@@ -384,6 +384,42 @@ table.release tr td img {
 .widget-preview-latest_file_releases-en-US {
     background-image:url('../images/widget-preview-latest_file_releases-en_US.png');
 }
+.widget-preview-project_latest_svn_commits-fr-FR {
+    background-image:url('../images/widget-preview-project_latest_svn_commits-fr_FR.png');
+}
+.widget-preview-project_latest_svn_commits-en-US {
+    background-image:url('../images/widget-preview-project_latest_svn_commits-en_US.png');
+}
+.widget-preview-project_latest_news-fr-FR {
+    background-image:url('../images/widget-preview-project_latest_news-fr_FR.png');
+}
+.widget-preview-project_latest_news-en-US {
+    background-image:url('../images/widget-preview-project_latest_news-en_US.png');
+}
+.widget-preview-project_public_areas-fr-FR {
+    background-image:url('../images/widget-preview-project_public_areas-fr_FR.png');
+}
+.widget-preview-project_public_areas-en-US {
+    background-image:url('../images/widget-preview-project_public_areas-en_US.png');
+}
+.widget-preview-project_description-fr-FR {
+    background-image:url('../images/widget-preview-project_description-fr_FR.png');
+}
+.widget-preview-project_description-en-US {
+    background-image:url('../images/widget-preview-project_description-en_US.png');
+}
+.widget-preview-project_classification-fr-FR {
+    background-image:url('../images/widget-preview-project_classification-fr_FR.png');
+}
+.widget-preview-project_classification-en-US {
+    background-image:url('../images/widget-preview-project_classification-en_US.png');
+}
+.widget-preview-project_members-fr-FR {
+    background-image:url('../images/widget-preview-project_members-fr_FR.png');
+}
+.widget-preview-project_members-en-US {
+    background-image:url('../images/widget-preview-project_members-en_US.png');
+}
 /* }}} */
 
 /* {{{ lists & users autocomplete */

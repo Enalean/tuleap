@@ -54,5 +54,12 @@ class Widget_ProjectMembers extends Widget {
     public function canBeUsedByProject(&$project) {
         return true;
     }
+    function getPreviewCssClass() {
+        $locale = UserManager::instance()->getCurrentUser()->getLocale();
+        if ($locale == 'fr_FR') {
+            return 'widget-preview-project_members-fr-FR';
+        }
+        return 'widget-preview-project_members-en-US';
+    }
 }
 ?>

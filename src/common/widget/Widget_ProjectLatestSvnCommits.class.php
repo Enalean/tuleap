@@ -26,5 +26,12 @@ class Widget_ProjectLatestSvnCommits extends Widget_ProjectLatestCommits {
     function canBeUsedByProject(&$project) {
         return $project->usesSvn();
     }
+    function getPreviewCssClass() {
+        $locale = UserManager::instance()->getCurrentUser()->getLocale();
+        if ($locale == 'fr_FR') {
+            return 'widget-preview-project_latest_svn_commits-fr-FR';
+        }
+        return 'widget-preview-project_latest_svn_commits-en-US';
+    }
 }
 ?>
