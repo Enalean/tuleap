@@ -31,7 +31,7 @@ if ($project->getStatus() == 'H') {
 	print '<P>'.$Language->getText('include_project_home','not_official_site',$GLOBALS['sys_name']);
 }
 
-
+$lm = new WidgetLayoutManager();
 $lm->displayLayout($project->getGroupId(), WidgetLayoutManager::OWNER_TYPE_GROUP);
 
 site_project_footer(array());
