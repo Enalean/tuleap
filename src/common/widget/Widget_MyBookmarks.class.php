@@ -42,7 +42,11 @@ class Widget_MyBookmarks extends Widget {
         return $html_my_bookmarks;
     }
     function getPreviewCssClass() {
-        return 'widget-preview-bookmarks';
+        $locale = UserManager::instance()->getCurrentUser()->getLocale();
+        if ($locale == 'fr_FR') {
+            return 'widget-preview-my_bookmarks-fr-FR';
+        }
+        return 'widget-preview-my_bookmarks-en-US';
     }
     function getDescription() {
         return 'Lists your favorite bookmarks (your favorite pages in Codendi or external). <br>'.

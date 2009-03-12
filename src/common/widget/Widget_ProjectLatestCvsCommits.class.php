@@ -26,5 +26,12 @@ class Widget_ProjectLatestCvsCommits extends Widget_ProjectLatestCommits {
     function canBeUsedByProject(&$project) {
         return $project->usesCvs();
     }
+    function getPreviewCssClass() {
+        $locale = UserManager::instance()->getCurrentUser()->getLocale();
+        if ($locale == 'fr_FR') {
+            return 'widget-preview-project_latest_cvs_commits-fr-FR';
+        }
+        return 'widget-preview-project_latest_cvs_commits-en-US';
+    }
 }
 ?>
