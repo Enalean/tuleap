@@ -500,7 +500,7 @@ function site_project_header($params) {
 		exit_error($Language->getText('include_html','invalid_g'),$Language->getText('include_html','g_not_exist'));
 	}
 	require_once('www/include/trove.php');
-    if (user_ismember($group_id, 'A') && !trove_project_categorized($group_id)) {
+    if (user_ismember($group_id, 'A') && !trove_project_categorized($group_id) && substr($_SERVER['SCRIPT_NAME'],0,9) == '/projects') {
 	    $GLOBALS['Response']->addFeedback('warning',$GLOBALS['Language']->getText('include_html','no_trovcat',array(get_server_url(), $group_id)), CODEX_PURIFIER_DISABLED);
     }
 	

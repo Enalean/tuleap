@@ -51,13 +51,6 @@ require_once('Docman_View_View.class.php');
                 $title .= $go->getPublicName().' - ';
             }
         }
-        
-        require_once('www/include/trove.php');
-        require_once(dirname(__FILE__).'/../Docman_PermissionsManager.class.php');
-        
-        if (Docman_PermissionsManager::instance($gid)->currentUserCanAdmin() && !trove_project_categorized($gid)) {
-            $title .=  $this->_controller->feedback->log('warning', $GLOBALS['Language']->getText('include_html','no_trovcat', array(get_server_url(), $gid)), CODEX_PURIFIER_DISABLED);
-        }
         $title .= $GLOBALS['Language']->getText('plugin_docman','title');
         return $title;
     }
