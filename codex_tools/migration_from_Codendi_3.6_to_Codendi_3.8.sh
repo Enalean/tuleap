@@ -305,6 +305,14 @@ WHERE scope = 'P'
 AND (service_short_name = '' OR service_short_name IS NULL)
 AND link LIKE '/tracker/%func=detail%';
 
+# add new reference for IM chat
+INSERT INTO reference SET 
+    keyword='chat', 
+    description='plugin_im:reference_chat_desc_key', 
+    link='/plugins/IM/?group_id=$group_id&action=viewchatlog&chat_log=$1', 
+    scope='S', 
+    service_short_name='IM',
+    nature='im_chat';
 
 # IM plugin
 # TODO : stop openfire service ($SERVICE openfire stop)

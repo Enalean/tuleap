@@ -69,6 +69,17 @@ class IM extends Controler {
 					$GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('global','perm_denied'));
 				}
                 break;
+            case 'viewchatlog':
+                if ($user->isMember($group_id)) {
+                    $chat_log = $request->get('chat_log');
+                    if (strlen($chat_log) != 8 || ! is_numeric($chat_log)) {
+                        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_im','reference_format_error', array($chat_log)));
+                    }
+                    $this->view = 'ref_muc_logs';
+                } else {
+                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('global','perm_denied'));
+                }
+                break;
             case 'muc_logs':
                 if ($user->isMember($group_id)) {
                 	$any = $GLOBALS['Language']->getText('global', 'any');

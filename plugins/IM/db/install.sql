@@ -66,3 +66,11 @@ WHERE group_id NOT IN (SELECT group_id
     FROM service
     WHERE short_name
     LIKE 'IM');
+    
+INSERT INTO reference SET 
+    keyword='chat', 
+    description='plugin_im:reference_chat_desc_key', 
+    link='/plugins/IM/?group_id=$group_id&action=viewchatlog&chat_log=$1', 
+    scope='S', 
+    service_short_name='IM',
+    nature='im_chat';

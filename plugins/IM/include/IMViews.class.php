@@ -131,7 +131,18 @@ class IMViews extends Views {
         	echo '<p class="feedback_error">'.$GLOBALS['Language']->getText('plugin_im', 'chatroom_onlymembers').'</p>';
         }
     }
-        
+    
+    /**
+     * Display muc logs of project $group_id when coming from a cross reference
+     * using monitoring openfire's plugin
+     */
+    function ref_muc_logs() {
+        $request = HTTPRequest::instance();
+        $group_id = $request->get('group_id');
+        $chat_log = $request->get('chat_log');
+        $date_log = substr($chat_log, 0, 4)."-".substr($chat_log, 4, 2)."-".substr($chat_log, 6, 2);
+        $this->_display_muc_logs($group_id, $date_log, $date_log);
+    }
     /**
      * Display muc logs of project $group_id
      * using monitoring openfire's plugin
@@ -139,7 +150,6 @@ class IMViews extends Views {
     function muc_logs() {
         $request = HTTPRequest::instance();
         $group_id = $request->get('group_id');
-        $project = project_get_object($group_id);
         
         $any = $GLOBALS['Language']->getText('global', 'any');
         
@@ -157,6 +167,14 @@ class IMViews extends Views {
         if ($end_date == '') {
             $end_date = $any;
         }
+        
+        $this->_display_muc_logs($group_id, $start_date, $end_date);
+        
+    }
+    
+    private function _display_muc_logs($group_id, $start_date, $end_date) {
+        $project = project_get_object($group_id);
+        $any = $GLOBALS['Language']->getText('global', 'any');
         
         echo '<h2>' . $GLOBALS['Language']->getText('plugin_im', 'muc_logs_title') . '</h2>';
                 
@@ -266,7 +284,6 @@ class IMViews extends Views {
             echo '</form>';
             
         }
-
     }
     
     /**

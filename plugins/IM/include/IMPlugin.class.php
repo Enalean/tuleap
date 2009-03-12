@@ -45,6 +45,7 @@ class IMPlugin extends Plugin {
         $this->_addHook('user_preferences_appearance', 'user_preferences_appearance', false);
         $this->_addHook('update_user_preferences_appearance', 'update_user_preferences_appearance', false);
         $this->_addHook('project_export_entry', 'provide_exportable_items', false);
+        $this->_addHook('get_available_reference_natures', 'getAvailableReferenceNatures', false);
         $this->debug=$debug;
         
     }
@@ -687,6 +688,12 @@ class IMPlugin extends Plugin {
         	$GLOBALS['HTML']->includeCalendarScripts();
             echo '<script type="text/javascript" src="/scripts/scriptaculous/scriptaculous.js"></script>'."\n";
         }
+    }
+    
+    function getAvailableReferenceNatures(&$params) {
+        $im_plugin_reference_natures = array(
+            'im_chat'  => array('keyword' => 'chat', 'label' => $GLOBALS['Language']->getText('plugin_im', 'reference_chat_nature_key')));
+        $params = array_merge($params, $im_plugin_reference_natures);
     }
     
  	function process() {	

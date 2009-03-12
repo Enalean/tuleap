@@ -8,6 +8,9 @@ plugin_im	service_lbl_key	Instant Messaging
 plugin_im	service_desc_key	Codex Instant Messaging allow communicate with your project team members. 
 plugin_im	desc	Codex Instant Messaging allow communicate with your project team members.
 
+plugin_im	reference_chat_nature_key	Chat
+plugin_im	reference_chat_nature_desc	Instant Messaging Chat
+
 plugin_im	my_roster	My IM Roster
 plugin_im	im_user_login	Instant Messaging Login:
 plugin_im	im_roster_member	Roster Members
@@ -31,6 +34,7 @@ plugin_im	muc_logs_end_date	End Date:
 plugin_im	search	Search
 plugin_im	muc_logs_helpsearch	Leave blank for Any
 plugin_im	date_format_error	Date format error: $1 is not a valid date
+plugin_im	reference_format_error	Chat reference format error: $1 is not a valid format (expected is YYYYMMDD)
 plugin_im	muc_logs_join	$1 joined the room
 plugin_im	muc_logs_left	$1 has left the room
 plugin_im	muc_logs_settopic	$1 has set the topic to: $2
