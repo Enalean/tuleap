@@ -19,7 +19,7 @@ commits_header(array ('title'=>$Language->getText('cvs_admin_commit', 'title'),
 		      'help' => 'CVSWebInterface.html#CVSAdministration'));
 
 // get project name
-$sql = "SELECT unix_group_name, cvs_tracker, cvs_watch_mode, cvs_events_mailing_list, cvs_events_mailing_header, cvs_preamble from groups where group_id=$group_id";
+$sql = "SELECT unix_group_name, cvs_tracker, cvs_watch_mode, cvs_events_mailing_list, cvs_events_mailing_header, cvs_preamble, cvs_is_private from groups where group_id=$group_id";
 
 $result = db_query($sql);
 $projectname = db_result($result, 0, 'unix_group_name');
@@ -28,6 +28,7 @@ $cvs_watch_mode = db_result($result, 0, 'cvs_watch_mode');
 $cvs_mailing_list = db_result($result, 0, 'cvs_events_mailing_list');
 $cvs_mailing_header = db_result($result, 0, 'cvs_events_mailing_header');
 $cvs_preamble = db_result($result, 0, 'cvs_preamble');
+$cvs_is_private = db_result($result, 0, 'cvs_is_private');
 
 if ($cvs_mailing_list == 'NULL') {
   $cvs_mailing_list = '';
@@ -38,12 +39,25 @@ if ($cvs_mailing_header == 'NULL') {
   $custom_mailing_header = "";
 }
 
+$project = ProjectManager::instance()->getProject($group_id);
+$checked  = $project->isPublic() && !$cvs_is_private ? '' : 'checked="true"';
+$readonly = $project->isPublic() ? '' : 'readonly="true" disabled="true"';
+    
 
 echo "<h2>".$Language->getText('cvs_admin_commit', 'title')."</h2>";
   
 echo '<FORM ACTION="'. $PHP_SELF .'" METHOD="GET">
 	<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$group_id.'">
 	<INPUT TYPE="HIDDEN" NAME="func" VALUE="setAdmin">
+	<h3>'.$Language->getText('cvs_admin_commit', 'private_hdr').'</h3>
+    <p>
+    <input type="hidden" name="private" '. $checked .' '. $readonly .' value="0" />
+    <input type="checkbox" name="private" '. $checked .' '. $readonly .' value="1" id="cvs_private" />
+    <label for="cvs_private">'. $GLOBALS['Language']->getText('cvs_admin_commit', 'private_lbl') .'</label>';
+    if (!$project->isPublic()) {
+        echo '<br /><em>'. $GLOBALS['Language']->getText('cvs_admin_commit', 'private_private_msg') .'</em>';
+    }
+    echo '</p>
 	<h3>'.$Language->getText('cvs_admin_commit', 'tracking_hdr').
 '</H3><p>'.$Language->getText('cvs_admin_commit', 'tracking_msg',array($GLOBALS['sys_name'])).
         '<p>'.$Language->getText('cvs_admin_commit', 'tracking_lbl').

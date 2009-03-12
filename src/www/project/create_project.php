@@ -193,11 +193,15 @@ function create_project($data, $do_not_exit = false) {
         }
         
         //copy cvs infos
-        $sql = "SELECT cvs_tracker, cvs_watch_mode, cvs_preamble FROM groups WHERE group_id=$template_id ";
+        $sql = "SELECT cvs_tracker, cvs_watch_mode, cvs_preamble, cvs_is_private FROM groups WHERE group_id=$template_id ";
         $result = db_query($sql);
         $arr = db_fetch_array($result);
-        $query = "UPDATE groups SET cvs_tracker='".$arr['cvs_tracker']."',  cvs_watch_mode='".$arr['cvs_watch_mode']."' , cvs_preamble='".db_escape_string($arr['cvs_preamble'])."' " .
-                 "WHERE group_id = '$group_id'";
+        $query = "UPDATE groups 
+                  SET cvs_tracker='".$arr['cvs_tracker']."',  
+                      cvs_watch_mode='".$arr['cvs_watch_mode']."' , 
+                      cvs_preamble='".db_escape_string($arr['cvs_preamble'])."',
+                      cvs_is_private = ".db_escape_int($arr['cvs_is_private']) ."
+                  WHERE group_id = '$group_id'";
         
         $result=db_query($query);
         if (!$result) {

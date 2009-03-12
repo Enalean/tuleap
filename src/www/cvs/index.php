@@ -49,7 +49,18 @@ switch ($func) {
      }
    }
    $feedback = $feedback.' '.$status;
-   $query = 'update groups set cvs_tracker="'.$tracked.'",cvs_watch_mode="'.$watches.'", cvs_events_mailing_list="'.$mailing_list.'", cvs_events_mailing_header="'.$mailing_header.'", cvs_preamble="'.htmlspecialchars($form_preamble).'" where group_id='.$group_id;
+   $is_private = '';
+   if ($request->exist('private')) {
+       $is_private = ', cvs_is_private = '. ($request->get('private') ? 1 : 0);
+   }
+   $query = 'update groups 
+             set cvs_tracker="'.$tracked.'",
+                 cvs_watch_mode="'.$watches.'", 
+                 cvs_events_mailing_list="'.$mailing_list.'", 
+                 cvs_events_mailing_header="'.$mailing_header.'", 
+                 cvs_preamble="'.htmlspecialchars($form_preamble).'" '.
+                 $is_private .'
+             where group_id='.$group_id;
    $result=db_query($query);
    require('../cvs/admin_commit.php');
    break;

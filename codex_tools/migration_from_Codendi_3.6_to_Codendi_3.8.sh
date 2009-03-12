@@ -471,6 +471,10 @@ DELETE FROM layouts_contents WHERE name IN ('projectclassification', 'projectdes
 # Delete hide_members column (not needed anymore, please do it after previous request)
 ALTER TABLE groups DROP hide_members;
 
+# Add cvs_is_private 
+ALTER TABLE groups ADD cvs_is_private TINYINT( 1 ) NOT NULL DEFAULT '0' AFTER cvs_preamble ;
+TODO: migrate .CODEX_PRIVATE
+
 #Layouts for dashboard
 INSERT INTO layouts(id, name, description, scope) VALUES
 (2, '3 columns', 'Simple layout made of 3 columns', 'S'),
