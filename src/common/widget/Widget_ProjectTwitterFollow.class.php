@@ -29,9 +29,8 @@ require_once('WidgetLayoutManager.class.php');
 */
 class Widget_ProjectTwitterFollow extends Widget_TwitterFollow {
     function Widget_ProjectTwitterFollow() {
-        $lm = new WidgetLayoutManager();
         $request = HTTPRequest::instance();
-        $this->Widget_TwitterFollow('projecttwitterfollow', $request->get('group_id'), $lm->OWNER_TYPE_USER);
+        $this->Widget_TwitterFollow('projecttwitterfollow', $request->get('group_id'), WidgetLayoutManager::OWNER_TYPE_USER);
     }
 }
 ?>

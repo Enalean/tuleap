@@ -21,8 +21,7 @@ abstract class HudsonWidget extends Widget {
     
     protected function getAvailableJobs() {
         $jobs = array();
-        $wlm = new WidgetLayoutManager();
-        if ($this->owner_type == $wlm->OWNER_TYPE_USER) {
+        if ($this->owner_type == WidgetLayoutManager::OWNER_TYPE_USER) {
             $jobs = $this->getJobsByUser($user = UserManager::instance()->getCurrentUser()->getId());
         } else {
             $jobs = $this->getJobsByGroup($this->group_id);

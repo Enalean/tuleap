@@ -19,8 +19,7 @@ class Widget_MySrs extends Widget {
     function Widget_MySrs() {
         $this->Widget('mysrs');
         $this->content = '';
-        $lm =& new WidgetLayoutManager();
-        $this->setOwner(user_getid(), $lm->OWNER_TYPE_USER);
+        $this->setOwner(user_getid(), WidgetLayoutManager::OWNER_TYPE_USER);
         
         $sql='SELECT group_id FROM support '.
             'WHERE support_status_id = 1 '.

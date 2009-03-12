@@ -20,8 +20,7 @@ class Widget_MyTasks extends Widget {
     function Widget_MyTasks() {
         $this->Widget('mytasks');
         $this->content = '';
-        $lm =& new WidgetLayoutManager();
-        $this->setOwner(user_getid(), $lm->OWNER_TYPE_USER);
+        $this->setOwner(user_getid(), WidgetLayoutManager::OWNER_TYPE_USER);
         $last_group=0;
     
         $sql = 'SELECT groups.group_id, groups.group_name, project_group_list.group_project_id, project_group_list.project_name '.

@@ -21,8 +21,7 @@ class hudson_Widget_JobTestTrend extends HudsonJobWidget {
     
     function hudson_Widget_JobTestTrend($owner_type, $owner_id) {
         $request =& HTTPRequest::instance();
-        $wlm = new WidgetLayoutManager();
-        if ($owner_type == $wlm->OWNER_TYPE_USER) {
+        if ($owner_type == WidgetLayoutManager::OWNER_TYPE_USER) {
             $this->widget_id = 'myhudsonjobtesttrend';
             $this->group_id = $owner_id;
         } else {

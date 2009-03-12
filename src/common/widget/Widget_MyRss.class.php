@@ -14,8 +14,7 @@ require_once('WidgetLayoutManager.class.php');
 */
 class Widget_MyRss extends Widget_Rss {
     function Widget_MyRss() {
-        $lm = new WidgetLayoutManager();
-        $this->Widget_Rss('myrss', user_getid(), $lm->OWNER_TYPE_USER);
+        $this->Widget_Rss('myrss', user_getid(), WidgetLayoutManager::OWNER_TYPE_USER);
     }
 }
 ?>

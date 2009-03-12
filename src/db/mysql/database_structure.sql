@@ -3233,6 +3233,17 @@ CREATE TABLE IF NOT EXISTS widget_twitterfollow (
   KEY (owner_id, owner_type)
 );
 
+DROP TABLE IF EXISTS widget_wikipage;
+CREATE TABLE IF NOT EXISTS widget_wikipage (
+  id int(11) unsigned NOT NULL auto_increment PRIMARY KEY,
+  owner_id int(11) unsigned NOT NULL default '0',
+  owner_type varchar(1) NOT NULL default 'u',
+  title varchar(255) NOT NULL,
+  group_id int(11) unsigned NOT NULL default '0',
+  wiki_page TEXT NULL,
+  KEY (owner_id, owner_type)
+);
+
 
 
 # 

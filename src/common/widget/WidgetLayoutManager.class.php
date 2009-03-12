@@ -13,9 +13,9 @@ require_once('common/widget/Widget.class.php');
 * @author  N. Terray
 */
 class WidgetLayoutManager {
-    var $OWNER_TYPE_USER  = 'u';
-    var $OWNER_TYPE_GROUP = 'g';
-    var $OWNER_TYPE_HOME  = 'h';
+    const OWNER_TYPE_USER  = 'u';
+    const OWNER_TYPE_GROUP = 'g';
+    const OWNER_TYPE_HOME  = 'h';
     
     /**
     * displayLayout
@@ -78,17 +78,17 @@ class WidgetLayoutManager {
         $readonly = true;
         $request =& HTTPRequest::instance();
         switch ($owner_type) {
-            case $this->OWNER_TYPE_USER:
+        case self::OWNER_TYPE_USER:
                 if (user_getid() == $owner_id) { //Current user can only update its own /my/ page
                     $readonly = false;
                 }
                 break;
-            case $this->OWNER_TYPE_GROUP:
+            case self::OWNER_TYPE_GROUP:
                 if (user_is_super_user() || user_ismember($request->get('group_id'), 'A')) { //Only project admin
                     $readonly = false;
                 }
                 break;
-            case $this->OWNER_TYPE_HOME:
+            case self::OWNER_TYPE_HOME:
                 //Only site admin
                 break;
             default:
@@ -111,7 +111,7 @@ class WidgetLayoutManager {
     * @param  owner_id The id of the newly created user
     */
     function createDefaultLayoutForUser($owner_id) {
-        $owner_type = $this->OWNER_TYPE_USER;
+        $owner_type = self::OWNER_TYPE_USER;
         $sql = "INSERT INTO owner_layouts(layout_id, is_default, owner_id, owner_type) VALUES (1, 1, $owner_id, '$owner_type')";
         if (db_query($sql)) {
             
@@ -148,24 +148,24 @@ class WidgetLayoutManager {
         $sql = "INSERT INTO owner_layouts(layout_id, is_default, owner_id, owner_type) 
         SELECT layout_id, is_default, $group_id, owner_type 
         FROM owner_layouts 
-        WHERE owner_type = '". $this->OWNER_TYPE_GROUP ."'
+        WHERE owner_type = '". self::OWNER_TYPE_GROUP ."'
           AND owner_id = $template_id
         ";
         if (db_query($sql)) {
             $sql = "SELECT layout_id, column_id, name, rank, is_minimized, is_removed, display_preferences, content_id
             FROM layouts_contents
-            WHERE owner_type = '". $this->OWNER_TYPE_GROUP ."'
+            WHERE owner_type = '". self::OWNER_TYPE_GROUP ."'
               AND owner_id = $template_id
             ";
             if ($req = db_query($sql)) {
                 while($data = db_fetch_array($req)) {
                     $w = Widget::getInstance($data['name']);
                     if ($w) {
-                        $w->setOwner($template_id, $this->OWNER_TYPE_GROUP);
+                        $w->setOwner($template_id, self::OWNER_TYPE_GROUP);
                         if ($w->canBeUsedByProject($project)) {
-                            $content_id = $w->cloneContent($w->content_id, $group_id, $this->OWNER_TYPE_GROUP);
+                            $content_id = $w->cloneContent($w->content_id, $group_id, self::OWNER_TYPE_GROUP);
                             $sql = "INSERT INTO layouts_contents(owner_id, owner_type, content_id, layout_id, column_id, name, rank, is_minimized, is_removed, display_preferences) 
-                            VALUES (". $group_id .", '". $this->OWNER_TYPE_GROUP ."', ". $content_id .", ". $data['layout_id'] .", ". $data['column_id'] .", '". $data['name'] ."', ". $data['rank'] .", ". $data['is_minimized'] .", ". $data['is_removed'] .", ". $data['display_preferences'] .")
+                            VALUES (". $group_id .", '". self::OWNER_TYPE_GROUP ."', ". $content_id .", ". $data['layout_id'] .", ". $data['column_id'] .", '". $data['name'] ."', ". $data['rank'] .", ". $data['is_minimized'] .", ". $data['is_removed'] .", ". $data['display_preferences'] .")
                             ";
                             db_query($sql);
                             echo db_error();

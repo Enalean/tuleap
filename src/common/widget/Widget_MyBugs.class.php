@@ -19,8 +19,7 @@ class Widget_MyBugs extends Widget {
     function Widget_MyBugs() {
         $this->Widget('mybugs');
         $this->content = '';
-        $lm =& new WidgetLayoutManager();
-        $this->setOwner(user_getid(), $lm->OWNER_TYPE_USER);
+        $this->setOwner(user_getid(), WidgetLayoutManager::OWNER_TYPE_USER);
         
         $sql='SELECT group_id,COUNT(bug_id) '.
             'FROM bug '.

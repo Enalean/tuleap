@@ -313,7 +313,7 @@ function account_create($loginname=''
     }
 }
 function account_create_mypage($user_id) {
-    $lm =& new WidgetLayoutManager();
+    $lm = new WidgetLayoutManager();
     $lm->createDefaultLayoutForUser($user_id);
 }
 

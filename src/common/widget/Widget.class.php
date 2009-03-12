@@ -14,6 +14,7 @@ require_once('common/widget/Widget_MyTasks.class.php');
 require_once('common/widget/Widget_MyRss.class.php');
 require_once('common/widget/Widget_MyAdmin.class.php');
 require_once('common/widget/Widget_MyTwitterFollow.class.php');
+//require_once('common/widget/Widget_MyWikiPage.class.php');
 require_once('common/widget/Widget_ProjectDescription.class.php');
 require_once('common/widget/Widget_ProjectClassification.class.php');
 require_once('common/widget/Widget_ProjectMembers.class.php');
@@ -24,6 +25,7 @@ require_once('common/widget/Widget_ProjectRss.class.php');
 require_once('common/widget/Widget_ProjectLatestSvnCommits.class.php');
 require_once('common/widget/Widget_ProjectLatestCvsCommits.class.php');
 require_once('common/widget/Widget_ProjectTwitterFollow.class.php');
+//require_once('common/widget/Widget_ProjectWikiPage.class.php');
 
 /**
 * Widget
@@ -168,6 +170,9 @@ require_once('common/widget/Widget_ProjectTwitterFollow.class.php');
             case 'mytwitterfollow':
                 $o =& new Widget_MyTwitterFollow();
                 break;
+            //case 'mywikipage':                   //not yet
+            //    $o =& new Widget_MyWikiPage();
+            //    break;
             case 'myadmin':
                 if (user_is_super_user()) { //This widget is only for super admin
                     $o =& new Widget_MyAdmin();
@@ -197,6 +202,9 @@ require_once('common/widget/Widget_ProjectTwitterFollow.class.php');
             case 'projecttwitterfollow':
                 $o =& new Widget_ProjectTwitterFollow();
                 break;
+            //case 'projectwikipage':                    //not yet
+            //    $o =& new Widget_ProjectWikiPage();
+            //    break;
             case 'projectlatestsvncommits':
                 $o =& new Widget_ProjectLatestSvnCommits();
                 break;
@@ -214,24 +222,23 @@ require_once('common/widget/Widget_ProjectTwitterFollow.class.php');
         return $o;
     }
     /* static */ function getCodeXWidgets($owner_type) {
-        $lm = new WidgetLayoutManager();
         switch ($owner_type) {
-            case $lm->OWNER_TYPE_USER:
+            case WidgetLayoutManager::OWNER_TYPE_USER:
                 $widgets = array('myadmin', 'mysurveys', 'myprojects', 'mybookmarks', 
-                    'mymonitoredforums', 'mymonitoredfp', 'myartifacts', 'mybugs',
-                    'mytasks', 'mysrs', 'mylatestsvncommits', 'mytwitterfollow'
+                    'mymonitoredforums', 'mymonitoredfp', 'myartifacts', 'mybugs', //'mywikipage' //not yet
+                    'mytasks', 'mysrs', 'mylatestsvncommits', 'mytwitterfollow',
                 );
                 break;
-            case $lm->OWNER_TYPE_GROUP:
+            case WidgetLayoutManager::OWNER_TYPE_GROUP:
                 $widgets = array('projectdescription', 'projectmembers', 
-                    'projectlatestfilereleases', 'projectlatestnews', 'projectpublicareas', 
-                    'projectlatestsvncommits', 'projectlatestcvscommits', 'projecttwitterfollow'
+                    'projectlatestfilereleases', 'projectlatestnews', 'projectpublicareas', //'projectwikipage' //not yet
+                    'projectlatestsvncommits', 'projectlatestcvscommits', 'projecttwitterfollow', 
                 );
                 if ($GLOBALS['sys_use_trove'] != 0) {
                     $widgets[] = 'projectclassification';
                 }
                 break;
-            case $lm->OWNER_TYPE_HOME:
+            case WidgetLayoutManager::OWNER_TYPE_HOME:
                 $widgets = array();
                 break;
             default:
@@ -249,17 +256,16 @@ require_once('common/widget/Widget_ProjectTwitterFollow.class.php');
         return $widgets;
     }
     /* static */ function getExternalWidgets($owner_type) {
-        $lm = new WidgetLayoutManager();
         switch ($owner_type) {
-            case $lm->OWNER_TYPE_USER:
+            case WidgetLayoutManager::OWNER_TYPE_USER:
                 $widgets = array('myrss'
                 );
                 break;
-            case $lm->OWNER_TYPE_GROUP:
+            case WidgetLayoutManager::OWNER_TYPE_GROUP:
                 $widgets = array('projectrss'
                 );
                 break;
-            case $lm->OWNER_TYPE_HOME:
+            case WidgetLayoutManager::OWNER_TYPE_HOME:
                 $widgets = array();
                 break;
             default:
@@ -285,6 +291,12 @@ require_once('common/widget/Widget_ProjectTwitterFollow.class.php');
     }
     function getPreviewCssClass() {
         return '';
+    }
+    function getAjaxUrl($owner_id, $owner_type) {
+        return '/widgets/widget.php?owner='. $owner_type.$owner_id .'&action=ajax&name['. $this->id .']='. $this->getInstanceId();
+    }
+    function getIframeUrl($owner_id, $owner_type) {
+        return '/widgets/widget.php?owner='. $owner_type.$owner_id .'&action=iframe&name['. $this->id .']='. $this->getInstanceId();
     }
 }
 ?>

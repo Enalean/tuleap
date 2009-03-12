@@ -225,15 +225,13 @@ class DocmanPlugin extends Plugin {
     }
     function widgets($params) {
         require_once('common/widget/WidgetLayoutManager.class.php');
-        $lm = new WidgetLayoutManager();
-        if ($params['owner_type'] == $lm->OWNER_TYPE_USER) {
+        if ($params['owner_type'] == WidgetLayoutManager::OWNER_TYPE_USER) {
             $params['codex_widgets'][] = 'mydocman';
         }
     }
     function default_widgets_for_new_owner($params) {
         require_once('common/widget/WidgetLayoutManager.class.php');
-        $lm = new WidgetLayoutManager();
-        if ($params['owner_type'] == $lm->OWNER_TYPE_USER) {
+        if ($params['owner_type'] == WidgetLayoutManager::OWNER_TYPE_USER) {
             $params['widgets'][] = array(
                 'name' => 'mydocman',
                 'column' => 1,

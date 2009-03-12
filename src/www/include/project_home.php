@@ -32,8 +32,7 @@ if ($project->getStatus() == 'H') {
 }
 
 
-$lm =& new WidgetLayoutManager();
-$lm->displayLayout($project->getGroupId(), $lm->OWNER_TYPE_GROUP);
+$lm->displayLayout($project->getGroupId(), WidgetLayoutManager::OWNER_TYPE_GROUP);
 
 site_project_footer(array());
 

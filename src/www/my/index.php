@@ -35,8 +35,8 @@ if (user_isloggedin()) {
 
     echo '<p>'. $Language->getText('my_index', 'message') .'</p>';
 
-    $lm =& new WidgetLayoutManager();
-    $lm->displayLayout(user_getid(), $lm->OWNER_TYPE_USER);
+    $lm = new WidgetLayoutManager();
+    $lm->displayLayout(user_getid(), WidgetLayoutManager::OWNER_TYPE_USER);
     
     echo show_priority_colors_key();
     ?>

@@ -324,7 +324,7 @@ function create_project($data, $do_not_exit = false) {
         }
         
         //Create the summary page
-        $lm =& new WidgetLayoutManager();
+        $lm = new WidgetLayoutManager();
         $lm->createDefaultLayoutForProject($group_id, $template_id);
         
         //Create project specific references if template is not default site template

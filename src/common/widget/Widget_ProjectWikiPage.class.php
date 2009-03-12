@@ -21,22 +21,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-require_once('Widget_Rss.class.php');
-require_once('Widget.class.php');
+require_once('Widget_WikiPage.class.php');
+require_once('WidgetLayoutManager.class.php');
 
 /**
-* Widget_TwitterFollow
-* 
-* Allow to follow a twitter user
-* 
+* Personal WikiPage
 */
-class Widget_ProjectRss extends Widget_Rss {
-    function Widget_ProjectRss() {
-        $request =& HTTPRequest::instance();
-        $this->Widget_Rss('projectrss', $request->get('group_id'), WidgetLayoutManager::OWNER_TYPE_GROUP);
-    }
-    function canBeUsedByProject(&$project) {
-        return true;
+class Widget_ProjectWikiPage extends Widget_WikiPage {
+    function Widget_ProjectWikiPage() {
+        $request = HTTPRequest::instance();
+        $this->Widget_WikiPage('projectwikipage', $request->get('group_id'), WidgetLayoutManager::OWNER_TYPE_USER);
     }
 }
 ?>

@@ -22,8 +22,7 @@ class hudson_Widget_JobTestResults extends HudsonJobWidget {
     
     function hudson_Widget_JobTestResults($owner_type, $owner_id) {
         $request =& HTTPRequest::instance();
-        $wlm = new WidgetLayoutManager();
-        if ($owner_type == $wlm->OWNER_TYPE_USER) {
+        if ($owner_type == WidgetLayoutManager::OWNER_TYPE_USER) {
             $this->widget_id = 'myhudsonjobtestresults';
             $this->group_id = $owner_id;
         } else {

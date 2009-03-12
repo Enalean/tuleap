@@ -18,4 +18,5 @@ widget_categ_label	frs	Files
 widget_categ_label	general	Général
 widget_categ_label	trackers	Outils de suivi
 widget_categ_label	scm	Gestion de code source
+widget_categ_label	wiki	Wiki
 

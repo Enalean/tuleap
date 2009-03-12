@@ -29,8 +29,7 @@ require_once('WidgetLayoutManager.class.php');
 */
 class Widget_MyTwitterFollow extends Widget_TwitterFollow {
     function Widget_MyTwitterFollow() {
-        $lm = new WidgetLayoutManager();
-        $this->Widget_TwitterFollow('mytwitterfollow', user_getid(), $lm->OWNER_TYPE_USER);
+        $this->Widget_TwitterFollow('mytwitterfollow', user_getid(), WidgetLayoutManager::OWNER_TYPE_USER);
     }
 }
 ?>

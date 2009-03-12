@@ -754,7 +754,7 @@ class Layout extends Response {
         }
         if ($widget->isAjax()) {
             echo '<div id="'. $element_id .'-ajax">';
-            echo '<noscript><iframe width="99%" frameborder="0" src="/widgets/widget.php?owner='. $owner_type.$owner_id .'&action=iframe&name['. $widget->id .']='. $widget->getInstanceId() .'"></iframe></noscript>';
+            echo '<noscript><iframe width="99%" frameborder="0" src="'. $widget->getIframeUrl($owner_id, $owner_type) .'"></iframe></noscript>';
             echo '</div>';
         } else {
             echo $widget->getContent();
@@ -765,7 +765,7 @@ class Layout extends Response {
             document.observe('dom:loaded', function () {
                 $('$element_id-ajax').update('<div style=\"text-align:center\">". $this->getImage('ic/spinner.gif') ."</div>');
                 new Ajax.Updater('$element_id-ajax', 
-                                 '/widgets/widget.php?owner=". $owner_type.$owner_id ."&action=ajax&name[". $widget->id ."]=". $widget->getInstanceId() ."'
+                                 '". $widget->getAjaxUrl($owner_id, $owner_type) ."'
                 );
             });
             </script>";

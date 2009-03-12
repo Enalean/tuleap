@@ -13,12 +13,12 @@ if ($owner) {
     $owner_id   = (int)substr($owner, 1);
     $owner_type = substr($owner, 0, 1);
     switch($owner_type) {
-        case $lm->OWNER_TYPE_USER:
+        case WidgetLayoutManager::OWNER_TYPE_USER:
             $owner_id = user_getid();
             $redirect = '/my/';
             $good = true;
             break;
-        case $lm->OWNER_TYPE_GROUP:
+        case WidgetLayoutManager::OWNER_TYPE_GROUP:
             if ($project = project_get_object($owner_id)) {
                 $group_id = $owner_id;
                 $_REQUEST['group_id'] = $_GET['group_id'] = $group_id;
