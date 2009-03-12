@@ -59,7 +59,7 @@ class Widget_TwitterFollow extends Widget {
             foreach($items as $i => $item) {
                 $content .= '<tr class="'. util_get_alt_row_color($i++) .'"><td WIDTH="99%">';
                 $content .= '<div style="float:right;">';
-                $content .=  '<a title="Reply" href="'. $this->getReplyToUrl($this->twitterfollow_user, basename($twitterfollow->get_link())) .'">';
+                $content .=  '<a title="Reply" href="'. $this->getReplyToUrl($this->twitterfollow_user, basename($item->get_link())) .'">';
                 $content .=  $GLOBALS['HTML']->getImage('ic/twitter_reply.gif');
                 $content .=  '</a>';
                 $content .= '</div>';
