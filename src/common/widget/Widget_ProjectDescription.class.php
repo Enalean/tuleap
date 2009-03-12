@@ -24,14 +24,14 @@ class Widget_ProjectDescription extends Widget {
         $hp =& CodeX_HTMLPurifier::instance();
         
         if ($project->getStatus() == 'H') {
-            echo '<p>' . $GLOBALS['Language']->getText('include_project_home','not_official_site',$GLOBALS['sys_name']) . '</p>';
+            echo '<p style="font-size:1.4em;">' . $GLOBALS['Language']->getText('include_project_home','not_official_site',$GLOBALS['sys_name']) . '</p>';
         }
         
         if ($project->getDescription()) {
-            echo "<p>" . $hp->purify($project->getDescription(), CODEX_PURIFIER_LIGHT, $group_id) . "</p>";
+            echo '<p style="font-size:1.4em;">' . $hp->purify($project->getDescription(), CODEX_PURIFIER_LIGHT, $group_id) . "</p>";
             $details_prompt = '[' . $GLOBALS['Language']->getText('include_project_home','more_info') . '...]';
         } else {
-            echo '<p>' . $Language->getText('include_project_home','no_short_desc',"/project/admin/editgroupinfo.php?group_id=$group_id") . '</p>';
+            echo '<p>' . $GLOBALS['Language']->getText('include_project_home','no_short_desc',"/project/admin/editgroupinfo.php?group_id=$group_id") . '</p>';
             $details_prompt = '[' . $GLOBALS['Language']->getText('include_project_home','other_info') . '...]';
         }
         
