@@ -58,22 +58,31 @@ class Widget_TwitterFollow extends Widget {
             $i = 0;
             foreach($items as $i => $item) {
                 $content .= '<tr class="'. util_get_alt_row_color($i++) .'"><td WIDTH="99%">';
+                $content .= '<div style="float:right;">';
+                $content .=  '<a title="Reply" href="'. $this->getReplyToUrl($this->twitterfollow_user, basename($twitterfollow->get_link())) .'">';
+                $content .=  $GLOBALS['HTML']->getImage('ic/twitter_reply.gif');
+                $content .=  '</a>';
+                $content .= '</div>';
+                
                 $content .= '<span';
                 if ($i == 1) {
                     $content .= ' style="font-size:1.5em">';
                     if ($image = $item->get_link(0, 'image')) {
                         //hack to display twitter avatar
                         $image = preg_replace('/_normal\.(jpg|png|gif)$/i', '_bigger.$1', $image);
+                        $content .= '<a href="http://twitter.com/'. urlencode($this->twitterfollow_user) .'">';
                         $content .= '<img src="'.  $hp->purify($image, CODEX_PURIFIER_CONVERT_HTML)  .'" style="float:left; margin-right:1em;" />';
+                        $content .= '</a>';
                     }
                 } else {
                     $content .= '>'; //end of <span
                 }
-                $content .= '<a href="'. $item->get_link() .'">'. $item->get_title() .'</a>';
+                $content .=  $hp->purify($item->get_title(), CODEX_PURIFIER_BASIC) ;
                 if ($item->get_date()) {
                     $content .= ' <span style="color:#999; white-space:nowrap;" title="'. format_date($GLOBALS['Language']->getText('system', 'datefmt'), $item->get_date('U')) .'">- '. util_time_ago_in_words($item->get_date('U')) .'</span>';
                 }
                 $content .= '</span>';
+                
                 $content .= '</td></tr>';
             }
             $content .= '</table>';
@@ -182,6 +191,9 @@ class Widget_TwitterFollow extends Widget {
     }
     function getFeedUrl($user) {
         return 'http://search.twitter.com/search.atom?q=from:'. $user;
+    }
+    function getReplyToUrl($user, $status_id) {
+        return 'http://twitter.com/home?status=@'. urlencode($user) .'%20&in_reply_to_status_id='. urlencode($status_id) .'&in_reply_to='. urlencode($user);
     }
 }
 ?>
