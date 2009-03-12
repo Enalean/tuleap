@@ -432,16 +432,42 @@ SET artifact_report_field.place_query = R1.new_rank;
 
 
 # Add 3 new widgets on project summary page
-INSERT INTO layouts_contents(owner_id, owner_type, layout_id, column_id, name)
-SELECT group_id, 'g', 1, 1, 'projectdescription'
-FROM groups;
-INSERT INTO layouts_contents(owner_id, owner_type, layout_id, column_id, name)
-SELECT group_id, 'g', 1, 1, 'projectclassification'
-FROM groups;
-INSERT INTO layouts_contents(owner_id, owner_type, layout_id, column_id, name)
-SELECT group_id, 'g', 1, 2, 'projectmembers'
+INSERT INTO layouts_contents(owner_id, owner_type, layout_id, column_id, name, rank)
+SELECT group_id, 'g', 1, 1, 'projectclassification', R.rank
+FROM groups 
+     INNER JOIN (SELECT owner_id, owner_type, layout_id, column_id, MIN(rank) - 1 as rank 
+                 FROM layouts_contents
+                 WHERE owner_type = 'g' 
+                   AND layout_id  = 1
+                   AND column_id  = 1
+                 GROUP BY owner_id, owner_type, layout_id, column_id) AS R
+           ON (owner_id = group_id);
+
+INSERT INTO layouts_contents(owner_id, owner_type, layout_id, column_id, name, rank)
+SELECT group_id, 'g', 1, 1, 'projectdescription', R.rank
 FROM groups
+     INNER JOIN (SELECT owner_id, owner_type, layout_id, column_id, MIN(rank) - 1 as rank 
+                 FROM layouts_contents
+                 WHERE owner_type = 'g' 
+                   AND layout_id  = 1
+                   AND column_id  = 1
+                 GROUP BY owner_id, owner_type, layout_id, column_id) AS R
+           ON (owner_id = group_id);
+
+INSERT INTO layouts_contents(owner_id, owner_type, layout_id, column_id, name, rank)
+SELECT group_id, 'g', 1, 2, 'projectmembers', R.rank
+FROM groups
+     INNER JOIN (SELECT owner_id, owner_type, layout_id, column_id, MIN(rank) - 1 as rank 
+                 FROM layouts_contents
+                 WHERE owner_type = 'g' 
+                   AND layout_id  = 1
+                   AND column_id  = 2
+                 GROUP BY owner_id, owner_type, layout_id, column_id) AS R
+           ON (owner_id = group_id)
 WHERE hide_members = 0;
+
+DELETE FROM layouts_contents WHERE name IN ('projectclassification', 'projectdescription', 'projectmembers');
+
 # Delete hide_members column (not needed anymore, please do it after previous request)
 ALTER TABLE groups DROP hide_members;
 
