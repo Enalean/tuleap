@@ -93,7 +93,7 @@ class ReferenceManager {
         $em->processEvent('get_available_reference_natures', &$plugins_natures);
         
         $natures = array_merge($core_natures, $plugins_natures);
-        $natures[self::REFERENCE_NATURE_OTHER] = $GLOBALS['Language']->getText('project_reference', 'reference_'.self::REFERENCE_NATURE_OTHER.'_nature_key');
+        $natures[self::REFERENCE_NATURE_OTHER] = array('keyword' => 'other', 'label' => $GLOBALS['Language']->getText('project_reference', 'reference_'.self::REFERENCE_NATURE_OTHER.'_nature_key'));
         return $natures;
     }
 

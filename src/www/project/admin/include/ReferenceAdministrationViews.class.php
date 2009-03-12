@@ -123,7 +123,7 @@ class ReferenceAdministrationViews extends Views {
         }
         
         if (array_key_exists($ref->getNature(), $this->natures)) {
-            $nature_desc = $this->natures[$ref->getNature()];
+            $nature_desc = $this->natures[$ref->getNature()]['label'];
         } else {
             $nature_desc = $ref->getNature();
         }
@@ -187,7 +187,7 @@ class ReferenceAdministrationViews extends Views {
         echo '<select name="nature" >';
         
         foreach ($this->natures as $nature_key => $nature_desc) {
-            echo '<option value="'.$nature_key.'">'.$nature_desc.'</option>';
+            echo '<option value="'.$nature_key.'">'.$nature_desc['label'].'</option>';
         }
         
         echo '</select>';
@@ -311,7 +311,7 @@ class ReferenceAdministrationViews extends Views {
                 } else {
                     $selected = '';
                 }
-                echo '<option value="'.$nature_key.'" '.$selected.'>'.$nature_desc.'</option>';
+                echo '<option value="'.$nature_key.'" '.$selected.'>'.$nature_desc['label'].'</option>';
             }
             echo '</select>';
         }
