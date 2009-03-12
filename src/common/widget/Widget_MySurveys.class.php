@@ -60,11 +60,7 @@ class Widget_MySurveys extends Widget {
         return $this->content;
     }
     function getPreviewCssClass() {
-        $locale = UserManager::instance()->getCurrentUser()->getLocale();
-        if ($locale == 'fr_FR') {
-            return 'widget-preview-my_surveys-fr-FR';
-        }
-        return 'widget-preview-my_surveys-en-US';
+        return parent::getPreviewCssClass('my_surveys');
     }
 }
 

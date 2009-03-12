@@ -289,8 +289,13 @@ require_once('common/widget/Widget_ProjectTwitterFollow.class.php');
     function getDescription() {
         return '';
     }
-    function getPreviewCssClass() {
-        return '';
+    function getPreviewCssClass($css_property = null) {
+        if ($css_property != null) {
+            $locale = UserManager::instance()->getCurrentUser()->getLocale();
+            return 'widget-preview-'.$css_property.'-'.$locale;
+        } else {
+            return '';
+        }
     }
     function getAjaxUrl($owner_id, $owner_type) {
         return '/widgets/widget.php?owner='. $owner_type.$owner_id .'&action=ajax&name['. $this->id .']='. $this->getInstanceId();

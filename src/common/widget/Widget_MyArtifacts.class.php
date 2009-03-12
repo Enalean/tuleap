@@ -265,7 +265,7 @@ class Widget_MyArtifacts extends Widget {
         return 'Lists artifacts you have submitted or assigned to you, by project. ';
     }
     function getPreviewCssClass() {
-        return 'widget-preview-myartifacts';
+        return 'widget-preview-my_artifacts';
     }
 }
 ?>

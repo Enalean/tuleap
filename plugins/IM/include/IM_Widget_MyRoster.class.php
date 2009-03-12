@@ -54,15 +54,9 @@ class IM_Widget_MyRoster extends Widget {
     function isAvailable() {
         return ! UserManager::instance()->getCurrentUser()->getPreference('plugin_im_hide_users_presence');
     }
-    
     function getPreviewCssClass() {
-        $locale = UserManager::instance()->getCurrentUser()->getLocale();
-        if ($locale == 'fr_FR') {
-            return 'widget-preview-myroster-fr-FR';
-        }
-        return 'widget-preview-myroster-en-US';
+        return parent::getPreviewCssClass('myroster');
     }
-    
     function isAjax() {
         return true;
     }

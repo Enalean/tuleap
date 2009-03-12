@@ -124,11 +124,7 @@ class Widget_MyProjects extends Widget {
         return 'Lists the projects you belong to. Selecting any of these projects brings you to the corresponding Project Summary page.';
     }
     function getPreviewCssClass() {
-        $locale = UserManager::instance()->getCurrentUser()->getLocale();
-        if ($locale == 'fr_FR') {
-            return 'widget-preview-myprojects-fr-FR';
-        }
-        return 'widget-preview-myprojects-en-US';
+        return parent::getPreviewCssClass('my_projects');
     }
 }
 ?>

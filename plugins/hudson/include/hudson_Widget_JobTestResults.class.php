@@ -100,15 +100,9 @@ class hudson_Widget_JobTestResults extends HudsonJobWidget {
             
         return $html;
     }
-    
     function getPreviewCssClass() {
-        $locale = UserManager::instance()->getCurrentUser()->getLocale();
-        if ($locale == 'fr_FR') {
-            return 'widget-preview-jobtestresults-fr-FR';
-        }
-        return 'widget-preview-jobtestresults-en-US';
+        return parent::getPreviewCssClass('jobtestresults');
     }
-
 }
 
 ?>

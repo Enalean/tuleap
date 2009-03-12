@@ -112,11 +112,7 @@ class Widget_MyMonitoredForums extends Widget {
                 To cancel any of the monitored items just click on the trash icon () next to the item label. ';
     }
     function getPreviewCssClass() {
-        $locale = UserManager::instance()->getCurrentUser()->getLocale();
-        if ($locale == 'fr_FR') {
-            return 'widget-preview-mymonitoredforums-fr-FR';
-        }
-        return 'widget-preview-mymonitoredforums-en-US';
+        return parent::getPreviewCssClass('my_monitored_forums');
     }
     function isAjax() {
         return true;

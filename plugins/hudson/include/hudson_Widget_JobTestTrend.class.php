@@ -98,13 +98,8 @@ class hudson_Widget_JobTestTrend extends HudsonJobWidget {
             
         return $html;
     }
-    
     function getPreviewCssClass() {
-        $locale = UserManager::instance()->getCurrentUser()->getLocale();
-        if ($locale == 'fr_FR') {
-            return 'widget-preview-jobtesttrend-fr-FR';
-        }
-        return 'widget-preview-jobtesttrend-en-US';
+        return parent::getPreviewCssClass('jobtesttrend');
     }
 }
 

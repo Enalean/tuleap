@@ -92,13 +92,8 @@ class hudson_Widget_JobBuildHistory extends HudsonJobWidget {
             return null;
         }
     }
-    
     function getPreviewCssClass() {
-        $locale = UserManager::instance()->getCurrentUser()->getLocale();
-        if ($locale == 'fr_FR') {
-            return 'widget-preview-jobbuildhistory-fr-FR';
-        }
-        return 'widget-preview-jobbuildhistory-en-US';
+        return parent::getPreviewCssClass('jobbuildhistory');
     }
 }
 

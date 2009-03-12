@@ -286,11 +286,7 @@ class Widget_ProjectPublicAreas extends Widget {
         return true;
     }
     function getPreviewCssClass() {
-        $locale = UserManager::instance()->getCurrentUser()->getLocale();
-        if ($locale == 'fr_FR') {
-            return 'widget-preview-project_public_areas-fr-FR';
-        }
-        return 'widget-preview-project_public_areas-en-US';
+        return parent::getPreviewCssClass('project_public_areas');
     }
 }
 ?>

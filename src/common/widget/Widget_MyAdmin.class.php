@@ -115,11 +115,7 @@ class Widget_MyAdmin extends Widget {
         return '<tr class="'. util_get_alt_row_color($i++) .'"><td>'. $text .'</td><td nowrap="nowrap" style="width:20%; background:'. $bgcolor .'; color:'. $textcolor .'; padding: 2px 8px; font-weight:bold; text-align:center;">'. $value .'</td></tr>';
     }
     function getPreviewCssClass() {
-        $locale = UserManager::instance()->getCurrentUser()->getLocale();
-        if ($locale == 'fr_FR') {
-            return 'widget-preview-my_admin-fr-FR';
-        }
-        return 'widget-preview-my_admin-en-US';
+        return parent::getPreviewCssClass('my_admin');
     }
 }
 ?>

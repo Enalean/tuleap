@@ -27,45 +27,45 @@ img.widget_lastbuilds_weather_img {
 
 
 /* Widgets preview */
-.widget-preview-jobbuildhistory-fr-FR {
+.widget-preview-jobbuildhistory-fr_FR {
     background-image:url("../images/widget_preview/fr_FR_hudson_widget_builds_history.png");
 }
-.widget-preview-jobbuildhistory-en-US {
+.widget-preview-jobbuildhistory-en_US {
     background-image:url("../images/widget_preview/en_US_hudson_widget_builds_history.png");
 }
-.widget-preview-joblastartifacts-fr-FR {
+.widget-preview-joblastartifacts-fr_FR {
     background-image:url("../images/widget_preview/fr_FR_hudson_widget_last_artifacts.png");
 }
-.widget-preview-joblastartifacts-en-US {
+.widget-preview-joblastartifacts-en_US {
     background-image:url("../images/widget_preview/en_US_hudson_widget_last_artifacts.png");
 }
-.widget-preview-joblastbuilds-fr-FR {
+.widget-preview-joblastbuilds-fr_FR {
     background-image:url("../images/widget_preview/fr_FR_hudson_widget_last_builds.png");
 }
-.widget-preview-joblastbuilds-en-US {
+.widget-preview-joblastbuilds-en_US {
     background-image:url("../images/widget_preview/en_US_hudson_widget_last_builds.png");
 }
-.widget-preview-jobtestresults-fr-FR {
+.widget-preview-jobtestresults-fr_FR {
     background-image:url("../images/widget_preview/fr_FR_hudson_widget_test_results.png");
 }
-.widget-preview-jobtestresults-en-US {
+.widget-preview-jobtestresults-en_US {
     background-image:url("../images/widget_preview/en_US_hudson_widget_test_results.png");
 }
-.widget-preview-jobtesttrend-fr-FR {
+.widget-preview-jobtesttrend-fr_FR {
     background-image:url("../images/widget_preview/fr_FR_hudson_widget_test_trend.png");
 }
-.widget-preview-jobtesttrend-en-US {
+.widget-preview-jobtesttrend-en_US {
     background-image:url("../images/widget_preview/en_US_hudson_widget_test_trend.png");
 }
-.widget-preview-myjobs-fr-FR {
+.widget-preview-myjobs-fr_FR {
     background-image:url("../images/widget_preview/fr_FR_hudson_widget_my_jobs.png");
 }
-.widget-preview-myjobs-en-US {
+.widget-preview-myjobs-en_US {
     background-image:url("../images/widget_preview/en_US_hudson_widget_my_jobs.png");
 }
-.widget-preview-jobsoverview-fr-FR {
+.widget-preview-jobsoverview-fr_FR {
     background-image:url("../images/widget_preview/fr_FR_hudson_widget_jobs_overview.png");
 }
-.widget-preview-jobsoverview-en-US {
+.widget-preview-jobsoverview-en_US {
     background-image:url("../images/widget_preview/en_US_hudson_widget_jobs_overview.png");
 }

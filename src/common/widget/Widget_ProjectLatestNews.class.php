@@ -42,11 +42,7 @@ class Widget_ProjectLatestNews extends Widget {
         return $project->usesNews();
     }
     function getPreviewCssClass() {
-        $locale = UserManager::instance()->getCurrentUser()->getLocale();
-        if ($locale == 'fr_FR') {
-            return 'widget-preview-project_latest_news-fr-FR';
-        }
-        return 'widget-preview-project_latest_news-en-US';
+        return parent::getPreviewCssClass('project_latest_news');
     }
 }
 ?>

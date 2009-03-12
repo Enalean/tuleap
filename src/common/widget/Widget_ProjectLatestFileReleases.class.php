@@ -36,11 +36,7 @@ class Widget_ProjectLatestFileReleases extends Widget {
         return 'frs';
     }
     function getPreviewCssClass() {
-        $locale = UserManager::instance()->getCurrentUser()->getLocale();
-        if ($locale == 'fr_FR') {
-            return 'widget-preview-latest_file_releases-fr-FR';
-        }
-        return 'widget-preview-latest_file_releases-en-US';
+        return parent::getPreviewCssClass('project_latest_file_releases');
     }
 }
 ?>

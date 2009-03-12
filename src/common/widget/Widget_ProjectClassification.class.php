@@ -27,11 +27,7 @@ class Widget_ProjectClassification extends Widget {
         return true;
     }
     function getPreviewCssClass() {
-        $locale = UserManager::instance()->getCurrentUser()->getLocale();
-        if ($locale == 'fr_FR') {
-            return 'widget-preview-project_classification-fr-FR';
-        }
-        return 'widget-preview-project_classification-en-US';
+        return parent::getPreviewCssClass('project_classification');
     }
 }
 ?>
