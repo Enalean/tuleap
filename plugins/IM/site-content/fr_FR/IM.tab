@@ -6,7 +6,8 @@ plugin_im	service_lbl_key	Messagerie Instantanée
 plugin_im	service_desc_key	La Messagerie Instantanée vous permet de discuter entre membres de projet.
 plugin_im	desc	La Messagerie Instantanée vous permet de discuter entre membres de projet.
 
-plugin_im	reference_chat_nature_key	Conversation de messagerie instantanée
+plugin_im	reference_chat_nature_key	Conversation
+plugin_im	reference_chat_nature_desc	Conversation de messagerie instantanée
 
 plugin_im	title	Messagerie instantanée
 plugin_im	my_roster	Ma liste de contact IM
