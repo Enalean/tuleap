@@ -59,6 +59,13 @@ class Widget_MySurveys extends Widget {
     function getContent() {
         return $this->content;
     }
+    function getPreviewCssClass() {
+        $locale = UserManager::instance()->getCurrentUser()->getLocale();
+        if ($locale == 'fr_FR') {
+            return 'widget-preview-my_surveys-fr-FR';
+        }
+        return 'widget-preview-my_surveys-en-US';
+    }
 }
 
 ?>

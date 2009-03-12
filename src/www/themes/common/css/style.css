@@ -378,6 +378,12 @@ table.release tr td img {
 .widget-preview-my_bookmarks-en-US {
     background-image:url('../images/widget-preview-my_bookmarks-en_US.png');
 }
+.widget-preview-my_surveys-fr-FR {
+    background-image:url('../images/widget-preview-my_surveys-fr_FR.png');
+}
+.widget-preview-my_surveys-en-US {
+    background-image:url('../images/widget-preview-my_surveys-en_US.png');
+}
 .widget-preview-my_admin-fr-FR {
     background-image:url('../images/widget-preview-my_admin-fr_FR.png');
 }

@@ -157,6 +157,13 @@ class Docman_Widget_MyDocman extends Widget {
     function isAjax() {
         return true;
     }
+    function getPreviewCssClass() {
+        $locale = UserManager::instance()->getCurrentUser()->getLocale();
+        if ($locale == 'fr_FR') {
+            return 'widget-preview-my_documents_under_review-fr-FR';
+        }
+        return 'widget-preview-my_documents_under_review-en-US';
+    }
 }
 
 ?>
