@@ -34,14 +34,9 @@ class permsVisitor {
         require_once('common/user/UserManager.class.php');
         $um   = UserManager::instance();
         $user = $um->getCurrentUser();
-        
-        $params['user']            = $user;
-        $params['ignore_collapse'] = true;
-        $params['ignore_perms']    = true;
-        $params['ignore_obsolete'] = false;
-        
         $itemFactory    = new Docman_ItemFactory($group_id);
-        $node           = $itemFactory->getItemTree(0, $params);
+        $rootItem       = $itemFactory->getRoot($group_id);
+        $node           = $itemFactory->getItemTree($rootItem, $user, true, true, false);
         $this->node     = $node;
         $this->group_id = $group_id;
     }
