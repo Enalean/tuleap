@@ -31,7 +31,7 @@ class Widget_MyMonitoredFp extends Widget {
         $current_user =& $um->getCurrentUser();
         if ($current_user->isRestricted()) {
             $projects = $current_user->getProjects();
-            $sql .= "AND group_id IN (". implode(',', $projects) .") ";
+            $sql .= "AND groups.group_id IN (". implode(',', $projects) .") ";
         }
         $sql .= "GROUP BY group_id ORDER BY group_id ASC LIMIT 100";
     
