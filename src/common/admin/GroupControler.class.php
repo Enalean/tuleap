@@ -143,7 +143,7 @@ class GroupControler extends Controler
         $dao            = new GroupDao(CodexDataAccess::instance());
         $this->_nbgroup = $dao->getFoundRows();
     }
-
+    
     /**
      * setOffset()
      *
@@ -207,6 +207,56 @@ class GroupControler extends Controler
     }
 
     /**
+     * Initialize filters values from input
+     * 
+     * @return void
+     */
+    function setFilterValues()
+    {
+        $request = HTTPRequest::instance();
+
+        //valid shortcut
+        $shortcutWhiteList = array('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J',
+                                   'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 
+                                   'U', 'V', 'W', 'X', 'Y', 'Z', '0', '1', '2', '3', 
+                                   '4', '5', '6', '7', '8', '9');
+        $validShortcut = new Valid_WhiteList('group_shortcut_search', $shortcutWhiteList);
+        $validShortcut->required();
+        $this->_shortcut = $request->getValidated('group_shortcut_search', $validShortcut, '');
+
+        //valid group name
+        $validGroupName = new Valid_String('group_name_search');
+        $validGroupName->required();
+        $this->_name = $request->getValidated('group_name_search', $validGroupName, '');
+        if ($this->_name) {
+            $n = explode(',', $this->_name);
+            $this->_name = $n[0];
+
+            if ( preg_match('#^.*\((.*)\)$#', $this->_name, $matches)) {
+                $this->_name = $matches[1];
+            }
+        }
+
+        //valid status
+        $statusWhiteList = array('all', 'I', 'A', 'P', 'H', 'D');
+        $validStatus = new Valid_WhiteList('group_status_search', $statusWhiteList);
+        $validStatus->required();
+        $this->_status = $request->getValidated('group_status_search', $validStatus, 'all');
+
+        //valid state
+        $stateWhiteList = array('0', 'Y', 'N');
+        $validState = new Valid_WhiteList('group_state_search', $stateWhiteList);
+        $validState->required();
+        $this->_state = $request->getValidated('group_state_search', $validState, '0');
+
+        //valid type
+        $typeWhiteList = array('0', '1', '2', '3');
+        $validType = new Valid_WhiteList('group_type_search', $typeWhiteList);
+        $validType->required();
+        $this->_type = $request->get('group_type_search', $validType, '0');
+    }
+    
+    /**
      * setMainGroupIterator()
      *
      * @return void
@@ -217,67 +267,6 @@ class GroupControler extends Controler
 
         $filter = array();
 
-        $request =& HTTPRequest::instance();
-
-        //define white lists for parameters
-        $shortcutWhiteList = array('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 
-                                   'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 
-                                   'U', 'V', 'W', 'X', 'Y', 'Z', '0', '1', '2', '3', 
-                                   '4', '5', '6', '7', '8', '9');
-
-        $statusWhiteList = array('all', 'I', 'A', 'P', 'H', 'D');
-
-        $stateWhiteList = array('0', 'Y', 'N');
-
-        $typeWhiteList = array('0', '1', '2', '3');
-
-        //valid parameters
-
-        //valid shortcut
-        $validShortcut = new Valid('group_shortcut_search');
-        $validShortcut->addRule(new Rule_WhiteList($shortcutWhiteList));
-
-        if ($request->valid($validShortcut)) {
-            $this->_shortcut = $request->get('group_shortcut_search');
-        } else {
-            $GLOBALS['Response']->addFeedback('error', 
-                                              $GLOBALS['Language']->getText('admin_group_controler', 'wrong_shortcut'));
-        }
-
-        //valid group name
-        $validGroupName = new Valid_String('group_name_search');
-
-        if ($request->valid($validGroupName)) {
-            $this->_name = $request->get('group_name_search');
-            $this->_name = explode(',', $this->_name);
-            $this->_name = $this->_name[0];
-
-            if ( preg_match('#^.*\((.*)\)$#', $this->_name, $matches)) {
-                $this->_name = $matches[1];
-            }
-        } else {
-            $GLOBALS['Response']->addFeedback('error', 
-                                              $GLOBALS['Language']->getText('admin_group_controler', 'wrong_group_name'));
-        }
-
-        //valid status
-        $validStatus = new Valid('group_status_search');
-        $validStatus->addRule(new Rule_WhiteList($statusWhiteList));
-        $validStatus->required();
-        $this->_status = $request->getValidated('group_status_search', $validStatus, 'all');
-
-        //valid state
-        $validState = new Valid('group_state_search');
-        $validState->addRule(new Rule_WhiteList($stateWhiteList));
-        $validState->required();
-        $this->_state = $request->getValidated('group_state_search', $validState, '0');
-
-        //valid type
-        $validType = new Valid('group_type_search');
-        $validType->addRule(new Rule_WhiteList($typeWhiteList));
-        $validType->required();
-        $this->_type = $request->get('group_type_search', $validType, '0');
-        
         if ($this->_shortcut != '') {
                 $filter[] = new GroupShortcutFilter($this->_shortcut);
         }
@@ -308,83 +297,7 @@ class GroupControler extends Controler
         $dao = new GroupDao(CodexDataAccess::instance());
 
         $filter = array();
-
-        $request =& HTTPRequest::instance();
-
-        //define white lists for parameters
-        $shortcutWhiteList = array('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 
-                                   'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 
-                                   'U', 'V', 'W', 'X', 'Y', 'Z', '0', '1', '2', '3', 
-                                   '4', '5', '6', '7', '8', '9');
-
-        $statusWhiteList = array('all', 'I', 'A', 'P', 'H', 'D');
-
-        $stateWhiteList = array('0', 'Y', 'N');
-
-        $typeWhiteList = array('0', '1', '2', '3');
-
-        //valid parameters
-
-        //valid shortcut
-        $validShortcut = new Valid('group_shortcut_search');
-        $validShortcut->addRule(new Rule_WhiteList($shortcutWhiteList));
-
-        if ($request->valid($validShortcut)) {
-            $this->_shortcut = $request->get('group_shortcut_search');
-        } else {
-            $GLOBALS['Response']->addFeedback('error', 
-                                              $GLOBALS['Language']->getText('admin_group_controler', 'wrong_shortcut'));
-        }
-
-        //valid group name
-        $validGroupName = new Valid_String('group_name_search');
-
-        if ($request->valid($validGroupName)) {
-            $this->_name = $request->get('group_name_search');
-            $this->_name = explode(',', $this->_name);
-            $this->_name = $this->_name[0];
-
-            if ( preg_match('#^.*\((.*)\)$#', $this->_name, $matches)) {
-                $this->_name = $matches[1];
-            }
-        } else {
-            $GLOBALS['Response']->addFeedback('error', 
-                                              $GLOBALS['Language']->getText('admin_group_controler', 'wrong_group_name'));
-        }
-
-        //valid status
-        $validStatus = new Valid('group_status_search');
-        $validStatus->addRule(new Rule_WhiteList($statusWhiteList));
-
-        if ($request->valid($validStatus)) {
-            $this->_status = $request->get('group_status_search');                
-        } else {
-            $GLOBALS['Response']->addFeedback('error', 
-                                              $GLOBALS['Language']->getText('admin_group_controler', 'wrong_status'));
-        }
-
-        //valid state
-        $validState = new Valid('group_state_search');
-        $validState->addRule(new Rule_WhiteList($stateWhiteList));
-
-        if ($request->valid($validState)) {
-            $this->_state = $request->get('group_state_search');
-        } else {
-            $GLOBALS['Response']->addFeedback('error', 
-                                              $GLOBALS['Language']->getText('admin_group_controler', 'wrong_state'));
-        }
-
-        //valid type
-        $validType = new Valid('group_type_search');
-        $validType->addRule(new Rule_WhiteList($typeWhiteList));
-
-        if ($request->valid($validType)) {
-            $this->_type = $request->get('group_type_search');
-        } else {
-            $GLOBALS['Response']->addFeedback('error', 
-                                              $GLOBALS['Language']->getText('admin_group_controler', 'wrong_type'));
-        }
-
+        
         if ($this->_shortcut != '') {
                 $filter[] = new GroupShortcutFilter($this->_shortcut);
         }
@@ -412,9 +325,9 @@ class GroupControler extends Controler
     function request() 
     {
         $this->setOffset();
-
         $this->setLimit();
-
+        $this->setFilterValues();
+        
         $this->setAdminEmailIterator();
 
         $this->setMainGroupIterator();
