@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# Copyright (c) Xerox Corporation, CodeX, Codendi 2007-2008.
+# Copyright (c) Xerox Corporation, Codendi 2007-2008.
 # This file is licensed under the GNU General Public License version 2. See the file COPYING.
 #
 # Purpose:
@@ -53,14 +53,14 @@ fi
 
 cd $BASEDIR/programmer_guide/xml/en_US
 
-if [ ! -e $BASEDIR/programmer_guide/pdf/en_US/CodeX_Programmer_Guide.pdf ]; then
+if [ ! -e $BASEDIR/programmer_guide/pdf/en_US/Codendi_Programmer_Guide.pdf ]; then
     FORCE=1;
 fi
 
 if [ $FORCE != 1 ]
 then
     # check if some need some update
-    COUNT=`find $BASEDIR/programmer_guide/xml -newer $BASEDIR/programmer_guide/pdf/en_US/CodeX_Programmer_Guide.pdf | wc -l`
+    COUNT=`find $BASEDIR/programmer_guide/xml -newer $BASEDIR/programmer_guide/pdf/en_US/Codendi_Programmer_Guide.pdf | wc -l`
     if [ $COUNT == 0 ]
     then
         # No changes in the documentation
@@ -74,10 +74,10 @@ fi
 
 mkdir -p ../../html/en_US
 
-$CMDDIR/xml2html.sh CodeX_Programmer_Guide.xml ../../html/en_US/ >/tmp/log_xml2html_$$ 2>&1
+$CMDDIR/xml2html.sh Codendi_Programmer_Guide.xml ../../html/en_US/ >/tmp/log_xml2html_$$ 2>&1
 if [ $? != 0 ]
 then
-    echo "CodeX documentation generation failed!"
+    echo "Codendi documentation generation failed!"
 	echo "See error log below:"
 	echo ""
 	cat /tmp/log_xml2html_$$
@@ -94,10 +94,10 @@ export PATH=${PATH}:${BASEDIR}/programmer_guide/cmd
 
 mkdir -p $BASEDIR/programmer_guide/pdf/en_US
 
-$CMDDIR/xml2pdf.sh CodeX_Programmer_Guide.xml $BASEDIR/programmer_guide/pdf/en_US/CodeX_Programmer_Guide_new.pdf >/tmp/log_xml2pdf_$$ 2>&1 
+$CMDDIR/xml2pdf.sh Codendi_Programmer_Guide.xml $BASEDIR/programmer_guide/pdf/en_US/Codendi_Programmer_Guide_new.pdf >/tmp/log_xml2pdf_$$ 2>&1 
 if [ $? != 0 ]
 then
-    echo "CodeX documentation generation failed!"
+    echo "Codendi documentation generation failed!"
 	echo "See error log below:"
     echo ""
     cat /tmp/log_xml2pdf_$$
@@ -111,9 +111,9 @@ fi
 export PATH=${OLD_PATH}
 
 cd $BASEDIR/programmer_guide/pdf/en_US
-if [ -f "CodeX_Programmer_Guide.pdf" ]; then
-    cp -f CodeX_Programmer_Guide.pdf CodeX_Programmer_Guide_old.pdf > /dev/null
+if [ -f "Codendi_Programmer_Guide.pdf" ]; then
+    cp -f Codendi_Programmer_Guide.pdf Codendi_Programmer_Guide_old.pdf > /dev/null
 fi
-mv CodeX_Programmer_Guide_new.pdf CodeX_Programmer_Guide.pdf
+mv Codendi_Programmer_Guide_new.pdf Codendi_Programmer_Guide.pdf
 cd "$CURRENTDIR"
 exit 0
