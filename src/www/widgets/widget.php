@@ -59,6 +59,7 @@ if ($request->valid($vOwner)) {
                             if ($widget->isAjax()) {
                                 $widget->loadContent($instance_id);
                                 echo $widget->getContent();
+                                exit();
                             }
                             break;
                         case 'iframe':
