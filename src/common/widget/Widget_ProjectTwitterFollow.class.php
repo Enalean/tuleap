@@ -32,5 +32,8 @@ class Widget_ProjectTwitterFollow extends Widget_TwitterFollow {
         $request = HTTPRequest::instance();
         $this->Widget_TwitterFollow('projecttwitterfollow', $request->get('group_id'), WidgetLayoutManager::OWNER_TYPE_USER);
     }
+    function canBeUsedByProject($project) {
+        return true;
+    }
 }
 ?>
