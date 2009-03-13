@@ -261,14 +261,14 @@ class UserSearchDisplay extends AdminSearchDisplay
         print 'Search (Login Name, Real Name):';
         print '<form name="usersearch" action="index.php" method="POST">';
 
-        print '<input type="text" class="autocompletion" name="user_name_search" id="user_name" />';
+        print '<input type="text" class="autocompletion" name="user_name_search" id="user_name" value="'.$this->_username.'"/>';
 
         print '</td>';
 
         print '<td align="center" width=33%>';
 
         print 'Search (GroupName, GroupUnixName):<br />';
-        print '<input type="text" class="autocompletion" name="user_group_search" id="user_group" />';
+        print '<input type="text" class="autocompletion" name="user_group_search" id="user_group" value="'.$this->_group.'"/>';
         print '<input type="hidden" name="user_group_search_id" id="group_id" />';
 
         print '</td>';
@@ -277,17 +277,16 @@ class UserSearchDisplay extends AdminSearchDisplay
 
         print '<b>Status <a href="javascript:help_window(\'/help/browse_tracker_query_field.php?helpid=101%7C101%7Cstatus_id\')"><b>[?]</b></a></b><br />';
 
-        print '<select name="user_status_search" id="status_id">';
-
-        print '<option value="all">All</option>';
-        print '<option value="A">'.$GLOBALS['Language']->getText('admin_userlist', 'active').'</option>';
-        print '<option value="R">'.$GLOBALS['Language']->getText('admin_userlist', 'restricted').'</option>';
-        print '<option value="V">'.$GLOBALS['Language']->getText('admin_userlist', 'validated').'</option>';
-        print '<option value="P">'.$GLOBALS['Language']->getText('admin_groupedit', 'pending').'</option>';
-        print '<option value="D">'.$GLOBALS['Language']->getText('admin_userlist', 'deleted').'</option>';
-        print '<option value="W">Validated as Restricted</option>';
-        print '<option value="S">'.$GLOBALS['Language']->getText('admin_userlist', 'suspended').'</option>';
-        print '</select>'; 
+        $vals = array('all', 'A', 'R', 'V', 'P', 'D', 'W', 'S');
+        $txts = array('All',
+                      $GLOBALS['Language']->getText('admin_userlist', 'active'),
+                      $GLOBALS['Language']->getText('admin_userlist', 'restricted'),
+                      $GLOBALS['Language']->getText('admin_userlist', 'validated'),
+                      $GLOBALS['Language']->getText('admin_groupedit', 'pending'),
+                      $GLOBALS['Language']->getText('admin_userlist', 'deleted'),
+                      'Validated as Restricted',
+                      $GLOBALS['Language']->getText('admin_userlist', 'suspended'));
+        print html_build_select_box_from_arrays($vals, $txts, 'user_status_search', $this->_status, false);
 
         print '</td>';
 

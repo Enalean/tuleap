@@ -253,7 +253,7 @@ class GroupSearchDisplay extends AdminSearchDisplay
         
         print 'Search (GroupName, GroupUnixName):';
         print '<form name="groupsearch" action="index.php" method="POST">';
-        print '<input type="text" name="group_name_search" id="group_name">';
+        print '<input type="text" name="group_name_search" id="group_name" value="'.$this->_name.'" />';
 
         print '</td>';
 
@@ -261,14 +261,14 @@ class GroupSearchDisplay extends AdminSearchDisplay
 
         print '<b>Status <a href="javascript:help_window(\'/help/browse_tracker_query_field.php?helpid=101%7C101%7Cstatus_id\')"><b>[?]</b></a></b><br />';
 
-        print '<select name="group_status_search" id="status_id">';
-        print '<option value="all">All</options>';
-        print '<option value="I">'.$GLOBALS['Language']->getText('admin_groupedit', 'incomplete').'</option>';
-        print '<option value="A">'.$GLOBALS['Language']->getText('admin_groupedit', 'active').'</option>';
-        print '<option value="P">'.$GLOBALS['Language']->getText('admin_groupedit', 'pending').'</option>';
-        print '<option value="H">'.$GLOBALS['Language']->getText('admin_groupedit', 'holding').'</option>';
-        print '<option value="D">'.$GLOBALS['Language']->getText('admin_groupedit', 'deleted').'</option>';
-        print '</select>';
+        $vals = array('all', 'I', 'A', 'P', 'H', 'D');
+        $txts = array('All',
+                      $GLOBALS['Language']->getText('admin_groupedit', 'incomplete'),
+                      $GLOBALS['Language']->getText('admin_groupedit', 'active'),
+                      $GLOBALS['Language']->getText('admin_groupedit', 'pending'),
+                      $GLOBALS['Language']->getText('admin_groupedit', 'holding'),
+                      $GLOBALS['Language']->getText('admin_groupedit', 'deleted'));
+        print html_build_select_box_from_arrays($vals, $txts, 'group_status_search', $this->_status, false);
 
         print '</td>';
 
@@ -276,23 +276,23 @@ class GroupSearchDisplay extends AdminSearchDisplay
 
         print '<b>Public? </b><br />';
 
-        print '<select name="group_state_search" id="state_id">';
-        print '<option value="any">'.$GLOBALS['Language']->getText('global', 'any').'</option>';
-        print '<option value="1">'.$GLOBALS['Language']->getText('global', 'yes').'</option>';
-        print '<option value="0">'.$GLOBALS['Language']->getText('global', 'no').'</option>';
-        print '</select>';
+        $vals = array('any', 1, 0);
+        $txts = array($GLOBALS['Language']->getText('global', 'any'),
+                      $GLOBALS['Language']->getText('global', 'yes'),
+                      $GLOBALS['Language']->getText('global', 'no'));
+        print html_build_select_box_from_arrays($vals, $txts, 'group_state_search', $this->_state, false);
 
         print '</td>';
 
         print '<td align="center" width=25%>';
         print '<b>Project type </b><br />';
-
-        print '<select name="group_type_search" id="type_id">';
-        print '<option value="any">'.$GLOBALS['Language']->getText('global', 'any').'</option>';
-        print '<option value="1">'.$GLOBALS['Language']->getText('include_common_template', 'project').'</option>';
-        print '<option value="2">'.$GLOBALS['Language']->getText('include_common_template', 'template').'</option>';
-        print '<option value="3">'.$GLOBALS['Language']->getText('include_common_template', 'test_project').'</option>';
-        print '</select>';
+        
+        $vals = array('any', 1, 0);
+        $txts = array($GLOBALS['Language']->getText('global', 'any'),
+                      $GLOBALS['Language']->getText('include_common_template', 'project'),
+                      $GLOBALS['Language']->getText('include_common_template', 'template'),
+                      $GLOBALS['Language']->getText('include_common_template', 'test_project'));
+        print html_build_select_box_from_arrays($vals, $txts, 'group_type_search', $this->_type, false);
 
         print '</td>';
 
