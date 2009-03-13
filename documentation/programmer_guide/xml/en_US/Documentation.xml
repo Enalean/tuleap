@@ -1,42 +1,45 @@
 <!--
 //
-// Copyright (c) Xerox Corporation, CodeX, Codendi 2007-2008.
+// Copyright (c) Xerox Corporation, Codendi 2007-2008.
 // This file is licensed under the GNU General Public License version 2. See the file COPYING. 
 //
-// Originally written by Marc Nazarian 2004, CodeX Team, Xerox
+// Originally written by Marc Nazarian 2004, Codendi Team, Xerox
 //
 -->
 <chapter id="Documentation">
   <title>Documentation</title>
-  <para>The CodeX documentation, including the user guide, 
+  <para>
+    The &SYS_PRODUCT_NAME; documentation, including the user guide, 
 	the installation guide, and of course this programmer guide,
 	is generated from the DocBook format. The aim of this chapter 
-	is to explain the generation process of the CodeX
+	is to explain the generation process of the &SYS_PRODUCT_NAME;
 	documentation, in order to improve it and/or make it upgrade.
   </para>
   
   <section>
     <title>Documentation with DocBook</title>
-    <para>This section is not a DocBook Tutorial. 
-	It focuses on the CodeX documentation generation process.
+    <para>
+        This section is not a DocBook Tutorial. 
+        It focuses on the &SYS_PRODUCT_NAME; documentation generation process.
     </para>
-    <para>DocBook provides a system for writing structured documents 
-	using SGML or XML. One of the big advantage of DocBook is 
-	that you can generate your documentation in various format
-	with only one source files. For instance, the CodeX User Guide 
-	is currently generated in 3 formats :
-	<itemizedlist mark="bullet" spacing="compact">
-	 <listitem><para>PDF</para></listitem>
-	 <listitem><para>multi-page HTML</para></listitem>
-	 <listitem><para>single-page HTML</para></listitem>
-	</itemizedlist>
+    <para>
+        DocBook provides a system for writing structured documents 
+        using SGML or XML. One of the big advantage of DocBook is 
+        that you can generate your documentation in various format
+        with only one source files. For instance, the &SYS_PRODUCT_NAME; User 
+        Guide is currently generated in 3 formats :
+        <itemizedlist mark="bullet" spacing="compact">
+         <listitem><para>PDF</para></listitem>
+         <listitem><para>multi-page HTML</para></listitem>
+         <listitem><para>single-page HTML</para></listitem>
+        </itemizedlist>
     </para>
 
     <para>
     	The generation is controlled by different XSL stylesheets, 
-	as shown in 
-	<xref linkend="FigureHTMLDocumentationGeneration" /> and 
-	<xref linkend="FigurePDFDocumentationGeneration" />.
+        as shown in 
+        <xref linkend="FigureHTMLDocumentationGeneration" /> and 
+        <xref linkend="FigurePDFDocumentationGeneration" />.
 
       <figure id="FigureHTMLDocumentationGeneration">
         <title>HTML generation process with DocBook</title>
@@ -63,98 +66,119 @@
 
     <section>
 	<title>Documentation directory structure</title>
-	<para>All the documentation files, including XML files, 
-	screenshots, images, slides and scripts are located
-	in the directory <literal>testserver/httpd/documentation/</literal>.
-	<footnote>
-	 <para>Except the main documentation generation script, 
-	located in <literal>testserver/utils/</literal></para>
-	</footnote>
-	All the paths given in this section are given as relative to 
-	this directory. 	In this directory, we can find one directory 
-	by available guide (installation guide, administration guide, 
-	developer guide, user guide). We will focus on the user guide, 
-	which is the more complete and complex structure. We can find 
-	almost the same structure for the other directories.
-	<itemizedlist mark="bullet" spacing="compact">
-	 <listitem>
-	  <para><literal>cmd</literal> : generation scripts.
-	     <itemizedlist mark="bullet" spacing="compact">
-	 	<listitem><para><literal>xml2html.sh</literal> : script for HTML generation</para></listitem>
-		<listitem><para><literal>xml2fo.sh</literal> and <literal>fo2pdf.sh</literal> : script for PDF generation</para></listitem>
-	     </itemizedlist>
-	     In these scripts, you can find the java call to saxon, 
-	     with the main XSL stylesheet.
-	  </para>
+	<para>
+        All the documentation files, including XML files, 
+        screenshots, images, slides and scripts are located
+        in the directory <literal>testserver/httpd/documentation/</literal>.
+        <footnote>
+        <para>Except the main documentation generation script, 
+        located in <literal>testserver/utils/</literal></para>
+        </footnote>
+        All the paths given in this section are given as relative to 
+        this directory. 	In this directory, we can find one directory 
+        by available guide (installation guide, administration guide, 
+        developer guide, user guide). We will focus on the user guide, 
+        which is the more complete and complex structure. We can find 
+        almost the same structure for the other directories.
+        <itemizedlist mark="bullet" spacing="compact">
+         <listitem>
+          <para>
+            <literal>cmd</literal> : generation scripts.
+	        <itemizedlist mark="bullet" spacing="compact">
+             <listitem><para><literal>xml2html.sh</literal> : script for HTML generation</para></listitem>
+             <listitem><para><literal>xml2fo.sh</literal> and <literal>fo2pdf.sh</literal> : script for PDF generation</para></listitem>
+            </itemizedlist>
+            In these scripts, you can find the java call to saxon, 
+            with the main XSL stylesheet.
+          </para>
          </listitem>
-	 <listitem>
-	   <para><literal>html</literal> : the html generated files, 
-		subdivided into language directory 
-		(<literal>en_US/</literal>, <literal>fr_FR/</literal>, etc...).
-	   </para>
+         <listitem>
+	      <para>
+            <literal>html</literal> : the html generated files, 
+            subdivided into language directory 
+            (<literal>en_US/</literal>, <literal>fr_FR/</literal>, etc...).
+          </para>
          </listitem>	  
-	 <listitem>
-	   <para><literal>icons</literal> : images and icons required 
-		in the documentation, like the CodeX icons, etc...
-	   </para>
+	     <listitem>
+	      <para>
+            <literal>icons</literal> : images and icons required 
+            in the documentation, like the &SYS_PRODUCT_NAME; icons, etc...
+          </para>
          </listitem>
-	 <listitem>
-	   <para><literal>pdf</literal> : the pdf generated files, 
-		subdivided into language directory 
-		(<literal>en_US/</literal>, <literal>fr_FR/</literal>, etc...).
-	   </para>
+         <listitem>
+          <para>
+            <literal>pdf</literal> : the pdf generated files, 
+            subdivided into language directory 
+            (<literal>en_US/</literal>, <literal>fr_FR/</literal>, etc...).
+	      </para>
          </listitem>	  
-	 <listitem>
-	   <para><literal>screenshots</literal> : screenshots used in 
-		the documentation. OpenOffice files used to generate 
-		the screenshots (with comments) are also stored in this 
-		directory. As the screenshots are localized, the directory 
-		is subdivided into language directory 
-		(<literal>en_US/</literal>, <literal>fr_FR/</literal>, etc...)
-	   </para>
+	     <listitem>
+	      <para>
+            <literal>screenshots</literal> : screenshots used in 
+            the documentation. OpenOffice files used to generate 
+            the screenshots (with comments) are also stored in this 
+            directory. As the screenshots are localized, the directory 
+            is subdivided into language directory 
+            (<literal>en_US/</literal>, <literal>fr_FR/</literal>, etc...)
+	      </para>
          </listitem>
-	 <listitem>
-	   <para><literal>slides</literal> : slides (and corresponding images files) 
-		used in the documentation. The directory is subdivided into language 
-		directory (<literal>en_US/</literal>, <literal>fr_FR/</literal>, etc...)
-	   </para>
+	     <listitem>
+	      <para>
+            <literal>slides</literal> : slides (and corresponding images files) 
+            used in the documentation. The directory is subdivided into language 
+            directory (<literal>en_US/</literal>, <literal>fr_FR/</literal>, etc...)
+	      </para>
          </listitem>
-	 <listitem>
-	   <para><literal>xml</literal> : documentation source files (in DocBook format). 
-		The directory is subdivided into language directory 
-		(<literal>en_US/</literal>, <literal>fr_FR/</literal>, etc...)
-	   </para>
-	   <para>In a language directory, the main file, called 
-		<literal>CodeX_User_Guide.xml</literal>, include all the chapters 
-		to make the final book.
-           </para>
-	   <para>In the xml root directory, the non-localized files 
-		<literal>ParametersDefault.dtd</literal> and 
-		<literal>ParametersDefault.dtd</literal> provide respectively 
-		site specific information and local customization.
-           </para>
+	     <listitem>
+	      <para>
+            <literal>xml</literal> : documentation source files (in DocBook format). 
+            The directory is subdivided into language directory 
+            (<literal>en_US/</literal>, <literal>fr_FR/</literal>, etc...)
+	      </para>
+	      <para>
+            In a language directory, the main file, called 
+            <literal>Codendi_User_Guide.xml</literal>, include all the chapters 
+            to make the final book.
+          </para>
+          <para>
+            In the xml root directory, the non-localized files 
+            <literal>ParametersDefault.dtd</literal> and 
+            <literal>ParametersDefault.dtd</literal> provide respectively 
+            site specific information and local customization.
+          </para>
          </listitem>
-	 <listitem>
-	   <para><literal>xsl</literal> : XSL files to generate the documentation 
-		into many formats.</para>
-		<itemizedlist mark="bullet" spacing="compact">
-	 	 <listitem>
-		   <para><literal>common</literal> : contains common files for any generated format.</para>
-		     <itemizedlist mark="bullet" spacing="compact">
-		      <listitem><para><literal>l10n.xml</literal> : available languages 
-				declaration. Update this file to add a language.</para>
-		      </listitem>
-		      <listitem><para><literal>&lt;language&gt;.xml</literal> : 
-				Generated text (like chapter, section, bibliography keywords) 
-				translation. If you want to add a new entry, don't forget to 
-				add it in every <literal>&lt;language&gt;.xml</literal> 
-				available file.</para>
-		      </listitem>
-		     </itemizedlist>
+	     <listitem>
+	      <para>
+            <literal>xsl</literal> : XSL files to generate the documentation 
+            into many formats.</para>
+            <itemizedlist mark="bullet" spacing="compact">
+            <listitem>
+            <para>
+                <literal>common</literal> : contains common files for any generated format.
+            </para>
+		    <itemizedlist mark="bullet" spacing="compact">
+		     <listitem>
+                <para>
+                    <literal>l10n.xml</literal> : available languages 
+                    declaration. Update this file to add a language.
+                 </para>
+		     </listitem>
+		     <listitem>
+                <para>
+                    <literal>&lt;language&gt;.xml</literal> : 
+                    Generated text (like chapter, section, bibliography keywords) 
+                    translation. If you want to add a new entry, don't forget to 
+                    add it in every <literal>&lt;language&gt;.xml</literal> 
+                    available file.
+                 </para>
+		     </listitem>
+		    </itemizedlist>
 		 </listitem>
 		 <listitem>
-		  <para><literal>fo</literal> : contains XSL stylesheet to convert XML into FO.</para>
-		   <itemizedlist mark="bullet" spacing="compact">
+		  <para>
+            <literal>fo</literal> : contains XSL stylesheet to convert XML into FO.
+          </para>
+		  <itemizedlist mark="bullet" spacing="compact">
 		    <listitem><para><literal>docbook_&lt;language&gt;.xsl</literal> : 
 				main XSL stylesheet. Do the imports of all the others XSL files.
 				Define the language for the generated text. Must be one of 
@@ -223,7 +247,7 @@
 	(like Table of content, Figure, etc...).
 	Keep the key and translate all values. A lot of languages are already 
 	available in the original DocBook distribution. 	Just be aware of some 
-	added key for the CodeX needs (like Authors, author, Description, etc...).
+	added key for the &SYS_PRODUCT_NAME; needs (like Authors, author, Description, etc...).
 	</para>
       </listitem>
 
@@ -268,6 +292,6 @@
 
 <!--
 Local Variables:
-sgml-parent-document: ("CodeX_Programmer_Guide.xml" "book" "chapter")
+sgml-parent-document: ("Codendi_Programmer_Guide.xml" "book" "chapter")
 End:
 -->

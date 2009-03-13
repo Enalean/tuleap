@@ -1,9 +1,9 @@
 <!--
 //
-// Copyright (c) Xerox Corporation, CodeX, Codendi 2007-2008.
+// Copyright (c) Xerox Corporation, Codendi 2007-2008.
 // This file is licensed under the GNU General Public License version 2. See the file COPYING. 
 //
-// Originally written by Nicolas Guerin 2004, CodeX Team, Xerox
+// Originally written by Nicolas Guerin 2004, Codendi Team, Xerox
 //
 -->
   <bookinfo>
@@ -14,7 +14,7 @@
         <surname>Guerin</surname>
 
         <affiliation>
-          <orgname>Xerox/CodeX/Codendi</orgname>
+          <orgname>Xerox/Codendi</orgname>
         </affiliation>
       </author>
     </authorgroup>
@@ -22,7 +22,7 @@
     <copyright>
       <year>2004</year>
 
-      <holder>Xerox Corporation, CodeX, Codendi.</holder>
+      <holder>Xerox Corporation, Codendi.</holder>
     </copyright>
 
     <legalnotice>
@@ -68,7 +68,7 @@
   </bookinfo>
 <!--
 Local Variables:
-sgml-parent-document: ("CodeX_Programmer_Guide.xml" "book" "chapter")
+sgml-parent-document: ("Codendi_Programmer_Guide.xml" "book" "chapter")
 End:
 -->
 
