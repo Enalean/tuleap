@@ -31,8 +31,7 @@ $vGroupId = new Valid_UInt('group_id');
 
 if($vGroupId->validate($group_id)){
     $group_id = $request->get('group_id');
-    require_once(dirname(__FILE__).'/../../docman/include/Docman_PermissionsManager.class.php');
-	if (!Docman_PermissionsManager::instance($group_id)->currentUserCanAdmin()) {
+	if (!UserManager::instance()->getCurrentUser()->isMember($group_id, 'A')) {
         $feedback .= $Language->getText('plugin_eac','error_not_admin');
         exit_not_logged_in();
     }
