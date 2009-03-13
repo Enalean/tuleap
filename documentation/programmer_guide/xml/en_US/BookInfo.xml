@@ -14,7 +14,7 @@
         <surname>Guerin</surname>
 
         <affiliation>
-          <orgname>Xerox/Codendi</orgname>
+          <orgname>&SYS_ORG_NAME;/&SYS_PRODUCT_NAME;</orgname>
         </affiliation>
       </author>
     </authorgroup>
@@ -22,7 +22,7 @@
     <copyright>
       <year>2004</year>
 
-      <holder>Xerox Corporation, Codendi.</holder>
+      <holder>Xerox Corporation, &SYS_PRODUCT_NAME;.</holder>
     </copyright>
 
     <legalnotice>
@@ -71,4 +71,3 @@ Local Variables:
 sgml-parent-document: ("Codendi_Programmer_Guide.xml" "book" "chapter")
 End:
 -->
-

@@ -39,7 +39,7 @@ avoid duplications -->
 ]>
 
 <book>
-  <title>CodeX Programmer Guide</title>
+  <title>&SYS_PRODUCT_NAME; Programmer Guide</title>
 
   <subtitle>&#34;Breaking the Barriers to Source Code Sharing inside &SYS_ORG_NAME;&#34;</subtitle>
 
