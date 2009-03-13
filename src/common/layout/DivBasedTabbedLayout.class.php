@@ -64,40 +64,46 @@ NB: Original OsdnNavBar has been removed from first cell. <td align="center">'.$
         $output = '
         <table cellpadding="0" cellspacing="0" border="0" width="100%">
             <tr>
-		<td class="header_logo"><a  href="/"><img src="'.$this->imgroot.'organization_logo.png" /></a>
-</td>
-
-                <td class="header_actions">
-                    <ul>';
-        if (user_isloggedin()) {
-            
-            $output .= '<li class="header_actions_nolink">'.$GLOBALS['Language']->getText('include_menu','logged_in').': '.user_getname().'</li>';
-            $output .= '<li><a href="/account/logout.php">'.$GLOBALS['Language']->getText('include_menu','logout').'</a></li>';
-            $output .= '<li><a href="/project/register.php">'.$GLOBALS['Language']->getText('include_menu','register_new_proj').'</a></li>';
-                                    
-            if (!HTTPRequest::instance()->isPost()) {
-                $bookmark_title = urlencode( str_replace($GLOBALS['sys_name'].': ', '', $params['title']));
-                $output .= '<li class="bookmarkpage"><a href="/my/bookmark_add.php?bookmark_url='.urlencode($_SERVER['REQUEST_URI']).'&bookmark_title='.$bookmark_title.'">'.$GLOBALS['Language']->getText('include_menu','bookmark_this_page').'</a></li>';
-            }
-        } else {
-            $output .= '<li class="header_actions_nolink highlight">'.$GLOBALS['Language']->getText('include_menu','not_logged_in').'</li>';
-            $output .= '<li><a href="/account/login.php">'.$GLOBALS['Language']->getText('include_menu','login').'</a></li>';
-            $em =& EventManager::instance();
-            $display_new_user = true;
-            $params = array('allow' => &$display_new_user);
-            $em->processEvent('display_newaccount', $params);
-            if ($display_new_user) {
-                $output .= '<li><a href="/account/register.php">'.$GLOBALS['Language']->getText('include_menu','new_user').'</a></li>';
-            }
-        
-        }
-        $output .= '</ul>
-                    <div class="header_searchbox">'.$this->getSearchBox().'</div>
+                <td class="header_logo">'. $this->getBodyHeaderLogo() .'</td>
+                <td class="header_actions">';
+        $output .= $this->getBodyHeaderActions($params);
+        $output .= '<div class="header_searchbox">'.$this->getSearchBox().'</div>
                 </td>
             </tr>
         </table>';
         return $output;
     }
+    function getBodyHeaderLogo() {
+        return '<a  href="/"><img src="'.$this->imgroot.'organization_logo.png" /></a>';
+    }
+    function getBodyHeaderActions($params) {
+        $html = '';
+        $html .= '<ul>';
+        if (user_isloggedin()) {
+            
+            $html .= '<li class="header_actions_nolink">'.$GLOBALS['Language']->getText('include_menu','logged_in').': '.user_getname().'</li>';
+            $html .= '<li><a href="/account/logout.php">'.$GLOBALS['Language']->getText('include_menu','logout').'</a></li>';
+            $html .= '<li><a href="/project/register.php">'.$GLOBALS['Language']->getText('include_menu','register_new_proj').'</a></li>';
+                                    
+            if (!HTTPRequest::instance()->isPost()) {
+                $bookmark_title = urlencode( str_replace($GLOBALS['sys_name'].': ', '', $params['title']));
+                $html .= '<li class="bookmarkpage"><a href="/my/bookmark_add.php?bookmark_url='.urlencode($_SERVER['REQUEST_URI']).'&bookmark_title='.$bookmark_title.'">'.$GLOBALS['Language']->getText('include_menu','bookmark_this_page').'</a></li>';
+            }
+        } else {
+            $html .= '<li class="header_actions_nolink highlight">'.$GLOBALS['Language']->getText('include_menu','not_logged_in').'</li>';
+            $html .= '<li><a href="/account/login.php">'.$GLOBALS['Language']->getText('include_menu','login').'</a></li>';
+            $em =& EventManager::instance();
+            $display_new_user = true;
+            $em->processEvent('display_newaccount', array('allow' => &$display_new_user));
+            if ($display_new_user) {
+                $html .= '<li><a href="/account/register.php">'.$GLOBALS['Language']->getText('include_menu','new_user').'</a></li>';
+            }
+        
+        }
+        $html .= '</ul>';
+        return $html;
+    }
+    
 	/**
 	 *	header() - "steel theme" top of page
 	 *
@@ -110,6 +116,7 @@ NB: Original OsdnNavBar has been removed from first cell. <td align="center">'.$
         ?>
 
 <body>
+<div id="wrapper">
 <div id="header"><?php echo $this->getBodyHeader($params); ?></div>
 
 <div id="navigation">
@@ -133,7 +140,7 @@ echo $this->outerTabs($params);
 	?>        
   </div> <!-- class="contenttable"> -->      
 </div> <!-- class="main_body_row"> -->
-
+</div> <!-- wrapper -->
     <?php echo $this->getCustomFooter(); ?>
     
 <?php
