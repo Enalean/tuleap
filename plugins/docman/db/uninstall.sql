@@ -17,3 +17,6 @@ DELETE FROM permissions WHERE permission_type LIKE 'PLUGIN_DOCMAN_%';
 
 DELETE FROM user_preferences WHERE preference_name LIKE 'plugin_docman%';
 
+DROP TABLE IF EXISTS plugin_docman_widget_embedded;
+
+DELETE FROM layouts_contents WHERE name LIKE 'plugin_docman%' OR name = 'mydocman';

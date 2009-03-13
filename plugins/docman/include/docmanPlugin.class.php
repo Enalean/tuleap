@@ -218,15 +218,31 @@ class DocmanPlugin extends Plugin {
     }
 
     function myPageBox($params) {
-        if ($params['widget'] == 'mydocman') {
-            require_once('Docman_Widget_MyDocman.class.php');
-            $params['instance'] = new Docman_Widget_MyDocman($this->getPluginPath());
+        switch ($params['widget']) {
+            case 'mydocman':
+                require_once('Docman_Widget_MyDocman.class.php');
+                $params['instance'] = new Docman_Widget_MyDocman($this->getPluginPath());
+                break;
+            case 'plugin_docman_my_embedded':
+                require_once('Docman_Widget_MyEmbedded.class.php');
+                $params['instance'] = new Docman_Widget_MyEmbedded($this->getPluginPath());
+                break;
+            case 'plugin_docman_project_embedded':
+                require_once('Docman_Widget_ProjectEmbedded.class.php');
+                $params['instance'] = new Docman_Widget_ProjectEmbedded($this->getPluginPath());
+                break;
+            default:
+                break;
         }
     }
     function widgets($params) {
         require_once('common/widget/WidgetLayoutManager.class.php');
         if ($params['owner_type'] == WidgetLayoutManager::OWNER_TYPE_USER) {
             $params['codex_widgets'][] = 'mydocman';
+            $params['codex_widgets'][] = 'plugin_docman_my_embedded';
+        }
+        if ($params['owner_type'] == WidgetLayoutManager::OWNER_TYPE_GROUP) {
+            $params['codex_widgets'][] = 'plugin_docman_project_embedded';
         }
     }
     function default_widgets_for_new_owner($params) {

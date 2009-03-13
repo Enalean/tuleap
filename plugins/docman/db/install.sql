@@ -305,6 +305,15 @@ CREATE TABLE plugin_docman_report_filter (
   INDEX report_label_idx(report_id, label(10))
 );
 
+DROP TABLE IF EXISTS plugin_docman_widget_embedded;
+CREATE TABLE plugin_docman_widget_embedded(
+    id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    owner_id int(11) unsigned NOT NULL,
+    owner_type varchar(1) NOT NULL,
+    title varchar(255) NOT NULL,
+    item_id INT(11) UNSIGNED NOT NULL,
+    KEY (owner_id, owner_type)
+);
 
 -- Enable service for project 1 and 100
 INSERT INTO service(group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES ( 100 , 'plugin_docman:service_lbl_key' , 'plugin_docman:service_desc_key' , 'docman', '/plugins/docman/?group_id=$group_id', 1 , 1 , 'system',  95 );
