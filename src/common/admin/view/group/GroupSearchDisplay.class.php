@@ -276,23 +276,21 @@ class GroupSearchDisplay extends AdminSearchDisplay
 
         print '<b>Public? </b><br />';
 
-        $vals = array('any', 1, 0);
-        $txts = array($GLOBALS['Language']->getText('global', 'any'),
-                      $GLOBALS['Language']->getText('global', 'yes'),
-                      $GLOBALS['Language']->getText('global', 'no'));
-        print html_build_select_box_from_arrays($vals, $txts, 'group_state_search', $this->_state, false);
+        $vals = array('N', 'Y');
+        $txts = array($GLOBALS['Language']->getText('global', 'no'),
+                      $GLOBALS['Language']->getText('global', 'yes'));
+        print html_build_select_box_from_arrays($vals, $txts, 'group_state_search', $this->_state, false, '', true);
 
         print '</td>';
 
         print '<td align="center" width=25%>';
         print '<b>Project type </b><br />';
         
-        $vals = array('any', 1, 0);
-        $txts = array($GLOBALS['Language']->getText('global', 'any'),
-                      $GLOBALS['Language']->getText('include_common_template', 'project'),
+        $vals = array('1', '2', '3');
+        $txts = array($GLOBALS['Language']->getText('include_common_template', 'project'),
                       $GLOBALS['Language']->getText('include_common_template', 'template'),
                       $GLOBALS['Language']->getText('include_common_template', 'test_project'));
-        print html_build_select_box_from_arrays($vals, $txts, 'group_type_search', $this->_type, false);
+        print html_build_select_box_from_arrays($vals, $txts, 'group_type_search', $this->_type, false, '', true);
 
         print '</td>';
 

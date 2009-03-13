@@ -362,12 +362,8 @@ class UserControler extends Controler
         //valid status
         $validStatus = new Valid('user_status_search');                
         $validStatus->addRule(new Rule_WhiteList($statusWhiteList));
-
-        if ($request->valid($validStatus)) {
-            $this->_status = $request->get('user_status_search');                
-        } else {
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('admin_user_controler', 'wrong_status'));
-        }
+        $validStatus->required();
+        $this->_status = $request->getValidated('user_status_search', $validStatus, 'all');
 
         if ($this->_shortcut != '') {
             $filter[] = new UserShortcutFilter($this->_shortcut);

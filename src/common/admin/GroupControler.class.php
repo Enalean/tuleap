@@ -227,9 +227,9 @@ class GroupControler extends Controler
 
         $statusWhiteList = array('all', 'I', 'A', 'P', 'H', 'D');
 
-        $stateWhiteList = array('any', '0', '1');
+        $stateWhiteList = array('0', 'Y', 'N');
 
-        $typeWhiteList = array('any', '1', '2', '3');
+        $typeWhiteList = array('0', '1', '2', '3');
 
         //valid parameters
 
@@ -263,36 +263,21 @@ class GroupControler extends Controler
         //valid status
         $validStatus = new Valid('group_status_search');
         $validStatus->addRule(new Rule_WhiteList($statusWhiteList));
-
-        if ($request->valid($validStatus)) {
-            $this->_status = $request->get('group_status_search');                
-        } else {
-            $GLOBALS['Response']->addFeedback('error', 
-                                              $GLOBALS['Language']->getText('admin_group_controler', 'wrong_status'));
-        }
+        $validStatus->required();
+        $this->_status = $request->getValidated('group_status_search', $validStatus, 'all');
 
         //valid state
         $validState = new Valid('group_state_search');
         $validState->addRule(new Rule_WhiteList($stateWhiteList));
-
-        if ($request->valid($validState)) {
-            $this->_state = $request->get('group_state_search');
-        } else {
-            $GLOBALS['Response']->addFeedback('error', 
-                                              $GLOBALS['Language']->getText('admin_group_controler', 'wrong_state'));
-        }
+        $validState->required();
+        $this->_state = $request->getValidated('group_state_search', $validState, '0');
 
         //valid type
         $validType = new Valid('group_type_search');
         $validType->addRule(new Rule_WhiteList($typeWhiteList));
-
-        if ($request->valid($validType)) {
-            $this->_type = $request->get('group_type_search');
-        } else {
-            $GLOBALS['Response']->addFeedback('error', 
-                                              $GLOBALS['Language']->getText('admin_group_controler', 'wrong_type'));
-        }
-
+        $validType->required();
+        $this->_type = $request->get('group_type_search', $validType, '0');
+        
         if ($this->_shortcut != '') {
                 $filter[] = new GroupShortcutFilter($this->_shortcut);
         }
@@ -302,10 +287,10 @@ class GroupControler extends Controler
         if ($this->_status != '' && $this->_status != 'all') {
             $filter[] = new GroupStatusFilter($this->_status);
         }
-        if ($this->_state != '' && $this->_state != 'any') {
+        if ($this->_state != '' && $this->_state != '0') {
             $filter[] = new GroupStateFilter($this->_state);
         }
-        if ($this->_type != '' && $this->_type != 'any') {
+        if ($this->_type != '' && $this->_type != '0') {
             $filter[] = new GroupTypeFilter($this->_type);
         }
         $this->_mainGroupIterator = $dao->searchGroupByFilter($filter, 
@@ -334,9 +319,9 @@ class GroupControler extends Controler
 
         $statusWhiteList = array('all', 'I', 'A', 'P', 'H', 'D');
 
-        $stateWhiteList = array('any', '0', '1');
+        $stateWhiteList = array('0', 'Y', 'N');
 
-        $typeWhiteList = array('any', '1', '2', '3');
+        $typeWhiteList = array('0', '1', '2', '3');
 
         //valid parameters
 
@@ -409,10 +394,10 @@ class GroupControler extends Controler
         if ($this->_status != '' && $this->_status != 'all') {
             $filter[] = new GroupStatusFilter($this->_status);
         }
-        if ($this->_state != '' && $this->_state != 'any') {
+        if ($this->_state != '' && $this->_state != '0') {
             $filter[] = new GroupStateFilter($this->_state);
         }
-        if ($this->_type != '' && $this->_type != 'any') {
+        if ($this->_type != '' && $this->_type != '0') {
             $filter[] = new GroupTypeFilter($this->_type);
         }
 

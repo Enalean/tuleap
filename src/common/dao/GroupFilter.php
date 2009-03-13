@@ -96,8 +96,13 @@ class GroupStateFilter implements IStatement
      */
     function __construct($state)
     {
-        $cleanState   = db_escape_int($state);
-        $this->_state = $cleanState;
+        switch ($state) {
+            case 'Y':
+                $this->_state = 1;
+                break;
+            case 'N':
+                $this->_state = 0;
+        }
     }
 
     /**
