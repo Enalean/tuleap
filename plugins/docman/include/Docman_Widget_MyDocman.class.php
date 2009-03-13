@@ -157,6 +157,9 @@ class Docman_Widget_MyDocman extends Widget {
     function isAjax() {
         return true;
     }
+    function getCategory() {
+        return 'plugin_docman';
+    }
     function getPreviewCssClass() {
         return parent::getPreviewCssClass('my_documents_under_review');
     }

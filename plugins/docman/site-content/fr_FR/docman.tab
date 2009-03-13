@@ -671,3 +671,5 @@ plugin_docman	docman_wiki_other_location	Autre chemin:
 plugin_docman	docman_wiki_other_locations	Autres chemins:
 plugin_docman	docman_wiki_breadcrumbs_locations	Chemins:
 plugin_docman	docman_wiki_perms_label	Permissions controllées par le gestionnaire de documents
+
+widget_categ_label	plugin_docman	Gestionnaire de documents
