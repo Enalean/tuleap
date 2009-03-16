@@ -14,7 +14,7 @@ class IM_Widget_MyRoster extends Widget {
     var $plugin;
     var $request;
     function IM_Widget_MyRoster($plugin) {
-        $this->Widget('myroster');
+        $this->Widget('plugin_im_myroster');
         $this->plugin = $plugin;
         $this->request =& HTTPRequest::instance();
     }

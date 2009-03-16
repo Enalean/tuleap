@@ -613,7 +613,7 @@ class IMPlugin extends Plugin {
     }
 
         function myPageBox($params) {
-            if ($params['widget'] == 'myroster') {
+            if ($params['widget'] == 'plugin_im_myroster') {
                 require_once('IM_Widget_MyRoster.class.php');
                 $params['instance'] = new IM_Widget_MyRoster($this);
             }
@@ -621,7 +621,7 @@ class IMPlugin extends Plugin {
         function widgets($params) {
             require_once('common/widget/WidgetLayoutManager.class.php');
             if ($params['owner_type'] == WidgetLayoutManager::OWNER_TYPE_USER) {
-                $params['codex_widgets'][] = 'myroster';
+                $params['codex_widgets'][] = 'plugin_im_myroster';
             }
         }
 
