@@ -1,9 +1,9 @@
 <!--
 //
-// Copyright (c) Xerox Corporation, CodeX, Codendi 2007-2008.
+// Copyright (c) Xerox Corporation, Codendi 2007-2008.
 // This file is licensed under the GNU General Public License version 2. See the file COPYING.
 //
-// Originally written by Marc Nazarian 2006, CodeX Team, Xerox
+// Originally written by Marc Nazarian 2006, Codendi Team, Xerox
 //
 -->
   <bookinfo>
@@ -22,7 +22,7 @@
     <copyright>
       <year>2006</year>
 
-      <holder>Xerox Corporation, CodeX, Codendi.</holder>
+      <holder>Xerox Corporation, &SYS_PRODUCT_NAME;.</holder>
     </copyright>
 
     <legalnotice>

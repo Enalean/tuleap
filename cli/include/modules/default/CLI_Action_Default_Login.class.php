@@ -1,15 +1,15 @@
 <?php
 /**
-* Copyright (c) Xerox Corporation, CodeX Team, 2001-2007. All rights reserved
+* Copyright (c) Xerox Corporation, Codendi Team, 2001-2007. All rights reserved
 *
 * 
 */
 
-require_once(CODEX_CLI_DIR.'/CLI_Action.class.php');
+require_once(CODENDI_CLI_DIR.'/CLI_Action.class.php');
 
 class CLI_Action_Default_Login extends CLI_Action {
     function CLI_Action_Default_Login() {
-        $this->CLI_Action('login', 'Log into CodeX server');
+        $this->CLI_Action('login', 'Log into Codendi server');
         $this->addParam(array(
             'name'           => 'loginname',
             'description'    => '--username=<username> or -U <username>    Specify the user name',
@@ -75,7 +75,7 @@ class CLI_Action_Default_Login extends CLI_Action {
             } else {
                 $protocol = "http";
             }
-            $GLOBALS['soap']->setWSDL($protocol."://".$loaded_params['others']['host']."/soap/codex.wsdl.php?wsdl");
+            $GLOBALS['soap']->setWSDL($protocol."://".$loaded_params['others']['host']."/soap/codendi.wsdl.php?wsdl");
         }
     	if (isset($loaded_params['others']['proxy'])) {
     		$proxy = $loaded_params['others']['proxy'];

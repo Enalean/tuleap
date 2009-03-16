@@ -5,11 +5,9 @@
 // contained in GForge.
 // Copyright 2005 GForge, LLC
 // http://gforge.org/
-// CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
 //
-// 
 //
-// Written by Marc Nazarian 2006, CodeX Team, Xerox
+// Written by Marc Nazarian 2006, Codendi Team, Xerox
 //
 -->
 <chapter id="Modules">
@@ -27,7 +25,7 @@
                     <listitem>
                         <para>--username: Spécifie le nom d'utilisateur avec lequel vous allez travailler. 
                         Le nom d'utilisateur est le même que celui que vous utilisez habituellement sur
-                        la page de connexion du site CodeX.
+                        la page de connexion du site &SYS_PRODUCT_NAME;.
                         </para>
                     </listitem>
                     <listitem>
@@ -36,7 +34,7 @@
                         </para>
                     </listitem>
                     <listitem>
-                        <para>--host: Spécifie le serveur CodeX (optionnel).
+                        <para>--host: Spécifie le serveur &SYS_PRODUCT_NAME; (optionnel).
                         </para>
                     </listitem>
                     <listitem>
@@ -54,10 +52,10 @@
                     <example>
                         <title>commande de login</title>
                         <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[mnazaria@linux codex cli ]$ ./codex.php login --username=john --password=johnpass --project=myproject
+[mnazaria@linux codendi cli ]$ ./codendi.php login --username=john --password=johnpass --project=myproject
 Logged in.
 (OR)
-[mnazaria@linux codex cli ]$ ./codex.php login --username=marc --project=myproject
+[mnazaria@linux codendi cli ]$ ./codendi.php login --username=marc --project=myproject
 Password:
 Logged in.
                         </programlisting>
@@ -73,7 +71,7 @@ Logged in.
                     <example>
                         <title>commande de logout</title>
                         <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[mnazaria@linux codex cli ]$ ./codex.php logout
+[mnazaria@linux codendi cli ]$ ./codendi.php logout
 Session terminated.
                         </programlisting>
                     </example>
@@ -106,7 +104,7 @@ Session terminated.
                     <example>
                         <title>commande trackerlist</title>
                         <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[mnazaria@linux codex cli ]$ ./codex.php tracker trackerlist --project=guineapig
+[mnazaria@linux codendi cli ]$ ./codendi.php tracker trackerlist --project=guineapig
 Array
 (
     [0] => Array
@@ -160,7 +158,7 @@ Array
                     <example>
                         <title>commande trackers</title>
                         <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[mnazaria@linux codex cli ]$ ./codex.php tracker trackers --project=guineapig
+[mnazaria@linux codendi cli ]$ ./codendi.php tracker trackers --project=guineapig
 Array
 (
     [0] => Array
@@ -199,7 +197,7 @@ Array
                     <example>
                         <title>commande tracker</title>
                         <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[mnazaria@linux codex cli ]$ ./codex.php tracker tracker --project=guineapig --tracker_id=159
+[mnazaria@linux codendi cli ]$ ./codendi.php tracker tracker --project=guineapig --tracker_id=159
 Array
 (
     [0] => Array
@@ -249,7 +247,7 @@ Array
                 <example>
                     <title>commande list</title>
                     <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[mnazaria@linux codex cli ]$ ./codex.php tracker list --tracker_id=113 --status=0 --assigned_to=142
+[mnazaria@linux codendi cli ]$ ./codendi.php tracker list --tracker_id=113 --status=0 --assigned_to=142
 Array
 (
     [0] => Array
@@ -328,7 +326,7 @@ Array
                 <example>
                     <title>commande reportlist</title>
                     <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[mnazaria@linux codex cli ]$ ./codex.php tracker reportlist --tracker_id=113 --status=0 --assigned_to=142 --sort="artifact_id DESC, open_date ASC"
+[mnazaria@linux codendi cli ]$ ./codendi.php tracker reportlist --tracker_id=113 --status=0 --assigned_to=142 --sort="artifact_id DESC, open_date ASC"
 Array
 (
     [total_artifacts_number] => 12
@@ -415,7 +413,7 @@ Array
                 <example>
                     <title>commande reports</title>
                     <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[mnazaria@linux codex cli ]$ ./codex.php tracker reports --tracker_id=371
+[mnazaria@linux codendi cli ]$ ./codendi.php tracker reports --tracker_id=371
 Array
 (
     [0] => Array(
@@ -488,7 +486,7 @@ Array
                 <example>
                     <title>commande add</title>
                     <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[mnazaria@linux codex cli ]$ ./codex.php tracker add --tracker_id=371 --summary="Back button is not working" --details="When I read my email and I press the back button, a blank page appears" --severity=4 --assigned_to=142
+[mnazaria@linux codendi cli ]$ ./codendi.php tracker add --tracker_id=371 --summary="Back button is not working" --details="When I read my email and I press the back button, a blank page appears" --severity=4 --assigned_to=142
 Confirm you want to add a new tracker with the following information:
 group_id: 160
 group_artifact_id: 371
@@ -545,7 +543,7 @@ Is this information correct? (y/n): y
                 <example>
                     <title>commande update</title>
                     <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[mnazaria@linux codex cli ]$ ./codex.php tracker update --tracker_id=371 --id=7374 --severity=6 --extra_field_notice_textfield="Increased priority"
+[mnazaria@linux codendi cli ]$ ./codendi.php tracker update --tracker_id=371 --id=7374 --severity=6 --extra_field_notice_textfield="Increased priority"
 Confirm you want to update the tracker with the following information:
 group_id: 160
 group_artifact_id: 371
@@ -581,7 +579,7 @@ Is this information correct? (y/n): y
                 <example>
                     <title>commande comments</title>
                     <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[mnazaria@linux codex cli ]$ ./codex.php tracker comments --tracker_id=371 --id=7374
+[mnazaria@linux codendi cli ]$ ./codendi.php tracker comments --tracker_id=371 --id=7374
 Array
 (
     [0] => Array
@@ -643,7 +641,7 @@ Array
                 <example>
                     <title>commande addComment</title>
                     <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[mnazaria@linux codex cli ]$ ./codex.php tracker addComment --tracker_id=371 --id=7374 --message="I agree with you"
+[mnazaria@linux codendi cli ]$ ./codendi.php tracker addComment --tracker_id=371 --id=7374 --message="I agree with you"
                     </programlisting>
                 </example>
                 </para>
@@ -678,7 +676,7 @@ Array
                 <example>
                     <title>commande updateComment</title>
                     <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[mnazaria@linux codex cli ]$ ./codex.php tracker updateComment --tracker_id=371 --artifact_id=7374 --comment_id=5478 --comment="This comment will replace the former one"
+[mnazaria@linux codendi cli ]$ ./codendi.php tracker updateComment --tracker_id=371 --artifact_id=7374 --comment_id=5478 --comment="This comment will replace the former one"
                     </programlisting>
                 </example>
                 </para>
@@ -710,7 +708,7 @@ Array
                 <example>
                     <title>commande deleteComment</title>
                     <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[mnazaria@linux codex cli ]$ ./codex.php tracker deleteComment --tracker_id=371 --artifact_id=7374 --comment_id=5478
+[mnazaria@linux codendi cli ]$ ./codendi.php tracker deleteComment --tracker_id=371 --artifact_id=7374 --comment_id=5478
                     </programlisting>
                 </example>
                 </para>
@@ -738,7 +736,7 @@ Array
                 <example>
                     <title>commande CCList</title>
                     <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[mnazaria@linux codex cli ]$ ./codex.php tracker CCList --tracker_id=371 --id=7374
+[mnazaria@linux codendi cli ]$ ./codendi.php tracker CCList --tracker_id=371 --id=7374
 Array
 (
     [0] => Array
@@ -785,7 +783,7 @@ Array
                 <example>
                     <title>commande addCC</title>
                     <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[mnazaria@linux codex cli ]$ ./codex.php tracker addCC --tracker_id=371 --id=7374 --cc_list="marc.nazarian@xrce.xerox.com, mnazaria, bsmith, james.brown@server.net"
+[mnazaria@linux codendi cli ]$ ./codendi.php tracker addCC --tracker_id=371 --id=7374 --cc_list="marc.nazarian@xrce.xerox.com, mnazaria, bsmith, james.brown@server.net"
                     </programlisting>
                 </example>
                 </para>
@@ -816,7 +814,7 @@ Array
                 <example>
                     <title>commande deleteCC </title>
                     <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[mnazaria@linux codex cli ]$ ./codex.php tracker deleteCC --tracker_id=371 --id=7374 --cc_id=33
+[mnazaria@linux codendi cli ]$ ./codendi.php tracker deleteCC --tracker_id=371 --id=7374 --cc_id=33
                     </programlisting>
                 </example>
                 </para>
@@ -844,7 +842,7 @@ Array
                 <example>
                     <title>commande dependencies</title>
                     <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[mnazaria@linux codex cli ]$ ./codex.php tracker dependencies --tracker_id=371 -- id=4569
+[mnazaria@linux codendi cli ]$ ./codendi.php tracker dependencies --tracker_id=371 -- id=4569
 Array
 (
     [0] => Array(
@@ -895,7 +893,7 @@ Array
                 <example>
                     <title>commande inverseDependencies</title>
                     <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[mnazaria@linux codex cli ]$ ./codex.php tracker inverseDependencies --tracker_id=371 -- id=10
+[mnazaria@linux codendi cli ]$ ./codendi.php tracker inverseDependencies --tracker_id=371 -- id=10
 Array
 (
     [0] => Array(
@@ -939,7 +937,7 @@ Array
                 <example>
                     <title>commande addDependencies</title>
                     <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[mnazaria@linux codex cli ]$ ./codex.php tracker addDependencies --tracker_id=371 --id=7374 --dependencies="45,689,7865"
+[mnazaria@linux codendi cli ]$ ./codendi.php tracker addDependencies --tracker_id=371 --id=7374 --dependencies="45,689,7865"
                     </programlisting>
                 </example>
                 </para>
@@ -970,7 +968,7 @@ Array
                 <example>
                     <title>commande deleteDependency</title>
                     <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[mnazaria@linux codex cli ]$ ./codex.php tracker deleteDependency --tracker_id=371 --id=7374 --dependency=14
+[mnazaria@linux codendi cli ]$ ./codendi.php tracker deleteDependency --tracker_id=371 --id=7374 --dependency=14
                     </programlisting>
                 </example>
                 </para>
@@ -998,7 +996,7 @@ Array
                 <example>
                     <title>commande artifactHistory</title>
                     <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[mnazaria@linux codex cli ]$ ./codex.php tracker artifactHistory --tracker_id=371 -- id=4569
+[mnazaria@linux codendi cli ]$ ./codendi.php tracker artifactHistory --tracker_id=371 -- id=4569
 Array
 (
     [0] => Array(
@@ -1044,7 +1042,7 @@ Array
                 <example>
                     <title>commande attachedFiles</title>
                     <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[mnazaria@linux codex cli ]$ ./codex.php tracker attachedFiles --tracker_id=116 --artifact_id=3
+[mnazaria@linux codendi cli ]$ ./codendi.php tracker attachedFiles --tracker_id=116 --artifact_id=3
 Array
 (
     [0] => Array
@@ -1103,7 +1101,7 @@ Array
                 <example>
                     <title>commande attachedFile</title>
                     <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[mnazaria@linux codex cli ]$ ./codex.php tracker attachedFile --tracker_id=116 --artifact_id=3 --file_id=11 --output=/home/mnazaria/screenshot.jpg
+[mnazaria@linux codendi cli ]$ ./codendi.php tracker attachedFile --tracker_id=116 --artifact_id=3 --file_id=11 --output=/home/mnazaria/screenshot.jpg
 File retrieved successfully.
                     </programlisting>
                  </example>
@@ -1138,7 +1136,7 @@ File retrieved successfully.
                 <example>
                     <title>commande addAttachedFile</title>
                     <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[mnazaria@linux codex cli ]$ ./codex.php tracker addAttachedFile --tracker_id=116 --id=3 --file=/home/mnazaria/image_patch.diff --description="This is the patch to apply"
+[mnazaria@linux codendi cli ]$ ./codendi.php tracker addAttachedFile --tracker_id=116 --id=3 --file=/home/mnazaria/image_patch.diff --description="This is the patch to apply"
 12
                     </programlisting>
                 </example>
@@ -1172,14 +1170,14 @@ File retrieved successfully.
                     <example>
                         <title>commande packages</title>
                         <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[mnazaria@linux codex cli ]$ ./codex.php frs packages --project=myproject
+[mnazaria@linux codendi cli ]$ ./codendi.php frs packages --project=myproject
 Array
 (
     [0] => Array 
             (
                 [package_id] => 13
                 [group_id] => 121
-                [name] => CodeX installation
+                [name] => &SYS_PRODUCT_NAME; installation
                 [status_id] => 1
                 [rank] => 10
                 [approve_license] => 1
@@ -1225,7 +1223,7 @@ Array
                     <example>
                         <title>commande addpackage</title>
                         <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[mnazaria@linux codex cli ]$ ./codex.php frs addpackage --project=myproject --name="my_new_package" --status_id=1
+[mnazaria@linux codendi cli ]$ ./codendi.php frs addpackage --project=myproject --name="my_new_package" --status_id=1
 65
                         </programlisting>
                     </example>
@@ -1251,14 +1249,14 @@ Array
                     <example>
                         <title>commande releases</title>
                         <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[mnazaria@linux codex cli ]$ ./codex.php frs releases --package_id=6
+[mnazaria@linux codendi cli ]$ ./codendi.php frs releases --package_id=6
 Array
 (
     [0] => Array 
             (
                 [release_id] => 73
                 [package_id] => 6
-                [name] => CodeX 2.8
+                [name] => &SYS_PRODUCT_NAME; 2.8
                 [note] => 
                 [changes] => New incredible functions in this new versions.
                 [status_id] => 1
@@ -1269,8 +1267,8 @@ Array
             (
                 [release_id] => 78
                 [package_id] => 6
-                [name] => CodeX 3.0
-                [note] => CodeX platform in version 3.0
+                [name] => &SYS_PRODUCT_NAME; 3.0
+                [note] => &SYS_PRODUCT_NAME; platform in version 3.0
                 [changes] => So crazy changes for this new release !
                 [status_id] => 1
                 [release_date] => 1163776125
@@ -1321,7 +1319,7 @@ Array
                     <example>
                         <title>commande addrelease</title>
                         <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[mnazaria@linux codex cli ]$ ./codex.php frs addrelease --package_id=6 --name="new version" --notes="somes notes about this release" --changes="the changes of this new release" --status_id=1
+[mnazaria@linux codendi cli ]$ ./codendi.php frs addrelease --package_id=6 --name="new version" --notes="somes notes about this release" --changes="the changes of this new release" --status_id=1
 84
                         </programlisting>
                     </example>
@@ -1351,7 +1349,7 @@ Array
                     <example>
                         <title>commande files</title>
                         <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[mnazaria@linux codex cli ]$ ./codex.php frs files --package_id=6 --release_id=49
+[mnazaria@linux codendi cli ]$ ./codendi.php frs files --package_id=6 --release_id=49
 Array
 (
     [0] => Array 
@@ -1410,12 +1408,12 @@ Array
                     <example>
                         <title>commande addfile</title>
                         <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[mnazaria@linux codex cli ]$ ./codex.php frs addfile --package_id=6 --release_id=49 --local_file=/home/mnazaria/my_file.pdf
+[mnazaria@linux codendi cli ]$ ./codendi.php frs addfile --package_id=6 --release_id=49 --local_file=/home/mnazaria/my_file.pdf
 627
 
 (pour un fichier local ou)
 
-[mnazaria@linux codex cli ]$ ./codex.php frs addfile --package_id=6 --release_id=49 --uploaded_file=my_file.pdf
+[mnazaria@linux codendi cli ]$ ./codendi.php frs addfile --package_id=6 --release_id=49 --uploaded_file=my_file.pdf
 627
 
 (pour un fichier déjà téléchargé dans le répertoire incoming de votre serveur)
@@ -1461,7 +1459,7 @@ Array
                     <example>
                         <title>commande getfile</title>
                         <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[mnazaria@linux codex cli ]$ ./codex.php frs getfile --package_id=6 --release_id=49 --file_id=644 --output=/home/mnazaria/downloaded_file.pdf
+[mnazaria@linux codendi cli ]$ ./codendi.php frs getfile --package_id=6 --release_id=49 --file_id=644 --output=/home/mnazaria/downloaded_file.pdf
 File retrieved successfully.
                         </programlisting>
                     </example>
@@ -1493,7 +1491,7 @@ File retrieved successfully.
                     <example>
                         <title>commande list</title>
                         <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[mnazaria@linux codex cli ]$ ./codex.php docman list --id=59 --project=myproject
+[mnazaria@linux codendi cli ]$ ./codendi.php docman list --id=59 --project=myproject
 Array
 (
     [0] => Array 
@@ -1579,7 +1577,7 @@ Array
                     <example>
                         <title>commande createDocument</title>
                         <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[mnazaria@linux codex cli ]$ ./codex.php docman createDocument --project=myproject --parent_id=60 --title="Document added from CLI" --type=link --content="http://www.xerox.com"
+[mnazaria@linux codendi cli ]$ ./codendi.php docman createDocument --project=myproject --parent_id=60 --title="Document added from CLI" --type=link --content="http://www.xerox.com"
 1
                         </programlisting>
                     </example>
@@ -1623,7 +1621,7 @@ Array
                     <example>
                         <title>createFolder command</title>
                         <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[mnazaria@linux codex cli ]$ ./codex.php docman createFolder --project=myproject --parent_id=60 --title="Tech docs folder"
+[mnazaria@linux codendi cli ]$ ./codendi.php docman createFolder --project=myproject --parent_id=60 --title="Tech docs folder"
 1
                         </programlisting>
                     </example>
@@ -1648,7 +1646,7 @@ Array
                     <example>
                         <title>commande delete</title>
                         <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[mnazaria@linux codex cli ]$ ./codex.php docman delete --project=myproject --id=361
+[mnazaria@linux codendi cli ]$ ./codendi.php docman delete --project=myproject --id=361
 1
                         </programlisting>
                     </example>
@@ -1673,7 +1671,7 @@ Array
                     <example>
                         <title>commande monitor</title>
                         <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[mnazaria@linux codex cli ]$ ./codex.php docman monitor --project=myproject --id=249
+[mnazaria@linux codendi cli ]$ ./codendi.php docman monitor --project=myproject --id=249
 1
                         </programlisting>
                     </example>
@@ -1702,7 +1700,7 @@ Array
                     <example>
                         <title>move command</title>
                         <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[mnazaria@linux codex cli ]$ ./codex.php docman move --project=myproject --id=241 --parent=59
+[mnazaria@linux codendi cli ]$ ./codendi.php docman move --project=myproject --id=241 --parent=59
 1
                         </programlisting>
                     </example>
@@ -1715,7 +1713,7 @@ Array
 </chapter>
 <!--
 Local Variables:
-sgml-parent-document: ("CodeX_CLI.xml" "book" "chapter")
+sgml-parent-document: ("Codendi_CLI.xml" "book" "chapter")
 End:
 -->
 

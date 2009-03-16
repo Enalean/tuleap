@@ -1,6 +1,6 @@
 <?php
 /**
- * CodeX Command-line Interface
+ * Codendi Command-line Interface
  *
  * Portion of this file is inspired from the  GForge Command-line Interface
  * contained in GForge.

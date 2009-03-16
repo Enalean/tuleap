@@ -16,13 +16,13 @@ if ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') || $GLOBALS['sys_fo
 $uri = $protocol.'://'.$sys_default_domain;
 
 if ($request->exist('wsdl')) {
-	header("Location: ".$uri."/soap/codex.wsdl.php?wsdl");
+	header("Location: ".$uri."/soap/codendi.wsdl.php?wsdl");
 	exit();
 }
 	
 try {
     
-    $server = new SoapServer($uri.'/soap/codex.wsdl.php?wsdl',  
+    $server = new SoapServer($uri.'/soap/codendi.wsdl.php?wsdl',  
     							array('trace' => 1, 
     								  'soap_version' => SOAP_1_1
     							));
@@ -56,7 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	    echo '<li>' , $func , '</li>';
 	}
     echo '</ul>';
-    echo '<a href="codex.wsdl.php?wsdl">You can access the WSDL</a>';
+    echo '<a href="codendi.wsdl.php?wsdl">You can access the WSDL</a>';
 }
 
 ?>

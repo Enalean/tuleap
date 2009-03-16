@@ -1,6 +1,6 @@
 <?php
 /**
- * CodeX Command-line Interface
+ * Codendi Command-line Interface
  *
  * Portion of this file is inspired from the  GForge Command-line Interface
  * contained in GForge.
@@ -9,7 +9,7 @@
  *
  */
 
-require_once(CODEX_CLI_DIR.'/CLI_Module.class.php');
+require_once(CODENDI_CLI_DIR.'/CLI_Module.class.php');
 
 require_once('CLI_Action_Docman_GetRoot.class.php');
 require_once('CLI_Action_Docman_List.class.php');

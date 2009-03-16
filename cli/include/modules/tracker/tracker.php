@@ -1,6 +1,6 @@
 <?php
 /**
- * CodeX Command-line Interface
+ * Codendi Command-line Interface
  *
  * Portion of this file is inspired from the  GForge Command-line Interface
  * contained in GForge.
@@ -8,7 +8,7 @@
  * http://gforge.org/
  *
  */
-require_once(CODEX_CLI_DIR.'/CLI_Module.class.php');
+require_once(CODENDI_CLI_DIR.'/CLI_Module.class.php');
 
 require_once('CLI_Action_Tracker_Trackerlist.class.php');
 require_once('CLI_Action_Tracker_Trackers.class.php');

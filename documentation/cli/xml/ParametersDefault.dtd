@@ -15,4 +15,5 @@ do not modify this file. Use the
 /etc/codex/documentation/cli/xml/ParametersLocal.dtd file 
 instead and redefine your entities there. If this file doesn't exist create it.-->
 
+<!ENTITY SYS_PRODUCT_NAME "Codendi">
 <!ENTITY SYS_DEFAULT_DOMAIN "codex.xerox.com">

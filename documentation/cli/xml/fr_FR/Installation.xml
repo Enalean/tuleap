@@ -5,18 +5,16 @@
 // contained in GForge.
 // Copyright 2005 GForge, LLC
 // http://gforge.org/
-// CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
 //
-// 
 //
-// Written by Marc Nazarian 2006, CodeX Team, Xerox
+// Written by Marc Nazarian 2006, Codendi Team, Xerox
 //
 
 -->
   <chapter id="Installation">
     <title>Installation</title>
 
-    <para>Pour installer le client en ligne de commande CodeX, 
+    <para>Pour installer le client en ligne de commande &SYS_PRODUCT_NAME;, 
     vous devez disposer de PHP5 installé sur votre machine
     (Le CLI ne fonctionnera pas avec PHP4). 
     La dernière version de PHP5 est grandement recommandée. 
@@ -42,7 +40,7 @@
     </para>
 
     <para><note>Si vous prévoyez d'utiliser le client en Ligne de Commande 
-    pour administrer une installation de CodeX via une connection HTTPS, 
+    pour administrer une installation de &SYS_PRODUCT_NAME; via une connection HTTPS, 
     vous devez compiler PHP avec l'extension CURL (en utilisant l'option 
     --with-curl dans le script de configuration).</note></para>
 
@@ -51,7 +49,7 @@
     votre machine locale.</para>
 
     <para>Après avoir décompressé le client en ligne de commande, vous devez 
-    éditer le fichier $PREFIX/codex.php (où $PREFIX est le répertoire dans 
+    éditer le fichier $PREFIX/codendi.php (où $PREFIX est le répertoire dans 
     lequel le client a été décompressé) avec votre éditeur préféré et modifier 
     les choses suivantes :
     <procedure>
@@ -70,18 +68,18 @@
                 <para>
                 <itemizedlist mark="bullet" spacing="compact">
                  <listitem>
-                    <para>CODEX_CLI_DIR: Pointe vers le répertoire dans lequel se 
+                    <para>CODENDI_CLI_DIR: Pointe vers le répertoire dans lequel se 
                         trouvent les fichiers nécessaires au client. Habituellement, 
                         il s'agit de $PREFIX/include/.
                     </para>
                  </listitem>
                  <listitem>
-                    <para>WSDL_URL (optionel): l'URL du WSDL de votre serveur CodeX SOAP. 
+                    <para>WSDL_URL (optionel): l'URL du WSDL de votre serveur &SYS_PRODUCT_NAME; SOAP. 
                         L'URL est très certainement http://&SYS_DEFAULT_DOMAIN;/soap/index.php?wsdl. 
                         Vous pouvez vérifier l'exactitude de l'URL en la tapant dans votre navigateur, 
                         vous devriez alors obtenir un fichier XML renvoyé par le serveur.
                         Si les variables ne sont pas affectées, le client essaiera d'utiliser 
-                        le WSDL spécifié dans la variable d'environement CODEX_WSDL.
+                        le WSDL spécifié dans la variable d'environement CODENDI_WSDL.
                     </para>
                  </listitem>
                 </itemizedlist>
@@ -89,10 +87,10 @@
           </para>
         </step>
         <step>
-          <para>Assurez-vous que le script codex.php ait bien les droits d'exécution. 
+          <para>Assurez-vous que le script codendi.php ait bien les droits d'exécution. 
                 Sinon, donnez-les lui en exécutant la commande suivante :
                 <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-chmod +x $PREFIX/codex.php
+chmod +x $PREFIX/codendi.php
                 </programlisting>
           </para>
         </step>
@@ -107,10 +105,10 @@ chmod +x $PREFIX/codex.php
         <example>
             <title>commande de login</title>
             <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[mnazaria@linux codex cli ]$ ./codex.php -v login --username=(votre nom d'utilisateur) --password=(votre mot de passe)
-CodeXSOAP::Connecting to the server http://&SYS_DEFAULT_DOMAIN;/soap/index.php?wsdl...
-CodeXSOAP::Connected!
-CodeXSOAP::Executing command login...
+[mnazaria@linux codendi cli ]$ ./codendi.php -v login --username=(votre nom d'utilisateur) --password=(votre mot de passe)
+CodendiSOAP::Connecting to the server http://&SYS_DEFAULT_DOMAIN;/soap/index.php?wsdl...
+CodendiSOAP::Connected!
+CodendiSOAP::Executing command login...
 Logged in as user (your user) , using session string MTAyLSotMTEyMzA4Mjg5My0qLTEyNy4wLjAuMS0qLU51U09BUC8wLjYuOSAoMS4xLjEuMSk=824c9f9010931f7872f4b9826c460ed3
 Logged in.
             </programlisting>
@@ -123,14 +121,14 @@ Logged in.
         "Fatal error: wsdl error: HTTP ERROR: Couldn't open socket connection to 
         server http://&SYS_DEFAULT_DOMAIN; prior to connect().",
         cela veut dire que votre ordinateur n'arrive pas à se connecter au 
-        serveur CodeX. Dans ce cas, vous devez vous assurer que l'adresse du serveur est 
+        serveur &SYS_PRODUCT_NAME;. Dans ce cas, vous devez vous assurer que l'adresse du serveur est 
         correcte et que vous pouvez bien vous connecter au serveur depuis votre ordinateur. 
     </para>
 
   </chapter>
 <!--
 Local Variables:
-sgml-parent-document: ("CodeX_CLI.xml" "book" "chapter")
+sgml-parent-document: ("Codendi_CLI.xml" "book" "chapter")
 End:
 -->
 

@@ -5,11 +5,9 @@
 // contained in GForge.
 // Copyright 2005 GForge, LLC
 // http://gforge.org/
-// CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
 //
-// 
 //
-// Written by Marc Nazarian 2006, CodeX Team, Xerox
+// Written by Marc Nazarian 2006, Codendi Team, Xerox
 //
 
 -->
@@ -18,7 +16,7 @@
 
     <para>La ligne de commande type pour appeler le client est la suivante :
         <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-# ./codex.php [options du programme] [nom du module] [nom de la fonction] 
+# ./codendi.php [options du programme] [nom du module] [nom de la fonction] 
 [paramètres de la fonction]
         </programlisting>
         <itemizedlist mark="bullet" spacing="compact">
@@ -36,7 +34,7 @@
          </listitem>
          <listitem>
           <para>Nom du module : Un "module" est un groupe de fonctions qui agit
-                sur une partie spécifique du système codeX. Actuellement, les 
+                sur une partie spécifique du système &SYS_PRODUCT_NAME;. Actuellement, les 
                 modules suivants sont disponibles :
            <itemizedlist mark="bullet" spacing="compact">
             <listitem>
@@ -77,7 +75,7 @@
   </chapter>
 <!--
 Local Variables:
-sgml-parent-document: ("CodeX_CLI.xml" "book" "chapter")
+sgml-parent-document: ("Codendi_CLI.xml" "book" "chapter")
 End:
 -->
 
