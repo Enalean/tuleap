@@ -1,10 +1,10 @@
 <?php
 /**
-* Copyright (c) Xerox Corporation, CodeX Team, 2001-2007. All rights reserved
+* Copyright (c) Xerox Corporation, Codendi Team, 2001-2007. All rights reserved
 *
 * 
 */
 
-define('CODEX_CLI_DIR', dirname(__FILE__).'/../../../../../cli');
+define('CODENDI_CLI_DIR', dirname(__FILE__).'/../../../../../cli');
 
 ?>

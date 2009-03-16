@@ -1,20 +1,20 @@
 <?php
 /**
-* Copyright (c) Xerox Corporation, CodeX Team, 2001-2007. All rights reserved
+* Copyright (c) Xerox Corporation, Codendi Team, 2001-2007. All rights reserved
 *
 * 
 */
 
 require_once('cli_constants.php');
 
-require_once(CODEX_CLI_DIR .'/include/CodeXSOAP.class.php');
-Mock::generate('CodeXSOAP');
+require_once(CODENDI_CLI_DIR .'/include/CodendiSOAP.class.php');
+Mock::generate('CodendiSOAP');
 
-require_once(CODEX_CLI_DIR .'/include/CLI_Module.class.php');
+require_once(CODENDI_CLI_DIR .'/include/CLI_Module.class.php');
 Mock::generate('CLI_Module');
 
-require_once(CODEX_CLI_DIR .'/include/CLI_Action.class.php');
-Mock::generatePartial('CLI_Action', 'CLI_ActionTestVersion', array('help', '_getCodeXSOAP'));
+require_once(CODENDI_CLI_DIR .'/include/CLI_Action.class.php');
+Mock::generatePartial('CLI_Action', 'CLI_ActionTestVersion', array('help', '_getCodendiSOAP'));
 
 class CLI_ActionTest extends UnitTestCase {
     function CLI_ActionTest($name = 'CLI_Action test') {
@@ -44,13 +44,13 @@ EOS;
     }
     
     function testExecuteHelp() {
-        $codexsoap =& new MockCodeXSOAP();
+        $codendisoap =& new MockCodendiSOAP();
         
         $module =& new MockCLI_Module();
         $module->setReturnValue('getParameter', true);
         
         $action =& new CLI_ActionTestVersion();
-        $action->setReturnReference('_getCodeXSOAP', $codexsoap);
+        $action->setReturnReference('_getCodendiSOAP', $codendisoap);
         $action->setModule($module);
         $action->expectCallCount('help', 3);
         

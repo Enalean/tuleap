@@ -1,16 +1,16 @@
 <?php
 /**
-* Copyright (c) Xerox Corporation, CodeX Team, 2001-2007. All rights reserved
+* Copyright (c) Xerox Corporation, Codendi Team, 2001-2007. All rights reserved
 *
 * 
 */
 
 require_once('cli_constants.php');
 
-require_once(CODEX_CLI_DIR .'/include/CLI_Action.class.php');
+require_once(CODENDI_CLI_DIR .'/include/CLI_Action.class.php');
 Mock::generate('CLI_Action');
 
-require_once(CODEX_CLI_DIR .'/include/CLI_Module.class.php');
+require_once(CODENDI_CLI_DIR .'/include/CLI_Module.class.php');
 Mock::generatePartial('CLI_Module', 'CLI_ModuleTestVersion', array('help'));
 
 
