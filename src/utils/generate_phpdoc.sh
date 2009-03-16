@@ -55,7 +55,7 @@ ${BASESRCDIR}/src/utils/php-launcher.sh -d output_buffering=1 ${PHPDOC} \
     --target ${phpdoc_output} \
     --examplesdir ${programmer_guide_dir}/examples \
     --directory ${BASESRCDIR}/src/common/valid \
-    --filename ${BASESRCDIR}/src/common/include/HTTPRequest.class.php,${BASESRCDIR}/src/common/include/CodeX_Request.class.php,${BASESRCDIR}/src/common/include/SOAPRequest.class.php
+    --filename ${BASESRCDIR}/src/common/include/HTTPRequest.class.php,${BASESRCDIR}/src/common/include/Codendi_Request.class.php,${BASESRCDIR}/src/common/include/SOAPRequest.class.php
 
 if [ "${PREPARE_SVN}" == "1" ]; then
     cd ${phpdoc_output}

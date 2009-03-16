@@ -22,7 +22,7 @@
  * 
  */
 
-class Docman_WikiRequest extends CodeX_Request {
+class Docman_WikiRequest extends Codendi_Request {
 
 }
 

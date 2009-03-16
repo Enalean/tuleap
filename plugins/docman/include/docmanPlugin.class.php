@@ -328,7 +328,7 @@ class DocmanPlugin extends Plugin {
     function ajax_reference_tooltip($params) {
         if ($params['reference']->getServiceShortName() == 'docman') {
             require_once('Docman_CoreController.class.php');
-            $request = new CodeX_Request(array(
+            $request = new Codendi_Request(array(
                 'id'       => $params['val'],
                 'group_id' => $params['group_id'],
                 'action'   => 'ajax_reference_tooltip'

@@ -72,12 +72,12 @@ class Docman_WikiController extends Docman_Controller {
         $item_dao =& $this->_getItemDao();
         if($item_dao->isWikiPageReferenced($wiki_page, $group_id)) {
             // TODO: find another way to return a value. 
-            // CodeX_Request->params should not be public
+            // Codendi_Request->params should not be public
             $this->request->params['referenced'] = true;
         }
         else {
             // TODO: find another way to return a value. 
-            // CodeX_Request->params should not be public
+            // Codendi_Request->params should not be public
             $this->request->params['referenced'] = false;
         }
     }
@@ -102,7 +102,7 @@ class Docman_WikiController extends Docman_Controller {
             }
         }
         // TODO: find another way to return a value. 
-        // CodeX_Request->params should not be public
+        // Codendi_Request->params should not be public
         $this->request->params['canAccess'] = $can_access;
     }
 
@@ -261,7 +261,7 @@ class Docman_WikiController extends Docman_Controller {
 
         // Write documents paths on wiki view.
         // TODO: find another way to return a value. 
-        // CodeX_Request->params should not be public
+        // Codendi_Request->params should not be public
         $this->request->params['html'] = $docman_references;
     }
 

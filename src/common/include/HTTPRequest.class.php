@@ -9,19 +9,19 @@
  */
 
 require_once('browser.php');
-require_once('common/include/CodeX_Request.class.php');
+require_once('common/include/Codendi_Request.class.php');
 require_once('common/valid/Valid.class.php');
 
 /**
  * @package CodeX
  */
-class HTTPRequest extends CodeX_Request {
+class HTTPRequest extends Codendi_Request {
 
     /**
      * Constructor
      */
     function HTTPRequest() {
-        parent::CodeX_Request($_REQUEST);
+        parent::Codendi_Request($_REQUEST);
     }
     
 

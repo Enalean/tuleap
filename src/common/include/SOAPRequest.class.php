@@ -7,11 +7,11 @@
  * SOAPRequest
  */
 
-require_once('common/include/CodeX_Request.class.php');
-class SOAPRequest extends CodeX_Request {
+require_once('common/include/Codendi_Request.class.php');
+class SOAPRequest extends Codendi_Request {
     
     function SOAPRequest($params) {
-        parent::CodeX_Request($params);
+        parent::Codendi_Request($params);
     }
     
     function registerShutdownFunction() {

@@ -4,11 +4,11 @@
  * 
  * 
  *
- * CodeX_Request
+ * Codendi_Request
  */
 
 
-/* abstract */ class CodeX_Request {
+/* abstract */ class Codendi_Request {
     /**
      * @var array
      * @access private
@@ -29,7 +29,7 @@
     /**
      * Constructor
      */
-    function CodeX_Request($params) {
+    function Codendi_Request($params) {
         $this->params                = $params;
         $this->_validated_input      = array();
         $this->_last_access_to_input = array();
