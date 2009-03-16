@@ -285,8 +285,5 @@ class Widget_ProjectPublicAreas extends Widget {
     function canBeUsedByProject(&$project) {
         return true;
     }
-    function getPreviewCssClass() {
-        return parent::getPreviewCssClass('project_public_areas');
-    }
 }
 ?>

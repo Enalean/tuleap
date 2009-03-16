@@ -14,7 +14,7 @@ require_once('Docman_ApprovalTableFactory.class.php');
 class Docman_Widget_MyDocman extends Widget {
     var $pluginPath;
     function Docman_Widget_MyDocman($pluginPath) {
-        $this->Widget('mydocman');
+        $this->Widget('plugin_docman_mydocman');
         $this->pluginPath = $pluginPath;
     }
     function getTitle() {
@@ -159,9 +159,6 @@ class Docman_Widget_MyDocman extends Widget {
     }
     function getCategory() {
         return 'plugin_docman';
-    }
-    function getPreviewCssClass() {
-        return parent::getPreviewCssClass('my_documents_under_review');
     }
 }
 

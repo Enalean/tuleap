@@ -114,8 +114,5 @@ class Widget_MyAdmin extends Widget {
     function _get_admin_row($i, $text, $value, $bgcolor, $textcolor = 'white') {
         return '<tr class="'. util_get_alt_row_color($i++) .'"><td>'. $text .'</td><td nowrap="nowrap" style="width:20%; background:'. $bgcolor .'; color:'. $textcolor .'; padding: 2px 8px; font-weight:bold; text-align:center;">'. $value .'</td></tr>';
     }
-    function getPreviewCssClass() {
-        return parent::getPreviewCssClass('my_admin');
-    }
 }
 ?>

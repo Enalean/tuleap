@@ -110,9 +110,6 @@ class Widget_MyLatestSvnCommits extends Widget {
     function getDescription() {
         return $GLOBALS['Language']->getText('my_index','my_latest_svn_commit_desc');
     }
-    function getPreviewCssClass() {
-        return parent::getPreviewCssClass('my_latest_svn_commits');
-    }
     function isAjax() {
         return true;
     }

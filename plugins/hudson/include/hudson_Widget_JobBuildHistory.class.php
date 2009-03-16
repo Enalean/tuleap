@@ -20,10 +20,10 @@ class hudson_Widget_JobBuildHistory extends HudsonJobWidget {
     function hudson_Widget_JobBuildHistory($owner_type, $owner_id) {
         $request =& HTTPRequest::instance();
         if ($owner_type == WidgetLayoutManager::OWNER_TYPE_USER) {
-            $this->widget_id = 'myhudsonjobbuildhistory';
+            $this->widget_id = 'plugin_hudson_my_jobbuildhistory';
             $this->group_id = $owner_id;
         } else {
-            $this->widget_id = 'projecthudsonjobbuildhistory';
+            $this->widget_id = 'plugin_hudson_project_jobbuildhistory';
             $this->group_id = $request->get('group_id');
         }
         $this->Widget($this->widget_id);
@@ -91,9 +91,6 @@ class hudson_Widget_JobBuildHistory extends HudsonJobWidget {
         } else {
             return null;
         }
-    }
-    function getPreviewCssClass() {
-        return parent::getPreviewCssClass('jobbuildhistory');
     }
 }
 

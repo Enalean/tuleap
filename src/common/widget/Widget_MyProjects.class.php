@@ -123,8 +123,5 @@ class Widget_MyProjects extends Widget {
     function getDescription() {
         return 'Lists the projects you belong to. Selecting any of these projects brings you to the corresponding Project Summary page.';
     }
-    function getPreviewCssClass() {
-        return parent::getPreviewCssClass('my_projects');
-    }
 }
 ?>

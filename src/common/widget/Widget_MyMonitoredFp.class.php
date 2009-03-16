@@ -107,9 +107,6 @@ class Widget_MyMonitoredFp extends Widget {
     function getDescription() {
         return 'Lists packages that you are currently monitoring, by project.';
     }
-    function getPreviewCssClass() {
-        return parent::getPreviewCssClass('my_monitored_files');
-    }
     function isAjax() {
         return true;
     }

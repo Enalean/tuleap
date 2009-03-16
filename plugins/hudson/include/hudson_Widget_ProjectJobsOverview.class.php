@@ -27,7 +27,7 @@ class hudson_Widget_ProjectJobsOverview extends HudsonOverviewWidget {
     var $_global_status_icon;
     
     function hudson_Widget_ProjectJobsOverview($plugin) {
-        $this->Widget('projecthudsonjobsoverview');
+        $this->Widget('plugin_hudson_project_jobsoverview');
         $this->plugin = $plugin;
         
         $request =& HTTPRequest::instance();
@@ -103,9 +103,6 @@ class hudson_Widget_ProjectJobsOverview extends HudsonOverviewWidget {
             $html .= '</table>';
             return $html;
         }
-    }
-    function getPreviewCssClass() {
-        return parent::getPreviewCssClass('jobsoverview');
     }
 }
 

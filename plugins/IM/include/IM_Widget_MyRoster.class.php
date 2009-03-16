@@ -54,9 +54,6 @@ class IM_Widget_MyRoster extends Widget {
     function isAvailable() {
         return ! UserManager::instance()->getCurrentUser()->getPreference('plugin_im_hide_users_presence');
     }
-    function getPreviewCssClass() {
-        return parent::getPreviewCssClass('myroster');
-    }
     function isAjax() {
         return true;
     }

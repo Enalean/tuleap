@@ -27,9 +27,6 @@ class Docman_Widget_MyEmbedded extends Docman_Widget_Embedded {
     public function __construct($plugin_path) {
         parent::__construct('plugin_docman_my_embedded', user_getid(), WidgetLayoutManager::OWNER_TYPE_USER, $plugin_path);
     }
-    public function getPreviewCssClass() {
-        return parent::getPreviewCssClass('plugin_docman_my_embedded');
-    }
 
 }
 ?>

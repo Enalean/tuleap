@@ -111,9 +111,6 @@ class Widget_MyMonitoredForums extends Widget {
         return 'Lists forums that you are currently monitoring, by project. <br>
                 To cancel any of the monitored items just click on the trash icon () next to the item label. ';
     }
-    function getPreviewCssClass() {
-        return parent::getPreviewCssClass('my_monitored_forums');
-    }
     function isAjax() {
         return true;
     }

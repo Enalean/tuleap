@@ -38,13 +38,6 @@ class Docman_Widget_ProjectEmbedded extends Docman_Widget_Embedded {
     public function canBeUsedByProject($project) {
         return true;
     }
-    
-    /**
-     * @return string
-     */
-    public function getPreviewCssClass() {
-        return parent::getPreviewCssClass('plugin_docman_my_embedded');
-    }
 
 }
 ?>

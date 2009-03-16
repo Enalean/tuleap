@@ -26,8 +26,5 @@ class Widget_ProjectLatestCvsCommits extends Widget_ProjectLatestCommits {
     function canBeUsedByProject(&$project) {
         return $project->usesCvs();
     }
-    function getPreviewCssClass() {
-        return parent::getPreviewCssClass('project_latest_cvs_commits');
-    }
 }
 ?>

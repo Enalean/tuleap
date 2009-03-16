@@ -219,7 +219,7 @@ class DocmanPlugin extends Plugin {
 
     function myPageBox($params) {
         switch ($params['widget']) {
-            case 'mydocman':
+            case 'plugin_docman_mydocman':
                 require_once('Docman_Widget_MyDocman.class.php');
                 $params['instance'] = new Docman_Widget_MyDocman($this->getPluginPath());
                 break;

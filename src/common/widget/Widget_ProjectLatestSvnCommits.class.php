@@ -26,8 +26,5 @@ class Widget_ProjectLatestSvnCommits extends Widget_ProjectLatestCommits {
     function canBeUsedByProject(&$project) {
         return $project->usesSvn();
     }
-    function getPreviewCssClass() {
-        return parent::getPreviewCssClass('project_latest_svn_commits');
-    }
 }
 ?>

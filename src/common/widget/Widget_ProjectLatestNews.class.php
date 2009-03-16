@@ -41,8 +41,5 @@ class Widget_ProjectLatestNews extends Widget {
     function canBeUsedByProject(&$project) {
         return $project->usesNews();
     }
-    function getPreviewCssClass() {
-        return parent::getPreviewCssClass('project_latest_news');
-    }
 }
 ?>

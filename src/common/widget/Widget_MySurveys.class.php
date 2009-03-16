@@ -59,9 +59,6 @@ class Widget_MySurveys extends Widget {
     function getContent() {
         return $this->content;
     }
-    function getPreviewCssClass() {
-        return parent::getPreviewCssClass('my_surveys');
-    }
 }
 
 ?>

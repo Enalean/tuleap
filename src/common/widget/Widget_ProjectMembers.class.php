@@ -54,8 +54,5 @@ class Widget_ProjectMembers extends Widget {
     public function canBeUsedByProject(&$project) {
         return true;
     }
-    function getPreviewCssClass() {
-        return parent::getPreviewCssClass('project_members');
-    }
 }
 ?>

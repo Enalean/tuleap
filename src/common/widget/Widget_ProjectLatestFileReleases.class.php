@@ -35,8 +35,5 @@ class Widget_ProjectLatestFileReleases extends Widget {
     function getCategory() {
         return 'frs';
     }
-    function getPreviewCssClass() {
-        return parent::getPreviewCssClass('project_latest_file_releases');
-    }
 }
 ?>

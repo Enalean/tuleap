@@ -26,7 +26,7 @@ class hudson_Widget_MyMonitoredJobs extends HudsonOverviewWidget {
     var $_global_status_icon;
     
     function hudson_Widget_MyMonitoredJobs($plugin) {
-        $this->Widget('myhudsonjobs');
+        $this->Widget('plugin_hudson_my_jobs');
         $this->plugin = $plugin;
         
         $this->_not_monitored_jobs = user_get_preference('plugin_hudson_my_not_monitored_jobs');
@@ -201,9 +201,6 @@ class hudson_Widget_MyMonitoredJobs extends HudsonOverviewWidget {
             $dar->next();
         }
         return $monitored_jobs;
-    }
-    function getPreviewCssClass() {
-        return parent::getPreviewCssClass('myjobs');
     }
 }
 

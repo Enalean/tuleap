@@ -41,9 +41,6 @@ class Widget_MyBookmarks extends Widget {
         $html_my_bookmarks .= '<div style="text-align:center; font-size:0.8em;"><a href="/my/bookmark_add.php">['. $GLOBALS['Language']->getText('my_index', 'add_bookmark') .']</a></div>';
         return $html_my_bookmarks;
     }
-    function getPreviewCssClass() {
-        return parent::getPreviewCssClass('my_bookmarks');
-    }
     function getDescription() {
         return 'Lists your favorite bookmarks (your favorite pages in Codendi or external). <br>'.
                'Note that in many cases Codendi uses URL with enough embedded information to bookmark sophisticated items like Software Map browsing, typical search in your project Bug or Task database, etc ... <br>'.
