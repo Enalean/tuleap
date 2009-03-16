@@ -26,6 +26,7 @@ require_once('common/widget/Widget_ProjectLatestSvnCommits.class.php');
 require_once('common/widget/Widget_ProjectLatestCvsCommits.class.php');
 require_once('common/widget/Widget_ProjectTwitterFollow.class.php');
 //require_once('common/widget/Widget_ProjectWikiPage.class.php');
+require_once('common/widget/Widget_ProjectSvnStats.class.php');
 
 /**
 * Widget
@@ -202,6 +203,9 @@ require_once('common/widget/Widget_ProjectTwitterFollow.class.php');
             case 'projecttwitterfollow':
                 $o =& new Widget_ProjectTwitterFollow();
                 break;
+            case 'projectsvnstats':
+                $o =& new Widget_ProjectSvnStats();
+                break;
             //case 'projectwikipage':                    //not yet
             //    $o =& new Widget_ProjectWikiPage();
             //    break;
@@ -233,6 +237,7 @@ require_once('common/widget/Widget_ProjectTwitterFollow.class.php');
                 $widgets = array('projectdescription', 'projectmembers', 
                     'projectlatestfilereleases', 'projectlatestnews', 'projectpublicareas', //'projectwikipage' //not yet
                     'projectlatestsvncommits', 'projectlatestcvscommits', 'projecttwitterfollow', 
+                    'projectsvnstats', 
                 );
                 if ($GLOBALS['sys_use_trove'] != 0) {
                     $widgets[] = 'projectclassification';

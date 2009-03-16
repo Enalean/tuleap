@@ -119,3 +119,7 @@ svn_utils	write_err	Error: Can't write to file $1
 svn_viewvc	access_denied	Access Denied
 svn_viewvc	acc_den_comment	You are not authorized to access this file. Please contact a <A HREF="$1">Project Administrator</A>.
 svn_viewvc	bad_roottype	Invalid roottype
+
+
+svn_widget	svnstats	Svn Stats
+

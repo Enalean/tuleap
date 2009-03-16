@@ -112,3 +112,7 @@ svn_utils	write_err	Erreur&nbsp;: Impossible d'écrire dans le fichier $1
 svn_viewvc	access_denied	Accès refusé
 svn_viewvc	acc_den_comment	Vous n'avez pas l'autorisation d'accès pour ce fichier. Veuillez contacter un <A HREF="$1">administrateur du projet</A>.
 svn_viewvc	bad_roottype	roottype invalide
+
+
+svn_widget	svnstats	Svn Stats
+
