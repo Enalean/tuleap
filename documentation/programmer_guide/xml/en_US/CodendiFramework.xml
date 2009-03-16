@@ -336,6 +336,112 @@ cp -r /home/httpd/plugins/template/site-content /etc/codendi/plugins/template/.]
 			<para><emphasis role="bold">Important:</emphasis> in both cases (manually, automatically) you may have to remove the directory of the plugin because its web space (<literal>/plugins/template/www/</literal>) will always remain accessible, even if the plugin is disabled or uninstalled.</para>
 		</section>
 	</section>
+    
+    <section id="Widgets">
+        <title>Widgets</title>
+        <para>
+            &SYS_PRODUCT_NAME; provides widgets on personal and project dashboards.
+            These widgets can be moved on the page, easily added and removed.
+            This lets the user (for personal dashboard) and project admin (for
+            project dashboard) design his own dashboard as ha wants.
+        </para>
+        <section id="HowToMakeAWidget">
+            <title>How to make a widget</title>
+            <para>
+                All widget related to the core of &SYS_PRODUCT_NAME; are located 
+                in src/common/widget/ directory.
+                Plugin's widget will be located in <plugin_dir>/include/.
+                Widget files must follow the syntax Widget_My[WidgetName] or
+                Widget_Project[WidgetName] and extends Widget class.
+            </para>
+            <para>
+                Then, you must implement your widget:
+<programlisting format="linespecific" linenumbering="unnumbered" width="80">
+<?php
+
+require_once('Widget.class.php');
+
+class Widget_MyPersonalWidget extends Widget {
+    /**
+     * Constructor of the widget
+     * If anything special here, just call the parent passing the name of the widget
+     */
+    public function __construct() {
+        // this name must be unique
+        $this->Widget('mypersonalwidget');
+    }
+    /**
+     * getTitle returns the title of the widget
+     * don't forget to internationalize it!
+     * @return string the title of the widget
+     */
+    function getTitle() {
+        // TODO
+    }
+    /**
+     * getContent returns the content of the widget, in other words the HTML to display
+     * This is the core of the widget.
+     * @return string HTML to display, body of the widget
+     */
+    function getContent() {
+        // TODO
+    }
+    /**
+     * getCategory returns the category of the widget
+     * In the user interface, widgets are grouped by category. The default 
+     * category (used if getCategory is not defined) is 'general'.
+     * Available categories are: general, scm, trackers, frs, forums, im, hudson
+     */
+    function getCategory() {
+        // optional (to be overwritten if different from 'general')
+    }
+    /**
+     * getDescription returns the description of the widget
+     * will be displayed in the User Interface when choosing widgets.
+     * A good description helps the user to know what the widget really do.
+     * don't forget to internationalize it!
+     * @return string the description of the widget
+     */
+    function getDescription() {
+        // TODO
+    }
+    /**
+     * isAjax returns weither the widget is ajax or not
+     * Dashboard can be a bit long to display, regarding the widgets the user
+     * as set. isAjax = true can speed up pages.
+     * @returns boolean if widget is ajax or not
+     */
+    function isAjax() {
+        // optional (to be overwritten or not, default value is false)
+    }
+}
+
+?>
+</programlisting>
+            </para>
+            <para>
+                Once your widget is implemented, you have to declare it to the system.
+                This can be done in the class Widget (src/common/Widget.class.php).
+                You need to add your widget in the function getInstance:
+<programlisting format="linespecific" linenumbering="unnumbered" width="80">
+case 'mypersonalwidget':
+    $o =& new Widget_MyPersonalWidget();
+    break;
+</programlisting>
+                Add the require_once('common/widget/Widget_MyPersonalWidget.class.php'); 
+                on top of the file, and then add your widget in the function
+                getCodeXWidgets, regarding it is a personal widget (diaplyed in 
+                personal dashboard) or a project widget (displayed in project dashboard).
+                Just add the name of your widget (e.g. 'mypersonalwidget') in the
+                array of available widgets.
+            </para>
+            <para>
+                Widget preview : TODO
+            </para>
+        </section>
+    </section>
+    
+    
 	<section id="Themes">
 		<title>Themes</title>
 		<figure id="ThemesFramework">

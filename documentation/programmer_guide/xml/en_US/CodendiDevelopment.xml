@@ -17,6 +17,52 @@
         Don't forget that an homogeneous code is easier to maintain!
       </para>
       
+      <section id="i18n">
+        <title>Internationalization (i18n)</title>
+        <para>
+            because &SYS_PRODUCT_NAME; is used by a large community of users and 
+            developpers, it is internationalized.
+            For now, available languages are:
+            <itemizedlist mark="bullet" spacing="compact">
+              <listitem>
+                <para>English</para>
+              </listitem>
+              <listitem>
+                <para>french</para>
+              </listitem>
+            </itemizedlist>
+        </para>
+        <para>
+            Thus, there shouldn't be any words or sentences of natural language 
+            in code source.
+        </para>
+        <para>
+            The class that manage i18nn is BaseLanguage (src/common/language/BaseLanguage.class.php)
+            A typical use in PHP is
+<programlisting format="linespecific" linenumbering="unnumbered" width="80">
+$Language->getText('include_exit','error'));
+</programlisting>
+            $Language is initialized by pre.php, and language is set regarding 
+            the user preferences. This php code will be replaced by a string 
+            defined in languages file, in the user natural language.
+        </para>
+        <para>
+            File languages are available in site-content directory.
+            For instance, the fiel in the example is located at
+            site-content/en_US/include/include.tab. Same file exists for french version:
+            site-content/fr_FR/include/include.tab.
+        </para>
+        <para>
+            These language file follow a defined syntax:
+<programlisting format="linespecific" linenumbering="unnumbered" width="80">
+key1 [tab] key2 [tab] translated string
+</programlisting>
+            and are separated by a carriage return. Keys are splitted in different 
+            files for convenience, but are "compiled" in a big unique file at 
+            execution.
+        </para>
+      </section>
+      
       <section><title>HTML</title>
         <para>
             All scripts that render HTML should be located in the 
@@ -32,6 +78,41 @@
         </para>
       </section>
       
+      <section>
+        <title>PHP 5 Conventions</title>
+        <section>
+            <title>Classes</title>
+            <para>
+                Classes must be named 'LikeThis', and corresponfing file must be 
+                'LikeThis.class.php'.
+            </para>
+            <para>
+<programlisting format="linespecific" linenumbering="unnumbered" width="80">
+class MyClass {
+    protected $attribute;
+    public function __construct(...) {
+    }
+    public function myMethod(...) {
+    }
+}
+</programlisting>
+            </para>
+            <para>
+             <itemizedlist mark="bullet" spacing="compact">
+              <listitem>
+                <para>Attribute visiblity is public,  protected or private</para>
+              </listitem>
+              <listitem>
+                <para>Class contructor is now named __construct</para>
+              </listitem>
+              <listitem>
+                <para>Method visibility is public,  protected or private.</para>
+              </listitem>
+             </itemizedlist>
+            </para>
+        </section>
+      </section>
+      
       <section><title>I/O</title>
         <para>
             PHP scripts should not directly modify the file system (e.g. for 
@@ -45,12 +126,17 @@
         <para>
             It is generally a good idea to give some feedback to the user when 
             she performed some action, e.g. 'member added', '3 artifacts updated', 
-            etc. The usual way to display this message is to use the 
-            <literal>&dollar;feedback</literal> global variable. This is a special 
-            variable that, when set, is systematically displayed in bold case 
-            (and usually in red) on the top and bottom of the page. Since the 
-            variable may have been modified before, you should append your text 
-            (e.g. with the '.=' operator), instead of simply setting it (with '=').
+            etc. The usual way to display this message is to use the Response
+            object (src/common/include/Response.class.php).
+            By using this object to add feedback, you will be reuse all the user
+            interface and feedback display.
+            A typical use is:
+<programlisting format="linespecific" linenumbering="unnumbered" width="80">
+$GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('global','perm_denied'));
+</programlisting>
+            The first argument of the addFeedback function is the level (info, warning, error),
+            the second argument is the message itself (don't forget to 
+            internationalize it! see <xref linkend="i18n"/> for details)
          </para>
       </section>
       
