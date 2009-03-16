@@ -21,20 +21,20 @@
  * 
  */
 
-require_once('common/include/CodeX_HTTPPurifier.class.php');
+require_once('common/include/Codendi_HTTPPurifier.class.php');
 
 
 /**
- * Tests the class CodeXHTMLPurifier
+ * Tests the class Codendi_HTTPPurifier
  */
-class CodeX_HTTPPurifierTest extends UnitTestCase {
+class Codendi_HTTPPurifierTest extends UnitTestCase {
 
-    function UnitTestCase($name = 'CodeX_HTTPPurifier test') {
+    function UnitTestCase($name = 'Codendi_HTTPPurifier test') {
         $this->UnitTestCase($name);
     }
 
     function testPurify() {
-        $p =& CodeX_HTTPPurifier::instance();
+        $p =& Codendi_HTTPPurifier::instance();
         $this->assertEqual('a', $p->purify("a"));
         $this->assertEqual('a', $p->purify("a\n"));
         $this->assertEqual('a', $p->purify("a\nb"));

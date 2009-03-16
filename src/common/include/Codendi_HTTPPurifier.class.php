@@ -26,18 +26,18 @@
  *
  * This class aims to purify the header to prevent header injections
  */
-class CodeX_HTTPPurifier {
+class Codendi_HTTPPurifier {
     /**
      * Singleton access.
      *
      * @access: static
      */
     function &instance() {
-        static $__codex_httppurifier_instance;
-        if(!$__codex_httppurifier_instance) {
-            $__codex_httppurifier_instance = new CodeX_HTTPPurifier();
+        static $__Codendi_HTTPPurifier_instance;
+        if(!$__Codendi_HTTPPurifier_instance) {
+            $__Codendi_HTTPPurifier_instance = new Codendi_HTTPPurifier();
         }
-        return $__codex_httppurifier_instance;
+        return $__Codendi_HTTPPurifier_instance;
     }
     
     function purify($s) {

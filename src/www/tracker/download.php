@@ -43,8 +43,8 @@ if (db_numrows($result)>0) {
                 } else {
                     
                     // Download the patch with the correct filetype
-                    require_once('common/include/CodeX_HTTPPurifier.class.php');
-                    $http = CodeX_HTTPPurifier::instance();
+                    require_once('common/include/Codendi_HTTPPurifier.class.php');
+                    $http = Codendi_HTTPPurifier::instance();
                     header('Content-Type: '.$http->purify(db_result($result,0,'filetype')));
                     header('Content-Length: '.$http->purify(db_result($result,0,'filesize')));
                     header('Content-Disposition: filename="'.$http->purify(db_result($result,0,'filename')).'"');

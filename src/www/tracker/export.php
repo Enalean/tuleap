@@ -8,7 +8,7 @@
 //
 
 
-require_once('common/include/CodeX_HTTPPurifier.class.php');
+require_once('common/include/Codendi_HTTPPurifier.class.php');
 
 //
 //  make sure this person has permission to view artifacts
@@ -86,7 +86,7 @@ if ($multiple_queries) {
 
 // Send the result in CSV format
 if ($result && $rows > 0) {
-    $http = CodeX_HTTPPurifier::instance();
+    $http = Codendi_HTTPPurifier::instance();
   $file_name = str_replace(' ','_','artifact_'.$ath->getItemName());
   header ('Content-Type: text/csv');
   header ('Content-Disposition: filename='.$http->purify($file_name).'_'.$ath->Group->getUnixName().'.csv');
