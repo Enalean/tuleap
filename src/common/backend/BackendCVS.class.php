@@ -22,6 +22,7 @@
  */
 
 require_once('common/backend/Backend.class.php');
+require_once('common/dao/ServiceDao.class.php');
 
 
 class BackendCVS extends Backend {
@@ -34,6 +35,11 @@ class BackendCVS extends Backend {
      */
     protected function BackendCVS() {
         Backend::Backend();
+    }
+
+
+    function _getServiceDao() {
+        return new ServiceDao(CodendiDataAccess::instance());
     }
 
 
@@ -279,7 +285,71 @@ class BackendCVS extends Backend {
     }
 
     function CVSRootListUpdate() {
-        // TODO
+        $cvs_root_allow_array = array();
+        $projlist = array();
+
+        $service_dao =& $this->_getServiceDao();
+        $dar =& $service_dao->searchActiveUnixGroupByUsedService('cvs');
+        foreach($dar as $row) {
+            $repolist[]="/cvsroot/".$row['unix_group_name'];
+        }
+
+
+        if ($this->useCVSNT()) {
+            $config_file=$GLOBALS['cvsnt_config_file'];
+            $cvsnt_marker="DON'T EDIT THIS LINE - END OF CODEX BLOCK";
+        } else {
+            $config_file=$GLOBALS['cvs_root_allow_file'];
+        }
+        $config_file_old=$config_file.".old";
+        $config_file_new=$config_file.".new";
+
+        if (is_file($config_file)) {
+            $cvs_config_array = file($config_file);
+        }
+
+        $fp = fopen($config_file_new, 'w');
+
+        if ($this->useCVSNT()) {
+            fwrite($fp, "# Codendi CVSROOT directory list: do not edit this list!\n");
+            
+            $num=0;
+            foreach ($repolist as $reponame) {
+                fwrite($fp, "Repository$num=$reponame\n");
+                $num++;
+            }
+            fwrite($fp,"# End of CodeX CVSROOT directory list: you may change options below $cvsnt_marker\n");
+  
+            // and recopy other configuration instructions
+            $configlines=0;
+            foreach($cvsnt_config_array as $line) {
+                if ($configlines) { fwrite($fp,$line); }
+                if (preg_match($cvsnt_marker,$line)) { $configlines=1;}
+            }
+        } else {
+            // CVS: simple list of allowed CVS roots
+            foreach ($repolist as $reponame) {
+                fwrite($fp, "$reponame\n");
+            }
+        }
+        fclose($fp);
+        // Backup existing file and install new one if they are different
+        if (is_file($config_file)) {
+            $current_config_string=serialize(file($config_file));
+            $new_config_string=serialize(file($config_file_new));
+            if ($current_config_string!==$new_config_string) {
+                    if (is_file($config_file_old)) {
+                        unlink($config_file_old);
+                    }
+                    rename($config_file,$config_file_old);
+                    rename($config_file_new,$config_file);
+            } // Else do nothing: the configuration has not changed
+        } else { 
+            // No existing file
+            rename($config_file_new,$config_file); 
+        }
+
+        return true;
     }
 
 }

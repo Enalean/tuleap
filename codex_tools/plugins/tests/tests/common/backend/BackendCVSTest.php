@@ -31,10 +31,15 @@ require_once('common/project/ProjectManager.class.php');
 Mock::generate('ProjectManager');
 require_once('common/project/Project.class.php');
 Mock::generate('Project');
+require_once('common/dao/ServiceDao.class.php');
+Mock::generate('ServiceDao');
+
+
 Mock::generatePartial('BackendCVS', 'BackendCVSTestVersionInit', array('_getUserManager', 
                                                              '_getProjectManager',
                                                              'chown',
                                                              'chgrp',
+                                                             '_getServiceDao'
                                                            ));
 
 class BackendCVSTestVersion extends BackendCVSTestVersionInit {
@@ -56,6 +61,7 @@ class BackendCVSTest extends UnitTestCase {
         $GLOBALS['cvslock_prefix']            = dirname(__FILE__) . '/_fixtures/var/lock/cvs';
         $GLOBALS['tmp_dir']                   = dirname(__FILE__) . '/_fixtures/var/tmp';
         $GLOBALS['cvs_cmd']                   = "/usr/bin/cvs";
+        $GLOBALS['cvs_root_allow_file']       = dirname(__FILE__) . '/_fixtures/etc/cvs_root_allow';
     }
     
     function tearDown() {
@@ -63,6 +69,7 @@ class BackendCVSTest extends UnitTestCase {
         unset($GLOBALS['cvslock_prefix']);
         unset($GLOBALS['tmp_dir']);
         unset($GLOBALS['cvs_cmd']);
+        unset($GLOBALS['cvs_root_allow_file']);
     }
     
     function testConstructor() {
@@ -150,7 +157,59 @@ class BackendCVSTest extends UnitTestCase {
         $backend->recurseDeleteInDir($GLOBALS['cvs_prefix']."/TestProj");
         rmdir($GLOBALS['cvs_prefix']."/TestProj");
         rmdir($GLOBALS['cvslock_prefix']."/TestProj");
-   }
+    }
 
+    function testCVSRootListUpdate() {
+        $backend =& new BackendCVSTestVersion($this);
+        $service_dao =& new MockServiceDao($this);
+        $service_dao->setReturnValue('searchActiveUnixGroupByUsedService',array(array('unix_group_name'=>'TestProj'),array('unix_group_name'=>'gpig')));
+        $backend->setReturnReference('_getServiceDao', $service_dao);
+
+
+        $backend->setNeedUpdateCVSRootList();
+        $this->assertTrue($backend->CVSRootListNeedUpdate(),"Need to update the repo list");
+
+        $this->assertEqual($backend->CVSRootListUpdate(),True);
+        
+        // Now test CVSRootListUpdate
+        $this->assertTrue(is_file($GLOBALS['cvs_root_allow_file']),"cvs_root_allow file should be created");
+        $cvs_config_array1 = file($GLOBALS['cvs_root_allow_file']);
+
+        $this->assertTrue(in_array("/cvsroot/gpig\n",$cvs_config_array1),"Project gpig should be listed in root file");
+        $this->assertTrue(in_array("/cvsroot/TestProj\n",$cvs_config_array1),"Project TestProj should be listed in root file");
+      
+        $service_dao->setReturnValue('searchActiveUnixGroupByUsedService',array(array('unix_group_name'=>'TestProj'),array('unix_group_name'=>'gpig')));
+        $backend->setNeedUpdateCVSRootList();
+        $this->assertTrue($backend->CVSRootListNeedUpdate(),"Need to update the repo list");
+        $this->assertEqual($backend->CVSRootListUpdate(),True);
+        $this->assertTrue(is_file($GLOBALS['cvs_root_allow_file'].".new"),"cvs_root_allow.new file should be created");
+        $this->assertFalse(is_file($GLOBALS['cvs_root_allow_file'].".old"),"cvs_root_allow.old file should not be created (same files)");
+        $cvs_config_array2 = file($GLOBALS['cvs_root_allow_file'].".new");
+        $this->assertTrue(in_array("/cvsroot/gpig\n",$cvs_config_array2),"Project gpig should be listed in root.new file");
+        $this->assertTrue(in_array("/cvsroot/TestProj\n",$cvs_config_array2),"Project TestProj should be listed in root.new file");
+
+
+        // A project was added
+        $service_dao2 =& new MockServiceDao($this);
+        $service_dao2->setReturnValue('searchActiveUnixGroupByUsedService',array(array('unix_group_name'=>'TestProj'),array('unix_group_name'=>'gpig'),array('unix_group_name'=>'newProj')));
+        $backend2 =& new BackendCVSTestVersion($this);
+        $backend2->setReturnReference('_getServiceDao', $service_dao2);
+        $backend2->setNeedUpdateCVSRootList();
+        $this->assertTrue($backend2->CVSRootListNeedUpdate(),"Need to update the repo list");
+        $this->assertEqual($backend2->CVSRootListUpdate(),True);
+        $this->assertFalse(is_file($GLOBALS['cvs_root_allow_file'].".new"),"cvs_root_allow.new file should not be created (moved because different files)");
+        $this->assertTrue(is_file($GLOBALS['cvs_root_allow_file'].".old"),"cvs_root_allow.old file should be created (different files)");
+        // Again
+        $backend2->setNeedUpdateCVSRootList();
+        $this->assertTrue($backend2->CVSRootListNeedUpdate(),"Need to update the repo list");
+        $this->assertEqual($backend2->CVSRootListUpdate(),True);
+        $this->assertTrue(is_file($GLOBALS['cvs_root_allow_file'].".new"),"cvs_root_allow.new file should be created (same files)");
+        $this->assertTrue(is_file($GLOBALS['cvs_root_allow_file'].".old"),"cvs_root_allow.old file should be there");
+
+        // Cleanup
+        unlink($GLOBALS['cvs_root_allow_file']);
+        unlink($GLOBALS['cvs_root_allow_file'].".old");
+        unlink($GLOBALS['cvs_root_allow_file'].".new");
+    }
 }
 ?>
