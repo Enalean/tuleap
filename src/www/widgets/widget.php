@@ -71,6 +71,10 @@ if ($request->valid($vOwner)) {
                             echo '</body></html>';
                             exit;
                             break;
+                        case 'process':
+                            $widget->loadContent($instance_id);
+                            $widget->process($owner_type, $owner_id);
+                            exit;
                         default:
                             break;
                     }
