@@ -76,8 +76,8 @@ $output = '';
             $output .= '<td align="center">' ;
             
             
-            $output .= '<a href="adminSvnPasserelle.php?func=delete&amp;log_id='. $row['log_id'].'" onclick="return confirm(\''.  $hp->purify($GLOBALS['Language']->getText('plugin_svntodimensions', 'admin_historic_warn'), CODEX_PURIFIER_CONVERT_HTML)  .'\');">'
-                           // . $GLOBALS['HTML']->getImage('./themes/default/images/delete.png', array('alt'=> $hp->purify($GLOBALS['Language']->getText('plugin_svntodimensions', 'admin_historic_delete'), CODEX_PURIFIER_CONVERT_HTML) , 'title'=>  $hp->purify($GLOBALS['Language']->getText('plugin_svntodimensions', 'admin_historic_delete'), CODEX_PURIFIER_CONVERT_HTML) )) .'</a>';
+            $output .= '<a href="adminSvnPasserelle.php?func=delete&amp;log_id='. $row['log_id'].'" onclick="return confirm(\''.  $hp->purify($GLOBALS['Language']->getText('plugin_svntodimensions', 'admin_historic_warn'), CODENDI_PURIFIER_CONVERT_HTML)  .'\');">'
+                           // . $GLOBALS['HTML']->getImage('./themes/default/images/delete.png', array('alt'=> $hp->purify($GLOBALS['Language']->getText('plugin_svntodimensions', 'admin_historic_delete'), CODENDI_PURIFIER_CONVERT_HTML) , 'title'=>  $hp->purify($GLOBALS['Language']->getText('plugin_svntodimensions', 'admin_historic_delete'), CODENDI_PURIFIER_CONVERT_HTML) )) .'</a>';
             
            .'<IMG SRC="./themes/default/images/delete.png" HEIGHT="16" WIDTH="16" BORDER="0"></A></td>';
             $output .= '</tr>';

@@ -555,10 +555,10 @@ class Docman_Actions extends Actions {
                     $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'info_item_moved', array(
                         $item->getGroupId(),
                         $old_parent->getId(), 
-                        $hp->purify($old_parent->getTitle(), CODEX_PURIFIER_CONVERT_HTML) ,
+                        $hp->purify($old_parent->getTitle(), CODENDI_PURIFIER_CONVERT_HTML) ,
                         $new_parent->getId(), 
-                        $hp->purify($new_parent->getTitle(), CODEX_PURIFIER_CONVERT_HTML)
-                    )), CODEX_PURIFIER_DISABLED);
+                        $hp->purify($new_parent->getTitle(), CODENDI_PURIFIER_CONVERT_HTML)
+                    )), CODENDI_PURIFIER_DISABLED);
                 } else {
                     $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_item_not_moved'));
                 }
@@ -1217,7 +1217,7 @@ class Docman_Actions extends Actions {
         
         $_logmsg = $GLOBALS['Language']->getText('plugin_docman', 'info_copy_notify_cp_'.$_itemtype).' '.$GLOBALS['Language']->getText('plugin_docman', 'info_copy_notify_cp');
         
-        $this->_controler->feedback->log('info', $_logmsg, CODEX_PURIFIER_LIGHT);
+        $this->_controler->feedback->log('info', $_logmsg, CODENDI_PURIFIER_LIGHT);
     }
 
     function paste($params) {

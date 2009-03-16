@@ -165,16 +165,16 @@ $hp =& Codendi_HTMLPurifier::instance();
 </td><td>
 <?php
 if (in_array($row_user['status'], array('P', 'V', 'W'))) {
-    ?><INPUT TYPE="TEXT" NAME="form_loginname" VALUE="<?php echo  $hp->purify($row_user['user_name'], CODEX_PURIFIER_CONVERT_HTML) ; ?>" ><?php
+    ?><INPUT TYPE="TEXT" NAME="form_loginname" VALUE="<?php echo  $hp->purify($row_user['user_name'], CODENDI_PURIFIER_CONVERT_HTML) ; ?>" ><?php
 } else {
-    echo  $hp->purify($row_user['user_name'], CODEX_PURIFIER_CONVERT_HTML) ;
+    echo  $hp->purify($row_user['user_name'], CODENDI_PURIFIER_CONVERT_HTML) ;
 }
 ?>
 </td></tr>
 <tr><td>
 <?php echo $GLOBALS['Language']->getText('account_options', 'realname'); ?>:
 </td><td>
-<INPUT TYPE="TEXT" NAME="form_realname" VALUE="<?php echo  $hp->purify($row_user['realname'], CODEX_PURIFIER_CONVERT_HTML) ; ?>" >
+<INPUT TYPE="TEXT" NAME="form_realname" VALUE="<?php echo  $hp->purify($row_user['realname'], CODENDI_PURIFIER_CONVERT_HTML) ; ?>" >
 </td></tr>
 <tr><td>
 <?php echo $Language->getText('admin_usergroup','shell'); ?>:
@@ -230,7 +230,7 @@ $hp = Codendi_HTMLPurifier::instance();
 <?php if($GLOBALS['sys_user_approval'] == 1){ ?>
 <HR>
 <H3><?php echo $Language->getText('admin_approve_pending_users','purpose'); ?>:</H3>
-<?php echo  $hp->purify($row_user['register_purpose'], CODEX_PURIFIER_CONVERT_HTML) ; 
+<?php echo  $hp->purify($row_user['register_purpose'], CODENDI_PURIFIER_CONVERT_HTML) ; 
 }?>
 <HR>
 

@@ -161,7 +161,7 @@ extends Docman_View_ItemDetailsSection {
             $html .= '<tr>';
             $html .= '<td>'.$GLOBALS['Language']->getText('plugin_docman', 'details_approval_owner_comment').'</td>';
             $html .= '<td>';
-            $html .= $this->hp->purify($this->table->getDescription(), CODEX_PURIFIER_BASIC, $this->item->getGroupId());
+            $html .= $this->hp->purify($this->table->getDescription(), CODENDI_PURIFIER_BASIC, $this->item->getGroupId());
             $html .= '</td>';
             $html .= '</tr>';
 
@@ -204,7 +204,7 @@ extends Docman_View_ItemDetailsSection {
                 $html .= '<td'.$_trClass.'>'.$_reviewHtml.'</td>';
 
                 // Comment
-                $html .= '<td'.$_trClass.'>'.$this->hp->purify($reviewer->getComment(), CODEX_PURIFIER_BASIC, $this->item->getGroupId()).'</td>';
+                $html .= '<td'.$_trClass.'>'.$this->hp->purify($reviewer->getComment(), CODENDI_PURIFIER_BASIC, $this->item->getGroupId()).'</td>';
 
                 // Date
                 $date = $reviewer->getReviewDate();
@@ -265,7 +265,7 @@ extends Docman_View_ItemDetailsSection {
         $html .= '<tr>';
         $html .= '<td>'.$GLOBALS['Language']->getText('plugin_docman', 'details_approval_doc_review_name').'</td>';
         $html .= '<td>';
-        $html .=  $this->hp->purify($this->item->getTitle(), CODEX_PURIFIER_CONVERT_HTML) ;
+        $html .=  $this->hp->purify($this->item->getTitle(), CODENDI_PURIFIER_CONVERT_HTML) ;
         if($itemCurrentVersion == null) {
             $url = Docman_View_View::buildUrl($this->url, 
                                               array('action' => 'show',
@@ -325,7 +325,7 @@ extends Docman_View_ItemDetailsSection {
         $html .= '<tr>';
         $html .= '<td>'.$GLOBALS['Language']->getText('plugin_docman', 'details_approval_owner_comment').'</td>';
         $html .= '<td>';
-        $html .= $this->hp->purify($this->table->getDescription(), CODEX_PURIFIER_BASIC, $this->item->getGroupId());
+        $html .= $this->hp->purify($this->table->getDescription(), CODENDI_PURIFIER_BASIC, $this->item->getGroupId());
         $html .= '</td>';
         $html .= '</tr>';
         

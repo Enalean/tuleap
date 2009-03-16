@@ -39,7 +39,7 @@ if ($usersearch) {
 		print "<tr><th>".$Language->getText('admin_search','login')."</th><th>".$Language->getText('admin_search','user_name')."</th></tr>\n\n";
 
 		while ($row = db_fetch_array($result)) {
-			print '<tr><td><a href="usergroup.php?user_id='. $row['user_id'] .'">'. $row['user_name'] .'</a></td><td>'.  $hp->purify($row['realname'], CODEX_PURIFIER_CONVERT_HTML) ."</td></tr>\n"; 
+			print '<tr><td><a href="usergroup.php?user_id='. $row['user_id'] .'">'. $row['user_name'] .'</a></td><td>'.  $hp->purify($row['realname'], CODENDI_PURIFIER_CONVERT_HTML) ."</td></tr>\n"; 
 		}
 		print "</table>";
 

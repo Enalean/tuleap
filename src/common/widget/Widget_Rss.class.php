@@ -20,7 +20,7 @@ require_once('Widget.class.php');
     }
     function getTitle() {
         $hp = Codendi_HTMLPurifier::instance();
-        return $this->rss_title ?  $hp->purify($this->rss_title, CODEX_PURIFIER_CONVERT_HTML)  : 'RSS Reader';
+        return $this->rss_title ?  $hp->purify($this->rss_title, CODENDI_PURIFIER_CONVERT_HTML)  : 'RSS Reader';
     }
     function getContent() {
         $hp = Codendi_HTMLPurifier::instance();
@@ -39,7 +39,7 @@ require_once('Widget.class.php');
                 $content .= '<tr class="'. util_get_alt_row_color($i++) .'"><td WIDTH="99%">';
                 if ($image = $item->get_link(0, 'image')) {
                     //hack to display twitter avatar
-                    $content .= '<img src="'.  $hp->purify($image, CODEX_PURIFIER_CONVERT_HTML)  .'" style="float:left; margin-right:1em;" />';
+                    $content .= '<img src="'.  $hp->purify($image, CODENDI_PURIFIER_CONVERT_HTML)  .'" style="float:left; margin-right:1em;" />';
                 }
                 $content .= '<a href="'. $item->get_link() .'">'. $item->get_title() .'</a>';
                 if ($item->get_date()) {
@@ -60,8 +60,8 @@ require_once('Widget.class.php');
     function getPreferences() {
         $hp = Codendi_HTMLPurifier::instance();
         $prefs  = '';
-        $prefs .= '<table><tr><td>Title:</td><td><input type="text" class="textfield_medium" name="rss[title]" value="'. $hp->purify($this->rss_title, CODEX_PURIFIER_CONVERT_HTML) .'" /></td></tr>';
-        $prefs .= '<tr><td>Url:</td><td><input type="text" class="textfield_medium" name="rss[url]" value="'. $hp->purify($this->rss_url, CODEX_PURIFIER_CONVERT_HTML) .'" /></td></tr>';
+        $prefs .= '<table><tr><td>Title:</td><td><input type="text" class="textfield_medium" name="rss[title]" value="'. $hp->purify($this->rss_title, CODENDI_PURIFIER_CONVERT_HTML) .'" /></td></tr>';
+        $prefs .= '<tr><td>Url:</td><td><input type="text" class="textfield_medium" name="rss[url]" value="'. $hp->purify($this->rss_url, CODENDI_PURIFIER_CONVERT_HTML) .'" /></td></tr>';
         $prefs .= '</table>';
         return $prefs;
     }

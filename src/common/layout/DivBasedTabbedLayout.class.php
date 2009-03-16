@@ -52,7 +52,7 @@ class DivBasedTabbedLayout extends Layout
 	 */
 	function createLinkToUserHome($user_name, $realname) {
 	    $hp = Codendi_HTMLPurifier::instance();
-		return '<a href="/users/'.$user_name.'/">'.$hp->purify($realname, CODEX_PURIFIER_CONVERT_HTML).'</a>';
+		return '<a href="/users/'.$user_name.'/">'.$hp->purify($realname, CODENDI_PURIFIER_CONVERT_HTML).'</a>';
 	}
     
     function getBodyHeader($params) {

@@ -43,7 +43,7 @@ class Widget_WikiPage extends Widget {
     }
     function getTitle() {
         $hp = Codendi_HTMLPurifier::instance();
-        return $this->wikipage_title ?  $hp->purify($this->wikipage_title, CODEX_PURIFIER_CONVERT_HTML)  : 'Wiki Page';
+        return $this->wikipage_title ?  $hp->purify($this->wikipage_title, CODENDI_PURIFIER_CONVERT_HTML)  : 'Wiki Page';
     }
     function getContent() {
         $hp = Codendi_HTMLPurifier::instance();
@@ -68,9 +68,9 @@ class Widget_WikiPage extends Widget {
     function getPreferences() {
         $hp = Codendi_HTMLPurifier::instance();
         $prefs  = '';
-        $prefs .= '<table><tr><td>Title:</td><td><input type="text" class="textfield_medium" name="WikiPage[title]" value="'. $hp->purify($this->wikipage_title, CODEX_PURIFIER_CONVERT_HTML) .'" /></td></tr>';
-        $prefs .= '<tr><td>Project id:</td><td><input type="text" class="textfield_medium" name="WikiPage[group_id]" value="'. $hp->purify($this->wikipage_group_id, CODEX_PURIFIER_CONVERT_HTML) .'" /></td></tr>';
-        $prefs .= '<tr><td>Wiki page:</td><td><input type="text" class="textfield_medium" name="WikiPage[wiki_page]" value="'. $hp->purify($this->wikipage_wiki_page, CODEX_PURIFIER_CONVERT_HTML) .'" /></td></tr>';
+        $prefs .= '<table><tr><td>Title:</td><td><input type="text" class="textfield_medium" name="WikiPage[title]" value="'. $hp->purify($this->wikipage_title, CODENDI_PURIFIER_CONVERT_HTML) .'" /></td></tr>';
+        $prefs .= '<tr><td>Project id:</td><td><input type="text" class="textfield_medium" name="WikiPage[group_id]" value="'. $hp->purify($this->wikipage_group_id, CODENDI_PURIFIER_CONVERT_HTML) .'" /></td></tr>';
+        $prefs .= '<tr><td>Wiki page:</td><td><input type="text" class="textfield_medium" name="WikiPage[wiki_page]" value="'. $hp->purify($this->wikipage_wiki_page, CODENDI_PURIFIER_CONVERT_HTML) .'" /></td></tr>';
         $prefs .= '</table>';
         return $prefs;
     }

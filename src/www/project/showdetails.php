@@ -45,7 +45,7 @@ $currentproject->displayProjectsDescFieldsValue();
 if ($license_other != '') {
 	print '<P>';
 	print '<b><u>'.$Language->getText('project_admin_editgroupinfo','license_comment').'</u></b>';
-	print '<P>'.$hp->purify(util_unconvert_htmlspecialchars($license_other), CODEX_PURIFIER_BASIC, $group_id);
+	print '<P>'.$hp->purify(util_unconvert_htmlspecialchars($license_other), CODENDI_PURIFIER_BASIC, $group_id);
 }
 
 print '<P><a href="/project/?group_id='.$group_id .'"> '.$Language->getText('project_showdetails','back_main').' </a>';

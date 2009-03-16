@@ -906,15 +906,15 @@ class Layout extends Response {
         
         //Basic feeds
         echo $this->getRssFeed(
-            $hp->purify($GLOBALS['sys_name']. ' - ' .$GLOBALS['Language']->getText('include_layout','latest_news_rss'), CODEX_PURIFIER_CONVERT_HTML),
+            $hp->purify($GLOBALS['sys_name']. ' - ' .$GLOBALS['Language']->getText('include_layout','latest_news_rss'), CODENDI_PURIFIER_CONVERT_HTML),
             '/export/rss_sfnews.php'
         );
         echo $this->getRssFeed(
-            $hp->purify($GLOBALS['sys_name']. ' - ' .$GLOBALS['Language']->getText('include_layout','newest_releases_rss'), CODEX_PURIFIER_CONVERT_HTML),
+            $hp->purify($GLOBALS['sys_name']. ' - ' .$GLOBALS['Language']->getText('include_layout','newest_releases_rss'), CODENDI_PURIFIER_CONVERT_HTML),
             '/export/rss_sfnewreleases.php'
         );
         echo $this->getRssFeed(
-            $hp->purify($GLOBALS['sys_name']. ' - ' .$GLOBALS['Language']->getText('include_layout','newest_projects_rss'), CODEX_PURIFIER_CONVERT_HTML),
+            $hp->purify($GLOBALS['sys_name']. ' - ' .$GLOBALS['Language']->getText('include_layout','newest_projects_rss'), CODENDI_PURIFIER_CONVERT_HTML),
             '/export/rss_sfprojects.php?type=rss&option=newest'
         );
         
@@ -922,7 +922,7 @@ class Layout extends Response {
         if (isset($GLOBALS['group_id']) && $GLOBALS['group_id']) {
             $project = project_get_object($GLOBALS['group_id']);
             echo $this->getRssFeed(
-                $hp->purify($project->getPublicName().' - '.$GLOBALS['Language']->getText('include_layout','latest_news_rss'), CODEX_PURIFIER_CONVERT_HTML),
+                $hp->purify($project->getPublicName().' - '.$GLOBALS['Language']->getText('include_layout','latest_news_rss'), CODENDI_PURIFIER_CONVERT_HTML),
                 '/export/rss_sfnews.php?group_id='.$GLOBALS['group_id']
             );
         }
@@ -930,7 +930,7 @@ class Layout extends Response {
         //Add additionnal feeds
         foreach($this->feeds as $feed) {
             echo $this->getRssFeed(
-                $hp->purify($feed['title'], CODEX_PURIFIER_CONVERT_HTML),
+                $hp->purify($feed['title'], CODENDI_PURIFIER_CONVERT_HTML),
                 $feed['href']
             );
         }
@@ -959,11 +959,11 @@ class Layout extends Response {
         $hp = Codendi_HTMLPurifier::instance();
         return '<span style="white-space:nowrap;"><input type="text" 
                        class="highlight-days-67 format-y-m-d divider-dash no-transparency" 
-                       id="'.  $hp->purify($id, CODEX_PURIFIER_CONVERT_HTML)  .'" 
-                       name="'. $hp->purify($name, CODEX_PURIFIER_CONVERT_HTML) .'" 
-                       size="'. $hp->purify($size, CODEX_PURIFIER_CONVERT_HTML) .'" 
-                       maxlength="'. $hp->purify($maxlength, CODEX_PURIFIER_CONVERT_HTML) .'" 
-                       value="'. $hp->purify($value, CODEX_PURIFIER_CONVERT_HTML) .'"></span>';
+                       id="'.  $hp->purify($id, CODENDI_PURIFIER_CONVERT_HTML)  .'" 
+                       name="'. $hp->purify($name, CODENDI_PURIFIER_CONVERT_HTML) .'" 
+                       size="'. $hp->purify($size, CODENDI_PURIFIER_CONVERT_HTML) .'" 
+                       maxlength="'. $hp->purify($maxlength, CODENDI_PURIFIER_CONVERT_HTML) .'" 
+                       value="'. $hp->purify($value, CODENDI_PURIFIER_CONVERT_HTML) .'"></span>';
     }
     
     function warning_for_services_which_configuration_is_not_inherited($group_id, $service_top_tab) {

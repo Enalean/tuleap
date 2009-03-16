@@ -145,7 +145,7 @@ function my_header($params) {
         site_header($params);
     }
     $hp = Codendi_HTMLPurifier::instance();
-    echo '<h2>'. $GLOBALS['Language']->getText('my_index', 'title', array( $hp->purify(user_getrealname(user_getid()), CODEX_PURIFIER_CONVERT_HTML) .' ('.user_getname().')'));
+    echo '<h2>'. $GLOBALS['Language']->getText('my_index', 'title', array( $hp->purify(user_getrealname(user_getid()), CODENDI_PURIFIER_CONVERT_HTML) .' ('.user_getname().')'));
     echo ' ' . help_button('LoginAndPersonalPage.html');
     echo '</h2>';
 }

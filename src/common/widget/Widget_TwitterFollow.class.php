@@ -41,7 +41,7 @@ class Widget_TwitterFollow extends Widget {
     }
     function getTitle() {
         $hp = Codendi_HTMLPurifier::instance();
-        return $this->twitterfollow_title ?  $hp->purify($this->twitterfollow_title, CODEX_PURIFIER_CONVERT_HTML)  : 'Twitter Follow';
+        return $this->twitterfollow_title ?  $hp->purify($this->twitterfollow_title, CODENDI_PURIFIER_CONVERT_HTML)  : 'Twitter Follow';
     }
     function getContent() {
         $hp = Codendi_HTMLPurifier::instance();
@@ -71,13 +71,13 @@ class Widget_TwitterFollow extends Widget {
                         //hack to display twitter avatar
                         $image = preg_replace('/_normal\.(jpg|png|gif)$/i', '_bigger.$1', $image);
                         $content .= '<a href="http://twitter.com/'. urlencode($this->twitterfollow_user) .'">';
-                        $content .= '<img src="'.  $hp->purify($image, CODEX_PURIFIER_CONVERT_HTML)  .'" style="float:left; margin-right:1em;" />';
+                        $content .= '<img src="'.  $hp->purify($image, CODENDI_PURIFIER_CONVERT_HTML)  .'" style="float:left; margin-right:1em;" />';
                         $content .= '</a>';
                     }
                 } else {
                     $content .= '>'; //end of <span
                 }
-                $content .=  $hp->purify($item->get_title(), CODEX_PURIFIER_BASIC) ;
+                $content .=  $hp->purify($item->get_title(), CODENDI_PURIFIER_BASIC) ;
                 if ($item->get_date()) {
                     $content .= ' <span style="color:#999; white-space:nowrap;" title="'. format_date($GLOBALS['Language']->getText('system', 'datefmt'), $item->get_date('U')) .'">- '. util_time_ago_in_words($item->get_date('U')) .'</span>';
                 }
@@ -98,8 +98,8 @@ class Widget_TwitterFollow extends Widget {
     function getPreferences() {
         $hp = Codendi_HTMLPurifier::instance();
         $prefs  = '';
-        $prefs .= '<table><tr><td>Title:</td><td><input type="text" class="textfield_medium" name="twitterfollow[title]" value="'. $hp->purify($this->twitterfollow_title, CODEX_PURIFIER_CONVERT_HTML) .'" /></td></tr>';
-        $prefs .= '<tr><td>Find tweets from the user:</td><td><input type="text" class="textfield_medium" name="twitterfollow[user]" value="'. $hp->purify($this->twitterfollow_user, CODEX_PURIFIER_CONVERT_HTML) .'" /></td></tr>';
+        $prefs .= '<table><tr><td>Title:</td><td><input type="text" class="textfield_medium" name="twitterfollow[title]" value="'. $hp->purify($this->twitterfollow_title, CODENDI_PURIFIER_CONVERT_HTML) .'" /></td></tr>';
+        $prefs .= '<tr><td>Find tweets from the user:</td><td><input type="text" class="textfield_medium" name="twitterfollow[user]" value="'. $hp->purify($this->twitterfollow_user, CODENDI_PURIFIER_CONVERT_HTML) .'" /></td></tr>';
         $prefs .= '</table>';
         return $prefs;
     }

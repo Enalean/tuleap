@@ -29,11 +29,11 @@ for($i=0;$i<sizeof($descfieldsinfos);$i++){
 		}
 	}
 	
-	echo "<P><B><u>".$hp->purify($desc_name,CODEX_PURIFIER_BASIC);
+	echo "<P><B><u>".$hp->purify($desc_name,CODENDI_PURIFIER_BASIC);
 	if($descfieldsinfos[$i]["desc_required"]==1){
 		echo "<font color='red'>*</font>";
 	}
-	echo ":</u></B><BR>".$hp->purify($desc_desc,CODEX_PURIFIER_LIGHT)."</BR>";
+	echo ":</u></B><BR>".$hp->purify($desc_desc,CODENDI_PURIFIER_LIGHT)."</BR>";
 	
 	if($descfieldsinfos[$i]["desc_type"]=='line'){
 		
@@ -41,7 +41,7 @@ for($i=0;$i<sizeof($descfieldsinfos);$i++){
 			 
 			 
 		if(isset($data['project']["form_".$descfieldsinfos[$i]["group_desc_id"]])){
-			echo "' value='".$hp->purify($data['project']["form_".$descfieldsinfos[$i]["group_desc_id"]],CODEX_PURIFIER_CONVERT_HTML);
+			echo "' value='".$hp->purify($data['project']["form_".$descfieldsinfos[$i]["group_desc_id"]],CODENDI_PURIFIER_CONVERT_HTML);
 		}
 		echo "'></BR>" ; ;
 		
@@ -51,7 +51,7 @@ for($i=0;$i<sizeof($descfieldsinfos);$i++){
 			 "' wrap='virtual' cols='70' rows='8'>";
 			 
 		if(isset($data['project']["form_".$descfieldsinfos[$i]["group_desc_id"]])){
-			echo $hp->purify($data['project']["form_".$descfieldsinfos[$i]["group_desc_id"]],CODEX_PURIFIER_CONVERT_HTML);
+			echo $hp->purify($data['project']["form_".$descfieldsinfos[$i]["group_desc_id"]],CODENDI_PURIFIER_CONVERT_HTML);
 		}
 		echo "</TEXTAREA></BR>" ;
 	}

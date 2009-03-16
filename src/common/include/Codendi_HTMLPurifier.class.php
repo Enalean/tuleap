@@ -37,14 +37,14 @@
  * </pre>
  */
 
-define('CODEX_PURIFIER_CONVERT_HTML', 0);
-define('CODEX_PURIFIER_STRIP_HTML', 1);
-define('CODEX_PURIFIER_BASIC',      5);
-define('CODEX_PURIFIER_LIGHT',     10);
-define('CODEX_PURIFIER_FULL',      15);
-define('CODEX_PURIFIER_JS_QUOTE', 20);
-define('CODEX_PURIFIER_JS_DQUOTE', 25);
-define('CODEX_PURIFIER_DISABLED', 100);
+define('CODENDI_PURIFIER_CONVERT_HTML', 0);
+define('CODENDI_PURIFIER_STRIP_HTML', 1);
+define('CODENDI_PURIFIER_BASIC',      5);
+define('CODENDI_PURIFIER_LIGHT',     10);
+define('CODENDI_PURIFIER_FULL',      15);
+define('CODENDI_PURIFIER_JS_QUOTE', 20);
+define('CODENDI_PURIFIER_JS_DQUOTE', 25);
+define('CODENDI_PURIFIER_DISABLED', 100);
 
 class Codendi_HTMLPurifier {
     /**
@@ -132,15 +132,15 @@ class Codendi_HTMLPurifier {
     function getHPConfig($level) {
         $config = null;
         switch($level) {
-        case CODEX_PURIFIER_LIGHT:
+        case CODENDI_PURIFIER_LIGHT:
             $config = $this->getLightConfig();
             break;
 
-        case CODEX_PURIFIER_FULL:
+        case CODENDI_PURIFIER_FULL:
             $config = $this->getCodeXConfig();
             break;
 
-        case CODEX_PURIFIER_STRIP_HTML:
+        case CODENDI_PURIFIER_STRIP_HTML:
             $config = $this->getStripConfig();
             break;
         }
@@ -159,44 +159,44 @@ class Codendi_HTMLPurifier {
      *
      * There are 5 level of purification, from the most restrictive to most
      * permissive:
-     * - CODEX_PURIFIER_CONVERT_HTML (default)
+     * - CODENDI_PURIFIER_CONVERT_HTML (default)
      *   Transform HTML markups it in entities.
      *
-     * - CODEX_PURIFIER_STRIP_HTML
+     * - CODENDI_PURIFIER_STRIP_HTML
      *   Removes all HTML markups. Note: as we relly on HTML Purifier to
      *   perform this operation this option is not considered as secure as
      *   CONVERT_HTML. If you are looking for the most secure option please
      *   consider CONVERT_HTML.
      *
-     * - CODEX_PURIFIER_BASIC (need $groupId to be set for automagic links)
+     * - CODENDI_PURIFIER_BASIC (need $groupId to be set for automagic links)
      *   Removes all user submitted HTML markups but: 
      *    - transform typed URLs into clickable URLs.
      *    - transform autmagic links.
      *    - transform carrige return into HTML br markup.
      *
-     * - CODEX_PURIFIER_LIGHT
+     * - CODENDI_PURIFIER_LIGHT
      *   First set of HTML formatting (@see getLightConfig() for allowed
-     *   markups) plus all what is allowed by CODEX_PURIFIER_BASIC.
+     *   markups) plus all what is allowed by CODENDI_PURIFIER_BASIC.
      *
-     * - CODEX_PURIFIER_FULL
+     * - CODENDI_PURIFIER_FULL
      *   Clean-up plain HTML using HTML Purifier rules (remove forms,
      *   javascript, ...). Warning: there is no longer codex facilities
      *   (neither automagic links nor carrige return to br transformation).
      *
-     * - CODEX_PURIFIER_DISABLED
+     * - CODENDI_PURIFIER_DISABLED
      *   No filter at all.
      */
     function purify($html, $level=0, $groupId=0) {
         $clean = '';
         switch($level) {
-        case CODEX_PURIFIER_DISABLED:
+        case CODENDI_PURIFIER_DISABLED:
             $clean = $html;
             break;
 
-        case CODEX_PURIFIER_LIGHT:
+        case CODENDI_PURIFIER_LIGHT:
             $html = nl2br($this->_makeLinks($html, $groupId));
-        case CODEX_PURIFIER_STRIP_HTML:
-        case CODEX_PURIFIER_FULL:
+        case CODENDI_PURIFIER_STRIP_HTML:
+        case CODENDI_PURIFIER_FULL:
             require_once($GLOBALS['htmlpurifier_dir'].'/HTMLPurifier.auto.php');
             $hp =& HTMLPurifier::getInstance();
             $config = $this->getHPConfig($level);
@@ -205,19 +205,19 @@ class Codendi_HTMLPurifier {
             unset($config);
             break;
 
-        case CODEX_PURIFIER_BASIC:
+        case CODENDI_PURIFIER_BASIC:
             $clean = nl2br($this->_makeLinks(htmlentities($html, ENT_QUOTES, 'UTF-8'), $groupId));
             break;
 
-        case CODEX_PURIFIER_JS_QUOTE:
+        case CODENDI_PURIFIER_JS_QUOTE:
             $clean = preg_replace('/\<\/script\>/umsi', "</'+'script>", addslashes(preg_replace('/\\\n/ums', "
 ", $html)));
             break;
-        case CODEX_PURIFIER_JS_DQUOTE:
+        case CODENDI_PURIFIER_JS_DQUOTE:
             $clean = preg_replace('/\<\/script\>/umsi', '</"+"script>', addslashes(preg_replace('/\\\n/ums', '
 ', $html)));
             break;
-        case CODEX_PURIFIER_CONVERT_HTML:
+        case CODENDI_PURIFIER_CONVERT_HTML:
         default:
             $clean = htmlentities($html, ENT_QUOTES, 'UTF-8');
             break;

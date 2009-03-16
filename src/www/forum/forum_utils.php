@@ -68,7 +68,7 @@ function forum_header($params) {
 			} else {
 				echo '
 				<B>'.$Language->getText('forum_forum_utils','posted_by').':</B> '.
-                $hp->purify($uh->getDisplayNameFromUserId(db_result($result,0,'submitted_by')), CODEX_PURIFIER_CONVERT_HTML) .
+                $hp->purify($uh->getDisplayNameFromUserId(db_result($result,0,'submitted_by')), CODENDI_PURIFIER_CONVERT_HTML) .
 				'<BR>
 				<B>'.$Language->getText('forum_forum','date').':</B> '. format_date($GLOBALS['Language']->getText('system', 'datefmt'),db_result($result,0,'date')).'<BR>
 				<B>'.$Language->getText('forum_forum_utils','summary').':</B><A HREF="/forum/forum.php?forum_id='.db_result($result,0,'forum_id').'">'. db_result($result,0,'summary').'</A>

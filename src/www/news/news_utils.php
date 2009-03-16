@@ -150,7 +150,7 @@ function news_show_latest($group_id='',$limit=10,$show_summaries=true,$allow_sub
                                                    <BR>&nbsp;';
                 }
                 $return .= '&nbsp;&nbsp;&nbsp;<I>'.
-                    $hp->purify($uh->getDisplayNameFromUserName(db_result($result,$i,'user_name')), CODEX_PURIFIER_CONVERT_HTML) .
+                    $hp->purify($uh->getDisplayNameFromUserName(db_result($result,$i,'user_name')), CODENDI_PURIFIER_CONVERT_HTML) .
                     ' - '.
                     format_date($GLOBALS['Language']->getText('system', 'datefmt'),db_result($result,$i,'date')) .' </I>'.
                     $proj_name . $summ_txt;

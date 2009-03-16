@@ -105,7 +105,7 @@ class Docman_View_ItemDetailsSectionActions extends Docman_View_ItemDetailsSecti
                     $content .= '</dd>';
                     $content .= '<dt>'.$GLOBALS['Language']->getText('plugin_docman', 'details_actions_paste').'</dt><dd>';
                     $copyurl = Docman_View_View::buildUrl($this->url, array('action' => 'action_paste', 'id' => $this->item->getId()));
-                    $content .= $GLOBALS['Language']->getText('plugin_docman', 'details_actions_paste_canpaste', array($copyurl,  $this->hp->purify($copiedItem->getTitle(), CODEX_PURIFIER_CONVERT_HTML) ));
+                    $content .= $GLOBALS['Language']->getText('plugin_docman', 'details_actions_paste_canpaste', array($copyurl,  $this->hp->purify($copiedItem->getTitle(), CODENDI_PURIFIER_CONVERT_HTML) ));
                 }
             }
             //}}}

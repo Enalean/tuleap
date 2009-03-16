@@ -5,7 +5,7 @@ class Feedback {
     function Feedback() {
         $this->logs = array();
     }
-    function log($level, $msg, $purify=CODEX_PURIFIER_CONVERT_HTML) {
+    function log($level, $msg, $purify=CODENDI_PURIFIER_CONVERT_HTML) {
         if(!is_array($msg)) {
             $msg = array($msg);
         }

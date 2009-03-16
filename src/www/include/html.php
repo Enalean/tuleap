@@ -77,8 +77,8 @@ function html_get_language_popup ($Language,$title='language_id',$selected='xzxz
     $html = '<select name="'. $title .'">';
     foreach($GLOBALS['Language']->getLanguages() as $code => $lang) {
         $select = ($selected == $code) ? 'selected="selected"' : '';
-        $html .= '<option value="'.  $hp->purify($code, CODEX_PURIFIER_CONVERT_HTML)  .'" '. $select .'>';
-        $html .= $hp->purify($lang, CODEX_PURIFIER_CONVERT_HTML);
+        $html .= '<option value="'.  $hp->purify($code, CODENDI_PURIFIER_CONVERT_HTML)  .'" '. $select .'>';
+        $html .= $hp->purify($lang, CODENDI_PURIFIER_CONVERT_HTML);
         $html .= '</option>';
     }
     $html .= '</selected>';
@@ -169,7 +169,7 @@ function html_build_select_box_from_array ($vals,$select_name,$checked_val='xzxz
 	return $return;
 }
 
-function html_build_select_box_from_arrays ($vals,$texts,$select_name,$checked_val='xzxz',$show_100=true,$text_100='',$show_any=false,$text_any='',$show_unchanged=false,$text_unchanged='', $purify_level=CODEX_PURIFIER_CONVERT_HTML) {
+function html_build_select_box_from_arrays ($vals,$texts,$select_name,$checked_val='xzxz',$show_100=true,$text_100='',$show_any=false,$text_any='',$show_unchanged=false,$text_unchanged='', $purify_level=CODENDI_PURIFIER_CONVERT_HTML) {
         global $Language;
         $return = '';
         $isAValueSelected = false;
@@ -297,7 +297,7 @@ function html_build_select_box_from_arrays ($vals,$texts,$select_name,$checked_v
 	return $return;
 }
 
-function html_build_select_box ($result, $name, $checked_val="xzxz",$show_100=true,$text_100='',$show_any=false,$text_any='',$show_unchanged=false,$text_unchanged='', $purify_level=CODEX_PURIFIER_CONVERT_HTML) {
+function html_build_select_box ($result, $name, $checked_val="xzxz",$show_100=true,$text_100='',$show_any=false,$text_any='',$show_unchanged=false,$text_unchanged='', $purify_level=CODENDI_PURIFIER_CONVERT_HTML) {
         global $Language;
 	/*
 		Takes a result set, with the first column being the "id" or value
@@ -320,7 +320,7 @@ function html_build_select_box ($result, $name, $checked_val="xzxz",$show_100=tr
 	return html_build_select_box_from_arrays (util_result_column_to_array($result,0),util_result_column_to_array($result,1),$name,$checked_val,$show_100,$text_100,$show_any,$text_any,$show_unchanged,$text_unchanged, $purify_level);
 }
 
-function html_build_multiple_select_box($result,$name,$checked_array,$size='8',$show_100=true,$text_100='', $show_any=false,$text_any='',$show_unchanged=false,$text_unchanged='',$show_value=true, $purify_level=CODEX_PURIFIER_CONVERT_HTML) {
+function html_build_multiple_select_box($result,$name,$checked_array,$size='8',$show_100=true,$text_100='', $show_any=false,$text_any='',$show_unchanged=false,$text_unchanged='',$show_value=true, $purify_level=CODENDI_PURIFIER_CONVERT_HTML) {
     if (is_array($result)) {
         $array =& $result;
     } else {
@@ -331,7 +331,7 @@ function html_build_multiple_select_box($result,$name,$checked_array,$size='8',$
     }
     return html_build_multiple_select_box_from_array($array,$name,$checked_array,$size,$show_100,$text_100, $show_any,$text_any,$show_unchanged,$text_unchanged,$show_value, $purify_level);
 }
-function html_build_multiple_select_box_from_array($array,$name,$checked_array,$size='8',$show_100=true,$text_100='', $show_any=false,$text_any='',$show_unchanged=false,$text_unchanged='',$show_value=true, $purify_level=CODEX_PURIFIER_CONVERT_HTML) {
+function html_build_multiple_select_box_from_array($array,$name,$checked_array,$size='8',$show_100=true,$text_100='', $show_any=false,$text_any='',$show_unchanged=false,$text_unchanged='',$show_value=true, $purify_level=CODENDI_PURIFIER_CONVERT_HTML) {
         global $Language;
 	/*
 		Takes a result set, with the first column being the "id" or value

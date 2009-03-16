@@ -62,10 +62,10 @@ class ArtifactRulesManagerHtml extends ArtifactRulesManager {
                 if ($field->isMultiSelectBox() || $field->isSelectBox()) {
                     $values = $field->getFieldPredefinedValues($this->artifact_type->getID());
                     if (db_numrows($values) >= 1) {
-                        echo "codendi.tracker.fields.add('".(int)$field->getID()."', '".$field->getName()."', '". $hp->purify(SimpleSanitizer::unsanitize($field->getLabel()), CODEX_PURIFIER_JS_QUOTE) ."')";
+                        echo "codendi.tracker.fields.add('".(int)$field->getID()."', '".$field->getName()."', '". $hp->purify(SimpleSanitizer::unsanitize($field->getLabel()), CODENDI_PURIFIER_JS_QUOTE) ."')";
                         $default_value = $field->getDefaultValue();
                         while ($row = db_fetch_array($values)) {
-                            echo "\n\t.addOption('".  $hp->purify(SimpleSanitizer::unsanitize($row[1]), CODEX_PURIFIER_JS_QUOTE)  ."'.escapeHTML(), '". (int)$row[0] ."', ". ($row[0]==$default_value?'true':'false') .")";
+                            echo "\n\t.addOption('".  $hp->purify(SimpleSanitizer::unsanitize($row[1]), CODENDI_PURIFIER_JS_QUOTE)  ."'.escapeHTML(), '". (int)$row[0] ."', ". ($row[0]==$default_value?'true':'false') .")";
                         }
                         echo ";\n";
                     }
@@ -147,7 +147,7 @@ class ArtifactRulesManagerHtml extends ArtifactRulesManager {
             $highlight = $this->fieldHasTarget($this->artifact_type->getId(), $field->getId()) ? ' class="boxhighlight" ' : ' ';
             $selected  = $field->getId() == $source_field ? ' selected="selected" ' : ' ';
             echo '<option value="'. $id .'" '. $highlight . $selected .'>';
-            echo $hp->purify(SimpleSanitizer::unsanitize($field->getLabel()), CODEX_PURIFIER_CONVERT_HTML);
+            echo $hp->purify(SimpleSanitizer::unsanitize($field->getLabel()), CODENDI_PURIFIER_CONVERT_HTML);
             echo '</option>';
         }
         echo '</select>';
@@ -160,7 +160,7 @@ class ArtifactRulesManagerHtml extends ArtifactRulesManager {
             $highlight = $this->fieldHasSource($this->artifact_type->getId(), $field->getId()) ? ' class="boxhighlight" ' : ' ';
             $selected  = $field->getId() == $target_field ? ' selected="selected" ' : ' ';
             echo '<option value="'. $id .'" '. $highlight . $selected .'>';
-            echo $hp->purify(SimpleSanitizer::unsanitize($field->getLabel()), CODEX_PURIFIER_CONVERT_HTML);
+            echo $hp->purify(SimpleSanitizer::unsanitize($field->getLabel()), CODENDI_PURIFIER_CONVERT_HTML);
             echo '</option>';
         }
         echo '</select>';
@@ -182,7 +182,7 @@ class ArtifactRulesManagerHtml extends ArtifactRulesManager {
                                  style="visibility: hidden;"
                                  onclick="admin_checked(this.id)" />';
                     echo '</td><td style="cursor: pointer;" onclick="return admin_selectSourceEvent(this)"><span> </span><label style="cursor: pointer;">';
-                    $v = $hp->purify(SimpleSanitizer::unsanitize($row[1]), CODEX_PURIFIER_CONVERT_HTML);
+                    $v = $hp->purify(SimpleSanitizer::unsanitize($row[1]), CODENDI_PURIFIER_CONVERT_HTML);
                     if ($this->valueHasTarget($this->artifact_type->getId(), $source_field, $row[0], $target_field)) {
                         echo '<strong>'. $v .'</strong>';
                     } else {
@@ -209,7 +209,7 @@ class ArtifactRulesManagerHtml extends ArtifactRulesManager {
                                  style="visibility: hidden;"
                                  onclick="admin_checked(this.id)" />';
                     echo '</td><td style="cursor: pointer;" onclick="return admin_selectTargetEvent(this)"><span> </span><label style="cursor: pointer;">';
-                    $v = $hp->purify(SimpleSanitizer::unsanitize($row[1]), CODEX_PURIFIER_CONVERT_HTML);
+                    $v = $hp->purify(SimpleSanitizer::unsanitize($row[1]), CODENDI_PURIFIER_CONVERT_HTML);
                     if ($this->valueHasSource($this->artifact_type->getId(), $target_field, $row[0], $source_field)) {
                         echo '<strong>'. $v .'</strong>';
                     } else {
@@ -281,7 +281,7 @@ class ArtifactRulesManagerHtml extends ArtifactRulesManager {
                         $this->saveRuleValue($this->artifact_type->getId(), $request->get('source_field'), $request->get('value'), $request->get('target_field'), $row[0]);
                     }
                 }
-                $GLOBALS['Response']->addFeedback('info',  '<span class="feedback_field_dependencies">'. $GLOBALS['Language']->getText('tracker_field_dependencies','saved') .'</span>', CODEX_PURIFIER_DISABLED);
+                $GLOBALS['Response']->addFeedback('info',  '<span class="feedback_field_dependencies">'. $GLOBALS['Language']->getText('tracker_field_dependencies','saved') .'</span>', CODENDI_PURIFIER_DISABLED);
                 $this->displayRules($request->get('source_field'), $request->get('target_field'), $request->get('value'), false);
                 break;
             case 'target': // n sources -> 1 target
@@ -295,7 +295,7 @@ class ArtifactRulesManagerHtml extends ArtifactRulesManager {
                         $this->saveRuleValue($this->artifact_type->getId(), $request->get('source_field'), $row[0], $request->get('target_field'), $request->get('value'));
                     }
                 }
-                $GLOBALS['Response']->addFeedback('info',  '<span class="feedback_field_dependencies">'. $GLOBALS['Language']->getText('tracker_field_dependencies','saved') .'</span>', CODEX_PURIFIER_DISABLED);
+                $GLOBALS['Response']->addFeedback('info',  '<span class="feedback_field_dependencies">'. $GLOBALS['Language']->getText('tracker_field_dependencies','saved') .'</span>', CODENDI_PURIFIER_DISABLED);
                 $this->displayRules($request->get('source_field'), $request->get('target_field'), false, $request->get('value'));
                 break;
             default:

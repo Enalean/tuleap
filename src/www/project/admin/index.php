@@ -161,7 +161,7 @@ $hp =& Codendi_HTMLPurifier::instance();
 
 print '&nbsp;
 <BR>
-'.$Language->getText('project_admin_index','short_desc',$hp->purify(db_result($res_grp,0,'short_description'), CODEX_PURIFIER_LIGHT));
+'.$Language->getText('project_admin_index','short_desc',$hp->purify(db_result($res_grp,0,'short_description'), CODENDI_PURIFIER_LIGHT));
 if ($project->usesHomePage()) {
     print '<P>'.$Language->getText('project_admin_index','home_page_link',$project->getHomePage()).'</B>';
  }

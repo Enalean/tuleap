@@ -92,7 +92,7 @@ extends Plugin {
             }
             echo "</div>\n";
             echo '<div style="width: 80em; font-family: monospace; margin-bottom: 0.5em;">'."\n";
-            echo $hp->purify($row['body'], CODEX_PURIFIER_BASIC);
+            echo $hp->purify($row['body'], CODENDI_PURIFIER_BASIC);
             echo "</div>\n";
 
             $dar->next();

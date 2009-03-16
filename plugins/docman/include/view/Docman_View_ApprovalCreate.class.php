@@ -30,7 +30,7 @@ class Docman_View_ApprovalCreate extends Docman_View_Details {
 
     function _getTitle($params) {
         $hp = Codendi_HTMLPurifier::instance();
-        return $GLOBALS['Language']->getText('plugin_docman', 'details_approval_create_title',  $hp->purify($params['item']->getTitle(), CODEX_PURIFIER_CONVERT_HTML) );
+        return $GLOBALS['Language']->getText('plugin_docman', 'details_approval_create_title',  $hp->purify($params['item']->getTitle(), CODENDI_PURIFIER_CONVERT_HTML) );
     }
 
     function _content($params) {

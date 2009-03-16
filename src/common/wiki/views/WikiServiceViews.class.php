@@ -42,7 +42,7 @@ class WikiServiceViews extends WikiViews {
     if(!is_null($_REQUEST['pagename'])) {
         $this->html_params['title']  = $GLOBALS['Language']->getText('wiki_views_wikiserviceviews',
                                                           'wiki_page_title',
-                                                          array( $hp->purify($_REQUEST['pagename'], CODEX_PURIFIER_CONVERT_HTML) ,
+                                                          array( $hp->purify($_REQUEST['pagename'], CODENDI_PURIFIER_CONVERT_HTML) ,
                                                                 group_getname($this->gid)));
     }
     else {

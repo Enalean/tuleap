@@ -133,9 +133,9 @@ function showErrors() {
 	  //if insert show default value
 	  if ($this->aid_column == -1 || $aid == "") {
 	    if ($value == "") {
-	      echo '<TD '. $width .' valign="top"><I>'.  $hp->purify($sub_on, CODEX_PURIFIER_CONVERT_HTML) .'</I></TD>';
+	      echo '<TD '. $width .' valign="top"><I>'.  $hp->purify($sub_on, CODENDI_PURIFIER_CONVERT_HTML) .'</I></TD>';
 	    } else {
-	      echo '<TD '. $width .' valign="top">'. $hp->purify($value, CODEX_PURIFIER_CONVERT_HTML) .'</TD>';
+	      echo '<TD '. $width .' valign="top">'. $hp->purify($value, CODENDI_PURIFIER_CONVERT_HTML) .'</TD>';
 	    }
 	  } else {
 	    echo '<TD '. $width .' valign="top"><I>'.$Language->getText('global','unchanged')."</I></TD>\n";
@@ -172,10 +172,10 @@ function showErrors() {
 		for ($d=0; $d < count($parsed_comments); $d++) {
 		  $arr = $parsed_comments[$d];
 		  echo '<TR class="'.util_get_alt_row_color($d).'">';
-		  echo "<TD $width>". $hp->purify($arr['date'], CODEX_PURIFIER_CONVERT_HTML) ."</TD>";
-          echo "<TD $width>". $hp->purify($arr['by'], CODEX_PURIFIER_CONVERT_HTML) ."</TD>";
-          echo "<TD $width>". $hp->purify($arr['type'], CODEX_PURIFIER_CONVERT_HTML) ."</TD>";
-          echo "<TD $width>". $hp->purify($arr['comment'], CODEX_PURIFIER_CONVERT_HTML) ."</TD>";
+		  echo "<TD $width>". $hp->purify($arr['date'], CODENDI_PURIFIER_CONVERT_HTML) ."</TD>";
+          echo "<TD $width>". $hp->purify($arr['by'], CODENDI_PURIFIER_CONVERT_HTML) ."</TD>";
+          echo "<TD $width>". $hp->purify($arr['type'], CODENDI_PURIFIER_CONVERT_HTML) ."</TD>";
+          echo "<TD $width>". $hp->purify($arr['comment'], CODENDI_PURIFIER_CONVERT_HTML) ."</TD>";
 		  echo "</TR>\n";
 		}
 		echo "</TABLE></TD>";
@@ -188,7 +188,7 @@ function showErrors() {
 	    
 	    //DEFAULT
 	  } else {
-	    echo '<TD '. $width .' valign="top">'.  $hp->purify($value, CODEX_PURIFIER_CONVERT_HTML) ."</TD>\n";
+	    echo '<TD '. $width .' valign="top">'.  $hp->purify($value, CODENDI_PURIFIER_CONVERT_HTML) ."</TD>\n";
 	  }
 	  
 	  
@@ -218,7 +218,7 @@ function showErrors() {
     
     while (list(,$label) = each($parsed_labels)) {
       echo '
-        <INPUT TYPE="HIDDEN" NAME="parsed_labels[]" VALUE="'. $hp->purify($label, CODEX_PURIFIER_CONVERT_HTML) .'">';
+        <INPUT TYPE="HIDDEN" NAME="parsed_labels[]" VALUE="'. $hp->purify($label, CODENDI_PURIFIER_CONVERT_HTML) .'">';
     }
     
     
@@ -226,7 +226,7 @@ function showErrors() {
       $data = $artifacts_data[$i];
       for ($c=0; $c < count($data); $c++) {
 	echo '
-        <INPUT TYPE="HIDDEN" NAME="artifacts_data_'.$i.'_'.$c.'" VALUE="'. $hp->purify($data[$c], CODEX_PURIFIER_CONVERT_HTML) .'">';
+        <INPUT TYPE="HIDDEN" NAME="artifacts_data_'.$i.'_'.$c.'" VALUE="'. $hp->purify($data[$c], CODENDI_PURIFIER_CONVERT_HTML) .'">';
       }
     }
     
@@ -310,7 +310,7 @@ function showErrors() {
     $hp = Codendi_HTMLPurifier::instance();
     foreach($record as $k => $v) {
         //We should know the type of each field because some are sanitized, others htmlspecialcharized...
-        $record[$k] =  $hp->purify($v, CODEX_PURIFIER_CONVERT_HTML);
+        $record[$k] =  $hp->purify($v, CODENDI_PURIFIER_CONVERT_HTML);
     }
     
     display_exported_fields($col_list,$this->lbl_list,$this->dsc_list,$record,$mand_list);

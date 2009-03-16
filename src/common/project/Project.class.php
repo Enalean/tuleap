@@ -371,9 +371,9 @@ class Project extends Group {
         		}
     		}
 			
-			echo "<P><b><u>".$hp->purify($descname,CODEX_PURIFIER_LIGHT,$this->getGroupId())."</u></b></P>";
+			echo "<P><b><u>".$hp->purify($descname,CODENDI_PURIFIER_LIGHT,$this->getGroupId())."</u></b></P>";
 			echo "<P>";
-			echo ($displayfieldvalue[$i] == '') ? $Language->getText('global','none') : $hp->purify($displayfieldvalue[$i], CODEX_PURIFIER_LIGHT,$this->getGroupId())  ;
+			echo ($displayfieldvalue[$i] == '') ? $Language->getText('global','none') : $hp->purify($displayfieldvalue[$i], CODENDI_PURIFIER_LIGHT,$this->getGroupId())  ;
 			echo "</P>";
 			
 		}

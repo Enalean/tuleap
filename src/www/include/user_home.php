@@ -50,7 +50,7 @@ echo '
 </TR>
 <TR valign=top>
 	<TD>'.$Language->getText('include_user_home','real_name').': </TD>
-	<TD><B>'. $hp->purify(db_result($res_user,0,'realname'), CODEX_PURIFIER_CONVERT_HTML) .'</B></TD>
+	<TD><B>'. $hp->purify(db_result($res_user,0,'realname'), CODENDI_PURIFIER_CONVERT_HTML) .'</B></TD>
 </TR>
 <TR valign=top>
 	<TD>'.$Language->getText('include_user_home','email_addr').': </TD>
@@ -182,7 +182,7 @@ if (user_isloggedin()) {
 	echo '
 	&nbsp;
 	<P>
-	<H3>'.$Language->getText('include_user_home','send_message_to').' '. $hp->purify(db_result($res_user,0,'realname'), CODEX_PURIFIER_CONVERT_HTML) .'</H3>
+	<H3>'.$Language->getText('include_user_home','send_message_to').' '. $hp->purify(db_result($res_user,0,'realname'), CODENDI_PURIFIER_CONVERT_HTML) .'</H3>
 	<P>
 	<FORM ACTION="/sendmessage.php" METHOD="POST">
 	<INPUT TYPE="HIDDEN" NAME="touser" VALUE="'.$user_id.'">
@@ -204,7 +204,7 @@ if (user_isloggedin()) {
 
 	$my_name=user_getrealname(user_getid());
     $cc = (isset($_REQUEST['cc'])?htmlspecialchars(trim($_REQUEST['cc'])):"");
-	echo  $hp->purify($my_name, CODEX_PURIFIER_CONVERT_HTML) .'</B>
+	echo  $hp->purify($my_name, CODENDI_PURIFIER_CONVERT_HTML) .'</B>
 	<INPUT TYPE="HIDDEN" NAME="name" VALUE="'.$my_name.'">
     <div>
         <script type="text/javascript" src="/scripts/blocks.js"></script>

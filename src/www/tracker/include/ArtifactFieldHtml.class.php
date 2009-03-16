@@ -52,9 +52,9 @@ class ArtifactFieldHtml extends ArtifactField {
 	    $hp = Codendi_HTMLPurifier::instance();
         $output = SimpleSanitizer::unsanitize($this->getLabel()).': ';
         if (!$ascii) {
-            $output =  $hp->purify($output, CODEX_PURIFIER_CONVERT_HTML) ;
+            $output =  $hp->purify($output, CODENDI_PURIFIER_CONVERT_HTML) ;
             if ($tooltip) {
-                $output = '<a class="tooltip" href="#" title="'. $hp->purify(SimpleSanitizer::unsanitize($this->description), CODEX_PURIFIER_CONVERT_HTML) .'">'. $output .'</a>';
+                $output = '<a class="tooltip" href="#" title="'. $hp->purify(SimpleSanitizer::unsanitize($this->description), CODENDI_PURIFIER_CONVERT_HTML) .'">'. $output .'</a>';
             }
             $output = '<B>'. $output .'</B>';
         }
@@ -109,7 +109,7 @@ class ArtifactFieldHtml extends ArtifactField {
             }
             $output  = html_build_multiple_select_box($result,$box_name,$checked,($this->getDisplaySize()!=""?$this->getDisplaySize():"6"),$show_none,$text_none, $show_any,$text_any,$show_unchanged,$text_unchanged,$show_value);
             $output .= '<script type="text/javascript">';
-            $output .= "\ncodendi.tracker.fields.add('".(int)$this->getID()."', '".$hp->purify($this->getName(), CODEX_PURIFIER_JS_QUOTE)."', '".$hp->purify(SimpleSanitizer::unsanitize($this->getLabel()), CODEX_PURIFIER_JS_QUOTE)."')";
+            $output .= "\ncodendi.tracker.fields.add('".(int)$this->getID()."', '".$hp->purify($this->getName(), CODENDI_PURIFIER_JS_QUOTE)."', '".$hp->purify(SimpleSanitizer::unsanitize($this->getLabel()), CODENDI_PURIFIER_JS_QUOTE)."')";
             $output .= $this->_getValuesAsJavascript($array_values,$checked);
             $output .= ";\n";
             $output .= "</script>";
@@ -126,7 +126,7 @@ class ArtifactFieldHtml extends ArtifactField {
             $output  = "";
             $isDefaultValuePresent = false;
             foreach ($values as $row) {
-                $output .= "\n\t.addOption('".  $hp->purify(SimpleSanitizer::unsanitize($row['1']), CODEX_PURIFIER_JS_QUOTE) ."'.escapeHTML(), '". (int)$row['0'] ."', ". ($this->_isValueDefaultValue($row['0'], $default_value)?'true':'false') .")";
+                $output .= "\n\t.addOption('".  $hp->purify(SimpleSanitizer::unsanitize($row['1']), CODENDI_PURIFIER_JS_QUOTE) ."'.escapeHTML(), '". (int)$row['0'] ."', ". ($this->_isValueDefaultValue($row['0'], $default_value)?'true':'false') .")";
                 if ($row['0'] == $default_value) {
                     $isDefaultValuePresent = true;
                 }
@@ -134,7 +134,7 @@ class ArtifactFieldHtml extends ArtifactField {
             if (!$isDefaultValuePresent && !is_array($default_value)) {
                 // for single select box, if the default value is not present, 
                 // we add the javascript for this "missing value" (the corresponding html code will be added by html_build_select_box_from_arrays)
-                $output .= "\n\t.addOption('". $hp->purify($Language->getText('tracker_include_field','unknown_value'), CODEX_PURIFIER_JS_QUOTE) ."', '". (int)$default_value ."', true)\n";
+                $output .= "\n\t.addOption('". $hp->purify($Language->getText('tracker_include_field','unknown_value'), CODENDI_PURIFIER_JS_QUOTE) ."', '". (int)$default_value ."', true)\n";
             }
             return $output;
     }        
@@ -182,7 +182,7 @@ class ArtifactFieldHtml extends ArtifactField {
             }
             $output  = html_build_select_box ($result,$box_name,$checked,$show_none,$text_none,$show_any, $text_any,$show_unchanged,$text_unchanged);
             $output .= '<script type="text/javascript">';
-            $output .= "\ncodendi.tracker.fields.add('".(int)$this->getID()."', '".$hp->purify($this->getName(), CODEX_PURIFIER_JS_QUOTE)."', '".$hp->purify(SimpleSanitizer::unsanitize($this->getLabel()), CODEX_PURIFIER_JS_QUOTE)."')";
+            $output .= "\ncodendi.tracker.fields.add('".(int)$this->getID()."', '".$hp->purify($this->getName(), CODENDI_PURIFIER_JS_QUOTE)."', '".$hp->purify(SimpleSanitizer::unsanitize($this->getLabel()), CODENDI_PURIFIER_JS_QUOTE)."')";
              $output .= $this->_getValuesAsJavascript($array_values,$checked);
             $output .= ';';
             $output .= "\n</script>";
@@ -244,7 +244,7 @@ class ArtifactFieldHtml extends ArtifactField {
 	    if ($ro) {
 			$html = htmlspecialchars($value);
 		} else {
-			$html = '<SELECT name="'. $hp->purify($this->field_name, CODEX_PURIFIER_CONVERT_HTML) .'_op">'.
+			$html = '<SELECT name="'. $hp->purify($this->field_name, CODENDI_PURIFIER_CONVERT_HTML) .'_op">'.
 			'<OPTION VALUE=">"'.(($value == '>') ? 'SELECTED':'').'>&gt;</OPTION>'.
 			'<OPTION VALUE="="'.(($value == '=') ? 'SELECTED':'').'>=</OPTION>'.
 			'<OPTION VALUE="<"'.(($value == '<') ? 'SELECTED':'').'>&lt;</OPTION>'.
@@ -303,8 +303,8 @@ class ArtifactFieldHtml extends ArtifactField {
         }
 
 	    $html = '<input type="text"'
-            .' name="'. $hp->purify($this->field_name, CODEX_PURIFIER_CONVERT_HTML) .'"'
-            .' value="'. $hp->purify(util_unconvert_htmlspecialchars($value), CODEX_PURIFIER_CONVERT_HTML) .'"'
+            .' name="'. $hp->purify($this->field_name, CODENDI_PURIFIER_CONVERT_HTML) .'"'
+            .' value="'. $hp->purify(util_unconvert_htmlspecialchars($value), CODENDI_PURIFIER_CONVERT_HTML) .'"'
             .$sizearg
             .$maxlengtharg
             .'>';
@@ -328,8 +328,8 @@ class ArtifactFieldHtml extends ArtifactField {
 	    if (!$cols || !$rows)
 			list($cols, $rows) = $this->getGlobalDisplaySize();
 	
-	    $html = '<TEXTAREA NAME="'. $hp->purify($this->field_name, CODEX_PURIFIER_CONVERT_HTML) .
-		'" id="tracker_'. $hp->purify( $this->field_name, CODEX_PURIFIER_CONVERT_HTML)  .'" ROWS="'.(int)$rows.'" COLS="'.(int)$cols.'" WRAP="SOFT">'. $hp->purify(util_unconvert_htmlspecialchars($value), CODEX_PURIFIER_CONVERT_HTML) .'</TEXTAREA>';
+	    $html = '<TEXTAREA NAME="'. $hp->purify($this->field_name, CODENDI_PURIFIER_CONVERT_HTML) .
+		'" id="tracker_'. $hp->purify( $this->field_name, CODENDI_PURIFIER_CONVERT_HTML)  .'" ROWS="'.(int)$rows.'" COLS="'.(int)$cols.'" WRAP="SOFT">'. $hp->purify(util_unconvert_htmlspecialchars($value), CODENDI_PURIFIER_CONVERT_HTML) .'</TEXTAREA>';
 	
 	    return($html);
 	
@@ -397,7 +397,7 @@ class ArtifactFieldHtml extends ArtifactField {
                 else {
                     $arr[$i] = SimpleSanitizer::unsanitize($this->getValue($group_artifact_id,$arr[$i]));
                     if (!$ascii) {
-                        $arr[$i] =  $hp->purify($arr[$i], CODEX_PURIFIER_CONVERT_HTML);
+                        $arr[$i] =  $hp->purify($arr[$i], CODENDI_PURIFIER_CONVERT_HTML);
                     }
                 }
 		    }
@@ -440,7 +440,7 @@ class ArtifactFieldHtml extends ArtifactField {
 				else  {
                     $arr[$i] = SimpleSanitizer::unsanitize($this->getValue($group_artifact_id,$arr[$i]));
                     if (!$ascii) {
-                        $arr[$i] =  $hp->purify($arr[$i], CODEX_PURIFIER_CONVERT_HTML);
+                        $arr[$i] =  $hp->purify($arr[$i], CODENDI_PURIFIER_CONVERT_HTML);
                     }
                 }
 		    }

@@ -155,7 +155,7 @@ extends Docman_ReportColumn {
             $dfltParams['id'] = $id;
             $url = $view->buildActionUrl($params, $dfltParams);
             
-            $href = '<a href="'.$url.'">'. $hp->purify($title, CODEX_PURIFIER_CONVERT_HTML) .'</a>';
+            $href = '<a href="'.$url.'">'. $hp->purify($title, CODENDI_PURIFIER_CONVERT_HTML) .'</a>';
             $pathUrl[] = $href;
         }
         $html = implode(' / ', $pathUrl);

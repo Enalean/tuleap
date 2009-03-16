@@ -76,19 +76,19 @@ if (!$res_new || db_numrows($res_new) < 1) {
                 $frsrf->userCanRead($row_new['group_id'], $row_new['package_id'], $row_new['release_id'], 100)) {
 	      print "<TR valign=top>";
 	      print "<TD colspan=2>";
-	      print '<A href="/projects/'. $row_new['unix_group_name'] .'"><B>'.  $hp->purify(util_unconvert_htmlspecialchars($row_new['group_name']), CODEX_PURIFIER_CONVERT_HTML) ."</B></A>";
+	      print '<A href="/projects/'. $row_new['unix_group_name'] .'"><B>'.  $hp->purify(util_unconvert_htmlspecialchars($row_new['group_name']), CODENDI_PURIFIER_CONVERT_HTML) ."</B></A>";
 		  print '</TD><TD nowrap><I>'. $Language->getText('new_index','released_by') .': <A href="/users/'. $row_new['user_name'] .'">';
-		  print  $hp->purify($row_new['user_name'], CODEX_PURIFIER_CONVERT_HTML)  .'</A></I></TD></TR>';	
+		  print  $hp->purify($row_new['user_name'], CODENDI_PURIFIER_CONVERT_HTML)  .'</A></I></TD></TR>';	
 		   
-	      print "<TR><TD>".$Language->getText('new_index','module').": ".  $hp->purify($row_new['module_name'], CODEX_PURIFIER_CONVERT_HTML) ."</TD>\n";
-	      print "<TD>".$Language->getText('new_index','version').": ".  $hp->purify($row_new['release_version'], CODEX_PURIFIER_CONVERT_HTML) ."</TD>\n";
+	      print "<TR><TD>".$Language->getText('new_index','module').": ".  $hp->purify($row_new['module_name'], CODENDI_PURIFIER_CONVERT_HTML) ."</TD>\n";
+	      print "<TD>".$Language->getText('new_index','version').": ".  $hp->purify($row_new['release_version'], CODENDI_PURIFIER_CONVERT_HTML) ."</TD>\n";
 	      print "<TD>" . date("M d, h:iA",$row_new['release_date']) . "</TD>\n";
 	      print "</TR>";
 		   
 	      print "<TR valign=top>";
 	      print "<TD colspan=2>&nbsp;<BR>";
 	      if ($row_new['short_description']) {
-		print "<I>".  $hp->purify(util_unconvert_htmlspecialchars($row_new['short_description']), CODEX_PURIFIER_BASIC) ."</I>";
+		print "<I>".  $hp->purify(util_unconvert_htmlspecialchars($row_new['short_description']), CODENDI_PURIFIER_BASIC) ."</I>";
 	      } else {
 		print "<I>".$Language->getText('new_index','no_desc')."</I>";
 	      }
@@ -217,7 +217,7 @@ if (!$res_new || db_numrows($res_new) < 1) {
 
 		  print "<TR valign=top>";
 		  print "<TD colspan=2>";
-		  print '<A href="/projects/'. $row_new['unix_group_name'] .'"><B>'.  $hp->purify(util_unconvert_htmlspecialchars($row_new['group_name']), CODEX_PURIFIER_CONVERT_HTML) .'</B> (' . date("y/m/d",$row_new['register_time']) . ")</A>\n</TD>";
+		  print '<A href="/projects/'. $row_new['unix_group_name'] .'"><B>'.  $hp->purify(util_unconvert_htmlspecialchars($row_new['group_name']), CODENDI_PURIFIER_CONVERT_HTML) .'</B> (' . date("y/m/d",$row_new['register_time']) . ")</A>\n</TD>";
 		  print "<TD nowrap><I>".$Language->getText('new_index','contact').": ";
 		  print join(',',$admins);
 		  print "</I></TD></TR>\n";	
@@ -225,7 +225,7 @@ if (!$res_new || db_numrows($res_new) < 1) {
 		  print "<TR valign=top>";
 		  print "<TD colspan=2>&nbsp;<BR>";
 		  if ($row_new['short_description']) {
-		    print '<I>'.  $hp->purify(util_unconvert_htmlspecialchars($row_new['short_description']), CODEX_PURIFIER_BASIC)  ."</I>";
+		    print '<I>'.  $hp->purify(util_unconvert_htmlspecialchars($row_new['short_description']), CODENDI_PURIFIER_BASIC)  ."</I>";
 		  } else {
 		    print '<I>'.$Language->getText('new_index','no_desc').'</I>';
 		  }

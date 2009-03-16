@@ -337,7 +337,7 @@ class Docman_ReportHtml {
         $html = '';
 
         if($this->report->getDescription() !== null) {
-            $html .= $this->hp->purify($this->report->getDescription(), CODEX_PURIFIER_BASIC, $this->report->getGroupId());
+            $html .= $this->hp->purify($this->report->getDescription(), CODENDI_PURIFIER_BASIC, $this->report->getGroupId());
         }
         $html .= $this->getReportImage();
 

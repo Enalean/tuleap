@@ -265,11 +265,11 @@ class IMViews extends Views {
                     echo '  <td class="log_time">&nbsp;</td>';
                 }
                 if ($conv->getNickname() != null) {
-                    echo '  <td class="log_nickname"><span title="'.$uh->getDisplayNameFromUserName($conv->getUsername()).'" style="color: '. $nick_color_arr[$conv->getNickname()] . ';">&lt;'.$purifier->purify($conv->getNickname(), CODEX_PURIFIER_CONVERT_HTML).'&gt;</span></td>';
+                    echo '  <td class="log_nickname"><span title="'.$uh->getDisplayNameFromUserName($conv->getUsername()).'" style="color: '. $nick_color_arr[$conv->getNickname()] . ';">&lt;'.$purifier->purify($conv->getNickname(), CODENDI_PURIFIER_CONVERT_HTML).'&gt;</span></td>';
                 } else {
                     echo '  <td class="log_nickname">&nbsp;</td>';
                 }
-                echo '  <td class="'.get_class($conv).'">'.$purifier->purify($conv->getMessage(), CODEX_PURIFIER_BASIC, $group_id).'</td>';
+                echo '  <td class="'.get_class($conv).'">'.$purifier->purify($conv->getMessage(), CODENDI_PURIFIER_BASIC, $group_id).'</td>';
                 echo ' </tr>';
                 
                 // update last activity time

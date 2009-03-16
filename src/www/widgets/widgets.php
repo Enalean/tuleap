@@ -24,7 +24,7 @@ if (user_isloggedin()) {
                 case WidgetLayoutManager::OWNER_TYPE_USER:
                     $owner_id = user_getid();
                     
-                    $title = $Language->getText('my_index', 'title', array( $hp->purify(user_getrealname(user_getid()), CODEX_PURIFIER_CONVERT_HTML) .' ('.user_getname().')'));
+                    $title = $Language->getText('my_index', 'title', array( $hp->purify(user_getrealname(user_getid()), CODENDI_PURIFIER_CONVERT_HTML) .' ('.user_getname().')'));
                     my_header(array('title'=>$title, 'selected_top_tab' => '/my/'));
                     $lm->displayAvailableWidgets(user_getid(), WidgetLayoutManager::OWNER_TYPE_USER, $layout_id);
                     site_footer(array());

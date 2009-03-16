@@ -69,7 +69,7 @@ class Docman_Widget_Embedded extends Widget /* implements Visitor */ {
      */
     public function getTitle() {
         $hp = Codendi_HTMLPurifier::instance();
-        return $this->plugin_docman_widget_embedded_title ?  $hp->purify($this->plugin_docman_widget_embedded_title, CODEX_PURIFIER_CONVERT_HTML)  : 'Embedded Document';
+        return $this->plugin_docman_widget_embedded_title ?  $hp->purify($this->plugin_docman_widget_embedded_title, CODENDI_PURIFIER_CONVERT_HTML)  : 'Embedded Document';
     }
     
     /**
@@ -114,8 +114,8 @@ class Docman_Widget_Embedded extends Widget /* implements Visitor */ {
     public function getPreferences() {
         $hp = Codendi_HTMLPurifier::instance();
         $prefs  = '';
-        $prefs .= '<table><tr><td>Title:</td><td><input type="text" class="textfield_medium" name="plugin_docman_widget_embedded[title]" value="'. $hp->purify($this->plugin_docman_widget_embedded_title, CODEX_PURIFIER_CONVERT_HTML) .'" /></td></tr>';
-        $prefs .= '<tr><td>Item_id:</td><td><input type="text" class="textfield_small" name="plugin_docman_widget_embedded[item_id]" value="'. $hp->purify($this->plugin_docman_widget_embedded_item_id, CODEX_PURIFIER_CONVERT_HTML) .'" /></td></tr>';
+        $prefs .= '<table><tr><td>Title:</td><td><input type="text" class="textfield_medium" name="plugin_docman_widget_embedded[title]" value="'. $hp->purify($this->plugin_docman_widget_embedded_title, CODENDI_PURIFIER_CONVERT_HTML) .'" /></td></tr>';
+        $prefs .= '<tr><td>Item_id:</td><td><input type="text" class="textfield_small" name="plugin_docman_widget_embedded[item_id]" value="'. $hp->purify($this->plugin_docman_widget_embedded_item_id, CODENDI_PURIFIER_CONVERT_HTML) .'" /></td></tr>';
         $prefs .= '</table>';
         return $prefs;
     }
@@ -306,7 +306,7 @@ class Docman_Widget_Embedded extends Widget /* implements Visitor */ {
                 $balise = 'div';
             }
             $html .= '<'. $balise .' style="clear:both">';
-            $html .= $hp->purify(file_get_contents($version->getPath()), CODEX_PURIFIER_FULL);
+            $html .= $hp->purify(file_get_contents($version->getPath()), CODENDI_PURIFIER_FULL);
             $html .= '</'. $balise .'>';
         } else {
             $html .= '<em>'. $GLOBALS['Language']->getText('plugin_docman', 'error_filenotfound') .'</em>';

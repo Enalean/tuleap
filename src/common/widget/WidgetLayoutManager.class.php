@@ -433,7 +433,7 @@ class WidgetLayoutManager {
             $widget_rows = array();
             if (count($categs)) {
                 foreach($categs as $c => $ws) {
-                    $widget_rows[$c] = '<td colspan="2"><a class="widget-categ-switcher" href="#widget-categ-'. $c .'">'.   $hp->purify($GLOBALS['Language']->getText('widget_categ_label', $c), CODEX_PURIFIER_CONVERT_HTML)  .'</td>';
+                    $widget_rows[$c] = '<td colspan="2"><a class="widget-categ-switcher" href="#widget-categ-'. $c .'">'.   $hp->purify($GLOBALS['Language']->getText('widget_categ_label', $c), CODENDI_PURIFIER_CONVERT_HTML)  .'</td>';
                 }
             } else {
                 foreach($widgets as $widget_name) {

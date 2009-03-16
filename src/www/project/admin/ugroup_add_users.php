@@ -127,7 +127,7 @@ if ($ugroup_id) {
             'group'=>$group_id,
             'help' => 'UserGroups.html#UGroupCreation')
         );
-        echo '<P><h2>'. $Language->getText('project_admin_editugroup','add_users_to').' '.  $hp->purify($ugroup_name, CODEX_PURIFIER_CONVERT_HTML)  .'</h2>';
+        echo '<P><h2>'. $Language->getText('project_admin_editugroup','add_users_to').' '.  $hp->purify($ugroup_name, CODENDI_PURIFIER_CONVERT_HTML)  .'</h2>';
         
         //Display the form
         $selected = 'selected="selected"';
@@ -172,7 +172,7 @@ if ($ugroup_id) {
         echo $Language->getText('project_admin_editugroup','name_contains').' ';
         
         //contains
-        echo '<input type="text" name="search" value="'.  $hp->purify($search, CODEX_PURIFIER_CONVERT_HTML) .'" class="textfield_medium" /> ';
+        echo '<input type="text" name="search" value="'.  $hp->purify($search, CODENDI_PURIFIER_CONVERT_HTML) .'" class="textfield_medium" /> ';
         //begin
         echo $Language->getText('project_admin_editugroup','begins').' ';
         echo '<select name="begin">';

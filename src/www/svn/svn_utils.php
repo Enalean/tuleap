@@ -94,7 +94,7 @@ function svn_utils_technician_box($projectname,$name='_commiter',$checked='xzxz'
         foreach ($usernames as &$username) {
             $username = $UH->getDisplayNameFromUserName($username);
         }           
-        return html_build_select_box_from_arrays($userids,$usernames,$name,$checked,true,$text_100,false,'',false,'', CODEX_PURIFIER_CONVERT_HTML);
+        return html_build_select_box_from_arrays($userids,$usernames,$name,$checked,true,$text_100,false,'',false,'', CODENDI_PURIFIER_CONVERT_HTML);
 	}
 }
 
@@ -445,7 +445,7 @@ function svn_utils_format_svn_history($group_id) {
         $hp = Codendi_HTMLPurifier::instance(); 
         while (list($user, ) = each($svnhist)) {
             $output .= '<BR>'
-                .$hp->purify($uh->getDisplayNameFromUserName($user), CODEX_PURIFIER_CONVERT_HTML)
+                .$hp->purify($uh->getDisplayNameFromUserName($user), CODENDI_PURIFIER_CONVERT_HTML)
                 .' ('.$svnhist[$user]['last'].'/'
                 .$svnhist[$user]['full'].')';
         }

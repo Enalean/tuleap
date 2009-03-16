@@ -65,7 +65,7 @@ function show_top_downloads() {
     while ($row_topdown = db_fetch_array($res_topdown)) {
         if ($row_topdown['downloads'] > 0) 
             $return .= '('. $row_topdown['downloads'] .') <A href="/projects/'. $row_topdown['unix_group_name'] .'/">'
-                .  $hp->purify(util_unconvert_htmlspecialchars($row_topdown['group_name']), CODEX_PURIFIER_CONVERT_HTML)  ."</A><BR>\n";
+                .  $hp->purify(util_unconvert_htmlspecialchars($row_topdown['group_name']), CODENDI_PURIFIER_CONVERT_HTML)  ."</A><BR>\n";
     }
     $return .= '<center><A href="/top/">[ '.$Language->getText('include_features_boxes','more').' ]</A></center>';
 	
@@ -95,9 +95,9 @@ function show_newest_releases() {
             //    (!permission_exist("RELEASE_READ",$row_newrel['release_id'] ))) {
             if ($frspf->userCanRead($row_newrel['group_id'], $row_newrel['package_id'], 100) &&
                 $frsrf->userCanRead($row_newrel['group_id'], $row_newrel['package_id'], $row_newrel['release_id'], 100)) {
-                $return .= '('.  $hp->purify($row_newrel['release_version'], CODEX_PURIFIER_CONVERT_HTML)  .')&nbsp;'.
+                $return .= '('.  $hp->purify($row_newrel['release_version'], CODENDI_PURIFIER_CONVERT_HTML)  .')&nbsp;'.
                     '<A href="/projects/'. $row_newrel['unix_group_name'] .'/">'.
-                     $hp->purify(util_unconvert_htmlspecialchars($row_newrel['group_name']), CODEX_PURIFIER_CONVERT_HTML)  ."</A><BR>\n";
+                     $hp->purify(util_unconvert_htmlspecialchars($row_newrel['group_name']), CODENDI_PURIFIER_CONVERT_HTML)  ."</A><BR>\n";
                 
                 $count++;
                 $DONE[$row_newrel['group_id']] = true;
@@ -159,7 +159,7 @@ function show_newest_projects() {
             if ( $row_newproj['register_time'] ) {
                 $return .= "(" . date("m/d",$row_newproj['register_time'])  . ") "
                     . '<A href="/projects/'. $row_newproj['unix_group_name'] .'/">'
-                    .  $hp->purify(util_unconvert_htmlspecialchars($row_newproj['group_name']), CODEX_PURIFIER_CONVERT_HTML)  ."</A><BR>\n";
+                    .  $hp->purify(util_unconvert_htmlspecialchars($row_newproj['group_name']), CODENDI_PURIFIER_CONVERT_HTML)  ."</A><BR>\n";
             }
         }
         $return .= '<CENTER><A href="/new/?func=projects">[ '.$Language->getText('include_features_boxes','more').' ]</A></CENTER>';
@@ -186,7 +186,7 @@ function show_highest_ranked_projects() {
         while ($row=db_fetch_array($result)) {
             $return .= '<B>'.$rank.'. </B>'
                 .' <A HREF="/projects/'.$row['unix_group_name'].
-                '/">'. $hp->purify(util_unconvert_htmlspecialchars($row['group_name']), CODEX_PURIFIER_CONVERT_HTML) .'</A><BR>';
+                '/">'. $hp->purify(util_unconvert_htmlspecialchars($row['group_name']), CODENDI_PURIFIER_CONVERT_HTML) .'</A><BR>';
             $rank++;
         }
         $return .= '<CENTER><A href="/top/mostactive.php?type=week">[ '.$Language->getText('include_features_boxes','more').' ]</A></CENTER>';

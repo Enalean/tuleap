@@ -71,7 +71,7 @@ class graphicEngineHtml extends Error {
                 }
 
                 echo  "</td>".
-                      "\n<td>".$hp->purify($r->getDescription(), CODEX_PURIFIER_BASIC).'</td>'.
+                      "\n<td>".$hp->purify($r->getDescription(), CODENDI_PURIFIER_BASIC).'</td>'.
                       "\n<td align=\"center\">".$hp->purify($r->getScopeLabel($r->getScope())).'</td>'.
                       "\n<td align=\"center\">";
 
@@ -296,7 +296,7 @@ class graphicEngineHtml extends Error {
             }
         } else {
             $hp =& Codendi_HTMLPurifier::instance();
-            $str .= '<input type="hidden" name="'. $name . $suffix .'" value="'. $hp->purify($value, CODEX_PURIFIER_CONVERT_HTML) .'" />';
+            $str .= '<input type="hidden" name="'. $name . $suffix .'" value="'. $hp->purify($value, CODENDI_PURIFIER_CONVERT_HTML) .'" />';
         }
         return $str;
     }

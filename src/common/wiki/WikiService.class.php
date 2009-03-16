@@ -98,7 +98,7 @@ class WikiService extends Controler {
                                                         'acces_denied_whole',
                                                         session_make_url("/project/memberlist.php?group_id=".$this->gid)
                                 ),
-                                CODEX_PURIFIER_DISABLED
+                                CODENDI_PURIFIER_DISABLED
                             );
         exit_permission_denied();
     }
@@ -114,7 +114,7 @@ class WikiService extends Controler {
                                                         'acces_denied_page',
                                                         session_make_url("/project/memberlist.php?group_id=".$this->gid)
                                 ),
-                                CODEX_PURIFIER_DISABLED
+                                CODENDI_PURIFIER_DISABLED
                             );
         exit_permission_denied();
       }

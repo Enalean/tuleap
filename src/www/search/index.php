@@ -115,7 +115,7 @@ if ($type_of_search == "soft") {
 		for ( $i = 0; $i < $rows; $i++ ) {
 			print	"<TR class=\"". html_get_alt_row_color($i)."\"><TD><A HREF=\"/projects/".db_result($result, $i, 'unix_group_name')."/\">"
 				. "<IMG SRC=\"".util_get_image_theme('msg.png')."\" BORDER=0 HEIGHT=12 WIDTH=10> ".db_result($result, $i, 'group_name')."</A></TD>"
-				. "<TD>". $hp->purify(util_unconvert_htmlspecialchars(db_result($result,$i,'short_description')), CODEX_PURIFIER_LIGHT) ."</TD></TR>\n";
+				. "<TD>". $hp->purify(util_unconvert_htmlspecialchars(db_result($result,$i,'short_description')), CODENDI_PURIFIER_LIGHT) ."</TD></TR>\n";
 		}
 		echo "</TABLE>\n";
 	}
@@ -162,7 +162,7 @@ if ($type_of_search == "soft") {
 		for ( $i = 0; $i < $rows; $i++ ) {
 			print	"<TR class=\"". html_get_alt_row_color($i) ."\"><TD><A HREF=\"/users/".db_result($result, $i, 'user_name')."/\">"
 				. "<IMG SRC=\"".util_get_image_theme('msg.png')."\" BORDER=0 HEIGHT=12 WIDTH=10> ".db_result($result, $i, 'user_name')."</A></TD>"
-				. "<TD>". $hp->purify(db_result($result,$i,'realname'), CODEX_PURIFIER_CONVERT_HTML) ."</TD></TR>\n";
+				. "<TD>". $hp->purify(db_result($result,$i,'realname'), CODENDI_PURIFIER_CONVERT_HTML) ."</TD></TR>\n";
 		}
 		echo "</TABLE>\n";
 	}
@@ -467,7 +467,7 @@ if ($type_of_search == "soft") {
                 $result = db_query($sql);
                 if ($rows_returned = db_result(db_query('SELECT FOUND_ROWS() as nb'), 0, 'nb')) {
                     
-                    echo '<h3>'. $hp->purify(SimpleSanitizer::unsanitize($at_arr[$i]->getName()), CODEX_PURIFIER_CONVERT_HTML) .'</h3>';
+                    echo '<h3>'. $hp->purify(SimpleSanitizer::unsanitize($at_arr[$i]->getName()), CODENDI_PURIFIER_CONVERT_HTML) .'</h3>';
                     
                     $art_field_fact = new ArtifactFieldFactory($at_arr[$i]);
                     

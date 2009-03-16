@@ -47,7 +47,7 @@ abstract class HTML_Element {
     }
     protected function renderLabel() {
         $hp = Codendi_HTMLPurifier::instance();
-        return '<label for="'. $this->id .'">'.  $hp->purify($this->label, CODEX_PURIFIER_CONVERT_HTML)  .'</label>';
+        return '<label for="'. $this->id .'">'.  $hp->purify($this->label, CODENDI_PURIFIER_CONVERT_HTML)  .'</label>';
     }
     public function render() {
         $html  = '';
@@ -61,7 +61,7 @@ abstract class HTML_Element {
     }
     protected function renderValue() {
         $hp = Codendi_HTMLPurifier::instance();
-        return  $hp->purify($this->value, CODEX_PURIFIER_CONVERT_HTML) ;
+        return  $hp->purify($this->value, CODENDI_PURIFIER_CONVERT_HTML) ;
     }
     public function getId() {
         return $this->id;

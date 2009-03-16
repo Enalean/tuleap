@@ -52,7 +52,7 @@ function show_users_list ($result,$user_name_search="") {
 		if ($usr['status'] == 'S') print "</TD>";
 		if ($usr['status'] == 'P') print "</TD>";
         if ($usr['status'] == 'V') print "</TD>";
-		print "\n<TD><A HREF=\"usergroup.php?user_id=".$usr['user_id']."\">". $hp->purify($usr['realname'], CODEX_PURIFIER_CONVERT_HTML) ."</A></TD>";
+		print "\n<TD><A HREF=\"usergroup.php?user_id=".$usr['user_id']."\">". $hp->purify($usr['realname'], CODENDI_PURIFIER_CONVERT_HTML) ."</A></TD>";
 		print "\n<TD><A HREF=\"/users/".$usr['user_name']."/\">[DevProfile]</A></TD>";
                 if ($usr['status'] == 'A') {
                     print "\n<TD>".$Language->getText('admin_userlist','active')."</TD>";

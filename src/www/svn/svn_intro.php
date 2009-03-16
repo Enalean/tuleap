@@ -36,7 +36,7 @@ $p =& project_get_object($group_id);
 
 // Show CVS access information
 if ($row_grp['svn_preamble'] != '') {
-    echo $hp->purify(util_unconvert_htmlspecialchars($row_grp['svn_preamble']), CODEX_PURIFIER_FULL);
+    echo $hp->purify(util_unconvert_htmlspecialchars($row_grp['svn_preamble']), CODENDI_PURIFIER_FULL);
 } else {
     $host = $GLOBALS['sys_default_domain'];
     if ($p && $p->usesService('svn')) {

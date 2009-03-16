@@ -114,7 +114,7 @@ class Docman_Widget_MyDocman extends Widget {
                     $html .= '<tr class="'. util_get_alt_row_color($i++).'">';
                     // Document
                     $html .= '<td align="left">';
-                    $html .= '<a href="'.$review['url'].'">'. $hp->purify($review['title'], CODEX_PURIFIER_CONVERT_HTML) .'</a>';
+                    $html .= '<a href="'.$review['url'].'">'. $hp->purify($review['title'], CODENDI_PURIFIER_CONVERT_HTML) .'</a>';
                     $html .= '</td>';
 
                     // For requester, precise the status

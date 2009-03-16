@@ -40,7 +40,7 @@ $mail->setBody($message);
 $mail->setFrom($GLOBALS['sys_noreply']);
 $mail_is_sent = $mail->send();
 if (!$mail_is_sent) {
-    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('global', 'mail_failed', array($GLOBALS['sys_email_admin'])), CODEX_PURIFIER_FULL);
+    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('global', 'mail_failed', array($GLOBALS['sys_email_admin'])), CODENDI_PURIFIER_FULL);
 }
 site_header(array('title'=>$Language->getText('account_lostpw-confirm', 'title')));
 if ($mail_is_sent) {

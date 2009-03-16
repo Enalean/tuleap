@@ -25,7 +25,7 @@ $row_user = db_fetch_array($res_user);
 
 ?>
 <p><?php echo $Language->getText('account_options', 'welcome'); ?>,
-    <b><?php echo  $purifier->purify(user_getrealname(user_getid()), CODEX_PURIFIER_CONVERT_HTML) ; ?></b>
+    <b><?php echo  $purifier->purify(user_getrealname(user_getid()), CODENDI_PURIFIER_CONVERT_HTML) ; ?></b>
 
 <p><?php echo $Language->getText('account_options', 'welcome_intro'); ?>
 <?php
@@ -73,7 +73,7 @@ if ($display_change_password) {
 
 <TR valign=top>
 <TD><?php echo $Language->getText('account_options', 'real_name'); ?>: </TD>
-<TD><B><?php echo $purifier->purify($row_user['realname'], CODEX_PURIFIER_CONVERT_HTML); ?></B></td>
+<TD><B><?php echo $purifier->purify($row_user['realname'], CODENDI_PURIFIER_CONVERT_HTML); ?></B></td>
 <td>
 <?php
 $display_change_realname = true;

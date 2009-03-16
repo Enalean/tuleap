@@ -308,7 +308,7 @@ if (!$res_dev || $number_per_page < 1) {
     while ($row_dev = db_fetch_array($res_dev)) {
         $i++;
         print '<TR class="'. util_get_alt_row_color($i) .'">';
-        $user_name = $hp->purify($uh->getDisplayName($row_dev['user_name'], $row_dev['realname']), CODEX_PURIFIER_CONVERT_HTML);
+        $user_name = $hp->purify($uh->getDisplayName($row_dev['user_name'], $row_dev['realname']), CODENDI_PURIFIER_CONVERT_HTML);
         echo '<td><a name="'. ucfirst(substr($row_dev['user_name'], 0, 1)) .'"></a>'. $user_name .'</td>';
         echo '
             <TD>

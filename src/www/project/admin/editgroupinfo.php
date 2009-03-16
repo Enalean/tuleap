@@ -156,11 +156,11 @@ print '
 <INPUT type="hidden" name="group_id" value="'.$group_id.'">
 
 <P>'.$Language->getText('project_admin_editgroupinfo','descriptive_g_name').'<font color="red">*</font>
-<BR><INPUT type="text" size="40" maxlen="40" name="form_group_name" value="'. $hp->purify(util_unconvert_htmlspecialchars($row_grp['group_name']), CODEX_PURIFIER_CONVERT_HTML) .'">
+<BR><INPUT type="text" size="40" maxlen="40" name="form_group_name" value="'. $hp->purify(util_unconvert_htmlspecialchars($row_grp['group_name']), CODENDI_PURIFIER_CONVERT_HTML) .'">
 
 <P>'.$Language->getText('project_admin_editgroupinfo','short_desc').'<font color="red">*</font>
 <BR><TEXTAREA cols="70" rows="3" wrap="virtual" name="form_shortdesc">
-'. $hp->purify(util_unconvert_htmlspecialchars($row_grp['short_description']), CODEX_PURIFIER_CONVERT_HTML) .'</TEXTAREA>';
+'. $hp->purify(util_unconvert_htmlspecialchars($row_grp['short_description']), CODENDI_PURIFIER_CONVERT_HTML) .'</TEXTAREA>';
 
 
 for($i=0;$i<sizeof($descfieldsinfos);$i++){
@@ -180,7 +180,7 @@ for($i=0;$i<sizeof($descfieldsinfos);$i++){
 		}
 	}
     		
-	echo "<P><u>".$hp->purify($descname,CODEX_PURIFIER_LIGHT,$group_id);
+	echo "<P><u>".$hp->purify($descname,CODENDI_PURIFIER_LIGHT,$group_id);
 	if($descfieldsinfos[$i]["desc_required"]==1){
 		echo "<font color='red'>*</font>";
 	}
@@ -190,7 +190,7 @@ for($i=0;$i<sizeof($descfieldsinfos);$i++){
 		echo "<BR><INPUT type='text' size='70' maxlen='70' name='form_".$descfieldsinfos[$i]["group_desc_id"];
 			 
 		if(isset($displayfieldvalue[$i])){
-			echo "' value='".$hp->purify($displayfieldvalue[$i],CODEX_PURIFIER_CONVERT_HTML,$group_id);
+			echo "' value='".$hp->purify($displayfieldvalue[$i],CODENDI_PURIFIER_CONVERT_HTML,$group_id);
 		}
 		
 		echo "'></BR>" ;
@@ -201,7 +201,7 @@ for($i=0;$i<sizeof($descfieldsinfos);$i++){
 			 "' wrap='virtual' cols='70' rows='8'>";
 			 
 		if(isset($displayfieldvalue[$i])){
-			echo $hp->purify($displayfieldvalue[$i],CODEX_PURIFIER_CONVERT_HTML,$group_id);
+			echo $hp->purify($displayfieldvalue[$i],CODENDI_PURIFIER_CONVERT_HTML,$group_id);
 		}
 		echo "</TEXTAREA></BR>" ;
 	}

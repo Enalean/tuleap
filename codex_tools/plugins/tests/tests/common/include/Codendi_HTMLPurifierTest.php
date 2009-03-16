@@ -69,10 +69,10 @@ class Codendi_HTMLPurifierTest extends UnitTestCase {
 
     function testStripLightForibdden() {
         $p =& Codendi_HTMLPurifierTestVersion::instance();
-        $this->assertEqual('', $p->purify('<script>alert(1);</script>', CODEX_PURIFIER_LIGHT));
-        $this->assertEqual('Bolded', $p->purify('<s>Bolded</s>', CODEX_PURIFIER_LIGHT));
-        $this->assertEqual('', $p->purify('<form name="test" method="post" action="?"><input type="submit" /></form>', CODEX_PURIFIER_LIGHT));
-        $this->anchorJsInjection(CODEX_PURIFIER_LIGHT);
+        $this->assertEqual('', $p->purify('<script>alert(1);</script>', CODENDI_PURIFIER_LIGHT));
+        $this->assertEqual('Bolded', $p->purify('<s>Bolded</s>', CODENDI_PURIFIER_LIGHT));
+        $this->assertEqual('', $p->purify('<form name="test" method="post" action="?"><input type="submit" /></form>', CODENDI_PURIFIER_LIGHT));
+        $this->anchorJsInjection(CODENDI_PURIFIER_LIGHT);
     }
 
     function anchorJsInjection($level) {
@@ -94,20 +94,20 @@ class Codendi_HTMLPurifierTest extends UnitTestCase {
     function testStripLightAllowed() {
         $p =& Codendi_HTMLPurifierTestVersion::instance();
 
-        $this->assertEqual('<p>Text</p>', $p->purify('<p>Text</p>', CODEX_PURIFIER_LIGHT));
-        $this->assertEqual('Text<br />', $p->purify('Text<br />', CODEX_PURIFIER_LIGHT));
+        $this->assertEqual('<p>Text</p>', $p->purify('<p>Text</p>', CODENDI_PURIFIER_LIGHT));
+        $this->assertEqual('Text<br />', $p->purify('Text<br />', CODENDI_PURIFIER_LIGHT));
 
-        $this->assertEqual('<a href="http://php.net">Text</a>', $p->purify('<a href="http://php.net">Text</a>', CODEX_PURIFIER_LIGHT));
+        $this->assertEqual('<a href="http://php.net">Text</a>', $p->purify('<a href="http://php.net">Text</a>', CODENDI_PURIFIER_LIGHT));
 
-        $this->assertEqual('<strong>Text</strong>', $p->purify('<strong>Text</strong>', CODEX_PURIFIER_LIGHT));
+        $this->assertEqual('<strong>Text</strong>', $p->purify('<strong>Text</strong>', CODENDI_PURIFIER_LIGHT));
     }
 
     function testStripLightTidy() {
         $p =& Codendi_HTMLPurifierTestVersion::instance();
-        $this->assertEqual('<p>Text</p>', $p->purify('<p>Text', CODEX_PURIFIER_LIGHT));
-        $this->assertEqual('Text<br />', $p->purify('Text<br>', CODEX_PURIFIER_LIGHT));
+        $this->assertEqual('<p>Text</p>', $p->purify('<p>Text', CODENDI_PURIFIER_LIGHT));
+        $this->assertEqual('Text<br />', $p->purify('Text<br>', CODENDI_PURIFIER_LIGHT));
 
-        $this->assertEqual('<a href="http://php.net">Text</a>', $p->purify('<a href=\'http://php.net\'>Text', CODEX_PURIFIER_LIGHT));
+        $this->assertEqual('<a href="http://php.net">Text</a>', $p->purify('<a href=\'http://php.net\'>Text', CODENDI_PURIFIER_LIGHT));
 
     }
 
@@ -134,13 +134,13 @@ class Codendi_HTMLPurifierTest extends UnitTestCase {
 
     function testPurifyJsQuoteAndDQuote() {
         $p =& Codendi_HTMLPurifier::instance();
-        $this->assertEqual('</"+"script>', $p->purify('</script>', CODEX_PURIFIER_JS_DQUOTE));
-        $this->assertEqual('a\"a', $p->purify('a"a', CODEX_PURIFIER_JS_DQUOTE));
-        $this->assertEqual('\"a', $p->purify('"a', CODEX_PURIFIER_JS_DQUOTE));
-        $this->assertEqual('a\"', $p->purify('a"', CODEX_PURIFIER_JS_DQUOTE));
-        $this->assertEqual('\"', $p->purify('"', CODEX_PURIFIER_JS_DQUOTE));
-        $this->assertEqual('</"+"script>'."\n".'bla bla'."\n".'</"+"script>'."\n".'bla bla'."\n".'</"+"script>', $p->purify('</script>\nbla bla\n</script>\nbla bla\n</script>', CODEX_PURIFIER_JS_DQUOTE));
-        $this->assertEqual("</'+'script>", $p->purify('</script>', CODEX_PURIFIER_JS_QUOTE));
+        $this->assertEqual('</"+"script>', $p->purify('</script>', CODENDI_PURIFIER_JS_DQUOTE));
+        $this->assertEqual('a\"a', $p->purify('a"a', CODENDI_PURIFIER_JS_DQUOTE));
+        $this->assertEqual('\"a', $p->purify('"a', CODENDI_PURIFIER_JS_DQUOTE));
+        $this->assertEqual('a\"', $p->purify('a"', CODENDI_PURIFIER_JS_DQUOTE));
+        $this->assertEqual('\"', $p->purify('"', CODENDI_PURIFIER_JS_DQUOTE));
+        $this->assertEqual('</"+"script>'."\n".'bla bla'."\n".'</"+"script>'."\n".'bla bla'."\n".'</"+"script>', $p->purify('</script>\nbla bla\n</script>\nbla bla\n</script>', CODENDI_PURIFIER_JS_DQUOTE));
+        $this->assertEqual("</'+'script>", $p->purify('</script>', CODENDI_PURIFIER_JS_QUOTE));
     }
 }
 ?>

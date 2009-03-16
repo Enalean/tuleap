@@ -149,7 +149,7 @@ function show_grouphistory ($group_id) {
 			}
 
 			echo '
-			<TR class="'. html_get_alt_row_color($i) .'"><TD>'. $hp->purify($msg, CODEX_PURIFIER_BASIC, $group_id).'</TD><TD>';
+			<TR class="'. html_get_alt_row_color($i) .'"><TD>'. $hp->purify($msg, CODENDI_PURIFIER_BASIC, $group_id).'</TD><TD>';
 			$val = db_result($result, $i, 'old_value');
 			if ($msg_key == "perm_granted_for_field") {
 			  $pattern = '/ugroup_([^ ,]*)_name_key/';

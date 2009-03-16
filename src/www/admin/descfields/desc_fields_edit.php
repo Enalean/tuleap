@@ -150,15 +150,15 @@ if($update_fields_desc_id){
 	echo "<INPUT TYPE='HIDDEN' NAME='form_desc_id' VALUE='".$update_fields_desc_id."'>";
 	
 	echo "<p>".$Language->getText('admin_desc_fields','desc_name')." ; ";
-	echo "<br><input type='text' size='71' maxlen='255' name='form_name' value='".$hp->purify($row_update['desc_name'],CODEX_PURIFIER_CONVERT_HTML)."'></br></p>";	
+	echo "<br><input type='text' size='71' maxlen='255' name='form_name' value='".$hp->purify($row_update['desc_name'],CODENDI_PURIFIER_CONVERT_HTML)."'></br></p>";	
 	
 	echo "<p>".$Language->getText('admin_desc_fields','desc_description')." ; ";
-	echo "<br><TEXTAREA cols='70' rows='5' wrap='virtual' name='form_desc'>".$hp->purify($row_update['desc_description'],CODEX_PURIFIER_CONVERT_HTML)."</TEXTAREA></br></p>";
+	echo "<br><TEXTAREA cols='70' rows='5' wrap='virtual' name='form_desc'>".$hp->purify($row_update['desc_description'],CODENDI_PURIFIER_CONVERT_HTML)."</TEXTAREA></br></p>";
 	
 	
 	
 	echo "<p>".$Language->getText('admin_desc_fields','rank_on_screen')." : ";
-	echo "<input type='text' size='5'  maxlen='5' name='form_rank' value='".$hp->purify($row_update['desc_rank'],CODEX_PURIFIER_LIGHT)."'></p>";
+	echo "<input type='text' size='5'  maxlen='5' name='form_rank' value='".$hp->purify($row_update['desc_rank'],CODENDI_PURIFIER_LIGHT)."'></p>";
 	
 	
 	echo "<p>".$Language->getText('admin_desc_fields','desc_type')." : ";
@@ -222,8 +222,8 @@ if($update_fields_desc_id){
 	
 		echo "<TR class='".util_get_alt_row_color($i)."'>";
 	
-		echo "<TD align='center'><a href='desc_fields_edit.php?update_fields_desc_id=".$descfieldsinfos[$i]['group_desc_id']."'>".$hp->purify($desc_name_inst,CODEX_PURIFIER_BASIC)."</a></TD>";
-		echo "<TD align='center'>".$hp->purify($desc_desc,CODEX_PURIFIER_LIGHT)."</TD>";
+		echo "<TD align='center'><a href='desc_fields_edit.php?update_fields_desc_id=".$descfieldsinfos[$i]['group_desc_id']."'>".$hp->purify($desc_name_inst,CODENDI_PURIFIER_BASIC)."</a></TD>";
+		echo "<TD align='center'>".$hp->purify($desc_desc,CODENDI_PURIFIER_LIGHT)."</TD>";
 		if($descfieldsinfos[$i]['desc_required']==0){
 			echo "<TD align='center'><a href='desc_fields_edit.php?make_required_desc_id=".$descfieldsinfos[$i]['group_desc_id']."'>".$Language->getText('admin_desc_fields','desc_no')."</a></TD>";
 		}else{
@@ -234,7 +234,7 @@ if($update_fields_desc_id){
 		}else{
 			echo "<TD align='center'>".$Language->getText('admin_desc_fields','desc_text')."</TD>";
 		}
-		echo "<TD align='center'>".$hp->purify($descfieldsinfos[$i]['desc_rank'],CODEX_PURIFIER_LIGHT)."</TD>";
+		echo "<TD align='center'>".$hp->purify($descfieldsinfos[$i]['desc_rank'],CODENDI_PURIFIER_LIGHT)."</TD>";
 		echo "<TD align='center'><a href='desc_fields_edit.php?delete_group_desc_id=".$descfieldsinfos[$i]['group_desc_id']."'><IMG SRC='".util_get_image_theme("ic/trash.png")."' HEIGHT='16' WIDTH='16' BORDER='0' ALT='DELETE'></IMG></a></TD>";
 		echo "</TR>";
 	}

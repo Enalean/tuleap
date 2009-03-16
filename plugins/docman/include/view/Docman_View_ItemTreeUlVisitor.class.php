@@ -162,7 +162,7 @@ class Docman_View_ItemTreeUlVisitor /* implements Visitor*/ {
                                                             isset($params['popup_doc']) ? true : false);
                     $this->html .= '<a href="'.$url.'" id="docman_item_title_link_'.$item->getId().'">';
                 }
-                $this->html .=   $this->hp->purify($item->getTitle(), CODEX_PURIFIER_CONVERT_HTML) ;
+                $this->html .=   $this->hp->purify($item->getTitle(), CODENDI_PURIFIER_CONVERT_HTML) ;
                 if ($action) {
                     $this->html .= '</a>';
                 }
@@ -173,7 +173,7 @@ class Docman_View_ItemTreeUlVisitor /* implements Visitor*/ {
                 $this->html .= '</div>';
                 
                 if (trim($item->getDescription()) != '') {
-                    $this->html .= '<div class="docman_item_description">'. $this->hp->purify($item->getDescription(), CODEX_PURIFIER_BASIC, $item->getGroupId()) .'</div>';
+                    $this->html .= '<div class="docman_item_description">'. $this->hp->purify($item->getDescription(), CODENDI_PURIFIER_BASIC, $item->getGroupId()) .'</div>';
             }
                 $li_displayed = true;
             }

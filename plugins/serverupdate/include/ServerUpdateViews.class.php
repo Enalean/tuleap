@@ -534,7 +534,7 @@ class ServerUpdateViews extends Views {
                     $output .= '<td class="pluginsadministration_plugin_descriptor">'.util_sysdatefmt_to_userdateformat(util_ISO8601_to_date($commit->getDate())).'</td>';
                     //Message
                     $output .= '<td>';
-                    $output .= $hp->purify($commit->getMessage(), CODEX_PURIFIER_BASIC);
+                    $output .= $hp->purify($commit->getMessage(), CODENDI_PURIFIER_BASIC);
                     $output .= '<p><u>'.$Language->getText('plugin_serverupdate_update','ChangedFiles').'</u>';
                     $output .= '<ul>';
                     $files = $commit->getFiles();

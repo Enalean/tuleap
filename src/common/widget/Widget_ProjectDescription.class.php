@@ -28,7 +28,7 @@ class Widget_ProjectDescription extends Widget {
         }
         
         if ($project->getDescription()) {
-            echo '<p style="font-size:1.4em;">' . $hp->purify($project->getDescription(), CODEX_PURIFIER_LIGHT, $group_id) . "</p>";
+            echo '<p style="font-size:1.4em;">' . $hp->purify($project->getDescription(), CODENDI_PURIFIER_LIGHT, $group_id) . "</p>";
             $details_prompt = '[' . $GLOBALS['Language']->getText('include_project_home','more_info') . '...]';
         } else {
             echo '<p>' . $GLOBALS['Language']->getText('include_project_home','no_short_desc',"/project/admin/editgroupinfo.php?group_id=$group_id") . '</p>';

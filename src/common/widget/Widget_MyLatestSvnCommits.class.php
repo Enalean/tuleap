@@ -64,7 +64,7 @@ class Widget_MyLatestSvnCommits extends Widget {
                             //In the db, svn dates are stored as int whereas cvs dates are stored as timestamp
                             $html .= format_date($GLOBALS['Language']->getText('system', 'datefmt'), (is_numeric($data['date']) ? $data['date'] : strtotime($data['date'])));
                             $html .= ' '.$GLOBALS['Language']->getText('my_index','my_latest_svn_commit_by').' ';
-                            $html .= $hp->purify($uh->getDisplayNameFromUserName($data['who']), CODEX_PURIFIER_CONVERT_HTML);
+                            $html .= $hp->purify($uh->getDisplayNameFromUserName($data['who']), CODENDI_PURIFIER_CONVERT_HTML);
                             $html .= '</div>';
                             $html .= '<div style="padding-left:20px; padding-bottom:4px; color:#555">';
                             $html .= util_make_links(substr($data['description'], 0, 255), $project->getGroupId());

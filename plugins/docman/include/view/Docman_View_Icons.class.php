@@ -109,14 +109,14 @@ class Docman_View_Icons extends Docman_View_Browse {
             'id'     => $item->getId()
         ));
         $html .= '<div><a href="'. $icon_url .'">'. $icon .'</a>';
-        $html .= '<span class="docman_item_title"><a href="'. $title_url .'" id="docman_item_title_link_'.$item->getId().'">'.  $hp->purify($item->getTitle(), CODEX_PURIFIER_CONVERT_HTML)  .'</a></span>';
+        $html .= '<span class="docman_item_title"><a href="'. $title_url .'" id="docman_item_title_link_'.$item->getId().'">'.  $hp->purify($item->getTitle(), CODENDI_PURIFIER_CONVERT_HTML)  .'</a></span>';
         $html .= '</a>';
         //Show/hide options {{{
         $html .= $this->getItemMenu($item, $params);
         $this->javascript .= $this->getActionForItem($item);
         //}}}
         if (trim($item->getDescription()) != '') {
-            $html .= '<div class="docman_item_description">'.  $hp->purify($item->getDescription(), CODEX_PURIFIER_BASIC) .'</div>';
+            $html .= '<div class="docman_item_description">'.  $hp->purify($item->getDescription(), CODENDI_PURIFIER_BASIC) .'</div>';
         }
         $html .= '</div>';
 

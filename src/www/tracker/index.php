@@ -210,7 +210,7 @@ if ( $func == 'gotoid' ) {
                                 $ah->mailFollowupWithPermissions($addresses);
                                 $itemname = $ath->getItemName();
                                 $GLOBALS['Response']->addFeedback('info', $Language->getText('tracker_index','create_success',
-                                    '<a href="/goto?key='.$itemname.'&val='.$ah->getID().'&group_id='.$group_id.'">'.$itemname.' #'.$ah->getID().'</a>'),CODEX_PURIFIER_LIGHT);
+                                    '<a href="/goto?key='.$itemname.'&val='.$ah->getID().'&group_id='.$group_id.'">'.$itemname.' #'.$ah->getID().'</a>'),CODENDI_PURIFIER_LIGHT);
                                 $GLOBALS['Response']->redirect('?group_id='. (int)$group_id .'&atid='. (int)$atid .'&func=browse');
                         }
                 }
@@ -300,7 +300,7 @@ if ( $func == 'gotoid' ) {
                                     $ah->mailFollowupWithPermissions($addresses);
                                     $itemname = $ath->getItemName();
                                     $GLOBALS['Response']->addFeedback('info', $Language->getText('tracker_index','create_success',
-                                        '<a href="/goto?key='.$itemname.'&val='.$ah->getID().'&group_id='.$group_id.'">'.$itemname.' #'.$ah->getID().'</a>'),CODEX_PURIFIER_LIGHT);                                
+                                        '<a href="/goto?key='.$itemname.'&val='.$ah->getID().'&group_id='.$group_id.'">'.$itemname.' #'.$ah->getID().'</a>'),CODENDI_PURIFIER_LIGHT);                                
                                     if ($ath->getStopNotification()) {
 									$GLOBALS['Response']->addFeedback('warning', $Language->getText('tracker_index','notification_stopped'));
 								}                            
@@ -427,7 +427,7 @@ if ( $func == 'gotoid' ) {
                         if (!$afh || !is_object($afh)) {
                                 $GLOBALS['Response']->addFeedback('error', $Language->getText('tracker_index','not_create_file_obj',$afh->getName()));
                         } elseif ($afh->isError()) {
-                                $GLOBALS['Response']->addFeedback('error', $afh->getErrorMessage().'::'. $hp->purify($afh->getName(), CODEX_PURIFIER_CONVERT_HTML));
+                                $GLOBALS['Response']->addFeedback('error', $afh->getErrorMessage().'::'. $hp->purify($afh->getName(), CODENDI_PURIFIER_CONVERT_HTML));
                         } else {
                                 if (!$afh->delete()) {
                                         $GLOBALS['Response']->addFeedback('error', $Language->getText('tracker_index','file_delete',$afh->getErrorMessage()));
@@ -542,7 +542,7 @@ if ( $func == 'gotoid' ) {
                         if (!isset($was_error) || !$was_error) {
                             $itemname = $ath->getItemName();
                             $GLOBALS['Response']->addFeedback('info', $Language->getText('tracker_index','update_success',
-                                    '<a href="/goto?key='.$itemname.'&val='.$ah->getID().'&group_id='.$group_id.'">'.$itemname.' #'.$ah->getID().'</a>'),CODEX_PURIFIER_LIGHT);                                
+                                    '<a href="/goto?key='.$itemname.'&val='.$ah->getID().'&group_id='.$group_id.'">'.$itemname.' #'.$ah->getID().'</a>'),CODENDI_PURIFIER_LIGHT);                                
                             if ($ah->ArtifactType->getStopNotification()) {
                                 $GLOBALS['Response']->addFeedback('warning', $Language->getText('tracker_index','notification_stopped'));
                             }                                                            
@@ -1069,12 +1069,12 @@ if ( $func == 'gotoid' ) {
                         '&group_id='. (int)$group_id.'&func=browse">' .
                         html_image("ic/tracker20w.png",array("border"=>"0","width"=>"20","height"=>"20"),0) .
                         '&nbsp;'.
-                         $hp->purify(SimpleSanitizer::unsanitize($at_arr[$j]->getName()), CODEX_PURIFIER_CONVERT_HTML)  .'</a> ';
+                         $hp->purify(SimpleSanitizer::unsanitize($at_arr[$j]->getName()), CODENDI_PURIFIER_CONVERT_HTML)  .'</a> ';
                     // Only show number of artifacts if the user has full access on the tracker.
                     if ($at_arr[$j]->userHasFullAccess()) {
                         echo '( <strong>'. (int)($at_arr[$j]->getOpenCount()) .' '.$Language->getText('tracker_index','open').' / '. (int)($at_arr[$j]->getTotalCount()) .' '.$Language->getText('tracker_index','total').'</strong> )';
                     }
-                    echo '<br />'. $hp->purify(SimpleSanitizer::unsanitize($at_arr[$j]->getDescription()), CODEX_PURIFIER_BASIC, $group_id)  .'<p>';
+                    echo '<br />'. $hp->purify(SimpleSanitizer::unsanitize($at_arr[$j]->getDescription()), CODENDI_PURIFIER_BASIC, $group_id)  .'<p>';
                 }
             }
         }

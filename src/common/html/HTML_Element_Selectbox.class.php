@@ -41,7 +41,7 @@ class HTML_Element_Selectbox extends HTML_Element {
     }
     protected function renderValue() {
         $hp = Codendi_HTMLPurifier::instance();
-        $html = '<select id="'. $this->id .'" name='.  $hp->purify($this->name, CODEX_PURIFIER_CONVERT_HTML) .'" ';
+        $html = '<select id="'. $this->id .'" name='.  $hp->purify($this->name, CODENDI_PURIFIER_CONVERT_HTML) .'" ';
         if ($this->onchange) {
             $html .= 'onchange="'. $this->onchange .'" ';
         }

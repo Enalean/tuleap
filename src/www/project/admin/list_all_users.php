@@ -34,7 +34,7 @@ if ($request->exist('group_id')) {
                 continue;
             }
         }
-        echo '<div><b>'.$row['user_name'].'</b> ('. $hp->purify($row['realname'], CODEX_PURIFIER_CONVERT_HTML) .")</div>\n";
+        echo '<div><b>'.$row['user_name'].'</b> ('. $hp->purify($row['realname'], CODENDI_PURIFIER_CONVERT_HTML) .")</div>\n";
     }
     
     echo '</div></td></tr></table>';

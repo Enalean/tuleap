@@ -42,7 +42,7 @@ $HTML->header(array('title'=>$Language->getText('account_change_email-complete',
 ?>
 <p><b><?php echo $Language->getText('account_change_email-complete', 'title'); ?></b>
 <P><?php echo $Language->getText('account_change_email-complete', 'message',
-			     array(  $hp->purify($row_user['realname'], CODEX_PURIFIER_CONVERT_HTML) , $row_user['email_new'],
+			     array(  $hp->purify($row_user['realname'], CODENDI_PURIFIER_CONVERT_HTML) , $row_user['email_new'],
 				    $GLOBALS['sys_name'], $row_user['user_name'])); ?>
 
 <P><A href="/">[ <?php echo $Language->getText('global', 'back_home'); ?> ]</A>

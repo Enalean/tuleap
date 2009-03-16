@@ -249,10 +249,10 @@ function getUsedFields() {
 	if (!array_key_exists($name,$predef_vals) && $name != $Language->getText('global','none')) {
 	  $this->setError($Language->getText('tracker_import_utils','not_a_predefined_value',array(
           $row+1,
-          $hp->purify(implode(",",$data), CODEX_PURIFIER_CONVERT_HTML),
-          $hp->purify($name, CODEX_PURIFIER_CONVERT_HTML) ,
-          $hp->purify($label, CODEX_PURIFIER_CONVERT_HTML) ,
-          $hp->purify(implode(",",array_keys($predef_vals)), CODEX_PURIFIER_CONVERT_HTML))));
+          $hp->purify(implode(",",$data), CODENDI_PURIFIER_CONVERT_HTML),
+          $hp->purify($name, CODENDI_PURIFIER_CONVERT_HTML) ,
+          $hp->purify($label, CODENDI_PURIFIER_CONVERT_HTML) ,
+          $hp->purify(implode(",",array_keys($predef_vals)), CODENDI_PURIFIER_CONVERT_HTML))));
 	  return false;
 	}
       }
@@ -270,10 +270,10 @@ function getUsedFields() {
 	} else {
 	  $this->setError($Language->getText('tracker_import_utils','not_a_predefined_value',array(
           $row+1,
-          $hp->purify(implode(",",$data), CODEX_PURIFIER_CONVERT_HTML),
-          $hp->purify($val, CODEX_PURIFIER_CONVERT_HTML) ,
-          $hp->purify($label, CODEX_PURIFIER_CONVERT_HTML) ,
-          $hp->purify(implode(",",array_keys($predef_vals)), CODEX_PURIFIER_CONVERT_HTML))));
+          $hp->purify(implode(",",$data), CODENDI_PURIFIER_CONVERT_HTML),
+          $hp->purify($val, CODENDI_PURIFIER_CONVERT_HTML) ,
+          $hp->purify($label, CODENDI_PURIFIER_CONVERT_HTML) ,
+          $hp->purify(implode(",",array_keys($predef_vals)), CODENDI_PURIFIER_CONVERT_HTML))));
 	  return false;
 	}
       }
@@ -322,10 +322,10 @@ function getUsedFields() {
 	  if ($is_empty) {
 	    $this->setError($Language->getText('tracker_import_utils','field_mandatory_and_current',array(
             $row+1,
-            $hp->purify(implode(",",$data), CODEX_PURIFIER_CONVERT_HTML),
-            $hp->purify($label, CODEX_PURIFIER_CONVERT_HTML) ,
-            $hp->purify(SimpleSanitizer::unsanitize($this->ath->getName()), CODEX_PURIFIER_CONVERT_HTML) ,
-            $hp->purify($val, CODEX_PURIFIER_CONVERT_HTML) )));
+            $hp->purify(implode(",",$data), CODENDI_PURIFIER_CONVERT_HTML),
+            $hp->purify($label, CODENDI_PURIFIER_CONVERT_HTML) ,
+            $hp->purify(SimpleSanitizer::unsanitize($this->ath->getName()), CODENDI_PURIFIER_CONVERT_HTML) ,
+            $hp->purify($val, CODENDI_PURIFIER_CONVERT_HTML) )));
 	    return false;
 	  }
 	}
@@ -345,8 +345,8 @@ function getUsedFields() {
 	    if (!$ok) {
 	      $this->setError($Language->getText('tracker_import_utils','incorrect_date',array(
               $row+1,
-              $hp->purify(implode(",",$data), CODEX_PURIFIER_CONVERT_HTML) ,
-              $hp->purify($val, CODEX_PURIFIER_CONVERT_HTML) )));
+              $hp->purify(implode(",",$data), CODENDI_PURIFIER_CONVERT_HTML) ,
+              $hp->purify($val, CODENDI_PURIFIER_CONVERT_HTML) )));
 	      return false;
 	    }
 	    $date = format_date("Y-m-d",$unix_time);
@@ -382,9 +382,9 @@ function getUsedFields() {
 	    
 	    $this->setError($Language->getText('tracker_import_utils','field_mandatory_and_line',array(
             $row+1,
-            $hp->purify(implode(",",$data), CODEX_PURIFIER_CONVERT_HTML) ,
-            $hp->purify($label, CODEX_PURIFIER_CONVERT_HTML) ,
-            $hp->purify(SimpleSanitizer::unsanitize($this->ath->getName()), CODEX_PURIFIER_CONVERT_HTML) )));
+            $hp->purify(implode(",",$data), CODENDI_PURIFIER_CONVERT_HTML) ,
+            $hp->purify($label, CODENDI_PURIFIER_CONVERT_HTML) ,
+            $hp->purify(SimpleSanitizer::unsanitize($this->ath->getName()), CODENDI_PURIFIER_CONVERT_HTML) )));
 	    return false;
           }
 	}
@@ -430,9 +430,9 @@ function getUsedFields() {
     if ($res && db_numrows($res) > 0) {
       $this->setError($Language->getText('tracker_import_utils','already_submitted',array(
           $row+1,
-          $hp->purify(implode(",",$data), CODEX_PURIFIER_CONVERT_HTML) ,
+          $hp->purify(implode(",",$data), CODENDI_PURIFIER_CONVERT_HTML) ,
           $sub_user_name,
-          $hp->purify(util_unconvert_htmlspecialchars($summary), CODEX_PURIFIER_CONVERT_HTML) )));
+          $hp->purify(util_unconvert_htmlspecialchars($summary), CODENDI_PURIFIER_CONVERT_HTML) )));
       return false;           
     }
   }
@@ -451,9 +451,9 @@ function getUsedFields() {
     if (db_numrows($result) == 0) {
       $this->setError($Language->getText('tracker_import_utils','art_not_exists',array(
           $row+1,
-          $hp->purify(implode(",",$data), CODEX_PURIFIER_CONVERT_HTML) ,
+          $hp->purify(implode(",",$data), CODENDI_PURIFIER_CONVERT_HTML) ,
           $aid,
-          $hp->purify(SimpleSanitizer::unsanitize($this->ath->getName()), CODEX_PURIFIER_CONVERT_HTML) )));
+          $hp->purify(SimpleSanitizer::unsanitize($this->ath->getName()), CODENDI_PURIFIER_CONVERT_HTML) )));
       return false;
     }
     
@@ -521,7 +521,7 @@ function getUsedFields() {
 	reset($data);
 	$this->setError($Language->getText('tracker_import_utils','column_mismatch',array(
         $row+1,
-        $hp->purify($data_details, CODEX_PURIFIER_CONVERT_HTML) ,
+        $hp->purify($data_details, CODENDI_PURIFIER_CONVERT_HTML) ,
         $num,
         $this->num_columns)));
 	return FALSE;

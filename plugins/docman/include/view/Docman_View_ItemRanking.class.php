@@ -66,7 +66,7 @@ class Docman_View_ItemRanking {
             $item = $brotherIter->current();
             if ($pm->userCanWrite($user, $item->getId())) {
                 $vals[$i]  = $item->getRank()+1;
-                $texts[$i] = $GLOBALS['Language']->getText('plugin_docman', 'view_itemrank_after').' '. $hp->purify($item->getTitle(), CODEX_PURIFIER_CONVERT_HTML) ;
+                $texts[$i] = $GLOBALS['Language']->getText('plugin_docman', 'view_itemrank_after').' '. $hp->purify($item->getTitle(), CODENDI_PURIFIER_CONVERT_HTML) ;
                 $i++;
             }
             $brotherIter->next();
