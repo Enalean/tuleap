@@ -28,17 +28,25 @@ class BackendSVN extends Backend {
 
 
     /**
+     * Constructor
+     */
+    protected function __construct() {
+        Backend::Backend();
+    }
+
+
+    /**
      * Create project SVN repository
      * If the directory already exists, nothing is done.
      * @return true if repo is successfully created, false otherwise
      */
-    function createProjectSVN($group_id) {
+    public function createProjectSVN($group_id) {
         $project=$this->_getProjectManager()->getProject($group_id);
         if (!$project) return false;
         return true;
     }
 
-    function archiveProjectSVN($group_id) {
+    public function archiveProjectSVN($group_id) {
         $project=$this->_getProjectManager()->getProject($group_id);
         if (!$project) return false;
         $mydir=$GLOBALS['svn_prefix']."/".$project->getUnixName(false);

@@ -27,13 +27,13 @@ require_once('common/dao/ServiceDao.class.php');
 
 class BackendCVS extends Backend {
 
-    var $CVSRootListNeedUpdate;
-    var $UseCVSNT;
+    protected $CVSRootListNeedUpdate;
+    protected $UseCVSNT;
 
     /**
      * Constructor
      */
-    protected function BackendCVS() {
+    protected function __construct() {
         Backend::Backend();
     }
 
@@ -60,7 +60,7 @@ class BackendCVS extends Backend {
      * If the directory already exists, nothing is done.
      * @return true if repo is successfully created, false otherwise
      */
-    function createProjectCVS($group_id) {
+    public function createProjectCVS($group_id) {
         $project=$this->_getProjectManager()->getProject($group_id);
         if (!$project) return false;
 
@@ -219,7 +219,7 @@ class BackendCVS extends Backend {
      * in the CVS passwd file. The pserver protocol will fallback
      * on /etc/passwd (or NSS) for user authentication
      */
-    function updateCVSwriters($group_id) {
+    public function updateCVSwriters($group_id) {
         $project=$this->_getProjectManager()->getProject($group_id);
         if (!$project) return false;
 
@@ -235,6 +235,7 @@ class BackendCVS extends Backend {
         }
         return $this->writeArrayToFile($members_name_array,$cvswriters_file);
     }
+
 
     function _CVSWatch($cvs_dir, $unix_group_name, $watch_mode) {
         $sandbox_dir =  $GLOBALS['tmp_dir']."/".$unix_group_name.".cvs_watch_sandbox";
@@ -260,7 +261,14 @@ class BackendCVS extends Backend {
     function _RcsCommit($file) {
         system("/usr/bin/rcs -q -l $file; ci -q -m\"Codendi modification\" $file; co -q $file");
     }
-    function archiveProjectCVS($group_id) {
+
+
+
+
+    /**
+     * Archive CVS repository: stores a tgz in temp dir, and remove the directory
+     */
+    public function archiveProjectCVS($group_id) {
         $project=$this->_getProjectManager()->getProject($group_id);
         if (!$project) return false;
         $mydir=$GLOBALS['cvs_prefix']."/".$project->getUnixName(false);
@@ -276,15 +284,11 @@ class BackendCVS extends Backend {
      }
 
 
-    function setNeedUpdateCVSRootList() {
-        $this->CVSRootListNeedUpdate=true;
-    }
 
-    function CVSRootListneedUpdate() {
-        return $this->CVSRootListNeedUpdate;
-    }
-
-    function CVSRootListUpdate() {
+    /**
+     * Update the "cvs_root_allow" file that contains the list of authorised CVS repositories
+     */
+    public function CVSRootListUpdate() {
         $cvs_root_allow_array = array();
         $projlist = array();
 
@@ -350,6 +354,14 @@ class BackendCVS extends Backend {
         }
 
         return true;
+    }
+
+    public function setNeedUpdateCVSRootList() {
+        $this->CVSRootListNeedUpdate=true;
+    }
+
+    public function CVSRootListneedUpdate() {
+        return $this->CVSRootListNeedUpdate;
     }
 
 }
