@@ -1477,6 +1477,12 @@ EOF
     echo "Graphic reports created !"
 fi
 
+###############################################################################
+# call the graphic report migration scripts
+current_dir=`pwd`
+cd /usr/share/codex/src/updates
+php update.php 010_graphontrackers_integration
+cd $current_dir
 
 ###############################################################################
 # Run 'analyse' on all MySQL DB
