@@ -149,7 +149,7 @@ $HTML->header(array('title'=>$Language->getText('admin_usergroup','title')));
 // get user info
 $res_user = db_query("SELECT * FROM user WHERE user_id=$user_id");
 $row_user = db_fetch_array($res_user);
-$hp =& CodeX_HTMLPurifier::instance();
+$hp =& Codendi_HTMLPurifier::instance();
 ?>
 <h2>
 <?php echo $Language->getText('admin_usergroup','header').": ".user_getname($user_id)." (ID ".$user_id.")"; ?></h2>
@@ -221,7 +221,7 @@ if($row_user['expiry_date'] != 0){
 require_once('common/event/EventManager.class.php');
 $em =& EventManager::instance();
 $em->processEvent('usergroup_update_form', array('row_user' => $row_user));
-$hp = CodeX_HTMLPurifier::instance();
+$hp = Codendi_HTMLPurifier::instance();
 ?>
 
 <INPUT type="submit" name="Update_Unix" value="<?php echo $Language->getText('global','btn_update'); ?>">

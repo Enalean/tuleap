@@ -43,7 +43,7 @@ function display_service_row($group_id, $service_id, $label, $short_name, $descr
             $label = $Language->getText($matches[1], $matches[2]);
         }
     }
-    $hp =& CodeX_HTMLPurifier::instance();
+    $hp =& Codendi_HTMLPurifier::instance();
     $description = $hp->purify($description);
     $label = $hp->purify($label);
 

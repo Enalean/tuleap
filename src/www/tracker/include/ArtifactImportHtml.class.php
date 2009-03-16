@@ -83,7 +83,7 @@ function showErrors() {
  */
   function showParseResults($parsed_labels,$artifacts_data) {
     global $Language;
-    $hp = CodeX_HTMLPurifier::instance();
+    $hp = Codendi_HTMLPurifier::instance();
     $this->getImportUser($sub_user_id,$sub_user_name);
     $sub_on = format_date("Y-m-d",time());
     
@@ -307,7 +307,7 @@ function showErrors() {
     }
     prepare_artifact_record($at,$fields,$this->ath->getId(),$record, 'csv');
     
-    $hp = CodeX_HTMLPurifier::instance();
+    $hp = Codendi_HTMLPurifier::instance();
     foreach($record as $k => $v) {
         //We should know the type of each field because some are sanitized, others htmlspecialcharized...
         $record[$k] =  $hp->purify($v, CODEX_PURIFIER_CONVERT_HTML);

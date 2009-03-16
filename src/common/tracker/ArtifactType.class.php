@@ -858,7 +858,7 @@ class ArtifactType extends Error {
 		}
         
         if (!eregi("^[a-zA-Z0-9_]+$",$itemname)) {
-            $hp = CodeX_HTMLPurifier::instance();
+            $hp = Codendi_HTMLPurifier::instance();
             $this->setError($Language->getText('tracker_common_type','invalid_shortname', $hp->purify($itemname, CODEX_PURIFIER_CONVERT_HTML) ));
             return false;
         }

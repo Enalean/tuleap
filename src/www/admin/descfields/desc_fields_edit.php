@@ -136,7 +136,7 @@ $HTML->header(array('title'=>$Language->getText('admin_desc_fields', 'title')));
 
 echo "<H2>".$Language->getText('admin_desc_fields','header')."</H2>";
 
-$hp = CodeX_HTMLPurifier::instance();
+$hp = Codendi_HTMLPurifier::instance();
 
 $update_fields_desc_id=$request->get('update_fields_desc_id');
 if($update_fields_desc_id){

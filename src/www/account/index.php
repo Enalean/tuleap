@@ -17,7 +17,7 @@ $em =& EventManager::instance();
 
 my_header(array('title'=>$Language->getText('account_options', 'title')));
 
-$purifier =& CodeX_HTMLPurifier::instance();
+$purifier =& Codendi_HTMLPurifier::instance();
 
 // get global user vars
 $res_user = db_query("SELECT * FROM user WHERE user_id=" . user_getid());

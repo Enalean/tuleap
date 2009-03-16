@@ -73,7 +73,7 @@ function html_get_timezone_popup ($title='timezone',$selected='xzxzxzx') {
  * @param		string	Which element of the box is to be selected
  */
 function html_get_language_popup ($Language,$title='language_id',$selected='xzxzxz') {
-    $hp = CodeX_HTMLPurifier::instance();
+    $hp = Codendi_HTMLPurifier::instance();
     $html = '<select name="'. $title .'">';
     foreach($GLOBALS['Language']->getLanguages() as $code => $lang) {
         $select = ($selected == $code) ? 'selected="selected"' : '';
@@ -173,7 +173,7 @@ function html_build_select_box_from_arrays ($vals,$texts,$select_name,$checked_v
         global $Language;
         $return = '';
         $isAValueSelected = false;
-        $hp =& CodeX_HTMLPurifier::instance();
+        $hp =& Codendi_HTMLPurifier::instance();
         
 	/*
 
@@ -348,7 +348,7 @@ function html_build_multiple_select_box_from_array($array,$name,$checked_array,$
 		Ninth param determine whether to show numeric values next to
 		the menu label (default true for backward compatibility
 	*/
-        $hp =& CodeX_HTMLPurifier::instance();
+        $hp =& Codendi_HTMLPurifier::instance();
         
         // Position default values for special menu items
         if ($text_100 == '') { $text_100 = $Language->getText('global','none'); }

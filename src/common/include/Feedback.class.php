@@ -16,7 +16,7 @@ class Feedback {
     function fetch() {
         $html = '';
         $old_level = null;
-        $hp =& CodeX_HTMLPurifier::instance();
+        $hp =& Codendi_HTMLPurifier::instance();
         foreach($this->logs as $log) {
             if (!is_null($old_level) && $old_level != $log['level']) {
                 $html .= '</ul>';

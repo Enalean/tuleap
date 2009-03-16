@@ -29,7 +29,7 @@ class Docman_View_LoveDetails {
 
     function Docman_View_LoveDetails($md) {
         $this->md = $md;
-        $this->hp =& CodeX_HTMLPurifier::instance();
+        $this->hp =& Codendi_HTMLPurifier::instance();
     }
 
     function getNameField($value='') {

@@ -17,7 +17,7 @@ class TabbedLayout extends Layout {
 	 *	@param	string	The user's realname
 	 */
 	function createLinkToUserHome($user_name, $realname) {
-        $hp = CodeX_HTMLPurifier::instance();
+        $hp = Codendi_HTMLPurifier::instance();
 		return '<a href="/users/'.$user_name.'/">'. $hp->purify($realname, CODEX_PURIFIER_CONVERT_HTML) .'</a>';
 	}
     
@@ -93,7 +93,7 @@ class TabbedLayout extends Layout {
     <link rel="alternate" title="<? echo $GLOBALS['sys_name']. ' - ' .$Language->getText('include_layout','newest_projects_rss'); ?>" href="<? echo get_server_url(); ?>/export/rss_sfprojects.php?type=rss&option=newest" type="application/rss+xml">
     <?php
         //Add additionnal feeds
-        $hp =& CodeX_HTMLPurifier::instance();
+        $hp =& Codendi_HTMLPurifier::instance();
         foreach($this->feeds as $feed) {
             echo '<link rel="alternate" title="'. $hp->purify($feed['title']) .'" href="'. $feed['href'] .'" type="application/rss+xml">';
         }

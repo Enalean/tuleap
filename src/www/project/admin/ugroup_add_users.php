@@ -63,7 +63,7 @@ if ($ugroup_id) {
     $res = ugroup_db_get_ugroup($ugroup_id);
     if ($res) {
         $ugroup_name = db_result($res, 0, 'name');
-        $hp = CodeX_HTMLPurifier::instance();
+        $hp = Codendi_HTMLPurifier::instance();
         
         //define capitals
         $sql = "SELECT DISTINCT UPPER(LEFT(user.email,1)) as capital
@@ -141,7 +141,7 @@ if ($ugroup_id) {
         if (db_numrows($res_members)>0) {
             echo '<table border="0" cellspacing="0" cellpadding="0" width="100%"><tbody>';
             $i = 0;
-            $hp = CodeX_HTMLPurifier::instance();
+            $hp = Codendi_HTMLPurifier::instance();
             while ($data = db_fetch_array($res_members)) {
                 echo '<tr class="'. html_get_alt_row_color(++$i) .'">';
                 echo '<td style="white-space:nowrap">'. $user_helper->getDisplayName($data['user_name'], $data['realname']) .'</td>';

@@ -1,7 +1,7 @@
 <?php
 
 require_once('Widget.class.php');
-require_once('common/include/CodeX_HTMLPurifier.class.php');
+require_once('common/include/Codendi_HTMLPurifier.class.php');
 
 /**
 * Widget_ProjectDescription
@@ -21,7 +21,7 @@ class Widget_ProjectDescription extends Widget {
         $request =& HTTPRequest::instance();
         $group_id = $request->get('group_id');
         $project =& project_get_object($group_id);
-        $hp =& CodeX_HTMLPurifier::instance();
+        $hp =& Codendi_HTMLPurifier::instance();
         
         if ($project->getStatus() == 'H') {
             echo '<p style="font-size:1.4em;">' . $GLOBALS['Language']->getText('include_project_home','not_official_site',$GLOBALS['sys_name']) . '</p>';

@@ -41,7 +41,7 @@ if ($request->isPost()
 	session_redirect("/");
 }
 
-$purifier =& CodeX_HTMLPurifier::instance();
+$purifier =& Codendi_HTMLPurifier::instance();
 
 $HTML->header(array('title'=>$Language->getText('account_lostlogin', 'title')));
 ?>

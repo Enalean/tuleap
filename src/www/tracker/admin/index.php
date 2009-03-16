@@ -38,7 +38,7 @@ $request =& HTTPRequest::instance();
 $group_id = $request->getValidated('group_id', 'GroupId');
 $atid     = $request->getValidated('atid', 'uint');
 
-$hp = CodeX_HTMLPurifier::instance();
+$hp = Codendi_HTMLPurifier::instance();
 
 if ($group_id && !$atid) {
 	//

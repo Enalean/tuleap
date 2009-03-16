@@ -522,7 +522,7 @@ class ServerUpdateViews extends Views {
                 $titles[] = $Language->getText('plugin_serverupdate_update','Actions');
                 $output .= html_build_list_table_top($titles);
                 
-                $hp = CodeX_HTMLPurifier::instance();
+                $hp = Codendi_HTMLPurifier::instance();
 
                 $i=0; // for color alternance
                 foreach($commits as $commit) {

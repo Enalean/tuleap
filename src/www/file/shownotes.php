@@ -32,7 +32,7 @@ if (!$release || !$release->isActive() || !$release->userCanRead()) {
 	exit_error($Language->getText('file_shownotes','not_found_err'),$Language->getText('file_shownotes','release_not_found'));
 } else {
 
-    $hp =& CodeX_HTMLPurifier::instance();
+    $hp =& Codendi_HTMLPurifier::instance();
 	$group_id = $release->getGroupID();
 
 	file_utils_header(array('title'=>$Language->getText('file_shownotes','release_notes'),'group'=>$group_id));

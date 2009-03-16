@@ -13,7 +13,7 @@ require_once('common/event/EventManager.class.php');
 $em =& EventManager::instance();
 $em->processEvent('before_change_email-complete', array());
 
-$hp = CodeX_HTMLPurifier::instance();
+$hp = Codendi_HTMLPurifier::instance();
 $request =& HTTPRequest::instance();
 
 // ###### function register_valid()

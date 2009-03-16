@@ -53,7 +53,7 @@ class ArtifactRulesManagerHtml extends ArtifactRulesManager {
     }
     
     function displayFieldsAndValuesAsJavascript() {
-        $hp = CodeX_HTMLPurifier::instance();
+        $hp = Codendi_HTMLPurifier::instance();
         echo "\n//------------------------------------------------------\n";
         $art_field_fact =& new ArtifactFieldFactory($this->artifact_type);
         $used_fields = $art_field_fact->getAllUsedFields();
@@ -124,7 +124,7 @@ class ArtifactRulesManagerHtml extends ArtifactRulesManager {
     
     
     function displayEditForm($source_field = false, $target_field = false, $source_value = false, $target_value = false) {
-        $hp = CodeX_HTMLPurifier::instance();
+        $hp = Codendi_HTMLPurifier::instance();
         echo '<noscript class="error">'. $GLOBALS['Language']->getText('tracker_field_dependencies','noscript') .'</noscript>';
         echo '<form action="'. $this->href .'" method="post" id="edit_rule_form"><div id="edit_rule">';
         /**/

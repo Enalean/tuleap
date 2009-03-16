@@ -55,7 +55,7 @@ if (register_valid()) {
 <p><?php echo $Language->getText('account_editsshkeys', 'keys'); ?>
 <br><textarea rows="10" cols="60" name="form_authorized_keys">
 <?php
-    $purifier =& CodeX_HTMLPurifier::instance();
+    $purifier =& Codendi_HTMLPurifier::instance();
 	$res_keys = db_query("SELECT authorized_keys FROM user WHERE user_id=".user_getid());
 	$row_keys = db_fetch_array($res_keys);
 	$authorized_keys = ereg_replace("###","\n",$row_keys['authorized_keys']);

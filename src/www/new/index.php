@@ -10,7 +10,7 @@ require_once('pre.php');
 require_once('www/project/admin/permissions.php');
 require_once('www/new/new_utils.php');
 
-$hp = CodeX_HTMLPurifier::instance();
+$hp = Codendi_HTMLPurifier::instance();
 
 $offset = $request->getValidated('offset', 'uint', 0);
 

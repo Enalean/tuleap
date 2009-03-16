@@ -434,7 +434,7 @@ class Docman_FilterText extends Docman_Filter {
     }
 
     function getUrlParameters() {
-        $hp = CodeX_HTMLPurifier::instance();
+        $hp = Codendi_HTMLPurifier::instance();
         $param = array($this->md->getLabel() => $hp->purify($this->value));
         return $param;
     }

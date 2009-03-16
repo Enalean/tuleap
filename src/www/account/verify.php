@@ -93,7 +93,7 @@ if ($request->isPost() && $request->exist('Login')){
 
 $HTML->header(array('title'=>$Language->getText('account_verify', 'title')));
 
-$purifier =& CodeX_HTMLPurifier::instance();
+$purifier =& Codendi_HTMLPurifier::instance();
 $confirm_hash = $purifier->purify($request->get('confirm_hash'));
 
 ?>

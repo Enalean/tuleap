@@ -101,7 +101,7 @@ class ArtifactCannedHtml extends ArtifactCanned {
 	  global $Language;
 	$group_id = $this->ArtifactType->Group->getID();
 	$atid = $this->ArtifactType->getID();
-    $hp = CodeX_HTMLPurifier::instance();
+    $hp = Codendi_HTMLPurifier::instance();
 	  echo '<H2>'.$Language->getText('tracker_import_admin','tracker').
       ' \'<a href="/tracker?group_id='. (int)$group_id.'&atid='. (int)$atid.'">'. $hp->purify(SimpleSanitizer::unsanitize($this->ArtifactType->getName()), CODEX_PURIFIER_CONVERT_HTML) .'</a>\' - '.
 	    $Language->getText('tracker_admin_index','create_modify_cannedresponse').'</a></H2>';

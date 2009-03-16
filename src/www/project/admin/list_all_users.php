@@ -23,7 +23,7 @@ if ($request->exist('group_id')) {
     while ($row = db_fetch_array($res)) {
         $current_group_restricted_users[$row['user_id']] = true;
     }
-    $hp = CodeX_HTMLPurifier::instance();
+    $hp = Codendi_HTMLPurifier::instance();
     $sql="SELECT user_id, user_name, realname, status FROM user WHERE status='A' OR status='R' ORDER BY user_name";
     $res = db_query($sql);
     $member_id = array();

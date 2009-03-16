@@ -442,7 +442,7 @@ function svn_utils_format_svn_history($group_id) {
         $output = '<P><b>'.$Language->getText('svn_utils','ci_week').'</b><BR>&nbsp;';
         reset($svnhist);
         $uh = new UserHelper();
-        $hp = CodeX_HTMLPurifier::instance(); 
+        $hp = Codendi_HTMLPurifier::instance(); 
         while (list($user, ) = each($svnhist)) {
             $output .= '<BR>'
                 .$hp->purify($uh->getDisplayNameFromUserName($user), CODEX_PURIFIER_CONVERT_HTML)

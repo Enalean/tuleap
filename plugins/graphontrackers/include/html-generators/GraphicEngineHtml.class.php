@@ -38,7 +38,7 @@ class graphicEngineHtml extends Error {
     }
 
     function showAvailableReports() {
-        $hp =& CodeX_HTMLPurifier::instance();
+        $hp =& Codendi_HTMLPurifier::instance();
         $g = $GLOBALS['ath']->getGroup();
         $group_id = $g->getID();
         $atid = $GLOBALS['ath']->getID();
@@ -101,7 +101,7 @@ class graphicEngineHtml extends Error {
      */
 
     function createReportForm() {
-        $hp =& CodeX_HTMLPurifier::instance();
+        $hp =& Codendi_HTMLPurifier::instance();
         $g = $GLOBALS['ath']->getGroup();
         $group_id = $g->getID();
         $atid = $GLOBALS['ath']->getID();
@@ -151,7 +151,7 @@ class graphicEngineHtml extends Error {
 
 
     function showReportForm($report_graphic_id) {
-        $hp =& CodeX_HTMLPurifier::instance();
+        $hp =& Codendi_HTMLPurifier::instance();
         $group = $GLOBALS['ath']->getGroup();
         $group_id = $group->getID();
         $atid = $GLOBALS['ath']->getID();
@@ -214,7 +214,7 @@ class graphicEngineHtml extends Error {
     }
 
     function showChartForm($chart) {
-        $hp =& CodeX_HTMLPurifier::instance();
+        $hp =& Codendi_HTMLPurifier::instance();
         $group_id = (int)$chart->getGraphicReport()->getGroupId();
         $atid = (int)$chart->getGraphicReport()->getAtid();
         echo '<H2>'.
@@ -295,14 +295,14 @@ class graphicEngineHtml extends Error {
                 $str .= $this->_toInputElement($name . $suffix . '[' . $k, $v, ']');
             }
         } else {
-            $hp =& CodeX_HTMLPurifier::instance();
+            $hp =& Codendi_HTMLPurifier::instance();
             $str .= '<input type="hidden" name="'. $name . $suffix .'" value="'. $hp->purify($value, CODEX_PURIFIER_CONVERT_HTML) .'" />';
         }
         return $str;
     }
     
     function genGraphRepSelBox($value) {
-        $hp =& CodeX_HTMLPurifier::instance();
+        $hp =& Codendi_HTMLPurifier::instance();
         require_once(dirname(__FILE__)."/../data-access/GraphOnTrackers_Report.class.php");
         $reports  = $this->grf->getReports_ids();
         $returns  = '<form name="plugin_graphontrackers_selectreport_form" action="'. $_SERVER['REQUEST_URI'] .'" method="GET">';

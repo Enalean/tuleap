@@ -21,7 +21,7 @@ require_once('Docman_View_GetMenuItemsVisitor.class.php');
 
     function Docman_View_View(&$controller) {
         $this->_controller = $controller;
-        $this->hp =& CodeX_HTMLPurifier::instance();
+        $this->hp =& Codendi_HTMLPurifier::instance();
         $this->javascript = "";
     }
     

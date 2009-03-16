@@ -76,7 +76,7 @@ function news_footer($params) {
 
 function news_show_latest($group_id='',$limit=10,$show_summaries=true,$allow_submit=true,$flat=false,$tail_headlines=0) {
     global $sys_news_group,$Language;
-    $hp = CodeX_HTMLPurifier::instance(); 
+    $hp = Codendi_HTMLPurifier::instance(); 
     $uh = new UserHelper();
     
     $return  = "";

@@ -16,9 +16,9 @@ require_once('common/wiki/lib/Wiki.class.php');
 require_once('www/project/admin/permissions.php');
 require_once('common/event/EventManager.class.php');
 require_once('common/widget/WidgetLayoutManager.class.php');
-require_once('common/include/CodeX_HTMLPurifier.class.php');
+require_once('common/include/Codendi_HTMLPurifier.class.php');
 
-$hp =& CodeX_HTMLPurifier::instance();
+$hp =& Codendi_HTMLPurifier::instance();
 
 $title = $Language->getText('include_project_home','proj_info').' - '. $project->getPublicName();
 

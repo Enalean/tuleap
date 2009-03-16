@@ -22,7 +22,7 @@ if (!$request->valid($vGroupId)) {
     $group_id = $request->get('group_id');
 }
 
-$hp =& CodeX_HTMLPurifier::instance();
+$hp =& Codendi_HTMLPurifier::instance();
 
 svn_header(array ('title'=>$Language->getText('svn_intro','info')));
 

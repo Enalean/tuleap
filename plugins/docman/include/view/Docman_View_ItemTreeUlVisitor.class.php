@@ -45,7 +45,7 @@ class Docman_View_ItemTreeUlVisitor /* implements Visitor*/ {
         $this->js                  = '';
         $this->stripFirstNode      = true;
         $this->firstNodeStripped   = false;
-        $this->hp                  =& CodeX_HTMLPurifier::instance();
+        $this->hp                  =& Codendi_HTMLPurifier::instance();
         $this->params              = $params;
         if (!isset($this->params['default_url'])) {
             $this->params['default_url'] = null;

@@ -52,7 +52,7 @@ class UserLogManager {
             if($dis == '') {
                 $dis = '&nbsp;';
             } else {
-                $hp = CodeX_HTMLPurifier::instance();
+                $hp = Codendi_HTMLPurifier::instance();
                 $dis = $hp->purify($dis);
             }
         } else {

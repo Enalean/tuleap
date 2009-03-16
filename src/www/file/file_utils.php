@@ -201,7 +201,7 @@ function frs_show_release_popup2($group_id, $name='release_id', $checked_val="xz
 	if (!$group_id) {
 		return $GLOBALS['Language']->getText('file_file_utils','g_id_err');
 	} else {
-        $hp =& CodeX_HTMLPurifier::instance();
+        $hp =& Codendi_HTMLPurifier::instance();
         $res = $frsrf->getFRSReleasesInfoListFromDb($group_id);
         $p = array();
         foreach($res as $release){
@@ -223,7 +223,7 @@ function frs_show_release_popup2($group_id, $name='release_id', $checked_val="xz
 
 function file_utils_show_processors ($result) {
     global $group_id,$Language;
-    $hp =& CodeX_HTMLPurifier::instance();
+    $hp =& Codendi_HTMLPurifier::instance();
     $rows  =  db_numrows($result);
 
     $title_arr=array();
@@ -336,7 +336,7 @@ function file_utils_convert_bytes_to_kbytes($size_in_bytes, $decimals_precision 
 }
 
 function frs_display_package_form(&$package, $title, $url, $siblings) {
-	$hp =& CodeX_HTMLPurifier::instance();
+	$hp =& Codendi_HTMLPurifier::instance();
     $group_id = $package->getGroupId();
     file_utils_admin_header(array('title'=>$GLOBALS['Language']->getText('file_admin_editpackages','edit_package'), 'help' => 'FileReleaseDelivery.html'));
     echo '<h3>'. $hp->purify($title, CODEX_PURIFIER_CONVERT_HTML) .'</h3>
@@ -379,7 +379,7 @@ function frs_display_package_form(&$package, $title, $url, $siblings) {
 
 function frs_display_release_form($is_update, &$release, $group_id, $title, $url) {
     global $frspf, $frsrf, $frsff;
-    $hp =& CodeX_HTMLPurifier::instance();
+    $hp =& Codendi_HTMLPurifier::instance();
     if (is_array($release)) {
         if (isset($release['date'])) {
             $release_date = $release['date'];

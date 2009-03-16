@@ -30,9 +30,9 @@
  * How to use it:
  * <pre>
  * require_once('pre.php');
- * require_once('common/include/CodeX_HTMLPurifier.class.php');
+ * require_once('common/include/Codendi_HTMLPurifier.class.php');
  * $crapy = '<a href="" onmouseover="alert(1);">testé</a>';
- * $hp =& CodeX_HTMLPurifier::instance();
+ * $hp =& Codendi_HTMLPurifier::instance();
  * $clean = $hp->purify($crapy);
  * </pre>
  */
@@ -46,11 +46,11 @@ define('CODEX_PURIFIER_JS_QUOTE', 20);
 define('CODEX_PURIFIER_JS_DQUOTE', 25);
 define('CODEX_PURIFIER_DISABLED', 100);
 
-class CodeX_HTMLPurifier {
+class Codendi_HTMLPurifier {
     /**
      * Hold an instance of the class
      */
-    private static $codex_htmlpurifier_instance;
+    private static $Codendi_HTMLPurifier_instance;
     
     /**
      * Constructor
@@ -64,11 +64,11 @@ class CodeX_HTMLPurifier {
      * @access: static
      */
     public static function instance() {
-        if (!isset(self::$codex_htmlpurifier_instance)) {
+        if (!isset(self::$Codendi_HTMLPurifier_instance)) {
             $c = __CLASS__;
-            self::$codex_htmlpurifier_instance = new $c;
+            self::$Codendi_HTMLPurifier_instance = new $c;
         }
-        return self::$codex_htmlpurifier_instance;
+        return self::$Codendi_HTMLPurifier_instance;
     }
 
     /**

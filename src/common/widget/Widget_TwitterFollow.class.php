@@ -40,11 +40,11 @@ class Widget_TwitterFollow extends Widget {
         $this->setOwner($owner_id, $owner_type);
     }
     function getTitle() {
-        $hp = CodeX_HTMLPurifier::instance();
+        $hp = Codendi_HTMLPurifier::instance();
         return $this->twitterfollow_title ?  $hp->purify($this->twitterfollow_title, CODEX_PURIFIER_CONVERT_HTML)  : 'Twitter Follow';
     }
     function getContent() {
-        $hp = CodeX_HTMLPurifier::instance();
+        $hp = Codendi_HTMLPurifier::instance();
         $content = '';
         if ($this->twitterfollow_user) {
             require_once('common/rss/libs/SimplePie/simplepie.inc');
@@ -96,7 +96,7 @@ class Widget_TwitterFollow extends Widget {
         return true;
     }
     function getPreferences() {
-        $hp = CodeX_HTMLPurifier::instance();
+        $hp = Codendi_HTMLPurifier::instance();
         $prefs  = '';
         $prefs .= '<table><tr><td>Title:</td><td><input type="text" class="textfield_medium" name="twitterfollow[title]" value="'. $hp->purify($this->twitterfollow_title, CODEX_PURIFIER_CONVERT_HTML) .'" /></td></tr>';
         $prefs .= '<tr><td>Find tweets from the user:</td><td><input type="text" class="textfield_medium" name="twitterfollow[user]" value="'. $hp->purify($this->twitterfollow_user, CODEX_PURIFIER_CONVERT_HTML) .'" /></td></tr>';

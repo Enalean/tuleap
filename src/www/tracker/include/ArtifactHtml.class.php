@@ -44,7 +44,7 @@ class ArtifactHtml extends Artifact {
          */
         function display($ro, $pv, $user_id) {
             global $art_field_fact,$art_fieldset_fact,$sys_max_size_attachment,$Language;
-            $hp = CodeX_HTMLPurifier::instance();
+            $hp = Codendi_HTMLPurifier::instance();
             $fields_per_line=2;
             // the column number is the number of field per line * 2 (label + value)
             // + the number of field per line -1 (a blank column between each pair "label-value" to give more space)
@@ -237,7 +237,7 @@ class ArtifactHtml extends Artifact {
             $title .= 'document.write(\'<a href="#reorder" onclick="tracker_reorder_followups();new Ajax.Request(\\\'invert_comments_order.php\\\'); return false;" title="Invert order of the follow-ups">[&darr;&uarr;]</a>\');';
             $title .= '</script>';
             $title .= ' <a href="/tracker/?func=rss&aid='. (int)$this->getId() .'&atid='. (int)$this->ArtifactType->getID() .'&group_id='. (int)$this->ArtifactType->getGroupId() .'" ';
-            $hp =& CodeX_HTMLPurifier::instance();
+            $hp =& Codendi_HTMLPurifier::instance();
             $title .= ' title="'. $hp->purify(util_unconvert_htmlspecialchars($group->getPublicName()).' '.SimpleSanitizer::unsanitize($this->ArtifactType->getName()) .' #'. $this->getId() .' - '. util_unconvert_htmlspecialchars($this->getValue('summary')), CODEX_PURIFIER_CONVERT_HTML) .' - '. $Language->getText('tracker_include_artifact','follow_ups') .'">';
             $title .= '[xml]</a> ';
             if ($pv == 0) {
@@ -510,7 +510,7 @@ class ArtifactHtml extends Artifact {
      */
     function displayCopy($ro,$pv) {
         global $art_field_fact,$art_fieldset_fact,$sys_max_size_attachment,$Language;
-        $hp = CodeX_HTMLPurifier::instance();
+        $hp = Codendi_HTMLPurifier::instance();
         $fields_per_line=2;
         // the column number is the number of field per line * 2 (label + value)
         // + the number of field per line -1 (a blank column between each pair "label-value" to give more space)
@@ -753,7 +753,7 @@ class ArtifactHtml extends Artifact {
             $result=$this->getHistory();
             $rows=db_numrows($result);
             $html = '';
-            $hp = CodeX_HTMLPurifier::instance();
+            $hp = Codendi_HTMLPurifier::instance();
             if ($rows > 0) {
         
                         $title_arr=array();
@@ -832,7 +832,7 @@ class ArtifactHtml extends Artifact {
          * @return void
          */
         function showInverseDependencies ($group_id, $group_artifact_id, $ascii=false) {
-            $hp = CodeX_HTMLPurifier::instance();
+            $hp = Codendi_HTMLPurifier::instance();
             global $sys_lf,$Language;
         
             //
@@ -911,7 +911,7 @@ class ArtifactHtml extends Artifact {
         
     function displayAdd($user_id) {
         global $art_field_fact,$art_fieldset_fact,$sys_max_size_attachment,$Language;
-        $hp = CodeX_HTMLPurifier::instance();
+        $hp = Codendi_HTMLPurifier::instance();
         
         $fields_per_line=2;
         // the column number is the number of field per line * 2 (label + value)
@@ -1107,7 +1107,7 @@ class ArtifactHtml extends Artifact {
          * @return void
          */
     function displayEditFollowupComment($comment_id) {
-         $hp = CodeX_HTMLPurifier::instance();
+         $hp = Codendi_HTMLPurifier::instance();
         $group = $this->ArtifactType->getGroup();
         $group_artifact_id = $this->ArtifactType->getID();
         $group_id = $group->getGroupId();

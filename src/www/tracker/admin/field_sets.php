@@ -26,7 +26,7 @@ if ( !$ath->isValid() ) {
 
 $ath->adminHeader(array('title'=>$Language->getText('tracker_admin_fieldset','tracker_admin').$Language->getText('tracker_admin_fieldset','fieldset_admin'),'help' => 'TrackerAdministration.html#TrackerFieldSetsManagement'));
 
-$hp = Codex_HTMLPurifier::instance();
+$hp = Codendi_HTMLPurifier::instance();
 echo '<H2>'.$Language->getText('tracker_import_admin','tracker').' \'<a href="/tracker/admin/?group_id='.(int)$group_id.'&atid='.(int)$atid.'">'. $hp->purify(SimpleSanitizer::unsanitize($ath->getName()), CODEX_PURIFIER_CONVERT_HTML) .'</a>\' '.$Language->getText('tracker_admin_fieldset','fieldset_admin').'</H2>';
 $ath->displayFieldSetList();
 $ath->displayFieldSetCreateForm();

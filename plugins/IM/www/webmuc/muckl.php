@@ -10,7 +10,7 @@
 
 	$group_id = $request->get('group_id');
 	
-	$hp = CodeX_HTMLPurifier::instance();
+	$hp = Codendi_HTMLPurifier::instance();
 	
 ?>
 

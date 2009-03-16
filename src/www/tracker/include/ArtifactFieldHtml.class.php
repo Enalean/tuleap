@@ -49,7 +49,7 @@ class ArtifactFieldHtml extends ArtifactField {
 	 *	@return	string
 	 */
 	function labelDisplay($break=false,$ascii=false,$tooltip=false) {
-	    $hp = CodeX_HTMLPurifier::instance();
+	    $hp = Codendi_HTMLPurifier::instance();
         $output = SimpleSanitizer::unsanitize($this->getLabel()).': ';
         if (!$ascii) {
             $output =  $hp->purify($output, CODEX_PURIFIER_CONVERT_HTML) ;
@@ -79,7 +79,7 @@ class ArtifactFieldHtml extends ArtifactField {
 	 */
 	function multipleFieldBox($box_name='',$group_artifact_id,$checked=false,$show_none=false,$text_none=0,$show_any=false, $text_any=0,$show_unchanged=false,$text_unchanged=0,$show_value=false) {
 	  global $Language;
-      $hp = CodeX_HTMLPurifier::instance();
+      $hp = Codendi_HTMLPurifier::instance();
 	  if (!$text_none) $text_none=$Language->getText('global','none');
 	  if (!$text_any) $text_any=$Language->getText('global','any');
 	  if (!$text_unchanged) $text_unchanged=$Language->getText('global','unchanged');
@@ -122,7 +122,7 @@ class ArtifactFieldHtml extends ArtifactField {
     }
     function _getValuesAsJavascript($values, $default_value) {
         global $Language;
-        $hp = CodeX_HTMLPurifier::instance();
+        $hp = Codendi_HTMLPurifier::instance();
             $output  = "";
             $isDefaultValuePresent = false;
             foreach ($values as $row) {
@@ -152,7 +152,7 @@ class ArtifactFieldHtml extends ArtifactField {
 	 */
 	function fieldBox($box_name='',$group_artifact_id,$checked=false,$show_none=false,$text_none=0,$show_any=false,$text_any=0,$show_unchanged=false,$text_unchanged=0) {
 	  global $Language;
-      $hp = CodeX_HTMLPurifier::instance();
+      $hp = Codendi_HTMLPurifier::instance();
 	  if (!$text_none) $text_none=$Language->getText('global','none');
 	  if (!$text_any) $text_any=$Language->getText('global','any');
 	  if (!$text_unchanged) $text_unchanged=$Language->getText('global','unchanged');
@@ -207,7 +207,7 @@ class ArtifactFieldHtml extends ArtifactField {
 
 	    // CAUTION!!!! The Javascript below assumes that the date always appear
 	    // in a field called 'artifact_form'
-	$hp = CodeX_HTMLPurifier::instance();
+	$hp = Codendi_HTMLPurifier::instance();
 	    if ($ro)
 			if ($date_begin || $date_end) {
 			    $html = $Language->getText('tracker_include_field','start')."&nbsp;$date_begin<br>".$Language->getText('tracker_include_field','end')."&nbsp;$date_end";
@@ -240,7 +240,7 @@ class ArtifactFieldHtml extends ArtifactField {
 	 */
 	function fieldDateOperator($value='',$ro=false) {
 	  global $Language;
-      $hp = CodeX_HTMLPurifier::instance();
+      $hp = Codendi_HTMLPurifier::instance();
 	    if ($ro) {
 			$html = htmlspecialchars($value);
 		} else {
@@ -267,7 +267,7 @@ class ArtifactFieldHtml extends ArtifactField {
 	 */
 	function fieldDate($value='',$ro=false,$size='10',$maxlength='10',$form_name='artifact_form',$today=false) {
 	  global $Language;
-      $hp = CodeX_HTMLPurifier::instance();
+      $hp = Codendi_HTMLPurifier::instance();
 	    if ($ro)
 			$html = $value;
 	    else {
@@ -288,7 +288,7 @@ class ArtifactFieldHtml extends ArtifactField {
 	 *	@return	string
 	 */
 	function fieldText($value='',$size=0,$maxlength=0) {
-        $hp = CodeX_HTMLPurifier::instance();
+        $hp = Codendi_HTMLPurifier::instance();
 	    if (!$size || !$maxlength)
 			list($size, $maxlength) = $this->getGlobalDisplaySize();
 	
@@ -324,7 +324,7 @@ class ArtifactFieldHtml extends ArtifactField {
 	 *	@return	string
 	 */
 	function fieldTextarea($value='',$cols=0,$rows=0) {
-        $hp = CodeX_HTMLPurifier::instance();
+        $hp = Codendi_HTMLPurifier::instance();
 	    if (!$cols || !$rows)
 			list($cols, $rows) = $this->getGlobalDisplaySize();
 	
@@ -363,7 +363,7 @@ class ArtifactFieldHtml extends ArtifactField {
 				   $show_any=false, $text_any=0,
 				   $show_unchanged=false,$text_unchanged=0) {
 	    global $Language;
-        $hp = CodeX_HTMLPurifier::instance();
+        $hp = Codendi_HTMLPurifier::instance();
         //Use url parameters to populate fields
         if (!$ro) {
             $request =& HTTPRequest::instance();

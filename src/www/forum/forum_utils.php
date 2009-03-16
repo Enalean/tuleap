@@ -23,7 +23,7 @@ require_once('common/reference/ReferenceManager.class.php');
 
 function forum_header($params) {
     global $HTML,$group_id,$forum_name,$thread_id,$msg_id,$forum_id,$et,$et_cookie,$Language;
-    $hp = CodeX_HTMLPurifier::instance(); 
+    $hp = Codendi_HTMLPurifier::instance(); 
     $uh = new UserHelper();
   
 	$params['group']=$group_id;

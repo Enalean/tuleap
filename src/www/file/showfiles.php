@@ -29,7 +29,7 @@ if (!user_isloggedin()) {
 
 $authorized_user = false;
 
-$hp = CodeX_HTMLPurifier::instance();
+$hp = Codendi_HTMLPurifier::instance();
 
 $request =& HTTPRequest::instance();
 $vGroupId = new Valid_GroupId();
@@ -79,7 +79,7 @@ $params = array (
 )), 'pv' => $pv);
 
 file_utils_header($params);
-$hp =& CodeX_HTMLPurifier::instance();
+$hp =& Codendi_HTMLPurifier::instance();
 if ($num_packages < 1) {
     echo '<h3>' . $Language->getText('file_showfiles', 'no_file_p') . '</h3><p>' . $Language->getText('file_showfiles', 'no_p_available');
     if (user_ismember($group_id,'R2')) {

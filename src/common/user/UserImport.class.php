@@ -53,7 +53,7 @@ class UserImport extends Error {
      */
     function parse($user_filename,&$errors,&$parsed_users) {
         global $Language;
-        $hp = CodeX_HTMLPurifier::instance();
+        $hp = Codendi_HTMLPurifier::instance();
         $user_file = fopen($user_filename, "r");
         $ok = true;  
         $user_dao =& new UserDao(CodendiDataAccess::instance());

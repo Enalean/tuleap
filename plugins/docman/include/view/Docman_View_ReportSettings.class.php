@@ -35,7 +35,7 @@ class Docman_View_ReportSettings extends Docman_View_Extra {
      */
     function _title($params) {
         $request =& HTTPRequest::instance();
-        $hp = CodeX_HTMLPurifier::instance();
+        $hp = Codendi_HTMLPurifier::instance();
         if($request->exist('report_id')) {
             echo '<h2>'.$GLOBALS['Language']->getText('plugin_docman', 'report_settings_report_name').' "'. $hp->purify($params['filter']->getName(), CODEX_PURIFIER_CONVERT_HTML) .'"</h2>';
         } else {
@@ -56,7 +56,7 @@ class Docman_View_ReportSettings extends Docman_View_Extra {
      *
      */
     function _getReportTableContent($reportIter, $isAdmin, &$altRowClass) {
-        $hp = CodeX_HTMLPurifier::instance();
+        $hp = Codendi_HTMLPurifier::instance();
         $html = '';
         $reportIter->rewind();
         while($reportIter->valid()) {

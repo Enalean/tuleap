@@ -35,7 +35,7 @@ class Docman_ReportHtml {
         $this->report = $report;
         $this->view   = $view;
         $this->defaultUrl = $defaultUrl;
-        $this->hp = CodeX_HTMLPurifier::instance();
+        $this->hp = Codendi_HTMLPurifier::instance();
     }
 
     /**

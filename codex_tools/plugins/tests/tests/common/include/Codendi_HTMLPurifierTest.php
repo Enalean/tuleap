@@ -22,23 +22,23 @@
  *
  */
 
-require_once('common/include/CodeX_HTMLPurifier.class.php');
+require_once('common/include/Codendi_HTMLPurifier.class.php');
 
 // Need a TestVersion to by pass '_makeLinks' method (call to utils_make_links
 // that perform DB calls).
 // Need to create this testversion by hand because with Mock object there is no
 // way to tell them "return the parameter as is".
 // This method to be used only when mandatory (when the is a utils_make_links call).
-class CodeX_HTMLPurifierTestVersion extends CodeX_HTMLPurifier {
-    private static $codex_htmlpurifier_testversion_instance;
+class Codendi_HTMLPurifierTestVersion extends Codendi_HTMLPurifier {
+    private static $Codendi_HTMLPurifier_testversion_instance;
     // Need to redfine this method too because the parent one return a
-    // 'CodeX_HTMLPurifier' object.
+    // 'Codendi_HTMLPurifier' object.
     public static function instance() {
-        if (!isset(self::$codex_htmlpurifier_testversion_instance)) {
+        if (!isset(self::$Codendi_HTMLPurifier_testversion_instance)) {
             $c = __CLASS__;
-            self::$codex_htmlpurifier_testversion_instance = new $c;
+            self::$Codendi_HTMLPurifier_testversion_instance = new $c;
         }
-        return self::$codex_htmlpurifier_testversion_instance;
+        return self::$Codendi_HTMLPurifier_testversion_instance;
     }
     function _makeLinks($str, $gid) {
         return $str;
@@ -48,9 +48,9 @@ class CodeX_HTMLPurifierTestVersion extends CodeX_HTMLPurifier {
 /**
  * Tests the class CodeXHTMLPurifier
  */
-class CodeX_HTMLPurifierTest extends UnitTestCase {
+class Codendi_HTMLPurifierTest extends UnitTestCase {
 
-    function UnitTestCase($name = 'CodeX_HTMLPurifier test') {
+    function UnitTestCase($name = 'Codendi_HTMLPurifier test') {
         $this->UnitTestCase($name);
     }
 
@@ -63,12 +63,12 @@ class CodeX_HTMLPurifierTest extends UnitTestCase {
 
 
     function testPurifySimple() {
-        $p =& CodeX_HTMLPurifier::instance();
+        $p =& Codendi_HTMLPurifier::instance();
         $this->assertEqual('&lt;script&gt;alert(1);&lt;/script&gt;', $p->purify('<script>alert(1);</script>'));
     }
 
     function testStripLightForibdden() {
-        $p =& CodeX_HTMLPurifierTestVersion::instance();
+        $p =& Codendi_HTMLPurifierTestVersion::instance();
         $this->assertEqual('', $p->purify('<script>alert(1);</script>', CODEX_PURIFIER_LIGHT));
         $this->assertEqual('Bolded', $p->purify('<s>Bolded</s>', CODEX_PURIFIER_LIGHT));
         $this->assertEqual('', $p->purify('<form name="test" method="post" action="?"><input type="submit" /></form>', CODEX_PURIFIER_LIGHT));
@@ -76,7 +76,7 @@ class CodeX_HTMLPurifierTest extends UnitTestCase {
     }
 
     function anchorJsInjection($level) {
-        $p =& CodeX_HTMLPurifierTestVersion::instance();
+        $p =& Codendi_HTMLPurifierTestVersion::instance();
         $this->assertEqual('<a href="http://php.net">Text</a>', $p->purify('<a href="http://php.net" onblur="evil">Text</a>', $level));
         $this->assertEqual('<a href="http://php.net">Text</a>', $p->purify('<a href="http://php.net" onclick="evil">Text</a>', $level));
         $this->assertEqual('<a href="http://php.net">Text</a>', $p->purify('<a href="http://php.net" ondbclick="evil">Text</a>', $level));
@@ -92,7 +92,7 @@ class CodeX_HTMLPurifierTest extends UnitTestCase {
     }
 
     function testStripLightAllowed() {
-        $p =& CodeX_HTMLPurifierTestVersion::instance();
+        $p =& Codendi_HTMLPurifierTestVersion::instance();
 
         $this->assertEqual('<p>Text</p>', $p->purify('<p>Text</p>', CODEX_PURIFIER_LIGHT));
         $this->assertEqual('Text<br />', $p->purify('Text<br />', CODEX_PURIFIER_LIGHT));
@@ -103,7 +103,7 @@ class CodeX_HTMLPurifierTest extends UnitTestCase {
     }
 
     function testStripLightTidy() {
-        $p =& CodeX_HTMLPurifierTestVersion::instance();
+        $p =& Codendi_HTMLPurifierTestVersion::instance();
         $this->assertEqual('<p>Text</p>', $p->purify('<p>Text', CODEX_PURIFIER_LIGHT));
         $this->assertEqual('Text<br />', $p->purify('Text<br>', CODEX_PURIFIER_LIGHT));
 
@@ -112,7 +112,7 @@ class CodeX_HTMLPurifierTest extends UnitTestCase {
     }
 
     function testPurifyArraySimple() {
-        $p =& CodeX_HTMLPurifier::instance();
+        $p =& Codendi_HTMLPurifier::instance();
 
         $vRef = array('<script>alert(1);</script>',
                       'toto',
@@ -126,14 +126,14 @@ class CodeX_HTMLPurifierTest extends UnitTestCase {
     }
 
     function testSingleton() {
-        $p1 =& CodeX_HTMLPurifier::instance();
-        $p2 =& CodeX_HTMLPurifier::instance();
+        $p1 =& Codendi_HTMLPurifier::instance();
+        $p2 =& Codendi_HTMLPurifier::instance();
         $this->assertReference($p1, $p2);
-        $this->assertIsA($p1, 'CodeX_HTMLPurifier');
+        $this->assertIsA($p1, 'Codendi_HTMLPurifier');
     }
 
     function testPurifyJsQuoteAndDQuote() {
-        $p =& CodeX_HTMLPurifier::instance();
+        $p =& Codendi_HTMLPurifier::instance();
         $this->assertEqual('</"+"script>', $p->purify('</script>', CODEX_PURIFIER_JS_DQUOTE));
         $this->assertEqual('a\"a', $p->purify('a"a', CODEX_PURIFIER_JS_DQUOTE));
         $this->assertEqual('\"a', $p->purify('"a', CODEX_PURIFIER_JS_DQUOTE));

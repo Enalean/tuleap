@@ -28,7 +28,7 @@ require_once('HTML_Element.class.php');
  */
 abstract class HTML_Element_Input extends HTML_Element {
     protected function renderValue() {
-        $hp = CodeX_HTMLPurifier::instance();
+        $hp = Codendi_HTMLPurifier::instance();
         $html = '<input type="'. $this->getInputType() .'" 
                          id="'. $this->id .'" 
                          name="'.  $hp->purify($this->name, CODEX_PURIFIER_CONVERT_HTML) .'" 

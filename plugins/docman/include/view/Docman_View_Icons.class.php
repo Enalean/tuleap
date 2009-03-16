@@ -92,7 +92,7 @@ class Docman_View_Icons extends Docman_View_Browse {
     }
     
     function _displayItem(&$item, $params) {
-        $hp = CodeX_HTMLPurifier::instance();
+        $hp = Codendi_HTMLPurifier::instance();
         $html = '<div id="item_'.$item->getId().'" class="'. Docman_View_Browse::getItemClasses($params) .'" style="position:relative;">';
         
         $show_options = isset($params['show_options']) && $params['show_options'] == $item->getId();

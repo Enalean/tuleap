@@ -41,7 +41,7 @@ $aid      = $request->getValidated('aid', 'uint', 0);
 $atid     = $request->getValidated('atid', 'uint', 0);
 $group_id = $request->getValidated('group_id', 'GroupId', 0);
 
-$hp = CodeX_HTMLPurifier::instance();
+$hp = Codendi_HTMLPurifier::instance();
 
 if ($aid && !$atid) {
     // We have the artifact id, but not the tracker id

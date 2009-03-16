@@ -22,7 +22,7 @@ if ($type_of_search !== "tracker" &&
     echo "<P><CENTER>";
     $HTML->bodySearchBox();
 }
-$hp = CodeX_HTMLPurifier::instance();
+$hp = Codendi_HTMLPurifier::instance();
 /*
 	Force them to enter at least three characters
 */

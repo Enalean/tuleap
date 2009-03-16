@@ -41,7 +41,7 @@ class Widget_MyLatestSvnCommits extends Widget {
         $html = '';
         $uh = new UserHelper();
         $request = HTTPRequest::instance();
-        $hp = CodeX_HTMLPurifier::instance();
+        $hp = Codendi_HTMLPurifier::instance();
         $user = UserManager::instance()->getCurrentUser();
         $project_ids = $user->getProjects();
         foreach ($project_ids as $project_id) {

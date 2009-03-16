@@ -37,7 +37,7 @@ class WikiServiceViews extends WikiViews {
    * WikiServiceViews - Constructor
    */
   function WikiServiceViews(&$controler, $id=0, $view=null) {
-      $hp = CodeX_HTMLPurifier::instance();
+      $hp = Codendi_HTMLPurifier::instance();
     parent::WikiView($controler, $id, $view);
     if(!is_null($_REQUEST['pagename'])) {
         $this->html_params['title']  = $GLOBALS['Language']->getText('wiki_views_wikiserviceviews',

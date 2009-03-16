@@ -23,7 +23,7 @@ require_once('Docman_View_ItemDetailsSectionApproval.class.php');
 class Docman_View_Details extends Docman_View_Display {
     
     /* protected */ function _getTitle($params) {
-        $hp = CodeX_HTMLPurifier::instance();
+        $hp = Codendi_HTMLPurifier::instance();
         return $GLOBALS['Language']->getText('plugin_docman', 'details_title',  $hp->purify($params['item']->getTitle(), CODEX_PURIFIER_CONVERT_HTML) );
     }
     

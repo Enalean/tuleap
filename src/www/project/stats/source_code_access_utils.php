@@ -49,7 +49,7 @@ function logs_cond($project, $span, $who) {
  * Process SQL query and display corresponding result
  */
 function logs_display($sql, $span, $field, $title='') {
-  $hp = CodeX_HTMLPurifier::instance();
+  $hp = Codendi_HTMLPurifier::instance();
   // Executions will continue until morale improves.
   $res = db_query( $sql );
 
@@ -161,7 +161,7 @@ function cvsaccess_logs_extract($project,$span,$who) {
 }
 
 function cvsaccess_logs_daily($project, $span = 7, $who="allusers") {  
-    $hp = CodeX_HTMLPurifier::instance();
+    $hp = Codendi_HTMLPurifier::instance();
 	// check first if service is used by this project
         // if service not used return immediately
         if (!$project->usesCVS()) {
@@ -255,7 +255,7 @@ function svnaccess_logs_extract($project, $span, $who) {
 }
 
 function svnaccess_logs_daily($project, $span = 7, $who="allusers") {
-    $hp = CodeX_HTMLPurifier::instance();
+    $hp = Codendi_HTMLPurifier::instance();
 	// check first if service is used by this project
         // if service not used return immediately
         if (! $project->usesSVN()) {

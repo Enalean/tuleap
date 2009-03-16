@@ -33,7 +33,7 @@ class ServiceFile extends Service {
     * @return arr[title], arr[content]
     */
     function getSummaryPageContent() {
-        $hp = CodeX_HTMLPurifier::instance();
+        $hp = Codendi_HTMLPurifier::instance();
         $ret = array(
             'title' => $GLOBALS['Language']->getText('include_project_home','latest_file_releases'),
             'content' => ''

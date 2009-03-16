@@ -7,7 +7,7 @@
 // 
 require_once('pre.php');
 
-$hp = CodeX_HTMLPurifier::instance();
+$hp = Codendi_HTMLPurifier::instance();
 // Check if group_id is valid
 $vGroupId = new Valid_GroupId();
 $vGroupId->required();

@@ -11,7 +11,7 @@ require_once('../include/PluginSvntodimensionsLogDao.class.php');
 $GLOBALS['HTML']->includeJavascriptFile("/scripts/prototype/prototype.js");
 session_require(array('group'=>'1','admin_flags'=>'A'));
 
-$hp =& CodeX_HTMLPurifier::instance();
+$hp =& Codendi_HTMLPurifier::instance();
 
 //delete log if func=delete
 $request =& HTTPRequest::instance();

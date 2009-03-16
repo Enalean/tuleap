@@ -305,7 +305,7 @@ class Docman_WikiController extends Docman_Controller {
     function showReferrerPath($referrer_id, $group_id) {
         $parents = array();
         $html = HTML();
-        $hp =& CodeX_HTMLPurifier::instance();
+        $hp =& Codendi_HTMLPurifier::instance();
         $item_factory =& $this->_getItemFactory($group_id);
         $item =& $item_factory->getItemFromDb($referrer_id);
         $reference =& $item;
@@ -339,7 +339,7 @@ class Docman_WikiController extends Docman_Controller {
     function getDocumentPath($id, $group_id, $referrer_id = null) {
         $parents = array();
         $html = HTML();
-        $hp =& CodeX_HTMLPurifier::instance();
+        $hp =& Codendi_HTMLPurifier::instance();
         $item_factory =& $this->_getItemFactory($group_id);
         $item =& $item_factory->getItemFromDb($id);
         $reference =& $item;

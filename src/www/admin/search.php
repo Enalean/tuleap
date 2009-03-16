@@ -7,7 +7,7 @@
 
 require_once('pre.php');
 
-$hp = CodeX_HTMLPurifier::instance();
+$hp = Codendi_HTMLPurifier::instance();
 session_require(array('group'=>'1','admin_flags'=>'A'));
 
 if ($search == "") {

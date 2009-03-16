@@ -60,7 +60,7 @@ class Docman_View_ItemRanking {
         $um =& UserManager::instance();
         $user =& $um->getCurrentUser();
 
-        $hp = CodeX_HTMLPurifier::instance();
+        $hp = Codendi_HTMLPurifier::instance();
         $brotherIter->rewind();
         while($brotherIter->valid()) {
             $item = $brotherIter->current();

@@ -116,7 +116,7 @@ function display_account_form($register_error)	{
     global $Language;
 
     $request =& HTTPRequest::instance();
-    $purifier =& CodeX_HTMLPurifier::instance();
+    $purifier =& Codendi_HTMLPurifier::instance();
 
     $page = $request->get('page');
 
@@ -250,7 +250,7 @@ if($page == "admin_creation") {
 // ###### first check for valid login, if so, congratulate
 
 $request =& HTTPRequest::instance();
-$hp =& CodeX_HTMLPurifier::instance();
+$hp =& Codendi_HTMLPurifier::instance();
 if ($request->isPost() && $request->exist('Register')) {
 
 

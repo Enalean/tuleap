@@ -20,7 +20,7 @@ require_once('Docman_View_Docman.class.php');
         echo '<h2>'. $this->_getTitle($params) .'</h2>';
     }
     function _breadCrumbs($params) {
-        $hp = CodeX_HTMLPurifier::instance();
+        $hp = Codendi_HTMLPurifier::instance();
         $item =& $params['item'];
         $current_item       =& $item;
         $current_item_title = $item->getTitle();

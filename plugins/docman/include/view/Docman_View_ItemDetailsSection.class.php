@@ -36,7 +36,7 @@
         $this->title  =  $title;
         $this->item   =& $item;
         $this->url    =  $url;
-        $this->hp     =& CodeX_HTMLPurifier::instance();
+        $this->hp     =& Codendi_HTMLPurifier::instance();
     }
     
     function getId() {

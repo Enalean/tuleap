@@ -461,7 +461,7 @@ function util_make_reference_links ($data,$group_id) {
 
 function util_user_link ($username) {
     global $Language;
-    $hp = CodeX_HTMLPurifier::instance();
+    $hp = Codendi_HTMLPurifier::instance();
     if ( $username == $Language->getText('global','none') || empty($username)) { 
         return  $hp->purify($username, CODEX_PURIFIER_CONVERT_HTML) ; 
     }

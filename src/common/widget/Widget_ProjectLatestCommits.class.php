@@ -29,7 +29,7 @@ class Widget_ProjectLatestCommits extends Widget {
         $html = '';
         $i = 1;
         $UH = new UserHelper();
-        $hp = CodeX_HTMLPurifier::instance(); 
+        $hp = Codendi_HTMLPurifier::instance(); 
         while($data = db_fetch_array($this->latest_revisions)) {
             $html .= '<div class="'. util_get_alt_row_color($i++) .'" style="border-bottom:1px solid #ddd">';
             $html .= '<div style="font-size:0.98em;">';

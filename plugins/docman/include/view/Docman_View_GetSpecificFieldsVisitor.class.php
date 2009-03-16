@@ -22,7 +22,7 @@ class Docman_MetadataHtmlWiki extends Docman_MetadataHtml {
     }
     
     function getField() {
-        $hp =& CodeX_HTMLPurifier::instance();
+        $hp =& Codendi_HTMLPurifier::instance();
         return '<input type="text" name="item[wiki_page]" value="'. $hp->purify($this->pagename) .'" /> ';
     }
 
@@ -46,7 +46,7 @@ class Docman_MetadataHtmlLink extends Docman_MetadataHtml {
     }
     
     function getField() {
-        $hp =& CodeX_HTMLPurifier::instance();
+        $hp =& Codendi_HTMLPurifier::instance();
         return '<input type="text" name="item[link_url]" value="'. $hp->purify($this->link_url) .'" />';
     }
 
@@ -93,7 +93,7 @@ class Docman_MetadataHtmlEmbeddedFile extends Docman_MetadataHtml {
     }
     
     function getField() {
-        $hp =& CodeX_HTMLPurifier::instance();
+        $hp =& Codendi_HTMLPurifier::instance();
         $html = '<script type="text/javascript" src="/scripts/tiny_mce/tiny_mce.js"></script>
 <script type="text/javascript">
 var embedded_content_rte = null;

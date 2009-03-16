@@ -31,7 +31,7 @@ class Docman_MetaMetadataHtml {
 
     function Docman_MetaMetadataHtml(&$md) {
         $this->md =& $md;
-        $this->hp =& CodeX_HTMLPurifier::instance();
+        $this->hp =& Codendi_HTMLPurifier::instance();
 
         $this->str_yes = $GLOBALS['Language']->getText('plugin_docman', 'admin_md_detail_param_yes');
         $this->str_no = $GLOBALS['Language']->getText('plugin_docman', 'admin_md_detail_param_no');

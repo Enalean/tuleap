@@ -79,7 +79,7 @@ extends Plugin {
         echo "<input type=\"submit\" name=\"delete\" value=\"Delete\" />\n";
         echo "</p>\n";
 
-        $hp =& CodeX_HTMLPurifier::instance();
+        $hp =& Codendi_HTMLPurifier::instance();
         while($dar->valid()) {
             $row = $dar->current();
 

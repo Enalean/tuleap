@@ -49,7 +49,7 @@ function doSelection(form) {
 	$trackers_array = $atf->getArtifactTypesFromId($group_id);
 	if ( $trackers_array !== false) {
             echo '<select name="artifact_type_id" size="5">';	
-            $hp = CodeX_HTMLPurifier::instance();
+            $hp = Codendi_HTMLPurifier::instance();
             
             foreach($trackers_array as $tracker) {
                 echo '<option value="'. (int)$tracker->getId().'">'. $hp->purify($tracker->getName()) .'</option>';

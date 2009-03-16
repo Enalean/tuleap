@@ -63,7 +63,7 @@ class Docman_HtmlFilter {
 
     function Docman_HtmlFilter($filter) {
         $this->filter = $filter;
-        $this->hp =& CodeX_HTMLPurifier::instance();
+        $this->hp =& Codendi_HTMLPurifier::instance();
     }
 
     function _fieldName() {

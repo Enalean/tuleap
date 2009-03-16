@@ -134,7 +134,7 @@ class Docman_MetadataHtml {
 
     function Docman_MetadataHtml(&$md, $formParams) {
         $this->md =& $md;
-        $this->hp =& CodeX_HTMLPurifier::instance();
+        $this->hp =& Codendi_HTMLPurifier::instance();
         $this->formParams = $formParams; 
     }
 
@@ -307,7 +307,7 @@ class Docman_MetadataHtmlList extends Docman_MetadataHtml {
      * static
      */
     function _getElementName(&$e, $hideNone=false) {
-        $hp =& CodeX_HTMLPurifier::instance();
+        $hp =& Codendi_HTMLPurifier::instance();
         $name = '';
         switch($e->getId()) {
         case 100:

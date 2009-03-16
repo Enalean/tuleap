@@ -105,7 +105,7 @@ class RegisterProjectStep_Template extends RegisterProjectStep {
     }
     
     function _displayProject($group_id, $group_name, $register_time, $unix_group_name, $short_description) {
-        $hp = CodeX_HTMLPurifier::instance();
+        $hp = Codendi_HTMLPurifier::instance();
         print '<TR>';
         $check = "";
         $title = '<B>'.  $hp->purify(util_unconvert_htmlspecialchars($group_name), CODEX_PURIFIER_CONVERT_HTML)  .

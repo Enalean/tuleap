@@ -41,7 +41,7 @@ function show_features_boxes() {
 function show_top_downloads() {
     global $Language;
     $return  = "";
-    $hp = CodeX_HTMLPurifier::instance();
+    $hp = Codendi_HTMLPurifier::instance();
     // Get time for today and yesterday at midnight
     $end_time = mktime(0,0,0);
     $start_time = $end_time - 86400;
@@ -76,7 +76,7 @@ function show_top_downloads() {
 function show_newest_releases() {
     global $Language;
     $return  = "";
-    $hp = CodeX_HTMLPurifier::instance();
+    $hp = Codendi_HTMLPurifier::instance();
     // Fetch releases that are no more than 3 months old
     $start_time = strval(time() - 3*30*24*3600);
     $query = new_utils_get_new_releases_short($start_time);
@@ -146,7 +146,7 @@ function show_sitestats() {
 function show_newest_projects() {
     global $Language;
     $return  = "";
-    $hp = CodeX_HTMLPurifier::instance();
+    $hp = Codendi_HTMLPurifier::instance();
     $start_time = strval(time()-(24*3600));
     $limit = 10;
     $sql = new_utils_get_new_projects ($start_time,0,$limit);
@@ -170,7 +170,7 @@ function show_newest_projects() {
 function show_highest_ranked_projects() {
     global $Language;
     $return  = "";
-    $hp = CodeX_HTMLPurifier::instance();
+    $hp = Codendi_HTMLPurifier::instance();
     //don't take into account test projects and template projects
     $sql="SELECT groups.group_name,groups.unix_group_name,groups.group_id,".
         "project_weekly_metric.ranking,project_weekly_metric.percentile ".

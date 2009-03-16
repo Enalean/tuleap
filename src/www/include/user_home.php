@@ -35,7 +35,7 @@ echo '
 <TD width=50%>';
 
 $HTML->box1_top($Language->getText('include_user_home','perso_info'));
-$hp = CodeX_HTMLPurifier::instance();
+$hp = Codendi_HTMLPurifier::instance();
 echo '
 &nbsp;
 <BR>

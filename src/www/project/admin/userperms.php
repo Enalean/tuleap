@@ -303,7 +303,7 @@ if (!$res_dev || $number_per_page < 1) {
     }
     
     $uh = new UserHelper();
-    $hp = CodeX_HTMLPurifier::instance(); 
+    $hp = Codendi_HTMLPurifier::instance(); 
     
     while ($row_dev = db_fetch_array($res_dev)) {
         $i++;

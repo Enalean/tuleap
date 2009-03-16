@@ -350,7 +350,7 @@ class Project extends Group {
     function displayProjectsDescFieldsValue(){
     	$descfieldsvalue=$this->getProjectsDescFieldsValue();
     	$descfields = getProjectsDescFieldsInfos();
-    	$hp = CodeX_HTMLPurifier::instance();
+    	$hp = Codendi_HTMLPurifier::instance();
     	global $Language;
     	
     	for($i=0;$i<sizeof($descfields);$i++){

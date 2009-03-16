@@ -46,7 +46,7 @@ function display_service_configuration_form($group_id, $service_id, $service, $r
   echo '
 <h3>'.$Language->getText('project_admin_editservice','s_conf').'</h3>';
   
-  $hp =& CodeX_HTMLPurifier::instance();
+  $hp =& Codendi_HTMLPurifier::instance();
 
   echo '
 <form method="post" name="form_update" action="/project/admin/servicebar.php?group_id='.$group_id.'">

@@ -13,7 +13,7 @@ require_once('www/admin/admin_utils.php');
 $GLOBALS['HTML']->includeCalendarScripts();
 
 session_require(array('group'=>'1','admin_flags'=>'A'));
-$hp = CodeX_HTMLPurifier::instance();
+$hp = Codendi_HTMLPurifier::instance();
 $request =& HTTPRequest:: instance();
 $action_select = '';
 $status= '';

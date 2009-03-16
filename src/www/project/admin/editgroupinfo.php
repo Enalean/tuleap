@@ -149,7 +149,7 @@ project_admin_header(array('title'=>$Language->getText('project_admin_editgroupi
 
 print '<P><h3>'.$Language->getText('project_admin_editgroupinfo','editing_g_info_for',$row_grp['group_name']).'</h3>';
 
-$hp = CodeX_HTMLPurifier::instance();
+$hp = Codendi_HTMLPurifier::instance();
 print '
 <P>
 <FORM action="'.$PHP_SELF.'" method="post">

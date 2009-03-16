@@ -10,7 +10,7 @@
 //
 
 require_once('common/include/Error.class.php');
-require_once('common/include/CodeX_HTMLPurifier.class.php');
+require_once('common/include/Codendi_HTMLPurifier.class.php');
 require_once('common/tracker/ArtifactGlobalNotificationFactory.class.php');
 require_once('common/include/SimpleSanitizer.class.php');
 
@@ -242,7 +242,7 @@ function getUsedFields() {
    */
   function checkPredefinedValues($field,$field_name,$label,$val,$predef_vals,$row,$data) {
     global $Language;
-    $hp = CodeX_HTMLPurifier::instance();
+    $hp = Codendi_HTMLPurifier::instance();
     if ($field->getDisplayType() == "MB") {
       $val_arr = explode(",",$val);
       while (list(,$name) = each($val_arr)) {
@@ -292,7 +292,7 @@ function getUsedFields() {
    */
   function checkValues($row,&$data,$insert,$from_update=false) {
     global $Language;
-    $hp = CodeX_HTMLPurifier::instance();
+    $hp = Codendi_HTMLPurifier::instance();
     for ($c=0; $c < count($this->parsed_labels); $c++) {
       $label = $this->parsed_labels[$c];
       $val = $data[$c];
@@ -403,7 +403,7 @@ function getUsedFields() {
    */
   function checkInsertArtifact($row,&$data,$from_update=false) {
     global $Language;
-    $hp = CodeX_HTMLPurifier::instance();
+    $hp = Codendi_HTMLPurifier::instance();
     // first make sure this isn't double-submitted
     
     //$field = $used_fields["Summary"];
@@ -445,7 +445,7 @@ function getUsedFields() {
   /** check if all the values correspond to predefined values of the corresponding fields */
   function checkUpdateArtifact($row,&$data,$aid) {
     global $Language;
-    $hp = CodeX_HTMLPurifier::instance();
+    $hp = Codendi_HTMLPurifier::instance();
     $sql = "SELECT artifact_id FROM artifact WHERE artifact_id = $aid and group_artifact_id = ".$this->ath->getID();
     $result = db_query($sql);
     if (db_numrows($result) == 0) {
@@ -473,7 +473,7 @@ function getUsedFields() {
 		 &$artifacts_data,
 		 &$number_inserts,&$number_updates) {
     global $Language;
-    $hp = CodeX_HTMLPurifier::instance();
+    $hp = Codendi_HTMLPurifier::instance();
     
     $number_inserts = 0;
     $number_updates = 0;

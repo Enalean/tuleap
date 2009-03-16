@@ -42,7 +42,7 @@ class ArtifactTypeHtml extends ArtifactType {
 	function header($params) {
 		global $Language;
 		$group_id= $this->Group->getID();
-        $hp = CodeX_HTMLPurifier::instance();
+        $hp = Codendi_HTMLPurifier::instance();
         
         $GLOBALS['HTML']->includeJavascriptFile("/scripts/scriptaculous/scriptaculous.js");
         $GLOBALS['HTML']->includeJavascriptFile("/scripts/fieldDependencies.js");
@@ -176,7 +176,7 @@ class ArtifactTypeHtml extends ArtifactType {
 	 *  @return void
 	 */
 	function displayPendingTrackers() {
-        $hp = CodeX_HTMLPurifier::instance();
+        $hp = Codendi_HTMLPurifier::instance();
 		global $atf,$Language;
 		
 
@@ -225,7 +225,7 @@ class ArtifactTypeHtml extends ArtifactType {
 	 *  @return void
 	 */
 	function displayAdminTrackers() {
-        $hp = CodeX_HTMLPurifier::instance();
+        $hp = Codendi_HTMLPurifier::instance();
 		global $atf,$Language;
 				
 		// Get the artfact type list
@@ -289,7 +289,7 @@ class ArtifactTypeHtml extends ArtifactType {
 	 */
 	function displayAdminTracker($group_id,$atid) {
 	  global $Language;
-      $hp = CodeX_HTMLPurifier::instance();
+      $hp = Codendi_HTMLPurifier::instance();
 	    echo '<H2>'.$Language->getText('tracker_import_admin','tracker').' \'<a href="/tracker/?group_id='.(int)$group_id.'&atid='.(int)$atid.'&func=browse">'.$hp->purify(SimpleSanitizer::unsanitize($this->getName()), CODEX_PURIFIER_CONVERT_HTML).'</a>\''.$Language->getText('tracker_include_type','administration').'</H2>';
 
 	    if ( $this->userIsAdmin() ) {
@@ -344,7 +344,7 @@ class ArtifactTypeHtml extends ArtifactType {
          * @protected
          */
         function displayAdminTitle($title) {
-            $hp = CodeX_HTMLPurifier::instance();
+            $hp = Codendi_HTMLPurifier::instance();
             echo '<H2>',
                 $GLOBALS['Language']->getText('tracker_import_admin','tracker'),
                 ' \'<a href="/tracker/admin/?group_id=',(int)$this->getGroupID(),'&atid=',(int)$this->getID(),'">',
@@ -361,7 +361,7 @@ class ArtifactTypeHtml extends ArtifactType {
          * @protected
          */
         function _displayAdminMenu($items) {
-            $hp = CodeX_HTMLPurifier::instance();
+            $hp = Codendi_HTMLPurifier::instance();
             $html = '';
             foreach($items as $item) {
                 if (isset($item['name'])) {
@@ -391,7 +391,7 @@ class ArtifactTypeHtml extends ArtifactType {
          *                                                           isset(['permissions'][PERMISSION_TYPE]) = true if ugroup has this permissions for the Field
          */
         function displayPermissionsFieldsTracker($ugroups_permissions, $group_first, $selected_id = false) {
-            $hp = CodeX_HTMLPurifier::instance();
+            $hp = Codendi_HTMLPurifier::instance();
             $this->displayAdminTitle($GLOBALS['Language']->getText('tracker_include_type','manage_fields_tracker_permissions_title'));
 
             $submit_permission = 'TRACKER_FIELD_SUBMIT';
@@ -648,7 +648,7 @@ EOS;
          *                              isset(['permissions'][PERMISSION_TYPE]) = true if ugroup has this permissions for the artifactType
          */
         function displayPermissionsTracker($ugroups_permissions) {
-            $hp = CodeX_HTMLPurifier::instance();
+            $hp = Codendi_HTMLPurifier::instance();
             $this->displayAdminTitle($GLOBALS['Language']->getText('tracker_include_type','manage_tracker_permissions_title'));
             $full_permission      = 'TRACKER_ACCESS_FULL';
             $assignee_permission  = 'TRACKER_ACCESS_ASSIGNEE';
@@ -787,7 +787,7 @@ EOS;
 	 *  @return void
 	 */
 	function displayOptions($group_id,$atid) {
-        $hp = CodeX_HTMLPurifier::instance();
+        $hp = Codendi_HTMLPurifier::instance();
 	  global $Language;
 
 		echo '<H2>'.$Language->getText('tracker_import_admin','tracker').' \'<a href="/tracker/admin/?group_id='.(int)$group_id.'&atid='.(int)$atid.'">'. $hp->purify(SimpleSanitizer::unsanitize($this->getName()), CODEX_PURIFIER_CONVERT_HTML) .'</a>\' - '.$Language->getText('tracker_include_type','settings').'</H2>';
@@ -873,7 +873,7 @@ EOS;
 	 */
 	function trackersSelectBox ($group_id,$name,$checked='xzxz') {
 		global $atf;
-        $hp = CodeX_HTMLPurifier::instance();
+        $hp = Codendi_HTMLPurifier::instance();
                 $tracker_names = array();
                 $tracker_ids   = array();
                 $trackers_array = $atf->getArtifactTypesFromId($group_id);
@@ -902,7 +902,7 @@ EOS;
 	 */
 	function displayCreateTracker($group_id,$codex_template,$group_id_template,$atid_template,$name,$description,$itemname) {
 	  global $Language;
-        $hp = CodeX_HTMLPurifier::instance();
+        $hp = Codendi_HTMLPurifier::instance();
 		echo '<script language="JavaScript">
 		      function trimStr(value) {
 		      	trimValue = "";
@@ -1045,7 +1045,7 @@ EOS;
 	 */
 	function displayFieldUsageList() {
 		global $ath,$art_field_fact,$art_fieldset_fact,$Language;
-		$hp = CodeX_HTMLPurifier::instance();
+		$hp = Codendi_HTMLPurifier::instance();
 		echo '<h3>'.$Language->getText('tracker_include_type','list_all_fields').'</h3>';
 		echo '<p>'.$Language->getText('tracker_include_report','mod');
 		
@@ -1302,7 +1302,7 @@ EOS;
 								   $display_size=false,$rank_on_screen=false,
 								   $empty_ok=false,$keep_history=false,$special=false,$use_it=false,$show_use=false, $fieldset_id=false) {
 		global $art_field_fact,$Language;
-		$hp = CodeX_HTMLPurifier::instance();
+		$hp = Codendi_HTMLPurifier::instance();
 		$field = $art_field_fact->getFieldFromId($field_id);
 
 		$af = new ArtifactField();
@@ -1498,7 +1498,7 @@ EOS;
 	 *  @return void
 	 */
 	function displayFieldValuesEditList() {
-        $hp = CodeX_HTMLPurifier::instance();
+        $hp = Codendi_HTMLPurifier::instance();
 		global $ath,$art_field_fact,$art_fieldset_fact,$Language;
 		
 		echo '<p>'.$Language->getText('tracker_include_report','mod');
@@ -1568,7 +1568,7 @@ EOS;
 	 *  @return void
 	 */
 	function displayValueFunctionForm($field_id,$value_function,$or_label="") {
-        $hp = CodeX_HTMLPurifier::instance();
+        $hp = Codendi_HTMLPurifier::instance();
 	  global $Language;
 	    if ( $or_label ) {
 	    	echo '<h3>'. $hp->purify($or_label, CODEX_PURIFIER_CONVERT_HTML) .' '.$Language->getText('tracker_include_type','bind_to_list').' ';
@@ -1673,7 +1673,7 @@ EOS;
 	 */
 	function displayFieldValueForm($func,$field_id,$value_id=false,$value=false,$order_id=false,$status=false,$description=false) {
 		global $Language;
-		$hp = CodeX_HTMLPurifier::instance();
+		$hp = Codendi_HTMLPurifier::instance();
         
 		if ( $func == "value_create" ) {
 			echo '<h3>'.$Language->getText('tracker_include_type','create_value').' '.help_button('TrackerAdministration.html#TrackerCreatingaTrackerFieldValue').'</h3>';
@@ -1806,7 +1806,7 @@ EOS;
 	 */
 	function displayFieldValuesList($field_id) {
 		global $ath,$art_field_fact,$Language;
-		$hp = CodeX_HTMLPurifier::instance();
+		$hp = Codendi_HTMLPurifier::instance();
 		
 		$field = $art_field_fact->getFieldFromId($field_id);
 		if ( !$field ) {
@@ -1948,7 +1948,7 @@ EOS;
 	
 	function displayNotificationForm($user_id) {
 	  global $Language;
-      $hp = CodeX_HTMLPurifier::instance();
+      $hp = Codendi_HTMLPurifier::instance();
 		// By default it's all 'yes'
 		for ($i=0; $i<$this->num_roles; $i++) {
 		    $role_label = $this->arr_roles[$i]['role_label'];
@@ -2166,7 +2166,7 @@ EOS;
 	 */
 	function displayDefaultValueForm($field_id,$default_value) {
 		global $ath,$art_field_fact,$Language;
-		$hp = CodeX_HTMLPurifier::instance();
+		$hp = Codendi_HTMLPurifier::instance();
 		$field = $art_field_fact->getFieldFromId($field_id);
 		if ( !$field ) {
 			return;
@@ -2284,7 +2284,7 @@ EOS;
          */
         function displayMassChange($ro, $mass_change_ids=null,$query=null,$art_report_html=null, $advsrch=0) {
             global $art_field_fact,$sys_max_size_attachment,$Language;
-            $hp = CodeX_HTMLPurifier::instance();
+            $hp = Codendi_HTMLPurifier::instance();
             $fields_per_line=2;
             $max_size=40;
             
@@ -2577,7 +2577,7 @@ EOS;
 	* @param change_ids: all the ids of the artifacts affected
 	*/
 	function showCCList($change_ids) {
-        $hp = CodeX_HTMLPurifier::instance();
+        $hp = Codendi_HTMLPurifier::instance();
 	  global $Language;
 		$out = "";
 			
@@ -2643,7 +2643,7 @@ EOS;
 	*/
 	function showAttachedFiles($change_ids) {
 	  global $Language;
-      $hp = CodeX_HTMLPurifier::instance();
+      $hp = Codendi_HTMLPurifier::instance();
 		$out = "";
 		$result = $this->getAttachedFiles($change_ids);		
 	
@@ -2707,7 +2707,7 @@ EOS;
          */
         function showDependencies ($change_ids) {
 	  global $Language;
-            $hp = CodeX_HTMLPurifier::instance();
+            $hp = Codendi_HTMLPurifier::instance();
             $result=$this->getDependencies($change_ids);
             $rows=db_numrows($result);
             $out = '';
@@ -2790,7 +2790,7 @@ EOS;
 	 */
     function displayFieldSetCreateForm($func="fieldset_create",$fieldset_id=false,$fieldset_name=false,$description=false,$rank=false) {
         global $art_fieldset_fact,$Language;
-        $hp = CodeX_HTMLPurifier::instance();
+        $hp = Codendi_HTMLPurifier::instance();
         $fieldset = $art_fieldset_fact->getFieldSetById($fieldset_id);
 
         $afs = new ArtifactFieldSet();
@@ -2855,7 +2855,7 @@ EOS;
      */
     function displayFieldSetList() {
         global $ath,$art_fieldset_fact,$Language;
-        $hp = CodeX_HTMLPurifier::instance();
+        $hp = Codendi_HTMLPurifier::instance();
         echo '<h3>'.$Language->getText('tracker_include_type','list_all_fieldsets').'</h3>';
         echo '<p>'.$Language->getText('tracker_include_report','mod');
         
@@ -2926,7 +2926,7 @@ EOS;
      * @param int $selected_field_set_id the id of the fieldset that must be selected, or false if no default fieldset is selected
      */
     function displayFieldSetDropDownList($artifact_group_id, $selected_fieldset_id = false) {
-        $hp = CodeX_HTMLPurifier::instance();
+        $hp = Codendi_HTMLPurifier::instance();
         global $ath,$art_fieldset_fact;
         
         $fieldsets = $art_fieldset_fact->getArtifactFieldSetsFromId($artifact_group_id);

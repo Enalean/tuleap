@@ -4,7 +4,7 @@ $request =& HTTPRequest::instance();
 
 
 $nb_max = 50;
-$hp = CodeX_HTMLPurifier::instance();
+$hp = Codendi_HTMLPurifier::instance();
 $s = db_escape_string(strtolower($request->get('search_for')));
 if ($request->get('users') || $request->get('mailinglists')) {
     if ($request->get('users')) {

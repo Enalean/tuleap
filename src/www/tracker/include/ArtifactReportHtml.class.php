@@ -37,7 +37,7 @@ class ArtifactReportHtml extends ArtifactReport {
          *      @return string
          */
         function showPriorityColorsKey($msg,$aids,$masschange,$pv) {
-            $hp = CodeX_HTMLPurifier::instance();
+            $hp = Codendi_HTMLPurifier::instance();
 	  global $Language,$group_id;
                 $html_result = "";
 
@@ -169,7 +169,7 @@ class ArtifactReportHtml extends ArtifactReport {
          */
         function displayQueryFields($prefs,$advsrch,$pv) {
             global $ath,$Language;
-            $hp = CodeX_HTMLPurifier::instance();
+            $hp = Codendi_HTMLPurifier::instance();
             $html_select = '';
             //
             // Loop through the list of used fields to define label and fields/boxes
@@ -327,7 +327,7 @@ class ArtifactReportHtml extends ArtifactReport {
          */
         function showResult ($group_id,$prefs,$offset,$total_rows,$url,$nolink,$chunksz,$morder,$advsrch,$chunksz,$aids,$masschange=false,$pv) {
             global $PHP_SELF,$Language,$ath;
-            $hp = CodeX_HTMLPurifier::instance();
+            $hp = Codendi_HTMLPurifier::instance();
             $html_result = "";
         
             // Build the list of links to use for column headings
@@ -632,7 +632,7 @@ class ArtifactReportHtml extends ArtifactReport {
          *
          */
         function displayReport($prefs,$group_id,$report_id,$set,$advsrch,$msort,$morder,$order,$pref_stg,$offset,$chunksz,$pv,$masschange=false) {
-            $hp = CodeX_HTMLPurifier::instance();
+            $hp = Codendi_HTMLPurifier::instance();
             global $ath,$art_field_fact,$Language;
                 
             $html_result = '';
@@ -886,7 +886,7 @@ class ArtifactReportHtml extends ArtifactReport {
          * @return void
          */
         function showAvailableReports($reports) {
-            $hp = CodeX_HTMLPurifier::instance();
+            $hp = Codendi_HTMLPurifier::instance();
                 global $ath,$Language;
                 
                 $g = $ath->getGroup();
@@ -964,7 +964,7 @@ class ArtifactReportHtml extends ArtifactReport {
          *  @return void
          */
         function createReportForm() {
-            $hp = CodeX_HTMLPurifier::instance();
+            $hp = Codendi_HTMLPurifier::instance();
                 global $ath,$Language;
                 
                 $g = $ath->getGroup();
@@ -1072,7 +1072,7 @@ class ArtifactReportHtml extends ArtifactReport {
          *  @return void
          */
         function showReportForm() {
-            $hp = CodeX_HTMLPurifier::instance();
+            $hp = Codendi_HTMLPurifier::instance();
                 global $ath, $Language;
                 
                 $g = $ath->getGroup();

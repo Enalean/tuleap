@@ -143,7 +143,7 @@ extends Docman_ReportColumn {
     }
 
     function getTableBox($item, $view, $params) {
-        $hp = CodeX_HTMLPurifier::instance();
+        $hp = Codendi_HTMLPurifier::instance();
         $pathTitle = $item->getPathTitle();
         $pathId    = $item->getPathId();
         $pathUrl   = array();

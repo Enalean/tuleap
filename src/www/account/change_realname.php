@@ -46,7 +46,7 @@ if (register_valid()) {
 
     $um = UserManager::instance();
     $user = $um->getCurrentUser();
-    $hp = CodeX_HTMLPurifier::instance();
+    $hp = Codendi_HTMLPurifier::instance();
 ?>
 <p><b><?php $Language->getText('account_change_realname', 'title'); ?></b>
 <form action="change_realname.php" method="post">

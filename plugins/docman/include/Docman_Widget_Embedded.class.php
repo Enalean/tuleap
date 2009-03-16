@@ -68,7 +68,7 @@ class Docman_Widget_Embedded extends Widget /* implements Visitor */ {
      * @return string
      */
     public function getTitle() {
-        $hp = CodeX_HTMLPurifier::instance();
+        $hp = Codendi_HTMLPurifier::instance();
         return $this->plugin_docman_widget_embedded_title ?  $hp->purify($this->plugin_docman_widget_embedded_title, CODEX_PURIFIER_CONVERT_HTML)  : 'Embedded Document';
     }
     
@@ -77,7 +77,7 @@ class Docman_Widget_Embedded extends Widget /* implements Visitor */ {
      * @return string html
      */
     public function getContent() {
-        $hp = CodeX_HTMLPurifier::instance();
+        $hp = Codendi_HTMLPurifier::instance();
         $content = '';
         if ($this->plugin_docman_widget_embedded_item_id) {
             if ($item = $this->getItem($this->plugin_docman_widget_embedded_item_id)) {
@@ -112,7 +112,7 @@ class Docman_Widget_Embedded extends Widget /* implements Visitor */ {
      * @return string html
      */
     public function getPreferences() {
-        $hp = CodeX_HTMLPurifier::instance();
+        $hp = Codendi_HTMLPurifier::instance();
         $prefs  = '';
         $prefs .= '<table><tr><td>Title:</td><td><input type="text" class="textfield_medium" name="plugin_docman_widget_embedded[title]" value="'. $hp->purify($this->plugin_docman_widget_embedded_title, CODEX_PURIFIER_CONVERT_HTML) .'" /></td></tr>';
         $prefs .= '<tr><td>Item_id:</td><td><input type="text" class="textfield_small" name="plugin_docman_widget_embedded[item_id]" value="'. $hp->purify($this->plugin_docman_widget_embedded_item_id, CODEX_PURIFIER_CONVERT_HTML) .'" /></td></tr>';
@@ -288,7 +288,7 @@ class Docman_Widget_Embedded extends Widget /* implements Visitor */ {
     }
 
     function visitEmbeddedFile($item, $params = array()) {
-        $hp = CodeX_HTMLPurifier::instance();
+        $hp = Codendi_HTMLPurifier::instance();
         $html = '';
         $version = $item->getCurrentVersion();
         if (file_exists($version->getPath())) {

@@ -2646,7 +2646,7 @@ class Artifact extends Error {
          * @return string the follow-up comments to display in HTML or in ascii mode
          */
         function showFollowUpComments($group_id, $pv, $ascii=false) {
-            $hp = CodeX_HTMLPurifier::instance();
+            $hp = Codendi_HTMLPurifier::instance();
             //
             //  Format the comment rows from artifact_history
             //  
@@ -2860,7 +2860,7 @@ class Artifact extends Error {
          * @return void
          */
         function showCCList ($group_id, $group_artifact_id, $ascii=false, $pv = 0) {
-            $hp = CodeX_HTMLPurifier::instance();
+            $hp = Codendi_HTMLPurifier::instance();
             global $Language;
         
             //
@@ -2967,7 +2967,7 @@ class Artifact extends Error {
          * @return void
          */
         function showDependencies ($group_id, $group_artifact_id, $ascii=false, $pv = 0) {
-            $hp = CodeX_HTMLPurifier::instance();
+            $hp = Codendi_HTMLPurifier::instance();
             global $Language;
         
             //
@@ -3069,7 +3069,7 @@ class Artifact extends Error {
         function showAttachedFiles ($group_id,$group_artifact_id,$ascii=false, $pv = 0) {
         
             global $Language;
-            $hp = CodeX_HTMLPurifier::instance();
+            $hp = Codendi_HTMLPurifier::instance();
             //
             //  show the files attached to this artifact
             //   

@@ -12,7 +12,7 @@ require_once('common/include/Response.class.php');
 
 require_once('common/event/EventManager.class.php');
 
-require_once('common/include/CodeX_HTMLPurifier.class.php');
+require_once('common/include/Codendi_HTMLPurifier.class.php');
 
 require_once('common/include/Combined.class.php');
 
@@ -902,7 +902,7 @@ class Layout extends Response {
      * Display all the syndication feeds (rss for now) for the current page
      */
     public function displaySyndicationElements() {
-        $hp =& CodeX_HTMLPurifier::instance();
+        $hp =& Codendi_HTMLPurifier::instance();
         
         //Basic feeds
         echo $this->getRssFeed(
@@ -956,7 +956,7 @@ class Layout extends Response {
      * @return string The calendar picker
      */
     function getDatePicker($id, $name, $value, $size = 10, $maxlength = 10) {
-        $hp = CodeX_HTMLPurifier::instance();
+        $hp = Codendi_HTMLPurifier::instance();
         return '<span style="white-space:nowrap;"><input type="text" 
                        class="highlight-days-67 format-y-m-d divider-dash no-transparency" 
                        id="'.  $hp->purify($id, CODEX_PURIFIER_CONVERT_HTML)  .'" 
@@ -1442,7 +1442,7 @@ class Layout extends Response {
                 $link=str_replace('$group_id',$group_id,$link);
             }
             $enabled = (is_numeric($toptab) && $toptab == $service_data['service_id']) || ($short_name && ($toptab == $short_name));
-            $hp =& CodeX_HTMLPurifier::instance();
+            $hp =& Codendi_HTMLPurifier::instance();
             $tabs[] = array('link'        => $link,
                             'icon'        => null,
                             'label'       => $short_name == 'summary' ? $hp->purify($project->getPublicName()).' &raquo;' : $hp->purify($service_data['label']),

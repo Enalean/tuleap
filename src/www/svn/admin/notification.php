@@ -39,7 +39,7 @@ if ($request->isPost() && $request->existAndNonEmpty('post_changes')) {
     }
 }
 
-$hp =& CodeX_HTMLPurifier::instance();
+$hp =& Codendi_HTMLPurifier::instance();
 
 // Display the form
 svn_header_admin(array ('title'=>$Language->getText('svn_admin_general_settings','gen_settings'),

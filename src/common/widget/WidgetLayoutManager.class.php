@@ -425,7 +425,7 @@ class WidgetLayoutManager {
     * @param  used_widgets  
     */
     function _displayWidgetsSelectionForm($title, $widgets, $used_widgets) {
-        $hp = CodeX_HTMLPurifier::instance();
+        $hp = Codendi_HTMLPurifier::instance();
         $additionnal_html = '';
         if (count($widgets)) {
             echo '<tr class="boxtitle"><td colspan="2">'. $title .'</td></tr>';

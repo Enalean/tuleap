@@ -12,7 +12,7 @@
 global $Language;
 
 $descfieldsinfos = getProjectsDescFieldsInfos();
-$hp = CodeX_HTMLPurifier::instance();
+$hp = Codendi_HTMLPurifier::instance();
 for($i=0;$i<sizeof($descfieldsinfos);$i++){
 
 	$desc_name=$descfieldsinfos[$i]["desc_name"];

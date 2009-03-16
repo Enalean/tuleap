@@ -38,7 +38,7 @@ if ($request->isPost() &&
     $GLOBALS['Response']->redirect('/my');
 }
 
-$purifier =& CodeX_HTMLPurifier::instance();
+$purifier =& Codendi_HTMLPurifier::instance();
 
 $HTML->header(array("title"=>$Language->getText('bookmark_edit', 'title')));
 

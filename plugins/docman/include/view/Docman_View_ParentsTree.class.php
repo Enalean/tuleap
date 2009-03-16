@@ -41,7 +41,7 @@ class Docman_View_ParentsTree /* implements Visitor*/ {
         return $html;
     }
     function fetchFolder($folder, $params) {
-        $hp = CodeX_HTMLPurifier::instance();
+        $hp = Codendi_HTMLPurifier::instance();
         $selected = '';
         if (!isset($params['selected']) || !$params['selected']) {
             if ($this->docman->userCanWrite($folder['id']) && (!$params['select'] || $params['select'] == $folder['id'])) {

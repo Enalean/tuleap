@@ -39,7 +39,7 @@ class HTML_Element_Option extends HTML_Element {
         return $this->renderValue();
     }
     protected function renderValue() {
-        $hp = CodeX_HTMLPurifier::instance();
+        $hp = Codendi_HTMLPurifier::instance();
         $html = '<option value="'.  $hp->purify($this->value, CODEX_PURIFIER_CONVERT_HTML) .'" '. $this->selected .'>';
         $html .=  $hp->purify($this->label, CODEX_PURIFIER_CONVERT_HTML) ;
         $html .= '</option>';

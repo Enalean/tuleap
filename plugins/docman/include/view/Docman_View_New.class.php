@@ -153,7 +153,7 @@ require_once('Docman_View_PermissionsForItem.class.php');
     }
 
     function _getNewsFieldset($params) {
-        $hp = CodeX_HTMLPurifier::instance();
+        $hp = Codendi_HTMLPurifier::instance();
         $html = '';
         $user =& $this->_controller->getUser();
         if ($user->isMember($params['item']->getGroupId(), 'A') || $user->isMember($params['item']->getGroupId(), 'N1') || $user->isMember($params['item']->getGroupId(), 'N2')) {

@@ -80,7 +80,7 @@ if ($request->isPost()) {
 //nuke their old session
 UserManager::instance()->logout();
 
-$purifier =& CodeX_HTMLPurifier::instance();
+$purifier =& Codendi_HTMLPurifier::instance();
 
 $userStatusBox = '';
 switch($status) {

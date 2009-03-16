@@ -551,7 +551,7 @@ class Docman_Actions extends Actions {
                         'parent'  => &$new_parent,
                         'user'    => &$user)
                     );
-                    $hp = CodeX_HTMLPurifier::instance();
+                    $hp = Codendi_HTMLPurifier::instance();
                     $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'info_item_moved', array(
                         $item->getGroupId(),
                         $old_parent->getId(), 
@@ -1345,7 +1345,7 @@ class Docman_Actions extends Actions {
             }
         }
 
-        $purifier =& CodeX_HTMLPurifier::instance();
+        $purifier =& Codendi_HTMLPurifier::instance();
 
         if(count($atrf->err['db']) > 0) {
             $ua  = array_unique($atrf->err['db']);

@@ -11,7 +11,7 @@ require_once('my_utils.php');
 require_once('common/event/EventManager.class.php');
 require_once('common/widget/WidgetLayoutManager.class.php');
 
-$hp = CodeX_HTMLPurifier::instance();
+$hp = Codendi_HTMLPurifier::instance();
 if (user_isloggedin()) {
 
     // If it's super user and license terms have not yet been agreed then redirect

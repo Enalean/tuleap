@@ -42,11 +42,11 @@ class Widget_WikiPage extends Widget {
         $this->setOwner($owner_id, $owner_type);
     }
     function getTitle() {
-        $hp = CodeX_HTMLPurifier::instance();
+        $hp = Codendi_HTMLPurifier::instance();
         return $this->wikipage_title ?  $hp->purify($this->wikipage_title, CODEX_PURIFIER_CONVERT_HTML)  : 'Wiki Page';
     }
     function getContent() {
-        $hp = CodeX_HTMLPurifier::instance();
+        $hp = Codendi_HTMLPurifier::instance();
         $content = '';
         $p = new WikiPage($this->wikipage_group_id, $this->wikipage_wiki_page);
         //Todo: prevent wiki initialisation
@@ -66,7 +66,7 @@ class Widget_WikiPage extends Widget {
         return true;
     }
     function getPreferences() {
-        $hp = CodeX_HTMLPurifier::instance();
+        $hp = Codendi_HTMLPurifier::instance();
         $prefs  = '';
         $prefs .= '<table><tr><td>Title:</td><td><input type="text" class="textfield_medium" name="WikiPage[title]" value="'. $hp->purify($this->wikipage_title, CODEX_PURIFIER_CONVERT_HTML) .'" /></td></tr>';
         $prefs .= '<tr><td>Project id:</td><td><input type="text" class="textfield_medium" name="WikiPage[group_id]" value="'. $hp->purify($this->wikipage_group_id, CODEX_PURIFIER_CONVERT_HTML) .'" /></td></tr>';

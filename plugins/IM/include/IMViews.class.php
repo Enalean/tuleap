@@ -218,7 +218,7 @@ class IMViews extends Views {
             echo $GLOBALS['Language']->getText('plugin_im', 'no_muc_logs');
         } else {
             
-            $purifier = CodeX_HTMLPurifier::instance();
+            $purifier = Codendi_HTMLPurifier::instance();
             $uh = new UserHelper();
             
             $nick_color_arr = array();  // association array nickname => color
@@ -336,7 +336,7 @@ class IMViews extends Views {
                         'message' => $GLOBALS['Language']->getText('plugin_im', 'muc_logs_message')
                     );
         
-        $purifier = CodeX_HTMLPurifier::instance();
+        $purifier = Codendi_HTMLPurifier::instance();
         $uh = new UserHelper();
             
         $file_name = 'muc_logs_'.$project->getUnixName();

@@ -47,7 +47,7 @@ class Docman_Widget_MyDocman extends Widget {
         return $html;
     }
     function _getReviews($reviewer = true) {
-        $hp = CodeX_HTMLPurifier::instance();
+        $hp = Codendi_HTMLPurifier::instance();
         require_once('www/my/my_utils.php');
         $html = '';
         

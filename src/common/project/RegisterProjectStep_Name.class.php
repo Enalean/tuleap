@@ -21,7 +21,7 @@ class RegisterProjectStep_Name extends RegisterProjectStep {
         );
     }
     function display($data) {
-        $hp = CodeX_HTMLPurifier::instance();
+        $hp = Codendi_HTMLPurifier::instance();
         $full_name =  $hp->purify(isset($data['project']['form_full_name']) ? $data['project']['form_full_name'] : '', CODEX_PURIFIER_CONVERT_HTML) ;
         $unix_name =  $hp->purify(isset($data['project']['form_unix_name']) ? $data['project']['form_unix_name'] : '', CODEX_PURIFIER_CONVERT_HTML) ;
         include($GLOBALS['Language']->getContent('project/projectname'));

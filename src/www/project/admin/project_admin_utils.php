@@ -111,7 +111,7 @@ function show_grouphistory ($group_id) {
 	global $Language;
 	$result=group_get_history($group_id);
 	$rows=db_numrows($result);
-	$hp =& CodeX_HTMLPurifier::instance();
+	$hp =& Codendi_HTMLPurifier::instance();
 
 	if ($rows > 0) {
 	

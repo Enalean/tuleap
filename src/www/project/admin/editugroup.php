@@ -129,7 +129,7 @@ if (($func=='edit')||($func=='do_create')) {
         echo '<input type="hidden" name="ugroup_id" value="'.$ugroup_id.'">';
         echo '<table>';
         $i = 0;
-        $hp = CodeX_HTMLPurifier::instance();
+        $hp = Codendi_HTMLPurifier::instance();
         while ($data = db_fetch_array($res)) {
             echo '<tr class="'. html_get_alt_row_color(++$i) .'">';
             echo '<td>'. user_get_name_display_from_id($data['user_id']) .'</td>';

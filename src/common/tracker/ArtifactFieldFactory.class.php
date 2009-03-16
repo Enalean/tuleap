@@ -256,7 +256,7 @@ class ArtifactFieldFactory extends Error {
 	    }
 	
 	    if (count($bad_fields) > 0) {
-            $hp = CodeX_HTMLPurifier::instance();
+            $hp = Codendi_HTMLPurifier::instance();
             $bad_fields_escaped = array();
             foreach($bad_fields as $f) {
                 $bad_fields_escaped[] =  $hp->purify(SimpleSanitizer::unsanitize($f), CODEX_PURIFIER_CONVERT_HTML);
