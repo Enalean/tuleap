@@ -17,13 +17,22 @@ class UserHelper {
     
     /**
      * Constructor
-     *
+     * @todo make it protected (singleton powaaa)
      */
-    function UserHelper() {
+    public function UserHelper() {
         $this->_username_display = $this->_getCurrentUserUsernameDisplayPreference();
         $this->_cache_by_id = array();
         $this->_cache_by_username = array();
         $this->_userdao = $this->_getuserDao();
+    }
+    
+    protected static $_instance;
+    public static function instance() {
+        if (!isset(self::$_instance)) {
+            $c = __CLASS__;
+            self::$_instance = new $c;
+        }
+        return self::$_instance;
     }
     
     function _getCurrentUserUsernameDisplayPreference() {
