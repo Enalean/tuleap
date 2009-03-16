@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# Copyright (c) Xerox Corporation, CodeX, Codendi 2007-2008.
+# Copyright (c) Xerox Corporation, Codendi 2007-2008.
 # This file is licensed under the GNU General Public License version 2. See the file COPYING.
 #
 # Purpose:
@@ -82,14 +82,14 @@ for lang in $LANGUAGES
 do
     cd $BASEDIR/cli/xml/$lang
 
-    if [ ! -e $BASEDIR/cli/pdf/$lang/CodeX_CLI.pdf ]; then
+    if [ ! -e $BASEDIR/cli/pdf/$lang/Codendi_CLI.pdf ]; then
         FORCE=1;
     fi
 
     if [ $FORCE != 1 ]
     then
         # check if some need some update
-        COUNT=`find $BASEDIR/cli/xml -newer $BASEDIR/cli/pdf/$lang/CodeX_CLI.pdf | wc -l`
+        COUNT=`find $BASEDIR/cli/xml -newer $BASEDIR/cli/pdf/$lang/Codendi_CLI.pdf | wc -l`
         if [ $COUNT == 0 ]
         then
             # No changes in the documentation
@@ -103,10 +103,10 @@ do
 
     mkdir -p ../../html/$lang
 
-    $CMDDIR/xml2html.sh CodeX_CLI.xml ../../html/$lang/ $lang >/tmp/log_xml2html_$$ 2>&1
+    $CMDDIR/xml2html.sh Codendi_CLI.xml ../../html/$lang/ $lang >/tmp/log_xml2html_$$ 2>&1
     if [ $? != 0 ]
     then
-        echo "CodeX documentation generation failed!"
+        echo "Codendi documentation generation failed!"
             echo "See error log below:"
             echo ""
             cat /tmp/log_xml2html_$$
@@ -123,10 +123,10 @@ do
     
     mkdir -p $BASEDIR/cli/pdf/$lang
 
-    $CMDDIR/xml2pdf.sh CodeX_CLI.xml $BASEDIR/cli/pdf/$lang/CodeX_CLI_new.pdf $lang >/tmp/log_xml2pdf_$$ 2>&1 
+    $CMDDIR/xml2pdf.sh Codendi_CLI.xml $BASEDIR/cli/pdf/$lang/Codendi_CLI_new.pdf $lang >/tmp/log_xml2pdf_$$ 2>&1 
     if [ $? != 0 ]
     then
-        echo "CodeX documentation generation failed!"
+        echo "Codendi documentation generation failed!"
             echo "See error log below:"
         echo ""
         cat /tmp/log_xml2pdf_$$
@@ -140,10 +140,10 @@ do
     export PATH=${OLD_PATH}
 
     cd $BASEDIR/cli/pdf/$lang
-    if [ -f "CodeX_CLI.pdf" ]; then
-        cp -f CodeX_CLI.pdf CodeX_CLI_old.pdf > /dev/null
+    if [ -f "Codendi_CLI.pdf" ]; then
+        cp -f Codendi_CLI.pdf Codendi_CLI_old.pdf > /dev/null
     fi
-    mv CodeX_CLI_new.pdf CodeX_CLI.pdf
+    mv Codendi_CLI_new.pdf Codendi_CLI.pdf
 done
 cd "$CURRENTDIR"
 exit 0

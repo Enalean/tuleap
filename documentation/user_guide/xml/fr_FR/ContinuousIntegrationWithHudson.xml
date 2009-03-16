@@ -823,7 +823,7 @@
         dans &SYS_PRODUCT_NAME;. Certaines références sont prédéfinies (job, build),
         mais vous pouvez tout à fait définir vos propres références si besoin
         (voir <xref linkend="ReferenceOverview" /> pour plus de détails sur les références)
-      <para>
+      </para>
       
       <section id="HudsonJobReferences">
         <title>Référencer un Job Hudson</title>

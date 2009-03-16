@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# Copyright (c) Xerox Corporation, CodeX, Codendi 2007-2008.
+# Copyright (c) Xerox Corporation, Codendi 2007-2008.
 # This file is licensed under the GNU General Public License version 2. See the file COPYING.
 #
 # Purpose:
@@ -97,8 +97,8 @@ fi
 
 # honor archivename if defined
 if [ -z "$archivename" ]; then
-    cli_version=`$GREP '\$CLI_VERSION = ' $BASESRCDIR/codex.php | $SED -e 's/$CLI_VERSION = "\(.*\)";/\1/'`
-    archivename="codex_cli-${cli_version}"
+    cli_version=`$GREP '\$CLI_VERSION = ' $BASESRCDIR/codendi.php | $SED -e 's/$CLI_VERSION = "\(.*\)";/\1/'`
+    archivename="codendi_cli-${cli_version}"
 fi
 
 
@@ -231,7 +231,7 @@ elif [ -n "$sys_https_host" ]; then
 else
     wsdl_domain='http://codex.xerox.com';
 fi   
-substitute "$TMPDIR/cli/codex.php" '%wsdl_domain%' "$wsdl_domain" 
+substitute "$TMPDIR/cli/codendi.php" '%wsdl_domain%' "$wsdl_domain" 
 
 # Rename the dir cli before creating the archive
 $MV cli $archivename
@@ -253,14 +253,14 @@ $MV "${archivename}_new.zip" $DESTDIR/$archivename.zip
 if [ $? != 0 ]
 then
     cd "$CURRENTDIR"
-    $ECHO "CodeX CLI package generation failed!";
+    $ECHO "Codendi CLI package generation failed!";
     exit 1
 fi
 
-if [ -f "$DESTDIR/CodeX_CLI.zip" ]; then
-   $RM "$DESTDIR/CodeX_CLI.zip"
+if [ -f "$DESTDIR/Codendi_CLI.zip" ]; then
+   $RM "$DESTDIR/Codendi_CLI.zip"
 fi
-$LN -s $archivename.zip $DESTDIR/CodeX_CLI.zip
+$LN -s $archivename.zip $DESTDIR/Codendi_CLI.zip
 
 # Fix SELinux context (it is set to 'user_u:object_r:tmp_t')
 SELINUX_ENABLED=1
@@ -270,7 +270,7 @@ if [ ! -e $CHCON ] || [ ! -e "/etc/selinux/config" ] || `$GREP -i -q '^SELINUX=d
 fi
 if [ $SELINUX_ENABLED != 0 ]; then
   $CHCON -h  root:object_r:httpd_sys_content_t $DESTDIR/$archivename.zip
-  $CHCON -h  root:object_r:httpd_sys_content_t $DESTDIR/CodeX_CLI.zip
+  $CHCON -h  root:object_r:httpd_sys_content_t $DESTDIR/Codendi_CLI.zip
 fi
 
 # Then delete the copied files needed to create the archive
