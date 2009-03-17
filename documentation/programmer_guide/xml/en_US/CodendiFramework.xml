@@ -350,13 +350,14 @@ cp -r /home/httpd/plugins/template/site-content /etc/codendi/plugins/template/.]
             <para>
                 All widget related to the core of &SYS_PRODUCT_NAME; are located 
                 in src/common/widget/ directory.
-                Plugin's widget will be located in <plugin_dir>/include/.
+                Plugin's widget will be located in [plugin_dir]/include/.
                 Widget files must follow the syntax Widget_My[WidgetName] or
                 Widget_Project[WidgetName] and extends Widget class.
             </para>
             <para>
                 Then, you must implement your widget:
 <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+<![CDATA[
 <?php
 
 require_once('Widget.class.php');
@@ -417,6 +418,7 @@ class Widget_MyPersonalWidget extends Widget {
 }
 
 ?>
+]]>
 </programlisting>
             </para>
             <para>
