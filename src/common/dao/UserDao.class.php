@@ -436,34 +436,6 @@ class UserDao extends DataAccessObject {
     }
 
     /**
-     * search user in the user_group table
-     * @return DataAccessResult
-     *
-     */
-    function searchUserInUserGroup($userid, $groupid) {
-
-        $sql = sprintf("SELECT user_id FROM user_group WHERE user_id=%d AND group_id=%d",
-            $this->da->escapeInt($userid),
-            $this->da->escapeInt($groupid));
-
-        return $this->retrieve($sql);
-    }
-
-    /**
-     * add user to group
-     * @return DataAccessResult
-     *
-     */
-    function addUserToGroup($userid, $groupid) {
-
-        $sql = sprintf("INSERT INTO user_group (user_id,group_id) VALUES (%d, %d)",
-                       $this->da->escapeInt($userid),
-                       $this->da->escapeInt($groupid));
-
-        return $this->update($sql);
-    }
-
-    /**
      * Check if the unix uid of a specific user exists
      * @return DataAccessResult
      *

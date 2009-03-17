@@ -389,40 +389,19 @@ class UserControler extends Controler
      */
     function addUserToGroup()
     {
-        $dao = new UserDao(CodexDataAccess::instance());
-
-        $groupdao = new GroupDao(CodexDataAccess::instance());
-        $filter   = array();
-
-        if (!$this->_userid) {
+        $user  = UserManager::instance()->getUserById($this->_userid);
+        $group = project_get_object($this->_groupid);
+        
+        if (!$user) {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('admin_user_controler', 'error_nouid'));
-        } elseif (!$this->_groupid) {
+        } elseif (!$group) {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('admin_user_controler', 'error_nogid'));
         } else {
-            //look for group that match with this groupid
-            $filter[] = new GroupIdFilter($this->_groupid);
-            $groupdao->searchGroupByFilter($filter);
-            
-            //if the group doesn't exist
-            if (!$dao || $dao->getFoundRows() <1) {
-                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('admin_user_controler', 'error_noadd'));
+            if(account_add_user_to_group($group->getID(), $user->getId())) {
+                $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('admin_user_controler', 'success_add_ug'));
+                $GLOBALS['Response']->redirect('/admin/user/index.php?user_id='.$this->_userid);
             } else {
-                $dao->searchUserInUserGroup($this->_userid, $this->_groupid);
-                
-                //if user doesn't belong to this group
-                if (!$dao || $dao->getFoundRows() < 1) {
-                    $dao->addUserToGroup($this->_userid, $this->_groupid);
-                    
-                    //if there is problem in adding user to this group
-                    if (!$dao || $dao->getFoundRows() < 1) {
-                        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('admin_user_controler', 'error_add_ug'));
-                    } else {
-                        $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('admin_user_controler', 'success_add_ug'));
-                        $GLOBALS['Response']->redirect('/admin/user/index.php?user_id='.$this->_userid);
-                    }
-                } else {
-                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('admin_user_controler', 'error_member', $this->_groupid));
-                }
+                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('admin_user_controler', 'error_add_ug'));
             }
         }
     }
