@@ -34,7 +34,7 @@ class BackendCVS extends Backend {
      * Constructor
      */
     protected function __construct() {
-        Backend::Backend();
+        parent::__construct();
     }
 
 

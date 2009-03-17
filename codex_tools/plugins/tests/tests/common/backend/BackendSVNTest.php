@@ -89,5 +89,42 @@ class BackendSVNTest extends UnitTestCase {
         unlink($GLOBALS['tmp_dir']."/TestProj-svn.tgz");
     }
 
+
+    function testCreateProjectSVN() {
+        $project =& new MockProject($this);
+        $project->setReturnValue('getUnixName', 'TestProj',array(false));
+        $project->setReturnValue('getUnixName', 'testproj',array(true));
+        $project->setReturnValue('isSVNTracked',true);
+        $proj_members = array("0" =>
+                              array (
+                                     "user_name"=> "user1",
+                                     "user_id"  => "1"),
+                              "1" =>
+                              array (
+                                     "user_name"=> "user2",
+                                     "user_id"  => "2"),
+                              "2" =>
+                              array (
+                                     "user_name"=> "user3",
+                                     "user_id"  => "3"));
+
+        $project->setReturnValue('getMembersUserNames',$proj_members);
+
+        $pm =& new MockProjectManager();
+        $pm->setReturnReference('getProject', $project, array(142));
+
+        $backend =& new BackendSVNTestVersion($this);
+        $backend->setReturnValue('_getProjectManager', $pm);
+
+        $this->assertEqual($backend->createProjectSVN(142),True);
+        $this->assertTrue(is_dir($GLOBALS['svn_prefix']."/TestProj"),"SVN dir should be created");
+        $this->assertTrue(is_dir($GLOBALS['svn_prefix']."/TestProj/hooks"),"hooks dir should be created");
+        $this->assertTrue(is_file($GLOBALS['svn_prefix']."/TestProj/hooks/post-commit"),"post-commit file should be created");
+
+
+        // Cleanup
+        $backend->recurseDeleteInDir($GLOBALS['svn_prefix']."/TestProj");
+        rmdir($GLOBALS['svn_prefix']."/TestProj");
+    }
 }
 ?>

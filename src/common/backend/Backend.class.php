@@ -143,9 +143,15 @@ class Backend {
     }
 
     function addBlock($filename,$command) {
-        system("echo \"".$this->block_marker_start."\" >> $filename");
-        system("echo ".escapeshellarg($command)." >> $filename");	 
-        system("echo \"".$this->block_marker_end."\" >> $filename");
+        
+        if (!$handle = fopen($filename, 'a')) {
+            $this->log("Can't open file for writing: $filename");
+            return false;
+        }
+        fwrite($handle,$this->block_marker_start."\n");
+        fwrite($handle,$command."\n");
+        fwrite($handle,$this->block_marker_end."\n");
+        return fclose($handle);
     }
 
     function removeBlock($filename) {

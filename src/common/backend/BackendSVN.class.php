@@ -31,7 +31,7 @@ class BackendSVN extends Backend {
      * Constructor
      */
     protected function __construct() {
-        Backend::Backend();
+        parent::__construct();
     }
 
 
@@ -43,9 +43,63 @@ class BackendSVN extends Backend {
     public function createProjectSVN($group_id) {
         $project=$this->_getProjectManager()->getProject($group_id);
         if (!$project) return false;
+        $unix_group_name=$project->getUnixName(false); // May contain upper-case letters
+        $svn_dir=$GLOBALS['svn_prefix']."/".$unix_group_name;
+        if (!is_dir($svn_dir)) {
+            // Let's create a SVN repository for this group
+            if (!mkdir($svn_dir)) {
+                $this->log("Can't create project SVN dir: $svn_dir");
+                return false;
+            }
+            system($GLOBALS['svnadmin_cmd']." create $svn_dir --fs-type fsfs");
+
+            $this->recurseChownChgrp($svn_dir,$GLOBALS['sys_http_user'],$unix_group_name);
+            system("chmod g+rw $svn_dir");
+        }
+
+
+        // Put in place the svn post-commit hook for email notification
+        // if not present (if the file does not exist it is created)
+        if ($project->isSVNTracked()) {
+            $filename = "$svn_dir/hooks/post-commit";
+            $update_hook=false;
+            if (! is_file($filename)) {
+                $update_hook=true;
+            } else {
+                $file_array=file($filename);
+                if (!in_array($this->block_marker_start,$file_array)) {
+                    $update_hook=true;
+                }
+            }
+            if ($update_hook) {
+                $command  ='REPOS="$1"'."\n";
+                $command .='REV="$2"'."\n";
+                $command .=$GLOBALS['codex_bin_prefix'].'/commit-email.pl "$REPOS" "$REV" 2>&1 >/dev/null';
+                $this->addBlock($filename,$command);
+                $this->chown($filename,$GLOBALS['sys_http_user']);
+                $this->chgrp($filename,$unix_group_name);
+           chmod("$filename",0775);
+            }
+        }
+
+        if (!$this->UpdateSVNAccess()) {
+            $this->log("Can't update SVN access file");
+            return false;
+        }
+
         return true;
     }
 
+
+
+    public function UpdateSVNAccess(){
+        return true;
+    }
+
+
+    /**
+     * Archive SVN repository: stores a tgz in temp dir, and remove the directory
+     */
     public function archiveProjectSVN($group_id) {
         $project=$this->_getProjectManager()->getProject($group_id);
         if (!$project) return false;
