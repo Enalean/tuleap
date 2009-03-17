@@ -20,7 +20,7 @@
       <section id="i18n">
         <title>Internationalization (i18n)</title>
         <para>
-            because &SYS_PRODUCT_NAME; is used by a large community of users and 
+            Because &SYS_PRODUCT_NAME; is used by a large community of users and 
             developpers, it is internationalized.
             For now, available languages are:
             <itemizedlist mark="bullet" spacing="compact">
@@ -28,32 +28,35 @@
                 <para>English</para>
               </listitem>
               <listitem>
-                <para>french</para>
+                <para>French</para>
               </listitem>
             </itemizedlist>
         </para>
         <para>
             Thus, there shouldn't be any words or sentences of natural language 
-            in code source.
+            in source code.
         </para>
         <para>
-            The class that manage i18nn is BaseLanguage (src/common/language/BaseLanguage.class.php)
-            A typical use in PHP is
+            The class that manage i18n is <emphasis role="bold">BaseLanguage</emphasis>
+            (src/common/language/BaseLanguage.class.php). A typical use in PHP is
+        </para>
 <programlisting format="linespecific" linenumbering="unnumbered" width="80">
 $Language->getText('include_exit','error'));
 </programlisting>
-            $Language is initialized by pre.php, and language is set regarding 
-            the user preferences. This php code will be replaced by a string 
-            defined in languages file, in the user natural language.
+        <para>
+            $Language is initialized by <emphasis role="bold">pre.php</emphasis>, 
+            and language is set regarding the user preferences. This php code will 
+            be replaced by a string defined in languages file.
         </para>
         <para>
-            File languages are available in site-content directory.
-            For instance, the fiel in the example is located at
-            site-content/en_US/include/include.tab. Same file exists for french version:
-            site-content/fr_FR/include/include.tab.
+            Language files are available in <emphasis role="bold">site-content</emphasis>
+            directory. For instance, the file used in the example is located at
+            <emphasis role="bold">site-content/en_US/include/include.tab</emphasis>. 
+            Same file exists for french version:
+            <emphasis role="bold">site-content/fr_FR/include/include.tab</emphasis>.
         </para>
         <para>
-            These language file follow a defined syntax:
+            These language files follow a defined syntax:
 <programlisting format="linespecific" linenumbering="unnumbered" width="80">
 key1 [tab] key2 [tab] translated string
 </programlisting>

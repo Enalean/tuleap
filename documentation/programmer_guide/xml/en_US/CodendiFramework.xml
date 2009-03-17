@@ -343,13 +343,13 @@ cp -r /home/httpd/plugins/template/site-content /etc/codendi/plugins/template/.]
             &SYS_PRODUCT_NAME; provides widgets on personal and project dashboards.
             These widgets can be moved on the page, easily added and removed.
             This lets the user (for personal dashboard) and project admin (for
-            project dashboard) design his own dashboard as ha wants.
+            project dashboard) design his own dashboard as he wants.
         </para>
         <section id="HowToMakeAWidget">
             <title>How to make a widget</title>
             <para>
-                All widget related to the core of &SYS_PRODUCT_NAME; are located 
-                in src/common/widget/ directory.
+                All widgets related to the core of &SYS_PRODUCT_NAME; are located 
+                in <emphasis role="bold">src/common/widget/ directory</emphasis>.
                 Plugin's widget will be located in [plugin_dir]/include/.
                 Widget files must follow the syntax Widget_My[WidgetName] or
                 Widget_Project[WidgetName] and extends Widget class.
@@ -423,8 +423,9 @@ class Widget_MyPersonalWidget extends Widget {
             </para>
             <para>
                 Once your widget is implemented, you have to declare it to the system.
-                This can be done in the class Widget (src/common/Widget.class.php).
-                You need to add your widget in the function getInstance:
+                This can be done in the class <emphasis role="bold">Widget</emphasis> 
+                (<emphasis role="bold">src/common/Widget.class.php</emphasis>).
+                You need to add your widget in the function getInstance():
 <programlisting format="linespecific" linenumbering="unnumbered" width="80">
 <![CDATA[
 case 'mypersonalwidget':
@@ -434,13 +435,57 @@ case 'mypersonalwidget':
 </programlisting>
                 Add the require_once('common/widget/Widget_MyPersonalWidget.class.php'); 
                 on top of the file, and then add your widget in the function
-                getCodeXWidgets, regarding it is a personal widget (diaplyed in 
+                getCodendiWidgets, regarding it is a personal widget (displayed in 
                 personal dashboard) or a project widget (displayed in project dashboard).
                 Just add the name of your widget (e.g. 'mypersonalwidget') in the
                 array of available widgets.
             </para>
             <para>
-                Widget preview : TODO
+                Each widget should provide a preview image. This is really convenient
+                for end user to help him knowing what the widget will look like.
+                If no preview is provided, the default one will be used, but
+                there won't be anything specific to the widget.
+                This preview image must be 128 x 128 pixels. We recommand using
+                the same preview style as the existing widgets, which means a 
+                circle preview rounded by a circle border (available at
+                <emphasis role="bold">src/www/themes/common/images/widget-preview-border.png</emphasis>).
+                This border has a transparency of 50%, and the outside of the circle is also
+                transparent. For instance:
+                <figure id="HudsonWidgetBuildHistory">
+                <title>Example of widget preview</title>
+                <mediaobject>
+                 <imageobject>
+                   <imagedata format="PNG"
+                     fileref="../../screenshots/widget-preview-my_artifacts.png" width="14.5cm" />
+                 </imageobject>
+                </mediaobject>
+               </figure>
+            </para>
+            <para>
+                To display widget preview, we use CSS images.
+                The CSS property of the widget preview is based on the widget's
+                name. It is <emphasis role="bold">widget-preview-[name_of_widget]-[locale]</emphasis>
+                where [name_of_widget] is the name of your widget (e.g. 'mypersonalwidget')
+                and [locale] is the locale language (yes, widget preview are also 
+                internationalized! If there text in your preview, don't forget to
+                do it).
+                Then, you must add the property in the CSS file 
+                (<emphasis role="bold">src/www/themes/common/css/style.css</emphasis>)
+                if your widget is a core widget, or 
+                <emphasis role="bold">plugins/[plugin_name]/www/themes/default/css/style.css</emphasis>
+                if your widget is a plugin's widget.
+                The code to add in the CSS file is the following:
+<programlisting format="linespecific" linenumbering="unnumbered" width="80">
+<![CDATA[
+.widget-preview-mypersonalwidget-fr_FR {
+    background-image:url("../images/widget_preview/fr_FR_my_personal_widget.png");
+}
+.widget-preview-mypersonalwidget-en_US {
+    background-image:url("../images/widget_preview/en_US_my_personal_widget.png");
+}
+]]>
+                where you just have to define where your image is located.
+</programlisting>
             </para>
         </section>
     </section>
