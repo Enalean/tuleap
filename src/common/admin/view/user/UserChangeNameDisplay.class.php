@@ -128,7 +128,7 @@ class UserChangeNameDisplay extends AdminEditDisplay
         print '<input type="hidden" name="task" value="change_user_name" />';
         print '<input type="hidden" name="user_id" value="'.$userid.'" />';
 
-        print '<p>New Codex Name : <input type="text" name="new_user_name" id="new_user_name" /></p>';
+        print '<p>New Codex Name : <input type="text" name="new_user_name" id="new_user_name" value="'.$this->_newUserName.'"/></p>';
 
         print '<p><input type="submit" name="submit" value="'.$GLOBALS['Language']->getText('global', 'btn_submit').'" /></p>';
 

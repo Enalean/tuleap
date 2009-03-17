@@ -579,31 +579,20 @@ class UserControler extends Controler
 
         //valid user id
         $validUserId = new Valid_UInt('user_id');
-
-        if ($request->validArray($validUserId) || $this->_userid == '') {
+        $validUserId->required();
+        if ($request->validArray($validUserId) || $request->valid($validUserId)) {
             $this->_userid = $request->get('user_id');
-        } else {
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('admin_user_controler', 'wrong_uid'));
         }
-
+        
         //valid group id
         $validGroupId = new Valid_UInt('group_id');
-
-        if ($request->valid($validGroupId)) {
-            $this->_groupid = $request->get('group_id');
-        } else {
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('admin_user_controler', 'wrong_gid'));
-        }
-
+        $validGroupId->required();
+        $this->_groupid = $request->getValidated('group_id', $validGroupId, false);
 
         //valid task
         $validTask = new Valid_String('task');
-
-        if ($request->valid($validTask)) {
-            $this->_task = $request->get('task');
-        } else {
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('admin_user_controler', 'wrong_task'));
-        }
+        $validTask->required();
+        $this->_task = $request->getValidated('task', $validTask, '');
 
         if ($this->_userid) {            
             $this->setUserParam($this->_userid);
