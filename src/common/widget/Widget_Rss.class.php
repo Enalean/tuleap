@@ -41,7 +41,7 @@ require_once('Widget.class.php');
                     //hack to display twitter avatar
                     $content .= '<img src="'.  $hp->purify($image, CODENDI_PURIFIER_CONVERT_HTML)  .'" style="float:left; margin-right:1em;" />';
                 }
-                $content .= '<a href="'. $item->get_link() .'">'. $item->get_title() .'</a>';
+                $content .= '<a href="'. $item->get_link() .'">'. $item->get_title() .'</a>';  //Trust SimplePie for purifying
                 if ($item->get_date()) {
                     $content .= '<span style="color:#999;" title="'. format_date($GLOBALS['Language']->getText('system', 'datefmt'), $item->get_date('U')) .'"> - '. util_time_ago_in_words($item->get_date('U')) .'</span>';
                 }
