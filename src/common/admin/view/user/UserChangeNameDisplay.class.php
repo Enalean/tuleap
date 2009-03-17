@@ -153,17 +153,9 @@ class UserChangeNameDisplay extends AdminEditDisplay
             $userid = $this->_userparam[0]['user_id'];
         }
 
-        print $GLOBALS['Language']->getText('admin_user_change_name', 'direction');
-
-        print '<form action="index.php" method="post">';
-
-        print '<input type="hidden" name="task" value="check_instruction" />';
-        print '<input type="hidden" name="user_id" value="'.$userid.'" />';
-        print '<input type="hidden" name="new_user_name" value="'.$this->_newUserName.'" />';
-
-        print '<input type="submit" name="submit" value="'.$GLOBALS['Language']->getText('global', 'btn_submit').'" /></p>';
-
-        print '</form>';
+        $user = UserManager::instance()->getUserById($userid);
+        
+        print $GLOBALS['Language']->getText('admin_user_change_name', 'direction', array($this->_newUserName, $user->getUserName()));
     }
 
     /**
