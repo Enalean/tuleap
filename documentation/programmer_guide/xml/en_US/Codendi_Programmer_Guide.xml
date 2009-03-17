@@ -1,10 +1,10 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!--
 //
-// Copyright (c) Xerox Corporation, CodeX, Codendi 2007-2008.
+// Copyright (c) Xerox Corporation, Codendi 2007-2008.
 // This file is licensed under the GNU General Public License version 2. See the file COPYING. 
 //
-// Originally written by Nicolas Guerin 2004, CodeX Team, Xerox
+// Originally written by Nicolas Guerin 2004, Codendi Team, Xerox
 //
 -->
 <?xml-stylesheet type="text/css"
@@ -19,8 +19,8 @@ href="file:/C:/Program Files/XMLmind_XML_Editor/css/docbook.css"
 <!ENTITY ChapterArchitecture SYSTEM "Architecture.xml">
 <!ENTITY ChapterDevEnvironmentSetup SYSTEM "DevEnvironmentSetup.xml">
 <!ENTITY ChapterDirStructure SYSTEM "DirStructure.xml">
-<!ENTITY ChapterCodeXDevelopment SYSTEM "CodeXDevelopment.xml">
-<!ENTITY ChapterCodexFramework SYSTEM "CodexFramework.xml">
+<!ENTITY ChapterCodendiDevelopment SYSTEM "CodendiDevelopment.xml">
+<!ENTITY ChapterCodendiFramework SYSTEM "CodendiFramework.xml">
 <!ENTITY ChapterSubmittingCode SYSTEM "SubmittingCode.xml">
 <!ENTITY ChapterDocumentation SYSTEM "Documentation.xml">
 
@@ -51,8 +51,8 @@ avoid duplications -->
   &ChapterArchitecture;
   &ChapterDevEnvironmentSetup; 
   &ChapterDirStructure;
-  &ChapterCodeXDevelopment;
-  &ChapterCodexFramework;
+  &ChapterCodendiDevelopment;
+  &ChapterCodendiFramework;
   &ChapterSubmittingCode;
   &ChapterDocumentation;  
 </book>
