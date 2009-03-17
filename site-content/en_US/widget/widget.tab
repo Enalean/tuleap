@@ -12,7 +12,7 @@
 widget	preferences_title	Preferences
 
 widget_add	title	Widgets
-widget_add	codex_widgets	$1 Widgets
+widget_add	codendi_widgets	$1 Widgets
 widget_add	external_widgets	External Widgets
 widget_add	add	Add
 widget_add	already_used	Already used

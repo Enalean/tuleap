@@ -316,7 +316,7 @@ class IMPlugin extends Plugin {
 	
 	/**
 	 * Shared group creation
-	 * @param array params data from the shared CodeX event 
+	 * @param array params data from the shared Codendi event 
 	 */
 	 function create_im_shared_group ($params) {
 		$group_ids = $params['group_id'];
@@ -621,7 +621,7 @@ class IMPlugin extends Plugin {
         function widgets($params) {
             require_once('common/widget/WidgetLayoutManager.class.php');
             if ($params['owner_type'] == WidgetLayoutManager::OWNER_TYPE_USER) {
-                $params['codex_widgets'][] = 'plugin_im_myroster';
+                $params['codendi_widgets'][] = 'plugin_im_myroster';
             }
         }
 

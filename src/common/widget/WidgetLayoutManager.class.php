@@ -8,7 +8,7 @@ require_once('common/widget/Widget.class.php');
 * 
 * Manage layouts for users, groups and homepage
 * 
-* Copyright (c) Xerox Corporation, CodeX Team, 2001-2007. All rights reserved
+* Copyright (c) Xerox Corporation, Codendi Team, 2001-2007. All rights reserved
 *
 * @author  N. Terray
 */
@@ -277,7 +277,7 @@ class WidgetLayoutManager {
             $after = '';
             echo '<table cellpadding="0" cellspacing="0"><tbody><tr valign="top"><td>';
             echo '<table cellpadding="2" cellspacing="0"><tbody>';
-            $after .= $this->_displayWidgetsSelectionForm($GLOBALS['Language']->getText('widget_add', 'codex_widgets', $GLOBALS['sys_name']), Widget::getCodeXWidgets($owner_type), $used_widgets);
+            $after .= $this->_displayWidgetsSelectionForm($GLOBALS['Language']->getText('widget_add', 'codendi_widgets', $GLOBALS['sys_name']), Widget::getCodendiWidgets($owner_type), $used_widgets);
             echo '<tr><td>&nbsp;</td><td></td></tr>';
             $after .= $this->_displayWidgetsSelectionForm($GLOBALS['Language']->getText('widget_add', 'external_widgets'), Widget::getExternalWidgets($owner_type), $used_widgets);
             echo '</tbody></table>';

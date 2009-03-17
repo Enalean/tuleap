@@ -33,7 +33,7 @@ require_once('common/widget/Widget_ProjectSvnStats.class.php');
 * 
 * TODO: description
 * 
-* Copyright (c) Xerox Corporation, CodeX Team, 2001-2007. All rights reserved
+* Copyright (c) Xerox Corporation, Codendi Team, 2001-2007. All rights reserved
 *
 * @author  N. Terray
 */
@@ -225,7 +225,7 @@ require_once('common/widget/Widget_ProjectSvnStats.class.php');
         }
         return $o;
     }
-    /* static */ function getCodeXWidgets($owner_type) {
+    /* static */ function getCodendiWidgets($owner_type) {
         switch ($owner_type) {
             case WidgetLayoutManager::OWNER_TYPE_USER:
                 $widgets = array('myadmin', 'mysurveys', 'myprojects', 'mybookmarks', 
@@ -253,7 +253,7 @@ require_once('common/widget/Widget_ProjectSvnStats.class.php');
         
         $plugins_widgets = array();
         $em =& EventManager::instance();
-        $em->processEvent('widgets', array('codex_widgets' => &$plugins_widgets, 'owner_type' => $owner_type));
+        $em->processEvent('widgets', array('codendi_widgets' => &$plugins_widgets, 'owner_type' => $owner_type));
         
         if (is_array($plugins_widgets)) {
             $widgets = array_merge($widgets, $plugins_widgets);

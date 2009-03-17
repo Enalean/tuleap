@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright Copyright (c) Xerox Corporation, CodeX, Codendi 2007-2008.
+ * @copyright Copyright (c) Xerox Corporation, Codendi 2007-2008.
  *
  * This file is licensed under the GNU General Public License version 2. See the file COPYING.
  * 
@@ -128,20 +128,20 @@ class hudsonPlugin extends Plugin {
     function widgets($params) {
         require_once('common/widget/WidgetLayoutManager.class.php');
         if ($params['owner_type'] == WidgetLayoutManager::OWNER_TYPE_USER) {
-            $params['codex_widgets'][] = 'plugin_hudson_my_jobs';
-            $params['codex_widgets'][] = 'plugin_hudson_my_joblastbuilds';
-            $params['codex_widgets'][] = 'plugin_hudson_my_jobtestresults';
-            $params['codex_widgets'][] = 'plugin_hudson_my_jobtesttrend';
-            $params['codex_widgets'][] = 'plugin_hudson_my_jobbuildhistory';
-            $params['codex_widgets'][] = 'plugin_hudson_my_joblastartifacts';
+            $params['codendi_widgets'][] = 'plugin_hudson_my_jobs';
+            $params['codendi_widgets'][] = 'plugin_hudson_my_joblastbuilds';
+            $params['codendi_widgets'][] = 'plugin_hudson_my_jobtestresults';
+            $params['codendi_widgets'][] = 'plugin_hudson_my_jobtesttrend';
+            $params['codendi_widgets'][] = 'plugin_hudson_my_jobbuildhistory';
+            $params['codendi_widgets'][] = 'plugin_hudson_my_joblastartifacts';
         }
         if ($params['owner_type'] == WidgetLayoutManager::OWNER_TYPE_GROUP) {
-            $params['codex_widgets'][] = 'plugin_hudson_project_jobsoverview';
-            $params['codex_widgets'][] = 'plugin_hudson_project_joblastbuilds';
-            $params['codex_widgets'][] = 'plugin_hudson_project_jobtestresults';
-            $params['codex_widgets'][] = 'plugin_hudson_project_jobtesttrend';
-            $params['codex_widgets'][] = 'plugin_hudson_project_jobbuildhistory';
-            $params['codex_widgets'][] = 'plugin_hudson_project_joblastartifacts';
+            $params['codendi_widgets'][] = 'plugin_hudson_project_jobsoverview';
+            $params['codendi_widgets'][] = 'plugin_hudson_project_joblastbuilds';
+            $params['codendi_widgets'][] = 'plugin_hudson_project_jobtestresults';
+            $params['codendi_widgets'][] = 'plugin_hudson_project_jobtesttrend';
+            $params['codendi_widgets'][] = 'plugin_hudson_project_jobbuildhistory';
+            $params['codendi_widgets'][] = 'plugin_hudson_project_joblastartifacts';
         }
     }
     
