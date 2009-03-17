@@ -426,9 +426,11 @@ class Widget_MyPersonalWidget extends Widget {
                 This can be done in the class Widget (src/common/Widget.class.php).
                 You need to add your widget in the function getInstance:
 <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+<![CDATA[
 case 'mypersonalwidget':
     $o =& new Widget_MyPersonalWidget();
     break;
+]]>
 </programlisting>
                 Add the require_once('common/widget/Widget_MyPersonalWidget.class.php'); 
                 on top of the file, and then add your widget in the function
