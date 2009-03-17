@@ -51,7 +51,7 @@ class Docman_FileStorage {
             $mode = 'w';
         }
         
-        if (($f = fopen($path, $mode)) && (flock($f, LOCK_EX))) {
+        if ($f = fopen($path, $mode)) {
             fseek($f, $chunk_offset * $chunk_size);
             
             if ($chunk_size > 0) {
