@@ -27,10 +27,12 @@ class WidgetLayout_Row {
         $c->setRow($this);
     }
     function display($readonly, $owner_id, $owner_type) {
-        echo '<table width="100%" border="0">';
+        echo '<table width="100%" border="0" cellpadding="0" cellspacing="0">';
         echo '<tr style="vertical-align:top;">';
+        $last = count($this->columns) - 1;
+        $i = 0;
         foreach($this->columns as $key => $nop) {
-            $this->columns[$key]->display($readonly, $owner_id, $owner_type);
+            $this->columns[$key]->display($readonly, $owner_id, $owner_type, $is_last = ($i++ == $last));
         }
         echo '</tr>';
         echo '</table>';
