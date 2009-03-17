@@ -48,7 +48,7 @@ class Widget_ProjectSvnStats extends Widget {
     function process($owner_type, $owner_id) {
         $dao = new SvnCommitsDao(CodendiDataAccess::instance());
         //The default duration is 30 days back
-        $duration = 120;
+        $duration = 30;
         
         $day = 24 * 3600;
         
