@@ -349,8 +349,9 @@ cp -r /home/httpd/plugins/template/site-content /etc/codendi/plugins/template/.]
             <title>How to make a widget</title>
             <para>
                 All widgets related to the core of &SYS_PRODUCT_NAME; are located 
-                in <emphasis role="bold">src/common/widget/ directory</emphasis>.
-                Plugin's widget will be located in [plugin_dir]/include/.
+                in <emphasis role="bold">src/common/widget/</emphasis> directory.
+                Plugin's widget will be located in 
+                <emphasis role="bold">/plugins/[plugin_dir]/include/</emphasis>.
                 Widget files must follow the syntax Widget_My[WidgetName] or
                 Widget_Project[WidgetName] and extends Widget class.
             </para>
@@ -365,7 +366,8 @@ require_once('Widget.class.php');
 class Widget_MyPersonalWidget extends Widget {
     /**
      * Constructor of the widget
-     * If anything special here, just call the parent passing the name of the widget
+     * If anything special here, just call the parent 
+     * passing the name of the widget
      */
     public function __construct() {
         // this name must be unique
@@ -380,7 +382,8 @@ class Widget_MyPersonalWidget extends Widget {
         // TODO
     }
     /**
-     * getContent returns the content of the widget, in other words the HTML to display
+     * getContent returns the content of the widget, in other words the 
+     * HTML to display
      * This is the core of the widget.
      * @return string HTML to display, body of the widget
      */
@@ -389,9 +392,11 @@ class Widget_MyPersonalWidget extends Widget {
     }
     /**
      * getCategory returns the category of the widget
-     * In the user interface, widgets are grouped by category. The default 
-     * category (used if getCategory is not defined) is 'general'.
-     * Available categories are: general, scm, trackers, frs, forums, im, hudson
+     * In the user interface, widgets are grouped by category. 
+     * The default category (used if getCategory is not defined) 
+     * is 'general'.
+     * Available categories are: 
+     * general, scm, trackers, frs, forums, im, hudson
      */
     function getCategory() {
         // optional (to be overwritten if different from 'general')
@@ -444,7 +449,7 @@ case 'mypersonalwidget':
                 Each widget should provide a preview image. This is really convenient
                 for end user to help him knowing what the widget will look like.
                 If no preview is provided, the default one will be used, but
-                there won't be anything specific to the widget.
+                it is better to provide a preview.
                 This preview image must be 128 x 128 pixels. We recommand using
                 the same preview style as the existing widgets, which means a 
                 circle preview rounded by a circle border (available at
@@ -456,7 +461,7 @@ case 'mypersonalwidget':
                 <mediaobject>
                  <imageobject>
                    <imagedata format="PNG"
-                     fileref="../../screenshots/widget-preview-my_artifacts.png" width="14.5cm" />
+                     fileref="../../screenshots/widget-preview-my_artifacts.png" width="5cm" />
                  </imageobject>
                 </mediaobject>
                </figure>
@@ -466,9 +471,9 @@ case 'mypersonalwidget':
                 The CSS property of the widget preview is based on the widget's
                 name. It is <emphasis role="bold">widget-preview-[name_of_widget]-[locale]</emphasis>
                 where [name_of_widget] is the name of your widget (e.g. 'mypersonalwidget')
-                and [locale] is the locale language (yes, widget preview are also 
-                internationalized! If there text in your preview, don't forget to
-                do it).
+                and [locale] is the locale language (fr_FR or en_US for instance).
+                Widget preview are also internationalized! If there is text in 
+                your preview, don't forget to internationalize it!.
                 Then, you must add the property in the CSS file 
                 (<emphasis role="bold">src/www/themes/common/css/style.css</emphasis>)
                 if your widget is a core widget, or 
@@ -484,8 +489,13 @@ case 'mypersonalwidget':
     background-image:url("../images/widget_preview/en_US_my_personal_widget.png");
 }
 ]]>
-                where you just have to define where your image is located.
 </programlisting>
+                where you just have to define where your image is located.
+            </para>
+            <para>
+                If your widget is a plugin's widget, you should implement the two
+                hooks <emphasis role="bold">widget_instance</emphasis> and 
+                <emphasis role="bold">widgets</emphasis>.
             </para>
         </section>
     </section>
