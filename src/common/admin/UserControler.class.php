@@ -31,6 +31,7 @@ require_once 'common/dao/CodexDataAccess.class.php';
 require_once 'common/dao/UserDao.class.php';
 require_once 'common/dao/GroupDao.class.php';
 require_once 'common/mvc/Controler.class.php';
+require_once 'common/event/EventManager.class.php';
 
 /**
  * UserControler()
@@ -507,7 +508,6 @@ class UserControler extends Controler
                              $date[0]);
 
             //Update in plugin
-            require_once 'common/event/EventManager.class.php';
             $em =& EventManager::instance();
             $em->processEvent('usergroup_update', array('HTTP_POST_VARS' =>  $_POST,
                                                      'user_id' => $this->_userid )); 
