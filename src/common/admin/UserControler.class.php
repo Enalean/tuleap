@@ -490,13 +490,17 @@ class UserControler extends Controler
 
             $date = util_date_to_unixtime($expirydate);
 
-            $dao->checkUnixUid($this->_userid);
-
-            $unixuidexist = $dao->getFoundRows();
-
-            // create unix uid if it doesn't exists
-            if ($unixuidexist <= 0 && $unixstatus != 'N') {
-                $dao->createUnixUid($this->_userid);
+            $dar = $dao->checkUnixUid($this->_userid);
+            if ($dar && !$dar->isError()) {
+                $unixUidToUpdate = array();
+                foreach($dar as $row) {
+                    if ($row['unix_uid'] == 0 && $unixstatus != 'N') {
+                        $unixUidToUpdate[] = $row['user_id']; 
+                    }
+                }
+                if (count($unixUidToUpdate) > 0) {
+                    $dao->createUnixUid($unixUidToUpdate);
+                }
             }
 
             //update

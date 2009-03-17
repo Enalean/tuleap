@@ -454,7 +454,7 @@ class UserDao extends DataAccessObject {
             $userid = db_escape_int($useridarray);
         }
 
-        $sql = 'SELECT unix_uid '.
+        $sql = 'SELECT user_id, unix_uid '.
             'FROM user '.
             'WHERE user_id IN ('.$userid.') ';
 
@@ -467,28 +467,19 @@ class UserDao extends DataAccessObject {
      *
      */
     function createUnixUid($useridarray) {
-
         if(is_array($useridarray)) {
-
-            $sql = '';
-            $update = '';
-            foreach ($useridarray as $uarray) {
-                $cleanuserid = db_escape_int($uarray);
-
-                $sql = 'UPDATE user '.
-                       'SET unix_uid = '.account_nextuid().' '.
-                       'WHERE user_id = '.$cleanuserid;
-
-                $update .= $this->update($sql);
+            $update = true;
+            foreach ($useridarray as $userId) {
+                $sql = 'UPDATE user, (SELECT MAX(unix_uid)+1 AS max_uid FROM user) AS R'.
+                       ' SET unix_uid = max_uid'.
+                       ' WHERE user_id = '.$this->da->quoteSmart($userId);
+                $update = $update & $this->update($sql);
             }
         }
         else {
-            $userid = db_escape_int($useridarray);
-
-            $sql = 'UPDATE user '.
-                   'SET unix_uid = '.account_nextuid().' '.
-                   'WHERE user_id = '.$userid;
-
+            $sql = 'UPDATE user, (SELECT MAX(unix_uid)+1 AS max_uid FROM user) AS R'.
+                   ' SET unix_uid = max_uid'.
+                   ' WHERE user_id = '.$this->da->quoteSmart($useridarray);
             $update = $this->update($sql);
         }
         return $update;
