@@ -397,7 +397,7 @@ class UserControler extends Controler
         } elseif (!$group) {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('admin_user_controler', 'error_nogid'));
         } else {
-            if(account_add_user_to_group($group->getID(), $user->getId())) {
+            if(account_add_user_to_group($group->getID(), $user->getUserName())) {
                 $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('admin_user_controler', 'success_add_ug'));
                 $GLOBALS['Response']->redirect('/admin/user/index.php?user_id='.$this->_userid);
             } else {
