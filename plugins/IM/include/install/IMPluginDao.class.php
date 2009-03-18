@@ -72,8 +72,7 @@ class IMPluginDao extends DataAccessObject {
 		$sql_muc="SELECT cg.group_id,LOWER(cg.unix_group_name) AS unix_group_name, cg.group_name,cg.short_description
 							FROM ". $this->da->db_name .".groups AS cg
 							LEFT JOIN openfire.mucRoom AS muc
-							ON (muc.name = LOWER(cg.unix_group_name)
-							AND muc.naturalName = cg.group_name)
+							ON (muc.name = LOWER(cg.unix_group_name))
 							WHERE muc.name IS NULL
 							AND cg.status = 'A'
 							ORDER BY group_name ASC"; ///////,LOWER(cg.unix_group_name) AS unix_group_name, cg.group_name,cg.short_description,cu.user_name AS user_name
