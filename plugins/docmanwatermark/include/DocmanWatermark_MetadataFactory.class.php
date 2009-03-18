@@ -35,6 +35,7 @@ class DocmanWatermark_MetadataFactory {
     
     public function &_getWatermarkMetadataDao() {
         if (!$this->dao) {
+        	require_once('common/dao/CodexDataAccess.class.php');
             $this->dao = new DocmanWatermark_MetadataDao(CodexDataAccess::instance());
         }
         return $this->dao;

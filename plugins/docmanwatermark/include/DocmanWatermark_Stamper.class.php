@@ -55,6 +55,14 @@ class DocmanWatermark_Stamper {
         ini_set('include_path', $this->lib_path.':'.ini_get('include_path'));
     }
     
+    public function getHeaders() {
+        return $this->headers;
+    }
+    
+    public function setHeaders($headers) {
+        $this->headers = $headers;
+    }
+    
     /**
      *  method to load the pdf document in zend_framework
      *  @param  void
@@ -77,7 +85,7 @@ class DocmanWatermark_Stamper {
         header('Content-Disposition: filename="'. $this->headers['file_name'] .'"');
         echo $this->pdf->render();
     }
-    
+
     /**
      *  method to check if the current item is a pdf using the item mime type
      *  @param  void
@@ -85,33 +93,51 @@ class DocmanWatermark_Stamper {
      */
 
     public function check() {
-        require_once(dirname(__FILE__).'/../../docman/include/Docman_MetadataFactory.class.php');
-        require_once(dirname(__FILE__).'/../../docman/include/Docman_MetadataListOfValuesElementFactory.class.php');
-        require_once('DocmanWatermark_MetadataFactory.class.php');
-        require_once('DocmanWatermark_MetadataValueFactory.class.php');
-        $dwmdf  = new DocmanWatermark_MetadataFactory();
-        $id     = $dwmdf->getMetadataIdFromGroupId($this->group_id);
-        // the watermark is disabled (the field id = 0) no stamping
+    	$id      = $this->getMetadataIdForWatermark();
         if ($id == 0) {
+            // Watermark disabled
             return false;
         }
-        $name   = $dwmdf->getMetadataNameFromId($id);
-        $mdf    = new Docman_MetadataFactory($this->group_id);
-        $md     = $mdf->findByName($name);
-        $mdlvef = new Docman_MetadataListOfValuesElementFactory();
-        $values = $mdlvef->getLoveValuesForItem($this->item,$md[0]);
-        $values->rewind();
-        if ($values->valid()) {
-            $value = $values->current(); 
-            $dwmdvf = new DocmanWatermark_MetadataValueFactory(); 
-            if (($this->headers['mime_type'] == 'application/pdf') && ($dwmdvf->isWatermarked($value->getId()))) {
-                return true;
-            } else {
-                return false;
-            }
+        $md      = $this->getMetadataForWatermark($id);
+        $value   = $this->getItemValueForWatermark($md);
+        $headers = $this->getHeaders();
+        require_once('DocmanWatermark_MetadataValueFactory.class.php');
+        $dwmvf = new DocmanWatermark_MetadataValueFactory(); 
+        if (($headers['mime_type'] == 'application/pdf') && 
+             ($dwmvf->isWatermarkedOnValue($value->getId()) || 
+                  $value->getName() == 'love_special_none_name_key')) {
+            return true;
         } else {
             return false;
         }
+    }
+
+    public function getMetadataIdForWatermark() {
+        require_once('DocmanWatermark_MetadataFactory.class.php');
+        $dwmdf  = new DocmanWatermark_MetadataFactory();
+        return $dwmdf->getMetadataIdFromGroupId($this->group_id);        
+    }
+
+    public function getMetadataForWatermark($id) {
+    	require_once('DocmanWatermark_MetadataFactory.class.php');
+        require_once(dirname(__FILE__).'/../../docman/include/Docman_MetadataFactory.class.php');
+        $dwmdf  = new DocmanWatermark_MetadataFactory();    	
+        $name   = $dwmdf->getMetadataNameFromId($id);
+        $mdf    = new Docman_MetadataFactory($this->group_id);
+        $md = $mdf->findByName($name);
+        return $md[0];
+    }
+
+    public function getItemValueForWatermark($md) {
+        require_once(dirname(__FILE__).'/../../docman/include/Docman_MetadataListOfValuesElementFactory.class.php');
+        $value  = 0;
+        $mdlvef = new Docman_MetadataListOfValuesElementFactory();
+        $values = $mdlvef->getLoveValuesForItem($this->item,$md);
+        $values->rewind();
+        if ($values->valid()) {
+            $value = $values->current();
+        }
+        return $value;
     }
 
     /**
@@ -121,19 +147,18 @@ class DocmanWatermark_Stamper {
      */
     public function stamp() {
         require_once('Zend/Pdf.php');
-        require_once(dirname(__FILE__).'/../../docman/include/Docman_MetadataFactory.class.php');
-        require_once(dirname(__FILE__).'/../../docman/include/Docman_MetadataListOfValuesElementFactory.class.php');
-        require_once('DocmanWatermark_MetadataFactory.class.php');
-        $dwmdf  = new DocmanWatermark_MetadataFactory();
-        $id     = $dwmdf->getMetadataIdFromGroupId($this->group_id);
+        require_once('DocmanWatermark_MetadataValueFactory.class.php');
+        $dwmvf = new DocmanWatermark_MetadataValueFactory();
+        $id = $this->getMetadataIdForWatermark();
         // when the watermark is disabled (the field id = 0) no stamping
         if ($id != 0) {
-            $name   = $dwmdf->getMetadataNameFromId($id);
-            $mdf    = new Docman_MetadataFactory($this->group_id);
-            $md     = $mdf->findByName($name);
-            $mdlvef = new Docman_MetadataListOfValuesElementFactory();
-            $values = $mdlvef->getLoveValuesForItem($this->item,$md[0]);
+            $md     = $this->getMetadataForWatermark($id);
+            $watermarkValue = $this->getItemValueForWatermark($md);
             foreach ($this->pdf->pages as $page) {
+            	$value = $watermarkValue->getName();
+                if ($value == 'love_special_none_name_key') {
+                    $value = '';
+                }
                 $width  = $page->getWidth();
                 $height = $page->getHeight();
                 $style = new Zend_Pdf_Style();
@@ -143,8 +168,8 @@ class DocmanWatermark_Stamper {
                 $page->setStyle($style);
                 $page->drawRectangle(40, 40, 60, $height-40,SHAPE_DRAW_STROKE);
                 $page->rotate(20, 20, 1.57);
-                $page->drawText("Downloaded on :".date("d M Y H:i", time())." by (".$this->user->getRealName().") ".$values[0]->getName()." ".
-                                "Downloaded on :".date("d M Y H:i", time())." by (".$this->user->getRealName().") ".$values[0]->getName(), 40, -10);
+                $page->drawText("Downloaded on :".date("d M Y H:i", time())." by (".$this->user->getRealName().") ".$value." ".
+                                "Downloaded on :".date("d M Y H:i", time())." by (".$this->user->getRealName().") ".$value, 40, -10);
             }      
         }
     }

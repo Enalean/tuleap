@@ -34,6 +34,7 @@ class DocmanWatermark_MetadataValueFactory {
     
     private function &_getWatermarkMetadataValueDao() {
         if (!$this->dao) {
+            require_once('common/dao/CodexDataAccess.class.php');
             $this->dao = new DocmanWatermark_MetadataValueDao(CodexDataAccess::instance());
         }
         return $this->dao;
@@ -72,16 +73,16 @@ class DocmanWatermark_MetadataValueFactory {
         $this->dao->deleteByGroupId($groupId);
     }
     
-    public function isWatermarked($valueId) {
+    public function isWatermarkedOnValue($valueId) {
         $dar = $this->dao->searchByValueId($valueId);
         $dar->rewind();
         if($dar->valid()) {
             $row = $dar->current();
             if ($row['watermark']) {
-                return 1;
+                return true;
             }
         }
-        return 0;            
+        return false;
     }
     
 }
