@@ -328,7 +328,7 @@ class BackendCVS extends Backend {
             $configlines=0;
             foreach($cvsnt_config_array as $line) {
                 if ($configlines) { fwrite($fp,$line); }
-                if (preg_match($cvsnt_marker,$line)) { $configlines=1;}
+                if (strpos($cvsnt_marker,$line)) { $configlines=1;}
             }
         } else {
             // CVS: simple list of allowed CVS roots
@@ -337,21 +337,9 @@ class BackendCVS extends Backend {
             }
         }
         fclose($fp);
+
         // Backup existing file and install new one if they are different
-        if (is_file($config_file)) {
-            $current_config_string=serialize(file($config_file));
-            $new_config_string=serialize(file($config_file_new));
-            if ($current_config_string!==$new_config_string) {
-                    if (is_file($config_file_old)) {
-                        unlink($config_file_old);
-                    }
-                    rename($config_file,$config_file_old);
-                    rename($config_file_new,$config_file);
-            } // Else do nothing: the configuration has not changed
-        } else { 
-            // No existing file
-            rename($config_file_new,$config_file); 
-        }
+        $this->installNewFileVersion($config_file_new,$config_file,$config_file_old);
 
         return true;
     }

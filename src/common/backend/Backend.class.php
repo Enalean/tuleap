@@ -189,6 +189,41 @@ class Backend {
 
     }
 
+    /**
+     *  Install new version of file
+     *
+     * Precisely: move 'file_new' to 'file' if they are different or if 'file' does not exist.
+     * Also, move 'file' to 'file_old' and remove previous 'file_old'
+     */
+    function installNewFileVersion($file_new,$file,$file_old) {
+        // Backup existing file and install new one if they are different
+        if (is_file($file)) {
+            $current_string=serialize(file($file));
+            $new_string=serialize(file($file_new));
+            if ($current_string!==$new_string) {
+                    if (is_file($file_old)) {
+                        unlink($file_old);
+                    }
+
+                    if (!rename($file,$file_old)) {
+                        $this->log("Can't move file $file to $file_old");
+                        return false;
+                    }
+                    if (!rename($file_new,$file)) {
+                        $this->log("Can't move file $file_new to $file");
+                        return false;
+                    }
+            } // Else do nothing: the configuration has not changed
+        } else { 
+            // No existing file
+            if (!rename($file_new,$file)) {
+                $this->log("Can't move file $file_new to $file (no existing file)");
+                return false;
+            }
+        }
+        return true;
+    }
+
 
 
     function setNeedUpdateMailAliases() {

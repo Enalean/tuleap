@@ -22,6 +22,8 @@
  */
 
 require_once('common/backend/Backend.class.php');
+require_once('common/dao/UGroupDao.class.php');
+require_once('common/project/UGroup.class.php');
 
 
 class BackendSVN extends Backend {
@@ -34,6 +36,14 @@ class BackendSVN extends Backend {
         parent::__construct();
     }
 
+
+    // For mocking (unit tests)
+    protected function _getUGroupDao() {
+        return new UGroupDao(CodendiDataAccess::instance());
+    }
+    protected function _getUGroupFromRow($row) {
+        return new UGroup($row);
+    }
 
     /**
      * Create project SVN repository
@@ -78,11 +88,11 @@ class BackendSVN extends Backend {
                 $this->addBlock($filename,$command);
                 $this->chown($filename,$GLOBALS['sys_http_user']);
                 $this->chgrp($filename,$unix_group_name);
-           chmod("$filename",0775);
+                chmod("$filename",0775);
             }
         }
 
-        if (!$this->UpdateSVNAccess()) {
+        if (!$this->updateSVNAccess($group_id)) {
             $this->log("Can't update SVN access file");
             return false;
         }
@@ -92,7 +102,85 @@ class BackendSVN extends Backend {
 
 
 
-    public function UpdateSVNAccess(){
+    // update Subversion DAV access control file if needed
+    public function updateSVNAccess($group_id){
+        $project=$this->_getProjectManager()->getProject($group_id);
+        if (!$project) return false;
+        $unix_group_name=$project->getUnixName(false); // May contain upper-case letters
+        $svn_dir=$GLOBALS['svn_prefix']."/".$unix_group_name;
+        if (!is_dir($svn_dir)) {
+            $this->log("Can't update SVN Access file: project SVN repo is missing: $svn_dir");
+            return false;
+        }
+
+        $svnaccess_file = $svn_dir."/.SVNAccessFile";
+        $svnaccess_file_old = $svnaccess_file.".old";
+        $svnaccess_file_new = $svnaccess_file.".new";
+        // if you change these block markers also change them in
+        // src/www/svn/svn_utils.php
+	$default_block_start="# BEGIN CODEX DEFAULT SETTINGS - DO NOT REMOVE";
+	$default_block_end="# END CODEX DEFAULT SETTINGS";
+        $custom_perms='';
+        $public_svn = 1; // TODO
+		
+        // Retrieve custom permissions, if any
+        if (is_file("$svnaccess_file")) {
+            $svnaccess_array = file($svnaccess_file);
+            $configlines=false;
+            foreach($svnaccess_array as $line) {
+                if ($configlines) { 
+                    $custom_perms .=$line; 
+                }
+                if (strpos($default_block_end,$line)) { $configlines=1;}
+            }
+        }
+
+        $fp = fopen($svnaccess_file_new, 'w');
+        fwrite($fp, "$default_block_start\n");
+        fwrite($fp, "[groups]\n");
+
+        // Special case for project members
+        fwrite($fp, "members = ");
+        $members_id_array=$project->getMembersUserNames();
+        $first=true;
+        foreach ($members_id_array as $member){
+            if (!$first) fwrite($fp,', ');
+            $first=false;
+            fwrite($fp, $member['user_name']);
+        }
+        fwrite($fp,"\n");
+
+
+        // Get all static ugroups
+        $ugroup_dao =& $this->_getUGroupDao();
+        $dar =& $ugroup_dao->searchByGroupId($group_id);
+        foreach($dar as $row) {
+            $ugroup =& $this->_getUGroupFromRow($row);
+            // User names must be in lowercase
+            $members_list = strtolower(implode(", ",$ugroup->getMembersUserName()));
+            if ($ugroup->getName() && $members_list) {
+                fwrite($fp, $ugroup->getName()." = ".$members_list."\n");
+            }
+        }
+        fwrite($fp,"\n");
+        fwrite($fp,"[/]\n");
+        fwrite($fp,"* = r\n");
+        //else { print SVNACCESS "* = \n";}
+        fwrite($fp,"@members = rw\n");
+        fwrite($fp, "$default_block_end\n");
+        if ($custom_perms)
+        fwrite($fp,$custom_perms);
+        fclose($fp);
+
+        // Backup existing file and install new one if they are different
+        $this->installNewFileVersion($svnaccess_file_new,$svnaccess_file,$svnaccess_file_old);
+
+        // set group ownership, admin user as owner so that
+        // PHP scripts can write to it directly
+        $this->chown($svnaccess_file,$GLOBALS['sys_http_user']);
+        $this->chgrp($svnaccess_file,$unix_group_name);
+        chmod("$svnaccess_file",0775);
+        
         return true;
     }
 
