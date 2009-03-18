@@ -39,8 +39,7 @@ class IMDao extends DataAccessObject {
 		$sql_muc="SELECT cg.group_id,LOWER(cg.unix_group_name) AS unix_group_name, cg.group_name,cg.short_description
 							FROM ". $this->codex_db_name .".groups AS cg
 							LEFT JOIN ".$this->openfire_db_name.".mucRoom AS muc
-							ON (muc.name = LOWER(cg.unix_group_name)
-							AND muc.naturalName = cg.group_name)
+							ON (muc.name = LOWER(cg.unix_group_name))
 							WHERE muc.name IS NULL
 							AND cg.status = 'A'
 							ORDER BY group_name ASC"; ///////,LOWER(cg.unix_group_name) AS unix_group_name, cg.group_name,cg.short_description,cu.user_name AS user_name
