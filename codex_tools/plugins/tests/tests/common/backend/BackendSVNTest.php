@@ -31,11 +31,17 @@ require_once('common/project/ProjectManager.class.php');
 Mock::generate('ProjectManager');
 require_once('common/project/Project.class.php');
 Mock::generate('Project');
+require_once('common/dao/UGroupDao.class.php');
+Mock::generate('UGroupDao');
+require_once('common/project/UGroup.class.php');
+Mock::generate('UGroup');
 Mock::generatePartial('BackendSVN', 'BackendSVNTestVersion', array('_getUserManager', 
-                                                             '_getProjectManager',
-                                                             'chown',
-                                                             'chgrp',
-                                                             ));
+                                                                   '_getProjectManager',
+                                                                   '_getUGroupDao',
+                                                                   '_getUGroupFromRow',
+                                                                   'chown',
+                                                                   'chgrp',
+                                                                   ));
 
 
 class BackendSVNTest extends UnitTestCase {
@@ -59,7 +65,7 @@ class BackendSVNTest extends UnitTestCase {
     }
     
 
-    function testArchiveProjectSVN() {
+    function testArchiveProjectSVN() { 
         $project =& new MockProject($this);
         $project->setReturnValue('getUnixName', 'TestProj',array(false));
         $project->setReturnValue('getUnixName', 'testproj',array(true));
@@ -76,8 +82,6 @@ class BackendSVNTest extends UnitTestCase {
         mkdir($projdir);
         mkdir($projdir."/db");
         
-        //$this->assertTrue(is_dir($projdir),"Project dir should be created");
-
         $this->assertEqual($backend->archiveProjectSVN(142),True);
         $this->assertFalse(is_dir($projdir),"Project SVN repository should be deleted");
         $this->assertTrue(is_file($GLOBALS['tmp_dir']."/TestProj-svn.tgz"),"SVN Archive should be created");
@@ -90,7 +94,7 @@ class BackendSVNTest extends UnitTestCase {
     }
 
 
-    function testCreateProjectSVN() {
+    function testCreateProjectSVN() { 
         $project =& new MockProject($this);
         $project->setReturnValue('getUnixName', 'TestProj',array(false));
         $project->setReturnValue('getUnixName', 'testproj',array(true));
@@ -107,14 +111,35 @@ class BackendSVNTest extends UnitTestCase {
                               array (
                                      "user_name"=> "user3",
                                      "user_id"  => "3"));
-
         $project->setReturnValue('getMembersUserNames',$proj_members);
 
         $pm =& new MockProjectManager();
         $pm->setReturnReference('getProject', $project, array(142));
 
+        $ugroups = array("0" =>
+                         array (
+                                "name"=> "QA",
+                                "ugroup_id"  => "104"),
+                         "1" =>
+                         array (
+                                "name"=> "Customers",
+                                "ugroup_id"  => "102"));
+        $ugdao =& new MockUGroupDao();
+        $ugdao->setReturnValue('searchByGroupId',$ugroups);
+
+        $ugroup =& new MockUGroup($this);
+        $ugroup->setReturnValueAt(0,'getMembersUserName',array('user1', 'user2', 'user3'));
+        $ugroup->setReturnValueAt(1,'getMembersUserName',array('user1', 'user4'));
+        $ugroup->setReturnValueAt(0,'getName',"QA");
+        $ugroup->setReturnValueAt(1,'getName',"QA");
+        $ugroup->setReturnValueAt(2,'getName',"customers");
+        $ugroup->setReturnValueAt(3,'getName',"customers");
+
+
         $backend =& new BackendSVNTestVersion($this);
         $backend->setReturnValue('_getProjectManager', $pm);
+        $backend->setReturnValue('_getUGroupFromRow', $ugroup);
+        $backend->setReturnValue('_getUGroupDao', $ugdao);
 
         $this->assertEqual($backend->createProjectSVN(142),True);
         $this->assertTrue(is_dir($GLOBALS['svn_prefix']."/TestProj"),"SVN dir should be created");
@@ -126,5 +151,84 @@ class BackendSVNTest extends UnitTestCase {
         $backend->recurseDeleteInDir($GLOBALS['svn_prefix']."/TestProj");
         rmdir($GLOBALS['svn_prefix']."/TestProj");
     }
+
+    function testUpdateSVNAccess() {
+        $project =& new MockProject($this);
+        $project->setReturnValue('getUnixName', 'TestProj',array(false));
+        $project->setReturnValue('getUnixName', 'testproj',array(true));
+        $project->setReturnValue('isSVNTracked',true);
+        $proj_members = array("0" =>
+                              array (
+                                     "user_name"=> "user1",
+                                     "user_id"  => "1"),
+                              "1" =>
+                              array (
+                                     "user_name"=> "user2",
+                                     "user_id"  => "2"),
+                              "2" =>
+                              array (
+                                     "user_name"=> "user3",
+                                     "user_id"  => "3"));
+        $project->setReturnValue('getMembersUserNames',$proj_members);
+
+        $pm =& new MockProjectManager();
+        $pm->setReturnReference('getProject', $project, array(142));
+
+        $ugroups = array("0" =>
+                         array (
+                                "name"=> "QA",
+                                "ugroup_id"  => "104"),
+                         "1" =>
+                         array (
+                                "name"=> "Customers",
+                                "ugroup_id"  => "102"));
+        $ugdao =& new MockUGroupDao();
+        $ugdao->setReturnValue('searchByGroupId',$ugroups);
+
+        $ugroup =& new MockUGroup($this);
+        $ugroup->setReturnValueAt(0,'getMembersUserName',array('user1', 'user2', 'user3'));
+        $ugroup->setReturnValueAt(1,'getMembersUserName',array('user1', 'user4'));
+        $ugroup->setReturnValueAt(2,'getMembersUserName',array('user1', 'user2', 'user3'));
+        $ugroup->setReturnValueAt(3,'getMembersUserName',array('user1', 'user4'));
+        $ugroup->setReturnValueAt(4,'getMembersUserName',array('user1', 'user2', 'user3'));
+        $ugroup->setReturnValueAt(5,'getMembersUserName',array('user1', 'user4', 'user5'));
+        $ugroup->setReturnValueAt(0,'getName',"QA");
+        $ugroup->setReturnValueAt(1,'getName',"QA");
+        $ugroup->setReturnValueAt(4,'getName',"QA");
+        $ugroup->setReturnValueAt(5,'getName',"QA");
+        $ugroup->setReturnValueAt(8,'getName',"QA");
+        $ugroup->setReturnValueAt(9,'getName',"QA");
+        $ugroup->setReturnValueAt(2,'getName',"customers");
+        $ugroup->setReturnValueAt(3,'getName',"customers");
+        $ugroup->setReturnValueAt(6,'getName',"customers");
+        $ugroup->setReturnValueAt(7,'getName',"customers");
+        $ugroup->setReturnValueAt(10,'getName',"customers");
+        $ugroup->setReturnValueAt(11,'getName',"customers");
+
+
+        $backend =& new BackendSVNTestVersion($this);
+        $backend->setReturnValue('_getProjectManager', $pm);
+        $backend->setReturnValue('_getUGroupFromRow', $ugroup);
+        $backend->setReturnValue('_getUGroupDao', $ugdao);
+
+        $this->assertEqual($backend->createProjectSVN(142),True);
+        $this->assertTrue(is_dir($GLOBALS['svn_prefix']."/TestProj"),"SVN dir should be created");
+        $this->assertTrue(is_file($GLOBALS['svn_prefix']."/TestProj/.SVNAccessFile"),"SVN access file should be created");
+
+        // Update without modification
+        $this->assertEqual($backend->updateSVNAccess(142),True);
+        $this->assertTrue(is_file($GLOBALS['svn_prefix']."/TestProj/.SVNAccessFile"),"SVN access file should exist");
+        $this->assertTrue(is_file($GLOBALS['svn_prefix']."/TestProj/.SVNAccessFile.new"),"SVN access file (.new) should be created");
+        $this->assertFalse(is_file($GLOBALS['svn_prefix']."/TestProj/.SVNAccessFile.old"),"SVN access file (.old) should not be created");
+        // Update with modification
+        $this->assertEqual($backend->updateSVNAccess(142),True);
+        $this->assertFalse(is_file($GLOBALS['svn_prefix']."/TestProj/.SVNAccessFile.new"),"SVN access file (.new) should be removed");
+        $this->assertTrue(is_file($GLOBALS['svn_prefix']."/TestProj/.SVNAccessFile.old"),"SVN access file (.old) should be created");
+
+        // Cleanup
+        $backend->recurseDeleteInDir($GLOBALS['svn_prefix']."/TestProj");
+        rmdir($GLOBALS['svn_prefix']."/TestProj");
+    }
+
 }
 ?>
