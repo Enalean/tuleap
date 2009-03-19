@@ -39,7 +39,7 @@ Mock::generate('User');
 Mock::generate('EventManager');
 Mock::generate('PermissionsManager');
 Mock::generate('SOAPRequest');
-Mock::generatePartial('Docman_SOAPActions', 'Docman_SOAPActions_Test', array('_getItemFactory', '_checkOwnerChange'));
+Mock::generatePartial('Docman_SOAPActions', 'Docman_SOAPActions_Test', array('_getItemFactory', '_checkOwnerChange', '_getFolderFactory'));
 
 /**
  * Unit tests for Docman_SOAPActions
