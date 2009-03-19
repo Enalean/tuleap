@@ -69,8 +69,8 @@ class DeletedValueWatermark extends UnitTestCase {
         $dws->setReturnReference('getMetadataForWatermark', $md);
         
         $mdv = new MockDocman_MetadataListOfValuesElement();
-        $mdv->setId(1);
-        $mdv->setName('value1');
+        $mdv->setReturnValue('getId', 1);
+        $mdv->setReturnValue('getName', 'value1');
         $dws->setReturnReference('getItemValueForWatermark', $mdv);
         
         $dws->setReturnValue('isWatermarkedOnValue', true);
