@@ -30,6 +30,7 @@ Mock::generate('BaseLanguage');
 Mock::generate('Docman_SOAPController');
 Mock::generate('Feedback');
 Mock::generate('Docman_ItemFactory');
+Mock::generate('Docman_FolderFactory');
 Mock::generate('Docman_File');
 Mock::generate('Docman_Version');
 Mock::generate('Docman_VersionFactory');
@@ -47,6 +48,7 @@ Mock::generatePartial('Docman_SOAPActions', 'Docman_SOAPActions_Test', array('_g
 class Docman_SOAPActionsTest extends UnitTestCase {
     private $MD5Map;
     private $itemFactory;
+    private $folderFactory;
     private $action;
     
     function Docman_SOAPActionsTest($name = 'Docman_Actions test') {
@@ -62,6 +64,7 @@ class Docman_SOAPActionsTest extends UnitTestCase {
         $version->setReturnValue('getNumber', 0);
         
         $itemFactory = new MockDocman_ItemFactory();
+        $folderFactory = new MockDocman_FolderFactory();
         $fileStorage = new MockDocman_FileStorage();
         
         // Item MD5 Map: id => md5sum
@@ -91,6 +94,7 @@ class Docman_SOAPActionsTest extends UnitTestCase {
         // Partial mock of Docman_SOAPActions
         $action = new Docman_SOAPActions_Test();
         $action->setReturnValue('_getItemFactory', $itemFactory);
+        $action->setReturnValue('_getFolderFactory', $folderFactory);
         $action->setReturnValue('_checkOwnerChange', 101, array('*', '*'));
         $action->Docman_SOAPActions($controller);
 
