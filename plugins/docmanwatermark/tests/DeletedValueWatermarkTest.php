@@ -78,5 +78,12 @@ class DeletedValueWatermark extends UnitTestCase {
         $check = $dws->check();
         $this->assertEqual($check, false);
     }
+    
+    function testWatermarkWhenWatermarkedMetadataNoLongerExist() {
+        $dws = new DocmanWatermark_StamperTest($this);
+        $dws->setReturnValue('getMetadataIdForWatermark', 10);
+        $dws->setReturnValue('getMetadataForWatermark', null);
+        $this->assertTrue($dws->check());
+    }
 }
 ?>

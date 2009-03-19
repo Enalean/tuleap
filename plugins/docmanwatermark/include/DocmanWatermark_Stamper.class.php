@@ -100,6 +100,10 @@ class DocmanWatermark_Stamper {
         }
         $md      = $this->getMetadataForWatermark($id);
         $value   = $this->getItemValueForWatermark($md);
+        if ($value == 0) {
+            return true;
+        } 
+        
         $headers = $this->getHeaders();
         require_once('DocmanWatermark_MetadataValueFactory.class.php');
         $dwmvf = new DocmanWatermark_MetadataValueFactory(); 
@@ -131,11 +135,13 @@ class DocmanWatermark_Stamper {
     public function getItemValueForWatermark($md) {
         require_once(dirname(__FILE__).'/../../docman/include/Docman_MetadataListOfValuesElementFactory.class.php');
         $value  = 0;
-        $mdlvef = new Docman_MetadataListOfValuesElementFactory();
-        $values = $mdlvef->getLoveValuesForItem($this->item,$md);
-        $values->rewind();
-        if ($values->valid()) {
-            $value = $values->current();
+        if ($md != null) {
+            $mdlvef = new Docman_MetadataListOfValuesElementFactory();
+            $values = $mdlvef->getLoveValuesForItem($this->item,$md);
+            $values->rewind();
+            if ($values->valid()) {
+                $value = $values->current();
+            }
         }
         return $value;
     }
@@ -155,8 +161,11 @@ class DocmanWatermark_Stamper {
             $md     = $this->getMetadataForWatermark($id);
             $watermarkValue = $this->getItemValueForWatermark($md);
             foreach ($this->pdf->pages as $page) {
-                $value = $watermarkValue->getName();
-                if ($value == 'love_special_none_name_key') {
+            	// watermark metadata is deleted
+            	if ($value != 0) {
+                    $value = $watermarkValue->getName();
+            	}
+                if ($value == 'love_special_none_name_key' || $value == 0) {
                     $value = '';
                 }
                 $width  = $page->getWidth();
