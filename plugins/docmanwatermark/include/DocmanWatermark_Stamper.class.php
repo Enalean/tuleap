@@ -93,7 +93,7 @@ class DocmanWatermark_Stamper {
      */
 
     public function check() {
-    	$id      = $this->getMetadataIdForWatermark();
+        $id      = $this->getMetadataIdForWatermark();
         if ($id == 0) {
             // Watermark disabled
             return false;
@@ -119,7 +119,7 @@ class DocmanWatermark_Stamper {
     }
 
     public function getMetadataForWatermark($id) {
-    	require_once('DocmanWatermark_MetadataFactory.class.php');
+        require_once('DocmanWatermark_MetadataFactory.class.php');
         require_once(dirname(__FILE__).'/../../docman/include/Docman_MetadataFactory.class.php');
         $dwmdf  = new DocmanWatermark_MetadataFactory();    	
         $name   = $dwmdf->getMetadataNameFromId($id);
@@ -155,7 +155,7 @@ class DocmanWatermark_Stamper {
             $md     = $this->getMetadataForWatermark($id);
             $watermarkValue = $this->getItemValueForWatermark($md);
             foreach ($this->pdf->pages as $page) {
-            	$value = $watermarkValue->getName();
+                $value = $watermarkValue->getName();
                 if ($value == 'love_special_none_name_key') {
                     $value = '';
                 }

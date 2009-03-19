@@ -28,7 +28,7 @@ Mock::generatePartial('DocmanWatermark_Stamper',
                       'DocmanWatermark_StamperTest', 
                       array('getMetadataIdForWatermark',
                             'getMetadataForWatermark',
-                            'getValueForWatermark',
+                            'getItemValueForWatermark',
                             'isWatermarkedOnValue',
                             'getHeaders'
                       ));
@@ -47,42 +47,48 @@ class DeletedValueWatermark extends UnitTestCase {
         
     }
     
-    function testWatermarkWhenMetaDataAvailableAndItemIsPDF() {
+    function testWatermarkWhenMetaDataNotAvailable() {
         $dws =& new DocmanWatermark_StamperTest($this);
-        $dws->setReturnValue('getMetadataIdForWatermark', 1);
-        $dws->setReturnValue('getItemValueForWatermark', 'watermark');
+        $dws->setReturnValue('getMetadataIdForWatermark', 0);
+        
+        require_once(dirname(__FILE__).'/../../docman/include/Docman_Metadata.class.php');
+        $md = new Docman_Metadata();
+        $md->setId(10);
+        $md->setName('Watermark');
+        $dws->setReturnReference('getMetadataForWatermark', $md);
+        
+        require_once(dirname(__FILE__).'/../../docman/include/Docman_MetadataListOfValuesElement.class.php');
+        $mdv = new Docman_MetadataListOfValuesElement();
+        $mdv->setId(1);
+        $mdv->setName('value1');
+        $dws->setReturnReference('getItemValueForWatermark', $mdv);
+        
         $dws->setReturnValue('isWatermarkedOnValue', true);
         $dws->setReturnValue('getHeaders', array('mime_type' => 'application/pdf'));
         $check = $dws->check();
-        $this->assertEqual($check, true);
+        $this->assertEqual($check, false);
     }
     
-    /*function testWatermarkWhenItemIsNotPDF() {
+    function testWatermarkWhenItemIsNotPDF() {
         $dws =& new DocmanWatermark_StamperTest($this);
-        $dws->setReturnValue('getMetadataIdForWatermark', 1);
-        $dws->setReturnValue('getMetadataForWatermark', 'Metadata');
-        $dws->setReturnValue('getItemValueForWatermark', 'watermark');
+        $dws->setReturnValue('getMetadataIdForWatermark', 10);
+        
+        require_once(dirname(__FILE__).'/../../docman/include/Docman_Metadata.class.php');
+        $md = new Docman_Metadata();
+        $md->setId(10);
+        $md->setName('Watermark');
+        $dws->setReturnReference('getMetadataForWatermark', $md);
+        
+        require_once(dirname(__FILE__).'/../../docman/include/Docman_MetadataListOfValuesElement.class.php');
+        $mdv = new Docman_MetadataListOfValuesElement();
+        $mdv->setId(1);
+        $mdv->setName('value1');
+        $dws->setReturnReference('getItemValueForWatermark', $mdv);
+        
         $dws->setReturnValue('isWatermarkedOnValue', true);
         $dws->setReturnValue('getHeaders', array('mime_type' => 'text/html'));
         $check = $dws->check();
         $this->assertEqual($check, false);
     }
-    
-    function testWatermarkWhenDeletedValue() {
-        $dws =& new DocmanWatermark_StamperTest($this);
-        $dws->setReturnValue('getMetadataIdForWatermark', 1);
-        $dws->setReturnValue('getMetadataForWatermark', 'Metadata');
-        $dws->setReturnValue('getItemValueForWatermark', 'watermark');
-        $dws->setReturnValue('isWatermarkedOnValue', false);
-        $dws->setReturnValue('getHeaders', array('mime_type' => 'application/pdf'));
-        require_once(dirname(__FILE__).'/../../docman/include/Docman_MetadataListOfValuesElement.class.php');
-        $value = new Docman_MetadataListOfValuesElement();
-        // value deleted
-        $value->setId(0);
-        $value->setName('Sample Value');
-        $check = $dws->check();
-        $this->assertEqual($check, true);
-    }*/
-    
 }
 ?>
