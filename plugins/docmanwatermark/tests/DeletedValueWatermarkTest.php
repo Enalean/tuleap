@@ -23,7 +23,11 @@
  * 
  */
 
+require_once(dirname(__FILE__).'/../../docman/include/Docman_Metadata.class.php');
+require_once(dirname(__FILE__).'/../../docman/include/Docman_MetadataListOfValuesElement.class.php');
 require_once(dirname(__FILE__).'/../include/DocmanWatermark_Stamper.class.php');
+Mock::generate('Docman_Metadata');
+Mock::generate('Docman_MetadataListOfValuesElement');
 Mock::generatePartial('DocmanWatermark_Stamper', 
                       'DocmanWatermark_StamperTest', 
                       array('getMetadataIdForWatermark',
@@ -50,21 +54,7 @@ class DeletedValueWatermark extends UnitTestCase {
     function testWatermarkWhenMetaDataNotAvailable() {
         $dws =& new DocmanWatermark_StamperTest($this);
         $dws->setReturnValue('getMetadataIdForWatermark', 0);
-        
-        require_once(dirname(__FILE__).'/../../docman/include/Docman_Metadata.class.php');
-        $md = new Docman_Metadata();
-        $md->setId(10);
-        $md->setName('Watermark');
-        $dws->setReturnReference('getMetadataForWatermark', $md);
-        
-        require_once(dirname(__FILE__).'/../../docman/include/Docman_MetadataListOfValuesElement.class.php');
-        $mdv = new Docman_MetadataListOfValuesElement();
-        $mdv->setId(1);
-        $mdv->setName('value1');
-        $dws->setReturnReference('getItemValueForWatermark', $mdv);
-        
-        $dws->setReturnValue('isWatermarkedOnValue', true);
-        $dws->setReturnValue('getHeaders', array('mime_type' => 'application/pdf'));
+        $dws->expectNever('getMetadataForWatermark');
         $check = $dws->check();
         $this->assertEqual($check, false);
     }
@@ -73,14 +63,12 @@ class DeletedValueWatermark extends UnitTestCase {
         $dws =& new DocmanWatermark_StamperTest($this);
         $dws->setReturnValue('getMetadataIdForWatermark', 10);
         
-        require_once(dirname(__FILE__).'/../../docman/include/Docman_Metadata.class.php');
-        $md = new Docman_Metadata();
-        $md->setId(10);
-        $md->setName('Watermark');
+        $md = new MockDocman_Metadata($this);
+        $md->setReturnValue('getId', 10);
+        $md->setReturnValue('getName', 'Watermark');
         $dws->setReturnReference('getMetadataForWatermark', $md);
         
-        require_once(dirname(__FILE__).'/../../docman/include/Docman_MetadataListOfValuesElement.class.php');
-        $mdv = new Docman_MetadataListOfValuesElement();
+        $mdv = new MockDocman_MetadataListOfValuesElement();
         $mdv->setId(1);
         $mdv->setName('value1');
         $dws->setReturnReference('getItemValueForWatermark', $mdv);
