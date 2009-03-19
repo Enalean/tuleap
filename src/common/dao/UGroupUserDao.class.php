@@ -42,3 +42,4 @@ class UGroupUserDao extends DataAccessObject {
     }
 
 }
+?>
