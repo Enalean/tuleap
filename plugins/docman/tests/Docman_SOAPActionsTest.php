@@ -40,7 +40,17 @@ Mock::generate('User');
 Mock::generate('EventManager');
 Mock::generate('PermissionsManager');
 Mock::generate('SOAPRequest');
-Mock::generatePartial('Docman_SOAPActions', 'Docman_SOAPActions_Test', array('_getItemFactory', '_checkOwnerChange', '_getFolderFactory'));
+Mock::generatePartial('Docman_SOAPActions', 'Docman_SOAPActions_Test', 
+    array(
+        '_getItemFactory',
+        '_checkOwnerChange',
+        '_getFolderFactory',
+        '_getUserManagerInstance',
+        '_getVersionFactory',
+        '_getPermissionsManagerInstance',
+        '_getEventManager',
+        '_getFileStorage',
+    ));
 
 /**
  * Unit tests for Docman_SOAPActions
@@ -50,6 +60,8 @@ class Docman_SOAPActionsTest extends UnitTestCase {
     private $itemFactory;
     private $folderFactory;
     private $action;
+    private $permissionManager;
+    private $fileStorage;
     
     function Docman_SOAPActionsTest($name = 'Docman_Actions test') {
         $this->UnitTestCase($name);
@@ -63,9 +75,9 @@ class Docman_SOAPActionsTest extends UnitTestCase {
         $version = new MockDocman_Version();
         $version->setReturnValue('getNumber', 0);
         
-        $itemFactory = new MockDocman_ItemFactory();
+        $this->itemFactory = new MockDocman_ItemFactory();
         $folderFactory = new MockDocman_FolderFactory();
-        $fileStorage = new MockDocman_FileStorage();
+        $this->fileStorage = new MockDocman_FileStorage();
         
         // Item MD5 Map: id => md5sum
         $this->MD5Map = array(128000 => '99999999999999999999999999999999');
@@ -73,9 +85,9 @@ class Docman_SOAPActionsTest extends UnitTestCase {
             $file = new MockDocman_File();
             $file->setReturnValue('getID', $itemId);
             $file->setReturnValue('getCurrentVersion', $version);
-            $itemFactory->setReturnValue('getItemFromDb', $file, array($itemId));
-            $itemFactory->setReturnValue('getItemTypeForItem', PLUGIN_DOCMAN_ITEM_TYPE_FILE, array($file));
-            $fileStorage->setReturnValue('getFileMD5sum', $md5, array('*', $itemId, '*'));
+            $this->itemFactory->setReturnValue('getItemFromDb', $file, array($itemId));
+            $this->itemFactory->setReturnValue('getItemTypeForItem', PLUGIN_DOCMAN_ITEM_TYPE_FILE, array($file));
+            $this->fileStorage->setReturnValue('getFileMD5sum', $md5, array('*', $itemId, '*'));
         }
         
         $user = new MockUser();
@@ -91,22 +103,19 @@ class Docman_SOAPActionsTest extends UnitTestCase {
         $versionFactory = new MockDocman_VersionFactory();
         $versionFactory->setReturnValue('getAllVersionForItem', array($version));
         
-        // Partial mock of Docman_SOAPActions
-        $action = new Docman_SOAPActions_Test();
-        $action->setReturnValue('_getItemFactory', $itemFactory);
-        $action->setReturnValue('_getFolderFactory', $folderFactory);
-        $action->setReturnValue('_checkOwnerChange', 101, array('*', '*'));
-        $action->Docman_SOAPActions($controller);
-
-        // Mock injection
-        $action->version_factory = $versionFactory;
-        $action->userManager = $userManager;
-        $action->permissions_manager = new MockPermissionsManager();
-        $action->event_manager = new MockEventManager();
-        $action->filestorage = $fileStorage;
+        $this->permissionManager = new MockPermissionsManager();
         
-        $this->action = $action;
-        $this->itemFactory = $itemFactory;
+        // Partial mock of Docman_SOAPActions
+        $this->action = new Docman_SOAPActions_Test();
+        $this->action->setReturnValue('_getItemFactory', $this->itemFactory);
+        $this->action->setReturnValue('_getFolderFactory', $folderFactory);
+        $this->action->setReturnValue('_checkOwnerChange', 101, array('*', '*'));
+        $this->action->setReturnValue('_getUserManagerInstance', $userManager);
+        $this->action->setReturnValue('_getVersionFactory', $versionFactory);
+        $this->action->setReturnValue('_getPermissionsManagerInstance', $this->permissionManager);
+        $this->action->setReturnValue('_getEventManager', new MockEventManager());
+        $this->action->setReturnValue('_getFileStorage', $this->fileStorage);
+        $this->action->Docman_SOAPActions($controller);
     }
     
     /**
@@ -223,7 +232,7 @@ class Docman_SOAPActionsTest extends UnitTestCase {
         
         $action->getControler()->request = $request;
         
-        $action->filestorage->expectOnce('store');
+        $this->fileStorage->expectOnce('store');
         $this->itemFactory->expectOnce('update');
         $action->event_manager->expectOnce('processEvent', array('send_notifications', '*'));
         
@@ -249,7 +258,7 @@ class Docman_SOAPActionsTest extends UnitTestCase {
         
         $action->getControler()->request = $request;
         
-        $action->filestorage->expectOnce('store');
+        $this->fileStorage->expectOnce('store');
         $this->itemFactory->expectNever('update');
         $action->event_manager->expectOnce('processEvent', array('send_notifications', '*'));
         
@@ -282,7 +291,7 @@ class Docman_SOAPActionsTest extends UnitTestCase {
         $action->getControler()->request = $request;
         
         $this->itemFactory->expectOnce('create');
-        $action->permissions_manager->expectOnce('clonePermissions');
+        $this->permissionManager->expectOnce('clonePermissions');
         $action->event_manager->expectAt(0, 'processEvent', array('plugin_docman_event_add', '*')); 
         $action->event_manager->expectAt(1, 'processEvent', array('plugin_docman_event_metadata_update', '*'));
         $action->event_manager->expectAt(2, 'processEvent', array('plugin_docman_event_metadata_update', '*'));
@@ -341,7 +350,7 @@ class Docman_SOAPActionsTest extends UnitTestCase {
         
         $action->getControler()->request = $request;
         
-        $action->filestorage->expect('store', array($params['upload_content'], $params['group_id'], $params['item_id'], 0, $params['chunk_offset'], $params['chunk_size']));
+        $this->fileStorage->expect('store', array($params['upload_content'], $params['group_id'], $params['item_id'], 0, $params['chunk_offset'], $params['chunk_size']));
         
         $action->appendFileChunk();
     }
