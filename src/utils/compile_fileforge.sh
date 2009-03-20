@@ -14,7 +14,7 @@ if [ -z "$CODEX_LOCAL_INC" ]; then
 fi
 ftp_incoming_dir=`/bin/grep '^\$ftp_incoming_dir' $CODEX_LOCAL_INC | /bin/sed -e 's/\$ftp_incoming_dir\s*=\s*\(.*\);\(.*\)/\1/' | tr -d '"' | tr -d "'" `
 ftp_frs_dir_prefix=`/bin/grep '^\$ftp_frs_dir_prefix' $CODEX_LOCAL_INC | /bin/sed -e 's/\$ftp_frs_dir_prefix\s*=\s*\(.*\);\(.*\)/\1/' | tr -d '"' | tr -d "'" `
-codex_bin_prefix=`/bin/grep '^\$codex_bin_prefix' $CODEX_LOCAL_INC | /bin/sed -e 's/\$codex_bin_prefix\s*=\s*\(.*\);\(.*\)/\1/' | tr -d '"' | tr -d "'" `
+codendi_bin_prefix=`/bin/grep '^\$codendi_bin_prefix' $CODEX_LOCAL_INC | /bin/sed -e 's/\$codendi_bin_prefix\s*=\s*\(.*\);\(.*\)/\1/' | tr -d '"' | tr -d "'" `
 
 
 substitute() {
@@ -29,5 +29,5 @@ substitute fileforge_custom.c '/var/lib/codex/ftp/codex' "$ftp_frs_dir_prefix"
 gcc fileforge_custom.c -o fileforge
 chown root.root fileforge
 chmod u+s fileforge
-mv fileforge $codex_bin_prefix
+mv fileforge $codendi_bin_prefix
 rm fileforge_custom.c

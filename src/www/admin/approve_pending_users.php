@@ -45,7 +45,7 @@ $expiry_date = 0;
             $shell="";
             if ($status=='restricted') {
                 $newstatus='R';
-                $shell=",shell='".$GLOBALS['codex_bin_prefix'] ."/cvssh-restricted'";
+                $shell=",shell='".$GLOBALS['codendi_bin_prefix'] ."/cvssh-restricted'";
             } else $newstatus='A';
         
             // update the user status flag to active

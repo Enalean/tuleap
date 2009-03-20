@@ -329,7 +329,7 @@ return 0 if file not deleted, 1 otherwise
     /**
      * Force the upload directory creation, and move the file $file_name in the good directory
      *
-     * @global $GLOBALS['codex_bin_prefix']
+     * @global $GLOBALS['codendi_bin_prefix']
      *
      * @param int $group_id the ID of the project we want to upload the file
      * @param string $file_name the name of the file we want to upload
@@ -343,8 +343,8 @@ return 0 if file not deleted, 1 otherwise
         $ret_val = null;
         $exec_res = null;
         //exec("/bin/date > /tmp/" . $group_unix_name . "$group_id", $exec_res);
-		//exec($GLOBALS['codex_bin_prefix'] . "/fileforge /tmp/" . $group_unix_name . "$group_id " . $group_unix_name, $exec_res);
-        $cmd = $GLOBALS['codex_bin_prefix'] . "/fileforge $file_name " . $group_unix_name . "/" . $upload_sub_dir;
+		//exec($GLOBALS['codendi_bin_prefix'] . "/fileforge /tmp/" . $group_unix_name . "$group_id " . $group_unix_name, $exec_res);
+        $cmd = $GLOBALS['codendi_bin_prefix'] . "/fileforge $file_name " . $group_unix_name . "/" . $upload_sub_dir;
         exec($cmd, $exec_res, $ret_val);
         return $ret_val;
     }

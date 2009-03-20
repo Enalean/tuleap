@@ -78,7 +78,7 @@ if ($request->isPost() && $request->exist('Login')){
               $shell="";
               if ($newstatus=='R') {
                   // Set restricted shell for restricted users.
-                  $shell=",shell='".$GLOBALS['codex_bin_prefix'] ."/cvssh-restricted'";
+                  $shell=",shell='".$GLOBALS['codendi_bin_prefix'] ."/cvssh-restricted'";
               }
 	    $res = db_query("UPDATE user SET status='".$newstatus."',unix_status='A',unix_uid=". account_nextuid().$shell."  WHERE user_name='".db_es($request->get('form_loginname'))."'");
 	  } else {

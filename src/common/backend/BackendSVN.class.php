@@ -84,7 +84,7 @@ class BackendSVN extends Backend {
             if ($update_hook) {
                 $command  ='REPOS="$1"'."\n";
                 $command .='REV="$2"'."\n";
-                $command .=$GLOBALS['codex_bin_prefix'].'/commit-email.pl "$REPOS" "$REV" 2>&1 >/dev/null';
+                $command .=$GLOBALS['codendi_bin_prefix'].'/commit-email.pl "$REPOS" "$REV" 2>&1 >/dev/null';
                 $this->addBlock($filename,$command);
                 $this->chown($filename,$GLOBALS['sys_http_user']);
                 $this->chgrp($filename,$unix_group_name);

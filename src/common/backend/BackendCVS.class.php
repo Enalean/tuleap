@@ -155,9 +155,9 @@ class BackendCVS extends Backend {
             $file_array=file($filename);
             if (!in_array($this->block_marker_start,$file_array)) {
                 if ($this->useCVSNT()) {
-                        $command = "ALL ".$GLOBALS['codex_bin_prefix']."/log_accum -T $unix_group_name -C $unix_group_name -s %{sVv}";
+                        $command = "ALL ".$GLOBALS['codendi_bin_prefix']."/log_accum -T $unix_group_name -C $unix_group_name -s %{sVv}";
                 } else {
-                        $command = "ALL (".$GLOBALS['codex_bin_prefix']."/log_accum -T $unix_group_name -C $unix_group_name -s %{sVv})>/dev/null 2>&1";
+                        $command = "ALL (".$GLOBALS['codendi_bin_prefix']."/log_accum -T $unix_group_name -C $unix_group_name -s %{sVv})>/dev/null 2>&1";
                 }
                 $this->_RcsCheckout($filename);
                 $this->addBlock($filename,$command);
@@ -171,7 +171,7 @@ class BackendCVS extends Backend {
             $file_array=file($filename);
             if (!in_array($this->block_marker_start,$file_array)) {
                 $this->_RcsCheckout($filename);
-                $this->addBlock($filename,"ALL ".$GLOBALS['codex_bin_prefix']."/commit_prep -T $unix_group_name -r");
+                $this->addBlock($filename,"ALL ".$GLOBALS['codendi_bin_prefix']."/commit_prep -T $unix_group_name -r");
                 $this->_RcsCommit($filename);
                 $this->recurseChownChgrp($cvs_dir."/CVSROOT",$GLOBALS['sys_http_user'],$unix_group_name);
             }

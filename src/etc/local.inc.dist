@@ -105,7 +105,7 @@ $codendi_dir = "/usr/share/codex";
 $sys_custom_dir = "/etc/codex";
 
 // Codendi binary prefix - do *not* use variables in this definition (compile_fileforge.sh)
-$codex_bin_prefix = "/usr/lib/codex/bin";
+$codendi_bin_prefix = "/usr/lib/codex/bin";
 
 // Codendi database configuration file
 $db_config_file = $sys_custom_dir . "/conf/database.inc";

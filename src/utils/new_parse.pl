@@ -393,9 +393,9 @@ while ($ln = pop(@groupdump_array)) {
 		{
 		    system("echo \"$MARKER_BEGIN\" >> $cvs_dir/CVSROOT/loginfo");
 		    if ($use_cvsnt) {
-			system("echo \"ALL $codex_bin_prefix/log_accum -T $gname -C $gname -s %{sVv}\" >> $cvs_dir/CVSROOT/loginfo");
+			system("echo \"ALL $codendi_bin_prefix/log_accum -T $gname -C $gname -s %{sVv}\" >> $cvs_dir/CVSROOT/loginfo");
 		    } else {
-			system("echo \"ALL ($codex_bin_prefix/log_accum -T $gname -C $gname -s %{sVv})>/dev/null 2>&1\" >> $cvs_dir/CVSROOT/loginfo");
+			system("echo \"ALL ($codendi_bin_prefix/log_accum -T $gname -C $gname -s %{sVv})>/dev/null 2>&1\" >> $cvs_dir/CVSROOT/loginfo");
 		    }	 
 		    system("echo \"$MARKER_END\" >> $cvs_dir/CVSROOT/loginfo");
 		    system("cd $cvs_dir/CVSROOT; rcs -q -l loginfo; ci -q -m\"CodeX modifications: entering log_accum from group fields (cvs_tracker/cvs_events)\" loginfo; co -q loginfo");
@@ -415,7 +415,7 @@ while ($ln = pop(@groupdump_array)) {
 		if (! $blockispresent)
 		{
 		    system("echo \"$MARKER_BEGIN\" >> $cvs_dir/CVSROOT/commitinfo");
-		    system("echo \"ALL $codex_bin_prefix/commit_prep -T $gname -r\" >> $cvs_dir/CVSROOT/commitinfo");
+		    system("echo \"ALL $codendi_bin_prefix/commit_prep -T $gname -r\" >> $cvs_dir/CVSROOT/commitinfo");
 		    system("echo \"$MARKER_END\" >> $cvs_dir/CVSROOT/commitinfo");
 		    system("cd $cvs_dir/CVSROOT; rcs -q -l commitinfo; ci -q -m\"CodeX modifications: entering commit_prep from group fields (cvs_tracker/cvs_events)\" commitinfo; co -q commitinfo");
 		    system("cd $cvs_dir/CVSROOT; chown -R $cxname:$gid commitinfo*");
@@ -602,7 +602,7 @@ while ($ln = pop(@groupdump_array)) {
 		    print FD "#!/bin/sh\n";
 		    print FD "$MARKER_BEGIN\n";
 		    print FD "REPOS=\"\$1\";REV=\"\$2\"\n";
-		    print FD "$codex_bin_prefix/commit-email.pl \"\$REPOS\" \"\$REV\" 2>&1 >/dev/null\n";
+		    print FD "$codendi_bin_prefix/commit-email.pl \"\$REPOS\" \"\$REV\" 2>&1 >/dev/null\n";
 		    print FD "$MARKER_END\n";
 		    close(FD);
 		    system("chown -R $cxname:$gid $postcommit_file");
