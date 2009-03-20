@@ -56,7 +56,7 @@ if [ -z "$BASEDOCDIR" ]; then
     if [ -z "$CODEX_LOCAL_INC" ]; then
         CODEX_LOCAL_INC=/etc/codex/conf/local.inc
     fi
-    CODEX_DOCUMENTATION_PREFIX=`$GREP '^\$codex_documentation_prefix' $CODEX_LOCAL_INC | $SED -e 's/\$codex_documentation_prefix\s*=\s*\(.*\);\(.*\)/\1/' | $TR -d '"' | $TR -d "'"`
+    CODEX_DOCUMENTATION_PREFIX=`$GREP '^\$codendi_documentation_prefix' $CODEX_LOCAL_INC | $SED -e 's/\$codendi_documentation_prefix\s*=\s*\(.*\);\(.*\)/\1/' | $TR -d '"' | $TR -d "'"`
     BASEDOCDIR=$CODEX_DOCUMENTATION_PREFIX
 fi
 CMDDOCDIR=$BASEDOCDIR/cli/cmd
@@ -125,7 +125,7 @@ if [ -z "$DESTDIR" ]; then
     if [ -z "$CODEX_LOCAL_INC" ]; then
         CODEX_LOCAL_INC=/etc/codex/conf/local.inc
     fi
-    DEST_DIR=`$GREP '^\$codex_downloads_dir' $CODEX_LOCAL_INC | $SED -e 's/\$codex_downloads_dir\s*=\s*\(.*\);\(.*\)/\1/' | $TR -d '"' | $TR -d "'"`
+    DEST_DIR=`$GREP '^\$codendi_downloads_dir' $CODEX_LOCAL_INC | $SED -e 's/\$codendi_downloads_dir\s*=\s*\(.*\);\(.*\)/\1/' | $TR -d '"' | $TR -d "'"`
     DESTDIR=$DEST_DIR
 fi
 

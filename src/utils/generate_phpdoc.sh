@@ -19,7 +19,7 @@ fi
 
 # honor BASEDOCDIR if defined
 if [ -z "$BASEDOCDIR" ]; then
-    CODEX_DOCUMENTATION_PREFIX=`${GREP} '^\$codex_documentation_prefix' $CODEX_LOCAL_INC | ${SED} -e 's/\$codex_documentation_prefix\s*=\s*\(.*\);\(.*\)/\1/' | tr -d '"' | tr -d "'"`
+    CODEX_DOCUMENTATION_PREFIX=`${GREP} '^\$codendi_documentation_prefix' $CODEX_LOCAL_INC | ${SED} -e 's/\$codendi_documentation_prefix\s*=\s*\(.*\);\(.*\)/\1/' | tr -d '"' | tr -d "'"`
     BASEDOCDIR=$CODEX_DOCUMENTATION_PREFIX
 fi
 
