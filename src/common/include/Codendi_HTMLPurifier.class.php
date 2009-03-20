@@ -78,7 +78,7 @@ class Codendi_HTMLPurifier {
         $config = HTMLPurifier_Config::createDefault();
         $config->set('Core', 'Encoding', 'UTF-8');
         // $config->set('HTML', 'Doctype', 'XHTML 1.0 Strict');
-        $config->set('Cache', 'SerializerPath', $GLOBALS['codex_cache_dir']);
+        $config->set('Cache', 'SerializerPath', $GLOBALS['codendi_cache_dir']);
         return $config;
     }
 

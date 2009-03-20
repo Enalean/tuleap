@@ -137,7 +137,7 @@ $sys_custom_incdir = $sys_custom_dir . '/site-content';// Directory which hosts 
 
 // Cache location -- this is needed by include/cache.php
 // This directory must be world reachable, but writable only by the web-server
-$codex_cache_dir = $tmp_dir . "/codex_cache";
+$codendi_cache_dir = $tmp_dir . "/codex_cache";
 
 $homedir_prefix = "/home/users"; // prefix to add to the user's homedir
 $grpdir_prefix  = "/home/groups";// prefix to add to the project's homedir
@@ -163,8 +163,8 @@ $ftp_anon_dir_prefix = "/var/lib/codex/ftp/pub";     // prefix to add to the ano
 $dump_dir         = "/var/lib/codex/dumps";// Where should we stick files we're working with
 
 // Paths for backend scripts
-$codex_log        = "/var/log/codex";   // Codendi log dir (cvslogs,)
-$codex_shell_skel = "/etc/skel_codex";  // Codendi Shell skeleton files directory
+$codendi_log        = "/var/log/codex";   // Codendi log dir (cvslogs,)
+$codendi_shell_skel = "/etc/skel_codex";  // Codendi Shell skeleton files directory
 $dns_master_file  = "/var/named/codex.zone";// DNS master file
 
 // Mailman paths

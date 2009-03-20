@@ -810,8 +810,8 @@ sub add_user {
 	# /etc/skel_codex into it. The change the ownership
 	unless (-d "$home_dir") {
             mkdir $home_dir, 0751;
-	    if (-d "$codex_shell_skel") {
-	        system("cd $codex_shell_skel; tar cf - . | (cd  $home_dir ; tar xf - )");
+	    if (-d "$codendi_shell_skel") {
+	        system("cd $codendi_shell_skel; tar cf - . | (cd  $home_dir ; tar xf - )");
 	    }
             #chown $uid, $uid, $home_dir;
 	    system("chown -R $uid.$uid $home_dir");

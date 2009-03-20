@@ -39,9 +39,9 @@ account_options	comma	virgule
 account_options	semicolon	point-virgule
 account_options	tab	tabulation
 account_options	username_display	Affichage des noms
-account_options	codex_login_and_name	Login (nom complet)
+account_options	codendi_login_and_name	Login (nom complet)
 account_options	codex_name_and_login	Nom complet (login)
-account_options	codex_login	Login
+account_options	codendi_login	Login
 account_options	realname	Nom complet
 account_options	auth_attempt_title	Détails d'authentification
 account_options	auth_attempt_last_success	Dernière connexion:
@@ -222,7 +222,7 @@ account_register	login	Nom de login
 account_register	ldap_login	Nom de login LDAP
 account_register	ldap_unix_login	Nom $1 <strong>(minuscules uniquement, pas d'espace)</strong>
 account_register	ldap_email_help	<em><strong>Remarque&nbsp;:</strong> Cette adresse e-mail provient de l'annuaire LDAP. Merci de ne pas la modifier.</em>
-account_register	codex_login_help	Ce nom de login a été généré à partir de votre adresse e-mail. Vous pouvez le changer si vous le souhaitez.
+account_register	codendi_login_help	Ce nom de login a été généré à partir de votre adresse e-mail. Vous pouvez le changer si vous le souhaitez.
 account_register	login_directions	<strong>(minuscules uniquement !)</strong>
 account_register	passwd	Mot de passe
 account_register	passwd_directions	(6 caractères minimum)	

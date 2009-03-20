@@ -38,7 +38,7 @@ $default_domain = join('.',$pieces);
 <TABLE width="100%" border=0 cellspacing=0 cellpadding=0 bgcolor="" valign="center">
   <TR valign="top" bgcolor="#ece9e5">
     <TD valign="center">
-      <A href="http://<? echo $default_domain; ?>/"><IMG src="http://<? echo $default_domain; ?>/themes/CodeX/images/codex_logo.png" vspace="" hspace="7" border=0 alt="Codendi Site"></A>
+      <A href="http://<? echo $default_domain; ?>/"><IMG src="http://<? echo $default_domain; ?>/themes/CodeX/images/codendi_logo.png" vspace="" hspace="7" border=0 alt="Codendi Site"></A>
     </TD>
     <TD width="99%"><!-- right of logo -->
       <IMG src="http://<? echo $default_domain; ?>/themes/CodeX/images/organization_logo.png" align="right" alt="Organisation" hspace="5" vspace="7" border=0 width="51" height="48">

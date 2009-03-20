@@ -23,7 +23,7 @@
  *
  *
  * Generate pre-analysed language files for each language and theme.
- * The resulting files will be located in $codex_cache_dir/lang (typically
+ * The resulting files will be located in $codendi_cache_dir/lang (typically
  * /var/tmp/codex_cache/lang).
  */
 

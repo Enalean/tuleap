@@ -117,10 +117,10 @@ class Widget_WikiPage extends Widget {
             $vTitle->required();
             if (!$request->validInArray('WikiPage', $vTitle)) {
                 require_once('common/rss/libs/SimplePie/simplepie.inc');
-                if (!is_dir($GLOBALS['codex_cache_dir'] .'/WikiPage')) {
-                    mkdir($GLOBALS['codex_cache_dir'] .'/WikiPage');
+                if (!is_dir($GLOBALS['codendi_cache_dir'] .'/WikiPage')) {
+                    mkdir($GLOBALS['codendi_cache_dir'] .'/WikiPage');
                 }
-                $WikiPage_reader =& new SimplePie($this->getFeedUrl($WikiPage['group_id']), $GLOBALS['codex_cache_dir'] .'/WikiPage', null, $GLOBALS['sys_proxy']);
+                $WikiPage_reader =& new SimplePie($this->getFeedUrl($WikiPage['group_id']), $GLOBALS['codendi_cache_dir'] .'/WikiPage', null, $GLOBALS['sys_proxy']);
                 $WikiPage['title'] = $WikiPage_reader->get_title();
             }
             $sql = 'INSERT INTO widget_wikipage (owner_id, owner_type, title, group_id, wiki_page) 

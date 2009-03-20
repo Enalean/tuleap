@@ -87,14 +87,14 @@ class BaseLanguage {
      * Load all generated php files to verify if the syntax is correct.
      */
     function testLanguageFiles() {
-        if(is_dir($GLOBALS['codex_cache_dir'].'/lang/')) {
-            $fd = opendir($GLOBALS['codex_cache_dir'].'/lang/');
+        if(is_dir($GLOBALS['codendi_cache_dir'].'/lang/')) {
+            $fd = opendir($GLOBALS['codendi_cache_dir'].'/lang/');
             // Browse all generated php files
             while(false !== ($file = readdir($fd))) {
-                if(is_file($GLOBALS['codex_cache_dir'].'/lang/'.$file)
+                if(is_file($GLOBALS['codendi_cache_dir'].'/lang/'.$file)
                    && preg_match('/\.php$/', $file)) {
                     echo "Test $file\n";
-                    include($GLOBALS['codex_cache_dir'].'/lang/'.$file);
+                    include($GLOBALS['codendi_cache_dir'].'/lang/'.$file);
                     unset($this->text_array);
                 }
             }
@@ -223,11 +223,11 @@ class BaseLanguage {
      */
     function dumpLanguageFile($lang, $text_array) {
         // Create language cache directory if needed
-        if (!file_exists($GLOBALS['codex_cache_dir'].'/lang/')) {
+        if (!file_exists($GLOBALS['codendi_cache_dir'].'/lang/')) {
             // This directory must be world reachable, but writable only by the web-server
-            mkdir($GLOBALS['codex_cache_dir'].'/lang/', 0755);
+            mkdir($GLOBALS['codendi_cache_dir'].'/lang/', 0755);
         }
-        $fd = @fopen($GLOBALS['codex_cache_dir'].'/lang/'.$lang.'.php', 'w');
+        $fd = @fopen($GLOBALS['codendi_cache_dir'].'/lang/'.$lang.'.php', 'w');
         if($fd !== false) {
             fwrite($fd, '<?php'."\n");
             foreach($text_array as $key1 => $level2) {
@@ -279,7 +279,7 @@ class BaseLanguage {
         if($this->lang != $lang) {
             $this->lang = $lang;
             setlocale (LC_TIME, $lang);
-            $langFile = $GLOBALS['codex_cache_dir'].'/lang/'.$this->lang.'.php';
+            $langFile = $GLOBALS['codendi_cache_dir'].'/lang/'.$this->lang.'.php';
             if(file_exists($langFile)) {
                 include($langFile);
             } else {

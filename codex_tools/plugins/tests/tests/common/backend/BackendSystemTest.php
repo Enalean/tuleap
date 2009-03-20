@@ -47,14 +47,14 @@ class BackendSystemTest extends UnitTestCase {
     function setUp() {
         $GLOBALS['homedir_prefix']            = dirname(__FILE__) . '/_fixtures/home/users';
         $GLOBALS['grpdir_prefix']             = dirname(__FILE__) . '/_fixtures/home/groups';
-        $GLOBALS['codex_shell_skel']          = dirname(__FILE__) . '/_fixtures/etc/skel_codendi';
+        $GLOBALS['codendi_shell_skel']        = dirname(__FILE__) . '/_fixtures/etc/skel_codendi';
         $GLOBALS['tmp_dir']                   = dirname(__FILE__) . '/_fixtures/var/tmp';
     }
     
     function tearDown() {
         unset($GLOBALS['homedir_prefix']);
         unset($GLOBALS['grpdir_prefix']);
-        unset($GLOBALS['codex_shell_skel']);
+        unset($GLOBALS['codendi_shell_skel']);
         unset($GLOBALS['tmp_dir']);
     }
     

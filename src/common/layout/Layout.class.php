@@ -1591,8 +1591,8 @@ class Layout extends Response {
             }
         }
         </script>';
-        $output .= '<a href="'.get_server_url().'" class="osdn_codex_logo">';
-        $output .= $this->getImage("codex_logo.png", array("width"=>"135", "height"=>"33", "hspace"=>"10", "alt"=>$GLOBALS['sys_default_domain'], "border"=>"0"));
+        $output .= '<a href="'.get_server_url().'" class="osdn_codendi_logo">';
+        $output .= $this->getImage("codendi_logo.png", array("width"=>"135", "height"=>"33", "hspace"=>"10", "alt"=>$GLOBALS['sys_default_domain'], "border"=>"0"));
         $output .= '<br /></a>';
         // MN : Before displaying the osdn nav drop down, we verify that the osdn_sites array exists
         include($GLOBALS['Language']->getContent('layout/osdn_sites'));

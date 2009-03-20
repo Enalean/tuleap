@@ -38,7 +38,7 @@ sub trigger_hudson_builds() {
             # 302 is the http code for redirect (http response for Hudson build)
             # so we consider it as a success
           } else {
-            my $logfile = "$codex_log/hudson_log";
+            my $logfile = "$codendi_log/hudson_log";
             my $statusline = $response->status_line;
             if (open(LOGFILE, ">> $logfile")) {
               print LOGFILE "Hudson build error with build url $job_url/build$token_url : $statusline \n";

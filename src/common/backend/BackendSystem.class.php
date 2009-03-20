@@ -42,9 +42,9 @@ class BackendSystem extends Backend {
 
         if (!is_dir($homedir)) {
             if (mkdir($homedir,0751)) {
-                // copy the contents of the $codex_shell_skel dir into homedir
-                if (is_dir($GLOBALS['codex_shell_skel'])) {
-                    system("cd ".$GLOBALS['codex_shell_skel']."; tar cf - . | (cd  $homedir ; tar xf - )");
+                // copy the contents of the $codendi_shell_skel dir into homedir
+                if (is_dir($GLOBALS['codendi_shell_skel'])) {
+                    system("cd ".$GLOBALS['codendi_shell_skel']."; tar cf - . | (cd  $homedir ; tar xf - )");
                 }
                 $this->recurseChownChgrp($homedir,$user->getUserName(),$user->getUserName());
 

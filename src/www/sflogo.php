@@ -41,9 +41,9 @@ if (!$group_id) {
 
 // LJ updated with the CodeX logo image
 if ($type == 1) {
-  readfile (util_get_image_theme("codex_logo.png", $sys_themedefault, true));
+  readfile (util_get_image_theme("codendi_logo.png", $sys_themedefault, true));
 }  else { // default
-  readfile (util_get_image_theme("codex_logo.png", $sys_themedefault, true));
+  readfile (util_get_image_theme("codendi_logo.png", $sys_themedefault, true));
 } 
 
 ?>

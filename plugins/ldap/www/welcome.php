@@ -166,9 +166,9 @@ else {
 <td><strong>'.user_getemail(user_getid()).'</strong></td>
 </tr>
 <tr>
-<td>'.$Language->getText('plugin_ldap', 'welcome_codex_login', array($GLOBALS['sys_name'])).'</td>
+<td>'.$Language->getText('plugin_ldap', 'welcome_codendi_login', array($GLOBALS['sys_name'])).'</td>
 <td>'.user_getname(user_getid()).'<br>
-'.$Language->getText('plugin_ldap', 'welcome_codex_login_j', array($GLOBALS['sys_name'])).'
+'.$Language->getText('plugin_ldap', 'welcome_codendi_login_j', array($GLOBALS['sys_name'])).'
 </td>
 </tr>
 </table>';

@@ -47,9 +47,9 @@ account_options	comma	comma
 account_options	semicolon	semicolon
 account_options	tab	tab
 account_options	username_display	Username Display
-account_options	codex_login_and_name	Login name (Real Name)
+account_options	codendi_login_and_name	Login name (Real Name)
 account_options	codex_name_and_login	Real Name (login name)
-account_options	codex_login	Login Name
+account_options	codendi_login	Login Name
 account_options	realname	Real Name
 account_options	auth_attempt_title	Authentication details
 account_options	auth_attempt_last_success	Last successful login:
@@ -230,7 +230,7 @@ account_register	login	Login Name
 account_register	ldap_login	LDAP Login Name
 account_register	ldap_unix_login	$1 Name <strong>(Lower case only, no spaces)</strong>
 account_register	ldap_email_help	<em><strong>Remark:</strong> This email address was retrieved from the directory. Please do not change it.</em>
-account_register	codex_login_help	This login was generated from your email address. You may change it if needed.
+account_register	codendi_login_help	This login was generated from your email address. You may change it if needed.
 account_register	login_directions	<strong>(Lower case only!)</strong>
 account_register	passwd	Password
 account_register	passwd_directions	(minimum 6 chars)	

@@ -217,18 +217,18 @@ class LdapPlugin extends Plugin {
     
     /**
      * @params $params $params['user_id'] IN
-     *                 $params['allow_codex_login'] IN/OUT
+     *                 $params['allow_codendi_login'] IN/OUT
      */
     function allowCodexLogin($params) {
         if ($GLOBALS['sys_auth_type'] == 'ldap') {
             if(UserLdap::isLdapUser($params['user_id'])) {
-                $params['allow_codex_login'] = false;
+                $params['allow_codendi_login'] = false;
                 $GLOBALS['feedback'] .= ' '.$GLOBALS['Language']->getText('plugin_ldap',
                                                                           'login_pls_use_ldap',
                                                                           array($GLOBALS['sys_name']));
             }
             else {
-                $params['allow_codex_login'] = true;
+                $params['allow_codendi_login'] = true;
             }
         }
     }

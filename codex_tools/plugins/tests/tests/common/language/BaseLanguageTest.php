@@ -39,11 +39,11 @@ class BaseLanguageTest extends UnitTestCase {
         $GLOBALS['sys_custom_incdir']     = dirname(__FILE__) . '/_fixtures/etc/site-content';
         $GLOBALS['sys_custompluginsroot'] = dirname(__FILE__) . '/_fixtures/etc/plugins';
         $GLOBALS['sys_custom_themeroot']  = dirname(__FILE__) . '/_fixtures/etc/themes';
-        $GLOBALS['codex_cache_dir']       = dirname(__FILE__) . '/_fixtures/tmp';
+        $GLOBALS['codendi_cache_dir']     = dirname(__FILE__) . '/_fixtures/tmp';
     }
     
     function tearDown() {
-        $tmpdir = $GLOBALS['codex_cache_dir'] . '/lang/';
+        $tmpdir = $GLOBALS['codendi_cache_dir'] . '/lang/';
         $fd = opendir($tmpdir);
         while(false !== ($file = readdir($fd))) {
             if(is_file($tmpdir .'/'. $file)) {
@@ -57,7 +57,7 @@ class BaseLanguageTest extends UnitTestCase {
         unset($GLOBALS['sys_pluginsroot']);
         unset($GLOBALS['sys_themeroot']);
         unset($GLOBALS['sys_custom_themeroot']);
-        unset($GLOBALS['codex_cache_dir']);
+        unset($GLOBALS['codendi_cache_dir']);
     }
     
     function testConstructor() {
@@ -239,7 +239,7 @@ class BaseLanguageTest extends UnitTestCase {
         $l = new BaseLanguage('en_US', 'en_US');
         $l->dumpLanguageFile('my_lang', array('module' => array('key' => 'value')));
         $this->assertEqual("<?php\n\$this->text_array['module']['key'] = 'value';\n?>",
-            file_get_contents($GLOBALS['codex_cache_dir'] .'/lang/my_lang.php')
+            file_get_contents($GLOBALS['codendi_cache_dir'] .'/lang/my_lang.php')
         );
     }
 }

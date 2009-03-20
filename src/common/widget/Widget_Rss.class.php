@@ -27,10 +27,10 @@ require_once('Widget.class.php');
         $content = '';
         if ($this->rss_url) {
             require_once('common/rss/libs/SimplePie/simplepie.inc');
-            if (!is_dir($GLOBALS['codex_cache_dir'] .'/rss')) {
-                mkdir($GLOBALS['codex_cache_dir'] .'/rss');
+            if (!is_dir($GLOBALS['codendi_cache_dir'] .'/rss')) {
+                mkdir($GLOBALS['codendi_cache_dir'] .'/rss');
             }
-            $rss =& new SimplePie($this->rss_url, $GLOBALS['codex_cache_dir'] .'/rss', null, $GLOBALS['sys_proxy']);
+            $rss =& new SimplePie($this->rss_url, $GLOBALS['codendi_cache_dir'] .'/rss', null, $GLOBALS['sys_proxy']);
             $max_items = 10;
             $items = array_slice($rss->get_items(), 0, $max_items);
             $content .= '<table width="100%">';
@@ -101,10 +101,10 @@ require_once('Widget.class.php');
             $vTitle->required();
             if (!$request->validInArray('rss', $vTitle)) {
                 require_once('common/rss/libs/SimplePie/simplepie.inc');
-                if (!is_dir($GLOBALS['codex_cache_dir'] .'/rss')) {
-                    mkdir($GLOBALS['codex_cache_dir'] .'/rss');
+                if (!is_dir($GLOBALS['codendi_cache_dir'] .'/rss')) {
+                    mkdir($GLOBALS['codendi_cache_dir'] .'/rss');
                 }
-                $rss_reader =& new SimplePie($rss['url'], $GLOBALS['codex_cache_dir'] .'/rss', null, $GLOBALS['sys_proxy']);
+                $rss_reader =& new SimplePie($rss['url'], $GLOBALS['codendi_cache_dir'] .'/rss', null, $GLOBALS['sys_proxy']);
                 $rss['title'] = $rss_reader->get_title();
             }
             $sql = 'INSERT INTO widget_rss (owner_id, owner_type, title, url) VALUES ('. $this->owner_id .", '". $this->owner_type ."', '". db_escape_string($rss['title']) ."', '". db_escape_string($rss['url']) ."')";

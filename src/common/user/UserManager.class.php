@@ -185,7 +185,7 @@ class UserManager {
                         //We have the good user, but check that he is allowed to connect
                         $auth_success = true;
                         $params = array('user_id'           => $this->_currentuser->getId(),
-                                        'allow_codex_login' => &$auth_success);
+                                        'allow_codendi_login' => &$auth_success);
                         $em->processEvent('session_after_login', $params);
                     }
                 }

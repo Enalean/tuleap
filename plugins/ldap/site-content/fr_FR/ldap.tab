@@ -27,8 +27,8 @@ plugin_ldap	welcome_preferences	Préférences du compte
 plugin_ldap	welcome_your_data	Détails du compte
 plugin_ldap	welcome_ldap_login	Nom de l'utilisateur&nbsp;:
 plugin_ldap	welcome_email	Adresse email&nbsp;: 
-plugin_ldap	welcome_codex_login	Login interne $1&nbsp;:
-plugin_ldap	welcome_codex_login_j	<em>Nécessaire pour les accès Shell, CVS, FTP et Subversion</em>.
+plugin_ldap	welcome_codendi_login	Login interne $1&nbsp;:
+plugin_ldap	welcome_codendi_login_j	<em>Nécessaire pour les accès Shell, CVS, FTP et Subversion</em>.
 plugin_ldap	welcome_error_up	Erreur lors de la mise à jour des paramètres de l'utilisateur
 plugin_ldap	welcome_error_up_expl	Une erreur s'est produite pendant la mise à jour du compte: $1.
 plugin_ldap	welcome_err_notz	Prière de choisir un autre fuseau horaire que 'Aucun'. <br /><br />Cliquez sur 'Retour' et choisissez un fuseau horaire.

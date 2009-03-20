@@ -12,12 +12,12 @@
 function cache_display($name,$function,$time) {
   global $Language;
 
-  if (!file_exists($GLOBALS['codex_cache_dir'])) {
+  if (!file_exists($GLOBALS['codendi_cache_dir'])) {
       // This directory must be world reachable, but writable only by the web-server
-      mkdir($GLOBALS['codex_cache_dir'], 0755);
+      mkdir($GLOBALS['codendi_cache_dir'], 0755);
   }
 
-  $filename = $GLOBALS['codex_cache_dir']."/codex_cache_".$GLOBALS['sys_user_theme']."_".$name."_".UserManager::instance()->getCurrentUser()->getLocale().".sf";
+  $filename = $GLOBALS['codendi_cache_dir']."/codex_cache_".$GLOBALS['sys_user_theme']."_".$name."_".UserManager::instance()->getCurrentUser()->getLocale().".sf";
 
 	while ((@filesize($filename)<=1) || ((time() - filectime($filename)) > $time)) {
 		// file is non-existant or expired, must redo, or wait for someone else to

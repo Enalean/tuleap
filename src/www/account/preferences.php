@@ -141,12 +141,12 @@ echo html_get_language_popup($Language,'language_id',UserManager::instance()->ge
  	  	 if ($u_display == 1) {
  	  	     print ' selected="selected"';
  	  	 }
-                 print '>'.$Language->getText('account_options','codex_login_and_name').'</option>';
+                 print '>'.$Language->getText('account_options','codendi_login_and_name').'</option>';
  	  	 print '<option value="2"';
  	  	 if ($u_display == 2) {
  	  	     print ' selected="selected"';
  	  	 }
-                 print '>'.$Language->getText('account_options','codex_login').'</option>';
+                 print '>'.$Language->getText('account_options','codendi_login').'</option>';
  	  	 print '<option value="3"';
  	  	 if ($u_display == 3) {
  	  	     print ' selected="selected"';

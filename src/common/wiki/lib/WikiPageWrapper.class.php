@@ -56,7 +56,7 @@ class WikiPageWrapper {
 	   $sys_dbuser.':'.$sys_dbpasswd.'@'.$sys_dbhost.'/'.$sys_dbname);
     define('DATABASE_PERSISTENT', false);
     define('GROUP_ID', $this->gid);    
-    define('PLUGIN_CACHED_CACHE_DIR', $GLOBALS['codex_cache_dir']);
+    define('PLUGIN_CACHED_CACHE_DIR', $GLOBALS['codendi_cache_dir']);
     define('DATABASE_AUTO_OPTIMIZE', false);
   }
 

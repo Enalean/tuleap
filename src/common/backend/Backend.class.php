@@ -92,7 +92,7 @@ class Backend {
 
 
     public function log($message) {
-        error_log($message."\n",3,$GLOBALS['codex_log']."/codendi_syslog");
+        error_log($message."\n",3,$GLOBALS['codendi_log']."/codendi_syslog");
     }
 
     /**

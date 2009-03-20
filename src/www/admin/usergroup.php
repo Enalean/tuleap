@@ -161,7 +161,7 @@ $hp =& Codendi_HTMLPurifier::instance();
 
 <table>
 <tr><td>
-<?php echo $GLOBALS['Language']->getText('account_options', 'codex_login'); ?>:
+<?php echo $GLOBALS['Language']->getText('account_options', 'codendi_login'); ?>:
 </td><td>
 <?php
 if (in_array($row_user['status'], array('P', 'V', 'W'))) {

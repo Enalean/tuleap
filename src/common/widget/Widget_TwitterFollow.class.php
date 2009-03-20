@@ -48,10 +48,10 @@ class Widget_TwitterFollow extends Widget {
         $content = '';
         if ($this->twitterfollow_user) {
             require_once('common/rss/libs/SimplePie/simplepie.inc');
-            if (!is_dir($GLOBALS['codex_cache_dir'] .'/rss')) {
-                mkdir($GLOBALS['codex_cache_dir'] .'/rss');
+            if (!is_dir($GLOBALS['codendi_cache_dir'] .'/rss')) {
+                mkdir($GLOBALS['codendi_cache_dir'] .'/rss');
             }
-            $twitterfollow = new SimplePie($this->getFeedUrl($this->twitterfollow_user), $GLOBALS['codex_cache_dir'] .'/rss', null, $GLOBALS['sys_proxy']);
+            $twitterfollow = new SimplePie($this->getFeedUrl($this->twitterfollow_user), $GLOBALS['codendi_cache_dir'] .'/rss', null, $GLOBALS['sys_proxy']);
             $max_items = 10;
             $items = array_slice($twitterfollow->get_items(), 0, $max_items);
             $content .= '<table width="100%">';
@@ -139,10 +139,10 @@ class Widget_TwitterFollow extends Widget {
             $vTitle->required();
             if (!$request->validInArray('twitterfollow', $vTitle)) {
                 require_once('common/rss/libs/SimplePie/simplepie.inc');
-                if (!is_dir($GLOBALS['codex_cache_dir'] .'/twitterfollow')) {
-                    mkdir($GLOBALS['codex_cache_dir'] .'/twitterfollow');
+                if (!is_dir($GLOBALS['codendi_cache_dir'] .'/twitterfollow')) {
+                    mkdir($GLOBALS['codendi_cache_dir'] .'/twitterfollow');
                 }
-                $twitterfollow_reader =& new SimplePie($this->getFeedUrl($twitterfollow['user']), $GLOBALS['codex_cache_dir'] .'/twitterfollow', null, $GLOBALS['sys_proxy']);
+                $twitterfollow_reader =& new SimplePie($this->getFeedUrl($twitterfollow['user']), $GLOBALS['codendi_cache_dir'] .'/twitterfollow', null, $GLOBALS['sys_proxy']);
                 $twitterfollow['title'] = $twitterfollow_reader->get_title();
             }
             $sql = 'INSERT INTO widget_twitterfollow (owner_id, owner_type, title, user) VALUES ('. $this->owner_id .", '". $this->owner_type ."', '". db_escape_string($twitterfollow['title']) ."', '". db_escape_string($twitterfollow['user']) ."')";
