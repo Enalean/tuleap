@@ -21,7 +21,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-define('PHPWIKI_DIR',$GLOBALS['codex_dir'].'/src/common/wiki/phpwiki');
+define('PHPWIKI_DIR',$GLOBALS['codendi_dir'].'/src/common/wiki/phpwiki');
 require_once(PHPWIKI_DIR.'/lib/prepend.php');
 require_once(PHPWIKI_DIR.'/lib/IniConfig.php');
 require_once('common/wiki/lib/WikiEntry.class.php');

@@ -17,7 +17,7 @@ class UTF8Test extends UnitTestCase {
             'tiny_mce',
             'phpwiki',
         );
-        $cmd = 'find '.$GLOBALS['codex_dir'].'/ -not -name "iso-8859-1_to_utf-8.sh" -not -wholename "*/'. implode('/*" -not -wholename "*/', $exclude_wholename) .'/*" -print -exec file -bi {} \; | grep -i iso-8859 -B 1';
+        $cmd = 'find '.$GLOBALS['codendi_dir'].'/ -not -name "iso-8859-1_to_utf-8.sh" -not -wholename "*/'. implode('/*" -not -wholename "*/', $exclude_wholename) .'/*" -print -exec file -bi {} \; | grep -i iso-8859 -B 1';
         $handle = popen($cmd, 'r');
         $error = false;
         $filename = '';
@@ -39,7 +39,7 @@ class UTF8Test extends UnitTestCase {
     
     function testHtmlEncoding() {
         //file -i does not work well on text/xml files
-        $this->_parseHtmlFiles($GLOBALS['codex_dir'].'/');
+        $this->_parseHtmlFiles($GLOBALS['codendi_dir'].'/');
     }
     
     private function _parseHtmlFiles($file) {

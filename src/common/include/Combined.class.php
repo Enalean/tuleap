@@ -43,7 +43,7 @@ class Combined {
     }
     
     protected function getDestinationDir() {
-        return $GLOBALS['codex_dir'] .'/src/www/scripts/combined/';
+        return $GLOBALS['codendi_dir'] .'/src/www/scripts/combined/';
     }
     
     protected function getSourceDir($script) {
@@ -51,7 +51,7 @@ class Combined {
         if (preg_match('`/plugins/([^/]+)/(.*)`', $script, $matches)) {
             return $GLOBALS['sys_pluginsroot']. $matches[1] . '/www/'. $matches[2];
         }
-        return $GLOBALS['codex_dir'] .'/src/www'. $script;
+        return $GLOBALS['codendi_dir'] .'/src/www'. $script;
     }
     
     protected function onTheFly() {

@@ -66,7 +66,7 @@ if [ -z "$BASESRCDIR" ]; then
     if [ -z "$CODEX_LOCAL_INC" ]; then
         CODEX_LOCAL_INC=/etc/codex/conf/local.inc
     fi
-    CODEX_DIR=`$GREP '^\$codex_dir' $CODEX_LOCAL_INC | $SED -e 's/\$codex_dir\s*=\s*\(.*\);\(.*\)/\1/' | $TR -d '"' | $TR -d "'"`
+    CODEX_DIR=`$GREP '^\$codendi_dir' $CODEX_LOCAL_INC | $SED -e 's/\$codendi_dir\s*=\s*\(.*\);\(.*\)/\1/' | $TR -d '"' | $TR -d "'"`
     BASESRCDIR=$CODEX_DIR/cli
 fi
 

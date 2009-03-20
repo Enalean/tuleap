@@ -1118,7 +1118,7 @@ class Layout extends Response {
     }
     function _debug_backtrace_rec(&$paths, $trace, $leaf = '') {
         if (count($trace)) {
-            $file = substr($trace[0]['file'], strlen($GLOBALS['codex_dir'])) .' #'. $trace[0]['line'] .' ('. (isset($trace[0]['class']) ? $trace[0]['class'] .'::' : '') . $trace[0]['function'] .')';
+            $file = substr($trace[0]['file'], strlen($GLOBALS['codendi_dir'])) .' #'. $trace[0]['line'] .' ('. (isset($trace[0]['class']) ? $trace[0]['class'] .'::' : '') . $trace[0]['function'] .')';
             if (strpos($file, '/src/common/dao/include/DataAccessObject.class.php') === 0) {
                 $this->_debug_backtrace_rec($paths, array_slice($trace, 1), $leaf);
             } else {

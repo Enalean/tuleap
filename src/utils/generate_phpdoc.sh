@@ -25,7 +25,7 @@ fi
 
 # honor BASESRCDIR if defined
 if [ -z "$BASESRCDIR" ]; then
-    CODEX_DIR=`${GREP} '^\$codex_dir' $CODEX_LOCAL_INC | ${SED} -e 's/\$codex_dir\s*=\s*\(.*\);\(.*\)/\1/' | tr -d '"' | tr -d "'"`
+    CODEX_DIR=`${GREP} '^\$codendi_dir' $CODEX_LOCAL_INC | ${SED} -e 's/\$codendi_dir\s*=\s*\(.*\);\(.*\)/\1/' | tr -d '"' | tr -d "'"`
     BASESRCDIR=$CODEX_DIR
 fi
 

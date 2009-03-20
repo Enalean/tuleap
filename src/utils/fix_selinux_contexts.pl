@@ -23,7 +23,7 @@ if (( ! -e $CHCON ) || ( ! -e "/etc/selinux/config" ) || ( `grep -i '^SELINUX=di
 }
 
 # /usr/share/codex -> CodeX main Web tree, documentation, plugins, etc.
-`$CHCON -R -h $context $codex_dir`;
+`$CHCON -R -h $context $codendi_dir`;
 
 # /etc/codex -> for licence, site-content...
 `$CHCON -R -h $context $sys_custom_dir`;

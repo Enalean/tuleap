@@ -11,7 +11,7 @@ sys_ip_address=$2;
 port="80";
 sys_org_name="Xerox";
 sys_long_org_name="Xerox Corporation";
-codex_dir="$WORKSPACE";
+codendi_dir="$WORKSPACE";
 
 cd $WORKSPACE/trunk/
 
@@ -47,15 +47,15 @@ substitute '../etc/codex/conf/local.inc' '%sys_org_name%' "Xerox"
 substitute '../etc/codex/conf/local.inc' '%sys_long_org_name%' "Xerox Corp" 
 substitute '../etc/codex/conf/local.inc' '%sys_fullname%' "$sys_default_domain" 
 substitute '../etc/codex/conf/local.inc' '%sys_win_domain%' " " 
-substitute '../etc/codex/conf/local.inc' '\/usr\/share\/codex' "$codex_dir/trunk"
-substitute '../etc/codex/conf/local.inc' '\/var\/lib\/codex' "$codex_dir/var/lib/codex"
-substitute '../etc/codex/conf/local.inc' '\/var\/log\/codex' "$codex_dir/var/log/codex"
-substitute '../etc/codex/conf/local.inc' '\/etc\/codex' "$codex_dir/etc/codex"
-substitute '../etc/codex/conf/local.inc' '\/usr\/lib\/codex\/bin' "$codex_dir/etc/codex"
+substitute '../etc/codex/conf/local.inc' '\/usr\/share\/codex' "$codendi_dir/trunk"
+substitute '../etc/codex/conf/local.inc' '\/var\/lib\/codex' "$codendi_dir/var/lib/codex"
+substitute '../etc/codex/conf/local.inc' '\/var\/log\/codex' "$codendi_dir/var/log/codex"
+substitute '../etc/codex/conf/local.inc' '\/etc\/codex' "$codendi_dir/etc/codex"
+substitute '../etc/codex/conf/local.inc' '\/usr\/lib\/codex\/bin' "$codendi_dir/etc/codex"
 substitute '../etc/codex/conf/local.inc' '^\$sys_https_host ' "// \\\$sys_https_host"
 substitute '../etc/codex/conf/local.inc' '\/usr\/share\/htmlpurifier' "/usr/share/htmlpurifier"
 substitute '../etc/codex/conf/local.inc' '\/usr\/share\/jpgraph' "/usr/share/jpgraph"
-substitute '../etc/codex/conf/local.inc' '\/var\/tmp' "$codex_dir/var/tmp"
+substitute '../etc/codex/conf/local.inc' '\/var\/tmp' "$codendi_dir/var/tmp"
 
 # Set environment var CODEX_LOCAL_INC
 export CODEX_LOCAL_INC="$WORKSPACE/etc/codex/conf/local.inc"

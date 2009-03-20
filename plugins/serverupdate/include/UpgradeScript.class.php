@@ -103,7 +103,7 @@ class UpgradeScript extends SVNCommitedFile {
         // Check if the file is a class file that extends CodeXUpgrade
         $classname = $this->getClassname();
         
-        include_once($GLOBALS['codex_dir'].substr($this->getPath(), strlen($this->branch)));
+        include_once($GLOBALS['codendi_dir'].substr($this->getPath(), strlen($this->branch)));
         
         $obj = new $classname();
         if (is_a($obj, 'CodeXUpgrade')) {
@@ -148,7 +148,7 @@ class UpgradeScript extends SVNCommitedFile {
     function execute() {
         $classname = $this->getClassname();
         
-        include_once($GLOBALS['codex_dir'].substr($this->getPath(), strlen($this->branch)));
+        include_once($GLOBALS['codendi_dir'].substr($this->getPath(), strlen($this->branch)));
         
         $upgrade = new $classname();
         $upgrade->apply();

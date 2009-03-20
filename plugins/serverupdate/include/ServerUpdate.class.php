@@ -31,7 +31,7 @@ class ServerUpdate extends Controler {
     
     function getSVNUpdate() {
         if (!$this->svnupdate) {
-            $this->svnupdate = new SVNUpdate($GLOBALS['codex_dir']);
+            $this->svnupdate = new SVNUpdate($GLOBALS['codendi_dir']);
         }
         return $this->svnupdate;
     }

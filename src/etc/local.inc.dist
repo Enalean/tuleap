@@ -7,7 +7,7 @@
 //
 // 
 //
-// CodeX Global Configuration File
+// Codendi Global Configuration File
 
 // Important note on file format
 // -----------------------------
@@ -30,11 +30,11 @@
 
 //
 //
-// PART I - CodeX hostnames
+// PART I - Codendi hostnames
 //
 
 // Hostnames should be fully qualified domain names (FQDNs); using short names
-// would be prettier but would stop you from distributing your CodeX
+// would be prettier but would stop you from distributing your Codendi
 // implementation across multiple domains.
 //
 // Of course, if you have a lot of machines serving a particular purpose
@@ -43,9 +43,9 @@
 // mechanism or something fancy like a local-director.
 //
 // =============================================================
-// The default CodeX domain
+// The default Codendi domain
 //
-// this is used where ever the "naked" form of the CodeX domain
+// this is used where ever the "naked" form of the Codendi domain
 // might be used.
 // This is also used as the default name for the Web server using
 // the standard http protocol (for https see below). You can also 
@@ -62,10 +62,10 @@ $sys_https_host = "%sys_default_domain%";
 //This is used for cookie authentication. If you have distributed servers, 
 //please use a generic domain to allow single sign on.
 //Examples:
-//- you have 1 server (s1.codex.com) 
-//   => cookie domain is "s1.codex.com"
-//- you have 2 servers (s1.codex.com & s2.codex.com) 
-//   => cookie domain should be "codex.com" for SSO
+//- you have 1 server (s1.codendi.com) 
+//   => cookie domain is "s1.codendi.com"
+//- you have 2 servers (s1.codendi.com & s2.codendi.com) 
+//   => cookie domain should be "codendi.com" for SSO
 $sys_cookie_domain = "%sys_default_domain%";
  
 // Machine that hosts the mailing lists (This could also be
@@ -93,21 +93,21 @@ $sys_server_id = 0;
 
 // In order to run a test server (without backend cron jobs, CVS, SVN, mailman, vhosts, FRS, etc.)
 // Please update the following variables:
-// $codex_dir = "mydir/codex"
+// $codendi_dir = "mydir/codex"
 // $sys_custom_dir = "mydir/etc/codex"
 // $sys_data_dir = "mydir/data"
 
 
-// CodeX directory (PHP pages, site-content, etc)
-$codex_dir = "/usr/share/codex";
+// Codendi directory (PHP pages, site-content, etc)
+$codendi_dir = "/usr/share/codex";
 
 // Site specific settings are stored there:
 $sys_custom_dir = "/etc/codex";
 
-// CodeX binary prefix - do *not* use variables in this definition (compile_fileforge.sh)
+// Codendi binary prefix - do *not* use variables in this definition (compile_fileforge.sh)
 $codex_bin_prefix = "/usr/lib/codex/bin";
 
-// CodeX database configuration file
+// Codendi database configuration file
 $db_config_file = $sys_custom_dir . "/conf/database.inc";
 
 // Data Directory
@@ -116,23 +116,23 @@ $sys_data_dir = "/var/lib/codex";
 // Place to put temporary data: deleted user's accounts, etc
 $tmp_dir = "/var/tmp";		 
 
-// CodeX utils and documentation directories
+// Codendi utils and documentation directories
 // WARNING: DO NOT USE VARIABLES in the three parameter definitions below.
 // For instance, do *not* use someting like
-//    *wrong* $codex_utils_prefix = $codex_dir . "codex/utils" *wrong*
+//    *wrong* $codex_utils_prefix = $codendi_dir . "codex/utils" *wrong*
 // this is because those variables will be read by shell scripts.
 $codex_utils_prefix         = "/usr/share/codex/src/utils";
 $codex_documentation_prefix = "/usr/share/codex/documentation";
-$codex_downloads_dir        = "/usr/share/codex/downloads";// CodeX extra files download directory (eg: CLI archive)
+$codex_downloads_dir        = "/usr/share/codex/downloads";// Codendi extra files download directory (eg: CLI archive)
 
 // Where wiki attachments are stored
 $sys_wiki_attachment_data_dir = $sys_data_dir . "/wiki";
 
-// Where the CodeX files are placed
-$sys_urlroot = $codex_dir . "/src/www/"; 
+// Where the Codendi files are placed
+$sys_urlroot = $codendi_dir . "/src/www/"; 
 
 // Site-content paths
-$sys_incdir = $codex_dir . '/site-content';// Directory which hosts the site content
+$sys_incdir = $codendi_dir . '/site-content';// Directory which hosts the site content
 $sys_custom_incdir = $sys_custom_dir . '/site-content';// Directory which hosts the customized site content
 
 // Cache location -- this is needed by include/cache.php
@@ -163,8 +163,8 @@ $ftp_anon_dir_prefix = "/var/lib/codex/ftp/pub";     // prefix to add to the ano
 $dump_dir         = "/var/lib/codex/dumps";// Where should we stick files we're working with
 
 // Paths for backend scripts
-$codex_log        = "/var/log/codex";   // CodeX log dir (cvslogs,)
-$codex_shell_skel = "/etc/skel_codex";  // CodeX Shell skeleton files directory
+$codex_log        = "/var/log/codex";   // Codendi log dir (cvslogs,)
+$codex_shell_skel = "/etc/skel_codex";  // Codendi Shell skeleton files directory
 $dns_master_file  = "/var/named/codex.zone";// DNS master file
 
 // Mailman paths
@@ -173,13 +173,13 @@ $mailman_list_dir= "/var/lib/mailman/lists";
 $mailman_wrapper = "/usr/lib/mailman/mail/mailman";
 
 // Plugins related paths
-$sys_pluginsroot       = $codex_dir . "/plugins/";
+$sys_pluginsroot       = $codendi_dir . "/plugins/";
 $sys_custompluginsroot = $sys_custom_dir . "/plugins/";
 $sys_pluginspath       = "/plugins";
 $sys_custompluginspath = "/customplugins";
 
 // Themeing related paths
-$sys_themeroot = $codex_dir . "/src/www/themes/";
+$sys_themeroot = $codendi_dir . "/src/www/themes/";
 $sys_custom_themeroot = $sys_custom_dir . "/themes";
 
 // 3rd Party libraries
@@ -210,7 +210,7 @@ $sys_dbauth_passwd = '%sys_dbauth_passwd%';
 // Number of hours between two runs of background scripts
 $sys_crondelay = 2;
 
-// Group id corresponding to CodeX News group
+// Group id corresponding to Codendi News group
 // (was group 714 in SourceForge - sfnews)
 $sys_news_group = 46;
 
@@ -224,7 +224,7 @@ $sys_my_page_survey = 1;
 // Linefeed characters: \r\n for Windows, \n for Linux/Unix
 $sys_lf = "\n";
 
-// Disable sub-domains (like cvs.proj.codex.xerox.com)
+// Disable sub-domains (like cvs.proj.codendi.xerox.com)
 // Should be disabled if no DNS delegation
 $sys_disable_subdomains = 0;
 
@@ -234,14 +234,14 @@ $sys_disable_subdomains = 0;
 // Should be either 'ldap' or 'codex'
 $sys_auth_type = 'codex';
 
-// LDAP server(s) to query for more information on CodeX users and 
+// LDAP server(s) to query for more information on Codendi users and 
 // for authentication.
 // You may use a comma-separated list if there are several servers available
 // (leave blank to disable LDAP lookup). 
 // To specify secure LDAP servers, use 'ldaps://servername' 
 $sys_ldap_server = '%sys_ldap_server%';
 
-// To enable LDAP information on CodeX users, also define the DN 
+// To enable LDAP information on Codendi users, also define the DN 
 // (distinguised name) to use in LDAP queries.
 // The ldap filter is the filter to use to query the LDAP directory
 // (%name% are substituted with the value from the user table)
@@ -281,16 +281,16 @@ $sys_name = 'Codendi';
 $sys_org_name      = '%sys_org_name%';
 $sys_long_org_name = '%sys_long_org_name%';
 
-// Email address pointing to the CodeX site administrators
+// Email address pointing to the Codendi site administrators
 // for use Web pages, documentation,etc.
 $sys_email_admin = 'codex-admin@%sys_default_domain%';
 
-// Email address pointing to the CodeX contacts.
+// Email address pointing to the Codendi contacts.
 // for use Web pages, documentation,etc.
 $sys_email_contact = 'codex-contact@%sys_default_domain%';
 
 // Address from which emails are sent
-$sys_noreply = '"CodeX" <noreply@%sys_default_domain%>';
+$sys_noreply = '"Codendi" <noreply@%sys_default_domain%>';
 
 // Supported languages (separated comma)
 // Only en_US and fr_FR are available for now

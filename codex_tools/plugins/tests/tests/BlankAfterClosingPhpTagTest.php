@@ -49,7 +49,7 @@ class BlankAfterClosingPhpTagTest extends UnitTestCase {
     }
     
     function testNoBlankBeforeAndAfterClosingPhpTag() {
-        $this->_parsePhpFiles($GLOBALS['codex_dir'].'/');
+        $this->_parsePhpFiles($GLOBALS['codendi_dir'].'/');
     }
     
     protected function _parsePhpFiles($file) {

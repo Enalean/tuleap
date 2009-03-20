@@ -118,7 +118,7 @@ class CombinedTest extends UnitTestCase {
     public function testGetSourceDir() {
         $c = new WhiteBox_Combined();
         $this->assertEqual($c->getSourceDir_exposed('/plugins/docman/docman.js'), $GLOBALS['sys_pluginsroot']. 'docman/www/docman.js');
-        $this->assertEqual($c->getSourceDir_exposed('/scripts/prototype.js'), $GLOBALS['codex_dir']. '/src/www/scripts/prototype.js');
+        $this->assertEqual($c->getSourceDir_exposed('/scripts/prototype.js'), $GLOBALS['codendi_dir']. '/src/www/scripts/prototype.js');
     }
     
     public function testAutoGenerate() {
