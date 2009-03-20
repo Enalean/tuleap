@@ -61,7 +61,7 @@ function checkUsersExistence($sessionKey, $users) {
         foreach ($users as $userIdentifier) {
             try {
                 $userObj = $um->getUserByIdentifier($userIdentifier);
-        	    if ($userObj !== null) {
+        	    if ($userObj !== null && ($userObj->isActive() || $userObj->isRestricted())) {
         	        $userInfo = array();
         	        $userInfo['identifier'] = $userIdentifier;
         	        $userInfo['username'] = $userObj->getUserName();

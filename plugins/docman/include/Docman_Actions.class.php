@@ -599,7 +599,7 @@ class Docman_Actions extends Actions {
         }
         $this->event_manager->processEvent('send_notifications', array());
     }
-    var $filestorage;
+    protected $filestorage;
     function &_getFileStorage() {
         if (!$this->filestorage) {
             $this->filestorage =& new Docman_FileStorage($this->_controler->getProperty('docman_root'));
@@ -611,14 +611,14 @@ class Docman_Actions extends Actions {
         return new Docman_ItemFactory($groupId);
     }
     
-    var $version_factory;
+    protected $version_factory;
     function &_getVersionFactory() {
         if (!$this->version_factory) {
             $this->version_factory =& new Docman_VersionFactory();
         }
         return $this->version_factory;
     }
-    var $permissions_manager;
+    protected $permissions_manager;
     function &_getPermissionsManagerInstance(){
         if(!$this->permissions_manager){
             $this->permissions_manager =& PermissionsManager::instance(); 
@@ -626,7 +626,7 @@ class Docman_Actions extends Actions {
         return $this->permissions_manager;
     }
     
-    var $userManager;
+    protected $userManager;
     function _getUserManagerInstance(){
         if(!$this->userManager){
             $this->userManager = UserManager::instance(); 
