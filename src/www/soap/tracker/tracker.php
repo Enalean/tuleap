@@ -2198,7 +2198,7 @@ function addArtifactWithFieldNames($sessionKey, $group_id, $group_artifact_id, $
             $field = $art_field_fact->getFieldFromName($extra_field_name->field_name);
             if ($field) {
                 $extra_field_id = $field->getID();
-                $extrafields_with_id[] = array('field_id' => $extra_field_id, 'field_value' => $extra_field_name->field_value);
+                $extrafields_with_id[] = array('field_id' => $extra_field_id, 'artifact_id' => 0, 'field_value' => $extra_field_name->field_value);
             } else {
                 return new SoapFault(invalid_field_fault,'Invalid Field:'.$extra_field_name->field_name,'addArtifact');
             }
