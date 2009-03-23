@@ -32,8 +32,9 @@ class Docman_ApprovalTableReviewerFactory {
     var $reviewerCache;
     var $err;
     var $warn;
+    private $notificationManager = null;
 
-    function Docman_ApprovalTableReviewerFactory(&$table, &$item) {
+    function Docman_ApprovalTableReviewerFactory(&$table, &$item, $notificationManager = null) {
         $this->table =& $table;
         $this->item =& $item;
         $this->reviewerCache = null;
@@ -45,6 +46,8 @@ class Docman_ApprovalTableReviewerFactory {
         $this->err['notreg'] = array();
         $this->warn = array();
         $this->warn['double'] = array();
+        
+        $this->notificationManager = $notificationManager;
     }
 
     function createReviewerFromRow($row) {
@@ -399,9 +402,17 @@ class Docman_ApprovalTableReviewerFactory {
         $um =& $this->_getUserManager();
         $owner =& $um->getUserById($this->table->getOwner());
         $atsm->setOwner($owner);
+        
+        if ($this->notificationManager !== null) {
+            $atsm->setNotificationManager($this->notificationManager);
+        }
+        
         return $atsm;
     }
-
+    
+    function setNotificationManager($notificationManager) {
+        $this->notificationManager = $notificationManager;
+    }
 }
 
 ?>

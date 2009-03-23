@@ -30,6 +30,8 @@ class Docman_ApprovalTableNotificationCycle {
     var $owner;
     var $item;
 
+    private $notificationManager = null;
+    
     function Docman_ApprovalTableNotificationCycle() {
         $this->table = null;
         $this->owner = null;
@@ -187,12 +189,24 @@ class Docman_ApprovalTableNotificationCycle {
      * Action
      */
     function notifyIndividual($reviewerId) {
+        // enable item monitoring
+        $this->enableMonitorForReviewer($reviewerId);
+        
         $um =& $this->_getUserManager();
         $reviewer =& $um->getUserById($reviewerId);
 
         $mail = $this->getNotifReviewer($reviewer);
         return $mail->send();
     }
+    
+    /**
+     * Enable the monitoring of an item for a given reviewer
+     */
+    private function enableMonitorForReviewer($reviewerId) {
+        if (($this->notificationManager !== null) && !$this->notificationManager->exist($reviewerId, $this->item->getId())) {
+            $this->notificationManager->add($reviewerId, $this->item->getId());
+        }
+    } 
 
     //
     //
@@ -484,6 +498,10 @@ class Docman_ApprovalTableNotificationCycle {
     function &_getSettingsBo($groupId) {
         $sBo =& Docman_SettingsBo::instance($groupId);
         return $sBo;
+    }
+    
+    function setNotificationManager($notificationManager) {
+        $this->notificationManager = $notificationManager;
     }
 }
 ?>

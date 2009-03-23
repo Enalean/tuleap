@@ -85,8 +85,8 @@ class Docman_HtmlFilter {
         $trashLink = '';
         if($trashLinkBase) {
             $trashLink = $trashLinkBase.$this->filter->md->getLabel();
-            $trashWarn = 'Are your sure you want to remove from filter list?';
-            $trashAlt  = '';
+            $trashWarn = $this->hp->purify($GLOBALS['Language']->getText('plugin_docman', 'report_remove_filter_warn'));
+            $trashAlt  = $this->hp->purify($GLOBALS['Language']->getText('plugin_docman', 'report_remove_filter_alt'));
             $trashLink = html_trash_link($trashLink, $trashWarn, $trashAlt);
         }
 
@@ -167,7 +167,8 @@ class Docman_HtmlFilterList extends Docman_HtmlFilter {
     }
 
     function buildSelectBox($vals, $txts) {
-        $html = html_build_select_box_from_arrays($vals, $txts, $this->filter->md->getLabel(), $this->filter->getValue(), false, '', true, $GLOBALS['Language']->getText('global', 'any'));
+        // Purifying is disabled as $txts already contains purified strings
+        $html = html_build_select_box_from_arrays($vals, $txts, $this->filter->md->getLabel(), $this->filter->getValue(), false, '', true, $GLOBALS['Language']->getText('global', 'any'), false, '', CODENDI_PURIFIER_DISABLED);
         return $html;
     }
 
@@ -199,8 +200,8 @@ extends Docman_HtmlFilterList {
     }
 
     function buildSelectBox($vals, $txts) {
-        
-        $html = html_build_select_box_from_arrays($vals, $txts, $this->filter->md->getLabel(), $this->filter->getValue(), false, '', true, $GLOBALS['Language']->getText('global', 'any'));
+        // Purifying is disabled as $txts already contains purified strings
+        $html = html_build_select_box_from_arrays($vals, $txts, $this->filter->md->getLabel(), $this->filter->getValue(), false, '', true, $GLOBALS['Language']->getText('global', 'any'), false, '', CODENDI_PURIFIER_DISABLED);
         return $html;
     }
 

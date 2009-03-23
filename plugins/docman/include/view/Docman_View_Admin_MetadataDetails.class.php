@@ -64,7 +64,7 @@ class Docman_View_Admin_MetadataDetails extends Docman_View_Extra {
             echo '<input type="hidden" name="label" value="'.$md->getLabel().'" />';
             echo '<input type="hidden" name="action" value="admin_md_details_update" />';
             echo $mdContent;
-            echo '<input type="submit" name="submit" value="Update" />';
+            echo '<input type="submit" name="submit" value="'.$GLOBALS['Language']->getText('plugin_docman', 'admin_md_details_update').'" />';
             echo '</form>';
         }
         else {

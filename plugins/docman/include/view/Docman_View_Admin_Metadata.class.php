@@ -92,9 +92,8 @@ class Docman_View_Admin_Metadata extends Docman_View_Extra {
                                         array('action' => 'admin_delete_metadata',
                                               'md' => $md->getLabel()));
                 
-                $dfltlabel = '';//
-                $warn = '';//$GLOBALS['Language']->getText('plugin_docman', 'admin_md_detail_val_delete_warn', array($name, $dfltlabel));
-                $alt  = '';//$GLOBALS['Language']->getText('plugin_docman', 'admin_md_detail_val_delete_alt', array($name));
+                $warn = $this->hp->purify(addslashes($GLOBALS['Language']->getText('plugin_docman', 'admin_metadata_list_delete_warn', $md->getName())));
+                $alt  = $this->hp->purify($GLOBALS['Language']->getText('plugin_docman', 'admin_metadata_list_delete_alt', $md->getName()));
                 $trash = html_trash_link($link, $warn, $alt);                    
             }
             $content .= '<td>'.$trash.'</td>';
@@ -125,7 +124,9 @@ class Docman_View_Admin_Metadata extends Docman_View_Extra {
         $md->setCanChangeType(true);
         $md->setCanChangeDescription(true);
         $md->setCanChangeIsEmptyAllowed(true);
+        $md->setCanChangeIsMultipleValuesAllowed(true);
         $md->setIsEmptyAllowed(true);
+        $md->setIsMultipleValuesAllowed(false);
 
         $sthCanChange = '';
         $metaMdHtml = new Docman_MetaMetadataHtml($md);        
@@ -133,6 +134,7 @@ class Docman_View_Admin_Metadata extends Docman_View_Extra {
         $content .= $metaMdHtml->getDescription($sthCanChange);
         $content .= $metaMdHtml->getType($sthCanChange);
         $content .= $metaMdHtml->getEmptyAllowed($sthCanChange);
+        $content .= $metaMdHtml->getMultipleValuesAllowed($sthCanChange);
         $content .= $metaMdHtml->getUseIt($sthCanChange);
         
         $content .= '<tr>';

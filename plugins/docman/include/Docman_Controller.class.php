@@ -77,16 +77,8 @@ class Docman_Controller extends Controler {
         $this->hierarchy      = array();
         $this->feedback       = false;
 
-        $flash = user_get_preference('plugin_docman_flash');
-        if ($flash) {
-            user_del_preference('plugin_docman_flash');
-            $this->feedback = unserialize($flash);
-        }
-        if(!$this->feedback) {
-            // Note: This may happen if unserialize fails.
-            $this->feedback =& $GLOBALS['Response']->_feedback;
-        }
-        
+        $this->feedback =& $GLOBALS['Response']->_feedback;
+
         $event_manager =& $this->_getEventManager();
         
         // Events that will call the Docman Logger
@@ -446,7 +438,7 @@ class Docman_Controller extends Controler {
                     $item =& $item_factory->getItemFromDb($id);
                     
                     if (!$item) {
-                        $this->feedback->log('error', 'Unable to retrieve item. Perhaps it was removed.');
+                        $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_item_deleted'));
                         $this->_setView('DocmanError');
                     }
 
@@ -572,8 +564,6 @@ class Docman_Controller extends Controler {
             // Sanitize
             $_mdLabel = $this->request->get('md');
     
-            // Valid
-            $valid = false;
             $md = null;
             $mdFactory = new Docman_MetadataFactory($this->_viewParams['group_id']);
             $valid = $this->validateMetadata($_mdLabel, $md);
@@ -591,19 +581,28 @@ class Docman_Controller extends Controler {
             }
             break;
         case 'admin_md_details_update':
+            $_name = $this->request->get('name');
             $_label = $this->request->get('label');
+            
             $mdFactory = $this->_getMetadataFactory($this->_viewParams['group_id']);
             if($mdFactory->isValidLabel($_label)) {
-                $this->action = $view;
-                $this->_viewParams['default_url_params'] = array('action'  => 'admin_md_details',
-                                                                 'md' => $_label);
+                $this->_viewParams['default_url_params'] = array('action'  => 'admin_md_details', 'md' => $_label);
+                if ($mdFactory->isHardCodedMetadata($_label) || $this->validateUpdateMetadata($_name, $_label)) {
+                    $this->action = $view;
+                }
             } else {
                 $this->_viewParams['default_url_params'] = array('action'  => 'admin_metadata');
             }
             $this->view = 'RedirectAfterCrud';
             break;
         case 'admin_create_metadata':
-            $this->action = $view;
+            $_name = $this->request->get('name');
+            $valid = $this->validateNewMetadata($_name);
+            
+            if ($valid) {
+                $this->action = $view;
+            }
+            
             $this->_viewParams['default_url_params'] = array('action'  => 'admin_metadata');
             $this->view = 'RedirectAfterCrud';
             break;
@@ -1195,14 +1194,14 @@ class Docman_Controller extends Controler {
                                 }
                             }
                         }
-                        //Actions
+
                         if ($valid) {
                             $this->action = $view;
-                        }
-                        //Views
-                        if ($valid) {
                             $this->_set_redirectView();
                         } else {
+                            // Propagate return page
+                            $this->_viewParams['token']               = $this->request->get('token');
+
                             $this->_viewParams['force_item']          = $new_item;
                             $this->_viewParams['force_news']          = $this->request->get('news');
                             $this->_viewParams['force_permissions']   = $this->request->get('permissions');
@@ -1447,6 +1446,58 @@ class Docman_Controller extends Controler {
                && $_md->getGroupId() == $this->groupId) {
                 $valid = true;
                 $md = $_md;
+            }
+        }
+        
+        return $valid;
+    }
+    
+    /**
+    * Checks that the new property have a non-empty name,
+    * and also checks that the same name is not already taken by
+    * another property
+    */
+    private function validateNewMetadata($name) {
+        if ($name == '') {
+            $valid = false;
+            $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'admin_metadata_new_name_missing'));
+        } else {
+            $mdFactory = new Docman_MetadataFactory($this->groupId);
+            
+            if($mdFactory->findByName($name)->count() == 0) {
+                $valid = true;
+            } else {
+                $valid = false;
+                $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'admin_metadata_new_name_exists', $name));
+            }
+        }
+        
+        return $valid;
+    }
+    
+    /**
+    * Checks that the updating property have a non-empty name,
+    * and if the name have been changed, also checks that the same
+    * name is not already taken by another property
+    */
+    private function validateUpdateMetadata($name, $label) {
+        if ($name == '') {
+            $valid = false;
+            $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'admin_metadata_new_name_missing'));
+        } else {
+            $mdFactory = new Docman_MetadataFactory($this->groupId);
+            
+            $md = $mdFactory->getFromLabel($label);
+            // name has changed
+            if ($md !== null && $md->getName() != $name) {
+                if($mdFactory->findByName($name)->count() == 0) {
+                    $valid = true;
+                } else {
+                    $valid = false;
+                    $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'admin_metadata_new_name_exists', $name));
+                }
+            } else {
+                $valid = true;
             }
         }
         

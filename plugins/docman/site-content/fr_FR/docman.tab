@@ -39,21 +39,22 @@ plugin_docman	approval_notif_declined_mail_subject	[$1] un approbateur ne donner
 plugin_docman	approval_notif_declined_mail_body	Votre document '$1' ne sera pas approuvé par $3 <$4>.\n\nVous pouvez accéder à la table d'approbation avec le lien suivant:\n<$4>\n\n--\nCeci est un message généré automatiquement. Merci de ne pas répondre à cet email.\n
 plugin_docman	approval_notification_failure	Pas d'email envoyé aux approbateurs.
 plugin_docman	approval_notification_success	Email envoyé aux approbateurs.
-plugin_docman	approval_review_success	Votre approbation n'a pas été enregistrée.
+plugin_docman	approval_review_success	Votre approbation a été enregistrée.
 plugin_docman	approval_review_failure	Une erreur est survenue lors de l'enregistrement de votre approbation.
 plugin_docman	approval_useradd_success	L'utilisateur a été ajouté à la table.
-plugin_docman	approval_useradd_err_perm	Impossible d'ajouter les utilisateurs suivants. Pas d'accès au document : <em>$1</em>.
-plugin_docman	approval_useradd_err_db	Impossible d'ajouter les utilisateurs suivants. Erreur interne : <em>$1</em>.
-plugin_docman	approval_useradd_err_notreg	Impossible d'ajouter les utilisateurs suivants. N'existent pas : <em>$1</em>. 
-plugin_docman	approval_useradd_warn_double	Déjà dans la table d'approbation : <em>$1</em>.
+plugin_docman	approval_useradd_err_perm	Impossible d'ajouter les utilisateurs suivants. Pas d'accès au document : $1.
+plugin_docman	approval_useradd_err_db	Impossible d'ajouter les utilisateurs suivants. Erreur interne : $1.
+plugin_docman	approval_useradd_err_notreg	Impossible d'ajouter les utilisateurs suivants. N'existent pas : $1. 
+plugin_docman	approval_useradd_warn_double	Déjà dans la table d'approbation : $1.
 plugin_docman	approval_userdel_success	Tous les utilisateurs sélectionnés ont été supprimé de la table d'approbation.
 plugin_docman	approval_userdel_failure	Impossible de supprimer $1 de la table d'approbation.
-plugin_docman	approval_tableupd_success	Paramètres de la tables modifiés.
+plugin_docman	approval_tableupd_success	Paramètres de la table modifiés.
 plugin_docman	approval_tableupd_failure	Le paramètres de la table n'ont pas été modifiés.
 plugin_docman	approval_tableins_failure	Un erreur est survenue lors de la création de la table d'approbation pour ce document.
 plugin_docman	approval_tabledel_success	Table supprimée.
 plugin_docman	approval_tabledel_failure	Une erreur est survenue. La table n'a pas été supprimée.
 
+plugin_docman	admin_md_details_update	Modifier
 plugin_docman	admin_md_detail_backtomenu	Retour au menu
 plugin_docman	admin_md_detail_param_title	Paramètres de la propriété
 plugin_docman	admin_md_detail_param_name	Nom :
@@ -131,7 +132,11 @@ plugin_docman	admin_metadata_list_name	Nom
 plugin_docman	admin_metadata_list_descr	Description
 plugin_docman	admin_metadata_list_status	Status
 plugin_docman	admin_metadata_list_delete	Supprimer
+plugin_docman	admin_metadata_list_delete_warn	Etes-vous sûr de vouloir supprimer la propriété '$1' ?
+plugin_docman	admin_metadata_list_delete_alt	Supprimer la propriété '$1'
 plugin_docman	admin_metadata_new_title	Créer une nouvelle propriété
+plugin_docman	admin_metadata_new_name_exists	Une propriété ayant pour nom '$1' existe déjà.
+plugin_docman	admin_metadata_new_name_missing	Le nom de la propriété est requis, merci de remplir ce champ.
 plugin_docman	admin_metadata_new_submit	Créer
 plugin_docman	admin_obsolete_title	Gérer les documents obsolètes
 plugin_docman	admin_obsolete_descr	Afficher et modifier les documents obsolètes.
@@ -227,7 +232,7 @@ plugin_docman	details_approval_history_table_owner	Demandeur
 plugin_docman	details_approval_history_table_status	Statut
 plugin_docman	details_approval_history_table_date	Date de début
 plugin_docman	details_approval_table_delete_txt	<h3>Confirmez la suppression de la table d'approbation</h3><p>Vous êtes sur le point de supprimer une table d'approbation. Merci de noter que toutes les données (liste des approbateurs, approbation en cours, paramètres) seront supprimées.</p><p>Êtes vous sûr de vouloir continuer ?</p>
-plugin_docman	details_approval_no_table	Pas de table d'approbation pour ce documment.
+plugin_docman	details_approval_no_table	Pas de table d'approbation pour ce document.
 plugin_docman	details_approval_no_table_create	Créer une nouvelle table d'approbation
 plugin_docman	details_approval_not_available	La table d'approbation n'est pas encore disponible.
 plugin_docman	details_approval_no_table_for_empty	Il est impossible de créer une table d'approbation pour un document Vide.
@@ -237,7 +242,7 @@ plugin_docman	details_approval_notif_2	Sequentiellement
 plugin_docman	details_approval_notif_email	Email de notification
 plugin_docman	details_approval_notif_email_act	Voir l'email de notification
 plugin_docman	details_approval_notif_relaunch	Relancer la notification :
-plugin_docman	details_approval_notif_help	$1 peut notifier les approbateurs de deux manières :<ul><li><strong>Tous d'un coup :</strong> notifie tous les approbateurs qui n'ont pas encore approuvé/réprouvé.</li><li><strong>Sequentiellement :</strong> notifie les approbateurs (qui n'ont pas encore approuvé/réprouvé) l'un après l'autre. Si quelqu'un réprouve le document, la séquence s'arrête.</li></ul>
+plugin_docman	details_approval_notif_help	$1 peut notifier les approbateurs de deux manières :<ul><li><strong>Tous d'un coup :</strong> notifie tous les approbateurs qui n'ont pas encore approuvé/réprouvé.</li><li><strong>Sequentiellement :</strong> notifie les approbateurs (qui n'ont pas encore approuvé/réprouvé) l'un après l'autre. Si quelqu'un réprouve le document, la séquence s'arrête.</li></ul>Dès qu'un approbateur est notifié par la table d'approbation, il est informé de tout changement ultérieur sur le document.
 plugin_docman	details_approval_notif_reviewers_submit	Notifier les personnes sélectionnées
 plugin_docman	details_approval_notif_reviewers_help	Envoyer un email aux personnes sélectionnées
 plugin_docman	details_approval_notif_title	Notification
@@ -337,6 +342,20 @@ plugin_docman	details_properties_view_doc_val	Cliquer pour ouvrir le document
 plugin_docman	details_title	Détails de $1
 plugin_docman	details_update_title	Mise à jour de $1
 plugin_docman	details_update_recursion_warning	<h3>Confirmation de l'application récursive des valeurs par défaut.</h3><p>Vous êtes sur le point d'appliquer les valeurs sélectionnées dans dans l'ensemble de champ <strong>Valeur par défaut</strong> ci-dessous sur <strong>$1 documents and $2 folders</strong>.</p>
+plugin_docman	details_statistics	Statistiques
+plugin_docman	details_statistics_summary	Résumé
+plugin_docman	details_statistics_details	Détails
+plugin_docman	details_statistics_details_description	Ce tableau présente le nombre d'éléments de chaque type.
+plugin_docman	details_statistics_children_count	Nombre d'éléments dans ce dossier :
+plugin_docman	details_statistics_size	Taille :
+plugin_docman	details_statistics_byte_symbol	o
+plugin_docman	details_statistics_help	<ul><li>Ces statistiques prennent en compte toute l'arborescence descendante de ce dossier.</li><li>Pour le calcul de la taille, seuls sont pris en compte les dernières versions des documents de type "fichier" et "fichier embarqué".</li></ul>
+plugin_docman	details_statistics_item_type_file	Fichiers :
+plugin_docman	details_statistics_item_type_wiki	Pages wiki :
+plugin_docman	details_statistics_item_type_embeddedfile	Fichiers embarqués :
+plugin_docman	details_statistics_item_type_empty	Documents vides :
+plugin_docman	details_statistics_item_type_link	Liens :
+plugin_docman	details_statistics_item_type_folder	Dossiers :
 
 plugin_docman	docman_browserns4	Votre navigateur (Netscape 4) est trop vieux pour pouvoir accéder au gestionnaire de document. Nous ne garantissons pas la compatibilité du service avec ce navigateur.
 
@@ -357,6 +376,7 @@ plugin_docman	error_invalid_md	Propriété invalide
 plugin_docman	error_item_not_deleted	Impossible de supprimer l'élément.
 plugin_docman	error_item_not_deleted_no_w	Impossible de supprimer cet élément car il contient des items que vous ne pouvez pas modifier (pas d'accès 'Rédacteur', il se peut que vous ne puissiez pas non plus les lire). Merci de contacter votre administrateur de gestionnaire de documents
 plugin_docman	error_item_not_moved	Impossible de déplacer l'élément.
+plugin_docman	error_item_deleted	Impossible de récupérer l'élément. Il a peut-être été supprimé.
 plugin_docman	error_md_or_love	Il y a une erreur dans les paramètres. Retour vers l'écran précédent.
 plugin_docman	error_no_perm_install	Vous devez être un administrateur projet pour initaliser ce service.
 plugin_docman	error_paste_in_document	Vous ne pouvez pas coller un élément dans un document
@@ -419,6 +439,13 @@ plugin_docman	filters_ordering	Ordre
 plugin_docman	filters_ordering_ascending	Ascendant
 plugin_docman	filters_ordering_descending	Descendant
 plugin_docman	filters_ordering_message	La valeur de $1 devrait être soit "Ascendant", soit "Descendant"
+plugin_docman	filters_item_type	Type d'élément
+plugin_docman	filters_item_type_file	Fichier
+plugin_docman	filters_item_type_wiki	Page wiki
+plugin_docman	filters_item_type_embeddedfile	Fichier embarqué
+plugin_docman	filters_item_type_empty	Document vide
+plugin_docman	filters_item_type_link	Lien
+plugin_docman	filters_item_type_folder	Dossier
 
 plugin_docman	info_copy_notify_cp	copié. vous pouvez maintenant le coller où vous vouler (même entre différents projets) avec l'action 'Coller' dans le menu popup.<br />Attention, la copie ne garde <strong>ni les tables d'approbations, ni les notifications</strong> à la différence du déplacement.
 plugin_docman	info_create_initversion	Version initiale créée.
@@ -560,6 +587,8 @@ plugin_docman	permission_write_short	Rédacteur
 plugin_docman	redirect	<div style="text-align:center"><p>Gestionnaire de documents mis à jour</p><p>Vous allez être redirigé <a href="$1">vers le gestionnaire de documents</a>.</p></div>
 
 plugin_docman	report_add_filter	Ajouter
+plugin_docman	report_remove_filter_alt	Enlever le filtre
+plugin_docman	report_remove_filter_warn	Etes-vous sûr de vouloir enlever ce filtre de la liste ?
 plugin_docman	report_clear_filters	Tout effacer
 plugin_docman	report_clone_success	Rapport cloné
 plugin_docman	report_custom_fltr	Personnaliser les filtres

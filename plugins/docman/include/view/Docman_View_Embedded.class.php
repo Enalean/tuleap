@@ -37,7 +37,7 @@ class Docman_View_Embedded extends Docman_View_Display {
                 } else {
                     $balise = 'div';
                 }
-                echo '<'. $balise .' style="clear:both">';
+                echo '<'. $balise .' class="docman_embedded_file_content">';
                 echo $this->hp->purify(file_get_contents($version->getPath()), CODENDI_PURIFIER_FULL);
                 echo '</'. $balise .'>';
             } else {

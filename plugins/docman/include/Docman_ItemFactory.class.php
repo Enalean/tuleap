@@ -910,7 +910,61 @@ class Docman_ItemFactory {
         }
         return $version;
     }
-
+    
+    /**
+     * Returns the folder stats (count + size)
+     */
+    public function getFolderStats($folder, $user) {
+        if(is_a($folder, 'Docman_Folder') && $folder->getId() !== null) {
+            $folderSubTree = $this->getItemSubTree($folder, $user, false, true);
+            return $this->getFolderTreeStats($folderSubTree);
+        } else {
+            return null;
+        }
+    }
+    
+    /**
+     * Recursive method that takes a subtree and
+     * returns the corresponding stats (count + size)
+     */
+    private function getFolderTreeStats($folder) {
+        $stats['count'] = 0;
+        $stats['size'] = 0;
+        $stats['types'] = array();
+        
+        if(is_a($folder, 'Docman_Folder')) {
+            $items = $folder->getAllItems();
+            foreach ($items->iterator() as $item) {
+                $class = get_class($item);
+                $type = strtolower(substr(strrchr($class, '_'), 1));
+                
+                if (!isset($stats['types'][$type])) {
+                    $stats['types'][$type] = 0;
+                }
+                
+                $stats['types'][$type]++;
+                $stats['count']++;
+                if ($type == 'file' || $type == 'embeddedfile') {
+                    $currentVersion = $item->getCurrentVersion();
+                    if ($currentVersion !== null) {
+                        $stats['size'] += $currentVersion->getFilesize();
+                    }
+                } else if ($type == 'folder') {
+                    $childStats = $this->getFolderTreeStats($item);
+                    foreach ($childStats['types'] as $k => $v) {
+                        if (!isset($stats['types'][$k])) {
+                            $stats['types'][$k] = 0;
+                        }
+                        $stats['types'][$k] += $v;
+                    }
+                    $stats['count'] += $childStats['count'];
+                    $stats['size'] += $childStats['size'];
+                }
+            }
+        }
+        
+        return $stats;
+    }
 }
 
 ?>

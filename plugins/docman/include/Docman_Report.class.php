@@ -195,6 +195,11 @@ class Docman_Report {
         $filterFactory = new Docman_FilterFactory($this->groupId);
         return $filterFactory->getGlobalSearchMetadata();
     }
+    
+    function getItemTypeSearchMetadata() {
+        $filterFactory = new Docman_FilterFactory($this->groupId);
+        return $filterFactory->getItemTypeSearchMetadata();
+    }
 }
 
 

@@ -40,7 +40,12 @@ class Docman_MetaMetadataHtml {
     function getName(&$sthCanChange) {
         $mdContent = '';
         $mdContent .= '<tr>';
-        $mdContent .= '<td>'.$GLOBALS['Language']->getText('plugin_docman', 'admin_md_detail_param_name').'</td>';
+        $mdContent .= '<td>';
+        $mdContent .= $GLOBALS['Language']->getText('plugin_docman', 'admin_md_detail_param_name');
+        if($this->md->canChangeName()) {
+            $mdContent .= '&nbsp;<span class="highlight">*</span>';
+        }
+        $mdContent .= '</td>';
         $mdContent .= '<td>';
         if($this->md->canChangeName()) {
             $sthCanChange = true;
@@ -111,7 +116,7 @@ class Docman_MetaMetadataHtml {
             if($this->md->isMultipleValuesAllowed()) {
                 $selected = 'checked="checked"';
             }          
-            $mdContent .= '<input type="checkbox" name="multiplevalues_allowed" value="1" '.$selected.' />';
+            $mdContent .= '<input type="checkbox" name="multiplevalues_allowed" id="multiplevalues_allowed" value="1" '.$selected.' />';
         }
         else {
             if($this->md->isMultipleValuesAllowed()) {

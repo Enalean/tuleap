@@ -54,7 +54,9 @@ class Docman_SqlFilterFactory {
             }
         }
         elseif(is_a($filter, 'Docman_FilterList')) {
-            if($filter->getValue() >= 100) {
+            // A value equals to 0 means that we selected "All" in the list
+            // so we don't want to use this filter
+            if($filter->getValue() != 0) {
                 $f = new Docman_SqlFilter($filter);
             }
         }       

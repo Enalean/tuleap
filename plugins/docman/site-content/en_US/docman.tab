@@ -42,10 +42,10 @@ plugin_docman	approval_notification_success	Email sent to reviewer.
 plugin_docman	approval_review_success	Your review was successfully recorded.
 plugin_docman	approval_review_failure	An error occurred on review recording.
 plugin_docman	approval_useradd_success	User successfully added to the approval table.
-plugin_docman	approval_useradd_err_perm	Cannot add following user(s). No access to document: <em>$1</em>.
-plugin_docman	approval_useradd_err_db	Cannot add  following user(s). Internal error: <em>$1</em>.
-plugin_docman	approval_useradd_err_notreg	Cannot add following user(s). Not registered users. <em>$1</em>. 
-plugin_docman	approval_useradd_warn_double	Already in this approval table: <em>$1</em>.
+plugin_docman	approval_useradd_err_perm	Cannot add following user(s). No access to document: $1.
+plugin_docman	approval_useradd_err_db	Cannot add  following user(s). Internal error: $1.
+plugin_docman	approval_useradd_err_notreg	Cannot add following user(s). Not registered users. $1. 
+plugin_docman	approval_useradd_warn_double	Already in this approval table: $1.
 plugin_docman	approval_userdel_success	All selected users were successfully removed from the approval table.
 plugin_docman	approval_userdel_failure	Cannot remove $1 from the approval table.
 plugin_docman	approval_tableupd_success	Table settings updated.
@@ -54,6 +54,7 @@ plugin_docman	approval_tableins_failure	An error occurred on approval table crea
 plugin_docman	approval_tabledel_success	Table successfully deleted.
 plugin_docman	approval_tabledel_failure	An error occurred: the approval table was not deleted.
 
+plugin_docman	admin_md_details_update	Modify
 plugin_docman	admin_md_detail_backtomenu	Back to Properties menu
 plugin_docman	admin_md_detail_param_title	Property parameters
 plugin_docman	admin_md_detail_param_name	Name:
@@ -131,7 +132,11 @@ plugin_docman	admin_metadata_list_name	Name
 plugin_docman	admin_metadata_list_descr	Description
 plugin_docman	admin_metadata_list_status	Status
 plugin_docman	admin_metadata_list_delete	Delete
+plugin_docman	admin_metadata_list_delete_warn	Are you sure you want to delete the property '$1'?
+plugin_docman	admin_metadata_list_delete_alt	Delete the property '$1'
 plugin_docman	admin_metadata_new_title	Create a new property
+plugin_docman	admin_metadata_new_name_exists	There is already a property with the name '$1'.
+plugin_docman	admin_metadata_new_name_missing	Property name is required, please fill this field.
 plugin_docman	admin_metadata_new_submit	Create
 plugin_docman	admin_obsolete_title	Manage Obsolete Documents
 plugin_docman	admin_obsolete_descr	View and update obsolete documents.
@@ -237,7 +242,7 @@ plugin_docman	details_approval_notif_2	Sequential
 plugin_docman	details_approval_notif_email	Notification email
 plugin_docman	details_approval_notif_email_act	See the notification email
 plugin_docman	details_approval_notif_relaunch	Relaunch notification:
-plugin_docman	details_approval_notif_help	$1 can notify approval members in two ways:<ul><li><strong>All at once:</strong> notify all reviewers who did not commit themselves yet.</li><li><strong>Sequential:</strong> notify reviewers (who did not commit themselves) one after another. If someone reject the document, the sequence stops.</li></ul>
+plugin_docman	details_approval_notif_help	$1 can notify approval members in two ways:<ul><li><strong>All at once:</strong> notify all reviewers who did not commit themselves yet.</li><li><strong>Sequential:</strong> notify reviewers (who did not commit themselves) one after another. If someone reject the document, the sequence stops.</li></ul>After an approver is notified by the approval table, it is informed of any later modification done on the document.
 plugin_docman	details_approval_notif_reviewers_submit	Notify selected people
 plugin_docman	details_approval_notif_reviewers_help	Send an email to selected people regardtheless
 plugin_docman	details_approval_notif_title	Notification
@@ -337,6 +342,20 @@ plugin_docman	details_properties_view_doc_val	Click to open the document
 plugin_docman	details_title	Details of $1
 plugin_docman	details_update_title	Update $1
 plugin_docman	details_update_recursion_warning	<h3>Confirm recursive application of default values.</h3><p>You are about to apply the values selected in <strong>Default Values</strong> field set below on <strong>$1 documents and $2 folders</strong>.</p>
+plugin_docman	details_statistics	Statistics
+plugin_docman	details_statistics_summary	Summary
+plugin_docman	details_statistics_details	Details
+plugin_docman	details_statistics_details_description	This table shows the number of elements of each type.
+plugin_docman	details_statistics_children_count	Number of items in this folder:
+plugin_docman	details_statistics_size	Size:
+plugin_docman	details_statistics_byte_symbol	B
+plugin_docman	details_statistics_help	<ul><li>The whole folder sub-tree is taken in account for these statistics.</li><li>To compute the size, only the last versions of "file" and "embedded file" documents are taken in account.</li></ul>
+plugin_docman	details_statistics_item_type_file	Files:
+plugin_docman	details_statistics_item_type_wiki	Wiki pages:
+plugin_docman	details_statistics_item_type_embeddedfile	Embedded files:
+plugin_docman	details_statistics_item_type_empty	Empty documents:
+plugin_docman	details_statistics_item_type_link	Links:
+plugin_docman	details_statistics_item_type_folder	Folders:
 
 plugin_docman	docman_browserns4	Your browser (Netscape 4) is too old to access to the document manager. We do not guaranty the compatibility of the service with your browser.
 
@@ -357,6 +376,7 @@ plugin_docman	error_invalid_md	Invalid property
 plugin_docman	error_item_not_deleted	Can't delete item.
 plugin_docman	error_item_not_deleted_no_w	Cannot delete this item because it contains items you are not allowed to modify (no 'Write' access, you may even not be able to read them). Please contact your document manager administrator.
 plugin_docman	error_item_not_moved	Can't move item.
+plugin_docman	error_item_deleted	Unable to retrieve item. Perhaps it was removed.
 plugin_docman	error_md_or_love	There is an error in parameters. Back to previous screen.
 plugin_docman	error_no_perm_install	You need to be a project administrator to initialize this service.
 plugin_docman	error_paste_in_document	You cannot paste something into a document.
@@ -419,6 +439,13 @@ plugin_docman	filters_ordering	Ordering
 plugin_docman	filters_ordering_ascending	Ascending
 plugin_docman	filters_ordering_descending	Descending
 plugin_docman	filters_ordering_message	Value of $1 should be either "Ascending" or "Descending"
+plugin_docman	filters_item_type	Item type
+plugin_docman	filters_item_type_file	File
+plugin_docman	filters_item_type_wiki	Wiki page
+plugin_docman	filters_item_type_embeddedfile	Embedded file
+plugin_docman	filters_item_type_empty	Empty document
+plugin_docman	filters_item_type_link	Link
+plugin_docman	filters_item_type_folder	Folder
 
 plugin_docman	info_copy_notify_cp	copied. you can now paste it wherever you want (even across projects) with 'Paste' action in popup menu.<br />Note that copy keeps <strong>neither approval tables nor notifications</strong> while move does.
 plugin_docman	info_create_initversion	Initial version successfully created.
@@ -560,6 +587,8 @@ plugin_docman	permission_write_short	Writer
 plugin_docman	redirect	<div style="text-align:center"><p>Document Manager updated</p><p>You will be redirected <a href="$1"> to the document manager</a>.</p></div>
 
 plugin_docman	report_add_filter	Add
+plugin_docman	report_remove_filter_alt	Remove the filter
+plugin_docman	report_remove_filter_warn	Are you sure you want to remove this filter from the list?
 plugin_docman	report_clear_filters	Clear all
 plugin_docman	report_clone_success	Report successfully cloned.
 plugin_docman	report_custom_fltr	Customize filters

@@ -221,8 +221,8 @@ DROP TABLE IF EXISTS plugin_docman_approval;
 CREATE TABLE plugin_docman_approval (
   table_id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
   item_id INT(11) UNSIGNED NULL DEFAULT NULL,
-  version_id INT(11) UNSIGNED NOT NULL,
-  wiki_version_id INT(11) UNSIGNED NOT NULL,
+  version_id INT(11) UNSIGNED NULL DEFAULT NULL,
+  wiki_version_id INT(11) UNSIGNED NULL DEFAULT NULL,
   table_owner INT(11) UNSIGNED NOT NULL,
   date INT(11) UNSIGNED NULL,
   description TEXT NULL,

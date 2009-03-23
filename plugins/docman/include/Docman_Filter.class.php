@@ -24,7 +24,6 @@
  */
 
 class Docman_Filter {
-    var $name;     
     var $value;
     var $md;
 
@@ -417,6 +416,22 @@ extends Docman_FilterList {
 
     function initFromRow($row) {
         $this->addValue($row['value_love']);
+    }
+}
+
+/**
+* Item type filters
+*/
+class Docman_FilterItemTypeAdvanced extends Docman_FilterListAdvanced {
+    function Docman_FilterItemTypeAdvanced($md) {
+        parent::Docman_Filter($md);
+        $this->setValue(array());
+    }
+}
+
+class Docman_FilterItemType extends Docman_FilterList {
+    function Docman_FilterItemType($md) {
+        parent::Docman_Filter($md);
     }
 }
 

@@ -183,9 +183,20 @@ class Docman_ReportHtml {
 
         // Special filters
         $gsmd = $this->report->getGlobalSearchMetadata();
-        if(!in_array($gsmd->getLabel(), $displayedFilters)) {
+        $itmd = $this->report->getItemTypeSearchMetadata();
+        
+        $showGlobalSearch = !in_array($gsmd->getLabel(), $displayedFilters);
+        $showItemTypeSearch = !in_array($itmd->getLabel(), $displayedFilters);
+        if ($showGlobalSearch || $showItemTypeSearch) {
             $html .= $this->getSelectOption('--', '--');
-            $html .= $this->getSelectOption($gsmd->getLabel(), $gsmd->getName(), '');
+            
+            if ($showGlobalSearch) {
+                $html .= $this->getSelectOption($gsmd->getLabel(), $gsmd->getName(), '');
+            }
+                    
+            if ($showItemTypeSearch) {
+                $html .= $this->getSelectOption($itmd->getLabel(), $itmd->getName(), '');
+            }
         }
 
         $html .= '</select>';

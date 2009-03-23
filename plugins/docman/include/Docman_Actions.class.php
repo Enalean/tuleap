@@ -354,6 +354,7 @@ class Docman_Actions extends Actions {
                 $id = $item_factory->create($item, $request->get('ordering'));
                 if ($id) {
                     $this->_controler->_viewParams['action_result'] = $id;
+                    $this->_controler->_viewParams['redirect_anchor'] = "#item_$id";
                     $new_item =& $item_factory->getItemFromDb($id);
                     $parent   =& $item_factory->getItemFromDb($item['parent_id']);
                     if ($request->exist('permissions') && $this->_controler->userCanManage($parent->getId())) {
@@ -417,6 +418,9 @@ class Docman_Actions extends Actions {
                             $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_create_news'));
                         }
                     }
+                    
+                    $folderFactory = $this->_getFolderFactory();
+                    $folderFactory->expand($parent);
                 }
             }
         }
@@ -617,6 +621,10 @@ class Docman_Actions extends Actions {
 
     function _getItemFactory($groupId=null) {
         return new Docman_ItemFactory($groupId);
+    }
+    
+    function _getFolderFactory($groupId=null) {
+        return new Docman_FolderFactory($groupId);
     }
     
     protected $version_factory;
@@ -1103,13 +1111,14 @@ class Docman_Actions extends Actions {
     function admin_create_metadata() {
         $request =& HTTPRequest::instance();
 
-        $_gid          = (int) $request->get('group_id');
-        $_name         = $request->get('name');
-        $_description  = $request->get('descr');
-        $_emptyallowed = (int) $request->get('empty_allowed');
-        $_dfltvalue    = $request->get('dflt_value');
-        $_useit        = $request->get('use_it');
-        $_type         = (int) $request->get('type');
+        $_gid                   = (int) $request->get('group_id');
+        $_name                  = $request->get('name');
+        $_description           = $request->get('descr');
+        $_emptyallowed          = (int) $request->get('empty_allowed');
+        $_multiplevaluesallowed = (int) $request->get('multiplevalues_allowed');
+        $_dfltvalue             = $request->get('dflt_value');
+        $_useit                 = $request->get('use_it');
+        $_type                  = (int) $request->get('type');
 
         $mdFactory = new Docman_MetadataFactory($_gid);
 
@@ -1120,6 +1129,13 @@ class Docman_Actions extends Actions {
         //$mdrow['label'] = 
         $mdrow['required'] = false;
         $mdrow['empty_ok'] = $_emptyallowed;
+        
+        if ($_type == PLUGIN_DOCMAN_METADATA_TYPE_LIST) {
+            $mdrow['mul_val_ok'] = $_multiplevaluesallowed;
+        } else {
+            $mdrow['mul_val_ok'] = false;
+        }
+        
         $mdrow['special'] = false;
         $mdrow['default_value'] = $_dfltvalue;
         $mdrow['use_it'] = $_useit;
@@ -1425,7 +1441,7 @@ class Docman_Actions extends Actions {
             $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'approval_tableupd_success'));
         }
     }
-
+    
     /**
      * @access private
      */
@@ -1447,7 +1463,7 @@ class Docman_Actions extends Actions {
             }
         }
 
-        // Then add ugroups.
+     // Then add ugroups.
         if($sUgroups !== null && count($sUgroups) > 0) {
             foreach($sUgroups as $ugroup) {
                 $ugroupAdded = false;
@@ -1589,7 +1605,7 @@ class Docman_Actions extends Actions {
             $this->_approval_update_settings($atf, $sStatus, $notification, $description, $owner);
             $table =& $atf->getTable();
             if(!$table->isClosed()) {
-                $atrf =& new Docman_ApprovalTableReviewerFactory($table, $item);
+                $atrf =& new Docman_ApprovalTableReviewerFactory($table, $item, $this->_controler->notificationsManager);
                 $this->_approval_update_add_users($atrf, $usUserList, $sUgroup);
                 if(is_array($sSelUser) && count($sSelUser) > 0) {
                     switch($sSelUserAct){
@@ -1658,6 +1674,7 @@ class Docman_Actions extends Actions {
         }
 
         $atrf =& Docman_ApprovalTableFactory::getReviewerFactoryFromItem($item);
+        $atrf->setNotificationManager($this->_controler->notificationsManager);
         $updated = $atrf->updateReview($review);
         if($updated) {
             $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'approval_review_success'));

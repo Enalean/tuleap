@@ -504,6 +504,10 @@ INSERT INTO layouts_rows_columns(id, layout_row_id, width) VALUES
 (9, 4, 33);
 
 
+#Upgrade docman
+ALTER TABLE plugin_docman_approval CHANGE COLUMN version_id version_id INT(11) UNSIGNED UNSIGNED NULL DEFAULT NULL;
+ALTER TABLE plugin_docman_approval CHANGE COLUMN wiki_version_id wiki_version_id INT(11) UNSIGNED UNSIGNED NULL DEFAULT NULL;
+
 #custom themes
 => no more images
 => refactoring in common/layout instead of www/include

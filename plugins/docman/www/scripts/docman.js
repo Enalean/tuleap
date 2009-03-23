@@ -104,6 +104,10 @@ Object.extend(com.xerox.codex.Docman.prototype, {
         //Focus
         this.focusEvent = this.focus.bindAsEventListener(this);
         document.observe('dom:loaded', this.focusEvent, true);
+        
+        // Metadata multiple value checkbox toggling
+        this.toggleMultipleValuesChoiceEvent = this.toggleMultipleValuesChoice.bindAsEventListener(this);
+        if (this.options.action == 'browse') document.observe('dom:loaded', this.toggleMultipleValuesChoiceEvent, true);
     },
     dispose: function() {
         // ShowOptions
@@ -127,6 +131,9 @@ Object.extend(com.xerox.codex.Docman.prototype, {
             node.stopObserving('mouseover', this.itemHighlight[item_id].mouseover);
             node.stopObserving('mouseout', this.itemHighlight[item_id].mouseout);
         });
+        
+        // Metadata multiple value checkbox toggling
+        document.stopObserving('dom:loaded', this.toggleMultipleValuesChoiceEvent);
     },
     //{{{------------------------------ Focus
     focus: function() {
@@ -377,6 +384,23 @@ Object.extend(com.xerox.codex.Docman.prototype, {
     //{{{----------------------------- Expand/Collapse
     initExpandCollapse: function() {
         this._expandCollapse(document.body);
+    },
+    toggleMultipleValuesChoice: function() {
+    	var type = $('type');
+    	var mulVal = $('multiplevalues_allowed');
+    	if (type != null && mulVal != null) {
+	    	function _toggleCheckBox () {
+	    		if (type.getValue() == 5) {
+	    			mulVal.enable();	
+	    		} else {
+	    			mulVal.checked = false;
+	    			mulVal.disable();
+	    		}
+	    	}
+	    	
+	    	Event.observe(type, 'change', _toggleCheckBox);
+	    	_toggleCheckBox();
+    	}
     },
     _expandCollapse:function (parent_element) {
         var docman_item_type_folder = new RegExp("(^|\\s)" + 'docman_item_type_folder' + "(\\s|$)");
@@ -914,3 +938,4 @@ function change_obsolescence_date(form) {
   // Write new date  
   input.value = newdatestr;
 }
+

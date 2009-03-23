@@ -42,6 +42,11 @@ class Docman_FilterFactory {
         $gsMd = $this->getGlobalSearchMetadata();
         $globalSearch = false;
         $gsRow = null;
+        
+        $itsMd = $this->getItemTypeSearchMetadata();
+        $itemTypeSearchSearch = false;
+        $itsRows = array();
+        
         $filtersArray = array();
 
         $metadataFactory = new Docman_MetadataFactory($report->getGroupId());
@@ -50,9 +55,12 @@ class Docman_FilterFactory {
         if($dar && !$dar->isError()) {
             while($dar->valid()) {
                 $row = $dar->current();
-                if($row['label'] == $gsMd->getLabel()) {
+                if ($row['label'] == $gsMd->getLabel()) {
                     $gsRow = $row;
                     $globalSearch = true;
+                } else if ($row['label'] == $itsMd->getLabel()) {
+                    $itsRows[] = $row;
+                    $itemTypeSearchSearch = true;
                 } else {
                     if(isset($filtersArray[$row['label']])) {
                         $f =& $filtersArray[$row['label']];
@@ -94,6 +102,17 @@ class Docman_FilterFactory {
             $report->addFilter($f);
             unset($f);
         }
+        
+        if($itemTypeSearchSearch) {
+            $f = $this->createItemTypeFilter($itsMd, $report->getAdvancedSearch());
+            
+            foreach ($itsRows as $itsRow) {
+                $f->initFromRow($itsRow);
+            }
+            
+            $report->addFilter($f);
+            unset($f);
+        }
     }
 
     function getGlobalSearchMetadata() {
@@ -106,7 +125,33 @@ class Docman_FilterFactory {
         $md->setLabel('global_txt');
         return $md;
     }
+    
+    function getItemTypeSearchMetadata() {
+        // Special case for a fake metadata: item type search
+        $md = new Docman_ListMetadata();
+        $md->setGroupId($this->groupId);
+        $md->setName($GLOBALS['Language']->getText('plugin_docman', 'filters_item_type'));
+        $md->setType(PLUGIN_DOCMAN_METADATA_TYPE_LIST);
+        $md->setUseIt(PLUGIN_DOCMAN_METADATA_USED);
+        $md->setLabel('item_type');
+        $md->setIsMultipleValuesAllowed(true);
+        
+        $row = array();
+        $values = array();
+        foreach (array('file', 'wiki', 'embeddedfile', 'empty', 'link', 'folder') as $type) {
+            $row['value_id'] = constant('PLUGIN_DOCMAN_ITEM_TYPE_'.strtoupper($type));
+            $row['name'] = $GLOBALS['Language']->getText('plugin_docman', 'filters_item_type_'.$type);
+            $row['status'] = 'A';
+            $love = new Docman_MetadataListOfValuesElement();
+            $love->initFromRow($row);
+            $values[] = $love;
+        }
+        
+        $md->setListOfValueElements($values);
 
+        return $md;
+    }
+    
     /**
      * Fake filter only used to display the global text search as a default
      * option when no filter selected.
@@ -124,7 +169,19 @@ class Docman_FilterFactory {
         $filter = new Docman_FilterGlobalText($md, $this->dynTextFields);
         return $this->_initFilter($filter, $request);
     }
-
+    
+    function getItemTypeSearchFilter($request, $advSearch) {
+        $md = $this->getItemTypeSearchMetadata();
+        
+        // set-up Filter
+        if ($advSearch) {
+            $filter = new Docman_FilterItemTypeAdvanced($md);
+        } else {
+            $filter = new Docman_FilterItemType($md);
+        }
+        
+        return $this->_initFilter($filter, $request);
+    }
     
     function createFilterOnMatch($md, $request, $advSearch) {
         $f = $this->createFromMetadata($md, $advSearch);
@@ -164,6 +221,16 @@ class Docman_FilterFactory {
         }
 
         return $filter;
+    }
+    
+    function createItemTypeFilter($md, $advSearch) {
+        if ($advSearch) {
+            $f = new Docman_FilterItemTypeAdvanced($md);
+        } else {
+            $f = new Docman_FilterItemType($md);
+        }
+        
+        return $f;
     }
 
     function _initFilter($filter, $request) {

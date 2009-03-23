@@ -168,6 +168,9 @@ class Docman_ReportFactory {
         // Special case for a fake metadata: generic text search
         $filter = $filterFactory->getGlobalSearchFilter($request);
         $this->_validateFilterAndCreate($report, $filter, $feedback);
+                
+        $filter = $filterFactory->getItemTypeSearchFilter($request, $report->getAdvancedSearch());
+        $this->_validateFilterAndCreate($report, $filter, $feedback);
     }
 
     function _validateFilterAndCreate(&$report, $filter, &$feedback) {

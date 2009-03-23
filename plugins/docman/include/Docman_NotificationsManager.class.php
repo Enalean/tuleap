@@ -180,6 +180,7 @@ class Docman_NotificationsManager extends NotificationsManager {
             case $this->MESSAGE_MODIFIED:
             case $this->MESSAGE_NEWVERSION:
                 $msg .= $params['path']->get($params['item']) .' has been modified by '. $user->getRealName() .".\n";
+                $msg .= $this->_url .'&action=details&id='. $params['item']->getId() ."\n";
                 break;
             case $this->MESSAGE_WIKI_NEWVERSION:
                 $msg .= 'New version of ' . $params['wiki_page'] . 'wiki page was created by ' . $user->getRealName() . ".\n";
