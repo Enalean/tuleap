@@ -125,6 +125,7 @@ class CLI_Module_Tracker extends CLI_Module {
                         // this field is not a standard field, so we consider it as an extra_filed
                         $extra_field = array();
                         $extra_field["field_name"] = $passed_parameter;
+                        $extra_field["artifact_id"] = 0;
                         $extra_field["field_value"] = $passed_value;
                         $extra_fields[] = $extra_field;
                     }
