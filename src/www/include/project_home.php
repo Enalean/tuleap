@@ -28,7 +28,10 @@ $title = $Language->getText('include_project_home','proj_info').' - '. $project-
 
 $HTML->includeJavascriptFile('/scripts/prototype/prototype.js');
 $HTML->includeJavascriptFile('/scripts/scriptaculous/scriptaculous.js');
-
+require_once('www/include/trove.php');
+if (user_ismember($group_id, 'A') && !trove_project_categorized($group_id) && substr($_SERVER['SCRIPT_NAME'],0,9) == '/projects') {
+    $GLOBALS['Response']->addFeedback('warning',$GLOBALS['Language']->getText('include_html','no_trovcat',array(get_server_url(), $group_id)), CODEX_PURIFIER_DISABLED);
+}
 site_project_header(array('title'=>$title,'group'=>$group_id,'toptab'=>'summary'));
 
 
