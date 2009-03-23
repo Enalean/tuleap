@@ -20,7 +20,6 @@
  */
 
 require_once('common/language/BaseLanguage.class.php');
-$GLOBALS['Language'] = new BaseLanguage();
 
 require_once(dirname(__FILE__).'/../include/Docman_SOAPActions.class.php');
 require_once(dirname(__FILE__).'/../include/Docman_SOAPController.class.php');
@@ -68,6 +67,8 @@ class Docman_SOAPActionsTest extends UnitTestCase {
     }
     
     public function setUp() {
+        $GLOBALS['Language'] = new BaseLanguage();
+        
         // Mock instanciation
         $controller = new MockDocman_SOAPController();
         $controller->feedback = new MockFeedback();
