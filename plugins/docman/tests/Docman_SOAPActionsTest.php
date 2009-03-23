@@ -19,6 +19,39 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+require_once('common/language/BaseLanguage.class.php');
+$GLOBALS['Language'] = new BaseLanguage();
+
+require_once(dirname(__FILE__).'/../include/Docman_SOAPActions.class.php');
+require_once(dirname(__FILE__).'/../include/Docman_SOAPController.class.php');
+require_once('common/include/SOAPRequest.class.php');
+
+Mock::generate('BaseLanguage');
+Mock::generate('Docman_SOAPController');
+Mock::generate('Feedback');
+Mock::generate('Docman_ItemFactory');
+Mock::generate('Docman_FolderFactory');
+Mock::generate('Docman_File');
+Mock::generate('Docman_Version');
+Mock::generate('Docman_VersionFactory');
+Mock::generate('Docman_FileStorage');
+Mock::generate('UserManager');
+Mock::generate('User');
+Mock::generate('EventManager');
+Mock::generate('PermissionsManager');
+Mock::generate('SOAPRequest');
+Mock::generatePartial('Docman_SOAPActions', 'Docman_SOAPActions_Test', 
+    array(
+        '_getItemFactory',
+        '_checkOwnerChange',
+        '_getFolderFactory',
+        '_getUserManagerInstance',
+        '_getVersionFactory',
+        '_getPermissionsManagerInstance',
+        '_getEventManager',
+        '_getFileStorage',
+    ));
+
 /**
  * Unit tests for Docman_SOAPActions
  */
@@ -31,44 +64,10 @@ class Docman_SOAPActionsTest extends UnitTestCase {
     private $fileStorage;
     
     function Docman_SOAPActionsTest($name = 'Docman_Actions test') {
-        require_once('common/language/BaseLanguage.class.php');
-        Mock::generate('BaseLanguage');
-        $GLOBALS['Language'] = new MockBaseLanguage();
-        
-        require_once(dirname(__FILE__).'/../include/Docman_SOAPActions.class.php');
-        require_once(dirname(__FILE__).'/../include/Docman_SOAPController.class.php');
-        require_once('common/include/SOAPRequest.class.php');
-        
-        Mock::generate('Docman_SOAPController');
-        Mock::generate('Feedback');
-        Mock::generate('Docman_ItemFactory');
-        Mock::generate('Docman_FolderFactory');
-        Mock::generate('Docman_File');
-        Mock::generate('Docman_Version');
-        Mock::generate('Docman_VersionFactory');
-        Mock::generate('Docman_FileStorage');
-        Mock::generate('UserManager');
-        Mock::generate('User');
-        Mock::generate('EventManager');
-        Mock::generate('PermissionsManager');
-        Mock::generate('SOAPRequest');
-        Mock::generatePartial('Docman_SOAPActions', 'Docman_SOAPActions_Test', 
-            array(
-                '_getItemFactory',
-                '_checkOwnerChange',
-                '_getFolderFactory',
-                '_getUserManagerInstance',
-                '_getVersionFactory',
-                '_getPermissionsManagerInstance',
-                '_getEventManager',
-                '_getFileStorage',
-            ));
-            
         $this->UnitTestCase($name);
     }
     
     public function setUp() {
-        
         // Mock instanciation
         $controller = new MockDocman_SOAPController();
         $controller->feedback = new MockFeedback();
