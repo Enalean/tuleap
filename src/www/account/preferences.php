@@ -136,7 +136,7 @@ echo html_get_language_popup($Language,'language_id',UserManager::instance()->ge
  	  	 if ($u_display == 0) {
  	  	     print ' selected="selected"';
  	  	 }
-                 print '>'.$Language->getText('account_options','codex_name_and_login').'</option>';
+                 print '>'.$Language->getText('account_options','codendi_name_and_login').'</option>';
  	  	 print '<option value="1"';
  	  	 if ($u_display == 1) {
  	  	     print ' selected="selected"';

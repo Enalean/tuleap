@@ -1229,7 +1229,7 @@ function util_check_restricted_access($request_uri, $script_name) {
           );
         // Default values are very restrictive, but they can be overriden in the site-content file
         // Default support project is project 1.
-        $allow_codex_welcome_page=false; // Allow access to welcome page 
+        $allow_welcome_page=false;       // Allow access to welcome page 
         $allow_news_browsing=false;      // Allow restricted users to read/comment news, including for their project
         $allow_user_browsing=false;      // Allow restricted users to access other user's page (Developer Profile)
         $allow_access_to_project_forums   = array(1); // Support project help forums are accessible through the 'Discussion Forums' link
@@ -1270,7 +1270,7 @@ function util_check_restricted_access($request_uri, $script_name) {
         }
 
         // Welcome page
-        if (!$allow_codex_welcome_page) {
+        if (!$allow_welcome_page) {
             $sc_name='/'.trim($script_name, "/");
             if ($sc_name == '/index.php') {
                 return false;

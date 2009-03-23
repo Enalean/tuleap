@@ -16,7 +16,7 @@ $default_domain = join('.',$pieces);
 <HTML>
 <HEAD>
 <TITLE>Codendi : Bienvenue</TITLE>
-<LINK rel="stylesheet" href="http://<? echo $default_domain; ?>/codex.css" type="text/css" >
+<LINK rel="stylesheet" href="http://<? echo $default_domain; ?>/codendi.css" type="text/css" >
 </HEAD>
 
 <BODY bgcolor="#BCBCAD" link="#8b4020" vlink="#8b4020" topmargin="0" bottommargin="0" leftmargin="0" rightmargin="0" marginheight="0" marginwidth="0">
@@ -26,7 +26,7 @@ $default_domain = join('.',$pieces);
   <TR>
     <TD><SPAN class=maintitlebar>&nbsp;&nbsp;
       <A class=maintitlebar href="http://<? echo $default_domain; ?>/"><B>Accueil</B></A> | 
-      <A class=maintitlebar href="http://<? echo $default_domain; ?>/docs/site/about_codex.php"><B>A propos de</B></A> | 
+      <A class=maintitlebar href="http://<? echo $default_domain; ?>/docs/site/about_codendi.php"><B>A propos de</B></A> | 
       <A class=maintitlebar href="http://<? echo $default_domain; ?>/contact.php"><B>Contactez-nous</B></A> |
       <A class=maintitlebar href="http://<? echo $default_domain; ?>/account/logout.php"><B>Se déconecter</B></A></SPAN>
     </TD>

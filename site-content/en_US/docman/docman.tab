@@ -110,7 +110,7 @@ docman_admin_index	perm_reset	Permissions reset to default
 docs_site_index	title	Site Documentation
 #
 #-----------------------------------------------
-# Script: SF/www/docs/site/about_codex.php
+# Script: SF/www/docs/site/about_codendi.php
 #
 docs_site_about	title	About the $1 Site
 #

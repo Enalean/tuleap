@@ -48,7 +48,7 @@ account_options	semicolon	semicolon
 account_options	tab	tab
 account_options	username_display	Username Display
 account_options	codendi_login_and_name	Login name (Real Name)
-account_options	codex_name_and_login	Real Name (login name)
+account_options	codendi_name_and_login	Real Name (login name)
 account_options	codendi_login	Login Name
 account_options	realname	Real Name
 account_options	auth_attempt_title	Authentication details

@@ -103,7 +103,7 @@ docman_admin_index	perm_reset	Permissions réinitialiser à leur valeurs par dé
 docs_site_index	title	Documentation du site 
 #
 #-----------------------------------------------
-# Script: SF/www/docs/site/about_codex.php
+# Script: SF/www/docs/site/about_codendi.php
 #
 docs_site_about	title	A propos du site $1
 #

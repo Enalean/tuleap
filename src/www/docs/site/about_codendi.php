@@ -11,7 +11,7 @@ require_once('pre.php');
 
 $HTML->header(array(title=>$Language->getText('docs_site_about','title', array($GLOBALS['sys_name']))));
 
-include($Language->getContent('docman/about_codex'));
+include($Language->getContent('docman/about_codendi'));
 
 $HTML->footer(array());
 

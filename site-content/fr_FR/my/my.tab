@@ -95,4 +95,4 @@ bookmark_rmproject	mail_body	Ce message est envoyé pour prévenir le(s) adminis
 #
 my_redirect	page_title	Redirection vers
 my_redirect	return_to	<p>La page demandée est en cours de chargement. Si ce n'est pas le cas, essayez <a href="$1">$1</a>.</p>
-my_redirect	default_txt	Vous êtes sur la page de redirection de CodeX. Vous trouverez des liens utiles sur votre <a href="/my">page personnelle</a>.
+my_redirect	default_txt	Vous êtes sur la page de redirection de Codendi. Vous trouverez des liens utiles sur votre <a href="/my">page personnelle</a>.
