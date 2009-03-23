@@ -51,6 +51,15 @@ class Feedback {
        }
        return $found;
     }
+    
+    function hasErrors() {
+       $found = false;
+       reset($this->logs);
+       while(!$found && list(,$log) = each($this->logs)) {
+            $found = ($log['level'] == 'error');
+       }
+       return $found;
+    }
 }
 
 ?>

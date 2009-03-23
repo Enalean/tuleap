@@ -72,7 +72,6 @@ function ugroup_db_get_members($ugroup_id, $with_display_preferences=false) {
     return $sql;
 }
 
-
 // Return name and id (as DB result) of all ugroups belonging to a specific project.
 function ugroup_db_get_existing_ugroups($group_id, $predefined=null) {
     $_extra = '';
@@ -81,6 +80,26 @@ function ugroup_db_get_existing_ugroups($group_id, $predefined=null) {
     }
     $sql="SELECT ugroup_id, name FROM ugroup WHERE group_id=$group_id ".$_extra." ORDER BY name";
     return db_query($sql);
+}
+
+/**
+ * Returns a list of ugroups for the given group, with their associated members
+ */
+function ugroup_get_ugroups_with_members($group_id) {
+    $sql="SELECT ugroup.ugroup_id, ugroup.name, user.user_id, user.user_name FROM ugroup ".
+    "NATURAL LEFT JOIN ugroup_user ".
+    "NATURAL LEFT JOIN user ".
+    "WHERE ugroup.group_id=".db_ei($group_id).
+    " ORDER BY ugroup.name";
+    
+    $return = array();
+    
+    $res = db_query($sql);
+    while ($data = db_fetch_array($res)) {
+        $return[] = $data;
+    }
+    
+    return $return;
 }
 
 // Return DB ugroup from ugroup_id 

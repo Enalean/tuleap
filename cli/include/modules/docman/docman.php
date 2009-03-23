@@ -13,7 +13,11 @@ require_once(CODENDI_CLI_DIR.'/CLI_Module.class.php');
 
 require_once('CLI_Action_Docman_GetRoot.class.php');
 require_once('CLI_Action_Docman_List.class.php');
-require_once('CLI_Action_Docman_CreateDocument.class.php');
+require_once('CLI_Action_Docman_CreateFile.class.php');
+require_once('CLI_Action_Docman_CreateEmbeddedFile.class.php');
+require_once('CLI_Action_Docman_CreateWikiPage.class.php');
+require_once('CLI_Action_Docman_CreateLink.class.php');
+require_once('CLI_Action_Docman_CreateEmptyDocument.class.php');
 require_once('CLI_Action_Docman_CreateFolder.class.php');
 require_once('CLI_Action_Docman_Delete.class.php');
 require_once('CLI_Action_Docman_Monitor.class.php');
@@ -24,7 +28,11 @@ class CLI_Module_Docman extends CLI_Module {
         $this->CLI_Module("docman", "Manage documents");
         $this->addAction(new CLI_Action_Docman_GetRoot());
         $this->addAction(new CLI_Action_Docman_List());
-        $this->addAction(new CLI_Action_Docman_CreateDocument());
+        $this->addAction(new CLI_Action_Docman_CreateFile());
+        $this->addAction(new CLI_Action_Docman_CreateEmbeddedFile());
+        $this->addAction(new CLI_Action_Docman_CreateWikiPage());
+        $this->addAction(new CLI_Action_Docman_CreateLink());
+        $this->addAction(new CLI_Action_Docman_CreateEmptyDocument());
         $this->addAction(new CLI_Action_Docman_CreateFolder());
         $this->addAction(new CLI_Action_Docman_Delete());
         $this->addAction(new CLI_Action_Docman_Monitor());

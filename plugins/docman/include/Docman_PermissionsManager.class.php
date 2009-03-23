@@ -422,6 +422,26 @@ class Docman_PermissionsManager {
         }
         return $this->currentUser;
     }
+    
+    /**
+    * Returns the integer value that corresponds to the permission
+    */
+    public static function getDefinitionIndexForPermission($p) {
+        switch ($p) {
+            case 'PLUGIN_DOCMAN_READ':
+                return 1;
+                break;
+            case 'PLUGIN_DOCMAN_WRITE':
+                return 2;
+                break;
+            case 'PLUGIN_DOCMAN_MANAGE':
+                return 3;
+                break;
+            default:
+                return 100;
+                break;
+        }
+    }
 
 }
 

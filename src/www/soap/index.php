@@ -21,7 +21,7 @@ if ($request->exist('wsdl')) {
 }
 	
 try {
-    
+	
     $server = new SoapServer($uri.'/soap/codendi.wsdl.php?wsdl',  
     							array('trace' => 1, 
     								  'soap_version' => SOAP_1_1
@@ -29,6 +29,7 @@ try {
 
 	require_once('common/session.php');
     require_once('common/group.php');
+    require_once('common/users.php');
     require_once('tracker/tracker.php');
     require_once('frs/frs.php');
     

@@ -381,6 +381,10 @@ plugin_docman	error_upload_unknown	Erreur de chargement de fichier($1). Code d'e
 plugin_docman	error_upload_notmp	Erreur de chargement de fichier($1). Un dossier temporaire est manquant.
 plugin_docman	error_upload_cantwrite	Erreur de chargement de fichier($1). Échec de l'écriture du fichier sur le disque.
 plugin_docman	error_upload_extension	Erreur de chargement de fichier($1). L'envoi de fichier est arrêté par l'extension.
+plugin_docman	error_append_filechunk	Une erreur est survenue durant l'ajout du morceau de fichier.
+plugin_docman	error_not_a_file	L'élément spécifié n'est pas un fichier.
+plugin_docman	error_get_checksum	Erreur lors de la récupération de la somme de contrôle du fichier.
+plugin_docman	error_item_id_missing	Erreur: pas d'élément à traiter (ID).
 
 plugin_docman	event_add	Création
 plugin_docman	event_edit	Edition
@@ -390,6 +394,8 @@ plugin_docman	event_access	Accès
 plugin_docman	event_newversion	Nouvelle version
 plugin_docman	event_metadataupdate	Mise à jour de propriété
 plugin_docman	event_wiki_page_updated	Nouvelle version de la page Wiki
+plugin_docman	event_set_version_author	Auteur de la version
+plugin_docman	event_set_version_date	Date de la version
 
 plugin_docman	field_description	Description :
 plugin_docman	field_rank	Rang :
@@ -670,6 +676,10 @@ plugin_docman	docman_wiki_hide_referencers	Cacher les documents liés
 plugin_docman	docman_wiki_other_location	Autre chemin:
 plugin_docman	docman_wiki_other_locations	Autres chemins:
 plugin_docman	docman_wiki_breadcrumbs_locations	Chemins:
+<<<<<<< .working
 plugin_docman	docman_wiki_perms_label	Permissions controllées par le gestionnaire de documents
 
 widget_categ_label	plugin_docman	Gestionnaire de documents
+=======
+plugin_docman	docman_wiki_perms_label	Permissions controllées par le gestionnaire de documents
+>>>>>>> .merge-right.r11470

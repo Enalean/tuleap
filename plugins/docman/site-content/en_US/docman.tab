@@ -381,6 +381,10 @@ plugin_docman	error_upload_unknown	File upload error($1). Unknown error code.
 plugin_docman	error_upload_notmp	File upload error($1). Missing a temporary folder.
 plugin_docman	error_upload_cantwrite	File upload error($1). Failed to write file to disk.
 plugin_docman	error_upload_extension	File upload error($1). File upload stopped by extension.
+plugin_docman	error_append_filechunk	Error while appending file chunk.
+plugin_docman	error_not_a_file	The specified item is not a file.
+plugin_docman	error_get_checksum	Error while getting file checksum.
+plugin_docman	error_item_id_missing	Error: item ID is missing.
 
 plugin_docman	event_add	Create
 plugin_docman	event_edit	Edit
@@ -390,6 +394,8 @@ plugin_docman	event_access	Access
 plugin_docman	event_newversion	New version
 plugin_docman	event_metadataupdate	Property change
 plugin_docman	event_wiki_page_updated	Wiki page content change
+plugin_docman	event_set_version_author	Version author
+plugin_docman	event_set_version_date	Version date
 
 plugin_docman	field_description	Description:
 plugin_docman	field_rank	Rank:
@@ -653,8 +659,6 @@ plugin_docman	view_itemrank_beg	At the beginning
 plugin_docman	view_itemrank_end		At the end
 plugin_docman	view_itemrank_position	Position:
 
-
-
 plugin_docman	view_Icons	Icons
 plugin_docman	view_Table	Table
 plugin_docman	view_Tree	Tree
@@ -675,3 +679,4 @@ plugin_docman	docman_wiki_breadcrumbs_locations	Locations:
 plugin_docman	docman_wiki_perms_label	Permissions controlled by documents manager
 
 widget_categ_label	plugin_docman	Document Manager
+

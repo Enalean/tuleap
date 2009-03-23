@@ -89,15 +89,25 @@ class Docman_Controller extends Controler {
         
         $event_manager =& $this->_getEventManager();
         
+        // Events that will call the Docman Logger
+        $logEvents = array (
+                         'plugin_docman_event_add',
+                         'plugin_docman_event_edit',
+                         'plugin_docman_event_move',
+                         'plugin_docman_event_del',
+                         'plugin_docman_event_access',
+                         'plugin_docman_event_new_version',
+                         'plugin_docman_event_metadata_update',
+                         'plugin_docman_event_set_version_author',
+                         'plugin_docman_event_set_version_date',
+                     );
+                     
         $this->logger  =& new Docman_Log();
-        $event_manager->addListener('plugin_docman_event_add',              $this->logger, 'log', true, 0);
-        $event_manager->addListener('plugin_docman_event_edit',             $this->logger, 'log', true, 0);
-        $event_manager->addListener('plugin_docman_event_move',             $this->logger, 'log', true, 0);
-        $event_manager->addListener('plugin_docman_event_del',              $this->logger, 'log', true, 0);
-        $event_manager->addListener('plugin_docman_event_access',           $this->logger, 'log', true, 0);
-        $event_manager->addListener('plugin_docman_event_new_version',      $this->logger, 'log', true, 0);
-        $event_manager->addListener('plugin_docman_event_metadata_update',  $this->logger, 'log', true, 0);
-        
+        foreach ($logEvents as $event) {
+        	$event_manager->addListener($event, $this->logger, 'log', true, 0);
+        }
+
+        // Other events
         $this->notificationsManager =& new Docman_NotificationsManager($this->getGroupId(), get_server_url().$this->getDefaultUrl(), $this->feedback);
         $event_manager->addListener('plugin_docman_event_edit',            $this->notificationsManager, 'somethingHappen', true, 0);
         $event_manager->addListener('plugin_docman_event_new_version',     $this->notificationsManager, 'somethingHappen', true, 0);
@@ -1150,6 +1160,7 @@ class Docman_Controller extends Controler {
             break;
         case 'createFolder':
         case 'createDocument':
+        case 'createItem':
             if ($this->request->exist('cancel')) {
                 $this->_set_redirectView();
             } else {

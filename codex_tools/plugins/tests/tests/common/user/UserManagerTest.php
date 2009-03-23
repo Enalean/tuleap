@@ -25,9 +25,20 @@ Mock::generatePartial('UserManager',
                             'getDao',
                       )
 );
+// Special mock for getUserByIdentifier test
+Mock::generatePartial('UserManager', 'UserManager4GetByIdent', array('_getEventManager', 'getUserByUserName', 'getUserById', 'getUserByEmail'));
 
 require_once('common/include/CookieManager.class.php');
 Mock::generate('CookieManager');
+Mock::generate('EventManager', 'BaseMockEventManager');
+
+class MockEM4UserManager extends BaseMockEventManager {
+   function processEvent($event, $params) {
+       foreach(parent::processEvent($event, $params) as $key => $value) {
+           $params[$key] = $value;
+       }
+   }
+} 
 
 /**
  * Copyright (c) Xerox Corporation, CodeX Team, 2001-2005. All rights reserved
@@ -400,6 +411,77 @@ class UserManagerTest extends UnitTestCase {
         
         $um->setReturnReference('getDao', $dao);
         $this->assertReference($userAnonymous, $um->login('user_123', 'bad_pwd', 0));
+    }
+    
+    function testGetUserByIdentifierPluginNoAnswerWithSimpleId() {
+        $em = new MockEventManager($this);
+        $em->expectOnce('processEvent');   
+
+        $um = new UserManager4GetByIdent($this);
+        $um->setReturnReference('_getEventManager', $em);
+
+        $um->expectOnce('getUserByUserName');
+        $um->setReturnValue('getUserByUserName', null);
+
+        $user = $um->getUserByIdentifier('test');
+        $this->assertNull($user);
+    }
+
+    function testGetUserByIdentifierPluginAnswerWithSimpleId() {
+        $em = new MockEventManager($this);
+        $em->expectOnce('processEvent');   
+
+        $um = new UserManager4GetByIdent($this);
+        $um->setReturnReference('_getEventManager', $em);
+
+        $um->expectOnce('getUserByUserName');
+        $u1 = new MockUser($this);
+        $um->setReturnReference('getUserByUserName', $u1);
+
+        $user = $um->getUserByIdentifier('test');
+        $this->assertIdentical($user, $u1);
+    }    
+
+    function testGetUserByIdentifierPluginNoAnswerWithComplexId() {
+        $em = new MockEventManager($this);
+        $em->expectOnce('processEvent');   
+
+        $um = new UserManager4GetByIdent($this);
+        $um->setReturnReference('_getEventManager', $em);
+
+        $um->expectNever('getUserByUserName');
+
+        $user = $um->getUserByIdentifier('plugin:test');
+        $this->assertNull($user);
+    }
+
+    function testGetUserByIdentifierPluginAnswer() {
+        $u1 = new MockUser($this);
+        $em = new MockEM4UserManager($this);
+        $em->setReturnValue('processEvent', array('tokenFound' => true, 'user' => &$u1));
+
+        $um = new UserManager4GetByIdent($this);
+        $um->setReturnReference('_getEventManager', $em);
+
+        $um->expectNever('getUserByUserName');
+
+        $user = $um->getUserByIdentifier('test');
+        $this->assertIdentical($user, $u1);
+    }
+
+    function testGetUserByIdentifierPluginAnswerNotFound() {
+        $u1 = new MockUser($this);
+        $em = new MockEM4UserManager($this);
+        $em->setReturnValue('processEvent', array('tokenFound' => false));
+
+        $um = new UserManager4GetByIdent($this);
+        $um->setReturnReference('_getEventManager', $em);
+
+        $um->expectOnce('getUserByUserName');
+        $um->setReturnValue('getUserByUserName', null);
+        
+        $user = $um->getUserByIdentifier('test');
+        $this->assertNull($user);
     }
 }
 ?>

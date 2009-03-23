@@ -437,7 +437,7 @@ class Docman_ItemFactory {
                 // can delete it. As a side effect decrease the number of
                 // document found.
                 if($dPm->userCanRead($user, $row['item_id']) && isset($folderList[$row['parent_id']])) {
-                    if($nbItemsFound >= $start && $nbItemsFound < $end) {
+                    if($nbItemsFound >= $start && $nbItemsFound < $end || (isset($params['getall']) && $params['getall'])) {
                         $itemArray[$row['item_id']] =& $this->getItemFromRow($row);
 
                         // Append Path

@@ -35,6 +35,55 @@ $server->wsdl->addComplexType(
     'tns:Group'
 );
 
+$server->wsdl->addComplexType(
+    'UGroupMember',
+    'complexType',
+    'struct',
+    'all',
+    '',
+    array(
+        'user_id' => array('name'=>'user_id', 'type'=>'xsd:int'), 
+        'user_name' => array('name'=>'user_name', 'type'=>'xsd:string'),
+    )
+);
+
+$server->wsdl->addComplexType(
+    'ArrayOfUGroupMember',
+    'complexType',
+    'array',
+    '',
+    'SOAP-ENC:Array',
+    array(),
+    array(
+        array('ref' => 'SOAP-ENC:arrayType', 'wsdl:arrayType' => 'tns:UGroupMember[]')
+    ),
+    'tns:UGroupMember'
+);
+
+$GLOBALS['server']->wsdl->addComplexType(
+    'Ugroup',
+    'complexType',
+    'struct',
+    'sequence',
+    '',
+    array(
+        'ugroup_id' => array('name'=>'ugroup_id', 'type' => 'xsd:int'),
+        'name' => array('name'=>'name', 'type' => 'xsd:string'),
+        'members' => array('name'=>'members', 'type' => 'tns:ArrayOfUGroupMember'),
+    )
+);
+
+$GLOBALS['server']->wsdl->addComplexType(
+    'ArrayOfUgroup',
+    'complexType',
+    'array',
+    '',
+    'SOAP-ENC:Array',
+    array(),
+    array(array('ref'=>'SOAP-ENC:arrayType','wsdl:arrayType'=>'tns:Ugroup[]')),
+    'tns:Ugroup'
+);
+
 //
 // Function definition
 //
@@ -73,6 +122,20 @@ $server->register(
     'rpc',
     'encoded',
     'Returns the Group object associated with the given ID, or a soap fault if the ID does not match with a valid project.'
+);
+
+
+$server->register(
+    'getGroupUgroups',
+    array('sessionKey'=>'xsd:string',
+        'group_id'=>'xsd:int'
+    ),
+    array('return'=>'tns:ArrayOfUgroup'),
+    $uri,
+    $uri.'#getGroupUgroups',
+    'rpc',
+    'encoded',
+    'Returns the Ugroups associated to the given project.'
 );
 
 } else {
@@ -208,11 +271,74 @@ function checkRestrictedAccess($group) {
     }
 }
 
+/**
+ * Returns true is the current user is a member of the given group
+ */
+function checkGroupMemberAccess($group) {
+    if ($group) {
+        $user = new User(session_get_userid());
+        if ($user) {
+            return $group->userIsMember();
+        } else {
+            return false;
+        }
+    } else {
+        return false;
+    }
+}
+
+function ugroups_to_soap($ugroups) {
+    $return = array();
+    
+    foreach ($ugroups as $ugroup) {
+        $ugroup_id = $ugroup['ugroup_id'];
+        if (!isset($return[$ugroup_id])) {
+            $return[$ugroup_id]['ugroup_id'] = $ugroup_id;
+            $return[$ugroup_id]['name'] = $ugroup['name'];
+            $return[$ugroup_id]['members'] = array();
+        }
+        
+        if ($ugroup['user_id']) {
+            $return[$ugroup_id]['members'][] = array('user_id' => $ugroup['user_id'],
+                                                     'user_name' => $ugroup['user_name']);
+        }
+    }
+    
+    return $return;
+}
+
+/**
+ * Returns the Ugroups associated to the given project
+ * This function can only be called by members of the group 
+ */
+function getGroupUgroups($sessionKey, $group_id) {
+   global $Language;
+    if (session_continue($sessionKey)) {
+        $group =& group_get_object($group_id);
+        if (!$group || !is_object($group)) {
+            return new SoapFault(get_group_fault, 'Could Not Get Group', 'getGroupUgroups');
+        } elseif ($group->isError()) {
+            return new SoapFault(get_group_fault,  $group->getErrorMessage(),  'getGroupUgroups');
+        }
+        if (!checkGroupMemberAccess($group)) {
+            return new SoapFault(get_group_fault,  'Restricted user: permission denied.',  'getGroupUgroups');
+        }
+        
+        $ugroups = ugroup_get_ugroups_with_members($group_id);
+        $return = ugroups_to_soap($ugroups);
+        
+        return $return;
+    } else {
+        return new SoapFault(invalid_session_fault, 'Invalid Session', 'getGroupUgroups');
+    }
+}
+
 $server->addFunction(
     	array(
             'getMyProjects',
             'getGroupByName',
-            'getGroupById'
+            'getGroupById',
+    	    'getGroupUgroups',
             ));
 
 }
