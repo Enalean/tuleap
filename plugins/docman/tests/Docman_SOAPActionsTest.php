@@ -118,6 +118,15 @@ class Docman_SOAPActionsTest extends UnitTestCase {
         $this->action->Docman_SOAPActions($controller);
     }
     
+    public function tearDown() {
+        unset($GLOBALS['Language'],
+              $this->itemFactory,
+              $this->fileStorage,
+              $this->MD5Map,
+              $this->permissionManager,
+              $this->action);
+    }
+    
     /**
      * Nominal case: getFileMD5sum is called with a correct file ID
      */
