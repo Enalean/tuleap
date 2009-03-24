@@ -262,8 +262,8 @@ project_admin_permissions	reset_to_def	Retour aux valeurs d'origine
 #-----------------------------------------------
 # Script: SF/www/project/admin/reference.php
 #
-project_reference	create_fail	Echec lors de la création du patron de référence&nbsp;: le mot clé choisi est invalide (réservé, ou déjà affecté)
-project_reference	create_for_tracker_fail	Patron de référence associé au tracker non créé&nbsp;: le nom court du tracker n'est pas valide (réservé, ou déjà affecté). Vous pourrez néanmoins référencer les artefacts de ce tracker avec le mot clé 'art'
+project_reference	create_fail	Echec lors de la création du patron de référence : le mot clé choisi est invalide (réservé, ou déjà affecté)
+project_reference	create_for_tracker_fail	Patron de référence associé au tracker non créé : le nom court du tracker n'est pas valide (réservé, ou déjà affecté). Vous pourrez néanmoins référencer les artefacts de ce tracker avec le mot clé 'art'
 project_reference	create_s	Créer un nouveau patron de référence.
 project_reference	del?	Détruire ?
 project_reference	del_fail	- Echec de la destruction ! $1
