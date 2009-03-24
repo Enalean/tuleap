@@ -172,7 +172,7 @@ class User {
      */
     protected $_group_data;
     protected function getUserGroupData() {
-        if (!$this->_group_data) {
+        if (!is_array($this->_group_data)) {
             $this->_group_data = array();
             if ($this->user_id) {
                 foreach($this->getUserGroupDao()->searchByUserId($this->user_id) as $row) {
