@@ -23,10 +23,17 @@
  * 
  */
 
+require_once('pre.php');
+require_once('www/project/export/project_export_utils.php');
+
 class userGroupExportMembers {   
 
-    var $sep =','; 
+    var $sep; 
 
+
+    public function __construct() {
+    	$this->sep = get_csv_separator();
+    }
     /**
      * Method userList which  extract list of  users of a user group
      * @param  int group_id project id
@@ -60,7 +67,7 @@ class userGroupExportMembers {
     public function listUserFormatting(&$ugroups, $group_id) {
         header('Content-Disposition: filename=export_userGroups_members.csv');
         header('Content-Type: text/csv');
-        echo "User group,User name\n";
+        echo "User group".$this->sep."User name".PHP_EOL;
         $result_ugroups  = $this->listUgroups($group_id);
         while($row_ugroups = db_fetch_array($result_ugroups)) {
             $ugroup_id = $row_ugroups['ugroup_id'];
@@ -69,7 +76,7 @@ class userGroupExportMembers {
         foreach($ugroups as $ugrp) {
             $result_list_user   = $this->userList($ugrp['ugroup_id'],$group_id);
             while ($row_list_user = db_fetch_array($result_list_user)) {
-                echo $ugrp['name']."".$this->sep."".$row_list_user['user_name']."".PHP_EOL;
+                echo $ugrp['name'].$this->sep.$row_list_user['user_name'].PHP_EOL;
             }
         }
     }

@@ -22,11 +22,15 @@
  *
  * 
  */
+
+require_once('pre.php');
+require_once('www/project/export/project_export_utils.php');
+
 class permsVisitor {
  
     var $group_id;
     var $allTreeItems = array();
-    var $sep          = ',';
+    var $sep;
     var $node;
     
     public function permsVisitor($group_id) {
@@ -37,6 +41,7 @@ class permsVisitor {
         $itemFactory    = new Docman_ItemFactory($group_id);
         $rootItem       = $itemFactory->getRoot($group_id);
         $node           = $itemFactory->getItemTree($rootItem, $user, true, true, false);
+        $this->sep      = get_csv_separator();
         $this->node     = $node;
         $this->group_id = $group_id;
     }
@@ -165,7 +170,7 @@ class permsVisitor {
     
     public function csvFormatting() {
        
-        echo "Document/Folder,User group,Read,Write,Manage\n";
+        echo "Document/Folder".$this->sep."User group".$this->sep."Read,Write".$this->sep."Manage".PHP_EOL;
         
         $table_perms = array();
         $docmanItem  = array();
