@@ -222,7 +222,6 @@ function ugroup_user_is_member($user_id, $ugroup_id, $group_id, $atid=0) {
  * Check membership of the user to a specified ugroup
  * $group_id is necessary for automatic project groups like project member, release admin, etc.
  * $atid is necessary for trackers since the tracker admin role is different for each tracker.
- * @return true if user is member of the ugroup, false otherwise.
  */
 function ugroup_db_get_dynamic_members($ugroup_id, $atid, $group_id, $with_display_preferences=false) {
     $sqlname="user.user_name";
