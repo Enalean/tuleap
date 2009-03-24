@@ -112,7 +112,11 @@ class IM extends Controler {
                 if ($group_id) {
                     $project = project_get_object($group_id);
                     if ($project->usesService('IM')) {
-                        $this->view = 'chat_room';
+                        if ($user->isMember($group_id)) {
+                            $this->view = 'chat_room';
+                        } else {
+                            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('global','perm_denied'));
+                        }
                     } else {
                         $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_im_admin','service_not_used'));
                     }
