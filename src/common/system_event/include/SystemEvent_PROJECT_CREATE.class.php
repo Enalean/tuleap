@@ -57,23 +57,41 @@ class SystemEvent_PROJECT_CREATE extends SystemEvent {
             return $this->setErrorBadParam();
         }
 
-        $backendSystem = new BackendSystem();
-        $backendCVS    = new BackendCVS();
+        $project = ProjectManager::instance()->getProject($group_id);
 
+        if (!$project) {
+            $this->setStatus(SystemEvent::STATUS_ERROR);
+            $this->setLog("Could not create/initialize project object");
+            return false;
+        }
 
+        $backendSystem = BackendSystem::instance();
         if (!$backendSystem->createProjectHome($group_id)) {
             $this->setStatus(SystemEvent::STATUS_ERROR);
             $this->setLog("Could not create project home");
             return false;
         }
-        if (!$backendCVS->createProjectCVS($group_id)) {
-            $this->setStatus(SystemEvent::STATUS_ERROR);
-            $this->setLog("Could not create/initialize project CVS repository");
-            return false;
-        }
-        $backendCVS->setNeedUpdateCVSRootList();
 
-        $this->setStatus("DONE");
+        if ($project->usesCVS()) {
+            $backendCVS    = BackendCVS::instance();
+            if (!$backendCVS->createProjectCVS($group_id)) {
+                $this->setStatus(SystemEvent::STATUS_ERROR);
+                $this->setLog("Could not create/initialize project CVS repository");
+                return false;
+            }
+            $backendCVS->setNeedUpdateCVSRootList();
+        }
+
+        if ($project->usesSVN()) {
+            $backendSVN    = BackendSVN::instance();
+            if (!$backendSVN->createProjectSVN($group_id)) {
+                $this->setStatus(SystemEvent::STATUS_ERROR);
+                $this->setLog("Could not create/initialize project SVN repository");
+                return false;
+            }
+        }
+
+        $this->setStatus(SystemEvent::STATUS_DONE);
         $this->setLog("OK");
         return true;
 

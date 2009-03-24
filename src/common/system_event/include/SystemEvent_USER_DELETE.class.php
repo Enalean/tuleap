@@ -57,18 +57,19 @@ class SystemEvent_USER_DELETE extends SystemEvent {
             return $this->setErrorBadParam();
         }
 
-        $backend=$this->_getBackend();
-        $backend->setNeedUpdateMailAliases();
+        // Need to remove user alias
+        BackendAliases::instance()->setNeedUpdateMailAliases();
 
-        if ($backend->archiveUserHome($user_id)) {
-            $this->setStatus(SystemEvent::STATUS_DONE);
-            $this->setLog("OK");
-            return true;
-        } else {
+        // Archive user home directory
+        if (!BackendSystem::instance()->archiveUserHome($user_id)) {
             $this->setStatus(SystemEvent::STATUS_ERROR);
             $this->setLog("Could not archive user home");
             return false;
         }
+
+        $this->setStatus(SystemEvent::STATUS_DONE);
+        $this->setLog("OK");
+        return true;
     }
 
 }

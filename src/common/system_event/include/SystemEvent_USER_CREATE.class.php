@@ -56,19 +56,19 @@ class SystemEvent_USER_CREATE extends SystemEvent {
             return $this->setErrorBadParam();
         }
 
-        $backend=$this->_getBackend();
-        $backend->setNeedUpdateMailAliases();
+        // Need to add new user alias
+        BackendAliases::instance()->setNeedUpdateMailAliases();
 
-        if ($backend->createUserHome($user_id)) {
-            $this->setStatus(SystemEvent::STATUS_DONE);
-            $this->setLog("OK");
-            return true;
-        } else {
+        // Create user home directory
+        if (!BackendSystem::instance()->createUserHome($user_id)) {
             $this->setStatus(SystemEvent::STATUS_ERROR);
             $this->setLog("Could not create user home");
             return false;
         }
-
+        
+        $this->setStatus(SystemEvent::STATUS_DONE);
+        $this->setLog("OK");
+        return true;
     }
 
 }

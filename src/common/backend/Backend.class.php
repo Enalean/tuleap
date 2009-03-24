@@ -21,15 +21,12 @@
  * 
  */
 
-require_once('common/backend/MailAliases.class.php');
-
 
 class Backend {
 
 
-    var $aliases;
-    var $block_marker_start = "# !!! CodeX Specific !!! DO NOT REMOVE (NEEDED CODEX MARKER)";
-    var $block_marker_end   = "# END OF NEEDED CODEX BLOCK";
+    public $block_marker_start = "# !!! CodeX Specific !!! DO NOT REMOVE (NEEDED CODEX MARKER)";
+    public $block_marker_end   = "# END OF NEEDED CODEX BLOCK";
 
 
     /**
@@ -53,7 +50,7 @@ class Backend {
     protected static $_instance;
     
     /**
-     * Backend is a singleton
+     * Backends are singletons
      */
     public static function instance() {
         if (!isset(self::$_instance)) {
@@ -64,20 +61,12 @@ class Backend {
     }
 
 
-    function _getUserManager() {
+    protected function _getUserManager() {
         return UserManager::instance();
     }
 
-     function _getProjectManager() {
-         return ProjectManager::instance();
-     }
-
-
-    function _getAliases() {
-        if (!$this->aliases) {
-            $this->aliases = new MailAliases();
-        }
-        return  $this->aliases;
+    protected function _getProjectManager() {
+        return ProjectManager::instance();
     }
 
     /** Create chown function to allow mocking in unit tests */
@@ -99,7 +88,7 @@ class Backend {
      * Recursive chown/chgrp function.
      * From comment at http://us2.php.net/manual/en/function.chown.php#40159
      */
-    function recurseChownChgrp($mypath, $uid, $gid) {
+    public function recurseChownChgrp($mypath, $uid, $gid) {
         $this->chown($mypath, $uid);
         $this->chgrp($mypath, $gid);
         $d = opendir($mypath);
@@ -125,7 +114,7 @@ class Backend {
      * see: http://us2.php.net/manual/en/function.rmdir.php#87385
      * Note: the function will empty everything in the given directory but won't remove the directory itself
      */
-    function recurseDeleteInDir($mypath) {
+    public function recurseDeleteInDir($mypath) {
         $mypath= rtrim($mypath, '/');
         $d = opendir($mypath);
         while(($file = readdir($d)) !== false) {
@@ -142,7 +131,7 @@ class Backend {
         closedir($d);
     }
 
-    function addBlock($filename,$command) {
+    public function addBlock($filename,$command) {
         
         if (!$handle = fopen($filename, 'a')) {
             $this->log("Can't open file for writing: $filename");
@@ -154,7 +143,7 @@ class Backend {
         return fclose($handle);
     }
 
-    function removeBlock($filename) {
+    public function removeBlock($filename) {
         $file_array=file($filename);
         $new_file_array=array();
         $inblock=false;
@@ -173,7 +162,7 @@ class Backend {
      * Write an array to a file
      * WARNING: the function does not add newlines at the end of each row
      */
-    function writeArrayToFile($file_array, $filename) {
+    public function writeArrayToFile($file_array, $filename) {
 
         if (!$handle = fopen($filename, 'w')) {
             $this->log("Can't open file for writing: $filename");
@@ -195,24 +184,27 @@ class Backend {
      * Precisely: move 'file_new' to 'file' if they are different or if 'file' does not exist.
      * Also, move 'file' to 'file_old' and remove previous 'file_old'
      */
-    function installNewFileVersion($file_new,$file,$file_old) {
+    public function installNewFileVersion($file_new,$file,$file_old,$force=false) {
         // Backup existing file and install new one if they are different
         if (is_file($file)) {
-            $current_string=serialize(file($file));
-            $new_string=serialize(file($file_new));
-            if ($current_string!==$new_string) {
-                    if (is_file($file_old)) {
-                        unlink($file_old);
-                    }
+            if (! $force) {
+                // Read file contents 
+                $current_string=serialize(file($file));
+                $new_string=serialize(file($file_new));
+            }
+            if ($force || ($current_string!==$new_string)) {
+                if (is_file($file_old)) {
+                    unlink($file_old);
+                }
 
-                    if (!rename($file,$file_old)) {
-                        $this->log("Can't move file $file to $file_old");
-                        return false;
-                    }
-                    if (!rename($file_new,$file)) {
-                        $this->log("Can't move file $file_new to $file");
-                        return false;
-                    }
+                if (!rename($file,$file_old)) {
+                    $this->log("Can't move file $file to $file_old");
+                    return false;
+                }
+                if (!rename($file_new,$file)) {
+                    $this->log("Can't move file $file_new to $file");
+                    return false;
+                }
             } // Else do nothing: the configuration has not changed
         } else { 
             // No existing file
@@ -222,21 +214,6 @@ class Backend {
             }
         }
         return true;
-    }
-
-
-
-    function setNeedUpdateMailAliases() {
-        $this->_getAliases()->setNeedUpdate();
-    }
-
-    function aliasesNeedUpdate() {
-        return  $this->_getAliases()->needUpdate();
-    }
-
-
-    function aliasesUpdate() {
-        return  $this->_getAliases()->update();
     }
 
 }
