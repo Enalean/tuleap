@@ -90,6 +90,19 @@ class BackendSVN extends Backend {
             $filename = "$svn_dir/hooks/post-commit";
             $update_hook=false;
             if (! is_file($filename)) {
+                // File header
+                $fp = fopen($filename, 'w');
+                fwrite($fp, "#!/bin/sh\n");
+                fwrite($fp, "# POST-COMMIT HOOK\n");
+                fwrite($fp, "#\n");
+                fwrite($fp, "# The post-commit hook is invoked after a commit.  Subversion runs\n");
+                fwrite($fp, "# this hook by invoking a program (script, executable, binary, etc.)\n");
+                fwrite($fp, "# named 'post-commit' (for which this file is a template) with the \n");
+                fwrite($fp, "# following ordered arguments:\n");
+                fwrite($fp, "#\n");
+                fwrite($fp, "#   [1] REPOS-PATH   (the path to this repository)\n");
+                fwrite($fp, "#   [2] REV          (the number of the revision just committed)\n\n");
+                fclose($fp);
                 $update_hook=true;
             } else {
                 $file_array=file($filename);

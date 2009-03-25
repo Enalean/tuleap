@@ -110,9 +110,9 @@ class BackendCVS extends Backend {
                 $filename= "$cvs_dir/CVSROOT/config";
                 $this->_RcsCheckout($filename);
                 system("echo  >> $filename");
-                system("echo '# !!! CodeX Specific !!! DO NOT REMOVE' >> $filename");
+                system("echo '# !!! Codendi Specific !!! DO NOT REMOVE' >> $filename");
                 system("echo '# Put all CVS lock files in a single directory world writable' >> $filename");
-                system("echo '# directory so that any CodeX registered user can checkout/update' >> $filename");
+                system("echo '# directory so that any registered user can checkout/update' >> $filename");
                 system("echo '# without having write permission on the entire cvs tree.' >> $filename");
                 system("echo 'LockDir=$lockdir' >> $filename");
                 // commit changes to config file (directly with RCS)

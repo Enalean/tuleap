@@ -156,7 +156,7 @@ class SystemEventManager {
         }
         // Since generating aliases may be costly, do it only once everything else is processed
         if (BackendAliases::instance()->aliasesNeedUpdate()) {
-            BackendAliases::instance()->aliasesUpdate();
+            BackendAliases::instance()->update();
         }
 
         // Update CVS root allow file once everything else is processed
