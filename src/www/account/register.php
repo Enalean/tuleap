@@ -312,7 +312,6 @@ if ($request->isPost() && $request->exist('Register')) {
     
             $content .= '<p><b>'.$Language->getText('account_register', 'title_approval').'</b>';
             $content .= '<p>'.$Language->getText('account_register', 'msg_approval', array($GLOBALS['sys_name'],$user_name,$href_approval));
-            $content .= 'admin approval';
             // Send a notification message to the Site administrator
             $from = $GLOBALS['sys_noreply'];
             $to = $GLOBALS['sys_email_admin'];
