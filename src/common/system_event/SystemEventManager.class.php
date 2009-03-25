@@ -160,8 +160,13 @@ class SystemEventManager {
         }
 
         // Update CVS root allow file once everything else is processed
-        if (BackendCVS::instance()->CVSRootListNeedUpdate()) {
+        if (BackendCVS::instance()->getCVSRootListNeedUpdate()) {
             BackendCVS::instance()->CVSRootListUpdate();
+        }
+
+        // Update SVN root definition for Apache once everything else is processed
+        if (BackendSVN::instance()->getSVNApacheConfNeedUpdate()) {
+            BackendSVN::instance()->generateSVNApacheConf();
         }
     }
 

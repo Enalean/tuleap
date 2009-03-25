@@ -79,7 +79,7 @@ class SystemEvent_PROJECT_CREATE extends SystemEvent {
                 $this->setLog("Could not create/initialize project CVS repository");
                 return false;
             }
-            $backendCVS->setNeedUpdateCVSRootList();
+            $backendCVS->setCVSRootListNeedUpdate();
         }
 
         if ($project->usesSVN()) {
@@ -89,6 +89,7 @@ class SystemEvent_PROJECT_CREATE extends SystemEvent {
                 $this->setLog("Could not create/initialize project SVN repository");
                 return false;
             }
+            $backendSVN->setSVNApacheConfNeedUpdate();
         }
 
         $this->setStatus(SystemEvent::STATUS_DONE);

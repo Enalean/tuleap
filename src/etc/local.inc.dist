@@ -150,8 +150,9 @@ $cvsnt_config_file   = "/etc/cvsnt/PServer"; // File containing CVSnt configurat
 $cvs_cmd             = "/usr/bin/cvs";       // CVS binary
 
 // Subversion paths
-$svn_prefix   = "/var/lib/codex/svnroot";// prefix to add to the subversion root directory
-$svnadmin_cmd = "/usr/bin/svnadmin";     // SVN Admin binary
+$svn_prefix    = "/var/lib/codex/svnroot";// prefix to add to the subversion root directory
+$svnadmin_cmd  = "/usr/bin/svnadmin";     // SVN Admin binary
+$svn_root_file = "/etc/httpd/conf.d/codex_svnroot.conf"; // File containing SVN repository definitions for Apache
 
 // FRS paths - do *not* use variables in the following parameters
 // If you change those paths, please run utils/compile_fileforge.sh

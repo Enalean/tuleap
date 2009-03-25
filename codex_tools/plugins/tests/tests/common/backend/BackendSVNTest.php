@@ -39,6 +39,7 @@ Mock::generatePartial('BackendSVN', 'BackendSVNTestVersion', array('_getUserMana
                                                                    '_getProjectManager',
                                                                    '_getUGroupDao',
                                                                    '_getUGroupFromRow',
+                                                                   '_getServiceDao',
                                                                    'chown',
                                                                    'chgrp',
                                                                    ));
@@ -53,11 +54,13 @@ class BackendSVNTest extends UnitTestCase {
     function setUp() {
         $GLOBALS['svn_prefix']                = dirname(__FILE__) . '/_fixtures/svnroot';
         $GLOBALS['tmp_dir']                   = dirname(__FILE__) . '/_fixtures/var/tmp';
+        $GLOBALS['svn_root_file']             = dirname(__FILE__) . '/_fixtures/etc/httpd/conf.d/codendi_svnroot.conf';
     }
     
     function tearDown() {
         unset($GLOBALS['svn_prefix']);
         unset($GLOBALS['tmp_dir']);
+        unset($GLOBALS['svn_root_file']);
     }
     
     function testConstructor() {
@@ -230,5 +233,37 @@ class BackendSVNTest extends UnitTestCase {
         rmdir($GLOBALS['svn_prefix']."/TestProj");
     }
 
+
+    function testGenerateSVNApacheConf() {
+        $backend =& new BackendSVNTestVersion($this);
+        $service_dao =& new MockServiceDao($this);
+        $active_groups = array("0" =>
+                              array (
+                                     "group_id"=> "101",
+                                     "group_name"  => "Guinea Pig",
+                                     "unix_group_name" => "gpig"),
+                               "1" =>
+                              array (
+                                     "group_id"=> "102",
+                                     "group_name"  => "Guinea Pig is \"back\"",
+                                     "unix_group_name" => "gpig2"),
+                               "2" =>
+                              array (
+                                     "group_id"=> "103",
+                                     "group_name"  => "Guinea Pig is 'angry'",
+                                     "unix_group_name" => "gpig3"));
+
+        $service_dao->setReturnValue('searchActiveUnixGroupByUsedService',$active_groups);
+        $backend->setReturnReference('_getServiceDao', $service_dao);
+
+        $this->assertEqual($backend->generateSVNApacheConf(),True);
+        $svnroots=file_get_contents($GLOBALS['svn_root_file']);
+        $this->assertFalse($svnroots === false);
+        $this->assertPattern("/gpig2/",$svnroots,"Project name not found in SVN root");
+        $this->assertPattern("/AuthName \"Subversion Authorization \(Guinea Pig is 'back'\)\"/",$svnroots,"Group name double quotes in realm");
+
+        // Cleanup
+        unlink($GLOBALS['svn_root_file']);
+    }
 }
 ?>

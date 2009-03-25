@@ -24,10 +24,13 @@
 require_once('common/backend/Backend.class.php');
 require_once('common/dao/UGroupDao.class.php');
 require_once('common/project/UGroup.class.php');
+require_once('common/dao/ServiceDao.class.php');
 
 
 class BackendSVN extends Backend {
 
+
+    protected $SVNApacheConfNeedUpdate;
 
     /**
      * Hold an instance of the class
@@ -59,6 +62,9 @@ class BackendSVN extends Backend {
     }
     protected function _getUGroupFromRow($row) {
         return new UGroup($row);
+    }
+    function _getServiceDao() {
+        return new ServiceDao(CodendiDataAccess::instance());
     }
 
     /**
@@ -128,7 +134,6 @@ class BackendSVN extends Backend {
 
         return true;
     }
-
 
 
     // update Subversion DAV access control file if needed
@@ -212,6 +217,73 @@ class BackendSVN extends Backend {
         
         return true;
     }
+
+
+    public function setSVNApacheConfNeedUpdate() {
+        $this->SVNApacheConfNeedUpdate=true;
+    }
+
+    public function getSVNApacheConfNeedUpdate() {
+        return $this->SVNApacheConfNeedUpdate;
+    }
+
+
+    // Add Subversion DAV definition for all projects in a dedicated Apache configuration file
+    public function generateSVNApacheConf(){
+
+        $svn_root_file = $GLOBALS['svn_root_file'];
+        $svn_root_file_old = $svn_root_file.".old";
+        $svn_root_file_new = $svn_root_file.".new";
+        
+
+        if (!$fp = fopen($svn_root_file_new, 'w')) {
+            $this->log("Can't open file for writing: $svn_root_file_new");
+            return false;
+        }
+
+
+        $service_dao =& $this->_getServiceDao();
+        $dar =& $service_dao->searchActiveUnixGroupByUsedService('svn');
+        foreach($dar as $row) {
+
+            // Replace double quotes by single quotes in project name (conflict with Apache realm name)
+            $group_name = strtr($row['group_name'],"\"","'");
+
+            // Write repository definition
+            fwrite($fp,"<Location /svnroot/".$row['unix_group_name'].">\n");
+            fwrite($fp,"    DAV svn\n");
+            fwrite($fp,"    SVNPath ".$GLOBALS['svn_prefix']."/".$row['unix_group_name']."\n");
+            fwrite($fp,"    AuthzSVNAccessFile ".$GLOBALS['svn_prefix']."/".$row['unix_group_name']."/.SVNAccessFile\n");
+            fwrite($fp,"    Require valid-user\n");
+            fwrite($fp,"    AuthType Basic\n");
+            fwrite($fp,"    AuthName \"Subversion Authorization (".$group_name.")\"\n");
+            fwrite($fp,"    AuthMYSQLEnable on\n");
+            fwrite($fp,"    AuthMySQLUser ".$GLOBALS['sys_dbauth_user']."\n");
+            fwrite($fp,"    AuthMySQLPassword ".$GLOBALS['sys_dbauth_passwd']."\n");
+            fwrite($fp,"    AuthMySQLDB codex\n");
+            fwrite($fp,"    AuthMySQLUserTable \"user, user_group\"\n");
+            fwrite($fp,"    AuthMySQLNameField user.user_name\n");
+            fwrite($fp,"    AuthMySQLPasswordField user.unix_pw\n");
+            fwrite($fp,"    AuthMySQLUserCondition \"(user.status='A' or (user.status='R' AND user_group.user_id=user.user_id and user_group.group_id=".$row['group_id']."))\"\n");
+            fwrite($fp,"    SVNIndexXSLT \"/svn/repos-web/view/repos.xsl\"\n");
+            if (!fwrite($fp,"</Location>\n\n")) {
+                $this->log("Error while writing to $svn_root_file_new");
+                return false;
+            }
+        }
+        fclose($fp);
+
+
+        // Backup existing file and install new one
+        $this->installNewFileVersion($svn_root_file_new,$svn_root_file,$svn_root_file_old,true);
+
+        //$this->chown($svn_root_file,$GLOBALS['sys_http_user']);
+        //$this->chgrp($svn_root_file,$unix_group_name);
+        //chmod("$svn_root_file",0775);
+        
+        return true;
+    }
+
 
 
     /**

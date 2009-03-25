@@ -30,11 +30,12 @@ class ServiceDao extends DataAccessObject {
     }
 
     /**
-    * Return unix name of active projects that use a specific service
+    * Return active projects that use a specific service
+    * WARNING: this returns all fields of all projects (might be big)
     * @return DataAccessResult
     */
     function & searchActiveUnixGroupByUsedService($service_short_name) {
-        $sql = sprintf("SELECT unix_group_name FROM groups, service WHERE groups.group_id=service.group_id AND service.short_name=%s AND service.is_used='1' AND groups.status='A'",
+        $sql = sprintf("SELECT * FROM groups, service WHERE groups.group_id=service.group_id AND service.short_name=%s AND service.is_used='1' AND groups.status='A'",
                 $this->da->quoteSmart($service_short_name));
         return $this->retrieve($sql);
     }

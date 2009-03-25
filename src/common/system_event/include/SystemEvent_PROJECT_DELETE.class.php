@@ -57,7 +57,9 @@ class SystemEvent_PROJECT_DELETE extends SystemEvent {
             return $this->setErrorBadParam();
         }
 
-        // Should we delete mailing lists?
+        $project = ProjectManager::instance()->getProject($group_id);
+
+        // Should we delete mailing lists? TODO
         //$backend->setNeedUpdateMailAliases();
 
         if (!BackendSystem::instance()->archiveProjectHome($group_id)) {
@@ -71,12 +73,17 @@ class SystemEvent_PROJECT_DELETE extends SystemEvent {
             $this->setLog("Could not archive project CVS repository");
             return false;
         }
-        BackendCVS::instance()->setNeedUpdateCVSRootList();
+        if ($project->usesCVS()) {
+            BackendCVS::instance()->setCVSRootListNeedUpdate();
+        }
 
         if (!BackendSVN::instance()->archiveProjectSVN($group_id)) {
             $this->setStatus(SystemEvent::STATUS_ERROR);
             $this->setLog("Could not archive project SVN repository");
             return false;
+        }
+        if ($project->usesSVN()) {
+            $backendSVN->setSVNApacheConfNeedUpdate();
         }
 
         $this->setStatus(SystemEvent::STATUS_DONE);

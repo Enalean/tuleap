@@ -362,11 +362,11 @@ class BackendCVS extends Backend {
         return true;
     }
 
-    public function setNeedUpdateCVSRootList() {
+    public function setCVSRootListNeedUpdate() {
         $this->CVSRootListNeedUpdate=true;
     }
 
-    public function CVSRootListneedUpdate() {
+    public function getCVSRootListNeedUpdate() {
         return $this->CVSRootListNeedUpdate;
     }
 

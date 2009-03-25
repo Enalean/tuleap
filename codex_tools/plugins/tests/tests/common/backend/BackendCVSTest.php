@@ -166,8 +166,8 @@ class BackendCVSTest extends UnitTestCase {
         $backend->setReturnReference('_getServiceDao', $service_dao);
 
 
-        $backend->setNeedUpdateCVSRootList();
-        $this->assertTrue($backend->CVSRootListNeedUpdate(),"Need to update the repo list");
+        $backend->setCVSRootListNeedUpdate();
+        $this->assertTrue($backend->getCVSRootListNeedUpdate(),"Need to update the repo list");
 
         $this->assertEqual($backend->CVSRootListUpdate(),True);
         
@@ -179,8 +179,8 @@ class BackendCVSTest extends UnitTestCase {
         $this->assertTrue(in_array("/cvsroot/TestProj\n",$cvs_config_array1),"Project TestProj should be listed in root file");
       
         $service_dao->setReturnValue('searchActiveUnixGroupByUsedService',array(array('unix_group_name'=>'TestProj'),array('unix_group_name'=>'gpig')));
-        $backend->setNeedUpdateCVSRootList();
-        $this->assertTrue($backend->CVSRootListNeedUpdate(),"Need to update the repo list");
+        $backend->setCVSRootListNeedUpdate();
+        $this->assertTrue($backend->getCVSRootListNeedUpdate(),"Need to update the repo list");
         $this->assertEqual($backend->CVSRootListUpdate(),True);
         $this->assertTrue(is_file($GLOBALS['cvs_root_allow_file'].".new"),"cvs_root_allow.new file should be created");
         $this->assertFalse(is_file($GLOBALS['cvs_root_allow_file'].".old"),"cvs_root_allow.old file should not be created (same files)");
@@ -194,14 +194,14 @@ class BackendCVSTest extends UnitTestCase {
         $service_dao2->setReturnValue('searchActiveUnixGroupByUsedService',array(array('unix_group_name'=>'TestProj'),array('unix_group_name'=>'gpig'),array('unix_group_name'=>'newProj')));
         $backend2 =& new BackendCVSTestVersion($this);
         $backend2->setReturnReference('_getServiceDao', $service_dao2);
-        $backend2->setNeedUpdateCVSRootList();
-        $this->assertTrue($backend2->CVSRootListNeedUpdate(),"Need to update the repo list");
+        $backend2->setCVSRootListNeedUpdate();
+        $this->assertTrue($backend2->getCVSRootListNeedUpdate(),"Need to update the repo list");
         $this->assertEqual($backend2->CVSRootListUpdate(),True);
         $this->assertFalse(is_file($GLOBALS['cvs_root_allow_file'].".new"),"cvs_root_allow.new file should not be created (moved because different files)");
         $this->assertTrue(is_file($GLOBALS['cvs_root_allow_file'].".old"),"cvs_root_allow.old file should be created (different files)");
         // Again
-        $backend2->setNeedUpdateCVSRootList();
-        $this->assertTrue($backend2->CVSRootListNeedUpdate(),"Need to update the repo list");
+        $backend2->setCVSRootListNeedUpdate();
+        $this->assertTrue($backend2->getCVSRootListNeedUpdate(),"Need to update the repo list");
         $this->assertEqual($backend2->CVSRootListUpdate(),True);
         $this->assertTrue(is_file($GLOBALS['cvs_root_allow_file'].".new"),"cvs_root_allow.new file should be created (same files)");
         $this->assertTrue(is_file($GLOBALS['cvs_root_allow_file'].".old"),"cvs_root_allow.old file should be there");
