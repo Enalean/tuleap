@@ -690,10 +690,10 @@ class IMPlugin extends Plugin {
         }
     }
     
-    function getAvailableReferenceNatures(&$params) {
+    function getAvailableReferenceNatures($params) {
         $im_plugin_reference_natures = array(
             'im_chat'  => array('keyword' => 'chat', 'label' => $GLOBALS['Language']->getText('plugin_im', 'reference_chat_nature_key')));
-        $params = array_merge($params, $im_plugin_reference_natures);
+        $params['natures'] = array_merge($params['natures'], $im_plugin_reference_natures);
     }
     
  	function process() {	
