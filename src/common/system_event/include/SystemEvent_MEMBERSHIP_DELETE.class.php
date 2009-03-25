@@ -50,11 +50,43 @@ class SystemEvent_MEMBERSHIP_DELETE extends SystemEvent {
      * Process stored event
      */
     function process() {
-        $this->setStatus("DONE");
+        ($group_id,$user_id)=$this->getParametersAsArray();
+
+        if (($group_id == 0)||($user_id == 0))  {
+            return $this->setErrorBadParam();
+        }
+
+        $project = ProjectManager::instance()->getProject($group_id);
+
+        if (!$project) {
+            $this->setStatus(SystemEvent::STATUS_ERROR);
+            $this->setLog("Could not create/initialize project object");
+            return false;
+        }
+
+        // CVS writers
+        if ($project->usesCVS()) {
+            if (!BackendCVS::instance()->updateCVSwriters($group_id)) {
+                $this->setStatus(SystemEvent::STATUS_ERROR);
+                $this->setLog("Could not update CVS writers for group $group_id");
+                return false;
+            }
+        }
+
+        // SVN access file
+        if ($project->usesSVN()) {
+            $backendSVN    = BackendSVN::instance();
+            if (!$backendSVN->updateSVNAccess($group_id)) {
+                $this->setStatus(SystemEvent::STATUS_ERROR);
+                $this->setLog("Could not update SVN access file ($group_id)");
+                return false;
+            }
+        }
+
+        $this->setStatus(SystemEvent::STATUS_DONE);
         $this->setLog("OK");
         return true;
     }
-
 }
 
 ?>

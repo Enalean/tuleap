@@ -34,13 +34,6 @@ class SystemEvent {
     var $priority;
     var $status;
 
-    // Handle to Backend objects
-/* no need for singleton?
-    var $backendSystem;
-    var $backendCVS;
-    var $backendSVN;
-*/
-
     var $log;
 
     // Define event types
@@ -90,6 +83,10 @@ class SystemEvent {
         return $this->parameters;
     }
 
+    function getParametersAsArray() {
+        return explode("::", $this->parameters);
+    }
+
     function getPriority() {
         return $this->priority;
     }
@@ -110,19 +107,6 @@ class SystemEvent {
         $this->log=$log;
     }
 
-/* no need for singleton?
-    function _getBackendSystem() {
-        return BackendSystem::instance();
-    }
-
-    function _getBackendCVS() {
-        return BackendCVS::instance();
-    }
-
-    function _getBackendSVN() {
-        return BackendSVN::instance();
-    }
-*/
 
     /**
      * Checks if the given value represents integer
