@@ -28,12 +28,28 @@ class BackendSystem extends Backend {
 
 
     /**
+     * Hold an instance of the class
+     */
+    protected static $_instance;
+    
+    /**
+     * Backends are singletons
+     */
+    public static function instance() {
+        if (!isset(self::$_instance)) {
+            $c = __CLASS__;
+            self::$_instance = new $c;
+        }
+        return self::$_instance;
+    }
+
+    /**
      * Create user home directory
      * Also copy files from the skel directory to the new home directory.
      * If the directory already exists, nothing is done.
      * @return true if directory is successfully created, false otherwise
      */
-    function createUserHome($user_id) {
+    public function createUserHome($user_id) {
         $user=$this->_getUserManager()->getUserById($user_id);
         if (!$user) return false;
         $homedir=$GLOBALS['homedir_prefix']."/".$user->getUserName();
@@ -62,7 +78,7 @@ class BackendSystem extends Backend {
      * If the directory already exists, nothing is done.
      * @return true if directory is successfully created, false otherwise
      */
-    function createProjectHome($group_id) {
+    public function createProjectHome($group_id) {
         $project=$this->_getProjectManager()->getProject($group_id);
         if (!$project) return false;
 
@@ -158,7 +174,7 @@ class BackendSystem extends Backend {
      * Archive the user home directory
      * @return true if directory is successfully archived, false otherwise
      */
-    function archiveUserHome($user_id) {
+    public function archiveUserHome($user_id) {
         $user=$this->_getUserManager()->getUserById($user_id);
         if (!$user) return false;
         $homedir=$GLOBALS['homedir_prefix']."/".$user->getUserName();
@@ -178,7 +194,7 @@ class BackendSystem extends Backend {
      * Archive the project directory
      * @return true if directory is successfully archived, false otherwise
      */
-    function archiveProjectHome($group_id) {
+    public function archiveProjectHome($group_id) {
         $project=$this->_getProjectManager()->getProject($group_id);
         if (!$project) return false;
         $mydir=$GLOBALS['grpdir_prefix']."/".$project->getUnixName(false);

@@ -31,6 +31,22 @@ class BackendCVS extends Backend {
     protected $UseCVSNT;
 
     /**
+     * Hold an instance of the class
+     */
+    protected static $_instance;
+    
+    /**
+     * Backends are singletons
+     */
+    public static function instance() {
+        if (!isset(self::$_instance)) {
+            $c = __CLASS__;
+            self::$_instance = new $c;
+        }
+        return self::$_instance;
+    }
+
+    /**
      * Constructor
      */
     protected function __construct() {

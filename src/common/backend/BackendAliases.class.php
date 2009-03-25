@@ -30,6 +30,22 @@ class BackendAliases extends Backend {
 
 
     /**
+     * Hold an instance of the class
+     */
+    protected static $_instance;
+    
+    /**
+     * Backends are singletons
+     */
+    public static function instance() {
+        if (!isset(self::$_instance)) {
+            $c = __CLASS__;
+            self::$_instance = new $c;
+        }
+        return self::$_instance;
+    }
+
+    /**
      * @return UserDao
      */
     protected function _getUserDao() {

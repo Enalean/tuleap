@@ -23,13 +23,21 @@
 require_once('common/dao/SystemEventDao.class.php');
 require_once('common/dao/CodendiDataAccess.class.php');
 require_once('common/event/EventManager.class.php');
+
+// Events
 require_once('common/system_event/include/SystemEvent_PROJECT_CREATE.class.php');
 require_once('common/system_event/include/SystemEvent_PROJECT_DELETE.class.php');
 require_once('common/system_event/include/SystemEvent_MEMBERSHIP_CREATE.class.php');
 require_once('common/system_event/include/SystemEvent_MEMBERSHIP_DELETE.class.php');
 require_once('common/system_event/include/SystemEvent_USER_CREATE.class.php');
 require_once('common/system_event/include/SystemEvent_USER_DELETE.class.php');
+
+// Backends
 require_once('common/backend/Backend.class.php');
+require_once('common/backend/BackendSystem.class.php');
+require_once('common/backend/BackendAliases.class.php');
+require_once('common/backend/BackendSVN.class.php');
+require_once('common/backend/BackendCVS.class.php');
 
 
 /**
@@ -40,10 +48,6 @@ require_once('common/backend/Backend.class.php');
 class SystemEventManager {
     
     var $dao;
-
-    // Handle to Backend object
-    var $backend;
-
 
     // Constructor
     function SystemEventManager() {
@@ -114,7 +118,6 @@ class SystemEventManager {
      * Process stored events. Should this be moved to a new class?
      */
     function processEvents() {
-        $backend=$this->_getBackend();
         while (($dar=$this->dao->checkOutNextEvent()) != null) {
             if ($row = $dar->getRow()) {
                 //echo "Processing event ".$row['id']." (".$row['type'].")\n";
