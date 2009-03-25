@@ -2639,10 +2639,7 @@ CREATE TABLE artifact_field_value (
   valueText text,
   valueFloat float(10,4),
   valueDate int(11),
-  KEY idx_field_id (field_id),
-  KEY idx_artifact_id (artifact_id),
-  KEY idx_art_field_id (artifact_id, field_id),
-  KEY valueInt (valueInt)
+  KEY idx_valueInt(artifact_id, field_id, valueInt)
 );
 
 #
