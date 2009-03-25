@@ -63,11 +63,13 @@ class BackendCVS extends Backend {
      * Return true if server uses CVS NT, or false if it uses GNU CVS
      */
     function useCVSNT() {
-        if (isset($UseCVSNT)) return $UseCVSNT;
+        if (isset($this->UseCVSNT)) return $this->UseCVSNT;
         if (is_file("/usr/bin/cvsnt")) {
-            $UseCVSNT=true;
-        } else {$UseCVSNT=false;}
-        return $UseCVSNT;
+            $this->UseCVSNT=true;
+        } else {
+            $this->UseCVSNT=false;
+        }
+        return $this->UseCVSNT;
     }
 
 
