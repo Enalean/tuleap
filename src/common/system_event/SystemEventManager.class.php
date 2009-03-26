@@ -31,6 +31,7 @@ require_once('common/system_event/include/SystemEvent_MEMBERSHIP_CREATE.class.ph
 require_once('common/system_event/include/SystemEvent_MEMBERSHIP_DELETE.class.php');
 require_once('common/system_event/include/SystemEvent_USER_CREATE.class.php');
 require_once('common/system_event/include/SystemEvent_USER_DELETE.class.php');
+require_once('common/system_event/include/SystemEvent_CVS_IS_PRIVATE.class.php');
 
 // Backends
 require_once('common/backend/Backend.class.php');
@@ -60,6 +61,7 @@ class SystemEventManager {
         $event_manager->addListener('project_admin_remove_user',$this, 'addSystemEvent', true, 0);
         $event_manager->addListener('project_admin_activate_user',$this, 'addSystemEvent', true, 0);
         $event_manager->addListener('project_admin_delete_user',$this, 'addSystemEvent', true, 0);
+        $event_manager->addListener('cvs_is_private',$this, 'addSystemEvent', true, 0);
     }
 
     function _getEventManager() {
@@ -108,6 +110,10 @@ class SystemEventManager {
             $sysevent = new SystemEvent(SystemEvent::USER_DELETE,$params['user_id'],SystemEvent::PRIORITY_LOW);
             $this->dao->store($sysevent);
             break;
+        case 'cvs_is_private':
+            $sysevent = new SystemEvent(SystemEvent::CVS_IS_PRIVATE,$params['group_id'].$param_separator.$params['cvs_is_private'],SystemEvent::PRIORITY_MEDIUM);
+            $this->dao->store($sysevent);
+            break;
         default:
             break;
         }
@@ -140,6 +146,9 @@ class SystemEventManager {
                     break;
                 case 'USER_DELETE':
                     $sysevent = new SystemEvent_USER_DELETE($row['id'],$row['parameters'],$row['priority'],$row['status']);
+                    break;
+                case 'CVS_IS_PRIVATE':
+                    $sysevent = new SystemEvent_CVS_IS_PRIVATE($row['id'],$row['parameters'],$row['priority'],$row['status']);
                     break;
                 default:              
                      $sysevent = null;

@@ -32,6 +32,10 @@ switch ($func) {
  }
 
  case 'setAdmin' : {
+   $sql = "SELECT cvs_is_private FROM groups WHERE group_id=". (int)$group_id;
+   $result = db_query($sql);
+   $initial_settings = db_fetch_array($result);
+   
    $feedback .= $Language->getText('cvs_index', 'config_updated');
    $status = $Language->getText('cvs_index', 'full_success');
 
@@ -51,7 +55,15 @@ switch ($func) {
    $feedback = $feedback.' '.$status;
    $is_private = '';
    if ($request->exist('private')) {
-       $is_private = ', cvs_is_private = '. ($request->get('private') ? 1 : 0);
+       $private = $request->get('private') ? 1 : 0;
+       $is_private = ', cvs_is_private = '. $private;
+       //Raise an event if needed
+       if ($initial_settings['cvs_is_private'] != $private) {
+           EventManager::instance()->processEvent('cvs_is_private', array(
+               'group_id'       => $group_id,
+               'cvs_is_private' => $private,
+           ));
+       }
    }
    $query = 'update groups 
              set cvs_tracker="'.$tracked.'",

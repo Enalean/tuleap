@@ -37,21 +37,22 @@ class SystemEvent {
     var $log;
 
     // Define event types
-    const PROJECT_CREATE="PROJECT_CREATE";
-    const PROJECT_DELETE="PROJECT_DELETE";
-    const USER_CREATE="USER_CREATE";
-    const USER_DELETE="USER_DELETE";
-    const USER_MODIFY="USER_MODIFY";
-    const MEMBERSHIP_CREATE="MEMBERSHIP_CREATE";
-    const MEMBERSHIP_DELETE="MEMBERSHIP_DELETE";
-    const MEMBERSHIP_MODIFY="MEMBERSHIP_MODIFY";
+    const PROJECT_CREATE        = "PROJECT_CREATE";
+    const PROJECT_DELETE        = "PROJECT_DELETE";
+    const USER_CREATE           = "USER_CREATE";
+    const USER_DELETE           = "USER_DELETE";
+    const USER_MODIFY           = "USER_MODIFY";
+    const MEMBERSHIP_CREATE     = "MEMBERSHIP_CREATE";
+    const MEMBERSHIP_DELETE     = "MEMBERSHIP_DELETE";
+    const MEMBERSHIP_MODIFY     = "MEMBERSHIP_MODIFY";
+    const CVS_IS_PRIVATE        = "CVS_IS_PRIVATE";
 
     // Define status value (in sync with DB enum)
-    const STATUS_NEW="NEW";
-    const STATUS_RUNNING="RUNNING";
-    const STATUS_DONE="DONE";
-    const STATUS_WARNING="WARNING";
-    const STATUS_ERROR="ERROR";
+    const STATUS_NEW        = "NEW";
+    const STATUS_RUNNING    = "RUNNING";
+    const STATUS_DONE       = "DONE";
+    const STATUS_WARNING    = "WARNING";
+    const STATUS_ERROR      = "ERROR";
 
     //Priority of the event
     const PRIORITY_HIGH   = 1;
