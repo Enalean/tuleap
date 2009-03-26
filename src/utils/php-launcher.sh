@@ -50,4 +50,6 @@ fi
 export CODEX_LOCAL_INC
 
 # Finaly runs php interpretor
-exec "${PHP}" ${PHP_PARAMS} $@
+phpscript=$1;
+shift;
+exec "${PHP}" ${PHP_PARAMS} $phpscript "$@"

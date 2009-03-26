@@ -22,10 +22,11 @@ function svn_data_get_technicians($projectname) {
     return db_query($sql);
 }
 
-function svn_data_update_general_settings($group_id,$svn_tracked,$svn_preamble) {
+function svn_data_update_general_settings($group_id,$svn_tracked,$svn_preamble,$svn_mandatory_ref) {
     
     $query = "update groups set svn_tracker='".db_ei($svn_tracked).
 	"', svn_preamble='".db_es(htmlspecialchars($svn_preamble)).
+    "', svn_mandatory_ref='".db_ei($svn_mandatory_ref).
 	"' where group_id='".db_ei($group_id)."'";
     $result = db_query($query);
     return ($result ? true : false);

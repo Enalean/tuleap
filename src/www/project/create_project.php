@@ -209,10 +209,10 @@ function create_project($data, $do_not_exit = false) {
         }
         
         //copy svn infos
-        $sql = "SELECT svn_tracker, svn_preamble FROM groups WHERE group_id=$template_id ";
+        $sql = "SELECT svn_tracker, svn_preamble, svn_madatory_ref FROM groups WHERE group_id=$template_id ";
         $result = db_query($sql);
         $arr = db_fetch_array($result);
-        $query = "UPDATE groups SET svn_tracker='".$arr['svn_tracker']."',  svn_preamble='".db_escape_string($arr['svn_preamble'])."' " .
+        $query = "UPDATE groups SET svn_tracker='".$arr['svn_tracker']."', svn_mandatory_ref='".$arr['svn_mandatory_ref']."', svn_preamble='".db_escape_string($arr['svn_preamble'])."' " .
                  "WHERE group_id = $group_id";
         
         $result=db_query($query);

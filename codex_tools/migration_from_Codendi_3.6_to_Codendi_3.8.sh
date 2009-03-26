@@ -194,6 +194,8 @@ INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('TRACKER_ARTI
 # add the field severity on all reports
 UPDATE artifact_report_field SET show_on_result = 1 WHERE field_name = 'severity';
 
+# Mandatory reference in SVN commit message
+ALTER TABLE groups ADD svn_mandatory_ref TINYINT NOT NULL DEFAULT '0' AFTER svn_tracker;
 
 # Cross references : add a new field 'nature'
 ALTER TABLE reference ADD nature VARCHAR( 64 ) NOT NULL;
@@ -532,7 +534,10 @@ ALTER TABLE artifact_field_value
 # TODO: add these lines to /etc/my.cnf under [mysqld]
 #
 
+# TODO : CREATE / UPDATE the pre-commit hook for every existing project.
+
 #
+# TODO: copy /src/utils/svn/codendi_svn_pre_commit.php into /usr/lib/codex/bin/codendi_svn_pre_commit.php
 # TODO: copy /src/utils/svn/commit-email.pl into /usr/lib/codex/bin/commit-email.pl
 # TODO: copy /src/utils/cvs1/log_accum into /usr/lib/codex/bin/log_accum
 #

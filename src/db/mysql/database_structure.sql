@@ -971,6 +971,7 @@ CREATE TABLE groups (
   cvs_preamble text NOT NULL,
   cvs_is_private TINYINT(1) NOT NULL DEFAULT 0,
   svn_tracker int(11)   NOT NULL default '1',
+  svn_mandatory_ref TINYINT NOT NULL default '0',
   svn_events_mailing_list text NOT NULL,
   svn_events_mailing_header varchar(64) binary DEFAULT NULL,
   svn_preamble text NOT NULL,

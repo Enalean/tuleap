@@ -319,6 +319,10 @@ class Project extends Group {
         return $this->project_data_array['svn_tracker'];
     }
 
+    function isSVNMandatoryRef() {
+        return $this->project_data_array['svn_mandatory_ref'];
+    }
+    
     function getSVNpreamble() {
         return $this->project_data_array['svn_preamble'];
     }

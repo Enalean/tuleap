@@ -126,6 +126,28 @@ class BackendSVN extends Backend {
                 chmod("$filename",0775);
             }
         }
+        
+        // Put in place the Codendi svn pre-commit hook
+        // if not present (if the file does not exist it is created)
+        $filename = "$svn_dir/hooks/pre-commit";
+        $update_hook=false;
+        if (! is_file($filename)) {
+            $update_hook=true;
+        } else {
+            $file_array=file($filename);
+            if (!in_array($this->block_marker_start,$file_array)) {
+                $update_hook=true;
+            }
+        }
+        if ($update_hook) {
+            $command  ='REPOS="$1"'."\n";
+            $command .='TXN="$2"'."\n";
+            $command .=$GLOBALS['codendi_dir'].'/php-launcher.sh '.$GLOBALS['codendi_bin_prefix'].'/codendi_svn_pre_commit.php "$REPOS" "$TXN" || exit 1';
+            $this->addBlock($filename,$command);
+            $this->chown($filename,$GLOBALS['sys_http_user']);
+            $this->chgrp($filename,$unix_group_name);
+            chmod("$filename",0775);
+        }
 
         if (!$this->updateSVNAccess($group_id)) {
             $this->log("Can't update SVN access file");

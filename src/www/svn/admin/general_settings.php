@@ -20,14 +20,17 @@ $request->valid(new Valid_String('SUBMIT'));
 if ($request->isPost() && $request->existAndNonEmpty('post_changes')) {
     $vTracked = new Valid_WhiteList('form_tracked', array('0', '1'));
     $vTracked->required();
-
+    $vMandatoryRef = new Valid_WhiteList('form_mandatory_ref', array('0', '1'));
+    $vMandatoryRef->required();
     $vPreamble = new Valid_Text('form_preamble');
 
-    if($request->valid($vTracked) && $request->valid($vPreamble)) {
+    if($request->valid($vTracked) && $request->valid($vPreamble) && $request->valid($vMandatoryRef)) {
         // group_id was validated in index.
         $form_tracked = $request->get('form_tracked');
         $form_preamble = $request->get('form_preamble');
-        $ret = svn_data_update_general_settings($group_id,$form_tracked,$form_preamble);
+        $form_mandatory_ref = $request->get('form_mandatory_ref');
+        
+        $ret = svn_data_update_general_settings($group_id,$form_tracked,$form_preamble,$form_mandatory_ref);
         if ($ret) {
             $GLOBALS['Response']->addFeedback('info', $Language->getText('svn_admin_general_settings','upd_success'));
         } else {
@@ -45,8 +48,9 @@ if ($request->isPost() && $request->existAndNonEmpty('post_changes')) {
 svn_header_admin(array ('title'=>$Language->getText('svn_admin_general_settings','gen_settings'),
 		      'help' => 'SubversionAdministrationInterface.html#SubversionGeneralSettings'));
 
-$project=project_get_object($group_id);
+$project = project_get_object($group_id);
 $svn_tracked = $project->isSVNTracked();
+$svn_mandatory_ref = $project->isSVNMandatoryRef();
 $svn_preamble = $project->getSVNPreamble();
 
 echo '
@@ -61,6 +65,12 @@ echo '
        <p><b>'.$Language->getText('svn_admin_general_settings','tracking').'</b>&nbsp;&nbsp;&nbsp;&nbsp;<SELECT name="form_tracked">
        <OPTION VALUE="1"'.(($svn_tracked == '1') ? ' SELECTED':'').'>'.$Language->getText('global','on').'</OPTION>
        <OPTION VALUE="0"'.(($svn_tracked == '0') ? ' SELECTED':'').'>'.$Language->getText('global','off').'</OPTION>       </SELECT></p>
+       <br><h3>'.$Language->getText('svn_admin_general_settings','mandatory_ref').'</H3><I>
+       <p>'.$Language->getText('svn_admin_general_settings','mandatory_ref_comment').
+    '</I>
+       <p><b>'.$Language->getText('svn_admin_general_settings','mandatory_ref').'</b>&nbsp;&nbsp;&nbsp;&nbsp;<SELECT name="form_mandatory_ref">
+       <OPTION VALUE="1"'.(($svn_mandatory_ref == '1') ? ' SELECTED':'').'>'.$Language->getText('global','on').'</OPTION>
+       <OPTION VALUE="0"'.(($svn_mandatory_ref == '0') ? ' SELECTED':'').'>'.$Language->getText('global','off').'</OPTION>       </SELECT></p>
        <br>'.$Language->getText('svn_admin_general_settings','preamble',array('/svn/?func=info&group_id='.$group_id,$GLOBALS['sys_name'])).'
        <BR>
        <TEXTAREA cols="70" rows="8" wrap="virtual" name="form_preamble">'.$svn_preamble.'</TEXTAREA>
