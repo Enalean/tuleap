@@ -59,6 +59,8 @@ class SystemEvent {
     const PRIORITY_MEDIUM = 2;
     const PRIORITY_LOW    = 3;
     
+    const PARAMETER_SEPARATOR = '::';
+    
     /**
      * Constructor
      * @param $type      : SystemeEvent type (const defined in this class)
@@ -89,7 +91,7 @@ class SystemEvent {
     }
 
     function getParametersAsArray() {
-        return explode("::", $this->parameters);
+        return explode(self::PARAMETER_SEPARATOR, $this->parameters);
     }
 
     function getPriority() {

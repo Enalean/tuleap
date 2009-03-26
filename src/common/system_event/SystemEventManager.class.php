@@ -84,7 +84,6 @@ class SystemEventManager {
      */
     function addSystemEvent($event, $params) {
         //$event = constant(strtoupper($event));
-        $param_separator="::";
         switch ($event) {
         case 'register_project_creation':
             $sysevent = new SystemEvent(SystemEvent::PROJECT_CREATE,$params['group_id'],SystemEvent::PRIORITY_MEDIUM);
@@ -95,11 +94,11 @@ class SystemEventManager {
             $this->dao->store($sysevent);
             break;
         case 'project_admin_add_user':
-            $sysevent = new SystemEvent(SystemEvent::MEMBERSHIP_CREATE,$params['group_id'].$param_separator.$params['user_id'],SystemEvent::PRIORITY_MEDIUM);
+            $sysevent = new SystemEvent(SystemEvent::MEMBERSHIP_CREATE,$params['group_id'].SystemEvent::PARAMETER_SEPARATOR.$params['user_id'],SystemEvent::PRIORITY_MEDIUM);
             $this->dao->store($sysevent);
             break;
         case 'project_admin_remove_user':
-            $sysevent = new SystemEvent(SystemEvent::MEMBERSHIP_DELETE,$params['group_id'].$param_separator.$params['user_id'],SystemEvent::PRIORITY_MEDIUM);
+            $sysevent = new SystemEvent(SystemEvent::MEMBERSHIP_DELETE,$params['group_id'].SystemEvent::PARAMETER_SEPARATOR.$params['user_id'],SystemEvent::PRIORITY_MEDIUM);
             $this->dao->store($sysevent);
             break;
         case 'project_admin_activate_user':
@@ -111,7 +110,7 @@ class SystemEventManager {
             $this->dao->store($sysevent);
             break;
         case 'cvs_is_private':
-            $sysevent = new SystemEvent(SystemEvent::CVS_IS_PRIVATE,$params['group_id'].$param_separator.$params['cvs_is_private'],SystemEvent::PRIORITY_MEDIUM);
+            $sysevent = new SystemEvent(SystemEvent::CVS_IS_PRIVATE,$params['group_id'].SystemEvent::PARAMETER_SEPARATOR.$params['cvs_is_private'],SystemEvent::PRIORITY_MEDIUM);
             $this->dao->store($sysevent);
             break;
         default:
