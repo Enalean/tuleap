@@ -186,10 +186,10 @@ class BackendSVN extends Backend {
 
 
         // Get all static ugroups
-        $ugroup_dao =& $this->_getUGroupDao();
-        $dar =& $ugroup_dao->searchByGroupId($group_id);
+        $ugroup_dao = $this->_getUGroupDao();
+        $dar = $ugroup_dao->searchByGroupId($group_id);
         foreach($dar as $row) {
-            $ugroup =& $this->_getUGroupFromRow($row);
+            $ugroup = $this->_getUGroupFromRow($row);
             // User names must be in lowercase
             $members_list = strtolower(implode(", ",$ugroup->getMembersUserName()));
             if ($ugroup->getName() && $members_list) {
@@ -242,8 +242,8 @@ class BackendSVN extends Backend {
         }
 
 
-        $service_dao =& $this->_getServiceDao();
-        $dar =& $service_dao->searchActiveUnixGroupByUsedService('svn');
+        $service_dao = $this->_getServiceDao();
+        $dar = $service_dao->searchActiveUnixGroupByUsedService('svn');
         foreach($dar as $row) {
 
             // Replace double quotes by single quotes in project name (conflict with Apache realm name)

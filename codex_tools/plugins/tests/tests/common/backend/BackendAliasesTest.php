@@ -47,7 +47,7 @@ class BackendAliasesTest extends UnitTestCase {
     
     
     function testUpdate() { 
-        $udao =& new MockUserDao();
+        $udao = new MockUserDao();
         $active_users = array("0" =>
                               array (
                                      "user_name"=> "user1",
@@ -67,7 +67,7 @@ class BackendAliasesTest extends UnitTestCase {
                            "1" => array ( "list_name"=> "list2"),
                            "2" => array ( "list_name"=> "list3"),
                            "3" => array ( "list_name"=> "list4"));
-        $MA =& new BackendAliasesTestVersion($this);
+        $MA = new BackendAliasesTestVersion($this);
         $MA->setReturnValue('_getUserDao', $udao);
         $MA->setReturnValue('_searchAllActiveML', $active_ml);
 

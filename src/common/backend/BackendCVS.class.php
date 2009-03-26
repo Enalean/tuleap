@@ -310,8 +310,8 @@ class BackendCVS extends Backend {
         $cvs_root_allow_array = array();
         $projlist = array();
 
-        $service_dao =& $this->_getServiceDao();
-        $dar =& $service_dao->searchActiveUnixGroupByUsedService('cvs');
+        $service_dao = $this->_getServiceDao();
+        $dar = $service_dao->searchActiveUnixGroupByUsedService('cvs');
         foreach($dar as $row) {
             $repolist[]="/cvsroot/".$row['unix_group_name'];
         }

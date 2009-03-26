@@ -53,7 +53,7 @@ class SystemEventManager {
     function SystemEventManager() {
         $this->_getDao();
 
-        $event_manager =& $this->_getEventManager();
+        $event_manager = $this->_getEventManager();
         $event_manager->addListener('register_project_creation',$this, 'addSystemEvent', true, 0);
         $event_manager->addListener('project_is_deleted',$this, 'addSystemEvent', true, 0);
         $event_manager->addListener('project_admin_add_user',$this, 'addSystemEvent', true, 0);
@@ -62,7 +62,7 @@ class SystemEventManager {
         $event_manager->addListener('project_admin_delete_user',$this, 'addSystemEvent', true, 0);
     }
 
-    function &_getEventManager() {
+    function _getEventManager() {
         return EventManager::instance();
     }
 

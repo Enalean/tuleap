@@ -65,14 +65,14 @@ class BackendSystemTest extends UnitTestCase {
 
     function testCreateUserHome() {
 
-        $user =& new MockUser($this);
+        $user = new MockUser($this);
         // We use codexadm uid/gid to avoid chown warnings (because test is not run as root)
         $user->setReturnValue('getUserName', 'codexadm');
 
-        $um =& new MockUserManager();
+        $um = new MockUserManager();
         $um->setReturnReference('getUserById', $user, array(104));
         
-        $backend =& new BackendTestVersion($this);
+        $backend = new BackendTestVersion($this);
         $backend->setReturnValue('_getUserManager', $um);
 
         $this->assertEqual($backend->createUserHome(104),True);
@@ -91,14 +91,14 @@ class BackendSystemTest extends UnitTestCase {
     }
 
     function testArchiveUserHome() {
-        $user =& new MockUser($this);
+        $user = new MockUser($this);
         // We use codexadm uid/gid to avoid chown warnings (because test is not run as root)
         $user->setReturnValue('getUserName', 'codexadm');
 
-        $um =& new MockUserManager();
+        $um = new MockUserManager();
         $um->setReturnReference('getUserById', $user, array(104));
         
-        $backend =& new BackendTestVersion($this);
+        $backend = new BackendTestVersion($this);
         $backend->setReturnValue('_getUserManager', $um);
 
         $backend->createUserHome(104);
@@ -116,15 +116,15 @@ class BackendSystemTest extends UnitTestCase {
     }
 
     function testArchiveProjectHome() {
-        $project =& new MockProject($this);
+        $project = new MockProject($this);
         $project->setReturnValue('getUnixName', 'TestProj',array(false));
         $project->setReturnValue('getUnixName', 'testproj',array(true));
 
-        $pm =& new MockProjectManager();
+        $pm = new MockProjectManager();
         $pm->setReturnReference('getProject', $project, array(142));
         //$pm->setReturnReference('getProject', $project);
 
-        $backend =& new BackendTestVersion($this);
+        $backend = new BackendTestVersion($this);
         $backend->setReturnValue('_getProjectManager', $pm);
 
         $projdir=$GLOBALS['grpdir_prefix']."/TestProj";

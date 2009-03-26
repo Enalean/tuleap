@@ -69,14 +69,14 @@ class BackendSVNTest extends UnitTestCase {
     
 
     function testArchiveProjectSVN() { 
-        $project =& new MockProject($this);
+        $project = new MockProject($this);
         $project->setReturnValue('getUnixName', 'TestProj',array(false));
         $project->setReturnValue('getUnixName', 'testproj',array(true));
 
-        $pm =& new MockProjectManager();
+        $pm = new MockProjectManager();
         $pm->setReturnReference('getProject', $project, array(142));
 
-        $backend =& new BackendSVNTestVersion($this);
+        $backend = new BackendSVNTestVersion($this);
         $backend->setReturnValue('_getProjectManager', $pm);
 
         $projdir=$GLOBALS['svn_prefix']."/TestProj";
@@ -98,7 +98,7 @@ class BackendSVNTest extends UnitTestCase {
 
 
     function testCreateProjectSVN() { 
-        $project =& new MockProject($this);
+        $project = new MockProject($this);
         $project->setReturnValue('getUnixName', 'TestProj',array(false));
         $project->setReturnValue('getUnixName', 'testproj',array(true));
         $project->setReturnValue('isSVNTracked',true);
@@ -116,7 +116,7 @@ class BackendSVNTest extends UnitTestCase {
                                      "user_id"  => "3"));
         $project->setReturnValue('getMembersUserNames',$proj_members);
 
-        $pm =& new MockProjectManager();
+        $pm = new MockProjectManager();
         $pm->setReturnReference('getProject', $project, array(142));
 
         $ugroups = array("0" =>
@@ -127,10 +127,10 @@ class BackendSVNTest extends UnitTestCase {
                          array (
                                 "name"=> "Customers",
                                 "ugroup_id"  => "102"));
-        $ugdao =& new MockUGroupDao();
+        $ugdao = new MockUGroupDao();
         $ugdao->setReturnValue('searchByGroupId',$ugroups);
 
-        $ugroup =& new MockUGroup($this);
+        $ugroup = new MockUGroup($this);
         $ugroup->setReturnValueAt(0,'getMembersUserName',array('user1', 'user2', 'user3'));
         $ugroup->setReturnValueAt(1,'getMembersUserName',array('user1', 'user4'));
         $ugroup->setReturnValueAt(0,'getName',"QA");
@@ -139,7 +139,7 @@ class BackendSVNTest extends UnitTestCase {
         $ugroup->setReturnValueAt(3,'getName',"customers");
 
 
-        $backend =& new BackendSVNTestVersion($this);
+        $backend = new BackendSVNTestVersion($this);
         $backend->setReturnValue('_getProjectManager', $pm);
         $backend->setReturnValue('_getUGroupFromRow', $ugroup);
         $backend->setReturnValue('_getUGroupDao', $ugdao);
@@ -156,7 +156,7 @@ class BackendSVNTest extends UnitTestCase {
     }
 
     function testUpdateSVNAccess() {
-        $project =& new MockProject($this);
+        $project = new MockProject($this);
         $project->setReturnValue('getUnixName', 'TestProj',array(false));
         $project->setReturnValue('getUnixName', 'testproj',array(true));
         $project->setReturnValue('isSVNTracked',true);
@@ -174,7 +174,7 @@ class BackendSVNTest extends UnitTestCase {
                                      "user_id"  => "3"));
         $project->setReturnValue('getMembersUserNames',$proj_members);
 
-        $pm =& new MockProjectManager();
+        $pm = new MockProjectManager();
         $pm->setReturnReference('getProject', $project, array(142));
 
         $ugroups = array("0" =>
@@ -185,10 +185,10 @@ class BackendSVNTest extends UnitTestCase {
                          array (
                                 "name"=> "Customers",
                                 "ugroup_id"  => "102"));
-        $ugdao =& new MockUGroupDao();
+        $ugdao = new MockUGroupDao();
         $ugdao->setReturnValue('searchByGroupId',$ugroups);
 
-        $ugroup =& new MockUGroup($this);
+        $ugroup = new MockUGroup($this);
         $ugroup->setReturnValueAt(0,'getMembersUserName',array('user1', 'user2', 'user3'));
         $ugroup->setReturnValueAt(1,'getMembersUserName',array('user1', 'user4'));
         $ugroup->setReturnValueAt(2,'getMembersUserName',array('user1', 'user2', 'user3'));
@@ -209,7 +209,7 @@ class BackendSVNTest extends UnitTestCase {
         $ugroup->setReturnValueAt(11,'getName',"customers");
 
 
-        $backend =& new BackendSVNTestVersion($this);
+        $backend = new BackendSVNTestVersion($this);
         $backend->setReturnValue('_getProjectManager', $pm);
         $backend->setReturnValue('_getUGroupFromRow', $ugroup);
         $backend->setReturnValue('_getUGroupDao', $ugdao);
@@ -235,8 +235,8 @@ class BackendSVNTest extends UnitTestCase {
 
 
     function testGenerateSVNApacheConf() {
-        $backend =& new BackendSVNTestVersion($this);
-        $service_dao =& new MockServiceDao($this);
+        $backend = new BackendSVNTestVersion($this);
+        $service_dao = new MockServiceDao($this);
         $active_groups = array("0" =>
                               array (
                                      "group_id"=> "101",

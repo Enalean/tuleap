@@ -78,14 +78,14 @@ class BackendCVSTest extends UnitTestCase {
     
 
     function testArchiveProjectCVS() {
-        $project =& new MockProject($this);
+        $project = new MockProject($this);
         $project->setReturnValue('getUnixName', 'TestProj',array(false));
         $project->setReturnValue('getUnixName', 'testproj',array(true));
 
-        $pm =& new MockProjectManager();
+        $pm = new MockProjectManager();
         $pm->setReturnReference('getProject', $project, array(142));
 
-        $backend =& new BackendCVSTestVersion($this);
+        $backend = new BackendCVSTestVersion($this);
         $backend->setReturnValue('_getProjectManager', $pm);
 
         $projdir=$GLOBALS['cvs_prefix']."/TestProj";
@@ -108,7 +108,7 @@ class BackendCVSTest extends UnitTestCase {
     }
 
     function testCreateProjectCVS() {
-        $project =& new MockProject($this);
+        $project = new MockProject($this);
         $project->setReturnValue('getUnixName', 'TestProj',array(false));
         $project->setReturnValue('getUnixName', 'testproj',array(true));
         $project->setReturnValue('isCVSTracked',true);
@@ -127,10 +127,10 @@ class BackendCVSTest extends UnitTestCase {
 
         $project->setReturnValue('getMembersUserNames',$proj_members);
 
-        $pm =& new MockProjectManager();
+        $pm = new MockProjectManager();
         $pm->setReturnReference('getProject', $project, array(142));
 
-        $backend =& new BackendCVSTestVersion($this);
+        $backend = new BackendCVSTestVersion($this);
         $backend->setReturnValue('_getProjectManager', $pm);
 
         $this->assertEqual($backend->createProjectCVS(142),True);
@@ -160,8 +160,8 @@ class BackendCVSTest extends UnitTestCase {
     }
 
     function testCVSRootListUpdate() {
-        $backend =& new BackendCVSTestVersion($this);
-        $service_dao =& new MockServiceDao($this);
+        $backend = new BackendCVSTestVersion($this);
+        $service_dao = new MockServiceDao($this);
         $service_dao->setReturnValue('searchActiveUnixGroupByUsedService',array(array('unix_group_name'=>'TestProj'),array('unix_group_name'=>'gpig')));
         $backend->setReturnReference('_getServiceDao', $service_dao);
 
@@ -190,9 +190,9 @@ class BackendCVSTest extends UnitTestCase {
 
 
         // A project was added
-        $service_dao2 =& new MockServiceDao($this);
+        $service_dao2 = new MockServiceDao($this);
         $service_dao2->setReturnValue('searchActiveUnixGroupByUsedService',array(array('unix_group_name'=>'TestProj'),array('unix_group_name'=>'gpig'),array('unix_group_name'=>'newProj')));
-        $backend2 =& new BackendCVSTestVersion($this);
+        $backend2 = new BackendCVSTestVersion($this);
         $backend2->setReturnReference('_getServiceDao', $service_dao2);
         $backend2->setCVSRootListNeedUpdate();
         $this->assertTrue($backend2->getCVSRootListNeedUpdate(),"Need to update the repo list");
