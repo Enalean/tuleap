@@ -52,45 +52,37 @@ class SystemEvent_PROJECT_CREATE extends SystemEvent {
     function process() {
         // Check parameters
         $group_id=$this->getIdFromParam($this->parameters);
-
-        if ($group_id == 0) {
-            return $this->setErrorBadParam();
-        }
-
-        $project = ProjectManager::instance()->getProject($group_id);
-
-        if (!$project) {
-            $this->error("Could not create/initialize project object");
-            return false;
-        }
-
-        $backendSystem = BackendSystem::instance();
-        if (!$backendSystem->createProjectHome($group_id)) {
-            $this->error("Could not create project home");
-            return false;
-        }
-
-        if ($project->usesCVS()) {
-            $backendCVS    = BackendCVS::instance();
-            if (!$backendCVS->createProjectCVS($group_id)) {
-                $this->error("Could not create/initialize project CVS repository");
+        
+        if ($project = $this->getProject($group_id)) {
+            
+            $backendSystem = BackendSystem::instance();
+            if (!$backendSystem->createProjectHome($group_id)) {
+                $this->error("Could not create project home");
                 return false;
             }
-            $backendCVS->setCVSRootListNeedUpdate();
-        }
-
-        if ($project->usesSVN()) {
-            $backendSVN    = BackendSVN::instance();
-            if (!$backendSVN->createProjectSVN($group_id)) {
-                $this->error("Could not create/initialize project SVN repository");
-                return false;
+            
+            if ($project->usesCVS()) {
+                $backendCVS    = BackendCVS::instance();
+                if (!$backendCVS->createProjectCVS($group_id)) {
+                    $this->error("Could not create/initialize project CVS repository");
+                    return false;
+                }
+                $backendCVS->setCVSRootListNeedUpdate();
             }
-            $backendSVN->setSVNApacheConfNeedUpdate();
+            
+            if ($project->usesSVN()) {
+                $backendSVN    = BackendSVN::instance();
+                if (!$backendSVN->createProjectSVN($group_id)) {
+                    $this->error("Could not create/initialize project SVN repository");
+                    return false;
+                }
+                $backendSVN->setSVNApacheConfNeedUpdate();
+            }
+            
+            $this->done();
+            return true;
         }
-
-        $this->done();
-        return true;
-
+        return false;
     }
 
 }

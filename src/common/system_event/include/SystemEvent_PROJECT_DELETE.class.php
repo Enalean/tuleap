@@ -52,39 +52,37 @@ class SystemEvent_PROJECT_DELETE extends SystemEvent {
     function process() {
         // Check parameters
         $group_id=$this->getIdFromParam($this->parameters);
-
-        if ($group_id == 0) {
-            return $this->setErrorBadParam();
+        
+        if ($project = $this->getProject($group_id)) {
+            
+            // Should we delete mailing lists? TODO
+            //$backend->setNeedUpdateMailAliases();
+    
+            if (!BackendSystem::instance()->archiveProjectHome($group_id)) {
+                $this->error("Could not archive project home");
+                return false;
+            }
+    
+            if (!BackendCVS::instance()->archiveProjectCVS($group_id)) {
+                $this->error("Could not archive project CVS repository");
+                return false;
+            }
+            if ($project->usesCVS()) {
+                BackendCVS::instance()->setCVSRootListNeedUpdate();
+            }
+    
+            if (!BackendSVN::instance()->archiveProjectSVN($group_id)) {
+                $this->error("Could not archive project SVN repository");
+                return false;
+            }
+            if ($project->usesSVN()) {
+                $backendSVN->setSVNApacheConfNeedUpdate();
+            }
+    
+            $this->done();
+            return true;
         }
-
-        $project = ProjectManager::instance()->getProject($group_id);
-
-        // Should we delete mailing lists? TODO
-        //$backend->setNeedUpdateMailAliases();
-
-        if (!BackendSystem::instance()->archiveProjectHome($group_id)) {
-            $this->error("Could not archive project home");
-            return false;
-        }
-
-        if (!BackendCVS::instance()->archiveProjectCVS($group_id)) {
-            $this->error("Could not archive project CVS repository");
-            return false;
-        }
-        if ($project->usesCVS()) {
-            BackendCVS::instance()->setCVSRootListNeedUpdate();
-        }
-
-        if (!BackendSVN::instance()->archiveProjectSVN($group_id)) {
-            $this->error("Could not archive project SVN repository");
-            return false;
-        }
-        if ($project->usesSVN()) {
-            $backendSVN->setSVNApacheConfNeedUpdate();
-        }
-
-        $this->done();
-        return true;
+        return false;
     }
 
 }

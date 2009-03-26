@@ -189,6 +189,24 @@ class SystemEvent {
         $this->logStatus(self::STATUS_WARNING, $msg);
     }
     
+    /**
+     * Initialize a project from the given $group_id
+     * @param int $group_id the id of the project
+     * @return Project
+     */
+    protected function getProject($group_id) {
+        if (!$group_id) {
+            return $this->setErrorBadParam();
+        }
+        
+        $project = ProjectManager::instance()->getProject($group_id);
+        
+        if (!$project) {
+            $this->error("Could not create/initialize project object");
+        }
+        
+        return $project;
+    }
 }
 
 ?>

@@ -50,38 +50,34 @@ class SystemEvent_MEMBERSHIP_CREATE extends SystemEvent {
      * Process stored event
      */
     function process() {
-        list($group_id,$user_id)=$this->getParametersAsArray();
-
-        if (($group_id == 0)||($user_id == 0))  {
-            return $this->setErrorBadParam();
-        }
-
-        $project = ProjectManager::instance()->getProject($group_id);
-
-        if (!$project) {
-            $this->error("Could not create/initialize project object");
-            return false;
-        }
-
-        // CVS writers
-        if ($project->usesCVS()) {
-            if (!BackendCVS::instance()->updateCVSwriters($group_id)) {
-                $this->error("Could not update CVS writers for group $group_id");
-                return false;
+        list($group_id,$user_id) = $this->getParametersAsArray();
+        
+        if ($project = $this->getProject($group_id)) {
+            if ($user_id == 0) {
+                return $this->setErrorBadParam();
             }
-        }
-
-        // SVN access file
-        if ($project->usesSVN()) {
-            $backendSVN = BackendSVN::instance();
-            if (!$backendSVN->updateSVNAccess($group_id)) {
-                $this->error("Could not update SVN access file ($group_id)");
-                return false;
+            
+            // CVS writers
+            if ($project->usesCVS()) {
+                if (!BackendCVS::instance()->updateCVSwriters($group_id)) {
+                    $this->error("Could not update CVS writers for group $group_id");
+                    return false;
+                }
             }
+            
+            // SVN access file
+            if ($project->usesSVN()) {
+                $backendSVN = BackendSVN::instance();
+                if (!$backendSVN->updateSVNAccess($group_id)) {
+                    $this->error("Could not update SVN access file ($group_id)");
+                    return false;
+                }
+            }
+            
+            $this->done();
+            return true;
         }
-
-        $this->done();
-        return true;
+        return false;
     }
 }
 

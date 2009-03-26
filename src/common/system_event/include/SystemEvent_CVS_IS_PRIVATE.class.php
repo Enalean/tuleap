@@ -50,27 +50,18 @@ class SystemEvent_CVS_IS_PRIVATE extends SystemEvent {
     function process() {
         list($group_id, $cvs_is_private) = $this->getParametersAsArray();
         
-        if (!$group_id) {
-            return $this->setErrorBadParam();
-        }
-        
-        $project = ProjectManager::instance()->getProject($group_id);
-        
-        if (!$project) {
-            $this->error("Could not create/initialize project object");
-            return false;
-        }
-        
-        if ($project->usesCVS()) {
-            if (!BackendCVS::instance()->cvsIsPrivate($group_id, $cvs_is_private)) {
-                $this->error("Could not set cvs is private for group $group_id");
-                return false;
+        if ($project = $this->getProject($group_id)) {
+            if ($project->usesCVS()) {
+                if (!BackendCVS::instance()->cvsIsPrivate($group_id, $cvs_is_private)) {
+                    $this->error("Could not set cvs is private for group $group_id");
+                    return false;
+                }
             }
+            
+            $this->done();
+            return true;
         }
-        
-        $this->done();
-        
-        return true;
+        return false;
     }
 
 }
