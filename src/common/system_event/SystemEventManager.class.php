@@ -110,7 +110,7 @@ class SystemEventManager {
             $this->dao->store($sysevent);
             break;
         case 'cvs_is_private':
-            $sysevent = new SystemEvent(SystemEvent::CVS_IS_PRIVATE,$params['group_id'].SystemEvent::PARAMETER_SEPARATOR.$params['cvs_is_private'],SystemEvent::PRIORITY_MEDIUM);
+            $sysevent = new SystemEvent(SystemEvent::CVS_IS_PRIVATE,$params['group_id'] . SystemEvent::PARAMETER_SEPARATOR . ($params['cvs_is_private'] ? 1 : 0) ,SystemEvent::PRIORITY_MEDIUM);
             $this->dao->store($sysevent);
             break;
         default:

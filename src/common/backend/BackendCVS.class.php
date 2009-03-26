@@ -369,6 +369,10 @@ class BackendCVS extends Backend {
     public function getCVSRootListNeedUpdate() {
         return $this->CVSRootListNeedUpdate;
     }
+    
+    public function cvsIsPrivate($group_id, $is_private) {
+        //Todo
+    }
 
 }
 
