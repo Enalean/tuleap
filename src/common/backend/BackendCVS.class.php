@@ -370,8 +370,16 @@ class BackendCVS extends Backend {
         return $this->CVSRootListNeedUpdate;
     }
     
-    public function cvsIsPrivate($group_id, $is_private) {
-        //Todo
+    /**
+     * Make the cvs repository of the project private or public
+     * @param Project $project
+     * @param boolean $is_private true if the repository is private
+     * @return boolean true if success
+     */
+    public function cvsIsPrivate($project, $is_private) {
+        $perms = $is_private ? 0770 : 0775;
+        $cvsroot = $GLOBALS['cvs_prefix'] . PATH_SEPARATOR . $project->getUnixName();
+        return is_dir($cvsroot) && $this->chmod($cvsroot, $perms);
     }
 
 }

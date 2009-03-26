@@ -39,6 +39,7 @@ Mock::generatePartial('BackendCVS', 'BackendCVSTestVersionInit', array('_getUser
                                                              '_getProjectManager',
                                                              'chown',
                                                              'chgrp',
+                                                             'chmod',
                                                              '_getServiceDao'
                                                            ));
 
@@ -62,9 +63,11 @@ class BackendCVSTest extends UnitTestCase {
         $GLOBALS['tmp_dir']                   = dirname(__FILE__) . '/_fixtures/var/tmp';
         $GLOBALS['cvs_cmd']                   = "/usr/bin/cvs";
         $GLOBALS['cvs_root_allow_file']       = dirname(__FILE__) . '/_fixtures/etc/cvs_root_allow';
+        mkdir($GLOBALS['cvs_prefix'] . PATH_SEPARATOR . 'toto');
     }
     
     function tearDown() {
+        rmdir($GLOBALS['cvs_prefix'] . PATH_SEPARATOR . 'toto');
         unset($GLOBALS['cvs_prefix']);
         unset($GLOBALS['cvslock_prefix']);
         unset($GLOBALS['tmp_dir']);
@@ -210,6 +213,41 @@ class BackendCVSTest extends UnitTestCase {
         unlink($GLOBALS['cvs_root_allow_file']);
         unlink($GLOBALS['cvs_root_allow_file'].".old");
         unlink($GLOBALS['cvs_root_allow_file'].".new");
+    }
+    
+    public function testCvsIsPrivate_private() {
+        $backend = new BackendCVSTestVersion($this);
+        $backend->setReturnValue('chmod', true);
+        $backend->expectOnce('chmod', array($GLOBALS['cvs_prefix'] . PATH_SEPARATOR . 'toto', 0770));
+        
+        $project = new MockProject($this);
+        $project->setReturnValue('getUnixName', 'toto');
+        
+        $this->assertTrue($backend->cvsIsPrivate($project, true));
+    }
+    
+    public function testCvsIsPrivate_public() {
+        $backend = new BackendCVSTestVersion($this);
+        $backend->setReturnValue('chmod', true);
+        $backend->expectOnce('chmod', array($GLOBALS['cvs_prefix'] . PATH_SEPARATOR . 'toto', 0775));
+        
+        $project = new MockProject($this);
+        $project->setReturnValue('getUnixName', 'toto');
+        
+        $this->assertTrue($backend->cvsIsPrivate($project, false));
+    }
+    
+    public function testCvsIsPrivate_no_repository() {
+        $path_that_doesnt_exist = md5(uniqid(rand(), true));
+        
+        $backend = new BackendCVSTestVersion($this);
+        $backend->expectNever('chmod');
+        
+        $project = new MockProject($this);
+        $project->setReturnValue('getUnixName', $path_that_doesnt_exist);
+        
+        $this->assertFalse($backend->cvsIsPrivate($project, true));
+        $this->assertFalse($backend->cvsIsPrivate($project, false));
     }
 }
 ?>

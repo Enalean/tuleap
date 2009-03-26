@@ -52,7 +52,7 @@ class SystemEvent_CVS_IS_PRIVATE extends SystemEvent {
         
         if ($project = $this->getProject($group_id)) {
             if ($project->usesCVS()) {
-                if (!BackendCVS::instance()->cvsIsPrivate($group_id, $cvs_is_private)) {
+                if (!BackendCVS::instance()->cvsIsPrivate($project, $cvs_is_private)) {
                     $this->error("Could not set cvs is private for group $group_id");
                     return false;
                 }

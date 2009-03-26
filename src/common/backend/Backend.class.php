@@ -79,6 +79,11 @@ class Backend {
         return chgrp($path, $uid);
     }
 
+    /** Create chmod function to allow mocking in unit tests */
+    protected function chmod($path, $perms) {
+        return chmod($path, $perms);
+    }
+
 
     public function log($message) {
         error_log($message."\n",3,$GLOBALS['codendi_log']."/codendi_syslog");
