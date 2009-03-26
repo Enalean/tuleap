@@ -139,8 +139,7 @@ class SystemEvent {
      * Error functions
      */
     function setErrorBadParam() {
-        $this->setStatus(SystemEvent::STATUS_ERROR);
-        $this->setLog("Bad parameter for event ".$this->getType().": ".$this->getParameters());
+        $this->error("Bad parameter for event ".$this->getType().": ".$this->getParameters());
         return 0;
     }
 
@@ -152,7 +151,44 @@ class SystemEvent {
     function process() {
         return null;
     }
-
+    
+    /**
+     * Private. Use error() | done() | ... instead
+     * @param string $status the status
+     * @param string $msg the message to log
+     */
+    private function logStatus($status, $msg) {
+        $this->setStatus($status);
+        $this->setLog($msg);
+    }
+    
+    /**
+     * Set the status of the event to STATUS_ERROR
+     * and log the msg
+     * @param string $msg the message to log
+     */
+    protected function error($msg) {
+        $this->logStatus(self::STATUS_ERROR, $msg);
+    }
+    
+    /**
+     * Set the status of the event to STATUS_DONE
+     * and log the msg
+     * @param string $msg the message to log. default is 'OK'
+     */
+    protected function done($msg = 'OK') {
+        $this->logStatus(self::STATUS_DONE, $msg);
+    }
+    
+    /**
+     * Set the status of the event to STATUS_WARNING
+     * and log the msg
+     * @param string $msg the message to log.
+     */
+    protected function warning($msg) {
+        $this->logStatus(self::STATUS_WARNING, $msg);
+    }
+    
 }
 
 ?>

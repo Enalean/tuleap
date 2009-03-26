@@ -63,14 +63,12 @@ class SystemEvent_PROJECT_DELETE extends SystemEvent {
         //$backend->setNeedUpdateMailAliases();
 
         if (!BackendSystem::instance()->archiveProjectHome($group_id)) {
-            $this->setStatus(SystemEvent::STATUS_ERROR);
-            $this->setLog("Could not archive project home");
+            $this->error("Could not archive project home");
             return false;
         }
 
         if (!BackendCVS::instance()->archiveProjectCVS($group_id)) {
-            $this->setStatus(SystemEvent::STATUS_ERROR);
-            $this->setLog("Could not archive project CVS repository");
+            $this->error("Could not archive project CVS repository");
             return false;
         }
         if ($project->usesCVS()) {
@@ -78,16 +76,14 @@ class SystemEvent_PROJECT_DELETE extends SystemEvent {
         }
 
         if (!BackendSVN::instance()->archiveProjectSVN($group_id)) {
-            $this->setStatus(SystemEvent::STATUS_ERROR);
-            $this->setLog("Could not archive project SVN repository");
+            $this->error("Could not archive project SVN repository");
             return false;
         }
         if ($project->usesSVN()) {
             $backendSVN->setSVNApacheConfNeedUpdate();
         }
 
-        $this->setStatus(SystemEvent::STATUS_DONE);
-        $this->setLog("OK");
+        $this->done();
         return true;
     }
 
