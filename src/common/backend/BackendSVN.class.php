@@ -132,6 +132,18 @@ class BackendSVN extends Backend {
         $filename = "$svn_dir/hooks/pre-commit";
         $update_hook=false;
         if (! is_file($filename)) {
+            // File header
+            $fp = fopen($filename, 'w');
+            fwrite($fp, "#!/bin/sh\n\n");
+            fwrite($fp, "# PRE-COMMIT HOOK\n");
+            fwrite($fp, "#\n");
+            fwrite($fp, "# The pre-commit hook is invoked before a Subversion txn is\n");
+            fwrite($fp, "# committed.  Subversion runs this hook by invoking a program\n");
+            fwrite($fp, "# (script, executable, binary, etc.) named 'pre-commit' (for which\n");
+            fwrite($fp, "# this file is a template), with the following ordered arguments:\n");
+            fwrite($fp, "#\n");
+            fwrite($fp, "#   [1] REPOS-PATH   (the path to this repository)\n");
+            fwrite($fp, "#   [2] TXN-NAME     (the name of the txn about to be committed)\n");
             $update_hook=true;
         } else {
             $file_array=file($filename);
