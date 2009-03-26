@@ -53,12 +53,16 @@ class SystemEvent {
     const STATUS_WARNING="WARNING";
     const STATUS_ERROR="ERROR";
 
-
+    //Priority of the event
+    const PRIORITY_HIGH   = 1;
+    const PRIORITY_MEDIUM = 2;
+    const PRIORITY_LOW    = 3;
+    
     /**
      * Constructor
      * @param $type      : SystemeEvent type (const defined in this class)
      * @param $parameters: Event Parameter (e.g. group_id if event type is PROJECT_CREATE)
-     * @param $priority  : Event priority
+     * @param $priority  : Event priority (PRIORITY_HIGH | PRIORITY_MEDIUM | PRIORITY_LOW)
      */
     function SystemEvent($type, $parameters, $priority ) {
         $this->type      = $type;

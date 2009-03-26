@@ -85,27 +85,27 @@ class SystemEventManager {
         $param_separator="::";
         switch ($event) {
         case 'register_project_creation':
-            $sysevent = new SystemEvent(SystemEvent::PROJECT_CREATE,$params['group_id'],2);
+            $sysevent = new SystemEvent(SystemEvent::PROJECT_CREATE,$params['group_id'],SystemEvent::PRIORITY_MEDIUM);
             $this->dao->store($sysevent);
             break;
         case 'project_is_deleted':
-            $sysevent = new SystemEvent(SystemEvent::PROJECT_DELETE,$params['group_id'],3);
+            $sysevent = new SystemEvent(SystemEvent::PROJECT_DELETE,$params['group_id'],SystemEvent::PRIORITY_LOW);
             $this->dao->store($sysevent);
             break;
         case 'project_admin_add_user':
-            $sysevent = new SystemEvent(SystemEvent::MEMBERSHIP_CREATE,$params['group_id'].$param_separator.$params['user_id'],2);
+            $sysevent = new SystemEvent(SystemEvent::MEMBERSHIP_CREATE,$params['group_id'].$param_separator.$params['user_id'],SystemEvent::PRIORITY_MEDIUM);
             $this->dao->store($sysevent);
             break;
         case 'project_admin_remove_user':
-            $sysevent = new SystemEvent(SystemEvent::MEMBERSHIP_DELETE,$params['group_id'].$param_separator.$params['user_id'],2);
+            $sysevent = new SystemEvent(SystemEvent::MEMBERSHIP_DELETE,$params['group_id'].$param_separator.$params['user_id'],SystemEvent::PRIORITY_MEDIUM);
             $this->dao->store($sysevent);
             break;
         case 'project_admin_activate_user':
-            $sysevent = new SystemEvent(SystemEvent::USER_CREATE,$params['user_id'],2);
+            $sysevent = new SystemEvent(SystemEvent::USER_CREATE,$params['user_id'],SystemEvent::PRIORITY_MEDIUM);
             $this->dao->store($sysevent);
             break;
         case 'project_admin_delete_user':
-            $sysevent = new SystemEvent(SystemEvent::USER_DELETE,$params['user_id'],3);
+            $sysevent = new SystemEvent(SystemEvent::USER_DELETE,$params['user_id'],SystemEvent::PRIORITY_LOW);
             $this->dao->store($sysevent);
             break;
         default:
