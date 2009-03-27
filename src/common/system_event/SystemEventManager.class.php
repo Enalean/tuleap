@@ -134,33 +134,20 @@ class SystemEventManager {
                 //echo "Processing event ".$row['id']." (".$row['type'].")\n";
 
                 switch ($row['type']) {
-                case 'PROJECT_CREATE':
-                    $sysevent = new SystemEvent_PROJECT_CREATE($row['id'],$row['parameters'],$row['priority'],$row['status']);
-                    break;
-                case 'PROJECT_DELETE':
-                    $sysevent = new SystemEvent_PROJECT_DELETE($row['id'],$row['parameters'],$row['priority'],$row['status']);
-                    break;
-                case 'MEMBERSHIP_CREATE':
-                    $sysevent = new SystemEvent_MEMBERSHIP_CREATE($row['id'],$row['parameters'],$row['priority'],$row['status']);
-                    break;
-                case 'MEMBERSHIP_DELETE':
-                    $sysevent = new SystemEvent_MEMBERSHIP_DELETE($row['id'],$row['parameters'],$row['priority'],$row['status']);
-                    break;
-                case 'USER_CREATE':
-                    $sysevent = new SystemEvent_USER_CREATE($row['id'],$row['parameters'],$row['priority'],$row['status']);
-                    break;
-                case 'USER_DELETE':
-                    $sysevent = new SystemEvent_USER_DELETE($row['id'],$row['parameters'],$row['priority'],$row['status']);
-                    break;
-                case 'CVS_IS_PRIVATE':
-                    $sysevent = new SystemEvent_CVS_IS_PRIVATE($row['id'],$row['parameters'],$row['priority'],$row['status']);
-                    break;
-                case 'PROJECT_IS_PRIVATE':
-                    $sysevent = new SystemEvent_PROJECT_IS_PRIVATE($row['id'],$row['parameters'],$row['priority'],$row['status']);
+                case SystemEvent::PROJECT_CREATE:
+                case SystemEvent::PROJECT_DELETE:
+                case SystemEvent::MEMBERSHIP_CREATE:
+                case SystemEvent::MEMBERSHIP_DELETE:
+                case SystemEvent::USER_CREATE:
+                case SystemEvent::USER_DELETE:
+                case SystemEvent::CVS_IS_PRIVATE:
+                case SystemEvent::PROJECT_IS_PRIVATE:
+                    $klass = 'SystemEvent_'. $row['type'];
+                    $sysevent = new $klass($row['id'], $row['parameters'], $row['priority'], $row['status']);
                     break;
                 default:              
-                     $sysevent = null;
-                   break;
+                    $sysevent = null;
+                    break;
                 }
 
                 // Process $sysevent
