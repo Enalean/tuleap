@@ -107,11 +107,11 @@ class SystemEventManager {
             $this->dao->store($sysevent);
             break;
         case 'project_admin_add_user':
-            $sysevent = new SystemEvent(SystemEvent::MEMBERSHIP_CREATE,$params['group_id'].SystemEvent::PARAMETER_SEPARATOR.$params['user_id'],SystemEvent::PRIORITY_MEDIUM);
+            $sysevent = new SystemEvent(SystemEvent::MEMBERSHIP_CREATE, $this->concatParameters($params, array('group_id', 'user_id')), SystemEvent::PRIORITY_MEDIUM);
             $this->dao->store($sysevent);
             break;
         case 'project_admin_remove_user':
-            $sysevent = new SystemEvent(SystemEvent::MEMBERSHIP_DELETE,$params['group_id'].SystemEvent::PARAMETER_SEPARATOR.$params['user_id'],SystemEvent::PRIORITY_MEDIUM);
+            $sysevent = new SystemEvent(SystemEvent::MEMBERSHIP_DELETE, $this->concatParameters($params, array('group_id', 'user_id')), SystemEvent::PRIORITY_MEDIUM);
             $this->dao->store($sysevent);
             break;
         case 'project_admin_activate_user':
@@ -123,7 +123,8 @@ class SystemEventManager {
             $this->dao->store($sysevent);
             break;
         case 'cvs_is_private':
-            $sysevent = new SystemEvent(SystemEvent::CVS_IS_PRIVATE,$params['group_id'] . SystemEvent::PARAMETER_SEPARATOR . ($params['cvs_is_private'] ? 1 : 0) ,SystemEvent::PRIORITY_MEDIUM);
+            $params['cvs_is_private'] = $params['cvs_is_private'] ? 1 : 0;
+            $sysevent = new SystemEvent(SystemEvent::CVS_IS_PRIVATE, $this->concatParameters($params, array('group_id', 'cvs_is_private')), SystemEvent::PRIORITY_MEDIUM);
             $this->dao->store($sysevent);
             break;
         case 'project_admin_ugroup_creation':
@@ -133,7 +134,7 @@ class SystemEventManager {
         case 'project_admin_ugroup_add_user':
         case 'project_admin_ugroup_deletion':
             $sysevent = new SystemEvent(SystemEvent::UGROUP_MODIFY,
-                                        $params['group_id'].SystemEvent::PARAMETER_SEPARATOR.$params['ugroup_id'],
+                                        $this->concatParameters($params, array('group_id', 'ugroup_id')),
                                         SystemEvent::PRIORITY_MEDIUM);
             $this->dao->store($sysevent);
             break;
@@ -144,13 +145,14 @@ class SystemEventManager {
             //(TODO: cache information to avoid multiple file edition? Or consume all other UGROUP_MODIFY events?)
             foreach ($params['ugroups'] as $ugroup_id) {
                 $sysevent = new SystemEvent(SystemEvent::UGROUP_MODIFY,
-                                            $params['group_id'].SystemEvent::PARAMETER_SEPARATOR.$ugroup_id,
+                                            $this->concatParameters($params, array('group_id', 'ugroup_id')),
                                             SystemEvent::PRIORITY_MEDIUM);
                 $this->dao->store($sysevent);
             }
             break;
         case 'project_is_private':
-            $sysevent = new SystemEvent(SystemEvent::PROJECT_IS_PRIVATE,$params['group_id'] . SystemEvent::PARAMETER_SEPARATOR . ($params['project_is_private'] ? 1 : 0) ,SystemEvent::PRIORITY_MEDIUM);
+            $params['project_is_private'] = $params['project_is_private'] ? 1 : 0;
+            $sysevent = new SystemEvent(SystemEvent::PROJECT_IS_PRIVATE, $this->concatParameters($params, array('group_id', 'project_is_private')), SystemEvent::PRIORITY_MEDIUM);
             $this->dao->store($sysevent);
             break;
         default:
@@ -159,6 +161,20 @@ class SystemEventManager {
     }
 
 
+    
+    /**
+     * Concat parameters as $params['key1'] . SEPARATOR . $params['key3'] ...
+     * @param array $params
+     * @param array $keys array('key1', 'key3')
+     */
+    public function concatParameters($params, $keys) {
+        $concat = array();
+        foreach($keys as $key) {
+            $concat[] = $params[$key];
+        }
+        return implode(SystemEvent::PARAMETER_SEPARATOR, $concat);
+    }
+    
     /**
      * Process stored events. Should this be moved to a new class?
      */
