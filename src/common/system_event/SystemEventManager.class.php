@@ -56,14 +56,19 @@ class SystemEventManager {
         $this->_getDao();
 
         $event_manager = $this->_getEventManager();
-        $event_manager->addListener('register_project_creation',    $this, 'addSystemEvent', true, 0);
-        $event_manager->addListener('project_is_deleted',           $this, 'addSystemEvent', true, 0);
-        $event_manager->addListener('project_admin_add_user',       $this, 'addSystemEvent', true, 0);
-        $event_manager->addListener('project_admin_remove_user',    $this, 'addSystemEvent', true, 0);
-        $event_manager->addListener('project_admin_activate_user',  $this, 'addSystemEvent', true, 0);
-        $event_manager->addListener('project_admin_delete_user',    $this, 'addSystemEvent', true, 0);
-        $event_manager->addListener('cvs_is_private',               $this, 'addSystemEvent', true, 0);
-        $event_manager->addListener('project_is_private',           $this, 'addSystemEvent', true, 0);
+        $events_to_listen = array(
+            'register_project_creation',
+            'project_is_deleted',
+            'project_admin_add_user',
+            'project_admin_remove_user',
+            'project_admin_activate_user',
+            'project_admin_delete_user',
+            'cvs_is_private',
+            'project_is_private',
+        );
+        foreach($events_to_listen as $event) {
+            $event_manager->addListener($event, $this, 'addSystemEvent', true, 0);
+        }
     }
 
     function _getEventManager() {
