@@ -8,3 +8,7 @@ DELETE FROM user   WHERE user_id ='99';
 DELETE FROM service WHERE group_id='99';
 DELETE FROM user_group WHERE user_id='99';
 
+DELETE FROM reference_group 
+WHERE reference_id IN (SELECT id FROM reference WHERE service_short_name='IM');
+
+DELETE FROM reference WHERE service_short_name='IM';

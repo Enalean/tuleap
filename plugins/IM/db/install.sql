@@ -74,3 +74,6 @@ INSERT INTO reference SET
     scope='S', 
     service_short_name='IM',
     nature='im_chat';
+INSERT INTO reference_group (reference_id, group_id, is_active)
+SELECT last_insert_id, group_id, 1
+FROM (SELECT LAST_INSERT_ID() as last_insert_id) AS R, groups; 

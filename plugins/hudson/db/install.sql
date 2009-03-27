@@ -31,7 +31,7 @@ WHERE group_id NOT IN (SELECT group_id
     WHERE short_name
     LIKE 'hudson');
 
--- Create references
+-- Create references and add them into every project
 INSERT INTO reference SET 
     keyword='job', 
     description='plugin_hudson:reference_job_desc_key', 
@@ -39,6 +39,9 @@ INSERT INTO reference SET
     scope='S', 
     service_short_name='hudson',
     nature='hudson_job';
+INSERT INTO reference_group (reference_id, group_id, is_active)
+SELECT last_insert_id, group_id, 1
+FROM (SELECT LAST_INSERT_ID() as last_insert_id) AS R, groups;
     
 INSERT INTO reference SET 
     keyword='build', 
@@ -47,6 +50,9 @@ INSERT INTO reference SET
     scope='S', 
     service_short_name='hudson',
     nature='hudson_build';
+INSERT INTO reference_group (reference_id, group_id, is_active)
+SELECT last_insert_id, group_id, 1
+FROM (SELECT LAST_INSERT_ID() as last_insert_id) AS R, groups;
 
 INSERT INTO reference SET 
     keyword='build', 
@@ -55,4 +61,6 @@ INSERT INTO reference SET
     scope='S', 
     service_short_name='hudson',
     nature='hudson_build';
-    
+INSERT INTO reference_group (reference_id, group_id, is_active)
+SELECT last_insert_id, group_id, 1
+FROM (SELECT LAST_INSERT_ID() as last_insert_id) AS R, groups;    
