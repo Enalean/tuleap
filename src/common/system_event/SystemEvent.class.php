@@ -46,7 +46,8 @@ class SystemEvent {
     const MEMBERSHIP_DELETE     = "MEMBERSHIP_DELETE";
     const MEMBERSHIP_MODIFY     = "MEMBERSHIP_MODIFY";
     const CVS_IS_PRIVATE        = "CVS_IS_PRIVATE";
-
+    const PROJECT_IS_PRIVATE    = "PROJECT_IS_PRIVATE";
+    
     // Define status value (in sync with DB enum)
     const STATUS_NEW        = "NEW";
     const STATUS_RUNNING    = "RUNNING";

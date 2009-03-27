@@ -21,20 +21,25 @@ $currentproject= new project($group_id);
 // group public choice
 $Update=$request->get('Update');
 if ($Update) {
+    $em =& EventManager::instance();
 	$res_grp = db_query("SELECT * FROM groups WHERE group_id=$group_id");
 
 	//audit trail
         if ($group->getStatus() != $form_status)
 		{ group_add_history ('status',$group->getStatus(),$group_id);  }
-	if ($group->isPublic() != $form_public)
-		{ group_add_history ('is_public',$group->isPublic(),$group_id);  }
+	if ($group->isPublic() != $form_public) { 
+        group_add_history('is_public',$group->isPublic(),$group_id);
+        $em->processEvent('project_is_private', array(
+            'group_id'           => $group_id, 
+            'project_is_private' => $form_public ? 0 : 1
+        ));
+    }
 	if ($group->getType() != $group_type)
 		{ group_add_history ('group_type',$group->getType(),$group_id);  }
 	if ($group->getHTTPDomain()!= $form_domain)
 		{ group_add_history ('http_domain',$group->getHTTPDomain(),$group_id);  }
 	if ($group->getUnixBox() != $form_box)
 		{ group_add_history ('unix_box',$group->getUnixBox(),$group_id);  }
-
 	db_query("UPDATE groups SET is_public=$form_public,status='$form_status',"
 		. "license='$form_license',type='$group_type',"
 		. "unix_box='$form_box',http_domain='$form_domain', "
@@ -45,7 +50,6 @@ if ($Update) {
 	$group = group_get_object($group_id,false,true);
 	
 	// ZD: Raise an event for group update 
-        $em =& EventManager::instance();
         if(isset($form_status) && $form_status && ($form_status=="H" || $form_status=="P")){
 	        $em->processEvent('project_is_suspended_or_pending', array(
 	            'group_id'       => $group_id
