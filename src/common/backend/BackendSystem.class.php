@@ -97,7 +97,11 @@ class BackendSystem extends Backend {
             if (mkdir($projdir,0775)) {
                 $this->chown($projdir, "dummy");
                 $this->chgrp($projdir, $unix_group_name);
-                chmod($projdir, 02775);
+                if ($project->isPublic()) {
+                    $this->chmod($projdir, 02775);
+                } else {
+                    $this->chmod($projdir, 02770);
+                }
             } else {
                 $this->log("Can't create project home: $projdir");
                 return false;
@@ -217,6 +221,16 @@ class BackendSystem extends Backend {
        } else return false;
      }
 
+     /**
+      * Set the privacy of the project home
+      * @param Project $project
+      * @param boolean $is_private
+      */
+     public function setProjectHomePrivacy($project, $is_private) {
+         $perms = $is_private ? 02770 : 02775;
+         $dir = $GLOBALS['grpdir_prefix'] . PATH_SEPARATOR . $project->getUnixName(false);
+         return is_dir($dir) && $this->chmod($dir, $perms);
+     }
 
 }
 

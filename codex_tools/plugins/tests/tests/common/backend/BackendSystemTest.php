@@ -35,6 +35,7 @@ Mock::generatePartial('BackendSystem', 'BackendTestVersion', array('_getUserMana
                                                              '_getProjectManager',
                                                              'chown',
                                                              'chgrp',
+                                                             'chmod',
                                                              ));
 
 
@@ -49,9 +50,11 @@ class BackendSystemTest extends UnitTestCase {
         $GLOBALS['grpdir_prefix']             = dirname(__FILE__) . '/_fixtures/home/groups';
         $GLOBALS['codendi_shell_skel']        = dirname(__FILE__) . '/_fixtures/etc/skel_codendi';
         $GLOBALS['tmp_dir']                   = dirname(__FILE__) . '/_fixtures/var/tmp';
+        mkdir($GLOBALS['grpdir_prefix'] . PATH_SEPARATOR . 'TestProj');
     }
     
     function tearDown() {
+        rmdir($GLOBALS['grpdir_prefix'] . PATH_SEPARATOR . 'TestProj');
         unset($GLOBALS['homedir_prefix']);
         unset($GLOBALS['grpdir_prefix']);
         unset($GLOBALS['codendi_shell_skel']);
@@ -147,6 +150,24 @@ class BackendSystemTest extends UnitTestCase {
 
         // Cleanup
         unlink($GLOBALS['tmp_dir']."/TestProj.tgz");
+    }
+    
+    public function testSetProjectHomePrivacy() {
+        $project = new MockProject($this);
+        $project->setReturnValueAt(0, 'getUnixName', 'TestProj', array(false));
+        $project->setReturnValueAt(1, 'getUnixName', 'TestProj', array(false));
+        $project->setReturnValueAt(2, 'getUnixName', 'doesnt_exist', array(false));
+        
+        $backend_system = new BackendTestVersion($this);
+        $backend_system->expectAt(0, 'chmod', array($GLOBALS['grpdir_prefix'] . PATH_SEPARATOR . 'TestProj', 02770));
+        $backend_system->expectAt(1, 'chmod', array($GLOBALS['grpdir_prefix'] . PATH_SEPARATOR . 'TestProj', 02775));
+        $backend_system->expectCallCount('chmod', 2);
+        $backend_system->setReturnValue('chmod', true);
+        
+        $this->assertTrue($backend_system->setProjectHomePrivacy($project, true));
+        $this->assertTrue($backend_system->setProjectHomePrivacy($project, false));
+        $this->assertFalse($backend_system->setProjectHomePrivacy($project, true));
+        
     }
 
 }

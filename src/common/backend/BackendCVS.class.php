@@ -378,7 +378,7 @@ class BackendCVS extends Backend {
      */
     public function cvsIsPrivate($project, $is_private) {
         $perms = $is_private ? 0770 : 0775;
-        $cvsroot = $GLOBALS['cvs_prefix'] . PATH_SEPARATOR . $project->getUnixName();
+        $cvsroot = $GLOBALS['cvs_prefix'] . PATH_SEPARATOR . $project->getUnixName(false);
         return is_dir($cvsroot) && $this->chmod($cvsroot, $perms);
     }
 

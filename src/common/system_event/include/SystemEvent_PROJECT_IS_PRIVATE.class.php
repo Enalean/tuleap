@@ -51,9 +51,15 @@ class SystemEvent_PROJECT_IS_PRIVATE extends SystemEvent {
         list($group_id, $project_is_private) = $this->getParametersAsArray();
         
         if ($project = $this->getProject($group_id)) {
+            
+            if (!BackendSystem::instance()->setProjectHomePrivacy($project, $project_is_private)) {
+                $this->error("Could not set project home privacy for $group_id");
+                return false;
+            }
+            
             if ($project->usesCVS()) {
                 if (!BackendCVS::instance()->cvsIsPrivate($project, $project_is_private)) {
-                    $this->error("Could not set cvs is private for group $group_id");
+                    $this->error("Could not set cvs is private for project $group_id");
                     return false;
                 }
             }
