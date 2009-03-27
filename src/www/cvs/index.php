@@ -55,6 +55,7 @@ switch ($func) {
    $feedback = $feedback.' '.$status;
    $is_private = '';
    if ($request->exist('private')) {
+       //TODO check that the project is public (else the cvs is always private)
        $private = $request->get('private') ? 1 : 0;
        $is_private = ', cvs_is_private = '. $private;
        //Raise an event if needed

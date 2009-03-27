@@ -520,14 +520,38 @@ ALTER TABLE artifact_field_value
 ALTER TABLE artifact_field_value
     ADD INDEX idx_valueInt(artifact_id, field_id, valueInt);
 
+# CVS is private
+# TODO : private projects 
+$CAT <<EOF | $PHP
+<?php
+require_once('/etc/codex/conf/local.inc');
+require_once('/etc/codex/conf/database.inc');
+mysql_connect($sys_dbhost, $sys_dbuser, $sys_dbpasswd) or die('ERROR: Unable to connect to the database. Aborting.');
+mysql_select_db($sys_dbname) or die('ERROR: Unable to select the database. Aborting.');
+
+$groups = array();
+foreach(glob($GLOBALS['cvs_prefix'] .'/*/.CODEX_PRIVATE') as $g) {
+    $groups[] = "'". mysql_real_escape_string(preg_replace('|^.*/([^/]*)/.CODEX_PRIVATE|', '$1', $g)) ."'";
+    unlink($g);
+}
+if (count($groups)) {
+    echo 'The following projects want to set their cvs repository private: '. implode(', ', $groups). PHP_EOL;
+    $sql = "UPDATE groups 
+            SET cvs_is_private 
+            WHERE unix_group_name IN (". implode(', ', $groups) .")";
+    mysql_query($sql) or die("ERROR: While executing the sql statement: ". mysql_error() ." -> ".$sql);
+    echo 'done.'. PHP_EOL;
+} else {
+    echo 'No projects want to set their cvs repository private.'. PHP_EOL;
+}
+?>
 
 
 #custom themes
 => no more images
 => refactoring in common/layout instead of www/include
 
-#TODO Move DivBasedLayout in common
-#TODO Clean-up CodendiBlack (remove common images, fix blue labels on IE, ...)
+#TODO Clean-up CodendiBlack (fix blue labels on IE, ...)
 #TODO remove reserved names javascript
 
 #
