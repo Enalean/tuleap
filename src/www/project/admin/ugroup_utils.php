@@ -475,6 +475,11 @@ function ugroup_remove_user_from_ugroup($group_id, $ugroup_id, $user_id) {
         $res = ugroup_db_get_ugroup($ugroup_id);
         group_add_history('upd_ug','',$group_id,array(db_result($res,0,'name')));
         $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('project_admin_ugroup_utils','ug_upd_success',array(db_result($res,0,'name'), 1)));
+        // Raise event for ugroup modification
+        EventManager::instance()->processEvent('project_admin_ugroup_remove_user', array(
+                'group_id' => $group_id,
+                'ugroup_id' => $ugroup_id,
+                'user_id' => $user_id));
     }
 }
 function ugroup_add_user_to_ugroup($group_id, $ugroup_id, $user_id) {
@@ -488,6 +493,11 @@ function ugroup_add_user_to_ugroup($group_id, $ugroup_id, $user_id) {
         $res = ugroup_db_get_ugroup($ugroup_id);
         group_add_history('upd_ug','',$group_id,array(db_result($res,0,'name')));
         $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('project_admin_ugroup_utils','ug_upd_success',array(db_result($res,0,'name'), 1)));
+        // Raise event for ugroup modification
+        EventManager::instance()->processEvent('project_admin_ugroup_add_user', array(
+                'group_id' => $group_id,
+                'ugroup_id' => $ugroup_id,
+                'user_id' => $user_id));
     }
 }
 

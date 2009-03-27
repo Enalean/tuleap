@@ -39,6 +39,7 @@ class SystemEvent {
     // Define event types
     const PROJECT_CREATE        = "PROJECT_CREATE";
     const PROJECT_DELETE        = "PROJECT_DELETE";
+    const UGROUP_MODIFY         = "UGROUP_MODIFY";
     const USER_CREATE           = "USER_CREATE";
     const USER_DELETE           = "USER_DELETE";
     const USER_MODIFY           = "USER_MODIFY";

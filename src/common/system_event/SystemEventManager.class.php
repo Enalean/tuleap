@@ -65,7 +65,13 @@ class SystemEventManager {
             'project_admin_delete_user',
             'cvs_is_private',
             'project_is_private',
-        );
+            'project_admin_ugroup_creation',
+            'project_admin_ugroup_edition',
+            'project_admin_ugroup_remove_user',
+            'project_admin_ugroup_add_user',
+            'project_admin_ugroup_deletion',
+            'project_admin_remove_user_from_project_ugroups',
+            );
         foreach($events_to_listen as $event) {
             $event_manager->addListener($event, $this, 'addSystemEvent', true, 0);
         }
@@ -120,6 +126,29 @@ class SystemEventManager {
             $sysevent = new SystemEvent(SystemEvent::CVS_IS_PRIVATE,$params['group_id'] . SystemEvent::PARAMETER_SEPARATOR . ($params['cvs_is_private'] ? 1 : 0) ,SystemEvent::PRIORITY_MEDIUM);
             $this->dao->store($sysevent);
             break;
+        case 'project_admin_ugroup_creation':
+        case 'project_admin_ugroup_creation':
+        case 'project_admin_ugroup_edition':
+        case 'project_admin_ugroup_remove_user':
+        case 'project_admin_ugroup_add_user':
+        case 'project_admin_ugroup_deletion':
+            $sysevent = new SystemEvent(SystemEvent::UGROUP_MODIFY,
+                                        $params['group_id'].SystemEvent::PARAMETER_SEPARATOR.$params['ugroup_id'],
+                                        SystemEvent::PRIORITY_MEDIUM);
+            $this->dao->store($sysevent);
+            break;
+        case 'project_admin_remove_user_from_project_ugroups':
+            // multiple ugroups
+            // We create several events for coherency. However, the current UGROUP_MODIFY event
+            // only needs to be called once per project 
+            //(TODO: cache information to avoid multiple file edition? Or consume all other UGROUP_MODIFY events?)
+            foreach ($params['ugroups'] as $ugroup_id) {
+                $sysevent = new SystemEvent(SystemEvent::UGROUP_MODIFY,
+                                            $params['group_id'].SystemEvent::PARAMETER_SEPARATOR.$ugroup_id,
+                                            SystemEvent::PRIORITY_MEDIUM);
+                $this->dao->store($sysevent);
+            }
+            break;
         case 'project_is_private':
             $sysevent = new SystemEvent(SystemEvent::PROJECT_IS_PRIVATE,$params['group_id'] . SystemEvent::PARAMETER_SEPARATOR . ($params['project_is_private'] ? 1 : 0) ,SystemEvent::PRIORITY_MEDIUM);
             $this->dao->store($sysevent);
@@ -143,6 +172,7 @@ class SystemEventManager {
                 case SystemEvent::PROJECT_DELETE:
                 case SystemEvent::MEMBERSHIP_CREATE:
                 case SystemEvent::MEMBERSHIP_DELETE:
+                case SystemEvent::UGROUP_MODIFY:
                 case SystemEvent::USER_CREATE:
                 case SystemEvent::USER_DELETE:
                 case SystemEvent::CVS_IS_PRIVATE:
