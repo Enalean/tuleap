@@ -336,7 +336,19 @@ class BackendSVN extends Backend {
             rmdir($mydir);
             return true;
        } else return false;
-     }
+    }
+    
+    /**
+     * Make the cvs repository of the project private or public
+     * @param Project $project
+     * @param boolean $is_private true if the repository is private
+     * @return boolean true if success
+     */
+    public function setSVNPrivacy($project, $is_private) {
+        $perms = $is_private ? 0770 : 0775;
+        $svnroot = $GLOBALS['svn_prefix'] . PATH_SEPARATOR . $project->getUnixName(false);
+        return is_dir($svnroot) && $this->chmod($cvsroot, $perms);
+    }
 
 }
 
