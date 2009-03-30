@@ -105,9 +105,10 @@ class GroupFactory extends Error {
         if ($this->isError() || !$result_my_groups) {
             return false;
         } else {
+            $pm = ProjectManager::instance();
             $my_groups = array();
             while ($res_group = db_fetch_array($result_my_groups)) {
-                $group = new Group($res_group['group_id']);
+                $group = $pm->getProject($res_group['group_id']);
                 if ($group && !$group->isError()) {
                     $my_groups[$group->getID()] = $group;
                 }

@@ -351,7 +351,8 @@ function news_notify_promotion_request($group_id,$news_bytes_id,$summary,$detail
     $summary = util_unconvert_htmlspecialchars($summary);
     $details = util_unconvert_htmlspecialchars($details);
 
-    $group = new Group($group_id);
+    $pm = ProjectManager::instance();
+    $group = $pm->getProject($group_id);
     // retrieve the user that submit the news
     $user = UserManager::instance()->getCurrentUser();
     

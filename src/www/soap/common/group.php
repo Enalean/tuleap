@@ -225,9 +225,10 @@ function getGroupByName($sessionKey, $unix_group_name) {
  */
 function getGroupById($sessionKey, $group_id) {
     if (session_continue($sessionKey)) {
-        $group = new Group($group_id);
+        $pm = ProjectManager::instance();
+        $group = $pm->getProject($group_id);
         if (!$group || !is_object($group)) {
-            return new SoapFault('2001', $group_id.' : '.$Language->getText('include_group', 'g_not_found'),'getGroupById');
+            return new SoapFault('2001', $group_id.' : '.$GLOBALS['Language']->getText('include_group', 'g_not_found'),'getGroupById');
         } elseif ($group->isError()) {
             return new SoapFault('2001', $group->getErrorMessage(),'getGroupById');
         }

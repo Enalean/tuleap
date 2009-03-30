@@ -709,7 +709,7 @@ function frs_display_release_form($is_update, &$release, $group_id, $title, $url
 
 function frs_process_release_form($is_update, $request, $group_id, $title, $url) {
     global $frspf, $frsrf, $frsff;
-
+    $pm = ProjectManager::instance();
     //get and filter all inputs from $request
     $release = array();
     $res = $request->get('release');
@@ -1027,7 +1027,7 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
                 }
             }
 
-            $group = new Group($group_id);
+            $group = $pm->getProject($group_id);
             $group_unix_name = $group->getUnixName(false);
             $project_files_dir = $GLOBALS['ftp_frs_dir_prefix'] . '/' . $group_unix_name;
 
@@ -1209,7 +1209,7 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
                                         if (file_exists($GLOBALS['ftp_incoming_dir'] . '/' . $filename)) {
                                             //move the file to a its project page using a setuid program
                                             //test if the file aldready exists in the destination directory
-                                            $group = new Group($group_id);
+                                            $group = $pm->getProject($group_id);
                                             $group_unix_name = $group->getUnixName(false);
                                             $exec_res = $frsff->moveFileForge($group_id, $filename, $frsff->getUploadSubDirectory($release_id));
                                             if (!$exec_res) {

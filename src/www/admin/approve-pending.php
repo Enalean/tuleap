@@ -92,7 +92,7 @@ if (db_numrows($res_grp) < 1) {
     echo $Language->getText('admin_approve_pending','no_pending');
 } else {
     site_admin_header(array('title'=>$Language->getText('admin_approve_pending','title')));
-    
+    $pm = ProjectManager::instance();
     while ($row_grp = db_fetch_array($res_grp)) {
     
         ?>
@@ -100,9 +100,9 @@ if (db_numrows($res_grp) < 1) {
             <legend style="font-size:1.3em; font-weight: bold;"><?php echo $row_grp['group_name']; ?></legend>
         
 <?php
-        $group = new Group($row_grp['group_id']);
+        $group = $pm->getProject($row_grp['group_id']);
         
-        $currentproject= new project($row_grp['group_id']);
+        $currentproject= $pm->getProject($row_grp['group_id']);
         
         
         $members_id = $group->getMembersId();

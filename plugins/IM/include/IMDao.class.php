@@ -168,6 +168,7 @@ class IMDao extends DataAccessObject {
 	 * @@return true/false
 	 */
 	function synchronize_grp_for_im_muc_room() {
+        $pm = ProjectManager::instance();
 			          $dar=&$this->search_group_without_muc();
 			         $result=$dar->query;//$this->retrieve($sql)->query;
 			         if(isset($result)&&$result){
@@ -256,7 +257,7 @@ class IMDao extends DataAccessObject {
 								//$tamp=true;//to be delete
 								//about muc members
 								$group_id=$row['group_id'];
-								$grp=new Group($group_id);
+								$grp = $pm->getProject($group_id);
 						        $project_members_ids=$grp->getMembersId();
 						        foreach($project_members_ids as $user_id){
 							        $user_object = UserManager::instance()->getUserById($user_id);
@@ -305,6 +306,7 @@ class IMDao extends DataAccessObject {
 	 * @param long $group_id.
 	 */
 	 function muc_member_build($group_id) {
+         $pm = ProjectManager::instance();
 		//IM infos
 		$im_object = $this->_get_im_object();
 		$jabberConf = $im_object->get_server_conf();
@@ -316,7 +318,7 @@ class IMDao extends DataAccessObject {
 		$super_admin_affiliation = self::OPENFIRE_SUPER_ADMIN_AFFILIATION;
 		
 		//about projet to be synchronize
-		$grp = new Group($group_id);
+		$grp = $pm->getProject($group_id);
 		$roomID = $this->get_room_id_by_unix_name ($grp->getUnixName());
 		$project_members_ids = $grp->getMembersId();
 		

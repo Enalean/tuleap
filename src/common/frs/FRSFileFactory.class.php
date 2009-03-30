@@ -337,7 +337,8 @@ return 0 if file not deleted, 1 otherwise
      * @return string the feedback returned by the fileforge command.
      */
     function moveFileForge($group_id, $file_name, $upload_sub_dir) {
-        $group = new Group($group_id);
+        $pm = ProjectManager::instance();
+        $group = $pm->getProject($group_id);
         $group_unix_name = $group->getUnixName(false);
 		$file_name = preg_replace('` `', '\\ ', $file_name);
         $ret_val = null;
