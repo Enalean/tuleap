@@ -40,8 +40,9 @@ extends Docman_View_ItemDetailsSectionActions {
         parent::Docman_View_ItemDetailsSectionActions($item, $url, false,
                                                       true, $controller);
         $this->itemToPaste = $itemToPaste;
-        $this->srcGo = group_get_object($this->itemToPaste->getGroupId());
-        $this->dstGo = group_get_object($item->getGroupId());
+        $pm = ProjectManager::instance();
+        $this->srcGo = $pm->getProject($this->itemToPaste->getGroupId());
+        $this->dstGo = $pm->getProject($item->getGroupId());
     }
 
     function checkMdDifferences(&$mdDiffers) {

@@ -33,7 +33,8 @@ session_require(array('group'=>$group_id,'admin_flags'=>'A'));
 //	  
 //  get the Group object
 //	  
-$group = project_get_object($group_id);
+$pm = ProjectManager::instance();
+$group = $pm->getProject($group_id);
 if (!$group || !is_object($group) || $group->isError()) {
   exit_no_group();
 }
@@ -72,7 +73,7 @@ if (isset($func)) {
             //	  
             //  get the Group object
             //	  
-            $group = project_get_object($group_id);
+            $group = $pm->getProject($group_id);
             if (!$group || !is_object($group) || $group->isError()) {
                 exit_no_group();
             }		   
@@ -118,7 +119,7 @@ if (isset($func)) {
 	}
 
 	// get current information, force update on group and project objects
-	$group = $project = project_get_object($group_id,true);
+    $group = $project = $pm->getProject($group_id,true);
 
 	$feedback .= ' '.$Language->getText('project_admin_index','changed_group_type').' ';
       }
@@ -129,7 +130,7 @@ if (isset($func)) {
       //	  
       //  get the Group object
       //
-       $group = project_get_object($group_id);
+       $group = $pm->getProject($group_id);
        if (!$group || !is_object($group) || $group->isError()) {
 	 exit_no_group();
        } 		   
@@ -155,7 +156,7 @@ echo '<TABLE width=100% cellpadding=2 cellspacing=2 border=0>
 $HTML->box1_top($Language->getText('project_admin_index','p_edit',group_getname($group_id))); 
 
 
-$project = project_get_object($group_id);
+$project = $pm->getProject($group_id);
 
 $hp =& Codendi_HTMLPurifier::instance();
 
@@ -226,7 +227,8 @@ if (user_is_super_user()) {
 } else {
     print '<B>'.$Language->getText('project_admin_index','group_type').' '.help_button('ProjectType.html').' : '.$template->getLabel($group->getType()).'</B>';
 }
-$template_group = project_get_object($group->getTemplate());
+
+$template_group = $pm->getProject($group->getTemplate());
 $template_name = $template_group->getPublicName();
 print '
 <HR NoShade SIZE="1">
@@ -398,7 +400,7 @@ if ( $project->usesTracker()) {
     //	  
     //  get the Group object
     //	  
-    $group = project_get_object($group_id);
+    $group = $pm->getProject($group_id);
     if (!$group || !is_object($group) || $group->isError()) {
         exit_no_group();
     }		   

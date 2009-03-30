@@ -9,7 +9,8 @@
 //	Originally written by Laurent Julliard 2004, CodeX Team, Xerox
 //
 
-$project=project_get_object($group_id);
+$pm = ProjectManager::instance();
+$project=$pm->getProject($group_id);
 $gname = $project->getUnixName(false);  // don't return a lower case group name
 
 

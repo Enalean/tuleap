@@ -404,7 +404,8 @@ if (isset($params['group']) && $params['group']) {
         $selected_top_tab = isset($params['selected_top_tab']) ? $params['selected_top_tab'] : '';
 		if(isset($params['group']) && $params['group']) {
 			// get group info using the common result set
-			$project = project_get_object($params['group']);
+			$pm = ProjectManager::instance();
+            $project = $pm->getProject($params['group']);
 			if ($project && is_object($project)) {
 				if ($project->isError()) {
 
@@ -451,7 +452,8 @@ if (isset($params['group']) && $params['group']) {
     }
     
     function project_tabs($toptab,$group_id) {
-        $project=project_get_object($group_id);
+        $pm = ProjectManager::instance();
+        $project=$pm->getProject($group_id);
         if ($project->isError()) {
             //wasn't found or some other problem
             return;

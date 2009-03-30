@@ -303,7 +303,8 @@ function _makeDocmanRequest($sessionKey, $group_id, $action, $params = array()) 
     $actor ="_makeDocmanRequest ($action)";
     
     if (session_continue($sessionKey)) {
-        $group =& group_get_object($group_id);
+        $pm = ProjectManager::instance();
+        $group = $pm->getProject($group_id);
         if (!$group || !is_object($group)) {
             return new SoapFault(get_group_fault, 'Could Not Get Group', $actor);
         } elseif ($group->isError()) {

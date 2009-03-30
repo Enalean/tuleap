@@ -28,8 +28,9 @@ class IM_Widget_MyRoster extends Widget {
         //group id of the user is member
         $projects_id_user=$user->getProjects();
         $html = '';
+        $pm = ProjectManager::instance();
         foreach ($projects_id_user as $project_id) {
-            $project = project_get_object($project_id);
+            $project = $pm->getProject($project_id);
             $project_unix_name=$project->getUnixName();
             $project_public_name=$project->getPublicName();
             $members_id_array=$project->getMembersUserNames();

@@ -21,7 +21,8 @@ function patch_header($params) {
 	$params['group']=$group_id;
 
 	//only projects can use the bug tracker, and only if they have it turned on
-	$project=project_get_object($group_id);
+	$pm = ProjectManager::instance();
+    $project=$pm->getProject($group_id);
 
 	if (!$project->usesPatch()) {
 		exit_error('Error','This Project Has Turned Off The Patch Manager');
@@ -50,7 +51,8 @@ function patch_header_admin($params) {
     $params['group']=$group_id;
     $params['toptab']='patch';
     
-    $project=project_get_object($group_id);
+    $pm = ProjectManager::instance();
+    $project=$pm->getProject($group_id);
     
     //only projects can use the patch manager, and only if they have it turned on
     if (!$project->usesPatch()) {

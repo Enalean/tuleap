@@ -232,7 +232,8 @@ function forum_create_forum($group_id,$forum_name,$is_public=1,$create_default_m
 	  if ($create_default_message) {
 	    //Get the name of the group
 	    $group_name = "";
-	    $group_obj  = group_get_object($group_id);
+	    $pm = ProjectManager::instance();
+        $group_obj  = $pm->getProject($group_id);
 	    if ($group_obj && is_object($group_obj)) {
 	      $group_name = $group_obj->getPublicName();
 	    }

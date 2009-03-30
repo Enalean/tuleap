@@ -58,7 +58,8 @@ function file_utils_admin_header($params) {
     site_project_header($params);
 
     if (user_ismember($group_id,"R2")) {
-        $p = project_get_object($group_id);
+        $pm = ProjectManager::instance();
+        $p = $pm->getProject($group_id);
         
         echo '<strong>';
         echo '<a href="/file/?group_id='.$group_id.'">'. $p->services['file']->getLabel() .'</a>';

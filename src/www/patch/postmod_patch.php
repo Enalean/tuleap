@@ -85,7 +85,8 @@ if ((db_numrows($result) > 0) && (user_ismember($group_id,'C2'))) {
 	/*
 		see if we're supposed to send all modifications to an address
 	*/
-	$project=project_get_object($group_id);
+	$pm = ProjectManager::instance();
+    $project=$pm->getProject($group_id);
 	if ($project->sendAllPatchUpdates()) {
 		$address=$project->getNewPatchAddress();
 	}       

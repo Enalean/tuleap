@@ -293,7 +293,8 @@ class ArtifactFactory extends Error {
         }
         $morder = implode(',' , $array_morder);
         
-        $group = group_get_object($group_id);
+        $pm = ProjectManager::instance();
+        $group = $pm->getProject($group_id);
         $ath = new ArtifactTypeHtml($group);
 
         $artifact_report = new ArtifactReport($report_id, $group_artifact_id);

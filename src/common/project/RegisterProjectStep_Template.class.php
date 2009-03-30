@@ -95,7 +95,8 @@ class RegisterProjectStep_Template extends RegisterProjectStep {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('register_projectname', 'info_missed'));
             return false;
         } else {
-            $p =& group_get_object($data['project']['built_from_template']);
+            $pm = ProjectManager::instance();
+            $p = $pm->getProject($data['project']['built_from_template']);
             if (!$p->isTemplate() && !user_ismember($data['project']['built_from_template'],'A')) {
                 $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('global', 'perm_denied'));
                 return false;

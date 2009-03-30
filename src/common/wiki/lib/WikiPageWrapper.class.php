@@ -46,7 +46,8 @@ class WikiPageWrapper {
 
     $this->gid = (int) $id;
 
-    $go = group_get_object($this->gid);
+    $pm = ProjectManager::instance();
+    $go = $pm->getProject($this->gid);
 
     $this->wikiname = ucfirst($go->getUnixName()).'Wiki';
  

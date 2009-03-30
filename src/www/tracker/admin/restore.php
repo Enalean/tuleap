@@ -31,11 +31,12 @@ require('../include/ArtifactHtml.class.php');
 
 session_require(array('group'=>'1','admin_flags'=>'A'));
 
+$pm = ProjectManager::instance();
 $request = HTTPRequest::instance();
 $func = $request->get('func');
 	switch ( $func ) {
 	case 'restore':
-	    if ($group = group_get_object($request->getValidated('group_id', 'GroupId'))) {
+	    if ($group = $pm->getProject($request->getValidated('group_id', 'GroupId'))) {
             $ath =  new ArtifactType($group, $atid);
             if (!$ath->restore()) {
               $feedback = $Language->getText('tracker_admin_restore','restore_failed');
@@ -46,7 +47,7 @@ $func = $request->get('func');
 		break;
 		
 	case 'delay':
-	    if ($group = group_get_object($request->getValidated('group_id', 'GroupId'))) {
+	    if ($group = $pm->getProject($request->getValidated('group_id', 'GroupId'))) {
             $ath =  new ArtifactType($group, $request->getValidated('atid', 'uint'));
             // just check date >= today
     
@@ -63,7 +64,7 @@ $func = $request->get('func');
 		
 	case 'delete':
         // Create field factory
-        if ($group = group_get_object($request->getValidated('group_id', 'GroupId'))) {
+        if ($group = $pm->getProject($request->getValidated('group_id', 'GroupId'))) {
             $atid = $request->getValidated('atid', 'uint');
             $ath =  new ArtifactType($group, $atid);
             $atf = new ArtifactTypeFactory($group);
@@ -96,7 +97,7 @@ $func = $request->get('func');
 	default:  
 	  break;
 	} // switch
-$group = group_get_object(1);	
+$group = $pm->getProject(1);	
 $ath = new ArtifactTypeHtml($group);
 $HTML->includeCalendarScripts();
 $HTML->header(array('title'=>$Language->getText('tracker_admin_restore','pending_deletions')));

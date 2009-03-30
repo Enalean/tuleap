@@ -123,13 +123,14 @@ class Widget_MyArtifacts extends Widget {
         
         $artifact_types = array();
         
+        $pm = ProjectManager::instance();
         while ($trackers_array = db_fetch_array($list_trackers)) {
             $atid = $trackers_array['group_artifact_id'];
             $group_id = $trackers_array['group_id'];
             
             // {{{ check permissions
             //create group
-            $group = project_get_object($group_id);
+            $group = $pm->getProject($group_id);
             if (!$group || !is_object($group) || $group->isError()) {
                     exit_no_group();
             }

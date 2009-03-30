@@ -184,7 +184,8 @@ echo '</table>
  */
 function display_service_creation_form($group_id,$su) {
     global $sys_default_domain,$Language;
-    $project=project_get_object($group_id);
+    $pm = ProjectManager::instance();
+    $project=$pm->getProject($group_id);
  
     echo '
 <h3>'.$Language->getText('project_admin_editservice','s_creation').'</h3>
@@ -250,7 +251,8 @@ echo '<tr><td><a href="#" title="'.$Language->getText('project_admin_editservice
 
 
 session_require(array('group'=>$group_id,'admin_flags'=>'A'));
-$project=project_get_object($group_id);
+$pm = ProjectManager::instance();
+$project=$pm->getProject($group_id);
 
 project_admin_header(array('title'=>$Language->getText('project_admin_editservice','edit_s'),'group'=>$group_id,
 			   'help' => 'ServiceConfiguration.html'));

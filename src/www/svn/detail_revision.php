@@ -39,7 +39,8 @@ if (!$request->valid($vGroupId)) {
         $order = '';
     }
 
-    $project = project_get_object($group_id);
+    $pm = ProjectManager::instance();
+    $project = $pm->getProject($group_id);
     $group_name = $project->getUnixName(false);
     $result = svn_data_get_revision_detail($group_id, $commit_id, $rev_id, $order);        
     if (db_numrows($result) > 0) {

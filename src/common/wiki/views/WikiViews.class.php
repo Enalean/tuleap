@@ -27,7 +27,8 @@ function exit_wiki_empty() {
 	global $group_id;
 	
 
-	$go = project_get_object($group_id);
+	$pm = ProjectManager::instance();
+    $go = $pm->getProject($group_id);
 	$uname = $go->getUnixName();
 
 	$HTML->header(array('title'=>$GLOBALS['Language']->getText('wiki_views_wikiviews', 'title_error')));
@@ -117,7 +118,8 @@ class WikiViews extends Views {
     $this->html_params['toptab'] = 'wiki';
 
     // Wikize project name
-    $go = project_get_object($this->gid);
+    $pm = ProjectManager::instance();
+    $go = $pm->getProject($this->gid);
     $this->wikiname = ucfirst($go->getUnixName()).'Wiki';
 
     // Build convenients URL

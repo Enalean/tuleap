@@ -5,7 +5,8 @@ require_once('common/include/HTTPRequest.class.php');
 
 $request =& HTTPRequest::instance();
 
-$project =& project_get_object($request->get('group_id'));
+$pm = ProjectManager::instance();
+$project = $pm->getProject($request->get('group_id'));
 if ($project && $request->exist('id')) {
     $db_res = db_query("SELECT * 
         FROM service 

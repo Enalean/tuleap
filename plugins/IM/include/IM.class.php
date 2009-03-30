@@ -110,7 +110,8 @@ class IM extends Controler {
                 break;
             default:
                 if ($group_id) {
-                    $project = project_get_object($group_id);
+                    $pm = ProjectManager::instance();
+                    $project = $pm->getProject($group_id);
                     if ($project->usesService('IM')) {
                         if ($user->isMember($group_id)) {
                             $this->view = 'chat_room';

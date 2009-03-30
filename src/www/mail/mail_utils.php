@@ -14,7 +14,8 @@ function mail_header($params) {
 	$params['group']=$group_id;
 	$params['toptab']='mail';
 
-	$project=project_get_object($group_id);
+	$pm = ProjectManager::instance();
+    $project=$pm->getProject($group_id);
 
 	if (!$project->usesMail()) {
 		exit_error($Language->getText('global','error'),$Language->getText('mail_utils','mail_turned_off'));
@@ -40,7 +41,8 @@ function mail_header_admin($params) {
 	$params['group']=$group_id;
 	$params['toptab']='mail';
 
-	$project=project_get_object($group_id);
+	$pm = ProjectManager::instance();
+    $project=$pm->getProject($group_id);
 
 	if (!$project->usesMail()) {
 		exit_error($Language->getText('global','error'),$Language->getText('mail_utils','mail_turned_off'));

@@ -422,7 +422,8 @@ if ($type_of_search == "soft") {
 	}
 
 } else if ($type_of_search == 'all_trackers') {
-    if ($project = project_get_object($group_id)) {
+    $pm = ProjectManager::instance();
+    if ($project = $pm->getProject($group_id)) {
         
         $atf = new ArtifactTypeFactory($project);
         
@@ -528,7 +529,8 @@ if ($type_of_search == "soft") {
     //
     //      get the Group object
     //
-    $group = group_get_object($group_id);
+    $pm = ProjectManager::instance();
+    $group = $pm->getProject($group_id);
     if (!$group || !is_object($group) || $group->isError()) {
             exit_no_group();
     }

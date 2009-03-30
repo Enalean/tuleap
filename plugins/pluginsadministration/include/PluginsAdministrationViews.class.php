@@ -130,6 +130,7 @@ class PluginsAdministrationViews extends Views {
         }
     }
     function properties() {
+        $pm = ProjectManager::instance();
         $link_to_plugins = dirname($_SERVER['REQUEST_URI']).'/';
         $request =& HTTPRequest::instance();
         if ($request->exist('plugin_id')) {
@@ -217,7 +218,7 @@ class PluginsAdministrationViews extends Views {
                         if(count($projectIds) > 0) {
                             $projects = '';
                             foreach($projectIds as $project_id) {
-                                if ($p = group_get_object($project_id)) {
+                                if ($p = $pm->getProject($project_id)) {
                                     $projects .= ' '.$project_id .' ('. $p->getUnixName() .'),';
                                 }
                             }

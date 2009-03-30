@@ -203,7 +203,8 @@ function ugroup_user_is_member($user_id, $ugroup_id, $group_id, $atid=0) {
         if ($user->isMember($group_id,'A')) { return true; }
     } else if ($ugroup_id==$GLOBALS['UGROUP_TRACKER_ADMIN']) {
         // Tracker admins
-        $group = group_get_object($group_id);	
+        $pm = ProjectManager::instance();
+        $group = $pm->getProject($group_id);	
         $at = new ArtifactType($group, $atid);
         return $at->userIsAdmin($user_id);
     } else { 

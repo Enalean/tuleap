@@ -53,11 +53,13 @@ $output = '';
         $logs_dao = new PluginSvntodimensionsLogDao(CodendiDataAccess::instance());
         $logs_result =& $logs_dao->searchAll();
         
+        $pm = ProjectManager::instance();
+        
         $row_index = 0;
         while($logs_result->valid()){
             $row = $logs_result->current();
             $output .= '<tr class="'.html_get_alt_row_color($row_index).'" >';
-            $group = group_get_object($row['group_id']);
+            $group = $pm->getProject($row['group_id']);
             $short_name = $group->getUnixName();
             $output .= '<td>'.$short_name.'</td>';
             $output .= '<td>'.$row['tag'].'</td>';

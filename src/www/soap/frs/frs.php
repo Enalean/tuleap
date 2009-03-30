@@ -297,7 +297,8 @@ $server->register(
  */
 function getPackages($sessionKey,$group_id) {
     if (session_continue($sessionKey)) {
-        $group = group_get_object($group_id);
+        $pm = ProjectManager::instance();
+        $group = $pm->getProject($group_id);
         if (!$group || !is_object($group)) {
             return new SoapFault(get_group_fault,'Could Not Get Group','getPackages');
         } elseif ($group->isError()) {
@@ -370,7 +371,8 @@ function packages_to_soap(&$pkg_arr) {
  */
 function addPackage($sessionKey,$group_id,$package_name,$status_id,$rank=0,$approve_license=true) {
     if (session_continue($sessionKey)) {
-        $group = group_get_object($group_id);
+        $pm = ProjectManager::instance();
+        $group = $pm->getProject($group_id);
         if (!$group || !is_object($group)) {
             return new SoapFault(get_group_fault,'Could Not Get Group', 'addPackage');
         } elseif ($group->isError()) {
@@ -413,7 +415,8 @@ function addPackage($sessionKey,$group_id,$package_name,$status_id,$rank=0,$appr
  */
 function getReleases($sessionKey,$group_id,$package_id) {
     if (session_continue($sessionKey)) {
-        $group = group_get_object($group_id);
+        $pm = ProjectManager::instance();
+        $group = $pm->getProject($group_id);
         if (!$group || !is_object($group)) {
             return new SoapFault(get_group_fault,'Could Not Get Group','getReleases');
         } elseif ($group->isError()) {
@@ -506,7 +509,8 @@ function releases_to_soap($release_arr) {
  */
 function addRelease($sessionKey,$group_id,$package_id,$name,$notes,$changes,$status_id,$release_date) {
     if (session_continue($sessionKey)) {
-        $group = group_get_object($group_id);
+        $pm = ProjectManager::instance();
+        $group = $pm->getProject($group_id);
         if (!$group || !is_object($group)) {
             return new SoapFault(get_group_fault,'Could Not Get Group','addRelease');
         } elseif ($group->isError()) {
@@ -557,7 +561,8 @@ function addRelease($sessionKey,$group_id,$package_id,$name,$notes,$changes,$sta
  */
 function getFiles($sessionKey,$group_id,$package_id,$release_id) {
     if (session_continue($sessionKey)) {
-        $group = group_get_object($group_id);
+        $pm = ProjectManager::instance();
+        $group = $pm->getProject($group_id);
         if (!$group || !is_object($group)) {
             return new SoapFault(get_group_fault,'Could Not Get Group','getFiles');
         } elseif ($group->isError()) {
@@ -652,7 +657,8 @@ function files_to_soap($files_arr) {
 function getFile($sessionKey,$group_id,$package_id,$release_id,$file_id) {
     if (session_continue($sessionKey)) {
     
-        $group = group_get_object($group_id);
+        $pm = ProjectManager::instance();
+        $group = $pm->getProject($group_id);
         if (!$group || !is_object($group)) {
             return new SoapFault(get_group_fault,'Could Not Get Group','getFile');
         } elseif ($group->isError()) {
@@ -728,7 +734,8 @@ function getFile($sessionKey,$group_id,$package_id,$release_id,$file_id) {
 function addFile($sessionKey,$group_id,$package_id,$release_id,$filename,$base64_contents,$type_id,$processor_id) {
     if (session_continue($sessionKey)) {
 
-        $group = group_get_object($group_id);
+        $pm = ProjectManager::instance();
+        $group = $pm->getProject($group_id);
         if (!$group || !is_object($group)) {
             return new SoapFault(get_group_fault,'Could Not Get Group','addFile');
         } elseif ($group->isError()) {
@@ -802,7 +809,8 @@ function addFile($sessionKey,$group_id,$package_id,$release_id,$filename,$base64
 function addUploadedFile($sessionKey,$group_id,$package_id,$release_id,$filename,$type_id,$processor_id) {
     if (session_continue($sessionKey)) {
 
-        $group = group_get_object($group_id);
+        $pm = ProjectManager::instance();
+        $group = $pm->getProject($group_id);
         if (!$group || !is_object($group)) {
             return new SoapFault(get_group_fault,'Could Not Get Group','addUploadedFile');
         } elseif ($group->isError()) {
@@ -859,7 +867,8 @@ function addUploadedFile($sessionKey,$group_id,$package_id,$release_id,$filename
 function getUploadedFiles($sessionKey, $group_id) {
     if (session_continue($sessionKey)) {
         
-        $group = group_get_object($group_id);
+        $pm = ProjectManager::instance();
+        $group = $pm->getProject($group_id);
         if (!$group || !is_object($group)) {
             return new soap_fault(get_group_fault,'getUploadedFiles','Could Not Get Group','');
         } elseif ($group->isError()) {

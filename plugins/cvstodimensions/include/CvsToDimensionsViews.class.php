@@ -191,7 +191,8 @@ class CvsToDimensionsViews extends Views {
     
     // {{{ functions to fill a form field
     function _fillProduct($initialized, $row, $request, $group_id){
-    	$group = group_get_object($group_id);
+    	$pm = ProjectManager::instance();
+        $group = $pm->getProject($group_id);
     	$short_name = $group->getUnixName();
     	$output = '';
     	

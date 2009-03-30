@@ -101,8 +101,9 @@ class ServerAdmin {
             if (count($projects)) {
                 $html .= '<p>'. $GLOBALS['Language']->getText('admin_servers', 'delete_using') .'</p>';
                 $html .= '<dl>';
+                $pm = ProjectManager::instance();
                 foreach($projects as $project_id => $services) {
-                    if ($p =& project_get_object($project_id)) {
+                    if ($p = $pm->getProject($project_id)) {
                         $html .= '<dt><a title="Project admin" href="/project/admin/?group_id='. $project_id .'">'. $p->getPublicName() .'</a></dt>';
                         $html .= '<dd><ul>';
                         foreach($services as $service) {

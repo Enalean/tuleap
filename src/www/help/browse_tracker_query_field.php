@@ -25,7 +25,8 @@ list($group_id, $artifact_type_id, $field_name) = explode('|',urldecode($helpid)
 //
 //	get the Group object
 //
-$group = group_get_object($group_id);
+$pm = ProjectManager::instance();
+$group = $pm->getProject($group_id);
 if (!$group || !is_object($group) || $group->isError()) {
     exit_no_group();
 }

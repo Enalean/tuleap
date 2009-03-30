@@ -44,7 +44,8 @@ session_require(array('group'=>$group_id,'admin_flags'=>'A'));
 //	  
 //  get the Group object
 //	  
-$group = group_get_object($group_id);
+$pm = ProjectManager::instance();
+$group = $pm->getProject($group_id);
 if (!$group || !is_object($group) || $group->isError()) {
 	exit_no_group();
 }		   
@@ -53,7 +54,7 @@ if (!$group || !is_object($group) || $group->isError()) {
 	exit_error($Language->getText('global','error'),$Language->getText('project_admin_index','not_get_atf'));
 }
 
-$project=project_get_object($group_id);
+$project=$pm->getProject($group_id);
 $groupname = $project->getUnixName();
 //export database name is: cx_<project shortname>
 $dbname = "cx_".str_replace("-","",$groupname);

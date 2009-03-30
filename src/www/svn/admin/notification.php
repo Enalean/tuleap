@@ -45,7 +45,8 @@ $hp =& Codendi_HTMLPurifier::instance();
 svn_header_admin(array ('title'=>$Language->getText('svn_admin_general_settings','gen_settings'),
 		      'help' => 'SubversionAdministrationInterface.html#SubversionEmailNotification'));
 
-$project=project_get_object($group_id);
+$pm = ProjectManager::instance();
+$project=$pm->getProject($group_id);
 $svn_mailing_list = $project->getSVNMailingList();
 $svn_mailing_header = $project->getSVNMailingHeader();
 

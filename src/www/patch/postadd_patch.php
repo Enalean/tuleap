@@ -56,7 +56,8 @@ if (!$result) {
 	$feedback .= ' Successfully Added Patch ';
 }
 
-$project=project_get_object($group_id);
+$pm = ProjectManager::instance();
+$project=$pm->getProject($group_id);
 
 mail_followup(db_insertid($result), $project->getNewPatchAddress());
 

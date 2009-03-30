@@ -307,7 +307,8 @@ if (!IS_SCRIPT &&
     if ($_SERVER['SCRIPT_NAME'] == '/file/download.php') { //There is no group_id for /file/download.php
         $components = explode('/', $_SERVER['REQUEST_URI']);
         if (isset($components[3])) {
-            $p =& project_get_object($components[3]);
+            $pm = ProjectManager::instance();
+            $p = $pm->getProject($components[3]);
         }
     } else if ($_SERVER['SCRIPT_NAME'] == '/svn/viewvc.php' && $request->get('roottype') == 'svn' && $request->exist('root')) { //There is no group_id for viewvc
         $res_grp=db_query("SELECT group_id FROM groups WHERE unix_group_name='". db_es($request->get('root')) ."'");
@@ -316,10 +317,12 @@ if (!IS_SCRIPT &&
             echo db_error();
             exit_error("Invalid Group","That group does not exist.");
         } else {
-            $p =& project_get_object(db_result($res_grp,0,'group_id'));
+            $pm = ProjectManager::instance();
+            $p = $pm->getProject(db_result($res_grp,0,'group_id'));
         }
     } else if ($request->exist('group_id')) {
-        $p =& project_get_object($request->get('group_id'));
+        $pm = ProjectManager::instance();
+        $p = $pm->getProject($request->get('group_id'));
     }
     if (isset($p)) {
         //get service from url

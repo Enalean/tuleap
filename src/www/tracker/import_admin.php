@@ -27,7 +27,8 @@ if ($group_id && $mode == "admin") {
   //	  
   //  get the Group object
   //	  
-  $group = group_get_object($group_id);
+  $pm = ProjectManager::instance();
+  $group = $pm->getProject($group_id);
   if (!$group || !is_object($group) || $group->isError()) {
 	exit_no_group();
   }		   
@@ -43,7 +44,8 @@ if ($group_id && $mode == "admin") {
   project_admin_header(array('title'=>$pg_title,
 			     'help' => 'ArtifactImport.html'));
 
-  $project=project_get_object($group_id);
+  $pm = ProjectManager::instance();
+  $project=$pm->getProject($group_id);
   if (! $project->usesTracker()) {
       echo '<P> '.$Language->getText('tracker_import_admin','disabled');
       project_admin_footer(array());

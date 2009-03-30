@@ -58,7 +58,8 @@ class Docman_NotificationsManager extends NotificationsManager {
         return $if;
     }
     function &_groupGetObject($group_id) {
-        $go = project_get_object($group_id);
+        $pm = ProjectManager::instance();
+        $go = $pm->getProject($group_id);
         return $go;
     }
     function &_getUserManager() {

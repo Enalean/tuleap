@@ -14,7 +14,8 @@ require_once('common/include/TemplateSingleton.class.php');
 require_once('common/event/EventManager.class.php');
 
 session_require(array('group'=>'1','admin_flags'=>'A'));
-$group = group_get_object($group_id,false,true);
+$pm = ProjectManager::instance();
+$group = $pm->getProject($group_id,false,true);
 
 $currentproject= new project($group_id);
 
@@ -47,7 +48,7 @@ if ($Update) {
 
 	$feedback .= $Language->getText('admin_groupedit','feedback_info');
 
-	$group = group_get_object($group_id,false,true);
+	$group = $pm->getProject($group_id,false,true);
 	
 	// ZD: Raise an event for group update 
         if(isset($form_status) && $form_status && ($form_status=="H" || $form_status=="P")){
@@ -151,7 +152,7 @@ $currentproject->displayProjectsDescFieldsValue();
 	
 print "<br><u>".$Language->getText('admin_groupedit','license_other')."</u>: <br> $row_grp[license_other]";
 
-$template_group = group_get_object($group->getTemplate());
+$template_group = $pm->getProject($group->getTemplate());
 print "<br><u>".$Language->getText('admin_groupedit','built_from_template').'</u>: <br> <A href="/projects/'.$template_group->getUnixName().'"> <B> '.$template_group->getPublicname().' </B></A>';
 
 echo "<P><HR><P>";

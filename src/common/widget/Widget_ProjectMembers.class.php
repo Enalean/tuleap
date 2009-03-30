@@ -20,7 +20,8 @@ class Widget_ProjectMembers extends Widget {
     public function getContent() {
         $request =& HTTPRequest::instance();
         $group_id = $request->get('group_id');
-        $project =& project_get_object($group_id);
+        $pm = ProjectManager::instance();
+        $project = $pm->getProject($group_id);
         
         $res_admin = db_query("SELECT user.user_id AS user_id,user.user_name AS user_name, user.realname as realname "
                             . "FROM user,user_group "

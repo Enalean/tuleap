@@ -206,7 +206,8 @@ if (!$request->valid($vGroupId)) {
     /*
      Display commits based on the form post - by user or status or both
     */
-    $project = group_get_object($group_id); 
+    $pm = ProjectManager::instance();
+    $project = $pm->getProject($group_id); 
     $root = $project->getUnixName(false);
 
     list($result, $totalrows) = svn_get_revisions($project, $offset, $chunksz, $_rev_id, $_commiter, $_srch, $order_by, $pv);

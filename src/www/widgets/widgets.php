@@ -31,7 +31,8 @@ if (user_isloggedin()) {
                     
                     break;
                 case WidgetLayoutManager::OWNER_TYPE_GROUP:
-                    if ($project = project_get_object($owner_id)) {
+                    $pm = ProjectManager::instance();
+                    if ($project = $pm->getProject($owner_id)) {
                         $group_id = $owner_id;
                         $_REQUEST['group_id'] = $_GET['group_id'] = $group_id;
                         $request->params['group_id'] = $group_id; //bad!

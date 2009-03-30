@@ -89,6 +89,7 @@ class Docman_HTTPController extends Docman_Controller {
      * about this obsolescence.
      */
     function notifyFuturObsoleteDocuments() {
+        $pm = ProjectManager::instance();
         $itemFactory = new Docman_ItemFactory(0);
 
         //require_once('common/mail/TestMail.class.php');
@@ -106,7 +107,7 @@ class Docman_HTTPController extends Docman_Controller {
             $owner =& $um->getUserById($item->getOwnerId());
             
             // Project
-            $group = group_get_object($item->getGroupId());
+            $group = $pm->getProject($item->getGroupId());
             
             // Date
             $obsoDate = util_timestamp_to_userdateformat($item->getObsolescenceDate(), true);

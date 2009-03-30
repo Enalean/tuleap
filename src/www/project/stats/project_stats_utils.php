@@ -22,7 +22,8 @@ function week_to_dates( $week, $year = 0 ) {
 
 
 function stats_get_sql_query($group_id) {
-    $grp=project_get_object($group_id);
+    $pm = ProjectManager::instance();
+    $grp=$pm->getProject($group_id);
     $sql  = "SELECT month,week,day,COUNT(day),MAX(developers) as developers ,AVG(group_ranking),AVG(group_metric)";
     if ($grp->usesFile())
         $sql .= ", SUM(downloads)";
@@ -50,7 +51,8 @@ function stats_get_sql_query($group_id) {
 
 function stats_get_table_service_header($group_id) {
     global $Language;
-    $grp=project_get_object($group_id);
+    $pm = ProjectManager::instance();
+    $grp=$pm->getProject($group_id);
     $text ='';
     if ($grp->usesHomePage())
         $text .=  '<TD class="boxtitle">'.$Language->getText('project_stats_index','page_views').'</TD>';
@@ -74,7 +76,8 @@ function stats_get_table_service_header($group_id) {
 }
 
 function stats_get_table_service_rows($group_id,$row) {
-    $grp=project_get_object($group_id);
+    $pm = ProjectManager::instance();
+    $grp=$pm->getProject($group_id);
     $text ='';
     if ($grp->usesHomePage())
         $text .= '<TD align="center">' . number_format( $row["SUM(site_views + subdomain_views)"] ) . '</TD>';
@@ -105,7 +108,8 @@ function stats_project_daily( $group_id, $span = 7 ) {
         $span = 7;
     }
     
-    $grp=project_get_object($group_id);
+    $pm = ProjectManager::instance();
+    $grp=$pm->getProject($group_id);
     
     // Get information about the date $span days ago 
     $begin_date = localtime( (time() - ($span * 86400)), 1);
@@ -155,7 +159,8 @@ function stats_project_daily( $group_id, $span = 7 ) {
 function stats_project_weekly( $group_id, $span = 8 ) {
     global $Language;
 
-    $grp=project_get_object($group_id);
+    $pm = ProjectManager::instance();
+    $grp=$pm->getProject($group_id);
 
     if (! $span ) { 
         $span = 8;
@@ -217,7 +222,8 @@ function stats_project_weekly( $group_id, $span = 8 ) {
 function stats_project_monthly( $group_id, $span = 4 ) {
     global $Language;
 
-    $grp=project_get_object($group_id);
+    $pm = ProjectManager::instance();
+    $grp=$pm->getProject($group_id);
 
     if (! $span ) { 
         $span = 4;
@@ -276,7 +282,8 @@ function stats_project_monthly( $group_id, $span = 4 ) {
 function stats_site_agregate( $group_id ) {
     global $Language;
 
-    $grp=project_get_object($group_id);
+    $pm = ProjectManager::instance();
+    $grp=$pm->getProject($group_id);
 
     $sql  = stats_get_sql_query($group_id);
     $sql .= "WHERE group_id = " . $group_id . " ";

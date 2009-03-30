@@ -52,7 +52,8 @@ if (isset($morder)) {
 
 
 // get project name
-$project =& project_get_object($group_id);
+$pm = ProjectManager::instance();
+$project = $pm->getProject($group_id);
 $projectname = $project->getUnixName(false);
 
 //

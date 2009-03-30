@@ -16,7 +16,8 @@ class Widget_ProjectLatestCommits extends Widget {
     function Widget_ProjectLatestCommits($id, $get_commits_callback) {
         $this->Widget($id);
         $request =& HTTPRequest::instance();
-        $project =& project_get_object($request->get('group_id'));
+        $pm = ProjectManager::instance();
+        $project = $pm->getProject($request->get('group_id'));
         if ($project && $this->canBeUsedByProject($project)) {
             list($this->latest_revisions,) = $get_commits_callback($project, 0, 5);
             $this->group_id = $project->getGroupId();
@@ -64,7 +65,8 @@ class Widget_ProjectLatestCommits extends Widget {
     /*
     Do not use rss for this widget because we don't resolved authentification issue
     function displayRss() {
-        $project =& project_get_object($this->group_id);
+        $pm = ProjectManager::instance();
+        $project = $pm->getProject($this->group_id);
         $rss = new RSS(array(
             'title'       => $project->getPublicName() .' - '. $this->getTitle(),
             'description' => '',

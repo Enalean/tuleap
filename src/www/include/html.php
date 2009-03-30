@@ -468,7 +468,8 @@ function site_header($params) {
     */
 
     if (isset($params['group'])) {
-	  $project=project_get_object($params['group']);
+	  $pm = ProjectManager::instance();
+      $project=$pm->getProject($params['group']);
 	  if ($project->isTemplate()) {
 	    $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('include_layout','template_warning'));
 	  }
@@ -500,7 +501,8 @@ function site_project_header($params) {
 	$group_id=$params['group'];
 
 	//get the project object 
-	$project=project_get_object($group_id);
+	$pm = ProjectManager::instance();
+    $project=$pm->getProject($group_id);
 
 	//group doesn't exist
 	if ($project->isError()) {

@@ -65,7 +65,8 @@ if ($request->isAjax()) {
                 require_once('common/tracker/ArtifactFieldFactory.class.php');
                 require_once('tracker/include/ArtifactHtml.class.php');
                 require_once('tracker/include/ArtifactFieldHtml.class.php');
-                $at = new ArtifactType(project_get_object($group_id),$atid);
+                $pm = ProjectManager::instance();
+                $at = new ArtifactType($pm->getProject($group_id),$atid);
                 if (!$at->isError() && $at->isValid()) {
                     $art_field_fact = new ArtifactFieldFactory($at);
                     $ah=new ArtifactHtml($at,$aid);

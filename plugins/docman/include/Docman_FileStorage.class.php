@@ -123,7 +123,8 @@ class Docman_FileStorage {
     }
     
     function _getGroupName($id) {
-        $group = group_get_object($id);
+        $pm = ProjectManager::instance();
+        $group = $pm->getProject($id);
         return $group->getUnixName();
     }
 }

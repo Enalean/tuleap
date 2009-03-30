@@ -144,14 +144,16 @@ function create_project($data, $do_not_exit = false) {
         */
             
         // Instanciate all services from the project template that are 'active'
-        $group = group_get_object($group_id);
+        $pm = ProjectManager::instance();
+        $group = $pm->getProject($group_id);
         if (!$group || !is_object($group) || $group->isError()) {
             exit_no_group();
         }
         
         $template_id = $group->getTemplate();
         
-        $template_group = group_get_object($template_id);
+        $pm = ProjectManager::instance();
+        $template_group = $pm->getProject($template_id);
         if (!$template_group || !is_object($template_group) || $template_group->isError()) {
           exit_no_group();
         }

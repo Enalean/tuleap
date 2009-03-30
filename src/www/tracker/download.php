@@ -23,7 +23,8 @@ $result = db_query($sql);
 if (db_numrows($result)>0) {
     $row = db_fetch_array($result);
     $atid = $row['group_artifact_id'];
-    $group = group_get_object($row['group_id']);
+    $pm = ProjectManager::instance();
+    $group = $pm->getProject($row['group_id']);
     
     $at = new ArtifactType($group,$atid);
     if ($at->userCanView()) {

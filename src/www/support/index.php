@@ -11,7 +11,8 @@ require('../support/support_utils.php');
 require('../support/support_data.php');
 
 if ($group_id) {
-	$project=project_get_object($group_id);
+	$pm = ProjectManager::instance();
+    $project=$pm->getProject($group_id);
 
 	switch ($func) {
 

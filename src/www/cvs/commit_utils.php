@@ -31,7 +31,8 @@ function commits_header($params) {
 	$params['toptab']='cvs';
 	$params['group']=$group_id;
 
-	$project=project_get_object($group_id);
+	$pm = ProjectManager::instance();
+    $project=$pm->getProject($group_id);
 
 	if (!$project->usesCVS()) {
 	    exit_error($Language->getText('global', 'error'),
@@ -66,7 +67,8 @@ function commits_header_admin($params) {
     $params['group']=$group_id;
     $params['toptab']='cvs';
     
-    $project=project_get_object($group_id);
+    $pm = ProjectManager::instance();
+    $project=$pm->getProject($group_id);
     
     if (!$project->usesCVS()) {
 	exit_error($Language->getText('global', 'error'),
@@ -599,7 +601,8 @@ function format_cvs_history($group_id) {
 // period is expressed in seconds
 function get_cvs_history($group_id, $period=false) {
   
-  $group = group_get_object($group_id);
+  $pm = ProjectManager::instance();
+  $group = $pm->getProject($group_id);
   
   if ($period) {
     // All times in cvs tables are stored in UTC ???

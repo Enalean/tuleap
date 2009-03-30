@@ -21,7 +21,8 @@ function survey_header($params) {
     $params['toptab']='survey';
     $params['group']=$group_id;
 
-    $project=project_get_object($group_id);
+    $pm = ProjectManager::instance();
+    $project=$pm->getProject($group_id);
 
     if (!$project->usesSurvey()) {
 	exit_error($Language->getText('global','error'),$Language->getText('survey_s_utils','s_off'));

@@ -93,7 +93,8 @@ class IMViews extends Views {
         $request = HTTPRequest::instance();
 
 		$group_id = $request->get('group_id'); 
-    	$project = project_get_object($group_id);
+    	$pm = ProjectManager::instance();
+        $project = $pm->getProject($group_id);
     	$um = UserManager::instance();
 	    $user = $um->getCurrentUser();
     	
@@ -173,7 +174,8 @@ class IMViews extends Views {
     }
     
     private function _display_muc_logs($group_id, $start_date, $end_date) {
-        $project = project_get_object($group_id);
+        $pm = ProjectManager::instance();
+        $project = $pm->getProject($group_id);
         $any = $GLOBALS['Language']->getText('global', 'any');
         
         echo '<h2>' . $GLOBALS['Language']->getText('plugin_im', 'muc_logs_title') . '</h2>';
@@ -293,7 +295,8 @@ class IMViews extends Views {
     function export_muc_logs() {
         $request = HTTPRequest::instance();
         $group_id = $request->get('group_id');
-        $project = project_get_object($group_id);
+        $pm = ProjectManager::instance();
+        $project = $pm->getProject($group_id);
         
         $any = $GLOBALS['Language']->getText('global', 'any');
         
@@ -411,6 +414,7 @@ class IMViews extends Views {
 			$array_grp_only = $array_grp;
 		}
 		
+        $pm = ProjectManager::instance();
         echo'<fieldset>';
 		echo'<legend class="im_synchronize">'.$GLOBALS["Language"]->getText('plugin_im_admin','projects_to_sync').'</legend>';
 		if ( $nb_grp != 0 || $nb_muc ) {
@@ -418,11 +422,11 @@ class IMViews extends Views {
 			global $PHP_SELF;
 			if (sizeof($array_muc_and_grp)) {
 				foreach ($array_muc_and_grp as $key => $val) {
-					$project = project_get_object($val);
+					$project = $pm->getProject($val);
 			        $unix_group_name = strtolower($project->getUnixName());
 			        $group_name=$project->getPublicName();
 			        $group_description = $project->getDescription();
-			        $grp = project_get_object($val); // $val = group_id;
+			        $grp = $pm->getProject($val); // $val = group_id;
 			        $group_id = $grp->getID();
 			        $project_members_ids = $grp->getMembersId();
 			        foreach ($project_members_ids as $key => $id) {
@@ -460,12 +464,13 @@ class IMViews extends Views {
 			}
 			
 			if (sizeof($array_grp_only)) {
-				foreach ($array_grp_only as $key => $val) {
-					$project = project_get_object($val);
+				$pm = ProjectManager::instance();
+                foreach ($array_grp_only as $key => $val) {
+					$project = $pm->getProject($val);
 			        $unix_group_name = strtolower($project->getUnixName());
 			        $group_name = $project->getPublicName();
 			        $group_description = $project->getDescription();
-			        $grp = project_get_object($val); // $val = group_id;
+			        $grp = $pm->getProject($val); // $val = group_id;
 			        $group_id = $grp->getID();
 			        $project_members_ids = $grp->getMembersId();
 			        foreach ($project_members_ids as $key => $id) {
@@ -503,12 +508,13 @@ class IMViews extends Views {
 			}
 			
 			if (sizeof($array_muc_only)) {
-				foreach ($array_muc_only as $key => $val) {
-					$project = project_get_object($val);
+				$pm = ProjectManager::instance();
+                foreach ($array_muc_only as $key => $val) {
+					$project = $pm->getProject($val);
 			        $unix_group_name = strtolower($project->getUnixName());
 			        $group_name = $project->getPublicName();
 			        $group_description = $project->getDescription();
-			        $grp = project_get_object($val); // $val = group_id;
+			        $grp = $pm->getProject($val); // $val = group_id;
 			        $group_id = $grp->getID();
 			        $project_members_ids = $grp->getMembersId();
 			        foreach ($project_members_ids as $key => $id){

@@ -19,7 +19,8 @@ if ($group_id ) {
     // Initialize the global data structure before anything else
     pm_init($group_id);
 
-    $project=project_get_object($group_id);
+    $pm = ProjectManager::instance();
+    $project=$pm->getProject($group_id);
 
 	//can this person view these tasks? they may have hacked past the /pm/index.php page
 	if (user_isloggedin() && user_ismember($group_id)) {

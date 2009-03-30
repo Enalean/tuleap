@@ -17,7 +17,8 @@ require_once('common/user/UserHelper.class.php');
 //	  
 //  get the Group object
 //	  
-$group = project_get_object($group_id);
+$pm = ProjectManager::instance();
+$group = $pm->getProject($group_id);
 if (!$group || !is_object($group) || $group->isError()) {
 	exit_no_group();
 }		   
@@ -30,7 +31,7 @@ $at_arr = $atf->getArtifactTypes();
 	
 session_require(array('group'=>$group_id,'admin_flags'=>'A'));
 
-$project=project_get_object($group_id);
+$project=$pm->getProject($group_id);
 if ($project->isError()) {
         //wasn't found or some other problem
         echo $Language->getText('project_admin_userperms','unable_load_p')."<br>";

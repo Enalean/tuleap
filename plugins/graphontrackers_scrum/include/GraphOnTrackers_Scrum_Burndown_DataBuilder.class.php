@@ -87,8 +87,9 @@ class GraphOnTrackers_Scrum_Burndown_DataBuilder extends ChartDataBuilder {
         
         //retrieve actual value of the field
         $field_value = array();
+        $pm = ProjectManager::instance();
         $at = new ArtifactType(
-            project_get_object($this->chart->getGraphicReport()->getGroupId()),
+            $pm->getProject($this->chart->getGraphicReport()->getGroupId()),
             $this->chart->getGraphicReport()->getAtid()
         );
         foreach($this->artifacts as $aid) {

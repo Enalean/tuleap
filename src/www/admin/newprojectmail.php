@@ -14,7 +14,8 @@ session_require(array('group'=>'1','admin_flags'=>'A'));
 
 $content = "";
 if (!send_new_project_email($group_id)) {
-    $group = group_get_object($group_id);
+    $pm = ProjectManager::instance();
+    $group = $pm->getProject($group_id);
     if ($group && is_object($group) && !$group->isError()) {
         $GLOBALS['feedback'] .= "<p>".$group->getPublicName()." - ".$GLOBALS['Language']->getText('global', 'mail_failed', array($GLOBALS['sys_email_admin']))."</p>";
     }

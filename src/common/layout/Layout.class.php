@@ -826,7 +826,8 @@ class Layout extends Response {
      */
     public function generic_header($params) {
         if (isset($GLOBALS['group_id']) && $GLOBALS['group_id']) {
-            $project = project_get_object($GLOBALS['group_id']);
+            $pm = ProjectManager::instance();
+            $project = $pm->getProject($GLOBALS['group_id']);
             if (isset($params['toptab'])) {
                 $this->warning_for_services_which_configuration_is_not_inherited($GLOBALS['group_id'], $params['toptab']);
             }
@@ -920,7 +921,8 @@ class Layout extends Response {
         
         // If in a project page, add a project news feed
         if (isset($GLOBALS['group_id']) && $GLOBALS['group_id']) {
-            $project = project_get_object($GLOBALS['group_id']);
+            $pm = ProjectManager::instance();
+            $project = $pm->getProject($GLOBALS['group_id']);
             echo $this->getRssFeed(
                 $hp->purify($project->getPublicName().' - '.$GLOBALS['Language']->getText('include_layout','latest_news_rss'), CODENDI_PURIFIER_CONVERT_HTML),
                 '/export/rss_sfnews.php?group_id='.$GLOBALS['group_id']
@@ -967,7 +969,8 @@ class Layout extends Response {
     }
     
     function warning_for_services_which_configuration_is_not_inherited($group_id, $service_top_tab) {
-        $project=project_get_object($group_id);
+        $pm = ProjectManager::instance();
+        $project=$pm->getProject($group_id);
         if ($project->isTemplate()) {
             switch($service_top_tab) {
             case 'admin':
@@ -1373,7 +1376,8 @@ class Layout extends Response {
       global $sys_default_domain,$Language;
             
             // get group info using the common result set
-            $project=project_get_object($group_id);
+            $pm = ProjectManager::instance();
+            $project=$pm->getProject($group_id);
             if ($project->isError()) {
                 //wasn't found or some other problem
                 return;

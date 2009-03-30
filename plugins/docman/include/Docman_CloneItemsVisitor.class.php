@@ -102,7 +102,8 @@ class Docman_CloneItemsVisitor {
             $versionFactory = $this->_getVersionFactory();
             $user = $params['user'];
             $label = $GLOBALS['Language']->getText('plugin_docman', 'clone_file_label');
-            $project = group_get_object($item->getGroupId());
+            $pm = ProjectManager::instance();
+            $project = $pm->getProject($item->getGroupId());
             $changelog = $GLOBALS['Language']->getText('plugin_docman', 'clone_file_changelog', array($item->getTitle(),
                                                                                                       $project->getPublicName(),
                                                                                                       $srcVersion->getNumber()));

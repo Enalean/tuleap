@@ -447,7 +447,8 @@ class WikiAttachment /* implements UGroupPermission */ {
      */
     function validate() {
         // Validate Group id
-        $go = group_get_object($this->gid);
+        $pm = ProjectManager::instance();
+        $go = $pm->getProject($this->gid);
         if(!$go) 
             exit_no_group();
    

@@ -131,6 +131,7 @@ function permission_get_object_type($permission_type,$object_id) {
 function permission_get_object_name($permission_type,$object_id) {
     global $Language,$group_id;
 
+    $pm = ProjectManager::instance();
     if ($permission_type=='NEWS_READ') {   
         return get_news_name_from_forum_id($object_id);
     } else if ($permission_type=='PACKAGE_READ') {
@@ -150,12 +151,12 @@ function permission_get_object_name($permission_type,$object_id) {
     } else if ($permission_type=='WIKIATTACHMENT_READ') {
         return $Language->getText('project_admin_permissions','wikiattachment');
     } else if (strpos($permission_type, 'TRACKER_ACCESS') === 0) { 
-        $group = group_get_object($group_id);	
+        $group = $pm->getProject($group_id);	
         $at = new ArtifactType($group, $object_id);
         return $at->getName();
     } else if (strpos($permission_type, 'TRACKER_FIELD') === 0) { 
         $ret = "$object_id";
-        if ($group = group_get_object($group_id)) {
+        if ($group = $pm->getProject($group_id)) {
             $atid = permission_extract_atid($object_id);
             $at   = new ArtifactType($group, $atid);
             $ret  = $at->getName();
@@ -177,7 +178,7 @@ function permission_get_object_name($permission_type,$object_id) {
             $row = db_fetch_array($result);
             $atid = $row['group_artifact_id'];
         }
-        $group = group_get_object($group_id);
+        $group = $pm->getProject($group_id);
         $at = new ArtifactType($group, $atid);
         $a = new Artifact($at,$object_id);
         return 'art #'. $a->getId() .' - '. $a->getSummary();    
@@ -239,7 +240,8 @@ function permission_user_allowed_to_change($group_id, $permission_type, $object_
     } else if ($permission_type=='WIKIATTACHMENT_READ') {
         return (user_ismember($group_id,'W2'));
     } else if (strpos($permission_type, 'TRACKER') === 0) { // Starts with 'TRACKER'
-        $group = group_get_object($group_id);	
+        $pm = ProjectManager::instance();
+        $group = $pm->getProject($group_id);	
         $at = new ArtifactType($group, (int)$object_id);
         return $at->userIsAdmin();
     } else {

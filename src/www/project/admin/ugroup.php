@@ -34,7 +34,8 @@ if ($func=='do_update') {
 
 project_admin_header(array('title'=>$Language->getText('project_admin_ugroup','manage_ug'),'group'=>$group_id,
 			   'help' => 'UserGroups.html'));
-$project=project_get_object($group_id);
+$pm = ProjectManager::instance();
+$project=$pm->getProject($group_id);
 
 print '<P><h2>'.$Language->getText('project_admin_ugroup','manage_ug_for',$project->getPublicName()).'</h2>';
 print '

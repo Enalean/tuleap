@@ -1249,7 +1249,8 @@ $server->register(
  */
 function getTrackerList($sessionKey, $group_id) {
     if (session_continue($sessionKey)) {
-        $group = group_get_object($group_id);
+        $pm = ProjectManager::instance();
+        $group = $pm->getProject($group_id);
         if (!$group || !is_object($group)) {
             return new SoapFault(get_group_fault,'Could Not Get Group', 'getTrackerList');
         } elseif ($group->isError()) {
@@ -1370,7 +1371,8 @@ function artifactreportsdesc_to_soap($artifactreportsdesc) {
 function getArtifactType($sessionKey, $group_id, $group_artifact_id) {
     if (session_continue($sessionKey)) {
         $user_id = UserManager::instance()->getCurrentUser()->getId();
-        $group = group_get_object($group_id);
+        $pm = ProjectManager::instance();
+        $group = $pm->getProject($group_id);
         if (!$group || !is_object($group)) {
             return new SoapFault(get_group_fault,'Could Not Get Group','getArtifactType');
         } elseif ($group->isError()) {
@@ -1408,7 +1410,8 @@ function getArtifactType($sessionKey, $group_id, $group_artifact_id) {
  */
 function getArtifactTypes($sessionKey, $group_id) {
     if (session_continue($sessionKey)) {
-        $group = group_get_object($group_id);
+        $pm = ProjectManager::instance();
+        $group = $pm->getProject($group_id);
         if (!$group || !is_object($group)) {
             return new SoapFault(get_group_fault,'Could Not Get Group','getArtifactTypes');
         } elseif ($group->isError()) {
@@ -1637,7 +1640,8 @@ function artifactrules_to_soap($artifact_type) {
 function getArtifacts($sessionKey,$group_id,$group_artifact_id, $criteria, $offset, $max_rows) {
     global $art_field_fact;
     if (session_continue($sessionKey)) {
-        $grp = group_get_object($group_id);
+        $pm = ProjectManager::instance();
+        $grp = $pm->getProject($group_id);
         if (!$grp || !is_object($grp)) {
             return new SoapFault(get_group_fault,'Could Not Get Group','getArtifacts');
         } elseif ($grp->isError()) {
@@ -1698,7 +1702,8 @@ function getArtifacts($sessionKey,$group_id,$group_artifact_id, $criteria, $offs
 function getArtifactsFromReport($sessionKey,$group_id,$group_artifact_id, $report_id, $criteria, $offset, $max_rows, $sort_criteria) {
     global $art_field_fact;
     if (session_continue($sessionKey)) {
-        $grp =& group_get_object($group_id);
+        $pm = ProjectManager::instance();
+        $grp = $pm->getProject($group_id);
         if (!$grp || !is_object($grp)) {
             return new SoapFault(get_group_fault,'Could Not Get Group','getArtifactsFromReport');
         } elseif ($grp->isError()) {
@@ -1762,7 +1767,8 @@ function getArtifactsFromReport($sessionKey,$group_id,$group_artifact_id, $repor
 function getArtifactById($sessionKey,$group_id,$group_artifact_id, $artifact_id) {    
     global $art_field_fact, $ath; 
     if (session_continue($sessionKey)){
-        $grp = group_get_object($group_id);
+        $pm = ProjectManager::instance();
+        $grp = $pm->getProject($group_id);
         if (!$grp || !is_object($grp)) {
             return new SoapFault(get_group_fault,'Could Not Get Group','getArtifactById');
         } elseif ($grp->isError()) {
@@ -2022,7 +2028,8 @@ function addArtifact($sessionKey, $group_id, $group_artifact_id, $status_id, $cl
     global $art_field_fact, $ath; 
     if (session_continue($sessionKey)) {
         $user_id = UserManager::instance()->getCurrentUser()->getId();
-        $grp = group_get_object($group_id);
+        $pm = ProjectManager::instance();
+        $grp = $pm->getProject($group_id);
         if (!$grp || !is_object($grp)) {
             return new SoapFault(get_group_fault,'Could Not Get Group','addArtifact');
         } elseif ($grp->isError()) {
@@ -2162,7 +2169,8 @@ function addArtifact($sessionKey, $group_id, $group_artifact_id, $status_id, $cl
 function addArtifactWithFieldNames($sessionKey, $group_id, $group_artifact_id, $status_id, $close_date, $summary, $details, $severity, $extra_fields) {
 	global $art_field_fact, $ath; 
     if (session_continue($sessionKey)) {
-        $grp = group_get_object($group_id);
+        $pm = ProjectManager::instance();
+        $grp = $pm->getProject($group_id);
         if (!$grp || !is_object($grp)) {
             return new SoapFault(get_group_fault,'Could Not Get Group','addArtifact');
         } elseif ($grp->isError()) {
@@ -2235,7 +2243,8 @@ function addArtifactWithFieldNames($sessionKey, $group_id, $group_artifact_id, $
 function updateArtifact($sessionKey, $group_id, $group_artifact_id, $artifact_id, $status_id, $close_date, $summary, $details, $severity, $extra_fields) {
     global $art_field_fact, $ath; 
     if (session_continue($sessionKey)) {
-        $grp = group_get_object($group_id);
+        $pm = ProjectManager::instance();
+        $grp = $pm->getProject($group_id);
         if (!$grp || !is_object($grp)) {
             return new SoapFault(get_group_fault,'Could Not Get Group','updateArtifact');
         } elseif ($grp->isError()) {
@@ -2328,7 +2337,8 @@ function updateArtifact($sessionKey, $group_id, $group_artifact_id, $artifact_id
 function updateArtifactWithFieldNames($sessionKey, $group_id, $group_artifact_id, $artifact_id, $status_id, $close_date, $summary, $details, $severity, $extra_fields) {
     global $art_field_fact, $ath;
     if (session_continue($sessionKey)) {
-        $grp = group_get_object($group_id);
+        $pm = ProjectManager::instance();
+        $grp = $pm->getProject($group_id);
         if (!$grp || !is_object($grp)) {
             return new SoapFault(get_group_fault,'Could Not Get Group','addArtifact');
         } elseif ($grp->isError()) {
@@ -2394,7 +2404,8 @@ function updateArtifactWithFieldNames($sessionKey, $group_id, $group_artifact_id
 function getArtifactFollowups($sessionKey, $group_id, $group_artifact_id, $artifact_id) {
     global $art_field_fact; 
     if (session_continue($sessionKey)){
-        $grp = group_get_object($group_id);
+        $pm = ProjectManager::instance();
+        $grp = $pm->getProject($group_id);
         if (!$grp || !is_object($grp)) {
             return new SoapFault(get_group_fault,'Could Not Get Group','getArtifactFollowups');
         } elseif ($grp->isError()) {
@@ -2468,7 +2479,8 @@ function artifactfollowups_to_soap($followups_res, $group_id, $group_artifact_id
  */
 function getArtifactCannedResponses($sessionKey, $group_id, $group_artifact_id) {
     if (session_continue($sessionKey)) {
-        $grp = group_get_object($group_id);
+        $pm = ProjectManager::instance();
+        $grp = $pm->getProject($group_id);
         if (!$grp || !is_object($grp)) {
             return new SoapFault(get_group_fault,'Could Not Get Group','getArtifactCannedResponses');
         } elseif ($grp->isError()) {
@@ -2518,7 +2530,8 @@ function artifactcannedresponses_to_soap($cannedresponses_res, $group_artifact_i
 function getArtifactReports($sessionKey, $group_id, $group_artifact_id) {
     $user_id = user_getid();
     if (session_continue($sessionKey)) {
-        $grp = group_get_object($group_id);
+        $pm = ProjectManager::instance();
+        $grp = $pm->getProject($group_id);
         if (!$grp || !is_object($grp)) {
             return new SoapFault(get_group_fault,'Could Not Get Group','getArtifactReports');
         } elseif ($grp->isError()) {
@@ -2605,7 +2618,8 @@ function getArtifactAttachedFiles($sessionKey,$group_id,$group_artifact_id,$arti
     global $art_field_fact;
     
     if (session_continue($sessionKey)) {
-        $grp = group_get_object($group_id);
+        $pm = ProjectManager::instance();
+        $grp = $pm->getProject($group_id);
         if (!$grp || !is_object($grp)) {
             return new SoapFault(get_group_fault,'Could Not Get Group','getArtifactAttachedFiles');
         } elseif ($grp->isError()) {
@@ -2662,7 +2676,8 @@ function getArtifactAttachedFiles($sessionKey,$group_id,$group_artifact_id,$arti
 function getArtifactAttachedFile($sessionKey,$group_id,$group_artifact_id,$artifact_id, $file_id) {
     global $art_field_fact; 
     if (session_continue($sessionKey)) {
-        $grp = group_get_object($group_id);
+        $pm = ProjectManager::instance();
+        $grp = $pm->getProject($group_id);
         if (!$grp || !is_object($grp)) {
             return new SoapFault(get_group_fault,'Could Not Get Group','getArtifactAttachedFile');
         } elseif ($grp->isError()) {
@@ -2765,7 +2780,8 @@ function artifactfile_to_soap($file_id, $attachedfiles_arr, $set_bin_data) {
 function getArtifactDependencies($sessionKey,$group_id,$group_artifact_id,$artifact_id) {
     global $art_field_fact; 
     if (session_continue($sessionKey)) {
-        $grp = group_get_object($group_id);
+        $pm = ProjectManager::instance();
+        $grp = $pm->getProject($group_id);
         if (!$grp || !is_object($grp)) {
             return new SoapFault(get_group_fault,'Could Not Get Group','getArtifactDependencies');
         } elseif ($grp->isError()) {
@@ -2844,7 +2860,8 @@ function dependencies_to_soap($artifact_type, $dependencies) {
 function getArtifactInverseDependencies($sessionKey,$group_id,$group_artifact_id,$artifact_id) {
     global $art_field_fact; 
     if (session_continue($sessionKey)) {
-        $grp = group_get_object($group_id);
+        $pm = ProjectManager::instance();
+        $grp = $pm->getProject($group_id);
         if (!$grp || !is_object($grp)) {
             return new SoapFault(get_group_fault,'Could Not Get Group','getArtifactInverseDependencies');
         } elseif ($grp->isError()) {
@@ -2929,7 +2946,8 @@ function inverse_dependencies_to_soap($artifact_type, $artifact_id, $inverse_dep
 function addArtifactAttachedFile($sessionKey,$group_id,$group_artifact_id,$artifact_id,$encoded_data,$description,$filename,$filetype) {
     global $art_field_fact; 
     if (session_continue($sessionKey)) {
-        $grp = group_get_object($group_id);
+        $pm = ProjectManager::instance();
+        $grp = $pm->getProject($group_id);
         if (!$grp || !is_object($grp)) {
             return new SoapFault(get_group_fault,'Could Not Get Group','addArtifactFile');
         } elseif ($grp->isError()) {
@@ -3009,7 +3027,8 @@ function addArtifactAttachedFile($sessionKey,$group_id,$group_artifact_id,$artif
 function deleteArtifactAttachedFile($sessionKey,$group_id,$group_artifact_id,$artifact_id,$file_id) {
     global $art_field_fact; 
     if (session_continue($sessionKey)) {
-        $grp = group_get_object($group_id);
+        $pm = ProjectManager::instance();
+        $grp = $pm->getProject($group_id);
         if (!$grp || !is_object($grp)) {
             return new SoapFault(get_group_fault,'Could Not Get Group','deleteArtifactFile');
         } elseif ($grp->isError()) {
@@ -3074,7 +3093,8 @@ function deleteArtifactAttachedFile($sessionKey,$group_id,$group_artifact_id,$ar
 function addArtifactDependencies($sessionKey, $group_id, $group_artifact_id, $artifact_id, $is_dependent_on_artifact_ids){
     global $art_field_fact; 
     if (session_continue($sessionKey)) {
-        $grp = group_get_object($group_id);
+        $pm = ProjectManager::instance();
+        $grp = $pm->getProject($group_id);
         if (!$grp || !is_object($grp)) {
             return new SoapFault(get_group_fault,'Could Not Get Group','addArtifactDependencies');
         } elseif ($grp->isError()) {
@@ -3137,7 +3157,8 @@ function addArtifactDependencies($sessionKey, $group_id, $group_artifact_id, $ar
 function updateArtifactFollowUp($sessionKey, $group_id, $group_artifact_id, $artifact_id, $artifact_history_id, $comment) {
     global $art_field_fact, $changes; 
     if (session_continue($sessionKey)){
-        $grp =& group_get_object($group_id);
+        $pm = ProjectManager::instance();
+        $grp = $pm->getProject($group_id);
         if (!$grp || !is_object($grp)) {
             return new SoapFault(get_group_fault,'Could Not Get Group','updateArtifactFollowUp');
         } elseif ($grp->isError()) {
@@ -3210,7 +3231,8 @@ function updateArtifactFollowUp($sessionKey, $group_id, $group_artifact_id, $art
 function deleteArtifactFollowUp($sessionKey, $group_id, $group_artifact_id, $artifact_id, $artifact_history_id) {
     global $art_field_fact, $changes; 
     if (session_continue($sessionKey)){
-        $grp =& group_get_object($group_id);
+        $pm = ProjectManager::instance();
+        $grp = $pm->getProject($group_id);
         if (!$grp || !is_object($grp)) {
             return new SoapFault(get_group_fault,'Could Not Get Group','deleteArtifactFollowUp');
         } elseif ($grp->isError()) {
@@ -3273,7 +3295,8 @@ function deleteArtifactFollowUp($sessionKey, $group_id, $group_artifact_id, $art
 function deleteArtifactDependency($sessionKey, $group_id, $group_artifact_id, $artifact_id, $dependent_on_artifact_id) {
     global $art_field_fact; 
     if (session_continue($sessionKey)) {
-        $grp = group_get_object($group_id);
+        $pm = ProjectManager::instance();
+        $grp = $pm->getProject($group_id);
         if (!$grp || !is_object($grp)) {
             return new SoapFault(get_group_fault,'Could Not Get Group','deleteArtifactDependency');
         } elseif ($grp->isError()) {
@@ -3334,7 +3357,8 @@ function deleteArtifactDependency($sessionKey, $group_id, $group_artifact_id, $a
 function addArtifactFollowup($sessionKey,$group_id,$group_artifact_id,$artifact_id,$body, $comment_type_id) {
     global $art_field_fact; 
     if (session_continue($sessionKey)) {
-        $grp = group_get_object($group_id);
+        $pm = ProjectManager::instance();
+        $grp = $pm->getProject($group_id);
         if (!$grp || !is_object($grp)) {
             return new SoapFault(get_group_fault,'Could Not Get Group','addArtifactFollowup');
         } elseif ($grp->isError()) {
@@ -3401,7 +3425,8 @@ function existArtifactSummary($sessionKey, $group_artifact_id, $summary) {
             return new SoapFault(get_artifact_type_fault, 'Tracker not found.', 'existArtifactSummary');
         }
         
-    	$grp =& group_get_object($group_id);
+    	$pm = ProjectManager::instance();
+        $grp = $pm->getProject($group_id);
         if (!$grp || !is_object($grp)) {
             return new SoapFault(get_group_fault,'Could Not Get Group','existArtifactSummary');
         } elseif ($grp->isError()) {
@@ -3444,7 +3469,8 @@ function existArtifactSummary($sessionKey, $group_artifact_id, $summary) {
 function getArtifactCCList($sessionKey,$group_id,$group_artifact_id,$artifact_id) {
     global $art_field_fact; 
     if (session_continue($sessionKey)) {
-        $grp = group_get_object($group_id);
+        $pm = ProjectManager::instance();
+        $grp = $pm->getProject($group_id);
         if (!$grp || !is_object($grp)) {
             return new SoapFault(get_group_fault,'Could Not Get Group','getArtifactCCList');
         } elseif ($grp->isError()) {
@@ -3514,7 +3540,8 @@ function artifactCC_to_soap($group_id,$group_artifact_id,$artifact_id, $artifact
 function addArtifactCC($sessionKey, $group_id, $group_artifact_id, $artifact_id, $cc_list, $cc_comment) {
     global $art_field_fact; 
     if (session_continue($sessionKey)) {
-        $grp = group_get_object($group_id);
+        $pm = ProjectManager::instance();
+        $grp = $pm->getProject($group_id);
         if (!$grp || !is_object($grp)) {
             return new SoapFault(get_group_fault,'Could Not Get Group','addArtifactCC');
         } elseif ($grp->isError()) {
@@ -3567,7 +3594,8 @@ function deleteArtifactCC($sessionKey, $group_id, $group_artifact_id, $artifact_
     global $art_field_fact; 
 
     if (session_continue($sessionKey)) {
-        $grp = group_get_object($group_id);
+        $pm = ProjectManager::instance();
+        $grp = $pm->getProject($group_id);
         if (!$grp || !is_object($grp)) {
             return new SoapFault(get_group_fault,'Could Not Get Group','deleteArtifactCC');
         } elseif ($grp->isError()) {
@@ -3623,7 +3651,8 @@ function deleteArtifactCC($sessionKey, $group_id, $group_artifact_id, $artifact_
 function getArtifactHistory($sessionKey,$group_id,$group_artifact_id,$artifact_id) {
     global $art_field_fact; 
     if (session_continue($sessionKey)) {
-        $grp = group_get_object($group_id);
+        $pm = ProjectManager::instance();
+        $grp = $pm->getProject($group_id);
         if (!$grp || !is_object($grp)) {
             return new SoapFault(get_group_fault,'Could Not Get Group','getArtifactHistory');
         } elseif ($grp->isError()) {

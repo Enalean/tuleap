@@ -153,8 +153,9 @@ class ArtifactTypeFactory extends Error {
               $this->setError($Language->getText('tracker_common_type','none_found').' '.db_error());
               return false;
           } else {
+              $pm = ProjectManager::instance();
               while ($arr = db_fetch_array($result)) {
-                  $new_at=new ArtifactType(group_get_object($group_id), $arr['group_artifact_id']);
+                  $new_at=new ArtifactType($pm->getProject($group_id), $arr['group_artifact_id']);
                   if ($new_at->userCanView()) {
                       $myArtifactTypes[] = $new_at;
                   }
@@ -404,8 +405,9 @@ class ArtifactTypeFactory extends Error {
             $this->setError($Language->getText('tracker_common_type','none_found').' '.db_error());
             return false;
         } else {
+            $pm = ProjectManager::instance();
             while ($arr = db_fetch_array($result)) {
-                $new_at = new ArtifactType(group_get_object($group_id), $arr['group_artifact_id']);
+                $new_at = new ArtifactType($pm->getProject($group_id), $arr['group_artifact_id']);
                 if ($new_at->userCanView()) {
                     return $new_at;
                 } else {
@@ -453,13 +455,15 @@ class ArtifactTypeFactory extends Error {
                 }
 
 		//	get the template Group object
-		$template_group = group_get_object($group_id_template);
+		$pm = ProjectManager::instance();
+        $template_group = $pm->getProject($group_id_template);
 		if (!$template_group || !is_object($template_group) || $template_group->isError()) {
 			$this->setError('ArtifactTypeFactory: '.$Language->getText('tracker_common_type','invalid_templ'));
 		}
 
 		// get the Group object of the new tracker
-		$group = group_get_object($group_id);
+		$pm = ProjectManager::instance();
+        $group = $pm->getProject($group_id);
 		if (!$group || !is_object($group) || $group->isError()) {
 			$this->setError('ArtifactTypeFactory: '.$Language->getText('tracker_common_type','invalid_templ'));
 		}

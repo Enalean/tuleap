@@ -9,7 +9,8 @@ require('rss_utils.inc');
 //First, check for valid group_id
 $request =& HTTPRequest::instance();
 if ($request->exist('group_id')) {
-    $project = group_get_object($request->get('group_id'));
+    $pm = ProjectManager::instance();
+    $project = $pm->getProject($request->get('group_id'));
     if (!$project || !$project->isPublic()) {
         $rss = new RSS(array(
             'title'       => $Language->getText('export_rss_sfnews','news',$GLOBALS['sys_name']),

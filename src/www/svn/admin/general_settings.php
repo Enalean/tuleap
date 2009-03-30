@@ -48,7 +48,8 @@ if ($request->isPost() && $request->existAndNonEmpty('post_changes')) {
 svn_header_admin(array ('title'=>$Language->getText('svn_admin_general_settings','gen_settings'),
 		      'help' => 'SubversionAdministrationInterface.html#SubversionGeneralSettings'));
 
-$project = project_get_object($group_id);
+$pm = ProjectManager::instance();
+$project = $pm->getProject($group_id);
 $svn_tracked = $project->isSVNTracked();
 $svn_mandatory_ref = $project->isSVNMandatoryRef();
 $svn_preamble = $project->getSVNPreamble();

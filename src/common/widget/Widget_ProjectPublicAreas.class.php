@@ -19,7 +19,8 @@ class Widget_ProjectPublicAreas extends Widget {
     function getContent() {
         $request =& HTTPRequest::instance();
         $group_id = $request->get('group_id');
-        $project =& project_get_object($group_id);
+        $pm = ProjectManager::instance();
+        $project = $pm->getProject($group_id);
         if ($project->usesHomePage()) {
             print "<A ";
             if (substr($project->getHomePage(), 0, 1)!="/") {
@@ -231,7 +232,8 @@ class Widget_ProjectPublicAreas extends Widget {
             //	  
             //  get the Group object
             //	  
-            $group = project_get_object($group_id);
+            $pm = ProjectManager::instance();
+            $group = $pm->getProject($group_id);
             if (!$group || !is_object($group) || $group->isError()) {
                 exit_no_group();
             }		   

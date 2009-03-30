@@ -82,7 +82,8 @@ class SvnToDimensionsActions extends Actions {
         $database = $current['dimensions_db'];
 
         $tmp_dir = $this->_controler->getProperty('temp_dir'); 
-        $group = group_get_object($group_id);
+        $pm = ProjectManager::instance();
+        $group = $pm->getProject($group_id);
         $short_name = $group->getUnixName(false);
         $folder_temp = $tmp_dir.'/'.$short_name;
         //get the tag to transfert for each PL or for the applicative tag

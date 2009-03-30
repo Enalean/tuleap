@@ -36,7 +36,8 @@ class hudson extends Controler {
         $vgi->required();
         if ($request->valid($vgi)) {
             $group_id = $request->get('group_id');
-            $project = project_get_object($group_id);
+            $pm = ProjectManager::instance();
+            $project = $pm->getProject($group_id);
             if ($project->usesService('hudson')) {
                 $user = UserManager::instance()->getCurrentUser();
                 if ($user->isMember($group_id)) {

@@ -315,7 +315,8 @@ function ugroups_to_soap($ugroups) {
 function getGroupUgroups($sessionKey, $group_id) {
    global $Language;
     if (session_continue($sessionKey)) {
-        $group =& group_get_object($group_id);
+        $pm = ProjectManager::instance();
+        $group = $pm->getProject($group_id);
         if (!$group || !is_object($group)) {
             return new SoapFault(get_group_fault, 'Could Not Get Group', 'getGroupUgroups');
         } elseif ($group->isError()) {

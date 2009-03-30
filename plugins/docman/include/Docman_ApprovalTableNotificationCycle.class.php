@@ -359,7 +359,8 @@ class Docman_ApprovalTableNotificationCycle {
 
     function getNotifReviewer($reviewer) {
         // Project
-        $group = group_get_object($this->item->getGroupId());
+        $pm = ProjectManager::instance();
+        $group = $pm->getProject($this->item->getGroupId());
 
         // Url
         $baseUrl = get_server_url().'/plugins/docman/?group_id='.$this->item->getGroupId();

@@ -47,7 +47,8 @@ if($request->valid($vFunc)) {
     }
 } else {
    // get project object
-   $project = project_get_object($group_id);
+   $pm = ProjectManager::instance();
+   $project = $pm->getProject($group_id);
    if (!$project || !is_object($project) || $project->isError()) {
        exit_no_group();
    }

@@ -14,7 +14,8 @@ class Widget_ProjectLatestFileReleases extends Widget {
     function Widget_ProjectLatestFileReleases() {
         $this->Widget('projectlatestfilereleases');
         $request =& HTTPRequest::instance();
-        $project =& project_get_object($request->get('group_id'));
+        $pm = ProjectManager::instance();
+        $project = $pm->getProject($request->get('group_id'));
         if ($project && $this->canBeUsedByProject($project)) {
             $this->content = $project->services['file']->getSummaryPageContent();
         }

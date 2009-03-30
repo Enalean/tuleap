@@ -21,7 +21,8 @@ function svn_header($params) {
 	$params['toptab']='svn';
 	$params['group']=$group_id;
 
-	$project=project_get_object($group_id);
+	$pm = ProjectManager::instance();
+    $project=$pm->getProject($group_id);
 
 	if (!$project->usesService('svn')) {
 	    exit_error($Language->getText('global','error'),$Language->getText('svn_utils','svn_off'));
@@ -55,7 +56,8 @@ function svn_header_admin($params) {
     $params['group']=$group_id;
     $params['toptab']='svn';
     
-    $project=project_get_object($group_id);
+    $pm = ProjectManager::instance();
+    $project=$pm->getProject($group_id);
     
     if (!$project->usesService('svn')) {
 	exit_error($Language->getText('global','error'),$Language->getText('svn_utils','browse_off'));
@@ -367,7 +369,8 @@ function svn_utils_show_revision_detail($result,$group_id,$group_name,$commit_id
     $links_arr[]=$url.'';
     $links_arr[]=$url.'type';
 
-    $project = group_get_object($group_id);
+    $pm = ProjectManager::instance();
+    $project = $pm->getProject($group_id);
     $root = $project->getUnixName();
 
     echo html_build_list_table_top ($title_arr,$links_arr);

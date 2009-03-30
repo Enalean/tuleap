@@ -145,7 +145,8 @@ if (($atn == 'bug')||($atn == 'task')||($atn == 'sr')||($atn == 'patch')) {
     $artifact_exists=util_get_ids_from_aid($aid,$art_group_id,$atid,$art_name);
 
     // Are the legacy trackers activated for this project? 
-    $grp=project_get_object($group_id);
+    $pm = ProjectManager::instance();
+    $grp=$pm->getProject($group_id);
     if ((($atn == 'bug')&&(!$grp->usesBugs()))
         ||(($atn == 'sr')&&(!$grp->usesSupport()))
         ||(($atn == 'task')&&(!$grp->usesPm()))

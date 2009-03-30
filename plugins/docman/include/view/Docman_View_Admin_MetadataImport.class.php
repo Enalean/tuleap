@@ -31,8 +31,9 @@ extends Docman_View_Extra {
     var $dstGo;
     
     function _title($params) {
-        $this->srcGo = group_get_object($params['sSrcGroupId']);
-        $this->dstGo = group_get_object($params['group_id']);
+        $pm = ProjectManager::instance();
+        $this->srcGo = $pm->getProject($params['sSrcGroupId']);
+        $this->dstGo = $pm->getProject($params['group_id']);
 
         echo '<h2>'. $this->_getTitle($params) .' - '. $GLOBALS['Language']->getText('plugin_docman', 'admin_md_import_title', array($this->srcGo->getPublicName())) .'</h2>';
     }

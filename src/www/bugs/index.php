@@ -15,7 +15,8 @@ if ($group_id) {
     // Initialize the global data structure before anything else
     bug_init($group_id);
 
-    $project=project_get_object($group_id);
+    $pm = ProjectManager::instance();
+    $project=$pm->getProject($group_id);
     $changed = false;
     $changes = array();
 

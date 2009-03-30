@@ -47,7 +47,8 @@ if ($group_id && !$atid) {
 	//
 	//	get the Group object
 	//
-	$group = group_get_object($group_id);
+	$pm = ProjectManager::instance();
+    $group = $pm->getProject($group_id);
 	if (!$group || !is_object($group) || $group->isError()) {
 		exit_no_group();
 	}
@@ -155,7 +156,8 @@ if ($group_id && !$atid) {
 	//
 	//	get the Group object
 	//
-	$group = group_get_object($group_id);
+	$pm = ProjectManager::instance();
+    $group = $pm->getProject($group_id);
 	if (!$group || !is_object($group) || $group->isError()) {
 		exit_no_group();
 	}

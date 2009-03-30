@@ -9,7 +9,8 @@
 if ($details != '') { 
 	patch_history_create('details',htmlspecialchars($details),$patch_id);  
 	$feedback .= ' Comment added to patch ';
-	$project=project_get_object($group_id);
+	$pm = ProjectManager::instance();
+    $project=$pm->getProject($group_id);
 	if ($project->sendAllPatchUpdates()) {
 		$address=$project->getNewPatchAddress();
 	}

@@ -283,7 +283,8 @@ echo $this->outerTabs($params);
         $selected = false;
         if (isset($params['group']) && $params['group']) {
             // get group info using the common result set
-			$project =& group_get_object($params['group']);
+			$pm = ProjectManager::instance();
+            $project = $pm->getProject($params['group']);
 			if ($project && is_object($project)) {
 				if ($project->isError()) {
                     die('is error');
@@ -362,7 +363,8 @@ echo $this->outerTabs($params);
     }
     
     function project_tabs($toptab,$group_id) {
-        $project=project_get_object($group_id);
+        $pm = ProjectManager::instance();
+        $project=$pm->getProject($group_id);
         if ($project->isError()) {
             //wasn't found or some other problem
             return;

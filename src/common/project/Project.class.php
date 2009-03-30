@@ -34,7 +34,7 @@ require_once('ProjectManager.class.php');
 	//now use the object to get the unix_name for the project
 	$grp->getUnixName();
 
-
+    @deprecated Use ProjectManager->getProject instead
 */
 
 
@@ -397,19 +397,22 @@ class Project extends Group {
 
 //deprecated
 function group_getname ($group_id = 0) {
-	$grp = project_get_object($group_id);
+	$pm = ProjectManager::instance();
+    $grp = $pm->getProject($group_id);
 	return $grp->getPublicName();
 }
 
 //deprecated
 function group_getunixname ($group_id) {
-	$grp = project_get_object($group_id);
+	$pm = ProjectManager::instance();
+    $grp = $pm->getProject($group_id);
 	return $grp->getUnixName();
 }
 
 //deprecated - should be getting objects instead
 function group_get_result($group_id=0) {
-	$grp = project_get_object($group_id);
+	$pm = ProjectManager::instance();
+    $grp = $pm->getProject($group_id);
 	return $grp->getData();
 }       
 

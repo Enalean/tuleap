@@ -16,7 +16,8 @@ $vGroupId->required();
 
 $there_are_specific_permissions = true;
 if ($request->valid($vGroupId)) {
-    $obj                            = project_get_object($request->get('group_id'));
+    $pm = ProjectManager::instance();
+    $obj                            = $pm->getProject($request->get('group_id'));
     $group_name                     = $obj->getUnixName(false);
  }
 

@@ -33,10 +33,11 @@ function send_new_project_email($group_id) {
 
 	// send one email per admin
     $nb_mail_failed = 0;
-	while ($row_admins = db_fetch_array($res_admins)) {
+	$pm = ProjectManager::instance();
+    while ($row_admins = db_fetch_array($res_admins)) {
 
         $server = get_server_url();
-        $p =& project_get_object($group_id);
+        $p = $pm->getProject($group_id);
         $host = $GLOBALS['sys_default_domain'];
         if ($p && $p->usesService('svn')) {
            $sf =& new ServerFactory();

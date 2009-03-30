@@ -41,7 +41,8 @@ if ($p && $plugin_manager->isPluginAvailable($p)) {
         $atid              = $request->get('atid');
         $type              = $request->get('type');
     
-        $group = group_get_object($group_id);
+        $pm = ProjectManager::instance();
+        $group = $pm->getProject($group_id);
         if ($group === false) {
             exit();
         }

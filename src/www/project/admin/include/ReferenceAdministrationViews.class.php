@@ -34,7 +34,8 @@ class ReferenceAdministrationViews extends Views {
     // {{{ Views
     function browse() {
         $request =& HTTPRequest::instance();
-        $project=project_get_object($request->get('group_id'));
+        $pm = ProjectManager::instance();
+        $project=$pm->getProject($request->get('group_id'));
         if ($request->get('group_id')==100) {
             print '<P><h2>'.$GLOBALS['Language']->getText('project_reference','edit_system_s').'</B></h2>';
         } else {
@@ -245,7 +246,8 @@ class ReferenceAdministrationViews extends Views {
         $request =& HTTPRequest::instance();
         $group_id=$request->get('group_id');
                 
-        $project=project_get_object($group_id);
+        $pm = ProjectManager::instance();
+        $project=$pm->getProject($group_id);
  
         $refid=$request->get('reference_id');
 

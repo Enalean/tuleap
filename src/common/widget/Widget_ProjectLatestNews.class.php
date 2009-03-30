@@ -14,7 +14,8 @@ class Widget_ProjectLatestNews extends Widget {
     function Widget_ProjectLatestNews() {
         $this->Widget('projectlatestnews');
         $request =& HTTPRequest::instance();
-        $project =& project_get_object($request->get('group_id'));
+        $pm = ProjectManager::instance();
+        $project = $pm->getProject($request->get('group_id'));
         if ($project && $this->canBeUsedByProject($project)) {
             require_once('www/news/news_utils.php');
             $this->content = news_show_latest($request->get('group_id'),10,false);

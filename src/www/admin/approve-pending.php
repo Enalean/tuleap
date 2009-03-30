@@ -62,12 +62,13 @@ if ($action=='activate') {
 	/*
 		Now send the project approval emails
 	*/
-	$groups=explode(',',$list_of_groups);
+	$pm = ProjectManager::instance();
+    $groups=explode(',',$list_of_groups);
 	$count=count($groups);
     for ($i=0; $i<$count; $i++) {
 		group_add_history ('approved','x',$groups[$i]);
 		if (!send_new_project_email($groups[$i])) {
-            $group = group_get_object($groups[$i]);
+            $group = $pm->getProject($groups[$i]);
             if ($group && is_object($group) && !$group->isError()) {
                 $GLOBALS['feedback'] .= "<p>".$group->getPublicName()." - ".$GLOBALS['Language']->getText('global', 'mail_failed', array($GLOBALS['sys_email_admin']))."</p>";
             }
@@ -165,7 +166,7 @@ if (db_numrows($res_grp) < 1) {
 
         $sf =& new ServerFactory();
         if (count($sf->getAllServers()) > 1) {
-            $p =& project_get_object($row_grp['group_id']);
+            $p = $pm->getProject($row_grp['group_id']);
             if ($p->usesFile() || $p->usesSVN()) {
                 print '<br><u>'. $Language->getText('admin_approve_pending','distributed_services') .'</u>:<br><ul>';
                 if ($p->usesFile()) {

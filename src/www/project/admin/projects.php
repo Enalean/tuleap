@@ -14,7 +14,8 @@ $group_id = $request->get('group_id');
 if (!$group_id) {
     exit_missing_param();
 } else {
-    if (!$p =& project_get_object($group_id)) {
+    $pm = ProjectManager::instance();
+    if (!$p =& $pm->getProject($group_id)) {
         exit_error($Language->getText('project_admin_index','invalid_p'),$Language->getText('project_admin_index','p_not_found'));
     } else {
         session_require(array('group' => $group_id, 'admin_flags' => 'A'));

@@ -280,7 +280,8 @@ if ($func=='do_update') {
 
 
 
-$project=project_get_object($group_id);
+$pm = ProjectManager::instance();
+$project=$pm->getProject($group_id);
 
 project_admin_header(array('title'=>$Language->getText('project_admin_servicebar','edit_s_bar'),'group'=>$group_id,
 			   'help' => 'ServiceConfiguration.html'));

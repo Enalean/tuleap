@@ -39,7 +39,8 @@ function pm_header($params) {
 	$params['toptab']='task';
 
 	//only projects can use the task tracker, and only if they have it turned on
-	$project=project_get_object($group_id);
+	$pm = ProjectManager::instance();
+    $project=$pm->getProject($group_id);
 
 	if (!$project->usesPm()) {
 		exit_error('Error','This Project Has Turned Off The Task Manager');
@@ -88,7 +89,8 @@ function pm_header_admin($params) {
     $params['group']=$group_id;
     $params['toptab']='task';
     
-    $project=project_get_object($group_id);
+    $pm = ProjectManager::instance();
+    $project=$pm->getProject($group_id);
     
     //only projects can use the task tracker, and only if they have it turned on
     if (!$project->usesPm()) {

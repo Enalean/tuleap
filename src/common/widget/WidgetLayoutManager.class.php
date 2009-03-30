@@ -144,7 +144,9 @@ class WidgetLayoutManager {
     * @param  template_id  the id of the project template
     */
     function createDefaultLayoutForProject($group_id, $template_id) {
-        $project =& project_get_object($group_id, true);
+        $pm = ProjectManager::instance();
+        $pm->clear($group_id);
+        $project = $pm->getProject($group_id);
         $sql = "INSERT INTO owner_layouts(layout_id, is_default, owner_id, owner_type) 
         SELECT layout_id, is_default, $group_id, owner_type 
         FROM owner_layouts 

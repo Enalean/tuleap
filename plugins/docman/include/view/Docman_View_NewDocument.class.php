@@ -48,7 +48,8 @@ class Docman_View_NewDocument extends Docman_View_New {
                 ));
         $wikiAvailable = true;
         if(isset($params['group_id'])) {
-            $go = project_get_object($params['group_id']);
+            $pm = ProjectManager::instance();
+            $go = $pm->getProject($params['group_id']);
             $wikiAvailable = $go->usesWiki();
 
         }

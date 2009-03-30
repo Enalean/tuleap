@@ -20,7 +20,8 @@ class Widget_ProjectDescription extends Widget {
     public function getContent() {
         $request =& HTTPRequest::instance();
         $group_id = $request->get('group_id');
-        $project =& project_get_object($group_id);
+        $pm = ProjectManager::instance();
+        $project = $pm->getProject($group_id);
         $hp =& Codendi_HTMLPurifier::instance();
         
         if ($project->getStatus() == 'H') {

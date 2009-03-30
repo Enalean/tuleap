@@ -52,7 +52,8 @@ if ($func=='do_create') {
 if ($func=='create') {
     project_admin_header(array('title'=>$Language->getText('project_admin_editugroup','create_ug'),'group'=>$group_id,
 			   'help' => 'UserGroups.html#UGroupCreation'));
-    $project=project_get_object($group_id);
+    $pm = ProjectManager::instance();
+    $project=$pm->getProject($group_id);
 
     print '<P><h2>'.$Language->getText('project_admin_editugroup','create_ug_for',$project->getPublicName()).'</h2>';
     echo '<p>'.$Language->getText('project_admin_editugroup','fill_ug_desc').'</p>';

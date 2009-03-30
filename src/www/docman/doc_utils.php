@@ -249,7 +249,8 @@ function docman_header($params) {
 
     global $group_id,$Language;
 
-	$project=project_get_object($group_id);
+	$pm = ProjectManager::instance();
+    $project=$pm->getProject($group_id);
 	
 	if (!$project->usesDocman()) {
 	    exit_error($Language->getText('global','error'),
@@ -284,7 +285,8 @@ function docman_header_admin($params) {
 
     global $group_id,$Language;
 
-    $project=project_get_object($group_id);
+    $pm = ProjectManager::instance();
+    $project=$pm->getProject($group_id);
     
     if (!$project->usesDocman()) {
 	exit_error($Language->getText('global','error'),

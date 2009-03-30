@@ -1264,7 +1264,8 @@ class Docman_Actions extends Actions {
         $groupId    = $this->_controler->_actionParams['sGroupId'];
         $srcGroupId = $this->_controler->_actionParams['sSrcGroupId'];
 
-        $srcGo = group_get_object($srcGroupId);
+        $pm = ProjectManager::instance();
+        $srcGo = $pm->getProject($srcGroupId);
         if($srcGo != false &&
            ($srcGo->isPublic() 
             || (!$srcGo->isPublic() && $srcGo->userIsMember()))) {            
@@ -1747,7 +1748,8 @@ class Docman_Actions extends Actions {
 
         // Any user can importreports from any public projects and from
         // Private projects he is member of.
-        $go = group_get_object($importGroupId);
+        $pm = ProjectManager::instance();
+        $go = $pm->getProject($importGroupId);
         if($go != false &&
            ($go->isPublic() 
             || (!$go->isPublic() && $go->userIsMember()))) {
