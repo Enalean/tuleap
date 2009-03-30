@@ -60,6 +60,8 @@ class SystemEvent_PROJECT_CREATE extends SystemEvent {
                 $this->error("Could not create project home");
                 return false;
             }
+            $backendSystem->setProjectHomePrivacy($project, !$project->isPublic());
+            
             
             if ($project->usesCVS()) {
                 $backendCVS    = BackendCVS::instance();
@@ -68,6 +70,7 @@ class SystemEvent_PROJECT_CREATE extends SystemEvent {
                     return false;
                 }
                 $backendCVS->setCVSRootListNeedUpdate();
+                $project->cvsIsPrivate($project, !$project->isPublic() || $project->isCVSPrivate());
             }
             
             if ($project->usesSVN()) {

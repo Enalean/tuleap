@@ -306,6 +306,10 @@ class Project extends Group {
     function getCVSpreamble() {
         return $this->project_data_array['cvs_preamble'];
     }
+    
+    function isCVSPrivate() {
+        return $this->project_data_array['cvs_is_private'];
+    }
 
     function getSVNMailingList() {
         return $this->project_data_array['svn_events_mailing_list'];
