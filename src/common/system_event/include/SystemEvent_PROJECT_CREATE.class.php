@@ -70,7 +70,7 @@ class SystemEvent_PROJECT_CREATE extends SystemEvent {
                     return false;
                 }
                 $backendCVS->setCVSRootListNeedUpdate();
-                $project->cvsIsPrivate($project, !$project->isPublic() || $project->isCVSPrivate());
+                $project->setCVSPrivacy($project, !$project->isPublic() || $project->isCVSPrivate());
             }
             
             if ($project->usesSVN()) {

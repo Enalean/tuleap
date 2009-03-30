@@ -215,7 +215,7 @@ class BackendCVSTest extends UnitTestCase {
         unlink($GLOBALS['cvs_root_allow_file'].".new");
     }
     
-    public function testCvsIsPrivate_private() {
+    public function testSetCVSPrivacy_private() {
         $backend = new BackendCVSTestVersion($this);
         $backend->setReturnValue('chmod', true);
         $backend->expectOnce('chmod', array($GLOBALS['cvs_prefix'] . PATH_SEPARATOR . 'toto', 0770));
@@ -223,10 +223,10 @@ class BackendCVSTest extends UnitTestCase {
         $project = new MockProject($this);
         $project->setReturnValue('getUnixName', 'toto');
         
-        $this->assertTrue($backend->cvsIsPrivate($project, true));
+        $this->assertTrue($backend->setCVSPrivacy($project, true));
     }
     
-    public function testCvsIsPrivate_public() {
+    public function testsetCVSPrivacy_public() {
         $backend = new BackendCVSTestVersion($this);
         $backend->setReturnValue('chmod', true);
         $backend->expectOnce('chmod', array($GLOBALS['cvs_prefix'] . PATH_SEPARATOR . 'toto', 0775));
@@ -234,10 +234,10 @@ class BackendCVSTest extends UnitTestCase {
         $project = new MockProject($this);
         $project->setReturnValue('getUnixName', 'toto');
         
-        $this->assertTrue($backend->cvsIsPrivate($project, false));
+        $this->assertTrue($backend->setCVSPrivacy($project, false));
     }
     
-    public function testCvsIsPrivate_no_repository() {
+    public function testSetCVSPrivacy_no_repository() {
         $path_that_doesnt_exist = md5(uniqid(rand(), true));
         
         $backend = new BackendCVSTestVersion($this);
@@ -246,8 +246,8 @@ class BackendCVSTest extends UnitTestCase {
         $project = new MockProject($this);
         $project->setReturnValue('getUnixName', $path_that_doesnt_exist);
         
-        $this->assertFalse($backend->cvsIsPrivate($project, true));
-        $this->assertFalse($backend->cvsIsPrivate($project, false));
+        $this->assertFalse($backend->setCVSPrivacy($project, true));
+        $this->assertFalse($backend->setCVSPrivacy($project, false));
     }
 }
 ?>
