@@ -54,7 +54,7 @@ if ($group_id && user_ismember($group_id,'A')) {
 
 
 					$result=db_query($sql);
-					$group_list_id = db_insertid($res);
+					$group_list_id = db_insertid($result);
 
                                             if (!$result) {
 						$feedback .= ' '.$Language->getText('mail_admin_index','add_list_err').' ';
@@ -81,7 +81,7 @@ if ($group_id && user_ismember($group_id,'A')) {
 	
 					mail ($row_email['email'],$GLOBALS['sys_name']." ".$Language->getText('mail_admin_index','new_mail_list'),$message,$hdrs);
  
-					$feedback .= " ".$Language->getText('mail_admin_index','mail_sent_to',$row_email[email])." ";
+					$feedback .= " ".$Language->getText('mail_admin_index','mail_sent_to',$row_email['email'])." ";
 				}
 			} else {
 
