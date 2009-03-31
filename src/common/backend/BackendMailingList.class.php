@@ -69,13 +69,11 @@ class BackendMailingList extends Backend {
         
         if ($fp = fopen($config_file, 'w')) {
             // Define encoding of this file for Python. See SR #764 
-            // Please note that this allows config_list to run with UTF-8 strings, but if the
-            // description contains non-ascii chars, they will be displayed badly in mailman config web page.
             fwrite($fp, "# coding=UTF-8\n\n");
             // Deactivate monthly reminders by default
             fwrite($fp, "send_reminders = 0\n");
             // Setup the description
-            fwrite($fp, "description = '".addslashes($list->getDescription())."'\n");
+            fwrite($fp, "description = ".escapeshellarg($list->getDescription())."\n");
             // Allow up to 200 kB messages
             fwrite($fp, "max_message_size = 200\n");
         
@@ -89,11 +87,8 @@ class BackendMailingList extends Backend {
             }
             fclose($fp);
             
-            if (system($GLOBALS['mailman_bin_dir']."/config_list -i $config_file ".$list->getListName()) !== false) {
-                if unlink($config_file) return true;
-            }
-        }
-        return false;
+            system($GLOBALS['mailman_bin_dir']."/config_list -i $config_file ".$list->getListName());
+        } else return false;
 
     }
 
@@ -148,7 +143,7 @@ class BackendMailingList extends Backend {
                 chmod($backupfile,0600);
 
                 // Delete the mailing list if asked to and the mailing exists (archive deleted as well)
-                system("$mailman_bin_dir/rmlist -a ".$list->getListName." >/dev/null");
+                system($GLOBALS['mailman_bin_dir']. '/rmlist -a '. $list->getListName .' >/dev/null');
                 
                 return true;
             }
