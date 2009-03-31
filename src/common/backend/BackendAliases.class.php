@@ -101,7 +101,10 @@ class BackendAliases extends Backend {
         fclose($fp);
 
         // Replace current file by new one
-        return ($this->installNewFileVersion($alias_file_new,$alias_file,$alias_file_old,true));
+        if (!$this->installNewFileVersion($alias_file_new,$alias_file,$alias_file_old,true)) return false;
+
+        // Run newaliases
+        return (system("/usr/bin/newaliases") !== false);
     }
 
 
