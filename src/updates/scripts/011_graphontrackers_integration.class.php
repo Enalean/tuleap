@@ -226,8 +226,8 @@ class Update_011 extends CodeXUpgrade {
                                     }
                                     $new_chart_id++;
                                 }
+                                $new_rpt_id++;
                             }
-                            $new_rpt_id++;                               
                         }
                     }                    
                 }
