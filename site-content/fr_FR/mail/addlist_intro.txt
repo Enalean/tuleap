@@ -16,7 +16,6 @@ echo '
 <li><b>'.$pm->getProject($group_id)->getUnixName().'-annonce</b>&nbsp;: pour les annonces de nouvelles versions ou d\'évènements relatifs au projet.
 </ul>
 
-<P>Cela prendra au maximum <B><span class="highlight">'.$GLOBALS['sys_crondelay'].' heures</span></B> pour que la liste soit effectivement créée.
 <P>';
 
 ?>

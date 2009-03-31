@@ -19,7 +19,6 @@ echo '
 <li><b>'.$pm->getProject($group_id)->getUnixName().'-announce</b>: for announcement of new releases or any new event in the life of the project.
 </ul>
 
-<P>It will take <B><span class="highlight">'.$GLOBALS['sys_crondelay'].' Hours</span></B>  maximum for your list(s) to be created.
 <P>';
 
 ?>
