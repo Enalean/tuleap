@@ -257,6 +257,7 @@ class SystemEventManager {
      * @param int $nb the number of event to includ in the table
      */
     public function fetchLastEventsStatus($nb = 10) {
+        $hp = Codendi_HTMLPurifier::instance();
         $html = '';
         $html .= '<table width="100%">';
         $i = 0;
@@ -270,7 +271,11 @@ class SystemEventManager {
             $html .= '<td>'. $row['type'] .'</td>';
             
             //status
-            $html .= '<td class="system_event_status_'. $row['status'] .'">';
+            $html .= '<td class="system_event_status_'. $row['status'] .'"';
+            if ($row['log']) {
+                $html .= ' title="'. $hp->purify($row['log'], CODENDI_PURIFIER_CONVERT_HTML) .'" ';
+            }
+            $html .= '>';
             $html .= $row['status'];
             $html .= '</td>';
             
