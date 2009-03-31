@@ -54,13 +54,18 @@ if ($group_id && user_ismember($group_id,'A')) {
 
 
 					$result=db_query($sql);
-					if (!$result) {
+					$group_list_id = db_insertid($res);
+
+                                            if (!$result) {
 						$feedback .= ' '.$Language->getText('mail_admin_index','add_list_err').' ';
 						echo db_error();
 					} else {
 						$feedback .= ' '.$Language->getText('mail_admin_index','list_added').' ';
 					}
 			
+                                        // Raise an event
+                                        EventManager::instance()->processEvent('mail_list_create', array('group_list_id' => $group_list_id,));
+
 					// get email addr
 					$res_email = db_query("SELECT email FROM user WHERE user_id='".user_getid()."'");
 					if (db_numrows($res_email) < 1) {
@@ -96,7 +101,11 @@ if ($group_id && user_ismember($group_id,'A')) {
 				$feedback .= ' '.$Language->getText('mail_admin_index','upate_status_err').' ';
 				echo db_error();
 			} else {
-				$feedback .= ' '.$Language->getText('mail_admin_index','status_update_success').' ';
+                            if ($is_public == 9) {
+                                // List deleted: raise event
+                                EventManager::instance()->processEvent('mail_list_delete', array('group_list_id' => $group_list_id,));
+                            }
+                            $feedback .= ' '.$Language->getText('mail_admin_index','status_update_success').' ';
 			}
 		}
 

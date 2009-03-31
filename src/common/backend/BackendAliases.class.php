@@ -22,11 +22,13 @@
  */
 
 require_once('common/backend/Backend.class.php');
+require_once('common/dao/MailingListDao.class.php');
 
 class BackendAliases extends Backend {
 
     protected $need_update=false;   
     protected $_userdao = null;
+    protected $_mailinglistdao = null;
 
 
     /**
@@ -53,6 +55,16 @@ class BackendAliases extends Backend {
           $this->_userdao = new UserDao(CodendiDataAccess::instance());
         }
         return $this->_userdao;
+    }
+
+    /**
+     * @return MailingListDao
+     */
+    protected function _getMailingListDao() {
+        if (!$this->_mailinglistdao) {
+          $this->_mailinglistdao = new MailingListDao(CodendiDataAccess::instance());
+        }
+        return $this->_mailinglistdao;
     }
 
     function setNeedUpdateMailAliases() {
@@ -124,18 +136,6 @@ class BackendAliases extends Backend {
         return fwrite($fp, "\n\n");
     }
 
-    /**
-    * Search active (=not deteted) mailing lists 
-    * return all active lists
-    * NOTE: this should be moved to a ML DAO someday (TODO)
-    * @return DataAccessResult
-    */
-    protected function _searchAllActiveML() {
-        $sql = "SELECT * 
-                FROM mail_group_list 
-                WHERE is_public IN (0,1)";
-        return $this->retrieve($sql);
-    }
 
 
     /** Mailing list aliases for mailman */
@@ -144,7 +144,7 @@ class BackendAliases extends Backend {
 	$mm_wrapper = $GLOBALS['mailman_wrapper'];
 
         fwrite($fp, "### Begin Mailing List Aliases ###\n\n");
-        $dar = $this->_searchAllActiveML();
+        $dar = $this->_getMailingListDao()->searchAllActiveML();
         foreach($dar as $row) {
             if ($row['list_name']) {
                 // Convert to lower case

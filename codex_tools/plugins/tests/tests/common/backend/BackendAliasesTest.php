@@ -26,10 +26,13 @@ require_once('common/backend/BackendAliases.class.php');
 
 require_once('common/dao/UserDao.class.php');
 Mock::generate('UserDao');
+require_once('common/dao/MailingListDao.class.php');
+Mock::generate('MailingListDao');
 
-Mock::generatePartial('BackendAliases', 'BackendAliasesTestVersion', array('_getUserDao', 
-                                                             '_searchAllActiveML'
-                                                           ));
+Mock::generatePartial('BackendAliases', 'BackendAliasesTestVersion', 
+                      array('_getUserDao', 
+                            '_getMailingListDao'
+                            ));
 
 class BackendAliasesTest extends UnitTestCase {
     
@@ -62,14 +65,16 @@ class BackendAliasesTest extends UnitTestCase {
                                      "email"  => "user1@domain3.com"));
         $udao->setReturnValue('searchByStatus',$active_users);
 
+        $listdao = new MockMailingListDao();
         $active_ml = array(
                            "0" => array ( "list_name"=> "list1"),
                            "1" => array ( "list_name"=> "list2"),
                            "2" => array ( "list_name"=> "list3"),
                            "3" => array ( "list_name"=> "list4"));
+        $listdao->setReturnValue('searchAllActiveML',$active_ml);
         $MA = new BackendAliasesTestVersion($this);
         $MA->setReturnValue('_getUserDao', $udao);
-        $MA->setReturnValue('_searchAllActiveML', $active_ml);
+        $MA->setReturnValue('_getMailingListDao', $listdao);
 
         $this->assertEqual($MA->update(),True);
         $aliases=file_get_contents($GLOBALS['alias_file']);

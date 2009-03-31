@@ -31,6 +31,8 @@ require_once('common/system_event/include/SystemEvent_MEMBERSHIP_CREATE.class.ph
 require_once('common/system_event/include/SystemEvent_MEMBERSHIP_DELETE.class.php');
 require_once('common/system_event/include/SystemEvent_USER_CREATE.class.php');
 require_once('common/system_event/include/SystemEvent_USER_DELETE.class.php');
+require_once('common/system_event/include/SystemEvent_MAILING_LIST_CREATE.class.php');
+require_once('common/system_event/include/SystemEvent_MAILING_LIST_DELETE.class.php');
 require_once('common/system_event/include/SystemEvent_CVS_IS_PRIVATE.class.php');
 require_once('common/system_event/include/SystemEvent_PROJECT_IS_PRIVATE.class.php');
 
@@ -40,6 +42,7 @@ require_once('common/backend/BackendSystem.class.php');
 require_once('common/backend/BackendAliases.class.php');
 require_once('common/backend/BackendSVN.class.php');
 require_once('common/backend/BackendCVS.class.php');
+require_once('common/backend/BackendMailingList.class.php');
 
 
 /**
@@ -71,6 +74,8 @@ class SystemEventManager {
             'project_admin_ugroup_add_user',
             'project_admin_ugroup_deletion',
             'project_admin_remove_user_from_project_ugroups',
+            'mail_list_create',
+            'mail_list_delete'
             );
         foreach($events_to_listen as $event) {
             $event_manager->addListener($event, $this, 'addSystemEvent', true, 0);
@@ -155,6 +160,14 @@ class SystemEventManager {
             $sysevent = new SystemEvent(SystemEvent::PROJECT_IS_PRIVATE, $this->concatParameters($params, array('group_id', 'project_is_private')), SystemEvent::PRIORITY_MEDIUM);
             $this->dao->store($sysevent);
             break;
+        case 'mail_list_create':
+            $sysevent = new SystemEvent(SystemEvent::MAILING_LIST_CREATE,$params['group_list_id'],SystemEvent::PRIORITY_MEDIUM);
+            $this->dao->store($sysevent);
+            break;
+        case 'mail_list_delete':
+            $sysevent = new SystemEvent(SystemEvent::MAILING_LIST_DELETE,$params['group_list_id'],SystemEvent::PRIORITY_LOW);
+            $this->dao->store($sysevent);
+            break;
         default:
             break;
         }
@@ -191,6 +204,8 @@ class SystemEventManager {
                 case SystemEvent::UGROUP_MODIFY:
                 case SystemEvent::USER_CREATE:
                 case SystemEvent::USER_DELETE:
+                case SystemEvent::MAILING_LIST_CREATE:
+                case SystemEvent::MAILING_LIST_DELETE:
                 case SystemEvent::CVS_IS_PRIVATE:
                 case SystemEvent::PROJECT_IS_PRIVATE:
                     $klass = 'SystemEvent_'. $row['type'];

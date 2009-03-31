@@ -1,0 +1,155 @@
+<?php
+/**
+ * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+ *
+ * This file is a part of Codendi.
+ *
+ * Codendi is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Codendi is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Codendi; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * 
+ */
+
+require_once('common/backend/Backend.class.php');
+require_once('common/dao/MailingListDao.class.php');
+require_once('common/dao/CodendiDataAccess.class.php');
+require_once('common/mailing_list/MailingList.class.php');
+
+class BackendMailingList extends Backend {
+
+    protected $_mailinglistdao = null;
+
+
+    /**
+     * Hold an instance of the class
+     */
+    protected static $_instance;
+    
+    /**
+     * Backends are singletons
+     */
+    public static function instance() {
+        if (!isset(self::$_instance)) {
+            $c = __CLASS__;
+            self::$_instance = new $c;
+        }
+        return self::$_instance;
+    }
+
+    /**
+     * @return MailingListDao
+     */
+    protected function _getMailingListDao() {
+        if (!$this->_mailinglistdao) {
+          $this->_mailinglistdao = new MailingListDao(CodendiDataAccess::instance());
+        }
+        return $this->_mailinglistdao;
+    }
+
+
+    /** 
+     * Update mailman configuration for the given list
+     * Write configuration in temporary file, and load it with mailman config_list tool
+     * @return true on success, false otherwise
+     */
+    protected function updateListConfig($list) {
+        // write configuration in temporary file
+        $config_file=$GLOBALS['tmp_dir']."/mailman_config_".$group_list_id.".in";
+        
+        if ($fp = fopen($config_file, 'w')) {
+            // Define encoding of this file for Python. See SR #764 
+            fwrite($fp, "# coding=UTF-8\n\n");
+            // Deactivate monthly reminders by default
+            fwrite($fp, "send_reminders = 0\n");
+            // Setup the description
+            fwrite($fp, "description = ".escapeshellarg($list->getDescription())."\n");
+            // Allow up to 200 kB messages
+            fwrite($fp, "max_message_size = 200\n");
+        
+            if ($list->getIsPublic() == 0) { // Private lists
+                // Don't advertise this list when people ask what lists are on this machine
+                fwrite($fp, "advertised = False\n");
+                // Private archives
+                fwrite($fp, "archive_private = 1\n");
+                // Subscribe requires approval
+                fwrite($fp, "subscribe_policy = 2\n");
+            }
+            fclose($fp);
+            
+            system($GLOBALS['mailman_bin_dir']."/config_list -i $config_file_list ".$list->getListName());
+        } else return false;
+
+    }
+
+
+    /**
+     * Create new mailing list with mailman 'newlist' tool
+     * then update the list configuration according to list settings
+     * @return true on success, false otherwise
+     */
+    public function createList($group_list_id) {
+
+        $dar = $this->_getMailingListDao()->searchByGroupListId($group_list_id);
+
+        if ($row = $dar->getRow()) {
+            $list = new MailingList($row);
+
+
+            $list_admin=UserManager::instance()->getUserById($list->getListAdmin());
+            $list_admin_email = $list_admin->getEmail();
+
+            $list_dir = $GLOBALS['mailman_list_dir']."/".$list->getListName();
+
+            if ((! is_dir($list_dir))&&($list->getIsPublic() != 9)) {
+                // Create list
+                system($GLOBALS['mailman_bin_dir']."/newlist -q ".$list->getListName()." $list_admin_email ".$list->getListPassword()." >/dev/null");
+
+                // Then update configuraion
+                return $this->updateListConfig($list);
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Delete mailing list 
+     * - list and archives are deleted
+     * - backup first in temp directory
+     * @return true on success, false otherwise
+     */
+    public function deleteList($group_list_id) {
+        $dar = $this->_getMailingListDao()->searchByGroupListId($group_list_id);
+
+        if ($row = $dar->getRow()) {
+            $list=new MailingList($row);
+            $list_dir = $GLOBALS['mailman_list_dir']."/".$list->getListName();
+            if ((is_dir($list_dir))&&($list->getIsPublic() == 9)) {
+
+                // Archive first
+                $list_archive_dir = $GLOBALS['mailman_list_dir']."/../archives/private/".$list->getListName(); // Does it work? TODO
+                $backupfile=$GLOBALS['tmp_dir']."/".$list->getListName()."-mailman.tgz";
+                system("tar cfz $backupfile $list_dir $list_archive_dir");
+                chmod($backupfile,0600);
+
+                // Delete the mailing list if asked to and the mailing exists (archive deleted as well)
+                system("$mailman_bin_dir/rmlist -a ".$list->getListName." >/dev/null");
+                
+                return true;
+            }
+        }
+        return false;
+    }
+}
+
+?>
