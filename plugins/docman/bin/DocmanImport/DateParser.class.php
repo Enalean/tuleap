@@ -34,8 +34,6 @@ class DateParser {
      * @return The corresponding timestamp
      */
     static function parseIso8601 ($isodate) {
-        $localOffset = date("Z", time());
-
         if (preg_match("/^(\d{4})-?(\d{2})-?(\d{2})(.*)$/", $isodate, $matches)) {
             list( , $year, $month, $day, $rest) = $matches;
 
@@ -43,6 +41,8 @@ class DateParser {
                 list( , $hour, $minute, $second, , $rest) = $matches;
                 $offsetHour = 0;
                 $offsetMinute = 0;
+                
+                $localOffset = date("Z", mktime($hour, $minute, (int)$second, $month, $day, $year));
                 if (preg_match("/^([+-])(\d{2})(:?(\d{2}))$/", $rest, $matches)) {
                     list( , $sign, $offsetHour, , $offsetMinute) = $matches;
                     if ($sign == '-') {
