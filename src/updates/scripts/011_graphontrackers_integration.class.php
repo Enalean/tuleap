@@ -36,23 +36,6 @@ class Update_011 extends CodeXUpgrade {
            $this->tableExists('plugin_graphtrackers_bar_chart') &&
            $this->tableExists('plugin_graphtrackers_line_chart')) {
 
-           	echo "create plugin_graphontrackers_line_chart table";
-            echo $this->getLineSeparator();                      
-            $sql = "CREATE TABLE plugin_graphontrackers_line_chart(
-                    id int(11)  NOT NULL PRIMARY KEY ,
-                    field_base varchar(255) ,
-                    state_source varchar(255) ,
-                    state_target varchar(255) ,
-                    date_min int(11) ,
-                    date_max int(11) ,
-                    date_reference int(11) ,
-                    method varchar(255))";
-            $res = $this->update($sql);
-            if (!$res) {
-                $this->addUpgradeError("An error occured while creating plugin_graphontrackers_line_chart table': ".$this->da->isError());
-            }            
-            
-
             // copy existing reports and charts
             echo "copy existing reports and charts";
             echo $this->getLineSeparator();
@@ -107,7 +90,7 @@ class Update_011 extends CodeXUpgrade {
                             if (!$res) {
                                 $this->addUpgradeError("An error occured while creating the report ".$rpt_id.": ".$this->da->isError());
                             }
-                            // get the new graphic report id 
+                            // Update user preferences
                             echo "New Graphic report Created: ".$new_rpt_id." Instead of the report ".$rpt_id;
                             echo $this->getLineSeparator();
                             echo "++++Update graphic report user prefs to the new created report+++";
@@ -131,7 +114,7 @@ class Update_011 extends CodeXUpgrade {
                                     echo "---- ---- Creating the Gantt chart: ".$gantt_id;
                                     echo $this->getLineSeparator();
                                     $sql = "INSERT INTO plugin_graphontrackers_chart (id,report_graphic_id,rank,chart_type,title,description,width,height) " .
-                                           "VALUES ($new_chart_id,".$rpt_id.",".$rank.",'gantt',".$this->da->quoteSmart($rowGantt['title']).",".$this->da->quoteSmart($rowGantt['description']).",0,0)";
+                                           "VALUES ($new_chart_id,".$new_rpt_id.",".$rank.",'gantt',".$this->da->quoteSmart($rowGantt['title']).",".$this->da->quoteSmart($rowGantt['description']).",0,0)";
                                     $res = $this->update($sql);
                                     if (!$res) {
                                         $this->addUpgradeError("An error occured while creating the gantt chart ".$gantt_id.": ".$this->da->isError());
@@ -164,7 +147,7 @@ class Update_011 extends CodeXUpgrade {
                                     if ($rowPie['height'] == '') $rowPie['height'] = 500;
                                     if ($rowPie['width'] == '') $rowPie['width'] = 500;
                                     $sql = "INSERT INTO plugin_graphontrackers_chart (id,report_graphic_id,rank,chart_type,title,description,width,height) " .
-                                           "VALUES ($new_chart_id,".$rpt_id.",".$rank.",'pie',".$this->da->quoteSmart($rowPie['title']).",".$this->da->quoteSmart($rowPie['description']).",".$rowPie['width'].",".$rowPie['height'].")";
+                                           "VALUES ($new_chart_id,".$new_rpt_id.",".$rank.",'pie',".$this->da->quoteSmart($rowPie['title']).",".$this->da->quoteSmart($rowPie['description']).",".$rowPie['width'].",".$rowPie['height'].")";
                                     $res = $this->update($sql);       
                                     if (!$res) {
                                         $this->addUpgradeError("An error occured while creating the pie chart ".$pie_id.": ".$this->da->isError());
@@ -196,7 +179,7 @@ class Update_011 extends CodeXUpgrade {
                                     if ($rowBar['height'] == '') $rowBar['height'] = 500;
                                     if ($rowBar['width'] == '') $rowBar['width'] = 500;
                                     $sql = "INSERT INTO plugin_graphontrackers_chart (id,report_graphic_id,rank,chart_type,title,description,width,height) " .
-                                           "VALUES ($new_chart_id,".$rpt_id.",".$rank.",'bar',".$this->da->quoteSmart($rowBar['title']).",".$this->da->quoteSmart($rowBar['description']).",".$rowBar['width'].",".$rowBar['height'].")";
+                                           "VALUES ($new_chart_id,".$new_rpt_id.",".$rank.",'bar',".$this->da->quoteSmart($rowBar['title']).",".$this->da->quoteSmart($rowBar['description']).",".$rowBar['width'].",".$rowBar['height'].")";
                                     $res = $this->update($sql);
                                     if (!$res) {
                                         $this->addUpgradeError("An error occured while creating the bar chart ".$bar_id.": ".$this->da->isError());
@@ -228,7 +211,7 @@ class Update_011 extends CodeXUpgrade {
                                     if ($rowLine['height'] == '') $rowLine['height'] = 500;
                                     if ($rowLine['width'] == '') $rowLine['width'] = 500;
                                     $sql = "INSERT INTO plugin_graphontrackers_chart (id,report_graphic_id,rank,chart_type,title,description,width,height) " .
-                                           "VALUES ($new_chart_id,".$rpt_id.",".$rank.",'line',".$this->da->quoteSmart($rowLine['title']).",".$this->da->quoteSmart($rowLine['description']).",".$rowLine['width'].",".$rowLine['height'].")";
+                                           "VALUES ($new_chart_id,".$new_rpt_id.",".$rank.",'line',".$this->da->quoteSmart($rowLine['title']).",".$this->da->quoteSmart($rowLine['description']).",".$rowLine['width'].",".$rowLine['height'].")";
                                     $res = $this->update($sql);
                                     if (!$res) {
                                         $this->addUpgradeError("An error occured while creating the line chart ".$line_id.": ".$this->da->isError());
