@@ -69,6 +69,7 @@ admin_main	statuspending_user	en attente
 admin_main	statustotal_user	total
 admin_main	desc_fields	Description des Projets
 admin_main	desc_fields_edit	Modification des champs de description des projets
+admin_main	system_event	System Events
 #
 #-----------------------------------------------
 # Script: SF/www/admin/admin_utils.php

@@ -82,6 +82,18 @@ class SystemEventManager {
         }
     }
 
+    protected static $_instance;
+    /**
+     * SystemEventManager is singleton
+     */
+    public static function instance() {
+        if (!isset(self::$_instance)) {
+            $c = __CLASS__;
+            self::$_instance = new $c;
+        }
+        return self::$_instance;
+    }
+    
     function _getEventManager() {
         return EventManager::instance();
     }
@@ -238,6 +250,34 @@ class SystemEventManager {
         if (BackendSVN::instance()->getSVNApacheConfNeedUpdate()) {
             BackendSVN::instance()->generateSVNApacheConf();
         }
+    }
+    
+    /**
+     * Compute a html table to display the status of the last n events
+     * @param int $nb the number of event to includ in the table
+     */
+    public function fetchLastEventsStatus($nb = 10) {
+        $html = '';
+        $html .= '<table width="100%">';
+        $i = 0;
+        foreach($this->dao->searchLastEvents($nb) as $row) {
+            $html .= '<tr class="'. html_get_alt_row_color($i++) .'">';
+            
+            //id
+            $html .= '<td>'. $row['id'] .'</td>';
+            
+            //name of the event
+            $html .= '<td>'. $row['type'] .'</td>';
+            
+            //status
+            $html .= '<td class="system_event_status_'. $row['status'] .'">';
+            $html .= $row['status'];
+            $html .= '</td>';
+            
+            $html .= '</tr>';
+        }
+        $html .= '</table>';
+        return $html;
     }
 
 }

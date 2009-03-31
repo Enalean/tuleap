@@ -890,3 +890,21 @@ td.forum_reference_separator {
 	border-top: thin dotted grey;
 	padding-top: 10px;
 }
+/* {{{ System Evvents */
+.system_event_status_NEW    ,
+.system_event_status_RUNNING,
+.system_event_status_DONE   ,
+.system_event_status_WARNING,
+.system_event_status_ERROR  
+{
+    font-weight:bold;
+    color:white;
+    text-align:center;
+}
+.system_event_status_NEW     { background-color: gray; }
+.system_event_status_RUNNING { background-color: blue; }
+.system_event_status_DONE    { background-color: green; }
+.system_event_status_WARNING { background-color: orange; }
+.system_event_status_ERROR   { background-color: red; }
+
+/* }}} */

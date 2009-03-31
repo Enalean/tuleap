@@ -74,7 +74,17 @@ class SystemEventDao extends DataAccessObject {
         return null;
     }
 
-
+    /**
+     * Search n last status
+     */
+    public function searchLastEvents($nb) {
+        $nb = $this->da->escapeInt($nb);
+        $sql = "SELECT * 
+                FROM system_event
+                ORDER BY id DESC
+                LIMIT $nb";
+        return $this->retrieve($sql);
+    }
 }
 
 ?>

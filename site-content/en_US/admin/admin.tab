@@ -77,6 +77,7 @@ admin_main	statuspending_user	pending
 admin_main	statustotal_user	total
 admin_main	desc_fields	Project Description Fields
 admin_main	desc_fields_edit	Project Description Fields Edition
+admin_main	system_event	System Events
 #
 #-----------------------------------------------
 # Script: SF/www/admin/admin_utils.php
@@ -408,3 +409,4 @@ admin_desc_fields	info_rank_noint	Rank must be an integer value!
 admin_desc_fields	add_success	Description Field Successfully added !
 admin_desc_fields	update_success	Description Field Successfully updated !
 admin_desc_fields	remove_success	Description Field Successfully deleted !
+
