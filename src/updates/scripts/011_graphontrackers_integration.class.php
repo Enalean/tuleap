@@ -95,7 +95,7 @@ class Update_011 extends CodeXUpgrade {
                             echo $this->getLineSeparator();
                             echo "++++Update graphic report user prefs to the new created report+++";
                             echo $this->getLineSeparator();
-                            $sql = "UPDATE user_preferences SET preference_value='&report_graphic_id=".$new_rpt_id."' WHERE user_id = ".$rowRpt['user_id']." AND preference_name LIKE '%tracker_graph_brow_cust%' and preference_value='&report_graphic_id=".$rpt_id."'";
+                            $sql = "UPDATE user_preferences SET preference_value='&report_graphic_id=".$new_rpt_id."' WHERE preference_name LIKE '%tracker_graph_brow_cust%' and preference_value='&report_graphic_id=".$rpt_id."'";
                             $res = $this->update($sql);
                             if (!$res) {
                                 $this->addUpgradeError("An error occured while updating user prefs for graphic report ".$rpt_id.": ".$this->da->isError());
