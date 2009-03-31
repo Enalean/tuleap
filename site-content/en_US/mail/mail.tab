@@ -19,7 +19,7 @@ mail_admin_index	add_list_err	Error Adding List
 mail_admin_index	list_added	List Added
 mail_admin_index	invalid_userid	Invalid userid
 mail_admin_index	does_not_compute	Email address not found.
-mail_admin_index	list_create_explain	A mailing list will be created on $1 in less than $2 hours\nand you are the list administrator.\n\nThis list is: $3 \n\nYour mailing list info is at:\n$4 \n\nList administration can be found at: \n$5\n\nYour list password is: $6\nYou are encouraged to change this password as soon as possible.\n\nThank you for using $1.\n\n -- The $1 Team\n
+mail_admin_index	list_create_explain	A mailing list will be created on $1 in a few minutes\nand you are the list administrator.\n\nThis list is: $3 \n\nYour mailing list info is at:\n$4 \n\nList administration can be found at: \n$5\n\nYour list password is: $6\nYou are encouraged to change this password as soon as possible.\n\nThank you for using $1.\n\n -- The $1 Team\n
 mail_admin_index	new_mail_list	New Mailing List
 mail_admin_index	mail_sent_to	Email sent with details to: $1
 mail_admin_index	invalid_list_name	Invalid List Name
@@ -29,7 +29,7 @@ mail_admin_index	add_a_mail_list	Add a Mailing List
 mail_admin_index	existing_mail_list	Existing Mailing Lists
 mail_admin_index	mail_list_name	Mailing List Name
 mail_admin_index	is_public	Is Public?
-mail_admin_index	public_explain	(Public means subscription right is granted to any user)
+mail_admin_index	public_explain	(Public means subscription right is granted to any user, and archives are public)
 mail_admin_index	desc	Description
 mail_admin_index	add_this_list	Add This List
 mail_admin_index	update_mail_list	Update Mailing Lists
