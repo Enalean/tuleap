@@ -549,6 +549,9 @@ if (count($groups)) {
 }
 ?>
 
+# Create 'private' directories in /home/group/
+find /home/groups/ -maxdepth 1 -mindepth 1 -type d -exec mkdir -v --context=root:object_r:httpd_sys_content_t --mode=2770 '{}/private' \; -exec chown dummy '{}/private' \;
+
 
 #custom themes
 => no more images
