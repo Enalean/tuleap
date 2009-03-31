@@ -42,6 +42,7 @@ Mock::generatePartial('BackendSVN', 'BackendSVNTestVersion', array('_getUserMana
                                                                    '_getServiceDao',
                                                                    'chown',
                                                                    'chgrp',
+                                                                   'chmod',
                                                                    ));
 
 
@@ -55,9 +56,11 @@ class BackendSVNTest extends UnitTestCase {
         $GLOBALS['svn_prefix']                = dirname(__FILE__) . '/_fixtures/svnroot';
         $GLOBALS['tmp_dir']                   = dirname(__FILE__) . '/_fixtures/var/tmp';
         $GLOBALS['svn_root_file']             = dirname(__FILE__) . '/_fixtures/etc/httpd/conf.d/codendi_svnroot.conf';
+        mkdir($GLOBALS['svn_prefix'] . PATH_SEPARATOR . 'toto');
     }
     
     function tearDown() {
+        rmdir($GLOBALS['svn_prefix'] . PATH_SEPARATOR . 'toto');
         unset($GLOBALS['svn_prefix']);
         unset($GLOBALS['tmp_dir']);
         unset($GLOBALS['svn_root_file']);
@@ -264,6 +267,41 @@ class BackendSVNTest extends UnitTestCase {
 
         // Cleanup
         unlink($GLOBALS['svn_root_file']);
+    }
+    
+    public function testSetSVNPrivacy_private() {
+        $backend = new BackendSVNTestVersion($this);
+        $backend->setReturnValue('chmod', true);
+        $backend->expectOnce('chmod', array($GLOBALS['svn_prefix'] . PATH_SEPARATOR . 'toto', 0770));
+        
+        $project = new MockProject($this);
+        $project->setReturnValue('getUnixName', 'toto');
+        
+        $this->assertTrue($backend->setSVNPrivacy($project, true));
+    }
+    
+    public function testsetSVNPrivacy_public() {
+        $backend = new BackendSVNTestVersion($this);
+        $backend->setReturnValue('chmod', true);
+        $backend->expectOnce('chmod', array($GLOBALS['svn_prefix'] . PATH_SEPARATOR . 'toto', 0775));
+        
+        $project = new MockProject($this);
+        $project->setReturnValue('getUnixName', 'toto');
+        
+        $this->assertTrue($backend->setSVNPrivacy($project, false));
+    }
+    
+    public function testSetSVNPrivacy_no_repository() {
+        $path_that_doesnt_exist = md5(uniqid(rand(), true));
+        
+        $backend = new BackendSVNTestVersion($this);
+        $backend->expectNever('chmod');
+        
+        $project = new MockProject($this);
+        $project->setReturnValue('getUnixName', $path_that_doesnt_exist);
+        
+        $this->assertFalse($backend->setSVNPrivacy($project, true));
+        $this->assertFalse($backend->setSVNPrivacy($project, false));
     }
 }
 ?>

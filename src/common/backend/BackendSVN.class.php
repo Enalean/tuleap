@@ -341,7 +341,7 @@ class BackendSVN extends Backend {
     public function setSVNPrivacy($project, $is_private) {
         $perms = $is_private ? 0770 : 0775;
         $svnroot = $GLOBALS['svn_prefix'] . PATH_SEPARATOR . $project->getUnixName(false);
-        return is_dir($svnroot) && $this->chmod($cvsroot, $perms);
+        return is_dir($svnroot) && $this->chmod($svnroot, $perms);
     }
 
 }

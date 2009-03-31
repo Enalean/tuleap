@@ -69,7 +69,7 @@ class SystemEvent_PROJECT_CREATE extends SystemEvent {
                     return false;
                 }
                 $backendCVS->setCVSRootListNeedUpdate();
-                $project->setCVSPrivacy($project, !$project->isPublic() || $project->isCVSPrivate());
+                $backendCVS->setCVSPrivacy($project, !$project->isPublic() || $project->isCVSPrivate());
             }
             
             if ($project->usesSVN()) {
@@ -79,6 +79,7 @@ class SystemEvent_PROJECT_CREATE extends SystemEvent {
                     return false;
                 }
                 $backendSVN->setSVNApacheConfNeedUpdate();
+                $backendSVN->setSVNPrivacy($project, !$project->isPublic());
             }
             
             $this->done();
