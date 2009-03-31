@@ -68,18 +68,20 @@ class Update_011 extends CodeXUpgrade {
             $darNumRpt = $this->retrieve($sqlNumRpt);
             if($darNumRpt && !$darNumRpt->isError()) {
             	$rowNumRpt = $darNumRpt->getRow(); 
-                $new_rpt_id = $rowNumRpt['num'];
+                $new_rpt_id = $rowNumRpt['num']+1;
             } else {
-                $new_rpt_id = 2000;
+                $this->addUpgradeError("error when generating the new graphic report ID: ".$this->da->isError());
+                return false;
             }
             
             $sqlNumChart = "SELECT MAX(id) num from plugin_graphontrackers_chart";
             $darNumChart = $this->retrieve($sqlNumChart);
             if($darNumChart && !$darNumChart->isError()) {
             	$rowNumChart = $darNumChart->getRow(); 
-                $new_chart_id = $rowNumChart['num'];
+                $new_chart_id = $rowNumChart['num']+1;
             } else {
-                $new_chart_id = 4000;
+                $this->addUpgradeError("error when generating the new chart ID: ".$this->da->isError());
+                return false;
             }
             
             if($darPrj && !$darPrj->isError()) {
@@ -110,7 +112,7 @@ class Update_011 extends CodeXUpgrade {
                             echo $this->getLineSeparator();
                             echo "++++Update graphic report user prefs to the new created report+++";
                             echo $this->getLineSeparator();
-                            $sql = "UPDATE user_preferences SET preference_value='&report_graphic_id=".$new_rpt_id."' WHERE preference_name LIKE '%tracker_graph_brow_cust%' and preference_value='&report_graphic_id=".$rpt_id."'";
+                            $sql = "UPDATE user_preferences SET preference_value='&report_graphic_id=".$new_rpt_id."' WHERE user_id = ".$rowRpt['user_id']." AND preference_name LIKE '%tracker_graph_brow_cust%' and preference_value='&report_graphic_id=".$rpt_id."'";
                             $res = $this->update($sql);
                             if (!$res) {
                                 $this->addUpgradeError("An error occured while updating user prefs for graphic report ".$rpt_id.": ".$this->da->isError());
