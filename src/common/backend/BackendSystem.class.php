@@ -85,6 +85,7 @@ class BackendSystem extends Backend {
         $unix_group_name=$project->getUnixName(false); // May contain upper-case letters
         $projdir=$GLOBALS['grpdir_prefix']."/".$unix_group_name;
         $ht_dir=$projdir."/htdocs";
+        $private_dir = $projdir .'/private';
         $ftp_anon_dir=$GLOBALS['ftp_anon_dir_prefix']."/".$unix_group_name;
         $ftp_frs_dir=$GLOBALS['ftp_frs_dir_prefix']."/".$unix_group_name;
 
@@ -97,11 +98,7 @@ class BackendSystem extends Backend {
             if (mkdir($projdir,0775)) {
                 $this->chown($projdir, "dummy");
                 $this->chgrp($projdir, $unix_group_name);
-                if ($project->isPublic()) {
-                    $this->chmod($projdir, 02775);
-                } else {
-                    $this->chmod($projdir, 02770);
-                }
+                $this->chmod($projdir, 02775);
             } else {
                 $this->log("Can't create project home: $projdir");
                 return false;
@@ -171,6 +168,17 @@ class BackendSystem extends Backend {
                 return false;
             }
         }
+        
+        if (!is_dir($private_dir)) {
+            if (mkdir($private_dir,0770)) {
+                $this->chmod($private_dir, 02770);
+                $this->chown($private_dir, "dummy");
+                $this->chgrp($private_dir, $unix_group_name);
+            } else {
+                $this->log("Can't create project private dir: $private_dir");
+                return false;
+            }
+        }
         return true;
     }
 
@@ -219,17 +227,6 @@ class BackendSystem extends Backend {
             }
             return true;
        } else return false;
-     }
-
-     /**
-      * Set the privacy of the project home
-      * @param Project $project
-      * @param boolean $is_private
-      */
-     public function setProjectHomePrivacy($project, $is_private) {
-         $perms = $is_private ? 02770 : 02775;
-         $dir = $GLOBALS['grpdir_prefix'] . PATH_SEPARATOR . $project->getUnixName(false);
-         return is_dir($dir) && $this->chmod($dir, $perms);
      }
 
 }

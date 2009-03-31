@@ -60,7 +60,6 @@ class SystemEvent_PROJECT_CREATE extends SystemEvent {
                 $this->error("Could not create project home");
                 return false;
             }
-            $backendSystem->setProjectHomePrivacy($project, !$project->isPublic());
             
             
             if ($project->usesCVS()) {
