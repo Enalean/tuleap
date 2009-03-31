@@ -309,13 +309,7 @@ class BackendSVN extends Backend {
 
 
         // Backup existing file and install new one
-        $this->installNewFileVersion($svn_root_file_new,$svn_root_file,$svn_root_file_old,true);
-
-        //$this->chown($svn_root_file,$GLOBALS['sys_http_user']);
-        //$this->chgrp($svn_root_file,$unix_group_name);
-        //chmod("$svn_root_file",0775);
-        
-        return true;
+        return $this->installNewFileVersion($svn_root_file_new,$svn_root_file,$svn_root_file_old,true);
     }
 
 

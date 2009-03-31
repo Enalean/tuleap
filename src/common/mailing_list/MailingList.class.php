@@ -58,6 +58,9 @@ class MailingList {
     }
 
 
+    public function getId() {
+        return $this->id;
+    }
     public function getListName() {
         return $this->list_name;
     }
