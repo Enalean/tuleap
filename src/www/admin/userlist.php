@@ -165,7 +165,8 @@ if (!$group_id) {
 	/*
 		Show list for one group
 	*/
-    print "<b>Group ".$Language->getText('admin_userlist','group',array(group_getname($group_id)))."</b>";
+    $pm = ProjectManager::instance();
+    print "<b>Group ".$Language->getText('admin_userlist','group',array($pm->getProject($group_id)->getPublicName()))."</b>";
 	
 	print "\n<p>";
 

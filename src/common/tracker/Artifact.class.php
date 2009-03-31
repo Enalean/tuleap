@@ -2325,7 +2325,8 @@ class Artifact extends Error {
         list($host,$port) = explode(':',$GLOBALS['sys_default_domain']);		
         $mail =& new Mail();
         $mail->setFrom($GLOBALS['sys_noreply']);
-        $mail->addAdditionalHeader("X-CodeX-Project",     group_getunixname($group_id));
+        $pm = ProjectManager::instance();
+        $mail->addAdditionalHeader("X-CodeX-Project",     $pm->getProject($group_id)->getUnixName());
         $mail->addAdditionalHeader("X-CodeX-Artifact",    $this->ArtifactType->getItemName());
         $mail->addAdditionalHeader("X-CodeX-Artifact-ID", $this->getID());
         
@@ -2439,7 +2440,8 @@ class Artifact extends Error {
 	    $full_snapshot = "";
 
         // We write the name of the project
-        $full_snapshot .= sprintf($fmt_left . $GLOBALS['sys_lf'] ."",$Language->getText('tracker_include_artifact','project').' '.util_unconvert_htmlspecialchars(group_getname($group_id) ));
+        $pm = ProjectManager::instance();
+        $full_snapshot .= sprintf($fmt_left . $GLOBALS['sys_lf'] ."",$Language->getText('tracker_include_artifact','project').' '.util_unconvert_htmlspecialchars($pm->getProject($group_id)->getPublicName() ));
         
 	    // Write all the fields, grouped by fieldsetset and ordered by rank.
 	    $left = 1;

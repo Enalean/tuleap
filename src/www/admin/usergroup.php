@@ -249,7 +249,8 @@ $res_cat = db_query("SELECT groups.group_name AS group_name, "
 	. "groups.group_id=user_group.group_id");
     
 	while ($row_cat = db_fetch_array($res_cat)) {
-		print ('<br><a href="groupedit.php?group_id='. $row_cat['group_id'] .'"><b>'. group_getname($row_cat['group_id']) . '</b></a>'
+		$pm = ProjectManager::instance();
+        print ('<br><a href="groupedit.php?group_id='. $row_cat['group_id'] .'"><b>'. $pm->getProject($row_cat['group_id'])->getPublicName() . '</b></a>'
 			. "&nbsp;&nbsp;&nbsp;<a href=\"usergroup.php?user_id=$user_id&action=remove_user_from_group&group_id=$row_cat[group_id]\">"
 			. "[".$Language->getText('admin_usergroup','remove_ug')."]</a>");
 		// editing for flags

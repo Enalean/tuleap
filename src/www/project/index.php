@@ -23,6 +23,7 @@ if($request->valid($vGroupId)) {
     }
 }
 
-$GLOBALS['Response']->redirect('/projects/'.group_getunixname($group_id));
+$pm = ProjectManager::instance();
+$GLOBALS['Response']->redirect('/projects/'.$pm->getProject($group_id)->getUnixName());
 
 ?>

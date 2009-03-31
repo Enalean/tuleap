@@ -88,8 +88,10 @@ function menu_search() {
 
 function menu_project($grp) {
   GLOBAL $HTML,$Language;
-    $HTML->menuhtml_top($Language->getText('include_menu','proj').': ' . group_getname($grp));
-    $HTML->menu_entry('/projects/'. group_getunixname($grp) .'/',$Language->getText('include_menu','proj_summary'));
+    $pm = ProjectManager::instance();
+    $HTML->menuhtml_top($Language->getText('include_menu','proj').': ' . $pm->getProject($grp)->getPublicName());
+    $pm = ProjectManager::instance();
+    $HTML->menu_entry('/projects/'. $pm->getProject($grp)->getUnixName() .'/',$Language->getText('include_menu','proj_summary'));
     print '<P>';
     $HTML->menu_entry('/project/admin/?group_id='.$grp,$Language->getText('include_menu','proj_admin'));
     $HTML->menuhtml_bottom();

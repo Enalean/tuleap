@@ -273,7 +273,8 @@ return 0 if file not deleted, 1 otherwise
 	    	$this->_delete($file_id);
 	    //append the filename and project name to a temp file for the root perl job to grab
 	    	$time = time();
-	    	exec ('/bin/echo "'. $file_name .'::'. group_getunixname($group_id) .'::'.$time.'" >> '. $ftp_incoming_dir .'/.delete_files');
+	    	$pm = ProjectManager::instance();
+            exec ('/bin/echo "'. $file_name .'::'. $pm->getProject($group_id)->getUnixName() .'::'.$time.'" >> '. $ftp_incoming_dir .'/.delete_files');
 	
 	    	return 1;
 	  	}

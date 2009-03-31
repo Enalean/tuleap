@@ -575,5 +575,7 @@ if (count($groups)) {
   set-variable  = binlog-ignore-db=openfire
 
 #
+todo "Note to Codendi Developers: "
+todo " - Some deprecated functions have been removed: group_getname, group_getunixname, group_get_result, group_get_object, project_get_object"
 
 

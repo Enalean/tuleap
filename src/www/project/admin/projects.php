@@ -21,8 +21,9 @@ if (!$group_id) {
         session_require(array('group' => $group_id, 'admin_flags' => 'A'));
         $display_headers_and_footers = !(isset($_SERVER['HTTP_X_REQUESTED_WITH']) &&  $_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest');
         if ($display_headers_and_footers) {
+            $pm = ProjectManager::instance();
             project_admin_header(array(
-                'title' => $Language->getText('project_admin_index','p_admin',group_getname($group_id)),
+                'title' => $Language->getText('project_admin_index','p_admin',$pm->getProject($group_id)->getPublicName()),
                 'group' => $group_id,
                 'help'  => 'ProjectAdministration.html'
             ));

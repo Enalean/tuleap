@@ -20,7 +20,8 @@ if (!$group_id) {
 }
 
 
-$params=array('title'=>$Language->getText('docman_index','title',array(group_getname($group_id))),
+$pm = ProjectManager::instance();
+$params=array('title'=>$Language->getText('docman_index','title',array($pm->getProject($group_id)->getPublicName())),
               'help'=>'DocumentManager.html',
               'pv'=>isset($pv)?$pv:false);
 docman_header($params);

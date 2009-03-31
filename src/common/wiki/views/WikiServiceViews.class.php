@@ -39,16 +39,17 @@ class WikiServiceViews extends WikiViews {
   function WikiServiceViews(&$controler, $id=0, $view=null) {
       $hp = Codendi_HTMLPurifier::instance();
     parent::WikiView($controler, $id, $view);
+    $pm = ProjectManager::instance();
     if(!is_null($_REQUEST['pagename'])) {
         $this->html_params['title']  = $GLOBALS['Language']->getText('wiki_views_wikiserviceviews',
                                                           'wiki_page_title',
                                                           array( $hp->purify($_REQUEST['pagename'], CODENDI_PURIFIER_CONVERT_HTML) ,
-                                                                group_getname($this->gid)));
+                                                                $pm->getProject($this->gid)->getPublicName()));
     }
     else {
         $this->html_params['title']  = $GLOBALS['Language']->getText('wiki_views_wikiserviceviews',
                                                           'wiki_title',
-                                                          array(group_getname($this->gid)));
+                                                          array($pm->getProject($this->gid)->getPublicName()));
     }
     $GLOBALS['wiki_view'] =& $this;
   }

@@ -102,7 +102,8 @@ function create_project($data, $do_not_exit = false) {
         }
 
         // define a module
-        $result=db_query("INSERT INTO filemodule (group_id,module_name) VALUES ('$group_id','".group_getunixname($group_id)."')");
+        $pm = ProjectManager::instance();
+        $result=db_query("INSERT INTO filemodule (group_id,module_name) VALUES ('$group_id','".$pm->getProject($group_id)->getUnixName()."')");
         if (!$result) {
                 list($host,$port) = explode(':',$GLOBALS['sys_default_domain']);		
                 exit_error($GLOBALS['Language']->getText('global','error'),$GLOBALS['Language']->getText('register_confirmation','ins_file_fail',array($host,db_error())));

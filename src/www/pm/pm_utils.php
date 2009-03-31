@@ -1464,10 +1464,11 @@ function pm_mail_followup($project_task_id,$more_addresses=false,$changes=false)
     	    ": FULL TASK SNAPSHOT   =================\n".
     	    ($changes ? '':$task_href)."\n\n";
         
+    			 $pm = ProjectManager::instance();
     	// Some special field first (group, created by/on)
     	$body .= sprintf($fmt.$fmt."\n", 
     			 'Submitted by: '.user_getname(db_result($result,0,'created_by')),
-    			 'Project: '.group_getname($group_id) );
+                 'Project: '.$pm->getProject($group_id)->getPublicName() );
     
     	// All other regular fields now		 
     	$i=0;
@@ -1529,7 +1530,8 @@ function pm_mail_followup($project_task_id,$more_addresses=false,$changes=false)
         list($host,$port) = explode(':',$GLOBALS['sys_default_domain']);		
     	$hdrs = 'From: noreply@'.$host.$sys_lf;
 	$hdrs .='Content-type: text/plain; charset=utf-8'.$sys_lf;
-	$hdrs .='X-CodeX-Project: '.group_getunixname($group_id).$sys_lf;
+	$pm = ProjectManager::instance();
+    $hdrs .='X-CodeX-Project: '.$pm->getProject($group_id)->getUnixName().$sys_lf;
 	$hdrs .='X-CodeX-Artifact: task'.$sys_lf;
 	$hdrs .='X-CodeX-Artifact-ID: '.$project_task_id.$sys_lf;
 	$subject='[Task #'.$project_task_id.'] '.util_unconvert_htmlspecialchars(db_result($result,0,'summary'));

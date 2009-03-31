@@ -10,6 +10,7 @@ require_once('pre.php');
 require('../mail_utils.php');
 
 
+$pm = ProjectManager::instance();
 if ($group_id && user_ismember($group_id,'A')) {
 
     $list_server = get_list_server_url();
@@ -30,7 +31,7 @@ if ($group_id && user_ismember($group_id,'A')) {
 			if (user_is_super_user())
 			    $new_list_name = strtolower($list_name);
 			else
-			    $new_list_name=strtolower(group_getunixname($group_id).'-'.$list_name);
+                $new_list_name=strtolower($pm->getProject($group_id)->getUnixName().'-'.$list_name);
 
 			//see if that's a valid email address
 			if (validate_email($new_list_name.'@'.$GLOBALS['sys_lists_host'])) {
@@ -136,9 +137,9 @@ if ($group_id && user_ismember($group_id,'A')) {
 		// full mailing list name
 		if (user_is_super_user()) {
 		    echo '<INPUT TYPE="TEXT" NAME="list_name"
-		    VALUE="'.group_getunixname($group_id).'-xxxxx" CLASS="textfield_small">@'.$GLOBALS['sys_lists_host'].'</B><BR>';		    
+            VALUE="'.$pm->getProject($group_id)->getUnixName().'-xxxxx" CLASS="textfield_small">@'.$GLOBALS['sys_lists_host'].'</B><BR>';		    
 		} else {
-		    echo '<B>'.group_getunixname($group_id).'-<INPUT TYPE="TEXT" NAME="list_name" VALUE="" CLASS="textfield_small">@'.$GLOBALS['sys_lists_host'].'</B><BR>';
+            echo '<B>'.$pm->getProject($group_id)->getUnixName().'-<INPUT TYPE="TEXT" NAME="list_name" VALUE="" CLASS="textfield_small">@'.$GLOBALS['sys_lists_host'].'</B><BR>';
 		}
 		echo '	<P>
 			<B>'.$Language->getText('mail_admin_index','is_public').' </B>'.$Language->getText('mail_admin_index','public_explain').'<BR>

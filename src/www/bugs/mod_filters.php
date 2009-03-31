@@ -98,6 +98,7 @@ if (user_isloggedin()) {
 	$sql="select bug_group_id,group_name from bug_group WHERE group_id='$group_id'";
 	$result5=db_query($sql);
 
+			$pm = ProjectManager::instance();
 	?>
 	<TABLE WIDTH="100%" CELLPADDING="3">
 		<TR>
@@ -106,9 +107,9 @@ if (user_isloggedin()) {
 			</TD>
 		</TR>
 		<TR>
-			<TD  VALIGN="TOP"><?php ShowResultSet($result,"Bug Techs for ".group_getname($group_id)); ?></TD>
+            <TD  VALIGN="TOP"><?php ShowResultSet($result,"Bug Techs for ".$pm->getProject($group_id)->getPublicName()); ?></TD>
 			<TD  VALIGN="TOP"><?php ShowResultSet($result2,"Bug Statuses"); ?></TD>
-			<TD  VALIGN="TOP"><?php ShowResultSet($result3,"Bug Categories for ".group_getname($group_id)); ?></TD>
+			<TD  VALIGN="TOP"><?php ShowResultSet($result3,"Bug Categories for ".$pm->getProject($group_id)->getPublicName()); ?></TD>
 		<TR>
 		<TR>
 			<TD  VALIGN="TOP"><?php ShowResultSet($result4,"Bug Resolutions"); ?></TD>

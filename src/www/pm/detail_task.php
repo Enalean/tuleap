@@ -19,12 +19,13 @@ $sql="SELECT * FROM project_task ".
 
 $result=db_query($sql);
 
+          $pm = ProjectManager::instance();
 ?>
 <H2>[ Task #<?php echo $project_task_id.'] '.db_result($result,0,'summary');?></H2>
 
 <TABLE CELLPADDING="0" WIDTH="100%">
       <TR><TD><B>Created by:</B>&nbsp;<?php echo user_getname(db_result($result,0,'created_by')); ?></TD>
-          <TD><B>Group:</B>&nbsp;<?php echo group_getname($group_id); ?></TD>
+          <TD><B>Group:</B>&nbsp;<?php echo $pm->getProject($group_id)->getPublicName(); ?></TD>
       </TR>
 
 	  <TR><TD COLSPAN="2">&nbsp</TD></TR>

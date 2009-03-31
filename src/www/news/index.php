@@ -25,8 +25,9 @@ if($request->valid(new Valid_Pv())) {
     $pv = 0;
 }
 
+$pm = ProjectManager::instance();
 if ($group_id) {
-    $title = $Language->getText('news_index','news_for',group_getname($group_id));
+    $title = $Language->getText('news_index','news_for',$pm->getProject($group_id)->getPublicName());
 } else {
     $title = $Language->getText('news_index','news');
 }
@@ -67,7 +68,7 @@ $rows=db_numrows($result);
 if ($rows < 1) {
 	echo '<H2>'.$Language->getText('news_index','no_news_found');
 	if ($group_id) {
-	  echo ' '.$Language->getText('news_index','for',group_getname($group_id));
+      echo ' '.$Language->getText('news_index','for',$pm->getProject($group_id)->getPublicName());
 	}
 	echo '</H2>';
 	echo '

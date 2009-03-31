@@ -271,7 +271,8 @@ if ($request->valid(new Valid_UInt('forum_id'))) {
         $is_a_news = true;
     }
     
-        $params=array('title'=>group_getname($group_id).' forum: '.$forum_name,
+        $pm = ProjectManager::instance();
+        $params=array('title'=>$pm->getProject($group_id)->getPublicName().' forum: '.$forum_name,
                       'pv'   =>isset($pv)?$pv:false);
 	forum_header($params);
 

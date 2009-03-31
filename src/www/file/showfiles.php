@@ -72,11 +72,12 @@ if ($request->valid(new Valid_Pv('pv'))) {
     $pv = false;
 }
     
+    $pm = ProjectManager::instance();
 $params = array (
     'title' => $Language->getText('file_showfiles',
     'file_p_for',
-    group_getname($group_id
-)), 'pv' => $pv);
+    $pm->getProject($group_id)->getPublicName()
+), 'pv' => $pv);
 
 file_utils_header($params);
 $hp =& Codendi_HTMLPurifier::instance();
@@ -143,7 +144,8 @@ function toggle_image(image_id) {
 <?
 }
 // get unix group name for path
-$group_unix_name = group_getunixname($group_id);
+$pm = ProjectManager::instance();
+$group_unix_name = $pm->getProject($group_id)->getUnixName();
 
 $proj_stats['packages'] = $num_packages;
 $pm = & PermissionsManager :: instance();

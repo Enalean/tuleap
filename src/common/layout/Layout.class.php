@@ -1403,6 +1403,7 @@ class Layout extends Response {
 
     function _getProjectTabs($toptab,&$project) {
       global $sys_default_domain;
+      $pm = ProjectManager::instance();
         $tabs = array();
         $group_id = $project->getGroupId();
         reset($project->service_data_array);
@@ -1436,7 +1437,7 @@ class Layout extends Response {
                     // NOTE: if you change link variables here, change them also in src/common/project/RegisterProjectStep_Confirmation.class.php and src/www/project/admin/servicebar.php
                     // Don't check project name if not needed.
                     // When it is done here, the service bar will not appear updated on the current page
-                    $link=str_replace('$projectname',group_getunixname($group_id),$link);
+                    $link=str_replace('$projectname',$pm->getProject($group_id)->getUnixName(),$link);
                 }
                 $link=str_replace('$sys_default_domain',$GLOBALS['sys_default_domain'],$link);
                 if ($GLOBALS['sys_force_ssl']) {

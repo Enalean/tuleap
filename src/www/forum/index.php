@@ -24,7 +24,8 @@ if($request->valid(new Valid_Pv())) {
 }
 
 
-$params=array('title'=>$Language->getText('forum_index','forums_for',group_getname($group_id)),
+$pm = ProjectManager::instance();
+$params=array('title'=>$Language->getText('forum_index','forums_for',$pm->getProject($group_id)->getPublicName()),
               'help' => 'WebForums.html',
               'pv'   => isset($pv)?$pv:false);
 forum_header($params);
@@ -46,7 +47,8 @@ $result = db_query ($sql);
 $rows = db_numrows($result); 
 
 if (!$result || $rows < 1) {
-  echo '<H1>'.$Language->getText('forum_index','no_forums',group_getname($group_id)).'</H1>';
+  $pm = ProjectManager::instance();
+  echo '<H1>'.$Language->getText('forum_index','no_forums',$pm->getProject($group_id)->getPublicName()).'</H1>';
     echo db_error();
     forum_footer($params);
     exit;

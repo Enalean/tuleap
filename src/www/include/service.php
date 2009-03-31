@@ -11,8 +11,9 @@ function service_create_service($arr, $group_id, $template, $force_enable = fals
     // Convert link to real values
     // NOTE: if you change link variables here, change them also in src/www/project/admin/servicebar.php and src/www/include/Layout.class.php
     $link=$arr['link'];
+    $pm = ProjectManager::instance();
     if ($template['system']) {
-        $link=str_replace('$projectname',group_getunixname($group_id),$link);
+        $link=str_replace('$projectname',$pm->getProject($group_id)->getUnixName(),$link);
         $link=str_replace('$sys_default_domain',$GLOBALS['sys_default_domain'],$link);
         $link=str_replace('$group_id',$group_id,$link);
         if ($GLOBALS['sys_force_ssl']) {
@@ -21,7 +22,7 @@ function service_create_service($arr, $group_id, $template, $force_enable = fals
         $link=str_replace('$sys_default_protocol',$sys_default_protocol,$link);
     } else {
       //for non-system templates
-      $link=str_replace($template['name'],group_getunixname($group_id),$link);
+      $link=str_replace($template['name'],$pm->getProject($group_id)->getUnixName(),$link);
       $link=preg_replace('/group_id='. $template['id'] .'([^\d]|$)/', 'group_id='. $group_id .'$1', $link);
     }
 

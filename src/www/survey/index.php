@@ -54,7 +54,8 @@ if (!$result || db_numrows($result) < 1) {
 	echo "<H2>".$Language->getText('survey_index','no_act_s')."</H2>";
 	echo db_error();
 } else {
-	echo "<H2>".$Language->getText('survey_index','s_for',group_getname($group_id))."</H2>";
+	$pm = ProjectManager::instance();
+    echo "<H2>".$Language->getText('survey_index','s_for',$pm->getProject($group_id)->getPublicName())."</H2>";
 	ShowResultsGroupSurveys($result);
 }
 

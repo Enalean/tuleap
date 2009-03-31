@@ -543,7 +543,8 @@ if ($result && $numrows > 0) {
 
 } else {
 
-    echo "<H2>No Matching Bugs Found for ".group_getname($group_id)." or filters too restrictive</H2>";
+    $pm = ProjectManager::instance();
+    echo "<H2>No Matching Bugs Found for ".$pm->getProject($group_id)->getPublicName()." or filters too restrictive</H2>";
     echo db_error();
 
 }

@@ -15,7 +15,8 @@ function html_feedback_bottom($feedback) {
 }
 
 function html_a_group($grp) {
-	print '<A /project/?group_id='.$grp.'>' . group_getname($grp) . '</A>';
+	$pm = ProjectManager::instance();
+    print '<A /project/?group_id='.$grp.'>' . $pm->getProject($grp)->getPublicName() . '</A>';
 }
 
 function html_blankimage($height,$width) {

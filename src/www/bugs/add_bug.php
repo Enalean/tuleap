@@ -27,7 +27,8 @@ if (!user_isloggedin() && db_result($res,0,'bug_allow_anon') == 0) {
 }
 
 echo util_unconvert_htmlspecialchars(db_result($res,0,'bug_preamble'));
-
+                  
+$pm = ProjectManager::instance();
 // Beginning of the submission form with fixed fields
 echo '<FORM ACTION="'.$PHP_SELF.'" METHOD="POST" enctype="multipart/form-data" NAME="bug_form">
     <INPUT TYPE="hidden" name="MAX_FILE_SIZE" value="'.$sys_max_size_attachment.'">
@@ -35,7 +36,7 @@ echo '<FORM ACTION="'.$PHP_SELF.'" METHOD="POST" enctype="multipart/form-data" N
 	<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$group_id.'">
 	<TABLE cellpadding="0">
 	<TR><TD VALIGN="TOP" COLSPAN="'.(2*$fields_per_line).'">
-                  <B>Group:</B>&nbsp;'.group_getname($group_id).'</TD></TR>';
+                  <B>Group:</B>&nbsp;'.$pm->getProject($group_id)->getPublicName().'</TD></TR>';
 
 
 

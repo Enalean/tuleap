@@ -20,6 +20,7 @@ class Widget_MySrs extends Widget {
         $this->Widget('mysrs');
         $this->content = '';
         $this->setOwner(user_getid(), WidgetLayoutManager::OWNER_TYPE_USER);
+        $pm = ProjectManager::instance();
         
         $sql='SELECT group_id FROM support '.
             'WHERE support_status_id = 1 '.
@@ -64,7 +65,7 @@ class Widget_MySrs extends Widget {
         
                 $html_hdr = ($j ? '<tr class="boxitem"><td colspan="2">' : '').
                     $hide_url.'<A HREF="/support/?group_id='.$group_id.'">'.
-                    group_getname($group_id).'</A>&nbsp;&nbsp;&nbsp;&nbsp;';
+                    $pm->getProject($group_id)->getPublicName().'</A>&nbsp;&nbsp;&nbsp;&nbsp;';
         
                 $html = ''; $count_new = max(0, $count_diff);
                 for ($i=0; $i<$rows2; $i++) {

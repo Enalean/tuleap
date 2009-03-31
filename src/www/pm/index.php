@@ -16,7 +16,8 @@ if ($group_id) {
 	    $group_project_id = 0;
 	}
 
-	pm_header(array('title'=>'Subprojects for '.group_getname($group_id),
+	$pm = ProjectManager::instance();
+    pm_header(array('title'=>'Subprojects for '.$pm->getProject($group_id)->getPublicName(),
 			'help'=>'TaskManager.html'));
 
 	if (user_isloggedin() && user_ismember($group_id)) {

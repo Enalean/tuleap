@@ -59,7 +59,8 @@ if (isset($_REQUEST['SUBMIT'])) {
 
 }
 
-project_admin_header(array('title'=>$Language->getText('project_admin_index','p_admin',group_getname($group_id)),
+$pm = ProjectManager::instance();
+project_admin_header(array('title'=>$Language->getText('project_admin_index','p_admin',$pm->getProject($group_id)->getPublicName()),
 			   'group'=>$group_id,
 			   'help' => 'SourceCodeAccessLogs.html'));
 

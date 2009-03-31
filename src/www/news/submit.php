@@ -69,18 +69,19 @@ if (user_isloggedin()) {
         news_header(array('title'=>$Language->getText('news_index','news'),
               'help'=>'NewsService.html'));
 
+        $pm = ProjectManager::instance();
         /*
          create a new discussion forum without a default msg
          if one isn't already there
         */
         echo '
-        <H3>'.$Language->getText('news_submit','submit_news_for',group_getname($group_id)).'</H3>
+        <H3>'.$Language->getText('news_submit','submit_news_for',$pm->getProject($group_id)->getPublicName()).'</H3>
         <P>
         '.$Language->getText('news_submit','post_explain',$GLOBALS['sys_name']).'
         <P>
         <FORM ACTION="" METHOD="POST">
         <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$group_id.'">
-        <B>'.$Language->getText('news_submit','for_project',group_getname($group_id)) .'</B>
+        <B>'.$Language->getText('news_submit','for_project',$pm->getProject($group_id)->getPublicName()) .'</B>
         <INPUT TYPE="HIDDEN" NAME="post_changes" VALUE="1">
         <P>
         <B>'.$Language->getText('news_admin_index','subject').':</B><BR>

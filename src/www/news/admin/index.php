@@ -27,6 +27,7 @@ if ($request->valid(new Valid_Uint('id'))) {
     $id = null;
 }
 
+$pm = ProjectManager::instance();
 // admin pages can be reached by news admin (N2) or project admin (A) 
 if ($group_id && $group_id != $GLOBALS['sys_news_group'] && (user_ismember($group_id, 'A') || user_ismember($group_id,'N2'))) {
     /*
@@ -115,7 +116,7 @@ if ($group_id && $group_id != $GLOBALS['sys_news_group'] && (user_ismember($grou
 		}    
 
 		echo '
-		<H3>'.$Language->getText('news_admin_index','approve_for',group_getname($group_id)).'</H3>
+        <H3>'.$Language->getText('news_admin_index','approve_for',$pm->getProject($group_id)->getPublicName()).'</H3>
 		<P>
 		<FORM ACTION="" METHOD="POST">
 		<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.db_result($result,0,'group_id').'">
@@ -151,10 +152,10 @@ if ($group_id && $group_id != $GLOBALS['sys_news_group'] && (user_ismember($grou
 		$rows=db_numrows($result);
 		if ($rows < 1) {
 			echo '
-				<H4>'.$Language->getText('news_admin_index','no_queued_item_found_for',group_getname($group_id)).'</H1>';
+                <H4>'.$Language->getText('news_admin_index','no_queued_item_found_for',$pm->getProject($group_id)->getPublicName()).'</H1>';
 		} else {
 			echo '
-				<H4>'.$Language->getText('news_admin_index','new_items',group_getname($group_id)).'</H4>
+                <H4>'.$Language->getText('news_admin_index','new_items',$pm->getProject($group_id)->getPublicName()).'</H4>
 				<P>';
 			for ($i=0; $i<$rows; $i++) {
 				echo '
@@ -242,7 +243,7 @@ if ($group_id && $group_id != $GLOBALS['sys_news_group'] && (user_ismember($grou
 		<FORM ACTION="" METHOD="POST">
 		<INPUT TYPE="HIDDEN" NAME="for_group" VALUE="'.db_result($result,0,'group_id').'">
 		<INPUT TYPE="HIDDEN" NAME="id" VALUE="'.db_result($result,0,'id').'">
-		<B>'.$Language->getText('news_admin_index','submitted_for_group').':</B> <a href="/projects/'.strtolower(db_result($result,0,'unix_group_name')).'/">'.group_getname(db_result($result,0,'group_id')).'</a><BR>
+		<B>'.$Language->getText('news_admin_index','submitted_for_group').':</B> <a href="/projects/'.strtolower(db_result($result,0,'unix_group_name')).'/">'.$pm->getProject(db_result($result,0,'group_id'))->getPublicName().'</a><BR>
 		<B>'.$Language->getText('news_admin_index','submitted_by').':</B> <a href="/users/'.$username.'">'.$username.'</a><BR>
         <B>'.$Language->getText('news_admin_index','submitted_on').':</B> '.$news_date.'<BR>        
 		<INPUT TYPE="HIDDEN" NAME="approve" VALUE="y">

@@ -205,10 +205,11 @@ function sr_utils_mail_followup($support_id,$more_addresses=false,$changes=false
 	    $body .= "\n============   SUPPORT REQ. #".$support_id.
 		": FULL SNAPSHOT   ==============\n".
 		($changes ? '':$sr_href)."\n\n";
+			     $pm = ProjectManager::instance();
 	    
 	    $body .= sprintf("$fmt$fmt\n$fmt\n",
 			     'Submitted by: '.user_getname(db_result($result,0,'submitted_by')),
-			     'Project: '.group_getname($group_id),
+                 'Project: '.$pm->getProject($group_id)->getPublicName(),
 			     'Submitted on: '.format_date($GLOBALS['Language']->getText('system', 'datefmt'),db_result($result,0,'open_date')));
 	    $body .= sprintf("$fmt$fmt\n$fmt$fmt\n\n%s\n\n",
 			     "Category: ".db_result($result,0,'category_name'),
@@ -272,7 +273,8 @@ function sr_utils_mail_followup($support_id,$more_addresses=false,$changes=false
             list($host,$port) = explode(':',$GLOBALS['sys_default_domain']);
 	    $hdrs = 'From: noreply@'.$host.$sys_lf;
 	    $hdrs .='Content-type: text/plain; charset=UTF-8'.$sys_lf;
-	    $hdrs .='X-CodeX-Project: '.group_getunixname($group_id).$sys_lf;
+	    $pm = ProjectManager::instance();
+        $hdrs .='X-CodeX-Project: '.$pm->getProject($group_id)->getUnixName().$sys_lf;
 	    $hdrs .='X-CodeX-Artifact: support'.$sys_lf;
 	    $hdrs .='X-CodeX-Artifact-ID: '.$support_id.$sys_lf;
 	    $subject="[ SR #".db_result($result,0,"support_id")." ] ".

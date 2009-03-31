@@ -80,7 +80,8 @@ if ($request->valid($vFrm)) {
     $group_id=db_result($result,0,'group_id');
     $forum_name=db_result($result,0,'forum_name');
     
-    $params=array('title'=>group_getname($group_id).' forum: '.$forum_name,
+    $pm = ProjectManager::instance();
+    $params=array('title'=>$pm->getProject($group_id)->getPublicName().' forum: '.$forum_name,
                       'pv'   =>isset($pv)?$pv:false);
     forum_header($params);
     

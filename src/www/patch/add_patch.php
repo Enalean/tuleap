@@ -15,12 +15,13 @@ $res_preamble  = db_query("SELECT patch_preamble FROM groups WHERE group_id=$gro
 echo '<H2>Submit A Patch</H2>';
 echo util_unconvert_htmlspecialchars(db_result($res_preamble,0,'patch_preamble'));
 
+		$pm = ProjectManager::instance();
 echo'		<FORM ACTION="'.$PHP_SELF.'" METHOD="POST" enctype="multipart/form-data">
         <INPUT TYPE="hidden" name="MAX_FILE_SIZE" value="'.$sys_max_size_upload.'">
 		<INPUT TYPE="HIDDEN" NAME="func" VALUE="postaddpatch">
 		<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$group_id.'">
 		<TABLE>
-		<TR><TD VALIGN="TOP" COLSPAN="2"><B>Project:</B>&nbsp;&nbsp;'.group_getname($group_id).'</TD></TR>
+        <TR><TD VALIGN="TOP" COLSPAN="2"><B>Project:</B>&nbsp;&nbsp;'.$pm->getProject($group_id)->getPublicName().'</TD></TR>
 		<TR><TD VALIGN="TOP" COLSPAN="2"><B>Category:</B>&nbsp;&nbsp;';
 
 	echo patch_category_box($group_id,'patch_category_id');

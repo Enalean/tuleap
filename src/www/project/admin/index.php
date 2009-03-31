@@ -17,13 +17,14 @@ require_once('www/project/admin/ugroup_utils.php');
 
 
 // get current information
-$res_grp = group_get_result($group_id);
-if (db_numrows($res_grp) < 1) {
+$pm = ProjectManager::instance();
+$grp = $pm->getProject($group_id);
+if (!$grp) {
   exit_error($Language->getText('project_admin_index','invalid_p'),$Language->getText('project_admin_index','p_not_found'));
 }
 
 //if the project isn't active, require you to be a member of the super-admin group
-if (!(db_result($res_grp,0,'status') == 'A')) {
+if ($grp->getStatus() != 'A') {
     session_require(array('group'=>1));
 }
 
@@ -143,7 +144,8 @@ if (isset($func)) {
     } */
 }
 $GLOBALS['HTML']->includeJavascriptFile('/scripts/scriptaculous/scriptaculous.js');
-project_admin_header(array('title'=>$Language->getText('project_admin_index','p_admin',group_getname($group_id)),'group'=>$group_id,
+$pm = ProjectManager::instance();
+project_admin_header(array('title'=>$Language->getText('project_admin_index','p_admin',$pm->getProject($group_id)->getPublicName()),'group'=>$group_id,
 			   'help' => 'ProjectAdministration.html'));
 
 /*
@@ -153,7 +155,7 @@ project_admin_header(array('title'=>$Language->getText('project_admin_index','p_
 echo '<TABLE width=100% cellpadding=2 cellspacing=2 border=0>
 <TR valign=top><TD width=50%>';
 
-$HTML->box1_top($Language->getText('project_admin_index','p_edit',group_getname($group_id))); 
+$HTML->box1_top($Language->getText('project_admin_index','p_edit',$pm->getProject($group_id)->getPublicName())); 
 
 
 $project = $pm->getProject($group_id);
@@ -162,7 +164,7 @@ $hp =& Codendi_HTMLPurifier::instance();
 
 print '&nbsp;
 <BR>
-'.$Language->getText('project_admin_index','short_desc',$hp->purify(db_result($res_grp,0,'short_description'), CODENDI_PURIFIER_LIGHT));
+'.$Language->getText('project_admin_index','short_desc',$hp->purify($grp->getDescription(), CODENDI_PURIFIER_LIGHT));
 if ($project->usesHomePage()) {
     print '<P>'.$Language->getText('project_admin_index','home_page_link',$project->getHomePage()).'</B>';
  }
@@ -171,9 +173,9 @@ print '&nbsp;
 <BR><P>
 '.$Language->getText('project_admin_index','view_proj_activity',"/project/stats/?group_id=$group_id");
 
-//print '<!-- Not implemented on CodeX
+//print '<!-- Not implemented on Codendi
 //<P align=center>
-//<A HREF="http://'.$GLOBALS['sys_cvs_host'].'/cvstarballs/'. db_result($res_grp,0,'unix_group_name') .'-cvsroot.tar.gz">[ Download Your Nightly CVS Tree Tarball ]</A>
+//<A HREF="http://'.$GLOBALS['sys_cvs_host'].'/cvstarballs/'. $grp->getUnixName() .'-cvsroot.tar.gz">[ Download Your Nightly CVS Tree Tarball ]</A>
 //-->';
 
 if ($GLOBALS['sys_use_trove'] != 0) {

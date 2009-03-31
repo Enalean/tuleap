@@ -22,6 +22,7 @@ $result=db_query($sql);
 
 if (db_numrows($result) > 0) {
 
+		$pm = ProjectManager::instance();
 	echo '
 		<H2>[ Support Request #'.$support_id.' ] '.db_result($result,0,'summary').'</H2>
 		 <FORM ACTION="'.$PHP_SELF.'" METHOD="POST">
@@ -32,7 +33,7 @@ if (db_numrows($result) > 0) {
 	<TABLE CELLPADDING="0" WIDTH="100%">
 	 <TR>
 		<TD><B>Submitted By:</B>&nbsp;'.db_result($result,0,'submitted_by').'</TD>
-		<TD><B>Group:</B>&nbsp;'.group_getname($group_id).'</TD>
+        <TD><B>Group:</B>&nbsp;'.$pm->getProject($group_id)->getPublicName().'</TD>
 	 </TR>
 
 	<TR>

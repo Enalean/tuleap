@@ -171,7 +171,8 @@ if (($func=='do_create')||($func=='do_update')) {
         if (strstr($link,'$projectname')) {
             // Don't check project name if not needed.
             // When it is done here, the service bar will not appear updated on the current page
-            $link=str_replace('$projectname',group_getunixname($group_id),$link);
+            $pm = ProjectManager::instance();
+            $link=str_replace('$projectname',$pm->getProject($group_id)->getUnixName(),$link);
         }
         $link=str_replace('$sys_default_domain',$GLOBALS['sys_default_domain'],$link);
         if ($GLOBALS['sys_force_ssl']) {
@@ -225,7 +226,8 @@ if ($func=='do_create') {
             if (strstr($link,'$projectname')) {
                 // Don't check project name if not needed.
                 // When it is done here, the service bar will not appear updated on the current page
-                $my_link=str_replace('$projectname',group_getunixname($my_group_id),$my_link);
+                $pm = ProjectManager::instance();
+                $my_link=str_replace('$projectname',$pm->getProject($my_group_id)->getUnixName(),$my_link);
             }
             $my_link=str_replace('$group_id',$my_group_id,$my_link);
 

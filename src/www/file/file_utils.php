@@ -1006,7 +1006,8 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
                         $package_name = $res['name'];
                     }
                     $list = implode($array_emails, ', ');
-                    $subject = $GLOBALS['sys_name'] . ' ' . $GLOBALS['Language']->getText('file_admin_editreleases', 'file_rel_notice') . ' ' . $GLOBALS['Language']->getText('file_admin_editreleases', 'file_rel_notice_project', group_getunixname($group_id));
+                    $pm = ProjectManager::instance();
+                    $subject = $GLOBALS['sys_name'] . ' ' . $GLOBALS['Language']->getText('file_admin_editreleases', 'file_rel_notice') . ' ' . $GLOBALS['Language']->getText('file_admin_editreleases', 'file_rel_notice_project', $pm->getProject($group_id)->getUnixName());
                     $package_id = $release['package_id'];
                     list ($host, $port) = explode(':', $GLOBALS['sys_default_domain']);
                     $body = $GLOBALS['Language']->getText('file_admin_editreleases', 'download_explain_modified_package', $package_name) . " " . $GLOBALS['Language']->getText('file_admin_editreleases', 'download_explain', array (

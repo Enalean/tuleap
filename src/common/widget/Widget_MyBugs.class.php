@@ -29,6 +29,7 @@ class Widget_MyBugs extends Widget {
     
         $result=db_query($sql);
         $rows=db_numrows($result);
+        $pm = ProjectManager::instance();
         
         if ($result && $rows >= 1) {
             $request =& HTTPRequest::instance();
@@ -65,7 +66,7 @@ class Widget_MyBugs extends Widget {
                 list($hide_now,$count_diff,$hide_url) = my_hide_url('bug',$group_id,$hide_item_id,$rows2,$hide_bug);
                 $html_hdr = ($j ? '<tr class="boxitem"><td colspan="2">' : '').
                     $hide_url.'<A HREF="/bugs/?group_id='.$group_id.'">'.
-                    group_getname($group_id).'</A>&nbsp;&nbsp;&nbsp;&nbsp;';
+                    $pm->getProject($group_id)->getPublicName().'</A>&nbsp;&nbsp;&nbsp;&nbsp;';
                 $html = '';
                 $count_new = max(0, $count_diff);
                 for ($i=0; $i<$rows2; $i++) {

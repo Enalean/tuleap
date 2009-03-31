@@ -44,6 +44,7 @@ if (db_numrows($result) > 0) {
                   <a href="'.$url.'&pv=1" target="_blank">&nbsp;Printer&nbsp;version</a>
                  </TD>';
     }
+    $pm = ProjectManager::instance();
     echo '</TR>
                  </TABLE>';
 ?>
@@ -56,7 +57,7 @@ if (db_numrows($result) > 0) {
 
     <TABLE CELLPADDING="0">
       <TR><TD><B>Submitted By:</B>&nbsp;<?php echo user_getname(db_result($result,0,'submitted_by')); ?></TD>
-          <TD><B>Group:</B>&nbsp;<?php echo group_getname($group_id); ?></TD>
+          <TD><B>Group:</B>&nbsp;<?php echo $pm->getProject($group_id)->getPublicName(); ?></TD>
       </TR>
       <TR><TD><B>Submitted on:</B>&nbsp;<?php echo format_date($GLOBALS['Language']->getText('system', 'datefmt'),db_result($result,0,'date')); ?></TD>
           <TD>

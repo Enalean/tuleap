@@ -30,49 +30,9 @@ require_once('common/include/TemplateSingleton.class.php');
 
 */
 
-/**
- *  group_get_object() - Get the group object.
- *
- *  group_get_object() is useful so you can pool group objects/save database queries
- *  You should always use this instead of instantiating the object directly.
- *
- *  You can now optionally pass in a db result handle. If you do, it re-uses that query
- *  to instantiate the objects.
- *
- *  IMPORTANT! That db result must contain all fields
- *  from groups table or you will have problems
- *
- *  @param		int		Required
- *  @param		int		Result set handle ("SELECT * FROM groups WHERE group_id=xx")
- *  @return a group object or false on failure
- *  @deprecated Use ProjectManager->getProject() instead
- */
-function &group_get_object($group_id,$res=false,$force_update=false) {
-	//create a common set of group objects
-	//saves a little wear on the database
-
-	//returns appropriate object
-	
-	global $GROUP_OBJ;
-    $group_id = (int) $group_id;
-	if (!isset($GROUP_OBJ["_".$group_id."_"]) || $force_update) {
-		if ($res) {
-			//the db result handle was passed in
-		} else {
-			$res=db_query("SELECT * FROM groups WHERE group_id=".$group_id);
-		}
-		if (!$res || db_numrows($res) < 1) {
-			$GROUP_OBJ["_".$group_id."_"]=false;
-		} else {
-            $GROUP_OBJ["_".$group_id."_"]= new Group($group_id);
-		}
-	}
-	return $GROUP_OBJ["_".$group_id."_"];
-}
-
 function group_get_object_by_name($groupname) {
-	$res=db_query("SELECT * FROM groups WHERE unix_group_name='".db_es($groupname)."'");
-	return group_get_object(db_result($res,0,'group_id'),$res);
+	$pm = ProjectManager::instance();
+    return $pm->getProject(group_getid_by_name($groupname));
 }
 
 function group_getid_by_name($groupname) {

@@ -98,7 +98,8 @@ class ArtifactHtml extends Artifact {
         
             $html = '';
             $html .= '<TABLE width="100%"><TR>';
-            $html .= '<TD align="left"><B>'.$Language->getText('tracker_include_artifact','project').'</B>&nbsp;</td><td COLSPAN="'.($columns_number-1).'">'. $hp->purify(util_unconvert_htmlspecialchars(group_getname($group_id)), CODENDI_PURIFIER_CONVERT_HTML) .'</TD>';
+            $pm = ProjectManager::instance();
+            $html .= '<TD align="left"><B>'.$Language->getText('tracker_include_artifact','project').'</B>&nbsp;</td><td COLSPAN="'.($columns_number-1).'">'. $hp->purify(util_unconvert_htmlspecialchars($pm->getProject($group_id)->getPublicName()), CODENDI_PURIFIER_CONVERT_HTML) .'</TD>';
             
             // Now display the variable part of the field list (depend on the project)
             
@@ -544,9 +545,10 @@ class ArtifactHtml extends Artifact {
         echo "</TD></TR></TABLE>";
           
         $html = '';
+        $pm = ProjectManager::instance();
         $html .= '
             <table width="100%">
-              <tr><td colspan="'.(int)$columns_number.'"><B>'.$Language->getText('tracker_include_artifact','group').':</B>&nbsp;'. $hp->purify(util_unconvert_htmlspecialchars(group_getname($group_id)), CODENDI_PURIFIER_CONVERT_HTML) .'</TD></tr>';
+              <tr><td colspan="'.(int)$columns_number.'"><B>'.$Language->getText('tracker_include_artifact','group').':</B>&nbsp;'. $hp->purify(util_unconvert_htmlspecialchars($pm->getProject($group_id)->getPublicName()), CODENDI_PURIFIER_CONVERT_HTML) .'</TD></tr>';
         
         // Now display the variable part of the field list (depend on the project)
         
@@ -937,11 +939,12 @@ class ArtifactHtml extends Artifact {
                 <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.(int)$group_id.'">
                 <INPUT TYPE="HIDDEN" NAME="atid" VALUE="'.(int)$group_artifact_id.'">';
         echo '<TABLE><TR><TD class="artifact">';
+        $pm = ProjectManager::instance();
 
         $html = '';
         $html .= '  <TABLE width="100%">
                 <TR><TD VALIGN="TOP" COLSPAN="'.($columns_number).'">
-                          <B>'.$Language->getText('tracker_include_artifact','group').':</B>&nbsp;'. $hp->purify(util_unconvert_htmlspecialchars(group_getname($group_id)), CODENDI_PURIFIER_CONVERT_HTML) .'</TD></TR>';
+                          <B>'.$Language->getText('tracker_include_artifact','group').':</B>&nbsp;'. $hp->purify(util_unconvert_htmlspecialchars($pm->getProject($group_id)->getPublicName()), CODENDI_PURIFIER_CONVERT_HTML) .'</TD></TR>';
         
                          
                          

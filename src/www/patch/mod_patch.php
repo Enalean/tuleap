@@ -17,6 +17,7 @@ if (db_numrows($result) > 0) {
 
 	echo '
 	<H2>[ Patch #'.$patch_id.' ] '.db_result($result,0,'summary').'</H2>';
+		$pm = ProjectManager::instance();
 
 	echo '
 	<FORM ACTION="'.$PHP_SELF.'" METHOD="POST" enctype="multipart/form-data">
@@ -28,7 +29,7 @@ if (db_numrows($result) > 0) {
 	<TABLE WIDTH="100%">
 	<TR>
 		<TD><B>Submitted By:&nbsp;</B>'.user_getname(db_result($result,0,'submitted_by')).'</TD>
-		<TD><B>Group:&nbsp;</B>'.group_getname($group_id).'</TD>
+        <TD><B>Group:&nbsp;</B>'.$pm->getProject($group_id)->getPublicName().'</TD>
 	</TR>
 
 	<TR>

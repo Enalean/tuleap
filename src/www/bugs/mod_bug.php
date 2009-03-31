@@ -42,6 +42,7 @@ if (db_numrows($result) > 0) {
 		      'help' => 'BugUpdate.html'
                       ));
     
+          $pm = ProjectManager::instance();
     // First display some  internal fields - Cannot be modified by the user
 ?>
     <TABLE cellpadding="0" cellspacing="0" width="100%"><TR>
@@ -62,7 +63,7 @@ if (db_numrows($result) > 0) {
     <INPUT TYPE="HIDDEN" NAME="bug_id" VALUE="<?php echo $bug_id; ?>">
     <TABLE cellpadding="0">
       <TR><TD><B>Submitted By:</B>&nbsp;</td><td><?php echo user_getname(db_result($result,0,'submitted_by')); ?></TD>
-          <TD><B>Group:</B>&nbsp;</td><td><?php echo group_getname($group_id); ?></TD>
+          <TD><B>Group:</B>&nbsp;</td><td><?php echo $pm->getProject($group_id)->getPublicName(); ?></TD>
       </TR>
       <TR><TD><B>Submitted on:</B>&nbsp;</td><td><?php  echo format_date($GLOBALS['Language']->getText('system', 'datefmt'),db_result($result,0,'date')); ?></TD>
           <TD colspan="2"><FONT SIZE="-1"><INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="Submit Changes"></TD>

@@ -29,25 +29,14 @@ require_once('ProjectManager.class.php');
 	Example of proper use:
 
 	//get a local handle for the object
-	$grp=project_get_object($group_id);
+	$pm = ProjectManager::instance();
+    $grp = $pm->getProject($group_id);
 
 	//now use the object to get the unix_name for the project
 	$grp->getUnixName();
 
     @deprecated Use ProjectManager->getProject instead
 */
-
-
-
-function project_get_object($group_id,$force_update=false) {
-    $projects = ProjectManager::instance();
-    if ($force_update) {
-        //clear the cache
-        $projects->clear($group_id);
-    }
-    //fetch the instance of the project
-    return $projects->getProject($group_id);
-}
 
 // see getProjectsDescFieldsInfos
 function cmp($a, $b){
@@ -388,32 +377,4 @@ class Project extends Group {
     	
     }
 }
-
-/*
-
-	Everything below here is deprecated
-
-*/
-
-//deprecated
-function group_getname ($group_id = 0) {
-	$pm = ProjectManager::instance();
-    $grp = $pm->getProject($group_id);
-	return $grp->getPublicName();
-}
-
-//deprecated
-function group_getunixname ($group_id) {
-	$pm = ProjectManager::instance();
-    $grp = $pm->getProject($group_id);
-	return $grp->getUnixName();
-}
-
-//deprecated - should be getting objects instead
-function group_get_result($group_id=0) {
-	$pm = ProjectManager::instance();
-    $grp = $pm->getProject($group_id);
-	return $grp->getData();
-}       
-
 ?>
