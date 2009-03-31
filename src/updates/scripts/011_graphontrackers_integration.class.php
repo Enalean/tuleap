@@ -63,8 +63,25 @@ class Update_011 extends CodeXUpgrade {
                       "FROM plugin_graphtrackers_report_graphic " .
                       "WHERE user_id <> 100";
             $darPrj = $this->retrieve($sqlPrj);
-            $new_rpt_id = 5;
-            $new_chart_id = 11; 
+            
+            $sqlNumRpt = "SELECT MAX(report_graphic_id) num from plugin_graphontrackers_report_graphic"; 
+            $darNumRpt = $this->retrieve($sqlNumRpt);
+            if($darNumRpt && !$darNumRpt->isError()) {
+            	$rowNumRpt = $darNumRpt->getRow(); 
+                $new_rpt_id = $rowNumRpt['num'];
+            } else {
+                $new_rpt_id = 2000;
+            }
+            
+            $sqlNumChart = "SELECT MAX(id) num from plugin_graphontrackers_chart";
+            $darNumChart = $this->retrieve($sqlNumChart);
+            if($darNumChart && !$darNumChart->isError()) {
+            	$rowNumChart = $darNumChart->getRow(); 
+                $new_chart_id = $rowNumChart['num'];
+            } else {
+                $new_chart_id = 4000;
+            }
+            
             if($darPrj && !$darPrj->isError()) {
                 while($rowPrj = $darPrj->getRow()) {
                     $group_id = $rowPrj['group_artifact_id'];
