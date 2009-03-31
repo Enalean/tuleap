@@ -98,7 +98,6 @@ class Update_011 extends CodeXUpgrade {
                             if (!$res) {
                                 $this->addUpgradeError("An error occured while updating user prefs for graphic report ".$rpt_id.": ".$this->da->isError());
                             }
-                            $new_rpt_id++;
                             echo $this->getLineSeparator();
                             
                             
@@ -130,7 +129,6 @@ class Update_011 extends CodeXUpgrade {
                                         $this->addUpgradeError("An error occured while creating the gantt chart ".$gantt_id.": ".$this->da->isError());
                                     }
                                     $new_chart_id++;
-                                           
                                 }
                             }
                             
@@ -229,7 +227,7 @@ class Update_011 extends CodeXUpgrade {
                                     $new_chart_id++;
                                 }
                             }
-                                                        
+                            $new_rpt_id++;                               
                         }
                     }                    
                 }
