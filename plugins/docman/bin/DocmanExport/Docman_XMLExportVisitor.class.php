@@ -31,13 +31,15 @@ class Docman_XMLExportVisitor {
     protected $statistics;
     protected $userCache;
     protected $dataPath;
+    protected $useLdapId;
 
     public function __construct(DOMDocument $doc) {
         $this->doc = $doc;
 
         $this->fileCounter = 0;
         $this->userCache = array();
-        
+        $this->useLdapId = true;
+
         $this->statistics['nb_items']   = 0;
         $this->statistics['nb_folder']  = 0;
         $this->statistics['nb_empty']   = 0;
@@ -64,7 +66,7 @@ class Docman_XMLExportVisitor {
         $this->appendChild($prop, 'description', $item->getDescription());
         $this->appendChild($prop, 'create_date', date('c', $item->getCreateDate()));
         $this->appendChild($prop, 'update_date', date('c', $item->getUpdateDate()));
-        $this->appendChild($prop, 'owner', $this->getNormalizedLogin($item->getOwnerId()));
+        $this->appendUserChild($prop, 'owner', $item->getOwnerId());
 
         $prjSettings = Docman_SettingsBo::instance($item->getGroupId());
         if($prjSettings->getMetadataUsage('status')) {
@@ -187,7 +189,7 @@ class Docman_XMLExportVisitor {
     
     protected function createVersion($version) {
         $vNode = $this->doc->createElement('version');
-        $this->appendChild($vNode, 'author', $this->getNormalizedLogin($version->getAuthorId()));
+        $this->appendUserChild($vNode, 'author', $version->getAuthorId());
         $this->appendChild($vNode, 'label', $version->getLabel());
         $this->appendChild($vNode, 'changelog', $version->getChangeLog());
         $this->appendChild($vNode, 'date', date('c', $version->getDate()));
@@ -201,20 +203,7 @@ class Docman_XMLExportVisitor {
         }
         return $vNode;
     }
-    
-    protected function getNormalizedLogin($userId) {
-        if(!isset($this->userCache[$userId])) {
-            $um = UserManager::instance();
-            $user = $um->getUserById($userId);
-            if($user !== null) {
-                $this->userCache[$userId] = $user->getName();
-            } else {
-                $this->userCache[$userId] = '';
-            }
-        }
-        return $this->userCache[$userId];
-    }
-    
+        
     protected function getNormalizedStatus($statusId) {
         switch($statusId) {
             case PLUGIN_DOCMAN_ITEM_STATUS_NONE:
@@ -240,6 +229,26 @@ class Docman_XMLExportVisitor {
             $subNode->appendChild($this->doc->createTextNode($value));
             $node->appendChild($subNode);
         }
+    }
+
+    protected function appendUserChild(DOMElement $node, $label, $userId) {
+        $user = UserManager::instance()->getUserById($userId);
+        $subNode = $this->doc->createElement($label);
+        if($userId != 0 && $user) {
+            if($this->useLdapId && $user->getLdapId() != '') {
+                $subNode->setAttribute('type', 'ldapid');
+                $subNode->appendChild($this->doc->createTextNode($user->getLdapId()));
+            } else {
+                $subNode->setAttribute('type', 'email');
+                $subNode->appendChild($this->doc->createTextNode($user->getEmail()));
+            }
+	    } else {
+	      $subNode->appendChild($this->doc->createTextNode('admin'));
+	    }
+	} else {
+	    $subNode->appendChild($this->doc->createTextNode('admin'));
+	}
+        $node->appendChild($subNode);
     }
     
     public function getXML(Docman_Item $item) {

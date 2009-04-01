@@ -15,7 +15,6 @@ class XMLExport {
     protected $archiveName;
     protected $groupId;
     protected $dataPath;
-    protected $packagePath;
 
     public function __construct() {
     }
@@ -24,8 +23,9 @@ class XMLExport {
         $this->groupId = $groupId;
     }
 
-    public function setArchiveName($name) {
-        $this->archiveName = $name;
+    public function setArchivePath($path) {
+        $this->archivePath = $path;
+	$this->archiveName = basename($path);
     }
 
     public function createDomDocument() {
@@ -42,7 +42,7 @@ class XMLExport {
     public function dumpPackage() {
         $this->createDirectories();
         $doc = $this->dump();
-        $doc->save($this->packagePath.'/'.$this->archiveName.'.xml');
+        $doc->save($this->archivePath.'/'.$this->archiveName.'.xml');
     }
 
     public function dump() {
@@ -59,10 +59,9 @@ class XMLExport {
     }
 
     public function createDirectories() {
-        $dirCreated = mkdir($this->archiveName.'/'.$this->archiveName, 0755, true);
+        $dirCreated = mkdir($this->archivePath.'/'.$this->archiveName, 0755, true);
         if($dirCreated) {
-            $this->packagePath = $this->archiveName;
-            $this->dataPath = $this->archiveName.'/'.$this->archiveName;
+            $this->dataPath = $this->archivePath.'/'.$this->archiveName;
 
             //$this->asXML();
             //$this->doc->validate();

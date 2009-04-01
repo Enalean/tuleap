@@ -53,7 +53,7 @@ $start = microtime(true);
 
 $XMLExport = new XMLExport();
 $XMLExport->setGroupId($argv[1]);
-$XMLExport->setArchiveName($argv[2]);
+$XMLExport->setArchivePath($argv[2]);
 
 //echo $XMLExport->dump()->saveXML();
 $XMLExport->dumpPackage();
