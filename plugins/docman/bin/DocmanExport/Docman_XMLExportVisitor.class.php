@@ -242,12 +242,10 @@ class Docman_XMLExportVisitor {
                 $subNode->setAttribute('type', 'email');
                 $subNode->appendChild($this->doc->createTextNode($user->getEmail()));
             }
-	    } else {
-	      $subNode->appendChild($this->doc->createTextNode('admin'));
-	    }
-	} else {
-	    $subNode->appendChild($this->doc->createTextNode('admin'));
-	}
+        } else {
+            $subNode->appendChild($this->doc->createTextNode('admin'));
+        }
+
         $node->appendChild($subNode);
     }
     
