@@ -201,7 +201,7 @@ class Update_011 extends CodeXUpgrade {
                             // get line charts of the report
                             $sqlLine = "SELECT * " .
                                         "FROM plugin_graphtrackers_line_chart " .
-                                        "WHERE field_base <> null and report_graphic_id = ".$rpt_id;
+                                        "WHERE report_graphic_id = ".$rpt_id;
                             $darLine = $this->retrieve($sqlLine);
                             if($darLine && !$darLine->isError()) {
                                 while($rowLine = $darLine->getRow()) {
