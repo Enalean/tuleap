@@ -1481,7 +1481,7 @@ fi
 # call the graphic report migration scripts
 current_dir=`pwd`
 cd $INSTALL_DIR/src/updates
-$INSTALL_DIR/src/utils/php-launcher.sh update.php 010_graphontrackers_integration
+$INSTALL_DIR/src/utils/php-launcher.sh upgrade.php 011_graphontrackers_integration
 cd $current_dir
 
 ###############################################################################
