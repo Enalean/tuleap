@@ -277,7 +277,7 @@ function checkRestrictedAccess($group) {
  */
 function checkGroupMemberAccess($group) {
     if ($group) {
-        $user = new User(session_get_userid());
+        $user = UserManager::instance()->getCurrentUser();
         if ($user) {
             return $group->userIsMember();
         } else {
