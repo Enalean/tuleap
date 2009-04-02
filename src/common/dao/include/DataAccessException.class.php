@@ -1,8 +1,6 @@
 <?php
 /*
- * Copyright (c) Xerox, 2008. All Rights Reserved.
- *
- * Originally written by Nicolas Terray, 2008. Xerox Codendi Team.
+ * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Codendi.
  *
@@ -17,8 +15,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with CodeX; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 class DataAccessException extends Exception {
 }

@@ -1,24 +1,23 @@
 <?php //-*-php-*-
 /* 
- * Copyright© STMicroelectronics, 2006
+ * Copyright (c) STMicroelectronics, 2006
  *
  * Originally written by Manuel Vacelet, STMicroelectronics, 2006. 
  *
- * This file is a part of CodeX.
+ * This file is a part of Codendi.
  *
- * CodeX is free software; you can redistribute it and/or modify
+ * Codendi is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * CodeX is distributed in the hope that it will be useful,
+ * Codendi is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with CodeX; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
 class _CodexPassUser
