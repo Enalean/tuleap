@@ -39,6 +39,7 @@ class BlankAfterClosingPhpTagTest extends UnitTestCase {
             'plugins/IM/www/webmuc/groupchat.php',
             'plugins/IM/www/webmuc/muckl.php',
             'plugins/IM/www/webmuc/roster.js.php',
+            'src/www/file/confirm_download.php',
             'src/www/tracker/tracker_selection.php',
             'src/www/tracker/group_selection.php',
             'src/www/scripts/check_pw.js.php',

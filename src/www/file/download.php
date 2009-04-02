@@ -10,7 +10,6 @@ require_once('www/project/admin/permissions.php');
 require_once('common/frs/FRSFileFactory.class.php');
 require_once('www/file/file_utils.php');
 
-if (user_isloggedin()) {
   list(,$group_id, $file_id) = explode('/', $_SERVER['PATH_INFO']);
 
   // Must have a group_id and file_id otherwise
@@ -52,10 +51,4 @@ if (user_isloggedin()) {
       exit_error($Language->getText('global','error'), $Language->getText('file_download','file_not_available'));
   }
 
-} else {
-  /*
-    Not logged in
-  */
-  exit_not_logged_in();
-}
 ?>

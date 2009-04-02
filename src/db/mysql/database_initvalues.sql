@@ -2079,6 +2079,7 @@ INSERT INTO ugroup (ugroup_id, name, description, group_id) VALUES (15, "ugroup_
 -- ugroup_id should always be lower than 100.
 --
 INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('PACKAGE_READ',100);
+INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('PACKAGE_READ',1);
 INSERT INTO permissions_values (permission_type,ugroup_id,is_default) VALUES ('PACKAGE_READ',2,1);
 INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('PACKAGE_READ',3);
 INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('PACKAGE_READ',4);
@@ -2086,6 +2087,7 @@ INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('PACKAGE_READ
 
 -- No default value for RELEASE_READ -> use parent permissions
 INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('RELEASE_READ',100);
+INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('RELEASE_READ',1);
 INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('RELEASE_READ',2);
 INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('RELEASE_READ',3);
 INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('RELEASE_READ',4);

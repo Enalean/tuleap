@@ -523,6 +523,12 @@ ALTER TABLE artifact_field_value
 ALTER TABLE artifact_field_value
     ADD INDEX idx_valueInt(artifact_id, field_id, valueInt);
 
+
+# FRS: files can now be browsed and downloaded by anonymous users (default permissions do not change, we only allow it)
+INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('PACKAGE_READ',1);
+INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('RELEASE_READ',1);
+
+
 # CVS is private
 # TODO : private projects 
 $CAT <<EOF | $PHP

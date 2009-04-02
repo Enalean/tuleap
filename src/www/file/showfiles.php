@@ -19,14 +19,6 @@ require_once ('common/user/UserManager.class.php');
 define("FRS_EXPANDED_ICON", util_get_image_theme("ic/toggle_minus.png"));
 define("FRS_COLLAPSED_ICON", util_get_image_theme("ic/toggle_plus.png"));
 
-// LJ Now only for registered users on CodeX
-if (!user_isloggedin()) {
-    /*
-    Not logged in
-    */
-    exit_not_logged_in();
-}
-
 $authorized_user = false;
 
 $hp = Codendi_HTMLPurifier::instance();

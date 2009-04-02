@@ -19,8 +19,6 @@ if($request->valid($vGroupId) && $request->valid($vFileId)) {
 } else {
     exit_missing_param();
 }
-
-if (user_isloggedin()) {
 	
   $frsff = new FRSFileFactory();
   $frspf = new FRSPackageFactory();
@@ -137,13 +135,3 @@ function download_local(group_id,file_id,filename) {
 </table>
 </body>
 </html>
-<?
-
-} else {
-  /*
-    Not logged in
-  */
-  exit_not_logged_in();
-}
-
-?>
