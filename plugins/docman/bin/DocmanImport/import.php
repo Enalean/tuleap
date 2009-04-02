@@ -130,7 +130,7 @@ if (!isset($password)) {
 $start = microtime(true);
 
 // WSDL URL
-$wsdl = "$url/soap/codex.wsdl.php?wsdl";
+$wsdl = "$url/soap/codendi.wsdl.php?wsdl";
 
 // Command line (for printing in log file)
 $command = implode(' ', $argv);
