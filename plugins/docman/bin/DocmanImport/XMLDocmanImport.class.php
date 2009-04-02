@@ -105,7 +105,7 @@ class XMLDocmanImport {
 
         try {
             $this->soap = new SoapClient($wsdl, array('trace' => true));
-            $this->hash = $this->soap->login($login, $password)->session_hash;
+            $this->hash = $this->soap->login($login, $password, "3.6")->session_hash;
             if ($projectId === null) {
                 $this->groupId = $this->soap->getGroupByName($this->hash, $project)->group_id;
             } else {
