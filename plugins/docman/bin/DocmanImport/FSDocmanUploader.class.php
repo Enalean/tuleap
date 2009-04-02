@@ -59,8 +59,8 @@ $source_dir = $argv[2];
 $id_dest    = $argv[3];
 
 // Server URL where all the stuff will be uploaded
-$codex_url = "";
-$soap_url  = "http://crx1348.cro.st.com:2222/soap/codex.wsdl.php?wsdl";
+$codendi_url = "";
+$soap_url  = "http://serveur.codendi/soap/codendi.wsdl.php?wsdl";
 
 //SOAP Authentication
 $soap = new SoapClient($soap_url);
