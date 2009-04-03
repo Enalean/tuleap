@@ -2639,7 +2639,8 @@ CREATE TABLE artifact_field_value (
   valueText text,
   valueFloat float(10,4),
   valueDate int(11),
-  KEY idx_valueInt(artifact_id, field_id, valueInt)
+  KEY idx_valueInt(artifact_id, field_id, valueInt),
+  KEY xtrk_valueInt(valueInt)
 );
 
 #
