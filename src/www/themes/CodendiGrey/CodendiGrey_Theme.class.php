@@ -27,9 +27,11 @@ class CodendiGrey_Theme extends DivBasedTabbedLayout {
     
     function getBodyHeader($params) {
         $html = '';
-        $html .= '<div class="header_logo">'. $this->getBodyHeaderLogo() .'</div>';
-        $html .= '<div class="header_searchbox">'.$this->getSearchBox().'</div>';
-        $html .= '<div class="header_actions">'. $this->getBodyHeaderActions($params) .'</div>';
+        $html .= '<table width="100%" cellpadding="0" cellspacing="0"><tr>';
+        $html .= '<td class="header_logo">'. $this->getBodyHeaderLogo() .'</td>';
+        $html .= '<td class="header_actions">'. $this->getBodyHeaderActions($params) .'</td>';
+        $html .= '<td class="header_searchbox">'.$this->getSearchBox().'</td>';
+        $html .= '</tr></table>';
         return $html;
     }
 }
