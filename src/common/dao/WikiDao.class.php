@@ -24,7 +24,7 @@
 require_once('include/DataAccessObject.class.php');
 
 /**
- *  Data Access Object for wiki db access from other codex components
+ *  Data Access Object for wiki db access from other codendi components
  */
 class WikiDao extends DataAccessObject {
     /**

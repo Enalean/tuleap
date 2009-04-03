@@ -26,10 +26,6 @@ require_once($GLOBALS['jpgraph_dir'].'/jpgraph_pie.php');
 * Facade for jpgraph PieGraph
 * 
 * @see jpgraph documentation for usage
-* 
-* Copyright (c) Xerox Corporation, CodeX Team, 2008. All rights reserved
-*
-* @author  N. Terray
 */
 class Chart_Pie extends Chart{
     

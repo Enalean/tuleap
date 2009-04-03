@@ -23,8 +23,8 @@ require_once('DataAccessException.class.php');
 
 $GLOBALS['DEBUG_DAO_QUERY_COUNT'] = 0;
 
-if(!defined('CODEX_DB_NULL')) define('CODEX_DB_NULL', 0);
-if(!defined('CODEX_DB_NOT_NULL')) define('CODEX_DB_NOT_NULL', 1);
+if(!defined('CODENDI_DB_NULL')) define('CODENDI_DB_NULL', 0);
+if(!defined('CODENDI_DB_NOT_NULL')) define('CODENDI_DB_NOT_NULL', 1);
 
 /**
  *  A simple class for querying MySQL
@@ -144,9 +144,9 @@ class DataAccess {
         return $value;
     }
 
-    function escapeInt($v, $null = CODEX_DB_NOT_NULL) {
+    function escapeInt($v, $null = CODENDI_DB_NOT_NULL) {
         $m = array();
-        if($null === CODEX_DB_NULL && $v === '') {
+        if($null === CODENDI_DB_NULL && $v === '') {
             return 'NULL';
         }
         if(preg_match('/^([+-]?[1-9][0-9]*|[+-]?0)$/', $v, $m)) {

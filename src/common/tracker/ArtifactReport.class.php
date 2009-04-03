@@ -1,14 +1,22 @@
 <?php
-//
-// Copyright (c) Xerox Corporation, CodeX Team, 2001-2003. All rights reserved
-//
-// 
-//
-//  Written for CodeX by Stephane Bouhet
-//
-
-//require_once('common/include/Error.class.php');
-//require_once('common/tracker/ArtifactReportField.class.php');
+/*
+ * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+ *
+ * This file is a part of Codendi.
+ *
+ * Codendi is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Codendi is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ */
 
 require_once('common/user/UserManager.class.php');
 require_once('common/dao/ArtifactFieldDao.class.php');
@@ -243,7 +251,7 @@ class ArtifactReport extends Error {
 	'show_on_query,show_on_result,place_query,place_result,col_width) VALUES ';
       
       $sql .= "(". db_ei($this->report_id) .",'". db_es($field_name) ."',". db_ei($show_on_query) .",". db_ei($show_on_result) .",".
-	 db_ei($place_query, CODEX_DB_NULL) .",". db_ei($place_result, CODEX_DB_NULL) .",". db_ei($col_width, CODEX_DB_NULL) .")";
+	 db_ei($place_query, CODENDI_DB_NULL) .",". db_ei($place_result, CODENDI_DB_NULL) .",". db_ei($col_width, CODENDI_DB_NULL) .")";
       //echo $sql.'<br>';
       $res = db_query($sql);
       if ($res) {

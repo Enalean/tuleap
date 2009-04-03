@@ -1,38 +1,50 @@
 <?php
-//
-// SourceForge: Breaking Down the Barriers to Open Source Development
-// Copyright 1999-2000 (c) The SourceForge Crew
-// http://sourceforge.net
-//
-// Copyright 2004-2005 (c) The CodeX Team, Xerox. All rights reserved
-//
-// 
-
-
 /*
+ * SourceForge: Breaking Down the Barriers to Open Source Development
+ * Copyright 1999-2000 (c) The SourceForge Crew
+ * http://sourceforge.net
+ * 
+ * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+ *
+ * This file is a part of Codendi.
+ *
+ * Codendi is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Codendi is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ */
 
-    Tim Perdue, September 7, 2000
-    Laurent Julliard, Jan 14, 2004
-    Manuel Vacelet, July 22, 2008 (nice, every 4 years !)
-
-    Base class for adding multilingual support to CodeX
-
-    Contains variables which can be overridden optionally by other
-    language files.
-
-    Base language is english - an english class will extend this one,
-    but won't override anything
-
-    As new languages are added, they can override what they wish, and
-    as we extend our class, other languages can follow suit
-    as they are translated without holding up our progress
-
-    A global language file is loaded first and then each php script
-    loads its won scripts (site-local customized versions are also
-    loaded if they do exist)
-
-*/
-
+/**
+ *
+ *  Tim Perdue, September 7, 2000
+ *  Laurent Julliard, Jan 14, 2004
+ *  Manuel Vacelet, July 22, 2008 (nice, every 4 years !)
+ *
+ *  Base class for adding multilingual support to Codendi
+ *
+ *  Contains variables which can be overridden optionally by other
+ *  language files.
+ *
+ *  Base language is english - an english class will extend this one,
+ *  but won't override anything
+ *
+ *  As new languages are added, they can override what they wish, and
+ *  as we extend our class, other languages can follow suit
+ *  as they are translated without holding up our progress
+ *
+ *  A global language file is loaded first and then each php script
+ *  loads its won scripts (site-local customized versions are also
+ *  loaded if they do exist)
+ *
+ */
 class BaseLanguage {
 
     //array to hold the string values
@@ -144,21 +156,21 @@ class BaseLanguage {
     }
 
     /**
-     * Load tab files in /usr/share/codex/site-content for given language
+     * Load tab files in /usr/share/codendi/site-content for given language
      */
     function loadCoreSiteContent($lang, &$text_array) {
         $this->loadAllTabFiles($GLOBALS['sys_incdir'].'/'.$lang, $text_array);
     }
 
     /**
-     * Load tab files in /etc/codex/site-content for given language
+     * Load tab files in /etc/codendi/site-content for given language
      */
     function loadCustomSiteContent($lang, &$text_array) {
         $this->loadAllTabFiles($GLOBALS['sys_custom_incdir'].'/'.$lang, $text_array);
     }
 
     /**
-     * Load all tab files in /usr/share/codex/plugins/.../site-content for
+     * Load all tab files in /usr/share/codendi/plugins/.../site-content for
      * given language
      */
     function loadPluginsSiteContent($lang, &$text_array) {
@@ -166,7 +178,7 @@ class BaseLanguage {
     }
 
     /**
-     * Load all tab files in /etc/codex/plugins/.../site-content for
+     * Load all tab files in /etc/codendi/plugins/.../site-content for
      * given language
      */
     function loadPluginsCustomSiteContent($lang, &$text_array) {

@@ -408,11 +408,11 @@ class GForgeLayout extends TabbedLayout {
 		// XXXX $site_fonts=$GLOBALS['Language']->getFont();
 
 	?>
-<!-- BEGIN codex stylesheet in GF Layout -->
+<!-- BEGIN codendi stylesheet in GF Layout -->
 <link rel="stylesheet" type="text/css" href="/themes/common/css/style.css">
 <link rel="stylesheet" type="text/css" href="<? echo util_get_css_theme(); ?>">
 <link rel="SHORTCUT ICON" href="<? echo util_get_image_theme("favicon.ico"); ?>">
-<!-- END   codex stylesheet in GF Layout -->
+<!-- END   codendi stylesheet in GF Layout -->
 <style type="text/css">
 	<!--
     /*{{{ Missing rules */

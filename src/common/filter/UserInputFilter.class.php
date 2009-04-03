@@ -3,7 +3,7 @@
  * @author Manuel VACELET <manuel.vacelet@st.com>
  * @copyright Copyright (c) STMicroelectronics, 2007. All Rights Reserved.
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License
- * @package CodeX
+ * @package Codendi
  */
 
 /**
@@ -53,7 +53,7 @@
  * @example filter/onerule.php Filtering with one smart rule.
  * @example filter/multiplerules.php Filtering with a lot of stupid rules.
  * @example filter/filterrequest.php Basic usage of this class.
- * @package CodeX
+ * @package Codendi
  */
 class UserInputFilter {
     /**

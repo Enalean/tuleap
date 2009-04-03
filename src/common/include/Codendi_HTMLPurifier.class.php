@@ -70,9 +70,9 @@ class Codendi_HTMLPurifier {
     }
 
     /**
-     * Base configuration of HTML Purifier for codex.
+     * Base configuration of HTML Purifier for codendi.
      */
-    function getCodeXConfig() {
+    protected function getCodendiConfig() {
         $config = HTMLPurifier_Config::createDefault();
         $config->set('Core', 'Encoding', 'UTF-8');
         // $config->set('HTML', 'Doctype', 'XHTML 1.0 Strict');
@@ -85,7 +85,7 @@ class Codendi_HTMLPurifier {
      *
      */
     function getLightConfig() {
-        $config = $this->getCodeXConfig();
+        $config = $this->getCodendiConfig();
         $config->set('HTML', 'Allowed', $this->getLightConfigMarkups());
         return $config;
     }
@@ -119,7 +119,7 @@ class Codendi_HTMLPurifier {
      *
      */
     function getStripConfig() {
-        $config = $this->getCodeXConfig();
+        $config = $this->getCodendiConfig();
         $config->set('HTML', 'Allowed', '');
         return $config;
     }
@@ -135,7 +135,7 @@ class Codendi_HTMLPurifier {
             break;
 
         case CODENDI_PURIFIER_FULL:
-            $config = $this->getCodeXConfig();
+            $config = $this->getCodendiConfig();
             break;
 
         case CODENDI_PURIFIER_STRIP_HTML:
@@ -178,7 +178,7 @@ class Codendi_HTMLPurifier {
      *
      * - CODENDI_PURIFIER_FULL
      *   Clean-up plain HTML using HTML Purifier rules (remove forms,
-     *   javascript, ...). Warning: there is no longer codex facilities
+     *   javascript, ...). Warning: there is no longer codendi facilities
      *   (neither automagic links nor carrige return to br transformation).
      *
      * - CODENDI_PURIFIER_DISABLED

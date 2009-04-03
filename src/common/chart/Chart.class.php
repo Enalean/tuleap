@@ -30,10 +30,6 @@ require_once($GLOBALS['jpgraph_dir'].'/jpgraph_date.php');
 * Facade for jpgraph Graph
 * 
 * @see jpgraph documentation for usage
-* 
-* Copyright (c) Xerox Corporation, CodeX Team, 2008. All rights reserved
-*
-* @author  N. Terray
 */
 class Chart {
     

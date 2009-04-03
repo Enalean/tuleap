@@ -23,7 +23,7 @@
 require_once('common/valid/Rule.class.php');
 
 /**
- * @package CodeX
+ * @package Codendi
  */
 class Valid {
     /**

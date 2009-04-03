@@ -65,17 +65,17 @@ class UserImport extends Error {
             if ($line != "") {
                 // check whether non-empty lines contain valid email addresses or valid usernames	
                 if (!validate_email($line)) {
-                    // It's not an email address, let's assume it is a CodeX username
+                    // It's not an email address, let's assume it is a Codendi username
                     $user_result = $user_dao->searchByUserName($line);
                     if ($user_result && ($user_array =& $user_result->getRow())) {	
                         $current_user = UserManager::instance()->getUserById($user_array['user_id']);  
                     } else {
-                        // this username doesn't exist in codeX   
+                        // this username doesn't exist in codendi   
                         $ok = false;
                         $errors = $Language->getText('project_admin_userimport','invalid_mail_or_username',$line);
                     }
                 } else {
-                    //check if user exists (has connected, at least once, to Codex)
+                    //check if user exists (has connected, at least once, to Codendi)
                     $user_result = $user_dao->searchByEmail($line);
                     $nb_users = $user_result->rowCount();
                     if ($nb_users < 1) {

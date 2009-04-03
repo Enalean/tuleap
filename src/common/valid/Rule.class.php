@@ -21,7 +21,7 @@
  */
 
 /**
- * @package CodeX
+ * @package Codendi
  */
 class Rule {
     /**

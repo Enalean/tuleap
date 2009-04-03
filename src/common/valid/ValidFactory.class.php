@@ -24,7 +24,7 @@ require_once('common/valid/Valid.class.php');
 
 /**
  * Check that value is a decimal integer greater or equal to zero.
- * @package CodeX
+ * @package Codendi
  */
 class Valid_UInt
 extends Valid {

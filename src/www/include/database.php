@@ -8,8 +8,8 @@
 //
 //
 $GLOBALS['DEBUG_DBPHP_QUERY_COUNT'] = 0;
-if(!defined('CODEX_DB_NULL')) define('CODEX_DB_NULL', 0);
-if(!defined('CODEX_DB_NOT_NULL')) define('CODEX_DB_NOT_NULL', 1);
+if(!defined('CODENDI_DB_NULL')) define('CODENDI_DB_NULL', 0);
+if(!defined('CODENDI_DB_NOT_NULL')) define('CODENDI_DB_NOT_NULL', 1);
 
 $conn = null;
 function db_connect() {
@@ -133,19 +133,19 @@ function db_es($string,$qhandle=false) {
  * Escape value as a valid decimal integer.
  *
  * If input is not a valid decimal integer, return '0'.
- * If CODEX_DB_NULL is used, empty string '' as $val returns 'NULL' string.
+ * If CODENDI_DB_NULL is used, empty string '' as $val returns 'NULL' string.
  * This last form is useful when the corresponding field is defined as INT or
  * NULL in SQL.
  *
  * @see http://php.net/language.types.integer
  * @see DataAccess::escapeInt for tests.
  * @param  mixed $val a value to escape
- * @param  int   $null CODEX_DB_NOT_NULL or CODEX_DB_NULL
+ * @param  int   $null CODENDI_DB_NOT_NULL or CODENDI_DB_NULL
  * @return string Decimal integer encoded as a string
  */
-function db_escape_int($val, $null = CODEX_DB_NOT_NULL) {
+function db_escape_int($val, $null = CODENDI_DB_NOT_NULL) {
     $match = array();
-    if($null === CODEX_DB_NULL && $val === '') {
+    if($null === CODENDI_DB_NULL && $val === '') {
         return 'NULL';
     }
     if(preg_match('/^([+-]?[1-9][0-9]*|[+-]?0)$/', $val, $match)) {
@@ -158,10 +158,10 @@ function db_escape_int($val, $null = CODEX_DB_NOT_NULL) {
  * Alias for db_escape_int
  *
  * @param mixed $val a value to escape
- * @param  int   $null CODEX_DB_NOT_NULL or CODEX_DB_NULL
+ * @param  int   $null CODENDI_DB_NOT_NULL or CODENDI_DB_NULL
  * @return string Decimal integer encoded as a string
  */
-function db_ei($val, $null = CODEX_DB_NOT_NULL) {
+function db_ei($val, $null = CODENDI_DB_NOT_NULL) {
     return db_escape_int($val, $null);
 }
 
