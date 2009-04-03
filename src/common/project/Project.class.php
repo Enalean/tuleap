@@ -74,17 +74,17 @@ class Project extends Group {
 		basically just call the parent to set up everything
                 and set up services arrays
     */
-    function Project($id) {
+    function Project($param) {
 	global $Language;
 
-        $this->Group($id);
+        $this->Group($param);
         
         //for right now, just point our prefs array at Group's data array
         //this will change later when we split the project_data table off from groups table
         $this->project_data_array=$this->data_array;
         
         // Get Service data
-        $db_res=db_query("SELECT * FROM service WHERE group_id='".db_es($id)."' ORDER BY rank");
+        $db_res=db_query("SELECT * FROM service WHERE group_id='".db_es($this->group_id)."' ORDER BY rank");
         $rows=db_numrows($db_res); 
         if ($rows < 1) {
             //function in class we extended

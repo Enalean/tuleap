@@ -60,10 +60,17 @@ class Group extends Error {
 	//whether the user is an admin/super user of this project
 	var $is_admin;
 
-	function Group($id) {
-	global $Language;
-		$this->Error();
-		$this->group_id=(int)$id;
+	function Group($param) {
+            //$param can be:
+            // - a row from the groups table -> use it
+            // - a group_id -> retrieve row from table
+            global $Language;
+            $this->Error();
+            if (is_array($param)) {
+                $this->group_id=$param['group_id'];
+                $this->data_array=$param;
+            } else {
+              $this->group_id=(int)$param; // TODO db_es()?
 		$this->db_result=db_query("SELECT * FROM groups WHERE group_id=".$this->group_id);
 		if (db_numrows($this->db_result) < 1) {
 			//function in class we extended
@@ -73,6 +80,7 @@ class Group extends Error {
 			//set up an associative array for use by other functions
 			$this->data_array=db_fetch_array($this->db_result);
 		}
+            }
 	}
 
 

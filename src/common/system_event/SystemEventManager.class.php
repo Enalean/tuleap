@@ -24,6 +24,7 @@ require_once('common/dao/CodendiDataAccess.class.php');
 require_once('common/event/EventManager.class.php');
 
 // Events
+require_once('common/system_event/include/SystemEvent_SYSTEM_CHECK.class.php');
 require_once('common/system_event/include/SystemEvent_PROJECT_CREATE.class.php');
 require_once('common/system_event/include/SystemEvent_PROJECT_DELETE.class.php');
 require_once('common/system_event/include/SystemEvent_MEMBERSHIP_CREATE.class.php');
@@ -59,6 +60,7 @@ class SystemEventManager {
 
         $event_manager = $this->_getEventManager();
         $events_to_listen = array(
+	    'system_check', 
             'register_project_creation',
             'project_is_deleted',
             'project_admin_add_user',
@@ -114,6 +116,11 @@ class SystemEventManager {
     function addSystemEvent($event, $params) {
         //$event = constant(strtoupper($event));
         switch ($event) {
+        case 'system_check':
+	    // TODO: check that there is no already existing system_check job?
+            $sysevent = new SystemEvent(SystemEvent::SYSTEM_CHECK,$params,SystemEvent::PRIORITY_LOW);
+            $this->dao->store($sysevent);
+            break;
         case 'register_project_creation':
             $sysevent = new SystemEvent(SystemEvent::PROJECT_CREATE,$params['group_id'],SystemEvent::PRIORITY_MEDIUM);
             $this->dao->store($sysevent);
@@ -208,6 +215,7 @@ class SystemEventManager {
                 //echo "Processing event ".$row['id']." (".$row['type'].")\n";
 
                 switch ($row['type']) {
+		case SystemEvent::SYSTEM_CHECK:
                 case SystemEvent::PROJECT_CREATE:
                 case SystemEvent::PROJECT_DELETE:
                 case SystemEvent::MEMBERSHIP_CREATE:
@@ -248,6 +256,8 @@ class SystemEventManager {
         // Update SVN root definition for Apache once everything else is processed
         if (BackendSVN::instance()->getSVNApacheConfNeedUpdate()) {
             BackendSVN::instance()->generateSVNApacheConf();
+            // TODO: need to refresh apache (reload)
+	    system('/sbin/service httpd reload');
         }
     }
     

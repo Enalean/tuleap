@@ -53,7 +53,6 @@ class SystemEvent_PROJECT_CREATE extends SystemEvent {
         $group_id=$this->getIdFromParam($this->parameters);
         
         if ($project = $this->getProject($group_id)) {
-            
             $backendSystem = BackendSystem::instance();
             if (!$backendSystem->createProjectHome($group_id)) {
                 $this->error("Could not create project home");
@@ -80,7 +79,8 @@ class SystemEvent_PROJECT_CREATE extends SystemEvent {
                 $backendSVN->setSVNApacheConfNeedUpdate();
                 $backendSVN->setSVNPrivacy($project, !$project->isPublic());
             }
-            
+
+            $backendSystem->log("Project ".$project->getUnixName()." created");            
             $this->done();
             return true;
         }

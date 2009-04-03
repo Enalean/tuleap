@@ -36,6 +36,7 @@ class SystemEvent {
     var $log;
 
     // Define event types
+    const SYSTEM_CHECK          = "SYSTEM_CHECK";
     const PROJECT_CREATE        = "PROJECT_CREATE";
     const PROJECT_DELETE        = "PROJECT_DELETE";
     const UGROUP_MODIFY         = "UGROUP_MODIFY";

@@ -90,75 +90,7 @@ class BackendSVN extends Backend {
 
 
         // Put in place the svn post-commit hook for email notification
-        // if not present (if the file does not exist it is created)
-        if ($project->isSVNTracked()) {
-            $filename = "$svn_dir/hooks/post-commit";
-            $update_hook=false;
-            if (! is_file($filename)) {
-                // File header
-                $fp = fopen($filename, 'w');
-                fwrite($fp, "#!/bin/sh\n");
-                fwrite($fp, "# POST-COMMIT HOOK\n");
-                fwrite($fp, "#\n");
-                fwrite($fp, "# The post-commit hook is invoked after a commit.  Subversion runs\n");
-                fwrite($fp, "# this hook by invoking a program (script, executable, binary, etc.)\n");
-                fwrite($fp, "# named 'post-commit' (for which this file is a template) with the \n");
-                fwrite($fp, "# following ordered arguments:\n");
-                fwrite($fp, "#\n");
-                fwrite($fp, "#   [1] REPOS-PATH   (the path to this repository)\n");
-                fwrite($fp, "#   [2] REV          (the number of the revision just committed)\n\n");
-                fclose($fp);
-                $update_hook=true;
-            } else {
-                $file_array=file($filename);
-                if (!in_array($this->block_marker_start,$file_array)) {
-                    $update_hook=true;
-                }
-            }
-            if ($update_hook) {
-                $command  ='REPOS="$1"'."\n";
-                $command .='REV="$2"'."\n";
-                $command .=$GLOBALS['codendi_bin_prefix'].'/commit-email.pl "$REPOS" "$REV" 2>&1 >/dev/null';
-                $this->addBlock($filename,$command);
-                $this->chown($filename,$GLOBALS['sys_http_user']);
-                $this->chgrp($filename,$unix_group_name);
-                chmod("$filename",0775);
-            }
-        }
-        
-        // Put in place the Codendi svn pre-commit hook
-        // if not present (if the file does not exist it is created)
-        $filename = "$svn_dir/hooks/pre-commit";
-        $update_hook=false;
-        if (! is_file($filename)) {
-            // File header
-            $fp = fopen($filename, 'w');
-            fwrite($fp, "#!/bin/sh\n\n");
-            fwrite($fp, "# PRE-COMMIT HOOK\n");
-            fwrite($fp, "#\n");
-            fwrite($fp, "# The pre-commit hook is invoked before a Subversion txn is\n");
-            fwrite($fp, "# committed.  Subversion runs this hook by invoking a program\n");
-            fwrite($fp, "# (script, executable, binary, etc.) named 'pre-commit' (for which\n");
-            fwrite($fp, "# this file is a template), with the following ordered arguments:\n");
-            fwrite($fp, "#\n");
-            fwrite($fp, "#   [1] REPOS-PATH   (the path to this repository)\n");
-            fwrite($fp, "#   [2] TXN-NAME     (the name of the txn about to be committed)\n");
-            $update_hook=true;
-        } else {
-            $file_array=file($filename);
-            if (!in_array($this->block_marker_start,$file_array)) {
-                $update_hook=true;
-            }
-        }
-        if ($update_hook) {
-            $command  ='REPOS="$1"'."\n";
-            $command .='TXN="$2"'."\n";
-            $command .=$GLOBALS['codendi_dir'].'/php-launcher.sh '.$GLOBALS['codendi_bin_prefix'].'/codendi_svn_pre_commit.php "$REPOS" "$TXN" || exit 1';
-            $this->addBlock($filename,$command);
-            $this->chown($filename,$GLOBALS['sys_http_user']);
-            $this->chgrp($filename,$unix_group_name);
-            chmod("$filename",0775);
-        }
+	if (!$this->updateHooks($project)) return false;
 
         if (!$this->updateSVNAccess($group_id)) {
             $this->log("Can't update SVN access file");
@@ -168,6 +100,83 @@ class BackendSVN extends Backend {
         return true;
     }
 
+
+    // Put in place the svn post-commit hook for email notification
+    // if not present (if the file does not exist it is created)
+    public function updateHooks($project) {
+      $unix_group_name=$project->getUnixName(false); // May contain upper-case letters
+      $svn_dir=$GLOBALS['svn_prefix']."/".$unix_group_name;
+
+      if ($project->isSVNTracked()) {
+	  $filename = "$svn_dir/hooks/post-commit";
+	  $update_hook=false;
+	  if (! is_file($filename)) {
+	      // File header
+	      $fp = fopen($filename, 'w');
+	      fwrite($fp, "#!/bin/sh\n");
+	      fwrite($fp, "# POST-COMMIT HOOK\n");
+	      fwrite($fp, "#\n");
+	      fwrite($fp, "# The post-commit hook is invoked after a commit.  Subversion runs\n");
+	      fwrite($fp, "# this hook by invoking a program (script, executable, binary, etc.)\n");
+	      fwrite($fp, "# named 'post-commit' (for which this file is a template) with the \n");
+	      fwrite($fp, "# following ordered arguments:\n");
+	      fwrite($fp, "#\n");
+	      fwrite($fp, "#   [1] REPOS-PATH   (the path to this repository)\n");
+	      fwrite($fp, "#   [2] REV          (the number of the revision just committed)\n\n");
+	      fclose($fp);
+	      $update_hook=true;
+	  } else {
+	    $file_array=file($filename);
+	    if (!in_array($this->block_marker_start,$file_array)) {
+	      $update_hook=true;
+	    }
+	  }
+	  if ($update_hook) {
+	    $command  ='REPOS="$1"'."\n";
+	    $command .='REV="$2"'."\n";
+	    $command .=$GLOBALS['codendi_bin_prefix'].'/commit-email.pl "$REPOS" "$REV" 2>&1 >/dev/null';
+	    $this->addBlock($filename,$command);
+	    $this->chown($filename,$GLOBALS['sys_http_user']);
+	    $this->chgrp($filename,$unix_group_name);
+	    chmod("$filename",0775);
+	  }
+      }
+        
+      // Put in place the Codendi svn pre-commit hook
+      // if not present (if the file does not exist it is created)
+      $filename = "$svn_dir/hooks/pre-commit";
+      $update_hook=false;
+      if (! is_file($filename)) {
+	// File header
+	$fp = fopen($filename, 'w');
+	fwrite($fp, "#!/bin/sh\n\n");
+	fwrite($fp, "# PRE-COMMIT HOOK\n");
+	fwrite($fp, "#\n");
+	fwrite($fp, "# The pre-commit hook is invoked before a Subversion txn is\n");
+	fwrite($fp, "# committed.  Subversion runs this hook by invoking a program\n");
+	fwrite($fp, "# (script, executable, binary, etc.) named 'pre-commit' (for which\n");
+	fwrite($fp, "# this file is a template), with the following ordered arguments:\n");
+	fwrite($fp, "#\n");
+	fwrite($fp, "#   [1] REPOS-PATH   (the path to this repository)\n");
+	fwrite($fp, "#   [2] TXN-NAME     (the name of the txn about to be committed)\n");
+	$update_hook=true;
+      } else {
+	$file_array=file($filename);
+	if (!in_array($this->block_marker_start,$file_array)) {
+	  $update_hook=true;
+	}
+      }
+      if ($update_hook) {
+	$command  ='REPOS="$1"'."\n";
+	$command .='TXN="$2"'."\n";
+	$command .=$GLOBALS['codendi_dir'].'/php-launcher.sh '.$GLOBALS['codendi_bin_prefix'].'/codendi_svn_pre_commit.php "$REPOS" "$TXN" || exit 1';
+	$this->addBlock($filename,$command);
+	$this->chown($filename,$GLOBALS['sys_http_user']);
+	$this->chgrp($filename,$unix_group_name);
+	chmod("$filename",0775);
+      }
+      return true;
+    }
 
     // update Subversion DAV access control file if needed
     public function updateSVNAccess($group_id){
@@ -213,7 +222,7 @@ class BackendSVN extends Backend {
         foreach ($members_id_array as $member){
             if (!$first) fwrite($fp,', ');
             $first=false;
-            fwrite($fp, $member['user_name']);
+            fwrite($fp, strtolower($member['user_name']));
         }
         fwrite($fp,"\n");
 
@@ -343,6 +352,23 @@ class BackendSVN extends Backend {
         return is_dir($svnroot) && $this->chmod($svnroot, $perms);
     }
 
+    /** 
+     * Check privacy of repository 
+     * @returns false if private repo does not have proper permissions, or true otherwise
+     */
+    public function isSVNPrivacyOK($project) {
+        $svnroot = $GLOBALS['svn_prefix'] . PATH_SEPARATOR . $project->getUnixName(false);
+        $is_private = !$project->isPublic() || $project->isSVNPrivate();
+        if ($is_private) {
+            $perms=fileperms($cvsroot);
+            // 'others' should have no right on the repository
+            // TODO: test formula :-)
+            if (($perms & 0x0004) || ($perms & 0x0002) || ($perms & 0x0001) || ($perms & 0x0200)) {
+	      return false;
+	    }
+	}
+	return true;
+    }
 }
 
 ?>

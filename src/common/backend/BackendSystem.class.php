@@ -71,7 +71,9 @@ class BackendSystem extends Backend {
         return false;
     }
 
-
+    public function userHomeExists($username) {
+      return (is_dir($GLOBALS['homedir_prefix']."/".$username));
+    }
     /**
      * Create project home directory
      * If the directory already exists, nothing is done.
@@ -177,7 +179,16 @@ class BackendSystem extends Backend {
                 $this->log("Can't create project private dir: $private_dir");
                 return false;
             }
-        }
+        } else {
+  	    // Check that perms are OK
+	    $perms=fileperms($private_dir);
+	    // 'others' should have no right on the repository
+	    // TODO: test formula :-)
+	    if (($perms & 0x0004) || ($perms & 0x0002) || ($perms & 0x0001) || ($perms & 0x0200)) {
+	      $this->chmod($private_dir, 02770);		
+	    }
+	    // TODO: check owner/group
+	}
         return true;
     }
 
@@ -225,8 +236,72 @@ class BackendSystem extends Backend {
                 }
             }
             return true;
-       } else return false;
-     }
+	} else return false;
+    }
+
+    //TODO
+    public function CleanupFRS() {
+        // location of the download/upload directories
+        $delete_dir = $GLOBALS['ftp_frs_dir_prefix']."/DELETED";
+
+	// list of files to be deleted
+	$deleting_files = $GLOBALS['ftp_incoming_dir'] ."/.delete_files";
+	$deleting_files_work = $GLOBALS['ftp_incoming_dir'] ."/.delete_files.work";
+
+	// move the list of files to delete to a temp work file
+	/*
+print `/bin/mv -f $deleting_files $deleting_files_work`;
+print `/bin/touch $deleting_files`;
+my $codex_user = &get_codex_user();
+print `/bin/chown $codex_user $deleting_files`;
+
+
+#
+#  move all files in the .delete_files
+#
+open(WAITING_FILES, "< $deleting_files_work" ) || die "Cannot open $deleting_files_work";
+FILE:
+while (<WAITING_FILES>) {
+
+	($file, $project, $time) = split("::", $_);
+
+	if ((!-f "$ftp_frs_dir_prefix/$project/$file") && (!-d "$ftp_frs_dir_prefix/$project/$file")) {
+		print "$ftp_frs_dir_prefix/$project/$file doesn't exist\n";
+		next FILE
+	} else {
+	  my (@subdirs, $endfile, $dirs);
+	  @subdirs = split("/", $file);
+	  $endfile = pop(@subdirs);
+	  $" = '/';
+          $dirs = "@subdirs";
+          print `/bin/mkdir -p $delete_dir/$project/$dirs`;
+	  
+	  $filename = "$ftp_frs_dir_prefix/$project/$file";
+	  $last_modified = (stat($filename))[9];
+	  $last_accessed = (stat($filename))[8];
+	  $last_ctime = (stat($filename))[10];
+
+	  #make sure that since the deletion of the file nobody has submitted a new file with 
+	  #the same filename
+	  if (($last_modified >= $time) || ($last_accessed >= $time) || ($last_ctime >= $time)) {
+	    print "don't delete file $project/$file (modified since deletion)\n";
+	  } else {
+	    print "deleting file $project/$file\n";
+	    print `/bin/mv -f $ftp_frs_dir_prefix/$project/$file $delete_dir/$project/$file-$time` ;
+	  } 
+	}
+}
+close(WAITING_FILES);
+
+#
+# delete all files under DELETE that are older than 7 days
+#
+
+print `find $delete_dir -type f -mtime +7 -exec rm {} \\;`;
+print `find $delete_dir -mindepth 1 -type d -empty -exec rm -R {} \\;`;
+
+	*/
+    }
 
 }
 

@@ -155,6 +155,18 @@ class BackendMailingList extends Backend {
         }
         return false;
     }
+
+    /**
+     * Check if the list exists on the file system
+     * @return true if list exists, false otherwise
+     */
+    public function listExists($list) {
+        // TODO is this the best test?
+        $list_dir = $GLOBALS['mailman_list_dir']."/".$list->getListName();
+        if (! is_dir($list_dir)) return false;
+        return true;
+    }
+
 }
 
 ?>

@@ -22,8 +22,8 @@
 
 require_once('pre.php');
 
-// TODO: Check that current user is root
-// TODO: check that script is not already running
+// TODO: launch CHECK_SYSTEM event
+
 $system_event_manager->processEvents();
 
 ?>
