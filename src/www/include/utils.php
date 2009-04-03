@@ -1238,7 +1238,8 @@ function util_check_restricted_access($request_uri, $script_name) {
         $allow_access_to_project_mail     = array(1); // Support project mailing lists (Developers Channels)
         $allow_access_to_project_frs      = array(1); // Support project file releases
         $allow_access_to_project_refs     = array(1); // Support project references
-        
+        $allow_access_to_project_news     = array(1); // Support project news
+       
         // List of fully public projects (same access for restricted and unrestricted users)
         $public_projects = array(); 
 
@@ -1256,6 +1257,7 @@ function util_check_restricted_access($request_uri, $script_name) {
         $allow_access_to_project_frs      = array_flip($allow_access_to_project_frs);
         $public_projects                  = array_flip($public_projects);
         $allow_access_to_project_refs     = array_flip($allow_access_to_project_refs);
+        $allow_access_to_project_news     = array_flip($allow_access_to_project_news);
 
         foreach ($forbidden_url as $str) {
             $pos = strpos($req_uri,$str);
@@ -1327,9 +1329,10 @@ function util_check_restricted_access($request_uri, $script_name) {
                         // Otherwise, get group_id of corresponding news
                         $result=db_query("SELECT group_id FROM news_bytes WHERE forum_id='".db_es($_REQUEST['forum_id'])."'");
                         $group_id=db_result($result,0,'group_id');
+                        if (isset($allow_access_to_project_news[$group_id])) $user_is_allowed=true;
                     }
                 }
-                // CodeX forums
+                // Support project forums
                 if (isset($allow_access_to_project_forums[$group_id])) {
                     $user_is_allowed=true;
                 }
@@ -1341,6 +1344,7 @@ function util_check_restricted_access($request_uri, $script_name) {
             }
         }
         
+
         // Artifact attachment download...
         if (strpos($req_uri,'/tracker/download.php') !== false) {
             if (isset($_REQUEST['artifact_id'])) {
