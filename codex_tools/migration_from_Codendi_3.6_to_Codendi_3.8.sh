@@ -521,7 +521,8 @@ ALTER TABLE artifact_field_value
     DROP INDEX valueInt;
 
 ALTER TABLE artifact_field_value
-    ADD INDEX idx_valueInt(artifact_id, field_id, valueInt);
+    ADD INDEX idx_valueInt(artifact_id, field_id, valueInt),
+    ADD INDEX xtrk_valueInt(valueInt);
 
 
 # FRS: files can now be browsed and downloaded by anonymous users (default permissions do not change, we only allow it)
