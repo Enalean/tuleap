@@ -35,6 +35,8 @@ require_once('common/dao/UGroupDao.class.php');
 Mock::generate('UGroupDao');
 require_once('common/project/UGroup.class.php');
 Mock::generate('UGroup');
+require_once('common/dao/ServiceDao.class.php');
+Mock::generate('ServiceDao');
 Mock::generatePartial('BackendSVN', 'BackendSVNTestVersion', array('_getUserManager', 
                                                                    '_getProjectManager',
                                                                    '_getUGroupDao',

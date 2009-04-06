@@ -104,7 +104,7 @@ class BackendAliases extends Backend {
         if (!$this->installNewFileVersion($alias_file_new,$alias_file,$alias_file_old,true)) return false;
 
         // Run newaliases
-        return (system("/usr/bin/newaliases") !== false);
+        return ($this->system("/usr/bin/newaliases") !== false);
     }
 
 

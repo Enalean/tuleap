@@ -210,7 +210,7 @@ class BackendCVS extends Backend {
     public function createLockDirIfMissing($project) {
         // Lockdir does not exist? (Re)create it.
         if (!$this->useCVSNT()) {
-            $lockdir=$GLOBALS['cvslock_prefix']."/".$project->getUnixName();
+            $lockdir=$GLOBALS['cvslock_prefix']."/".$project->getUnixName(false);
             if (! is_dir($lockdir)) {
                 if (!mkdir("$lockdir",0777)) {
                     $this->log("Can't create project CVS lock dir: $lockdir");

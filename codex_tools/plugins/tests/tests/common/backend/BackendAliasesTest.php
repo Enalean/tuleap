@@ -31,7 +31,8 @@ Mock::generate('MailingListDao');
 
 Mock::generatePartial('BackendAliases', 'BackendAliasesTestVersion', 
                       array('_getUserDao', 
-                            '_getMailingListDao'
+                            '_getMailingListDao',
+                            'system'
                             ));
 
 class BackendAliasesTest extends UnitTestCase {
@@ -75,6 +76,8 @@ class BackendAliasesTest extends UnitTestCase {
         $MA = new BackendAliasesTestVersion($this);
         $MA->setReturnValue('_getUserDao', $udao);
         $MA->setReturnValue('_getMailingListDao', $listdao);
+        $MA->expectOnce('system', array('/usr/bin/newaliases'));
+        $MA->setReturnValue('system', true);
 
         $this->assertEqual($MA->update(),True);
         $aliases=file_get_contents($GLOBALS['alias_file']);

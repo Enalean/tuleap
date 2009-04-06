@@ -134,7 +134,7 @@ class BackendCVSTest extends UnitTestCase {
         $pm->setReturnReference('getProject', $project, array(142));
 
         $backend = new BackendCVSTestVersion($this);
-        $backend->setReturnValue('_getProjectManager', $pm);
+        $backend->setReturnReference('_getProjectManager', $pm);
 
         $this->assertEqual($backend->createProjectCVS(142),True);
         $this->assertTrue(is_dir($GLOBALS['cvs_prefix']."/TestProj"),"CVS dir should be created");
