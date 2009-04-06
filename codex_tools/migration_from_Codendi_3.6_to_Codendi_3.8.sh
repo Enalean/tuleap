@@ -350,6 +350,12 @@ CREATE TABLE IF NOT EXISTS system_event (
   log TEXT,
   PRIMARY KEY (id)
 ) TYPE=MyISAM;
+
+CREATE TABLE system_events_followers (
+  id INT(11) unsigned NOT NULL AUTO_INCREMENT PRIMARY KEY, 
+  emails TEXT NOT NULL ,
+  types VARCHAR( 31 ) NOT NULL
+);
 EOF
 
 

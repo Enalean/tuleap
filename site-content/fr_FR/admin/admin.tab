@@ -404,4 +404,6 @@ admin_desc_fields	remove_success	Champ de Description supprimé avec succès !
 
 
 admin_system_events	title	Événements Système
-
+admin_system_events	notifications	Alertes
+admin_system_events	send_email	Envoyer un email à :
+admin_system_events	nobody	Personne

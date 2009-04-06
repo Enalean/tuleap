@@ -2983,6 +2983,24 @@ SELECT group_id, 'g', 1, 2, 'projectlatestcvscommits', 2
 FROM service
 WHERE short_name = 'cvs' AND is_active = 1 AND is_used = 1;
 
+
+CREATE TABLE IF NOT EXISTS system_event (
+  id INT(11) unsigned NOT NULL AUTO_INCREMENT, 
+  type VARCHAR(255) NOT NULL default '',
+  parameters TEXT,
+  priority TINYINT(1) NOT NULL default '0',
+  status  ENUM( 'NEW', 'RUNNING', 'DONE', 'ERROR', 'WARNING' ) NOT NULL DEFAULT 'NEW',
+  create_date DATETIME DEFAULT '0000-00-00 00:00:00' NOT NULL,
+  process_date DATETIME DEFAULT '0000-00-00 00:00:00' NOT NULL,
+  end_date DATETIME DEFAULT '0000-00-00 00:00:00' NOT NULL,
+  log TEXT,
+  PRIMARY KEY (id)
+);
+CREATE TABLE system_events_followers (
+  id INT(11) unsigned NOT NULL AUTO_INCREMENT PRIMARY KEY, 
+  emails TEXT NOT NULL ,
+  types VARCHAR( 31 ) NOT NULL
+);
 #
 # EOF
 #

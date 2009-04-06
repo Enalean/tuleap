@@ -908,3 +908,10 @@ td.forum_reference_separator {
 .system_event_status_ERROR   { background-color: red; }
 
 /* }}} */
+
+/* {{{ defaultValueActsAshint */
+.hint {
+    color:#666;
+    font-style:italic;
+}
+/* }}} */
