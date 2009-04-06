@@ -45,7 +45,8 @@ class Widget_MySystemEvent extends Widget {
         $hp = Codendi_HTMLPurifier::instance();
         $content = '';
         $se = SystemEventManager::instance();
-        $content .= $se->fetchLastEventsStatus(10);
+        $content .= $se->fetchLastEventsStatus(0, 10);
+        $content .= '<div style="text-align:center"><a href="/admin/system_events/">[ '. $GLOBALS['Language']->getText('global', 'more') .' ]</a></div>';
         return $content;
     }
     

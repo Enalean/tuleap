@@ -263,14 +263,34 @@ class SystemEventManager {
     
     /**
      * Compute a html table to display the status of the last n events
-     * @param int $nb the number of event to includ in the table
+     * @param int $offset the offset of the pagination
+     * @param int $limit the number of event to includ in the table
+     * @param boolean $full display a full table or only a summary
      */
-    public function fetchLastEventsStatus($nb = 10) {
+    public function fetchLastEventsStatus($offset = 0, $limit = 10, $full = false) {
         $hp = Codendi_HTMLPurifier::instance();
         $html = '';
         $html .= '<table width="100%">';
+        
+        if ($full) {
+            $html .= '<thead><tr>';
+            $html .= '<th class="boxtitle">'. 'id' .'</td>';
+            $html .= '<th class="boxtitle">'. 'type' .'</td>';
+            $html .= '<th class="boxtitle" style="text-align:center">'. 'status' .'</th>';
+            $html .= '<th class="boxtitle" style="text-align:center">'. 'priority' .'</th>';
+            $html .= '<th class="boxtitle">'. 'parameters' .'</th>';
+            $html .= '<th class="boxtitle">'. 'create_date' .'</th>';
+            $html .= '<th class="boxtitle">'. 'process_date' .'</th>';
+            $html .= '<th class="boxtitle">'. 'end_date' .'</th>';
+            $html .= '<th class="boxtitle">'. 'log' .'</th>';
+            
+            $html .= '</tr></thead>';
+            
+        }
+        $html .= '<tbody>';
+        
         $i = 0;
-        foreach($this->dao->searchLastEvents($nb) as $row) {
+        foreach($this->dao->searchLastEvents($offset, $limit) as $row) {
             $html .= '<tr class="'. html_get_alt_row_color($i++) .'">';
             
             //id
@@ -288,9 +308,44 @@ class SystemEventManager {
             $html .= $row['status'];
             $html .= '</td>';
             
+            if ($full) {
+                $html .= '<td style="text-align:center">'. $row['priority'] .'</td>';
+                $html .= '<td>'. $row['parameters'] .'</td>';
+                $html .= '<td>'. $row['create_date'] .'</td>';
+                $html .= '<td>'. $row['process_date'] .'</td>';
+                $html .= '<td>'. $row['end_date'] .'</td>';
+                $html .= '<td>'. $row['log'] .'</td>';
+            }
+            
             $html .= '</tr>';
         }
-        $html .= '</table>';
+        $html .= '</tbody></table>';
+        if ($full) {
+            //Pagination
+            list(,$num_total_rows) = each($this->dao->retrieve("SELECT FOUND_ROWS() AS nb")->getRow());
+            
+            $nb_of_pages = ceil($num_total_rows / $limit);
+            $current_page = round($offset / $limit);
+            $html .= '<div style="font-family:Verdana">Page: ';
+            $width = 10;
+            for ($i = 0 ; $i < $nb_of_pages ; ++$i) {
+                if ($i == 0 || $i == $nb_of_pages - 1 || ($current_page - $width / 2 <= $i && $i <= $width / 2 + $current_page)) {
+                    $html .= '<a href="?'.
+                        'offset='. (int)($i * $limit) .
+                        '">';
+                    if ($i == $current_page) {
+                        $html .= '<b>'. ($i + 1) .'</b>';
+                    } else {
+                        $html .= $i + 1;
+                    }
+                    $html .= '</a>&nbsp;';
+                } else if ($current_page - $width / 2 - 1 == $i || $current_page + $width / 2 + 1 == $i) {
+                    $html .= '...&nbsp;';
+                }
+            }
+            echo '</div>';
+        
+        }
         return $html;
     }
 

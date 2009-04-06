@@ -90,12 +90,13 @@ class SystemEventDao extends DataAccessObject {
     /**
      * Search n last status
      */
-    public function searchLastEvents($nb) {
-        $nb = $this->da->escapeInt($nb);
-        $sql = "SELECT * 
+    public function searchLastEvents($offset, $limit) {
+        $offset = $this->da->escapeInt($offset);
+        $limit = $this->da->escapeInt($limit);
+        $sql = "SELECT SQL_CALC_FOUND_ROWS * 
                 FROM system_event
                 ORDER BY id DESC
-                LIMIT $nb";
+                LIMIT $offset, $limit";
         return $this->retrieve($sql);
     }
 }

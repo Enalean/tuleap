@@ -51,6 +51,7 @@ global	select	Select
 global	unchanged	Unchanged
 global	or	or
 global	and	and
+global	more	more
 global	activate	activate
 global	deactivate	deactivate
 global	Project	Project

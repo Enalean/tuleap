@@ -402,3 +402,6 @@ admin_desc_fields	add_success	Champ de Description ajouté avec succès !
 admin_desc_fields	update_success	Champ de Description modifié avec succès !
 admin_desc_fields	remove_success	Champ de Description supprimé avec succès !
 
+
+admin_system_events	title	Événements Système
+

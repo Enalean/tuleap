@@ -410,3 +410,6 @@ admin_desc_fields	add_success	Description Field Successfully added !
 admin_desc_fields	update_success	Description Field Successfully updated !
 admin_desc_fields	remove_success	Description Field Successfully deleted !
 
+
+admin_system_events	title	System Events
+
