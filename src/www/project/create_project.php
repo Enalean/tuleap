@@ -150,7 +150,11 @@ function create_project($data, $do_not_exit = false) {
         if (!$group || !is_object($group)) {
             exit_no_group();
         }
-        
+        //set up the group_id
+        $_REQUEST['group_id'] = $_GET['group_id'] = $group_id;
+        $request =& HTTPRequest::instance();
+        $request->params['group_id'] = $_REQUEST['group_id'];
+
         $template_id = $group->getTemplate();
         
         $pm = ProjectManager::instance();

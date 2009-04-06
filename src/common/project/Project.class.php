@@ -87,10 +87,8 @@ class Project extends Group {
         $db_res=db_query("SELECT * FROM service WHERE group_id='".db_es($this->group_id)."' ORDER BY rank");
         $rows=db_numrows($db_res); 
         if ($rows < 1) {
-            //function in class we extended
-            $this->setError($Language->getText('include_project','services_not_found'));
             $this->service_data_array=array();
-        } else {
+        }
             for ($j = 0; $j < $rows; $j++) { 
                 $res_row = db_fetch_array($db_res);
                 $short_name=$res_row['short_name'];
@@ -134,7 +132,6 @@ class Project extends Group {
                 $this->services[$s->getShortName()] =& $s;
                 unset($s);
             }
-        }
     }
 
 
