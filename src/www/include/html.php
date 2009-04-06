@@ -504,7 +504,7 @@ function site_project_header($params) {
 	//get the project object 
 	$pm = ProjectManager::instance();
     $project=$pm->getProject($group_id);
-
+var_dump($project);
 	//group doesn't exist
 	if ($project->isError()) {
 		exit_error($Language->getText('include_html','invalid_g'),$Language->getText('include_html','g_not_exist'));

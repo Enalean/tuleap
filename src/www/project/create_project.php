@@ -147,7 +147,7 @@ function create_project($data, $do_not_exit = false) {
         // Instanciate all services from the project template that are 'active'
         $pm = ProjectManager::instance();
         $group = $pm->getProject($group_id);
-        if (!$group || !is_object($group) || $group->isError()) {
+        if (!$group || !is_object($group)) {
             exit_no_group();
         }
         
@@ -212,7 +212,7 @@ function create_project($data, $do_not_exit = false) {
         }
         
         //copy svn infos
-        $sql = "SELECT svn_tracker, svn_preamble, svn_madatory_ref FROM groups WHERE group_id=$template_id ";
+        $sql = "SELECT svn_tracker, svn_preamble, svn_mandatory_ref FROM groups WHERE group_id=$template_id ";
         $result = db_query($sql);
         $arr = db_fetch_array($result);
         $query = "UPDATE groups SET svn_tracker='".$arr['svn_tracker']."', svn_mandatory_ref='".$arr['svn_mandatory_ref']."', svn_preamble='".db_escape_string($arr['svn_preamble'])."' " .
