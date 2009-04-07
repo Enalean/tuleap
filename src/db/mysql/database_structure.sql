@@ -36,7 +36,7 @@ CREATE TABLE activity_log (
   KEY idx_activity_log_day (day),
   KEY idx_activity_log_group (group_id),
   KEY type_idx (type)
-) TYPE=MyISAM;
+);
 
 #
 # Table structure for table 'activity_log_old'
@@ -56,7 +56,7 @@ CREATE TABLE activity_log_old (
   KEY idx_activity_log_day (day),
   KEY idx_activity_log_group (group_id),
   KEY type_idx (type)
-) TYPE=MyISAM;
+);
 
 #
 # Table structure for table 'activity_log_old_old'
@@ -75,7 +75,7 @@ CREATE TABLE activity_log_old_old (
   KEY idx_activity_log_day (day),
   KEY idx_activity_log_group (group_id),
   KEY type_idx (type)
-) TYPE=MyISAM;
+);
 
 #
 # Table structure for table 'bug'
@@ -149,7 +149,7 @@ CREATE TABLE bug (
   custom_df5 int(11) NOT NULL default '0',
   PRIMARY KEY  (bug_id),
   KEY idx_bug_group_id (group_id)
-) TYPE=MyISAM;
+);
 
 #
 # Table structure for table 'bug_bug_dependencies'
@@ -162,7 +162,7 @@ CREATE TABLE bug_bug_dependencies (
   PRIMARY KEY  (bug_depend_id),
   KEY idx_bug_bug_dependencies_bug_id (bug_id),
   KEY idx_bug_bug_is_dependent_on_task_id (is_dependent_on_bug_id)
-) TYPE=MyISAM;
+);
 
 #
 # Table structure for table 'bug_canned_responses'
@@ -175,7 +175,7 @@ CREATE TABLE bug_canned_responses (
   body text,
   PRIMARY KEY  (bug_canned_id),
   KEY idx_bug_canned_response_group_id (group_id)
-) TYPE=MyISAM;
+);
 
 #
 # Table structure for table 'bug_cc' for carbon-copied people
@@ -191,7 +191,7 @@ CREATE TABLE bug_cc (
   date int(11) NOT NULL default '0',
   PRIMARY KEY  (bug_cc_id),
   KEY bug_id_idx (bug_id)
-) TYPE=MyISAM;
+);
 
 
 #
@@ -235,7 +235,7 @@ CREATE TABLE bug_field (
   value_function VARCHAR(255) DEFAULT NULL,
   PRIMARY KEY  (bug_field_id),
   KEY idx_bug_field_name (field_name)
-) TYPE=MyISAM;
+);
 
 #
 # Table structure for table 'bug_field_usage'
@@ -284,7 +284,7 @@ CREATE TABLE bug_field_usage (
   custom_value_function varchar(255) default NULL,
   KEY idx_bug_fu_field_id (bug_field_id),
   KEY idx_bug_fu_group_id (group_id)
-) TYPE=MyISAM;
+);
 
 #
 # Table structure for table 'bug_field_value'
@@ -326,7 +326,7 @@ CREATE TABLE bug_field_value (
   KEY idx_bug_fv_group_id (group_id),
   KEY idx_bug_fv_value_id (value_id),
   KEY idx_bug_fv_status (status)
-) TYPE=MyISAM;
+);
 
 #
 # Table structure for table 'bug_file' for bug attachments
@@ -344,7 +344,7 @@ CREATE TABLE bug_file (
   filetype text NOT NULL,
   PRIMARY KEY  (bug_file_id),
   KEY bug_id_idx (bug_id)
-) TYPE=MyISAM;
+);
 
 #
 # Table structure for table 'bug_filter'
@@ -357,7 +357,7 @@ CREATE TABLE bug_filter (
   sql_clause text NOT NULL,
   is_active int(11) NOT NULL default '0',
   PRIMARY KEY  (filter_id)
-) TYPE=MyISAM;
+);
 
 #
 # Table structure for table 'bug_history'
@@ -373,7 +373,7 @@ CREATE TABLE bug_history (
   type int(11) default NULL,
   PRIMARY KEY  (bug_history_id),
   KEY idx_bug_history_bug_id (bug_id)
-) TYPE=MyISAM;
+);
 
 #
 # Table structure for table 'bug_notification'
@@ -387,7 +387,7 @@ CREATE TABLE bug_notification (
   event_id int(11) NOT NULL default '0',
   notify int(11) NOT NULL default '1',
   KEY user_id_idx (user_id)
-) TYPE=MyISAM;
+);
 
 #
 # Table structure for table 'bug_notification_event'
@@ -402,7 +402,7 @@ CREATE TABLE bug_notification_event (
   description varchar(255) default NULL,
   rank int(11) NOT NULL default '0',
   KEY event_id_idx (event_id)
-) TYPE=MyISAM;
+);
 
 #
 # Table structure for table 'bug_notification_role'
@@ -415,7 +415,7 @@ CREATE TABLE bug_notification_role (
   description varchar(255) default NULL,
   rank int(11) NOT NULL default '0',
   KEY role_id_idx (role_id)
-) TYPE=MyISAM;
+);
 
 #
 # Table structure for table 'bug_report'
@@ -439,7 +439,7 @@ CREATE TABLE bug_report (
   KEY group_id_idx (group_id),
   KEY user_id_idx (user_id),
   KEY scope_idx (scope)
-) TYPE=MyISAM;
+);
 
 #
 # Table structure for table 'bug_report_field'
@@ -466,7 +466,7 @@ CREATE TABLE bug_report_field (
   place_result int(11) default NULL,
   col_width int(11) default NULL,
   KEY profile_id_idx (report_id)
-) TYPE=MyISAM;
+);
 
 #
 # Table structure for table 'bug_task_dependencies'
@@ -479,7 +479,7 @@ CREATE TABLE bug_task_dependencies (
   PRIMARY KEY  (bug_depend_id),
   KEY idx_bug_task_dependencies_bug_id (bug_id),
   KEY idx_bug_task_is_dependent_on_task_id (is_dependent_on_task_id)
-) TYPE=MyISAM;
+);
 
 #
 # Table structure for table 'bug_watcher'
@@ -492,7 +492,7 @@ CREATE TABLE bug_watcher (
   watchee_id int(11) NOT NULL default '0',
   KEY user_id_idx (user_id),
   KEY watchee_id_idx (watchee_id)
-) TYPE=MyISAM;
+);
 
 #
 # Table structure for table 'db_images'
@@ -510,7 +510,7 @@ CREATE TABLE db_images (
   height int(11) NOT NULL default '0',
   PRIMARY KEY  (id),
   KEY idx_db_images_group (group_id)
-) TYPE=MyISAM;
+);
 
 #
 # Table structure for table 'doc_data'
@@ -531,7 +531,7 @@ CREATE TABLE doc_data (
   filetype text,
   PRIMARY KEY  (docid),
   KEY idx_doc_group_doc_group (doc_group)
-) TYPE=MyISAM;
+);
 
 #
 # Table structure for table 'doc_groups'
@@ -544,7 +544,7 @@ CREATE TABLE doc_groups (
   group_id int(11) NOT NULL default '0',
   PRIMARY KEY  (doc_group),
   KEY idx_doc_groups_group (group_id)
-) TYPE=MyISAM;
+);
 
 
 #
@@ -558,7 +558,7 @@ CREATE TABLE filedownload_log (
   KEY all_idx (user_id,filerelease_id),
   KEY time_idx (time),
   KEY filerelease_id_idx (filerelease_id)
-) TYPE=MyISAM;
+);
 
 #
 # Table structure for table 'filemodule'
@@ -571,7 +571,7 @@ CREATE TABLE filemodule (
   recent_filerelease varchar(20) NOT NULL default '',
   PRIMARY KEY  (filemodule_id),
   KEY idx_filemodule_group_id (group_id)
-) TYPE=MyISAM;
+);
 
 #
 # Table structure for table 'filemodule_monitor'
@@ -581,7 +581,7 @@ CREATE TABLE filemodule_monitor (
   filemodule_id int(11) NOT NULL default '0',
   user_id int(11) NOT NULL default '0',
   KEY idx_filemodule_monitor_id (filemodule_id)
-) TYPE=MyISAM;
+);
 
 #
 # Table structure for table 'filerelease'
@@ -613,7 +613,7 @@ CREATE TABLE filerelease (
   KEY unix_box_idx (unix_box),
   KEY post_time_idx (post_time),
   KEY idx_release_time (release_time)
-) TYPE=MyISAM;
+);
 
 #
 # Table structure for table 'forum'
@@ -636,7 +636,7 @@ CREATE TABLE forum (
   KEY idx_forum_id_date (group_forum_id,date),
   KEY idx_forum_id_date_followup (group_forum_id,date,is_followup_to),
   KEY idx_forum_thread_date_followup (thread_id,date,is_followup_to)
-) TYPE=MyISAM;
+);
 
 #
 # Table structure for table 'forum_agg_msg_count'
@@ -646,7 +646,7 @@ CREATE TABLE forum_agg_msg_count (
   group_forum_id int(11) NOT NULL default '0',
   count int(11) NOT NULL default '0',
   PRIMARY KEY  (group_forum_id)
-) TYPE=MyISAM;
+);
 
 #
 # Table structure for table 'forum_group_list'
@@ -661,7 +661,7 @@ CREATE TABLE forum_group_list (
   PRIMARY KEY  (group_forum_id),
   FULLTEXT (description),
   KEY idx_forum_group_list_group_id (group_id)
-) TYPE=MyISAM;
+);
 
 #
 # Table structure for table 'forum_monitored_forums'
@@ -674,7 +674,7 @@ CREATE TABLE forum_monitored_forums (
   PRIMARY KEY  (monitor_id),
   KEY idx_forum_monitor_thread_id (forum_id),
   KEY idx_forum_monitor_combo_id (forum_id,user_id)
-) TYPE=MyISAM;
+);
 
 #
 # Table structure for 'forum_monitored_threads' table
@@ -686,7 +686,7 @@ CREATE TABLE forum_monitored_threads (
   thread_id int(11) NOT NULL default '0',
   user_id int(11) NOT NULL default '0',
   PRIMARY KEY (thread_monitor_id)
-) TYPE=MyISAM;
+);
 
 #
 # Table structure for table 'forum_saved_place'
@@ -698,7 +698,7 @@ CREATE TABLE forum_saved_place (
   forum_id int(11) NOT NULL default '0',
   save_date int(11) NOT NULL default '0',
   PRIMARY KEY  (saved_place_id)
-) TYPE=MyISAM;
+);
 
 #
 # Table structure for table 'forum_thread_id'
@@ -707,7 +707,7 @@ CREATE TABLE forum_saved_place (
 CREATE TABLE forum_thread_id (
   thread_id int(11) NOT NULL auto_increment,
   PRIMARY KEY  (thread_id)
-) TYPE=MyISAM;
+);
 
 
 #
@@ -723,7 +723,7 @@ CREATE TABLE frs_dlstats_agg (
   KEY day_idx (day),
   KEY downloads_http_idx (downloads_http),
   KEY downloads_ftp_idx (downloads_ftp)
-) TYPE=MyISAM;
+);
 
 #
 # Table structure for table 'frs_dlstats_file_agg'
@@ -736,7 +736,7 @@ CREATE TABLE frs_dlstats_file_agg (
   KEY idx_dlstats_file_file_id (file_id),
   KEY idx_dlstats_file_day (day),
   KEY idx_dlstats_file_down (downloads)
-) TYPE=MyISAM;
+);
 
 #
 # Table structure for table 'frs_dlstats_filetotal_agg'
@@ -746,7 +746,7 @@ CREATE TABLE frs_dlstats_filetotal_agg (
   file_id int(11) NOT NULL default '0',
   downloads int(11) NOT NULL default '0',
   KEY idx_stats_agr_tmp_fid (file_id)
-) TYPE=MyISAM;
+);
 
 #
 # Table structure for table 'frs_dlstats_group_agg'
@@ -759,7 +759,7 @@ CREATE TABLE frs_dlstats_group_agg (
   KEY group_id_idx (group_id),
   KEY day_idx (day),
   KEY downloads_idx (downloads)
-) TYPE=MyISAM;
+);
 
 #
 # Table structure for table 'frs_dlstats_grouptotal_agg'
@@ -769,7 +769,7 @@ CREATE TABLE frs_dlstats_grouptotal_agg (
   group_id int(11) NOT NULL default '0',
   downloads int(11) NOT NULL default '0',
   KEY idx_stats_agr_tmp_gid (group_id)
-) TYPE=MyISAM;
+);
 
 #
 # Table structure for table 'frs_file'
@@ -791,7 +791,7 @@ CREATE TABLE frs_file (
   KEY idx_frs_file_date (post_date),
   KEY idx_frs_file_processor (processor_id),
   KEY idx_frs_file_name (filename(45))
-) TYPE=MyISAM;
+);
 
 #
 # Table structure for table 'frs_filetype'
@@ -801,7 +801,7 @@ CREATE TABLE frs_filetype (
   type_id int(11) NOT NULL auto_increment,
   name text,
   PRIMARY KEY  (type_id)
-) TYPE=MyISAM;
+);
 
 #
 # Table structure for table 'frs_package'
@@ -816,7 +816,7 @@ CREATE TABLE frs_package (
   approve_license TINYINT(1) NOT NULL default '1',
   PRIMARY KEY  (package_id),
   KEY idx_package_group_id (group_id)
-) TYPE=MyISAM;
+);
 
 #
 # Table structure for table 'frs_processor'
@@ -828,7 +828,7 @@ CREATE TABLE frs_processor (
   rank int(11) NOT NULL default '0',
   group_id int(11) NOT NULL default '0',
   PRIMARY KEY  (processor_id)
-) TYPE=MyISAM;
+);
 
 #
 # Table structure for table 'frs_release'
@@ -848,7 +848,7 @@ CREATE TABLE frs_release (
   KEY idx_frs_release_by (released_by),
   KEY idx_frs_release_date (release_date),
   KEY idx_frs_release_package (package_id)
-) TYPE=MyISAM;
+);
 
 
 #
@@ -866,7 +866,7 @@ CREATE TABLE group_cvs_full_history (
   KEY group_id_idx (group_id),
   KEY user_id_idx (user_id),
   KEY day_idx (day)
-) TYPE=MyISAM;
+);
 
 #
 # Table structure for table 'group_cvs_history'
@@ -881,7 +881,7 @@ CREATE TABLE group_cvs_history (
   cvs_adds_wk int(11) NOT NULL default '0',
   KEY group_id_idx (group_id),
   KEY user_name_idx (user_name)
-) TYPE=MyISAM;
+);
 
 #
 # Table structure for table 'group_svn_full_history'
@@ -901,7 +901,7 @@ CREATE TABLE group_svn_full_history (
   KEY group_id_idx (group_id),
   KEY user_id_idx (user_id),
   KEY day_idx (day)
-) TYPE=MyISAM;
+);
 
 #
 # Table structure for table 'group_history'
@@ -916,7 +916,7 @@ CREATE TABLE group_history (
   date int(11) default NULL,
   PRIMARY KEY  (group_history_id),
   KEY idx_group_history_group_id (group_id)
-) TYPE=MyISAM;
+);
 
 #
 # Table structure for table 'group_type'
@@ -926,7 +926,7 @@ CREATE TABLE group_type (
   type_id int(11) NOT NULL,
   name text NOT NULL default '',
   PRIMARY KEY  (type_id)
-) TYPE=MyISAM;
+);
 
 
 #
@@ -980,7 +980,7 @@ CREATE TABLE groups (
   KEY idx_groups_public (is_public),
   KEY idx_groups_unix (unix_group_name),
   KEY idx_groups_type (type)
-) TYPE=MyISAM;
+);
 #
 # Table structure for table 'group_desc'
 #
@@ -994,7 +994,7 @@ CREATE TABLE group_desc (
   desc_type ENUM( 'line', 'text' ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT 'text',
   PRIMARY KEY (group_desc_id),
   UNIQUE (desc_name)
-) TYPE=MyISAM;
+);
 
 #
 # Table structure for table 'group_desc_value'
@@ -1005,7 +1005,7 @@ CREATE TABLE group_desc_value (
   group_desc_id INT( 11 ) NOT NULL ,
   value text CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
   PRIMARY KEY (desc_value_id)
-) TYPE=MyISAM;
+);
 
 #
 # Table structure for table 'image'
@@ -1024,7 +1024,7 @@ CREATE TABLE image (
   KEY image_category_idx (image_category),
   KEY image_type_idx (image_type),
   KEY group_id_idx (group_id)
-) TYPE=MyISAM;
+);
 
 
 CREATE TABLE mail_group_list (
@@ -1038,7 +1038,7 @@ CREATE TABLE mail_group_list (
   description text,
   PRIMARY KEY  (group_list_id),
   KEY idx_mail_group_list_group (group_id)
-) TYPE=MyISAM;
+);
 
 
 #
@@ -1058,7 +1058,7 @@ CREATE TABLE news_bytes (
   KEY idx_news_bytes_forum (forum_id),
   KEY idx_news_bytes_group (group_id),
   KEY idx_news_bytes_approved (is_approved)
-) TYPE=MyISAM;
+);
 
 #
 # Table structure for table 'patch'
@@ -1080,7 +1080,7 @@ CREATE TABLE patch (
   filetype varchar(50) NOT NULL default '',
   PRIMARY KEY  (patch_id),
   KEY idx_patch_group_id (group_id)
-) TYPE=MyISAM;
+);
 
 #
 # Table structure for table 'patch_category'
@@ -1092,7 +1092,7 @@ CREATE TABLE patch_category (
   category_name text NOT NULL,
   PRIMARY KEY  (patch_category_id),
   KEY idx_patch_group_group_id (group_id)
-) TYPE=MyISAM;
+);
 
 #
 # Table structure for table 'patch_history'
@@ -1107,7 +1107,7 @@ CREATE TABLE patch_history (
   date int(11) default NULL,
   PRIMARY KEY  (patch_history_id),
   KEY idx_patch_history_patch_id (patch_id)
-) TYPE=MyISAM;
+);
 
 #
 # Table structure for table 'patch_status'
@@ -1117,7 +1117,7 @@ CREATE TABLE patch_status (
   patch_status_id int(11) NOT NULL auto_increment,
   status_name text,
   PRIMARY KEY  (patch_status_id)
-) TYPE=MyISAM;
+);
 
 #
 # Table structure for table 'people_skill'
@@ -1127,7 +1127,7 @@ CREATE TABLE people_skill (
   skill_id int(11) NOT NULL auto_increment,
   name text,
   PRIMARY KEY  (skill_id)
-) TYPE=MyISAM;
+);
 
 #
 # Table structure for table 'people_skill_inventory'
@@ -1140,7 +1140,7 @@ CREATE TABLE people_skill_inventory (
   skill_level_id int(11) NOT NULL default '0',
   skill_year_id int(11) NOT NULL default '0',
   PRIMARY KEY  (skill_inventory_id)
-) TYPE=MyISAM;
+);
 
 #
 # Table structure for table 'people_skill_level'
@@ -1150,7 +1150,7 @@ CREATE TABLE people_skill_level (
   skill_level_id int(11) NOT NULL auto_increment,
   name text,
   PRIMARY KEY  (skill_level_id)
-) TYPE=MyISAM;
+);
 
 #
 # Table structure for table 'people_skill_year'
@@ -1160,7 +1160,7 @@ CREATE TABLE people_skill_year (
   skill_year_id int(11) NOT NULL auto_increment,
   name text,
   PRIMARY KEY  (skill_year_id)
-) TYPE=MyISAM;
+);
 
 #
 # Table structure for table 'project_assigned_to'
@@ -1173,7 +1173,7 @@ CREATE TABLE project_assigned_to (
   PRIMARY KEY  (project_assigned_id),
   KEY idx_project_assigned_to_task_id (project_task_id),
   KEY idx_project_assigned_to_assigned_to (assigned_to_id)
-) TYPE=MyISAM;
+);
 
 #
 # Table structure for table 'project_counts_tmp'
@@ -1183,7 +1183,7 @@ CREATE TABLE project_counts_tmp (
   group_id int(11) default NULL,
   type text,
   count float(8,5) default NULL
-) TYPE=MyISAM;
+);
 
 #
 # Table structure for table 'project_counts_weekly_tmp'
@@ -1193,7 +1193,7 @@ CREATE TABLE project_counts_weekly_tmp (
   group_id int(11) default NULL,
   type text,
   count float(8,5) default NULL
-) TYPE=MyISAM;
+);
 
 #
 # Table structure for table 'project_dependencies'
@@ -1206,7 +1206,7 @@ CREATE TABLE project_dependencies (
   PRIMARY KEY  (project_depend_id),
   KEY idx_project_dependencies_task_id (project_task_id),
   KEY idx_project_is_dependent_on_task_id (is_dependent_on_task_id)
-) TYPE=MyISAM;
+);
 
 #
 # Table structure for table 'project_group_list'
@@ -1221,7 +1221,7 @@ CREATE TABLE project_group_list (
   order_id int(11) NOT NULL default '0',
   PRIMARY KEY  (group_project_id),
   KEY idx_project_group_list_group_id (group_id)
-) TYPE=MyISAM;
+);
 
 #
 # Table structure for table 'project_history'
@@ -1236,7 +1236,7 @@ CREATE TABLE project_history (
   date int(11) NOT NULL default '0',
   PRIMARY KEY  (project_history_id),
   KEY idx_project_history_task_id (project_task_id)
-) TYPE=MyISAM;
+);
 
 #
 # Table structure for table 'project_metric'
@@ -1248,7 +1248,7 @@ CREATE TABLE project_metric (
   group_id int(11) NOT NULL default '0',
   PRIMARY KEY  (ranking),
   KEY idx_project_metric_group (group_id)
-) TYPE=MyISAM;
+);
 
 #
 # Table structure for table 'project_metric_tmp1'
@@ -1259,7 +1259,7 @@ CREATE TABLE project_metric_tmp1 (
   group_id int(11) NOT NULL default '0',
   value float(8,5) default NULL,
   PRIMARY KEY  (ranking)
-) TYPE=MyISAM;
+);
 
 #
 # Table structure for table 'project_metric_weekly_tmp1'
@@ -1270,7 +1270,7 @@ CREATE TABLE project_metric_weekly_tmp1 (
   group_id int(11) NOT NULL default '0',
   value float(8,5) default NULL,
   PRIMARY KEY  (ranking)
-) TYPE=MyISAM;
+);
 
 #
 # Table structure for table 'project_status'
@@ -1280,7 +1280,7 @@ CREATE TABLE project_status (
   status_id int(11) NOT NULL auto_increment,
   status_name text NOT NULL,
   PRIMARY KEY  (status_id)
-) TYPE=MyISAM;
+);
 
 #
 # Table structure for table 'project_task'
@@ -1300,7 +1300,7 @@ CREATE TABLE project_task (
   status_id int(11) NOT NULL default '0',
   PRIMARY KEY  (project_task_id),
   KEY idx_project_task_group_project_id (group_project_id)
-) TYPE=MyISAM;
+);
 
 #
 # Table structure for table 'project_weekly_metric'
@@ -1312,7 +1312,7 @@ CREATE TABLE project_weekly_metric (
   group_id int(11) NOT NULL default '0',
   PRIMARY KEY  (ranking),
   KEY idx_project_metric_weekly_group (group_id)
-) TYPE=MyISAM;
+);
 
 #
 # Table structure for table 'session'
@@ -1327,7 +1327,7 @@ CREATE TABLE session (
   KEY idx_session_user_id (user_id),
   KEY time_idx (time),
   KEY idx_session_time (time)
-) TYPE=MyISAM;
+);
 
 #
 # Table structure for table 'snippet'
@@ -1345,7 +1345,7 @@ CREATE TABLE snippet (
   PRIMARY KEY  (snippet_id),
   KEY idx_snippet_language (language),
   KEY idx_snippet_category (category)
-) TYPE=MyISAM;
+);
 
 #
 # Table structure for table 'snippet_package'
@@ -1361,7 +1361,7 @@ CREATE TABLE snippet_package (
   PRIMARY KEY  (snippet_package_id),
   KEY idx_snippet_package_language (language),
   KEY idx_snippet_package_category (category)
-) TYPE=MyISAM;
+);
 
 #
 # Table structure for table 'snippet_package_item'
@@ -1373,7 +1373,7 @@ CREATE TABLE snippet_package_item (
   snippet_version_id int(11) NOT NULL default '0',
   PRIMARY KEY  (snippet_package_item_id),
   KEY idx_snippet_package_item_pkg_ver (snippet_package_version_id)
-) TYPE=MyISAM;
+);
 
 #
 # Table structure for table 'snippet_package_version'
@@ -1388,7 +1388,7 @@ CREATE TABLE snippet_package_version (
   date int(11) NOT NULL default '0',
   PRIMARY KEY  (snippet_package_version_id),
   KEY idx_snippet_package_version_pkg_id (snippet_package_id)
-) TYPE=MyISAM;
+);
 
 #
 # Table structure for table 'snippet_version'
@@ -1407,7 +1407,7 @@ CREATE TABLE snippet_version (
   filetype varchar(50) NOT NULL default '',
   PRIMARY KEY  (snippet_version_id),
   KEY idx_snippet_version_snippet_id (snippet_id)
-) TYPE=MyISAM;
+);
 
 #
 # Table structure for table 'stats_agg_logo_by_day'
@@ -1416,7 +1416,7 @@ CREATE TABLE snippet_version (
 CREATE TABLE stats_agg_logo_by_day (
   day int(11) default NULL,
   count int(11) default NULL
-) TYPE=MyISAM;
+);
 
 #
 # Table structure for table 'stats_agg_logo_by_group'
@@ -1426,7 +1426,7 @@ CREATE TABLE stats_agg_logo_by_group (
   day int(11) default NULL,
   group_id int(11) default NULL,
   count int(11) default NULL
-) TYPE=MyISAM;
+);
 
 #
 # Table structure for table 'stats_agg_pages_by_browser'
@@ -1435,7 +1435,7 @@ CREATE TABLE stats_agg_logo_by_group (
 CREATE TABLE stats_agg_pages_by_browser (
   browser varchar(8) default NULL,
   count int(11) default NULL
-) TYPE=MyISAM;
+);
 
 #
 # Table structure for table 'stats_agg_pages_by_day'
@@ -1445,7 +1445,7 @@ CREATE TABLE stats_agg_pages_by_day (
   day int(11) NOT NULL default '0',
   count int(11) NOT NULL default '0',
   KEY idx_pages_by_day_day (day)
-) TYPE=MyISAM;
+);
 
 #
 # Table structure for table 'stats_agg_pages_by_day_old'
@@ -1454,7 +1454,7 @@ CREATE TABLE stats_agg_pages_by_day (
 CREATE TABLE stats_agg_pages_by_day_old (
   day int(11) default NULL,
   count int(11) default NULL
-) TYPE=MyISAM;
+);
 
 #
 # Table structure for table 'stats_agg_site_by_day'
@@ -1463,7 +1463,7 @@ CREATE TABLE stats_agg_pages_by_day_old (
 CREATE TABLE stats_agg_site_by_day (
   day int(11) NOT NULL default '0',
   count int(11) NOT NULL default '0'
-) TYPE=MyISAM;
+);
 
 #
 # Table structure for table 'stats_agg_site_by_group'
@@ -1473,7 +1473,7 @@ CREATE TABLE stats_agg_site_by_group (
   day int(11) NOT NULL default '0',
   group_id int(11) NOT NULL default '0',
   count int(11) NOT NULL default '0'
-) TYPE=MyISAM;
+);
 
 #
 # Table structure for table 'stats_agr_filerelease'
@@ -1485,7 +1485,7 @@ CREATE TABLE stats_agr_filerelease (
   downloads int(11) NOT NULL default '0',
   KEY idx_stats_agr_tmp_fid (filerelease_id),
   KEY idx_stats_agr_tmp_gid (group_id)
-) TYPE=MyISAM;
+);
 
 #
 # Table structure for table 'stats_agr_project'
@@ -1519,7 +1519,7 @@ CREATE TABLE stats_agr_project (
   svn_checkouts   smallint(6) DEFAULT '0' NOT NULL,
   svn_access_count       smallint(6) DEFAULT '0' NOT NULL,
   KEY idx_project_agr_log_group (group_id)
-) TYPE=MyISAM;
+);
 
 #
 # Table structure for table 'stats_ftp_downloads'
@@ -1533,7 +1533,7 @@ CREATE TABLE stats_ftp_downloads (
   KEY idx_ftpdl_day (day),
   KEY idx_ftpdl_fid (filerelease_id),
   KEY idx_ftpdl_group_id (group_id)
-) TYPE=MyISAM;
+);
 
 #
 # Table structure for table 'stats_http_downloads'
@@ -1547,7 +1547,7 @@ CREATE TABLE stats_http_downloads (
   KEY idx_httpdl_day (day),
   KEY idx_httpdl_fid (filerelease_id),
   KEY idx_httpdl_group_id (group_id)
-) TYPE=MyISAM;
+);
 
 #
 # Table structure for table 'stats_project'
@@ -1590,7 +1590,7 @@ CREATE TABLE stats_project (
   KEY idx_archive_project_week (week),
   KEY idx_archive_project_day (day),
   KEY idx_archive_project_monthday (month,day)
-) TYPE=MyISAM;
+);
 
 #
 # Table structure for table 'stats_project_tmp'
@@ -1632,7 +1632,7 @@ CREATE TABLE stats_project_tmp (
   KEY idx_project_stats_day (day),
   KEY idx_project_stats_week (week),
   KEY idx_project_stats_month (month)
-) TYPE=MyISAM;
+);
 
 #
 # Table structure for table 'stats_site'
@@ -1654,7 +1654,7 @@ CREATE TABLE stats_site (
   KEY idx_stats_site_week (week),
   KEY idx_stats_site_day (day),
   KEY idx_stats_site_monthday (month,day)
-) TYPE=MyISAM;
+);
 
 #
 # Table structure for table 'support'
@@ -1673,7 +1673,7 @@ CREATE TABLE support (
   close_date int(11) NOT NULL default '0',
   PRIMARY KEY  (support_id),
   KEY idx_support_group_id (group_id)
-) TYPE=MyISAM;
+);
 
 #
 # Table structure for table 'support_canned_responses'
@@ -1686,7 +1686,7 @@ CREATE TABLE support_canned_responses (
   body text,
   PRIMARY KEY  (support_canned_id),
   KEY idx_support_canned_response_group_id (group_id)
-) TYPE=MyISAM;
+);
 
 #
 # Table structure for table 'support_category'
@@ -1698,7 +1698,7 @@ CREATE TABLE support_category (
   category_name text NOT NULL,
   PRIMARY KEY  (support_category_id),
   KEY idx_support_group_group_id (group_id)
-) TYPE=MyISAM;
+);
 
 #
 # Table structure for table 'support_history'
@@ -1713,7 +1713,7 @@ CREATE TABLE support_history (
   date int(11) default NULL,
   PRIMARY KEY  (support_history_id),
   KEY idx_support_history_support_id (support_id)
-) TYPE=MyISAM;
+);
 
 #
 # Table structure for table 'support_messages'
@@ -1727,7 +1727,7 @@ CREATE TABLE support_messages (
   body text,
   PRIMARY KEY  (support_message_id),
   KEY idx_support_messages_support_id (support_id)
-) TYPE=MyISAM;
+);
 
 #
 # Table structure for table 'support_status'
@@ -1737,7 +1737,7 @@ CREATE TABLE support_status (
   support_status_id int(11) NOT NULL auto_increment,
   status_name text,
   PRIMARY KEY  (support_status_id)
-) TYPE=MyISAM;
+);
 
 #
 # Table structure for table 'survey_question_types'
@@ -1748,7 +1748,7 @@ CREATE TABLE survey_question_types (
   type text NOT NULL,
   rank int(11) NOT NULL default '0',
   PRIMARY KEY  (id)
-) TYPE=MyISAM;
+);
 
 #
 # Table structure for table 'survey_questions'
@@ -1761,7 +1761,7 @@ CREATE TABLE survey_questions (
   question_type int(11) NOT NULL default '0',
   PRIMARY KEY  (question_id),
   KEY idx_survey_questions_group (group_id)
-) TYPE=MyISAM;
+);
 
 #
 # Table structure for table 'survey_radio_choices'
@@ -1774,7 +1774,7 @@ CREATE TABLE survey_radio_choices (
   radio_choice text NOT NULL,
   PRIMARY KEY  (choice_id),  
   KEY idx_survey_radio_choices_question_id (question_id)
-) TYPE=MyISAM;
+);
 
 #
 # Table structure for table 'survey_rating_aggregate'
@@ -1786,7 +1786,7 @@ CREATE TABLE survey_rating_aggregate (
   response float NOT NULL default '0',
   count int(11) NOT NULL default '0',
   KEY idx_survey_rating_aggregate_type_id (type,id)
-) TYPE=MyISAM;
+);
 
 #
 # Table structure for table 'survey_rating_response'
@@ -1800,7 +1800,7 @@ CREATE TABLE survey_rating_response (
   date int(11) NOT NULL default '0',
   KEY idx_survey_rating_responses_user_type_id (user_id,type,id),
   KEY idx_survey_rating_responses_type_id (type,id)
-) TYPE=MyISAM;
+);
 
 #
 # Table structure for table 'survey_responses'
@@ -1817,7 +1817,7 @@ CREATE TABLE survey_responses (
   KEY idx_survey_responses_user_survey_question (user_id,survey_id,question_id),
   KEY idx_survey_responses_survey_question (survey_id,question_id),
   KEY idx_survey_responses_group_id (group_id)
-) TYPE=MyISAM;
+);
 
 #
 # Table structure for table 'surveys'
@@ -1832,7 +1832,7 @@ CREATE TABLE surveys (
   is_anonymous int(11) NOT NULL default '0',
   PRIMARY KEY  (survey_id),
   KEY idx_surveys_group (group_id)
-) TYPE=MyISAM;
+);
 
 #
 # Table structure for table 'tmp_projs_releases_tmp'
@@ -1843,7 +1843,7 @@ CREATE TABLE tmp_projs_releases_tmp (
   month int(11) NOT NULL default '0',
   total_proj int(11) NOT NULL default '0',
   total_releases int(11) NOT NULL default '0'
-) TYPE=MyISAM;
+);
 
 #
 # Table structure for table 'top_group'
@@ -1872,7 +1872,7 @@ CREATE TABLE top_group (
   KEY rank_userrank_idx (rank_userrank),
   KEY rank_forumposts_week_idx (rank_forumposts_week),
   KEY pageviews_proj_idx (pageviews_proj)
-) TYPE=MyISAM;
+);
 
 #
 # Table structure for table 'trove_cat'
@@ -1894,7 +1894,7 @@ CREATE TABLE trove_cat (
   KEY parent_idx (parent),
   KEY root_parent_idx (root_parent),
   KEY version_idx (version)
-) TYPE=MyISAM;
+);
 
 #
 # Table structure for table 'trove_group_link'
@@ -1909,7 +1909,7 @@ CREATE TABLE trove_group_link (
   PRIMARY KEY  (trove_group_id),
   KEY idx_trove_group_link_group_id (group_id),
   KEY idx_trove_group_link_cat_id (trove_cat_id)
-) TYPE=MyISAM;
+);
 
 #
 # Table structure for table 'user'
@@ -1952,7 +1952,7 @@ CREATE TABLE user (
   nb_auth_failure INT(11) NOT NULL DEFAULT 0,
   PRIMARY KEY  (user_id),
   KEY idx_user_user (status)
-) TYPE=MyISAM;
+);
 
 #
 # Table structure for table 'user_bookmarks'
@@ -1965,7 +1965,7 @@ CREATE TABLE user_bookmarks (
   bookmark_title text,
   PRIMARY KEY  (bookmark_id),
   KEY idx_user_bookmark_user_id (user_id)
-) TYPE=MyISAM;
+);
 
 
 #
@@ -1994,7 +1994,7 @@ CREATE TABLE user_group (
   KEY forum_flags_idx (forum_flags),
   KEY project_flags_idx (project_flags),
   KEY admin_flags_idx (admin_flags)
-) TYPE=MyISAM;
+);
 
 
 #
@@ -2006,7 +2006,7 @@ CREATE TABLE user_preferences (
   preference_name varchar(255) NOT NULL default '',
   preference_value text,
   PRIMARY KEY  (user_id,preference_name)
-) TYPE=MyISAM;
+);
 
 
 #
@@ -2020,7 +2020,7 @@ CREATE TABLE doc_log (
   KEY all_idx (user_id,docid),
   KEY time_idx (time),
   KEY docid_idx (docid)
-) TYPE=MyISAM;
+);
 
 #
 # Table structure for table 'project_cc' for carbon-copied people
@@ -2036,7 +2036,7 @@ CREATE TABLE project_cc (
   date int(11) NOT NULL default '0',
   PRIMARY KEY  (project_cc_id),
   KEY project_id_idx (project_task_id)
-) TYPE=MyISAM;
+);
 
 #
 # Table structure for table 'project_watcher'
@@ -2049,7 +2049,7 @@ CREATE TABLE project_watcher (
   watchee_id int(11) NOT NULL default '0',
   KEY user_id_idx (user_id),
   KEY watchee_id_idx (watchee_id)
-) TYPE=MyISAM;
+);
 
 #
 # Table structure for table 'project_notification'
@@ -2063,7 +2063,7 @@ CREATE TABLE project_notification (
   event_id int(11) NOT NULL default '0',
   notify int(11) NOT NULL default '1',
   KEY user_id_idx (user_id)
-) TYPE=MyISAM;
+);
 
 #
 # Table structure for table 'project_notification_event'
@@ -2078,7 +2078,7 @@ CREATE TABLE project_notification_event (
   description varchar(255) default NULL,
   rank int(11) NOT NULL default '0',
   KEY event_id_idx (event_id)
-) TYPE=MyISAM;
+);
 
 #
 # Table structure for table 'project_notification_role'
@@ -2091,7 +2091,7 @@ CREATE TABLE project_notification_role (
   description varchar(255) default NULL,
   rank int(11) NOT NULL default '0',
   KEY role_id_idx (role_id)
-) TYPE=MyISAM;
+);
 
 #
 # Table structure for table 'project_file' for task attachments
@@ -2109,7 +2109,7 @@ CREATE TABLE project_file (
   filetype text NOT NULL,
   PRIMARY KEY  (project_file_id),
   KEY project_task_id_idx (project_task_id)
-) TYPE=MyISAM;
+);
 
 #
 # Table structure for table 'project_field'
@@ -2151,7 +2151,7 @@ CREATE TABLE project_field (
   custom int(11) NOT NULL default '0',
   PRIMARY KEY  (project_field_id),
   KEY idx_project_field_name (field_name)
-) TYPE=MyISAM;
+);
 
 #
 # Table structure for table 'project_field_usage'
@@ -2199,7 +2199,7 @@ CREATE TABLE project_field_usage (
   custom_keep_history int(11) default NULL,
   KEY idx_project_fu_field_id (project_field_id),
   KEY idx_project_fu_group_id (group_id)
-) TYPE=MyISAM;
+);
 
 #
 # Table structure for table 'project_field_value'
@@ -2241,7 +2241,7 @@ CREATE TABLE project_field_value (
   KEY idx_project_fv_group_id (group_id),
   KEY idx_project_fv_value_id (value_id),
   KEY idx_project_fv_status (status)
-) TYPE=MyISAM;
+);
 
 
 # CREATE cvs support tables
@@ -2267,7 +2267,7 @@ CREATE TABLE cvs_checkins (
   KEY fileid (fileid),
   KEY branchid (branchid),
   KEY commitid (commitid)
-) TYPE=MyISAM;
+);
 
 CREATE TABLE cvs_commits (
   id mediumint(9) NOT NULL auto_increment,
@@ -2275,7 +2275,7 @@ CREATE TABLE cvs_commits (
   whoid mediumint(9) DEFAULT '0' NOT NULL,
   KEY whoid (whoid),
   PRIMARY KEY (id)
-) TYPE=MyISAM;
+);
 
 CREATE TABLE cvs_descs (
   id mediumint(9) NOT NULL auto_increment,
@@ -2283,7 +2283,7 @@ CREATE TABLE cvs_descs (
   hash bigint(20) DEFAULT '0' NOT NULL,
   PRIMARY KEY (id),
   KEY hash (hash)
-) TYPE=MyISAM;
+);
 
 CREATE TABLE cvs_dirs (
   id mediumint(9) NOT NULL auto_increment,
@@ -2685,7 +2685,7 @@ CREATE TABLE artifact_cc (
   date int(11) NOT NULL default '0',
   PRIMARY KEY  (artifact_cc_id),
   KEY artifact_id_idx (artifact_id)
-) TYPE=MyISAM;
+);
 
 #
 # Table structure for table 'artifact_file'
@@ -2919,7 +2919,7 @@ CREATE TABLE wiki_group_list (
 	rank int(11) NOT NULL default '0',
         language_id VARCHAR( 17 ) NOT NULL DEFAULT 'en_US',
 	PRIMARY KEY (id)	
-) TYPE=MyISAM;
+);
 
 # Table for Wiki access logs
 CREATE TABLE wiki_log (
@@ -2930,7 +2930,7 @@ CREATE TABLE wiki_log (
   KEY all_idx (user_id,group_id),
   KEY time_idx (time),
   KEY group_id_idx (group_id)
-) TYPE=MyISAM;
+);
 
 
 # Tables for Wiki attachments support
@@ -3264,7 +3264,7 @@ CREATE TABLE IF NOT EXISTS cross_references (
   target_gid INT(11) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (id)
   
-) TYPE=MyISAM;
+);
 
 
 # --------------------------------------------------------
@@ -3293,7 +3293,7 @@ CREATE TABLE IF NOT EXISTS system_event (
   end_date DATETIME DEFAULT '0000-00-00 00:00:00' NOT NULL,
   log TEXT,
   PRIMARY KEY (id)
-) TYPE=MyISAM;
+);
 
 
 #
