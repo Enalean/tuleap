@@ -22,43 +22,43 @@ substitute() {
   perl -pi -e "s/$2/$replacement/g" $1
 }
 
-# Create /var/tmp/codex_cache dir
+# Create /var/tmp/codendi_cache dir
 mkdir -p ../var/
 mkdir -p ../var/tmp/
-mkdir -p ../var/tmp/codex_cache/
+mkdir -p ../var/tmp/codendi_cache/
 
-# Create /etc/codex/conf and /etc:codex/plugins/IM/etc dir
+# Create /etc/codendi/conf and /etc/codendi/plugins/IM/etc dir
 mkdir -p ../etc/
-mkdir -p ../etc/codex/
-mkdir -p ../etc/codex/conf/
-mkdir -p ../etc/codex/plugins/
-mkdir -p ../etc/codex/plugins/IM/
-mkdir -p ../etc/codex/plugins/IM/etc/
+mkdir -p ../etc/codendi/
+mkdir -p ../etc/codendi/conf/
+mkdir -p ../etc/codendi/plugins/
+mkdir -p ../etc/codendi/plugins/IM/
+mkdir -p ../etc/codendi/plugins/IM/etc/
 
 # Copy dist files to etc dir
-cp src/etc/database.inc.dist ../etc/codex/conf/database.inc
-cp plugins/IM/include/jabbex_api/installation/resources/jabbex_conf.tpl.xml ../etc/codex/plugins/IM/etc/jabbex_conf.xml
-cp src/etc/local.inc.dist ../etc/codex/conf/local.inc
+cp src/etc/database.inc.dist ../etc/codendi/conf/database.inc
+cp plugins/IM/include/jabbex_api/installation/resources/jabbex_conf.tpl.xml ../etc/codendi/plugins/IM/etc/jabbex_conf.xml
+cp src/etc/local.inc.dist ../etc/codendi/conf/local.inc
 
 # Substitute dist values by correct ones
-substitute '../etc/codex/conf/local.inc' '%sys_default_domain%' "$sys_default_domain:$port" 
-substitute '../etc/codex/conf/local.inc' '%sys_ldap_server%' " " 
-substitute '../etc/codex/conf/local.inc' '%sys_org_name%' "Xerox" 
-substitute '../etc/codex/conf/local.inc' '%sys_long_org_name%' "Xerox Corp" 
-substitute '../etc/codex/conf/local.inc' '%sys_fullname%' "$sys_default_domain" 
-substitute '../etc/codex/conf/local.inc' '%sys_win_domain%' " " 
-substitute '../etc/codex/conf/local.inc' '\/usr\/share\/codex' "$codendi_dir/trunk"
-substitute '../etc/codex/conf/local.inc' '\/var\/lib\/codex' "$codendi_dir/var/lib/codex"
-substitute '../etc/codex/conf/local.inc' '\/var\/log\/codex' "$codendi_dir/var/log/codex"
-substitute '../etc/codex/conf/local.inc' '\/etc\/codex' "$codendi_dir/etc/codex"
-substitute '../etc/codex/conf/local.inc' '\/usr\/lib\/codex\/bin' "$codendi_dir/etc/codex"
-substitute '../etc/codex/conf/local.inc' '^\$sys_https_host ' "// \\\$sys_https_host"
-substitute '../etc/codex/conf/local.inc' '\/usr\/share\/htmlpurifier' "/usr/share/htmlpurifier"
-substitute '../etc/codex/conf/local.inc' '\/usr\/share\/jpgraph' "/usr/share/jpgraph"
-substitute '../etc/codex/conf/local.inc' '\/var\/tmp' "$codendi_dir/var/tmp"
+substitute '../etc/codendi/conf/local.inc' '%sys_default_domain%' "$sys_default_domain:$port" 
+substitute '../etc/codendi/conf/local.inc' '%sys_ldap_server%' " " 
+substitute '../etc/codendi/conf/local.inc' '%sys_org_name%' "Xerox" 
+substitute '../etc/codendi/conf/local.inc' '%sys_long_org_name%' "Xerox Corp" 
+substitute '../etc/codendi/conf/local.inc' '%sys_fullname%' "$sys_default_domain" 
+substitute '../etc/codendi/conf/local.inc' '%sys_win_domain%' " " 
+substitute '../etc/codendi/conf/local.inc' '\/usr\/share\/codendi' "$codendi_dir/trunk"
+substitute '../etc/codendi/conf/local.inc' '\/var\/lib\/codendi' "$codendi_dir/var/lib/codendi"
+substitute '../etc/codendi/conf/local.inc' '\/var\/log\/codendi' "$codendi_dir/var/log/codendi"
+substitute '../etc/codendi/conf/local.inc' '\/etc\/codendi' "$codendi_dir/etc/codendi"
+substitute '../etc/codendi/conf/local.inc' '\/usr\/lib\/codendi\/bin' "$codendi_dir/etc/codendi"
+substitute '../etc/codendi/conf/local.inc' '^\$sys_https_host ' "// \\\$sys_https_host"
+substitute '../etc/codendi/conf/local.inc' '\/usr\/share\/htmlpurifier' "/usr/share/htmlpurifier"
+substitute '../etc/codendi/conf/local.inc' '\/usr\/share\/jpgraph' "/usr/share/jpgraph"
+substitute '../etc/codendi/conf/local.inc' '\/var\/tmp' "$codendi_dir/var/tmp"
 
 # Set environment var CODEX_LOCAL_INC
-export CODEX_LOCAL_INC="$WORKSPACE/etc/codex/conf/local.inc"
+export CODEX_LOCAL_INC="$WORKSPACE/etc/codendi/conf/local.inc"
 
 # Create a symbolic link from plugins/tests to codex_tools/tests
 cd $WORKSPACE/trunk/plugins/
@@ -92,25 +92,25 @@ ln -sf /usr/share/hudson/share/fop /usr/local/fop
 ln -sf /usr/share/hudson/share/jimi /usr/local/jimi
 ln -sf /usr/share/hudson/share/saxon /usr/local/saxon
 
-# Create /etc/codex/documentation/user_guide/xml/ and /etc/codex/documentation/cli/xml/ dir
-mkdir -p /etc/codex/
-mkdir -p /etc/codex/documentation/
-mkdir -p /etc/codex/documentation/user_guide/
-mkdir -p /etc/codex/documentation/user_guide/xml/
+# Create /etc/codendi/documentation/user_guide/xml/ and /etc/codendi/documentation/cli/xml/ dir
+mkdir -p /etc/codendi/
+mkdir -p /etc/codendi/documentation/
+mkdir -p /etc/codendi/documentation/user_guide/
+mkdir -p /etc/codendi/documentation/user_guide/xml/
 
-mkdir -p /etc/codex/documentation/cli/
-mkdir -p /etc/codex/documentation/cli/xml/
+mkdir -p /etc/codendi/documentation/cli/
+mkdir -p /etc/codendi/documentation/cli/xml/
 
-# Copy dist files to /etc/codex/documentation
-cp $WORKSPACE/trunk/src/etc/ParametersLocal.dtd.dist /etc/codex/documentation/user_guide/xml/ParametersLocal.dtd
-cp $WORKSPACE/trunk/src/etc/ParametersLocal.cli.dtd.dist /etc/codex/documentation/cli/xml/ParametersLocal.dtd
+# Copy dist files to /etc/codendi/documentation
+cp $WORKSPACE/trunk/src/etc/ParametersLocal.dtd.dist /etc/codendi/documentation/user_guide/xml/ParametersLocal.dtd
+cp $WORKSPACE/trunk/src/etc/ParametersLocal.cli.dtd.dist /etc/codendi/documentation/cli/xml/ParametersLocal.dtd
 
 # Substitute dist values by correct ones
-substitute '/etc/codex/documentation/user_guide/xml/ParametersLocal.dtd' '%sys_default_domain%' "$sys_default_domain" 
-substitute '/etc/codex/documentation/user_guide/xml/ParametersLocal.dtd' '%sys_org_name%' "$sys_org_name" 
-substitute '/etc/codex/documentation/user_guide/xml/ParametersLocal.dtd' '%sys_long_org_name%' "$sys_long_org_name" 
+substitute '/etc/codendi/documentation/user_guide/xml/ParametersLocal.dtd' '%sys_default_domain%' "$sys_default_domain" 
+substitute '/etc/codendi/documentation/user_guide/xml/ParametersLocal.dtd' '%sys_org_name%' "$sys_org_name" 
+substitute '/etc/codendi/documentation/user_guide/xml/ParametersLocal.dtd' '%sys_long_org_name%' "$sys_long_org_name" 
 
-substitute '/etc/codex/documentation/cli/xml/ParametersLocal.dtd' '%sys_default_domain%' "$sys_default_domain" 
+substitute '/etc/codendi/documentation/cli/xml/ParametersLocal.dtd' '%sys_default_domain%' "$sys_default_domain" 
 
 
 # Generate the documentation (User Guide, CLI and programmer's guide)
