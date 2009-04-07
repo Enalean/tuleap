@@ -103,14 +103,8 @@ for ($i = 1; $i <= $argc-1; $i++) {
 
 define("WSDL_URL", $host);
 $LOG = new Log();
-<<<<<<< .working
 $soap = new CodendiSOAP($API_VERSION);
 $modules =& new CLI_ModuleFactory(CODENDI_CLI_DIR."modules/");
-=======
-
-$soap = new CodeXSOAP();
-$modules =& new CLI_ModuleFactory(CODEX_CLI_DIR."modules/");
->>>>>>> .merge-right.r11470
 
 if ($display_help || !$function_index) {		// No function was specified. Show the help.
 	display_help($modules);
@@ -207,4 +201,3 @@ Available functions for the default module:
 EOT;
 */
 ?>
-
