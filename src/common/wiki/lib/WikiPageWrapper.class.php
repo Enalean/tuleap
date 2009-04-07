@@ -160,15 +160,15 @@ Upload:num_rev/filename
 
   function render($lite=false, $full_screen=false) {
     if($lite) {
-      define('THEME', 'CodeX-lite'); 
+      define('THEME', 'Codendi-lite'); 
     }
     if ($full_screen) {
-      define('THEME', 'Codex-light-printer-version');  
+      define('THEME', 'Codendi-light-printer-version');  
     }
 
     IniConfig(PHPWIKI_DIR."/config/config.ini");
     ini_set('include_path', PHPWIKI_DIR.':'.ini_get('include_path'));
-    include(PHPWIKI_DIR."/codex.php");
+    include(PHPWIKI_DIR."/codendi.php");
   }
 
   /**
@@ -195,8 +195,8 @@ Upload:num_rev/filename
       $desc_en = "Initial wiki document";
       switch ($we->getLanguage_id()){
               // English
-	      case 'en_US':   define('WIKI_PGSRC', 'codexpgsrc');
-			define('DEFAULT_WIKI_PGSRC', PHPWIKI_DIR.'/codexpgsrc');
+	      case 'en_US':   define('WIKI_PGSRC', 'codendipgsrc');
+			define('DEFAULT_WIKI_PGSRC', PHPWIKI_DIR.'/codendipgsrc');
 			$we->setName($name_en);
 		        $we->setPage($page_en);
 			$we->setDesc($desc_en);
@@ -209,8 +209,8 @@ Upload:num_rev/filename
 			$we->setDesc($desc_fr);
 			break;
 	      
-	      default : define('WIKI_PGSRC', 'codexpgsrc');
-			define('DEFAULT_WIKI_PGSRC', PHPWIKI_DIR.'/codexpgsrc');
+	      default : define('WIKI_PGSRC', 'codendipgsrc');
+			define('DEFAULT_WIKI_PGSRC', PHPWIKI_DIR.'/codendipgsrc');
 			$we->setName($name_en);
 		        $we->setPage($page_en);
 			$we->setDesc($desc_en);			
@@ -247,8 +247,8 @@ Upload:num_rev/filename
         global $request;
         global $WikiTheme;
           
-        define('WIKI_PGSRC', 'codexpgsrc');
-        define('DEFAULT_WIKI_PGSRC', PHPWIKI_DIR.'/codexpgsrc');
+        define('WIKI_PGSRC', 'codendipgsrc');
+        define('DEFAULT_WIKI_PGSRC', PHPWIKI_DIR.'/codendipgsrc');
         define('ENABLE_EMAIL_NOTIFIFICATION', false);
           
         $request = $this->getRequest();
@@ -258,7 +258,7 @@ Upload:num_rev/filename
         // WikiTheme and those files are required because of the WikiLink
         // function used during upgrade process.
         require_once(PHPWIKI_DIR."/lib/Theme.php");
-        require_once(PHPWIKI_DIR."/themes/CodeX/themeinfo.php");
+        require_once(PHPWIKI_DIR."/themes/Codendi/themeinfo.php");
           
         $check = false;
         CheckActionPageUpdate($request, $check);

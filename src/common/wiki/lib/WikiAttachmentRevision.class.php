@@ -71,13 +71,13 @@ class WikiAttachmentRevision {
     }
 
     function &getDao() {        
-        static $_codex_wikiattachmentrevisiondao_instance;
+        static $_codendi_wikiattachmentrevisiondao_instance;
         
-        if(!$_codex_wikiattachmentrevisiondao_instance) {
-            $_codex_wikiattachmentrevisiondao_instance =& new WikiAttachmentRevisionDao(CodendiDataAccess::instance());
+        if(!$_codendi_wikiattachmentrevisiondao_instance) {
+            $_codendi_wikiattachmentrevisiondao_instance =& new WikiAttachmentRevisionDao(CodendiDataAccess::instance());
         }
 
-        return $_codex_wikiattachmentrevisiondao_instance;
+        return $_codendi_wikiattachmentrevisiondao_instance;
     }
 
     function dbFetch() {

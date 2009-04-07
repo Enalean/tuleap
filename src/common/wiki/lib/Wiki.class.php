@@ -26,7 +26,7 @@ require_once('WikiPage.class.php');
  * 
  * This class is a part of the Model of Wiki Service it aims to be the
  * interface between data corresponding to a Wiki Service (instance of
- * PhpWiki for CodeX) and CodeX application
+ * PhpWiki for Codendi) and Codendi application
  *
  * @package   WikiService
  * @copyright STMicroelectronics, 2005

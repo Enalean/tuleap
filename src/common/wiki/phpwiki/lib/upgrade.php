@@ -115,7 +115,7 @@ function isActionPage($filename) {
 function CheckActionPageUpdate(&$request, $checkonly=false)  {
     echo "<h3>",_("check for necessary ActionPage updates"),"</h3>\n";
     $dbi = $request->getDbh(); 
-    $path = FindFile('codexpgsrc');
+    $path = FindFile('codendipgsrc');
     $pgsrc = new fileSet($path);
     // most actionpages have the same name as the plugin
     $loc_path = FindLocalizedFile('pgsrc');

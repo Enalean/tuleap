@@ -139,7 +139,7 @@ class WikiViews extends Views {
    * Display Wiki Service header
    */
   function header() {
-    $this->html_params['stylesheet'][] = '/wiki/themes/CodeX/phpwiki-codex.css';
+    $this->html_params['stylesheet'][] = '/wiki/themes/Codendi/phpwiki-codendi.css';
     parent::header();
     $this->displayMenu();
   }

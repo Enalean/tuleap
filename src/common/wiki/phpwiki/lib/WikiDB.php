@@ -229,7 +229,7 @@ class WikiDB {
                 $page = new WikiDB_Page($this, $pagename);
                 list($emails, $userids) = $page->getPageChangeEmails($notify);
                 if (!empty($emails)) {
-                    // CodeX specific
+                    // Codendi specific
                     $subject = sprintf(_("Page removed %s"), $pagename);
                     $from    = user_getemail(user_getid());
                     $body    = $subject."\n".
@@ -907,7 +907,7 @@ class WikiDB_Page
         // postgres can't optimize while locked.
         if ((DEBUG & _DEBUG_SQL) or (time() % 5 == 0)) {
             if ($backend->optimize()){
-                // CodeX: don't show this message...
+                // Codendi: don't show this message...
                 //trigger_error(_("Optimizing database"), E_USER_NOTICE);
             }
         }
@@ -1045,7 +1045,7 @@ class WikiDB_Page
                 Iso8601DateTime($meta['mtime']) . "\n";
             $content .= _("New page");
         }
-        // CodeX specific
+        // Codendi specific
         $from    = user_getemail(user_getid());
         $body    = $subject."\n".
                    sprintf(_("Edited by: %s"), $from)."\n".
@@ -1072,7 +1072,7 @@ class WikiDB_Page
                                                                 $to, $meta, $emails, $userids);
         } else {
             $oldname = $this->_pagename;
-            // CodeX specific
+            // Codendi specific
             $subject = sprintf(_("Page rename %s to %s"), $oldname, $to);
             $from    = user_getemail(user_getid());
             $body    = $subject."\n".

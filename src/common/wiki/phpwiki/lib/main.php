@@ -93,7 +93,7 @@ class WikiRequest extends Request {
 
         if ((DEBUG & _DEBUG_SQL) or (time() % 50 == 0)) {
             if ($this->_dbi->_backend->optimize()) {
-                // CodeX: don't show this message...
+                // Codendi: don't show this message...
                 //trigger_error(_("Optimizing database"), E_USER_NOTICE);
             }
         }
@@ -844,7 +844,7 @@ class WikiRequest extends Request {
         if (!empty($this->args['auth']) and !empty($this->args['auth']['userid']))
             return $this->args['auth']['userid'];
 
-        // Codex specific
+        // Codendi specific
         return user_getname();
 
         if ($user = $this->getSessionVar('wiki_user')) {

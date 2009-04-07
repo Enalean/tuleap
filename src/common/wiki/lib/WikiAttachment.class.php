@@ -30,7 +30,7 @@ require_once('common/dao/CodendiDataAccess.class.php');
  *
  * This class allows to manage external ressources in wiki (non-text
  * ressources)
- * It's based on UpLoad plugin in PhpWiki and a CodeX layer in order to manage
+ * It's based on UpLoad plugin in PhpWiki and a Codendi layer in order to manage
  * versionning of files and permissions.
  * Every ressources (attachments) are stored in a directory. There is one
  * ressource directory per project. Every revisions of a file are stored in a
@@ -94,13 +94,13 @@ class WikiAttachment /* implements UGroupPermission */ {
     }
 
     function &getDao() {
-        static $_codex_wikiattachmentdao_instance;
+        static $_codendi_wikiattachmentdao_instance;
         
-        if(!$_codex_wikiattachmentdao_instance) {
-            $_codex_wikiattachmentdao_instance =& new WikiAttachmentDao(CodendiDataAccess::instance());
+        if(!$_codendi_wikiattachmentdao_instance) {
+            $_codendi_wikiattachmentdao_instance =& new WikiAttachmentDao(CodendiDataAccess::instance());
         }
 
-        return $_codex_wikiattachmentdao_instance;
+        return $_codendi_wikiattachmentdao_instance;
     }
 
     /**

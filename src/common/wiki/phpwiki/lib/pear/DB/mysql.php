@@ -111,7 +111,7 @@ class DB_mysql extends DB_common
      */
     function connect($dsninfo, $persistent = false)
     {
-        /// ++ MV add for CodeX: re-use codex DB connexion
+        /// ++ MV add for Codendi: re-use codendi DB connexion
         global $conn;
         $this->_db = $GLOBALS['sys_dbname'];
         $this->dsn = $dsninfo;

@@ -227,7 +227,7 @@ class WikiServiceViews extends WikiViews {
    */
   function header() {
     if(!browser_is_netscape4()) {
-      $this->html_params['stylesheet'][] = '/wiki/themes/CodeX/phpwiki.css';
+      $this->html_params['stylesheet'][] = '/wiki/themes/Codendi/phpwiki.css';
     }
     parent::header();
   }

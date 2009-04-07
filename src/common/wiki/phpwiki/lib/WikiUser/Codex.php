@@ -20,17 +20,17 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class _CodexPassUser
+class _CodendiPassUser
 extends _PassUser
 {
-    function _CodexPassUser($UserName='',$prefs=false) {
+    function _CodendiPassUser($UserName='',$prefs=false) {
         if ($prefs) $this->_prefs = $prefs;
 
         /* Actually, we cannot set preferences here because PhpWiki instanciate
          * _PassUser class before. So we had to modify _PassUser constructor to
-        instanciate CodexUserPreferences instead of UserPreferences.
+        instanciate CodendiUserPreferences instead of UserPreferences.
          * if (!$this->_prefs) {
-            $this->_prefs = new CodexUserPreferences();
+            $this->_prefs = new CodendiUserPreferences();
             $this->hasHomePage();
             $this->getPreferences();
             print_r($this->_prefs);
@@ -46,7 +46,7 @@ extends _PassUser
             $this->_level = WIKIAUTH_ANON;
             break;
         case 'admin':
-            $this->_level = WIKIAUTH_ADMIN; // admin codex
+            $this->_level = WIKIAUTH_ADMIN; // admin Codendi
             break;
         default:
             $this->_level = WIKIAUTH_USER;
@@ -55,7 +55,7 @@ extends _PassUser
         if(user_ismember(GROUP_ID, 'W2'))
             $this->_level = WIKIAUTH_ADMIN; //admin wiki
 
-        $this->_authmethod = 'Codex';
+        $this->_authmethod = 'Codendi';
     }
 
     function userExists() {
@@ -69,10 +69,10 @@ extends _PassUser
     }
 }
 
-class CodexUserPreferences
+class CodendiUserPreferences
 extends UserPreferences {
 
-    function CodexUserPreferences($saved_prefs = false) {
+    function CodendiUserPreferences($saved_prefs = false) {
         $this->UserPreferences($saved_prefs);
         //        $this->set('emailVerified', 1);
         //$this->set('email', user_getemail(user_getid()));

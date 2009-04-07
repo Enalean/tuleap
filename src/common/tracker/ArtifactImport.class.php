@@ -159,7 +159,7 @@ function getUsedFields() {
     $used_fields[$this->lbl_list['cc_comment']] = "";
     
     //special cases for submitted by and submitted on that can be set
-    //"unused" by the user but that will nevertheless be used by CodeX
+    //"unused" by the user but that will nevertheless be used by Codendi
     $submitted_by_field = $this->art_field_fact->getFieldFromName('submitted_by');
     $submitted_by_label = $submitted_by_field->getLabel();
     if (array_key_exists($submitted_by_label, $used_fields) === false)

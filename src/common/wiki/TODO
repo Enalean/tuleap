@@ -14,10 +14,10 @@
 * notifications display
 
 !!! Done
-* move wiki search (find page) in codex search box
+* move wiki search (find page) in Codendi search box
 * change way to attach a file.
 * check config
-* make CodeX-lite theme
+* make Codendi-lite theme
 * move wiki admin link in Admin section of the wiki.
 * check rights
 * verify diffs and clean pgsrc 

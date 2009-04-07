@@ -7,7 +7,7 @@ rcs_id('');
 
 require_once('lib/Theme.php');
 
-$WikiTheme = new Theme('CodeX');
+$WikiTheme = new Theme('Codendi');
 
 // CSS file defines fonts, colors and background images for this
 // style.  The companion '*-heavy.css' file isn't defined, it's just

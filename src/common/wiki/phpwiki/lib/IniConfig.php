@@ -529,7 +529,7 @@ function fixup_static_configs($file) {
         $FieldSeparator = "\xFF";
     else
         $FieldSeparator = "\x81";
-    // CodeX: removed PhpWikiAdministration/SetAcl, PhpWikiAdministration/Chown and PhpWikiAdministration/Chmod
+    // Codendi: removed PhpWikiAdministration/SetAcl, PhpWikiAdministration/Chown and PhpWikiAdministration/Chmod
     $AllActionPages = explode(':',
                               'AllPages:BackLinks:CreatePage:DebugInfo:EditMetaData:FindPage:'
                               .'FullRecentChanges:FullTextSearch:FuzzyPages:InterWikiSearch:'

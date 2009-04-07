@@ -2,7 +2,7 @@
 //apd_set_pprof_trace(); 
 define('PHPWIKI_NOMAIN', true);
 
-function codex_main () {
+function codendi_main () {
     if ( !USE_DB_SESSION )
         validateSessionPath();
 
@@ -80,7 +80,7 @@ if (defined('WIKI_SOAP')   and WIKI_SOAP)   return;
     $validators['%weak'] = true;
     $request->setValidators($validators);
 
-    /* $html_params = array(//'stylesheet' => '/wiki/themes/CodeX/phpwiki-codex.css',
+    /* $html_params = array(//'stylesheet' => '/wiki/themes/Codendi/phpwiki-codendi.css',
                          'group' => 1,
                          'toptab' => 'wiki',
                          'title' => 'yeah');        
@@ -97,6 +97,6 @@ if (defined('WIKI_SOAP')   and WIKI_SOAP)   return;
 
 include(PHPWIKI_DIR."/lib/main.php");
 
-codex_main();
+codendi_main();
 
 ?>

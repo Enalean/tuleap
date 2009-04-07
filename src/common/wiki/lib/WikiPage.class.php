@@ -23,9 +23,9 @@ require_once('WikiPageWrapper.class.php');
 require_once('www/project/admin/permissions.php');
 
 /**
- * CodeX manipulation of WikiPages
+ * Codendi manipulation of WikiPages
  *
- * This class is CodeX representation of wiki_page table in database.
+ * This class is Codendi representation of wiki_page table in database.
  *
  * @package WikiService
  * @copyright STMicroelectronics, 2005

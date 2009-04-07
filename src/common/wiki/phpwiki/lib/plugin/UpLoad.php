@@ -188,7 +188,7 @@ ws[cfh]");
             $message->pushContent(HTML::br(),HTML::br());
         }
 
-        /// {{{ Codex Specific        
+        /// {{{ Codendi Specific        
 
         // URL arguments
         if(array_key_exists('offset', $_REQUEST))
