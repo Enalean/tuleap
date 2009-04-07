@@ -26,25 +26,7 @@
 *
 */
 class SystemEvent_MEMBERSHIP_CREATE extends SystemEvent {
-
-
-    /**
-     * Constructor
-     * @param $id        : SystemEvent DB ID
-     * @param $parameters: Event Parameter 
-     * @param $priority  : Event priority
-     * @param $status    : Event status
-     */
-    function SystemEvent_MEMBERSHIP_CREATE($id, $parameters, $priority, $status ) {
-        $this->id        = $id;
-        $this->type      = SystemEvent::MEMBERSHIP_CREATE;
-        $this->parameters= $parameters;
-        $this->priority  = $priority;
-        $this->status    = $status;
-    }
-
-
-
+    
     /** 
      * Process stored event
      */

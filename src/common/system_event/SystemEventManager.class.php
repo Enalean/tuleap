@@ -117,38 +117,46 @@ class SystemEventManager {
         //$event = constant(strtoupper($event));
         switch ($event) {
         case 'system_check':
-	    // TODO: check that there is no already existing system_check job?
-            $sysevent = new SystemEvent(SystemEvent::SYSTEM_CHECK,$params,SystemEvent::PRIORITY_LOW);
-            $this->dao->store($sysevent);
+            // TODO: check that there is no already existing system_check job?
+            $this->createEvent(SystemEvent::SYSTEM_CHECK,
+                               '',
+                               SystemEvent::PRIORITY_LOW);
             break;
         case 'register_project_creation':
-            $sysevent = new SystemEvent(SystemEvent::PROJECT_CREATE,$params['group_id'],SystemEvent::PRIORITY_MEDIUM);
-            $this->dao->store($sysevent);
+            $this->createEvent(SystemEvent::PROJECT_CREATE,
+                               $params['group_id'],
+                               SystemEvent::PRIORITY_MEDIUM);
             break;
         case 'project_is_deleted':
-            $sysevent = new SystemEvent(SystemEvent::PROJECT_DELETE,$params['group_id'],SystemEvent::PRIORITY_LOW);
-            $this->dao->store($sysevent);
+            $this->createEvent(SystemEvent::PROJECT_DELETE,
+                               $params['group_id'],
+                               SystemEvent::PRIORITY_LOW);
             break;
         case 'project_admin_add_user':
-            $sysevent = new SystemEvent(SystemEvent::MEMBERSHIP_CREATE, $this->concatParameters($params, array('group_id', 'user_id')), SystemEvent::PRIORITY_MEDIUM);
-            $this->dao->store($sysevent);
+            $this->createEvent(SystemEvent::MEMBERSHIP_CREATE, 
+                               $this->concatParameters($params, array('group_id', 'user_id')), 
+                               SystemEvent::PRIORITY_MEDIUM);
             break;
         case 'project_admin_remove_user':
-            $sysevent = new SystemEvent(SystemEvent::MEMBERSHIP_DELETE, $this->concatParameters($params, array('group_id', 'user_id')), SystemEvent::PRIORITY_MEDIUM);
-            $this->dao->store($sysevent);
+            $this->createEvent(SystemEvent::MEMBERSHIP_DELETE, 
+                               $this->concatParameters($params, array('group_id', 'user_id')), 
+                               SystemEvent::PRIORITY_MEDIUM);
             break;
         case 'project_admin_activate_user':
-            $sysevent = new SystemEvent(SystemEvent::USER_CREATE,$params['user_id'],SystemEvent::PRIORITY_MEDIUM);
-            $this->dao->store($sysevent);
+            $this->createEvent(SystemEvent::USER_CREATE,
+                               $params['user_id'],
+                               SystemEvent::PRIORITY_MEDIUM);
             break;
         case 'project_admin_delete_user':
-            $sysevent = new SystemEvent(SystemEvent::USER_DELETE,$params['user_id'],SystemEvent::PRIORITY_LOW);
-            $this->dao->store($sysevent);
+            $this->createEvent(SystemEvent::USER_DELETE,
+                               $params['user_id'],
+                               SystemEvent::PRIORITY_LOW);
             break;
         case 'cvs_is_private':
             $params['cvs_is_private'] = $params['cvs_is_private'] ? 1 : 0;
-            $sysevent = new SystemEvent(SystemEvent::CVS_IS_PRIVATE, $this->concatParameters($params, array('group_id', 'cvs_is_private')), SystemEvent::PRIORITY_MEDIUM);
-            $this->dao->store($sysevent);
+            $this->createEvent(SystemEvent::CVS_IS_PRIVATE, 
+                               $this->concatParameters($params, array('group_id', 'cvs_is_private')), 
+                               SystemEvent::PRIORITY_MEDIUM);
             break;
         case 'project_admin_ugroup_creation':
         case 'project_admin_ugroup_creation':
@@ -156,10 +164,9 @@ class SystemEventManager {
         case 'project_admin_ugroup_remove_user':
         case 'project_admin_ugroup_add_user':
         case 'project_admin_ugroup_deletion':
-            $sysevent = new SystemEvent(SystemEvent::UGROUP_MODIFY,
-                                        $this->concatParameters($params, array('group_id', 'ugroup_id')),
-                                        SystemEvent::PRIORITY_MEDIUM);
-            $this->dao->store($sysevent);
+            $this->createEvent(SystemEvent::UGROUP_MODIFY,
+                               $this->concatParameters($params, array('group_id', 'ugroup_id')),
+                               SystemEvent::PRIORITY_MEDIUM);
             break;
         case 'project_admin_remove_user_from_project_ugroups':
             // multiple ugroups
@@ -167,31 +174,49 @@ class SystemEventManager {
             // only needs to be called once per project 
             //(TODO: cache information to avoid multiple file edition? Or consume all other UGROUP_MODIFY events?)
             foreach ($params['ugroups'] as $ugroup_id) {
-                $sysevent = new SystemEvent(SystemEvent::UGROUP_MODIFY,
-                                            $this->concatParameters($params, array('group_id', 'ugroup_id')),
-                                            SystemEvent::PRIORITY_MEDIUM);
-                $this->dao->store($sysevent);
+                $this->createEvent(SystemEvent::UGROUP_MODIFY,
+                                   $this->concatParameters($params, array('group_id', 'ugroup_id')),
+                                   SystemEvent::PRIORITY_MEDIUM);
             }
             break;
         case 'project_is_private':
             $params['project_is_private'] = $params['project_is_private'] ? 1 : 0;
-            $sysevent = new SystemEvent(SystemEvent::PROJECT_IS_PRIVATE, $this->concatParameters($params, array('group_id', 'project_is_private')), SystemEvent::PRIORITY_MEDIUM);
-            $this->dao->store($sysevent);
+            $this->createEvent(SystemEvent::PROJECT_IS_PRIVATE, 
+                               $this->concatParameters($params, array('group_id', 'project_is_private')), 
+                               SystemEvent::PRIORITY_MEDIUM);
             break;
         case 'mail_list_create':
-            $sysevent = new SystemEvent(SystemEvent::MAILING_LIST_CREATE,$params['group_list_id'],SystemEvent::PRIORITY_MEDIUM);
-            $this->dao->store($sysevent);
+            $this->createEvent(SystemEvent::MAILING_LIST_CREATE,
+                               $params['group_list_id'],
+                               SystemEvent::PRIORITY_MEDIUM);
             break;
         case 'mail_list_delete':
-            $sysevent = new SystemEvent(SystemEvent::MAILING_LIST_DELETE,$params['group_list_id'],SystemEvent::PRIORITY_LOW);
-            $this->dao->store($sysevent);
+            $this->createEvent(SystemEvent::MAILING_LIST_DELETE,
+                               $params['group_list_id'],
+                               SystemEvent::PRIORITY_LOW);
             break;
         default:
             break;
         }
     }
-
-
+    
+    /**
+     * Create a new event, store it in the db and send notifications
+     */
+    protected function createEvent($type, $parameters, $priority) {
+        if ($id = $this->dao->store($type, $parameters, $priority, SystemEvent::STATUS_NEW, $_SERVER['REQUEST_TIME'])) {
+            $sysevent = new SystemEvent($id, 
+                                        $type, 
+                                        $parameters,
+                                        $priority, 
+                                        SystemEvent::STATUS_NEW, 
+                                        $_SERVER['REQUEST_TIME'], 
+                                        null, 
+                                        null,
+                                        null);
+            $sysevent->notify();
+        }
+    }
     
     /**
      * Concat parameters as $params['key1'] . SEPARATOR . $params['key3'] ...
@@ -213,9 +238,9 @@ class SystemEventManager {
         while (($dar=$this->dao->checkOutNextEvent()) != null) {
             if ($row = $dar->getRow()) {
                 //echo "Processing event ".$row['id']." (".$row['type'].")\n";
-
+                $sysevent = null;
                 switch ($row['type']) {
-		case SystemEvent::SYSTEM_CHECK:
+                case SystemEvent::SYSTEM_CHECK:
                 case SystemEvent::PROJECT_CREATE:
                 case SystemEvent::PROJECT_DELETE:
                 case SystemEvent::MEMBERSHIP_CREATE:
@@ -228,17 +253,25 @@ class SystemEventManager {
                 case SystemEvent::CVS_IS_PRIVATE:
                 case SystemEvent::PROJECT_IS_PRIVATE:
                     $klass = 'SystemEvent_'. $row['type'];
-                    $sysevent = new $klass($row['id'], $row['parameters'], $row['priority'], $row['status']);
+                    $sysevent = new $klass($row['id'], 
+                                           $row['type'], 
+                                           $row['parameters'], 
+                                           $row['priority'],
+                                           $row['status'], 
+                                           $row['create_date'], 
+                                           $row['process_date'], 
+                                           $row['end_date'],
+                                           $row['log']);
                     break;
                 default:              
-                    $sysevent = null;
                     break;
                 }
 
                 // Process $sysevent
-                if (isset($sysevent) && ($sysevent)) {
+                if ($sysevent) {
                     $sysevent->process();
                     $this->dao->close($sysevent);
+                    $sysevent->notify();
                     // Output errors???
                 }
             }
@@ -257,7 +290,7 @@ class SystemEventManager {
         if (BackendSVN::instance()->getSVNApacheConfNeedUpdate()) {
             BackendSVN::instance()->generateSVNApacheConf();
             // TODO: need to refresh apache (reload)
-	    system('/sbin/service httpd reload');
+            system('/sbin/service httpd reload');
         }
     }
     

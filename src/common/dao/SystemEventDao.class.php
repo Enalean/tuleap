@@ -36,17 +36,26 @@ class SystemEventDao extends DataAccessObject {
 
     /** 
      * Create new SystemEvent and store it in the DB
-     * @param $sysevent : SystemEvent object
      * @return true if there is no error
      */
-    function store($sysevent) {
-        $sql = sprintf("INSERT INTO system_event (type, parameters, priority, status, create_date) VALUES (%s, %s, %s, %s, FROM_UNIXTIME(%s))",
-                       $this->da->quoteSmart($sysevent->getType()),
-                       $this->da->quoteSmart($sysevent->getParameters()),
-                       $this->da->quoteSmart($sysevent->getPriority()),
-                       $this->da->quoteSmart($sysevent->getStatus()),
-                       $this->da->quoteSmart(time()));
-        return $this->update($sql);
+    function store($type, $parameters, $priority,$status, $create_date) {
+        $sql = sprintf("INSERT INTO system_event (type, parameters, priority, status, create_date) VALUES (%s, %s, %d, %s, FROM_UNIXTIME(%d))",
+                       $this->da->quoteSmart($type),
+                       $this->da->quoteSmart($parameters),
+                       $this->da->escapeInt($priority),
+                       $this->da->quoteSmart($status),
+                       $this->da->escapeInt($create_date));
+        
+        $inserted = $this->update($sql);
+        if ($inserted) {
+            $dar =& $this->retrieve("SELECT LAST_INSERT_ID() AS id");
+            if ($row = $dar->getRow()) {
+                $inserted = $row['id'];
+            } else {
+                $inserted = $dar->isError();
+            }
+        } 
+        return $inserted;
     }
 
      /** 
@@ -55,12 +64,16 @@ class SystemEventDao extends DataAccessObject {
      * @return true if there is no error
      */
     function close($sysevent) {
-        $sql = sprintf("UPDATE system_event SET status=%s, log=%s, end_date=FROM_UNIXTIME(%s) WHERE id=%s",
+        $now = time();
+        $sql = sprintf("UPDATE system_event SET status=%s, log=%s, end_date=FROM_UNIXTIME(%d) WHERE id=%d",
                        $this->da->quoteSmart($sysevent->getStatus()),
                        $this->da->quoteSmart($sysevent->getLog()),
-                       $this->da->quoteSmart(time()),
-                        $this->da->quoteSmart($sysevent->getId()));
-        return $this->update($sql);
+                       $this->da->escapeInt($now),
+                       $this->da->escapeInt($sysevent->getId()));
+        if ($updated = $this->update($sql)) {
+            $sysevent->setEndDate($now);
+        }
+        return $updated;
     }
 
    /**

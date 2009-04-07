@@ -26,25 +26,7 @@
 *
 */
 class SystemEvent_MEMBERSHIP_DELETE extends SystemEvent {
-
-
-    /**
-     * Constructor
-     * @param $id        : SystemEvent DB ID
-     * @param $parameters: Event Parameter 
-     * @param $priority  : Event priority
-     * @param $status    : Event status
-     */
-    function SystemEvent_MEMBERSHIP_DELETE($id, $parameters, $priority, $status ) {
-        $this->id        = $id;
-        $this->type      = SystemEvent::MEMBERSHIP_DELETE;
-        $this->parameters= $parameters;
-        $this->priority  = $priority;
-        $this->status    = $status;
-    }
-
-
-
+    
     /** 
      * Process stored event
      */

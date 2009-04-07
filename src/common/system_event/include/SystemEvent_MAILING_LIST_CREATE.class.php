@@ -26,23 +26,7 @@
 *
 */
 class SystemEvent_MAILING_LIST_CREATE extends SystemEvent {
-
-
-    /**
-     * Constructor
-     * @param $id        : SystemEvent DB ID
-     * @param $parameters: Event Parameter 
-     * @param $priority  : Event priority
-     * @param $status    : Event status
-     */
-    function __construct($id, $parameters, $priority, $status ) {
-        parent::__construct(SystemEvent::MAILING_LIST_CREATE, $parameters, $priority);
-        $this->id        = $id;
-        $this->status    = $status;
-    }
-
-
-
+    
     /** 
      * Process stored event
      */

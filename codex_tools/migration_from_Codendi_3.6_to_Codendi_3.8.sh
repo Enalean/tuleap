@@ -344,9 +344,9 @@ CREATE TABLE IF NOT EXISTS system_event (
   parameters TEXT,
   priority TINYINT(1) NOT NULL default '0',
   status  ENUM( 'NEW', 'RUNNING', 'DONE', 'ERROR', 'WARNING' ) NOT NULL DEFAULT 'NEW',
-  create_date DATETIME DEFAULT '0000-00-00 00:00:00' NOT NULL,
-  process_date DATETIME DEFAULT '0000-00-00 00:00:00' NOT NULL,
-  end_date DATETIME DEFAULT '0000-00-00 00:00:00' NOT NULL,
+  create_date DATETIME NOT NULL,
+  process_date DATETIME NULL,
+  end_date DATETIME NULL,
   log TEXT,
   PRIMARY KEY (id)
 ) TYPE=MyISAM;

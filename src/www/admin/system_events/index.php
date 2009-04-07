@@ -53,7 +53,7 @@ echo '<h2>'.  $hp->purify($title, CODENDI_PURIFIER_CONVERT_HTML)  .'</h2>';
 
 $se = SystemEventManager::instance();
 $offset = $request->get('offset') ? (int)$request->get('offset') : 0;
-$limit  = 20;
+$limit  = 50;
 echo $se->fetchLastEventsStatus($offset, $limit, true);
 
 echo '<h3>'. $Language->getText('admin_system_events', 'notifications') .'</h3>';

@@ -20,6 +20,8 @@
  * 
  */
 
+require_once('common/dao/SystemEventsFollowersDao.class.php');
+require_once('common/mail/Mail.class.php');
 
 /**
 * System Event class
@@ -27,13 +29,15 @@
 */
 class SystemEvent {
 
-    var $id;
-    var $type;
-    var $parameters;
-    var $priority;
-    var $status;
-
-    var $log;
+    protected $id;
+    protected $type;
+    protected $parameters;
+    protected $priority;
+    protected $status;
+    protected $create_date;
+    protected $process_date;
+    protected $end_date;
+    protected $log;
 
     // Define event types
     const SYSTEM_CHECK          = "SYSTEM_CHECK";
@@ -67,23 +71,32 @@ class SystemEvent {
     
     /**
      * Constructor
-     * @param $type      : SystemeEvent type (const defined in this class)
-     * @param $parameters: Event Parameter (e.g. group_id if event type is PROJECT_CREATE)
-     * @param $priority  : Event priority (PRIORITY_HIGH | PRIORITY_MEDIUM | PRIORITY_LOW)
+     * @param int $id The id of the event
+     * @param string $type SystemEvent type (const defined in this class)
+     * @param string $parameters Event Parameter (e.g. group_id if event type is PROJECT_CREATE)
+     * @param int $priority Event priority (PRIORITY_HIGH | PRIORITY_MEDIUM | PRIORITY_LOW)
+     * @param string $status Event status (STATUS_NEW | STATUS_RUNNING | STATUS_DONE | STATUS_WARNING | STATUS_ERROR)
+     * @param string $create_date
+     * @param string $process_date
+     * @param string $end_date
+     * @param string $log
      */
-    function SystemEvent($type, $parameters, $priority ) {
-        $this->type      = $type;
-        $this->parameters= $parameters;
-        $this->priority  = $priority;
-        $this->status    = SystemEvent::STATUS_NEW;
+    function SystemEvent($id, $type, $parameters, $priority, $status, $create_date, $process_date, $end_date, $log) {
+        $this->id           = $id;
+        $this->type         = $type;
+        $this->parameters   = $parameters;
+        $this->priority     = $priority;
+        $this->status       = $status;
+        $this->create_date  = $create_date;
+        $this->process_date = $process_date;
+        $this->end_date     = $end_date;
+        $this->log          = $log;
     }
 
     // Getters
 
     function getId() {
-        if (isset($this->id)) {
-            return $this->id;
-        } else return 0;
+        return $this->id;
     }
 
     function getType() {
@@ -118,7 +131,26 @@ class SystemEvent {
         $this->log=$log;
     }
 
-
+    function getCreateDate() {
+        return $this->create_date;
+    }
+    
+    function getProcessDate() {
+        return $this->process_date;
+    }
+    
+    function getEndDate() {
+        return $this->end_date;
+    }
+    
+    public function setProcessDate($process_date) {
+        $this->process_date = $process_date;
+    }
+    
+    public function setEndDate($end_date) {
+        $this->end_date = $end_date;
+    }
+    
     /**
      * Checks if the given value represents integer
      * is_int() won't work on string containing integers...
@@ -210,6 +242,38 @@ class SystemEvent {
         }
         
         return $project;
+    }
+    
+    /**
+     * Notify people that listen to the status of the event
+     */
+    public function notify() {
+        $dao = new SystemEventsFollowersDao(CodendiDataAccess::instance());
+        $listeners = array();
+        foreach($dao->searchByType($this->getStatus()) as $row) {
+            $listeners = array_merge($listeners, explode(',', $row['emails']));
+        }
+        if (count($listeners)) {
+            $listeners = array_unique($listeners);
+            $m = new Mail();
+            $m->setFrom($GLOBALS['sys_noreply']);
+            $m->setTo(implode(',', $listeners));
+            $m->setSubject('['. $this->getstatus() .'] '. $this->getType());
+            $m->setBody("
+Event:        #{$this->getId()}
+Type:         {$this->getType()}
+Parameters:   {$this->getParameters()}
+Priority:     {$this->getPriority()}
+Status:       {$this->getStatus()}
+Log:          {$this->getLog()}
+Create Date:  {$this->getCreateDate()}
+Process Date: {$this->getProcessDate()}
+End Date:     {$this->getEndDate()}
+---------------
+<". get_server_url() ."/admin/system_events/>
+");
+            $m->send();
+        }
     }
 }
 
