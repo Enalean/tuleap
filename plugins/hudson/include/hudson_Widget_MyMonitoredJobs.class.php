@@ -38,7 +38,7 @@ class hudson_Widget_MyMonitoredJobs extends HudsonOverviewWidget {
         
         $this->_use_global_status = user_get_preference('plugin_hudson_use_global_status');
         if ($this->_use_global_status === false) {
-            $this->_use_global_status = "true";
+            $this->_use_global_status = "false";
             user_set_preference('plugin_hudson_use_global_status', $this->_use_global_status);
         }
         
