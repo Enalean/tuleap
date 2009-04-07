@@ -1011,6 +1011,8 @@ NameVirtualHost %sys_ip_address%:80
  # Include all configuration files from conf.d (php, subversion, etc.)
  # (also included from conf/ssl.conf)
  Include conf.d/*.conf
+ LogFormat "%t %u %h %U %{SVN-ACTION}e %s" svn
+ CustomLog logs/svnlog svn env=SVN-ACTION
 </VirtualHost>
 
 
@@ -1028,6 +1030,8 @@ Include conf/ssl.conf
 <VirtualHost %sys_ip_address%:80>
         ServerName %sys_default_domain%
         ServerAlias svn.*.%sys_default_domain%
+        LogFormat "%t %u %h %U %{SVN-ACTION}e %s" svn
+        CustomLog logs/svnlog svn env=SVN-ACTION
         Include conf.d/codex_svnroot.conf
 </VirtualHost>
 
