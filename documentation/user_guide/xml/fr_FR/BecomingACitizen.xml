@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!--
 //
-// Copyright (c) Xerox Corporation, CodeX, Codendi 2007-2008.
+// Copyright (c) Xerox Corporation, Codendi 2007-2008.
 // This file is licensed under the GNU General Public License version 2. See the file COPYING. 
 //
 //
@@ -384,7 +384,7 @@
       
       <listitem>
       <para><emphasis role="bold">Format de date CSV</emphasis>:
-          CodeX vous permet d'importer et d'exporter des données de vos projets
+          &SYS_PRODUCT_NAME; vous permet d'importer et d'exporter des données de vos projets
           (Voir <xref linkend="ProjectDataExport" /> pour plus de détails).
           Le format d'import et d'export utilisé est le format CSV.
           Comme la norme CSV n'est pas implémentée de la même manière dans tous les 

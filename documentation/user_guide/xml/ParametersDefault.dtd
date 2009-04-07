@@ -1,9 +1,9 @@
 <!--
 //
-// Copyright (c) Xerox Corporation, CodeX, Codendi 2007-2008.
+// Copyright (c) Xerox Corporation, Codendi 2007-2008.
 // This file is licensed under the GNU General Public License version 2. See the file COPYING. 
 //
-// Originally written by Laurent Julliard 2003, CodeX Team, Xerox
+// Originally written by Laurent Julliard 2003, Codendi Team, Xerox
 //
 -->
 
@@ -22,6 +22,7 @@ instead and redefine your entities there. If this file doesn't exist create it.-
 <!ENTITY SYS_DOWNLOAD_HOST "download.codex.xerox.com">
 <!ENTITY SYS_SHELL_HOST "shell.codex.xerox.com">
 <!ENTITY SYS_LISTS_HOST "lists.codex.xerox.com">
+<!ENTITY SYS_DATA_DIR "/var/lib/codex">
 <!ENTITY FTPINCOMING_DIR "/home/ftp/incoming">
 <!ENTITY FTPFILES_DIR "/home/ftp/codex">
 <!ENTITY SYS_ORG_NAME "Xerox">

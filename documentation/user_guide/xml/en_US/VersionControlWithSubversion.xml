@@ -1,10 +1,7 @@
 <!--
 //
-// Copyright (c) Xerox Corporation, CodeX, Codendi 2007-2008.
+// Copyright (c) Xerox Corporation, Codendi 2007-2008.
 // This file is licensed under the GNU General Public License version 2. See the file COPYING. 
-//
-//
-// Last edition by Benjamin Ninassi 2008, &SYS_PRODUCT_NAME; Team, Xerox
 //
 -->
   <chapter id="VersionControlWithSubversion">
@@ -321,7 +318,7 @@
     <section id="TheSubversionRepositoryStructure">
       <title>The Subversion Repository Structure</title>
 
-      <para>When a new Codex project is created, it comes with a
+      <para>When a new &SYS_PRODUCT_NAME; project is created, it comes with a
       virgin subversion repository that the project team must
       populate. Due to the fact that Subversion manages branching and
       tagging through its virtual filesystem (and not through labels
@@ -799,7 +796,7 @@ members = member1,member2,...,memberN
 @members = rw
       </programlisting>
       <para>will indeed prevent registered users from reading the '/secret' directory.</para>
-      <para>If you really need to prevent access to the whole repository, you should contact a &SYS_PRODUCT_NAME; administrator (s/he will create a .CODEX_PRIVATE file in the repository).</para>
+      <para>If you really need to prevent access to the whole repository, you should contact a &SYS_PRODUCT_NAME; administrator.</para>
 	<para>For more information about the format of this file you
 	should refer to the Subversion Book (see <xref
 	linkend="SubversionReferences" />).</para>

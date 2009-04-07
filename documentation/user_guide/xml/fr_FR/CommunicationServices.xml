@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!--
 //
-// Copyright (c) Xerox Corporation, CodeX, Codendi 2007-2008.
+// Copyright (c) Xerox Corporation, Codendi 2007-2008.
 // This file is licensed under the GNU General Public License version 2. See the file COPYING. 
 //
 //
@@ -241,7 +241,7 @@ http://&SYS_LISTS_HOST;/mailman/admin/nomliste
         <para>Le status d'un utilisateur utilisant un client Jabber (en ligne, occupé, absent)
         est affiché dans &SYS_PRODUCT_NAME;.</para>
         
-        <section id="JabberOnCodexWebPage">
+        <section id="JabberOnWebPage">
         <title>Intégration de la messagerie instantanée dans &SYS_PRODUCT_NAME;</title>
         
         <para>Un certain nombre d'informations concernant la messagerie instantanée 

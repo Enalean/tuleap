@@ -2,7 +2,7 @@
 
 <!--
 //
-// Copyright (c) Xerox Corporation, CodeX, Codendi 2007-2008.
+// Copyright (c) Xerox Corporation, Codendi 2007-2008.
 // This file is licensed under the GNU General Public License version 2. See the file COPYING. 
 //
 //
@@ -323,7 +323,7 @@
 
 <xsl:template name="book.titlepage.recto">
 
-  <!-- CX-SBT: Add a block to draw a rectangle + the Codex logo -->
+  <!-- CX-SBT: Add a block to draw a rectangle + the Codendi logo -->
   <fo:block xmlns:fo="http://www.w3.org/1999/XSL/Format" border-after-color="red" 
 		    border-after-width="0.1em" 
 		    border-before-color="red" 

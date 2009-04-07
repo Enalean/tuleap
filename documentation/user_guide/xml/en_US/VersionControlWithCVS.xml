@@ -1,6 +1,6 @@
 <!--
 //
-// Copyright (c) Xerox Corporation, CodeX, Codendi 2007-2008.
+// Copyright (c) Xerox Corporation, Codendi 2007-2008.
 // This file is licensed under the GNU General Public License version 2. See the file COPYING. 
 //
 //
@@ -160,7 +160,7 @@
         </listitem>
         
         <listitem>
-          <para>Setup the connection to the Codex project: 
+          <para>Setup the connection to the &SYS_PRODUCT_NAME; project: 
           <literal>Admin->Preferences</literal>
           </para><para>Enter the CVSROOT:</para><para>
           <literal>:pserver:username@cvs.projectname.&SYS_DEFAULT_DOMAIN;:/cvsroot/projectname</literal>
@@ -181,7 +181,7 @@
         </listitem> 
         
         <listitem>
-          <para>Checkout the source code from the CVS repository of your Codex project:</para>
+          <para>Checkout the source code from the CVS repository of your &SYS_PRODUCT_NAME; project:</para>
           <para><literal>Create->Check out module</literal></para>
           <para><literal>Enter the module name and path on the server:</literal></para>
           <para>type the path of the source code you want to extract. In general it's the name of the top directory of your CVS repository.</para>

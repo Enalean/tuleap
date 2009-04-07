@@ -1,11 +1,8 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!--
 //
-// Copyright (c) Xerox Corporation, CodeX, Codendi 2007-2008.
+// Copyright (c) Xerox Corporation, Codendi 2007-2008.
 // This file is licensed under the GNU General Public License version 2. See the file COPYING. 
-//
-//
-// Last edition by Benjamin Ninassi 2008, &SYS_PRODUCT_NAME; Team, Xerox
 //
 -->
   <chapter id="VersionControlWithSubversion">
@@ -841,7 +838,7 @@ members = membre1,membre2,...,membreN
 @members = rw
       </programlisting>
       <para>empèchera effectivement aux utilisateurs non membres du projet d'accéder au repertoire '/secret'.</para>
-      <para>Si vous souhaitez néanmoins interdire l'accès à la totalité du dépôt, vous devrez contacter un administrateur &SYS_PRODUCT_NAME; (il créera un fichier .CODEX_PRIVATE dans le dépôt).</para>
+      <para>Si vous souhaitez néanmoins interdire l'accès à la totalité du dépôt, vous devrez contacter un administrateur &SYS_PRODUCT_NAME;.</para>
 	<para>Pour plus d'information concernant le format de ce
 	fichier référez-vous aux ouvrages sur Subversion (voir <xref
 	linkend="SubversionReferences" />).</para>

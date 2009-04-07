@@ -4,12 +4,11 @@
 
 <!--
 //
-// Copyright (c) Xerox Corporation, CodeX, Codendi 2007-2008.
+// Copyright (c) Xerox Corporation, Codendi 2007-2008.
 // This file is licensed under the GNU General Public License version 2. See the file COPYING. 
 //
-// $Id: 
 //
-//	Originally written by Stephane Bouhet 2002, CodeX Team, Xerox
+//	Originally written by Stephane Bouhet 2002, Codendi Team, Xerox
 //
 -->
 

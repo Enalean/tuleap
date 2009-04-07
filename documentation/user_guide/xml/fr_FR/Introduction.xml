@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!--
 //
-// Copyright (c) Xerox Corporation, CodeX, Codendi 2007-2008.
+// Copyright (c) Xerox Corporation, Codendi 2007-2008.
 // This file is licensed under the GNU General Public License version 2. See the file COPYING. 
 //
 //
@@ -10,7 +10,7 @@
   <chapter id="Introduction">
     <title>Introduction</title>
 
-    <para>L'objectif de l'initiative Codendi (initialement Code eXchange = CodeX) de
+    <para>L'objectif de l'initiative &SYS_PRODUCT_NAME; (initialement Code eXchange) de
     &SYS_ORG_NAME; est de transposer et d'appliquer les principes du
     développement Open Source dans notre propre environnement
     d'entreprise. L'établissement du développement logiciel et la

@@ -1,6 +1,6 @@
 <!--
 //
-// Copyright (c) Xerox Corporation, CodeX, Codendi 2007-2008.
+// Copyright (c) Xerox Corporation, Codendi 2007-2008.
 // This file is licensed under the GNU General Public License version 2. See the file COPYING. 
 //
 //
@@ -96,7 +96,7 @@ newgrp projectname
             <para>Project Members access: use an ftp client to connect
             to <literal>&SYS_DOWNLOAD_HOST;</literal>. Use &SYS_PRODUCT_NAME;
             login and password and then type <literal>cd
-            /var/lib/codex/ftp/pub/projectname</literal>
+            &SYS_DATA_DIR;/ftp/pub/projectname</literal>
             to access the FTP Anonymous space. From there project
             members have both read and write access which means that
             they can upload files.</para>
@@ -136,7 +136,7 @@ newgrp projectname
         a CC address or a dependency to an artifact), and the mail notification is 
         not active with the CLI.
       </para>
-      <para>The full CLI documentation is available at <ulink url="http://&SYS_DEFAULT_DOMAIN;/documentation/cli/pdf/en_US/CodeX_CLI.pdf">http://&SYS_DEFAULT_DOMAIN;/documentation/cli/pdf/en_US/CodeX_CLI.pdf</ulink>
+      <para>The full CLI documentation is available at <ulink url="http://&SYS_DEFAULT_DOMAIN;/documentation/cli/pdf/en_US/Codendi_CLI.pdf">http://&SYS_DEFAULT_DOMAIN;/documentation/cli/pdf/en_US/Codendi_CLI.pdf</ulink>
       </para>
     </section>
 
@@ -182,7 +182,7 @@ newgrp projectname
             <step><para>Enjoy &SYS_PRODUCT_NAME;!</para></step>
         </procedure>
       </para>
-      <para>The full Eclipse plugin documentation is available at <ulink url="http://&SYS_DEFAULT_DOMAIN;/documentation/eclipse/pdf/en_US/CodeX_Eclipse_Plugin_User_Guide.pdf">http://&SYS_DEFAULT_DOMAIN;/documentation/eclipse/pdf/en_US/CodeX_Eclipse_Plugin_User_Guide.pdf</ulink>
+      <para>The full Eclipse plugin documentation is available at <ulink url="http://&SYS_DEFAULT_DOMAIN;/documentation/eclipse/pdf/en_US/Codendi_Eclipse_Plugin_User_Guide.pdf">http://&SYS_DEFAULT_DOMAIN;/documentation/eclipse/pdf/en_US/Codendi_Eclipse_Plugin_User_Guide.pdf</ulink>
       </para>
     </section>
     

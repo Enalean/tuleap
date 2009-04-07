@@ -1,6 +1,6 @@
 <!--
 //
-// Copyright (c) Xerox Corporation, CodeX, Codendi 2007-2008.
+// Copyright (c) Xerox Corporation, Codendi 2007-2008.
 // This file is licensed under the GNU General Public License version 2. See the file COPYING. 
 //
 //
@@ -209,7 +209,7 @@ http://&SYS_LISTS_HOST;/mailman/admin/listname
         <para>The status of a user using a Jabber client (online, busy, away) is 
         displayed in &SYS_PRODUCT_NAME;.</para>
         
-        <section id="JabberOnCodexWebPage">
+        <section id="JabberOnWebPage">
         <title>Jabber Related Information on the &SYS_PRODUCT_NAME; Web Page</title>
         
         <para>&SYS_PRODUCT_NAME; provides several bits of information regarding the Instant 
