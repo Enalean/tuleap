@@ -551,7 +551,16 @@ class WidgetLayoutManager {
         $res = db_query($sql);
         echo db_error();
         $column_id = db_result($res, 0, 'id');
-        $column_id = $column_id ? $column_id : 1;
+        if (!$column_id) {
+            $sql = "SELECT r.rank AS rank, c.id as id
+                    FROM layouts_rows AS r 
+                         INNER JOIN layouts_rows_columns AS c
+                         ON (c.layout_row_id = r.id)
+                    WHERE r.layout_id = $layout_id
+                    ORDER BY rank, id";
+            $res = db_query($sql);
+            $column_id = db_result($res, 0, 'id');
+        }
         
         //content_id
         if ($widget->isUnique()) {
