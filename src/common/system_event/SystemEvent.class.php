@@ -87,9 +87,9 @@ class SystemEvent {
         $this->parameters   = $parameters;
         $this->priority     = $priority;
         $this->status       = $status;
-        $this->create_date  = $create_date;
-        $this->process_date = $process_date;
-        $this->end_date     = $end_date;
+        $this->create_date  = is_numeric($create_date) ? date('Y-m-d H:i:s', $create_date) : $create_date;
+        $this->process_date = is_numeric($process_date) ? date('Y-m-d H:i:s', $process_date) : $process_date;
+        $this->end_date     = is_numeric($end_date) ? date('Y-m-d H:i:s', $end_date) : $end_date;
         $this->log          = $log;
     }
 
@@ -144,11 +144,11 @@ class SystemEvent {
     }
     
     public function setProcessDate($process_date) {
-        $this->process_date = $process_date;
+        $this->process_date = is_numeric($process_date) ? date('Y-m-d H:i:s', $process_date) : $process_date;
     }
     
     public function setEndDate($end_date) {
-        $this->end_date = $end_date;
+        $this->end_date = is_numeric($end_date) ? date('Y-m-d H:i:s', $end_date) : $end_date;
     }
     
     /**
