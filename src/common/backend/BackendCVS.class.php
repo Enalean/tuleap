@@ -417,27 +417,27 @@ class BackendCVS extends Backend {
         $cvsroot = $GLOBALS['cvs_prefix'] . PATH_SEPARATOR . $project->getUnixName(false);
         $is_private = !$project->isPublic() || $project->isCVSPrivate();
         if ($is_private) {
-	    $perms=fileperms($cvsroot);
-	    // 'others' should have no right on the repository
-	    // TODO: test formula :-)
-	    if (($perms & 0x0004) || ($perms & 0x0002) || ($perms & 0x0001) || ($perms & 0x0200)) {
-                return false;
-	    }
-	}
-	return true;
+            $perms = fileperms($cvsroot);
+            // 'others' should have no right on the repository
+            // TODO: test formula :-)
+            if (($perms & 0x0004) || ($perms & 0x0002) || ($perms & 0x0001) || ($perms & 0x0200)) {
+                    return false;
+            }
+        }
+        return true;
     }
 
 
 
     //  Deleting files older than 2 hours in var/run/log_accum that contain 'files' (they have not been deleted due to commit abort) 
     public function cleanup() {
-      //print("Deleting old files in /var/run/log_accum");
-      $TMPDIR = "/var/run/log_accum"; //TODO: should be in local.inc?
-      // TODO: @old_files=`find $TMPDIR -name "*.files.*" -amin +120 `;
-      foreach ($filelist as $file){
-	//chomp; TODO?
-	unlink($file);
-      }
+        //print("Deleting old files in /var/run/log_accum");
+        $TMPDIR = "/var/run/log_accum"; //TODO: should be in local.inc?
+        // TODO: @old_files=`find $TMPDIR -name "*.files.*" -amin +120 `;
+        foreach ($filelist as $file) {
+            //chomp; TODO?
+            unlink($file);
+        }
     }
 }
 
