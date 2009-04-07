@@ -248,13 +248,13 @@ if($update_fields_desc_id){
 	
 	echo "<form action='desc_fields_edit.php' method='post'>";
 	echo "<p>".$Language->getText('admin_desc_fields','desc_name')." : ";
-	echo "<br><input type='text' size='71' maxlen='255' name='form_name' value='". $hp->purify($desc_name, CODEX_CONVERT_HTML) ."'></br></p>";
+	echo "<br><input type='text' size='71' maxlen='255' name='form_name' value='". $hp->purify($desc_name, CODENDI_PURIFIER_CONVERT_HTML) ."'></br></p>";
 	
 	echo "<p>".$Language->getText('admin_desc_fields','desc_description')." : ";
-	echo "<br><TEXTAREA name='form_desc' wrap='virtual' cols='70' rows='5'>". $hp->purify($desc_description, CODEX_CONVERT_HTML) ."</TEXTAREA></br></p>";
+	echo "<br><TEXTAREA name='form_desc' wrap='virtual' cols='70' rows='5'>". $hp->purify($desc_description, CODENDI_PURIFIER_CONVERT_HTML) ."</TEXTAREA></br></p>";
 	
 	echo "<p>".$Language->getText('admin_desc_fields','rank_on_screen')." : ";
-	echo "<input type='text' size='5'  maxlen='5' name='form_rank'' value='". $hp->purify($desc_rank, CODEX_CONVERT_HTML) ."'></p>";
+	echo "<input type='text' size='5'  maxlen='5' name='form_rank'' value='". $hp->purify($desc_rank, CODENDI_PURIFIER_CONVERT_HTML) ."'></p>";
 	echo "<p>".$Language->getText('admin_desc_fields','desc_type')." : ";
 	
 	echo "<SELECT name='form_type'>";
