@@ -302,7 +302,7 @@ class BackendSVN extends Backend {
             fwrite($fp,"    AuthMYSQLEnable on\n");
             fwrite($fp,"    AuthMySQLUser ".$GLOBALS['sys_dbauth_user']."\n");
             fwrite($fp,"    AuthMySQLPassword ".$GLOBALS['sys_dbauth_passwd']."\n");
-            fwrite($fp,"    AuthMySQLDB codex\n");
+            fwrite($fp,"    AuthMySQLDB ".$GLOBALS['sys_dbname']."\n");
             fwrite($fp,"    AuthMySQLUserTable \"user, user_group\"\n");
             fwrite($fp,"    AuthMySQLNameField user.user_name\n");
             fwrite($fp,"    AuthMySQLPasswordField user.unix_pw\n");
