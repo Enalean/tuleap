@@ -61,7 +61,7 @@ class UserHelper {
     /**
      * getDisplayName
      * 
-     * Get user name from Codex login, according to the user prefs: Codex login or Real name
+     * Get user name from Codendi login, according to the user prefs: Codendi login or Real name
      * 
      * Username display preference:
      *  1: user_name (realname)
@@ -148,7 +148,7 @@ class UserHelper {
     /**
      * getDisplayNameFromUser
      * 
-     * Get user name from Codex login, according to the user prefs: Codex login or Real name
+     * Get user name from Codendi login, according to the user prefs: Codendi login or Real name
      *
      * @param User the user to display
      * @see getDisplayName
@@ -163,7 +163,7 @@ class UserHelper {
     /**
      * getDisplayNameFromUserId
      * 
-     * Get user name from Codex login, according to the user prefs: Codex login or Real name
+     * Get user name from Codendi login, according to the user prefs: Codendi login or Real name
      *
      * @param int the user_id of the user to display
      * @see getDisplayName
@@ -189,7 +189,7 @@ class UserHelper {
     /**
      * getDisplayNameFromUserName
      * 
-     * Get user name from Codex login, according to the user prefs: Codex login or Real name
+     * Get user name from Codendi login, according to the user prefs: Codendi login or Real name
      *
      * @param string the user_name of the user to display
      * @see getDisplayName

@@ -60,7 +60,7 @@ class Widget_ProjectSvnStats extends Widget {
         }
         if (count($stats)) {
             //sort the results
-            uasort($stats, array($this, 'sortByTop'));
+            uksort($stats, array($this, 'sortByTop'));
             
             //fill-in the holes and the labels
             $today = strtotime(date('Y-m-d', $_SERVER['REQUEST_TIME']));
@@ -69,7 +69,7 @@ class Widget_ProjectSvnStats extends Widget {
                 $dates[] = date('M d', $i);
                 foreach($stats as $whoid => $stat) {
                     if (!isset($stat[$i])) {
-                        $stats[$whoid][$i] = '-';
+                        $stats[$whoid][$i] = '0';
                     }
                 }
             }
@@ -87,7 +87,7 @@ class Widget_ProjectSvnStats extends Widget {
             foreach($stats as $whoid => $stat) {
                 ksort($stat);
                 $l = new LinePlot(array_values($stat));
-                $l->SetColor($colors[$i % $nb_colors]);
+                $l->SetColor($colors[$i++ % $nb_colors].':0.9');
                 if ($user = UserManager::instance()->getUserById($whoid)) {
                     $l->SetLegend(UserHelper::instance()->getDisplayNameFromUser($user));
                 } else {
@@ -128,7 +128,7 @@ class Widget_ProjectSvnStats extends Widget {
     }
     
     protected function sortByTop($a, $b) {
-        return strnatcasecmp($this->tmp_nb_of_commit[$a], $this->tmp_nb_of_commit[$b]);
+        return strnatcasecmp($this->tmp_nb_of_commit[$b], $this->tmp_nb_of_commit[$a]);
     }
 }
 ?>

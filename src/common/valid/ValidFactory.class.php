@@ -102,7 +102,7 @@ extends Valid {
 }
 
 /**
- * Check that value match CodeX user short name format.
+ * Check that value match Codendi user short name format.
  *
  * This rule doesn't check that user actually exists.
  */
@@ -116,7 +116,7 @@ extends Valid_String {
 
 
 /**
- * Check that submitted value is a simple string and a valid CodeX email.
+ * Check that submitted value is a simple string and a valid Codendi email.
  */
 class Valid_Email
 extends Valid_String {

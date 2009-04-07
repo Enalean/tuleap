@@ -1803,7 +1803,7 @@ class Artifact extends Error {
                     			}
                 		} else {
 					// we handle now also the case that the assigned_to field is NOT BOUND to a predefined value list
-					// we accept only names that correspond to codex user names
+					// we accept only names that correspond to codendi user names
 					while (list (,$value_id)=each ($field_value)) {
 						$user_name = $field->getValue($this->ArtifactType->getID(),$value_id);
 						$res_u = user_get_result_set_from_unix($user_name);
@@ -1828,7 +1828,7 @@ class Artifact extends Error {
 			$val_func = $field->getValueFunction();
 			if ($val_func[0] == "") {
 				// we handle now also the case that the assigned_to field is NOT BOUND to a predefined value list
-				// we accept only names that correspond to codex user names
+				// we accept only names that correspond to codendi user names
 				// so: this user_id is not a user_id but a value_id
 				$user_name = $field->getValue($this->ArtifactType->getID(),$user_id);
 				$res = user_get_result_set_from_unix($user_name);
@@ -2340,9 +2340,9 @@ class Artifact extends Error {
         $mail =& new Mail();
         $mail->setFrom($GLOBALS['sys_noreply']);
         $pm = ProjectManager::instance();
-        $mail->addAdditionalHeader("X-CodeX-Project",     $pm->getProject($group_id)->getUnixName());
-        $mail->addAdditionalHeader("X-CodeX-Artifact",    $this->ArtifactType->getItemName());
-        $mail->addAdditionalHeader("X-CodeX-Artifact-ID", $this->getID());
+        $mail->addAdditionalHeader("X-Codendi-Project",     $pm->getProject($group_id)->getUnixName());
+        $mail->addAdditionalHeader("X-Codendi-Artifact",    $this->ArtifactType->getItemName());
+        $mail->addAdditionalHeader("X-Codendi-Artifact-ID", $this->getID());
         
         
 	    //treat anonymous users

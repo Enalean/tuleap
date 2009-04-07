@@ -51,7 +51,7 @@ class Rule {
 }
 
 /**
- * Validate date provided by CodeX calendar.
+ * Validate date provided by Codendi calendar.
  *
  * Note: this date format is more restrictive than php check date because in
  * this case, 2007-01-01 format (with zero in month or day) is not allowed.
@@ -212,11 +212,11 @@ extends Rule {
 }
 
 /**
- * Check if an email address is valid or not in CodeX context.
+ * Check if an email address is valid or not in Codendi context.
  *
  * This rule is influenced by a global variable 'sys_disable_subdomain'. If
- * this variable is set (no subdomain for codex) and only in this case, emails
- * like 'user@codex' are allowed.
+ * this variable is set (no subdomain for codendi) and only in this case, emails
+ * like 'user@codendi' are allowed.
  *
  * The faulty email address is available with $this->getErrorMessage();
  */
@@ -266,7 +266,7 @@ extends Rule {
 }
 
 /**
- * Check if value match CodeX user names format.
+ * Check if value match Codendi user names format.
  *
  * This rule doesn't check that user actually exists.
  */
@@ -305,13 +305,13 @@ extends Rule {
 }
 
 /**
- * Check that file was correctly uploaded doesn't by pass CodeX limits.
+ * Check that file was correctly uploaded doesn't by pass Codendi limits.
  *
  * Tests mainly rely on PHP $_FILES error code but add a double check of file
  * size because MAX_FILE_SIZE (used by PHP to check allowed size) is submitted
  * by the client.
  *
- * By default the maxSize is defined by 'sys_max_size_upload' CodeX
+ * By default the maxSize is defined by 'sys_max_size_upload' Codendi
  * variable but may be customized with setMaxSize.
  */
 require_once("www/file/file_utils.php"); // Needed for 2 GB workaround

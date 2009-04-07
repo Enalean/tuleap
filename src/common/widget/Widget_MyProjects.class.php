@@ -89,7 +89,7 @@ class Widget_MyProjects extends Widget {
     }
     function displayRss() {
         $rss = new RSS(array(
-            'title'       => 'CodeX - MyProjects',
+            'title'       => 'Codendi - MyProjects',
             'description' => 'My projects',
             'link'        => get_server_url(),
             'language'    => 'en-us',
