@@ -122,8 +122,8 @@ class BackendSystem extends Backend {
                 chmod($ht_dir, 02775);
 
                 // Copy custom homepage template for project web site if any
-		$custom_homepage = $GLOBALS['sys_custom_incdir']."/en_US/others/default_page.php";
-		$default_homepage = $GLOBALS['sys_incdir']."/en_US/others/default_page.php";
+                $custom_homepage = $GLOBALS['sys_custom_incdir']."/en_US/others/default_page.php";
+                $default_homepage = $GLOBALS['sys_incdir']."/en_US/others/default_page.php";
                 $dest_homepage = $ht_dir."/index.php";
                 if (is_file($custom_homepage)) {
                     copy($custom_homepage,$dest_homepage);
@@ -180,15 +180,15 @@ class BackendSystem extends Backend {
                 return false;
             }
         } else {
-  	    // Check that perms are OK
-	    $perms=fileperms($private_dir);
-	    // 'others' should have no right on the repository
-	    // TODO: test formula :-)
-	    if (($perms & 0x0004) || ($perms & 0x0002) || ($perms & 0x0001) || ($perms & 0x0200)) {
-	      $this->chmod($private_dir, 02770);		
-	    }
-	    // TODO: check owner/group
-	}
+            // Check that perms are OK
+            $perms = fileperms($private_dir);
+            // 'others' should have no right on the repository
+            // TODO: test formula :-)
+            if (($perms & 0x0004) || ($perms & 0x0002) || ($perms & 0x0001) || ($perms & 0x0200)) {
+              $this->chmod($private_dir, 02770);		
+            }
+            // TODO: check owner/group
+        }
         return true;
     }
 
@@ -208,7 +208,9 @@ class BackendSystem extends Backend {
             $this->recurseDeleteInDir($homedir);
             rmdir($homedir);
             return true;
-       } else return false;
+        } else {
+            return false;
+        }
     }
 
 
@@ -236,71 +238,57 @@ class BackendSystem extends Backend {
                 }
             }
             return true;
-	} else return false;
+        } else {
+            return false;
+        }
     }
 
-    //TODO
-    public function CleanupFRS() {
+    /**
+     * Remove deleted releases and released files
+     */
+    public function cleanupFRS() {
         // location of the download/upload directories
         $delete_dir = $GLOBALS['ftp_frs_dir_prefix']."/DELETED";
 
-	// list of files to be deleted
-	$deleting_files = $GLOBALS['ftp_incoming_dir'] ."/.delete_files";
-	$deleting_files_work = $GLOBALS['ftp_incoming_dir'] ."/.delete_files.work";
+        // list of files to be deleted
+        $deleting_files = $GLOBALS['ftp_incoming_dir'] ."/.delete_files";
+        $deleting_files_work = $GLOBALS['ftp_incoming_dir'] ."/.delete_files.work";
 
-	// move the list of files to delete to a temp work file
-	/*
-print `/bin/mv -f $deleting_files $deleting_files_work`;
-print `/bin/touch $deleting_files`;
-my $codex_user = &get_codex_user();
-print `/bin/chown $codex_user $deleting_files`;
-
-
-#
-#  move all files in the .delete_files
-#
-open(WAITING_FILES, "< $deleting_files_work" ) || die "Cannot open $deleting_files_work";
-FILE:
-while (<WAITING_FILES>) {
-
-	($file, $project, $time) = split("::", $_);
-
-	if ((!-f "$ftp_frs_dir_prefix/$project/$file") && (!-d "$ftp_frs_dir_prefix/$project/$file")) {
-		print "$ftp_frs_dir_prefix/$project/$file doesn't exist\n";
-		next FILE
-	} else {
-	  my (@subdirs, $endfile, $dirs);
-	  @subdirs = split("/", $file);
-	  $endfile = pop(@subdirs);
-	  $" = '/';
-          $dirs = "@subdirs";
-          print `/bin/mkdir -p $delete_dir/$project/$dirs`;
-	  
-	  $filename = "$ftp_frs_dir_prefix/$project/$file";
-	  $last_modified = (stat($filename))[9];
-	  $last_accessed = (stat($filename))[8];
-	  $last_ctime = (stat($filename))[10];
-
-	  #make sure that since the deletion of the file nobody has submitted a new file with 
-	  #the same filename
-	  if (($last_modified >= $time) || ($last_accessed >= $time) || ($last_ctime >= $time)) {
-	    print "don't delete file $project/$file (modified since deletion)\n";
-	  } else {
-	    print "deleting file $project/$file\n";
-	    print `/bin/mv -f $ftp_frs_dir_prefix/$project/$file $delete_dir/$project/$file-$time` ;
-	  } 
-	}
-}
-close(WAITING_FILES);
-
-#
-# delete all files under DELETE that are older than 7 days
-#
-
-print `find $delete_dir -type f -mtime +7 -exec rm {} \\;`;
-print `find $delete_dir -mindepth 1 -type d -empty -exec rm -R {} \\;`;
-
-	*/
+        // move the list of files to delete to a temp work file
+        rename($deleting_files, $deleting_files_work);
+        touch($deleting_files);
+        $this->chown($deleting_files, $GLOBALs['sys_http_user']);
+        
+        //move all files in the .delete_files
+        $waiting_files = file($deleting_files_work);
+        if ($waiting_files === false) {
+            $this->log("Cannot open $deleting_files_work");
+            return false;
+        } else {
+            foreach($waiting_files as $line) {
+                list($file, $project, $time) = explode('::', $line);
+                $filename = $GLOBALS['ftp_frs_dir_prefix'] ."/$project/$file";
+                if (!file_exists($filename)) {
+                    $this->log("$filename doesn't exist");
+                } else {
+                    $subdirs = dirname($file);
+                    mkdir("$delete_dir/$project/$subdirs", 0770, true);
+                    
+                    //make sure that since the deletion of the file nobody has submitted a new file with 
+                    //the same filename
+                    if (filemtime($filename) >= $time || fileatime($filename) >= $time || filectime($filename) >= $time) {
+                        $this->log("Don't delete file $project/$file (modified since deletion)");
+                    } else {
+                        $this->log("Deleting file $project/$file");
+                        rename($filename, "$delete_dir/$project/$file-$time");
+                    }
+                }
+            }
+            //delete all files under DELETE that are older than 7 days
+            system("find $delete_dir -type f -mtime +7 -exec rm {} \\;");
+            system("find $delete_dir -mindepth 1 -type d -empty -exec rm -R {} \\;");
+        }
+        return true;
     }
 
 }
