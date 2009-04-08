@@ -56,10 +56,10 @@ if (( ! -e $CHCON ) || ( ! -e "/etc/selinux/config" ) || ( `grep -i '^SELINUX=di
 `setsebool -P httpd_can_network_connect=1`;
 
 # Reload SELinux modules
-opendir(DIR, "$INSTALL_DIR/codex_tools/selinux/modules") || die "Can't opendir SELinux modules: $!";
+opendir(DIR, "$INSTALL_DIR/codendi_tools/selinux/modules") || die "Can't opendir SELinux modules: $!";
 while($file=readdir(DIR)) {
   if ($file=~/\.pp$/) {
-      `$SEMODULE -i $INSTALL_DIR/codex_tools/selinux/modules/$file`;
+      `$SEMODULE -i $INSTALL_DIR/codendi_tools/selinux/modules/$file`;
   }
 }
 closedir DIR;
