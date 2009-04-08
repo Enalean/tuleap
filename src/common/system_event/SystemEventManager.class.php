@@ -60,7 +60,8 @@ class SystemEventManager {
 
         $event_manager = $this->_getEventManager();
         $events_to_listen = array(
-	    'system_check', 
+            'system_check', 
+            Event::EDIT_SSH_KEYS,
             'register_project_creation',
             'project_is_deleted',
             'project_admin_add_user',
@@ -121,6 +122,11 @@ class SystemEventManager {
             $this->createEvent(SystemEvent::SYSTEM_CHECK,
                                '',
                                SystemEvent::PRIORITY_LOW);
+            break;
+        case Event::EDIT_SSH_KEYS:
+            $this->createEvent(SystemEvent::EDIT_SSH_KEYS,
+                               $params['user_id'],
+                               SystemEvent::PRIORITY_MEDIUM);
             break;
         case 'register_project_creation':
             $this->createEvent(SystemEvent::PROJECT_CREATE,
@@ -241,6 +247,7 @@ class SystemEventManager {
                 $sysevent = null;
                 switch ($row['type']) {
                 case SystemEvent::SYSTEM_CHECK:
+                case SystemEvent::EDIT_SSH_KEYS:
                 case SystemEvent::PROJECT_CREATE:
                 case SystemEvent::PROJECT_DELETE:
                 case SystemEvent::MEMBERSHIP_CREATE:

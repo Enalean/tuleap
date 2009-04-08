@@ -20,6 +20,7 @@
 
 require_once('common/collection/PrioritizedMultiMap.class.php');
 require_once('common/collection/Map.class.php');
+require_once('Event.class.php');
 
 /**
  * EventManager

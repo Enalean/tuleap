@@ -22,13 +22,17 @@ function register_valid()	{
         || !$request->existAndNonEmpty('form_authorized_keys')) {
 		return 0;
 	}
-
+    $user = UserManager::instance()->getCurrentUser();
 
 	$form_authorized_keys = trim($request->get('form_authorized_keys'));
 	$form_authorized_keys = ereg_replace("(\r\n)|(\n)","###", $form_authorized_keys);
 
 	// if we got this far, it must be good
-	db_query("UPDATE user SET authorized_keys='".db_es($form_authorized_keys)."' WHERE user_id=" . user_getid());
+	db_query("UPDATE user SET authorized_keys='".db_es($form_authorized_keys)."' WHERE user_id=" . $user->getId());
+    
+    $em = EventManager::instance();
+    $em->processEvent(Event::EDIT_SSH_KEYS, array('user_id' => $user->getId()));
+    
 	return 1;
 }
 
