@@ -18,8 +18,21 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once('common/mvc/Controler.class.php');
+require_once('common/include/HTTPRequest.class.php');
+require_once('CodendiJRIViews.class.php');
+require_once('CodendiJRIActions.class.php');
+class CodendiJRI extends Controler {
+    
+    function CodendiJRI() {
+        
+    }
+    
+    function request() {
+        $request =& HTTPRequest::instance();
+        
+        $this->view = 'index';
+    }
+}
+
 ?>
-
-<h3>Documentation de Codendi JRI</h3>
-
-<a href="documentation/index.html">Documentation de Codendi JRI</a> (javadoc)

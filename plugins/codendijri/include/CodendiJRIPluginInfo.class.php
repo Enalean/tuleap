@@ -18,8 +18,15 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once('common/plugin/PluginInfo.class.php');
+require_once('CodendiJRIPluginDescriptor.class.php');
+
+class CodendiJRIPluginInfo extends PluginInfo {
+    
+    function CodendiJRIPluginInfo(&$plugin) {
+        $this->PluginInfo($plugin);
+        $this->setPluginDescriptor(new CodendiJRIPluginDescriptor());
+    }
+    
+}
 ?>
-
-<h3>Documentation de Codendi JRI</h3>
-
-<a href="documentation/index.html">Documentation de Codendi JRI</a> (javadoc)

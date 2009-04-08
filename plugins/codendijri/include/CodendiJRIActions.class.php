@@ -18,8 +18,21 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once('common/mvc/Actions.class.php');
+require_once('common/include/HTTPRequest.class.php');
+
+class CodendiJRIActions extends Actions {
+    
+    function CodendiJRIActions(&$controler, $view=null) {
+        $this->Actions($controler);
+	}
+	
+	// {{{ Actions
+    
+    // }}}
+    
+    
+}
+
+
 ?>
-
-<h3>Documentation de Codendi JRI</h3>
-
-<a href="documentation/index.html">Documentation de Codendi JRI</a> (javadoc)
