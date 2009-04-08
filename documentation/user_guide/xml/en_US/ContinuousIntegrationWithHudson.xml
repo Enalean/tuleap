@@ -3,15 +3,15 @@
 // This file is licensed under the GNU General Public License version 2. See the file COPYING. 
 -->
 <chapter id="ContinuousIntegrationWithHudson">
-  <title>Conitnuous Integration With Hudson</title>
+  <title>Continuous Integration With Hudson</title>
   
   <section id="ContinuousIntegrationIntroduction">
     <title>Introduction to Continuous Integration</title>
     
     <para>
-        Continuous Integration is the given name for the goods practices used 
+        Continuous Integration is the given name for the good practices used 
         in software engineering. These good practices aim at checking that a 
-        source code modification do not lead to a regression of the developping 
+        source code modification does not lead to a regression on the developping 
         software application. This checking is usually performed on a different 
         machine than your development one (this machine is called an integration
         server); and this checking is carried out rather frequently
@@ -37,9 +37,9 @@
          <listitem><para>Quality analysis on source code (coding conventions, number of comments, code metrics, etc.),</para></listitem>
          <listitem><para>Delivery generation (exe, zip, tar, etc.).</para></listitem>
         </itemizedlist>
-        The continuous integration tool doesn't perform the build itself, but just
+        The continuous integration tool does not perform the build itself, but just
         launch it with regular interval, display the result of the build, and is
-        capable of sending notification to project members if a modification involved
+        able of sending notification to project members if a modification involved
         any regression.
     </para>
     <para>
@@ -49,20 +49,20 @@
         <itemizedlist mark="bullet">
          <listitem><para>Tests are immediatly executed after each modification (step sometimes neglected by developers),</para></listitem>
          <listitem><para>Integration issues are continuously detected, to be fixed as soon as possible,</para></listitem>
-         <listitem><para>There always exist an operational version of deliveries available for tests, demo or distribution.</para></listitem>
+         <listitem><para>It always exists an operational version of deliveries available for tests, demo or distribution.</para></listitem>
         </itemizedlist>
     </para>
     
     <para>
         The continuous integration tool we decided to integrate in &SYS_PRODUCT_NAME; 
-        is <emphasis role="bold">Hudson</emphasis>, which is one of the best tool
-        at the moment. Hudson configuration can be easily done in the web interface,
+        is <emphasis role="bold">Hudson</emphasis>, which is one of the actual best tool
+        . Hudson configuration can be easily done on the web interface,
         and there is a contextual help for each step of the configuration, which
         is really appreciable.
     </para>
     
     <para>
-      Some of the words about continuous integration and Hudson are quiet specific.
+      The lexicon of Continuous integration and Hudson is quite specific.
       Let's then give a definition:
       <table frame="all">
        <title>Glossary of Hudson and continuous integration specific words</title>
@@ -82,17 +82,17 @@
          The job will trigger the build, but it's also in charge of setting the 
          building environment required for executing the build (updating the
          source code for instance). It will also be able to execute the build,
-         and then perform some tasks such as publish generated documenation,
-         publish test results, send notifications, etc.)</entry>
+         and then perform some tasks such as publishing generated documentation,
+         publishing test results, sending notifications, etc.)</entry>
         </row>
         <row>
          <entry><emphasis role="bold">Build</emphasis></entry>
-         <entry>Process made of several steps executed periodically on a
+         <entry>Process is made of several steps executed periodically on a
          continuous integration server.</entry>
         </row>
         <row>
          <entry><emphasis role="bold">Artifact</emphasis></entry>
-         <entry>Item generated during the build, and published by the continuous
+         <entry>Item are generated during the build, and are published by the continuous
          integration tool. The continuous integration notion of artifact is 
          obviously different than the notion of a &SYS_PRODUCT_NAME; artifact
          (which is an item tracked in a tracker).</entry>
@@ -104,7 +104,7 @@
         </row>
         <row>
          <entry><emphasis role="bold">Status (of the build)</emphasis></entry>
-         <entry>Build status. Can take several values regarding the tool.
+         <entry>Build status can take several values regarding the tool.
          Hudson has 4 status:
           <itemizedlist mark="bullet">
            <listitem><para>Successfull : everything went fine, all tests were successfull,</para></listitem>
@@ -162,7 +162,7 @@
       <para>
         All these steps have an online contextual help. Don't be afraid to
         use it. To do it, you only have to select the question mark corresponding
-        to the option you need.
+        to the option needed.
       </para>
         
       <section id="HudsonSystemConfigurationToolpath">
@@ -236,7 +236,7 @@
         <title>Email Notification</title>
         <para>
             Hudson is able to send notification to warn about build result.
-            One can of course configure this for each job.
+            You can of course configure this for each job.
             To enable notification, you need to state a mail server (SMTP server).
             Leave the field empty if you want to use the default mail server (localhost).
         </para>
@@ -284,7 +284,7 @@
     <section id="HudsonPluginsConfiguration">
       <title>Hudson Plug-ins</title>
       <para>
-        Lot's of plug-ins are available to extend Hudson. Among them, we can quote:
+        Lots of plug-ins are available to extend Hudson. Among them, we can quote:
         checkstyle, CI game, Crap4J, LDAP Email, MSBuild, NAnt,
         NUnit, Selenium, etc. You will find a detailed list of all these plug-ins
         at <ulink url="http://hudson.gotdns.com/wiki/display/HUDSON/Plugins">http://hudson.gotdns.com/wiki/display/HUDSON/Plugins</ulink>
@@ -319,7 +319,7 @@
         the job configuration screen. You can add a description if you want.
         Then, you will be able to specify the source code repository, and the
         way that Hudson will handle the source code updates, define the steps
-        of the build, and tell Hudson what you want it to do after the build.
+        of the build, and tell Hudson what to do after the build.
     </para>
     
     <section id="JobConfigurationSVNCVS">
@@ -358,14 +358,14 @@
             access the repository. You can then choose several options for managing
             this authentication (either give your login/password or use SSH public
             key authentication or HTTPS client certificate). We let you choosing 
-            what option better fit your needs.
+            what option better fits your needs.
           </para>
           <para>
             You can add several repositories by pressing the button "Add more locations...".
           </para>
           <para>
             Finally, if you want to give the ability to the users to navigate
-            in the source code repository throught Hudson interface, you can
+            in the source code repository through Hudson interface, you can
             select "ViewSVN" in the field "Repository browser", and then enter
             the folowing string:
             <emphasis role="bold">http://&SYS_DEFAULT_DOMAIN;/svn/viewvc.php?roottype=svn&amp;root=[your_projet_short_name]</emphasis>
@@ -378,7 +378,7 @@
       <para>
         As explained in introduction, the big thing with continuous integration
         is the fact that once configured, the build is continuously done, and you
-        don't have to think about it. We still need to configure the way hudson
+        don't have to think about it. However, we still need to configure the way hudson
         will schedule the build. Two main options are available:
         <itemizedlist mark="bullet">
          <listitem>
@@ -392,12 +392,12 @@
          </listitem>
          <listitem>
           <para><emphasis role="bold">Trigger builds remotely</emphasis>:
-          this 'push' option avoid server overloading. The build is triggered by
-          a URL. To avoid anybody to trigger builds, you can protect the operation
+          this 'push' option avoids server overloading. The build is triggered by
+          an URL. To avoid anybody to trigger builds, you can protect the operation
           by specifying an authentication token. To really enable the build trigger
-          after each commmit, you will need to configure it in &SYS_PRODUCT_NAME;,
+          after each commit, you will need to configure it in &SYS_PRODUCT_NAME;,
           in the 'Build' tab of your project (See <xref linkend="HudsonServiceAddJob" />). 
-          You will be able to specify your token if you've defined one.
+          You will be able to specify your token if you have defined one.
           </para>
          </listitem>
         </itemizedlist>
@@ -442,7 +442,7 @@
          </listitem>
         </itemizedlist>
       </para>
-      The step configuration is specific to your project. You will let you
+      The step configuration is specific to your project. We will let you
       configure it as needed.
     </section>
     
@@ -465,8 +465,8 @@
          </listitem>
          <listitem>
           <para><emphasis role="bold">Publish Javadoc</emphasis>:
-          if your build produces javadoc, you can publish it on the build page.
-          To do that, give the path to the root folder of the generated javadoc.
+          if your build produces javadoc, you can publish it on the build page
+          by giving the path to the root folder of the generated javadoc.
           The reference folder is the workspace. You can also use the wildcard, and
           can choose either archive old versions of the javadoc or not.
           </para>
@@ -474,7 +474,7 @@
          <listitem>
           <para><emphasis role="bold">Publish JUnit test result report</emphasis>:
           if your build executes JUnit tests, you can publish a result report on
-          the build page. To do it, specify the path of the JUnit generated XML 
+          the build page in specifying the path of the JUnit generated XML 
           report files. If you use another test plug-in, you will find nearly 
           the same.
           </para>
@@ -517,7 +517,7 @@
           </para>
           <para>
           You can also send a separate email to people who broke the build.
-          To do this, the continuous integration server must well configured
+          To do this, the continuous integration server must be well configured
           (see <xref linkend="HudsonSystemConfigurationEmailNotification" />).
           </para>
          </listitem>
@@ -533,9 +533,9 @@
     <para>
         As continuous integration is a good practice in software engineering,
         &SYS_PRODUCT_NAME; integrates Hudson tool.
-        We saw how to install (see <xref linkend="HudsonInstallation" />) 
-        and configure (see <xref linkend="HudsonConfiguration" />) Hudson. 
-        We also saw how to create and configure Hudson jobs
+        We know how to install (see <xref linkend="HudsonInstallation" />) 
+        and configure (see <xref linkend="HudsonConfiguration" />) Hudson, 
+        and how to create and configure Hudson jobs
         (see <xref linkend="JobCreationAndConfiguration" />).
         Let's see now how Hudson is integrated to &SYS_PRODUCT_NAME;.
     </para>
@@ -549,7 +549,7 @@
       </para>
       <para>
         Once the service is enabled, you will see a "Build" tab in the service bar
-        of your project. This the Hudson continuous integration tab.
+        of your project : the Hudson continuous integration tab.
       </para>
       
       <section id="HudsonServiceAddJob">
@@ -607,21 +607,21 @@
         </para>
         <para>
             The name of the job is automatically detected during job creation.
-            But you can change it if needed. This pretty convenient if you want
+            But you can change it if needed. This is pretty convenient if you want
             to make references to Hudson items (see <xref linkend="HudsonJobReferences" />).
             Spaces in the name of jobs are not allowed. They are replaced by (_),
             in order to allow references.
         </para>
         <para>
             The name of the job and the latest builds are hypertext links that
-            will be opened the corresponding Hudson section in an frame below
+            will be opened the corresponding Hudson section in a frame below
             the table. This is really convenient to browse Hudson interface 
             while staying in the &SYS_PRODUCT_NAME; interface.
             If you want to open the Hudson frame in a specific window, just select
             the 'show only this frame' link.
         </para>
         <para>
-            The table provide also links to Hudson jobs RSS feed.
+            The table provides also links to Hudson jobs RSS feed.
         </para>
       </section>
       
@@ -630,8 +630,8 @@
     <section id="HudsonWidgets">
       <title>Hudson Widgets</title>
       <para>
-        Hudson service let you adorn your personal and project dashboard with 
-        some nice widgets.
+        Hudson service lets you adorn your personal and project dashboard with 
+        many widgets.
         To know how to add widgets to your personal dashboard, see
         <xref linkend="LoginAndPersonalPage" />. The procedure is similar
         to add widgets to dashboard project (see <xref linkend="ProjectSummaryPageContent" />).
@@ -642,7 +642,7 @@
           <emphasis role="bold">My Hudson jobs</emphasis>:
           only available on the personal dashboard.
           By default, it gives an overview of all the jobs of all the projects
-          you're member of. You can of course select the jobs you wish to display
+          you are member of. You can of course select the jobs you wish to display
           by selecting the preferences link of the widget.
            <figure id="HudsonWidgetMyJobs">
             <title>"My Hudson Jobs" Widget</title>
@@ -696,7 +696,7 @@
           this widget is available for both personal and project dashboard.
           It is linked to only one job, and show the test results of the latest build 
           for the selected job. To display something, your job needs to execute
-          tests and publish them. The result is shown in a pie chart.
+          tests and publish them. The result is shown on a pie chart.
            <figure id="HudsonWidgetTestResults">
             <title>"Test results" Widget</title>
             <mediaobject>
@@ -715,7 +715,7 @@
           It is linked to only one job, and show the test result trend for the job.
           Of course, your job needs to have tests to display something.
           The graph will show the number of tests (failed and successfull) along 
-          time. It can be pretty convenient for project managers to check that
+          time. It can be very convenient for project managers to check that
           the number of tests is increasing while the number of build and commits
           are increasing too.
            <figure id="HudsonWidgetTestTrend">
