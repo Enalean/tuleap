@@ -21,6 +21,7 @@
  */
 
 require_once('common/backend/Backend.class.php');
+require_once('common/dao/UserDao.class.php');
 
 
 class BackendSystem extends Backend {
@@ -289,6 +290,51 @@ class BackendSystem extends Backend {
             system("find $delete_dir -mindepth 1 -type d -empty -exec rm -R {} \\;");
         }
         return true;
+    }
+    
+    /**
+     * dumps SSH authorized_keys into all users homedirs
+     */
+    public function dumpSSHKeys() {
+        $userdao = new UserDao(CodendiDatatAccess::instance());
+        foreach($userdao->searchSSHKeys() as $row) {
+            $this->writeSSHKeys($row['user_name'], $row['authorized_keys']);
+        }
+        return true;
+    }
+    
+    /**
+     * dumps SSH authorized_keys for a user in its homedir
+     * @param User $user
+     */
+    public function dumpSSHKeysForUser($user) {
+        return $this->writeSSHKeys($user->getUserName(), $user->getAuthorizedKeys());
+    }
+    
+    /**
+     * Write SSH authorized_keys into a user homedir
+     * @param string $ssh_keys from the db
+     * @param string $username
+     */
+    protected function writeSSHKeys($username, $ssh_keys) {
+        $ssh_keys = str_replace('###', "\n", $ssh_keys);
+        $username = strtolower($username);
+        $ssh_dir = $GLOBALS['homedir_prefix'] ."/$username/.ssh";
+        
+        if (!is_dir($ssh_dir)) {
+            mkdir($ssh_dir);
+            $this->chmod($ssh_dir, 0755);
+            $this->chown($ssh_dir, $username);
+            $this->chgrp($ssh_dir, $username);
+        }
+        
+        file_put_contents("$ssh_dir/authorized_keys_new", $ssh_keys);
+        rename("$ssh_dir/authorized_keys_new", "$ssh_dir/authorized_keys");
+        $this->chmod("$ssh_dir/authorized_keys", 0644);
+        $this->chown("$ssh_dir/authorized_keys", $username);
+        $this->chgrp("$ssh_dir/authorized_keys", $username);
+        
+        $this->log("Authorized_keys for $username written.");
     }
 
 }

@@ -32,27 +32,30 @@ class SystemEvent_SYSTEM_CHECK extends SystemEvent {
      * Process stored event
      */
     function process() {
-
+        
         $backendSystem      = BackendSystem::instance();
         $backendAliases     = BackendAliases::instance();
         $backendSVN         = BackendSVN::instance();
         $backendCVS         = BackendCVS::instance();
         $backendMailingList = BackendMailingList::instance();
-
-        //TODO: SSH keys ssh_create.pl
-        // remove deleted releases and released files
-        //cd $CODEX_UTILS_PREFIX/download
-        //./download_filemaint.pl
+        
+        //TODO: 
         // User: unix_status vs status??
         // Private project: if codeaxadm is not member of the project: check access to SVN (incl. ViewVC), CVS, Web...
         // CVS Watch?
         // TODO: log event in syslog?
-
+        
+        // remove deleted releases and released files
+        $backendSystem->cleanupFRS();
+        
+        // dump SSH authorized_keys into all users homedirs
+        $backendSystem->dumpSSHKeys();
+        
         // Force global updates: aliases, CVS roots, SVN roots
         $backendCVS->setCVSRootListNeedUpdate();
         $backendSVN->setSVNApacheConfNeedUpdate();
-        BackendAliases::instance()->setNeedUpdateMailAliases();
-
+        $backendAliases->setNeedUpdateMailAliases();
+        
         // Check mailing lists
         // (re-)create missing ML
         $mailinglistdao = new MailingListDao(CodendiDataAccess::instance());
@@ -64,10 +67,9 @@ class SystemEvent_SYSTEM_CHECK extends SystemEvent {
             }
             // TODO what about lists that changed their setting (description, public/private) ?
         }
-
-
+        
         // Check users
-        // (re-) create missing home directories
+        // (re-)create missing home directories
         $userdao = new UserDao(CodendiDataAccess::instance());
         $allowed_statuses=array(User::STATUS_ACTIVE, User::STATUS_RESTRICTED);
         $dar = $userdao->searchByStatus($allowed_statuses);
@@ -76,7 +78,7 @@ class SystemEvent_SYSTEM_CHECK extends SystemEvent {
                 $backendSystem->createUserHome($row['user_id']);
             }
         }
-
+        
         $project_manager = ProjectManager::instance();
         foreach($project_manager->getProjectsByStatus(Project::STATUS_ACTIVE) as $project) {
             
@@ -122,7 +124,7 @@ class SystemEvent_SYSTEM_CHECK extends SystemEvent {
                     $backendSVN->setSVNPrivacy($project, !$project->isPublic() || $project->isSVNPrivate());
                 }
             }
-
+            
             $backendSystem->log("Project ".$project->getUnixName()." created");            
             $this->done();
             return true;

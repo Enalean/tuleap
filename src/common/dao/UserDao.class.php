@@ -76,6 +76,16 @@ class UserDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
     
+    public function searchSSHKeys() {
+        $sql = "SELECT user_name, authorized_keys 
+                FROM user 
+                WHERE unix_status = 'A' 
+                  AND (status= 'A' OR status='R') 
+                  AND authorized_keys != '' 
+                  AND authorized_keys IS NOT NULL";
+        return $this->retrieve($sql);
+    }
+    
     /**
     * create a row in the table user 
     * @return true or id(auto_increment) if there is no error
