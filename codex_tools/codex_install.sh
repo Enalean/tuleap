@@ -1,17 +1,17 @@
 #!/bin/bash
 #
-# Copyright (c) Xerox Corporation, CodeX, Codendi 2007-2008.
+# Copyright (c) Xerox Corporation, Codendi 2001-2009.
 # This file is licensed under the GNU General Public License version 2. See the file COPYING.
 #
-#      Originally written by Laurent Julliard 2004, CodeX Team, Xerox
+#      Originally written by Laurent Julliard 2004, Codendi Team, Xerox
 #
-#  This file is part of the CodeX software and must be place at the same
-#  level as the CodeX, RPMS_CodeX and nonRPMS_CodeX directory when
+#  This file is part of the Codendi software and must be place at the same
+#  level as the Codendi, RPMS_Codendi and nonRPMS_Codendi directory when
 #  delivered on a CD or by other means
 #
 
 # In order to keep a log of the installation, you may run the script with:
-# ./codex_install.sh 2>&1 | tee /tmp/codex_install.log
+# ./codendi_install.sh 2>&1 | tee /tmp/codendi_install.log
 
 progname=$0
 #scriptdir=/mnt/cdrom
@@ -19,11 +19,11 @@ if [ -z "$scriptdir" ]; then
     scriptdir=`dirname $progname`
 fi
 cd ${scriptdir};TOP_DIR=`pwd`;cd - > /dev/null # redirect to /dev/null to remove display of folder (RHEL4 only)
-RPMS_DIR=${TOP_DIR}/RPMS_CodeX
-nonRPMS_DIR=${TOP_DIR}/nonRPMS_CodeX
-CodeX_DIR=${TOP_DIR}/CodeX
-TODO_FILE=/root/todo_codex.txt
-export INSTALL_DIR="/usr/share/codex"
+RPMS_DIR=${TOP_DIR}/RPMS_Codendi
+nonRPMS_DIR=${TOP_DIR}/nonRPMS_Codendi
+Codendi_DIR=${TOP_DIR}/Codendi
+TODO_FILE=/root/todo_codendi.txt
+export INSTALL_DIR="/usr/share/codendi"
 
 # path to command line tools
 GROUPADD='/usr/sbin/groupadd'
@@ -86,7 +86,7 @@ make_backup() {
     file="$1"
     ext="$2"
     if [ -z $ext ]; then
-	ext="nocodex"
+	ext="nocodendi"
     fi
     backup_file="$1.$ext"
     [ -e "$file" -a ! -e "$backup_file" ] && $CP "$file" "$backup_file"
@@ -110,7 +110,7 @@ substitute() {
 }
 
 ##############################################
-# CodeX installation
+# Codendi installation
 ##############################################
 
 ##############################################
@@ -209,24 +209,24 @@ make_backup /etc/shadow
 make_backup /etc/group
 
 # Delete users that could be part of the groups (otherwise groupdel fails!)
-for u in mailman dummy codexadm ftp ftpadmin
+for u in mailman dummy codendiadm ftp ftpadmin
 do
     $USERDEL $u 2>/dev/null 1>&2
 done
 
 # Create Groups
-create_group codexadm 104
+create_group codendiadm 104
 create_group dummy 103
 create_group mailman 106
 create_group ftpadmin 96
 create_group ftp 50
 
 # Ask for domain name and other installation parameters
-read -p "CodeX Domain name: " sys_default_domain
+read -p "Codendi Domain name: " sys_default_domain
 read -p "Your Company short name (e.g. Xerox): " sys_org_name
 read -p "Your Company long name (e.g. Xerox Corporation): " sys_long_org_name
-read -p "Codex Server fully qualified machine name: " sys_fullname
-read -p "Codex Server IP address: " sys_ip_address
+read -p "Codendi Server fully qualified machine name: " sys_fullname
+read -p "Codendi Server IP address: " sys_ip_address
 read -p "LDAP server name: " sys_ldap_server
 read -p "Activate user shell accounts? [y|n]:" active_shell
 read -p "Generate a self-signed SSL certificate to enable HTTPS support? [y|n]:" create_ssl_certificate
@@ -241,11 +241,11 @@ while [ "$rt_passwd" != "$rt_passwd2" ]; do
     echo
 done
 
-codexadm_passwd="a"; codexadm_passwd2="b";
-while [ "$codexadm_passwd" != "$codexadm_passwd2" ]; do
-    read -s -p "Password for user codexadm: " codexadm_passwd
+codendiadm_passwd="a"; codendiadm_passwd2="b";
+while [ "$codendiadm_passwd" != "$codendiadm_passwd2" ]; do
+    read -s -p "Password for user codendiadm: " codendiadm_passwd
     echo
-    read -s -p "Retype codexadm password: " codexadm_passwd2
+    read -s -p "Retype codendiadm password: " codendiadm_passwd2
     echo
 done
 
@@ -283,8 +283,8 @@ done
 
 #py_cmd="import crypt; print crypt.crypt(\"$rt_passwd\",\"\$1\$e4h67niB\$\")"
 #rt_encpasswd=`python -c "$py_cmd"`
-py_cmd="import crypt; print crypt.crypt(\"$codexadm_passwd\",\"\$1\$h67e4niB\$\")"
-codex_encpasswd=`python -c "$py_cmd"`
+py_cmd="import crypt; print crypt.crypt(\"$codendiadm_passwd\",\"\$1\$h67e4niB\$\")"
+codendi_encpasswd=`python -c "$py_cmd"`
 py_cmd="import crypt; print crypt.crypt(\"$mm_passwd\",\"\$1\$eniB4h67\$\")"
 mm_encpasswd=`python -c "$py_cmd"`
 
@@ -293,99 +293,99 @@ mm_encpasswd=`python -c "$py_cmd"`
 # No longer modify root password. It is not safe to do this in a script.
 #$USERMOD -p "$rt_encpasswd" root
 
-$USERDEL codexadm 2>/dev/null 1>&2
-$USERADD -c 'Owner of CodeX directories' -M -d '/home/codexadm' -p "$codex_encpasswd" -u 104 -g 104 -s '/bin/bash' -G ftpadmin,mailman codexadm
+$USERDEL codendiadm 2>/dev/null 1>&2
+$USERADD -c 'Owner of Codendi directories' -M -d '/home/codendiadm' -p "$codendi_encpasswd" -u 104 -g 104 -s '/bin/bash' -G ftpadmin,mailman codendiadm
 # mailman group needed to write in /var/log/mailman/ directory
 
 $USERDEL mailman 2>/dev/null 1>&2
 $USERADD -c 'Owner of Mailman directories' -M -d '/usr/lib/mailman' -p "$mm_encpasswd" -u 106 -g 106 -s '/sbin/nologin' mailman
 
 $USERDEL ftpadmin 2>/dev/null 1>&2
-$USERADD -c 'FTP Administrator' -M -d '/var/lib/codex/ftp' -u 96 -g 96 ftpadmin
+$USERADD -c 'FTP Administrator' -M -d '/var/lib/codendi/ftp' -u 96 -g 96 ftpadmin
 
 $USERDEL ftp 2>/dev/null 1>&2
-$USERADD -c 'FTP User' -M -d '/var/lib/codex/ftp' -u 14 -g 50 ftp
+$USERADD -c 'FTP User' -M -d '/var/lib/codendi/ftp' -u 14 -g 50 ftp
 
 $USERDEL dummy 2>/dev/null 1>&2
-$USERADD -c 'Dummy CodeX User' -M -d '/var/lib/codex/dumps' -u 103 -g 103 dummy
+$USERADD -c 'Dummy Codendi User' -M -d '/var/lib/codendi/dumps' -u 103 -g 103 dummy
 
 # Build file structure
 
-build_dir $INSTALL_DIR codexadm codexadm 775
-#build_dir $INSTALL_DIR/downloads codexadm codexadm 775
-build_dir /home/users codexadm codexadm 775
-build_dir /home/groups codexadm codexadm 775
+build_dir $INSTALL_DIR codendiadm codendiadm 775
+#build_dir $INSTALL_DIR/downloads codendiadm codendiadm 775
+build_dir /home/users codendiadm codendiadm 775
+build_dir /home/groups codendiadm codendiadm 775
 
 # home directories
-build_dir /home/codexadm codexadm codexadm 700
+build_dir /home/codendiadm codendiadm codendiadm 700
 # data dirs
-build_dir /var/lib/codex codexadm codexadm 755
-build_dir /var/lib/codex/dumps dummy dummy 755
-build_dir /var/lib/codex/ftp root ftp 755
-#build_dir /var/lib/codex/ftp/bin ftpadmin ftpadmin 111
-#build_dir /var/lib/codex/ftp/etc ftpadmin ftpadmin 111
-#build_dir /var/lib/codex/ftp/lib ftpadmin ftpadmin 755
-build_dir /var/lib/codex/ftp/codex root root 711
-build_dir /var/lib/codex/ftp/pub ftpadmin ftpadmin 755
-build_dir /var/lib/codex/ftp/incoming ftpadmin ftpadmin 3777
-build_dir /var/lib/codex/wiki codexadm codexadm 700
-build_dir /var/lib/codex/backup codexadm codexadm 711
-build_dir /var/lib/codex/backup/mysql mysql mysql 770 
-build_dir /var/lib/codex/backup/mysql/old root root 700
-build_dir /var/lib/codex/backup/subversion root root 700
-build_dir /var/lib/codex/docman codexadm codexadm 700
+build_dir /var/lib/codendi codendiadm codendiadm 755
+build_dir /var/lib/codendi/dumps dummy dummy 755
+build_dir /var/lib/codendi/ftp root ftp 755
+#build_dir /var/lib/codendi/ftp/bin ftpadmin ftpadmin 111
+#build_dir /var/lib/codendi/ftp/etc ftpadmin ftpadmin 111
+#build_dir /var/lib/codendi/ftp/lib ftpadmin ftpadmin 755
+build_dir /var/lib/codendi/ftp/codendi root root 711
+build_dir /var/lib/codendi/ftp/pub ftpadmin ftpadmin 755
+build_dir /var/lib/codendi/ftp/incoming ftpadmin ftpadmin 3777
+build_dir /var/lib/codendi/wiki codendiadm codendiadm 700
+build_dir /var/lib/codendi/backup codendiadm codendiadm 711
+build_dir /var/lib/codendi/backup/mysql mysql mysql 770 
+build_dir /var/lib/codendi/backup/mysql/old root root 700
+build_dir /var/lib/codendi/backup/subversion root root 700
+build_dir /var/lib/codendi/docman codendiadm codendiadm 700
 # log dirs
-build_dir /var/log/codex codexadm codexadm 755
-build_dir /var/log/codex/cvslogs codexadm codexadm 775
-build_dir /var/tmp/codex_cache codexadm codexadm 755
+build_dir /var/log/codendi codendiadm codendiadm 755
+build_dir /var/log/codendi/cvslogs codendiadm codendiadm 775
+build_dir /var/tmp/codendi_cache codendiadm codendiadm 755
 # bin dirs
-build_dir /usr/lib/codex codexadm codexadm 755
-build_dir /usr/lib/codex/bin codexadm codexadm 755
+build_dir /usr/lib/codendi codendiadm codendiadm 755
+build_dir /usr/lib/codendi/bin codendiadm codendiadm 755
 # config dirs
-build_dir /etc/skel_codex root root 755
-build_dir /etc/codex codexadm codexadm 755
-build_dir /etc/codex/conf codexadm codexadm 700
-build_dir /etc/codex/documentation codexadm codexadm 755
-build_dir /etc/codex/documentation/user_guide codexadm codexadm 755
-build_dir /etc/codex/documentation/user_guide/xml codexadm codexadm 755
-build_dir /etc/codex/documentation/cli codexadm codexadm 755
-build_dir /etc/codex/documentation/cli/xml codexadm codexadm 755
-build_dir /etc/codex/site-content codexadm codexadm 755
-build_dir /etc/codex/site-content/en_US codexadm codexadm 755
-build_dir /etc/codex/site-content/en_US/others codexadm codexadm 755
-build_dir /etc/codex/site-content/fr_FR codexadm codexadm 755
-build_dir /etc/codex/site-content/fr_FR/others codexadm codexadm 755
-build_dir /etc/codex/themes codexadm codexadm 755
-build_dir /etc/codex/plugins codexadm codexadm 755
-build_dir /etc/codex/plugins/docman codexadm codexadm 755
-build_dir /etc/codex/plugins/pluginsadministration codexadm codexadm 755
-build_dir /etc/codex/plugins/serverupdate codexadm codexadm 755
+build_dir /etc/skel_codendi root root 755
+build_dir /etc/codendi codendiadm codendiadm 755
+build_dir /etc/codendi/conf codendiadm codendiadm 700
+build_dir /etc/codendi/documentation codendiadm codendiadm 755
+build_dir /etc/codendi/documentation/user_guide codendiadm codendiadm 755
+build_dir /etc/codendi/documentation/user_guide/xml codendiadm codendiadm 755
+build_dir /etc/codendi/documentation/cli codendiadm codendiadm 755
+build_dir /etc/codendi/documentation/cli/xml codendiadm codendiadm 755
+build_dir /etc/codendi/site-content codendiadm codendiadm 755
+build_dir /etc/codendi/site-content/en_US codendiadm codendiadm 755
+build_dir /etc/codendi/site-content/en_US/others codendiadm codendiadm 755
+build_dir /etc/codendi/site-content/fr_FR codendiadm codendiadm 755
+build_dir /etc/codendi/site-content/fr_FR/others codendiadm codendiadm 755
+build_dir /etc/codendi/themes codendiadm codendiadm 755
+build_dir /etc/codendi/plugins codendiadm codendiadm 755
+build_dir /etc/codendi/plugins/docman codendiadm codendiadm 755
+build_dir /etc/codendi/plugins/pluginsadministration codendiadm codendiadm 755
+build_dir /etc/codendi/plugins/serverupdate codendiadm codendiadm 755
 # SCM dirs
 build_dir /var/run/log_accum root root 777
-build_dir /var/lib/codex/cvsroot codexadm codexadm 755
-build_dir /var/lib/codex/svnroot codexadm codexadm 755
+build_dir /var/lib/codendi/cvsroot codendiadm codendiadm 755
+build_dir /var/lib/codendi/svnroot codendiadm codendiadm 755
 build_dir /var/lock/cvs root root 751
-$LN -sf /var/lib/codex/cvsroot /cvsroot
-$LN -sf /var/lib/codex/svnroot /svnroot
+$LN -sf /var/lib/codendi/cvsroot /cvsroot
+$LN -sf /var/lib/codendi/svnroot /svnroot
 
 
-$TOUCH /var/lib/codex/ftp/incoming/.delete_files
-$CHOWN codexadm.ftpadmin /var/lib/codex/ftp/incoming/.delete_files
-$CHMOD 750 /var/lib/codex/ftp/incoming/.delete_files
-$TOUCH /var/lib/codex/ftp/incoming/.delete_files.work
-$CHOWN codexadm.ftpadmin /var/lib/codex/ftp/incoming/.delete_files.work
-$CHMOD 750 /var/lib/codex/ftp/incoming/.delete_files.work
-build_dir /var/lib/codex/ftp/codex/DELETED codexadm codexadm 750
+$TOUCH /var/lib/codendi/ftp/incoming/.delete_files
+$CHOWN codendiadm.ftpadmin /var/lib/codendi/ftp/incoming/.delete_files
+$CHMOD 750 /var/lib/codendi/ftp/incoming/.delete_files
+$TOUCH /var/lib/codendi/ftp/incoming/.delete_files.work
+$CHOWN codendiadm.ftpadmin /var/lib/codendi/ftp/incoming/.delete_files.work
+$CHMOD 750 /var/lib/codendi/ftp/incoming/.delete_files.work
+build_dir /var/lib/codendi/ftp/codendi/DELETED codendiadm codendiadm 750
 
-$TOUCH /etc/httpd/conf.d/codex_svnroot.conf
+$TOUCH /etc/httpd/conf.d/codendi_svnroot.conf
 
 # SELinux specific
 if [ $SELINUX_ENABLED ]; then
-    $CHCON -R -h $SELINUX_CONTEXT /usr/share/codex
-    $CHCON -R -h $SELINUX_CONTEXT /etc/codex
-    $CHCON -R -h $SELINUX_CONTEXT /var/lib/codex
+    $CHCON -R -h $SELINUX_CONTEXT /usr/share/codendi
+    $CHCON -R -h $SELINUX_CONTEXT /etc/codendi
+    $CHCON -R -h $SELINUX_CONTEXT /var/lib/codendi
     $CHCON -R -h $SELINUX_CONTEXT /home/groups
-    $CHCON -R -h $SELINUX_CONTEXT /home/codexadm
+    $CHCON -R -h $SELINUX_CONTEXT /home/codendiadm
     $CHCON -h $SELINUX_CONTEXT /svnroot
     $CHCON -h $SELINUX_CONTEXT /cvsroot
 fi
@@ -417,16 +417,16 @@ done
 cd - > /dev/null
 
 ######
-# Now install CodeX specific RPMS (and remove RedHat RPMs)
+# Now install Codendi specific RPMS (and remove RedHat RPMs)
 #
 
 
-# SELinux CodeX-specific policy
+# SELinux Codendi-specific policy
 #if [ $SELINUX_ENABLED ]; then
 #    echo "Removing existing SELinux policy .."
 #    $RPM -e selinux-policy-targeted-sources 2>/dev/null
 #    $RPM -e selinux-policy-targeted 2>/dev/null
-#    echo "Installing SELinux targeted policy for CodeX...."
+#    echo "Installing SELinux targeted policy for Codendi...."
 #    cd ${RPMS_DIR}/selinux-policy-targeted
 #    newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
 #    $RPM -Uvh ${newest_rpm}/selinux-policy-targeted-1*.noarch.rpm
@@ -436,7 +436,7 @@ cd - > /dev/null
 echo "Removing existing Java JRE..."
 $RPM -e jre  2>/dev/null
 $RPM -e j2re 2>/dev/null
-echo "Installing Java JRE RPMs for CodeX...."
+echo "Installing Java JRE RPMs for Codendi...."
 cd ${RPMS_DIR}/jre
 newest_rpm=`$LS -1 -I old -I TRANS.TBL | $TAIL -1`
 $RPM -ivh ${newest_rpm}/jre-*i?86.rpm
@@ -455,7 +455,7 @@ $LN -sf $newest_jre jre
 # -> cvs
 echo "Removing existing CVS .."
 $RPM -e --allmatches cvs 2>/dev/null
-echo "Installing CVS RPMs for CodeX...."
+echo "Installing CVS RPMs for Codendi...."
 cd ${RPMS_DIR}/cvs
 newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
 $RPM -Uvh ${newest_rpm}/cvs-1.*.i386.rpm
@@ -476,7 +476,7 @@ $RPM -e --allmatches subversion-python 2>/dev/null
 $RPM -e --allmatches subversion 2>/dev/null
 $RPM -e --allmatches neon-devel 2>/dev/null
 $RPM -e --allmatches neon 2>/dev/null
-echo "Installing Subversion and Neon RPMs for CodeX...."
+echo "Installing Subversion and Neon RPMs for Codendi...."
 cd ${RPMS_DIR}/subversion
 newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
 cd ${newest_rpm}
@@ -486,21 +486,21 @@ $RPM --nodeps -Uvh subversion-tools*.i386.rpm
 
 # -> cvsgraph 
 $RPM -e --allmatches cvsgraph 2>/dev/null
-echo "Installing cvsgraph RPM for CodeX...."
+echo "Installing cvsgraph RPM for Codendi...."
 cd ${RPMS_DIR}/cvsgraph
 newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
 $RPM -Uvh ${newest_rpm}/cvsgraph-1*i?86.rpm
 
 # -> highlight
 $RPM -e --allmatches highlight 2>/dev/null
-echo "Installing highlight RPM for CodeX...."
+echo "Installing highlight RPM for Codendi...."
 cd ${RPMS_DIR}/highlight
 newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
 $RPM -Uvh ${newest_rpm}/highlight-2*i?86.rpm
 
 # -> JPGraph
 $RPM -e jpgraph jpgraphs-docs 2>/dev/null
-echo "Installing JPGraph RPM for CodeX...."
+echo "Installing JPGraph RPM for Codendi...."
 cd ${RPMS_DIR}/jpgraph
 newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
 $RPM -Uvh ${newest_rpm}/jpgraph-2*noarch.rpm
@@ -510,7 +510,7 @@ $RPM -Uvh ${newest_rpm}/jpgraph-docs-2*noarch.rpm
 echo "Removing installed viewcvs/viewvc if any .."
 $RPM -e --nodeps viewcvs 2>/dev/null
 $RPM -e --nodeps viewvc 2>/dev/null
-echo "Installing viewvc RPM for CodeX...."
+echo "Installing viewvc RPM for Codendi...."
 cd ${RPMS_DIR}/viewvc
 newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
 $RPM -Uvh ${newest_rpm}/viewvc-*.noarch.rpm
@@ -518,7 +518,7 @@ $RPM -Uvh ${newest_rpm}/viewvc-*.noarch.rpm
 # -> phpMyAdmin
 echo "Removing installed phpMyAdmin if any .."
 $RPM -e phpMyAdmin phpmyadmin 2>/dev/null
-echo "Installing phpMyAdmin RPM for CodeX...."
+echo "Installing phpMyAdmin RPM for Codendi...."
 cd ${RPMS_DIR}/phpMyAdmin
 newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
 $RPM -Uvh ${newest_rpm}/phpmyadmin-*.noarch.rpm
@@ -526,7 +526,7 @@ $RPM -Uvh ${newest_rpm}/phpmyadmin-*.noarch.rpm
 # -> mailman
 echo "Removing installed mailman if any .."
 $RPM -e --allmatches mailman 2>/dev/null
-echo "Installing mailman RPM for CodeX...."
+echo "Installing mailman RPM for Codendi...."
 cd ${RPMS_DIR}/mailman
 newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
 $RPM -Uvh ${newest_rpm}/mailman-2*i?86.rpm
@@ -534,7 +534,7 @@ $RPM -Uvh ${newest_rpm}/mailman-2*i?86.rpm
 # Munin
 echo "Removing installed Munin if any .."
 $RPM -e --allmatches `rpm -qa 'munin*' 'perl-HTML-Template*' 'perl-Net-Server' 'perl-rrdtool*' 'rrdtool*' 'perl-Crypt-DES' 'perl-Net-SNMP' 'perl-Config-General'` 2>/dev/null
-echo "Installing Munin RPMs for CodeX...."
+echo "Installing Munin RPMs for Codendi...."
 cd ${RPMS_DIR}/munin
 newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
 $RPM --nosignature -Uvh ${newest_rpm}/perl-Net-Server*.noarch.rpm
@@ -550,7 +550,7 @@ $RPM -Uvh ${newest_rpm}/munin-1*.noarch.rpm
 echo "Removing installed htmlpurifier if any .."
 $RPM -e htmlpurifier 2>/dev/null
 $RPM -e htmlpurifier-docs 2>/dev/null
-echo "Installing htmlpurifier RPM for CodeX...."
+echo "Installing htmlpurifier RPM for Codendi...."
 cd ${RPMS_DIR}/htmlpurifier
 newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
 $RPM -Uvh ${newest_rpm}/htmlpurifier-3*.noarch.rpm
@@ -570,32 +570,32 @@ cd ${newest_rpm}
 $CP helga.jar presence.jar subscription.jar monitoring.jar /opt/openfire/plugins
 
 #####
-# CodeX RPMS
+# Codendi RPMS
 
-# -> codex-jri
-echo "Removing installed CodeX JRI if any .."
-$RPM -e --allmatches codex-jri 2>/dev/null
-echo "Installing CodeX JRI RPM...."
-cd ${RPMS_DIR}/codex-jri
+# -> codendi-jri
+echo "Removing installed Codendi JRI if any .."
+$RPM -e --allmatches codendi-jri 2>/dev/null
+echo "Installing Codendi JRI RPM...."
+cd ${RPMS_DIR}/codendi-jri
 newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
-$RPM -Uvh ${newest_rpm}/codex-jri-*noarch.rpm
+$RPM -Uvh ${newest_rpm}/codendi-jri-*noarch.rpm
 
 
-# -> codex-eclipse
+# -> codendi-eclipse
 echo "Removing installed Eclipse plugin if any .."
-$RPM -e --allmatches codex-eclipse 2>/dev/null
+$RPM -e --allmatches codendi-eclipse 2>/dev/null
 echo "Installing Eclipse plugin RPM...."
-cd ${RPMS_DIR}/codex-eclipse
+cd ${RPMS_DIR}/codendi-eclipse
 newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
-$RPM -Uvh ${newest_rpm}/codex-eclipse-*noarch.rpm
+$RPM -Uvh ${newest_rpm}/codendi-eclipse-*noarch.rpm
 
-# -> codex-salome-tmf
+# -> codendi-salome-tmf
 echo "Removing installed SalomeTMF plugin if any .."
-$RPM -e --allmatches codex-salome-tmf 2>/dev/null
+$RPM -e --allmatches codendi-salome-tmf 2>/dev/null
 echo "Installing SalomeTMF plugin RPM...."
-cd ${RPMS_DIR}/codex-salome-tmf
+cd ${RPMS_DIR}/codendi-salome-tmf
 newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
-$RPM -Uvh ${newest_rpm}/codex-salome-tmf-*noarch.rpm
+$RPM -Uvh ${newest_rpm}/codendi-salome-tmf-*noarch.rpm
 
 
 ######
@@ -650,8 +650,8 @@ $LN -sf ${dir_entry} docbook-xsl
 #$RM -f apache-tomcat-6
 #$LN -sf ${dir_entry} apache-tomcat-6
 #TOMCAT_DIR=/usr/share/apache-tomcat-6
-echo "export JAVA_HOME=/usr/java/jre" >> /home/codexadm/.profile
-#echo "export CATALINA_HOME=$TOMCAT_DIR" >> /home/codexadm/.profile
+echo "export JAVA_HOME=/usr/java/jre" >> /home/codendiadm/.profile
+#echo "export CATALINA_HOME=$TOMCAT_DIR" >> /home/codendiadm/.profile
 
 #echo "Creating tomcat config file..."
 #TOMCAT_USERS_XML=$TOMCAT_DIR/conf/tomcat-users.xml
@@ -659,11 +659,11 @@ echo "export JAVA_HOME=/usr/java/jre" >> /home/codexadm/.profile
 #<?xml version='1.0' encoding='utf-8'?>
 #<tomcat-users>
 #  <role rolename="manager"/>
-#  <user username="codexadm" password="$codexadm_passwd" roles="manager"/>
+#  <user username="codendiadm" password="$codendiadm_passwd" roles="manager"/>
 #</tomcat-users>
 #EOF
 #$CHMOD 0600 $TOMCAT_USERS_XML
-#$CHOWN -R codexadm.codexadm $TOMCAT_DIR
+#$CHOWN -R codendiadm.codendiadm $TOMCAT_DIR
 
 echo "Creating MySQL conf file..."
 $CAT <<'EOF' >/etc/my.cnf
@@ -672,7 +672,7 @@ default-character-set=utf8
 
 [mysqld]
 default-character-set=utf8
-log-bin=codex-bin
+log-bin=codendi-bin
 skip-bdb
 set-variable = max_allowed_packet=128M
 datadir=/var/lib/mysql
@@ -682,7 +682,7 @@ socket=/var/lib/mysql/mysql.sock
 old_passwords=1
 
 # Skip logging openfire db (for instant messaging)
-# The 'monitor' openrfire plugin creates large codex-bin files
+# The 'monitor' openrfire plugin creates large codendi-bin files
 # Comment this line if you prefer to be safer.
 set-variable  = binlog-ignore-db=openfire
 
@@ -709,27 +709,27 @@ echo "***************************************"
 cd ${nonRPMS_DIR}/utilities
 for f in *
 do
-  $CP $f /usr/lib/codex/bin
-  $CHOWN codexadm.codexadm /usr/lib/codex/bin/$f
+  $CP $f /usr/lib/codendi/bin
+  $CHOWN codendiadm.codendiadm /usr/lib/codendi/bin/$f
 done
-$CHOWN root.root /usr/lib/codex/bin/fileforge
-$CHMOD u+s /usr/lib/codex/bin/fileforge
+$CHOWN root.root /usr/lib/codendi/bin/fileforge
+$CHMOD u+s /usr/lib/codendi/bin/fileforge
 
 ##############################################
-# Install the CodeX software 
+# Install the Codendi software 
 #
-echo "Installing the CodeX software..."
+echo "Installing the Codendi software..."
 cd $INSTALL_DIR
-$TAR xfz ${CodeX_DIR}/codex*.tgz
-$CHOWN -R codexadm.codexadm $INSTALL_DIR
+$TAR xfz ${Codendi_DIR}/codendi*.tgz
+$CHOWN -R codendiadm.codendiadm $INSTALL_DIR
 $FIND $INSTALL_DIR -type f -exec $CHMOD u+rw,g+rw,o-w+r {} \;
 $FIND $INSTALL_DIR -type d -exec $CHMOD 775 {} \;
 
 make_backup /etc/httpd/conf/httpd.conf
-for f in /etc/httpd/conf/httpd.conf /var/named/chroot/var/named/codex_full.zone \
+for f in /etc/httpd/conf/httpd.conf /var/named/chroot/var/named/codendi_full.zone \
 /etc/httpd/conf/ssl.conf \
 /etc/httpd/conf.d/php.conf /etc/httpd/conf.d/subversion.conf \
-/etc/codex/conf/local.inc /etc/codex/conf/database.inc /etc/httpd/conf.d/codex_aliases.conf; do
+/etc/codendi/conf/local.inc /etc/codendi/conf/database.inc /etc/httpd/conf.d/codendi_aliases.conf; do
     yn="0"
     fn=`basename $f`
     [ -f "$f" ] && read -p "$f already exist. Overwrite? [y|n]:" yn
@@ -742,72 +742,72 @@ for f in /etc/httpd/conf/httpd.conf /var/named/chroot/var/named/codex_full.zone 
 	$CP -f $INSTALL_DIR/src/etc/$fn.dist $f
     fi
 
-    $CHOWN codexadm.codexadm $f
+    $CHOWN codendiadm.codendiadm $f
     $CHMOD 640 $f
 done
 
-$CHOWN root:named /var/named/chroot/var/named/codex_full.zone
+$CHOWN root:named /var/named/chroot/var/named/codendi_full.zone
 #$LN -s /var/named/chroot/etc/named.conf /etc
 if [ -f "/var/named/chroot/etc/named.conf" ]; then
    $CHGRP named /var/named/chroot/etc/named.conf
 fi
 
 if [ $SELINUX_ENABLED ]; then
-    $CHCON -h system_u:object_r:named_zone_t /var/named/chroot/var/named/codex_full.zone
+    $CHCON -h system_u:object_r:named_zone_t /var/named/chroot/var/named/codendi_full.zone
     if [ -f "/var/named/chroot/etc/named.conf" ]; then
         $CHCON -h system_u:object_r:named_conf_t /var/named/chroot/etc/named.conf
     fi
 fi
 
-# CodeX User Guide
+# Codendi User Guide
 # a) copy the local parameters file in custom area and customize it
 # b) create the html target directory
 # c) create the PDF target directory
 #
 
-$CP $INSTALL_DIR/src/etc/ParametersLocal.dtd.dist /etc/codex/documentation/user_guide/xml/ParametersLocal.dtd
-$CP $INSTALL_DIR/src/etc/ParametersLocal.cli.dtd.dist /etc/codex/documentation/cli/xml/ParametersLocal.dtd
+$CP $INSTALL_DIR/src/etc/ParametersLocal.dtd.dist /etc/codendi/documentation/user_guide/xml/ParametersLocal.dtd
+$CP $INSTALL_DIR/src/etc/ParametersLocal.cli.dtd.dist /etc/codendi/documentation/cli/xml/ParametersLocal.dtd
 # replace string patterns in ParametersLocal.dtd
-substitute '/etc/codex/documentation/user_guide/xml/ParametersLocal.dtd' '%sys_default_domain%' "$sys_default_domain" 
-substitute '/etc/codex/documentation/user_guide/xml/ParametersLocal.dtd' '%sys_org_name%' "$sys_org_name" 
-substitute '/etc/codex/documentation/user_guide/xml/ParametersLocal.dtd' '%sys_long_org_name%' "$sys_long_org_name" 
+substitute '/etc/codendi/documentation/user_guide/xml/ParametersLocal.dtd' '%sys_default_domain%' "$sys_default_domain" 
+substitute '/etc/codendi/documentation/user_guide/xml/ParametersLocal.dtd' '%sys_org_name%' "$sys_org_name" 
+substitute '/etc/codendi/documentation/user_guide/xml/ParametersLocal.dtd' '%sys_long_org_name%' "$sys_long_org_name" 
 # For CLI: only one parameter
-substitute '/etc/codex/documentation/cli/xml/ParametersLocal.dtd' '%sys_default_domain%' "$sys_default_domain" 
+substitute '/etc/codendi/documentation/cli/xml/ParametersLocal.dtd' '%sys_default_domain%' "$sys_default_domain" 
 
 for lang in en_US fr_FR
 do
-    $MKDIR -p  /etc/codex/documentation/user_guide/xml/$lang
-    $MKDIR -p  /etc/codex/documentation/cli/xml/$lang
+    $MKDIR -p  /etc/codendi/documentation/user_guide/xml/$lang
+    $MKDIR -p  /etc/codendi/documentation/cli/xml/$lang
     $MKDIR -p  $INSTALL_DIR/documentation/user_guide/pdf/$lang
     $MKDIR -p  $INSTALL_DIR/documentation/user_guide/html/$lang
     $MKDIR -p  $INSTALL_DIR/documentation/cli/pdf/$lang
     $MKDIR -p  $INSTALL_DIR/documentation/cli/html/$lang
 done
-$CHOWN -R codexadm.codexadm /etc/codex/documentation
-$CHOWN -R codexadm.codexadm $INSTALL_DIR/documentation
-$CP $INSTALL_DIR/src/utils/backup_job /usr/lib/codex/bin
-$CHOWN root.root /usr/lib/codex/bin/backup_job
-$CHMOD 740 /usr/lib/codex/bin/backup_job
-$CP $INSTALL_DIR/src/utils/svn/backup_subversion.sh /usr/lib/codex/bin
-$CHOWN root.root /usr/lib/codex/bin/backup_subversion.sh
-$CHMOD 740 /usr/lib/codex/bin/backup_subversion.sh
+$CHOWN -R codendiadm.codendiadm /etc/codendi/documentation
+$CHOWN -R codendiadm.codendiadm $INSTALL_DIR/documentation
+$CP $INSTALL_DIR/src/utils/backup_job /usr/lib/codendi/bin
+$CHOWN root.root /usr/lib/codendi/bin/backup_job
+$CHMOD 740 /usr/lib/codendi/bin/backup_job
+$CP $INSTALL_DIR/src/utils/svn/backup_subversion.sh /usr/lib/codendi/bin
+$CHOWN root.root /usr/lib/codendi/bin/backup_subversion.sh
+$CHMOD 740 /usr/lib/codendi/bin/backup_subversion.sh
 
 # replace string patterns in local.inc
-substitute '/etc/codex/conf/local.inc' '%sys_default_domain%' "$sys_default_domain" 
-substitute '/etc/codex/conf/local.inc' '%sys_ldap_server%' "$sys_ldap_server" 
-substitute '/etc/codex/conf/local.inc' '%sys_org_name%' "$sys_org_name" 
-substitute '/etc/codex/conf/local.inc' '%sys_long_org_name%' "$sys_long_org_name" 
-substitute '/etc/codex/conf/local.inc' '%sys_fullname%' "$sys_fullname" 
-substitute '/etc/codex/conf/local.inc' '%sys_dbauth_passwd%' "$dbauth_passwd" 
+substitute '/etc/codendi/conf/local.inc' '%sys_default_domain%' "$sys_default_domain" 
+substitute '/etc/codendi/conf/local.inc' '%sys_ldap_server%' "$sys_ldap_server" 
+substitute '/etc/codendi/conf/local.inc' '%sys_org_name%' "$sys_org_name" 
+substitute '/etc/codendi/conf/local.inc' '%sys_long_org_name%' "$sys_long_org_name" 
+substitute '/etc/codendi/conf/local.inc' '%sys_fullname%' "$sys_fullname" 
+substitute '/etc/codendi/conf/local.inc' '%sys_dbauth_passwd%' "$dbauth_passwd" 
 if [ "$disable_subdomains" = "y" ]; then
-  substitute '/etc/codex/conf/local.inc' 'sys_lists_host = "lists.' 'sys_lists_host = "'
-  substitute '/etc/codex/conf/local.inc' 'sys_disable_subdomains = 0' 'sys_disable_subdomains = 1'
+  substitute '/etc/codendi/conf/local.inc' 'sys_lists_host = "lists.' 'sys_lists_host = "'
+  substitute '/etc/codendi/conf/local.inc' 'sys_disable_subdomains = 0' 'sys_disable_subdomains = 1'
 fi
-# replace string patterns in codex_aliases.inc
-substitute '/etc/codex/conf.d/codex_aliases.conf' '%sys_default_domain%' "$sys_default_domain" 
+# replace string patterns in codendi_aliases.inc
+substitute '/etc/codendi/conf.d/codendi_aliases.conf' '%sys_default_domain%' "$sys_default_domain" 
 
 # replace string patterns in database.inc
-substitute '/etc/codex/conf/database.inc' '%sys_dbpasswd%' "$codexadm_passwd" 
+substitute '/etc/codendi/conf/database.inc' '%sys_dbpasswd%' "$codendiadm_passwd" 
 
 # replace string patterns in httpd.conf
 substitute '/etc/httpd/conf/httpd.conf' '%sys_default_domain%' "$sys_default_domain"
@@ -817,28 +817,28 @@ substitute '/etc/httpd/conf/httpd.conf' '%sys_ip_address%' "$sys_ip_address"
 substitute '/etc/httpd/conf.d/munin.conf' '%sys_dbauth_passwd%' "$dbauth_passwd" 
 
 if [ "$disable_subdomains" != "y" ]; then
-  # replace string patterns in codex_full.zone
+  # replace string patterns in codendi_full.zone
   sys_shortname=`echo $sys_fullname | $PERL -pe 's/\.(.*)//'`
   dns_serial=`date +%Y%m%d`01
-  substitute '/var/named/chroot/var/named/codex_full.zone' '%sys_default_domain%' "$sys_default_domain" 
-  substitute '/var/named/chroot/var/named/codex_full.zone' '%sys_fullname%' "$sys_fullname"
-  substitute '/var/named/chroot/var/named/codex_full.zone' '%sys_ip_address%' "$sys_ip_address"
-  substitute '/var/named/chroot/var/named/codex_full.zone' '%sys_shortname%' "$sys_shortname"
-  substitute '/var/named/chroot/var/named/codex_full.zone' '%dns_serial%' "$dns_serial"
+  substitute '/var/named/chroot/var/named/codendi_full.zone' '%sys_default_domain%' "$sys_default_domain" 
+  substitute '/var/named/chroot/var/named/codendi_full.zone' '%sys_fullname%' "$sys_fullname"
+  substitute '/var/named/chroot/var/named/codendi_full.zone' '%sys_ip_address%' "$sys_ip_address"
+  substitute '/var/named/chroot/var/named/codendi_full.zone' '%sys_shortname%' "$sys_shortname"
+  substitute '/var/named/chroot/var/named/codendi_full.zone' '%dns_serial%' "$dns_serial"
 fi
 
 # Make sure SELinux contexts are valid
 if [ $SELINUX_ENABLED ]; then
-    $CHCON -R -h $SELINUX_CONTEXT /usr/share/codex
+    $CHCON -R -h $SELINUX_CONTEXT /usr/share/codendi
 fi
 
-# Create .subversion directory in codexadm home dir.
-su -c 'svn info --non-interactive https://partners.xrce.xerox.com/svnroot/codex/dev/trunk' - codexadm 2> /dev/null &
+# Create .subversion directory in codendiadm home dir.
+su -c 'svn info --non-interactive https://partners.xrce.xerox.com/svnroot/codendi/dev/trunk' - codendiadm 2> /dev/null &
 
 
-todo "Customize /etc/codex/conf/local.inc and /etc/codex/conf/database.inc"
-todo "Customize /etc/codex/documentation/user_guide/xml/ParametersLocal.dtd and /etc/codex/documentation/cli/xml/ParametersLocal.dtd"
-todo "You may also want to customize /etc/httpd/conf/httpd.conf /usr/lib/codex/bin/backup_job and /usr/lib/codex/bin/backup_subversion.sh"
+todo "Customize /etc/codendi/conf/local.inc and /etc/codendi/conf/database.inc"
+todo "Customize /etc/codendi/documentation/user_guide/xml/ParametersLocal.dtd and /etc/codendi/documentation/cli/xml/ParametersLocal.dtd"
+todo "You may also want to customize /etc/httpd/conf/httpd.conf /usr/lib/codendi/bin/backup_job and /usr/lib/codendi/bin/backup_subversion.sh"
 
 ##############################################
 # Installing phpMyAdmin
@@ -848,8 +848,8 @@ todo "You may also want to customize /etc/httpd/conf/httpd.conf /usr/lib/codex/b
 # This is needed by phpMyAdmin
 #$CHMOD o+rwx /var/lib/php/session
 # OR
-# Make codexadm a member of the apache group?
-$USERMOD -a -G apache codexadm
+# Make codendiadm a member of the apache group?
+$USERMOD -a -G apache codendiadm
 
 
 # Add PmaAbsoluteUri parameter? seems useless now
@@ -857,41 +857,41 @@ $USERMOD -a -G apache codexadm
 #todo "If you want to run the site in https only, edit the phpMyAdmin configuration file at /var/www/phpMyAdmin/config.inc.php, and replace 'http' by 'https' for the line \$cfg['PmaAbsoluteUri']"
 
 ##############################################
-# Installing the CodeX database
+# Installing the Codendi database
 #
-echo "Creating the CodeX database..."
+echo "Creating the Codendi database..."
 
 yn="-"
 freshdb=0
 pass_opt=""
-if [ -d "/var/lib/mysql/codex" ]; then
-    read -p "CodeX Database already exists. Overwrite? [y|n]:" yn
+if [ -d "/var/lib/mysql/codendi" ]; then
+    read -p "Codendi Database already exists. Overwrite? [y|n]:" yn
 fi
 
 # See if MySQL root account is password protected
 mysqlshow 2>&1 | grep password
 while [ $? -eq 0 ]; do
-    read -s -p "Existing CodeX DB is password protected. What is the Mysql root password?: " old_passwd
+    read -s -p "Existing Codendi DB is password protected. What is the Mysql root password?: " old_passwd
     echo
     mysqlshow --password=$old_passwd 2>&1 | grep password
 done
 [ "X$old_passwd" != "X" ] && pass_opt="--password=$old_passwd"
 
-# Delete the CodeX DB if asked for
+# Delete the Codendi DB if asked for
 if [ "$yn" = "y" ]; then
-    $MYSQL -u root $pass_opt -e "drop database codex"
+    $MYSQL -u root $pass_opt -e "drop database codendi"
 fi
 
-if [ ! -d "/var/lib/mysql/codex" ]; then
+if [ ! -d "/var/lib/mysql/codendi" ]; then
     freshdb=1
-    $MYSQL -u root $pass_opt -e "create database codex DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci"
+    $MYSQL -u root $pass_opt -e "create database codendi DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci"
     $CAT <<EOF | $MYSQL -u root mysql $pass_opt
-GRANT ALL PRIVILEGES on *.* to codexadm@localhost identified by '$codexadm_passwd' WITH GRANT OPTION;
+GRANT ALL PRIVILEGES on *.* to codendiadm@localhost identified by '$codendiadm_passwd' WITH GRANT OPTION;
 GRANT ALL PRIVILEGES on *.* to root@localhost identified by '$rt_passwd';
-GRANT SELECT ON codex.user to dbauthuser@localhost identified by '$dbauth_passwd';
-GRANT SELECT ON codex.groups to dbauthuser@localhost;
-GRANT SELECT ON codex.user_group to dbauthuser@localhost;
-GRANT SELECT ON codex.session to dbauthuser@localhost;
+GRANT SELECT ON codendi.user to dbauthuser@localhost identified by '$dbauth_passwd';
+GRANT SELECT ON codendi.groups to dbauthuser@localhost;
+GRANT SELECT ON codendi.user_group to dbauthuser@localhost;
+GRANT SELECT ON codendi.session to dbauthuser@localhost;
 FLUSH PRIVILEGES;
 EOF
 fi
@@ -899,12 +899,12 @@ fi
 pass_opt="--password=$rt_passwd"
 
 if [ $freshdb -eq 1 ]; then
-echo "Populating the CodeX database..."
+echo "Populating the Codendi database..."
 cd $INSTALL_DIR/src/db/mysql/
-$MYSQL -u codexadm codex --password=$codexadm_passwd < database_structure.sql   # create the DB
+$MYSQL -u codendiadm codendi --password=$codendiadm_passwd < database_structure.sql   # create the DB
 cp database_initvalues.sql /tmp/database_initvalues.sql
 substitute '/tmp/database_initvalues.sql' '_DOMAIN_NAME_' "$sys_default_domain"
-$MYSQL -u codexadm codex --password=$codexadm_passwd < /tmp/database_initvalues.sql  # populate with init values.
+$MYSQL -u codendiadm codendi --password=$codendiadm_passwd < /tmp/database_initvalues.sql  # populate with init values.
 rm -f /tmp/database_initvalues.sql
 fi
 
@@ -995,9 +995,9 @@ fi
 
 # Create site wide ML
 # Note that if sys_default_domain is not a domain, the script will complain
-LIST_OWNER=codex-admin@$sys_default_domain
+LIST_OWNER=codendi-admin@$sys_default_domain
 if [ "$disable_subdomains" = "y" ]; then
-    LIST_OWNER=codex-admin@$sys_fullname
+    LIST_OWNER=codendi-admin@$sys_fullname
 fi
 /usr/lib/mailman/bin/newlist -q mailman $LIST_OWNER $mm_passwd > /dev/null
 
@@ -1022,7 +1022,7 @@ mailman-unsubscribe:  "|/usr/lib/mailman/mail/mailman unsubscribe mailman"
 
 EOF
 
-# Subscribe codex-admin to this ML
+# Subscribe codendi-admin to this ML
 echo $LIST_OWNER | /usr/lib/mailman/bin/add_members -r - mailman
 
 $SERVICE mailman start
@@ -1033,10 +1033,10 @@ $SERVICE mailman start
 echo "##############################################"
 echo "Installing sendmail shell wrappers and configuring sendmail..."
 cd /etc/smrsh
-$LN -sf /usr/lib/codex/bin/gotohell
+$LN -sf /usr/lib/codendi/bin/gotohell
 #$LN -sf $MAILMAN_DIR/mail/mailman Now done in RPM install
 
-$PERL -i'.orig' -p -e's:^O\s*AliasFile.*:O AliasFile=/etc/aliases,/etc/aliases.codex:' /etc/mail/sendmail.cf
+$PERL -i'.orig' -p -e's:^O\s*AliasFile.*:O AliasFile=/etc/aliases,/etc/aliases.codendi:' /etc/mail/sendmail.cf
 cat <<EOF >/etc/mail/local-host-names
 # local-host-names - include all aliases for your machine here.
 $sys_default_domain
@@ -1044,14 +1044,14 @@ lists.$sys_default_domain
 users.$sys_default_domain
 EOF
 
-todo "Finish sendmail settings (see installation Guide) and create codex-contact and codex-admin aliases in /etc/aliases"
+todo "Finish sendmail settings (see installation Guide) and create codendi-contact and codendi-admin aliases in /etc/aliases"
 
 ##############################################
 # CVS configuration
 #
 echo "Configuring the CVS server and CVS tracking tools..."
 $TOUCH /etc/cvs_root_allow
-$CHOWN codexadm.codexadm /etc/cvs_root_allow
+$CHOWN codendiadm.codendiadm /etc/cvs_root_allow
 $CHMOD 644 /etc/cvs_root_allow
 
 $CP /etc/xinetd.d/cvs /root/cvs.xinetd.ori
@@ -1070,18 +1070,18 @@ service cvspserver
 EOF
 
 cd $INSTALL_DIR/src/utils/cvs1
-$CP log_accum /usr/lib/codex/bin
-$CP commit_prep /usr/lib/codex/bin
-$CP cvssh /usr/lib/codex/bin
-$CP cvssh-restricted /usr/lib/codex/bin
+$CP log_accum /usr/lib/codendi/bin
+$CP commit_prep /usr/lib/codendi/bin
+$CP cvssh /usr/lib/codendi/bin
+$CP cvssh-restricted /usr/lib/codendi/bin
 
 $CAT <<'EOF' >> /etc/shells
-/usr/lib/codex/bin/cvssh
-/usr/lib/codex/bin/cvssh-restricted
+/usr/lib/codendi/bin/cvssh
+/usr/lib/codendi/bin/cvssh-restricted
 EOF
 
-cd /usr/lib/codex/bin
-$CHOWN codexadm.codexadm log_accum commit_prep
+cd /usr/lib/codendi/bin
+$CHOWN codendiadm.codendiadm log_accum commit_prep
 $CHMOD 755 log_accum commit_prep cvssh cvssh-restricted
 $CHMOD u+s log_accum   # sets the uid bit (-rwsr-xr-x)
 
@@ -1091,9 +1091,9 @@ $CHMOD u+s log_accum   # sets the uid bit (-rwsr-xr-x)
 #
 echo "Configuring the Subversion server and tracking tools..."
 cd $INSTALL_DIR/src/utils/svn
-$CP commit-email.pl /usr/lib/codex/bin
-cd /usr/lib/codex/bin
-$CHOWN codexadm.codexadm commit-email.pl
+$CP commit-email.pl /usr/lib/codendi/bin
+cd /usr/lib/codendi/bin
+$CHOWN codendiadm.codendiadm commit-email.pl
 $CHMOD 755 commit-email.pl
 
 
@@ -1108,13 +1108,13 @@ $PERL -i'.orig' -p -e's/\d+ \d+ (.*daily)/58 23 \1/g' /etc/crontab
 
 # Configure vsftpd
 $PERL -i'.orig' -p -e "s/^#anon_upload_enable=YES/anon_upload_enable=YES/g" /etc/vsftpd/vsftpd.conf 
-$PERL -pi -e "s/^#ftpd_banner=.*/ftpd_banner=Welcome to CodeX FTP service./g" /etc/vsftpd/vsftpd.conf 
+$PERL -pi -e "s/^#ftpd_banner=.*/ftpd_banner=Welcome to Codendi FTP service./g" /etc/vsftpd/vsftpd.conf 
 $PERL -pi -e "s/^local_umask=.*/local_umask=002/g" /etc/vsftpd/vsftpd.conf 
 
 # Add welcome messages
-$CAT <<'EOF' > /var/lib/codex/ftp/.message
+$CAT <<'EOF' > /var/lib/codendi/ftp/.message
 ********************************************************************
-Welcome to CodeX FTP server
+Welcome to Codendi FTP server
 
 On This Site:
 /incoming          Place where to upload your new file release
@@ -1122,15 +1122,15 @@ On This Site:
 *********************************************************************
 
 EOF
-$CHOWN ftpadmin.ftpadmin /var/lib/codex/ftp/.message
+$CHOWN ftpadmin.ftpadmin /var/lib/codendi/ftp/.message
 
 # Add welcome messages
-$CAT <<'EOF' >/var/lib/codex/ftp/incoming/.message
+$CAT <<'EOF' >/var/lib/codendi/ftp/incoming/.message
 
 Upload new file releases here
 
 EOF
-$CHOWN ftpadmin.ftpadmin /var/lib/codex/ftp/incoming/.message
+$CHOWN ftpadmin.ftpadmin /var/lib/codendi/ftp/incoming/.message
 
 $SERVICE vsftpd start
 
@@ -1138,21 +1138,21 @@ $SERVICE vsftpd start
 # Create the custom default page for the project Web sites
 #
 echo "Creating the custom default page for the project Web sites..."
-def_page=/etc/codex/site-content/en_US/others/default_page.php
+def_page=/etc/codendi/site-content/en_US/others/default_page.php
 yn="y"
 [ -f "$def_page" ] && read -p "Custom Default Project Home page already exists. Overwrite? [y|n]:" yn
 if [ "$yn" = "y" ]; then
-    $MKDIR -p /etc/codex/site-content/en_US/others
-    $CHOWN codexadm.codexadm /etc/codex/site-content/en_US/others
-    $CP $INSTALL_DIR/site-content/en_US/others/default_page.php /etc/codex/site-content/en_US/others/default_page.php
+    $MKDIR -p /etc/codendi/site-content/en_US/others
+    $CHOWN codendiadm.codendiadm /etc/codendi/site-content/en_US/others
+    $CP $INSTALL_DIR/site-content/en_US/others/default_page.php /etc/codendi/site-content/en_US/others/default_page.php
 fi
 
 if [ "$disable_subdomains" = "y" ]; then
   echo "Use same-host project web sites"
-  $MYSQL -u codexadm codex --password=$codexadm_passwd -e "UPDATE service SET link = '/www/\$projectname/' WHERE short_name = 'homepage'"
+  $MYSQL -u codendiadm codendi --password=$codendiadm_passwd -e "UPDATE service SET link = '/www/\$projectname/' WHERE short_name = 'homepage'"
 fi
 
-todo "Customize /etc/codex/site-content/en_US/others/default_page.php (project web site default home page)"
+todo "Customize /etc/codendi/site-content/en_US/others/default_page.php (project web site default home page)"
 todo "Customize site-content information for your site."
 todo "  For instance: contact/contact.txt cvs/intro.txt"
 todo "  svn/intro.txt include/new_project_email.txt, etc."
@@ -1162,17 +1162,17 @@ todo "  svn/intro.txt include/new_project_email.txt, etc."
 
 if [ "$active_shell" = "n" ]; then
     echo "Shell access configuration defaulted to 'No shell account'..."
-    $MYSQL -u codexadm codex --password=$codexadm_passwd -e "ALTER TABLE user ALTER COLUMN shell SET DEFAULT '/sbin/nologin'"
+    $MYSQL -u codendiadm codendi --password=$codendiadm_passwd -e "ALTER TABLE user ALTER COLUMN shell SET DEFAULT '/sbin/nologin'"
 fi
 
 ##############################################
 # DNS Configuration
 #
 if [ "$disable_subdomains" != "y" ]; then
-  todo "Create the DNS configuration files as explained in the CodeX Installation Guide:"
-  todo "    update /var/named/chroot/var/named/codex_full.zone - replace all words starting with %%."
+  todo "Create the DNS configuration files as explained in the Codendi Installation Guide:"
+  todo "    update /var/named/chroot/var/named/codendi_full.zone - replace all words starting with %%."
   todo "    make sure the file is readable by 'other':"
-  todo "      > chmod o+r /var/named/chroot/var/named/codex_full.zone"
+  todo "      > chmod o+r /var/named/chroot/var/named/codendi_full.zone"
   todo "    edit /etc/named.conf to create the new zone."
 fi
 
@@ -1181,53 +1181,53 @@ fi
 #
 echo "Installing root user crontab..."
 $CAT <<'EOF' >/tmp/cronfile
-# run the Codex crontab script once every 2 hours
+# run the Codendi crontab script once every 2 hours
 # this script synchronizes user, groups, cvs repo,
 # directories, mailing lists, etc...
-0 0-23/2 * * * /usr/share/codex/src/utils/xerox_crontab.sh
+0 0-23/2 * * * /usr/share/codendi/src/utils/xerox_crontab.sh
 #
 # run the daily statistics script just a little bit after
 # midnight so that it computes stats for the day before
 # Run at 0:30 am
-30 0 * * * /usr/share/codex/src/utils/xerox_all_daily_stats.sh
+30 0 * * * /usr/share/codendi/src/utils/xerox_all_daily_stats.sh
 #
 # run the weekly stats for projects. Run it on Monday morning so that
 # it computes the stats for the week before
 # Run on Monday at 1am
-0 1 * * Mon (cd /usr/share/codex/src/utils/underworld-root; ./db_project_weekly_metric.pl)
+0 1 * * Mon (cd /usr/share/codendi/src/utils/underworld-root; ./db_project_weekly_metric.pl)
 #
 # daily incremental backup of subversion repositories
-45 23 * * 1-6 /usr/lib/codex/bin/backup_subversion.sh -i
+45 23 * * 1-6 /usr/lib/codendi/bin/backup_subversion.sh -i
 #
 # weekly full backup of subversion repositories (0:15 on Sunday)
-15 0 * * Sun /usr/lib/codex/bin/backup_subversion.sh -noarchives
+15 0 * * Sun /usr/lib/codendi/bin/backup_subversion.sh -noarchives
 #
 # weekly backup preparation (mysql shutdown, file dump and restart)
-45 0 * * Sun /usr/lib/codex/bin/backup_job
+45 0 * * Sun /usr/lib/codendi/bin/backup_job
 
 # Delete all files in FTP incoming that are older than 2 weeks (336 hours)
 #
-0 3 * * * /usr/sbin/tmpwatch -m -f 336 /var/lib/codex/ftp/incoming
+0 3 * * * /usr/sbin/tmpwatch -m -f 336 /var/lib/codendi/ftp/incoming
 #
 # It looks like we have memory leaks in Apache in some versions so restart it
 # on Sunday. Do it while the DB is down for backup
 50 0 * * Sun /sbin/service httpd restart
 #
 # Once a minute make sure that the setuid bit is set on some critical files
-* * * * * (cd /usr/lib/codex/bin; /bin/chmod u+s log_accum fileforge)
+* * * * * (cd /usr/lib/codendi/bin; /bin/chmod u+s log_accum fileforge)
 EOF
 crontab -u root /tmp/cronfile
 
-echo "Installing  codexadm user crontab..."
+echo "Installing  codendiadm user crontab..."
 $CAT <<'EOF' >/tmp/cronfile
-# Daily CodeX PHP cron (obsolete documents...)
-10 0 * * * /usr/share/codex/src/utils/php-launcher.sh /usr/share/codex/src/utils/codex_daily.php
-# Re-generate the CodeX User Guides on a daily basis
-00 03 * * * /usr/share/codex/src/utils/generate_doc.sh
-30 03 * * * /usr/share/codex/src/utils/generate_programmer_doc.sh
-45 03 * * * /usr/share/codex/src/utils/generate_cli_package.sh
+# Daily Codendi PHP cron (obsolete documents...)
+10 0 * * * /usr/share/codendi/src/utils/php-launcher.sh /usr/share/codendi/src/utils/codendi_daily.php
+# Re-generate the Codendi User Guides on a daily basis
+00 03 * * * /usr/share/codendi/src/utils/generate_doc.sh
+30 03 * * * /usr/share/codendi/src/utils/generate_programmer_doc.sh
+45 03 * * * /usr/share/codendi/src/utils/generate_cli_package.sh
 EOF
-crontab -u codexadm /tmp/cronfile
+crontab -u codendiadm /tmp/cronfile
 
 
 ##############################################
@@ -1244,7 +1244,7 @@ $CAT <<'EOF' >/etc/logrotate.d/httpd
      year=`date +%Y`
      month=`date +%m`
      day=`date +%d`
-     destdir="/var/log/codex/$year/$month"
+     destdir="/var/log/codendi/$year/$month"
      destfile="http_combined_$year$month$day.log"
      mkdir -p $destdir
      cp /var/log/httpd/access_log.1 $destdir/$destfile
@@ -1261,7 +1261,7 @@ $CAT <<'EOF' >/etc/logrotate.d/httpd
      month=`date +%m`
      day=`date +%d`
      #server=`hostname`
-     destdir="/var/log/codex/$year/$month"
+     destdir="/var/log/codendi/$year/$month"
      destfile="vhosts-access_$year$month$day.log"
      mkdir -p $destdir
      cp /var/log/httpd/vhosts-access_log.1 $destdir/$destfile
@@ -1327,7 +1327,7 @@ $CAT <<'EOF' >/etc/logrotate.d/vsftpd.log
      year=`date +%Y`
      month=`date +%m`
      day=`date +%d`
-     destdir="/var/log/codex/$year/$month"
+     destdir="/var/log/codendi/$year/$month"
      destfile="ftp_xferlog_$year$month$day.log"
      mkdir -p $destdir
      cp /var/log/xferlog.1 $destdir/$destfile
@@ -1338,24 +1338,24 @@ $CHOWN root.root /etc/logrotate.d/vsftpd.log
 $CHMOD 644 /etc/logrotate.d/vsftpd.log
 
 ##############################################
-# Create CodeX profile script
+# Create Codendi profile script
 #
 
 # customize the global profile 
-$GREP profile_codex /etc/profile 1>/dev/null
+$GREP profile_codendi /etc/profile 1>/dev/null
 [ $? -ne 0 ] && \
     cat <<'EOF' >>/etc/profile
-# Now the Part specific to CodeX users
+# Now the Part specific to Codendi users
 #
 if [ `id -u` -gt 20000 -a `id -u` -lt 50000 ]; then
-        . /etc/profile_codex
+        . /etc/profile_codendi
 fi
 EOF
 
-$CAT <<'EOF' >/etc/profile_codex
-# /etc/profile_codex
+$CAT <<'EOF' >/etc/profile_codendi
+# /etc/profile_codendi
 #
-# Specific login set up and messages for CodeX users`
+# Specific login set up and messages for Codendi users`
  
 # All projects this user belong to
  
@@ -1374,9 +1374,9 @@ grplist=`echo $grplist_name | cut -f$field_list -d" "`;
  
 cat <<EOM
  
----------------------------------
-W E L C O M E   T O   C O D E X !
----------------------------------
+-------------------------------------
+W E L C O M E   T O   C O D E N D I !
+-------------------------------------
                                                                                
 You are currently in your user home directory: $HOME
 EOM
@@ -1391,7 +1391,7 @@ cat <<EOM
 Corresponding CVS and Subversion repositories are in /cvsroot and /svnroot
                                                                                
              *** IMPORTANT REMARK ***
-The CodeX server hosts very valuable yet publicly available
+The Codendi server hosts very valuable yet publicly available
 data. Therefore we recommend that you keep working only in
 the directories listed above for which you have full rights
 and responsibilities.
@@ -1427,79 +1427,79 @@ fi
 # *Last* step: install plugins
 #
 # docman plugin
-$CAT $INSTALL_DIR/plugins/docman/db/install.sql | $MYSQL -u codexadm codex --password=$codexadm_passwd
-build_dir /etc/codex/plugins/docman/etc codexadm codexadm 755
-$CP $INSTALL_DIR/plugins/docman/etc/docman.inc.dist /etc/codex/plugins/docman/etc/docman.inc
-$CHOWN codexadm.codexadm /etc/codex/plugins/docman/etc/docman.inc
-$CHMOD 644 /etc/codex/plugins/docman/etc/docman.inc
+$CAT $INSTALL_DIR/plugins/docman/db/install.sql | $MYSQL -u codendiadm codendi --password=$codendiadm_passwd
+build_dir /etc/codendi/plugins/docman/etc codendiadm codendiadm 755
+$CP $INSTALL_DIR/plugins/docman/etc/docman.inc.dist /etc/codendi/plugins/docman/etc/docman.inc
+$CHOWN codendiadm.codendiadm /etc/codendi/plugins/docman/etc/docman.inc
+$CHMOD 644 /etc/codendi/plugins/docman/etc/docman.inc
 
 # serverupdate plugin
-$CAT $INSTALL_DIR/plugins/serverupdate/db/install.sql | $MYSQL -u codexadm codex --password=$codexadm_passwd
+$CAT $INSTALL_DIR/plugins/serverupdate/db/install.sql | $MYSQL -u codendiadm codendi --password=$codendiadm_passwd
 
 # salome plugin
-$CAT $INSTALL_DIR/plugins/salome/db/install.sql | $MYSQL -u codexadm codex --password=$codexadm_passwd
-build_dir /etc/codex/plugins/salome/etc codexadm codexadm 755
-$CP $INSTALL_DIR/plugins/salome/etc/salome.inc.dist /etc/codex/plugins/salome/etc/salome.inc
-$CP $INSTALL_DIR/plugins/salome/etc/database_salome.inc.dist /etc/codex/plugins/salome/etc/database_salome.inc
-substitute '/etc/codex/plugins/salome/etc/database_salome.inc' '%sys_salomedbpasswd%' "$slm_passwd" 
-$CHOWN codexadm.codexadm /etc/codex/plugins/salome/etc/*
-$CHMOD 644 /etc/codex/plugins/salome/etc/*
+$CAT $INSTALL_DIR/plugins/salome/db/install.sql | $MYSQL -u codendiadm codendi --password=$codendiadm_passwd
+build_dir /etc/codendi/plugins/salome/etc codendiadm codendiadm 755
+$CP $INSTALL_DIR/plugins/salome/etc/salome.inc.dist /etc/codendi/plugins/salome/etc/salome.inc
+$CP $INSTALL_DIR/plugins/salome/etc/database_salome.inc.dist /etc/codendi/plugins/salome/etc/database_salome.inc
+substitute '/etc/codendi/plugins/salome/etc/database_salome.inc' '%sys_salomedbpasswd%' "$slm_passwd" 
+$CHOWN codendiadm.codendiadm /etc/codendi/plugins/salome/etc/*
+$CHMOD 644 /etc/codendi/plugins/salome/etc/*
 java -jar $INSTALL_DIR/plugins/salome/tools/keygen.jar $slm_passwd $INSTALL_DIR/plugins/salome/www/webapps/jdbc_client/cfg/
 #java -jar $INSTALL_DIR/plugins/salome/tools/keygen.jar $slm_passwd $TOMCAT_DIR/webapps/salome_tmf-soap-server-3/cfg
 
 #GraphOnTrackers plugin
-$CAT $INSTALL_DIR/plugins/graphontrackers/db/install.sql | $MYSQL -u codexadm codex --password=$codexadm_passwd
-$CAT $INSTALL_DIR/plugins/graphontrackers/db/initvalues.sql | $MYSQL -u codexadm codex --password=$codexadm_passwd
+$CAT $INSTALL_DIR/plugins/graphontrackers/db/install.sql | $MYSQL -u codendiadm codendi --password=$codendiadm_passwd
+$CAT $INSTALL_DIR/plugins/graphontrackers/db/initvalues.sql | $MYSQL -u codendiadm codendi --password=$codendiadm_passwd
 
 # IM plugin
-build_dir /etc/codex/plugins/IM/etc codexadm codexadm 755
+build_dir /etc/codendi/plugins/IM/etc codendiadm codendiadm 755
 # Create openfireadm MySQL user
 $CAT <<EOF | $MYSQL -u root mysql $pass_opt
 GRANT ALL PRIVILEGES on openfire.* to openfireadm@localhost identified by '$openfire_passwd';
 FLUSH PRIVILEGES;
 EOF
 # Install plugin
-$CAT $INSTALL_DIR/plugins/IM/db/install.sql | $MYSQL -u codexadm codex --password=$codexadm_passwd
+$CAT $INSTALL_DIR/plugins/IM/db/install.sql | $MYSQL -u codendiadm codendi --password=$codendiadm_passwd
 # Initialize Jabbex
 IM_ADMIN_GROUP='imadmingroup'
 IM_ADMIN_USER='imadmin-bot'
 IM_ADMIN_USER_PW='1M@dm1n'
 IM_MUC_PW='Mu6.4dm1n' # Doesn't need to change
-$PHP $INSTALL_DIR/plugins/IM/include/jabbex_api/installation/install.php -a -orp $rt_passwd -uod openfireadm -pod $openfire_passwd -ucd dbauthuser -pcd $dbauth_passwd -odb jdbc:mysql://localhost:3306/openfire -cdb jdbc:mysql://localhost:3306/codex -ouri $sys_default_domain -gjx $IM_ADMIN_GROUP -ujx $IM_ADMIN_USER -pjx $IM_ADMIN_USER_PW -pmuc $IM_MUC_PW
+$PHP $INSTALL_DIR/plugins/IM/include/jabbex_api/installation/install.php -a -orp $rt_passwd -uod openfireadm -pod $openfire_passwd -ucd dbauthuser -pcd $dbauth_passwd -odb jdbc:mysql://localhost:3306/openfire -cdb jdbc:mysql://localhost:3306/codendi -ouri $sys_default_domain -gjx $IM_ADMIN_GROUP -ujx $IM_ADMIN_USER -pjx $IM_ADMIN_USER_PW -pmuc $IM_MUC_PW
 
 ##############################################
 # Generate Documentation
 #
-echo "Generating the CodeX Manuals. This will take a few minutes."
+echo "Generating the Codendi Manuals. This will take a few minutes."
 $INSTALL_DIR/src/utils/generate_doc.sh -f
 $INSTALL_DIR/src/utils/generate_programmer_doc.sh -f
 $INSTALL_DIR/src/utils/generate_cli_package.sh -f
-$CHOWN -R codexadm.codexadm $INSTALL_DIR/documentation
-$CHOWN -R codexadm.codexadm $INSTALL_DIR/downloads
+$CHOWN -R codendiadm.codendiadm $INSTALL_DIR/documentation
+$CHOWN -R codendiadm.codendiadm $INSTALL_DIR/downloads
 
 ##############################################
 # End of installation
 #
 todo "If you are behind a proxy, then you need to declare the proxy in two files: "
-todo "* sys_proxy in /etc/codex/conf/local.inc (for external RSS feeds support)"
-todo "* /home/codexadm/.subversion/servers for the Server Update plugin"
-todo "In order to enable the subversion update, you also need to type the following commands (as codexadm):"
-todo "     cd /usr/share/codex/"
+todo "* sys_proxy in /etc/codendi/conf/local.inc (for external RSS feeds support)"
+todo "* /home/codendiadm/.subversion/servers for the Server Update plugin"
+todo "In order to enable the subversion update, you also need to type the following commands (as codendiadm):"
+todo "     cd /usr/share/codendi/"
 todo "     svn status -u --username <your_login_on_partners>"
 todo "   Accept the certificate permanently, and type in your password."
 
-todo "If only HTTPS is enabled on the CodeX server:"
-todo " * update ENTITY SYS_UPDATE_SITE in /etc/codex/documentation/user_guide/xml/ParametersLocal.dtd (replace 'http' by 'https')"
+todo "If only HTTPS is enabled on the Codendi server:"
+todo " * update ENTITY SYS_UPDATE_SITE in /etc/codendi/documentation/user_guide/xml/ParametersLocal.dtd (replace 'http' by 'https')"
 todo " * WARNING: The Eclipse plugin *requires* a *valid* SSL certificate (from a certified authority). Self-signed certificates *won't* work."
 todo "If you wish to use SSL encryption with the Jabber server, you need to import or generate an SSL server into Openfire's web server:"
 todo " * Go in Openfire Admin iterface (on port 9090 by def), then: Server Settings -> Server Certificates"
-todo "To customize the network gallery, copy /usr/share/codex/site-content/en_US/layout/osdn_sites.txt to /etc/codex/site-content/en_US/layout/ and edit it."
-todo "Create the shell login files for CodeX users in /etc/skel_codex"
-todo "Change the default login shell if needed in the database (/sbin/nologin or /usr/lib/codex/bin/cvssh, etc.)"
-todo "Then, run the main crontab script manually: /usr/share/codex/src/utils/xerox_crontab.sh"
+todo "To customize the network gallery, copy /usr/share/codendi/site-content/en_US/layout/osdn_sites.txt to /etc/codendi/site-content/en_US/layout/ and edit it."
+todo "Create the shell login files for Codendi users in /etc/skel_codendi"
+todo "Change the default login shell if needed in the database (/sbin/nologin or /usr/lib/codendi/bin/cvssh, etc.)"
+todo "Then, run the main crontab script manually: /usr/share/codendi/src/utils/xerox_crontab.sh"
 todo "Last, log in as 'admin' on web server, read/accept the license, and click on 'server update'. Then update the server to the latest available version."
 todo ""
-todo "Note: CodeX now supports CVSNT and the sserver protocol, but they are not installed by default."
+todo "Note: Codendi now supports CVSNT and the sserver protocol, but they are not installed by default."
 todo "If you plan to use CVSNT, please refer to the installation guide"
 todo "-----------------------------------------"
 todo "This TODO list is available in $TODO_FILE"
