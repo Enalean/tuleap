@@ -1,21 +1,29 @@
-#
-# CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
-# Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2002. All Rights Reserved
-# http://codex.xerox.com
-#
 # 
-#
-#  License:
-#    This file is subject to the terms and conditions of the GNU General Public
-#    license. See the file COPYING in the main directory of this archive for
-#    more details.
+# Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+# 
+# This file is a part of Codendi.
+# 
+# Codendi is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+# 
+# Codendi is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+# 
+
 #
 # Purpose:
-#    Create all the CodeX tables. (The Database must be created first by hand)
+#    Create all the Codendi tables. (The Database must be created first by hand)
 #
 # MySQL dump 8.22
 #
-# Host: localhost    Database: codex
+# Host: localhost    Database: codendi
 #-------------------------------------------------------
 # Server version	3.23.51-log
 
@@ -206,7 +214,7 @@ CREATE TABLE bug_cc (
 #               For SB Not applicable
 # label       : short name (used on the HTML form)
 # description : longer description of this field
-# scope       : S if predefined values are for the entire Codex,
+# scope       : S if predefined values are for the entire Codendi,
 #               P if values can be re-defined at the project level
 # required    : 0 a project can decide not to use this bug field
 #               1 all projects have to use this bug field
@@ -216,7 +224,7 @@ CREATE TABLE bug_cc (
 #               1 yes keep the old values in the history table
 # special     : 0 process this field as usual
 #               1 this field require some special processing
-# custom      : 0 this is a CodeX field which semantic (label) cannot be customized
+# custom      : 0 this is a Codendi field which semantic (label) cannot be customized
 #               1 this field is a custom field which label can be user defined
 #
 CREATE TABLE bug_field (
@@ -422,7 +430,7 @@ CREATE TABLE bug_notification_role (
 #
 # Notes: 
 # - scope='S' means a bug report available to all projects
-# (defined by CodeX Site administrators, group_id =100)
+# (defined by Codendi Site administrators, group_id =100)
 # - scope='P' means a bug report available to all project members
 # of project group_id (defined by project admin)
 # - scope='I' means a personal (individual) bug report only visible 
@@ -2123,7 +2131,7 @@ CREATE TABLE project_file (
 #               For SB Not applicable
 # label       : short name (used on the HTML form)
 # description : longer description of this field
-# scope       : S if predefined values are for the entire Codex,
+# scope       : S if predefined values are for the entire Codendi,
 #               P if values can be re-defined at the project level
 # required    : 0 a project can decide not to use this task field
 #               1 all projects have to use this task field
@@ -2133,7 +2141,7 @@ CREATE TABLE project_file (
 #               1 yes keep the old values in the history table
 # special     : 0 process this field as usual
 #               1 this field require some special processing
-# custom      : 0 this is a CodeX field which semantic (label) cannot be customized
+# custom      : 0 this is a Codendi field which semantic (label) cannot be customized
 #               1 this field is a custom field which label can be user defined
 #
 CREATE TABLE project_field (
@@ -2484,7 +2492,7 @@ CREATE TABLE artifact_field_usage (
 #               For SB Not applicable
 # label       : short name (used on the HTML form)
 # description : longer description of this field
-# scope       : S if predefined values are for the entire Codex,
+# scope       : S if predefined values are for the entire Codendi,
 #               P if values can be re-defined at the project level
 # required    : 0 a project can decide not to use this artifact field
 #               1 all projects have to use this artifact field

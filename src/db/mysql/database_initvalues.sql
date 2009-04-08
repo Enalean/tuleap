@@ -1,17 +1,25 @@
-#
-# CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
-# Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2002. All Rights Reserved
-# http://codex.xerox.com
-#
 # 
-#
-#  License:
-#    This file is subject to the terms and conditions of the GNU General Public
-#    license. See the file COPYING in the main directory of this archive for
-#    more details.
+# Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+# 
+# This file is a part of Codendi.
+# 
+# Codendi is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+# 
+# Codendi is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+# 
+
 #
 # Purpose:
-#    Insert default values in all the CodeX tables.
+#    Insert default values in all the Codendi tables.
 
 
 
@@ -57,7 +65,7 @@ INSERT INTO user SET \
 INSERT INTO user SET \
         user_id = 101, \
         user_name = 'admin', \
-        email = 'codex-admin@_DOMAIN_NAME_', \
+        email = 'codendi-admin@_DOMAIN_NAME_', \
         user_pw = '6f3cac6213ffceee27cc85414f458caa', \
         realname = 'Site Administrator', \
         register_purpose = NULL, \
@@ -110,22 +118,22 @@ INSERT INTO group_desc SET \
 
 INSERT INTO groups SET \
   group_id = '1', \
-  group_name = 'CodeX Administration Project', \
+  group_name = 'Codendi Administration Project', \
   is_public = '1', \
   status = 'A', \
-  unix_group_name = 'codex', \
+  unix_group_name = 'codendi', \
   unix_box = 'shell1', \
-  http_domain = 'codex._DOMAIN_NAME_', \
-  short_description = 'CodeX Administration Project', \
+  http_domain = 'codendi._DOMAIN_NAME_', \
+  short_description = 'Codendi Administration Project', \
   cvs_box = 'cvs1', \
   svn_box = 'svn1', \
   license = 'xrx', \
   license_other = '', \
   register_time = 940000000, \
   rand_hash = '', \
-  new_bug_address = 'codex-admin@_DOMAIN_NAME_', \
-  new_patch_address = 'codex-admin@_DOMAIN_NAME_', \
-  new_support_address = 'codex-admin@_DOMAIN_NAME_', \
+  new_bug_address = 'codendi-admin@_DOMAIN_NAME_', \
+  new_patch_address = 'codendi-admin@_DOMAIN_NAME_', \
+  new_support_address = 'codendi-admin@_DOMAIN_NAME_', \
   type = '1', \
   send_all_bugs = '1', \
   send_all_patches = '1', \
@@ -195,7 +203,7 @@ INSERT INTO groups SET \
   unix_group_name = 'none', \
   unix_box = 'shell1', \
   http_domain = '', \
-  short_description = 'The default CodeX template', \
+  short_description = 'The default Codendi template', \
   cvs_box = '', \
   svn_box = '', \
   license = '', \
@@ -2022,9 +2030,9 @@ insert into service (service_id, group_id, label, description, short_name, link,
 insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (17, 100, 'service_wiki_lbl_key', 'service_wiki_desc_key', 'wiki', '/wiki/?group_id=$group_id', 1, 1, 'system', 105);
 
 -- Group 1
-insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (31, 1, 'service_summary_lbl_key', 'service_summary_desc_key', 'summary', '/projects/codex/', 1, 1, 'system', 10);
+insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (31, 1, 'service_summary_lbl_key', 'service_summary_desc_key', 'summary', '/projects/codendi/', 1, 1, 'system', 10);
 insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (32, 1, 'service_admin_lbl_key', 'service_admin_desc_key', 'admin', '/project/admin/?group_id=1', 1, 1, 'system', 20);
-insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (33, 1, 'service_homepage_lbl_key', 'service_homepage_desc_key', 'homepage', 'http://codex._DOMAIN_NAME_', 1, 1, 'system', 30);
+insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (33, 1, 'service_homepage_lbl_key', 'service_homepage_desc_key', 'homepage', 'http://codendi._DOMAIN_NAME_', 1, 1, 'system', 30);
 insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (34, 1, 'service_forum_lbl_key', 'service_forum_desc_key', 'forum', '/forum/?group_id=1', 1, 1, 'system', 40);
 insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (35, 1, 'service_mail_lbl_key', 'service_mail_desc_key', 'mail', '/mail/?group_id=1', 1, 1, 'system', 80);
 insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (36, 1, 'service_doc_lbl_key', 'service_doc_desc_key', 'doc', '/docman/?group_id=1', 0, 0, 'system', 100);
@@ -2557,8 +2565,8 @@ INSERT INTO plugin (name, available) VALUES ('serverupdate', '1');
 -- install and enable eclipse plugin
 INSERT INTO plugin (name, available) VALUES ('eclipse', '1');
 
--- install and enable codexjri plugin
-INSERT INTO plugin (name, available) VALUES ('codexjri', '1');
+-- install and enable codendijri plugin
+INSERT INTO plugin (name, available) VALUES ('codendijri', '1');
 
 -- install and enable salome plugin
 INSERT INTO plugin (name, available) VALUES ('salome', '1');

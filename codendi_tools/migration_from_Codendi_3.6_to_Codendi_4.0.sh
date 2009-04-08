@@ -773,6 +773,13 @@ if (count($groups)) {
 ?>
 EOF
 
+echo "- Rename codexjri to codendijri"
+$CAT <<EOF | $MYSQL $pass_opt codex
+UPDATE plugin
+SET name = 'codendijri'
+WHERE name = 'codexjri';
+EOF
+
 ###############################################################################
 # Run 'analyse' on all MySQL DB
 echo "Analyzing and optimizing MySQL databases (this might take a few minutes)"
@@ -877,8 +884,6 @@ $SERVICE httpd start
 $SERVICE sendmail start
 $SERVICE mailman start
 $SERVICE smb start
-
-
 
 
 
