@@ -39,14 +39,14 @@ class SystemEvent_SYSTEM_CHECK extends SystemEvent {
         $backendCVS         = BackendCVS::instance();
         $backendMailingList = BackendMailingList::instance();
 
-	//TODO: SSH keys ssh_create.pl
-	// remove deleted releases and released files
-	//cd $CODEX_UTILS_PREFIX/download
-	//./download_filemaint.pl
-	// User: unix_status vs status??
-	// Private project: if codeaxadm is not member of the project: check access to SVN (incl. ViewVC), CVS, Web...
-	// CVS Watch?
-	// TODO: log event in syslog?
+        //TODO: SSH keys ssh_create.pl
+        // remove deleted releases and released files
+        //cd $CODEX_UTILS_PREFIX/download
+        //./download_filemaint.pl
+        // User: unix_status vs status??
+        // Private project: if codeaxadm is not member of the project: check access to SVN (incl. ViewVC), CVS, Web...
+        // CVS Watch?
+        // TODO: log event in syslog?
 
         // Force global updates: aliases, CVS roots, SVN roots
         $backendCVS->setCVSRootListNeedUpdate();
@@ -54,28 +54,28 @@ class SystemEvent_SYSTEM_CHECK extends SystemEvent {
         BackendAliases::instance()->setNeedUpdateMailAliases();
 
         // Check mailing lists
-	// (re-)create missing ML
+        // (re-)create missing ML
         $mailinglistdao = new MailingListDao(CodendiDataAccess::instance());
-        $dar = $mailingListDao()->searchAllActiveML();
+        $dar = $mailinglistdao()->searchAllActiveML();
         foreach($dar as $row) {
-          $list = new MailingList($row);
-          if (!$backendMailingList->listExists($list)) {
-            $backendMailingList->createList($list->getId());
-          }
-          // TODO what about lists that changed their setting (description, public/private) ?
+            $list = new MailingList($row);
+            if (!$backendMailingList->listExists($list)) {
+                $backendMailingList->createList($list->getId());
+            }
+            // TODO what about lists that changed their setting (description, public/private) ?
         }
 
 
-	// Check users
-	// (re-) create missing home directories
-	$userdao = new UserDao(CodendiDataAccess::instance());
+        // Check users
+        // (re-) create missing home directories
+        $userdao = new UserDao(CodendiDataAccess::instance());
         $allowed_statuses=array('A', 'R'); // Active and restricted users
         $dar = $userdao->searchByStatus($allowed_statuses);
         foreach($dar as $row) {
-	    if (! $backendSystem->userHomeExists($row['user_name'])) {
-	        $backendSystem->createUserHome($row['user_id']);
-	    }
-	}
+            if (! $backendSystem->userHomeExists($row['user_name'])) {
+                $backendSystem->createUserHome($row['user_id']);
+            }
+        }
 
 
         // Projects
@@ -85,47 +85,49 @@ class SystemEvent_SYSTEM_CHECK extends SystemEvent {
                 WHERE status IN ('A')"; // TODO check query
         $dar = $this->retrieve($sql);
         foreach($dar as $row) {
-          $project = new Project($row);
-
-	  // Recreate project directories if they were deleted
-	  if (!$backendSystem->createProjectHome($group_id)) {
-	      $this->error("Could not create project home");
-	      return false;
-	  }
-
-          if ($project->usesCVS()) {
-              if (!$backendCVS->repositoryExists($project)) {
-                  if (!$backendCVS->createProjectCVS($project->group_id)) {
-                      $this->error("Could not create/initialize project CVS repository");
-                      return false;
-                  }
-                  $backendCVS->setCVSPrivacy($project, !$project->isPublic() || $project->isCVSPrivate());
-              }
-	      $backendCVS->createLockDirIfMissing($project);
-	      // check post-commit hooks
-	      if (!$backendCVS->updatePostCommit($project)) return false;
-	      $backendCVS->updateCVSwriters($project->getID());
-
-              // Check access rights
-              if (!$backendCVS->isCVSPrivacyOK($project)) {
-                  $backendCVS->setCVSPrivacy($project, !$project->isPublic() || $project->isCVSPrivate());
-              }
-          }
+            $project = new Project($row);
             
-	  if ($project->usesSVN()) {
-              if (!$backendSVN->repositoryExists($project)) {
-	          if (!$backendSVN->createProjectSVN($group_id)) {
-		      $this->error("Could not create/initialize project SVN repository");
-		      return false;
-                  }
-		  $backendSVN->updateHooks($project);
-		  $backendSVN->updateSVNAccess($project->getID());
-		  $backendSVN->setSVNPrivacy($project, !$project->isPublic() || $project->isSVNPrivate());
-	      }
-	      // Check access rights
-              if (!$backendSVN->isSVNPrivacyOK($project)) {
-                  $backendSVN->setSVNPrivacy($project, !$project->isPublic() || $project->isSVNPrivate());
-              }
+            // Recreate project directories if they were deleted
+            if (!$backendSystem->createProjectHome($group_id)) {
+                $this->error("Could not create project home");
+                return false;
+            }
+            
+            if ($project->usesCVS()) {
+                if (!$backendCVS->repositoryExists($project)) {
+                    if (!$backendCVS->createProjectCVS($project->group_id)) {
+                        $this->error("Could not create/initialize project CVS repository");
+                        return false;
+                    }
+                    $backendCVS->setCVSPrivacy($project, !$project->isPublic() || $project->isCVSPrivate());
+                }
+                $backendCVS->createLockDirIfMissing($project);
+                // check post-commit hooks
+                if (!$backendCVS->updatePostCommit($project)) {
+                    return false;
+                }
+                $backendCVS->updateCVSwriters($project->getID());
+                
+                // Check access rights
+                if (!$backendCVS->isCVSPrivacyOK($project)) {
+                    $backendCVS->setCVSPrivacy($project, !$project->isPublic() || $project->isCVSPrivate());
+                }
+            }
+            
+            if ($project->usesSVN()) {
+                if (!$backendSVN->repositoryExists($project)) {
+                    if (!$backendSVN->createProjectSVN($group_id)) {
+                        $this->error("Could not create/initialize project SVN repository");
+                        return false;
+                    }
+                    $backendSVN->updateHooks($project);
+                    $backendSVN->updateSVNAccess($project->getID());
+                    $backendSVN->setSVNPrivacy($project, !$project->isPublic() || $project->isSVNPrivate());
+                }
+                // Check access rights
+                if (!$backendSVN->isSVNPrivacyOK($project)) {
+                    $backendSVN->setSVNPrivacy($project, !$project->isPublic() || $project->isSVNPrivate());
+                }
             }
 
             $backendSystem->log("Project ".$project->getUnixName()." created");            
