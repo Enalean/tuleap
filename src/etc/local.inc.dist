@@ -1,11 +1,23 @@
 <?php
-//
-// CodeX: Breaking Down the Barriers to Source Code Sharing
-// Copyright 1999-2000 (c) The SourceForge Crew
-// Copyright (c) Xerox Corporation, CodeX, 2001-2006. All Rights Reserved
-// http://codex.xerox.com
-//
-// 
+/*
+ * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+ *
+ * This file is a part of Codendi.
+ *
+ * Codendi is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Codendi is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ */
+ 
 //
 // Codendi Global Configuration File
 
@@ -93,8 +105,8 @@ $sys_server_id = 0;
 
 // In order to run a test server (without backend cron jobs, CVS, SVN, mailman, vhosts, FRS, etc.)
 // Please update the following variables:
-// $codendi_dir = "mydir/codex"
-// $sys_custom_dir = "mydir/etc/codex"
+// $codendi_dir = "mydir/codendi"
+// $sys_custom_dir = "mydir/etc/codendi"
 // $sys_data_dir = "mydir/data"
 
 
@@ -119,7 +131,7 @@ $tmp_dir = "/var/tmp";
 // Codendi utils and documentation directories
 // WARNING: DO NOT USE VARIABLES in the three parameter definitions below.
 // For instance, do *not* use someting like
-//    *wrong* $codendi_utils_prefix = $codendi_dir . "codex/utils" *wrong*
+//    *wrong* $codendi_utils_prefix = $codendi_dir . "codendi/utils" *wrong*
 // this is because those variables will be read by shell scripts.
 $codendi_utils_prefix         = "/usr/share/codendi/src/utils";
 $codendi_documentation_prefix = "/usr/share/codendi/documentation";
@@ -156,12 +168,12 @@ $svn_root_file = "/etc/httpd/conf.d/codendi_svnroot.conf"; // File containing SV
 
 // FRS paths - do *not* use variables in the following parameters
 // If you change those paths, please run utils/compile_fileforge.sh
-$ftp_frs_dir_prefix  = "/var/lib/codex/ftp/codendi";   // Where the released files are located
-$ftp_incoming_dir    = "/var/lib/codex/ftp/incoming";// Where files are placed when uploaded
-$ftp_anon_dir_prefix = "/var/lib/codex/ftp/pub";     // prefix to add to the anon ftp project homedir
+$ftp_frs_dir_prefix  = "/var/lib/codendi/ftp/codendi";   // Where the released files are located
+$ftp_incoming_dir    = "/var/lib/codendi/ftp/incoming";// Where files are placed when uploaded
+$ftp_anon_dir_prefix = "/var/lib/codendi/ftp/pub";     // prefix to add to the anon ftp project homedir
 
 // Path for DB sumps. Do *not* use variables in this parameter
-$dump_dir         = "/var/lib/codex/dumps";// Where should we stick files we're working with
+$dump_dir         = "/var/lib/codendi/dumps";// Where should we stick files we're working with
 
 // Paths for backend scripts
 $codendi_log        = "/var/log/codendi";   // Codendi log dir (cvslogs,)
@@ -235,8 +247,8 @@ $sys_disable_subdomains = 0;
 //
 // Authentication scheme
 //
-// Should be either 'ldap' or 'codex'
-$sys_auth_type = 'codex';
+// Should be either 'ldap' or 'codendi'
+$sys_auth_type = 'codendi';
 
 // LDAP server(s) to query for more information on Codendi users and 
 // for authentication.
@@ -305,10 +317,10 @@ $sys_supported_languages = 'en_US,fr_FR';
 $sys_lang = 'en_US';
 
 // Default theme
-$sys_themedefault = 'CodeXTab';
+$sys_themedefault = 'CodendiTab';
 
 // Default theme for old browsers (currently netscape 4)
-$sys_themedefault_old = 'CodeX';
+$sys_themedefault_old = 'Codendi';
 
 // If set to 1 (one) it forces the server to operate
 // HTTPS (SSL connection). HTTP request are redirected

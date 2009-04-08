@@ -84,7 +84,7 @@ SSLCryptoDevice builtin
 #DocumentRoot "/var/www/html"
 #ServerName www.example.com:443
 
-# Use same log files for SSL traffic to preserve CodeX statistics:
+# Use same log files for SSL traffic to preserve Codendi statistics:
 ErrorLog logs/error_log
 TransferLog logs/access_log
 LogLevel warn

@@ -1,4 +1,4 @@
-; CodeX DNS zone definition
+; Codendi DNS zone definition
 $TTL 3600
 @		IN	SOA	%sys_fullname%. dnssupport.%sys_fullname%. (
 				        %dns_serial%	; Serial

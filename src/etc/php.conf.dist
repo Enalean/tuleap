@@ -9,7 +9,7 @@
 
 #
 # Cause the PHP interpreter handle files with a .php extension.
-# CodeX: also handles php3 legacy scripts
+# Codendi: also handles php3 legacy scripts
 #
 <Files *.php?>
     SetOutputFilter PHP
@@ -30,7 +30,7 @@ php_flag register_globals on
 php_flag magic_quotes_gpc on
 # Needed by trackers and phpWiki
 php_flag register_long_arrays on
-php_value include_path "/usr/share/codex/src/www/include:/usr/share/codex/src:."
+php_value include_path "/usr/share/codendi/src/www/include:/usr/share/codendi/src:."
 php_value memory_limit 196M
 php_value post_max_size 128M
 php_value upload_max_filesize 128M
@@ -43,7 +43,7 @@ php_flag allow_call_time_pass_reference on
 # With PHP5 session.save_path may not have a default value. This will raise a notice when
 # browsing wiki pages. To fix it, just uncomment the following line.
 #
-#php_value session.save_path "/var/tmp/codex_cache"
+#php_value session.save_path "/var/tmp/codendi_cache"
 
 
 # Debugging all=6143, all but notice=6135. See http://www.php.net/error_reporting

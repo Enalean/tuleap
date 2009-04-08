@@ -893,7 +893,8 @@ $SERVICE smb start
 
 
 
-
+TODO migrate CodeX* themes (in file and in db and in plugins)
+TODO migrate User-Agent (Dont allow access to API for anyone.)
 
 TODO use functions for indexes
 
