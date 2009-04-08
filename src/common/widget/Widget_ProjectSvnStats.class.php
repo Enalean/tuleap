@@ -62,10 +62,22 @@ class Widget_ProjectSvnStats extends Widget {
             //sort the results
             uksort($stats, array($this, 'sortByTop'));
             
+            //Pick up a date
+            list(,$s) = each($stats);
+            list($a_day,) = each($s);
+            
+            //jump to today
+            $today = $_SERVER['REQUEST_TIME'];
+            $today_in_stats = $a_day;
+            while($today_in_stats < $today) {
+                $today_in_stats += $day;
+            }
+            $today_in_stats -= $day;
+            $start_of_period = $today_in_stats - $duration * $day;
+            
             //fill-in the holes and the labels
-            $today = strtotime(date('Y-m-d', $_SERVER['REQUEST_TIME']));
             $dates = array();
-            for($i = $today - $duration * $day ; $i <= $today ; $i += $day) {
+            for($i = $start_of_period ; $i <= $today_in_stats ; $i += $day) {
                 $dates[] = date('M d', $i);
                 foreach($stats as $whoid => $stat) {
                     if (!isset($stat[$i])) {
