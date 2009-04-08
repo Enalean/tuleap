@@ -60,9 +60,9 @@ substitute '../etc/codendi/conf/local.inc' '\/var\/tmp' "$codendi_dir/var/tmp"
 # Set environment var CODEX_LOCAL_INC
 export CODEX_LOCAL_INC="$WORKSPACE/etc/codendi/conf/local.inc"
 
-# Create a symbolic link from plugins/tests to codex_tools/tests
+# Create a symbolic link from plugins/tests to codendi_tools/tests
 cd $WORKSPACE/trunk/plugins/
-ln -sf ../codex_tools/plugins/tests
+ln -sf ../codendi_tools/plugins/tests
 cd tests/www/
 
 # Execute the Tests

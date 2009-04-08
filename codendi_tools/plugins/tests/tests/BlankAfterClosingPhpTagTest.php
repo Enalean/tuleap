@@ -1,9 +1,22 @@
 <?php
-/**
-* Copyright (c) Xerox Corporation, CodeX Team, 2001-2007. All rights reserved
-*
-* 
-*/
+/*
+ * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+ *
+ * This file is a part of Codendi.
+ *
+ * Codendi is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Codendi is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ */
 
 class BlankAfterClosingPhpTagTest extends UnitTestCase {
     
@@ -25,7 +38,7 @@ class BlankAfterClosingPhpTagTest extends UnitTestCase {
         //Those files are allowed to contains something before opening tag
         $this->allow_start = array(
             'cli/codendi.php',
-            'codex_tools/utils/checkCommitMessage.php',
+            'codendi_tools/utils/checkCommitMessage.php',
             'plugins/IM/include/jabbex_api/installation/install.php',
             'plugins/IM/www/webmuc/groupchat.php',
             'plugins/docman/bin/DocmanImport/FSDocmanUploader.class.php',
@@ -35,7 +48,7 @@ class BlankAfterClosingPhpTagTest extends UnitTestCase {
         $this->allow_end = array(
             'cli/codendi.php',
             'plugins/tests/www/index.php',
-            'codex_tools/tests/www/index.php',
+            'codendi_tools/tests/www/index.php',
             'plugins/IM/www/webmuc/groupchat.php',
             'plugins/IM/www/webmuc/muckl.php',
             'plugins/IM/www/webmuc/roster.js.php',
