@@ -19,13 +19,13 @@ if [ -z "$scriptdir" ]; then
     scriptdir=`dirname $progname`
 fi
 cd ${scriptdir};TOP_DIR=`pwd`;cd - > /dev/null # redirect to /dev/null to remove display of folder (RHEL4 only)
-RPMS_DIR=${TOP_DIR}/RPMS_CodeX
-nonRPMS_DIR=${TOP_DIR}/nonRPMS_CodeX
-CodeX_DIR=${TOP_DIR}/CodeX
-#TODO_FILE=/root/todo_codex_upgrade_4.0.txt
-export INSTALL_DIR="/usr/share/codex"
-BACKUP_INSTALL_DIR="/usr/share/codex_34"
-ETC_DIR="/etc/codex"
+RPMS_DIR=${TOP_DIR}/RPMS_Codendi
+nonRPMS_DIR=${TOP_DIR}/nonRPMS_Codendi
+Codendi_DIR=${TOP_DIR}/Codendi
+#TODO_FILE=/root/todo_codendi_upgrade_4.0.txt
+export INSTALL_DIR="/usr/share/codendi"
+BACKUP_INSTALL_DIR="/usr/share/codendi_34"
+ETC_DIR="/etc/codendi"
 
 # path to command line tools
 GROUPADD='/usr/sbin/groupadd'
@@ -86,7 +86,7 @@ make_backup() {
     file="$1"
     ext="$2"
     if [ -z $ext ]; then
-	ext="nocodex"
+	ext="nocodendi"
     fi
     backup_file="$1.$ext"
     [ -e "$file" -a ! -e "$backup_file" ] && $CP "$file" "$backup_file"
@@ -110,10 +110,10 @@ substitute() {
 }
 
 ##############################################
-# CodeX 3.6 to 4.0 migration
+# Codendi 3.6 to 4.0 migration
 ##############################################
-echo "Migration script from CodeX 3.6 to CodeX 4.0"
-echo "Please Make sure you read migration_from_CodeX_3.6_to_Codendi_4.0.README"
+echo "Migration script from Codendi 3.6 to Codendi 4.0"
+echo "Please Make sure you read migration_from_Codendi_3.6_to_Codendi_4.0.README"
 echo "*before* running this script!"
 yn="y"
 read -p "Continue? [yn]: " yn
@@ -139,12 +139,12 @@ yn="y"
 $GREP -q "$OLD_CX_RELEASE" $INSTALL_DIR/src/www/VERSION
 if [ $? -ne 0 ]; then
     $CAT <<EOF
-This machine does not have CodeX ${OLD_CX_RELEASE} installed. Executing this
+This machine does not have Codendi ${OLD_CX_RELEASE} installed. Executing this
 script may cause data loss or corruption.
 EOF
 read -p "Continue? [yn]: " yn
 else
-    echo "Found CodeX ${OLD_CX_RELEASE} installed... good!"
+    echo "Found Codendi ${OLD_CX_RELEASE} installed... good!"
 fi
 
 if [ "$yn" = "n" ]; then
@@ -199,9 +199,9 @@ $SERVICE smb stop
 
 
 #############################################
-# Make codexadm a member of the apache group
+# Make codendiadm a member of the apache group
 # for phpMyAdmin (session, config files...)
-$USERMOD -a -G apache codexadm
+$USERMOD -a -G apache codendiadm
 
 ##############################################
 # Analyze site-content 
@@ -219,7 +219,7 @@ removed=`$DIFF -q -r \
  -e "s/@//g"     \
  -e '/^$/ d'`
 if [ "$removed" != "" ]; then
-  echo "The following files doesn't existing in the site-content of CodeX:"
+  echo "The following files doesn't existing in the site-content of Codendi:"
   echo "$removed"
 fi
 
@@ -236,7 +236,7 @@ for i in `$DIFF -q -r \
             -e '/^$/ d'` 
 do
    if [ $one_has_been_found -eq 0 ]; then
-      echo "  The following files differ from the site-content of CodeX:"
+      echo "  The following files differ from the site-content of Codendi:"
       one_has_been_found=1
    fi
    echo "    $i"
@@ -260,7 +260,7 @@ pass_opt=""
 # See if MySQL root account is password protected
 mysqlshow 2>&1 | grep password
 while [ $? -eq 0 ]; do
-    read -s -p "Existing CodeX DB is password protected. What is the Mysql root password?: " old_passwd
+    read -s -p "Existing Codendi DB is password protected. What is the Mysql root password?: " old_passwd
     echo
     mysqlshow --password=$old_passwd 2>&1 | grep password
 done
@@ -283,10 +283,10 @@ echo "Starting DB update for Codendi 4.0 This might take a few minutes."
 
 echo "- Create dbauthuser, needed for MySQL-based authentication for HTTP (SVN) and Openfire"
 $CAT <<EOF | $MYSQL -u root mysql $pass_opt
-GRANT SELECT ON codex.user to dbauthuser@localhost identified by '$dbauth_passwd';
-GRANT SELECT ON codex.groups to dbauthuser@localhost;
-GRANT SELECT ON codex.user_group to dbauthuser@localhost;
-GRANT SELECT ON codex.session to dbauthuser@localhost;
+GRANT SELECT ON codendi.user to dbauthuser@localhost identified by '$dbauth_passwd';
+GRANT SELECT ON codendi.groups to dbauthuser@localhost;
+GRANT SELECT ON codendi.user_group to dbauthuser@localhost;
+GRANT SELECT ON codendi.session to dbauthuser@localhost;
 FLUSH PRIVILEGES;
 EOF
 
@@ -299,7 +299,7 @@ EOF
 
 
 echo "- Remove useless tables"
-$CAT <<EOF | $MYSQL $pass_opt codex
+$CAT <<EOF | $MYSQL $pass_opt codendi
 DROP TABLE intel_agreement;
 DROP TABLE user_diary;
 DROP TABLE user_diary_monitor;
@@ -312,18 +312,18 @@ EOF
 
 
 echo "- Account approver"
-$CAT <<EOF | $MYSQL $pass_opt codex
+$CAT <<EOF | $MYSQL $pass_opt codendi
 ALTER TABLE user ADD COLUMN approved_by int(11) NOT NULL default '0' AFTER add_date;
 EOF
 
 
 echo "- Windows password no longer needed"
-$CAT <<EOF | $MYSQL $pass_opt codex
+$CAT <<EOF | $MYSQL $pass_opt codendi
 ALTER TABLE user DROP COLUMN windows_pw;
 EOF
 
 echo "- Table structure for System Events"
-$CAT <<EOF | $MYSQL $pass_opt codex
+$CAT <<EOF | $MYSQL $pass_opt codendi
 # 
 # Table structure for System Events
 # 
@@ -360,7 +360,7 @@ EOF
 
 
 echo "- Artifact permissions"
-$CAT <<EOF | $MYSQL $pass_opt codex
+$CAT <<EOF | $MYSQL $pass_opt codendi
 ALTER TABLE artifact ADD COLUMN use_artifact_permissions tinyint(1) NOT NULL DEFAULT '0' AFTER group_artifact_id;
 
 INSERT INTO permissions_values (permission_type,ugroup_id,is_default) VALUES ('TRACKER_ARTIFACT_ACCESS',1,1);
@@ -372,22 +372,22 @@ EOF
 
 echo "- Add the field severity on all reports"
 #TODO usefull ?
-$CAT <<EOF | $MYSQL $pass_opt codex
+$CAT <<EOF | $MYSQL $pass_opt codendi
 UPDATE artifact_report_field SET show_on_result = 1 WHERE field_name = 'severity';
 EOF;
 
 echo "- Mandatory reference in SVN commit message"
-$CAT <<EOF | $MYSQL $pass_opt codex
+$CAT <<EOF | $MYSQL $pass_opt codendi
 ALTER TABLE groups ADD svn_mandatory_ref TINYINT NOT NULL DEFAULT '0' AFTER svn_tracker;
 EOF
 
 echo "- Cross references : add a new field 'nature'"
-$CAT <<EOF | $MYSQL $pass_opt codex
+$CAT <<EOF | $MYSQL $pass_opt codendi
 ALTER TABLE reference ADD nature VARCHAR( 64 ) NOT NULL;
 EOF
 
 echo "- Set the nature for existing references"
-$CAT <<EOF | $MYSQL $pass_opt codex
+$CAT <<EOF | $MYSQL $pass_opt codendi
 UPDATE reference
 SET nature = 'artifact'
 WHERE (keyword = 'art' OR
@@ -456,25 +456,25 @@ WHERE (nature = '' OR nature IS NULL);
 EOF
 
 echo "- Cross-references change the type of column to handle wiki references (not int)"
-$CAT <<EOF | $MYSQL $pass_opt codex
+$CAT <<EOF | $MYSQL $pass_opt codendi
 ALTER TABLE cross_references CHANGE source_id source_id VARCHAR( 128 ) NOT NULL DEFAULT '0';
 ALTER TABLE cross_references CHANGE target_id target_id VARCHAR( 128 ) NOT NULL DEFAULT '0';
 EOF;
 
 echo "- Cross references : add two fields"
-$CAT <<EOF | $MYSQL $pass_opt codex
+$CAT <<EOF | $MYSQL $pass_opt codendi
 ALTER TABLE cross_references ADD source_keyword VARCHAR( 32 ) NOT NULL AFTER source_type;
 ALTER TABLE cross_references ADD target_keyword VARCHAR( 32 ) NOT NULL AFTER target_type;
 EOF;
 
 echo "- Change type of existing cross references from 'revision_svn' to 'svn_revision'"
-$CAT <<EOF | $MYSQL $pass_opt codex
+$CAT <<EOF | $MYSQL $pass_opt codendi
 UPDATE cross_references SET source_type = 'svn_revision' WHERE source_type LIKE 'revision_svn';
 UPDATE cross_references SET target_type = 'svn_revision' WHERE target_type LIKE 'revision_svn';
 EOF
 
 echo "- Set keywords"
-$CAT <<EOF | $MYSQL $pass_opt codex
+$CAT <<EOF | $MYSQL $pass_opt codendi
 UPDATE cross_references SET source_keyword = 'art' WHERE source_type LIKE 'artifact';
 UPDATE cross_references SET source_keyword = 'doc' WHERE source_type LIKE 'document';
 UPDATE cross_references SET source_keyword = 'cvs' WHERE source_type LIKE 'cvs_commit';
@@ -500,7 +500,7 @@ UPDATE cross_references SET target_keyword = 'wiki' WHERE target_type LIKE 'wiki
 EOF
 
 echo "- fix references > services"
-$CAT <<EOF | $MYSQL $pass_opt codex
+$CAT <<EOF | $MYSQL $pass_opt codendi
 UPDATE reference
 SET service_short_name = 'tracker'
 WHERE scope = 'P'
@@ -509,7 +509,7 @@ AND link LIKE '/tracker/%func=detail%';
 EOF
 
 echo "- add new reference for IM chat"
-$CAT <<EOF | $MYSQL $pass_opt codex
+$CAT <<EOF | $MYSQL $pass_opt codendi
 INSERT INTO reference SET 
     keyword='chat', 
     description='plugin_im:reference_chat_desc_key', 
@@ -526,7 +526,7 @@ EOF
 # TODO : stop openfire service ($SERVICE openfire stop)
 
 echo "- Add IM service"
-$CAT <<EOF | $MYSQL $pass_opt codex
+$CAT <<EOF | $MYSQL $pass_opt codendi
 INSERT INTO service(group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES ( 100 , 'plugin_im:service_lbl_key' , 'plugin_im:service_desc_key' , 'IM', '/plugins/IM/?group_id=$group_id', 1 , 1 , 'system',  210 );
 INSERT INTO service(group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES ( 1   , 'plugin_im:service_lbl_key' , 'plugin_im:service_desc_key' , 'IM', '/plugins/IM/?group_id=1', 1 , 0 , 'system',  210 );
 # Create IM service for all other projects (but disabled)
@@ -540,16 +540,16 @@ WHERE group_id NOT IN (SELECT group_id
 EOF
 
 echo "- IM plugin : grant privileges for openfireadm on session table (required for webmuc)"
-$CAT <<EOF | $MYSQL $pass_opt codex
-GRANT SELECT ON codex.session to openfireadm@localhost;
+$CAT <<EOF | $MYSQL $pass_opt codendi
+GRANT SELECT ON codendi.session to openfireadm@localhost;
 FLUSH PRIVILEGES;
 EOF
 
 # IM openfire configuration
-# TODO : create database_im.inc in /etc/codex/plugins/IM/etc/
+# TODO : create database_im.inc in /etc/codendi/plugins/IM/etc/
 
 echo "- Specific configuration for webmuc"
-$CAT <<EOF | $MYSQL $pass_opt codex
+$CAT <<EOF | $MYSQL $pass_opt codendi
 INSERT INTO openfire.jiveProperty (name, propValue) VALUES 
 	("httpbind.enabled", "true"),
 	("httpbind.port.plain", "7070"),
@@ -566,7 +566,7 @@ EOF
 
 
 echo "- CI with Hudson plugin"
-$CAT <<EOF | $MYSQL $pass_opt codex
+$CAT <<EOF | $MYSQL $pass_opt codendi
 CREATE TABLE plugin_hudson_job (
   job_id int(11) UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT ,
   group_id int(11) NOT NULL ,
@@ -586,7 +586,7 @@ CREATE TABLE plugin_hudson_widget (
 EOF
 
 echo "- Add hudson service"
-$CAT <<EOF | $MYSQL $pass_opt codex
+$CAT <<EOF | $MYSQL $pass_opt codendi
 INSERT INTO service(group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES ( 100 , 'plugin_hudson:service_lbl_key' , 'plugin_hudson:service_desc_key' , 'hudson', '/plugins/hudson/?group_id=$group_id', 1 , 1 , 'system',  220 );
 INSERT INTO service(group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES ( 1   , 'plugin_hudson:service_lbl_key' , 'plugin_hudson:service_desc_key' , 'hudson', '/plugins/hudson/?group_id=1', 1 , 0 , 'system',  220 );
 # Create hudson service for all other projects (but disabled)
@@ -601,7 +601,7 @@ EOF
 
 
 echo "- Update user language"
-$CAT <<EOF | $MYSQL $pass_opt codex
+$CAT <<EOF | $MYSQL $pass_opt codendi
 ALTER TABLE user CHANGE language_id language_id VARCHAR( 17 ) NOT NULL DEFAULT 'en_US' 
 UPDATE user 
 SET language_id = 'fr_FR'
@@ -628,7 +628,7 @@ EOF
 
 echo "- Reorder report fields for prepareRanking usage"
 #TODO Usefull ?
-$CAT <<EOF | $MYSQL $pass_opt codex
+$CAT <<EOF | $MYSQL $pass_opt codendi
 SET @counter = 0;
 SET @previous = NULL;
 UPDATE artifact_report_field 
@@ -652,7 +652,7 @@ SET artifact_report_field.place_query = R1.new_rank;
 EOF
 
 echo "- Add 3 new widgets on project summary page"
-$CAT <<EOF | $MYSQL $pass_opt codex
+$CAT <<EOF | $MYSQL $pass_opt codendi
 INSERT INTO layouts_contents(owner_id, owner_type, layout_id, column_id, name, rank)
 SELECT group_id, 'g', 1, 1, 'projectclassification', R.rank
 FROM groups 
@@ -689,18 +689,18 @@ WHERE hide_members = 0;
 EOF
 
 echo "- Delete hide_members column"
-$CAT <<EOF | $MYSQL $pass_opt codex
+$CAT <<EOF | $MYSQL $pass_opt codendi
 # (not needed anymore, please do it after previous request)
 ALTER TABLE groups DROP hide_members;
 EOF
 
 echo "- Add cvs_is_private"
-$CAT <<EOF | $MYSQL $pass_opt codex 
+$CAT <<EOF | $MYSQL $pass_opt codendi 
 ALTER TABLE groups ADD cvs_is_private TINYINT( 1 ) NOT NULL DEFAULT '0' AFTER cvs_preamble ;
 EOF
 
 echo "- Layouts for dashboard"
-$CAT <<EOF | $MYSQL $pass_opt codex 
+$CAT <<EOF | $MYSQL $pass_opt codendi 
 INSERT INTO layouts(id, name, description, scope) VALUES
 (2, '3 columns', 'Simple layout made of 3 columns', 'S'),
 (3, 'Left', 'Simple layout made of a main column and a small, left sided, column', 'S'),
@@ -722,13 +722,13 @@ INSERT INTO layouts_rows_columns(id, layout_row_id, width) VALUES
 EOF
 
 echo "- Upgrade docman"
-$CAT <<EOF | $MYSQL $pass_opt codex 
+$CAT <<EOF | $MYSQL $pass_opt codendi 
 ALTER TABLE plugin_docman_approval CHANGE COLUMN version_id version_id INT(11) UNSIGNED UNSIGNED NULL DEFAULT NULL;
 ALTER TABLE plugin_docman_approval CHANGE COLUMN wiki_version_id wiki_version_id INT(11) UNSIGNED UNSIGNED NULL DEFAULT NULL;
 EOF
 
 echo "- Perfs"
-$CAT <<EOF | $MYSQL $pass_opt codex 
+$CAT <<EOF | $MYSQL $pass_opt codendi 
 ALTER TABLE artifact_field_value 
     DROP INDEX idx_field_id, 
     DROP INDEX idx_artifact_id, 
@@ -741,7 +741,7 @@ ALTER TABLE artifact_field_value
 EOF
 
 echo "- Files can now be browsed and downloaded by anonymous users (default permissions do not change, we only allow it)"
-$CAT <<EOF | $MYSQL $pass_opt codex 
+$CAT <<EOF | $MYSQL $pass_opt codendi 
 INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('PACKAGE_READ',1);
 INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('RELEASE_READ',1);
 EOF
@@ -750,8 +750,8 @@ echo "- CVS is private"
 # TODO : private projects 
 $CAT <<EOF | $PHP
 <?php
-require_once('/etc/codex/conf/local.inc');
-require_once('/etc/codex/conf/database.inc');
+require_once('/etc/codendi/conf/local.inc');
+require_once('/etc/codendi/conf/database.inc');
 mysql_connect($sys_dbhost, $sys_dbuser, $sys_dbpasswd) or die('ERROR: Unable to connect to the database. Aborting.');
 mysql_select_db($sys_dbname) or die('ERROR: Unable to select the database. Aborting.');
 
@@ -774,7 +774,7 @@ if (count($groups)) {
 EOF
 
 echo "- Rename codexjri to codendijri"
-$CAT <<EOF | $MYSQL $pass_opt codex
+$CAT <<EOF | $MYSQL $pass_opt codendi
 UPDATE plugin
 SET name = 'codendijri'
 WHERE name = 'codexjri';
@@ -800,9 +800,9 @@ echo "Updating local.inc"
 $GREP -q ^\$sys_dbauth_user  $ETC_DIR/conf/local.inc
 if [ $? -ne 0 ]; then
   # Remove end PHP marker
-  substitute '/etc/codex/conf/local.inc' '\?\>' ''
+  substitute '/etc/codendi/conf/local.inc' '\?\>' ''
 
-  $CAT <<EOF >> /etc/codex/conf/local.inc
+  $CAT <<EOF >> /etc/codendi/conf/local.inc
 // DB user for http authentication (must have access to user/group/user_group tables)
 \$sys_dbauth_user = "dbauthuser";
 \$sys_dbauth_passwd = '$dbauth_passwd';
@@ -814,9 +814,9 @@ fi
 $GREP -q ^\$sys_pending_account_lifetime  $ETC_DIR/conf/local.inc
 if [ $? -ne 0 ]; then
   # Remove end PHP marker
-  substitute '/etc/codex/conf/local.inc' '\?\>' ''
+  substitute '/etc/codendi/conf/local.inc' '\?\>' ''
 
-  $CAT <<EOF >> /etc/codex/conf/local.inc
+  $CAT <<EOF >> /etc/codendi/conf/local.inc
 // Duration before deleting pending accounts which have not been activated
 // (in days)
 // Default value is 60 days
@@ -829,9 +829,9 @@ fi
 $GREP -q ^\$unix_uid_add  $ETC_DIR/conf/local.inc
 if [ $? -ne 0 ]; then
   # Remove end PHP marker
-  substitute '/etc/codex/conf/local.inc' '\?\>' ''
+  substitute '/etc/codendi/conf/local.inc' '\?\>' ''
 
-  $CAT <<EOF >> /etc/codex/conf/local.inc
+  $CAT <<EOF >> /etc/codendi/conf/local.inc
 
 // How much to add to the database unix_uid to get the actual unix uid
 \$unix_uid_add  = "20000";
@@ -843,9 +843,9 @@ fi
 $GREP -q ^\$unix_gid_add  $ETC_DIR/conf/local.inc
 if [ $? -ne 0 ]; then
   # Remove end PHP marker
-  substitute '/etc/codex/conf/local.inc' '\?\>' ''
+  substitute '/etc/codendi/conf/local.inc' '\?\>' ''
 
-  $CAT <<EOF >> /etc/codex/conf/local.inc
+  $CAT <<EOF >> /etc/codendi/conf/local.inc
 
 // How much to add to the database group_id to get the unix gid
 \$unix_gid_add  = "1000";
@@ -905,7 +905,7 @@ TODO: migrate .CODEX_PRIVATE
 # TODO : $xml->jdbcAuthProvider->addChild('codexUserSessionIdSQL', "SELECT session_hash FROM session WHERE session.user_id = (SELECT user_id FROM user WHERE user.user_name = ?)");
 # copy jar file into openfire lib dir
 $CP $INSTALL_DIR/plugins/IM/include/jabbex_api/installation/resources/codendi_auth.jar /opt/openfire/lib/.
-# TODO : update httpd.conf and codex_aliases.conf (see rev #10208 for details)
+# TODO : update httpd.conf and codendi_aliases.conf (see rev #10208 for details)
 # TODO : instal monitoring plugin (copy plugin jar in openfire plugin dir)
 
 # Add common stylesheet in custom themes
@@ -925,13 +925,13 @@ TODO : Déplacer le script de debug dans Layout.class.php
 # TODO : CREATE / UPDATE the pre-commit hook for every existing project.
 
 #
-# TODO: copy /src/utils/svn/codendi_svn_pre_commit.php into /usr/lib/codex/bin/codendi_svn_pre_commit.php
-# TODO: copy /src/utils/svn/commit-email.pl into /usr/lib/codex/bin/commit-email.pl
-# TODO: copy /src/utils/cvs1/log_accum into /usr/lib/codex/bin/log_accum
+# TODO: copy /src/utils/svn/codendi_svn_pre_commit.php into /usr/lib/codendi/bin/codendi_svn_pre_commit.php
+# TODO: copy /src/utils/svn/commit-email.pl into /usr/lib/codendi/bin/commit-email.pl
+# TODO: copy /src/utils/cvs1/log_accum into /usr/lib/codendi/bin/log_accum
 #
 
   # Skip logging openfire db (for instant messaging)
-  # The 'monitor' openrfire plugin creates large codex-bin files
+  # The 'monitor' openrfire plugin creates large codendi-bin files
   # Comment this line if you prefer to be safer.
   set-variable  = binlog-ignore-db=openfire
 
