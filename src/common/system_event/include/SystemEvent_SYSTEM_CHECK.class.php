@@ -69,7 +69,7 @@ class SystemEvent_SYSTEM_CHECK extends SystemEvent {
         // Check users
         // (re-) create missing home directories
         $userdao = new UserDao(CodendiDataAccess::instance());
-        $allowed_statuses=array('A', 'R'); // Active and restricted users
+        $allowed_statuses=array(User::STATUS_ACTIVE, User::STATUS_RESTRICTED);
         $dar = $userdao->searchByStatus($allowed_statuses);
         foreach($dar as $row) {
             if (! $backendSystem->userHomeExists($row['user_name'])) {

@@ -30,6 +30,33 @@ require_once('common/dao/UserGroupDao.class.php');
 class User {
     
     /**
+     * The user is active
+     */
+    const STATUS_ACTIVE     = 'A';
+    
+    /**
+     * The user is restricted
+     */
+    const STATUS_RESTRICTED = 'R';
+    
+    /**
+     * The user is pending
+     */
+    const STATUS_PENDING    = 'P';
+    
+    /**
+     * The user is suspended
+     */
+    const STATUS_SUSPENDED  = 'S';
+    
+    /**
+     * The user is deleted
+     */
+    const STATUS_DELETED    = 'D';
+    
+    
+    
+    /**
      * the id of the user
      * = 0 if anonymous
      */
