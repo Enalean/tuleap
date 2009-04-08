@@ -1,12 +1,12 @@
 #!/bin/sh
 date
-CX_VERSION='support/CX_3_6_SUP'
-CX_SHORT_VERSION='3.6.sup'
+CX_VERSION='support/CX_4_0_SUP'
+CX_SHORT_VERSION='4.0.sup'
 #CX_VERSION='dev_server'
 #CX_SHORT_VERSION='dev'
-PACKAGE_DIR=/root/CodeX_Packaging/$CX_VERSION/packages
-SOURCE_DIR=/root/CodeX_Packaging/$CX_VERSION/codex
-BUILD_DIR=/root/CodeX_Packaging/$CX_VERSION/build
+PACKAGE_DIR=/root/Codendi_Packaging/$CX_VERSION/packages
+SOURCE_DIR=/root/Codendi_Packaging/$CX_VERSION/codendi
+BUILD_DIR=/root/Codendi_Packaging/$CX_VERSION/build
 echo "Building ISO image for version: $CX_VERSION"
 yn="0"
 read -p "Update source and package working copies? [y|n]:" yn
@@ -17,8 +17,8 @@ fi
 echo "SVN update done at:"
 date
 CX_REVISION=`svn info $SOURCE_DIR | grep Revision | sed 's/Revision: //'`
-ISO_LABEL="CodeX $CX_SHORT_VERSION"
-ISO_FILE="/root/CodeX_Packaging/$CX_VERSION/iso_images/codex-$CX_SHORT_VERSION.r$CX_REVISION.iso"
+ISO_LABEL="Codendi $CX_SHORT_VERSION"
+ISO_FILE="/root/Codendi_Packaging/$CX_VERSION/iso_images/codendi-$CX_SHORT_VERSION.r$CX_REVISION.iso"
 
 # Shell commands used
 LS='/bin/ls'
@@ -48,49 +48,49 @@ echo "Creating clean build directory..."
 #rm -rf $BUILD_DIR; 
 $MKDIR -p $BUILD_DIR
 cd $BUILD_DIR
-$RM codex_install.sh INSTALL migration_* README  RELEASE_NOTES
+$RM codendi_install.sh INSTALL migration_* README  RELEASE_NOTES
 # Copy the install script at the top directory
-echo "Copying the CodeX installation script at:"
+echo "Copying the Codendi installation script at:"
 date
 cd $PACKAGE_DIR
-$CP -af $SOURCE_DIR/codex_tools/codex_install.sh $BUILD_DIR
-$CHMOD +x $BUILD_DIR/codex_install.sh
+$CP -af $SOURCE_DIR/codendi_tools/codendi_install.sh $BUILD_DIR
+$CHMOD +x $BUILD_DIR/codendi_install.sh
 
 # Copy the migration script at the top directory
-echo "Copying the CodeX migration script..."
+echo "Copying the Codendi migration script..."
 cd $PACKAGE_DIR
-$CP -af $SOURCE_DIR/codex_tools/migration_from_CodeX_3.4_to_Codendi_3.6.sh $BUILD_DIR
-$CHMOD +x $BUILD_DIR/migration_from_CodeX_3.4_to_Codendi_3.6.sh
-$CP -af $SOURCE_DIR/codex_tools/migration_from_CodeX_3.4_to_Codendi_3.6.README $BUILD_DIR
-$CHMOD +x $BUILD_DIR/migration_from_CodeX_3.4_to_Codendi_3.6.README
+$CP -af $SOURCE_DIR/codendi_tools/migration_from_Codendi_3.4_to_Codendi_4.0.sh $BUILD_DIR
+$CHMOD +x $BUILD_DIR/migration_from_Codendi_3.4_to_Codendi_4.0.sh
+$CP -af $SOURCE_DIR/codendi_tools/migration_from_Codendi_3.4_to_Codendi_4.0.README $BUILD_DIR
+$CHMOD +x $BUILD_DIR/migration_from_Codendi_3.4_to_Codendi_4.0.README
 
-# Copy the entire CodeX and nonRPMS_CodeX dir
-echo "Copying the CodeX software and nonRPMS packages... at:"
+# Copy the entire Codendi and nonRPMS_Codendi dir
+echo "Copying the Codendi software and nonRPMS packages... at:"
 date
-$RSYNC -a --exclude='.svn' --delete $PACKAGE_DIR/nonRPMS_CodeX $BUILD_DIR
-mkdir -p $BUILD_DIR/CodeX
+$RSYNC -a --exclude='.svn' --delete $PACKAGE_DIR/nonRPMS_Codendi $BUILD_DIR
+mkdir -p $BUILD_DIR/Codendi
 BRANCH_NAME=`echo $SOURCE_DIR|sed 's/.*\///'`
-if [ -e $BUILD_DIR/CodeX/src ]; then
-  $MV $BUILD_DIR/CodeX/src $BUILD_DIR/CodeX/$BRANCH_NAME
+if [ -e $BUILD_DIR/Codendi/src ]; then
+  $MV $BUILD_DIR/Codendi/src $BUILD_DIR/Codendi/$BRANCH_NAME
 fi
 echo "... source1 done at:"
 date
-$RSYNC -a --delete $SOURCE_DIR $BUILD_DIR/CodeX
+$RSYNC -a --delete $SOURCE_DIR $BUILD_DIR/Codendi
 echo "... source2 done at:"
 date
-$MV $BUILD_DIR/CodeX/$BRANCH_NAME $BUILD_DIR/CodeX/src
-# Only copy the latest RPMs from RPMS CodeX
-echo "Copying the CodeX RPMS packages..."
-$MKDIR -p $BUILD_DIR/RPMS_CodeX
-cd $PACKAGE_DIR/RPMS_CodeX
+$MV $BUILD_DIR/Codendi/$BRANCH_NAME $BUILD_DIR/Codendi/src
+# Only copy the latest RPMs from RPMS Codendi
+echo "Copying the Codendi RPMS packages..."
+$MKDIR -p $BUILD_DIR/RPMS_Codendi
+cd $PACKAGE_DIR/RPMS_Codendi
 RPM_LIST=`ls -1`
 for i in $RPM_LIST
 do
-    cd $PACKAGE_DIR/RPMS_CodeX/$i
+    cd $PACKAGE_DIR/RPMS_Codendi/$i
     newest_rpm=`$LS -1 -I old | $TAIL -1`
-    $MKDIR -p $BUILD_DIR/RPMS_CodeX/$i
-    $RSYNC -a --exclude='.svn' --delete $newest_rpm $BUILD_DIR/RPMS_CodeX/$i
-    cd $BUILD_DIR/RPMS_CodeX/$i
+    $MKDIR -p $BUILD_DIR/RPMS_Codendi/$i
+    $RSYNC -a --exclude='.svn' --delete $newest_rpm $BUILD_DIR/RPMS_Codendi/$i
+    cd $BUILD_DIR/RPMS_Codendi/$i
     old_rpms=`$LS -1 | $GREP -v $newest_rpm`
     for j in $old_rpms
     do
@@ -102,14 +102,14 @@ echo "... packages done at:"
 date
 
 # Remove deprecated packages
-cd $BUILD_DIR/RPMS_CodeX 
+cd $BUILD_DIR/RPMS_Codendi 
 RPM_LIST=`ls -1`
 for i in $RPM_LIST
 do
-    if [ ! -e $PACKAGE_DIR/RPMS_CodeX/$i ];
+    if [ ! -e $PACKAGE_DIR/RPMS_Codendi/$i ];
     then
         echo "Removing deprecated package: $i"
-        echo $RM -rf $BUILD_DIR/RPMS_CodeX/$i
+        echo $RM -rf $BUILD_DIR/RPMS_Codendi/$i
     fi
 done
 
@@ -118,16 +118,16 @@ echo "Changing ownership to root.root for everything..."
 $CHOWN -R root.root $BUILD_DIR/*
 echo "... done at:"
 date
-# delete codex_tools directory in BUILD_DIR
-#echo "Deleting codex_tools directory..."
-#cd $BUILD_DIR/CodeX/src
-#rm -rf codex_tools
+# delete codendi_tools directory in BUILD_DIR
+#echo "Deleting codendi_tools directory..."
+#cd $BUILD_DIR/Codendi/src
+#rm -rf codendi_tools
 
-# create the tar file of CodeX sources
-echo "Creating tar file of CodeX sources..."
-cd $BUILD_DIR/CodeX/src
-$TAR cfz ../codex.tgz .
-$CHOWN root.root ../codex.tgz
+# create the tar file of Codendi sources
+echo "Creating tar file of Codendi sources..."
+cd $BUILD_DIR/Codendi/src
+$TAR cfz ../codendi.tgz .
+$CHOWN root.root ../codendi.tgz
 echo "... done at:"
 date
 
@@ -160,21 +160,21 @@ License (GPL).
 
 Contact
 -------
-If you want to know more about CodeX or if you have questions send an email
-to info@codex.xerox.com
+If you want to know more about Codendi or if you have questions send an email
+to info@codendi.xerox.com
 
 Support Requests
 ----------------
 Codendi users inside of the Xerox Network must submit their support requests
 through the Codendi central site at:
-http://codex.xerox.com/tracker/?func=add&group_id=1&atid=922 
+http://codendi.xerox.com/tracker/?func=add&group_id=1&atid=922 
 
 Codendi customers outside of Xerox must submit their support requests through
 the external Codendi support site at:
 https://partners.xrce.xerox.com/tracker/?func=add&group_id=120&atid=199
 
 -- The Codendi Team
-   <info@codex.xerox.com>
+   <info@codendi.xerox.com>
 
 EOF
 
@@ -185,14 +185,14 @@ Copyright (c) Xerox Corporation, 2001-2008. All Rights Reserved
 http://www.codendi.com
 
 - login as root user
-- cd into the directory where the codex_install.sh script is located
-(probably /mnt/cdrom if you received the CodeX software on a CDROM)
-- For a fresh CodeX installation run the installation script with ./codex_install.sh
-- For an update from 3.4 please read migration_from_CodeX_3.4_to_Codendi_3.6.README.
-- For an update from a prior release, please update to CodeX 3.4 first.
+- cd into the directory where the codendi_install.sh script is located
+(probably /mnt/cdrom if you received the Codendi software on a CDROM)
+- For a fresh Codendi installation run the installation script with ./codendi_install.sh
+- For an update from 3.4 please read migration_from_Codendi_3.4_to_Codendi_4.0.README.
+- For an update from a prior release, please update to Codendi 3.4 first.
 
 -- The Codendi Team
-   <info@codex.xerox.com>
+   <info@codendi.xerox.com>
 EOF
 
 # create a RELEASE_NOTES file at the top
@@ -201,26 +201,26 @@ Codendi: The Xerox Solution to Maximize the Value of Your Corporate Software Ass
 Copyright (c) Xerox Corporation, 2001-2008. All Rights Reserved
 http://www.codendi.com
 
-This is Codendi 3.6 Release Candidate
+This is Codendi 4.0 Release Candidate
 
 Please read the README and INSTALL files carefully, and get in touch with us
-at codex-contact@codex.xerox.com if you have questions.
+at codendi-contact@codendi.xerox.com if you have questions.
 
-        CodeX is no more, welcome Codendi!
+        Codendi is no more, welcome Codendi!
 
-Xerox decided to change the name of the CodeX product to Codendi.
+Xerox decided to change the name of the Codendi product to Codendi.
 This decision helps identify our product better, and provides a new brand.
 Of course, this does not prevent existing customers to continue to use the name
-CodeX internally.
+Codendi internally.
 
 We also decided to change the license of the Codendi software.
-CodeX was mostly GPL v2 with a few Xerox proprietary components (documentation,
+Codendi was mostly GPL v2 with a few Xerox proprietary components (documentation,
 Eclipse plugin, ...), and this confused some people.
 So we changed our license so that *all* Codendi is now licensed under the
 General Public Licence (GPL) V2.
 You no longer need to wonder if you are allowed to modify any part of Codendi!
 
-Here are the new features of Codendi 3.6:
+Here are the new features of Codendi 4.0:
 
 - Codendi now includes a test management framework: SalomeTMF.
   Salomé-TMF is an independent, open source Test Management Tool, which helps 
@@ -242,7 +242,7 @@ Here are the new features of Codendi 3.6:
   JDBC access to the Codendi server. Another version based on SOAP is being integrated.
 
 - Instant Messaging server.
-  Codendi 3.6 provides a Jabber/XMPP server for instant messaging (IM).
+  Codendi 4.0 provides a Jabber/XMPP server for instant messaging (IM).
   Every user declared in Codendi has a corresponding jabberID, and every project
   has a chat room reserved for its members. 
   Simply connect to Codendi with a Jabber client and use your jabber ID: your
@@ -261,17 +261,17 @@ Here are the new features of Codendi 3.6:
   display your project plan in a Gantt chart.... 
   This feature perfectly fits our generic tracker, and can be used with any custom fields.
 
-- Improved security. Codendi 3.6 benefits from all the work done on CodeX 3.4-Security release.
+- Improved security. Codendi 4.0 benefits from all the work done on Codendi 3.4-Security release.
   User input is properly filtered to avoid all types of security risks.
 
 - Improve cross-reference tracking.
   If you reference an artifact in a SVN or CVS commit, the artifact is automatically updated with a 
   reference to the commit (and vice-versa). All references are now clearly displayed;
 
-- Codendi 3.6 comes with Subversion 1.5, that now provides merge tracking!
+- Codendi 4.0 comes with Subversion 1.5, that now provides merge tracking!
 
 - Backend updates:
-  * Platform upgrade: Codendi 3.6 runs on RedHat Enterprise Linux 5 and CentOS 5. This means that 
+  * Platform upgrade: Codendi 4.0 runs on RedHat Enterprise Linux 5 and CentOS 5. This means that 
     all packages have been upgraded: PHP5, Apache 2.2, MySQL 5, etc.
     New SELinux modules are provided and are fully compatible with Codendi
   * Major switch of charset from iso-latin1 to UTF-8. All services are impacted, and this now
@@ -319,7 +319,7 @@ echo "Building ISO image in $ISO_FILE at:"
 date
 mkisofs -quiet -A "$ISO_LABEL" -V "$ISO_LABEL" -J -R -x ./lost+found -x .. -o "$ISO_FILE" $BUILD_DIR
 
-echo "CodeX ISO image available at $ISO_FILE ..."
+echo "Codendi ISO image available at $ISO_FILE ..."
 date
 echo "Done!"
 exit 0
