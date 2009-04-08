@@ -63,6 +63,17 @@ function getProjectsDescFieldsInfos(){
 
 class Project extends Group {
 
+    /**
+     * The project is active
+     */
+    const STATUS_ACTIVE = 'A';
+    
+    /**
+     * The project is pending
+     */
+    const STATUS_PENDING = 'P';
+    
+    
     var $project_data_array;
 
     // All data concerning services for this project

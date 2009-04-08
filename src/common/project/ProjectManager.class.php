@@ -17,6 +17,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
+require_once('Project.class.php');
+require_once('common/dao/ProjectDao.class.php');
 
 /**
  * Provide access to projects
@@ -80,9 +82,8 @@ class ProjectManager {
      * @param $group_id int The id of the project to look for
      * @return Project
      */
-    protected function createProjectInstance($group_id) {
-        require_once('Project.class.php');
-        return new Project($group_id);
+    protected function createProjectInstance($group_id_or_row) {
+        return new Project($group_id_or_row);
     }
     
     /**
@@ -90,6 +91,19 @@ class ProjectManager {
      */
     public function clear($group_id) {
         unset($this->_cached_projects[$group_id]);
+    }
+    
+    public function getProjectsByStatus($status) {
+        $projects = array();
+        $dao = new ProjectDao(CodendiDataAccess::instance());
+        foreach($dao->searchByStatus($status) as $row) {
+            if (!isset($this->_cached_projects[$row['group_id']])) {
+                $p = $this->createProjectInstance($row);
+                $this->_cached_projects[$row['group_id']] = $p;
+            }
+            $projects[$row['group_id']] = $this->_cached_projects[$row['group_id']];
+        }
+        return $projects;
     }
 }
 ?>

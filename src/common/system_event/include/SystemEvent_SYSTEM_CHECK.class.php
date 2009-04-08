@@ -77,25 +77,18 @@ class SystemEvent_SYSTEM_CHECK extends SystemEvent {
             }
         }
 
-
-        // Projects
-        // TODO This should go to a DAO
-        $sql = "SELECT * 
-                FROM groups 
-                WHERE status IN ('A')"; // TODO check query
-        $dar = $this->retrieve($sql);
-        foreach($dar as $row) {
-            $project = new Project($row);
+        $project_manager = ProjectManager::instance();
+        foreach($project_manager->getProjectsByStatus(Project::STATUS_ACTIVE) as $project) {
             
             // Recreate project directories if they were deleted
-            if (!$backendSystem->createProjectHome($group_id)) {
+            if (!$backendSystem->createProjectHome($project->getId())) {
                 $this->error("Could not create project home");
                 return false;
             }
             
             if ($project->usesCVS()) {
                 if (!$backendCVS->repositoryExists($project)) {
-                    if (!$backendCVS->createProjectCVS($project->group_id)) {
+                    if (!$backendCVS->createProjectCVS($project->getId())) {
                         $this->error("Could not create/initialize project CVS repository");
                         return false;
                     }
@@ -116,12 +109,12 @@ class SystemEvent_SYSTEM_CHECK extends SystemEvent {
             
             if ($project->usesSVN()) {
                 if (!$backendSVN->repositoryExists($project)) {
-                    if (!$backendSVN->createProjectSVN($group_id)) {
+                    if (!$backendSVN->createProjectSVN($project->getId())) {
                         $this->error("Could not create/initialize project SVN repository");
                         return false;
                     }
                     $backendSVN->updateHooks($project);
-                    $backendSVN->updateSVNAccess($project->getID());
+                    $backendSVN->updateSVNAccess($project->getId());
                     $backendSVN->setSVNPrivacy($project, !$project->isPublic() || $project->isSVNPrivate());
                 }
                 // Check access rights
