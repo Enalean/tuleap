@@ -439,6 +439,16 @@ table.release tr td img {
 .widget-preview-projectmembers-en_US {
     background-image:url('../images/widget-preview-project_members-en_US.png');
 }
+.widget-preview-mysystemevent-fr_FR {
+    background-image:url('../images/widget-preview-mysystemevent-fr_FR.png');
+}
+.widget-preview-mysystemevent-en_US {
+    background-image:url('../images/widget-preview-mysystemevent-en_US.png');
+}
+.widget-preview-mytwitterfollow-en_US,
+.widget-preview-projecttwitterfollow-en_US {
+    background-image:url('../images/widget-preview-twitterfollow.png');
+}
 /* }}} */
 
 /* {{{ lists & users autocomplete */
