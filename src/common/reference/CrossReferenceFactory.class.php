@@ -248,8 +248,10 @@ class CrossReferenceFactory {
             $display .= "</p>";
     	}
     	
-    	$display .= '<script src="/scripts/cross_references.js.php" type="text/javascript"></script>';
-    	$display .= '<script type="text/javascript">hide_references_to();</script>';
+    	if (array_key_exists('target', $refArraySourceTarget)) {
+            $display .= '<script src="/scripts/cross_references.js.php" type="text/javascript"></script>';
+            $display .= '<script type="text/javascript">hide_references_to();</script>';
+        }
     	
     	return $display;
     }
