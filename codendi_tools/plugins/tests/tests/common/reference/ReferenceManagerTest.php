@@ -107,7 +107,7 @@ class ReferenceManagerTest extends UnitTestCase {
 		$this->assertTrue(count($rm->extractReferences("art #123",0))==1,"Art is a shared keyword for all projects");
 		$this->assertTrue(count($rm->extractReferences("arto #123",0))==0,"Should not extract a reference on unknown keyword");
 		$this->assertTrue(count($rm->extractReferences("art #1:123",0))==1,"Art is a reference for project num 1");
-		$this->assertTrue(count($rm->extractReferences("art #100:123",0))==1,"Art is a reference for project named codex");
+		$this->assertTrue(count($rm->extractReferences("art #100:123",0))==1,"Art is a reference for project named codendi");
 	}
 
 	function testExtractRegexp() {
@@ -125,7 +125,7 @@ class ReferenceManagerTest extends UnitTestCase {
 		$this->assertTrue(count($rm->_extractAllMatches("art #123:123"))==1,"groupID:ObjID");
 		$this->assertTrue(count($rm->_extractAllMatches("art #abc:abc"))==1,"groupName:ObjName");
 		$this->assertTrue(count($rm->_extractAllMatches("art #123:abc"))==1,"groupID:ObjName");
-		$this->assertTrue(count($rm->_extractAllMatches("art #123:abc is a reference to art #123 and rev #codex:123 as well as file #123:release1",0))==4,"Multiple extracts");
+		$this->assertTrue(count($rm->_extractAllMatches("art #123:abc is a reference to art #123 and rev #codendi:123 as well as file #123:release1",0))==4,"Multiple extracts");
 		$this->assertTrue(count($rm->_extractAllMatches("art #123-rev #123",0))==2,"Multiple extracts with '-'");
 		$this->assertTrue(count($rm->_extractAllMatches("art #123:wikipage/2",0))==1,"Wikipage revision number");
 

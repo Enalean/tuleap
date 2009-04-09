@@ -131,7 +131,7 @@ EOS;
             echo '<h2>'.  $hp->purify($p, CODEX_PURIFIER_CONVERT_HTML)  .'</h2>';
             flush();
             echo '<pre>';
-            $cmd = 'cd '. $GLOBALS['codex_dir']. $p .' ; grep -rinE "TODO" * | 
+            $cmd = 'cd '. $GLOBALS['codendi_dir']. $p .' ; grep -rinE "TODO" * | 
                         grep -v ".svn" | 
                         grep -v ".php~" | 
                         grep -v ".class~" | 

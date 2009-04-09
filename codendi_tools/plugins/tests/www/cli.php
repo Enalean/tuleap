@@ -24,5 +24,5 @@ function add_test_to_group($test, $categ, $params) {
 }
 /**/
 $g =& get_group_tests($GLOBALS['tests']);
-exit($g->run(CodeXReporterFactory::reporter("text")) ? 0 : 1);
+exit($g->run(CodendiReporterFactory::reporter("text")) ? 0 : 1);
 ?>

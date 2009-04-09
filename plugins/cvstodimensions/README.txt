@@ -2,11 +2,11 @@ Pour que le plugin fonctionne correctement, vous devez tout d'abord réaliser le
 * récupérer les 3 rpm suivants pour installer les outils Oracle pour Php:
 	- oracle-instantclient-basic-10.2.0.3-1.i386.rpm à recupérer sur http://www.oracle.com/technology/software/tech/oci/instantclient/index.html (Xerox peut le fournir si necessaire)
 	- oracle-instantclient-devel-10.2.0.3-1.i386.rpm à recupérer sur http://www.oracle.com/technology/software/tech/oci/instantclient/index.html (Xerox peut le fournir si necessaire)
-	- php-oci8-4.3.9-3.codex.i386.rpm à récupérer sur le CD de Codex
+	- php-oci8-4.3.9-3.codendi.i386.rpm à récupérer sur le CD de Codendi
 * installer les rpm : 
 	- rpm -ivh oracle-instantclient-basic-10.2.0.3-1.i386.rpm
 	- rpm -ivh oracle-instantclient-devel-10.2.0.3-1.i386.rpm
-	- rpm -ivh php-oci8-4.3.9-3.codex.i386.rpm 
+	- rpm -ivh php-oci8-4.3.9-3.codendi.i386.rpm 
  
 	Pour être sûr que l'installation s'est faite correctement, on peut tester ceci:
 	ldd /usr/lib/php4/oci8.so

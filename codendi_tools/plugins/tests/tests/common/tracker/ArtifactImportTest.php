@@ -335,11 +335,11 @@ Excel issue, reassigned to Gene, reduced to Ordinary
       $followup_comments= "==================================================
 ".$GLOBALS['Language']->getText('tracker_import_utils','type').": ".$GLOBALS['Language']->getText('global','none')."     ".$GLOBALS['Language']->getText('global','by').": jstidd      ".$GLOBALS['Language']->getText('global','on').": 2000-12-09 00:08
 
-noreply was aliased to codex-admin in order to prevent failure of delivery (to anybody) for the message.  This will cause all new bugs to be visible to the codex administrators until an alternate solution is devised.  It seems ill-advised to set the email value in user=100 to null, because we are not sure where this value is used in the system and what the effects will be of possible syntax errors created by the use of null instead of a valid mail address.  What is needed is to alias noreply to a bit bucket.
+noreply was aliased to codex-admin in order to prevent failure of delivery (to anybody) for the message.  This will cause all new bugs to be visible to the codendi administrators until an alternate solution is devised.  It seems ill-advised to set the email value in user=100 to null, because we are not sure where this value is used in the system and what the effects will be of possible syntax errors created by the use of null instead of a valid mail address.  What is needed is to alias noreply to a bit bucket.
 ==================================================
 ".$GLOBALS['Language']->getText('tracker_import_utils','type').": ".$GLOBALS['Language']->getText('global','none')."     ".$GLOBALS['Language']->getText('global','by').": jstidd      ".$GLOBALS['Language']->getText('global','on').": 2000-12-08 23:06
 
-The cause of this problem is that bugs assigned to 'None' are assigned by default to the default user, user_id=100 by bug_data_create in bugs/bug_data.php.  The email field for user 100 in the database was noreply@sourceforge.net.  This has been changed to noreply@codex.xerox.com.  The Assigned To: field on this bug has been changed to None in order to test this change.
+The cause of this problem is that bugs assigned to 'None' are assigned by default to the default user, user_id=100 by bug_data_create in bugs/bug_data.php.  The email field for user 100 in the database was noreply@sourceforge.net.  This has been changed to noreply@codendi.com.  The Assigned To: field on this bug has been changed to None in order to test this change.
 ==================================================
 ".$GLOBALS['Language']->getText('tracker_import_utils','type').": ".$GLOBALS['Language']->getText('global','none')."     ".$GLOBALS['Language']->getText('global','by').": jstidd      ".$GLOBALS['Language']->getText('global','on').": 2000-12-08 22:30
 

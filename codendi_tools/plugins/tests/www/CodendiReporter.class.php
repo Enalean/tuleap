@@ -3,7 +3,7 @@
 require_once('../include/simpletest/reporter.php');
 require_once('../include/simpletest/extensions/junit_xml_reporter.php');
 
-class CodeXHtmlReporter extends HtmlReporter {
+class CodendiHtmlReporter extends HtmlReporter {
     protected $_timer;
     function paintHeader($test_name) {
         print "<h1>$test_name</h1>\n";
@@ -38,7 +38,7 @@ class CodeXHtmlReporter extends HtmlReporter {
     }
 }
  
-class CodeXJUnitXMLReporter extends JUnitXMLReporter {
+class CodendiJUnitXMLReporter extends JUnitXMLReporter {
         
     public function getXML() {
         return $this->doc->saveXML();
@@ -52,17 +52,17 @@ class CodeXJUnitXMLReporter extends JUnitXMLReporter {
         
 }
 
-class CodeXReporterFactory {
+class CodendiReporterFactory {
     public static function reporter($type = "html") {
         switch ($type) {
             case "text":
                 return new TextReporter();
                 break;
             case "junit_xml":
-                return new CodeXJUnitXMLReporter();
+                return new CodendiJUnitXMLReporter();
                 break;
             default:
-                return new CodeXHtmlReporter();
+                return new CodendiHtmlReporter();
         }
     }
 }

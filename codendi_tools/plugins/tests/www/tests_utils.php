@@ -1,13 +1,13 @@
 <?php
 error_reporting(E_ALL);
-require(getenv('CODEX_LOCAL_INC')?getenv('CODEX_LOCAL_INC'):'/etc/codex/conf/local.inc');
+require(getenv('CODEX_LOCAL_INC')?getenv('CODEX_LOCAL_INC'):'/etc/codendi/conf/local.inc');
 require($GLOBALS['db_config_file']);
 
 require_once('../include/simpletest/unit_tester.php');
 require_once('../include/simpletest/mock_objects.php');
 require_once('../include/simpletest/web_tester.php');
 
-require_once('CodeXReporter.class.php');
+require_once('CodendiReporter.class.php');
 
 $GLOBALS['config']['plugins_root'] = $GLOBALS['sys_pluginsroot'];
 $GLOBALS['config']['tests_root']   = '/tests/';

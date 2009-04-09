@@ -25,7 +25,7 @@
 require_once('common/mail/Mail.class.php');
 
 /**
- * Use this class to hook email management in codex.
+ * Use this class to hook email management in codendi.
  * How to use it:
  * 1. make a link on it in src/common/mail
  * 2. customize $this->_testDir to a directory the http server you run is
@@ -39,7 +39,7 @@ class FakeMail extends Mail {
 
     function FakeMail() {
         parent::Mail();
-        $this->_testDir = '/var/tmp/codex_cache/mail';
+        $this->_testDir = '/var/tmp/codendi_cache/mail';
     }
 
     function _sendmail($headers) {

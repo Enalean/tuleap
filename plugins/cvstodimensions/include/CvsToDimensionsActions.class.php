@@ -1,11 +1,21 @@
 <?php
-
-
-/**
- * Copyright (c) Xerox Corporation, CodeX Team, 2001-2005. All rights reserved
- * 
+/*
+ * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
- * CvsToDimensionsActions
+ * This file is a part of Codendi.
+ *
+ * Codendi is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Codendi is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 require_once ('common/mvc/Actions.class.php');
 require_once ('common/include/HTTPRequest.class.php');
@@ -110,8 +120,8 @@ class CvsToDimensionsActions extends Actions {
                 $this->_controler->transferInProgress = true;
                 if(in_array("PRODUCT-MANAGER", $roles_array)){
                     //check upload manager role
-                    $codex_user_name = $user->getName();
-                    $user_name = strtoupper($codex_user_name);
+                    $codendi_user_name = $user->getName();
+                    $user_name = strtoupper($codendi_user_name);
     
                     $roles = & $p26c_dao->searchRoleByProductAndUser($product_name, $user_name);
                     $roles_array = $this->_resultset_to_array($roles, "ROLE");
@@ -129,7 +139,7 @@ class CvsToDimensionsActions extends Actions {
                         $dmcli = $this->_controler->getProperty('dmcli');
                         $dsn = $this->_controler->getProperty('dsn');
                         $host = $this->_controler->getProperty('host');
-                        $dmcli_authent = $dmcli . ' -user '.$codex_user_name.' -pass ' . $password . ' -dbname ' . $database . ' -dsn ' . $dsn .
+                        $dmcli_authent = $dmcli . ' -user '.$codendi_user_name.' -pass ' . $password . ' -dbname ' . $database . ' -dsn ' . $dsn .
                         ' -host ' . $host . ' ';
 
                         $workset_array = $this->_resultset_to_array($worksets, "WORKSET_NAME");

@@ -19,7 +19,7 @@ The docman uses also widely some other patterns:
 
 !! Factories / Business Objects debate
 
-These two patterns are equivalent and both are used in Codex.
+These two patterns are equivalent and both are used in Codendi.
 
 However, we decided to only use Factory name for developments, new developments shouldn't add new '*Bo' classes. We migrate old code to new standard step by step.
 

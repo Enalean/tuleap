@@ -2,7 +2,7 @@
 <?php
  /**
   * Script to upload an entire block of folders & files
-  * into Codex document manager.
+  * into Codendi document manager.
   *
   * usage: DocUploader project_id source_dir id_dest
   *
@@ -10,7 +10,7 @@
   *  -project is your project shortname (where you need to upload  documents)
   *  -project_id is your project ID
   *  -source_dir is the local path to the directory containing documents you need to upload
-  *  -id_destination is the id of the folder (in codex doc manager)
+  *  -id_destination is the id of the folder (in codendi doc manager)
   */
 
 function getChunk($filePath, $offset, $size) {

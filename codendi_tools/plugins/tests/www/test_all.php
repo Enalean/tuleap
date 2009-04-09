@@ -1,7 +1,7 @@
 <?php
 
 require_once('./tests_utils.php');
-require_once('CodeXReporter.class.php');
+require_once('CodendiReporter.class.php');
 
 function add_test_to_group($test, $categ, $params) {
     if (is_array($test)) {
@@ -24,7 +24,7 @@ function add_test_to_group($test, $categ, $params) {
 
 $g =& get_group_tests($GLOBALS['tests']);
 
-$j_reporter = new CodeXJUnitXMLReporter();
+$j_reporter = new CodendiJUnitXMLReporter();
 $g->run($j_reporter);
 
 $xml = $j_reporter->writeXML('codendi_unit_tests_report.xml');

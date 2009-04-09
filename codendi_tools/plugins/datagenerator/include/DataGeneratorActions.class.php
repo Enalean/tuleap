@@ -31,7 +31,7 @@ class DataGeneratorActions extends Actions {
                     if (!$um->getUserByUserName($user['name'])) {
                         require_once('account.php');
                         account_create($user['name']
-                              ,'codex'
+                              ,'codendi'
                               ,''
                               ,$user['realname']
                               ,''

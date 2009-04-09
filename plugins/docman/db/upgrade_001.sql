@@ -16,7 +16,7 @@ ALTER TABLE plugin_docman_item ADD COLUMN obsolescence_date int(11) DEFAULT 0 NO
 --
 -- label       : short name (used on the HTML form)
 -- description : longer description of this field
--- scope       : S if predefined values are for the entire Codex,
+-- scope       : S if predefined values are for the entire Codendi,
 --               P if values can be re-defined at the project level
 -- required    : 0 a project can decide not to use this artifact field
 --               1 all projects have to use this artifact field

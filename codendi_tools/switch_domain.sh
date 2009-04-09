@@ -17,17 +17,17 @@ echo "Current domain = $old_domain"
 read -p "New domain: " new_domain
 
 
-substitute '/etc/codex/conf/local.inc' "$old_domain" "$new_domain" 
-substitute '/etc/codex/conf.d/codex_aliases.conf' "$old_domain" "$new_domain" 
+substitute '/etc/codendi/conf/local.inc' "$old_domain" "$new_domain" 
+substitute '/etc/codendi/conf.d/codendi_aliases.conf' "$old_domain" "$new_domain" 
 substitute '/etc/httpd/conf/httpd.conf' "$old_domain" "$new_domain"
-if [ -e '/etc/codex/documentation/user_guide/xml/ParametersLocal.dtd' ] ; then
-    substitute '/etc/codex/documentation/user_guide/xml/ParametersLocal.dtd' "$old_domain" "$new_domain" 
+if [ -e '/etc/codendi/documentation/user_guide/xml/ParametersLocal.dtd' ] ; then
+    substitute '/etc/codendi/documentation/user_guide/xml/ParametersLocal.dtd' "$old_domain" "$new_domain" 
 fi
-if [ -e '/etc/codex/documentation/cli/xml/ParametersLocal.dtd' ] ; then
-    substitute '/etc/codex/documentation/cli/xml/ParametersLocal.dtd' "$old_domain" "$new_domain" 
+if [ -e '/etc/codendi/documentation/cli/xml/ParametersLocal.dtd' ] ; then
+    substitute '/etc/codendi/documentation/cli/xml/ParametersLocal.dtd' "$old_domain" "$new_domain" 
 fi
-if [ -e '/var/named/chroot/var/named/codex_full.zone' ] ; then
-    substitute '/var/named/chroot/var/named/codex_full.zone' "$old_domain" "$new_domain" 
+if [ -e '/var/named/chroot/var/named/codendi_full.zone' ] ; then
+    substitute '/var/named/chroot/var/named/codendi_full.zone' "$old_domain" "$new_domain" 
 fi
 if [ -e '/etc/mail/local-host-names' ] ; then
     substitute '/etc/mail/local-host-names' "$old_domain" "$new_domain" 

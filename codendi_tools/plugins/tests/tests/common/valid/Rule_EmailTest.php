@@ -37,60 +37,60 @@ class Rule_EmailTest extends UnitTestCase {
     function testWithoutSubDomains() {
         $GLOBALS['sys_disable_subdomains'] = 1;
         $r = new Rule_Email();
-        $this->assertTrue($r->isValid('user@codex'));
-        $this->assertTrue($r->isValid('user@codex.domain.com'));
+        $this->assertTrue($r->isValid('user@codendi'));
+        $this->assertTrue($r->isValid('user@codendi.domain.com'));
     }
 
     function testWithSubDomains() {
         $GLOBALS['sys_disable_subdomains'] = 0;
         $r = new Rule_Email();
-        $this->assertFalse($r->isValid('user@codex'));
-        $this->assertTrue($r->isValid('user@codex.domain.com'));
+        $this->assertFalse($r->isValid('user@codendi'));
+        $this->assertTrue($r->isValid('user@codendi.domain.com'));
     }
 
     function testSpecialCharsWoSD() {
         $GLOBALS['sys_disable_subdomains'] = 1;
         $r = new Rule_Email();
-        $this->assertFalse($r->isValid("user@codex.domain.com\n"));
-        $this->assertFalse($r->isValid("\nuser@codex.domain.com"));
-        $this->assertFalse($r->isValid("user@codex.domain.com\nuser@codex.domain.com"));
-        $this->assertFalse($r->isValid("user@codex.domain.com\0"));
-        $this->assertFalse($r->isValid("\0user@codex.domain.com"));
-        $this->assertFalse($r->isValid("user@codex.domain.com\0user@codex.domain.com"));
+        $this->assertFalse($r->isValid("user@codendi.domain.com\n"));
+        $this->assertFalse($r->isValid("\nuser@codendi.domain.com"));
+        $this->assertFalse($r->isValid("user@codendi.domain.com\nuser@codendi.domain.com"));
+        $this->assertFalse($r->isValid("user@codendi.domain.com\0"));
+        $this->assertFalse($r->isValid("\0user@codendi.domain.com"));
+        $this->assertFalse($r->isValid("user@codendi.domain.com\0user@codendi.domain.com"));
     }
 
     function testSpecialCharsWithSD() {
         $GLOBALS['sys_disable_subdomains'] = 0;
         $r = new Rule_Email();
-        $this->assertFalse($r->isValid("user@codex.domain.com\n"));
-        $this->assertFalse($r->isValid("\nuser@codex.domain.com"));
-        $this->assertFalse($r->isValid("user@codex.domain.com\nuser@codex.domain.com"));
-        $this->assertFalse($r->isValid("user@codex.domain.com\0"));
-        $this->assertFalse($r->isValid("\0user@codex.domain.com"));
-        $this->assertFalse($r->isValid("user@codex.domain.com\0user@codex.domain.com"));
+        $this->assertFalse($r->isValid("user@codendi.domain.com\n"));
+        $this->assertFalse($r->isValid("\nuser@codendi.domain.com"));
+        $this->assertFalse($r->isValid("user@codendi.domain.com\nuser@codendi.domain.com"));
+        $this->assertFalse($r->isValid("user@codendi.domain.com\0"));
+        $this->assertFalse($r->isValid("\0user@codendi.domain.com"));
+        $this->assertFalse($r->isValid("user@codendi.domain.com\0user@codendi.domain.com"));
     }
 
     function testMultipleEmails() {
         $r = new Rule_Email(',');
 
-        $this->assertTrue($r->isValid("user@codex.domain.com"));
-        $this->assertTrue($r->isValid("user@codex.domain.com, user2@codex.domain.com"));
+        $this->assertTrue($r->isValid("user@codendi.domain.com"));
+        $this->assertTrue($r->isValid("user@codendi.domain.com, user2@codendi.domain.com"));
 
-        $this->assertFalse($r->isValid("user@codex.domain.com; user2@codex.domain.com"));
-        $this->assertFalse($r->isValid("user@codex.domain.com, toto l'asticot"));
-        $this->assertFalse($r->isValid("toto l'asticot, user@codex.domain.com"));
+        $this->assertFalse($r->isValid("user@codendi.domain.com; user2@codendi.domain.com"));
+        $this->assertFalse($r->isValid("user@codendi.domain.com, toto l'asticot"));
+        $this->assertFalse($r->isValid("toto l'asticot, user@codendi.domain.com"));
         $this->assertFalse($r->isValid("toto l'asticot"));
     }
 
     function testMultipleEmailsMultipleSeparator() {
         $r = new Rule_Email('[,;]');
 
-        $this->assertTrue($r->isValid("user@codex.domain.com"));
-        $this->assertTrue($r->isValid("user@codex.domain.com, user2@codex.domain.com"));
-        $this->assertTrue($r->isValid("user@codex.domain.com; user2@codex.domain.com"));
-        $this->assertTrue($r->isValid("user@codex.domain.com; user2@codex.domain.com, user3@codex.domain.com"));
+        $this->assertTrue($r->isValid("user@codendi.domain.com"));
+        $this->assertTrue($r->isValid("user@codendi.domain.com, user2@codendi.domain.com"));
+        $this->assertTrue($r->isValid("user@codendi.domain.com; user2@codendi.domain.com"));
+        $this->assertTrue($r->isValid("user@codendi.domain.com; user2@codendi.domain.com, user3@codendi.domain.com"));
 
-        $this->assertFalse($r->isValid("user@codex.domain.com; toto l'asticot, user3@codex.domain.com"));
+        $this->assertFalse($r->isValid("user@codendi.domain.com; toto l'asticot, user3@codendi.domain.com"));
     }
 
 }

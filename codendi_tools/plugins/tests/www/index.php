@@ -215,7 +215,7 @@ function display_tests_as_javascript($tests, $categ, $params) {
                                 }
                             }
                             $g =& get_group_tests($_REQUEST['tests_to_run']);
-                            $g->run(CodeXReporterFactory::reporter());
+                            $g->run(CodendiReporterFactory::reporter());
                         }
                         ?>
                     </fieldset>

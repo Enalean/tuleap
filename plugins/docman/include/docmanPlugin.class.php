@@ -256,7 +256,7 @@ class DocmanPlugin extends Plugin {
         }
     }
     /**
-     * Hook: called by daily codex script.
+     * Hook: called by daily codendi script.
      */
     function codexDaily() {
         require_once('Docman_HTTPController.class.php');
