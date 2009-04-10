@@ -21,7 +21,7 @@ function people_header($params) {
 	   <H2>'.$GLOBALS['sys_name'].' - '.$Language->getText('people_utils','people_skills').'</H2>
 		<P><B>
 	<A HREF="/people/admin/">'.$Language->getText('people_utils','admin').'</A>';
-    if ($params['help']) {
+    if (array_key_exists('help', $params) && $params['help']) {
 	echo ' | '.help_button($params['help'],false,$Language->getText('global','help'));
     }
     echo '</B>';
