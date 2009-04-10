@@ -77,7 +77,7 @@ function forum_header($params) {
 
 				echo '<P>';
 				
-			    $crossref_fact= new CrossReferenceFactory(db_result($result,0,'id'), ReferenceManager::REFERENCE_NATURE_NEWS, $group_id);
+                $crossref_fact= new CrossReferenceFactory($forum_id, ReferenceManager::REFERENCE_NATURE_NEWS, $group_id);
                 $crossref_fact->fetchDatas();
                 if ($crossref_fact->getNbReferences() > 0) {
                     echo '<b> '.$Language->getText('cross_ref_fact_include','references').'</b>';
@@ -890,5 +890,6 @@ function forum_thread_add_monitor($forum_id, $thread_id, $user_id) {
               $result= db_query($qry);
               return true;
           }
+          
 
 ?>

@@ -263,8 +263,8 @@ function news_submit($group_id,$summary,$details,$private_news, $promote_news = 
         
         // extract cross references           
         $reference_manager =& ReferenceManager::instance();
-        $reference_manager->extractCrossRef($summary, $news_bytes_id, ReferenceManager::REFERENCE_NATURE_NEWS, $group_id);
-        $reference_manager->extractCrossRef($details, $news_bytes_id, ReferenceManager::REFERENCE_NATURE_NEWS, $group_id);
+        $reference_manager->extractCrossRef($summary, $new_id, ReferenceManager::REFERENCE_NATURE_NEWS, $group_id);
+        $reference_manager->extractCrossRef($details, $new_id, ReferenceManager::REFERENCE_NATURE_NEWS, $group_id);
     }
 }
 
