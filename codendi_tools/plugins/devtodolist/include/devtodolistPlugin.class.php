@@ -68,7 +68,7 @@ class DevtodolistPlugin extends Plugin {
 EOS;
     }
     public function process() {
-        $hp = CodeX_HTMLPurifier::instance();
+        $hp = Codendi_HTMLPurifier::instance();
         $all_path = array(
             '/src/common',
             '/src/www',
@@ -79,7 +79,7 @@ EOS;
             echo '<ul>';
             foreach($all_path as $p) {
                 if ($request->get('path') && preg_match('`'. preg_quote($request->get('path')) .'`', $p)) {
-                    echo '<li>'.  $hp->purify($p, CODEX_PURIFIER_CONVERT_HTML)  .'</li>';
+                    echo '<li>'.  $hp->purify($p, CODENDI_PURIFIER_CONVERT_HTML)  .'</li>';
                 }
             }
             echo '</ul>';
@@ -128,7 +128,7 @@ EOS;
         ';
         
         foreach($path as $p) {
-            echo '<h2>'.  $hp->purify($p, CODEX_PURIFIER_CONVERT_HTML)  .'</h2>';
+            echo '<h2>'.  $hp->purify($p, CODENDI_PURIFIER_CONVERT_HTML)  .'</h2>';
             flush();
             echo '<pre>';
             $cmd = 'cd '. $GLOBALS['codendi_dir']. $p .' ; grep -rinE "TODO" * | 
