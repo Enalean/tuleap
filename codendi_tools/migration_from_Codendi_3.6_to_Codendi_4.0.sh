@@ -775,6 +775,51 @@ if (count($groups)) {
 ?>
 EOF
 
+echo "- Store .SVNAccessFile in db"
+$CAT <<EOF | $PHP
+<?php
+require_once('/etc/codendi/conf/local.inc');
+require_once('/etc/codendi/conf/database.inc');
+
+mysql_connect($sys_dbhost, $sys_dbuser, $sys_dbpasswd) or die('ERROR: Unable to connect to the database. Aborting.');
+mysql_select_db($sys_dbname) or die('ERROR: Unable to select the database. Aborting.');
+
+function svn_utils_read_svn_access_file($gname) {
+
+    global $svn_prefix;
+
+    $filename = "$svn_prefix/$gname/.SVNAccessFile";
+    $buffer = '';
+
+    $fd = @fopen("$filename", "r");
+    if (!$fd) {
+        error_log("Unable to open $filename");
+        $buffer = false;
+    } else {
+        $in_settings = false;
+        while (!feof($fd)) {
+            $line = fgets($fd, 4096);
+            if (strpos($line,'# BEGIN CODEX DEFAULT') !== false) { $in_settings = true; }
+            if (!$in_settings) { $buffer .= $line; }
+            if (strpos($line,'# END CODEX DEFAULT') !== false) { $in_settings = false; }
+        }
+        fclose($fd);
+    }
+    return $buffer;
+}
+
+foreach(glob($svn_prefix.'/*/.SVNAccessFile') as $file) {
+    $gname = basename(dirname($file));
+    $content = svn_utils_read_svn_access_file($gname);
+    $sql = "UPDATE groups 
+            SET svn_accessfile = '". mysql_real_escape_string($content) ."' 
+            WHERE unix_group_name = '". mysql_real_escape_string($gname) ."'";
+    mysql_query($sql) or error_log(mysql_error());
+}
+?>
+EOF
+
+
 echo "- Rename codexjri to codendijri"
 $CAT <<EOF | $MYSQL $pass_opt codendi
 UPDATE plugin
@@ -894,7 +939,6 @@ $SERVICE smb start
 
 
 
-TODO migrate svnaccessfile in db
 
 TODO migrate CodeX* themes (in file and in db and in plugins)
 TODO migrate User-Agent (Dont allow access to API for anyone.)
