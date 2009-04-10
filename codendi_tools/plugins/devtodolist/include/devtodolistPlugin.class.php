@@ -85,8 +85,8 @@ EOS;
             echo '</ul>';
             exit;
         }
-        $GLOBALS['HTML']->includeJavascriptFile('/scripts/scriptaculous/scriptaculous.js');
-        $GLOBALS['HTML']->header(array(
+        $GLOBALS['HTML']->includeJavascriptFile('/scripts/scriptaculous/scriptaculous.js')
+                        ->header(array(
             'title' => $GLOBALS['Language']->getText('plugin_devtodolist', 'descriptor_name'),
             'toptab' => 'admin'
         ));

@@ -983,7 +983,6 @@ CREATE TABLE groups (
   svn_events_mailing_list text NOT NULL,
   svn_events_mailing_header varchar(64) binary DEFAULT NULL,
   svn_preamble text NOT NULL,
-  svn_accessfile text NULL,
   PRIMARY KEY  (group_id),
   KEY idx_groups_status (status),
   KEY idx_groups_public (is_public),
