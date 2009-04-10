@@ -214,17 +214,17 @@ class WidgetLayoutManager {
         while($data = db_fetch_array($res)) {
             $used_widgets[] = $data['name'];
         }
-        echo '<h3>';
+        echo '<ul class="widget_toolbar">';
         if ($update_layout = HTTPRequest::instance()->get('update') == 'layout') {
-            echo '<a href="'. str_replace('&update=layout', '', $_SERVER['REQUEST_URI']) .'">'. $GLOBALS['Language']->getText('widget_add', 'title') .'</a>';
-            echo ' | '. 'Layout';
+            echo '<li><a href="'. str_replace('&update=layout', '', $_SERVER['REQUEST_URI']) .'">'. $GLOBALS['Language']->getText('widget_add', 'title') .'</a></li>';
+            echo '<li class="current"><a href="'. $_SERVER['REQUEST_URI'] .'">'. $GLOBALS['Language']->getText('widget_layout', 'title') .'</a></li>';
             $action = 'layout';
         } else {
-            echo $GLOBALS['Language']->getText('widget_add', 'title') .' | ';
-            echo '<a href="'. $_SERVER['REQUEST_URI'] .'&amp;update=layout">'. 'Layout' .'</a>';
+            echo '<li class="current"><a href="'. $_SERVER['REQUEST_URI'] .'">'. $GLOBALS['Language']->getText('widget_add', 'title') .'</a></li>';
+            echo '<li><a href="'. $_SERVER['REQUEST_URI'] .'&amp;update=layout">'. $GLOBALS['Language']->getText('widget_layout', 'title') .'</a></li>';
             $action = 'widget';
         }
-        echo '</h3>';
+        echo '</ul>';
         echo '<form action="/widgets/updatelayout.php?owner='. $owner_type.$owner_id .'&amp;action='. $action .'&amp;layout_id='. $layout_id .'" method="POST">';
         if ($update_layout) {
             $sql = "SELECT * FROM layouts WHERE scope='S' ORDER BY id ";
@@ -298,7 +298,6 @@ class WidgetLayoutManager {
                             echo '<table cellpadding="2" cellspacing="0">
                                     <tbody>';
                                     $after .= $this->_displayWidgetsSelectionForm($GLOBALS['Language']->getText('widget_add', 'codendi_widgets', $GLOBALS['sys_name']), Widget::getCodendiWidgets($owner_type), $used_widgets);
-                                    $after .= $this->_displayWidgetsSelectionForm($GLOBALS['Language']->getText('widget_add', 'external_widgets'), Widget::getExternalWidgets($owner_type), $used_widgets);
                                     echo '</tbody>
                                 </table>';
                             echo '</td>
@@ -452,7 +451,7 @@ class WidgetLayoutManager {
         $hp = Codendi_HTMLPurifier::instance();
         $additionnal_html = '';
         if (count($widgets)) {
-            echo '<tr><td colspan="2"><h3>'. $title .'</h3>';
+            echo '<tr><td colspan="2">';
             $categs = $this->getCategories($widgets);
             $widget_rows = array();
             if (count($categs)) {

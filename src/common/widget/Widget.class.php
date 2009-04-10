@@ -250,14 +250,14 @@ require_once('common/widget/Widget_ProjectSvnStats.class.php');
                 $widgets = array('myadmin', 'mysurveys', 'myprojects', 'mybookmarks', 
                     'mymonitoredforums', 'mymonitoredfp', 'myartifacts', 'mybugs', //'mywikipage' //not yet
                     'mytasks', 'mysrs', 'mylatestsvncommits', 'mytwitterfollow',
-                    'mysystemevent', 
+                    'mysystemevent', 'myrss',
                 );
                 break;
             case WidgetLayoutManager::OWNER_TYPE_GROUP:
                 $widgets = array('projectdescription', 'projectmembers', 
                     'projectlatestfilereleases', 'projectlatestnews', 'projectpublicareas', //'projectwikipage' //not yet
                     'projectlatestsvncommits', 'projectlatestcvscommits', 'projecttwitterfollow', 
-                    'projectsvnstats', 
+                    'projectsvnstats', 'projectrss', 
                 );
                 if ($GLOBALS['sys_use_trove'] != 0) {
                     $widgets[] = 'projectclassification';
@@ -283,11 +283,11 @@ require_once('common/widget/Widget_ProjectSvnStats.class.php');
     /* static */ function getExternalWidgets($owner_type) {
         switch ($owner_type) {
             case WidgetLayoutManager::OWNER_TYPE_USER:
-                $widgets = array('myrss'
+                $widgets = array(
                 );
                 break;
             case WidgetLayoutManager::OWNER_TYPE_GROUP:
-                $widgets = array('projectrss'
+                $widgets = array(
                 );
                 break;
             case WidgetLayoutManager::OWNER_TYPE_HOME:

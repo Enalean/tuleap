@@ -4,7 +4,7 @@
 #
 widget	preferences_title	Préférences
 
-widget_add	title	Widgets
+widget_add	title	Add widgets
 widget_add	codendi_widgets	Widgets $1
 widget_add	external_widgets	Widgets Externes
 widget_add	add	Ajouter
@@ -19,4 +19,6 @@ widget_categ_label	general	Général
 widget_categ_label	trackers	Outils de suivi
 widget_categ_label	scm	Gestion de code source
 widget_categ_label	wiki	Wiki
+
+widget_layout	title	Customize layout
 
