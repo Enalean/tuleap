@@ -11,7 +11,7 @@
 #
 widget	preferences_title	Preferences
 
-widget_add	title	Ajouter des widgets
+widget_add	title	Add widgets
 widget_add	codendi_widgets	$1 Widgets
 widget_add	external_widgets	External Widgets
 widget_add	add	Add
@@ -27,5 +27,7 @@ widget_categ_label	trackers	Trackers
 widget_categ_label	scm	Source Code Management
 widget_categ_label	wiki	Wiki
 
-widget_layout	title	Personnaliser la mise en page
+widget_layout	title	Customize layout
+
+widget_dashboard	updated	Your <a href="$1">dashboard</a> has been updated.
 

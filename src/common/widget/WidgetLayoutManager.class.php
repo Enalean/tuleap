@@ -423,6 +423,7 @@ class WidgetLayoutManager {
                 }
             }
         }
+        $this->feedback($owner_id, $owner_type);
     }
     
     function _retrieveStructureOfLayout($layout_id) {
@@ -618,6 +619,21 @@ class WidgetLayoutManager {
             db_query($sql);
             echo db_error();
         }
+        $this->feedback($owner_id, $owner_type);
+    }
+    
+    protected function feedback($owner_id, $owner_type) {
+        $link = '/';
+        if ($owner_type == self::OWNER_TYPE_GROUP) {
+            //retrieve the short name of the project
+            if ($project = ProjectManager::instance()->getProject($owner_id)) {
+                $hp = Codendi_HTMLPurifier::instance();
+                $link = '/projects/'.  $hp->purify($project->getUnixGroupName(), CODENDI_PURIFIER_CONVERT_HTML) ;
+            }
+        } else if ($owner_type == self::OWNER_TYPE_USER) {
+            $link = '/my/';
+        }
+        $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('widget_dashboard', 'updated', $link), CODENDI_PURIFIER_DISABLED);
     }
     
     /**
