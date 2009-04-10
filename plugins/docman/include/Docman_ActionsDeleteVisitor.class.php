@@ -111,10 +111,9 @@ class Docman_ActionsDeleteVisitor /* implements Visitor */ {
     }
 
     function _deleteItem($item, $params) {
-        if ($this->docman->userCanWrite($item->getId())) {
-            $item->setDeleteDate($this->deleteDate);
-            $dao = $this->_getItemDao();
-            $dao->updateFromRow($item->toRow());
+       if ($this->docman->userCanWrite($item->getId())) {
+
+            // The event must be processed before the item is deleted
             $em =& $this->_getEventManager();
             $em->processEvent('plugin_docman_event_del', array(
                 'group_id' => $item->getGroupId(),
@@ -122,6 +121,10 @@ class Docman_ActionsDeleteVisitor /* implements Visitor */ {
                 'parent'   => &$params['parent'],
                 'user'     => &$params['user'])
             );
+            
+            $item->setDeleteDate($this->deleteDate);
+            $dao = $this->_getItemDao();
+            $dao->updateFromRow($item->toRow());
             return true;
         } else {
             $this->docman->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_perms_delete_item', $item->getTitle()));
