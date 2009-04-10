@@ -378,7 +378,9 @@ EOF;
 
 echo "- Mandatory reference in SVN commit message"
 $CAT <<EOF | $MYSQL $pass_opt codendi
-ALTER TABLE groups ADD svn_mandatory_ref TINYINT NOT NULL DEFAULT '0' AFTER svn_tracker;
+ALTER TABLE groups 
+    ADD svn_mandatory_ref TINYINT NOT NULL DEFAULT '0' AFTER svn_tracker,
+    ADD svn_accessfile text NULL AFTER svn_preamble;
 EOF
 
 echo "- Cross references : add a new field 'nature'"
@@ -892,6 +894,7 @@ $SERVICE smb start
 
 
 
+TODO migrate svnaccessfile in db
 
 TODO migrate CodeX* themes (in file and in db and in plugins)
 TODO migrate User-Agent (Dont allow access to API for anyone.)

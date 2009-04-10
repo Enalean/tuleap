@@ -21,6 +21,13 @@ if ($request->isPost() && $request->existAndNonEmpty('post_changes')) {
     $vAccessFile->setErrorMessage($Language->getText('svn_admin_access_control','upd_fail'));
     if($request->valid($vAccessFile)) {
         $form_accessfile = $request->get('form_accessfile');
+        
+        //store the custom access file in db
+        $sql = "UPDATE groups
+                SET svn_accessfile = '". db_es($form_accessfile) ."'
+                WHERE group_id = ". db_ei($group_id);
+        db_query($sql);
+        
         $buffer = svn_utils_read_svn_access_file_defaults($gname);
         $buffer .= $form_accessfile;
         $ret = svn_utils_write_svn_access_file($gname,$buffer);

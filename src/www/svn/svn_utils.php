@@ -466,15 +466,15 @@ function svn_utils_read_svn_access_file_defaults($gname,$display=false) {
     $in_settings = false;
     $buffer = '';
     while (!feof($fd)) {
-	$line = fgets($fd, 4096);
-	//if for display: don't include comment lines 
-	if ($display && strpos($line,'# END CODEX DEFAULT') !== false) { $in_settings = false; break; }
-	else if (!$display && strpos($line,'# BEGIN CODEX DEFAULT') !== false) { $in_settings = true; }
-
-	if ($in_settings) { $buffer .= $line; }
-
-	if ($display && strpos($line,'# BEGIN CODEX DEFAULT') !== false) { $in_settings = true; }
-	else if (!$display && strpos($line,'# END CODEX DEFAULT') !== false) { $in_settings = false; break; }
+        $line = fgets($fd, 4096);
+        //if for display: don't include comment lines 
+        if ($display && strpos($line,'# END CODEX DEFAULT') !== false) { $in_settings = false; break; }
+        else if (!$display && strpos($line,'# BEGIN CODEX DEFAULT') !== false) { $in_settings = true; }
+    
+        if ($in_settings) { $buffer .= $line; }
+    
+        if ($display && strpos($line,'# BEGIN CODEX DEFAULT') !== false) { $in_settings = true; }
+        else if (!$display && strpos($line,'# END CODEX DEFAULT') !== false) { $in_settings = false; break; }
     }
     fclose($fd);
     return $buffer;
