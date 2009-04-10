@@ -508,10 +508,14 @@ class Jabbex implements JabbexInterface
 	 * - false on error.
 	 */
 	function user_status($jid){
-		if( ! $f = fopen("http://".JABBER_SERVER_DNS.":".JABBER_WEBADMIN_UNSEC_PORT."/plugins/presence/status?jid=".$jid."&type=xml","r") ){
-			return false;
-		}
-
+		$filename = "http://".JABBER_SERVER_DNS.":".JABBER_WEBADMIN_UNSEC_PORT."/plugins/presence/status?jid=".$jid."&type=xml";
+        if (file_exists($filename)) {
+            if( ! $f = fopen($filename,"r") ){
+                return false;
+            }
+        } else {
+            return false;
+        }
 		if( ! $in_stream = fread($f,65535) ){
 			return false;
 		}
