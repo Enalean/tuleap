@@ -291,13 +291,21 @@ class WidgetLayoutManager {
             echo '<input type="submit" id="save" value="'. $GLOBALS['Language']->getText('global', 'btn_submit') .'" />';
         } else {
             $after = '';
-            echo '<table cellpadding="0" cellspacing="0"><tbody><tr valign="top"><td>';
-            echo '<table cellpadding="2" cellspacing="0"><tbody>';
-            $after .= $this->_displayWidgetsSelectionForm($GLOBALS['Language']->getText('widget_add', 'codendi_widgets', $GLOBALS['sys_name']), Widget::getCodendiWidgets($owner_type), $used_widgets);
-            echo '<tr><td>&nbsp;</td><td></td></tr>';
-            $after .= $this->_displayWidgetsSelectionForm($GLOBALS['Language']->getText('widget_add', 'external_widgets'), Widget::getExternalWidgets($owner_type), $used_widgets);
-            echo '</tbody></table>';
-            echo '</td><td id="widget-content-categ">'. $after .'</td></tr></tbody></table>';
+            echo '<table cellpadding="0" cellspacing="0">
+                    <tbody>
+                        <tr valign="top">
+                            <td>';
+                            echo '<table cellpadding="2" cellspacing="0">
+                                    <tbody>';
+                                    $after .= $this->_displayWidgetsSelectionForm($GLOBALS['Language']->getText('widget_add', 'codendi_widgets', $GLOBALS['sys_name']), Widget::getCodendiWidgets($owner_type), $used_widgets);
+                                    $after .= $this->_displayWidgetsSelectionForm($GLOBALS['Language']->getText('widget_add', 'external_widgets'), Widget::getExternalWidgets($owner_type), $used_widgets);
+                                    echo '</tbody>
+                                </table>';
+                            echo '</td>
+                            <td id="widget-content-categ">'. $after .'</td>
+                        </tr>
+                    </tbody>
+                </table>';
         }
         echo '</form>';
     }
@@ -444,14 +452,22 @@ class WidgetLayoutManager {
         $hp = Codendi_HTMLPurifier::instance();
         $additionnal_html = '';
         if (count($widgets)) {
-            echo '<tr class="boxtitle"><td colspan="2">'. $title .'</td></tr>';
+            echo '<tr><td colspan="2"><h3>'. $title .'</h3>';
             $categs = $this->getCategories($widgets);
             $widget_rows = array();
             if (count($categs)) {
                 foreach($categs as $c => $ws) {
-                    $widget_rows[$c] = '<td colspan="2"><a class="widget-categ-switcher" href="#widget-categ-'. $c .'">'.   $hp->purify($GLOBALS['Language']->getText('widget_categ_label', $c), CODENDI_PURIFIER_CONVERT_HTML)  .'</td>';
+                    $widget_rows[$c] = '<a class="widget-categ-switcher" href="#widget-categ-'. $c .'"><span>'.   $hp->purify($GLOBALS['Language']->getText('widget_categ_label', $c), CODENDI_PURIFIER_CONVERT_HTML)  .'</span></a>';
                 }
+                uksort($widget_rows, 'strnatcasecmp');
+                echo '<ul id="widget-categories">';
+                foreach($widget_rows as $row) {
+                    echo '<li>'. $row .'</li>';
+                }
+                echo '</ul>';
+                echo '</td></tr>';
             } else {
+                echo '</td></tr>';
                 foreach($widgets as $widget_name) {
                     if ($widget = Widget::getInstance($widget_name)) {
                         if ($widget->isAvailable()) {
@@ -468,11 +484,10 @@ class WidgetLayoutManager {
                         }
                     }
                 }
-            }
-            uksort($widget_rows, 'strnatcasecmp');
-            $i = 0;
-            foreach($widget_rows as $row) {
-                echo '<tr class="'. (count($categs) ? '' : util_get_alt_row_color($i++)) .'">'. $row .'</tr>';
+                $i = 0;
+                foreach($widget_rows as $row) {
+                    echo '<tr class="'. (count($widget_rows) ? '' : util_get_alt_row_color($i++)) .'">'. $row .'</tr>';
+                }
             }
             if (count($categs)) {
                 foreach($categs as $c => $ws) {
@@ -480,26 +495,25 @@ class WidgetLayoutManager {
                     $widget_rows = array();
                     foreach($ws as $widget_name => $widget) {
                         $row = '';
-                        $row .= '<table width="100%"><tr valign="top"><td rowspan="2" class="widget-preview '. $widget->getPreviewCssClass() .'"></td><td>';
+                        $row .= '<div class="widget-preview '. $widget->getPreviewCssClass() .'">';
                         $row .= '<strong>'. $widget->getTitle()  .'</strong>';
                         $row .= '<p>'. $widget->getDescription() .'</p>';
                         $row .= $widget->getInstallPreferences();
-                        $row .= '</td></tr><tr valign="bottom"><td align="right">';
+                        $row .= '</div><div style="text-align:right; border-bottom:1px solid #ddd; padding-bottom:10px; margin-bottom:20px;">';
                         if ($widget->isUnique() && in_array($widget_name, $used_widgets)) {
                             $row .= '<em>'. $GLOBALS['Language']->getText('widget_add', 'already_used') .'</em>';
                         } else {
                             $row .= '<input type="submit" name="name['. $widget_name .'][add]" value="'. $GLOBALS['Language']->getText('widget_add', 'add') .'" />';
                         }
-                        $row .= '</td></tr></table>';
+                        $row .= '</div>';
                         $widget_rows[$widget->getTitle()] = $row;
                     }
                     uksort($widget_rows, 'strnatcasecmp');
-                    $additionnal_html .= '<table cellpadding="20" cellspacing="0" id="widget-categ-'. $c .'">';
-                    $additionnal_html .= '<tr class="boxtitle"><td colspan="2">'. $c .'</td></tr>';
+                    $additionnal_html .= '<div id="widget-categ-'. $c .'"><h4 class="boxtitle">'. $hp->purify($GLOBALS['Language']->getText('widget_categ_label', $c), CODENDI_PURIFIER_CONVERT_HTML) .'</h4>';
                     foreach($widget_rows as $row) {
-                        $additionnal_html .= '<tr class="'. util_get_alt_row_color($i++) .'"><td>'. $row .'</td></tr>';
+                        $additionnal_html .= $row;
                     }
-                    $additionnal_html .= '</table>';
+                    $additionnal_html .= '</div>';
                 }
             }
         }

@@ -343,10 +343,27 @@ table.release tr td img {
 #widget-content-categ {
     padding:10px;
 }
+#widget-categories {
+    list-style-type: none;
+    margin-left:0;
+    padding-left:1em;
+}
+#widget-categories li.selected {
+    font-weight:bold;
+    margin-top:0.2em;
+    margin-bottom:0.2em;
+}
+#widget-categories li.selected a:after {
+    content: '»';
+}
+#widget-categories li a span {
+    padding-right:1em;
+}
 .widget-preview {
     background:transparent url('../images/widget-preview.png') top left no-repeat;
-    width:128px;
-    height:128px;
+    padding-left:138px;
+    width:550px;
+    min-height:128px;
 }
 .widget-preview-bookmarks {
     background-image:url('../images/widget-preview-favorites.png');
