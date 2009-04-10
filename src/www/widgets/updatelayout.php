@@ -9,12 +9,14 @@ $lm = new WidgetLayoutManager();
 $good = false;
 $redirect   = '/';
 $owner = $request->get('owner');
+
 if ($owner) {
     $owner_id   = (int)substr($owner, 1);
     $owner_type = substr($owner, 0, 1);
     switch($owner_type) {
         case WidgetLayoutManager::OWNER_TYPE_USER:
             $owner_id = user_getid();
+            $layout_id =(int)$request->get('layout_id');
             $redirect = '/my/';
             $good = true;
             break;
@@ -55,6 +57,7 @@ if ($owner) {
                                         break;
                                     case 'add':
                                     default:
+                                        $redirect ='/widgets/widgets.php?owner='. $owner_type.$owner_id.'&layout_id='. $layout_id.'#filter-widget-categ-'.$widget->getCategory();
                                         $lm->addWidget($owner_id, $owner_type, $layout_id, $name, $widget, $request);
                                         break;
                                 }
