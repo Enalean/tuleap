@@ -70,7 +70,7 @@ cd tests/www/
 php -d include_path="$WORKSPACE/trunk/src/www/include:$WORKSPACE/trunk/src:." -d memory_limit=196M test_all.php
 
 # Checkstyle
-php -d memory_limit=256M /usr/bin/phpcs --standard=$WORKSPACE/trunk/codendi_tools/utils/phpcs/Codendi $WORKSPACE/trunk/src/common/ --report=checkstyle -n --ignore=*/phpwiki/* > $WORKSPACE/var/tmp/checkstyle.xml 
+php -d memory_limit=256M /usr/bin/phpcs --standard=$WORKSPACE/trunk/codendi_tools/utils/phpcs/Codendi $WORKSPACE/trunk/src/common/backend --report=checkstyle -n --ignore=*/phpwiki/* > $WORKSPACE/var/tmp/checkstyle.xml 
 
 #################
 # DOCUMENTATION #
