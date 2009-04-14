@@ -69,6 +69,8 @@ cd tests/www/
 # This will produce a "JUnit like" test result file named codendi_unit_tests_report.xml that Hudson can use to produce test results.
 php -d include_path="$WORKSPACE/trunk/src/www/include:$WORKSPACE/trunk/src:." -d memory_limit=196M test_all.php
 
+# Checkstyle
+php -d memory_limit=256M /usr/bin/phpcs --standard=$WORKSPACE/trunk/codendi_tools/utils/phpcs/Codendi trunk/src/common/ --report=checkstyle --ignore=*/phpwiki/* > var/tmp/checkstyle.xml 
 
 #################
 # DOCUMENTATION #
