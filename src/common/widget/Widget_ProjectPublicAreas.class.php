@@ -49,7 +49,7 @@ class Widget_ProjectPublicAreas extends Widget {
         // ################## forums
         
         if ($project->usesForum()) {
-            print '<HR SIZE="1" width="99%" NoShade><A href="/forum/?group_id='.$group_id.'">';
+            print '<HR SIZE="1" width="99%" NoShade><A href="'.$project->getForumPage().'">';
             html_image("ic/notes16.png",array('width'=>'20', 'height'=>'20', 'alt'=>$GLOBALS['Language']->getText('include_project_home','public_forums'))); 
             print '&nbsp;'.$GLOBALS['Language']->getText('include_project_home','public_forums').'</A>';
             $res_count = db_query("SELECT count(forum.msg_id) AS count FROM forum,forum_group_list WHERE "
@@ -140,7 +140,7 @@ class Widget_ProjectPublicAreas extends Widget {
         // ##################### Mailing lists (only for Active)
         
         if ($project->usesMail()) {
-            print '<HR SIZE="1" width="99%" NoShade><A href="/mail/?group_id='.$group_id.'">';
+            print '<HR SIZE="1" width="99%" NoShade><A href="'.$project->getMailPage().'">';
             html_image("ic/mail16b.png",array('width'=>'20', 'height'=>'20', 'alt'=>$GLOBALS['Language']->getText('include_project_home','mail_lists'))); 
             print '&nbsp;'.$GLOBALS['Language']->getText('include_project_home','mail_lists').'</A>';
             $res_count = db_query("SELECT count(*) AS count FROM mail_group_list WHERE group_id=$group_id AND is_public=1");
@@ -172,7 +172,7 @@ class Widget_ProjectPublicAreas extends Widget {
         // ######################### Wiki (only for Active)
         
         if ($project->usesWiki()) {
-            print '<HR SIZE="1" width="99%" NoShade><A href="/wiki/?group_id='.$group_id.'">';
+            print '<HR SIZE="1" width="99%" NoShade><A href="'.$project->getWikiPage().'">';
             html_image("ic/wiki.png",array('width'=>'18', 'height'=>'12', 'alt'=>$GLOBALS['Language']->getText('include_project_home','wiki')));
             print ' '.$GLOBALS['Language']->getText('include_project_home','wiki').'</A>';
                 $wiki=new Wiki($group_id);
@@ -193,7 +193,7 @@ class Widget_ProjectPublicAreas extends Widget {
         // ######################### CVS (only for Active)
         
         if ($project->usesCVS()) {
-            print '<HR SIZE="1" width="99%" NoShade><A href="/cvs/?group_id='.$group_id.'">';
+            print '<HR SIZE="1" width="99%" NoShade><A href="'.$project->getCvsPage().'">';
             html_image("ic/cvs16b.png",array('width'=>'20', 'height'=>'20', 'alt'=>'CVS'));
             print ' '.$GLOBALS['Language']->getText('include_project_home','cvs_repo').'</A>';
         // LJ Cvs checkouts added 
@@ -217,7 +217,7 @@ class Widget_ProjectPublicAreas extends Widget {
         // ######################### Subversion (only for Active)
         
         if ($project->usesService('svn')) {
-            print '<HR SIZE="1" width="99%" NoShade><A href="/svn/?group_id='.$group_id.'">';
+            print '<HR SIZE="1" width="99%" NoShade><A href="'.$project->getSvnPage().'">';
             html_image("ic/svn16b.png",array('width'=>'20', 'height'=>'20', 'alt'=>'Subversion'));
             print ' '.$GLOBALS['Language']->getText('include_project_home','svn_repo').'</A>';
             $sql = "SELECT SUM(svn_access_count) AS accesses from group_svn_full_history where group_id='$group_id'";
@@ -240,7 +240,7 @@ class Widget_ProjectPublicAreas extends Widget {
         
         // ######################### Trackers (only for Active)
         if ( $project->usesTracker() ) {
-            print '<HR SIZE="1" width="99%" NoShade><A href="/tracker/?group_id='.$group_id.'">';
+            print '<HR SIZE="1" width="99%" NoShade><A href="'.$project->getTrackerPage().'">';
             html_image("ic/tracker20w.png",array('width'=>'20', 'height'=>'20', 'alt'=>$GLOBALS['Language']->getText('include_project_home','trackers')));
             print ' '.$GLOBALS['Language']->getText('include_project_home','trackers').'</A>';
             //	  
