@@ -241,8 +241,31 @@ class Project extends Group {
     function getHomePage() {
         return $this->service_data_array['homepage']['link'];
     }
+    
+    function getWikiPage(){
+        return $this->service_data_array['wiki']['link'];
+    }
 
-
+    function getForumPage(){
+        return $this->service_data_array['forum']['link'];
+    }
+    
+    function getMailPage(){
+        return $this->service_data_array['mail']['link'];
+    }
+    
+    function getCvsPage(){
+        return $this->service_data_array['cvs']['link'];
+    }
+    
+    function getSvnPage(){
+        return $this->service_data_array['svn']['link'];
+    }
+    
+    function getTrackerPage(){
+        return $this->service_data_array['tracker']['link'];
+    }
+    
     /*
 		email address to send new 
 		bugs/patches/support requests to
