@@ -46,24 +46,35 @@ class Backend {
     /**
      * Hold an instance of the class
      */
-    protected static $_instance;
+    protected static $instance;
     
     /**
      * Backends are singletons
+     *
+     * @return Backend
      */
     public static function instance() {
-        if (!isset(self::$_instance)) {
+        if (!isset(self::$instance)) {
             $c = __CLASS__;
-            self::$_instance = new $c;
+            self::$instance = new $c;
         }
-        return self::$_instance;
+        return self::$instance;
     }
 
-
+    /**
+     * Get an instance of UserManager. Mainly used for mock
+     * 
+     * @return UserManager
+     */
     protected function _getUserManager() {
         return UserManager::instance();
     }
 
+    /**
+     * Get an instance of UserManager. Mainly used for mock
+     * 
+     * @return ProjectManager
+     */
     protected function _getProjectManager() {
         return ProjectManager::instance();
     }
@@ -90,7 +101,7 @@ class Backend {
 
 
     public function log($message) {
-        error_log($message."\n",3,$GLOBALS['codendi_log']."/codendi_syslog");
+        error_log($message."\n", 3, $GLOBALS['codendi_log']."/codendi_syslog");
     }
 
     /**
@@ -101,13 +112,13 @@ class Backend {
         $this->chown($mypath, $uid);
         $this->chgrp($mypath, $gid);
         $d = opendir($mypath);
-        while(($file = readdir($d)) !== false) {
+        while (($file = readdir($d)) !== false) {
             if ($file != "." && $file != "..") {
                 
                 $typepath = $mypath . "/" . $file ;
 
                 //print $typepath. " : " . filetype ($typepath). "\n" ;
-                if (filetype ($typepath) == 'dir') {
+                if (filetype($typepath) == 'dir') {
                     $this->recurseChownChgrp($typepath, $uid, $gid);
                 } else {
                     $this->chown($typepath, $uid);
@@ -124,46 +135,52 @@ class Backend {
      * Note: the function will empty everything in the given directory but won't remove the directory itself
      */
     public function recurseDeleteInDir($mypath) {
-        $mypath= rtrim($mypath, '/');
-        $d = opendir($mypath);
-        while(($file = readdir($d)) !== false) {
+        $mypath = rtrim($mypath, '/');
+        $d      = opendir($mypath);
+        while (($file = readdir($d)) !== false) {
             if ($file != "." && $file != "..") {
                 
                 $typepath = $mypath . "/" . $file ;
 
-                if( is_dir($typepath) ) {
+                if ( is_dir($typepath) ) {
                     $this->recurseDeleteInDir($typepath);
                     rmdir($typepath);
-                } else unlink($typepath);
+                } else {
+                    unlink($typepath);
+                }
             }
         }
         closedir($d);
     }
 
-    public function addBlock($filename,$command) {
+    public function addBlock($filename, $command) {
         
         if (!$handle = fopen($filename, 'a')) {
             $this->log("Can't open file for writing: $filename");
             return false;
         }
-        fwrite($handle,$this->block_marker_start."\n");
-        fwrite($handle,$command."\n");
-        fwrite($handle,$this->block_marker_end."\n");
+        fwrite($handle, $this->block_marker_start."\n");
+        fwrite($handle, $command."\n");
+        fwrite($handle, $this->block_marker_end."\n");
         return fclose($handle);
     }
 
     public function removeBlock($filename) {
-        $file_array=file($filename);
-        $new_file_array=array();
-        $inblock=false;
-        while($line=array_shift($file_array)) {
-            if (strcmp($line,$this->block_marker_start) == 0) { $inblock=true; }
-            if (! $inblock) {
-                array_push($new_file_array,$line);
+        $file_array     = file($filename);
+        $new_file_array = array();
+        $inblock        = false;
+        while ($line = array_shift($file_array)) {
+            if (strcmp($line, $this->block_marker_start) == 0) { 
+                $inblock = true; 
             }
-            if (strcmp($line,$this->block_marker_end) == 0) { $inblock=false; }
+            if (! $inblock) {
+                array_push($new_file_array, $line);
+            }
+            if (strcmp($line, $this->block_marker_end) == 0) { 
+                $inblock = false; 
+            }
         }
-        return $this->writeArrayToFile($new_file_array,$filename);
+        return $this->writeArrayToFile($new_file_array, $filename);
     }
 
 
@@ -175,10 +192,10 @@ class Backend {
 
         if (!$handle = fopen($filename, 'w')) {
             $this->log("Can't open file for writing: $filename");
-           return false;
+            return false;
         }
-        foreach($file_array as $line ) {
-            if (fwrite($handle, $line) === FALSE) {
+        foreach ($file_array as $line ) {
+            if (fwrite($handle, $line) === false) {
                 $this->log("Can't write to file: $filename");
                 return false;
             }
@@ -198,26 +215,26 @@ class Backend {
         if (is_file($file)) {
             if (! $force) {
                 // Read file contents 
-                $current_string=serialize(file($file));
-                $new_string=serialize(file($file_new));
+                $current_string = serialize(file($file));
+                $new_string     = serialize(file($file_new));
             }
-            if ($force || ($current_string!==$new_string)) {
+            if ($force || ($current_string !== $new_string)) {
                 if (is_file($file_old)) {
                     unlink($file_old);
                 }
 
-                if (!rename($file,$file_old)) {
+                if (!rename($file, $file_old)) {
                     $this->log("Can't move file $file to $file_old");
                     return false;
                 }
-                if (!rename($file_new,$file)) {
+                if (!rename($file_new, $file)) {
                     $this->log("Can't move file $file_new to $file");
                     return false;
                 }
             } // Else do nothing: the configuration has not changed
         } else { 
             // No existing file
-            if (!rename($file_new,$file)) {
+            if (!rename($file_new, $file)) {
                 $this->log("Can't move file $file_new to $file (no existing file)");
                 return false;
             }
