@@ -177,10 +177,6 @@ class ArtifactReportHtml extends ArtifactReport {
             //
             $query_fields = $this->getQueryFields();
             
-            $html_select .= '<div style="text-align:right;">';
-            $html_select .= $this->getFieldsSelectbox('change_report_query', '-- Add/remove criteria', $query_fields, $ath);
-            $html_select .= '</div>';
-            
             $html_select .= "<table width='100%'>";
             $labels = '';
             $boxes  = '';
@@ -357,12 +353,6 @@ class ArtifactReportHtml extends ArtifactReport {
             $result = $this->getResultQueryReport($query);
             $rows = count($result);
             
-            if (!$pv && !$masschange && $this->getId() != 100) {
-                $html_result .= '<div style="text-align:right;">';
-                $html_result .= $this->getFieldsSelectbox('change_report_column', '-- Add/remove column', $result_fields, $ath);
-                $html_result .= '</div>';
-            }
-            
            /*
               Show extra rows for <-- Prev / Next -->
             */  
@@ -424,35 +414,7 @@ class ArtifactReportHtml extends ArtifactReport {
                 //TODO: put width here
                	$html_result .= html_build_list_table_top ($title_arr,$links_arr,true);
             } else {
-                $html_result .= '<script type="text/javascript">'."
-                TableKit.options.observers['onResizeEnd'] = function(table) {
-                    var total = table.offsetWidth;
-                    var form  = table.up('form');
-                    var inputs = Element.childElements(table.rows[0]).inject([], function (inputs, cell) {
-                        var percent = Math.round(cell.offsetWidth * 100 / total);
-                        var el = new Element('input', {
-                            type: 'hidden',
-                            name: 'resizecolumns['+cell.down().id+']',
-                            value: percent
-                        });
-                        Element.setStyle(cell, {
-                            width: percent + '%'
-                        });
-                        form.appendChild(el);
-                        inputs.push(el);
-                        return inputs;
-                    });
-                    
-                    //Send request
-                    form.request();
-                    
-                    //Remove inputs for a future call
-                    inputs.each(function (input) {
-                        Element.remove(input);
-                    });
-                }
-                </script>";
-                $html_result .= '<table class="reorderable resizable" width="100%" cellpadding="2" cellspacing="1" border="0">';
+                $html_result .= '<table width="100%" cellpadding="2" cellspacing="1" border="0">';
                 $html_result .= '<thead>';
                 $html_result .= '<tr class="boxtable">';
                 while((list(,$title) = each($title_arr)) && 
