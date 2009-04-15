@@ -55,8 +55,18 @@ class IM_Widget_MyRoster extends Widget {
     function isAvailable() {
         return ! UserManager::instance()->getCurrentUser()->getPreference('plugin_im_hide_users_presence');
     }
+    
+    /**
+     * Say if the widget should display its content via ajax. This speed up the 
+     * rendering of the page but defer the rendering of the dashboard.
+     *
+     * @return boolean
+     */
     function isAjax() {
-        return true;
+        // We cannot be in ajax mode since there is some javascript code to 
+        // execute in the content (for security reasons scripts are removed from 
+        // ajax response).
+        return false;
     }
 }
 
