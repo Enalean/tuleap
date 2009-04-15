@@ -20,7 +20,6 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 require_once('DocmanConstants.class.php');
-require_once('Group.class.php');
 require_once('common/mvc/Controler.class.php');
 require_once('common/include/HTTPRequest.class.php');
 require_once('common/user/UserManager.class.php');

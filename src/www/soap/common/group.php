@@ -197,7 +197,7 @@ function getMyProjects($sessionKey) {
 function getGroupByName($sessionKey, $unix_group_name) {
     global $Language;
     if (session_continue($sessionKey)) {
-        $group = group_get_object_by_name($unix_group_name);  // function located in www/include/Group.class.php
+        $group = group_get_object_by_name($unix_group_name);  // function located in common/project/Group.class.php
         if (! $group || !is_object($group)) {
             return new SoapFault('2002', $unix_group_name.' : '.$Language->getText('include_group', 'g_not_found'), 'getGroupByName');
         } elseif ($group->isError()) {

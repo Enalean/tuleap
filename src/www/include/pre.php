@@ -157,7 +157,7 @@ require_once('common/user/User.class.php');
 $current_user = UserManager::instance()->getCurrentUser();
 
 //group functions like get_name, etc
-require_once('Group.class.php');
+require_once('common/project/Group.class.php');
 
 //library to set up context help
 require_once('help.php');

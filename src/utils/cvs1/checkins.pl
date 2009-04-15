@@ -11,7 +11,7 @@
 #    more details.
 #
 # Purpose:
-#    This Perl include file mimics some of the fucntion in www/include/Group.class.php
+#    This Perl include file mimics some of the fucntion in common/project/Group.class.php
 #    to allow Perl scripts to handle checkins tables in codex codex db
 
 

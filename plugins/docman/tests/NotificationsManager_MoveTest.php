@@ -42,7 +42,7 @@ Mock::generate('DataAccessResult');
 require_once('common/language/BaseLanguage.class.php');
 Mock::generate('BaseLanguage');
 
-require_once('Group.class.php');
+require_once('common/project/Group.class.php');
 Mock::generate('Group');
 
 require_once('common/include/Feedback.class.php');
