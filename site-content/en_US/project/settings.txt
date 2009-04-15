@@ -18,9 +18,16 @@
 
 <fieldset><legend style="font-size:1.2em;">Choose the project privacy</legend>
 <B>Project privacy: </B>
-<select name="is_public"><option value="0">Private</option>
-<option value="1" selected="selected">Public</option>
-</select>
+<?php
+
+if ($GLOBALS['sys_is_project_public']==1){
+    echo '<select name="is_public"><option value="1" selected="selected">Public</option><option value="0">Private</option>
+</select>';
+}else{
+    echo '<select name="is_public"><option value="0" selected="selected">Private</option><option value="1">Public</option>
+</select>';
+}
+?>
 </fieldset>
 
 
