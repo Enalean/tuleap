@@ -35,8 +35,8 @@ require_once('common/dao/ServiceDao.class.php');
 Mock::generate('ServiceDao');
 
 
-Mock::generatePartial('BackendCVS', 'BackendCVSTestVersionInit', array('_getUserManager', 
-                                                             '_getProjectManager',
+Mock::generatePartial('BackendCVS', 'BackendCVSTestVersionInit', array('getUserManager', 
+                                                             'getProjectManager',
                                                              'chown',
                                                              'chgrp',
                                                              'chmod',
@@ -63,11 +63,11 @@ class BackendCVSTest extends UnitTestCase {
         $GLOBALS['tmp_dir']                   = dirname(__FILE__) . '/_fixtures/var/tmp';
         $GLOBALS['cvs_cmd']                   = "/usr/bin/cvs";
         $GLOBALS['cvs_root_allow_file']       = dirname(__FILE__) . '/_fixtures/etc/cvs_root_allow';
-        mkdir($GLOBALS['cvs_prefix'] . PATH_SEPARATOR . 'toto');
+        mkdir($GLOBALS['cvs_prefix'] . '/' . 'toto');
     }
     
     function tearDown() {
-        rmdir($GLOBALS['cvs_prefix'] . PATH_SEPARATOR . 'toto');
+        rmdir($GLOBALS['cvs_prefix'] . '/' . 'toto');
         unset($GLOBALS['cvs_prefix']);
         unset($GLOBALS['cvslock_prefix']);
         unset($GLOBALS['tmp_dir']);
@@ -89,7 +89,7 @@ class BackendCVSTest extends UnitTestCase {
         $pm->setReturnReference('getProject', $project, array(142));
 
         $backend = new BackendCVSTestVersion($this);
-        $backend->setReturnValue('_getProjectManager', $pm);
+        $backend->setReturnValue('getProjectManager', $pm);
 
         $projdir=$GLOBALS['cvs_prefix']."/TestProj";
 
@@ -134,7 +134,7 @@ class BackendCVSTest extends UnitTestCase {
         $pm->setReturnReference('getProject', $project, array(142));
 
         $backend = new BackendCVSTestVersion($this);
-        $backend->setReturnReference('_getProjectManager', $pm);
+        $backend->setReturnReference('getProjectManager', $pm);
 
         $this->assertEqual($backend->createProjectCVS(142),True);
         $this->assertTrue(is_dir($GLOBALS['cvs_prefix']."/TestProj"),"CVS dir should be created");
@@ -218,7 +218,7 @@ class BackendCVSTest extends UnitTestCase {
     public function testSetCVSPrivacy_private() {
         $backend = new BackendCVSTestVersion($this);
         $backend->setReturnValue('chmod', true);
-        $backend->expectOnce('chmod', array($GLOBALS['cvs_prefix'] . PATH_SEPARATOR . 'toto', 0770));
+        $backend->expectOnce('chmod', array($GLOBALS['cvs_prefix'] . '/' . 'toto', 0770));
         
         $project = new MockProject($this);
         $project->setReturnValue('getUnixName', 'toto');
@@ -229,7 +229,7 @@ class BackendCVSTest extends UnitTestCase {
     public function testsetCVSPrivacy_public() {
         $backend = new BackendCVSTestVersion($this);
         $backend->setReturnValue('chmod', true);
-        $backend->expectOnce('chmod', array($GLOBALS['cvs_prefix'] . PATH_SEPARATOR . 'toto', 0775));
+        $backend->expectOnce('chmod', array($GLOBALS['cvs_prefix'] . '/' . 'toto', 0775));
         
         $project = new MockProject($this);
         $project->setReturnValue('getUnixName', 'toto');

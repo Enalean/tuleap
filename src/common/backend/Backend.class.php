@@ -20,7 +20,10 @@
  * 
  */
 
-
+/**
+ * Base class to work on Codendi backend
+ * Change file perms, write Codendi blocks, ...
+ */
 class Backend {
 
 
@@ -66,7 +69,7 @@ class Backend {
      * 
      * @return UserManager
      */
-    protected function _getUserManager() {
+    protected function getUserManager() {
         return UserManager::instance();
     }
 
@@ -75,38 +78,89 @@ class Backend {
      * 
      * @return ProjectManager
      */
-    protected function _getProjectManager() {
+    protected function getProjectManager() {
         return ProjectManager::instance();
     }
 
-    /** Create chown function to allow mocking in unit tests */
+    /** 
+     * Create chown function to allow mocking in unit tests 
+     * Attempts to change the owner of the file filename  to user user . 
+     * Only the superuser may change the owner of a file. 
+     * 
+     * @param string $path Path to the file. 
+     * @param mixed  $uid  A user name or number.
+     * 
+     * @return boolean true on success or false on failure
+     */
     protected function chown($path, $uid) {
         return chown($path, $uid);
     }
 
-    /** Create chgrp function to allow mocking in unit tests */
+    /** 
+     * Create chgrp function to allow mocking in unit tests 
+     * Attempts to change the group of the file filename  to group .
+     *
+     * Only the superuser may change the group of a file arbitrarily; 
+     * other users may change the group of a file to any group of which 
+     * that user is a member. 
+     * 
+     * @param string $path Path to the file. 
+     * @param mixed  $uid  A group name or number.
+     * 
+     * @return boolean true on success or false on failure
+     */
     protected function chgrp($path, $uid) {
         return chgrp($path, $uid);
     }
 
-    /** Create chmod function to allow mocking in unit tests */
-    protected function chmod($path, $perms) {
-        return chmod($path, $perms);
+    /** 
+     * Create chmod function to allow mocking in unit tests 
+     * Attempts to change the mode of the specified $file to that given in $mode . 
+     * 
+     * @param string $file Path to the file. 
+     * @param number $mode The mode parameter consists of three octal number 
+     *                     components specifying access restrictions for the 
+     *                     owner, the user group in which the owner is in, and 
+     *                     to everybody else in this order.
+     * 
+     * @return boolean true on success or false on failure
+     */
+    protected function chmod($file, $mode) {
+        return chmod($file, $mode);
     }
 
-    /** Create system function to allow mocking in unit tests */
+    /** 
+     * Create system function to allow mocking in unit tests 
+     *
+     * @param string $cmd The command that will be executed
+     *
+     * @return mixed Returns the last line of the command output on success, and false 
+     * on failure.
+     */
     protected function system($cmd) {
         return system($cmd);
     }
 
-
+    /**
+     * Log message in codendi_syslog
+     *
+     * @param string $message The error message that should be logged.
+     * 
+     * @return boolean true on success or false on failure
+     */
     public function log($message) {
-        error_log($message."\n", 3, $GLOBALS['codendi_log']."/codendi_syslog");
+        return error_log($message."\n", 3, $GLOBALS['codendi_log']."/codendi_syslog");
     }
 
     /**
      * Recursive chown/chgrp function.
      * From comment at http://us2.php.net/manual/en/function.chown.php#40159
+     * 
+     * @param string $mypath Path to the file (or directory)
+     * @param mixed  $uid    A user name or number.
+     * @param mixed  $gid    A group name or number.
+     *
+     * @return void
      */
     public function recurseChownChgrp($mypath, $uid, $gid) {
         $this->chown($mypath, $uid);
@@ -133,6 +187,10 @@ class Backend {
      * Recursive rm function.
      * see: http://us2.php.net/manual/en/function.rmdir.php#87385
      * Note: the function will empty everything in the given directory but won't remove the directory itself
+     * 
+     * @param string $mypath Path to the directory
+     *
+     * @return void
      */
     public function recurseDeleteInDir($mypath) {
         $mypath = rtrim($mypath, '/');
@@ -153,6 +211,14 @@ class Backend {
         closedir($d);
     }
 
+    /**
+     * Add Codendi block in a file
+     * 
+     * @param string $filename Path to the file
+     * @param string $command  content of the block
+     *
+     * @return boolean true on success or false on failure.
+     */
     public function addBlock($filename, $command) {
         
         if (!$handle = fopen($filename, 'a')) {
@@ -165,6 +231,13 @@ class Backend {
         return fclose($handle);
     }
 
+    /**
+     * Remove Codendi block in a file
+     * 
+     * @param string $filename Path to the file
+     *
+     * @return boolean true on success or false on failure.
+     */
     public function removeBlock($filename) {
         $file_array     = file($filename);
         $new_file_array = array();
@@ -187,6 +260,11 @@ class Backend {
     /**
      * Write an array to a file
      * WARNING: the function does not add newlines at the end of each row
+     * 
+     * @param array  $file_array Content to write to file
+     * @param string $filename   Path to the file
+     *
+     * @return boolean true on success or false on failure.
      */
     public function writeArrayToFile($file_array, $filename) {
 
@@ -200,17 +278,24 @@ class Backend {
                 return false;
             }
         }
-        fclose($handle);
+        return fclose($handle);
 
     }
 
     /**
-     *  Install new version of file
+     * Install new version of file
      *
      * Precisely: move 'file_new' to 'file' if they are different or if 'file' does not exist.
      * Also, move 'file' to 'file_old' and remove previous 'file_old'
+     * 
+     * @param string $file_new Path to the new file.
+     * @param string $file     Path to the current file.
+     * @param string $file_old Path to the old file.
+     * @param string $force    Force install. Default is false.
+     *
+     * @return boolean true on success or false on failure.
      */
-    public function installNewFileVersion($file_new,$file,$file_old,$force=false) {
+    public function installNewFileVersion($file_new, $file, $file_old, $force=false) {
         // Backup existing file and install new one if they are different
         if (is_file($file)) {
             if (! $force) {

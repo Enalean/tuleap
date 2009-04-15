@@ -50,7 +50,7 @@ class BackendSystem extends Backend {
      * @return true if directory is successfully created, false otherwise
      */
     public function createUserHome($user_id) {
-        $user=$this->_getUserManager()->getUserById($user_id);
+        $user=$this->getUserManager()->getUserById($user_id);
         if (!$user) return false;
         $homedir=$GLOBALS['homedir_prefix']."/".$user->getUserName();
 
@@ -81,7 +81,7 @@ class BackendSystem extends Backend {
      * @return true if directory is successfully created, false otherwise
      */
     public function createProjectHome($group_id) {
-        $project=$this->_getProjectManager()->getProject($group_id);
+        $project=$this->getProjectManager()->getProject($group_id);
         if (!$project) return false;
 
         $unix_group_name=$project->getUnixName(false); // May contain upper-case letters
@@ -198,7 +198,7 @@ class BackendSystem extends Backend {
      * @return true if directory is successfully archived, false otherwise
      */
     public function archiveUserHome($user_id) {
-        $user=$this->_getUserManager()->getUserById($user_id);
+        $user=$this->getUserManager()->getUserById($user_id);
         if (!$user) return false;
         $homedir=$GLOBALS['homedir_prefix']."/".$user->getUserName();
         $backupfile=$GLOBALS['tmp_dir']."/".$user->getUserName().".tgz";
@@ -220,7 +220,7 @@ class BackendSystem extends Backend {
      * @return true if directory is successfully archived, false otherwise
      */
     public function archiveProjectHome($group_id) {
-        $project=$this->_getProjectManager()->getProject($group_id);
+        $project=$this->getProjectManager()->getProject($group_id);
         if (!$project) return false;
         $mydir=$GLOBALS['grpdir_prefix']."/".$project->getUnixName(false);
         $backupfile=$GLOBALS['tmp_dir']."/".$project->getUnixName(false).".tgz";

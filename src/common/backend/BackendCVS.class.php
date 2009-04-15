@@ -91,7 +91,7 @@ class BackendCVS extends Backend {
      * @return true if repo is successfully created, false otherwise
      */
     public function createProjectCVS($group_id) {
-        $project=$this->_getProjectManager()->getProject($group_id);
+        $project=$this->getProjectManager()->getProject($group_id);
         if (!$project) return false;
 
         $unix_group_name=$project->getUnixName(false); // May contain upper-case letters
@@ -265,7 +265,7 @@ class BackendCVS extends Backend {
      * on /etc/passwd (or NSS) for user authentication
      */
     public function updateCVSwriters($group_id) {
-        $project=$this->_getProjectManager()->getProject($group_id);
+        $project=$this->getProjectManager()->getProject($group_id);
         if (!$project) return false;
 
         $unix_group_name=$project->getUnixName(false); // May contain upper-case letters
@@ -314,7 +314,7 @@ class BackendCVS extends Backend {
      * Archive CVS repository: stores a tgz in temp dir, and remove the directory
      */
     public function archiveProjectCVS($group_id) {
-        $project=$this->_getProjectManager()->getProject($group_id);
+        $project=$this->getProjectManager()->getProject($group_id);
         if (!$project) return false;
         $mydir=$GLOBALS['cvs_prefix']."/".$project->getUnixName(false);
         $backupfile=$GLOBALS['tmp_dir']."/".$project->getUnixName(false)."-cvs.tgz";
@@ -405,7 +405,7 @@ class BackendCVS extends Backend {
      */
     public function setCVSPrivacy($project, $is_private) {
         $perms = $is_private ? 0770 : 0775;
-        $cvsroot = $GLOBALS['cvs_prefix'] . PATH_SEPARATOR . $project->getUnixName(false);
+        $cvsroot = $GLOBALS['cvs_prefix'] . '/' . $project->getUnixName(false);
         return is_dir($cvsroot) && $this->chmod($cvsroot, $perms);
     }
 
@@ -414,7 +414,7 @@ class BackendCVS extends Backend {
      * @returns false if private repo does not have proper permissions, or true otherwise
      */
     public function isCVSPrivacyOK($project) {
-        $cvsroot = $GLOBALS['cvs_prefix'] . PATH_SEPARATOR . $project->getUnixName(false);
+        $cvsroot = $GLOBALS['cvs_prefix'] . '/' . $project->getUnixName(false);
         $is_private = !$project->isPublic() || $project->isCVSPrivate();
         if ($is_private) {
             $perms = fileperms($cvsroot);

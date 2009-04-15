@@ -37,10 +37,10 @@ require_once('common/project/UGroup.class.php');
 Mock::generate('UGroup');
 require_once('common/dao/ServiceDao.class.php');
 Mock::generate('ServiceDao');
-Mock::generatePartial('BackendSVN', 'BackendSVNTestVersion', array('_getUserManager', 
-                                                                   '_getProjectManager',
-                                                                   '_getUGroupDao',
-                                                                   '_getUGroupFromRow',
+Mock::generatePartial('BackendSVN', 'BackendSVNTestVersion', array('getUserManager', 
+                                                                   'getProjectManager',
+                                                                   'getUGroupDao',
+                                                                   'getUGroupFromRow',
                                                                    '_getServiceDao',
                                                                    'chown',
                                                                    'chgrp',
@@ -58,11 +58,11 @@ class BackendSVNTest extends UnitTestCase {
         $GLOBALS['svn_prefix']                = dirname(__FILE__) . '/_fixtures/svnroot';
         $GLOBALS['tmp_dir']                   = dirname(__FILE__) . '/_fixtures/var/tmp';
         $GLOBALS['svn_root_file']             = dirname(__FILE__) . '/_fixtures/etc/httpd/conf.d/codendi_svnroot.conf';
-        mkdir($GLOBALS['svn_prefix'] . PATH_SEPARATOR . 'toto');
+        mkdir($GLOBALS['svn_prefix'] . '/' . 'toto');
     }
     
     function tearDown() {
-        rmdir($GLOBALS['svn_prefix'] . PATH_SEPARATOR . 'toto');
+        rmdir($GLOBALS['svn_prefix'] . '/' . 'toto');
         unset($GLOBALS['svn_prefix']);
         unset($GLOBALS['tmp_dir']);
         unset($GLOBALS['svn_root_file']);
@@ -82,7 +82,7 @@ class BackendSVNTest extends UnitTestCase {
         $pm->setReturnReference('getProject', $project, array(142));
 
         $backend = new BackendSVNTestVersion($this);
-        $backend->setReturnValue('_getProjectManager', $pm);
+        $backend->setReturnValue('getProjectManager', $pm);
 
         $projdir=$GLOBALS['svn_prefix']."/TestProj";
 
@@ -145,9 +145,9 @@ class BackendSVNTest extends UnitTestCase {
 
 
         $backend = new BackendSVNTestVersion($this);
-        $backend->setReturnValue('_getProjectManager', $pm);
-        $backend->setReturnValue('_getUGroupFromRow', $ugroup);
-        $backend->setReturnValue('_getUGroupDao', $ugdao);
+        $backend->setReturnValue('getProjectManager', $pm);
+        $backend->setReturnValue('getUGroupFromRow', $ugroup);
+        $backend->setReturnValue('getUGroupDao', $ugdao);
 
         $this->assertEqual($backend->createProjectSVN(142),True);
         $this->assertTrue(is_dir($GLOBALS['svn_prefix']."/TestProj"),"SVN dir should be created");
@@ -215,9 +215,9 @@ class BackendSVNTest extends UnitTestCase {
 
 
         $backend = new BackendSVNTestVersion($this);
-        $backend->setReturnValue('_getProjectManager', $pm);
-        $backend->setReturnValue('_getUGroupFromRow', $ugroup);
-        $backend->setReturnValue('_getUGroupDao', $ugdao);
+        $backend->setReturnValue('getProjectManager', $pm);
+        $backend->setReturnValue('getUGroupFromRow', $ugroup);
+        $backend->setReturnValue('getUGroupDao', $ugdao);
 
         $this->assertEqual($backend->createProjectSVN(142),True);
         $this->assertTrue(is_dir($GLOBALS['svn_prefix']."/TestProj"),"SVN dir should be created");
@@ -274,7 +274,7 @@ class BackendSVNTest extends UnitTestCase {
     public function testSetSVNPrivacy_private() {
         $backend = new BackendSVNTestVersion($this);
         $backend->setReturnValue('chmod', true);
-        $backend->expectOnce('chmod', array($GLOBALS['svn_prefix'] . PATH_SEPARATOR . 'toto', 0770));
+        $backend->expectOnce('chmod', array($GLOBALS['svn_prefix'] . '/' . 'toto', 0770));
         
         $project = new MockProject($this);
         $project->setReturnValue('getUnixName', 'toto');
@@ -285,7 +285,7 @@ class BackendSVNTest extends UnitTestCase {
     public function testsetSVNPrivacy_public() {
         $backend = new BackendSVNTestVersion($this);
         $backend->setReturnValue('chmod', true);
-        $backend->expectOnce('chmod', array($GLOBALS['svn_prefix'] . PATH_SEPARATOR . 'toto', 0775));
+        $backend->expectOnce('chmod', array($GLOBALS['svn_prefix'] . '/' . 'toto', 0775));
         
         $project = new MockProject($this);
         $project->setReturnValue('getUnixName', 'toto');

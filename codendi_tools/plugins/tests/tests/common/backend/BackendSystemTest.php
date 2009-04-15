@@ -31,8 +31,8 @@ require_once('common/project/ProjectManager.class.php');
 Mock::generate('ProjectManager');
 require_once('common/project/Project.class.php');
 Mock::generate('Project');
-Mock::generatePartial('BackendSystem', 'BackendTestVersion', array('_getUserManager', 
-                                                             '_getProjectManager',
+Mock::generatePartial('BackendSystem', 'BackendTestVersion', array('getUserManager', 
+                                                             'getProjectManager',
                                                              'chown',
                                                              'chgrp',
                                                              'chmod',
@@ -74,7 +74,7 @@ class BackendSystemTest extends UnitTestCase {
         $um->setReturnReference('getUserById', $user, array(104));
         
         $backend = new BackendTestVersion($this);
-        $backend->setReturnValue('_getUserManager', $um);
+        $backend->setReturnValue('getUserManager', $um);
 
         $this->assertEqual($backend->createUserHome(104),True);
         $this->assertTrue(is_dir($GLOBALS['homedir_prefix']."/codendiadm"),"Home dir should be created");
@@ -100,7 +100,7 @@ class BackendSystemTest extends UnitTestCase {
         $um->setReturnReference('getUserById', $user, array(104));
         
         $backend = new BackendTestVersion($this);
-        $backend->setReturnValue('_getUserManager', $um);
+        $backend->setReturnValue('getUserManager', $um);
 
         $backend->createUserHome(104);
         $this->assertTrue(is_dir($GLOBALS['homedir_prefix']."/codendiadm"),"Home dir should be created");
@@ -126,7 +126,7 @@ class BackendSystemTest extends UnitTestCase {
         //$pm->setReturnReference('getProject', $project);
 
         $backend = new BackendTestVersion($this);
-        $backend->setReturnValue('_getProjectManager', $pm);
+        $backend->setReturnValue('getProjectManager', $pm);
 
         $projdir=$GLOBALS['grpdir_prefix']."/TestProj";
         $lcprojlnk=$GLOBALS['grpdir_prefix']."/testproj";

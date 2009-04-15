@@ -25,7 +25,9 @@ require_once('common/dao/UGroupDao.class.php');
 require_once('common/project/UGroup.class.php');
 require_once('common/dao/ServiceDao.class.php');
 
-
+/**
+ * Backend class to work on subversion repositories
+ */
 class BackendSVN extends Backend {
 
 
@@ -34,17 +36,19 @@ class BackendSVN extends Backend {
     /**
      * Hold an instance of the class
      */
-    protected static $_instance;
+    protected static $instance;
     
     /**
      * Backends are singletons
+     *
+     * @return BackendSVN
      */
     public static function instance() {
-        if (!isset(self::$_instance)) {
+        if (!isset(self::$instance)) {
             $c = __CLASS__;
-            self::$_instance = new $c;
+            self::$instance = new $c;
         }
-        return self::$_instance;
+        return self::$instance;
     }
 
     /**
@@ -55,13 +59,29 @@ class BackendSVN extends Backend {
     }
 
 
-    // For mocking (unit tests)
-    protected function _getUGroupDao() {
+    /**
+     * For mocking (unit tests)
+     * 
+     * @return UGroupDao
+     */
+    protected function getUGroupDao() {
         return new UGroupDao(CodendiDataAccess::instance());
     }
-    protected function _getUGroupFromRow($row) {
+    /**
+     * For mocking (unit tests)
+     *
+     * @param array $row a row from the db for a ugroup
+     * 
+     * @return UGroup
+     */
+    protected function getUGroupFromRow($row) {
         return new UGroup($row);
     }
+    /**
+     * For mocking (unit tests)
+     * 
+     * @return ServiceDao
+     */
     function _getServiceDao() {
         return new ServiceDao(CodendiDataAccess::instance());
     }
@@ -69,11 +89,16 @@ class BackendSVN extends Backend {
     /**
      * Create project SVN repository
      * If the directory already exists, nothing is done.
-     * @return true if repo is successfully created, false otherwise
+     * 
+     * @param int $group_id The id of the project to work on
+     * 
+     * @return boolean true if repo is successfully created, false otherwise
      */
     public function createProjectSVN($group_id) {
-        $project=$this->_getProjectManager()->getProject($group_id);
-        if (!$project) return false;
+        $project=$this->getProjectManager()->getProject($group_id);
+        if (!$project) {
+            return false;
+        }
         $unix_group_name=$project->getUnixName(false); // May contain upper-case letters
         $svn_dir=$GLOBALS['svn_prefix']."/".$unix_group_name;
         if (!is_dir($svn_dir)) {
@@ -84,13 +109,15 @@ class BackendSVN extends Backend {
             }
             system($GLOBALS['svnadmin_cmd']." create $svn_dir --fs-type fsfs");
 
-            $this->recurseChownChgrp($svn_dir,$GLOBALS['sys_http_user'],$unix_group_name);
+            $this->recurseChownChgrp($svn_dir, $GLOBALS['sys_http_user'], $unix_group_name);
             system("chmod g+rw $svn_dir");
         }
 
 
         // Put in place the svn post-commit hook for email notification
-	if (!$this->updateHooks($project)) return false;
+        if (!$this->updateHooks($project)) {
+            return false;
+        }
 
         if (!$this->updateSVNAccess($group_id)) {
             $this->log("Can't update SVN access file");
@@ -101,8 +128,14 @@ class BackendSVN extends Backend {
     }
 
 
-    // Put in place the svn post-commit hook for email notification
-    // if not present (if the file does not exist it is created)
+    /**
+     * Put in place the svn post-commit hook for email notification
+     * if not present (if the file does not exist it is created)
+     * 
+     * @param Project $project The project to work on
+     * 
+     * @return boolean true on success or false on failure
+     */
     public function updateHooks($project) {
         $unix_group_name=$project->getUnixName(false); // May contain upper-case letters
         $svn_dir=$GLOBALS['svn_prefix']."/".$unix_group_name;
@@ -127,7 +160,7 @@ class BackendSVN extends Backend {
                 $update_hook=true;
             } else {
                 $file_array=file($filename);
-                if (!in_array($this->block_marker_start,$file_array)) {
+                if (!in_array($this->block_marker_start, $file_array)) {
                     $update_hook=true;
                 }
             }
@@ -135,17 +168,17 @@ class BackendSVN extends Backend {
                 $command  ='REPOS="$1"'."\n";
                 $command .='REV="$2"'."\n";
                 $command .=$GLOBALS['codendi_bin_prefix'].'/commit-email.pl "$REPOS" "$REV" 2>&1 >/dev/null';
-                $this->addBlock($filename,$command);
-                $this->chown($filename,$GLOBALS['sys_http_user']);
-                $this->chgrp($filename,$unix_group_name);
-                chmod("$filename",0775);
+                $this->addBlock($filename, $command);
+                $this->chown($filename, $GLOBALS['sys_http_user']);
+                $this->chgrp($filename, $unix_group_name);
+                chmod("$filename", 0775);
             }
         }
           
         // Put in place the Codendi svn pre-commit hook
         // if not present (if the file does not exist it is created)
         $filename = "$svn_dir/hooks/pre-commit";
-        $update_hook=false;
+        $update_hook = false;
         if (! is_file($filename)) {
             // File header
             $fp = fopen($filename, 'w');
@@ -162,28 +195,36 @@ class BackendSVN extends Backend {
             $update_hook=true;
         } else {
             $file_array=file($filename);
-            if (!in_array($this->block_marker_start,$file_array)) {
+            if (!in_array($this->block_marker_start, $file_array)) {
                 $update_hook=true;
             }
         }
         if ($update_hook) {
-            $command  ='REPOS="$1"'."\n";
-            $command .='TXN="$2"'."\n";
-            $command .=$GLOBALS['codendi_dir'].'/php-launcher.sh '.$GLOBALS['codendi_bin_prefix'].'/codendi_svn_pre_commit.php "$REPOS" "$TXN" || exit 1';
-            $this->addBlock($filename,$command);
-            $this->chown($filename,$GLOBALS['sys_http_user']);
-            $this->chgrp($filename,$unix_group_name);
-            chmod("$filename",0775);
+            $command  = 'REPOS="$1"'."\n";
+            $command .= 'TXN="$2"'."\n";
+            $command .= $GLOBALS['codendi_dir'].'/php-launcher.sh '.$GLOBALS['codendi_bin_prefix'].'/codendi_svn_pre_commit.php "$REPOS" "$TXN" || exit 1';
+            $this->addBlock($filename, $command);
+            $this->chown($filename, $GLOBALS['sys_http_user']);
+            $this->chgrp($filename, $unix_group_name);
+            chmod("$filename", 0775);
         }
         return true;
     }
 
-    // update Subversion DAV access control file if needed
-    public function updateSVNAccess($group_id){
-        $project=$this->_getProjectManager()->getProject($group_id);
-        if (!$project) return false;
-        $unix_group_name=$project->getUnixName(false); // May contain upper-case letters
-        $svn_dir=$GLOBALS['svn_prefix']."/".$unix_group_name;
+    /**
+     * Update Subversion DAV access control file if needed
+     *
+     * @param int $group_id the id of the project
+     *
+     * @return boolean true on success or false on failure
+     */
+    public function updateSVNAccess($group_id) {
+        $project = $this->getProjectManager()->getProject($group_id);
+        if (!$project) {
+            return false;
+        }
+        $unix_group_name = $project->getUnixName(false); // May contain upper-case letters
+        $svn_dir = $GLOBALS['svn_prefix']."/".$unix_group_name;
         if (!is_dir($svn_dir)) {
             $this->log("Can't update SVN Access file: project SVN repo is missing: $svn_dir");
             return false;
@@ -198,16 +239,18 @@ class BackendSVN extends Backend {
         $default_block_end="# END CODEX DEFAULT SETTINGS";
         $custom_perms='';
         $public_svn = 1; // TODO
-		
+        
         // Retrieve custom permissions, if any
         if (is_file("$svnaccess_file")) {
             $svnaccess_array = file($svnaccess_file);
             $configlines=false;
-            foreach($svnaccess_array as $line) {
+            foreach ($svnaccess_array as $line) {
                 if ($configlines) { 
                     $custom_perms .=$line; 
                 }
-                if (strpos($default_block_end,$line)) { $configlines=1;}
+                if (strpos($default_block_end, $line)) { 
+                    $configlines=1;
+                }
             }
         }
 
@@ -219,59 +262,76 @@ class BackendSVN extends Backend {
         fwrite($fp, "members = ");
         $members_id_array=$project->getMembersUserNames();
         $first=true;
-        foreach ($members_id_array as $member){
-            if (!$first) fwrite($fp,', ');
+        foreach ($members_id_array as $member) {
+            if (!$first) {
+                fwrite($fp, ', ');
+            }
             $first=false;
             fwrite($fp, strtolower($member['user_name']));
         }
-        fwrite($fp,"\n");
+        fwrite($fp, "\n");
 
 
         // Get all static ugroups
-        $ugroup_dao = $this->_getUGroupDao();
+        $ugroup_dao = $this->getUGroupDao();
         $dar = $ugroup_dao->searchByGroupId($group_id);
-        foreach($dar as $row) {
-            $ugroup = $this->_getUGroupFromRow($row);
+        foreach ($dar as $row) {
+            $ugroup = $this->getUGroupFromRow($row);
             // User names must be in lowercase
-            $members_list = strtolower(implode(", ",$ugroup->getMembersUserName()));
+            $members_list = strtolower(implode(", ", $ugroup->getMembersUserName()));
             if ($ugroup->getName() && $members_list) {
                 fwrite($fp, $ugroup->getName()." = ".$members_list."\n");
             }
         }
-        fwrite($fp,"\n");
-        fwrite($fp,"[/]\n");
-        fwrite($fp,"* = r\n");
+        fwrite($fp, "\n");
+        fwrite($fp, "[/]\n");
+        fwrite($fp, "* = r\n");
         //else { print SVNACCESS "* = \n";}
-        fwrite($fp,"@members = rw\n");
+        fwrite($fp, "@members = rw\n");
         fwrite($fp, "$default_block_end\n");
-        if ($custom_perms)
-        fwrite($fp,$custom_perms);
+        if ($custom_perms) {
+            fwrite($fp, $custom_perms);
+        }
         fclose($fp);
 
         // Backup existing file and install new one if they are different
-        $this->installNewFileVersion($svnaccess_file_new,$svnaccess_file,$svnaccess_file_old);
+        $this->installNewFileVersion($svnaccess_file_new, $svnaccess_file, $svnaccess_file_old);
 
         // set group ownership, admin user as owner so that
         // PHP scripts can write to it directly
-        $this->chown($svnaccess_file,$GLOBALS['sys_http_user']);
-        $this->chgrp($svnaccess_file,$unix_group_name);
-        chmod("$svnaccess_file",0775);
+        $this->chown($svnaccess_file, $GLOBALS['sys_http_user']);
+        $this->chgrp($svnaccess_file, $unix_group_name);
+        chmod("$svnaccess_file", 0775);
         
         return true;
     }
 
-
+    /**
+     * Force apache conf update
+     *
+     * @return void
+     */
     public function setSVNApacheConfNeedUpdate() {
-        $this->SVNApacheConfNeedUpdate=true;
+        $this->SVNApacheConfNeedUpdate = true;
     }
 
+    /**
+     * Say if apache conf need update
+     * 
+     * @return boolean
+     */
     public function getSVNApacheConfNeedUpdate() {
         return $this->SVNApacheConfNeedUpdate;
     }
 
 
-    // Add Subversion DAV definition for all projects in a dedicated Apache configuration file
-    public function generateSVNApacheConf(){
+    /**
+     * Add Subversion DAV definition for all projects in a dedicated Apache 
+     * configuration file
+     * 
+     * @return boolean true on success or false on failure
+     */
+    public function generateSVNApacheConf() {
 
         $svn_root_file = $GLOBALS['svn_root_file'];
         $svn_root_file_old = $svn_root_file.".old";
@@ -286,29 +346,29 @@ class BackendSVN extends Backend {
 
         $service_dao = $this->_getServiceDao();
         $dar = $service_dao->searchActiveUnixGroupByUsedService('svn');
-        foreach($dar as $row) {
+        foreach ($dar as $row) {
 
             // Replace double quotes by single quotes in project name (conflict with Apache realm name)
-            $group_name = strtr($row['group_name'],"\"","'");
+            $group_name = strtr($row['group_name'], "\"", "'");
 
             // Write repository definition
-            fwrite($fp,"<Location /svnroot/".$row['unix_group_name'].">\n");
-            fwrite($fp,"    DAV svn\n");
-            fwrite($fp,"    SVNPath ".$GLOBALS['svn_prefix']."/".$row['unix_group_name']."\n");
-            fwrite($fp,"    AuthzSVNAccessFile ".$GLOBALS['svn_prefix']."/".$row['unix_group_name']."/.SVNAccessFile\n");
-            fwrite($fp,"    Require valid-user\n");
-            fwrite($fp,"    AuthType Basic\n");
-            fwrite($fp,"    AuthName \"Subversion Authorization (".$group_name.")\"\n");
-            fwrite($fp,"    AuthMYSQLEnable on\n");
-            fwrite($fp,"    AuthMySQLUser ".$GLOBALS['sys_dbauth_user']."\n");
-            fwrite($fp,"    AuthMySQLPassword ".$GLOBALS['sys_dbauth_passwd']."\n");
-            fwrite($fp,"    AuthMySQLDB ".$GLOBALS['sys_dbname']."\n");
-            fwrite($fp,"    AuthMySQLUserTable \"user, user_group\"\n");
-            fwrite($fp,"    AuthMySQLNameField user.user_name\n");
-            fwrite($fp,"    AuthMySQLPasswordField user.unix_pw\n");
-            fwrite($fp,"    AuthMySQLUserCondition \"(user.status='A' or (user.status='R' AND user_group.user_id=user.user_id and user_group.group_id=".$row['group_id']."))\"\n");
-            fwrite($fp,"    SVNIndexXSLT \"/svn/repos-web/view/repos.xsl\"\n");
-            if (!fwrite($fp,"</Location>\n\n")) {
+            fwrite($fp, "<Location /svnroot/".$row['unix_group_name'].">\n");
+            fwrite($fp, "    DAV svn\n");
+            fwrite($fp, "    SVNPath ".$GLOBALS['svn_prefix']."/".$row['unix_group_name']."\n");
+            fwrite($fp, "    AuthzSVNAccessFile ".$GLOBALS['svn_prefix']."/".$row['unix_group_name']."/.SVNAccessFile\n");
+            fwrite($fp, "    Require valid-user\n");
+            fwrite($fp, "    AuthType Basic\n");
+            fwrite($fp, "    AuthName \"Subversion Authorization (".$group_name.")\"\n");
+            fwrite($fp, "    AuthMYSQLEnable on\n");
+            fwrite($fp, "    AuthMySQLUser ".$GLOBALS['sys_dbauth_user']."\n");
+            fwrite($fp, "    AuthMySQLPassword ".$GLOBALS['sys_dbauth_passwd']."\n");
+            fwrite($fp, "    AuthMySQLDB ".$GLOBALS['sys_dbname']."\n");
+            fwrite($fp, "    AuthMySQLUserTable \"user, user_group\"\n");
+            fwrite($fp, "    AuthMySQLNameField user.user_name\n");
+            fwrite($fp, "    AuthMySQLPasswordField user.unix_pw\n");
+            fwrite($fp, "    AuthMySQLUserCondition \"(user.status='A' or (user.status='R' AND user_group.user_id=user.user_id and user_group.group_id=".$row['group_id']."))\"\n");
+            fwrite($fp, "    SVNIndexXSLT \"/svn/repos-web/view/repos.xsl\"\n");
+            if (!fwrite($fp, "</Location>\n\n")) {
                 $this->log("Error while writing to $svn_root_file_new");
                 return false;
             }
@@ -317,57 +377,70 @@ class BackendSVN extends Backend {
 
 
         // Backup existing file and install new one
-        return $this->installNewFileVersion($svn_root_file_new,$svn_root_file,$svn_root_file_old,true);
+        return $this->installNewFileVersion($svn_root_file_new, $svn_root_file, $svn_root_file_old, true);
     }
 
 
 
     /**
      * Archive SVN repository: stores a tgz in temp dir, and remove the directory
+     *
+     * @param int $group_id The id of the project to work on
+     * 
+     * @return boolean true on success or false on failure
      */
     public function archiveProjectSVN($group_id) {
-        $project=$this->_getProjectManager()->getProject($group_id);
-        if (!$project) return false;
+        $project=$this->getProjectManager()->getProject($group_id);
+        if (!$project) {
+            return false;
+        }
         $mydir=$GLOBALS['svn_prefix']."/".$project->getUnixName(false);
         $backupfile=$GLOBALS['tmp_dir']."/".$project->getUnixName(false)."-svn.tgz";
 
         if (is_dir($mydir)) {
             system("cd ".$GLOBALS['svn_prefix']."; tar cfz $backupfile ".$project->getUnixName(false));
-            chmod($backupfile,0600);
+            chmod($backupfile, 0600);
             $this->recurseDeleteInDir($mydir);
             rmdir($mydir);
             return true;
-       } else return false;
+        } else {
+            return false;
+        }
     }
     
     /**
      * Make the cvs repository of the project private or public
-     * @param Project $project
+     * 
+     * @param Project $project    The project to work on
      * @param boolean $is_private true if the repository is private
+     * 
      * @return boolean true if success
      */
     public function setSVNPrivacy($project, $is_private) {
         $perms = $is_private ? 0770 : 0775;
-        $svnroot = $GLOBALS['svn_prefix'] . PATH_SEPARATOR . $project->getUnixName(false);
+        $svnroot = $GLOBALS['svn_prefix'] . '/' . $project->getUnixName(false);
         return is_dir($svnroot) && $this->chmod($svnroot, $perms);
     }
 
     /** 
      * Check privacy of repository 
-     * @returns false if private repo does not have proper permissions, or true otherwise
+     * 
+     * @param Project $project The project to work on
+     * 
+     * @return boolean false if private repo does not have proper permissions, or true otherwise
      */
     public function isSVNPrivacyOK($project) {
-        $svnroot = $GLOBALS['svn_prefix'] . PATH_SEPARATOR . $project->getUnixName(false);
+        $svnroot = $GLOBALS['svn_prefix'] . '/' . $project->getUnixName(false);
         $is_private = !$project->isPublic() || $project->isSVNPrivate();
         if ($is_private) {
-            $perms=fileperms($cvsroot);
+            $perms = fileperms($svnroot);
             // 'others' should have no right on the repository
             // TODO: test formula :-)
             if (($perms & 0x0004) || ($perms & 0x0002) || ($perms & 0x0001) || ($perms & 0x0200)) {
-	      return false;
-	    }
-	}
-	return true;
+                return false;
+            }
+        }
+        return true;
     }
 }
 
