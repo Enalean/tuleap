@@ -14,7 +14,7 @@ require_once('www/project/admin/permissions.php');
 require_once('www/file/file_utils.php');
 require_once('www/docman/doc_utils.php');
 
-
+$hp = Codendi_HTMLPurifier::instance();
 function display_name_and_desc_form($ugroup_name,$ugroup_description) {
   global $Language;
 
@@ -212,7 +212,9 @@ if (($func=='edit')||($func=='do_create')) {
                 echo '<TD>'.$Language->getText('project_admin_editugroup','tracker_field')
                     .' <a href="/tracker/admin/?group_id='.$group_id.'&atid='.$atid.'&func=permissions&perm_type=fields&group_first=1&selected_id='.$ugroup_id.'">' 
                     .$objname.'</a></TD>';
-            } else {
+            } else if ($row['permission_type'] == 'TRACKER_ARTIFACT_ACCESS') {
+                echo '<td>'. $hp->purify($objname, CODENDI_PURIFIER_BASIC) .'</td>';
+            }else {
                 $results = false;
                 $em =& EventManager::instance();
                 $em->processEvent('permissions_for_ugroup', array(

@@ -116,6 +116,9 @@ class Artifact extends Error {
     function fetchData($artifact_id) {
 
         global $art_field_fact,$Language;
+        if (!$art_field_fact) {
+            $art_field_fact = new ArtifactFieldFactory($this->ArtifactType);
+        }
 
         // first fetch values of standard fields
         $sql = "SELECT * FROM artifact WHERE artifact_id='". db_ei($artifact_id) ."' AND group_artifact_id='". db_ei($this->ArtifactType->getID()) ."'";

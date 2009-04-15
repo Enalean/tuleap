@@ -30,7 +30,9 @@
 
 require_once('www/project/admin/ugroup_utils.php');
 require_once('www/project/admin/project_admin_utils.php');
+require_once('common/tracker/Artifact.class.php');
 require_once('common/tracker/ArtifactType.class.php');
+require_once('common/tracker/ArtifactFieldFactory.class.php');
 require_once('common/tracker/ArtifactField.class.php');
 #require_once('common/wiki/lib/WikiPage.class.php');
 require_once('common/event/EventManager.class.php');
@@ -180,8 +182,8 @@ function permission_get_object_name($permission_type,$object_id) {
         }
         $group = $pm->getProject($group_id);
         $at = new ArtifactType($group, $atid);
-        $a = new Artifact($at,$object_id);
-        return 'art #'. $a->getId() .' - '. $a->getSummary();    
+        $a  = new Artifact($at,$object_id);
+        return 'art #'. $a->getId() .' - '. util_unconvert_htmlspecialchars($a->getSummary());    
     } else {
         $em =& EventManager::instance();
         $object_name = false;
