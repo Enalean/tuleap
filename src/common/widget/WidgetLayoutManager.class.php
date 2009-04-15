@@ -628,7 +628,7 @@ class WidgetLayoutManager {
             //retrieve the short name of the project
             if ($project = ProjectManager::instance()->getProject($owner_id)) {
                 $hp = Codendi_HTMLPurifier::instance();
-                $link = '/projects/'.  $hp->purify($project->getUnixGroupName(), CODENDI_PURIFIER_CONVERT_HTML) ;
+                $link = '/projects/'.  $hp->purify($project->getUnixName(), CODENDI_PURIFIER_CONVERT_HTML) ;
             }
         } else if ($owner_type == self::OWNER_TYPE_USER) {
             $link = '/my/';
