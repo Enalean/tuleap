@@ -188,7 +188,8 @@ class CrossReferenceFactory {
     	$available_natures = $reference_manager->getAvailableNatures();
     	
     	// HTML part (stored in $display)
-    	$display = '';
+        $itemIsReferenced = false;
+        $display = '';
     	$display .= '<p id="cross_references_legend">' . $Language->getText('cross_ref_fact_include','legend') . '</p>';
     	foreach ($crossRefArray as $nature => $refArraySourceTarget) {
             $display .= "<p><b>" . $available_natures[$nature]['label'] . "</b>";
@@ -211,6 +212,7 @@ class CrossReferenceFactory {
                 $display .= "</li>";
             }
             if (array_key_exists('target', $refArraySourceTarget)) {
+                $itemIsReferenced = true;
                 $display.="<li class='reference_to'>".$GLOBALS['HTML']->getImage('ic/right_arrow.png', 
                     array( 'alt'=> $Language->getText('cross_ref_fact_include','referenced_in'),
                             'align' => 'top-left',
@@ -248,7 +250,7 @@ class CrossReferenceFactory {
             $display .= "</p>";
     	}
     	
-    	if (array_key_exists('target', $refArraySourceTarget)) {
+    	if ($itemIsReferenced) {
             $display .= '<script src="/scripts/cross_references.js.php" type="text/javascript"></script>';
             $display .= '<script type="text/javascript">hide_references_to();</script>';
         }
