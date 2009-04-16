@@ -647,7 +647,7 @@ plugin_docman	report_upd_success	Rapport mis à jour.
 plugin_docman	report_upd_groupmismatch	Les ids de projet ne correspondent pas. Mise à jour annulée.
 
 plugin_docman	resource_name_document	Document <a href="$1">$2</a>
-plugin_docman	resource_name_folder	Dossier <a href="$1">$2</a>
+plugin_docman	resource_name_folder	 Dossier <a href="$1">$2</a>
 plugin_docman	roottitle_lbl_key	Documentation du projet
 
 plugin_docman	service_lbl_key	Documents
@@ -679,8 +679,8 @@ plugin_docman	view_documenttable_update_date	Dernière mise-à-jour
 plugin_docman	view_documenttable_status	Statut
 plugin_docman	view_documenttable_toggletitle	Cliquez sur le titre pour inverser le tri du tableau
 plugin_docman	view_documenttable_begin	Début
-plugin_docman	view_documenttable_previous	Précédent
-plugin_docman	view_documenttable_next	Suivant
+plugin_docman	view_documenttable_previous	$1 Précédents
+plugin_docman	view_documenttable_next	 $1 Suivants
 plugin_docman	view_documenttable_end	Fin
 
 plugin_docman	view_itemrank_after	Après
@@ -705,10 +705,7 @@ plugin_docman	docman_wiki_hide_referencers	Cacher les documents liés
 plugin_docman	docman_wiki_other_location	Autre chemin:
 plugin_docman	docman_wiki_other_locations	Autres chemins:
 plugin_docman	docman_wiki_breadcrumbs_locations	Chemins:
-<<<<<<< .working
 plugin_docman	docman_wiki_perms_label	Permissions controllées par le gestionnaire de documents
 
 widget_categ_label	plugin_docman	Gestionnaire de documents
-=======
-plugin_docman	docman_wiki_perms_label	Permissions controllées par le gestionnaire de documents
->>>>>>> .merge-right.r11470
+

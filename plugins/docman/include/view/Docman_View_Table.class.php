@@ -95,25 +95,25 @@ class Docman_View_Table extends Docman_View_Browse {
         else {
             $first       = '&lt;&lt; '.$GLOBALS['Language']->getText('plugin_docman', 'view_documenttable_begin');
         }
-   
+        
         $previousOffset = $_low_limit - $offset;
         if($_low_limit > 0) {
             if($previousOffset < 0) {
                 $previousOffset = 0;
             }
             $previousUrl = $this->_buildSearchUrl($params, array('start' => $previousOffset));
-            $previous    = '<a href="'.$previousUrl.'">&lt; '.$GLOBALS['Language']->getText('plugin_docman', 'view_documenttable_previous').' '.$offset.'</a>';
+            $previous    = '<a href="'.$previousUrl.'">&lt; '.$GLOBALS['Language']->getText('plugin_docman', 'view_documenttable_previous', $offset).'&gt;</a>';
         }
         else {
-            $previous    = '&lt; '.$GLOBALS['Language']->getText('plugin_docman', 'view_documenttable_previous').' '.$offset;
+            $previous    = '&lt; '.$GLOBALS['Language']->getText('plugin_docman', 'view_documenttable_previous', $offset);
         }
-
+         
         if($_high_limit < $nbItemsFound) {
             $nextUrl     = $this->_buildSearchUrl($params, array('start' => $_high_limit));
-            $next        = '<a href="'.$nextUrl.'">'.$GLOBALS['Language']->getText('plugin_docman', 'view_documenttable_next').' '.$offset.' &gt;</a>';
+            $next        = '<a href="'.$nextUrl.'">'.$GLOBALS['Language']->getText('plugin_docman', 'view_documenttable_next', $offset).' &gt;</a>';
         }
         else {
-            $next        = $GLOBALS['Language']->getText('plugin_docman', 'view_documenttable_next').' '.$offset.' &gt;';
+            $next        = $GLOBALS['Language']->getText('plugin_docman', 'view_documenttable_next', $offset).' &gt;';
         }
 
         if($_high_limit < $nbItemsFound) {

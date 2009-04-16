@@ -679,8 +679,8 @@ plugin_docman	view_documenttable_update_date	Last Update
 plugin_docman	view_documenttable_status	Status
 plugin_docman	view_documenttable_toggletitle	Click on title to toggle table sort
 plugin_docman	view_documenttable_begin	Begin
-plugin_docman	view_documenttable_previous	Previous
-plugin_docman	view_documenttable_next	Next
+plugin_docman	view_documenttable_previous	Previous $1
+plugin_docman	view_documenttable_next	Next $1
 plugin_docman	view_documenttable_end	End
 
 plugin_docman	view_itemrank_after	After
