@@ -375,11 +375,6 @@ INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('TRACKER_ARTI
 INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('TRACKER_ARTIFACT_ACCESS',15);
 EOF
 
-echo "- Add the field severity on all reports"
-#TODO usefull ?
-$CAT <<EOF | $MYSQL $pass_opt codendi
-UPDATE artifact_report_field SET show_on_result = 1 WHERE field_name = 'severity';
-EOF;
 
 echo "- Mandatory reference in SVN commit message"
 $CAT <<EOF | $MYSQL $pass_opt codendi
@@ -630,33 +625,6 @@ WHERE language_id != 'fr_FR';
 DROP TABLE supported_languages;
 EOF
 
-
-
-
-echo "- Reorder report fields for prepareRanking usage"
-#TODO Usefull ?
-$CAT <<EOF | $MYSQL $pass_opt codendi
-SET @counter = 0;
-SET @previous = NULL;
-UPDATE artifact_report_field 
-        INNER JOIN (SELECT @counter := IF(@previous = report_id, @counter + 1, 1) AS new_rank, 
-                           @previous := report_id, 
-                           artifact_report_field.* 
-                    FROM artifact_report_field 
-                    ORDER BY report_id, place_result, field_name
-        ) as R1 USING(report_id,field_name)
-SET artifact_report_field.place_result = R1.new_rank;
-SET @counter = 0;
-SET @previous = NULL;
-UPDATE artifact_report_field 
-        INNER JOIN (SELECT @counter := IF(@previous = report_id, @counter + 1, 1) AS new_rank, 
-                           @previous := report_id, 
-                           artifact_report_field.* 
-                    FROM artifact_report_field 
-                    ORDER BY report_id, place_query, field_name
-        ) as R1 USING(report_id,field_name)
-SET artifact_report_field.place_query = R1.new_rank;
-EOF
 
 echo "- Add 3 new widgets on project summary page"
 $CAT <<EOF | $MYSQL $pass_opt codendi
