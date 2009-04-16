@@ -383,7 +383,7 @@ class ArtifactReportHtml extends ArtifactReport {
             $html_result .= $nav_bar;
 
 	    if ($masschange) {
-               	$html_result .= '<FORM NAME="artifact_list" action="" METHOD="POST">';
+               	$html_result .= '</form><FORM NAME="artifact_list" action="" METHOD="POST">';
                	$html_result .= html_build_list_table_top ($title_arr,$links_arr,true);
             } else {
                	$html_result .= html_build_list_table_top ($title_arr,$links_arr);
