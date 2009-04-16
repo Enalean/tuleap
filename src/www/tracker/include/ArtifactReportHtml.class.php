@@ -493,25 +493,6 @@ class ArtifactReportHtml extends ArtifactReport {
                             while($row = db_fetch_array($field_values)) {
                                 $array_values[]  = "[".$row['value_id'].", '". addslashes($row['value']) ."']";
                             }
-                            $html_result .= '<script type="text/javascript">';
-                            $html_result .= "
-                            document.observe('dom:loaded', function() {
-                                new Ajax.InPlaceCollectionEditor('status_id_$i', '/tracker/', {
-                                    collection: [". implode(',', $array_values) ."],
-                                    callback: function(form, value) {
-                                        return {
-                                            func:                      'postmod',
-                                            group_id:                  ". $group_id .",
-                                            atid:                      ". $ath->getId() .",
-                                            aid:                       ". $result[$i]['artifact_id'] .",
-                                            artifact_timestamp:        (new Date()).getTime(),
-                                            field:                     '". $field->getName() ."',
-                                            '". $field->getName() ."': value
-                                        }
-                                    }
-                                });
-                            });
-                            </script>";
                         }
                         $html_result .= "</TD>\n";
 				    } else if ($field->getName() == 'summary') {
