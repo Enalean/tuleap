@@ -647,11 +647,11 @@ function permission_display_selection_frs($permission_type, $object_id = null, $
     while($row = db_fetch_array($res)) {
         $name = util_translate_name_ugroup($row[1]);
         $array[] = array(
-            'value' => $row[0], 
-            'text' => $name
-        );
+                'value' => $row[0], 
+                'text' => $name
+                );
     }
-    $html .= html_build_multiple_select_box($array,"ugroups[]",($nb_set?util_result_column_to_array($res_ugroups):$default_values),8, true, util_translate_name_ugroup('ugroup_nobody_name_key'), false, '', false, '',false);
+    $html .= html_build_multiple_select_box($array,"ugroups[]",($nb_set?util_result_column_to_array($res_ugroups):$default_values),8, false, util_translate_name_ugroup('ugroup_nobody_name_key'), false, '', false, '',false);
     $html .= '<p>'.$GLOBALS['Language']->getText('project_admin_permissions','admins_create_modify_ug',array("/project/admin/editugroup.php?func=create&group_id=$group_id","/project/admin/ugroup.php?group_id=$group_id"));
     echo $html;
 }

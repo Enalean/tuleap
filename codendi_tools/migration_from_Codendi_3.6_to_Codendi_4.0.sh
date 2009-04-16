@@ -297,6 +297,11 @@ ALTER TABLE frs_file CHANGE file_size file_size BIGINT NOT NULL DEFAULT '0';
 ALTER TABLE wiki_attachment_revision CHANGE size size BIGINT NOT NULL;
 EOF
 
+echo "- Remove nobody permissions FRS and update permissions table"
+$CAT <<EOF | $MYSQL $pass_opt codendi
+DELETE FROM permissions_values WHERE (permission_type='PACKAGE_READ' or permission_type='RELEASE_READ') and ugroup_id='100';
+UPDATE permissions SET ugroup_id='4' WHERE (permission_type='PACKAGE_READ' or permission_type='RELEASE_READ') and ugroup_id='100';
+EOF
 
 echo "- Remove useless tables"
 $CAT <<EOF | $MYSQL $pass_opt codendi
