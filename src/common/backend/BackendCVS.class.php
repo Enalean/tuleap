@@ -419,7 +419,6 @@ class BackendCVS extends Backend {
         if ($is_private) {
             $perms = fileperms($cvsroot);
             // 'others' should have no right on the repository
-            // TODO: test formula :-)
             if (($perms & 0x0004) || ($perms & 0x0002) || ($perms & 0x0001) || ($perms & 0x0200)) {
                     return false;
             }
@@ -429,13 +428,15 @@ class BackendCVS extends Backend {
 
 
 
-    //  Deleting files older than 2 hours in var/run/log_accum that contain 'files' (they have not been deleted due to commit abort) 
+    //  Deleting files older than 2 hours in /var/run/log_accum that contain 'files' (they have not been deleted due to commit abort) 
     public function cleanup() {
-        //print("Deleting old files in /var/run/log_accum");
-        $TMPDIR = "/var/run/log_accum"; //TODO: should be in local.inc?
-        // TODO: @old_files=`find $TMPDIR -name "*.files.*" -amin +120 `;
-        foreach ($filelist as $file) {
-            //chomp; TODO?
+        // TODO: test!
+        $filelist = shell_exec("/usr/bin/find ".$GLOBALS['cvs_hook_tmp_dir']." -name \"*.files.*\" -amin +120");
+        $files = explode("\n",$filelist);
+        // Remove last (empty) element
+        array_pop($files);
+
+        foreach ($files as $file) {
             unlink($file);
         }
     }

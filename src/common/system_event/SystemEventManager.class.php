@@ -296,7 +296,7 @@ class SystemEventManager {
         // Update SVN root definition for Apache once everything else is processed
         if (BackendSVN::instance()->getSVNApacheConfNeedUpdate()) {
             BackendSVN::instance()->generateSVNApacheConf();
-            // TODO: need to refresh apache (reload)
+            // Need to refresh apache (reload)
             system('/sbin/service httpd reload');
         }
     }

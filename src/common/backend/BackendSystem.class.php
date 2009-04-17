@@ -184,7 +184,6 @@ class BackendSystem extends Backend {
             // Check that perms are OK
             $perms = fileperms($private_dir);
             // 'others' should have no right on the repository
-            // TODO: test formula :-)
             if (($perms & 0x0004) || ($perms & 0x0002) || ($perms & 0x0001) || ($perms & 0x0200)) {
               $this->chmod($private_dir, 02770);		
             }

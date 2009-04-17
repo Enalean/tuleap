@@ -38,7 +38,7 @@
 #
 $ENTRIES       = "CVS/Entries";
 
-$TMPDIR = "/var/run/log_accum";
+$TMPDIR = $cvs_hook_tmp_dir;
 
 # Patterns to find $Log keywords in files
 #

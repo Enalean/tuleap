@@ -873,6 +873,20 @@ if [ $? -ne 0 ]; then
 EOF
 fi
 
+# cvs_hook_tmp_dir
+$GREP -q ^\$cvs_hook_tmp_dir  $ETC_DIR/conf/local.inc
+if [ $? -ne 0 ]; then
+  # Remove end PHP marker
+  substitute '/etc/codendi/conf/local.inc' '\?\>' ''
+
+  $CAT <<EOF >> /etc/codendi/conf/local.inc
+
+\$cvs_hook_tmp_dir    = "/var/run/log_accum"; // temporary directory used by CVS commit hooks
+
+?>
+EOF
+fi
+
 
 ###############################################################################
 # HTTP-based authentication
@@ -945,10 +959,28 @@ TODO : Déplacer le script de debug dans Layout.class.php
 # TODO : CREATE / UPDATE the pre-commit hook for every existing project.
 
 #
-# TODO: copy /src/utils/svn/codendi_svn_pre_commit.php into /usr/lib/codendi/bin/codendi_svn_pre_commit.php
-# TODO: copy /src/utils/svn/commit-email.pl into /usr/lib/codendi/bin/commit-email.pl
-# TODO: copy /src/utils/cvs1/log_accum into /usr/lib/codendi/bin/log_accum
+# TODO: copy /src/utils/svn/codendi_svn_pre_commit.php into /usr/lib/codendi/bin/codendi_svn_pre_commit.php (also in codendi_install!!)
+# TODO: rename /usr/lib/codex to /usr/lib/codendi
+
 #
+# Re-copy files that have been modified
+#
+cd $INSTALL_DIR/src/utils/cvs1
+$CP log_accum /usr/lib/codendi/bin
+$CP commit_prep /usr/lib/codendi/bin
+cd /usr/lib/codendi/bin
+$CHOWN codendiadm.codendiadm log_accum commit_prep
+$CHMOD 755 log_accum commit_prep cvssh cvssh-restricted
+$CHMOD u+s log_accum   # sets the uid bit (-rwsr-xr-x)
+
+cd $INSTALL_DIR/src/utils/svn
+$CP commit-email.pl /usr/lib/codendi/bin
+cd /usr/lib/codendi/bin
+$CHOWN codendiadm.codendiadm commit-email.pl
+$CHMOD 755 commit-email.pl
+
+# TODO: replace codex by codendi in /etc/shells
+
 
 # TODO: propose to migrate to java-1.6.0-openjdk
 # yum install...

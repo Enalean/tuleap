@@ -14,7 +14,7 @@
 
 sub cvs_watch {
     local($repository, $temp_name, $id, $watch_mode) = @_;
-    $TMPDIR = "/var/run/log_accum";
+    $TMPDIR = $cvs_hook_tmp_dir;
     $DIR_NAME = sprintf ("$TMPDIR/#%s.sandbox", $temp_name);
     if($watch_mode eq '1'){
         system("mkdir $DIR_NAME.$id; cd $DIR_NAME.$id;cvs -d/$repository co . 2>/dev/null 1>&2;cvs -d/$repository watch on 2>/dev/null 1>&2;");
