@@ -183,6 +183,7 @@ for rpm in openssh-server openssh openssh-clients \
    dejavu-lgc-fonts \
    compat-libstdc++-33 \
    policycoreutils coreutils selinux-policy selinux-policy-targeted libselinux \
+   java-1.6.0-openjdk jpackage-utils giflib\
    zip unzip enscript xinetd mod_auth_mysql
 do
     $RPM -q $rpm  2>/dev/null 1>&2
@@ -432,25 +433,6 @@ cd - > /dev/null
 #    $RPM -Uvh ${newest_rpm}/selinux-policy-targeted-1*.noarch.rpm
 #fi
 
-# -> jre
-echo "Removing existing Java JRE..."
-$RPM -e jre  2>/dev/null
-$RPM -e j2re 2>/dev/null
-echo "Installing Java JRE RPMs for Codendi...."
-cd ${RPMS_DIR}/jre
-newest_rpm=`$LS -1 -I old -I TRANS.TBL | $TAIL -1`
-$RPM -ivh ${newest_rpm}/jre-*i?86.rpm
-cd /usr/java
-newest_jre=`$LS -1d jre* | $TAIL -1`
-$LN -sf $newest_jre jre
-
-# Use "alternatives" system to point to the Sun JRE
-# default priority for gcj seems(?) 1420 -> use 10000 for Sun JRE.
-/usr/sbin/alternatives --install /usr/bin/java java /usr/java/jre/bin/java 10000 \
-    --slave /usr/bin/rmiregistry rmiregistry /usr/java/jre/bin/rmiregistry \
-    --slave /usr/bin/keytool keytool /usr/java/jre/bin/keytool
-#    --slave /usr/lib/jvm/jre jre /usr/java/jre
-# Note: /usr/sbin/alternatives --set java /usr/java/jre/bin/java seems useless??
 
 # -> cvs
 echo "Removing existing CVS .."
@@ -650,7 +632,7 @@ $LN -sf ${dir_entry} docbook-xsl
 #$RM -f apache-tomcat-6
 #$LN -sf ${dir_entry} apache-tomcat-6
 #TOMCAT_DIR=/usr/share/apache-tomcat-6
-echo "export JAVA_HOME=/usr/java/jre" >> /home/codendiadm/.profile
+echo "export JAVA_HOME=/usr/lib/jvm/java-1.6.0-openjdk-1.6.0.0/jre" >> /home/codendiadm/.profile
 #echo "export CATALINA_HOME=$TOMCAT_DIR" >> /home/codendiadm/.profile
 
 #echo "Creating tomcat config file..."

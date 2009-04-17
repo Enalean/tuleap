@@ -950,6 +950,10 @@ TODO : Déplacer le script de debug dans Layout.class.php
 # TODO: copy /src/utils/cvs1/log_accum into /usr/lib/codendi/bin/log_accum
 #
 
+# TODO: propose to migrate to java-1.6.0-openjdk
+# yum install...
+# echo "export JAVA_HOME=/usr/lib/jvm/java-1.6.0-openjdk-1.6.0.0/jre" >> /home/codendiadm/.profile
+
   # Skip logging openfire db (for instant messaging)
   # The 'monitor' openrfire plugin creates large codendi-bin files
   # Comment this line if you prefer to be safer.
