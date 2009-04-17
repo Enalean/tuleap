@@ -30,5 +30,8 @@ class Widget_MyWikiPage extends Widget_WikiPage {
     function Widget_MyWikiPage() {
         $this->Widget_WikiPage('mywikipage', user_getid(), WidgetLayoutManager::OWNER_TYPE_USER);
     }
+    function getDescription() {
+        return $GLOBALS['Language']->getText('widget_description_my_wiki_page','description');
+    }
 }
 ?>

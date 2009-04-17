@@ -98,13 +98,13 @@ plugin_hudson	widget_job_not_found	Job not found.
 plugin_hudson	widget_tests_not_found	No test found for this job.
 plugin_hudson	widget_build_not_found	No build found for this job.
 
-plugin_hudson	widget_description_buildshistory	Shows the build history of the selected job, under the form of RSS feed.
-plugin_hudson	widget_description_lastartifacts	Shows the last successfully published artifacts.
-plugin_hudson	widget_description_lastbuilds	Show the last builds for this job (last one, last successfull, last failed) and the weather report.
-plugin_hudson	widget_description_testresults	Show the test results of the latest build for the selected job.
-plugin_hudson	widget_description_testtrend	Shows the test result trend for the selected job.
-plugin_hudson	widget_description_myjobs	Shows an overview of all the jobs of all the projects you're member of.
-plugin_hudson	widget_description_jobsoverview	Shows an overview of all the jobs associated with this project.
+plugin_hudson	widget_description_buildshistory	Show the build history of the selected job, under the form of RSS feed. For each build of the list, you can see the build number, the status and the date the build has been scheduled.
+plugin_hudson	widget_description_lastartifacts	Show the last successfully published artifacts of one job. To display something, your job needs to publish artifacts.
+plugin_hudson	widget_description_lastbuilds	Show the last builds for this job (last one, last successfull, last failed) and the weather report. The trend is represented by a weather report (sun, thunder, etc.) meaning that the trend is good or not.
+plugin_hudson	widget_description_testresults	Show the test results of the latest build for the selected job.To display something, your job needs to execute tests and publish them. The result is shown on a pie chart.
+plugin_hudson	widget_description_testtrend	Show the test result trend for the selected job. To display something, your job needs to have tests. The graph will show the number of tests (failed and successfull) along  time. The number of tests is increasing while the number of build and commits are increasing too.
+plugin_hudson	widget_description_myjobs	Show an overview of all the jobs of all the projects you're member of. You can of course select the jobs you wish to display by selecting the preferences link of the widget.
+plugin_hudson	widget_description_jobsoverview	Shows an overview of all the jobs associated with this project. You can always choose the ones you want to display in the widget (preferences link).
 
 widget_categ_label	ci	Continuous Integration
 

@@ -30,5 +30,9 @@ class Widget_MyTwitterFollow extends Widget_TwitterFollow {
     function Widget_MyTwitterFollow() {
         $this->Widget_TwitterFollow('mytwitterfollow', user_getid(), WidgetLayoutManager::OWNER_TYPE_USER);
     }
+    
+    function getDescription() {
+        return $GLOBALS['Language']->getText('widget_description_my_twitter_follow','description');
+    }
 }
 ?>

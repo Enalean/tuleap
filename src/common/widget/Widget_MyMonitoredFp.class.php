@@ -119,7 +119,7 @@ class Widget_MyMonitoredFp extends Widget {
         return 'frs';
     }
     function getDescription() {
-        return 'Lists packages that you are currently monitoring, by project.';
+        return $GLOBALS['Language']->getText('widget_description_my_monitored_fp','description');;
     }
     function isAjax() {
         return true;

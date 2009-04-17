@@ -14,6 +14,7 @@ plugin_im	reference_chat_nature_desc	Instant Messaging Chat
 plugin_im	my_roster	My IM Roster
 plugin_im	im_user_login	Instant Messaging Login:
 plugin_im	im_roster_member	Roster Members
+plugin_im	widget_description	This widget lets you having access to your roster (contact list) and the status of each of your contacts directly on your personal page. Next to each user name Codendi displays a colored icon (gray, green, yellow or red) that indicates the status of the user: gray for "offline", green for "online", yellow for "away", and red for "busy". Users can change their status through their Jabber client.		
 
 plugin_im	title	Instant messaging
 plugin_im	muc_delete	is deleted from Instant Messaging

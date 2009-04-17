@@ -390,7 +390,6 @@ echo $this->outerTabs($params);
     * @param sel_tab_bgcolor DEPRECATED
     */
 	function tabGenerator($TABS_DIRS,$TABS_TITLES,$nested=false,$selected=false,$level) {
-
 		$count=count($TABS_DIRS);
 		$width=intval((100/$count));
 		

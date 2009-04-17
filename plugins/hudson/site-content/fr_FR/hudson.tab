@@ -98,13 +98,13 @@ plugin_hudson	widget_job_not_found	Job non trouvé.
 plugin_hudson	widget_tests_not_found	Tests non trouvés pour ce job.
 plugin_hudson	widget_build_not_found	Build non trouvé pour ce job.
 
-plugin_hudson	widget_description_buildshistory	Affiche l'historique des builds du job sélectionné, sous la forme d'un flux RSS.
-plugin_hudson	widget_description_lastartifacts	Affiche les derniers artéfacts publiés avec succès.
-plugin_hudson	widget_description_lastbuilds	Affiche les derniers builds du job sélectionné (le dernier, le dernier succès, le dernier échec) ainsi que la tendance du job.
-plugin_hudson	widget_description_testresults	Affiche les résultats des tests du dernier build du job sélectionné.
-plugin_hudson	widget_description_testtrend	Affiche la tendance des tests pour le job sélectionné.
-plugin_hudson	widget_description_myjobs	Affiche un aperçu des jobs de tous les projets dont vous êtes membre.
-plugin_hudson	widget_description_jobsoverview	Affiche un aperçu de tous les jobs associés à ce projet.
+plugin_hudson	widget_description_buildshistory	Affiche l'historique des builds du job sélectionné, sous la forme d'un flux RSS. Pour chaque build de la liste, vous avez son numéro, son état et sa date.
+plugin_hudson	widget_description_lastartifacts	Affiche les derniers artéfacts publiés du job sélectionné. Il faut que votre job dispose d'artéfacts et qu'il les publie pour que ce widget affiche quelque chose.
+plugin_hudson	widget_description_lastbuilds	Affiche les derniers builds du job sélectionné (le dernier, le dernier succès, le dernier échec) ainsi que la tendance du job. Cette tendance est représentée par une image empruntée à la météo (soleil, orage, etc) pour signifier que la tendance est au beau fixe ou pas.
+plugin_hudson	widget_description_testresults	Affiche les résultats des tests du dernier build du job sélectionné. Pour fonctionner, votre job doit disposer de tests qui soient publiés afin que ce widget affiche quelque chose. Les résultats sont présentés sous forme de camembert.
+plugin_hudson	widget_description_testtrend	Affiche la tendance des tests pour le job sélectionné. Il faut que votre job dispose de tests pour que ce widget affiche quelque chose. Ce graphique représente le nombre de tests (en échec et en succès) dans le temps. Cela permet par exemple de vérifier que le nombre de tests est en constante augmentation avec le nombre de builds/commits.
+plugin_hudson	widget_description_myjobs	Affiche un aperçu des jobs de tous les projets dont vous êtes membre. Vous pouvez bien entendu choisir les jobs que vous souhaitez voir affichés en cliquant sur le lien "préférences" du widget.
+plugin_hudson	widget_description_jobsoverview	Affiche un aperçu de tous les jobs associés à ce projet. Si vous avez plusieurs jobs associés à votre projet, vous pouvez choisir ceux que vous souhaitez voir dans le widget (lien préférences).
 
 widget_categ_label	ci	Intégration Continue
 

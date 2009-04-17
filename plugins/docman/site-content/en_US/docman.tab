@@ -708,4 +708,6 @@ plugin_docman	docman_wiki_breadcrumbs_locations	Locations:
 plugin_docman	docman_wiki_perms_label	Permissions controlled by documents manager
 
 widget_categ_label	plugin_docman	Document Manager
+plugin_docman	widget_description_my_docman	List the documents under review.
+plugin_docman	widget_description_embedded	List the embedded documents under review.
 

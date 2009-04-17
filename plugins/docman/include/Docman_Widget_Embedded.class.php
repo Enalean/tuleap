@@ -318,6 +318,9 @@ class Docman_Widget_Embedded extends Widget /* implements Visitor */ {
         return $this->visitDocument($item, $params);
     }
 
+    function getDescription() {
+        return $GLOBALS['Language']->getText('plugin_docman','widget_description_embedded');
+    }
 
 }
 ?>

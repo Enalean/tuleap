@@ -277,7 +277,7 @@ class Widget_MyArtifacts extends Widget {
         return 'trackers';
     }
     function getDescription() {
-        return 'Lists artifacts you have submitted or assigned to you, by project. ';
+        return $GLOBALS['Language']->getText('widget_description_my_artifacts','description');
     }
 }
 ?>

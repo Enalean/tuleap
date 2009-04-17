@@ -175,6 +175,10 @@ class Docman_Widget_MyDocman extends Widget {
     function getCategory() {
         return 'plugin_docman';
     }
+    
+    function getDescription() {
+        return $GLOBALS['Language']->getText('plugin_docman','widget_description_my_docman');
+    }
 }
 
 ?>

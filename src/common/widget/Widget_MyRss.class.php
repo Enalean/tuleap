@@ -30,5 +30,9 @@ class Widget_MyRss extends Widget_Rss {
     function Widget_MyRss() {
         $this->Widget_Rss('myrss', user_getid(), WidgetLayoutManager::OWNER_TYPE_USER);
     }
+    
+    function getDescription() {
+        return $GLOBALS['Language']->getText('widget_description_my_rss','description');
+    }
 }
 ?>

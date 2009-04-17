@@ -73,6 +73,9 @@ class Widget_MySurveys extends Widget {
     function getContent() {
         return $this->content;
     }
+    function getDescription() {
+        return $GLOBALS['Language']->getText('widget_description_my_surveys','description');
+    }
 }
 
 ?>

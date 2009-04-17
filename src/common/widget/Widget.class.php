@@ -48,6 +48,7 @@ require_once('common/widget/Widget_ProjectTwitterFollow.class.php');
 //require_once('common/widget/Widget_ProjectWikiPage.class.php');
 require_once('common/widget/Widget_ProjectSvnStats.class.php');
 
+
 /**
 * Widget
 */

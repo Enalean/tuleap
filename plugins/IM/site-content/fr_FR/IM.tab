@@ -12,6 +12,7 @@ plugin_im	reference_chat_nature_desc	Conversation de messagerie instantanée
 plugin_im	title	Messagerie instantanée
 plugin_im	my_roster	Ma liste de contact IM
 plugin_im	im_roster_member	Membres de votre liste IM
+plugin_im	widget_description	Ce widget permet de voir sa liste de contact ainsi que leur status. Chaque nom d'utilisateur affiché dans Codendi s'accompagne d'une icone de couleur (gris,vert, jaune ou rouge) indiquant le status de l'utilisateur : gris pour "non connecté", vert pour "en ligne", jaune pour "absent" et rouge pour "occupé". Les utilisateurs peuvent modifier leur status à l'aide de leur client Jabber.
 plugin_im	link_im_admin_title	Messagerie Instantanée
 
 plugin_im	im_user_login	Login Messagerie Instantanée:

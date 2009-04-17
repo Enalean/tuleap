@@ -52,6 +52,10 @@ class IM_Widget_MyRoster extends Widget {
         return $html;
     }
     
+    function getDescription() {
+        return $GLOBALS['Language']->getText('plugin_im','widget_description');
+    }
+    
     function isAvailable() {
         return ! UserManager::instance()->getCurrentUser()->getPreference('plugin_im_hide_users_presence');
     }

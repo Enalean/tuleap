@@ -708,4 +708,5 @@ plugin_docman	docman_wiki_breadcrumbs_locations	Chemins:
 plugin_docman	docman_wiki_perms_label	Permissions controllées par le gestionnaire de documents
 
 widget_categ_label	plugin_docman	Gestionnaire de documents
-
+plugin_docman	widget_description_my_docman	Affiche la liste des documents en attente d'approbation.
+plugin_docman	widget_description_embedded	Affiche la liste des fichiers embarqués en attente d'approbation.

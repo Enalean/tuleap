@@ -139,5 +139,9 @@ class Widget_MyTasks extends Widget {
         $result=db_query($sql);
         return $result && db_numrows($result) > 0;
     }
+    
+    function getDescription() {
+        return $GLOBALS['Language']->getText('widget_description_my_tasks','description');
+    }
 }
 ?>

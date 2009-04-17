@@ -108,7 +108,7 @@ class Widget_MyLatestSvnCommits extends Widget {
         return 'scm';
     }
     function getDescription() {
-        return $GLOBALS['Language']->getText('my_index','my_latest_svn_commit_desc');
+        return $GLOBALS['Language']->getText('widget_description_my_latest_svn_commits','description');
     }
     function isAjax() {
         return true;

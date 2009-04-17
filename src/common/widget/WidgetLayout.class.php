@@ -46,11 +46,11 @@ class WidgetLayout {
         }
         if (!$readonly) {
             $cells = "['". implode("', '", $this->getColumnIds()) ."']";
-            echo <<<EOS
+           echo <<<EOS
             <script type="text/javascript">
             var cells = $cells;
             Event.observe(window, 'load', function() {
-                cells.each(function (cell_id) {
+                  cells.each(function (cell_id) {
                     Sortable.create(cell_id, {
                         dropOnEmpty: true,
                         constraint:  false,
