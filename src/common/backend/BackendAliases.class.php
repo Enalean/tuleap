@@ -99,7 +99,6 @@ class BackendAliases extends Backend {
         }
         fclose($fp);
 
-	// TODO run newaliases after installing new file
         // Replace current file by new one
         if (!$this->installNewFileVersion($alias_file_new,$alias_file,$alias_file_old,true)) return false;
 

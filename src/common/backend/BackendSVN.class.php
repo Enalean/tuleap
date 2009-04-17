@@ -286,7 +286,7 @@ class BackendSVN extends Backend {
         fwrite($fp, "\n");
         fwrite($fp, "[/]\n");
         fwrite($fp, "* = r\n");
-        //else { print SVNACCESS "* = \n";}
+        //else { print SVNACCESS "* = \n";} TODO
         fwrite($fp, "@members = rw\n");
         fwrite($fp, "$default_block_end\n");
         if ($custom_perms) {
@@ -435,7 +435,6 @@ class BackendSVN extends Backend {
         if ($is_private) {
             $perms = fileperms($svnroot);
             // 'others' should have no right on the repository
-            // TODO: test formula :-)
             if (($perms & 0x0004) || ($perms & 0x0002) || ($perms & 0x0001) || ($perms & 0x0200)) {
                 return false;
             }
