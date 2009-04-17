@@ -231,7 +231,7 @@ if ($group_id && !$atid) {
 						exit_error($Language->getText('global','error'),$Language->getText('tracker_admin_index','not_updated_report').': '.$arh->getErrorMessage());
 					exit_error($Language->getText('global','error'),$Language->getText('tracker_admin_index','not_updated_report'));
 				}
-				$GLOBALS['Response']->addFeedback('info', "Report definition updated");
+				$GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('tracker_index','report_definition_updated'));
 			} else {
                 if ($ath->userIsAdmin() && ($rep_scope == 'P') && ($request->exist('rep_default'))) {
                     $rep_default = 1;

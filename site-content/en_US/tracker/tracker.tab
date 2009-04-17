@@ -121,6 +121,7 @@ tracker_index	updated_aid	Updated $1
 tracker_index	mass_change	Mass Change
 tracker_index	invalid_field_dependency	Invalid Field Dependency
 tracker_index	notification_stopped	Note: email notifications are suspended for this tracker.
+tracker_index	report_definition_updated	Report definition updated.
 #
 #-----------------------------------------------
 # Script: SF/www/tracker/masschange_detail.php
