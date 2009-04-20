@@ -56,5 +56,8 @@ class Widget_ProjectLatestNews extends Widget {
     function canBeUsedByProject(&$project) {
         return $project->usesNews();
     }
+    function getDescription() {
+        return $GLOBALS['Language']->getText('widget_description_latest_news','description');
+    }
 }
 ?>

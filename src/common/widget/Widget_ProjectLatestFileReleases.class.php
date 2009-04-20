@@ -51,5 +51,8 @@ class Widget_ProjectLatestFileReleases extends Widget {
     function getCategory() {
         return 'frs';
     }
+    function getDescription() {
+        return $GLOBALS['Language']->getText('widget_description_project_latest_file_releases','description');
+    }
 }
 ?>

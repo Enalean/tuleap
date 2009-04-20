@@ -37,5 +37,8 @@ class Widget_ProjectRss extends Widget_Rss {
     function canBeUsedByProject(&$project) {
         return true;
     }
+    function getDescription() {
+        return $GLOBALS['Language']->getText('widget_description_my_rss','description');
+    }
 }
 ?>

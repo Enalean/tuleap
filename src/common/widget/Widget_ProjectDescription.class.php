@@ -57,5 +57,8 @@ class Widget_ProjectDescription extends Widget {
     public function canBeUsedByProject(&$project) {
         return true;
     }
+    function getDescription() {
+        return $GLOBALS['Language']->getText('widget_description_description','description');
+    }
 }
 ?>

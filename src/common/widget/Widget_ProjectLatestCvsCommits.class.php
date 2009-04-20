@@ -41,5 +41,8 @@ class Widget_ProjectLatestCvsCommits extends Widget_ProjectLatestCommits {
     function canBeUsedByProject(&$project) {
         return $project->usesCvs();
     }
+    function getDescription() {
+        return $GLOBALS['Language']->getText('widget_description_my_latest_cvs_commits','description');
+    }
 }
 ?>

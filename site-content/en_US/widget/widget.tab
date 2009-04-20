@@ -42,4 +42,10 @@ widget_description_my_surveys	description	List the surveys you have not answered
 widget_description_my_system_event	description	List the system events.
 widget_description_my_tasks	description	List the tasks assigned to you.
 widget_description_my_twitter_follow	description	List the information on the twitter you decided to follow.
-
+widget_description_project_latest_file_releases	description	List the most recent packages available for download along with their revision. <br>A Release Notes icon allows you to see the latest changes and developers comments associated with this revision. <br>Then comes the monitor icon, selecting this icon will cause this package to be monitored for you. <br>Anytime the project development team posts a new release, you will be automatically notified via e-mail. All monitored File Releases are listed in your Personal Page and can be canceled from this page or from the main page of the file release system. .
+widget_description_classification	description	List the categories of the project.
+widget_description_description	description	Allow you to view the project description.
+widget_description_latest_news	description	List the last 10 pieces of news posted by the project members.
+widget_description_project_members	description	List the project members.
+widget_description_public_areas	description	List all available services for this project along with some information next to it. Click on any of this item to access a service. <br>The role of this area is pretty much equivalent to the Project Main Menu at the top of the screen except that it shows additional information about each of the service (e.g. total number of open bugs, tasks, ...) 
+widget_description_my_latest_cvs_commits	description	List CVS commits you have done, by project.
