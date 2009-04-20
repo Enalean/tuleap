@@ -110,7 +110,7 @@ class DataAccessObject {
             $newRank = 0;
         }
         else {
-            switch($rank) {
+            switch((string)$rank) {
             case '--':
                 $sql = sprintf('SELECT rank'.
                                ' FROM '. $this->table_name .
