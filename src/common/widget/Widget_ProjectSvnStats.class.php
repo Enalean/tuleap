@@ -46,67 +46,74 @@ class Widget_ProjectSvnStats extends Widget {
     protected $tmp_nb_of_commit;
     function process($owner_type, $owner_id) {
         $dao = new SvnCommitsDao(CodendiDataAccess::instance());
-        //The default duration is 30 days back
-        $duration = 30;
+        //The default duration is 3 months back
+        $nb_weeks = 4 * 3;
+        $duration = 7 * $nb_weeks;
         
         $day = 24 * 3600;
+        $week = 7 * $day;
         
         //compute the stats
         $stats = array();
         $nb_of_commits = array();
         foreach($dao->statsByGroupId($owner_id, $duration) as $row) {
-            $stats[$row['whoid']][$row['day'] * $day] = $row['nb_commits'];
+            $stats[$row['whoid']]['by_day'][$row['day'] * $day] = $row['nb_commits'];
+            $stats[$row['whoid']]['by_week'][$row['week']]      = $row['nb_commits'];
             $this->tmp_nb_of_commit[$row['whoid']] = (isset($this->tmp_nb_of_commit[$row['whoid']]) ? $this->tmp_nb_of_commit[$row['whoid']] : 0) + $row['nb_commits'];
         }
         if (count($stats)) {
             //sort the results
             uksort($stats, array($this, 'sortByTop'));
             
-            //Pick up a date
-            list(,$s) = each($stats);
-            list($a_day,) = each($s);
+            $today           = $_SERVER['REQUEST_TIME'];
+            $start_of_period = strtotime("-$nb_weeks weeks");
             
-            //jump to today
-            $today = $_SERVER['REQUEST_TIME'];
-            $today_in_stats = $a_day;
-            while($today_in_stats < $today) {
-                $today_in_stats += $day;
-            }
-            $today_in_stats -= $day;
-            $start_of_period = $today_in_stats - $duration * $day;
-            
-            //fill-in the holes and the labels
-            $dates = array();
-            for($i = $start_of_period ; $i <= $today_in_stats ; $i += $day) {
-                $dates[] = date('M d', $i);
-                foreach($stats as $whoid => $stat) {
-                    if (!isset($stat[$i])) {
-                        $stats[$whoid][$i] = '0';
-                    }
+            //fill-in the holes
+            $tmp_stats = array();
+            foreach($stats as $whoid => $stat) {
+                $tmp_stats = array();
+                for($i = $start_of_period ; $i <= $today ; $i += $week) {
+                    $w = date('W', $i);
+                    $tmp_stats[$w] = isset($stat['by_week'][$w]) ? $stat['by_week'][$w] : '0';
                 }
+                $stats[$whoid]['by_week'] = $tmp_stats;
+            }
+            
+            
+            //fill-in the labels
+            $dates = array();
+            for($i = $start_of_period ; $i <= $today ; $i += $week) {
+                $dates[] = date('M d', $i);
             }
             
             $nb_commiters = count($stats);
             
             //Build the chart
-            $c = new Chart(300, 300+16*$nb_commiters);
-            $c->SetScale('datlin');
+            $c = new Chart(400, 300+16*$nb_commiters);
+            $c->SetScale('textlin');
             $c->img->SetMargin(40,20,20,80+16*$nb_commiters);
             $c->xaxis->SetTickLabels($dates);
             $c->legend->Pos(0.1,0.95,'left','bottom');
-            $colors = $GLOBALS['HTML']->getChartColors();
+            
+            $colors = array_reverse(array_slice($GLOBALS['HTML']->getChartColors(), 0, $nb_commiters));
             $nb_colors = count($colors);
+            $bars = array();
+            $i = 0;
             foreach($stats as $whoid => $stat) {
-                ksort($stat);
-                $l = new LinePlot(array_values($stat));
-                $l->SetColor($colors[$i++ % $nb_colors].':0.9');
+                $l = new BarPlot(array_values($stat['by_week']));
+                $color = $colors[$i++ % $nb_colors];
+                $l->SetColor($color.':0.7');
+                $l->setFillColor($color);
                 if ($user = UserManager::instance()->getUserById($whoid)) {
                     $l->SetLegend(UserHelper::instance()->getDisplayNameFromUser($user));
                 } else {
                     $l->SetLegend('Unknown user ('. (int)$whoid .')');
                 }
-                $c->Add($l);
+                $bars[] = $l;
             }
+            
+            $gbplot = new AccBarPlot($bars);
+            $c->Add($gbplot);
             echo $c->stroke();
         } else {
             //There is no stats yet
@@ -140,7 +147,7 @@ class Widget_ProjectSvnStats extends Widget {
     }
     
     protected function sortByTop($a, $b) {
-        return strnatcasecmp($this->tmp_nb_of_commit[$b], $this->tmp_nb_of_commit[$a]);
+        return strnatcasecmp($this->tmp_nb_of_commit[$a], $this->tmp_nb_of_commit[$b]);
     }
 }
 ?>

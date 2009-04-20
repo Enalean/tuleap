@@ -32,13 +32,14 @@ class SvnCommitsDao extends DataAccessObject {
     public function statsByGroupId($group_id, $duration) {
         $group_id = $this->da->escapeInt($group_id);
         $duration = $this->da->escapeInt($duration);
-        $sql = "SELECT whoid,
-                        TO_DAYS(FROM_UNIXTIME(date)) - TO_DAYS(FROM_UNIXTIME(0)) as day,
-                        count(id) AS nb_commits
+        $sql = "SELECT whoid, 
+                        TO_DAYS(FROM_UNIXTIME(date)) - TO_DAYS(FROM_UNIXTIME(0)) as day, 
+                        WEEK(FROM_UNIXTIME(date)) as week, 
+                        count(id) AS nb_commits 
                 FROM $this->table_name
-                WHERE DATEDIFF(NOW(), FROM_UNIXTIME(date)) < $duration
+                WHERE DATEDIFF(NOW(), FROM_UNIXTIME(date)) < $duration 
                   AND group_id = $group_id
-                GROUP BY whoid, day
+                GROUP BY whoid, week 
                 ORDER BY whoid, day";
         return $this->retrieve($sql);
     }
