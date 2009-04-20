@@ -292,7 +292,7 @@
     <para>You provided a certain amount of demographic information to &SYS_PRODUCT_NAME;
       when you first registered on the &SYS_PRODUCT_NAME; site. This and other information
       can be modified at any time by selecting the &#34;Account
-      Maintenance&#34; item in the &SYS_PRODUCT_NAME Main Menu.</para>
+      Maintenance&#34; item in the &SYS_PRODUCT_NAME; Main Menu.</para>
 
     <para>Most of the items on the &#34;Account Maintenance&#34; page will
       look obvious to you. However, we would like to draw your attention on
@@ -355,7 +355,7 @@
       
       <listitem>
       <para><emphasis role="bold">CSV date format</emphasis>:
-          &SYS_PRODUCT_NAME provides export and import functionalities
+          &SYS_PRODUCT_NAME; provides export and import functionalities
           (See <xref linkend="ProjectDataExport" /> for details).
           The import/export format is CSV format. Like CSV norm is
           not implemented by the same way in each software, we allow you
