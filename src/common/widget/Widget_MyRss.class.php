@@ -32,7 +32,7 @@ class Widget_MyRss extends Widget_Rss {
     }
     
     function getDescription() {
-        return $GLOBALS['Language']->getText('widget_description_my_rss','description');
+        return $GLOBALS['Language']->getText('widget_description_rss','description');
     }
 }
 ?>

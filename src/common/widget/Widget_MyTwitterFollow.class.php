@@ -32,7 +32,7 @@ class Widget_MyTwitterFollow extends Widget_TwitterFollow {
     }
     
     function getDescription() {
-        return $GLOBALS['Language']->getText('widget_description_my_twitter_follow','description');
+        return $GLOBALS['Language']->getText('widget_description_twitter_follow','description');
     }
 }
 ?>

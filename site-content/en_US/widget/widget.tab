@@ -33,7 +33,7 @@ widget_dashboard	updated	Your <a href="$1">dashboard</a> has been updated.
 
 widget_description_my_bookmarks	description	List your favorite bookmarks (your favorite pages in Codendi or external).<br>Note that in many cases Codendi uses URL with enough embedded information to bookmark sophisticated items like Software Map browsing, typical search in your project Bug or Task database, etc . <br>Bookmarked items can be edited which means that both the title of the bookmark and its destination URL can be modified.
 widget_description_my_artifacts	description	List artifacts you have submitted or assigned to you, by project.
-widget_description_latest_svn_commits	description	List SVN commits you have done, by project.
+widget_description_my_latest_svn_commits	description	List SVN commits you have done, by project.
 widget_description_my_monitored_forums	description	List forums that you are currently monitoring, by project. <br>To cancel any of the monitored items just click on the trash icon next to the item label.
 widget_description_my_monitored_fp	description	List packages that you are currently monitoring, by project.<br>To cancel any of the monitored items just click on the trash icon next to the item label.
 widget_description_my_projects	description	List the projects you belong to. Selecting any of these projects brings you to the corresponding Project Summary page.
@@ -48,4 +48,5 @@ widget_description_project_description	description	Allow you to view the project
 widget_description_project_latest_news	description	List the last 10 pieces of news posted by the project members.
 widget_description_project_members	description	List the project members.
 widget_description_project_public_areas	description	List all available services for this project along with some information next to it. Click on any of this item to access a service. <br>The role of this area is pretty much equivalent to the Project Main Menu at the top of the screen except that it shows additional information about each of the service (e.g. total number of open bugs, tasks, ...) 
-widget_description_latest_cvs_commits	description	List CVS commits you have done, by project.
+widget_description_project_latest_cvs_commits	description	List CVS commits you have done, by project.
+widget_description_project_latest_svn_commits	description	List SVN commits you have done, by project.
