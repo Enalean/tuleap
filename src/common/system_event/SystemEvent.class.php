@@ -47,6 +47,7 @@ class SystemEvent {
     const UGROUP_MODIFY         = "UGROUP_MODIFY";
     const USER_CREATE           = "USER_CREATE";
     const USER_DELETE           = "USER_DELETE";
+    const USER_EMAIL_CHANGED    = "USER_EMAIL_CHANGED";
     const USER_MODIFY           = "USER_MODIFY";
     const MEMBERSHIP_CREATE     = "MEMBERSHIP_CREATE";
     const MEMBERSHIP_DELETE     = "MEMBERSHIP_DELETE";

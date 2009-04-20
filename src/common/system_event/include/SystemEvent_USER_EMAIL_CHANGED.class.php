@@ -17,26 +17,14 @@
  * You should have received a copy of the GNU General Public License
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
-class Event {
-    
-    /**
-     * The user has just changed his ssh authorized keys.
-     * 
-     * Parameters:
-     *  'user' => User
-     * 
-     * No expected results
-     */
-    const EDIT_SSH_KEYS = 'edit_ssh_keys';
+class SystemEvent_USER_EMAIL_CHANGED extends SystemEvent {
+    public function process() {
 
-    /**
-     * The user has just changed his email address.
-     * 
-     * Parameters:
-     *  'user_id' => User ID
-     * 
-     * No expected results
-     */
-    const USER_EMAIL_CHANGED = 'user_email_changed';
+        // Need to update aliases
+        BackendAliases::instance()->setNeedUpdateMailAliases();
+            
+        $this->done();
+        return true;
+    }
 }
 ?>

@@ -128,6 +128,11 @@ class SystemEventManager {
                                $params['user_id'],
                                SystemEvent::PRIORITY_MEDIUM);
             break;
+        case Event::USER_EMAIL_CHANGED:
+            $this->createEvent(SystemEvent::USER_EMAIL_CHANGED,
+                               $params['user_id'],
+                               SystemEvent::PRIORITY_LOW);
+            break;
         case 'register_project_creation':
             $this->createEvent(SystemEvent::PROJECT_CREATE,
                                $params['group_id'],
@@ -255,6 +260,7 @@ class SystemEventManager {
                 case SystemEvent::UGROUP_MODIFY:
                 case SystemEvent::USER_CREATE:
                 case SystemEvent::USER_DELETE:
+                case SystemEvent::USER_EMAIL_CHANGED:
                 case SystemEvent::MAILING_LIST_CREATE:
                 case SystemEvent::MAILING_LIST_DELETE:
                 case SystemEvent::CVS_IS_PRIVATE:

@@ -30,6 +30,7 @@ if (db_numrows($res_user) < 1) {
     exit_error($Language->getText('include_exit', 'error'),
 	       $Language->getText('account_change_email-complete', 'invalid_hash'));
 }
+
 $row_user = db_fetch_array($res_user);
 
 db_query("UPDATE user SET "
@@ -37,6 +38,9 @@ db_query("UPDATE user SET "
 	. "confirm_hash='none',"
 	. "email_new='" . $row_user['email'] . "' WHERE "
 	. "confirm_hash='".db_es($confirm_hash)."'");
+
+$em = EventManager::instance();
+$em->processEvent(Event::USER_EMAIL_CHANGED, row_user['user_id']);
 
 $HTML->header(array('title'=>$Language->getText('account_change_email-complete', 'title')));
 ?>
