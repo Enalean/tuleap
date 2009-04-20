@@ -42,7 +42,7 @@ class Widget_ProjectLatestCvsCommits extends Widget_ProjectLatestCommits {
         return $project->usesCvs();
     }
     function getDescription() {
-        return $GLOBALS['Language']->getText('widget_description_my_latest_cvs_commits','description');
+        return $GLOBALS['Language']->getText('widget_description_project_latest_cvs_commits','description');
     }
 }
 ?>

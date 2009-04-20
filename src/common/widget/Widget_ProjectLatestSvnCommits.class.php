@@ -41,7 +41,7 @@ class Widget_ProjectLatestSvnCommits extends Widget_ProjectLatestCommits {
         return $project->usesSvn();
     }
     function getDescription() {
-        return $GLOBALS['Language']->getText('widget_description_my_latest_svn_commits','description');
+        return $GLOBALS['Language']->getText('widget_description_project_latest_svn_commits','description');
     }
 }
 ?>

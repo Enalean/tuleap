@@ -302,7 +302,7 @@ class Widget_ProjectPublicAreas extends Widget {
         return true;
     }
     function getDescription() {
-        return $GLOBALS['Language']->getText('widget_description_public_areas','description');
+        return $GLOBALS['Language']->getText('widget_description_project_public_areas','description');
     }
 }
 ?>

@@ -41,7 +41,7 @@ class Widget_ProjectClassification extends Widget {
         return true;
     }
     function getDescription() {
-        return $GLOBALS['Language']->getText('widget_description_classification','description');
+        return $GLOBALS['Language']->getText('widget_description_project_classification','description');
     }
 }
 ?>
