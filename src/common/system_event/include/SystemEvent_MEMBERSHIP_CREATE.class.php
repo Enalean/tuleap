@@ -48,13 +48,15 @@ class SystemEvent_MEMBERSHIP_CREATE extends SystemEvent {
             
             // SVN access file
             if ($project->usesSVN()) {
-                $backendSVN = BackendSVN::instance();
-                if (!$backendSVN->updateSVNAccess($group_id)) {
+                if (!BackendSVN::instance()->updateSVNAccess($group_id)) {
                     $this->error("Could not update SVN access file ($group_id)");
                     return false;
                 }
             }
             
+            // Need to update system group cache
+            BackendSystem::instance()->setNeedRefreshGroupCache();
+
             $this->done();
             return true;
         }

@@ -27,6 +27,10 @@ require_once('common/dao/UserDao.class.php');
 class BackendSystem extends Backend {
 
 
+    protected $needRefreshUserCache=false;
+    protected $needRefreshGroupCache=false;
+
+
     /**
      * Hold an instance of the class
      */
@@ -41,6 +45,48 @@ class BackendSystem extends Backend {
             self::$_instance = new $c;
         }
         return self::$_instance;
+    }
+
+    /**
+     * Warn system that the user lists has been updated (new user)
+     * This is required so that nscd (name service caching daemon) knows that it needs
+     * to update its user data.
+     *
+     * NOTE: Don't need to update cache on deleted user since shadow information are not cached, 
+     * so even if the cache is not refreshed, a deleted user won't be able to login
+     * @return true on success, false otherwise
+     */
+    public function refreshUserCache() {
+        return (system("/usr/sbin/nscd --invalidate=passwd") !== false);
+    }
+
+
+    public function setNeedRefreshUserCache() {
+        $this->needRefreshUserCache=true;
+    }
+
+    public function getNeedRefreshUserCache() {
+        return $this->needRefreshUserCache;
+    }
+
+    /**
+     * Warn system that the group lists has been updated (new group, new member to group or memeber removed from group)
+     * This is required so that nscd (name service caching daemon) knows that it needs
+     * to update its group data.
+     *
+     * NOTE: Currently, we don't update group cache on deleted group, new user and deleted user
+     * @return true on success, false otherwise
+     */
+    public function refreshGroupCache() {
+        return (system("/usr/sbin/nscd --invalidate=group") !== false);
+    }
+
+    public function setNeedRefreshGroupCache() {
+        $this->needRefreshGroupCache=true;
+    }
+
+    public function getNeedRefreshGroupCache() {
+        return $this->needRefreshGroupCache;
     }
 
     /**

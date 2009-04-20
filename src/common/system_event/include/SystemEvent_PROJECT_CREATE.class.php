@@ -62,6 +62,9 @@ class SystemEvent_PROJECT_CREATE extends SystemEvent {
                 $backendSVN->setSVNPrivacy($project, !$project->isPublic());
             }
 
+            // Need to update system group cache
+            $backendSystem->setNeedRefreshGroupCache();
+
             $backendSystem->log("Project ".$project->getUnixName()." created");            
             $this->done();
             return true;

@@ -305,6 +305,13 @@ class SystemEventManager {
             // Need to refresh apache (reload)
             system('/sbin/service httpd reload');
         }
+        // Update system user and group caches once everything else is processed
+        if (BackendSystem::instance()->getNeedRefreshUserCache()) {
+            BackendSystem::instance()->refreshUserCache();
+        }
+        if (BackendSystem::instance()->getNeedRefreshGroupCache()) {
+            BackendSystem::instance()->refreshGroupCache();
+        }
     }
     
     /**

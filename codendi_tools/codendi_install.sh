@@ -184,7 +184,7 @@ for rpm in openssh-server openssh openssh-clients \
    compat-libstdc++-33 \
    policycoreutils coreutils selinux-policy selinux-policy-targeted libselinux \
    java-1.6.0-openjdk jpackage-utils giflib\
-   zip unzip enscript xinetd mod_auth_mysql
+   zip unzip enscript xinetd mod_auth_mysql nscd
 do
     $RPM -q $rpm  2>/dev/null 1>&2
     if [ $? -eq 1 ]; then
@@ -314,8 +314,8 @@ $USERADD -c 'Dummy Codendi User' -M -d '/var/lib/codendi/dumps' -u 103 -g 103 du
 
 build_dir $INSTALL_DIR codendiadm codendiadm 775
 #build_dir $INSTALL_DIR/downloads codendiadm codendiadm 775
-build_dir /home/users codendiadm codendiadm 775
-build_dir /home/groups codendiadm codendiadm 775
+build_dir /home/users codendiadm codendiadm 771
+build_dir /home/groups codendiadm codendiadm 771
 
 # home directories
 build_dir /home/codendiadm codendiadm codendiadm 700
@@ -363,8 +363,8 @@ build_dir /etc/codendi/plugins/pluginsadministration codendiadm codendiadm 755
 build_dir /etc/codendi/plugins/serverupdate codendiadm codendiadm 755
 # SCM dirs
 build_dir /var/run/log_accum root root 777
-build_dir /var/lib/codendi/cvsroot codendiadm codendiadm 755
-build_dir /var/lib/codendi/svnroot codendiadm codendiadm 755
+build_dir /var/lib/codendi/cvsroot codendiadm codendiadm 751
+build_dir /var/lib/codendi/svnroot codendiadm codendiadm 751
 build_dir /var/lock/cvs root root 751
 $LN -sf /var/lib/codendi/cvsroot /cvsroot
 $LN -sf /var/lib/codendi/svnroot /svnroot
@@ -465,6 +465,13 @@ cd ${newest_rpm}
 $RPM -ivh neon-0.*.i386.rpm neon-devel*.i386.rpm subversion-1.*.i386.rpm mod_dav_svn*.i386.rpm subversion-perl*.i386.rpm subversion-python*.i386.rpm 
 # Dependency error with Perl ??
 $RPM --nodeps -Uvh subversion-tools*.i386.rpm
+
+# -> libnss-mysql (system authentication based on MySQL)
+$RPM -e --allmatches libnss-mysql 2>/dev/null
+echo "Installing libnss-mysql RPM for Codendi...."
+cd ${RPMS_DIR}/libnss-mysql
+newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
+$RPM -Uvh ${newest_rpm}/libnss-mysql-1*i?86.rpm
 
 # -> cvsgraph 
 $RPM -e --allmatches cvsgraph 2>/dev/null
@@ -1395,6 +1402,11 @@ $CHKCONFIG mailman on
 $CHKCONFIG munin-node on
 $CHKCONFIG vsftpd on
 $CHKCONFIG openfire on
+# NSCD is the NAme Service Caching Daemon.
+# It is very useful when libnss_mysql is used for authentication
+$CHKCONFIG nscd on
+
+$SERVICE nscd start
 
 
 ##############################################

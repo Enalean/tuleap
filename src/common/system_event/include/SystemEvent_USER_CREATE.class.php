@@ -47,6 +47,9 @@ class SystemEvent_USER_CREATE extends SystemEvent {
             return false;
         }
         
+        // Need to update system user cache
+        BackendSystem::instance()->setNeedRefreshUserCache();
+
         $this->done();
         return true;
     }
