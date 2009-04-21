@@ -501,6 +501,10 @@ table.release tr td img {
 .widget-preview-projectrss-fr_FR {
     background-image:url('../images/widget-preview-rss.png');
 }
+.widget-preview-projectsvnstats-en_US,
+.widget-preview-projectsvnstats-fr_FR {
+    background-image:url('../images/widget-preview-project_svn-stats.png');
+}
 /* }}} */
 
 /* {{{ lists & users autocomplete */
