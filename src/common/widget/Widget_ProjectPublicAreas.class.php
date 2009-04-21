@@ -58,7 +58,7 @@ class Widget_ProjectPublicAreas extends Widget {
                 . "AND forum_group_list.is_public=1");
             $row_count = db_fetch_array($res_count);
             $pos = strpos($project->getForumPage(), '/forum/');
-            if ($pos !== false && $pos==0) {
+            if ($pos ===0) {
                 print ' ( '.$GLOBALS['Language']->getText('include_project_home','msg',$row_count['count']).' ';
                 $res_count = db_query("SELECT count(*) AS count FROM forum_group_list WHERE group_id=$group_id "
                 . "AND is_public=1");
@@ -180,7 +180,7 @@ class Widget_ProjectPublicAreas extends Widget {
             print ' '.$GLOBALS['Language']->getText('include_project_home','wiki').'</A>';
                 $wiki=new Wiki($group_id);
             $pos = strpos($project->getWikiPage(), '/wiki/');
-            if ($pos !== false && $pos==0) {
+            if ($pos === 0) {
                 echo ' ( '.$GLOBALS['Language']->getText('include_project_home','nb_wiki_pages',$wiki->getProjectPageCount()).' )';
             }
         }
