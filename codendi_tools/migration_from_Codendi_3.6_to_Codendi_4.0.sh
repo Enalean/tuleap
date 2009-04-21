@@ -283,6 +283,31 @@ done
 # replace strings in libnss-mysql config files
 substitute '/etc/libnss-mysql.cfg' '%sys_dbauth_passwd%' "$dbauth_passwd" 
 substitute '/etc/libnss-mysql-root.cfg' '%sys_dbauth_passwd%' "$dbauth_passwd" 
+$CHMOD 600 /etc/libnss-mysql.cfg
+$CHMOD 600 /etc/libnss-mysql-root.cfg
+
+# Update nsswitch.conf to use libnss-mysql
+if [ -f "/etc/nsswitch.conf" ]; then
+    # passwd
+    $GREP ^passwd  /etc/nsswitch.conf | $GREP -q mysql
+    if [ $? -ne 0 ]; then
+        $PERL -i'.orig' -p -e "s/^passwd(.*)/passwd\1 mysql/g" /etc/nsswitch.conf
+    fi
+
+    # shadow
+    $GREP ^shadow  /etc/nsswitch.conf | $GREP -q mysql
+    if [ $? -ne 0 ]; then
+        $PERL -i'.orig' -p -e "s/^shadow(.*)/shadow\1 mysql/g" /etc/nsswitch.conf
+    fi
+
+    # group
+    $GREP ^group  /etc/nsswitch.conf | $GREP -q mysql
+    if [ $? -ne 0 ]; then
+        $PERL -i'.orig' -p -e "s/^group(.*)/group\1 mysql/g" /etc/nsswitch.conf
+    fi
+else
+    echo '/etc/nsswitch.conf does not exist. Cannot use MySQL authentication!'
+fi
 
 
 #############################################

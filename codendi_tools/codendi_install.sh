@@ -184,7 +184,7 @@ for rpm in openssh-server openssh openssh-clients \
    compat-libstdc++-33 \
    policycoreutils coreutils selinux-policy selinux-policy-targeted libselinux \
    java-1.6.0-openjdk jpackage-utils giflib\
-   zip unzip enscript xinetd mod_auth_mysql nscd
+   zip unzip enscript xinetd mod_auth_mysql nss nscd
 do
     $RPM -q $rpm  2>/dev/null 1>&2
     if [ $? -eq 1 ]; then
@@ -754,6 +754,32 @@ if [ $SELINUX_ENABLED ]; then
     fi
 fi
 
+
+# Update nsswitch.conf to use libnss-mysql
+if [ -f "/etc/nsswitch.conf" ]; then
+    # passwd
+    $GREP ^passwd  /etc/nsswitch.conf | $GREP -q mysql
+    if [ $? -ne 0 ]; then
+        $PERL -i'.orig' -p -e "s/^passwd(.*)/passwd\1 mysql/g" /etc/nsswitch.conf
+    fi
+
+    # shadow
+    $GREP ^shadow  /etc/nsswitch.conf | $GREP -q mysql
+    if [ $? -ne 0 ]; then
+        $PERL -i'.orig' -p -e "s/^shadow(.*)/shadow\1 mysql/g" /etc/nsswitch.conf
+    fi
+
+    # group
+    $GREP ^group  /etc/nsswitch.conf | $GREP -q mysql
+    if [ $? -ne 0 ]; then
+        $PERL -i'.orig' -p -e "s/^group(.*)/group\1 mysql/g" /etc/nsswitch.conf
+    fi
+else
+    echo '/etc/nsswitch.conf does not exist. Cannot use MySQL authentication!'
+fi
+
+
+
 # Codendi User Guide
 # a) copy the local parameters file in custom area and customize it
 # b) create the html target directory
@@ -811,6 +837,8 @@ substitute '/etc/httpd/conf/httpd.conf' '%sys_ip_address%' "$sys_ip_address"
 # replace strings in libnss-mysql config files
 substitute '/etc/libnss-mysql.cfg' '%sys_dbauth_passwd%' "$dbauth_passwd" 
 substitute '/etc/libnss-mysql-root.cfg' '%sys_dbauth_passwd%' "$dbauth_passwd" 
+$CHMOD 600 /etc/libnss-mysql.cfg
+$CHMOD 600 /etc/libnss-mysql-root.cfg
 
 # replace string patterns in munin.conf (for MySQL authentication)
 substitute '/etc/httpd/conf.d/munin.conf' '%sys_dbauth_passwd%' "$dbauth_passwd" 
@@ -1413,7 +1441,7 @@ $CHKCONFIG munin-node on
 $CHKCONFIG vsftpd on
 $CHKCONFIG openfire on
 # NSCD is the Name Service Caching Daemon.
-# It is very useful when libnss_mysql is used for authentication
+# It is very useful when libnss-mysql is used for authentication
 $CHKCONFIG nscd on
 
 $SERVICE nscd start
