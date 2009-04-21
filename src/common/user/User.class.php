@@ -191,6 +191,21 @@ class User {
     }
     
     /**
+     * clear: clear the cached group data
+     */
+    function clearGroupData() {
+        unset($this->_group_data);
+        $this->_group_data = null;
+    }
+    /**
+     * clear: clear the cached tracker data
+     */
+    function clearTrackerData() {
+       unset($this->_tracker_data);
+       $this->_tracker_data = null;
+    }
+     
+    /**
      * group data row from db. 
      * For each group_id (the user is part of) one array from the user_group table
      */

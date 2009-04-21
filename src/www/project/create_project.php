@@ -129,6 +129,9 @@ function create_project($data, $do_not_exit = false) {
             exit_error($GLOBALS['Language']->getText('global','error'),$GLOBALS['Language']->getText('register_confirmation','set_owner_fail',array($GLOBALS['sys_email_admin'],db_error())));
         }
         
+        // clear the user data to take into account this new group.
+        $user = UserManager::instance()->getCurrentUser();
+        $user->clearGroupData();
         
         /*//Add a couple of forums for this group and make the project creator 
         // (current user) monitor these forums
