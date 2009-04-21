@@ -24,7 +24,7 @@ nonRPMS_DIR=${TOP_DIR}/nonRPMS_Codendi
 Codendi_DIR=${TOP_DIR}/Codendi
 #TODO_FILE=/root/todo_codendi_upgrade_4.0.txt
 export INSTALL_DIR="/usr/share/codendi"
-BACKUP_INSTALL_DIR="/usr/share/codendi_34"
+BACKUP_INSTALL_DIR="/usr/share/codex_36"
 ETC_DIR="/etc/codendi"
 
 # path to command line tools
@@ -136,7 +136,7 @@ done
 #
 OLD_CX_RELEASE='3.6'
 yn="y"
-$GREP -q "$OLD_CX_RELEASE" $INSTALL_DIR/src/www/VERSION
+$GREP -q "$OLD_CX_RELEASE" /usr/share/codex/src/www/VERSION
 if [ $? -ne 0 ]; then
     $CAT <<EOF
 This machine does not have Codendi ${OLD_CX_RELEASE} installed. Executing this
@@ -374,6 +374,21 @@ echo "Update munin.conf accordingly"
 # replace string patterns in munin.conf (for MySQL authentication)
 substitute '/etc/httpd/conf.d/munin.conf' '%sys_dbauth_passwd%' "$dbauth_passwd" 
 
+
+##############################################
+# Install the Codendi software 
+#
+echo "Installing the Codendi software..."
+$MV /usr/share/codex/ $BACKUP_INSTALL_DIR
+$MKDIR $INSTALL_DIR;
+cd $INSTALL_DIR
+$TAR xfz ${Codendi_DIR}/codendi*.tgz
+$CHOWN -R codendiadm.codendiadm $INSTALL_DIR
+$FIND $INSTALL_DIR -type f -exec $CHMOD u+rw,g+rw,o-w+r, {} \;
+$FIND $INSTALL_DIR -type d -exec $CHMOD 775 {} \;
+
+$CP -r /etc/codex/ /etc/codex_36
+$MV /etc/codex/ $ETC_DIR
 
 ##############################################
 # Analyze site-content 
