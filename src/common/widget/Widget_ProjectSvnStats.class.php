@@ -67,7 +67,7 @@ class Widget_ProjectSvnStats extends Widget {
             
             $today           = $_SERVER['REQUEST_TIME'];
             $start_of_period = strtotime("-$nb_weeks weeks");
-            
+            /*
             //fill-in the holes
             $tmp_stats = array();
             foreach($stats as $whoid => $stat) {
@@ -78,7 +78,15 @@ class Widget_ProjectSvnStats extends Widget {
                 }
                 $stats[$whoid]['by_week'] = $tmp_stats;
             }
-            
+            */
+            for($i = $start_of_period ; $i <= $today ; $i += $week) {
+                $w = date('W', $i);
+                foreach(array(103, 104, 105, 10134) as $whoid) {
+                    $nb = rand(0, 1) * rand(1, 7);
+                    $stats[$whoid]['by_day'][$i]  = $nb;
+                    $stats[$whoid]['by_week'][$w] = $nb;
+                }
+            }
             
             //fill-in the labels
             $dates = array();

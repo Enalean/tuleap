@@ -294,7 +294,7 @@ $res_memb = db_query("SELECT user.realname,user.user_id,user.user_name,user.stat
 		     "FROM user,user_group ".
 		     "WHERE user.user_id=user_group.user_id ".
 		     "AND user_group.group_id=$group_id");
-
+print '<div  style="max-height:200px; overflow:auto;">';
 print '<TABLE WIDTH="100%" BORDER="0">';
 $em =& EventManager::instance();
 $user_helper = new UserHelper();
@@ -316,7 +316,7 @@ while ($row_memb=db_fetch_array($res_memb)) {
 	'<TD><A href="/users/'.$row_memb['user_name'].'/">'. $display_name .' </A></TD></TR>';
 }
 
-print '</TABLE> <HR NoShade SIZE="1">';
+print '</TABLE></div> <HR NoShade SIZE="1">';
 
 /*
 	Add member form
