@@ -232,7 +232,7 @@ $MKDIR $INSTALL_DIR;
 cd $INSTALL_DIR
 $TAR xfz ${Codendi_DIR}/codendi*.tgz
 $CHOWN -R codendiadm.codendiadm $INSTALL_DIR
-$FIND $INSTALL_DIR -type f -exec $CHMOD u+rw,g+rw,o-w+r, {} \;
+$FIND $INSTALL_DIR -type f -exec $CHMOD u+rw,g+rw,o-w+r {} \;
 $FIND $INSTALL_DIR -type d -exec $CHMOD 775 {} \;
 
 $CP -r /etc/codex/ /etc/codex_36
@@ -242,6 +242,7 @@ $MV /etc/codex/ $ETC_DIR
 echo -n "codexadm is now known as codendiadm..."
 groupmod -n codendiadm codexadm
 usermod -d /home/codendiadm -m -l codendiadm codexadm
+echo "done"
 
 dbauth_passwd="a"; dbauth_passwd2="b";
 while [ "$dbauth_passwd" != "$dbauth_passwd2" ]; do
@@ -474,7 +475,7 @@ EOF
 
 
 echo "- Add support for > 2GB files in DB (FRS and Wiki)"
-$CAT <<EOF | $MYSQL -u root mysql $pass_opt
+$CAT <<EOF | $MYSQL $pass_opt codendi
 ALTER TABLE frs_file CHANGE file_size file_size BIGINT NOT NULL DEFAULT '0';
 ALTER TABLE wiki_attachment_revision CHANGE size size BIGINT NOT NULL;
 EOF
