@@ -178,6 +178,25 @@ if [ "$yn" = "n" ]; then
     exit 1
 fi
 
+##############################################
+# Check Required Stock RedHat RPMs are installed
+#
+rpms_ok=1
+for rpm in nscd
+do
+    $RPM -q $rpm  2>/dev/null 1>&2
+    if [ $? -eq 1 ]; then
+	rpms_ok=0
+	missing_rpms="$missing_rpms $rpm"
+    fi
+done
+if [ $rpms_ok -eq 0 ]; then
+    msg="The following Redhat Linux RPMs must be installed first:\n"
+    msg="${msg}$missing_rpms\n"
+    msg="${msg}Get them from your Redhat CDROM or FTP site, install them and re-run the installation script"
+    die "$msg"
+fi
+echo "All requested RedHat RPMS installed... good!"
 
 ###############################################################################
 echo "Updating Packages"
@@ -185,6 +204,13 @@ echo "Updating Packages"
 
 # TODO MUST reinstall: munin RPM (Codendi specific, with MySQL auth), viewVC (bug fixed)
 
+# -> libnss-mysql (system authentication based on MySQL)
+$RPM -e --allmatches libnss-mysql 2>/dev/null
+echo "Installing libnss-mysql RPM for Codendi...."
+cd ${RPMS_DIR}/libnss-mysql
+newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
+$RPM -Uvh ${newest_rpm}/libnss-mysql-1*i?86.rpm
+	 
 
 ##############################################
 # Stop some services before upgrading
@@ -816,6 +842,13 @@ chmod 751 /var/lib/codex/cvsroot/
 chmod 751 /var/lib/codex/svnroot/
 chmod 771 /home/users
 chmod 771 /home/groups
+
+# NSCD is the Name Service Caching Daemon.
+# It is very useful when libnss_mysql is used for authentication
+$CHKCONFIG nscd on
+
+$SERVICE nscd start
+
 
 ###############################################################################
 echo "Updating local.inc"
