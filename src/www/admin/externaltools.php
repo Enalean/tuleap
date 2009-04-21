@@ -24,6 +24,10 @@ switch($request->get('tool')) {
         $title = 'phpMyAdmin';
         $src   = '/phpMyAdmin/';
         break;
+    case 'APC':
+        $title = 'APC';
+        $src   = '/admin/apc.php';
+        break;
     case 'info':
         $title = 'PHP info';
         $src   = '/info.php';

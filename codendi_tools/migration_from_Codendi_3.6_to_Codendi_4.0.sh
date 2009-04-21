@@ -211,6 +211,13 @@ cd ${RPMS_DIR}/libnss-mysql
 newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
 $RPM -Uvh ${newest_rpm}/libnss-mysql-1*i?86.rpm
 	 
+# -> APC
+$RPM -e php-pecl-apc 2>/dev/null
+echo "Installing APC (PHP cache) RPM for Codendi...."
+cd ${RPMS_DIR}/php-pecl-apc
+newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
+$RPM -Uvh ${newest_rpm}/php-pecl-apc-*.i?86.rpm
+
 
 ##############################################
 # Stop some services before upgrading

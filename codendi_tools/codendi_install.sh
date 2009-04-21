@@ -175,7 +175,7 @@ for rpm in openssh-server openssh openssh-clients \
    sendmail telnet bind bind-chroot caching-nameserver ntp python perl-suidperl \
    python-devel rcs sendmail-cf perl-URI perl-HTML-Tagset perl-Digest-SHA1 perl-Digest-HMAC perl-Socket6 \
    perl-HTML-Parser perl-libwww-perl php php-ldap php-mysql mysql-server \
-   mysql MySQL-python php-mbstring php-gd php-soap php-xml \
+   mysql MySQL-python php-mbstring php-gd php-soap php-xml php-pear \
    perl-DateManip sysstat curl aspell \
    gd-devel freetype-devel libpng-devel libjpeg-devel \
    libart_lgpl  \
@@ -496,7 +496,6 @@ $RPM -Uvh ${newest_rpm}/jpgraph-2*noarch.rpm
 $RPM -Uvh ${newest_rpm}/jpgraph-docs-2*noarch.rpm
 
 # -> ViewVC
-echo "Removing installed viewcvs/viewvc if any .."
 $RPM -e --nodeps viewcvs 2>/dev/null
 $RPM -e --nodeps viewvc 2>/dev/null
 echo "Installing viewvc RPM for Codendi...."
@@ -505,12 +504,18 @@ newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
 $RPM -Uvh ${newest_rpm}/viewvc-*.noarch.rpm
 
 # -> phpMyAdmin
-echo "Removing installed phpMyAdmin if any .."
 $RPM -e phpMyAdmin phpmyadmin 2>/dev/null
 echo "Installing phpMyAdmin RPM for Codendi...."
 cd ${RPMS_DIR}/phpMyAdmin
 newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
 $RPM -Uvh ${newest_rpm}/phpmyadmin-*.noarch.rpm
+
+# -> APC
+$RPM -e php-pecl-apc 2>/dev/null
+echo "Installing APC (PHP cache) RPM for Codendi...."
+cd ${RPMS_DIR}/php-pecl-apc
+newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
+$RPM -Uvh ${newest_rpm}/php-pecl-apc-*.i?86.rpm
 
 # -> mailman
 echo "Removing installed mailman if any .."
