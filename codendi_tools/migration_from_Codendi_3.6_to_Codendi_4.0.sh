@@ -224,6 +224,10 @@ $SERVICE mailman stop
 $SERVICE smb stop
 
 
+echo -n "codexadm is now known as codendiadm..."
+groupmod -n codendiadm codexadm
+usermod -d /home/codendiadm -m -l codendiadm codexadm
+
 dbauth_passwd="a"; dbauth_passwd2="b";
 while [ "$dbauth_passwd" != "$dbauth_passwd2" ]; do
     read -s -p "Password for DB Authentication user: " dbauth_passwd
