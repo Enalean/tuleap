@@ -1,13 +1,13 @@
 #!/bin/sh
 date
-CX_VERSION='support/CX_4_0_SUP'
-CX_SHORT_VERSION='4.0.sup'
-#CX_VERSION='dev_server'
-#CX_SHORT_VERSION='dev'
-PACKAGE_DIR=/root/Codendi_Packaging/$CX_VERSION/packages
-SOURCE_DIR=/root/Codendi_Packaging/$CX_VERSION/codendi
-BUILD_DIR=/root/Codendi_Packaging/$CX_VERSION/build
-echo "Building ISO image for version: $CX_VERSION"
+#CODENDI_VERSION='Codendi_Pro_4.0'
+#CODENDI_SHORT_VERSION='pro.4.0'
+CODENDI_VERSION='labs'
+CODENDI_SHORT_VERSION='labs'
+PACKAGE_DIR=/root/Codendi_Packaging/$CODENDI_VERSION/packages
+SOURCE_DIR=/root/Codendi_Packaging/$CODENDI_VERSION/codendi
+BUILD_DIR=/root/Codendi_Packaging/$CODENDI_VERSION/build
+echo "Building ISO image for version: $CODENDI_VERSION"
 yn="0"
 read -p "Update source and package working copies? [y|n]:" yn
 if [ "$yn" = "y" ]; then
@@ -15,10 +15,9 @@ if [ "$yn" = "y" ]; then
   echo `cd $PACKAGE_DIR; svn update`
 fi
 echo "SVN update done at:"
-date
-CX_REVISION=`svn info $SOURCE_DIR | grep Revision | sed 's/Revision: //'`
-ISO_LABEL="Codendi $CX_SHORT_VERSION"
-ISO_FILE="/root/Codendi_Packaging/$CX_VERSION/iso_images/codendi-$CX_SHORT_VERSION.r$CX_REVISION.iso"
+CODENDI_REVISION=`svn info $SOURCE_DIR | grep Revision | sed 's/Revision: //'`
+ISO_LABEL="Codendi $CODENDI_SHORT_VERSION"
+ISO_FILE="/root/Codendi_Packaging/$CODENDI_VERSION/iso_images/codendi-$CODENDI_SHORT_VERSION.r$CODENDI_REVISION.iso"
 
 # Shell commands used
 LS='/bin/ls'
@@ -48,10 +47,9 @@ echo "Creating clean build directory..."
 #rm -rf $BUILD_DIR; 
 $MKDIR -p $BUILD_DIR
 cd $BUILD_DIR
-$RM codendi_install.sh INSTALL migration_* README  RELEASE_NOTES
+$RM -f codendi_install.sh INSTALL migration_* README  RELEASE_NOTES
 # Copy the install script at the top directory
 echo "Copying the Codendi installation script at:"
-date
 cd $PACKAGE_DIR
 $CP -af $SOURCE_DIR/codendi_tools/codendi_install.sh $BUILD_DIR
 $CHMOD +x $BUILD_DIR/codendi_install.sh
@@ -59,14 +57,13 @@ $CHMOD +x $BUILD_DIR/codendi_install.sh
 # Copy the migration script at the top directory
 echo "Copying the Codendi migration script..."
 cd $PACKAGE_DIR
-$CP -af $SOURCE_DIR/codendi_tools/migration_from_Codendi_3.4_to_Codendi_4.0.sh $BUILD_DIR
-$CHMOD +x $BUILD_DIR/migration_from_Codendi_3.4_to_Codendi_4.0.sh
-$CP -af $SOURCE_DIR/codendi_tools/migration_from_Codendi_3.4_to_Codendi_4.0.README $BUILD_DIR
-$CHMOD +x $BUILD_DIR/migration_from_Codendi_3.4_to_Codendi_4.0.README
+$CP -af $SOURCE_DIR/codendi_tools/migration_from_Codendi_3.6_to_Codendi_4.0.sh $BUILD_DIR
+$CHMOD +x $BUILD_DIR/migration_from_Codendi_3.6_to_Codendi_4.0.sh
+$CP -af $SOURCE_DIR/codendi_tools/migration_from_Codendi_3.6_to_Codendi_4.0.README $BUILD_DIR
+$CHMOD +x $BUILD_DIR/migration_from_Codendi_3.6_to_Codendi_4.0.README
 
 # Copy the entire Codendi and nonRPMS_Codendi dir
 echo "Copying the Codendi software and nonRPMS packages... at:"
-date
 $RSYNC -a --exclude='.svn' --delete $PACKAGE_DIR/nonRPMS_Codendi $BUILD_DIR
 mkdir -p $BUILD_DIR/Codendi
 BRANCH_NAME=`echo $SOURCE_DIR|sed 's/.*\///'`
@@ -74,10 +71,8 @@ if [ -e $BUILD_DIR/Codendi/src ]; then
   $MV $BUILD_DIR/Codendi/src $BUILD_DIR/Codendi/$BRANCH_NAME
 fi
 echo "... source1 done at:"
-date
 $RSYNC -a --delete $SOURCE_DIR $BUILD_DIR/Codendi
 echo "... source2 done at:"
-date
 $MV $BUILD_DIR/Codendi/$BRANCH_NAME $BUILD_DIR/Codendi/src
 # Only copy the latest RPMs from RPMS Codendi
 echo "Copying the Codendi RPMS packages..."
@@ -99,7 +94,6 @@ do
     done
 done
 echo "... packages done at:"
-date
 
 # Remove deprecated packages
 cd $BUILD_DIR/RPMS_Codendi 
@@ -117,7 +111,6 @@ done
 echo "Changing ownership to root.root for everything..."
 $CHOWN -R root.root $BUILD_DIR/*
 echo "... done at:"
-date
 # delete codendi_tools directory in BUILD_DIR
 #echo "Deleting codendi_tools directory..."
 #cd $BUILD_DIR/Codendi/src
@@ -129,7 +122,6 @@ cd $BUILD_DIR/Codendi/src
 $TAR cfz ../codendi.tgz .
 $CHOWN root.root ../codendi.tgz
 echo "... done at:"
-date
 
 # create a README file at the top
 cd $BUILD_DIR
@@ -201,24 +193,10 @@ Codendi: The Xerox Solution to Maximize the Value of Your Corporate Software Ass
 Copyright (c) Xerox Corporation, 2001-2008. All Rights Reserved
 http://www.codendi.com
 
-This is Codendi 4.0 Release Candidate
-
+This is Codendi 4.0 
 Please read the README and INSTALL files carefully, and get in touch with us
 at codendi-contact@codendi.xerox.com if you have questions.
 
-        Codendi is no more, welcome Codendi!
-
-Xerox decided to change the name of the Codendi product to Codendi.
-This decision helps identify our product better, and provides a new brand.
-Of course, this does not prevent existing customers to continue to use the name
-Codendi internally.
-
-We also decided to change the license of the Codendi software.
-Codendi was mostly GPL v2 with a few Xerox proprietary components (documentation,
-Eclipse plugin, ...), and this confused some people.
-So we changed our license so that *all* Codendi is now licensed under the
-General Public Licence (GPL) V2.
-You no longer need to wonder if you are allowed to modify any part of Codendi!
 
 Here are the new features of Codendi 4.0:
 
@@ -316,7 +294,6 @@ EOF
 
 # Build ISO image
 echo "Building ISO image in $ISO_FILE at:"
-date
 mkisofs -quiet -A "$ISO_LABEL" -V "$ISO_LABEL" -J -R -x ./lost+found -x .. -o "$ISO_FILE" $BUILD_DIR
 
 echo "Codendi ISO image available at $ISO_FILE ..."
