@@ -223,6 +223,21 @@ $SERVICE sendmail stop
 $SERVICE mailman stop
 $SERVICE smb stop
 
+##############################################
+# Install the Codendi software 
+#
+echo "Installing the Codendi software..."
+$MV /usr/share/codex/ $BACKUP_INSTALL_DIR
+$MKDIR $INSTALL_DIR;
+cd $INSTALL_DIR
+$TAR xfz ${Codendi_DIR}/codendi*.tgz
+$CHOWN -R codendiadm.codendiadm $INSTALL_DIR
+$FIND $INSTALL_DIR -type f -exec $CHMOD u+rw,g+rw,o-w+r, {} \;
+$FIND $INSTALL_DIR -type d -exec $CHMOD 775 {} \;
+
+$CP -r /etc/codex/ /etc/codex_36
+$MV /etc/codex/ $ETC_DIR
+
 
 echo -n "codexadm is now known as codendiadm..."
 groupmod -n codendiadm codexadm
@@ -378,21 +393,6 @@ echo "Update munin.conf accordingly"
 # replace string patterns in munin.conf (for MySQL authentication)
 substitute '/etc/httpd/conf.d/munin.conf' '%sys_dbauth_passwd%' "$dbauth_passwd" 
 
-
-##############################################
-# Install the Codendi software 
-#
-echo "Installing the Codendi software..."
-$MV /usr/share/codex/ $BACKUP_INSTALL_DIR
-$MKDIR $INSTALL_DIR;
-cd $INSTALL_DIR
-$TAR xfz ${Codendi_DIR}/codendi*.tgz
-$CHOWN -R codendiadm.codendiadm $INSTALL_DIR
-$FIND $INSTALL_DIR -type f -exec $CHMOD u+rw,g+rw,o-w+r, {} \;
-$FIND $INSTALL_DIR -type d -exec $CHMOD 775 {} \;
-
-$CP -r /etc/codex/ /etc/codex_36
-$MV /etc/codex/ $ETC_DIR
 
 ##############################################
 # Analyze site-content 
