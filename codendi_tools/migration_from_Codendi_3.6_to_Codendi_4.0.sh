@@ -24,7 +24,7 @@ nonRPMS_DIR=${TOP_DIR}/nonRPMS_Codendi
 Codendi_DIR=${TOP_DIR}/Codendi
 #TODO_FILE=/root/todo_codendi_upgrade_4.0.txt
 export INSTALL_DIR="/usr/share/codendi"
-BACKUP_INSTALL_DIR="/usr/share/codendi_36"
+BACKUP_INSTALL_DIR="/usr/share/codendi_34"
 ETC_DIR="/etc/codendi"
 
 # path to command line tools
@@ -136,7 +136,7 @@ done
 #
 OLD_CX_RELEASE='3.6'
 yn="y"
-$GREP -q "$OLD_CX_RELEASE" /usr/share/codex/src/www/VERSION
+$GREP -q "$OLD_CX_RELEASE" $INSTALL_DIR/src/www/VERSION
 if [ $? -ne 0 ]; then
     $CAT <<EOF
 This machine does not have Codendi ${OLD_CX_RELEASE} installed. Executing this
@@ -228,18 +228,6 @@ $SERVICE smb stop
 # Make codendiadm a member of the apache group
 # for phpMyAdmin (session, config files...)
 $USERMOD -a -G apache codendiadm
-
-##############################################
-# Install the Codendi software 
-#
-echo "Installing the Codendi software..."
-$MV $INSTALL_DIR $BACKUP_INSTALL_DIR
-$MKDIR $INSTALL_DIR;
-cd $INSTALL_DIR
-$TAR xfz ${Codendi_DIR}/codendi*.tgz
-$CHOWN -R codendiadm.codendiadm $INSTALL_DIR
-$FIND $INSTALL_DIR -type f -exec $CHMOD u+rw,g+rw,o-w+r, {} \;
-$FIND $INSTALL_DIR -type d -exec $CHMOD 775 {} \;
 
 ##############################################
 # Analyze site-content 
