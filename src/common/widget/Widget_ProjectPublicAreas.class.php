@@ -37,16 +37,19 @@ class Widget_ProjectPublicAreas extends Widget {
             print '<HR SIZE="1" width="99%" NoShade><A href="'.$project->getForumPage().'">';
             html_image("ic/notes16.png",array('width'=>'20', 'height'=>'20', 'alt'=>$GLOBALS['Language']->getText('include_project_home','public_forums'))); 
             print '&nbsp;'.$GLOBALS['Language']->getText('include_project_home','public_forums').'</A>';
+            
             $res_count = db_query("SELECT count(forum.msg_id) AS count FROM forum,forum_group_list WHERE "
                 . "forum_group_list.group_id=$group_id AND forum.group_forum_id=forum_group_list.group_forum_id "
                 . "AND forum_group_list.is_public=1");
             $row_count = db_fetch_array($res_count);
-            print ' ( '.$GLOBALS['Language']->getText('include_project_home','msg',$row_count['count']).' ';
-        
-            $res_count = db_query("SELECT count(*) AS count FROM forum_group_list WHERE group_id=$group_id "
+            $pos = strpos($project->getForumPage(), '/forum/');
+            if ($pos ===0) {
+                print ' ( '.$GLOBALS['Language']->getText('include_project_home','msg',$row_count['count']).' ';
+                $res_count = db_query("SELECT count(*) AS count FROM forum_group_list WHERE group_id=$group_id "
                 . "AND is_public=1");
-            $row_count = db_fetch_array($res_count);
-            print $GLOBALS['Language']->getText('include_project_home','forums',$row_count['count'])." )\n";
+                $row_count = db_fetch_array($res_count);
+                print $GLOBALS['Language']->getText('include_project_home','forums',$row_count['count'])." )\n";
+            }
         /*
             $sql="SELECT * FROM forum_group_list WHERE group_id='$group_id' AND is_public=1";
             $res2 = db_query ($sql);
@@ -161,7 +164,10 @@ class Widget_ProjectPublicAreas extends Widget {
             html_image("ic/wiki.png",array('width'=>'18', 'height'=>'12', 'alt'=>$GLOBALS['Language']->getText('include_project_home','wiki')));
             print ' '.$GLOBALS['Language']->getText('include_project_home','wiki').'</A>';
                 $wiki=new Wiki($group_id);
-            echo ' ( '.$GLOBALS['Language']->getText('include_project_home','nb_wiki_pages',$wiki->getProjectPageCount()).' )';
+            $pos = strpos($project->getWikiPage(), '/wiki/');
+            if ($pos === 0) {
+                echo ' ( '.$GLOBALS['Language']->getText('include_project_home','nb_wiki_pages',$wiki->getProjectPageCount()).' )';
+            }
         }
         
         // ######################### Surveys (only for Active)
@@ -285,5 +291,7 @@ class Widget_ProjectPublicAreas extends Widget {
     function canBeUsedByProject(&$project) {
         return true;
     }
+    
+    
 }
 ?>
