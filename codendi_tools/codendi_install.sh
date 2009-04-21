@@ -149,7 +149,7 @@ if [ "$yn" = "n" ]; then
 fi
 
 rm -f $TODO_FILE
-todo "WHAT TO DO TO FINISH THE CODEX INSTALLATION (see $TODO_FILE)"
+todo "WHAT TO DO TO FINISH THE CODENDI INSTALLATION (see $TODO_FILE)"
 
 
 ##############################################
@@ -718,6 +718,7 @@ make_backup /etc/httpd/conf/httpd.conf
 for f in /etc/httpd/conf/httpd.conf /var/named/chroot/var/named/codendi_full.zone \
 /etc/httpd/conf/ssl.conf \
 /etc/httpd/conf.d/php.conf /etc/httpd/conf.d/subversion.conf \
+/etc/libnss-mysql.cfg  /etc/libnss-mysql-root.cfg \
 /etc/codendi/conf/local.inc /etc/codendi/conf/database.inc /etc/httpd/conf.d/codendi_aliases.conf; do
     yn="0"
     fn=`basename $f`
@@ -801,6 +802,10 @@ substitute '/etc/codendi/conf/database.inc' '%sys_dbpasswd%' "$codendiadm_passwd
 # replace string patterns in httpd.conf
 substitute '/etc/httpd/conf/httpd.conf' '%sys_default_domain%' "$sys_default_domain"
 substitute '/etc/httpd/conf/httpd.conf' '%sys_ip_address%' "$sys_ip_address"
+
+# replace strings in libnss-mysql config files
+substitute '/etc/libnss-mysql.cfg' '%sys_dbauth_passwd%' "$dbauth_passwd" 
+substitute '/etc/libnss-mysql-root.cfg' '%sys_dbauth_passwd%' "$dbauth_passwd" 
 
 # replace string patterns in munin.conf (for MySQL authentication)
 substitute '/etc/httpd/conf.d/munin.conf' '%sys_dbauth_passwd%' "$dbauth_passwd" 
@@ -1402,7 +1407,7 @@ $CHKCONFIG mailman on
 $CHKCONFIG munin-node on
 $CHKCONFIG vsftpd on
 $CHKCONFIG openfire on
-# NSCD is the NAme Service Caching Daemon.
+# NSCD is the Name Service Caching Daemon.
 # It is very useful when libnss_mysql is used for authentication
 $CHKCONFIG nscd on
 

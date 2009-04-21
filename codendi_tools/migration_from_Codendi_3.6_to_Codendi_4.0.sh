@@ -224,10 +224,156 @@ $SERVICE mailman stop
 $SERVICE smb stop
 
 
+dbauth_passwd="a"; dbauth_passwd2="b";
+while [ "$dbauth_passwd" != "$dbauth_passwd2" ]; do
+    read -s -p "Password for DB Authentication user: " dbauth_passwd
+    echo
+    read -s -p "Retype password for DB Authentication user: " dbauth_passwd2
+    echo
+done
+
+
+
+# New dist files
+for f in /etc/libnss-mysql.cfg  /etc/libnss-mysql-root.cfg; do
+    yn="0"
+    fn=`basename $f`
+    [ -f "$f" ] && read -p "$f already exist. Overwrite? [y|n]:" yn
+
+    if [ "$yn" = "y" ]; then
+	$CP -f $f $f.orig
+    fi
+
+    if [ "$yn" != "n" ]; then
+	$CP -f $INSTALL_DIR/src/etc/$fn.dist $f
+    fi
+
+    $CHOWN codendiadm.codendiadm $f
+    $CHMOD 640 $f
+done
+
+
+# replace strings in libnss-mysql config files
+substitute '/etc/libnss-mysql.cfg' '%sys_dbauth_passwd%' "$dbauth_passwd" 
+substitute '/etc/libnss-mysql-root.cfg' '%sys_dbauth_passwd%' "$dbauth_passwd" 
+
+
 #############################################
 # Make codendiadm a member of the apache group
 # for phpMyAdmin (session, config files...)
 $USERMOD -a -G apache codendiadm
+
+
+#############################################
+# Remove SMB support
+$CHKCONFIG smb off
+todo "Please note that Windows shares (with Samba) are no longer supported for security reasons"
+
+###############################################################################
+# Add some privacy in shared directories. Also helps libnss_mysql...
+chmod 751 /var/lib/codex/cvsroot/
+chmod 751 /var/lib/codex/svnroot/
+chmod 771 /home/users
+chmod 771 /home/groups
+
+# NSCD is the Name Service Caching Daemon.
+# It is very useful when libnss_mysql is used for authentication
+$CHKCONFIG nscd on
+
+$SERVICE nscd start
+
+
+###############################################################################
+echo "Updating local.inc"
+
+# Remove $sys_win_domain XXX ???
+
+
+# dbauthuser and password
+$GREP -q ^\$sys_dbauth_user  $ETC_DIR/conf/local.inc
+if [ $? -ne 0 ]; then
+  # Remove end PHP marker
+  substitute '/etc/codendi/conf/local.inc' '\?\>' ''
+
+  $CAT <<EOF >> /etc/codendi/conf/local.inc
+// DB user for http authentication (must have access to user/group/user_group tables)
+\$sys_dbauth_user = "dbauthuser";
+\$sys_dbauth_passwd = '$dbauth_passwd';
+?>
+EOF
+fi
+
+# sys_pending_account_lifetime
+$GREP -q ^\$sys_pending_account_lifetime  $ETC_DIR/conf/local.inc
+if [ $? -ne 0 ]; then
+  # Remove end PHP marker
+  substitute '/etc/codendi/conf/local.inc' '\?\>' ''
+
+  $CAT <<EOF >> /etc/codendi/conf/local.inc
+// Duration before deleting pending accounts which have not been activated
+// (in days)
+// Default value is 60 days
+\$sys_pending_account_lifetime = 60;
+?>
+EOF
+fi
+
+# unix_uid_add
+$GREP -q ^\$unix_uid_add  $ETC_DIR/conf/local.inc
+if [ $? -ne 0 ]; then
+  # Remove end PHP marker
+  substitute '/etc/codendi/conf/local.inc' '\?\>' ''
+
+  $CAT <<EOF >> /etc/codendi/conf/local.inc
+
+// How much to add to the database unix_uid to get the actual unix uid
+\$unix_uid_add  = "20000";
+?>
+EOF
+fi
+
+# unix_gid_add
+$GREP -q ^\$unix_gid_add  $ETC_DIR/conf/local.inc
+if [ $? -ne 0 ]; then
+  # Remove end PHP marker
+  substitute '/etc/codendi/conf/local.inc' '\?\>' ''
+
+  $CAT <<EOF >> /etc/codendi/conf/local.inc
+
+// How much to add to the database group_id to get the unix gid
+\$unix_gid_add  = "1000";
+?>
+EOF
+fi
+
+# cvs_hook_tmp_dir
+$GREP -q ^\$cvs_hook_tmp_dir  $ETC_DIR/conf/local.inc
+if [ $? -ne 0 ]; then
+  # Remove end PHP marker
+  substitute '/etc/codendi/conf/local.inc' '\?\>' ''
+
+  $CAT <<EOF >> /etc/codendi/conf/local.inc
+
+\$cvs_hook_tmp_dir    = "/var/run/log_accum"; // temporary directory used by CVS commit hooks
+
+?>
+EOF
+fi
+
+
+###############################################################################
+# HTTP-based authentication
+echo "Moving /etc/httpd/conf/htpasswd to /etc/httpd/conf/htpasswd.codendi4.0"
+echo "This file is no longer needed (now using MySQL based authentication with mod_auth_mysql)"
+
+if [ -f "/etc/httpd/conf/htpasswd" ]; then
+  $MV /etc/httpd/conf/htpasswd /etc/httpd/conf/htpasswd.codendi4.0
+fi
+
+echo "Update munin.conf accordingly"
+# replace string patterns in munin.conf (for MySQL authentication)
+substitute '/etc/httpd/conf.d/munin.conf' '%sys_dbauth_passwd%' "$dbauth_passwd" 
+
 
 ##############################################
 # Analyze site-content 
@@ -293,21 +439,12 @@ done
 [ "X$old_passwd" != "X" ] && pass_opt="--password=$old_passwd"
 
 
-
-dbauth_passwd="a"; dbauth_passwd2="b";
-while [ "$dbauth_passwd" != "$dbauth_passwd2" ]; do
-    read -s -p "Password for DB Authentication user: " dbauth_passwd
-    echo
-    read -s -p "Retype password for DB Authentication user: " dbauth_passwd2
-    echo
-done
-
 echo "Starting DB update for Codendi 4.0 This might take a few minutes."
 
 
 
 
-echo "- Create dbauthuser, needed for MySQL-based authentication for HTTP (SVN) and Openfire"
+echo "- Create dbauthuser, needed for MySQL-based authentication for HTTP (SVN), libNSS-mysql and Openfire"
 $CAT <<EOF | $MYSQL -u root mysql $pass_opt
 GRANT SELECT ON codendi.user to dbauthuser@localhost identified by '$dbauth_passwd';
 GRANT SELECT ON codendi.groups to dbauthuser@localhost;
@@ -836,110 +973,6 @@ mysqlcheck -Aaos $pass_opt
 echo "Creating private directories in /home/group/"
 find /home/groups/ -maxdepth 1 -mindepth 1 -type d -exec mkdir -v --context=root:object_r:httpd_sys_content_t --mode=2770 '{}/private' \; -exec chown dummy '{}/private' \;
 
-###############################################################################
-# Add some privacy in shared directories. Also helps libnss_mysql...
-chmod 751 /var/lib/codex/cvsroot/
-chmod 751 /var/lib/codex/svnroot/
-chmod 771 /home/users
-chmod 771 /home/groups
-
-# NSCD is the Name Service Caching Daemon.
-# It is very useful when libnss_mysql is used for authentication
-$CHKCONFIG nscd on
-
-$SERVICE nscd start
-
-
-###############################################################################
-echo "Updating local.inc"
-
-# Remove $sys_win_domain XXX ???
-
-
-# dbauthuser and password
-$GREP -q ^\$sys_dbauth_user  $ETC_DIR/conf/local.inc
-if [ $? -ne 0 ]; then
-  # Remove end PHP marker
-  substitute '/etc/codendi/conf/local.inc' '\?\>' ''
-
-  $CAT <<EOF >> /etc/codendi/conf/local.inc
-// DB user for http authentication (must have access to user/group/user_group tables)
-\$sys_dbauth_user = "dbauthuser";
-\$sys_dbauth_passwd = '$dbauth_passwd';
-?>
-EOF
-fi
-
-# sys_pending_account_lifetime
-$GREP -q ^\$sys_pending_account_lifetime  $ETC_DIR/conf/local.inc
-if [ $? -ne 0 ]; then
-  # Remove end PHP marker
-  substitute '/etc/codendi/conf/local.inc' '\?\>' ''
-
-  $CAT <<EOF >> /etc/codendi/conf/local.inc
-// Duration before deleting pending accounts which have not been activated
-// (in days)
-// Default value is 60 days
-\$sys_pending_account_lifetime = 60;
-?>
-EOF
-fi
-
-# unix_uid_add
-$GREP -q ^\$unix_uid_add  $ETC_DIR/conf/local.inc
-if [ $? -ne 0 ]; then
-  # Remove end PHP marker
-  substitute '/etc/codendi/conf/local.inc' '\?\>' ''
-
-  $CAT <<EOF >> /etc/codendi/conf/local.inc
-
-// How much to add to the database unix_uid to get the actual unix uid
-\$unix_uid_add  = "20000";
-?>
-EOF
-fi
-
-# unix_gid_add
-$GREP -q ^\$unix_gid_add  $ETC_DIR/conf/local.inc
-if [ $? -ne 0 ]; then
-  # Remove end PHP marker
-  substitute '/etc/codendi/conf/local.inc' '\?\>' ''
-
-  $CAT <<EOF >> /etc/codendi/conf/local.inc
-
-// How much to add to the database group_id to get the unix gid
-\$unix_gid_add  = "1000";
-?>
-EOF
-fi
-
-# cvs_hook_tmp_dir
-$GREP -q ^\$cvs_hook_tmp_dir  $ETC_DIR/conf/local.inc
-if [ $? -ne 0 ]; then
-  # Remove end PHP marker
-  substitute '/etc/codendi/conf/local.inc' '\?\>' ''
-
-  $CAT <<EOF >> /etc/codendi/conf/local.inc
-
-\$cvs_hook_tmp_dir    = "/var/run/log_accum"; // temporary directory used by CVS commit hooks
-
-?>
-EOF
-fi
-
-
-###############################################################################
-# HTTP-based authentication
-echo "Moving /etc/httpd/conf/htpasswd to /etc/httpd/conf/htpasswd.old"
-echo "This file is no longer needed (now using MySQL based authentication with mod_auth_mysql)"
-
-if [ -f "/etc/httpd/conf/htpasswd" ]; then
-  $MV /etc/httpd/conf/htpasswd /etc/httpd/conf/htpasswd.codendi4.0
-fi
-
-echo "Update munin.conf accordingly"
-# replace string patterns in munin.conf (for MySQL authentication)
-substitute '/etc/httpd/conf.d/munin.conf' '%sys_dbauth_passwd%' "$dbauth_passwd" 
 
 
 ##############################################
@@ -957,12 +990,6 @@ $SERVICE crond start
 $SERVICE httpd start
 $SERVICE sendmail start
 $SERVICE mailman start
-$SERVICE smb start
-
-
-
-
-
 
 
 
@@ -1002,6 +1029,8 @@ TODO : Déplacer le script de debug dans Layout.class.php
 # TODO: copy /src/utils/svn/codendi_svn_pre_commit.php into /usr/lib/codendi/bin/codendi_svn_pre_commit.php (also in codendi_install!!)
 # TODO: rename /usr/lib/codex to /usr/lib/codendi
 
+# Todo, modify fileforge.c and recompile for new layout.
+
 #
 # Re-copy files that have been modified
 #
@@ -1034,10 +1063,6 @@ $CHMOD 755 commit-email.pl
 #
 todo "Note to Codendi Developers: "
 todo " - Some deprecated functions have been removed: group_getname, group_getunixname, group_get_result, group_get_object, project_get_object"
-
-
-todo "Please note that Windows shares (with Samba) are no longer supported"
-
 
 
 
