@@ -230,6 +230,12 @@ $SERVICE sendmail stop
 $SERVICE mailman stop
 $SERVICE smb stop
 
+
+echo -n "codexadm is now known as codendiadm..."
+groupmod -n codendiadm codexadm
+usermod -d /home/codendiadm -m -l codendiadm codexadm
+echo "done"
+
 ##############################################
 # Install the Codendi software 
 #
@@ -244,12 +250,6 @@ $FIND $INSTALL_DIR -type d -exec $CHMOD 775 {} \;
 
 $CP -r /etc/codex/ /etc/codex_36
 $MV /etc/codex/ $ETC_DIR
-
-
-echo -n "codexadm is now known as codendiadm..."
-groupmod -n codendiadm codexadm
-usermod -d /home/codendiadm -m -l codendiadm codexadm
-echo "done"
 
 dbauth_passwd="a"; dbauth_passwd2="b";
 while [ "$dbauth_passwd" != "$dbauth_passwd2" ]; do
@@ -614,7 +614,7 @@ WHERE (keyword = 'art' OR
        keyword = 'slmbug' OR
        keyword = 'sr' OR
        keyword = 'story' OR
-       keyword = 'task' OR
+       keyword = 'task'
       );
 UPDATE reference
 SET nature = 'document'
@@ -676,13 +676,13 @@ echo "- Cross-references change the type of column to handle wiki references (no
 $CAT <<EOF | $MYSQL $pass_opt codendi
 ALTER TABLE cross_references CHANGE source_id source_id VARCHAR( 128 ) NOT NULL DEFAULT '0';
 ALTER TABLE cross_references CHANGE target_id target_id VARCHAR( 128 ) NOT NULL DEFAULT '0';
-EOF;
+EOF
 
 echo "- Cross references : add two fields"
 $CAT <<EOF | $MYSQL $pass_opt codendi
 ALTER TABLE cross_references ADD source_keyword VARCHAR( 32 ) NOT NULL AFTER source_type;
 ALTER TABLE cross_references ADD target_keyword VARCHAR( 32 ) NOT NULL AFTER target_type;
-EOF;
+EOF
 
 echo "- Change type of existing cross references from 'revision_svn' to 'svn_revision'"
 $CAT <<EOF | $MYSQL $pass_opt codendi
@@ -819,7 +819,8 @@ EOF
 
 echo "- Update user language"
 $CAT <<EOF | $MYSQL $pass_opt codendi
-ALTER TABLE user CHANGE language_id language_id VARCHAR( 17 ) NOT NULL DEFAULT 'en_US' 
+ALTER TABLE user CHANGE language_id language_id VARCHAR( 17 ) NOT NULL DEFAULT 'en_US';
+
 UPDATE user 
 SET language_id = 'fr_FR'
 WHERE language_id = 2;
@@ -828,7 +829,8 @@ UPDATE user
 SET language_id = 'en_US'
 WHERE language_id != 'fr_FR';
 
-ALTER TABLE wiki_group_list CHANGE language_id language_id VARCHAR( 17 ) NOT NULL DEFAULT 'en_US'
+ALTER TABLE wiki_group_list CHANGE language_id language_id VARCHAR( 17 ) NOT NULL DEFAULT 'en_US';
+
 UPDATE wiki_group_list 
 SET language_id = 'fr_FR'
 WHERE language_id = 2;
@@ -942,20 +944,20 @@ $CAT <<EOF | $PHP
 <?php
 require_once('/etc/codendi/conf/local.inc');
 require_once('/etc/codendi/conf/database.inc');
-mysql_connect($sys_dbhost, $sys_dbuser, $sys_dbpasswd) or die('ERROR: Unable to connect to the database. Aborting.');
-mysql_select_db($sys_dbname) or die('ERROR: Unable to select the database. Aborting.');
+mysql_connect(\$sys_dbhost, \$sys_dbuser, \$sys_dbpasswd) or die('ERROR: Unable to connect to the database. Aborting.');
+mysql_select_db(\$sys_dbname) or die('ERROR: Unable to select the database. Aborting.');
 
-$groups = array();
-foreach(glob($GLOBALS['cvs_prefix'] .'/*/.CODEX_PRIVATE') as $g) {
-    $groups[] = "'". mysql_real_escape_string(preg_replace('|^.*/([^/]*)/.CODEX_PRIVATE|', '$1', $g)) ."'";
-    unlink($g);
+\$groups = array();
+foreach(glob(\$GLOBALS['cvs_prefix'] .'/*/.CODEX_PRIVATE') as \$g) {
+    \$groups[] = "'". mysql_real_escape_string(preg_replace('|^.*/([^/]*)/.CODEX_PRIVATE|', '\$1', \$g)) ."'";
+    unlink(\$g);
 }
-if (count($groups)) {
-    echo 'The following projects want to set their cvs repository private: '. implode(', ', $groups). PHP_EOL;
-    $sql = "UPDATE groups 
+if (count(\$groups)) {
+    echo 'The following projects want to set their cvs repository private: '. implode(', ', \$groups). PHP_EOL;
+    \$sql = "UPDATE groups 
             SET cvs_is_private 
-            WHERE unix_group_name IN (". implode(', ', $groups) .")";
-    mysql_query($sql) or die("ERROR: While executing the sql statement: ". mysql_error() ." -> ".$sql);
+            WHERE unix_group_name IN (". implode(', ', \$groups) .")";
+    mysql_query(\$sql) or die("ERROR: While executing the sql statement: ". mysql_error() ." -> ".\$sql);
     echo 'done.'. PHP_EOL;
 } else {
     echo 'No projects want to set their cvs repository private.'. PHP_EOL;
@@ -969,40 +971,40 @@ $CAT <<EOF | $PHP
 require_once('/etc/codendi/conf/local.inc');
 require_once('/etc/codendi/conf/database.inc');
 
-mysql_connect($sys_dbhost, $sys_dbuser, $sys_dbpasswd) or die('ERROR: Unable to connect to the database. Aborting.');
-mysql_select_db($sys_dbname) or die('ERROR: Unable to select the database. Aborting.');
+mysql_connect(\$sys_dbhost, \$sys_dbuser, \$sys_dbpasswd) or die('ERROR: Unable to connect to the database. Aborting.');
+mysql_select_db(\$sys_dbname) or die('ERROR: Unable to select the database. Aborting.');
 
-function svn_utils_read_svn_access_file($gname) {
+function svn_utils_read_svn_access_file(\$gname) {
 
-    global $svn_prefix;
+    global \$svn_prefix;
 
-    $filename = "$svn_prefix/$gname/.SVNAccessFile";
-    $buffer = '';
+    \$filename = "\$svn_prefix/\$gname/.SVNAccessFile";
+    \$buffer = '';
 
-    $fd = @fopen("$filename", "r");
-    if (!$fd) {
-        error_log("Unable to open $filename");
-        $buffer = false;
+    \$fd = @fopen("\$filename", "r");
+    if (!\$fd) {
+        error_log("Unable to open \$filename");
+        \$buffer = false;
     } else {
-        $in_settings = false;
-        while (!feof($fd)) {
-            $line = fgets($fd, 4096);
-            if (strpos($line,'# BEGIN CODEX DEFAULT') !== false) { $in_settings = true; }
-            if (!$in_settings) { $buffer .= $line; }
-            if (strpos($line,'# END CODEX DEFAULT') !== false) { $in_settings = false; }
+        \$in_settings = false;
+        while (!feof(\$fd)) {
+            \$line = fgets(\$fd, 4096);
+            if (strpos(\$line,'# BEGIN CODEX DEFAULT') !== false) { \$in_settings = true; }
+            if (!\$in_settings) { \$buffer .= \$line; }
+            if (strpos(\$line,'# END CODEX DEFAULT') !== false) { \$in_settings = false; }
         }
-        fclose($fd);
+        fclose(\$fd);
     }
-    return $buffer;
+    return \$buffer;
 }
 
-foreach(glob($svn_prefix.'/*/.SVNAccessFile') as $file) {
-    $gname = basename(dirname($file));
-    $content = svn_utils_read_svn_access_file($gname);
-    $sql = "UPDATE groups 
-            SET svn_accessfile = '". mysql_real_escape_string($content) ."' 
-            WHERE unix_group_name = '". mysql_real_escape_string($gname) ."'";
-    mysql_query($sql) or error_log(mysql_error());
+foreach(glob(\$svn_prefix.'/*/.SVNAccessFile') as \$file) {
+    \$gname = basename(dirname(\$file));
+    \$content = svn_utils_read_svn_access_file(\$gname);
+    \$sql = "UPDATE groups 
+            SET svn_accessfile = '". mysql_real_escape_string(\$content) ."' 
+            WHERE unix_group_name = '". mysql_real_escape_string(\$gname) ."'";
+    mysql_query(\$sql) or error_log(mysql_error());
 }
 ?>
 EOF
