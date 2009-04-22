@@ -304,8 +304,8 @@ Unix account.
      and assignment to Unix group is safe as well).Going back
      to status 'A' will reactivate the account with the initial
      password.
-<li>'D' for Deleted: the entry in /etc/passwd is deleted
-    for this user and the home directory is archived in /tmp
+<li>'D' for Deleted: the home directory
+    for this user is archived in /tmp
     (and therefore automatically cleaned up after 7 days) for
     the moment and then removed from /home/users. Assignment to
     Unix groups is revoked as well of course.
@@ -555,9 +555,7 @@ to access a project summary page on the Codendi Web site (not to be
 confused
 with the Project Web site at http://<i>ProjectShortName</i>.codex.xerox.com/</li>
   <br>
-&nbsp; <li> A Unix group with the same name (all lowercase) is created
-in
-the /etc/group Unix file.</li>
+&nbsp; <li> A Unix group with the same name (all lowercase) is created</li>
   <ul>
     <li> It is applied to all projects related disk resources (e.g. the
 Project
@@ -1623,7 +1621,7 @@ the Web interface)</li>
   <li> Exit</li>
 </ol>
 <p><br>
-<b><u>new_parse.pl</u></b> </p>
+<b><u>new_parse.pl</u> (<i>deprecated in Codendi 4.0</i>)</b> </p>
 <p>This script is critical in the creation of the user/group
 infrastructure
 and it is worth spending some time on it. Let's go through the file
@@ -2317,11 +2315,8 @@ Now you have a fresh CVS or SVN repository and the team can start the import aga
 <LI>Log as root on the codex server</LI>
 <li>First of all, make sure that the new login name is not already used!</li>
 <li>Second of all, make sure that the Xerox cron job won't run while you do the update (you may edit the root crontab if necessary)!</li>
-<LI> Modify the system files with groupmod and usermod.
-<br>Use this command to rename the group associated with the user:
-<br><tt>   groupmod -n new_name old_name</tt>
-<br>Use this command to update the username, initial group and home directory:
-<br><tt>   usermod -d /home/users/new_name -m -g new_name -l new_name old_name </tt>
+<LI> Rename the user home directory:
+<br><tt>   mv /home/users/old_name /home/users/new_name</tt>
 <br>
 </li>
 
@@ -2389,10 +2384,8 @@ on the Codendi server. Here is the procedure to follow to change a group name (a
 <li>/svnroot
 </tt></ul>
 <li>Edit <tt>/etc/cvs_root_allow</tt> and change project name
-<li>Edit <tt>/etc/passwd</tt> and change the project name in the <tt>anoncvs_xxx</tt> entry (3 occurrences on one line)
-<li>Edit <tt>/etc/group</tt> and change the project name (1 occurrence on one line)
 
-<br>Comment: the last 3 would be done automatically at the next cron update but doing it by hand keep everything consistent with the next step<br>
+<br>Comment: the last one would be done automatically at the next cron update but doing it by hand keep everything consistent with the next step<br>
 
 <li>Checkout the CVSROOT directory of the project:
 <tt>cvs -d:pserver:username@codex.xerox.com:/cvsroot/projectname co CVSROOT</tt>.

@@ -228,6 +228,26 @@ manual software installation<br>
 </table>
 <div align="center"><br>
 </div>
+<h2>Authentication with libnNSS-MySQL</h2>
+<p>Starting with Codendi 4.0, Codendi users are now directly authenticated against the MySQL database.
+There is no longer need to edit /etc/passwd, /etc/shadow and /etc/group.
+Only the system users listed above still need to exist in those files (codendiadm, mailman, ftp, etc.).
+<h3>Configuration files</h3>
+LibNSS-MySQL needs two configuration files: /etc/libnss-mysql.cfg and /etc/libnss-mysql-root.cfg.
+Those files contain the queries that map system calls to SQL syntax. We provide sample files (.dist) for codendi in /usr/share/codendi/src/etc.
+<h3>nsswitch.conf</h3>
+In order to use libnss-mysql, one need to update /etc/nsswitch.conf to inform the system that it can use mysql for name service requests.
+Here is an extract from a sample nsswitch.conf (it is automatically updated by the Codendi installation script):
+<pre>
+passwd:     files mysql
+shadow:     files mysql
+group:      files mysql
+</pre>
+This means that if a user or group is not found in the corresponding file (/etc/passwd or /etc/group), the system will look into the MySQL DB.
+<h3>NSCD</h3>
+Using MySQL for system calls is slower that using the dedicated files. For this reason, we decided to deploy nscd (Name Service Caching Daemon) by default with Codendi.
+This daemon stores successfull name service requests into a cache for faster performance. Please note, however, that each time a user or a project is created, or a new member is added to a project, we need to clear the nscd cache. This is done automatically by the Codendi backend.
+
 <hr size="2" width="100%">
 <h1><a name="File_System_Settings"></a>File System Settings</h1>
 Directory that must be created on the filesystem prior to software
