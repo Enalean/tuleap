@@ -50,7 +50,7 @@ def load_local_config(filename):
 # Global Variables
 ##############################
 
-db_include = os.getenv('CODEX_LOCAL_INC','')
+db_include = os.getenv('CODENDI_LOCAL_INC','')
 if db_include is "":
     db_include = "/etc/codex/conf/local.inc"
 # Local Include file for database username and password

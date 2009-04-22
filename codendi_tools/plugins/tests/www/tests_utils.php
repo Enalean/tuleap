@@ -1,6 +1,6 @@
 <?php
 error_reporting(E_ALL);
-require(getenv('CODEX_LOCAL_INC')?getenv('CODEX_LOCAL_INC'):'/etc/codendi/conf/local.inc');
+require(getenv('CODENDI_LOCAL_INC')?getenv('CODENDI_LOCAL_INC'):'/etc/codendi/conf/local.inc');
 require($GLOBALS['db_config_file']);
 
 require_once('../include/simpletest/unit_tester.php');

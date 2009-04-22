@@ -39,15 +39,15 @@ error() {
     exit 1
 }
 
-# Check if CODEX_LOCAL_INC variable exists in the environement
+# Check if CODENDI_LOCAL_INC variable exists in the environement
 # or set a default value
-if [ ! -f "${CODEX_LOCAL_INC}" ]; then
-    CODEX_LOCAL_INC="/etc/codex/conf/local.inc"
+if [ ! -f "${CODENDI_LOCAL_INC}" ]; then
+    CODENDI_LOCAL_INC="/etc/codex/conf/local.inc"
 fi
-if [ ! -f "${CODEX_LOCAL_INC}" ]; then
-    error "No valid CODEX_LOCAL_INC found. Please update your environnement."
+if [ ! -f "${CODENDI_LOCAL_INC}" ]; then
+    error "No valid CODENDI_LOCAL_INC found. Please update your environnement."
 fi
-export CODEX_LOCAL_INC
+export CODENDI_LOCAL_INC
 
 # Finaly runs php interpretor
 phpscript=$1;

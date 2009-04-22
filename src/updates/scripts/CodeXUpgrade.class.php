@@ -40,7 +40,7 @@ class Update_001 extends CodeXUpgrade {
 */
 
 // Defines all of the CodeX settings first (hosts, databases, etc.)
-require_once(getenv('CODEX_LOCAL_INC')?getenv('CODEX_LOCAL_INC'):'/etc/codex/conf/local.inc');
+require_once(getenv('CODENDI_LOCAL_INC')?getenv('CODENDI_LOCAL_INC'):'/etc/codex/conf/local.inc');
 require($GLOBALS['db_config_file']);
 //database abstraction
 require_once(dirname(__FILE__).'/../../common/dao/include/DataAccessObject.class.php');

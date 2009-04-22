@@ -8,24 +8,24 @@ GREP="/bin/grep"
 EGREP="/bin/egrep"
 SED="/bin/sed"
 
-if [ -z "$CODEX_LOCAL_INC" ]; then
-   CODEX_LOCAL_INC=/etc/codex/conf/local.inc
+if [ -z "$CODENDI_LOCAL_INC" ]; then
+   CODENDI_LOCAL_INC=/etc/codex/conf/local.inc
 fi
 
-if [ ! -f "$CODEX_LOCAL_INC" ]; then
-    echo "***ERROR: $CODEX_LOCAL_INC not found."
+if [ ! -f "$CODENDI_LOCAL_INC" ]; then
+    echo "***ERROR: $CODENDI_LOCAL_INC not found."
     exit 1;
 fi
 
 # honor BASEDOCDIR if defined
 if [ -z "$BASEDOCDIR" ]; then
-    CODEX_DOCUMENTATION_PREFIX=`${GREP} '^\$codendi_documentation_prefix' $CODEX_LOCAL_INC | ${SED} -e 's/\$codendi_documentation_prefix\s*=\s*\(.*\);\(.*\)/\1/' | tr -d '"' | tr -d "'"`
+    CODEX_DOCUMENTATION_PREFIX=`${GREP} '^\$codendi_documentation_prefix' $CODENDI_LOCAL_INC | ${SED} -e 's/\$codendi_documentation_prefix\s*=\s*\(.*\);\(.*\)/\1/' | tr -d '"' | tr -d "'"`
     BASEDOCDIR=$CODEX_DOCUMENTATION_PREFIX
 fi
 
 # honor BASESRCDIR if defined
 if [ -z "$BASESRCDIR" ]; then
-    CODEX_DIR=`${GREP} '^\$codendi_dir' $CODEX_LOCAL_INC | ${SED} -e 's/\$codendi_dir\s*=\s*\(.*\);\(.*\)/\1/' | tr -d '"' | tr -d "'"`
+    CODEX_DIR=`${GREP} '^\$codendi_dir' $CODENDI_LOCAL_INC | ${SED} -e 's/\$codendi_dir\s*=\s*\(.*\);\(.*\)/\1/' | tr -d '"' | tr -d "'"`
     BASESRCDIR=$CODEX_DIR
 fi
 

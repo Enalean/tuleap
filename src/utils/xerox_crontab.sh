@@ -16,12 +16,12 @@
 #    update of CodeX
 
 # Read util directory location from local.inc
-if [ -z "$CODEX_LOCAL_INC" ]; then 
-    CODEX_LOCAL_INC=/etc/codex/conf/local.inc
+if [ -z "$CODENDI_LOCAL_INC" ]; then 
+    CODENDI_LOCAL_INC=/etc/codex/conf/local.inc
 fi
-CODEX_UTILS_PREFIX=`/bin/grep '^\$codendi_utils_prefix' $CODEX_LOCAL_INC | /bin/sed -e 's/\$codendi_utils_prefix\s*=\s*\(.*\);\(.*\)/\1/' | tr -d '"' | tr -d "'"`
-dump_dir=`/bin/grep '^\$dump_dir' $CODEX_LOCAL_INC | /bin/sed -e 's/\$dump_dir\s*=\s*\(.*\);\(.*\)/\1/' | tr -d '"' | tr -d "'"`
-SYS_DISABLE_SUBDOMAINS=`/bin/grep '^\$sys_disable_subdomains' $CODEX_LOCAL_INC | /bin/sed -e 's/\$sys_disable_subdomains\s*=\s*\(.*\);\(.*\)/\1/' | tr -d '"' | tr -d "'"`
+CODEX_UTILS_PREFIX=`/bin/grep '^\$codendi_utils_prefix' $CODENDI_LOCAL_INC | /bin/sed -e 's/\$codendi_utils_prefix\s*=\s*\(.*\);\(.*\)/\1/' | tr -d '"' | tr -d "'"`
+dump_dir=`/bin/grep '^\$dump_dir' $CODENDI_LOCAL_INC | /bin/sed -e 's/\$dump_dir\s*=\s*\(.*\);\(.*\)/\1/' | tr -d '"' | tr -d "'"`
+SYS_DISABLE_SUBDOMAINS=`/bin/grep '^\$sys_disable_subdomains' $CODENDI_LOCAL_INC | /bin/sed -e 's/\$sys_disable_subdomains\s*=\s*\(.*\);\(.*\)/\1/' | tr -d '"' | tr -d "'"`
 if [ -z $SYS_DISABLE_SUBDOMAINS ]; then
 	SYS_DISABLE_SUBDOMAINS=0
 fi

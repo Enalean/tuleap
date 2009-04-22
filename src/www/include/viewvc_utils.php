@@ -86,7 +86,7 @@ function viewvc_utils_passcommand() {
            'PATH="'.getStringFromServer('PATH').'" '.
            'HTTP_HOST="'.getStringFromServer('HTTP_HOST').'" '.
            'DOCUMENT_ROOT="'.getStringFromServer('DOCUMENT_ROOT').'" '.
-           'CODEX_LOCAL_INC="'.getStringFromServer('CODEX_LOCAL_INC').'" '. 
+           'CODENDI_LOCAL_INC="'.getStringFromServer('CODENDI_LOCAL_INC').'" '. 
            '/var/www/cgi-bin/viewvc.cgi 2>&1';
 
   ob_start();

@@ -53,46 +53,46 @@ EXIST_CHANGE=0
 CURRENTDIR=`pwd`
 # honor BASEDOCDIR if defined
 if [ -z "$BASEDOCDIR" ]; then
-    if [ -z "$CODEX_LOCAL_INC" ]; then
-        CODEX_LOCAL_INC=/etc/codex/conf/local.inc
+    if [ -z "$CODENDI_LOCAL_INC" ]; then
+        CODENDI_LOCAL_INC=/etc/codex/conf/local.inc
     fi
-    CODEX_DOCUMENTATION_PREFIX=`$GREP '^\$codendi_documentation_prefix' $CODEX_LOCAL_INC | $SED -e 's/\$codendi_documentation_prefix\s*=\s*\(.*\);\(.*\)/\1/' | $TR -d '"' | $TR -d "'"`
+    CODEX_DOCUMENTATION_PREFIX=`$GREP '^\$codendi_documentation_prefix' $CODENDI_LOCAL_INC | $SED -e 's/\$codendi_documentation_prefix\s*=\s*\(.*\);\(.*\)/\1/' | $TR -d '"' | $TR -d "'"`
     BASEDOCDIR=$CODEX_DOCUMENTATION_PREFIX
 fi
 CMDDOCDIR=$BASEDOCDIR/cli/cmd
 
 # honor BASESRCDIR if defined
 if [ -z "$BASESRCDIR" ]; then
-    if [ -z "$CODEX_LOCAL_INC" ]; then
-        CODEX_LOCAL_INC=/etc/codex/conf/local.inc
+    if [ -z "$CODENDI_LOCAL_INC" ]; then
+        CODENDI_LOCAL_INC=/etc/codex/conf/local.inc
     fi
-    CODEX_DIR=`$GREP '^\$codendi_dir' $CODEX_LOCAL_INC | $SED -e 's/\$codendi_dir\s*=\s*\(.*\);\(.*\)/\1/' | $TR -d '"' | $TR -d "'"`
+    CODEX_DIR=`$GREP '^\$codendi_dir' $CODENDI_LOCAL_INC | $SED -e 's/\$codendi_dir\s*=\s*\(.*\);\(.*\)/\1/' | $TR -d '"' | $TR -d "'"`
     BASESRCDIR=$CODEX_DIR/cli
 fi
 
 # honor TMPDIR if defined
 if [ -z "$TMPDIR" ]; then
-    if [ -z "$CODEX_LOCAL_INC" ]; then
-        CODEX_LOCAL_INC=/etc/codex/conf/local.inc
+    if [ -z "$CODENDI_LOCAL_INC" ]; then
+        CODENDI_LOCAL_INC=/etc/codex/conf/local.inc
     fi
-    TMP_DIR=`$GREP '^\$tmp_dir' $CODEX_LOCAL_INC | $SED -e 's/\$tmp_dir\s*=\s*\(.*\);\(.*\)/\1/' | $TR -d '"' | $TR -d "'"`
+    TMP_DIR=`$GREP '^\$tmp_dir' $CODENDI_LOCAL_INC | $SED -e 's/\$tmp_dir\s*=\s*\(.*\);\(.*\)/\1/' | $TR -d '"' | $TR -d "'"`
     TMPDIR=$TMP_DIR
 fi
 
 # honor sys_default_domain if defined
 if [ -z "$sys_default_domain" ]; then
-    if [ -z "$CODEX_LOCAL_INC" ]; then
-        CODEX_LOCAL_INC=/etc/codex/conf/local.inc
+    if [ -z "$CODENDI_LOCAL_INC" ]; then
+        CODENDI_LOCAL_INC=/etc/codex/conf/local.inc
     fi
-    sys_default_domain=`$GREP '^\$sys_default_domain' $CODEX_LOCAL_INC | $SED -e 's/\$sys_default_domain\s*=\s*\(.*\);\(.*\)/\1/' | $TR -d '"' | $TR -d "'"`
+    sys_default_domain=`$GREP '^\$sys_default_domain' $CODENDI_LOCAL_INC | $SED -e 's/\$sys_default_domain\s*=\s*\(.*\);\(.*\)/\1/' | $TR -d '"' | $TR -d "'"`
 fi
 
 # honor $sys_https_host if defined
 if [ -z "$sys_https_host" ]; then
-    if [ -z "$CODEX_LOCAL_INC" ]; then
-        CODEX_LOCAL_INC=/etc/codex/conf/local.inc
+    if [ -z "$CODENDI_LOCAL_INC" ]; then
+        CODENDI_LOCAL_INC=/etc/codex/conf/local.inc
     fi
-    sys_https_host=`$GREP '^\$sys_https_host' $CODEX_LOCAL_INC | $SED -e 's/\$sys_https_host\s*=\s*\(.*\);\(.*\)/\1/' | $TR -d '"' | $TR -d "'"`
+    sys_https_host=`$GREP '^\$sys_https_host' $CODENDI_LOCAL_INC | $SED -e 's/\$sys_https_host\s*=\s*\(.*\);\(.*\)/\1/' | $TR -d '"' | $TR -d "'"`
 fi
 
 # honor archivename if defined
@@ -122,10 +122,10 @@ done
 
 # honor DESTDIR if defined
 if [ -z "$DESTDIR" ]; then
-    if [ -z "$CODEX_LOCAL_INC" ]; then
-        CODEX_LOCAL_INC=/etc/codex/conf/local.inc
+    if [ -z "$CODENDI_LOCAL_INC" ]; then
+        CODENDI_LOCAL_INC=/etc/codex/conf/local.inc
     fi
-    DEST_DIR=`$GREP '^\$codendi_downloads_dir' $CODEX_LOCAL_INC | $SED -e 's/\$codendi_downloads_dir\s*=\s*\(.*\);\(.*\)/\1/' | $TR -d '"' | $TR -d "'"`
+    DEST_DIR=`$GREP '^\$codendi_downloads_dir' $CODENDI_LOCAL_INC | $SED -e 's/\$codendi_downloads_dir\s*=\s*\(.*\);\(.*\)/\1/' | $TR -d '"' | $TR -d "'"`
     DESTDIR=$DEST_DIR
 fi
 

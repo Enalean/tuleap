@@ -15,7 +15,7 @@ if (version_compare(phpversion(), '5.1.6', '<')) {
 */
 
 // Defines all of the CodeX settings first (hosts, databases, etc.)
-require(getenv('CODEX_LOCAL_INC')?getenv('CODEX_LOCAL_INC'):'/etc/codex/conf/local.inc');
+require(getenv('CODENDI_LOCAL_INC')?getenv('CODENDI_LOCAL_INC'):'/etc/codex/conf/local.inc');
 require($GLOBALS['db_config_file']);
 require_once('common/include/CookieManager.class.php');
 require_once('common/include/HTTPRequest.class.php');
