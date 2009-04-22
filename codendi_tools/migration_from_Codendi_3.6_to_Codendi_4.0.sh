@@ -278,12 +278,20 @@ $MKDIR -p $BACKUP_DIR/etc/httpd
 $MKDIR -p $BACKUP_DIR/usr/lib
 $MKDIR -p $BACKUP_DIR/var/tmp
 $MKDIR -p $BACKUP_DIR/var/named/chroot/var
+
+echo "Backup /etc/httpd/conf.d"
 $CP -r /etc/httpd/conf.d $BACKUP_DIR/etc/httpd
+echo "Backup /etc/httpd/conf"
 $CP -r /etc/httpd/conf $BACKUP_DIR/etc/httpd
-$CP -r /etc/codex/ $BACKUP_DIR/etc/codex
+echo "Backup /etc/codex"
+$CP -r /etc/codex $BACKUP_DIR/etc/codex
+echo "Backup /usr/lib/codex"
 $CP -r /usr/lib/codex $BACKUP_DIR/usr/lib
+echo "Backup /var/named/chroot/var/named"
 $CP -r /var/named/chroot/var/named $BACKUP_DIR/var/named/chroot/var
+echo "Backup /var/named/chroot/etc"
 $CP -r /var/named/chroot/etc $BACKUP_DIR/var/named/chroot
+echo "Backup /var/tmp/codex_cache"
 $MV /var/tmp/codex_cache $BACKUP_DIR/var/tmp/
 
 # Renames
