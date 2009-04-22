@@ -26,6 +26,10 @@ Codendi_DIR=${TOP_DIR}/Codendi
 export INSTALL_DIR="/usr/share/codendi"
 BACKUP_INSTALL_DIR="/usr/share/codex_36"
 ETC_DIR="/etc/codendi"
+USR_LIB_DIR="/usr/lib/codendi"
+VAR_LIB_DIR="/var/lib/codendi"
+VAR_TMP_DIR="/var/tmp/codendi_cache"
+VAR_LOG_DIR="/var/log/codendi"
 
 # path to command line tools
 GROUPADD='/usr/sbin/groupadd'
@@ -270,8 +274,44 @@ $CHOWN -R codendiadm.codendiadm $INSTALL_DIR
 $FIND $INSTALL_DIR -type f -exec $CHMOD u+rw,g+rw,o-w+r {} \;
 $FIND $INSTALL_DIR -type d -exec $CHMOD 775 {} \;
 
+#
+# Migrate paths
+#
 $CP -r /etc/codex/ /etc/codex_36
 $MV /etc/codex $ETC_DIR
+
+$CP -r /usr/lib/codex /usr/lib/codex_36
+$MV /usr/lib/codex $USR_LIB_DIR
+
+$CP -r /var/lib/codex /var/lib/codex_36
+$MV /var/lib/codex/ftp/codex /var/lib/codex/ftp/codendi
+$MV /var/lib/codex $VAR_LIB_DIR
+
+$CP -r /var/tmp/codex_cache /var/tmp/codex_cache_36
+$MV /var/tmp/codex_cache $VAR_TMP_DIR
+
+# no more used (need to generate it the first time?)
+$MV /etc/httpd/conf.d/codex_svnroot.conf /etc/httpd/conf.d/codendi_svnroot.conf_36
+
+$CP -r /var/log/codex /var/log/codex_36
+$MV /var/log/codex $VAR_LOG_DIR
+substitute '/etc/logrotate.d/httpd' '/var/log/codex/' "$VAR_LOG_DIR"
+substitute '/etc/logrotate.d/vsftpd.log' '/var/log/codex/' "$VAR_LOG_DIR"
+
+if [ -d /etc/skel_codex ]; then 
+    $CP -r /etc/skel_codex /etc/skel_codex_36
+    $MV /etc/skel_codex /etc/skel_codendi
+fi
+
+$CP /var/named/chroot/var/named/codex_full.zone /var/named/chroot/var/named/codex_full.zone_36
+$MV /var/named/chroot/var/named/codex_full.zone /var/named/chroot/etc/codendi.zone
+substitute '/var/named/chroot/etc/named.conf' 'codex_full.zone' "codendi.zone" 
+
+$CP /etc/aliases.codex /etc/aliases.codex_36
+$MV /etc/aliases.codex /etc/aliases.codendi
+substitute '/etc/mail/sendmail.cf' '/etc/aliases.codex' "/etc/aliases.codendi"
+
+
 
 dbauth_passwd="a"; dbauth_passwd2="b";
 while [ "$dbauth_passwd" != "$dbauth_passwd2" ]; do
