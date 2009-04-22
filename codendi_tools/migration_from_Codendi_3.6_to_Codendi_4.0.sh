@@ -198,6 +198,28 @@ if [ $rpms_ok -eq 0 ]; then
 fi
 echo "All requested RedHat RPMS installed... good!"
 
+
+################################################
+# Check that there is no codendi database
+#
+pass_opt=""
+# See if MySQL root account is password protected
+mysqlshow 2>&1 | grep password
+while [ $? -eq 0 ]; do
+    read -s -p "Existing DB is password protected. What is the Mysql root password?: " old_passwd
+    echo
+    mysqlshow --password=$old_passwd 2>&1 | grep password
+done
+[ "X$old_passwd" != "X" ] && pass_opt="--password=$old_passwd"
+mysql $pass_opt -e "USE codendi;" | grep "Unknown database"
+if [ $? -eq 0 ]; then
+    echo "Conflict: There is already a database named codendi."
+    echo "Abortind."
+else 
+    echo "No conflict"
+fi
+exit 1
+
 ###############################################################################
 echo "Updating Packages"
 
@@ -249,7 +271,7 @@ $FIND $INSTALL_DIR -type f -exec $CHMOD u+rw,g+rw,o-w+r {} \;
 $FIND $INSTALL_DIR -type d -exec $CHMOD 775 {} \;
 
 $CP -r /etc/codex/ /etc/codex_36
-$MV /etc/codex/ $ETC_DIR
+$MV /etc/codex $ETC_DIR
 
 dbauth_passwd="a"; dbauth_passwd2="b";
 while [ "$dbauth_passwd" != "$dbauth_passwd2" ]; do
@@ -480,15 +502,6 @@ echo "Updating the database..."
 $SERVICE mysqld start
 sleep 5
 
-pass_opt=""
-# See if MySQL root account is password protected
-mysqlshow 2>&1 | grep password
-while [ $? -eq 0 ]; do
-    read -s -p "Existing Codendi DB is password protected. What is the Mysql root password?: " old_passwd
-    echo
-    mysqlshow --password=$old_passwd 2>&1 | grep password
-done
-[ "X$old_passwd" != "X" ] && pass_opt="--password=$old_passwd"
 
 
 echo "Starting DB update for Codendi 4.0 This might take a few minutes."
@@ -1036,6 +1049,9 @@ echo "Update SELinux contexts if needed"
 cd $INSTALL_DIR/src/utils
 ./fix_selinux_contexts.pl
 
+
+substitute '/etc/httpd/conf/httpd.conf' 'codex' 'codendi'
+
 ##############################################
 # Restarting some services
 #
@@ -1046,6 +1062,11 @@ $SERVICE sendmail start
 $SERVICE mailman start
 
 
+
+
+
+Codendification:
+- /var/lib/mysql/codex-bin*
 
 
 TODO migrate CodeX* themes (in file and in db and in plugins)
