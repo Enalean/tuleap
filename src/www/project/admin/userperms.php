@@ -41,104 +41,130 @@ if ($project->isError()) {
 // ########################### form submission, make updates
 if (isset($submit)) {
     group_add_history ('changed_member_perm','',$group_id);
-
-	$res_dev = db_query("SELECT user_id FROM user_group WHERE group_id=$group_id");
-	while ($row_dev = db_fetch_array($res_dev)) {
-		//
+    
+    $res_dev = db_query("SELECT user_id FROM user_group WHERE group_id=$group_id");
+    while ($row_dev = db_fetch_array($res_dev)) {
+        
+        if($request ->exist("admin_user_$row_dev[user_id]")){
+         //
 		// cannot turn off their own admin flag if no other admin in project -- set it back to 'A'
 		//
-		if (user_getid() == $row_dev['user_id']) {
-                    $admin_flags="admin_user_$row_dev[user_id]";
-                    if ($$admin_flags != 'A') {
-                        // Check that there is still at least one admin
-                        $res_dev2 = db_query("SELECT user_id FROM user_group WHERE group_id=$group_id");
-                        $other_admin_exists=false;
-                        while ($row_dev2 = db_fetch_array($res_dev2)) {
+        
+		    if (user_getid() == $row_dev['user_id']) {
+                        $admin_flags="admin_user_$row_dev[user_id]";
+                        if ($$admin_flags != 'A') {
+                            // Check that there is still at least one admin
+                            $res_dev2 = db_query("SELECT user_id FROM user_group WHERE group_id=$group_id");
+                            $other_admin_exists=false;
+                            while ($row_dev2 = db_fetch_array($res_dev2)) {
                             // Go through all users and see if there is at least one with admin flag.
-                            $flag_var="admin_user_$row_dev2[user_id]";
-                            if ($$flag_var=='A') {
-                                $other_admin_exists=true;
-                                break;
+                                $flag_var="admin_user_$row_dev2[user_id]";
+                                    if ($$flag_var=='A') {
+                                            $other_admin_exists=true;
+                                            break;
+                                    }
+                            }
+                            if (!$other_admin_exists) {
+                                $GLOBALS['Response']->addFeedback('error', $Language->getText('project_admin_userperms','cannot_remove_admin_stat'));
+                                $$admin_flags='A';
                             }
                         }
-                        if (!$other_admin_exists) {
-                            $GLOBALS['Response']->addFeedback('error', $Language->getText('project_admin_userperms','cannot_remove_admin_stat'));
-                            $$admin_flags='A';
+            } else {
+                $admin_flags="admin_user_$row_dev[user_id]";
+            }
+            $bug_flags="bugs_user_$row_dev[user_id]";
+            $forum_flags="forums_user_$row_dev[user_id]";
+            $project_flags="projects_user_$row_dev[user_id]";
+            $patch_flags="patch_user_$row_dev[user_id]";
+            $support_flags="support_user_$row_dev[user_id]";
+            $doc_flags="doc_user_$row_dev[user_id]";
+            $file_flags="file_user_$row_dev[user_id]";
+            $wiki_flags="wiki_user_$row_dev[user_id]";
+            $svn_flags="svn_user_$row_dev[user_id]";
+            $news_flags="news_user_$row_dev[user_id]";
+		
+        
+            $res = db_query('UPDATE user_group SET ' 
+                ."admin_flags='".$$admin_flags."',"
+                ."bug_flags='".$$bug_flags."',"
+                ."forum_flags='".$$forum_flags."',"
+                ."project_flags='".$$project_flags."', "
+                .(isset($$doc_flags) ? "doc_flags='".$$doc_flags."', " : '')
+                ."file_flags='".$$file_flags."', "
+                ."patch_flags='".$$patch_flags."', "
+                ."wiki_flags='".$$wiki_flags."', "
+                ."news_flags='".$$news_flags."', "
+                ."support_flags='".$$support_flags."', "
+                ."svn_flags='".$$svn_flags."' "
+                ."WHERE user_id='$row_dev[user_id]' AND group_id='$group_id'");
+        
+        
+            $tracker_error = false;
+            if ( $project->usesTracker()&&$at_arr ) {
+                for ($j = 0; $j < count($at_arr); $j++) {
+                    $atid = $at_arr[$j]->getID();
+                    $perm_level = "tracker_user_$row_dev[user_id]_$atid";
+                     //echo "Tracker ".$at_arr[$j]->getName()."(".$at_arr[$j]->getID()."): ".$perm_level."=".$$perm_level."<br>";
+                    if ( $at_arr[$j]->existUser($row_dev['user_id']) ) {
+                        if ( !$at_arr[$j]->updateUser($row_dev['user_id'],$$perm_level) ) {
+                            echo $at_arr[$j]->getErrorMessage();
+                            $tracker_error = true;
+                        }
+                    } else {
+                        if ( !$at_arr[$j]->addUser($row_dev['user_id'],$$perm_level) ) {
+                            $tracker_error = true;
                         }
                     }
-		} else {
-			$admin_flags="admin_user_$row_dev[user_id]";
-		}
-		$bug_flags="bugs_user_$row_dev[user_id]";
-		$forum_flags="forums_user_$row_dev[user_id]";
-		$project_flags="projects_user_$row_dev[user_id]";
-		$patch_flags="patch_user_$row_dev[user_id]";
-		$support_flags="support_user_$row_dev[user_id]";
-		$doc_flags="doc_user_$row_dev[user_id]";
-		$file_flags="file_user_$row_dev[user_id]";
-		$wiki_flags="wiki_user_$row_dev[user_id]";
-		$svn_flags="svn_user_$row_dev[user_id]";
-		$news_flags="news_user_$row_dev[user_id]";
-		
-		$res = db_query('UPDATE user_group SET ' 
-			."admin_flags='".$$admin_flags."',"
-			."bug_flags='".$$bug_flags."',"
-			."forum_flags='".$$forum_flags."',"
-			."project_flags='".$$project_flags."', "
-			."doc_flags='".$$doc_flags."', "
-			."file_flags='".$$file_flags."', "
-			."patch_flags='".$$patch_flags."', "
-			."wiki_flags='".$$wiki_flags."', "
-			."news_flags='".$$news_flags."', "
-			."support_flags='".$$support_flags."', "
-			."svn_flags='".$$svn_flags."' "
-			."WHERE user_id='$row_dev[user_id]' AND group_id='$group_id'");
+              
+                }
+            }
 
-		$tracker_error = false;
-		if ( $project->usesTracker()&&$at_arr ) {
-			for ($j = 0; $j < count($at_arr); $j++) {
-				$atid = $at_arr[$j]->getID();
-				$perm_level = "tracker_user_$row_dev[user_id]_$atid";
-				//echo "Tracker ".$at_arr[$j]->getName()."(".$at_arr[$j]->getID()."): ".$perm_level."=".$$perm_level."<br>";
-				if ( $at_arr[$j]->existUser($row_dev['user_id']) ) {
-					if ( !$at_arr[$j]->updateUser($row_dev['user_id'],$$perm_level) ) {
-						echo $at_arr[$j]->getErrorMessage();
-						$tracker_error = true;
-					}
-				} else {
-					if ( !$at_arr[$j]->addUser($row_dev['user_id'],$$perm_level) ) {
-						$tracker_error = true;
-					}
-				}
-			}
-		}
-
-		if (!$res || $tracker_error) {
-			$GLOBALS['Response']->addFeedback('error', $Language->getText('project_admin_userperms','perm_fail_for',$row_dev['user_id']).' '.db_error());
-		}
+            if (!$res || $tracker_error) {
+                $GLOBALS['Response']->addFeedback('error', $Language->getText('project_admin_userperms','perm_fail_for',$row_dev['user_id']).' '.db_error());
+            }
         
-        // Raise an event
-        $em =& EventManager::instance();
-        $em->processEvent('project_admin_change_user_permissions', array(
-            'group_id' => $group_id,
-            'user_id' => $row_dev['user_id'],
-            'user_permissions' => array(
-                    'admin_flags'   => $$admin_flags,
-                    'bug_flags'     => $$bug_flags,
-                    'forum_flags'   => $$forum_flags,
-                    'project_flags' => $$project_flags,
-                    'doc_flags'     => $$doc_flags,
-                    'file_flags'    => $$file_flags,
-                    'patch_flags'   => $$patch_flags,
-                    'wiki_flags'    => $$wiki_flags,
-                    'news_flags'    => $$news_flags,
-                    'support_flags' => $$support_flags,
-                    'svn_flags'     => $$svn_flags
-                )
-        ));
-        
+            // Raise an event
+            $em =& EventManager::instance();
+            if(isset($$doc_flags)){
+                $em->processEvent('project_admin_change_user_permissions', array(
+                    'group_id' => $group_id,
+                    'user_id' => $row_dev['user_id'],
+                    'user_permissions' => array(
+                        'admin_flags'   => $$admin_flags,
+                        'bug_flags'     => $$bug_flags,
+                        'forum_flags'   => $$forum_flags,
+                        'project_flags' => $$project_flags,
+                        'doc_flags'     => $$doc_flags,
+                        'file_flags'    => $$file_flags,
+                        'patch_flags'   => $$patch_flags,
+                        'wiki_flags'    => $$wiki_flags,
+                        'news_flags'    => $$news_flags,
+                        'support_flags' => $$support_flags,
+                        'svn_flags'     => $$svn_flags
+                        )
+                ));
+            }else{
+                $em->processEvent('project_admin_change_user_permissions', array(
+                    'group_id' => $group_id,
+                    'user_id' => $row_dev['user_id'],
+                    'user_permissions' => array(
+                        'admin_flags'   => $$admin_flags,
+                        'bug_flags'     => $$bug_flags,
+                        'forum_flags'   => $$forum_flags,
+                        'project_flags' => $$project_flags,
+                        'file_flags'    => $$file_flags,
+                        'patch_flags'   => $$patch_flags,
+                        'wiki_flags'    => $$wiki_flags,
+                        'news_flags'    => $$news_flags,
+                        'support_flags' => $$support_flags,
+                        'svn_flags'     => $$svn_flags
+                        )
+                ));
+            }
+            
+        }  
 	}
-
+    
 	$GLOBALS['Response']->addFeedback('info', $Language->getText('project_admin_userperms','perm_upd'));
 }
 
