@@ -27,8 +27,8 @@
 class Backend {
 
 
-    public $block_marker_start = "# !!! CodeX Specific !!! DO NOT REMOVE (NEEDED CODEX MARKER)";
-    public $block_marker_end   = "# END OF NEEDED CODEX BLOCK";
+    public $block_marker_start = "# !!! Codendi Specific !!! DO NOT REMOVE (NEEDED CODENDI MARKER)";
+    public $block_marker_end   = "# END OF NEEDED CODENDI BLOCK";
 
 
     /**

@@ -91,8 +91,8 @@ if ($sys_force_ssl) {
 
 
 # file templates
-my $MARKER_BEGIN = "# !!! CodeX Specific !!! DO NOT REMOVE (NEEDED CODEX MARKER)";
-my $MARKER_END   = "# END OF NEEDED CODEX BLOCK";
+my $MARKER_BEGIN = "# !!! Codendi Specific !!! DO NOT REMOVE (NEEDED CODENDI MARKER)";
+my $MARKER_END   = "# END OF NEEDED CODENDI BLOCK";
 
 # See under which user this script is running. It is the user that is
 # also going to be used to run viewvc.cgi. And we need to make it the
@@ -763,8 +763,8 @@ if ($use_cvsnt && $server_is_master) {
     print FILE "Repository$n=$_";
     $n++;
   }
-  $cvsnt_marker="DON'T EDIT THIS LINE - END OF CODEX BLOCK";
-  print FILE "# End of CodeX CVSROOT directory list: you may change options below $cvsnt_marker\n";
+  $cvsnt_marker="DON'T EDIT THIS LINE - END OF CODENDI BLOCK";
+  print FILE "# End of Codendi CVSROOT directory list: you may change options below $cvsnt_marker\n";
   
   # and recopy other configuration instructions
   my $configlines=0;

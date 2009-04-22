@@ -1088,6 +1088,18 @@ TODO : Déplacer le script de debug dans Layout.class.php
 # TODO CODENDIFICATION:
 # replace "CODEX BLOCK" by "CODENDI BLOCK" in /etc/cvsnt/PServer
 # httpd.conf: replace CODEX_LOCAL_INC by CODENDI_LOCAL_INC
+# migrate all CodeX blocks in cvs and svn repositories!:
+#    "# !!! CodeX Specific !!! DO NOT REMOVE (NEEDED CODEX MARKER)";
+#    "# END OF NEEDED CODEX BLOCK";
+#   Becomes
+#    "# !!! Codendi Specific !!! DO NOT REMOVE (NEEDED CODENDI MARKER)";
+#    "# END OF NEEDED CODENDI BLOCK";
+#   in:
+#   /cvsroot/*/CVSROOT/loginfo
+#   /cvsroot/*/CVSROOT/commitinfo
+#   /cvsroot/*/CVSROOT/notify
+#   /svnroot/*/hooks/post-commit
+
 #
 # Warn admins that CODEX_LOCAL_INC was replaced by CODENDI_LOCAL_INC
 #

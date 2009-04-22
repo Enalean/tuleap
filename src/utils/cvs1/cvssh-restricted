@@ -1,14 +1,14 @@
 #! /usr/bin/perl -w
 #
 # "Shell" for a restricted account, limiting the available commands
-# This shell is particularly designed for CodeX restricted users:
+# This shell is particularly designed for Codendi restricted users:
 # it denies access to cvs repositories of projects the user is not member of.
 #
 # Based on work by Roland Mas, debian-sf (Sourceforge for Debian)
 # Inspired from the grap.c file in Sourceforge 2.5
 #
-# Modified by N. Guerin for the CodeX project.
-# Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2005. All Rights Reserved
+# Modified by N. Guerin for the Codendi project.
+# Copyright (c) Xerox Corporation, Codendi, 2005. All Rights Reserved
 #
 # 
 #

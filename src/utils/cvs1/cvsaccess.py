@@ -1,14 +1,21 @@
+# Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
 #
-# CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
-# Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2004. All Rights Reserved
-# http://codex.xerox.com
+# This file is a part of Codendi.
 #
-# 
+# Codendi is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
 #
-#  License:
-#    This file is subject to the terms and conditions of the GNU General Public
-#    license. See the file COPYING in the main directory of this archive for
-#    more details.
+# Codendi is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+#
+
 #
 # Purpose:
 #    This Python file determine whether a given user has access to the CVS
@@ -48,7 +55,7 @@ def check_read_access(username, cvsrepo, cvspath):
 
     # A directory that is not world readable can only be viewed
     # through viewvc if the user is a project member
-    # Since .CODEX_PRIVATE only removes read access on top directory,
+    # Since we only removes read access on top directory,
     # we need to also check it.
     if group_id and ((mode & stat.S_IROTH) == 0 or (mode_repo & stat.S_IROTH) == 0) and not user.user_is_member(group_id, '0'):
         return False

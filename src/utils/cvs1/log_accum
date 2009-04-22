@@ -14,13 +14,13 @@
 #
 # hacked greatly by Greg A. Woods <woods@web.net>
 #
-# Heavily modified for the CodeX project at Xerox
-# Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2004-2006. All Rights Reserved
+# Heavily modified for the Codendi project at Xerox
+# Copyright (c) Xerox Corporation, Codendi / Codendi Team, 2004-2006. All Rights Reserved
 
 # Usage: log_accum.pl [-d] [-s] [-M module] [[-m mailto] ...] [-f logfile]
 #	-d		- turn on debugging
 #       -G database     - interface to Gnats
-#       -nodb           - suppress default codex database commit tracking
+#       -nodb           - suppress default codendi database commit tracking
 #	-m mailto	- send mail to "mailto" (multiple)
 #	-M modulename	- set module name to "modulename"
 #	-f logfile	- write commit messages to logfile too
@@ -35,14 +35,14 @@
 #	Configurable options
 #
 
-# Codex specific
+# Codendi specific
 #
-# Make sure that log_accum has the s flag and owned by codexadm.codexadm
+# Make sure that log_accum has the s flag and owned by codendiadm.codendiadm
 # Like this:
-# -rwsrwxr-x  codexadm codexadm
+# -rwsrwxr-x  codendiadm codendiadm
 #
 
-# Use LWP for CodeX HTTP API
+# Use LWP for Codendi HTTP API
 use HTTP::Request::Common qw(POST);
 use LWP::UserAgent;
 use Encode;
@@ -50,22 +50,22 @@ use Encode;
 # DB connection
 use DBI;
 
-$utils_path = $ENV{'CODEX_UTILS_PREFIX'} || "/usr/share/codendi/src/utils";
+$utils_path = $ENV{'CODENDI_UTILS_PREFIX'} || "/usr/share/codendi/src/utils";
 require $utils_path."/include.pl";
 require $utils_path."/group.pl";
 require $utils_path."/cvs1/checkins.pl";
 require $utils_path."/hudson.pl";
 
-my $codex_srv;
+my $codendi_srv;
 if ($sys_force_ssl) {
-  $codex_srv="https://$sys_https_host";
+  $codendi_srv="https://$sys_https_host";
 } else {
-  $codex_srv="http://$sys_default_domain";
+  $codendi_srv="http://$sys_default_domain";
 }
-$codex_http_srv="http://$sys_default_domain";
+$codendi_http_srv="http://$sys_default_domain";
 
 # Base name of viewvc specification
-$VIEWVC_URL = "$codex_srv/cvs/viewvc.php/";
+$VIEWVC_URL = "$codendi_srv/cvs/viewvc.php/";
 $TMPDIR = $cvs_hook_tmp_dir;
 
 # Set this to something that takes "-s".
@@ -461,7 +461,7 @@ sub generate_viewvc_urls {
 # This next if assumes that if a repository name is not given with the
 # -C option, we then have to append the project name to the VIEWVC_URL
 # and the project name has been defined by the -T option
-# (this works for the particular setup in savannah.gnu.org and CodeX
+# (this works for the particular setup in savannah.gnu.org and Codendi
 # but will have to be changed in other sites.)
     if ($viewvc_name eq '')
     {
@@ -575,14 +575,14 @@ sub generate_checkins {
 }
 
 
-# CodeX - extract all items that needs to be cross-referenced
+# Codendi - extract all items that needs to be cross-referenced
 # in the log message
 sub extract_xrefs {
     my (@log) = @_;
 
-    # Use CodeX HTTP API
+    # Use Codendi HTTP API
     my $ua = LWP::UserAgent->new;
-    $ua->agent('CodeX Perl Agent');
+    $ua->agent('Codendi Perl Agent');
 
     if (!$group_id) {
       $group_id=100;
@@ -590,7 +590,7 @@ sub extract_xrefs {
     $text=join("\n",@log);
     $cvstype="commit_cvs";
     # HTTPS is not supported by LWP on RHEL3 -> use HTTP
-    my $req = POST "$codex_http_srv/api/reference/extractCross",
+    my $req = POST "$codendi_http_srv/api/reference/extractCross",
       [ group_id => "$group_id", text => "$text", rev_id=>"$commit_id", login=>"$login", type=>"$cvstype" ];
    
     my $response = $ua->request($req);
@@ -671,7 +671,7 @@ $temp_name = "temp";
 $do_viewvc = 0;
 $viewvc_name = '';
 $do_diffs = 0;
-$codexdb = 1;
+$codendidb = 1;
 %diffmon = ();
 
 # parse command line arguments (file list is seen as one arg)
@@ -701,7 +701,7 @@ while (@ARGV) {
 	($gnatsdb) && die("Too many '-G' args\n");
 	$gnatsdb = shift @ARGV;
     } elsif ($arg eq '-nodb') {
-	$codexdb = 0;
+	$codendidb = 0;
     } elsif ($arg eq '-T') {
 	$temp_name = shift @ARGV;
     } elsif ($arg eq '-C') {
@@ -760,7 +760,7 @@ if ($debug) {
   print STDERR "\nentering log_accum\n";
 }
 
-($mailto) || ($codexdb) || die("No -m mail recipient specified\n");
+($mailto) || ($codendidb) || die("No -m mail recipient specified\n");
 $mailto =~ s/^\s+//;
 &set_temp_vars ($temp_name);
 
@@ -796,7 +796,7 @@ if ($debug) {
 }
 
 
-if ($codexdb) {
+if ($codendidb) {
 
   &db_connect;
 
@@ -864,7 +864,7 @@ if ($files[2] =~ /New/ && $files[3] =~ /directory/) {
 
     ## track in cvs database
     $db_track = 0;
-    if ($codexdb) {
+    if ($codendidb) {
       $db_track = &isGroupCvsTracked();
       if ($debug) {
 	print STDERR "tracking: ", $db_track, "\n";
@@ -899,7 +899,7 @@ if ($files[2] =~ /New/ && $files[3] =~ /directory/) {
 
 
 if ($debug) {
-  print STDERR $codexdb, " value for codexdb \n";
+  print STDERR $codendidb, " value for codendidb \n";
 }
 
 while (<STDIN>) {
@@ -1000,14 +1000,14 @@ if ($files[2] =~ /Imported/ && $files[3] =~ /sources/) {
     
     $db_track = 0;
     $db_events_list = 'NULL';
-    if ($codexdb) {
+    if ($codendidb) {
       $db_track = &isGroupCvsTracked();
       $db_events_list = &cvsGroup_mailto();
       if ($debug) {
 	print STDERR "tracking: ", $db_track, "\n";
 	print STDERR "mailing: ", $db_events_list, "\n";
       }
-      $codexdb = $codexdb && (($db_events_list != 'NULL') || $db_track);
+      $codendidb = $codendidb && (($db_events_list != 'NULL') || $db_track);
     }
     if ($db_track) {
       $commit_id = db_get_commit($debug);
@@ -1027,7 +1027,7 @@ if ($do_viewvc) {
 				   @files[1 .. $#files]);
 }
 
-if ($codexdb) {
+if ($codendidb) {
   $db_track = &isGroupCvsTracked();
   $db_events_list = &cvsGroup_mailto();
   if ($debug) {
@@ -1035,9 +1035,9 @@ if ($codexdb) {
     print STDERR "tracking: ", $db_track, "\n";
     print STDERR "mailing: ", $db_events_list, "\n";
   }
-  $codexdb = $codexdb && (($db_events_list != 'NULL') || $db_track);
+  $codendidb = $codendidb && (($db_events_list != 'NULL') || $db_track);
 }
-if ($codexdb) {  
+if ($codendidb) {  
   if ($debug) {
     local @keys = keys %branches;
     print STDERR $#keys , " found branches\n";
@@ -1076,7 +1076,7 @@ if ($debug) {
 &append_names_to_file("$ADDED_FILE.$i.$id",   $dir, @added_files);
 &append_names_to_file("$REMOVED_FILE.$i.$id", $dir, @removed_files);
 &append_names_to_file("$URL_FILE.$i.$id",     $dir, @urls);
-if ($codexdb) {
+if ($codendidb) {
   &append_names_to_file("$DB_FILE.$i.$id",    &checkin_describe($dir), @checkins);
 }
 &write_logfile("$LOG_FILE.$i.$id", @log_lines);
@@ -1154,7 +1154,7 @@ for ($i = 0; ; $i++) {
 	push(@text, "Log message:");
 	push(@text, @log_txt);
 	push(@text, "");
-        # CodeX: extract references from log message
+        # Codendi: extract references from log message
         &extract_xrefs(@log_txt)
     }
     if ($db_track) {
@@ -1307,7 +1307,7 @@ if ($gnatsdb ne '') {
 }
 
 # Trigger Continuous Integration build if needed.
-if ($codexdb) {
+if ($codendidb) {
     &trigger_hudson_builds($group_id, 'cvs');
 }
 

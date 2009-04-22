@@ -1,16 +1,24 @@
 #!/usr/bin/perl
 #
-# CodeX: Breaking Down the Barriers to Source Code Sharing
-# Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2006. All Rights Reserved
+# Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
 #
-# 
+# This file is a part of Codendi.
 #
-#  License:
-#    This file is subject to the terms and conditions of the GNU General Public
-#    license. See the file COPYING in the main directory of this archive for
-#    more details.
+# Codendi is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
 #
-# cvs2cvsnt: convert CodeX CVS repositories to CVSNT.
+# Codendi is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+#
+#
+# cvs2cvsnt: convert Codendi CVS repositories to CVSNT.
 # Simply update the CVSROOT/loginfo file so that the format is accepted by cvsnt.
 #
 # WARNING: this script backs up all 'loginfo' files and replaces them with a new file
@@ -23,10 +31,10 @@ umask 002;
 require("../include.pl");  # Include all the predefined functions and variables
 
 $server_url=$sys_default_domain;
-my ($cxname) = get_codex_user();
+my ($cxname) = get_codendi_user();
 
-my $MARKER_BEGIN = "# !!! CodeX Specific !!! DO NOT REMOVE (NEEDED CODEX MARKER)";
-my $MARKER_END   = "# END OF NEEDED CODEX BLOCK";
+my $MARKER_BEGIN = "# !!! Codendi Specific !!! DO NOT REMOVE (NEEDED CODENDI MARKER)";
+my $MARKER_END   = "# END OF NEEDED CODENDI BLOCK";
 
 
 @projects=`ls -1 $cvs_prefix`;

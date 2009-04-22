@@ -1,13 +1,21 @@
-# CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
-# Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2001. All Rights Reserved
-# http://codex.xerox.com
+# Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
 #
-# 
+# This file is a part of Codendi.
 #
-#  License:
-#    This file is subject to the terms and conditions of the GNU General Public
-#    license. See the file COPYING in the main directory of this archive for
-#    more details.
+# Codendi is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# Codendi is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+#
+
 #
 # Purpose:
 #    This Perl include file contains function to enable or disable cvs watch on a given module
