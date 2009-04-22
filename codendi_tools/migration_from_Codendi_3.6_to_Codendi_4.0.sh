@@ -30,6 +30,7 @@ USR_LIB_DIR="/usr/lib/codendi"
 VAR_LIB_DIR="/var/lib/codendi"
 VAR_TMP_DIR="/var/tmp/codendi_cache"
 VAR_LOG_DIR="/var/log/codendi"
+BACKUP_DIR="/root/codex_3_6_backup"
 
 # path to command line tools
 GROUPADD='/usr/sbin/groupadd'
@@ -247,7 +248,11 @@ $SERVICE smb stop
 
 echo -n "codexadm is now known as codendiadm..."
 groupmod -n codendiadm codexadm
-usermod -d /home/codendiadm -m -l codendiadm codexadm
+usermod -d /home/codendiadm -m  -c 'Owner of Codendi directories' -l codendiadm codexadm
+# also relocate homedir of ftp, ftpadmin and dummy users
+usermod -d /var/lib/codendi/ftp ftp 2> /dev/null
+usermod -d /var/lib/codendi/ftp ftpadmin 2> /dev/null
+usermod  -c 'Dummy Codendi User' -d /var/lib/codendi/dumps dummy 2> /dev/null
 echo "done"
 
 ##############################################
@@ -265,29 +270,42 @@ $FIND $INSTALL_DIR -type d -exec $CHMOD 775 {} \;
 #
 # Migrate paths
 #
-$CP -r /etc/codex/ /etc/codex_36
+
+# Backups
+$MKDIR -p $BACKUP_DIR
+$MKDIR -p $BACKUP_DIR/etc
+$MKDIR -p $BACKUP_DIR/etc/httpd
+$MKDIR -p $BACKUP_DIR/usr/lib
+$MKDIR -p $BACKUP_DIR/var/tmp
+$MKDIR -p $BACKUP_DIR/var/named/chroot/var
+$CP -r /etc/httpd/conf.d $BACKUP_DIR/etc/httpd
+$CP -r /etc/httpd/conf $BACKUP_DIR/etc/httpd
+$CP -r /etc/codex/ $BACKUP_DIR/etc/codex
+$CP -r /usr/lib/codex $BACKUP_DIR/usr/lib
+$CP -r /var/named/chroot/var/named $BACKUP_DIR/var/named/chroot/var
+$CP -r /var/named/chroot/etc $BACKUP_DIR/var/named/chroot
+$MV /var/tmp/codex_cache $BACKUP_DIR/var/tmp/
+
+# Renames
 $MV /etc/codex $ETC_DIR
-
-$CP -r /usr/lib/codex /usr/lib/codex_36
 $MV /usr/lib/codex $USR_LIB_DIR
-
-$CP -r /var/lib/codex /var/lib/codex_36
 $MV /var/lib/codex/ftp/codex /var/lib/codex/ftp/codendi
 $MV /var/lib/codex $VAR_LIB_DIR
-
-$CP -r /var/tmp/codex_cache /var/tmp/codex_cache_36
-$MV /var/tmp/codex_cache $VAR_TMP_DIR
-
-# no more used (need to generate it the first time?)
-$MV /etc/httpd/conf.d/codex_svnroot.conf /etc/httpd/conf.d/codendi_svnroot.conf_36
-
-$CP -r /var/log/codex /var/log/codex_36
 $MV /var/log/codex $VAR_LOG_DIR
+build_dir /var/tmp/codendi_cache codendiadm codendiadm 755
+$RM /etc/httpd/conf.d/codex_svnroot.conf
+
+
+
+
+#
+# Codendification of config files
+#
+
 substitute '/etc/logrotate.d/httpd' '/var/log/codex/' "$VAR_LOG_DIR"
 substitute '/etc/logrotate.d/vsftpd.log' '/var/log/codex/' "$VAR_LOG_DIR"
 
 if [ -d /etc/skel_codex ]; then 
-    $CP -r /etc/skel_codex /etc/skel_codex_36
     $MV /etc/skel_codex /etc/skel_codendi
 fi
 
@@ -310,8 +328,11 @@ while [ "$dbauth_passwd" != "$dbauth_passwd2" ]; do
 done
 
 
+#
+# Install New dist files
+#
 
-# New dist files
+# libnss-mysql
 for f in /etc/libnss-mysql.cfg  /etc/libnss-mysql-root.cfg; do
     yn="0"
     fn=`basename $f`
@@ -359,18 +380,6 @@ else
     echo '/etc/nsswitch.conf does not exist. Cannot use MySQL authentication!'
 fi
 
-
-#############################################
-# Make codendiadm a member of the apache group
-# for phpMyAdmin (session, config files...)
-$USERMOD -a -G apache codendiadm
-
-
-#############################################
-# Remove SMB support
-$CHKCONFIG smb off
-todo "Please note that Windows shares (with Samba) are no longer supported for security reasons"
-
 ###############################################################################
 # Add some privacy in shared directories. Also helps libnss_mysql...
 chmod 751 /var/lib/codex/cvsroot/
@@ -383,6 +392,19 @@ chmod 771 /home/groups
 $CHKCONFIG nscd on
 
 $SERVICE nscd start
+
+
+#############################################
+# Make codendiadm a member of the apache group
+# for phpMyAdmin (session, config files...)
+# NG: wasn't this done in 3.6?
+$USERMOD -a -G apache codendiadm
+
+
+#############################################
+# Remove SMB support
+$CHKCONFIG smb off
+todo "Please note that Windows shares (with Samba) are no longer supported for security reasons"
 
 
 ###############################################################################
@@ -1143,12 +1165,14 @@ TODO : Déplacer le script de debug dans Layout.class.php
 # TODO: copy /src/utils/svn/codendi_svn_pre_commit.php into /usr/lib/codendi/bin/codendi_svn_pre_commit.php (also in codendi_install!!)
 # TODO: rename /usr/lib/codex to /usr/lib/codendi
 
-# Todo, modify fileforge.c and recompile for new layout.
+# Todo, modify fileforge.c and recompile for new layout., and reinstall
 
+#
 # TODO CODENDIFICATION:
-# replace "CODEX BLOCK" by "CODENDI BLOCK" in /etc/cvsnt/PServer
-# httpd.conf: replace CODEX_LOCAL_INC by CODENDI_LOCAL_INC
-# migrate all CodeX blocks in cvs and svn repositories!:
+#
+# - replace "CODEX BLOCK" by "CODENDI BLOCK" in /etc/cvsnt/PServer
+# - httpd.conf: replace CODEX_LOCAL_INC by CODENDI_LOCAL_INC
+# - migrate all CodeX blocks in cvs and svn repositories!:
 #    "# !!! CodeX Specific !!! DO NOT REMOVE (NEEDED CODEX MARKER)";
 #    "# END OF NEEDED CODEX BLOCK";
 #   Becomes
@@ -1159,9 +1183,25 @@ TODO : Déplacer le script de debug dans Layout.class.php
 #   /cvsroot/*/CVSROOT/commitinfo
 #   /cvsroot/*/CVSROOT/notify
 #   /svnroot/*/hooks/post-commit
-
+# - in /svnroot/*/.SVNAccessFile, replace (twice) "CODEX DEFAULT SETTINGS" by "CODENDI DEFAULT SETTINGS"
+# - uninstall codex-* rpm (codex-jri, codex-eclipse and codex-salome) and reinstall codendi-* ones
+# - /etc/my.cnf: log-bin=codex-bin
+# - rename /etc/httpd/cond/codex_aliases.conf
+# ????# Create .subversion directory in codexadm home dir.
+# ????su -c 'svn info --non-interactive https://partners.xrce.xerox.com/svnroot/codex/dev/trunk' - codexadm 2> /dev/null &
+#??? Mailman: codex-admin??
+##$PERL -pi -e "s/^#ftpd_banner=.*/ftpd_banner=Welcome to CodeX FTP service./g" /etc/vsftpd/vsftpd.conf 
+# - /var/lib/codex/ftp/.message contains 'CodeX'
+# - Update root and codexadm crontab
+# - /etc/logrotate.d/httpd and /etc/logrotate.d/vsftpd.log conatain paths with '/codex/'
+# - /etc/profile contains reference to '/etc/profile_codex'
+# - rename /etc/profile_codex
+# - /etc/profile_codex contains "C O D E X3 and "CodeX"
+# - MySQL: 'codex' db, codexadm user and grants on codex DB.
+# - Warn admins that CODEX_LOCAL_INC was replaced by CODENDI_LOCAL_INC
+# - OpenFire install.
 #
-# Warn admins that CODEX_LOCAL_INC was replaced by CODENDI_LOCAL_INC
+# remove references to sys_win_domain in documentation (Windows support..)
 #
 # Re-copy files that have been modified
 #

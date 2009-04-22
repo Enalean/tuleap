@@ -235,8 +235,8 @@ class BackendSVN extends Backend {
         $svnaccess_file_new = $svnaccess_file.".new";
         // if you change these block markers also change them in
         // src/www/svn/svn_utils.php
-        $default_block_start="# BEGIN CODEX DEFAULT SETTINGS - DO NOT REMOVE";
-        $default_block_end="# END CODEX DEFAULT SETTINGS";
+        $default_block_start="# BEGIN CODENDI DEFAULT SETTINGS - DO NOT REMOVE";
+        $default_block_end="# END CODENDI DEFAULT SETTINGS";
         $custom_perms='';
         $public_svn = 1; // TODO
         
