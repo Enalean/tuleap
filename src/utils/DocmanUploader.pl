@@ -37,7 +37,7 @@ use Env qw($CODEX_WSDL);
 #################################
 
 # Where CodeX-CLI tool stands
-my $_cli_dir   = "/usr/share/codex/cli";
+my $_cli_dir   = "/usr/share/codendi/cli";
 # Server URL where all the stuff will be uploaded
 my $_codex_url = "http://codex.xerox.com";
 # CLI execution command

@@ -232,7 +232,7 @@ use HTTP::Request::Common qw(POST);
 use LWP::UserAgent;
 
 
-$utils_path = $ENV{'CODEX_UTILS_PREFIX'} || "/usr/share/codex/src/utils";
+$utils_path = $ENV{'CODEX_UTILS_PREFIX'} || "/usr/share/codendi/src/utils";
 require $utils_path."/include.pl";
 require $utils_path."/group.pl";
 require $utils_path."/svn/svn-checkins.pl";
