@@ -1064,5 +1064,5 @@ Include conf/ssl.conf
 # On the production server the local.inc file is in /etc/codendi/conf/local.inc
 # because it contains sensitive data
 #
-SetEnv CODEX_LOCAL_INC ""
+SetEnv CODENDI_LOCAL_INC ""
 

@@ -346,7 +346,7 @@ class BackendCVS extends Backend {
 
         if ($this->useCVSNT()) {
             $config_file=$GLOBALS['cvsnt_config_file'];
-            $cvsnt_marker="DON'T EDIT THIS LINE - END OF CODEX BLOCK";
+            $cvsnt_marker="DON'T EDIT THIS LINE - END OF CODENDI BLOCK";
         } else {
             $config_file=$GLOBALS['cvs_root_allow_file'];
         }

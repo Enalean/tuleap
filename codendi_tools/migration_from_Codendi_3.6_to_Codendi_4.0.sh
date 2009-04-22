@@ -234,7 +234,7 @@ $SERVICE smb stop
 # Install the Codendi software 
 #
 echo "Installing the Codendi software..."
-$MV /usr/share/codex/ $BACKUP_INSTALL_DIR
+$MV /usr/share/codex $BACKUP_INSTALL_DIR
 $MKDIR $INSTALL_DIR;
 cd $INSTALL_DIR
 $TAR xfz ${Codendi_DIR}/codendi*.tgz
@@ -1083,6 +1083,9 @@ TODO : Déplacer le script de debug dans Layout.class.php
 
 # Todo, modify fileforge.c and recompile for new layout.
 
+# TODO CODENDIFICATION:
+# replace "CODEX BLOCK" by "CODENDI BLOCK" in /etc/cvsnt/PServer
+# httpd.conf: replace CODEX_LOCAL_INC by CODENDI_LOCAL_INC
 #
 # Re-copy files that have been modified
 #
