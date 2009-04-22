@@ -30,7 +30,7 @@ require_once('common/event/EventManager.class.php');
 
 //
 $em =& EventManager::instance();
-$em->processEvent("codex_daily_start", null);
+$em->processEvent("codendi_daily_start", null);
 
 //change account status to suspended when the account expiry date is passed
 $current_date = format_date('Y-m-d',time());

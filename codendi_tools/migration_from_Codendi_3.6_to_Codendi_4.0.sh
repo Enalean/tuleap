@@ -1089,6 +1089,8 @@ TODO : Déplacer le script de debug dans Layout.class.php
 # replace "CODEX BLOCK" by "CODENDI BLOCK" in /etc/cvsnt/PServer
 # httpd.conf: replace CODEX_LOCAL_INC by CODENDI_LOCAL_INC
 #
+# Warn admins that CODEX_LOCAL_INC was replaced by CODENDI_LOCAL_INC
+#
 # Re-copy files that have been modified
 #
 cd $INSTALL_DIR/src/utils/cvs1

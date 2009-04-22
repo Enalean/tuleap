@@ -44,7 +44,7 @@ class DocmanPlugin extends Plugin {
         $this->_addHook('soap',                              'soap',                              false);
         $this->_addHook('widget_instance',                   'myPageBox',                         false);
         $this->_addHook('widgets',                           'widgets',                           false);
-        $this->_addHook('codex_daily_start',                 'codexDaily',                        false);
+        $this->_addHook('codendi',                           'codendiDaily',                      false);
         $this->_addHook('default_widgets_for_new_owner',     'default_widgets_for_new_owner',     false);
         $this->_addHook('wiki_page_updated',                 'wiki_page_updated',                 false);
         $this->_addHook('wiki_before_content',               'wiki_before_content',               false);
@@ -258,7 +258,7 @@ class DocmanPlugin extends Plugin {
     /**
      * Hook: called by daily codendi script.
      */
-    function codexDaily() {
+    function codendiDaily() {
         require_once('Docman_HTTPController.class.php');
         $controler =& new Docman_HTTPController($this, $this->getPluginPath(), $this->getThemePath());
         $controler->notifyFuturObsoleteDocuments();
