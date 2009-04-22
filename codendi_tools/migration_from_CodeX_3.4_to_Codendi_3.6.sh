@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Copyright (c) Xerox Corporation, CodeX, Codendi 2007-2008.
+# Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
 # This file is licensed under the GNU General Public License version 2. See the file COPYING. 
 #
 #  $Id$

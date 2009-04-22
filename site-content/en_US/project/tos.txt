@@ -1,8 +1,8 @@
 <!--
 //
-// CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
-// Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2001-2002. All Rights Reserved
-// http://codex.xerox.com
+// Codendi
+// Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+// http://www.codendi.com
 //
 // 
 //
@@ -173,5 +173,5 @@ or any other matters to the <a href="/contact.php"><?php print $GLOBALS['sys_nam
 
 
 <p>
-Content owned by <?php print $GLOBALS['sys_long_org_name']; ?>. Copyright 2000-<?php print date('Y',time()); ?>, <?php print $GLOBALS['sys_org_name']; ?> Team. All rights reserved.
+Content owned by <?php print $GLOBALS['sys_long_org_name']; ?>. Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
 </p>

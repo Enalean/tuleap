@@ -13,7 +13,7 @@ require_once('common/dao/include/DataAccessResult.class.php');
 Mock::generate('DataAccessResult');
 
 /**
- * Copyright (c) Xerox Corporation, CodeX Team, 2001-2005. All rights reserved
+ * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  * 
  * 
  *

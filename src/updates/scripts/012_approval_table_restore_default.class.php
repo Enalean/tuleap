@@ -1,6 +1,6 @@
 <?php
 //
-// Copyright (c) Xerox Corporation, CodeX Team, 2001-2005. All rights reserved
+// Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
 //
 // $Id: /mirror/st/codex/integration/CodeX-3.4-ST_20080204/trunk/src/updates/scripts/002_docman_itembo_cleanup.class.php 11236 2007-08-22T12:24:47.496682Z vacelet  $
 

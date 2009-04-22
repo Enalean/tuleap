@@ -1,8 +1,8 @@
 <!--
 //
-// CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
+// Codendi
 // Copyright (c) STMicroelectronics, 2008. All Rights Reserved
-// http://codex.xerox.com
+// http://www.codendi.com
 //
 -->
 

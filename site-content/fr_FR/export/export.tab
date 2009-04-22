@@ -1,5 +1,5 @@
 #
-# Copyright (c) Xerox Corporation, CodeX, Codendi 2007-2008.
+# Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
 # This file is licensed under the GNU General Public License version 2. See the file COPYING.
 #
 #-----------------------------------------------
@@ -27,7 +27,7 @@ export_nitf_sfforums	g_id_err	ERREUR&nbsp;: Cette URL doit être appelée avec u
 #-----------------------------------------------
 # Script: SF/www/export/rss_sfnewreleases.php
 #
-export_rss_sfnewreleases	copyright	Copyright (c) $1, Equipe $2, 2001-$3. Tous droits réservés.
+export_rss_sfnewreleases	copyright	Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
 export_rss_sfnewreleases	new_releases	Nouvelles versions de $1
 #
 #-----------------------------------------------

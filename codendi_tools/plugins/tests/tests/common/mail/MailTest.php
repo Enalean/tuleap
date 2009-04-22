@@ -7,7 +7,7 @@ require_once('common/dao/UserDao.class.php');
 Mock::generate('UserDao');
 Mock::generatePartial('Mail', 'MailTestVersion', array('_getUserDao'));
 /**
- * Copyright (c) Xerox Corporation, CodeX Team, 2001-2005. All rights reserved
+ * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  * 
  * 
  *

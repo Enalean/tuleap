@@ -8,7 +8,7 @@ if (!class_exists("FakeValue")) {
 
 
 /**
- * Copyright (c) Xerox Corporation, CodeX Team, 2001-2005. All rights reserved
+ * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  * 
  * 
  *

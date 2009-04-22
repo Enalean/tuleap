@@ -1,8 +1,8 @@
 #!/bin/sh
 #
-# CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
-# Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2001-2005. All Rights Reserved
-# http://codex.xerox.com
+# Codendi
+# Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+# http://www.codendi.com
 #
 # 
 #
@@ -38,7 +38,7 @@ cd $CODEX_UTILS_PREFIX/underworld-dummy
 
 # dump the mail aliases (not needed here
 # because we do not want to create e-mail aliases
-# for the codex members (member@codex.xerox.com)
+# for the codex members (member@www.codendi.com)
 # ./new_aliases.pl
 
 

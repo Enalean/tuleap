@@ -6,7 +6,7 @@ require_once('common/include/HTTPRequest.class.php');
 /**
 * IM_Widget
 * 
-* Copyright (c) Xerox Corporation, CodeX Team, 2001-2008. All rights reserved
+* Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
 *
 * @author  M. Nazarian, D. Madruga De Aquino, Z. Diallo
 */

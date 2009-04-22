@@ -5,7 +5,7 @@ header('Content-type: application/x-javascript');
 
 ?>
 /*
-* Copyright (c) Xerox Corporation, CodeX Team, 2001-2007. All rights reserved
+* Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
 */
 var password_strategy_good_or_bad;
 var password_strategy_messages = {

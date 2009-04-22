@@ -1,13 +1,13 @@
 <?php
   //
   // SourceForge: Breaking Down the Barriers to Open Source Development
-  // Copyright 1999-2000 (c) The SourceForge Crew
+  // Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
   // http://sourceforge.net
   //
   //
-  // CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
-  // Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2001-2002. All Rights Reserved
-  // http://codex.xerox.com
+  // Codendi
+  // Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+  // http://www.codendi.com
   //
   // 
   //

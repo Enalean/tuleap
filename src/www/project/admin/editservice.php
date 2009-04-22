@@ -1,6 +1,6 @@
 <?php
 //
-// Copyright (c) Xerox Corporation, CodeX Team, 2001-2004. All rights reserved
+// Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
 //
 // 
 //

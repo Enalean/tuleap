@@ -1,7 +1,7 @@
 #!/bin/bash
 #
-# CodeX: Breaking Down the Barriers to Source Code Sharing inside Xerox
-# Copyright (c) Xerox Corporation, CodeX / CodeX Team, 2001-2006. All Rights Reserved
+# Codendi
+# Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
 # http://codex.xrce.xerox.com
 #
 # 

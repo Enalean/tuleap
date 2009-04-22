@@ -3,7 +3,7 @@
 #  * export scripts message catalog (English)
 #  *
 #  * CodeX: Breaking Down the Barriers to Enterprise Code Sharing 
-#  * Copyright 2004-2005 (c) The CodeX Team, Xerox Corporation. All rights reserved
+#  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
 #  * http://codex.xrce.xerox.com
 #  *
 #  *
@@ -34,7 +34,7 @@ export_nitf_sfforums	g_id_err	ERROR: This URL must be called with a valid group_
 #-----------------------------------------------
 # Script: SF/www/export/rss_sfnewreleases.php
 #
-export_rss_sfnewreleases	copyright	Copyright (c) $1, $2 Team, 2001-$3. All Rights Reserved
+export_rss_sfnewreleases	copyright	Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
 export_rss_sfnewreleases	new_releases	$1 New Releases
 #
 #-----------------------------------------------
