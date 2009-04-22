@@ -57,8 +57,8 @@ substitute '../etc/codendi/conf/local.inc' '\/usr\/share\/htmlpurifier' "/usr/sh
 substitute '../etc/codendi/conf/local.inc' '\/usr\/share\/jpgraph' "/usr/share/jpgraph"
 substitute '../etc/codendi/conf/local.inc' '\/var\/tmp' "$codendi_dir/var/tmp"
 
-# Set environment var CODEX_LOCAL_INC
-export CODEX_LOCAL_INC="$WORKSPACE/etc/codendi/conf/local.inc"
+# Set environment var CODENDI_LOCAL_INC
+export CODENDI_LOCAL_INC="$WORKSPACE/etc/codendi/conf/local.inc"
 
 # Create a symbolic link from plugins/tests to codendi_tools/tests
 cd $WORKSPACE/trunk/plugins/
