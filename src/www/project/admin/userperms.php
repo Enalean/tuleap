@@ -83,21 +83,25 @@ if (isset($submit)) {
             $svn_flags="svn_user_$row_dev[user_id]";
             $news_flags="news_user_$row_dev[user_id]";
 		
-        
-            $res = db_query('UPDATE user_group SET ' 
-                ."admin_flags='".$$admin_flags."',"
-                ."bug_flags='".$$bug_flags."',"
-                ."forum_flags='".$$forum_flags."',"
-                ."project_flags='".$$project_flags."', "
-                .(isset($$doc_flags) ? "doc_flags='".$$doc_flags."', " : '')
-                ."file_flags='".$$file_flags."', "
-                ."patch_flags='".$$patch_flags."', "
-                ."wiki_flags='".$$wiki_flags."', "
-                ."news_flags='".$$news_flags."', "
-                ."support_flags='".$$support_flags."', "
-                ."svn_flags='".$$svn_flags."' "
-                ."WHERE user_id='$row_dev[user_id]' AND group_id='$group_id'");
-        
+            $flags = array('bug_flags', 
+                'forum_flags', 
+                'project_flags',
+                'doc_flags', 
+                'file_flags', 
+                'patch_flags', 
+                'wiki_flags', 
+                'news_flags', 
+                'support_flags',
+                'svn_flags'
+            );
+            $sql = "UPDATE user_group SET admin_flags='".$$admin_flags."'";
+            foreach ($flags as $flag) {
+                if (isset($$flag)) {
+                    $sql .= ", $flag = '".$$flag."'";
+                }
+            }
+            $sql .= "WHERE user_id='$row_dev[user_id]' AND group_id='$group_id'";
+            $res = db_query($sql);
         
             $tracker_error = false;
             if ( $project->usesTracker()&&$at_arr ) {
@@ -125,44 +129,19 @@ if (isset($submit)) {
         
             // Raise an event
             $em =& EventManager::instance();
-            if(isset($$doc_flags)){
-                $em->processEvent('project_admin_change_user_permissions', array(
-                    'group_id' => $group_id,
-                    'user_id' => $row_dev['user_id'],
-                    'user_permissions' => array(
-                        'admin_flags'   => $$admin_flags,
-                        'bug_flags'     => $$bug_flags,
-                        'forum_flags'   => $$forum_flags,
-                        'project_flags' => $$project_flags,
-                        'doc_flags'     => $$doc_flags,
-                        'file_flags'    => $$file_flags,
-                        'patch_flags'   => $$patch_flags,
-                        'wiki_flags'    => $$wiki_flags,
-                        'news_flags'    => $$news_flags,
-                        'support_flags' => $$support_flags,
-                        'svn_flags'     => $$svn_flags
-                        )
-                ));
-            }else{
-                $em->processEvent('project_admin_change_user_permissions', array(
-                    'group_id' => $group_id,
-                    'user_id' => $row_dev['user_id'],
-                    'user_permissions' => array(
-                        'admin_flags'   => $$admin_flags,
-                        'bug_flags'     => $$bug_flags,
-                        'forum_flags'   => $$forum_flags,
-                        'project_flags' => $$project_flags,
-                        'file_flags'    => $$file_flags,
-                        'patch_flags'   => $$patch_flags,
-                        'wiki_flags'    => $$wiki_flags,
-                        'news_flags'    => $$news_flags,
-                        'support_flags' => $$support_flags,
-                        'svn_flags'     => $$svn_flags
-                        )
-                ));
+            $user_permissions = array();
+            $user_permissions['admin_flags'] = $$admin_flags;
+            foreach ($flags as $flag) {
+                if (isset($$flag)) {
+                    $user_permissions[$flag] = $$flag;
+                }
             }
-            
-        }  
+            $em->processEvent('project_admin_change_user_permissions', array(
+                'group_id' => $group_id,
+                'user_id' => $row_dev['user_id'],
+                'user_permissions' => $user_permissions
+            ));
+        }
 	}
     
 	$GLOBALS['Response']->addFeedback('info', $Language->getText('project_admin_userperms','perm_upd'));
