@@ -114,6 +114,13 @@ substitute() {
   $PERL -pi -e "s/$2/$replacement/g" $1
 }
 
+codendification() {
+    substitute "$1" 'C O D E X' 'C O D E N D I'
+    substitute "$1" 'CODEX' 'CODENDI'
+    substitute "$1" 'CodeX' 'Codendi'
+    substitute "$1" 'Codex' 'Codendi'
+    substitute "$1" 'codex' 'codendi'
+}
 ##############################################
 # Codendi 3.6 to 4.0 migration
 ##############################################
@@ -325,7 +332,8 @@ $CP /etc/aliases.codex /etc/aliases.codex_36
 $MV /etc/aliases.codex /etc/aliases.codendi
 substitute '/etc/mail/sendmail.cf' '/etc/aliases.codex' "/etc/aliases.codendi"
 
-
+codendification '$ETC_DIR/conf/local.inc'
+codendification '$ETC_DIR/conf/database.inc'
 
 dbauth_passwd="a"; dbauth_passwd2="b";
 while [ "$dbauth_passwd" != "$dbauth_passwd2" ]; do
