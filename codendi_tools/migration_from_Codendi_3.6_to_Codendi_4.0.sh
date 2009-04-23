@@ -316,9 +316,9 @@ $RM /etc/httpd/conf.d/codex_svnroot.conf
 #
 # Codendification of config files
 #
-
-substitute '/etc/logrotate.d/httpd' '/var/log/codex/' "$VAR_LOG_DIR"
-substitute '/etc/logrotate.d/vsftpd.log' '/var/log/codex/' "$VAR_LOG_DIR"
+echo "Codendification"
+substitute '/etc/logrotate.d/httpd' '\/var\/log\/codex' "$VAR_LOG_DIR"
+substitute '/etc/logrotate.d/vsftpd.log' '\/var\/log\/codex' "$VAR_LOG_DIR"
 
 if [ -d /etc/skel_codex ]; then 
     $MV /etc/skel_codex /etc/skel_codendi
@@ -330,10 +330,16 @@ substitute '/var/named/chroot/etc/named.conf' 'codex_full.zone' "codendi.zone"
 
 $CP /etc/aliases.codex /etc/aliases.codex_36
 $MV /etc/aliases.codex /etc/aliases.codendi
-substitute '/etc/mail/sendmail.cf' '/etc/aliases.codex' "/etc/aliases.codendi"
+substitute '/etc/mail/sendmail.cf' '\/etc\/aliases.codex' "/etc/aliases.codendi"
 
 codendification "$ETC_DIR/conf/local.inc"
 codendification "$ETC_DIR/conf/database.inc"
+
+# /cvsroot and /svnroot
+rm /cvsroot
+rm /svnroot
+ln -s $VAR_LIB_DIR/cvsroot /cvsroot
+ln -s $VAR_LIB_DIR/svnroot /svnroot
 
 dbauth_passwd="a"; dbauth_passwd2="b";
 while [ "$dbauth_passwd" != "$dbauth_passwd2" ]; do
