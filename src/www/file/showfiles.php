@@ -340,7 +340,7 @@ while (list ($package_id, $package) = each($packages)) {
                             if ($file_release['file_size'] < 1024) {
                                 $size_precision = 2;
                             }
-                            print '</B></TD>' . '<TD>' . file_utils_convert_bytes_to_kbytes($file_release['file_size'], $size_precision) . '</TD>' . '<TD>' . ($file_release['downloads'] ? $file_release['downloads'] : '0') . '</TD>';
+                            print '</B></TD>' . '<TD>' . FRSFile::convertBytesToKbytes($file_release['file_size'], $size_precision) . '</TD>' . '<TD>' . ($file_release['downloads'] ? $file_release['downloads'] : '0') . '</TD>';
                             print '<TD>' . (isset ($processor[$file_release['processor']]) ?  $hp->purify($processor[$file_release['processor']], CODENDI_PURIFIER_CONVERT_HTML) : "") . '</TD>';
                             print '<TD>' . (isset ($file_type[$file_release['type']]) ? $file_type[$file_release['type']] : "") . '</TD>' . '<TD>' . format_date("Y-m-d", $file_release['release_time']) . '</TD>' . '</TR>' . "\n";
                             if (!isset ($proj_stats['size']))
@@ -395,7 +395,7 @@ if (!$pv) {
 // project totals (statistics) 
 if (isset ($proj_stats['size'])) {
 	
-    $total_size = file_utils_convert_bytes_to_kbytes($proj_stats['size']);
+    $total_size = FRSFile::convertBytesToKbytes($proj_stats['size']);
 
     print '<p>';
     print '<b>' . $Language->getText('file_showfiles', 'proj_total') . ': </b>';

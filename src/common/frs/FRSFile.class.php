@@ -158,6 +158,26 @@ class FRSFile extends Error {
         $this->file_size = $file_size;
     }
     
+    static function convertBytesToKbytes($size_in_bytes, $decimals_precision = 0) {
+        $size_in_kbytes = $size_in_bytes / 1024;
+        
+        $decimal_separator = $GLOBALS['Language']->getText('system','decimal_separator');
+        $thousand_separator = $GLOBALS['Language']->getText('system','thousand_separator'); 
+        // because I don't know how to specify a space in a .tab file
+        if ($thousand_separator == "' '") {
+            $thousand_separator = ' ';  
+        }
+        return number_format($size_in_kbytes, $decimals_precision, $decimal_separator, $thousand_separator); 
+    }
+
+    function getDisplayFileSize() {
+        $decimals_precision = 0;
+        if ($this->getFileSize() < 1024) {
+            $decimals_precision = 2;
+        }
+        return $this->convertBytesToKbytes($this->getFileSize(), $decimals_precision);
+    }
+    
     function getPostDate() {
         return $this->post_date;
     }
@@ -369,6 +389,43 @@ class FRSFile extends Error {
         }
             
         return true;
+    }
+    
+    /**
+     * Returns the HTML content for tooltip when hover a reference with the nature file
+     * @returns string HTML content for file tooltip
+     */
+    function getReferenceTooltip() {
+        $tooltip = '';
+        $rf = new FRSReleaseFactory();
+        $pf = new FRSPackageFactory();
+        $release_id = $this->getReleaseID();
+        $release = $rf->getFRSReleaseFromDb($release_id);
+        $package_id = $release->getPackageID();
+        $package = $pf->getFRSPackageFromDb($package_id);
+        $tooltip .= '<table>';
+        $tooltip .= ' <tr>';
+        $tooltip .= '  <td><strong>' . $GLOBALS['Language']->getText('file_admin_editreleases', 'filename') . ':</strong></td>';
+        $tooltip .= '  <td>'.basename($this->getFileName()).'</td>';
+        $tooltip .= ' </tr>';
+        $tooltip .= ' <tr>';
+        $tooltip .= '  <td><strong>' . $GLOBALS['Language']->getText('file_showfiles', 'size') . ':</strong></td>';
+        $tooltip .= '  <td>'.$this->getDisplayFileSize().'</td>';
+        $tooltip .= ' </tr>';
+        $tooltip .= ' <tr>';
+        $tooltip .= '  <td><strong>' . $GLOBALS['Language']->getText('file_showfiles', 'date') . ':</strong></td>';
+        $tooltip .= '  <td>'.format_date("Y-m-d", $release->getReleaseDate()).'</td>';
+        $tooltip .= ' </tr>';
+        $tooltip .= ' <tr>';
+        $tooltip .= '  <td><strong>' . $GLOBALS['Language']->getText('file_admin_editreleases', 'release_name') . ':</strong></td>';
+        $tooltip .= '  <td>'.$release->getName().'</td>';
+        $tooltip .= ' </tr>';
+        $tooltip .= ' <tr>';
+        $tooltip .= '  <td><strong>' . $GLOBALS['Language']->getText('file_admin_editpackages', 'p_name') . ':</strong></td>';
+        $tooltip .= '  <td>'.$package->getName().'</td>';
+        $tooltip .= ' </tr>';
+        $tooltip .= '</table>';
+        return $tooltip;
     }
     
 }

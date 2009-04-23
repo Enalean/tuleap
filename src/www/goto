@@ -110,6 +110,35 @@ if ($request->isAjax()) {
                 }
             }
             break;
+        case 'file':
+            require_once('common/frs/FRSReleaseFactory.class.php');
+            require_once('common/frs/FRSPackageFactory.class.php');
+            $group_id = $request->get('group_id');
+            switch ($ref->getNature()) {
+                case ReferenceManager::REFERENCE_NATURE_RELEASE:
+                    $rf = new FRSReleaseFactory();
+                    $release_id = $request->get('val');
+                    $release = $rf->getFRSReleaseFromDb($release_id);
+                    $package_id = $release->getPackageID();
+                    if ($rf->userCanRead($group_id, $package_id, $release_id)) {
+                        echo $release->getReferenceTooltip();
+                    }
+                    break;
+                case ReferenceManager::REFERENCE_NATURE_FILE:
+                    require_once('common/frs/FRSFileFactory.class.php');
+                    $ff = new FRSFileFactory();
+                    $file_id = $request->get('val');
+                    $file = $ff->getFRSFileFromDb($file_id);
+                    $rf = new FRSReleaseFactory();
+                    $release_id = $file->getReleaseID();
+                    $release = $rf->getFRSReleaseFromDb($release_id);
+                    $package_id = $release->getPackageID();
+                    if ($rf->userCanRead($group_id, $package_id, $release_id)) {
+                        echo $file->getReferenceTooltip();
+                    }
+                    break;
+            }
+            break;
         default:
             $em = EventManager::instance();
             $em->processEvent('ajax_reference_tooltip', array(

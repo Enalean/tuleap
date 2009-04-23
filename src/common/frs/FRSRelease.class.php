@@ -255,6 +255,34 @@ class FRSRelease extends Error {
         $release_factory = new FRSReleaseFactory();
         return $release_factory->userCanRead($this->getGroupID(), $this->getPackageID(), $this->getReleaseID(), $user_id);
 	}
+	
+	/**
+     * Returns the HTML content for tooltip when hover a reference with the nature file
+     * @returns string HTML content for file tooltip
+     */
+    function getReferenceTooltip() {
+        $tooltip = '';
+        $package_id = $this->getPackageID();
+        $pf = new FRSPackageFactory();
+        $package = $pf->getFRSPackageFromDb($package_id);
+        $tooltip .= '<table>';
+        $tooltip .= ' <tr>';
+        $tooltip .= '  <td><strong>' . $GLOBALS['Language']->getText('file_admin_editreleases', 'release_name') . ':</strong></td>';
+        $tooltip .= '  <td>'.$this->getName().'</td>';
+        $tooltip .= ' </tr>';
+        $tooltip .= ' <tr>';
+        $tooltip .= '  <td><strong>' . $GLOBALS['Language']->getText('file_showfiles', 'date') . ':</strong></td>';
+        $tooltip .= '  <td>'.format_date("Y-m-d", $this->getReleaseDate()).'</td>';
+        $tooltip .= ' </tr>';
+        $tooltip .= ' <tr>';
+        $tooltip .= ' <tr>';
+        $tooltip .= '  <td><strong>' . $GLOBALS['Language']->getText('file_admin_editpackages', 'p_name') . ':</strong></td>';
+        $tooltip .= '  <td>'.$package->getName().'</td>';
+        $tooltip .= ' </tr>';
+        $tooltip .= '</table>';
+        return $tooltip;
+    }
+    
 }
 
 ?>
