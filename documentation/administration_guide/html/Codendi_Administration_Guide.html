@@ -352,7 +352,7 @@ in the lost password procedure.</li>
 that is often seen when using the Codendi mass mail Engine. All invalid
 e-mail address are
 bounced
-and returned to codex-admin@codex.xerox.com. Once in a while it is good
+and returned to codex-admin@codendi.example.com. Once in a while it is good
 to
 make a bit of clean-up in the user database as follows:</li>
   <ul>
@@ -447,7 +447,7 @@ chunk. So the
 larger
 the selected population the bigger the number of copies. The reason for
 these multiple copies is because messages are "apparently" sent to
-noreply@codex.xerox.com to stress the fact that recipient should not
+noreply@codendi.example.com to stress the fact that recipient should not
 reply to this message. If the noreply email address is an alias to
 codex-admin then multiple copies will be received by Codendi
 administrators. The noreply address may also be aliased to&nbsp;
@@ -549,11 +549,11 @@ a project short name. This project short name can be used in a number
 of
 places:
 <ol>
-  <li> http://codex.xerox.com/projects/<i>ProjectShortName</i> is a
+  <li> http://codendi.example.com/projects/<i>ProjectShortName</i> is a
 shortcut
 to access a project summary page on the Codendi Web site (not to be
 confused
-with the Project Web site at http://<i>ProjectShortName</i>.codex.xerox.com/</li>
+with the Project Web site at http://<i>ProjectShortName</i>.codendi.example.com/</li>
   <br>
 &nbsp; <li> A Unix group with the same name (all lowercase) is created</li>
   <ul>
@@ -1370,7 +1370,7 @@ the command line used to run the cvs server.
 <p> </p>
 <hr width="100%" size="2">
 <h1><a name="DNS"></a>DNS</h1>
-Codendi has its own internal domain : codex.xerox.com. And the codex
+Codendi has its own internal domain : codendi.example.com. And the codendi
 machine is the name server for this domain. The DNS configuration files
 are
 located in:<br>
@@ -1378,7 +1378,7 @@ located in:<br>
   <li><tt>/etc/named.conf</tt>: top configuration file&nbsp;</li>
   <li><tt>/var/named/chroot/var/named/codendi.zone</tt>: this is
 where&nbsp;the
-codex.xerox.com domain is defined.&nbsp;</li>
+codendi.example.com domain is defined.&nbsp;</li>
 </ul>
 <h2> Static configuration file<br>
 </h2>
@@ -1462,7 +1462,7 @@ the Codendi server:</font>
 <ol>
   <li> <font color="#ff0000">Connect to the Codendi server using ssh and
 your
-personal Codendi account (e.g. ssh <span style="font-style: italic;">username</span>@codex.xerox.com)</font></li>
+personal Codendi account (e.g. ssh <span style="font-style: italic;">username</span>@codendi.example.com)</font></li>
   <li> <font color="#ff0000">Then if you must act as root or
 codexadm
 user use the su command (su - root) and type the appropriate password</font></li>
@@ -1782,9 +1782,8 @@ Here is how you should proceed:<br>
 </p>
 <ul>
   <li>First you should make sure that the Codendi source code
-repository that you must use for your updates is accessible. This repository is different
-depending whether&nbsp; you operate a Codendi site on the Xerox Intranet
-or on your own customer network :</li>
+repository that you must use for your updates is accessible. 
+</li>
 </ul>
 <div style="text-align: center;"><br>
 <table
@@ -1800,11 +1799,6 @@ Site Location<br>
  style="vertical-align: top; font-weight: bold; background-color: rgb(204, 204, 204);">Codendi
 repository pointer<br>
       </td>
-    </tr>
-    <tr>
-      <td style="vertical-align: top;">Xerox Intranet<br>
-      </td>
-      <td style="vertical-align: top;">http://svn.codex.codex.xerox.com/svnroot/codex</td>
     </tr>
     <tr>
       <td style="vertical-align: top;">Customer Extranet<br>
@@ -2275,7 +2269,7 @@ update to create a fresh /svnroot/projectname SVN repository. If you are in a hu
 svnadmin dump /path_to_svn_root &gt; svn_dumpfile</pre>
 <li>Ask the team to copy the dump file on the codex server, e.g.:
 <pre>
-scp svn_dumpfile username@codex.xerox.com:/home/groups/projectname</pre>
+scp svn_dumpfile username@codendi.example.com:/home/groups/projectname</pre>
 (it is also possible to use FTP instead).
 <li>then a Codendi site administrator needs to load the repository content into the existing repository on Codendi:
 <pre>
@@ -2388,7 +2382,7 @@ on the Codendi server. Here is the procedure to follow to change a group name (a
 <br>Comment: the last one would be done automatically at the next cron update but doing it by hand keep everything consistent with the next step<br>
 
 <li>Checkout the CVSROOT directory of the project:
-<tt>cvs -d:pserver:username@codex.xerox.com:/cvsroot/projectname co CVSROOT</tt>.
+<tt>cvs -d:pserver:username@codendi.example.com:/cvsroot/projectname co CVSROOT</tt>.
 Then edit the 'config' and  'commitinfo' files and change the project name wherever it appears. Last, commit the changes. (you may also directly edit those files in the /cvsroot/projectname/CVSROOT directory, but don't forget to also edit the ',v' files then).
 
 <li>Edit the 'groups' table of the Codex DB with phpMyAdmin and change
@@ -2438,7 +2432,7 @@ all of the smtp addresses for the user.</LI>
 administrator, the way to do this is to follow the User Admin link from the
 Site Administration list in the column on the left.  (You can't see this
 list unless you are a site administrator.)  The User Admin page,
-<A HREF=http://codex.xerox.com/admin/userlist.php>http://codex.xerox.com/admin/userlist.php</A>, displays an alphabetical list of
+<A HREF=/admin/userlist.php>http://codendi.example.com/admin/userlist.php</A>, displays an alphabetical list of
 Codendi/Unix user name links.  Each user name begins a row of links, including
 DevProfile, Activate, Delete, and Suspend.  We are interested here in the
 user name link itself and the DevProfile link.</LI>
@@ -2626,7 +2620,7 @@ and make sure it works ok<br>
 release space (/home/groups/codex/htdocs/packages/RPMS_Codendi)</li>
   <li>Send an email to the codex-devel mailing list to announce the
 availability of the new codex specific package and point them to the
-RPM release space ( <a href="http://codex.codex.xerox.com/packages/">http://codex.codex.xerox.com/packages/</a>
+RPM release space ( <a href="https://codendi.partners.xrce.xerox.com/packages/">http://codendi.partners.xrce.xerox.com/packages/</a>
 ...)</li>
 </ol>
 
@@ -2659,7 +2653,7 @@ Passwords, for details. (Intranet)
 2) Change the codexadm password in /etc/codex/conf/local.inc. (Restarting
 services is not necessary.)
 <br>
-3) Send note to codex-admin@lists.codex.xerox.com
+3) Send note to codex-admin@lists.codendi.example.com
 stating passwords have been changed.
 <br>
 4) All Codendi admins need to change the password on
@@ -2721,7 +2715,7 @@ projects.
 from Codendi website:
 <br>
 - Go to
-http://codex.xerox.com
+http://codendi.example.com
 <br>
 - Log
 in as <b>admin</b>
@@ -2765,7 +2759,7 @@ mailman
 
 <br>
 - Go to
-http://lists.codex.xerox.com/mailman/admin
+http://lists.codendi.example.com/mailman/admin
 <br>
 - Click
 on any mailing list
@@ -2844,7 +2838,7 @@ $sys_allow_restricted_users = 1;
 <p>If you need to completely remove shell access (and forbid CVS), you need to modify the shell manually in the administration interface for each user: set it to /sbin/nologin.
 <p>Setup: in order to use CVS, the restricted user must do the following:
 <ul><li>Set the 'CVS_RSH' environment variable to 'ssh'
-<li>use the following command line: cvs -d:ext:username@codex.xerox.com:/cvsroot/projectname co module
+<li>use the following command line: cvs -d:ext:username@codendi.example.com:/cvsroot/projectname co module
 </ul>
 See also 'Codendi Installation Guide'.
 <h3>Setting restricted users privileges</h3>
@@ -2865,7 +2859,7 @@ $forbidden_url = array(
           );
 
 // Use true/false for those options
-$allow_welcome_page=false;// Allow access to Codendi welcome page (at e.g. http://codex.xerox.com/)
+$allow_welcome_page=false;// Allow access to Codendi welcome page (at e.g. http://codendi.example.com/)
 $allow_news_browsing=false;     // Allow restricted users to read/comment news, including for their project
 $allow_user_browsing=true;      // Allow restricted users to access other user's page (Developer Profile)
 $allow_access_to_codex_forums=true;   // Codendi help forums are accessible through the 'Discussion Forums' link

@@ -16,4 +16,4 @@ do not modify this file. Use the
 instead and redefine your entities there. If this file doesn't exist create it.-->
 
 <!ENTITY SYS_PRODUCT_NAME "Codendi">
-<!ENTITY SYS_DEFAULT_DOMAIN "codex.xerox.com">
+<!ENTITY SYS_DEFAULT_DOMAIN "codendi.example.com">

@@ -229,7 +229,7 @@ if [ -n "$sys_https_host" ]; then
 elif [ -n "$sys_https_host" ]; then
     wsdl_domain="http://$sys_default_domain";
 else
-    wsdl_domain='http://codex.xerox.com';
+    wsdl_domain='http://codendi.example.com';
 fi   
 substitute "$TMPDIR/cli/codendi.php" '%wsdl_domain%' "$wsdl_domain" 
 

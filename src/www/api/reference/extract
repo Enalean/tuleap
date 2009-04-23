@@ -22,11 +22,11 @@ reference description
  * example:
 Tracker Artifact
 art #6840
-http://codex.xerox.com/goto?key=art&val=6840&group_id=109
+http://codendi.example.com/goto?key=art&val=6840&group_id=109
 
 Tracker Artifact
 art #6841
-http://codex.xerox.com/goto?key=art&val=6841&group_id=109
+http://codendi.example.com/goto?key=art&val=6841&group_id=109
 
 */
 

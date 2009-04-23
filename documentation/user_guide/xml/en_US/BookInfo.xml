@@ -280,7 +280,7 @@
 
         <authorinitials>Nicolas Guerin</authorinitials>
 
-        <revremark>Added information about setting up WinCVS for &SYS_PRODUCT_NAME;, based on description for the TIFFany project: http://tiffany.codex.xerox.com/wincvs.php</revremark>
+        <revremark>Added information about setting up WinCVS for &SYS_PRODUCT_NAME;, based on description for the TIFFany project</revremark>
       </revision>
       <revision>
         <revnumber>2.6.5</revnumber>

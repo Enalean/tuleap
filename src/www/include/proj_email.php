@@ -92,7 +92,7 @@ function send_new_user_email($to,$confirm_hash, $username)
 
 // LJ To test the new e-mail message content and format
 // LJ uncomment the code below and above and invoke 
-// LJ http://codex.xerox.com/include/proj_email.php
+// LJ http://codendi.example.com/include/proj_email.php
 // LJ from your favorite browser
 //LJ
 //echo "<PRE>";
