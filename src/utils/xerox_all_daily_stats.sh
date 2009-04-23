@@ -17,7 +17,7 @@
 
 # Read util directory location from local.inc
 if [ -z "$CODENDI_LOCAL_INC" ]; then 
-    CODENDI_LOCAL_INC=/etc/codex/conf/local.inc
+    CODENDI_LOCAL_INC=/etc/codendi/conf/local.inc
 fi
 CODEX_UTILS_PREFIX=`/bin/grep '^\$codendi_utils_prefix' $CODENDI_LOCAL_INC | /bin/sed -e 's/\$codendi_utils_prefix\s*=\s*\(.*\);\(.*\)/\1/' | tr -d '"' | tr -d "'"`
 dump_dir=`/bin/grep '^\$dump_dir' $CODENDI_LOCAL_INC | /bin/sed -e 's/\$dump_dir\s*=\s*\(.*\);\(.*\)/\1/' | tr -d '"' | tr -d "'"`
