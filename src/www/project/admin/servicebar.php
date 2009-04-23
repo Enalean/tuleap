@@ -5,7 +5,7 @@
 // 
 //
 //
-//  Written for CodeX by Nicolas Guerin
+//  Written for Codendi by Nicolas Guerin
 //
 
 require_once('pre.php');

@@ -2,7 +2,7 @@
 /*
  * Copyright (c) Xerox, 2008. All Rights Reserved.
  *
- * Originally written by Nicolas Terray, 2008. Xerox Codex Team.
+ * Originally written by Nicolas Terray, 2008. Xerox Codendi Team.
  *
  * This file is a part of Codendi.
  *

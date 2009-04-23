@@ -146,7 +146,7 @@ if (db_numrows($result) > 0) {
 
       <TR><TD colspan="2">
       <h3>CC List <?php echo help_button('BugUpdate.html#BugCCList'); ?></h3>
-	  <b><u>Note:</b></u> for CodeX users use their login name rather than their email addresses.<p>
+	  <b><u>Note:</b></u> for Codendi users use their login name rather than their email addresses.<p>
 	  <B>Add CC:&nbsp;</b><input type="text" name="add_cc" size="30">&nbsp;&nbsp;&nbsp;
 	  <B>Comment:&nbsp;</b><input type="text" name="cc_comment" size="40" maxlength="255"><p>
 	  <?php show_bug_cc_list($bug_id, $group_id); ?>

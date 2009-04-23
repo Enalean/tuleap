@@ -20,7 +20,7 @@ function help_button($type,$helpid=false,$prompt='[?]') {
 
     // Generic processing derives the script name from the help type
     if ($helpid == false) {
-	// $type is a static HTML page from the CodeX User Guide
+	// $type is a static HTML page from the Codendi User Guide
 	$script = '/help/show_help.php?section='.$type;
     } else {
 	// $type is a php script - the invoker probably wants to customize 

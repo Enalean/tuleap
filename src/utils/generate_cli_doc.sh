@@ -20,9 +20,9 @@ if [ -z "$BASEDIR" ]; then
     if [ -z "$CODENDI_LOCAL_INC" ]; then
         CODENDI_LOCAL_INC=/etc/codendi/conf/local.inc
     fi
-    CODEX_DOCUMENTATION_PREFIX=`/bin/grep '^\$codendi_documentation_prefix' $CODENDI_LOCAL_INC | /bin/sed -e 's/\$codendi_documentation_prefix\s*=\s*\(.*\);\(.*\)/\1/' | tr -d '"' | tr -d "'"`
+    CODENDI_DOCUMENTATION_PREFIX=`/bin/grep '^\$codendi_documentation_prefix' $CODENDI_LOCAL_INC | /bin/sed -e 's/\$codendi_documentation_prefix\s*=\s*\(.*\);\(.*\)/\1/' | tr -d '"' | tr -d "'"`
     
-    BASEDIR=$CODEX_DOCUMENTATION_PREFIX
+    BASEDIR=$CODENDI_DOCUMENTATION_PREFIX
 fi
 CMDDIR=$BASEDIR/cli/cmd
      

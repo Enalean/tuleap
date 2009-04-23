@@ -56,7 +56,7 @@ if ($docid) {
         $res_insert = db_query( $sql );
     }
 
-    // HTML or text files that were copy/pasted are displayed in a CodeX-formatted page.
+    // HTML or text files that were copy/pasted are displayed in a Codendi-formatted page.
     // Uploaded files are always displayed as-is.
     if ( (($row['filetype'] == 'text/html')||($row['filetype'] == 'text/plain') )&&($row['filesize']==0)) {
         docman_header(array('title'=>$row['title'],

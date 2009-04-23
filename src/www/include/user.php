@@ -76,7 +76,7 @@ function user_getrealname($user_id) {
 }
 
 // LJ - Added here because we use the real e-mail addresse
-// on CodeX - No e-mail aliases like on SF
+// on Codendi - No e-mail aliases like on SF
 //Deprecated. Use User->getEmail() instead
 function user_getemail($user_id) {
 	global $Language;
@@ -146,7 +146,7 @@ function user_get_result_set_from_email($email) {
 	return $USER_RES["_".$user_id."_"];
 }       
 
-// Get user name from user id, according to the user prefs: Codex login or Real name
+// Get user name from user id, according to the user prefs: Codendi login or Real name
 //Deprectaed. Use UserHelper->getDisplayNameFromUserId() instead
 function user_get_name_display_from_id($user_id) {
     
@@ -172,7 +172,7 @@ function user_get_name_display_from_id($user_id) {
     
 }
 
-// Get user name from Codex login, according to the user prefs: Codex login or Real name
+// Get user name from Codendi login, according to the user prefs: Codendi login or Real name
 //Deprectaed. Use UserHelper->getDisplayNameFromUserName() instead
 function user_get_name_display_from_unix($user_name) {
     
@@ -183,7 +183,7 @@ function user_get_name_display_from_unix($user_name) {
     
     $u_display = user_get_preference("username_display");
     if ($u_display == 2) {
-    	//Codex login
+    	//Codendi login
         return $user_name;
     } else {
     	// need Real name   

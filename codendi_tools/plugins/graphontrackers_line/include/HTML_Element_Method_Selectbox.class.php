@@ -4,7 +4,7 @@
  *
  * Originally written by Mahmoud MAALEJ, 2006. STMicroelectronics.
  * 
- * Updated by Nicolas Terray, 2008, Xerox codeX Team
+ * Updated by Nicolas Terray, 2008, Xerox Codendi Team
  * 
  * This file is a part of Codendi.
  *

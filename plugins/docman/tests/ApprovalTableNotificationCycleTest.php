@@ -60,7 +60,7 @@ class ApprovalTableNotificationCycleTest extends UnitTestCase {
         $mail->expectOnce('_sendmail');
 
         $owner =& new MockUser();
-        $owner->setReturnValue('getEmail', 'owner@codex.com');
+        $owner->setReturnValue('getEmail', 'owner@codendi.com');
         $owner->setReturnValue('getRealName', 'Owner');
 
         $cycle =& new Docman_ApprovalTableNotificationCycleTest($this);

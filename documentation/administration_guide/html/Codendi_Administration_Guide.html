@@ -147,7 +147,7 @@ project.<br>
 
 <h2> Pending users</h2>
 
-Before a user account is made available, it has to be activated. According to your Codex 
+Before a user account is made available, it has to be activated. According to your Codendi 
 configuration there are several ways to activate an account:
 <ul>
 	<li><b>Standard case, no administration approval is needed.</b><br />
@@ -352,7 +352,7 @@ in the lost password procedure.</li>
 that is often seen when using the Codendi mass mail Engine. All invalid
 e-mail address are
 bounced
-and returned to codex-admin@codendi.example.com. Once in a while it is good
+and returned to codendi-admin@codendi.example.com. Once in a while it is good
 to
 make a bit of clean-up in the user database as follows:</li>
   <ul>
@@ -449,7 +449,7 @@ the selected population the bigger the number of copies. The reason for
 these multiple copies is because messages are "apparently" sent to
 noreply@codendi.example.com to stress the fact that recipient should not
 reply to this message. If the noreply email address is an alias to
-codex-admin then multiple copies will be received by Codendi
+codendi-admin then multiple copies will be received by Codendi
 administrators. The noreply address may also be aliased to&nbsp;
 /dev/null to avoid this problem (see <span
  style="font-family: monospace;">/etc/aliases</span>).
@@ -480,9 +480,9 @@ Therefore Codendi makes
 a
 direct mapping between a project and a Linux group, and between a user
 and
-a Linux account. As an example if you are a member of the "codex"
+a Linux account. As an example if you are a member of the "codendi"
 project on
-Codendi, your Unix account will also be a member of the "codex" Unix
+Codendi, your Unix account will also be a member of the "codendi" Unix
 group.
 <p>&nbsp;Let's review some of the key permission mechanism in place on
 Codendi.
@@ -521,9 +521,9 @@ lowercase even if uppercase are used in the Web login name. <br>
 </ol>
 There are specific user account you must know about:
 <ul>
-  <li> <b>codexadm:</b> this is the user that owns the entire Codendi
+  <li> <b>codendiadm:</b> this is the user that owns the entire Codendi
 Web
-site hierarchy under /usr/share/codex</li>
+site hierarchy under /usr/share/codendi</li>
   <li> <b>dummy:</b> a "dummy" user that is generally used whenever a
 file
 belongs to a given group but to no specific user in particular. More or
@@ -583,20 +583,20 @@ the user can access its own home directory.</li>
 </ol>
 There are specific group accounts you must know about:
 <ul>
-  <li> <b>codexadm:</b> group created to own the Codendi Web
+  <li> <b>codendiadm:</b> group created to own the Codendi Web
 hierarchy
-under <span style="font-family: monospace;">/usr/share/codex</span>.</li>
+under <span style="font-family: monospace;">/usr/share/codendi</span>.</li>
   <li><span style="font-weight: bold;">mailman:</span> group owner of
 all the Mailman directories</li>
 </ul>
 <h1> <a name="CodendiFileStructure"></a>Codendi File Structure</h1>
 <h2> Web site</h2>
 The Codendi Web front end files are all under <b><span
- style="font-family: monospace;">/usr/share/codex</span>.</b> Except
+ style="font-family: monospace;">/usr/share/codendi</span>.</b> Except
 otherwise
 specified this directories and all the files and directories under it
 belongs
-to user.group: <b>codexadm.codexadm</b> (rwxr-xr-x) <br>
+to user.group: <b>codendiadm.codendiadm</b> (rwxr-xr-x) <br>
 &nbsp; <br>
 <table border="1" cellspacing="2" cellpadding="2" width="100%">
   <caption><br>
@@ -662,9 +662,9 @@ extension) are instantiated by the Codendi installation script,
 customized at installation time and
 copied over to the target directories. <br>
       <b><font color="#ff0000">Remark:</font></b> the database.inc
-configuration file stored in /etc/codex/conf/database.inc contains
+configuration file stored in /etc/codendi/conf/database.inc contains
 the Codendi database password in clear so it must be readable only for
-the codexadm user/group
+the codendiadm user/group
 only (rw-r-----)</td>
     </tr>
     <tr>
@@ -680,7 +680,7 @@ only (rw-r-----)</td>
       </td>
     </tr>
     <tr>
-      <td valign="top">/usr/lib/codex/bin</td>
+      <td valign="top">/usr/lib/codendi/bin</td>
       <td valign="top">There are a couple of executables in this
 directory
 that work in cooperation with the Codendi WEB Site:
@@ -723,13 +723,13 @@ Codendi.</li>
       <td bgcolor="#c0c0c0"><b>Description</b></td>
     </tr>
     <tr>
-      <td valign="top">/var/lib/codex/cvsroot and link from /cvsroot</td>
+      <td valign="top">/var/lib/codendi/cvsroot and link from /cvsroot</td>
       <td valign="top">The CVS repositories of all Codendi projects are
 created
-under the <span style="font-family: monospace;">/var/lib/codex/cvsroot</span>
+under the <span style="font-family: monospace;">/var/lib/codendi/cvsroot</span>
 directory. This directory is linked from <span style="font-family: monospace;">/cvsroot</span>
 in the top directory.
- /var/lib/codex/<i>ProjectName</i> is the CVS repository
+ /var/lib/codendi/<i>ProjectName</i> is the CVS repository
 of
 project <i>ProjectName</i>. By default all files belong to user nobody
 and
@@ -754,7 +754,7 @@ CVS repository must have the executable flag set <br>
         <li> The CVS lock dir is now created in /var/lock/cvs/<i>ProjectName</i>. It is world writable (drwxrwxrwx) so that all users even those
 not
 part of the project team can checkout a working copy of the CVS tree.</li>
-        <li>The CVS repository for each project is owned by the user <i>codexadm.</i>
+        <li>The CVS repository for each project is owned by the user <i>codendiadm.</i>
 This allows the CVS web interface, which implements its own access
 control,
 to access the directory even if the directory is not world readable.<br>
@@ -763,7 +763,7 @@ to access the directory even if the directory is not world readable.<br>
 world readable (drwxrwx---). It is only user and group readable because
 the sources
 must be invisible to non project members.</li>
-        <li>If the CVS repository contains a file with the name <tt>.CODEX_PRIVATE<i>,
+        <li>If the CVS repository contains a file with the name <tt>.CODENDI_PRIVATE<i>,
           </i></tt>then the repository is NOT world readable.<br>
         </li>
       </ul>
@@ -793,14 +793,14 @@ must not be touched).</td>
       <td bgcolor="#c0c0c0"><b>Description</b></td>
     </tr>
     <tr>
-      <td valign="top">/var/lib/codex/svnroot and link from /svnroot</td>
+      <td valign="top">/var/lib/codendi/svnroot and link from /svnroot</td>
       <td valign="top">The Subversion repositories of all Codendi&nbsp;
 projects are
 created
-under the <span style="font-family: monospace;">/var/lib/codex/svnroot</span>
+under the <span style="font-family: monospace;">/var/lib/codendi/svnroot</span>
 directory.  This directory is linked from <span style="font-family: monospace;">/svnroot</span>
 in the top directory.
-/var/lib/codex/svnsroot/<i>ProjectName</i> is the Subversion repository
+/var/lib/codendi/svnsroot/<i>ProjectName</i> is the Subversion repository
 of
 project <i>ProjectName</i>. As opposed to CVS, Subversion manages the
 repository in a database acting as a virtual filesystem. Therefore
@@ -853,7 +853,7 @@ on the server.<br>
       <td bgcolor="#c0c0c0"><b>Description</b></td>
     </tr>
     <tr>
-      <td valign="top">/var/log/codex</td>
+      <td valign="top">/var/log/codendi</td>
       <td valign="top">The directory where log files used for
 statistics
 are archived. Archiving takes place each day.</td>
@@ -863,14 +863,14 @@ are archived. Archiving takes place each day.</td>
       <td valign="top">File name pattern: <tt>cvs_traffic_YYYYMMDD.log</tt>
       <p>A daily log of the CVS history files for all Codendi projects.
 The
-script <tt>/usr/share/codex/src/utils/cvs1/cvs_history_parse.pl </tt>runs
+script <tt>/usr/share/codendi/src/utils/cvs1/cvs_history_parse.pl </tt>runs
 daily
 and is responsible for extracting the CVS log information of that day
 for
 all <tt>/cvsroot/ProjectName/CVSROOT/history</tt> file and assemble
 them all
 in a single log file. </p>
-      <p>This global log file is later processed by the script <tt>/usr/share/codex/src/utils/underworld-root/db_stats_cvs_history.pl</tt>
+      <p>This global log file is later processed by the script <tt>/usr/share/codendi/src/utils/underworld-root/db_stats_cvs_history.pl</tt>
 which feeds the Codendi database with statistical figures about the CVS
 activity
 of each project (like the number of&nbsp; CVS checkout/add/commit
@@ -928,7 +928,7 @@ Files </a>section). It is basically a copy of the FTP log file <span
       <td bgcolor="#c0c0c0"><b>Description</b></td>
     </tr>
     <tr>
-      <td valign="top">/var/lib/codex/dumps</td>
+      <td valign="top">/var/lib/codendi/dumps</td>
       <td valign="top">As we will see later in this document there is a
 bunch
 of background script running on Codendi on a regular basis. The default
@@ -942,7 +942,7 @@ them in the next stages.
       <ul>
         <li> <b>aliases:</b> all Codendi users have an email alias in
 the
-form of login login_name@users.<span style="font-style: italic;">your.codex.domain</span>.
+form of login login_name@users.<span style="font-style: italic;">your.codendi.domain</span>.
 By creating such
 aliases
 one can send an email to a Codendi user simply by using it's login name.
@@ -956,15 +956,15 @@ automatically
 updated.</li>
 All user aliases and mailing list aliases are actually appended to the
 master
-file <tt>/usr/share/codex/src/utils/underworld-dummy/aliases.zone</tt>. This
+file <tt>/usr/share/codendi/src/utils/underworld-dummy/aliases.zone</tt>. This
 file
-contains codex wide aliases like codex-admin or codex-contact. If you
+contains codendi wide aliases like codendi-admin or codendi-contact. If you
 want
 to add more aliases modify this file NOT the /etc/aliases... files<br>
         <br>
         <li> <b>subversion_dir_dump</b> ready to use Apache config files with
 a list of all the per project subversion repositories. 
-This will be copied as is in the <tt>/etc/httpd/conf.d/codex_svnroot.conf</tt> file.</li>
+This will be copied as is in the <tt>/etc/httpd/conf.d/codendi_svnroot.conf</tt> file.</li>
         <li> <b>db_top_groups_calc_output: </b>contains all sorts of
 statistics
 about the Codendi hosted projects (project name, old project rank in
@@ -1065,7 +1065,7 @@ going from one project directory to another. This would be of course error
 prone. <br>
       <br>
 This directory will be world readable unless the project is <u>private</u>
-or the project directory contains a file named <tt>.CODEX_PRIVATE.</tt><br>
+or the project directory contains a file named <tt>.CODENDI_PRIVATE.</tt><br>
       </td>
     </tr>
   </tbody>
@@ -1083,7 +1083,7 @@ or the project directory contains a file named <tt>.CODEX_PRIVATE.</tt><br>
       <td bgcolor="#c0c0c0"><b>Description</b></td>
     </tr>
     <tr>
-      <td valign="top">/var/lib/codex/ftp/codex/<span style="font-style: italic;">ProjectName</span></td>
+      <td valign="top">/var/lib/codendi/ftp/codendi/<span style="font-style: italic;">ProjectName</span></td>
       <td valign="top">This is where all the uploaded files associated
 with a given release of project <span style="font-style: italic;">ProjectName</span>
 (see the <a
@@ -1099,13 +1099,13 @@ is group
 writable.&nbsp;</td>
     </tr>
     <tr nosave="">
-      <td valign="top" nosave="">/var/lib/codex/ftp/incoming</td>
+      <td valign="top" nosave="">/var/lib/codendi/ftp/incoming</td>
       <td>The FTP incoming directory is used by the project members
 to upload the software packages to be associated with new software
 releases in the Codendi File Release Service.
 This
 is a temporary storage area as the uploaded files move to the final
-release space&nbsp; /var/lib/codex/ftp/codex/<span style="font-style: italic;">ProjectName</span>
+release space&nbsp; /var/lib/codendi/ftp/codendi/<span style="font-style: italic;">ProjectName</span>
 (see
 above) when a new software release is created.&nbsp;
       <p><b><font color="#ff0000">Remark: </font></b>There is a script
@@ -1133,7 +1133,7 @@ we don't want that ghost files stay here for too long.<br>
       <td bgcolor="#c0c0c0"><b>Description</b></td>
     </tr>
     <tr>
-      <td valign="top">/var/lib/codex/ftp/pub/<span style="font-style: italic;">ProjectName</span></td>
+      <td valign="top">/var/lib/codendi/ftp/pub/<span style="font-style: italic;">ProjectName</span></td>
       <td valign="top">This is the anonymous FTP space assigned to
 project <span style="font-style: italic;">ProjectName</span> at
 creation time. It can be used by the project
@@ -1189,14 +1189,14 @@ must use
 this user whenever you want to grant/revoke new permission to a given
 user
 or network domain, etc...</li>
-  <li> <b>codexadm</b>: the user that was specifically created to
+  <li> <b>codendiadm</b>: the user that was specifically created to
 have
-read/write access to the codex database. It can only interact
+read/write access to the codendi database. It can only interact
 with
 the database from the local host and not from a remote machine. All the
 Codendi PHP scripts run under this user name to
 connect
-to the database (see the file <span style="font-family: monospace;">/etc/codex/conf/local.inc</span>
+to the database (see the file <span style="font-family: monospace;">/etc/codendi/conf/local.inc</span>
 for the configuration of the database user and password).<br>
   </li>
   <li> <b>dummy</b>: this user was created with read only access on
@@ -1232,7 +1232,7 @@ From any Unix account, type:
  style="font-style: italic;">database_name</span> -p</tt> </p>
 <p>where database_name is the name of the database you want to connect
 to
-(e.g. "codex" for the Codendi master database) and the user_name is
+(e.g. "codendi" for the Codendi master database) and the user_name is
 the MySQL user name you
 pretend
 to be (type -p if there is a password associated with this user but
@@ -1270,10 +1270,10 @@ is currently configured on the Codendi production server to give access
 to
 the Codendi database only. You can access phpMyAdmin at
 <center>
-<p>http://<span style="font-style: italic;">your.codex.domain</span>/phpMyAdmin</p>
+<p>http://<span style="font-style: italic;">your.codendi.domain</span>/phpMyAdmin</p>
 </center>
 <p>This is password protected at the HTTP level. Authenticate with the
-codexadm
+codendiadm
 user
 name and password. <br>
 &nbsp; </p>
@@ -1287,13 +1287,13 @@ master file also includes specific configuration files located at /<span
 <h2> Master server</h2>
 The master Codendi Web server can be accessed through one the following
 URLs:
-xww.<span style="font-style: italic;">your.codex.domain</span>, www.<span
- style="font-style: italic;">your.codex.domain</span> or simply <span
- style="font-style: italic;">your.codex.domain</span>. and any aliases
+xww.<span style="font-style: italic;">your.codendi.domain</span>, www.<span
+ style="font-style: italic;">your.codendi.domain</span> or simply <span
+ style="font-style: italic;">your.codendi.domain</span>. and any aliases
 that you may have defined yourself in the file <span
- style="font-family: monospace;">/var/named/codex.zone</span>. The
+ style="font-family: monospace;">/var/named/codendi.zone</span>. The
 Apache Document
-Root is at <span style="font-family: monospace;">/usr/share/codex/src/www</span>
+Root is at <span style="font-family: monospace;">/usr/share/codendi/src/www</span>
 where all the PHP scripts are located.
 <h2> Virtual Servers</h2>
 Each project has its own project Web server. These servers are configured with 
@@ -1387,9 +1387,9 @@ The top configuration file is in <tt>/etc/named.conf</tt>. This file
 is static
 and must be edited by hand. Before the Codendi server is installed you
 must ask your network administrator to create the Codendi domain <span
- style="font-style: italic;">your.codex.domain</span> and delegate the
+ style="font-style: italic;">your.codendi.domain</span> and delegate the
 administration of this domain to the Codendi server. </p>
-<p>The Codendi zone is defined in <tt>/var/named/codex.zone</tt>
+<p>The Codendi zone is defined in <tt>/var/named/codendi.zone</tt>
 . It contains the IP address for the master Codendi server as well as a
 list of aliases defined like www, cvs,
 download, shell,
@@ -1402,26 +1402,26 @@ host some Codendi functions on a separate server (e.g the mailing list
 manager or the CVS server). Doing so will just be a matter of changing
 the IP address
 associated
-with the lists.<span style="font-style: italic;">your.codex.domain</span>
-or cvs.<span style="font-style: italic;">your.codex.domain</span> and
+with the lists.<span style="font-style: italic;">your.codendi.domain</span>
+or cvs.<span style="font-style: italic;">your.codendi.domain</span> and
 all the rest will be transparent for
 the
 end users. </p>
 <p>Similarly mail exchange records (MX record) have been defined for
-lists.<span style="font-style: italic;">your.codex.domain</span>.
+lists.<span style="font-style: italic;">your.codendi.domain</span>.
 Strictly speaking this is not necessary today because the IP address of
 the
 machine receiving the e-mail is the same as the one
-lists.<span style="font-style: italic;">your.codex.domain</span>
+lists.<span style="font-style: italic;">your.codendi.domain</span>
 is pointing to. But in the future we may want to have a dedicated
 server to
-handle email for the codex domain. Hence the MX record. <br>
+handle email for the codendi domain. Hence the MX record. <br>
 &nbsp; </p>
 <h2> Wildcard DNS record</h2>
 As explained above each project on Codendi has its own Web server that
 can
 be accessed at the URL http://<span style="font-style: italic;">projectname</span>.<span
- style="font-style: italic;">your.codex.domain</span>, as well as dedicated cvs.projectname and svn.projectname domains.
+ style="font-style: italic;">your.codendi.domain</span>, as well as dedicated cvs.projectname and svn.projectname domains.
 For this to work, Codendi now provides a wildcard DNS record that accepts all subdomains.
 It it defined in codendi.zone with these lines: (Xerox server)<br>
 <tt>
@@ -1445,7 +1445,7 @@ your Windows users to install an SSH client instead.<br>
 <br>
 As a Codendi site administrator you may also decide to disable shell
 accounts for all users. If this is so you must change the default shell
-assigned to new Codex users when they register. See the <a
+assigned to new Codendi users when they register. See the <a
  href="/documentation/installation_guide/html/Codendi_Installation_Guide.html#Shell_Account">SSH
 section in the Codendi installation Guide</a> for detailed instructions.<br>
 <center>
@@ -1464,7 +1464,7 @@ the Codendi server:</font>
 your
 personal Codendi account (e.g. ssh <span style="font-style: italic;">username</span>@codendi.example.com)</font></li>
   <li> <font color="#ff0000">Then if you must act as root or
-codexadm
+codendiadm
 user use the su command (su - root) and type the appropriate password</font></li>
 </ol>
 <font color="#ff0000">The reason for the 2-step process is to be able
@@ -1496,11 +1496,11 @@ file run
 the command "newaliases" for the changes to take effect.</td>
     </tr>
     <tr nosave="">
-      <td style="font-family: monospace;" valign="top" nosave="">/etc/aliases.codex</td>
+      <td style="font-family: monospace;" valign="top" nosave="">/etc/aliases.codendi</td>
       <td>This file is generated automatically by the Codendi daemon
 scripts
 and must never be edited by hand. The beginning of the file contains
-some predefined aliases (codex-admin, codex-contact, noreply,...) that
+some predefined aliases (codendi-admin, codendi-contact, noreply,...) that
 must not be modified.<br>
       </td>
     </tr>
@@ -1544,7 +1544,7 @@ crontab.
 <table border="1" width="100%" nosave="">
   <tbody>
     <tr nosave="">
-      <td style="font-family: monospace;" valign="top" nosave="">/usr/share/codex/src/utils/xerox_crontab.sh</td>
+      <td style="font-family: monospace;" valign="top" nosave="">/usr/share/codendi/src/utils/xerox_crontab.sh</td>
       <td>This is the master daemon script for the Codendi site. It runs
 once every 2 hours and update all the user/group accounts, initialize
 CVS repository,
@@ -1553,24 +1553,24 @@ and groups
 (projects) have a fully functional environment from a Unix perspective</td>
     </tr>
     <tr>
-      <td style="font-family: monospace;">/usr/share/codex/src/utils/xerox_all_daily_stats.sh</td>
+      <td style="font-family: monospace;">/usr/share/codendi/src/utils/xerox_all_daily_stats.sh</td>
       <td>As the name says it this the master script that compute all
 the
 daily statistics about the Codendi site globally and also for individual
 projects</td>
     </tr>
     <tr>
-      <td><span style="font-family: monospace;">/usr/share/codex/src/utils/underworld-root/...
+      <td><span style="font-family: monospace;">/usr/share/codendi/src/utils/underworld-root/...
       </span><br>
       <span style="font-family: monospace;">db_project_weekly_metric.pl</span></td>
       <td>Same as above but this time it is for weekly statistics</td>
     </tr>
     <tr>
-      <td style="font-family: monospace;">/usr/lib/codex/bin/backup_job</td>
+      <td style="font-family: monospace;">/usr/lib/codendi/bin/backup_job</td>
       <td>Backup of all Codendi file system.</td>
     </tr>
     <tr>
-      <td style="font-family: monospace;">/usr/lib/codex/bin/backup_subversion.sh</td>
+      <td style="font-family: monospace;">/usr/lib/codendi/bin/backup_subversion.sh</td>
       <td>Backup of all Codendi subversion repositories.</td>
     </tr>
   </tbody>
@@ -1579,7 +1579,7 @@ projects</td>
 &nbsp; </p>
 <h2> The scripts</h2>
 It is beyond the scope of this document to review all the scripts under
-<span style="font-family: monospace;">/usr/share/codex/src/utils</span>. The
+<span style="font-family: monospace;">/usr/share/codendi/src/utils</span>. The
 most important scripts a Codendi administrator must know about are:<br>
 <p><b><u>xerox_crontab.sh</u></b> </p>
 <p>This is an orchestrator script in charge of running many others in
@@ -1595,12 +1595,12 @@ the rest of the script.<br>
   </li>
   <li> Generate e-mail aliases for the mailing lists
 (<span style="font-style: italic;">projectname</span>-xxxxx@lists.<span
- style="font-style: italic;">your.codex.domain</span>)
+ style="font-style: italic;">your.codendi.domain</span>)
 and for the users (<span style="font-style: italic;">username</span>@users.<span
- style="font-style: italic;">your.codex.domain</span>) and store them
-in the&nbsp; <span style="font-family: monospace;">/var/lib/codex/dumps/aliases</span>
+ style="font-style: italic;">your.codendi.domain</span>) and store them
+in the&nbsp; <span style="font-family: monospace;">/var/lib/codendi/dumps/aliases</span>
 file.</li>
-  <li> Copy the freshly dumped file into /etc/aliases.codex and force
+  <li> Copy the freshly dumped file into /etc/aliases.codendi and force
 sendmail
 aliases refresh to activate the new aliases.</li>
   <li> Generate the Apache config file for virtual hosts (project Web
@@ -1674,7 +1674,7 @@ the
 right one. The setuid bit on the group should probably work as well but
 it
 has not been tested. This method works so let's keep it.</li>
-    <li> Change the user ownership of the entire CVS repo to <i>codexadm</i>
+    <li> Change the user ownership of the entire CVS repo to <i>codendiadm</i>
 to start with</li>
     <li> (deprecated - user no longer created) Create the anoncvs_xxxx user in case we want to activate the
 anonymous
@@ -1683,13 +1683,13 @@ user
 to checkout&nbsp; -read- and you must be a project member to commit
 changes
 -write-)</li>
-    <li> If it's a private project or if the CVS repo contains a <tt>.CODEX_PRIVATE</tt>
+    <li> If it's a private project or if the CVS repo contains a <tt>.CODENDI_PRIVATE</tt>
 file, then make sure only the project members can look at the files in
 the
 CVS repo when using the shell account.</li>
     <li>If it's a private project or if the group home directory
 contains
-a <tt>.CODEX_PRIVATE</tt> file, then make sure that only project
+a <tt>.CODENDI_PRIVATE</tt> file, then make sure that only project
 members
 have access to the group home directory when using the shell account.</li>
     <li> Initialize a new Subversion repository for this project and
@@ -1702,7 +1702,7 @@ script<br>
 The output of all the back-end scripts run through xerox_crontab.sh is
 sent to
 the
-codex-admin email alias for verification .<br>
+codendi-admin email alias for verification .<br>
 <br>
 <hr width="100%" size="2">
 <h1> <a name="Log_Files"></a>Log Files</h1>
@@ -1759,7 +1759,7 @@ Codendi offers a continuous update process to Codendi site administrators
 to quickly and easily put in place new bug fixes, new features while
 minimizing the server downtime. The Codendi software is made of PHP and
 Perl code that is delivered in source form to our customers. The Codendi
-software resides in the <span style="font-family: monospace;">/usr/share/codex</span>
+software resides in the <span style="font-family: monospace;">/usr/share/codendi</span>
 directory and it is formatted in such a way that it behaves like a Subversion
 working copy that can be remotely updated when ever the system
 administrator decide to do so.<br>
@@ -1803,7 +1803,7 @@ repository pointer<br>
     <tr>
       <td style="vertical-align: top;">Customer Extranet<br>
       </td>
-      <td style="vertical-align: top;">https://partners.xrce.xerox.com:/svnroot/codex<br>
+      <td style="vertical-align: top;">https://partners.xrce.xerox.com:/svnroot/codendi<br>
       </td>
     </tr>
   </tbody>
@@ -1811,9 +1811,9 @@ repository pointer<br>
 <br>
 </div>
 <ul>
-  <li>Log to the 'codexadm' Codendi shell account on the Codendi server</li>
+  <li>Log to the 'codendiadm' Codendi shell account on the Codendi server</li>
   <li>Go to the Codendi top directory: <span
- style="font-family: monospace;">cd /usr/share/codex</span></li>
+ style="font-family: monospace;">cd /usr/share/codendi</span></li>
   <li>Launch an SVN status command to get a list of all the
 files that needs to be updated on your local Codendi directory<br>
     <br>
@@ -1835,7 +1835,7 @@ then it 's a normal update operation that you can do with a simple:<br>
   <li>If <span style="font-family: monospace;">src/etc/local.inc.dist</span>
 is in the list of files to be updated then you must look at the
 differences with your own local.inc.dist and make the changes in your <span
- style="font-family: monospace;">/etc/codex/conf/local.inc</span> file
+ style="font-family: monospace;">/etc/codendi/conf/local.inc</span> file
 accordingly. To see what has changed in the local.inc.dist file type:<br>
     <br>
     <span style="font-family: monospace;">svn diff --username  <span style="font-style: italic;">username </span>
@@ -1844,7 +1844,7 @@ place<br>
 svn update --username  <span style="font-style: italic;">username</span>&nbsp;
 # do the real update<br>
 vi
-/etc/codex/conf/local.inc&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+/etc/codendi/conf/local.inc&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 # edit your Codendi configuration file and merge the changes<br>
     </span><br>
 then do the real update as above.<br>
@@ -1989,26 +1989,26 @@ data is backed up to disk.&nbsp; The sequence is as follows: </p>
 <ul>
   <ul>
     <li> /etc/rc.d/init.d/mysql stop</li>
-    <li> move old codex-bin.index, codex-bin.001, sqldump.&lt;last
+    <li> move old codendi-bin.index, codendi-bin.001, sqldump.&lt;last
 week's date/time&gt; to</li>
     <br>
-/var/lib/codex/backup/mysql/old directory <li> dump&nbsp; 0f&nbsp;&nbsp;
-/var/lib/codex/backup/mysql/sqldump.&lt;date&gt;.&lt;time&gt;&nbsp;&nbsp;
+/var/lib/codendi/backup/mysql/old directory <li> dump&nbsp; 0f&nbsp;&nbsp;
+/var/lib/codendi/backup/mysql/sqldump.&lt;date&gt;.&lt;time&gt;&nbsp;&nbsp;
 /var/lib/mysql</li>
     <li> /etc/rc.d/init.d/mysql start</li>
   </ul>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 -&nbsp;&nbsp;&nbsp; reads /etc/my.cnf <br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
--&nbsp;&nbsp;&nbsp; new codex-bin.index created <br>
+-&nbsp;&nbsp;&nbsp; new codendi-bin.index created <br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
--&nbsp;&nbsp;&nbsp; new codex-bin.001 created
+-&nbsp;&nbsp;&nbsp; new codendi-bin.001 created
 </ul>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 The whole MySQL data backup process takes less than 15 seconds
 <p>
 </li>
-<li>Subversion repositories: a specific subversion backup script (/usr/share/codex/utils/subversion_backup.sh) is run in the root crontab. 
+<li>Subversion repositories: a specific subversion backup script (/usr/share/codendi/utils/subversion_backup.sh) is run in the root crontab. 
 <br>The script offers two backup mechanisms: full backup, and incremental backup (with '-i' flag). Currently, full backups are run weekly, while incremental ones are run daily.
 <li>
 <p>Disk Partitions - Using Legato software, a full backup of all disks (except
@@ -2024,11 +2024,11 @@ days of the week (Monday - Saturday) run incremental backups. </p>
 <li>
 2 files are needed to rebuild.  Find the most recent "dump" and "bin" files:
 <pre>
-cd  /var/lib/codex/backup/mysql
+cd  /var/lib/codendi/backup/mysql
 ls  -lt
   Example: 
   sqldump.080502.004501	(created from cron "dump" every Sunday; mysql is shut down prior to "dump")
-  codex-bin.001		(created when mysql starts up every Sunday;
+  codendi-bin.001		(created when mysql starts up every Sunday;
 			log file that contains changes that are made to the databases)
 service mysql stop
 cd  /var/lib
@@ -2037,7 +2037,7 @@ mv  mysql  mysql.bck
 <li>Then restore the mysql databases from sqldump.080502.004501, either in interactive or automatic mode.
 <ul><li>Interactive mode:
 <pre>
-/sbin/restore  -ivf   /var/lib/codex/backup/mysql/sqldump.080502.004501
+/sbin/restore  -ivf   /var/lib/codendi/backup/mysql/sqldump.080502.004501
 /sbin/restore >  cd  var/lib
 /sbin/restore >  verbose
 /sbin/restore >  add mysql
@@ -2048,19 +2048,19 @@ set owner/mode for '.'? [yn]  n
 </pre>
 <li>Automatic mode:
 <pre>
-restore -r -f /var/lib/codex/backup/mysql/sqldump.080502.004501
+restore -r -f /var/lib/codendi/backup/mysql/sqldump.080502.004501
 </pre>
 You can safely ignore the 'not found on tape' messages (they correspond to files that are not in the dump)
 </li>
 </ul>
-<li>Finish the mysql rebuild by reloading data from codex-bin.001, which contains changes since sqldump.080502.004501 was created.
+<li>Finish the mysql rebuild by reloading data from codendi-bin.001, which contains changes since sqldump.080502.004501 was created.
 <br>
 Boot system in single user mode:
 We don't want anyone trying to update the mysql database before everything has been restored.
 <pre>
 /etc/rc.d/init.d/mysql  start
-cd  /var/lib/codex/backup/mysql
-/usr/bin/mysqlbinlog  codex-bin.001  |  mysql --user=root  -p
+cd  /var/lib/codendi/backup/mysql
+/usr/bin/mysqlbinlog  codendi-bin.001  |  mysql --user=root  -p
 password: (enter root password)
 </pre>
 No information will display until it's finished.
@@ -2077,7 +2077,7 @@ Rebuild is complete.
       <td><b>Description</b></td>
     </tr>
     <tr>
-      <td>/var/lib/codex/backup/mysql <br>
+      <td>/var/lib/codendi/backup/mysql <br>
 &nbsp; <br>
 &nbsp; <br>
 &nbsp; <br>
@@ -2091,13 +2091,13 @@ Rebuild is complete.
       <ul>
         <li><b>sqldump.&lt;date&gt;.&lt;time&gt;:</b>&nbsp; dump of
 /var/lib/mysql</li>
-        <li><b>codex-bin.index:</b> Text file indicating file name to
+        <li><b>codendi-bin.index:</b> Text file indicating file name to
 use
 when restoring mysql data</li>
-        <li><b>codex-bin.001:&nbsp;</b> Binary log file used for
+        <li><b>codendi-bin.001:&nbsp;</b> Binary log file used for
 viewing or piping into a mysql command if rebuilding database</li>
       </ul>
-Older files are stored in /var/lib/codex/backup/mysql/old</td>
+Older files are stored in /var/lib/codendi/backup/mysql/old</td>
     </tr>
     <tr>
       <td>/etc <br>
@@ -2113,7 +2113,7 @@ starts.&nbsp; MySQL variables are set here.</li>
       </td>
     </tr>
     <tr>
-      <td>/usr/lib/codex/bin <br>
+      <td>/usr/lib/codendi/bin <br>
 &nbsp;
       <p>&nbsp;</p>
       </td>
@@ -2267,7 +2267,7 @@ update to create a fresh /svnroot/projectname SVN repository. If you are in a hu
 <li>The project team should provide a dump of the existing Subversion repository. To create an SVN dump please use the following command (Unix/Linux):
 <pre>
 svnadmin dump /path_to_svn_root &gt; svn_dumpfile</pre>
-<li>Ask the team to copy the dump file on the codex server, e.g.:
+<li>Ask the team to copy the dump file on the codendi server, e.g.:
 <pre>
 scp svn_dumpfile username@codendi.example.com:/home/groups/projectname</pre>
 (it is also possible to use FTP instead).
@@ -2276,7 +2276,7 @@ scp svn_dumpfile username@codendi.example.com:/home/groups/projectname</pre>
 svnadmin load /svnroot/projectname &lt; /home/groups/projectname/svn_dumpfile </pre> 
 <li>Then, don't forget to set proper Unix ownership on the repository:
 <pre>
-chown -R codexadm.projectname /svnroot/projectname</pre>
+chown -R codendiadm.projectname /svnroot/projectname</pre>
 <li>if the existing repository had specific permissions or hooks, it is now time to copy the corresponding files on the new repository. This can be done by the project team.
 <li>Once the team has tested the new repository, you can remove the dump file from /home/groups/projectname/svn_dumpfile.
 </ol>
@@ -2296,7 +2296,7 @@ The fastest and safest way (where xxx is the project name):
 <li>Delete the CVS or SVN tree: <br><tt>rm -rf  xxx</tt>
 <li>Force the cron update process to run now:
 <pre>
-$ cd /usr/share/codex/src/utils
+$ cd /usr/share/codendi/src/utils
 $./xerox_crontab.sh
 </pre>
 <li>Delete corresponding entries from cvs_checkins, cvs_commits and cvs_descs tables to prevent showing them while browsing commits with viewVC.
@@ -2306,7 +2306,7 @@ Now you have a fresh CVS or SVN repository and the team can start the import aga
 <h2><a name="HowTo_Change_User_Name"></a>Changing a User Name on Codendi</h2>
 <em>How a Codendi administrator can change a user's login name</em>
 <UL>
-<LI>Log as root on the codex server</LI>
+<LI>Log as root on the codendi server</LI>
 <li>First of all, make sure that the new login name is not already used!</li>
 <li>Second of all, make sure that the Xerox cron job won't run while you do the update (you may edit the root crontab if necessary)!</li>
 <LI> Rename the user home directory:
@@ -2371,8 +2371,8 @@ on the Codendi server. Here is the procedure to follow to change a group name (a
 <li> First log as root
 <li>Change the old project name 'xxx' in the following directories:
 <ul><tt>
-<li>/var/lib/codex/ftp/pub 
-<li>/var/lib/codex/ftp/codex 
+<li>/var/lib/codendi/ftp/pub 
+<li>/var/lib/codendi/ftp/codendi 
 <li>/home/groups 
 <li>/cvsroot
 <li>/svnroot
@@ -2385,7 +2385,7 @@ on the Codendi server. Here is the procedure to follow to change a group name (a
 <tt>cvs -d:pserver:username@codendi.example.com:/cvsroot/projectname co CVSROOT</tt>.
 Then edit the 'config' and  'commitinfo' files and change the project name wherever it appears. Last, commit the changes. (you may also directly edit those files in the /cvsroot/projectname/CVSROOT directory, but don't forget to also edit the ',v' files then).
 
-<li>Edit the 'groups' table of the Codex DB with phpMyAdmin and change
+<li>Edit the 'groups' table of the Codendi DB with phpMyAdmin and change
 the name (2 occurrences in 2 columns: <tt>unix_group_name,
 http_domain</tt>). Then edit the 'service' table, and change the link to the 'Project Summary' and potentially to the 'Project Home Page'. All other fields can be changed by the project admin via the Web interface.
 
@@ -2580,7 +2580,7 @@ deleted as well.
 <ol>
 <li>Have a Codendi Web page ready and open on the Search people box. Type part of people's name in the box and determine the login name from the result list
 <li>Have a terminal session open on the Codendi server and connect to the database with:<br><br>
-<tt>mysql -u codexadm codex -p</tt><br><br>
+<tt>mysql -u codendiadm codendi -p</tt><br><br>
 then use the following SQL statement for Suspend/Delete scenario: <br><br>
 
 <tt> update user set unix_status='S',status='D' where user_name='fmarcus';</tt>
@@ -2600,26 +2600,26 @@ or for the Delete/Delete scenario use: <br><br>
 <ol>
   <li>Log as root on a test server</li>
   <li>Go to /usr/src/redhat/SPECS</li>
-  <li>Install the previous codex specific RPM in source form if
+  <li>Install the previous codendi specific RPM in source form if
 necessary to get the specific patches and also the specific spec file</li>
   <li>Install the new version&nbsp; of the standard source RPM</li>
-  <li>Make a diff between the old codex specific spec file and the new
+  <li>Make a diff between the old codendi specific spec file and the new
 standard spec file to see what are the changes.</li>
-  <li>Merge the changes you made in the old codex specific spec file in
+  <li>Merge the changes you made in the old codendi specific spec file in
 the new spec file</li>
-  <li>Don't forget to append the 'codex' suffix to the release name in
+  <li>Don't forget to append the 'codendi' suffix to the release name in
 the new spec file.</li>
   <li>Also change the name of the new spec file to reflect the version
-number and the codex prefix (e.g. cvs-1.11.1p1-8.7.spec)</li>
+number and the codendi prefix (e.g. cvs-1.11.1p1-8.7.spec)</li>
   <li>Recompile the package (rpm -ba ... to generate both the source
 and the binary package</li>
   <li>Install the new modified binary RPM package on the test server
 and make sure it works ok<br>
   </li>
   <li>Publish the new packages (both source and binary) in the package
-release space (/home/groups/codex/htdocs/packages/RPMS_Codendi)</li>
-  <li>Send an email to the codex-devel mailing list to announce the
-availability of the new codex specific package and point them to the
+release space (/home/groups/codendi/htdocs/packages/RPMS_Codendi)</li>
+  <li>Send an email to the codendi-devel mailing list to announce the
+availability of the new codendi specific package and point them to the
 RPM release space ( <a href="https://codendi.partners.xrce.xerox.com/packages/">http://codendi.partners.xrce.xerox.com/packages/</a>
 ...)</li>
 </ol>
@@ -2643,17 +2643,17 @@ Passwords, for details. (Intranet)
 <br>
 <b>root</b>
 <br>
-<b>codexadm</b>
+<b>codendiadm</b>
 <br>
 <b>admin</b>
 <br>
 <b>mailman</b>
 <br>
 
-2) Change the codexadm password in /etc/codex/conf/local.inc. (Restarting
+2) Change the codendiadm password in /etc/codendi/conf/local.inc. (Restarting
 services is not necessary.)
 <br>
-3) Send note to codex-admin@lists.codendi.example.com
+3) Send note to codendi-admin@lists.codendi.example.com
 stating passwords have been changed.
 <br>
 4) All Codendi admins need to change the password on
@@ -2676,10 +2676,10 @@ their privileged personal account.
 <br>
 enter password: [enter old password]
 </p>
-<p><b>codexadm</b> account:
+<p><b>codendiadm</b> account:
 
 <br>
-1) Change <i>unix</i> password from <b>codexadm</b>
+1) Change <i>unix</i> password from <b>codendiadm</b>
 account:
 <br>
 - password (cr)
@@ -2691,11 +2691,11 @@ account:
 2) Change <i>mysql </i>password:
 
 <br>
-- mysqladmin - -user=codexadm -p password [enter new password]
+- mysqladmin - -user=codendiadm -p password [enter new password]
 <br>
 enter password: [enter old password]
 <br>
-3) Modify /etc/codex/conf/local.inc - change <b>codexadm</b>
+3) Modify /etc/codendi/conf/local.inc - change <b>codendiadm</b>
 password<br>
 </p>
 <p><b>admin</b> account:
@@ -2798,7 +2798,7 @@ of the selected mailing list, then it is OK.
     </p>
 
 <p>Save this script for instance as <tt>del_bug.sql</tt> and launch it with <br>
-      <tt>mysql -u codexadm -v -v -v -p codex &lt; del_bug.sql &gt; out</tt>
+      <tt>mysql -u codendiadm -v -v -v -p codendi &lt; del_bug.sql &gt; out</tt>
 </p>
 
 
@@ -2819,7 +2819,7 @@ of the selected mailing list, then it is OK.
 <h3>Configuration</h3>
 <h4>local.inc</h4>
 <p>In order to setup restricted users, you need a coherent local.inc.
-<p>Edit /etc/codex/conf/local.inc and make sure that the following variables are properly set:
+<p>Edit /etc/codendi/conf/local.inc and make sure that the following variables are properly set:
 <pre>
 $sys_user_approval = 1;
 $sys_is_project_public = 1;
@@ -2834,7 +2834,7 @@ $sys_allow_restricted_users = 1;
 </ul>
 <h4>Restricted Shell</h4>
 <p>By default, restricted users do not have a regular shell access: they are given a restricted shell access that only supports a few command (only 'cvs' today).
-<p>The default shell is '/usr/lib/codex/bin/cvssh-restricted'. It grants CVS access to projects the user is member of, and forbid access to all other projects repositories.
+<p>The default shell is '/usr/lib/codendi/bin/cvssh-restricted'. It grants CVS access to projects the user is member of, and forbid access to all other projects repositories.
 <p>If you need to completely remove shell access (and forbid CVS), you need to modify the shell manually in the administration interface for each user: set it to /sbin/nologin.
 <p>Setup: in order to use CVS, the restricted user must do the following:
 <ul><li>Set the 'CVS_RSH' environment variable to 'ssh'
@@ -2842,7 +2842,7 @@ $sys_allow_restricted_users = 1;
 </ul>
 See also 'Codendi Installation Guide'.
 <h3>Setting restricted users privileges</h3>
-<p>You may fine tune the privileges of restricted users on your system. Simply copy /usr/share/codex/site-content/en_US/include/restricted_user_permissions.txt in /etc/codex/site-content/en_US/include/ and edit it. This is a sample configuration file:
+<p>You may fine tune the privileges of restricted users on your system. Simply copy /usr/share/codendi/site-content/en_US/include/restricted_user_permissions.txt in /etc/codendi/site-content/en_US/include/ and edit it. This is a sample configuration file:
 <pre>
 // comment/uncomment forbidden URLs
 $forbidden_url = array(
@@ -2862,10 +2862,10 @@ $forbidden_url = array(
 $allow_welcome_page=false;// Allow access to Codendi welcome page (at e.g. http://codendi.example.com/)
 $allow_news_browsing=false;     // Allow restricted users to read/comment news, including for their project
 $allow_user_browsing=true;      // Allow restricted users to access other user's page (Developer Profile)
-$allow_access_to_codex_forums=true;   // Codendi help forums are accessible through the 'Discussion Forums' link
-$allow_access_to_codex_trackers=false;// Codendi trackers are used for support requests on Codendi
-$allow_access_to_codex_docs=false; // Codendi documents (Note that the User Guide is always accessible)
-$allow_access_to_codex_mail=false; // Codendi mailing lists (Developers Channels)
+$allow_access_to_codendi_forums=true;   // Codendi help forums are accessible through the 'Discussion Forums' link
+$allow_access_to_codendi_trackers=false;// Codendi trackers are used for support requests on Codendi
+$allow_access_to_codendi_docs=false; // Codendi documents (Note that the User Guide is always accessible)
+$allow_access_to_codendi_mail=false; // Codendi mailing lists (Developers Channels)
 </pre>
 <h3>Other considerations</h3>
 <ul>
@@ -2925,9 +2925,9 @@ You might need to add "--encoding=iso8859-1 --encoding=utf_8" if the conversion 
 <li>This will convert the CVS repository with all the historical information (including all commits, tags and branches).
 To select a set of historical data, please read: <a href="http://cvs2svn.tigris.org/cvs2svn.html">http://cvs2svn.tigris.org/cvs2svn.html</a>
 <li>You should then set proper ownership on the repository:
-<pre>chown -R codexadm.projname /svnroot/projname</pre>
+<pre>chown -R codendiadm.projname /svnroot/projname</pre>
 <li>Activate the Subversion service in Codendi if it is disabled.
-<li>You may also populate the Codendi DB with subversion revision details: you need to execute as codexadm '/usr/lib/codex/bin/commit-email.pl NNN' for each revision number (NNN) created. Please note however that CVS commits performed by people whose login name does not correspond to Codendi logins won't appear.
+<li>You may also populate the Codendi DB with subversion revision details: you need to execute as codendiadm '/usr/lib/codendi/bin/commit-email.pl NNN' for each revision number (NNN) created. Please note however that CVS commits performed by people whose login name does not correspond to Codendi logins won't appear.
 </ul>
 
 <hr>
@@ -2935,22 +2935,22 @@ To select a set of historical data, please read: <a href="http://cvs2svn.tigris.
 <p>
 Subversion repositories are backed up every day. So it is always possible to restore the repository as it was the day before.
 <br>There are two Subversion backup directories:
-<ul><li>/var/lib/codex/backup/subversion/full contains the full backups performed weekly
-<li>/var/lib/codex/backup/subversion/incr contains the incremental backups performed daily.
+<ul><li>/var/lib/codendi/backup/subversion/full contains the full backups performed weekly
+<li>/var/lib/codendi/backup/subversion/incr contains the incremental backups performed daily.
 </ul>
 In order to restore the most recent version of the repository, you need:
 <ul><li>to restore the most recent full backup: 
-<br>simply copy /var/lib/codex/backup/subversion/full/current/projectname-rev1 as /svnroot/projectname, and note the number 'rev1'.
+<br>simply copy /var/lib/codendi/backup/subversion/full/current/projectname-rev1 as /svnroot/projectname, and note the number 'rev1'.
 <li>then restore the incremental backups starting with 'rev1+1':
 <pre>
-cd /var/lib/codex/backup/subversion/incr/projectname
+cd /var/lib/codendi/backup/subversion/incr/projectname
 bunzip2 < projectname.incr.rev1+1:rev2.bz2 | svnadmin load /svnroot/projectname 
 bunzip2 < projectname.incr.rev2+1:rev3.bz2 | svnadmin load /svnroot/projectname 
 etc.
 </pre>
 <li>Last, restore appropriate permissions:
 <pre>
-chown -R codexadm.projectname /svnroot/projectname
+chown -R codendiadm.projectname /svnroot/projectname
 </pre>
 </ul>
 
@@ -2967,13 +2967,13 @@ In this case, you need to recover the repository.
 <br>As root, run the following commands:
 <pre>
 svnadmin recover /svnroot/projectname
-chown -R codexadm.projectname /svnroot/projectname
+chown -R codendiadm.projectname /svnroot/projectname
 </pre>
 <p>In case the "svnadmin recover" command still fails you can use the low level repair utility of Berkeley DB:
 <pre>
 cd /svnroot/projectname/db
 db_recover -c -v
-chown -R codexadm.projectname /svnroot/projectname
+chown -R codendiadm.projectname /svnroot/projectname
 </pre>
 
 
@@ -3009,18 +3009,18 @@ to be located on satellite servers.
 
 <h3>Setup</h3>
 <dl>
-    <dt>In /etc/codex/conf/local.inc:</dt>
+    <dt>In /etc/codendi/conf/local.inc:</dt>
     <dd>
         Choose a sys_server_id for the master and the satellite (any integer is OK)
     </dd>
-    <dt>In /etc/codex/conf/database.inc:</dt>
+    <dt>In /etc/codendi/conf/database.inc:</dt>
     <dd>
         both servers should point to the master MySQL server. 
     </dd>
     <dt>In MySQL on the master server:</dt>
     <dd>Do not forget to enable remote access from the satellites in mysql :
-        <pre>GRANT ALL ON codex.* TO codexadm@<em>satellite.domain.com</em> IDENTIFIED BY '<em>xxxx</em>'</pre>
-        Where 'xxxx' is the database password for codexadm. See <a href="http://dev.mysql.com/doc/refman/5.0/en/grant.html">mysql documentation</a> for details.
+        <pre>GRANT ALL ON codendi.* TO codendiadm@<em>satellite.domain.com</em> IDENTIFIED BY '<em>xxxx</em>'</pre>
+        Where 'xxxx' is the database password for codendiadm. See <a href="http://dev.mysql.com/doc/refman/5.0/en/grant.html">mysql documentation</a> for details.
     </dd>
     <dt>In Codendi web interface:</dt>
     <dd>
@@ -3039,7 +3039,7 @@ Please note that the default template does not allow selection of satellite serv
 <h3>Migration</h3>
 <p>It is possible to relocate a service that already has some historical data.
 <h4>Files</h4>
-<p>Make a tarball of the /var/lib/codex/ftp/codex/<i>projname</i> directory on the server that contains the existing data, and un-tar the files at the same location on the new server.
+<p>Make a tarball of the /var/lib/codendi/ftp/codendi/<i>projname</i> directory on the server that contains the existing data, and un-tar the files at the same location on the new server.
 <h4>Subversion</h4>
 <p>Similarly, make a tarball of the /svnroot/<i>projname</i> directory on the server that contains the existing data, and un-tar the files at the same location on the new server.
 <h3>Single Sign-on</h3>

@@ -18,7 +18,7 @@
 <!-- CX-SBT: Import all the standard Docbook XSLT first -->
 <xsl:import href="/usr/local/docbook-xsl/fo/docbook.xsl"/>
 
-<!-- CX-SBT: And then import the specific CodeX XSLT -->
+<!-- CX-SBT: And then import the specific Codendi XSLT -->
 <xsl:import href="param.xsl"/>
 <xsl:import href="admon.xsl"/>
 <xsl:import href="pagesetup.xsl"/>

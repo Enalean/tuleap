@@ -12,7 +12,7 @@
   // 
   //
   //	Originally written by Quentin Cregan, SourceForge 06/2000
-  //	Modified by Laurent Julliard 2001-2004, CodeX Team, Xerox
+  //	Modified by Laurent Julliard 2001-2004, Codendi Team, Xerox
 
 require_once('pre.php');
 require_once('../doc_utils.php');

@@ -5,7 +5,7 @@
 * 
 */
 
-require_once(CODEX_CLI_DIR.'/CLI_Action.class.php');
+require_once(CODENDI_CLI_DIR.'/CLI_Action.class.php');
 
 abstract class CLI_Action_Docman_CreateItem extends CLI_Action {
     function CLI_Action_Docman_CreateItem($name, $description) {

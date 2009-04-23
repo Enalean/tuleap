@@ -131,7 +131,7 @@ sub get_email_from_login {
 
 #
 # input: a string handled as a email address
-# output: 1 if the email address is valid, or 0 if the email address is not known in CodeX, or if all the accounts associated with it are deleted or suspended
+# output: 1 if the email address is valid, or 0 if the email address is not known in Codendi, or if all the accounts associated with it are deleted or suspended
 #
 sub is_valid_email {
 
@@ -148,7 +148,7 @@ sub is_valid_email {
             # if the email is unknow, we add it (it is an external email address for instance)
             return 1;
         } else {
-            # if the email address is known in the CodeX system, we check if it is not associated with a wrong account (suspended or deleted)
+            # if the email address is known in the Codendi system, we check if it is not associated with a wrong account (suspended or deleted)
             while ($user_hash_ref = $c->fetchrow_hashref) {
                 if ($user_hash_ref->{status} eq 'A' || $user_hash_ref->{status} eq 'R') {
                     return 1;

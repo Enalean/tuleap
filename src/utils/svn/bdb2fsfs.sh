@@ -21,8 +21,8 @@
 #
 debug=
 
-sys_http_user="codexadm"
-BKPDIR=/var/lib/codex/__tmp_svn__backup__
+sys_http_user="codendiadm"
+BKPDIR=/var/lib/codendi/__tmp_svn__backup__
 
 
 set -e${debug}

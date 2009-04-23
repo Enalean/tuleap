@@ -88,7 +88,7 @@ class UserLdap {
         $form_loginname = $lr->getLogin();
         include($GLOBALS['Language']->getContent('ldap/register_ldap_get_data'));
 
-        // Create codex account
+        // Create codendi account
         if($new_userid = account_create($form_loginname
                                         ,$password
                                         ,$lr->getEdUid()

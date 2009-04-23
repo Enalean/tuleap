@@ -6,7 +6,7 @@
  * Description: Random MUC and shared group related operation are run in batchs of 2 to 8 operations 100 times.
  * 
  * Pre-conditions:
- * - The project id "monster2 must in the CodeX environment (and state = A).
+ * - The project id "monster2 must in the Codendi environment (and state = A).
  * - No MUC room named "monster" or "monster2" must exist.
  * 
  * Post-Condition:

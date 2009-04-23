@@ -13,7 +13,7 @@ require_once('LDAPResult.class.php');
 
 /**
  * LDAP class definition
- * Provides LDAP facilities to CodeX:
+ * Provides LDAP facilities to Codendi:
  * - directory search
  * - user authentication
  * The ldap object is initialized with global parameters (from local.inc):

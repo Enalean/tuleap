@@ -6,7 +6,7 @@
 // Originally written by Nicolas Guerin 2004, Codendi Team, Xerox
 //
 -->
-  <chapter id="CodeXDevelopment">
+  <chapter id="CodendiDevelopment">
     <title>&SYS_PRODUCT_NAME; Development</title>
     <para></para>
     
@@ -413,6 +413,6 @@ $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('global
 
   <!--
   Local Variables:
-  sgml-parent-document: ("CodeX_Programmer_Guide.xml" "book" "chapter")
+  sgml-parent-document: ("Codendi_Programmer_Guide.xml" "book" "chapter")
   End:
   -->

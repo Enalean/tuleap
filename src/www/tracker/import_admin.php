@@ -6,7 +6,7 @@
 // 
 //
 //
-//  Written for CodeX by Marie-Luise Schneider
+//  Written for Codendi by Marie-Luise Schneider
 //
 
 require_once('pre.php');

@@ -6,7 +6,7 @@
 //
 // 
 //
-//	Originally written by Laurent Julliard 2001, 2002, CodeX Team, Xerox
+//	Originally written by Laurent Julliard 2001, 2002, Codendi Team, Xerox
 //
 
 require_once('pre.php');

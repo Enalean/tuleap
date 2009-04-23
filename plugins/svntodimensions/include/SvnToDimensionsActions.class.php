@@ -107,23 +107,23 @@ class SvnToDimensionsActions extends Actions {
             $product = & $p26c_dao->searchProductByName($product_name);
             if ($product->rowCount() >= 1) {
 
-                //ckeck PRODUCT-MANAGER role for CODEXADM user on the given product
-                $roles = & $p26c_dao->searchRoleByProductAndUser($product_name, "CODEXADM");
+                //ckeck PRODUCT-MANAGER role for CODENDIADM user on the given product
+                $roles = & $p26c_dao->searchRoleByProductAndUser($product_name, "CODENDIADM");
                 $roles_array = $this->_resultset_to_array($roles, "ROLE");
                 $logs_dao = new PluginSvntodimensionsLogDao(CodendiDataAccess :: instance());
                 //dmcli authentification command
-                 $codex_user_name = $user->getName();
+                 $codendi_user_name = $user->getName();
                  $dmcli = $this->_controler->getProperty('dmcli');
                  $dsn = $this->_controler->getProperty('dsn');
                  $host = $this->_controler->getProperty('host');
-                 $dmcli_authent = $dmcli . ' -user '.$codex_user_name.' -pass ' . $password . ' -dbname ' . $database . ' -dsn ' . $dsn .
+                 $dmcli_authent = $dmcli . ' -user '.$codendi_user_name.' -pass ' . $password . ' -dbname ' . $database . ' -dsn ' . $dsn .
                         ' -host ' . $host . ' ';                      
                                 
                         //for each tag to export : SVN to dimensions process
                         foreach ($tags as $pl => $tag){
                             if(in_array("PRODUCT-MANAGER", $roles_array)){
                                 //check upload manager role
-                                $user_name = strtoupper($codex_user_name);
+                                $user_name = strtoupper($codendi_user_name);
                                 $roles = & $p26c_dao->searchRoleByProductAndUser($product_name, $user_name);
                                 $user_roles_array = $this->_resultset_to_array($roles, "ROLE");
                                 $requires_role = $this->_controler->getProperty('role');

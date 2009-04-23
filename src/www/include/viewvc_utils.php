@@ -28,7 +28,7 @@ function viewvc_utils_getfile($script_name) {
 
 
 /**
- * return true if we have to display the codex header
+ * return true if we have to display the codendi header
  * and footer around the viewvc output
  */
 function viewvc_utils_display_header() {

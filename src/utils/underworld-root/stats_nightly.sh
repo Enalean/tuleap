@@ -15,8 +15,8 @@ echo "--- Beginning of $script ---"
 # statistics for the day before
 ./db_stats_site_nightly.pl $*
 
-# Compute the number of reference to the CodeX site
-# through the CodeX logo displayed on other Web pages
+# Compute the number of reference to the Codendi site
+# through the Codendi logo displayed on other Web pages
 # by day and by project (group). Must be run after midnight to compute
 # statistics for the day before
 ./db_site_stats.pl $*

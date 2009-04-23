@@ -99,7 +99,7 @@ my $MARKER_END   = "# END OF NEEDED CODENDI BLOCK";
 # owner of all CVS root directories so the CGI script can browse all
 # CVS roots including private ones.  For private groups the viewvc.cgi
 # script will implement its own access control.
-my ($cxname) = get_codex_user();
+my ($cxname) = get_codendi_user();
 
 # PK new variables for simple final abstract
 #
@@ -237,7 +237,7 @@ while ($ln = pop(@groupdump_array)) {
 	# Add $sys_http_user user to the group if it is a private project
 	# otherwise Apache won't be able to access the document Root
 	# of the project web iste which is not world readable (see below)
-	$public_grp = $gis_public && ! -e "$grpdir_prefix/$gname/.CODEX_PRIVATE";
+	$public_grp = $gis_public && ! -e "$grpdir_prefix/$gname/.CODENDI_PRIVATE";
 	if ($userlist eq "") {
 	  $userlist = $sys_http_user unless $public_grp;
 	} else {
@@ -307,13 +307,13 @@ while ($ln = pop(@groupdump_array)) {
 		    mkdir "$lockdir", 0777;
 		    chmod 0777, "$lockdir"; # overwrite umask value
 		    system("echo  >> $cvs_dir/CVSROOT/config");
-		    system("echo '# !!! CodeX Specific !!! DO NOT REMOVE' >> $cvs_dir/CVSROOT/config");
+		    system("echo '# !!! Codendi Specific !!! DO NOT REMOVE' >> $cvs_dir/CVSROOT/config");
 		    system("echo '# Put all CVS lock files in a single directory world writable' >> $cvs_dir/CVSROOT/config");
-		    system("echo '# directory so that any CodeX registered user can checkout/update' >> $cvs_dir/CVSROOT/config");
+		    system("echo '# directory so that any Codendi registered user can checkout/update' >> $cvs_dir/CVSROOT/config");
 		    system("echo '# without having write permission on the entire cvs tree.' >> $cvs_dir/CVSROOT/config");
 		    system("echo 'LockDir=$lockdir' >> $cvs_dir/CVSROOT/config");
 		    # commit changes to config file (directly with RCS)
-		    system("cd $cvs_dir/CVSROOT; rcs -q -l config; ci -q -m\"CodeX modifications\" config; co -q config");
+		    system("cd $cvs_dir/CVSROOT; rcs -q -l config; ci -q -m\"Codendi modifications\" config; co -q config");
                 }
 
                 # setup loginfo to make group ownership every commit
@@ -324,7 +324,7 @@ while ($ln = pop(@groupdump_array)) {
                 } else {
 		    system("echo \"ALL (cat;chgrp -R $gname $cvs_dir)>/dev/null 2>&1\" > $cvs_dir/CVSROOT/loginfo");
                 }
-                system("cd $cvs_dir/CVSROOT; rcs -q -l loginfo; ci -q -m\"CodeX modifications\" loginfo; co -q loginfo");
+                system("cd $cvs_dir/CVSROOT; rcs -q -l loginfo; ci -q -m\"Codendi modifications\" loginfo; co -q loginfo");
                 system("cd $cvs_dir/CVSROOT; chown -R $cxname:$gid loginfo*");
 
 		# put an empty line in in the valid tag cache (means no tag yet)
@@ -339,7 +339,7 @@ while ($ln = pop(@groupdump_array)) {
                   chmod 0666, "$cvs_dir/CVSROOT/history";
                 }
 
-		# set group ownership, codex user
+		# set group ownership, codendi user
 		system("chown -R $cxname:$gid $cvs_dir");
 		system("chmod g+rw $cvs_dir");
 
@@ -367,7 +367,7 @@ while ($ln = pop(@groupdump_array)) {
 	    # writer file
 
 	    if ($group_modified) {
-		# On CodeX writers go through pserver as well so put
+		# On Codendi writers go through pserver as well so put
 		# group members in writers file. Do not write anything
 		# in the CVS passwd file. The pserver protocol will fallback
 		# on /etc/passwd for user authentication
@@ -398,7 +398,7 @@ while ($ln = pop(@groupdump_array)) {
 			system("echo \"ALL ($codendi_bin_prefix/log_accum -T $gname -C $gname -s %{sVv})>/dev/null 2>&1\" >> $cvs_dir/CVSROOT/loginfo");
 		    }	 
 		    system("echo \"$MARKER_END\" >> $cvs_dir/CVSROOT/loginfo");
-		    system("cd $cvs_dir/CVSROOT; rcs -q -l loginfo; ci -q -m\"CodeX modifications: entering log_accum from group fields (cvs_tracker/cvs_events)\" loginfo; co -q loginfo");
+		    system("cd $cvs_dir/CVSROOT; rcs -q -l loginfo; ci -q -m\"Codendi modifications: entering log_accum from group fields (cvs_tracker/cvs_events)\" loginfo; co -q loginfo");
 		    system("cd $cvs_dir/CVSROOT; chown -R $cxname:$gid loginfo*");
 		}
 
@@ -417,7 +417,7 @@ while ($ln = pop(@groupdump_array)) {
 		    system("echo \"$MARKER_BEGIN\" >> $cvs_dir/CVSROOT/commitinfo");
 		    system("echo \"ALL $codendi_bin_prefix/commit_prep -T $gname -r\" >> $cvs_dir/CVSROOT/commitinfo");
 		    system("echo \"$MARKER_END\" >> $cvs_dir/CVSROOT/commitinfo");
-		    system("cd $cvs_dir/CVSROOT; rcs -q -l commitinfo; ci -q -m\"CodeX modifications: entering commit_prep from group fields (cvs_tracker/cvs_events)\" commitinfo; co -q commitinfo");
+		    system("cd $cvs_dir/CVSROOT; rcs -q -l commitinfo; ci -q -m\"Codendi modifications: entering commit_prep from group fields (cvs_tracker/cvs_events)\" commitinfo; co -q commitinfo");
 		    system("cd $cvs_dir/CVSROOT; chown -R $cxname:$gid commitinfo*");
 		}
 	    }
@@ -442,7 +442,7 @@ while ($ln = pop(@groupdump_array)) {
 		    system("echo \"$MARKER_BEGIN\" >> $filename");
 		    system("echo \"ALL mail %s -s \\\"CVS notification\\\"\" >> $filename");
 		    system("echo \"$MARKER_END\" >> $filename");
-		    system("cd $cvs_dir/CVSROOT; rcs -q -l notify; ci -q -m\"CodeX modifications: enable notifications\" notify; co -q notify");
+		    system("cd $cvs_dir/CVSROOT; rcs -q -l notify; ci -q -m\"Codendi modifications: enable notifications\" notify; co -q notify");
 		    system("cd $cvs_dir/CVSROOT; chown -R $cxname:$gid notify*");
 
                     # Apply cvs watch on only if cvs_watch_mode changed to on 
@@ -480,7 +480,7 @@ while ($ln = pop(@groupdump_array)) {
 		if ($blockispresent)
 		{
 		    write_array_file($filename, @file_array );
-		    system("cd $cvs_dir/CVSROOT; rcs -q -l notify; ci -q -m\"CodeX modifications: disable notifications\" notify; co -q notify");
+		    system("cd $cvs_dir/CVSROOT; rcs -q -l notify; ci -q -m\"Codendi modifications: disable notifications\" notify; co -q notify");
 		    system("cd $cvs_dir/CVSROOT; chown -R $cxname:$gid notify*");
 		}
 	    }
@@ -511,7 +511,7 @@ while ($ln = pop(@groupdump_array)) {
 		system("$svnadmin_cmd create $svn_dir --fs-type fsfs");
 		$group_modified = 1;
 
-		# set group ownership, codex user
+		# set group ownership, codendi user
 		system("chown -R $cxname:$gid $svn_dir");
 		system("chmod g+rw $svn_dir");
 
@@ -526,13 +526,13 @@ while ($ln = pop(@groupdump_array)) {
 	    
 	    if ($group_modified ||
 		($gstatus eq 'A' && !(-e "$svnaccess_file")) ||
-		( -e "$svn_prefix/$gname/.CODEX_PRIVATE") || # file may be created any time
+		( -e "$svn_prefix/$gname/.CODENDI_PRIVATE") || # file may be created any time
 		((stat($0))[9] > (stat("$svnaccess_file"))[9]) ) { 
 		# i.e. this script has been modified since last update
 		# This test will be removed if we need to list active/restricted users in the SVN auth file
 		my $custom_perm=0;
 		my $custom_lines;
-		my $public_svn = $gis_public && ! -e "$svn_prefix/$gname/.CODEX_PRIVATE";
+		my $public_svn = $gis_public && ! -e "$svn_prefix/$gname/.CODENDI_PRIVATE";
 		
 		# Retrieve custom permissions, if any
 		if (-e "$svnaccess_file") {
@@ -541,7 +541,7 @@ while ($ln = pop(@groupdump_array)) {
 			if ($custom_perm) {
 			    $custom_lines.=$_;
 			} else {
-			    if (m/END CODEX DEFAULT SETTINGS/) {$custom_perm=1;}
+			    if (m/END CODENDI DEFAULT SETTINGS/) {$custom_perm=1;}
 			}
 		    }
 		    close(SVNACCESS);
@@ -552,7 +552,7 @@ while ($ln = pop(@groupdump_array)) {
 			or croak "Can't open Subversion access file $svnaccess_file: $!";
 		    # if you change these block markers also change them in
 		    # src/www/svn/svn_utils.php
-		    print SVNACCESS "# BEGIN CODEX DEFAULT SETTINGS - DO NOT REMOVE\n";
+		    print SVNACCESS "# BEGIN CODENDI DEFAULT SETTINGS - DO NOT REMOVE\n";
 		    print SVNACCESS "[groups]\n";
 		    print SVNACCESS "members = ",join(", ", split(",", $userlist)),"\n";
 
@@ -576,11 +576,11 @@ while ($ln = pop(@groupdump_array)) {
 		    if ($public_svn) { print SVNACCESS "* = r\n"; }
 		    else { print SVNACCESS "* = \n";}
 		    print SVNACCESS "\@members = rw\n";
-		    print SVNACCESS "# END CODEX DEFAULT SETTINGS\n";
+		    print SVNACCESS "# END CODENDI DEFAULT SETTINGS\n";
 		    if ($custom_perm) { print SVNACCESS $custom_lines;}
 		    close(SVNACCESS);
 		    
-		    # set group ownership, codex user as owner so that
+		    # set group ownership, codendi user as owner so that
 		    # PHP scripts can write to it directly
 		    system("chown -R $cxname:$gid $svnaccess_file");
 		    system("chmod g+rw $svnaccess_file");
@@ -616,7 +616,7 @@ while ($ln = pop(@groupdump_array)) {
 	# and untraversable.  The project home, subversion root and cvs root directories
 	# are private if either:
 	# (1) The project is private
-	# (2) The directory contains a file named .CODEX_PRIVATE
+	# (2) The directory contains a file named .CODENDI_PRIVATE
 	#
 	if ($gstatus eq 'A') {
 	    my ($cvsmode, $svnmode, $grpmode, $new_cvsmode, $new_svnmode, $new_grpmode);
@@ -626,9 +626,9 @@ while ($ln = pop(@groupdump_array)) {
 	    ($d,$d,$svnmode) = stat("$svn_prefix/$gname");
 	    ($d,$d,$grpmode) = stat("$grpdir_prefix/$gname");
 
-	    $public_cvs = $gis_public && ! -e "$cvs_prefix/$gname/.CODEX_PRIVATE";
-	    $public_svn = $gis_public && ! -e "$svn_prefix/$gname/.CODEX_PRIVATE";
-	    $public_grp = $gis_public && ! -e "$grpdir_prefix/$gname/.CODEX_PRIVATE";
+	    $public_cvs = $gis_public && ! -e "$cvs_prefix/$gname/.CODENDI_PRIVATE";
+	    $public_svn = $gis_public && ! -e "$svn_prefix/$gname/.CODENDI_PRIVATE";
+	    $public_grp = $gis_public && ! -e "$grpdir_prefix/$gname/.CODENDI_PRIVATE";
 
 	    if ($public_cvs) {
 		$new_cvsmode = ($cvsmode | 0005);
@@ -757,7 +757,7 @@ write_array_file($cvs_root_allow_file, @cvs_root_allow_array);
 if ($use_cvsnt && $server_is_master) {
   # Write cvsroot list in CVSNT config file
   open FILE,">$cvsnt_config_file";
-  print FILE "# CodeX CVSROOT directory list: do not edit this list! modify $cvs_root_allow_file instead\n";
+  print FILE "# Codendi CVSROOT directory list: do not edit this list! modify $cvs_root_allow_file instead\n";
   my $n=0;
   foreach(@cvs_root_allow_array) {
     print FILE "Repository$n=$_";
@@ -807,7 +807,7 @@ sub add_user {
 	push @group_array, "$username:x:$uid:\n";
 
 	# Now lets create the homedir and copy the contents of
-	# /etc/skel_codex into it. The change the ownership
+	# /etc/skel_codendi into it. The change the ownership
 	unless (-d "$home_dir") {
             mkdir $home_dir, 0751;
 	    if (-d "$codendi_shell_skel") {

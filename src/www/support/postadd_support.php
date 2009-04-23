@@ -19,7 +19,7 @@ if (!user_isloggedin()) {
 } else {
 	$user=user_getid();
 	//use their user_name if they are logged in
-	// LJ No alias on CodeX $user_email=user_getname().'@'.$GLOBALS['sys_users_host'];
+	// LJ No alias on Codendi $user_email=user_getname().'@'.$GLOBALS['sys_users_host'];
 	$user_email=user_getemail($user);
 }
 

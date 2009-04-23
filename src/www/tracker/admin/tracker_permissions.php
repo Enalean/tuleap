@@ -5,7 +5,7 @@
 // 
 //
 //
-//  Written for CodeX by Nicolas Terray
+//  Written for Codendi by Nicolas Terray
 //
 
 

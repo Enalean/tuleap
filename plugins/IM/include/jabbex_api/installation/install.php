@@ -50,7 +50,7 @@ class JabbeXInstaller {
 		$usage_msg = 	"\n".
 						"**************************************************************************************************************\n".
 						"* Usage: php ". $this->argv[0] ." [-h|-i|-a [OPTIONS]] \n".
-						"* Install Openfire Jabber server and configure it to integrate with CodeX.\n".
+						"* Install Openfire Jabber server and configure it to integrate with Codendi.\n".
 						"* \n".
 						"* Mandatory arguments:\n".
 						"* 	-h	Show this help message.\n".
@@ -62,23 +62,23 @@ class JabbeXInstaller {
 						"* 		-orp	Root password for Openfire's DB server.\n".
 						"* 		-uod	Username Openfire will use to access its DB.\n".
 						"* 		-pod	Password for this user.\n".
-						"* 		-ucd	Username Openfire will use to access CodeX's DB.\n".
+						"* 		-ucd	Username Openfire will use to access Codendi's DB.\n".
 						"* 		-pcd	Password for this user.\n".
 						"* 		-odb	Openfire's DB complete JDBC URL (eg: jdbc:mysql://<db_server_url>:<db_port>/<db_name>).\n".
-						"* 		-cdb	CodeX's DB complete JDBC URL (eg: jdbc:mysql://<db_server_url>:<db_port>/<db_name>).\n".
+						"* 		-cdb	Codendi's DB complete JDBC URL (eg: jdbc:mysql://<db_server_url>:<db_port>/<db_name>).\n".
 						"* 		-ouri	Openfire server URI (used by clients to connect to the server).\n".
-						"* 		-gjx	CodeX group of the IM admins.\n".
+						"* 		-gjx	Codendi group of the IM admins.\n".
 						"* 		-ujx	Default JabbeX user's username (must be a member of the gjx).\n".
 						"* 		-pjx	Password for this user.\n".
 						"* 		-pmuc	Password for managing the MUC services.\n".
 						"*\n".
 						"*	Optional arguments for automatic mode:\n".
 						"*		-dir	Openfire's installation directory (default: /opt/openfire).\n".
-						"*		-etcdir	Openfire's installation directory (default: /etc/codex/plugins/IM/etc/).\n".
+						"*		-etcdir	Openfire's installation directory (default: /etc/codendi/plugins/IM/etc/).\n".
 						"*		-ap		Unsecure web admin port (default: 9090).\n".
 						"*		-aps	Secure web admin port (default: 9091).\n".
 						"*		-odd	Openfire's DB driver (default: com.mysql.jdbc.Driver).\n".
-						"*		-cdd	CodeX's DB driver (default: com.mysql.jdbc.Driver).\n".
+						"*		-cdd	Codendi's DB driver (default: com.mysql.jdbc.Driver).\n".
 						"*		-op		Jabber port (default: 5222).\n".
 						"*		-hbot	Helga bot username (default: bot).\n".
 						"*		-hsv	Helga service identifier (default: helga).\n".
@@ -122,7 +122,7 @@ class JabbeXInstaller {
 			$xml->jdbcProvider->addChild('connectionString',$parameters["CD_DB_URI"]."?user=".$parameters["USER_CD_DB"]."&amp;password=".$parameters["PWD_CD_DB"]);
 			
 			// provider->auth->className done in openfire.tpl.xml
-			$xml->jdbcAuthProvider->addChild('codexUserSessionIdSQL', "SELECT session_hash FROM session WHERE session.user_id = (SELECT user_id FROM user WHERE user.user_name = ?)");
+			$xml->jdbcAuthProvider->addChild('codendiUserSessionIdSQL', "SELECT session_hash FROM session WHERE session.user_id = (SELECT user_id FROM user WHERE user.user_name = ?)");
 
 			if( $xml->asXML($conf_file) ){
 
@@ -201,17 +201,17 @@ class JabbeXInstaller {
 		print("\nThe password for this username (for the Openfire's DB):\n");
 		$this->arguments["PWD_OF_DB"] = $this->read();
 
-		print("\nCodeX's DB JDBC Driver [com.mysql.jdbc.Driver]:\n");
+		print("\nCodendi's DB JDBC Driver [com.mysql.jdbc.Driver]:\n");
 		$this->arguments["CD_DB_DRIVER"] = $this->read();
 		if(empty($this->arguments["CD_DB_DRIVER"])) $this->arguments["CD_DB_DRIVER"] = "com.mysql.jdbc.Driver";
 
-		print("\nCodeX's DB complete URL (eg: jdbc:mysql://<db_server_url>:<db_port>/<db_name>):\n");
+		print("\nCodendi's DB complete URL (eg: jdbc:mysql://<db_server_url>:<db_port>/<db_name>):\n");
 		$this->arguments["CD_DB_URI"] = $this->read();
 
-		print("\nUsername for accessing the CodeX's DB:\n");
+		print("\nUsername for accessing the Codendi's DB:\n");
 		$this->arguments["USER_CD_DB"] = $this->read();
 
-		print("\nThe password for this username (for the CodeX's DB):\n");
+		print("\nThe password for this username (for the Codendi's DB):\n");
 		$this->arguments["PWD_CD_DB"] = $this->read();
 
 		print("\nJabber server URI:\n");
@@ -227,7 +227,7 @@ class JabbeXInstaller {
 		print("\nThe password for this user:\n");
 		$this->arguments["PWD_JABBEX"] = $this->read();
 
-		print("\nThe CodeX group of IM admins:\n");
+		print("\nThe Codendi group of IM admins:\n");
 		$this->arguments["GROUP_JABBEX"] = $this->read();
 		
 		print("\nThe password for MUC management:\n");
@@ -321,7 +321,7 @@ class JabbeXInstaller {
 
 			$default_val = array(
 						"-dir" => "/opt/openfire",
-						"-etcdir" => "/etc/codex/plugins/IM/etc/",
+						"-etcdir" => "/etc/codendi/plugins/IM/etc/",
 						"-ap" => "9090",
 						"-aps" => "9091",
 						"-odd" => "com.mysql.jdbc.Driver",
@@ -417,12 +417,12 @@ class JabbeXInstaller {
 		print(	"* 	- Root password for Openfire's DB server.\n".
 				"* 	- Username Openfire will use to access its DB.\n".
 				"* 	- Password for this user.\n".
-				"* 	- Username Openfire will use to access CodeX's DB.\n".
+				"* 	- Username Openfire will use to access Codendi's DB.\n".
 				"* 	- Password for this user.\n".
 				"* 	- Openfire's DB complete URL (eg: jdbc:mysql://<db_server_url>:<db_port>/<db_name>).\n".
-				"* 	- CodeX's DB complete URL (eg: jdbc:mysql://<db_server_url>:<db_port>/<db_name>).\n".
+				"* 	- Codendi's DB complete URL (eg: jdbc:mysql://<db_server_url>:<db_port>/<db_name>).\n".
 				"* 	- Openfire server URI (used by clients to connect to the server).\n".
-				"* 	- CodeX group of the IM admins.\n".
+				"* 	- Codendi group of the IM admins.\n".
 				"* 	- Default JabbeX user's username (must be a member of the gjx).\n".
 				"* 	- Password for this user.\n".
 				"* 	- Password for managing the MUC services.\n");
@@ -617,13 +617,13 @@ class JabbeXInstaller {
         
 	}
 	
-	function changeJabbexUserPasswordInCodexDatabase() {
+	function changeJabbexUserPasswordInCodendiDatabase() {
 
-        print("Updating '".$this->arguments["USER_JABBEX"]."' user password in codex database...\n");
+        print("Updating '".$this->arguments["USER_JABBEX"]."' user password in codendi database...\n");
 
         $root = "root";
         $pwd = $this->arguments["ROOT_OF_DB"];
-        $db_name = 'codex';
+        $db_name = 'codendi';
         $openfire_db_host = $this->arguments["OF_DB_HOST"]; 
 
         $jabbex_user_password = $this->arguments["PWD_JABBEX"];
@@ -633,7 +633,7 @@ class JabbeXInstaller {
 
         // Check if there was any error
         if ( !(strpos($result,"error") === false) ) {
-            exit("ERROR: Unable to change '".$jabbex_user_name."' user password in codex database.\n $result");
+            exit("ERROR: Unable to change '".$jabbex_user_name."' user password in codendi database.\n $result");
         } else {
             print("'".$jabbex_user_name."' user password was properly updated!\n");
             return true;
@@ -715,7 +715,7 @@ class JabbeXInstaller {
 	}	
 	
 	/*
-	 * Creates the JabbeX configuration file /etc/codex/plugins/IM/etc/jabbex_conf.xml based on
+	 * Creates the JabbeX configuration file /etc/codendi/plugins/IM/etc/jabbex_conf.xml based on
 	 * the template file resources/jabbex_conf.tpl.xml.
 	 */
 	function configure_jabbex(){
@@ -750,9 +750,9 @@ class JabbeXInstaller {
 
 				fclose($fp);
 
-				// Granting permission -rw-r--r-- 1 codexadm codexadm
+				// Granting permission -rw-r--r-- 1 codendiadm codendiadm
 				`chmod 644 $file`;
-				`chown codexadm:codexadm $file`;
+				`chown codendiadm:codendiadm $file`;
 				//---
 
 				print("\n");
@@ -774,7 +774,7 @@ class JabbeXInstaller {
 	}
 
 	/*
-	 * Creates the database configuration file /etc/codex/plugins/IM/etc/database_im.inc based on
+	 * Creates the database configuration file /etc/codendi/plugins/IM/etc/database_im.inc based on
 	 * the template file resources/database_im.tpl.inc.
 	 */
 	function configure_database_im() {
@@ -803,9 +803,9 @@ class JabbeXInstaller {
 
 				fclose($fp);
 
-				// Granting permission -rw-r--r-- 1 codexadm codexadm
+				// Granting permission -rw-r--r-- 1 codendiadm codendiadm
 				`chmod 644 $file`;
-				`chown codexadm:codexadm $file`;
+				`chown codendiadm:codendiadm $file`;
 				//---
 
 				print("\n");
@@ -969,9 +969,9 @@ class JabbeXInstaller {
 		$jar_dest = $this->arguments["OPENFIRE_DIR"] . "/lib/codendi_auth.jar";
 		
 		if (copy($jar_source, $jar_dest)) { 
-				// Granting permission -rw-r--r-- 1 codexadm codexadm
+				// Granting permission -rw-r--r-- 1 codendiadm codendiadm
 				`chmod 644 $jar_dest`;
-				`chown codexadm:codexadm $jar_dest`;
+				`chown codendiadm:codendiadm $jar_dest`;
 				//---
 
 				print("\n");
@@ -1014,7 +1014,7 @@ $installer->configure_openfire();
 $installer->configure_openfire_for_webmuc();
 
 $installer->configure_jabbex_user();
-$installer->changeJabbexUserPasswordInCodexDatabase();  
+$installer->changeJabbexUserPasswordInCodendiDatabase();  
 
 $installer->configure_presence_plugin();
 $installer->configure_subscription_plugin();

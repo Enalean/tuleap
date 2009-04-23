@@ -121,7 +121,7 @@ class SVNUpdate {
     function setRepository($repository) {
         $this->repository = $repository;
         $url = parse_url($repository);
-        // we remove /svnroot/codex from path to retrieve the branch
+        // we remove /svnroot/codendi from path to retrieve the branch
         $els = explode('/', $url['path']);
         array_shift($els); array_shift($els); array_shift($els);
         $this->branch = '/'.implode('/', $els);
@@ -188,8 +188,8 @@ class SVNUpdate {
      * - located in the scripts directory, and
      * - has the extension .php, and
      * - under version control, and
-     * - implementing the generic Upgrade Script CodeXUpgrade and
-     * - is not CodeXUpgrade itself !
+     * - implementing the generic Upgrade Script CodendiUpgrade and
+     * - is not CodendiUpgrade itself !
      *
      * @return array all the script-upgrades found in the script directory and well formed. Array of {UpgradeScript} Object
      */
@@ -202,7 +202,7 @@ class SVNUpdate {
                 $files_under_subversion_control = $this->_getFilesUnderSVNControl($script_path);
                 // walk the files found in the directory
                 while (($file = readdir($dir_handle)) !== false) {
-                    if (!in_array($file, array('.', '..', 'CodeXUpgrade.class.php'))) {
+                    if (!in_array($file, array('.', '..', 'CodendiUpgrade.class.php'))) {
                         $path_parts = pathinfo($file);
                         if ($path_parts['extension'] == 'php') {
                             // To avoid the case where another file would be here (not a so called script)
@@ -634,7 +634,7 @@ class SVNUpdate {
      * 
      * This class is based on the 1.1 SVN version, and the svn info command returns something like this :
      * Path: .
-     * URL: https://partners.xrce.xerox.com/svnroot/codex/support/CX_2_6_SUP
+     * URL: https://partners.xrce.xerox.com/svnroot/codendi/support/CX_2_6_SUP
      * Repository UUID: df09dd2a-99fe-0310-ba0d-faeadf64de00
      * Revision: 2599
      * Node Kind: directory

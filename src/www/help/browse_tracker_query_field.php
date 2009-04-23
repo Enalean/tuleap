@@ -6,7 +6,7 @@
 //
 // 
 //
-//	Originally written by Laurent Julliard 2003, CodeX Team, Xerox
+//	Originally written by Laurent Julliard 2003, Codendi Team, Xerox
 //
 // Purpose: Display contextual help for artifact search criteria. 
 //              Help depends upon the field type.

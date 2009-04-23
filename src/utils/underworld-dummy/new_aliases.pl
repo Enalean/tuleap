@@ -3,7 +3,7 @@
 # 
 # new_aliases.pl - Updates virtusertable and /etc/sendmail.cw on mail1
 #
-# This script is currently NOT USED BY CODEX
+# This script is currently NOT USED BY CODENDI
 #
 
 use DBI;

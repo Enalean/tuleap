@@ -234,9 +234,9 @@ document.observe('dom:loaded', function() {
     });
     
     //{{{ Look for HIGHLIGHT_STARTCOLOR in current css
-    var codex_field_dependencies_highlight_change = getStyleClassProperty('codex_field_dependencies_highlight_change', 'backgroundColor');
-    if (codex_field_dependencies_highlight_change && codex_field_dependencies_highlight_change != '') {
-        HIGHLIGHT_STARTCOLOR = codex_field_dependencies_highlight_change;
+    var codendi_field_dependencies_highlight_change = getStyleClassProperty('codendi_field_dependencies_highlight_change', 'backgroundColor');
+    if (codendi_field_dependencies_highlight_change && codendi_field_dependencies_highlight_change != '') {
+        HIGHLIGHT_STARTCOLOR = codendi_field_dependencies_highlight_change;
     }
     var hexChars = "0123456789ABCDEF";
     function Dec2Hex (Dec) { 

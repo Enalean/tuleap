@@ -232,7 +232,7 @@ $rel->execute();
 # results deals with the intrisic quality of the project and second when a
 # project has no survey the SQL statement does return an empty result. Since
 # most project does not have surveys we ended up with no result at all
-# causing the "most Active this week" box on the CodeX home page to be empty
+# causing the "most Active this week" box on the Codendi home page to be empty
 # So I decided to remove survey ponderation.
 # 
 # Rk: the survey_rating_aggregate table is computed in the

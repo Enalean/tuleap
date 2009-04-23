@@ -56,7 +56,7 @@ $armh =& new ArtifactRulesManagerHtml($ath);
 $armh->displayRulesAsJavascript();
 echo "Event.observe(window, 'load', function() {
         if ($('tracker_details')) {
-            new com.xerox.codex.FieldEditor('tracker_details', {
+            new com.xerox.codendi.FieldEditor('tracker_details', {
                 edit:    '". addslashes($Language->getText('tracker_fieldeditor','edit')) ."',
                 preview: '". addslashes($Language->getText('tracker_fieldeditor','preview')) ."',
                 warning: '". addslashes($Language->getText('tracker_fieldeditor','warning')) ."',

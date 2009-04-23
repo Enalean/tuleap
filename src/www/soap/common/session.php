@@ -36,7 +36,7 @@ $server->register('login', // method name
     $uri.'#login', // soapaction
     'rpc', // style
     'encoded', // use
-    'Login CodeX Server with given login, password and version.
+    'Login Codendi Server with given login, password and version.
      Returns a soap fault if the login failed, or if the version mismatch.' // documentation
 );
 
@@ -70,14 +70,14 @@ $server->register('logout',
     $uri.'#logout',
     'rpc',
     'encoded',
-    'Logout the session identified by the given sessionKey From CodeX Server.
+    'Logout the session identified by the given sessionKey From Codendi Server.
      Returns a soap fault if the sessionKey is not a valid session key.'
 );
 
 } else {
 	
 /**
- * login : login the CodeX server
+ * login : login the Codendi server
  *
  * @global $Language
  *
@@ -106,7 +106,7 @@ function login($loginname, $passwd, $version) {
 }
 
 /**
- * retrieveSession : retrieve a valid CodeX session
+ * retrieveSession : retrieve a valid Codendi session
  *
  * @global $Language
  *
@@ -156,7 +156,7 @@ function isCompatible($client_version) {
 }
 
 /**
- * logout : logout the CodeX server
+ * logout : logout the Codendi server
  * 
  * @param string $sessionKey the session hash associated with the session opened by the person who calls the service
  */

@@ -17,7 +17,7 @@ require("../include.pl");  # Include all the predefined functions
 &db_connect;
 
 my ($logfile, $sql, $res, $temp, %groups, $group_id, $errors );
-my ($sql_del, $res_del, %users, $user_id); # LJ for CodeX
+my ($sql_del, $res_del, %users, $user_id); # LJ for Codendi
 my $verbose = 1;
 
 ##
@@ -75,7 +75,7 @@ while ( $temp = $res->fetchrow_arrayref() ) {
 }
 
 # LJ And we now do the same for users since we log stats about
-# users as well in CodeX (See group_cvs_full_history table)
+# users as well in Codendi (See group_cvs_full_history table)
 print "Caching user information from user table.\n" if $verbose;
 $sql = "SELECT user_id,user_name FROM user";
 $res = $dbh->prepare($sql);
@@ -135,7 +135,7 @@ while(<LOGFILE>) {
         } elsif ( $_ =~ /^U::/ ) {
 
 	  # LJ It is a per user per group statistic so feed the
-	  # group_cvs_full_history table (CodeX specific)
+	  # group_cvs_full_history table (Codendi specific)
 	  
 	  $group_id = $groups{$group};
 

@@ -2,11 +2,11 @@ Pour que le plugin fonctionne correctement, vous devez tout d'abord réaliser le
 * récupérer les 3 rpm suivants pour installer les outils Oracle pour Php:
 	- oracle-instantclient-basic-10.2.0.3-1.i386.rpm à récupérer sur http://www.oracle.com/technology/software/tech/oci/instantclient/index.html (Xerox peut le fournir si nécessaire)
 	- oracle-instantclient-devel-10.2.0.3-1.i386.rpm à récupérer sur http://www.oracle.com/technology/software/tech/oci/instantclient/index.html (Xerox peut le fournir si nécessaire)
-	- php-oci8-4.3.9-3.codex.i386.rpm à récupérer sur le CD de Codex
+	- php-oci8-4.3.9-3.codendi.i386.rpm à récupérer sur le CD de Codendi
 * installer les rpm : 
 	- rpm -ivh oracle-instantclient-basic-10.2.0.3-1.i386.rpm
 	- rpm -ivh oracle-instantclient-devel-10.2.0.3-1.i386.rpm
-	- rpm -ivh php-oci8-4.3.9-3.codex.i386.rpm 
+	- rpm -ivh php-oci8-4.3.9-3.codendi.i386.rpm 
  
 	Pour être sûr que l'installation s'est faite correctement, on peut tester ceci:
 	ldd /usr/lib/php4/oci8.so
@@ -17,7 +17,7 @@ Pour que le plugin fonctionne correctement, vous devez tout d'abord réaliser le
 	Si on a un 'not found' à la place de /usr/lib/oracle... c'est que l'installation ne s'est pas déroulée correctement.
 
 * redémarrer apache avec 'service httpd restart'
-* s'assurer que codexadm a bien été rajouté dans la base de données de dimensions utilisée avec le bon rôle (pour lancer le script uploadvers.sh)
+* s'assurer que codendiadm a bien été rajouté dans la base de données de dimensions utilisée avec le bon rôle (pour lancer le script uploadvers.sh)
 * s'assurer que le process dimensions a bien été lancé sur la machine
 
  

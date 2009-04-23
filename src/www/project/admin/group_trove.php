@@ -41,7 +41,7 @@ if ($request->exist('Submit') && $request->exist('root1')) {
 project_admin_header(array('title'=>$Language->getText('project_admin_grouptrove','g_trove_info'),'group'=>$group_id));
 
 // LJ New message added to explain that if a Topic category is not there
-// LJ put the project unclassified and the CodeX team will create the
+// LJ put the project unclassified and the Codendi team will create the
 // Lj new entry
 //
 print '<P>'.$Language->getText('project_admin_grouptrove','select_3_classifs',$GLOBALS['sys_name']);

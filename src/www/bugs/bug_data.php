@@ -6,7 +6,7 @@
 //
 //
 //	Originally by to the SourceForge Team,1999-2000
-//	Very Heavy rewrite by Laurent Julliard 2001, 2002, CodeX Team, Xerox
+//	Very Heavy rewrite by Laurent Julliard 2001, 2002, Codendi Team, Xerox
 //
 
 /*

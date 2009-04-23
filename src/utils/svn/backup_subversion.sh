@@ -16,7 +16,7 @@ set -e
 #
 
 #
-# Do backups of all CodeX subversion repositories
+# Do backups of all Codendi subversion repositories
 #
 #
 # This script provides both full backups and incremental backups.
@@ -38,10 +38,10 @@ set -e
 # configuration variables
 
 # SvnParentPath is the directory where project repositories are found
-#SvnParentPath=/var/lib/codex/svnroot
+#SvnParentPath=/var/lib/codendi/svnroot
 SvnParentPath=/svnroot # We can use the symbolic link
 
-SvnBackupPath=/var/lib/codex/backup/subversion
+SvnBackupPath=/var/lib/codendi/backup/subversion
 # SvnIncrBackupPath is the directory where incremental backups are created
 SvnIncrBackupPath=${SvnBackupPath}/incr
 # SvnFullBackupPath is the directory where full backups are created

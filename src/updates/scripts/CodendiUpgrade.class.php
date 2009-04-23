@@ -5,8 +5,8 @@
  * 
  * 
  *
- * CodeXUpgrade
- * Generic class for upgrading CodeX Server.
+ * CodendiUpgrade
+ * Generic class for upgrading Codendi Server.
  *
  */
 /*
@@ -21,9 +21,9 @@ Class must be Update_XXX where XXX is the same as the filename
 // 
 
 
-require_once('CodeXUpgrade.class.php');
+require_once('CodendiUpgrade.class.php');
 
-class Update_001 extends CodeXUpgrade {
+class Update_001 extends CodendiUpgrade {
 
     function _process() {
         echo $this->getLineSeparator();
@@ -39,8 +39,8 @@ class Update_001 extends CodeXUpgrade {
 
 */
 
-// Defines all of the CodeX settings first (hosts, databases, etc.)
-require_once(getenv('CODENDI_LOCAL_INC')?getenv('CODENDI_LOCAL_INC'):'/etc/codex/conf/local.inc');
+// Defines all of the Codendi settings first (hosts, databases, etc.)
+require_once(getenv('CODENDI_LOCAL_INC')?getenv('CODENDI_LOCAL_INC'):'/etc/codendi/conf/local.inc');
 require($GLOBALS['db_config_file']);
 //database abstraction
 require_once(dirname(__FILE__).'/../../common/dao/include/DataAccessObject.class.php');
@@ -49,7 +49,7 @@ require_once(dirname(__FILE__).'/../../common/dao/CodendiDataAccess.class.php');
 define("WEB_ENVIRONMENT", "web");
 define("CONSOLE_ENVIRONMENT", "console");
 
-/*abstract*/ class CodeXUpgrade extends DataAccessObject {
+/*abstract*/ class CodendiUpgrade extends DataAccessObject {
 
     //abstract public function _process();    // signature for the _process function.
 
@@ -63,7 +63,7 @@ define("CONSOLE_ENVIRONMENT", "console");
     var $_environment;
     
     
-    function CodeXUpgrade() {
+    function CodendiUpgrade() {
         $this->_upgradeError = null;
         $this->setEnvironment();
         $da =& CodendiDataAccess::instance();

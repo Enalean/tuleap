@@ -4,9 +4,7 @@
  *
  * Originally written by Mahmoud MAALEJ, 2006. STMicroelectronics.
  * 
- * Updated by Nicolas Terray, 2008, Xerox codeX Team
- * 
- * This file is a part of Codendi.
+ * Updated by Nicolas Terray, 2008, Xerox Codendi.
  *
  * Codendi is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

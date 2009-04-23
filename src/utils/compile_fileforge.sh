@@ -24,7 +24,7 @@ substitute() {
 
 cp fileforge.c fileforge_custom.c
 substitute fileforge_custom.c '/var/lib/codendi/ftp/incoming' "$ftp_incoming_dir" 
-substitute fileforge_custom.c '/var/lib/codendi/ftp/codex' "$ftp_frs_dir_prefix" 
+substitute fileforge_custom.c '/var/lib/codendi/ftp/codendi' "$ftp_frs_dir_prefix" 
 
 gcc fileforge_custom.c -o fileforge
 chown root.root fileforge

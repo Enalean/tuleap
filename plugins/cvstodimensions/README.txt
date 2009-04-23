@@ -17,7 +17,7 @@ Pour que le plugin fonctionne correctement, vous devez tout d'abord réaliser le
 	Si on a un 'not found' à la place de /usr/lib/oracle... c'est que l'installation ne s'est pas déroulée correctement.
 
 * redémarrer apache avec 'service httpd restart'
-* s'assurer que codexadm a bien été rajouté dans la base de données de dimensions utilisée avec le bon rôle (pour lancer le script upload.sh)
+* s'assurer que codendiadm a bien été rajouté dans la base de données de dimensions utilisée avec le bon rôle (pour lancer le script upload.sh)
 * s'assurer que le process dimensions a bien été lancé sur la machine
 
  

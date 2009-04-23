@@ -44,7 +44,7 @@ $sql	= "CREATE TABLE frs_dlstats_grouptotal_agg_tmp ( "
 	. ")";
 $rel = $dbh->do($sql) || die "SQL parse error: $!";
 
-# On CodeX - All file downloads are now now tracked directly at the
+# On Codendi - All file downloads are now now tracked directly at the
 # PHP level and an audit trail goes in the filedownload_log table.
 # Downloads no longer go though http or ftp
 #$sql	= "SELECT group_id,SUM(downloads) FROM stats_http_downloads GROUP BY group_id";
@@ -102,7 +102,7 @@ $sql	= "CREATE TABLE frs_dlstats_filetotal_agg_tmp ( "
 	. ")";
 $rel = $dbh->do($sql) || die "SQL parse error: $!";
 
-# On CodeX - All file downloads are now tracked directly at the
+# On Codendi - All file downloads are now tracked directly at the
 # PHP level and an audit trail goes in the filedownload_log table.
 # Downloads no longer go though http or ftp
 #$sql	= "SELECT filerelease_id,SUM(downloads) FROM stats_http_downloads GROUP BY filerelease_id";

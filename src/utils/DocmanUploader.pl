@@ -4,7 +4,7 @@
 #######################################################################
 #                                                                     #
 # Script to upload an entire block of folders & files                 #
-#  into Codex document manager.                                       #
+#  into Codendi document manager.                                       #
 #                                                                     #
 # usage: DocUploader project project_id source_dir id_dest            #
 #                                                                     #
@@ -14,10 +14,10 @@
 #   -project_id is your project ID                                    #
 #   -source_dir is the local path to the directory containing         #
 #           documents you need to upload                              #
-#   -id_destination is the id of the folder (in codex doc             #
+#   -id_destination is the id of the folder (in codendi doc             #
 #                   manager)                                          #
-# NB: You have to specify the path to your codex cli in the line 35   #
-#     and the URL of your CodeX server on line 36                     #
+# NB: You have to specify the path to your codendi cli in the line 35   #
+#     and the URL of your Codendi server on line 36                     #
 # Author : Hamouda LAYOUNI                                            #
 # email  : hamouda.layouni@st.com                                     #
 #######################################################################
@@ -30,18 +30,18 @@ use Term::ReadKey;
 use Crypt::SSLeay;
 use warnings;
 use strict;
-use Env qw($CODEX_WSDL);
+use Env qw($CODENDI_WSDL);
 
 #################################
-#      /path/to/codex/cli       #
+#      /path/to/codendi/cli       #
 #################################
 
-# Where CodeX-CLI tool stands
+# Where Codendi-CLI tool stands
 my $_cli_dir   = "/usr/share/codendi/cli";
 # Server URL where all the stuff will be uploaded
-my $_codex_url = "http://codendi.example.com";
+my $_codendi_url = "http://codendi.example.com";
 # CLI execution command
-my $_cli_cmd   = "/usr/bin/php $_cli_dir/codex.php";
+my $_cli_cmd   = "/usr/bin/php $_cli_dir/codendi.php";
 
 ######                          ######
 ###### End of parameter section ######
@@ -66,7 +66,7 @@ my $_password = ReadLine(0);
 chomp ($_password);
 ReadMode('normal');
 
-my $_login_url   = $_codex_url."/account/login.php";
+my $_login_url   = $_codendi_url."/account/login.php";
 my $_project     = $ARGV[0];
 my $_project_id  = $ARGV[1];
 my $_source      = $ARGV[2];
@@ -89,7 +89,7 @@ my $i=0;
 
 ###############################################################
 ##    saving the structure of the source in an array         ##
-##    to be used after to create items into codex docman     ##
+##    to be used after to create items into codendi docman     ##
 ###############################################################
 my $_last_length;
 for my $item (@dirs)
@@ -154,16 +154,16 @@ for my $item (@files)
 }
 
 ###########################################
-##             LOGIN TO CODEX            ##
+##             LOGIN TO CODENDI            ##
 ###########################################
 
-print "\n....... Logging in to codex .......\n";
+print "\n....... Logging in to codendi .......\n";
 
-# Set CODEX_WSDL according to DocmanUploader settings
-$CODEX_WSDL = $_codex_url."/soap/index.php?wsdl";
+# Set CODENDI_WSDL according to DocmanUploader settings
+$CODENDI_WSDL = $_codendi_url."/soap/index.php?wsdl";
 my $_login_cmd=$_cli_cmd.' login --username="'.$_username.'" --password="'.$_password.'"';
 system ($_login_cmd) == 0
-    or die "Login ($_login_cmd) with CodeX CLI failed: $?";
+    or die "Login ($_login_cmd) with Codendi CLI failed: $?";
 
 my $_stay_in_ssl = 1;                     # item of the login form
 my $_login_var = 'Login';                 # item of the login form
@@ -181,7 +181,7 @@ $bot->form_number(0);
 
 $bot->cookie_jar(
     HTTP::Cookies->new(
-        file           => "$ENV{HOME}/.codexDocmanUploaderCookies",
+        file           => "$ENV{HOME}/.codendiDocmanUploaderCookies",
         autosave       => 1,
         ignore_discard => 1,  # le cookie devrait  tre effac    la fin
     )
@@ -194,13 +194,13 @@ $bot->field( login => $_login_var );
 $bot->click();
 
 ###########################################
-##         LOGGED IN TO CODEX            ##
+##         LOGGED IN TO CODENDI            ##
 ###########################################
 
 #----------------------------------------------------------------------------#
 
 ############################################################################
-##             Copying the documents structure in Codex Docman            ##
+##             Copying the documents structure in Codendi Docman            ##
 ############################################################################ 
 
 my $_depth = 0;
@@ -274,7 +274,7 @@ for my $i (0..$#source_table) {
                     ##                  create  1st files                    ##
                     ###########################################################
 
-                    my $_upload_document_url = $_codex_url."/plugins/docman/?group_id="."$_project_id"."&action=newDocument&id="."$_id_dest"."&bc=1";
+                    my $_upload_document_url = $_codendi_url."/plugins/docman/?group_id="."$_project_id"."&action=newDocument&id="."$_id_dest"."&bc=1";
                     print "\nUploading $source_table[$i][0] file .......";
 
                     my $resp = $bot->get($_upload_document_url);
@@ -306,7 +306,7 @@ for my $i (0..$#source_table) {
                     ##                 create  files                    ##
                     ######################################################
 
-                    my $_upload_document_url = $_codex_url."/plugins/docman/?group_id="."$_project_id"."&action=newDocument&id="."$_parent_id"."&bc=1";
+                    my $_upload_document_url = $_codendi_url."/plugins/docman/?group_id="."$_project_id"."&action=newDocument&id="."$_parent_id"."&bc=1";
 
                     print "\nUploading $source_table[$i][0] file .......";
 
@@ -330,10 +330,10 @@ for my $i (0..$#source_table) {
 
 
 #############################################
-##            LOGOUT FROM CODEX            ##
+##            LOGOUT FROM CODENDI            ##
 #############################################
 
-print "\n........ Logging out from Codex ........\n";
+print "\n........ Logging out from Codendi ........\n";
 my $_logout_cmd="$_cli_cmd logout";
 
 system ("$_logout_cmd");

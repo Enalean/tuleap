@@ -17,7 +17,7 @@
 #  Use '-s' for silent mode (summary only)
 #  Use '-v' for verbose mode (print also unused keys)
 #
-# Originaly written by Nicolas Guerin - 2005, CodeX Team, Xerox
+# Originaly written by Nicolas Guerin - 2005, Codendi Team, Xerox
 #
 
 use strict;
@@ -25,7 +25,7 @@ use vars qw($sys_urlroot $sys_pluginsroot $sys_incdir);
 
 require("include.pl");  # Include all the predefined functions and variables
 
-# Location of CodeX sources to analyse
+# Location of Codendi sources to analyse
 my $source_dir="$sys_urlroot/..";
 my $plugin_src_dir="$sys_pluginsroot";
 # Language specific dir

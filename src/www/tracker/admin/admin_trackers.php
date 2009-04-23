@@ -5,7 +5,7 @@
 // 
 //
 //
-//  Written for CodeX by Stephane Bouhet
+//  Written for Codendi by Stephane Bouhet
 //
 
 

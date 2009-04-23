@@ -139,7 +139,7 @@ if (db_numrows($result) > 0) {
 	 echo '<TR><TD COLSPAN="'.$fields_per_line.'">
                      <hr><h3>CC List '.($pv ? '':help_button('BugUpdate.html#BugCCList')).'</h3>';
 	 if (!$pv) {
-	   echo '<b><u>Note:</b></u> for CodeX users use their login name rather than their email addresses.<p>
+	   echo '<b><u>Note:</b></u> for Codendi users use their login name rather than their email addresses.<p>
 	   <B>Add CC:&nbsp;</b><input type="text" name="add_cc" size="30">&nbsp;&nbsp;&nbsp;
 	   <B>Comment:&nbsp;</b><input type="text" name="cc_comment" size="40" maxlength="255"><p>';
 	 }

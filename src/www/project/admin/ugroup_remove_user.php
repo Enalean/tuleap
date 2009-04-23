@@ -6,7 +6,7 @@
 //
 // 
 //
-// Originally written by Nicolas Terray 2008, CodeX Team, Xerox
+// Originally written by Nicolas Terray 2008, Codendi Team, Xerox
 //
 
 require_once('pre.php');

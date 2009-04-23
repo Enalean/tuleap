@@ -64,14 +64,14 @@ substitute_keywords() {
 
 if [ ! -d bin -o ! -d etc -o ! -d httpd -o ! -d var ]
 then
-    echo "This directory does not look like a CodeX test server directory." 1>&2
+    echo "This directory does not look like a Codendi test server directory." 1>&2
     echo "It does not have bin, etc, httpd, and var subdirectories." 1>&2
     exit 1
 fi
 
 if [ ! -f etc/local.inc.template -o ! -f etc/httpd/conf/httpd.conf.template ]
 then
-    echo "This directory does not look like a CodeX test server directory." 1>&2
+    echo "This directory does not look like a Codendi test server directory." 1>&2
     echo "It does not have both a etc/local.inc.template and a" 1>&2
     echo "etc/httpd/conf/httpd.conf.template file." 1>&2
     exit 1

@@ -65,7 +65,7 @@ if ($request->isPost() && $request->exist('Login')){
             $newstatus='A';
         }
 
-        // LJ in CodeX we now activate the Unix account upfront to limit
+        // LJ in Codendi we now activate the Unix account upfront to limit
         // LJ source code access control(CVS, File Release) to registered
         // LJ users only
         // LJ	$res = db_query("UPDATE user SET status='A' WHERE user_name='$GLOBALS[form_loginname]'");

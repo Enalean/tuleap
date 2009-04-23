@@ -30,8 +30,8 @@ class SVNUpdateTest extends UnitTestCase {
     
     function testGetSVNInfo() {
         $svn_infos = "Path: .\n";
-        $svn_infos .= "URL: https://partners.xrce.xerox.com/svnroot/codex/support/CX_3_6_SUP\n";
-        $svn_infos .= "Repository Root: https://partners.xrce.xerox.com/svnroot/codex\n";
+        $svn_infos .= "URL: https://partners.xrce.xerox.com/svnroot/codendi/support/CX_3_6_SUP\n";
+        $svn_infos .= "Repository Root: https://partners.xrce.xerox.com/svnroot/codendi\n";
         $svn_infos .= "Repository UUID: df09dd2a-99fe-0310-ba0d-faeadf64de00\n";
         $svn_infos .= "Revision: 2599\n";
         $svn_infos .= "Node Kind: directory\n";
@@ -43,7 +43,7 @@ class SVNUpdateTest extends UnitTestCase {
         $su =& new SVNUpdateTestVersion($this);
         
         $this->assertEqual($su->_getSVNInfoRevision($svn_infos), 2599);
-        $repository = "https://partners.xrce.xerox.com/svnroot/codex/support/CX_3_6_SUP";
+        $repository = "https://partners.xrce.xerox.com/svnroot/codendi/support/CX_3_6_SUP";
         $this->assertEqual($su->_getSVNInfoRepository($svn_infos), $repository, "Repository should be : ".$repository." ; found: ".$su->_getSVNInfoRepository($svn_infos));
         
     }

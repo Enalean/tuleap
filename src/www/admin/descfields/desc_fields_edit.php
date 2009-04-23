@@ -6,7 +6,7 @@
 //
 // 
 //
-// Originally written by Benjamin Ninassi 2008, CodeX Team, Xerox
+// Originally written by Benjamin Ninassi 2008, Codendi Team, Xerox
 //
 
 require_once('pre.php');

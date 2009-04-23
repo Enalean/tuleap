@@ -37,7 +37,7 @@ $res_new = db_query( $query );
 
 // LJ In case there is less than 4 releases in the last N days
 // LJ then display the last ones regardless of how old they are
-// LJ We don't want an empty list when CodeX started and there
+// LJ We don't want an empty list when Codendi started and there
 // is little activity.
 if (!$res_new || db_numrows($res_new) < 4) {
 	$start_time = 0;

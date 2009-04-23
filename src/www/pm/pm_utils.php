@@ -1531,9 +1531,9 @@ function pm_mail_followup($project_task_id,$more_addresses=false,$changes=false)
     	$hdrs = 'From: noreply@'.$host.$sys_lf;
 	$hdrs .='Content-type: text/plain; charset=utf-8'.$sys_lf;
 	$pm = ProjectManager::instance();
-    $hdrs .='X-CodeX-Project: '.$pm->getProject($group_id)->getUnixName().$sys_lf;
-	$hdrs .='X-CodeX-Artifact: task'.$sys_lf;
-	$hdrs .='X-CodeX-Artifact-ID: '.$project_task_id.$sys_lf;
+    $hdrs .='X-Codendi-Project: '.$pm->getProject($group_id)->getUnixName().$sys_lf;
+	$hdrs .='X-Codendi-Artifact: task'.$sys_lf;
+	$hdrs .='X-Codendi-Artifact-ID: '.$project_task_id.$sys_lf;
 	$subject='[Task #'.$project_task_id.'] '.util_unconvert_htmlspecialchars(db_result($result,0,'summary'));
 
     	mail($to,$subject,$body,$hdrs);

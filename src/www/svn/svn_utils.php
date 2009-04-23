@@ -6,7 +6,7 @@
 //
 // 
 //
-//      Originally written by Laurent Julliard 2004 CodeX Team, Xerox
+//      Originally written by Laurent Julliard 2004 Codendi Team, Xerox
 //
 
 require_once('common/user/UserHelper.class.php');
@@ -468,13 +468,13 @@ function svn_utils_read_svn_access_file_defaults($gname,$display=false) {
     while (!feof($fd)) {
         $line = fgets($fd, 4096);
         //if for display: don't include comment lines 
-        if ($display && strpos($line,'# END CODEX DEFAULT') !== false) { $in_settings = false; break; }
-        else if (!$display && strpos($line,'# BEGIN CODEX DEFAULT') !== false) { $in_settings = true; }
+        if ($display && strpos($line,'# END CODENDI DEFAULT') !== false) { $in_settings = false; break; }
+        else if (!$display && strpos($line,'# BEGIN CODENDI DEFAULT') !== false) { $in_settings = true; }
     
         if ($in_settings) { $buffer .= $line; }
     
-        if ($display && strpos($line,'# BEGIN CODEX DEFAULT') !== false) { $in_settings = true; }
-        else if (!$display && strpos($line,'# END CODEX DEFAULT') !== false) { $in_settings = false; break; }
+        if ($display && strpos($line,'# BEGIN CODENDI DEFAULT') !== false) { $in_settings = true; }
+        else if (!$display && strpos($line,'# END CODENDI DEFAULT') !== false) { $in_settings = false; break; }
     }
     fclose($fd);
     return $buffer;
@@ -497,9 +497,9 @@ function svn_utils_read_svn_access_file($gname) {
         $in_settings = false;
         while (!feof($fd)) {
             $line = fgets($fd, 4096);
-            if (strpos($line,'# BEGIN CODEX DEFAULT') !== false) { $in_settings = true; }
+            if (strpos($line,'# BEGIN CODENDI DEFAULT') !== false) { $in_settings = true; }
             if (!$in_settings) { $buffer .= $line; }
-            if (strpos($line,'# END CODEX DEFAULT') !== false) { $in_settings = false; }
+            if (strpos($line,'# END CODENDI DEFAULT') !== false) { $in_settings = false; }
         }
         fclose($fd);
     }   

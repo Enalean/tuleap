@@ -44,7 +44,7 @@ while(my ($unix_group_name,$group_name,$group_id,$location,$server_id) = $c->fet
           "    AuthMYSQLEnable on\n",
           "    AuthMySQLUser $sys_dbauth_user\n",
           "    AuthMySQLPassword $sys_dbauth_passwd\n",
-          "    AuthMySQLDB codex\n",
+          "    AuthMySQLDB codendi\n",
           "    AuthMySQLUserTable \"user, user_group\"\n",
           "    AuthMySQLNameField user.user_name\n",
           "    AuthMySQLPasswordField user.unix_pw\n",

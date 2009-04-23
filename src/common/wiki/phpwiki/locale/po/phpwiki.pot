@@ -125,10 +125,10 @@ msgstr ""
 #: ../lib/plugin/PageGroup.php:177 ../lib/plugin/PageGroup.php:193
 #: ../lib/plugin/PageGroup.php:200 ../lib/plugin/PageHistory.php:219
 #: ../lib/plugin/UnfoldSubpages.php:140
-#: ../themes/CodeX-lite/templates/head.tmpl:52
-#: ../themes/CodeX-lite/templates/top.tmpl:10
-#: ../themes/CodeX/templates/head.tmpl:52
-#: ../themes/CodeX/templates/top.tmpl:10
+#: ../themes/Codendi-lite/templates/head.tmpl:52
+#: ../themes/Codendi-lite/templates/top.tmpl:10
+#: ../themes/Codendi/templates/head.tmpl:52
+#: ../themes/Codendi/templates/top.tmpl:10
 #: ../themes/default/templates/head.tmpl:52
 #: ../themes/default/templates/top.tmpl:11
 #: ../themes/Sidebar/templates/frame-header.tmpl:16
@@ -139,8 +139,8 @@ msgstr ""
 
 #: ../lib/display.php:119 ../lib/display.php:131
 #: ../lib/plugin/BackLinks.php:31 ../lib/plugin/_WikiTranslation.php:53
-#: ../themes/CodeX-lite/templates/navbar.tmpl:34
-#: ../themes/CodeX/templates/navbar.tmpl:34
+#: ../themes/Codendi-lite/templates/navbar.tmpl:34
+#: ../themes/Codendi/templates/navbar.tmpl:34
 #: ../themes/default/templates/navbar.tmpl:34
 #: ../themes/Sidebar/templates/navbar.tmpl:35
 msgid "BackLinks"
@@ -317,12 +317,12 @@ msgstr ""
 
 #: ../lib/EditToolbar.php:59 ../lib/plugin/InterWikiSearch.php:91
 #: ../lib/plugin/RecentChanges.php:588
-#: ../themes/CodeX-lite/templates/search.tmpl:10
-#: ../themes/CodeX-lite/templates/search.tmpl:11
-#: ../themes/CodeX-lite/templates/search.tmpl:18
-#: ../themes/CodeX/templates/search.tmpl:10
-#: ../themes/CodeX/templates/search.tmpl:11
-#: ../themes/CodeX/templates/search.tmpl:18
+#: ../themes/Codendi-lite/templates/search.tmpl:10
+#: ../themes/Codendi-lite/templates/search.tmpl:11
+#: ../themes/Codendi-lite/templates/search.tmpl:18
+#: ../themes/Codendi/templates/search.tmpl:10
+#: ../themes/Codendi/templates/search.tmpl:11
+#: ../themes/Codendi/templates/search.tmpl:18
 #: ../themes/default/templates/search.tmpl:10
 #: ../themes/default/templates/search.tmpl:11
 #: ../themes/default/templates/search.tmpl:18
@@ -482,8 +482,8 @@ msgid "An unnamed PhpWiki"
 msgstr ""
 
 #: ../lib/IniConfig.php:732 ../lib/upgrade.php:155
-#: ../themes/CodeX-lite/templates/userprefs.tmpl:121
-#: ../themes/CodeX/templates/userprefs.tmpl:121
+#: ../themes/Codendi-lite/templates/userprefs.tmpl:121
+#: ../themes/Codendi/templates/userprefs.tmpl:121
 #: ../themes/default/templates/userprefs.tmpl:123
 msgid "HomePage"
 msgstr ""
@@ -524,12 +524,12 @@ msgstr ""
 #: ../lib/loadsave.php:82 ../lib/loadsave.php:408 ../lib/loadsave.php:844
 #: ../lib/loadsave.php:850 ../lib/loadsave.php:858 ../lib/main.php:970
 #: ../lib/main.php:1074 ../lib/plugin/WikiAdminSelect.php:192
-#: ../lib/WikiPlugin.php:121 ../themes/CodeX-lite/templates/head.tmpl:85
-#: ../themes/CodeX-lite/templates/head.tmpl:86
-#: ../themes/CodeX-lite/templates/navbar.tmpl:55
-#: ../themes/CodeX/templates/head.tmpl:85
-#: ../themes/CodeX/templates/head.tmpl:86
-#: ../themes/CodeX/templates/navbar.tmpl:55
+#: ../lib/WikiPlugin.php:121 ../themes/Codendi-lite/templates/head.tmpl:85
+#: ../themes/Codendi-lite/templates/head.tmpl:86
+#: ../themes/Codendi-lite/templates/navbar.tmpl:55
+#: ../themes/Codendi/templates/head.tmpl:85
+#: ../themes/Codendi/templates/head.tmpl:86
+#: ../themes/Codendi/templates/navbar.tmpl:55
 #: ../themes/default/templates/head.tmpl:85
 #: ../themes/default/templates/head.tmpl:86
 #: ../themes/default/templates/navbar.tmpl:55
@@ -643,10 +643,10 @@ msgstr ""
 #: ../lib/loadsave.php:733 ../lib/PageType.php:134
 #: ../lib/plugin/InterWikiSearch.php:55 ../lib/plugin/WantedPagesOld.php:81
 #: ../lib/plugin/WantedPages.php:54
-#: ../themes/CodeX-lite/templates/info.tmpl:145
-#: ../themes/CodeX-lite/templates/info.tmpl:146
-#: ../themes/CodeX/templates/info.tmpl:145
-#: ../themes/CodeX/templates/info.tmpl:146
+#: ../themes/Codendi-lite/templates/info.tmpl:145
+#: ../themes/Codendi-lite/templates/info.tmpl:146
+#: ../themes/Codendi/templates/info.tmpl:145
+#: ../themes/Codendi/templates/info.tmpl:146
 #: ../themes/default/templates/info.tmpl:144
 #: ../themes/default/templates/info.tmpl:145
 msgid "InterWikiMap"
@@ -716,8 +716,8 @@ msgid " Sorry, cannot merge."
 msgstr ""
 
 #: ../lib/loadsave.php:884 ../lib/loadsave.php:893 ../lib/loadsave.php:909
-#: ../themes/CodeX-lite/templates/actionbar.tmpl:44
-#: ../themes/CodeX/templates/actionbar.tmpl:44
+#: ../themes/Codendi-lite/templates/actionbar.tmpl:44
+#: ../themes/Codendi/templates/actionbar.tmpl:44
 #: ../themes/default/templates/actionbar.tmpl:26
 msgid "Revert"
 msgstr ""
@@ -796,10 +796,10 @@ msgstr ""
 #: ../lib/plugin/RecentChanges.php:285 ../lib/plugin/RecentChanges.php:388
 #: ../lib/plugin/RecentChanges.php:464 ../lib/plugin/RecentChanges.php:600
 #: ../lib/plugin/RecentChanges.php:734 ../lib/RSSWriter091.php:113
-#: ../themes/CodeX-lite/templates/head.tmpl:68
-#: ../themes/CodeX-lite/templates/navbar.tmpl:19
-#: ../themes/CodeX/templates/head.tmpl:68
-#: ../themes/CodeX/templates/navbar.tmpl:19
+#: ../themes/Codendi-lite/templates/head.tmpl:68
+#: ../themes/Codendi-lite/templates/navbar.tmpl:19
+#: ../themes/Codendi/templates/head.tmpl:68
+#: ../themes/Codendi/templates/navbar.tmpl:19
 #: ../themes/default/templates/head.tmpl:68
 #: ../themes/default/templates/navbar.tmpl:19
 msgid "RecentChanges"
@@ -1054,8 +1054,8 @@ msgid "Rename"
 msgstr ""
 
 #: ../lib/main.php:995 ../lib/main.php:1000 ../lib/plugin/PageDump.php:36
-#: ../themes/CodeX-lite/templates/actionbar.tmpl:53
-#: ../themes/CodeX/templates/actionbar.tmpl:53
+#: ../themes/Codendi-lite/templates/actionbar.tmpl:53
+#: ../themes/Codendi/templates/actionbar.tmpl:53
 #: ../themes/default/templates/actionbar.tmpl:35
 msgid "PageDump"
 msgstr ""
@@ -1067,18 +1067,18 @@ msgstr ""
 
 #: ../lib/main.php:1017 ../lib/plugin/RecentChanges.php:591
 #: ../lib/plugin/TitleSearch.php:43 ../lib/Theme.php:1194
-#: ../themes/CodeX-lite/templates/navbar.tmpl:6
-#: ../themes/CodeX-lite/templates/navbar.tmpl:24
-#: ../themes/CodeX-lite/templates/search.tmpl:3
-#: ../themes/CodeX-lite/templates/search.tmpl:6
-#: ../themes/CodeX-lite/templates/search.tmpl:25
-#: ../themes/CodeX-lite/templates/search.tmpl:29
-#: ../themes/CodeX/templates/navbar.tmpl:6
-#: ../themes/CodeX/templates/navbar.tmpl:24
-#: ../themes/CodeX/templates/search.tmpl:3
-#: ../themes/CodeX/templates/search.tmpl:6
-#: ../themes/CodeX/templates/search.tmpl:25
-#: ../themes/CodeX/templates/search.tmpl:29
+#: ../themes/Codendi-lite/templates/navbar.tmpl:6
+#: ../themes/Codendi-lite/templates/navbar.tmpl:24
+#: ../themes/Codendi-lite/templates/search.tmpl:3
+#: ../themes/Codendi-lite/templates/search.tmpl:6
+#: ../themes/Codendi-lite/templates/search.tmpl:25
+#: ../themes/Codendi-lite/templates/search.tmpl:29
+#: ../themes/Codendi/templates/navbar.tmpl:6
+#: ../themes/Codendi/templates/navbar.tmpl:24
+#: ../themes/Codendi/templates/search.tmpl:3
+#: ../themes/Codendi/templates/search.tmpl:6
+#: ../themes/Codendi/templates/search.tmpl:25
+#: ../themes/Codendi/templates/search.tmpl:29
 #: ../themes/default/templates/navbar.tmpl:6
 #: ../themes/default/templates/navbar.tmpl:24
 #: ../themes/default/templates/search.tmpl:3
@@ -1170,8 +1170,8 @@ msgstr ""
 msgid "Select"
 msgstr ""
 
-#: ../lib/PageList.php:954 ../themes/CodeX-lite/templates/info.tmpl:64
-#: ../themes/CodeX/templates/info.tmpl:64
+#: ../lib/PageList.php:954 ../themes/Codendi-lite/templates/info.tmpl:64
+#: ../themes/Codendi/templates/info.tmpl:64
 #: ../themes/default/templates/info.tmpl:64
 msgid "Last Modified"
 msgstr ""
@@ -1184,8 +1184,8 @@ msgstr ""
 msgid "Size"
 msgstr ""
 
-#: ../lib/PageList.php:961 ../themes/CodeX-lite/templates/info.tmpl:66
-#: ../themes/CodeX/templates/info.tmpl:66
+#: ../lib/PageList.php:961 ../themes/Codendi-lite/templates/info.tmpl:66
+#: ../themes/Codendi/templates/info.tmpl:66
 #: ../themes/default/templates/info.tmpl:66
 msgid "Last Summary"
 msgstr ""
@@ -1195,8 +1195,8 @@ msgstr ""
 msgid "Version"
 msgstr ""
 
-#: ../lib/PageList.php:966 ../themes/CodeX-lite/templates/info.tmpl:65
-#: ../themes/CodeX/templates/info.tmpl:65
+#: ../lib/PageList.php:966 ../themes/Codendi-lite/templates/info.tmpl:65
+#: ../themes/Codendi/templates/info.tmpl:65
 #: ../themes/default/templates/info.tmpl:65
 msgid "Last Author"
 msgstr ""
@@ -1209,10 +1209,10 @@ msgstr ""
 msgid "Creator"
 msgstr ""
 
-#: ../lib/PageList.php:976 ../themes/CodeX-lite/templates/editpage.tmpl:67
-#: ../themes/CodeX-lite/templates/info.tmpl:127
-#: ../themes/CodeX/templates/editpage.tmpl:67
-#: ../themes/CodeX/templates/info.tmpl:127
+#: ../lib/PageList.php:976 ../themes/Codendi-lite/templates/editpage.tmpl:67
+#: ../themes/Codendi-lite/templates/info.tmpl:127
+#: ../themes/Codendi/templates/editpage.tmpl:67
+#: ../themes/Codendi/templates/info.tmpl:127
 #: ../themes/default/templates/editpage.tmpl:73
 #: ../themes/default/templates/info.tmpl:127
 msgid "Locked"
@@ -1318,10 +1318,10 @@ msgid "WARNING: InterWikiMap page is unlocked, so not using those links."
 msgstr ""
 
 #: ../lib/PageType.php:244 ../lib/PageType.php:247 ../lib/stdlib.php:665
-#: ../themes/CodeX-lite/templates/navbar.tmpl:11
-#: ../themes/CodeX-lite/templates/navbar.tmpl:13
-#: ../themes/CodeX/templates/navbar.tmpl:11
-#: ../themes/CodeX/templates/navbar.tmpl:13
+#: ../themes/Codendi-lite/templates/navbar.tmpl:11
+#: ../themes/Codendi-lite/templates/navbar.tmpl:13
+#: ../themes/Codendi/templates/navbar.tmpl:11
+#: ../themes/Codendi/templates/navbar.tmpl:13
 #: ../themes/default/templates/navbar.tmpl:11
 #: ../themes/default/templates/navbar.tmpl:13
 #: ../themes/Sidebar/templates/navbar.tmpl:27
@@ -1489,22 +1489,22 @@ msgid "Minor"
 msgstr ""
 
 #: ../lib/plugin/AuthorHistory.php:125
-#: ../themes/CodeX-lite/templates/info.tmpl:70
-#: ../themes/CodeX-lite/templates/wikiforum.tmpl:22
-#: ../themes/CodeX/templates/info.tmpl:70
-#: ../themes/CodeX/templates/wikiforum.tmpl:22
+#: ../themes/Codendi-lite/templates/info.tmpl:70
+#: ../themes/Codendi-lite/templates/wikiforum.tmpl:22
+#: ../themes/Codendi/templates/info.tmpl:70
+#: ../themes/Codendi/templates/wikiforum.tmpl:22
 #: ../themes/default/templates/info.tmpl:70
 #: ../themes/default/templates/wikiforum.tmpl:22
 msgid "Author"
 msgstr ""
 
 #: ../lib/plugin/AuthorHistory.php:126 ../lib/plugin/AuthorHistory.php:178
-#: ../themes/CodeX-lite/templates/blogform.tmpl:15
-#: ../themes/CodeX-lite/templates/editpage.tmpl:42
-#: ../themes/CodeX-lite/templates/info.tmpl:71
-#: ../themes/CodeX/templates/blogform.tmpl:15
-#: ../themes/CodeX/templates/editpage.tmpl:42
-#: ../themes/CodeX/templates/info.tmpl:71
+#: ../themes/Codendi-lite/templates/blogform.tmpl:15
+#: ../themes/Codendi-lite/templates/editpage.tmpl:42
+#: ../themes/Codendi-lite/templates/info.tmpl:71
+#: ../themes/Codendi/templates/blogform.tmpl:15
+#: ../themes/Codendi/templates/editpage.tmpl:42
+#: ../themes/Codendi/templates/info.tmpl:71
 #: ../themes/default/templates/blogform.tmpl:15
 #: ../themes/default/templates/editpage.tmpl:47
 #: ../themes/default/templates/info.tmpl:71
@@ -1536,8 +1536,8 @@ msgid "History of major modifications for any page edited by %s."
 msgstr ""
 
 #: ../lib/plugin/_BackendInfo.php:30 ../lib/plugin/_WikiTranslation.php:60
-#: ../themes/CodeX-lite/templates/actionbar.tmpl:52
-#: ../themes/CodeX/templates/actionbar.tmpl:52
+#: ../themes/Codendi-lite/templates/actionbar.tmpl:52
+#: ../themes/Codendi/templates/actionbar.tmpl:52
 #: ../themes/default/templates/actionbar.tmpl:34
 msgid "DebugInfo"
 msgstr ""
@@ -1652,12 +1652,12 @@ msgid "Edit %s"
 msgstr ""
 
 #: ../lib/plugin/Calendar.php:41 ../lib/plugin/Calendar.php:45
-#: ../themes/CodeX-lite/templates/head.tmpl:95
-#: ../themes/CodeX-lite/templates/homepage.tmpl:15
-#: ../themes/CodeX-lite/templates/navbar.tmpl:45
-#: ../themes/CodeX/templates/head.tmpl:95
-#: ../themes/CodeX/templates/homepage.tmpl:15
-#: ../themes/CodeX/templates/navbar.tmpl:45
+#: ../themes/Codendi-lite/templates/head.tmpl:95
+#: ../themes/Codendi-lite/templates/homepage.tmpl:15
+#: ../themes/Codendi-lite/templates/navbar.tmpl:45
+#: ../themes/Codendi/templates/head.tmpl:95
+#: ../themes/Codendi/templates/homepage.tmpl:15
+#: ../themes/Codendi/templates/navbar.tmpl:45
 #: ../themes/default/templates/head.tmpl:95
 #: ../themes/default/templates/homepage.tmpl:15
 #: ../themes/default/templates/navbar.tmpl:45
@@ -1683,8 +1683,8 @@ msgid "Create a Wiki page."
 msgstr ""
 
 #: ../lib/plugin/Comment.php:22
-#: ../themes/CodeX-lite/templates/blogform.tmpl:21
-#: ../themes/CodeX/templates/blogform.tmpl:21
+#: ../themes/Codendi-lite/templates/blogform.tmpl:21
+#: ../themes/Codendi/templates/blogform.tmpl:21
 #: ../themes/default/templates/blogform.tmpl:21
 msgid "Comment"
 msgstr ""
@@ -2078,8 +2078,8 @@ msgid "Failed to set LDAP protocol version to 3"
 msgstr ""
 
 #: ../lib/plugin/LikePages.php:32
-#: ../themes/CodeX-lite/templates/navbar.tmpl:33
-#: ../themes/CodeX/templates/navbar.tmpl:33
+#: ../themes/Codendi-lite/templates/navbar.tmpl:33
+#: ../themes/Codendi/templates/navbar.tmpl:33
 #: ../themes/default/templates/navbar.tmpl:33
 msgid "LikePages"
 msgstr ""
@@ -2359,10 +2359,10 @@ msgid "Version %d"
 msgstr ""
 
 #: ../lib/plugin/PageHistory.php:180
-#: ../themes/CodeX-lite/templates/info.tmpl:17
-#: ../themes/CodeX-lite/templates/info.tmpl:21
-#: ../themes/CodeX/templates/info.tmpl:17
-#: ../themes/CodeX/templates/info.tmpl:21
+#: ../themes/Codendi-lite/templates/info.tmpl:17
+#: ../themes/Codendi-lite/templates/info.tmpl:21
+#: ../themes/Codendi/templates/info.tmpl:17
+#: ../themes/Codendi/templates/info.tmpl:21
 #: ../themes/default/templates/info.tmpl:17
 #: ../themes/default/templates/info.tmpl:21
 msgid "minor edit"
@@ -2373,8 +2373,8 @@ msgid "History of changes."
 msgstr ""
 
 #: ../lib/plugin/PageHistory.php:250 ../lib/plugin/RecentChanges.php:65
-#: ../themes/CodeX-lite/templates/actionbar.tmpl:47
-#: ../themes/CodeX/templates/actionbar.tmpl:47
+#: ../themes/Codendi-lite/templates/actionbar.tmpl:47
+#: ../themes/Codendi/templates/actionbar.tmpl:47
 #: ../themes/default/templates/actionbar.tmpl:29
 msgid "PageHistory"
 msgstr ""
@@ -2385,8 +2385,8 @@ msgid "List PageHistory for %s"
 msgstr ""
 
 #: ../lib/plugin/PageInfo.php:32
-#: ../themes/CodeX-lite/templates/actionbar.tmpl:49
-#: ../themes/CodeX/templates/actionbar.tmpl:49
+#: ../themes/Codendi-lite/templates/actionbar.tmpl:49
+#: ../themes/Codendi/templates/actionbar.tmpl:49
 #: ../themes/default/templates/actionbar.tmpl:31
 msgid "PageInfo"
 msgstr ""
@@ -2511,8 +2511,8 @@ msgid "Used to create a clickable popup link."
 msgstr ""
 
 #: ../lib/plugin/_PreferencesInfo.php:30
-#: ../themes/CodeX-lite/templates/userprefs.tmpl:12
-#: ../themes/CodeX/templates/userprefs.tmpl:12
+#: ../themes/Codendi-lite/templates/userprefs.tmpl:12
+#: ../themes/Codendi/templates/userprefs.tmpl:12
 #: ../themes/default/templates/userprefs.tmpl:12
 msgid "PreferencesInfo"
 msgstr ""
@@ -2729,8 +2729,8 @@ msgid "Related Changes"
 msgstr ""
 
 #: ../lib/plugin/RelatedChanges.php:73
-#: ../themes/CodeX-lite/templates/navbar.tmpl:37
-#: ../themes/CodeX/templates/navbar.tmpl:37
+#: ../themes/Codendi-lite/templates/navbar.tmpl:37
+#: ../themes/Codendi/templates/navbar.tmpl:37
 #: ../themes/default/templates/navbar.tmpl:37
 msgid "RelatedChanges"
 msgstr ""
@@ -3182,10 +3182,10 @@ msgstr ""
 #: ../lib/plugin/WikiAdminSelect.php:218 ../lib/plugin/WikiAdminSelect.php:239
 #: ../lib/plugin/WikiAdminSetAcl.php:190 ../lib/plugin/WikiAdminUtils.php:265
 #: ../lib/plugin/WikiFormRich.php:317 ../lib/removepage.php:24
-#: ../lib/upgrade.php:680 ../themes/CodeX-lite/templates/login.tmpl:80
-#: ../themes/CodeX-lite/templates/userprefs.tmpl:183
-#: ../themes/CodeX/templates/login.tmpl:80
-#: ../themes/CodeX/templates/userprefs.tmpl:183
+#: ../lib/upgrade.php:680 ../themes/Codendi-lite/templates/login.tmpl:80
+#: ../themes/Codendi-lite/templates/userprefs.tmpl:183
+#: ../themes/Codendi/templates/login.tmpl:80
+#: ../themes/Codendi/templates/userprefs.tmpl:183
 #: ../themes/default/templates/login.tmpl:78
 #: ../themes/default/templates/userprefs.tmpl:243
 msgid "Cancel"
@@ -3256,14 +3256,14 @@ msgid "Can't open the upload logfile."
 msgstr ""
 
 #: ../lib/plugin/UserPreferences.php:38
-#: ../themes/CodeX-lite/templates/head.tmpl:91
-#: ../themes/CodeX-lite/templates/head.tmpl:92
-#: ../themes/CodeX-lite/templates/homepage.tmpl:11
-#: ../themes/CodeX-lite/templates/navbar.tmpl:40
-#: ../themes/CodeX/templates/head.tmpl:91
-#: ../themes/CodeX/templates/head.tmpl:92
-#: ../themes/CodeX/templates/homepage.tmpl:11
-#: ../themes/CodeX/templates/navbar.tmpl:40
+#: ../themes/Codendi-lite/templates/head.tmpl:91
+#: ../themes/Codendi-lite/templates/head.tmpl:92
+#: ../themes/Codendi-lite/templates/homepage.tmpl:11
+#: ../themes/Codendi-lite/templates/navbar.tmpl:40
+#: ../themes/Codendi/templates/head.tmpl:91
+#: ../themes/Codendi/templates/head.tmpl:92
+#: ../themes/Codendi/templates/homepage.tmpl:11
+#: ../themes/Codendi/templates/navbar.tmpl:40
 #: ../themes/default/templates/head.tmpl:91
 #: ../themes/default/templates/head.tmpl:92
 #: ../themes/default/templates/homepage.tmpl:11
@@ -3278,8 +3278,8 @@ msgid ""
 msgstr ""
 
 #: ../lib/plugin/UserPreferences.php:104
-#: ../themes/CodeX-lite/templates/wikiforum.tmpl:22
-#: ../themes/CodeX/templates/wikiforum.tmpl:22
+#: ../themes/Codendi-lite/templates/wikiforum.tmpl:22
+#: ../themes/Codendi/templates/wikiforum.tmpl:22
 #: ../themes/default/templates/wikiforum.tmpl:22
 msgid "Message"
 msgstr ""
@@ -3390,8 +3390,8 @@ msgid "PgsrcTranslation"
 msgstr ""
 
 #: ../lib/plugin/WantedPagesOld.php:100
-#: ../themes/CodeX-lite/templates/online.tmpl:38
-#: ../themes/CodeX/templates/online.tmpl:38
+#: ../themes/Codendi-lite/templates/online.tmpl:38
+#: ../themes/Codendi/templates/online.tmpl:38
 #: ../themes/default/templates/online.tmpl:38
 msgid "<none>"
 msgstr ""
@@ -3991,8 +3991,8 @@ msgid "Sorry. Access Restrictions not yet implemented"
 msgstr ""
 
 #: ../lib/plugin/WikiAdminUtils.php:211
-#: ../themes/CodeX-lite/templates/userprefs.tmpl:122
-#: ../themes/CodeX/templates/userprefs.tmpl:122
+#: ../themes/Codendi-lite/templates/userprefs.tmpl:122
+#: ../themes/Codendi/templates/userprefs.tmpl:122
 #: ../themes/default/templates/userprefs.tmpl:124
 msgid "E-Mail"
 msgstr ""
@@ -4160,12 +4160,12 @@ msgid "ExternalSearchPlugin"
 msgstr ""
 
 #: ../lib/plugin/_WikiTranslation.php:64
-#: ../themes/CodeX-lite/templates/head.tmpl:41
-#: ../themes/CodeX-lite/templates/head.tmpl:42
-#: ../themes/CodeX-lite/templates/navbar.tmpl:20
-#: ../themes/CodeX/templates/head.tmpl:41
-#: ../themes/CodeX/templates/head.tmpl:42
-#: ../themes/CodeX/templates/navbar.tmpl:20
+#: ../themes/Codendi-lite/templates/head.tmpl:41
+#: ../themes/Codendi-lite/templates/head.tmpl:42
+#: ../themes/Codendi-lite/templates/navbar.tmpl:20
+#: ../themes/Codendi/templates/head.tmpl:41
+#: ../themes/Codendi/templates/head.tmpl:42
+#: ../themes/Codendi/templates/navbar.tmpl:20
 #: ../themes/default/templates/head.tmpl:41
 #: ../themes/default/templates/head.tmpl:42
 #: ../themes/default/templates/navbar.tmpl:20
@@ -4370,10 +4370,10 @@ msgid "WikiPlugin"
 msgstr ""
 
 #: ../lib/plugin/_WikiTranslation.php:123
-#: ../themes/CodeX-lite/templates/head.tmpl:78
-#: ../themes/CodeX-lite/templates/head.tmpl:79
-#: ../themes/CodeX/templates/head.tmpl:78
-#: ../themes/CodeX/templates/head.tmpl:79
+#: ../themes/Codendi-lite/templates/head.tmpl:78
+#: ../themes/Codendi-lite/templates/head.tmpl:79
+#: ../themes/Codendi/templates/head.tmpl:78
+#: ../themes/Codendi/templates/head.tmpl:79
 #: ../themes/default/templates/head.tmpl:78
 #: ../themes/default/templates/head.tmpl:79
 msgid "WikiWikiWeb"
@@ -4644,16 +4644,16 @@ msgstr ""
 msgid "'%s': Bad page name"
 msgstr ""
 
-#: ../lib/Theme.php:939 ../themes/CodeX-lite/templates/actionbar.tmpl:33
-#: ../themes/CodeX/templates/actionbar.tmpl:33
+#: ../lib/Theme.php:939 ../themes/Codendi-lite/templates/actionbar.tmpl:33
+#: ../themes/Codendi/templates/actionbar.tmpl:33
 #: ../themes/default/templates/actionbar.tmpl:15
 msgid "Edit"
 msgstr ""
 
-#: ../lib/Theme.php:941 ../themes/CodeX-lite/templates/signin.tmpl:16
-#: ../themes/CodeX-lite/templates/signin.tmpl:27
-#: ../themes/CodeX/templates/signin.tmpl:16
-#: ../themes/CodeX/templates/signin.tmpl:27
+#: ../lib/Theme.php:941 ../themes/Codendi-lite/templates/signin.tmpl:16
+#: ../themes/Codendi-lite/templates/signin.tmpl:27
+#: ../themes/Codendi/templates/signin.tmpl:16
+#: ../themes/Codendi/templates/signin.tmpl:27
 #: ../themes/default/templates/signin.tmpl:16
 #: ../themes/default/templates/signin.tmpl:27
 #: ../themes/Sidebar/templates/signin.tmpl:16
@@ -4662,8 +4662,8 @@ msgid "Sign Out"
 msgstr ""
 
 #: ../lib/Theme.php:942 ../lib/WikiUserNew.php:473 ../lib/WikiUser.php:221
-#: ../themes/CodeX-lite/templates/login.tmpl:78
-#: ../themes/CodeX/templates/login.tmpl:78
+#: ../themes/Codendi-lite/templates/login.tmpl:78
+#: ../themes/Codendi/templates/login.tmpl:78
 #: ../themes/default/templates/login.tmpl:76
 msgid "Sign In"
 msgstr ""
@@ -4930,8 +4930,8 @@ msgid "Page rename %s to %s"
 msgstr ""
 
 #: ../lib/WikiDB.php:1638 ../lib/WikiDB.php:1642
-#: ../themes/CodeX-lite/templates/homepage.tmpl:7
-#: ../themes/CodeX/templates/homepage.tmpl:7
+#: ../themes/Codendi-lite/templates/homepage.tmpl:7
+#: ../themes/Codendi/templates/homepage.tmpl:7
 #: ../themes/default/templates/homepage.tmpl:7
 #, php-format
 msgid "Describe %s here."
@@ -5261,15 +5261,15 @@ msgstr ""
 msgid "Please contact your PhpWiki administrator for assistance."
 msgstr ""
 
-#: ../lib/WikiUser.php:443 ../themes/CodeX-lite/templates/homepage.tmpl:37
-#: ../themes/CodeX/templates/homepage.tmpl:37
+#: ../lib/WikiUser.php:443 ../themes/Codendi-lite/templates/homepage.tmpl:37
+#: ../themes/Codendi/templates/homepage.tmpl:37
 #: ../themes/default/templates/homepage.tmpl:37
 msgid "CategoryHomepage"
 msgstr ""
 
 #: ../lib/WikiUser.php:465 ../lib/WikiUser.php:475
-#: ../themes/CodeX-lite/templates/navbar.tmpl:40
-#: ../themes/CodeX/templates/navbar.tmpl:40
+#: ../themes/Codendi-lite/templates/navbar.tmpl:40
+#: ../themes/Codendi/templates/navbar.tmpl:40
 #: ../themes/default/templates/navbar.tmpl:40
 msgid "Preferences"
 msgstr ""
@@ -5312,385 +5312,385 @@ msgstr ""
 msgid "References"
 msgstr ""
 
-#: ../themes/CodeX-lite/templates/actionbar.tmpl:33
-#: ../themes/CodeX/templates/actionbar.tmpl:33
+#: ../themes/Codendi-lite/templates/actionbar.tmpl:33
+#: ../themes/Codendi/templates/actionbar.tmpl:33
 #: ../themes/default/templates/actionbar.tmpl:15
 msgid "Edit Old Revision"
 msgstr ""
 
-#: ../themes/CodeX-lite/templates/actionbar.tmpl:35
-#: ../themes/CodeX-lite/templates/head.tmpl:52
-#: ../themes/CodeX/templates/actionbar.tmpl:35
-#: ../themes/CodeX/templates/head.tmpl:52
+#: ../themes/Codendi-lite/templates/actionbar.tmpl:35
+#: ../themes/Codendi-lite/templates/head.tmpl:52
+#: ../themes/Codendi/templates/actionbar.tmpl:35
+#: ../themes/Codendi/templates/head.tmpl:52
 #: ../themes/default/templates/actionbar.tmpl:17
 #: ../themes/default/templates/head.tmpl:52
 msgid "View Source"
 msgstr ""
 
-#: ../themes/CodeX-lite/templates/actionbar.tmpl:57
-#: ../themes/CodeX/templates/actionbar.tmpl:57
+#: ../themes/Codendi-lite/templates/actionbar.tmpl:57
+#: ../themes/Codendi/templates/actionbar.tmpl:57
 #: ../themes/default/templates/actionbar.tmpl:39
 msgid "PurgeHtmlCache"
 msgstr ""
 
-#: ../themes/CodeX-lite/templates/actionbar.tmpl:58
-#: ../themes/CodeX/templates/actionbar.tmpl:58
+#: ../themes/Codendi-lite/templates/actionbar.tmpl:58
+#: ../themes/Codendi/templates/actionbar.tmpl:58
 #: ../themes/default/templates/actionbar.tmpl:40
 msgid ""
 "Purge HTML cache for this page. Regenerate from WikiMarkup when next "
 "accessed."
 msgstr ""
 
-#: ../themes/CodeX-lite/templates/addcomment.tmpl:14
-#: ../themes/CodeX-lite/templates/blogform.tmpl:28
-#: ../themes/CodeX/templates/addcomment.tmpl:14
-#: ../themes/CodeX/templates/blogform.tmpl:28
+#: ../themes/Codendi-lite/templates/addcomment.tmpl:14
+#: ../themes/Codendi-lite/templates/blogform.tmpl:28
+#: ../themes/Codendi/templates/addcomment.tmpl:14
+#: ../themes/Codendi/templates/blogform.tmpl:28
 #: ../themes/default/templates/addcomment.tmpl:14
 #: ../themes/default/templates/blogform.tmpl:28
 msgid "Add Comment"
 msgstr ""
 
-#: ../themes/CodeX-lite/templates/blogform.tmpl:11
-#: ../themes/CodeX/templates/blogform.tmpl:11
+#: ../themes/Codendi-lite/templates/blogform.tmpl:11
+#: ../themes/Codendi/templates/blogform.tmpl:11
 #: ../themes/default/templates/blogform.tmpl:11
 msgid "Add a Comment"
 msgstr ""
 
-#: ../themes/CodeX-lite/templates/browse.tmpl:6
-#: ../themes/CodeX-lite/templates/viewsource.tmpl:5
-#: ../themes/CodeX/templates/browse.tmpl:6
-#: ../themes/CodeX/templates/viewsource.tmpl:5
+#: ../themes/Codendi-lite/templates/browse.tmpl:6
+#: ../themes/Codendi-lite/templates/viewsource.tmpl:5
+#: ../themes/Codendi/templates/browse.tmpl:6
+#: ../themes/Codendi/templates/viewsource.tmpl:5
 #: ../themes/default/templates/browse.tmpl:6
 #: ../themes/default/templates/viewsource.tmpl:5
 msgid "Note:"
 msgstr ""
 
-#: ../themes/CodeX-lite/templates/browse.tmpl:7
-#: ../themes/CodeX-lite/templates/viewsource.tmpl:10
-#: ../themes/CodeX/templates/browse.tmpl:7
-#: ../themes/CodeX/templates/viewsource.tmpl:10
+#: ../themes/Codendi-lite/templates/browse.tmpl:7
+#: ../themes/Codendi-lite/templates/viewsource.tmpl:10
+#: ../themes/Codendi/templates/browse.tmpl:7
+#: ../themes/Codendi/templates/viewsource.tmpl:10
 #: ../themes/default/templates/browse.tmpl:7
 #: ../themes/default/templates/viewsource.tmpl:10
 msgid "You are viewing an old revision of this page."
 msgstr ""
 
-#: ../themes/CodeX-lite/templates/browse.tmpl:8
-#: ../themes/CodeX-lite/templates/viewsource.tmpl:11
-#: ../themes/CodeX/templates/browse.tmpl:8
-#: ../themes/CodeX/templates/viewsource.tmpl:11
+#: ../themes/Codendi-lite/templates/browse.tmpl:8
+#: ../themes/Codendi-lite/templates/viewsource.tmpl:11
+#: ../themes/Codendi/templates/browse.tmpl:8
+#: ../themes/Codendi/templates/viewsource.tmpl:11
 #: ../themes/default/templates/browse.tmpl:8
 #: ../themes/default/templates/viewsource.tmpl:11
 msgid "View the current version"
 msgstr ""
 
-#: ../themes/CodeX-lite/templates/comment.tmpl:18
-#: ../themes/CodeX-lite/templates/wikiblog.tmpl:19
-#: ../themes/CodeX/templates/comment.tmpl:18
-#: ../themes/CodeX/templates/wikiblog.tmpl:19
+#: ../themes/Codendi-lite/templates/comment.tmpl:18
+#: ../themes/Codendi-lite/templates/wikiblog.tmpl:19
+#: ../themes/Codendi/templates/comment.tmpl:18
+#: ../themes/Codendi/templates/wikiblog.tmpl:19
 #: ../themes/default/templates/comment.tmpl:18
 #: ../themes/default/templates/wikiblog.tmpl:19
 #, php-format
 msgid "Comment modified on %s by %s"
 msgstr ""
 
-#: ../themes/CodeX-lite/templates/comment.tmpl:24
-#: ../themes/CodeX-lite/templates/wikiblog.tmpl:24
-#: ../themes/CodeX/templates/comment.tmpl:24
-#: ../themes/CodeX/templates/wikiblog.tmpl:24
+#: ../themes/Codendi-lite/templates/comment.tmpl:24
+#: ../themes/Codendi-lite/templates/wikiblog.tmpl:24
+#: ../themes/Codendi/templates/comment.tmpl:24
+#: ../themes/Codendi/templates/wikiblog.tmpl:24
 #: ../themes/default/templates/comment.tmpl:24
 #: ../themes/default/templates/wikiblog.tmpl:24
 #, php-format
 msgid "Comments on %s by %s."
 msgstr ""
 
-#: ../themes/CodeX-lite/templates/comment.tmpl:28
-#: ../themes/CodeX/templates/comment.tmpl:28
+#: ../themes/Codendi-lite/templates/comment.tmpl:28
+#: ../themes/Codendi/templates/comment.tmpl:28
 #: ../themes/default/templates/comment.tmpl:28
 #, php-format
 msgid "%s by %s"
 msgstr ""
 
-#: ../themes/CodeX-lite/templates/debug.tmpl:18
-#: ../themes/CodeX/templates/debug.tmpl:18
+#: ../themes/Codendi-lite/templates/debug.tmpl:18
+#: ../themes/Codendi/templates/debug.tmpl:18
 #: ../themes/default/templates/debug.tmpl:18
 #, php-format
 msgid "Page Execution took %s seconds"
 msgstr ""
 
-#: ../themes/CodeX-lite/templates/debug.tmpl:21
-#: ../themes/CodeX/templates/debug.tmpl:21
+#: ../themes/Codendi-lite/templates/debug.tmpl:21
+#: ../themes/Codendi/templates/debug.tmpl:21
 #: ../themes/default/templates/debug.tmpl:21
 #, php-format
 msgid ", Memory: %s"
 msgstr ""
 
-#: ../themes/CodeX-lite/templates/dialog.tmpl:18
-#: ../themes/CodeX/templates/dialog.tmpl:18
+#: ../themes/Codendi-lite/templates/dialog.tmpl:18
+#: ../themes/Codendi/templates/dialog.tmpl:18
 #: ../themes/default/templates/dialog.tmpl:18
 msgid "Dialog"
 msgstr ""
 
-#: ../themes/CodeX-lite/templates/editpage.tmpl:4
-#: ../themes/CodeX/templates/editpage.tmpl:4
+#: ../themes/Codendi-lite/templates/editpage.tmpl:4
+#: ../themes/Codendi/templates/editpage.tmpl:4
 #: ../themes/default/templates/editpage.tmpl:4
 msgid "Preview only!  Changes not saved."
 msgstr ""
 
-#: ../themes/CodeX-lite/templates/editpage.tmpl:8
-#: ../themes/CodeX/templates/editpage.tmpl:8
+#: ../themes/Codendi-lite/templates/editpage.tmpl:8
+#: ../themes/Codendi/templates/editpage.tmpl:8
 #: ../themes/default/templates/editpage.tmpl:8
 #, php-format
 msgid ""
 "Please continue editing.  (You'll find your %s at the bottom of the page.)"
 msgstr ""
 
-#: ../themes/CodeX-lite/templates/editpage.tmpl:9
-#: ../themes/CodeX/templates/editpage.tmpl:9
+#: ../themes/Codendi-lite/templates/editpage.tmpl:9
+#: ../themes/Codendi/templates/editpage.tmpl:9
 #: ../themes/default/templates/editpage.tmpl:9
 msgid "edit area"
 msgstr ""
 
-#: ../themes/CodeX-lite/templates/editpage.tmpl:20
-#: ../themes/CodeX/templates/editpage.tmpl:20
+#: ../themes/Codendi-lite/templates/editpage.tmpl:20
+#: ../themes/Codendi/templates/editpage.tmpl:20
 #: ../themes/default/templates/editpage.tmpl:20
 msgid "Warning: You are editing an old revision."
 msgstr ""
 
-#: ../themes/CodeX-lite/templates/editpage.tmpl:21
-#: ../themes/CodeX/templates/editpage.tmpl:21
+#: ../themes/Codendi-lite/templates/editpage.tmpl:21
+#: ../themes/Codendi/templates/editpage.tmpl:21
 #: ../themes/default/templates/editpage.tmpl:21
 msgid "Saving this page will overwrite the current version."
 msgstr ""
 
-#: ../themes/CodeX-lite/templates/editpage.tmpl:54
-#: ../themes/CodeX/templates/editpage.tmpl:54
+#: ../themes/Codendi-lite/templates/editpage.tmpl:54
+#: ../themes/Codendi/templates/editpage.tmpl:54
 #: ../themes/default/templates/editpage.tmpl:59
 msgid "This is a minor change."
 msgstr ""
 
-#: ../themes/CodeX-lite/templates/editpage.tmpl:55
-#: ../themes/CodeX/templates/editpage.tmpl:55
+#: ../themes/Codendi-lite/templates/editpage.tmpl:55
+#: ../themes/Codendi/templates/editpage.tmpl:55
 #: ../themes/default/templates/editpage.tmpl:60
 msgid "Use old markup"
 msgstr ""
 
-#: ../themes/CodeX-lite/templates/editpage.tmpl:107
-#: ../themes/CodeX-lite/templates/editpage.tmpl:112
-#: ../themes/CodeX/templates/editpage.tmpl:107
-#: ../themes/CodeX/templates/editpage.tmpl:112
+#: ../themes/Codendi-lite/templates/editpage.tmpl:107
+#: ../themes/Codendi-lite/templates/editpage.tmpl:112
+#: ../themes/Codendi/templates/editpage.tmpl:107
+#: ../themes/Codendi/templates/editpage.tmpl:112
 #: ../themes/default/templates/editpage.tmpl:113
 #: ../themes/default/templates/editpage.tmpl:118
 #, php-format
 msgid "See %s tips for editing."
 msgstr ""
 
-#: ../themes/CodeX-lite/templates/editpage.tmpl:107
-#: ../themes/CodeX-lite/templates/editpage.tmpl:112
-#: ../themes/CodeX/templates/editpage.tmpl:107
-#: ../themes/CodeX/templates/editpage.tmpl:112
+#: ../themes/Codendi-lite/templates/editpage.tmpl:107
+#: ../themes/Codendi-lite/templates/editpage.tmpl:112
+#: ../themes/Codendi/templates/editpage.tmpl:107
+#: ../themes/Codendi/templates/editpage.tmpl:112
 #: ../themes/default/templates/editpage.tmpl:113
 #: ../themes/default/templates/editpage.tmpl:118
 msgid "GoodStyle"
 msgstr ""
 
-#: ../themes/CodeX-lite/templates/editpage.tmpl:108
-#: ../themes/CodeX/templates/editpage.tmpl:108
+#: ../themes/Codendi-lite/templates/editpage.tmpl:108
+#: ../themes/Codendi/templates/editpage.tmpl:108
 #: ../themes/default/templates/editpage.tmpl:114
 msgid "OldTextFormattingRules"
 msgstr ""
 
-#: ../themes/CodeX-lite/templates/editpage.tmpl:108
-#: ../themes/CodeX-lite/templates/editpage.tmpl:113
-#: ../themes/CodeX/templates/editpage.tmpl:108
-#: ../themes/CodeX/templates/editpage.tmpl:113
+#: ../themes/Codendi-lite/templates/editpage.tmpl:108
+#: ../themes/Codendi-lite/templates/editpage.tmpl:113
+#: ../themes/Codendi/templates/editpage.tmpl:108
+#: ../themes/Codendi/templates/editpage.tmpl:113
 #: ../themes/default/templates/editpage.tmpl:114
 #: ../themes/default/templates/editpage.tmpl:119
 msgid "Synopsis"
 msgstr ""
 
-#: ../themes/CodeX-lite/templates/editpage.tmpl:113
-#: ../themes/CodeX/templates/editpage.tmpl:113
+#: ../themes/Codendi-lite/templates/editpage.tmpl:113
+#: ../themes/Codendi/templates/editpage.tmpl:113
 #: ../themes/default/templates/editpage.tmpl:119
 msgid "TextFormattingRules"
 msgstr ""
 
-#: ../themes/CodeX-lite/templates/forumadd.tmpl:11
-#: ../themes/CodeX-lite/templates/wikiforum.tmpl:20
-#: ../themes/CodeX/templates/forumadd.tmpl:11
-#: ../themes/CodeX/templates/wikiforum.tmpl:20
+#: ../themes/Codendi-lite/templates/forumadd.tmpl:11
+#: ../themes/Codendi-lite/templates/wikiforum.tmpl:20
+#: ../themes/Codendi/templates/forumadd.tmpl:11
+#: ../themes/Codendi/templates/wikiforum.tmpl:20
 #: ../themes/default/templates/forumadd.tmpl:11
 #: ../themes/default/templates/wikiforum.tmpl:20
 msgid "Post new"
 msgstr ""
 
-#: ../themes/CodeX-lite/templates/forumadd.tmpl:13
-#: ../themes/CodeX/templates/forumadd.tmpl:13
+#: ../themes/Codendi-lite/templates/forumadd.tmpl:13
+#: ../themes/Codendi/templates/forumadd.tmpl:13
 #: ../themes/default/templates/forumadd.tmpl:13
 msgid "Title:"
 msgstr ""
 
-#: ../themes/CodeX-lite/templates/forumadd.tmpl:17
-#: ../themes/CodeX-lite/templates/wikiforum.tmpl:29
-#: ../themes/CodeX/templates/forumadd.tmpl:17
-#: ../themes/CodeX/templates/wikiforum.tmpl:29
+#: ../themes/Codendi-lite/templates/forumadd.tmpl:17
+#: ../themes/Codendi-lite/templates/wikiforum.tmpl:29
+#: ../themes/Codendi/templates/forumadd.tmpl:17
+#: ../themes/Codendi/templates/wikiforum.tmpl:29
 #: ../themes/default/templates/forumadd.tmpl:17
 #: ../themes/default/templates/wikiforum.tmpl:29
 msgid "Reply"
 msgstr ""
 
-#: ../themes/CodeX-lite/templates/forumadd.tmpl:22
-#: ../themes/CodeX/templates/forumadd.tmpl:22
+#: ../themes/Codendi-lite/templates/forumadd.tmpl:22
+#: ../themes/Codendi/templates/forumadd.tmpl:22
 #: ../themes/default/templates/forumadd.tmpl:22
 msgid "Add Message"
 msgstr ""
 
-#: ../themes/CodeX-lite/templates/head.tmpl:36
-#: ../themes/CodeX-lite/templates/head.tmpl:37
-#: ../themes/CodeX-lite/templates/htmldump.tmpl:22
-#: ../themes/CodeX/templates/head.tmpl:36
-#: ../themes/CodeX/templates/head.tmpl:37
-#: ../themes/CodeX/templates/htmldump.tmpl:22
+#: ../themes/Codendi-lite/templates/head.tmpl:36
+#: ../themes/Codendi-lite/templates/head.tmpl:37
+#: ../themes/Codendi-lite/templates/htmldump.tmpl:22
+#: ../themes/Codendi/templates/head.tmpl:36
+#: ../themes/Codendi/templates/head.tmpl:37
+#: ../themes/Codendi/templates/htmldump.tmpl:22
 #: ../themes/default/templates/head.tmpl:36
 #: ../themes/default/templates/head.tmpl:37
 #: ../themes/default/templates/htmldump.tmpl:22
 msgid "HowToUseWiki"
 msgstr ""
 
-#: ../themes/CodeX-lite/templates/head.tmpl:75
-#: ../themes/CodeX-lite/templates/head.tmpl:76
-#: ../themes/CodeX/templates/head.tmpl:75
-#: ../themes/CodeX/templates/head.tmpl:76
+#: ../themes/Codendi-lite/templates/head.tmpl:75
+#: ../themes/Codendi-lite/templates/head.tmpl:76
+#: ../themes/Codendi/templates/head.tmpl:75
+#: ../themes/Codendi/templates/head.tmpl:76
 #: ../themes/default/templates/head.tmpl:75
 #: ../themes/default/templates/head.tmpl:76
 msgid "SandBox"
 msgstr ""
 
-#: ../themes/CodeX-lite/templates/homepage.tmpl:10
-#: ../themes/CodeX/templates/homepage.tmpl:10
+#: ../themes/Codendi-lite/templates/homepage.tmpl:10
+#: ../themes/Codendi/templates/homepage.tmpl:10
 #: ../themes/default/templates/homepage.tmpl:10
 #, php-format
 msgid "You can personalize various settings in %s."
 msgstr ""
 
-#: ../themes/CodeX-lite/templates/homepage.tmpl:13
-#: ../themes/CodeX/templates/homepage.tmpl:13
+#: ../themes/Codendi-lite/templates/homepage.tmpl:13
+#: ../themes/Codendi/templates/homepage.tmpl:13
 #: ../themes/default/templates/homepage.tmpl:13
 msgid "(Your preferences are stored as hidden data within this page)."
 msgstr ""
 
-#: ../themes/CodeX-lite/templates/homepage.tmpl:16
-#: ../themes/CodeX/templates/homepage.tmpl:16
+#: ../themes/Codendi-lite/templates/homepage.tmpl:16
+#: ../themes/Codendi/templates/homepage.tmpl:16
 #: ../themes/default/templates/homepage.tmpl:16
 #, php-format
 msgid "The %s subpage enables simple weblogging."
 msgstr ""
 
-#: ../themes/CodeX-lite/templates/info.tmpl:30
-#: ../themes/CodeX/templates/info.tmpl:30
+#: ../themes/Codendi-lite/templates/info.tmpl:30
+#: ../themes/Codendi/templates/info.tmpl:30
 #: ../themes/default/templates/info.tmpl:30
 msgid "1 word"
 msgstr ""
 
-#: ../themes/CodeX-lite/templates/info.tmpl:32
-#: ../themes/CodeX/templates/info.tmpl:32
+#: ../themes/Codendi-lite/templates/info.tmpl:32
+#: ../themes/Codendi/templates/info.tmpl:32
 #: ../themes/default/templates/info.tmpl:32
 #, php-format
 msgid "%s words"
 msgstr ""
 
-#: ../themes/CodeX-lite/templates/info.tmpl:36
-#: ../themes/CodeX/templates/info.tmpl:36
+#: ../themes/Codendi-lite/templates/info.tmpl:36
+#: ../themes/Codendi/templates/info.tmpl:36
 #: ../themes/default/templates/info.tmpl:36
 #, php-format
 msgid "Version %s"
 msgstr ""
 
-#: ../themes/CodeX-lite/templates/info.tmpl:37
-#: ../themes/CodeX/templates/info.tmpl:37
+#: ../themes/Codendi-lite/templates/info.tmpl:37
+#: ../themes/Codendi/templates/info.tmpl:37
 #: ../themes/default/templates/info.tmpl:37
 msgid "Original (1.2 or 1.0)"
 msgstr ""
 
-#: ../themes/CodeX-lite/templates/info.tmpl:69
-#: ../themes/CodeX/templates/info.tmpl:69
+#: ../themes/Codendi-lite/templates/info.tmpl:69
+#: ../themes/Codendi/templates/info.tmpl:69
 #: ../themes/default/templates/info.tmpl:69
 msgid "Saved on:"
 msgstr ""
 
-#: ../themes/CodeX-lite/templates/info.tmpl:74
-#: ../themes/CodeX/templates/info.tmpl:74
+#: ../themes/Codendi-lite/templates/info.tmpl:74
+#: ../themes/Codendi/templates/info.tmpl:74
 #: ../themes/default/templates/info.tmpl:74
 #, php-format
 msgid "Statistics about %s."
 msgstr ""
 
-#: ../themes/CodeX-lite/templates/info.tmpl:85
-#: ../themes/CodeX/templates/info.tmpl:85
+#: ../themes/Codendi-lite/templates/info.tmpl:85
+#: ../themes/Codendi/templates/info.tmpl:85
 #: ../themes/default/templates/info.tmpl:85
 msgid "Supplanted on:"
 msgstr ""
 
-#: ../themes/CodeX-lite/templates/info.tmpl:103
-#: ../themes/CodeX/templates/info.tmpl:103
+#: ../themes/Codendi-lite/templates/info.tmpl:103
+#: ../themes/Codendi/templates/info.tmpl:103
 #: ../themes/default/templates/info.tmpl:103
 msgid "Page Version:"
 msgstr ""
 
-#: ../themes/CodeX-lite/templates/info.tmpl:107
-#: ../themes/CodeX/templates/info.tmpl:107
+#: ../themes/Codendi-lite/templates/info.tmpl:107
+#: ../themes/Codendi/templates/info.tmpl:107
 #: ../themes/default/templates/info.tmpl:107
 msgid "Markup:"
 msgstr ""
 
-#: ../themes/CodeX-lite/templates/info.tmpl:111
-#: ../themes/CodeX/templates/info.tmpl:111
+#: ../themes/Codendi-lite/templates/info.tmpl:111
+#: ../themes/Codendi/templates/info.tmpl:111
 #: ../themes/default/templates/info.tmpl:111
 msgid "Size:"
 msgstr ""
 
-#: ../themes/CodeX-lite/templates/info.tmpl:116
-#: ../themes/CodeX/templates/info.tmpl:116
+#: ../themes/Codendi-lite/templates/info.tmpl:116
+#: ../themes/Codendi/templates/info.tmpl:116
 #: ../themes/default/templates/info.tmpl:116
 msgid "Hits:"
 msgstr ""
 
-#: ../themes/CodeX-lite/templates/info.tmpl:133
-#: ../themes/CodeX/templates/info.tmpl:133
+#: ../themes/Codendi-lite/templates/info.tmpl:133
+#: ../themes/Codendi/templates/info.tmpl:133
 #: ../themes/default/templates/info.tmpl:133
 msgid "home page"
 msgstr ""
 
-#: ../themes/CodeX-lite/templates/info.tmpl:136
-#: ../themes/CodeX/templates/info.tmpl:136
+#: ../themes/Codendi-lite/templates/info.tmpl:136
+#: ../themes/Codendi/templates/info.tmpl:136
 #: ../themes/default/templates/info.tmpl:136
 msgid "User page"
 msgstr ""
 
-#: ../themes/CodeX-lite/templates/info.tmpl:143
-#: ../themes/CodeX/templates/info.tmpl:143
+#: ../themes/Codendi-lite/templates/info.tmpl:143
+#: ../themes/Codendi/templates/info.tmpl:143
 #: ../themes/default/templates/info.tmpl:142
 msgid "Blog page"
 msgstr ""
 
-#: ../themes/CodeX-lite/templates/info.tmpl:149
-#: ../themes/CodeX/templates/info.tmpl:149
+#: ../themes/Codendi-lite/templates/info.tmpl:149
+#: ../themes/Codendi/templates/info.tmpl:149
 #: ../themes/default/templates/info.tmpl:148
 msgid "Subpage"
 msgstr ""
 
-#: ../themes/CodeX-lite/templates/info.tmpl:154
-#: ../themes/CodeX/templates/info.tmpl:154
+#: ../themes/Codendi-lite/templates/info.tmpl:154
+#: ../themes/Codendi/templates/info.tmpl:154
 #: ../themes/default/templates/info.tmpl:153
 msgid "Page Type:"
 msgstr ""
 
-#: ../themes/CodeX-lite/templates/login.tmpl:4
-#: ../themes/CodeX/templates/login.tmpl:4
+#: ../themes/Codendi-lite/templates/login.tmpl:4
+#: ../themes/Codendi/templates/login.tmpl:4
 msgid "Please log-in to access to this page"
 msgstr ""
 
-#: ../themes/CodeX-lite/templates/login.tmpl:50
-#: ../themes/CodeX/templates/login.tmpl:50
+#: ../themes/Codendi-lite/templates/login.tmpl:50
+#: ../themes/Codendi/templates/login.tmpl:50
 #: ../themes/default/templates/login.tmpl:48
 #, php-format
 msgid ""
@@ -5699,45 +5699,45 @@ msgid ""
 "in RecentChanges to your home page."
 msgstr ""
 
-#: ../themes/CodeX-lite/templates/login.tmpl:62
-#: ../themes/CodeX/templates/login.tmpl:62
+#: ../themes/Codendi-lite/templates/login.tmpl:62
+#: ../themes/Codendi/templates/login.tmpl:62
 #: ../themes/default/templates/login.tmpl:60
 msgid ""
 "Note: Only if you create your personal HomePage with same the pagename as "
 "your user id, you will be able to store your UserPreferences. Otherwise not."
 msgstr ""
 
-#: ../themes/CodeX-lite/templates/login.tmpl:65
-#: ../themes/CodeX/templates/login.tmpl:65
+#: ../themes/Codendi-lite/templates/login.tmpl:65
+#: ../themes/Codendi/templates/login.tmpl:65
 #: ../themes/default/templates/login.tmpl:63
 msgid "New users may use an empty password."
 msgstr ""
 
-#: ../themes/CodeX-lite/templates/login.tmpl:70
-#: ../themes/CodeX/templates/login.tmpl:70
+#: ../themes/Codendi-lite/templates/login.tmpl:70
+#: ../themes/Codendi/templates/login.tmpl:70
 #: ../themes/default/templates/login.tmpl:68
 msgid "UserId:"
 msgstr ""
 
-#: ../themes/CodeX-lite/templates/login.tmpl:74
-#: ../themes/CodeX/templates/login.tmpl:74
+#: ../themes/Codendi-lite/templates/login.tmpl:74
+#: ../themes/Codendi/templates/login.tmpl:74
 #: ../themes/default/templates/login.tmpl:72
 msgid "Password:"
 msgstr ""
 
-#: ../themes/CodeX-lite/templates/navbar.tmpl:15
-#: ../themes/CodeX/templates/navbar.tmpl:15
+#: ../themes/Codendi-lite/templates/navbar.tmpl:15
+#: ../themes/Codendi/templates/navbar.tmpl:15
 #: ../themes/default/templates/navbar.tmpl:15
 #: ../themes/Sidebar/templates/navbar.tmpl:31
 msgid "Article"
 msgstr ""
 
-#: ../themes/CodeX-lite/templates/navbar.tmpl:28
-#: ../themes/CodeX-lite/templates/navbar.tmpl:30
-#: ../themes/CodeX-lite/templates/search.tmpl:13
-#: ../themes/CodeX/templates/navbar.tmpl:28
-#: ../themes/CodeX/templates/navbar.tmpl:30
-#: ../themes/CodeX/templates/search.tmpl:13
+#: ../themes/Codendi-lite/templates/navbar.tmpl:28
+#: ../themes/Codendi-lite/templates/navbar.tmpl:30
+#: ../themes/Codendi-lite/templates/search.tmpl:13
+#: ../themes/Codendi/templates/navbar.tmpl:28
+#: ../themes/Codendi/templates/navbar.tmpl:30
+#: ../themes/Codendi/templates/search.tmpl:13
 #: ../themes/default/templates/navbar.tmpl:28
 #: ../themes/default/templates/navbar.tmpl:30
 #: ../themes/default/templates/search.tmpl:13
@@ -5746,72 +5746,72 @@ msgstr ""
 msgid "Quick Search"
 msgstr ""
 
-#: ../themes/CodeX-lite/templates/navbar.tmpl:51
-#: ../themes/CodeX/templates/navbar.tmpl:51
+#: ../themes/Codendi-lite/templates/navbar.tmpl:51
+#: ../themes/Codendi/templates/navbar.tmpl:51
 #: ../themes/default/templates/navbar.tmpl:51
 msgid "Today"
 msgstr ""
 
-#: ../themes/CodeX-lite/templates/navbar.tmpl:55
-#: ../themes/CodeX/templates/navbar.tmpl:55
+#: ../themes/Codendi-lite/templates/navbar.tmpl:55
+#: ../themes/Codendi/templates/navbar.tmpl:55
 #: ../themes/default/templates/navbar.tmpl:55
 #: ../themes/Sidebar/templates/navbar.tmpl:38
 msgid "Admin"
 msgstr ""
 
-#: ../themes/CodeX-lite/templates/nochanges.tmpl:3
-#: ../themes/CodeX/templates/nochanges.tmpl:3
+#: ../themes/Codendi-lite/templates/nochanges.tmpl:3
+#: ../themes/Codendi/templates/nochanges.tmpl:3
 #: ../themes/default/templates/nochanges.tmpl:3
 msgid "Edit aborted."
 msgstr ""
 
-#: ../themes/CodeX-lite/templates/nochanges.tmpl:4
-#: ../themes/CodeX/templates/nochanges.tmpl:4
+#: ../themes/Codendi-lite/templates/nochanges.tmpl:4
+#: ../themes/Codendi/templates/nochanges.tmpl:4
 #: ../themes/default/templates/nochanges.tmpl:4
 msgid "You have not made any changes so no new version has been saved."
 msgstr ""
 
-#: ../themes/CodeX-lite/templates/online.tmpl:8
-#: ../themes/CodeX-lite/templates/online.tmpl:16
-#: ../themes/CodeX-lite/templates/online.tmpl:59
-#: ../themes/CodeX/templates/online.tmpl:8
-#: ../themes/CodeX/templates/online.tmpl:16
-#: ../themes/CodeX/templates/online.tmpl:59
+#: ../themes/Codendi-lite/templates/online.tmpl:8
+#: ../themes/Codendi-lite/templates/online.tmpl:16
+#: ../themes/Codendi-lite/templates/online.tmpl:59
+#: ../themes/Codendi/templates/online.tmpl:8
+#: ../themes/Codendi/templates/online.tmpl:16
+#: ../themes/Codendi/templates/online.tmpl:59
 #: ../themes/default/templates/online.tmpl:8
 #: ../themes/default/templates/online.tmpl:16
 #: ../themes/default/templates/online.tmpl:59
 msgid "Who Is Online"
 msgstr ""
 
-#: ../themes/CodeX-lite/templates/online.tmpl:16
-#: ../themes/CodeX/templates/online.tmpl:16
+#: ../themes/Codendi-lite/templates/online.tmpl:16
+#: ../themes/Codendi/templates/online.tmpl:16
 #: ../themes/default/templates/online.tmpl:16
 msgid "Switch to detailed list"
 msgstr ""
 
-#: ../themes/CodeX-lite/templates/online.tmpl:22
-#: ../themes/CodeX/templates/online.tmpl:22
+#: ../themes/Codendi-lite/templates/online.tmpl:22
+#: ../themes/Codendi/templates/online.tmpl:22
 #: ../themes/default/templates/online.tmpl:22
 #, php-format
 msgid "Our users created a total of %d pages."
 msgstr ""
 
-#: ../themes/CodeX-lite/templates/online.tmpl:23
-#: ../themes/CodeX/templates/online.tmpl:23
+#: ../themes/Codendi-lite/templates/online.tmpl:23
+#: ../themes/Codendi/templates/online.tmpl:23
 #: ../themes/default/templates/online.tmpl:23
 #, php-format
 msgid "We have a total of %d registered users."
 msgstr ""
 
-#: ../themes/CodeX-lite/templates/online.tmpl:24
-#: ../themes/CodeX/templates/online.tmpl:24
+#: ../themes/Codendi-lite/templates/online.tmpl:24
+#: ../themes/Codendi/templates/online.tmpl:24
 #: ../themes/default/templates/online.tmpl:24
 #, php-format
 msgid "The newest registered user is %s."
 msgstr ""
 
-#: ../themes/CodeX-lite/templates/online.tmpl:28
-#: ../themes/CodeX/templates/online.tmpl:28
+#: ../themes/Codendi-lite/templates/online.tmpl:28
+#: ../themes/Codendi/templates/online.tmpl:28
 #: ../themes/default/templates/online.tmpl:28
 #, php-format
 msgid ""
@@ -5819,289 +5819,289 @@ msgid ""
 "Guests"
 msgstr ""
 
-#: ../themes/CodeX-lite/templates/online.tmpl:30
-#: ../themes/CodeX/templates/online.tmpl:30
+#: ../themes/Codendi-lite/templates/online.tmpl:30
+#: ../themes/Codendi/templates/online.tmpl:30
 #: ../themes/default/templates/online.tmpl:30
 #, php-format
 msgid "Most users ever online was %d at %s."
 msgstr ""
 
-#: ../themes/CodeX-lite/templates/online.tmpl:31
-#: ../themes/CodeX/templates/online.tmpl:31
+#: ../themes/Codendi-lite/templates/online.tmpl:31
+#: ../themes/Codendi/templates/online.tmpl:31
 #: ../themes/default/templates/online.tmpl:31
 msgid "Registered Users Online: "
 msgstr ""
 
-#: ../themes/CodeX-lite/templates/online.tmpl:43
-#: ../themes/CodeX/templates/online.tmpl:43
+#: ../themes/Codendi-lite/templates/online.tmpl:43
+#: ../themes/Codendi/templates/online.tmpl:43
 #: ../themes/default/templates/online.tmpl:43
 msgid "Admin is also online."
 msgstr ""
 
-#: ../themes/CodeX-lite/templates/online.tmpl:47
-#: ../themes/CodeX/templates/online.tmpl:47
+#: ../themes/Codendi-lite/templates/online.tmpl:47
+#: ../themes/Codendi/templates/online.tmpl:47
 #: ../themes/default/templates/online.tmpl:47
 #, php-format
 msgid "This data is based on users active over the past %s."
 msgstr ""
 
-#: ../themes/CodeX-lite/templates/online.tmpl:51
-#: ../themes/CodeX/templates/online.tmpl:51
+#: ../themes/Codendi-lite/templates/online.tmpl:51
+#: ../themes/Codendi/templates/online.tmpl:51
 #: ../themes/default/templates/online.tmpl:51
 msgid "Sorry, no dynamic DB Session support."
 msgstr ""
 
-#: ../themes/CodeX-lite/templates/online.tmpl:59
-#: ../themes/CodeX/templates/online.tmpl:59
+#: ../themes/Codendi-lite/templates/online.tmpl:59
+#: ../themes/Codendi/templates/online.tmpl:59
 #: ../themes/default/templates/online.tmpl:59
 msgid "Switch to summary"
 msgstr ""
 
-#: ../themes/CodeX-lite/templates/online.tmpl:63
-#: ../themes/CodeX/templates/online.tmpl:63
+#: ../themes/Codendi-lite/templates/online.tmpl:63
+#: ../themes/Codendi/templates/online.tmpl:63
 #: ../themes/default/templates/online.tmpl:63
 msgid "Registered Users"
 msgstr ""
 
-#: ../themes/CodeX-lite/templates/online.tmpl:78
-#: ../themes/CodeX/templates/online.tmpl:78
+#: ../themes/Codendi-lite/templates/online.tmpl:78
+#: ../themes/Codendi/templates/online.tmpl:78
 #: ../themes/default/templates/online.tmpl:78
 msgid "Guests"
 msgstr ""
 
-#: ../themes/CodeX-lite/templates/pagelink.tmpl:13
-#: ../themes/CodeX/templates/pagelink.tmpl:13
+#: ../themes/Codendi-lite/templates/pagelink.tmpl:13
+#: ../themes/Codendi/templates/pagelink.tmpl:13
 #: ../themes/default/templates/pagelink.tmpl:13
 msgid "|<<"
 msgstr ""
 
-#: ../themes/CodeX-lite/templates/pagelink.tmpl:15
-#: ../themes/CodeX/templates/pagelink.tmpl:15
+#: ../themes/Codendi-lite/templates/pagelink.tmpl:15
+#: ../themes/Codendi/templates/pagelink.tmpl:15
 #: ../themes/default/templates/pagelink.tmpl:15
 msgid "<<"
 msgstr ""
 
-#: ../themes/CodeX-lite/templates/pagelink.tmpl:18
-#: ../themes/CodeX/templates/pagelink.tmpl:18
+#: ../themes/Codendi-lite/templates/pagelink.tmpl:18
+#: ../themes/Codendi/templates/pagelink.tmpl:18
 #: ../themes/default/templates/pagelink.tmpl:18
 #, php-format
 msgid " - %d / %d - "
 msgstr ""
 
-#: ../themes/CodeX-lite/templates/pagelink.tmpl:21
-#: ../themes/CodeX/templates/pagelink.tmpl:21
+#: ../themes/Codendi-lite/templates/pagelink.tmpl:21
+#: ../themes/Codendi/templates/pagelink.tmpl:21
 #: ../themes/default/templates/pagelink.tmpl:21
 msgid ">>"
 msgstr ""
 
-#: ../themes/CodeX-lite/templates/pagelink.tmpl:23
-#: ../themes/CodeX/templates/pagelink.tmpl:23
+#: ../themes/Codendi-lite/templates/pagelink.tmpl:23
+#: ../themes/Codendi/templates/pagelink.tmpl:23
 #: ../themes/default/templates/pagelink.tmpl:23
 msgid ">>|"
 msgstr ""
 
-#: ../themes/CodeX-lite/templates/redirect.tmpl:19
-#: ../themes/CodeX-lite/templates/redirect.tmpl:42
-#: ../themes/CodeX/templates/redirect.tmpl:19
-#: ../themes/CodeX/templates/redirect.tmpl:42
+#: ../themes/Codendi-lite/templates/redirect.tmpl:19
+#: ../themes/Codendi-lite/templates/redirect.tmpl:42
+#: ../themes/Codendi/templates/redirect.tmpl:19
+#: ../themes/Codendi/templates/redirect.tmpl:42
 #: ../themes/default/templates/redirect.tmpl:19
 #: ../themes/default/templates/redirect.tmpl:42
 msgid "Redirect"
 msgstr ""
 
-#: ../themes/CodeX-lite/templates/redirect.tmpl:44
-#: ../themes/CodeX/templates/redirect.tmpl:44
+#: ../themes/Codendi-lite/templates/redirect.tmpl:44
+#: ../themes/Codendi/templates/redirect.tmpl:44
 #: ../themes/default/templates/redirect.tmpl:44
 #, php-format
 msgid "Your browser should have redirected you to %s."
 msgstr ""
 
-#: ../themes/CodeX-lite/templates/search.tmpl:16
-#: ../themes/CodeX-lite/templates/search.tmpl:23
-#: ../themes/CodeX/templates/search.tmpl:16
-#: ../themes/CodeX/templates/search.tmpl:23
+#: ../themes/Codendi-lite/templates/search.tmpl:16
+#: ../themes/Codendi-lite/templates/search.tmpl:23
+#: ../themes/Codendi/templates/search.tmpl:16
+#: ../themes/Codendi/templates/search.tmpl:23
 #: ../themes/default/templates/search.tmpl:16
 #: ../themes/default/templates/search.tmpl:23
 msgid "LiveSearch"
 msgstr ""
 
-#: ../themes/CodeX-lite/templates/signin.tmpl:25
-#: ../themes/CodeX/templates/signin.tmpl:25
+#: ../themes/Codendi-lite/templates/signin.tmpl:25
+#: ../themes/Codendi/templates/signin.tmpl:25
 #: ../themes/default/templates/signin.tmpl:25
 #, php-format
 msgid "Authenticated as %s"
 msgstr ""
 
-#: ../themes/CodeX-lite/templates/signin.tmpl:34
-#: ../themes/CodeX/templates/signin.tmpl:34
+#: ../themes/Codendi-lite/templates/signin.tmpl:34
+#: ../themes/Codendi/templates/signin.tmpl:34
 #: ../themes/default/templates/signin.tmpl:34
 #: ../themes/Sidebar/templates/signin.tmpl:38
 msgid "Enter your UserId to sign in"
 msgstr ""
 
-#: ../themes/CodeX-lite/templates/signin.tmpl:37
-#: ../themes/CodeX/templates/signin.tmpl:37
+#: ../themes/Codendi-lite/templates/signin.tmpl:37
+#: ../themes/Codendi/templates/signin.tmpl:37
 #: ../themes/default/templates/signin.tmpl:37
 #, php-format
 msgid "You are signed but not authenticated as %s. "
 msgstr ""
 
-#: ../themes/CodeX-lite/templates/signin.tmpl:40
-#: ../themes/CodeX/templates/signin.tmpl:40
+#: ../themes/Codendi-lite/templates/signin.tmpl:40
+#: ../themes/Codendi/templates/signin.tmpl:40
 #: ../themes/default/templates/signin.tmpl:40
 #: ../themes/Sidebar/templates/signin.tmpl:44
 #, php-format
 msgid "Click to authenticate as %s"
 msgstr ""
 
-#: ../themes/CodeX-lite/templates/signin.tmpl:59
-#: ../themes/CodeX/templates/signin.tmpl:59
+#: ../themes/Codendi-lite/templates/signin.tmpl:59
+#: ../themes/Codendi/templates/signin.tmpl:59
 #: ../themes/default/templates/signin.tmpl:59
 #: ../themes/Sidebar/templates/signin.tmpl:64
 msgid "Sign in as:"
 msgstr ""
 
-#: ../themes/CodeX-lite/templates/userprefs.tmpl:62
-#: ../themes/CodeX-lite/templates/userprefs.tmpl:64
-#: ../themes/CodeX/templates/userprefs.tmpl:62
-#: ../themes/CodeX/templates/userprefs.tmpl:64
+#: ../themes/Codendi-lite/templates/userprefs.tmpl:62
+#: ../themes/Codendi-lite/templates/userprefs.tmpl:64
+#: ../themes/Codendi/templates/userprefs.tmpl:62
+#: ../themes/Codendi/templates/userprefs.tmpl:64
 #: ../themes/default/templates/userprefs.tmpl:62
 #: ../themes/default/templates/userprefs.tmpl:64
 msgid "<system theme>"
 msgstr ""
 
-#: ../themes/CodeX-lite/templates/userprefs.tmpl:73
-#: ../themes/CodeX-lite/templates/userprefs.tmpl:99
-#: ../themes/CodeX/templates/userprefs.tmpl:73
-#: ../themes/CodeX/templates/userprefs.tmpl:99
+#: ../themes/Codendi-lite/templates/userprefs.tmpl:73
+#: ../themes/Codendi-lite/templates/userprefs.tmpl:99
+#: ../themes/Codendi/templates/userprefs.tmpl:73
+#: ../themes/Codendi/templates/userprefs.tmpl:99
 #: ../themes/default/templates/userprefs.tmpl:73
 #: ../themes/default/templates/userprefs.tmpl:99
 msgid "Personal theme:"
 msgstr ""
 
-#: ../themes/CodeX-lite/templates/userprefs.tmpl:79
-#: ../themes/CodeX-lite/templates/userprefs.tmpl:81
-#: ../themes/CodeX/templates/userprefs.tmpl:79
-#: ../themes/CodeX/templates/userprefs.tmpl:81
+#: ../themes/Codendi-lite/templates/userprefs.tmpl:79
+#: ../themes/Codendi-lite/templates/userprefs.tmpl:81
+#: ../themes/Codendi/templates/userprefs.tmpl:79
+#: ../themes/Codendi/templates/userprefs.tmpl:81
 #: ../themes/default/templates/userprefs.tmpl:79
 #: ../themes/default/templates/userprefs.tmpl:81
 msgid "<system language>"
 msgstr ""
 
-#: ../themes/CodeX-lite/templates/userprefs.tmpl:90
-#: ../themes/CodeX-lite/templates/userprefs.tmpl:100
-#: ../themes/CodeX/templates/userprefs.tmpl:90
-#: ../themes/CodeX/templates/userprefs.tmpl:100
+#: ../themes/Codendi-lite/templates/userprefs.tmpl:90
+#: ../themes/Codendi-lite/templates/userprefs.tmpl:100
+#: ../themes/Codendi/templates/userprefs.tmpl:90
+#: ../themes/Codendi/templates/userprefs.tmpl:100
 #: ../themes/default/templates/userprefs.tmpl:90
 #: ../themes/default/templates/userprefs.tmpl:100
 msgid "Personal language:"
 msgstr ""
 
-#: ../themes/CodeX-lite/templates/userprefs.tmpl:116
-#: ../themes/CodeX/templates/userprefs.tmpl:116
+#: ../themes/Codendi-lite/templates/userprefs.tmpl:116
+#: ../themes/Codendi/templates/userprefs.tmpl:116
 #: ../themes/default/templates/userprefs.tmpl:118
 msgid "UserId"
 msgstr ""
 
-#: ../themes/CodeX-lite/templates/userprefs.tmpl:120
-#: ../themes/CodeX/templates/userprefs.tmpl:120
+#: ../themes/Codendi-lite/templates/userprefs.tmpl:120
+#: ../themes/Codendi/templates/userprefs.tmpl:120
 #: ../themes/default/templates/userprefs.tmpl:122
 msgid "Auth Level"
 msgstr ""
 
-#: ../themes/CodeX-lite/templates/userprefs.tmpl:120
-#: ../themes/CodeX/templates/userprefs.tmpl:120
+#: ../themes/Codendi-lite/templates/userprefs.tmpl:120
+#: ../themes/Codendi/templates/userprefs.tmpl:120
 #: ../themes/default/templates/userprefs.tmpl:122
 msgid "Auth Method"
 msgstr ""
 
-#: ../themes/CodeX-lite/templates/userprefs.tmpl:124
-#: ../themes/CodeX/templates/userprefs.tmpl:124
+#: ../themes/Codendi-lite/templates/userprefs.tmpl:124
+#: ../themes/Codendi/templates/userprefs.tmpl:124
 #: ../themes/default/templates/userprefs.tmpl:126
 msgid "Theme"
 msgstr ""
 
-#: ../themes/CodeX-lite/templates/userprefs.tmpl:124
-#: ../themes/CodeX/templates/userprefs.tmpl:124
+#: ../themes/Codendi-lite/templates/userprefs.tmpl:124
+#: ../themes/Codendi/templates/userprefs.tmpl:124
 #: ../themes/default/templates/userprefs.tmpl:126
 msgid "Current Theme"
 msgstr ""
 
-#: ../themes/CodeX-lite/templates/userprefs.tmpl:125
-#: ../themes/CodeX/templates/userprefs.tmpl:125
+#: ../themes/Codendi-lite/templates/userprefs.tmpl:125
+#: ../themes/Codendi/templates/userprefs.tmpl:125
 #: ../themes/default/templates/userprefs.tmpl:127
 msgid "Language"
 msgstr ""
 
-#: ../themes/CodeX-lite/templates/userprefs.tmpl:125
-#: ../themes/CodeX/templates/userprefs.tmpl:125
+#: ../themes/Codendi-lite/templates/userprefs.tmpl:125
+#: ../themes/Codendi/templates/userprefs.tmpl:125
 #: ../themes/default/templates/userprefs.tmpl:127
 msgid "Current Language"
 msgstr ""
 
-#: ../themes/CodeX-lite/templates/userprefs.tmpl:131
-#: ../themes/CodeX/templates/userprefs.tmpl:131
+#: ../themes/Codendi-lite/templates/userprefs.tmpl:131
+#: ../themes/Codendi/templates/userprefs.tmpl:131
 #: ../themes/default/templates/userprefs.tmpl:133
 msgid "Change Password"
 msgstr ""
 
-#: ../themes/CodeX-lite/templates/userprefs.tmpl:131
-#: ../themes/CodeX/templates/userprefs.tmpl:131
+#: ../themes/Codendi-lite/templates/userprefs.tmpl:131
+#: ../themes/Codendi/templates/userprefs.tmpl:131
 #: ../themes/default/templates/userprefs.tmpl:133
 msgid "Set Password"
 msgstr ""
 
-#: ../themes/CodeX-lite/templates/userprefs.tmpl:133
-#: ../themes/CodeX/templates/userprefs.tmpl:133
+#: ../themes/Codendi-lite/templates/userprefs.tmpl:133
+#: ../themes/Codendi/templates/userprefs.tmpl:133
 #: ../themes/default/templates/userprefs.tmpl:135
 msgid "New password"
 msgstr ""
 
-#: ../themes/CodeX-lite/templates/userprefs.tmpl:136
-#: ../themes/CodeX/templates/userprefs.tmpl:136
+#: ../themes/Codendi-lite/templates/userprefs.tmpl:136
+#: ../themes/Codendi/templates/userprefs.tmpl:136
 #: ../themes/default/templates/userprefs.tmpl:138
 msgid "Type it again"
 msgstr ""
 
-#: ../themes/CodeX-lite/templates/userprefs.tmpl:142
-#: ../themes/CodeX/templates/userprefs.tmpl:142
+#: ../themes/Codendi-lite/templates/userprefs.tmpl:142
+#: ../themes/Codendi/templates/userprefs.tmpl:142
 #: ../themes/default/templates/userprefs.tmpl:144
 msgid "E-mail"
 msgstr ""
 
-#: ../themes/CodeX-lite/templates/userprefs.tmpl:145
-#: ../themes/CodeX/templates/userprefs.tmpl:145
+#: ../themes/Codendi-lite/templates/userprefs.tmpl:145
+#: ../themes/Codendi/templates/userprefs.tmpl:145
 #: ../themes/default/templates/userprefs.tmpl:163
 msgid "Get an email notification at changes of the following pages:"
 msgstr ""
 
-#: ../themes/CodeX-lite/templates/userprefs.tmpl:148
-#: ../themes/CodeX/templates/userprefs.tmpl:148
+#: ../themes/Codendi-lite/templates/userprefs.tmpl:148
+#: ../themes/Codendi/templates/userprefs.tmpl:148
 #: ../themes/default/templates/userprefs.tmpl:166
 msgid ""
 "Enter pages seperated by space or comma. Wildcards (fileglobbing) allowed."
 msgstr ""
 
-#: ../themes/CodeX-lite/templates/userprefs.tmpl:155
-#: ../themes/CodeX/templates/userprefs.tmpl:155
+#: ../themes/Codendi-lite/templates/userprefs.tmpl:155
+#: ../themes/Codendi/templates/userprefs.tmpl:155
 #: ../themes/default/templates/userprefs.tmpl:195
 msgid "Edit Area Size"
 msgstr ""
 
-#: ../themes/CodeX-lite/templates/userprefs.tmpl:158
-#: ../themes/CodeX/templates/userprefs.tmpl:158
+#: ../themes/Codendi-lite/templates/userprefs.tmpl:158
+#: ../themes/Codendi/templates/userprefs.tmpl:158
 #: ../themes/default/templates/userprefs.tmpl:198
 msgid "Height"
 msgstr ""
 
-#: ../themes/CodeX-lite/templates/userprefs.tmpl:165
-#: ../themes/CodeX/templates/userprefs.tmpl:165
+#: ../themes/Codendi-lite/templates/userprefs.tmpl:165
+#: ../themes/Codendi/templates/userprefs.tmpl:165
 #: ../themes/default/templates/userprefs.tmpl:205
 msgid "Width"
 msgstr ""
 
-#: ../themes/CodeX-lite/templates/userprefs.tmpl:174
-#: ../themes/CodeX/templates/userprefs.tmpl:174
+#: ../themes/Codendi-lite/templates/userprefs.tmpl:174
+#: ../themes/Codendi/templates/userprefs.tmpl:174
 #: ../themes/default/templates/userprefs.tmpl:214
 msgid ""
 "Note that many browsers will automatically adjust the width of the editing "
@@ -6109,48 +6109,48 @@ msgid ""
 "preference will be ignored."
 msgstr ""
 
-#: ../themes/CodeX-lite/templates/userprefs.tmpl:181
-#: ../themes/CodeX/templates/userprefs.tmpl:181
+#: ../themes/Codendi-lite/templates/userprefs.tmpl:181
+#: ../themes/Codendi/templates/userprefs.tmpl:181
 #: ../themes/default/templates/userprefs.tmpl:241
 msgid "Update Preferences"
 msgstr ""
 
-#: ../themes/CodeX-lite/templates/userprefs.tmpl:182
-#: ../themes/CodeX/templates/userprefs.tmpl:182
+#: ../themes/Codendi-lite/templates/userprefs.tmpl:182
+#: ../themes/Codendi/templates/userprefs.tmpl:182
 #: ../themes/default/templates/userprefs.tmpl:242
 msgid "Remove Preferences"
 msgstr ""
 
-#: ../themes/CodeX-lite/templates/viewsource.tmpl:6
-#: ../themes/CodeX/templates/viewsource.tmpl:6
+#: ../themes/Codendi-lite/templates/viewsource.tmpl:6
+#: ../themes/Codendi/templates/viewsource.tmpl:6
 #: ../themes/default/templates/viewsource.tmpl:6
 msgid "This page has been locked by the administrator and cannot be edited."
 msgstr ""
 
-#: ../themes/CodeX-lite/templates/wikiforum.tmpl:20
-#: ../themes/CodeX/templates/wikiforum.tmpl:20
+#: ../themes/Codendi-lite/templates/wikiforum.tmpl:20
+#: ../themes/Codendi/templates/wikiforum.tmpl:20
 #: ../themes/default/templates/wikiforum.tmpl:20
 msgid "New Topic"
 msgstr ""
 
-#: ../themes/CodeX-lite/templates/wikiforum.tmpl:28
-#: ../themes/CodeX/templates/wikiforum.tmpl:28
+#: ../themes/Codendi-lite/templates/wikiforum.tmpl:28
+#: ../themes/Codendi/templates/wikiforum.tmpl:28
 #: ../themes/default/templates/wikiforum.tmpl:28
 #, php-format
 msgid "Posted: %s"
 msgstr ""
 
-#: ../themes/CodeX-lite/themeinfo.php:24 ../themes/CodeX/themeinfo.php:24
+#: ../themes/Codendi-lite/themeinfo.php:24 ../themes/Codendi/themeinfo.php:24
 #: ../themes/default/themeinfo.php:24 ../themes/Sidebar/themeinfo.php:122
 msgid "Printer"
 msgstr ""
 
-#: ../themes/CodeX-lite/themeinfo.php:25 ../themes/CodeX/themeinfo.php:25
+#: ../themes/Codendi-lite/themeinfo.php:25 ../themes/Codendi/themeinfo.php:25
 #: ../themes/default/themeinfo.php:25
 msgid "Top & bottom toolbars"
 msgstr ""
 
-#: ../themes/CodeX-lite/themeinfo.php:26 ../themes/CodeX/themeinfo.php:26
+#: ../themes/Codendi-lite/themeinfo.php:26 ../themes/Codendi/themeinfo.php:26
 #: ../themes/default/themeinfo.php:26 ../themes/Sidebar/themeinfo.php:123
 msgid "Modern"
 msgstr ""

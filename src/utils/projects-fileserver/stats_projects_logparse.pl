@@ -19,7 +19,7 @@ require("../include.pl");  # Include all the predefined functions
 
 my ( $filerel, $query, $rel, %groups, %filerelease, $bytes, $filepath, $group_name, $filename, $files );
 
-# Note that db_connect triggered the reading of the CodeX config file
+# Note that db_connect triggered the reading of the Codendi config file
 &db_connect;
 
 # get the host name

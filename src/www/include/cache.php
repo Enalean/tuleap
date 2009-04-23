@@ -17,7 +17,7 @@ function cache_display($name,$function,$time) {
       mkdir($GLOBALS['codendi_cache_dir'], 0755);
   }
 
-  $filename = $GLOBALS['codendi_cache_dir']."/codex_cache_".$GLOBALS['sys_user_theme']."_".$name."_".UserManager::instance()->getCurrentUser()->getLocale().".sf";
+  $filename = $GLOBALS['codendi_cache_dir']."/codendi_cache_".$GLOBALS['sys_user_theme']."_".$name."_".UserManager::instance()->getCurrentUser()->getLocale().".sf";
 
 	while ((@filesize($filename)<=1) || ((time() - filectime($filename)) > $time)) {
 		// file is non-existant or expired, must redo, or wait for someone else to

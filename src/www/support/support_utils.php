@@ -274,9 +274,9 @@ function sr_utils_mail_followup($support_id,$more_addresses=false,$changes=false
 	    $hdrs = 'From: noreply@'.$host.$sys_lf;
 	    $hdrs .='Content-type: text/plain; charset=UTF-8'.$sys_lf;
 	    $pm = ProjectManager::instance();
-        $hdrs .='X-CodeX-Project: '.$pm->getProject($group_id)->getUnixName().$sys_lf;
-	    $hdrs .='X-CodeX-Artifact: support'.$sys_lf;
-	    $hdrs .='X-CodeX-Artifact-ID: '.$support_id.$sys_lf;
+        $hdrs .='X-Codendi-Project: '.$pm->getProject($group_id)->getUnixName().$sys_lf;
+	    $hdrs .='X-Codendi-Artifact: support'.$sys_lf;
+	    $hdrs .='X-Codendi-Artifact-ID: '.$support_id.$sys_lf;
 	    $subject="[ SR #".db_result($result,0,"support_id")." ] ".
 		util_unconvert_htmlspecialchars(db_result($result,0,"summary"));
 

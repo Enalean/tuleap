@@ -19,31 +19,31 @@
 if [ -z "$CODENDI_LOCAL_INC" ]; then 
     CODENDI_LOCAL_INC=/etc/codendi/conf/local.inc
 fi
-CODEX_UTILS_PREFIX=`/bin/grep '^\$codendi_utils_prefix' $CODENDI_LOCAL_INC | /bin/sed -e 's/\$codendi_utils_prefix\s*=\s*\(.*\);\(.*\)/\1/' | tr -d '"' | tr -d "'"`
+CODENDI_UTILS_PREFIX=`/bin/grep '^\$codendi_utils_prefix' $CODENDI_LOCAL_INC | /bin/sed -e 's/\$codendi_utils_prefix\s*=\s*\(.*\);\(.*\)/\1/' | tr -d '"' | tr -d "'"`
 dump_dir=`/bin/grep '^\$dump_dir' $CODENDI_LOCAL_INC | /bin/sed -e 's/\$dump_dir\s*=\s*\(.*\);\(.*\)/\1/' | tr -d '"' | tr -d "'"`
 export dump_dir
 
 # First the script that do the analysis
-# of both the CodeX main site and the
-# ftp andhttp downloads of CodeX project
+# of both the Codendi main site and the
+# ftp andhttp downloads of Codendi project
 # files
-cd $CODEX_UTILS_PREFIX/download
+cd $CODENDI_UTILS_PREFIX/download
 ./stats_logparse.sh $*
 
 # Then the script that analyzes CVS history
 # files and reshape them all in one single
 # file for later analysis
-cd $CODEX_UTILS_PREFIX/cvs1
+cd $CODENDI_UTILS_PREFIX/cvs1
 ./cvs_history_parse.pl $*
 
 # Now make all the stat internal to the
-# CodeX DB
-cd $CODEX_UTILS_PREFIX/underworld-root
+# Codendi DB
+cd $CODENDI_UTILS_PREFIX/underworld-root
 ./stats_nightly.sh $*
 
 
 # Then insert the per project Web page
 # views (subdomain views)in the stats_project table
-cd $CODEX_UTILS_PREFIX/projects-fileserver
+cd $CODENDI_UTILS_PREFIX/projects-fileserver
 ./stats_projects_logparse.pl $*
 

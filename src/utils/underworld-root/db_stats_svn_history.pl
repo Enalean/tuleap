@@ -98,7 +98,7 @@ while ( $temp = $res->fetchrow_arrayref() ) {
 }
 
 # And we now do the same for users since we log stats about
-# users as well in CodeX (See group_svn_full_history table)
+# users as well in Codendi (See group_svn_full_history table)
 print "Caching user information from user table.\n" if $verbose;
 $sql = "SELECT user_id,user_name FROM user";
 $res = $dbh->prepare($sql);

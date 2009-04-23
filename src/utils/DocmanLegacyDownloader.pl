@@ -11,8 +11,8 @@
 #   -password                                                         #
 #   -group_id is the group_id of your project                         #
 #                                                                     #
-# NB: if you are not using this script on codex.cro.st.com            #
-#     you have to change in the line 41 'host=codex.cro.st.com'       #
+# NB: if you are not using this script on codendi.cro.st.com            #
+#     you have to change in the line 41 'host=codendi.cro.st.com'       #
 #     by your server name.                                            #
 #                                                                     #
 # Author : Hamouda LAYOUNI                                            #
@@ -35,8 +35,8 @@ sub util_unconvert_htmlspecialchars {
     return $data;
 }
 
-my $_codex_server="codex-test.cro.st.com";
-my $_codex_db="codex";
+my $_codendi_server="codendi-test.cro.st.com";
+my $_codendi_db="codendi";
 
 print "Database User : ";
 ReadMode('normal');
@@ -52,7 +52,7 @@ print "\nEnter the group_id of the project :";
 ReadMode('normal');
 my $group_id = ReadLine(0);
 chomp ($group_id);
-my $source ="dbi:mysql:dbname=$_codex_db;host=$_codex_server";
+my $source ="dbi:mysql:dbname=$_codendi_db;host=$_codendi_server";
 my $base = DBI->connect($source,$user,$passwd) or die DBI::errstr;
 
 print "Creating directory: project_documentation \n";

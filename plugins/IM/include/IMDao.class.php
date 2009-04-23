@@ -6,7 +6,7 @@ require_once('JabbexFactory.class.php');
 class IMDao extends DataAccessObject {
 	
     var $openfire_db_name;
-    var $codex_db_name;
+    var $codendi_db_name;
     
     const MUC_ROOM_TYPE_ID = 23;
     const OPENFIRE_ADMIN_AFFILIATION = 20;
@@ -19,7 +19,7 @@ class IMDao extends DataAccessObject {
     function IMDao(& $da ) {
         DataAccessObject::DataAccessObject($da);
         $this->openfire_db_name = $da->db_name;
-        $this->codex_db_name = $GLOBALS['sys_dbname'];
+        $this->codendi_db_name = $GLOBALS['sys_dbname'];
     }
     
     /**
@@ -37,7 +37,7 @@ class IMDao extends DataAccessObject {
     function & search_group_without_muc() {
 		
 		$sql_muc="SELECT cg.group_id,LOWER(cg.unix_group_name) AS unix_group_name, cg.group_name,cg.short_description
-							FROM ". $this->codex_db_name .".groups AS cg
+							FROM ". $this->codendi_db_name .".groups AS cg
 							LEFT JOIN ".$this->openfire_db_name.".mucRoom AS muc
 							ON (muc.name = LOWER(cg.unix_group_name))
 							WHERE muc.name IS NULL
@@ -89,7 +89,7 @@ class IMDao extends DataAccessObject {
 	function & search_group_without_shared_group() {
 		
 		$sql='SELECT cg.group_id
-				FROM '. $this->codex_db_name .'.groups AS cg 
+				FROM '. $this->codendi_db_name .'.groups AS cg 
 				LEFT JOIN '.$this->openfire_db_name.'.jiveGroupProp AS og
 	     				ON (og.groupName = LOWER(cg.unix_group_name)
 	          			AND og.name = \'sharedRoster.showInRoster\')
@@ -107,7 +107,7 @@ class IMDao extends DataAccessObject {
 	function synchronize_grp_for_im_display_name() {
 		$sql_displayName='INSERT INTO '.$this->openfire_db_name.'.jiveGroupProp (groupName, name, propValue)' .
 	  								   'SELECT LOWER(cg.unix_group_name), \'sharedRoster.displayName\', cg.group_name
-										FROM '. $this->codex_db_name .'.groups AS cg LEFT JOIN '.$this->openfire_db_name.'.jiveGroupProp AS og
+										FROM '. $this->codendi_db_name .'.groups AS cg LEFT JOIN '.$this->openfire_db_name.'.jiveGroupProp AS og
 			     						ON (og.groupName = cg.unix_group_name
 			          					AND og.name = \'sharedRoster.displayName\')
 										WHERE og.groupName IS NULL
@@ -122,7 +122,7 @@ class IMDao extends DataAccessObject {
 	function synchronize_grp_for_im_show_in_roster() {
 		$sqlshowInRoster='INSERT INTO '.$this->openfire_db_name.'.jiveGroupProp (groupName, name, propValue)' .
 			        		         'SELECT LOWER(cg.unix_group_name), \'sharedRoster.showInRoster\', \'onlyGroup\'
-									  FROM '. $this->codex_db_name .'.groups AS cg LEFT JOIN '.$this->openfire_db_name.'.jiveGroupProp AS og
+									  FROM '. $this->codendi_db_name .'.groups AS cg LEFT JOIN '.$this->openfire_db_name.'.jiveGroupProp AS og
 	     							  ON (og.groupName = cg.unix_group_name
 	          						  AND og.name = \'sharedRoster.showInRoster\')
 									  WHERE og.groupName IS NULL

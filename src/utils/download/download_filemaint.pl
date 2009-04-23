@@ -21,8 +21,8 @@ $deleting_files_work = $ftp_incoming_dir ."/.delete_files.work";
 #move the list of files to delete to a temp work file
 print `/bin/mv -f $deleting_files $deleting_files_work`;
 print `/bin/touch $deleting_files`;
-my $codex_user = &get_codex_user();
-print `/bin/chown $codex_user $deleting_files`;
+my $codendi_user = &get_codendi_user();
+print `/bin/chown $codendi_user $deleting_files`;
 
 
 #

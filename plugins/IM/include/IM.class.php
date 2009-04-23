@@ -30,7 +30,7 @@ class IM extends Controler {
             case 'synchronize_all':
                 if ($user->isSuperUser()) {
                     $this->action = 'synchronize_all';
-                    $this->view = 'codex_im_admin';
+                    $this->view = 'codendi_im_admin';
                 } else {
 					$GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('global','perm_denied'));
 				}
@@ -38,7 +38,7 @@ class IM extends Controler {
             case 'synchronize_muc_only':
                 if ($user->isSuperUser()) {
             		$this->action = 'synchronize_muc_only';
-                    $this->view = 'codex_im_admin';
+                    $this->view = 'codendi_im_admin';
                 } else {
 					$GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('global','perm_denied'));
 				}
@@ -46,7 +46,7 @@ class IM extends Controler {
 		    case 'synchronize_grp_only':
                 if ($user->isSuperUser()) {
             		$this->action = 'synchronize_grp_only';
-                    $this->view = 'codex_im_admin';
+                    $this->view = 'codendi_im_admin';
                 } else {
 					$GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('global','perm_denied'));
 				}
@@ -54,7 +54,7 @@ class IM extends Controler {
 		    case 'synchronize_muc_and_grp':
                 if ($user->isSuperUser()) {
             		$this->action = 'synchronize_muc_and_grp';
-                    $this->view = 'codex_im_admin';
+                    $this->view = 'codendi_im_admin';
                 } else {
 					$GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('global','perm_denied'));
 				}
@@ -62,9 +62,9 @@ class IM extends Controler {
             case 'get_presence':
                     $this->view = 'get_presence';
                     break;
-		    case 'codex_im_admin':
+		    case 'codendi_im_admin':
                 if ($user->isSuperUser()) {
-					$this->view = 'codex_im_admin';
+					$this->view = 'codendi_im_admin';
                 } else {
 					$GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('global','perm_denied'));
 				}
@@ -123,7 +123,7 @@ class IM extends Controler {
                     }
                 } else {
                     if ($user->isSuperUser()) {
-                        $this->view = 'codex_im_admin';
+                        $this->view = 'codendi_im_admin';
                     } else {
                         $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('global','perm_denied'));
                     }

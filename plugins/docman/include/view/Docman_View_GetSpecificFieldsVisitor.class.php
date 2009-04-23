@@ -97,7 +97,7 @@ class Docman_MetadataHtmlEmbeddedFile extends Docman_MetadataHtml {
         $html = '<script type="text/javascript" src="/scripts/tiny_mce/tiny_mce.js"></script>
 <script type="text/javascript">
 var embedded_content_rte = null;
-var CodeX_RTE = Class.create({
+var Codendi_RTE = Class.create({
         initialize:function(element) {
             this.element = $(element);
             this.rte     = false;
@@ -143,7 +143,7 @@ var CodeX_RTE = Class.create({
         }
 });
 var embedded_rte = null;
-document.observe("dom:loaded", function() { embedded_rte = new CodeX_RTE("embedded_content"); } );
+document.observe("dom:loaded", function() { embedded_rte = new Codendi_RTE("embedded_content"); } );
 </script>';
         $html .= '<textarea id="embedded_content" name="content" cols="80" rows="20">'. $hp->purify($this->content) .'</textarea>';
         return $html;

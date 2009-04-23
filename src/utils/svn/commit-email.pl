@@ -225,14 +225,14 @@ unless (-d _)
 
 #####################################################################
 #
-# Connect to CodeX database and include all files needed
+# Connect to Codendi database and include all files needed
 #
 use DBI;
 use HTTP::Request::Common qw(POST);
 use LWP::UserAgent;
 
 
-$utils_path = $ENV{'CODEX_UTILS_PREFIX'} || "/usr/share/codendi/src/utils";
+$utils_path = $ENV{'CODENDI_UTILS_PREFIX'} || "/usr/share/codendi/src/utils";
 require $utils_path."/include.pl";
 require $utils_path."/group.pl";
 require $utils_path."/svn/svn-checkins.pl";
@@ -245,23 +245,23 @@ my $gname = $repos;
 $gname =~ s|.*/||; # Remove everything until the last slash
 my $group_id = &set_group_info_from_name($gname);
 
-my $codex_srv;
+my $codendi_srv;
 if ($sys_force_ssl) {
-  $codex_srv="https://$sys_https_host";
+  $codendi_srv="https://$sys_https_host";
 } else {
-  $codex_srv="http://$sys_default_domain";
+  $codendi_srv="http://$sys_default_domain";
 }
-$codex_http_srv="http://$sys_default_domain";
+$codendi_http_srv="http://$sys_default_domain";
 
-my $mod_url = $codex_srv."/svn/viewvc.php/%s?r1=%s&r2=%s&roottype=svn&root=$gname&diff_format=h&pathrev=$rev";
-my $add_url  = $codex_srv."/svn/viewvc.php/%s?revision=$rev&view=log&roottype=svn&root=$gname&pathrev=$rev";
+my $mod_url = $codendi_srv."/svn/viewvc.php/%s?r1=%s&r2=%s&roottype=svn&root=$gname&diff_format=h&pathrev=$rev";
+my $add_url  = $codendi_srv."/svn/viewvc.php/%s?revision=$rev&view=log&roottype=svn&root=$gname&pathrev=$rev";
 
-my $no_diff = 1; # no inline diff for CodeX
+my $no_diff = 1; # no inline diff for Codendi
 
 # arrays to store all references.
 my %references;
 
-# get the mail header and mailto address from CodeX DB
+# get the mail header and mailto address from Codendi DB
 $svnmailheader = &svnGroup_mail_header();
 if ($svnmailheader eq 'NULL') {
   $svnmailheader = "";
@@ -302,7 +302,7 @@ my @log_for_db=@svnlooklines;
 my @log = map { "$_\n" } @svnlooklines;
 &extract_xrefs(@log);
 
-# CodeX - Figure out what the real user name and email are
+# Codendi - Figure out what the real user name and email are
 #
 
 local ($login, $gecos);
@@ -425,7 +425,7 @@ if ($debug) {
 }
 
 # Get the diff from svnlook.
-# CodeX Specific - no diff output for CodeX - Build the ViewVC URL  instead
+# Codendi Specific - no diff output for Codendi - Build the ViewVC URL  instead
 my @no_diff_deleted;
 if ($no_diff == 0) {
   @no_diff_deleted = $no_diff_deleted ? ('--no-diff-deleted') : ();
@@ -503,7 +503,7 @@ $dirlist =~ s/\n//;
 my @body;
 push(@body, sprintf("SVN Repository: %s\n",$repos));
 push(@body, sprintf("Changes by:     %s  on %s\n","$fullname <$mailname>", $date));
-push(@body, sprintf("New Revision:   %s   %s/goto?key=rev&val=%s&group_id=%s\n", $rev, $codex_srv, $rev, $group_id));
+push(@body, sprintf("New Revision:   %s   %s/goto?key=rev&val=%s&group_id=%s\n", $rev, $codendi_srv, $rev, $group_id));
 push(@body, "\n");
 
 # Changes by SL : we first add the log message to the mail body before adding
@@ -663,7 +663,7 @@ foreach my $project (@project_settings_list)
       }
   }
 
-# Now add the Subversion information in the CodeX tracking database
+# Now add the Subversion information in the Codendi tracking database
 if (&isGroupSvnTracked) {
   $commit_id = db_get_commit($group_id,$repos,$rev,$unix_gmtime,$author,@log_for_db);
 
@@ -791,14 +791,14 @@ sub read_from_process
     }
 }
 
-# CodeX - extract all items that needs to be cross-referenced
+# Codendi - extract all items that needs to be cross-referenced
 # in the log message
 sub extract_xrefs {
     
     my (@log) = @_;
-    # Use CodeX HTTP API
+    # Use Codendi HTTP API
     my $ua = LWP::UserAgent->new;
-    $ua->agent('CodeX Perl Agent');
+    $ua->agent('Codendi Perl Agent');
 
     if (!$group_id) {
       $group_id=100;
@@ -807,7 +807,7 @@ sub extract_xrefs {
     $text=join("\n",@log);
         
     # HTTPS is not supported by LWP on RHEL3 -> use HTTP
-    my $req = POST "$codex_http_srv/api/reference/extractCross",
+    my $req = POST "$codendi_http_srv/api/reference/extractCross",
       [ group_id => "$group_id", text => "$text", rev_id=>"$rev", login=>"$author", type=>"$type" ];
   
 
@@ -878,7 +878,7 @@ sub trigger_hudson_builds() {
     $c = $dbh->prepare($query);
     $res = $c->execute();
     if ($res && ($c->rows > 0)) {
-      # Use CodeX HTTP API
+      # Use Codendi HTTP API
       my $ua = LWP::UserAgent->new;
       $ua->agent('Codendi CI Perl Agent');
       $ua->timeout(10);

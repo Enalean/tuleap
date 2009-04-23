@@ -367,7 +367,7 @@ class BackendCVS extends Backend {
                 fwrite($fp, "Repository$num=$reponame\n");
                 $num++;
             }
-            fwrite($fp,"# End of CodeX CVSROOT directory list: you may change options below $cvsnt_marker\n");
+            fwrite($fp,"# End of Codendi CVSROOT directory list: you may change options below $cvsnt_marker\n");
   
             // and recopy other configuration instructions
             $configlines=0;

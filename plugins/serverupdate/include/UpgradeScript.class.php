@@ -100,13 +100,13 @@ class UpgradeScript extends SVNCommitedFile {
     
     function isWellImplemented() {
         $is_ok = false;
-        // Check if the file is a class file that extends CodeXUpgrade
+        // Check if the file is a class file that extends CodendiUpgrade
         $classname = $this->getClassname();
         
         include_once($GLOBALS['codendi_dir'].substr($this->getPath(), strlen($this->branch)));
         
         $obj = new $classname();
-        if (is_a($obj, 'CodeXUpgrade')) {
+        if (is_a($obj, 'CodendiUpgrade')) {
             // Check if the method _process is implemented
             if (method_exists($obj, '_process')) {
                 $is_ok = true;
@@ -134,7 +134,7 @@ class UpgradeScript extends SVNCommitedFile {
         if (! UpgradeScript::isInScriptDirectory($branch, $path)) {
             return false;
         }
-        if (basename($path) == 'CodeXUpgrade.class.php') {
+        if (basename($path) == 'CodendiUpgrade.class.php') {
             return true;
         } else {
             return false;

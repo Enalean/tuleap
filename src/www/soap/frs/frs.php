@@ -761,7 +761,7 @@ function addFile($sessionKey,$group_id,$package_id,$release_id,$filename,$base64
         
         $file_fact = new FRSFileFactory();
         if ($file_fact->userCanAdd($group_id)) {
-            $tmpname = tempnam("/tmp", "codex_soap_frs");
+            $tmpname = tempnam("/tmp", "codendi_soap_frs");
             $fh = fopen($tmpname, "wb");
             if (!$fh) {
                 return new SoapFault(invalid_file_fault,'Could not create temporary file in directory /tmp', 'addFile');

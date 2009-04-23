@@ -14,7 +14,7 @@
 #
 # /usr/lib/codendi/bin/backup_job
 #
-#      Originally written by Vicki Tuttle 2001- 2003, CodeX Team, Xerox
+#      Originally written by Vicki Tuttle 2001- 2003, Codendi Team, Xerox
 #      This job shuts down mysql and copies mysql database files to
 #      /cvsroot/.mysql_backup
 #      It then starts mysql and backs up all filesystems to tape

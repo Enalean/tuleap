@@ -6,7 +6,7 @@
 //
 // 
 //
-// Originally written by Nicolas Guerin 2005, CodeX Team, Xerox
+// Originally written by Nicolas Guerin 2005, Codendi Team, Xerox
 //
 
 // Simple script to edit document groups permissions

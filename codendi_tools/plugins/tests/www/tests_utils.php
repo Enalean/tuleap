@@ -25,9 +25,9 @@ function search_tests_rec($dir, &$tab, $entry) {
             while (($file = readdir($dh)) !== false) {
                 if (!in_array($file, $GLOBALS['config']['excludes']) && $file[0] !== '_') {
                     if (is_dir("$dir/$file")) {
-                        search_tests_rec("$dir/$file", $tab[($entry == 'tests'?'CodeX':$entry)], $file);
+                        search_tests_rec("$dir/$file", $tab[($entry == 'tests'?'Codendi':$entry)], $file);
                     } else if(substr($file, -strlen($GLOBALS['config']['suffix'])) === $GLOBALS['config']['suffix']) {
-                        $tab[($entry == 'tests'?'CodeX':$entry)]['_tests'][] = $file;
+                        $tab[($entry == 'tests'?'Codendi':$entry)]['_tests'][] = $file;
                     }
                 }
             }
@@ -67,7 +67,7 @@ function &get_group_tests($tablo) {
             add_test_to_group($t, $c, 
                 array(
                 'group' => &$o, 
-                'path' => $GLOBALS['config']['plugins_root'] . ($plugin == 'CodeX' ? 'tests' : $plugin) . $GLOBALS['config']['tests_root']
+                'path' => $GLOBALS['config']['plugins_root'] . ($plugin == 'Codendi' ? 'tests' : $plugin) . $GLOBALS['config']['tests_root']
             ));
         }
         $g->addTestCase($o);

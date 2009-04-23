@@ -13,7 +13,7 @@
 	Bug Tracker
 	By Tim Perdue, Sourceforge, 11/99
 	Heavy rewrite by Tim Perdue, April 2000
-	Very heavy rewrite by Laurent Julliard 2001, 2002, CodeX Team, Xerox
+	Very heavy rewrite by Laurent Julliard 2001, 2002, Codendi Team, Xerox
 */
 
 /* Generate URL arguments from a variable wether scalar or array */
@@ -1086,9 +1086,9 @@ function bug_mail_followup($bug_id,$more_addresses=false,$changes=false) {
 	$hdrs='From: noreply@'.$host.$sys_lf;
 	$hdrs .='Content-type: text/plain; charset=utf-8'.$sys_lf;
 	$pm = ProjectManager::instance();
-    $hdrs .='X-CodeX-Project: '.$pm->getProject($group_id)->getUnixName().$sys_lf;
-	$hdrs .='X-CodeX-Artifact: bug'.$sys_lf;
-	$hdrs .='X-CodeX-Artifact-ID: '.$bug_id.$sys_lf;
+    $hdrs .='X-Codendi-Project: '.$pm->getProject($group_id)->getUnixName().$sys_lf;
+	$hdrs .='X-Codendi-Artifact: bug'.$sys_lf;
+	$hdrs .='X-Codendi-Artifact-ID: '.$bug_id.$sys_lf;
         $subject='[Bug #'.db_result($result,0,'bug_id').'] '.util_unconvert_htmlspecialchars(db_result($result,0,'summary'));
 
 
@@ -1581,7 +1581,7 @@ function bug_validate_cc_list($arr_email, &$message) {
     while (list(,$cc) = each($arr_email)) {
 	// Make sure that the address is valid
 	if (! validate_email($cc)) {
-	    // check for a valid CodeX user.
+	    // check for a valid Codendi user.
 	    $res = user_get_result_set_from_unix($cc);
 	    if (db_numrows($res) == 0) {
 		$valid = false;

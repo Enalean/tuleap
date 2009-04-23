@@ -537,7 +537,7 @@ $em->processEvent('the_corresponding_hook', $the_parameters);]]></programlisting
 				<listitem><simpara>Check if footer calls generic_footer (This will replace GForge copyright by &SYS_PRODUCT_NAME; copyright)</simpara></listitem>
 				<listitem><simpara>Replace the GForge logo by a &SYS_PRODUCT_NAME; logo</simpara></listitem>
 				<listitem><simpara>Copy &SYS_PRODUCT_NAME; images<programlisting><![CDATA[
-cp -ir /home/httpd/SF/www/themes/CodeX/images/* 
+cp -ir /home/httpd/SF/www/themes/Codendi/images/* 
    /etc/codendi/themes/gforge_theme/images/.]]></programlisting> (Say no for each prompt)</simpara></listitem>
 				<listitem><simpara>Remove trailing spaces in the Theme class file (To prevent sending characters before headers)</simpara></listitem>
 				<listitem><simpara>Update css with missing rules (most of them are in GForgeLayout::header)</simpara></listitem>

@@ -100,7 +100,7 @@ sub session_set {
 }
 
 #############################
-# Get CodeX apache user from local.inc
+# Get Codendi apache user from local.inc
 #############################
 sub session_store_access {
   my ($uid) = @_;

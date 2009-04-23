@@ -46,8 +46,8 @@ int legal_string (char* test_string) {
 int main (int argc, char** argv) {
 
   /* edit me */
-  char* src_dir   = "/var/lib/codex/ftp/incoming/";
-  char* dest_dir  = "/var/lib/codex/ftp/codex/";
+  char* src_dir   = "/var/lib/codendi/ftp/incoming/";
+  char* dest_dir  = "/var/lib/codendi/ftp/codendi/";
 
   /* don't edit me (unless mv isn't in /bin) */
   char* move_path = "/bin/mv";

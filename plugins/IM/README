@@ -1,4 +1,4 @@
-This directory contents the IM plugin which maps data from CodeX and needed for the IM solution. 
+This directory contents the IM plugin which maps data from Codendi and needed for the IM solution. 
 
 In plugins/IM/ we have:
 
@@ -6,16 +6,16 @@ In plugins/IM/ we have:
 
 
 -> etc: scripts to configure/customize the plugin. The directory will be copied in 
- etc/codex/plugins/IM/etc,
+ etc/codendi/plugins/IM/etc,
  
  
 -> include: contains PHP classes, including the main class of the plugin
    >>IMPlugin.class.php :
    >>IMPluginDescriptor.class.php
    >>IMPluginInfo.class.php :
-   >>CodexToJabberData.class.php :
+   >>CodendiToJabberData.class.php :
 -> site-content: the repository for plugin specific text and messages. This can be customized
-   with /etc/codex/plugins/IM/site-content/,
+   with /etc/codendi/plugins/IM/site-content/,
    
    
 ->> www: web space of the IM plugin. It will be accessible by the following URI:

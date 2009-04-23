@@ -23,14 +23,14 @@
  * 
  */
 
-// This screen is a part of the "hidden" registeration process under CodeX when
+// This screen is a part of the "hidden" registeration process under Codendi when
 // LDAP is enabled.
 // In this case, there is no more "Create new account" for new users but the
 // login process automaticaly create new account when:
 // * given user exist in LDAP
 // * this user is authenticated against the LDAP
-// * corresponding codex account do not exist:
-//   * imply codex username not exist
+// * corresponding codendi account do not exist:
+//   * imply codendi username not exist
 //   * imply ldap_name not already in DB
 
 require_once('pre.php');

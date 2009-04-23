@@ -7,7 +7,7 @@
 //
 //
 //
-//  Written for CodeX by Nicolas Guérin
+//  Written for Codendi by Nicolas Guérin
 //
 
 

@@ -17,7 +17,7 @@ sub trigger_hudson_builds() {
     $c = $dbh->prepare($query);
     $res = $c->execute();
     if ($res && ($c->rows > 0)) {
-      # Use CodeX HTTP API
+      # Use Codendi HTTP API
       my $ua = LWP::UserAgent->new;
       $ua->agent('Codendi CI Perl Agent');
       $ua->timeout(10);

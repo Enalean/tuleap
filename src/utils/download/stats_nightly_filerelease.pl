@@ -42,7 +42,7 @@ print "Running year $year, month $month, day $day.\n" if $verbose;
 ## POPULATE THE frs_dlstats_group_agg TABLE.
 ##
 
-# Normally on CodeX all downloads go through a PHP script and no longer
+# Normally on Codendi all downloads go through a PHP script and no longer
 # through ftp or Http. So the 2 next queries are useless but we keep them
 # if one day we revert to the initial download process.
 #
@@ -64,7 +64,7 @@ while ( @tmp_ar = $rel->fetchrow_array() ) {
 	$downloads{ $tmp_ar[0] } += $tmp_ar[1]; 
 }
 
-# Count all the downloads through the CodeX Web Frontend  (group by project)
+# Count all the downloads through the Codendi Web Frontend  (group by project)
 # (this used to be counted through HTTP downloads but access is now
 # managed thorugh a PHP script and there is special table storing download information
 $sql    = "SELECT frs_package.group_id AS group_id,COUNT(*) "
@@ -102,7 +102,7 @@ $total_xfers = 0;
 ## POPULATE THE frs_dlstats_file_agg TABLE.
 ##
 
-# Normally on CodeX all downloads go through a PHP script and no longer
+# Normally on Codendi all downloads go through a PHP script and no longer
 # through ftp or Http. So the 2 next queries are useless but we keep them
 # if one day we revert to the initial download process.
 
@@ -124,9 +124,9 @@ while ( @tmp_ar = $rel->fetchrow_array() ) {
 	$downloads{ $tmp_ar[0] } += $tmp_ar[1]; 
 }
 
-# Count all the downloads through the CodeX Web Frontend  (group by file)
+# Count all the downloads through the Codendi Web Frontend  (group by file)
 # (this used to be counted through HTTP downloads but access is now
-# monitored on CodeX and there is special table storing download information
+# monitored on Codendi and there is special table storing download information
 $sql	= "SELECT dl.filerelease_id,COUNT(*) AS downloads FROM filedownload_log as dl,groups,frs_release,frs_package,frs_file "
 	. "WHERE ( time >= $time_begin AND time <= $time_end) AND groups.type = 1 "
         . "AND frs_package.group_id=groups.group_id "

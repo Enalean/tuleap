@@ -3,7 +3,7 @@
 // Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
 // This file is licensed under the GNU General Public License version 2. See the file COPYING.
 //
-// Originally written by Marc Nazarian 2006, CodeX Team, Xerox
+// Originally written by Marc Nazarian 2006, Codendi Team, Xerox
 //
 -->
   <bookinfo>
@@ -64,7 +64,7 @@
   </bookinfo>
 <!--
 Local Variables:
-sgml-parent-document: ("CodeX_CLI.xml" "book" "chapter")
+sgml-parent-document: ("Codendi_CLI.xml" "book" "chapter")
 End:
 -->
 

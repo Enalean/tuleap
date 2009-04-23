@@ -92,7 +92,7 @@ $graph->DrawGrid('gray');
 $graph->LineGraph( $data1, 'red' );
 $graph->LineGraph( $data2, 'blue' );
 $pm = ProjectManager::instance();
-$graph->SetTitle( "CodeX Statistics: " . util_unconvert_htmlspecialchars($pm->getProject($group_id)->getPublicName()) );
+$graph->SetTitle( "Codendi Statistics: " . util_unconvert_htmlspecialchars($pm->getProject($group_id)->getPublicName()) );
 $graph->SetSubTitle("Page Views (red) and Downloads (blue) for the past $i days");
 $graph->SetxTitle('Date');
 $graph->SetyTitle('Views (red) / Downloads (blue)');

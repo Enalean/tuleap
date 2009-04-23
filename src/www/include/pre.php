@@ -7,15 +7,15 @@
 // 
 
 if (version_compare(phpversion(), '5.1.6', '<')) {
-    die('CodeX must be run on a PHP 5.1.6 (or greater) engine');
+    die('Codendi must be run on a PHP 5.1.6 (or greater) engine');
 }
 
 /*
 	redirect to proper hostname to get around certificate problem on IE 5
 */
 
-// Defines all of the CodeX settings first (hosts, databases, etc.)
-require(getenv('CODENDI_LOCAL_INC')?getenv('CODENDI_LOCAL_INC'):'/etc/codex/conf/local.inc');
+// Defines all of the Codendi settings first (hosts, databases, etc.)
+require(getenv('CODENDI_LOCAL_INC')?getenv('CODENDI_LOCAL_INC'):'/etc/codendi/conf/local.inc');
 require($GLOBALS['db_config_file']);
 require_once('common/include/CookieManager.class.php');
 require_once('common/include/HTTPRequest.class.php');
@@ -227,7 +227,7 @@ if(!IS_SCRIPT) {
 //Project extends Group and includes preference accessors
 require_once('common/project/Project.class.php');
 
-// If the CodeX Software license was declined by the site admin
+// If the Codendi Software license was declined by the site admin
 // so stop all accesses to the site. Use exlicit path to avoid
 // loading the license.php file in the register directory when
 // invoking project/register.php
@@ -381,7 +381,7 @@ if (!IS_SCRIPT &&
 
 //Check post max size
 if ($request->exist('postExpected') && !$request->exist('postReceived')) {
-    $e = 'You tried to upload a file that is larger than the CodeX post_max_size setting.';
+    $e = 'You tried to upload a file that is larger than the Codendi post_max_size setting.';
     exit_error('Error', $e);
 }
 

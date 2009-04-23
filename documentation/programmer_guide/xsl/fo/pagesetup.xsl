@@ -406,7 +406,7 @@
 <xsl:template match="chapter|appendix" mode="running.head.mode">
   <xsl:param name="master-reference" select="'unknown'"/>
   <xsl:variable name="head">
-    <!-- CX-SBT: For the header, we draw a table with the XAT Logo + the "CodeX Programmer Guide" label -->
+    <!-- CX-SBT: For the header, we draw a table with the XAT Logo + the "Codendi Programmer Guide" label -->
     <fo:block font-size="{$body.font.size}" border-after-color="black" 
         	border-after-width="0.02em"
         	border-after-style="solid" 
@@ -431,7 +431,7 @@
                 </fo:table-cell>
 
                 <fo:table-cell text-align="right" display-align="after">
-                  <fo:block font-style="italic">CodeX Programmer Guide</fo:block>
+                  <fo:block font-style="italic">Codendi Programmer Guide</fo:block>
                 </fo:table-cell>
               </fo:table-row>
             </fo:table-body>

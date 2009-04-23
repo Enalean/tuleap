@@ -62,7 +62,7 @@ load_local_config(db_include)
 # Database Connect Functions
 ##############################
 def db_connect():
-    """Connect to CodeX database"""
+    """Connect to Codendi database"""
     global dbh
     load_local_config(db_config_file)
     # connect to the database
@@ -111,11 +111,11 @@ def get_cookie_prefix():
     return (sys_cookie_prefix)
 
 
-# Get CodeX Apache User
-def get_codex_user():
-    """Get CodeX Apache user name"""
+# Get Codendi Apache User
+def get_codendi_user():
+    """Get Codendi Apache user name"""
     return sys_http_user
-#    """Get CodeX user name from apache conf file."""
+#    """Get Codendi user name from apache conf file."""
 #    try:
 #        f = open(apache_conf)
 #    except IOError, (errno, strerror):

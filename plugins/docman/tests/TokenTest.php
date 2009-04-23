@@ -61,28 +61,28 @@ class TokenTest extends UnitTestCase {
         
         $t1 =& new Docman_TokenTestVersion();
         $t1->setReturnReference('_getDao', $dao);
-        $t1->setReturnValue('_getReferer', 'http://codex.com/?id=1&action=show');
+        $t1->setReturnValue('_getReferer', 'http://codendi.com/?id=1&action=show');
         $t1->setReturnValue('_getCurrentUserId', '123');
         $t1->setReturnValue('_getHTTPRequest', $http);
         $t1->Docman_Token();
         
         $t2 =& new Docman_TokenTestVersion();
         $t2->setReturnReference('_getDao', $dao);
-        $t2->setReturnValue('_getReferer', 'http://codex.com/?id=1&action=show');
+        $t2->setReturnValue('_getReferer', 'http://codendi.com/?id=1&action=show');
         $t2->setReturnValue('_getCurrentUserId', '123');
         $t2->setReturnValue('_getHTTPRequest', $http);
         $t2->Docman_Token();
         
         $t3 =& new Docman_TokenTestVersion();
         $t3->setReturnReference('_getDao', $dao);
-        $t3->setReturnValue('_getReferer', 'http://codex.com/?id=2&action=show');
+        $t3->setReturnValue('_getReferer', 'http://codendi.com/?id=2&action=show');
         $t3->setReturnValue('_getCurrentUserId', '123');
         $t3->setReturnValue('_getHTTPRequest', $http);
         $t3->Docman_Token();
         
         $t4 =& new Docman_TokenTestVersion();
         $t4->setReturnReference('_getDao', $dao);
-        $t4->setReturnValue('_getReferer', 'http://codex.com/?id=1&action=show');
+        $t4->setReturnValue('_getReferer', 'http://codendi.com/?id=1&action=show');
         $t4->setReturnValue('_getCurrentUserId', '987');
         $t4->setReturnValue('_getHTTPRequest', $http);
         $t4->Docman_Token();
@@ -98,7 +98,7 @@ class TokenTest extends UnitTestCase {
         
         $t1 =& new Docman_TokenTestVersion();
         $t1->setReturnReference('_getDao', $dao);
-        $t1->setReturnValue('_getReferer', 'http://codex.com/?');
+        $t1->setReturnValue('_getReferer', 'http://codendi.com/?');
         $t1->setReturnValue('_getCurrentUserId', '123');
         $t1->setReturnValue('_getHTTPRequest', $http);
         $t1->Docman_Token();
@@ -108,7 +108,7 @@ class TokenTest extends UnitTestCase {
         
         $t2 =& new Docman_TokenTestVersion();
         $t2->setReturnReference('_getDao', $dao);
-        $t2->setReturnValue('_getReferer', 'http://codex.com/?id=1&action=show');
+        $t2->setReturnValue('_getReferer', 'http://codendi.com/?id=1&action=show');
         $t2->setReturnValue('_getCurrentUserId', '123');
         $t2->setReturnValue('_getHTTPRequest', $http);
         $t2->Docman_Token();
@@ -118,7 +118,7 @@ class TokenTest extends UnitTestCase {
         
         $t3 =& new Docman_TokenTestVersion();
         $t3->setReturnReference('_getDao', $dao);
-        $t3->setReturnValue('_getReferer', 'http://codex.com/?id=1&action=show');
+        $t3->setReturnValue('_getReferer', 'http://codendi.com/?id=1&action=show');
         $t3->setReturnValue('_getCurrentUserId', null);
         $t3->setReturnValue('_getHTTPRequest', $http);
         $t3->Docman_Token();
@@ -128,7 +128,7 @@ class TokenTest extends UnitTestCase {
     
     function testStorage() {
         $user_id = 123;
-        $referer = 'http://codex.com/?id=1&action=show';
+        $referer = 'http://codendi.com/?id=1&action=show';
         
         $dao =& new MockDocman_TokenDao();
         $dao->expectOnce('create', array($user_id, '*', $referer));
@@ -150,7 +150,7 @@ class TokenTest extends UnitTestCase {
         foreach(array('aaaa', '?action=foo', '?action=details&section=notification') as $referer) {
             $t =& new Docman_TokenTestVersion();
             $t->setReturnReference('_getDao', $dao);
-            $t->setReturnValue('_getReferer', 'http://codex.com/'. $referer);
+            $t->setReturnValue('_getReferer', 'http://codendi.com/'. $referer);
             $t->setReturnValue('_getCurrentUserId', '123');
             $t->setReturnValue('_getHTTPRequest', $http);
             $t->Docman_Token();
@@ -160,7 +160,7 @@ class TokenTest extends UnitTestCase {
         foreach(array('?action=show', '?id=1&action=show', '?action=details', '?action=details&section=history') as $referer) {
             $t =& new Docman_TokenTestVersion();
             $t->setReturnReference('_getDao', $dao);
-            $t->setReturnValue('_getReferer', 'http://codex.com/'. $referer);
+            $t->setReturnValue('_getReferer', 'http://codendi.com/'. $referer);
             $t->setReturnValue('_getCurrentUserId', '123');
             $t->setReturnValue('_getHTTPRequest', $http);
             $t->Docman_Token();
@@ -171,7 +171,7 @@ class TokenTest extends UnitTestCase {
 
     /* Cannot be tested due to PHP4 references
     function testGoodRetrieval() {
-        $url     = 'http://codex.com/?id=1&action=show';
+        $url     = 'http://codendi.com/?id=1&action=show';
         $user_id = 123;
         $token   = '5db412fe1829e6dea7fc20fc17df5e16';
         
@@ -192,7 +192,7 @@ class TokenTest extends UnitTestCase {
         
     }
     function testBadRetrieval() {
-        $url     = 'http://codex.com/?id=1&action=show';
+        $url     = 'http://codendi.com/?id=1&action=show';
         $user_id = 123;
         $token   = '5db412fe1829e6dea7fc20fc17df5e16';
         

@@ -296,7 +296,7 @@ a.tabsellink:hover {
 /* Only full hexa are allowed                    */
 /* don't use names (purple, red, yellow)         */
 /* don't use half hexa (#FF0000 instead of #F00) */
-.codex_field_dependencies_highlight_change {
+.codendi_field_dependencies_highlight_change {
     /* background-color: #8b4020; */
 }
 
@@ -692,7 +692,7 @@ table.release tr td img {
 }
 
 /* document manager */
-/* It is a plugin. Look in /etc/codex/plugins/docman/www/themes/CodexSTN */
+/* It is a plugin. Look in /etc/codendi/plugins/docman/www/themes/CodendiSTN */
 
 /* trackers */
 #artifacts_result table td {

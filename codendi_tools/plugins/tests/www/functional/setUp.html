@@ -11,7 +11,7 @@
 </thead><tbody>
 <tr>
 	<td>open</td>
-	<td id="codex_reset_db">/plugins/tests/reset_db.php_TO_REMOVE_</td>
+	<td id="codendi_reset_db">/plugins/tests/reset_db.php_TO_REMOVE_</td>
 	<td></td>
 </tr>
 <tr>
@@ -27,7 +27,7 @@
 
 </tbody></table>
 <br />
-<input type="text" id="codex_code" /><input type="button" id="codex_dounlock" value="Unlock" />
+<input type="text" id="codendi_code" /><input type="button" id="codendi_dounlock" value="Unlock" />
 <script type="text/javascript">
 function setCookie(name,value,days) {
     if (days) {
@@ -49,23 +49,23 @@ function readCookie(name) {
     }
     return null;
 }
-if ($('codex_reset_db').innerHTML.match(/_TO_REMOVE_/)) {
-    if (readCookie("codex_selenium") == "1") {
-        $('codex_reset_db').innerHTML = $('codex_reset_db').innerHTML.gsub('_TO_REMOVE_', '');
+if ($('codendi_reset_db').innerHTML.match(/_TO_REMOVE_/)) {
+    if (readCookie("codendi_selenium") == "1") {
+        $('codendi_reset_db').innerHTML = $('codendi_reset_db').innerHTML.gsub('_TO_REMOVE_', '');
     } else {
         var hash = Math.floor(Math.random()*10000);
         document.write('<div>Please type the following code to reset your database : '+hash+'</div>');
-        Event.observe('codex_dounlock', 'click', function() {
-                if ($('codex_code').value == hash) {
-                    $('codex_reset_db').innerHTML = $('codex_reset_db').innerHTML.gsub('_TO_REMOVE_', '');
+        Event.observe('codendi_dounlock', 'click', function() {
+                if ($('codendi_code').value == hash) {
+                    $('codendi_reset_db').innerHTML = $('codendi_reset_db').innerHTML.gsub('_TO_REMOVE_', '');
                     alert('Reset db should have been unlocked. Enjoy!');
-                    setCookie("codex_selenium", "1", 0);
+                    setCookie("codendi_selenium", "1", 0);
                 }
         });
     }
 }
 Event.observe(window.top, 'unload', function() {
-        setCookie("codex_selenium", "0", 0);
+        setCookie("codendi_selenium", "0", 0);
 });
 </script>
 </body>

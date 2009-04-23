@@ -13,7 +13,7 @@ require_once('Docman_View_Header.class.php');
 /* abstract */ class Docman_View_ProjectHeader extends Docman_View_Header {
     
     /* protected */ function _scripts($params) {
-        echo '<script type="text/javascript"> var docman = new com.xerox.codex.Docman('. $params['group_id'] .', ';
+        echo '<script type="text/javascript"> var docman = new com.xerox.codendi.Docman('. $params['group_id'] .', ';
         $di =& $this->_getDocmanIcons($params);
         echo $this->phpArrayToJsArray(array_merge(array(
                 'folderSpinner' => $di->getFolderSpinner(),

@@ -644,7 +644,7 @@ function check_cvs_access($username, $group_name, $cvspath) {
   }
   $mode = fileperms($path);
 
-  // Also check permissions on top directory (in case of .CODEX_PRIVATE)
+  // Also check permissions on top directory (in case of .CODENDI_PRIVATE)
   $mode_top = fileperms("/cvsroot/".$group_name);
 
   // A directory that is not world readable can only be viewed

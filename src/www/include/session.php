@@ -29,7 +29,7 @@ function session_redirect($loc) {
 function session_require($req) {
   global $Language;
 	/*
-		CodeX admins always return true
+		Codendi admins always return true
 	*/
 	if (user_is_super_user()) {
 		return true;

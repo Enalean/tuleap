@@ -114,7 +114,7 @@ class UserImportHtml extends UserImport {
     function displayImport($parsed_users) {
         global $feedback,$Language;
 
-        //use Codex logins to add project members in DB, 
+        //use Codendi logins to add project members in DB, 
         //mail addresses are not used because it will fail in case plugin ldap is disabled/unplugged
         $ok = $this->updateDB($parsed_users);
         if ($ok) { 

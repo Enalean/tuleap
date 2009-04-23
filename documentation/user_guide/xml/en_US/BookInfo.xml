@@ -375,7 +375,7 @@
 
         <authorinitials>Nicolas Guerin</authorinitials>
 
-        <revremark>Minor correction on codex-contact and codex-admin email parameters</revremark>
+        <revremark>Minor correction on codendi-contact and codendi-admin email parameters</revremark>
       </revision>
       <revision>
         <revnumber>2.6.15</revnumber>

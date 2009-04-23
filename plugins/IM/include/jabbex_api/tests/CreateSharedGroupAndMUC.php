@@ -10,7 +10,7 @@
  * 		3 - The default Jabbex JID must have permission to create a MUC room;
  * 		4 - No other connection of the default JID that uses resource res_398671989 must be active.
  * 		5 - The user "bbking" must exist in the server.
- * 		6 - The project id xingalab must exist in the CodeX environment;
+ * 		6 - The project id xingalab must exist in the Codendi environment;
  *		7 - The default Jabbex JID must have permission to create a shared group with the Helga plugin;
  * 		8 - The Helga plugin must be installed and JabbeX must be configured to properly use it; 
  * Post-conditions:

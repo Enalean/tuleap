@@ -166,7 +166,7 @@ if ($export == 'artifact') {
 
 
     // make sure the database name is not the same as the 
-    // CodeX database name !!!!
+    // Codendi database name !!!!
     if ($dbname != $sys_dbname) {
 
 		// Get the artfact type list

@@ -4,7 +4,7 @@
 # This file is licensed under the GNU General Public License version 2. See the file COPYING.
 #
 # Purpose:
-#    Launcher for CodeX Upgrade
+#    Launcher for Codendi Upgrade
 #
 
 if [ $1 ]

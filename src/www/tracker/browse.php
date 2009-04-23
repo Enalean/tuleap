@@ -9,7 +9,7 @@
 //
 //  Parts of code come from bug_util.php (written by Laurent Julliard)
 //
-//  Written for CodeX by Stephane Bouhet
+//  Written for Codendi by Stephane Bouhet
 //
 
 //require_once('common/tracker/ArtifactFactory.class.php');

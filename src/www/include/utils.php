@@ -809,7 +809,7 @@ function util_normalize_emails($adresses) {
         if (trim($value) !== "") {
             $value = util_cleanup_emails($value);
             if (!validate_email($value)) {
-                //Maybe it is a codex username, we take his e-mail
+                //Maybe it is a codendi username, we take his e-mail
                 $result = user_get_result_set_from_unix($value); 
                 if ($result && db_numrows($result) > 0) {
                     $value = db_result($result,0,"email");
@@ -862,25 +862,25 @@ function util_normalize_emails($adresses) {
 /**
  * Try to find the best user identifier for a given identifier.
  *
- * The best (from CodeX point of view) user identifier is the CodeX
- * user_name. But people don't remember CodeX user_name. A given user can
- * reference another user with his email, codex user_name, ldap uid, ldap
+ * The best (from Codendi point of view) user identifier is the Codendi
+ * user_name. But people don't remember Codendi user_name. A given user can
+ * reference another user with his email, codendi user_name, ldap uid, ldap
  * common name.
  * This function returns the best identifier:
- * - First ask to plugins (mainly LDAP) if they know a codex user with this
+ * - First ask to plugins (mainly LDAP) if they know a codendi user with this
  *   identifier
- * - If no user found by plugin, test if identifier is a valid codex username
- * - Otherwise, if not in strict mode (ie. doesn't mandate a valid codex user)
+ * - If no user found by plugin, test if identifier is a valid codendi username
+ * - Otherwise, if not in strict mode (ie. doesn't mandate a valid codendi user)
  *   test if its a valid email address.
  * - Else, return an empty string (ie. not a valid identifier)
  *
  * @param ident (IN) : A user identifier
- * @param strict (IN): If strict mode is enabled only CodeX user and ldap valid
+ * @param strict (IN): If strict mode is enabled only Codendi user and ldap valid
  *                     entries are allowed. Otherwise, return an empty string
  * @return String
  */
 function util_user_finder($ident, $strict=true) {
-    $bestCodexIdentifier='';
+    $bestCodendiIdentifier='';
 
     $ident = rtrim($ident);
     $ident = trim($ident);
@@ -889,28 +889,28 @@ function util_user_finder($ident, $strict=true) {
     $eParams = array();
     $eParams['ident']                 = $ident;
     $eParams['strict']                = $strict;
-    $eParams['best_codex_identifier'] =& $bestCodexIdentifier;
+    $eParams['best_codendi_identifier'] =& $bestCodendiIdentifier;
     $em->processEvent('user_finder', $eParams);
-    if ($bestCodexIdentifier == '') {
+    if ($bestCodendiIdentifier == '') {
         // No valid user found, try an internal lookup for username
         $res = user_get_result_set_from_unix($ident);
         if($res && db_numrows($res) == 1) {
             if(db_result($res, 0, 'status') == 'A' || db_result($res, 0, 'status') == 'R') {
-                $bestCodexIdentifier = $ident;
+                $bestCodendiIdentifier = $ident;
             }
         } else {
-            // Neither Plugins nor codex found a valid user with this
+            // Neither Plugins nor codendi found a valid user with this
             // identifier. If allowed, return the identifier as email address
             // if the identifier is a valid email address.
             if(!$strict) {
                 if (validate_email($ident)) {
-                    $bestCodexIdentifier=$ident;
+                    $bestCodendiIdentifier=$ident;
                 }
             }
         }
     }
 
-    return $bestCodexIdentifier;
+    return $bestCodendiIdentifier;
 }
 
 
@@ -974,7 +974,7 @@ function util_get_image_theme($fn, $the_theme=false, $absolute=false){
     $path = util_get_dir_image_theme($the_theme);
     if ($absolute) {
         if (strpos($path, '/custom') !== false) { 
-            // Custom images are in /etc/codex/themes
+            // Custom images are in /etc/codendi/themes
             $path= preg_replace('/\/custom/','',$path);
             $path = $GLOBALS['sys_custom_themeroot'] . $path;
         } else {
@@ -1218,13 +1218,13 @@ function util_check_restricted_access($request_uri, $script_name) {
         $forbidden_url = array( 
           '/snippet',     // Code Snippet Library
           '/softwaremap/',// browsable software map
-          '/new/',        // list of the newest releases made on the CodeX site ('/news' must be allowed...)
+          '/new/',        // list of the newest releases made on the Codendi site ('/news' must be allowed...)
           '/search',      // search for people, projects, and artifacts in trackers!
           '/people/',     // people skills and profile
-          '/stats',       // CodeX site statistics
+          '/stats',       // Codendi site statistics
           '/top',         // projects rankings (active, downloads, etc)
           '/project/register.php',    // Register a new project
-          '/export',      // CodeX XML feeds
+          '/export',      // Codendi XML feeds
           '/info.php'     // PHP info
           );
         // Default values are very restrictive, but they can be overriden in the site-content file
@@ -1354,13 +1354,13 @@ function util_check_restricted_access($request_uri, $script_name) {
             }
         }
 
-        // CodeX trackers
+        // Codendi trackers
         if (strpos($req_uri,'/tracker/') !== false && 
             isset($allow_access_to_project_trackers[$group_id])) {
             $user_is_allowed=true;
         }
 
-        // CodeX documents and wiki
+        // Codendi documents and wiki
         if (((strpos($req_uri,'/docman/') !== false) || 
             (strpos($req_uri,'/plugins/docman/') !== false) ||
             (strpos($req_uri,'/wiki/') !== false)) &&
@@ -1368,13 +1368,13 @@ function util_check_restricted_access($request_uri, $script_name) {
             $user_is_allowed=true;
         }
 
-        // CodeX mailing lists page
+        // Codendi mailing lists page
         if (strpos($req_uri,'/mail/') !== false &&
             isset($allow_access_to_project_mail[$group_id])) {
             $user_is_allowed=true;
         }
         
-        // CodeX file releases
+        // Codendi file releases
         if (strpos($req_uri,'/file/') !== false &&
             isset($allow_access_to_project_frs[$group_id])) {
             $user_is_allowed=true;

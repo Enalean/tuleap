@@ -12,7 +12,7 @@
 #
 # Purpose:
 #    This Perl include file stores Subversion commit information into the 
-#   CodeX Database
+#   Codendi Database
 #
 
 

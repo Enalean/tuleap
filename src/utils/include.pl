@@ -78,21 +78,21 @@ sub open_array_file {
 sub write_array_file {
         my ($file_name, @file_array) = @_;
         
-        open(FD, ">$file_name.codextemp") || die "Can't open $file_name: $!.\n";
+        open(FD, ">$file_name.codenditemp") || die "Can't open $file_name: $!.\n";
         foreach (@file_array) { 
                 if ($_ ne '') { 
                         print FD;
                 }       
         }       
         close(FD);
-        rename "$file_name.codextemp","$file_name" || die "Can't rename $file_name.codextemp to $file_name: $!.\n";
+        rename "$file_name.codenditemp","$file_name" || die "Can't rename $file_name.codenditemp to $file_name: $!.\n";
 }
 
     
 #############################
-# Get CodeX apache user from local.inc
+# Get Codendi apache user from local.inc
 #############################
-sub get_codex_user {
+sub get_codendi_user {
 
   return $sys_http_user;
 

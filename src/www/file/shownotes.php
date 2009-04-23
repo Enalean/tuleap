@@ -11,7 +11,7 @@ require_once('www/file/file_utils.php');
 require_once('common/frs/FRSReleaseFactory.class.php');
 require_once('common/reference/CrossReferenceFactory.class.php');
 
-// NTY Now only for registered users on CodeX
+// NTY Now only for registered users on Codendi
 if (!user_isloggedin()) {
     /*
     Not logged in

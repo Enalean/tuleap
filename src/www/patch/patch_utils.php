@@ -284,9 +284,9 @@ function mail_followup($patch_id,$more_addresses=false) {
 		$hdrs = 'From: noreply@'.$host.$sys_lf;
 		$hdrs .='Content-type: text/plain; charset=utf-8'.$sys_lf;
 		$pm = ProjectManager::instance();
-        $hdrs .='X-CodeX-Project: '.$pm->getProject(db_result($result,0,'group_id'))->getUnixName().$sys_lf;
-		$hdrs .='X-CodeX-Artifact: patch'.$sys_lf;
-		$hdrs .='X-CodeX-Artifact-ID: '.$patch_id.$sys_lf;
+        $hdrs .='X-Codendi-Project: '.$pm->getProject(db_result($result,0,'group_id'))->getUnixName().$sys_lf;
+		$hdrs .='X-Codendi-Artifact: patch'.$sys_lf;
+		$hdrs .='X-Codendi-Artifact-ID: '.$patch_id.$sys_lf;
 
 		mail($to,$subject,$body,$hdrs);
 

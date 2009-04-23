@@ -13,13 +13,13 @@
 #
 # Purpose:
 #    Run a series of scripts in the right order for the periodic cron
-#    update of CodeX
+#    update of Codendi
 
 # Read util directory location from local.inc
 if [ -z "$CODENDI_LOCAL_INC" ]; then 
     CODENDI_LOCAL_INC=/etc/codendi/conf/local.inc
 fi
-CODEX_UTILS_PREFIX=`/bin/grep '^\$codendi_utils_prefix' $CODENDI_LOCAL_INC | /bin/sed -e 's/\$codendi_utils_prefix\s*=\s*\(.*\);\(.*\)/\1/' | tr -d '"' | tr -d "'"`
+CODENDI_UTILS_PREFIX=`/bin/grep '^\$codendi_utils_prefix' $CODENDI_LOCAL_INC | /bin/sed -e 's/\$codendi_utils_prefix\s*=\s*\(.*\);\(.*\)/\1/' | tr -d '"' | tr -d "'"`
 dump_dir=`/bin/grep '^\$dump_dir' $CODENDI_LOCAL_INC | /bin/sed -e 's/\$dump_dir\s*=\s*\(.*\);\(.*\)/\1/' | tr -d '"' | tr -d "'"`
 SYS_DISABLE_SUBDOMAINS=`/bin/grep '^\$sys_disable_subdomains' $CODENDI_LOCAL_INC | /bin/sed -e 's/\$sys_disable_subdomains\s*=\s*\(.*\);\(.*\)/\1/' | tr -d '"' | tr -d "'"`
 if [ -z $SYS_DISABLE_SUBDOMAINS ]; then
@@ -27,7 +27,7 @@ if [ -z $SYS_DISABLE_SUBDOMAINS ]; then
 fi
 
 # First run the dump utility for users and groups
-cd $CODEX_UTILS_PREFIX/underworld-dummy
+cd $CODENDI_UTILS_PREFIX/underworld-dummy
 ./dump_database.pl
 
 # Then dump the mailing list
@@ -38,7 +38,7 @@ cd $CODEX_UTILS_PREFIX/underworld-dummy
 
 # dump the mail aliases (not needed here
 # because we do not want to create e-mail aliases
-# for the codex members (member@www.codendi.com)
+# for the codendi members (member@www.codendi.com)
 # ./new_aliases.pl
 
 
@@ -47,7 +47,7 @@ cd $CODEX_UTILS_PREFIX/underworld-dummy
 # the one in /etc/aliases
 ./mail_aliases.pl
 
-# we also need to copy the CodeX aliases file in /etc
+# we also need to copy the Codendi aliases file in /etc
 # because the $dump_dir dir has perm 700 which is not
 # enough for newaliases to operate correctly
 # and run the newaliases command to update sendmail
@@ -55,10 +55,10 @@ cd $CODEX_UTILS_PREFIX/underworld-dummy
 # NOTE: the newaliases command is not necessary because
 # sendmail automagically detects the change of the aliases
 # file. But just in case...
-cp $dump_dir/aliases /etc/aliases.codex
+cp $dump_dir/aliases /etc/aliases.codendi
 /usr/bin/newaliases
 
-# generate the list of CodeX virtual hosts
+# generate the list of Codendi virtual hosts
 ./apache_conf.pl
 
 
@@ -66,7 +66,7 @@ cp $dump_dir/aliases /etc/aliases.codex
 # NOW THE REAL UPDATE
 #
 
-cd $CODEX_UTILS_PREFIX 
+cd $CODENDI_UTILS_PREFIX 
 # update user and groups system files
 # as well as various repositories
 cp -f /etc/passwd /etc/passwd.backup
@@ -75,8 +75,8 @@ cp -f /etc/group /etc/group.backup
 ./new_parse.pl
 
 # Apache configuration must be reloaded because of new SVN repositories
-cp -f /etc/httpd/conf.d/codex_svnroot.conf /etc/httpd/conf.d/codex_svnroot.conf.backup
-cp -f $dump_dir/subversion_dir_dump /etc/httpd/conf.d/codex_svnroot.conf
+cp -f /etc/httpd/conf.d/codendi_svnroot.conf /etc/httpd/conf.d/codendi_svnroot.conf.backup
+cp -f $dump_dir/subversion_dir_dump /etc/httpd/conf.d/codendi_svnroot.conf
 /sbin/service httpd reload
 
 # update authorized SSH keys in home dir
@@ -86,5 +86,5 @@ cp -f $dump_dir/subversion_dir_dump /etc/httpd/conf.d/codex_svnroot.conf
 ./mailing_lists_create.pl
 
 # remove deleted releases and released files
-cd $CODEX_UTILS_PREFIX/download
+cd $CODENDI_UTILS_PREFIX/download
 ./download_filemaint.pl

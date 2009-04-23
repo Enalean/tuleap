@@ -611,7 +611,7 @@ function project_export_makesalt($type=CRYPT_SALT_LENGTH) {
 
 
 
-function codex_crypt($id,$salt,$type=CRYPT_SALT_LENGTH) {
+function codendi_crypt($id,$salt,$type=CRYPT_SALT_LENGTH) {
   return substr(crypt($id,$salt),$type); 
 }
 
@@ -630,7 +630,7 @@ function prepare_survey_responses_record($group_id, &$record, $salt) {
     $record['reponse'] = prepare_textarea($record['response']);
     
     //compute encrypted user_id
-    $enc_user_id = codex_crypt($record['user_id'],$salt);  
+    $enc_user_id = codendi_crypt($record['user_id'],$salt);  
     $record['user_id'] = $enc_user_id;
  
 }
@@ -892,10 +892,10 @@ function db_project_create($dbname) {
     /*
           Create the db if it does not exist and grant read access only
           to the user 'cxuser'
-          CAUTION!! The codexadm user must have GRANT privilege granted 
+          CAUTION!! The codendiadm user must have GRANT privilege granted 
           for this to work. This can be done from the mysql shell with:
              $ mysql -u root mysql -p
-             mysql> UPDATE user SET Grant_priv='Y' where User='codexadm';
+             mysql> UPDATE user SET Grant_priv='Y' where User='codendiadm';
              mysql> FLUSH PRIVILEGES;
      */
 

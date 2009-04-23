@@ -6,11 +6,11 @@
 //
 // 
 //
-// Originally written by Laurent Julliard 2004, CodeX Team, Xerox
+// Originally written by Laurent Julliard 2004, Codendi Team, Xerox
 //
 
-$FILE_ACCEPTED = $GLOBALS['sys_custom_dir'].'/CODEX_LICENSE_ACCEPTED';
-$FILE_DECLINED = $GLOBALS['sys_custom_dir'].'/CODEX_LICENSE_DECLINED';
+$FILE_ACCEPTED = $GLOBALS['sys_custom_dir'].'/CODENDI_LICENSE_ACCEPTED';
+$FILE_DECLINED = $GLOBALS['sys_custom_dir'].'/CODENDI_LICENSE_DECLINED';
 
 
 /**

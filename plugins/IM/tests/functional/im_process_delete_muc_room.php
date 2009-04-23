@@ -13,7 +13,7 @@
  * 		1 - le muc room du projet dont le group_id=225 est détruit dans lesrveur openfire .
  */
  
- ini_set('include_path',"/home/zdiallo/CodeX/dev_server/codex/src/www/include:/home/zdiallo/CodeX/dev_server/codex/src:.");
+ ini_set('include_path',"/home/zdiallo/Codendi/dev_server/codendi/src/www/include:/home/zdiallo/Codendi/dev_server/codendi/src:.");
  require_once('pre.php');
  require_once("../include/IMPlugin.class.php");
  $id=10;

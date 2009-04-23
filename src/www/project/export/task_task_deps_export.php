@@ -75,7 +75,7 @@ if ($export == 'task_task_deps') {
 } else if ($export == "project_db") {
 
     // make sure the database name is not the same as the 
-    // CodeX database name !!!!
+    // Codendi database name !!!!
     if ($dbname != $sys_dbname) {
 
 	// Let's create the project database if it does not exist

@@ -6,7 +6,7 @@
 //
 // 
 //
-// Originally written by Stephane Bouhet 2002, CodeX Team, Xerox
+// Originally written by Stephane Bouhet 2002, Codendi Team, Xerox
 //
 */
 
@@ -181,7 +181,7 @@ textarea {
 .tooltip:hover { text-decoration:none; color: #ff0000}
 
 /* dynamic fields */
-.codex_field_dependencies_highlight_change {
+.codendi_field_dependencies_highlight_change {
     background-color: #FFCC00;
 }
 .release {

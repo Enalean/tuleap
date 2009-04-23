@@ -111,8 +111,8 @@ class CvsToDimensionsActions extends Actions {
                 $this->_removeAdditionnalModules($modules_dao, $group_id, $modules_results);
                 $design_part_missing = $this->_getMissingModulesInP26C($p26c_dao, $modules_dao, $product_name, $group_id);
 
-                //ckeck PRODUCT-MANAGER role for CODEXADM user on the given product
-                $roles = & $p26c_dao->searchRoleByProductAndUser($product_name, "CODEXADM");
+                //ckeck PRODUCT-MANAGER role for CODENDIADM user on the given product
+                $roles = & $p26c_dao->searchRoleByProductAndUser($product_name, "CODENDIADM");
                 $roles_array = $this->_resultset_to_array($roles, "ROLE");
                 $logs_dao = new PluginCvstodimensionsLogDao(CodendiDataAccess :: instance());
                 //save logs information

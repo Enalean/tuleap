@@ -1,3 +1,3 @@
 <?php
-header('Location: selenium/TestRunner.html?test=../CodeXTestsSuite.html');
+header('Location: selenium/TestRunner.html?test=../CodendiTestsSuite.html');
 ?>

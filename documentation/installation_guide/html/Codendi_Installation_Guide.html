@@ -75,9 +75,9 @@ data will be located.
 <br>The following table shows the main directories used by Codendi:
 <table border="1">
 <tr><th>Top Directory</th><th>Content</th></tr>
-<tr><td><pre>/usr</pre></td><td>Codendi source code is installed in /usr/share/codex. Size around 300 MB. Total size for the whole /usr directory: up to 8 GB for a full RHEL4 installation.</td></tr>
+<tr><td><pre>/usr</pre></td><td>Codendi source code is installed in /usr/share/codendi. Size around 300 MB. Total size for the whole /usr directory: up to 8 GB for a full RHEL4 installation.</td></tr>
 <tr><td><pre>/home</pre></td><td>Contains Codendi users home directories, and project directories (including project web sites). Size depends on Codendi usage (login shell allowed, web site usage).</td></tr>
-<tr><td><pre>/var</pre></td><td>/var/lib/mysql contains the Codendi database, and /var/lib/codex is Codendi main data directory. It contains CVS and Subversion repositories, file releases, backups . Size: as much as the projects need. This directory should be located in the biggest disk or disk partition.</td></tr>
+<tr><td><pre>/var</pre></td><td>/var/lib/mysql contains the Codendi database, and /var/lib/codendi is Codendi main data directory. It contains CVS and Subversion repositories, file releases, backups . Size: as much as the projects need. This directory should be located in the biggest disk or disk partition.</td></tr>
 </table>
 <p>Whatever the partitioning scheme chosen, it is always possible to move directories from a partition to another, and create links from their original location. Be warned, though, of potential issues with SELinux: you might need to change security contexts.
 <hr size="2" width="100%">
@@ -106,13 +106,13 @@ manual software installation<br>
       </b></td>
     </tr>
     <tr>
-      <td valign="top">codexadm</td>
+      <td valign="top">codendiadm</td>
       <td valign="top">104<br>
       </td>
       <td valign="top">104<br>
       </td>
       <td valign="top">Owner of Codendi directories</td>
-      <td valign="top">/home/codexadm</td>
+      <td valign="top">/home/codendiadm</td>
       <td valign="top">/bin/bash</td>
       <td valign="top">Set a password<br>
       </td>
@@ -125,9 +125,9 @@ manual software installation<br>
       </td>
       <td valign="top">Dummy Codendi user<br>
       </td>
-      <td valign="top">/var/lib/codex/dumps</td>
+      <td valign="top">/var/lib/codendi/dumps</td>
       <td valign="top">/bin/bash</td>
-      <td valign="top">Set same password as codexadm<br>
+      <td valign="top">Set same password as codendiadm<br>
       </td>
     </tr>
     <tr>
@@ -140,7 +140,7 @@ manual software installation<br>
       <td valign="top">/usr/lib/mailman</td>
       <td valign="top">/bin/bash</td>
       <td valign="top">- shell login not allowed<br>
-- Set same password as codexadm<br>
+- Set same password as codendiadm<br>
       </td>
     </tr>
     <tr>
@@ -150,7 +150,7 @@ manual software installation<br>
       <td valign="top">96<br>
       </td>
       <td valign="top">FTP Administrator</td>
-      <td valign="top">/var/lib/codex/ftp</td>
+      <td valign="top">/var/lib/codendi/ftp</td>
       <td valign="top">&nbsp;-<br>
       </td>
       <td valign="top">shell login not allowed</td>
@@ -164,7 +164,7 @@ manual software installation<br>
       </td>
       <td valign="top">FTP User<br>
       </td>
-      <td valign="top">/var/lib/codex/ftp</td>
+      <td valign="top">/var/lib/codendi/ftp</td>
       <td valign="top">-<br>
       </td>
       <td valign="top">shell login not allowed<br>
@@ -190,7 +190,7 @@ manual software installation<br>
       </b></td>
     </tr>
     <tr>
-      <td valign="top">codexadm</td>
+      <td valign="top">codendiadm</td>
       <td valign="top">104<br>
       </td>
       <td valign="top">-<br>
@@ -220,7 +220,7 @@ manual software installation<br>
       <td valign="top">ftpadmin</td>
       <td valign="top">96<br>
       </td>
-      <td valign="top">ftpadmin, codexadm</td>
+      <td valign="top">ftpadmin, codendiadm</td>
       <td valign="top"><br>
       </td>
     </tr>
@@ -277,7 +277,7 @@ Projects Directories</b><br>
     </tr>
     <tr>
       <td valign="top">/home/users</td>
-      <td valign="top">codexadm.codexadm<br>
+      <td valign="top">codendiadm.codendiadm<br>
       </td>
       <td valign="top">drwxrwxr-x<br>
       </td>
@@ -286,7 +286,7 @@ Projects Directories</b><br>
     </tr>
     <tr>
       <td valign="top">/home/groups</td>
-      <td valign="top">codexadm.codexadm </td>
+      <td valign="top">codendiadm.codendiadm </td>
       <td valign="top">drwxrwxr-x </td>
       <td valign="top"><br>
       </td>
@@ -306,7 +306,7 @@ database dumps</b><br>
       </td>
     </tr>
     <tr>
-      <td valign="top">/var/lib/codex/dumps</td>
+      <td valign="top">/var/lib/codendi/dumps</td>
       <td valign="top">dummy.dummy </td>
       <td valign="top">drwxr-xr-x</td>
       <td valign="top"><br>
@@ -318,7 +318,7 @@ database dumps</b><br>
       </td>
     </tr>
     <tr>
-      <td valign="top">/var/lib/codex/ftp<br>
+      <td valign="top">/var/lib/codendi/ftp<br>
       </td>
       <td valign="top">root.ftp<br>
       </td>
@@ -331,8 +331,8 @@ central server<br>
       </td>
     </tr>
     <tr>
-      <td valign="top">/var/lib/codex/ftp/bin<br>
-/var/lib/codex/ftp/etc<br>
+      <td valign="top">/var/lib/codendi/ftp/bin<br>
+/var/lib/codendi/ftp/etc<br>
       </td>
       <td valign="top">ftpadmin.ftpadmin<br>
       </td>
@@ -342,7 +342,7 @@ central server<br>
       </td>
     </tr>
     <tr>
-      <td valign="top">/var/lib/codex/ftp/lib<br>
+      <td valign="top">/var/lib/codendi/ftp/lib<br>
       </td>
       <td valign="top">ftpadmin.ftpadmin</td>
       <td valign="top">drwxr-xr-x<br>
@@ -351,7 +351,7 @@ central server<br>
       </td>
     </tr>
     <tr>
-      <td valign="top">/var/lib/codex/ftp/codex<br>
+      <td valign="top">/var/lib/codendi/ftp/codendi<br>
       </td>
       <td valign="top">root.root<br>
       </td>
@@ -361,7 +361,7 @@ central server<br>
       </td>
     </tr>
     <tr>
-      <td valign="top">/var/lib/codex/ftp/pub<br>
+      <td valign="top">/var/lib/codendi/ftp/pub<br>
       </td>
       <td valign="top">ftpadmin.ftpadmin<br>
       </td>
@@ -371,7 +371,7 @@ central server<br>
       </td>
     </tr>
     <tr>
-      <td valign="top">/var/lib/codex/ftp/incoming<br>
+      <td valign="top">/var/lib/codendi/ftp/incoming<br>
       </td>
       <td valign="top">ftpadmin.ftpadmin<br>
       </td>
@@ -407,9 +407,9 @@ cvs tracking script that feed the Codendi database<br>
       </td>
     </tr>
     <tr>
-      <td valign="top">/var/lib/codex/cvsroot<br>
+      <td valign="top">/var/lib/codendi/cvsroot<br>
       </td>
-      <td valign="top">codexadm.codexadm</td>
+      <td valign="top">codendiadm.codendiadm</td>
       <td valign="top">drwxr-xr-x<br>
       </td>
       <td valign="top">Where all CVS repo reside.<br>
@@ -421,7 +421,7 @@ cvs tracking script that feed the Codendi database<br>
       <td valign="top">root.root</td>
       <td valign="top">lrwxrwxrwx<br>
       </td>
-      <td valign="top">Link to /var/lib/codex/cvsroot.<br>
+      <td valign="top">Link to /var/lib/codendi/cvsroot.<br>
       </td>
     </tr>
     <tr>
@@ -429,9 +429,9 @@ cvs tracking script that feed the Codendi database<br>
       </td>
     </tr>
     <tr>
-      <td valign="top">/var/lib/codex/svnroot<br>
+      <td valign="top">/var/lib/codendi/svnroot<br>
       </td>
-      <td valign="top">codexadm.codexadm</td>
+      <td valign="top">codendiadm.codendiadm</td>
       <td valign="top">drwxr-xr-x<br>
       </td>
       <td valign="top">Where all Subversion repositories reside.<br>
@@ -443,7 +443,7 @@ cvs tracking script that feed the Codendi database<br>
       <td valign="top">root.root</td>
       <td valign="top">lrwxrwxrwx<br>
       </td>
-      <td valign="top">Link to /var/lib/codex/svnroot.<br>
+      <td valign="top">Link to /var/lib/codendi/svnroot.<br>
       </td>
     </tr>
     <tr>
@@ -452,18 +452,18 @@ cvs tracking script that feed the Codendi database<br>
       </td>
     </tr>
     <tr>
-      <td valign="top">/var/log/codex/<br>
+      <td valign="top">/var/log/codendi/<br>
       </td>
-      <td valign="top">codexadm.codexadm</td>
+      <td valign="top">codendiadm.codendiadm</td>
       <td valign="top">drwxr-xr-x<br>
       </td>
       <td valign="top"><br>
       </td>
     </tr>
     <tr>
-      <td valign="top">/var/log/codex/cvslogs<br>
+      <td valign="top">/var/log/codendi/cvslogs<br>
       </td>
-      <td valign="top">codexadm.codexadm</td>
+      <td valign="top">codendiadm.codendiadm</td>
       <td valign="top">drwxrwxr-x<br>
       </td>
       <td style="vertical-align: top;">Daily generated log files of all
@@ -476,9 +476,9 @@ HTML</b><br>
       </td>
     </tr>
     <tr>
-      <td valign="top">/var/tmp/codex_cache<br>
+      <td valign="top">/var/tmp/codendi_cache<br>
       </td>
-      <td valign="top">codexadm.codexadm</td>
+      <td valign="top">codendiadm.codendiadm</td>
       <td valign="top">drwxr-xr-x<br>
       </td>
       <td valign="top"><br>
@@ -513,7 +513,7 @@ only be available once the MySQL packages are installed (see section </span><a
 Startup files</b></td>
     </tr>
     <tr>
-      <td valign="top">/etc/skel_codex<br>
+      <td valign="top">/etc/skel_codendi<br>
       </td>
       <td valign="top">root.root<br>
       </td>
@@ -544,7 +544,7 @@ Codendi installation directory, custom directory, data directory (for file packa
 codendiadm subversion directory (for server update plugin),
 project directories (for project web sites) and source code repositories (for ViewVC).
 <br> 
-You can execute the 'fix_selinux_contexts.pl' Perl script located in /usr/share/codex/src/utils to setup SELinux directory contexts automatically.
+You can execute the 'fix_selinux_contexts.pl' Perl script located in /usr/share/codendi/src/utils to setup SELinux directory contexts automatically.
 
 <h3>New SELinux modules</h3>
 <p>Codendi also needs specific rules that must be added to the RedHat default
@@ -554,7 +554,7 @@ In order to load a binary module, simply type:
 <pre>
 semodule -i modulename.pp
 </pre>
-You can load all Codendi-provided modules by running the 'fix_selinux_contexts.pl' Perl script located in /usr/share/codex/src/utils.
+You can load all Codendi-provided modules by running the 'fix_selinux_contexts.pl' Perl script located in /usr/share/codendi/src/utils.
 <h3>Compiling SELinux modules</h3>
 <p>
 Please read the <a href="http://www.redhat.com/docs/manuals/enterprise/RHEL-5-manual/Deployment_Guide-en-US/selg-overview.html">
@@ -604,13 +604,13 @@ Packages<br>
       </td>
     </tr>
     <tr>
-      <td valign="top">codex-eclipse<br>
+      <td valign="top">codendi-eclipse<br>
       </td>
       <td valign="top">Install the Codendi Eclipse software. This RPM is needed if you activate the Eclipse plugin.<br>
       </td>
     </tr>
     <tr>
-      <td valign="top">codex-salome<br>
+      <td valign="top">codendi-salome<br>
       </td>
       <td valign="top">Install the Codendi SaloméTMF package. This RPM is needed if you activate the SaloméTMF plugin.<br>
       </td>
@@ -911,11 +911,11 @@ zone "codendi.xerox.com" {
 <h1><a name="Apache_Configuration"></a>Apache Configuration</h1>
 <ul>
   <li>A sample Apache configuration file is available in the Codendi code
-in <tt>/usr/share/codex/src/etc/http.conf.dist</tt>. Edit this file to
+in <tt>/usr/share/codendi/src/etc/http.conf.dist</tt>. Edit this file to
 reflect your site settings and place it in <tt>/etc/httpd/conf/httpd.conf</tt>.</li>
   <li>Modules configuration must
 be placed in <tt>/etc/httpd/conf.d/</tt> . Codendi comes with a number
-of Apache modules configuration files that must be copied from <tt>/usr/share/codex/src/etc/</tt>
+of Apache modules configuration files that must be copied from <tt>/usr/share/codendi/src/etc/</tt>
 to <tt>/etc/httpd/conf.d/</tt> (e.g. php.conf, ssl.conf,etc.). 
   <li>Please not that, by default, <b>all</b> 
 configuration files (ending with .conf) located in <tt>/etc/httpd/conf.d/</tt> are included in both httpd.conf and ssl.conf.
@@ -936,7 +936,7 @@ in the right place. The RedHat Manual has excellent instructions on how
 to do generate a self-signed certificate. See the section called 
 <a href="http://www.redhat.com/docs/manuals/enterprise/RHEL-5-manual/Deployment_Guide-en-US/s1-httpd-secure-server.html">Apache HTTP Secure Server Configuration</a>
 <p>
-You will also find a script that will automate these tasks for you (/usr/share/codex/src/utils/generate_ssl_certificate.sh)
+You will also find a script that will automate these tasks for you (/usr/share/codendi/src/utils/generate_ssl_certificate.sh)
 <p>
 Note: although RedHat recommends that you generate a password protected
 key for your certificate it has some serious implications. The most
@@ -945,7 +945,7 @@ while rebooting the Codendi system to type the password when the Apache
 server is started. This prevents from doing an unattended reboot.<br>
 <br>
 To activate SSL on your Codendi server simply copy the sample <span
- style="font-family: monospace;">/usr/share/codex/src/etc/ssl.conf.dist</span>
+ style="font-family: monospace;">/usr/share/codendi/src/etc/ssl.conf.dist</span>
 file to <tt>/etc/httpd/conf/</tt>. It contains all the necessary
 Apache directives
 to enable secured HTTP. Then do the following:<br>
@@ -955,13 +955,13 @@ to enable secured HTTP. Then do the following:<br>
 appropriate values for your site.<tt><br>
     </tt></li>
   <li>For the changes to take effect you must restart the Apache server.</li>
-  <li>Then edit the /etc/codex/conf/local.inc file and edit the
+  <li>Then edit the /etc/codendi/conf/local.inc file and edit the
 $sys_https_host
 variable (in most cases this will be the same name as the
 $sys_default_domain variable. If the port number you use for https is
 not the regular one (443) then you must specify the port number
 explicitely in the host name.</li>
-  <li>In the same /etc/codex/conf/local.inc file, you can also tune the
+  <li>In the same /etc/codendi/conf/local.inc file, you can also tune the
 $sys_force_ssl variable to determine how HTTPS is
 going to be used/enforced on your site.<br>
   </li>
@@ -992,13 +992,13 @@ to the GNU GPL license.&nbsp;</font></li>
 Software</h1>
 As user root:<br>
 <ul>
-  <li>copy /usr/share/codex/src/etc/local.inc.dist in
-/etc/codex/conf/local.inc and /usr/share/codex/src/etc/database.inc.dist in
-/etc/codex/conf/database.inc</li>
+  <li>copy /usr/share/codendi/src/etc/local.inc.dist in
+/etc/codendi/conf/local.inc and /usr/share/codendi/src/etc/database.inc.dist in
+/etc/codendi/conf/database.inc</li>
   <li>change local.inc and database.inc ownership (e.g. chown
-codexadm.codexadm
-/etc/codex/conf/local.inc)</li>
-  <li>change permission (e.g. chmod 640 /etc/codex/conf/local.inc) <b><font
+codendiadm.codendiadm
+/etc/codendi/conf/local.inc)</li>
+  <li>change permission (e.g. chmod 640 /etc/codendi/conf/local.inc) <b><font
  color="#ff0000">**HIGHLY CRITICAL**</font></b></li>
 </ul>
 A couple of remarks on the some the variables in local.inc:<br>
@@ -1020,7 +1020,7 @@ adress to what used to be a simple alias will automagically redirect
 all
 the traffic for this service to the right machine.</li>
   <li><b>Database parameters</b> ($sys_dbxxx) : you'll have to provide
-the password for the MySQL codexadm user here so make sure you have
+the password for the MySQL codendiadm user here so make sure you have
 set the file permission of database.inc correctly (see above)</li>
   <li><b>Codendi News group</b> ($sys_news_group): this is a reserved
 Codendi group_id. Leave this value unchanged.</li>
@@ -1040,7 +1040,7 @@ name as $sys_default_domain. Set it to an empty string ($sys_https_host
     <pre>   php_flag magic_quotes_gpc on</pre>
   </li>
   <li>Update the include_path variable to the following value:<br>
-    <pre>   php_value include_path "/usr/share/codex/src/www/include:/usr/share/codex/src:."</pre>
+    <pre>   php_value include_path "/usr/share/codendi/src/www/include:/usr/share/codendi/src:."</pre>
   </li>
   <li>Also set/tune some additional variable for upload size:<br>
     <pre>   php_value memory_limit 30M
@@ -1100,7 +1100,7 @@ the maximum size you chose. </li>
     <tr>
       <td valign="top">sys_max_size_upload<br>
       </td>
-      <td valign="top">/etc/codex/conf/local.inc<br>
+      <td valign="top">/etc/codendi/conf/local.inc<br>
       </td>
       <td valign="top">N<br>
       </td>
@@ -1162,28 +1162,28 @@ start')</li>
 </ul>
 <h2>Create Codendi database</h2>
 <p>As root, run in a shell </p>
-<pre>		mysql -e "create database codex"<br><br></pre>
+<pre>		mysql -e "create database codendi"<br><br></pre>
 <h2>Define access permission</h2>
 <ul>
-  <li>Choose distinct&nbsp; passwords for the MySQL 'codexadm'
+  <li>Choose distinct&nbsp; passwords for the MySQL 'codendiadm'
 account &nbsp;<b>and</b> 'root' account. We recommend that you use the
-same passwords as those you chose for the codexadm Unix account and
+same passwords as those you chose for the codendiadm Unix account and
 root Unix account created earlier.&nbsp;</li>
   <li>Then run mysql on the mysql database: </li>
 </ul>
-<pre>		# mysql mysql<br><br>		mysql&gt; GRANT ALL PRIVILEGES<br>      on *.* <br>      to codexadm@localhost <br>      identified by 'password';<br><br>		mysql&gt; GRANT ALL PRIVILEGES<br>      on *.* <br>      to root@localhost <br>      identified by 'password';<br>				  <br>		mysql&gt; Flush Privileges;<br>		mysql&gt; quit<br><br></pre>
+<pre>		# mysql mysql<br><br>		mysql&gt; GRANT ALL PRIVILEGES<br>      on *.* <br>      to codendiadm@localhost <br>      identified by 'password';<br><br>		mysql&gt; GRANT ALL PRIVILEGES<br>      on *.* <br>      to root@localhost <br>      identified by 'password';<br>				  <br>		mysql&gt; Flush Privileges;<br>		mysql&gt; quit<br><br></pre>
 From now onwards if you want to use the mysql shell to interact with
 the Codendi database (think twice before doing any change by hand in the
 database !!!) you'll have to run the following command and type the
-codexadm password when prompted:<br>
+codendiadm password when prompted:<br>
 <br>
-<pre>		# mysql -u codexadm codex -p<br></pre>
+<pre>		# mysql -u codendiadm codendi -p<br></pre>
 <br>
 <h2>Populate the database</h2>
 To create the tables in the Codendi database and populate the database
 with the initial values one needs to type a few commands:
-<pre>cd /usr/share/codex/src/db/mysql/<br>mysql -u codexadm codex -p &lt; database_structure.sql   # create the DB<br>mysql -u codexadm codex -p &lt; database_initvalues.sql  # populate with init values.<br><br>If you make a mistake in the creation process and want to restart from scratch run the following command:<br></pre>
-<pre>mysql -e "drop database codex"<br><br></pre>
+<pre>cd /usr/share/codendi/src/db/mysql/<br>mysql -u codendiadm codendi -p &lt; database_structure.sql   # create the DB<br>mysql -u codendiadm codendi -p &lt; database_initvalues.sql  # populate with init values.<br><br>If you make a mistake in the creation process and want to restart from scratch run the following command:<br></pre>
+<pre>mysql -e "drop database codendi"<br><br></pre>
 <h2>MySQL configuration file</h2>
 The /etc/my.cnf configuration file is here to specify a number of
 configuration items that are going to be used by the MySQL engine at
@@ -1194,7 +1194,7 @@ time.&nbsp; Right now the configuration file looks like this<br>
  style="font-family: monospace;">
 <span style="font-family: monospace;">[mysqld]</span><br
  style="font-family: monospace;">
-<span style="font-family: monospace;">log-bin=codex-bin</span><br
+<span style="font-family: monospace;">log-bin=codendi-bin</span><br
  style="font-family: monospace;">
 <span style="font-family: monospace;">set-variable =
 max_allowed_packet=128M</span><br style="font-family: monospace;">
@@ -1225,7 +1225,7 @@ DMcodendi.xerox.com
 The commented out version of this line would then look like so:
 <pre>#O DaemonPortOptions=Port=smtp,Addr=127.0.0.1, Name=MTA</pre>
   <li>Aliases files should have been automatically set up. They are:<br>
-    <pre>O AliasFile=/etc/aliases,/etc/aliases.codex</pre>
+    <pre>O AliasFile=/etc/aliases,/etc/aliases.codendi</pre>
   </li>
   <li>If you have errors when using mailman like this one:
 <pre>
@@ -1263,17 +1263,17 @@ Or edit /etc/sysconfig/network and enter the machine fully qualified name as HOS
 This is where you must insert system level aliases by hand (e.g.
 aliases for postmaster, root, etc.). <br>
 <br>
-/<u>etc/aliases.codex</u><br>
+/<u>etc/aliases.codendi</u><br>
 <br>
-aliases.codex is generated automatically bo the Codendi cron job (see
+aliases.codendi is generated automatically bo the Codendi cron job (see
 below) and contains the aliases for all the mailing lists in the
 @lists.codendi.xerox.com domain and the email aliases for users. **Never
 edit this file by hand**<br>
 <br>
-<u>/usr/share/codex/src/utils/underworld-dummy/aliases.zone</u><br>
+<u>/usr/share/codendi/src/utils/underworld-dummy/aliases.zone</u><br>
 <br>
-This is where you can define Codendi level aliases like codex-contact,
-codex-admin, etc. This file is currently under version control so if you
+This is where you can define Codendi level aliases like codendi-contact,
+codendi-admin, etc. This file is currently under version control so if you
 are
 managing your own site it might be a better idea to add these aliases
 in
@@ -1295,7 +1295,7 @@ Codendi now uses a modified version of RedHat mailman RPMs.
 Only the RPM SPEC file and mailman configuration files have been changed.
 <br>
 You need to setup a mailman admin password once the installation is done (we
-recommend that you use the same password as the codexadm account).
+recommend that you use the same password as the codendiadm account).
 To
 this end use the 'mmsitepass' script in /usr/lib/mailman/bin.<br>
 <br>
@@ -1336,18 +1336,18 @@ Then recompile with python -O mm_cfg.py.<br>
 There are a few utilities that must be either compiled and/or installed
 in /usr/local/bin. A precompiled version of all these scripts is
 provided at <a
- href="http://codendi.partners.xrce.xerox.com/packages/nonRPMS_CodeX/utilities">http://codendi.partners.xrce.xerox.com/packages/nonRPMS_CodeX/utilities</a>
+ href="http://codendi.partners.xrce.xerox.com/packages/nonRPMS_Codendi/utilities">http://codendi.partners.xrce.xerox.com/packages/nonRPMS_Codendi/utilities</a>
 <br>
 <br>
 <h2>fileforge</h2>
 <p>This is a small utility which is called by the Apache server to move
 files from the incoming ftp directory to the project file release space</p>
-<p>Go to /usr/share/codex/src/utils. In fileforge.c, modify the following
+<p>Go to /usr/share/codendi/src/utils. In fileforge.c, modify the following
 lines if need be </p>
-<pre>  char * src_dir   = "/var/lib/codex/ftp/incoming/"; /* the ftp incoming directory */<br>  char * dest_dir  = "/var/lib/codex/ftp/codex/"; /* the file release space for Codendi projects */<br></pre>
+<pre>  char * src_dir   = "/var/lib/codendi/ftp/incoming/"; /* the ftp incoming directory */<br>  char * dest_dir  = "/var/lib/codendi/ftp/codendi/"; /* the file release space for Codendi projects */<br></pre>
 The trailing slashes are mandatory. Compile it with gcc -O2 -o
 fileforge fileforge.c. Then copy fileforge to /usr/local/bin and run:
-<pre>	# cd /usr/local/bin<br>	# chown root.codexadm fileforge<br>	# chmod 4750 fileforge   # sets the uid bit<br><br></pre>
+<pre>	# cd /usr/local/bin<br>	# chown root.codendiadm fileforge<br>	# chmod 4750 fileforge   # sets the uid bit<br><br></pre>
 <p>Alternatively, use the compile_fileforge.sh script located in src/utils: it will perform all those steps for you.
 <h2>gotohell</h2>
 A simple shell script to discard all the messages sent to the
@@ -1358,7 +1358,7 @@ noreply@codendi.xerox.com messages. The file must contain:<br>
   <pre>cat - &gt;/dev/null</pre>
 </blockquote>
 Ownership and permission must be:<br>
-<pre>	-rwxr-xr-x&nbsp;&nbsp;&nbsp; 1 root&nbsp;&nbsp;&nbsp;&nbsp; root&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 27 Dec 11&nbsp; 2001 /usr/lib/codex/bin/gotohell</pre>
+<pre>	-rwxr-xr-x&nbsp;&nbsp;&nbsp; 1 root&nbsp;&nbsp;&nbsp;&nbsp; root&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 27 Dec 11&nbsp; 2001 /usr/lib/codendi/bin/gotohell</pre>
 <br>
 <br>
 <hr style="width: 100%; height: 2px;">
@@ -1368,13 +1368,13 @@ Ownership and permission must be:<br>
 your Codendi server (see the section on <a
  href="#RPM_Packages">RPM
 Packages</a>)</li>
-  <li>Create the <tt>/var/lib/codex/svnroot</tt> directory and the <tt>/svnroot</tt> link as
+  <li>Create the <tt>/var/lib/codendi/svnroot</tt> directory and the <tt>/svnroot</tt> link as
 follows:<br>
     <br>
-    <tt># mkdir /var/lib/codex/svnroot<br>
-# chown codexadm.codexadm /var/lib/codex/svnroot</tt><tt><br>
+    <tt># mkdir /var/lib/codendi/svnroot<br>
+# chown codendiadm.codendiadm /var/lib/codendi/svnroot</tt><tt><br>
 # chmod 775 /svnroot</tt><tt><br>
-# ln -s /var/lib/codex/svnroot /svnroot</tt><tt><br>
+# ln -s /var/lib/codendi/svnroot /svnroot</tt><tt><br>
 </li>
 </ul>
 Subversion offers several remote access methods either via the native
@@ -1395,7 +1395,7 @@ Packages</a>)</li>
   <li>Create the <tt>/etc/cvs_root_allow</tt> file as follows:<br>
     <br>
     <tt># touch /etc/cvs_root_allow<br>
-# chown codexadm.codexadm /etc/cvs</tt><tt>_root</tt><tt>_allow<br>
+# chown codendiadm.codendiadm /etc/cvs</tt><tt>_root</tt><tt>_allow<br>
 # chmod 644 /etc/cvs</tt><tt>_root</tt><tt>_allow</tt></li>
 </ul>
 Then you have to decide what type of CVS access you want to offer to
@@ -1473,10 +1473,10 @@ service cvspserver
 chkconfig --add cvslockd
 service cvslockd start
 </pre>
-<li>Copy '/usr/share/codex/src/etc/PServer.dist' file to /etc/cvsnt/PServer.<br>
+<li>Copy '/usr/share/codendi/src/etc/PServer.dist' file to /etc/cvsnt/PServer.<br>
 Note that the sserver protocol uses the same SSL certificates as the https protocol.
 If your Codendi server is not yet configured for HTTPS, you need to generate a certificate.
-<li>You may need to migrate existing CVSROOTs if they were created with CVS (and not CVSNT) with a script. Use /usr/share/codex/src/utils/cvs1/cvs2cvsnt.pl.
+<li>You may need to migrate existing CVSROOTs if they were created with CVS (and not CVSNT) with a script. Use /usr/share/codendi/src/utils/cvs1/cvs2cvsnt.pl.
 
 </ul>
 <h2>The SSH approach</h2>
@@ -1510,13 +1510,13 @@ This feature is activated in the CVS Web interface of the Codendi Web
 frontend under CVS -&gt; Admin. For this feature to work properly
 symbolic links must be created from the /usr/local/bin directory as
 follows:<br>
-<pre><tt>&nbsp;&nbsp;&nbsp; # cd /usr/share/codex/src/utils/cvs1</tt><tt><br>&nbsp;&nbsp;&nbsp; # cp log_accum /usr/lib/codex/bin<br>&nbsp;&nbsp;&nbsp; # cp commit_prep</tt><tt> /usr/lib/codex/bin</tt></pre>
+<pre><tt>&nbsp;&nbsp;&nbsp; # cd /usr/share/codendi/src/utils/cvs1</tt><tt><br>&nbsp;&nbsp;&nbsp; # cp log_accum /usr/lib/codendi/bin<br>&nbsp;&nbsp;&nbsp; # cp commit_prep</tt><tt> /usr/lib/codendi/bin</tt></pre>
 The log_accum script requires the
-codexadm group ownership to execute properly. <b><font
+codendiadm group ownership to execute properly. <b><font
  color="#ff0000">**HIGHLY CRITICAL**</font></b>
-<pre>	# cd /usr/lib/codex/bin<br>	# chown codexadm.codexadm log_accum commit_prep<br>	# chmod 755 log_accum commit_prep<br>	# chmod u+s log_accum   # sets the uid bit (-rwsr-xr-x)<br></pre>
+<pre>	# cd /usr/lib/codendi/bin<br>	# chown codendiadm.codendiadm log_accum commit_prep<br>	# chmod 755 log_accum commit_prep<br>	# chmod u+s log_accum   # sets the uid bit (-rwsr-xr-x)<br></pre>
 Be careful that you must set the uid bit again whenever the log_accum
-script is updated from CVS and copied again into the /usr/lib/codex/bin
+script is updated from CVS and copied again into the /usr/lib/codendi/bin
 directory.<br>
 <tt><br>
 </tt>
@@ -1527,7 +1527,7 @@ their Web browser. After installing the ViewVC RPM package (see&nbsp;<a
  href="#Installing_the_Codendi_Software">#Installing_the_Codendi_Software</a>
 ), a cgi-bin directory is created with the viewvc.cgi script in it.
 The ViewVC configuration file is at <span
- style="font-family: monospace;">/etc/codex/conf/viewvc.conf</span>.<br>
+ style="font-family: monospace;">/etc/codendi/conf/viewvc.conf</span>.<br>
 <br>
 <hr>
 <h1><a name="FTP_Configuration"></a>FTP Configuration</h1>
@@ -1541,7 +1541,7 @@ The ViewVC configuration file is at <span
   <li>You may also customize the welcome banner.<tt><br>
 ftpd_banner=Welcome to Codendi FTP service.
     </tt></li>
-  <li>Last, you may also set welcome messages in various directories: /var/lib/codex/ftp/.message for the main welcome message, and /var/lib/codex/ftp/incoming/.message for the incoming directory. Make sure both files are owned by ftpadmin.</li>
+  <li>Last, you may also set welcome messages in various directories: /var/lib/codendi/ftp/.message for the main welcome message, and /var/lib/codendi/ftp/incoming/.message for the incoming directory. Make sure both files are owned by ftpadmin.</li>
 </ul>
 <hr>
 <h1><a name="Shell_Account"></a>Shell Account</h1>
@@ -1594,7 +1594,7 @@ Codendi restricted users (status 'R')
 <br>
 To activate these pseudo shells:<br>
 <ul>
-  <li>copy the file cvssh (or cvssh-restricted) in /usr/lib/codex/bin,
+  <li>copy the file cvssh (or cvssh-restricted) in /usr/lib/codendi/bin,
 make sure it is executable and also add the file to the list of
 authorized shells in /etc/shells. Adding cvssh to /etc/shells will make
 it appear in the list of possible shells in the Codendi user admin
@@ -1603,7 +1603,7 @@ interface. Note: This is already done for you on Codendi versions after 2.4</li>
 then
 change the default value of the shell column in the user table with the
 following mysql command:<br>
-    <pre>$ mysql -u codexadm codex -p<br>mysql&gt;&nbsp; ALTER TABLE user ALTER COLUMN shell SET DEFAULT<br>'/usr/lib/codex/bin/cvssh' ;</pre>
+    <pre>$ mysql -u codendiadm codendi -p<br>mysql&gt;&nbsp; ALTER TABLE user ALTER COLUMN shell SET DEFAULT<br>'/usr/lib/codendi/bin/cvssh' ;</pre>
   </li>
 </ul>
 <br>
@@ -1616,7 +1616,7 @@ The procedure is as follows:<br>
 then
 change the default value of the shell column in the user table with the
 following mysql command:<br>
-    <pre>$ mysql -u codexadm codex -p<br>mysql&gt;&nbsp; ALTER TABLE user ALTER COLUMN shell SET DEFAULT<br>'/bin/false' ;</pre>
+    <pre>$ mysql -u codendiadm codendi -p<br>mysql&gt;&nbsp; ALTER TABLE user ALTER COLUMN shell SET DEFAULT<br>'/bin/false' ;</pre>
   </li>
 </ul>
 Note: if you do this then you must use the pserver or sserver protocols to access
@@ -1653,7 +1653,7 @@ taken into account</li>
 <h2><a name="System_configuration_file_local.inc"></a>System
 configuration file (local.inc)</h2>
 The PHP scripts take many values from a configuration file located in <span
- style="font-family: monospace;">/etc/codex/conf/local.inc</span>. This
+ style="font-family: monospace;">/etc/codendi/conf/local.inc</span>. This
 file must
 be initially copied from the <span style="font-family: monospace;">src/etc/local.inc.dist</span>
 file and the values must be changed accordingly for your site. Make
@@ -1668,8 +1668,8 @@ directory:
 	<dt><tt>src/www/themes/</tt></dt>
 	<dd>
 		<div>Each sub-directory in this place contains a given theme which name 
-		is the sub-directory name. By default Codendi comes with the 'CodeX', 
-		'CodeXTab' and 'savannah' themes. Each theme directory 
+		is the sub-directory name. By default Codendi comes with the 'Codendi', 
+		'CodendiTab' and 'savannah' themes. Each theme directory 
 		contains a <tt>css</tt> directory and a <tt>images</tt> directory. 
 		</div>
 		<div>Each style directory contains 3 CSS files named 
@@ -1688,7 +1688,7 @@ directory:
 <div>
 To have more information about themes, or about creation of new themes, please 
 see the corresponding section in <a
- href="/documentation/programmer_guide/html/en_US/CodeX_Programmer_Guide.html">The Codendi Programmer's Guide</a>.</div>
+ href="/documentation/programmer_guide/html/en_US/Codendi_Programmer_Guide.html">The Codendi Programmer's Guide</a>.</div>
 <br>
 <h2>Organization Logo</h2>
 At the top of the left hand side Codendi menu pane (just above the Logged
@@ -1726,21 +1726,21 @@ script the text belongs to.</li>
 By default the site-content directory should be stored in the same
 place as the src directory (PHP scripts). &nbsp;Make sure you update the
 <tt>$sys_incdir</tt>
-variable in <tt>/etc/codex/conf/local.inc</tt> to reflect the path to
+variable in <tt>/etc/codendi/conf/local.inc</tt> to reflect the path to
 the <tt>site-content</tt>
-directory (default is <tt>/usr/share/codex/site-content</tt>).<br>
+directory (default is <tt>/usr/share/codendi/site-content</tt>).<br>
 <br>
 To customize the content of a given script for your site go through the
 following steps:<br>
 <ol>
-  <li>Under <span style="font-family: monospace;">/etc/codex</span>
+  <li>Under <span style="font-family: monospace;">/etc/codendi</span>
 create the <span style="font-family: monospace;">site-content</span>
 directory if it doesn't exist.</li>
   <li>For each piece of text that you want to customize copy the
-original <tt><i>whattext</i>.txt</tt> file under the <tt>/etc/codex/site-content/<i></i></tt>
+original <tt><i>whattext</i>.txt</tt> file under the <tt>/etc/codendi/site-content/<i></i></tt>
 with the exact same path. For instance if you want to customize the
 introductory text of the Codendi home page, copy <span
- style="font-family: monospace;">/usr/share/codex/site-content/en_US/homepage/welcome_intro.txt</span>&nbsp;
+ style="font-family: monospace;">/usr/share/codendi/site-content/en_US/homepage/welcome_intro.txt</span>&nbsp;
 into and <span style="font-family: monospace;">/etc/site-content/en_US/homepage/welcome_intro.txt</span>
 edit it as you like.<br>
     <br>
@@ -1760,17 +1760,17 @@ Currently, Codendi supports the English and French languages.
 <br>The format of the message files is very simple: one line per message, with the following format:<br>
 <pre>   key1[tab]key2[tab]your message here</pre>
 <p>As with other site-content files, you may customize the language files, so that you can change a few specific messages:
-<ol><li>Copy the language file you need to customize from the /usr/share/codex/site-content subdirectory to the corresponding subdirectory in /etc/codex/site-content (see <a href="#Site_content">Site content</a> above)
+<ol><li>Copy the language file you need to customize from the /usr/share/codendi/site-content subdirectory to the corresponding subdirectory in /etc/codendi/site-content (see <a href="#Site_content">Site content</a> above)
 <li>Remove all lines that you don't need to change, and only keep the lines you will modify.
 <li>Change the messages
 <li>Repeat the operation for all the languages you need to support on your Codendi server.
 </ol>
-<p>Codendi themes may also use additional messages that are not part of the main Codendi source code. These messages are directly stored in the theme directory, and they may be customized for local themes in /etc/codex/themes/messages/<i>theme_name</i>/
+<p>Codendi themes may also use additional messages that are not part of the main Codendi source code. These messages are directly stored in the theme directory, and they may be customized for local themes in /etc/codendi/themes/messages/<i>theme_name</i>/
 <p>When looking for a message to display, Codendi will look successively in the following directories, stopping as soon as the message is found:
 <ol><li>Theme-specific message file
-<li>/etc/codex/site-content/<i>user_lang</i> directory
-<li>/usr/share/codex/site-content/<i>user_lang</i> directory
-<li>/usr/share/codex/site-content/en_US directory (if the message file does not exist in the selected language)
+<li>/etc/codendi/site-content/<i>user_lang</i> directory
+<li>/usr/share/codendi/site-content/<i>user_lang</i> directory
+<li>/usr/share/codendi/site-content/en_US directory (if the message file does not exist in the selected language)
 </ol>
 
 <h2>Site Documentation</h2>
@@ -1803,32 +1803,32 @@ directories.<br>
 The User Guide contain references to the company name, server name
 running Codendi,etc. These pieces of information vary from one site to
 another. Therefore a specific file has been introduced at <span
- style="font-family: monospace;">/usr/share/codex/documentation/user_guide/xml/ParametersLocal.dtd</span>
+ style="font-family: monospace;">/usr/share/codendi/documentation/user_guide/xml/ParametersLocal.dtd</span>
 that you can use to customize the&nbsp; content of the Codendi User
 Guide. To do so:<br>
 <ul>
-  <li>Copy <span style="font-family: monospace;">/usr/share/codex/documentation/user_guide/xml/ParametersLocal.dtd
+  <li>Copy <span style="font-family: monospace;">/usr/share/codendi/documentation/user_guide/xml/ParametersLocal.dtd
 to </span><span style="font-family: monospace;"><span
- style="font-family: monospace;">/etc/codex/documentation/user_guide/xml/ParametersLocal.dtd</span></span></li>
+ style="font-family: monospace;">/etc/codendi/documentation/user_guide/xml/ParametersLocal.dtd</span></span></li>
   <li>Edit the file you just copied and redefine the XML entities that
 govern
 the site specific information. For a list of the available XML entities
 that you can redefine see the <span style="font-family: monospace;"><span
- style="font-family: monospace;">/usr/share/codex/documentation/user_guide/xml/en_US/</span></span><span
+ style="font-family: monospace;">/usr/share/codendi/documentation/user_guide/xml/en_US/</span></span><span
  style="font-family: monospace;">ParametersDefault.dtd</span> . <br>
   </li>
   <li>Regenerate the documentation by running <span
  style="font-family: monospace;">the script
-/usr/share/codex/src/utils/generate_doc.sh</span></li>
+/usr/share/codendi/src/utils/generate_doc.sh</span></li>
 </ul>
 <br>
 Also notice that the HTML and PDF versions of the CUG are <b>not</b>
 stored in the source repository. They are generated from the XML files
-using the script&nbsp; <span style="font-family: monospace;">/usr/share/codex/src/utils/generate_doc.sh</span>.
+using the script&nbsp; <span style="font-family: monospace;">/usr/share/codendi/src/utils/generate_doc.sh</span>.
 You can run this
 script
-by hand from the codexadm Linux account and our advice is also to
-include it in the codexadm crontab so that it runs once a day and
+by hand from the codendiadm Linux account and our advice is also to
+include it in the codendiadm crontab so that it runs once a day and
 automatically regenerate the documentation when needed.<br>
 <br>
 For the script to work properly you must have the JRE (Java Runtime
@@ -1838,17 +1838,17 @@ software packages to install</a>.<br>
 <h2>Project Web Site</h2>
 When a project is registered on Codendi a new web site is created for
 that project. A default home page is installed for that project from
-the <span style="font-family: monospace;">/usr/share/codex/site-content/en_US/others/default_page.php</span>
+the <span style="font-family: monospace;">/usr/share/codendi/site-content/en_US/others/default_page.php</span>
 file. You may want to create your own custom
 file for your own Codendi site. To do so, copy the <span style="font-family: monospace;">
-/usr/share/codex/site-content/en_US/others/default_page.php</span> file
-in the <span style="font-family: monospace;">/etc/codex/site-content/en_US/others/</span>
+/usr/share/codendi/site-content/en_US/others/default_page.php</span> file
+in the <span style="font-family: monospace;">/etc/codendi/site-content/en_US/others/</span>
 directory if not already
 there. Then, edit the custom file and customize it to your liking<br>
 <hr>
 <h1>LDAP Authentication and Querying</h1>
-<p><b>NOTE: LDAP settings have changed in CodeX 2.8.</b>
-<br><b>This documentation is only valid for CodeX 2.6.</b>
+<p><b>NOTE: LDAP settings have changed in Codendi 2.8.</b>
+<br><b>This documentation is only valid for Codendi 2.6.</b>
 <h2>LDAP information from the company directory</h2>
 <p>
 While visiting a user information page on Codendi, you have the ability
@@ -1908,7 +1908,7 @@ When logging on the Codendi web interface, simply enter your LDAP name and passw
 <ul><li><span style="font-family: monospace;">$sys_ldap_server</span> is the full name of the LDAP server(s). You may specify
 multiple directories or mirrors by using a comma separated list of servers. To specify secure LDAP servers, use 'ldaps://servername'. This variable is already defined above for querying LDAP information from the company directory.
 <li><span style="font-family: monospace;">$sys_ldap_bind_dn</span> and <span style="font-family: monospace;">$sys_ldap_bind_passwd</span> may also be necessary depending on your LDAP setup (see above).
-<li><span style="font-family: monospace;">$sys_auth_type</span> defines the authentication scheme to use. Its default value is 'codex' for Codendi specific login/passwords. In order to use LDAP authentication, set this variable to 'ldap'.
+<li><span style="font-family: monospace;">$sys_auth_type</span> defines the authentication scheme to use. Its default value is 'codendi' for Codendi specific login/passwords. In order to use LDAP authentication, set this variable to 'ldap'.
 <li><span style="font-family: monospace;">$sys_ldap_auth_dn</span> is the distinguished name (DN) used for checking the user LDAP name and password. 
 <ul><li>If you already know the correct DN to use for your LDAP repository, please use <span style="font-family: monospace;">'%ldap_name%'</span> wherever the user LDAP login should appear in this DN. It will automatically be replaced by the login name entered by the user. In order to test the user credentials, the system will perform an LDAP bind with this DN and the user entered password. 
 <br>Example: <span style="font-family: monospace;">$sys_ldap_auth_dn = 'dc=xerox, dc=com, cn=%ldap_name%'</span>.
@@ -1925,7 +1925,7 @@ multiple directories or mirrors by using a comma separated list of servers. To s
 <h1><a name="Backend_Scripts"></a>Backend Scripts<br>
 </h1>
 Most of the backend scripts used by the Codendi system are writen in Perl
-and are located in <tt>/usr/share/codex/src/utils</tt>. Many of these script
+and are located in <tt>/usr/share/codendi/src/utils</tt>. Many of these script
 use the<tt> include.pl</tt> file and, in case you did not follow the
 standard installation process explained in this document, you may have
 to customize the content of this include file to match your site
@@ -1952,46 +1952,46 @@ server (including the CVS repo). <br>
 <blockquote><tt># run the Codendi crontab script once every 2 hours</tt><br>
   <tt># this script synchronizes user, groups, cvs repo, </tt><br>
   <tt># directories, mailing lists, etc...</tt><br>
-  <tt>0 0-23/2 * * * /usr/share/codex/src/utils/xerox_crontab.sh </tt><br>
+  <tt>0 0-23/2 * * * /usr/share/codendi/src/utils/xerox_crontab.sh </tt><br>
   <tt>#</tt><br>
   <tt># run the daily statistics script just a little bit after</tt><br>
   <tt># midnight so that it computes stats for the day before</tt><br>
   <tt># Run at 0:30 am</tt><br>
-  <tt>30 0 * * * /usr/share/codex/src/utils/xerox_all_daily_stats.sh</tt><br>
+  <tt>30 0 * * * /usr/share/codendi/src/utils/xerox_all_daily_stats.sh</tt><br>
   <tt>#</tt><br>
   <tt># run the weekly stats for projects. Run it on Monday morning so
 that</tt><br>
   <tt># it computes the stats for the week before</tt><br>
   <tt># Run on Monday at 1am</tt><br>
-  <tt>0 1 * * Mon (cd /usr/share/codex/src/utils/underworld-root;
+  <tt>0 1 * * Mon (cd /usr/share/codendi/src/utils/underworld-root;
 ./db_project_weekly_metric</tt><tt>.pl)</tt><br>
   <tt># daily incremental backup of subversion repositories</tt><br>
-  <tt>45 23 * * 1-6 /usr/lib/codex/bin/backup_subversion.sh -i</tt><br>
+  <tt>45 23 * * 1-6 /usr/lib/codendi/bin/backup_subversion.sh -i</tt><br>
   <tt>#</tt><br>
   <tt># weekly full backup of subversion repositories (0:15 on Sunday)</tt><br>
-  <tt>15 0 * * Sun /usr/lib/codex/bin/backup_subversion.sh</tt><br>
+  <tt>15 0 * * Sun /usr/lib/codendi/bin/backup_subversion.sh</tt><br>
   <tt>#</tt><br>
   <tt># weekly backup preparation (mysql shutdown, file dump and restart)</tt><br>
-  <tt>45 0 * * Sun /usr/lib/codex/bin/backup_job</tt><br>
+  <tt>45 0 * * Sun /usr/lib/codendi/bin/backup_job</tt><br>
   <tt>#</tt><br>
   <tt># Delete all files in FTP incoming that are older than 2 weeks
 (336 hours)</tt><br>
   <tt>#</tt><br>
-  <tt>0 3 * * * /usr/sbin/tmpwatch -m -f 336 /var/lib/codex/ftp/incoming</tt><br>
+  <tt>0 3 * * * /usr/sbin/tmpwatch -m -f 336 /var/lib/codendi/ftp/incoming</tt><br>
   <tt>#</tt><br>
   <tt>#</tt><br>
   <tt># Once a minute make sure that the setuid bit is set on some critical files</tt><br>
-  <tt>* * * * * (cd /usr/lib/codex/bin; /bin/chmod u+s log_accum fileforge)</tt><br>
+  <tt>* * * * * (cd /usr/lib/codendi/bin; /bin/chmod u+s log_accum fileforge)</tt><br>
   <br>
 </blockquote>
 Please note that your own root crontab should probably contain some
 additional jobs like may be stopping the mysql engine before starting
 your backup procedure or something similar.<br>
-<h2>Codexadm crontab</h2>
+<h2>Codendiadm crontab</h2>
 <blockquote><tt># Re-generate the Codendi User Guides on a daily basis</tt><br>
-  <tt>00 03 * * * /usr/share/codex/src/utils/generate_doc.sh</tt><br>
-  <tt>30 03 * * * /usr/share/codex/src/utils/generate_programmer_doc.sh</tt><br>
-  <tt>45 03 * * * /usr/share/codex/src/utils/generate_cli_package.sh</tt><br>
+  <tt>00 03 * * * /usr/share/codendi/src/utils/generate_doc.sh</tt><br>
+  <tt>30 03 * * * /usr/share/codendi/src/utils/generate_programmer_doc.sh</tt><br>
+  <tt>45 03 * * * /usr/share/codendi/src/utils/generate_cli_package.sh</tt><br>
   <br>
 </blockquote>
 <br>
@@ -2028,7 +2028,7 @@ month=`date +%m`</span><br style="font-family: monospace;">
 <span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;&nbsp;
 day=`date +%d`</span><br style="font-family: monospace;">
 <span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;&nbsp;
-destdir="/var/log/codex/$year/$month"</span><br
+destdir="/var/log/codendi/$year/$month"</span><br
  style="font-family: monospace;">
 <span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;&nbsp;
 destfile="http_combined_$year$month$day.log"</span><br
@@ -2070,7 +2070,7 @@ day=`date +%d`</span><br style="font-family: monospace;">
 <span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;&nbsp;
 server=`hostname`</span><br style="font-family: monospace;">
 <span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;&nbsp;
-destdir="/var/log/codex/$server/$year/$month"</span><br
+destdir="/var/log/codendi/$server/$year/$month"</span><br
  style="font-family: monospace;">
 <span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;&nbsp;
 destfile="vhosts-access_$year$month$day.log"</span><br
@@ -2169,7 +2169,7 @@ month=`date +%m`</span><br style="font-family: monospace;">
 <span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;&nbsp;
 day=`date +%d`</span><br style="font-family: monospace;">
 <span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;&nbsp;
-destdir="/var/log/codex/$year/$month"</span><br
+destdir="/var/log/codendi/$year/$month"</span><br
  style="font-family: monospace;">
 <span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;&nbsp;
 destfile="ftp_xferlog_$year$month$day.log"</span><br
@@ -2196,14 +2196,14 @@ phpMyAdmin is now provided with Codendi as a customized RPM package.
 When you access the phpMyAdmin GUI at
 http://<span style="font-style: italic;">your.codendi.domain</span>/phpMyAdmin
 you'll be prompted for a
-user name and password. Use the MySQL 'codexadm' login and password.
+user name and password. Use the MySQL 'codendiadm' login and password.
 <br>
 
 <hr>
 <h1><a name="Eclipse_plugin"></a>Eclipse plugin<br>
 </h1>
 <p>Codendi provides a plugin for Eclipse to allow access to Codendi trackers
-directly from the IDE interface. This plugin is provided as a rpm (named codex-eclipse),
+directly from the IDE interface. This plugin is provided as a rpm (named codendi-eclipse),
 that needs to be installed on the Codendi server. You also need to activate the plugin
 from the Codendi plugin administration interface.
 <br>Please read the Codendi User Guide for more information on how to setup
@@ -2214,7 +2214,7 @@ the Eclipse plugin.
 </h1>
 <p>Codendi provides a test plan manager called SaloméTMF. This is a
 Java application that must be downloaded by the end user with Java Web Start.
-<br>In order to provide this service, you need to install a dedicated RPM (codex-salome).
+<br>In order to provide this service, you need to install a dedicated RPM (codendi-salome).
 You also need to activate the plugin from the Codendi plugin administration interface,
 and activate the service for each project that would like to use the service.
 <p>
@@ -2230,7 +2230,7 @@ to the server database. Make sure that your firewalls do not forbid access to th
 <p>Codendi hosts an Instant Messaging server based on the Jabber/XMPP protocol to provide instant messaging.
 This server is the java-based <a href="http://www.igniterealtime.org/projects/openfire/index.jsp">OpenFire</a> server.
 <br>Please note that OpenFire uses its own database (openfire), with its own administrator ('openfireadm').
-The openfireadm MySQL user also needs read access to the user, group and user_group tables of the main database ('codex').
+The openfireadm MySQL user also needs read access to the user, group and user_group tables of the main database ('codendi').
 <br>
 You can access the <a href="../JabbeXInstallGuide.odt">detailed installation guide: JabbeXInstallGuide.odt</a> (OpenOffice odt format).
 

@@ -70,7 +70,7 @@ Output: frs_dlstats_grouptotal_agg table
 
 db_dlstats_filetotal.pl (** NOT USED AND OUTDATED **)
 -----------------------
-Same as above but this time it counts the number of downloads by CodeX released file. SAm observation as above
+Same as above but this time it counts the number of downloads by Codendi released file. SAm observation as above
 Input:  frs_dlstats_file_agg table
 Output: frs_dlstats_filetotal_agg table
 (** NOT USED AND OUTDATED **)

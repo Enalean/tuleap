@@ -6,7 +6,7 @@
 //
 // 
 //
-// Originally written by Nicolas Guerin 2004, CodeX Team, Xerox
+// Originally written by Nicolas Guerin 2004, Codendi Team, Xerox
 //
 
 // Supported object types and related object_id:

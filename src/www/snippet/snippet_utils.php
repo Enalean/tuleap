@@ -23,7 +23,7 @@ function snippet_header($params) {
         }
 
 	// LJ used so the search box will add the necessary element to the pop-up box
-	// CodeX Specific
+	// Codendi Specific
 	$is_snippet_page=1;
 
 

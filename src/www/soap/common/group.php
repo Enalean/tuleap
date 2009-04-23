@@ -142,7 +142,7 @@ $server->register(
 	
 
 /**
- * Returns a soap Group object corresponding to the CodeX Group object
+ * Returns a soap Group object corresponding to the Codendi Group object
  *
  * @param Object{Group} $group the group we want to convert in soap
  * @return array the soap group object

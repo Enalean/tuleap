@@ -143,7 +143,7 @@ $result=db_query($sql);
      <?php 
 	 echo '<TR><TD COLSPAN="2">
                      <h3>CC List '.help_button('TaskUpdate.html#TaskCCList').'</h3>
-	   <b><u>Note:</b></u> for CodeX users use their login name rather than their email addresses.<p>
+	   <b><u>Note:</b></u> for Codendi users use their login name rather than their email addresses.<p>
 	   <B>Add CC:&nbsp;</b><input type="text" name="add_cc" size="30">&nbsp;&nbsp;&nbsp;
 	   <B>Comment:&nbsp;</b><input type="text" name="cc_comment" size="40" maxlength="255"><p>';
 	  show_task_cc_list($project_task_id, $group_id);

@@ -39,7 +39,7 @@ if (!$group_id) {
 	exit;
 }
 
-// LJ updated with the CodeX logo image
+// LJ updated with the Codendi logo image
 if ($type == 1) {
   readfile (util_get_image_theme("codendi_logo.png", $sys_themedefault, true));
 }  else { // default

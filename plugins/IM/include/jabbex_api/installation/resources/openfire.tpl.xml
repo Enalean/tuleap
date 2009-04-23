@@ -58,13 +58,13 @@
   
   
   <!--
-	CodeX DB Integration
+	Codendi DB Integration
   -->  
   <jdbcProvider> 
   </jdbcProvider>  
   <provider> 
     <auth> 
-      <className>org.jivesoftware.openfire.auth.CodexJDBCAuthProvider</className> 
+      <className>org.jivesoftware.openfire.auth.CodendiJDBCAuthProvider</className> 
     </auth>  
     <user> 
       <className>org.jivesoftware.openfire.user.JDBCUserProvider</className> 

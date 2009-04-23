@@ -6,7 +6,7 @@
 //
 //
 //
-//  Written for CodeX by Stephane Bouhet
+//  Written for Codendi by Stephane Bouhet
 //
 
 require_once('pre.php');
@@ -88,7 +88,7 @@ if ($group_id && !$atid) {
             $GLOBALS['feedback'] .= htmlspecialchars($request->get('feedback'));
         }
 
-        $codex_template    = $request->getValidated('codex_template', 'uint', 0);
+        $codendi_template    = $request->getValidated('codendi_template', 'uint', 0);
         $group_id_template = $request->getValidated('group_id_template', 'uint', 0);
         $atid_template     = $request->getValidated('atid_template', 'uint', 0);
         $name              = $request->getValidated('name', 'string', '');
@@ -96,7 +96,7 @@ if ($group_id && !$atid) {
         $itemname          = $request->getValidated('itemname', 'string', '');
 
 		$ath->adminTrackersHeader(array('title'=>$Language->getText('tracker_admin_field_usage','tracker_admin').$Language->getText('tracker_admin_index','create_tracker'),'help' => 'TrackerCreation.html'));
-		$ath->displayCreateTracker($group_id,$codex_template,$group_id_template,$atid_template,$name,$description,$itemname);
+		$ath->displayCreateTracker($group_id,$codendi_template,$group_id_template,$atid_template,$name,$description,$itemname);
 		$ath->footer(array());
 		break;
 		

@@ -140,5 +140,5 @@ def check_read_access(username, svnrepo, svnpath):
     else:
         return False
 
-#check_read_access('laurent','/svnroot/codex/', '/codex/trunk/SRC')
-#fetch_access_file('/svnroot/codex')
+#check_read_access('laurent','/svnroot/codendi/', '/codendi/trunk/SRC')
+#fetch_access_file('/svnroot/codendi')

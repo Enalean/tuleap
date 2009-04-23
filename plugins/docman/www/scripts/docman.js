@@ -1,6 +1,6 @@
 if (!com) var com = {};
 if (!com.xerox) com.xerox = {};
-if (!com.xerox.codex) com.xerox.codex = {};
+if (!com.xerox.codendi) com.xerox.codendi = {};
 /**
  * Debug function.
  * Just give a msg as arguments, 
@@ -40,8 +40,8 @@ if (!document.getElementsByClassNames) {
     }
 }
 
-com.xerox.codex.Docman = Class.create();
-Object.extend(com.xerox.codex.Docman.prototype, {
+com.xerox.codendi.Docman = Class.create();
+Object.extend(com.xerox.codendi.Docman.prototype, {
     initialize: function(group_id, options) {
         if (!group_id) {
             throw 'group_id is mandatory!';
@@ -186,7 +186,7 @@ Object.extend(com.xerox.codex.Docman.prototype, {
         }
         $H(this.actionsForItem).keys().each((function (item_id) {
             if (!this.showOptions_Menus[item_id]) {
-                this.showOptions_Menus[item_id] = new com.xerox.codex.Menu(item_id, this, {close:this.options.language.btn_close});
+                this.showOptions_Menus[item_id] = new com.xerox.codendi.Menu(item_id, this, {close:this.options.language.btn_close});
             }
             
             //ItemHighlight
@@ -523,7 +523,7 @@ Object.extend(com.xerox.codex.Docman.prototype, {
         return false;
     },
     // Warning: The 2 "Insersion after" should have their values (name) escaped to avoid XSS.
-    // But I think this kind of attack cannot be used against codex.
+    // But I think this kind of attack cannot be used against codendi.
     reportSelectSave: function(event) {
         var form = $('plugin_docman_report_form');
         var select = form['plugin_docman_report_save'];
@@ -586,9 +586,9 @@ Object.extend(com.xerox.codex.Docman.prototype, {
     }
 });
 
-com.xerox.codex.openedMenu = null;
-com.xerox.codex.Menu = Class.create();
-Object.extend(com.xerox.codex.Menu.prototype, {
+com.xerox.codendi.openedMenu = null;
+com.xerox.codendi.Menu = Class.create();
+Object.extend(com.xerox.codendi.Menu.prototype, {
     initialize:function(item_id, docman, options) {
         this.item_id = item_id;
         this.docman = docman;
@@ -858,9 +858,9 @@ Object.extend(com.xerox.codex.Menu.prototype, {
             this.dimensions = Element.getDimensions(actions_panel);
             
         //}
-        if (!com.xerox.codex.openedMenu || com.xerox.codex.openedMenu != menu) {
+        if (!com.xerox.codendi.openedMenu || com.xerox.codendi.openedMenu != menu) {
             this.hide();
-            com.xerox.codex.openedMenu = menu;
+            com.xerox.codendi.openedMenu = menu;
             Element.setStyle('docman_item_menu_invisible_iframe', {
                 width:this.dimensions.width+'px',
                 height:this.dimensions.height+'px'
@@ -878,9 +878,9 @@ Object.extend(com.xerox.codex.Menu.prototype, {
         return false;
     },
     hide:function(evt) {
-        if (com.xerox.codex.openedMenu) {
-            ['docman_item_menu_invisible_iframe', com.xerox.codex.openedMenu].each(function (element) { Element.hide(element); });
-            com.xerox.codex.openedMenu = null;
+        if (com.xerox.codendi.openedMenu) {
+            ['docman_item_menu_invisible_iframe', com.xerox.codendi.openedMenu].each(function (element) { Element.hide(element); });
+            com.xerox.codendi.openedMenu = null;
         }
         if (evt) {
             Event.stop(evt);

@@ -1,8 +1,8 @@
 LDAP Plugin
 ===========
 
-This is the LDAP plugin for CodeX. It provides LDAP authentication and querying. 
-See the CodeX Installation Guide for more information.
+This is the LDAP plugin for Codendi. It provides LDAP authentication and querying. 
+See the Codendi Installation Guide for more information.
 
 Installation
 ------------

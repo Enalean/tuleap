@@ -7,7 +7,7 @@
 //
 //	Originally by to the SourceForge Team,1999-2000
 //
-//  Written for CodeX by Stephane Bouhet
+//  Written for Codendi by Stephane Bouhet
 //
 
 require_once('common/tracker/ArtifactType.class.php');
@@ -889,7 +889,7 @@ EOS;
 	 *  Display the create tracker form
 	 *
 	 *  @param group_id: the group id
-	 *  @param codex_template: the artifact type id chosen for a CodeX template
+	 *  @param codendi_template: the artifact type id chosen for a Codendi template
 	 *  @param group_id_template: the group id chosen for an existing tracker
 	 *  @param atid_template: the artifact type id chosen for an existing tracker
 	 *  @param name: the name chosen
@@ -898,7 +898,7 @@ EOS;
 	 *
 	 *  @return void
 	 */
-	function displayCreateTracker($group_id,$codex_template,$group_id_template,$atid_template,$name,$description,$itemname) {
+	function displayCreateTracker($group_id,$codendi_template,$group_id_template,$atid_template,$name,$description,$itemname) {
 	  global $Language;
         $hp = Codendi_HTMLPurifier::instance();
 		echo '<script language="JavaScript">
@@ -948,13 +948,13 @@ EOS;
 			  	document.form_create.submit();
 			  }
 
-			  function onSubmitCreateCodeXTemplate() {
+			  function onSubmitCreateCodendiTemplate() {
 			  	if ( checkValues() ) {
-                    if ( document.form_create.codex_template.value == 100 ) {
+                    if ( document.form_create.codendi_template.value == 100 ) {
 			  			document.form_create.feedback.value = "'.$Language->getText('tracker_include_type','choose_tmpl').'";
 					  	document.form_create.func.value = "create";
 			  		}
-			  		document.form_create.atid_chosen.value = document.form_create.codex_template.value;
+			  		document.form_create.atid_chosen.value = document.form_create.codendi_template.value;
 			  		document.form_create.group_id_chosen.value = 100;
 				} else {
 				  	document.form_create.func.value = "create";
@@ -1011,8 +1011,8 @@ EOS;
 			  <tr valign="top">
 			     <td width="300"><li><b>'.$Language->getText('tracker_include_type','from_tmpl').'</b></li></td>
 			     <td colspan="2">';
-        echo $this->trackersSelectBox(100,"codex_template",$codex_template);
-        echo '	 &nbsp;<input type="button" name="CreateCodeXTemplate" value="'.$Language->getText('global','btn_create').'" onClick="onSubmitCreateCodeXTemplate()"><br><br></td>
+        echo $this->trackersSelectBox(100,"codendi_template",$codendi_template);
+        echo '	 &nbsp;<input type="button" name="CreateCodendiTemplate" value="'.$Language->getText('global','btn_create').'" onClick="onSubmitCreateCodendiTemplate()"><br><br></td>
 			  <tr valign="top">    
 			     <td width="300"><li>'.$Language->getText('tracker_include_type','from_exist').'</li></td>
 			     
@@ -1867,7 +1867,7 @@ EOS;
 			
 			if (( $row['status'] == "P" || $field->getName() == "severity" )
                             &&(!user_is_super_user())){
-				// Unable to delete Permanent values, except for values in the tracker templates (for CodeX admins)
+				// Unable to delete Permanent values, except for values in the tracker templates (for Codendi admins)
 		    	$html .= "\n<td align =\"center\">-</td>";
 			} else {
 		    	$html .= "\n<td align =\"center\"><a href=\"/tracker/admin/?func=value_delete&group_id=".(int)$this->Group->getID()."&atid=".(int)$this->getID()."&field_id=".(int)$field->getID()."&value_id=".(int)$row['value_id']."\"><img src=\"".util_get_image_theme("ic/trash.png")."\" border=\"0\" onClick=\"return confirm('".$Language->getText('tracker_include_type','del_value')."')\"></a></td>";

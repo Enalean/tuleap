@@ -46,7 +46,7 @@ class Codendi_HTMLPurifierTestVersion extends Codendi_HTMLPurifier {
 }
 
 /**
- * Tests the class CodeXHTMLPurifier
+ * Tests the class CodendiHTMLPurifier
  */
 class Codendi_HTMLPurifierTest extends UnitTestCase {
 

@@ -18,7 +18,7 @@ class LdapPlugin extends Plugin {
 
         // Authentication
         $this->_addHook('session_before_login', 'authenticate', false);
-        $this->_addHook('session_after_login', 'allowCodexLogin', false);
+        $this->_addHook('session_after_login', 'allowCodendiLogin', false);
 
         // Login
         $this->_addHook('display_lostpw_createaccount', 'forbidIfLdapAuth', false);
@@ -164,7 +164,7 @@ class LdapPlugin extends Plugin {
             if ($ldap->authenticate($params['loginname'], $params['passwd'])) {
                 $lri =& $ldap->searchLogin($params['loginname']);
                 if($lri->count() === 1) {
-                    // Check if this user is a codex user or not. 
+                    // Check if this user is a codendi user or not. 
                     $lr = $lri->get(0);        
                     $qry = "SELECT user_id,status"
                         . " FROM user"
@@ -172,7 +172,7 @@ class LdapPlugin extends Plugin {
                     $res = db_query($qry);
                     if (!$res || db_numrows($res) < 1) {
                         // Authenticated user
-                        // without codex account
+                        // without codendi account
                         // create account!                        
                         UserLdap::register($lr, 
                                            $params['passwd'], 
@@ -220,7 +220,7 @@ class LdapPlugin extends Plugin {
      * @params $params $params['user_id'] IN
      *                 $params['allow_codendi_login'] IN/OUT
      */
-    function allowCodexLogin($params) {
+    function allowCodendiLogin($params) {
         if ($GLOBALS['sys_auth_type'] == 'ldap') {
             if(UserLdap::isLdapUser($params['user_id'])) {
                 $params['allow_codendi_login'] = false;
@@ -247,28 +247,28 @@ class LdapPlugin extends Plugin {
      * Hook
      * Params:
      *  IN  $params['ident']
-     *  IN  $params['strict'] If set to true, $ident must be a valid codex user.
-     *  OUT $params['best_codex_identifier']
+     *  IN  $params['strict'] If set to true, $ident must be a valid codendi user.
+     *  OUT $params['best_codendi_identifier']
      */
     function userFinder($params) {
         $ldap =& LDAP::instance();
         $lri  =& $ldap->searchUser($params['ident']);
         
-        $bestCodexIdentifier = '';
+        $bestCodendiIdentifier = '';
         if(!$ldap->isError() && ($lri->count() == 1)) {          
             $lr =& $lri->get(0);
 
             $res1 = UserLdap::getUserResultSet($lr->getEdUid());
             
             if(db_numrows($res1) === 1) {
-                $bestCodexIdentifier = db_result($res1, 0, 'user_name');
+                $bestCodendiIdentifier = db_result($res1, 0, 'user_name');
             }
             elseif(!$params['strict']) {
-                $bestCodexIdentifier = $lr->getEmail();
+                $bestCodendiIdentifier = $lr->getEmail();
             }
         }
-        if($bestCodexIdentifier != '') {
-            $params['best_codex_identifier'] = $bestCodexIdentifier;
+        if($bestCodendiIdentifier != '') {
+            $params['best_codendi_identifier'] = $bestCodendiIdentifier;
         }
     }
 

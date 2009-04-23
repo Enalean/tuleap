@@ -322,7 +322,7 @@
 
 <xsl:template name="book.titlepage.recto">
 
-  <!-- CX-SBT: Add a block to draw a rectangle + the Codex logo -->
+  <!-- CX-SBT: Add a block to draw a rectangle + the Codendi logo -->
   <fo:block xmlns:fo="http://www.w3.org/1999/XSL/Format" border-after-color="black" 
 		    border-after-width="0.1em" 
 		    border-before-color="black" 
@@ -339,7 +339,7 @@
                                  height="auto"
                                  content-height="auto"
                                  width="auto"
-                                 src="url(../../icons/codex.png)" />
+                                 src="url(../../icons/codendi.png)" />
           </fo:block>
 
   <xsl:choose>

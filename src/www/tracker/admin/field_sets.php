@@ -5,7 +5,7 @@
 // $$
 //
 //
-//  Written for CodeX by Marc Nazarian
+//  Written for Codendi by Marc Nazarian
 //
 
 

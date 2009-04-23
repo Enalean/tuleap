@@ -7,7 +7,7 @@
 //
 //      Originally by to the SourceForge Team,1999-2000
 //
-//  Written for CodeX by Stephane Bouhet
+//  Written for Codendi by Stephane Bouhet
 //
 
 

@@ -433,7 +433,7 @@ class ServerUpdateViews extends Views {
      * Call the Javascript function to display the progressBar animation
      */
     function _displayWaitingImage() {
-        $this->_displayTemporaryImage("progressBar", $this->getIconsPath()."CodeXProgressBar.gif", $GLOBALS['Language']->getText('plugin_serverupdate_update','UpdateInProgress'), $GLOBALS['Language']->getText('plugin_serverupdate_update','UpdateInProgress'));
+        $this->_displayTemporaryImage("progressBar", $this->getIconsPath()."CodendiProgressBar.gif", $GLOBALS['Language']->getText('plugin_serverupdate_update','UpdateInProgress'), $GLOBALS['Language']->getText('plugin_serverupdate_update','UpdateInProgress'));
     }
     /**
      * Call the Javascript function to hide the progressBar animation

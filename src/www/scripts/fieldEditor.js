@@ -25,11 +25,11 @@
 // Define namespace to prevent clashes
 if (!com) var com = {};
 if (!com.xerox) com.xerox = {};
-if (!com.xerox.codex) com.xerox.codex = {};
-if (!com.xerox.codex.tracker) com.xerox.codex.tracker = {};
+if (!com.xerox.codendi) com.xerox.codendi = {};
+if (!com.xerox.codendi.tracker) com.xerox.codendi.tracker = {};
 
-com.xerox.codex.FieldEditor = Class.create();
-Object.extend(com.xerox.codex.FieldEditor.prototype, {
+com.xerox.codendi.FieldEditor = Class.create();
+Object.extend(com.xerox.codendi.FieldEditor.prototype, {
     initialize: function(element, options) {
         this.element = $(element);
         this.options = Object.extend({

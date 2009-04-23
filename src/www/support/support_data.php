@@ -129,7 +129,7 @@ function support_data_create_support ($group_id,$support_category_id,$user_email
 	} else {
 		$user=user_getid();
 		//use their user_name if they are logged in
-		// LJ No alias on CodeX. Use real e-mail
+		// LJ No alias on Codendi. Use real e-mail
 		// LJ $user_email=user_getname().'@'.$GLOBALS['sys_users_host'];
 		$user_email=user_getname($user);
 	}

@@ -56,8 +56,8 @@ if [ -z "$BASEDOCDIR" ]; then
     if [ -z "$CODENDI_LOCAL_INC" ]; then
         CODENDI_LOCAL_INC=/etc/codendi/conf/local.inc
     fi
-    CODEX_DOCUMENTATION_PREFIX=`$GREP '^\$codendi_documentation_prefix' $CODENDI_LOCAL_INC | $SED -e 's/\$codendi_documentation_prefix\s*=\s*\(.*\);\(.*\)/\1/' | $TR -d '"' | $TR -d "'"`
-    BASEDOCDIR=$CODEX_DOCUMENTATION_PREFIX
+    CODENDI_DOCUMENTATION_PREFIX=`$GREP '^\$codendi_documentation_prefix' $CODENDI_LOCAL_INC | $SED -e 's/\$codendi_documentation_prefix\s*=\s*\(.*\);\(.*\)/\1/' | $TR -d '"' | $TR -d "'"`
+    BASEDOCDIR=$CODENDI_DOCUMENTATION_PREFIX
 fi
 CMDDOCDIR=$BASEDOCDIR/cli/cmd
 
@@ -66,8 +66,8 @@ if [ -z "$BASESRCDIR" ]; then
     if [ -z "$CODENDI_LOCAL_INC" ]; then
         CODENDI_LOCAL_INC=/etc/codendi/conf/local.inc
     fi
-    CODEX_DIR=`$GREP '^\$codendi_dir' $CODENDI_LOCAL_INC | $SED -e 's/\$codendi_dir\s*=\s*\(.*\);\(.*\)/\1/' | $TR -d '"' | $TR -d "'"`
-    BASESRCDIR=$CODEX_DIR/cli
+    CODENDI_DIR=`$GREP '^\$codendi_dir' $CODENDI_LOCAL_INC | $SED -e 's/\$codendi_dir\s*=\s*\(.*\);\(.*\)/\1/' | $TR -d '"' | $TR -d "'"`
+    BASESRCDIR=$CODENDI_DIR/cli
 fi
 
 # honor TMPDIR if defined
@@ -217,7 +217,7 @@ fi
 # Use the tar command to make a complex copy :
 # we copy the file contained in cli, documentation/cli/pdf, documentation/cli/html into $TMPDIR,
 # excluding the files .svn (subversion admin files) and *_old (old pdf documentation)
-(cd $CODEX_DIR; $TAR --exclude '.svn' --exclude "*_old.*" -h -cf - cli/ documentation/cli/pdf documentation/cli/html) | (cd $TMPDIR; $TAR xf -)
+(cd $CODENDI_DIR; $TAR --exclude '.svn' --exclude "*_old.*" -h -cf - cli/ documentation/cli/pdf documentation/cli/html) | (cd $TMPDIR; $TAR xf -)
 cd $TMPDIR
 # We reorganize the files to fit the archive organization we want
 $MV documentation/cli cli/documentation
