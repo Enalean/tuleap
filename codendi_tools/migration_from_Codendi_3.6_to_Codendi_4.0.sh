@@ -575,7 +575,14 @@ done
 
 echo "Starting DB update for Codendi 4.0 This might take a few minutes."
 
+echo "- rename codex db as codendi"
+mysqldump -u root $pass_opt codex > /tmp/dump.codex.sql
+$MYSQL -u root mysql $pass_opt -e "DROP DATABASE codex; CREATE DATABASE codendi;"
+$MYSQL -u root mysql $pass_opt codendi < /tmp/dump.codex.sql
 
+mysqldump -u root $pass_opt mysql > /tmp/dump.mysql.sql
+substitute '/tmp/dump.mysql.sql' 'codex' 'codendi'
+$MYSQL -u root mysql $pass_opt mysql < /tmp/dump.mysql.sql
 
 
 echo "- Create dbauthuser, needed for MySQL-based authentication for HTTP (SVN), libNSS-mysql and Openfire"
