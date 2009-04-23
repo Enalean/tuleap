@@ -257,8 +257,8 @@ class FRSRelease extends Error {
 	}
 	
 	/**
-     * Returns the HTML content for tooltip when hover a reference with the nature file
-     * @returns string HTML content for file tooltip
+     * Returns the HTML content for tooltip when hover a reference with the nature release
+     * @returns string HTML content for release tooltip
      */
     function getReferenceTooltip() {
         $tooltip = '';
