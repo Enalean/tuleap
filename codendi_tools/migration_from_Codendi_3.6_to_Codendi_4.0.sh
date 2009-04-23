@@ -390,8 +390,8 @@ fi
 
 ###############################################################################
 # Add some privacy in shared directories. Also helps libnss_mysql...
-chmod 751 /var/lib/codex/cvsroot/
-chmod 751 /var/lib/codex/svnroot/
+chmod 751 $VAR_LIB_DIR/cvsroot/
+chmod 751 $VAR_LIB_DIR/svnroot/
 chmod 771 /home/users
 chmod 771 /home/groups
 
@@ -1178,7 +1178,6 @@ TODO : Déplacer le script de debug dans Layout.class.php
 
 #
 # TODO: copy /src/utils/svn/codendi_svn_pre_commit.php into /usr/lib/codendi/bin/codendi_svn_pre_commit.php (also in codendi_install!!)
-# TODO: rename /usr/lib/codex to /usr/lib/codendi
 
 # Todo, modify fileforge.c and recompile for new layout., and reinstall
 
@@ -1275,5 +1274,3 @@ echo "=============================================="
 echo "Migration completed succesfully!"
 
 exit 1;
-
-
