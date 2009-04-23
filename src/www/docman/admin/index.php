@@ -1,7 +1,7 @@
 <?php
   //
   // SourceForge: Breaking Down the Barriers to Open Source Development
-  // Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+  // Copyright 1999-2000 (c) The SourceForge Crew
   // http://sourceforge.net
   //
   //

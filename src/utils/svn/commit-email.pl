@@ -15,11 +15,11 @@
 #
 #
 #
-# Heavily modified by Laurent Julliard for the CodeX project at Xerox
-# Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+# Heavily modified by Laurent Julliard for the Codendi project at Xerox
+# Copyright (c) Xerox Corporation, Codendi Team, 2004-2009. All Rights Reserved
 #
 # ====================================================================
-# Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+# Copyright (c) 2000-2004 CollabNet.  All rights reserved.
 #
 # This software is licensed as described in the file COPYING, which
 # you should have received as part of this distribution.  The terms

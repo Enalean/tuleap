@@ -1,10 +1,6 @@
 /*==================================================*
  
-
- Codendi
  Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- http://codex.xerox.com
-
  Modified by Nicolas Guerin
 
  Based on:
@@ -13,7 +9,7 @@
  http://www.freewebs.com/sean_geraty/picklist.html
 
  * filterlist.js:
- Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+ Copyright 2003 Patrick Fitzgerald
  http://www.barelyfitz.com/webdesign/articles/filterlist/
  *==================================================*/
 function filterlist(selectobj) {

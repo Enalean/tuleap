@@ -187,5 +187,5 @@ Veuillez informer <a href="/contact.php">l'équipe <?php print $GLOBALS['sys_nam
 
 
 <p>
-Ce contenu est la propriété de <?php print $GLOBALS['sys_long_org_name']; ?>. Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+Ce contenu est la propriété de <?php print $GLOBALS['sys_long_org_name']; ?>. Copyright 2000-<?php print date('Y',time()); ?>, Equipe <?php print $GLOBALS['sys_org_name']; ?>. Tous droits réservés.
 </p>

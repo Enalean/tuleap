@@ -56,7 +56,7 @@ the <a href="/documentation/user_guide/html/en_US/ReferencingtheCodeXSite.html" 
 </p>
 
 <p>
-In the course of the registration process you will be presented with the <?php print $GLOBALS['sys_org_name']; ?> Code eXchange Policy. This policy explains the rights and duties implied by code sharing and reuse. We strongly suggest that you use this default policy for your own project. Do not confuse this policy with Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+In the course of the registration process you will be presented with the <?php print $GLOBALS['sys_org_name']; ?> Code eXchange Policy. This policy explains the rights and duties implied by code sharing and reuse. We strongly suggest that you use this default policy for your own project. Do not confuse this policy with Copyright:  in any case your team (and <?php print $GLOBALS['sys_org_name']; ?> in general) will still own the code and the <?php print $GLOBALS['sys_org_name']; ?> standard Copyright statement must be present in your source code.
 </p>
 
 <br /><hr /><br />

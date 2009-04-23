@@ -2,12 +2,10 @@
 #  *
 #  * export scripts message catalog (English)
 #  *
-#  * CodeX: Breaking Down the Barriers to Enterprise Code Sharing 
 #  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
-#  * http://codex.xrce.xerox.com
 #  *
 #  *
 #  */
 #
-rss	copyright	Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+rss	copyright	Copyright (c) $1, $2 Team, 2001-$3. All Rights Reserved
 
