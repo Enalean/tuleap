@@ -2,7 +2,7 @@
 #
 # Codendi
 # Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
-# http://codex.xrce.xerox.com
+# http://www.codendi.com
 #
 # 
 #
