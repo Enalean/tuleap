@@ -271,6 +271,8 @@ $MKDIR $INSTALL_DIR;
 cd $INSTALL_DIR
 $TAR xfz ${Codendi_DIR}/codendi*.tgz
 $CHOWN -R codendiadm.codendiadm $INSTALL_DIR
+
+echo "Setting up fileperms on installed files and directory"
 $FIND $INSTALL_DIR -type f -exec $CHMOD u+rw,g+rw,o-w+r {} \;
 $FIND $INSTALL_DIR -type d -exec $CHMOD 775 {} \;
 
@@ -309,7 +311,7 @@ $MV /var/lib/codex $VAR_LIB_DIR
 $MV /var/log/codex $VAR_LOG_DIR
 build_dir /var/tmp/codendi_cache codendiadm codendiadm 755
 $RM /etc/httpd/conf.d/codex_svnroot.conf
-
+$TOUCH /etc/httpd/conf.d/codendi_svnroot.conf
 
 
 
@@ -1152,7 +1154,9 @@ $SERVICE mailman start
 
 
 
-
+Verifier qu'il y a assez de place sur le disque avant de faire les backup et l'installation
+ df -h /big/ | awk '{print $4}' | tail -n 1
+=> donne la taille disponible pour la partition qui contient /big/
 
 Codendification:
 - /var/lib/mysql/codex-bin*
