@@ -332,8 +332,8 @@ $CP /etc/aliases.codex /etc/aliases.codex_36
 $MV /etc/aliases.codex /etc/aliases.codendi
 substitute '/etc/mail/sendmail.cf' '/etc/aliases.codex' "/etc/aliases.codendi"
 
-codendification '$ETC_DIR/conf/local.inc'
-codendification '$ETC_DIR/conf/database.inc'
+codendification "$ETC_DIR/conf/local.inc"
+codendification "$ETC_DIR/conf/database.inc"
 
 dbauth_passwd="a"; dbauth_passwd2="b";
 while [ "$dbauth_passwd" != "$dbauth_passwd2" ]; do
@@ -1133,8 +1133,7 @@ echo "Update SELinux contexts if needed"
 cd $INSTALL_DIR/src/utils
 ./fix_selinux_contexts.pl
 
-
-substitute '/etc/httpd/conf/httpd.conf' 'codex' 'codendi'
+codendification '/etc/httpd/conf/httpd.conf'
 
 ##############################################
 # Restarting some services
