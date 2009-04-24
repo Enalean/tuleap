@@ -36,8 +36,6 @@ if (array_key_exists("CODENDI_WSDL", $_ENV)) {
 
 $CLI_VERSION = "1.1";
 
-$API_VERSION = "4.0";
-
 error_reporting(E_ALL);
 
 /* Include common files */
@@ -103,7 +101,7 @@ for ($i = 1; $i <= $argc-1; $i++) {
 
 define("WSDL_URL", $host);
 $LOG = new Log();
-$soap = new CodendiSOAP($API_VERSION);
+$soap = new CodendiSOAP();
 $modules =& new CLI_ModuleFactory(CODENDI_CLI_DIR."modules/");
 
 if ($display_help || !$function_index) {		// No function was specified. Show the help.

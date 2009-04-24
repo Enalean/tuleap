@@ -25,13 +25,11 @@ class CodendiSOAP extends SoapClient {
 	var $session_group_id;	// Default group
 	var $session_user;		// Logged user name
     var $session_user_id;	// Logged user ID
-    
-    var $api_version;
 	
 	/**
 	 * constructor
 	 */
-	function CodendiSOAP($api_version) {
+	function CodendiSOAP() {
 		$this->wsdl_string = "";
 		$this->proxy_host = "";
 		$this->proxy_port = 0;
@@ -40,8 +38,6 @@ class CodendiSOAP extends SoapClient {
 		$this->session_group_id = 0;		// By default don't use a group
 		$this->session_user = "";
         $this->session_user_id = 0;
-        
-        $this->api_version = $api_version;
 		
 		// Try to find a dir where to put the session file
 		if (array_key_exists("HOME", $_ENV)) {
@@ -168,13 +164,6 @@ class CodendiSOAP extends SoapClient {
 		return $this->proxy_port;
 	}
 	
-	function getAPIVersion() {
-		return $this->api_version;
-	}
-	function setAPIVersion($api_version) {
-		$this->api_version = $api_version;
-	}
-	
 	function saveSession() {
 		$handler = fopen($this->session_file, "w");
 		if (!$handler) {
@@ -188,7 +177,6 @@ class CodendiSOAP extends SoapClient {
         fputs($handler, "session_user_id=\"".$this->session_user_id."\"\n");
         fputs($handler, "proxy_host=\"".$this->proxy_host."\"\n");
         fputs($handler, "proxy_port=\"".$this->proxy_port."\"\n");
-        fputs($handler, "api_version=\"".$this->api_version."\"\n");
 		fclose($handler);
 		
 		chmod($this->session_file, 0600);
@@ -206,7 +194,6 @@ class CodendiSOAP extends SoapClient {
 				$this->wsdl_string = $session["wsdl_string"];
 				$this->proxy_host = $session["proxy_host"];
 				$this->proxy_port = $session["proxy_port"];
-				$this->api_version = $session["api_version"];
 			}
 		}
 	}

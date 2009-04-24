@@ -83,11 +83,7 @@ class CLI_Action_Default_Login extends CLI_Action {
         }
         
     }
-	function after_loadParams(&$loaded_params) {
-		// We add the WS API version here
-    	$loaded_params['soap']['version'] = $GLOBALS['soap']->getAPIVersion();
-    }
-    function soapResult($params, $soap_result, $fieldnames = array(), $loaded_params = array()) {
+	function soapResult($params, $soap_result, $fieldnames = array(), $loaded_params = array()) {
         if (!$loaded_params['others']['quiet']) $this->show_output($soap_result);
         $session_string = $soap_result->session_hash;
         $user_id = $soap_result->user_id;
