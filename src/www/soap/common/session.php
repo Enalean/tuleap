@@ -28,21 +28,19 @@ $server->wsdl->addComplexType(
 //
 $server->register('login', // method name
     array('loginname' => 'xsd:string', // input parameters
-        'passwd'    => 'xsd:string',
-    	'version'	=> 'xsd:string'
+        'passwd'    => 'xsd:string'
     ),
     array('return'   => 'tns:Session'), // output parameters
     $uri, // namespace
     $uri.'#login', // soapaction
     'rpc', // style
     'encoded', // use
-    'Login Codendi Server with given login, password and version.
-     Returns a soap fault if the login failed, or if the version mismatch.' // documentation
+    'Login Codendi Server with given login and password.
+     Returns a soap fault if the login failed.' // documentation
 );
 
 $server->register('retrieveSession',
-    array('session_hash' => 'xsd:string',
-    	  'version'		 => 'xsd:string'
+    array('session_hash' => 'xsd:string'
     ),
     array('return'   => 'tns:Session'),
     $uri,
@@ -50,7 +48,7 @@ $server->register('retrieveSession',
     'rpc',
     'encoded',
     'Retrieve a valid session with a given session_hash and version.
-     Returns a soap fault if the session is not valid or if the version mismatch.'
+     Returns a soap fault if the session is not valid.'
 );
 
 $server->register('getAPIVersion',
@@ -83,25 +81,20 @@ $server->register('logout',
  *
  * @param string $loginname the user name (login)
  * @param string $passwd the password associated with the loginname $loginname
- * @param string $version the version of the API we want to login
  * @return array the SOAPSession if the loginname and the password are matching and if the version of the API is matching, a soap fault otherwise
  */
-function login($loginname, $passwd, $version) {
+function login($loginname, $passwd) {
     global $Language;
     
-    if (isCompatible($version)) {
-        $user = UserManager::instance()->login($loginname, $passwd);
-	    if ($user->isLoggedIn()) {
-	        $return = array(
-	            'user_id'      => $user->getId(),
-	            'session_hash' => $user->getSessionHash()
-	        );
-	        return $return;
-	    } else {
-	        return new SoapFault(login_fault, $loginname.' : '.$Language->getText('include_session', 'invalid_pwd'), 'login');
-	    }
+    $user = UserManager::instance()->login($loginname, $passwd);
+    if ($user->isLoggedIn()) {
+        $return = array(
+            'user_id'      => $user->getId(),
+            'session_hash' => $user->getSessionHash()
+        );
+        return $return;
     } else {
-        return new SoapFault(login_fault, 'Version of Web Service API mismatch: given '.$version.' while expected '.constant("CODENDI_WS_API_VERSION"), 'login');
+        return new SoapFault(login_fault, $loginname.' : '.$Language->getText('include_session', 'invalid_pwd'), 'login');
     }
 }
 
@@ -111,24 +104,19 @@ function login($loginname, $passwd, $version) {
  * @global $Language
  *
  * @param string $session_hash the session hash that identify the session to retrieve
- * @param string $version the version of the API we want to login
  * @return array the SOAPSession if the session_hash identify a valid session, or a soap fault otherwise
  */
-function retrieveSession($session_hash, $version) {
+function retrieveSession($session_hash) {
     global $Language;
-    if (isCompatible($version)) {
-	    if (session_continue($session_hash)) {
-            $user = UserManager::instance()->getCurrentUser();
-	        $return = array(
-	            'user_id'      => $user->getId(),
-	            'session_hash' => $user->getSessionHash()
-	        );
-	        return $return;
-	    } else {
-	        return new SoapFault(invalid_session_fault, 'Invalid Session.', 'retrieveSession');
-	    }
+    if (session_continue($session_hash)) {
+        $user = UserManager::instance()->getCurrentUser();
+        $return = array(
+            'user_id'      => $user->getId(),
+            'session_hash' => $user->getSessionHash()
+        );
+        return $return;
     } else {
-        return new SoapFault(login_fault, 'Version of Web Service API mismatch: given '.$version.' while expected '.constant("CODENDI_WS_API_VERSION"), 'login');
+        return new SoapFault(invalid_session_fault, 'Invalid Session.', 'retrieveSession');
     }
 }
 
@@ -141,18 +129,6 @@ function retrieveSession($session_hash, $version) {
  */
 function getAPIVersion() {
     return constant('CODENDI_WS_API_VERSION');
-}
-
-/**
- * Returns yes if the client version is compatible with this WS API version
- * 
- * Note: for now, compatible means equal, but we can imagine more complex rules (3.6 compatible with 3.6.1)
- * 
- * @param string $client_version the API version the client want to connect to
- * @return boolean true if $client_version is compatible with this API version, false otherwise 
- */
-function isCompatible($client_version) {
-    return constant('CODENDI_WS_API_VERSION') === $client_version;
 }
 
 /**
