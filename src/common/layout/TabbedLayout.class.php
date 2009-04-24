@@ -68,7 +68,7 @@ class TabbedLayout extends Layout {
             </tr>
             <tr>
                 <td class="header_logo">
-                    <a  class="header_logo" href="/"><img src="'.$this->imgroot.'codex_banner_lc.png" /></a>
+                    <a  class="header_logo" href="/"><img src="'.$this->imgroot.'codendi_banner_lc.png" /></a>
                 </td>
                 <td class="header_searchbox"><br />'.$this->getSearchBox().'</td>
             </tr>

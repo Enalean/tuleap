@@ -1213,7 +1213,7 @@ class Layout extends Response {
 <!-- First line with borders and corners -->
            <tr>
                <td background="<? echo util_get_image_theme("upper_left_corner.png"); ?>" width="1%" height="26"><img src="<? echo util_get_image_theme("upper_left_corner.png"); ?>" width="16" height="26" alt=" "></td>
-                <td background="<? echo util_get_image_theme("top_border.png"); ?>" align="left" colspan="3" width="99%"><a href="/"><img src="<? echo util_get_image_theme("codex_banner_lc.png"); ?>" border="0" alt="<?php echo $GLOBALS['sys_name'].' '.$Language->getText('include_layout','banner'); ?>"></a></td>
+                <td background="<? echo util_get_image_theme("top_border.png"); ?>" align="left" colspan="3" width="99%"><a href="/"><img src="<? echo util_get_image_theme("codex_banner_lc.png"); ?>"  height="26" border="0" alt="<?php echo $GLOBALS['sys_name'].' '.$Language->getText('include_layout','banner'); ?>"></a></td>
                 <td><img src="<? echo util_get_image_theme("upper_right_corner.png"); ?>" width="16" height="26" alt=" "></td>
         </tr>
 
@@ -1611,7 +1611,7 @@ class Layout extends Response {
         }
         </script>';
         $output .= '<a href="'.get_server_url().'" class="osdn_codendi_logo">';
-        $output .= $this->getImage("codendi_logo.png", array("width"=>"135", "height"=>"33", "hspace"=>"10", "alt"=>$GLOBALS['sys_default_domain'], "border"=>"0"));
+        $output .= $this->getImage("codendi_logo.png", array("alt"=>$GLOBALS['sys_default_domain'], "border"=>"0"));
         $output .= '<br /></a>';
         // MN : Before displaying the osdn nav drop down, we verify that the osdn_sites array exists
         include($GLOBALS['Language']->getContent('layout/osdn_sites'));
