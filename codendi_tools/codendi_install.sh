@@ -126,7 +126,6 @@ done
 #
 RH_RELEASE="5"
 yn="y"
-## XXXX CHECK RELEASE > 4.4: this is needed by SVN 1.4 (?)
 $RPM -q redhat-release-${RH_RELEASE}* 2>/dev/null 1>&2
 if [ $? -eq 1 ]; then
   $RPM -q centos-release-${RH_RELEASE}* 2>/dev/null 1>&2
@@ -458,11 +457,12 @@ $RPM -e --allmatches subversion-python 2>/dev/null
 $RPM -e --allmatches subversion 2>/dev/null
 $RPM -e --allmatches neon-devel 2>/dev/null
 $RPM -e --allmatches neon 2>/dev/null
+$RPM -e --allmatches sqlite 2>/dev/null
 echo "Installing Subversion and Neon RPMs for Codendi...."
 cd ${RPMS_DIR}/subversion
 newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
 cd ${newest_rpm}
-$RPM -ivh neon-0.*.i386.rpm neon-devel*.i386.rpm subversion-1.*.i386.rpm mod_dav_svn*.i386.rpm subversion-perl*.i386.rpm subversion-python*.i386.rpm 
+$RPM -ivh neon-0.*.i386.rpm neon-devel*.i386.rpm subversion-1.*.i386.rpm mod_dav_svn*.i386.rpm subversion-perl*.i386.rpm subversion-python*.i386.rpm sqlite-3*.i386.rpm
 # Dependency error with Perl ??
 $RPM --nodeps -Uvh subversion-tools*.i386.rpm
 
