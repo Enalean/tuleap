@@ -45,6 +45,10 @@ class Chart_GanttBar {
         $this->_jpgraph_instance->caption->setFont($this->getFont(), FS_NORMAL, 7);
                         
     }
+    
+    public function getFont() {
+        return FF_USERFONT;
+    }
 
     public function __get($name) {
         return $this->_jpgraph_instance->$name;

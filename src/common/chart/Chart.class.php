@@ -47,6 +47,10 @@ class Chart {
         if ($aWidth && $aHeight) {
             $this->_jpgraph_instance->img->SetAntiAliasing();
         }
+        $this->_jpgraph_instance->SetUserFont('dejavu-lgc/DejaVuLGCSans.ttf',  
+                                              'dejavu-lgc/DejaVuLGCSans-Bold.ttf', 
+                                              'dejavu-lgc/DejaVuLGCSans-Oblique.ttf', 
+                                              'dejavu-lgc/DejaVuLGCSans-BoldOblique.ttf');
         
         $this->_jpgraph_instance->legend->SetShadow(false);
         $this->_jpgraph_instance->legend->SetColor($this->getMainColor());
