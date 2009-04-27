@@ -122,13 +122,14 @@ do
 done
 
 ##############################################
-# Check we are running on RHEL 5
+# Check we are running on RHEL 5.3 
+# 5.3 is needed for openjdk. This will need to be updated when 5.4 is available!
 #
 RH_RELEASE="5"
 yn="y"
-$RPM -q redhat-release-${RH_RELEASE}* 2>/dev/null 1>&2
+$RPM -q redhat-release-${RH_RELEASE}* | grep 5-3 2>/dev/null 1>&2
 if [ $? -eq 1 ]; then
-  $RPM -q centos-release-${RH_RELEASE}* 2>/dev/null 1>&2
+  $RPM -q centos-release-${RH_RELEASE}* | grep 5-3 2>/dev/null 1>&2
   if [ $? -eq 1 ]; then
     cat <<EOF
 This machine is not running RedHat Enterprise Linux ${RH_RELEASE} or CentOS  ${RH_RELEASE}. Executing this install
@@ -457,12 +458,13 @@ $RPM -e --allmatches subversion-python 2>/dev/null
 $RPM -e --allmatches subversion 2>/dev/null
 $RPM -e --allmatches neon-devel 2>/dev/null
 $RPM -e --allmatches neon 2>/dev/null
-$RPM -e --allmatches sqlite 2>/dev/null
-echo "Installing Subversion and Neon RPMs for Codendi...."
+echo "Installing Subversion, Neon and recent SQLite RPMs for Codendi...."
 cd ${RPMS_DIR}/subversion
 newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
 cd ${newest_rpm}
-$RPM -ivh neon-0.*.i386.rpm neon-devel*.i386.rpm subversion-1.*.i386.rpm mod_dav_svn*.i386.rpm subversion-perl*.i386.rpm subversion-python*.i386.rpm sqlite-3*.i386.rpm
+# Update SQLite first: version above 3.4 is required for SVN 1.6, and RHEL5 only provides version 3.3.
+$RPM -Uvh sqlite-3*.i386.rpm
+$RPM -ivh neon-0.*.i386.rpm neon-devel*.i386.rpm subversion-1.*.i386.rpm mod_dav_svn*.i386.rpm subversion-perl*.i386.rpm subversion-python*.i386.rpm 
 # Dependency error with Perl ??
 $RPM --nodeps -Uvh subversion-tools*.i386.rpm
 
@@ -471,7 +473,7 @@ $RPM -e --allmatches libnss-mysql 2>/dev/null
 echo "Installing libnss-mysql RPM for Codendi...."
 cd ${RPMS_DIR}/libnss-mysql
 newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
-$RPM -Uvh ${newest_rpm}/libnss-mysql-1*i?86.rpm
+$RPM -Uvh --nosignature ${newest_rpm}/libnss-mysql-1*i?86.rpm
 
 # -> cvsgraph 
 $RPM -e --allmatches cvsgraph 2>/dev/null
@@ -825,7 +827,7 @@ if [ "$disable_subdomains" = "y" ]; then
   substitute '/etc/codendi/conf/local.inc' 'sys_disable_subdomains = 0' 'sys_disable_subdomains = 1'
 fi
 # replace string patterns in codendi_aliases.inc
-substitute '/etc/codendi/conf.d/codendi_aliases.conf' '%sys_default_domain%' "$sys_default_domain" 
+substitute '/etc/httpd/conf.d/codendi_aliases.conf' '%sys_default_domain%' "$sys_default_domain" 
 
 # replace string patterns in database.inc
 substitute '/etc/codendi/conf/database.inc' '%sys_dbpasswd%' "$codendiadm_passwd" 
@@ -915,10 +917,6 @@ if [ ! -d "/var/lib/mysql/codendi" ]; then
     $CAT <<EOF | $MYSQL -u root mysql $pass_opt
 GRANT ALL PRIVILEGES on *.* to codendiadm@localhost identified by '$codendiadm_passwd' WITH GRANT OPTION;
 GRANT ALL PRIVILEGES on *.* to root@localhost identified by '$rt_passwd';
-GRANT SELECT ON codendi.user to dbauthuser@localhost identified by '$dbauth_passwd';
-GRANT SELECT ON codendi.groups to dbauthuser@localhost;
-GRANT SELECT ON codendi.user_group to dbauthuser@localhost;
-GRANT SELECT ON codendi.session to dbauthuser@localhost;
 FLUSH PRIVILEGES;
 EOF
 fi
@@ -933,6 +931,15 @@ cp database_initvalues.sql /tmp/database_initvalues.sql
 substitute '/tmp/database_initvalues.sql' '_DOMAIN_NAME_' "$sys_default_domain"
 $MYSQL -u codendiadm codendi --password=$codendiadm_passwd < /tmp/database_initvalues.sql  # populate with init values.
 rm -f /tmp/database_initvalues.sql
+
+# Create dbauthuser
+$CAT <<EOF | $MYSQL -u root mysql $pass_opt
+GRANT SELECT ON codendi.user to dbauthuser@localhost identified by '$dbauth_passwd';
+GRANT SELECT ON codendi.groups to dbauthuser@localhost;
+GRANT SELECT ON codendi.user_group to dbauthuser@localhost;
+GRANT SELECT ON codendi.session to dbauthuser@localhost;
+FLUSH PRIVILEGES;
+EOF
 fi
 
 
@@ -1458,6 +1465,8 @@ fi
 ##############################################
 # *Last* step: install plugins
 #
+
+echo "Install codendi plugins"
 # docman plugin
 $CAT $INSTALL_DIR/plugins/docman/db/install.sql | $MYSQL -u codendiadm codendi --password=$codendiadm_passwd
 build_dir /etc/codendi/plugins/docman/etc codendiadm codendiadm 755
@@ -1503,9 +1512,9 @@ $PHP $INSTALL_DIR/plugins/IM/include/jabbex_api/installation/install.php -a -orp
 # Generate Documentation
 #
 echo "Generating the Codendi Manuals. This will take a few minutes."
-$INSTALL_DIR/src/utils/generate_doc.sh -f
-$INSTALL_DIR/src/utils/generate_programmer_doc.sh -f
-$INSTALL_DIR/src/utils/generate_cli_package.sh -f
+su -c "$INSTALL_DIR/src/utils/generate_doc.sh -f" - codendiadm 2> /dev/null &
+su -c "$INSTALL_DIR/src/utils/generate_programmer_doc.sh -f" - codendiadm 2> /dev/null &
+su -c "$INSTALL_DIR/src/utils/generate_cli_package.sh -f" - codendiadm 2> /dev/null &
 $CHOWN -R codendiadm.codendiadm $INSTALL_DIR/documentation
 $CHOWN -R codendiadm.codendiadm $INSTALL_DIR/downloads
 

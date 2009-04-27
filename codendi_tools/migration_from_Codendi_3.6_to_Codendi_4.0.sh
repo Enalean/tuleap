@@ -190,11 +190,26 @@ if [ "$yn" = "n" ]; then
     exit 1
 fi
 
+
 ##############################################
 # Check Required Stock RedHat RPMs are installed
 #
+
+$RPM -q java-1.6.0-openjdk  2>/dev/null 1>&2
+if [ $? -eq 1 ]; then
+   echo "Java is now supported by RHEL/CentOS with the OpenJDK. If you wish to use it, you can install the package java-1.6.0-openjdk with yum and uninstall the JRE."
+   read -p "Continue? [yn]: " yn
+   if [ "$yn" = "n" ]; then
+       echo "Bye now!"
+       exit 1
+   fi
+else
+    echo "java-1.6.0-openjdk is installed: setting JAVA_HOME variable for codendiadm"
+    echo "export JAVA_HOME=/usr/lib/jvm/java-1.6.0-openjdk-1.6.0.0/jre" >> /home/codendiadm/.profile
+fi
+
 rpms_ok=1
-for rpm in nscd php-pear java-1.6.0-openjdk jpackage-utils giflib mod_auth_mysql
+for rpm in nscd php-pear mod_auth_mysql
 do
     $RPM -q $rpm  2>/dev/null 1>&2
     if [ $? -eq 1 ]; then
@@ -232,11 +247,13 @@ $RPM -e --allmatches subversion-python 2>/dev/null
 $RPM -e --allmatches subversion 2>/dev/null
 $RPM -e --allmatches neon-devel 2>/dev/null
 $RPM -e --allmatches neon 2>/dev/null
-$RPM -e --allmatches sqlite 2>/dev/null
+echo "Installing Subversion, Neon and recent SQLite RPMs for Codendi...."
 cd ${RPMS_DIR}/subversion
 newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
 cd ${newest_rpm}
-$RPM -ivh neon-0.*.i386.rpm neon-devel*.i386.rpm subversion-1.*.i386.rpm mod_dav_svn*.i386.rpm subversion-perl*.i386.rpm subversion-python*.i386.rpm sqlite-3*.i386.rpm
+# Update SQLite first: version above 3.4 is required for SVN 1.6, and RHEL5 only provides version 3.3.
+$RPM -Uvh sqlite-3*.i386.rpm
+$RPM -ivh neon-0.*.i386.rpm neon-devel*.i386.rpm subversion-1.*.i386.rpm mod_dav_svn*.i386.rpm subversion-perl*.i386.rpm subversion-python*.i386.rpm 
 # Dependency error with Perl ??
 $RPM --nodeps -Uvh subversion-tools*.i386.rpm
 
@@ -248,7 +265,7 @@ $RPM -e --allmatches libnss-mysql 2>/dev/null
 echo "Installing libnss-mysql RPM for Codendi...."
 cd ${RPMS_DIR}/libnss-mysql
 newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
-$RPM -Uvh ${newest_rpm}/libnss-mysql-1*i?86.rpm
+$RPM -Uvh --nosignature ${newest_rpm}/libnss-mysql-1*i?86.rpm
 	 
 # -> APC
 $RPM -e php-pecl-apc 2>/dev/null
@@ -1286,6 +1303,7 @@ $CHMOD 755 commit-email.pl
 # TODO: propose to migrate to java-1.6.0-openjdk
 # yum install...
 # echo "export JAVA_HOME=/usr/lib/jvm/java-1.6.0-openjdk-1.6.0.0/jre" >> /home/codendiadm/.profile
+# echo "export JAVA_HOME=/usr/lib/jvm/java-1.6.0-openjdk-1.6.0.0/jre" >> /home/codendiadm/.profile
 
   # Skip logging openfire db (for instant messaging)
   # The 'monitor' openrfire plugin creates large codendi-bin files
@@ -1293,6 +1311,20 @@ $CHMOD 755 commit-email.pl
   set-variable  = binlog-ignore-db=openfire
 
 #
+
+
+##############################################
+# Generate Documentation
+#
+echo "Generating the Codendi Manuals. This will take a few minutes."
+su -c "$INSTALL_DIR/src/utils/generate_doc.sh -f" - codendiadm 2> /dev/null &
+su -c "$INSTALL_DIR/src/utils/generate_programmer_doc.sh -f" - codendiadm 2> /dev/null &
+su -c "$INSTALL_DIR/src/utils/generate_cli_package.sh -f" - codendiadm 2> /dev/null &
+$CHOWN -R codendiadm.codendiadm $INSTALL_DIR/documentation
+$CHOWN -R codendiadm.codendiadm $INSTALL_DIR/downloads
+
+
+
 todo "Note to Codendi Developers: "
 todo " - Some deprecated functions have been removed: group_getname, group_getunixname, group_get_result, group_get_object, project_get_object"
 
