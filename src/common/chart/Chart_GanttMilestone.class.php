@@ -41,9 +41,9 @@ class Chart_GanttMileStone {
         $this->_jpgraph_instance->mark->setFillColor($color);
         
         $this->_jpgraph_instance->title->setColor($color_dark);
-        $this->_jpgraph_instance->title->setFont(FF_DEJAVU, FS_NORMAL, 8);
+        $this->_jpgraph_instance->title->setFont($this->getFont(), FS_NORMAL, 8);
         $this->_jpgraph_instance->caption->setColor($GLOBALS['HTML']->getChartMainColor());
-        $this->_jpgraph_instance->caption->setFont(FF_DEJAVU, FS_NORMAL, 7);
+        $this->_jpgraph_instance->caption->setFont($this->getFont(), FS_NORMAL, 7);
         
     }
 

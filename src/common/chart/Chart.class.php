@@ -51,10 +51,10 @@ class Chart {
         $this->_jpgraph_instance->legend->SetShadow(false);
         $this->_jpgraph_instance->legend->SetColor($this->getMainColor());
         $this->_jpgraph_instance->legend->SetFillColor($GLOBALS['HTML']->getChartBackgroundColor());
-        $this->_jpgraph_instance->legend->SetFont(FF_DEJAVU,FS_NORMAL,8);
+        $this->_jpgraph_instance->legend->SetFont($this->getFont(), FS_NORMAL,8);
         $this->_jpgraph_instance->legend->SetVColMargin(5);
         
-        $this->_jpgraph_instance->title->SetFont(FF_DEJAVU,FS_BOLD,12);
+        $this->_jpgraph_instance->title->SetFont($this->getFont(), FS_BOLD,12);
         $this->_jpgraph_instance->title->SetColor($this->getMainColor());
         $this->_jpgraph_instance->title->SetMargin(15);
         
@@ -96,20 +96,20 @@ class Chart {
         }
         if (!strnatcasecmp($method, 'SetScale')) {
             $this->_jpgraph_instance->xaxis->SetColor($this->getMainColor(), $this->getMainColor());
-            $this->_jpgraph_instance->xaxis->SetFont(FF_DEJAVU,FS_NORMAL,8);
+            $this->_jpgraph_instance->xaxis->SetFont($this->getFont(), FS_NORMAL,8);
             $this->_jpgraph_instance->xaxis->SetLabelAngle(45);
-            $this->_jpgraph_instance->xaxis->title->SetFont(FF_DEJAVU,FS_BOLD,8);
+            $this->_jpgraph_instance->xaxis->title->SetFont($this->getFont(), FS_BOLD,8);
             
             $this->_jpgraph_instance->yaxis->SetColor($this->getMainColor(), $this->getMainColor());
-            $this->_jpgraph_instance->yaxis->SetFont(FF_DEJAVU,FS_NORMAL,8);
-            $this->_jpgraph_instance->xaxis->title->SetFont(FF_DEJAVU,FS_BOLD,8);
-            $this->_jpgraph_instance->yaxis->title->SetFont(FF_DEJAVU,FS_BOLD,8);
+            $this->_jpgraph_instance->yaxis->SetFont($this->getFont(), FS_NORMAL,8);
+            $this->_jpgraph_instance->xaxis->title->SetFont($this->getFont(), FS_BOLD,8);
+            $this->_jpgraph_instance->yaxis->title->SetFont($this->getFont(), FS_BOLD,8);
         }
         return $result;
     }
     
     public function getFont() {
-        return FF_DEJAVU;
+        return FF_USERFONT;
     }
     
     public function getMainColor() {
