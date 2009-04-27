@@ -194,7 +194,7 @@ fi
 # Check Required Stock RedHat RPMs are installed
 #
 rpms_ok=1
-for rpm in nscd
+for rpm in nscd php-pear java-1.6.0-openjdk jpackage-utils giflib mod_auth_mysql
 do
     $RPM -q $rpm  2>/dev/null 1>&2
     if [ $? -eq 1 ]; then
@@ -223,8 +223,25 @@ fi
 ###############################################################################
 echo "Updating Packages"
 
+echo "Upgrading to Subversion 1.6"
+$RPM -e --allmatches subversion-tools  2>/dev/null
+$RPM -e --allmatches subversion-devel 2>/dev/null
+$RPM -e --allmatches mod_dav_svn 2>/dev/null
+$RPM -e --allmatches subversion-perl 2>/dev/null
+$RPM -e --allmatches subversion-python 2>/dev/null
+$RPM -e --allmatches subversion 2>/dev/null
+$RPM -e --allmatches neon-devel 2>/dev/null
+$RPM -e --allmatches neon 2>/dev/null
+$RPM -e --allmatches sqlite 2>/dev/null
+cd ${RPMS_DIR}/subversion
+newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
+cd ${newest_rpm}
+$RPM -ivh neon-0.*.i386.rpm neon-devel*.i386.rpm subversion-1.*.i386.rpm mod_dav_svn*.i386.rpm subversion-perl*.i386.rpm subversion-python*.i386.rpm sqlite-3*.i386.rpm
+# Dependency error with Perl ??
+$RPM --nodeps -Uvh subversion-tools*.i386.rpm
 
-# TODO MUST reinstall: munin RPM (Codendi specific, with MySQL auth), viewVC (bug fixed)
+
+# TODO MUST reinstall: munin RPM (Codendi specific, with MySQL auth), viewVC (bug fixed), phpMyAdmin, Mailman, htmlpurifier, cvs
 
 # -> libnss-mysql (system authentication based on MySQL)
 $RPM -e --allmatches libnss-mysql 2>/dev/null
@@ -1127,6 +1144,13 @@ EOF
 echo "Analyzing and optimizing MySQL databases (this might take a few minutes)"
 mysqlcheck -Aaos $pass_opt
 
+##############################################
+# Upgrade to SVN 1.6
+#
+echo "Upgrade repositories to SVN 1.6"
+find /svnroot/ -maxdepth 1 -name "*" -exec sudo -u codexadm svnadmin upgrade {} \; >/dev/null
+
+
 ###############################################################################
 # Create 'private' directories in /home/group/
 echo "Creating private directories in /home/group/"
@@ -1227,10 +1251,16 @@ TODO : Déplacer le script de debug dans Layout.class.php
 # - /etc/logrotate.d/httpd and /etc/logrotate.d/vsftpd.log conatain paths with '/codex/'
 # - /etc/profile contains reference to '/etc/profile_codex'
 # - rename /etc/profile_codex
-# - /etc/profile_codex contains "C O D E X3 and "CodeX"
+# - /etc/profile_codex contains "C O D E X" and "CodeX"
 # - MySQL: 'codex' db, codexadm user and grants on codex DB.
 # - Warn admins that CODEX_LOCAL_INC was replaced by CODENDI_LOCAL_INC
 # - OpenFire install.
+# - Migrate all CodeX in /etc/codendi (site-content, etc.)
+# - change codex project short name on Partners
+# - custom themes:'codex' in theme CSS -> codendi .
+# - CODEX_LICENSE_ACCEPTED???
+#
+# Update install/admin guides with new backend system.
 #
 # remove references to sys_win_domain in documentation (Windows support..)
 #
