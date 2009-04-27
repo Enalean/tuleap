@@ -51,6 +51,8 @@ class WidgetLayoutManager {
             $readonly = !$this->_currentUserCanUpdateLayout($owner_id, $owner_type);
             if (!$readonly) {
                 echo '<a href="/widgets/widgets.php?owner='. $owner_type.$owner_id .'&amp;layout_id='. $data['id'] .'">['. $GLOBALS['Language']->getText('widget_add', 'link_add') .']</a>';
+            } else if ($owner_type === self::OWNER_TYPE_GROUP) {
+                echo '<br />';
             }
             $layout =& new WidgetLayout($data['id'], $data['name'], $data['description'], $data['scope']);
             $sql = 'SELECT * FROM layouts_rows WHERE layout_id = '. $layout->id .' ORDER BY rank';
