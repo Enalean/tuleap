@@ -341,7 +341,7 @@ class BackendSystem extends Backend {
      * dumps SSH authorized_keys into all users homedirs
      */
     public function dumpSSHKeys() {
-        $userdao = new UserDao(CodendiDatatAccess::instance());
+        $userdao = new UserDao(CodendiDataAccess::instance());
         foreach($userdao->searchSSHKeys() as $row) {
             $this->writeSSHKeys($row['user_name'], $row['authorized_keys']);
         }
