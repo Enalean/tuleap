@@ -23,5 +23,7 @@ cross_ref_fact_include	hide_references_to	Hide items referenced by this item
 cross_ref_fact_include	cross_referenced	Bidirectionnal References :
 cross_ref_fact_include	referenced_in	This item is referenced by :
 cross_ref_fact_include	reference_to	This item references :
+cross_ref_fact_include	confirm_delete	Delete the reference?
+cross_ref_fact_include	delete	Delete
 
 

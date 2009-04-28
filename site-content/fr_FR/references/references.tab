@@ -17,3 +17,5 @@ cross_ref_fact_include	hide_references_to	Cacher les objets référencés par ce
 cross_ref_fact_include	cross_referenced	Références bidirectionnelles :
 cross_ref_fact_include	referenced_in	Cet objet est référencé par :
 cross_ref_fact_include	reference_to	Cet objet référence :
+cross_ref_fact_include	confirm_delete	Supprimer la référence?
+cross_ref_fact_include	delete	Supprimer
