@@ -303,7 +303,7 @@ class BackendSystem extends Backend {
         // move the list of files to delete to a temp work file
         rename($deleting_files, $deleting_files_work);
         touch($deleting_files);
-        $this->chown($deleting_files, $GLOBALs['sys_http_user']);
+        $this->chown($deleting_files, $GLOBALS['sys_http_user']);
         
         //move all files in the .delete_files
         $waiting_files = file($deleting_files_work);
