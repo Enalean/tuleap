@@ -110,6 +110,24 @@ if ($request->isAjax()) {
                 }
             }
             break;
+        case 'svn':
+            require_once('www/svn/svn_data.php');
+            $group_id = $request->get('group_id');
+            $commit_id = $request->get('val');
+            $result = svn_data_get_revision_detail($group_id, $commit_id);
+            $date = format_date($GLOBALS['Language']->getText('system', 'datefmt'), db_result($result, 0, 'date'));
+            $list_log = '<pre>'.util_make_links(util_line_wrap(db_result($result, 0, 'description')), $group_id).'</pre>';
+            echo '<table>';
+            echo ' <tr>';
+            echo '  <td><strong>' . $GLOBALS['Language']->getText('svn_utils','date') . ':</strong></td>';
+            echo '  <td>' . $date . '</td>';
+            echo ' </tr>';
+            echo ' <tr>';
+            echo '  <td><strong>' . $GLOBALS['Language']->getText('svn_browse_revision','log_message') . ':</strong></td>';
+            echo '  <td>' . $list_log . '</td>';
+            echo ' </tr>';
+            echo '</table>';
+            break;
         case 'file':
             require_once('common/frs/FRSReleaseFactory.class.php');
             require_once('common/frs/FRSPackageFactory.class.php');
