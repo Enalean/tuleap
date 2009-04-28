@@ -22,7 +22,7 @@ cd ${scriptdir};TOP_DIR=`pwd`;cd - > /dev/null # redirect to /dev/null to remove
 RPMS_DIR=${TOP_DIR}/RPMS_Codendi
 nonRPMS_DIR=${TOP_DIR}/nonRPMS_Codendi
 Codendi_DIR=${TOP_DIR}/Codendi
-#TODO_FILE=/root/todo_codendi_upgrade_4.0.txt
+TODO_FILE=/root/todo_codendi_upgrade_4.0.txt
 export INSTALL_DIR="/usr/share/codendi"
 BACKUP_INSTALL_DIR="/usr/share/codex_36"
 ETC_DIR="/etc/codendi"
@@ -370,6 +370,8 @@ substitute '/etc/mail/sendmail.cf' '\/etc\/aliases.codex' "/etc/aliases.codendi"
 
 codendification "$ETC_DIR/conf/local.inc"
 codendification "$ETC_DIR/conf/database.inc"
+substitute "$ETC_DIR/conf/local.inc" "sys_themedefault\s*=\s*'CodendiTab'" "sys_themedefault\s*=\s*'CodeXTab'"
+substitute "$ETC_DIR/conf/local.inc" "sys_themedefault\s*=\s*'Codendi'" "sys_themedefault\s*=\s*'CodeX'"
 
 # /cvsroot and /svnroot
 rm /cvsroot
