@@ -724,7 +724,7 @@ $FIND $INSTALL_DIR -type d -exec $CHMOD 775 {} \;
 make_backup /etc/httpd/conf/httpd.conf
 for f in /etc/httpd/conf/httpd.conf /var/named/chroot/var/named/codendi_full.zone \
 /etc/httpd/conf/ssl.conf \
-/etc/httpd/conf.d/php.conf /etc/httpd/conf.d/subversion.conf \
+/etc/httpd/conf.d/php.conf /etc/httpd/conf.d/subversion.conf /etc/httpd/conf.d/auth_mysql.conf \
 /etc/libnss-mysql.cfg  /etc/libnss-mysql-root.cfg \
 /etc/codendi/conf/local.inc /etc/codendi/conf/database.inc /etc/httpd/conf.d/codendi_aliases.conf; do
     yn="0"

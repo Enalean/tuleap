@@ -391,7 +391,7 @@ done
 #
 
 # libnss-mysql
-for f in /etc/libnss-mysql.cfg  /etc/libnss-mysql-root.cfg; do
+for f in /etc/libnss-mysql.cfg  /etc/libnss-mysql-root.cfg /etc/httpd/conf.d/auth_mysql.conf; do
     yn="0"
     fn=`basename $f`
     [ -f "$f" ] && read -p "$f already exist. Overwrite? [y|n]:" yn
