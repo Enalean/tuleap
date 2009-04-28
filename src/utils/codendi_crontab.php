@@ -22,7 +22,9 @@
 
 require_once('pre.php');
 
-// TODO: launch CHECK_SYSTEM event
+// launch SYSTEM_CHECK event
+$em = EventManager::instance();
+$em->processEvent(Event::SYSTEM_CHECK, null);
 
 $system_event_manager->processEvents();
 

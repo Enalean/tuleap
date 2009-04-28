@@ -20,6 +20,14 @@
 class Event {
     
     /**
+     * Periodical system check event.
+     * 
+     * No Parameters.
+     * No expected results
+     */
+    const SYSTEM_CHECK = 'system_check';
+
+    /**
      * The user has just changed his ssh authorized keys.
      * 
      * Parameters:
@@ -27,8 +35,8 @@ class Event {
      * 
      * No expected results
      */
-    const EDIT_SSH_KEYS = 'edit_ssh_keys';
 
+    const EDIT_SSH_KEYS = 'edit_ssh_keys';
     /**
      * The user has just changed his email address.
      * 

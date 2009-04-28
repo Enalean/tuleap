@@ -60,7 +60,8 @@ class SystemEventManager {
 
         $event_manager = $this->_getEventManager();
         $events_to_listen = array(
-            'system_check', 
+            Event::SYSTEM_CHECK, 
+            Event::USER_EMAIL_CHANGED, 
             Event::EDIT_SSH_KEYS,
             'register_project_creation',
             'project_is_deleted',
@@ -117,7 +118,7 @@ class SystemEventManager {
     function addSystemEvent($event, $params) {
         //$event = constant(strtoupper($event));
         switch ($event) {
-        case 'system_check':
+        case Event::SYSTEM_CHECK:
             // TODO: check that there is no already existing system_check job?
             $this->createEvent(SystemEvent::SYSTEM_CHECK,
                                '',
@@ -169,7 +170,12 @@ class SystemEventManager {
                                $this->concatParameters($params, array('group_id', 'cvs_is_private')), 
                                SystemEvent::PRIORITY_MEDIUM);
             break;
-        case 'project_admin_ugroup_creation':
+        case 'project_is_private':
+            $params['project_is_private'] = $params['project_is_private'] ? 1 : 0;
+            $this->createEvent(SystemEvent::PROJECT_IS_PRIVATE, 
+                               $this->concatParameters($params, array('group_id', 'project_is_private')), 
+                               SystemEvent::PRIORITY_MEDIUM);
+            break;
         case 'project_admin_ugroup_creation':
         case 'project_admin_ugroup_edition':
         case 'project_admin_ugroup_remove_user':
@@ -189,12 +195,6 @@ class SystemEventManager {
                                    $this->concatParameters($params, array('group_id', 'ugroup_id')),
                                    SystemEvent::PRIORITY_MEDIUM);
             }
-            break;
-        case 'project_is_private':
-            $params['project_is_private'] = $params['project_is_private'] ? 1 : 0;
-            $this->createEvent(SystemEvent::PROJECT_IS_PRIVATE, 
-                               $this->concatParameters($params, array('group_id', 'project_is_private')), 
-                               SystemEvent::PRIORITY_MEDIUM);
             break;
         case 'mail_list_create':
             $this->createEvent(SystemEvent::MAILING_LIST_CREATE,
