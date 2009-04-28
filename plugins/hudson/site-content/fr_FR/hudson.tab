@@ -63,6 +63,9 @@ plugin_hudson	job_deleted	Le job Hudson a été supprimé.
 plugin_hudson	delete_job_confirmation	Etes-vous sûr de vouloir supprimer le job $1 du projet $2 ?
 plugin_hudson	back_to_jobs	Revenir à la liste des jobs
 
+plugin_hudson	build_time	Build exécuté le :
+
+plugin_hudson	status	Statut :
 plugin_hudson	status_blue	Succès
 plugin_hudson	status_blue_anime	En cours
 plugin_hudson	status_yellow	Instable

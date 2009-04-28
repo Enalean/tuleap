@@ -63,6 +63,9 @@ plugin_hudson	job_deleted	Hudson job deleted.
 plugin_hudson	delete_job_confirmation	Are you sure you want to delete Job $1 from project $2?
 plugin_hudson	back_to_jobs	Back to jobs list
 
+plugin_hudson	build_time	Build performed on:
+
+plugin_hudson	status	Status:
 plugin_hudson	status_blue	Success
 plugin_hudson	status_blue_anime	In progress
 plugin_hudson	status_yellow	Unstable

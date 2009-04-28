@@ -25,6 +25,7 @@ class hudsonPlugin extends Plugin {
         $this->_addHook('widgets', 'widgets', false);
         
         $this->_addHook('get_available_reference_natures', 'getAvailableReferenceNatures', false);
+        $this->_addHook('ajax_reference_tooltip', 'ajax_reference_tooltip', false);
 	}
 	
     function &getPluginInfo() {
@@ -150,6 +151,82 @@ class hudsonPlugin extends Plugin {
             'hudson_build'  => array('keyword' => 'build', 'label' => $GLOBALS['Language']->getText('plugin_hudson', 'reference_build_nature_key')),
             'hudson_job' => array('keyword' => 'job', 'label' => $GLOBALS['Language']->getText('plugin_hudson', 'reference_job_nature_key')));
         $params['natures'] = array_merge($params['natures'], $hudson_plugin_reference_natures);
+    }
+    
+    function ajax_reference_tooltip($params) {
+        require_once('HudsonJob.class.php');
+        require_once('HudsonBuild.class.php');
+        require_once('hudson_Widget_JobLastBuilds.class.php');
+        
+        $ref = $params['reference'];
+        switch ($ref->getNature()) {
+            case 'hudson_build':
+                $val = $params['val'];
+                $group_id = $params['group_id'];
+                $job_dao = new PluginHudsonJobDao(CodendiDataAccess::instance());
+                if (strpos($val, "/") !== false) {
+                    $arr = explode("/", $val);
+                    $job_name = $arr[0];
+                    $build_id = $arr[1];
+                    $dar = $job_dao->searchByJobName($job_name, $group_id);
+                } else {
+                    $build_id = $val; 
+                    $dar = $job_dao->searchByGroupID($group_id);
+                    if ($dar->rowCount() != 1) {
+                        $dar = null;
+                    }
+                }
+                if ($dar && $dar->valid()) {
+                    $row = $dar->current();
+                    $build = new HudsonBuild($row['job_url'].'/'.$build_id.'/');
+                    echo '<strong>' . $GLOBALS['Language']->getText('plugin_hudson', 'build_time') . '</strong> ' . $build->getBuildTime() . '<br />'; 
+                    echo '<strong>' . $GLOBALS['Language']->getText('plugin_hudson', 'status') . '</strong> ' . $build->getResult();
+                } else {
+                    echo '<span class="error">'.$GLOBALS['Language']->getText('plugin_hudson','error_object_not_found').'</span>';
+                }
+                break;
+            case 'hudson_job':
+                $job_dao = new PluginHudsonJobDao(CodendiDataAccess::instance());
+                $job_name = $params['val'];
+                $group_id = $params['group_id'];
+                $dar = $job_dao->searchByJobName($job_name, $group_id);
+                if ($dar->valid()) {
+                    $row = $dar->current();
+                    try {
+                        $job = new HudsonJob($row['job_url']);
+                        $job_id = $row['job_id'];
+                        $html = '';
+                        $html .= '<table>';
+                        $html .= ' <tr>';
+                        $html .= '  <td colspan="2">';
+                        $html .= '   '.$job->getName().': <img src="'.$job->getStatusIcon().'" />';
+                        $html .= '  </td>';
+                        $html .= ' </tr>';
+                        $html .= ' <tr>';
+                        $html .= '  <td>';
+                        $html .= '   <ul>';
+                        if ($job->hasBuilds()) {
+                            $html .= ' <li>'.$GLOBALS['Language']->getText('plugin_hudson', 'last_build').' <a href="/plugins/hudson/?action=view_build&group_id='.$group_id.'&job_id='.$job_id.'&build_id='.$job->getLastBuildNumber().'"># '.$job->getLastBuildNumber().'</a></li>';
+                            $html .= ' <li>'.$GLOBALS['Language']->getText('plugin_hudson', 'last_build_success').' <a href="/plugins/hudson/?action=view_build&group_id='.$group_id.'&job_id='.$job_id.'&build_id='.$job->getLastSuccessfulBuildNumber().'"># '.$job->getLastSuccessfulBuildNumber().'</a></li>';
+                            $html .= ' <li>'.$GLOBALS['Language']->getText('plugin_hudson', 'last_build_failure').' <a href="/plugins/hudson/?action=view_build&group_id='.$group_id.'&job_id='.$job_id.'&build_id='.$job->getLastFailedBuildNumber().'"># '.$job->getLastFailedBuildNumber().'</a></li>';
+                        } else {
+                            $html .= ' <li>'. $GLOBALS['Language']->getText('plugin_hudson', 'widget_build_not_found') . '</li>';
+                        }
+                        $html .= '   </ul>';
+                        $html .= '  </td>';
+                        $html .= '  <td class="widget_lastbuilds_weather">';
+                        $html .= $GLOBALS['Language']->getText('plugin_hudson', 'weather_report').'<img src="'.$job->getWeatherReportIcon().'" align="middle" />';
+                        $html .= '  </td>';
+                        $html .= ' </tr>';
+                        $html .= '</table>';  
+                        echo $html;    
+                    } catch (Exception $e) {
+                    }
+                } else {
+                    echo '<span class="error">'.$GLOBALS['Language']->getText('plugin_hudson','error_object_not_found').'</span>';
+                }
+                break;
+        }
     }
     
     function process() {

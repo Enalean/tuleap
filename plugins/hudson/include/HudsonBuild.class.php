@@ -106,6 +106,9 @@ class HudsonBuild {
     function getTimestamp() {
         return $this->dom_build->timestamp;
     }
+    function getBuildTime() {
+        return format_date($GLOBALS['Language']->getText('system', 'datefmt'), substr($this->getTimestamp(), 0, -3));
+    }
 }
 
 ?>
