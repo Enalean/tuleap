@@ -271,13 +271,12 @@ class FRSRelease extends Error {
         $tooltip .= '  <td>'.$this->getName().'</td>';
         $tooltip .= ' </tr>';
         $tooltip .= ' <tr>';
-        $tooltip .= '  <td><strong>' . $GLOBALS['Language']->getText('file_showfiles', 'date') . ':</strong></td>';
-        $tooltip .= '  <td>'.format_date("Y-m-d", $this->getReleaseDate()).'</td>';
-        $tooltip .= ' </tr>';
-        $tooltip .= ' <tr>';
-        $tooltip .= ' <tr>';
         $tooltip .= '  <td><strong>' . $GLOBALS['Language']->getText('file_admin_editpackages', 'p_name') . ':</strong></td>';
         $tooltip .= '  <td>'.$package->getName().'</td>';
+        $tooltip .= ' </tr>';
+        $tooltip .= ' <tr>';
+        $tooltip .= '  <td><strong>' . $GLOBALS['Language']->getText('file_showfiles', 'date') . ':</strong></td>';
+        $tooltip .= '  <td>'.format_date($GLOBALS['Language']->getText('system', 'datefmt_short'), $this->getReleaseDate()).'</td>';
         $tooltip .= ' </tr>';
         $tooltip .= '</table>';
         return $tooltip;

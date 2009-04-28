@@ -303,3 +303,5 @@ file_shownotes	release_notes	Notes et Modifications de la version
 file_shownotes	release_name	Nom de version
 file_shownotes	changes	Modifications
 file_shownotes	notes	Notes
+
+file_ref_tooltip	package_release	Paquet/Version
