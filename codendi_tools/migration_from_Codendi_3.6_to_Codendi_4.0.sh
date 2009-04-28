@@ -1167,7 +1167,7 @@ mysqlcheck -Aaos $pass_opt
 # Upgrade to SVN 1.6
 #
 echo "Upgrade repositories to SVN 1.6"
-find /svnroot/ -maxdepth 1 -name "*" -exec sudo -u codexadm svnadmin upgrade {} \; >/dev/null
+find /svnroot/ -maxdepth 1 -name "*" -exec sudo -u codendiadm svnadmin upgrade {} \; >/dev/null
 
 
 ###############################################################################
