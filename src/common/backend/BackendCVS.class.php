@@ -336,6 +336,7 @@ class BackendCVS extends Backend {
     public function CVSRootListUpdate() {
         $cvs_root_allow_array = array();
         $projlist = array();
+	$repolist = array();
 
         $service_dao = $this->_getServiceDao();
         $dar = $service_dao->searchActiveUnixGroupByUsedService('cvs');

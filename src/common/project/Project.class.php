@@ -351,6 +351,11 @@ class Project extends Group {
         return $this->project_data_array['svn_preamble'];
     }
 
+    function isSVNPrivate() {
+        // TODO XXXX not implemented yet.
+        return false;
+    }
+
     function getProjectsCreatedFrom() {
         $sql = 'SELECT * FROM groups WHERE built_from_template = '. $this->getGroupId() ." AND status <> 'D'";
         $subprojects = array();

@@ -127,6 +127,19 @@ class BackendSVN extends Backend {
         return true;
     }
 
+    /**
+     * Check if repository of given project exists
+     * @param Project
+     * @return true is repository already exists, false otherwise
+     */
+    function repositoryExists($project) {
+        $unix_group_name=$project->getUnixName(false); // May contain upper-case letters
+        $svn_dir=$GLOBALS['svn_prefix']."/".$unix_group_name;
+        if (is_dir($svn_dir)) {
+          return true;
+        } else return false; 
+    }
+
 
     /**
      * Put in place the svn post-commit hook for email notification

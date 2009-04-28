@@ -61,7 +61,7 @@ class SystemEvent_SYSTEM_CHECK extends SystemEvent {
         // Check mailing lists
         // (re-)create missing ML
         $mailinglistdao = new MailingListDao(CodendiDataAccess::instance());
-        $dar = $mailinglistdao()->searchAllActiveML();
+        $dar = $mailinglistdao->searchAllActiveML();
         foreach($dar as $row) {
             $list = new MailingList($row);
             if (!$backendMailingList->listExists($list)) {
