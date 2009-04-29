@@ -126,7 +126,7 @@ codendification() {
 # @param column
 drop_index() {
     $CAT <<EOF | $MYSQL $pass_opt codendi | grep -q $2
-SHOW INDEX FROM $1 LIKE '$2';
+SHOW INDEX FROM $1 WHERE key_name = '$2';
 EOF
     if [ $? -ne 0 ]; then
         $CAT <<EOF | $MYSQL $pass_opt codendi
@@ -1257,7 +1257,7 @@ mysqlcheck -Aaos $pass_opt
 # Upgrade to SVN 1.6
 #
 echo "Upgrade repositories to SVN 1.6"
-find /svnroot/ -maxdepth 1 -name "*" -exec sudo -u codendiadm svnadmin upgrade {} \; >/dev/null
+find /svnroot/ -maxdepth 1 -mindepth 1 -name "*" -exec sudo -u codendiadm svnadmin upgrade {} \; >/dev/null
 
 
 ###############################################################################
