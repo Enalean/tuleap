@@ -41,6 +41,7 @@ class SystemEvent_SYSTEM_CHECK extends SystemEvent {
         // Private project: if codeaxadm is not member of the project: check access to SVN (incl. ViewVC), CVS, Web...
         // CVS Watch?
         // TODO: log event in syslog?
+        // TODO: check that there is no pending event??? What about lower priority events??
         
         // remove deleted releases and released files
         $backendSystem->cleanupFRS();

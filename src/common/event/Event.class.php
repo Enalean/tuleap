@@ -37,6 +37,7 @@ class Event {
      */
 
     const EDIT_SSH_KEYS = 'edit_ssh_keys';
+
     /**
      * The user has just changed his email address.
      * 

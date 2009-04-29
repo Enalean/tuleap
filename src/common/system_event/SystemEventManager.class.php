@@ -35,6 +35,7 @@ require_once('common/system_event/include/SystemEvent_MAILING_LIST_CREATE.class.
 require_once('common/system_event/include/SystemEvent_MAILING_LIST_DELETE.class.php');
 require_once('common/system_event/include/SystemEvent_CVS_IS_PRIVATE.class.php');
 require_once('common/system_event/include/SystemEvent_PROJECT_IS_PRIVATE.class.php');
+require_once('common/system_event/include/SystemEvent_SERVICE_USAGE_SWITCH.class.php');
 
 // Backends
 require_once('common/backend/Backend.class.php');
@@ -78,7 +79,8 @@ class SystemEventManager {
             'project_admin_ugroup_deletion',
             'project_admin_remove_user_from_project_ugroups',
             'mail_list_create',
-            'mail_list_delete'
+            'mail_list_delete',
+            'service_is_used'
             );
         foreach($events_to_listen as $event) {
             $event_manager->addListener($event, $this, 'addSystemEvent', true, 0);
@@ -206,6 +208,11 @@ class SystemEventManager {
                                $params['group_list_id'],
                                SystemEvent::PRIORITY_LOW);
             break;
+        case 'service_is_used':
+            $this->createEvent(SystemEvent::SERVICE_USAGE_SWITCH,
+                               $this->concatParameters($params, array('group_id', 'shortname', 'is_used')),
+                               SystemEvent::PRIORITY_MEDIUM);
+            break;
         default:
             break;
         }
@@ -265,6 +272,7 @@ class SystemEventManager {
                 case SystemEvent::MAILING_LIST_DELETE:
                 case SystemEvent::CVS_IS_PRIVATE:
                 case SystemEvent::PROJECT_IS_PRIVATE:
+                case SystemEvent::SERVICE_USAGE_SWITCH:
                     $klass = 'SystemEvent_'. $row['type'];
                     $sysevent = new $klass($row['id'], 
                                            $row['type'], 

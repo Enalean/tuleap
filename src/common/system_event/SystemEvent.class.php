@@ -56,7 +56,8 @@ class SystemEvent {
     const PROJECT_IS_PRIVATE    = "PROJECT_IS_PRIVATE";
     const MAILING_LIST_CREATE   = "MAILING_LIST_CREATE";
     const MAILING_LIST_DELETE   = "MAILING_LIST_DELETE";
-    
+    const SERVICE_USAGE_SWITCH  = "SERVICE_USAGE_SWITCH";
+ 
     // Define status value (in sync with DB enum)
     const STATUS_NEW        = "NEW";
     const STATUS_RUNNING    = "RUNNING";

@@ -104,6 +104,9 @@ function display_service_row($group_id, $service_id, $label, $short_name, $descr
 
 session_require(array('group'=>$group_id,'admin_flags'=>'A'));
 
+$pm = ProjectManager::instance();
+$project=$pm->getProject($group_id);
+
 
 $is_superuser=false;
 if (user_is_super_user()) {
@@ -171,8 +174,7 @@ if (($func=='do_create')||($func=='do_update')) {
         if (strstr($link,'$projectname')) {
             // Don't check project name if not needed.
             // When it is done here, the service bar will not appear updated on the current page
-            $pm = ProjectManager::instance();
-            $link=str_replace('$projectname',$pm->getProject($group_id)->getUnixName(),$link);
+            $link=str_replace('$projectname',$project->getUnixName(),$link);
         }
         $link=str_replace('$sys_default_domain',$GLOBALS['sys_default_domain'],$link);
         if ($GLOBALS['sys_force_ssl']) {
@@ -257,6 +259,11 @@ if ($func=='do_update') {
         $admin_statement = ", is_active=". ($is_active ? 1 : 0) .", scope='". $scope ."'";
         
     }
+
+    if (isset($short_name)) {
+        // Store current 'is_used' value for this service
+        $previous_is_used=$project->usesService($short_name);
+    }
     $sql = "UPDATE service SET label='$label', description='$description', link='$link' ". $admin_statement .
         ", is_used=".($is_used?"1":"0").", rank='$rank' $set_server_id, is_in_iframe=$is_in_iframe WHERE service_id=$service_id";
     $result=db_query($sql);
@@ -267,23 +274,25 @@ if ($func=='do_update') {
         $feedback .= ' '.$Language->getText('project_admin_servicebar','s_update_success').' ';
     }
 
+
     // If this is a global service (i.e. with a shortname)... 
     if (isset($short_name)) {
-        //... we might need to (de-)activate the corresponding reference
-        $reference_manager =& ReferenceManager::instance();
-        $reference_manager->updateReferenceForService($group_id,$short_name,($is_used?"1":"0"));
-        
-        //... and let plugins do what they have to do.
-        $em =& EventManager::instance();
-        $em->processEvent('service_is_used', array('shortname' => $short_name, 'is_used' => $is_used?true:false, 'group_id' => $group_id));
+        // And if usage was changed
+        if ( $previous_is_used != $is_used ) {
+            //... we might need to (de-)activate the corresponding reference
+            $reference_manager =& ReferenceManager::instance();
+            $reference_manager->updateReferenceForService($group_id,$short_name,($is_used?"1":"0"));
+            
+            //... and let plugins do what they have to do.
+            $em =& EventManager::instance();
+            $em->processEvent('service_is_used', array('shortname' => $short_name, 'is_used' => $is_used?true:false, 'group_id' => $group_id));
+        }
     }
 }
 
 
 
 
-$pm = ProjectManager::instance();
-$project=$pm->getProject($group_id);
 
 project_admin_header(array('title'=>$Language->getText('project_admin_servicebar','edit_s_bar'),'group'=>$group_id,
 			   'help' => 'ServiceConfiguration.html'));
