@@ -125,13 +125,9 @@ codendification() {
 # @param table
 # @param column
 drop_index() {
-    $CAT <<EOF | $MYSQL $pass_opt codendi | grep -q $2
-SHOW INDEX FROM $1 WHERE key_name = '$2';
-EOF
-    if [ $? -ne 0 ]; then
-        $CAT <<EOF | $MYSQL $pass_opt codendi
-ALTER TABLE $1 DROP INDEX $2;
-EOF
+    $MYSQL $pass_opt codendi -e "SHOW INDEX FROM $1 WHERE key_name = '$2'" | grep -q $2
+    if [ $? -eq 0 ]; then
+        $MYSQL $pass_opt codendi -e "ALTER TABLE $1 DROP INDEX $2"
     fi
 }
 ##############################################
