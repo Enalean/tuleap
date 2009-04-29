@@ -39,10 +39,9 @@ class UserDao extends DataAccessObject {
     */
     function searchByStatus($status) {
         if (is_array($status)) {
-            $where_status=implode("' OR status = '",$status);
-        } else { $where_status = $status; }
-        $sql = sprintf("SELECT * FROM user WHERE status = '%s'",
-                       $where_status);
+            $where_status=$this->da->quoteSmartImplode(" OR status = ",$status);
+        } else { $where_status = $this->da->quoteSmart($status); }
+        $sql = "SELECT * FROM user WHERE status = $where_status";
         return $this->retrieve($sql);
     }
     

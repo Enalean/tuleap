@@ -144,6 +144,21 @@ class DataAccess {
         return $value;
     }
 
+    /**
+     * Save implode function to use with SQL queries
+    * @static
+    */
+    function quoteSmartImplode($glue, $pieces, $params = array()) {
+        $lem = array_keys($pieces);
+        $str='';
+        for($i=0;$i<sizeof($lem);$i++) {
+            $quoted_piece=$this->quoteSmart($pieces[$lem[$i]],$params);
+            $str .= ($i == sizeof($lem)-1) ? $quoted_piece : $quoted_piece.$glue;
+        }
+        return $str;
+    }
+
+
     function escapeInt($v, $null = CODENDI_DB_NOT_NULL) {
         $m = array();
         if($null === CODENDI_DB_NULL && $v === '') {
