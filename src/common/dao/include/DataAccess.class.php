@@ -145,19 +145,23 @@ class DataAccess {
     }
 
     /**
-     * Save implode function to use with SQL queries
-    * @static
-    */
+     * Safe implode function to use with SQL queries
+     * @static
+     */
     function quoteSmartImplode($glue, $pieces, $params = array()) {
         $lem = array_keys($pieces);
         $str='';
-        for($i=0;$i<sizeof($lem);$i++) {
-            $quoted_piece=$this->quoteSmart($pieces[$lem[$i]],$params);
-            $str .= ($i == sizeof($lem)-1) ? $quoted_piece : $quoted_piece.$glue;
-        }
+        $after_first=false;
+        foreach ($pieces as $piece) {
+            if ($after_first) {
+                $str.=$glue;
+            }
+            $str.=$this->quoteSmart($piece,$params);
+            $after_first=true;
+        }            
         return $str;
     }
-
+    
 
     function escapeInt($v, $null = CODENDI_DB_NOT_NULL) {
         $m = array();
