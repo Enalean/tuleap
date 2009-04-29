@@ -999,9 +999,14 @@ echo "Configuring Mailman..."
 
 # Update Mailman config
 if [ "$disable_subdomains" != "y" ]; then
-    $CAT <<EOF >> /usr/lib/mailman/Mailman/mm_cfg.py
-DEFAULT_EMAIL_HOST = 'lists.$sys_default_domain'
-DEFAULT_URL_HOST = 'lists.$sys_default_domain'
+  LIST_DOMAIN=lists.$sys_default_domain
+else
+  LIST_DOMAIN=$sys_default_domain
+fi
+
+$CAT <<EOF >> /usr/lib/mailman/Mailman/mm_cfg.py
+DEFAULT_EMAIL_HOST = '$LIST_DOMAIN'
+DEFAULT_URL_HOST = '$LIST_DOMAIN'
 add_virtualhost(DEFAULT_URL_HOST, DEFAULT_EMAIL_HOST)
 
 # Remove images from Mailman pages (GNU, Python and Mailman logos)
@@ -1012,17 +1017,7 @@ IMAGE_LOGOS = 0
 #PUBLIC_ARCHIVE_URL = 'https://%(hostname)s/pipermail/%(listname)s'
 
 EOF
-else
-    $CAT <<EOF >> /usr/lib/mailman/Mailman/mm_cfg.py
-# Remove images from Mailman pages (GNU, Python and Mailman logos)
-IMAGE_LOGOS = 0
 
-# Uncomment to run Mailman on secure server only
-#DEFAULT_URL_PATTERN = 'https://%s/mailman/'
-#PUBLIC_ARCHIVE_URL = 'https://%(hostname)s/pipermail/%(listname)s'
-
-EOF
-fi
 
 # Compile file
 `python -O /usr/lib/mailman/Mailman/mm_cfg.py`
