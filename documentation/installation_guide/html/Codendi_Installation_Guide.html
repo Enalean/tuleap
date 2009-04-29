@@ -1943,17 +1943,9 @@ Other cron jobs run daily and weekly statistics.<br>
 <br>
 <h2>Root crontab</h2>
 Find below a copy of the root crontab file. we highly recommend that
-you keep the same time and frequency to run the jobs. You can however
-increase the frequency of the xerox_crontab.sh job which runs normally
-once every 2 hours to create new user and project directory on the
-Linux
-server (including the CVS repo). <br>
+you keep the same time and frequency to run the jobs. <br>
 <br>
-<blockquote><tt># run the Codendi crontab script once every 2 hours</tt><br>
-  <tt># this script synchronizes user, groups, cvs repo, </tt><br>
-  <tt># directories, mailing lists, etc...</tt><br>
-  <tt>0 0-23/2 * * * /usr/share/codendi/src/utils/xerox_crontab.sh </tt><br>
-  <tt>#</tt><br>
+<blockquote>
   <tt># run the daily statistics script just a little bit after</tt><br>
   <tt># midnight so that it computes stats for the day before</tt><br>
   <tt># Run at 0:30 am</tt><br>

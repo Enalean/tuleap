@@ -1543,15 +1543,6 @@ crontab.
 &nbsp;
 <table border="1" width="100%" nosave="">
   <tbody>
-    <tr nosave="">
-      <td style="font-family: monospace;" valign="top" nosave="">/usr/share/codendi/src/utils/xerox_crontab.sh</td>
-      <td>This is the master daemon script for the Codendi site. It runs
-once every 2 hours and update all the user/group accounts, initialize
-CVS repository,
-home directories,... and do all the necessary tasks so that the user
-and groups
-(projects) have a fully functional environment from a Unix perspective</td>
-    </tr>
     <tr>
       <td style="font-family: monospace;">/usr/share/codendi/src/utils/xerox_all_daily_stats.sh</td>
       <td>As the name says it this the master script that compute all
@@ -1577,133 +1568,6 @@ projects</td>
 </table>
 <br>
 &nbsp; </p>
-<h2> The scripts</h2>
-It is beyond the scope of this document to review all the scripts under
-<span style="font-family: monospace;">/usr/share/codendi/src/utils</span>. The
-most important scripts a Codendi administrator must know about are:<br>
-<p><b><u>xerox_crontab.sh</u></b> </p>
-<p>This is an orchestrator script in charge of running many others in
-the appropriate order. By default it runs once every other hours. Let's
-review what the script does step by step: </p>
-<ol>
-  <li> First it dumps all the necessary information from the Codendi
-database
-into the <a href="#Dump_files">Dump Files</a> area. User, groups
-(projects),
-mailing list information, User SSH keys. Dump files are used throughout
-the rest of the script.<br>
-  </li>
-  <li> Generate e-mail aliases for the mailing lists
-(<span style="font-style: italic;">projectname</span>-xxxxx@lists.<span
- style="font-style: italic;">your.codendi.domain</span>)
-and for the users (<span style="font-style: italic;">username</span>@users.<span
- style="font-style: italic;">your.codendi.domain</span>) and store them
-in the&nbsp; <span style="font-family: monospace;">/var/lib/codendi/dumps/aliases</span>
-file.</li>
-  <li> Copy the freshly dumped file into /etc/aliases.codendi and force
-sendmail
-aliases refresh to activate the new aliases.</li>
-  <li> Generate the Apache config file for virtual hosts (project Web
-sites)</li>
-  <li> Run <span style="font-family: monospace;">new_parse.pl</span>
-to update existing user account
-(creation, deletion, ,suspension)
-and create the new user and group account as well as all the related
-directories
-(see below for more details)</li>
-  <li> Restart Apache with the new Virtual host definition (done after
-user/group
-update)</li>
-  <li> Create the appropriate SSH shared in user directories (as given
-through
-the Web interface)</li>
-  <li> Create any new mailing list in mailman.</li>
-  <li> Exit</li>
-</ol>
-<p><br>
-<b><u>new_parse.pl</u> (<i>deprecated in Codendi 4.0</i>)</b> </p>
-<p>This script is critical in the creation of the user/group
-infrastructure
-and it is worth spending some time on it. Let's go through the file
-step by
-step: </p>
-<ol>
-  <li> Open the user dump file and the /etc/passwd and /etc/shadow
-files and look for those users that have been deleted, activated,
-suspended, password
-or shell has changed and modify the /etc/passwd and /etc/shadow file
-accordingly</li>
-  <li> If this is a new user:</li>
-  <ul>
-    <li> Create the user home directory with appropriate permissions in
-/home/users/</li>
-  </ul>
-  <li> Do the same with groups (projects). Open the project dump file
-and
-/etc/group and see which group have been added/deleted/suspended.
-Project directories are all under /home/groups.</li>
-  <li> If this is a new project :</li>
-  <ul>
-    <li> Create the project home directory in /home/groups</li>
-    <li> Create the default htdocs subdirectory for
-the
-Project Web site in the project home directory</li>
-    <li> Copy the default index.php file (home page) in htdocs so that
-when
-you access the project Web site it displays something clever (We copy
-this
-default home from the master copy in src/utils/default_page.php)</li>
-    <li> Create the FTP release space and the Anonymous FTP space.</li>
-    <li> Initialize a new CVS repository for this project with the "cvs
-init"
-command</li>
-    <li> Create the lock directory in /var/lock/cvs/<i>projectname</i> with
-world
-writable permission (see <a href="#CVS_Repositories">CVS&nbsp;Repositories
-      </a>above) and change the CVSROOT/config file to tell CVS that it
-must
-use this as a lock directory. Commit the changes made to the config
-file
-with a simple rcs checkin command.</li>
-    <li>Change the CVSROOT/loginfo file to make sure that
-CVS&nbsp;change
-all the committed files to group ownership. This is to solve the
-problem if
-a user belongs to several groups and the one selected by default is not
-the
-right one. The setuid bit on the group should probably work as well but
-it
-has not been tested. This method works so let's keep it.</li>
-    <li> Change the user ownership of the entire CVS repo to <i>codendiadm</i>
-to start with</li>
-    <li> (deprecated - user no longer created) Create the anoncvs_xxxx user in case we want to activate the
-anonymous
-checkout access to CVS again one day. (today you must be a registered
-user
-to checkout&nbsp; -read- and you must be a project member to commit
-changes
--write-)</li>
-    <li> If it's a private project or if the CVS repo contains a <tt>.CODENDI_PRIVATE</tt>
-file, then make sure only the project members can look at the files in
-the
-CVS repo when using the shell account.</li>
-    <li>If it's a private project or if the group home directory
-contains
-a <tt>.CODENDI_PRIVATE</tt> file, then make sure that only project
-members
-have access to the group home directory when using the shell account.</li>
-    <li> Initialize a new Subversion repository for this project and
-create
-the default access permission file and install the post-commit hook
-script<br>
-    </li>
-  </ul>
-</ol>
-The output of all the back-end scripts run through xerox_crontab.sh is
-sent to
-the
-codendi-admin email alias for verification .<br>
-<br>
 <hr width="100%" size="2">
 <h1> <a name="Log_Files"></a>Log Files</h1>
 <h2> Log Files</h2>
@@ -2294,11 +2158,7 @@ The fastest and safest way (where xxx is the project name):
 <li>Make a backup copy of the current tree in /tmp just in case...:
 <br><tt>tar cvfz /tmp/xxx_repository.tgz ./xxx   </tt>
 <li>Delete the CVS or SVN tree: <br><tt>rm -rf  xxx</tt>
-<li>Force the cron update process to run now:
-<pre>
-$ cd /usr/share/codendi/src/utils
-$./xerox_crontab.sh
-</pre>
+<li>Force the cron update process to run now.
 <li>Delete corresponding entries from cvs_checkins, cvs_commits and cvs_descs tables to prevent showing them while browsing commits with viewVC.
 </ul>
 Now you have a fresh CVS or SVN repository and the team can start the import again.
@@ -2921,7 +2781,7 @@ Some projects may want to switch from CVS to Subversion. There are many good rea
 <li>Then simply type:
 <pre>cvs2svn --existing-svnrepos -s /svnroot/projname --tmpdir=/tmp /cvsroot/projname</pre>
 You might need to add "--encoding=iso8859-1 --encoding=utf_8" if the conversion process stops because of character encoding issues.
-<br><b>Note:</b> If the conversion fails with a Berkeley DB error, this might be caused by BDB version differences between the svn client (v1.2+) and the svn repository (v1.0 or v1.1). In this case, delete the old repository, and recreate it with the 'xerox_crontab.sh' script. Actually, you should also upgrade all existing svn repositories that use the deprecated version of BDB...
+<br><b>Note:</b> If the conversion fails with a Berkeley DB error, this might be caused by BDB version differences between the svn client (v1.2+) and the svn repository (v1.0 or v1.1). In this case, delete the old repository, and recreate it with the backend script. Actually, you should also upgrade all existing svn repositories that use the deprecated version of BDB...
 <li>This will convert the CVS repository with all the historical information (including all commits, tags and branches).
 To select a set of historical data, please read: <a href="http://cvs2svn.tigris.org/cvs2svn.html">http://cvs2svn.tigris.org/cvs2svn.html</a>
 <li>You should then set proper ownership on the repository:

@@ -1262,6 +1262,13 @@ echo "Creating private directories in /home/group/"
 find /home/groups/ -maxdepth 1 -mindepth 1 -type d -exec mkdir -v --context=root:object_r:httpd_sys_content_t --mode=2770 '{}/private' \; -exec chown dummy '{}/private' \;
 
 
+###############################################################################
+# Remove old backend script from crontab
+echo "Remove xerox_crontab script from root crontab"
+crontab -u root -l > /tmp/root_cronfile
+$PERL -i'.orig' -p -e's/^(.*xerox_crontab.sh.*)$/#\1/' /tmp/root_cronfile
+crontab -u root /tmp/root_cronfile
+
 
 ##############################################
 # Fix SELinux contexts if needed
@@ -1352,7 +1359,7 @@ TODO : Déplacer le script de debug dans Layout.class.php
 #??? Mailman: codex-admin??
 ##$PERL -pi -e "s/^#ftpd_banner=.*/ftpd_banner=Welcome to CodeX FTP service./g" /etc/vsftpd/vsftpd.conf 
 # - /var/lib/codex/ftp/.message contains 'CodeX'
-# - Update root and codexadm crontab
+# - Update root and codexadm crontab (partially done)
 # - /etc/logrotate.d/httpd and /etc/logrotate.d/vsftpd.log conatain paths with '/codex/'
 # - /etc/profile contains reference to '/etc/profile_codex'
 # - rename /etc/profile_codex

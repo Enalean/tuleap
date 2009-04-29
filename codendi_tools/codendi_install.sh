@@ -1210,11 +1210,6 @@ fi
 #
 echo "Installing root user crontab..."
 $CAT <<'EOF' >/tmp/cronfile
-# run the Codendi crontab script once every 2 hours
-# this script synchronizes user, groups, cvs repo,
-# directories, mailing lists, etc...
-0 0-23/2 * * * /usr/share/codendi/src/utils/xerox_crontab.sh
-#
 # run the daily statistics script just a little bit after
 # midnight so that it computes stats for the day before
 # Run at 0:30 am
@@ -1532,7 +1527,6 @@ todo " * Go in Openfire Admin iterface (on port 9090 by def), then: Server Setti
 todo "To customize the network gallery, copy /usr/share/codendi/site-content/en_US/layout/osdn_sites.txt to /etc/codendi/site-content/en_US/layout/ and edit it."
 todo "Create the shell login files for Codendi users in /etc/skel_codendi"
 todo "Change the default login shell if needed in the database (/sbin/nologin or /usr/lib/codendi/bin/cvssh, etc.)"
-todo "Then, run the main crontab script manually: /usr/share/codendi/src/utils/xerox_crontab.sh"
 todo "Last, log in as 'admin' on web server, read/accept the license, and click on 'server update'. Then update the server to the latest available version."
 todo ""
 todo "Note: Codendi now supports CVSNT and the sserver protocol, but they are not installed by default."
