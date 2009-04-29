@@ -68,6 +68,9 @@ if (( ! -e $CHCON ) || ( ! -e "/etc/selinux/config" ) || ( `grep -i '^SELINUX=di
 # Allow scripts to connect to the internet (e.g. for external RSS feeds)
 `setsebool -P httpd_can_network_connect=1`;
 
+# Relax restriction on NSCD (need to access MySQL)
+`setsebool -P nscd_disable_trans 1`;
+
 # Reload SELinux modules
 opendir(DIR, "$INSTALL_DIR/codendi_tools/selinux/modules") || die "Can't opendir SELinux modules: $!";
 while($file=readdir(DIR)) {
