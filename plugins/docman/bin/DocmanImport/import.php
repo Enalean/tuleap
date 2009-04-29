@@ -21,6 +21,9 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+ini_set('max_execution_time', 0);
+ini_set('memory_limit', -1);
+
 require_once 'XMLDocmanImport.class.php';
 require_once 'XMLDocmanUpdate.class.php';
 require_once 'parameters.php';
@@ -47,7 +50,9 @@ Optional parameters:
     --update                                Update the document tree. Warning! This will create, update or remove documents
     --continue                              Continue the upload: this will only create missing items
     --path=<path to import>                 Path to import in the archive (default: \"/Project Documentation\")
-    --import-metadata=<metadata title>      Dynamic metadata that will be appended by import messages. If not defined, the messages will be appended to the item description.
+    --import-metadata=<metadata title>      Dynamic metadata that will be appended by import messages. 
+                                            If not defined, the messages will be appended to the item description.
+                                            If set to \"false\" no messages will be recorded.
     --auto-retry                            In case of error, retry 5 times before asking the user what to do
     --log                                   Log output in a file
     --help                                  Show this help".PHP_EOL.PHP_EOL; 

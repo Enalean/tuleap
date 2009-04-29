@@ -62,7 +62,10 @@ class XMLDocmanImport {
     
     // Whether the items will be reordered or not (folder, docs - alphabetical)
     protected $reorder;
-            
+
+    // Whether the import message will be recorded in a metadata or not
+    protected $recordImportMessage;
+
     // The import messages will be appended in the following metadata
     protected $importMessageMetadata;
     
@@ -98,10 +101,16 @@ class XMLDocmanImport {
             $this->log("* Logging output to \"$logFile\" *".PHP_EOL);
         }
         
-        $this->force = $force;
-        $this->reorder = $reorder;
-        $this->importMessageMetadata = $importMessageMetadata;
+        $this->force     = $force;
+        $this->reorder   = $reorder;
         $this->autoRetry = $autoRetry;
+        if (strtolower($importMessageMetadata) == "false") {
+            // Don't record import message in metadata
+            $this->recordImportMessage = false;
+        } else {
+            $this->recordImportMessage = true;
+            $this->importMessageMetadata = $importMessageMetadata;
+        }
 
         try {
             $this->soap = new SoapClient($wsdl, array('trace' => true));
@@ -173,7 +182,7 @@ class XMLDocmanImport {
         $this->buildMetadataMap();
         
         // Import message metadata checks
-        if ($this->importMessageMetadata != '') {
+        if ($this->recordImportMessage && $this->importMessageMetadata != '') {
             if (!array_key_exists($this->importMessageMetadata, $this->metadataMap)) {
                 $this->exitError("You specified an incorrect import message metadata: ".$this->importMessageMetadata.PHP_EOL);
             } else {
@@ -377,35 +386,37 @@ class XMLDocmanImport {
             $this->log("Done.".PHP_EOL);
         }
     }
-    
+
     /**
      * Appends the given message to the description node of the item
      */
     private function addImportMessageOnItem($item, $message) {
-        $appendText = "Import information: $message";
-        
-        if ($this->importMessageMetadata == '') {
-            if (!isset($item->properties->description)) {
-                $item->properties->addChild('description');
-            }
-            $node = $item->properties->description;
-        } else {
-            $nodes = $item->xpath('properties/property[@title="'.$this->importMessageMetadata.'"]');
-            if (count($nodes) > 0) {
-                $node = $nodes[0];
-            } else {
-                $node = $item->properties->addChild('property');
-                $node->addAttribute('title', $this->importMessageMetadata);
-            }
-        }
-        
-        if ((string)$node != '') {
-            $appendText = "\n$appendText";
-        }
+        if ($this->recordImportMessage) {
+            $appendText = "Import information: $message";
 
-        $this->appendTextToNode($node, $appendText);
+            if ($this->importMessageMetadata == '') {
+                if (!isset($item->properties->description)) {
+                    $item->properties->addChild('description');
+                }
+                $node = $item->properties->description;
+            } else {
+                $nodes = $item->xpath('properties/property[@title="'.$this->importMessageMetadata.'"]');
+                if (count($nodes) > 0) {
+                    $node = $nodes[0];
+                } else {
+                    $node = $item->properties->addChild('property');
+                    $node->addAttribute('title', $this->importMessageMetadata);
+                }
+            }
+
+            if ((string)$node != '') {
+                $appendText = "\n$appendText";
+            }
+
+            $this->appendTextToNode($node, $appendText);
+        }
     }
-    
+
     /**
      * Appends a text to a node
      */
@@ -417,7 +428,9 @@ class XMLDocmanImport {
     }
 
     protected function printSoapResponseAndThrow(SoapFault $e) {
-        $this->log("Response:".PHP_EOL.$this->soap->__getLastResponse().PHP_EOL);
+        $this->log(PHP_EOL);
+        $this->log($e->getMessage().PHP_EOL);
+        $this->log("*** SOAP Response:".PHP_EOL.$this->soap->__getLastResponse().PHP_EOL);
         throw $e;
     }
     
@@ -595,8 +608,8 @@ class XMLDocmanImport {
                         }
     
                         $server_values = array_keys($this->metadataMap[$name]['values']);
-                        if ($values != $server_values) {
-                            $diff1 = array_diff($values, $server_values);
+                        $diff1 = array_diff($values, $server_values);
+                        if (count($diff1) > 0) {
                             $diff2 = array_diff($server_values, $values);
                             $errorMsg = "The property '$name' doesn't declare the same list of values as in the target project:".PHP_EOL;
                             if (count($diff1)) {
