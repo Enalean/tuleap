@@ -149,5 +149,9 @@ class Widget_ProjectSvnStats extends Widget {
     protected function sortByTop($a, $b) {
         return strnatcasecmp($this->tmp_nb_of_commit[$a], $this->tmp_nb_of_commit[$b]);
     }
+    
+    function getDescription() {
+        return $GLOBALS['Language']->getText('widget_description_project_svn_stats','description');
+    }
 }
 ?>

@@ -116,5 +116,5 @@ svn_viewvc	acc_den_comment	Vous n'avez pas l'autorisation d'accès pour ce fichi
 svn_viewvc	bad_roottype	roottype invalide
 
 
-svn_widget	svnstats	Svn Stats
+svn_widget	svnstats	Statistiques Svn
 

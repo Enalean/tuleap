@@ -48,5 +48,6 @@ widget_description_project_description	description	Allow you to view the project
 widget_description_project_latest_news	description	List the last 10 pieces of news posted by the project members.
 widget_description_project_members	description	List the project members.
 widget_description_project_public_areas	description	List all available services for this project along with some information next to it. Click on any of this item to access a service. <br>The role of this area is pretty much equivalent to the Project Main Menu at the top of the screen except that it shows additional information about each of the service (e.g. total number of open bugs, tasks, ...) 
-widget_description_project_latest_cvs_commits	description	List CVS commits you have done, by project.
-widget_description_project_latest_svn_commits	description	List SVN commits you have done, by project.
+widget_description_project_latest_cvs_commits	description	List the latest CVS commits of the project.
+widget_description_project_latest_svn_commits	description	List the latest SVN commits of the project.
+widget_description_project_svn_stats	description	Show the svn statistics of the project by week.The result is shown on a bar chart.

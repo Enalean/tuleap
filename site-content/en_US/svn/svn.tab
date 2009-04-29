@@ -123,5 +123,5 @@ svn_viewvc	acc_den_comment	You are not authorized to access this file. Please co
 svn_viewvc	bad_roottype	Invalid roottype
 
 
-svn_widget	svnstats	Svn Stats
+svn_widget	svnstats	Svn Statistics
 
