@@ -127,12 +127,9 @@ class SystemEvent_SYSTEM_CHECK extends SystemEvent {
                     $backendSVN->setSVNPrivacy($project, !$project->isPublic() || $project->isSVNPrivate());
                 }
             }
-            
-            $backendSystem->log("Project ".$project->getUnixName()." created");            
-            $this->done();
-            return true;
         }
-        return false;
+        $this->done();
+        return true;
     }
 
 }
