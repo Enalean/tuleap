@@ -135,7 +135,7 @@ mysql_drop_index() {
 # @param $2 name of the index
 # @param $3 columns (coma separated)
 mysql_add_index() {
-    drop_index "$1" "$2"
+    mysql_drop_index "$1" "$2"
     $MYSQL $pass_opt codendi -e "ALTER TABLE $1 ADD INDEX $2($3)"
 }
 ##############################################
