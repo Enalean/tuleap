@@ -275,6 +275,9 @@ $RPM -ivh neon-0.*.i386.rpm neon-devel*.i386.rpm subversion-1.*.i386.rpm mod_dav
 # Dependency error with Perl ??
 $RPM --nodeps -Uvh subversion-tools*.i386.rpm
 
+
+# TODO MUST reinstall: munin RPM (Codendi specific, with MySQL auth), viewVC (bug fixed), phpMyAdmin, Mailman, htmlpurifier, cvs
+
 # -> libnss-mysql (system authentication based on MySQL)
 $RPM -e --allmatches libnss-mysql 2>/dev/null
 echo "Installing libnss-mysql RPM for Codendi...."
@@ -289,80 +292,6 @@ cd ${RPMS_DIR}/php-pecl-apc
 newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
 $RPM -Uvh ${newest_rpm}/php-pecl-apc-*.i?86.rpm
 
-# -> cvs
-echo "Removing existing CVS .."
-$RPM -e --allmatches cvs 2>/dev/null
-echo "Installing CVS RPMs for Codendi...."
-cd ${RPMS_DIR}/cvs
-newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
-$RPM -Uvh ${newest_rpm}/cvs-1.*.i386.rpm
-
-# -> JPGraph
-$RPM -e jpgraph jpgraphs-docs 2>/dev/null
-echo "Installing JPGraph RPM for Codendi...."
-cd ${RPMS_DIR}/jpgraph
-newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
-$RPM -Uvh ${newest_rpm}/jpgraph-2*noarch.rpm
-$RPM -Uvh ${newest_rpm}/jpgraph-docs-2*noarch.rpm
-
-# -> ViewVC
-$RPM -e --nodeps viewcvs 2>/dev/null
-$RPM -e --nodeps viewvc 2>/dev/null
-echo "Installing viewvc RPM for Codendi...."
-cd ${RPMS_DIR}/viewvc
-newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
-$RPM -Uvh ${newest_rpm}/viewvc-*.noarch.rpm
-
-# -> phpMyAdmin
-$RPM -e phpMyAdmin phpmyadmin 2>/dev/null
-echo "Installing phpMyAdmin RPM for Codendi...."
-cd ${RPMS_DIR}/phpMyAdmin
-newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
-
-# Munin
-echo "Removing installed Munin if any .."
-$RPM -e --allmatches `rpm -qa 'munin*' 'perl-HTML-Template*' 'perl-Net-Server' 'perl-rrdtool*' 'rrdtool*' 'perl-Crypt-DES' 'perl-Net-SNMP' 'perl-Config-General'` 2>/dev/null
-echo "Installing Munin RPMs for Codendi...."
-cd ${RPMS_DIR}/munin
-newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
-$RPM --nosignature -Uvh ${newest_rpm}/perl-Net-Server*.noarch.rpm
-$RPM --nosignature -Uvh ${newest_rpm}/perl-Crypt-DES*.i386.rpm
-$RPM --nosignature -Uvh ${newest_rpm}/perl-Net-SNMP-*.noarch.rpm
-$RPM --nosignature -Uvh ${newest_rpm}/perl-Config-General-*.noarch.rpm
-$RPM --nosignature -Uvh ${newest_rpm}/perl-HTML-Template*.noarch.rpm
-$RPM --nosignature -Uvh ${newest_rpm}/rrdtool-*.i386.rpm ${newest_rpm}/perl-rrdtool-*.i386.rpm
-$RPM -Uvh ${newest_rpm}/munin-node-*.noarch.rpm
-$RPM -Uvh ${newest_rpm}/munin-1*.noarch.rpm
-
-
-#####
-# Codendi RPMS
-
-# -> codendi-jri
-echo "Removing installed CodeX JRI if any .."
-$RPM -e --allmatches codex-jri 2>/dev/null
-echo "Installing Codendi JRI RPM...."
-cd ${RPMS_DIR}/codendi-jri
-newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
-$RPM -Uvh ${newest_rpm}/codendi-jri-*noarch.rpm
-
-
-# -> codendi-eclipse
-echo "Removing installed Eclipse plugin if any .."
-$RPM -e --allmatches codex-eclipse 2>/dev/null
-echo "Installing Eclipse plugin RPM...."
-cd ${RPMS_DIR}/codendi-eclipse
-newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
-$RPM -Uvh ${newest_rpm}/codendi-eclipse-*noarch.rpm
-
-# -> codendi-salome-tmf
-echo "Removing installed SalomeTMF plugin if any .."
-$RPM -e --allmatches codex-salome-tmf 2>/dev/null
-echo "Installing SalomeTMF plugin RPM...."
-cd ${RPMS_DIR}/codendi-salome-tmf
-newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
-$RPM -Uvh ${newest_rpm}/codendi-salome-tmf-*noarch.rpm
-        
 
 ##############################################
 # Stop some services before upgrading
@@ -461,6 +390,82 @@ codendification "$ETC_DIR/conf/local.inc"
 codendification "$ETC_DIR/conf/database.inc"
 substitute "$ETC_DIR/conf/local.inc" "sys_themedefault\s*=\s*'CodendiTab'" "sys_themedefault = 'CodeXTab'"
 substitute "$ETC_DIR/conf/local.inc" "sys_themedefault\s*=\s*'Codendi'" "sys_themedefault = 'CodeX'"
+
+# -> cvs
+echo "Removing existing CVS .."
+$RPM -e --allmatches cvs 2>/dev/null
+echo "Installing CVS RPMs for Codendi...."
+cd ${RPMS_DIR}/cvs
+newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
+$RPM -Uvh ${newest_rpm}/cvs-1.*.i386.rpm
+
+# -> JPGraph
+$RPM -e jpgraph jpgraphs-docs 2>/dev/null
+echo "Installing JPGraph RPM for Codendi...."
+cd ${RPMS_DIR}/jpgraph
+newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
+$RPM -Uvh ${newest_rpm}/jpgraph-2*noarch.rpm
+$RPM -Uvh ${newest_rpm}/jpgraph-docs-2*noarch.rpm
+
+# -> ViewVC
+$RPM -e --nodeps viewcvs 2>/dev/null
+$RPM -e --nodeps viewvc 2>/dev/null
+echo "Installing viewvc RPM for Codendi...."
+cd ${RPMS_DIR}/viewvc
+newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
+$RPM -Uvh ${newest_rpm}/viewvc-*.noarch.rpm
+
+# -> phpMyAdmin
+$RPM -e phpMyAdmin phpmyadmin 2>/dev/null
+echo "Installing phpMyAdmin RPM for Codendi...."
+cd ${RPMS_DIR}/phpMyAdmin
+newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
+
+# Munin
+echo "Removing installed Munin if any .."
+$RPM -e --allmatches `rpm -qa 'munin*' 'perl-HTML-Template*' 'perl-Net-Server' 'perl-rrdtool*' 'rrdtool*' 'perl-Crypt-DES' 'perl-Net-SNMP' 'perl-Config-General'` 2>/dev/null
+echo "Installing Munin RPMs for Codendi...."
+cd ${RPMS_DIR}/munin
+newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
+$RPM --nosignature -Uvh ${newest_rpm}/perl-Net-Server*.noarch.rpm
+$RPM --nosignature -Uvh ${newest_rpm}/perl-Crypt-DES*.i386.rpm
+$RPM --nosignature -Uvh ${newest_rpm}/perl-Net-SNMP-*.noarch.rpm
+$RPM --nosignature -Uvh ${newest_rpm}/perl-Config-General-*.noarch.rpm
+$RPM --nosignature -Uvh ${newest_rpm}/perl-HTML-Template*.noarch.rpm
+$RPM --nosignature -Uvh ${newest_rpm}/rrdtool-*.i386.rpm ${newest_rpm}/perl-rrdtool-*.i386.rpm
+$RPM -Uvh ${newest_rpm}/munin-node-*.noarch.rpm
+$RPM -Uvh ${newest_rpm}/munin-1*.noarch.rpm
+
+
+#####
+# Codendi RPMS
+
+# -> codendi-jri
+echo "Removing installed CodeX JRI if any .."
+$RPM -e --allmatches codex-jri 2>/dev/null
+echo "Installing Codendi JRI RPM...."
+cd ${RPMS_DIR}/codendi-jri
+newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
+$RPM -Uvh ${newest_rpm}/codendi-jri-*noarch.rpm
+
+
+# -> codendi-eclipse
+echo "Removing installed Eclipse plugin if any .."
+$RPM -e --allmatches codex-eclipse 2>/dev/null
+echo "Installing Eclipse plugin RPM...."
+cd ${RPMS_DIR}/codendi-eclipse
+newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
+$RPM -Uvh ${newest_rpm}/codendi-eclipse-*noarch.rpm
+
+# -> codendi-salome-tmf
+echo "Removing installed SalomeTMF plugin if any .."
+$RPM -e --allmatches codex-salome-tmf 2>/dev/null
+echo "Installing SalomeTMF plugin RPM...."
+cd ${RPMS_DIR}/codendi-salome-tmf
+newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
+$RPM -Uvh ${newest_rpm}/codendi-salome-tmf-*noarch.rpm
+        
+
 
 
 
