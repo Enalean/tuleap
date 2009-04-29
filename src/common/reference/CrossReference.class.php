@@ -126,6 +126,21 @@ class CrossReference extends Error{
         $this->sourceUrl=get_server_url()."/goto?key=".urlencode($this->sourceKey)."&val=".urlencode($this->refSourceId).$group_param;
 	
     }    
+    
+    function deleteCrossReference(){
+        $sql = "DELETE FROM cross_references 
+		        WHERE ((target_gid=" . $this->refTargetGid . " AND target_id='" . $this->refTargetId . "' AND target_type='" . $this->refTargetType. "' ) 
+				     AND (source_gid=" .$this->refSourceGid." AND source_id='" .$this->refSourceId . "' AND source_type='" . $this->refSourceType. "' )) 
+                     OR ((target_gid=" . $this->refSourceGid . " AND target_id='" . $this->refSourceId . "' AND target_type='" . $this->refSourceType. "' ) 
+				     AND (source_gid=" . $this->refTargetGid." AND source_id='" .$this->refTargetId  . "' AND source_type='" . $this->refTargetType. "' ))";
+        $res = db_query($sql);
+        if ($res) {
+            return true;
+      	} else {
+            return false;
+      	}
+    }
+    
 
 }
 

@@ -46,8 +46,9 @@ function show_references_to() {
 *Show the delete icon for items
 */
 function show_delete_icon(){
+    
     document.observe('dom:loaded', function(){
-             $$('.link_to_ref').each(function (l) {
+              $$('.link_to_ref').each(function (l) {
                     l.down('.delete_ref').hide();
                     l.observe('mouseover', function() {
                             l.down('.delete_ref').show();
@@ -59,20 +60,24 @@ function show_delete_icon(){
                    });
 }
 
-function delete_ref( id, params,message ){
-	if(confirm(message)){
+function delete_ref( id, message ){
+    if(confirm(message)){
         var opt = {
             method: 'get',
-            parameters: params,
-            /*onLoading: confirm(message),*/
-            onComplete:function(l){
+            onComplete:function(){
+                /*if current id has 1 sibling (the img), we hide the 'cross_reference'
+                *else if current id has no sibling, we hide the reference nature
+                */else we just hide the reference
                 if($(id).siblings().length==1  && $(id).up().siblings().length > 0){
                         $(id).up().hide();
                 }else if($(id).up().siblings().length==0){
                         $(id).up('.nature').hide();
-                }else $(id).hide();
+                }else {
+                    $(id).hide();
+                }
             }
         }
-        new Ajax.Updater('id', '../reference/rmreference.php', opt);
+        new Ajax.Updater('id', $(id).down('.delete_ref').href, opt);
     }
+    return false;
 }

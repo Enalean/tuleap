@@ -85,7 +85,9 @@ codendi.Tooltip = Class.create({
             });
             this.tooltip.show();
             if (evt) {
-                Event.stop(evt);
+                //Event.stop(evt);
+                Event.extend(evt);
+                evt.preventDefault();
             }
         } else if (!this.fetched) {
             this.fetch();
