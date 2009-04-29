@@ -147,8 +147,7 @@ class CrossReferenceFactory {
          *  ...
          */
          
-         //isProjectAdmin($user_id, $entity_group_id);
-    	$crossRefArray = array();
+        $crossRefArray = array();
        
         // Walk the target ref array in order to fill the crossRefArray array
     	for ($i=0;$i<sizeof($this->target_refs_datas);$i++) {   		

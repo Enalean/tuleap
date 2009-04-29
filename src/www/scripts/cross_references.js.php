@@ -67,7 +67,8 @@ function delete_ref( id, message ){
             onComplete:function(){
                 /*if current id has 1 sibling (the img), we hide the 'cross_reference'
                 *else if current id has no sibling, we hide the reference nature
-                */else we just hide the reference
+                *else we just hide the reference
+                */
                 if($(id).siblings().length==1  && $(id).up().siblings().length > 0){
                         $(id).up().hide();
                 }else if($(id).up().siblings().length==0){
