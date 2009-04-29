@@ -122,13 +122,21 @@ codendification() {
     substitute "$1" 'codex' 'codendi'
 }
 
-# @param table
-# @param column
-drop_index() {
+# @param $1 table
+# @param $2 name of the index
+mysql_drop_index() {
     $MYSQL $pass_opt codendi -e "SHOW INDEX FROM $1 WHERE key_name = '$2'" | grep -q $2
     if [ $? -eq 0 ]; then
         $MYSQL $pass_opt codendi -e "ALTER TABLE $1 DROP INDEX $2"
     fi
+}
+
+# @param $1 table
+# @param $2 name of the index
+# @param $3 columns (coma separated)
+mysql_add_index() {
+    drop_index "$1" "$2"
+    $MYSQL $pass_opt codendi -e "ALTER TABLE $1 ADD INDEX $2($3)"
 }
 ##############################################
 # Codendi 3.6 to 4.0 migration
@@ -1148,16 +1156,12 @@ ALTER TABLE plugin_docman_approval CHANGE COLUMN wiki_version_id wiki_version_id
 EOF
 
 echo "- Perfs"
-drop_index 'artifact_field_value' 'idx_field_id'
-drop_index 'artifact_field_value' 'idx_artifact_id'
-drop_index 'artifact_field_value' 'idx_art_field_id'
-drop_index 'artifact_field_value' 'valueInt'
-
-$CAT <<EOF | $MYSQL $pass_opt codendi 
-ALTER TABLE artifact_field_value
-    ADD INDEX idx_valueInt(artifact_id, field_id, valueInt),
-    ADD INDEX xtrk_valueInt(valueInt);
-EOF
+mysql_drop_index 'artifact_field_value' 'idx_field_id'
+mysql_drop_index 'artifact_field_value' 'idx_artifact_id'
+mysql_drop_index 'artifact_field_value' 'idx_art_field_id'
+mysql_drop_index 'artifact_field_value' 'valueInt'
+mysql_add_index  'artifact_field_value' 'idx_valueInt' 'artifact_id, field_id, valueInt'
+mysql_add_index  'artifact_field_value' 'xtrk_valueInt' 'valueInt'
 
 echo "- Files can now be browsed and downloaded by anonymous users (default permissions do not change, we only allow it)"
 $CAT <<EOF | $MYSQL $pass_opt codendi 
