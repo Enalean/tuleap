@@ -60,6 +60,19 @@ class DataAccessTest extends UnitTestCase {
         $this->assertIdentical("'\\\\x1a'", $da->quoteSmart("\\x1a"));
     }
 
+    function testQuoteSmartImplode() {
+        $da = new DataAccessTestVersion($this);
+        $this->assertIdentical('123', $da->quoteSmartImplode('',array("123")), "Array with one element");
+        $this->assertIdentical('123456', $da->quoteSmartImplode('',array("123","456")), "Glue is empty");
+        $this->assertIdentical('123 456', $da->quoteSmartImplode(' ',array("123","456")), "Glue is empty");
+        $this->assertIdentical("'val1'", $da->quoteSmartImplode(' ',array("val1")), "Array with one string");
+        $this->assertIdentical("'val1' OR 'val2'", $da->quoteSmartImplode(' OR ',array("val1","val2")), "Array with two strings");
+        $this->assertIdentical("'val1' OR 'val2' OR 34", $da->quoteSmartImplode(' OR ',array("val1","val2",34)), "Array with three elements");
+        $this->assertIdentical("'val1''val2'", $da->quoteSmartImplode('',array("val1","val2")), "Array with two strings and no glue"); // Is this what we really expect??
+        $this->assertIdentical("'val\\'1' OR 'val2'", $da->quoteSmartImplode(' OR ',array("val'1","val2")), "Array with two strings");
+        $this->assertIdentical("'val1'''val2'", $da->quoteSmartImplode("'",array("val1","val2")), "Glue is not escaped");// Is this what we really expect??
+   }
+
 
     function testIsInteger() {
         $input = '123';
