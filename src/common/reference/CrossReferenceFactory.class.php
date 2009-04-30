@@ -210,10 +210,6 @@ class CrossReferenceFactory {
         
          // HTML part (stored in $display)
         $display = '';
-         if ($can_delete){
-                $display .= '<script src="/scripts/cross_references.js.php" type="text/javascript"></script>';
-                $display .= '<script type="text/javascript">show_delete_icon();</script>';
-         }
        
     	$display .= '<p id="cross_references_legend">' . $Language->getText('cross_ref_fact_include','legend') . '</p>';
     	foreach ($crossRefArray as $nature => $refArraySourceTarget) {
@@ -238,7 +234,7 @@ class CrossReferenceFactory {
                            $params = $this->getParams($currRef);
                            $display.="<a  class='delete_ref'  href='/reference/rmreference.php".$params."' ";
                            $display.=" onClick=\"return delete_ref('".$id."','".$message."');\">";
-                           $display.=$GLOBALS['HTML']->getImage('ic/delete_reference.png', 
+                           $display.=$GLOBALS['HTML']->getImage('ic/cross.png', 
                                 array( 'alt'=> $Language->getText('cross_ref_fact_include','delete'),
                                     'align' => 'absbottom',
                                     'hspace' => '3',
@@ -272,7 +268,7 @@ class CrossReferenceFactory {
                             $params = $this->getParams($currRef);
                             $display.="<a class='delete_ref'  href='/reference/rmreference.php".$params."' ";
                             $display.=" onClick=\"return delete_ref('".$id."','".$message."');\">";
-                            $display.=$GLOBALS['HTML']->getImage('ic/delete_reference.png', 
+                            $display.=$GLOBALS['HTML']->getImage('ic/cross.png', 
                                 array( 'alt'=> $Language->getText('cross_ref_fact_include','delete'),
                                     'align' => 'absbottom',
                                     'hspace' => '3',
@@ -306,7 +302,7 @@ class CrossReferenceFactory {
                            $params = $this->getParams($currRef);
                            $display.="<a  class='delete_ref'  href='/reference/rmreference.php".$params."' ";
                            $display.=" onClick=\"return delete_ref('".$id."','".$message."');\">";
-                           $display.=$GLOBALS['HTML']->getImage('ic/delete_reference.png', 
+                           $display.=$GLOBALS['HTML']->getImage('ic/cross.png', 
                                 array( 'alt'=> $Language->getText('cross_ref_fact_include','delete'),
                                     'align' => 'absbottom',
                                     'hspace' => '3',
@@ -326,11 +322,6 @@ class CrossReferenceFactory {
             $display .= "</p>";
             $display .= "</div>";
     	}
-    	
-    	if ($itemIsReferenced) {
-            $display .= '<script src="/scripts/cross_references.js.php" type="text/javascript"></script>';
-            $display .= '<script type="text/javascript">hide_references_to();</script>';
-        }
     	
     	return $display;
     }

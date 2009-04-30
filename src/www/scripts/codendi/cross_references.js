@@ -1,7 +1,24 @@
-<?php
-require_once('pre.php');
-header('Content-type: application/x-javascript');
-?>
+/**
+* Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+*
+* This file is a part of Codendi.
+*
+* Codendi is free software; you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation; either version 2 of the License, or
+* (at your option) any later version.
+*
+* Codendi is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with Codendi; if not, write to the Free Software
+* Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+*
+* 
+*/
 
 /**
  * Hide references from the current item to other items
@@ -22,7 +39,7 @@ function hide_references_to() {
         }
     );
     // display 'show link'
-    $('cross_references_legend').replace('<p id="cross_references_legend"><?php echo $GLOBALS['Language']->getText('cross_ref_fact_include','legend_referenced_by');?> <span><a href="#" onclick="show_references_to(); return false;"><?php echo $Language->getText('cross_ref_fact_include','show_references_to'); ?></span></p>');
+    $('cross_references_legend').replace('<p id="cross_references_legend">'+ codendi.getText('cross_ref_fact_include','legend_referenced_by') +' <span><a href="#" onclick="show_references_to(); return false;">'+ codendi.getText('cross_ref_fact_include','show_references_to') +'</span></p>');
 }
 
 /**
@@ -39,7 +56,7 @@ function show_references_to() {
 	    }
 	);
 	// display 'hide link'
-	$('cross_references_legend').replace('<p id="cross_references_legend"><?php echo $GLOBALS['Language']->getText('cross_ref_fact_include','legend');?> <span><a href="#" onclick="hide_references_to(); return false;"><?php echo $Language->getText('cross_ref_fact_include','hide_references_to'); ?></span></p>');
+	$('cross_references_legend').replace('<p id="cross_references_legend">'+ codendi.getText('cross_ref_fact_include','legend') +' <span><a href="#" onclick="hide_references_to(); return false;">'+ codendi.getText('cross_ref_fact_include','hide_references_to') +'</span></p>');
 }
 
 /**
@@ -47,17 +64,7 @@ function show_references_to() {
 */
 function show_delete_icon(){
     
-    document.observe('dom:loaded', function(){
-              $$('.link_to_ref').each(function (l) {
-                    l.down('.delete_ref').hide();
-                    l.observe('mouseover', function() {
-                            l.down('.delete_ref').show();
-                    });
-                    l.observe('mouseout', function() {
-                        l.down('.delete_ref').hide();
-                     });
-                    }); 
-                   });
+    
 }
 
 function delete_ref( id, message ){
@@ -82,3 +89,22 @@ function delete_ref( id, message ){
     }
     return false;
 }
+
+document.observe('dom:loaded', function() {
+    
+    //hide reference to item to clean the ui
+    hide_references_to();
+    
+    //hide the delete ref icon to clean the ui
+    $$('.link_to_ref').each(function (l) {
+        if (l.down('.delete_ref')) {
+            l.down('.delete_ref').hide();
+            l.observe('mouseover', function() {
+                l.down('.delete_ref').show();
+            });
+            l.observe('mouseout', function() {
+                l.down('.delete_ref').hide();
+            });
+        }
+    });
+});
