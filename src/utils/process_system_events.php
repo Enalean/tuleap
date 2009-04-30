@@ -19,10 +19,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  */
+$processUser = posix_getpwuid(posix_geteuid());
+$username = $processUser['name'];
+
+if ($username != 'root') {
+    echo "Must be root to run this script (currently:".$username.")\n";
+    exit(1);
+}
 
 require_once('pre.php');
 
-// TODO: Check that current user is root
 // TODO: check that script is not already running
 $system_event_manager->processEvents();
 
