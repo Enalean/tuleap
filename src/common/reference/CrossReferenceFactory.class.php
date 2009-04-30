@@ -202,13 +202,18 @@ class CrossReferenceFactory {
     	$user = UserManager::instance()->getCurrentUser();
     
         $itemIsReferenced = false;
-        $project_admin = $user->isMember($this->entity_gid, 'A') ;
-        // HTML part (stored in $display)
+        if($user->isSuperUser() || $user->isMember($this->entity_gid, 'A') ){
+                $can_delete = true;
+        }else{
+                $can_delete = false;
+        }
+        
+         // HTML part (stored in $display)
         $display = '';
-         if ($project_admin){
-             $display .= '<script src="/scripts/cross_references.js.php" type="text/javascript"></script>';
-             $display .= '<script type="text/javascript">show_delete_icon();</script>';
-          }
+         if ($can_delete){
+                $display .= '<script src="/scripts/cross_references.js.php" type="text/javascript"></script>';
+                $display .= '<script type="text/javascript">show_delete_icon();</script>';
+         }
        
     	$display .= '<p id="cross_references_legend">' . $Language->getText('cross_ref_fact_include','legend') . '</p>';
     	foreach ($crossRefArray as $nature => $refArraySourceTarget) {
@@ -229,7 +234,7 @@ class CrossReferenceFactory {
                     $display.="<span id='" .$id ."' class='link_to_ref'>";
                     $display .= "<a  class='cross-reference' title='" . $available_natures[$nature]['label'] . "' href='".$currRef->getRefTargetUrl()."'>";
                     $display.= $currRef->getRefTargetKey()." #".$currRef->getRefTargetId()."</a>";
-                    if ($project_admin) {
+                    if ($can_delete) {
                            $params = $this->getParams($currRef);
                            $display.="<a  class='delete_ref'  href='/reference/rmreference.php".$params."' ";
                            $display.=" onClick=\"return delete_ref('".$id."','".$message."');\">";
@@ -263,9 +268,9 @@ class CrossReferenceFactory {
                     $display.="<span id='" .$id ."' class='link_to_ref'>";
                     $display .= "<a  class='cross-reference' title='" . $available_natures[$nature]['label'] . "' href='".$currRef->getRefTargetUrl()."'>";
                     $display.= $currRef->getRefTargetKey()." #".$currRef->getRefTargetId()."</a>";
-                     if ($project_admin) {
+                     if ($can_delete) {
                             $params = $this->getParams($currRef);
-                            $display.="<a  class='delete_ref'  href='/reference/rmreference.php".$params."' ";
+                            $display.="<a class='delete_ref'  href='/reference/rmreference.php".$params."' ";
                             $display.=" onClick=\"return delete_ref('".$id."','".$message."');\">";
                             $display.=$GLOBALS['HTML']->getImage('ic/delete_reference.png', 
                                 array( 'alt'=> $Language->getText('cross_ref_fact_include','delete'),
@@ -297,7 +302,7 @@ class CrossReferenceFactory {
                     $display.="<span id='" .$id ."' class='link_to_ref'>";
                     $display .= "<a  class='cross-reference' title='" . $available_natures[$nature]['label'] . "' href='".$currRef->getRefSourceUrl()."'>";
                     $display.= $currRef->getRefSourceKey()." #".$currRef->getRefSourceId()."</a>";
-                    if ($project_admin) {
+                    if ($can_delete) {
                            $params = $this->getParams($currRef);
                            $display.="<a  class='delete_ref'  href='/reference/rmreference.php".$params."' ";
                            $display.=" onClick=\"return delete_ref('".$id."','".$message."');\">";
