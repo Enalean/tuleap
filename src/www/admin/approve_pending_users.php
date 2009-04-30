@@ -72,7 +72,7 @@ $expiry_date = 0;
              while ($row_user = db_fetch_array($res_user)) {
                 $from = $GLOBALS['sys_noreply'];
                     $to = $row_user['email'];
-                    $subject = $Language->getText('admin_approve_pending_users', 'email_title', array($GLOBALS['sys_name']));
+                    $subject = $Language->getText('admin_approve_pending_users', 'email_title');
                     
                     include($Language->getContent('admin/new_account_email'));
         

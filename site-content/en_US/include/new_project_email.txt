@@ -53,12 +53,7 @@ to advertise its creation (we\'ll put it on the front page !).
 
 Other miscellaneous points:
 
-- Your CVS and Subversion accounts for this project will become
-active at the next '.$GLOBALS['sys_crondelay'].'-hour cron update.  If this
-is not the case please open a support ticket so that we may take a
-look at the problem.
-
-- Also note that it might take up to a day for the '. $GLOBALS['sys_org_name']. ' name servers
+- Note that it might take up to a day for the '. $GLOBALS['sys_org_name']. ' name servers
 to be aware of your project specific server names (see above). If you
 are in a hurry, you may try pointing at '. $host. ' directly.
 
