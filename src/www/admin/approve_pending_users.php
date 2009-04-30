@@ -64,10 +64,7 @@ $expiry_date = 0;
                      . " WHERE user_id IN ($list_of_users)");
             
              // Send a notification message to the user when account is activated by the Site Administrator
-                    $date = getdate(time());
-                    $hoursleft = ($sys_crondelay - 1) - ($date['hours'] % $sys_crondelay);
-                    $minutesleft = 60 - $date['minutes'];
-                    $base_url = get_server_url();
+             $base_url = get_server_url();
              
              while ($row_user = db_fetch_array($res_user)) {
                 $from = $GLOBALS['sys_noreply'];
