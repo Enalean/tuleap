@@ -20,12 +20,17 @@
  *
  */
 
+//
+// This script simply launches a SYSTEM_CHECK event.
+//
+// This event will trigger some checkings on the backend: it will
+// make sure that all users, projects, directories, repositories, ... are
+// properly set.
+
 require_once('pre.php');
 
 // launch SYSTEM_CHECK event
 $em = EventManager::instance();
 $em->processEvent(Event::SYSTEM_CHECK, null);
-
-$system_event_manager->processEvents();
 
 ?>
