@@ -173,7 +173,7 @@ $ftp_frs_dir_prefix  = "/var/lib/codendi/ftp/codendi";   // Where the released f
 $ftp_incoming_dir    = "/var/lib/codendi/ftp/incoming";// Where files are placed when uploaded
 $ftp_anon_dir_prefix = "/var/lib/codendi/ftp/pub";     // prefix to add to the anon ftp project homedir
 
-// Path for DB sumps. Do *not* use variables in this parameter
+// Path for DB dumps. Do *not* use variables in this parameter
 $dump_dir         = "/var/lib/codendi/dumps";// Where should we stick files we're working with
 
 // Paths for backend scripts
