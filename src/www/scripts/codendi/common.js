@@ -47,4 +47,9 @@ function help_window(helpurl) {
   $w('input textarea').each(function(tag){ Element.addMethods(tag, methods) });
 })();
 
-
+var codendi = {
+    locales: {},
+    getText: function(key1, key2) {
+        return codendi.locales[key1][key2];
+    }
+}

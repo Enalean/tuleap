@@ -866,6 +866,12 @@ class Layout extends Response {
         $c = new Combined();
         echo $c->getScripts(array('/scripts/codendi/common.js'));
         
+        //Javascript i18n
+        echo '<script type="text/javascript">'."\n";
+        include $GLOBALS['Language']->getContent('scripts/locale');
+        echo '
+        </script>';
+        
         if (isset($GLOBALS['DEBUG_MODE']) && $GLOBALS['DEBUG_MODE'] && ($GLOBALS['DEBUG_DISPLAY_FOR_ALL'] || user_ismember(1, 'A')) ) {
             echo '<script type="text/javascript" src="/scripts/codendi/debug_reserved_names.js"></script>';
         }
