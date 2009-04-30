@@ -27,8 +27,8 @@
 class Backend {
 
 
-    public $block_marker_start = "# !!! Codendi Specific !!! DO NOT REMOVE (NEEDED CODENDI MARKER)";
-    public $block_marker_end   = "# END OF NEEDED CODENDI BLOCK";
+    public $block_marker_start = "# !!! Codendi Specific !!! DO NOT REMOVE (NEEDED CODENDI MARKER)\n";
+    public $block_marker_end   = "# END OF NEEDED CODENDI BLOCK\n";
 
 
     /**
@@ -225,9 +225,9 @@ class Backend {
             $this->log("Can't open file for writing: $filename");
             return false;
         }
-        fwrite($handle, $this->block_marker_start."\n");
+        fwrite($handle, $this->block_marker_start);
         fwrite($handle, $command."\n");
-        fwrite($handle, $this->block_marker_end."\n");
+        fwrite($handle, $this->block_marker_end);
         return fclose($handle);
     }
 
