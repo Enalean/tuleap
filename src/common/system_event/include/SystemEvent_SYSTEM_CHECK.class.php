@@ -118,10 +118,11 @@ class SystemEvent_SYSTEM_CHECK extends SystemEvent {
                         $this->error("Could not create/initialize project SVN repository");
                         return false;
                     }
-                    $backendSVN->updateHooks($project);
                     $backendSVN->updateSVNAccess($project->getId());
                     $backendSVN->setSVNPrivacy($project, !$project->isPublic() || $project->isSVNPrivate());
                 }
+                $backendSVN->updateHooks($project);
+
                 // Check access rights
                 if (!$backendSVN->isSVNPrivacyOK($project)) {
                     $backendSVN->setSVNPrivacy($project, !$project->isPublic() || $project->isSVNPrivate());
