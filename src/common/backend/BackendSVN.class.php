@@ -186,8 +186,18 @@ class BackendSVN extends Backend {
                 $this->chgrp($filename, $unix_group_name);
                 chmod("$filename", 0775);
             }
+        } else {
+            // Make sure that the Codendi blocks are removed
+            $filename = "$svn_dir/hooks/post-commit";
+            $update_hook=false;
+            if (is_file($filename)) {
+                $file_array=file($filename);
+                if (in_array($this->block_marker_start, $file_array)) {
+                    $this->removeBlock($filename);
+                }
+            }
         }
-          
+
         // Put in place the Codendi svn pre-commit hook
         // if not present (if the file does not exist it is created)
         $filename = "$svn_dir/hooks/pre-commit";

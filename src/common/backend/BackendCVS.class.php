@@ -252,6 +252,18 @@ class BackendCVS extends Backend {
                 $this->_RcsCommit($filename);
                 $this->recurseChownChgrp($cvs_dir."/CVSROOT",$GLOBALS['sys_http_user'],$unix_group_name);
             }
+        } else {
+            // Remove Codendi blocks if needed
+            $filename = "$cvs_dir/CVSROOT/loginfo";
+            $file_array=file($filename);
+            if (in_array($this->block_marker_start,$file_array)) {
+                $this->removeBlock($filename);
+            }
+            $filename = "$cvs_dir/CVSROOT/commitinfo";
+            $file_array=file($filename);
+            if (in_array($this->block_marker_start,$file_array)) {
+                $this->removeBlock($filename);
+            }
         }
 	return true;
     }
