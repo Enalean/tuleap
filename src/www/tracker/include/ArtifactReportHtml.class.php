@@ -434,7 +434,7 @@ class ArtifactReportHtml extends ArtifactReport {
             $html_result .= '<tbody>';
             for ($i=0; $i < $rows ; $i++) {
 
-                $html_result .= '<TR class="'. html_get_alt_row_color ($i) .'">'."\n";
+                $html_result .= '<TR class="'. get_priority_color($result[$i]['severity_id']) .'">'."\n";
 
                 if ($masschange) {
                         $html_result .= '<TD align="center"><INPUT TYPE="checkbox" name="mass_change_ids[]" value="'.$result[$i]['artifact_id'].'"></td>';
@@ -457,8 +457,6 @@ class ArtifactReportHtml extends ArtifactReport {
 						} else {
 						    $html_result .= '<TD align="center">-</TD>';
 						}
-                    } else if ($field->getName() == 'severity') {
-                        $html_result .= '<TD '. $width .'><table><tr><td><div style="width:1em; height:1em; border:1px solid gray; float:left;" class="'. get_priority_color($result[$i]['severity_id']) .'"></div></td><td>'. $hp->purify($value, CODENDI_PURIFIER_BASIC, $group_id) .'</td></tr></table></td>';
 				    } else if ($field->getName() == 'artifact_id') {
 						if ($nolink) 
 						    $html_result .= "<TD $width>".  $hp->purify($value, CODENDI_PURIFIER_CONVERT_HTML) ."</TD>\n";
