@@ -1210,6 +1210,12 @@ fi
 #
 echo "Installing root user crontab..."
 $CAT <<'EOF' >/tmp/cronfile
+# Once a minute, process Codendi system events
+* * * * * (cd /usr/share/codendi/src/utils; ./php-launcher.sh ./process_system_events.php)
+#
+# Regularly launch a system_check event (e.g. every half-hour) 
+0,30 * * * * (cd /usr/share/codendi/src/utils; ./php-launcher.sh ./launch_system_check.php)
+#
 # run the daily statistics script just a little bit after
 # midnight so that it computes stats for the day before
 # Run at 0:30 am

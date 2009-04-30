@@ -1269,9 +1269,20 @@ find /home/groups/ -maxdepth 1 -mindepth 1 -type d -exec mkdir -v --context=root
 
 ###############################################################################
 # Remove old backend script from crontab
+echo "Add new system scripts in root crontab"
+$CAT <<'EOF' > /tmp/root_cronfile
+# Once a minute, process Codendi system events
+* * * * * (cd /usr/share/codendi/src/utils; ./php-launcher.sh ./process_system_events.php)
+#
+# Regularly launch a system_check event (e.g. every half-hour) 
+0,30 * * * * (cd /usr/share/codendi/src/utils; ./php-launcher.sh ./launch_system_check.php)
+#
+EOF
+
 echo "Remove xerox_crontab script from root crontab"
-crontab -u root -l > /tmp/root_cronfile
+crontab -u root -l >> /tmp/root_cronfile
 $PERL -i'.orig' -p -e's/^(.*xerox_crontab.sh.*)$/#\1/' /tmp/root_cronfile
+
 crontab -u root /tmp/root_cronfile
 
 
