@@ -1004,7 +1004,7 @@ EOF
 
 echo "- Specific configuration for webmuc"
 $CAT <<EOF | $MYSQL $pass_opt codendi
-INSERT INTO openfire.jiveProperty (name, propValue) VALUES 
+REPLACE INTO openfire.jiveProperty (name, propValue) VALUES 
 	("httpbind.enabled", "true"),
 	("httpbind.port.plain", "7070"),
 	("xmpp.httpbind.client.requests.polling", "0"),
