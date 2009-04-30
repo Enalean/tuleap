@@ -1073,6 +1073,10 @@ lists.$sys_default_domain
 users.$sys_default_domain
 EOF
 
+
+# Default: codex-admin is redirected to root
+echo "codendi-admin:          root" >> /etc/aliases
+
 todo "Finish sendmail settings (see installation Guide) and create codendi-contact and codendi-admin aliases in /etc/aliases"
 
 ##############################################
@@ -1120,10 +1124,10 @@ $CHMOD u+s log_accum   # sets the uid bit (-rwsr-xr-x)
 #
 echo "Configuring the Subversion server and tracking tools..."
 cd $INSTALL_DIR/src/utils/svn
-$CP commit-email.pl /usr/lib/codendi/bin
+$CP commit-email.pl codendi_svn_pre_commit.php /usr/lib/codendi/bin
 cd /usr/lib/codendi/bin
-$CHOWN codendiadm.codendiadm commit-email.pl
-$CHMOD 755 commit-email.pl
+$CHOWN codendiadm.codendiadm commit-email.pl codendi_svn_pre_commit.php
+$CHMOD 755 commit-email.pl codendi_svn_pre_commit.php
 
 
 ##############################################
@@ -1443,6 +1447,9 @@ $CHKCONFIG mailman on
 $CHKCONFIG munin-node on
 $CHKCONFIG vsftpd on
 $CHKCONFIG openfire on
+
+$SERVICE httpd restart
+
 # NSCD is the Name Service Caching Daemon.
 # It is very useful when libnss-mysql is used for authentication
 $CHKCONFIG nscd on

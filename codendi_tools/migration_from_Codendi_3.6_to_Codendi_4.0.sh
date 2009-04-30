@@ -1346,8 +1346,6 @@ TODO : Déplacer le script de debug dans Layout.class.php
 # TODO : CREATE / UPDATE the pre-commit hook for every existing project.
 
 #
-# TODO: copy /src/utils/svn/codendi_svn_pre_commit.php into /usr/lib/codendi/bin/codendi_svn_pre_commit.php (also in codendi_install!!)
-
 # Todo, modify fileforge.c and recompile for new layout., and reinstall
 
 #
@@ -1403,10 +1401,10 @@ $CHMOD 755 log_accum commit_prep cvssh cvssh-restricted
 $CHMOD u+s log_accum   # sets the uid bit (-rwsr-xr-x)
 
 cd $INSTALL_DIR/src/utils/svn
-$CP commit-email.pl /usr/lib/codendi/bin
+$CP commit-email.pl codendi_svn_pre_commit.php /usr/lib/codendi/bin
 cd /usr/lib/codendi/bin
-$CHOWN codendiadm.codendiadm commit-email.pl
-$CHMOD 755 commit-email.pl
+$CHOWN codendiadm.codendiadm commit-email.pl codendi_svn_pre_commit.php
+$CHMOD 755 commit-email.pl codendi_svn_pre_commit.php
 
 # TODO: replace codex by codendi in /etc/shells
 

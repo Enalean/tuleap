@@ -215,7 +215,7 @@ class BackendSVN extends Backend {
         if ($update_hook) {
             $command  = 'REPOS="$1"'."\n";
             $command .= 'TXN="$2"'."\n";
-            $command .= $GLOBALS['codendi_dir'].'/php-launcher.sh '.$GLOBALS['codendi_bin_prefix'].'/codendi_svn_pre_commit.php "$REPOS" "$TXN" || exit 1';
+            $command .= $GLOBALS['codendi_dir'].'/src/utils/php-launcher.sh '.$GLOBALS['codendi_bin_prefix'].'/codendi_svn_pre_commit.php "$REPOS" "$TXN" || exit 1';
             $this->addBlock($filename, $command);
             $this->chown($filename, $GLOBALS['sys_http_user']);
             $this->chgrp($filename, $unix_group_name);
