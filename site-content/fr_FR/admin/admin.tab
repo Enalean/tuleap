@@ -243,7 +243,7 @@ admin_user_changepw	error_passwd	Les mots de passe ne sont pas identiques.
 admin_user_changepw	error_update	Erreur interne&nbsp;: le mot de passe n'a pu être mis à jour.
 admin_user_changepw	title_changed	Mot de passe modifié avec succès
 admin_user_changepw	header_changed	Confirmation du changement de mot de passe
-admin_user_changepw	msg_changed	le mot de passe utilisateur a été modifié. Ce changement est effectif immédiatement sur le site web, mais ne prendra effet sur le compte shell ou CVS qu'à la prochaine mise à jour du backend dans  <span class=\"highlight\"><b>$1</b> heure(s) <b>$2</b> minute(s)</b></span>.
+admin_user_changepw	msg_changed	Le mot de passe utilisateur a été modifié. 
 admin_user_changepw	title	Changement de mot de passe
 admin_user_changepw	ldap_warning	ATTENTION&nbsp;: Changer le mot de passe ici ne changera pas le mot de passe LDAP !
 admin_user_changepw	header	Changement du mot de passe

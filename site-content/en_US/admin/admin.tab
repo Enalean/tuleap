@@ -251,7 +251,7 @@ admin_user_changepw	error_passwd	Passwords do not match.
 admin_user_changepw	error_update	Internal error: Could not update password.
 admin_user_changepw	title_changed	Successfully Changed Password	
 admin_user_changepw	header_changed	Password Change Confirmation
-admin_user_changepw	msg_changed	The user's password has been changed. This change is immediate on the web site, but will not take effect on the user's shell/cvs account until the next cron update, which will happen in <span class=\"highlight\"><b>$1 h $2 minutes</b></span> from now.
+admin_user_changepw	msg_changed	The user's password has been changed. 
 admin_user_changepw	title	Change Password
 admin_user_changepw	ldap_warning	WARNING: Changing the password here won't change the LDAP password!
 admin_user_changepw	header	Password Change

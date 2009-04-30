@@ -48,11 +48,6 @@ if (register_valid()) {
 <h2><?php echo $Language->getText('account_editsshkeys', 'title').' '.help_button('OtherServices.html#ShellAccount'); ?></h2>
 <?php
         echo $Language->getText('account_editsshkeys', 'message');
-	$date = getdate(time());
-	$hoursleft = ($GLOBALS['sys_crondelay'] - 1) - ($date['hours'] % $GLOBALS['sys_crondelay']);
-	$minutesleft = 60 - $date['minutes'];
-        echo "\n".$Language->getText('account_editsshkeys', 'important', array($hoursleft, $minutesleft));
-
 ?>
 
 <form action="editsshkeys.php" method="post">

@@ -72,12 +72,9 @@ $em->processEvent('before_change_pw', array());
 $user_id = is_numeric($request->get('user_id')) ? (int)$request->get('user_id') : user_getid();
 if (register_valid($user_id)) {
     $HTML->header(array('title'=>$Language->getText('account_change_pw', 'title_success')));
-    $d = getdate(time());
-    $h = ($sys_crondelay - 1) - ($d['hours'] % $sys_crondelay);
-    $m= 60 - $d['minutes'];
 ?>
 <p><b><? echo $Language->getText('account_change_pw', 'title_success'); ?></b>
-<p><? echo $Language->getText('account_change_pw', 'message', array($GLOBALS['sys_name'],$h,$m)); ?>
+<p><? echo $Language->getText('account_change_pw', 'message', array($GLOBALS['sys_name'])); ?>
 
 <p><a href="/">[ <? echo $Language->getText('global', 'back_home');?> ]</a>
 <?php

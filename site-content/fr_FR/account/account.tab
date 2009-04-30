@@ -88,7 +88,7 @@ account_change_email-complete	message	Bienvenue, $1.<P>Votre changement d'adress
 # Script: SF/www/account/change_pw.php
 #
 account_change_pw	title_success	Mot de passe modifié avec succès
-account_change_pw	message	Félicitations ! Vous venez de changer votre mot de passe. Ce changement est immédiat sur votre compte Web, mais ne prendra effet sur vos comptes shell ou cvs qu'à la prochaine mise à jour du backend qui aura lieu dans <span class=\"highlight\"><b> $2&nbsp;h&nbsp;$3&nbsp;minutes</b></span>.
+account_change_pw	message	Félicitations ! Vous venez de changer votre mot de passe. 
 account_change_pw	title	Changement du mot de passe
 account_change_pw	old_password	Ancien mot de passe
 account_change_pw	new_password	Nouveau mot de passe
@@ -128,14 +128,13 @@ account_deleted	message	Votre compte utilisateur a été détruit. Si vous avez 
 #
 account_editsshkeys	title	Modification des clés SSH partagées
 account_editsshkeys	message	Pour éviter d'avoir à taper votre mot de passe à chaque ouverture d'une session shell, vous pouvez enregistrer une ou plusieurs de vos clés publiques SSH qui seront stockées dans votre fichier '~/.ssh/authorized_keys'.<P>Pour générer une clé publique SSH, vous devez utiliser le programme 'ssh-keygen' (ou ssh-keygen1) sur votre station de travail. Ensuite, ouvrez le fichier '~/.ssh/identity.pub' où se trouve la clé publique générée. Consultez la documentation de ssh pour plus d'information sur le partage de clés.
-account_editsshkeys	important	<P><b>IMPORTANT&nbsp;:</b>La mise à jour de vos clés SSH ne sera effective qu'après la prochaine mise à jour du backend dans approximativement <B>$1</B> heures et <B>$2</B> minutes.
 account_editsshkeys	keys	Clés partagées&nbsp;:<BR><I>Important&nbsp;: Assurez vous qu'il n'y ait aucun saut de ligne dans une clé mais uniquement entre chaque clé. Après avoir soumis vos clés vérifiez que le nombre de clés est bien celui que vous attendiez.</I>
 #
 #-----------------------------------------------
 # Script: SF/www/account/first.php
 #
 account_first	title	Bienvenue sur $1 !
-account_first	message	Vous êtes maintenant un utilisateur enregistré sur $1. En tant que tel, vous pouvez participer pleinement à toutes les activités du site Web $1. Vous pouvez utiliser les forums, souscrire à des listes de distributions, naviguer dans la liste des projets hébergés, ou même démarrer votre propre projet.<P><center><b><span class="highlight">** REMARQUES IMPORTANTES **</span></b></center><BR>Bien que votre compte Web soit disponible dès maintenant, $1 prendra quelques temps pour créer votre <u>compte shell</u>. Certaines fonctionnalités comme l'accès aux répertoires CVS en dépendent. Votre <u>compte shell</u> sera activé dans approximativement <b>$2</b> heures et <B>$3</B> minutes. <P>Entre temps nous vous recommandons vivement de parcourir le site, lire la <A href="/plugins/docman/?group_id=1">documentation du site</a> et de peaufiner la configuration de votre <a href="/account/">compte utilisateur</a> (définir votre profil de compétences, vos préférences, etc&hellip;)<P><center><b><span class="highlight">*-*-*-*</span></b></center> <P>Profitez pleinement du site, envoyez vos suggestions sur les améliorations que nous pourrions apporter et n'oubliez pas de parler de $1 autour de vous. <P>-- L'équipe $1
+account_first	message	Vous êtes maintenant un utilisateur enregistré sur $1. En tant que tel, vous pouvez participer pleinement à toutes les activités du site Web $1. Vous pouvez utiliser les forums, souscrire à des listes de distributions, naviguer dans la liste des projets hébergés, ou même démarrer votre propre projet.<P>Nous vous recommandons vivement de parcourir le site, lire la <A href="/plugins/docman/?group_id=1">documentation du site</a> et de peaufiner la configuration de votre <a href="/account/">compte utilisateur</a> (définir votre profil de compétences, vos préférences, etc&hellip;)<P>Profitez pleinement du site, envoyez vos suggestions sur les améliorations que nous pourrions apporter et n'oubliez pas de parler de $1 autour de vous. <P>-- L'équipe $1
 #
 #-----------------------------------------------
 # Script: SF/www/account/login.php

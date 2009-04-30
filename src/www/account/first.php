@@ -17,11 +17,7 @@ $HTML->header(array('title'=>$Language->getText('account_first', 'title', array(
 <P>
 <?php 
 
-$date = getdate(time());
-$hoursleft = ($GLOBALS['sys_crondelay'] - 1) - ($date['hours'] % $GLOBALS['sys_crondelay']);
-$minutesleft = 60 - $date['minutes'];
-
-echo $Language->getText('account_first', 'message', array($GLOBALS['sys_name'],$hoursleft,$minutesleft));
+echo $Language->getText('account_first', 'message', array($GLOBALS['sys_name']));
 
 $HTML->footer(array());
 

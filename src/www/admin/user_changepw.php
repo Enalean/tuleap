@@ -52,12 +52,9 @@ function register_valid()	{
 $HTML->includeJavascriptFile('/scripts/check_pw.js.php');
 if (register_valid()) {
     $HTML->header(array('title'=>$Language->getText('admin_user_changepw','title_changed')));
-    $d = getdate(time());
-    $h = ($sys_crondelay - 1) - ($d['hours'] % $sys_crondelay);
-    $m= 60 - $d['minutes'];
 ?>
 <h3><?php echo $Language->getText('admin_user_changepw','header_changed'); ?></h3>
-<p><?php echo $Language->getText('admin_user_changepw','msg_changed',array($h,$m)); ?></h3>
+<p><?php echo $Language->getText('admin_user_changepw','msg_changed'); ?></h3>
 
 <p><a href="/admin"><?php echo $Language->getText('global','back'); ?></a>.
 <?php
