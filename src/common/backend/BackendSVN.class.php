@@ -388,6 +388,10 @@ class BackendSVN extends Backend {
         }
         fclose($fp);
 
+        $this->chown("$svn_root_file_new", $GLOBALS['sys_http_user']);
+        $this->chgrp("$svn_root_file_new", $GLOBALS['sys_http_user']);
+        chmod("$svn_root_file_new", 0640);
+
 
         // Backup existing file and install new one
         return $this->installNewFileVersion($svn_root_file_new, $svn_root_file, $svn_root_file_old, true);
