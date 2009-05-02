@@ -122,6 +122,29 @@ $gitphp_conf['geshi'] = TRUE;
 $gitphp_conf['geshiroot'] = "geshi/";
 
 /*
+ * filemimetype
+ * Attempt to read the file's mimetype when displaying
+ * (for example, displaying an image as an actual image
+ *  in a browser)
+ * This requires either PHP >= 5.3.0, PECL fileinfo, or
+ * Linux
+ */
+$gitphp_conf['filemimetype'] = FALSE;
+
+/*
+ * magicdb
+ * Path to the libmagic db used to read mimetype
+ * You can leave this as null and let the system
+ * try to find the database for you, but that method
+ * is known to have issues
+ * If the path is correct but it's still not working,
+ * try removing the file extension if you have it on,
+ * or vice versa
+ */
+$gitphp_conf['magicdb'] = "/usr/share/misc/magic.mgc";
+//$gitphp_conf['magicdb'] = "C:\\wamp\\php\\extras\\magic";  // Windows
+
+/*
  * git_projects
  * Two-dimensional array list of projects
  * First array index is the name of the category the projects
