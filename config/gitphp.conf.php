@@ -167,6 +167,7 @@ $git_projects['Core']['XNSS_old'] = "core/xnss_old.git";
 $git_projects['PHP']['Codex'] = "php/codex.git";
 $git_projects['PHP']['gitphp'] = "php/gitphp.git";
 $git_projects['PHP']['MDB'] = "php/mdb.git";
+$git_projects['PHP']['xxcache'] = "php/xxcache.git";
 $git_projects['Nuclear']['Fusion'] = "nuclear/fusion.git";
 $git_projects['Websites']['lots'] = "websites/lots.git";
 $git_projects['Websites']['bth'] = "websites/bth.git";
