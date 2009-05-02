@@ -11,7 +11,7 @@ function script_url()
 {
 	global $gitphp_conf;
 
-	if ($gitphp_conf['self'])
+	if (isset($gitphp_conf['self']))
 		return $gitphp_conf['self'];
 
 	if (isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] == 'on'))
