@@ -56,7 +56,7 @@ $gitphp_conf['gittmp'] = "/tmp/gitphp/";
  * The variable '$gitphp_version' will expand to the
  * version number only
  */
-$gitphp_conf['title'] = "centraldogma :: $gitphp_appstring";
+$gitphp_conf['title'] = "$gitphp_appstring";
 
 /*
  * self
@@ -66,7 +66,7 @@ $gitphp_conf['title'] = "centraldogma :: $gitphp_appstring";
  * index.php filename), make sure to include the trailing
  * slash!
  */
-$gitphp_conf['self'] = "http://centraldogma/gitphp/";
+$gitphp_conf['self'] = "http://localhost/gitphp/";
 
 /*
  * smarty_prefix
@@ -109,7 +109,7 @@ $gitphp_conf['bzblocksize'] = 9;
  * Run blob output through geshi syntax highlighting
  * and line numbering
  */
-$gitphp_conf['geshi'] = TRUE;
+$gitphp_conf['geshi'] = FALSE;
 
 /*
  * geshiroot
@@ -129,7 +129,7 @@ $gitphp_conf['geshiroot'] = "geshi/";
  * This requires either PHP >= 5.3.0, PECL fileinfo, or
  * Linux
  */
-$gitphp_conf['filemimetype'] = FALSE;
+$gitphp_conf['filemimetype'] = TRUE;
 
 /*
  * magicdb
@@ -157,33 +157,10 @@ $gitphp_conf['magicdb'] = "/usr/share/misc/magic.mgc";
  * Comment out $git_projects (leave null) to attempt to read all
  * projects in the projectroot.
  */
-$git_projects['Core']['FBX'] = "core/fbx.git";
-$git_projects['Core']['Mvm'] = "core/mvm.git";
-$git_projects['Core']['PySoulforge'] = "core/pysoulforge.git";
-$git_projects['Core']['Scripts'] = "core/scripts.git";
-$git_projects['Core']['Soulforge'] = "core/soulforge.git";
-$git_projects['Core']['XNSS'] = "core/xnss.git";
-$git_projects['Core']['XNSS_old'] = "core/xnss_old.git";
-$git_projects['PHP']['Codex'] = "php/codex.git";
-$git_projects['PHP']['gitphp'] = "php/gitphp.git";
-$git_projects['PHP']['MDB'] = "php/mdb.git";
-$git_projects['PHP']['xxcache'] = "php/xxcache.git";
-$git_projects['Nuclear']['Fusion'] = "nuclear/fusion.git";
-$git_projects['Websites']['lots'] = "websites/lots.git";
-$git_projects['Websites']['bth'] = "websites/bth.git";
-$git_projects['School']['CS135'] = "school/cs135.git";
-$git_projects['School']['CS150'] = "school/cs150.git";
-$git_projects['School']['CS151'] = "school/cs151.git";
-$git_projects['School']['CS156'] = "school/cs156.git";
-$git_projects['School']['CS160'] = "school/cs160.git";
-$git_projects['School']['CS161'] = "school/cs161.git";
-$git_projects['School']['CS169'] = "school/cs169.git";
-$git_projects['School']['CS178'] = "school/cs178.git";
-$git_projects['School']['CS180'] = "school/cs180.git";
-$git_projects['School']['CS189'] = "school/cs189.git";
-$git_projects['School']['CS183'] = "school/cs183.git";
-$git_projects['School']['CS193'] = "school/cs193.git";
-$git_projects['School']['CS195'] = "school/cs195.git";
-$git_projects['School']['CS196'] = "school/cs196.git";
+//$git_projects['Core']['FBX'] = "core/fbx.git";
+//$git_projects['PHP']['gitphp'] = "php/gitphp.git";
+//$git_projects['PHP']['MDB'] = "php/mdb.git";
+//$git_projects['PHP']['xxcache'] = "php/xxcache.git";
+//$git_projects['Websites']['bth'] = "websites/bth.git";
 
 ?>
