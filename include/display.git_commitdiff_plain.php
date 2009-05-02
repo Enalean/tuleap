@@ -12,8 +12,8 @@
  include_once('gitutil.git_read_commit.php');
  include_once('gitutil.git_diff_tree.php');
  include_once('gitutil.git_rev_list.php');
- include_once('gitutil.git_diff_print.php');
  include_once('gitutil.read_info_ref.php');
+ include_once('display.git_diff_print.php');
 
 function git_commitdiff_plain($projectroot,$project,$hash,$hash_parent)
 {

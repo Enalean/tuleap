@@ -8,7 +8,7 @@
  */
 
  include_once('util.prep_tmpdir.php');
- include_once('gitutil.git_diff_print.php');
+ include_once('display.git_diff_print.php');
 
 function git_blobdiff_plain($projectroot,$project,$hash,$hashbase,$hashparent,$file)
 {

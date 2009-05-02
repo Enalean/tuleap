@@ -1,6 +1,6 @@
 <?php
 /*
- *  gitutil.git_diff_print.php
+ *  display.git_diff_print.php
  *  gitphp: A PHP git repository browser
  *  Component: Display - print a diff
  *
