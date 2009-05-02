@@ -61,12 +61,15 @@ $gitphp_conf['title'] = "$gitphp_appstring";
 /*
  * self
  * This is the path to the script that will be inserted
- * in urls.
+ * in urls.  If you leave this blank/commented the script
+ * will try to guess the correct URL, but you can override
+ * it here if it's not being guessed correctly.
+ *
  * If only specifying the directory path (and omitting the
  * index.php filename), make sure to include the trailing
  * slash!
  */
-$gitphp_conf['self'] = "http://localhost/gitphp/";
+//$gitphp_conf['self'] = "http://localhost/gitphp/";
 
 /*
  * smarty_prefix

@@ -9,6 +9,7 @@
 
  include_once('util.prep_tmpdir.php');
  include_once('util.date_str.php');
+ include_once('util.script_url.php');
  include_once('gitutil.git_read_commit.php');
  include_once('gitutil.git_diff_tree.php');
  include_once('gitutil.git_rev_list.php');
@@ -17,7 +18,7 @@
 
 function git_commitdiff_plain($projectroot,$project,$hash,$hash_parent)
 {
-	global $gitphp_conf,$tpl;
+	global $tpl;
 	$ret = prep_tmpdir();
 	if ($ret !== TRUE) {
 		echo $ret;
@@ -47,7 +48,7 @@ function git_commitdiff_plain($projectroot,$project,$hash,$hash_parent)
 	$tpl->assign("subject",$co['title']);
 	if (isset($tagname))
 		$tpl->assign("tagname",$tagname);
-	$tpl->assign("url",$gitphp_conf['self'] . "?p=" . $project . "&a=commitdiff&h=" . $hash);
+	$tpl->assign("url",script_url() . "?p=" . $project . "&a=commitdiff&h=" . $hash);
 	$tpl->assign("comment",$co['comment']);
 	$tpl->display("diff_plaintext.tpl");
 	echo "\n\n";

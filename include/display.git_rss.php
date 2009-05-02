@@ -8,6 +8,7 @@
  */
 
  include_once('util.date_str.php');
+ include_once('util.script_url.php');
  include_once('gitutil.git_read_head.php');
  include_once('gitutil.git_read_revlist.php');
  include_once('gitutil.git_read_commit.php');
@@ -15,12 +16,12 @@
 
 function git_rss($projectroot,$project)
 {
-	global $tpl,$gitphp_conf;
+	global $tpl;
 	$head = git_read_head($projectroot . $project);
 	$revlist = git_read_revlist($projectroot . $project, $head, 150);
 	header("Content-type: text/xml; charset=UTF-8");
 	$tpl->clear_all_assign();
-	$tpl->assign("self",$gitphp_conf['self']);
+	$tpl->assign("self",script_url());
 	$tpl->assign("project",$project);
 	$tpl->display("rss_header.tpl");
 
@@ -46,7 +47,7 @@ function git_rss($projectroot,$project)
 		$tpl->assign("title",htmlentities($co['title']));
 		$tpl->assign("author",htmlentities($co['author']));
 		$tpl->assign("cdrfc2822",$cd['rfc2822']);
-		$tpl->assign("self",$gitphp_conf['self']);
+		$tpl->assign("self",script_url());
 		$tpl->assign("project",$project);
 		$tpl->assign("commit",$commit);
 		$tpl->assign("comment",$co['comment']);
