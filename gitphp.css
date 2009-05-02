@@ -1,3 +1,6 @@
+.italic {font-style:italic;}
+.bold {font-weight:bold;}
+.underline {text-decoration:underline;}
 body {
 	font-family: sans-serif; font-size: 12px; border:solid #d9d8d1; border-width:1px;
 	margin:10px; background-color:#ffffff; color:#000000;
@@ -55,4 +58,41 @@ a.rss_logo:hover { background-color:#ee5500; }
 span.tag {
 	padding:0px 4px; font-size:10px; font-weight:normal;
 	background-color:#ffffaa; border:1px solid; border-color:#ffffcc #ffee00 #ffee00 #ffffcc;
+}
+.diffplus {
+	color: #008800;
+}
+.diffminus {
+	color: #cc0000;
+}
+.diffat {
+	color: #990099;
+}
+span.agehighlight {
+	color: #009900;
+}
+img.logo {
+	float: right;
+	border-width: 0px;
+}
+.respectwhitespace {
+	white-space: pre;
+}
+.monospace {
+	font-family: monospace;
+}
+span.newfile {
+	color: #008000;
+}
+span.deletedfile {
+	color: #c00000;
+}
+span.changedfile {
+	color: #777777;
+}
+span.movedfile {
+	color: #777777;
+}
+span.latenight {
+	color: #cc0000;
 }

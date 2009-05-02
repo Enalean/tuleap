@@ -16,18 +16,13 @@ header("Content-Type: $contentType; charset=utf-8"); *}
 {if $rss_link}
 <link rel="alternate" title="{$project} log" href="{$SCRIPT_NAME}?p={$project}&a=rss" type="application/rss+xml" />
 {/if}
-{literal}<style type="text/css">/*<![CDATA[[*/<!--
- .italic {font-style:italic;}
- .bold {font-weight:bold;}
- .underline {text-decoration:underline;}
-/*]]>*/--></style>{/literal}
 <link rel="stylesheet" href="{$stylesheet}" type="text/css" />
 {$smarty.capture.header}
 </head>
 <body>
 <div class="page_header">
 <a href="http://www.kernel.org/pub/software/scm/git/docs/" title="git documentation">
-<img src="git-logo.png" width="72" height="27" alt="git" style="float:right; border-width:0px;" />
+<img src="git-logo.png" width="72" height="27" alt="git" class="logo" />
 </a>
 <a href="index.php">projects</a> / 
 {if $project}

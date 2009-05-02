@@ -6,7 +6,7 @@
  *  Copyright (C) 2006 Christopher Han <xiphux@gmail.com>
  *}
  <tr class="{$class}">
- <td style="font-family:monospace">{$filemode}</td>
+ <td class="monospace">{$filemode}</td>
  <td class="list">
  {if $type == "blob"}
  <a href="{$SCRIPT_NAME}?p={$project}&a=blob&h={$hash}{if $hashbase}&hb={$hashbase}{/if}&f={if $base}{$base}{/if}{$name}" class="list">{$name}</a></td>

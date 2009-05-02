@@ -7,13 +7,13 @@
  *}
 <tr class="{$class}">
 <td>
-{if $idt}<span style="white-space:pre;">  {/if}<a href="{$SCRIPT_NAME}?p={$project}&a=summary" class="list">{$project}</a>{if $idt}</span>{/if}
+{if $idt}<span class="respectwhitespace">  {/if}<a href="{$SCRIPT_NAME}?p={$project}&a=summary" class="list">{$project}</a>{if $idt}</span>{/if}
 </td>
 <td>{$descr}</td>
 <td><i>{$owner}</i></td>
 <td>
 {if $age_colored}
-<span style="color: #009900;">
+<span class="agehighlight">
 {/if}
 {if $age_bold}
 <b>

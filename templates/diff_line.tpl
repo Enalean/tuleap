@@ -5,4 +5,4 @@
  *
  *  Copyright (C) 2006 Christopher Han <xiphux@gmail.com>
  *}
- <div class="pre"{if $color} style="color:{$color};"{/if}>{$line}</div>
+ <div class="pre{if $class} {$class}{/if}">{$line}</div>

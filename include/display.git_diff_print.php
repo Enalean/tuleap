@@ -33,13 +33,13 @@ function git_diff_print($proj,$from,$from_name,$to,$to_name,$format = "html")
 		$line = strtok($diffout,"\n");
 		while ($line !== false) {
 			$start = substr($line,0,1);
-			unset($color);
+			unset($class);
 			if ($start == "+")
-				$color = "#008800";
+				$class = "diffplus";
 			else if ($start == "-")
-				$color = "#cc0000";
+				$class = "diffminus";
 			else if ($start == "@")
-				$color = "#990099";
+				$class = "diffat";
 			if ($start != "\\") {
 			/*
 				while (($pos = strpos($line,"\t")) !== false) {
@@ -53,8 +53,8 @@ function git_diff_print($proj,$from,$from_name,$to,$to_name,$format = "html")
 			 */
 				$tpl->clear_all_assign();
 				$tpl->assign("line",htmlentities($line));
-				if (isset($color))
-					$tpl->assign("color",$color);
+				if (isset($class))
+					$tpl->assign("class",$class);
 				$tpl->display("diff_line.tpl");
 			}
 			$line = strtok("\n");
