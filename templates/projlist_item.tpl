@@ -28,5 +28,5 @@
 </span>
 {/if}
 </td>
-<td class="link"><a href="{$SCRIPT_NAME}?p={$project}&a=summary">summary</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=shortlog">shortlog</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=log">log</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=snapshot&h=HEAD">snapshot</a></td>
+<td class="link"><a href="{$SCRIPT_NAME}?p={$project}&a=summary">summary</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=shortlog">shortlog</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=log">log</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=tree">tree</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=snapshot&h=HEAD">snapshot</a></td>
 </tr>
