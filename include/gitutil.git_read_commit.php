@@ -12,7 +12,7 @@
 
 function git_read_commit($proj,$head)
 {
-	$revlist = git_rev_list($proj,$head,1,TRUE,TRUE);
+	$revlist = git_rev_list($proj,$head,1,NULL,TRUE,TRUE);
 	$lines = explode("\n",$revlist);
 	if (!($lines[0]) || !ereg("^[0-9a-fA-F]{40}",$lines[0]))
 		return null;

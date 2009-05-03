@@ -30,5 +30,17 @@ header("Content-Type: $contentType; charset=utf-8"); *}
   {if $action}
     / {$action}
   {/if}
+<form method="get" action="index.php" enctype="application/x-www-form-urlencoded">
+<div class="search">
+<input type="hidden" name="p" value="{$project}" />
+<input type="hidden" name="a" value="search" />
+<input type="hidden" name="h" value="{if $hash}{$hash}{else}HEAD{/if}" />
+<select name="st">
+<option {if $searchtype == 'commit'}selected="selected"{/if} value="commit">commit</option>
+<option {if $searchtype == 'author'}selected="selected"{/if} value="author">author</option>
+<option {if $searchtype == 'committer'}selected="selected"{/if} value="committer">committer</option>
+</select> search: <input type="text" name="s" {if $search}value="{$search}"{/if} />
+</div>
+</form>
 {/if}
 </div>

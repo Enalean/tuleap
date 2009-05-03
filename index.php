@@ -118,6 +118,10 @@
 					include_once('include/display.git_history.php');
 					git_history($gitphp_conf['projectroot'],$_GET['p'], (isset($_GET['h']) ? $_GET['h'] : NULL),$_GET['f']);
 					break;
+				case "search":
+					include_once('include/display.git_search.php');
+					git_search($gitphp_conf['projectroot'],$_GET['p'],(isset($_GET['h']) ? $_GET['h'] : NULL),(isset($_GET['s']) ? $_GET['s'] : NULL),(isset($_GET['st']) ? $_GET['st'] : "commit"),(isset($_GET['pg']) ? $_GET['pg'] : 0));
+					break;
 				default:
 					echo "Unknown action";
 					break;
@@ -147,6 +151,16 @@
 		}
 	 }
 	 $tpl->assign("title",$title);
+	 if (isset($_GET['st']))
+	 	$tpl->assign("searchtype",$_GET['st']);
+	else
+		$tpl->assign("searchtype","commit");
+	if (isset($_GET['s']))
+		$tpl->assign("search",$_GET['s']);
+	if (isset($_GET['hb']))
+		$tpl->assign("hash",$_GET['hb']);
+	else if (isset($_GET['h']))
+		$tpl->assign("hash",$_GET['h']);
 	 $tpl->display("header.tpl");
  }
 

@@ -1,5 +1,5 @@
 {*
- *  log_page.tpl
+ *  log_pagenav.tpl
  *  gitphp: A PHP git repository browser
  *  Component: Log view page nav template
  *
