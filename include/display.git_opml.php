@@ -7,10 +7,10 @@
  *  Copyright (C) 2008 Christopher Han <xiphux@gmail.com>
  */
 
- include_once('util.script_url.php');
- include_once('gitutil.git_read_projects.php');
- include_once('gitutil.git_read_head.php');
- include_once('gitutil.git_read_commit.php');
+ require_once('util.script_url.php');
+ require_once('gitutil.git_read_projects.php');
+ require_once('gitutil.git_read_head.php');
+ require_once('gitutil.git_read_commit.php');
 
 function git_opml($projectroot,$projectlist)
 {

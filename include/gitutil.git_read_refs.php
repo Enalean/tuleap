@@ -7,12 +7,12 @@
  *  Copyright (C) 2008 Christopher Han <xiphux@gmail.com>
  */
 
- include_once('util.age_string.php');
- include_once('util.epochcmp.php');
- include_once('gitutil.git_get_type.php');
- include_once('gitutil.git_read_hash.php');
- include_once('gitutil.git_read_tag.php');
- include_once('gitutil.git_read_commit.php');
+ require_once('util.age_string.php');
+ require_once('util.epochcmp.php');
+ require_once('gitutil.git_get_type.php');
+ require_once('gitutil.git_read_hash.php');
+ require_once('gitutil.git_read_tag.php');
+ require_once('gitutil.git_read_commit.php');
 
 function git_read_refs($projectroot,$project,$refdir)
 {

@@ -7,11 +7,11 @@
  *  Copyright (C) 2008 Christopher Han <xiphux@gmail.com>
  */
 
- include_once('gitutil.git_get_hash_by_path.php');
- include_once('gitutil.git_read_head.php');
- include_once('gitutil.git_read_commit.php');
- include_once('gitutil.read_info_ref.php');
- include_once('gitutil.git_history_list.php');
+ require_once('gitutil.git_get_hash_by_path.php');
+ require_once('gitutil.git_read_head.php');
+ require_once('gitutil.git_read_commit.php');
+ require_once('gitutil.read_info_ref.php');
+ require_once('gitutil.git_history_list.php');
 
 function git_history($projectroot,$project,$hash,$file)
 {

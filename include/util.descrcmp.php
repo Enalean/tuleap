@@ -7,7 +7,7 @@
  *  Copyright (C) 2008 Christopher Han <xiphux@gmail.com>
  */
 
- include_once('gitutil.git_project_descr.php');
+ require_once('gitutil.git_project_descr.php');
 
 function descrcmp($a,$b)
 {

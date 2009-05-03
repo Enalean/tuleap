@@ -7,8 +7,8 @@
  *  Copyright (C) 2008 Christopher Han <xiphux@gmail.com>
  */
 
-include_once('defs.commands.php');
-include_once('gitutil.git_exec.php');
+require_once('defs.commands.php');
+require_once('gitutil.git_exec.php');
 
 function git_read_head($proj)
 {

@@ -7,11 +7,11 @@
  *  Copyright (C) 2008 Christopher Han <xiphux@gmail.com>
  */
 
- include_once('util.date_str.php');
- include_once('gitutil.git_read_head.php');
- include_once('gitutil.git_read_revlist.php');
- include_once('gitutil.git_read_commit.php');
- include_once('gitutil.read_info_ref.php');
+ require_once('util.date_str.php');
+ require_once('gitutil.git_read_head.php');
+ require_once('gitutil.git_read_revlist.php');
+ require_once('gitutil.git_read_commit.php');
+ require_once('gitutil.read_info_ref.php');
 
 function git_shortlog($projectroot,$project,$hash,$page)
 {

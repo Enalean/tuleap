@@ -7,7 +7,7 @@
  *  Copyright (C) 2008 Christopher Han <xiphux@gmail.com>
  */
 
-include_once('defs.constants.php');
+require_once('defs.constants.php');
 
 function git_project_descr($projectroot,$project,$trim = FALSE)
 {

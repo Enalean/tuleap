@@ -7,7 +7,7 @@
  *  Copyright (C) 2008 Christopher Han <xiphux@gmail.com>
  */
 
-include_once('gitutil.git_ls_tree.php');
+require_once('gitutil.git_ls_tree.php');
 
 function git_get_hash_by_path($project,$base,$path,$type = null)
 {

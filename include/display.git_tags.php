@@ -7,8 +7,8 @@
  *  Copyright (C) 2008 Christopher Han <xiphux@gmail.com>
  */
 
- include_once('gitutil.git_read_head.php');
- include_once('gitutil.git_read_refs.php');
+ require_once('gitutil.git_read_head.php');
+ require_once('gitutil.git_read_refs.php');
 
 function git_tags($projectroot,$project)
 {

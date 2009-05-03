@@ -7,7 +7,7 @@
  *  Copyright (C) 2008 Christopher Han <xiphux@gmail.com>
  */
 
- include_once('gitutil.git_cat_file.php');
+ require_once('gitutil.git_cat_file.php');
 
 function git_diff_print($proj,$from,$from_name,$to,$to_name,$format = "html")
 {

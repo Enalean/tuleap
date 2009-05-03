@@ -7,7 +7,7 @@
  *  Copyright (C) 2008 Christopher Han <xiphux@gmail.com>
  */
 
- include_once('gitutil.git_project_owner.php');
+ require_once('gitutil.git_project_owner.php');
 
 function ownercmp($a,$b)
 {

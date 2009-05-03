@@ -16,12 +16,12 @@
  /*
   * Configuration
   */
- include_once('config/gitphp.conf.php');
+ require_once('config/gitphp.conf.php');
 
  /*
   * Instantiate Smarty
   */
- include_once($gitphp_conf['smarty_prefix'] . "Smarty.class.php");
+ require_once($gitphp_conf['smarty_prefix'] . "Smarty.class.php");
  $tpl =& new Smarty;
  $tpl->load_filter('output','trimwhitespace');
 
@@ -31,11 +31,11 @@
  ob_start();
  if (isset($_GET['a']) && $_GET['a'] == "opml") {
 	$suppress_headers = TRUE;
-	include_once('include/display.git_opml.php');
+	require_once('include/display.git_opml.php');
 	git_opml($gitphp_conf['projectroot'],$git_projects);
  } else if (isset($_GET['a']) && $_GET['a'] == "project_index") {
 	$suppress_headers = TRUE;
-	include_once('include/display.git_project_index.php');
+	require_once('include/display.git_project_index.php');
 	git_project_index($gitphp_conf['projectroot'],$git_projects);
  } else if (isset($_GET['p'])) {
  	if (!is_dir($gitphp_conf['projectroot'] . $_GET['p']))
@@ -45,81 +45,81 @@
 	else {
 		$rss_link = TRUE;
 		if (!isset($_GET['a'])) {
-			include_once('include/display.git_summary.php');
+			require_once('include/display.git_summary.php');
 			git_summary($gitphp_conf['projectroot'],$_GET['p']);
 		} else {
 			switch ($_GET['a']) {
 				case "summary":
-					include_once('include/display.git_summary.php');
+					require_once('include/display.git_summary.php');
 					git_summary($gitphp_conf['projectroot'],$_GET['p']);
 					break;
 				case "tree":
-					include_once('include/display.git_tree.php');
+					require_once('include/display.git_tree.php');
 					git_tree($gitphp_conf['projectroot'], $_GET['p'], (isset($_GET['h']) ? $_GET['h'] : NULL), (isset($_GET['f']) ? $_GET['f'] : NULL), (isset($_GET['hb']) ? $_GET['hb'] : NULL));
 					break;
 				case "shortlog":
-					include_once('include/display.git_shortlog.php');
+					require_once('include/display.git_shortlog.php');
 					git_shortlog($gitphp_conf['projectroot'],$_GET['p'],(isset($_GET['h']) ? $_GET['h'] : NULL), (isset($_GET['pg']) ? $_GET['pg'] : NULL));
 					break;
 				case "log":
-					include_once('include/display.git_log.php');
+					require_once('include/display.git_log.php');
 					git_log($gitphp_conf['projectroot'],$_GET['p'], (isset($_GET['h']) ? $_GET['h'] : NULL), (isset($_GET['pg']) ? $_GET['pg'] : NULL));
 					break;
 				case "commit":
-					include_once('include/display.git_commit.php');
+					require_once('include/display.git_commit.php');
 					git_commit($gitphp_conf['projectroot'],$_GET['p'],$_GET['h']);
 					break;
 				case "commitdiff":
-					include_once('include/display.git_commitdiff.php');
+					require_once('include/display.git_commitdiff.php');
 					git_commitdiff($gitphp_conf['projectroot'],$_GET['p'],$_GET['h'], (isset($_GET['hp']) ? $_GET['hp'] : NULL));
 					break;
 				case "commitdiff_plain":
 					$suppress_headers = TRUE;
-					include_once('include/display.git_commitdiff_plain.php');
+					require_once('include/display.git_commitdiff_plain.php');
 					git_commitdiff_plain($gitphp_conf['projectroot'],$_GET['p'],$_GET['h'],(isset($_GET['hp']) ? $_GET['hp'] : NULL));
 					break;
 				case "heads":
-					include_once('include/display.git_heads.php');
+					require_once('include/display.git_heads.php');
 					git_heads($gitphp_conf['projectroot'],$_GET['p']);
 					break;
 				case "tags":
-					include_once('include/display.git_tags.php');
+					require_once('include/display.git_tags.php');
 					git_tags($gitphp_conf['projectroot'],$_GET['p']);
 					break;
 				case "rss":
 					$suppress_headers = TRUE;
-					include_once('include/display.git_rss.php');
+					require_once('include/display.git_rss.php');
 					git_rss($gitphp_conf['projectroot'],$_GET['p']);
 					break;
 				case "blob":
-					include_once('include/display.git_blob.php');
+					require_once('include/display.git_blob.php');
 					git_blob($gitphp_conf['projectroot'],$_GET['p'], (isset($_GET['h']) ? $_GET['h'] : NULL), (isset($_GET['f']) ? $_GET['f'] : NULL), (isset($_GET['hb']) ? $_GET['hb'] : NULL));
 					break;
 				case "blob_plain":
 					$suppress_headers = TRUE;
-					include_once('include/display.git_blob_plain.php');
+					require_once('include/display.git_blob_plain.php');
 					git_blob_plain($gitphp_conf['projectroot'],$_GET['p'],$_GET['h'],(isset($_GET['f']) ? $_GET['f'] : NULL));
 					break;
 				case "blobdiff":
-					include_once('include/display.git_blobdiff.php');
+					require_once('include/display.git_blobdiff.php');
 					git_blobdiff($gitphp_conf['projectroot'],$_GET['p'],$_GET['h'],$_GET['hb'],$_GET['hp'],(isset($_GET['f']) ? $_GET['f'] : NULL));
 					break;
 				case "blobdiff_plain":
 					$suppress_headers = TRUE;
-					include_once('include/display.git_blobdiff_plain.php');
+					require_once('include/display.git_blobdiff_plain.php');
 					git_blobdiff_plain($gitphp_conf['projectroot'],$_GET['p'],$_GET['h'],$_GET['hb'],$_GET['hp'], (isset($_GET['f']) ? $_GET['f'] : NULL));
 					break;
 				case "snapshot":
 					$suppress_headers = TRUE;
-					include_once('include/display.git_snapshot.php');
+					require_once('include/display.git_snapshot.php');
 					git_snapshot($gitphp_conf['projectroot'],$_GET['p'], (isset($_GET['h']) ? $_GET['h'] : NULL));
 					break;
 				case "history":
-					include_once('include/display.git_history.php');
+					require_once('include/display.git_history.php');
 					git_history($gitphp_conf['projectroot'],$_GET['p'], (isset($_GET['h']) ? $_GET['h'] : NULL),$_GET['f']);
 					break;
 				case "search":
-					include_once('include/display.git_search.php');
+					require_once('include/display.git_search.php');
 					git_search($gitphp_conf['projectroot'],$_GET['p'],(isset($_GET['h']) ? $_GET['h'] : NULL),(isset($_GET['s']) ? $_GET['s'] : NULL),(isset($_GET['st']) ? $_GET['st'] : "commit"),(isset($_GET['pg']) ? $_GET['pg'] : 0));
 					break;
 				default:
@@ -130,7 +130,7 @@
 	}
  } else {
  	$tpl->display("hometext.tpl");
-	include_once('include/display.git_project_list.php');
+	require_once('include/display.git_project_list.php');
  	git_project_list($gitphp_conf['projectroot'],$git_projects,(isset($_GET['o']) ? $_GET['o'] : "project"));
  }
  $main = ob_get_contents();
@@ -171,7 +171,7 @@
  if (!$suppress_headers) {
 	 if ($rss_link) {
 		$tpl->assign("project",$_GET['p']);
-		include_once('include/gitutil.git_project_descr.php');
+		require_once('include/gitutil.git_project_descr.php');
 		$tpl->assign("descr",git_project_descr($gitphp_conf['projectroot'],$_GET['p']));
 	 }
 	 $tpl->display("footer.tpl");

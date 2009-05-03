@@ -7,10 +7,10 @@
  *  Copyright (C) 2008 Christopher Han <xiphux@gmail.com>
  */
 
- include_once('util.file_type.php');
- include_once('util.date_str.php');
- include_once('gitutil.git_read_commit.php');
- include_once('gitutil.git_diff_tree.php');
+ require_once('util.file_type.php');
+ require_once('util.date_str.php');
+ require_once('gitutil.git_read_commit.php');
+ require_once('gitutil.git_diff_tree.php');
 
 function git_commit($projectroot,$project,$hash)
 {

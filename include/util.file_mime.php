@@ -7,9 +7,9 @@
  *  Copyright (C) 2009 Christopher Han <xiphux@gmail.com>
  */
 
-include_once('util.file_mime_fileinfo.php');
-include_once('util.file_mime_file.php');
-include_once('util.file_mime_ext.php');
+require_once('util.file_mime_fileinfo.php');
+require_once('util.file_mime_file.php');
+require_once('util.file_mime_ext.php');
 
 function file_mime($buffer, $file = NULL)
 {

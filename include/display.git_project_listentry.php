@@ -7,10 +7,10 @@
  *  Copyright (C) 2008 Christopher Han <xiphux@gmail.com>
  */
 
- include_once('gitutil.git_project_descr.php');
- include_once('gitutil.git_project_owner.php');
- include_once('gitutil.git_read_head.php');
- include_once('gitutil.git_read_commit.php');
+ require_once('gitutil.git_project_descr.php');
+ require_once('gitutil.git_project_owner.php');
+ require_once('gitutil.git_read_head.php');
+ require_once('gitutil.git_read_commit.php');
 
 function git_project_listentry($projectroot,$project,$class,$indent)
 {

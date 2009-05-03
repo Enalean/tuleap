@@ -7,11 +7,11 @@
  *  Copyright (C) 2008 Christopher Han <xiphux@gmail.com>
  */
 
- include_once('gitutil.git_read_head.php');
- include_once('gitutil.git_get_hash_by_path.php');
- include_once('gitutil.git_cat_file.php');
- include_once('gitutil.git_read_commit.php');
- include_once('util.file_mime.php');
+ require_once('gitutil.git_read_head.php');
+ require_once('gitutil.git_get_hash_by_path.php');
+ require_once('gitutil.git_cat_file.php');
+ require_once('gitutil.git_read_commit.php');
+ require_once('util.file_mime.php');
 
 function git_blob($projectroot, $project, $hash, $file, $hashbase)
 {
@@ -57,17 +57,19 @@ function git_blob($projectroot, $project, $hash, $file, $hashbase)
 		if ($usedgeshi) {
 			$usedgeshi = FALSE;
 			include_once($gitphp_conf['geshiroot'] . "geshi.php");
-			$geshi = new GeSHi("",'php');
-			if ($geshi) {
-				$lang = "";
-				if (isset($file))
-					$lang = $geshi->get_language_name_from_extension(substr(strrchr($file,'.'),1));
-				if (isset($lang) && (strlen($lang) > 0)) {
-					$geshi->set_source($catout);
-					$geshi->set_language($lang);
-					$geshi->enable_line_numbers(GESHI_FANCY_LINE_NUMBERS);
-					echo $geshi->parse_code();
-					$usedgeshi = TRUE;
+			if (class_exists("GeSHi")) {
+				$geshi = new GeSHi("",'php');
+				if ($geshi) {
+					$lang = "";
+					if (isset($file))
+						$lang = $geshi->get_language_name_from_extension(substr(strrchr($file,'.'),1));
+					if (isset($lang) && (strlen($lang) > 0)) {
+						$geshi->set_source($catout);
+						$geshi->set_language($lang);
+						$geshi->enable_line_numbers(GESHI_FANCY_LINE_NUMBERS);
+						echo $geshi->parse_code();
+						$usedgeshi = TRUE;
+					}
 				}
 			}
 		}

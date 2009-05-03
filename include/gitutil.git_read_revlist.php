@@ -7,7 +7,7 @@
  *  Copyright (C) 2008 Christopher Han <xiphux@gmail.com>
  */
 
- include_once('gitutil.git_rev_list.php');
+ require_once('gitutil.git_rev_list.php');
 
 function git_read_revlist($proj,$head,$count,$skip = NULL)
 {

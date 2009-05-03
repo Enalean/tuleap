@@ -7,9 +7,9 @@
  *  Copyright (C) 2008 Christopher Han <xiphux@gmail.com>
  */
 
- include_once('util.prep_tmpdir.php');
- include_once('gitutil.git_read_commit.php');
- include_once('display.git_diff_print.php');
+ require_once('util.prep_tmpdir.php');
+ require_once('gitutil.git_read_commit.php');
+ require_once('display.git_diff_print.php');
 
 function git_blobdiff($projectroot,$project,$hash,$hashbase,$hashparent,$file)
 {

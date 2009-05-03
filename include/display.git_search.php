@@ -7,9 +7,9 @@
  *  Copyright (C) 2009 Christopher Han <xiphux@gmail.com>
  */
 
-include_once('defs.constants.php');
-include_once('gitutil.git_read_commit.php');
-include_once('gitutil.git_rev_list.php');
+require_once('defs.constants.php');
+require_once('gitutil.git_read_commit.php');
+require_once('gitutil.git_rev_list.php');
 
 function git_search($projectroot, $project, $hash, $search, $searchtype, $page = 0)
 {

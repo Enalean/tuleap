@@ -7,7 +7,7 @@
  *  Copyright (C) 2008 Christopher Han <xiphux@gmail.com>
  */
 
- include_once('gitutil.git_recurse_projects.php');
+ require_once('gitutil.git_recurse_projects.php');
 
 function git_read_projects($projectroot,$projectlist)
 {

@@ -7,8 +7,8 @@
  *  Copyright (C) 2008 Christopher Han <xiphux@gmail.com>
  */
 
- include_once('gitutil.git_cat_file.php');
- include_once('util.file_mime.php');
+ require_once('gitutil.git_cat_file.php');
+ require_once('util.file_mime.php');
 
 function git_blob_plain($projectroot,$project,$hash,$file)
 {

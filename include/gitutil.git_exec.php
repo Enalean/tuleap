@@ -8,9 +8,9 @@
  */
 
  if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN')
- 	include_once('gitutil.git_exec_win.php');
+ 	require_once('gitutil.git_exec_win.php');
  else
- 	include_once('gitutil.git_exec_nix.php');
+ 	require_once('gitutil.git_exec_nix.php');
 
 function git_exec($project, $command)
 {

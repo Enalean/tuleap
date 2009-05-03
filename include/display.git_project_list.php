@@ -7,12 +7,12 @@
  *  Copyright (C) 2008 Christopher Han <xiphux@gmail.com>
  */
 
- include_once('util.projectcmp.php');
- include_once('util.descrcmp.php');
- include_once('util.ownercmp.php');
- include_once('util.agecmp.php');
- include_once('display.git_project_listentry.php');
- include_once('gitutil.git_read_projects.php');
+ require_once('util.projectcmp.php');
+ require_once('util.descrcmp.php');
+ require_once('util.ownercmp.php');
+ require_once('util.agecmp.php');
+ require_once('display.git_project_listentry.php');
+ require_once('gitutil.git_read_projects.php');
 
 function git_project_list($projectroot,$projectlist,$order = "project")
 {

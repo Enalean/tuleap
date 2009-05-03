@@ -7,7 +7,7 @@
  *  Copyright (C) 2008 Christopher Han <xiphux@gmail.com>
  */
 
-include_once('gitutil.git_cat_file.php');
+require_once('gitutil.git_cat_file.php');
 
 function git_get_type($project, $hash)
 {

@@ -7,7 +7,7 @@
  *  Copyright (C) 2008 Christopher Han <xiphux@gmail.com>
  */
 
- include_once('gitutil.git_read_projects.php');
+ require_once('gitutil.git_read_projects.php');
 
 function git_project_index($projectroot, $projectlist)
 {
