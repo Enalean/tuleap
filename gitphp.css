@@ -99,7 +99,9 @@ span.latenight {
 span.searchmatch {
 	color: #e00000;
 }
+div.message {
+	padding: 12px;
+}
 div.error {
-	padding: 10px;
 	color: #ff0000;
 }
