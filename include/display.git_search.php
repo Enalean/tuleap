@@ -8,6 +8,7 @@
  */
 
 require_once('defs.constants.php');
+require_once('util.highlight.php');
 require_once('gitutil.git_read_commit.php');
 require_once('gitutil.git_rev_list.php');
 
@@ -91,28 +92,9 @@ function git_search($projectroot, $project, $hash, $search, $searchtype, $page =
 			$tpl->assign("committree",$co2['tree']);
 			$matches = array();
 			foreach ($co2['comment'] as $comline) {
-				if (eregi("(.*)(" . quotemeta($search) . ")(.*)",$comline,$regs)) {
-					$linelen = strlen($regs[0]);
-					if ($linelen > GITPHP_TRIM_LENGTH) {
-						$matchlen = strlen($regs[2]);
-						$remain = floor((GITPHP_TRIM_LENGTH - $matchlen) / 2);
-						$leftlen = strlen($regs[1]);
-						$rightlen = strlen($regs[3]);
-						if ($leftlen > $remain) {
-							$leftremain = $remain;
-							if ($rightlen < $remain)
-								$leftremain += ($remain - $rightlen);
-							$regs[1] = "..." . substr($regs[1], ($leftlen - ($leftremain - 3)));
-						}
-						if ($rightlen > $remain) {
-							$rightremain = $remain;
-							if ($leftlen < $remain)
-								$rightremain += ($remain - $leftlen);
-							$regs[3] = substr($regs[3],0,$rightremain-3) . "...";
-						}
-					}
-					$matches[] = $regs[1] . "<span class=\"searchmatch\">" . $regs[2] . "</span>" . $regs[3];
-				}
+				$hl = highlight($comline, $search, "searchmatch", GITPHP_TRIM_LENGTH);
+				if ($hl && (strlen($hl) > 0))
+					$matches[] = $hl;
 			}
 			$tpl->assign("matches",$matches);
 			$tpl->display("search_item.tpl");
