@@ -27,7 +27,7 @@ function git_shortlog($projectroot,$project,$hash,$page)
 	$tpl->assign("hash",$hash);
 	$tpl->display("shortlog_nav.tpl");
 
-	$revlist = git_read_revlist($projectroot . $project, $hash, (100 * ($page+1)));
+	$revlist = git_read_revlist($projectroot . $project, $hash, 101, ($page * 100));
 
 	if (($hash != $head) || $page)
 		$tpl->assign("headlink",TRUE);
@@ -35,14 +35,15 @@ function git_shortlog($projectroot,$project,$hash,$page)
 		$tpl->assign("prevlink",TRUE);
 		$tpl->assign("prevpage",$page-1);
 	}
-	if (count($revlist) >= (100 * ($page+1)-1)) {
+	if (count($revlist) > 100) {
 		$tpl->assign("nextlink",TRUE);
 		$tpl->assign("nextpage",$page+1);
 	}
 	$tpl->display("shortlog_pagenav.tpl");
 
 	$alternate = FALSE;
-	for ($i = ($page * 100); $i < count($revlist); $i++) {
+	$commitcount = min(100,count($revlist));
+	for ($i = 0; $i < $commitcount; $i++) {
 		$tpl->clear_all_assign();
 		$commit = $revlist[$i];
 		if (strlen(trim($commit)) > 0) {
@@ -70,7 +71,7 @@ function git_shortlog($projectroot,$project,$hash,$page)
 	$tpl->clear_all_assign();
 	$tpl->assign("project",$project);
 	$tpl->assign("hash",$hash);
-	if (count($revlist) >= (100 * ($page+1)-1)) {
+	if (count($revlist) > 100) {
 		$tpl->assign("nextlink",TRUE);
 		$tpl->assign("nextpage",$page+1);
 	}

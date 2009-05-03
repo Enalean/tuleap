@@ -68,7 +68,8 @@ function git_search($projectroot, $project, $hash, $search, $searchtype, $page =
 	$tpl->display("search_header.tpl");
 
 	$alternate = FALSE;
-	for ($i = 0; $i <= 100; $i++) {
+	$commitcount = min(100,count($revlist));
+	for ($i = 0; $i < $commitcount; $i++) {
 		$tpl->clear_all_assign();
 		$commit = $revlist[$i];
 		if (strlen(trim($commit)) > 0) {

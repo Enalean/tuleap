@@ -27,7 +27,7 @@ function git_log($projectroot,$project,$hash,$page)
 	$tpl->assign("hash",$hash);
 	$tpl->display("log_nav.tpl");
 
-	$revlist = git_read_revlist($projectroot . $project, $hash, (100 * ($page+1)));
+	$revlist = git_read_revlist($projectroot . $project, $hash, 101, ($page * 100));
 
 	if (($hash != $head) || $page)
 		$tpl->assign("headlink",TRUE);
@@ -35,7 +35,7 @@ function git_log($projectroot,$project,$hash,$page)
 		$tpl->assign("prevlink",TRUE);
 		$tpl->assign("prevpage",$page-1);
 	}
-	if (count($revlist) >= (100 * ($page+1)-1)) {
+	if (count($revlist) > 100) {
 		$tpl->assign("nextlink",TRUE);
 		$tpl->assign("nextpage",$page+1);
 	}
@@ -48,7 +48,8 @@ function git_log($projectroot,$project,$hash,$page)
 		$tpl->assign("age_string",$co['age_string']);
 		$tpl->display("log_info.tpl");
 	}
-	for ($i = ($page * 100); $i < count($revlist); $i++) {
+	$commitcount = min(100,count($revlist));
+	for ($i = 0; $i < $commitcount; $i++) {
 		$commit = $revlist[$i];
 		if (isset($commit) && strlen($commit) > 1) {
 			$tpl->clear_all_assign();
