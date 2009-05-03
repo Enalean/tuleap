@@ -161,6 +161,8 @@
 		$tpl->assign("hash",$_GET['hb']);
 	else if (isset($_GET['h']))
 		$tpl->assign("hash",$_GET['h']);
+	if ($gitphp_conf['search'])
+		$tpl->assign("enablesearch",TRUE);
 	 $tpl->display("header.tpl");
  }
 

@@ -30,6 +30,7 @@ header("Content-Type: $contentType; charset=utf-8"); *}
   {if $action}
     / {$action}
   {/if}
+  {if $enablesearch}
 <form method="get" action="index.php" enctype="application/x-www-form-urlencoded">
 <div class="search">
 <input type="hidden" name="p" value="{$project}" />
@@ -42,5 +43,6 @@ header("Content-Type: $contentType; charset=utf-8"); *}
 </select> search: <input type="text" name="s" {if $search}value="{$search}"{/if} />
 </div>
 </form>
+  {/if}
 {/if}
 </div>

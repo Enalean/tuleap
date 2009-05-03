@@ -12,7 +12,14 @@ include_once('gitutil.git_rev_list.php');
 
 function git_search($projectroot, $project, $hash, $search, $searchtype, $page = 0)
 {
-	global $tpl;
+	global $tpl,$gitphp_conf;
+
+	if (!$gitphp_conf['search']) {
+		$tpl->clear_all_assign();
+		$tpl->assign("message","Search has been disabled");
+		$tpl->display("message.tpl");
+		return;
+	}
 
 	if (!isset($search) || (strlen($search) < 2)) {
 		$tpl->clear_all_assign();

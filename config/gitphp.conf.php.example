@@ -148,6 +148,12 @@ $gitphp_conf['magicdb'] = "/usr/share/misc/magic.mgc";
 //$gitphp_conf['magicdb'] = "C:\\wamp\\php\\extras\\magic";  // Windows
 
 /*
+ * search
+ * Set this to false or comment it out to disable searching
+ */
+$gitphp_conf['search'] = TRUE;
+
+/*
  * git_projects
  * Two-dimensional array list of projects
  * First array index is the name of the category the projects
