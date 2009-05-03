@@ -7,6 +7,7 @@
  *  Copyright (C) 2008 Christopher Han <xiphux@gmail.com>
  */
 
+ include_once('defs.constants.php');
  include_once('util.age_string.php');
  include_once('gitutil.git_rev_list.php');
 
@@ -51,8 +52,8 @@ function git_read_commit($proj,$head)
 			if ((strlen($trimmed) > 0) && !ereg("^[0-9a-fA-F]{40}",$trimmed) && !ereg("^parent [0-9a-fA-F]{40}",$trimmed)) {
 				if (!isset($commit['title'])) {
 					$commit['title'] = $trimmed;
-					if (strlen($trimmed) > 50)
-						$commit['title_short'] = substr($trimmed,0,50) . " ...";
+					if (strlen($trimmed) > GITPHP_TRIM_LENGTH)
+						$commit['title_short'] = substr($trimmed,0,GITPHP_TRIM_LENGTH) . "...";
 					else
 						$commit['title_short'] = $trimmed;
 				}

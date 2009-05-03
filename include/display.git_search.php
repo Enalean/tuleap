@@ -7,6 +7,7 @@
  *  Copyright (C) 2009 Christopher Han <xiphux@gmail.com>
  */
 
+include_once('defs.constants.php');
 include_once('gitutil.git_read_commit.php');
 include_once('gitutil.git_rev_list.php');
 
@@ -91,11 +92,10 @@ function git_search($projectroot, $project, $hash, $search, $searchtype, $page =
 			$matches = array();
 			foreach ($co2['comment'] as $comline) {
 				if (eregi("(.*)(" . quotemeta($search) . ")(.*)",$comline,$regs)) {
-					$maxlen = 50;
 					$linelen = strlen($regs[0]);
-					if ($linelen > $maxlen) {
+					if ($linelen > GITPHP_TRIM_LENGTH) {
 						$matchlen = strlen($regs[2]);
-						$remain = floor(($maxlen - $matchlen) / 2);
+						$remain = floor((GITPHP_TRIM_LENGTH - $matchlen) / 2);
 						$leftlen = strlen($regs[1]);
 						$rightlen = strlen($regs[3]);
 						if ($leftlen > $remain) {
