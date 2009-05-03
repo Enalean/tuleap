@@ -7,6 +7,7 @@
  *  Copyright (C) 2008 Christopher Han <xiphux@gmail.com>
  */
 
+ include_once('defs.constants.php');
  include_once('util.date_str.php');
  include_once('util.script_url.php');
  include_once('gitutil.git_read_head.php');
@@ -18,7 +19,7 @@ function git_rss($projectroot,$project)
 {
 	global $tpl;
 	$head = git_read_head($projectroot . $project);
-	$revlist = git_read_revlist($projectroot . $project, $head, 150);
+	$revlist = git_read_revlist($projectroot . $project, $head, GITPHP_RSS_ITEMS);
 	header("Content-type: text/xml; charset=UTF-8");
 	$tpl->clear_all_assign();
 	$tpl->assign("self",script_url());
