@@ -44,7 +44,7 @@ function git_filesearch($project, $hash, $search, $case = false, $skip = 0, $cou
 		$fname = trim($regs[4]);
 		if (isset($matches[$fname])) {
 			$matches[$fname]['hash'] = $regs[3];
-			$matches[$fname]['mode'] = $regs[1];
+			$matches[$fname]['type'] = $regs[2];
 		} else {
 			if ($case)
 				$ret = ereg("^([0-9]+) (.+) ([0-9a-fA-F]{40})\t(.*" . quotemeta($search) . ".*)",$line,$regs);
@@ -54,7 +54,7 @@ function git_filesearch($project, $hash, $search, $case = false, $skip = 0, $cou
 				$fname = trim($regs[4]);
 				$matches[$fname] = array();
 				$matches[$fname]['hash'] = $regs[3];
-				$matches[$fname]['mode'] = $regs[1];
+				$matches[$fname]['type'] = $regs[2];
 			}
 		}
 	 }

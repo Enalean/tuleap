@@ -9,7 +9,6 @@
 
 require_once('defs.constants.php');
 require_once('util.highlight.php');
-require_once('util.file_type.php');
 require_once('gitutil.git_filesearch.php');
 require_once('gitutil.git_read_commit.php');
 
@@ -88,8 +87,7 @@ function git_search_files($projectroot, $project, $hash, $search, $page = 0)
 		else
 			$tpl->assign("filename",$file);
 		$tpl->assign("hash",$data['hash']);
-		$type = file_type($data['mode']);
-		if ($type == "directory")
+		if ($data['type'] == "tree")
 			$tpl->assign("tree",TRUE);
 		if (isset($data['lines'])) {
 			$matches = array();
