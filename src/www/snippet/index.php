@@ -17,7 +17,7 @@ snippet_header(array('title'=>$Language->getText('snippet_browse','s_library'),
 		     'header'=>$Language->getText('snippet_browse','s_library'),
 		     'help' => 'TheCodendiMainMenu.html#TheCodeSnippetLibrary'));
 
-echo cache_display('snippet_mainpage','4',1800);
+echo snippet_mainpage();
 
 snippet_footer(array());
 

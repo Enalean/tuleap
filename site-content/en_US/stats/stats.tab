@@ -23,13 +23,6 @@ stats_graph	site_graphs	SITE GRAPHS
 stats_index	sitewide_agg_stats	Sitewide Agregate Statistics
 #
 #-----------------------------------------------
-# Script: SF/www/stats/oldindex.php
-#
-stats_oldindex	stats	Site Statistics
-stats_oldindex	project_stats	Project Stats
-stats_oldindex	sf_stats	SourceForge Stats
-#
-#-----------------------------------------------
 # Script: SF/www/stats/projects.php
 #
 stats_projects	comparisons	Project Statistical Comparisons
