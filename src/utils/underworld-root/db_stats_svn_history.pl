@@ -45,7 +45,7 @@ my $chronolog_basedir = $codendi_log;
 ## to run yesterday's data.
 ##
 
-my ($query,$filepath, $group_name);
+my ($query,$repopath, $group_name);
 my %svn_access = ();
 my %svn_access_by_group = ();
 
@@ -67,7 +67,7 @@ $day      = strftime("%d", gmtime( $day_begin ) );
 # Day YYYYMMDD used in the group_svn_full_history table
 $day_date = "$year$month$day";
 
-$file = "$chronolog_basedir/$year/$month/http_combined_$year$month$day.log";
+$file = "$chronolog_basedir/$year/$month/svn_$year$month$day.log";
 
 print "Running year $year, month $month, day $day from \'$file\'\n" if $verbose;
 print "Beginning Subversion access parsing logfile \'$file\'...\n" if $verbose;			
@@ -111,20 +111,20 @@ while ( $temp = $res->fetchrow_arrayref() ) {
 while (<LOGFILE>) {
   chomp($_);
 
-  $_ =~ m/^([\d\.]+)\s.+\s(.+)\s\[(.+)\]\s\"\w+\s(.+)\sHTTP.+(\d\d\d)\s([\d-]+)/;
+  $_ =~ m/^([\d\.]+)\s.+\s(.+)\s\[(.+)\]\s(.+)\s(\d\d\d)\s\".*\"/;
 
   $ip   = $1;
   $user = $2;
   $date = $3;
-  $filepath = $4;
+  $repopath = $4;
   $code = $5;
-  $size = $6; # can be '-' in some subversion http methods.
+  $svncom = $6; 
 
   #print "--------------------------------\n";
   #print "line: $_\n";
-  #print "file: $filepath\n";
+  #print "file: $repopath\n";
 
-  if ( $filepath =~ m:/svnroot/([^ /]+):) {
+  if ( $repopath =~ m:/svnroot/([^ /]+):) {
     $gname = $1;
     $group_id = $groups{$gname};
 

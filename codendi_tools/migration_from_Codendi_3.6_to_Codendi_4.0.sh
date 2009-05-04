@@ -547,8 +547,17 @@ $CAT <<'EOF' >>/etc/logrotate.d/httpd
     rotate 4
     postrotate
         /sbin/service httpd reload 2> /dev/null || true
+     year=`date +%Y`
+     month=`date +%m`
+     day=`date +%d`
+     #server=`hostname`
+     destdir="/var/log/codendi/$year/$month"
+     destfile="svn_$year$month$day.log"
+     mkdir -p $destdir
+     cp /var/log/httpd/svn_log.1 $destdir/$destfile
     endscript
 }
+
 
 EOF
 
