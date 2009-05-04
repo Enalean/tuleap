@@ -1,0 +1,7 @@
+codendi.locales['cross_ref_fact_include'] = {
+    legend: 'Liste des objets étant référencés par cet objet ou le référençant.',
+    legend_referenced_by: 'Liste des objets référençant cet objet.',
+    show_references_to:	'Voir les objets référencés par cet objet',
+    hide_references_to:	'Cacher les objets référencés par cet objet'
+};
+
