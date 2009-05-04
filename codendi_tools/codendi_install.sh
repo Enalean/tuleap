@@ -1302,15 +1302,6 @@ $CAT <<'EOF' >/etc/logrotate.d/httpd
     endscript
 }
                                                                               
-/var/log/httpd/agent_log {
-    missingok
-    daily
-    rotate 4
-    postrotate
-        /sbin/service httpd reload 2> /dev/null || true
-    endscript
-}
-                                                                              
 /var/log/httpd/error_log {
     missingok
     daily
@@ -1320,7 +1311,8 @@ $CAT <<'EOF' >/etc/logrotate.d/httpd
     endscript
 }
 
-/var/log/httpd/ssl_request_log {
+
+/var/log/httpd/svn_log {
     missingok
     daily
     rotate 4
@@ -1329,23 +1321,6 @@ $CAT <<'EOF' >/etc/logrotate.d/httpd
     endscript
 }
 
-/var/log/httpd/referer_log {
-    missingok
-    daily
-    rotate 4
-    postrotate
-        /sbin/service httpd reload 2> /dev/null || true
-    endscript
-}
-                                                                               
-/var/log/httpd/suexec_log {
-    missingok
-    daily
-    rotate 4
-    postrotate
-        /sbin/service httpd reload 2> /dev/null || true
-    endscript
-}
 EOF
 $CHOWN root.root /etc/logrotate.d/httpd
 $CHMOD 644 /etc/logrotate.d/httpd

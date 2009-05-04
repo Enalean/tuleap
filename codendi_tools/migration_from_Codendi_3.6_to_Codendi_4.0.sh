@@ -536,6 +536,22 @@ else
     echo '/etc/nsswitch.conf does not exist. Cannot use MySQL authentication!'
 fi
 
+
+###############################################################################
+# Add logrotate for SVN logs
+$CAT <<'EOF' >>/etc/logrotate.d/httpd
+
+/var/log/httpd/svn_log {
+    missingok
+    daily
+    rotate 4
+    postrotate
+        /sbin/service httpd reload 2> /dev/null || true
+    endscript
+}
+
+EOF
+
 ###############################################################################
 # Add some privacy in shared directories. Also helps libnss_mysql...
 chmod 751 $VAR_LIB_DIR/cvsroot/
