@@ -7,7 +7,6 @@
 // 
 
 require_once('pre.php');
-require_once('cache.php');
 require_once('www/forum/forum_utils.php');
 require_once('features_boxes.php');
 
