@@ -366,6 +366,11 @@ class BackendSVN extends Backend {
             return false;
         }
 
+        fwrite($fp, "# Codendi SVN repositories\n\n");
+
+        # Define specific log file for SVN queries
+        fwrite($fp, "# Custom log file for SVN queries\n");
+        fwrite($fp, 'CustomLog logs/svn_log "%t %u %h %U %{SVN-ACTION}e %s" env=SVN-ACTION'."\n\n");
 
         $service_dao = $this->_getServiceDao();
         $dar = $service_dao->searchActiveUnixGroupByUsedService('svn');
