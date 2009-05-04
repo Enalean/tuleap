@@ -98,12 +98,19 @@ document.observe('dom:loaded', function() {
     //hide the delete ref icon to clean the ui
     $$('.link_to_ref').each(function (l) {
         if (l.down('.delete_ref')) {
-            l.down('.delete_ref').hide();
-            l.observe('mouseover', function() {
-                l.down('.delete_ref').show();
+            var a = l.down('.delete_ref');
+            var img = a.down('img');
+            a.hide();
+            img.src = img.src.replace('cross.png', 'cross-disabled.png');
+            l.observe('mouseover', function(evt) {
+                a.show();
+                if (Event.element(evt).tagName.toLowerCase() == 'img') {
+                    img.src = img.src.replace('cross-disabled.png', 'cross.png');
+                }
             });
             l.observe('mouseout', function() {
-                l.down('.delete_ref').hide();
+                a.hide();
+                img.src = img.src.replace('cross.png', 'cross-disabled.png');
             });
         }
     });
