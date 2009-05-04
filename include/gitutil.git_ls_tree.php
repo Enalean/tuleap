@@ -16,7 +16,7 @@ function git_ls_tree($proj,$hash,$nullterm = FALSE, $recurse = FALSE)
 	if ($nullterm)
 		$cmd .= " -z";
 	if ($recurse)
-		$cmd .= " -r -t --full-tree";
+		$cmd .= " -r -t --full-name";
 	return git_exec($proj, $cmd . " " . $hash);
 }
 
