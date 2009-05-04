@@ -236,8 +236,6 @@ class CrossReferenceFactory {
                            $display.=" onClick=\"return delete_ref('".$id."','".$message."');\">";
                            $display.=$GLOBALS['HTML']->getImage('ic/cross.png', 
                                 array( 'alt'=> $Language->getText('cross_ref_fact_include','delete'),
-                                    'align' => 'absbottom',
-                                    'hspace' => '3',
                                     'title' => $Language->getText('cross_ref_fact_include','delete') ));
                            $display.='</a>';                                                    
                     }
@@ -270,8 +268,6 @@ class CrossReferenceFactory {
                             $display.=" onClick=\"return delete_ref('".$id."','".$message."');\">";
                             $display.=$GLOBALS['HTML']->getImage('ic/cross.png', 
                                 array( 'alt'=> $Language->getText('cross_ref_fact_include','delete'),
-                                    'align' => 'absbottom',
-                                    'hspace' => '3',
                                     'title' => $Language->getText('cross_ref_fact_include','delete') ));
                             $display.='</a>';
                      }
@@ -304,8 +300,6 @@ class CrossReferenceFactory {
                            $display.=" onClick=\"return delete_ref('".$id."','".$message."');\">";
                            $display.=$GLOBALS['HTML']->getImage('ic/cross.png', 
                                 array( 'alt'=> $Language->getText('cross_ref_fact_include','delete'),
-                                    'align' => 'absbottom',
-                                    'hspace' => '3',
                                     'title' => $Language->getText('cross_ref_fact_include','delete') ));
                            $display.='</a>';
                            

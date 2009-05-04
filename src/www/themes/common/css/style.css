@@ -947,6 +947,7 @@ div.layout-manager-column-remove_hover {
 }
 /* }}} */
 
+/* {{{ Cross References */
 ul.cross_reference_list {
     list-style-type: none;
     padding-left: 0;
@@ -956,6 +957,16 @@ td.forum_reference_separator {
 	border-top: thin dotted grey;
 	padding-top: 10px;
 }
+
+.delete_ref {
+    padding-left: 4px;
+}
+
+.delete_ref img {
+    vertical-align:middle;
+}
+/* }}} */
+
 /* {{{ System Evvents */
 .system_event_status_NEW    ,
 .system_event_status_RUNNING,
