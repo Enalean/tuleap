@@ -12,8 +12,6 @@ cross_ref_fact_include	svn_revision	Revision SVN
 cross_ref_fact_include	cvs_commit	Commit CVS
 cross_ref_fact_include	legend	Liste des objets étant référencés par cet objet ou le référençant.
 cross_ref_fact_include	legend_referenced_by	Liste des objets référençant cet objet.
-cross_ref_fact_include	show_references_to	Voir les objets référencés par cet objet
-cross_ref_fact_include	hide_references_to	Cacher les objets référencés par cet objet
 cross_ref_fact_include	cross_referenced	Références bidirectionnelles :
 cross_ref_fact_include	referenced_in	Cet objet est référencé par :
 cross_ref_fact_include	reference_to	Cet objet référence :
