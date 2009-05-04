@@ -24,7 +24,8 @@
  * Hide references from the current item to other items
  */
 function hide_references_to() {
-    $$(".reference_to").each(
+    var references = $$(".reference_to");
+    references.each(
         function(li) {
             // hide all <li> with class "reference_to"
             li.hide();
@@ -39,14 +40,21 @@ function hide_references_to() {
         }
     );
     // display 'show link'
-    $('cross_references_legend').replace('<p id="cross_references_legend">'+ codendi.getText('cross_ref_fact_include','legend_referenced_by') +' <span><a href="#" onclick="show_references_to(); return false;">'+ codendi.getText('cross_ref_fact_include','show_references_to') +'</span></p>');
+    if (references.size() > 0) {
+        $('cross_references_legend').replace('<p id="cross_references_legend">'+ 
+            codendi.getText('cross_ref_fact_include','legend_referenced_by') +
+            ' <span><a href="#" onclick="show_references_to(); return false;">'+ 
+            codendi.getText('cross_ref_fact_include','show_references_to') +
+            '</span></p>');
+    }
 }
 
 /**
  * Show references from the current item to other items
  */
 function show_references_to() {
-    $$(".reference_to").each( 
+    var references = $$(".reference_to");
+    references.each( 
 	    function(li) {
 	        // show all <li> with class "reference_to"
 	        li.show();
@@ -56,7 +64,13 @@ function show_references_to() {
 	    }
 	);
 	// display 'hide link'
-	$('cross_references_legend').replace('<p id="cross_references_legend">'+ codendi.getText('cross_ref_fact_include','legend') +' <span><a href="#" onclick="hide_references_to(); return false;">'+ codendi.getText('cross_ref_fact_include','hide_references_to') +'</span></p>');
+    if (references.size() > 0) {
+        $('cross_references_legend').replace('<p id="cross_references_legend">'+ 
+            codendi.getText('cross_ref_fact_include','legend') +
+            ' <span><a href="#" onclick="hide_references_to(); return false;">'+ 
+            codendi.getText('cross_ref_fact_include','hide_references_to') +
+            '</span></p>');
+    }
 }
 
 /**
@@ -93,7 +107,9 @@ function delete_ref( id, message ){
 document.observe('dom:loaded', function() {
     
     //hide reference to item to clean the ui
-    hide_references_to();
+    if ($('cross_references_legend')) {
+        hide_references_to();
+    }
     
     //hide the delete ref icon to clean the ui
     $$('.link_to_ref').each(function (l) {
