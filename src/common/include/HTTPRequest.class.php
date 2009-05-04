@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Codendi.
