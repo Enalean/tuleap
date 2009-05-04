@@ -47,9 +47,9 @@ function git_filesearch($project, $hash, $search, $case = false, $skip = 0, $cou
 			$matches[$fname]['type'] = $regs[2];
 		} else {
 			if ($case)
-				$ret = ereg("^([0-9]+) (.+) ([0-9a-fA-F]{40})\t(.*" . quotemeta($search) . ".*)",$line,$regs);
+				$ret = ereg("^([0-9]+) (.+) ([0-9a-fA-F]{40})\t(.*" . quotemeta($search) . "[^/]*)$",$line,$regs);
 			else
-				$ret = eregi("^([0-9]+) (.+) ([0-9a-fA-F]{40})\t(.*" . quotemeta($search) . ".*)",$line,$regs);
+				$ret = eregi("^([0-9]+) (.+) ([0-9a-fA-F]{40})\t(.*" . quotemeta($search) . "[^/]*)$",$line,$regs);
 			if ($ret) {
 				$fname = trim($regs[4]);
 				$matches[$fname] = array();

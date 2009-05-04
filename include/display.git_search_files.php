@@ -81,7 +81,16 @@ function git_search_files($projectroot, $project, $hash, $search, $page = 0)
 		$tpl->assign("project",$project);
 		$tpl->assign("hashbase",$hash);
 		$tpl->assign("file",$file);
-		$hlt = highlight($file, $search, "searchmatch");
+		if (strpos($file,"/") !== false) {
+			$f = basename($file);
+			$d = dirname($file);
+			if ($d == "/")
+				$d = "";
+			$hlt = highlight($f, $search, "searchmatch");
+			if ($hlt)
+				$hlt = $d . "/" . $hlt;
+		} else
+			$hlt = highlight($file, $search, "searchmatch");
 		if ($hlt)
 			$tpl->assign("filename",$hlt);
 		else
