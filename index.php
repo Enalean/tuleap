@@ -119,8 +119,13 @@
 					git_history($gitphp_conf['projectroot'],$_GET['p'], (isset($_GET['h']) ? $_GET['h'] : NULL),$_GET['f']);
 					break;
 				case "search":
-					require_once('include/display.git_search.php');
-					git_search($gitphp_conf['projectroot'],$_GET['p'],(isset($_GET['h']) ? $_GET['h'] : NULL),(isset($_GET['s']) ? $_GET['s'] : NULL),(isset($_GET['st']) ? $_GET['st'] : "commit"),(isset($_GET['pg']) ? $_GET['pg'] : 0));
+					if (isset($_GET['st']) && ($_GET['st'] == 'file')) {
+						require_once('include/display.git_search_files.php');
+						git_search_files($gitphp_conf['projectroot'],$_GET['p'],(isset($_GET['h']) ? $_GET['h'] : NULL),(isset($_GET['s']) ? $_GET['s'] : NULL),(isset($_GET['pg']) ? $_GET['pg'] : 0));
+					} else {
+						require_once('include/display.git_search.php');
+						git_search($gitphp_conf['projectroot'],$_GET['p'],(isset($_GET['h']) ? $_GET['h'] : NULL),(isset($_GET['s']) ? $_GET['s'] : NULL),(isset($_GET['st']) ? $_GET['st'] : "commit"),(isset($_GET['pg']) ? $_GET['pg'] : 0));
+					}
 					break;
 				default:
 					echo "Unknown action";
@@ -163,6 +168,8 @@
 		$tpl->assign("hash",$_GET['h']);
 	if ($gitphp_conf['search'])
 		$tpl->assign("enablesearch",TRUE);
+	if ($gitphp_conf['filesearch'])
+		$tpl->assign("filesearch",TRUE);
 	 $tpl->display("header.tpl");
  }
 

@@ -7,7 +7,7 @@
  *  Copyright (C) 2008 Christopher Han <xiphux@gmail.com>
  */
 
-function highlight($haystack, $needle, $highlightclass, $trimlen = NULL)
+function highlight($haystack, $needle, $highlightclass, $trimlen = NULL, $escape = false)
 {
 	if (eregi("(.*)(" . quotemeta($needle) . ")(.*)",$haystack,$regs)) {
 		if (isset($trimlen) && ($trimlen > 0)) {
@@ -30,6 +30,11 @@ function highlight($haystack, $needle, $highlightclass, $trimlen = NULL)
 					$regs[3] = substr($regs[3],0,$rightremain-3) . "...";
 				}
 			}
+		}
+		if ($escape) {
+			$regs[1] = htmlspecialchars($regs[1]);
+			$regs[2] = htmlspecialchars($regs[2]);
+			$regs[3] = htmlspecialchars($regs[3]);
 		}
 		$ret = $regs[1] . "<span";
 		if ($highlightclass)

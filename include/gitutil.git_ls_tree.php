@@ -10,11 +10,13 @@
  require_once('defs.commands.php');
  require_once('gitutil.git_exec.php');
 
-function git_ls_tree($proj,$hash,$nullterm = FALSE)
+function git_ls_tree($proj,$hash,$nullterm = FALSE, $recurse = FALSE)
 {
 	$cmd = GIT_LS_TREE;
 	if ($nullterm)
 		$cmd .= " -z";
+	if ($recurse)
+		$cmd .= " -r -t --full-tree";
 	return git_exec($proj, $cmd . " " . $hash);
 }
 

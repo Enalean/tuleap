@@ -1,24 +1,25 @@
 <?php
 /*
- *  display.git_search.php
+ *  display.git_search_files.php
  *  gitphp: A PHP git repository browser
- *  Component: Display - search
+ *  Component: Display - search in files
  *
  *  Copyright (C) 2009 Christopher Han <xiphux@gmail.com>
  */
 
 require_once('defs.constants.php');
 require_once('util.highlight.php');
+require_once('util.file_type.php');
+require_once('gitutil.git_filesearch.php');
 require_once('gitutil.git_read_commit.php');
-require_once('gitutil.git_rev_list.php');
 
-function git_search($projectroot, $project, $hash, $search, $searchtype, $page = 0)
+function git_search_files($projectroot, $project, $hash, $search, $page = 0)
 {
 	global $tpl,$gitphp_conf;
 
-	if (!$gitphp_conf['search']) {
+	if (!($gitphp_conf['search'] && $gitphp_conf['filesearch'])) {
 		$tpl->clear_all_assign();
-		$tpl->assign("message","Search has been disabled");
+		$tpl->assign("message","File search has been disabled");
 		$tpl->display("message.tpl");
 		return;
 	}
@@ -37,8 +38,9 @@ function git_search($projectroot, $project, $hash, $search, $searchtype, $page =
 
 	$co = git_read_commit($projectroot . $project, $hash);
 
-	$revlist = explode("\n",trim(git_rev_list($projectroot . $project, $hash, 101, ($page * 100), FALSE, FALSE, $searchtype, $search)));
-	if (count($revlist) < 1 || (strlen($revlist[0]) < 1)) {
+	$filesearch = git_filesearch($projectroot . $project, $hash, $search, false, ($page * 100), 101);
+
+	if (count($filesearch) < 1) {
 		$tpl->clear_all_assign();
 		$tpl->assign("message","No matches for '" . $search . "'.");
 		$tpl->display("message.tpl");
@@ -52,14 +54,14 @@ function git_search($projectroot, $project, $hash, $search, $searchtype, $page =
 	$tpl->display("search_nav.tpl");
 
 	$tpl->assign("search",$search);
-	$tpl->assign("searchtype",$searchtype);
+	$tpl->assign("searchtype","file");
 	if ($page > 0) {
 		$tpl->assign("firstlink",TRUE);
 		$tpl->assign("prevlink",TRUE);
 		if ($page > 1)
 			$tpl->assign("prevpage",$page-1);
 	}
-	if (count($revlist) > 100) {
+	if (count($filesearch) > 100) {
 		$tpl->assign("nextlink",TRUE);
 		$tpl->assign("nextpage",$page+1);
 	}
@@ -69,43 +71,48 @@ function git_search($projectroot, $project, $hash, $search, $searchtype, $page =
 	$tpl->display("search_header.tpl");
 
 	$alternate = FALSE;
-	$commitcount = min(100,count($revlist));
-	for ($i = 0; $i < $commitcount; $i++) {
+	$i = 0;
+	foreach ($filesearch as $file => $data) {
 		$tpl->clear_all_assign();
-		$commit = $revlist[$i];
-		if (strlen(trim($commit)) > 0) {
-			$co2 = git_read_commit($projectroot . $project, $commit);
-			if ($alternate)
-				$tpl->assign("class","dark");
-			else
-				$tpl->assign("class","light");
-			$alternate = !$alternate;
-			$tpl->assign("project",$project);
-			$tpl->assign("commit",$commit);
-			$tpl->assign("agestringage",$co2['age_string_age']);
-			$tpl->assign("agestringdate",$co2['age_string_date']);
-			$tpl->assign("authorname",$co2['author_name']);
-			$tpl->assign("title_short",$co2['title_short']);
-			if (strlen($co2['title_short']) < strlen($co2['title']))
-				$tpl->assign("title",$co2['title']);
-			$tpl->assign("committree",$co2['tree']);
+		if ($alternate)
+			$tpl->assign("class","dark");
+		else
+			$tpl->assign("class","light");
+		$alternate = !$alternate;
+		$tpl->assign("project",$project);
+		$tpl->assign("hashbase",$hash);
+		$tpl->assign("file",$file);
+		$hlt = highlight($file, $search, "searchmatch");
+		if ($hlt)
+			$tpl->assign("filename",$hlt);
+		else
+			$tpl->assign("filename",$file);
+		$tpl->assign("hash",$data['hash']);
+		$type = file_type($data['mode']);
+		if ($type == "directory")
+			$tpl->assign("tree",TRUE);
+		if (isset($data['lines'])) {
 			$matches = array();
-			foreach ($co2['comment'] as $comline) {
-				$hl = highlight($comline, $search, "searchmatch", GITPHP_TRIM_LENGTH);
-				if ($hl && (strlen($hl) > 0))
-					$matches[] = $hl;
+			foreach ($data['lines'] as $line) {
+				$hlt = highlight($line,$search,"searchmatch",floor(GITPHP_TRIM_LENGTH*1.5),true);
+				if ($hlt)
+					$matches[] = $hlt;
 			}
-			$tpl->assign("matches",$matches);
-			$tpl->display("search_item.tpl");
+			if (count($matches) > 0)
+				$tpl->assign("matches",$matches);
 		}
+		$tpl->display("search_fileitem.tpl");
+		$i++;
+		if ($i >= 100)
+			break;
 	}
 
 	$tpl->clear_all_assign();
 	$tpl->assign("project",$project);
 	$tpl->assign("hash",$hash);
 	$tpl->assign("search",$search);
-	$tpl->assign("searchtype",$searchtype);
-	if (count($revlist) > 100) {
+	$tpl->assign("searchtype","file");
+	if (count($filesearch) > 100) {
 		$tpl->assign("nextlink",TRUE);
 		$tpl->assign("nextpage",$page+1);
 	}

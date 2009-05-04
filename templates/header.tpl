@@ -40,6 +40,9 @@ header("Content-Type: $contentType; charset=utf-8"); *}
 <option {if $searchtype == 'commit'}selected="selected"{/if} value="commit">commit</option>
 <option {if $searchtype == 'author'}selected="selected"{/if} value="author">author</option>
 <option {if $searchtype == 'committer'}selected="selected"{/if} value="committer">committer</option>
+{if $filesearch}
+<option {if $searchtype == 'file'}selected="selected"{/if} value="file">file</option>
+{/if}
 </select> search: <input type="text" name="s" {if $search}value="{$search}"{/if} />
 </div>
 </form>

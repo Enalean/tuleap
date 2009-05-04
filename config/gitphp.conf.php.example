@@ -154,6 +154,13 @@ $gitphp_conf['magicdb'] = "/usr/share/misc/magic.mgc";
 $gitphp_conf['search'] = TRUE;
 
 /*
+ * filesearch
+ * Set this to false to disable searching within files
+ * (it can be resource intensive)
+ */
+$gitphp_conf['filesearch'] = TRUE;
+
+/*
  * git_projects
  * Two-dimensional array list of projects
  * First array index is the name of the category the projects
