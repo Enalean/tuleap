@@ -142,12 +142,12 @@ class BackendCVSTest extends UnitTestCase {
         $this->assertTrue(is_file($GLOBALS['cvs_prefix']."/TestProj/CVSROOT/loginfo"),"loginfo file should be created");
 
         $loginfo_file = file($GLOBALS['cvs_prefix']."/TestProj/CVSROOT/loginfo");
-        $this->assertTrue(in_array($backend->block_marker_start."\n",$loginfo_file),"loginfo file should contain block");
+        $this->assertTrue(in_array($backend->block_marker_start,$loginfo_file),"loginfo file should contain block");
         $commitinfo_file = file($GLOBALS['cvs_prefix']."/TestProj/CVSROOT/commitinfo");
-        $this->assertTrue(in_array($backend->block_marker_start."\n",$commitinfo_file),"commitinfo file should contain block");
+        $this->assertTrue(in_array($backend->block_marker_start,$commitinfo_file),"commitinfo file should contain block");
 
          $commitinfov_file = file($GLOBALS['cvs_prefix']."/TestProj/CVSROOT/commitinfo,v");
-        $this->assertTrue(in_array($backend->block_marker_start."\n",$commitinfov_file),"commitinfo file should be under version control and contain block");
+        $this->assertTrue(in_array($backend->block_marker_start,$commitinfov_file),"commitinfo file should be under version control and contain block");
        
         $this->assertTrue(is_dir($GLOBALS['cvslock_prefix']."/TestProj"),"CVS lock dir should be created");
 
