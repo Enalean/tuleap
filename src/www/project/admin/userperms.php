@@ -96,13 +96,13 @@ if (isset($submit)) {
             );
             $sql = "UPDATE user_group SET admin_flags='".$$admin_flags."'";
             foreach ($flags as $flag) {
-                if (isset($$flag)) {
-                    $sql .= ", $flag = '".$$flag."'";
+                if (isset($$$flag)) {
+                    $sql .= ", $flag = '".$$$flag."'";
                 }
             }
-            $sql .= "WHERE user_id='$row_dev[user_id]' AND group_id='$group_id'";
+            $sql .= " WHERE user_id='$row_dev[user_id]' AND group_id='$group_id'";
+           
             $res = db_query($sql);
-        
             $tracker_error = false;
             if ( $project->usesTracker()&&$at_arr ) {
                 for ($j = 0; $j < count($at_arr); $j++) {
@@ -132,8 +132,8 @@ if (isset($submit)) {
             $user_permissions = array();
             $user_permissions['admin_flags'] = $$admin_flags;
             foreach ($flags as $flag) {
-                if (isset($$flag)) {
-                    $user_permissions[$flag] = $$flag;
+                if (isset($$$flag)) {
+                    $user_permissions[$flag] = $$$flag;
                 }
             }
             $em->processEvent('project_admin_change_user_permissions', array(
