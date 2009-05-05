@@ -10,6 +10,10 @@ if (version_compare(phpversion(), '5.1.6', '<')) {
     die('Codendi must be run on a PHP 5.1.6 (or greater) engine');
 }
 
+
+define('TTF_DIR','/usr/share/fonts/');
+
+
 /*
 	redirect to proper hostname to get around certificate problem on IE 5
 */

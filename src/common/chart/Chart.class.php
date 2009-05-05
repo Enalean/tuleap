@@ -55,10 +55,10 @@ class Chart {
             $this->jpgraph_instance->img->SetAntiAliasing();
         }
         $this->jpgraph_instance->SetUserFont(
-            '../dejavu-lgc/DejaVuLGCSans.ttf',  
-            '../dejavu-lgc/DejaVuLGCSans-Bold.ttf', 
-            '../dejavu-lgc/DejaVuLGCSans-Oblique.ttf', 
-            '../dejavu-lgc/DejaVuLGCSans-BoldOblique.ttf'
+            'dejavu-lgc/DejaVuLGCSans.ttf',  
+            'dejavu-lgc/DejaVuLGCSans-Bold.ttf', 
+            'dejavu-lgc/DejaVuLGCSans-Oblique.ttf', 
+            'dejavu-lgc/DejaVuLGCSans-BoldOblique.ttf'
         );
         
         $this->jpgraph_instance->legend->SetShadow(false);
