@@ -501,7 +501,7 @@ class ArtifactFieldHtml extends ArtifactField {
 			$output .= $this->fieldText($value,(strlen($value)+1),(strlen($value)+1));
 			break;
 		} else {
-	    		$value = number_format($value,2);
+	    		$value = number_format($value, 2, '.', '');
 		}
 	    }
 		if ($ascii) 
