@@ -27,56 +27,118 @@
 */
 class Chart_GanttMileStone {
     
-    protected $_jpgraph_instance;
+    protected $jpgraph_instance;
     
     /**
     * Constructor
+    * 
+    * @param int    $aVPos    Vertical position (row)
+    * @param string $aLabel   Text label
+    * @param int    $aDate    Date of the milestone
+    * @param string $aCaption Caption string for bar. Default is ""
+    * 
+    * @return void
     */
-    public function __construct($aVPos,$aLabel,$aDate,$aCaption="") {
-        $this->_jpgraph_instance = new MileStone($aVPos,$aLabel,$aDate,$aCaption);
+    public function __construct($aVPos, $aLabel, $aDate, $aCaption="") {
+        $this->jpgraph_instance = new MileStone($aVPos, $aLabel, $aDate, $aCaption);
         $color      = $GLOBALS['HTML']->getGanttMilestoneColor();
         $color_dark = $color .':0.6';
         
-        $this->_jpgraph_instance->mark->setColor($color_dark);
-        $this->_jpgraph_instance->mark->setFillColor($color);
+        $this->jpgraph_instance->mark->setColor($color_dark);
+        $this->jpgraph_instance->mark->setFillColor($color);
         
-        $this->_jpgraph_instance->title->setColor($color_dark);
-        $this->_jpgraph_instance->title->setFont($this->getFont(), FS_NORMAL, 8);
-        $this->_jpgraph_instance->caption->setColor($GLOBALS['HTML']->getChartMainColor());
-        $this->_jpgraph_instance->caption->setFont($this->getFont(), FS_NORMAL, 7);
+        $this->jpgraph_instance->title->setColor($color_dark);
+        $this->jpgraph_instance->title->setFont($this->getFont(), FS_NORMAL, 8);
+        $this->jpgraph_instance->caption->setColor($GLOBALS['HTML']->getChartMainColor());
+        $this->jpgraph_instance->caption->setFont($this->getFont(), FS_NORMAL, 7);
         
     }
     
+    /**
+     * Return the font used by the milestone
+     *
+     * @return int
+     */
     public function getFont() {
         return FF_USERFONT;
     }
-
+    
+    /**
+     * Use magic method to retrieve property of a jpgraph instance
+     * /!\ Do not call it directly
+     *
+     * @param string $name The name of the property
+     *
+     * @return mixed
+     */
     public function __get($name) {
-        return $this->_jpgraph_instance->$name;
+        return $this->jpgraph_instance->$name;
     }
     
+    /**
+     * Use magic method to set property of a jpgraph instance
+     * /!\ Do not call it directly
+     *
+     * @param string $name  The name of the property
+     * @param mixed  $value The new value
+     *
+     * @return mixed the $value
+     */
     public function __set($name, $value) {
-        return $this->_jpgraph_instance->$name = $value;
+        return $this->jpgraph_instance->$name = $value;
     }
     
+    /**
+     * Use magic method to know if a property of a jpgraph instance exists
+     * /!\ Do not call it directly
+     *
+     * @param string $name The name of the property
+     *
+     * @return boolean
+     */
     public function __isset($name) {
-        return isset($this->_jpgraph_instance->$name);
+        return isset($this->jpgraph_instance->$name);
     }
     
+    /**
+     * Use magic method to unset a property of a jpgraph instance
+     * /!\ Do not call it directly
+     *
+     * @param string $name The name of the property
+     *
+     * @return boolean
+     */
     public function __unset($name) {
-        unset($this->_jpgraph_instance->$name);
+        unset($this->jpgraph_instance->$name);
     }
     
+    /**
+     * Use magic method to call a method of a jpgraph instance
+     * /!\ Do not call it directly
+     *
+     * @param string $method The name of the method
+     * @param array  $args   The parameters of the method
+     *
+     * @return mixed
+     */
     public function __call($method, $args) {
-        $result = call_user_func_array(array($this->_jpgraph_instance, $method), $args);
+        $result = call_user_func_array(array($this->jpgraph_instance, $method), $args);
         return $result;
     }
     
-    public function SetCSIM($link, $alt) {
-        $this->_jpgraph_instance->SetCSIMTarget($link); 
-        $this->_jpgraph_instance->SetCSIMAlt($alt);
-        $this->_jpgraph_instance->title->SetCSIMTarget($link); 
-        $this->_jpgraph_instance->title->SetCSIMAlt($alt);
+    /**
+     * Set CSIM target and alt for the milestone
+     * 
+     * @param string $link the target
+     * @param string $alt  the alt of the target
+     *
+     * @return void
+     */
+    public function setCSIM($link, $alt) {
+        $this->jpgraph_instance->SetCSIMTarget($link); 
+        $this->jpgraph_instance->SetCSIMAlt($alt);
+        $this->jpgraph_instance->title->SetCSIMTarget($link); 
+        $this->jpgraph_instance->title->SetCSIMAlt($alt);
     }
 }
 ?>

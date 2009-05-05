@@ -29,7 +29,12 @@ require_once($GLOBALS['jpgraph_dir'].'/jpgraph_pie.php');
 */
 class Chart_Pie extends Chart{
     
-    protected function _getGraphClass() {
+    /**
+     * Get the name of the jpgraph class to instantiate
+     *
+     * @return string
+     */
+    protected function getGraphClass() {
         return 'PieGraph';
     }
     

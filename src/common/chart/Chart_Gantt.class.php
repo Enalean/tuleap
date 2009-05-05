@@ -33,8 +33,16 @@ class Chart_Gantt extends Chart{
 
     /**
     * Constructor
+    * 
+    * @param int    $aWidth      Default is 0
+    * @param int    $aHeight     Default is 0
+    * @param string $aCachedName Default is ""
+    * @param int    $aTimeOut    Default is 0
+    * @param bool   $aInline     Default is true
+    * 
+    * @return void
     */
-    public function __construct($aWidth=0,$aHeight=0,$aCachedName="",$aTimeOut=0,$aInline=true) {
+    public function __construct($aWidth = 0, $aHeight = 0, $aCachedName = "", $aTimeOut = 0, $aInline = true) {
         parent::__construct($aWidth, $aHeight, $aCachedName, $aTimeOut, $aInline);
         
         $header_color = $GLOBALS['HTML']->getGanttHeaderColor();
@@ -61,22 +69,51 @@ class Chart_Gantt extends Chart{
         $this->scale->actinfo->vgrid->SetColor($header_color);
     }
     
-    protected function _getGraphClass() {
+    /**
+     * Get the name of the jpgraph class to instantiate
+     *
+     * @return string
+     */
+    protected function getGraphClass() {
         return 'GanttGraph';
     }
     
+    /**
+     * Return the color used to draw a gantt bar when the task is late
+     *
+     * @return string
+     * @see Layout->getGanttLateBarColor
+     */
     public function getLateBarColor() {
         return $GLOBALS['HTML']->getGanttLateBarColor();
     }
     
+    /**
+     * Return the color used to draw a gantt bar when there is an error (mainly in dates)
+     *
+     * @return string
+     * @see Layout->getGanttErrorBarColor
+     */
     public function getErrorBarColor() {
         return $GLOBALS['HTML']->getGanttErrorBarColor();
     }
     
+    /**
+     * Return the color used to draw a gantt bar when the task is green
+     *
+     * @return string
+     * @see Layout->getGanttGreenBarColor
+     */
     public function getGreenBarColor() {
         return $GLOBALS['HTML']->getGanttGreenBarColor();
     }
     
+    /**
+     * Return the color used to draw the "today" vertical line
+     *
+     * @return string
+     * @see Layout->getGanttTodayLineColor
+     */
     public function getTodayLineColor() {
         return $GLOBALS['HTML']->getGanttTodayLineColor();
     }
