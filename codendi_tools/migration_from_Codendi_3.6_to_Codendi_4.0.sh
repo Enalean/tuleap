@@ -1023,8 +1023,6 @@ FLUSH PRIVILEGES;
 EOF
 
 # IM openfire configuration
-# TODO : create database_im.inc in /etc/codendi/plugins/IM/etc/
-
 echo "- Specific configuration for webmuc"
 $CAT <<EOF | $MYSQL $pass_opt codendi
 REPLACE INTO openfire.jiveProperty (name, propValue) VALUES 
@@ -1348,13 +1346,22 @@ TODO use functions for indexes
 
 TODO: migrate .CODEX_PRIVATE
 
+# IM / Webchat configuration
+SYS_DEFAUL_DOMAIN=`$GREP '^\$sys_default_domain' $ETC_DIR/codendi/conf/local.inc | /bin/sed -e 's/\$sys_default_domain\s*=\s*\(.*\);\(.*\)/\1/' | tr -d '"' | tr -d "'"`
+$CP $INSTALL_DIR/plugins/IM/include/jabbex_api/installation/resources/database_im.tpl.inc $ETC_DIR/plugins/IM/etc/database_im.inc
+substitute "$ETC_DIR/plugins/IM/etc/database_im.inc" '{__OPENFIRE_DB_HOST__}' "$SYS_DEFAUL_DOMAIN"
+substitute "$ETC_DIR/plugins/IM/etc/database_im.inc" '{__OPENFIRE_DB_USER__}' "openfireadm"
+substitute "$ETC_DIR/plugins/IM/etc/database_im.inc" '{__OPENFIRE_DB_NAME__}' "openfire"
+# TODO : substitute {__OPENFIRE_DB_PASSWORD__} -> value available in /opt/openfire/conf/openfire.xml : <jive><database><defaultProvider><password> value here! </password>
+
 # TODO : Modify openfire/conf/openfire.xml : 
 # TODO : $xml->provider->auth->className update node to CodexJDBCAuth
 # TODO : $xml->jdbcAuthProvider->addChild('codexUserSessionIdSQL', "SELECT session_hash FROM session WHERE session.user_id = (SELECT user_id FROM user WHERE user.user_name = ?)");
 # copy jar file into openfire lib dir
 $CP $INSTALL_DIR/plugins/IM/include/jabbex_api/installation/resources/codendi_auth.jar /opt/openfire/lib/.
 # TODO : update httpd.conf and codendi_aliases.conf (see rev #10208 for details)
-# TODO : instal monitoring plugin (copy plugin jar in openfire plugin dir)
+# Instal monitoring plugin (copy plugin jar in openfire plugin dir)
+$CP ${RPMS_DIR}/openfire/monitoring.jar /opt/openfire/plugins
 
 # Add common stylesheet in custom themes
 
