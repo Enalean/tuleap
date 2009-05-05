@@ -952,7 +952,7 @@ class ArtifactReport extends Error {
 	  
 	  $count = 1;
 	  
-	  $select = "SELECT a.severity as severity_id, a.artifact_id as artifact_id, ";
+	  $select = "SELECT STRAIGHT_JOIN a.severity as severity_id, a.artifact_id as artifact_id, ";
 	  $from = "FROM artifact a";
 	  $where = "WHERE a.group_artifact_id = ". db_ei($this->group_artifact_id) ;
 	  
@@ -1123,11 +1123,21 @@ class ArtifactReport extends Error {
                 reset($fields_sb);
                 while (list($field_name,$field) = each($fields_sb)) {
 					$values = array();
-					if ( $field->isStandardField() ) {
-						$values[] = $res[$i][$field_name];
+					if ($field->getDisplayType() == 'MB') {
+					    if ($res[$i][$field_name] != 'None' && $res[$i][$field_name] != 100) {
+					        // For multi select boxes, retreive all the values
+					        // because of group by clause in query...
+					        $values = $field->getValues($res[$i]['artifact_id']);
+					    } else {
+					        // ... but if the only available value is None,
+					        // there is no need to fetch the list as if None is
+					        // present it means there is no other values.
+					        $values[] = 100;
+					    }
 					} else {
-						$values = $field->getValues($res[$i]['artifact_id']);
+					    $values[] = $res[$i][$field_name];
 					}
+
 					$label_values = $field->getLabelValues($this->group_artifact_id,$values);
 					$res[$i][$field_name] = join(", ",$label_values);
 				}

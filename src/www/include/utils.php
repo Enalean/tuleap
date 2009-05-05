@@ -465,7 +465,7 @@ function util_user_link ($username) {
     if ( $username == $Language->getText('global','none') || empty($username)) { 
         return  $hp->purify($username, CODENDI_PURIFIER_CONVERT_HTML) ; 
     }
-    return '<a href="/users/'.urlencode($username).'">'. $hp->purify(user_get_name_display_from_unix($username), CODENDI_PURIFIER_CONVERT_HTML) .'</a>';
+    return '<a href="/users/'.urlencode($username).'">'. $hp->purify(UserHelper::instance()->getDisplayNameFromUserName($username), CODENDI_PURIFIER_CONVERT_HTML) .'</a>';
 }
 
 function util_multi_user_link ($usernames) {
