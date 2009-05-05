@@ -1960,6 +1960,7 @@ CREATE TABLE user (
   last_auth_failure INT(11) NOT NULL DEFAULT 0,
   nb_auth_failure INT(11) NOT NULL DEFAULT 0,
   PRIMARY KEY  (user_id),
+  INDEX idx_user_name(user_name(10)),
   KEY idx_user_user (status)
 );
 
@@ -2474,8 +2475,7 @@ CREATE TABLE artifact_field_usage (
   group_artifact_id int(11) NOT NULL default '0',
   use_it int(11) NOT NULL default '0',
   place int(11) default NULL,
-  KEY idx_fk_field_id (field_id),
-  KEY idx_fk_group_artifact_id (group_artifact_id)
+  INDEX idx_fk(field_id, group_artifact_id)
 );
 
 #

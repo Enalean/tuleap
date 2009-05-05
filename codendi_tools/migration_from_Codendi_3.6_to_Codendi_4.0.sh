@@ -1188,6 +1188,10 @@ mysql_drop_index 'artifact_field_value' 'idx_art_field_id'
 mysql_drop_index 'artifact_field_value' 'valueInt'
 mysql_add_index  'artifact_field_value' 'idx_valueInt' 'artifact_id, field_id, valueInt'
 mysql_add_index  'artifact_field_value' 'xtrk_valueInt' 'valueInt'
+mysql_add_index  'user'                 'idx_user_name' 'user_name(10)'
+mysql_drop_index 'artifact_field_usage' 'idx_fk_field_id'
+mysql_drop_index 'artifact_field_usage' 'idx_fk_group_artifact_id'
+mysql_add_index  'artifact_field_value' 'idx_fk' 'field_id, group_artifact_id'
 
 echo "- Files can now be browsed and downloaded by anonymous users (default permissions do not change, we only allow it)"
 $CAT <<EOF | $MYSQL $pass_opt codendi 
