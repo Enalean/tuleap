@@ -9,7 +9,8 @@ require_once('common/user/UserManager.class.php');
  * UserHelper
  */
 class UserHelper {
-    
+    private static $instance;
+
     var $_username_display;
     var $_cache_by_id;
     var $_cache_by_username;
@@ -26,6 +27,13 @@ class UserHelper {
         $this->_userdao = $this->_getuserDao();
     }
     
+    public static function instance() {
+        if(!isset(self::$instance)) {
+            self::$instance = new UserHelper();
+        }
+        return self::$instance;
+    }
+
     function _getCurrentUserUsernameDisplayPreference() {
         return user_get_preference("username_display");
     }
