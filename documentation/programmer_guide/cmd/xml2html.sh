@@ -1,8 +1,4 @@
 #!/bin/sh
-# honor JAVA_HOME if defined
-if [ -z "$JAVA_HOME" ]; then 
-    JAVA_HOME=/usr/java/jre
-fi
 
 # honor SAXON_HOME if defined
 if [ -z "$SAXON_HOME" ]; then 
@@ -27,7 +23,7 @@ CP=${SAXON_HOME}/saxon.jar
 echo Using CLASSPATH: ${CP}
 PREV_DIR=`pwd`
 cd $2
-${JAVA_HOME}/bin/java -cp ${CP} com.icl.saxon.StyleSheet ${PREV_DIR}/$1 ${DOC_HOME}/programmer_guide/xsl/htmlhelp/htmlhelp.xsl > /dev/null
+java -cp ${CP} com.icl.saxon.StyleSheet ${PREV_DIR}/$1 ${DOC_HOME}/programmer_guide/xsl/htmlhelp/htmlhelp.xsl > /dev/null
 if [ $? != 0 ]
 then 
 	cd ${PREV_DIR}

@@ -646,7 +646,7 @@ $LN -sf ${dir_entry} docbook-xsl
 #$RM -f apache-tomcat-6
 #$LN -sf ${dir_entry} apache-tomcat-6
 #TOMCAT_DIR=/usr/share/apache-tomcat-6
-echo "export JAVA_HOME=/usr/lib/jvm/java-1.6.0-openjdk-1.6.0.0/jre" >> /home/codendiadm/.profile
+#echo "export JAVA_HOME=/usr/lib/jvm/java-1.6.0-openjdk-1.6.0.0/jre" >> /home/codendiadm/.profile
 #echo "export CATALINA_HOME=$TOMCAT_DIR" >> /home/codendiadm/.profile
 
 #echo "Creating tomcat config file..."
@@ -873,13 +873,11 @@ todo "You may also want to customize /etc/httpd/conf/httpd.conf /usr/lib/codendi
 # Installing phpMyAdmin
 #
 
-# Sometimes, PHP does not seem to set the proper access rights on /var/lib/php/session.
-# This is needed by phpMyAdmin
-#$CHMOD o+rwx /var/lib/php/session
-# OR
-# Make codendiadm a member of the apache group?
+# Make codendiadm a member of the apache group
+# This is needed to use the php session at /var/lib/php/session (e.g. for phpwiki)
 $USERMOD -a -G apache codendiadm
-
+# Allow read/write access to DAV lock dir for codendiadm in case we want ot enable WebDAV.
+$CHMOD 770 /var/lib/dav/
 
 # Add PmaAbsoluteUri parameter? seems useless now
 #$PERL -i'.orig' -p -e "s/(\?\>)/\\\$cfg['PmaAbsoluteUri'] = 'http:\/\/$sys_default_domain\/phpMyAdmin'\;\n\1/;" /var/www/phpMyAdmin/config.inc.php

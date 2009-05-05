@@ -215,15 +215,11 @@ fi
 $RPM -q java-1.6.0-openjdk  2>/dev/null 1>&2
 if [ $? -eq 1 ]; then
    echo "Java is now supported by RHEL/CentOS with the OpenJDK. If you wish to use it, you can install the package java-1.6.0-openjdk with yum and uninstall the JRE."
-   read -p "Continue? [yn]: " yn
+   read -p "Continue with current Java configuration? [yn]: " yn
    if [ "$yn" = "n" ]; then
        echo "Bye now!"
        exit 1
    fi
-else
-    echo "java-1.6.0-openjdk is installed: setting JAVA_HOME variable for codendiadm"
-    # use codexadm however it will be changed to codendiadm later in the migration
-    echo "export JAVA_HOME=/usr/lib/jvm/java-1.6.0-openjdk-1.6.0.0/jre" >> /home/codexadm/.profile
 fi
 
 rpms_ok=1
@@ -581,6 +577,8 @@ $SERVICE nscd start
 # NG: wasn't this done in 3.6?
 $USERMOD -a -G apache codendiadm
 
+# Allow read/write access to DAV lock dir for codendiadm in case we want ot enable WebDAV.
+$CHMOD 770 /var/lib/dav/
 
 #############################################
 # Remove SMB support
@@ -1437,11 +1435,6 @@ $CHMOD 755 commit-email.pl codendi_svn_pre_commit.php
 
 # TODO: replace codex by codendi in /etc/shells
 
-
-# TODO: propose to migrate to java-1.6.0-openjdk
-# yum install...
-# echo "export JAVA_HOME=/usr/lib/jvm/java-1.6.0-openjdk-1.6.0.0/jre" >> /home/codendiadm/.profile
-# echo "export JAVA_HOME=/usr/lib/jvm/java-1.6.0-openjdk-1.6.0.0/jre" >> /home/codendiadm/.profile
 
   # Skip logging openfire db (for instant messaging)
   # The 'monitor' openrfire plugin creates large codendi-bin files

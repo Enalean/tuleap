@@ -1,8 +1,4 @@
 #!/bin/sh
-# honor JAVA_HOME if defined
-if [ -z "$JAVA_HOME" ]; then 
-    JAVA_HOME=/usr/java/jre
-fi
 
 # honor SAXON_HOME if defined
 if [ -z "$SAXON_HOME" ]; then 
@@ -29,7 +25,7 @@ PREV_DIR=`pwd`
 cd $2
 
 # Generate the multi-page documentation (documentation splitted into sub-chapter html files)
-${JAVA_HOME}/bin/java -cp ${CP} com.icl.saxon.StyleSheet ${PREV_DIR}/$1 ${DOC_HOME}/cli/xsl/htmlhelp/htmlhelp_$3.xsl > /dev/null
+java -cp ${CP} com.icl.saxon.StyleSheet ${PREV_DIR}/$1 ${DOC_HOME}/cli/xsl/htmlhelp/htmlhelp_$3.xsl > /dev/null
 if [ $? != 0 ]
 then 
 	cd ${PREV_DIR}
@@ -38,7 +34,7 @@ then
 fi
 
 # Generate the single-page documentation (one html file for all the documentation)
-${JAVA_HOME}/bin/java -cp ${CP} com.icl.saxon.StyleSheet ${PREV_DIR}/$1 ${DOC_HOME}/cli/xsl/htmlhelp/htmlhelp_onechunk_$3.xsl > /dev/null
+java -cp ${CP} com.icl.saxon.StyleSheet ${PREV_DIR}/$1 ${DOC_HOME}/cli/xsl/htmlhelp/htmlhelp_onechunk_$3.xsl > /dev/null
 if [ $? != 0 ]
 then 
 	cd ${PREV_DIR}
