@@ -38,6 +38,7 @@
 define('CODENDI_PURIFIER_CONVERT_HTML', 0);
 define('CODENDI_PURIFIER_STRIP_HTML', 1);
 define('CODENDI_PURIFIER_BASIC',      5);
+define('CODENDI_PURIFIER_BASIC_NOBR',      6);
 define('CODENDI_PURIFIER_LIGHT',     10);
 define('CODENDI_PURIFIER_FULL',      15);
 define('CODENDI_PURIFIER_JS_QUOTE', 20);
@@ -205,6 +206,9 @@ class Codendi_HTMLPurifier {
 
         case CODENDI_PURIFIER_BASIC:
             $clean = nl2br($this->_makeLinks(htmlentities($html, ENT_QUOTES, 'UTF-8'), $groupId));
+            break;
+        case CODENDI_PURIFIER_BASIC_NOBR:
+            $clean = $this->_makeLinks(htmlentities($html, ENT_QUOTES, 'UTF-8'), $groupId);
             break;
 
         case CODENDI_PURIFIER_JS_QUOTE:
