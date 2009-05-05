@@ -93,19 +93,26 @@ $gitphp_conf['title'] = "$gitphp_appstring";
 $gitphp_conf['smarty_prefix'] = "smarty/";
 
 /*
- * bzsnapshots
- * If set to true, will bzcompress snapshot tars before sending them.
- * Your PHP must have been compiled with bzip2 support!
+ * snapshotformat
+ * Indicates what kind of compression will be done on the
+ * snapshot archive.  Recognized settings are:
+ *
+ * GITPHP_SNAPSHOT_BZ2 - create a tar.bz2 file (php must have bz2 support)
+ * GITPHP_SNAPSHOT_GZ - create a tar.gz file (php must have gzip support)
+ *
+ * Any other setting, or no setting, will create uncompressed tar archives
+ * If you choose a compression format and your php does not support it,
+ * gitphp will fall back to uncompressed tar archives
  */
-$gitphp_conf['bzsnapshots'] = TRUE;
+$gitphp_conf['snapshotformat'] = GITPHP_SNAPSHOT_BZ2;
 
 /*
- * bzblocksize
- * Sets the compression level for bzip2.  Ranges from 1-9, with
+ * compresslevel
+ * Sets the compression level for snapshots.  Ranges from 1-9, with
  * 9 being the most compression but requiring the most processing
- * (bzip defaults to 4)
+ * (bzip defaults to 4, gzip defaults to -1)
  */
-$gitphp_conf['bzblocksize'] = 9;
+$gitphp_conf['compresslevel'] = 9;
 
 /*
  * geshi

@@ -14,6 +14,11 @@
  include_once('include/version.php');
 
  /*
+  * Constants
+  */
+ require_once('include/defs.constants.php');
+
+ /*
   * Configuration
   */
  require_once('config/gitphp.conf.php');
