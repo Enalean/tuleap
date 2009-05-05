@@ -56,7 +56,7 @@ if (!$release || !$release->isActive() || !$release->userCanRead()) {
         '<B>'.$Language->getText('file_shownotes','changes').':</B>'.PHP_EOL
         .$hp->purify($release->getChanges(), $purify_level, $group_id);
 	if ($release->isPreformatted()) {
-		echo '<PRE>';
+		echo '</PRE>';
     }
     
     $crossref_fact= new CrossReferenceFactory($release_id, ReferenceManager::REFERENCE_NATURE_RELEASE, $group_id);
