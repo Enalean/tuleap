@@ -42,6 +42,7 @@ require_once($GLOBALS['htmlpurifier_dir'].'/HTMLPurifier.auto.php');
 define('CODEX_PURIFIER_CONVERT_HTML', 0);
 define('CODEX_PURIFIER_STRIP_HTML', 1);
 define('CODEX_PURIFIER_BASIC',      5);
+define('CODEX_PURIFIER_BASIC_NOBR',      6);
 define('CODEX_PURIFIER_LIGHT',     10);
 define('CODEX_PURIFIER_FULL',      15);
 define('CODEX_PURIFIER_JS_QUOTE', 20);
@@ -203,6 +204,9 @@ class CodeX_HTMLPurifier {
 
         case CODEX_PURIFIER_BASIC:
             $clean = nl2br($this->_makeLinks(htmlentities($html, ENT_QUOTES, 'UTF-8'), $groupId));
+            break;
+        case CODENDI_PURIFIER_BASIC_NOBR:
+            $clean = $this->_makeLinks(htmlentities($html, ENT_QUOTES, 'UTF-8'), $groupId);
             break;
 
         case CODEX_PURIFIER_JS_QUOTE:

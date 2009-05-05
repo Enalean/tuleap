@@ -145,5 +145,11 @@ class CodeX_HTMLPurifierTest extends UnitTestCase {
         $this->assertEqual('</"+"script>'."\n".'bla bla'."\n".'</"+"script>'."\n".'bla bla'."\n".'</"+"script>', $p->purify('</script>\nbla bla\n</script>\nbla bla\n</script>', CODEX_PURIFIER_JS_DQUOTE));
         $this->assertEqual("</'+'script>", $p->purify('</script>', CODEX_PURIFIER_JS_QUOTE));
     }
+    
+    function testBasicNobr() {
+        $p = Codendi_HTMLPurifierTestVersion::instance();
+        $this->assertEqual("a<br />\nb", $p->purify("a\nb", CODEX_PURIFIER_BASIC));
+        $this->assertEqual("a\nb", $p->purify("a\nb", CODEX_PURIFIER_BASIC_NOBR));
+    }
 }
 ?>
