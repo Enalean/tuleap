@@ -315,9 +315,9 @@ return 0 if file not deleted, 1 otherwise
         // Remove last (empty) element
         array_pop($files);
         foreach ($files as $file) {
-            //if ((!ereg('^\.', $file[0])) && is_file($GLOBALS['ftp_incoming_dir'] . '/' . $file)) { // Not useful with workaround
-            $uploaded_file_names[] = $file;
-            //}
+            if (!ereg('^\.', $file[0])) {
+                $uploaded_file_names[] = $file;
+            }
         }
         return $uploaded_file_names;
     }
