@@ -241,6 +241,27 @@ if [ $rpms_ok -eq 0 ]; then
 fi
 echo "All requested RedHat RPMS installed... good!"
 
+##############################################
+# Ask for domain name and other installation parameters
+#
+sys_default_domain=`grep ServerName /etc/httpd/conf/httpd.conf | grep -v '#' | head -1 | cut -d " " -f 2 ;`
+if [ -z $sys_default_domain ]; then
+  read -p "CodeX Domain name: " sys_default_domain
+fi
+sys_ip_address=`grep NameVirtualHost /etc/httpd/conf/httpd.conf | grep -v '#' | cut -d " " -f 2 | cut -d ":" -f 1`
+if [ -z $sys_ip_address ]; then
+  read -p "Codex Server IP address: " sys_ip_address
+fi
+
+dbauth_passwd="a"; dbauth_passwd2="b";
+while [ "$dbauth_passwd" != "$dbauth_passwd2" ]; do
+    read -s -p "Password for DB Authentication user: " dbauth_passwd
+    echo
+    read -s -p "Retype password for DB Authentication user: " dbauth_passwd2
+    echo
+done
+
+
 
 ################################################
 # Check that there is no codendi database
@@ -273,8 +294,6 @@ $RPM -ivh neon-0.*.i386.rpm neon-devel*.i386.rpm subversion-1.*.i386.rpm mod_dav
 # Dependency error with Perl ??
 $RPM --nodeps -Uvh subversion-tools*.i386.rpm
 
-
-# TODO MUST reinstall: munin RPM (Codendi specific, with MySQL auth), viewVC (bug fixed), phpMyAdmin, Mailman, htmlpurifier, cvs
 
 # -> libnss-mysql (system authentication based on MySQL)
 $RPM -e --allmatches libnss-mysql 2>/dev/null
@@ -419,6 +438,17 @@ echo "Installing phpMyAdmin RPM for Codendi...."
 cd ${RPMS_DIR}/phpMyAdmin
 newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
 
+# -> mailman
+echo "Removing installed mailman if any .."
+$RPM -e --allmatches mailman 2>/dev/null
+echo "Installing mailman RPM for Codendi...."
+cd ${RPMS_DIR}/mailman
+newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
+$RPM -Uvh ${newest_rpm}/mailman-2*i?86.rpm
+
+# Recover config
+$CP /usr/lib/mailman/Mailman/mm_cfg.py.rpmsave /usr/lib/mailman/Mailman/mm_cfg.py
+
 # Munin
 echo "Removing installed Munin if any .."
 $RPM -e --allmatches `rpm -qa 'munin*' 'perl-HTML-Template*' 'perl-Net-Server' 'perl-rrdtool*' 'rrdtool*' 'perl-Crypt-DES' 'perl-Net-SNMP' 'perl-Config-General'` 2>/dev/null
@@ -434,6 +464,15 @@ $RPM --nosignature -Uvh ${newest_rpm}/rrdtool-*.i386.rpm ${newest_rpm}/perl-rrdt
 $RPM -Uvh ${newest_rpm}/munin-node-*.noarch.rpm
 $RPM -Uvh ${newest_rpm}/munin-1*.noarch.rpm
 
+# -> HTML Purifier
+echo "Removing installed htmlpurifier if any .."
+$RPM -e htmlpurifier 2>/dev/null
+$RPM -e htmlpurifier-docs 2>/dev/null
+echo "Installing htmlpurifier RPM for Codendi...."
+cd ${RPMS_DIR}/htmlpurifier
+newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
+$RPM -Uvh ${newest_rpm}/htmlpurifier-3*.noarch.rpm
+$RPM -Uvh ${newest_rpm}/htmlpurifier-docs*.noarch.rpm
 
 #####
 # Codendi RPMS
@@ -464,30 +503,32 @@ newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
 $RPM -Uvh ${newest_rpm}/codendi-salome-tmf-*noarch.rpm
         
 
+##############################################
+# Now install various precompiled utilities
+# Fileforge was codendified
+cd ${nonRPMS_DIR}/utilities
+for f in *
+do
+  $CP $f /usr/lib/codendi/bin
+  $CHOWN codendiadm.codendiadm /usr/lib/codendi/bin/$f
+done
+$CHOWN root.root /usr/lib/codendi/bin/fileforge
+$CHMOD u+s /usr/lib/codendi/bin/fileforge
 
 
-
-# /cvsroot and /svnroot
+# Path codendification of /cvsroot and /svnroot
 rm /cvsroot
 rm /svnroot
 ln -s $VAR_LIB_DIR/cvsroot /cvsroot
 ln -s $VAR_LIB_DIR/svnroot /svnroot
 
-dbauth_passwd="a"; dbauth_passwd2="b";
-while [ "$dbauth_passwd" != "$dbauth_passwd2" ]; do
-    read -s -p "Password for DB Authentication user: " dbauth_passwd
-    echo
-    read -s -p "Retype password for DB Authentication user: " dbauth_passwd2
-    echo
-done
-
-
 #
 # Install New dist files
 #
 
-# libnss-mysql
-for f in /etc/libnss-mysql.cfg  /etc/libnss-mysql-root.cfg /etc/httpd/conf.d/auth_mysql.conf; do
+for f in /etc/httpd/conf/httpd.conf /etc/httpd/conf.d/codendi_aliases.conf \
+ /etc/httpd/conf.d/php.conf \
+ /etc/libnss-mysql.cfg  /etc/libnss-mysql-root.cfg /etc/httpd/conf.d/auth_mysql.conf; do
     yn="0"
     fn=`basename $f`
     [ -f "$f" ] && read -p "$f already exist. Overwrite? [y|n]:" yn
@@ -503,6 +544,13 @@ for f in /etc/libnss-mysql.cfg  /etc/libnss-mysql-root.cfg /etc/httpd/conf.d/aut
     $CHOWN codendiadm.codendiadm $f
     $CHMOD 640 $f
 done
+
+# replace string patterns in httpd.conf
+substitute '/etc/httpd/conf/httpd.conf' '%sys_default_domain%' "$sys_default_domain"
+substitute '/etc/httpd/conf/httpd.conf' '%sys_ip_address%' "$sys_ip_address"
+# replace string patterns in codendi_aliases.inc
+substitute '/etc/httpd/conf.d/codendi_aliases.conf' '%sys_default_domain%' "$sys_default_domain" 
+$RM /etc/httpd/conf.d/codex_aliases.conf
 
 
 # replace strings in libnss-mysql config files
@@ -591,8 +639,11 @@ todo "Please note that Windows shares (with Samba) are no longer supported for s
 ###############################################################################
 echo "Updating local.inc"
 
-# Remove $sys_win_domain XXX ???
+# Remove $sys_win_domain
+$PERL -pi -e 's/(\$sys_win_domain.*)/\/\/\1 DEPRECATED/g' $ETC_DIR/conf/local.inc
 
+# Remove $apache_htpasswd
+$PERL -pi -e 's/(\$apache_htpasswd.*)/\/\/\1 DEPRECATED/g' $ETC_DIR/conf/local.inc
 
 # dbauthuser and password
 $GREP -q ^\$sys_dbauth_user  $ETC_DIR/conf/local.inc
@@ -665,14 +716,59 @@ if [ $? -ne 0 ]; then
 EOF
 fi
 
+# svn_root_file 
+$GREP -q ^\$svn_root_file  $ETC_DIR/conf/local.inc
+if [ $? -ne 0 ]; then
+  # Remove end PHP marker
+  substitute '/etc/codendi/conf/local.inc' '\?\>' ''
+
+  $CAT <<EOF >> /etc/codendi/conf/local.inc
+
+\$svn_root_file = "/etc/httpd/conf.d/codendi_svnroot.conf"; // File containing SVN repository definitions for Apache
+
+?>
+EOF
+fi
+
+# alias_file 
+$GREP -q ^\$alias_file  $ETC_DIR/conf/local.inc
+if [ $? -ne 0 ]; then
+  # Remove end PHP marker
+  substitute '/etc/codendi/conf/local.inc' '\?\>' ''
+
+  $CAT <<EOF >> /etc/codendi/conf/local.inc
+
+// Sendmail alias
+\$alias_file      = "/etc/aliases.codendi";
+
+?>
+EOF
+fi
+
+# sys_supported_languages 
+$GREP -q ^\$sys_supported_languages  $ETC_DIR/conf/local.inc
+if [ $? -ne 0 ]; then
+  # Remove end PHP marker
+  substitute '/etc/codendi/conf/local.inc' '\?\>' ''
+
+  $CAT <<EOF >> /etc/codendi/conf/local.inc
+
+// Supported languages (separated comma)
+// Only en_US and fr_FR are available for now
+// Exemple: 'en_US,fr_FR'
+$sys_supported_languages = 'en_US,fr_FR';
+
+?>
+EOF
+fi
+
 
 ###############################################################################
 # HTTP-based authentication
-echo "Moving /etc/httpd/conf/htpasswd to /etc/httpd/conf/htpasswd.codendi4.0"
-echo "This file is no longer needed (now using MySQL based authentication with mod_auth_mysql)"
+echo "Removing /etc/httpd/conf/htpasswd: this file is no longer needed (now using MySQL based authentication with mod_auth_mysql)"
 
 if [ -f "/etc/httpd/conf/htpasswd" ]; then
-  $MV /etc/httpd/conf/htpasswd /etc/httpd/conf/htpasswd.codendi4.0
+  $RM /etc/httpd/conf/htpasswd
 fi
 
 echo "Update munin.conf accordingly"
@@ -1332,11 +1428,6 @@ codendification '/etc/profile_codex'
 $MV /etc/profile_codex /etc/profile_codendi
 
 
-
-# XXX TODO: what about codex in domain name?
-codendification '/etc/httpd/conf/httpd.conf'
-$MV /etc/httpd/cond/codex_aliases.conf /etc/httpd/cond/codendi_aliases.conf
-
 codendification '/etc/vsftpd/vsftpd.conf'
 codendification '/var/lib/codex/ftp/.message'
 
@@ -1374,7 +1465,6 @@ echo "Migrate SVN hook files"
 $FIND /svnroot/ -type f -name post-commit -exec perl -pi -e 's@/codex/@/codendi/@g; s/CodeX/Codendi/g; s/CODEX/CODENDI/g'  {} \;
 $FIND /svnroot/ -type f -name .SVNAccessFile -exec perl -pi -e 's/CODEX DEF/CODENDI DEF/g'  {} \;
 
-
 ##############################################
 # Fix SELinux contexts if needed
 #
@@ -1401,9 +1491,9 @@ TODO migrate CodeX* themes (in file and in db and in plugins)
 TODO migrate User-Agent (Dont allow access to API for anyone.)
 
 # IM / Webchat configuration
-SYS_DEFAUL_DOMAIN=`$GREP '^\$sys_default_domain' $ETC_DIR/codendi/conf/local.inc | /bin/sed -e 's/\$sys_default_domain\s*=\s*\(.*\);\(.*\)/\1/' | tr -d '"' | tr -d "'"`
+SYS_DEFAULT_DOMAIN=`$GREP '^\$sys_default_domain' $ETC_DIR/codendi/conf/local.inc | /bin/sed -e 's/\$sys_default_domain\s*=\s*\(.*\);\(.*\)/\1/' | tr -d '"' | tr -d "'"`
 $CP $INSTALL_DIR/plugins/IM/include/jabbex_api/installation/resources/database_im.tpl.inc $ETC_DIR/plugins/IM/etc/database_im.inc
-substitute "$ETC_DIR/plugins/IM/etc/database_im.inc" '{__OPENFIRE_DB_HOST__}' "$SYS_DEFAUL_DOMAIN"
+substitute "$ETC_DIR/plugins/IM/etc/database_im.inc" '{__OPENFIRE_DB_HOST__}' "$SYS_DEFAULT_DOMAIN"
 substitute "$ETC_DIR/plugins/IM/etc/database_im.inc" '{__OPENFIRE_DB_USER__}' "openfireadm"
 substitute "$ETC_DIR/plugins/IM/etc/database_im.inc" '{__OPENFIRE_DB_NAME__}' "openfire"
 # TODO : substitute {__OPENFIRE_DB_PASSWORD__} -> value available in /opt/openfire/conf/openfire.xml : <jive><database><defaultProvider><password> value here! </password>
@@ -1413,7 +1503,6 @@ substitute "$ETC_DIR/plugins/IM/etc/database_im.inc" '{__OPENFIRE_DB_NAME__}' "o
 # TODO : $xml->jdbcAuthProvider->addChild('codexUserSessionIdSQL', "SELECT session_hash FROM session WHERE session.user_id = (SELECT user_id FROM user WHERE user.user_name = ?)");
 # copy jar file into openfire lib dir
 $CP $INSTALL_DIR/plugins/IM/include/jabbex_api/installation/resources/codendi_auth.jar /opt/openfire/lib/.
-# TODO : update httpd.conf and codendi_aliases.conf (see rev #10208 for details)
 # Instal monitoring plugin (copy plugin jar in openfire plugin dir)
 $CP ${RPMS_DIR}/openfire/monitoring.jar /opt/openfire/plugins
 
@@ -1430,13 +1519,9 @@ TODO : Déplacer le script de debug dans Layout.class.php
 # TODO : CREATE / UPDATE the pre-commit hook for every existing project.
 
 #
-# Todo, modify fileforge.c and recompile for new layout., and reinstall
-
-#
 # TODO CODENDIFICATION:
 #
 # - replace "CODEX BLOCK" by "CODENDI BLOCK" in /etc/cvsnt/PServer
-# - httpd.conf: replace CODEX_LOCAL_INC by CODENDI_LOCAL_INC
 
 # Ask to make a manual update (-u???) on /usr/share/codedni as codendiadm to get new realm 
 #??? Mailman: codex-admin??

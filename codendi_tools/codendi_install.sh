@@ -724,7 +724,7 @@ $FIND $INSTALL_DIR -type d -exec $CHMOD 775 {} \;
 echo "Installing configuration files..."
 #echo " You should overwrite existing files"
 make_backup /etc/httpd/conf/httpd.conf
-for f in /etc/httpd/conf/httpd.conf /var/named/chroot/var/named/codendi_full.zone \
+for f in /etc/httpd/conf/httpd.conf /var/named/chroot/var/named/codendi.zone \
 /etc/httpd/conf/ssl.conf \
 /etc/httpd/conf.d/php.conf /etc/httpd/conf.d/subversion.conf /etc/httpd/conf.d/auth_mysql.conf \
 /etc/libnss-mysql.cfg  /etc/libnss-mysql-root.cfg \
@@ -747,14 +747,14 @@ for f in /etc/httpd/conf/httpd.conf /var/named/chroot/var/named/codendi_full.zon
     $CHMOD 640 $f
 done
 
-$CHOWN root:named /var/named/chroot/var/named/codendi_full.zone
+$CHOWN root:named /var/named/chroot/var/named/codendi.zone
 #$LN -s /var/named/chroot/etc/named.conf /etc
 if [ -f "/var/named/chroot/etc/named.conf" ]; then
    $CHGRP named /var/named/chroot/etc/named.conf
 fi
 
 if [ $SELINUX_ENABLED ]; then
-    $CHCON -h system_u:object_r:named_zone_t /var/named/chroot/var/named/codendi_full.zone
+    $CHCON -h system_u:object_r:named_zone_t /var/named/chroot/var/named/codendi.zone
     if [ -f "/var/named/chroot/etc/named.conf" ]; then
         $CHCON -h system_u:object_r:named_conf_t /var/named/chroot/etc/named.conf
     fi
@@ -850,14 +850,14 @@ $CHMOD 600 /etc/libnss-mysql-root.cfg
 substitute '/etc/httpd/conf.d/munin.conf' '%sys_dbauth_passwd%' "$dbauth_passwd" 
 
 if [ "$disable_subdomains" != "y" ]; then
-  # replace string patterns in codendi_full.zone
+  # replace string patterns in codendi.zone
   sys_shortname=`echo $sys_fullname | $PERL -pe 's/\.(.*)//'`
   dns_serial=`date +%Y%m%d`01
-  substitute '/var/named/chroot/var/named/codendi_full.zone' '%sys_default_domain%' "$sys_default_domain" 
-  substitute '/var/named/chroot/var/named/codendi_full.zone' '%sys_fullname%' "$sys_fullname"
-  substitute '/var/named/chroot/var/named/codendi_full.zone' '%sys_ip_address%' "$sys_ip_address"
-  substitute '/var/named/chroot/var/named/codendi_full.zone' '%sys_shortname%' "$sys_shortname"
-  substitute '/var/named/chroot/var/named/codendi_full.zone' '%dns_serial%' "$dns_serial"
+  substitute '/var/named/chroot/var/named/codendi.zone' '%sys_default_domain%' "$sys_default_domain" 
+  substitute '/var/named/chroot/var/named/codendi.zone' '%sys_fullname%' "$sys_fullname"
+  substitute '/var/named/chroot/var/named/codendi.zone' '%sys_ip_address%' "$sys_ip_address"
+  substitute '/var/named/chroot/var/named/codendi.zone' '%sys_shortname%' "$sys_shortname"
+  substitute '/var/named/chroot/var/named/codendi.zone' '%dns_serial%' "$dns_serial"
 fi
 
 # Make sure SELinux contexts are valid
@@ -1205,9 +1205,9 @@ fi
 #
 if [ "$disable_subdomains" != "y" ]; then
   todo "Create the DNS configuration files as explained in the Codendi Installation Guide:"
-  todo "    update /var/named/chroot/var/named/codendi_full.zone - replace all words starting with %%."
+  todo "    update /var/named/chroot/var/named/codendi.zone - replace all words starting with %%."
   todo "    make sure the file is readable by 'other':"
-  todo "      > chmod o+r /var/named/chroot/var/named/codendi_full.zone"
+  todo "      > chmod o+r /var/named/chroot/var/named/codendi.zone"
   todo "    edit /etc/named.conf to create the new zone."
 fi
 

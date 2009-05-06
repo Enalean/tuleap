@@ -26,8 +26,8 @@ fi
 if [ -e '/etc/codendi/documentation/cli/xml/ParametersLocal.dtd' ] ; then
     substitute '/etc/codendi/documentation/cli/xml/ParametersLocal.dtd' "$old_domain" "$new_domain" 
 fi
-if [ -e '/var/named/chroot/var/named/codendi_full.zone' ] ; then
-    substitute '/var/named/chroot/var/named/codendi_full.zone' "$old_domain" "$new_domain" 
+if [ -e '/var/named/chroot/var/named/codendi.zone' ] ; then
+    substitute '/var/named/chroot/var/named/codendi.zone' "$old_domain" "$new_domain" 
 fi
 if [ -e '/etc/mail/local-host-names' ] ; then
     substitute '/etc/mail/local-host-names' "$old_domain" "$new_domain" 

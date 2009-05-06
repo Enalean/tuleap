@@ -17,7 +17,7 @@ This document explains how to upgrade from a Codendi 3.6 server to Codendi 4.0.
   - The .CODEX_PRIVATE files have not been deleted, but they are no longer used.
 
 
-
+* httpd.conf and codex_aliases.conf were backed-up (look at /root/codex_3_6_backup/) and re-generated. If you had specific settings, please re-copy them to the new files.
 
 
 
