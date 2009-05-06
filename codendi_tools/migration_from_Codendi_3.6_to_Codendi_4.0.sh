@@ -724,6 +724,14 @@ fi
 echo "Analysis done."
 
 ##############################################
+# MySQL config
+echo "Updating /etc/my.cnf..."
+codendification "/etc/my.cnf"
+$PERL -pi -e "s/$2/$replacement/g" $1
+
+$PERL -pi -e "s/(\[mysqld\])/\1\n# Skip logging openfire db (for instant messaging)\n# The 'monitor' openfire plugin creates large codendi-bin files\n# Comment this line if you prefer to be safer.\nset-variable  = binlog-ignore-db=openfire\n/g" /etc/my.cnf
+
+##############################################
 # Database Structure and initvalues upgrade
 #
 echo "Updating the database..."
@@ -1310,7 +1318,6 @@ $PERL -i'.orig' -p -e's/^(.*xerox_crontab.sh.*)$/#\1/' /tmp/root_cronfile
 
 crontab -u root /tmp/root_cronfile
 
-
 ##############################################
 # Fix SELinux contexts if needed
 #
@@ -1370,10 +1377,6 @@ $CP ${RPMS_DIR}/openfire/monitoring.jar /opt/openfire/plugins
 #TODO Clean-up CodendiBlack (fix blue labels on IE, ...)
 #TODO remove reserved names javascript
 
-#
-# TODO: add these lines to /etc/my.cnf under [mysqld]
-#
-
 TODO : Déplacer le script de debug dans Layout.class.php
 # TODO : CREATE / UPDATE the pre-commit hook for every existing project.
 
@@ -1398,7 +1401,6 @@ TODO : Déplacer le script de debug dans Layout.class.php
 #   /svnroot/*/hooks/post-commit
 # - in /svnroot/*/.SVNAccessFile, replace (twice) "CODEX DEFAULT SETTINGS" by "CODENDI DEFAULT SETTINGS"
 # - uninstall codex-* rpm (codex-jri, codex-eclipse and codex-salome) and reinstall codendi-* ones
-# - /etc/my.cnf: log-bin=codex-bin
 # - rename /etc/httpd/cond/codex_aliases.conf
 # ????# Create .subversion directory in codexadm home dir.
 # ????su -c 'svn info --non-interactive https://partners.xrce.xerox.com/svnroot/codex/dev/trunk' - codexadm 2> /dev/null &
@@ -1441,10 +1443,6 @@ $CHMOD 755 commit-email.pl codendi_svn_pre_commit.php
 # TODO: replace codex by codendi in /etc/shells
 
 
-  # Skip logging openfire db (for instant messaging)
-  # The 'monitor' openrfire plugin creates large codendi-bin files
-  # Comment this line if you prefer to be safer.
-  set-variable  = binlog-ignore-db=openfire
 
 #
 
