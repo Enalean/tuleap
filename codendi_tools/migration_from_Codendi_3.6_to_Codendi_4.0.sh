@@ -729,7 +729,6 @@ echo "Analysis done."
 # MySQL config
 echo "Updating /etc/my.cnf..."
 codendification "/etc/my.cnf"
-$PERL -pi -e "s/$2/$replacement/g" $1
 
 $PERL -pi -e "s/(\[mysqld\])/\1\n# Skip logging openfire db (for instant messaging)\n# The 'monitor' openfire plugin creates large codendi-bin files\n# Comment this line if you prefer to be safer.\nset-variable  = binlog-ignore-db=openfire\n/g" /etc/my.cnf
 
