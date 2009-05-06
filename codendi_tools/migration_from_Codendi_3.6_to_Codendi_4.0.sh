@@ -1319,13 +1319,32 @@ $PERL -i'.orig' -p -e's/^(.*xerox_crontab.sh.*)$/#\1/' /tmp/root_cronfile
 crontab -u root /tmp/root_cronfile
 
 ##############################################
+# Codendification of CODEX_LICENSE_ACCEPTED
+if [ -f "/etc/codendi/CODEX_LICENSE_ACCEPTED " ]; then
+  $MV /etc/codendi/CODEX_LICENSE_ACCEPTED /etc/codendi/CODENDI_LICENSE_ACCEPTED
+fi
+
+##############################################
+# Codendification of profile
+codendification '/etc/profile'
+codendification '/etc/profile_codex'
+$MV /etc/profile_codex /etc/profile_codendi
+
+codendification '/etc/vsftpd/vsftpd.conf'
+
+##############################################
 # Fix SELinux contexts if needed
 #
 echo "Update SELinux contexts if needed"
 cd $INSTALL_DIR/src/utils
 ./fix_selinux_contexts.pl
 
+# XXX TODO: what about codex in domain name?
 codendification '/etc/httpd/conf/httpd.conf'
+$MV /etc/httpd/cond/codex_aliases.conf /etc/httpd/cond/codendi_aliases.conf
+
+codendification '/etc/logrotate.d/httpd'
+codendification '/etc/logrotate.d/vsftpd.log'
 
 ##############################################
 # Restarting some services
@@ -1400,25 +1419,17 @@ TODO : Déplacer le script de debug dans Layout.class.php
 #   /cvsroot/*/CVSROOT/notify
 #   /svnroot/*/hooks/post-commit
 # - in /svnroot/*/.SVNAccessFile, replace (twice) "CODEX DEFAULT SETTINGS" by "CODENDI DEFAULT SETTINGS"
-# - uninstall codex-* rpm (codex-jri, codex-eclipse and codex-salome) and reinstall codendi-* ones
-# - rename /etc/httpd/cond/codex_aliases.conf
 # ????# Create .subversion directory in codexadm home dir.
 # ????su -c 'svn info --non-interactive https://partners.xrce.xerox.com/svnroot/codex/dev/trunk' - codexadm 2> /dev/null &
 #??? Mailman: codex-admin??
-##$PERL -pi -e "s/^#ftpd_banner=.*/ftpd_banner=Welcome to CodeX FTP service./g" /etc/vsftpd/vsftpd.conf 
 # - /var/lib/codex/ftp/.message contains 'CodeX'
 # - Update root and codexadm crontab (partially done)
-# - /etc/logrotate.d/httpd and /etc/logrotate.d/vsftpd.log conatain paths with '/codex/'
-# - /etc/profile contains reference to '/etc/profile_codex'
-# - rename /etc/profile_codex
-# - /etc/profile_codex contains "C O D E X" and "CodeX"
 # - MySQL: 'codex' db, codexadm user and grants on codex DB.
 # - Warn admins that CODEX_LOCAL_INC was replaced by CODENDI_LOCAL_INC
 # - OpenFire install.
 # - Migrate all CodeX in /etc/codendi (site-content, etc.)
 # - change codex project short name on Partners
 # - custom themes:'codex' in theme CSS -> codendi .
-# - CODEX_LICENSE_ACCEPTED???
 #
 # Update install/admin guides with new backend system.
 #
