@@ -1357,18 +1357,12 @@ $SERVICE mailman start
 
 
 
-Verifier qu'il y a assez de place sur le disque avant de faire les backup et l'installation
- df -h /big/ | awk '{print $4}' | tail -n 1
-=> donne la taille disponible pour la partition qui contient /big/
-
 Codendification:
 - /var/lib/mysql/codex-bin*
 
 
 TODO migrate CodeX* themes (in file and in db and in plugins)
 TODO migrate User-Agent (Dont allow access to API for anyone.)
-
-TODO use functions for indexes
 
 # IM / Webchat configuration
 SYS_DEFAUL_DOMAIN=`$GREP '^\$sys_default_domain' $ETC_DIR/codendi/conf/local.inc | /bin/sed -e 's/\$sys_default_domain\s*=\s*\(.*\);\(.*\)/\1/' | tr -d '"' | tr -d "'"`
