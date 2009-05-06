@@ -30,8 +30,8 @@ require_once('common/dao/MailingListDao.class.php');
 Mock::generate('MailingListDao');
 
 Mock::generatePartial('BackendAliases', 'BackendAliasesTestVersion', 
-                      array('_getUserDao', 
-                            '_getMailingListDao',
+                      array('getUserDao', 
+                            'getMailingListDao',
                             'system'
                             ));
 
@@ -74,8 +74,8 @@ class BackendAliasesTest extends UnitTestCase {
                            "3" => array ( "list_name"=> "list4"));
         $listdao->setReturnValue('searchAllActiveML',$active_ml);
         $MA = new BackendAliasesTestVersion($this);
-        $MA->setReturnValue('_getUserDao', $udao);
-        $MA->setReturnValue('_getMailingListDao', $listdao);
+        $MA->setReturnValue('getUserDao', $udao);
+        $MA->setReturnValue('getMailingListDao', $listdao);
         $MA->expectOnce('system', array('/usr/bin/newaliases'));
         $MA->setReturnValue('system', true);
 
