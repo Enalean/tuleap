@@ -7,6 +7,14 @@ This document explains how to upgrade from a Codendi 3.6 server to Codendi 4.0.
 
 
 
+* .CODEX_PRIVATE files have been deprecated
+  - you can setup CVS repository privacy with a new option in the CVS dministration page of each project.
+  - you can setup SVN privacy by setting approriate rights in the'/svnroot/projname/.SVNAccessFile" file
+  - a new "private" directory is created in the project home (/home/group/projname), and it is only
+    readable by project members.
+  - Only existing .CODEX_PRIVATE files for CVS have been "migrated" to the new option. You should check that 
+    SVN reposiotries and project homes protected this way have proper access rights.
+  - The .CODEX_PRIVATE files have not been deleted, but they are no longer used.
 
 
 

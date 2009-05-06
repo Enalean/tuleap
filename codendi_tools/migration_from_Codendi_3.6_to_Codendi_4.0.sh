@@ -1212,7 +1212,7 @@ foreach(glob(\$GLOBALS['cvs_prefix'] .'/*/.CODEX_PRIVATE') as \$g) {
 if (count(\$groups)) {
     echo 'The following projects want to set their cvs repository private: '. implode(', ', \$groups). PHP_EOL;
     \$sql = "UPDATE groups 
-            SET cvs_is_private 
+            SET cvs_is_private = '1'
             WHERE unix_group_name IN (". implode(', ', \$groups) .")";
     mysql_query(\$sql) or die("ERROR: While executing the sql statement: ". mysql_error() ." -> ".\$sql);
     echo 'done.'. PHP_EOL;
@@ -1343,8 +1343,6 @@ TODO migrate CodeX* themes (in file and in db and in plugins)
 TODO migrate User-Agent (Dont allow access to API for anyone.)
 
 TODO use functions for indexes
-
-TODO: migrate .CODEX_PRIVATE
 
 # IM / Webchat configuration
 SYS_DEFAUL_DOMAIN=`$GREP '^\$sys_default_domain' $ETC_DIR/codendi/conf/local.inc | /bin/sed -e 's/\$sys_default_domain\s*=\s*\(.*\);\(.*\)/\1/' | tr -d '"' | tr -d "'"`

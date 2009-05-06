@@ -734,7 +734,7 @@ of
 project <i>ProjectName</i>. By default all files belong to user nobody
 and
 group <i>ProjectName</i>. File permission is read only (r--r--r--) for
-files and directories are user and group writable (rwxrwxr-x). This is
+files, while directories are user and group writable (rwxrwxr-x). This is
 defined by CVS and must not be touched. <br>
       <br>
 By default CVS servers on Codendi are configured to perform all
@@ -742,30 +742,24 @@ transactions through the pserver protocol. Codendi can be tuned to use
 the ssh tunnelling protocol, or the sserver encrypted protocol 
 (with CVSNT) instead. Ask the Xerox Codendi team for more
 information. If secured transaction and fine grain access permissions
-are high on your&nbsp; list of project requirements, we strongly
+are high on your list of project requirements, we strongly
 advise you to consider the use of Subversion instead of CVS.<br>
       <p>Exceptions to these rules are: </p>
       <ul>
         <li> CVS files that correspond to executables for which we want
 the executable flags to be preserved when the file is checked out of
-the
-CVS repository must have the executable flag set <br>
+the CVS repository must have the executable flag set <br>
         </li>
-        <li> The CVS lock dir is now created in /var/lock/cvs/<i>ProjectName</i>. It is world writable (drwxrwxrwx) so that all users even those
+        <li>(GNU CVS only) The CVS lock dir is created in /var/lock/cvs/<i>ProjectName</i>. It is world writable (drwxrwxrwx) so that all users even those
 not
 part of the project team can checkout a working copy of the CVS tree.</li>
         <li>The CVS repository for each project is owned by the user <i>codendiadm.</i>
 This allows the CVS web interface, which implements its own access
-control,
-to access the directory even if the directory is not world readable.<br>
+control, to access the directory even if the directory is not world readable.<br>
         </li>
-        <li> For <u>private</u> projects the CVS repository is NOT
+        <li> For <u>private</u> projects and public projects that set the CVS reposiotry to be private, the CVS repository is NOT
 world readable (drwxrwx---). It is only user and group readable because
-the sources
-must be invisible to non project members.</li>
-        <li>If the CVS repository contains a file with the name <tt>.CODENDI_PRIVATE<i>,
-          </i></tt>then the repository is NOT world readable.<br>
-        </li>
+the sources must be invisible to non project members.</li>
       </ul>
 Ability to commit changes to the CVS repository from a working copy is
 controlled
@@ -1050,22 +1044,20 @@ There is currently no space quota on a user home directories.</td>
 directory.
 When this directory is initialized a minimal directory structure is
 created
-to host the Project Web Site. One sub-directory is created:
+to host the Project Web Site. Two sub-directories are created:
       <ul>
         <li> <b>htdocs</b> : this is where all html, shmtl, php,....
 file should go (Apache Virtual Server Document Root)</tt></li>
+        <li> <b>private</b> : this is a private directoy that is only accessible to project members</tt></li>
       </ul>
 These directories all have the group setuid bit set. On Linux this
 ensures that files created under this directory by a group member are
 automatically created with the right group ownership. The reason for that is because
-a user can belong to several Codendi projects and therefore it can be a member
+a user can belong to several Codendi projects and therefore he can be a member
 of several Unix groups. If the setuid bit wasn't used it would be the
 responsibility of the user to change its working group with the newgrp command when
 going from one project directory to another. This would be of course error
-prone. <br>
-      <br>
-This directory will be world readable unless the project is <u>private</u>
-or the project directory contains a file named <tt>.CODENDI_PRIVATE.</tt><br>
+prone.
       </td>
     </tr>
   </tbody>
