@@ -721,6 +721,8 @@ $CHOWN -R codendiadm.codendiadm $INSTALL_DIR
 $FIND $INSTALL_DIR -type f -exec $CHMOD u+rw,g+rw,o-w+r {} \;
 $FIND $INSTALL_DIR -type d -exec $CHMOD 775 {} \;
 
+echo "Installing configuration files..."
+#echo " You should overwrite existing files"
 make_backup /etc/httpd/conf/httpd.conf
 for f in /etc/httpd/conf/httpd.conf /var/named/chroot/var/named/codendi_full.zone \
 /etc/httpd/conf/ssl.conf \
@@ -729,7 +731,9 @@ for f in /etc/httpd/conf/httpd.conf /var/named/chroot/var/named/codendi_full.zon
 /etc/codendi/conf/local.inc /etc/codendi/conf/database.inc /etc/httpd/conf.d/codendi_aliases.conf; do
     yn="0"
     fn=`basename $f`
-    [ -f "$f" ] && read -p "$f already exist. Overwrite? [y|n]:" yn
+#   [ -f "$f" ] && read -p "$f already exist. Overwrite? [y|n]:" yn
+# Always overwrite files
+    [ -f "$f" ] && yn="y"
 
     if [ "$yn" = "y" ]; then
 	$CP -f $f $f.orig

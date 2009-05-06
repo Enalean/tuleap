@@ -308,8 +308,12 @@ class BackendSVN extends Backend {
         }
         fwrite($fp, "\n");
         fwrite($fp, "[/]\n");
-        fwrite($fp, "* = r\n");
-        //else { print SVNACCESS "* = \n";} TODO
+        $is_private = !$project->isPublic() || $project->isSVNPrivate();
+        if ($is_private) {
+            fwrite($fp, "* = \n");
+        } else {
+            fwrite($fp, "* = r\n");
+        }
         fwrite($fp, "@members = rw\n");
         fwrite($fp, "$default_block_end\n");
         if ($custom_perms) {
