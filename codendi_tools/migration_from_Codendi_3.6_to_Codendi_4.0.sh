@@ -108,10 +108,12 @@ die() {
 }
 
 substitute() {
-  # $1: filename, $2: string to match, $3: replacement string
-  # Allow '/' is $3, so we need to double-escape the string
-  replacement=`echo $3 | sed "s|/|\\\\\/|g"`
-  $PERL -pi -e "s/$2/$replacement/g" $1
+  if [ -f $1 ]; then
+    # $1: filename, $2: string to match, $3: replacement string
+    # Allow '/' is $3, so we need to double-escape the string
+    replacement=`echo $3 | sed "s|/|\\\\\/|g"`
+    $PERL -pi -e "s/$2/$replacement/g" $1
+  fi
 }
 
 codendification() {
@@ -1330,7 +1332,49 @@ codendification '/etc/profile'
 codendification '/etc/profile_codex'
 $MV /etc/profile_codex /etc/profile_codendi
 
+
+
+# XXX TODO: what about codex in domain name?
+codendification '/etc/httpd/conf/httpd.conf'
+$MV /etc/httpd/cond/codex_aliases.conf /etc/httpd/cond/codendi_aliases.conf
+
 codendification '/etc/vsftpd/vsftpd.conf'
+codendification '/var/lib/codex/ftp/.message'
+
+
+##############################################
+# Codendification: CVS and SVN repos
+
+echo "Migrate CVS hook files"
+$FIND /cvsroot/ -type d -name CVSROOT -exec co -q -l {}/loginfo \; 2> /dev/null
+$FIND /cvsroot/ -type f -name loginfo -exec perl -pi -e 's@/codex/@/codendi/@g; s/CodeX/Codendi/g; s/CODEX/CODENDI/g'  {} \;
+$FIND /cvsroot/ -type f -name loginfo -exec /usr/bin/rcs -q -l {} \; 2> /dev/null
+$FIND /cvsroot/ -type f -name loginfo -exec ci -q -m"Codendi 4.0 mod" -q -l {} \; 2> /dev/null
+$FIND /cvsroot/ -type f -name loginfo -exec co -q {} \; 2> /dev/null
+
+
+$FIND /cvsroot/ -type f -name commitinfo -exec co -q -l {} \; 2> /dev/null
+$FIND /cvsroot/ -type f -name commitinfo -exec perl -pi -e 's@/codex/@/codendi/@g; s/CodeX/Codendi/g; s/CODEX/CODENDI/g'  {} \; 
+$FIND /cvsroot/ -type f -name commitinfo -exec /usr/bin/rcs -q -l {} \; 2> /dev/null
+$FIND /cvsroot/ -type f -name commitinfo -exec ci -q -m"Codendi 4.0 mod" -q -l {} \; 2> /dev/null
+$FIND /cvsroot/ -type f -name commitinfo -exec co -q {} \; 2> /dev/null
+
+$FIND /cvsroot/ -type f -name config -exec co -q -l {} \; 2> /dev/null
+$FIND /cvsroot/ -type f -name config -exec perl -pi -e 's@/codex/@/codendi/@g; s/CodeX/Codendi/g; s/CODEX/CODENDI/g'  {} \; 
+$FIND /cvsroot/ -type f -name config -exec /usr/bin/rcs -q -l {} \; 2> /dev/null
+$FIND /cvsroot/ -type f -name config -exec ci -q -m"Codendi 4.0 mod" -q -l {} \; 2> /dev/null
+$FIND /cvsroot/ -type f -name config -exec co -q {} \; 2> /dev/null
+
+$FIND /cvsroot/ -type f -name notify -exec co -q -l {} \; 2> /dev/null
+$FIND /cvsroot/ -type f -name notify -exec perl -pi -e 's@/codex/@/codendi/@g; s/CodeX/Codendi/g; s/CODEX/CODENDI/g'  {} \; 
+$FIND /cvsroot/ -type f -name notify -exec /usr/bin/rcs -q -l {} \; 2> /dev/null
+$FIND /cvsroot/ -type f -name notify -exec ci -q -m"Codendi 4.0 mod" -q -l {} \; 2> /dev/null
+$FIND /cvsroot/ -type f -name notify -exec co -q {} \; 2> /dev/null
+
+echo "Migrate SVN hook files"
+$FIND /svnroot/ -type f -name post-commit -exec perl -pi -e 's@/codex/@/codendi/@g; s/CodeX/Codendi/g; s/CODEX/CODENDI/g'  {} \;
+$FIND /svnroot/ -type f -name .SVNAccessFile -exec perl -pi -e 's/CODEX DEF/CODENDI DEF/g'  {} \;
+
 
 ##############################################
 # Fix SELinux contexts if needed
@@ -1338,13 +1382,6 @@ codendification '/etc/vsftpd/vsftpd.conf'
 echo "Update SELinux contexts if needed"
 cd $INSTALL_DIR/src/utils
 ./fix_selinux_contexts.pl
-
-# XXX TODO: what about codex in domain name?
-codendification '/etc/httpd/conf/httpd.conf'
-$MV /etc/httpd/cond/codex_aliases.conf /etc/httpd/cond/codendi_aliases.conf
-
-codendification '/etc/logrotate.d/httpd'
-codendification '/etc/logrotate.d/vsftpd.log'
 
 ##############################################
 # Restarting some services
@@ -1401,22 +1438,9 @@ TODO : Déplacer le script de debug dans Layout.class.php
 #
 # - replace "CODEX BLOCK" by "CODENDI BLOCK" in /etc/cvsnt/PServer
 # - httpd.conf: replace CODEX_LOCAL_INC by CODENDI_LOCAL_INC
-# - migrate all CodeX blocks in cvs and svn repositories!:
-#    "# !!! CodeX Specific !!! DO NOT REMOVE (NEEDED CODEX MARKER)";
-#    "# END OF NEEDED CODEX BLOCK";
-#   Becomes
-#    "# !!! Codendi Specific !!! DO NOT REMOVE (NEEDED CODENDI MARKER)";
-#    "# END OF NEEDED CODENDI BLOCK";
-#   in:
-#   /cvsroot/*/CVSROOT/loginfo
-#   /cvsroot/*/CVSROOT/commitinfo
-#   /cvsroot/*/CVSROOT/notify
-#   /svnroot/*/hooks/post-commit
-# - in /svnroot/*/.SVNAccessFile, replace (twice) "CODEX DEFAULT SETTINGS" by "CODENDI DEFAULT SETTINGS"
-# ????# Create .subversion directory in codexadm home dir.
-# ????su -c 'svn info --non-interactive https://partners.xrce.xerox.com/svnroot/codex/dev/trunk' - codexadm 2> /dev/null &
+
+# Ask to make a manual update (-u???) on /usr/share/codedni as codendiadm to get new realm 
 #??? Mailman: codex-admin??
-# - /var/lib/codex/ftp/.message contains 'CodeX'
 # - Update root and codexadm crontab (partially done)
 # - MySQL: 'codex' db, codexadm user and grants on codex DB.
 # - Warn admins that CODEX_LOCAL_INC was replaced by CODENDI_LOCAL_INC
