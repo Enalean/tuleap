@@ -709,4 +709,5 @@ plugin_docman	docman_wiki_perms_label	Permissions controllées par le gestionnai
 
 widget_categ_label	plugin_docman	Gestionnaire de documents
 plugin_docman	widget_description_my_docman	Affiche la liste des documents en attente d'approbation.
-plugin_docman	widget_description_embedded	Permet d'afficher un fichiers embarqué directement dans le widget.
+plugin_docman	widget_title_embedded	Visionneur du gestionnaire de document
+plugin_docman	widget_description_embedded	Permet d'afficher un élément du gestionnaire de document directement dans le dashboard. <br /><em>Pour le moment seuls les fichiers embarqués sont supportés</em>.

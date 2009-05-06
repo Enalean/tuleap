@@ -23,6 +23,7 @@
 
 require_once('Docman_ItemDao.class.php');
 require_once('Docman_ItemFactory.class.php');
+require_once('Docman_PermissionsManager.class.php');
 
 /**
  * Embed an item in the dashboard
@@ -69,7 +70,9 @@ class Docman_Widget_Embedded extends Widget /* implements Visitor */ {
      */
     public function getTitle() {
         $hp = Codendi_HTMLPurifier::instance();
-        return $this->plugin_docman_widget_embedded_title ?  $hp->purify($this->plugin_docman_widget_embedded_title, CODENDI_PURIFIER_CONVERT_HTML)  : 'Embedded Document';
+        return $this->plugin_docman_widget_embedded_title ?  
+               $hp->purify($this->plugin_docman_widget_embedded_title, CODENDI_PURIFIER_CONVERT_HTML)  : 
+               $GLOBALS['Language']->getText('plugin_docman', 'widget_title_embedded');
     }
     
     /**
@@ -82,10 +85,10 @@ class Docman_Widget_Embedded extends Widget /* implements Visitor */ {
         if ($this->plugin_docman_widget_embedded_item_id) {
             if ($item = $this->getItem($this->plugin_docman_widget_embedded_item_id)) {
                 $content .= $item->accept($this);
+                $content .= '<div style="text-align:center"><a href="'. $this->plugin_path .'/?group_id='. (int)$item->getGroupId() .'&amp;action=details&amp;id='.  (int)$item->getId() .'">[Go to document]</div>';
             } else {
                 $content .= 'Document doesn\'t exist or you don\'t have permissions to see it';
             }
-            $content .= '<div style="text-align:center"><a href="'. $this->plugin_path .'/?group_id='. (int)$item->getGroupId() .'&amp;action=details&amp;id='.  (int)$item->getId() .'">[Go to document]</div>';
         }
         return $content;
     }
@@ -199,7 +202,7 @@ class Docman_Widget_Embedded extends Widget /* implements Visitor */ {
         if (($plugin_docman_widget_embedded = $request->get('plugin_docman_widget_embedded')) && $request->valid($vContentId)) {
             $vItem_id = new Valid_String('item_id');
             if($request->validInArray('plugin_docman_widget_embedded', $vItem_id)) {
-                $item_id = " item_id   = ". db_escape_integer($plugin_docman_widget_embedded['item_id']) ." ";
+                $item_id = " item_id   = ". db_ei($plugin_docman_widget_embedded['item_id']) ." ";
             } else {
                 $item_id = ' item_id = item_id ';
             }
@@ -260,6 +263,11 @@ class Docman_Widget_Embedded extends Widget /* implements Visitor */ {
         $dao = new Docman_ItemDao(CodendiDataAccess::instance());
         if ($row = $dao->searchByid($item_id)->getRow()) {
             $item = Docman_ItemFactory::instance($row['group_id'])->getItemFromRow($row);
+            $dPm  = Docman_PermissionsManager::instance($row['group_id']);
+            $user = UserManager::instance()->getCurrentUser();
+            if (!$dPm->userCanRead($user, $item->getId())) {
+                $item = false;
+            }
         }
         return $item;
     }

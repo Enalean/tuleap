@@ -710,4 +710,5 @@ plugin_docman	docman_wiki_perms_label	Permissions controlled by documents manage
 widget_categ_label	plugin_docman	Document Manager
 plugin_docman	widget_description_my_docman	List the documents under review.
 plugin_docman	widget_description_embedded	Allow you to view an embedded documents directly in the widget.
-
+plugin_docman	widget_title_embedded	Docman Viewer
+plugin_docman	widget_description_embedded	Display a docman item directly in the dashboard. <br /><em>For now, only embedded files are supported</em>.
