@@ -363,6 +363,10 @@ echo "Backup /etc/httpd/conf"
 $CP -r /etc/httpd/conf $BACKUP_DIR/etc/httpd
 echo "Backup /etc/codex"
 $CP -r /etc/codex $BACKUP_DIR/etc/codex
+echo "Backup /etc/passwd, /etc/shadow, /etc/group"
+$CP -r /etc/passwd $BACKUP_DIR/etc/
+$CP -r /etc/shadow $BACKUP_DIR/etc/
+$CP -r /etc/group $BACKUP_DIR/etc/
 echo "Backup /usr/lib/codex"
 $CP -r /usr/lib/codex $BACKUP_DIR/usr/lib
 echo "Backup /var/named/chroot/var/named"
@@ -634,6 +638,12 @@ $CHMOD 770 /var/lib/dav/
 # Remove SMB support
 $CHKCONFIG smb off
 todo "Please note that Windows shares (with Samba) are no longer supported for security reasons"
+
+# move password file to backup dir
+if [ -f /etc/samba/smbpasswd ]; then
+  $MV /etc/samba/smbpasswd $BACKUP_DIR/etc
+fi
+
 
 
 ###############################################################################
@@ -1490,6 +1500,116 @@ echo "Migrate SVN hook files"
 $FIND /svnroot/ -type f -name post-commit -exec perl -pi -e 's@/codex/@/codendi/@g; s/CodeX/Codendi/g; s/CODEX/CODENDI/g'  {} \;
 $FIND /svnroot/ -type f -name .SVNAccessFile -exec perl -pi -e 's/CODEX DEF/CODENDI DEF/g'  {} \;
 # Pre-commit hooks will be automatically installed during the next system_check event.
+
+##############################################
+# Clean-up system files
+
+echo "Cleaning-up system files (/etc/passwd, /etc/shadow, /etc/group)"
+
+$PERL <<'EOF'
+
+sub open_array_file {
+    my $filename = shift(@_);
+    open (FD, $filename) || die "Can't open $filename: $!.\n";
+    @tmp_array = <FD>;
+    close(FD);
+    return @tmp_array;
+}       
+
+sub write_array_file {
+    my ($file_name, @file_array) = @_;    
+    open(FD, ">$file_name.codenditemp") || die "Can't open $file_name: $!.\n";
+    foreach (@file_array) { 
+        if ($_ ne '') { 
+                print FD;
+            }       
+    }       
+    close(FD);
+    rename "$file_name.codenditemp","$file_name" || die "Can't rename $file_name.codenditemp to $file_name: $!.\n";
+}
+
+sub hash_passwd_array {
+        my @file_array = @_;
+        my %tmp_hash;
+        my $counter=0;
+
+        foreach (@file_array) {
+          ($name,$junk,$id,$rest) = split(":", $_);
+          if (defined $tmp_hash{$id}) { ;}
+          $tmp_hash{$id}=$counter;
+          $counter++;
+        }
+        return %tmp_hash;
+      }
+
+sub hash_shadow_array {
+        my @file_array = @_;
+        my %tmp_hash;
+        my $counter=0;
+
+        foreach (@file_array) {
+          ($name,$rest) = split(":", $_);
+          if (defined $tmp_hash{$name}) {;}
+          $tmp_hash{$name}=$counter;
+          $counter++;
+        }
+        return %tmp_hash;
+      }
+
+sub hash_group_array {
+        my @file_array = @_;
+        my %tmp_hash;
+        my $counter=0;
+
+        foreach (@file_array) {
+          ($name,$x,$gid,$rest) = split(":", $_);
+          if (defined $tmp_hash{$gid}) { ;}
+          $tmp_hash{$gid}=$counter;
+          $counter++;
+        }
+        return %tmp_hash;
+      }
+
+@passwd_array = open_array_file("/etc/passwd");
+@passwd_array_copy = open_array_file("/etc/passwd");
+@shadow_array = open_array_file("/etc/shadow");
+@group_array = open_array_file("/etc/group");
+@group_array_copy = open_array_file("/etc/group");
+%passwd_hash = hash_passwd_array(@passwd_array);
+%shadow_hash = hash_shadow_array(@shadow_array);
+%group_hash = hash_group_array(@group_array);
+
+while ($ln = pop(@passwd_array_copy)) {
+    chop($ln);
+    ($username, $x, $uid, $gid, $remain) = split(":", $ln);
+    if ($uid > 20000) {
+        # Remove Codendi user
+        if (defined $passwd_hash{$uid}) {
+            $passwd_array[$passwd_hash{$uid}] = '';
+        }
+        if (defined $shadow_hash{$username}) {
+          $shadow_array[$shadow_hash{$username}] = '';
+        }
+    }
+}
+
+while ($ln = pop(@group_array_copy)) {
+    chop($ln);
+    ($groupname, $x, $gid,$remain) = split(":", $ln);
+    if ($gid > 1000) {
+        if (defined $group_hash{$gid}) {
+            $group_array[$group_hash{$gid}] = '';
+        }
+    }
+}
+
+write_array_file("/etc/passwd", @passwd_array);
+write_array_file("/etc/shadow", @shadow_array);
+write_array_file("/etc/group", @group_array);
+
+
+EOF
+
 
 
 ##############################################
