@@ -2994,6 +2994,7 @@ SELECT group_id, 'g', 1, 2, 'projectlatestcvscommits', 2
 FROM service
 WHERE short_name = 'cvs' AND is_active = 1 AND is_used = 1;
 
+INSERT INTO system_events_followers (emails, types) VALUES ('admin', 'WARNING,ERROR');
 #
 # EOF
 #

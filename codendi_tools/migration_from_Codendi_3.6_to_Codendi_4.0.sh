@@ -951,6 +951,10 @@ CREATE TABLE system_events_followers (
   emails TEXT NOT NULL ,
   types VARCHAR( 31 ) NOT NULL
 );
+
+INSERT INTO system_events_followers (emails, types) VALUES
+('admin', 'WARNING,ERROR');
+
 EOF
 
 
@@ -1665,8 +1669,6 @@ $CP ${newest_rpm}/monitoring.jar /opt/openfire/plugins
 
 #TODO Clean-up CodendiBlack (fix blue labels on IE, ...)
 #TODO remove reserved names javascript
-
-# TODO : Déplacer le script de debug dans Layout.class.php
 
 #
 # TODO CODENDIFICATION:
