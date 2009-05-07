@@ -1184,7 +1184,7 @@ fi
 
 if [ "$disable_subdomains" = "y" ]; then
   echo "Use same-host project web sites"
-  $MYSQL -u codendiadm codendi --password=$codendiadm_passwd -e "UPDATE service SET link = '/www/\$projectname/' WHERE short_name = 'homepage'"
+  $MYSQL -u codendiadm codendi --password=$codendiadm_passwd -e "UPDATE service SET link = IF(group_id = 1, 'codendi', '/www/\$projectname/') WHERE short_name = 'homepage' "
 fi
 
 todo "Customize /etc/codendi/site-content/en_US/others/default_page.php (project web site default home page)"
