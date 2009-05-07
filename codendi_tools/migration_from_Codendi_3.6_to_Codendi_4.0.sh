@@ -756,7 +756,7 @@ if [ $? -ne 0 ]; then
 // Supported languages (separated comma)
 // Only en_US and fr_FR are available for now
 // Exemple: 'en_US,fr_FR'
-$sys_supported_languages = 'en_US,fr_FR';
+\$sys_supported_languages = 'en_US,fr_FR';
 
 ?>
 EOF
