@@ -1634,12 +1634,12 @@ $SERVICE mailman start
 
 
 # IM / Webchat configuration
-SYS_DEFAULT_DOMAIN=`$GREP '^\$sys_default_domain' $ETC_DIR/codendi/conf/local.inc | /bin/sed -e 's/\$sys_default_domain\s*=\s*\(.*\);\(.*\)/\1/' | tr -d '"' | tr -d "'"`
+SYS_DEFAULT_DOMAIN=`$GREP '^\$sys_default_domain' $ETC_DIR/conf/local.inc | /bin/sed -e 's/\$sys_default_domain\s*=\s*\(.*\);\(.*\)/\1/' | tr -d '"' | tr -d "'"`
 $CP $INSTALL_DIR/plugins/IM/include/jabbex_api/installation/resources/database_im.tpl.inc $ETC_DIR/plugins/IM/etc/database_im.inc
 substitute "$ETC_DIR/plugins/IM/etc/database_im.inc" '{__OPENFIRE_DB_HOST__}' "$SYS_DEFAULT_DOMAIN"
 substitute "$ETC_DIR/plugins/IM/etc/database_im.inc" '{__OPENFIRE_DB_USER__}' "openfireadm"
 substitute "$ETC_DIR/plugins/IM/etc/database_im.inc" '{__OPENFIRE_DB_NAME__}' "openfire"
-# TODO : substitute {__OPENFIRE_DB_PASSWORD__} -> value available in /opt/openfire/conf/openfire.xml : <jive><database><defaultProvider><password> value here! </password>
+substitute "$ETC_DIR/plugins/IM/etc/database_im.inc" '{__OPENFIRE_DB_PASSWORD__}' "`php -r '\$jive = new SimpleXmlElement(file_get_contents(\"/opt/openfire/conf/openfire.xml\")); echo \$jive->database->defaultProvider->password;'`"
 
 # TODO : Modify openfire/conf/openfire.xml : 
 # TODO : $xml->provider->auth->className update node to CodexJDBCAuth
@@ -1647,7 +1647,9 @@ substitute "$ETC_DIR/plugins/IM/etc/database_im.inc" '{__OPENFIRE_DB_NAME__}' "o
 # copy jar file into openfire lib dir
 $CP $INSTALL_DIR/plugins/IM/include/jabbex_api/installation/resources/codendi_auth.jar /opt/openfire/lib/.
 # Instal monitoring plugin (copy plugin jar in openfire plugin dir)
-$CP ${RPMS_DIR}/openfire/monitoring.jar /opt/openfire/plugins
+cd ${RPMS_DIR}/openfire
+newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
+$CP ${newest_rpm}/monitoring.jar /opt/openfire/plugins
 
 
 # Codendification:
