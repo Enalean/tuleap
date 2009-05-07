@@ -1200,7 +1200,7 @@ class XMLDocmanImport {
                         $this->soap->createDocmanFileVersion($this->hash, $this->groupId, $itemId, $label, $changeLog, $fileSize, $fileName, $fileType, $contents, $chunk_offset, $chunk_size, $author, $date);
                     } else {
                         // If this is not the first chunk, then we have to append the chunk
-                        $this->soap->appendDocmanFileChunk($this->hash, $this->groupId, $itemId, $contents, $chunk_offset, $chunk_size, $version);
+                        $this->soap->appendDocmanFileChunk($this->hash, $this->groupId, $itemId, $contents, $chunk_offset, $chunk_size);
                     }
                 } catch (Exception $e){
                     $retry = $this->askWhatToDo($e);
