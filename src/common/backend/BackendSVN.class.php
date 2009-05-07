@@ -104,7 +104,7 @@ class BackendSVN extends Backend {
         if (!is_dir($svn_dir)) {
             // Let's create a SVN repository for this group
             if (!mkdir($svn_dir)) {
-                $this->log("Can't create project SVN dir: $svn_dir");
+                $this->log("Can't create project SVN dir: $svn_dir", Backend:LOG_ERROR);
                 return false;
             }
             system($GLOBALS['svnadmin_cmd']." create $svn_dir --fs-type fsfs");
@@ -120,7 +120,7 @@ class BackendSVN extends Backend {
         }
 
         if (!$this->updateSVNAccess($group_id)) {
-            $this->log("Can't update SVN access file");
+            $this->log("Can't update SVN access file", Backend:LOG_ERROR);
             return false;
         }
 
@@ -249,7 +249,7 @@ class BackendSVN extends Backend {
         $unix_group_name = $project->getUnixName(false); // May contain upper-case letters
         $svn_dir = $GLOBALS['svn_prefix']."/".$unix_group_name;
         if (!is_dir($svn_dir)) {
-            $this->log("Can't update SVN Access file: project SVN repo is missing: $svn_dir");
+            $this->log("Can't update SVN Access file: project SVN repo is missing: $svn_dir", Backend:LOG_ERROR);
             return false;
         }
 
@@ -366,7 +366,7 @@ class BackendSVN extends Backend {
         
 
         if (!$fp = fopen($svn_root_file_new, 'w')) {
-            $this->log("Can't open file for writing: $svn_root_file_new");
+            $this->log("Can't open file for writing: $svn_root_file_new", Backend:LOG_ERROR);
             return false;
         }
 
@@ -401,7 +401,7 @@ class BackendSVN extends Backend {
             fwrite($fp, "    AuthMySQLUserCondition \"(user.status='A' or (user.status='R' AND user_group.user_id=user.user_id and user_group.group_id=".$row['group_id']."))\"\n");
             fwrite($fp, "    SVNIndexXSLT \"/svn/repos-web/view/repos.xsl\"\n");
             if (!fwrite($fp, "</Location>\n\n")) {
-                $this->log("Error while writing to $svn_root_file_new");
+                $this->log("Error while writing to $svn_root_file_new", Backend:LOG_ERROR);
                 return false;
             }
         }

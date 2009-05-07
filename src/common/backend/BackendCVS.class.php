@@ -99,7 +99,7 @@ class BackendCVS extends Backend {
         if (!is_dir($cvs_dir)) {
             // Let's create a CVS repository for this group
             if (!mkdir($cvs_dir)) {
-                $this->log("Can't create project CVS dir: $cvs_dir");
+                $this->log("Can't create project CVS dir: $cvs_dir", Backend:LOG_ERROR);
                 return false;
             }
 
@@ -213,7 +213,7 @@ class BackendCVS extends Backend {
             $lockdir=$GLOBALS['cvslock_prefix']."/".$project->getUnixName(false);
             if (! is_dir($lockdir)) {
                 if (!mkdir("$lockdir",0777)) {
-                    $this->log("Can't create project CVS lock dir: $lockdir");
+                    $this->log("Can't create project CVS lock dir: $lockdir", Backend:LOG_ERROR);
                     return false;
                 }
                 chmod("$lockdir",0777); // overwrite umask value

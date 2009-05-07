@@ -116,7 +116,7 @@ class BackendSystem extends Backend {
 
                 return true;
             } else {
-                $this->log("Can't create user home: $homedir");
+                $this->log("Can't create user home: $homedir", Backend:LOG_ERROR);
             }
         }
         return false;
@@ -152,7 +152,7 @@ class BackendSystem extends Backend {
                 $this->chgrp($projdir, $unix_group_name);
                 $this->chmod($projdir, 02775);
             } else {
-                $this->log("Can't create project home: $projdir");
+                $this->log("Can't create project home: $projdir", Backend:LOG_ERROR);
                 return false;
             }
         }
@@ -160,7 +160,7 @@ class BackendSystem extends Backend {
             $lcprojlnk=strtolower($projdir);
             if (!is_link($lcprojlnk)) {
                 if (!symlink($projdir,$lcprojlnk)) {
-                    $this->log("Can't create project link: $lcprojlnk");
+                    $this->log("Can't create project link: $lcprojlnk", Backend:LOG_ERROR);
                 }
             }
         }
@@ -188,7 +188,7 @@ class BackendSystem extends Backend {
                 }
 
             } else {
-                $this->log("Can't create project web root: $ht_dir");
+                $this->log("Can't create project web root: $ht_dir", Backend:LOG_ERROR);
                 return false;
             }
         }
@@ -202,7 +202,7 @@ class BackendSystem extends Backend {
                 $this->chgrp($ftp_anon_dir, $unix_group_name);
                 chmod($ftp_anon_dir, 02775);
             } else {
-                $this->log("Can't create project public ftp dir: $ftp_anon_dir");
+                $this->log("Can't create project public ftp dir: $ftp_anon_dir", Backend:LOG_ERROR);
                 return false;
             }
         }
@@ -216,7 +216,7 @@ class BackendSystem extends Backend {
                 $this->chown($ftp_frs_dir, "dummy");
                 $this->chgrp($ftp_frs_dir, $unix_group_name);
             } else {
-                $this->log("Can't create project file release dir: $ftp_frs_dir");
+                $this->log("Can't create project file release dir: $ftp_frs_dir", Backend:LOG_ERROR);
                 return false;
             }
         }
@@ -227,7 +227,7 @@ class BackendSystem extends Backend {
                 $this->chown($private_dir, "dummy");
                 $this->chgrp($private_dir, $unix_group_name);
             } else {
-                $this->log("Can't create project private dir: $private_dir");
+                $this->log("Can't create project private dir: $private_dir", Backend:LOG_ERROR);
                 return false;
             }
         } else {
@@ -312,14 +312,14 @@ class BackendSystem extends Backend {
         //move all files in the .delete_files
         $waiting_files = file($deleting_files_work);
         if ($waiting_files === false) {
-            $this->log("Cannot open $deleting_files_work");
+            $this->log("Cannot open $deleting_files_work", Backend:LOG_ERROR);
             return false;
         } else {
             foreach($waiting_files as $line) {
                 list($file, $project, $time) = explode('::', $line);
                 $filename = $GLOBALS['ftp_frs_dir_prefix'] ."/$project/$file";
                 if (!file_exists($filename)) {
-                    $this->log("$filename doesn't exist");
+                    $this->log("$filename doesn't exist", Backend:LOG_WARNING);
                 } else {
                     $subdirs = dirname($file);
                     mkdir("$delete_dir/$project/$subdirs", 0770, true);
@@ -327,9 +327,9 @@ class BackendSystem extends Backend {
                     //make sure that since the deletion of the file nobody has submitted a new file with 
                     //the same filename
                     if (filemtime($filename) >= $time || fileatime($filename) >= $time || filectime($filename) >= $time) {
-                        $this->log("Don't delete file $project/$file (modified since deletion)");
+                        $this->log("Don't delete file $project/$file (modified since deletion)", Backend:LOG_WARNING);
                     } else {
-                        $this->log("Deleting file $project/$file");
+                        $this->log("Deleting file $project/$file", Backend:LOG_INFO);
                         rename($filename, "$delete_dir/$project/$file-$time");
                     }
                 }
@@ -384,7 +384,7 @@ class BackendSystem extends Backend {
         $this->chown("$ssh_dir/authorized_keys", $username);
         $this->chgrp("$ssh_dir/authorized_keys", $username);
         
-        $this->log("Authorized_keys for $username written.");
+        $this->log("Authorized_keys for $username written.", Backend:LOG_INFO);
     }
 
 }

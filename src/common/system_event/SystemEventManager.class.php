@@ -290,9 +290,11 @@ class SystemEventManager {
 
                 // Process $sysevent
                 if ($sysevent) {
+                    Backend::instance()->log("Processing event #$sysevent->id $sysevent->type($sysevent->parameters)");
                     $sysevent->process();
                     $this->dao->close($sysevent);
                     $sysevent->notify();
+                    Backend::instance()->log("Processing event #$sysevent->id: done.");
                     // Output errors???
                 }
             }

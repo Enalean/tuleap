@@ -26,7 +26,10 @@
  */
 class Backend {
 
-
+    const LOG_INFO    = "info";
+    const LOG_WARNING = "warn";
+    const LOG_ERROR   = "error";
+    
     public $block_marker_start = "# !!! Codendi Specific !!! DO NOT REMOVE (NEEDED CODENDI MARKER)\n";
     public $block_marker_end   = "# END OF NEEDED CODENDI BLOCK\n";
 
@@ -145,11 +148,12 @@ class Backend {
      * Log message in codendi_syslog
      *
      * @param string $message The error message that should be logged.
+     * @param string $level   The level of the message "info", "warn", ...
      * 
      * @return boolean true on success or false on failure
      */
-    public function log($message) {
-        return error_log($message."\n", 3, $GLOBALS['codendi_log']."/codendi_syslog");
+    public function log($message, $level = 'info') {
+        return error_log(date('c')." [$level] $message.\n", 3, $GLOBALS['codendi_log']."/codendi_syslog");
     }
 
     /**
@@ -222,7 +226,7 @@ class Backend {
     public function addBlock($filename, $command) {
         
         if (!$handle = fopen($filename, 'a')) {
-            $this->log("Can't open file for writing: $filename");
+            $this->log("Can't open file for writing: $filename", self:LOG_ERROR);
             return false;
         }
         fwrite($handle, $this->block_marker_start);
@@ -269,12 +273,12 @@ class Backend {
     public function writeArrayToFile($file_array, $filename) {
 
         if (!$handle = fopen($filename, 'w')) {
-            $this->log("Can't open file for writing: $filename");
+            $this->log("Can't open file for writing: $filename", self:LOG_ERROR);
             return false;
         }
         foreach ($file_array as $line ) {
             if (fwrite($handle, $line) === false) {
-                $this->log("Can't write to file: $filename");
+                $this->log("Can't write to file: $filename", self:LOG_ERROR);
                 return false;
             }
         }
@@ -309,18 +313,18 @@ class Backend {
                 }
 
                 if (!rename($file, $file_old)) {
-                    $this->log("Can't move file $file to $file_old");
+                    $this->log("Can't move file $file to $file_old", self:LOG_ERROR);
                     return false;
                 }
                 if (!rename($file_new, $file)) {
-                    $this->log("Can't move file $file_new to $file");
+                    $this->log("Can't move file $file_new to $file", self:LOG_ERROR);
                     return false;
                 }
             } // Else do nothing: the configuration has not changed
         } else { 
             // No existing file
             if (!rename($file_new, $file)) {
-                $this->log("Can't move file $file_new to $file (no existing file)");
+                $this->log("Can't move file $file_new to $file (no existing file)", self:LOG_ERROR);
                 return false;
             }
         }
