@@ -15,7 +15,7 @@ CREATE TABLE plugin_hudson_widget (
   widget_name varchar(64) NOT NULL ,
   owner_id int(11) UNSIGNED NOT NULL ,
   owner_type varchar(1) NOT NULL ,
-  job_id int(11) NOT NULL ,
+  job_id int(11) NOT NULL
 );
 
 -- Enable service for project 1 and 100
