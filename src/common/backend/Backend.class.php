@@ -226,7 +226,7 @@ class Backend {
     public function addBlock($filename, $command) {
         
         if (!$handle = fopen($filename, 'a')) {
-            $this->log("Can't open file for writing: $filename", self:LOG_ERROR);
+            $this->log("Can't open file for writing: $filename", self::LOG_ERROR);
             return false;
         }
         fwrite($handle, $this->block_marker_start);
@@ -273,12 +273,12 @@ class Backend {
     public function writeArrayToFile($file_array, $filename) {
 
         if (!$handle = fopen($filename, 'w')) {
-            $this->log("Can't open file for writing: $filename", self:LOG_ERROR);
+            $this->log("Can't open file for writing: $filename", self::LOG_ERROR);
             return false;
         }
         foreach ($file_array as $line ) {
             if (fwrite($handle, $line) === false) {
-                $this->log("Can't write to file: $filename", self:LOG_ERROR);
+                $this->log("Can't write to file: $filename", self::LOG_ERROR);
                 return false;
             }
         }
@@ -313,18 +313,18 @@ class Backend {
                 }
 
                 if (!rename($file, $file_old)) {
-                    $this->log("Can't move file $file to $file_old", self:LOG_ERROR);
+                    $this->log("Can't move file $file to $file_old", self::LOG_ERROR);
                     return false;
                 }
                 if (!rename($file_new, $file)) {
-                    $this->log("Can't move file $file_new to $file", self:LOG_ERROR);
+                    $this->log("Can't move file $file_new to $file", self::LOG_ERROR);
                     return false;
                 }
             } // Else do nothing: the configuration has not changed
         } else { 
             // No existing file
             if (!rename($file_new, $file)) {
-                $this->log("Can't move file $file_new to $file (no existing file)", self:LOG_ERROR);
+                $this->log("Can't move file $file_new to $file (no existing file)", self::LOG_ERROR);
                 return false;
             }
         }

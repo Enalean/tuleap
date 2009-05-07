@@ -105,7 +105,7 @@ class BackendAliases extends Backend {
         $alias_file_old = $alias_file.".old";
 
         if (!$fp = fopen($alias_file_new, 'w')) {
-            $this->log("Can't open file for writing: $alias_file_new", Backend:LOG_ERROR);
+            $this->log("Can't open file for writing: $alias_file_new", Backend::LOG_ERROR);
             return false;
         }
 
@@ -113,7 +113,7 @@ class BackendAliases extends Backend {
             || (!$this->writeListAliases($fp))
             || (!$this->writeUserAliases($fp))
         ) {
-            $this->log("Can't write aliases to $alias_file_new", Backend:LOG_ERROR);
+            $this->log("Can't write aliases to $alias_file_new", Backend::LOG_ERROR);
             return false;
         }
         fclose($fp);
