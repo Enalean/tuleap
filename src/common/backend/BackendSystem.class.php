@@ -89,6 +89,10 @@ class BackendSystem extends Backend {
         return $this->needRefreshGroupCache;
     }
 
+    public function checkSetUIDbit() {
+        system("cd ".$GLOBALS['codendi_bin_prefix']."; /bin/chmod u+s log_accum fileforge");
+    }
+
     /**
      * Create user home directory
      * Also copy files from the skel directory to the new home directory.

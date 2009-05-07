@@ -1946,10 +1946,16 @@ Find below a copy of the root crontab file. we highly recommend that
 you keep the same time and frequency to run the jobs. <br>
 <br>
 <blockquote>
+  <tt># Once a minute, process Codendi system events</tt><br>
+  <tt>* * * * * (cd /usr/share/codendi/src/utils; ./php-launcher.sh ./process_system_events.php)</tt><br>
+  <tt>#</tt><br>
+  <tt># Regularly launch a system_check event (e.g. every half-hour) </tt><br>
+  <tt>0,30 * * * * (cd /usr/share/codendi/src/utils; ./php-launcher.sh ./launch_system_check.php)</tt><br>
+  <tt>#</tt><br>
   <tt># run the daily statistics script just a little bit after</tt><br>
   <tt># midnight so that it computes stats for the day before</tt><br>
   <tt># Run at 0:30 am</tt><br>
-  <tt>30 0 * * * /usr/share/codendi/src/utils/xerox_all_daily_stats.sh</tt><br>
+  <tt>30 0 * * * /usr/share/codendi/src/utils/compute_all_daily_stats.sh</tt><br>
   <tt>#</tt><br>
   <tt># run the weekly stats for projects. Run it on Monday morning so
 that</tt><br>
@@ -1971,16 +1977,16 @@ that</tt><br>
   <tt>#</tt><br>
   <tt>0 3 * * * /usr/sbin/tmpwatch -m -f 336 /var/lib/codendi/ftp/incoming</tt><br>
   <tt>#</tt><br>
-  <tt>#</tt><br>
-  <tt># Once a minute make sure that the setuid bit is set on some critical files</tt><br>
-  <tt>* * * * * (cd /usr/lib/codendi/bin; /bin/chmod u+s log_accum fileforge)</tt><br>
   <br>
 </blockquote>
 Please note that your own root crontab should probably contain some
 additional jobs like may be stopping the mysql engine before starting
 your backup procedure or something similar.<br>
 <h2>Codendiadm crontab</h2>
-<blockquote><tt># Re-generate the Codendi User Guides on a daily basis</tt><br>
+<blockquote>
+  <tt># Daily Codendi PHP cron (obsolete documents...)</tt><br>
+  <tt>10 0 * * * /usr/share/codendi/src/utils/php-launcher.sh /usr/share/codendi/src/utils/codendi_daily.php</tt><br>
+  <tt># Re-generate the Codendi User Guides on a daily basis</tt><br>
   <tt>00 03 * * * /usr/share/codendi/src/utils/generate_doc.sh</tt><br>
   <tt>30 03 * * * /usr/share/codendi/src/utils/generate_programmer_doc.sh</tt><br>
   <tt>45 03 * * * /usr/share/codendi/src/utils/generate_cli_package.sh</tt><br>

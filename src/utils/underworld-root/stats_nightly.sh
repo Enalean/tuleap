@@ -37,7 +37,7 @@ echo "--- Beginning of $script ---"
 # text output to a file in the dumpt directory
 # LJ note: I was unable to find where and when this
 # output file is used !!
-# $dump_dir is defined in xerox_all_daily_stats.sh
+# $dump_dir is defined in compute_all_daily_stats.sh
 ./db_top_groups_calc.pl $* > $dump_dir/db_top_groups_calc_output
 
 

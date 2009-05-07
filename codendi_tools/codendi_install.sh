@@ -1225,7 +1225,7 @@ $CAT <<'EOF' >/tmp/cronfile
 # run the daily statistics script just a little bit after
 # midnight so that it computes stats for the day before
 # Run at 0:30 am
-30 0 * * * /usr/share/codendi/src/utils/xerox_all_daily_stats.sh
+30 0 * * * /usr/share/codendi/src/utils/compute_all_daily_stats.sh
 #
 # run the weekly stats for projects. Run it on Monday morning so that
 # it computes the stats for the week before
@@ -1249,8 +1249,6 @@ $CAT <<'EOF' >/tmp/cronfile
 # on Sunday. Do it while the DB is down for backup
 50 0 * * Sun /sbin/service httpd restart
 #
-# Once a minute make sure that the setuid bit is set on some critical files
-* * * * * (cd /usr/lib/codendi/bin; /bin/chmod u+s log_accum fileforge)
 EOF
 crontab -u root /tmp/cronfile
 

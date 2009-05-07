@@ -1412,8 +1412,33 @@ EOF
 echo "Remove xerox_crontab script from root crontab"
 crontab -u root -l >> /tmp/root_cronfile
 $PERL -i'.orig' -p -e's/^(.*xerox_crontab.sh.*)$/#\1/' /tmp/root_cronfile
+# Also remove this line (done in SYSTEM_CHECK event)
+$PERL -pi -e's/^(.*chmod u+s log_accum fileforge.*)$/#\1/' /tmp/root_cronfile
+
+# Codendification of crontab
+codendification '/tmp/root_cronfile'
+
+substitute '/tmp/root_cronfile' "xerox_all_daily_stats" "compute_all_daily_stats" 
 
 crontab -u root /tmp/root_cronfile
+
+
+echo "Installing  codendiadm user crontab..."
+$CAT <<'EOF' >/tmp/cronfile
+# Daily Codendi PHP cron (obsolete documents...)
+10 0 * * * /usr/share/codendi/src/utils/php-launcher.sh /usr/share/codendi/src/utils/codendi_daily.php
+# Re-generate the Codendi User Guides on a daily basis
+00 03 * * * /usr/share/codendi/src/utils/generate_doc.sh
+30 03 * * * /usr/share/codendi/src/utils/generate_programmer_doc.sh
+45 03 * * * /usr/share/codendi/src/utils/generate_cli_package.sh
+EOF
+crontab -u codendiadm /tmp/cronfile
+
+# Move away codexadm crontab
+if [ -f '/var/spool/cron/codexadm' ]; then
+  $MV '/var/spool/cron/codexadm' "$BACKUP_DIR/codexadm.cron"
+fi
+
 
 ##############################################
 # Codendification of CODEX_LICENSE_ACCEPTED
@@ -1464,6 +1489,8 @@ $FIND /cvsroot/ -type f -name notify -exec co -q {} \; 2> /dev/null
 echo "Migrate SVN hook files"
 $FIND /svnroot/ -type f -name post-commit -exec perl -pi -e 's@/codex/@/codendi/@g; s/CodeX/Codendi/g; s/CODEX/CODENDI/g'  {} \;
 $FIND /svnroot/ -type f -name .SVNAccessFile -exec perl -pi -e 's/CODEX DEF/CODENDI DEF/g'  {} \;
+# Pre-commit hooks will be automatically installed during the next system_check event.
+
 
 ##############################################
 # Fix SELinux contexts if needed
@@ -1483,12 +1510,8 @@ $SERVICE mailman start
 
 
 
-Codendification:
-- /var/lib/mysql/codex-bin*
 
 
-TODO migrate CodeX* themes (in file and in db and in plugins)
-TODO migrate User-Agent (Dont allow access to API for anyone.)
 
 # IM / Webchat configuration
 SYS_DEFAULT_DOMAIN=`$GREP '^\$sys_default_domain' $ETC_DIR/codendi/conf/local.inc | /bin/sed -e 's/\$sys_default_domain\s*=\s*\(.*\);\(.*\)/\1/' | tr -d '"' | tr -d "'"`
@@ -1506,17 +1529,22 @@ $CP $INSTALL_DIR/plugins/IM/include/jabbex_api/installation/resources/codendi_au
 # Instal monitoring plugin (copy plugin jar in openfire plugin dir)
 $CP ${RPMS_DIR}/openfire/monitoring.jar /opt/openfire/plugins
 
+
+# Codendification:
+# - /var/lib/mysql/codex-bin*
+
+# TODO migrate CodeX* themes (in file and in db and in plugins)
+
 # Add common stylesheet in custom themes
 
 #custom themes
-=> no more images
-=> refactoring in common/layout instead of www/include
+#=> no more images
+#=> refactoring in common/layout instead of www/include
 
 #TODO Clean-up CodendiBlack (fix blue labels on IE, ...)
 #TODO remove reserved names javascript
 
-TODO : Déplacer le script de debug dans Layout.class.php
-# TODO : CREATE / UPDATE the pre-commit hook for every existing project.
+# TODO : Déplacer le script de debug dans Layout.class.php
 
 #
 # TODO CODENDIFICATION:
@@ -1525,7 +1553,6 @@ TODO : Déplacer le script de debug dans Layout.class.php
 
 # Ask to make a manual update (-u???) on /usr/share/codedni as codendiadm to get new realm 
 #??? Mailman: codex-admin??
-# - Update root and codexadm crontab (partially done)
 # - MySQL: 'codex' db, codexadm user and grants on codex DB.
 # - Warn admins that CODEX_LOCAL_INC was replaced by CODENDI_LOCAL_INC
 # - OpenFire install.
