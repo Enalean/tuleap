@@ -594,6 +594,38 @@ newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
 $RPM -Uvh ${newest_rpm}/codendi-salome-tmf-*noarch.rpm
 
 
+##############################################
+echo "Prevent yum from auto-updating some packages (cvs, mailman)"
+
+if [ -f /etc/yum.conf ]; then
+    $GREP -q ^exclude  /etc/yum.conf
+    if [ $? -ne 0 ]; then
+        # Add all
+        echo "# Codendi specific" >> /etc/yum.conf
+        echo "exclude=mailman cvs" >> /etc/yum.conf
+    else
+        # mailman
+        $GREP ^exclude  /etc/yum.conf | $GREP -q mailman
+        if [ $? -ne 0 ]; then
+             $PERL -i'.orig' -p -e "s/^exclude(.*)/exclude\1 mailman/" /etc/yum.conf
+        fi
+        # cvs
+        $GREP ^exclude  /etc/yum.conf | $GREP -q cvs
+        if [ $? -ne 0 ]; then
+             $PERL -i'.orig' -p -e "s/^exclude(.*)/exclude\1 cvs/" /etc/yum.conf
+        fi
+    fi
+fi
+
+
+$PERL -pi -e "s/^#ftpd_banner=.*/ftpd_banner=Welcome to Codendi FTP service./g" /etc/vsftpd/vsftpd.conf 
+
+fi
+
+# CodeX/Codendi specific
+exclude=mailman cvs
+
+
 ######
 # Now install the non RPMs stuff 
 #
