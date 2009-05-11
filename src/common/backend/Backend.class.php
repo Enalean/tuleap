@@ -33,6 +33,10 @@ class Backend {
     public $block_marker_start = "# !!! Codendi Specific !!! DO NOT REMOVE (NEEDED CODENDI MARKER)\n";
     public $block_marker_end   = "# END OF NEEDED CODENDI BLOCK\n";
 
+    // Name of apache user (codendiadm).
+    protected $httpUser;
+    // UID of apache user (codendiadm).
+    protected $httpUserUID;
 
     /**
      * Constructor
@@ -156,6 +160,34 @@ class Backend {
         return error_log(date('c')." [$level] $message.\n", 3, $GLOBALS['codendi_log']."/codendi_syslog");
     }
 
+    /** 
+     * Return username running the Apache server
+     *
+     * @return string unix user name 
+     */
+    public function getHTTPUser() {
+        if (! $this->httpUser) {
+            $this->httpUser = $GLOBALS['sys_http_user'];
+        }
+        return $this->httpUser;
+    }
+
+
+    /** 
+     * Return user ID running the Apache server
+     *
+     * @return int unix user ID 
+     */
+    public function getHTTPUserUID() {
+        if (! $this->httpUserUID) {
+            $userinfo = posix_getpwnam($GLOBALS['sys_http_user']);
+            $this->httpUserUID = $userinfo['uid'];
+        }
+        return $this->httpUserUID;
+    }
+
+
+    /** 
     /**
      * Recursive chown/chgrp function.
      * From comment at http://us2.php.net/manual/en/function.chown.php#40159

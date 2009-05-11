@@ -109,7 +109,7 @@ class BackendSVN extends Backend {
             }
             system($GLOBALS['svnadmin_cmd']." create $svn_dir --fs-type fsfs");
 
-            $this->recurseChownChgrp($svn_dir, $GLOBALS['sys_http_user'], $unix_group_name);
+            $this->recurseChownChgrp($svn_dir, $this->getHTTPUser(), $unix_group_name);
             system("chmod g+rw $svn_dir");
         }
 
@@ -182,7 +182,7 @@ class BackendSVN extends Backend {
                 $command .='REV="$2"'."\n";
                 $command .=$GLOBALS['codendi_bin_prefix'].'/commit-email.pl "$REPOS" "$REV" 2>&1 >/dev/null';
                 $this->addBlock($filename, $command);
-                $this->chown($filename, $GLOBALS['sys_http_user']);
+                $this->chown($filename, $this->getHTTPUser());
                 $this->chgrp($filename, $unix_group_name);
                 chmod("$filename", 0775);
             }
@@ -227,7 +227,7 @@ class BackendSVN extends Backend {
             $command .= 'TXN="$2"'."\n";
             $command .= $GLOBALS['codendi_dir'].'/src/utils/php-launcher.sh '.$GLOBALS['codendi_bin_prefix'].'/codendi_svn_pre_commit.php "$REPOS" "$TXN" || exit 1';
             $this->addBlock($filename, $command);
-            $this->chown($filename, $GLOBALS['sys_http_user']);
+            $this->chown($filename, $this->getHTTPUser());
             $this->chgrp($filename, $unix_group_name);
             chmod("$filename", 0775);
         }
@@ -326,7 +326,7 @@ class BackendSVN extends Backend {
 
         // set group ownership, admin user as owner so that
         // PHP scripts can write to it directly
-        $this->chown($svnaccess_file, $GLOBALS['sys_http_user']);
+        $this->chown($svnaccess_file, $this->getHTTPUser());
         $this->chgrp($svnaccess_file, $unix_group_name);
         chmod("$svnaccess_file", 0775);
         
@@ -407,8 +407,8 @@ class BackendSVN extends Backend {
         }
         fclose($fp);
 
-        $this->chown("$svn_root_file_new", $GLOBALS['sys_http_user']);
-        $this->chgrp("$svn_root_file_new", $GLOBALS['sys_http_user']);
+        $this->chown("$svn_root_file_new", $this->getHTTPUser());
+        $this->chgrp("$svn_root_file_new", $this->getHTTPUser());
         chmod("$svn_root_file_new", 0640);
 
 
@@ -474,7 +474,7 @@ class BackendSVN extends Backend {
             $perms = fileperms($svnroot);
             // 'others' should have no right on the repository
             if (($perms & 0x0004) || ($perms & 0x0002) || ($perms & 0x0001) || ($perms & 0x0200)) {
-                $this->log("Restoring privacy on SVN dir: $svnroot", Backend::LOG_WARN);
+                $this->log("Restoring privacy on SVN dir: $svnroot", Backend::LOG_WARNING);
                $this->setSVNPrivacy($project, $is_private);
             }
         } 
@@ -485,16 +485,16 @@ class BackendSVN extends Backend {
             // Get file stat 
             $stat = stat("$svnroot/$file");
             if ($stat) {
-                if ( (posix_getpwuid($stat['uid']) != $GLOBALS['sys_http_user'])
-                     || (posix_getgrgid($stat['gid']) != $unix_group_name) ) {
+                if ( ($stat['uid'] != $this->getHTTPUserUID())
+                     || ($stat['gid'] != $project->getUnixGID()) ) {
                     $need_owner_update = true;
                 }
             }
         }
         if ($need_owner_update) {
             $this->log("Restoring ownership on SVN dir: $svnroot", Backend::LOG_INFO);
-            $this->recurseChownChgrp($svnroot, $GLOBALS['sys_http_user'], $unix_group_name);
-            $this->chown($svnroot, $GLOBALS['sys_http_user']);
+            $this->recurseChownChgrp($svnroot, $this->getHTTPUser(), $unix_group_name);
+            $this->chown($svnroot, $this->getHTTPUser());
             $this->chgrp($svnroot, $unix_group_name);
             system("chmod g+rw $svnroot");
         }

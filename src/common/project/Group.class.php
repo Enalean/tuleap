@@ -183,6 +183,15 @@ class Group extends Error {
 	}
 
 	/**
+	 *	getUnixGID - return the Unix GID for this group.
+	 *
+	 *	@return int GID.
+	 */
+	function getUnixGID() {
+		return $this->data_array['group_id']+$GLOBALS['unix_gid_add'];
+	}
+
+	/**
 	 *	getMembersId - Return an array of user ids of group members
 	 *
 	 *	@return int group_id.

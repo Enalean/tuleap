@@ -109,10 +109,8 @@ class SystemEvent_SYSTEM_CHECK extends SystemEvent {
                 }
                 $backendCVS->updateCVSwriters($project->getID());
                 
-                // Check access rights
-                if (!$backendCVS->isCVSPrivacyOK($project)) {
-                    $backendCVS->setCVSPrivacy($project, !$project->isPublic() || $project->isCVSPrivate());
-                }
+                // Check ownership/mode/access rights
+                $backendCVS->checkCVSMode($project);
             }
             
             if ($project->usesSVN()) {

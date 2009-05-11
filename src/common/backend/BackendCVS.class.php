@@ -154,7 +154,7 @@ class BackendCVS extends Backend {
             chmod("$cvs_dir/CVSROOT/val-tags",0664);
 
             // set group ownership, http user
-            $this->recurseChownChgrp($cvs_dir,$GLOBALS['sys_http_user'],$unix_group_name);
+            $this->recurseChownChgrp($cvs_dir,$this->getHTTPUser(),$unix_group_name);
             system("chmod g+rw $cvs_dir");
         }
 
@@ -167,7 +167,7 @@ class BackendCVS extends Backend {
             system("touch $cvs_dir/CVSROOT/history");
             // Must be writable
             chmod("$cvs_dir/CVSROOT/history",0666);
-            $this->recurseChownChgrp($cvs_dir."/CVSROOT",$GLOBALS['sys_http_user'],$unix_group_name);
+            $this->recurseChownChgrp($cvs_dir."/CVSROOT",$this->getHTTPUser(),$unix_group_name);
         }
 	
 	// Update post-commit hooks
@@ -184,7 +184,7 @@ class BackendCVS extends Backend {
 
                 // Apply cvs watch on only if cvs_watch_mode changed to on 
                 $this->CVSWatch($cvs_dir,$unix_group_name,1);
-                $this->recurseChownChgrp($cvs_dir,$GLOBALS['sys_http_user'],$unix_group_name);
+                $this->recurseChownChgrp($cvs_dir,$this->getHTTPUser(),$unix_group_name);
                 system("chmod g+rw $cvs_dir");
             }
         }
@@ -198,7 +198,7 @@ class BackendCVS extends Backend {
                 $this->_RcsCheckout($filename);
                 $this->removeBlock($filename);
                 $this->_RcsCommit($filename);
-                $this->recurseChownChgrp($cvs_dir."/CVSROOT",$GLOBALS['sys_http_user'],$unix_group_name);
+                $this->recurseChownChgrp($cvs_dir."/CVSROOT",$this->getHTTPUser(),$unix_group_name);
                 $this->CVSWatch($cvs_dir,$unix_group_name,0);
             }
         }
@@ -239,7 +239,7 @@ class BackendCVS extends Backend {
                 $this->_RcsCheckout($filename);
                 $this->addBlock($filename,$command);
                 $this->_RcsCommit($filename);
-                $this->recurseChownChgrp($cvs_dir."/CVSROOT",$GLOBALS['sys_http_user'],$unix_group_name);
+                $this->recurseChownChgrp($cvs_dir."/CVSROOT",$this->getHTTPUser(),$unix_group_name);
             }
 
             
@@ -250,7 +250,7 @@ class BackendCVS extends Backend {
                 $this->_RcsCheckout($filename);
                 $this->addBlock($filename,"ALL ".$GLOBALS['codendi_bin_prefix']."/commit_prep -T $unix_group_name -r");
                 $this->_RcsCommit($filename);
-                $this->recurseChownChgrp($cvs_dir."/CVSROOT",$GLOBALS['sys_http_user'],$unix_group_name);
+                $this->recurseChownChgrp($cvs_dir."/CVSROOT",$this->getHTTPUser(),$unix_group_name);
             }
         } else {
             // Remove Codendi blocks if needed
@@ -422,24 +422,49 @@ class BackendCVS extends Backend {
         return is_dir($cvsroot) && $this->chmod($cvsroot, $perms);
     }
 
+
     /** 
-     * Check privacy of repository 
-     * @returns false if private repo does not have proper permissions, or true otherwise
+     * Check ownership/mode/privacy of repository 
+     * 
+     * @param Project $project The project to work on
+     * 
+     * @return boolean true if success
      */
-    public function isCVSPrivacyOK($project) {
-        $cvsroot = $GLOBALS['cvs_prefix'] . '/' . $project->getUnixName(false);
+    public function checkCVSMode($project) {
+        $unix_group_name =  $project->getUnixName(false);
+        $cvsroot = $GLOBALS['cvs_prefix'] . '/' . $unix_group_name;
         $is_private = !$project->isPublic() || $project->isCVSPrivate();
         if ($is_private) {
             $perms = fileperms($cvsroot);
             // 'others' should have no right on the repository
             if (($perms & 0x0004) || ($perms & 0x0002) || ($perms & 0x0001) || ($perms & 0x0200)) {
-                    return false;
+                $this->log("Restoring privacy on CVS dir: $cvsroot", Backend::LOG_WARNING);
+                $this->setCVSPrivacy($project,$is_private);
             }
         }
+        // Sometimes, there might be a bad ownership on file (e.g. chmod failed, maintenance done as root...)
+        $files_to_check=array('CVSROOT/loginfo', 'CVSROOT/commitinfo', 'CVSROOT/config');
+        $need_owner_update = false;
+        foreach ($files_to_check as $file) {
+            // Get file stat 
+            $stat = stat("$cvsroot/$file");
+            if ($stat) {
+                if ( ($stat['uid'] != $this->getHTTPUserUID())
+                     || ($stat['gid'] != $project->getUnixGID()) ) {
+                    $need_owner_update = true;
+                }
+            }
+        }
+        if ($need_owner_update) {
+            $this->log("Restoring ownership on CVS dir: $cvsroot", Backend::LOG_INFO);
+            $this->recurseChownChgrp($cvsroot, $this->getHTTPUser(), $unix_group_name);
+            $this->chown($cvsroot, $this->getHTTPUser());
+            $this->chgrp($cvsroot, $unix_group_name);
+            system("chmod g+rw $cvsroot");
+        }
+
         return true;
     }
-
-
 
     //  Deleting files older than 2 hours in /var/run/log_accum that contain 'files' (they have not been deleted due to commit abort) 
     public function cleanup() {

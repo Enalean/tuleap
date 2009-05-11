@@ -146,7 +146,7 @@ class BackendAliases extends Backend {
         fwrite($fp, "codex-contact:           codendi-admin\n");// deprecated user name
         fwrite($fp, "codex-admin:             codendi-admin\n");// deprecated user name
         fwrite($fp, "sourceforge:             codendi-admin\n");// deprecated user name
-        fwrite($fp, $GLOBALS['sys_http_user'].":               codendi-admin\n");
+        fwrite($fp, $this->getHTTPUser().":               codendi-admin\n");
         fwrite($fp, "noreply:                 \"|".$GLOBALS['codendi_bin_prefix']."/gotohell\"\n");
         fwrite($fp, "undisclosed-recipients:  \"|".$GLOBALS['codendi_bin_prefix']."/gotohell\"\n"); // for phpWiki notifications...
         fwrite($fp, "webmaster:               codendi-admin\n");
