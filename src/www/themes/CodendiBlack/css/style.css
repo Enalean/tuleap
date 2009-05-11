@@ -143,7 +143,7 @@ h3 {
     margin-bottom: 20px;
 }
 .boxtitle {
-  background: black url(../images/listheadergrad_simple.gif) left top repeat-x;
+  background: #424142 url(../images/listheadergrad_simple.gif) left top repeat-x;
   font-weight: bold; 
   text-align: left; 
   color: #fff7f0;
@@ -701,3 +701,29 @@ table.release tr td img {
 }
 
 /* }}}*/
+
+table.ServiceMenu {
+  width: 100%;
+
+  margin-top: 0px;
+  margin-bottom: 0px;
+  padding-top: 0px;
+  padding-bottom: 0px;
+}
+
+ul.ServiceMenu    {
+  margin-top: 0px;
+  list-style-type: none; 
+  padding: 0px;
+}
+
+ul.ServiceMenu li {
+  display: inline;
+  font-weight: bold;
+}
+
+ul.ServiceMenu li.current {
+  font-weight: bold;
+}
+
+

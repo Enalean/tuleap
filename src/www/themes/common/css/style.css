@@ -381,7 +381,7 @@ table.release tr td img {
     margin-bottom:0.2em;
 }
 #widget-categories li.selected a:after {
-    content: '»';
+    content: 'Â»';
 }
 #widget-categories li a span {
     padding-right:1em;
@@ -992,3 +992,28 @@ td.forum_reference_separator {
     font-style:italic;
 }
 /* }}} */
+
+/*Wiki*/
+table.ServiceMenu {
+  width: 100%;
+
+  margin-top: 0px;
+  margin-bottom: 0px;
+  padding-top: 0px;
+  padding-bottom: 0px;
+}
+
+ul.ServiceMenu    {
+  margin-top: 0px;
+  list-style-type: none; 
+  padding: 0px;
+}
+
+ul.ServiceMenu li {
+  display: inline;
+  font-weight: bold;
+}
+
+ul.ServiceMenu li.current {
+  font-weight: bold;
+}
