@@ -126,10 +126,8 @@ class SystemEvent_SYSTEM_CHECK extends SystemEvent {
                 }
                 $backendSVN->updateHooks($project);
 
-                // Check access rights
-                if (!$backendSVN->isSVNPrivacyOK($project)) {
-                    $backendSVN->setSVNPrivacy($project, !$project->isPublic() || $project->isSVNPrivate());
-                }
+                // Check ownership/mode/access rights
+                $backendSVN->checkSVNMode($project);
             }
         }
         $this->done();

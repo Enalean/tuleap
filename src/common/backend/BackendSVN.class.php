@@ -458,23 +458,47 @@ class BackendSVN extends Backend {
         return is_dir($svnroot) && $this->chmod($svnroot, $perms);
     }
 
+
     /** 
-     * Check privacy of repository 
+     * Check ownership/mode/privacy of repository 
      * 
      * @param Project $project The project to work on
      * 
-     * @return boolean false if private repo does not have proper permissions, or true otherwise
+     * @return boolean true if success
      */
-    public function isSVNPrivacyOK($project) {
-        $svnroot = $GLOBALS['svn_prefix'] . '/' . $project->getUnixName(false);
+    public function checkSVNMode($project) {
+        $unix_group_name =  $project->getUnixName(false);
+        $svnroot = $GLOBALS['svn_prefix'] . '/' . $unix_group_name;
         $is_private = !$project->isPublic() || $project->isSVNPrivate();
         if ($is_private) {
             $perms = fileperms($svnroot);
             // 'others' should have no right on the repository
             if (($perms & 0x0004) || ($perms & 0x0002) || ($perms & 0x0001) || ($perms & 0x0200)) {
-                return false;
+                $this->log("Restoring privacy on SVN dir: $svnroot", Backend::LOG_WARN);
+               $this->setSVNPrivacy($project, $is_private);
+            }
+        } 
+        // Sometimes, there might be a bad ownership on file (e.g. chmod failed, maintenance done as root...)
+        $files_to_check=array('db/current', 'hooks/pre-commit', 'hooks/post-commit');
+        $need_owner_update = false;
+        foreach ($files_to_check as $file) {
+            // Get file stat 
+            $stat = stat("$svnroot/$file");
+            if ($stat) {
+                if ( (posix_getpwuid($stat['uid']) != $GLOBALS['sys_http_user'])
+                     || (posix_getgrgid($stat['gid']) != $unix_group_name) ) {
+                    $need_owner_update = true;
+                }
             }
         }
+        if ($need_owner_update) {
+            $this->log("Restoring ownership on SVN dir: $svnroot", Backend::LOG_INFO);
+            $this->recurseChownChgrp($svnroot, $GLOBALS['sys_http_user'], $unix_group_name);
+            $this->chown($svnroot, $GLOBALS['sys_http_user']);
+            $this->chgrp($svnroot, $unix_group_name);
+            system("chmod g+rw $svnroot");
+        }
+
         return true;
     }
 }
