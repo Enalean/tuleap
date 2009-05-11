@@ -155,7 +155,17 @@ class BackendSystem extends Backend {
                 $this->log("Can't create project home: $projdir", Backend::LOG_ERROR);
                 return false;
             }
+        } else {
+            // Get directory stat 
+            $stat = stat("$projdir");
+            if ($stat) {
+                if ($stat['gid'] != $project->getUnixGID()) {
+                    $this->log("Restoring ownership on project dir: $projdir", Backend::LOG_WARNING);
+                    $this->recurseChgrp($projdir,$unix_group_name);
+                }
+            }
         }
+
         if ($projdir != strtolower($projdir)) {
             $lcprojlnk=strtolower($projdir);
             if (!is_link($lcprojlnk)) {
@@ -237,7 +247,16 @@ class BackendSystem extends Backend {
             if (($perms & 0x0004) || ($perms & 0x0002) || ($perms & 0x0001) || ($perms & 0x0200)) {
               $this->chmod($private_dir, 02770);		
             }
-            // TODO: check owner/group
+            // Get directory stat 
+            $stat = stat("$private_dir");
+            if ($stat) {
+                if ( ($stat['uid'] != $GLOBALS['dummy_uid'])
+                     || ($stat['gid'] != $project->getUnixGID()) ) {
+                    $this->log("Restoring privacy on private dir: $private_dir", Backend::LOG_WARNING);
+                    $this->chown($private_dir, "dummy");
+                    $this->chgrp($private_dir, $unix_group_name);
+                }
+            }
         }
         return true;
     }

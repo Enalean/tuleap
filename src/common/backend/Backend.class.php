@@ -219,6 +219,34 @@ class Backend {
         closedir($d);
     }
 
+    /** 
+    /**
+     * Recursive chgrp (only) function.
+     * 
+     * @param string $mypath Path to the file (or directory)
+     * @param mixed  $gid    A group name (or number??).
+     *
+     * @return void
+     */
+    public function recurseChgrp($mypath, $gid) {
+        $this->chgrp($mypath, $gid);
+        $d = opendir($mypath);
+        while (($file = readdir($d)) !== false) {
+            if ($file != "." && $file != "..") {
+                
+                $typepath = $mypath . "/" . $file ;
+
+                //print $typepath. " : " . filetype ($typepath). "\n" ;
+                if (filetype($typepath) == 'dir') {
+                    $this->recurseChgrp($typepath, $gid);
+                } else {
+                    $this->chgrp($typepath, $gid);
+                }
+            }
+        }
+        closedir($d);
+    }
+
     /**
      * Recursive rm function.
      * see: http://us2.php.net/manual/en/function.rmdir.php#87385
