@@ -67,17 +67,15 @@ a:hover {
     color: #dc4900; 
 }
 /******** priorities **********/
-/* vert-jaune-rouge */
-.priora { background-color: #e8ff8b; }
-.priorb { background-color: #eae579; }
-.priorc { background-color: #edcc68; }
-.priord { background-color: #f0b256; }
-.priore { background-color: #f39945; }
-.priorf { background-color: #f67f34; }
-.priorg { background-color: #f96622; }
-.priorh { background-color: #fc4c11; }
-.priori { background-color: #ff3300; }
-/**/
+.priora { background-color: #eae191; }
+.priorb { background-color: #e6ce88; }
+.priorc { background-color: #e3bb7f; }
+.priord { background-color: #e0a876; }
+.priore { background-color: #dd966e; }
+.priorf { background-color: #da8365; }
+.priorg { background-color: #d7705c; }
+.priorh { background-color: #d45d53; }
+.priori { background-color: #d14b4b; }
 
 
 /********   forum    **********/
@@ -702,28 +700,6 @@ table.release tr td img {
 
 /* }}}*/
 
-table.ServiceMenu {
-  width: 100%;
 
-  margin-top: 0px;
-  margin-bottom: 0px;
-  padding-top: 0px;
-  padding-bottom: 0px;
-}
-
-ul.ServiceMenu    {
-  margin-top: 0px;
-  list-style-type: none; 
-  padding: 0px;
-}
-
-ul.ServiceMenu li {
-  display: inline;
-  font-weight: bold;
-}
-
-ul.ServiceMenu li.current {
-  font-weight: bold;
-}
 
 
