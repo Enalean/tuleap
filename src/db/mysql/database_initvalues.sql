@@ -2577,6 +2577,9 @@ INSERT INTO plugin (name, available) VALUES ('graphontrackers', '1');
 -- install and enable instant messaging plugin
 INSERT INTO plugin (name, available) VALUES ('IM', '1');
 
+-- install and enable hudson plugin
+INSERT INTO plugin (name, available) VALUES ('hudson', '1');
+
 
 --
 -- Insert default references

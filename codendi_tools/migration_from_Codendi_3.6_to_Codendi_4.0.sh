@@ -1118,6 +1118,46 @@ SELECT last_insert_id, group_id, 1
 FROM (SELECT LAST_INSERT_ID() as last_insert_id) AS R, groups; 
 EOF
 
+echo "- add new references for hudson"
+$CAT <<EOF | $MYSQL $pass_opt codendi
+INSERT INTO reference SET 
+    keyword='job', 
+    description='plugin_hudson:reference_job_desc_key', 
+    link='/plugins/hudson/?group_id=$group_id&action=view_job&job=$1', 
+    scope='S', 
+    service_short_name='hudson',
+    nature='hudson_job';
+INSERT INTO reference_group (reference_id, group_id, is_active)
+SELECT last_insert_id, group_id, 1
+FROM (SELECT LAST_INSERT_ID() as last_insert_id) AS R, groups;
+EOF
+
+$CAT <<EOF | $MYSQL $pass_opt codendi
+INSERT INTO reference SET 
+    keyword='build', 
+    description='plugin_hudson:reference_build_desc_key', 
+    link='/plugins/hudson/?group_id=$group_id&action=view_build&job=$1&build=$2', 
+    scope='S', 
+    service_short_name='hudson',
+    nature='hudson_build';
+INSERT INTO reference_group (reference_id, group_id, is_active)
+SELECT last_insert_id, group_id, 1
+FROM (SELECT LAST_INSERT_ID() as last_insert_id) AS R, groups;
+EOF
+
+$CAT <<EOF | $MYSQL $pass_opt codendi
+INSERT INTO reference SET 
+    keyword='build', 
+    description='plugin_hudson:reference_build_desc_key', 
+    link='/plugins/hudson/?group_id=$group_id&action=view_build&build=$1', 
+    scope='S', 
+    service_short_name='hudson',
+    nature='hudson_build';
+INSERT INTO reference_group (reference_id, group_id, is_active)
+SELECT last_insert_id, group_id, 1
+FROM (SELECT LAST_INSERT_ID() as last_insert_id) AS R, groups;
+EOF
+
 # IM plugin
 # TODO : stop openfire service ($SERVICE openfire stop)
 
@@ -1160,6 +1200,11 @@ EOF
 
 
 echo "- CI with Hudson plugin"
+echo "- install and enable hudson plugin"
+$CAT <<EOF | $MYSQL $pass_opt codendi
+INSERT INTO plugin (name, available) VALUES ('hudson', '1');
+EOF
+
 $CAT <<EOF | $MYSQL $pass_opt codendi
 CREATE TABLE plugin_hudson_job (
   job_id int(11) UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT ,
