@@ -16,11 +16,11 @@
 <fieldset><legend style="font-size:1.2em;">Choisissez le niveau de confidentialité du projet</legend>
 <B>Confidentialité: </B>
 if ($GLOBALS['sys_is_project_public']==1){
-    echo '<select name="is_public"><option value="1" selected="selected">Public</option><option value="0">Privé</option>
-</select>';
+    <select name="is_public"><option value="1" selected="selected">Public</option><option value="0">Privé</option>
+</select>;
 }else{
-    echo '<select name="is_public"><option value="0" selected="selected">Privé</option><option value="1">Public</option>
-</select>';
+    <select name="is_public"><option value="0" selected="selected">Privé</option><option value="1">Public</option>
+</select>;
 }
 ?>
 </fieldset>
