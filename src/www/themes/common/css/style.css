@@ -381,7 +381,7 @@ table.release tr td img {
     margin-bottom:0.2em;
 }
 #widget-categories li.selected a:after {
-    content: 'Â»';
+    content: ' »';
 }
 #widget-categories li a span {
     padding-right:1em;
