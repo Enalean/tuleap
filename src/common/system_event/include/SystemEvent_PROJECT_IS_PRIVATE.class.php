@@ -48,6 +48,10 @@ class SystemEvent_PROJECT_IS_PRIVATE extends SystemEvent {
                     $this->error("Could not set svn privacy for project $group_id");
                     return false;
                 }
+                if (!$backendSVN->updateSVNAccess($group_id) ) {
+                    $this->error("Could not update svn access file for project $group_id");
+                    return false;
+                }
             }
             
             $this->done();
