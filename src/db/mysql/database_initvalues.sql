@@ -1855,7 +1855,7 @@ INSERT INTO artifact_report_field VALUES (100,'artifact_id',1,1,50,10,NULL);
 INSERT INTO artifact_report_field VALUES (100,'summary',0,1,NULL,20,NULL);
 INSERT INTO artifact_report_field VALUES (100,'open_date',1,1,40,30,NULL);
 INSERT INTO artifact_report_field VALUES (100,'submitted_by',0,1,NULL,50,NULL);
-INSERT INTO artifact_report_field VALUES (100,'severity',0,1,NULL,NULL,NULL);
+INSERT INTO artifact_report_field VALUES (100,'severity',0,0,NULL,NULL,NULL);
 INSERT INTO artifact_report_field VALUES (2,'subproject_id',1,1,10,30,NULL);
 INSERT INTO artifact_report_field VALUES (2,'multi_assigned_to',1,1,20,60,NULL);
 INSERT INTO artifact_report_field VALUES (2,'status_id',1,1,30,100,NULL);
@@ -1867,7 +1867,7 @@ INSERT INTO artifact_report_field VALUES (2,'percent_complete',0,1,NULL,80,NULL)
 INSERT INTO artifact_report_field VALUES (2,'artifact_id',0,1,NULL,1,NULL);
 INSERT INTO artifact_report_field VALUES (3,'category_id',1,0,10,NULL,NULL);
 INSERT INTO artifact_report_field VALUES (3,'status_id',1,0,30,NULL,NULL);
-INSERT INTO artifact_report_field VALUES (3,'summary',0,1,NULL,20,NULL);
+INSERT INTO artifact_report_field VALUES (3,'summary',0,0,NULL,20,NULL);
 INSERT INTO artifact_report_field VALUES (3,'open_date',0,1,NULL,30,NULL);
 INSERT INTO artifact_report_field VALUES (3,'submitted_by',0,1,NULL,50,NULL);
 INSERT INTO artifact_report_field VALUES (3,'severity',0,1,NULL,NULL,NULL);
