@@ -82,7 +82,6 @@ foreach($dar as $row) {
     if ($request->get('edit') == $row['id']) {
         echo '<select name="followers['. $row['id'] .'][types][]" size="5" multiple="multiple">';
         echo '<option value="'. SystemEvent::STATUS_NEW .'"     '. (in_array(SystemEvent::STATUS_NEW    , $types) ? 'selected="true"' : '') .'">'. SystemEvent::STATUS_NEW     .'</option>';
-        echo '<option value="'. SystemEvent::STATUS_RUNNING .'" '. (in_array(SystemEvent::STATUS_RUNNING, $types) ? 'selected="true"' : '') .'">'. SystemEvent::STATUS_RUNNING .'</option>';
         echo '<option value="'. SystemEvent::STATUS_DONE .'"    '. (in_array(SystemEvent::STATUS_DONE   , $types) ? 'selected="true"' : '') .'">'. SystemEvent::STATUS_DONE    .'</option>';
         echo '<option value="'. SystemEvent::STATUS_WARNING .'" '. (in_array(SystemEvent::STATUS_WARNING, $types) ? 'selected="true"' : '') .'">'. SystemEvent::STATUS_WARNING .'</option>';
         echo '<option value="'. SystemEvent::STATUS_ERROR .'"   '. (in_array(SystemEvent::STATUS_ERROR  , $types) ? 'selected="true"' : '') .'">'. SystemEvent::STATUS_ERROR   .'</option>';
@@ -107,7 +106,6 @@ if (!$request->get('edit')) {
     echo '</td><td>';
     echo '<select name="new_followers[types][]" size="5" multiple="multiple">';
     echo '<option value="'. SystemEvent::STATUS_NEW .'"     >'. SystemEvent::STATUS_NEW     .'</option>';
-    echo '<option value="'. SystemEvent::STATUS_RUNNING .'" >'. SystemEvent::STATUS_RUNNING .'</option>';
     echo '<option value="'. SystemEvent::STATUS_DONE .'"    >'. SystemEvent::STATUS_DONE    .'</option>';
     echo '<option value="'. SystemEvent::STATUS_WARNING .'" selected="true">'. SystemEvent::STATUS_WARNING .'</option>';
     echo '<option value="'. SystemEvent::STATUS_ERROR .'"   selected="true">'. SystemEvent::STATUS_ERROR   .'</option>';
