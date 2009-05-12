@@ -426,13 +426,15 @@ sub mail_notification {
     if ($SENDMAIL ne '')
     {
 	my ($comma_names) = join (', ', split (/\s+/, $names));
+        # Encode fullname
+        $encfullname = encode('MIME-Q', $fullname);
 	unshift (@text,
 		 "To: $comma_names",
 		 "Subject: $subject",
 		 "Reply-to: $mailname",
 		 "Content-type: text/plain; charset=utf-8",
 		 ''); # We need this blank line before the message body.
-	open (MAIL, "| $SENDMAIL -bm -F\"$fullname\" $names");
+	open (MAIL, "| $SENDMAIL -bm -F\"$encfullname\" $names");
     }
     else
     {
@@ -663,7 +665,6 @@ else
     }
     $mailname = "$login\@$hostdomain";
 }
-
 $cvsroot = $ENV{'CVSROOT'};
 $do_status = 1;
 $modulename = "";
