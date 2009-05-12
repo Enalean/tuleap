@@ -1,9 +1,0 @@
-#
-# Increase PHP max execution time for the export
-# database because it can last a long time
-# add also higher memory limit as sdi has many bugs
-# to export
-#
-
-php_value max_execution_time "3600"
-php_value memory_limit "256M"

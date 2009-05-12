@@ -1,7 +1,0 @@
-<!--
-//
-// Copyright (c) Xerox Corporation, CodeX, Codendi 2007-2008.
-// This file is licensed under the GNU General Public License version 2. See the file COPYING.
-//
--->
-<p>Avant de fournir des informations spécifiques par rapport à votre nouveau projet choississez un patron parmi les projets de patron disponible. Votre nouveau projet sera configuré exactement de la même manière que le patron choisi.</p>

@@ -1,0 +1,22 @@
+Codex Packaging
+
+Before using this Makefile, try to have the EPEL repository enabled and the package RpmDevTools on your system.
+You must also install all Codex Dependencies.
+=> You can run the tools/codendi_deps.sh script, it will enable EPEL repo, install RpmDevTools and all Codex Dependencies. (You have to be root, it use yum)
+
+To test the prototype, please run :
+[user@domain]$ make -f Makefile
+
+And follow the menu.
+
+You have to Checkout the CodeX's source than you can test the prototype
+
+to Checkout sources, just run this command :
+[user@domain]$ make -f Makefile checkout
+
+to build, install and test Codex, just run this command :
+[user@domain]$ make -f Makefile codendi
+
+Open your browser and enjoy it !
+
+-- Wael Ammar <wael.ammar@st.com>
