@@ -848,7 +848,7 @@ $CP $INSTALL_DIR/src/utils/backup_job /usr/lib/codendi/bin
 $CHOWN root.root /usr/lib/codendi/bin/backup_job
 $CHMOD 740 /usr/lib/codendi/bin/backup_job
 $CP $INSTALL_DIR/src/utils/svn/backup_subversion.sh /usr/lib/codendi/bin
-$CHOWN root.root /usr/lib/codendi/bin/backup_subversion.sh
+$CHOWN root:root /usr/lib/codendi/bin/backup_subversion.sh
 $CHMOD 740 /usr/lib/codendi/bin/backup_subversion.sh
 
 # replace string patterns in local.inc
@@ -875,7 +875,8 @@ substitute '/etc/httpd/conf/httpd.conf' '%sys_ip_address%' "$sys_ip_address"
 # replace strings in libnss-mysql config files
 substitute '/etc/libnss-mysql.cfg' '%sys_dbauth_passwd%' "$dbauth_passwd" 
 substitute '/etc/libnss-mysql-root.cfg' '%sys_dbauth_passwd%' "$dbauth_passwd" 
-$CHMOD 600 /etc/libnss-mysql.cfg
+$CHOWN root:root /etc/libnss-mysql.cfg /etc/libnss-mysql-root.cfg
+$CHMOD 644 /etc/libnss-mysql.cfg
 $CHMOD 600 /etc/libnss-mysql-root.cfg
 
 # replace string patterns in munin.conf (for MySQL authentication)
@@ -1362,7 +1363,7 @@ $CAT <<'EOF' >/etc/logrotate.d/httpd
 }
 
 EOF
-$CHOWN root.root /etc/logrotate.d/httpd
+$CHOWN root:root /etc/logrotate.d/httpd
 $CHMOD 644 /etc/logrotate.d/httpd
 
 
@@ -1383,7 +1384,7 @@ $CAT <<'EOF' >/etc/logrotate.d/vsftpd.log
     endscript
 }
 EOF
-$CHOWN root.root /etc/logrotate.d/vsftpd.log
+$CHOWN root:root /etc/logrotate.d/vsftpd.log
 $CHMOD 644 /etc/logrotate.d/vsftpd.log
 
 ##############################################

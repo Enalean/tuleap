@@ -516,7 +516,7 @@ do
   $CP $f /usr/lib/codendi/bin
   $CHOWN codendiadm.codendiadm /usr/lib/codendi/bin/$f
 done
-$CHOWN root.root /usr/lib/codendi/bin/fileforge
+$CHOWN root:root /usr/lib/codendi/bin/fileforge
 $CHMOD u+s /usr/lib/codendi/bin/fileforge
 
 
@@ -560,7 +560,8 @@ $RM /etc/httpd/conf.d/codex_aliases.conf
 # replace strings in libnss-mysql config files
 substitute '/etc/libnss-mysql.cfg' '%sys_dbauth_passwd%' "$dbauth_passwd" 
 substitute '/etc/libnss-mysql-root.cfg' '%sys_dbauth_passwd%' "$dbauth_passwd" 
-$CHMOD 600 /etc/libnss-mysql.cfg
+$CHOWN root:root /etc/libnss-mysql.cfg /etc/libnss-mysql-root.cfg
+$CHMOD 644 /etc/libnss-mysql.cfg
 $CHMOD 600 /etc/libnss-mysql-root.cfg
 
 # Update nsswitch.conf to use libnss-mysql
