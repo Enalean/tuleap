@@ -21,11 +21,9 @@
 <?php
 
 if ($GLOBALS['sys_is_project_public']==1){
-    <select name="is_public"><option value="1" selected="selected">Public</option><option value="0">Private</option>
-</select>;
+    echo '<select name="is_public"><option value="1" selected="selected">Public</option><option value="0">Private</option></select>';
 }else{
-    <select name="is_public"><option value="0" selected="selected">Private</option><option value="1">Public</option>
-</select>;
+    echo '<select name="is_public"><option value="0" selected="selected">Private</option><option value="1">Public</option></select>';
 }
 ?>
 </fieldset>
