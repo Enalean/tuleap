@@ -36,6 +36,7 @@ require_once('common/system_event/include/SystemEvent_MAILING_LIST_DELETE.class.
 require_once('common/system_event/include/SystemEvent_CVS_IS_PRIVATE.class.php');
 require_once('common/system_event/include/SystemEvent_PROJECT_IS_PRIVATE.class.php');
 require_once('common/system_event/include/SystemEvent_SERVICE_USAGE_SWITCH.class.php');
+require_once('common/system_event/include/SystemEvent_UGROUP_MODIFY.class.php');
 
 // Backends
 require_once('common/backend/Backend.class.php');
@@ -193,6 +194,7 @@ class SystemEventManager {
             // only needs to be called once per project 
             //(TODO: cache information to avoid multiple file edition? Or consume all other UGROUP_MODIFY events?)
             foreach ($params['ugroups'] as $ugroup_id) {
+                $params['ugroup_id'] = $ugroup_id;
                 $this->createEvent(SystemEvent::UGROUP_MODIFY,
                                    $this->concatParameters($params, array('group_id', 'ugroup_id')),
                                    SystemEvent::PRIORITY_MEDIUM);
@@ -223,15 +225,16 @@ class SystemEventManager {
      */
     protected function createEvent($type, $parameters, $priority) {
         if ($id = $this->dao->store($type, $parameters, $priority, SystemEvent::STATUS_NEW, $_SERVER['REQUEST_TIME'])) {
-            $sysevent = new SystemEvent($id, 
-                                        $type, 
-                                        $parameters,
-                                        $priority, 
-                                        SystemEvent::STATUS_NEW, 
-                                        $_SERVER['REQUEST_TIME'], 
-                                        null, 
-                                        null,
-                                        null);
+            $klass = 'SystemEvent_'. $type;
+            $sysevent = new $klass($id, 
+                                   $type, 
+                                   $parameters,
+                                   $priority, 
+                                   SystemEvent::STATUS_NEW, 
+                                   $_SERVER['REQUEST_TIME'], 
+                                   null, 
+                                   null,
+                                   null);
             $sysevent->notify();
         }
     }

@@ -27,6 +27,19 @@
 */
 class SystemEvent_CVS_IS_PRIVATE extends SystemEvent {
     
+    /**
+     * Verbalize the parameters so they are readable and much user friendly in 
+     * notifications
+     * 
+     * @return string
+     */
+    public function verbalizeParameters() {
+        $txt = '';
+        list($group_id, $cvs_is_private) = $this->getParametersAsArray();
+        $txt .= 'project: #'. $group_id .', cvs is private: '. ($cvs_is_private ? 'true' : 'false');
+        return $txt;
+    }
+    
     /** 
      * Process stored event
      */

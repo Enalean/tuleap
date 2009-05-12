@@ -27,6 +27,19 @@
 */
 class SystemEvent_SERVICE_USAGE_SWITCH extends SystemEvent {
     
+    /**
+     * Verbalize the parameters so they are readable and much user friendly in 
+     * notifications
+     * 
+     * @return string
+     */
+    public function verbalizeParameters() {
+        $txt = '';
+        list($group_id, $shortname, $is_used) = $this->getParametersAsArray();
+        $txt .= 'project: #'. $group_id .', service: '. $shortname .', service is used: '. ($is_used ? 'true' : 'false');
+        return $txt;
+    }
+    
     /** 
      * Process stored event
      */

@@ -25,6 +25,16 @@
 */
 class SystemEvent_SYSTEM_CHECK extends SystemEvent {
     
+    /**
+     * Verbalize the parameters so they are readable and much user friendly in 
+     * notifications
+     * 
+     * @return string
+     */
+    public function verbalizeParameters() {
+        return '-';
+    }
+    
     /** 
      * Process stored event
      */

@@ -27,6 +27,19 @@
 */
 class SystemEvent_MEMBERSHIP_DELETE extends SystemEvent {
     
+    /**
+     * Verbalize the parameters so they are readable and much user friendly in 
+     * notifications
+     * 
+     * @return string
+     */
+    public function verbalizeParameters() {
+        $txt = '';
+        list($group_id, $user_id) = $this->getParametersAsArray();
+        $txt .= 'project: #'. $group_id .', user to add: #'. $user_id;
+        return $txt;
+    }
+    
     /** 
      * Process stored event
      */

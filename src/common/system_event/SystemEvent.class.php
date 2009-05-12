@@ -24,10 +24,10 @@ require_once('common/dao/SystemEventsFollowersDao.class.php');
 require_once('common/mail/Mail.class.php');
 
 /**
-* System Event class
-*
-*/
-class SystemEvent {
+ * System Event class
+ *
+ */
+abstract class SystemEvent {
 
     protected $id;
     protected $type;
@@ -109,7 +109,15 @@ class SystemEvent {
     function getParameters() {
         return $this->parameters;
     }
-
+    
+    /**
+     * Verbalize the parameters so they are readable and much user friendly in 
+     * notifications
+     * 
+     * @return string
+     */
+    public abstract function verbalizeParameters();
+    
     function getParametersAsArray() {
         return explode(self::PARAMETER_SEPARATOR, $this->parameters);
     }
@@ -265,7 +273,7 @@ class SystemEvent {
             $m->setBody("
 Event:        #{$this->getId()}
 Type:         {$this->getType()}
-Parameters:   {$this->getParameters()}
+Parameters:   {$this->verbalizeParameters()}
 Priority:     {$this->getPriority()}
 Status:       {$this->getStatus()}
 Log:          {$this->getLog()}

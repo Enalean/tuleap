@@ -18,6 +18,19 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 class SystemEvent_USER_EMAIL_CHANGED extends SystemEvent {
+    
+    /**
+     * Verbalize the parameters so they are readable and much user friendly in 
+     * notifications
+     * 
+     * @return string
+     */
+    public function verbalizeParameters() {
+        $txt = '';
+        $txt .= 'user: #'. $this->getIdFromParam($this->parameters);
+        return $txt;
+    }
+    
     public function process() {
 
         // Need to update aliases

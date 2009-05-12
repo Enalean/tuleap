@@ -27,6 +27,18 @@
 */
 class SystemEvent_MAILING_LIST_DELETE extends SystemEvent {
     
+    /**
+     * Verbalize the parameters so they are readable and much user friendly in 
+     * notifications
+     * 
+     * @return string
+     */
+    public function verbalizeParameters() {
+        $txt = '';
+        $txt .= 'mailing list: #'. $this->getIdFromParam($this->parameters);
+        return $txt;
+    }
+    
     /** 
      * Process stored event
      */

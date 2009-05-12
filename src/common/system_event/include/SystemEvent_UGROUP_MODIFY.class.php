@@ -28,6 +28,19 @@
 */
 class SystemEvent_UGROUP_MODIFY extends SystemEvent {
     
+    /**
+     * Verbalize the parameters so they are readable and much user friendly in 
+     * notifications
+     * 
+     * @return string
+     */
+    public function verbalizeParameters() {
+        $txt = '';
+        list($group_id, $ugroup_id) = $this->getParametersAsArray();
+        $txt .= 'project: #'. $group_id .', ugroup: #'. $ugroup_id;
+        return $txt;
+    }
+    
     /** 
      * Process stored event
      */

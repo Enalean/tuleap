@@ -18,6 +18,19 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 class SystemEvent_EDIT_SSH_KEYS extends SystemEvent {
+    
+    /**
+     * Verbalize the parameters so they are readable and much user friendly in 
+     * notifications
+     * 
+     * @return string
+     */
+    public function verbalizeParameters() {
+        $txt = '';
+        $txt .= 'user: #'. $this->getIdFromParam($this->parameters);
+        return $txt;
+    }
+
     public function process() {
         $user_id = $this->getIdFromParam($this->parameters);
         if ($user = UserManager::instance()->getUserById($user_id)) {
