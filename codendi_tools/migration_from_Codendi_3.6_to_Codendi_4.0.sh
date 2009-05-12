@@ -1622,11 +1622,11 @@ substitute "$ETC_DIR/plugins/IM/etc/database_im.inc" '{__OPENFIRE_DB_NAME__}' "o
 substitute "$ETC_DIR/plugins/IM/etc/database_im.inc" '{__OPENFIRE_DB_PASSWORD__}' "`php -r '\$jive = new SimpleXmlElement(file_get_contents(\"/opt/openfire/conf/openfire.xml\")); echo \$jive->database->defaultProvider->password;'`"
 echo " - modify openfire/conf/openfire.xml"
 substitute "/opt/openfire/conf/openfire.xml" 'org.jivesoftware.openfire.auth.JDBCAuthProvider' "org.jivesoftware.openfire.auth.CodendiJDBCAuthProvider" 
-substitute "/opt/openfire/conf/openfire.xml" '<passwordType>md5</passwordType>' "<passwordType>md5</passwordType><codendiUserSessionIdSQL>SELECT session_hash FROM session WHERE session.user_id = (SELECT user_id FROM user WHERE user.user_name = ?)</codendiUserSessionIdSQL>"
+substitute "/opt/openfire/conf/openfire.xml" '<passwordType>md5<\/passwordType>' "<passwordType>md5</passwordType><codendiUserSessionIdSQL>SELECT session_hash FROM session WHERE session.user_id = (SELECT user_id FROM user WHERE user.user_name = ?)</codendiUserSessionIdSQL>"
 codendification "/opt/openfire/conf/openfire.xml"
-echo " - copy Codendi Auth jar file into openfire lib dir
+echo " - copy Codendi Auth jar file into openfire lib dir"
 $CP $INSTALL_DIR/plugins/IM/include/jabbex_api/installation/resources/codendi_auth.jar /opt/openfire/lib/.
-echo " - install monitoring plugin (copy monitoring plugin jar in openfire plugin dir)
+echo " - install monitoring plugin (copy monitoring plugin jar in openfire plugin dir)"
 cd ${RPMS_DIR}/openfire
 newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
 $CP ${newest_rpm}/monitoring.jar /opt/openfire/plugins
