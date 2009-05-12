@@ -205,7 +205,7 @@ class CodeX_HTMLPurifier {
         case CODEX_PURIFIER_BASIC:
             $clean = nl2br($this->_makeLinks(htmlentities($html, ENT_QUOTES, 'UTF-8'), $groupId));
             break;
-        case CODENDI_PURIFIER_BASIC_NOBR:
+        case CODEX_PURIFIER_BASIC_NOBR:
             $clean = $this->_makeLinks(htmlentities($html, ENT_QUOTES, 'UTF-8'), $groupId);
             break;
 
