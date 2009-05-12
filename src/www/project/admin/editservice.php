@@ -141,9 +141,15 @@ if ($service['scope'] == 'project') {
     echo '<input type="checkbox" name="is_in_iframe" value="1" '.( $service['is_in_iframe'] ? 'checked="checked"' : '' ).' />';
     echo '</td></tr>';
 }
+
 echo '<tr><td><a href="#" title="'.$Language->getText('project_admin_editservice','pos_in_s_bar').'">'.$Language->getText('project_admin_editservice','screen_rank').':&nbsp;</a><font color="red">*</font></td><td>';
-echo '<input type="text" name="rank" size="5" maxlength="5" value="'.$service['rank'].'">';
+if ($service['short_name']=='summary'){
+    echo '<input type="text" name="rank" size="5" maxlength="5" value="'.$service['rank'].'" readonly>';
+}else{
+    echo '<input type="text" name="rank" size="5" maxlength="5" value="'.$service['rank'].'">';
+}
 echo '</td></tr>';
+
 
 //{{{ Distributed architecture
 if (in_array($service['short_name'], array('file', 'svn'))) {

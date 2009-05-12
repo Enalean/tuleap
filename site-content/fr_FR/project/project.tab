@@ -453,6 +453,8 @@ project_admin_servicebar	rank_on_screen	Rang à l'écran
 project_admin_servicebar	del?	Détruire ?
 project_admin_servicebar	home_page	Site Web
 project_admin_servicebar	cant_create_s_for_p	ERREUR - Impossible de créer le service pour le projet $1
+project_admin_servicebar	bad_rank	ERREUR - Le rang doit être supérieur à $1.
+
 #
 #-----------------------------------------------
 # Script: SF/www/project/admin/ugroup.php
