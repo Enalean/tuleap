@@ -854,7 +854,7 @@ class Layout extends Response {
                     <title>'. $GLOBALS['sys_name'] . ($params['title'] ? ':' : '') . $params['title'] .'</title>
                     <link rel="SHORTCUT ICON" href="'. $this->imgroot . 'favicon.ico' .'">';
         echo $this->displayJavascriptElements();
-        echo $this->displayStylesheetElements();
+        echo $this->displayStylesheetElements($params);
         echo $this->displaySyndicationElements();
         echo '</head>';
     }
@@ -902,7 +902,7 @@ class Layout extends Response {
     /**
      * Display all the stylesheets for the current page
      */
-    public function displayStylesheetElements() {
+    public function displayStylesheetElements($params) {
         // Stylesheet external files
         echo '<link rel="stylesheet" type="text/css" href="/themes/common/css/style.css" />';
         echo '<link rel="stylesheet" type="text/css" href="'. util_get_css_theme() .'" />';
