@@ -54,10 +54,41 @@ echo '<h2>'.  $hp->purify($title, CODENDI_PURIFIER_CONVERT_HTML)  .'</h2>';
 $se = SystemEventManager::instance();
 $offset = $request->get('offset') ? (int)$request->get('offset') : 0;
 $limit  = 50;
-echo $se->fetchLastEventsStatus($offset, $limit, true);
+$full   = true;
+$filter = $request->get('filter_status');
+if (!$filter) {
+    $filter = array(
+        SystemEvent::STATUS_NEW, 
+        SystemEvent::STATUS_RUNNING, 
+        SystemEvent::STATUS_DONE, 
+        SystemEvent::STATUS_WARNING, 
+        SystemEvent::STATUS_ERROR,
+    );
+}
+echo '<form action="" method="POST">';
+echo '<fieldset>';
+echo '<legend>Filter:</legend>';
+echo '<input type="hidden" name="filter_status[]" value="'.  $hp->purify(SystemEvent::STATUS_NONE, CODENDI_PURIFIER_CONVERT_HTML)  .'" />';
+foreach(array(
+    SystemEvent::STATUS_NEW, 
+    SystemEvent::STATUS_RUNNING, 
+    SystemEvent::STATUS_DONE, 
+    SystemEvent::STATUS_WARNING, 
+    SystemEvent::STATUS_ERROR,) as $status
+) {
+    echo '<input type="checkbox" 
+                 name="filter_status[]" 
+                 value="'.  $hp->purify($status, CODENDI_PURIFIER_CONVERT_HTML)  .'" 
+                 id="filter_'.  $hp->purify($status, CODENDI_PURIFIER_CONVERT_HTML)  .'"
+                 '. (in_array($status, $filter) ? 'checked="checked"' : '') .'
+                 />';
+    echo '<label for="filter_'.  $hp->purify($status, CODENDI_PURIFIER_CONVERT_HTML)  .'">'.  $hp->purify($status, CODENDI_PURIFIER_CONVERT_HTML)  .'</label> ';
+}
+echo '<input type="submit" value="'. $GLOBALS['Language']->getText('global', 'btn_submit') .'" />';
+echo '</fieldset>';
+echo $se->fetchLastEventsStatus($offset, $limit, $full, $filter);
 
 echo '<h3>'. $Language->getText('admin_system_events', 'notifications') .'</h3>';
-echo '<form action="" method="POST">';
 echo $GLOBALS['Language']->getText('admin_system_events', 'send_email');
 $dar = $sefdao->searchAll();
 if (!$dar->rowCount()) {

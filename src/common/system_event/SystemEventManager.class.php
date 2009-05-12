@@ -329,11 +329,14 @@ class SystemEventManager {
     
     /**
      * Compute a html table to display the status of the last n events
-     * @param int $offset the offset of the pagination
-     * @param int $limit the number of event to includ in the table
-     * @param boolean $full display a full table or only a summary
+     * 
+     * @param int     $offset        the offset of the pagination
+     * @param int     $limit         the number of event to includ in the table
+     * @param boolean $full          display a full table or only a summary
+     * @param array   $filter_status the filter on status
+     * @return string html
      */
-    public function fetchLastEventsStatus($offset = 0, $limit = 10, $full = false) {
+    public function fetchLastEventsStatus($offset = 0, $limit = 10, $full = false, $filter_status = false) {
         $hp = Codendi_HTMLPurifier::instance();
         $html = '';
         $html .= '<table width="100%">';
@@ -355,8 +358,17 @@ class SystemEventManager {
         }
         $html .= '<tbody>';
         
+        if (!$filter_status) {
+            $filter_status = array(
+                SystemEvent::STATUS_NEW, 
+                SystemEvent::STATUS_RUNNING, 
+                SystemEvent::STATUS_DONE, 
+                SystemEvent::STATUS_WARNING, 
+                SystemEvent::STATUS_ERROR,
+            );
+        }
         $i = 0;
-        foreach($this->dao->searchLastEvents($offset, $limit) as $row) {
+        foreach($this->dao->searchLastEvents($offset, $limit, $filter_status) as $row) {
             $html .= '<tr class="'. html_get_alt_row_color($i++) .'">';
             
             //id

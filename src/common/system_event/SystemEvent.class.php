@@ -59,6 +59,7 @@ abstract class SystemEvent {
     const SERVICE_USAGE_SWITCH  = "SERVICE_USAGE_SWITCH";
  
     // Define status value (in sync with DB enum)
+    const STATUS_NONE       = "NONE";
     const STATUS_NEW        = "NEW";
     const STATUS_RUNNING    = "RUNNING";
     const STATUS_DONE       = "DONE";
