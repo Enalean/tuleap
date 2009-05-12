@@ -1155,11 +1155,11 @@ for ($i = 0; ; $i++) {
 	push(@text, "Log message:");
 	push(@text, @log_txt);
 	push(@text, "");
-        # Codendi: extract references from log message
-        &extract_xrefs(@log_txt)
     }
     if ($db_track) {
-      &db_checkins_add($i, $commit_id, @log_txt);
+        # Codendi: extract references from log message
+        &extract_xrefs(@log_txt)
+        &db_checkins_add($i, $commit_id, @log_txt);
     }
     @url_txt = &read_logfile("$URL_FILE.$i.$id", "");
     if ($#url_txt >= 0) {
