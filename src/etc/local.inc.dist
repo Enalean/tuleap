@@ -160,7 +160,7 @@ $cvslock_prefix      = "/var/lock/cvs";           // prefix to add to the cvs lo
 $cvs_root_allow_file = "/etc/cvs_root_allow";// File containing allowed cvs roots (regular CVS *and* CVSnt)
 $cvsnt_config_file   = "/etc/cvsnt/PServer"; // File containing CVSnt configuration
 $cvs_cmd             = "/usr/bin/cvs";       // CVS binary
-$cvs_hook_tmp_dir    = "/var/run/log_accum"; // temporary directory used by CVS commit hooks
+$cvs_hook_tmp_dir    = "/var/run/log_accum"; // temporary directory used by CVS commit hooks. Must be similar in commit_prep
 
 // Subversion paths
 $svn_prefix    = "/var/lib/codendi/svnroot";// prefix to add to the subversion root directory
