@@ -1637,12 +1637,6 @@ $CP ${newest_rpm}/monitoring.jar /opt/openfire/plugins
 # - /var/lib/mysql/codex-bin*
 # NTY: Why? There are already codendi-bin* after migration in /var/lib/mysql/...
 
-# Add common stylesheet in custom themes
-
-#custom themes
-#=> no more images
-#=> refactoring in common/layout instead of www/include
-
 #
 # TODO CODENDIFICATION:
 #
@@ -1694,18 +1688,11 @@ $CHOWN -R codendiadm.codendiadm $INSTALL_DIR/downloads
 
 todo "Note to Codendi Developers: "
 todo " - Some deprecated functions have been removed: group_getname, group_getunixname, group_get_result, group_get_object, project_get_object"
-
-
-
-
-
-
-
-
-
-
-
-
+todo " - Themes have been enhanced. Images and css inherit from a common theme:"
+todo "   + images not found in your custom theme will be taken from common."
+todo "   + css rules can be overriden by your theme."
+todo "   + => this will ease the maintenance of your theme (no need to duplicate images, no need to modify stylesheets)"
+todo " - Layout has been refactored: moved in src/common, headers management have been enhanced, ..."
 
 
 
