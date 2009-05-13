@@ -53,3 +53,35 @@ var codendi = {
         return codendi.locales[key1][key2];
     }
 }
+
+
+
+document.observe('dom:loaded', function() {
+    //search togglers
+    $$('.toggler', '.toggler-hide', '.toggler-noajax', '.toggler-hide-noajax').each(function (toggler) {
+        //prehide or preshow depending on the initial state of the toggler
+        toggler.nextSiblings().invoke(toggler.hasClassName('toggler-hide') || toggler.hasClassName('toggler-hide-noajax')  ? 'hide' : 'show');
+        
+        toggler.observe('click', function() {
+            //toggle next siblings
+            toggler.nextSiblings().invoke(toggler.hasClassName('toggler') || toggler.hasClassName('toggler-noajax') ? 'hide' : 'show');
+            
+            //toggle the state
+            if (toggler.hasClassName('toggler-noajax') || toggler.hasClassName('toggler-hide-noajax')) {
+                toggler.toggleClassName('toggler-noajax')
+                       .toggleClassName('toggler-hide-noajax');
+            } else {
+                toggler.toggleClassName('toggler')
+                       .toggleClassName('toggler-hide');
+                //save the state with ajax only if the toggler has an id
+                if (toggler.id) {
+                    new Ajax.Request('/toggler.php', {
+                            parameters: {
+                                id: toggler.id
+                            }
+                    });
+                }
+            }
+        });
+    });
+});

@@ -993,7 +993,7 @@ td.forum_reference_separator {
 }
 /* }}} */
 
-/*Wiki*/
+/* {{{ Wiki */
 table.ServiceMenu {
   width: 100%;
 
@@ -1017,3 +1017,22 @@ ul.ServiceMenu li {
 ul.ServiceMenu li.current {
   font-weight: bold;
 }
+/* }}} */
+
+/* {{{ Toggler */
+.toggler-noajax, .toggler-hide-noajax,
+.toggler, .toggler-hide {
+    background-position:left middle;
+    background-repeat:no-repeat;
+    padding-left:16px;
+    cursor:pointer;
+}
+.toggler,
+.toggler-noajax {
+    background-image:url('../images/ic/toggle_minus.png');
+}
+.toggler-hide,
+.toggler-hide-noajax {
+    background-image:url('../images/ic/toggle_plus.png');
+}
+/* }}} */
