@@ -407,6 +407,7 @@ $CP /etc/aliases.codex /etc/aliases.codex_36
 $MV /etc/aliases.codex /etc/aliases.codendi
 substitute '/etc/mail/sendmail.cf' '\/etc\/aliases.codex' "/etc/aliases.codendi"
 
+codendification /etc/shells
 codendification "$ETC_DIR/conf/local.inc"
 codendification "$ETC_DIR/conf/database.inc"
 substitute "$ETC_DIR/conf/local.inc" "sys_themedefault\s*=\s*'CodendiTab'" "sys_themedefault = 'CodeXTab'"
@@ -1680,11 +1681,8 @@ cd /usr/lib/codendi/bin
 $CHOWN codendiadm.codendiadm commit-email.pl codendi_svn_pre_commit.php
 $CHMOD 755 commit-email.pl codendi_svn_pre_commit.php
 
-# TODO: replace codex by codendi in /etc/shells
 
 
-
-#
 
 
 ##############################################
