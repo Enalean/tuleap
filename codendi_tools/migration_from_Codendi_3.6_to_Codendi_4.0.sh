@@ -1620,7 +1620,7 @@ $CP $INSTALL_DIR/plugins/IM/include/jabbex_api/installation/resources/database_i
 substitute "$ETC_DIR/plugins/IM/etc/database_im.inc" '{__OPENFIRE_DB_HOST__}' "$SYS_DEFAULT_DOMAIN"
 substitute "$ETC_DIR/plugins/IM/etc/database_im.inc" '{__OPENFIRE_DB_USER__}' "openfireadm"
 substitute "$ETC_DIR/plugins/IM/etc/database_im.inc" '{__OPENFIRE_DB_NAME__}' "openfire"
-substitute "$ETC_DIR/plugins/IM/etc/database_im.inc" '{__OPENFIRE_DB_PASSWORD__}' "`php -r '\$jive = new SimpleXmlElement(file_get_contents(\"/opt/openfire/conf/openfire.xml\")); echo \$jive->database->defaultProvider->password;'`"
+substitute "$ETC_DIR/plugins/IM/etc/database_im.inc" '{__OPENFIRE_DB_PWD__}' "`php -r '\$jive = new SimpleXmlElement(file_get_contents(\"/opt/openfire/conf/openfire.xml\")); echo \$jive->database->defaultProvider->password;'`"
 echo " - modify openfire/conf/openfire.xml"
 substitute "/opt/openfire/conf/openfire.xml" 'org.jivesoftware.openfire.auth.JDBCAuthProvider' "org.jivesoftware.openfire.auth.CodendiJDBCAuthProvider" 
 substitute "/opt/openfire/conf/openfire.xml" '<passwordType>md5<\/passwordType>' "<passwordType>md5</passwordType><codendiUserSessionIdSQL>SELECT session_hash FROM session WHERE session.user_id = (SELECT user_id FROM user WHERE user.user_name = ?)</codendiUserSessionIdSQL>"
