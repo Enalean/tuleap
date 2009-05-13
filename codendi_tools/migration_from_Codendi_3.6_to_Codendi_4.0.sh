@@ -408,6 +408,10 @@ $MV /etc/aliases.codex /etc/aliases.codendi
 substitute '/etc/mail/sendmail.cf' '\/etc\/aliases.codex' "/etc/aliases.codendi"
 
 codendification /etc/shells
+
+if [ -f /etc/cvsnt/PServer ]; then
+    codendification /etc/cvsnt/PServer
+fi
 codendification "$ETC_DIR/conf/local.inc"
 codendification "$ETC_DIR/conf/database.inc"
 substitute "$ETC_DIR/conf/local.inc" "sys_themedefault\s*=\s*'CodendiTab'" "sys_themedefault = 'CodeXTab'"
@@ -1640,9 +1644,9 @@ $CP ${newest_rpm}/monitoring.jar /opt/openfire/plugins
 #
 # TODO CODENDIFICATION:
 #
-# - replace "CODEX BLOCK" by "CODENDI BLOCK" in /etc/cvsnt/PServer
 
-# Ask to make a manual update (-u???) on /usr/share/codedni as codendiadm to get new realm 
+
+# Ask to make a manual update (-u???) on /usr/share/codendi as codendiadm to get new realm 
 #??? Mailman: codex-admin??
 # - Warn admins that CODEX_LOCAL_INC was replaced by CODENDI_LOCAL_INC
 # - OpenFire install.
