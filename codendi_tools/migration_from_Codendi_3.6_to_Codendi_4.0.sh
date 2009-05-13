@@ -1635,17 +1635,13 @@ $CP ${newest_rpm}/monitoring.jar /opt/openfire/plugins
 
 # Codendification:
 # - /var/lib/mysql/codex-bin*
-
-# TODO migrate CodeX* themes (in file and in db and in plugins)
+# NTY: Why? There are already codendi-bin* after migration in /var/lib/mysql/...
 
 # Add common stylesheet in custom themes
 
 #custom themes
 #=> no more images
 #=> refactoring in common/layout instead of www/include
-
-#TODO Clean-up CodendiBlack (fix blue labels on IE, ...)
-#TODO remove reserved names javascript
 
 #
 # TODO CODENDIFICATION:
@@ -1654,7 +1650,6 @@ $CP ${newest_rpm}/monitoring.jar /opt/openfire/plugins
 
 # Ask to make a manual update (-u???) on /usr/share/codedni as codendiadm to get new realm 
 #??? Mailman: codex-admin??
-# - MySQL: 'codex' db, codexadm user and grants on codex DB.
 # - Warn admins that CODEX_LOCAL_INC was replaced by CODENDI_LOCAL_INC
 # - OpenFire install.
 # - Migrate all CodeX in /etc/codendi (site-content, etc.)
