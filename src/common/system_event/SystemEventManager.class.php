@@ -37,6 +37,7 @@ require_once('common/system_event/include/SystemEvent_CVS_IS_PRIVATE.class.php')
 require_once('common/system_event/include/SystemEvent_PROJECT_IS_PRIVATE.class.php');
 require_once('common/system_event/include/SystemEvent_SERVICE_USAGE_SWITCH.class.php');
 require_once('common/system_event/include/SystemEvent_UGROUP_MODIFY.class.php');
+require_once('common/system_event/include/SystemEvent_EDIT_SSH_KEYS.class.php');
 
 // Backends
 require_once('common/backend/Backend.class.php');
@@ -121,61 +122,61 @@ class SystemEventManager {
     function addSystemEvent($event, $params) {
         //$event = constant(strtoupper($event));
         switch ($event) {
-        case Event::SYSTEM_CHECK:
+        case Event::TYPE_SYSTEM_CHECK:
             // TODO: check that there is no already existing system_check job?
-            $this->createEvent(SystemEvent::SYSTEM_CHECK,
+            $this->createEvent(SystemEvent::TYPE_SYSTEM_CHECK,
                                '',
                                SystemEvent::PRIORITY_LOW);
             break;
-        case Event::EDIT_SSH_KEYS:
-            $this->createEvent(SystemEvent::EDIT_SSH_KEYS,
+        case Event::TYPE_EDIT_SSH_KEYS:
+            $this->createEvent(SystemEvent::TYPE_EDIT_SSH_KEYS,
                                $params['user_id'],
                                SystemEvent::PRIORITY_MEDIUM);
             break;
-        case Event::USER_EMAIL_CHANGED:
-            $this->createEvent(SystemEvent::USER_EMAIL_CHANGED,
+        case Event::TYPE_USER_EMAIL_CHANGED:
+            $this->createEvent(SystemEvent::TYPE_USER_EMAIL_CHANGED,
                                $params['user_id'],
                                SystemEvent::PRIORITY_LOW);
             break;
         case 'register_project_creation':
-            $this->createEvent(SystemEvent::PROJECT_CREATE,
+            $this->createEvent(SystemEvent::TYPE_PROJECT_CREATE,
                                $params['group_id'],
                                SystemEvent::PRIORITY_MEDIUM);
             break;
         case 'project_is_deleted':
-            $this->createEvent(SystemEvent::PROJECT_DELETE,
+            $this->createEvent(SystemEvent::TYPE_PROJECT_DELETE,
                                $params['group_id'],
                                SystemEvent::PRIORITY_LOW);
             break;
         case 'project_admin_add_user':
-            $this->createEvent(SystemEvent::MEMBERSHIP_CREATE, 
+            $this->createEvent(SystemEvent::TYPE_MEMBERSHIP_CREATE, 
                                $this->concatParameters($params, array('group_id', 'user_id')), 
                                SystemEvent::PRIORITY_MEDIUM);
             break;
         case 'project_admin_remove_user':
-            $this->createEvent(SystemEvent::MEMBERSHIP_DELETE, 
+            $this->createEvent(SystemEvent::TYPE_MEMBERSHIP_DELETE, 
                                $this->concatParameters($params, array('group_id', 'user_id')), 
                                SystemEvent::PRIORITY_MEDIUM);
             break;
         case 'project_admin_activate_user':
-            $this->createEvent(SystemEvent::USER_CREATE,
+            $this->createEvent(SystemEvent::TYPE_USER_CREATE,
                                $params['user_id'],
                                SystemEvent::PRIORITY_MEDIUM);
             break;
         case 'project_admin_delete_user':
-            $this->createEvent(SystemEvent::USER_DELETE,
+            $this->createEvent(SystemEvent::TYPE_USER_DELETE,
                                $params['user_id'],
                                SystemEvent::PRIORITY_LOW);
             break;
         case 'cvs_is_private':
             $params['cvs_is_private'] = $params['cvs_is_private'] ? 1 : 0;
-            $this->createEvent(SystemEvent::CVS_IS_PRIVATE, 
+            $this->createEvent(SystemEvent::TYPE_CVS_IS_PRIVATE, 
                                $this->concatParameters($params, array('group_id', 'cvs_is_private')), 
                                SystemEvent::PRIORITY_MEDIUM);
             break;
         case 'project_is_private':
             $params['project_is_private'] = $params['project_is_private'] ? 1 : 0;
-            $this->createEvent(SystemEvent::PROJECT_IS_PRIVATE, 
+            $this->createEvent(SystemEvent::TYPE_PROJECT_IS_PRIVATE, 
                                $this->concatParameters($params, array('group_id', 'project_is_private')), 
                                SystemEvent::PRIORITY_MEDIUM);
             break;
@@ -184,7 +185,7 @@ class SystemEventManager {
         case 'project_admin_ugroup_remove_user':
         case 'project_admin_ugroup_add_user':
         case 'project_admin_ugroup_deletion':
-            $this->createEvent(SystemEvent::UGROUP_MODIFY,
+            $this->createEvent(SystemEvent::TYPE_UGROUP_MODIFY,
                                $this->concatParameters($params, array('group_id', 'ugroup_id')),
                                SystemEvent::PRIORITY_MEDIUM);
             break;
@@ -195,23 +196,23 @@ class SystemEventManager {
             //(TODO: cache information to avoid multiple file edition? Or consume all other UGROUP_MODIFY events?)
             foreach ($params['ugroups'] as $ugroup_id) {
                 $params['ugroup_id'] = $ugroup_id;
-                $this->createEvent(SystemEvent::UGROUP_MODIFY,
+                $this->createEvent(SystemEvent::TYPE_UGROUP_MODIFY,
                                    $this->concatParameters($params, array('group_id', 'ugroup_id')),
                                    SystemEvent::PRIORITY_MEDIUM);
             }
             break;
         case 'mail_list_create':
-            $this->createEvent(SystemEvent::MAILING_LIST_CREATE,
+            $this->createEvent(SystemEvent::TYPE_MAILING_LIST_CREATE,
                                $params['group_list_id'],
                                SystemEvent::PRIORITY_MEDIUM);
             break;
         case 'mail_list_delete':
-            $this->createEvent(SystemEvent::MAILING_LIST_DELETE,
+            $this->createEvent(SystemEvent::TYPE_MAILING_LIST_DELETE,
                                $params['group_list_id'],
                                SystemEvent::PRIORITY_LOW);
             break;
         case 'service_is_used':
-            $this->createEvent(SystemEvent::SERVICE_USAGE_SWITCH,
+            $this->createEvent(SystemEvent::TYPE_SERVICE_USAGE_SWITCH,
                                $this->concatParameters($params, array('group_id', 'shortname', 'is_used')),
                                SystemEvent::PRIORITY_MEDIUM);
             break;
@@ -259,38 +260,8 @@ class SystemEventManager {
         while (($dar=$this->dao->checkOutNextEvent()) != null) {
             if ($row = $dar->getRow()) {
                 //echo "Processing event ".$row['id']." (".$row['type'].")\n";
-                $sysevent = null;
-                switch ($row['type']) {
-                case SystemEvent::SYSTEM_CHECK:
-                case SystemEvent::EDIT_SSH_KEYS:
-                case SystemEvent::PROJECT_CREATE:
-                case SystemEvent::PROJECT_DELETE:
-                case SystemEvent::MEMBERSHIP_CREATE:
-                case SystemEvent::MEMBERSHIP_DELETE:
-                case SystemEvent::UGROUP_MODIFY:
-                case SystemEvent::USER_CREATE:
-                case SystemEvent::USER_DELETE:
-                case SystemEvent::USER_EMAIL_CHANGED:
-                case SystemEvent::MAILING_LIST_CREATE:
-                case SystemEvent::MAILING_LIST_DELETE:
-                case SystemEvent::CVS_IS_PRIVATE:
-                case SystemEvent::PROJECT_IS_PRIVATE:
-                case SystemEvent::SERVICE_USAGE_SWITCH:
-                    $klass = 'SystemEvent_'. $row['type'];
-                    $sysevent = new $klass($row['id'], 
-                                           $row['type'], 
-                                           $row['parameters'], 
-                                           $row['priority'],
-                                           $row['status'], 
-                                           $row['create_date'], 
-                                           $row['process_date'], 
-                                           $row['end_date'],
-                                           $row['log']);
-                    break;
-                default:              
-                    break;
-                }
-
+                $sysevent = $this->getInstanceFromRow($row);
+                
                 // Process $sysevent
                 if ($sysevent) {
                     Backend::instance()->log("Processing event #".$sysevent->getId()." ".$sysevent->getType()."(".$sysevent->getParameters().")", Backend::LOG_INFO);
@@ -328,15 +299,77 @@ class SystemEventManager {
     }
     
     /**
+     * Instantiate a SystemEvent from a row
+     *
+     * @param array $row The data of the event
+     *
+     * @return SystemEvent
+     */
+    protected function getInstanceFromRow($row) {
+        $sysevent = null;
+        switch ($row['type']) {
+        case SystemEvent::TYPE_SYSTEM_CHECK:
+        case SystemEvent::TYPE_EDIT_SSH_KEYS:
+        case SystemEvent::TYPE_PROJECT_CREATE:
+        case SystemEvent::TYPE_PROJECT_DELETE:
+        case SystemEvent::TYPE_MEMBERSHIP_CREATE:
+        case SystemEvent::TYPE_MEMBERSHIP_DELETE:
+        case SystemEvent::TYPE_UGROUP_MODIFY:
+        case SystemEvent::TYPE_USER_CREATE:
+        case SystemEvent::TYPE_USER_DELETE:
+        case SystemEvent::TYPE_USER_EMAIL_CHANGED:
+        case SystemEvent::TYPE_MAILING_LIST_CREATE:
+        case SystemEvent::TYPE_MAILING_LIST_DELETE:
+        case SystemEvent::TYPE_CVS_IS_PRIVATE:
+        case SystemEvent::TYPE_PROJECT_IS_PRIVATE:
+        case SystemEvent::TYPE_SERVICE_USAGE_SWITCH:
+            $klass = 'SystemEvent_'. $row['type'];
+            $sysevent = new $klass($row['id'], 
+                                   $row['type'], 
+                                   $row['parameters'], 
+                                   $row['priority'],
+                                   $row['status'], 
+                                   $row['create_date'], 
+                                   $row['process_date'], 
+                                   $row['end_date'],
+                                   $row['log']);
+            break;
+        default:              
+            break;
+        }
+        return $sysevent;
+    }
+    
+    
+    /**
+     * @return array
+     */
+    public function getTypes() {
+        $reflect = new ReflectionClass('SystemEvent');
+        $consts  = $reflect->getConstants();
+        array_walk($consts, array($this, 'filterConstants'));
+        $types = array_filter($consts);
+        return $types;
+    }
+    
+    protected function filterConstants(&$item, $key) {
+        if (strpos($key, 'TYPE_') !== 0) {
+            $item = null;
+        }
+    }
+    
+    /**
      * Compute a html table to display the status of the last n events
      * 
      * @param int     $offset        the offset of the pagination
      * @param int     $limit         the number of event to includ in the table
      * @param boolean $full          display a full table or only a summary
      * @param array   $filter_status the filter on status
+     * @param array   $filter_type   the filter on type
+     *
      * @return string html
      */
-    public function fetchLastEventsStatus($offset = 0, $limit = 10, $full = false, $filter_status = false) {
+    public function fetchLastEventsStatus($offset = 0, $limit = 10, $full = false, $filter_status = false, $filter_type = false) {
         $hp = Codendi_HTMLPurifier::instance();
         $html = '';
         $html .= '<table width="100%">';
@@ -367,35 +400,40 @@ class SystemEventManager {
                 SystemEvent::STATUS_ERROR,
             );
         }
+        if (!$filter_type) {
+            $filter_type = $this->getTypes();
+        }
         $i = 0;
-        foreach($this->dao->searchLastEvents($offset, $limit, $filter_status) as $row) {
-            $html .= '<tr class="'. html_get_alt_row_color($i++) .'">';
-            
-            //id
-            $html .= '<td>'. $row['id'] .'</td>';
-            
-            //name of the event
-            $html .= '<td>'. $row['type'] .'</td>';
-            
-            //status
-            $html .= '<td class="system_event_status_'. $row['status'] .'"';
-            if ($row['log']) {
-                $html .= ' title="'. $hp->purify($row['log'], CODENDI_PURIFIER_CONVERT_HTML) .'" ';
+        foreach($this->dao->searchLastEvents($offset, $limit, $filter_status, $filter_type) as $row) {
+            if ($sysevent = $this->getInstanceFromRow($row)) {
+                $html .= '<tr class="'. html_get_alt_row_color($i++) .'">';
+                
+                //id
+                $html .= '<td>'. $sysevent->getId() .'</td>';
+                
+                //name of the event
+                $html .= '<td>'. $sysevent->getType() .'</td>';
+                
+                //status
+                $html .= '<td class="system_event_status_'. $row['status'] .'"';
+                if ($sysevent->getLog()) {
+                    $html .= ' title="'. $hp->purify($sysevent->getLog(), CODENDI_PURIFIER_CONVERT_HTML) .'" ';
+                }
+                $html .= '>';
+                $html .= $sysevent->getStatus();
+                $html .= '</td>';
+                
+                if ($full) {
+                    $html .= '<td style="text-align:center">'. $sysevent->getPriority() .'</td>';
+                    $html .= '<td>'. $sysevent->verbalizeParameters(true) .'</td>';
+                    $html .= '<td>'. $sysevent->getCreateDate().'</td>';
+                    $html .= '<td>'. $sysevent->getProcessDate() .'</td>';
+                    $html .= '<td>'. $sysevent->getEndDate() .'</td>';
+                    $html .= '<td>'. $sysevent->getLog() .'</td>';
+                }
+                
+                $html .= '</tr>';
             }
-            $html .= '>';
-            $html .= $row['status'];
-            $html .= '</td>';
-            
-            if ($full) {
-                $html .= '<td style="text-align:center">'. $row['priority'] .'</td>';
-                $html .= '<td>'. $row['parameters'] .'</td>';
-                $html .= '<td>'. $row['create_date'] .'</td>';
-                $html .= '<td>'. $row['process_date'] .'</td>';
-                $html .= '<td>'. $row['end_date'] .'</td>';
-                $html .= '<td>'. $row['log'] .'</td>';
-            }
-            
-            $html .= '</tr>';
         }
         $html .= '</tbody></table>';
         if ($full) {
@@ -408,8 +446,11 @@ class SystemEventManager {
             $width = 10;
             for ($i = 0 ; $i < $nb_of_pages ; ++$i) {
                 if ($i == 0 || $i == $nb_of_pages - 1 || ($current_page - $width / 2 <= $i && $i <= $width / 2 + $current_page)) {
-                    $html .= '<a href="?'.
-                        'offset='. (int)($i * $limit) .
+                    $html .= '<a href="?'. http_build_query(array(
+                            'offset'        => (int)($i * $limit),
+                            'filter_status' => $filter_status,
+                            'filter_type'   => $filter_type,
+                        )).
                         '">';
                     if ($i == $current_page) {
                         $html .= '<b>'. ($i + 1) .'</b>';

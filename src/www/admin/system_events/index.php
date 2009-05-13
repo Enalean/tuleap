@@ -19,6 +19,7 @@
  */
 require_once('pre.php');
 require_once('common/dao/SystemEventsFollowersDao.class.php');
+require_once('common/include/Toggler.class.php');
 
 session_require(array('group'=>'1', 'admin_flags'=>'A'));
 
@@ -52,12 +53,12 @@ $HTML->header(array('title' => $title));
 echo '<h2>'.  $hp->purify($title, CODENDI_PURIFIER_CONVERT_HTML)  .'</h2>';
 
 $se = SystemEventManager::instance();
-$offset = $request->get('offset') ? (int)$request->get('offset') : 0;
-$limit  = 50;
-$full   = true;
-$filter = $request->get('filter_status');
-if (!$filter) {
-    $filter = array(
+$offset        = $request->get('offset') && !$request->exist('filter') ? (int)$request->get('offset') : 0;
+$limit         = 50;
+$full          = true;
+$filter_status = $request->get('filter_status');
+if (!$filter_status) {
+    $filter_status = array(
         SystemEvent::STATUS_NEW, 
         SystemEvent::STATUS_RUNNING, 
         SystemEvent::STATUS_DONE, 
@@ -65,10 +66,16 @@ if (!$filter) {
         SystemEvent::STATUS_ERROR,
     );
 }
+$filter_type = $request->get('filter_type');
+if (!$filter_type) {
+    $filter_type = $se->getTypes();
+}
+
 echo '<form action="" method="POST">';
 echo '<fieldset>';
-echo '<legend>Filter:</legend>';
-echo '<input type="hidden" name="filter_status[]" value="'.  $hp->purify(SystemEvent::STATUS_NONE, CODENDI_PURIFIER_CONVERT_HTML)  .'" />';
+echo '<legend id="system_events_filter" class="'. Toggler::getClassname('system_events_filter') .'">Filter:</legend>';
+echo '<strong>'. 'Status:'. '</strong> <input type="hidden" name="filter_status[]" value="'.  $hp->purify(SystemEvent::STATUS_NONE, CODENDI_PURIFIER_CONVERT_HTML)  .'" />';
+echo '<br />';
 foreach(array(
     SystemEvent::STATUS_NEW, 
     SystemEvent::STATUS_RUNNING, 
@@ -80,13 +87,35 @@ foreach(array(
                  name="filter_status[]" 
                  value="'.  $hp->purify($status, CODENDI_PURIFIER_CONVERT_HTML)  .'" 
                  id="filter_'.  $hp->purify($status, CODENDI_PURIFIER_CONVERT_HTML)  .'"
-                 '. (in_array($status, $filter) ? 'checked="checked"' : '') .'
+                 '. (in_array($status, $filter_status) ? 'checked="checked"' : '') .'
                  />';
     echo '<label for="filter_'.  $hp->purify($status, CODENDI_PURIFIER_CONVERT_HTML)  .'">'.  $hp->purify($status, CODENDI_PURIFIER_CONVERT_HTML)  .'</label> ';
 }
-echo '<input type="submit" value="'. $GLOBALS['Language']->getText('global', 'btn_submit') .'" />';
+echo '<hr size="1" />';
+echo '<strong>'. 'Types:'. '</strong> <input type="hidden" name="filter_type[]" value="-" />';
+echo '<table>';
+$types = $se->getTypes();
+uksort($types, 'strnatcasecmp');
+foreach(array_chunk($types, 5) as $row) {
+    echo '<tr>';
+    foreach ($row as $type) {
+        echo '<td>';
+        echo '<input type="checkbox" 
+                     name="filter_type[]" 
+                     value="'.  $hp->purify($type, CODENDI_PURIFIER_CONVERT_HTML)  .'" 
+                     id="filter_'.  $hp->purify($type, CODENDI_PURIFIER_CONVERT_HTML)  .'"
+                     '. (in_array($type, $filter_type) ? 'checked="checked"' : '') .'
+                     />';
+        echo '<label for="filter_'.  $hp->purify($type, CODENDI_PURIFIER_CONVERT_HTML)  .'">'.  $hp->purify($type, CODENDI_PURIFIER_CONVERT_HTML)  .'</label> ';
+        echo '</td>';
+    }
+    echo '</tr>';
+}
+echo '</table>';
+echo '<hr size="1" />';
+echo '<input type="submit" name="filter" value="'. $GLOBALS['Language']->getText('global', 'btn_submit') .'" />';
 echo '</fieldset>';
-echo $se->fetchLastEventsStatus($offset, $limit, $full, $filter);
+echo $se->fetchLastEventsStatus($offset, $limit, $full, $filter_status, $filter_type);
 
 echo '<h3>'. $Language->getText('admin_system_events', 'notifications') .'</h3>';
 echo $GLOBALS['Language']->getText('admin_system_events', 'send_email');

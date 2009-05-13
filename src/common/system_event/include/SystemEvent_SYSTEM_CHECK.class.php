@@ -29,9 +29,12 @@ class SystemEvent_SYSTEM_CHECK extends SystemEvent {
      * Verbalize the parameters so they are readable and much user friendly in 
      * notifications
      * 
+     * @param bool $with_link true if you want links to entities. The returned 
+     * string will be html instead of plain/text
+     *
      * @return string
      */
-    public function verbalizeParameters() {
+    public function verbalizeParameters($with_link) {
         return '-';
     }
     

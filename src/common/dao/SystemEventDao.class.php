@@ -103,13 +103,15 @@ class SystemEventDao extends DataAccessObject {
     /**
      * Search n last status
      */
-    public function searchLastEvents($offset, $limit, $filters_status) {
+    public function searchLastEvents($offset, $limit, $filters_status, $filters_type) {
         $offset         = $this->da->escapeInt($offset);
         $limit          = $this->da->escapeInt($limit);
         $filters_status = $this->da->quoteSmartImplode(", ", $filters_status);
+        $filters_type   = $this->da->quoteSmartImplode(", ", $filters_type);
         $sql = "SELECT SQL_CALC_FOUND_ROWS * 
                 FROM system_event
                 WHERE status IN ($filters_status)
+                  AND type   IN ($filters_type)
                 ORDER BY id DESC
                 LIMIT $offset, $limit";
         return $this->retrieve($sql);

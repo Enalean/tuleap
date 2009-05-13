@@ -31,9 +31,12 @@ class SystemEvent_MAILING_LIST_DELETE extends SystemEvent {
      * Verbalize the parameters so they are readable and much user friendly in 
      * notifications
      * 
+     * @param bool $with_link true if you want links to entities. The returned 
+     * string will be html instead of plain/text
+     *
      * @return string
      */
-    public function verbalizeParameters() {
+    public function verbalizeParameters($with_link) {
         $txt = '';
         $txt .= 'mailing list: #'. $this->getIdFromParam($this->parameters);
         return $txt;

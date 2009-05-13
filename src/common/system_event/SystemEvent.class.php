@@ -40,23 +40,23 @@ abstract class SystemEvent {
     protected $log;
 
     // Define event types
-    const SYSTEM_CHECK          = "SYSTEM_CHECK";
-    const EDIT_SSH_KEYS         = "EDIT_SSH_KEYS";
-    const PROJECT_CREATE        = "PROJECT_CREATE";
-    const PROJECT_DELETE        = "PROJECT_DELETE";
-    const UGROUP_MODIFY         = "UGROUP_MODIFY";
-    const USER_CREATE           = "USER_CREATE";
-    const USER_DELETE           = "USER_DELETE";
-    const USER_EMAIL_CHANGED    = "USER_EMAIL_CHANGED";
-    const USER_MODIFY           = "USER_MODIFY";
-    const MEMBERSHIP_CREATE     = "MEMBERSHIP_CREATE";
-    const MEMBERSHIP_DELETE     = "MEMBERSHIP_DELETE";
-    const MEMBERSHIP_MODIFY     = "MEMBERSHIP_MODIFY";
-    const CVS_IS_PRIVATE        = "CVS_IS_PRIVATE";
-    const PROJECT_IS_PRIVATE    = "PROJECT_IS_PRIVATE";
-    const MAILING_LIST_CREATE   = "MAILING_LIST_CREATE";
-    const MAILING_LIST_DELETE   = "MAILING_LIST_DELETE";
-    const SERVICE_USAGE_SWITCH  = "SERVICE_USAGE_SWITCH";
+    const TYPE_SYSTEM_CHECK          = "SYSTEM_CHECK";
+    const TYPE_EDIT_SSH_KEYS         = "EDIT_SSH_KEYS";
+    const TYPE_PROJECT_CREATE        = "PROJECT_CREATE";
+    const TYPE_PROJECT_DELETE        = "PROJECT_DELETE";
+    const TYPE_UGROUP_MODIFY         = "UGROUP_MODIFY";
+    const TYPE_USER_CREATE           = "USER_CREATE";
+    const TYPE_USER_DELETE           = "USER_DELETE";
+    const TYPE_USER_EMAIL_CHANGED    = "USER_EMAIL_CHANGED";
+    const TYPE_USER_MODIFY           = "USER_MODIFY";
+    const TYPE_MEMBERSHIP_CREATE     = "MEMBERSHIP_CREATE";
+    const TYPE_MEMBERSHIP_DELETE     = "MEMBERSHIP_DELETE";
+    const TYPE_MEMBERSHIP_MODIFY     = "MEMBERSHIP_MODIFY";
+    const TYPE_CVS_IS_PRIVATE        = "CVS_IS_PRIVATE";
+    const TYPE_PROJECT_IS_PRIVATE    = "PROJECT_IS_PRIVATE";
+    const TYPE_MAILING_LIST_CREATE   = "MAILING_LIST_CREATE";
+    const TYPE_MAILING_LIST_DELETE   = "MAILING_LIST_DELETE";
+    const TYPE_SERVICE_USAGE_SWITCH  = "SERVICE_USAGE_SWITCH";
  
     // Define status value (in sync with DB enum)
     const STATUS_NONE       = "NONE";
@@ -115,9 +115,46 @@ abstract class SystemEvent {
      * Verbalize the parameters so they are readable and much user friendly in 
      * notifications
      * 
+     * @param bool $with_link true if you want links to entities. The returned 
+     * string will be html instead of plain/text
+     *
      * @return string
      */
-    public abstract function verbalizeParameters();
+    public abstract function verbalizeParameters($with_link);
+    
+    /**
+     * verbalize a user id.
+     * 
+     * @param integer $user_id   The user id
+     * @param boolean $with_link true if you want links to entities. The returned 
+     * string will be html instead of plain/text
+     *
+     * @return string
+     */
+    public function verbalizeUserId($user_id, $with_link) {
+        $txt = '#'. $user_id;
+        if ($with_link) {
+            $txt = '<a href="/admin/usergroup.php?user_id='. $user_id .'">'. $txt .'</a>';
+        }
+        return $txt;
+    }
+    
+    /**
+     * verbalize a project id.
+     * 
+     * @param integer $group_id   The project id
+     * @param boolean $with_link true if you want links to entities. The returned 
+     * string will be html instead of plain/text
+     *
+     * @return string
+     */
+    public function verbalizeProjectId($group_id, $with_link) {
+        $txt = '#'. $group_id;
+        if ($with_link) {
+            $txt = '<a href="/admin/groupedit.php?group_id='. $group_id .'">'. $txt .'</a>';
+        }
+        return $txt;
+    }
     
     function getParametersAsArray() {
         return explode(self::PARAMETER_SEPARATOR, $this->parameters);

@@ -31,12 +31,15 @@ class SystemEvent_PROJECT_IS_PRIVATE extends SystemEvent {
      * Verbalize the parameters so they are readable and much user friendly in 
      * notifications
      * 
+     * @param bool $with_link true if you want links to entities. The returned 
+     * string will be html instead of plain/text
+     *
      * @return string
      */
-    public function verbalizeParameters() {
+    public function verbalizeParameters($with_link) {
         $txt = '';
         list($group_id, $project_is_private) = $this->getParametersAsArray();
-        $txt .= 'project: #'. $group_id .', project is private: '. ($project_is_private ? 'true' : 'false');
+        $txt .= 'project: '. $this->verbalizeProjectId($group_id, $with_link) .', project is private: '. ($project_is_private ? 'true' : 'false');
         return $txt;
     }
 

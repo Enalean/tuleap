@@ -31,12 +31,15 @@ class SystemEvent_MEMBERSHIP_CREATE extends SystemEvent {
      * Verbalize the parameters so they are readable and much user friendly in 
      * notifications
      * 
+     * @param bool $with_link true if you want links to entities. The returned 
+     * string will be html instead of plain/text
+     *
      * @return string
      */
-    public function verbalizeParameters() {
+    public function verbalizeParameters($with_link) {
         $txt = '';
         list($group_id, $user_id) = $this->getParametersAsArray();
-        $txt .= 'project: #'. $group_id .', user to add: #'. $user_id;
+        $txt .= 'project: '. $this->verbalizeProjectId($group_id, $with_link) .', user to add: '. $this->verbalizeUserId($user_id, $with_link);
         return $txt;
     }
     

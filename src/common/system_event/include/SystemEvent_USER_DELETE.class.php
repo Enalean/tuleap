@@ -31,11 +31,14 @@ class SystemEvent_USER_DELETE extends SystemEvent {
      * Verbalize the parameters so they are readable and much user friendly in 
      * notifications
      * 
+     * @param bool $with_link true if you want links to entities. The returned 
+     * string will be html instead of plain/text
+     *
      * @return string
      */
-    public function verbalizeParameters() {
+    public function verbalizeParameters($with_link) {
         $txt = '';
-        $txt .= 'user: #'. $this->getIdFromParam($this->parameters);
+        $txt .= 'user: '. $this->verbalizeUserId($this->getIdFromParam($this->parameters), $with_link);
         return $txt;
     }
     
