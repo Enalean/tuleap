@@ -314,6 +314,7 @@ $RPM -Uvh ${newest_rpm}/php-pecl-apc-*.i?86.rpm
 # Stop some services before upgrading
 #
 echo "Stopping crond, httpd, sendmail, mailman and smb ..."
+$SERVICE openfire stop
 $SERVICE crond stop
 $SERVICE httpd stop
 $SERVICE mysqld stop
@@ -1125,7 +1126,6 @@ FROM (SELECT LAST_INSERT_ID() as last_insert_id) AS R, groups;
 EOF
 
 # IM plugin
-# TODO : stop openfire service ($SERVICE openfire stop)
 
 echo "- Add IM service"
 $CAT <<EOF | $MYSQL $pass_opt codendi
@@ -1648,8 +1648,6 @@ $CP ${newest_rpm}/monitoring.jar /opt/openfire/plugins
 
 # Ask to make a manual update (-u???) on /usr/share/codendi as codendiadm to get new realm 
 #??? Mailman: codex-admin??
-# - Warn admins that CODEX_LOCAL_INC was replaced by CODENDI_LOCAL_INC
-# - OpenFire install.
 # - Migrate all CodeX in /etc/codendi (site-content, etc.)
 # - change codex project short name on Partners
 # - custom themes:'codex' in theme CSS -> codendi .
@@ -1689,7 +1687,7 @@ $CHOWN -R codendiadm.codendiadm $INSTALL_DIR/documentation
 $CHOWN -R codendiadm.codendiadm $INSTALL_DIR/downloads
 
 
-
+todo "If you use CODEX_LOCAL_INC environment variable, please rename it to CODENDI_LOCAL_INC"
 todo "Note to Codendi Developers: "
 todo " - Some deprecated functions have been removed: group_getname, group_getunixname, group_get_result, group_get_object, project_get_object"
 todo " - Themes have been enhanced. Images and css inherit from a common theme:"
