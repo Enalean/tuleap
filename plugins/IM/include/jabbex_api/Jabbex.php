@@ -509,23 +509,13 @@ class Jabbex implements JabbexInterface
 	 */
 	function user_status($jid){
 		$filename = "http://".JABBER_SERVER_DNS.":".JABBER_WEBADMIN_UNSEC_PORT."/plugins/presence/status?jid=".$jid."&type=xml";
-        if (file_exists($filename)) {
-            if( ! $f = fopen($filename,"r") ){
-                return false;
-            }
-        } else {
-            return false;
-        }
-		if( ! $in_stream = fread($f,65535) ){
+		if( ! $in_stream = file_get_contents($filename) ){
 			return false;
 		}
-
-		fclose($f);
 
 		if( ! $xml = simplexml_load_string($in_stream) ){
 			return false;
 		}
-
 		$status = array('status' => NULL , 'message' => NULL);
 		
 		$valid = false;
