@@ -114,7 +114,11 @@ class hudsonViews extends Views {
     function build_number() {
         $request =& HTTPRequest::instance();
         $group_id = $request->get('group_id');
-        $build_id = $request->get('build_id');
+        if ($request->exist('build')) {
+            $build_id = $request->get('build');
+        } else {
+            $build_id = $request->get('build_id');
+        }
         $job_dao = new PluginHudsonJobDao(CodendiDataAccess::instance());
         if ($request->exist('job_id')) {
             $job_id = $request->get('job_id');
