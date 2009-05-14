@@ -109,6 +109,9 @@ class UserManager {
      * @return User or null if the user is not found
      */
     function getUserByLdapId($ldapId) {
+        if($ldapId == null) {
+            return null;
+        }
         if (!isset($this->_userid_byldapid[$ldapId])) {
             $dar =& $this->_userdao->searchByLdapId($ldapId);
             if ($row = $dar->getRow()) {
