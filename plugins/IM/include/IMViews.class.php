@@ -52,7 +52,7 @@ class IMViews extends Views {
         if (trim($section) !== '' && $section{0} !== '#') {
             $section = '#'.$section;
         }
-        return '<b><a href="javascript:help_window(\''.get_server_url().'/plugins/IM/documentation/'.UserManager::instance()->getCurrentUser()->getLocale().'/'.$section.'\');">'.$GLOBALS['Language']->getText('global', 'help').'</a></b>';
+        return '<b><a href="javascript:help_window(\''.get_server_url().'/documentation/user_guide/html/'.UserManager::instance()->getCurrentUser()->getLocale().'/IMPlugin.html'.$section.'\');">'.$GLOBALS['Language']->getText('global', 'help').'</a></b>';
     }
     
     function _getTitle() {
