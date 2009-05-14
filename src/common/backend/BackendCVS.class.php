@@ -173,36 +173,9 @@ class BackendCVS extends Backend {
 	// Update post-commit hooks
 	if (!$this->updatePostCommit($project)) return false;
 
-        // Add notify command if cvs_watch_mode is on
-        if ($project->getCVSWatchMode()){
-            $filename = "$cvs_dir/CVSROOT/notify";
-            $file_array=file($filename);
-            if (!in_array($this->block_marker_start,$file_array)) {
-                $this->_RcsCheckout($filename);
-                $this->addBlock($filename,'ALL mail %s -s "CVS notification"');
-                $this->_RcsCommit($filename);
-
-                // Apply cvs watch on only if cvs_watch_mode changed to on 
-                $this->CVSWatch($cvs_dir,$unix_group_name,1);
-                $this->recurseChownChgrp($cvs_dir,$this->getHTTPUser(),$unix_group_name);
-                system("chmod g+rw $cvs_dir");
-            }
-        }
-      
-        // Remove notify command if cvs_watch_mode is off.
-        if (! $project->getCVSWatchMode()) {
-            $filename = "$cvs_dir/CVSROOT/notify";
-            $file_array=file($filename);
-            if (in_array($this->block_marker_start,$file_array)) {
-                // Switch to cvs watch off
-                $this->_RcsCheckout($filename);
-                $this->removeBlock($filename);
-                $this->_RcsCommit($filename);
-                $this->recurseChownChgrp($cvs_dir."/CVSROOT",$this->getHTTPUser(),$unix_group_name);
-                $this->CVSWatch($cvs_dir,$unix_group_name,0);
-            }
-        }
-
+	// Update watch mode
+	if (!$this->updateCVSWatchMode($group_id)) return false;
+ 
         return true;
     }
 
@@ -294,7 +267,53 @@ class BackendCVS extends Backend {
     }
 
 
-    function _CVSWatch($cvs_dir, $unix_group_name, $watch_mode) {
+     /**
+      * Update CVS Watch Mode
+      * @return true on success
+      */
+    public function updateCVSWatchMode($group_id) {
+        $project=$this->getProjectManager()->getProject($group_id);
+        if (!$project) return false;
+
+        $unix_group_name=$project->getUnixName(false); // May contain upper-case letters
+        $cvs_dir=$GLOBALS['cvs_prefix']."/".$unix_group_name;
+
+
+        // Add notify command if cvs_watch_mode is on
+        if ($project->getCVSWatchMode()){
+            $filename = "$cvs_dir/CVSROOT/notify";
+            $file_array=file($filename);
+            if (!in_array($this->block_marker_start,$file_array)) {
+                $this->_RcsCheckout($filename);
+                $this->addBlock($filename,'ALL mail %s -s "CVS notification"');
+                $this->_RcsCommit($filename);
+
+                // Apply cvs watch on only if cvs_watch_mode changed to on 
+                $this->CVSWatch($cvs_dir,$unix_group_name,1);
+                $this->recurseChownChgrp($cvs_dir,$this->getHTTPUser(),$unix_group_name);
+                system("chmod g+rw $cvs_dir");
+            }
+        }
+      
+        // Remove notify command if cvs_watch_mode is off.
+        if (! $project->getCVSWatchMode()) {
+            $filename = "$cvs_dir/CVSROOT/notify";
+            $file_array=file($filename);
+            if (in_array($this->block_marker_start,$file_array)) {
+                // Switch to cvs watch off
+                $this->_RcsCheckout($filename);
+                $this->removeBlock($filename);
+                $this->_RcsCommit($filename);
+                $this->recurseChownChgrp($cvs_dir."/CVSROOT",$this->getHTTPUser(),$unix_group_name);
+                $this->CVSWatch($cvs_dir,$unix_group_name,0);
+            }
+        }
+
+        return true;
+    }
+
+
+   function CVSWatch($cvs_dir, $unix_group_name, $watch_mode) {
         $sandbox_dir =  $GLOBALS['tmp_dir']."/".$unix_group_name.".cvs_watch_sandbox";
         if (is_dir($sandbox_dir)) {
             return false;

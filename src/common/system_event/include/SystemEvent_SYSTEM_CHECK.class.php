@@ -122,6 +122,8 @@ class SystemEvent_SYSTEM_CHECK extends SystemEvent {
                 }
                 $backendCVS->updateCVSwriters($project->getID());
                 
+                $backendCVS->updateCVSWatchMode($project->getID());
+                 
                 // Check ownership/mode/access rights
                 $backendCVS->checkCVSMode($project);
             }
