@@ -403,9 +403,9 @@ class BackendCVS extends Backend {
   
             // and recopy other configuration instructions
             $configlines=0;
-            foreach($cvsnt_config_array as $line) {
+            foreach($cvs_config_array as $line) {
                 if ($configlines) { fwrite($fp,$line); }
-                if (strpos($cvsnt_marker,$line)) { $configlines=1;}
+                if (strpos($line,$cvsnt_marker)) { $configlines=1;}
             }
         } else {
             // CVS: simple list of allowed CVS roots
