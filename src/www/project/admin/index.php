@@ -16,6 +16,14 @@ require_once('common/frs/FRSPackageFactory.class.php');
 require_once('www/project/admin/ugroup_utils.php');
 
 
+// Valid group id
+$vGroupId = new Valid_GroupId();
+$vGroupId->required();
+if(!$request->valid($vGroupId)) {
+    exit_error($Language->getText('project_admin_index','invalid_p'), $Language->getText('project_admin_index','p_not_found'));
+}
+$group_id = $request->get('group_id');
+
 // get current information
 $pm = ProjectManager::instance();
 $grp = $pm->getProject($group_id);
@@ -40,70 +48,18 @@ if (!$group || !is_object($group) || $group->isError()) {
   exit_no_group();
 }
 
+$em =& EventManager::instance();
 
 if (isset($func)) {
     /*
       updating the database
     */
     if ($func=='adduser') {
-        /*
-	    add user to this project
-        */
+        //add user to this project
         $res = account_add_user_to_group ($group_id,$form_unix_name);
-	
-        if ($res) {
-            group_add_history('added_user',$form_unix_name,$group_id,array($form_unix_name));
-        }
-
     } else if ($func=='rmuser') {
-        /*
-	  remove a user from this portal
-        */
-        $res=db_query("DELETE FROM user_group WHERE group_id='$group_id' AND user_id='$rm_id' AND admin_flags <> 'A'");
-        if (!$res || db_affected_rows($res) < 1) {
-            $feedback .= ' '.$Language->getText('project_admin_index','user_not_removed').' ';
-        } else {
-            
-            // Raise an event
-            $em =& EventManager::instance();
-            $em->processEvent('project_admin_remove_user', array(
-                'group_id' => $group_id,
-                'user_id' => $rm_id
-            ));
-            
-            //	  
-            //  get the Group object
-            //	  
-            $group = $pm->getProject($group_id);
-            if (!$group || !is_object($group) || $group->isError()) {
-                exit_no_group();
-            }		   
-            $atf = new ArtifactTypeFactory($group);
-            if (!$group || !is_object($group) || $group->isError()) {
-                $feedback .= $Language->getText('project_admin_index','not_get_atf');
-            }
-            
-            // Get the artfact type list
-            $at_arr = $atf->getArtifactTypes();
-            
-            if ($at_arr && count($at_arr) > 0) {
-                for ($j = 0; $j < count($at_arr); $j++) {
-                    if ( !$at_arr[$j]->deleteUser($rm_id) ) {
-                        $feedback .= ' '.$Language->getText('project_admin_index','del_tracker_perm_fail',$at_arr[$j]->getName()).' ';
-                    }
-                }
-            }
-            
-            // Remove user from ugroups attached to this project
-            if (!ugroup_delete_user_from_project_ugroups($group_id,$rm_id)) {
-                $feedback .= ' '.$Language->getText('project_admin_index','del_user_from_ug_fail').' ';
-            }
-
-            $feedback .= ' '.$Language->getText('project_admin_index','user_removed').' ';
-            group_add_history ('removed_user',user_getname($rm_id)." ($rm_id)",$group_id);
-        }
-
-
+        // remove a user from this portal
+        account_remove_user_from_group($group_id, $rm_id);
     } else if ($func == "change_group_type") {
 
       if ($group->getType() != $form_project_type) {
@@ -293,10 +249,10 @@ $HTML->box1_top($Language->getText('project_admin_editugroup','proj_members')."&
 $res_memb = db_query("SELECT user.realname,user.user_id,user.user_name,user.status ".
 		     "FROM user,user_group ".
 		     "WHERE user.user_id=user_group.user_id ".
-		     "AND user_group.group_id=$group_id");
+		     "AND user_group.group_id=$group_id ".
+             "ORDER BY user.realname");
 print '<div  style="max-height:200px; overflow:auto;">';
 print '<TABLE WIDTH="100%" BORDER="0">';
-$em =& EventManager::instance();
 $user_helper = new UserHelper();
 while ($row_memb=db_fetch_array($res_memb)) {
     $display_name = '';
@@ -323,14 +279,27 @@ print '</TABLE></div> <HR NoShade SIZE="1">';
 */
 
 echo '
-          <FORM ACTION="'. $PHP_SELF .'" METHOD="POST">
+          <FORM ACTION="?" METHOD="POST">
           <INPUT TYPE="hidden" NAME="func" VALUE="adduser">
           <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'. $group_id .'">
           <TABLE WIDTH="100%" BORDER="0">
-          <TR><TD><B>'.$Language->getText('project_admin_index','login_name').'</B></TD><TD><INPUT TYPE="TEXT" NAME="form_unix_name" VALUE=""></TD></TR>
+          <TR><TD><B>'.$Language->getText('project_admin_index','login_name').'</B></TD><TD><INPUT TYPE="TEXT" NAME="form_unix_name" VALUE="" id="add_user"></TD></TR>
+';
+
+// JS code for autocompletion on "add_user" field defined on top.
+$js = "new UserAutoCompleter('add_user',
+                          '".util_get_dir_image_theme()."',
+                          false);";
+$GLOBALS['Response']->includeFooterJavascriptSnippet($js);
+
+echo '
           <TR><TD COLSPAN="2" ALIGN="CENTER"><INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="'.$Language->getText('project_admin_index','add_user').'"></TD></TR></FORM>
           </TABLE>
+';
 
+$em->processEvent('project_admin_add_user_form', array('groupId' => $group_id));
+
+echo '
          <HR NoShade SIZE="1">
          <div align="center">
          <A href="/project/admin/userimport.php?group_id='. $group_id.'">'.$Language->getText('project_admin_index','import_user').'</A>       
@@ -430,7 +399,6 @@ if ( $project->usesTracker()) {
 $admin_pages = array();
 $params = array('project' => &$project, 'admin_pages' => &$admin_pages);
 
-$em =& EventManager::instance();
 $em->processEvent('service_admin_pages', $params);
 
 foreach($admin_pages as $admin_page) {

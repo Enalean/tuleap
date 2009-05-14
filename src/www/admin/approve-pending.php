@@ -49,11 +49,14 @@ if ($action=='activate') {
 		$admin_list=result_column_to_array($admin_res,0);
 		$count=count($admin_list);
 
+		$um = UserManager::instance();
 		for ($i=0; $i<$count; $i++) {
-			$res_user=db_query("UPDATE user SET unix_uid='" . account_nextuid() . "',unix_status='A' WHERE user_id='$admin_list[$i]'");
-			if (!$res_user || db_affected_rows($res_user) < 1) {
-				echo db_error();
-			}
+		    $user = $um->getUserById($admin_list[$i]);
+		    $um->assignNextUnixUid($user);
+		    $user->setUnixStatus('A');
+		    if (!$um->updateDb($user)) {
+		        echo "Unable to update user's unix status<br>";
+		    }
 		}
 	} else {
 		echo db_error();

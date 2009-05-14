@@ -59,6 +59,13 @@ if (strstr($submit,$Language->getText('tracker_masschange_detail','selected_item
   $query = $art_field_fact->extractFieldList();
   $ath->displayMassChange($ro, null,$query,$art_report_html, $advsrch);
 }
+
+echo '<script type="text/javascript">'. "\n";
+echo "new UserAutoCompleter('tracker_cc',
+                          '".util_get_dir_image_theme()."',
+                          true);\n";
+echo "</script>\n";
+
 // Display footer page
 $ath->footer($params);
 

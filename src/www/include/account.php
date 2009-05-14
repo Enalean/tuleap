@@ -44,42 +44,42 @@ function account_add_user_to_group ($group_id,&$user_unix_name) {
   global $Language;
 	
 	$ret = false;
-
-    $user_unix_name = util_user_finder($user_unix_name, true);
-	$res_newuser = db_query("SELECT status,user_id,unix_status,unix_uid FROM user WHERE user_name='".db_es($user_unix_name)."'");
-
-	if (db_numrows($res_newuser) > 0) {
+	
+    $um = UserManager::instance();
+    $user = $um->findUser($user_unix_name);
+	if ($user) {
 
 	    //user was found but if it's a pending account adding
 	    //is not allowed
-	    if (db_result($res_newuser,0,'status') != 'A' && db_result($res_newuser,0,'status') != 'R') {
+	    if (!$user->isActive() && !$user->isRestricted()) {
             $GLOBALS['Response']->addFeedback('error', $Language->getText('include_account', 'account_notactive',$user_unix_name));
             return false;
 	    }
 
-		$form_newuid = db_result($res_newuser,0,'user_id');
-
 		//if not already a member, add it
-		$res_member = db_query("SELECT user_id FROM user_group WHERE user_id=".$form_newuid." AND group_id='".db_es($group_id)."'");
-		if (db_numrows($res_member) < 1) {
+		if (!$user->isMember($group_id)) {
 			//not already a member
-			db_query("INSERT INTO user_group (user_id,group_id) VALUES (".$form_newuid.",'".db_es($group_id)."')");
+			db_query("INSERT INTO user_group (user_id,group_id) VALUES (".db_ei($user->getId()).",".db_ei($group_id).")");
 
 			//if no unix account, give them a unix_uid
-			if ((db_result($res_newuser,0,'unix_status') == 'N') || (!db_result($res_newuser,0,'unix_uid') )) {
-				db_query("UPDATE user SET unix_status='A',unix_uid=" . account_nextuid() . " WHERE user_id=".$form_newuid);
+			if ($user->getUnixStatus() == 'N' || !$user->getUnixUid()) {
+			    $um->assignNextUnixUid($user);
+
+			    $user->setUnixStatus('A');
+			    $um->updateDb($user);
 			}
             
             // Raise an event
             $em =& EventManager::instance();
             $em->processEvent('project_admin_add_user', array(
-                'group_id' => $group_id,
-                'user_id' => $form_newuid,
-                'user_unix_name' => $user_unix_name
+                'group_id'       => $group_id,
+                'user_id'        => $user->getId(),
+                'user_unix_name' => $user->getUserName(),
             ));
             
 			$GLOBALS['Response']->addFeedback('info', $Language->getText('include_account','user_added'));
-            account_send_add_user_to_group_email($group_id,$form_newuid);
+            account_send_add_user_to_group_email($group_id, $user->getId());
+            group_add_history('added_user', $user->getUserName(), $group_id, array($user->getUserName()));
 			$ret = true;
 		} else {
 			//user was a member
@@ -122,6 +122,59 @@ function account_send_add_user_to_group_email($group_id,$user_id) {
     }
 }
 
+/**
+ * Remove a user from a project
+ *
+ * @param Integer $groupId Project id
+ * @param Integer $userId  User id
+ */
+function account_remove_user_from_group($groupId, $userId) {
+    $pm = ProjectManager::instance();
+    $res=db_query("DELETE FROM user_group WHERE group_id='$groupId' AND user_id='$userId' AND admin_flags <> 'A'");
+    if (!$res || db_affected_rows($res) < 1) {
+        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('project_admin_index','user_not_removed'));
+    } else {
+        // Raise an event
+        $em = EventManager::instance();
+        $em->processEvent('project_admin_remove_user', array(
+                'group_id' => $groupId,
+                'user_id' => $userId
+        ));
+
+        //
+        //  get the Group object
+        //
+        $group = $pm->getProject($groupId);
+        if (!$group || !is_object($group) || $group->isError()) {
+            exit_no_group();
+        }
+        $atf = new ArtifactTypeFactory($group);
+        if (!$group || !is_object($group) || $group->isError()) {
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('project_admin_index','not_get_atf'));
+        }
+
+        // Get the artfact type list
+        $at_arr = $atf->getArtifactTypes();
+
+        if ($at_arr && count($at_arr) > 0) {
+            for ($j = 0; $j < count($at_arr); $j++) {
+                if ( !$at_arr[$j]->deleteUser($userId) ) {
+                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('project_admin_index','del_tracker_perm_fail',$at_arr[$j]->getName()));
+                }
+            }
+        }
+
+        // Remove user from ugroups attached to this project
+        if (!ugroup_delete_user_from_project_ugroups($groupId,$userId)) {
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('project_admin_index','del_user_from_ug_fail'));
+        }
+        $name = user_getname($userId);
+        $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('project_admin_index','user_removed').' ('.$name.')');
+        group_add_history ('removed_user',user_getname($userId)." ($userId)",$groupId);
+        return true;
+    }
+    return false;
+}
 
 // Generate a valid Unix login name from the email address.
 function account_make_login_from_email($email) {
@@ -238,13 +291,6 @@ function account_genunixpw($plainpw) {
 	return crypt($plainpw,account_gensalt());
 }
 
-// returns next userid
-function account_nextuid() {
-	db_query("SELECT max(unix_uid) AS maxid FROM user");
-	$row = db_fetch_array();
-	return ($row['maxid'] + 1);
-}
-
 // print out shell selects
 function account_shellselects($current) {
 	$shells = file("/etc/shells");
@@ -272,7 +318,6 @@ function account_create($loginname=''
                         ,$mail_va=0
                         ,$timezone='GMT'
                         ,$lang_id='en_US'
-                        ,$unix_uid
                         ,$unix_status='N'
                         ,$expiry_date=0
                         ) {
@@ -295,7 +340,6 @@ function account_create($loginname=''
                      ." ,mail_va=".db_ei($mail_va)
                      ." ,timezone='".db_es($timezone)."'"
                      ." ,language_id='".db_es($lang_id) ."'"
-                     ." ,unix_uid=".db_ei($unix_uid)
                      ." ,unix_status='".db_es($unix_status)."'"
                      ." ,expiry_date=".db_ei($expiry_date));
     
@@ -304,6 +348,9 @@ function account_create($loginname=''
         return 0;
     } else {
         $user_id = db_insertid($result);
+        $um = UserManager::instance();
+        $user = $um->getUserById($user_id);
+        $um->assignNextUnixUid($user);
         account_create_mypage($user_id);
         if ($status=='A' or $status=='R') {
             $em =& EventManager::instance();
@@ -319,7 +366,10 @@ function account_create_mypage($user_id) {
 
 function account_redirect_after_login() {
     global $pv;  
-    
+
+    $em =& EventManager::instance();
+    $em->processEvent('account_redirect_after_login', null);
+
     if(array_key_exists('return_to', $_REQUEST) && $_REQUEST['return_to'] != '') {
         $returnToToken = parse_url($_REQUEST['return_to']);
         if(preg_match('{/my(/|/index.php|)}i', $returnToToken['path'])) {

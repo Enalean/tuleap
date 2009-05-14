@@ -18,7 +18,8 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ * along with Codendi; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
 require('www/include/account.php');
@@ -43,78 +44,38 @@ class UserImport extends Error {
     }
 
     /** 
-     * parse a file in simple text  format containing users to be imported into the project
-     * @param string $user_filename (IN): the complete file name of the file to be parsed
-     * @param array $parsed_users (OUT): the users parsed in the import file
-     *                                   array of the form (column_number => User object)
-     * @param string $errors (OUT): string containing explanation what error occurred
-     * @return boolean true if parse ok, false if errors occurred
+     * Parse a file in simple text  format containing users to be imported into the project
+     * 
+     * @param string $user_filename (IN):  the complete file name of the file to be parsed
+     * @param array  $parsed_users  (OUT): the users parsed in the import file
+     *                                     array of the form (column_number => User object)
+     * @param array  $errors        (OUT): string containing explanation what error occurred
+     * 
+     * @return boolean true if at least one entry was successfully parsed
      */
-    function parse($user_filename,&$errors,&$parsed_users) {
-        global $Language;
-        $hp = Codendi_HTMLPurifier::instance();
-        $user_file = fopen($user_filename, "r");
-        $ok = true;  
-        $user_dao =& new UserDao(CodendiDataAccess::instance());
-        $user_id_array = array();   // to check the double names or emails
-            
-        //parsing each line of the file
-        while ($ok && !feof($user_file)) {
-            $current_user = false;
-            $line = trim(fgets($user_file));
-            if ($line != "") {
-                // check whether non-empty lines contain valid email addresses or valid usernames	
-                if (!validate_email($line)) {
-                    // It's not an email address, let's assume it is a Codendi username
-                    $user_result = $user_dao->searchByUserName($line);
-                    if ($user_result && ($user_array =& $user_result->getRow())) {	
-                        $current_user = UserManager::instance()->getUserById($user_array['user_id']);  
-                    } else {
-                        // this username doesn't exist in codendi   
-                        $ok = false;
-                        $errors = $Language->getText('project_admin_userimport','invalid_mail_or_username',$line);
-                    }
-                } else {
-                    //check if user exists (has connected, at least once, to Codendi)
-                    $user_result = $user_dao->searchByEmail($line);
-                    $nb_users = $user_result->rowCount();
-                    if ($nb_users < 1) {
-                        $ok = false;	
-                        $errors=$Language->getText('project_admin_userimport','unknown_user',$line);	
-                    } elseif ($nb_users > 1) {
-                        $ok = false;
-                        $errors=$Language->getText('project_admin_userimport','special_user',$line);
-                    } else {
-                        $user_array =& $user_result->getRow();
-                        $current_user = UserManager::instance()->getUserById($user_array['user_id']);
-                    }
-                }
-                // $current_user contains the user Object we areparsing the name of or the email address 
-                if ($ok && $current_user) {
-                    // check that the user is active
-                    if (! $current_user->isActive()) {
-                        $ok = false;
-                        $errors=$Language->getText('project_admin_userimport','active_user', $hp->purify($current_user->getRealName(), CODENDI_PURIFIER_CONVERT_HTML) ); 	
-                    } else {
-                        // check that the user is not already memeber of the project
-                        if ($current_user->isMember($this->group_id)) {
-                        	    $ok = false;
-                            $errors=$Language->getText('project_admin_userimport','member_user', $hp->purify($current_user->getRealName(), CODENDI_PURIFIER_CONVERT_HTML) );
-                        } else {
-                            // last check : is the user already in the list of imported users ?                        
-                            if (! in_array($current_user->getID(), $user_id_array)) {
-                            	    // everything is ok, we can add the user in the list of users to import
-                                $parsed_users[] = $current_user;
-                                $user_id_array[] = $current_user->getID();
-                            }
+    function parse($user_filename, &$errors, &$parsed_users) {
+        $um = UserManager::instance();
+
+        $fileContent = file($user_filename, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+        if ($fileContent) {
+            foreach ($fileContent as $line) {
+                $line = trim($line);
+                if ($line != "") {
+                    $user = $um->findUser($line);
+                    if ($user && ($user->isActive() || $user->isRestricted())) {
+                        if (!$user->isMember($this->group_id)
+                            && !isset($parsed_users[$user->getId()])) {
+                            $parsed_users[$user->getId()] = $user;
                         }
+                    } else {
+                        $errors[] = $line;
                     }
                 }
             }
+            return (count($parsed_users) > 0);
+        } else {
+            return false;
         }
-
-        fclose($user_file);
-        return $ok;
     }
 
     /**
@@ -128,9 +89,7 @@ class UserImport extends Error {
         for ($i=0;$i<count($parsed_users);$i++) {
             $res = account_add_user_to_group($this->group_id, $parsed_users[$i]);
     
-            if ($res) {
-                group_add_history('added_user',$parsed_users[$i],$this->group_id,array($parsed_users[$i]));        
-            } else {
+            if (!$res) {
                 return false;
                 exit;
             }    

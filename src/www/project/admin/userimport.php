@@ -37,9 +37,6 @@ if (!isset($_REQUEST['group_id'])) {
 }
 
 session_require(array('group'=>$_REQUEST['group_id'],'admin_flags'=>'A'));
-
-project_admin_header(array('title'=>$Language->getText('project_admin_userimport','import_members'),
-                 'help' => 'AddingRemovingUsers.html'));
        
 $import = new UserImportHtml($_REQUEST['group_id']);
 if (isset($_REQUEST['mode']) && $_REQUEST['mode'] == "parse") {
@@ -52,6 +49,4 @@ if (isset($_REQUEST['mode']) && $_REQUEST['mode'] == "parse") {
     $import->displayInput();
 }
 
-project_admin_footer(array());
-  
 ?>

@@ -127,6 +127,28 @@ class UserManager {
     }
     
     /**
+     * Try to find a user that match the given identifier
+     * 
+     * @param String $ident A user identifier
+     * 
+     * @return User
+     */
+    function findUser($ident) {
+        $user = null;
+        $eParams = array('ident' => $ident,
+                         'user'  => &$user);
+        $this->getEventManager()->processEvent('user_manager_find_user', $eParams);
+        if (!$user) {
+            // No valid user found, try an internal lookup for username
+            $user = $this->getUserByUserName($ident);
+            //@todo: lookup based on email address ?
+            //@todo: lookup based on common name ?
+        }
+        
+        return $user;
+    }
+    
+    /**
      * Returns the user that have the given email address.
      * Returns null if no account is found.
      * Throws an exception if several accounts share the same email address.
@@ -431,6 +453,50 @@ class UserManager {
     
     function _getPasswordLifetime() {
         return $GLOBALS['sys_password_lifetime'];
+    }
+    
+    /**
+     * Update db entry of 'user' table with values in object
+     * @param User $user
+     */
+    function updateDb($user) {
+    	if (!$user->isAnonymous()) {
+    		$userRow = $user->toRow();
+    		if ($user->getPassword() != '') {
+                if (md5($user->getPassword()) != $user->getUserPw()) {
+        			// Update password
+        			$userRow['password'] = $user->getPassword(); 
+                }
+    		}
+    		return $this->_userdao->updateByRow($userRow);
+    	}
+    	return false;
+    }
+    
+    /**
+     * Assign to given user the next available unix_uid
+     * 
+     * We need to pass the whole user object and to modify it in this
+     * method to avoid conflicts if updateDb is used after this call. As
+     * updateDb will perform a select on user table to check what changed
+     * between the user table and the user object, the user object must contains
+     * what was updated by this method.
+     * 
+     * @param User $user A user object to update
+     * 
+     * @return Boolean
+     */
+    function assignNextUnixUid($user) {
+        $newUid = $this->_userdao->assignNextUnixUid($user->getId());
+        if ($newUid !== false) {
+            $user->setUnixUid($newUid);
+            return true;
+        }
+        return false;
+    }
+    
+    function getEventManager() {
+        return EventManager::instance();
     }
 }
 

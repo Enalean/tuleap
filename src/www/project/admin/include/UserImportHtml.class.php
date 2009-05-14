@@ -44,31 +44,34 @@ class UserImportHtml extends UserImport {
      *
      */
     function displayParse($user_filename) {
-        global $Language, $feedback;
-        
         if (!file_exists($user_filename) || !is_readable($user_filename)) {
-            $feedback = $Language->getText('project_admin_userimport','missing_file');
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('project_admin_userimport','missing_file'));
             $this->displayInput();
-            project_admin_footer(array());   
-            exit;
+            return;
         }
         
+        $errors       = array();
+        $parsed_users = array();
         $ok = $this->parse($user_filename,$errors,$parsed_users);
-
-        if (!$ok) {        
+        $this->showErrors($errors);
+        
+        if (!$ok) {
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('project_admin_userimport','err_no_user_to_import'));
             $this->displayInput();
-            $this->showErrors($errors); 
         } else {
-            echo '<h2>'.$Language->getText('project_admin_userimport','parse_report').'</h2>';
+            project_admin_header(array('title'=>$GLOBALS['Language']->getText('project_admin_userimport','import_members'),
+                 'help' => 'AddingRemovingUsers.html'));
+            echo '<h2>'.$GLOBALS['Language']->getText('project_admin_userimport','parse_report').'</h2>';
             $this->showParseResults($parsed_users);
+            project_admin_footer(array());
         }
     }
   
 
     function showErrors($errors) {
-        global $feedback;
-        
-        $feedback .= $errors;
+        foreach($errors as $error) {
+            $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('project_admin_userimport','invalid_mail_or_username',$error));
+        }
     }
 
 
@@ -84,9 +87,9 @@ class UserImportHtml extends UserImport {
         //Display table containing the list of users to be imported
         $title_arr = array($Language->getText('project_admin_userimport','username'),$Language->getText('project_admin_userimport','mail_addr'));
         echo html_build_list_table_top ($title_arr);   
-        for ($i=0;$i<count($parsed_users);$i++) {
-            $current_user = $parsed_users[$i];    
-            echo '<TR class="'.util_get_alt_row_color($i).'">'."\n";
+        $i = 0;
+        foreach ($parsed_users as $current_user) {
+            echo '<TR class="'.util_get_alt_row_color($i++).'">'."\n";
             echo '<TD>'.$current_user->getName().'</TD>'."\n";
             echo '<TD>'.$current_user->getEmail().'</TD></TR>'."\n";
         }
@@ -112,18 +115,10 @@ class UserImportHtml extends UserImport {
      * @param array $parsed_users array of users. The array has the form of $parsed_users[] -> username
      */
     function displayImport($parsed_users) {
-        global $feedback,$Language;
-
         //use Codendi logins to add project members in DB, 
         //mail addresses are not used because it will fail in case plugin ldap is disabled/unplugged
-        $ok = $this->updateDB($parsed_users);
-        if ($ok) { 
-            $feedback = $Language->getText('project_admin_userimport','success_import')." ";
-        } else { 
-            $feedback = $Language->getText('project_admin_userimport','fail_import')." ";
-        }   
-
-        $this->displayInput();
+        $this->updateDB($parsed_users);
+        $GLOBALS['Response']->redirect('/project/admin/index.php?group_id='.$this->group_id);
     }
   
   
@@ -149,6 +144,9 @@ class UserImportHtml extends UserImport {
     function displayInput() {
         global $PHP_SELF, $Language;
     
+        project_admin_header(array('title'=>$Language->getText('project_admin_userimport','import_members'),
+                 'help' => 'AddingRemovingUsers.html'));
+        
         echo '<h2>'.$Language->getText('project_admin_userimport','import_members', array(help_button('AddingRemovingUsers.html'))).'</h2>';
         echo $Language->getText('project_admin_userimport','import_welcome',array('/project/admin/userimport.php?group_id='.$this->group_id.'&mode=showformat&func=import'));
 
@@ -162,6 +160,7 @@ class UserImportHtml extends UserImport {
             </TABLE><P>
             <INPUT TYPE="submit" name="submit" value="'.$Language->getText('project_admin_userimport','submit').'">
             </FORM> ';     
+        project_admin_footer(array());
     }
 
 }

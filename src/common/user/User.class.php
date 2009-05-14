@@ -129,6 +129,12 @@ class User {
     protected $session_hash;
     
     /**
+     * Special property, out of $data_array to store CLEAR password
+     * should be used only for update/creation purpose.
+     */
+    private $password;
+    
+    /**
      * Constructor
      * 
      * You should not create new User directly. 
@@ -395,7 +401,22 @@ class User {
     //
     // Getter
     //
-    
+
+    /**
+     * Return associative array of data from db
+     * 
+     * @return array
+     */
+    function toRow() {
+    	$row = array();
+    	foreach ($this->data_array as $k => $v) {
+    		if (!is_numeric($k)) {
+    			$row[$k] = $v;
+    		}
+    	}
+        return $row;
+    }
+
     /**
      * @return int the ID of the user
      */
@@ -442,7 +463,7 @@ class User {
      */
     function getLdapId() {
         return $this->data_array['ldap_id'];
-    }
+    }    
     /**
      * @return string the registration date of the user (timestamp format)
      */
@@ -508,6 +529,11 @@ class User {
     function getUnixStatus() {
         return $this->unix_status;
     }
+    
+    function getUnixUid() {
+        return $this->data_array['unix_uid'];
+    }
+    
     /**
      * @return string unix box of the user
      */
@@ -552,23 +578,24 @@ class User {
         return $this->user_pw;
     }
     
+    /**
+     * @return String User shell
+     */
+    function getShell() {
+        return $this->data_array['shell'];
+    }
+    
     function getLocale() {
         return $this->locale;
     }
-    function setLocale($locale) {
-        $this->locale = $locale;
-    }
-    
+
     /**
      * @return int Timestamp of the last authentication success.
      */
     function getLastAuthSuccess() {
         return $this->last_auth_success;
     }
-    function setLastAuthSuccess($last) {
-        $this->last_auth_success = $last;
-        return $this;
-    }
+    
     /**
      * Return the previous authentication success (the one before last auth
      * success).
@@ -577,29 +604,26 @@ class User {
     function getPreviousAuthSuccess() {
         return $this->prev_auth_success;
     }
-    function setPreviousAuthSuccess($previous) {
-        $this->prev_auth_success = $previous;
-        return $this;
-    }
+    
     /**
      * @return int Timestamp of the last unsuccessful authencation attempt
      */
     function getLastAuthFailure() {
         return $this->last_auth_failure;
     }
-    function setLastAuthFailure($last) {
-        $this->last_auth_failure = $last;
-        return $this;
-    }
+    
     /**
      * @return int Number of authentication failure since the last success.
      */
     function getNbAuthFailure() {
         return $this->nb_auth_failure;
     }
-    function setNbAuthFailure($nb) {
-        $this->nb_auth_failure = $nb;
-        return $this;
+
+    /** 
+     * @return String Clear user password
+     */
+    function getPassword() {
+        return $this->password; 
     }
     /**
      * isActive - test if the user is active or not
@@ -683,6 +707,215 @@ class User {
         }
         return $projects;
     }
+
+    //
+    // Setters
+    //
+
+    /**
+     * @param int the ID of the user
+     */
+    function setId($id) {
+        $this->id = $id;
+        $this->data_array['user_id'] = $id;
+    }
+
+    /**
+     * @param string the name of the user (aka login)
+     */
+    function setUserName($name) {
+        $this->data_array['user_name'] = $name;
+    }
+    /**
+     * @param string the real name of the user
+     */
+    function setRealName($name) {
+        $this->data_array['realname'] = $name;
+    }
+    /**
+     * @param string the email adress of the user
+     */
+    function setEmail($email) {
+        $this->data_array['email'] = $email;
+    }
+    /**
+     * @param string the Status of the user
+     * 'A' = Active
+     * 'R' = Restricted
+     * 'D' = Deleted
+     * 'S' = Suspended
+     */
+    function setStatus($status) {
+    	$allowedStatus = array('A' => true,
+    	                       'R' => true,
+    	                       'D' => true,
+    	                       'S' => true);
+    	if (isset($allowedStatus[$status])) {
+            $this->data_array['status'] = $status;
+    	}
+    }
+    /**
+     * @param string ldap identifier of the user
+     */
+    function setLdapId($ldapId) {
+        $this->data_array['ldap_id'] = $ldapId;
+    }    
+    /**
+     * @param string the registration date of the user (timestamp format)
+     */
+    function setAddDate($addDate) {
+        $this->data_array['add_date'] = $addDate;
+    }
+    /**
+     * @param string the timezone of the user (GMT, Europe/Paris, etc ...)
+     */
+    function setTimezone($timezone) {
+        $this->data_array['timezone'] = $timezone;
+    }
+    /**
+     * @param int 1 if the user accept to receive site mail updates, 0 if he does'nt
+     */
+    function setMailSiteUpdates($mailSiteUpdate) {
+        $this->data_array['mail_siteupdates'] = $mailSiteUpdate;
+    }
+    /**
+     * @param int 1 if the user accept to receive additional mails from the community, 0 if he does'nt
+     */
+    function setMailVA($mailVa) {
+        $this->data_array['mail_va'] = $mailVa;
+    }
+    /**
+     * @param int 0 or 1
+     */
+    function setStickyLogin($stickyLogin) {
+        $this->data_array['sticky_login'] = $stickyLogin;
+    }
+    /**
+     * @param int font size preference of the user
+     */
+    function setFontSize($fontSize) {
+        $this->data_array['fontsize'] = $fontSize;
+    }
+    /**
+     * @param string theme set in user's preferences
+     */
+    function setTheme($theme) {
+        $this->data_array['theme'] = $theme;
+    }
+    /**
+     * @param string the Status of the user
+     * '0' = (number zero) special value for the site admin
+     * 'N' = No Unix Account
+     * 'A' = Active
+     * 'S' = Suspended
+     * 'D' = Deleted
+     */
+    function setUnixStatus($unixStatus) {
+    	$allowedStatus = array(0 => true,
+    	                       '0' => true,
+    	                       'N' => true,
+    	                       'A' => true,
+    	                       'S' => true,
+    	                       'D' => true);
+        if (isset($allowedStatus[$unixStatus])) {
+            $this->data_array['unix_status'] = $unixStatus;
+        }
+    }
+    
+    /**
+     * @param Integer $unixUid Unix uid
+     */
+    function setUnixUid($unixUid) {
+        $this->data_array['unix_uid'] = $unixUid;
+    }
+    
+    /**
+     * @param string unix box of the user
+     */
+    function setUnixBox($unixBox) {
+        $this->data_array['unix_box'] = $unixBox;
+    }
+    /**
+     * @param string authorized keys of the user
+     */
+    function setAuthorizedKeys($authorizedKeys) {
+        $this->data_array['authorized_keys'] = $authorizedKeys;
+    }
+    /**
+     * @param string resume of the user
+     */
+    function setPeopleResume($peopleResume) {
+        $this->data_array['people_resume'] = $peopleResume;
+    }
+    /**
+     * @param int 1 if the user skills are public, 0 otherwise
+     */
+    function setPeopleViewSkills($peopleViewSkills) {
+        $this->data_array['people_view_skills'] = $peopleViewSkills;
+    }
+    /**
+     * @param int ID of the language of the user
+     */
+    function setLanguageID($languageID) {
+        $this->data_array['language_id'] = $languageID;
+    }
+    /**
+     * @param string md5 of user pwd
+     */
+    function setUserPw($userPw) {
+        $this->data_array['user_pw'] = $userPw;
+    }
+    
+    /**
+     * @param String User shell
+     */
+    function setShell($shell) {
+        $this->data_array['shell'] = $shell;
+    }
+    
+    function setLocale($locale) {
+        $this->locale = $locale;
+    }
+    
+    /**
+     * @param int Timestamp of the last authentication success.
+     */
+    function setLastAuthSuccess($lastAuthSuccess) {
+        $this->data_array['last_auth_success'] = $lastAuthSuccess;
+    }
+    /**
+     * the previous authentication success (the one before last auth
+     * success).
+     * @param int Timestamp of the previous authentication success.
+     */
+    function setPreviousAuthSuccess($previousAuthSuccess) {
+        $this->data_array['prev_auth_success'] = $previousAuthSuccess;
+    }
+    /**
+     * @param int Timestamp of the last unsuccessful authencation attempt
+     */
+    function setLastAuthFailure($lastAuthFailure) {
+        $this->data_array['last_auth_failure'] = $lastAuthFailure;
+    }
+    /**
+     * @param int Number of authentication failure since the last success.
+     */
+    function setNbAuthFailure($nbAuthFailure) {
+        $this->data_array['nb_auth_failure'] = $nbAuthFailure;
+    }
+    
+    /**
+     * Set clear password
+     * 
+     * @param  String $password
+     */
+    function setPassword($password) {
+        $this->password = $password;
+    }
+
+    //
+    // Preferences
+    //
     
     protected function getPreferencesDao() {
         if (!$this->_preferencesdao) {

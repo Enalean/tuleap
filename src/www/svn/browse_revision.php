@@ -217,7 +217,7 @@ if (!$request->valid($vGroupId)) {
      creating a custom technician box which includes "any"
     */
 
-    $tech_box=svn_utils_technician_box($root, '_commiter', $_commiter, 'Any');
+    $tech_box=svn_utils_technician_box($group_id, '_commiter', $_commiter, 'Any');
 
 
 

@@ -128,6 +128,52 @@ class UserDao extends DataAccessObject {
         return $inserted;
     }
 
+    function updateByRow(array $user) {
+        $stmt = array();
+        if (isset($user['password'])) {
+            $stmt[] = 'user_pw='.$this->da->quoteSmart(md5($user['password']));
+            $stmt[] = 'unix_pw='.$this->da->quoteSmart(account_genunixpw($user['password']));
+            $stmt[] = 'windows_pw='.$this->da->quoteSmart(account_genwinpw($user['password']));
+            $stmt[] = 'last_pwd_update='.$_SERVER['REQUEST_TIME'];
+            unset($user['password']);
+        }
+        $dar = $this->searchByUserId($user['user_id']);
+        if($dar && !$dar->isError()) {
+            $current = $dar->current();
+            foreach ($user as $field => $value) {
+                if ($field != 'user_id' && $value != $current[$field]) {
+                    $stmt[] = $field.' = '.$this->da->quoteSmart($value);
+                }
+            }
+            if (count($stmt) > 0) {
+                $sql = 'UPDATE user SET '.implode(', ', $stmt).' WHERE user_id = '.db_ei($user['user_id']);
+                return $this->update($sql);
+            }
+        }
+        return false;
+    }
+    
+    /**
+     * Assign to given user the next available unix_uid
+     * 
+     * @param Integer $userId User ID
+     * 
+     * @return Boolean
+     */
+    function assignNextUnixUid($userId) {
+        $sql = 'UPDATE user, (SELECT MAX(unix_uid)+1 AS max_uid FROM user) AS R'.
+               ' SET unix_uid = max_uid'.
+               ' WHERE user_id = '.$this->da->quoteSmart($userId);
+        if ($this->update($sql)) {
+            $sql = 'SELECT unix_uid FROM user WHERE user_id = '.$this->da->quoteSmart($userId);
+            $dar = $this->retrieve($sql);
+            if ($dar && !$dar->isError()) {
+                $row = $dar->current();
+                return $row['unix_uid'];
+            }
+        }
+        return false;
+    }
     
     /**
     * Searches User status by Email
@@ -234,6 +280,40 @@ class UserDao extends DataAccessObject {
         $sql = "DELETE FROM session
                 WHERE session_hash = ". $this->da->quoteSmart($session_hash);
         return $this->update($sql);
+    }
+
+    /**
+     * Search active users with realname or user_name like the variable.
+     *
+     * You can limit the number of results.
+     * This is used by "search users as you type"
+     */
+    function & searchUserNameLike($name, $limit=0) {
+        $sql = "SELECT SQL_CALC_FOUND_ROWS realname, user_name".
+            " FROM user".
+            " WHERE (realname LIKE '%".db_es($name)."%'".
+            " OR user_name LIKE '%".db_es($name)."%')".
+            " AND status IN ('A', 'R')";
+        $sql .= "ORDER BY realname";
+        if($limit > 0) {
+            $sql .= " LIMIT ".db_ei($limit);
+        }
+
+        return $this->retrieve($sql);
+    }
+
+    /**
+     * Return the result of  'FOUND_ROWS()' SQL method for the last query.
+     */
+    function foundRows() {
+        $sql = "SELECT FOUND_ROWS() as nb;";
+        $dar = $this->retrieve($sql);
+        if($dar && !$dar->isError()) {
+            $row = $dar->getRow();
+            return $row['nb'];
+        } else {
+            return false;
+        }
     }
 }
 

@@ -200,14 +200,11 @@ class Docman_ApprovalTableReviewerFactory {
         $nbUserAdded = 0;
         foreach($userArray as $user) {
             $added = false;
-            $userName = util_user_finder($user, true);
-            if($userName != '') {
-                $res = user_get_result_set_from_unix($userName);
-                if($res) {
-                    $added = $this->_addUser(db_result($res, 0, 'user_id'));
-                    if($added) {
-                        $nbUserAdded++;
-                    }
+            $u = UserManager::instance()->findUser($user);
+            if($u) {
+                $added = $this->_addUser($u->getId());
+                if($added) {
+                    $nbUserAdded++;
                 }
             } else {
                 $this->err['notreg'][] = $user;

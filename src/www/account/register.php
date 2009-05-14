@@ -104,7 +104,6 @@ function register_valid($confirm_hash)	{
                           ,$request->get('form_mail_va')
                           ,$tz
                           ,UserManager::instance()->getCurrentUser()->getLocale()
-                          ,account_nextuid()
                           ,'A',$expiry_date);
 
     

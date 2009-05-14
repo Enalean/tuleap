@@ -42,7 +42,6 @@ class DataGeneratorActions extends Actions {
                               ,0
                               ,'Europe/Paris'
                               ,'en_US'
-                              ,account_nextuid()
                               ,'A');
                         $nb_done++;
                     }

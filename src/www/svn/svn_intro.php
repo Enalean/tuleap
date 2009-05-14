@@ -11,6 +11,7 @@
 
 require_once('common/server/ServerFactory.class.php');
 require_once('common/include/URL.class.php');
+require_once('common/event/EventManager.class.php');
 
 
 $vGroupId = new Valid_UInt('group_id');
@@ -54,7 +55,20 @@ if ($row_grp['svn_preamble'] != '') {
        $svn_url = 'http://svn.'. $row_grp['unix_group_name'] .'.'. $host;
     }
     $svn_url .= '/svnroot/'. $row_grp['unix_group_name'];
-    include($Language->getContent('svn/intro'));
+
+    // Hook to replace the default information about subversion
+    // If no plugin set '$svn_intro_in_plugin' to true, the default message is
+    // displayed.
+    $em =& EventManager::instance();
+    $svn_intro_in_plugin = false;
+    $svnParams = array('svn_intro_in_plugin' => &$svn_intro_in_plugin,
+                       'group_id'            => $group_id,
+                       'svn_url'             => $svn_url,
+                       'user_id'             => user_getid());
+    $em->processEvent('svn_intro', $svnParams);
+    if(!$svn_intro_in_plugin) {
+        include($Language->getContent('svn/intro'));
+    }
 }
 
 // Summary info

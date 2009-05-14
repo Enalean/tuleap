@@ -65,6 +65,10 @@ echo "Event.observe(window, 'load', function() {
             });
         }
 });";
+
+echo "new UserAutoCompleter('tracker_cc',
+                          '".util_get_dir_image_theme()."',
+                          true);\n";
 echo "</script>";
 
 // Display footer page

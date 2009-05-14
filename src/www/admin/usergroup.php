@@ -102,7 +102,9 @@ if ($action=='remove_user_from_group') {
     		$row_uid = db_fetch_array($res_uid);
     		if ($row_uid['unix_uid'] == 0) {
     			// need to create uid
-    			db_query("UPDATE user SET unix_uid=" . account_nextuid() . " WHERE user_id=$user_id");
+    			$um = UserManager::instance();
+    			$um->getUserById($user_id); 
+    			$um->assignNextUnixUid($user);
     		} 
     		// now do update
     		$result=db_query("UPDATE user SET unix_status='$form_unixstatus' WHERE user_id=$user_id");	

@@ -34,6 +34,7 @@ class Combined {
             '/scripts/codendi/cross_references.js',
             '/scripts/codendi/Tooltip.js',
             '/scripts/codendi/LayoutManager.js',
+            '/scripts/autocomplete.js',
         );
         return $arr;
     }

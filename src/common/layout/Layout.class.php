@@ -73,6 +73,7 @@ class Layout extends Response {
     private $bgpri = array();
     
     var $feeds;
+    protected $javascriptFooter;
     
     /**
      * Constuctor
@@ -84,7 +85,8 @@ class Layout extends Response {
         
         $this->feeds      = array();
         $this->javascript = array();
-        
+        $this->javascriptFooter = array();
+
         /*
             Set up the priority color array one time only
         */
@@ -715,12 +717,73 @@ class Layout extends Response {
         echo '</select>';
     }
     
+    /**
+     * Add a Javascript file path that will be included in the header of the HTML page. 
+     *
+     * The file will be included in the generated page in <head> section
+     * Note: the order of call of include*Javascript method is very important. 
+     * The code will be included and executed in the same order the
+     * includes are done. This allows (for instance) to define a var before
+     * including a script (eg. Layout::includeCalendarScripts).
+     * 
+     * @see   Layout::includeCalendarScripts
+     * @param String $file Path (relative to URL root) the the javascript file
+     * 
+     * @return void
+     */
     function includeJavascriptFile($file) {
         $this->javascript[] = array('file' => $file);
     }
+    
+    /**
+     * Add a Javascript piece of code to execute in the header of the page. 
+     *
+     * Codendi will append and execute the code in <head> section.
+     * Note: the order of call of include*Javascript method is very important.
+     * see includeJavascriptFile for more details
+     * 
+     * @see Layout::includeJavascriptFile 
+     * @param String $snippet Javascript code.
+     * 
+     * @return void
+     */
     function includeJavascriptSnippet($snippet) {
         $this->javascript[] = array('snippet' => $snippet);
     }
+    
+    /**
+     * Add a Javascript file path that will be included at the end of the HTML page. 
+     *
+     * The file will be included in the generated page just before the </body>
+     * markup. 
+     * Note: the order of call of include*Javascript method is very important.
+     * see includeJavascriptFile for more details
+     * 
+     * @see Layout::includeJavascriptFile
+     * @param String $file Path (relative to URL root) the the javascript file
+     * 
+     * @return void
+     */
+    function includeFooterJavascriptFile($file) {
+        $this->javascriptFooter[] = array('file' => $file);
+    }
+    
+    /**
+     * Add a Javascript piece of code to execute in the footer of the page.
+     *
+     * Codendi will append and execute the code just before </body> markup.
+     * Note: the order of call of include*Javascript method is very important.
+     * see includeJavascriptFile for more details
+     * 
+     * @see Layout::includeJavascriptFile
+     * @param String $snippet Javascript code.
+     * 
+     * @return void
+     */
+    function includeFooterJavascriptSnippet($snippet) {
+        $this->javascriptFooter[] = array('snippet' => $snippet);
+    }
+    
     function includeCalendarScripts() {
         $this->includeJavascriptSnippet("var useLanguage = '". substr(UserManager::instance()->getCurrentUser()->getLocale(), 0, 2) ."';");
         $this->includeJavascriptFile("/scripts/datepicker/datepicker.js");
@@ -860,7 +923,13 @@ class Layout extends Response {
     }
     
     /**
-     * Display all the javascript tag for the current page
+	 * Display the Javascript code to be included in <head>
+	 *
+	 * Snippet and files are included one after another in the order of call
+	 * of includeJavascriptFile & includeJavascriptSnippet methods.
+	 * 
+	 * @see includeJavascriptFile
+	 * @see includeJavascriptSnippet
      */
     public function displayJavascriptElements() {
         $c = new Combined();
@@ -883,20 +952,42 @@ class Layout extends Response {
         $em->processEvent("javascript_file", null);
         
         foreach ($this->javascript as $js) {
-            reset($js);
-            list($type, $content) = each($js);
-            if ($type == 'file') {
-                if (!$c->isCombined($content)) {
-                    echo '<script type="text/javascript" src="'. $content .'"></script>';
-                }
+            if (isset($js['file']) && !$c->isCombined($js['file'])) {
+                echo '<script type="text/javascript" src="'. $js['file'] .'"></script>'."\n";
             } else {
-                echo '<script type="text/javascript">'. $content .'</script>';
+                echo '<script type="text/javascript">'."\n";
+                echo '//<!--'."\n";
+                echo $js['snippet']."\n";
+                echo '//-->'."\n";
+                echo '</script>'."\n";
             }
         }
         echo '<script type="text/javascript">'."\n";
         $em->processEvent("javascript", null);
         echo '
         </script>';
+    }
+    
+    /**
+     * Display the Javascript code to be included at the end of the page.
+     * Snippet and files are included one after another in the order of call
+     * of includeFooterJavascriptFile & includeFooterJavascriptSnippet methods.
+     * 
+     * @see includeFooterJavascriptFile
+     * @see includeFooterJavascriptSnippet
+     */
+    function displayFooterJavascriptElements() {
+        foreach ($this->javascriptFooter as $js) {
+            if (isset($js['file'])) {
+                echo '<script type="text/javascript" src="'. $js['file'] .'"></script>'."\n";
+            } else {
+                echo '<script type="text/javascript">'."\n";
+                echo '//<!--'."\n";
+                echo $js['snippet']."\n";
+                echo '//-->'."\n";
+                echo '</script>'."\n";
+            }
+        }
     }
     
     /**
@@ -1128,7 +1219,8 @@ class Layout extends Response {
                 
         echo "</pre>\n";
         }
-          
+
+        echo $this->displayFooterJavascriptElements();
         echo '</body>';
         echo '</html>';
     }
@@ -1196,9 +1288,9 @@ class Layout extends Response {
     }
     
     function pv_footer($params) {
+        echo $this->displayFooterJavascriptElements();
         echo "\n</body></html>";
     }
-
 
     function header($params) {
         global $Language;

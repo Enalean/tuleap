@@ -71,7 +71,7 @@ function util_get_user_preferences_export_datefmt() {
         case "day_month_year";
             $fmt = 'd/m/Y H:i:s';
             break;
-        default;
+        default:
             $fmt = 'm/d/Y H:i:s';
             break;
     }
@@ -874,43 +874,28 @@ function util_normalize_emails($adresses) {
  *   test if its a valid email address.
  * - Else, return an empty string (ie. not a valid identifier)
  *
- * @param ident (IN) : A user identifier
- * @param strict (IN): If strict mode is enabled only Codendi user and ldap valid
- *                     entries are allowed. Otherwise, return an empty string
+ * @param String  $ident (IN)      A user identifier
+ * @param Boolean $strict (IN)     If strict mode is enabled only Codendi user and ldap valid
+ *                                 entries are allowed. Otherwise, return an empty string
+ *
  * @return String
  */
 function util_user_finder($ident, $strict=true) {
-    $bestCodendiIdentifier='';
-
-    $ident = rtrim($ident);
     $ident = trim($ident);
-
-    $em =& EventManager::instance();
-    $eParams = array();
-    $eParams['ident']                 = $ident;
-    $eParams['strict']                = $strict;
-    $eParams['best_codendi_identifier'] =& $bestCodendiIdentifier;
-    $em->processEvent('user_finder', $eParams);
-    if ($bestCodendiIdentifier == '') {
-        // No valid user found, try an internal lookup for username
-        $res = user_get_result_set_from_unix($ident);
-        if($res && db_numrows($res) == 1) {
-            if(db_result($res, 0, 'status') == 'A' || db_result($res, 0, 'status') == 'R') {
-                $bestCodendiIdentifier = $ident;
-            }
-        } else {
-            // Neither Plugins nor codendi found a valid user with this
-            // identifier. If allowed, return the identifier as email address
-            // if the identifier is a valid email address.
-            if(!$strict) {
-                if (validate_email($ident)) {
-                    $bestCodendiIdentifier=$ident;
-                }
+    $user = UserManager::instance()->findUser($ident);
+    if ($user) {
+        return $user->getUserName();
+    } else {
+        // Neither Plugins nor Codendi found a valid user with this
+        // identifier. If allowed, return the identifier as email address
+        // if the identifier is a valid email address.
+        if(!$strict) {
+            if (validate_email($ident)) {
+                return $ident;
             }
         }
     }
-
-    return $bestCodendiIdentifier;
+    return '';
 }
 
 

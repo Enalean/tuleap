@@ -480,9 +480,9 @@ class Docman_FilterOwner extends Docman_Filter {
 
     function _urlMatchUpdate($request) {
         if(parent::_urlMatchUpdate($request)) {
-            $user = util_user_finder($this->getValue());
-            if($user != '') {
-                $this->setValue($user);
+            $user = UserManager::instance()->findUser($this->getValue());
+            if($user) {
+                $this->setValue($user->getUserName());
             }
             return true;
         }

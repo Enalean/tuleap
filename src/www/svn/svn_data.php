@@ -11,14 +11,14 @@
 
 require_once('svn_utils.php');
 
-function svn_data_get_technicians($projectname) {
+function svn_data_get_technicians($group_id) {
 
     // Get list of all people who once committed something in the CVS
     // including those who may have been removed from the project since then.
-    $sql="SELECT DISTINCT user.user_name, user.user_name ".
-        "FROM svn_commits, svn_repositories, user ".
-        "WHERE (svn_repositories.repository like '%/".db_es($projectname)."') AND (svn_repositories.id = svn_commits.repositoryid) AND (svn_commits.whoid=user.user_id) ".
-        "ORDER BY user.user_name ASC";
+    $sql="SELECT DISTINCT user.user_name, user.user_name".
+        " FROM user INNER JOIN svn_commits ON (svn_commits.whoid=user.user_id)".
+        " WHERE svn_commits.group_id=".db_ei($group_id).
+        " ORDER BY user.user_name ASC";
     return db_query($sql);
 }
 

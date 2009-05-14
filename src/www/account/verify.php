@@ -58,11 +58,12 @@ if ($request->isPost() && $request->exist('Login')){
     $success=verify_login_valid();
     if ($success) {
         // Get user status: if already set to 'R' (restricted) don't change it!
-        $res_status=db_query("SELECT status FROM user WHERE user_name='".db_es($request->get('form_loginname'))."'");
-        if (db_result($res_status,0,'status') == 'R' || db_result($res_status,0,'status') == 'W') {
-            $newstatus='R';
+        $um = UserManager::instance();
+        $user = $um->getUserByUserName($request->get('form_loginname'));
+        if ($user->getStatus() == 'R' || $user->getStatus() == 'W') {
+            $user->setStatus('R');
         } else {
-            $newstatus='A';
+            $user->setStatus('A');
         }
 
         // LJ in Codendi we now activate the Unix account upfront to limit
@@ -70,24 +71,21 @@ if ($request->isPost() && $request->exist('Login')){
         // LJ users only
         // LJ	$res = db_query("UPDATE user SET status='A' WHERE user_name='$GLOBALS[form_loginname]'");
 
-	// LJ Since the URL in the e-mail notification can be used
-	// LJ several times we must make sure that we do not generate
-	// LJ a unix user_id a second time
-	  $res_user = db_query("SELECT unix_uid FROM user WHERE user_name='".db_es($request->get('form_loginname'))."'");
-	  if (db_result($res_user,0,'unix_uid') == 0) {	
-              $shell="";
-              if ($newstatus=='R') {
-                  // Set restricted shell for restricted users.
-                  $shell=",shell='".$GLOBALS['codendi_bin_prefix'] ."/cvssh-restricted'";
-              }
-	    $res = db_query("UPDATE user SET status='".$newstatus."',unix_status='A',unix_uid=". account_nextuid().$shell."  WHERE user_name='".db_es($request->get('form_loginname'))."'");
-	  } else {
-	    $res = db_query("UPDATE user SET status='".$newstatus."',unix_status='A'  WHERE user_name='".db_es($request->get('form_loginname'))."'");
-	  }
-          $user= UserManager::instance()->getUserByUserName($request->get('form_loginname'));
-          $em =& EventManager::instance();
-          $em->processEvent('project_admin_activate_user', array('user_id' => $user->getId()));
-          session_redirect("/account/first.php");
+        // LJ Since the URL in the e-mail notification can be used
+        // LJ several times we must make sure that we do not generate
+        // LJ a unix user_id a second time
+        if ($user->getUnixUid() == 0) {
+            $um->assignNextUnixUid($user);
+            if ($user->getStatus() == 'R') {
+                // Set restricted shell for restricted users.
+                $user->setShell($GLOBALS['codendi_bin_prefix'] .'/cvssh-restricted');
+            }
+
+        }
+        $user->setUnixStatus('A');
+        $um->updateDb($user);
+
+        session_redirect("/account/first.php");
 	}
 }
 

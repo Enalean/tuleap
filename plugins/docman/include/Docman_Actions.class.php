@@ -77,21 +77,17 @@ class Docman_Actions extends Actions {
     function _checkOwnerChange($owner, &$user) {
         $ret_id = null;
 
-        $_owner = util_user_finder($owner);
-        if($_owner == "") {
+        $_owner = UserManager::instance()->findUser($owner);
+        if(!$_owner) {
             $this->_controler->feedback->log('warning', $GLOBALS['Language']->getText('plugin_docman', 'warning_missingowner'));
             $ret_id = $user->getId();
         }
         else {
-            $dbresults = user_get_result_set_from_unix($_owner);
-            $_owner_id     = db_result($dbresults, 0, 'user_id');
-            $_owner_status = db_result($dbresults, 0, 'status');
-            if($_owner_id === false || $_owner_id < 1 || !($_owner_status == 'A' || $_owner_status = 'R')) {
+            if(!$_owner->isAnonymous() && ($_owner->isActive() || $_owner->isRestricted())) {
+                $ret_id = $_owner->getId();
+            } else {
                 $this->_controler->feedback->log('warning', $GLOBALS['Language']->getText('plugin_docman', 'warning_invalidowner'));
                 $ret_id = $user->getId();
-            }
-            else {
-                $ret_id = $_owner_id;
             }
         }
         return $ret_id;
@@ -1421,14 +1417,13 @@ class Docman_Actions extends Actions {
 
         // Change owner
         if($newOwner === false) {
-            $_owner = util_user_finder($owner);
-            if($_owner == "") {
+            $_owner = UserManager::instance()->findUser($owner);
+            if(!$_owner) {
                 $newOwner = $table->getOwner();
             } else {
-                $dbresults = user_get_result_set_from_unix($_owner);
-                $newOwner  = db_result($dbresults, 0, 'user_id');
-                $_owner_status = db_result($dbresults, 0, 'status');
-                if($newOwner === false || $newOwner < 1 || !($_owner_status == 'A' || $_owner_status = 'R')) {
+                if(!$_owner->isAnonymous() && ($_owner->isActive() || $_owner->isRestricted())) {
+                    $newOwner = $_owner->getId();
+                } else {
                     $newOwner = $table->getOwner();
                 }
             }

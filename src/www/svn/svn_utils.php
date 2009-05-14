@@ -79,12 +79,12 @@ function svn_footer($params) {
 }
 
 
-function svn_utils_technician_box($projectname,$name='_commiter',$checked='xzxz',$text_100='None') {
+function svn_utils_technician_box($group_id,$name='_commiter',$checked='xzxz',$text_100='None') {
   global $Language;
-	if (!$projectname) {
+	if (!$group_id) {
 		return $Language->getText('svn_utils','g_id_err');
 	} else {
-		$result=svn_data_get_technicians($projectname);
+		$result=svn_data_get_technicians($group_id);
         if (!in_array($checked,util_result_column_to_array($result))) {
             // Selected 'my commits' but never commited
             $checked='xzxz';
@@ -597,7 +597,7 @@ function svn_utils_parse_access_file($gname) {
         if ($m) {
           $group = $matches[1];
           $users = $matches[2];
-          $SVNGROUPS[strtolower($group)] = split(",", str_replace(' ','',strtolower($users)));
+          $SVNGROUPS[strtolower($group)] = array_map('trim', split(",", strtolower($users)));
         }
       } else if ($state == $ST_PATH) {
         $m = preg_match($perm_pat, $line, $matches);
@@ -636,6 +636,10 @@ global $SVNACCESS, $SVNGROUPS;
  if ($SVNACCESS == "None") {
     svn_utils_parse_access_file($gname);
   }
+
+  $em = EventManager::instance();
+  $em->processEvent('svn_check_access_username', array('username'  => &$username,
+                                                       'groupname' => $gname));
 
  $forbidden = array();
  if (!user_is_super_user()) {   // super user have all the rights (no forbidden paths)
@@ -681,9 +685,11 @@ function svn_utils_check_access($username, $gname, $svnpath) {
 
   if ( (user_getname()==$username) && (user_is_super_user())) return true;
 
-  # make sure that usernames are lowercase
+  $em =& EventManager::instance();
+  $em->processEvent('svn_check_access_username', array('username'  => &$username,
+                                                       'groupname' => $gname));
   $username = strtolower($username);
-  
+
   if ($SVNACCESS == "None") {
     svn_utils_parse_access_file($gname);
   }

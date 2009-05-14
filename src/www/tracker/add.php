@@ -39,6 +39,9 @@ $ah->displayAdd(user_getid());
 echo "<script type=\"text/javascript\">\n";
 $armh =& new ArtifactRulesManagerHtml($ath);
 $armh->displayRulesAsJavascript();
+echo "new UserAutoCompleter('tracker_cc',
+                          '".util_get_dir_image_theme()."',
+                          true);\n";
 echo "</script>";
 
 // Display footer page

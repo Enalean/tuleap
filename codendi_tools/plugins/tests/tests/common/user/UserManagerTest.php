@@ -483,5 +483,78 @@ class UserManagerTest extends UnitTestCase {
         $user = $um->getUserByIdentifier('test');
         $this->assertNull($user);
     }
+    
+    function testUpdateFailureWhenAnonymous() {
+    	$user = new MockUser($this);
+        $user->setReturnValue('isAnonymous', true);
+        
+        $dao = new MockUserDao($this);
+        $um = new UserManager($dao);
+        $this->assertFalse($um->updateDb($user));
+    }
+    
+    function testUpdateDaoResultPropagated() {
+    	$user = new MockUser($this);
+    	$user->setReturnValue('isAnonymous', false);
+    	
+    	// True
+    	$daotrue = new MockUserDao($this);
+        $daotrue->setReturnValue('updateByRow', true);
+    	$umtrue = new UserManager($daotrue);
+        $this->assertTrue($umtrue->updateDb($user));
+        
+        // False
+        $daofalse = new MockUserDao($this);
+        $daofalse->setReturnValue('updateByRow', false);
+        $umfalse = new UserManager($daofalse);
+        $this->assertFalse($umfalse->updateDb($user));
+    }
+    
+    function testUpdatePassword() {
+    	$password = "coco l'asticot";
+    	
+    	$user = new MockUser($this);
+        $user->setReturnValue('isAnonymous', false);
+        $user->setReturnValue('toRow', array());
+        $user->setReturnValue('getPassword', $password);
+        $user->setReturnValue('getUserPw', md5("j'ai faim"));
+        
+        $dao = new MockUserDao($this);
+        $dao->expect('updateByRow', array(array('password' => $password)));
+        
+        $um = new UserManager($dao);
+        $um->updateDb($user);
+    }
+
+    function testUpdateNoPasswordChange() {
+        $password = "coco l'asticot";
+        
+        $user = new MockUser($this);
+        $user->setReturnValue('isAnonymous', false);
+        $user->setReturnValue('toRow', array());
+        $user->setReturnValue('getPassword', $password);
+        $user->setReturnValue('getUserPw', md5($password));
+        
+        $dao = new MockUserDao($this);
+        $dao->expect('updateByRow', array(array()));
+        
+        $um = new UserManager($dao);
+        $um->updateDb($user);
+    }
+    
+    function testAssignNextUnixUidUpdateUser() {
+        $user = new MockUser($this);
+        $user->expectOnce('setUnixUid', array(1789));
+        
+        $dao = new MockUserDao($this);
+        $dao->setReturnValue('assignNextUnixUid', 1789);
+        
+        $um = new UserManager($dao);
+        $um->assignNextUnixUid($user);
+        
+        // Instead of $user->expectOnce('setUnixUid', array(1789)); with
+        // Codendi 4.0 and new User, we should use this assertion:
+        //$this->assertEqual(1789, $user->getUnixUid());
+    }
 }
 ?>
