@@ -122,18 +122,18 @@ class SystemEventManager {
     function addSystemEvent($event, $params) {
         //$event = constant(strtoupper($event));
         switch ($event) {
-        case Event::TYPE_SYSTEM_CHECK:
+        case Event::SYSTEM_CHECK:
             // TODO: check that there is no already existing system_check job?
             $this->createEvent(SystemEvent::TYPE_SYSTEM_CHECK,
                                '',
                                SystemEvent::PRIORITY_LOW);
             break;
-        case Event::TYPE_EDIT_SSH_KEYS:
+        case Event::EDIT_SSH_KEYS:
             $this->createEvent(SystemEvent::TYPE_EDIT_SSH_KEYS,
                                $params['user_id'],
                                SystemEvent::PRIORITY_MEDIUM);
             break;
-        case Event::TYPE_USER_EMAIL_CHANGED:
+        case Event::USER_EMAIL_CHANGED:
             $this->createEvent(SystemEvent::TYPE_USER_EMAIL_CHANGED,
                                $params['user_id'],
                                SystemEvent::PRIORITY_LOW);
