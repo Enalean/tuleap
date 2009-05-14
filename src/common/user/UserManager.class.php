@@ -143,6 +143,14 @@ class UserManager {
         $this->getEventManager()->processEvent('user_manager_find_user', $eParams);
         if (!$user) {
             // No valid user found, try an internal lookup for username
+            if(preg_match('/^(.*) \((.*)\)$/', $ident, $matches)) {
+                if(trim($matches[2]) != '') {
+                    $ident = $matches[2];
+                } else {
+                    //$user  = $this->getUserByCommonName($matches[1]);
+                }
+            }
+
             $user = $this->getUserByUserName($ident);
             //@todo: lookup based on email address ?
             //@todo: lookup based on common name ?

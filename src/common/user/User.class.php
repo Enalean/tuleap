@@ -129,10 +129,10 @@ class User {
     protected $session_hash;
     
     /**
-     * Special property, out of $data_array to store CLEAR password
+     * Special property to store CLEAR password
      * should be used only for update/creation purpose.
      */
-    private $password;
+    private $clear_password;
     
     /**
      * Constructor
@@ -194,6 +194,51 @@ class User {
         }
         
         $this->session_hash = false;
+    }
+    
+    
+
+    /**
+     * Return associative array of data from db
+     * 
+     * @return array
+     */
+    function toRow() {
+        return array(
+            'user_id'            => $this->user_id,
+            'user_name'          => $this->user_name,
+            'email'              => $this->email,
+            'user_pw'            => $this->user_pw,
+            'realname'           => $this->realname,
+            'register_purpose'   => $this->register_purpose,
+            'status'             => $this->status,
+            'shell'              => $this->shell,
+            'unix_pw'            => $this->unix_pw,
+            'unix_status'        => $this->unix_status,
+            'unix_uid'           => $this->unix_uid,
+            'unix_box'           => $this->unix_box,
+            'ldap_id'            => $this->ldap_id,
+            'add_date'           => $this->add_date,
+            'confirm_hash'       => $this->confirm_hash,
+            'mail_siteupdates'   => $this->mail_siteupdates,
+            'mail_va'            => $this->mail_va,
+            'sticky_login'       => $this->sticky_login,
+            'authorized_keys'    => $this->authorized_keys,
+            'email_new'          => $this->email_new,
+            'people_view_skills' => $this->people_view_skills,
+            'people_resume'      => $this->people_resume,
+            'timezone'           => $this->timezone,
+            'fontsize'           => $this->fontsize,
+            'theme'              => $this->theme,
+            'language_id'        => $this->language_id,
+            'last_pwd_update'    => $this->last_pwd_update,
+            'last_access_date'   => $this->last_access_date,
+            'expiry_date'        => $this->expiry_date,
+            'prev_auth_success'  => $this->prev_auth_success,
+            'last_auth_success'  => $this->last_auth_success,
+            'last_auth_failure'  => $this->last_auth_failure,
+            'nb_auth_failure'    => $this->nb_auth_failure,
+        );
     }
     
     /**
@@ -403,21 +448,6 @@ class User {
     //
 
     /**
-     * Return associative array of data from db
-     * 
-     * @return array
-     */
-    function toRow() {
-    	$row = array();
-    	foreach ($this->data_array as $k => $v) {
-    		if (!is_numeric($k)) {
-    			$row[$k] = $v;
-    		}
-    	}
-        return $row;
-    }
-
-    /**
      * @return int the ID of the user
      */
     function getId() {
@@ -462,7 +492,7 @@ class User {
      * @return string ldap identifier of the user
      */
     function getLdapId() {
-        return $this->data_array['ldap_id'];
+        return $this->ldap_id;
     }    
     /**
      * @return string the registration date of the user (timestamp format)
@@ -531,7 +561,7 @@ class User {
     }
     
     function getUnixUid() {
-        return $this->data_array['unix_uid'];
+        return $this->unix_uid;
     }
     
     /**
@@ -582,7 +612,7 @@ class User {
      * @return String User shell
      */
     function getShell() {
-        return $this->data_array['shell'];
+        return $this->shell;
     }
     
     function getLocale() {
@@ -623,7 +653,7 @@ class User {
      * @return String Clear user password
      */
     function getPassword() {
-        return $this->password; 
+        return $this->clear_password; 
     }
     /**
      * isActive - test if the user is active or not
@@ -717,26 +747,26 @@ class User {
      */
     function setId($id) {
         $this->id = $id;
-        $this->data_array['user_id'] = $id;
+        $this->user_id = $id;
     }
 
     /**
      * @param string the name of the user (aka login)
      */
     function setUserName($name) {
-        $this->data_array['user_name'] = $name;
+        $this->user_name = $name;
     }
     /**
      * @param string the real name of the user
      */
     function setRealName($name) {
-        $this->data_array['realname'] = $name;
+        $this->realname = $name;
     }
     /**
      * @param string the email adress of the user
      */
     function setEmail($email) {
-        $this->data_array['email'] = $email;
+        $this->email = $email;
     }
     /**
      * @param string the Status of the user
@@ -751,56 +781,56 @@ class User {
     	                       'D' => true,
     	                       'S' => true);
     	if (isset($allowedStatus[$status])) {
-            $this->data_array['status'] = $status;
+            $this->status = $status;
     	}
     }
     /**
      * @param string ldap identifier of the user
      */
     function setLdapId($ldapId) {
-        $this->data_array['ldap_id'] = $ldapId;
+        $this->ldap_id = $ldapId;
     }    
     /**
      * @param string the registration date of the user (timestamp format)
      */
     function setAddDate($addDate) {
-        $this->data_array['add_date'] = $addDate;
+        $this->add_date = $addDate;
     }
     /**
      * @param string the timezone of the user (GMT, Europe/Paris, etc ...)
      */
     function setTimezone($timezone) {
-        $this->data_array['timezone'] = $timezone;
+        $this->timezone = $timezone;
     }
     /**
      * @param int 1 if the user accept to receive site mail updates, 0 if he does'nt
      */
     function setMailSiteUpdates($mailSiteUpdate) {
-        $this->data_array['mail_siteupdates'] = $mailSiteUpdate;
+        $this->mail_siteupdates = $mailSiteUpdate;
     }
     /**
      * @param int 1 if the user accept to receive additional mails from the community, 0 if he does'nt
      */
     function setMailVA($mailVa) {
-        $this->data_array['mail_va'] = $mailVa;
+        $this->mail_va = $mailVa;
     }
     /**
      * @param int 0 or 1
      */
     function setStickyLogin($stickyLogin) {
-        $this->data_array['sticky_login'] = $stickyLogin;
+        $this->sticky_login = $stickyLogin;
     }
     /**
      * @param int font size preference of the user
      */
     function setFontSize($fontSize) {
-        $this->data_array['fontsize'] = $fontSize;
+        $this->fontsize = $fontSize;
     }
     /**
      * @param string theme set in user's preferences
      */
     function setTheme($theme) {
-        $this->data_array['theme'] = $theme;
+        $this->theme = $theme;
     }
     /**
      * @param string the Status of the user
@@ -818,7 +848,7 @@ class User {
     	                       'S' => true,
     	                       'D' => true);
         if (isset($allowedStatus[$unixStatus])) {
-            $this->data_array['unix_status'] = $unixStatus;
+            $this->unix_status = $unixStatus;
         }
     }
     
@@ -826,51 +856,51 @@ class User {
      * @param Integer $unixUid Unix uid
      */
     function setUnixUid($unixUid) {
-        $this->data_array['unix_uid'] = $unixUid;
+        $this->unix_uid = $unixUid;
     }
     
     /**
      * @param string unix box of the user
      */
     function setUnixBox($unixBox) {
-        $this->data_array['unix_box'] = $unixBox;
+        $this->unix_box = $unixBox;
     }
     /**
      * @param string authorized keys of the user
      */
     function setAuthorizedKeys($authorizedKeys) {
-        $this->data_array['authorized_keys'] = $authorizedKeys;
+        $this->authorized_keys = $authorizedKeys;
     }
     /**
      * @param string resume of the user
      */
     function setPeopleResume($peopleResume) {
-        $this->data_array['people_resume'] = $peopleResume;
+        $this->people_resume = $peopleResume;
     }
     /**
      * @param int 1 if the user skills are public, 0 otherwise
      */
     function setPeopleViewSkills($peopleViewSkills) {
-        $this->data_array['people_view_skills'] = $peopleViewSkills;
+        $this->people_view_skills = $peopleViewSkills;
     }
     /**
      * @param int ID of the language of the user
      */
     function setLanguageID($languageID) {
-        $this->data_array['language_id'] = $languageID;
+        $this->language_id = $languageID;
     }
     /**
      * @param string md5 of user pwd
      */
     function setUserPw($userPw) {
-        $this->data_array['user_pw'] = $userPw;
+        $this->user_pw = $userPw;
     }
     
     /**
      * @param String User shell
      */
     function setShell($shell) {
-        $this->data_array['shell'] = $shell;
+        $this->shell = $shell;
     }
     
     function setLocale($locale) {
@@ -881,7 +911,7 @@ class User {
      * @param int Timestamp of the last authentication success.
      */
     function setLastAuthSuccess($lastAuthSuccess) {
-        $this->data_array['last_auth_success'] = $lastAuthSuccess;
+        $this->last_auth_success = $lastAuthSuccess;
     }
     /**
      * the previous authentication success (the one before last auth
@@ -889,19 +919,19 @@ class User {
      * @param int Timestamp of the previous authentication success.
      */
     function setPreviousAuthSuccess($previousAuthSuccess) {
-        $this->data_array['prev_auth_success'] = $previousAuthSuccess;
+        $this->prev_auth_success = $previousAuthSuccess;
     }
     /**
      * @param int Timestamp of the last unsuccessful authencation attempt
      */
     function setLastAuthFailure($lastAuthFailure) {
-        $this->data_array['last_auth_failure'] = $lastAuthFailure;
+        $this->last_auth_failure = $lastAuthFailure;
     }
     /**
      * @param int Number of authentication failure since the last success.
      */
     function setNbAuthFailure($nbAuthFailure) {
-        $this->data_array['nb_auth_failure'] = $nbAuthFailure;
+        $this->nb_auth_failure = $nbAuthFailure;
     }
     
     /**
@@ -910,7 +940,7 @@ class User {
      * @param  String $password
      */
     function setPassword($password) {
-        $this->password = $password;
+        $this->clear_password = $password;
     }
 
     //
