@@ -311,7 +311,7 @@ abstract class SystemEvent {
             $m->setBody("
 Event:        #{$this->getId()}
 Type:         {$this->getType()}
-Parameters:   {$this->verbalizeParameters()}
+Parameters:   {$this->verbalizeParameters(false)}
 Priority:     {$this->getPriority()}
 Status:       {$this->getStatus()}
 Log:          {$this->getLog()}
