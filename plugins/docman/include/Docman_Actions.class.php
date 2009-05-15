@@ -1085,20 +1085,20 @@ class Docman_Actions extends Actions {
 
                 $updated = $mdFactory->update($md);
                 if($updated) {
-                    $this->_controler->feedback->log('info', 'Metadata successfully updated');
+                    $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'admin_metadata_update'));
                 }
                 else {
-                    $this->_controler->feedback->log('warning', 'Metadata not updated');
+                    $this->_controler->feedback->log('warning', $GLOBALS['Language']->getText('plugin_docman', 'admin_metadata_not_update'));
                 }
             }
             else {
-                $this->_controler->feedback->log('error', 'Given project id and metadata project id mismatch.');
-                $this->_controler->feedback->log('error', 'Metadata not updated');
+                $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'admin_metadata_id_mismatched'));
+                $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'admin_metadata_not_update'));
             }
         }
         else {
-            $this->_controler->feedback->log('error', 'Bad metadata label');
-            $this->_controler->feedback->log('error', 'Metadata not updated');
+            $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'admin_metadata_bad_label'));
+            $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'admin_metadata_not_update'));
         }
     }
 
@@ -1138,10 +1138,10 @@ class Docman_Actions extends Actions {
 
         $mdId = $mdFactory->create($md);
         if($mdId !== false) {
-            $this->_controler->feedback->log('info', 'Property successfully created');
+            $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'admin_metadata_create'));
         }
         else {
-            $this->_controler->feedback->log('error', 'An error occured on propery creation');
+            $this->_controler->feedback->log('error',$GLOBALS['Language']->getText('plugin_docman', 'admin_metadata_error_creation'));
         }
     }
 
@@ -1216,10 +1216,10 @@ class Docman_Actions extends Actions {
             $loveFactory = new Docman_MetadataListOfValuesElementFactory($md->getId());
             $deleted = $loveFactory->delete($love);
             if($deleted) {
-                $this->_controler->feedback->log('info', 'Element successfully deleted.');
-                $this->_controler->feedback->log('info', 'Documents labeled with the deleted element were reset to the "None" value.');
+                $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'admin_metadata_delete_element'));
+                $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'admin_metadata_reset_delete_element'));
             } else {
-                $this->_controler->feedback->log('error', 'An error occured on element deletion.');
+                $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'admin_metadata_error_delete_element'));
             }
         }
         else {
@@ -1238,14 +1238,14 @@ class Docman_Actions extends Actions {
         $updated = $loveFactory->update($love);
 
         if($updated) {
-            $this->_controler->feedback->log('info', 'Element successfully updated');
+            $this->_controler->feedback->log('info',  $GLOBALS['Language']->getText('plugin_docman', 'admin_metadata_element_update'));
 
             $this->_controler->view = 'RedirectAfterCrud';
             $this->_controler->_viewParams['default_url_params']  = array('action' => 'admin_md_details',
                                                                           'md'     => $md->getLabel());
         }
         else {
-            $this->_controler->feedback->log('error', 'Unable to update element.');
+            $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'admin_metadata_element_not_update'));
 
             $this->_controler->view = 'RedirectAfterCrud';
             $this->_controler->_viewParams['default_url_params']  = array('action' => 'admin_display_love',

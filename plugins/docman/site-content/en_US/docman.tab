@@ -138,6 +138,18 @@ plugin_docman	admin_metadata_new_title	Create a new property
 plugin_docman	admin_metadata_new_name_exists	There is already a property with the name '$1'.
 plugin_docman	admin_metadata_new_name_missing	Property name is required, please fill this field.
 plugin_docman	admin_metadata_new_submit	Create
+plugin_docman	admin_metadata_update	Metadata successfully updated.
+plugin_docman	admin_metadata_not_update	Metadata not updated.
+plugin_docman	admin_metadata_id_mismatched	Given project id and metadata project id mismatch.
+plugin_docman	admin_metadata_bad_label	Bad metadata label.
+plugin_docman	admin_metadata_create	Property successfully created.
+plugin_docman	admin_metadata_error_creation	An error occured on property creation
+plugin_docman	admin_metadata_delete_element	Element successfully deleted.
+plugin_docman	admin_metadata_reset_delete_element	Documents labeled with the deleted element were reset to the "None" value.
+plugin_docman	admin_metadata_error_delete_element	An error occured on element suppression.
+plugin_docman	admin_metadata_element_update	Element successfully updated.
+plugin_docman	admin_metadata_element_not_update	Unable to update element.
+
 plugin_docman	admin_obsolete_title	Manage Obsolete Documents
 plugin_docman	admin_obsolete_descr	View and update obsolete documents.
 plugin_docman	admin_obsolete_help	This is the list of all documents obsolete today. If you click on document title you will be redirected to the document properties and you will be able to make it available again.
