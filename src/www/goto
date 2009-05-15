@@ -128,6 +128,25 @@ if ($request->isAjax()) {
             echo ' </tr>';
             echo '</table>';
             break;
+        case 'cvs':
+            require_once('www/cvs/commit_utils.php');
+            $commit_id = $request->get('val');
+            $sql = "SELECT repository, cvs_commits.comm_when as c_when, repositoryid, description, file, fileid, dir, dirid, type, branch, revision, addedlines, removedlines ".
+                    "FROM cvs_dirs, cvs_descs, cvs_files, cvs_checkins, cvs_branches, cvs_repositories, cvs_commits ".
+                    "WHERE cvs_checkins.fileid=cvs_files.id ".
+                    "   AND cvs_checkins.dirid=cvs_dirs.id ".
+                    "   AND cvs_checkins.commitid=cvs_commits.id ".
+                    "   AND cvs_checkins.branchid=cvs_branches.id ".
+                    "   AND cvs_checkins.descid=cvs_descs.id ".
+                    "   AND cvs_checkins.repositoryid=cvs_repositories.id ".
+                    "   AND cvs_checkins.commitid='$commit_id' ";
+            $result = db_query($sql);
+            if (db_numrows($result) < 1) {
+                echo $GLOBALS['Language']->getText('cvs_detail_commit', 'error_notfound',array($commit_id));
+            } else {
+                show_commit_details($result);
+            }
+            break;
         case 'file':
             require_once('common/frs/FRSReleaseFactory.class.php');
             require_once('common/frs/FRSPackageFactory.class.php');
