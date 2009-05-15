@@ -692,7 +692,7 @@ class Layout extends Response {
     
     function iframe($url, $html_options = array()) {
         $html = '';
-        $html .= '<div class="iframe_showonly"><a id="link_show_only" href="'. $url .'" title="Show only this frame">Show only this frame '. $this->getImage('ic/plain-arrow-down.png') .'</a></div>';
+        $html .= '<div class="iframe_showonly"><a id="link_show_only" href="'. $url .'" title="'.$GLOBALS['Language']->getText('global', 'show_frame') .'">'.$GLOBALS['Language']->getText('global', 'show_frame').' '. $this->getImage('ic/plain-arrow-down.png') .'</a></div>';
         $args = ' src="'. $url .'" ';
         foreach($html_options as $key => $value) {
             $args .= ' '. $key .'="'. $value .'" ';
@@ -1517,13 +1517,13 @@ class Layout extends Response {
     }
 
     function _getProjectTabs($toptab,&$project) {
-      global $sys_default_domain;
-      $pm = ProjectManager::instance();
+        global $sys_default_domain;
+        $pm = ProjectManager::instance();
         $tabs = array();
         $group_id = $project->getGroupId();
         reset($project->service_data_array);
-        while (list($short_name,$service_data) = each($project->service_data_array)) {
-            if ((string)$short_name == "admin") {
+         while (list($short_name,$service_data) = each($project->service_data_array)) {
+               if ((string)$short_name == "admin") {
                 // for the admin service, we will check if the user is allowed to use the service
                 // it means : 1) to be a super user, or
                 //            2) to be project admin
