@@ -182,6 +182,11 @@ echo ")</b>";?>
 <li><a href="/news/admin"><?php echo $Language->getText('admin_main', 'site_news_approval'); ?></A>
 </ul>
 
+<h3><?php echo $Language->getText('admin_main', 'system_event'); ?></h3>
+<ul>
+<li><a href="/admin/system_events/"><?php echo $Language->getText('admin_main', 'sysevent_monitor'); ?></A>
+</ul>
+
 <h3><?php echo $Language->getText('admin_main', 'desc_fields'); ?></h3>
 <ul>
 <li><a href="/admin/descfields/desc_fields_edit.php"><?php echo $Language->getText('admin_main', 'desc_fields_edit'); ?></A>

@@ -78,6 +78,7 @@ admin_main	statustotal_user	total
 admin_main	desc_fields	Project Description Fields
 admin_main	desc_fields_edit	Project Description Fields Edition
 admin_main	system_event	System Events
+admin_main	sysevent_monitor	System Events Monitor
 #
 #-----------------------------------------------
 # Script: SF/www/admin/admin_utils.php
