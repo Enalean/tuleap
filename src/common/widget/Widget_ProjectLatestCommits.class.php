@@ -25,27 +25,34 @@ require_once('common/rss/RSS.class.php');
 * Widget_ProjectLatestCommits
 */
 class Widget_ProjectLatestCommits extends Widget {
-    var $latest_revisions;
+    var $latest_revisions = null;
     var $group_id;
+
     function Widget_ProjectLatestCommits($id, $get_commits_callback) {
         $this->Widget($id);
         $request =& HTTPRequest::instance();
-        $pm = ProjectManager::instance();
-        $project = $pm->getProject($request->get('group_id'));
-        if ($project && $this->canBeUsedByProject($project)) {
-            list($this->latest_revisions,) = $get_commits_callback($project, 0, 5);
-            $this->group_id = $project->getGroupId();
-        }
+        $this->group_id = $request->get('group_id');
     }
     /* protected */ function _getLinkToCommit($data) { }
     /* protected */ function _getLinkToMore() { }
     
+    function getLatestRevisions() {
+        if (! $this->latest_revisions) {
+            $pm = ProjectManager::instance();
+            $project = $pm->getProject($this->group_id);
+            if ($project && $this->canBeUsedByProject($project)) {
+                list($this->latest_revisions,) = $get_commits_callback($project, 0, 5);
+            }
+        }
+        return $this->latest_revisions;
+    }
+
     function getContent() {
         $html = '';
         $i = 1;
         $UH = new UserHelper();
         $hp = Codendi_HTMLPurifier::instance(); 
-        while($data = db_fetch_array($this->latest_revisions)) {
+        while($data = db_fetch_array($this->getLatestRevisions())) {
             $html .= '<div class="'. util_get_alt_row_color($i++) .'" style="border-bottom:1px solid #ddd">';
             $html .= '<div style="font-size:0.98em;">';
             $html .= '<a href="'. $this->_getLinkToCommit($data) .'">#'.$data['revision'].'</a>';
@@ -67,7 +74,7 @@ class Widget_ProjectLatestCommits extends Widget {
         return $html;
     }
     function isAvailable() {
-        return $this->latest_revisions && user_isloggedin() ? true : false;
+        return $this->getLatestRevisions() && user_isloggedin() ? true : false;
     }
     function hasRss() {
         return false;
