@@ -105,7 +105,7 @@ class BackendCVS extends Backend {
 
             if ($this->useCVSNT()) {
                 // Tell cvsnt not to update /etc/cvsnt/PServer: this is done later by this the script.
-                system($GLOBALS['cvs_cmd']." -d$cvs_dir init -n");
+                system($GLOBALS['cvs_cmd']." -d$cvs_dir init -n 2> /dev/null");
             } else {
                 system($GLOBALS['cvs_cmd']." -d$cvs_dir init");
             }
