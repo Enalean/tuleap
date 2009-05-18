@@ -1374,7 +1374,7 @@ follows:<br>
     <tt># mkdir /var/lib/codendi/svnroot<br>
 # chown codendiadm.codendiadm /var/lib/codendi/svnroot</tt><tt><br>
 # chmod 775 /svnroot</tt><tt><br>
-# ln -s /var/lib/codendi/svnroot /svnroot</tt><tt><br>
+# ln -s /var/lib/codendi/svnroot /svnroot</tt><br>
 </li>
 </ul>
 Subversion offers several remote access methods either via the native
@@ -1442,15 +1442,23 @@ current implementation all project members are granted read and write
 access to the CVS repository of the projects they belong to. &nbsp;You
 can always add users' name in the CVSROOT/readers file to give them
 read-only access.<br>
-<h2>The sserver approach</h2>
+<h2>The sserver approach: CVSNT</h2>
 <ul>
-<li>First, you need to make sure that you use cvsnt and not cvs. Type 'cvs -v' to verify this.
+<li>First, you need to make sure that you use cvsnt and not cvs. Type 'cvs -v' to verify this. If not, install CVSNT from Codendi CD like this:
+
+<pre>
+rpm -ivh --nodeps cvsnt-2.5.04.3236-1.i386.rpm cvsnt-protocol-sserver-2.5.04.3236-1.i386.rpm
+ln -s /lib/libcrypto.so.0.9.8e /lib/libcrypto.so.4
+ln -s /lib/libssl.so.0.9.8e /lib/libssl.so.4
+</pre>
+The RPM provided by CVSNT relies on older libraries. This is why we need to 'force' the RPM installation without checking dependencies.
+
 <li>You also need to verify that the sserver protocol is installed. Type 'cvs info'. this command should return a line like this one:
 <pre>
-sserver             sserver 2.5.02 (Servalan) Build 2064
+sserver             sserver 2.5.04 (Zen) Build 3236 ()
 </pre>
 <li>Configure xinetd to start the cvs server when needed. The
-/etc/xinetd.d/cvs file must look like this: <br>
+/etc/xinetd.d/cvsnt file must look like this: <br>
 <pre>
 service cvspserver
 {
@@ -1467,7 +1475,12 @@ service cvspserver
        mdns            = no # Lockserver handles mdns broadcast
 } 
 </pre>
-<li>Make sure that there is no /etc/xinetd.d/cvsnt file that might interfere with this one. Don't rename the file, but move it somewhere else, or delete it.
+You will need to restart xinetd:
+<pre>
+service xinetd restart
+
+</pre>
+<li>Make sure that there is no /etc/xinetd.d/cvs file that might interfere with this one. Don't rename the file, but move it somewhere else, or delete it.
 <li>add the cvslockd service:
 <pre>
 chkconfig --add cvslockd
