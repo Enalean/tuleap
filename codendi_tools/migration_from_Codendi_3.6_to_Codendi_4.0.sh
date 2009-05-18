@@ -603,7 +603,7 @@ $CAT <<'EOF' >>/etc/logrotate.d/httpd
     daily
     rotate 4
     postrotate
-        /sbin/service httpd reload 2> /dev/null || true
+        /sbin/service httpd reload > /dev/null || true
      year=`date +%Y`
      month=`date +%m`
      day=`date +%d`
