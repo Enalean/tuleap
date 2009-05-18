@@ -124,7 +124,7 @@ class BackendAliases extends Backend {
         }
 
         // Run newaliases
-        return ($this->system("/usr/bin/newaliases") !== false);
+        return ($this->system("/usr/bin/newaliases > /dev/null") !== false);
     }
 
 
