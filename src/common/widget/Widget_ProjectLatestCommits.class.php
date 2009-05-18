@@ -27,11 +27,13 @@ require_once('common/rss/RSS.class.php');
 class Widget_ProjectLatestCommits extends Widget {
     var $latest_revisions = null;
     var $group_id;
+    var $commits_callback;
 
     function Widget_ProjectLatestCommits($id, $get_commits_callback) {
         $this->Widget($id);
         $request =& HTTPRequest::instance();
         $this->group_id = $request->get('group_id');
+        $this->commits_callback = $get_commits_callback;
     }
     /* protected */ function _getLinkToCommit($data) { }
     /* protected */ function _getLinkToMore() { }
@@ -41,6 +43,7 @@ class Widget_ProjectLatestCommits extends Widget {
             $pm = ProjectManager::instance();
             $project = $pm->getProject($this->group_id);
             if ($project && $this->canBeUsedByProject($project)) {
+                $get_commits_callback = $this->commits_callback;
                 list($this->latest_revisions,) = $get_commits_callback($project, 0, 5);
             }
         }
