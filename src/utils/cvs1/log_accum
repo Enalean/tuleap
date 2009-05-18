@@ -590,7 +590,7 @@ sub extract_xrefs {
       $group_id=100;
     }
     $text=join("\n",@log);
-    $cvstype="commit_cvs";
+    $cvstype="cvs_commit";
     # HTTPS is not supported by LWP on RHEL3 -> use HTTP
     my $req = POST "$codendi_http_srv/api/reference/extractCross",
       [ group_id => "$group_id", text => "$text", rev_id=>"$commit_id", login=>"$login", type=>"$cvstype" ];
