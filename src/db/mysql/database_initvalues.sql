@@ -127,7 +127,7 @@ INSERT INTO groups SET \
   short_description = 'Codendi Administration Project', \
   cvs_box = 'cvs1', \
   svn_box = 'svn1', \
-  license = 'xrx', \
+  license = 'cdi', \
   license_other = '', \
   register_time = 940000000, \
   rand_hash = '', \
@@ -166,7 +166,7 @@ INSERT INTO groups SET \
   short_description = 'Site News Private Project. All Site News should be posted from this project', \
   cvs_box = 'cvs1', \
   svn_box = 'svn1', \
-  license = 'xrx', \
+  license = 'cdi', \
   license_other = '', \
   register_time = 940000000, \
   rand_hash = '', \
@@ -411,7 +411,7 @@ INSERT INTO trove_cat VALUES (10, 2000040701, 6, 6, 'beta', '4 - Beta', 'Resourc
 INSERT INTO trove_cat VALUES (11, 2000040701, 6, 6, 'production', '5 - Production/Stable', 'Deliverables are complete and usable by the intended audience.', 0, 0, 'Development Status :: 5 - Production/Stable', '6 :: 11');
 INSERT INTO trove_cat VALUES (12, 2000040701, 6, 6, 'mature', '6 - Mature', 'This resource has an extensive history of successful use and has probably undergone several stable revisions.', 0, 0, 'Development Status :: 6 - Mature', '6 :: 12');
 INSERT INTO trove_cat VALUES (13, 2000031601, 0, 0, 'license', 'License', 'License terms under which the resource is distributed.', 0, 0, 'License', '13');
-INSERT INTO trove_cat VALUES (14, 2000111301, 13, 13, 'xrx', 'Xerox Code eXchange Policy', 'The default Policy ruling the code sharing attitude in Xerox.', 0, 0, 'License :: Xerox Code eXchange Policy', '13 :: 14');
+INSERT INTO trove_cat VALUES (14, 2000111301, 13, 13, 'cdi', 'Codendi exchange Policy', 'The default Policy ruling the code sharing attitude.', 0, 0, 'License :: Codendi exchange Policy', '13 :: 14');
 INSERT INTO trove_cat VALUES (274, 2001061501, 154, 18, 'printservices', 'Print Services', 'XAC/DDA/Print Services Projects', 0, 0, 'Topic :: Printing :: Print Services', '18 :: 154 :: 274');
 INSERT INTO trove_cat VALUES (275, 2001062601, 160, 160, 'JSP', 'JSP', 'Java Server Pages: Sun\'s Java language embedded in HTML pages', 0, 0, 'Programming Language :: JSP', '160 :: 275');
 INSERT INTO trove_cat VALUES (18, 2000031601, 0, 0, 'topic', 'Topic', 'Topic categorization.', 0, 0, 'Topic', '18');
@@ -453,7 +453,7 @@ INSERT INTO trove_cat VALUES (185, 2000032001, 160, 160, 'shell', 'Unix Shell', 
 INSERT INTO trove_cat VALUES (186, 2000032001, 160, 160, 'visualbasic', 'Visual Basic', 'Visual Basic', 0, 0, 'Programming Language :: Visual Basic', '160 :: 186');
 INSERT INTO trove_cat VALUES (276, 2001122001, 160, 160, 'rebol', 'Rebol', 'The Rebol programming language', 0, 0, 'Programming Language :: Rebol', '160 :: 276');
 INSERT INTO trove_cat VALUES (278, 2002051501, 6, 6, 'endoflife', '7 - End of Life', 'The software project has come to an end and it is not expected to evolve in the future', 0, 0, 'Development Status :: 7 - End of Life', '6 :: 278');
-INSERT INTO trove_cat VALUES (194, 2000111301, 13, 13, 'osi', 'Open Source Approved license', 'Open Source approved licenses. Use one of these only if Open Sourcing your Xerox software has been explicitely approved by the Xerox COMIP.', 0, 0, 'License :: Open Source Approved license', '13 :: 194');
+INSERT INTO trove_cat VALUES (194, 2000111301, 13, 13, 'osi', 'Open Source Approved license', 'Open Source approved licenses. Use one of these only if Open Sourcing your software has been explicitely approved by your legal department.', 0, 0, 'License :: Open Source Approved license', '13 :: 194');
 INSERT INTO trove_cat VALUES (196, 2000040701, 13, 13, 'other', 'Other/Proprietary License', 'Non OSI-Approved/Proprietary license.', 0, 0, 'License :: Other/Proprietary License', '13 :: 196');
 INSERT INTO trove_cat VALUES (272, 2000120801, 132, 18, 'ui', 'User Interface', 'Everything dealing with Computer UI such as new user interface paradigm, Graphical Toolkit, Widgets library,...', 0, 0, 'Topic :: Information Technology :: User Interface', '18 :: 132 :: 272');
 INSERT INTO trove_cat VALUES (198, 2000032001, 160, 160, 'java', 'Java', 'Java', 0, 0, 'Programming Language :: Java', '160 :: 198');
