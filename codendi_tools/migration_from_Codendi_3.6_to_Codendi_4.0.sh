@@ -537,7 +537,7 @@ ln -s $VAR_LIB_DIR/svnroot /svnroot
 #
 
 for f in /etc/httpd/conf/httpd.conf /etc/httpd/conf.d/codendi_aliases.conf \
- /etc/httpd/conf.d/php.conf \
+ /etc/httpd/conf.d/php.conf /etc/httpd/conf.d/subversion.conf \
  /etc/libnss-mysql.cfg  /etc/libnss-mysql-root.cfg /etc/httpd/conf.d/auth_mysql.conf; do
     yn="0"
     fn=`basename $f`
