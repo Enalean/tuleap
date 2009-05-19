@@ -23,7 +23,7 @@
 
 require_once 'common/layout/DivBasedTabbedLayout.class.php';
 
-class CodendiBlack_Theme extends DivBasedTabbedLayout {
+class Dawn_Theme extends DivBasedTabbedLayout {
     function __construct($root) {
         parent::__construct($root);
     }
