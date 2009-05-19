@@ -66,7 +66,7 @@ class SystemEventManager {
             Event::SYSTEM_CHECK, 
             Event::USER_EMAIL_CHANGED, 
             Event::EDIT_SSH_KEYS,
-            'register_project_creation',
+            'approve_pending_project',
             'project_is_deleted',
             'project_admin_add_user',
             'project_admin_remove_user',
@@ -138,9 +138,9 @@ class SystemEventManager {
                                $params['user_id'],
                                SystemEvent::PRIORITY_LOW);
             break;
-        case 'register_project_creation':
+        case 'approve_pending_project':
             $this->createEvent(SystemEvent::TYPE_PROJECT_CREATE,
-                               $params['group_id'],
+                               $params['group_id'], 
                                SystemEvent::PRIORITY_MEDIUM);
             break;
         case 'project_is_deleted':

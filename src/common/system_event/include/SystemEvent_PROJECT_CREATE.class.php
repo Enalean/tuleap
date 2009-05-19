@@ -38,7 +38,12 @@ class SystemEvent_PROJECT_CREATE extends SystemEvent {
      */
     public function verbalizeParameters($with_link) {
         $txt = '';
-        $txt .= 'project: '. $this->verbalizeProjectId($this->getIdFromParam($this->parameters), $with_link);
+        if (strpos($this->parameters,',' === FALSE)) {
+            // Only one Group ID
+            $txt .= 'project: '. $this->verbalizeProjectId($this->getIdFromParam($this->parameters), $with_link);
+        } else {
+            $txt .= 'projects: '. $this->parameters;
+        }
         return $txt;
     }
     
@@ -46,47 +51,46 @@ class SystemEvent_PROJECT_CREATE extends SystemEvent {
      * Process stored event
      */
     function process() {
-        // Check parameters
-        $group_id=$this->getIdFromParam($this->parameters);
+
+        $groups=explode(',',$this->parameters);
+        foreach ($groups as $group_id) {
         
-        if ($project = $this->getProject($group_id)) {
-            $backendSystem = BackendSystem::instance();
-            if (!$backendSystem->createProjectHome($group_id)) {
-                $this->error("Could not create project home");
-                return false;
-            }
-            
-            
-            if ($project->usesCVS()) {
-                $backendCVS    = BackendCVS::instance();
-                if (!$backendCVS->createProjectCVS($group_id)) {
-                    $this->error("Could not create/initialize project CVS repository");
+            if ($project = $this->getProject($group_id)) {
+                $backendSystem = BackendSystem::instance();
+                if (!$backendSystem->createProjectHome($group_id)) {
+                    $this->error("Could not create project home");
                     return false;
                 }
-                $backendCVS->setCVSRootListNeedUpdate();
-                $backendCVS->setCVSPrivacy($project, !$project->isPublic() || $project->isCVSPrivate());
-            }
             
-            if ($project->usesSVN()) {
-                $backendSVN    = BackendSVN::instance();
-                if (!$backendSVN->createProjectSVN($group_id)) {
-                    $this->error("Could not create/initialize project SVN repository");
-                    return false;
+            
+                if ($project->usesCVS()) {
+                    $backendCVS    = BackendCVS::instance();
+                    if (!$backendCVS->createProjectCVS($group_id)) {
+                        $this->error("Could not create/initialize project CVS repository");
+                        return false;
+                    }
+                    $backendCVS->setCVSRootListNeedUpdate();
+                    $backendCVS->setCVSPrivacy($project, !$project->isPublic() || $project->isCVSPrivate());
                 }
-                $backendSVN->setSVNApacheConfNeedUpdate();
-                $backendSVN->setSVNPrivacy($project, !$project->isPublic());
+            
+                if ($project->usesSVN()) {
+                    $backendSVN    = BackendSVN::instance();
+                    if (!$backendSVN->createProjectSVN($group_id)) {
+                        $this->error("Could not create/initialize project SVN repository");
+                        return false;
+                    }
+                    $backendSVN->setSVNApacheConfNeedUpdate();
+                    $backendSVN->setSVNPrivacy($project, !$project->isPublic());
+                }
+                $backendSystem->log("Project ".$project->getUnixName()." created");            
             }
-
-            // Need to update system group cache
-            $backendSystem->setNeedRefreshGroupCache();
-
-            $backendSystem->log("Project ".$project->getUnixName()." created");            
-            $this->done();
-            return true;
         }
-        return false;
-    }
+        // Need to update system group cache
+        $backendSystem->setNeedRefreshGroupCache();
 
+        $this->done();
+        return true;
+    }
 }
 
 ?>
