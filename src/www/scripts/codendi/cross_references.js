@@ -116,16 +116,11 @@ document.observe('dom:loaded', function() {
         if (l.down('.delete_ref')) {
             var a = l.down('.delete_ref');
             var img = a.down('img');
-            a.hide();
             img.src = img.src.replace('cross.png', 'cross-disabled.png');
-            l.observe('mouseover', function(evt) {
-                a.show();
-                if (Event.element(evt).tagName.toLowerCase() == 'img') {
-                    img.src = img.src.replace('cross-disabled.png', 'cross.png');
-                }
+            img.observe('mouseover', function(evt) {
+                img.src = img.src.replace('cross-disabled.png', 'cross.png');
             });
-            l.observe('mouseout', function() {
-                a.hide();
+            img.observe('mouseout', function() {
                 img.src = img.src.replace('cross.png', 'cross-disabled.png');
             });
         }
