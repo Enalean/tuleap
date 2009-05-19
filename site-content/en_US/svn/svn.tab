@@ -62,6 +62,7 @@ svn_browse_revision	browse_commit	Browse commits by:
 svn_browse_revision	rev	Revision
 svn_browse_revision	commiter	Commiter
 svn_browse_revision	path	Path
+svn_browse_revision	log_message	Log Message
 svn_browse_revision	search	Keyword search in log message
 svn_browse_revision	commit_at_once	commits at once.
 svn_browse_revision	no_match	No Commits Match Your Criteria

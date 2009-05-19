@@ -55,6 +55,7 @@ svn_browse_revision	browse_commit	Afficher les commits par&nbsp;:
 svn_browse_revision	rev	Révision
 svn_browse_revision	commiter	Soumis par
 svn_browse_revision	path	Chemin
+svn_browse_revision	log_message	Message de commit
 svn_browse_revision	search	Recherche par mots-clés dans les messages de log
 svn_browse_revision	commit_at_once	commits à la fois
 svn_browse_revision	no_match	Aucun commit ne correspond à vos critères
