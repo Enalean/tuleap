@@ -1871,7 +1871,8 @@ class Artifact extends Error {
 		    !isset($user_ids[$user_id]) && 
 		    $this->ArtifactType->checkNotification($user_id, 'ASSIGNEE', $changes) &&
 		    $this->userCanView($user_id) &&
-            $curr_assignee->isActive() || $curr_assignee->isRestricted()) {
+            $curr_assignee && (
+            $curr_assignee->isActive() || $curr_assignee->isRestricted())) {
                 	//echo "DBG - ASSIGNEE OLD - user=$user_id<br>";
                 	$user_ids[$user_id] = true;
             	}
