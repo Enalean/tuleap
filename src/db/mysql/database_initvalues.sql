@@ -2951,6 +2951,13 @@ FROM user_group
 WHERE group_id = 1
   AND admin_flags = 'A';
 
+-- Add mysystemevent only to current admins
+INSERT INTO layouts_contents (owner_id, owner_type, layout_id, column_id, name, rank) 
+SELECT DISTINCT user_id, 'u', 1, 2, 'mysystemevent', -3
+FROM user_group
+WHERE group_id = 1
+  AND admin_flags = 'A';
+
 INSERT INTO layouts_contents (owner_id, owner_type, layout_id, column_id, name, rank) 
 SELECT user_id, 'u', 1, 2, 'myartifacts', 0
 FROM user;

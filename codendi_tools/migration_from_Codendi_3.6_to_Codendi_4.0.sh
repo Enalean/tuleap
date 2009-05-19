@@ -1236,6 +1236,21 @@ FROM groups
 WHERE hide_members = 0;
 EOF
 
+echo "- Add system_events widgets on admin dashboard"
+$CAT <<EOF | $MYSQL $pass_opt codendi
+INSERT INTO layouts_contents(owner_id, owner_type, layout_id, column_id, name, rank)
+SELECT user_id, 'u', layout_id, column_id, 'mysystemevent', R.rank
+FROM user_group 
+     INNER JOIN (SELECT owner_id, owner_type, layout_id, column_id, MIN(rank) - 1 as rank 
+                 FROM layouts_contents INNER JOIN owner_layouts USING (owner_id, owner_type, layout_id)
+                 WHERE owner_type = 'u' 
+                   AND is_default = 1
+                 GROUP BY owner_id, owner_type, layout_id) AS R
+           ON (owner_id = user_id)
+WHERE group_id = 1
+  AND admin_flags = 'A';
+EOF
+
 echo "- Delete hide_members column"
 $CAT <<EOF | $MYSQL $pass_opt codendi
 # (not needed anymore, please do it after previous request)
