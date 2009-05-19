@@ -74,3 +74,6 @@ If you want to use syntax highlighting with GeSHi (http://qbnz.com/highlighter/)
 you will need to change the config key 'geshi' to true and set up the
 'geshiroot' key to point to the geshi directory if it's not in a standard php
 include directory or a subdirectory of GitPHP, same as with smarty.
+
+If you want to edit the text header that appears above the project list on the
+home page, edit templates/hometext.tpl.
