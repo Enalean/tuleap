@@ -420,7 +420,7 @@ INSERT INTO trove_cat VALUES (22, 2000111301, 18, 18, 'docmgt', 'Document Manage
 INSERT INTO trove_cat VALUES (37, 2000111301, 20, 18, 'wireless', 'Wireless Communication', 'Tools supporting wireless communication (radio, IR,...)', 0, 0, 'Topic :: Internet/Intranet Connectivity :: Wireless Communication', '18 :: 20 :: 37');
 INSERT INTO trove_cat VALUES (43, 2000111301, 18, 18, 'imagemgt', 'Image Management', 'Software to help capture, manipulate, transform, render images (e.g. image processing, color management, printing/marking, image capture, image compression technics, etc.)', 0, 0, 'Topic :: Image Management', '18 :: 43');
 INSERT INTO trove_cat VALUES (45, 2000111301, 18, 18, 'development', 'Software Development', 'Software used to aid software development ( e.g. language interpreters, compilers, debuggers, project management tools, build tools, Devt Environment, Devt Framework,etc.)', 0, 0, 'Topic :: Software Development', '18 :: 45');
-INSERT INTO trove_cat VALUES (97, 2000111301, 18, 18, 'scientific', 'Scientific/Engineering', 'Scientific or Engineering applications, to include research on non computer related sciences. (e.g. Physics and Mathematics in general, Xerography, Data Visualization Tools, etc.)', 0, 0, 'Topic :: Scientific/Engineering', '18 :: 97');
+INSERT INTO trove_cat VALUES (97, 2000111301, 18, 18, 'scientific', 'Scientific/Engineering', 'Scientific or Engineering applications, to include research on non computer related sciences. (e.g. Physics and Mathematics in general, Data Visualization Tools, etc.)', 0, 0, 'Topic :: Scientific/Engineering', '18 :: 97');
 INSERT INTO trove_cat VALUES (132, 2000111301, 18, 18, 'it', 'Information Technology', 'Applications related to information management and computer science in general (User Interface, Distributed Systems, Knowledge Mgt, Information Retrieval, Natural Language Processing, Security, Globalisation, etc.)', 0, 0, 'Topic :: Information Technology', '18 :: 132');
 INSERT INTO trove_cat VALUES (136, 2000111301, 18, 18, 'system', 'System', 'Operating system core and administration utilities (e.g Drivers, Printers drivers, Emulators, Networking, Kernels, File Systems, Clustering, Benchmark, etc...', 0, 0, 'Topic :: System', '18 :: 136');
 INSERT INTO trove_cat VALUES (154, 2000032001, 18, 18, 'printing', 'Printing', 'Tools, daemons, and utilities for printer control.', 0, 0, 'Topic :: Printing', '18 :: 154');
@@ -1974,7 +1974,7 @@ INSERT INTO snippet_type VALUES (7,'Macros');
 #
 
 INSERT INTO snippet_license VALUES (100,'None');
-INSERT INTO snippet_license VALUES (1,'Code eXchange Policy');
+INSERT INTO snippet_license VALUES (1,'Codendi exchange Policy');
 INSERT INTO snippet_license VALUES (2,'Other');
 
 
