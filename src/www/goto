@@ -67,6 +67,7 @@ if ($request->isAjax()) {
                 require_once('tracker/include/ArtifactFieldHtml.class.php');
                 $pm = ProjectManager::instance();
                 $at = new ArtifactType($pm->getProject($group_id),$atid);
+                $values = null;
                 if (!$at->isError() && $at->isValid()) {
                     $art_field_fact = new ArtifactFieldFactory($at);
                     $ah=new ArtifactHtml($at,$aid);
@@ -103,7 +104,7 @@ if ($request->isAjax()) {
                     }
                 }
                 
-                if (count($values)) {
+                if ($values && count($values)) {
                     echo '<table>';
                     echo implode('', $values);
                     echo '</table>';
