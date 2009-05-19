@@ -60,22 +60,22 @@ while [ "$openfire_passwd" != "$openfire_passwd2" ]; do
 done
 
 
-substitute 'codex/codex.spec' '%sys_default_domain%' "$sys_default_domain" 
-substitute 'codex/codex.spec' '%sys_org_name%' "$sys_org_name" 
-substitute 'codex/codex.spec' '%sys_long_org_name%' "$sys_long_org_name" 
-substitute 'codex/codex.spec' '%sys_fullname%' "$sys_fullname" 
-substitute 'codex/codex.spec' '%sys_ip_address%' "$sys_ip_address" 
-substitute 'codex/codex.spec' '%sys_ldap_server%' "$sys_ldap_server" 
-substitute 'codex/codex.spec' '%sys_win_domain%' "$sys_win_domain" 
-substitute 'codex/codex.spec' '%active_shell%' "$active_shell" 
-substitute 'codex/codex.spec' '%create_ssl_certificate%' "$create_ssl_certificate" 
-substitute 'codex/codex.spec' '%disable_subdomains%' "$disable_subdomains" 
+substitute 'codex.spec' '%sys_default_domain%' "$sys_default_domain" 
+substitute 'codex.spec' '%sys_org_name%' "$sys_org_name" 
+substitute 'codex.spec' '%sys_long_org_name%' "$sys_long_org_name" 
+substitute 'codex.spec' '%sys_fullname%' "$sys_fullname" 
+substitute 'codex.spec' '%sys_ip_address%' "$sys_ip_address" 
+substitute 'codex.spec' '%sys_ldap_server%' "$sys_ldap_server" 
+substitute 'codex.spec' '%sys_win_domain%' "$sys_win_domain" 
+substitute 'codex.spec' '%active_shell%' "$active_shell" 
+substitute 'codex.spec' '%create_ssl_certificate%' "$create_ssl_certificate" 
+substitute 'codex.spec' '%disable_subdomains%' "$disable_subdomains" 
 
 
-substitute 'codex/codex.spec' '%rt_passwd%' "$rt_passwd" 
-substitute 'codex/codex.spec' '%codexadm_passwd%' "$codexadm_passwd" 
-substitute 'codex/codex.spec' '%mm_passwd%' "$mm_passwd" 
-substitute 'codex/codex.spec' '%slm_passwd%' "$slm_passwd" 
-substitute 'codex/codex.spec' '%openfire_passwd%' "$openfire_passwd" 
+substitute 'codex.spec' '%rt_passwd%' "$rt_passwd" 
+substitute 'codex.spec' '%codexadm_passwd%' "$codexadm_passwd" 
+substitute 'codex.spec' '%mm_passwd%' "$mm_passwd" 
+substitute 'codex.spec' '%slm_passwd%' "$slm_passwd" 
+substitute 'codex.spec' '%openfire_passwd%' "$openfire_passwd" 
 
 

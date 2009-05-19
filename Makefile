@@ -74,21 +74,19 @@ dist: rpmprep
 #
 ### codendi
 #
-target clean build : override version=$(shell grep '^Version:' codex/codex.spec | sed 's/.*:\s*\(.*\)/\1/')
+target clean build : override version=$(shell grep '^Version:' codex.spec.dist | sed 's/.*:\s*\(.*\)/\1/')
 
 clean:		# cleanall files of codendi build                         #
 	@rm -rf codendi-$(version).tar.bz2 codendi-$(version)
 	@echo clean Done
 
-###Add conf variable
-addconf: 
-	sh tools/addconf.sh
-
 ### build CodeX
-build: rpmprep addconf		# Build rpm codendi packages                               #
-	cd codex ;find . -type f | grep -v '/.svn/' | grep -v plugins |grep -v documentation | grep -v rpm | cpio -pdumvB ../codendi-$(version)
-	cp tools/codex.spec codendi-$(version)/.
+build: rpmprep	# Build rpm codendi packages                               #
+	cd codex ;find . -type f | grep -v '/.svn/' | grep -v plugins |grep -v documentation | grep -v rpm | cpio -pdumvB ../codendi-$(version)	
 	cp tools/sed.sh codendi-$(version)/.
+	cp codex.spec.dist codex.spec
+	sh tools/addconf.sh
+	mv codex.spec codendi-$(version)/.
 	tar cvjf codendi-$(version).tar.bz2 codendi-$(version)
 	rpmbuild -ta --rcfile rpmrc codendi-$(version).tar.bz2
 
