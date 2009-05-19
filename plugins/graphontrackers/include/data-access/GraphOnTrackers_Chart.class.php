@@ -124,7 +124,7 @@ abstract class GraphOnTrackers_Chart {
      */
     public function stroke() {
         $e = $this->buildGraph();
-        if (is_object($e->graph)) {
+        if ($e && is_object($e->graph)) {
             $e->graph->StrokeCSIM(); 
         }
     }
