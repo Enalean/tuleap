@@ -210,7 +210,7 @@ include_project_home	monitor_pack	Monitor This Package
 include_project_home	view_all_files	View ALL Project Files
 include_project_home	public_areas	Public Areas
 include_project_home	project_description	Project Description
-include_project_home	project_classification	Projet Classification
+include_project_home	project_classification	Project Classification
 include_project_home	homepage	Homepage
 include_project_home	proj_home	Project Homepage
 include_project_home	public_forums	Public Forums
