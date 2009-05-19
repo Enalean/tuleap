@@ -7,6 +7,6 @@
  *}
  <div class="index_include">
  <p>
- git source code archive on centraldogma
+ git source code archive
  </p>
  </div>
