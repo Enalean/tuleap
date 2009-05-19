@@ -36,8 +36,8 @@ function rgb2html($r, $g=-1, $b=-1)
     return '#'.$color;
 }
 
-$a = html2rgb('e8ff8b');
-$b = html2rgb('ff3300');
+$a = html2rgb('eae191');
+$b = html2rgb('D14B4B');
       
 $size = 9;
 header('Content-type: text/plain');
