@@ -73,13 +73,12 @@ class DataBuilder {
         
         if ($af_x->isUsed() && (!isset($af_y) || $af_y->isUsed())) {
             $select   = "SELECT ";
-            $from     = "FROM ";
+            $from     = "FROM artifact a ";
             $where    = "WHERE ";
             $group_by = "GROUP BY ";
             $order_by = "ORDER BY ";
             if ($af_x->isStandardField() && (!$af_x->isUsername())) {
                 $select   .= "afvl.value AS field1 ";
-                $from     .= "artifact a ";
                 $from     .= "JOIN artifact_field_value_list afvl ";
                 $where    .= "a.artifact_id IN (".implode($this->artifacts,',').") ";
                 $where    .= "AND a.group_artifact_id=afvl.group_artifact_id ";
@@ -89,7 +88,6 @@ class DataBuilder {
                 $order_by .= "afvl.value_id ASC";
             } else if ($af_x->isStandardField() && ($af_x->isUsername())) {
                 $select   .= "u.realName AS field1, u.user_id AS id1 ";
-                $from     .= "artifact a ";
                 $from     .= "JOIN user u ";
                 $where    .= "a.artifact_id IN (".implode($this->artifacts,',').") ";
                 $where    .= "AND u.user_id=a.".db_es($this->field_X)." ";
@@ -97,7 +95,7 @@ class DataBuilder {
                 $order_by .= "u.user_id ASC";
             } else if (!$af_x->isStandardField() && (!$af_x->isUsername())) {
                 $select   .= "afvl.value AS field1 ";
-                $from     .= "artifact_field_value afv ";
+                $from     .= ", artifact_field_value afv ";
                 $from     .= "JOIN artifact_field_value_list afvl ";
                 $where    .= "afv.artifact_id IN (".implode($this->artifacts,',').") ";
                 $where    .= "AND afv.valueInt=afvl.value_id ";
@@ -109,7 +107,7 @@ class DataBuilder {
                 $order_by .= "afvl.order_id ASC";
             } else { //if (!$af_x->isStandardField() && ($af_x->isUsername()))
                 $select   .= "u.realName AS field1, u.user_id AS id1 ";
-                $from     .= "artifact_field_value afv ";
+                $from     .= ", artifact_field_value afv ";
                 $from     .= "JOIN user u ";
                 $where    .= "afv.artifact_id IN (".implode($this->artifacts,',').") ";
                 $where    .= "AND afv.field_id=".db_ei($af_x->getId())." ";
@@ -127,7 +125,6 @@ class DataBuilder {
                     if ($af_x->isStandardField()) {
                         $where .= "AND a.".db_es($this->field_Y)."=afvl1.value_id ";
                     } else if (!$af_x->isStandardField()) {
-                        $from  .= "JOIN artifact a ";
                         $where .= "AND a.artifact_id=afv.artifact_id ";
                     }
                     if (!$af_x->isUsername()) {
@@ -143,7 +140,6 @@ class DataBuilder {
                 } else if ($af_y->isStandardField() && ($af_y->isUsername())) {
                     $select   .= ",u1.realName AS field2, u1.user_id AS id2 ";
                     if (!$af_x->isStandardField()) {
-                        $from     .= "JOIN artifact a  ";
                         $where    .= "AND a.artifact_id=afv.artifact_id ";
                     }
                     if (!$af_x->isUsername()) {
@@ -158,7 +154,6 @@ class DataBuilder {
                    $from     .= "JOIN artifact_field_value afv1 ";
                    $from     .= "JOIN artifact_field_value_list afvl1 ";
                    if (!$af_x->isStandardField()) {
-                       $from  .= "JOIN artifact a ";
                        $where .= "AND afv.artifact_id=a.artifact_id ";
                        if (!$af_x->isUsername()) {
                            $where .= "AND a.group_artifact_id=afvl.group_artifact_id ";
@@ -179,7 +174,6 @@ class DataBuilder {
                     $where  .= "AND afv1.artifact_id IN (".implode($this->artifacts,',').") ";
                     $where  .= "AND afv1.field_id=".db_ei($af_y->getId())." ";
                     if (!$af_x->isStandardField()) {
-                        $from  .= "JOIN artifact a  ";
                         $where .= "AND a.artifact_id=afv.artifact_id ";
                         $where .= "AND afv.artifact_id=afv1.artifact_id ";
                         if (!$af_x->isUsername()) {
@@ -206,11 +200,11 @@ class DataBuilder {
             $user  = UserManager::instance()->getCurrentUser();
             $ugroups = $user->getUgroups($group_id, array('artifact_type' => $this->atid));
 
-            $from  .= " LEFT JOIN permissions 
-                             ON (permissions.object_id = CONVERT(a.artifact_id USING utf8) 
+            $from  .= " , permissions ";
+            $where .= " AND (permissions.object_id = CONVERT(a.artifact_id USING utf8) 
                                  AND 
-                                 permissions.permission_type = 'TRACKER_ARTIFACT_ACCESS') ";
-            $where .= " AND (a.use_artifact_permissions = 0
+                                 permissions.permission_type = 'TRACKER_ARTIFACT_ACCESS')
+                        AND (a.use_artifact_permissions = 0
                              OR 
                              (
                                  permissions.ugroup_id IN (". implode(',', $ugroups) .")
