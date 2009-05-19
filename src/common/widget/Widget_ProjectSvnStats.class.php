@@ -122,6 +122,12 @@ class Widget_ProjectSvnStats extends Widget {
             
             //ttf from jpgraph
             $ttf = new TTF();
+            $ttf->SetUserFont(
+                'dejavu-lgc/DejaVuLGCSans.ttf',  
+                'dejavu-lgc/DejaVuLGCSans-Bold.ttf', 
+                'dejavu-lgc/DejaVuLGCSans-Oblique.ttf', 
+                'dejavu-lgc/DejaVuLGCSans-BoldOblique.ttf'
+            );
             //Calculate the baseline
             // @see http://www.php.net/manual/fr/function.imagettfbbox.php#75333
             //this should be above baseline
@@ -129,16 +135,16 @@ class Widget_ProjectSvnStats extends Widget {
             //some of these additional letters should go below it
             $test3="Hjgqp";
             //get the dimension for these two:
-            $box2 = imageTTFBbox(10,0,$ttf->File(FF_DV_SANSSERIF),$test2);
-            $box3 = imageTTFBbox(10,0,$ttf->File(FF_DV_SANSSERIF),$test3);
+            $box2 = imageTTFBbox(10,0,$ttf->File(FF_USERFONT),$test2);
+            $box3 = imageTTFBbox(10,0,$ttf->File(FF_USERFONT),$test3);
             $baseline = abs((abs($box2[5]) + abs($box2[1])) - (abs($box3[5]) + abs($box3[1])));
             
             $error = "No commits in the last $duration days";
-            $bbox = imageTTFBbox(10, 0, $ttf->File(FF_DV_SANSSERIF), $error);
+            $bbox = imageTTFBbox(10, 0, $ttf->File(FF_USERFONT), $error);
             if ($im = @imagecreate($bbox[2] - $bbox[6], $bbox[3] - $bbox[5])) {
                 $background_color = imagecolorallocate($im, 255, 255, 255);
                 $text_color       = imagecolorallocate($im, 64, 64, 64);
-                imagettftext($im, 10, 0, 0, $bbox[3] - $bbox[5] - $baseline, $text_color, $ttf->File(FF_DV_SANSSERIF), $error);
+                imagettftext($im, 10, 0, 0, $bbox[3] - $bbox[5] - $baseline, $text_color, $ttf->File(FF_USERFONT), $error);
                 header("Content-type: image/png");
                 imagepng($im);
                 imagedestroy($im);
