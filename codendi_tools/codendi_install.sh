@@ -422,18 +422,6 @@ cd - > /dev/null
 #
 
 
-# SELinux Codendi-specific policy
-#if [ $SELINUX_ENABLED ]; then
-#    echo "Removing existing SELinux policy .."
-#    $RPM -e selinux-policy-targeted-sources 2>/dev/null
-#    $RPM -e selinux-policy-targeted 2>/dev/null
-#    echo "Installing SELinux targeted policy for Codendi...."
-#    cd ${RPMS_DIR}/selinux-policy-targeted
-#    newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
-#    $RPM -Uvh ${newest_rpm}/selinux-policy-targeted-1*.noarch.rpm
-#fi
-
-
 # -> cvs
 echo "Removing existing CVS .."
 $RPM -e --allmatches cvs 2>/dev/null
