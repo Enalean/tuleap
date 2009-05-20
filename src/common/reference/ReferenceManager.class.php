@@ -273,7 +273,7 @@ class ReferenceManager {
     /** Add all system references associated to the given service */
     function addSystemReferencesForService($template_id,$group_id,$short_name) {
       $reference_dao =& $this->_getReferenceDao();
-      $dar = $reference_dao->searchByServiceShortName($short_name);
+      $dar = $reference_dao->searchByScopeAndServiceShortName('S',$short_name);
       while ($row = $dar->getRow()) {
 	$this->createSystemReferenceGroup($template_id,$group_id,$row['id']);
       }
