@@ -2984,7 +2984,17 @@ INSERT INTO layouts_contents (owner_id, owner_type, layout_id, column_id, name, 
 SELECT group_id, 'g', 1, 1, 'projectpublicareas', 1
 FROM groups;
 
+INSERT INTO layouts_contents (owner_id, owner_type, layout_id, column_id, name, rank) 
+SELECT group_id, 'g', 1, 1, 'projectmembers', 1
+FROM groups;
 
+INSERT INTO layouts_contents (owner_id, owner_type, layout_id, column_id, name, rank) 
+SELECT group_id, 'g', 1, 1, 'projectclassification', 1
+FROM groups;
+
+INSERT INTO layouts_contents (owner_id, owner_type, layout_id, column_id, name, rank) 
+SELECT group_id, 'g', 1, 1, 'projectdescription', 1
+FROM groups;
 
 -- only if News is used
 INSERT INTO layouts_contents (owner_id, owner_type, layout_id, column_id, name, rank) 
