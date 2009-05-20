@@ -5,7 +5,7 @@
 #-----------------------------------------------
 # Script: SF/www/my/index.php
 #
-my_index	my_dashboard	Tableau de bord
+my_index	my_dashboard	Mon tableau de bord
 my_index	account_maintenance	Gestion du compte
 my_index	title	Page personnelle de $1
 my_index	err_badbrowser	Alerte&nbsp;: votre navigateur (Netscape 4.x) n'est pas supporté. Certaines fonctionnalités ne seront pas disponibles.

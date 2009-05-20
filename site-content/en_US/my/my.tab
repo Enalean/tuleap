@@ -13,7 +13,7 @@
 #-----------------------------------------------
 # Script: SF/www/my/index.php
 #
-my_index	my_dashboard	Dashboard
+my_index	my_dashboard	My Dashboard
 my_index	account_maintenance	Account Maintenance
 my_index	title	Personal Page for $1
 my_index	err_badbrowser	Warning: your browser (Netscape 4.x) is not supported. Some functionalities will not be available.
