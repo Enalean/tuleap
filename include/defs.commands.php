@@ -13,7 +13,7 @@ define('GIT_LS_TREE','ls-tree');
 define('GIT_REV_LIST','rev-list');
 define('GIT_REV_PARSE','rev-parse');
 define('GIT_SHOW_REF','show-ref');
-define('GIT_TAR_TREE','tar-tree');
+define('GIT_ARCHIVE','archive');
 define('GIT_GREP','grep');
 
 ?>

@@ -13,5 +13,6 @@ define("GITPHP_RSS_ITEMS", 150);
 
 define("GITPHP_COMPRESS_BZ2", 1);
 define("GITPHP_COMPRESS_GZ", 2);
+define("GITPHP_COMPRESS_ZIP", 3);
 
 ?>
