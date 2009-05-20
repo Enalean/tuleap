@@ -12,7 +12,7 @@ To begin, you need to have your git repositories set up in a directory that the
 webserver can access.  They can be in subdirectories within that, but you will
 need a base directory to tell GitPHP where to look for repositories.  These
 must be bare repositories - for those who don't know, the directory of source
-code you have is your working copy.  The .git hidden directory inside of that
+code you have is your working copy, and the .git hidden directory inside of that
 is the actual repository, which is what GitPHP reads.  There are files in here
 like HEAD, COMMIT_EDITMSG, description, etc.
 
@@ -23,6 +23,7 @@ cp -r .git /gitprojects/myproject.git
 
 Or, a new bare repository can be initialized with:
 
+mkdir mybareproject
 cd mybareproject
 git-init --bare
 
@@ -32,7 +33,7 @@ Once you have your projects in a directory, something like:
 /gitprojects/project2.git
 /gitprojects/subdir/project3.git
 
-You can begin setting up GitPHP.  Put the GitPHP source files in a place
+You can begin setting up GitPHP.  Put the GitPHP files in a place
 readable by your webserver.  You will need to change the permissions of the
 templates_c directory to be writable by your webserver.  This can be done
 by either:
