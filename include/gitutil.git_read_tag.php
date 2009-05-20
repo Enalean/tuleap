@@ -27,7 +27,7 @@ function git_read_tag($project, $tag_id)
 			$tag['author'] = $regs[1];
 			$tag['epoch'] = $regs[2];
 			$tag['tz'] = $regs[3];
-		} else if (ereg("--BEGIN",$tok)) {
+		} else {
 			while ($tok !== false) {
 				$comment[] = $tok;
 				$tok = strtok("\n");

@@ -89,8 +89,12 @@ function git_summary($projectroot,$project)
 				$tpl->assign("tagtype",$tag['type']);
 				$tpl->assign("refid",$tag['refid']);
 				$tpl->assign("reftype",$tag['reftype']);
-				if (isset($tag['comment']))
-					$tpl->assign("comment",$tag['comment']);
+				if (isset($tag['comment'])) {
+					$com = trim($tag['comment'][0]);
+					if (strlen($com) > GITPHP_TRIM_LENGTH)
+						$com = substr($trimmed,0,GITPHP_TRIM_LENGTH) . "...";
+					$tpl->assign("comment",$com);
+				}
 			} else
 				$tpl->assign("truncate",TRUE);
 			$tpl->display("project_taglist_item.tpl");

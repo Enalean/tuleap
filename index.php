@@ -132,6 +132,10 @@
 						git_search($gitphp_conf['projectroot'],$_GET['p'],(isset($_GET['h']) ? $_GET['h'] : NULL),(isset($_GET['s']) ? $_GET['s'] : NULL),(isset($_GET['st']) ? $_GET['st'] : "commit"),(isset($_GET['pg']) ? $_GET['pg'] : 0));
 					}
 					break;
+				case "tag":
+					require_once('include/display.git_tag.php');
+					git_tag($gitphp_conf['projectroot'],$_GET['p'],$_GET['h']);
+					break;
 				default:
 					echo "Unknown action";
 					break;
