@@ -608,11 +608,6 @@ fi
 
 $PERL -pi -e "s/^#ftpd_banner=.*/ftpd_banner=Welcome to Codendi FTP service./g" /etc/vsftpd/vsftpd.conf 
 
-fi
-
-# CodeX/Codendi specific
-exclude=mailman cvs
-
 
 ######
 # Now install the non RPMs stuff 
