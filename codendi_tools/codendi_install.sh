@@ -1459,7 +1459,7 @@ $SERVICE httpd restart
 $CHKCONFIG nscd on
 
 $SERVICE nscd start
-
+$SERVICE munin-node start
 
 ##############################################
 # Set SELinux contexts and load policies
