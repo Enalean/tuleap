@@ -422,12 +422,10 @@ if (isset($params['group']) && $params['group']) {
 				if ($project->isError()) {
 
 				} else {
-					$TABS_DIRS[]='/projects/'.$project->getUnixName().'/';
-					$TABS_TITLES[]=$project->getPublicName();
-					$selected=count($TABS_DIRS)-1;
+					    $selected=array_search("/softwaremap/", $TABS_DIRS);
 				}
 			}
-		} elseif (strstr(getStringFromServer('REQUEST_URI'),'/my/')   ||
+		} else if (strstr(getStringFromServer('REQUEST_URI'),'/my/')   ||
 				strstr(getStringFromServer('REQUEST_URI'),'/themes/') ||
                 strstr(getStringFromServer('REQUEST_URI'),'/account/') ) {
 			$selected=array_search("/my/", $TABS_DIRS);
