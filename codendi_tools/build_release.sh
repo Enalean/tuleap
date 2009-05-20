@@ -111,10 +111,6 @@ done
 echo "Changing ownership to root.root for everything..."
 $CHOWN -R root.root $BUILD_DIR/*
 echo "... done at:"
-# delete codendi_tools directory in BUILD_DIR
-#echo "Deleting codendi_tools directory..."
-#cd $BUILD_DIR/Codendi/src
-#rm -rf codendi_tools
 
 # create the tar file of Codendi sources
 echo "Creating tar file of Codendi sources..."
@@ -127,7 +123,7 @@ echo "... done at:"
 cd $BUILD_DIR
 cat <<'EOF' >README
 Codendi: The Xerox Solution to Maximize the Value of Your Corporate Software Assets
-Copyright (c) Xerox Corporation, 2001-2008. All Rights Reserved
+Copyright (c) Xerox Corporation, 2001-2009. All Rights Reserved
 http://www.codendi.com
 
 The Codendi software From Xerox aims at providing large companies with an
@@ -148,141 +144,136 @@ License
 -------
 Codendi is originally based on SourceForge 2.0 and the numerous
 enhancements brought to the original software are under the GNU General Public
-License (GPL).
+License (GPL v2).
 
 Contact
 -------
-If you want to know more about Codendi or if you have questions send an email
-to info@codendi.xerox.com
-
-Support Requests
-----------------
-Codendi users inside of the Xerox Network must submit their support requests
-through the Codendi central site at:
-http://codendi.xerox.com/tracker/?func=add&group_id=1&atid=922 
-
-Codendi customers outside of Xerox must submit their support requests through
-the external Codendi support site at:
-https://partners.xrce.xerox.com/tracker/?func=add&group_id=120&atid=199
+If you want to know more about Codendi or if you have questions, submit them
+at http://www.codendi.com
 
 -- The Codendi Team
-   <info@codendi.xerox.com>
+http://www.codendi.com
 
 EOF
 
 # create a INSTALL file at the top
 cat <<'EOF' >INSTALL
 Codendi: The Xerox Solution to Maximize the Value of Your Corporate Software Assets
-Copyright (c) Xerox Corporation, 2001-2008. All Rights Reserved
+Copyright (c) Xerox Corporation, 2001-2009. All Rights Reserved
 http://www.codendi.com
 
 - login as root user
 - cd into the directory where the codendi_install.sh script is located
 (probably /mnt/cdrom if you received the Codendi software on a CDROM)
 - For a fresh Codendi installation run the installation script with ./codendi_install.sh
-- For an update from 3.4 please read migration_from_Codendi_3.4_to_Codendi_4.0.README.
-- For an update from a prior release, please update to Codendi 3.4 first.
+- For an update from 3.6 please read migration_from_Codendi_3.6_to_Codendi_4.0.README.
+- For an update from a prior release, please update to Codendi 3.6 first.
+
+After a fresh installation, here is a checklist of things to verify or update:
+- Finish sendmail installation (see installation Guide) and create codendi-admin alias in /etc/aliases
+- You may want to customize configuration files for your local settings:
+    /etc/codendi/conf/local.inc
+    /etc/codendi/conf/database.inc
+    /etc/codendi/documentation/user_guide/xml/ParametersLocal.dtd
+    /etc/codendi/documentation/cli/xml/ParametersLocal.dtd
+    /etc/httpd/conf/httpd.conf
+    /usr/lib/codendi/bin/backup_job
+    /usr/lib/codendi/bin/backup_subversion.sh
+    /etc/codendi/site-content/en_US/others/default_page.php (project web site default home page)
+- Customize site-content information for your site.
+    For instance: contact/contact.txt cvs/intro.txt
+    svn/intro.txt include/new_project_email.txt, layout/osdn_sites.txt etc.
+- If you are behind a proxy, then you need to declare the proxy in two files: 
+  * sys_proxy in /etc/codendi/conf/local.inc (for external RSS feeds support)
+  * /home/codendiadm/.subversion/servers for the Server Update plugin
+- In order to enable the subversion update, you also need to type the following commands (as codendiadm):
+      cd /usr/share/codendi/
+      svn status -u --username <your_login_on_partners>
+    Accept the certificate permanently, type in your password, and accept to store it locally.
+- If only HTTPS is enabled on the Codendi server:
+   * update ENTITY SYS_UPDATE_SITE in /etc/codendi/documentation/user_guide/xml/ParametersLocal.dtd (replace 'http' by 'https')
+   * WARNING: The Eclipse plugin *requires* a *valid* SSL certificate (from a certified authority). Self-signed certificates *won't* work.
+- If you wish to use SSL encryption with the Jabber server, you need to import or generate an SSL server into Openfire's web server:
+   * Go in Openfire Admin iterface (on port 9090 by def), then: Server Settings -> Server Certificates
+- Create the shell login files for Codendi users in /etc/skel_codendi
+- Change the default login shell if needed in the database (/sbin/nologin or /usr/lib/codendi/bin/cvssh, etc.)
+- Last, log in as 'admin' on web server, read/accept the license, and click on 'server update'. Then update the server to the latest available version. 
+
 
 -- The Codendi Team
-   <info@codendi.xerox.com>
+http://www.codendi.com
 EOF
 
 # create a RELEASE_NOTES file at the top
 cat <<'EOF' >RELEASE_NOTES
 Codendi: The Xerox Solution to Maximize the Value of Your Corporate Software Assets
-Copyright (c) Xerox Corporation, 2001-2008. All Rights Reserved
+Copyright (c) Xerox Corporation, 2001-2009. All Rights Reserved
 http://www.codendi.com
 
 This is Codendi 4.0 
 Please read the README and INSTALL files carefully, and get in touch with us
-at codendi-contact@codendi.xerox.com if you have questions.
+at http://www.codendi.com if you have questions.
 
 
 Here are the new features of Codendi 4.0:
 
-- Codendi now includes a test management framework: SalomeTMF.
-  Salomé-TMF is an independent, open source Test Management Tool, which helps 
-  you to manage your entire testing process - creating test scripts, executing
-  tests, tracking results, produce documentation, and more.
-    * Organize your test cases and your campaign in hierarchical tree structure
-    * Define manual tests (sequence of actions) or automatic (programs or scripts of tests)
-    * Define several environments under tests in a project
-    * Parametrize your manual and automatic tests and carry out them on several environments
-    * Track results associated with test execution on an environment under test
-    * Attach files or URLs on the data managed by Salome-TMF (test, execution, environment, etc) 
-  Salomé is nicely integrated into Codendi: it is automatically setup in each project,
-  and is launched with a single click. You can then submit test defects in a Codendi
-  tracker directly from Salomé.
-  Salomé is provided as a Java Web Start application, but its configuration is done
-  in the Codendi interface. The Codendi template mechanism makes it possible to inherit
-  the Salome configuration from the template project.
-  Please note that the current version of Salomé provided with Codendi needs a direct
-  JDBC access to the Codendi server. Another version based on SOAP is being integrated.
+- New "Dawn" theme: 
+  This is certainly the most visible change. we hope you like it! 
+  Of course, you can still use all the previous themes.
 
-- Instant Messaging server.
-  Codendi 4.0 provides a Jabber/XMPP server for instant messaging (IM).
-  Every user declared in Codendi has a corresponding jabberID, and every project
-  has a chat room reserved for its members. 
-  Simply connect to Codendi with a Jabber client and use your jabber ID: your
-  list of contact automatically contains all the projects you belong to, with all the
-  project members: you can chat with them instantly!
-  Furthermore, in some places, Codendi displays a jabber icon next to the user names
-  showing the jabber status of the user (available, disconnected, away, etc.) so
-  that you know if you can start a chat session!
+- Project and personal dashboards
+  Codendi 4.0 provides fully-customizable dashboard for projects (replacing the previous 'Summary' page) and for 'My Personal Page'.
+  The dashboards can be customized with many widgets provided with Codendi 4.0, and their layout  is completely customizable: columns, lines, can be arranged like you want.
+  Among the new widgets, you will find Continuous Integration widgets (status of latest build, current trend, etc.), a Subversion statistics widget, or a Twitter follow widget!
 
+- Continuous Integration with Hudson
+  Codendi may now be connected to your Hudson Continuous Integration (CI) servers. This allows you to access your CI information directly from your project dashboard. 
+  Moreover, we provide guidelines for a better integration between Hudson and Codendi, allowing you to trigger a CI build on every commit, or to be notified when a build fails. 
+  Read the user documentation for more details.
 
-- Graphs for trackers
-  Add some visual information on your trackers! Codendi provides easy-to-use
-  graphical components for trackers that allow creation of Pie, Bar and
-  Gantt charts related to trackers.
-  You may now visually display the distribution of bugs per severity or assignees,
-  display your project plan in a Gantt chart.... 
-  This feature perfectly fits our generic tracker, and can be used with any custom fields.
+- Web Chat
+  Codendi now provides a web interface to your project chat room! Interact with your teammates on Jabber with your web browser.
+  Additionally, Codendi now stores the chat logs in its database, so that you can access them later.
 
-- Improved security. Codendi 4.0 benefits from all the work done on Codendi 3.4-Security release.
-  User input is properly filtered to avoid all types of security risks.
+- References management (like "bug #123")
+  - Cross-reference extraction and storage now works on all services (tracker, SVN, CVS, documents, files, etc.)
+  - New button to delete stored references
+  - Added meaningful tooltips on references
+  - Implement mandatory references in CVS or SVN commits: with this option, the commit is rejected if it does not contain a reference to a Codendi object (task, bug, revision, etc.)
 
-- Improve cross-reference tracking.
-  If you reference an artifact in a SVN or CVS commit, the artifact is automatically updated with a 
-  reference to the commit (and vice-versa). All references are now clearly displayed;
+- Document Manager enhancements:
+  - Docman uploader/downloader
+  - Improved SOAP API
+  - one approval table per wiki or file version
+  - wiki page permissions linked to docman if needed
+  - display docman references (if any) in front of wiki page  - Links to documents in notification emails
+  - Filter a search by item type
+  - Enable monitoring of an item for people that are added to the item's approval table (starting from the moment they're notified by the approval table)
+  - Tree view: expand a folder after an item is created inside and scroll to the page to the item
+  - When creating a metadata, display "allow multiple selection" choice. Checkbox is disabled if the type is not "list". Also, a non-empty name is required, and it cannot be the same name as another property (verification also done when updating a property).
+  - Statistics tabs for folders (number of items, size)
 
-- Codendi 4.0 comes with Subversion 1.5, that now provides merge tracking!
+- Permissions on artifacts:
+  It is now possible to set specific permissions on individual artifacts.
 
-- Backend updates:
-  * Platform upgrade: Codendi 4.0 runs on RedHat Enterprise Linux 5 and CentOS 5. This means that 
-    all packages have been upgraded: PHP5, Apache 2.2, MySQL 5, etc.
-    New SELinux modules are provided and are fully compatible with Codendi
-  * Major switch of charset from iso-latin1 to UTF-8. All services are impacted, and this now
-    provides a better handling of non-ASCII characters.
-  * Codendi now uses the SOAP library provided by PHP5 for better performance and scalability.
-    Some changes were made to the API.
+- New backend, completely rewritten in PHP!
+  - Backend actions (repository creation, membership change, etc.) performed within one minute!
+  - System event implementation
+  - System Event monitoring page and notification for administrators
+  - authentication (system, CVS, SVN) is now based on database queries.
+  - In a "restricted user" setup, non-restricted users may now access public SVN repositories.
+  - new Codendi log file in /var/log/codendi
+  - improved SVN logging
 
-- Other smaller improvements:
-* Codendi provides a new tracker template "Scrum Backlog" for managing Scrum user stories
-* Project description fields (short description, long description, etc.) can now be customized 
-  by the site administrator.
-* New WYSIWYG interface for embedded document edition (in Document Manager): you may now edit
-  an HTML document online as you would edit a document on your desktop.
-* You may now set default value for text area fields in trackers. For instance,
-  you can create a template for "original submission"
-* improved user statistics (number of active users)
-* updated documentation explaining all the new features
-* nice SVN repository listing (when directly accessing URLs like http://server/svnroot/guineapig/).
-* improved, scalable interface for user group edition
-* Site administrators may now directly create user accounts
-* user accounts can have an expiry date
-* CLI now support a proxy option
-* new calendar graphical element to replace the old pop-up.
-* new "last-update-date" field that allows you to know which artifacts were updated recently.
-* display username according to user preferences (unix name, real name, etc.) in many places, including tracker fields and SVN search.
-* provide a link to the new/edited artifact in the feedback box
-* you may now select the default report in a tracker
+- Improved performance
+  In Codendi 4.0, we worked on improving the user experience by implementing several performance-related tasks (database optimizations, Javascript, language files, etc.)
 
-- Other backend improvements:
-* Simplified vhost and DNS management
-* Packaging: Eclise, JRI and Salome provided as RPMs
-* No longer support for CGI scripts in project web site for better security
-* Support project web sites even if subdomains are not available (use /www/projname URL).
+Other changes
+- Add support for files larger than 2GB in File Release Manager.
+- CodeX cleanup: CodeX, the old name of Codendi, has now (almost) completely disappeared from the code base.
+- Updated packages: Codendi 4.0 provides Subversion 1.6, and many other recent packages.
+- .CODEX_PRIVATE file is now deprecated (use the new CVS private repository option instead).
+- Samba support is also discontinued (access to Windows shares) for security reasons.
 
 ...and many more smaller additions and fixes.
 

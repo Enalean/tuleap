@@ -1532,28 +1532,10 @@ $CHOWN -R codendiadm.codendiadm $INSTALL_DIR/downloads
 ##############################################
 # End of installation
 #
-todo "If you are behind a proxy, then you need to declare the proxy in two files: "
-todo "* sys_proxy in /etc/codendi/conf/local.inc (for external RSS feeds support)"
-todo "* /home/codendiadm/.subversion/servers for the Server Update plugin"
-todo "In order to enable the subversion update, you also need to type the following commands (as codendiadm):"
-todo "     cd /usr/share/codendi/"
-todo "     svn status -u --username <your_login_on_partners>"
-todo "   Accept the certificate permanently, and type in your password."
-
-todo "If only HTTPS is enabled on the Codendi server:"
-todo " * update ENTITY SYS_UPDATE_SITE in /etc/codendi/documentation/user_guide/xml/ParametersLocal.dtd (replace 'http' by 'https')"
-todo " * WARNING: The Eclipse plugin *requires* a *valid* SSL certificate (from a certified authority). Self-signed certificates *won't* work."
-todo "If you wish to use SSL encryption with the Jabber server, you need to import or generate an SSL server into Openfire's web server:"
-todo " * Go in Openfire Admin iterface (on port 9090 by def), then: Server Settings -> Server Certificates"
-todo "To customize the network gallery, copy /usr/share/codendi/site-content/en_US/layout/osdn_sites.txt to /etc/codendi/site-content/en_US/layout/ and edit it."
-todo "Create the shell login files for Codendi users in /etc/skel_codendi"
-todo "Change the default login shell if needed in the database (/sbin/nologin or /usr/lib/codendi/bin/cvssh, etc.)"
-todo "Last, log in as 'admin' on web server, read/accept the license, and click on 'server update'. Then update the server to the latest available version."
+todo "Don't forget to read the INSTALL file"
 todo ""
-todo "Note: Codendi now supports CVSNT and the sserver protocol, but they are not installed by default."
-todo "If you plan to use CVSNT, please refer to the installation guide"
 todo "-----------------------------------------"
-todo "This TODO list is available in $TODO_FILE"
+todo "This TODO list is available in $TODO_FILE."
 
 # End of it
 echo "=============================================="
