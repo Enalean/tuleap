@@ -5,7 +5,13 @@ Welcome to Codendi 4.0
 
 This document explains how to upgrade from a Codendi 3.6 server to Codendi 4.0.
 
+In order to upgrade to Codendi 4.0, simply:
+- read the RELEASE_NOTES file
+- back-up your data
+- run this script as root:
+./migration_from_CodeX_3.4_to_Codendi_3.6.sh
 
+Here are a few things you should now about Codendi 4.0:
 
 * .CODEX_PRIVATE files have been deprecated
   - you can setup CVS repository privacy with a new option in the CVS dministration page of each project.
@@ -16,68 +22,32 @@ This document explains how to upgrade from a Codendi 3.6 server to Codendi 4.0.
     SVN reposiotries and project homes protected this way have proper access rights.
   - The .CODEX_PRIVATE files have not been deleted, but they are no longer used.
 
-* Private projects no longer have privacy in their whole project directory. Only the 'private' directory is now private. If private information is available elesewhere, you should move it to the 'private' directory. TODO: script to automate this?
+* Private projects no longer have privacy in their whole project directory. Only the 'private' directory is now private. If private information is available elesewhere, you should move it to the 'private' directory.
 
+* Samba support (Windows shares) was discontinued for security reasons
 
 * httpd.conf and codex_aliases.conf were backed-up (look at /root/codex_3_6_backup/) and re-generated. If you had specific settings, please re-copy them to the new files.
 
 * Authentication now relies on the database. Codendi uses libnss-mysql for system authentication, and mod_auth_mysql for Apache authentication.
   The system files (/etc/passwd, /etc/group and /etc/shadow) are "cleaned-up" of all Codendi users and groups during the migration.
 
+* All references to "CodeX" (the old name of Codendi) have been removed (except for the themes).
+  You may have to update your local modifications if you have any to take this change into account.
 
+* Where is xerox_crontab.sh?
+  The backend has been completely rewritten in PHP, and most backend scripts have disappeared! 
+  Now, backend actions are performed in "real-time". 
+  However, if you still need to "run the crontab", you now need to type this as root:
+cd /usr/share/codendi/src/utils
+./php-launcher.sh launch_system_check.php 
+./php-launcher.sh process_system_events.php 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-* If you wish to change the name of your server from "CodeX" to "Codendi", you should
-  change $sysname in /etc/codex/conf/local.inc to "Codendi".
-
-* On the opposite, if you wish to keep the old name in the documentation, you should 
-  add the SYS_PRODUCT_NAME line in
-  /etc/codex/documentation/user_guide/xml/ParametersLocal.dtd
-  (see /usr/share/codex/src/etc/ParametersLocal.dtd.dist)
 
 You are all set!
 
-Toubleshooting:
---------------
-Here are a few tips in case of problems after the migration
-
-
-Q: I can't use CVS after the migration: the CVS client complains about a lock
-   that can't be written
-A: You need to execute the Codendi cron job (/usr/share/codex/src/util/xerox_crontab.sh)
-   to regenerate the locks in /var/lock/cvs
-
-Q: The User/Admin/Install guide is no longer accessible
-A: First, check that the documentation was properly generated (i.e. file
-   /usr/share/codex/documentation/user_guide/pdf/en_US/Codendi_User_Guide.pdf
-   should exist). Otherwise, run "generate_doc.sh" as codexadm.
-   Then, please note that these guides were renamed from "CodeX" to "Codendi",
-   so please update your links accordingly.
-
 Enjoy Codendi 4.0!
-
 
 -- The Xerox Codendi team
 
-Questions? -> codex-devel@partners.xrce.xerox.com
-Problems?  -> https://partners.xrce.xerox.com/tracker/?group_id=120&atid=199
+Questions? -> http://www.codendi.com
 
