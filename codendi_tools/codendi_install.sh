@@ -274,6 +274,9 @@ while [ "$openfire_passwd" != "$openfire_passwd2" ]; do
     echo
 done
 
+echo "DB authentication user: MySQL user that will be used for user authentication"
+echo "  Please do not reuse a password here, as this password will be stored in clear on the filesystem and will be accessible to all logged-in user."
+
 dbauth_passwd="a"; dbauth_passwd2="b";
 while [ "$dbauth_passwd" != "$dbauth_passwd2" ]; do
     read -s -p "Password for DB Authentication user: " dbauth_passwd

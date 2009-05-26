@@ -253,6 +253,9 @@ if [ -z $sys_ip_address ]; then
   read -p "Codex Server IP address: " sys_ip_address
 fi
 
+echo "DB authentication user: MySQL user that will be used for user authentication"
+echo "  Please do not reuse a password here, as this password will be stored in clear on the filesystem and will be accessible to all logged-in user."
+
 dbauth_passwd="a"; dbauth_passwd2="b";
 while [ "$dbauth_passwd" != "$dbauth_passwd2" ]; do
     read -s -p "Password for DB Authentication user: " dbauth_passwd
@@ -419,6 +422,7 @@ codendification "$ETC_DIR/conf/local.inc"
 codendification "$ETC_DIR/conf/database.inc"
 substitute "$ETC_DIR/conf/local.inc" "sys_themedefault\s*=\s*'CodendiTab'" "sys_themedefault = 'CodeXTab'"
 substitute "$ETC_DIR/conf/local.inc" "sys_themedefault\s*=\s*'Codendi'" "sys_themedefault = 'CodeX'"
+substitute "$ETC_DIR/conf/local.inc" "sys_email_admin\s*=\s*'codendi" "sys_email_admin = 'codex"
 
 # -> cvs
 echo "Removing existing CVS .."
@@ -445,10 +449,12 @@ newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
 $RPM -Uvh ${newest_rpm}/viewvc-*.noarch.rpm
 
 # -> phpMyAdmin
-$RPM -e phpMyAdmin phpmyadmin 2>/dev/null
+$RPM -e phpMyAdmin 2>/dev/null
+$RPM -e phpmyadmin 2>/dev/null
 echo "Installing phpMyAdmin RPM for Codendi...."
 cd ${RPMS_DIR}/phpMyAdmin
 newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
+$RPM -Uvh ${newest_rpm}/phpmyadmin-*.noarch.rpm
 
 # -> mailman
 echo "Removing installed mailman if any .."
@@ -646,7 +652,6 @@ $CHMOD 770 /var/lib/dav/
 #############################################
 # Remove SMB support
 $CHKCONFIG smb off
-todo "Please note that Windows shares (with Samba) are no longer supported for security reasons"
 
 # move password file to backup dir
 if [ -f /etc/samba/smbpasswd ]; then
@@ -811,7 +816,7 @@ removed=`$DIFF -q -r \
  -e "s/@//g"     \
  -e '/^$/ d'`
 if [ "$removed" != "" ]; then
-  echo "The following files doesn't existing in the site-content of Codendi:"
+  echo "The following files do not exist in the site-content of Codendi:"
   echo "$removed"
 fi
 
@@ -1404,7 +1409,7 @@ find /svnroot/ -maxdepth 1 -mindepth 1 -name "*" -exec sudo -u codendiadm svnadm
 ###############################################################################
 # Create 'private' directories in /home/group/
 echo "Creating private directories in /home/group/"
-find /home/groups/ -maxdepth 1 -mindepth 1 -type d -exec mkdir -v --context=root:object_r:httpd_sys_content_t --mode=2770 '{}/private' \; -exec chown dummy '{}/private' \;
+find /home/groups/ -maxdepth 1 -mindepth 1 -type d -exec mkdir -p --context=root:object_r:httpd_sys_content_t --mode=2770 '{}/private' \; -exec chown dummy '{}/private' \;
 
 
 ###############################################################################
@@ -1423,7 +1428,7 @@ echo "Remove xerox_crontab script from root crontab"
 crontab -u root -l >> /tmp/root_cronfile
 $PERL -i'.orig' -p -e's/^(.*xerox_crontab.sh.*)$/#\1/' /tmp/root_cronfile
 # Also remove this line (done in SYSTEM_CHECK event)
-$PERL -pi -e's/^(.*chmod u+s log_accum fileforge.*)$/#\1/' /tmp/root_cronfile
+$PERL -pi -e's/^(.*chmod u\+s log_accum fileforge.*)$/#\1/' /tmp/root_cronfile
 
 # Codendification of crontab
 codendification '/tmp/root_cronfile'
@@ -1452,7 +1457,7 @@ fi
 
 ##############################################
 # Codendification of CODEX_LICENSE_ACCEPTED
-if [ -f "/etc/codendi/CODEX_LICENSE_ACCEPTED " ]; then
+if [ -f "/etc/codendi/CODEX_LICENSE_ACCEPTED" ]; then
   $MV /etc/codendi/CODEX_LICENSE_ACCEPTED /etc/codendi/CODENDI_LICENSE_ACCEPTED
 fi
 
@@ -1654,24 +1659,6 @@ newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
 $CP ${newest_rpm}/monitoring.jar /opt/openfire/plugins
 
 
-# Codendification:
-# - /var/lib/mysql/codex-bin*
-# NTY: Why? There are already codendi-bin* after migration in /var/lib/mysql/...
-
-#
-# TODO CODENDIFICATION:
-#
-
-
-# Ask to make a manual update (-u???) on /usr/share/codendi as codendiadm to get new realm 
-#??? Mailman: codex-admin??
-# - Migrate all CodeX in /etc/codendi (site-content, etc.)
-# - change codex project short name on Partners
-# - custom themes:'codex' in theme CSS -> codendi .
-#
-# Update install/admin guides with new backend system.
-#
-# remove references to sys_win_domain in documentation (Windows support..)
 #
 # Re-copy files that have been modified
 #
@@ -1691,8 +1678,6 @@ $CHMOD 755 commit-email.pl codendi_svn_pre_commit.php
 
 
 
-
-
 ##############################################
 # Generate Documentation
 #
@@ -1702,23 +1687,6 @@ su -c "$INSTALL_DIR/src/utils/generate_programmer_doc.sh -f" - codendiadm 2> /de
 su -c "$INSTALL_DIR/src/utils/generate_cli_package.sh -f" - codendiadm 2> /dev/null &
 $CHOWN -R codendiadm.codendiadm $INSTALL_DIR/documentation
 $CHOWN -R codendiadm.codendiadm $INSTALL_DIR/downloads
-
-
-todo "If you use CODEX_LOCAL_INC environment variable, please rename it to CODENDI_LOCAL_INC"
-todo "Note to Codendi Developers: "
-todo " - Some deprecated functions have been removed: group_getname, group_getunixname, group_get_result, group_get_object, project_get_object"
-todo " - Themes have been enhanced. Images and css inherit from a common theme:"
-todo "   + images not found in your custom theme will be taken from common."
-todo "   + css rules can be overriden by your theme."
-todo "   + => this will ease the maintenance of your theme (no need to duplicate images, no need to modify stylesheets)"
-todo " - Layout has been refactored: moved in src/common, headers management have been enhanced, ..."
-
-
-
-
-
-
-
 
 
 # End of it

@@ -1116,12 +1116,12 @@ The integration of CVS and Subversion in &SYS_PRODUCT_NAME; precisely provide th
 	  <step>
 	    <para>Run the setup program and go through the
 	    installation process.<emphasis role="bold">Important
-	    Remark</emphasis>: On Windows NT/2000/XP you must have
+	    Remark</emphasis>: On Windows you must have
 	    administrator rights to install the driver.</para>
 	  </step>
 	  <step>
 	    <para>Add your project database to Windows Data
-	    Sources. For Windows NT/2000/XP users:</para>
+	    Sources. For Windows users:</para>
 
 	    <itemizedlist mark="bullet" spacing="compact">
 	      <listitem>

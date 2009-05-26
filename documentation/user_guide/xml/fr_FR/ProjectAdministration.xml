@@ -1213,13 +1213,12 @@ ces patrons de référence sont définis par l'administrateur du site et sont co
 	    <para>Lancez l'exécution du programme setup et parcourez
 	    les étapes du processus d'installation.<emphasis
 	    role="bold"> Remarque importante</emphasis> : sur Windows
-	    NT/2000/XP vous devez être administrateur pour pouvoir
+	    vous devez être administrateur pour pouvoir
 	    installer le pilote.</para>
 	  </step>
 	  <step>
 	    <para>Ajouter votre base de données dans les Source de
-	    Données Windows. Pour les utilisateurs de Windows
-	    NT/2000/XP :</para>
+	    Données Windows. Pour les utilisateurs de Windows :</para>
 
 	    <itemizedlist mark="bullet" spacing="compact">
 	      <listitem>
