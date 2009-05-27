@@ -404,7 +404,7 @@ if [ -d /etc/skel_codex ]; then
 fi
 
 $CP /var/named/chroot/var/named/codex_full.zone /var/named/chroot/var/named/codex_full.zone_36
-$MV /var/named/chroot/var/named/codex_full.zone /var/named/chroot/etc/codendi.zone
+$MV /var/named/chroot/var/named/codex_full.zone /var/named/chroot/var/named/codendi.zone
 substitute '/var/named/chroot/etc/named.conf' 'codex_full.zone' "codendi.zone" 
 
 $CP /etc/aliases.codex /etc/aliases.codex_36
@@ -447,6 +447,8 @@ echo "Installing viewvc RPM for Codendi...."
 cd ${RPMS_DIR}/viewvc
 newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
 $RPM -Uvh ${newest_rpm}/viewvc-*.noarch.rpm
+# Use new conf file
+$CP -u /etc/codendi/conf/viewvc.conf.rpmnew /etc/codendi/conf/viewvc.conf
 
 # -> phpMyAdmin
 $RPM -e phpMyAdmin 2>/dev/null
@@ -1067,8 +1069,8 @@ EOF
 
 echo "- Cross-references change the type of column to handle wiki references (not int)"
 $CAT <<EOF | $MYSQL $pass_opt codendi
-ALTER TABLE cross_references CHANGE source_id source_id VARCHAR( 128 ) NOT NULL DEFAULT '0';
-ALTER TABLE cross_references CHANGE target_id target_id VARCHAR( 128 ) NOT NULL DEFAULT '0';
+ALTER TABLE cross_references CHANGE source_id source_id VARCHAR( 255 ) NOT NULL DEFAULT '0';
+ALTER TABLE cross_references CHANGE target_id target_id VARCHAR( 255 ) NOT NULL DEFAULT '0';
 EOF
 
 echo "- Cross references : add two fields"
@@ -1289,12 +1291,47 @@ INSERT INTO layouts_rows_columns(id, layout_row_id, width) VALUES
 (7, 3, 66),
 (8, 4, 66),
 (9, 4, 33);
+
+
+
+CREATE TABLE IF NOT EXISTS widget_twitterfollow (
+  id int(11) unsigned NOT NULL auto_increment,
+  owner_id int(11) unsigned NOT NULL default '0',
+  owner_type varchar(1) NOT NULL default 'u',
+  title varchar(255) NOT NULL,
+  user text NOT NULL,
+  PRIMARY KEY  (id),
+  KEY owner_id (owner_id,owner_type)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
+
+CREATE TABLE IF NOT EXISTS widget_wikipage (
+  id int(11) unsigned NOT NULL auto_increment,
+  owner_id int(11) unsigned NOT NULL default '0',
+  owner_type varchar(1) NOT NULL default 'u',
+  title varchar(255) NOT NULL,
+  group_id int(11) unsigned NOT NULL default '0',
+  wiki_page text,
+  PRIMARY KEY  (id),
+  KEY owner_id (owner_id,owner_type)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
 EOF
 
 echo "- Upgrade docman"
 $CAT <<EOF | $MYSQL $pass_opt codendi 
 ALTER TABLE plugin_docman_approval CHANGE COLUMN version_id version_id INT(11) UNSIGNED UNSIGNED NULL DEFAULT NULL;
 ALTER TABLE plugin_docman_approval CHANGE COLUMN wiki_version_id wiki_version_id INT(11) UNSIGNED UNSIGNED NULL DEFAULT NULL;
+
+CREATE TABLE IF NOT EXISTS plugin_docman_widget_embedded (
+  id int(11) unsigned NOT NULL auto_increment,
+  owner_id int(11) unsigned NOT NULL,
+  owner_type varchar(1) NOT NULL,
+  title varchar(255) NOT NULL,
+  item_id int(11) unsigned NOT NULL,
+  PRIMARY KEY  (id),
+  KEY owner_id (owner_id,owner_type)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
 EOF
 
 echo "- Perfs"
@@ -1471,6 +1508,8 @@ $MV /etc/profile_codex /etc/profile_codendi
 codendification '/etc/vsftpd/vsftpd.conf'
 codendification '/var/lib/codex/ftp/.message'
 
+perl -pi -e 's@/var/lib/codex@/var/lib/codendi@g;' /etc/codendi/documentation/user_guide/xml/ParametersLocal.dtd
+perl -pi -e 's@/var/lib/codex@/var/lib/codendi@g;' /etc/codendi/plugins/docman/etc/docman.inc
 
 ##############################################
 # Codendification: CVS and SVN repos
@@ -1676,6 +1715,16 @@ cd /usr/lib/codendi/bin
 $CHOWN codendiadm.codendiadm commit-email.pl codendi_svn_pre_commit.php
 $CHMOD 755 commit-email.pl codendi_svn_pre_commit.php
 
+#
+# Paths Codendification 
+#
+echo "- Rename codex to codendi"
+$CAT <<EOF | $MYSQL $pass_opt codendi
+UPDATE svn_repositories 
+SET repository=replace(repository, '/var/lib/codex', '/var/lib/codendi');
+UPDATE plugin_docman_version 
+SET path= replace(path, '/var/lib/codex', '/var/lib/codendi');
+EOF
 
 
 ##############################################
@@ -1692,5 +1741,14 @@ $CHOWN -R codendiadm.codendiadm $INSTALL_DIR/downloads
 # End of it
 echo "=============================================="
 echo "Migration completed succesfully!"
+echo
+echo "The following files contain the string 'codex'."
+echo "You should manually edit them and check if the string should be replaced by 'codendi'."
+echo
+fgrep -ril codex /etc/codendi/site-content
+
+echo
+echo "Note: if you wish to change all occurences of 'codex' into 'codendi' for one file, you can execute this simple command:"
+echo ' perl -pi -e "s/codex/codendi/g" filename'
 
 exit 1;
