@@ -41,23 +41,24 @@ function account_set_password($user_id,$password) {
 
 // Add user to an existing project
 function account_add_user_to_group ($group_id,&$user_unix_name) {
-  global $Language;
+    global $Language;
 	
 	$ret = false;
 	
     $um = UserManager::instance();
     $user = $um->findUser($user_unix_name);
-	if ($user) {
+    if ($user) {
 
-	    //user was found but if it's a pending account adding
-	    //is not allowed
-	    if (!$user->isActive() && !$user->isRestricted()) {
+        //user was found but if it's a pending account adding
+        //is not allowed
+        if (!$user->isActive() && !$user->isRestricted()) {
             $GLOBALS['Response']->addFeedback('error', $Language->getText('include_account', 'account_notactive',$user_unix_name));
             return false;
-	    }
+        }
 
-		//if not already a member, add it
-		if (!$user->isMember($group_id)) {
+        //if not already a member, add it
+        $res_member = db_query("SELECT user_id FROM user_group WHERE user_id=".$user->getId()." AND group_id='".db_ei($group_id)."'");
+        if (db_numrows($res_member) < 1) {
 			//not already a member
 			db_query("INSERT INTO user_group (user_id,group_id) VALUES (".db_ei($user->getId()).",".db_ei($group_id).")");
 
