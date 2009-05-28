@@ -515,12 +515,16 @@ newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
 $RPM -Uvh ${newest_rpm}/codendi-eclipse-*noarch.rpm
 
 # -> codendi-salome-tmf
+# Copy key.txt
+$cp $INSTALL_DIR/plugins/salome/www/webapps/jdbc_client/cfg/key.txt /tmp/
 echo "Removing installed SalomeTMF plugin if any .."
 $RPM -e --allmatches codex-salome-tmf 2>/dev/null
 echo "Installing SalomeTMF plugin RPM...."
 cd ${RPMS_DIR}/codendi-salome-tmf
 newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
 $RPM -Uvh ${newest_rpm}/codendi-salome-tmf-*noarch.rpm
+# And re-copy key
+$CP /tmp/key.txt $INSTALL_DIR/plugins/salome/www/webapps/jdbc_client/cfg/
         
 
 ##############################################
@@ -1125,7 +1129,7 @@ $CAT <<EOF | $MYSQL $pass_opt codendi
 INSERT INTO reference SET 
     keyword='chat', 
     description='plugin_im:reference_chat_desc_key', 
-    link='/plugins/IM/?group_id=$group_id&action=viewchatlog&chat_log=$1', 
+    link='/plugins/IM/?group_id=\$group_id&action=viewchatlog&chat_log=\$1', 
     scope='S', 
     service_short_name='IM',
     nature='im_chat';
@@ -1138,7 +1142,7 @@ EOF
 
 echo "- Add IM service"
 $CAT <<EOF | $MYSQL $pass_opt codendi
-INSERT INTO service(group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES ( 100 , 'plugin_im:service_lbl_key' , 'plugin_im:service_desc_key' , 'IM', '/plugins/IM/?group_id=$group_id', 1 , 1 , 'system',  210 );
+INSERT INTO service(group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES ( 100 , 'plugin_im:service_lbl_key' , 'plugin_im:service_desc_key' , 'IM', '/plugins/IM/?group_id=\$group_id', 1 , 1 , 'system',  210 );
 INSERT INTO service(group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES ( 1   , 'plugin_im:service_lbl_key' , 'plugin_im:service_desc_key' , 'IM', '/plugins/IM/?group_id=1', 1 , 0 , 'system',  210 );
 # Create IM service for all other projects (but disabled)
 INSERT INTO service(group_id, label, description, short_name, link, is_active, is_used, scope, rank)
@@ -1682,7 +1686,7 @@ echo "Configuring IM/Webchat"
 SYS_DEFAULT_DOMAIN=`$GREP '^\$sys_default_domain' $ETC_DIR/conf/local.inc | /bin/sed -e 's/\$sys_default_domain\s*=\s*\(.*\);\(.*\)/\1/' | tr -d '"' | tr -d "'"`
 echo " - configure database_im.inc" 
 $CP $INSTALL_DIR/plugins/IM/include/jabbex_api/installation/resources/database_im.tpl.inc $ETC_DIR/plugins/IM/etc/database_im.inc
-substitute "$ETC_DIR/plugins/IM/etc/database_im.inc" '{__OPENFIRE_DB_HOST__}' "$SYS_DEFAULT_DOMAIN"
+substitute "$ETC_DIR/plugins/IM/etc/database_im.inc" '{__OPENFIRE_DB_HOST__}' "localhost"
 substitute "$ETC_DIR/plugins/IM/etc/database_im.inc" '{__OPENFIRE_DB_USER__}' "openfireadm"
 substitute "$ETC_DIR/plugins/IM/etc/database_im.inc" '{__OPENFIRE_DB_NAME__}' "openfire"
 substitute "$ETC_DIR/plugins/IM/etc/database_im.inc" '{__OPENFIRE_DB_PWD__}' "`php -r '\$jive = new SimpleXmlElement(file_get_contents(\"/opt/openfire/conf/openfire.xml\")); echo \$jive->database->defaultProvider->password;'`"

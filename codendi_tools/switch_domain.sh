@@ -32,8 +32,39 @@ fi
 if [ -e '/etc/mail/local-host-names' ] ; then
     substitute '/etc/mail/local-host-names' "$old_domain" "$new_domain" 
 fi
+if [ -e '/etc/codendi/plugins/salome/etc/database_salome.inc' ] ; then
+    substitute '/etc/codendi/plugins/salome/etc/database_salome.inc' "$old_domain" "$new_domain"
+fi
+if [ -e '/etc/codendi/plugins/IM/etc/jabbex_conf.xml ] ; then
+    substitute '/etc/codendi/plugins/IM/etc/jabbex_conf.xml' "$old_domain" "$new_domain"
+fi
+
 
 # TODO
 # Mailman? /usr/lib/mailman/Mailman/mm_cfg.py + existing mailing lists...
 # DB: user email, group http_domain, homepage service
+
 # OpenFire: must re-install jabbex
+# OR:
+# service openfire stop
+# jive-property: xmpp.domain, xmpp.muc.create.jid, xmpp.muc.sysadmin.jid, plugin.subscription.whiteList
+# UPDATE mucAffiliation SET jid=replace(jid, '$old_domain', '$new_domain');
+# UPDATE mucConversationLog SET sender=replace(sender, '$old_domain', '$new_domain');
+# UPDATE mucMember SET jid=replace(jid, '$old_domain', '$new_domain');
+# UPDATE pubsubAffiliation SET jid=replace(jid, '$old_domain', '$new_domain');
+# UPDATE pubsubAffiliation SET nodeID=replace(nodeID, '$old_domain', '$new_domain');
+# UPDATE pubsubAffiliation SET serviceID=replace(serviceID, '$old_domain', '$new_domain');
+# UPDATE pubsubDefaultConf SET serviceID=replace(serviceID, '$old_domain', '$new_domain');
+# UPDATE pubsubItem SET nodeID=replace(nodeID, '$old_domain', '$new_domain');
+# UPDATE pubsubItem SET serviceID=replace(serviceID, '$old_domain', '$new_domain');
+# UPDATE pubsubItem SET jid=replace(jid, '$old_domain', '$new_domain');
+# UPDATE pubsubNode SET serviceID=replace(serviceID, '$old_domain', '$new_domain');
+# UPDATE pubsubNode SET nodeID=replace(nodeID, '$old_domain', '$new_domain');
+# UPDATE pubsubNode SET parent=replace(parent, '$old_domain', '$new_domain');
+# UPDATE pubsubNode SET creator=replace(creator, '$old_domain', '$new_domain');
+# UPDATE pubsubSubscription SET serviceID=replace(serviceID, '$old_domain', '$new_domain');
+# UPDATE pubsubSubscription SET nodeID=replace(nodeID, '$old_domain', '$new_domain');
+# UPDATE pubsubSubscription SET jid=replace(jid, '$old_domain', '$new_domain');
+# UPDATE pubsubSubscription SET owner=replace(owner, '$old_domain', '$new_domain');
+
+
