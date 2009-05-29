@@ -161,9 +161,8 @@ todo "WHAT TO DO TO FINISH THE CODENDI INSTALLATION (see $TODO_FILE)"
 # zip, unzip -> CLI client
 # dump -> backup_job
 # dejavu-lgc-fonts -> jpgraph
-#rpm -Uvh cpp-3.4.6-3.i386.rpm gcc-3.4.6-3.i386.rpm  libgcc-3.4.6-3.i386.rpm gcc-c++-3.4.6-3.i386.rpm gcc-g77-3.4.6-3.i386.rpm gcc-java-3.4.6-3.i386.rpm libstdc++-* libf2c-3.4.6-3.i386.rpm libgcj-3.4.6-3.i386.rpm libgcj-devel-3.4.6-3.i386.rpm
+# cpp-3.4.6-3.i386.rpm gcc-3.4.6-3.i386.rpm  libgcc-3.4.6-3.i386.rpm gcc-c++-3.4.6-3.i386.rpm gcc-g77-3.4.6-3.i386.rpm gcc-java-3.4.6-3.i386.rpm libstdc++-* libf2c-3.4.6-3.i386.rpm libgcj-3.4.6-3.i386.rpm libgcj-devel-3.4.6-3.i386.rpm
 # php-xml -> jabbex
-# Missing on CentOS 5: xorg-x11-deprecated-libs httpd-suexec
 # compat-libstdc++-33 -> CVSnt
 # apr apr-util -> svn
 # xinetd -> cvs
@@ -224,8 +223,8 @@ create_group ftp 50
 
 # Ask for domain name and other installation parameters
 read -p "Codendi Domain name: " sys_default_domain
-read -p "Your Company short name (e.g. Xerox): " sys_org_name
-read -p "Your Company long name (e.g. Xerox Corporation): " sys_long_org_name
+read -p "Your Company short name: " sys_org_name
+read -p "Your Company long name: " sys_long_org_name
 read -p "Codendi Server fully qualified machine name: " sys_fullname
 read -p "Codendi Server IP address: " sys_ip_address
 read -p "LDAP server name: " sys_ldap_server
@@ -739,6 +738,13 @@ $CHOWN -R codendiadm.codendiadm $INSTALL_DIR
 $FIND $INSTALL_DIR -type f -exec $CHMOD u+rw,g+rw,o-w+r {} \;
 $FIND $INSTALL_DIR -type d -exec $CHMOD 775 {} \;
 
+LABS=1;
+if [ -f $INSTALL_DIR/plugins/serverupdate/db/install.sql ]; then
+  LABS=0
+fi
+
+
+
 echo "Installing configuration files..."
 #echo " You should overwrite existing files"
 make_backup /etc/httpd/conf/httpd.conf
@@ -884,9 +890,11 @@ if [ $SELINUX_ENABLED ]; then
     $CHCON -R -h $SELINUX_CONTEXT /usr/share/codendi
 fi
 
-# Create .subversion directory in codendiadm home dir.
-su -c 'svn info --non-interactive https://partners.xrce.xerox.com/svnroot/codendi/dev/trunk' - codendiadm 2> /dev/null &
-
+if [ ! $LABS]; then
+  build_dir /etc/codendi/plugins/serverupdate codendiadm codendiadm 755
+  # Create .subversion directory in codendiadm home dir.
+  su -c 'svn info --non-interactive https://partners.xrce.xerox.com/svnroot/codendi/dev/trunk' - codendiadm 2> /dev/null &
+fi
 
 todo "Customize /etc/codendi/conf/local.inc and /etc/codendi/conf/database.inc"
 todo "Customize /etc/codendi/documentation/user_guide/xml/ParametersLocal.dtd and /etc/codendi/documentation/cli/xml/ParametersLocal.dtd"
@@ -1479,8 +1487,10 @@ $CP $INSTALL_DIR/plugins/docman/etc/docman.inc.dist /etc/codendi/plugins/docman/
 $CHOWN codendiadm.codendiadm /etc/codendi/plugins/docman/etc/docman.inc
 $CHMOD 644 /etc/codendi/plugins/docman/etc/docman.inc
 
-# serverupdate plugin
-$CAT $INSTALL_DIR/plugins/serverupdate/db/install.sql | $MYSQL -u codendiadm codendi --password=$codendiadm_passwd
+if [ ! $LABS ]; then
+  # serverupdate plugin
+  $CAT $INSTALL_DIR/plugins/serverupdate/db/install.sql | $MYSQL -u codendiadm codendi --password=$codendiadm_passwd
+fi
 
 # salome plugin
 $CAT $INSTALL_DIR/plugins/salome/db/install.sql | $MYSQL -u codendiadm codendi --password=$codendiadm_passwd

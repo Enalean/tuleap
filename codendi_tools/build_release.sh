@@ -7,6 +7,8 @@ CODENDI_SHORT_VERSION='labs'
 PACKAGE_DIR=/root/Codendi_Packaging/$CODENDI_VERSION/packages
 SOURCE_DIR=/root/Codendi_Packaging/$CODENDI_VERSION/codendi
 BUILD_DIR=/root/Codendi_Packaging/$CODENDI_VERSION/build
+SOURCE_TMPDIR=/root/Codendi_Packaging/$CODENDI_VERSION/tmpsrc
+
 echo "Building ISO image for version: $CODENDI_VERSION"
 yn="0"
 read -p "Update source and package working copies? [y|n]:" yn
@@ -14,7 +16,6 @@ if [ "$yn" = "y" ]; then
   echo `cd $SOURCE_DIR; svn update`
   echo `cd $PACKAGE_DIR; svn update`
 fi
-echo "SVN update done at:"
 CODENDI_REVISION=`svn info $SOURCE_DIR | grep Revision | sed 's/Revision: //'`
 ISO_LABEL="Codendi $CODENDI_SHORT_VERSION"
 ISO_FILE="/root/Codendi_Packaging/$CODENDI_VERSION/iso_images/codendi-$CODENDI_SHORT_VERSION.r$CODENDI_REVISION.iso"
@@ -49,42 +50,58 @@ $MKDIR -p $BUILD_DIR
 cd $BUILD_DIR
 $RM -f codendi_install.sh INSTALL migration_* README  RELEASE_NOTES
 # Copy the install script at the top directory
-echo "Copying the Codendi installation script at:"
+echo "Copying the Codendi installation script"
 cd $PACKAGE_DIR
 $CP -af $SOURCE_DIR/codendi_tools/codendi_install.sh $BUILD_DIR
 $CHMOD +x $BUILD_DIR/codendi_install.sh
 
 # Copy the migration script at the top directory
-echo "Copying the Codendi migration script..."
-cd $PACKAGE_DIR
-$CP -af $SOURCE_DIR/codendi_tools/migration_from_Codendi_3.6_to_Codendi_4.0.sh $BUILD_DIR
-$CHMOD +x $BUILD_DIR/migration_from_Codendi_3.6_to_Codendi_4.0.sh
-$CP -af $SOURCE_DIR/codendi_tools/migration_from_Codendi_3.6_to_Codendi_4.0.README $BUILD_DIR
-$CHMOD +x $BUILD_DIR/migration_from_Codendi_3.6_to_Codendi_4.0.README
+if [ "$CODENDI_SHORT_VERSION" != 'labs' ]; then
+  echo "Copying the Codendi migration script..."
+  cd $PACKAGE_DIR
+  $CP -af $SOURCE_DIR/codendi_tools/migration_from_Codendi_3.6_to_Codendi_4.0.sh $BUILD_DIR
+  $CHMOD +x $BUILD_DIR/migration_from_Codendi_3.6_to_Codendi_4.0.sh
+  $CP -af $SOURCE_DIR/codendi_tools/migration_from_Codendi_3.6_to_Codendi_4.0.README $BUILD_DIR
+  $CHMOD +x $BUILD_DIR/migration_from_Codendi_3.6_to_Codendi_4.0.README
+fi
 
 # Copy the entire Codendi and nonRPMS_Codendi dir
-echo "Copying the Codendi software and nonRPMS packages... at:"
+echo "Copying the Codendi software and nonRPMS packages... :"
 $RSYNC -a --exclude='.svn' --delete $PACKAGE_DIR/nonRPMS_Codendi $BUILD_DIR
 mkdir -p $BUILD_DIR/Codendi
+mkdir -p $SOURCE_TMPDIR
+
 BRANCH_NAME=`echo $SOURCE_DIR|sed 's/.*\///'`
-if [ -e $BUILD_DIR/Codendi/src ]; then
-  $MV $BUILD_DIR/Codendi/src $BUILD_DIR/Codendi/$BRANCH_NAME
+if [ -e $SOURCE_TMPDIR/src ]; then
+  $MV $SOURCE_TMPDIR/src $SOURCE_TMPDIR/$BRANCH_NAME
 fi
-echo "... source1 done at:"
-$RSYNC -a --delete $SOURCE_DIR $BUILD_DIR/Codendi
-echo "... source2 done at:"
-$MV $BUILD_DIR/Codendi/$BRANCH_NAME $BUILD_DIR/Codendi/src
+
+if [ "$CODENDI_SHORT_VERSION" != 'labs' ]; then
+  FILTER=""
+else
+  FILTER="--exclude-from=$SOURCE_DIR/codendi_tools/build_filter.txt"
+fi
+$RSYNC -a $FILTER --delete $SOURCE_DIR $SOURCE_TMPDIR
+$MV $SOURCE_TMPDIR/$BRANCH_NAME $SOURCE_TMPDIR/src
 # Only copy the latest RPMs from RPMS Codendi
 echo "Copying the Codendi RPMS packages..."
 $MKDIR -p $BUILD_DIR/RPMS_Codendi
 cd $PACKAGE_DIR/RPMS_Codendi
+
+if [ "$CODENDI_SHORT_VERSION" != 'labs' ]; then
+  FILTER=""
+else
+  # does not work??
+  FILTER="--exclude=\"*src*\""
+fi
+
 RPM_LIST=`ls -1`
 for i in $RPM_LIST
 do
     cd $PACKAGE_DIR/RPMS_Codendi/$i
     newest_rpm=`$LS -1 -I old | $TAIL -1`
     $MKDIR -p $BUILD_DIR/RPMS_Codendi/$i
-    $RSYNC -a --exclude='.svn' --delete $newest_rpm $BUILD_DIR/RPMS_Codendi/$i
+    $RSYNC -a --exclude='.svn' --exclude="*src*" --delete $newest_rpm $BUILD_DIR/RPMS_Codendi/$i
     cd $BUILD_DIR/RPMS_Codendi/$i
     old_rpms=`$LS -1 | $GREP -v $newest_rpm`
     for j in $old_rpms
@@ -93,7 +110,7 @@ do
       $RM -rf $j
     done
 done
-echo "... packages done at:"
+echo "... packages done"
 
 # Remove deprecated packages
 cd $BUILD_DIR/RPMS_Codendi 
@@ -110,14 +127,13 @@ done
 # Change ownership of everything
 echo "Changing ownership to root.root for everything..."
 $CHOWN -R root.root $BUILD_DIR/*
-echo "... done at:"
+
 
 # create the tar file of Codendi sources
 echo "Creating tar file of Codendi sources..."
-cd $BUILD_DIR/Codendi/src
-$TAR cfz ../codendi.tgz .
-$CHOWN root.root ../codendi.tgz
-echo "... done at:"
+cd $SOURCE_TMPDIR/src
+$TAR cfz $BUILD_DIR/Codendi/codendi.tgz .
+$CHOWN root.root $BUILD_DIR/Codendi/codendi.tgz
 
 # create a README file at the top
 cd $BUILD_DIR
@@ -284,7 +300,7 @@ Enjoy Codendi!
 EOF
 
 # Build ISO image
-echo "Building ISO image in $ISO_FILE at:"
+echo "Building ISO image in $ISO_FILE"
 mkisofs -quiet -A "$ISO_LABEL" -V "$ISO_LABEL" -J -R -x ./lost+found -x .. -o "$ISO_FILE" $BUILD_DIR
 
 echo "Codendi ISO image available at $ISO_FILE ..."
