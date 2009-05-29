@@ -295,7 +295,7 @@ cd ${newest_rpm}
 $RPM -Uvh sqlite-3*.i386.rpm
 $RPM -ivh neon-0.*.i386.rpm neon-devel*.i386.rpm subversion-1.*.i386.rpm mod_dav_svn*.i386.rpm subversion-perl*.i386.rpm subversion-python*.i386.rpm 
 # Dependency error with Perl ??
-$RPM --nodeps -Uvh subversion-tools*.i386.rpm
+#$RPM --nodeps -Uvh subversion-tools*.i386.rpm
 
 
 # -> libnss-mysql (system authentication based on MySQL)
@@ -422,6 +422,7 @@ codendification "$ETC_DIR/conf/local.inc"
 codendification "$ETC_DIR/conf/database.inc"
 substitute "$ETC_DIR/conf/local.inc" "sys_themedefault\s*=\s*'CodendiTab'" "sys_themedefault = 'CodeXTab'"
 substitute "$ETC_DIR/conf/local.inc" "sys_themedefault\s*=\s*'Codendi'" "sys_themedefault = 'CodeX'"
+substitute "$ETC_DIR/conf/local.inc" "sys_themedefault_old\s*=\s*'Codendi'" "sys_themedefault_old = 'CodeX'"
 substitute "$ETC_DIR/conf/local.inc" "sys_email_admin\s*=\s*'codendi" "sys_email_admin = 'codex"
 
 # -> cvs
@@ -448,7 +449,7 @@ cd ${RPMS_DIR}/viewvc
 newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
 $RPM -Uvh ${newest_rpm}/viewvc-*.noarch.rpm
 # Use new conf file
-$CP -u /etc/codendi/conf/viewvc.conf.rpmnew /etc/codendi/conf/viewvc.conf
+$CP /etc/codendi/conf/viewvc.conf.rpmnew /etc/codendi/conf/viewvc.conf
 
 # -> phpMyAdmin
 $RPM -e phpMyAdmin 2>/dev/null
@@ -515,8 +516,6 @@ newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
 $RPM -Uvh ${newest_rpm}/codendi-eclipse-*noarch.rpm
 
 # -> codendi-salome-tmf
-# Copy key.txt
-$cp $INSTALL_DIR/plugins/salome/www/webapps/jdbc_client/cfg/key.txt /tmp/
 echo "Removing installed SalomeTMF plugin if any .."
 $RPM -e --allmatches codex-salome-tmf 2>/dev/null
 echo "Installing SalomeTMF plugin RPM...."
@@ -524,8 +523,10 @@ cd ${RPMS_DIR}/codendi-salome-tmf
 newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
 $RPM -Uvh ${newest_rpm}/codendi-salome-tmf-*noarch.rpm
 # And re-copy key
-$CP /tmp/key.txt $INSTALL_DIR/plugins/salome/www/webapps/jdbc_client/cfg/
-        
+if [ -f "$BACKUP_INSTALL_DIR/plugins/salome/www/webapps/jdbc_client/cfg/key.txt" ]; then
+  $CP $BACKUP_INSTALL_DIR/plugins/salome/www/webapps/jdbc_client/cfg/key.txt $INSTALL_DIR/plugins/salome/www/webapps/jdbc_client/cfg/
+fi
+      
 
 ##############################################
 # Now install various precompiled utilities
@@ -675,6 +676,9 @@ $PERL -pi -e 's/(\$sys_win_domain.*)/\/\/\1 DEPRECATED/g' $ETC_DIR/conf/local.in
 # Remove $apache_htpasswd
 $PERL -pi -e 's/(\$apache_htpasswd.*)/\/\/\1 DEPRECATED/g' $ETC_DIR/conf/local.inc
 
+# Remove sys_crondelay
+$PERL -pi -e 's/(\$sys_crondelay.*)/\/\/\1 DEPRECATED/g' $ETC_DIR/conf/local.inc
+
 # dbauthuser and password
 $GREP -q ^\$sys_dbauth_user  $ETC_DIR/conf/local.inc
 if [ $? -ne 0 ]; then
@@ -711,7 +715,6 @@ if [ $? -ne 0 ]; then
   substitute '/etc/codendi/conf/local.inc' '\?\>' ''
 
   $CAT <<EOF >> /etc/codendi/conf/local.inc
-
 // How much to add to the database unix_uid to get the actual unix uid
 \$unix_uid_add  = "20000";
 ?>
@@ -725,7 +728,6 @@ if [ $? -ne 0 ]; then
   substitute '/etc/codendi/conf/local.inc' '\?\>' ''
 
   $CAT <<EOF >> /etc/codendi/conf/local.inc
-
 // How much to add to the database group_id to get the unix gid
 \$unix_gid_add  = "1000";
 ?>
@@ -739,7 +741,6 @@ if [ $? -ne 0 ]; then
   substitute '/etc/codendi/conf/local.inc' '\?\>' ''
 
   $CAT <<EOF >> /etc/codendi/conf/local.inc
-
 \$cvs_hook_tmp_dir    = "/var/run/log_accum"; // temporary directory used by CVS commit hooks
 
 ?>
@@ -753,7 +754,6 @@ if [ $? -ne 0 ]; then
   substitute '/etc/codendi/conf/local.inc' '\?\>' ''
 
   $CAT <<EOF >> /etc/codendi/conf/local.inc
-
 \$svn_root_file = "/etc/httpd/conf.d/codendi_svnroot.conf"; // File containing SVN repository definitions for Apache
 
 ?>
@@ -1444,13 +1444,12 @@ mysqlcheck -Aaos $pass_opt
 # Upgrade to SVN 1.6
 #
 echo "Upgrade repositories to SVN 1.6"
-find /svnroot/ -maxdepth 1 -mindepth 1 -name "*" -exec sudo -u codendiadm svnadmin upgrade {} \; >/dev/null
-
+find /svnroot/ -maxdepth 1 -mindepth 1 -name "*" -exec sudo -u codendiadm svnadmin upgrade {} \;  2>/dev/null 1>&2
 
 ###############################################################################
 # Create 'private' directories in /home/group/
 echo "Creating private directories in /home/group/"
-find /home/groups/ -maxdepth 1 -mindepth 1 -type d -exec mkdir -p --context=root:object_r:httpd_sys_content_t --mode=2770 '{}/private' \; -exec chown dummy '{}/private' \;
+find /home/groups/ -maxdepth 1 -mindepth 1 -type d -exec mkdir -p --mode=2770 '{}/private' \; -exec chown dummy '{}/private' \;
 
 
 ###############################################################################
@@ -1660,10 +1659,18 @@ EOF
 
 
 
+
+##############################################
+# Remove deprecated SELinux modules
+if [ $SELINUX_ENABLED ]; then
+  echo "Removing obsolete SELinux module"
+  /usr/sbin/semodule -r cvs ethtool fileforge mailman others viewvc svn vsftpd 2> /dev/null
+fi
+
 ##############################################
 # Fix SELinux contexts if needed
 #
-echo "Update SELinux contexts if needed"
+echo "Update SELinux contexts and modules"
 cd $INSTALL_DIR/src/utils
 ./fix_selinux_contexts.pl
 

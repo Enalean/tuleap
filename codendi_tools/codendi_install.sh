@@ -457,7 +457,7 @@ cd ${newest_rpm}
 $RPM -Uvh sqlite-3*.i386.rpm
 $RPM -ivh neon-0.*.i386.rpm neon-devel*.i386.rpm subversion-1.*.i386.rpm mod_dav_svn*.i386.rpm subversion-perl*.i386.rpm subversion-python*.i386.rpm 
 # Dependency error with Perl ??
-$RPM --nodeps -Uvh subversion-tools*.i386.rpm
+#$RPM --nodeps -Uvh subversion-tools*.i386.rpm
 
 # -> libnss-mysql (system authentication based on MySQL)
 $RPM -e --allmatches libnss-mysql 2>/dev/null

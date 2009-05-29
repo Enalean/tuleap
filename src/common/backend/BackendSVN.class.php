@@ -479,7 +479,7 @@ class BackendSVN extends Backend {
             }
         } 
         // Sometimes, there might be a bad ownership on file (e.g. chmod failed, maintenance done as root...)
-        $files_to_check=array('db/current', 'hooks/pre-commit', 'hooks/post-commit');
+        $files_to_check=array('db/current', 'hooks/pre-commit', 'hooks/post-commit', 'db/rep-cache.db');
         $need_owner_update = false;
         foreach ($files_to_check as $file) {
             // Get file stat 

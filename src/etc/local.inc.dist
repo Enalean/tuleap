@@ -226,9 +226,6 @@ $sys_dbauth_passwd = '%sys_dbauth_passwd%';
 // 
 
 
-// Number of hours between two runs of background scripts
-$sys_crondelay = 2;
-
 // Group id corresponding to Codendi News group
 // (was group 714 in SourceForge - sfnews)
 $sys_news_group = 46;
