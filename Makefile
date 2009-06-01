@@ -88,7 +88,9 @@ build: rpmprep	# Build rpm codendi packages                               #
 	sh tools/addconf.sh
 	mv codex.spec codendi-$(version)/.
 	tar cvjf codendi-$(version).tar.bz2 codendi-$(version)
-	rpmbuild -ta --rcfile rpmrc codendi-$(version).tar.bz2
+	cp codendi-$(version)/codex.spec /tmp/codendi-build/SPEC/.
+	cp codendi-$(version).tar.bz2 /tmp/codendi-build/SOURCE/.
+	rpmbuild -ba --rcfile rpmrc /tmp/codendi-build/SPEC/codex.spec
 
 install: 		# Install Codendi rpm (if you have executed the build) 		#
 	su -c 'rpm -ivh /tmp/codendi-build/RPMS/noarch/codendi-3.6-1.noarch.rpm ; rm -f /etc/httpd/conf.d/ssl.conf'
