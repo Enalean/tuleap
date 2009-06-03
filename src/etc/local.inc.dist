@@ -147,7 +147,7 @@ $sys_urlroot = $codendi_dir . "/src/www/";
 $sys_incdir = $codendi_dir . '/site-content';// Directory which hosts the site content
 $sys_custom_incdir = $sys_custom_dir . '/site-content';// Directory which hosts the customized site content
 
-// Cache location -- this is needed by include/cache.php
+// Cache location
 // This directory must be world reachable, but writable only by the web-server
 $codendi_cache_dir = $tmp_dir . "/codendi_cache";
 

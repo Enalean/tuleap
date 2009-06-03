@@ -9,7 +9,6 @@
 require_once('vars.php');
 require_once('pre.php');
 require('../snippet/snippet_utils.php');
-require_once('cache.php');
 
 
 
