@@ -104,9 +104,11 @@ class Docman_ActionsDeleteVisitor /* implements Visitor */ {
         if(!$referenced) {
             $dIF =& $this->_getItemFactory();
             $id_in_wiki = $dIF->getIdInWikiOfWikiPageItem($item->getPageName(), $item->getGroupId());
-            // Restrict access to wiki admins.
-            permission_clear_all($item->getGroupId(), 'WIKIPAGE_READ', $id_in_wiki, false);
-            permission_add_ugroup($item->getGroupId(), 'WIKIPAGE_READ', $id_in_wiki, $GLOBALS['UGROUP_WIKI_ADMIN']);
+            // Restrict access to wiki admins if the page already exists in wiki.
+            if($id_in_wiki !== null) {
+                permission_clear_all($item->getGroupId(), 'WIKIPAGE_READ', $id_in_wiki, false);
+                permission_add_ugroup($item->getGroupId(), 'WIKIPAGE_READ', $id_in_wiki, $GLOBALS['UGROUP_WIKI_ADMIN']);
+            }
         }
     }
 
