@@ -47,6 +47,10 @@ def check_read_access(username, cvsrepo, cvspath):
     if not os.path.exists(path):
         path = path+',v'
 
+    # if file was removed, allow access anyway.
+    if not os.path.exists(path):
+        return True
+
     mode = os.stat(path)[stat.ST_MODE]
     mode_repo = os.stat(cvsrepo)[stat.ST_MODE]
 
