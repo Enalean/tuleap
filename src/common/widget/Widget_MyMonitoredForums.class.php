@@ -91,7 +91,7 @@ class Widget_MyMonitoredForums extends Widget {
                     <TR class="'. util_get_alt_row_color($i) .'"><TD WIDTH="99%">'.
                         '&nbsp;&nbsp;&nbsp;-&nbsp;<A HREF="/forum/forum.php?forum_id='.$group_forum_id.'">'.
                         stripslashes(db_result($result2,$i,'forum_name')).'</A></TD>'.
-                        '<TD ALIGN="center"><A HREF="/forum/monitor.php?forum_id='.$group_forum_id.
+                        '<TD ALIGN="center"><A HREF="/my/stop_monitor.php?forum_id='.$group_forum_id.
                         '" onClick="return confirm(\''.$GLOBALS['Language']->getText('my_index', 'stop_forum').'\')">'.
                         '<IMG SRC="'.util_get_image_theme("ic/trash.png").'" HEIGHT="16" WIDTH="16" '.
                         'BORDER=0 ALT="'.$GLOBALS['Language']->getText('my_index', 'stop_monitor').'"></A></TD></TR>';
