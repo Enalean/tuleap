@@ -203,7 +203,7 @@ extends Rule {
 class Rule_NoCr
 extends Rule {
     function isValid($val) {
-        if(strpos($val, 0x0A) === false && strpos($val, 0x0D) === false
+        if(is_string($val) && strpos($val, 0x0A) === false && strpos($val, 0x0D) === false
            && strpos($val, 0x00) === false) {
             return true;
         }
