@@ -50,6 +50,9 @@ class Rule_StringTest extends UnitTestCase {
         $this->assertFalse($r->isValid("abcd\rfg"));
         $this->assertFalse($r->isValid("\rabcdfg"));
         $this->assertFalse($r->isValid("abcdfg\r"));
+        
+        $array = array("abcdfg");
+        $this->assertFalse($r->isValid($array));
     }
 
     function testNull() {
