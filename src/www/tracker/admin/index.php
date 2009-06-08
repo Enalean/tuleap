@@ -559,6 +559,7 @@ if ($group_id && !$atid) {
             }
 
             if ( (!$field->isDateField() && $request->valid(new Valid_String('default_value'))) 
+                || ($field->isMultiSelectBox())
                 || ($request->valid(new Valid_String('default_value')))
                 || ($field->isTextArea() && $request->valid(new Valid_Text('default_value')))) {
             
