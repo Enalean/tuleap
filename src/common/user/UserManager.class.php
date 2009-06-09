@@ -113,7 +113,7 @@ class UserManager {
             return null;
         }
         if (!isset($this->_userid_byldapid[$ldapId])) {
-            $dar =& $this->_userdao->searchByLdapId($ldapId);
+            $dar =& $this->getDao()->searchByLdapId($ldapId);
             if ($row = $dar->getRow()) {
                 $u =& $this->_getUserInstanceFromRow($row);
                 $this->_users[$u->getId()] = $u;
@@ -165,7 +165,7 @@ class UserManager {
      * Throws an exception if several accounts share the same email address.
      */
     public function getUserByEmail($email) {
-        $user_result = $this->_userdao->searchByEmail($email);
+        $user_result = $this->getDao()->searchByEmail($email);
 
         if ($user_result->rowCount() == 1) {
             return $this->_getUserInstanceFromRow($user_result->getRow());
@@ -479,7 +479,7 @@ class UserManager {
         			$userRow['password'] = $user->getPassword(); 
                 }
     		}
-    		return $this->_userdao->updateByRow($userRow);
+    		return $this->getDao()->updateByRow($userRow);
     	}
     	return false;
     }
@@ -498,7 +498,7 @@ class UserManager {
      * @return Boolean
      */
     function assignNextUnixUid($user) {
-        $newUid = $this->_userdao->assignNextUnixUid($user->getId());
+        $newUid = $this->getDao()->assignNextUnixUid($user->getId());
         if ($newUid !== false) {
             $user->setUnixUid($newUid);
             return true;

@@ -489,7 +489,8 @@ class UserManagerTest extends UnitTestCase {
         $user->setReturnValue('isAnonymous', true);
         
         $dao = new MockUserDao($this);
-        $um = new UserManager($dao);
+        $um = new UserManagerTestVersion($this);
+        $um->setReturnReference('getDao', $dao);
         $this->assertFalse($um->updateDb($user));
     }
     
@@ -500,13 +501,15 @@ class UserManagerTest extends UnitTestCase {
     	// True
     	$daotrue = new MockUserDao($this);
         $daotrue->setReturnValue('updateByRow', true);
-    	$umtrue = new UserManager($daotrue);
+    	$umtrue = new UserManagerTestVersion($this);
+        $umtrue->setReturnReference('getDao', $daotrue);
         $this->assertTrue($umtrue->updateDb($user));
         
         // False
         $daofalse = new MockUserDao($this);
         $daofalse->setReturnValue('updateByRow', false);
-        $umfalse = new UserManager($daofalse);
+        $umfalse = new UserManagerTestVersion($this);
+        $umfalse->setReturnReference('getDao', $daofalse);
         $this->assertFalse($umfalse->updateDb($user));
     }
     
@@ -522,7 +525,8 @@ class UserManagerTest extends UnitTestCase {
         $dao = new MockUserDao($this);
         $dao->expect('updateByRow', array(array('password' => $password)));
         
-        $um = new UserManager($dao);
+        $um = new UserManagerTestVersion($this);
+        $um->setReturnReference('getDao', $dao);
         $um->updateDb($user);
     }
 
@@ -538,7 +542,8 @@ class UserManagerTest extends UnitTestCase {
         $dao = new MockUserDao($this);
         $dao->expect('updateByRow', array(array()));
         
-        $um = new UserManager($dao);
+        $um = new UserManagerTestVersion($this);
+        $um->setReturnReference('getDao', $dao);
         $um->updateDb($user);
     }
     
@@ -549,7 +554,8 @@ class UserManagerTest extends UnitTestCase {
         $dao = new MockUserDao($this);
         $dao->setReturnValue('assignNextUnixUid', 1789);
         
-        $um = new UserManager($dao);
+        $um = new UserManagerTestVersion($this);
+        $um->setReturnReference('getDao', $dao);
         $um->assignNextUnixUid($user);
         
         // Instead of $user->expectOnce('setUnixUid', array(1789)); with
