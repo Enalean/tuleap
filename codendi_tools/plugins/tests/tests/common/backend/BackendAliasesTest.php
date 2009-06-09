@@ -76,7 +76,7 @@ class BackendAliasesTest extends UnitTestCase {
         $MA = new BackendAliasesTestVersion($this);
         $MA->setReturnValue('getUserDao', $udao);
         $MA->setReturnValue('getMailingListDao', $listdao);
-        $MA->expectOnce('system', array('/usr/bin/newaliases'));
+        $MA->expectOnce('system', array('/usr/bin/newaliases > /dev/null'));
         $MA->setReturnValue('system', true);
 
         $this->assertEqual($MA->update(),True);
