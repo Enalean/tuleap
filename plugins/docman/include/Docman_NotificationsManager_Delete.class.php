@@ -107,20 +107,16 @@ class Docman_NotificationsManager_Delete extends Docman_NotificationsManager {
         $msg = '';
         switch($message_type) {
             case $this->MESSAGE_REMOVED:
-                $msg .= $params['path']->get($params['item']) .' has been removed by '. $user->getRealName() .'.';
-                $msg .= "\n\n---------------------------------------------------------------------\n";
-                $msg .= "You are receiving this message because you were monitoring this item.\n";
-                $msg .= $this->_url;
+                $msg .= $GLOBALS['Language']->getText('plugin_docman', 'notifications_removed_mail_body', array($params['path']->get($params['item']), 
+                                                              $user->getRealName(),
+                                                              $this->_url));
                 break;
             case $this->MESSAGE_REMOVED_FROM:
-                $msg .= $params['path']->get($params['parent']) .' has been modified by '. $user->getRealName() .".\n";
-                $msg .= $this->_url .'&action=show&id='. $params['parent']->getId() ."\n";
-                $msg .= "\nRemoved:";
-                $msg .= "\n   ". $params['item']->getTitle();
-                $msg .= "\n\n----------------------------------------------------------------------\n";
-                $msg .= "You are receiving this message because you are monitoring this folder.\n";
-                $msg .= "To stop monitoring, please visit:\n";
-                $msg .= $this->_url .'&action=details&section=notifications&id='. $params['parent']->getId();
+                $msg .= $GLOBALS['Language']->getText('plugin_docman', 'notifications_removed_from_mail_body', array($params['path']->get($params['parent']), 
+                                                              $user->getRealName(),
+                                                              $this->_url,
+                                                              $params['parent']->getId(),
+                                                              $params['item']->getTitle()));
                 break;
             default:
                 $msg .= parent::_getMessageForUser($user, $message_type, $params);

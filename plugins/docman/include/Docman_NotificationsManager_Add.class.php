@@ -52,14 +52,11 @@ class Docman_NotificationsManager_Add extends Docman_NotificationsManager {
         $msg = '';
         switch($message_type) {
             case $this->MESSAGE_ADDED:
-                $msg .= $params['path']->get($params['parent']) .' has been modified by '. $user->getRealName() .".\n";
-                $msg .= $this->_url .'&action=show&id='. $params['parent']->getId() ."\n";
-                $msg .= "\nAdded:";
-                $msg .= "\n   ". $params['item']->getTitle();
-                $msg .= "\n\n----------------------------------------------------------------------\n";
-                $msg .= "You are receiving this message because you are monitoring this folder.\n";
-                $msg .= "To stop monitoring, please visit:\n";
-                $msg .= $this->_url .'&action=details&section=notifications&id='. $params['parent']->getId();
+                $msg .= $GLOBALS['Language']->getText('plugin_docman', 'notifications_added_mail_body', array($params['path']->get($params['parent']), 
+                                                              $user->getRealName(),
+                                                              $this->_url,
+                                                              $params['parent']->getId(),
+                                                              $params['item']->getTitle()));
                 break;
             default:
                 $msg .= parent::_getMessageForUser($user, $message_type, $params);
