@@ -476,7 +476,7 @@ class ArtifactReportHtml extends ArtifactReport {
 					} else if ( $field->isFloat() ) {
 						$html_result .= "<TD $width>". number_format($value,2) .'&nbsp;</TD>'."\n";
 					} else if( $field->isTextArea()){
-                        $text = str_replace("\t", "&nbsp;&nbsp;&nbsp;&nbsp;", nl2br(util_make_links($value,$group_id)));
+                        $text = str_replace("\t", "&nbsp;&nbsp;&nbsp;&nbsp;", $value);
                         $text = str_replace('  ', '&nbsp; ', $text);
                         $text = str_replace('  ', '&nbsp; ', $text);
                         $html_result .= '<TD '. $width .' style="font-family:monospace; font-size:10pt;">'.  $hp->purify($text, CODENDI_PURIFIER_BASIC, $group_id) . '&nbsp;</TD>';
