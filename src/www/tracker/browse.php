@@ -54,7 +54,7 @@ if ( !$ath->isValid() ) {
 if (user_isloggedin()) {
     if (!$request->exist('report_id')) {
 		$report_id = user_get_preference('artifact_browse_report'.$atid);
-	    if ($report_id == "") {
+        if ($report_id == "") {
 	    	// Default value
             $arf = new ArtifactReportFactory();
             $report_id = $arf->getDefaultReport($atid);
@@ -64,12 +64,19 @@ if (user_isloggedin()) {
 	    }
     } else {
         $report_id = $request->get('report_id');
-		if ($report_id != user_get_preference('artifact_browse_report'.$atid)) {
+        if ($report_id != user_get_preference('artifact_browse_report'.$atid)) {
 	    	user_set_preference('artifact_browse_report'.$atid, $report_id);
             user_del_preference('artifact_browse_order'.$atid);
             user_del_preference('artifact_brow_cust'.$atid);
             $GLOBALS['Response']->redirect('?atid='. $atid .'&group_id='. $group_id);
         }
+    }
+}else{
+    if (!$request->exist('report_id')) {
+            $arf = new ArtifactReportFactory();
+            $report_id = $arf->getDefaultReport($atid);
+    }else{
+            $report_id = $request->get('report_id');
     }
 }
 
