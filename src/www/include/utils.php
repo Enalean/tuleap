@@ -759,11 +759,12 @@ Function  ShowResultSet($result,$title="Untitled",$linkify=false,$showheaders=tr
 	}
 }
 
-// Clean up email address (remove starting and ending spaces) and put to lower
+// Clean up email address (remove starting and ending spaces),replace semicolon by comma and put to lower
 // case
 function util_cleanup_emails ($addresses) {
     $addresses=preg_replace("/\s+[,;]/",",", $addresses);
     $addresses=preg_replace("/[,;]\s+/",",", $addresses);
+    $addresses=str_replace(";",",", $addresses);
     return strtolower(rtrim(trim($addresses)));
 }
 
