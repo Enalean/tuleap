@@ -258,8 +258,8 @@ class BackendSVN extends Backend {
         $svnaccess_file_new = $svnaccess_file.".new";
         // if you change these block markers also change them in
         // src/www/svn/svn_utils.php
-        $default_block_start="# BEGIN CODENDI DEFAULT SETTINGS - DO NOT REMOVE";
-        $default_block_end="# END CODENDI DEFAULT SETTINGS";
+        $default_block_start="# BEGIN CODENDI DEFAULT SETTINGS - DO NOT REMOVE\n";
+        $default_block_end="# END CODENDI DEFAULT SETTINGS\n";
         $custom_perms='';
         $public_svn = 1; // TODO
         
@@ -267,18 +267,18 @@ class BackendSVN extends Backend {
         if (is_file("$svnaccess_file")) {
             $svnaccess_array = file($svnaccess_file);
             $configlines=false;
-            foreach ($svnaccess_array as $line) {
+            while ($line = array_shift($svnaccess_array)) {
                 if ($configlines) { 
                     $custom_perms .=$line; 
                 }
-                if (strpos($default_block_end, $line)) { 
+                if (strcmp($line, $default_block_end) == 0) { 
                     $configlines=1;
                 }
             }
         }
 
         $fp = fopen($svnaccess_file_new, 'w');
-        fwrite($fp, "$default_block_start\n");
+        fwrite($fp, "$default_block_start");
         fwrite($fp, "[groups]\n");
 
         // Special case for project members
@@ -315,7 +315,7 @@ class BackendSVN extends Backend {
             fwrite($fp, "* = r\n");
         }
         fwrite($fp, "@members = rw\n");
-        fwrite($fp, "$default_block_end\n");
+        fwrite($fp, "$default_block_end");
         if ($custom_perms) {
             fwrite($fp, $custom_perms);
         }
