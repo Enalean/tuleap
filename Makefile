@@ -28,13 +28,13 @@ alldeps: htmlpurifier jpgraph 	# Install CodeX Post Dependencies	#
 
 # Build Deps
 htmlpurifier: rpmprep	
-	cp codex/rpm/specs/htmlpurifier.spec /tmp/codendi-build/SPEC/.
-	cp codex/rpm/sources/htmlpurifier-3.1.1.tar.gz /tmp/codendi-build/SOURCE/.
+	cp codex/rpm/SPECS/htmlpurifier.spec /tmp/codendi-build/SPEC/.
+	cp codex/rpm/SOURCES/htmlpurifier-*.tar.gz /tmp/codendi-build/SOURCE/.
 	rpmbuild -ba --rcfile rpmrc /tmp/codendi-build/SPEC/htmlpurifier.spec 
 
 jpgraph: rpmprep	
-	cp codex/rpm/specs/jpgraph.codex.spec /tmp/codendi-build/SPEC/.
-	cp codex/rpm/sources/jpgraph-* /tmp/codendi-build/SOURCE/.
+	cp codex/rpm/SPECS/jpgraph.codex.spec /tmp/codendi-build/SPEC/.
+	cp codex/rpm/SOURCES/jpgraph-* /tmp/codendi-build/SOURCE/.
 	rpmbuild -ba --rcfile rpmrc /tmp/codendi-build/SPEC/jpgraph.codex.spec
 
 
@@ -82,7 +82,7 @@ clean:		# cleanall files of codendi build                         #
 
 ### build CodeX
 build: rpmprep	# Build rpm codendi packages                               #
-	cd codex ;find . -type f | grep -v '/.svn/' | grep -v plugins |grep -v documentation | grep -v rpm | cpio -pdumvB ../codendi-$(version)	
+	cd codex ;rm -f src/utils/DocmanLegacyDownloader.pl src/utils/DocmanUploader.pl ; find . -type f | grep -v '/.svn/' | grep -v plugins |grep -v documentation | grep -v rpm | cpio -pdumvB ../codendi-$(version)	
 	cp tools/sed.sh codendi-$(version)/.
 	cp codex.spec.dist codex.spec
 	sh tools/addconf.sh
