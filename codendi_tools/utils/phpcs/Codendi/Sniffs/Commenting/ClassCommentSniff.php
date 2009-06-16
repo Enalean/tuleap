@@ -5,7 +5,7 @@ if (class_exists('PHP_CodeSniffer_CommentParser_ClassCommentParser', true) === f
     throw new PHP_CodeSniffer_Exception($error);
 }
 
-require_once dirname(__FILE__)'./FileCommentSniff.php';
+require_once dirname(__FILE__).'/FileCommentSniff.php';
 
 if (class_exists('Codendi_Sniffs_Commenting_FileCommentSniff', true) === false) {
     $error = 'Class Codendi_Sniffs_Commenting_FileCommentSniff not found';
