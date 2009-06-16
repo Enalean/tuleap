@@ -1011,6 +1011,8 @@ NameVirtualHost %sys_ip_address%:80
  # Include all configuration files from conf.d (php, subversion, etc.)
  # (also included from conf/ssl.conf)
  Include conf.d/*.conf
+
+ CustomLog logs/access_log common
 </VirtualHost>
 
 
