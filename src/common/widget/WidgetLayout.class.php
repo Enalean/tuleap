@@ -57,6 +57,7 @@ class WidgetLayout {
                         tag:         'div',
                         handle:      'widget_titlebar_handle',
                         containment: cells,
+                        format:      /^widget_(.*)$/,
                         onUpdate: function() {
                             new Ajax.Request('/widgets/updatelayout.php?owner=$owner_type'+$owner_id+'&layout_id='+$this->id+'&'+Sortable.serialize(cell_id));
                         }

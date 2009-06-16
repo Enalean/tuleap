@@ -742,7 +742,6 @@ class WidgetLayoutManager {
                 //Compute differences
                 $originals = array();
                 $sql = "SELECT * FROM layouts_contents WHERE owner_type = '". $owner_type ."' AND owner_id = ". $owner_id ." AND column_id = ". $column_id .' ORDER BY rank';
-                echo $sql;
                 $res = db_query($sql);
                 echo db_error();
                 while($data = db_fetch_array($res)) {
@@ -769,7 +768,6 @@ class WidgetLayoutManager {
                           AND column_id = '. $column_id .
                           $_and;
                     $res = db_query($sql);
-                echo $sql;
                     echo db_error();
                 }
                 
@@ -794,7 +792,6 @@ class WidgetLayoutManager {
                           $_and ."
                           AND layout_id = ". $layout_id;
                     $res = db_query($sql);
-                echo $sql;
                     echo db_error();
                 }
                 
@@ -804,7 +801,6 @@ class WidgetLayoutManager {
                 $values = array();
                 foreach($names as $name) {
                     $sql = 'UPDATE layouts_contents SET rank = '. ($rank++) ." WHERE owner_type = '". $owner_type ."' AND owner_id = ". $owner_id .' AND column_id = '. $column_id ." AND name = '".$name[1]."' AND content_id = ". $name[0];
-                echo $sql;
                     db_query($sql);
                     echo db_error();
                 }
