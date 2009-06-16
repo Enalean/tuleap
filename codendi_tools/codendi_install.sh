@@ -453,7 +453,10 @@ cd ${RPMS_DIR}/subversion
 newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
 cd ${newest_rpm}
 # Update SQLite first: version above 3.4 is required for SVN 1.6, and RHEL5 only provides version 3.3.
-$RPM -Uvh sqlite-3*.i386.rpm
+# Need to upgrade both sqlite and sqlite-devel at once
+$RPM -Uvh sqlite-3*.i386.rpm sqlite-devel-3*.i386.rpm
+
+
 $RPM -ivh neon-0.*.i386.rpm neon-devel*.i386.rpm subversion-1.*.i386.rpm mod_dav_svn*.i386.rpm subversion-perl*.i386.rpm subversion-python*.i386.rpm 
 # Dependency error with Perl ??
 #$RPM --nodeps -Uvh subversion-tools*.i386.rpm
@@ -890,7 +893,7 @@ if [ $SELINUX_ENABLED ]; then
     $CHCON -R -h $SELINUX_CONTEXT /usr/share/codendi
 fi
 
-if [ ! $LABS]; then
+if [ ! $LABS ]; then
   build_dir /etc/codendi/plugins/serverupdate codendiadm codendiadm 755
   # Create .subversion directory in codendiadm home dir.
   su -c 'svn info --non-interactive https://partners.xrce.xerox.com/svnroot/codendi/dev/trunk' - codendiadm 2> /dev/null &
@@ -1104,6 +1107,7 @@ EOF
 
 
 # Default: codex-admin is redirected to root
+# TODO check if already there
 echo "codendi-admin:          root" >> /etc/aliases
 
 todo "Finish sendmail settings (see installation Guide) and create codendi-contact and codendi-admin aliases in /etc/aliases"
