@@ -8,12 +8,13 @@
 
 sys_default_domain=$1;
 sys_ip_address=$2;
+local_module_directory=$3;
 port="80";
 sys_org_name="Xerox";
 sys_long_org_name="Xerox Corporation";
 codendi_dir="$WORKSPACE";
 
-cd $WORKSPACE/trunk/
+cd $WORKSPACE/$local_module_directory/
 
 substitute() {
   # $1: filename, $2: string to match, $3: replacement string
@@ -47,7 +48,7 @@ substitute '../etc/codendi/conf/local.inc' '%sys_org_name%' "Xerox"
 substitute '../etc/codendi/conf/local.inc' '%sys_long_org_name%' "Xerox Corp" 
 substitute '../etc/codendi/conf/local.inc' '%sys_fullname%' "$sys_default_domain" 
 substitute '../etc/codendi/conf/local.inc' '%sys_win_domain%' " " 
-substitute '../etc/codendi/conf/local.inc' '\/usr\/share\/codendi' "$codendi_dir/trunk"
+substitute '../etc/codendi/conf/local.inc' '\/usr\/share\/codendi' "$codendi_dir/$local_module_directory"
 substitute '../etc/codendi/conf/local.inc' '\/var\/lib\/codendi' "$codendi_dir/var/lib/codendi"
 substitute '../etc/codendi/conf/local.inc' '\/var\/log\/codendi' "$codendi_dir/var/log/codendi"
 substitute '../etc/codendi/conf/local.inc' '\/etc\/codendi' "$codendi_dir/etc/codendi"
@@ -61,22 +62,22 @@ substitute '../etc/codendi/conf/local.inc' '\/var\/tmp' "$codendi_dir/var/tmp"
 export CODENDI_LOCAL_INC="$WORKSPACE/etc/codendi/conf/local.inc"
 
 # Create a symbolic link from plugins/tests to codendi_tools/tests
-cd $WORKSPACE/trunk/plugins/
+cd $WORKSPACE/$local_module_directory/plugins/
 ln -sf ../codendi_tools/plugins/tests
 cd tests/www/
 
 # Execute the Tests
 # This will produce a "JUnit like" test result file named codendi_unit_tests_report.xml that Hudson can use to produce test results.
-php -d include_path="$WORKSPACE/trunk/src/www/include:$WORKSPACE/trunk/src:." -d memory_limit=196M test_all.php
+php -d include_path="$WORKSPACE/$local_module_directory/src/www/include:$WORKSPACE/$local_module_directory/src:." -d memory_limit=196M test_all.php
 
 # Checkstyle
-php -d memory_limit=256M /usr/bin/phpcs --standard=$WORKSPACE/trunk/codendi_tools/utils/phpcs/Codendi $WORKSPACE/trunk/src/common/chart $WORKSPACE/trunk/src/common/backend --report=checkstyle -n --ignore=*/phpwiki/* > $WORKSPACE/var/tmp/checkstyle.xml 
+php -d memory_limit=256M /usr/bin/phpcs --standard=$WORKSPACE/$local_module_directory/codendi_tools/utils/phpcs/Codendi $WORKSPACE/$local_module_directory/src/common/chart $WORKSPACE/$local_module_directory/src/common/backend --report=checkstyle -n --ignore=*/phpwiki/* > $WORKSPACE/var/tmp/checkstyle.xml 
 
 #################
 # DOCUMENTATION #
 #################
 
-BASEDIR="$WORKSPACE/trunk/documentation"
+BASEDIR="$WORKSPACE/$local_module_directory/documentation"
 
 DOCBOOK_LIBS_HOME="/usr/share/hudson/share"
 SAXON_HOME="$DOCBOOK_LIBS_HOME/saxon/"
@@ -104,8 +105,8 @@ mkdir -p /etc/codendi/documentation/cli/
 mkdir -p /etc/codendi/documentation/cli/xml/
 
 # Copy dist files to /etc/codendi/documentation
-cp $WORKSPACE/trunk/src/etc/ParametersLocal.dtd.dist /etc/codendi/documentation/user_guide/xml/ParametersLocal.dtd
-cp $WORKSPACE/trunk/src/etc/ParametersLocal.cli.dtd.dist /etc/codendi/documentation/cli/xml/ParametersLocal.dtd
+cp $WORKSPACE/$local_module_directory/src/etc/ParametersLocal.dtd.dist /etc/codendi/documentation/user_guide/xml/ParametersLocal.dtd
+cp $WORKSPACE/$local_module_directory/src/etc/ParametersLocal.cli.dtd.dist /etc/codendi/documentation/cli/xml/ParametersLocal.dtd
 
 # Substitute dist values by correct ones
 substitute '/etc/codendi/documentation/user_guide/xml/ParametersLocal.dtd' '%sys_default_domain%' "$sys_default_domain" 
@@ -116,6 +117,6 @@ substitute '/etc/codendi/documentation/cli/xml/ParametersLocal.dtd' '%sys_defaul
 
 
 # Generate the documentation (User Guide, CLI and programmer's guide)
-sh $WORKSPACE/trunk/src/utils/generate_doc.sh -v
-sh $WORKSPACE/trunk/src/utils/generate_cli_doc.sh -v
-sh $WORKSPACE/trunk/src/utils/generate_programmer_doc.sh -v
+sh $WORKSPACE/$local_module_directory/src/utils/generate_doc.sh -v
+sh $WORKSPACE/$local_module_directory/src/utils/generate_cli_doc.sh -v
+sh $WORKSPACE/$local_module_directory/src/utils/generate_programmer_doc.sh -v
