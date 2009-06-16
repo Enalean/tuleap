@@ -18,10 +18,10 @@ progname=$0
 if [ -z "$scriptdir" ]; then 
     scriptdir=`dirname $progname`
 fi
-cd ${scriptdir};TOP_DIR=`pwd`;cd - > /dev/null # redirect to /dev/null to remove display of folder (RHEL4 only)
-RPMS_DIR=${TOP_DIR}/RPMS_Codendi
-nonRPMS_DIR=${TOP_DIR}/nonRPMS_Codendi
-Codendi_DIR=${TOP_DIR}/Codendi
+cd "${scriptdir}";TOP_DIR=`pwd`;cd - > /dev/null # redirect to /dev/null to remove display of folder (RHEL4 only)
+RPMS_DIR="${TOP_DIR}/RPMS_Codendi"
+nonRPMS_DIR="${TOP_DIR}/nonRPMS_Codendi"
+Codendi_DIR="${TOP_DIR}/Codendi"
 TODO_FILE=/root/todo_codendi_upgrade_4.0.txt
 export INSTALL_DIR="/usr/share/codendi"
 BACKUP_INSTALL_DIR="/usr/share/codex_36"
@@ -288,7 +288,7 @@ $RPM -e --allmatches subversion 2>/dev/null
 $RPM -e --allmatches neon-devel 2>/dev/null
 $RPM -e --allmatches neon 2>/dev/null
 echo "Installing Subversion, Neon and recent SQLite RPMs for Codendi...."
-cd ${RPMS_DIR}/subversion
+cd "${RPMS_DIR}/subversion"
 newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
 cd ${newest_rpm}
 # Update SQLite first: version above 3.4 is required for SVN 1.6, and RHEL5 only provides version 3.3.
@@ -301,14 +301,14 @@ $RPM -ivh neon-0.*.i386.rpm neon-devel*.i386.rpm subversion-1.*.i386.rpm mod_dav
 # -> libnss-mysql (system authentication based on MySQL)
 $RPM -e --allmatches libnss-mysql 2>/dev/null
 echo "Installing libnss-mysql RPM for Codendi...."
-cd ${RPMS_DIR}/libnss-mysql
+cd "${RPMS_DIR}/libnss-mysql"
 newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
 $RPM -Uvh --nosignature ${newest_rpm}/libnss-mysql-1*i?86.rpm
 	 
 # -> APC
 $RPM -e php-pecl-apc 2>/dev/null
 echo "Installing APC (PHP cache) RPM for Codendi...."
-cd ${RPMS_DIR}/php-pecl-apc
+cd "${RPMS_DIR}/php-pecl-apc"
 newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
 $RPM -Uvh ${newest_rpm}/php-pecl-apc-*.i?86.rpm
 
@@ -342,7 +342,7 @@ echo "Installing the Codendi software..."
 $MV /usr/share/codex $BACKUP_INSTALL_DIR
 $MKDIR $INSTALL_DIR;
 cd $INSTALL_DIR
-$TAR xfz ${Codendi_DIR}/codendi*.tgz
+$TAR xfz "${Codendi_DIR}/codendi*.tgz"
 $CHOWN -R codendiadm.codendiadm $INSTALL_DIR
 
 echo "Setting up fileperms on installed files and directory"
@@ -429,14 +429,14 @@ substitute "$ETC_DIR/conf/local.inc" "sys_email_admin\s*=\s*'codendi" "sys_email
 echo "Removing existing CVS .."
 $RPM -e --allmatches cvs 2>/dev/null
 echo "Installing CVS RPMs for Codendi...."
-cd ${RPMS_DIR}/cvs
+cd "${RPMS_DIR}/cvs"
 newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
 $RPM -Uvh ${newest_rpm}/cvs-1.*.i386.rpm
 
 # -> JPGraph
 $RPM -e jpgraph jpgraphs-docs 2>/dev/null
 echo "Installing JPGraph RPM for Codendi...."
-cd ${RPMS_DIR}/jpgraph
+cd "${RPMS_DIR}/jpgraph"
 newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
 $RPM -Uvh ${newest_rpm}/jpgraph-2*noarch.rpm
 $RPM -Uvh ${newest_rpm}/jpgraph-docs-2*noarch.rpm
@@ -445,7 +445,7 @@ $RPM -Uvh ${newest_rpm}/jpgraph-docs-2*noarch.rpm
 $RPM -e --nodeps viewcvs 2>/dev/null
 $RPM -e --nodeps viewvc 2>/dev/null
 echo "Installing viewvc RPM for Codendi...."
-cd ${RPMS_DIR}/viewvc
+cd "${RPMS_DIR}/viewvc"
 newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
 $RPM -Uvh ${newest_rpm}/viewvc-*.noarch.rpm
 # Use new conf file
@@ -455,7 +455,7 @@ $CP /etc/codendi/conf/viewvc.conf.rpmnew /etc/codendi/conf/viewvc.conf
 $RPM -e phpMyAdmin 2>/dev/null
 $RPM -e phpmyadmin 2>/dev/null
 echo "Installing phpMyAdmin RPM for Codendi...."
-cd ${RPMS_DIR}/phpMyAdmin
+cd "${RPMS_DIR}/phpMyAdmin"
 newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
 $RPM -Uvh ${newest_rpm}/phpmyadmin-*.noarch.rpm
 
@@ -463,7 +463,7 @@ $RPM -Uvh ${newest_rpm}/phpmyadmin-*.noarch.rpm
 echo "Removing installed mailman if any .."
 $RPM -e --allmatches mailman 2>/dev/null
 echo "Installing mailman RPM for Codendi...."
-cd ${RPMS_DIR}/mailman
+cd "${RPMS_DIR}/mailman"
 newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
 $RPM -Uvh ${newest_rpm}/mailman-2*i?86.rpm
 
@@ -474,7 +474,7 @@ $CP /usr/lib/mailman/Mailman/mm_cfg.py.rpmsave /usr/lib/mailman/Mailman/mm_cfg.p
 echo "Removing installed Munin if any .."
 $RPM -e --allmatches `rpm -qa 'munin*' 'perl-HTML-Template*' 'perl-Net-Server' 'perl-rrdtool*' 'rrdtool*' 'perl-Crypt-DES' 'perl-Net-SNMP' 'perl-Config-General'` 2>/dev/null
 echo "Installing Munin RPMs for Codendi...."
-cd ${RPMS_DIR}/munin
+cd "${RPMS_DIR}/munin"
 newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
 $RPM --nosignature -Uvh ${newest_rpm}/perl-Net-Server*.noarch.rpm
 $RPM --nosignature -Uvh ${newest_rpm}/perl-Crypt-DES*.i386.rpm
@@ -490,7 +490,7 @@ echo "Removing installed htmlpurifier if any .."
 $RPM -e htmlpurifier 2>/dev/null
 $RPM -e htmlpurifier-docs 2>/dev/null
 echo "Installing htmlpurifier RPM for Codendi...."
-cd ${RPMS_DIR}/htmlpurifier
+cd "${RPMS_DIR}/htmlpurifier"
 newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
 $RPM -Uvh ${newest_rpm}/htmlpurifier-3*.noarch.rpm
 $RPM -Uvh ${newest_rpm}/htmlpurifier-docs*.noarch.rpm
@@ -502,7 +502,7 @@ $RPM -Uvh ${newest_rpm}/htmlpurifier-docs*.noarch.rpm
 echo "Removing installed CodeX JRI if any .."
 $RPM -e --allmatches codex-jri 2>/dev/null
 echo "Installing Codendi JRI RPM...."
-cd ${RPMS_DIR}/codendi-jri
+cd "${RPMS_DIR}/codendi-jri"
 newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
 $RPM -Uvh ${newest_rpm}/codendi-jri-*noarch.rpm
 
@@ -511,7 +511,7 @@ $RPM -Uvh ${newest_rpm}/codendi-jri-*noarch.rpm
 echo "Removing installed Eclipse plugin if any .."
 $RPM -e --allmatches codex-eclipse 2>/dev/null
 echo "Installing Eclipse plugin RPM...."
-cd ${RPMS_DIR}/codendi-eclipse
+cd "${RPMS_DIR}/codendi-eclipse"
 newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
 $RPM -Uvh ${newest_rpm}/codendi-eclipse-*noarch.rpm
 
@@ -519,7 +519,7 @@ $RPM -Uvh ${newest_rpm}/codendi-eclipse-*noarch.rpm
 echo "Removing installed SalomeTMF plugin if any .."
 $RPM -e --allmatches codex-salome-tmf 2>/dev/null
 echo "Installing SalomeTMF plugin RPM...."
-cd ${RPMS_DIR}/codendi-salome-tmf
+cd "${RPMS_DIR}/codendi-salome-tmf"
 newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
 $RPM -Uvh ${newest_rpm}/codendi-salome-tmf-*noarch.rpm
 # And re-copy key
@@ -531,7 +531,7 @@ fi
 ##############################################
 # Now install various precompiled utilities
 # Fileforge was codendified
-cd ${nonRPMS_DIR}/utilities
+cd "${nonRPMS_DIR}/utilities"
 for f in *
 do
   $CP $f /usr/lib/codendi/bin
@@ -1512,6 +1512,7 @@ codendification '/etc/vsftpd/vsftpd.conf'
 codendification '/var/lib/codex/ftp/.message'
 
 perl -pi -e 's@/var/lib/codex@/var/lib/codendi@g;' /etc/codendi/documentation/user_guide/xml/ParametersLocal.dtd
+perl -pi -e 's@ftp/codex@ftp/codendi@g;' /etc/codendi/documentation/user_guide/xml/ParametersLocal.dtd
 perl -pi -e 's@/var/lib/codex@/var/lib/codendi@g;' /etc/codendi/plugins/docman/etc/docman.inc
 
 ##############################################
@@ -1704,7 +1705,7 @@ codendification "/opt/openfire/conf/openfire.xml"
 echo " - copy Codendi Auth jar file into openfire lib dir"
 $CP $INSTALL_DIR/plugins/IM/include/jabbex_api/installation/resources/codendi_auth.jar /opt/openfire/lib/.
 echo " - install monitoring plugin (copy monitoring plugin jar in openfire plugin dir)"
-cd ${RPMS_DIR}/openfire
+cd "${RPMS_DIR}/openfire"
 newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
 $CP ${newest_rpm}/monitoring.jar /opt/openfire/plugins
 
