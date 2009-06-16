@@ -1909,6 +1909,12 @@ restore -r -f /var/lib/codendi/backup/mysql/sqldump.080502.004501
 You can safely ignore the 'not found on tape' messages (they correspond to files that are not in the dump)
 </li>
 </ul>
+<br>
+<li>Then, change the ownership and the security context of the directory:
+<pre>
+chown -R mysql:mysql /var/lib/mysql
+chcon -R system_u:object_r:mysqld_db_t /var/lib/mysql
+</pre>
 <li>Finish the mysql rebuild by reloading data from codendi-bin.001, which contains changes since sqldump.080502.004501 was created.
 <br>
 Boot system in single user mode:
