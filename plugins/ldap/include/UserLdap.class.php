@@ -101,7 +101,6 @@ class UserLdap {
                                         ,0
                                         ,'None'
                                         ,$GLOBALS['Language']->getText('conf','language_id')
-                                        ,account_nextuid()
                                         ,'A')) {
 
             $user_id     = $new_userid;
