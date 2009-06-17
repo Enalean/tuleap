@@ -1903,6 +1903,18 @@ chcon -R system_u:object_r:mysqld_db_t /var/lib/mysql
 <br>
 Boot system in single user mode:
 We don't want anyone trying to update the mysql database before everything has been restored.
+Before reloading date, you have to update /etc/my.cnf :<br>
+Replace :
+<pre>
+[client]
+default-character-set=utf8
+</pre>
+by :
+<pre>
+[client]
+loose-default-character-set=utf8
+</pre>
+And then :
 <pre>
 service mysqld  start
 cd  /var/lib/
