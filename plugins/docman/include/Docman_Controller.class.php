@@ -476,8 +476,12 @@ class Docman_Controller extends Controler {
                         $can_read = $dpm->userCanAccess($user, $item->getId());
                         $folder_or_document = is_a($item, 'Docman_Folder') ? 'folder' : 'document';
                         if (!$can_read) {
-                            $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_perms_view'));
-                            $this->_setView('ProjectError');
+                            if ($this->request->get('action') == 'ajax_reference_tooltip') {
+                                $this->_setView('AjaxReferenceTooltipError');
+                            } else {
+                                $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_perms_view'));
+                                $this->_setView('ProjectError');
+                            }
                         } else {
                             $mdFactory = new Docman_MetadataFactory($this->_viewParams['group_id']);
                             $mdFactory->appendItemMetadataList($item);
