@@ -684,7 +684,7 @@ $LN -sf ${dir_entry} docbook-xsl
 echo "Creating MySQL conf file..."
 $CAT <<'EOF' >/etc/my.cnf
 [client]
-default-character-set=utf8
+loose-default-character-set=utf8
 
 [mysqld]
 default-character-set=utf8

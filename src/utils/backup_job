@@ -35,7 +35,7 @@ oldBackupDstDir=/var/lib/codendi/backup/mysql/old
 currentBackupDstDir=/var/lib/codendi/backup/mysql
 binaryLogDir=/var/lib/mysql
 mysqlDataDir=/var/lib/mysql
-
+tarDir=/var/lib
 #
 ###############################################################################
 
@@ -71,12 +71,6 @@ sleep 5
 # Move current bkp to old dir
 ${MKDIR} -p ${oldBackupDir}
 
-# Because of -e flag, we need to make sure the files exist before moving them
-binfiles=`ls ${binaryLogDir} | grep codendi-bin | head -1`
-if [ $binfiles ];
-then
-    ${MV} ${binaryLogDir}/codendi-bin.* ${oldBackupDir}
-fi
 dumpfiles=`ls ${currentBackupDstDir} | grep sqldump | head -1`
 if [ $dumpfiles ];
 then
@@ -84,8 +78,8 @@ then
 fi
 
 # back up mysql datafiles to disk
-${DUMP} 0f ${currentBackupDstDir}/sqldump.`date +%m%d%y.%H%M` -M ${mysqlDataDir}
-
+cd ${tarDir}
+tar -vczf ${currentBackupDstDir}/sqldump.`date +%m%d%y.%H%M`.tar --exclude 'codendi-bin.*' mysql
 # If there is no archives keeping, delete old  backup
 if [ "${NOOLD}" == 1 ]; then 
     ${RM} -rf ${oldBackupDir}
