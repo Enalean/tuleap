@@ -201,12 +201,12 @@ class DataBuilder {
             $ugroups = $user->getUgroups($group_id, array('artifact_type' => $this->atid));
 
             $from  .= " , permissions ";
-            $where .= " AND (permissions.object_id = CONVERT(a.artifact_id USING utf8) 
-                                 AND 
-                                 permissions.permission_type = 'TRACKER_ARTIFACT_ACCESS')
-                        AND (a.use_artifact_permissions = 0
+            $where .= " AND (a.use_artifact_permissions = 0
                              OR 
-                             (
+                             (permissions.object_id = CONVERT(a.artifact_id USING utf8) 
+                                 AND 
+                                 permissions.permission_type = 'TRACKER_ARTIFACT_ACCESS'
+                                 AND
                                  permissions.ugroup_id IN (". implode(',', $ugroups) .")
                              )
                        ) ";
