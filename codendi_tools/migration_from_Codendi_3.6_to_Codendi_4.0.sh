@@ -1721,10 +1721,13 @@ $CHOWN codendiadm.codendiadm log_accum commit_prep
 $CHMOD 755 log_accum commit_prep cvssh cvssh-restricted
 $CHMOD u+s log_accum   # sets the uid bit (-rwsr-xr-x)
 
+cd $INSTALL_DIR/src/utils
+$CP backup_job /usr/lib/codendi/bin
+
 cd $INSTALL_DIR/src/utils/svn
-$CP commit-email.pl codendi_svn_pre_commit.php /usr/lib/codendi/bin
+$CP commit-email.pl codendi_svn_pre_commit.php backup_subversion.sh /usr/lib/codendi/bin
 cd /usr/lib/codendi/bin
-$CHOWN codendiadm.codendiadm commit-email.pl codendi_svn_pre_commit.php
+$CHOWN codendiadm.codendiadm commit-email.pl codendi_svn_pre_commit.php backup_subversion.sh
 $CHMOD 755 commit-email.pl codendi_svn_pre_commit.php
 
 #
