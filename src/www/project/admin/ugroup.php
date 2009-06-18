@@ -35,7 +35,6 @@ function format_html_row($row, &$row_num) {
 }
 
 $em =& EventManager::instance();
-$Language->loadLanguageMsg('project/project');
 
 session_require(array('group'=>$group_id,'admin_flags'=>'A'));
 if (!isset($func)) $func="";

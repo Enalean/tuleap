@@ -83,84 +83,9 @@ class TabbedLayout extends Layout {
 	function header($params) {
 		global $Language;
 
-		if (!$params['title']) {
-			$params['title'] =  $GLOBALS['sys_name'];
-		} else {
-			$params['title'] =  $GLOBALS['sys_name'] . ': ' . $params['title'];
-		}
+		$this->generic_header($params); 
 		?>
 
-<!DOCTYPE html
-	PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="<?php echo UserManager::instance()->getCurrentUser()->getLocale(); ?>">
-
-  <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=<?php echo $Language->getEncoding(); ?>" />
-	<title><?php echo $params['title']; ?></title>
-    <link rel="stylesheet" type="text/css" href="/themes/common/css/style.css">
-    <link rel="alternate" title="<? echo $GLOBALS['sys_name']. ' - ' .$Language->getText('include_layout','latest_news_rss'); ?>" href="<? echo get_server_url(); ?>/export/rss_sfnews.php" type="application/rss+xml">
-    <link rel="alternate" title="<? echo $GLOBALS['sys_name']. ' - ' .$Language->getText('include_layout','newest_releases_rss'); ?>" href="<? echo get_server_url(); ?>/export/rss_sfnewreleases.php" type="application/rss+xml">
-    <link rel="alternate" title="<? echo $GLOBALS['sys_name']. ' - ' .$Language->getText('include_layout','newest_projects_rss'); ?>" href="<? echo get_server_url(); ?>/export/rss_sfprojects.php?type=rss&option=newest" type="application/rss+xml">
-    <?php
-        //Add additionnal feeds
-        $hp =& Codendi_HTMLPurifier::instance();
-        foreach($this->feeds as $feed) {
-            echo '<link rel="alternate" title="'. $hp->purify($feed['title']) .'" href="'. $feed['href'] .'" type="application/rss+xml">';
-        }
-    ?>
-    <link rel="SHORTCUT ICON" href="<?php echo $this->imgroot; ?>favicon.ico">
-    <?php
-        $this->displayJavascriptElements();
-    ?>
-    <script language="JavaScript" type="text/javascript">
-	<!--
-
-	function help_window(helpurl) {
-		HelpWin = window.open( helpurl,'HelpWindow','scrollbars=yes,resizable=yes,toolbar=no,height=740,width=1000');
-	}
-	// -->
-	</script>
-<?php
-/*
-
-
-
-	WARNING - changing this font call can affect
-	INTERNATIONALIZATION
-
-
-*/
-
-
-		//gets font from Language Object
-		$site_fonts=$GLOBALS['Language']->getFont();
-
-	?>
-    <link rel="stylesheet" href="<? echo util_get_css_theme(); ?>" type="text/css" />
-    <!-- {{{ reimport style, only for netscape 4 compatibility -->
-    <link rel="stylesheet" href="<? echo dirname(util_get_css_theme()).'/style.css'; ?>" type="text/css" />
-    <!-- }}} -->
-<?php
-              if(isset($params['stylesheet']) && is_array($params['stylesheet'])) {
-                  foreach($params['stylesheet'] as $css) {
-                      print '<link rel="stylesheet" type="text/css" href="'.$css.'" />';
-                      print "\n";
-                  }
-              }
-?>
-
-    <style type="text/css">
-	<!--
-    <?php 
-        $em = EventManager::instance();
-        $em->processEvent("cssstyle",null);
-    ?>
-	-->
-    </style>
-<?php $em->processEvent('cssfile',null); ?>
-</head>
 
 <body>
 <div id="header"><?php echo $this->getBodyHeader($params); ?></div>
