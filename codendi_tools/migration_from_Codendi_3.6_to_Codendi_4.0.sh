@@ -342,7 +342,7 @@ echo "Installing the Codendi software..."
 $MV /usr/share/codex $BACKUP_INSTALL_DIR
 $MKDIR $INSTALL_DIR;
 cd $INSTALL_DIR
-$TAR xfz "${Codendi_DIR}/codendi*.tgz"
+$TAR xfz "${Codendi_DIR}"/codendi*.tgz
 $CHOWN -R codendiadm.codendiadm $INSTALL_DIR
 
 echo "Setting up fileperms on installed files and directory"

@@ -622,7 +622,7 @@ $PERL -pi -e "s/^#ftpd_banner=.*/ftpd_banner=Welcome to Codendi FTP service./g" 
 echo "Installing Saxon...."
 cd /usr/local
 $RM -rf saxon*
-$TAR xfz "${nonRPMS_DIR}/docbook/saxon-*.tgz"
+$TAR xfz "${nonRPMS_DIR}"/docbook/saxon-*.tgz
 dir_entry=`$LS -1d saxon-*`
 $LN -sf ${dir_entry} saxon
 
@@ -630,7 +630,7 @@ $LN -sf ${dir_entry} saxon
 echo "Installing FOP...."
 cd /usr/local
 $RM -rf fop*
-$TAR xfz "${nonRPMS_DIR}/docbook/fop-*.tgz"
+$TAR xfz "${nonRPMS_DIR}"/docbook/fop-*.tgz
 dir_entry=`$LS -1d fop-*`
 $LN -sf ${dir_entry} fop
 
@@ -638,7 +638,7 @@ $LN -sf ${dir_entry} fop
 echo "Installing Jimi...."
 cd /usr/local
 $RM -rf [jJ]imi*
-$TAR xfz "${nonRPMS_DIR}/docbook/Jimi-*.tgz"
+$TAR xfz "${nonRPMS_DIR}"/docbook/Jimi-*.tgz
 dir_entry=`$LS -1d [jJ]imi-*`
 $LN -sf ${dir_entry} jimi
 
@@ -646,7 +646,7 @@ $LN -sf ${dir_entry} jimi
 echo "Installing DocBook DTD...."
 cd /usr/local
 $RM -rf docbook-dtd*
-$TAR xfz "${nonRPMS_DIR}/docbook/docbook-dtd-*.tgz"
+$TAR xfz "${nonRPMS_DIR}"/docbook/docbook-dtd-*.tgz
 dir_entry=`$LS -1d docbook-dtd-*`
 $LN -sf ${dir_entry} docbook-dtd
 
@@ -654,7 +654,7 @@ $LN -sf ${dir_entry} docbook-dtd
 echo "Installing DocBook XSL...."
 cd /usr/local
 $RM -rf docbook-xsl*
-$TAR xfz "${nonRPMS_DIR}/docbook/docbook-xsl-*.tgz"
+$TAR xfz "${nonRPMS_DIR}"/docbook/docbook-xsl-*.tgz
 dir_entry=`$LS -1d docbook-xsl-*`
 $LN -sf ${dir_entry} docbook-xsl
 
@@ -736,7 +736,7 @@ $CHMOD u+s /usr/lib/codendi/bin/fileforge
 #
 echo "Installing the Codendi software..."
 cd $INSTALL_DIR
-$TAR xfz "${Codendi_DIR}/codendi*.tgz"
+$TAR xfz "${Codendi_DIR}"/codendi*.tgz
 $CHOWN -R codendiadm.codendiadm $INSTALL_DIR
 $FIND $INSTALL_DIR -type f -exec $CHMOD u+rw,g+rw,o-w+r {} \;
 $FIND $INSTALL_DIR -type d -exec $CHMOD 775 {} \;
