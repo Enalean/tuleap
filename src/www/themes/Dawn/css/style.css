@@ -31,7 +31,7 @@ lightgrayblue: #EFF3FF
 /********  general   **********/
 body {
     margin: 0em;
-    background: #333; 
+    background: #333 ; 
     color:#333;
     font-family: helvetica,arial,verdana,sans-serif;
     padding: 0;
@@ -371,11 +371,9 @@ td.artifact_spacer { width: 5%; }
     width: 100%;
     font-family: tahoma, verdana, sans-serif;
     font-size: 85%;
-    margin: 0; padding: 0;
+    margin: auto; padding: 0;
     border: 0;
-}
-
-
+ }
 
 #level_1 ul {
     height: 43px;
@@ -418,18 +416,20 @@ td.artifact_spacer { width: 5%; }
     text-align:center;
     clear:both;
 }
+
 #level_2 ul {
     list-style-type:none;
     width:auto;
     position:relative;
     display:block;
-    height:33px;
+    min-height:33px;
     font-size:.9em;
-    background:#DC4900 url(../images/tabs/level2_bg.png) repeat-x top left;
+    background: #DC4900 url(../images/tabs/level2_bg.png) top left;
     font-family:"Lucida Grande", Verdana,Helvetica,Arial,sans-serif;
     border:1px solid #000;
     margin:0;
     padding-left: 1em;
+    white-space: nowrap;
 }
 
 #level_2 ul li {
@@ -447,7 +447,6 @@ td.artifact_spacer { width: 5%; }
     padding:9px 15px 0;
     font-weight:normal;
 }
-
 
 #level_2 ul li a:hover, 
 #level_2 ul li a.current {
