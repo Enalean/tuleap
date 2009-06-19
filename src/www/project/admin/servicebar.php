@@ -219,7 +219,10 @@ if ($func=='do_create') {
     } else {
         $feedback .= " ".$Language->getText('project_admin_servicebar','s_create_success')." ";
     }
-
+    
+    $pm->clear($group_id);
+    $project = $pm->getProject($group_id);
+    
     if (($is_active)&&($group_id==100)) {
         // Add service to ALL active projects!
         $sql1="SELECT group_id FROM groups WHERE group_id!=100";
@@ -276,13 +279,15 @@ if ($func=='do_update') {
     $sql = "UPDATE service SET label='$label', description='$description', link='$link' ". $admin_statement .
         ", is_used=".($is_used?"1":"0").", rank='$rank' $set_server_id, is_in_iframe=$is_in_iframe WHERE service_id=$service_id";
     $result=db_query($sql);
-
+   
     if (!$result) {
         exit_error($Language->getText('global','error'),$Language->getText('project_admin_servicebar','cant_update_s',db_error()));
     } else {
         $feedback .= ' '.$Language->getText('project_admin_servicebar','s_update_success').' ';
     }
-
+    
+    $pm->clear($group_id);
+    $project =$pm->getProject($group_id);
 
     // If this is a global service (i.e. with a shortname)... 
     if (isset($short_name)) {
@@ -298,10 +303,6 @@ if ($func=='do_update') {
         }
     }
 }
-
-
-
-
 
 project_admin_header(array('title'=>$Language->getText('project_admin_servicebar','edit_s_bar'),'group'=>$group_id,
 			   'help' => 'ServiceConfiguration.html'));
