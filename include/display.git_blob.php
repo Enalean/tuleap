@@ -11,13 +11,14 @@
  require_once('gitutil.git_get_hash_by_path.php');
  require_once('gitutil.git_cat_file.php');
  require_once('gitutil.git_read_commit.php');
+ require_once('gitutil.git_path_trees.php');
  require_once('util.file_mime.php');
 
 function git_blob($projectroot, $project, $hash, $file, $hashbase)
 {
 	global $gitphp_conf,$tpl;
+	$base = $hashbase ? $hashbase : git_read_head($projectroot . $project);
 	if (!isset($hash) && isset($file)) {
-		$base = $hashbase ? $hashbase : git_read_head($projectroot . $project);
 		$hash = git_get_hash_by_path($projectroot . $project, $base,$file,"blob");
 	}
 	$catout = git_cat_file($projectroot . $project, $hash);
@@ -37,8 +38,10 @@ function git_blob($projectroot, $project, $hash, $file, $hashbase)
 		$tpl->display("blob_emptynav.tpl");
 	}
 	$tpl->clear_all_assign();
-	if (isset($file))
-		$tpl->assign("file",$file);
+	$tpl->assign("project",$project);
+	$tpl->assign("hashbase",$base);
+	$paths = git_path_trees($projectroot . $project, $base, $file);
+	$tpl->assign("paths",$paths);
 	$tpl->display("blob_header.tpl");
 
 	if ($gitphp_conf['filemimetype']) {

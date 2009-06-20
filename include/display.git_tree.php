@@ -13,6 +13,7 @@
  require_once('gitutil.git_ls_tree.php');
  require_once('gitutil.read_info_ref.php');
  require_once('gitutil.git_read_commit.php');
+ require_once('gitutil.git_path_trees.php');
 
 function git_tree($projectroot,$project,$hash,$file,$hashbase)
 {
@@ -40,8 +41,10 @@ function git_tree($projectroot,$project,$hash,$file,$hashbase)
 		$tpl->display("tree_emptynav.tpl");
 	}
 	$tpl->clear_all_assign();
-	if (isset($file))
-		$tpl->assign("filename",$file);
+	$tpl->assign("project",$project);
+	$tpl->assign("hashbase",$hashbase);
+	$paths = git_path_trees($projectroot . $project, $hashbase, $file);
+	$tpl->assign("paths",$paths);
 	$tpl->display("tree_filelist_header.tpl");
 
 	$tok = strtok($lsout,"\0");
