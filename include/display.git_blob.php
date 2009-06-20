@@ -12,17 +12,19 @@
  require_once('gitutil.git_cat_file.php');
  require_once('gitutil.git_read_commit.php');
  require_once('gitutil.git_path_trees.php');
+ require_once('gitutil.read_info_ref.php');
  require_once('util.file_mime.php');
 
 function git_blob($projectroot, $project, $hash, $file, $hashbase)
 {
 	global $gitphp_conf,$tpl;
-	$base = $hashbase ? $hashbase : git_read_head($projectroot . $project);
-	if (!isset($hash) && isset($file)) {
-		$hash = git_get_hash_by_path($projectroot . $project, $base,$file,"blob");
-	}
+	if (!isset($hashbase))
+		$hashbase = git_read_head($projectroot . $project);
+	if (!isset($hash) && isset($file))
+		$hash = git_get_hash_by_path($projectroot . $project, $hashbase,$file,"blob");
 	$catout = git_cat_file($projectroot . $project, $hash);
 	if (isset($hashbase) && ($co = git_read_commit($projectroot . $project, $hashbase))) {
+		$refs = read_info_ref($projectroot . $project);
 		$tpl->clear_all_assign();
 		$tpl->assign("project",$project);
 		$tpl->assign("hashbase",$hashbase);
@@ -31,6 +33,8 @@ function git_blob($projectroot, $project, $hash, $file, $hashbase)
 		if (isset($file))
 			$tpl->assign("file",$file);
 		$tpl->assign("title",$co['title']);
+		if (isset($refs[$hashbase]))
+			$tpl->assign("hashbaseref",$refs[$hashbase]);
 		$tpl->display("blob_nav.tpl");
 	} else {
 		$tpl->clear_all_assign();
@@ -39,8 +43,8 @@ function git_blob($projectroot, $project, $hash, $file, $hashbase)
 	}
 	$tpl->clear_all_assign();
 	$tpl->assign("project",$project);
-	$tpl->assign("hashbase",$base);
-	$paths = git_path_trees($projectroot . $project, $base, $file);
+	$tpl->assign("hashbase",$hashbase);
+	$paths = git_path_trees($projectroot . $project, $hashbase, $file);
 	$tpl->assign("paths",$paths);
 	$tpl->display("blob_header.tpl");
 

@@ -13,4 +13,8 @@
  <a href="{$SCRIPT_NAME}?p={$project}&a=blob_plain&h={$hash}">plain</a><br />
  {/if}
  </div>
- <div><a href="{$SCRIPT_NAME}?p={$project}&a=commit&h={$hashbase}" class="title">{$title}</a></div>
+ <div><a href="{$SCRIPT_NAME}?p={$project}&a=commit&h={$hashbase}" class="title">{$title}
+ {if $hashbaseref}
+ <span class="tag">{$hashbaseref}</span>
+ {/if}
+ </a></div>
