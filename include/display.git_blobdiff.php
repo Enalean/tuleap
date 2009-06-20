@@ -10,6 +10,7 @@
  require_once('util.prep_tmpdir.php');
  require_once('gitutil.git_read_commit.php');
  require_once('gitutil.read_info_ref.php');
+ require_once('gitutil.git_path_trees.php');
  require_once('display.git_diff_print.php');
 
 function git_blobdiff($projectroot,$project,$hash,$hashbase,$hashparent,$file)
@@ -46,6 +47,8 @@ function git_blobdiff($projectroot,$project,$hash,$hashbase,$hashparent,$file)
 	$tpl->assign("hashparent",$hashparent);
 	$tpl->assign("hashbase",$hashbase);
 	$tpl->assign("hash",$hash);
+	$paths = git_path_trees($projectroot . $project, $hashbase, $file);
+	$tpl->assign("paths",$paths);
 	$tpl->display("blobdiff_header.tpl");
 	git_diff_print($projectroot . $project, $hashparent,($file?$file:$hashparent),$hash,($file?$file:$hash));
 	$tpl->clear_all_assign();
