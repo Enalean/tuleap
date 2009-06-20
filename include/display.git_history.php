@@ -12,6 +12,7 @@
  require_once('gitutil.git_read_commit.php');
  require_once('gitutil.read_info_ref.php');
  require_once('gitutil.git_history_list.php');
+ require_once('gitutil.git_path_trees.php');
 
 function git_history($projectroot,$project,$hash,$file)
 {
@@ -23,10 +24,13 @@ function git_history($projectroot,$project,$hash,$file)
 	$tpl->clear_all_assign();
 	$tpl->assign("project",$project);
 	$tpl->assign("hash",$hash);
+	if (isset($refs[$hash]))
+		$tpl->assign("hashbaseref",$refs[$hash]);
 	$tpl->assign("tree",$co['tree']);
 	$tpl->display("history_nav.tpl");
 	$tpl->assign("title",$co['title']);
-	$tpl->assign("file",$file);
+	$paths = git_path_trees($projectroot . $project, $hash, $file);
+	$tpl->assign("paths",$paths);
 	$tpl->display("history_header.tpl");
 	$cmdout = git_history_list($projectroot . $project, $hash, $file);
 	$alternate = FALSE;
