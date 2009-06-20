@@ -13,7 +13,7 @@ require_once('gitutil.git_exec.php');
 function git_read_head($proj)
 {
 	$cmd = GIT_REV_PARSE . " --verify HEAD";
-	return git_exec($proj, $cmd);
+	return trim(git_exec($proj, $cmd));
 }
 
 ?>
