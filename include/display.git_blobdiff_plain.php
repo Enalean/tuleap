@@ -18,7 +18,7 @@ function git_blobdiff_plain($projectroot,$project,$hash,$hashbase,$hashparent,$f
 		return;
 	}
 	header("Content-type: text/plain; charset=UTF-8");
-	git_diff_print($projectroot . $project, $hashparent,($file?$file:$hashparent),$hash,($file?$file:$hash),"plain");
+	git_diff_print($projectroot . $project, $hashparent,($file?"a/".$file:$hashparent),$hash,($file?"b/".$file:$hash),"plain");
 }
 
 ?>

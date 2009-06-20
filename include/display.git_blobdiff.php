@@ -27,6 +27,7 @@ function git_blobdiff($projectroot,$project,$hash,$hashbase,$hashparent,$file)
 		$tpl->assign("hashparent",$hashparent);
 		$tpl->assign("tree",$co['tree']);
 		$tpl->assign("title",$co['title']);
+		$tpl->assign("file",$file);
 		$tpl->display("blobdiff_nav.tpl");
 	} else {
 		$tpl->clear_all_assign();
