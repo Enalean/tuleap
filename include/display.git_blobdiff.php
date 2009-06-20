@@ -9,6 +9,7 @@
 
  require_once('util.prep_tmpdir.php');
  require_once('gitutil.git_read_commit.php');
+ require_once('gitutil.read_info_ref.php');
  require_once('display.git_diff_print.php');
 
 function git_blobdiff($projectroot,$project,$hash,$hashbase,$hashparent,$file)
@@ -28,6 +29,9 @@ function git_blobdiff($projectroot,$project,$hash,$hashbase,$hashparent,$file)
 		$tpl->assign("tree",$co['tree']);
 		$tpl->assign("title",$co['title']);
 		$tpl->assign("file",$file);
+		$refs = read_info_ref($projectroot . $project);
+		if (isset($refs[$hashbase]))
+			$tpl->assign("hashbaseref",$refs[$hashbase]);
 		$tpl->display("blobdiff_nav.tpl");
 	} else {
 		$tpl->clear_all_assign();
