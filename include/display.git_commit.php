@@ -11,6 +11,7 @@
  require_once('util.date_str.php');
  require_once('gitutil.git_read_commit.php');
  require_once('gitutil.git_diff_tree.php');
+ require_once('gitutil.read_info_ref.php');
 
 function git_commit($projectroot,$project,$hash)
 {
@@ -35,6 +36,7 @@ function git_commit($projectroot,$project,$hash)
 		$tpl->assign("parent",$co['parent']);
 	$tpl->display("commit_nav.tpl");
 	$tpl->assign("title",$co['title']);
+	$refs = read_info_ref($projectroot . $project);
 	if (isset($refs[$co['id']]))
 		$tpl->assign("commitref",$refs[$co['id']]);
 	$tpl->assign("author",$co['author']);
