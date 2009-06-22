@@ -44,6 +44,9 @@ Here are a few things you should now about Codendi 4.0:
   We suggest that you verify all your local files for occurrences of "CodeX".
   For instance, you should execute 'grep -r -i codex /etc/codendi' and verify the output.
 
+* The new database is named "codendi", but the previous one named "codex" was not deleted.
+  You can remove it at your convenience ("drop database codex;" in mysql).
+ 
 * Where is xerox_crontab.sh?
   The backend has been completely rewritten in PHP, and most backend scripts have disappeared! 
   Now, backend actions are performed in "real-time". 
