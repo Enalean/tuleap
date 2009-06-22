@@ -9,7 +9,7 @@ $vAction = new Valid_WhiteList('action',array('permissions_frs_package','permiss
 if ($request->valid($vAction)) {
     $action = $request->get('action');
 } else {
-    exit_error($GLOBALS['Language']->getText('',''),$GLOBALS['Language']->getText('',''));
+    exit_error('', '');
 }
 
 if ($action == 'permissions_frs_package') {
