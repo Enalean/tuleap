@@ -385,7 +385,6 @@ class BackendSystem extends Backend {
      * @param string $username
      */
     protected function writeSSHKeys($username, $ssh_keys) {
-        echo $username, $ssh_keys;
         $ssh_keys = str_replace('###', "\n", $ssh_keys);
         $username = strtolower($username);
         $ssh_dir = $GLOBALS['homedir_prefix'] ."/$username/.ssh";
