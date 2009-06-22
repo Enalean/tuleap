@@ -306,10 +306,8 @@ class BackendSystem extends Backend {
                     unlink($GLOBALS['grpdir_prefix']."/".$project->getUnixName(true));
                 }
             }
-            return true;
-        } else {
-            return false;
         }
+        return true;
     }
 
     /**

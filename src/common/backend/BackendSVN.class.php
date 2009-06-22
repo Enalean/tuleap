@@ -438,10 +438,8 @@ class BackendSVN extends Backend {
             chmod($backupfile, 0600);
             $this->recurseDeleteInDir($mydir);
             rmdir($mydir);
-            return true;
-        } else {
-            return false;
         }
+        return true;
     }
     
     /**
