@@ -969,7 +969,6 @@ $CAT <<EOF | $MYSQL -u root mysql $pass_opt
 GRANT SELECT ON codendi.user to dbauthuser@localhost identified by '$dbauth_passwd';
 GRANT SELECT ON codendi.groups to dbauthuser@localhost;
 GRANT SELECT ON codendi.user_group to dbauthuser@localhost;
-GRANT SELECT ON codendi.session to dbauthuser@localhost;
 FLUSH PRIVILEGES;
 EOF
 fi
@@ -1516,6 +1515,10 @@ build_dir /etc/codendi/plugins/IM/etc codendiadm codendiadm 755
 # Create openfireadm MySQL user
 $CAT <<EOF | $MYSQL -u root mysql $pass_opt
 GRANT ALL PRIVILEGES on openfire.* to openfireadm@localhost identified by '$openfire_passwd';
+GRANT SELECT ON codendi.user to openfireadm@localhost;
+GRANT SELECT ON codendi.groups to openfireadm@localhost;
+GRANT SELECT ON codendi.user_group to openfireadm@localhost;
+GRANT SELECT ON codendi.session to openfireadm@localhost;
 FLUSH PRIVILEGES;
 EOF
 # Install plugin
@@ -1525,7 +1528,7 @@ IM_ADMIN_GROUP='imadmingroup'
 IM_ADMIN_USER='imadmin-bot'
 IM_ADMIN_USER_PW='1M@dm1n'
 IM_MUC_PW='Mu6.4dm1n' # Doesn't need to change
-$PHP $INSTALL_DIR/plugins/IM/include/jabbex_api/installation/install.php -a -orp $rt_passwd -uod openfireadm -pod $openfire_passwd -ucd dbauthuser -pcd $dbauth_passwd -odb jdbc:mysql://localhost:3306/openfire -cdb jdbc:mysql://localhost:3306/codendi -ouri $sys_default_domain -gjx $IM_ADMIN_GROUP -ujx $IM_ADMIN_USER -pjx $IM_ADMIN_USER_PW -pmuc $IM_MUC_PW
+$PHP $INSTALL_DIR/plugins/IM/include/jabbex_api/installation/install.php -a -orp $rt_passwd -uod openfireadm -pod $openfire_passwd -ucd openfireadm -pcd $openfire_passwd -odb jdbc:mysql://localhost:3306/openfire -cdb jdbc:mysql://localhost:3306/codendi -ouri $sys_default_domain -gjx $IM_ADMIN_GROUP -ujx $IM_ADMIN_USER -pjx $IM_ADMIN_USER_PW -pmuc $IM_MUC_PW
 
 # Hudson plugin
 $CAT $INSTALL_DIR/plugins/hudson/db/install.sql | $MYSQL -u codendiadm codendi --password=$codendiadm_passwd
