@@ -35,6 +35,7 @@ BACKUP_DIR="/root/codex_3_6_backup"
 # path to command line tools
 GROUPADD='/usr/sbin/groupadd'
 GROUPDEL='/usr/sbin/groupdel'
+GROUPMOD='/usr/sbin/groupmod'
 USERADD='/usr/sbin/useradd'
 USERDEL='/usr/sbin/userdel'
 USERMOD='/usr/sbin/usermod'
@@ -61,7 +62,7 @@ PERL='/usr/bin/perl'
 DIFF='/usr/bin/diff'
 PHP='/usr/bin/php'
 
-CMD_LIST="GROUPADD GROUDEL USERADD USERDEL USERMOD MV CP LN LS RM TAR \
+CMD_LIST="GROUPADD GROUDEL GROUPMOD USERADD USERDEL USERMOD MV CP LN LS RM TAR \
 MKDIR RPM CHOWN CHMOD FIND MYSQL TOUCH CAT MAKE TAIL GREP CHKCONFIG \
 SERVICE PERL DIFF"
 
@@ -327,12 +328,12 @@ $SERVICE smb stop
 
 
 echo -n "codexadm is now known as codendiadm..."
-groupmod -n codendiadm codexadm
-usermod -d /home/codendiadm -m  -c 'Owner of Codendi directories' -l codendiadm codexadm
+$GROUPMOD -n codendiadm codexadm
+$USERMOD -d /home/codendiadm -m  -c 'Owner of Codendi directories' -l codendiadm codexadm
 # also relocate homedir of ftp, ftpadmin and dummy users
-usermod -d /var/lib/codendi/ftp ftp 2> /dev/null
-usermod -d /var/lib/codendi/ftp ftpadmin 2> /dev/null
-usermod  -c 'Dummy Codendi User' -d /var/lib/codendi/dumps dummy 2> /dev/null
+$USERMOD -d /var/lib/codendi/ftp ftp 2> /dev/null
+$USERMOD -d /var/lib/codendi/ftp ftpadmin 2> /dev/null
+$USERMOD  -c 'Dummy Codendi User' -d /var/lib/codendi/dumps dummy 2> /dev/null
 echo "done"
 
 ##############################################
@@ -635,10 +636,10 @@ EOF
 
 ###############################################################################
 # Add some privacy in shared directories. Also helps libnss_mysql...
-chmod 751 $VAR_LIB_DIR/cvsroot/
-chmod 751 $VAR_LIB_DIR/svnroot/
-chmod 771 /home/users
-chmod 771 /home/groups
+$CHMOD 751 $VAR_LIB_DIR/cvsroot/
+$CHMOD 751 $VAR_LIB_DIR/svnroot/
+$CHMOD 771 /home/users
+$CHMOD 771 /home/groups
 
 # NSCD is the Name Service Caching Daemon.
 # It is very useful when libnss_mysql is used for authentication
