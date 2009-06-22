@@ -40,7 +40,7 @@ db_query("UPDATE user SET "
 	. "confirm_hash='".db_es($confirm_hash)."'");
 
 $em = EventManager::instance();
-$em->processEvent(Event::USER_EMAIL_CHANGED, row_user['user_id']);
+$em->processEvent(Event::USER_EMAIL_CHANGED, $row_user['user_id']);
 
 $HTML->header(array('title'=>$Language->getText('account_change_email-complete', 'title')));
 ?>
