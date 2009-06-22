@@ -293,7 +293,8 @@ cd "${RPMS_DIR}/subversion"
 newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
 cd ${newest_rpm}
 # Update SQLite first: version above 3.4 is required for SVN 1.6, and RHEL5 only provides version 3.3.
-$RPM -Uvh sqlite-3*.i386.rpm
+# Need to upgrade both sqlite and sqlite-devel at once
+$RPM -Uvh sqlite-3*.i386.rpm sqlite-devel-3*.i386.rpm
 $RPM -ivh neon-0.*.i386.rpm neon-devel*.i386.rpm subversion-1.*.i386.rpm mod_dav_svn*.i386.rpm subversion-perl*.i386.rpm subversion-python*.i386.rpm 
 # Dependency error with Perl ??
 #$RPM --nodeps -Uvh subversion-tools*.i386.rpm
