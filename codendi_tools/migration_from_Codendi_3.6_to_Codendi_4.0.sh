@@ -141,6 +141,14 @@ mysql_add_index() {
     mysql_drop_index "$1" "$2"
     $MYSQL $pass_opt codendi -e "ALTER TABLE $1 ADD INDEX $2($3)"
 }
+
+# @param $1 table
+# @param $2 name of the unique index
+# @param $3 columns (coma separated)
+mysql_add_unique() {
+    mysql_drop_index "$1" "$2"
+    $MYSQL $pass_opt codendi -e "ALTER TABLE $1 ADD UNIQUE $2($3)"
+}
 ##############################################
 # Codendi 3.6 to 4.0 migration
 ##############################################
@@ -1331,6 +1339,9 @@ echo "- Upgrade docman"
 $CAT <<EOF | $MYSQL $pass_opt codendi 
 ALTER TABLE plugin_docman_approval CHANGE COLUMN version_id version_id INT(11) UNSIGNED UNSIGNED NULL DEFAULT NULL;
 ALTER TABLE plugin_docman_approval CHANGE COLUMN wiki_version_id wiki_version_id INT(11) UNSIGNED UNSIGNED NULL DEFAULT NULL;
+mysql_add_unique  'plugin_docman_approval' 'version_id' 'version_id'
+mysql_drop_index 'plugin_docman_approval' 'item_wiki'    
+mysql_add_unique  'plugin_docman_approval' 'item_id' 'item_id,wiki_version_id'
 
 CREATE TABLE IF NOT EXISTS plugin_docman_widget_embedded (
   id int(11) unsigned NOT NULL auto_increment,
