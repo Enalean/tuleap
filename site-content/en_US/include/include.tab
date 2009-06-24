@@ -48,7 +48,6 @@ include_exit	need_to_login	Sorry, you have to be <A HREF="/account/login.php">lo
 include_exit	choose_proj_err	Error - Choose a Project
 include_exit	no_gid_err	Error - No group_id was chosen.
 include_exit	missing_param_err	Error - Missing Parameters
-include_exit	private_project_no_perm	Private Project. You may only access private projects you are member of.<p><a href="/my/">Back to your personal page.</a>
 #
 #-----------------------------------------------
 # Script: SF/www/include/features_boxes.php

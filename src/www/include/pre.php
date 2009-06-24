@@ -336,13 +336,6 @@ if (!IS_SCRIPT &&
         exit_restricted_user_permission_denied();
     }
 }
-
-if (!IS_SCRIPT) {
-    if (!util_check_private_access($_SERVER['REQUEST_URI'], $_SERVER['SCRIPT_NAME'])) {
-            exit_private_project_permission_denied();
-    }
-}
-
 require_once('common/include/URL.class.php');
 $request =& HTTPRequest::instance();
 //Do nothing if we are not in a distributed architecture

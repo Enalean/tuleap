@@ -37,11 +37,6 @@ function exit_permission_denied() {
     exit_error($Language->getText('include_exit','perm_denied'),$Language->getText('include_exit','no_perm').'<p>'.$feedback);
 }
 
-function exit_private_project_permission_denied() {
-    global $feedback,$Language;
-    exit_error($Language->getText('include_exit','perm_denied'),$Language->getText('include_exit','private_project_no_perm').'<p>'.$feedback);
-} 
-
 function exit_restricted_user_permission_denied() {
   global $feedback,$Language;
     exit_error($Language->getText('include_exit','perm_denied'),$Language->getText('include_exit','restricted_user_no_perm').'<p>'.$feedback);
