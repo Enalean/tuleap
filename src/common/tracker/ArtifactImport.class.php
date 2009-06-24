@@ -649,7 +649,7 @@ function getUsedFields() {
 
     $comment = str_replace("'","\'",$arr['comment']);
 
-    $res=db_query("SELECT * FROM artifact_history WHERE artifact_id = ". db_ei($art_id) ." AND field_name = 'comment' AND old_value = '". db_es($comment) ."'");
+    $res=db_query("SELECT * FROM artifact_history WHERE artifact_id = ". db_ei($art_id) ." AND field_name = 'comment' AND new_value = '". db_es($comment) ."'");
 
     if ($res && db_numrows($res) > 0) {
       return true;
@@ -765,9 +765,9 @@ function getUsedFields() {
       $arr["by"] = $by;
       $arr["type"] = $comment_type_id;
       $arr["comment"] = $comment;
-      if (!$this->checkCommentExist($arr,$art_id)) {
+      //if (!$this->checkCommentExist($arr,$art_id)) {
 	$parsed_comments[] = $arr;
-      }
+      //}
       unset($comment_type_id);
     }
     
@@ -1091,7 +1091,8 @@ function getUsedFields() {
     if ($comments) {
       if ($this->parseFollowUpComments($comments,$parsed_comments,$aid) && $parsed_comments && !empty($parsed_comments)) {
             $comments_ok = true;
-            if (!$ah->addFollowUpComments($parsed_comments)) {
+            $changes = null;
+            if (!$ah->addFollowUpComments($parsed_comments, $changes)) {
                 $errors .= $Language->getText('tracker_import_utils','problem_insert_followup',$ah->getID())." ";
                 $comments_ok = false;
                 return false;

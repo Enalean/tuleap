@@ -439,7 +439,7 @@ if ($type_of_search == "soft") {
                 $array=explode(" ",$words);
                 $words1=implode($array,"%' $crit artifact.details LIKE '%");
                 $words2=implode($array,"%' $crit artifact.summary LIKE '%");
-                $words3=implode($array,"%' $crit artifact_history.old_value LIKE '%");
+                $words3=implode($array,"%' $crit artifact_history.new_value LIKE '%");
                 
                 $sql = "SELECT SQL_CALC_FOUND_ROWS artifact.artifact_id,
                                artifact.summary,
@@ -461,7 +461,7 @@ if ($type_of_search == "soft") {
                                OR 
                                (artifact.summary LIKE '%". db_es($words2) ."%') 
                                OR 
-                               (artifact_history.field_name='comment' AND (artifact_history.old_value LIKE '%". db_es($words3) ."%'))
+                               (artifact_history.field_name='comment' AND (artifact_history.new_value LIKE '%". db_es($words3) ."%'))
                          ) 
                        GROUP BY open_date DESC, artifact.artifact_id DESC 
                        LIMIT ". db_ei($offset) .", 25";
@@ -566,7 +566,7 @@ if ($type_of_search == "soft") {
     $array=explode(" ",$words);
     $words1=implode($array,"%' $crit artifact.details LIKE '%");
     $words2=implode($array,"%' $crit artifact.summary LIKE '%");
-    $words3=implode($array,"%' $crit artifact_history.old_value LIKE '%");
+    $words3=implode($array,"%' $crit artifact_history.new_value LIKE '%");
     
     $sql = "SELECT SQL_CALC_FOUND_ROWS artifact.artifact_id,
                    artifact.summary,
@@ -588,13 +588,12 @@ if ($type_of_search == "soft") {
                    OR 
                    (artifact.summary LIKE '%". db_es($words2) ."%') 
                    OR 
-                   (artifact_history.field_name='comment' AND (artifact_history.old_value LIKE '%". db_es($words3) ."%'))
+                   (artifact_history.field_name='comment' AND (artifact_history.new_value LIKE '%". db_es($words3) ."%'))
              ) 
            GROUP BY open_date DESC 
            LIMIT ". db_ei($offset) .", 25";
     $result = db_query($sql);
     $rows_returned = db_result(db_query('SELECT FOUND_ROWS() as nb'), 0, 'nb');
-
 	if ( !$result || $rows_returned < 1) {
 		$no_rows = 1;
 		echo '<H2>'.$Language->getText('search_index','no_match_found',htmlentities(stripslashes($words), ENT_QUOTES, 'UTF-8')).'</H2>';
