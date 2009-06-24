@@ -1197,6 +1197,196 @@ function getStringFromServer($key) {
         }
 }
 
+/**
+ * checkPrivateAccess - prevent a registered but not member user access a private project with the current url.
+ *
+ * @param string $request_uri is the original REQUEST_URI
+ * @param string $script_name is the original SCRIPT_NAME
+ * @return true is access is granted
+ * @return false is access is forbidden
+*/
+function util_check_private_access($request_uri, $script_name) {
+    
+    $user = UserManager::instance()->getCurrentUser();
+    if (!$user->isAnonymous()) {
+        if (isset($GLOBALS['group_id'])) { 
+            $group_id=$GLOBALS['group_id']; 
+        }
+        // Make sure the URI starts with a single slash
+        $req_uri='/'.trim($request_uri, "/");
+        
+        $forbidden_url = array( 
+          '/snippet',     // Code Snippet Library
+          '/softwaremap/',// browsable software map
+          '/new/',        // list of the newest releases made on the Codendi site ('/news' must be allowed...)
+          '/search',      // search for people, projects, and artifacts in trackers!
+          '/people/',     // people skills and profile
+          '/stats',       // Codendi site statistics
+          '/top',         // projects rankings (active, downloads, etc)
+          '/project/register.php',    // Register a new project
+          '/export',      // Codendi XML feeds
+          '/info.php'     // PHP info
+          );
+         
+        $allow_welcome_page=false;       // Allow access to welcome page 
+        $allow_news_browsing=false;      // Allow users to read/comment news, including for their project
+        $allow_user_browsing=false;      // Allow users to access other user's page (Developer Profile)
+        $allow_access_to_project_forums   = false; // Support project help forums are accessible through the 'Discussion Forums' link
+        $allow_access_to_project_trackers = false; // Support project trackers are used for support requests
+        $allow_access_to_project_docs     = false;// Support project documents and wiki (Note that the User Guide is always accessible)
+        $allow_access_to_project_mail     = false; // Support project mailing lists (Developers Channels)
+        $allow_access_to_project_frs      = false; // Support project file releases
+        $allow_access_to_project_refs     = false;// Support project references
+        $allow_access_to_project_news     = false; // Support project news
+       
+        // List of private projects 
+        $private_projects = array(); 
+
+        foreach ($forbidden_url as $str) {
+            $pos = strpos($req_uri,$str);
+            if ($pos === false) {
+                // Not found
+            } else {
+                if ($pos == 0) {
+                    // beginning of string
+                    return false;
+                }
+            }
+        }
+
+        // Welcome page
+        if (!$allow_welcome_page) {
+            $sc_name='/'.trim($script_name, "/");
+            if ($sc_name == '/index.php') {
+                return false;
+            }
+        }
+
+        
+        // Forbid access to other user's page (Developer Profile)
+        if ((strpos($req_uri,'/users/') !== false)&&(!$allow_user_browsing)) {
+            if ($req_uri != '/users/'.user_getname())
+                return false;
+        }
+
+
+        // Get group_id for project pages that don't have it
+        // /projects/ and /viewvc/
+        if ((strpos($req_uri,'/projects/') !== false)||(strpos($req_uri,'/viewvc.php/') !== false)){
+            // Check that the user is a member of this project
+            if (strpos($req_uri,'/projects/') !== false){
+                $pieces = explode("/", $request_uri);
+                $this_proj_name=$pieces[2];
+            } else if (strpos($req_uri,'/viewvc.php/') !== false) {
+                preg_match("/root=([a-zA-Z0-9_-]+)/",$req_uri, $matches);
+                $this_proj_name=$matches[1];
+            }
+            $res_proj=db_query("SELECT group_id FROM groups WHERE unix_group_name='".db_es($this_proj_name)."'");
+            if (db_numrows($res_proj) < 1) { # project does not exist
+                return false;
+            }
+            $group_id=db_result($res_proj,0,'group_id');
+        }
+        
+         // File downloads. It might be a good idea to restrict access to shownotes.php too...
+        if (strpos($req_uri,'/file/download.php') !== false) {
+            list(,$group_id, $file_id) = explode('/', $GLOBALS['PATH_INFO']);
+        }
+        
+        // Now check special cases
+        $user_is_allowed=false;
+        
+        // Forum and news. Each published news is a special forum of project 'news'
+        if (strpos($req_uri,'/forum/') !== false) {
+            if (array_key_exists('forum_id', $_REQUEST) && $_REQUEST['forum_id']) {
+                // Get corresponding project
+                $result=db_query("SELECT group_id FROM forum_group_list WHERE group_forum_id='".db_es($_REQUEST['forum_id'])."'");
+                $group_id=db_result($result,0,'group_id');
+                // News
+                if ($group_id==$GLOBALS['sys_news_group']) {
+                    if ($allow_news_browsing) {
+                    	$user_is_allowed=true;
+                    } else {
+                        // Otherwise, get group_id of corresponding news
+                        $result=db_query("SELECT group_id FROM news_bytes WHERE forum_id='".db_es($_REQUEST['forum_id'])."'");
+                        $group_id=db_result($result,0,'group_id');
+                        if (isset($allow_access_to_project_news[$group_id])) $user_is_allowed=true;
+                    }
+                }
+                // Support project forums
+                if (isset($allow_access_to_project_forums[$group_id])) {
+                    $user_is_allowed=true;
+                }
+            }
+            elseif (array_key_exists('group_id', $_REQUEST) &&
+                    $_REQUEST['group_id'] &&
+                    isset($allow_access_to_project_forums[$group_id])) {
+                $user_is_allowed=true;
+            }
+        }
+        
+        // Artifact attachment download...
+        if (strpos($req_uri,'/tracker/download.php') !== false) {
+            if (isset($_REQUEST['artifact_id'])) {
+                $result=db_query("SELECT group_id FROM artifact_group_list,artifact WHERE artifact.group_artifact_id=artifact_group_list.group_artifact_id AND artifact.artifact_id="
+                                 .db_ei($_REQUEST['artifact_id']));
+                $group_id=db_result($result,0,'group_id');
+            }
+        }
+
+        // Codendi trackers
+        if (strpos($req_uri,'/tracker/') !== false && 
+            isset($allow_access_to_project_trackers[$group_id])) {
+            $user_is_allowed=false;
+        }
+
+        // Codendi documents and wiki
+        if (((strpos($req_uri,'/docman/') !== false) || 
+            (strpos($req_uri,'/plugins/docman/') !== false) ||
+            (strpos($req_uri,'/wiki/') !== false)) &&
+            isset($allow_access_to_project_docs[$group_id])) {
+            $user_is_allowed=false;
+           
+        }
+
+        // Codendi mailing lists page
+        if (strpos($req_uri,'/mail/') !== false &&
+            isset($allow_access_to_project_mail[$group_id])) {
+            $user_is_allowed=false;
+        }
+        
+        // Codendi file releases
+        if (strpos($req_uri,'/file/') !== false &&
+            isset($allow_access_to_project_frs[$group_id])) {
+            $user_is_allowed=false;
+        }
+
+        // References
+        if (strpos($req_uri,'/goto') !== false &&
+            isset($allow_access_to_project_refs[$group_id])) {
+            $user_is_allowed=false;
+        }
+
+        // Now check group_id
+        if (isset($group_id)) { 
+            if (!$user_is_allowed) { 
+                if ((!user_ismember($group_id))
+                    &&(!isset($private_projects[$group_id]))) {
+                    return false;
+                }
+            }
+        } elseif (array_key_exists('group_id', $_REQUEST)) {
+            if (!$user_is_allowed) {
+                if ((!user_ismember($_REQUEST['group_id']))
+                    &&(!isset($private_projects[$_REQUEST['group_id']])))  {
+                    return false;
+                }
+            }
+        }
+    } 
+        
+    return true;
+}
 
 /**
  * checkRestrictedAccess - check that a restricted user can access the current URL.
@@ -1213,7 +1403,9 @@ function util_check_restricted_access($request_uri, $script_name) {
     // Currently, we don't restrict access to 'shownotes.php' and to tracker file attachment downloads
 
     if (user_isrestricted()) {
-        if (isset($GLOBALS['group_id'])) { $group_id=$GLOBALS['group_id']; }
+        if (isset($GLOBALS['group_id'])) { 
+            $group_id=$GLOBALS['group_id']; 
+        }
 
         // Make sure the URI starts with a single slash
         $req_uri='/'.trim($request_uri, "/");
