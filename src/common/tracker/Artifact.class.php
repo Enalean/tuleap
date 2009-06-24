@@ -651,6 +651,9 @@ class Artifact extends Error {
     function addFollowUpComments($parsed_comments,&$changes) {
     	global $Language;
 
+        $art_field_fact = new ArtifactFieldFactory($this->ArtifactType);
+        $artifact_import = new ArtifactImport($this->ArtifactType, $art_field_fact, $this->ArtifactType->Group);
+        
       	while (list(,$arr) = each($parsed_comments)) {        
 		  	$by = $arr['by'];
 			if ($by == "100") {
@@ -665,11 +668,13 @@ class Artifact extends Error {
 				$email = $by;
 				$user_id = 100;
 			}	
-		
-			$sql="insert into artifact_history(artifact_id,field_name,old_value,new_value,mod_by,email,date,type) ".
-		    	"VALUES (". db_ei($this->getID()) .",'comment','','". db_es($arr['comment']) ."','". db_ei($user_id) ."','". db_es($email) ."','". db_ei($arr['date']) ."','". db_ei($arr['type']) ."')";
+            
+            if ( ! $artifact_import->checkCommentExist($arr, $this->getID())) {
+                $sql="insert into artifact_history(artifact_id,field_name,old_value,new_value,mod_by,email,date,type) ".
+		    	    "VALUES (". db_ei($this->getID()) .",'comment','','". db_es($arr['comment']) ."','". db_ei($user_id) ."','". db_es($email) ."','". db_ei($arr['date']) ."','". db_ei($arr['type']) ."')";
 				
-		    db_query($sql);
+                db_query($sql);
+            }
 
 		}
 		
@@ -783,10 +788,12 @@ class Artifact extends Error {
                 return false;
             }                    
             if (! $masschange && $field->isMultiSelectBox()) {
-                foreach ($value as $a_value) {
-                    if ($a_value != 100 && ! $field->checkValueInPredefinedValues($this->ArtifactType->getID(), $a_value)) {
-                        $this->setError($Language->getText('tracker_common_artifact','bad_field_value', array($field->getLabel(), $value)));
-                        return false;
+                if (is_array($value)) {
+                    foreach ($value as $a_value) {
+                        if ($a_value != 100 && ! $field->checkValueInPredefinedValues($this->ArtifactType->getID(), $a_value)) {
+                            $this->setError($Language->getText('tracker_common_artifact','bad_field_value', array($field->getLabel(), $value)));
+                            return false;
+                        }
                     }
                 }
             }
@@ -2656,7 +2663,7 @@ class Artifact extends Error {
                         $Language->getText('tracker_import_utils','date').": %-30s".$Language->getText('global','by').": %s". $GLOBALS['sys_lf'] ."%s";
                     $comment_txt = util_unconvert_htmlspecialchars(db_result($result, $i, 'new_value'));
                     $out .= sprintf($fmt,
-                                    format_date($GLOBALS['sys_datefmt'],db_result($orig_date, 0, 'date')),
+                                    format_date(util_get_user_preferences_export_datefmt(),db_result($orig_date, 0, 'date')),
                                     (db_result($orig_subm, 0, 'mod_by')==100?db_result($orig_subm, 0, 'email'):user_getname(db_result($orig_subm, 0, 'mod_by'))),
                                     ($comment_type != '' ? $comment_type.$GLOBALS['sys_lf'] : '') . $comment_txt
                                     );

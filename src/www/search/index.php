@@ -459,7 +459,7 @@ if ($type_of_search == "soft") {
 	$array=explode(" ",$words);
 	$words1=implode($array,"%' $crit artifact.details LIKE '%");
 	$words2=implode($array,"%' $crit artifact.summary LIKE '%");
-	$words3=implode($array,"%' $crit artifact_history.old_value LIKE '%");
+	$words3=implode($array,"%' $crit artifact_history.new_value LIKE '%");
 
 	$sql =	"SELECT artifact.artifact_id,artifact.summary,artifact.open_date,user.user_name "
 		. "FROM artifact "
@@ -470,7 +470,7 @@ if ($type_of_search == "soft") {
 		. "    AND ((artifact.details LIKE '%$words1%') "
 		. "      OR (artifact.summary LIKE '%$words2%') "
 		. "      OR (artifact_history.field_name='comment' "
-		. "          AND (artifact_history.old_value LIKE '%$words3%'))) "
+		. "          AND (artifact_history.new_value LIKE '%$words3%'))) "
 		. "GROUP BY open_date DESC LIMIT $offset,999999999";
 
 	$result = db_query($sql);
