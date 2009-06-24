@@ -92,7 +92,7 @@ class LDAPResultIterator /*implements Iterator*/ {
      *
      * @param $pos int
      */
-    function &get($pos) {
+    function get($pos) {
         $this->seek($pos);
         if($this->valid) {
             return $this->current();
@@ -107,7 +107,7 @@ class LDAPResultIterator /*implements Iterator*/ {
      *
      * @return LDAPResult or false
      */
-    function &iterate() {
+    function iterate() {
         if($this->valid()) {
             $res =& $this->current();
             $this->next();
@@ -146,7 +146,7 @@ class LDAPResultIterator /*implements Iterator*/ {
      * 
      * @return LDAPResult
      */
-    function &current() {
+    function current() {
         return new LDAPResult($this->list[$this->key]);
     }
 

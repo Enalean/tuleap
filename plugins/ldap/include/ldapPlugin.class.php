@@ -202,8 +202,12 @@ class LdapPlugin extends Plugin {
                     }
                 }      
                 else {
-                    // @todo: transfert to plugin site-content
-                    $GLOBALS['feedback'] .= $Language->getText('include_session','invalid_ldap_name') .'. ';
+                    if (! $ldap->isError()) {
+                        // @todo: transfert to plugin site-content
+                        $GLOBALS['feedback'] .= $Language->getText('include_session','invalid_ldap_name') .'. ';
+                    } else {
+                        $GLOBALS['feedback'] .= $ldap->getErrorMessage().". ";
+                    }
                 }
             }
             else {
@@ -537,8 +541,7 @@ class LdapPlugin extends Plugin {
         //OUT $params['allow']
         $um =& UserManager::instance();
         $user =& $um->getCurrentUser();
-        $user_info = $user->data_array;
-        if ($GLOBALS['sys_auth_type'] == 'ldap' && $user_info['ldap_id'] != '') {
+        if ($GLOBALS['sys_auth_type'] == 'ldap' && $user->getLdapId() != '') {
             $params['allow']=false;
         }
     }

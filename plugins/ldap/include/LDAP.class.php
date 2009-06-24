@@ -184,7 +184,7 @@ class LDAP extends Error {
 
     // Search the LDAP directory with the given DN and filter.
     // @return array of result entries
-    function &search($dn,$filter,$args=null) {
+    function search($dn,$filter,$args=null) {
         global $Language;
         if (!$this->connect()) {
             $this->setError($Language->getText('ldap_class','err_cant_connect'));
@@ -222,7 +222,7 @@ class LDAP extends Error {
      * @param $filter string LDAP filter
      * @return LDAPResultIterator
      */
-    function &asearch($filter, $args=null) {
+    function asearch($filter, $args=null) {
         return new LDAPResultIterator($this->search($GLOBALS['sys_ldap_dn'], $filter, $args));    
     }
 
@@ -234,7 +234,7 @@ class LDAP extends Error {
      * @param $name string login
      * @return LDAPResultIterator
      */    
-    function &searchLogin($name) {
+    function searchLogin($name) {
         if ($GLOBALS['sys_ldap_auth_filter']) {
             $ldap_filter = $GLOBALS['sys_ldap_auth_filter'];
         } else {
@@ -253,7 +253,7 @@ class LDAP extends Error {
      * @param $name string LDAP Id
      * @return LDAPResultIterator
      */  
-    function &searchEdUid($name) {
+    function searchEdUid($name) {
         if ($GLOBALS['sys_ldap_eduid_filter']) {
             $ldap_filter = $GLOBALS['sys_ldap_eduid_filter'];
         } else {
@@ -271,7 +271,7 @@ class LDAP extends Error {
      * @param $name string
      * @return LDAPResultIterator
      */  
-    function &searchUser($words) {
+    function searchUser($words) {
         if(array_key_exists('sys_ldap_search_user', $GLOBALS)) {
             $ldap_filter = $GLOBALS['sys_ldap_search_user'];
         }
