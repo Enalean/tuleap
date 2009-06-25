@@ -89,7 +89,8 @@ class Docman_WikiController extends Docman_Controller {
         require_once 'Docman_PermissionsManager.class.php';
         $dPM =& Docman_PermissionsManager::instance($group_id);
 
-        $references = $this->_getDocmanReferences($wiki_page, $group_id);
+        $item_factory =& $this->_getItemFactory();
+        $references = $item_factory->getWikiPageReferencers($wiki_page, $group_id);
 
         require_once 'common/user/UserManager.class.php';
         $uM =& UserManager::instance();
@@ -108,10 +109,11 @@ class Docman_WikiController extends Docman_Controller {
 
     function wikiPageUpdated() {
         $event_manager =& $this->_getEventManager();
+        $item_factory =& $this->_getItemFactory();
         
         $wiki_page = $this->request->get('wiki_page');
         $group_id = $this->request->get('group_id');
-        $documents = $this->_getDocmanReferences($wiki_page, $group_id);
+        $documents = $item_factory->getWikiPageReferencers($wiki_page, $group_id);
         $item_dao =& new Docman_ItemDao(CodexDataAccess::instance());
         foreach($documents as $key => $document) {
             // Update the item's update date attribute.
@@ -139,24 +141,6 @@ class Docman_WikiController extends Docman_Controller {
             $this->actionsManagement();
         }
         return $this->viewsManagement();
-    }
-
-    function _getDocmanReferences($wiki_page, $group_id) {
-        $items = array();
-        $item_dao =& $this->_getItemDao();
-        if($item_dao->isWikiPageReferenced($wiki_page, $group_id)) {
-            $items_ids = $item_dao->getItemIdByWikiPageAndGroupId($wiki_page, $group_id);
-            $item_factory =& $this->_getItemFactory();
-            if(is_array($items_ids)){
-                foreach($items_ids as $key => $id) {
-                    $items[] =& $item_factory->getItemFromDb($id);
-                }
-            }
-            else {
-                $items[] =& $item_factory->getItemFromDb($items_ids);
-            }
-        }
-        return $items;
     }
 
     function wiki_before_content() {
