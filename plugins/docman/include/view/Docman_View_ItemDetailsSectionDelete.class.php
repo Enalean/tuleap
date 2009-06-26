@@ -33,12 +33,16 @@ class Docman_View_ItemDetailsSectionDelete extends Docman_View_ItemDetailsSectio
     }
     function getContent() {
         $folder_or_document = is_a($this->item, 'Docman_Folder') ? 'folder' : (is_a($this->item, 'Docman_File') ? 'file' : 'document');
+        $item_type = $this->_controller->_getItemFactory()->getItemTypeForItem($this->item);
         
         $content = '';
         $content .= '<dl><dt>'. $GLOBALS['Language']->getText('plugin_docman', 'details_actions_delete') .'</dt><dd>';
         $content .= '<form action="'. $this->url .'" method="POST">';
         $content .= '<div class="docman_confirm_delete">';
         $content .= $GLOBALS['Language']->getText('plugin_docman', 'details_delete_warning_'.$folder_or_document,  $this->hp->purify($this->item->getTitle(), CODEX_PURIFIER_CONVERT_HTML) );
+        if($item_type == PLUGIN_DOCMAN_ITEM_TYPE_WIKI) {
+            $content .= $this->getWikiDeleteInfo();
+        }
         $content .= '<div class="docman_confirm_delete_buttons">';
         if ($this->token) {
             $content .= '<input type="hidden" name="token" value="'. $this->token .'" />';
@@ -53,6 +57,65 @@ class Docman_View_ItemDetailsSectionDelete extends Docman_View_ItemDetailsSectio
         $content .= '</form>';
         $content .= '</dd></dl>';
         return $content;
+    }
+
+    function getWikiDeleteInfo() {
+        $output = '';
+        $output .= $GLOBALS['Language']->getText('plugin_docman', 'details_delete_warning_wiki');
+
+        // List of other possible referencers.
+        $pagename = $this->item->getPagename();
+        $referencers = $this->_controller->_getItemFactory()->getWikiPageReferencers($pagename, $this->item->getGroupId());
+        if(is_array($referencers) && count($referencers) > 1) {
+            $output .= $GLOBALS['Language']->getText('plugin_docman', 'details_delete_wiki_impact_on_documents');
+            $output .= '<div id="other_referencers">';
+            foreach($referencers as $key => $doc) {
+                if($this->item->getId() != $doc->getId()) {
+                    $output .= $this->getDocumentPath($doc);
+                }
+            }
+            $output .= '</div>';
+        }
+
+        $output .= '<p><input type="checkbox" id="cascade_to_wiki" name="cascade_to_wiki"/>';
+        $output .= '<label for="cascade_to_wiki">';
+        $output .= $GLOBALS['Language']->getText('plugin_docman', 'docman_wiki_delete_cascade');
+        $output .= '</label></p>';
+        
+        return $output;
+    }
+
+    function getDocumentPath($item) {
+        $parents = array();
+        $html = '';
+        $hp = CodeX_HTMLPurifier::instance();
+
+        $reference = $item;
+
+        while ($item && $item->getParentId() != 0) {
+            $item = $this->_controller->_getItemFactory()->getItemFromDb($item->getParentId());
+            $parents[] = array(
+                'id'    => $item->getId(),
+                'title' => $item->getTitle()
+            );
+        }
+        $parents = array_reverse($parents);
+        $item_url = '/plugins/docman/?group_id=' . $item->getGroupId() . '&sort_update_date=0&action=show&id=';
+        foreach($parents as $parent) {
+            $html .= '<a href="'. $item_url. $parent['id']. '">'. $parent['title']. '</a>';
+            $html .= ' / ';
+        }
+
+        $md_uri = '/plugins/docman/?group_id=' . $item->getGroupId() . '&action=details&id=' . $item->getId();
+
+        //Add a pen icon linked to document properties.
+        $pen_icon = '<a href="'. $md_uri . '"><img src="' . util_get_image_theme("ic/edit.png") . '" /></a>';
+
+        $html .= '<a href="'. $item_url . $reference->getId() . '">'. $reference->getTitle() . '</a>';
+        $html .= $pen_icon;
+        $html .= '<br>';
+
+        return $html;
     }
 }
 ?>
