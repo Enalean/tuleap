@@ -71,6 +71,11 @@ class ArtifactImport extends Error {
    var $submitted_on_column;
    
    /** information parsed from the import file
+    * the column in the csv file that contains the artifact last modified date
+    */
+   var $last_update_date_column;
+   
+   /** information parsed from the import file
     * array of the form (column_number => field_label) containing
     * all the fields in the parsed csv file
     */
@@ -105,6 +110,7 @@ class ArtifactImport extends Error {
     $this->aid_column = -1;
     $this->submitted_by_column = -1;
     $this->submitted_on_column = -1;
+    $this->last_update_date_column = -1;
     $this->parsed_labels = array();
   }
 
@@ -158,7 +164,7 @@ function getUsedFields() {
     $used_fields[$this->lbl_list['add_cc']] = "";
     $used_fields[$this->lbl_list['cc_comment']] = "";
     
-    //special cases for submitted by and submitted on that can be set
+    //special cases for submitted by, submitted on and last_update_date that can be set
     //"unused" by the user but that will nevertheless be used by Codendi
     $submitted_by_field = $this->art_field_fact->getFieldFromName('submitted_by');
     $submitted_by_label = $submitted_by_field->getLabel();
@@ -169,7 +175,12 @@ function getUsedFields() {
     $open_date_label = $open_date_field->getLabel();
     if (array_key_exists($open_date_label, $used_fields) === false)
       $used_fields[$open_date_label] = $open_date_field; 
-    
+  
+    $last_update_date_field = $this->art_field_fact->getFieldFromName("last_update_date");
+    $last_update_date_label = $last_update_date_field->getLabel();
+    if (array_key_exists($last_update_date_label, $used_fields) === false)
+      $used_fields[$last_update_date_label] = $last_update_date_field;
+  
     return $used_fields;
   }
 
@@ -198,6 +209,7 @@ function getUsedFields() {
 	if ($field_name == "artifact_id") $this->aid_column = $c; 
 	if ($field_name == "submitted_by") $this->submitted_by_column = $c;
 	if ($field_name == "open_date") $this->submitted_on_column = $c;
+    if ($field_name == "last_update_date") $this->last_update_date_column = $c;
       }
       $this->parsed_labels[$c] = $field_label;
       
@@ -223,6 +235,7 @@ function getUsedFields() {
 	  $field_name = $field->getName();
 	  if ($field_name != "artifact_id" &&
 	      $field_name != "open_date" &&
+          $field_name != "last_update_date" &&
 	      $field_name != "submitted_by" &&
 	      $label != $this->lbl_list['follow_ups'] &&
 	      $label != $this->lbl_list['is_dependent_on'] &&
@@ -321,10 +334,11 @@ function getUsedFields() {
       if ($field && !$field->isEmptyOk() &&
 	  $field_name != "artifact_id") {
 	if ($field_name == "submitted_by" ||
-	    $field_name == "open_date") {
-	  //submitted on and submitted by are accepted as "" on inserts and
+	    $field_name == "open_date" ||
+        $field_name == "last_update_date") {
+	  //submitted on, submitted by and last modified on are accepted as "" on inserts and
 	  //we put time() importing user as default
-	} else {
+    } else {
 	  
 	  $is_empty = ( ($field->isSelectBox() || $field->isMultiSelectBox()) ? ($val==$Language->getText('global','none')) : ($val==''));
 
@@ -382,6 +396,7 @@ function getUsedFields() {
 	if ($field) {
           if ($field_name != "artifact_id" &&
               $field_name != "open_date" &&
+              $field_name != "last_update_date" &&
               $field_name != "submitted_by" &&
               $label != $this->lbl_list['follow_ups'] &&
               $label != $this->lbl_list['is_dependent_on'] &&
