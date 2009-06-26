@@ -675,3 +675,5 @@ plugin_docman	docman_wiki_other_locations	Other locations:
 plugin_docman	docman_wiki_breadcrumbs_locations	Locations:
 plugin_docman	docman_wiki_perms_label	Permissions controlled by documents manager
 plugin_docman	docman_wiki_delete_cascade	Cascade deletion to wiki service
+plugin_docman	docman_wiki_delete_wiki_page_success	Wiki page successfully deleted from wiki service.
+plugin_docman	docman_wiki_delete_wiki_page_failed	Error while trying to delete the wiki page from wiki service.

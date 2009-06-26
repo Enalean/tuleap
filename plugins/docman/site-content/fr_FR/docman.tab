@@ -673,3 +673,5 @@ plugin_docman	docman_wiki_other_locations	Autres chemins:
 plugin_docman	docman_wiki_breadcrumbs_locations	Chemins:
 plugin_docman	docman_wiki_perms_label	Permissions controllées par le gestionnaire de documents
 plugin_docman	docman_wiki_delete_cascade	Propager la suppression au service wiki
+plugin_docman	docman_wiki_delete_wiki_page_success	Page wiki supprimé du service wiki avec succès.
+plugin_docman	docman_wiki_delete_wiki_page_failed	Erreur lors de la suppression de la page wiki à partir du service wiki.

@@ -71,7 +71,7 @@ class Docman_View_ItemDetailsSectionDelete extends Docman_View_ItemDetailsSectio
             $output .= '<div id="other_referencers">';
             foreach($referencers as $key => $doc) {
                 if($this->item->getId() != $doc->getId()) {
-                    $output .= $this->getDocumentPath($doc);
+                    $output .= $this->getWikiDocumentPath($doc);
                 }
             }
             $output .= '</div>';
@@ -85,7 +85,7 @@ class Docman_View_ItemDetailsSectionDelete extends Docman_View_ItemDetailsSectio
         return $output;
     }
 
-    function getDocumentPath($item) {
+    function getWikiDocumentPath($item) {
         $parents = array();
         $html = '';
         $hp = CodeX_HTMLPurifier::instance();

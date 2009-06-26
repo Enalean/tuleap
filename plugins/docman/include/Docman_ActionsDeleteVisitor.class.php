@@ -66,9 +66,19 @@ class Docman_ActionsDeleteVisitor /* implements Visitor */ {
     function visitWiki(&$item, $params = array()) {
         // delete the document.
         $deleted = $this->visitDocument($item, $params);
+
         if($deleted) {
-            // grant a wiki permission only to wiki admins on the corresponding wiki page.
-            $this->restrictAccess($item, $params);
+            if(!$params['cascade']) {
+                // grant a wiki permission only to wiki admins on the corresponding wiki page.
+                $this->restrictAccess($item, $params);
+            } else { // User have choosen to delete wiki page from wiki service too
+                $dIF =& $this->_getItemFactory();
+                if($dIF->deleteWikiPage($item->getPageName(), $item->getGroupId())){
+                    $this->docman->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'docman_wiki_delete_wiki_page_success'));
+                } else {
+                    $this->docman->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'docman_wiki_delete_wiki_page_failed'));
+                }
+            }
         }
         return $deleted;
     }
