@@ -3125,7 +3125,7 @@ function addArtifactDependencies($sessionKey, $group_id, $group_artifact_id, $ar
             return new SoapFault(get_artifact_fault,$a->getErrorMessage(),'addArtifactDependencies');
         }
         
-        if (!$a->addDependencies($is_dependent_on_artifact_ids,&$changes,false)) {
+        if (!$a->addDependencies($is_dependent_on_artifact_ids,&$changes,false, false)) {
             if (!isset($changes) || !is_array($changes) || count($changes) == 0) {
                 return new SoapFault(add_dependency_fault, 'Dependencies addition for artifact #'.$a->getID().' failed', 'addArtifactDependencies');
             }

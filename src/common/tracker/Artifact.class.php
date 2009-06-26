@@ -1028,11 +1028,17 @@ class Artifact extends Error {
         //
         
 	    if ($import && $artifact_id_dependent) {
-			if (!$this->deleteAllDependencies()) return false;
-			if ($artifact_id_dependent == $Language->getText('global','none')) unset($artifact_id_dependent);
+			if (!$this->deleteAllDependencies()) {
+                return false;
+            }
+			if ($artifact_id_dependent == $Language->getText('global','none')) {
+                unset($artifact_id_dependent);
+            }
 	    }
-        if (!$this->addDependencies($artifact_id_dependent,$changes,$masschange)) {
-            return false;
+        if (isset($artifact_id_dependent)) {
+            if (!$this->addDependencies($artifact_id_dependent,$changes,$masschange, $import)) {
+                return false;
+            }
         }
                 
         //
@@ -1347,7 +1353,7 @@ class Artifact extends Error {
      *
      * @return boolean
      */
-    function addDependencies($artifact_id_dependent,&$changes,$masschange) {
+    function addDependencies($artifact_id_dependent,&$changes,$masschange, $import = false) {
         global $Language;
         
         if ( !$artifact_id_dependent ) 
@@ -1365,8 +1371,11 @@ class Artifact extends Error {
             
             // Check existance
             if (!$this->validArtifact($id)) {
-                $ok = false;
-                $GLOBALS['Response']->addFeedback('error', $Language->getText('tracker_common_artifact','invalid_art',$id));
+                // at import stage, $id can have value "None" or "Aucun"
+                if ( ! $import || $id != $Language->getText('global','none')) {
+                    $ok = false;
+                    $GLOBALS['Response']->addFeedback('error', $Language->getText('tracker_common_artifact','invalid_art',$id));
+                }
             }
             if ($ok && ($id != $this->getID()) && !$this->existDependency($id)) {
                 $res = $this->insertDependency($id);

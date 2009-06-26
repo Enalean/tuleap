@@ -1023,7 +1023,7 @@ function getUsedFields() {
     }
     //handle dependencies and such stuff ...
     if ($artifact_depend_id) {
-      if (!$ah->addDependencies($artifact_depend_id,$changes,false)) {
+      if (!$ah->addDependencies($artifact_depend_id,$changes,false, true)) {
 	$errors .= $Language->getText('tracker_import_utils','problem_insert_dependent',$ah->getID())." ";
 	//return false;
       }
@@ -1075,7 +1075,7 @@ function getUsedFields() {
       return;
     }
     
-
+    
     $vfl = $this->prepareVfl($data,$artifact_depend_id,$add_cc,$cc_comment,$comments);
 
     //data control layer
