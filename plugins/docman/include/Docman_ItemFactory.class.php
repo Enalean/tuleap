@@ -215,8 +215,7 @@ class Docman_ItemFactory {
            && $wiki_dao->deleteWikiPageVersion($id_in_wiki)
            && $wiki_dao->deleteLinksFromToWikiPage($id_in_wiki)
            && $wiki_dao->deleteWikiPageFromNonEmptyList($id_in_wiki)
-           && $wiki_dao->deleteWikiPageRecentInfos($id_in_wiki)
-           && $wiki_dao->deleteWikiPageLog($wiki_page, $group_id)) {
+           && $wiki_dao->deleteWikiPageRecentInfos($id_in_wiki)) {
             return true;
         } else {
             return false;   

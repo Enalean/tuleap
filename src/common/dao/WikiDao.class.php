@@ -151,19 +151,5 @@ class WikiDao extends DataAccessObject {
                     ' WHERE id=%d', $id);
         return $this->update($sql);
     }
-
-    /**
-     * Deletes all log infos related to wiki page identified by  its name and group_id.
-     *
-     * @param string $pagename Name of the wiki page.
-     * @param int $group_id project id.
-     * @return true if there is no error
-     */
-    function deleteWikiPageLog($pagename, $group_id) {
-        $sql = sprintf('DELETE FROM wiki_log'.
-                    ' WHERE pagename=%s'.
-                    ' AND group_id=%d', $this->da->quoteSmart($pagename), $group_id);
-        return $this->update($sql);
-    }
 }
 ?>
