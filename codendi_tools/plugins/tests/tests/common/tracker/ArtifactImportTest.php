@@ -96,6 +96,15 @@ class ArtifactImportTest extends UnitTestCase {
       $submitted_on->setReturnValue('isSelectBox',false);
       $submitted_on->setReturnValue('isMultiSelectBox',false);
 
+      $last_update_date = new ArtifactFieldImportVersion($this);
+      $last_update_date->setReturnValue('getLabel','Last Modified On');
+      $last_update_date->setReturnValue('getName','last_update_date');
+      $last_update_date->setReturnValue('isEmptyOk',false);
+      $last_update_date->setReturnValue('getDisplayType','DF');
+      $last_update_date->setReturnValue('isDateField',true);
+      $last_update_date->setReturnValue('isSelectBox',false);
+      $last_update_date->setReturnValue('isMultiSelectBox',false);
+
       $artifact_id = new ArtifactFieldImportVersion($this);
       $artifact_id->setReturnValue('getLabel','Artifact Id');
       $artifact_id->setReturnValue('getName','artifact_id');
@@ -138,6 +147,7 @@ class ArtifactImportTest extends UnitTestCase {
       $atf->setReturnValue('getAllUsedFields',array($submitted_by,$submitted_on,$artifact_id,$comment_type_id,$assigned_to,$orig_subm));
       $atf->setReturnValue('getFieldFromName',$submitted_by,array('submitted_by'));
       $atf->setReturnValue('getFieldFromName',$submitted_on,array('open_date'));
+      $atf->setReturnValue('getFieldFromName',$last_update_date,array('last_update_date'));
       $atf->setReturnValue('getFieldFromName',$artifact_id,array('artifact_id'));
       $atf->setReturnValue('getFieldFromName',$assigned_to,array('assigned_to'));
       $atf->setReturnValue('getFieldFromName',$comment_type_id,array('comment_type_id'));
@@ -210,6 +220,7 @@ class ArtifactImportTest extends UnitTestCase {
       $atf->setReturnValue('getAllUsedFields',array($submitted_by,$submitted_on,$artifact_id,$comment_type_id,$assigned_to,$orig_subm,$mbox_field,$sbox_field));
       $atf->setReturnValue('getFieldFromName',$submitted_by,array('submitted_by'));
       $atf->setReturnValue('getFieldFromName',$submitted_on,array('open_date'));
+      $atf->setReturnValue('getFieldFromName',$last_update_date,array('last_update_date'));
       $atf->setReturnValue('getFieldFromName',$artifact_id,array('artifact_id'));
       $atf->setReturnValue('getFieldFromName',$assigned_to,array('assigned_to'));
       $atf->setReturnValue('getFieldFromName',$comment_type_id,array('comment_type_id'));
@@ -284,6 +295,7 @@ class ArtifactImportTest extends UnitTestCase {
       $aff->setReturnValue('getAllUsedFields',array());
       $aff->setReturnValue('getFieldFromName',$submitted_by,array('submitted_by'));
       $aff->setReturnValue('getFieldFromName',$submitted_on,array('open_date'));
+      $aff->setReturnValue('getFieldFromName',$last_update_date,array('last_update_date'));
 
       $test = new ArtifactImport($at,$aff,'group');
       $test->parseFieldNames(array('Follow-up Comments'));
