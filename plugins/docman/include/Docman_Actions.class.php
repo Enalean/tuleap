@@ -842,7 +842,7 @@ class Docman_Actions extends Actions {
         $_sGroupId = (int) $request->get('group_id');
         $_sId      = (int) $request->get('id');
 
-        if($request->exist('cascade_to_wiki') && $request->get('cascade_to_wiki') == 'on'){
+        if($request->exist('cascadeWikiPageDeletion') && $request->get('cascadeWikiPageDeletion') == 'on'){
             $cascade = true;
         } else {
             $cascade = false;
@@ -863,7 +863,7 @@ class Docman_Actions extends Actions {
                     $deletor =& new Docman_ActionsDeleteVisitor($this->_getFileStorage(), $this->_controler);
                     if ($item->accept($deletor, array('user'  => &$user, 
                                                     'parent'  => $itemFactory->getItemFromDb($item->getParentId()),
-                                                    'cascade' => $cascade))) {
+                                                    'cascadeWikiPageDeletion' => $cascade))) {
                         $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'info_item_deleted'));
                     }
                 }

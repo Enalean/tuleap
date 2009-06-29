@@ -63,12 +63,23 @@ class Docman_ActionsDeleteVisitor /* implements Visitor */ {
         //Mark the document as deleted
         return $this->_deleteItem($item, $params);
     }
+
+    /**
+    * Handles wiki page deletion with two different behaviors:
+    * 1- User decides to keep wiki page in wiki service. In this case, we restrict access to that wiki page to wiki admins only.
+    * 2- User decides to cascade deletion of the wiki page to wiki service too. In that case, we completely remove the wiki page from wiki service.
+    *
+    * @param Docman_Item $item
+    * @param array $params params.
+    *
+    * @return boolean $deleted. True if there is no error.  False otherwise.
+    */
     function visitWiki(&$item, $params = array()) {
         // delete the document.
         $deleted = $this->visitDocument($item, $params);
 
         if($deleted) {
-            if(!$params['cascade']) {
+            if(!$params['cascadeWikiPageDeletion']) {
                 // grant a wiki permission only to wiki admins on the corresponding wiki page.
                 $this->restrictAccess($item, $params);
             } else { // User have choosen to delete wiki page from wiki service too

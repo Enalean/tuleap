@@ -77,8 +77,8 @@ class Docman_View_ItemDetailsSectionDelete extends Docman_View_ItemDetailsSectio
             $output .= '</div>';
         }
 
-        $output .= '<p><input type="checkbox" id="cascade_to_wiki" name="cascade_to_wiki"/>';
-        $output .= '<label for="cascade_to_wiki">';
+        $output .= '<p><input type="checkbox" id="cascadeWikiPageDeletion" name="cascadeWikiPageDeletion"/>';
+        $output .= '<label for="cascadeWikiPageDeletion">';
         $output .= $GLOBALS['Language']->getText('plugin_docman', 'docman_wiki_delete_cascade');
         $output .= '</label></p>';
         
