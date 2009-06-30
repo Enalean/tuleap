@@ -31,7 +31,7 @@ class Widget_MyLatestSvnCommits extends Widget {
         return $GLOBALS['Language']->getText('my_index','my_latest_svn_commit');
     }
     public function _getLinkToCommit($group_id, $commit_id) {
-        return '/svn/?func=detailrevision&amp;group_id='.$group_id.'&amp;commit_id='.$commit_id;
+        return '/svn/?func=detailrevision&amp;group_id='.$group_id.'&amp;rev_id='.$commit_id;
     }
     public function _getLinkToMore($group_id, $commiter) {
         return '/svn/?func=browse&group_id='.$group_id.'&_commiter='.$commiter;
