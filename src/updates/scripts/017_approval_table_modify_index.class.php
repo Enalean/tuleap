@@ -9,7 +9,7 @@ require_once('CodendiUpgrade.class.php');
 /**
  * Restore right column default values for approval table.
  */
-class Update_013 extends CodendiUpgrade {
+class Update_017 extends CodendiUpgrade {
 
     function _process() {
         echo $this->getLineSeparator();

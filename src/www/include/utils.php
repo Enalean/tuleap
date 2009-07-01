@@ -9,6 +9,7 @@
 
 require_once('common/reference/ReferenceManager.class.php');
 require_once('common/valid/Rule.class.php');
+require_once('common/include/URL.class.php');
 
 // Part about CSV format export
 // The separator for CSV export can differ regarding the Excel version.
@@ -1170,6 +1171,31 @@ function getStringFromServer($key) {
         }
 }
 
+/**
+ * checkPrivateAccess - prevent a registered but not member user access a private project with the current url.
+ *
+ * @param string $request_uri is the original REQUEST_URI
+ * @return true is access is granted
+ * @return false is access is forbidden
+*/
+function util_check_private_access($request_uri) {
+
+     $url = new URL();
+     $group_id =  (isset($GLOBALS['group_id'])) ? $GLOBALS['group_id'] : $url->getGroupIdFromUrl($request_uri);
+     if(isset($group_id)){
+        $pm = ProjectManager::instance();
+        $project=$pm->getProject($group_id);
+        $public_project = $project->isPublic();
+        $user = UserManager::instance()->getCurrentUser();
+        if(!$public_project && !$user->isRestricted()) {
+           
+            if (!$user->isMember($group_id)) {
+                 return false;
+            }
+         }  
+    }
+    return true;
+}
 
 /**
  * checkRestrictedAccess - check that a restricted user can access the current URL.
@@ -1182,15 +1208,18 @@ function getStringFromServer($key) {
 
 function util_check_restricted_access($request_uri, $script_name) {
     global $Language;
+    
+    $url = new URL();
+    $group_id =  (isset($GLOBALS['group_id'])) ? $GLOBALS['group_id'] : $url->getGroupIdFromUrl($request_uri);
+
     // Note:
     // Currently, we don't restrict access to 'shownotes.php' and to tracker file attachment downloads
-
-    if (user_isrestricted()) {
-        if (isset($GLOBALS['group_id'])) { $group_id=$GLOBALS['group_id']; }
-
-        // Make sure the URI starts with a single slash
+    
+    $user = UserManager::instance()->getCurrentUser();
+    if ($user->isRestricted()) {
+         // Make sure the URI starts with a single slash
         $req_uri='/'.trim($request_uri, "/");
-
+        $user_is_allowed=false;
         /* Examples of input params:
          Script: /projects, Uri=/projects/ljproj/
          Script: /survey/index.php, Uri=/survey/?group_id=101
@@ -1265,80 +1294,25 @@ function util_check_restricted_access($request_uri, $script_name) {
             }
         }
 
-        
         // Forbid access to other user's page (Developer Profile)
         if ((strpos($req_uri,'/users/') !== false)&&(!$allow_user_browsing)) {
-            if ($req_uri != '/users/'.user_getname())
-                return false;
-        }
-
-
-        // Get group_id for project pages that don't have it
-        
-        // /projects/ and /viewvc/
-        if ((strpos($req_uri,'/projects/') !== false)||(strpos($req_uri,'/viewvc.php/') !== false)){
-            // Check that the user is a member of this project
-            if (strpos($req_uri,'/projects/') !== false){
-                $pieces = explode("/", $request_uri);
-                $this_proj_name=$pieces[2];
-            } else if (strpos($req_uri,'/viewvc.php/') !== false) {
-                preg_match("/root=([a-zA-Z0-9_-]+)/",$req_uri, $matches);
-                $this_proj_name=$matches[1];
-            }
-            $res_proj=db_query("SELECT group_id FROM groups WHERE unix_group_name='".db_es($this_proj_name)."'");
-            if (db_numrows($res_proj) < 1) { # project does not exist
+            if ($req_uri != '/users/'.$user->getName()) {
                 return false;
             }
-            $group_id=db_result($res_proj,0,'group_id');
         }
-        
-        
-        // File downloads. It might be a good idea to restrict access to shownotes.php too...
-        if (strpos($req_uri,'/file/download.php') !== false) {
-            list(,$group_id, $file_id) = explode('/', $GLOBALS['PATH_INFO']);
-        }
-        
-        // Now check special cases
-        $user_is_allowed=false;
-        
+
         // Forum and news. Each published news is a special forum of project 'news'
-        if (strpos($req_uri,'/forum/') !== false) {
-            if (array_key_exists('forum_id', $_REQUEST) && $_REQUEST['forum_id']) {
-                // Get corresponding project
-                $result=db_query("SELECT group_id FROM forum_group_list WHERE group_forum_id='".db_es($_REQUEST['forum_id'])."'");
-                $group_id=db_result($result,0,'group_id');
-                // News
-                if ($group_id==$GLOBALS['sys_news_group']) {
-                    if ($allow_news_browsing) {
-                    	$user_is_allowed=true;
-                    } else {
-                        // Otherwise, get group_id of corresponding news
-                        $result=db_query("SELECT group_id FROM news_bytes WHERE forum_id='".db_es($_REQUEST['forum_id'])."'");
-                        $group_id=db_result($result,0,'group_id');
-                        if (isset($allow_access_to_project_news[$group_id])) $user_is_allowed=true;
-                    }
-                }
-                // Support project forums
-                if (isset($allow_access_to_project_forums[$group_id])) {
-                    $user_is_allowed=true;
-                }
-            }
-            elseif (array_key_exists('group_id', $_REQUEST) &&
-                    $_REQUEST['group_id'] &&
-                    isset($allow_access_to_project_forums[$group_id])) {
-                $user_is_allowed=true;
-            }
+        if (isset($allow_access_to_project_news[$group_id])) {
+            $user_is_allowed=true;
         }
         
-
-        // Artifact attachment download...
-        if (strpos($req_uri,'/tracker/download.php') !== false) {
-            if (isset($_REQUEST['artifact_id'])) {
-                $result=db_query("SELECT group_id FROM artifact_group_list,artifact WHERE artifact.group_artifact_id=artifact_group_list.group_artifact_id AND artifact.artifact_id="
-                                 .db_ei($_REQUEST['artifact_id']));
-                $group_id=db_result($result,0,'group_id');
-            }
+        if ($allow_news_browsing) {
+             $user_is_allowed=true;
         }
+                    
+        if (isset($allow_access_to_project_forums[$group_id])) {
+              $user_is_allowed=true;
+         }
 
         // Codendi trackers
         if (strpos($req_uri,'/tracker/') !== false && 
@@ -1375,14 +1349,14 @@ function util_check_restricted_access($request_uri, $script_name) {
         // Now check group_id
         if (isset($group_id)) { 
             if (!$user_is_allowed) { 
-                if ((!user_ismember($group_id))
+                if ((!$user->isMember($group_id))
                     &&(!isset($public_projects[$group_id]))) {
                     return false;
                 }
             }
         } elseif (array_key_exists('group_id', $_REQUEST)) {
             if (!$user_is_allowed) {
-                if ((!user_ismember($_REQUEST['group_id']))
+                if ((!$user->isMember($_REQUEST['group_id']))
                     &&(!isset($public_projects[$_REQUEST['group_id']])))  {
                     return false;
                 }
