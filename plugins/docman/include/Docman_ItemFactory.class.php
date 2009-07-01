@@ -201,7 +201,7 @@ class Docman_ItemFactory {
     }
 
     /**
-    * This deletes a wiki page and all its stored data and infos from codex.
+    * This deletes an existant wiki page and all its stored data and infos from codendi db.
     *
     * @param string $wiki_page name of the wiki page
     * @param int $group_id project id.
@@ -211,15 +211,19 @@ class Docman_ItemFactory {
     function deleteWikiPage($wiki_page, $group_id) {
         $wiki_dao = $this->_getWikiDao();
         $id_in_wiki = $wiki_dao->retrieveWikiPageId($wiki_page, $group_id);
-        if($wiki_dao->deleteWikiPage($id_in_wiki)
-           && $wiki_dao->deleteWikiPageVersion($id_in_wiki)
-           && $wiki_dao->deleteLinksFromToWikiPage($id_in_wiki)
-           && $wiki_dao->deleteWikiPageFromNonEmptyList($id_in_wiki)
-           && $wiki_dao->deleteWikiPageRecentInfos($id_in_wiki)) {
-            return true;
+        if($id_in_wiki !== null) {
+            if($wiki_dao->deleteWikiPage($id_in_wiki)
+                && $wiki_dao->deleteWikiPageVersion($id_in_wiki)
+                && $wiki_dao->deleteLinksFromToWikiPage($id_in_wiki)
+                && $wiki_dao->deleteWikiPageFromNonEmptyList($id_in_wiki)
+                && $wiki_dao->deleteWikiPageRecentInfos($id_in_wiki)) {
+                return true;
+            } else {
+                return false;   
+            }
         } else {
-            return false;   
-        }
+            return false;
+        } 
     }
 
     function &getItemFromDb($id, $params = array()) {
