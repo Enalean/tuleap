@@ -36,7 +36,7 @@ class GraphOnTrackers_Chart_GanttDataBuilder extends ChartDataBuilder {
         if (!$af->isStandardField()) {
             $sql = sprintf('SELECT afv.artifact_id as id,afv.valueDate as val
                             FROM artifact_field_value afv
-                            JOIN artifact_field af
+                            INNER JOIN artifact_field af
                             USING (field_id)
                             WHERE af.group_artifact_id = %d
                             AND af.field_name = "%s"
@@ -67,7 +67,7 @@ class GraphOnTrackers_Chart_GanttDataBuilder extends ChartDataBuilder {
     function getIntValues($field_name) {
         $sql = sprintf(' SELECT artifact_id as id,afv.valueInt as val
                             FROM artifact_field_value afv
-                            JOIN artifact_field af
+                            INNER JOIN artifact_field af
                             USING (field_id)
                             WHERE af.group_artifact_id = %d
                             AND af.field_name = "%s"
@@ -89,7 +89,7 @@ class GraphOnTrackers_Chart_GanttDataBuilder extends ChartDataBuilder {
     function getFloatValues($field_name) {
         $sql = sprintf(' SELECT artifact_id as id,afv.valueFloat as val
                             FROM artifact_field_value afv
-                            JOIN artifact_field af
+                            INNER JOIN artifact_field af
                             USING (field_id)
                             WHERE af.group_artifact_id = %d
                             AND af.field_name = "%s"
@@ -120,9 +120,9 @@ class GraphOnTrackers_Chart_GanttDataBuilder extends ChartDataBuilder {
         if ((!$af->isStandardField()) && (!$af->isUsername())) {
             $sql = sprintf('SELECT artifact_id as id,afvl.value as val
                             FROM artifact_field_value afv
-                            JOIN artifact_field af
+                            INNER JOIN artifact_field af
                             USING (field_id)
-                            JOIN artifact_field_value_list afvl
+                            INNER JOIN artifact_field_value_list afvl
                             USING (group_artifact_id,field_id)
                             WHERE af.group_artifact_id = %d
                             AND af.field_name = "%s"
@@ -134,9 +134,9 @@ class GraphOnTrackers_Chart_GanttDataBuilder extends ChartDataBuilder {
         } else if (($af->isStandardField()) && (!$af->isUsername())) {
             $sql = sprintf('SELECT artifact_id as id,afvl.value as val
                             FROM artifact a
-                            JOIN artifact_field_value_list afvl
+                            INNER JOIN artifact_field_value_list afvl
                             USING (group_artifact_id)
-                            JOIN artifact_field af
+                            INNER JOIN artifact_field af
                             USING (group_artifact_id,field_id)
                             WHERE a.group_artifact_id = %d
                             AND af.field_name = "%s"
@@ -150,8 +150,8 @@ class GraphOnTrackers_Chart_GanttDataBuilder extends ChartDataBuilder {
         } else if ((!$af->isStandardField()) && ($af->isUsername())) {
             $sql = sprintf('SELECT artifact_id as id,u.realName as val
                             FROM artifact_field_value afv
-                            JOIN artifact_field af USING (field_id)
-                            JOIN user u
+                            INNER JOIN artifact_field af USING (field_id)
+                            INNER JOIN user u
                             WHERE af.group_artifact_id = %d
                             AND af.field_name = "%s"
                             AND afv.valueInt = u.user_id
@@ -203,7 +203,7 @@ class GraphOnTrackers_Chart_GanttDataBuilder extends ChartDataBuilder {
         if (!$af->isStandardField()) {
             $sql = sprintf('SELECT artifact_id as id,afv.valueText as val
                             FROM artifact_field_value afv
-                            JOIN artifact_field af
+                            INNER JOIN artifact_field af
                             USING (field_id)
                             WHERE af.group_artifact_id = %d
                             AND af.field_name = "%s"

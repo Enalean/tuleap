@@ -30,7 +30,7 @@ class GraphOnTrackers_Chart_PieDataBuilder extends ChartDataBuilder {
      */
     function buildProperties($engine) {
         parent::buildProperties($engine);
-        $engine->field_base          = $this->getField_base();
+        //$engine->field_base          = $this->getField_base();
         $this->buildData($engine);
     }
     
