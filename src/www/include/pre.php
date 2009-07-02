@@ -301,7 +301,8 @@ if (!IS_SCRIPT &&
     }
 }
 
-if (!IS_SCRIPT) {
+if (!IS_SCRIPT &&
+    (strcmp(substr($_SERVER['SCRIPT_NAME'],0,5),'/api/') !=0)) {
     if (!util_check_private_access($_SERVER['REQUEST_URI'])) {
             exit_private_project_permission_denied();
     }
