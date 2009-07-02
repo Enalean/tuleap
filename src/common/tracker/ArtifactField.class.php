@@ -1186,43 +1186,27 @@ class ArtifactField extends Error {
 		$hash_values = array();
 		// Retrieve the full list (id+label)
 		if ( $this->isUserName() ) {
-			// For user fields, we need to retrieve all users because for
-			// tracker which allows anonymous submission for the values
-
-			if (count($values) == 1 && $values[0] == 100) {
-			    // When there is only one result and this result is 100 (None)
-			    // avoid a useless DB call
-			    $all_values = false;
-			    $label_values[] = $Language->getText('global','none');
-			} elseif (!$this->isStandardField() && $this->getDisplayType() == 'SB') {
-                // For username fields with single select box (not multiple) the
-                // DB query retreive the username, no need to fetch it again.
-                $all_values = false;
-                $label_values = $values;
-			}  else {
-			    $all_values = $this->getUsersList($values);
-			}
+			$all_values = $this->getUsersList($values);
 		} else {
 			$all_values = $this->getFieldPredefinedValues($group_artifact_id,false,false,false,true);		
 		}
 
-        if ($all_values !== false) {
-            // Create an hash table with the id as key
-            for($i=0;$i<db_numrows($all_values);$i++) {
-                $hash_values[db_result($all_values,$i,0)] = db_result($all_values,$i,1);
-            }
+        // Create an hash table with the id as key
+        for($i=0;$i<db_numrows($all_values);$i++) {
+            $hash_values[db_result($all_values,$i,0)] = db_result($all_values,$i,1);
+        }
 
-            // Build the label values using the id values
-            while (list(,$v) = each($values)) {
-                if ( $v == 100 ) {
-                    $label_values[] = $Language->getText('global','none');
-                } else if ($v == 0) {
-                    $label_values[] = $Language->getText('global','any');
-                } else {
-                    $label_values[] = $hash_values[$v];
-                }
+        // Build the label values using the id values
+        while (list(,$v) = each($values)) {
+            if ( $v == 100 ) {
+                $label_values[] = $Language->getText('global','none');
+            } else if ($v == 0) {
+                $label_values[] = $Language->getText('global','any');
+            } else {
+                $label_values[] = $hash_values[$v];
             }
         }
+
 		return $label_values;
 	}
 
@@ -1232,12 +1216,13 @@ class ArtifactField extends Error {
 	 *  @return array
 	 */
 	function getUsersList($values) {
-		$sql="SELECT user_id,user_name ".
+        
+        $sql="SELECT user_id,user_name ".
 		    "FROM user ".
 		    "WHERE user_id IN (". db_es(join(",",$values)) .")";
 		$res_value = db_query($sql);
 		
-		return $res_value;
+        return $res_value;
 	}
 
 	/**

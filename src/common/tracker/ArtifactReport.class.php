@@ -1123,22 +1123,13 @@ class ArtifactReport extends Error {
                 reset($fields_sb);
                 while (list($field_name,$field) = each($fields_sb)) {
 					$values = array();
-					if ($field->getDisplayType() == 'MB') {
-					    if ($res[$i][$field_name] != 'None' && $res[$i][$field_name] != 100) {
-					        // For multi select boxes, retreive all the values
-					        // because of group by clause in query...
-					        $values = $field->getValues($res[$i]['artifact_id']);
-					    } else {
-					        // ... but if the only available value is None,
-					        // there is no need to fetch the list as if None is
-					        // present it means there is no other values.
-					        $values[] = 100;
-					    }
-					} else {
-					    $values[] = $res[$i][$field_name];
-					}
-
-					$label_values = $field->getLabelValues($this->group_artifact_id,$values);
+                    if ( $field->isStandardField() ) {
+                        $values[] = $res[$i][$field_name];
+                    } else {
+                        $values = $field->getValues($res[$i]['artifact_id']);
+                    }
+                    
+                    $label_values = $field->getLabelValues($this->group_artifact_id,$values);
 					$res[$i][$field_name] = join(", ",$label_values);
 				}
 
