@@ -58,6 +58,7 @@ if ($p && $plugin_manager->isPluginAvailable($p)) {
                 $gr = new GraphOnTrackers_Report($report_graphic_id);
                 if ($c = $gr->getChart($id)) {
                     $c->stroke($group_id,$atid);
+                    //Layout::showDebugInfo();
                 }
             }
         }

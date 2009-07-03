@@ -176,7 +176,7 @@ class DataBuilder {
                             ) ";
 
             $sql ="$select $from $where $group_by $order_by";
-            //echo $sql;
+            //echo "$sql<br>\n";
             $res = db_query($sql);
             for($i=0;$i<db_numrows($res);$i++) {
                 $r[$i] = db_fetch_array($res);

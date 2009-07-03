@@ -1110,88 +1110,101 @@ class Layout extends Response {
         include($Language->getContent('layout/footer'));
             
         if ( isset($GLOBALS['DEBUG_MODE']) && $GLOBALS['DEBUG_MODE'] && ($GLOBALS['DEBUG_DISPLAY_FOR_ALL'] || user_ismember(1, 'A')) ) {
-                $debug_compute_tile=microtime(true) - $GLOBALS['debug_time_start'];
-                echo '<span class="debug">'.$Language->getText('include_layout','query_count').": ";
-                echo $GLOBALS['DEBUG_DAO_QUERY_COUNT'] ."<br>";
-                echo "Page generated in ".$debug_compute_tile." seconds (xdebug: ". xdebug_time_index() .")</span>\n";
-                if ($file = xdebug_get_profiler_filename()) {
-                    echo '<div>Profiler info has been written in: '. $file .'</div>';
-                }
-                
-                // Display all queries used to generate the page
-                /*
-                echo "<br>Queries:\n";
-                echo '<pre>';
-                print_r($GLOBALS['QUERIES']);
-                echo '</pre>';
-                
-                $max = 0;
-                foreach($GLOBALS['DBSTORE'] as $d) {
-                    foreach($d['trace'] as $trace) {
-                        $time_taken = 1000 * round($trace[2] - $trace[1], 3);
-                        if ($max < $time_taken) {
-                            $max = $time_taken;
-                        }
-                    }
-                }
+            $this->showDebugInfo();
+        }
 
-                $paths = array();
-                $time = $GLOBALS['debug_time_start'];
-                foreach($GLOBALS['DBSTORE'] as $d) {
-                    foreach($d['trace'] as $trace) {
-                        $time_taken = 1000 * round($trace[2] - $trace[1], 3);
-                        $this->_debug_backtrace_rec($paths, array_reverse($trace[0]), 
+        echo $this->displayFooterJavascriptElements();
+        echo '</body>';
+        echo '</html>';
+    }
+    
+    /**
+     * Display debug info gathered along the execution
+     * 
+     * @return void
+     */
+    public static function showDebugInfo() {
+        $debug_compute_tile=microtime(true) - $GLOBALS['debug_time_start'];
+        echo '<span class="debug">'.$GLOBALS['Language']->getText('include_layout','query_count').": ";
+        echo $GLOBALS['DEBUG_DAO_QUERY_COUNT'] ."<br>";
+        echo "Page generated in ".$debug_compute_tile." seconds (xdebug: ". xdebug_time_index() .")</span>\n";
+        if ($file = xdebug_get_profiler_filename()) {
+            echo '<div>Profiler info has been written in: '. $file .'</div>';
+        }
+
+        // Display all queries used to generate the page
+        /*
+        echo "<br>Queries:\n";
+        echo '<pre>';
+        print_r($GLOBALS['QUERIES']);
+        echo '</pre>';
+
+        $max = 0;
+        foreach($GLOBALS['DBSTORE'] as $d) {
+            foreach($d['trace'] as $trace) {
+                $time_taken = 1000 * round($trace[2] - $trace[1], 3);
+                if ($max < $time_taken) {
+                    $max = $time_taken;
+                }
+            }
+        }
+
+        $paths = array();
+        $time = $GLOBALS['debug_time_start'];
+        foreach($GLOBALS['DBSTORE'] as $d) {
+            foreach($d['trace'] as $trace) {
+                $time_taken = 1000 * round($trace[2] - $trace[1], 3);
+                self::_debug_backtrace_rec($paths, array_reverse($trace[0]),
                             '['. (1000*round($trace[1] - $GLOBALS['debug_time_start'], 3)) 
-                            .'/'. $time_taken .'] '. 
-                            ($time_taken >= $max ? ' top! ' : '') . $d['sql']);
-                    }
+                .'/'. $time_taken .'] '.
+                ($time_taken >= $max ? ' top! ' : '') . $d['sql']);
+            }
+        }
+        echo '<table>';
+        self::_debug_display_paths($paths, false);
+        echo '</table>';
+        /**/
+
+        //Print the backtrace of specific queries
+        /*
+        echo '<pre>';
+        $specific_queries = array(48,49);
+        $i = 0;
+        foreach($GLOBALS['DBSTORE'] as $d) {
+            //echo $i ."\t". $d['sql'] ."\n";
+            if (in_array($i++, $specific_queries)) {
+                $traces = $d['trace'][0];
+                foreach($traces as $trace) {
+                    echo '<code>'. $trace['file']. ' #'. $trace['line'] .' ('. (isset($trace['class']) ? $trace['class'] .'::' : '') . $trace['function'] ."</code>\n";
                 }
-                echo '<table>';
-                $this->_debug_display_paths($paths, false);
-                echo '</table>';
-                /**/
-                
-                //Print the backtrace of specific queries
-                /*
-                echo '<pre>';
-                $specific_queries = array(48,49);
-                $i = 0;
-                foreach($GLOBALS['DBSTORE'] as $d) {
-                    //echo $i ."\t". $d['sql'] ."\n";
-                    if (in_array($i++, $specific_queries)) {
-                        $traces = $d['trace'][0];
-                        foreach($traces as $trace) {
-                            echo '<code>'. $trace['file']. ' #'. $trace['line'] .' ('. (isset($trace['class']) ? $trace['class'] .'::' : '') . $trace['function'] ."</code>\n";
-                        }
-                        echo "\n";
-                    }
+                echo "\n";
+            }
+        }
+        echo '</pre>';
+        /**/
+
+        // Display queries executed more than once
+        $title_displayed = false;
+        foreach ($GLOBALS['DBSTORE'] as $key => $value) {
+            if ($GLOBALS['DBSTORE'][$key]['nb'] > 1) {
+                if (!$title_displayed) {
+                    echo '<p>Queries executed more than once :</p>';
+                    $title_displayed = true;
                 }
-                echo '</pre>';
-                /**/
-                
-                // Display queries executed more than once
-                $title_displayed = false;
-                foreach ($GLOBALS['DBSTORE'] as $key => $value) {
-                    if ($GLOBALS['DBSTORE'][$key]['nb'] > 1) {
-                        if (!$title_displayed) {
-                            echo '<p>Queries executed more than once :</p>';
-                            $title_displayed = true;
-                        }
-                        echo "<div><legend>\n";
-                        echo $GLOBALS['HTML']->getImage(
-                            'ic/toggle_plus.png', 
-                            array(
-                                'id' => "stacktrace_toggle_$key", 
-                                'style' => 'vertical-align:middle; cursor:hand; cursor:pointer;',
-                                'title' => addslashes($GLOBALS['Language']->getText('tracker_include_artifact', 'toggle'))
-                            )
-                        );
-                        echo "<b>Run ".$GLOBALS['DBSTORE'][$key]['nb']." times: </b>";
-                        echo $GLOBALS['DBSTORE'][$key]['sql']."\n";
-                        echo '</legend></div>';
-                        // Display available stacktraces
-                        echo "<div id=\"stacktrace_alternate_$key\" style=\"\" ></div>";
-                        echo "<script type=\"text/javascript\">Event.observe($('stacktrace_toggle_$key'), 'click', function (evt) { 
+                echo "<div><legend>\n";
+                echo $GLOBALS['HTML']->getImage('ic/toggle_plus.png', 
+                        array(
+                              'id' => "stacktrace_toggle_$key", 
+                              'style' => 'vertical-align:middle; cursor:hand; cursor:pointer;',
+                              'title' => addslashes($GLOBALS['Language']->getText('tracker_include_artifact', 'toggle'))
+                             )
+                );
+                echo "<b>Run ".$GLOBALS['DBSTORE'][$key]['nb']." times: </b>";
+                echo $GLOBALS['DBSTORE'][$key]['sql']."\n";
+                echo '</legend></div>';
+                // Display available stacktraces
+                echo "<div id=\"stacktrace_alternate_$key\" style=\"\" ></div>";
+                echo "<script type=\"text/javascript\">Event.observe($('stacktrace_toggle_$key'), 'click', function (evt) {
                 var element = $('stacktrace_$key');
                 if (element) {
                     Element.toggle(element);
@@ -1211,43 +1224,40 @@ class Layout extends Response {
             });
             $('stacktrace_alternate_$key').update('');
             </script>";
-                        echo "<div id=\"stacktrace_$key\" style=\"display: none;\">";
-                        $this->_debug_backtraces($GLOBALS['DBSTORE'][$key]['trace']);
-                        echo "</div>";
-                    }
-                }
-                
-        echo "</pre>\n";
+                echo "<div id=\"stacktrace_$key\" style=\"display: none;\">";
+                self::_debug_backtraces($GLOBALS['DBSTORE'][$key]['trace']);
+                echo "</div>";
+            }
         }
 
-        echo $this->displayFooterJavascriptElements();
-        echo '</body>';
-        echo '</html>';
+        echo "</pre>\n";
     }
-    function _debug_backtraces($backtraces) {
+
+    public static function _debug_backtraces($backtraces) {
         $paths = array();
         $i = 1;
         foreach($backtraces as $b) {
-            $this->_debug_backtrace_rec($paths, array_reverse($b[0]), ('#' . $i++));
+            self::debug_backtrace_rec($paths, array_reverse($b[0]), ('#' . $i++));
         }
         echo '<table>';
-        $this->_debug_display_paths($paths);
+        self::_debug_display_paths($paths);
         echo '</table>';
     }
-    function _debug_backtrace_rec(&$paths, $trace, $leaf = '') {
+
+    public static function _debug_backtrace_rec(&$paths, $trace, $leaf = '') {
         if (count($trace)) {
             $file = substr($trace[0]['file'], strlen($GLOBALS['codendi_dir'])) .' #'. $trace[0]['line'] .' ('. (isset($trace[0]['class']) ? $trace[0]['class'] .'::' : '') . $trace[0]['function'] .')';
             if (strpos($file, '/src/common/dao/include/DataAccessObject.class.php') === 0) {
-                $this->_debug_backtrace_rec($paths, array_slice($trace, 1), $leaf);
+                self::_debug_backtrace_rec($paths, array_slice($trace, 1), $leaf);
             } else {
-                $this->_debug_backtrace_rec($paths[$file], array_slice($trace, 1), $leaf);
+                self::_debug_backtrace_rec($paths[$file], array_slice($trace, 1), $leaf);
             }
         } else if ($leaf) {
             $paths[] = $leaf;
         }
     }
-    
-    function _debug_display_paths($paths, $red = true, $padding = 0) {
+
+    public static function _debug_display_paths($paths, $red = true, $padding = 0) {
         if (is_array($paths)) {
             $color = "black";
             if ($red && count($paths) > 1) {
@@ -1269,11 +1279,11 @@ class Layout extends Response {
                     echo '</td>';
                     echo '</tr>';
                 }
-                $this->_debug_display_paths($next, $red, $padding+20);
+                self::_debug_display_paths($next, $red, $padding+20);
             }
         }
     }
-    
+
     function pv_header($params) {
         $this->generic_header($params); 
         echo '
