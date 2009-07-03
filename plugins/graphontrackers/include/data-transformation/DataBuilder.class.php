@@ -166,18 +166,15 @@ class DataBuilder {
             $user  = UserManager::instance()->getCurrentUser();
             $ugroups = $user->getUgroups($group_id, array('artifact_type' => $this->atid));
 
-            $from  .= " , permissions ";
+            $from  .= " LEFT JOIN permissions
+                         ON (permissions.object_id = CONVERT(a.artifact_id USING utf8)
+                             AND 
+                             permissions.permission_type = 'TRACKER_ARTIFACT_ACCESS') ";
             $where .= " AND (a.use_artifact_permissions = 0
-                             OR 
-                             (permissions.object_id = CONVERT(a.artifact_id USING utf8) 
-                                 AND 
-                                 permissions.permission_type = 'TRACKER_ARTIFACT_ACCESS'
-                                 AND
-                                 permissions.ugroup_id IN (". implode(',', $ugroups) .")
-                             )
-                       ) ";
-            
-            
+                             OR
+                             permissions.ugroup_id IN (". implode(',', $ugroups) .")
+                            ) ";
+
             $sql ="$select $from $where $group_by $order_by";
             //echo $sql;
             $res = db_query($sql);
