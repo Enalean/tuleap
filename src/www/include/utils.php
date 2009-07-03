@@ -902,10 +902,10 @@ function util_user_finder($ident, $strict=true) {
 
 
 function util_is_valid_filename ($file) {
-    if (ereg("[]~`!~#\"$%^,&*();=|[{}<>?/]",$file)) {
+    if (ereg("[]`!#\"$%^,&*();=|[{}<>?/]",$file)) {
         return false;
     } 
-    if (ereg("^@",$file)) { // Starts with at sign
+    if (ereg("^@|^~",$file)) { // Starts with at sign
         return false;
     } 
     if (strstr($file,'..')) {
