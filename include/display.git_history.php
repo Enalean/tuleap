@@ -27,47 +27,38 @@ function git_history($projectroot,$project,$hash,$file)
 	if (isset($refs[$hash]))
 		$tpl->assign("hashbaseref",$refs[$hash]);
 	$tpl->assign("tree",$co['tree']);
-	$tpl->display("history_nav.tpl");
 	$tpl->assign("title",$co['title']);
 	$paths = git_path_trees($projectroot . $project, $hash, $file);
 	$tpl->assign("paths",$paths);
-	$tpl->display("history_header.tpl");
 	$cmdout = git_history_list($projectroot . $project, $hash, $file);
-	$alternate = FALSE;
 	$lines = explode("\n", $cmdout);
+	$historylines = array();
 	foreach ($lines as $i => $line) {
 		if (ereg("^([0-9a-fA-F]{40})",$line,$regs))
 			$commit = $regs[1];
 		else if (ereg(":([0-7]{6}) ([0-7]{6}) ([0-9a-fA-F]{40}) ([0-9a-fA-F]{40}) (.)\t(.*)$",$line,$regs) && isset($commit)) {
+				$historyline = array();
 				$co = git_read_commit($projectroot . $project, $commit);
-				$tpl->clear_all_assign();
-				if ($alternate)
-					$tpl->assign("class","dark");
-				else
-					$tpl->assign("class","light");
-				$alternate = !$alternate;
-				$tpl->assign("project",$project);
-				$tpl->assign("agestringage",$co['age_string_age']);
-				$tpl->assign("agestringdate",$co['age_string_date']);
-				$tpl->assign("authorname",$co['author_name']);
-				$tpl->assign("commit",$commit);
-				$tpl->assign("file",$file);
-				$tpl->assign("title",$co['title_short']);
+				$historyline["agestringage"] = $co['age_string_age'];
+				$historyline["agestringdate"] = $co['age_string_date'];
+				$historyline["authorname"] = $co['author_name'];
+				$historyline["commit"] = $commit;
+				$historyline["file"] = $file;
+				$historyline["title"] = $co['title_short'];
 				if (isset($refs[$commit]))
-					$tpl->assign("commitref",$refs[$commit]);
+					$historyline["commitref"] = $refs[$commit];
 				$blob = git_get_hash_by_path($projectroot . $project, $hash,$file);
 				$blob_parent = git_get_hash_by_path($projectroot . $project, $commit,$file);
 				if ($blob && $blob_parent && ($blob != $blob_parent)) {
-					$tpl->assign("blob",$blob);
-					$tpl->assign("blobparent",$blob_parent);
-					$tpl->assign("difftocurrent",TRUE);
+					$historyline["blob"] = $blob;
+					$historyline["blobparent"] = $blob_parent;
 				}
-				$tpl->display("history_item.tpl");
+				$historylines[] = $historyline;
 				unset($commit);
 		}
 	}
-	$tpl->clear_all_assign();
-	$tpl->display("history_footer.tpl");
+	$tpl->assign("historylines",$historylines);
+	$tpl->display("history.tpl");
 }
 
 ?>
