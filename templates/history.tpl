@@ -31,6 +31,7 @@
    </b>
  </div>
  <table cellspacing="0">
+   {* Display each history line *}
    {section name=history loop=$historylines}
      <tr class="{cycle values="light,dark"}">
        <td title="{$historylines[history].agestringage}"><i>{$historylines[history].agestringdate}</i></td>

@@ -5,6 +5,7 @@
  *
  *  Copyright (C) 2009 Christopher Han <xiphux@gmail.com>
  *}
+ {* Nav *}
  <div class="page_nav">
    <a href="{$SCRIPT_NAME}?p={$project}&a=summary">summary</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=shortlog&h={$hash}">shortlog</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=log&h={$hash}">log</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=commit&h={$hash}">commit</a> | commitdiff | <a href="{$SCRIPT_NAME}?p={$project}&a=tree&h={$tree}&hb={$hash}">tree</a><br /><a href="{$SCRIPT_NAME}?p={$project}&a=commitdiff_plain&h={$hash}&hp={$hashparent}">plain</a>
  </div>
@@ -19,6 +20,7 @@
      {$line}<br />
    {/foreach}
    <br />
+   {* Diff each file changed *}
    {section name=difftree loop=$difftreelines}
      {if $difftreelines[difftree].status == "A"}
        <div class="diff_info">
