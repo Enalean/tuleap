@@ -23,30 +23,22 @@ function git_blob($projectroot, $project, $hash, $file, $hashbase)
 	if (!isset($hash) && isset($file))
 		$hash = git_get_hash_by_path($projectroot . $project, $hashbase,$file,"blob");
 	$catout = git_cat_file($projectroot . $project, $hash);
-	if (isset($hashbase) && ($co = git_read_commit($projectroot . $project, $hashbase))) {
-		$refs = read_info_ref($projectroot . $project);
-		$tpl->clear_all_assign();
-		$tpl->assign("project",$project);
-		$tpl->assign("hashbase",$hashbase);
-		$tpl->assign("tree",$co['tree']);
-		$tpl->assign("hash",$hash);
-		if (isset($file))
-			$tpl->assign("file",$file);
-		$tpl->assign("title",$co['title']);
-		if (isset($refs[$hashbase]))
-			$tpl->assign("hashbaseref",$refs[$hashbase]);
-		$tpl->display("blob_nav.tpl");
-	} else {
-		$tpl->clear_all_assign();
-		$tpl->assign("hash",$hash);
-		$tpl->display("blob_emptynav.tpl");
-	}
 	$tpl->clear_all_assign();
+	$tpl->assign("hash",$hash);
 	$tpl->assign("project",$project);
 	$tpl->assign("hashbase",$hashbase);
+	if ($co = git_read_commit($projectroot . $project, $hashbase)) {
+		$tpl->assign("fullnav",TRUE);
+		$refs = read_info_ref($projectroot . $project);
+		$tpl->assign("tree",$co['tree']);
+		$tpl->assign("title",$co['title']);
+		if (isset($file))
+			$tpl->assign("file",$file);
+		if (isset($refs[$hashbase]))
+			$tpl->assign("hashbaseref",$refs[$hashbase]);
+	}
 	$paths = git_path_trees($projectroot . $project, $hashbase, $file);
 	$tpl->assign("paths",$paths);
-	$tpl->display("blob_header.tpl");
 
 	if ($gitphp_conf['filemimetype']) {
 		$mime = file_mime($catout,$file);
@@ -55,10 +47,8 @@ function git_blob($projectroot, $project, $hash, $file, $hashbase)
 	}
 
 	if ($mimetype == "image") {
-		$tpl->clear_all_assign();
 		$tpl->assign("mime", $mime);
 		$tpl->assign("data", base64_encode($catout));
-		$tpl->display("blob_image.tpl");
 	} else {
 		$usedgeshi = $gitphp_conf['geshi'];
 		if ($usedgeshi) {
@@ -74,7 +64,7 @@ function git_blob($projectroot, $project, $hash, $file, $hashbase)
 						$geshi->set_source($catout);
 						$geshi->set_language($lang);
 						$geshi->enable_line_numbers(GESHI_FANCY_LINE_NUMBERS);
-						echo $geshi->parse_code();
+						$tpl->assign("geshiout",$geshi->parse_code());
 						$usedgeshi = TRUE;
 					}
 				}
@@ -83,20 +73,11 @@ function git_blob($projectroot, $project, $hash, $file, $hashbase)
 
 		if (!$usedgeshi) {
 			$lines = explode("\n",$catout);
-			foreach ($lines as $i => $line) {
-				/*
-				 * TODO: Convert tabs to spaces
-				 */
-				$tpl->clear_all_assign();
-				$tpl->assign("nr",$i+1);
-				$tpl->assign("line",htmlentities($line));
-				$tpl->display("blob_line.tpl");
-			}
+			$tpl->assign("lines",$lines);
 		}
 	}
 
-	$tpl->clear_all_assign();
-	$tpl->display("blob_footer.tpl");
+	$tpl->display("blob.tpl");
 }
 
 ?>
