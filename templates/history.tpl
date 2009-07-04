@@ -1,7 +1,7 @@
 {*
  *  history.tpl
  *  gitphp: A PHP git repository browser
- *  Component: History view nav template
+ *  Component: History view template
  *
  *  Copyright (C) 2009 Christopher Han <xiphux@gmail.com>
  *}
