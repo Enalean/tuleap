@@ -74,31 +74,31 @@
    {section name=difftree loop=$difftreelines}
      <tr class="{cycle values="light,dark"}">
 	 
-	 {if $difftreelines[difftree].status == "A"}
-	  <td><a href="{$SCRIPT_NAME}?p={$project}&a=blob&h={$difftreelines[difftree].to_id}&hb={$hash}&f={$difftreelines[difftree].file}" class="list">{$difftreelines[difftree].file}</a></td>
-	  <td><span class="newfile">[new {$difftreelines[difftree].to_filetype}{if $difftreelines[difftree].isreg} with mode: {$difftreelines[difftree].to_mode_cut}{/if}]</span></td>
-	  <td class="link"><a href="{$SCRIPT_NAME}?p={$project}&a=blob&h={$difftreelines[difftree].to_id}&hb={$hash}&f={$difftreelines[difftree].file}">blob</a></td>
-	 {elseif $difftreelines[difftree].status == "D"}
-	  <td><a href="{$SCRIPT_NAME}?p={$project}&a=blob&h={$difftreelines[difftree].from_id}&hb={$hash}&f={$difftreelines[difftree].file}" class="list">{$difftreelines[difftree].file}</a></td>
-	  <td><span class="deletedfile">[deleted {$difftreelines[difftree].from_filetype}]</span></td>
-	  <td class="link"><a href="{$SCRIPT_NAME}?p={$project}&a=blob&h={$difftreelines[difftree].from_id}&hb={$hash}&f={$difftreelines[difftree].file}">blob</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=history&h={$hash}&f={$difftreelines[difftree].file}">history</a></td>
-	 {elseif $difftreelines[difftree].status == "M" || $difftreelines[difftree].status == "T"}
-	  <td>
-	  {if $difftreelines[difftree].to_id != $difftreelines[difftree].from_id}
-	    <a href="{$SCRIPT_NAME}?p={$project}&a=blobdiff&h={$difftreelines[difftree].to_id}&hp={$difftreelines[difftree].from_id}&hb={$hash}&f={$difftreelines[difftree].file}" class="list">{$difftreelines[difftree].file}</a>
-	  {else}
-	    <a href="{$SCRIPT_NAME}?p={$project}&a=blob&h={$difftreelines[difftree].to_id}&hb={$hash}&f={$difftreelines[difftree].file}" class="list">{$difftreelines[difftree].file}</a>
-	  {/if}
-	  </td>
-	  <td>{if $difftreelines[difftree].from_mode != $difftreelines[difftree].to_mode} <span class="changedfile">[changed{$difftreelines[difftree].modechange}]</span>{/if}</td>
-	  <td class="link">
-	  <a href="{$SCRIPT_NAME}?p={$project}&a=blob&h={$difftreelines[difftree].to_id}&hb={$hash}&f={$difftreelines[difftree].file}">blob</a>{if $difftreelines[difftree].to_id != $difftreelines[difftree].from_id} | <a href="{$SCRIPT_NAME}?p={$project}&a=blobdiff&h={$difftreelines[difftree].to_id}&hp={$difftreelines[difftree].from_id}&hb={$hash}&f={$difftreelines[difftree].file}">diff</a>{/if} | <a href="{$SCRIPT_NAME}?p={$project}&a=history&h={$hash}&f={$difftreelines[difftree].file}">history</a></td>
-	 {elseif $difftreelines[difftree].status == "R"}
-	  <td><a href="{$SCRIPT_NAME}?p={$project}&a=blob&h={$difftreelines[difftree].to_id}&hb={$hash}&f={$difftreelines[difftree].to_file}" class="list">{$difftreelines[difftree].to_file}</a></td>
-	  <td><span class="movedfile">[moved from <a href="{$SCRIPT_NAME}?p={$project}&a=blob&h={$difftreelines[difftree].from_id}&hb={$hash}&f={$difftreelines[difftree].from_file}" class="list">{$difftreelines[difftree].from_file}</a> with {$difftreelines[difftree].similarity}% similarity{$difftreelines[difftree].simmodechg}]</span></td>
-	  <td class="link"><a href="{$SCRIPT_NAME}?p={$project}&a=blob&h={$difftreelines[difftree].to_id}&hb={$hash}&f={$difftreelines[difftree].to_file}">blob</a>{if $difftreelines[difftree].to_id != $difftreelines[difftree].from_id} | <a href="{$SCRIPT_NAME}?p={$project}&a=blobdiff&h={$difftreelines[difftree].to_id}&hp={$difftreelines[difftree].from_id}&hb={$hash}&f={$difftreelines[difftree].to_file}">diff</a>{/if}</td>
-	 {/if}
+       {if $difftreelines[difftree].status == "A"}
+         <td><a href="{$SCRIPT_NAME}?p={$project}&a=blob&h={$difftreelines[difftree].to_id}&hb={$hash}&f={$difftreelines[difftree].file}" class="list">{$difftreelines[difftree].file}</a></td>
+         <td><span class="newfile">[new {$difftreelines[difftree].to_filetype}{if $difftreelines[difftree].isreg} with mode: {$difftreelines[difftree].to_mode_cut}{/if}]</span></td>
+         <td class="link"><a href="{$SCRIPT_NAME}?p={$project}&a=blob&h={$difftreelines[difftree].to_id}&hb={$hash}&f={$difftreelines[difftree].file}">blob</a></td>
+       {elseif $difftreelines[difftree].status == "D"}
+         <td><a href="{$SCRIPT_NAME}?p={$project}&a=blob&h={$difftreelines[difftree].from_id}&hb={$hash}&f={$difftreelines[difftree].file}" class="list">{$difftreelines[difftree].file}</a></td>
+         <td><span class="deletedfile">[deleted {$difftreelines[difftree].from_filetype}]</span></td>
+         <td class="link"><a href="{$SCRIPT_NAME}?p={$project}&a=blob&h={$difftreelines[difftree].from_id}&hb={$hash}&f={$difftreelines[difftree].file}">blob</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=history&h={$hash}&f={$difftreelines[difftree].file}">history</a></td>
+       {elseif $difftreelines[difftree].status == "M" || $difftreelines[difftree].status == "T"}
+         <td>
+           {if $difftreelines[difftree].to_id != $difftreelines[difftree].from_id}
+             <a href="{$SCRIPT_NAME}?p={$project}&a=blobdiff&h={$difftreelines[difftree].to_id}&hp={$difftreelines[difftree].from_id}&hb={$hash}&f={$difftreelines[difftree].file}" class="list">{$difftreelines[difftree].file}</a>
+           {else}
+             <a href="{$SCRIPT_NAME}?p={$project}&a=blob&h={$difftreelines[difftree].to_id}&hb={$hash}&f={$difftreelines[difftree].file}" class="list">{$difftreelines[difftree].file}</a>
+           {/if}
+         </td>
+         <td>{if $difftreelines[difftree].from_mode != $difftreelines[difftree].to_mode} <span class="changedfile">[changed{$difftreelines[difftree].modechange}]</span>{/if}</td>
+         <td class="link">
+           <a href="{$SCRIPT_NAME}?p={$project}&a=blob&h={$difftreelines[difftree].to_id}&hb={$hash}&f={$difftreelines[difftree].file}">blob</a>{if $difftreelines[difftree].to_id != $difftreelines[difftree].from_id} | <a href="{$SCRIPT_NAME}?p={$project}&a=blobdiff&h={$difftreelines[difftree].to_id}&hp={$difftreelines[difftree].from_id}&hb={$hash}&f={$difftreelines[difftree].file}">diff</a>{/if} | <a href="{$SCRIPT_NAME}?p={$project}&a=history&h={$hash}&f={$difftreelines[difftree].file}">history</a></td>
+       {elseif $difftreelines[difftree].status == "R"}
+         <td><a href="{$SCRIPT_NAME}?p={$project}&a=blob&h={$difftreelines[difftree].to_id}&hb={$hash}&f={$difftreelines[difftree].to_file}" class="list">{$difftreelines[difftree].to_file}</a></td>
+         <td><span class="movedfile">[moved from <a href="{$SCRIPT_NAME}?p={$project}&a=blob&h={$difftreelines[difftree].from_id}&hb={$hash}&f={$difftreelines[difftree].from_file}" class="list">{$difftreelines[difftree].from_file}</a> with {$difftreelines[difftree].similarity}% similarity{$difftreelines[difftree].simmodechg}]</span></td>
+         <td class="link"><a href="{$SCRIPT_NAME}?p={$project}&a=blob&h={$difftreelines[difftree].to_id}&hb={$hash}&f={$difftreelines[difftree].to_file}">blob</a>{if $difftreelines[difftree].to_id != $difftreelines[difftree].from_id} | <a href="{$SCRIPT_NAME}?p={$project}&a=blobdiff&h={$difftreelines[difftree].to_id}&hp={$difftreelines[difftree].from_id}&hb={$hash}&f={$difftreelines[difftree].to_file}">diff</a>{/if}</td>
+       {/if}
 
-	 </tr>
+     </tr>
    {/section}
  </table>
