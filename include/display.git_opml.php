@@ -9,8 +9,6 @@
 
  require_once('util.script_url.php');
  require_once('gitutil.git_read_projects.php');
- require_once('gitutil.git_read_head.php');
- require_once('gitutil.git_read_commit.php');
 
 function git_opml($projectroot,$projectlist)
 {
@@ -19,32 +17,19 @@ function git_opml($projectroot,$projectlist)
 	header("Content-type: text/xml; charset=UTF-8");
 	$tpl->clear_all_assign();
 	$tpl->assign("title",$gitphp_conf['title']);
-	$tpl->display("opml_header.tpl");
-	echo "\n";
+	$tpl->assign("self",script_url());
+	$opmllist = array();
 	foreach ($projlist as $cat => $plist) {
 		if (is_array($plist)) {
 			foreach ($plist as $i => $proj) {
-				$head = git_read_head($projectroot . $proj);
-				$co = git_read_commit($projectroot . $proj, $head);
-				$tpl->clear_all_assign();
-				$tpl->assign("proj",$proj);
-				$tpl->assign("self",script_url());
-				$tpl->display("opml_item.tpl");
-				echo "\n";
+				$opmllist[] = $proj;
 			}
 		} else {
-			$head = git_read_head($projectroot . $plist);
-			$co = git_read_commit($projectroot . $plist, $head);
-			$tpl->clear_all_assign();
-			$tpl->assign("proj",$plist);
-			$tpl->assign("self",script_url());
-			$tpl->display("opml_item.tpl");
-			echo "\n";
+			$opmllist[] = $plist;
 		}
 	}
-
-	$tpl->clear_all_assign();
-	$tpl->display("opml_footer.tpl");
+	$tpl->assign("opmllist",$opmllist);
+	$tpl->display("opml.tpl");
 }
 
 ?>

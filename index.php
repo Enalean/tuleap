@@ -31,7 +31,8 @@
  if (isset($_GET['a']) &&
      ($_GET['a'] != "commitdiff_plain") &&
      ($_GET['a'] != "blob_plain") &&
-     ($_GET['a'] != "blobdiff_plain")) {
+     ($_GET['a'] != "blobdiff_plain") &&
+     ($_GET['a'] != "opml")) {
 	$tpl->load_filter('output','trimwhitespace');
 }
 
