@@ -11,7 +11,7 @@
  require_once('gitutil.git_read_commit.php');
  require_once('gitutil.read_info_ref.php');
  require_once('gitutil.git_path_trees.php');
- require_once('display.git_diff_print.php');
+ require_once('gitutil.git_diff.php');
 
 function git_blobdiff($projectroot,$project,$hash,$hashbase,$hashparent,$file)
 {
@@ -21,38 +21,26 @@ function git_blobdiff($projectroot,$project,$hash,$hashbase,$hashparent,$file)
 		echo $ret;
 		return;
 	}
-	if (isset($hashbase) && ($co = git_read_commit($projectroot . $project, $hashbase))) {
-		$tpl->clear_all_assign();
-		$tpl->assign("project",$project);
-		$tpl->assign("hash",$hash);
-		$tpl->assign("hashbase",$hashbase);
-		$tpl->assign("hashparent",$hashparent);
+	$tpl->clear_all_assign();
+	$tpl->assign("hash",$hash);
+	$tpl->assign("hashparent",$hashparent);
+	$tpl->assign("hashbase",$hashbase);
+	$tpl->assign("project",$project);
+	if (isset($file))
+		$tpl->assign("file",$file);
+	if ($co = git_read_commit($projectroot . $project, $hashbase)) {
+		$tpl->assign("fullnav",TRUE);
 		$tpl->assign("tree",$co['tree']);
 		$tpl->assign("title",$co['title']);
-		$tpl->assign("file",$file);
 		$refs = read_info_ref($projectroot . $project);
 		if (isset($refs[$hashbase]))
 			$tpl->assign("hashbaseref",$refs[$hashbase]);
-		$tpl->display("blobdiff_nav.tpl");
-	} else {
-		$tpl->clear_all_assign();
-		$tpl->assign("hash",$hash);
-		$tpl->assign("hashparent",$hashparent);
-		$tpl->display("blobdiff_emptynav.tpl");
 	}
-	$tpl->clear_all_assign();
-	if (isset($file))
-		$tpl->assign("file",$file);
-	$tpl->assign("project",$project);
-	$tpl->assign("hashparent",$hashparent);
-	$tpl->assign("hashbase",$hashbase);
-	$tpl->assign("hash",$hash);
 	$paths = git_path_trees($projectroot . $project, $hashbase, $file);
 	$tpl->assign("paths",$paths);
-	$tpl->display("blobdiff_header.tpl");
-	git_diff_print($projectroot . $project, $hashparent,($file?$file:$hashparent),$hash,($file?$file:$hash));
-	$tpl->clear_all_assign();
-	$tpl->display("blobdiff_footer.tpl");
+	$diffout = explode("\n",git_diff($projectroot . $project, $hashparent,($file?$file:$hashparent),$hash,($file?$file:$hash)));
+	$tpl->assign("diff",$diffout);
+	$tpl->display("blobdiff.tpl");
 }
 
 ?>
