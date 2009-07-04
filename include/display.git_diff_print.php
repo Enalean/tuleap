@@ -7,26 +7,12 @@
  *  Copyright (C) 2008 Christopher Han <xiphux@gmail.com>
  */
 
- require_once('gitutil.git_cat_file.php');
+ require_once('gitutil.git_diff.php');
 
 function git_diff_print($proj,$from,$from_name,$to,$to_name,$format = "html")
 {
-	global $gitphp_conf,$tpl;
-	$from_tmp = "/dev/null";
-	$to_tmp = "/dev/null";
-	if (function_exists('posix_getpid'))
-		$pid = posix_getpid();
-	else
-		$pid = rand();
-	if (isset($from)) {
-		$from_tmp = $gitphp_conf['gittmp'] . "gitphp_" . $pid . "_from";
-		git_cat_file($proj,$from,$from_tmp);
-	}
-	if (isset($to)) {
-		$to_tmp = $gitphp_conf['gittmp'] . "gitphp_" . $pid . "_to";
-		git_cat_file($proj,$to,$to_tmp);
-	}
-	$diffout = shell_exec($gitphp_conf['diffbin'] . " -u -p -L '" . $from_name . "' -L '" . $to_name . "' " . $from_tmp . " " . $to_tmp);
+	global $tpl;
+	$diffout = git_diff($proj, $from, $from_name, $to, $to_name);
 	if ($format == "plain")
 		echo $diffout;
 	else {
@@ -60,10 +46,6 @@ function git_diff_print($proj,$from,$from_name,$to,$to_name,$format = "html")
 			$line = strtok("\n");
 		}
 	}
-	if (isset($from))
-		unlink($from_tmp);
-	if (isset($to))
-		unlink($to_tmp);
 }
 
 ?>
