@@ -24,8 +24,8 @@ function git_rss($projectroot,$project)
 	$tpl->clear_all_assign();
 	$tpl->assign("self",script_url());
 	$tpl->assign("project",$project);
-	$tpl->display("rss_header.tpl");
 
+	$commitlines = array();
 	for ($i = 0; $i <= count($revlist); $i++) {
 		$commit = $revlist[$i];
 		$co = git_read_commit($projectroot . $project, $commit);
@@ -40,24 +40,21 @@ function git_rss($projectroot,$project)
 				$difftree[] = $regs[7];
 			$tok = strtok("\n");
 		}
-		$tpl->clear_all_assign();
-		$tpl->assign("cdmday",$cd['mday']);
-		$tpl->assign("cdmonth",$cd['month']);
-		$tpl->assign("cdhour",$cd['hour']);
-		$tpl->assign("cdminute",$cd['minute']);
-		$tpl->assign("title",htmlentities($co['title']));
-		$tpl->assign("author",htmlentities($co['author']));
-		$tpl->assign("cdrfc2822",$cd['rfc2822']);
-		$tpl->assign("self",script_url());
-		$tpl->assign("project",$project);
-		$tpl->assign("commit",$commit);
-		$tpl->assign("comment",$co['comment']);
-		$tpl->assign("difftree",$difftree);
-		$tpl->display("rss_item.tpl");
+		$commitline = array();
+		$commitline["cdmday"] = $cd['mday'];
+		$commitline["cdmonth"] = $cd['month'];
+		$commitline["cdhour"] = $cd['hour'];
+		$commitline["cdminute"] = $cd['minute'];
+		$commitline["title"] = $co['title'];
+		$commitline["author"] = $co['author'];
+		$commitline["cdrfc2822"] = $cd['rfc2822'];
+		$commitline["commit"] = $commit;
+		$commitline["comment"] = $co['comment'];
+		$commitline["difftree"] = $difftree;
+		$commitlines[] = $commitline;
 	}
-
-	$tpl->clear_all_assign();
-	$tpl->display("rss_footer.tpl");
+	$tpl->assign("commitlines",$commitlines);
+	$tpl->display("rss.tpl");
 }
 
 ?>
