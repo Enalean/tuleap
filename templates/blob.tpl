@@ -53,10 +53,12 @@
      {$geshiout}
    {else}
      {* Just plain display *}
-     <div class="pre">
+     <table class="code">
      {foreach from=$lines item=line name=lines}
-       {if $smarty.foreach.lines.iteration < 10} {/if}{if $smarty.foreach.lines.iteration < 100} {/if}{if $smarty.foreach.lines.iteration < 1000} {/if}<a id="l{$smarty.foreach.lines.iteration}" href="#l{$smarty.foreach.lines.iteration}" class="linenr">{$smarty.foreach.lines.iteration}</a> {$line|escape:'htmlall'}
+       <tr>
+         <td class="num"><a id="l{$smarty.foreach.lines.iteration}" href="#l{$smarty.foreach.lines.iteration}" class="linenr">{$smarty.foreach.lines.iteration}</a></td>
+	 <td class="codeline">{$line|escape:'htmlall'}</td>
      {/foreach}
-     </div>
+     </table>
    {/if}
  </div>
