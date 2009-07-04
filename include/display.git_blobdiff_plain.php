@@ -8,7 +8,7 @@
  */
 
  require_once('util.prep_tmpdir.php');
- require_once('display.git_diff_print.php');
+ require_once('gitutil.git_diff.php');
 
 function git_blobdiff_plain($projectroot,$project,$hash,$hashbase,$hashparent,$file)
 {
@@ -18,7 +18,7 @@ function git_blobdiff_plain($projectroot,$project,$hash,$hashbase,$hashparent,$f
 		return;
 	}
 	header("Content-type: text/plain; charset=UTF-8");
-	git_diff_print($projectroot . $project, $hashparent,($file?"a/".$file:$hashparent),$hash,($file?"b/".$file:$hash),"plain");
+	echo git_diff($projectroot . $project, $hashparent,($file?"a/".$file:$hashparent),$hash,($file?"b/".$file:$hash));
 }
 
 ?>
