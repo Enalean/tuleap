@@ -17,3 +17,8 @@ X-Git-Url: {$url}
 {$line}
 {/foreach}
 ---
+
+
+{foreach from=$diffs item=diffout}
+{$diffout}
+{/foreach}

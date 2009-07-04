@@ -14,7 +14,7 @@
  require_once('gitutil.git_diff_tree.php');
  require_once('gitutil.git_rev_list.php');
  require_once('gitutil.read_info_ref.php');
- require_once('display.git_diff_print.php');
+ require_once('gitutil.git_diff.php');
 
 function git_commitdiff_plain($projectroot,$project,$hash,$hash_parent)
 {
@@ -50,18 +50,19 @@ function git_commitdiff_plain($projectroot,$project,$hash,$hash_parent)
 		$tpl->assign("tagname",$tagname);
 	$tpl->assign("url",script_url() . "?p=" . $project . "&a=commitdiff&h=" . $hash);
 	$tpl->assign("comment",$co['comment']);
-	$tpl->display("diff_plaintext.tpl");
-	echo "\n\n";
+	$diffs = array();
 	foreach ($difftree as $i => $line) {
 		if (ereg("^:([0-7]{6}) ([0-7]{6}) ([0-9a-fA-F]{40}) ([0-9a-fA-F]{40}) (.)\t(.*)$",$line,$regs)) {
 			if ($regs[5] == "A")
-				git_diff_print($projectroot . $project, null, "/dev/null", $regs[4], "b/" . $regs[6], "plain");
+				$diffs[] = git_diff($projectroot . $project, null, "/dev/null", $regs[4], "b/" . $regs[6]);
 			else if ($regs[5] == "D")
-				git_diff_print($projectroot . $project, $regs[3], "a/" . $regs[6], null, "/dev/null", "plain");
+				$diffs[] = git_diff($projectroot . $project, $regs[3], "a/" . $regs[6], null, "/dev/null");
 			else if ($regs[5] == "M")
-				git_diff_print($projectroot . $project, $regs[3], "a/" . $regs[6], $regs[4], "b/" . $regs[6], "plain");
+				$diffs[] = git_diff($projectroot . $project, $regs[3], "a/" . $regs[6], $regs[4], "b/" . $regs[6]);
 		}
 	}
+	$tpl->assign("diffs",$diffs);
+	$tpl->display("diff_plaintext.tpl");
 }
 
 ?>
