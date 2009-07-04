@@ -28,7 +28,6 @@
   */
  require_once($gitphp_conf['smarty_prefix'] . "Smarty.class.php");
  $tpl =& new Smarty;
- $tpl->load_filter('output','trimwhitespace');
 
  $rss_link = FALSE;
  $suppress_headers = FALSE;
