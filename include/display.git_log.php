@@ -25,50 +25,44 @@ function git_log($projectroot,$project,$hash,$page)
 	$tpl->clear_all_assign();
 	$tpl->assign("project",$project);
 	$tpl->assign("hash",$hash);
-	$tpl->display("log_nav.tpl");
+	$tpl->assign("head",$head);
+
+	if ($page)
+		$tpl->assign("page",$page);
 
 	$revlist = git_read_revlist($projectroot . $project, $hash, 101, ($page * 100));
 
-	if (($hash != $head) || $page)
-		$tpl->assign("headlink",TRUE);
-	if ($page > 0) {
-		$tpl->assign("prevlink",TRUE);
-		$tpl->assign("prevpage",$page-1);
-	}
-	if (count($revlist) > 100) {
-		$tpl->assign("nextlink",TRUE);
-		$tpl->assign("nextpage",$page+1);
-	}
-	$tpl->display("log_pagenav.tpl");
+	$revlistcount = count($revlist);
+	$tpl->assign("revlistcount",$revlistcount);
 
 	if (!$revlist) {
-		$tpl->clear_all_assign();
-		$tpl->assign("project",$project);
+		$tpl->assign("norevlist",TRUE);
 		$co = git_read_commit($hash);
-		$tpl->assign("age_string",$co['age_string']);
-		$tpl->display("log_info.tpl");
+		$tpl->assign("lastchange",$co['age_string']);
 	}
-	$commitcount = min(100,count($revlist));
+
+	$commitlines = array();
+	$commitcount = min(100,$revlistcount);
 	for ($i = 0; $i < $commitcount; $i++) {
 		$commit = $revlist[$i];
 		if (isset($commit) && strlen($commit) > 1) {
-			$tpl->clear_all_assign();
+			$commitline = array();
 			$co = git_read_commit($projectroot . $project, $commit);
 			$ad = date_str($co['author_epoch']);
-			$tpl->assign("project",$project);
-			$tpl->assign("commit",$commit);
+			$commitline["project"] = $project;
+			$commitline["commit"] = $commit;
 			if (isset($refs[$commit]))
-				$tpl->assign("commitref",$refs[$commit]);
-			$tpl->assign("agestring",$co['age_string']);
-			$tpl->assign("title",$co['title']);
-			$tpl->assign("authorname",$co['author_name']);
-			$tpl->assign("rfc2822",$ad['rfc2822']);
-			$tpl->assign("comment",$co['comment']);
-			if (count($co['comment']) > 0)
-				$tpl->assign("notempty",TRUE);
-			$tpl->display("log_item.tpl");
+				$commitline["commitref"] = $refs[$commit];
+			$commitline["agestring"] = $co['age_string'];
+			$commitline["title"] = $co['title'];
+			$commitline["authorname"] = $co['author_name'];
+			$commitline["rfc2822"] = $ad['rfc2822'];
+			$commitline["comment"] = $co['comment'];
+			$commitlines[] = $commitline;
 		}
 	}
+	$tpl->assign("commitlines",$commitlines);
+	$tpl->display("log.tpl");
 }
 
 ?>
