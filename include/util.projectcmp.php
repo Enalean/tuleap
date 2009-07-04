@@ -9,7 +9,7 @@
 
 function projectcmp($a,$b)
 {
-	return strcmp($a,$b);
+	return strcmp($a["project"],$b["project"]);
 }
 
 ?>

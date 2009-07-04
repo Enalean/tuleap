@@ -105,3 +105,6 @@ div.message {
 div.error {
 	color: #ff0000;
 }
+.indent {
+	margin-left: 8px;
+}

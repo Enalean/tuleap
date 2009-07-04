@@ -11,19 +11,17 @@
  require_once('util.descrcmp.php');
  require_once('util.ownercmp.php');
  require_once('util.agecmp.php');
- require_once('display.git_project_listentry.php');
  require_once('gitutil.git_read_projects.php');
 
 function git_project_list($projectroot,$projectlist,$order = "project")
 {
 	global $tpl,$git_projects;
-	$projects = git_read_projects($projectroot,$projectlist);
+	$projects = git_read_projects($projectroot,$projectlist, TRUE);
 	if (is_array($projects)) {
 		if (count($projects) > 0) {
 			$tpl->clear_all_assign();
 			if ($order)
 				$tpl->assign("order",$order);
-			$tpl->display("projlist_header.tpl");
 			if (!isset($git_projects)) {
 				switch ($order) {
 					case "project":
@@ -39,46 +37,31 @@ function git_project_list($projectroot,$projectlist,$order = "project")
 						usort($projects,"agecmp");
 						break;
 				}
-			}
-			$alternate = false;
-			foreach ($projects as $cat => $plist) {
-				if (is_array($plist)) {
-					if ($cat != "none") {
-						$tpl->clear_all_assign();
-						$tpl->assign("category",$cat);
-						$tpl->display("projlist_category.tpl");
+			} else {
+				$tpl->assign("categorized",TRUE);
+				foreach ($projects as $cat => $plist) {
+					switch ($order) {
+						case "project":
+							usort($projects[$cat],"projectcmp");
+							break;
+						case "descr":
+							usort($projects[$cat],"descrcmp");
+							break;
+						case "owner":
+							usort($projects[$cat],"ownercmp");
+							break;
+						case "age":
+							usort($projects[$cat],"agecmp");
+							break;
 					}
-					if (isset($git_projects)) {
-						switch ($order) {
-							case "project":
-								usort($plist,"projectcmp");
-								break;
-							case "descr":
-								usort($plist,"descrcmp");
-								break;
-							case "owner":
-								usort($plist,"ownercmp");
-								break;
-							case "age":
-								usort($plist,"agecmp");
-								break;
-						}
-					}
-					foreach ($plist as $i => $proj) {
-						git_project_listentry($projectroot,$proj,($alternate?"dark":"light"),($cat=="none"?FALSE:TRUE));
-						$alternate = !$alternate;
-					}
-				} else {
-					git_project_listentry($projectroot,$plist,($alternate?"dark":"light"),FALSE);
-					$alternate = !$alternate;
 				}
 			}
-			$tpl->clear_all_assign();
-			$tpl->display("projlist_footer.tpl");
+			$tpl->assign("projects",$projects);
 		} else
-			echo "No projects found";
+			$tpl->assign("errmsg","No projects found");
 	} else
-		echo $projects;
+		$tpl->assign("errmsg",$projects);
+	$tpl->display("projlist.tpl");
 }
 
 ?>

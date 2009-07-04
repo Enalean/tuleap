@@ -7,12 +7,9 @@
  *  Copyright (C) 2008 Christopher Han <xiphux@gmail.com>
  */
 
- require_once('gitutil.git_project_descr.php');
-
 function descrcmp($a,$b)
 {
-	global $gitphp_conf;
-	return strcmp(git_project_descr($gitphp_conf['projectroot'],$a),git_project_descr($gitphp_conf['projectroot'],$b));
+	return strcmp($a["descr"],$b["descr"]);
 }
 
 ?>
