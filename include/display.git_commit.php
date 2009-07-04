@@ -34,7 +34,6 @@ function git_commit($projectroot,$project,$hash)
 	$tpl->assign("tree",$co['tree']);
 	if (isset($co['parent']))
 		$tpl->assign("parent",$co['parent']);
-	$tpl->display("commit_nav.tpl");
 	$tpl->assign("title",$co['title']);
 	$refs = read_info_ref($projectroot . $project);
 	if (isset($refs[$co['id']]))
@@ -53,32 +52,25 @@ function git_commit($projectroot,$project,$hash)
 	$tpl->assign("parents",$co['parents']);
 	$tpl->assign("comment",$co['comment']);
 	$tpl->assign("difftreesize",count($difftree)+1);
-	$tpl->display("commit_data.tpl");
-	$alternate = FALSE;
+	$difftreelines = array();
 	foreach ($difftree as $i => $line) {
-		$tpl->clear_all_assign();
 		if (ereg("^:([0-7]{6}) ([0-7]{6}) ([0-9a-fA-F]{40}) ([0-9a-fA-F]{40}) (.)([0-9]{0,3})\t(.*)$",$line,$regs)) {
-			if ($alternate)
-				$tpl->assign("class","dark");
-			else
-				$tpl->assign("class","light");
-			$alternate = !$alternate;
-			$tpl->assign("project",$project);
-			$tpl->assign("hash",$hash);
-			$tpl->assign("from_mode",$regs[1]);
-			$tpl->assign("to_mode",$regs[2]);
-			$tpl->assign("from_mode_cut",substr($regs[1],-4));
-			$tpl->assign("to_mode_cut",substr($regs[2],-4));
-			$tpl->assign("from_id",$regs[3]);
-			$tpl->assign("to_id",$regs[4]);
-			$tpl->assign("status",$regs[5]);
-			$tpl->assign("similarity",$regs[6]);
-			$tpl->assign("file",$regs[7]);
-			$tpl->assign("from_file",strtok($regs[7],"\t"));
-			$tpl->assign("to_file",strtok("\t"));
-			$tpl->assign("to_filetype",file_type($regs[2]));
+			$difftreeline = array();
+			$difftreeline["from_mode"] = $regs[1];
+			$difftreeline["to_mode"] = $regs[2];
+			$difftreeline["from_mode_cut"] = substr($regs[1],-4);
+			$difftreeline["to_mode_cut"] = substr($regs[2],-4);
+			$difftreeline["from_id"] = $regs[3];
+			$difftreeline["to_id"] = $regs[4];
+			$difftreeline["status"] = $regs[5];
+			$difftreeline["similarity"] = ltrim($regs[6],"0");
+			$difftreeline["file"] = $regs[7];
+			$difftreeline["from_file"] = strtok($regs[7],"\t");
+			$difftreeline["from_filetype"] = file_type($regs[1]);
+			$difftreeline["to_file"] = strtok("\t");
+			$difftreeline["to_filetype"] = file_type($regs[2]);
 			if ((octdec($regs[2]) & 0x8000) == 0x8000)
-				$tpl->assign("isreg",TRUE);
+				$difftreeline["isreg"] = TRUE;
 			$modestr = "";
 			if ((octdec($regs[1]) & 0x17000) != (octdec($regs[2]) & 0x17000))
 				$modestr .= " from " . file_type($regs[1]) . " to " . file_type($regs[2]);
@@ -88,17 +80,16 @@ function git_commit($projectroot,$project,$hash)
 				else if (octdec($regs[2]) & 0x8000)
 					$modestr .= " mode: " . (octdec($regs[2]) & 0777);
 			}
-			$tpl->assign("modechange",$modestr);
+			$difftreeline["modechange"] = $modestr;
 			$simmodechg = "";
 			if ($regs[1] != $regs[2])
 				$simmodechg .= ", mode: " . (octdec($regs[2]) & 0777);
-			$tpl->assign("simmodechg",$simmodechg);
-
-			$tpl->display("commit_item.tpl");
+			$difftreeline["simmodechg"] = $simmodechg;
+			$difftreelines[] = $difftreeline;
 		}
 	}
-	$tpl->clear_all_assign();
-	$tpl->display("commit_footer.tpl");
+	$tpl->assign("difftreelines",$difftreelines);
+	$tpl->display("commit.tpl");
 }
 
 ?>
