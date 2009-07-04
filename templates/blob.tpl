@@ -1,5 +1,5 @@
 {*
- *  blob_nav.tpl
+ *  blob.tpl
  *  gitphp: A PHP git repository browser
  *  Component: Blob view template
  *
