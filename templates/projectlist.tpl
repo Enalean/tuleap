@@ -1,5 +1,5 @@
 {*
- *  projlist.tpl
+ *  projectlist.tpl
  *  gitphp: A PHP git repository browser
  *  Component: Project list template
  *
@@ -35,10 +35,10 @@
       <th>Actions</th>
     </tr>
 
-    {if $categorized}
+    {if $categorizedprojects}
       {* Show categorized; categorized project lists nested associatively in the project
          list by category key *}
-      {foreach from=$projects key=categ item=plist}
+      {foreach from=$categorizedprojects key=categ item=plist}
         {if $categ != "none"}
           <tr>
             <th>{$categ}</th>

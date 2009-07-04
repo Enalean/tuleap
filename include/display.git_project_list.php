@@ -37,8 +37,8 @@ function git_project_list($projectroot,$projectlist,$order = "project")
 						usort($projects,"agecmp");
 						break;
 				}
+				$tpl->assign("projects",$projects);
 			} else {
-				$tpl->assign("categorized",TRUE);
 				foreach ($projects as $cat => $plist) {
 					switch ($order) {
 						case "project":
@@ -55,13 +55,13 @@ function git_project_list($projectroot,$projectlist,$order = "project")
 							break;
 					}
 				}
+				$tpl->assign("categorizedprojects",$projects);
 			}
-			$tpl->assign("projects",$projects);
 		} else
 			$tpl->assign("errmsg","No projects found");
 	} else
 		$tpl->assign("errmsg",$projects);
-	$tpl->display("projlist.tpl");
+	$tpl->display("projectlist.tpl");
 }
 
 ?>
