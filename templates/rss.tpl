@@ -1,9 +1,9 @@
 {*
  *  rss.tpl
  *  gitphp: A PHP git repository browser
- *  Component: RSS header template
+ *  Component: RSS template
  *
- *  Copyright (C) 2006 Christopher Han <xiphux@gmail.com>
+ *  Copyright (C) 2009 Christopher Han <xiphux@gmail.com>
  *}
 <?xml version="1.0" encoding="utf-8"?>
 <rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/">
