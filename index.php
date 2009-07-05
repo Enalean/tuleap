@@ -51,11 +51,13 @@
 	require_once('include/display.git_project_index.php');
 	git_project_index($gitphp_conf['projectroot'],$git_projects);
  } else if (isset($_GET['p'])) {
- 	if (!is_dir($gitphp_conf['projectroot'] . $_GET['p']))
-		echo "No such directory";
-	else if (!is_file($gitphp_conf['projectroot'] . $_GET['p'] . "/HEAD"))
-		echo "No such project";
-	else {
+ 	if (!is_dir($gitphp_conf['projectroot'] . $_GET['p'])) {
+		require_once('include/display.git_message.php');
+		git_message("No such directory",TRUE);
+	} else if (!is_file($gitphp_conf['projectroot'] . $_GET['p'] . "/HEAD")) {
+		require_once('include/display.git_message.php');
+		git_message("No such project",TRUE);
+	} else {
 		$rss_link = TRUE;
 		if (!isset($_GET['a'])) {
 			require_once('include/display.git_summary.php');
@@ -145,7 +147,8 @@
 					git_tag($gitphp_conf['projectroot'],$_GET['p'],$_GET['h']);
 					break;
 				default:
-					echo "Unknown action";
+					require_once('include/display.git_message.php');
+					git_message("Unknown action", TRUE);
 					break;
 			}
 		}
