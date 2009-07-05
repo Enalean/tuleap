@@ -28,51 +28,38 @@ function git_tree($projectroot,$project,$hash,$file,$hashbase)
 	$lsout = git_ls_tree($projectroot . $project, $hash, TRUE);
 	$refs = read_info_ref($projectroot . $project);
 	$tpl->clear_all_assign();
+	$tpl->assign("project",$project);
+	$tpl->assign("hash",$hash);
+	if (isset($hashbase))
+		$tpl->assign("hashbase",$hashbase);
 	if (isset($hashbase) && ($co = git_read_commit($projectroot . $project, $hashbase))) {
 		$basekey = $hashbase;
-		$tpl->assign("hashbase",$hashbase);
-		$tpl->assign("project",$project);
+		$tpl->assign("fullnav",TRUE);
 		$tpl->assign("title",$co['title']);
 		if (isset($refs[$hashbase]))
 			$tpl->assign("hashbaseref",$refs[$hashbase]);
-		$tpl->display("tree_nav.tpl");
-	} else {
-		$tpl->assign("hash",$hash);
-		$tpl->display("tree_emptynav.tpl");
 	}
-	$tpl->clear_all_assign();
-	$tpl->assign("project",$project);
-	$tpl->assign("hashbase",$hashbase);
 	$paths = git_path_trees($projectroot . $project, $hashbase, $file);
 	$tpl->assign("paths",$paths);
-	$tpl->display("tree_filelist_header.tpl");
 
+	if (isset($file))
+		$tpl->assign("base",$file . "/");
+
+	$treelines = array();
 	$tok = strtok($lsout,"\0");
-	$alternate = FALSE;
 	while ($tok !== false) {
 		if (ereg("^([0-9]+) (.+) ([0-9a-fA-F]{40})\t(.+)$",$tok,$regs)) {
-			$tpl->clear_all_assign();
-			if ($alternate)
-				$tpl->assign("class","dark");
-			else
-				$tpl->assign("class","light");
-			$alternate = !$alternate;
-			$tpl->assign("filemode",mode_str($regs[1]));
-			$tpl->assign("type",$regs[2]);
-			$tpl->assign("hash",$regs[3]);
-			$tpl->assign("name",$regs[4]);
-			$tpl->assign("project",$project);
-			if (isset($file))
-				$tpl->assign("base",$file . "/");
-			if (isset($basekey))
-				$tpl->assign("hashbase",$basekey);
-			$tpl->display("tree_filelist_item.tpl");
+			$treeline = array();
+			$treeline["filemode"] = mode_str($regs[1]);
+			$treeline["type"] = $regs[2];
+			$treeline["hash"] = $regs[3];
+			$treeline["name"] = $regs[4];
+			$treelines[] = $treeline;
 		}
 		$tok = strtok("\0");
 	}
-
-	$tpl->clear_all_assign();
-	$tpl->display("tree_filelist_footer.tpl");
+	$tpl->assign("treelines",$treelines);
+	$tpl->display("tree.tpl");
 }
 
 ?>
