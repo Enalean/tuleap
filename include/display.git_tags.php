@@ -14,8 +14,6 @@ function git_tags($projectroot,$project)
 {
 	global $tpl;
 	$head = git_read_head($projectroot . $project);
-	$tpl->clear_all_assign();
-	$tpl->assign("project",$project);
 	$tpl->assign("head",$head);
 	$taglist = git_read_refs($projectroot, $project, "refs/tags");
 	if (isset($taglist) && (count($taglist) > 0)) {

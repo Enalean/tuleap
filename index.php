@@ -45,8 +45,35 @@
 	$tpl->load_filter('output','trimwhitespace');
 }
 
+/*
+ * Setup global assigns used everywhere (such as header/footer)
+ */
+ $tpl->assign("stylesheet",$gitphp_conf['stylesheet']);
+ $tpl->assign("version",$gitphp_version);
+ $tpl->assign("pagetitle",$gitphp_conf['title']);
+ if (isset($_GET['p'])) {
+	$tpl->assign("validproject",TRUE);
+	$tpl->assign("project",$_GET['p']);
+	require_once('include/gitutil.git_project_descr.php');
+	$tpl->assign("projectdescription",git_project_descr($gitphp_conf['projectroot'],$_GET['p']));
+	if (isset($_GET['a']))
+		$tpl->assign("action",$_GET['a']);
+ }
+ if (isset($_GET['st']))
+ 	$tpl->assign("currentsearchtype",$_GET['st']);
+ else
+	$tpl->assign("currentsearchtype","commit");
+if (isset($_GET['s']))
+	$tpl->assign("currentsearch",$_GET['s']);
+if (isset($_GET['hb']))
+	$tpl->assign("currentsearchhash",$_GET['hb']);
+else if (isset($_GET['h']))
+	$tpl->assign("currentsearchhash",$_GET['h']);
+if ($gitphp_conf['search'])
+	$tpl->assign("enablesearch",TRUE);
+if ($gitphp_conf['filesearch'])
+	$tpl->assign("filesearch",TRUE);
 
- $rss_link = FALSE;
  $suppress_headers = FALSE;
 
  ob_start();
@@ -60,13 +87,14 @@
 	git_project_index($gitphp_conf['projectroot'],$git_projects);
  } else if (isset($_GET['p'])) {
  	if (!is_dir($gitphp_conf['projectroot'] . $_GET['p'])) {
+		$tpl->assign("validproject",FALSE);
 		require_once('include/display.git_message.php');
 		git_message("No such directory",TRUE);
 	} else if (!is_file($gitphp_conf['projectroot'] . $_GET['p'] . "/HEAD")) {
+		$tpl->assign("validproject",FALSE);
 		require_once('include/display.git_message.php');
 		git_message("No such project",TRUE);
 	} else {
-		$rss_link = TRUE;
 		if (!isset($_GET['a'])) {
 			require_once('include/display.git_summary.php');
 			git_summary($gitphp_conf['projectroot'],$_GET['p']);
@@ -170,45 +198,12 @@
  ob_end_clean();
 
  if (!$suppress_headers) {
-	 $tpl->clear_all_assign();
-	 $tpl->assign("stylesheet",$gitphp_conf['stylesheet']);
-	 $tpl->assign("version",$gitphp_version);
-	 $title = $gitphp_conf['title'];
-	 if ($rss_link) {
-		$tpl->assign("rss_link",TRUE);
-		$tpl->assign("project",$_GET['p']);
-		$title .= " :: " . $_GET['p'];
-		if (isset($_GET['a'])) {
-			$tpl->assign("action",$_GET['a']);
-			$title .= "/" . $_GET['a'];
-		}
-	 }
-	 $tpl->assign("title",$title);
-	 if (isset($_GET['st']))
-	 	$tpl->assign("searchtype",$_GET['st']);
-	else
-		$tpl->assign("searchtype","commit");
-	if (isset($_GET['s']))
-		$tpl->assign("search",$_GET['s']);
-	if (isset($_GET['hb']))
-		$tpl->assign("hash",$_GET['hb']);
-	else if (isset($_GET['h']))
-		$tpl->assign("hash",$_GET['h']);
-	if ($gitphp_conf['search'])
-		$tpl->assign("enablesearch",TRUE);
-	if ($gitphp_conf['filesearch'])
-		$tpl->assign("filesearch",TRUE);
 	 $tpl->display("header.tpl");
  }
 
  echo $main;
 
  if (!$suppress_headers) {
-	 if ($rss_link) {
-		$tpl->assign("project",$_GET['p']);
-		require_once('include/gitutil.git_project_descr.php');
-		$tpl->assign("descr",git_project_descr($gitphp_conf['projectroot'],$_GET['p']));
-	 }
 	 $tpl->display("footer.tpl");
  }
 

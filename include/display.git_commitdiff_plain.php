@@ -42,7 +42,6 @@ function git_commitdiff_plain($projectroot,$project,$hash,$hash_parent)
 	header("Content-type: text/plain; charset=UTF-8");
 	header("Content-disposition: inline; filename=\"git-" . $hash . ".patch\"");
 	$ad = date_str($co['author_epoch'],$co['author_tz']);
-	$tpl->clear_all_assign();
 	$tpl->assign("from",$co['author']);
 	$tpl->assign("date",$ad['rfc2822']);
 	$tpl->assign("subject",$co['title']);

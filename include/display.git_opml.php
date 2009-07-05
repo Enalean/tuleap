@@ -15,7 +15,6 @@ function git_opml($projectroot,$projectlist)
 	global $tpl,$gitphp_conf;
 	$projlist = git_read_projects($projectroot,$projectlist);
 	header("Content-type: text/xml; charset=UTF-8");
-	$tpl->clear_all_assign();
 	$tpl->assign("title",$gitphp_conf['title']);
 	$tpl->assign("self",script_url());
 	$opmllist = array();

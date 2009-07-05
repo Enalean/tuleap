@@ -27,8 +27,6 @@ function git_tree($projectroot,$project,$hash,$file,$hashbase)
 	}
 	$lsout = git_ls_tree($projectroot . $project, $hash, TRUE);
 	$refs = read_info_ref($projectroot . $project);
-	$tpl->clear_all_assign();
-	$tpl->assign("project",$project);
 	$tpl->assign("hash",$hash);
 	if (isset($hashbase))
 		$tpl->assign("hashbase",$hashbase);

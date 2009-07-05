@@ -21,8 +21,6 @@ function git_history($projectroot,$project,$hash,$file)
 		$hash = git_read_head($projectroot . $project);
 	$co = git_read_commit($projectroot . $project, $hash);
 	$refs = read_info_ref($projectroot . $project);
-	$tpl->clear_all_assign();
-	$tpl->assign("project",$project);
 	$tpl->assign("hash",$hash);
 	if (isset($refs[$hash]))
 		$tpl->assign("hashbaseref",$refs[$hash]);

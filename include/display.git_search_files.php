@@ -16,7 +16,6 @@ function git_search_files($projectroot, $project, $hash, $search, $page = 0)
 {
 	global $tpl,$gitphp_conf;
 
-	$tpl->clear_all_assign();
 	if (!($gitphp_conf['search'] && $gitphp_conf['filesearch'])) {
 		$tpl->assign("message","File search has been disabled");
 		$tpl->display("message.tpl");
@@ -44,7 +43,6 @@ function git_search_files($projectroot, $project, $hash, $search, $page = 0)
 		return;
 	}
 
-	$tpl->assign("project",$project);
 	$tpl->assign("hash",$hash);
 	$tpl->assign("treehash",$co['tree']);
 

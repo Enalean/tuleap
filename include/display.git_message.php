@@ -10,7 +10,6 @@
 function git_message($message, $error = FALSE)
 {
 	global $tpl;
-	$tpl->clear_all_assign();
 	$tpl->assign("message",$message);
 	if ($error)
 		$tpl->assign("error", TRUE);

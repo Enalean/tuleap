@@ -21,9 +21,7 @@ function git_rss($projectroot,$project)
 	$head = git_read_head($projectroot . $project);
 	$revlist = git_read_revlist($projectroot . $project, $head, GITPHP_RSS_ITEMS);
 	header("Content-type: text/xml; charset=UTF-8");
-	$tpl->clear_all_assign();
 	$tpl->assign("self",script_url());
-	$tpl->assign("project",$project);
 
 	$commitlines = array();
 	for ($i = 0; $i <= count($revlist); $i++) {

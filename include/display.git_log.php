@@ -22,8 +22,6 @@ function git_log($projectroot,$project,$hash,$page)
 	if (!isset($page))
 		$page = 0;
 	$refs = read_info_ref($projectroot . $project);
-	$tpl->clear_all_assign();
-	$tpl->assign("project",$project);
 	$tpl->assign("hash",$hash);
 	$tpl->assign("head",$head);
 

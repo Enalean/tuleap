@@ -25,8 +25,6 @@ function git_summary($projectroot,$project)
 	$commitdate = date_str($commit['committer_epoch'],$commit['committer_tz']);
 	$owner = git_project_owner($projectroot,$project);
 	$refs = read_info_ref($projectroot . $project);
-	$tpl->clear_all_assign();
-	$tpl->assign("project",$project);
 	$tpl->assign("head",$head);
 	$tpl->assign("description",$descr);
 	$tpl->assign("owner",$owner);

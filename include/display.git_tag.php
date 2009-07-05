@@ -16,8 +16,6 @@ function git_tag($projectroot, $project, $hash)
 	global $tpl;
 
 	$head = git_read_head($projectroot . $project);
-	$tpl->clear_all_assign();
-	$tpl->assign("project",$project);
 	$tpl->assign("head",$head);
 	$tpl->assign("hash", $hash);
 

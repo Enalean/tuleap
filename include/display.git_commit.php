@@ -28,8 +28,6 @@ function git_commit($projectroot,$project,$hash)
 	}
 	$diffout = git_diff_tree($projectroot . $project, $root . " " . $parent . " " . $hash, TRUE);
 	$difftree = explode("\n",$diffout);
-	$tpl->clear_all_assign();
-	$tpl->assign("project",$project);
 	$tpl->assign("hash",$hash);
 	$tpl->assign("tree",$co['tree']);
 	if (isset($co['parent']))

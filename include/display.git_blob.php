@@ -23,9 +23,7 @@ function git_blob($projectroot, $project, $hash, $file, $hashbase)
 	if (!isset($hash) && isset($file))
 		$hash = git_get_hash_by_path($projectroot . $project, $hashbase,$file,"blob");
 	$catout = git_cat_file($projectroot . $project, $hash);
-	$tpl->clear_all_assign();
 	$tpl->assign("hash",$hash);
-	$tpl->assign("project",$project);
 	$tpl->assign("hashbase",$hashbase);
 	if ($co = git_read_commit($projectroot . $project, $hashbase)) {
 		$tpl->assign("fullnav",TRUE);

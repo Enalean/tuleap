@@ -12,8 +12,8 @@ header("Content-Type: $contentType; charset=utf-8"); *}
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
   <!-- gitphp web interface {$version}, (C) 2006 Christopher Han <xiphux@gmail.com> -->
   <head>
-    <title>{$title}</title>
-    {if $rss_link}
+    <title>{$pagetitle}{if $project && $validproject} :: {$project}{if $action}/{$action}{/if}{/if}</title>
+    {if $validproject}
       <link rel="alternate" title="{$project} log" href="{$SCRIPT_NAME}?p={$project}&a=rss" type="application/rss+xml" />
     {/if}
     <link rel="stylesheet" href="{$stylesheet}" type="text/css" />
@@ -25,7 +25,7 @@ header("Content-Type: $contentType; charset=utf-8"); *}
         <img src="git-logo.png" width="72" height="27" alt="git" class="logo" />
       </a>
       <a href="index.php">projects</a> / 
-      {if $project}
+      {if $project && $validproject}
         <a href="{$SCRIPT_NAME}?p={$project}&a=summary">{$project}</a>
         {if $action}
            / {$action}
@@ -35,15 +35,15 @@ header("Content-Type: $contentType; charset=utf-8"); *}
             <div class="search">
               <input type="hidden" name="p" value="{$project}" />
               <input type="hidden" name="a" value="search" />
-              <input type ="hidden" name="h" value="{if $hash}{$hash}{else}HEAD{/if}" />
+              <input type ="hidden" name="h" value="{if $currentsearchhash}{$currentsearchhash}{else}HEAD{/if}" />
               <select name="st">
-                <option {if $searchtype == 'commit'}selected="selected"{/if} value="commit">commit</option>
-                <option {if $searchtype == 'author'}selected="selected"{/if} value="author">author</option>
-                <option {if $searchtype == 'committer'}selected="selected"{/if} value="committer">committer</option>
+                <option {if $currentsearchtype == 'commit'}selected="selected"{/if} value="commit">commit</option>
+                <option {if $currentsearchtype == 'author'}selected="selected"{/if} value="author">author</option>
+                <option {if $currentsearchtype == 'committer'}selected="selected"{/if} value="committer">committer</option>
                 {if $filesearch}
-                  <option {if $searchtype == 'file'}selected="selected"{/if} value="file">file</option>
+                  <option {if $currentsearchtype == 'file'}selected="selected"{/if} value="file">file</option>
                 {/if}
-              </select> search: <input type="text" name="s" {if $search}value="{$search}"{/if} />
+              </select> search: <input type="text" name="s" {if $currentsearch}value="{$currentsearch}"{/if} />
             </div>
           </form>
         {/if}

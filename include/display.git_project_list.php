@@ -19,7 +19,6 @@ function git_project_list($projectroot,$projectlist,$order = "project")
 	$projects = git_read_projects($projectroot,$projectlist, TRUE);
 	if (is_array($projects)) {
 		if (count($projects) > 0) {
-			$tpl->clear_all_assign();
 			if ($order)
 				$tpl->assign("order",$order);
 			if (!isset($git_projects)) {

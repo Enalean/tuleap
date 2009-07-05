@@ -21,11 +21,9 @@ function git_blobdiff($projectroot,$project,$hash,$hashbase,$hashparent,$file)
 		echo $ret;
 		return;
 	}
-	$tpl->clear_all_assign();
 	$tpl->assign("hash",$hash);
 	$tpl->assign("hashparent",$hashparent);
 	$tpl->assign("hashbase",$hashbase);
-	$tpl->assign("project",$project);
 	if (isset($file))
 		$tpl->assign("file",$file);
 	if ($co = git_read_commit($projectroot . $project, $hashbase)) {
