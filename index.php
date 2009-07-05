@@ -56,8 +56,10 @@
 	$tpl->assign("project",$_GET['p']);
 	require_once('include/gitutil.git_project_descr.php');
 	$tpl->assign("projectdescription",git_project_descr($gitphp_conf['projectroot'],$_GET['p']));
-	if (isset($_GET['a']))
+	if (isset($_GET['a'])) {
 		$tpl->assign("action",$_GET['a']);
+		$tpl->assign("validaction", TRUE);
+	}
  }
  if (isset($_GET['st']))
  	$tpl->assign("currentsearchtype",$_GET['st']);
@@ -174,6 +176,7 @@ if ($gitphp_conf['filesearch'])
 					git_tag($gitphp_conf['projectroot'],$_GET['p'],$_GET['h']);
 					break;
 				default:
+					$tpl->assign("validaction", FALSE);
 					require_once('include/display.git_message.php');
 					git_message("Unknown action", TRUE);
 					break;

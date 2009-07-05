@@ -12,7 +12,7 @@ header("Content-Type: $contentType; charset=utf-8"); *}
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
   <!-- gitphp web interface {$version}, (C) 2006 Christopher Han <xiphux@gmail.com> -->
   <head>
-    <title>{$pagetitle}{if $project && $validproject} :: {$project}{if $action}/{$action}{/if}{/if}</title>
+    <title>{$pagetitle}{if $project && $validproject} :: {$project}{if $action && $validaction}/{$action}{/if}{/if}</title>
     {if $validproject}
       <link rel="alternate" title="{$project} log" href="{$SCRIPT_NAME}?p={$project}&a=rss" type="application/rss+xml" />
     {/if}
@@ -27,7 +27,7 @@ header("Content-Type: $contentType; charset=utf-8"); *}
       <a href="index.php">projects</a> / 
       {if $project && $validproject}
         <a href="{$SCRIPT_NAME}?p={$project}&a=summary">{$project}</a>
-        {if $action}
+        {if $action && $validaction}
            / {$action}
         {/if}
         {if $enablesearch}
