@@ -1,7 +1,7 @@
 {*
  *  project.tpl
  *  gitphp: A PHP git repository browser
- *  Component: Project template
+ *  Component: Project summary template
  *
  *  Copyright (C) 2009 Christopher Han <xiphux@gmail.com>
  *}
