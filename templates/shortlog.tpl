@@ -5,6 +5,7 @@
  *
  *  Copyright (C) 2009 Christopher Han <xiphux@gmail.com>
  *}
+ {* Nav *}
  <div class="page_nav">
    <a href="{$SCRIPT_NAME}?p={$project}&a=summary">summary</a> | shortlog | <a href="{$SCRIPT_NAME}?p={$project}&a=log&h={$hash}">log</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=commit&h={$hash}">commit</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=commitdiff&h={$hash}">commitdiff</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=tree&h={$hash}&hb={$hash}">tree</a>
    <br />
@@ -31,6 +32,7 @@
    <a href="{$SCRIPT_NAME}?p={$project}&a=summary" class="title">&nbsp;</a>
  </div>
  <table cellspacing="0">
+   {* Display each log entry *}
    {section name=log loop=$commitlines}
      <tr class="{cycle values="light,dark"}">
        <td title="{$commitlines[log].agestringage}"><i>{$commitlines[log].agestringdate}</i></td>

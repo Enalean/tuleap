@@ -5,11 +5,13 @@
  *
  *  Copyright (C) 2009 Christopher Han <xiphux@gmail.com>
  *}
+ {* Nav *}
  <div class="page_nav">
    summary | <a href="{$SCRIPT_NAME}?p={$project}&a=shortlog">shortlog</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=log">log</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=commit&h={$head}">commit</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=commitdiff&h={$head}">commitdiff</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=tree">tree</a>
    <br /><br />
  </div>
  <div class="title">&nbsp;</div>
+ {* Project brief *}
  <table cellspacing="0">
    <tr><td>description</td><td>{$description}</td></tr>
    <tr><td>owner</td><td>{$owner}</td></tr>
@@ -19,6 +21,7 @@
    <a class="title" href="{$SCRIPT_NAME}?p={$project}&a=shortlog">shortlog</a>
  </div>
  <table cellspacing="0">
+   {* Recent revisions *}
    {section name=rev max=17 loop=$revlist}
      {if $smarty.section.rev.index == 16}
        <tr class="light">
@@ -41,6 +44,7 @@
    {/section}
  </table>
  {if $taglist}
+   {* Tags *}
    <div>
      <a href="{$SCRIPT_NAME}?p={$project}&a=tags" class="title">tags</a>
    </div>
@@ -69,6 +73,7 @@
    </table>
  {/if}
  {if $headlist}
+   {* Heads *}
    <div>
      <a href="{$SCRIPT_NAME}?p={$project}&a=heads" class="title">heads</a>
    </div>
