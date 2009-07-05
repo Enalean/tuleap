@@ -19,26 +19,16 @@ function git_tag($projectroot, $project, $hash)
 	$tpl->clear_all_assign();
 	$tpl->assign("project",$project);
 	$tpl->assign("head",$head);
-	$tpl->display("tag_nav.tpl");
+	$tpl->assign("hash", $hash);
 
 	$tag = git_read_tag($projectroot . $project, $hash);
 
-	$tpl->clear_all_assign();
-	$tpl->assign("project", $project);
-	$tpl->assign("hash", $hash);
-	$tpl->assign("title",$tag['name']);
-	$tpl->assign("type",$tag['type']);
-	$tpl->assign("object",$tag['object']);
+	$tpl->assign("tag",$tag);
 	if (isset($tag['author'])) {
-		$tpl->assign("author",$tag['author']);
 		$ad = date_str($tag['epoch'],$tag['tz']);
-		$tpl->assign("adrfc2822",$ad['rfc2822']);
-		$tpl->assign("adhourlocal",$ad['hour_local']);
-		$tpl->assign("adminutelocal",$ad['minute_local']);
-		$tpl->assign("adtzlocal",$ad['tz_local']);
+		$tpl->assign("datedata",$ad);
 	}
-	$tpl->assign("comment",$tag['comment']);
-	$tpl->display("tag_data.tpl");
+	$tpl->display("tag.tpl");
 }
 
 ?>
