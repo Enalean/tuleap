@@ -6,7 +6,6 @@
  *
  *  Copyright (C) 2006 Christopher Han <xiphux@gmail.com>
  */
- ob_start();
 
  /*
   * Version
@@ -190,7 +189,5 @@ if ($gitphp_conf['filesearch'])
 
  if ($gitphp_conf['debug'])
  	echo "Execution time: " . round(microtime(true) - GITPHP_START_TIME, 8) . " sec";
-
- ob_end_flush();
 
 ?>
