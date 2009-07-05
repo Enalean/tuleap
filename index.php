@@ -24,6 +24,14 @@
  require_once('config/gitphp.conf.php');
 
  /*
+  * Debug
+  */
+ if ($gitphp_conf['debug']) {
+ 	define('GITPHP_START_TIME', microtime(true));
+	error_reporting(E_ALL|E_STRICT);
+ }
+
+ /*
   * Instantiate Smarty
   */
  require_once($gitphp_conf['smarty_prefix'] . "Smarty.class.php");
@@ -203,6 +211,9 @@
 	 }
 	 $tpl->display("footer.tpl");
  }
+
+ if ($gitphp_conf['debug'])
+ 	echo "Execution time: " . round(microtime(true) - GITPHP_START_TIME, 8) . " sec";
 
  ob_end_flush();
 

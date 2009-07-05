@@ -169,6 +169,13 @@ $gitphp_conf['search'] = TRUE;
 $gitphp_conf['filesearch'] = TRUE;
 
 /*
+ * debug
+ * Turns on extra warning messages and benchmarking.
+ * Not recommended for production systems
+ */
+$gitphp_conf['debug'] = FALSE;
+
+/*
  * git_projects
  * Two-dimensional array list of projects
  * First array index is the name of the category the projects
