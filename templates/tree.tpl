@@ -5,6 +5,9 @@
  *
  *  Copyright (C) 2009 Christopher Han <xiphux@gmail.com>
  *}
+
+ {include file='header.tpl'}
+
  {* Nav *}
  {if $fullnav}
    <div class="page_nav">
@@ -55,3 +58,6 @@
      {/section}
    </table>
  </div>
+
+ {include file='footer.tpl'}
+

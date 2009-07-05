@@ -5,6 +5,9 @@
  *
  *  Copyright (C) 2009 Christopher Han <xiphux@gmail.com>
  *}
+
+ {include file='header.tpl'}
+
  {* Nav *}
  <div class="page_nav">
    summary | <a href="{$SCRIPT_NAME}?p={$project}&a=shortlog">shortlog</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=log">log</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=commit&h={$head}">commit</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=commitdiff&h={$head}">commitdiff</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=tree">tree</a>
@@ -91,3 +94,6 @@
      {/section}
    </table>
  {/if}
+
+ {include file='footer.tpl'}
+

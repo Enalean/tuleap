@@ -11,21 +11,19 @@ require_once('defs.constants.php');
 require_once('util.highlight.php');
 require_once('gitutil.git_read_commit.php');
 require_once('gitutil.git_rev_list.php');
+require_once('display.git_message.php');
 
 function git_search($projectroot, $project, $hash, $search, $searchtype, $page = 0)
 {
 	global $tpl,$gitphp_conf;
 
 	if (!$gitphp_conf['search']) {
-		$tpl->assign("message","Search has been disabled");
-		$tpl->display("message.tpl");
+		git_message("Search has been disabled", TRUE, TRUE);
 		return;
 	}
 
 	if (!isset($search) || (strlen($search) < 2)) {
-		$tpl->assign("error",TRUE);
-		$tpl->assign("message","You must enter search text of at least 2 characters");
-		$tpl->display("message.tpl");
+		git_message("You must enter search text of at least 2 characters", TRUE, TRUE);
 		return;
 	}
 	if (!isset($hash)) {
@@ -37,8 +35,7 @@ function git_search($projectroot, $project, $hash, $search, $searchtype, $page =
 
 	$revlist = explode("\n",trim(git_rev_list($projectroot . $project, $hash, 101, ($page * 100), FALSE, FALSE, $searchtype, $search)));
 	if (count($revlist) < 1 || (strlen($revlist[0]) < 1)) {
-		$tpl->assign("message","No matches for '" . $search . "'.");
-		$tpl->display("message.tpl");
+		git_message("No matches for '" . $search . "'.", FALSE, TRUE);
 		return;
 	}
 

@@ -5,6 +5,9 @@
  *
  *  Copyright (C) 2009 Christopher Han <xiphux@gmail.com>
  *}
+
+ {include file='header.tpl'}
+
  {* If we managed to look up commit info, we have enough info to display the full header - othewise just use a simple header *}
  <div class="page_nav">
    {if $fullnav}
@@ -47,3 +50,6 @@
    {* Display the diff *}
    {include file='filediff.tpl'}
  </div>
+
+ {include file='footer.tpl'}
+

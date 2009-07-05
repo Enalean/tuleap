@@ -74,15 +74,11 @@ if ($gitphp_conf['search'])
 if ($gitphp_conf['filesearch'])
 	$tpl->assign("filesearch",TRUE);
 
- $suppress_headers = FALSE;
 
- ob_start();
  if (isset($_GET['a']) && $_GET['a'] == "opml") {
-	$suppress_headers = TRUE;
 	require_once('include/display.git_opml.php');
 	git_opml($gitphp_conf['projectroot'],$git_projects);
  } else if (isset($_GET['a']) && $_GET['a'] == "project_index") {
-	$suppress_headers = TRUE;
 	require_once('include/display.git_project_index.php');
 	git_project_index($gitphp_conf['projectroot'],$git_projects);
  } else if (isset($_GET['p'])) {
@@ -125,7 +121,6 @@ if ($gitphp_conf['filesearch'])
 					git_commitdiff($gitphp_conf['projectroot'],$_GET['p'],$_GET['h'], (isset($_GET['hp']) ? $_GET['hp'] : NULL));
 					break;
 				case "commitdiff_plain":
-					$suppress_headers = TRUE;
 					require_once('include/display.git_commitdiff_plain.php');
 					git_commitdiff_plain($gitphp_conf['projectroot'],$_GET['p'],$_GET['h'],(isset($_GET['hp']) ? $_GET['hp'] : NULL));
 					break;
@@ -138,7 +133,6 @@ if ($gitphp_conf['filesearch'])
 					git_tags($gitphp_conf['projectroot'],$_GET['p']);
 					break;
 				case "rss":
-					$suppress_headers = TRUE;
 					require_once('include/display.git_rss.php');
 					git_rss($gitphp_conf['projectroot'],$_GET['p']);
 					break;
@@ -147,7 +141,6 @@ if ($gitphp_conf['filesearch'])
 					git_blob($gitphp_conf['projectroot'],$_GET['p'], (isset($_GET['h']) ? $_GET['h'] : NULL), (isset($_GET['f']) ? $_GET['f'] : NULL), (isset($_GET['hb']) ? $_GET['hb'] : NULL));
 					break;
 				case "blob_plain":
-					$suppress_headers = TRUE;
 					require_once('include/display.git_blob_plain.php');
 					git_blob_plain($gitphp_conf['projectroot'],$_GET['p'],$_GET['h'],(isset($_GET['f']) ? $_GET['f'] : NULL));
 					break;
@@ -156,12 +149,10 @@ if ($gitphp_conf['filesearch'])
 					git_blobdiff($gitphp_conf['projectroot'],$_GET['p'],$_GET['h'],$_GET['hb'],$_GET['hp'],(isset($_GET['f']) ? $_GET['f'] : NULL));
 					break;
 				case "blobdiff_plain":
-					$suppress_headers = TRUE;
 					require_once('include/display.git_blobdiff_plain.php');
 					git_blobdiff_plain($gitphp_conf['projectroot'],$_GET['p'],$_GET['h'],$_GET['hb'],$_GET['hp'], (isset($_GET['f']) ? $_GET['f'] : NULL));
 					break;
 				case "snapshot":
-					$suppress_headers = TRUE;
 					require_once('include/display.git_snapshot.php');
 					git_snapshot($gitphp_conf['projectroot'],$_GET['p'], (isset($_GET['h']) ? $_GET['h'] : NULL));
 					break;
@@ -190,21 +181,8 @@ if ($gitphp_conf['filesearch'])
 		}
 	}
  } else {
- 	$tpl->display("hometext.tpl");
 	require_once('include/display.git_project_list.php');
  	git_project_list($gitphp_conf['projectroot'],$git_projects,(isset($_GET['o']) ? $_GET['o'] : "project"));
- }
- $main = ob_get_contents();
- ob_end_clean();
-
- if (!$suppress_headers) {
-	 $tpl->display("header.tpl");
- }
-
- echo $main;
-
- if (!$suppress_headers) {
-	 $tpl->display("footer.tpl");
  }
 
  if ($gitphp_conf['debug'])

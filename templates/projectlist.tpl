@@ -5,6 +5,11 @@
  *
  *  Copyright (C) 2009 Christopher Han <xiphux@gmail.com>
  *}
+
+{include file='header.tpl'}
+
+{include file='hometext.tpl'}
+
 {if $message}
   {* Something is wrong; display an error message instead of trying to list *}
   {include file='message.tpl'}
@@ -96,3 +101,6 @@
 
   </table>
 {/if}
+
+{include file='footer.tpl'}
+
