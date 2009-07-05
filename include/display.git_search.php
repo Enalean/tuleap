@@ -16,15 +16,14 @@ function git_search($projectroot, $project, $hash, $search, $searchtype, $page =
 {
 	global $tpl,$gitphp_conf;
 
+	$tpl->clear_all_assign();
 	if (!$gitphp_conf['search']) {
-		$tpl->clear_all_assign();
 		$tpl->assign("message","Search has been disabled");
 		$tpl->display("message.tpl");
 		return;
 	}
 
 	if (!isset($search) || (strlen($search) < 2)) {
-		$tpl->clear_all_assign();
 		$tpl->assign("error",TRUE);
 		$tpl->assign("message","You must enter search text of at least 2 characters");
 		$tpl->display("message.tpl");
@@ -39,77 +38,51 @@ function git_search($projectroot, $project, $hash, $search, $searchtype, $page =
 
 	$revlist = explode("\n",trim(git_rev_list($projectroot . $project, $hash, 101, ($page * 100), FALSE, FALSE, $searchtype, $search)));
 	if (count($revlist) < 1 || (strlen($revlist[0]) < 1)) {
-		$tpl->clear_all_assign();
 		$tpl->assign("message","No matches for '" . $search . "'.");
 		$tpl->display("message.tpl");
 		return;
 	}
 
-	$tpl->clear_all_assign();
 	$tpl->assign("project",$project);
 	$tpl->assign("hash",$hash);
 	$tpl->assign("treehash",$co['tree']);
-	$tpl->display("search_nav.tpl");
 
 	$tpl->assign("search",$search);
 	$tpl->assign("searchtype",$searchtype);
-	if ($page > 0) {
-		$tpl->assign("firstlink",TRUE);
-		$tpl->assign("prevlink",TRUE);
-		if ($page > 1)
-			$tpl->assign("prevpage",$page-1);
-	}
-	if (count($revlist) > 100) {
-		$tpl->assign("nextlink",TRUE);
-		$tpl->assign("nextpage",$page+1);
-	}
-	$tpl->display("search_pagenav.tpl");
+	$tpl->assign("page",$page);
+	$revlistcount = count($revlist);
+	$tpl->assign("revlistcount",$revlistcount);
 
 	$tpl->assign("title",$co['title']);
-	$tpl->display("search_header.tpl");
 
-	$alternate = FALSE;
-	$commitcount = min(100,count($revlist));
+	$commitlines = array();
+	$commitcount = min(100,$revlistcount);
 	for ($i = 0; $i < $commitcount; $i++) {
-		$tpl->clear_all_assign();
 		$commit = $revlist[$i];
 		if (strlen(trim($commit)) > 0) {
+			$commitline = array();
 			$co2 = git_read_commit($projectroot . $project, $commit);
-			if ($alternate)
-				$tpl->assign("class","dark");
-			else
-				$tpl->assign("class","light");
-			$alternate = !$alternate;
-			$tpl->assign("project",$project);
-			$tpl->assign("commit",$commit);
-			$tpl->assign("agestringage",$co2['age_string_age']);
-			$tpl->assign("agestringdate",$co2['age_string_date']);
-			$tpl->assign("authorname",$co2['author_name']);
-			$tpl->assign("title_short",$co2['title_short']);
+			$commitline["commit"] = $commit;
+			$commitline["agestringage"] = $co2['age_string_age'];
+			$commitline["agestringdate"] = $co2['age_string_date'];
+			$commitline["authorname"] = $co2['author_name'];
+			$commitline["title_short"] = $co2['title_short'];
 			if (strlen($co2['title_short']) < strlen($co2['title']))
-				$tpl->assign("title",$co2['title']);
-			$tpl->assign("committree",$co2['tree']);
+				$commitline["title"] = $co2['title'];
+			$commitline["committree"] = $co2['tree'];
 			$matches = array();
 			foreach ($co2['comment'] as $comline) {
 				$hl = highlight($comline, $search, "searchmatch", GITPHP_TRIM_LENGTH);
 				if ($hl && (strlen($hl) > 0))
 					$matches[] = $hl;
 			}
-			$tpl->assign("matches",$matches);
-			$tpl->display("search_item.tpl");
+			$commitline["matches"] = $matches;
+			$commitlines[] = $commitline;
 		}
 	}
-
-	$tpl->clear_all_assign();
-	$tpl->assign("project",$project);
-	$tpl->assign("hash",$hash);
-	$tpl->assign("search",$search);
-	$tpl->assign("searchtype",$searchtype);
-	if (count($revlist) > 100) {
-		$tpl->assign("nextlink",TRUE);
-		$tpl->assign("nextpage",$page+1);
-	}
-	$tpl->display("search_footer.tpl");
+	
+	$tpl->assign("commitlines",$commitlines);
+	$tpl->display("search.tpl");
 }
 
 ?>
