@@ -1,7 +1,7 @@
 {*
- *  error.tpl
+ *  message.tpl
  *  gitphp: A PHP git repository browser
- *  Component: Error message template
+ *  Component: Warning/error message template
  *
  *  Copyright (C) 2009 Christopher Han <xiphux@gmail.com>
  *}

@@ -5,9 +5,9 @@
  *
  *  Copyright (C) 2009 Christopher Han <xiphux@gmail.com>
  *}
-{if $errmsg}
+{if $message}
   {* Something is wrong; display an error message instead of trying to list *}
-  {$errmsg}
+  {include file='message.tpl'}
 {else}
   <table cellspacing="0">
     {* Header *}

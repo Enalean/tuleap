@@ -57,10 +57,14 @@ function git_project_list($projectroot,$projectlist,$order = "project")
 				}
 				$tpl->assign("categorizedprojects",$projects);
 			}
-		} else
-			$tpl->assign("errmsg","No projects found");
-	} else
-		$tpl->assign("errmsg",$projects);
+		} else {
+			$tpl->assign("message","No projects found");
+			$tpl->assign("error",TRUE);
+		}
+	} else {
+		$tpl->assign("message",$projects);
+		$tpl->assign("error",TRUE);
+	}
 	$tpl->display("projectlist.tpl");
 }
 
