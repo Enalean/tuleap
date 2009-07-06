@@ -216,6 +216,10 @@ extends WikiPlugin
                     $this->_tocCounter($tocCounter, $level);                	
                     if (!strstr($content[$i],'#[')) {
                         $s = trim($match[2]);
+
+                        // Remove escape char from toc titles.
+                        $s = str_replace('~', '', $s);
+
                         $anchor = $this->_nextAnchor($s);
                         $manchor = MangleXmlIdentifier($anchor);
                         $texts = $s;
