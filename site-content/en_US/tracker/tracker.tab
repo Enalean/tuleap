@@ -223,6 +223,22 @@ tracker_admin_index	fieldset_updated	Field Set updated
 tracker_admin_index	fieldset_deleted	Field Set deleted
 tracker_admin_index	modify_fieldset	 - Modify Field Set
 tracker_admin_index	modify_fieldset_for	 - Modify Field Set for '$1'
+tracker_admin_index	admin_date_field_notif	Tracker Administration - Date Fields Reminder Settings
+tracker_admin_index	wrong_field	Wrong field_id '$1'.
+tracker_admin_index	notif_update_success	'$1' Reminder Settings Update Successful.
+tracker_admin_index	notif_update_fail	'$1' Reminder Settings Update Failed.
+tracker_admin_index	specify_notified_users	Error. You must specify the users to be notified.
+tracker_admin_index	specify_notification_start	Error. You must specify the notification start date.
+tracker_admin_index	specify_notification_frequency	Error. You must specify the notification frequency.
+tracker_admin_index	specify_notification_recurse	Error. You must specify the number of mails to be sent.
+tracker_admin_index	positive_value	Error. You must specify a positive value.
+tracker_admin_index	reminder_mail_subject	Reminder: '$1' $2 for '$3'
+tracker_admin_index	reminder_mail_body_header	Codex was asked to remind you today that the '$1' in the artifact below is $2 (Week $3).
+tracker_admin_index	reminder_mail_body_project	Project: '$1'
+tracker_admin_index	reminder_mail_body_tracker	Tracker: '$1'
+tracker_admin_index	reminder_mail_body_art	Artifact: '$1'
+tracker_admin_index	reminder_mail_body_art_link	You can access the artifact here:
+tracker_admin_index	reminder_mail_footer	This is an automatic message sent by Codex. Please do not reply to this email.
 #
 #-----------------------------------------------
 # Script: SF/www/tracker/admin/restore.php
@@ -484,6 +500,7 @@ tracker_include_type	display_info	Display information
 tracker_include_type	display_size	Display Size
 tracker_include_type	allow_empty	Allow Empty Value
 tracker_include_type	keep_change_history	Keep Change History
+tracker_include_type	enable_notifications	Enable Reminder
 tracker_include_type	misc	Miscellaneous:
 tracker_include_type	use_field	Use this field
 tracker_include_type	fields_requ	fields required
@@ -512,7 +529,7 @@ tracker_include_type	no_hidden_val	---- NO HIDDEN VALUES ----
 tracker_include_type	hidden_val	---- HIDDEN VALUES ----
 tracker_include_type	toggle_notification	Toggle Email Notification
 tracker_include_type	notification_suspended	Email Notifications Suspended
-tracker_include_type	toggle_notif_note	<B>As a tracker administrator</B>, you can temporarily suspend all the e-mail notifications in this tracker, regardless of the notification settings below.
+tracker_include_type	toggle_notif_note	<B>As a tracker administrator</B>, you can temporarily suspend all the e-mail notifications in this tracker, regardless of the notification settings below (except for reminder on Date fields).
 tracker_include_type	toggle_notif_warn	The tracker administrator has temporarily suspended email notifications in this tracker. The notification settings below are now ignored.
 tracker_include_type	stop_notification	Suspend Email Notification
 tracker_include_type	global_mail_notif	Global Email Notification
@@ -523,6 +540,9 @@ tracker_include_type	admin_conf	<P>The tracker administrators have configured th
 tracker_include_type	send_all_or_not	(Send on all updates: $1)
 tracker_include_type	admin_not_conf	<P>The tracker administrator hasn't yet specified email addresses that will systematically receive email notification of new artifacts.
 tracker_include_type	perso_mail_notif	Personal Email Notification
+tracker_include_type	date_fields_mail_notif	Date Fields Email Notification
+tracker_include_type	notification_status	Notification Status
+tracker_include_type	notification_settings	Notification Settings
 tracker_include_type	users_to_watch	Users To Watch
 tracker_include_type	backup_person	You can receive a carbon copy of email notifications sent to certain users of this project. List the login name of any user you wish to watch, separated by commas.</b>
 tracker_include_type	watchers	For your information your own artifact notifications are currently watched by: <u>$1</u>	
@@ -578,6 +598,21 @@ tracker_include_type	rank_in_fieldset	Rank in Field Set
 tracker_include_type	current_date	Current date.
 tracker_include_type	date_value	Date value:
 tracker_include_type	mass_change_permissions	Change permissions
+
+tracker_include_type	active			active
+tracker_include_type	disabled		disabled
+tracker_include_type	edit_notif_settings	[Edit Reminder Settings]
+tracker_include_type	notif_settings_field	Reminder Settings For '$1' Field
+tracker_include_type	days			day(s)
+tracker_include_type	notify_after		after
+tracker_include_type	notify_before		before
+tracker_include_type	reminder_form_part1	The notification on <b>'$1'</b> will start
+tracker_include_type	reminder_form_part2	the date set in this field.
+tracker_include_type	reminder_form_part3	Codex will send
+tracker_include_type	reminder_form_part4	e-mail(s) to
+tracker_include_type	reminder_form_part5	with a frequency of one e-mail every
+tracker_include_type	reminder_form_part6	<b>Example</b>:<br><br>The notification on '$1' date will start <b>2</b> days <b>before</b> the date set in this field.<br>Codex will send <b>3</b> e-mails to <b>Submitter</b> and <b>Assignee</b>, with a frequency of one e-mail every <b>2</b> days.
+tracker_include_type	reminder_form_part7	It means: Codex will send to artifact submitter and assignee(s): <br> * 1 e-mail 2 days before <i>'$1'</i> date<br> * 1 e-mail on <i>'$1'</i> date <br> * 1 e-mail 2 days after <i>'$1'</i> date
 
 tracker_include_type	add	Add
 tracker_include_type	error_gn_default_not_added	Unable to add default global notification
