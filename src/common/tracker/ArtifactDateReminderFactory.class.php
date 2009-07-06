@@ -162,7 +162,7 @@ class ArtifactDateReminderFactory extends Error {
      * @return string
      */
     function getTrackerName() {
-        $group = group_get_object($this->getGroupId());
+        $group = ProjectManager::instance()->getProject($this->getGroupId());
         $at = new ArtifactType($group,$this->getGroupArtifactId());
         return $at->getName();
     }
@@ -244,7 +244,7 @@ class ArtifactDateReminderFactory extends Error {
      * @return int
      */
     function getDateValue() {
-        $group = group_get_object($this->getGroupId());
+        $group = ProjectManager::instance()->getProject($this->getGroupId());
         $at = new ArtifactType($group,$this->getGroupArtifactId());
         $art_field_fact = new ArtifactFieldFactory($at);
         $field = $art_field_fact->getFieldFromId($this->getFieldId());
@@ -297,7 +297,7 @@ class ArtifactDateReminderFactory extends Error {
         global $art_field_fact;
 
         //Instantiate a new Artifact object
-        $group = group_get_object($this->getGroupId());
+        $group = ProjectManager::instance()->getProject($this->getGroupId());
         $at = new ArtifactType($group,$this->getGroupArtifactId());
         $art_field_fact = new ArtifactFieldFactory($at);
         $art = new Artifact($at,$this->getArtifactId(),false);
@@ -442,7 +442,7 @@ class ArtifactDateReminderFactory extends Error {
     function isUserAllowedToBeNotified($user_id) {
         global $art_field_fact;
          
-        $group = group_get_object($this->getGroupId());
+        $group = ProjectManager::instance()->getProject($this->getGroupId());
         $at = new ArtifactType($group,$this->getGroupArtifactId());
         $art_field_fact = new ArtifactFieldFactory($at);
         $art = new Artifact($at,$this->getArtifactId(),false);
@@ -459,7 +459,7 @@ class ArtifactDateReminderFactory extends Error {
     function handleNotification() {
         global $art_field_fact;
 
-        $group = group_get_object($this->getGroupId());
+        $group = ProjectManager::instance()->getProject($this->getGroupId());
         $at = new ArtifactType($group,$this->getGroupArtifactId());
         $art_field_fact = new ArtifactFieldFactory($at);
         $field =  $art_field_fact->getFieldFromId($this->getFieldId());
