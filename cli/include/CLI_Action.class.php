@@ -432,17 +432,40 @@ class CLI_Action {
                         $titles[$colname] = $fieldnames[$colname];
                     }
                 }
-                
-                if (!is_array($value)) {
-                    if (!isset($lengths[$colname]) || $lengths[$colname] < strlen($value)+2) {
-                        $lengths[$colname] = max(strlen($value), strlen($titles[$colname]));
-                        $lengths[$colname] += 2;
-                    }
-                } else {
-                    $lengths[$colname] = strlen($titles[$colname]) + 2;
-                }
             }
         }
+        // Multi-line string handling
+        // A row containing a N-line cell will give N rows in the array $result
+        $rowArrays = array();
+        $result2 = array();
+        foreach ($result as $i => $row) {
+            foreach ($row as $colname => $value) {
+                if (is_array($value)) {
+                    $lengths[$colname] = strlen($titles[$colname]) + 2;
+                    $rowArrays[$i][0][$colname] = $value;
+                } else {
+                    $lines = explode("\n", $value);
+                
+                    foreach ($lines as $j => $line) {
+                        if (!isset($lengths[$colname]) || $lengths[$colname] < strlen($line)+2) {
+                            $lengths[$colname] = max(strlen($line), strlen($titles[$colname]));
+                            $lengths[$colname] += 2;
+                        }
+
+                        if (!isset($rowArrays[$i][$j])) {
+                            foreach ($titles as $colname2 => $v) {
+                                $rowArrays[$i][$j][$colname2] = '';
+                            }
+                        }
+                        $rowArrays[$i][$j][$colname] = $line;
+                    }
+                }
+            }
+            foreach ($rowArrays[$i] as $row) {
+                $result2[] = $row;
+            }
+        }
+        $result = $result2;
     
         // show the titles
         foreach ($titles as $colname => $title) {
