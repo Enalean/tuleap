@@ -572,7 +572,7 @@ function show_post_form($forum_id, $thread_id=0, $is_followup_to=0, $subject="")
           </TD></TR>
 	  <TR><TD><B><?php echo $Language->getText('forum_forum_utils','msg'); ?>:
             </TD><TD>
-		<TEXTAREA NAME="body" VALUE="" ROWS="10" COLS="60" WRAP="SOFT"></TEXTAREA>
+		<TEXTAREA NAME="body" VALUE="" ROWS="10" COLS="80" WRAP="SOFT"></TEXTAREA>
 	  </TD></TR>
 	  <TR><TD COLSPAN="2" ALIGN="center">
 		<B><span class="highlight"><?php echo $Language->getText('forum_forum_utils','html_displays_as_text'); ?></span></B>
