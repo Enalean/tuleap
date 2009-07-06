@@ -714,7 +714,7 @@ class Docman_ItemFactory {
         $dpm =& Docman_PermissionsManager::instance($this->groupId);
         $dpm->retreiveReadPermissionsForItems($itemIds, $user);
         foreach($itemArray as $item) {
-             if(!$dPm->userCanRead($user, $item->getId())) {
+             if(!$dpm->userCanRead($user, $item->getId())) {
                  unset($itemList[$item->getId()]);
                  unset($orphans[$item->getId()]);
              }
