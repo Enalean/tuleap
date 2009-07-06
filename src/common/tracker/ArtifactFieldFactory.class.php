@@ -80,7 +80,7 @@ class ArtifactFieldFactory extends Error {
 	function fetchData($group_artifact_id) {
 	    
 	    $sql='SELECT af.field_id, field_name, display_type, data_type, '.
-		'display_size,label, description,scope,required,empty_ok,keep_history,special, '.
+		'display_size,label, description,scope,required,empty_ok,keep_history,notification,special, '.
 		'value_function,'.
 		'af.group_artifact_id, use_it, place, default_value, field_set_id '.
 		'FROM artifact_field_usage afu, artifact_field af '.
@@ -151,6 +151,23 @@ class ArtifactFieldFactory extends Error {
 		uasort($result_fields,"art_field_factory_cmp_place");
 		return $result_fields;
 
+	}
+
+	/**
+	* Return all date fields used
+	* 
+	*                @return array
+	*/
+	function getUsedDateFields() {
+	
+	    $result_fields = array();
+	    while (list($key,$field) = each($this->USAGE_BY_NAME) ) {
+		if ( $field->getUseIt() == 1 && $field->isDateField()) {
+	    	    $result_fields[$key] = $field;
+		}
+	    }
+		
+	    return $result_fields;
 	}
 
 	/**
@@ -410,7 +427,7 @@ class ArtifactFieldFactory extends Error {
 		',"'. db_es($field->getDisplayType()) .'","'. db_es($field->getDisplaySize()) .'","'. db_es($field->getLabel()) .
 		'","'. db_es($field->getDescription()) .'","'. db_es($field->getScope()) .'",'. db_ei($field->getRequired()) .
 		','. db_ei($field->getEmptyOk()) .','. db_ei($field->getKeepHistory()) .','. db_ei($field->getSpecial()) .
-		',"'. db_es(implode(",",$dest_val_func)) .'","'. db_es($field->getDefaultValue(true)) .'")';
+		',"'. db_es(implode(",",$dest_val_func)) .'","'. db_es($field->getDefaultValue(true)).'",'.db_ei($field->getNotificationStatus()).')';
 	      
 	      $res_insert = db_query($sql_insert);
 	      //echo $sql_insert;
@@ -565,7 +582,7 @@ class ArtifactFieldFactory extends Error {
 			 &&($display_type == "TF") ) 
 			return "";
 		
-		if ( ($this->data_type == $af->DATATYPE_TEXT)
+		if ( ($data_type == $af->DATATYPE_TEXT)
 			 &&($display_type == "TA") ) 
 			return "";
 
@@ -604,7 +621,7 @@ class ArtifactFieldFactory extends Error {
 	 */
 	function createField($description,$label,$data_type,$display_type,
 						 $display_size,$rank_on_screen,
-						 $empty_ok,$keep_history,$special,$use_it,$field_set_id) {
+						 $empty_ok,$keep_history,$enable_notification,$special,$use_it,$field_set_id) {
 
 	  global $Language;
 
@@ -630,7 +647,7 @@ class ArtifactFieldFactory extends Error {
 		// First create the artifact_field
 		$sql = "INSERT INTO artifact_field VALUES (".
 				 db_ei($field_id) .",". db_ei($this->ArtifactType->getID()) .",". db_ei($field_set_id) .",'". db_es($field_name) ."',". db_ei($data_type) .",'". db_es($display_type) ."','". db_es($display_size) ."','".
-				 db_es($label) ."','". db_es($description) ."','',0,". db_ei($empty_ok) .",". db_ei($keep_history) .",". db_ei($special) .",'','". db_es($default_value) ."')";
+				 db_es($label) ."','". db_es($description) ."','',0,". db_ei($empty_ok) .",". db_ei($keep_history) .",". db_ei($special) .",'','". db_es($default_value) ."',".db_ei($enable_notification).")";
 								
 		$res_insert = db_query($sql);
 		if (!$res_insert || db_affected_rows($res_insert) <= 0) {
@@ -647,6 +664,11 @@ class ArtifactFieldFactory extends Error {
 		if (!$res_insert || db_affected_rows($res_insert) <= 0) {
 			$this->setError($Language->getText('tracker_common_field_factory','use_ins_err',array($field_id,$this->ArtifactType->getID(),db_error())));
 			return false;
+		}
+		
+		//Insert default reminder settings, in case the field is a date-field and reminder is enabled
+		if ($data_type == $af->DATATYPE_DATE && $enable_notification == 1) {
+		    $af->setDefaultReminderSettings($field_id,$this->ArtifactType->getID());
 		}
 		
 		// We need to insert with the default value, records in artifact_field_value table
