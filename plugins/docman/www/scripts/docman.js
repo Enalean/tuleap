@@ -750,7 +750,15 @@ Object.extend(com.xerox.codendi.Menu.prototype, {
                     feedback.show();
                     
                     // There is sth to paste.
-                    this.docman.canPaste = true;
+                    //this.docman.canPaste = true;
+
+                    // There is something to paste & user have write permission on a folder -> user can paste inside that folder.
+                    $H(this.docman.actionsForItem).keys().each(function (id) {
+                        if (this.docman.actionsForItem[id].canNewDocument) {
+                            this.docman.actionsForItem[id].canPaste = true;
+                        }
+                    }.bind(this));
+
                 }.bindAsEventListener(this)
             });
             Event.stop(evt);
