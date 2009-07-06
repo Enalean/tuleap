@@ -44,6 +44,12 @@
 	$tpl->load_filter('output','trimwhitespace');
 }
 
+ /*
+  * Init i18n
+  */
+ require_once('include/i18n.initlocale.php');
+ $localestrings = initlocale($gitphp_conf['lang']);
+
 /*
  * Setup global assigns used everywhere (such as header/footer)
  */

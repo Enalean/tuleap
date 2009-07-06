@@ -65,24 +65,23 @@ function git_commit($projectroot,$project,$hash)
 			$difftreeline["file"] = $regs[7];
 			$difftreeline["from_file"] = strtok($regs[7],"\t");
 			$difftreeline["from_filetype"] = file_type($regs[1]);
+			$difftreeline["from_filetype_localized"] = lookupstring($difftreeline["from_filetype"]);
 			$difftreeline["to_file"] = strtok("\t");
 			$difftreeline["to_filetype"] = file_type($regs[2]);
+			$difftreeline["to_filetype_localized"] = lookupstring($difftreeline["to_filetype"]);
 			if ((octdec($regs[2]) & 0x8000) == 0x8000)
 				$difftreeline["isreg"] = TRUE;
 			$modestr = "";
 			if ((octdec($regs[1]) & 0x17000) != (octdec($regs[2]) & 0x17000))
-				$modestr .= " from " . file_type($regs[1]) . " to " . file_type($regs[2]);
+				$difftreeline["typechange"] = TRUE;
 			if ((octdec($regs[1]) & 0777) != (octdec($regs[2]) & 0777)) {
 				if ((octdec($regs[1]) & 0x8000) && (octdec($regs[2]) & 0x8000))
-					$modestr .= " mode: " . (octdec($regs[1]) & 0777) . "->" . (octdec($regs[2]) & 0777);
+					$difftreeline["modechange"] = (octdec($regs[1]) & 0777) . "->" . (octdec($regs[2]) & 0777);
 				else if (octdec($regs[2]) & 0x8000)
-					$modestr .= " mode: " . (octdec($regs[2]) & 0777);
+					$difftreeline["modechange"] = (octdec($regs[2]) & 0777);
 			}
-			$difftreeline["modechange"] = $modestr;
-			$simmodechg = "";
 			if ($regs[1] != $regs[2])
-				$simmodechg .= ", mode: " . (octdec($regs[2]) & 0777);
-			$difftreeline["simmodechg"] = $simmodechg;
+				$difftreeline["simmodechg"] = (octdec($regs[2]) & 0777);
 			$difftreelines[] = $difftreeline;
 		}
 	}

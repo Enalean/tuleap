@@ -13,6 +13,7 @@
  require_once('gitutil.git_diff_tree.php');
  require_once('gitutil.read_info_ref.php');
  require_once('gitutil.git_diff.php');
+ require_once('i18n.lookupstring.php');
 
 function git_commitdiff($projectroot,$project,$hash,$hash_parent)
 {
@@ -47,6 +48,8 @@ function git_commitdiff($projectroot,$project,$hash,$hash_parent)
 			$difftreeline["file"] = $regs[6];
 			$difftreeline["from_type"] = file_type($regs[1]);
 			$difftreeline["to_type"] = file_type($regs[2]);
+			$difftreeline["from_type_localized"] = lookupstring($difftreeline["from_type"]);
+			$difftreeline["to_type_localized"] = lookupstring($difftreeline["to_type"]);
 			if ($regs[5] == "A")
 				$difftreeline['diffout'] = explode("\n",git_diff($projectroot . $project, null,"/dev/null",$regs[4],"b/" . $regs[6]));
 			else if ($regs[5] == "D")

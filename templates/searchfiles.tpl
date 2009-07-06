@@ -10,24 +10,33 @@
 
 {* Nav *}
 <div class="page_nav">
-  <a href="{$SCRIPT_NAME}?p={$project}&a=summary">summary</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=shortlog&h={$hash}">shortlog</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=log&h={$hash}">log</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=commit&h={$hash}">commit</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=commitdiff&h={$hash}">commitdiff</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=tree&h={$treehash}&hb={$hash}">tree</a>
+  {* i18n: summary = summary *}
+  {* i18n: shortlog = shortlog *}
+  {* i18n: log = log *}
+  {* i18n: commit = commit *}
+  {* i18n: commitdiff = commitdiff *}
+  {* i18n: tree = tree *}
+  <a href="{$SCRIPT_NAME}?p={$project}&a=summary">{$localize.summary}</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=shortlog&h={$hash}">{$localize.shortlog}</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=log&h={$hash}">{$localize.log}</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=commit&h={$hash}">{$localize.commit}</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=commitdiff&h={$hash}">{$localize.commitdiff}</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=tree&h={$treehash}&hb={$hash}">{$localize.tree}</a>
   <br />
+  {* i18n: first = first *}
   {if $page > 0}
-    <a href="{$SCRIPT_NAME}?p={$project}&a=search&h={$hash}&s={$search}&st={$searchtype}">first</a>
+    <a href="{$SCRIPT_NAME}?p={$project}&a=search&h={$hash}&s={$search}&st={$searchtype}">{$localize.first}</a>
   {else}
-    first
+    {$localize.first}
   {/if}
     &sdot; 
+  {* i18n: prev = prev *}
   {if $page > 0}
-    <a href="{$SCRIPT_NAME}?p={$project}&a=search&h={$hash}&s={$search}&st={$searchtype}{if $page > 1}&pg={$page-1}{/if}" accesskey="p" title="Alt-p">prev</a>
+    <a href="{$SCRIPT_NAME}?p={$project}&a=search&h={$hash}&s={$search}&st={$searchtype}{if $page > 1}&pg={$page-1}{/if}" accesskey="p" title="Alt-p">{$localize.prev}</a>
   {else}
-    prev
+    {$localize.prev}
   {/if}
     &sdot; 
+  {* i18n: next = next *}
   {if $filesearchcount > 100}
-    <a href="{$SCRIPT_NAME}?p={$project}&a=search&h={$hash}&s={$search}&st={$searchtype}&pg={$page+1}" accesskey="n" title="Alt-n">next</a>
+    <a href="{$SCRIPT_NAME}?p={$project}&a=search&h={$hash}&s={$search}&st={$searchtype}&pg={$page+1}" accesskey="n" title="Alt-n">{$localize.next}</a>
   {else}
-    next
+    {$localize.next}
   {/if}
   <br />
 </div>
@@ -50,9 +59,12 @@
       </td>
       <td class="link">
         {if $filesearchlines[match].tree}
-          <a href="{$SCRIPT_NAME}?p={$project}&a=tree&h={$filesearchlines[match].hash}&hb={$hash}&f={$filesearchlines[match].file}">tree</a>
+	  {* i18n: tree = tree *}
+          <a href="{$SCRIPT_NAME}?p={$project}&a=tree&h={$filesearchlines[match].hash}&hb={$hash}&f={$filesearchlines[match].file}">{$localize.tree}</a>
         {else}
-          <a href="{$SCRIPT_NAME}?p={$project}&a=blob&h={$filesearchlines[match].hash}&hb={$hash}&f={$filesearchlines[match].file}">blob</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=history&h={$hash}&f={$filesearchlines[match].file}">history</a>
+	  {* i18n: blob = blob *}
+	  {* i18n: history = history *}
+          <a href="{$SCRIPT_NAME}?p={$project}&a=blob&h={$filesearchlines[match].hash}&hb={$hash}&f={$filesearchlines[match].file}">{$localize.blob}</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=history&h={$hash}&f={$filesearchlines[match].file}">{$localize.history}</a>
         {/if}
       </td>
     </tr>
@@ -60,7 +72,8 @@
 
   {if $filesearchcount > 100}
     <tr>
-      <td><a href="{$SCRIPT_NAME}?p={$project}&a=search&h={$hash}&s={$search}&st={$searchtype}&pg={$page+1}" title="Alt-n">next</a></td>
+      {* i18n: next = next *}
+      <td><a href="{$SCRIPT_NAME}?p={$project}&a=search&h={$hash}&s={$search}&st={$searchtype}&pg={$page+1}" title="Alt-n">{$localize.next}</a></td>
     </tr>
   {/if}
 </table>

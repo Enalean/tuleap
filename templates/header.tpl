@@ -12,7 +12,7 @@ header("Content-Type: $contentType; charset=utf-8"); *}
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
   <!-- gitphp web interface {$version}, (C) 2006 Christopher Han <xiphux@gmail.com> -->
   <head>
-    <title>{$pagetitle}{if $project && $validproject} :: {$project}{if $action && $validaction}/{$action}{/if}{/if}</title>
+    <title>{$pagetitle}{if $project && $validproject} :: {$project}{if $action && $validaction}/{$localize.$action}{/if}{/if}</title>
     {if $validproject}
       <link rel="alternate" title="{$project} log" href="{$SCRIPT_NAME}?p={$project}&a=rss" type="application/rss+xml" />
     {/if}
@@ -24,11 +24,12 @@ header("Content-Type: $contentType; charset=utf-8"); *}
       <a href="http://www.kernel.org/pub/software/scm/git/docs/" title="git documentation">
         <img src="git-logo.png" width="72" height="27" alt="git" class="logo" />
       </a>
-      <a href="index.php">projects</a> / 
+      {* i18n: projects = projects *}
+      <a href="index.php">{$localize.projects}</a> / 
       {if $project && $validproject}
         <a href="{$SCRIPT_NAME}?p={$project}&a=summary">{$project}</a>
         {if $action && $validaction}
-           / {$action}
+           / {$localize.$action}
         {/if}
         {if $enablesearch}
           <form method="get" action="index.php" enctype="application/x-www-form-urlencoded">
@@ -37,13 +38,18 @@ header("Content-Type: $contentType; charset=utf-8"); *}
               <input type="hidden" name="a" value="search" />
               <input type ="hidden" name="h" value="{if $currentsearchhash}{$currentsearchhash}{else}HEAD{/if}" />
               <select name="st">
-                <option {if $currentsearchtype == 'commit'}selected="selected"{/if} value="commit">commit</option>
-                <option {if $currentsearchtype == 'author'}selected="selected"{/if} value="author">author</option>
-                <option {if $currentsearchtype == 'committer'}selected="selected"{/if} value="committer">committer</option>
+	        {* i18n: commit = commit *}
+                <option {if $currentsearchtype == 'commit'}selected="selected"{/if} value="commit">{$localize.commit}</option>
+                {* i18n: author = author *}
+                <option {if $currentsearchtype == 'author'}selected="selected"{/if} value="author">{$localize.author}</option>
+                {* i18n: committer = committer *}
+                <option {if $currentsearchtype == 'committer'}selected="selected"{/if} value="committer">{$localize.committer}</option>
                 {if $filesearch}
-                  <option {if $currentsearchtype == 'file'}selected="selected"{/if} value="file">file</option>
+		  {* i18n: file = file *}
+                  <option {if $currentsearchtype == 'file'}selected="selected"{/if} value="file">{$localize.file}</option>
                 {/if}
-              </select> search: <input type="text" name="s" {if $currentsearch}value="{$currentsearch}"{/if} />
+		{* i18n: search = search *}
+              </select> {$localize.search}: <input type="text" name="s" {if $currentsearch}value="{$currentsearch}"{/if} />
             </div>
           </form>
         {/if}

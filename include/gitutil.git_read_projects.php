@@ -7,6 +7,7 @@
  *  Copyright (C) 2008 Christopher Han <xiphux@gmail.com>
  */
 
+ require_once('i18n.lookupstring.php');
  require_once('gitutil.git_recurse_projects.php');
  require_once('gitutil.git_project_info.php');
 
@@ -46,9 +47,9 @@ function git_read_projects($projectroot,$projectlist,$projdata = FALSE)
 				}
 			}
 		} else
-			return "Projectroot is not a directory";
+			return lookupstring("Projectroot is not a directory");
 	} else
-		return "No projectroot set";
+		return lookupstring("No projectroot set");
 	return $projects;
 }
 

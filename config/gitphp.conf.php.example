@@ -176,6 +176,13 @@ $gitphp_conf['filesearch'] = TRUE;
 $gitphp_conf['debug'] = FALSE;
 
 /*
+ * lang
+ * Sets the language of the interface
+ * Must be a valid translation in include/locale/
+ */
+$gitphp_conf['lang'] = "en_US";
+
+/*
  * git_projects
  * Two-dimensional array list of projects
  * First array index is the name of the category the projects

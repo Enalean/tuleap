@@ -10,7 +10,13 @@
 
  {* Page header *}
  <div class="page_nav">
-   <a href="{$SCRIPT_NAME}?p={$project}&a=summary">summary</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=shortlog">shortlog</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=log">log</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=commit&h={$hash}">commit</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=commitdiff&h={$hash}">commitdiff</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=tree&h={$tree}&hb={$hash}">tree</a>
+   {* i18n: summary = summary *}
+   {* i18n: shortlog = shortlog *}
+   {* i18n: log = log *}
+   {* i18n: commit = commit *}
+   {* i18n: commitdiff = commitdiff *}
+   {* i18n: tree = tree *}
+   <a href="{$SCRIPT_NAME}?p={$project}&a=summary">{$localize.summary}</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=shortlog">{$localize.shortlog}</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=log">{$localize.log}</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=commit&h={$hash}">{$localize.commit}</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=commitdiff&h={$hash}">{$localize.commitdiff}</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=tree&h={$tree}&hb={$hash}">{$localize.tree}</a>
    <br /><br />
  </div>
  <div>
@@ -40,7 +46,11 @@
        <td title="{$historylines[history].agestringage}"><i>{$historylines[history].agestringdate}</i></td>
        <td><i>{$historylines[history].authorname}</i></td>
        <td><a href="{$SCRIPT_NAME}?p={$project}&a=commit&h={$historylines[history].commit}" class="list"><b>{$historylines[history].title}{if $historylines[history].commitref} <span class="tag">{$historylines[history].commitref}</span>{/if}</b></a></td>
-       <td class="link"><a href="{$SCRIPT_NAME}?p={$project}&a=commit&h={$historylines[history].commit}">commit</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=commitdiff&h={$historylines[history].commit}">commitdiff</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=blob&hb={$historylines[history].commit}&f={$historylines[history].file}">blob</a>{if $historylines[history].blob && $historylines[history].blobparent} | <a href="{$SCRIPT_NAME}?p={$project}&a=blobdiff&h={$historylines[history].blob}&hp={$historylines[history].blobparent}&hb={$historylines[history].commit}&f={$historylines[history].file}">diff to current</a>{/if}
+       {* i18n: difftocurrent = diff to current *}
+       {* i18n: blob = blob *}
+       {* i18n: commit = commit *}
+       {* i18n: commitdiff = commitdiff *}
+       <td class="link"><a href="{$SCRIPT_NAME}?p={$project}&a=commit&h={$historylines[history].commit}">{$localize.commit}</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=commitdiff&h={$historylines[history].commit}">{$localize.commitdiff}</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=blob&hb={$historylines[history].commit}&f={$historylines[history].file}">{$localize.blob}</a>{if $historylines[history].blob && $historylines[history].blobparent} | <a href="{$SCRIPT_NAME}?p={$project}&a=blobdiff&h={$historylines[history].blob}&hp={$historylines[history].blobparent}&hb={$historylines[history].commit}&f={$historylines[history].file}">{$localize.difftocurrent}</a>{/if}
        </td>
      </tr>
    {/section}

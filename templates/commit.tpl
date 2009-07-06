@@ -10,7 +10,13 @@
 
  <div class="page_nav">
    {* Nav *}
-   <a href="{$SCRIPT_NAME}?p={$project}&a=summary">summary</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=shortlog&h={$hash}">shortlog</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=log&h={$hash}">log</a> | commit | {if $parent}<a href="{$SCRIPT_NAME}?p={$project}&a=commitdiff&h={$hash}">commitdiff</a> | {/if}<a href="{$SCRIPT_NAME}?p={$project}&a=tree&h={$tree}&hb={$hash}">tree</a>
+   {* i18n: summary = summary *}
+   {* i18n: shortlog = shortlog *}
+   {* i18n: log = log *}
+   {* i18n: commit = commit *}
+   {* i18n: commitdiff = commitdiff *}
+   {* i18n: tree = tree *}
+   <a href="{$SCRIPT_NAME}?p={$project}&a=summary">{$localize.summary}</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=shortlog&h={$hash}">{$localize.shortlog}</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=log&h={$hash}">{$localize.log}</a> | {$localize.commit} | {if $parent}<a href="{$SCRIPT_NAME}?p={$project}&a=commitdiff&h={$hash}">{$localize.commitdiff}</a> | {/if}<a href="{$SCRIPT_NAME}?p={$project}&a=tree&h={$tree}&hb={$hash}">{$localize.tree}</a>
    <br /><br />
  </div>
  <div>
@@ -29,7 +35,8 @@
    {* Commit data *}
    <table cellspacing="0">
      <tr>
-       <td>author</td>
+       {* i18n: author = author *}
+       <td>{$localize.author}</td>
        <td>{$author}</td>
      </tr>
      <tr>
@@ -37,7 +44,8 @@
        <td> {$adrfc2822} ({if $adhourlocal < 6}<span class="latenight">{/if}{$adhourlocal}:{$adminutelocal}{if $adhourlocal < 6}</span>{/if} {$adtzlocal})</td>
      </tr>
      <tr>
-       <td>committer</td>
+       {* i18n: committer = committer *}
+       <td>{$localize.committer}</td>
        <td>{$committer}</td>
      </tr>
      <tr>
@@ -45,19 +53,26 @@
        <td> {$cdrfc2822} ({$cdhourlocal}:{$cdminutelocal} {$cdtzlocal})</td>
      </tr>
      <tr>
-       <td>commit</td>
+       {* i18n: commit = commit *}
+       <td>{$localize.commit}</td>
        <td class="monospace">{$id}</td>
      <tr>
      <tr>
-       <td>tree</td>
+       {* i18n: tree = tree *}
+       <td>{$localize.tree}</td>
        <td class="monospace"><a href="{$SCRIPT_NAME}?p={$project}&a=tree&h={$tree}&hb={$hash}" class="list">{$tree}</a></td>
-       <td class="link"><a href="{$SCRIPT_NAME}?p={$project}&a=tree&h={$tree}&hb={$hash}">tree</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=snapshot&h={$hash}">snapshot</a></td>
+       {* i18n: snapshot = snapshot *}
+       {* i18n: tree = tree *}
+       <td class="link"><a href="{$SCRIPT_NAME}?p={$project}&a=tree&h={$tree}&hb={$hash}">{$localize.tree}</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=snapshot&h={$hash}">{$localize.snapshot}</a></td>
      </tr>
      {foreach from=$parents item=par}
        <tr>
-         <td>parent</td>
+         {* i18n: parent = parent *}
+         <td>{$localize.parent}</td>
 	 <td class="monospace"><a href="{$SCRIPT_NAME}?p={$project}&a=commit&h={$par}" class="list">{$par}</a></td>
-         <td class="link"><a href="{$SCRIPT_NAME}?p={$project}&a=commit&h={$par}">commit</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=commitdiff&h={$hash}&hp={$par}">commitdiff</a></td>
+	 {* i18n: commit = commit *}
+	 {* i18n: commitdiff = commitdiff *}
+         <td class="link"><a href="{$SCRIPT_NAME}?p={$project}&a=commit&h={$par}">{$localize.commit}</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=commitdiff&h={$hash}&hp={$par}">{$localize.commitdiff}</a></td>
        </tr>
      {/foreach}
    </table>
@@ -69,7 +84,8 @@
  </div>
  <div class="list_head">
    {if $difftreesize > 11}
-     {$difftreesize} files changed:
+     {* i18n: fileschanged = %1$d files changed *}
+     {$localize.fileschanged|sprintf:$difftreesize}:
    {/if}
  </div>
  <table cellspacing="0">
@@ -79,12 +95,22 @@
 	 
        {if $difftreelines[difftree].status == "A"}
          <td><a href="{$SCRIPT_NAME}?p={$project}&a=blob&h={$difftreelines[difftree].to_id}&hb={$hash}&f={$difftreelines[difftree].file}" class="list">{$difftreelines[difftree].file}</a></td>
-         <td><span class="newfile">[new {$difftreelines[difftree].to_filetype}{if $difftreelines[difftree].isreg} with mode: {$difftreelines[difftree].to_mode_cut}{/if}]</span></td>
-         <td class="link"><a href="{$SCRIPT_NAME}?p={$project}&a=blob&h={$difftreelines[difftree].to_id}&hb={$hash}&f={$difftreelines[difftree].file}">blob</a></td>
+	 {if $difftreelines[difftree].isreg}
+	   {* i18n: newobjectwithmode = new %1$s with mode: %2$s *}
+           <td><span class="newfile">[{$localize.newobjectwithmode|sprintf:$difftreelines[difftree].to_filetype_localized:$difftreelines[difftree].to_mode_cut}]</span></td>
+	 {else}
+	   {* i18n: newobject = new %1$s *}
+           <td><span class="newfile">[{$localize.newobject|sprintf:$difftreelines[difftree].to_filetype_localized}]</span></td>
+	 {/if}
+	 {* i18n: blob = blob *}
+         <td class="link"><a href="{$SCRIPT_NAME}?p={$project}&a=blob&h={$difftreelines[difftree].to_id}&hb={$hash}&f={$difftreelines[difftree].file}">{$localize.blob}</a></td>
        {elseif $difftreelines[difftree].status == "D"}
          <td><a href="{$SCRIPT_NAME}?p={$project}&a=blob&h={$difftreelines[difftree].from_id}&hb={$hash}&f={$difftreelines[difftree].file}" class="list">{$difftreelines[difftree].file}</a></td>
-         <td><span class="deletedfile">[deleted {$difftreelines[difftree].from_filetype}]</span></td>
-         <td class="link"><a href="{$SCRIPT_NAME}?p={$project}&a=blob&h={$difftreelines[difftree].from_id}&hb={$hash}&f={$difftreelines[difftree].file}">blob</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=history&h={$hash}&f={$difftreelines[difftree].file}">history</a></td>
+	 {* i18n: deletedobject = deleted %1$s *}
+         <td><span class="deletedfile">[{$localize.deletedobject|sprintf:$difftreelines[difftree].from_filetype_localized}]</span></td>
+	 {* i18n: blob = blob *}
+	 {* i18n: history = history *}
+         <td class="link"><a href="{$SCRIPT_NAME}?p={$project}&a=blob&h={$difftreelines[difftree].from_id}&hb={$hash}&f={$difftreelines[difftree].file}">{$localize.blob}</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=history&h={$hash}&f={$difftreelines[difftree].file}">{$localize.history}</a></td>
        {elseif $difftreelines[difftree].status == "M" || $difftreelines[difftree].status == "T"}
          <td>
            {if $difftreelines[difftree].to_id != $difftreelines[difftree].from_id}
@@ -93,13 +119,38 @@
              <a href="{$SCRIPT_NAME}?p={$project}&a=blob&h={$difftreelines[difftree].to_id}&hb={$hash}&f={$difftreelines[difftree].file}" class="list">{$difftreelines[difftree].file}</a>
            {/if}
          </td>
-         <td>{if $difftreelines[difftree].from_mode != $difftreelines[difftree].to_mode} <span class="changedfile">[changed{$difftreelines[difftree].modechange}]</span>{/if}</td>
+         <td>
+	   {if $difftreelines[difftree].from_mode != $difftreelines[difftree].to_mode}
+	     <span class="changedfile">
+	       {if $difftreelines[difftree].typechange}
+	         {* i18n: changedobjecttype = changed from %1$s to %2$s *}
+	         [{$localize.changedobjecttype|sprintf:$difftreelines[difftree].from_filetype_localized:$difftreelines[difftree].to_filetype_localized}]
+	       {/if}
+	       {if $difftreelines[difftree].modechange}
+	         {* i18n: changedobjectmode = changed mode: %1$s *}
+	         [{$localize.changedobjectmode|sprintf:$difftreelines[difftree].modechange}]
+	       {/if}
+	     </span>
+	   {/if}
+	 </td>
          <td class="link">
-           <a href="{$SCRIPT_NAME}?p={$project}&a=blob&h={$difftreelines[difftree].to_id}&hb={$hash}&f={$difftreelines[difftree].file}">blob</a>{if $difftreelines[difftree].to_id != $difftreelines[difftree].from_id} | <a href="{$SCRIPT_NAME}?p={$project}&a=blobdiff&h={$difftreelines[difftree].to_id}&hp={$difftreelines[difftree].from_id}&hb={$hash}&f={$difftreelines[difftree].file}">diff</a>{/if} | <a href="{$SCRIPT_NAME}?p={$project}&a=history&h={$hash}&f={$difftreelines[difftree].file}">history</a></td>
+	   {* i18n: blob = blob *}
+	   {* i18n: diff = diff *}
+	   {* i18n: history = history *}
+           <a href="{$SCRIPT_NAME}?p={$project}&a=blob&h={$difftreelines[difftree].to_id}&hb={$hash}&f={$difftreelines[difftree].file}">{$localize.blob}</a>{if $difftreelines[difftree].to_id != $difftreelines[difftree].from_id} | <a href="{$SCRIPT_NAME}?p={$project}&a=blobdiff&h={$difftreelines[difftree].to_id}&hp={$difftreelines[difftree].from_id}&hb={$hash}&f={$difftreelines[difftree].file}">{$localize.diff}</a>{/if} | <a href="{$SCRIPT_NAME}?p={$project}&a=history&h={$hash}&f={$difftreelines[difftree].file}">{$localize.history}</a></td>
        {elseif $difftreelines[difftree].status == "R"}
          <td><a href="{$SCRIPT_NAME}?p={$project}&a=blob&h={$difftreelines[difftree].to_id}&hb={$hash}&f={$difftreelines[difftree].to_file}" class="list">{$difftreelines[difftree].to_file}</a></td>
-         <td><span class="movedfile">[moved from <a href="{$SCRIPT_NAME}?p={$project}&a=blob&h={$difftreelines[difftree].from_id}&hb={$hash}&f={$difftreelines[difftree].from_file}" class="list">{$difftreelines[difftree].from_file}</a> with {$difftreelines[difftree].similarity}% similarity{$difftreelines[difftree].simmodechg}]</span></td>
-         <td class="link"><a href="{$SCRIPT_NAME}?p={$project}&a=blob&h={$difftreelines[difftree].to_id}&hb={$hash}&f={$difftreelines[difftree].to_file}">blob</a>{if $difftreelines[difftree].to_id != $difftreelines[difftree].from_id} | <a href="{$SCRIPT_NAME}?p={$project}&a=blobdiff&h={$difftreelines[difftree].to_id}&hp={$difftreelines[difftree].from_id}&hb={$hash}&f={$difftreelines[difftree].to_file}">diff</a>{/if}</td>
+	 {capture name='oldfile' assign='oldfile'}<a href="{$SCRIPT_NAME}?p={$project}&a=blob&h={$difftreelines[difftree].from_id}&hb={$hash}&f={$difftreelines[difftree].from_file}" class="list">{$difftreelines[difftree].from_file}</a>{/capture}
+         {if $difftreelines[difftree].simmodechg}
+           {* i18n: movedobjectwithsimilaritymodechange = moved from %1$s with %2$d%% similarity, mode: %3$s *}
+           <td><span class="movedfile">[{$localize.movedobjectwithsimilaritymodechange|sprintf:$oldfile:$difftreelines[difftree].similarity:$difftreelines[difftree].simmodechg}]</span></td>
+	 {else}
+           {* i18n: movedobjectwithsimilarity = moved from %1$s with %2$d%% similarity *}
+           <td><span class="movedfile">[{$localize.movedobjectwithsimilarity|sprintf:$oldfile:$difftreelines[difftree].similarity}]</span></td>
+	 {/if}
+	 {* i18n: blob = blob *}
+	 {* i18n: diff = diff *}
+         <td class="link"><a href="{$SCRIPT_NAME}?p={$project}&a=blob&h={$difftreelines[difftree].to_id}&hb={$hash}&f={$difftreelines[difftree].to_file}">{$localize.blob}</a>{if $difftreelines[difftree].to_id != $difftreelines[difftree].from_id} | <a href="{$SCRIPT_NAME}?p={$project}&a=blobdiff&h={$difftreelines[difftree].to_id}&hp={$difftreelines[difftree].from_id}&hb={$hash}&f={$difftreelines[difftree].to_file}">{$localize.diff}</a>{/if}</td>
        {/if}
 
      </tr>

@@ -18,13 +18,15 @@
 function git_blob($projectroot, $project, $hash, $file, $hashbase)
 {
 	global $gitphp_conf,$tpl;
+	$head = git_read_head($projectroot . $project);
 	if (!isset($hashbase))
-		$hashbase = git_read_head($projectroot . $project);
+		$hashbase = $head;
 	if (!isset($hash) && isset($file))
 		$hash = git_get_hash_by_path($projectroot . $project, $hashbase,$file,"blob");
 	$catout = git_cat_file($projectroot . $project, $hash);
 	$tpl->assign("hash",$hash);
 	$tpl->assign("hashbase",$hashbase);
+	$tpl->assign("head", $head);
 	if ($co = git_read_commit($projectroot . $project, $hashbase)) {
 		$tpl->assign("fullnav",TRUE);
 		$refs = read_info_ref($projectroot . $project);
@@ -32,8 +34,13 @@ function git_blob($projectroot, $project, $hash, $file, $hashbase)
 		$tpl->assign("title",$co['title']);
 		if (isset($file))
 			$tpl->assign("file",$file);
-		if (isset($refs[$hashbase]))
-			$tpl->assign("hashbaseref",$refs[$hashbase]);
+		if ($hashbase == "HEAD") {
+			if (isset($refs[$head]))
+				$tpl->assign("hashbaseref",$refs[$head]);
+		} else {
+			if (isset($refs[$hashbase]))
+				$tpl->assign("hashbaseref", $refs[$hashbase]);
+		}
 	}
 	$paths = git_path_trees($projectroot . $project, $hashbase, $file);
 	$tpl->assign("paths",$paths);
