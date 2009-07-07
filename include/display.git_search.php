@@ -19,12 +19,14 @@ function git_search($projectroot, $project, $hash, $search, $searchtype, $page =
 	global $tpl,$gitphp_conf;
 
 	if (!$gitphp_conf['search']) {
-		git_message(lookupstring('Search has been disabled'), TRUE, TRUE);
+		git_message(lookupstring('searchhasbeendisabled'), TRUE, TRUE);
+		//git_message(lookupstring('Search has been disabled'), TRUE, TRUE);
 		return;
 	}
 
 	if (!isset($search) || (strlen($search) < 2)) {
-		git_message(lookupstring('You must enter search text of at least 2 characters'), TRUE, TRUE);
+		git_message(lookupstring('searchtooshort'), TRUE, TRUE);
+		//git_message(lookupstring('You must enter search text of at least 2 characters'), TRUE, TRUE);
 		return;
 	}
 	if (!isset($hash)) {
@@ -36,7 +38,8 @@ function git_search($projectroot, $project, $hash, $search, $searchtype, $page =
 
 	$revlist = explode("\n",trim(git_rev_list($projectroot . $project, $hash, 101, ($page * 100), FALSE, FALSE, $searchtype, $search)));
 	if (count($revlist) < 1 || (strlen($revlist[0]) < 1)) {
-		git_message(sprintf(lookupstring('No matches for \'%1$s\'.'), $search), FALSE, TRUE);
+		git_message(sprintf(lookupstring('nomatches'), $search), FALSE, TRUE);
+		//git_message(sprintf(lookupstring('No matches for \'%1$s\'.'), $search), FALSE, TRUE);
 		return;
 	}
 

@@ -19,12 +19,14 @@ function git_search_files($projectroot, $project, $hash, $search, $page = 0)
 	global $tpl,$gitphp_conf;
 
 	if (!($gitphp_conf['search'] && $gitphp_conf['filesearch'])) {
-		git_message(lookupstring('File search has been disabled'), TRUE, TRUE);
+		git_message(lookupstring('filesearchhasbeendisabled'), TRUE, TRUE);
+		//git_message(lookupstring('File search has been disabled'), TRUE, TRUE);
 		return;
 	}
 
 	if (!isset($search) || (strlen($search) < 2)) {
-		git_message(lookupstring('You must enter search text of at least 2 characters'), TRUE, TRUE);
+		git_message(lookupstring('searchtooshort'), TRUE, TRUE);
+		//git_message(lookupstring('You must enter search text of at least 2 characters'), TRUE, TRUE);
 		return;
 	}
 	if (!isset($hash)) {
@@ -37,7 +39,8 @@ function git_search_files($projectroot, $project, $hash, $search, $page = 0)
 	$filesearch = git_filesearch($projectroot . $project, $hash, $search, false, ($page * 100), 101);
 
 	if (count($filesearch) < 1) {
-		git_message(sprintf(lookupstring('No matches for \'%1$s\'.'), $search), FALSE, TRUE);
+		git_message(sprintf(lookupstring('nomatches'), $search), FALSE, TRUE);
+		//git_message(sprintf(lookupstring('No matches for \'%1$s\'.'), $search), FALSE, TRUE);
 		return;
 	}
 

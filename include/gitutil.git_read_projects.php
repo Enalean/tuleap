@@ -46,10 +46,12 @@ function git_read_projects($projectroot,$projectlist,$projdata = FALSE)
 						$projects[$i] = $p;
 				}
 			}
-		} else
-			return lookupstring("Projectroot is not a directory");
+		} else {
+			return lookupstring("projectrootisnotadirectory");
+			//return lookupstring("Projectroot is not a directory");
+		}
 	} else
-		return lookupstring("No projectroot set");
+		return lookupstring("noprojectrootset");
 	return $projects;
 }
 

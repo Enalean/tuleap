@@ -58,7 +58,8 @@ function git_project_list($projectroot,$projectlist,$order = "project")
 				$tpl->assign("categorizedprojects",$projects);
 			}
 		} else {
-			$tpl->assign("message",lookupstring("No projects found"));
+			$tpl->assign("message",lookupstring("noprojectsfound"));
+			//$tpl->assign("message",lookupstring("No projects found"));
 			$tpl->assign("error",TRUE);
 		}
 	} else {
