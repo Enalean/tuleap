@@ -21,7 +21,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
  
-require_once('common/tracker/ArtifactDateReminderFactory.class.php');
+require_once('ArtifactDateReminderFactory.class.php');
 
 //
 // The artifact date reminder object

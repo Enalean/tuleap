@@ -154,23 +154,6 @@ class ArtifactFieldFactory extends Error {
 	}
 
 	/**
-	* Return all date fields used
-	* 
-	*                @return array
-	*/
-	function getUsedDateFields() {
-	
-	    $result_fields = array();
-	    while (list($key,$field) = each($this->USAGE_BY_NAME) ) {
-		if ( $field->getUseIt() == 1 && $field->isDateField()) {
-	    	    $result_fields[$key] = $field;
-		}
-	    }
-		
-	    return $result_fields;
-	}
-
-	/**
 	 *  Return all the fields unused
 	 *
 	 *	@return	array
@@ -664,11 +647,6 @@ class ArtifactFieldFactory extends Error {
 		if (!$res_insert || db_affected_rows($res_insert) <= 0) {
 			$this->setError($Language->getText('tracker_common_field_factory','use_ins_err',array($field_id,$this->ArtifactType->getID(),db_error())));
 			return false;
-		}
-		
-		//Insert default reminder settings, in case the field is a date-field and reminder is enabled
-		if ($data_type == $af->DATATYPE_DATE && $enable_notification == 1) {
-		    $af->setDefaultReminderSettings($field_id,$this->ArtifactType->getID());
 		}
 		
 		// We need to insert with the default value, records in artifact_field_value table

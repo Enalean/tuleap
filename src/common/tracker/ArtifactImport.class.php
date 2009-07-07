@@ -1035,10 +1035,8 @@ function getUsedFields() {
     // Artifact creation        
     if (!$ah->create($vfl,true,$row)) {
       exit_error($Language->getText('global','error'),$ah->getErrorMessage());
-    } else {
-      //add the artifact to date reminder processing table, if relevant
-      $this->ath->addArtifactToDateReminderProcessing(0,$ah->getID(),$this->ath->getID());
     }
+
     //handle dependencies and such stuff ...
     if ($artifact_depend_id) {
       if (!$ah->addDependencies($artifact_depend_id,$changes,false, true)) {
@@ -1066,6 +1064,9 @@ function getUsedFields() {
         $agnf =& new ArtifactGlobalNotificationFactory();
         $ah->mailFollowupWithPermissions($agnf->getAllAddresses($this->ath->getID(), $update = false));
     }
+    
+    $em = EventManager::instance();
+    $em->processEvent('artifact_import_insert_artifact', array('artifact_id' => $ah->getID(), 'artifact_type' => $this->ath));
   }
   return true;
   }

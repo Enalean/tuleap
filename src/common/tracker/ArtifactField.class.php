@@ -1309,28 +1309,6 @@ class ArtifactField extends Error {
 			return false;
 		}
 		
-		//If it is a date field, that was disabled or on which the notification is disabled, then remove the corresponding date reminder settings in db  
-		if (($this->isDateField() && $enable_notification == 0 && $this->getNotificationStatus() == 1) || ($this->isDateField() && $use_it == 0 && $this->getNotificationStatus() == 1)) {
-		    $this->deleteFieldReminderSettings($this->field_id,$group_artifact_id);	    
-		}
-		
-		//If it is a date field, on which notification reminder is enabled, then set the default reminder settings
-		if ($this->isDateField() && $enable_notification == 1 && $this->getNotificationStatus() == 0) {
-		    $this->setDefaultReminderSettings($this->field_id,$group_artifact_id);
-		    //Now populate the 'artifact_date_reminder_processing' table with concerned artifacts
-		    $art = sprintf('SELECT * FROM artifact'
-                                 .' WHERE group_artifact_id=%d'
-                                 .' AND status_id <> 3',
-                                 db_ei($group_artifact_id));
-		    $res_art = db_query($art);
-		    if (db_numrows($res_art) > 0) {
-		        while ($arr = db_fetch_array($res_art)) {
-		            $artifact_id = $arr['artifact_id'];
-		            $ath->addArtifactToDateReminderProcessing($this->field_id,$artifact_id,$group_artifact_id);
-				}
-		    }
-		}
-				
 		if ( ($use_it == "1")&&($this->getUseIt() == "0") ) {
 			
 			// We need to insert with the default value, records in artifact_field_value table
@@ -1678,47 +1656,6 @@ class ArtifactField extends Error {
 		
 		return true;
 		
-	}
-	
-	/**
-	* Delete reminder settings of a specific field
-	*
-	* @param field_id: the field id
-	* @param group_artifact_id: the tracker id
-	* 
-	* @return result set
-	*/
-	function deleteFieldReminderSettings($field_id,$group_artifact_id) {
-	
-	    $del = sprintf('DELETE FROM artifact_date_reminder_settings'
-			    .' WHERE field_id=%d'
-			    .' AND group_artifact_id=%d',
-			    $field_id,$group_artifact_id);
-	    $result = db_query($del);
-	    $rem = sprintf('DELETE FROM artifact_date_reminder_processing'
-			    .' WHERE field_id=%d'
-			    .' AND group_artifact_id=%d',
-			    $field_id,$group_artifact_id);
-	    $result = db_query($rem);	
-	    
-	}
-	
-	/**
-	* Insert default reminder settings of a date field
-	* 
-	* @param field_id: the field id
-	* @param group_artifact_id: the tracker id
-	* 
-	* @return result set
-	*/
-	function setDefaultReminderSettings($field_id,$group_artifact_id) {
-	
-	    $ins = sprintf('INSERT INTO artifact_date_reminder_settings'
-			    .' (field_id,group_artifact_id,notification_start,notification_type,frequency,recurse,notified_people)'
-			    .' VALUES (%d,%d,%d,%d,%d,%d,"%s")',
-			    $field_id,$group_artifact_id,0,0,1,1,"1,2,3,4");
-	    $res = db_query($ins);
-	
 	}
 	
 	/**

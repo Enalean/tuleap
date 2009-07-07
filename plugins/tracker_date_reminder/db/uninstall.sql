@@ -1,5 +1,6 @@
 ##
 ## Sql Uninstall Script
 ##
-DROP TABLE plugin_template_my_table;
+DROP TABLE IF EXISTS artifact_date_reminder_settings;
+DROP TABLE IF EXISTS artifact_date_reminder_processing;
 
