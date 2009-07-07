@@ -10,40 +10,40 @@ $strings = array(
 	 * Error message that tells the user that
 	 * there were no projects found in the projectroot
 	 */
-	'noprojectsfound' => 'No projects found',
+	'No projects found' => 'No projects found',
 
 	/*
 	 * Error message that tells the user that the projectroot
 	 * they have set up is not a directory
 	 */
-	'projectrootisnotadirectory' => 'Projectroot is not a directory',
+	'Projectroot is not a directory' => 'Projectroot is not a directory',
 
 	/*
 	 * Error message that tells the user that they have not set
 	 * a projectroot
 	 */
-	'noprojectrootset' => 'No projectroot set',
+	'No projectroot set' => 'No projectroot set',
 
 	/*
 	 * Tells the user that all searching has been disabled
 	 */
-	'searchhasbeendisabled' => 'Search has been disabled',
+	'Search has been disabled' => 'Search has been disabled',
 
 	/*
 	 * Tells the user that searching with files has been disabled
 	 */
-	'filesearchhasbeendisabled' => 'File search has been disabled',
+	'File search has been disabled' => 'File search has been disabled',
 
 	/*
 	 * Tells the user that their search string must be a minimum of 2 characters
 	 */
-	'searchtooshort' => 'You must enter search text of at least 2 characters',
+	'You must enter search text of at least 2 characters' => 'You must enter search text of at least 2 characters',
 
 	/*
 	 * Tells the user that no matches were found for their search, where
 	 * %1$s is the search string
 	 */
-	'nomatches' => 'No matches for \'%1$s\'.',
+	'No matches for \'%1$s\'.' => 'No matches for \'%1$s\'.',
 
 	/*
 	 * Used to indicate multiple projects - links back to the project
