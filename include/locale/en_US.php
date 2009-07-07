@@ -360,6 +360,21 @@ $strings = array(
 	 * where %1$d is the numebr of files changed
 	 */
 	'fileschanged' => '%1$d files changed',
+
+	/*
+	 * Used on a plaintext diff to indicate who it's from
+	 */
+	'From' => 'From',
+
+	/*
+	 * Used on a plaintext diff to indicate the date
+	 */
+	'Date' => 'Date',
+
+	/*
+	 * Used on a plaintext diff to indicate the subject
+	 */
+	'Subject' => 'Subject',
 );
 
 ?>

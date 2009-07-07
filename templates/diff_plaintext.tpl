@@ -5,9 +5,9 @@
  *
  *  Copyright (C) 2006 Christopher Han <xiphux@gmail.com>
  *}
-From: {$from}
-Date: {$date}
-Subject: {$subject}
+{$localize.From}: {$from}
+{$localize.Date}: {$date}
+{$localize.Subject}: {$subject}
 {if $tagname}
 X-Git-Tag: {$tagname}
 {/if}
