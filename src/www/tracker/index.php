@@ -210,10 +210,8 @@ if ( $func == 'gotoid' ) {
                                 $addresses = $agnf->getAllAddresses($ath->getID());
                                 $ah->mailFollowupWithPermissions($addresses);
 
-                                // add the artifact to date reminder processing table, if relevant
-                                if ($ah->getStatusID() == 1) {
-                                    $ath->addArtifactToDateReminderProcessing(0,$ah->getID(),$atid);
-                                }
+                                $em = EventManager::instance();
+                                $em->processEvent('tracker_postadd', array('ah' => $ah, 'ath' => $ath));
 
                                 $itemname = $ath->getItemName();
                                 $GLOBALS['Response']->addFeedback('info', $Language->getText('tracker_index','create_success',
@@ -305,12 +303,10 @@ if ( $func == 'gotoid' ) {
                                     $agnf =& new ArtifactGlobalNotificationFactory();
                                     $addresses = $agnf->getAllAddresses($ath->getID());
                                     $ah->mailFollowupWithPermissions($addresses);
-
-                                    // add the artifact to date reminder processing table, if relevant
-                                    if ($ah->getStatusID() == 1) {
-                                        $ath->addArtifactToDateReminderProcessing(0,$ah->getID(),$atid);
-                                    }
-
+                                    
+                                    $em = EventManager::instance();
+                                    $em->processEvent('postcopy', array('ah' => $ah, 'ath' => $ath));
+                                    
                                     $itemname = $ath->getItemName();
                                     $GLOBALS['Response']->addFeedback('info', $Language->getText('tracker_index','create_success',
                                         '<a href="/goto?key='.$itemname.'&val='.$ah->getID().'&group_id='.$group_id.'">'.$itemname.' #'.$ah->getID().'</a>'),CODENDI_PURIFIER_LIGHT);                                

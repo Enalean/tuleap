@@ -29,17 +29,22 @@ class tracker_date_reminderPlugin extends Plugin {
         parent::__construct($id);
         $this->setScope(self::SCOPE_PROJECT);
         
+        //
         $this->_addHook('artifact_type_html_display_notification_form', 'artifact_type_html_display_notification_form', false);
+        //
         $this->_addHook('tracker_graphic_report_admin', 'tracker_graphic_report_admin', false);
-
         // Field deletion
         $this->_addHook('tracker_admin_field_delete', 'tracker_admin_field_delete', false);
-        
+        // Codendi daily actions
         $this->_addHook('codendi_daily_start', 'codendi_daily_start', false);
-        
         // Tracker deletion
         $this->_addHook('artifact_type_factory_delete_artifact_type', 'artifact_type_factory_delete_artifact_type', false);
+        //
         $this->_addHook('artifact_import_insert_artifact', 'artifact_import_insert_artifact', false);
+        // Create new artifact
+        $this->_addHook('tracker_postadd', 'tracker_create_artifact', false);
+        // Copy an artifact
+        $this->_addHook('tracker_postcopy', 'tracker_create_artifact', false);
     }
 
     function getPluginInfo() {
@@ -212,6 +217,14 @@ class tracker_date_reminderPlugin extends Plugin {
         //if the field is date field, clear corresponding date reminder settings
         $tdrArtifactField = new TrackerDateReminder_ArtifactField();
         $tdrArtifactField->deleteFieldReminderSettings($params['field']->getID(), $params['ath']->getID());
+    }
+    
+    function tracker_create_artifact($params) {
+        // add the artifact to date reminder processing table, if relevant
+        if ($params['ah']->getStatusID() == 1) {
+            $tdrArtifactType = new TrackerDateReminder_ArtifactType($params['ath']);
+            $tdrArtifactType->addArtifactToDateReminderProcessing(0, $params['ah']->getID(), $params['ath']->getID());
+        }
     }
 }
 
