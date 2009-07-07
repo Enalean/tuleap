@@ -235,19 +235,19 @@ $strings = array(
 	'HEAD' => '{HĚĂD•}',
 	
 	/*
-         * Used to indicate the description of the project, on the project summary page
-         */
-        'description' => '{dêscrïptìõn•••}',
+     * Used to indicate the description of the project, on the project summary page
+     */
+    'description' => '{dêscrïptìõn•••}',
 
-        /*
-         * Used to indicate the owner of the project, on the project summary page
-         */
-        'owner' => '{öwnêr•}',
+    /*
+     * Used to indicate the owner of the project, on the project summary page
+     */
+    'owner' => '{öwnêr•}',
 
-       /*
-        * Used to indicate the age (last change) of the project, on the project summary page
-        */
-        'lastchange' => '{låst chãngë•••}',
+    /*
+     * Used to indicate the age (last change) of the project, on the project summary page
+     */
+    'lastchange' => '{låst chãngë•••}',
 
 	/*
 	 * Used to indicate the object that is the parent of this one (eg the commit that
@@ -355,26 +355,11 @@ $strings = array(
 	 */
 	'agerightnow' => '{rĩght nøw•••}',
 	
-        /*
-         * Used to indicate a certain number of files were changed in a commit
-         * where %1$d is the numebr of files changed
-         */
-        'fileschanged' => '{chângëd ‹%1$d› fĭlēs••••}',
-
-	/*
-	 * Used on a plaintext diff to indicate who it's from
-	 */
-	'From' => '{Fröm•}',
-
-	/*
-	 * Used on a plaintext diff to indicate the date
-	 */
-	'Date' => '{Dātë•}',
-
-	/*
-	 * Used on a plaintext diff to indicate the subject
-	 */
-	'Subject' => '{Sübjêct••}',
+     /*
+      * Used to indicate a certain number of files were changed in a commit
+      * where %1$d is the numebr of files changed
+      */
+     'fileschanged' => '{chângëd ‹%1$d› fĭlēs••••}',
 );
 
 ?>
