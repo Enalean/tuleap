@@ -13,7 +13,13 @@
    {if $fullnav}
      <a href="{$SCRIPT_NAME}?p={$project}&a=summary">summary</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=shortlog">shortlog</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=log">log</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=commit&h={$hashbase}">commit</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=commitdiff&h={$hashbase}">commitdiff</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=tree&h={$tree}&hb={$hashbase}">tree</a><br />
      {if $file}
-       <a href="{$SCRIPT_NAME}?p={$project}&a=blob_plain&h={$hash}&f={$file}">plain</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=blob&hb=HEAD&f={$file}">head</a><br />
+       <a href="{$SCRIPT_NAME}?p={$project}&a=blob_plain&h={$hash}&f={$file}">plain</a> | 
+       {if ($hashbase != "HEAD") && ($hashbase != $head)}
+         <a href="{$SCRIPT_NAME}?p={$project}&a=blob&hb=HEAD&f={$file}">HEAD</a>
+       {else}
+         HEAD
+       {/if}
+       <br />
      {else}
        <a href="{$SCRIPT_NAME}?p={$project}&a=blob_plain&h={$hash}">plain</a><br />
      {/if}
