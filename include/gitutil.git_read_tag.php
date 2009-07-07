@@ -8,7 +8,6 @@
  */
 
  require_once('gitutil.git_cat_file.php');
- require_once('i18n.lookupstring.php');
 
 function git_read_tag($project, $tag_id)
 {
@@ -20,10 +19,9 @@ function git_read_tag($project, $tag_id)
 	while ($tok !== false) {
 		if (ereg("^object ([0-9a-fA-F]{40})$",$tok,$regs))
 			$tag['object'] = $regs[1];
-		else if (ereg("^type (.+)$",$tok,$regs)) {
+		else if (ereg("^type (.+)$",$tok,$regs))
 			$tag['type'] = $regs[1];
-			$tag['type_localized'] = lookupstring($tag['type']);
-		} else if (ereg("^tag (.+)$",$tok,$regs))
+		else if (ereg("^tag (.+)$",$tok,$regs))
 			$tag['name'] = $regs[1];
 		else if (ereg("^tagger (.*) ([0-9]+) (.*)$",$tok,$regs)) {
 			$tag['author'] = $regs[1];

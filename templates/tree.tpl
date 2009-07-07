@@ -11,13 +11,7 @@
  {* Nav *}
  {if $fullnav}
    <div class="page_nav">
-     {* i18n: summary = summary *}
-     {* i18n: shortlog = shortlog *}
-     {* i18n: log = log *}
-     {* i18n: commit = commit *}
-     {* i18n: commitdiff = commitdiff *}
-     {* i18n: tree = tree *}
-     <a href="{$SCRIPT_NAME}?p={$project}&a=summary">{$localize.summary}</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=shortlog&h={$hashbase}">{$localize.shortlog}</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=log&h={$hashbase}">{$localize.log}</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=commit&h={$hashbase}">{$localize.commit}</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=commitdiff&h={$hashbase}">{$localize.commitdiff}</a> | {$localize.tree}<br /><br />
+     <a href="{$SCRIPT_NAME}?p={$project}&a=summary">summary</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=shortlog&h={$hashbase}">shortlog</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=log&h={$hashbase}">log</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=commit&h={$hashbase}">commit</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=commitdiff&h={$hashbase}">commitdiff</a> | tree<br /><br />
    </div>
    <div>
      <a href="{$SCRIPT_NAME}?p={$project}&a=commit&h={$hashbase}" class="title">{$title}
@@ -50,17 +44,14 @@
              <a href="{$SCRIPT_NAME}?p={$project}&a=blob&h={$treelines[tree].hash}{if $hashbase}&hb={$hashbase}{/if}&f={if $base}{$base}{/if}{$treelines[tree].name}" class="list">{$treelines[tree].name}</a>
 	   </td>
            <td class="link">
-	     {* i18n: blob = blob *}
-	     {* i18n: history = history *}
-	     <a href="{$SCRIPT_NAME}?p={$project}&a=blob&h={$treelines[tree].hash}{if $hashbase}&hb={$hashbase}{/if}&f={if $base}{$base}{/if}{$treelines[tree].name}">{$localize.blob}</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=history&h={$hashbase}&f={if $base}{$base}{/if}{$treelines[tree].name}">{$localize.history}</a>
+	     <a href="{$SCRIPT_NAME}?p={$project}&a=blob&h={$treelines[tree].hash}{if $hashbase}&hb={$hashbase}{/if}&f={if $base}{$base}{/if}{$treelines[tree].name}">blob</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=history&h={$hashbase}&f={if $base}{$base}{/if}{$treelines[tree].name}">history</a>
 	   </td>
          {elseif $treelines[tree].type == "tree"}
            <td class="list">
              <a href="{$SCRIPT_NAME}?p={$project}&a=tree&h={$treelines[tree].hash}{if $hashbase}&hb={$hashbase}{/if}&f={if $base}{$base}{/if}{$treelines[tree].name}">{$treelines[tree].name}</a>
 	   </td>
            <td class="link">
-	     {* i18n: tree = tree *}
-	     <a href="{$SCRIPT_NAME}?p={$project}&a=tree&h={$treelines[tree].hash}{if $hashbase}&hb={$hashbase}{/if}&f={if $base}{$base}{/if}{$treelines[tree].name}">{$localize.tree}</a>
+	     <a href="{$SCRIPT_NAME}?p={$project}&a=tree&h={$treelines[tree].hash}{if $hashbase}&hb={$hashbase}{/if}&f={if $base}{$base}{/if}{$treelines[tree].name}">tree</a>
 	   </td>
          {/if}
        </tr>

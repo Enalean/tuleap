@@ -11,7 +11,6 @@
  require_once('util.descrcmp.php');
  require_once('util.ownercmp.php');
  require_once('util.agecmp.php');
- require_once('i18n.lookupstring.php');
  require_once('gitutil.git_read_projects.php');
 
 function git_project_list($projectroot,$projectlist,$order = "project")
@@ -58,7 +57,7 @@ function git_project_list($projectroot,$projectlist,$order = "project")
 				$tpl->assign("categorizedprojects",$projects);
 			}
 		} else {
-			$tpl->assign("message",lookupstring("No projects found"));
+			$tpl->assign("message","No projects found");
 			$tpl->assign("error",TRUE);
 		}
 	} else {

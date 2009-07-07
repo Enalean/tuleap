@@ -11,16 +11,9 @@
  {* If we managed to look up commit info, we have enough info to display the full header - othewise just use a simple header *}
  <div class="page_nav">
    {if $fullnav}
-     {* i18n: summary = summary *}
-     {* i18n: shortlog = shortlog *}
-     {* i18n: log = log *}
-     {* i18n: commit = commit *}
-     {* i18n: commitdiff = commitdiff *}
-     {* i18n: tree = tree *}
-     <a href="{$SCRIPT_NAME}?p={$project}&a=summary">{$localize.summary}</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=shortlog">{$localize.shortlog}</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=log">{$localize.log}</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=commit&h={$hashbase}">{$localize.commit}</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=commitdiff&h={$hashbase}">{$localize.commitdiff}</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=tree&h={$tree}&hb={$hashbase}">{$localize.tree}</a>
+     <a href="{$SCRIPT_NAME}?p={$project}&a=summary">summary</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=shortlog">shortlog</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=log">log</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=commit&h={$hashbase}">commit</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=commitdiff&h={$hashbase}">commitdiff</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=tree&h={$tree}&hb={$hashbase}">tree</a>
      <br />
-     {* i18n: plain = plain *}
-     <a href="{$SCRIPT_NAME}?p={$project}&a=blobdiff_plain&h={$hash}&hp={$hashparent}&f={$file}">{$localize.plain}</a>
+     <a href="{$SCRIPT_NAME}?p={$project}&a=blobdiff_plain&h={$hash}&hp={$hashparent}&f={$file}">plain</a>
    {else}
      <br /><br />
    {/if}
@@ -52,8 +45,7 @@
  <div class="page_body">
    <div class="diff_info">
      {* Display the from -> to diff header *}
-     {* i18n: blob = blob *}
-     {$localize.blob}:<a href="{$SCRIPT_NAME}?p={$project}&a=blob&h={$hashparent}&hb={$hashbase}&f={$file}">{if $file}a/{$file}{else}{$hashparent}{/if}</a> -&gt; {$localize.blob}:<a href="{$SCRIPT_NAME}?p={$project}&a=blob&h={$hash}&hb={$hashbase}&f={$file}">{if $file}b/{$file}{else}{$hash}{/if}</a>
+     blob:<a href="{$SCRIPT_NAME}?p={$project}&a=blob&h={$hashparent}&hb={$hashbase}&f={$file}">{if $file}a/{$file}{else}{$hashparent}{/if}</a> -&gt; blob:<a href="{$SCRIPT_NAME}?p={$project}&a=blob&h={$hash}&hb={$hashbase}&f={$file}">{if $file}b/{$file}{else}{$hash}{/if}</a>
    </div>
    {* Display the diff *}
    {include file='filediff.tpl'}

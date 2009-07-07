@@ -17,32 +17,27 @@
   <table cellspacing="0">
     {* Header *}
     <tr>
-      {* i18n: headerproject = Project *}
       {if $order == "project"}
-        <th>{$localize.headerproject}</th>
+        <th>Project</th>
       {else}
-        <th><a class="header" href="{$SCRIPT_NAME}?o=project">{$localize.headerproject}</a></th>
+        <th><a class="header" href="{$SCRIPT_NAME}?o=project">Project</a></th>
       {/if}
-      {* i18n: headerdescription = Description *}
       {if $order == "descr"}
-        <th>{$localize.headerdescription}</th>
+        <th>Description</th>
       {else}
-        <th><a class="header" href="{$SCRIPT_NAME}?o=descr">{$localize.headerdescription}</a></th>
+        <th><a class="header" href="{$SCRIPT_NAME}?o=descr">Description</a></th>
       {/if}
-      {* i18n: headerowner = Owner *}
       {if $order == "owner"}
-        <th>{$localize.headerowner}</th>
+        <th>Owner</th>
       {else}
-        <th><a class="header" href="{$SCRIPT_NAME}?o=owner">{$localize.headerowner}</a></th>
+        <th><a class="header" href="{$SCRIPT_NAME}?o=owner">Owner</a></th>
       {/if}
-      {* i18n: headerlastchange = Last Change *}
       {if $order == "age"}
-        <th>{$localize.headerlastchange}</th>
+        <th>Last Change</th>
       {else}
-        <th><a class="header" href="{$SCRIPT_NAME}?o=age">{$localize.headerlastchange}</a></th>
+        <th><a class="header" href="{$SCRIPT_NAME}?o=age">Last Change</a></th>
       {/if}
-      {* i18n: headeractions = Actions *}
-      <th>{$localize.headeractions}</th>
+      <th>Actions</th>
     </tr>
 
     {if $categorizedprojects}
@@ -74,12 +69,7 @@
                 <i>{$plist[proj].age_string}</i>
               {/if}
             </td>
-	    {* i18n: summary = summary *}
-	    {* i18n: shortlog = shortlog *}
-	    {* i18n: log = log *}
-	    {* i18n: snapshot = snapshot *}
-	    {* i18n: tree = tree *}
-            <td class="link"><a href="{$SCRIPT_NAME}?p={$plist[proj].project}&a=summary">{$localize.summary}</a> | <a href="{$SCRIPT_NAME}?p={$plist[proj].project}&a=shortlog">{$localize.shortlog}</a> | <a href="{$SCRIPT_NAME}?p={$plist[proj].project}&a=log">{$localize.log}</a> | <a href="{$SCRIPT_NAME}?p={$plist[proj].project}&a=tree">{$localize.tree}</a> | <a href="{$SCRIPT_NAME}?p={$plist[proj].project}&a=snapshot&h=HEAD">{$localize.snapshot}</a></td>
+            <td class="link"><a href="{$SCRIPT_NAME}?p={$plist[proj].project}&a=summary">summary</a> | <a href="{$SCRIPT_NAME}?p={$plist[proj].project}&a=shortlog">shortlog</a> | <a href="{$SCRIPT_NAME}?p={$plist[proj].project}&a=log">log</a> | <a href="{$SCRIPT_NAME}?p={$plist[proj].project}&a=tree">tree</a> | <a href="{$SCRIPT_NAME}?p={$plist[proj].project}&a=snapshot&h=HEAD">snapshot</a></td>
           </tr>
         {/section}
       {/foreach}
@@ -103,12 +93,7 @@
               <i>{$projects[proj].age_string}</i>
             {/if}
           </td>
-	  {* i18n: summary = summary *}
-	  {* i18n: shortlog = shortlog *}
-	  {* i18n: log = log *}
-	  {* i18n: snapshot = snapshot *}
-	  {* i18n: tree = tree *}
-          <td class="link"><a href="{$SCRIPT_NAME}?p={$projects[proj].project}&a=summary">{$localize.summary}</a> | <a href="{$SCRIPT_NAME}?p={$projects[proj].project}&a=shortlog">{$localize.shortlog}</a> | <a href="{$SCRIPT_NAME}?p={$projects[proj].project}&a=log">{$localize.log}</a> | <a href="{$SCRIPT_NAME}?p={$projects[proj].project}&a=tree">{$localize.tree}</a> | <a href="{$SCRIPT_NAME}?p={$projects[proj].project}&a=snapshot&h=HEAD">{$localize.snapshot}</a></td>
+          <td class="link"><a href="{$SCRIPT_NAME}?p={$projects[proj].project}&a=summary">summary</a> | <a href="{$SCRIPT_NAME}?p={$projects[proj].project}&a=shortlog">shortlog</a> | <a href="{$SCRIPT_NAME}?p={$projects[proj].project}&a=log">log</a> | <a href="{$SCRIPT_NAME}?p={$projects[proj].project}&a=tree">tree</a> | <a href="{$SCRIPT_NAME}?p={$projects[proj].project}&a=snapshot&h=HEAD">snapshot</a></td>
         </tr>
       {/section}
 

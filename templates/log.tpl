@@ -10,33 +10,24 @@
 
  {* Nav *}
  <div class="page_nav">
-   {* i18n: summary = summary *}
-   {* i18n: shortlog = shortlog *}
-   {* i18n: log = log *}
-   {* i18n: commit = commit *}
-   {* i18n: commitdiff = commitdiff *}
-   {* i18n: tree = tree *}
-   <a href="{$SCRIPT_NAME}?p={$project}&a=summary">{$localize.summary}</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=shortlog&h={$hash}">{$localize.shortlog}</a> | {$localize.log} | <a href="{$SCRIPT_NAME}?p={$project}&a=commit&h={$hash}">{$localize.commit}</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=commitdiff&h={$hash}">{$localize.commitdiff}</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=tree&h={$hash}&hb={$hash}">{$localize.tree}</a>
+   <a href="{$SCRIPT_NAME}?p={$project}&a=summary">summary</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=shortlog&h={$hash}">shortlog</a> | log | <a href="{$SCRIPT_NAME}?p={$project}&a=commit&h={$hash}">commit</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=commitdiff&h={$hash}">commitdiff</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=tree&h={$hash}&hb={$hash}">tree</a>
    <br />
-   {* i18n: HEAD = HEAD *}
    {if ($hash != $head) || $page}
-     <a href="{$SCRIPT_NAME}?p={$project}&a=log">{$localize.HEAD}</a>
+     <a href="{$SCRIPT_NAME}?p={$project}&a=log">HEAD</a>
    {else}
-     {$localize.HEAD}
+     HEAD
    {/if}
    &sdot; 
-   {* i18n: prev = prev *}
    {if $page > 0}
-     <a href="{$SCRIPT_NAME}?p={$project}&a=log&h={$hash}&pg={$page-1}" accesskey="p" title="Alt-p">{$localize.prev}</a>
+     <a href="{$SCRIPT_NAME}?p={$project}&a=log&h={$hash}&pg={$page-1}" accesskey="p" title="Alt-p">prev</a>
    {else}
-     {$localize.prev}
+     prev
    {/if}
    &sdot; 
-   {* i18n: next = next *}
    {if $revlistcount > 100}
-     <a href="{$SCRIPT_NAME}?p={$project}&a=log&h={$hash}&pg={$page+1}" accesskey="n" title="Alt-n">{$localize.next}</a>
+     <a href="{$SCRIPT_NAME}?p={$project}&a=log&h={$hash}&pg={$page+1}" accesskey="n" title="Alt-n">next</a>
    {else}
-     {$localize.next}
+     next
    {/if}
    <br />
  </div>
@@ -60,10 +51,7 @@
    </div>
    <div class="title_text">
      <div class="log_link">
-       {* i18n: tree = tree *}
-       {* i18n: commit = commit *}
-       {* i18n: commitdiff = commitdiff *}
-       <a href="{$SCRIPT_NAME}?p={$project}&a=commit&h={$commitlines[log].commit}">{$localize.commit}</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=commitdiff&h={$commitlines[log].commit}">{$localize.commitdiff}</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=tree&h={$commitlines[log].commit}&hb={$commitlines[log].commit}">{$localize.tree}</a>
+       <a href="{$SCRIPT_NAME}?p={$project}&a=commit&h={$commitlines[log].commit}">commit</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=commitdiff&h={$commitlines[log].commit}">commitdiff</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=tree&h={$commitlines[log].commit}&hb={$commitlines[log].commit}">tree</a>
        <br />
      </div>
      <i>{$commitlines[log].authorname} [{$commitlines[log].rfc2822}]</i><br />

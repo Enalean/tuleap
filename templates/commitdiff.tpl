@@ -10,14 +10,7 @@
 
  {* Nav *}
  <div class="page_nav">
-   {* i18n: summary = summary *}
-   {* i18n: shortlog = shortlog *}
-   {* i18n: log = log *}
-   {* i18n: commit = commit *}
-   {* i18n: commitdiff = commitdiff *}
-   {* i18n: plain = plain *}
-   {* i18n: tree = tree *}
-   <a href="{$SCRIPT_NAME}?p={$project}&a=summary">{$localize.summary}</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=shortlog&h={$hash}">{$localize.shortlog}</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=log&h={$hash}">{$localize.log}</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=commit&h={$hash}">{$localize.commit}</a> | {$localize.commitdiff} | <a href="{$SCRIPT_NAME}?p={$project}&a=tree&h={$tree}&hb={$hash}">{$localize.tree}</a><br /><a href="{$SCRIPT_NAME}?p={$project}&a=commitdiff_plain&h={$hash}&hp={$hashparent}">{$localize.plain}</a>
+   <a href="{$SCRIPT_NAME}?p={$project}&a=summary">summary</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=shortlog&h={$hash}">shortlog</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=log&h={$hash}">log</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=commit&h={$hash}">commit</a> | commitdiff | <a href="{$SCRIPT_NAME}?p={$project}&a=tree&h={$tree}&hb={$hash}">tree</a><br /><a href="{$SCRIPT_NAME}?p={$project}&a=commitdiff_plain&h={$hash}&hp={$hashparent}">plain</a>
  </div>
  <div>
    <br /><br />
@@ -34,18 +27,16 @@
    {section name=difftree loop=$difftreelines}
      {if $difftreelines[difftree].status == "A"}
        <div class="diff_info">
-         {* i18n: deleted = deleted *}
-         {$difftreelines[difftree].to_type_localized}:<a href="{$SCRIPT_NAME}?p={$project}&a=blob&h={$difftreelines[difftree].to_id}&hb={$hash}&f={$difftreelines[difftree].file}">{if $difftreelines[difftree].file}{$difftreelines[difftree].file}{else}{$difftreelines[difftree].to_id}{/if}</a>({$localize.new})
+         {$difftreelines[difftree].to_type}:<a href="{$SCRIPT_NAME}?p={$project}&a=blob&h={$difftreelines[difftree].to_id}&hb={$hash}&f={$difftreelines[difftree].file}">{if $difftreelines[difftree].file}{$difftreelines[difftree].file}{else}{$difftreelines[difftree].to_id}{/if}</a>(new)
        </div>
      {elseif $difftreelines[difftree].status == "D"}
        <div class="diff_info">
-         {* i18n: deleted = deleted *}
-         {$difftreelines[difftree].from_type_localized}:<a href="{$SCRIPT_NAME}?p={$project}&a=blob&h={$difftreelines[difftree].from_id}&hb={$hash}&f={$difftreelines[difftree].file}">{if $difftreelines[difftree].file}{$difftreelines[difftree].file}{else}{$difftreelines[difftree].from_id}{/if}</a>({$localize.deleted})
+         {$difftreelines[difftree].from_type}:<a href="{$SCRIPT_NAME}?p={$project}&a=blob&h={$difftreelines[difftree].from_id}&hb={$hash}&f={$difftreelines[difftree].file}">{if $difftreelines[difftree].file}{$difftreelines[difftree].file}{else}{$difftreelines[difftree].from_id}{/if}</a>(deleted)
        </div>
      {elseif $difftreelines[difftree].status == "M"}
        {if $difftreelines[difftree].from_id != $difftreelines[difftree].to_id}
          <div class="diff_info">
-	   {$difftreelines[difftree].from_type_localized}:<a href="{$SCRIPT_NAME}?p={$project}&a=blob&h={$difftreelines[difftree].from_id}&hb={$hash}&f={$difftreelines[difftree].file}">{if $difftreelines[difftree].file}a/{$difftreelines[difftree].file}{else}{$difftreelines[difftree].from_id}{/if}</a> -&gt; {$difftreelines[difftree].to_type_localized}:<a href="{$SCRIPT_NAME}?p={$project}&a=blob&h={$difftreelines[difftree].to_id}&hb={$hash}&f={$difftreelines[difftree].file}">{if $difftreelines[difftree].file}b/{$difftreelines[difftree].file}{else}{$difftreelines[difftree].to_id}{/if}</a>
+	   {$difftreelines[difftree].from_type}:<a href="{$SCRIPT_NAME}?p={$project}&a=blob&h={$difftreelines[difftree].from_id}&hb={$hash}&f={$difftreelines[difftree].file}">{if $difftreelines[difftree].file}a/{$difftreelines[difftree].file}{else}{$difftreelines[difftree].from_id}{/if}</a> -&gt; {$difftreelines[difftree].to_type}:<a href="{$SCRIPT_NAME}?p={$project}&a=blob&h={$difftreelines[difftree].to_id}&hb={$hash}&f={$difftreelines[difftree].file}">{if $difftreelines[difftree].file}b/{$difftreelines[difftree].file}{else}{$difftreelines[difftree].to_id}{/if}</a>
 	 </div>
        {/if}
      {/if}

@@ -10,13 +10,7 @@
 
  {* Nav *}
  <div class="page_nav">
-   {* i18n: summary = summary *}
-   {* i18n: shortlog = shortlog *}
-   {* i18n: log = log *}
-   {* i18n: commit = commit *}
-   {* i18n: commitdiff = commitdiff *}
-   {* i18n: tree = tree *}
-   <a href="{$SCRIPT_NAME}?p={$project}&a=summary">{$localize.summary}</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=shortlog">{$localize.shortlog}</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=log">{$localize.log}</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=commit&h={$head}">{$localize.commit}</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=commitdiff&h={$head}">{$localize.commitdiff}</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=tree&hb={$head}">{$localize.tree}</a>
+   <a href="{$SCRIPT_NAME}?p={$project}&a=summary">summary</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=shortlog">shortlog</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=log">log</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=commit&h={$head}">commit</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=commitdiff&h={$head}">commitdiff</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=tree&hb={$head}">tree</a>
    <br /><br />
  </div>
  {* Tag data *}
@@ -26,15 +20,13 @@
  <div class="title_text">
    <table cellspacing="0">
      <tr>
-       {* i18n: object = object *}
-       <td>{$localize.object}</td>
+       <td>object</td>
        <td class="monospace"><a href="{$SCRIPT_NAME}?p={$project}&a={$tag.type}&h={$tag.object}" class="list">{$tag.object}</a></td>
-       <td class="link"><a href="{$SCRIPT_NAME}?p={$project}&a={$tag.type}&h={$tag.object}">{$tag.type_localized}</a></td>
+       <td class="link"><a href="{$SCRIPT_NAME}?p={$project}&a={$tag.type}&h={$tag.object}">{$tag.type}</a></td>
      </tr>
      {if $tag.author}
        <tr>
-         {* i18n: author = author *}
-         <td>{$localize.author}</td>
+         <td>author</td>
 	 <td>{$tag.author}</td>
        </tr>
        <tr>

@@ -13,7 +13,6 @@
  require_once('gitutil.git_read_hash.php');
  require_once('gitutil.git_read_tag.php');
  require_once('gitutil.git_read_commit.php');
- require_once('i18n.lookupstring.php');
 
 function git_read_refs($projectroot,$project,$refdir)
 {
@@ -45,7 +44,6 @@ function git_read_refs($projectroot,$project,$refdir)
 		if ($type) {
 			$ref_item = array();
 			$ref_item['type'] = $type;
-			$ref_item['type_localized'] = lookupstring($type);
 			$ref_item['id'] = $ref_id;
 			$ref_item['epoch'] = 0;
 			$ref_item['age'] = "unknown";
@@ -74,7 +72,6 @@ function git_read_refs($projectroot,$project,$refdir)
 				$ref_item['epoch'] = $co['committer_epoch'];
 				$ref_item['age'] = $co['age_string'];
 			}
-			$ref_item['reftype_localized'] = lookupstring($ref_item['reftype']);
 			$reflist[] = $ref_item;
 		}
 	}

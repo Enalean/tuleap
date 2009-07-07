@@ -11,14 +11,11 @@
           <div class="page_footer_text">{$projectdescription}</div>
         {/if}
 	{if $validproject}
-	  {* i18n: RSS = RSS *}
-          <a href="{$SCRIPT_NAME}?p={$project}&a=rss" class="rss_logo">{$localize.RSS}</a>
+          <a href="{$SCRIPT_NAME}?p={$project}&a=rss" class="rss_logo">RSS</a>
 	{/if}
       {else}
-        {* i18n: OPML = OPML *}
-        <a href="{$SCRIPT_NAME}?a=opml" class="rss_logo">{$localize.OPML}</a>
-	{* i18n: TXT = TXT *}
-        <a href="{$SCRIPT_NAME}?a=project_index" class="rss_logo">{$localize.TXT}</a>
+        <a href="{$SCRIPT_NAME}?a=opml" class="rss_logo">OPML</a>
+        <a href="{$SCRIPT_NAME}?a=project_index" class="rss_logo">TXT</a>
       {/if}
     </div>
   </body>

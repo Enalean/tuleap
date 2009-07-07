@@ -11,25 +11,11 @@
  {* If we managed to look up commit info, we have enough info to display the full header - othewise just use a simple header *}
  <div class="page_nav">
    {if $fullnav}
-     {* i18n: summary = summary *}
-     {* i18n: shortlog = shortlog *}
-     {* i18n: log = log *}
-     {* i18n: commit = commit *}
-     {* i18n: comitdiff = commitdiff *}
-     {* i18n: tree = tree *}
-     <a href="{$SCRIPT_NAME}?p={$project}&a=summary">{$localize.summary}</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=shortlog">{$localize.shortlog}</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=log">{$localize.log}</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=commit&h={$hashbase}">{$localize.commit}</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=commitdiff&h={$hashbase}">{$localize.commitdiff}</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=tree&h={$tree}&hb={$hashbase}">{$localize.tree}</a><br />
-     {* i18n: plain = plain *}
+     <a href="{$SCRIPT_NAME}?p={$project}&a=summary">summary</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=shortlog">shortlog</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=log">log</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=commit&h={$hashbase}">commit</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=commitdiff&h={$hashbase}">commitdiff</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=tree&h={$tree}&hb={$hashbase}">tree</a><br />
      {if $file}
-       <a href="{$SCRIPT_NAME}?p={$project}&a=blob_plain&h={$hash}&f={$file}">{$localize.plain}</a> | 
-       {* i18n: HEAD = HEAD *}
-       {if ($hashbase != "HEAD") && ($hashbase != $head)}
-         <a href="{$SCRIPT_NAME}?p={$project}&a=blob&hb=HEAD&f={$file}">{$localize.HEAD}</a>
-       {else}
-         {$localize.HEAD}
-       {/if}
-       <br />
+       <a href="{$SCRIPT_NAME}?p={$project}&a=blob_plain&h={$hash}&f={$file}">plain</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=blob&hb=HEAD&f={$file}">head</a><br />
      {else}
-       <a href="{$SCRIPT_NAME}?p={$project}&a=blob_plain&h={$hash}">{$localize.plain}</a><br />
+       <a href="{$SCRIPT_NAME}?p={$project}&a=blob_plain&h={$hash}">plain</a><br />
      {/if}
    {else}
      <br /><br />

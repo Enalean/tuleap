@@ -10,13 +10,7 @@
 
  {* Nav *}
  <div class="page_nav">
-   {* i18n: summary = summary *}
-   {* i18n: shortlog = shortlog *}
-   {* i18n: log = log *}
-   {* i18n: commit = commit *}
-   {* i18n: commitdiff = commitdiff *}
-   {* i18n: tree = tree *}
-   <a href="{$SCRIPT_NAME}?p={$project}&a=summary">{$localize.summary}</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=shortlog">{$localize.shortlog}</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=log">{$localize.log}</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=commit&h={$head}">{$localize.commit}</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=commitdiff&h={$head}">{$localize.commitdiff}</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=tree&hb={$head}">{$localize.tree}</a>
+   <a href="{$SCRIPT_NAME}?p={$project}&a=summary">summary</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=shortlog">shortlog</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=log">log</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=commit&h={$head}">commit</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=commitdiff&h={$head}">commitdiff</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=tree&hb={$head}">tree</a>
    <br /><br />
  </div>
  <div>
@@ -35,15 +29,11 @@
        </td>
        <td class="link">
          {if $taglist[tag].type == "tag"}
-	   {* i18n: tag = tag *}
-	   <a href="{$SCRIPT_NAME}?p={$project}&a=tag&h={$taglist[tag].id}">{$localize.tag}</a> | 
+	   <a href="{$SCRIPT_NAME}?p={$project}&a=tag&h={$taglist[tag].id}">tag</a> | 
 	 {/if}
-	 <a href="{$SCRIPT_NAME}?p={$project}&a={$taglist[tag].reftype}&h={$taglist[tag].refid}">{$taglist[tag].reftype_localized}</a>
+	 <a href="{$SCRIPT_NAME}?p={$project}&a={$taglist[tag].reftype}&h={$taglist[tag].refid}">{$taglist[tag].reftype}</a>
 	 {if $taglist[tag].reftype == "commit"}
-	   {* i18n: shortlog = shortlog *}
-	   {* i18n: log = log *}
-	   {* i18n: snapshot = snapshot *}
-	   | <a href="{$SCRIPT_NAME}?p={$project}&a=shortlog&h=refs/tags/{$taglist[tag].name}">{$localize.shortlog}</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=log&h=refs/tags/{$taglist[tag].name}">{$localize.log}</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=snapshot&h={$taglist[tag].refid}">{$localize.snapshot}</a>
+	   | <a href="{$SCRIPT_NAME}?p={$project}&a=shortlog&h=refs/tags/{$taglist[tag].name}">shortlog</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=log&h=refs/tags/{$taglist[tag].name}">log</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=snapshot&h={$taglist[tag].refid}">snapshot</a>
 	 {/if}
        </td>
      </tr>
