@@ -67,9 +67,6 @@ class ArtifactField extends Error {
 	
 	// Keep the history changes
 	var $keep_history;
-
-	// Is the notification about this field enabled ?
-	var $enable_notification;
 	
 	// Is the field special?
 	var $special;
@@ -118,7 +115,7 @@ class ArtifactField extends Error {
 	    global $display_debug;
 	    
 	    $sql="SELECT af.field_id, field_name, data_type, display_type, ".
-		"display_size,label, description,scope,required,empty_ok,keep_history,notification,special, ".
+		"display_size,label, description,scope,required,empty_ok,keep_history,special, ".
 		"value_function, ".
 		"af.group_artifact_id, use_it, place, default_value, af.field_set_id ".
 		"FROM artifact_field af, artifact_field_usage afu ".
@@ -157,7 +154,6 @@ class ArtifactField extends Error {
 		$this->required = $field_array['required'];    // don't use it : value always equal to 0
 		$this->empty_ok = $field_array['empty_ok'];
 		$this->keep_history = $field_array['keep_history'];
-		$this->enable_notification = $field_array['notification'];
 		$this->special = $field_array['special'];
 		// if value_function == "", the result of explode will be: array([0] => "") and that's not what we want.
 		if ($field_array['value_function'] != "") {
@@ -316,15 +312,6 @@ class ArtifactField extends Error {
 	}
 	
 	/**
-	* Get the notification status of the date field (enabled/disabled)
-	* 
-	* @return boolean
-	*/
-	function getNotificationStatus() {
-	    return $this->enable_notification;
-	}
-	
-	/**
 	 *  Get the special attribute value
 	 *
 	 * @return boolean
@@ -401,7 +388,6 @@ class ArtifactField extends Error {
 		 	   " - required=".$this->required.
 		 	   " - empty_ok=".$this->empty_ok.
 		 	   " - keep_history=".$this->keep_history.
-			   " - enable_notification=".$this->enable_notification.
 		 	   " - special=".$this->special.
 		 	   " - value_function=".$this->value_function.
 		 	   " - use_it=".$this->use_it.
@@ -1259,7 +1245,7 @@ class ArtifactField extends Error {
 	 */
 	function update($group_artifact_id,$field_name,$description,$label,$data_type,$display_type,
 						 $display_size,$rank_on_screen,
-						 $empty_ok,$keep_history,$enable_notification,$special,$use_it, $fieldset_id) {
+						 $empty_ok,$keep_history,$special,$use_it, $fieldset_id) {
 	  global $Language,$ath;
 	 	
 		// Check arguments
@@ -1286,7 +1272,6 @@ class ArtifactField extends Error {
 			   "description='". db_es($description) ."',".
 			   "empty_ok=". db_ei($empty_ok) .",".
 			   "keep_history=". db_ei($keep_history) .",".
-			   "notification=".db_ei($enable_notification).",".
 			   "special=". db_ei($special) .",".
                "field_set_id=". db_ei($fieldset_id) ." ".
 			   "WHERE group_artifact_id=". db_ei($group_artifact_id) ." AND field_id=". db_ei($this->field_id) ;

@@ -476,7 +476,6 @@ if ($group_id && !$atid) {
 		$ath->footer(array());
 		break;
 	  
-	
 	case 'editoptions':
 		if ( !user_isloggedin() ) {
 			exit_not_logged_in();
@@ -740,7 +739,7 @@ if ($group_id && !$atid) {
                     
 		if ( !$art_field_fact->createField($description,$label,$data_type,$display_type,
 						 $display_size,$rank_on_screen,
-						 (isset($empty_ok)?$empty_ok:0),(isset($keep_history)?$keep_history:0),(isset($enable_notification)?$enable_notification:0),$special,$use_it,$field_set_id) ) {
+						 (isset($empty_ok)?$empty_ok:0),(isset($keep_history)?$keep_history:0),$special,$use_it,$field_set_id) ) {
 			exit_error($Language->getText('global','error'),$art_field_fact->getErrorMessage());
 		} else {
             // Reload the field factory
@@ -783,10 +782,9 @@ if ($group_id && !$atid) {
                     $special        = $request->getValidated('special', new Valid_WhiteList('', array(1)), 0);
                     $use_it         = $request->getValidated('use_it', new Valid_WhiteList('', array(1)), 0);
                     $field_set_id = $request->getValidated('field_set_id', 'uint');
-                    $enable_notification = $request->getValidated('enable_notification', new Valid_WhiteList('', array(1)), 0);
 			if ( !$field->update($atid,$field_name,$description,$label,$data_type,$display_type,
 							 ($display_size=="N/A"?"":$display_size),$rank_on_screen,
-							 $empty_ok,$keep_history,$enable_notification,$special,$use_it,$field_set_id) ) {
+							 $empty_ok,$keep_history,$special,$use_it,$field_set_id) ) {
 				exit_error($Language->getText('global','error'),$field->getErrorMessage());
 			} else {
                 if (!(isset($use_it) && $use_it)) {
@@ -868,7 +866,7 @@ if ($group_id && !$atid) {
 						    $field->getName(),$field->getDescription(),$field->getLabel(),
 						    $field->getDataType(),$field->getDefaultValue(),$field->getDisplayType(),
 						    $field->getDisplaySize(),$field->getPlace(),
-						    $field->getEmptyOk(),$field->getKeepHistory(),$field->getNotificationStatus(),$field->isSpecial(),$field->getUseIt(),true,$field->getFieldSetID());
+						    $field->getEmptyOk(),$field->getKeepHistory(),$field->isSpecial(),$field->getUseIt(),true,$field->getFieldSetID());
 			$ath->footer(array());
 		}
 		break;

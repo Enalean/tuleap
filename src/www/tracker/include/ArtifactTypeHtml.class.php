@@ -1164,56 +1164,48 @@ EOS;
 		echo '<script language="JavaScript">
 
 			  function onChangeFieldType(form) {
-			  		var notif_chkbx = document.getElementById("enable_notification");
 					switch ( form.field_type.value ) {
 			  		// Select Box
 			  		case "1":
 			  			form.data_type.value = '.(int)$af->DATATYPE_INT.';
 					  	form.display_type.value = "SB";
 					  	form.display_size.value = "N/A";
-						notif_chkbx.disabled=true;
 					  	break;
 			  		// Multi Select Box
 			  		case "2":
 			  			form.data_type.value = '.(int)$af->DATATYPE_INT.';
 					  	form.display_type.value = "MB";
 					  	form.display_size.value = "N/A";
-					  	notif_chkbx.disabled=true;
 						break;
 			  		// TextField
 			  		case "3":
 			  			form.data_type.value = '.(int)$af->DATATYPE_TEXT.';
 					  	form.display_type.value = "TF";
 					  	form.display_size.value = "N/A";
-					  	notif_chkbx.disabled=true;
 						break;
 			  		// TextArea
 			  		case "4":
 			  			form.data_type.value = '.(int)$af->DATATYPE_TEXT.';
 					  	form.display_type.value = "TA";
 					  	form.display_size.value = "60/7";
-					  	notif_chkbx.disabled=true;
 						break;
 			  		// DateField
 			  		case "5":
 			  			form.data_type.value = '.(int)$af->DATATYPE_DATE.';
 					  	form.display_type.value = "DF";
 					  	form.display_size.value = "N/A";
-					  	notif_chkbx.disabled=false;
 						break;
 			  		// FloatField
 			  		case "6":
 			  			form.data_type.value = '.(int)$af->DATATYPE_FLOAT.';
 					  	form.display_type.value = "TF";
 					  	form.display_size.value = "N/A";
-					  	notif_chkbx.disabled=true;
 						break;
 			  		// IntegerField
 			  		case "7":
 			  			form.data_type.value = '.(int)$af->DATATYPE_INT.';
 					  	form.display_type.value = "TF";
 					  	form.display_size.value = "N/A";
-					  	notif_chkbx.disabled=true;
 						break;
 					default:
 						alert("Unknow field type!");
@@ -1306,7 +1298,7 @@ EOS;
 	 */
 	function displayFieldUsageForm($func="field_create",$field_id=false,$field_name=false,$description=false,$label=false,$data_type=false,$default_value=false,$display_type=false,
 								   $display_size=false,$rank_on_screen=false,
-								   $empty_ok=false,$keep_history=false,$enable_notification=false,$special=false,$use_it=false,$show_use=false, $fieldset_id=false) {
+								   $empty_ok=false,$keep_history=false,$special=false,$use_it=false,$show_use=false, $fieldset_id=false) {
 		global $art_field_fact,$Language;
 		$hp = Codendi_HTMLPurifier::instance();
 		$field = $art_field_fact->getFieldFromId($field_id);
@@ -1446,27 +1438,8 @@ EOS;
 			}
 		}
 				
-		echo '</td>';
-		
-		echo '<td><label>'.$Language->getText('tracker_include_type','enable_notifications').': </label>';  		
-		if ($enable_notification) {
-		    $checked = "checked";		    
-		} else {
-		    $checked = "";
-		}
-		//in field creation form, SB is the default selected value, so the 'enable_notification' checkbox should be disabled by default
-		if ( $func == "field_create" ) {
-		    $disabled = "disabled";
-		} else {
-		    if ( $field && $field->isDateField() && !$field->isSpecial()) {
-		        $disabled = "";
-		    } else {
-		        $disabled = "disabled";
-		    }
-		}
-		echo '<input type="checkbox" id="enable_notification" name="enable_notification" value="1" '.$checked.' '.$disabled.'> </td>';		
-
-		echo '</tr>';		
+		echo '
+		  </td></tr>';
 		      
 		if ( $show_use ) {
 		    echo  '
@@ -1972,7 +1945,7 @@ EOS;
 	 */
 	
 	function displayNotificationForm($user_id) {
-	  global $Language,$art_field_fact;
+	  global $Language;
       $hp = Codendi_HTMLPurifier::instance();
 		// By default it's all 'yes'
 		for ($i=0; $i<$this->num_roles; $i++) {
@@ -2174,7 +2147,7 @@ EOS;
 		echo "</table>\n";
 		
 		$em = EventManager::instance();
-		$em->processEvent('artifact_type_html_display_notification_form', array('at' => $this, 'group_id' => $group_id, 'art_field_fact' => $art_field_fact));
+		$em->processEvent('artifact_type_html_display_notification_form', array('at' => $this, 'group_id' => $group_id, 'art_field_fact' => $GLOBALS['art_field_fact']));
 		
 		echo '<P align="center"><INPUT type="submit" name="submit" value="'.$Language->getText('tracker_include_artifact','submit').'">
 		</FORM>';
