@@ -375,30 +375,6 @@ $strings = array(
 	 * Used on a plaintext diff to indicate the subject
 	 */
 	'Subject' => 'Subject',
-
-	/*
-	 * Used in the rss feed description to indicate that this
-	 * is a certain project's log, where %1$s is the project path
-	 */
-	'projectlog' => '%1$s log',
-
-	/*
-	 * Used in the rss feed to indicate the language
-	 */
-	'rsslang' => 'en',
-
-	/*
-	 * Used as the title of the opml export to indicate that this
-	 * is an export of a certain gitphp instance, where
-	 * %1$s is the title of the gitphp install
-	 */
-	'opmlexport' => '%1$s OPML Export',
-
-	/*
-	 * Used as the text for the opml container to indicate that
-	 * it contains git rss feeds
-	 */
-	'gitrssfeeds' => 'git RSS feeds',
 );
 
 ?>

@@ -8,10 +8,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <opml version="1.0">
   <head>
-    <title>{$localize.opmlexport|sprintf:$title}</title>
+    <title>{$title} OPML Export</title>
   </head>
   <body>
-    <outline text="{$localize.gitrssfeeds}">
+    <outline text="git RSS feeds">
 
       {foreach from=$opmllist item=proj}
       <outline type="rss" text="{$proj}" title="{$proj}" xmlUrl="{$self}?p={$proj}&amp;a=rss" htmlUrl="{$self}?p={$proj}&amp;a=summary" />

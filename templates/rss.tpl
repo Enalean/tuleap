@@ -10,8 +10,8 @@
   <channel>
     <title>{$project}</title>
     <link>{$self}?p={$project}&amp;a=summary</link>
-    <description>{$localize.projectlog|sprintf:$project}</description>
-    <language>{$localize.rsslang}</language>
+    <description>{$project} log</description>
+    <language>en</language>
 
     {section name=rssitem loop=$commitlines}
       <item>
