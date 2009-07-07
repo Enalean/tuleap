@@ -13,6 +13,7 @@ header("Content-Type: $contentType; charset=utf-8"); *}
   <!-- gitphp web interface {$version}, (C) 2006 Christopher Han <xiphux@gmail.com> -->
   <head>
     <title>{$pagetitle}{if $project && $validproject} :: {$project}{if $action && $validaction}/{$localize.$action}{/if}{/if}</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     {if $validproject}
       <link rel="alternate" title="{$project} log" href="{$SCRIPT_NAME}?p={$project}&a=rss" type="application/rss+xml" />
     {/if}
