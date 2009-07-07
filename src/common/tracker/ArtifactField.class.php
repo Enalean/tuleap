@@ -1246,7 +1246,7 @@ class ArtifactField extends Error {
 	function update($group_artifact_id,$field_name,$description,$label,$data_type,$display_type,
 						 $display_size,$rank_on_screen,
 						 $empty_ok,$keep_history,$special,$use_it, $fieldset_id) {
-	  global $Language,$ath;
+	  global $Language;
 	 	
 		// Check arguments
 		if ( $field_name=="" || $data_type=="" || $display_type=="" ) {
@@ -1257,7 +1257,6 @@ class ArtifactField extends Error {
 		// Default values
 		$empty_ok = ($empty_ok?$empty_ok:0);
 		$keep_history = ($keep_history?$keep_history:0);
-		$enable_notification = ($enable_notification?$enable_notification:0);
 		$use_it = ($use_it?$use_it:0);
 		$special = ($special?$special:0);
 		$rank_on_screen = ($rank_on_screen?$rank_on_screen:"''");
