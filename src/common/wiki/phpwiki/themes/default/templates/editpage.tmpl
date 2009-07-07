@@ -110,12 +110,12 @@ function showOldMarkupRules(show) {
 
 <div id="oldMarkup" class="wiki-edithelp">
 <!-- FIXME: do we need this at all?  If so, it could probably be moved to TextFormattingRules -->
-<p><?= fmt("See %s tips for editing.", WikiLink(_("GoodStyle"))) ?></p>
+<!--<p><?= fmt("See %s tips for editing.", WikiLink(_("GoodStyle"))) ?></p>-->
 <?plugin IncludePage page=_("OldTextFormattingRules") section=_("Synopsis") quiet=1?>
 </div>
 <div id="newMarkup" class="wiki-edithelp">
 <!-- FIXME: do we need this at all?  If so, it could probably be moved to TextFormattingRules -->
-<p><?= fmt("See %s tips for editing.", WikiLink(_("GoodStyle"))) ?></p>
+<!--<p><?= fmt("See %s tips for editing.", WikiLink(_("GoodStyle"))) ?></p>-->
 <?plugin IncludePage page=_("TextFormattingRules") section=_("Synopsis") quiet=1?>
 </div>
 <?=$HIDDEN_INPUTS?>
