@@ -31,9 +31,13 @@ class tracker_date_reminderPlugin extends Plugin {
         
         $this->_addHook('artifact_type_html_display_notification_form', 'artifact_type_html_display_notification_form', false);
         $this->_addHook('tracker_graphic_report_admin', 'tracker_graphic_report_admin', false);
+
+        // Field deletion
+        $this->_addHook('tracker_admin_field_delete', 'tracker_admin_field_delete', false);
         
         $this->_addHook('codendi_daily_start', 'codendi_daily_start', false);
         
+        // Tracker deletion
         $this->_addHook('artifact_type_factory_delete_artifact_type', 'artifact_type_factory_delete_artifact_type', false);
         $this->_addHook('artifact_import_insert_artifact', 'artifact_import_insert_artifact', false);
     }
@@ -115,6 +119,11 @@ class tracker_date_reminderPlugin extends Plugin {
     }
     
     function tracker_graphic_report_admin($params) {
+        $request = HTTPRequest::instance();
+        if ($request->getValidated('func', 'string') != 'date_field_notification') {
+            return;
+        }
+
         if ( !user_isloggedin() ) {
             exit_not_logged_in();
             return;
@@ -125,11 +134,11 @@ class tracker_date_reminderPlugin extends Plugin {
             return;
         }
 
-        $request = HTTPRequest::instance();
-        
+
         $field_id = $request->getValidated('field_id', 'uint');
         $field    = $params['art_field_fact']->getFieldFromId($field_id);
-        //@todo: change check
+                //@todo: change check
+        if ($field) {
 
 /*        //check if  field_id exist
         $sql = sprintf('SELECT field_id FROM artifact_field'
@@ -187,7 +196,7 @@ class tracker_date_reminderPlugin extends Plugin {
                 }
             }
         }
-
+        }
         $params['ath']->adminHeader(array ('title'=>$GLOBALS['Language']->getText('tracker_admin_index','admin_date_field_notif'),
            'help' => 'TrackerAdministration.html#TrackerEmailNotificationSettings'));
          
@@ -197,6 +206,12 @@ class tracker_date_reminderPlugin extends Plugin {
         $tdrArtifactFieldHtml->displayDateFieldNotificationSettings($params['ath'], $field);
         $params['ath']->footer(array());
         exit;
+    }
+    
+    function tracker_admin_field_delete($params) {
+        //if the field is date field, clear corresponding date reminder settings
+        $tdrArtifactField = new TrackerDateReminder_ArtifactField();
+        $tdrArtifactField->deleteFieldReminderSettings($params['field']->getID(), $params['ath']->getID());
     }
 }
 

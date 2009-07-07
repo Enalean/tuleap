@@ -818,10 +818,9 @@ if ($group_id && !$atid) {
         $field_id = $request->getValidated('field_id', 'uint', 0);
 		$field = $art_field_fact->getFieldFromId($field_id);
 		if ( $field ) {
-            
-            //if the field is date field, clear corresponding date reminder settings
-            $field->deleteFieldReminderSettings($field->getID(),$atid);
-	    
+            $em = EventManager::instance();
+            $em->processEvent('tracker_admin_field_delete', array('field' => $field, 'ath' => $ath));
+
             //clear permissions
             permission_clear_all_fields_tracker($group_id, $atid, $field->getID());
             
