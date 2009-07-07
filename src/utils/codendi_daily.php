@@ -25,7 +25,6 @@
 
 require_once('pre.php');
 require_once('common/event/EventManager.class.php');
-require_once('common/tracker/ArtifactDateReminder.class.php');
 
 // Include for services
 
@@ -41,10 +40,4 @@ $unix_time = mktime(0, 0, 0, $date_list[1], $date_list[2], $date_list[0]);
 db_query("UPDATE user SET status='S', unix_status='S'"
                     ." WHERE expiry_date!=0 and expiry_date<" . $unix_time );
 
-//Process daily events, start with notiication reminder in trackers
-$callArray = array('ArtifactDateReminder');
-foreach($callArray as $class) {
-    $obj = new $class;
-    $obj->codexDaily();
-}
 ?>

@@ -32,6 +32,8 @@ class tracker_date_reminderPlugin extends Plugin {
         $this->_addHook('artifact_type_html_display_notification_form', 'artifact_type_html_display_notification_form', false);
         $this->_addHook('tracker_graphic_report_admin', 'tracker_graphic_report_admin', false);
         
+        $this->_addHook('codendi_daily_start', 'codendi_daily_start', false);
+        
         $this->_addHook('artifact_type_factory_delete_artifact_type', 'artifact_type_factory_delete_artifact_type', false);
         $this->_addHook('artifact_import_insert_artifact', 'artifact_import_insert_artifact', false);
     }
@@ -44,6 +46,11 @@ class tracker_date_reminderPlugin extends Plugin {
         return $this->pluginInfo;
     }
 
+    function codendi_daily_start($params) {
+        $artifactDateReminder = new ArtifactDateReminder();
+        $artifactDateReminder->codexDaily();
+    }
+    
     function artifact_type_factory_delete_artifact_type($params) {
         // Delete artifact_date_reminder_settings
         $sql = sprintf('DELETE FROM artifact_date_reminder_settings'.
