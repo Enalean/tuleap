@@ -3,24 +3,21 @@
  * Copyright (c) STMicroelectronics, 2006. All Rights Reserved.
  *
  * Originally written by Manuel Vacelet, 2006
+ * 
+ * This file is a part of Codendi.
  *
- * This file is a part of CodeX.
- *
- * CodeX is free software; you can redistribute it and/or modify
+ * Codendi is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * CodeX is distributed in the hope that it will be useful,
+ * Codendi is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with CodeX; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
- * 
+ * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 require_once('Docman_FileStorage.class.php');
 require_once('Docman_VersionFactory.class.php');
@@ -107,20 +104,18 @@ class Docman_ActionsDeleteVisitor /* implements Visitor */ {
         if(!$referenced) {
             $dIF =& $this->_getItemFactory();
             $id_in_wiki = $dIF->getIdInWikiOfWikiPageItem($item->getPageName(), $item->getGroupId());
-            // Restrict access to wiki admins.
-            permission_clear_all($item->getGroupId(), 'WIKIPAGE_READ', $id_in_wiki, false);
-            permission_add_ugroup($item->getGroupId(), 'WIKIPAGE_READ', $id_in_wiki, $GLOBALS['UGROUP_WIKI_ADMIN']);
+            // Restrict access to wiki admins if the page already exists in wiki.
+            if($id_in_wiki !== null) {
+                permission_clear_all($item->getGroupId(), 'WIKIPAGE_READ', $id_in_wiki, false);
+                permission_add_ugroup($item->getGroupId(), 'WIKIPAGE_READ', $id_in_wiki, $GLOBALS['UGROUP_WIKI_ADMIN']);
+            }
         }
     }
 
     function _deleteItem($item, $params) {
-        if ($this->docman->userCanWrite($item->getId())) {
-            $item->setDeleteDate($this->deleteDate);
-            $dIF =& $this->_getItemFactory();
-            $dIF->delCutPreferenceForAllUsers($item->getId());
-            $dIF->delCopyPreferenceForAllUsers($item->getId());
-            $dao = $this->_getItemDao();
-            $dao->updateFromRow($item->toRow());
+       if ($this->docman->userCanWrite($item->getId())) {
+
+            // The event must be processed before the item is deleted
             $em =& $this->_getEventManager();
             $em->processEvent('plugin_docman_event_del', array(
                 'group_id' => $item->getGroupId(),
@@ -128,6 +123,10 @@ class Docman_ActionsDeleteVisitor /* implements Visitor */ {
                 'parent'   => &$params['parent'],
                 'user'     => &$params['user'])
             );
+            
+            $item->setDeleteDate($this->deleteDate);
+            $dao = $this->_getItemDao();
+            $dao->updateFromRow($item->toRow());
             return true;
         } else {
             $this->docman->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_perms_delete_item', $item->getTitle()));
@@ -153,7 +152,7 @@ class Docman_ActionsDeleteVisitor /* implements Visitor */ {
         return $fs;
     }
     function &_getItemDao() {
-        $dao = new Docman_ItemDao(CodexDataAccess::instance());
+        $dao = new Docman_ItemDao(CodendiDataAccess::instance());
         return $dao;
     }
 }
