@@ -176,6 +176,28 @@ $gitphp_conf['filesearch'] = TRUE;
 $gitphp_conf['debug'] = FALSE;
 
 /*
+ * cache
+ * Turns on smarty caching
+ * Be very careful with this!  Due to varying cache lifetimes,
+ * you could end up seeing a mix of pages from before and after
+ * a commit!
+ * If in doubt, leave this off
+ */
+$gitphp_conf['cache'] = FALSE;
+
+/*
+ * cachelifetime
+ * Sets how long a page will be cached, in seconds
+ * This will vary greatly depending on how active your projects are.
+ * If you set it too high, commits that happen close to one another
+ * will appear to be mixed together as the user navigates between
+ * pages, depending on when each page was previously accessed and
+ * its current cache lifetime.
+ * If in doubt, set it to something extremely low, like 3 seconds.
+ */
+$gitphp_conf['cachelifetime'] = 3;
+
+/*
  * git_projects
  * Two-dimensional array list of projects
  * First array index is the name of the category the projects
