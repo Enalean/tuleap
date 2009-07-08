@@ -38,6 +38,7 @@ class Docman_View_GetMenuItemsVisitor /* implements Visitor*/ {
         // to develop and compute that case.
         if($this->if->isMoveable($item) && $this->dPm->userCanWrite($this->user, $item->getId()) && $this->dPm->userCanWrite($this->user, $item->getParentId())) {
             $this->actions['canMove'] = true;
+            $this->actions['canCut'] = true;
         }
         if(!$this->if->isRoot($item) && $this->dPm->userCanWrite($this->user, $item->getId()) && $this->dPm->userCanWrite($this->user, $item->getParentId())) {
             $this->actions['canDelete'] = true;
@@ -50,7 +51,8 @@ class Docman_View_GetMenuItemsVisitor /* implements Visitor*/ {
         if($this->dPm->userCanWrite($this->user, $item->getId())) {
             $this->actions['canNewDocument'] = true;
             $this->actions['canNewFolder']   = true;
-            if($this->if->getCopyPreference($this->user) != false) {
+            if($this->if->getCopyPreference($this->user) !== false ||
+               $this->if->getCutPreference($this->user, $item->getGroupId()) !== false) {
                 $this->actions['canPaste'] = true;
             }
         }

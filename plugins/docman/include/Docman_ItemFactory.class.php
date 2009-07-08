@@ -53,6 +53,7 @@ class Docman_ItemFactory {
         $this->rootItems[] = array();
         $this->onlyOneChildForRoot[] = array();
         $this->copiedItem = array();
+        $this->cutItem = array();
 
         // Parameter
         $this->groupId = $groupId;
@@ -883,9 +884,41 @@ class Docman_ItemFactory {
         return $dar->valid();
     }
 
+    function setCutPreference($item) {
+        user_set_preference(PLUGIN_DOCMAN_PREF.'_item_cut',
+                            $item->getId());
+    }
+
     function setCopyPreference($item) {
         user_set_preference(PLUGIN_DOCMAN_PREF.'_item_copy',
                             $item->getId());
+    }
+
+    /**
+     * Get the item_id that was cut by the user.
+     * 
+     * If groupId is given, only items that belongs to this groupId will be
+     * returned.
+     * If no item match, returns false.
+     * 
+     * @param User    $user
+     * @param Integer $groupId
+     * 
+     * @return Integer or false.
+     */
+    function getCutPreference($user, $groupId=null) {
+        if(!isset($this->cutItem[$user->getId()])) {
+            $cutId = false;
+            $id = user_get_preference(PLUGIN_DOCMAN_PREF.'_item_cut');
+            if ($groupId !== null && $id !== false) {
+                $item = $this->getItemFromDb($id);
+                if ($item->getGroupId() == $groupId) {
+                    $cutId = $id;
+                }
+            }
+            $this->cutItem[$user->getId()] = $cutId;
+        }
+        return $this->cutItem[$user->getId()];
     }
 
     function getCopyPreference($user) {
@@ -895,8 +928,36 @@ class Docman_ItemFactory {
         return $this->copiedItem[$user->getId()];
     }
 
+    function delCutPreference() {
+        user_del_preference(PLUGIN_DOCMAN_PREF.'_item_cut');
+    }
+
     function delCopyPreference() {
         user_del_preference(PLUGIN_DOCMAN_PREF.'_item_copy');
+    }
+
+    /**
+    * This order deletion of cut preferences of all users set on item identified by $item_id.
+    *
+    * @param int $item_id identifier of docman item that has been marked as deleted.
+    * @return void.
+    *
+    */
+    function delCutPreferenceForAllUsers($item_id) {
+        $dao =& $this->_getItemDao();
+        $dao->deleteCutPreferenceForAllUsers($item_id);
+    }
+
+    /**
+    * This order deletion of copy preferences of all users set on item identified by $item_id.
+    *
+    * @param int $item_id identifier of docman item that has been marked as deleted.
+    * @return void.
+    *
+    */
+    function delCopyPreferenceForAllUsers($item_id) {
+        $dao =& $this->_getItemDao();
+        $dao->deleteCopyPreferenceForAllUsers($item_id);
     }
 
     function getCurrentWikiVersion($item) {

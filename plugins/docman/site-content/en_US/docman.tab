@@ -1,4 +1,5 @@
 plugin_docman	action_approval	Approval table
+plugin_docman	action_cut	Cut
 plugin_docman	action_copy	Copy
 plugin_docman	action_delete	Delete
 plugin_docman	action_details	Properties
@@ -175,7 +176,10 @@ plugin_docman	descriptor_description	Document Manager
 plugin_docman	descriptor_name	Document Manager
 
 plugin_docman	details_actions	Actions
+plugin_docman	details_actions_cut	Cut
 plugin_docman	details_actions_copy	Copy
+plugin_docman	details_actions_cut_cancut_document	You can <a href="$1">cut this document</a>.
+plugin_docman	details_actions_cut_cancut_folder	You can <a href="$1">cut this folder</a>.
 plugin_docman	details_actions_copy_cancopy_document	You can <a href="$1">copy this document</a>.
 plugin_docman	details_actions_copy_cancopy_folder	You can <a href="$1">copy this folder</a>.
 plugin_docman	details_actions_delete	Delete
@@ -199,6 +203,8 @@ plugin_docman	details_actions_newversion_cannotcreate	You cannot create a new ve
 plugin_docman	details_actions_newversion_changelog	Change Log:
 plugin_docman	details_actions_newversion_label	Version Label:
 plugin_docman	details_actions_paste	Paste
+plugin_docman	details_actions_paste_from_cut	You are about to <strong>paste</strong> an item you <strong>cut</strong>. It will preserve the whole hierarchy, notifications, approval table, permissions, etc. Actually, only the parent of the item will change.
+plugin_docman	details_actions_paste_from_copy	You are about to <strong>paste</strong> an item you <strong>copied</strong>. It will clone the whole hierarchy but <strong>only keeps the latest version of files, doesn't keep approval tables nor notifications and inherit permissions from new parent</strong>.
 plugin_docman	details_actions_paste_canpaste	You can <a href="$1">paste '$2' into this folder</a>.
 plugin_docman	details_actions_update	Update
 plugin_docman	details_actions_update_can	You can <a href="$1">update</a> this document.
@@ -333,6 +339,11 @@ plugin_docman	details_paste_mddiff_title	Document properties
 plugin_docman	details_paste_button_paste	Paste
 plugin_docman	details_paste_button_pasteanyway	Paste Anyway
 plugin_docman	details_paste_title	Paste '$1' in '$2'
+plugin_docman	details_paste_inprogress_title	Paste in progress '$1' in '$2'
+plugin_docman	details_paste_inprogress_info	Paste in progress...
+plugin_docman	details_paste_inprogress_wait	\n\nPlease wait for the paste to complete. This may take a while depending on size of data to be copied <img src="$1" />
+plugin_docman	details_paste_successful	<p>Paste operation successfully completed.</p>
+plugin_docman	details_paste_complete_redirect	<p>You will be redirected to <a href="'.$1.'">'.$2.'</a> in $3 seconds</p>
 plugin_docman	details_permissions	Permissions
 plugin_docman	details_permissions_ugroups	User groups
 plugin_docman	details_permissions_perms	Access Permissions
@@ -459,7 +470,8 @@ plugin_docman	filters_item_type_empty	Empty document
 plugin_docman	filters_item_type_link	Link
 plugin_docman	filters_item_type_folder	Folder
 
-plugin_docman	info_copy_notify_cp	copied. you can now paste it wherever you want (even across projects) with 'Paste' action in popup menu.<br />Note that copy keeps <strong>neither approval tables nor notifications</strong> while move does.
+plugin_docman	info_cut_notify_cut	cut. You can now paste it wherever you want with 'Paste' action in popup menu.
+plugin_docman	info_copy_notify_cp	copied. you can now paste it wherever you want (even across projects) with 'Paste' action in popup menu.<br />Note that copy keeps <strong>neither approval tables nor notifications</strong> while cut does.
 plugin_docman	info_create_initversion	Initial version successfully created.
 plugin_docman	info_create_newversion	New version successfully created.
 plugin_docman	info_document_created	Document successfully created.

@@ -762,6 +762,36 @@ class Docman_ItemDao extends DataAccessObject {
             return null;
         }
     }
+
+    /**
+    * This removes all users copy preferences set on item identified by $item_id. This is done once the corresponding item is deleted
+    *
+    * @param int $itemid identifer of docman item that has been marked as deleted.
+    *@return void
+    *
+    */
+    function deleteCopyPreferenceForAllUsers($item_id) {
+        $sql = sprintf('DELETE FROM user_preferences'.
+            ' WHERE preference_name=\'%s_item_copy\''.
+            ' AND preference_value=%d'
+            , PLUGIN_DOCMAN_PREF, $this->da->quoteSmart($item_id));
+        $this->update($sql);
+    }
+
+    /**
+    * This removes all users cut preferences set on item identified by $item_id. This is done once the corresponding item is deleted
+    *
+    * @param int $itemid identifer of docman item that has been marked as deleted.
+    *@return void
+    *
+    */
+    function deleteCutPreferenceForAllUsers($item_id) {
+        $sql = sprintf('DELETE FROM user_preferences'.
+            ' WHERE preference_name=\'%s_item_cut\''.
+            ' AND preference_value=%d'
+            , PLUGIN_DOCMAN_PREF, $this->da->quoteSmart($item_id));
+        $this->update($sql);
+    }
 }
 
 ?>

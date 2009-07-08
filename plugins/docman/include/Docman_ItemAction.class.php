@@ -190,6 +190,20 @@ class Docman_ItemActionCopy extends Docman_ItemAction {
     }
 }
 
+class Docman_ItemActionCut extends Docman_ItemAction {
+    function Docman_ItemActionCut(&$item, $params) {
+        parent::Docman_ItemAction($item);
+        $this->action           = 'action_cut';
+        $this->classes          = 'docman_item_option_cut';
+        $this->title            = $GLOBALS['Language']->getText('plugin_docman', 'action_cut');
+
+        $currentItem = $params['item'];
+        $origAction = isset($params['action']) ? $params['action'] : 'show';
+        $this->extraUrlParams   = array('orig_id'     => $currentItem->getId(),
+                                        'orig_action' => $origAction);
+    }
+}
+
 class Docman_ItemActionPaste extends Docman_ItemAction {
     function Docman_ItemActionPaste(&$item, $params) {
         parent::Docman_ItemAction($item);

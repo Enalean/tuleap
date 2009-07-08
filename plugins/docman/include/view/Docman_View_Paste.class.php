@@ -40,7 +40,8 @@ class Docman_View_Paste extends Docman_View_Details {
         $vSection = new Docman_View_ItemDetailsSectionPaste($params['item'],
                                                             $params['default_url'],
                                                             $this->_controller,
-                                                            $params['itemToPaste']);
+                                                            $params['itemToPaste'],
+                                                            $params['srcMode']);
         parent::_content($params, $vSection, 'actions');
     }
 }

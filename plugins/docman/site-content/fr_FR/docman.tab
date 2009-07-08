@@ -1,4 +1,5 @@
 plugin_docman	action_approval	Table d'approbation
+plugin_docman	action_cut	Couper
 plugin_docman	action_copy	Copier
 plugin_docman	action_delete	Supprimer
 plugin_docman	action_details	Propriétés
@@ -175,9 +176,12 @@ plugin_docman	descriptor_description	Gestionnaire de documents
 plugin_docman	descriptor_name	Gestionnaire de Documents
 
 plugin_docman	details_actions	Actions
+plugin_docman	details_actions_cut	Cut
 plugin_docman	details_actions_copy	Copier
+plugin_docman	details_actions_cut_cancut_document	Vous pouvez <a href="$1">couper ce document</a>.
+plugin_docman	details_actions_cut_cancut_folder	Vous pouvez <a href="$1">couper ce dossier</a>.
 plugin_docman	details_actions_copy_cancopy_document	Vous pouvez <a href="$1">copier ce document</a>.
-plugin_docman	details_actions_copy_cancopy_folder	Vous pouver <a href="$1">copier ce dossier</a>.
+plugin_docman	details_actions_copy_cancopy_folder	Vous pouvez <a href="$1">copier ce dossier</a>.
 plugin_docman	details_actions_delete	Suppression
 plugin_docman	details_actions_delete_candelete_document	Vous pouvez <a href="$1">supprimer ce document</a>.
 plugin_docman	details_actions_delete_candelete_folder	Vous pouvez <a href="$1">supprimer ce dossier</a>.
@@ -199,6 +203,8 @@ plugin_docman	details_actions_newversion_cannotcreate	Vous ne pouvez pas créer 
 plugin_docman	details_actions_newversion_changelog	Description des changements :
 plugin_docman	details_actions_newversion_label	Nom de version :
 plugin_docman	details_actions_paste	Coller
+plugin_docman	details_actions_paste_from_cut	Vous allez <strong>coller</strong> un item que vous avez <strong>coupé</strong>. Cette opération préserve l'arborescence, les notifications, les tables d'approbation, les permissions, etc. En fait, seul le parent de l'item change.
+plugin_docman	details_actions_paste_from_copy	Vous allez <strong>coller</strong> un item que vous avez <strong>copié</strong>. Cette opération clone l'arborescence mais <strong>ne prend que la dernière version des fichiers, ne conserve pas les tables d'approbation ni les notification et hérite des permissions posées sur le nouvel item parent</strong>.
 plugin_docman	details_actions_paste_canpaste	Vous pouvez <a href="$1">coller '$2' dans ce dossier</a>.
 plugin_docman	details_actions_update	Mise à jour
 plugin_docman	details_actions_update_can	Vous pouvez <a href="$1">mettre à jour</a> ce document.
@@ -333,6 +339,11 @@ plugin_docman	details_paste_mddiff_title	Propriétés de document
 plugin_docman	details_paste_button_paste	Coller
 plugin_docman	details_paste_button_pasteanyway	Coller [force]
 plugin_docman	details_paste_title	Coller '$1' dans '$2'
+plugin_docman	details_paste_inprogress_title	Coller '$1' dans '$2' en cours...
+plugin_docman	details_paste_inprogress_info	Coller en cours...
+plugin_docman	details_paste_inprogress_wait	\n\nVeuillez attendre que la copie soit terminée. L'opération peut prendre du temps en fonction de la taille des données à coller <img src="$1" />
+plugin_docman	details_paste_successful	<p>Opération "Coller" terminée avec succès.</p>
+plugin_docman	details_paste_complete_redirect	<p>Vous allez être redirigé vers <a href="'.$1.'">'.$2.'</a> dans $3 secondes</p>
 plugin_docman	details_permissions	Permissions
 plugin_docman	details_permissions_ugroups	Groupes d'utilisateurs
 plugin_docman	details_permissions_perms	Permissions d'accès
@@ -459,7 +470,8 @@ plugin_docman	filters_item_type_empty	Document vide
 plugin_docman	filters_item_type_link	Lien
 plugin_docman	filters_item_type_folder	Dossier
 
-plugin_docman	info_copy_notify_cp	copié. vous pouvez maintenant le coller où vous vouler (même entre différents projets) avec l'action 'Coller' dans le menu popup.<br />Attention, la copie ne garde <strong>ni les tables d'approbations, ni les notifications</strong> à la différence du déplacement.
+plugin_docman	info_cut_notify_cut	coupé. vous pouvez maintenant le coller où vous voulez avec l'action 'Coller' dans le menu popup.
+plugin_docman	info_copy_notify_cp	copié. vous pouvez maintenant le coller où vous voulez (même entre différents projets) avec l'action 'Coller' dans le menu popup.<br />Attention, la copie ne garde <strong>ni les tables d'approbations, ni les notifications</strong> à la différence du déplacement (couper/coller).
 plugin_docman	info_create_initversion	Version initiale créée.
 plugin_docman	info_create_newversion	Nouvelle version créée.
 plugin_docman	info_document_created	Document créé.

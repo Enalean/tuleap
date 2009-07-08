@@ -34,15 +34,17 @@ extends Docman_View_ItemDetailsSectionActions {
     var $itemToPaste;
     var $srcGo;
     var $dstGo;
-
+    private $mode;
+    
     function Docman_View_ItemDetailsSectionPaste(&$item, $url, &$controller,
-                                                 $itemToPaste) {
+                                                 $itemToPaste, $mode) {
         parent::Docman_View_ItemDetailsSectionActions($item, $url, false,
                                                       true, $controller);
         $this->itemToPaste = $itemToPaste;
         $pm = ProjectManager::instance();
         $this->srcGo = $pm->getProject($this->itemToPaste->getGroupId());
         $this->dstGo = $pm->getProject($item->getGroupId());
+        $this->mode  = $mode;
     }
 
     function checkMdDifferences(&$mdDiffers) {
@@ -71,15 +73,22 @@ extends Docman_View_ItemDetailsSectionActions {
     function getContent() {
         return $this->item->accept($this);
     }
-
+    
     function visitFolder($item, $params = array()) {
         $content = '';
 
         // First Check metadata differences
         $mdDiffers = false;
-        $content = $this->checkMdDifferences($mdDiffers);
-
+        if ($this->mode == 'copy') {
+            $content = $this->checkMdDifferences($mdDiffers);
+        }
+        
         $content .= '<h2>'. $GLOBALS['Language']->getText('plugin_docman', 'details_actions_paste') .'</h2>';
+        
+        $content .= '<p>';
+        $content .= $GLOBALS['Language']->getText('plugin_docman', 'details_actions_paste_from_'.$this->mode);
+        $content .= '</p>';
+        
         $content .= '<form name="select_paste_location" method="POST" action="?">';
         $content .= '<input type="hidden" name="action" value="paste" />';
         $content .= '<input type="hidden" name="group_id" value="'.$this->item->getGroupId().'" />';
@@ -90,7 +99,7 @@ extends Docman_View_ItemDetailsSectionActions {
         $content .= $itemRanking->getDropDownWidget($this->item);
         $content .= '</p>';
 
-        if($mdDiffers == 'admin') {
+        if($this->mode == 'copy' && $mdDiffers == 'admin') {
             $content .= '<p>';
             $content .= $GLOBALS['Language']->getText('plugin_docman', 'details_paste_importmd', array($this->srcGo->getPublicName()));
             $content .= ' ';
@@ -99,7 +108,7 @@ extends Docman_View_ItemDetailsSectionActions {
         }
 
         $buttonTxt = $GLOBALS['Language']->getText('plugin_docman', 'details_paste_button_paste');
-        if($mdDiffers == 'user') {
+        if($this->mode == 'copy' && $mdDiffers == 'user') {
             $buttonTxt = $GLOBALS['Language']->getText('plugin_docman', 'details_paste_button_pasteanyway');
         }
         $content .= '<input type="submit" name="submit" value="'.$buttonTxt.'" />';
