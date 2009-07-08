@@ -1,0 +1,6 @@
+--- Merging r3 through r7 into '.':
+A    fake1.txt
+A    fake2.txt
+   C README.fake.txt
+Summary of conflicts:
+  Tree conflicts: 1
