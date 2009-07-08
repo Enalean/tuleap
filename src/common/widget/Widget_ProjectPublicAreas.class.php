@@ -285,8 +285,13 @@ class Widget_ProjectPublicAreas extends Widget {
         if ($project->isActive()) {
             print '<HR SIZE="1" width="99%" NoShade>';
         
-                list($host,$port) = explode(':',$GLOBALS['sys_default_domain']);		
-            print "<A href=\"ftp://" . $project->getUnixName() . "." . $host ."/pub/". $project->getUnixName(false) ."/\">";    // keep the first occurence in lower case
+            list($host,$port) = explode(':',$GLOBALS['sys_default_domain']);
+            if ($GLOBALS['sys_disable_subdomains']) {
+            	$ftp_subdomain = "";	
+            } else {
+            	$ftp_subdomain = $project->getUnixName() . ".";
+            }
+            print "<A href=\"ftp://" . $ftp_subdomain . $host ."/pub/". $project->getUnixName(false) ."/\">";    // keep the first occurence in lower case
             print html_image("ic/ftp16b.png",array('width'=>'20', 'height'=>'20', 'alt'=>$GLOBALS['Language']->getText('include_project_home','anon_ftp_space')));
             print $GLOBALS['Language']->getText('include_project_home','anon_ftp_space').'</A>';
         }
