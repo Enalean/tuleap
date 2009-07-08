@@ -37,19 +37,22 @@ class TrackerDateReminder_ArtifactFieldHtml {
         }
 
         $out = '';
-        $out = '<FORM ACTION="/tracker/admin/index.php?func=date_field_notification&group_id='.$at->Group->getID().'&atid='.$at->getID().'&field_id='.$field->getID().'" METHOD="POST" name="date_field_notification_settings_form">
+
+        $baseActionUrl = '/tracker/admin/index.php?func=date_field_notification&group_id='.$at->Group->getID().'&atid='.$at->getID().'&field_id='.$field->getID();
+        
+        if ($enabled) {
+            $out .= '<H3>'.$GLOBALS['Language']->getText('plugin_tracker_date_reminder', 'notif_settings_del_title').'</H3>';
+            $out .= '<FORM ACTION="'.$baseActionUrl.'&delete_reminder=true" METHOD="POST">';
+            $out .= '<P>'.$GLOBALS['Language']->getText('plugin_tracker_date_reminder', 'notif_settings_del_desc').'</P>';
+            $out .= '<INPUT TYPE="SUBMIT" NAME="reminder" VALUE="'.$GLOBALS['Language']->getText('plugin_tracker_date_reminder', 'notif_settings_del_button').'" />';
+            $out .= '</FORM>';
+        }
+
+        $out .= '<FORM ACTION="'.$baseActionUrl.'" METHOD="POST" name="date_field_notification_settings_form">
             <INPUT TYPE="HIDDEN" NAME="field_id" VALUE="'.$field->getID().'">
             <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$at->Group->getID().'">
             <INPUT TYPE="HIDDEN" NAME="atid" VALUE="'.$at->getID().'">';
-        
-        $out .= '<h3>Activate reminder on this field</h3>';
-        $checked = '';
-        if ($enabled) {
-            $checked = 'CHECKED="CHECKED"';
-        }
-        $out .= '<INPUT TYPE="CHECKBOX" NAME="enabled" VALUE="1" '.$checked.'/>';
 
-        
         $out .= '<h3>'.$GLOBALS['Language']->getText('tracker_include_type','notif_settings_field',array($field->getLabel())).'</h3>';
          
         $out .= '<fieldset>
@@ -113,9 +116,9 @@ class TrackerDateReminder_ArtifactFieldHtml {
         $out .= '</SELECT></TD><TD valign="top">'.
         $GLOBALS['Language']->getText('tracker_include_type','reminder_form_part5').
             ' <INPUT TYPE="TEXT" NAME="frequency" SIZE="5" VALUE="'.$frequency.'"> '.$GLOBALS['Language']->getText('tracker_include_type','days').
-            '.</TD></TR></TABLE></fieldset><P>'.$GLOBALS['Language']->getText('tracker_include_type','reminder_form_part6',array($field->getLabel())).
+            '.</TD></TR></TABLE><INPUT TYPE="SUBMIT" NAME="submit_notif_settings" value="'.$GLOBALS['Language']->getText('global', 'btn_update').'"></P></FORM></fieldset><P>'.$GLOBALS['Language']->getText('tracker_include_type','reminder_form_part6',array($field->getLabel())).
             '<P>'.$GLOBALS['Language']->getText('tracker_include_type','reminder_form_part7',array($field->getLabel())).'</P>'.
-            '<P><INPUT TYPE="SUBMIT" NAME="submit_notif_settings"></P></FORM>';
+            '<P>';
         echo $out;
 
     }

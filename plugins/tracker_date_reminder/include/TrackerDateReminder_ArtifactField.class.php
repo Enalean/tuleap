@@ -66,50 +66,44 @@ class TrackerDateReminder_ArtifactField {
      *
      *  @return true on success, false on failure.
      */
-    function updateDateFieldReminderSettings(ArtifactType $at, ArtifactField $field,$group_artifact_id,$enabled,$start,$notif_type,$frequency,$recurse,$people_notified) {
-        // Check if reminder exists or not
-        if (!$enabled) {
-            $this->deleteFieldReminderSettings($field->getID(), $group_artifact_id);
-            return true;
-        } else {
-            $res = $this->getDateFieldReminderSettings($field->getID(), $group_artifact_id);
-            if ($res && !db_error($res)) {
-                $notified_users = implode(",",$people_notified);
-                if (db_numrows($res) == 0) {
-                    // No reminder, create it
-                    $insert = 'INSERT INTO artifact_date_reminder_settings'.
+    function updateDateFieldReminderSettings(ArtifactType $at, ArtifactField $field,$group_artifact_id,$start,$notif_type,$frequency,$recurse,$people_notified) {
+        $res = $this->getDateFieldReminderSettings($field->getID(), $group_artifact_id);
+        if ($res && !db_error($res)) {
+            $notified_users = implode(",",$people_notified);
+            if (db_numrows($res) == 0) {
+                // No reminder, create it
+                $insert = 'INSERT INTO artifact_date_reminder_settings'.
                           '(field_id, group_artifact_id, notification_start, notification_type, frequency, recurse, notified_people)'.
                           ' VALUES'.
                           ' ('.db_ei($field->getId()).','.db_ei($group_artifact_id).','.db_ei($start).','.db_ei($notif_type).','.db_ei($frequency).','.db_ei($recurse).','.db_es($notified_users).')';
-                    $inserted = db_query($insert);
-                    if ($inserted) {
-                        $this->populateProcessingForField($at, $field->getId(), $group_artifact_id);
-                        return true;
-                    }
-                    return false;
-                } else {
-                    //update reminder settings
-                    $update = sprintf('UPDATE artifact_date_reminder_settings'
-                        .' SET notification_start=%d'
-                        .' , notification_type=%d'
-                        .' , frequency=%d'
-                        .' , recurse=%d'
-                        .' , notified_people="%s"'
-                        .' WHERE group_artifact_id=%d'
-                        .' AND field_id=%d',
-                        db_ei($start),
-                        db_ei($notif_type),
-                        db_ei($frequency),
-                        db_ei($recurse),
-                        db_es($notified_users),
-                        db_ei($group_artifact_id),
-                        db_ei($field->getId()));
-                    $result = db_query($update);
-                    return $result;
+                $inserted = db_query($insert);
+                if ($inserted) {
+                    $this->populateProcessingForField($at, $field->getId(), $group_artifact_id);
+                    return true;
                 }
-            } else {
                 return false;
+            } else {
+                //update reminder settings
+                $update = sprintf('UPDATE artifact_date_reminder_settings'
+                .' SET notification_start=%d'
+                .' , notification_type=%d'
+                .' , frequency=%d'
+                .' , recurse=%d'
+                .' , notified_people="%s"'
+                .' WHERE group_artifact_id=%d'
+                .' AND field_id=%d',
+                db_ei($start),
+                db_ei($notif_type),
+                db_ei($frequency),
+                db_ei($recurse),
+                db_es($notified_users),
+                db_ei($group_artifact_id),
+                db_ei($field->getId()));
+                $result = db_query($update);
+                return $result;
             }
+        } else {
+            return false;
         }
     }
 }

@@ -145,59 +145,62 @@ class tracker_date_reminderPlugin extends Plugin {
 
         $field_id = $request->getValidated('field_id', 'uint');
         $field    = $params['art_field_fact']->getFieldFromId($field_id);
-        //@todo: change check
-        if ($field) {
-            if (array_key_exists('submit_notif_settings', $_REQUEST) && $_REQUEST['submit_notif_settings']) {
-                if ((!isset($_REQUEST['notified_users']) || (isset($_REQUEST['notified_users']) && $_REQUEST['notified_users'] == NULL)) && _
-                (!isset($_REQUEST['notified_groups']) || (isset($_REQUEST['notified_groups']) && $_REQUEST['notified_groups'] == NULL))) {
-                    $GLOBALS['Response']->addFeedback('error',$GLOBALS['Language']->getText('tracker_admin_index','specify_notified_users'));
-                } else if (!isset($_REQUEST['start']) || (isset($_REQUEST['start']) && $_REQUEST['start'] == NULL)) {
-                    $GLOBALS['Response']->addFeedback('error',$GLOBALS['Language']->getText('tracker_admin_index','specify_notification_start'));
-                } else if (!ereg("^[0-9]+$",$_REQUEST['start']) || $_REQUEST['start'] < 0) {
-                    $GLOBALS['Response']->addFeedback('error',$GLOBALS['Language']->getText('tracker_admin_index','positive_value'));
-                } else if (!isset($_REQUEST['frequency']) || (isset($_REQUEST['frequency']) && ($_REQUEST['frequency'] == NULL || $_REQUEST['frequency'] == 0))) {
-                    $GLOBALS['Response']->addFeedback('error',$GLOBALS['Language']->getText('tracker_admin_index','specify_notification_frequency'));
-                } else if (!ereg("^[0-9]+$",$_REQUEST['frequency']) || $_REQUEST['frequency'] < 0) {
-                    $GLOBALS['Response']->addFeedback('error',$GLOBALS['Language']->getText('tracker_admin_index','positive_value'));
-                } else if (!isset($_REQUEST['recurse']) || (isset($_REQUEST['recurse']) && ($_REQUEST['recurse'] == NULL || $_REQUEST['recurse'] == 0))) {
-                    $GLOBALS['Response']->addFeedback('error',$GLOBALS['Language']->getText('tracker_admin_index','specify_notification_recurse'));
-                } else if (!ereg("^[0-9]+$",$_REQUEST['recurse']) || $_REQUEST['recurse'] < 0) {
-                    $GLOBALS['Response']->addFeedback('error',$GLOBALS['Language']->getText('tracker_admin_index','positive_value'));
-                } else {
-
-                    $enabled = $request->getValidated('enabled', 'uint', 0);
-
-                    //merge notified_users and notified_groups into one array
-                    if (isset($_REQUEST['notified_users'])) {
-                        $notified = $_REQUEST['notified_users'];
-                    } else {
-                        $notified = array();
-                    }
-                    if (isset($_REQUEST['notified_groups'])) {
-                        foreach ($_REQUEST['notified_groups'] as $gr) {
-                            array_push($notified,$gr);
-                        }
-                    }
-                    // now update the reminder settings
+        if ($field && $field->isDateField() && !$field->isSpecial()) {
+            if ($request->isPost()) {
+                if ($request->existAndNonEmpty('delete_reminder')) {
                     $tdrArtifactField = new TrackerDateReminder_ArtifactField();
-                    $res = $tdrArtifactField->updateDateFieldReminderSettings($params['ath'], $field, $params['ath']->getID(),$enabled,$_REQUEST['start'],$_REQUEST['notif_type'],$_REQUEST['frequency'],$_REQUEST['recurse'],$notified);
-                    if ($res) {
-                        $GLOBALS['Response']->addFeedback('info',$GLOBALS['Language']->getText('tracker_admin_index','notif_update_success',array($field->getLabel())));
+                    $tdrArtifactField->deleteFieldReminderSettings($field->getID(), $params['ath']->getID());
+                }
+                elseif (array_key_exists('submit_notif_settings', $_REQUEST) && $_REQUEST['submit_notif_settings']) {
+                    if ((!isset($_REQUEST['notified_users']) || (isset($_REQUEST['notified_users']) && $_REQUEST['notified_users'] == NULL)) && _
+                    (!isset($_REQUEST['notified_groups']) || (isset($_REQUEST['notified_groups']) && $_REQUEST['notified_groups'] == NULL))) {
+                        $GLOBALS['Response']->addFeedback('error',$GLOBALS['Language']->getText('tracker_admin_index','specify_notified_users'));
+                    } else if (!isset($_REQUEST['start']) || (isset($_REQUEST['start']) && $_REQUEST['start'] == NULL)) {
+                        $GLOBALS['Response']->addFeedback('error',$GLOBALS['Language']->getText('tracker_admin_index','specify_notification_start'));
+                    } else if (!ereg("^[0-9]+$",$_REQUEST['start']) || $_REQUEST['start'] < 0) {
+                        $GLOBALS['Response']->addFeedback('error',$GLOBALS['Language']->getText('tracker_admin_index','positive_value'));
+                    } else if (!isset($_REQUEST['frequency']) || (isset($_REQUEST['frequency']) && ($_REQUEST['frequency'] == NULL || $_REQUEST['frequency'] == 0))) {
+                        $GLOBALS['Response']->addFeedback('error',$GLOBALS['Language']->getText('tracker_admin_index','specify_notification_frequency'));
+                    } else if (!ereg("^[0-9]+$",$_REQUEST['frequency']) || $_REQUEST['frequency'] < 0) {
+                        $GLOBALS['Response']->addFeedback('error',$GLOBALS['Language']->getText('tracker_admin_index','positive_value'));
+                    } else if (!isset($_REQUEST['recurse']) || (isset($_REQUEST['recurse']) && ($_REQUEST['recurse'] == NULL || $_REQUEST['recurse'] == 0))) {
+                        $GLOBALS['Response']->addFeedback('error',$GLOBALS['Language']->getText('tracker_admin_index','specify_notification_recurse'));
+                    } else if (!ereg("^[0-9]+$",$_REQUEST['recurse']) || $_REQUEST['recurse'] < 0) {
+                        $GLOBALS['Response']->addFeedback('error',$GLOBALS['Language']->getText('tracker_admin_index','positive_value'));
                     } else {
-                        $GLOBALS['Response']->addFeedback('error',$GLOBALS['Language']->getText('tracker_admin_index','notif_update_fail',array($field->getLabel())));
+
+                        //merge notified_users and notified_groups into one array
+                        if (isset($_REQUEST['notified_users'])) {
+                            $notified = $_REQUEST['notified_users'];
+                        } else {
+                            $notified = array();
+                        }
+                        if (isset($_REQUEST['notified_groups'])) {
+                            foreach ($_REQUEST['notified_groups'] as $gr) {
+                                array_push($notified,$gr);
+                            }
+                        }
+                        // now update the reminder settings
+                        $tdrArtifactField = new TrackerDateReminder_ArtifactField();
+                        $res = $tdrArtifactField->updateDateFieldReminderSettings($params['ath'], $field, $params['ath']->getID(),$_REQUEST['start'],$_REQUEST['notif_type'],$_REQUEST['frequency'],$_REQUEST['recurse'],$notified);
+                        if ($res) {
+                            $GLOBALS['Response']->addFeedback('info',$GLOBALS['Language']->getText('tracker_admin_index','notif_update_success',array($field->getLabel())));
+                        } else {
+                            $GLOBALS['Response']->addFeedback('error',$GLOBALS['Language']->getText('tracker_admin_index','notif_update_fail',array($field->getLabel())));
+                        }
                     }
                 }
             }
-        }
-        $params['ath']->adminHeader(array ('title'=>$GLOBALS['Language']->getText('tracker_admin_index','admin_date_field_notif'),
+            $params['ath']->adminHeader(array ('title'=>$GLOBALS['Language']->getText('tracker_admin_index','admin_date_field_notif'),
            'help' => 'TrackerAdministration.html#TrackerEmailNotificationSettings'));
-         
-        echo '<H2>'.$GLOBALS['Language']->getText('tracker_import_admin','tracker').' \'<a href="/tracker/admin/?group_id='.$params['ath']->Group->getID().'&atid='.$params['ath']->getID().'">'.$params['ath']->getName().'</a>\' - '.$GLOBALS['Language']->getText('tracker_include_type','mail_notif').'</h2>';
+             
+            echo '<H2>'.$GLOBALS['Language']->getText('tracker_import_admin','tracker').' \'<a href="/tracker/admin/?group_id='.$params['ath']->Group->getID().'&atid='.$params['ath']->getID().'">'.$params['ath']->getName().'</a>\' - '.$GLOBALS['Language']->getText('tracker_include_type','mail_notif').'</h2>';
 
-        $tdrArtifactFieldHtml = new TrackerDateReminder_ArtifactFieldHtml();
-        $tdrArtifactFieldHtml->displayDateFieldNotificationSettings($params['ath'], $field);
-        $params['ath']->footer(array());
-        exit;
+            $tdrArtifactFieldHtml = new TrackerDateReminder_ArtifactFieldHtml();
+            $tdrArtifactFieldHtml->displayDateFieldNotificationSettings($params['ath'], $field);
+            $params['ath']->footer(array());
+            exit;
+        }
     }
 
     /**

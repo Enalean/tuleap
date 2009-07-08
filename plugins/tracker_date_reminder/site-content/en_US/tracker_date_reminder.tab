@@ -1,2 +1,5 @@
 plugin_tracker_date_reminder	descriptor_description	Date based notification in trackers.
 plugin_tracker_date_reminder	descriptor_name	Tracker date based reminder
+plugin_tracker_date_reminder	notif_settings_del_title	Date based email reminder activated for this field
+plugin_tracker_date_reminder	notif_settings_del_desc	You can disable reminder with following button
+plugin_tracker_date_reminder	notif_settings_del_button	Delete reminder on this field
