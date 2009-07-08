@@ -1036,7 +1036,6 @@ function getUsedFields() {
     if (!$ah->create($vfl,true,$row)) {
       exit_error($Language->getText('global','error'),$ah->getErrorMessage());
     }
-
     //handle dependencies and such stuff ...
     if ($artifact_depend_id) {
       if (!$ah->addDependencies($artifact_depend_id,$changes,false, true)) {

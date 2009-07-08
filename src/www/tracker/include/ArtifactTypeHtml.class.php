@@ -1164,7 +1164,7 @@ EOS;
 		echo '<script language="JavaScript">
 
 			  function onChangeFieldType(form) {
-					switch ( form.field_type.value ) {
+			  		switch ( form.field_type.value ) {
 			  		// Select Box
 			  		case "1":
 			  			form.data_type.value = '.(int)$af->DATATYPE_INT.';
@@ -1176,37 +1176,37 @@ EOS;
 			  			form.data_type.value = '.(int)$af->DATATYPE_INT.';
 					  	form.display_type.value = "MB";
 					  	form.display_size.value = "N/A";
-						break;
+					  	break;
 			  		// TextField
 			  		case "3":
 			  			form.data_type.value = '.(int)$af->DATATYPE_TEXT.';
 					  	form.display_type.value = "TF";
 					  	form.display_size.value = "N/A";
-						break;
+					  	break;
 			  		// TextArea
 			  		case "4":
 			  			form.data_type.value = '.(int)$af->DATATYPE_TEXT.';
 					  	form.display_type.value = "TA";
 					  	form.display_size.value = "60/7";
-						break;
+					  	break;
 			  		// DateField
 			  		case "5":
 			  			form.data_type.value = '.(int)$af->DATATYPE_DATE.';
 					  	form.display_type.value = "DF";
 					  	form.display_size.value = "N/A";
-						break;
+					  	break;
 			  		// FloatField
 			  		case "6":
 			  			form.data_type.value = '.(int)$af->DATATYPE_FLOAT.';
 					  	form.display_type.value = "TF";
 					  	form.display_size.value = "N/A";
-						break;
+					  	break;
 			  		// IntegerField
 			  		case "7":
 			  			form.data_type.value = '.(int)$af->DATATYPE_INT.';
 					  	form.display_type.value = "TF";
 					  	form.display_size.value = "N/A";
-						break;
+					  	break;
 					default:
 						alert("Unknow field type!");
 						break;
@@ -1439,7 +1439,7 @@ EOS;
 		}
 				
 		echo '
-		  </td></tr>';
+		      </td></tr>';
 		      
 		if ( $show_use ) {
 		    echo  '

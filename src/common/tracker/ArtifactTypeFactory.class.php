@@ -233,7 +233,7 @@ class ArtifactTypeFactory extends Error {
 		$sql = "DELETE FROM artifact_perm   
 			    WHERE group_artifact_id=". db_ei($atid);
 		db_query ($sql);
-			
+		
         
         // We need to instanciate an artifactType to instanciate the factories
         $artifactType = new ArtifactType($this->getGroup(), $atid, false);

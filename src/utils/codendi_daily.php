@@ -40,4 +40,5 @@ $unix_time = mktime(0, 0, 0, $date_list[1], $date_list[2], $date_list[0]);
 db_query("UPDATE user SET status='S', unix_status='S'"
                     ." WHERE expiry_date!=0 and expiry_date<" . $unix_time );
 
+
 ?>
