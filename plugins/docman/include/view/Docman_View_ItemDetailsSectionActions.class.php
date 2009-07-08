@@ -57,6 +57,13 @@ class Docman_View_ItemDetailsSectionActions extends Docman_View_ItemDetailsSecti
         }
         $content .= '</dd>';
         //}}}
+
+        //{{{ Cut
+        $content .= '<dt>'.$GLOBALS['Language']->getText('plugin_docman', 'details_actions_cut').'</dt><dd>';
+        $cuturl = Docman_View_View::buildUrl($this->url, array('action' => 'action_cut', 'id' => $this->item->getId(), 'orig_action' => 'details', 'orig_id' => $this->item->getId()));
+        $content .= $GLOBALS['Language']->getText('plugin_docman', 'details_actions_cut_cancut_'.$folder_or_document, $cuturl);
+        $content .= '</dd>';
+        //}}}
         
         //{{{ Copy
         $content .= '<dt>'.$GLOBALS['Language']->getText('plugin_docman', 'details_actions_copy').'</dt><dd>';
@@ -97,16 +104,21 @@ class Docman_View_ItemDetailsSectionActions extends Docman_View_ItemDetailsSecti
                 Docman_View_View::buildUrl($this->url, array('action' => 'newFolder', 'id' => $item->getId()))
             );
             //{{{ Paste
-            $itemFactory =& Docman_ItemFactory::instance($item->getGroupId());
+            $itemFactory  = Docman_ItemFactory::instance($item->getGroupId());
             $copiedItemId = $itemFactory->getCopyPreference($this->_controller->getUser());
-            if($copiedItemId != false) {
-                $copiedItem = $itemFactory->getItemFromDb($copiedItemId);
-                if($copiedItem) {
-                    $content .= '</dd>';
-                    $content .= '<dt>'.$GLOBALS['Language']->getText('plugin_docman', 'details_actions_paste').'</dt><dd>';
-                    $copyurl = Docman_View_View::buildUrl($this->url, array('action' => 'action_paste', 'id' => $this->item->getId()));
-                    $content .= $GLOBALS['Language']->getText('plugin_docman', 'details_actions_paste_canpaste', array($copyurl,  $this->hp->purify($copiedItem->getTitle(), CODENDI_PURIFIER_CONVERT_HTML) ));
-                }
+            $cutItemId    = $itemFactory->getCutPreference($this->_controller->getUser(), $item->getGroupId());
+            $srcItem = null;
+            if ($copiedItemId !== false && $cutItemId === false) {
+                $srcItem = $itemFactory->getItemFromDb($copiedItemId);
+            }
+            elseif ($copiedItemId === false && $cutItemId !== false) {
+                $srcItem = $itemFactory->getItemFromDb($cutItemId);
+            }
+            if($srcItem) {
+                $content .= '</dd>';
+                $content .= '<dt>'.$GLOBALS['Language']->getText('plugin_docman', 'details_actions_paste').'</dt><dd>';
+                $copyurl = Docman_View_View::buildUrl($this->url, array('action' => 'action_paste', 'id' => $this->item->getId()));
+                $content .= $GLOBALS['Language']->getText('plugin_docman', 'details_actions_paste_canpaste', array($copyurl,  $this->hp->purify($srcItem->getTitle(), CODEX_PURIFIER_CONVERT_HTML) ));
             }
             //}}}
         }
