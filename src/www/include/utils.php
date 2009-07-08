@@ -1370,12 +1370,11 @@ function util_check_restricted_access($request_uri, $script_name) {
  * checkAllowedAnonymousUrl - check that an url have access anonymously to feeds.
  *
  * @param string $request_uri is the original REQUEST_URI
- * @return true is access is granted
- * @return false is access is forbidden
+ * @return true if access is granted
+ * @return false if access is forbidden
 */
 
 function util_check_allowed_anonymous_url($script_name) {
-    global $Language;
     // Note:
     // those are some allowed url to be accessed as anonymous
     // Just admin site setup a list of secure/confident url that allow to be accessed anonymously 
@@ -1383,7 +1382,7 @@ function util_check_allowed_anonymous_url($script_name) {
     $enable_anonymous_url = false;
     $allowed_scripts = array();
     // Customizable settings for anonymous Url:
-    include($Language->getContent('include/allowed_url_anonymously','en_US'));
+    include($GlOBALS['Language']->getContent('include/allowed_url_anonymously','en_US'));
     // End of customization
     if ($enable_anonymous_url == false) {
         return false;
