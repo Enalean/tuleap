@@ -22,6 +22,7 @@ require_once 'common/plugin/Plugin.class.php';
 require_once 'TrackerDateReminder_ArtifactFieldFactory.class.php';
 require_once 'TrackerDateReminder_ArtifactFieldHtml.class.php';
 require_once 'TrackerDateReminder_ArtifactType.class.php';
+require_once 'ArtifactDateReminder.class.php';
 
 class tracker_date_reminderPlugin extends Plugin {
 
