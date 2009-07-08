@@ -1066,7 +1066,7 @@ function getUsedFields() {
     }
     
     $em = EventManager::instance();
-    $em->processEvent('artifact_import_insert_artifact', array('artifact_id' => $ah->getID(), 'artifact_type' => $this->ath));
+    $em->processEvent('artifact_import_insert_artifact', array('ah' => $ah, 'ath' => $this->ath));
   }
   return true;
   }
