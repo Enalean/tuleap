@@ -644,11 +644,96 @@ class Docman_Actions extends Actions {
         return $this->userManager;
     }
     
+    /**
+     * Perform paste operation after cut
+     * 
+     * @param Docman_Item   $itemToPaste   Item to paste
+     * @param Docman_Folder $newParentItem New parent item
+     * @param User          $user          User who perform the paste
+     * @param String        $ordering      Where the item should be paste within the new folder
+     * 
+     * @return void
+     */
+    protected function _doCutPaste($itemToMove, $newParentItem, $user, $ordering) {
+        if ($itemToMove && $newParentItem) {
+            $item_factory = $this->_getItemFactory();
+            $old_parent   = $item_factory->getItemFromDb($itemToMove->getParentId());
+            if ($item_factory->setNewParent($itemToMove->getId(), $newParentItem->getId(), $ordering)) {
+                $this->event_manager->processEvent('plugin_docman_event_move', array(
+                        'group_id' => $itemToMove->getGroupId(),
+                        'item'    => &$itemToMove, 
+                        'parent'  => &$newParentItem,
+                        'user'    => &$user)
+                );
+                $hp = CodeX_HTMLPurifier::instance();
+                $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'info_item_moved', array(
+                            $itemToMove->getGroupId(),
+                            $old_parent->getId(),
+                            $hp->purify($old_parent->getTitle(), CODEX_PURIFIER_CONVERT_HTML) ,
+                            $newParentItem->getId(),
+                            $hp->purify($newParentItem->getTitle(), CODEX_PURIFIER_CONVERT_HTML)
+                            )
+                        ), 
+                    CODEX_PURIFIER_DISABLED);
+                    $item_factory->delCopyPreference();
+                    $item_factory->delCutPreference();
+            } else {
+                $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_item_not_moved'));
+            }
+        }
+    }
+
+    /**
+     * Perform paste operation after a copy
+     * 
+     * @param Docman_Item   $itemToPaste   Item to paste
+     * @param Docman_Folder $newParentItem New parent item
+     * @param User          $user          User who perform the paste
+     * @param String        $ordering      Where the item should be paste within the new folder
+     * @param Boolean       $importMd      Do we need to import metadata from another project    
+     * @param String        $dataRoot      Where the docman data stand on hard drive
+     * 
+     * @return void
+     */
+    protected function _doCopyPaste($itemToPaste, $newParentItem, $user, $ordering, $importMd, $dataRoot) {
+        $srcMdFactory = new Docman_MetadataFactory($itemToPaste->getGroupId());
+
+        // Import metadata if asked
+        if($importMd) {
+            $srcMdFactory->exportMetadata($newParentItem->getGroupId());
+        }
+
+        // Get mapping between the 2 definitions
+        $mdMapping = array();
+        $srcMdFactory->getMetadataMapping($newParentItem->getGroupId(), $mdMapping);
+
+        // Permissions
+        if($itemToPaste->getGroupId() != $newParentItem->getGroupId()) {
+            $ugroupsMapping = false;
+        } else {
+            $ugroupsMapping = true;
+        }
+
+        //
+        // Action
+        $itemFactory = $this->_getItemFactory();
+        $itemFactory->cloneItems($itemToPaste->getGroupId(),
+            $newParentItem->getGroupId(),
+            $user,
+            $mdMapping,
+            $ugroupsMapping,
+            $dataRoot,
+            $itemToPaste->getId(),
+            $newParentItem->getId(),
+            $ordering);
+
+        $itemFactory->delCopyPreference();
+        $itemFactory->delCutPreference();
+    }
+    
     function move() {
         $request =& $this->_controler->request;
         if ($request->exist('id')) {
-            $user =& $this->_controler->getUser();
-            
             $item_factory =& $this->_getItemFactory();
             //Move in a specific folder (maybe the same)
             if ($request->exist('item_to_move')) {
@@ -695,10 +780,106 @@ class Docman_Actions extends Actions {
                     $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_item_not_moved'));
                 }
             }
+            $newParentItem = $item_factory->getItemFromDb($new_parent_id);
+			$user          = $this->_controler->getUser();
+            $this->_doCutPaste($item, $newParentItem, $user, $ordering);
         }
         $this->event_manager->processEvent('send_notifications', array());
     }
-    
+
+    function action_cut($params) {
+        //
+        // Param
+        $user = $this->_controler->getUser();
+        $item = $this->_controler->_actionParams['item'];
+        $hp   = CodeX_HTMLPurifier::instance();
+
+        //
+        // Action
+        $itemFactory =& $this->_getItemFactory();
+
+        $itemFactory->delCopyPreference();
+        $itemFactory->delCutPreference();
+        $itemFactory->setCutPreference($item);
+
+        //
+        // Message
+        $this->_controler->feedback->log('info', $hp->purify($item->getTitle()).' '.$GLOBALS['Language']->getText('plugin_docman', 'info_cut_notify_cut'));
+    }
+
+    function action_copy($params) {
+        //
+        // Param
+        $user = $this->_controler->getUser();
+        $item = $this->_controler->_actionParams['item'];
+        $hp   = CodeX_HTMLPurifier::instance();
+        
+        //
+        // Action
+        $itemFactory =& $this->_getItemFactory();
+
+        $itemFactory->delCopyPreference();
+        $itemFactory->delCutPreference();        
+        $itemFactory->setCopyPreference($item);
+
+        //
+        // Message
+        $msg = $hp->purify($item->getTitle()).' '.$GLOBALS['Language']->getText('plugin_docman', 'info_copy_notify_cp');
+        $this->_controler->feedback->log('info', $msg, CODEX_PURIFIER_DISABLED);
+    }
+
+    /**
+     * Perform paste action (after a copy or a cut)
+     * 
+     * @param Docman_Item $itemToPaste
+     * @param Docman_Item $newParentItem
+     * @param String      $rank
+     * @param Boolean     $importMd
+     * @param String      $srcMode
+     * 
+     * @return void
+     */
+	function doPaste($itemToPaste, $newParentItem, $rank, $importMd, $srcMode) {
+		$user      = $this->_controler->getUser();
+	    $mdMapping = false;
+	    switch ($srcMode) {
+	        case 'copy':
+				$dataRoot = $this->_controler->getProperty('docman_root');
+	            $this->_doCopyPaste($itemToPaste, $newParentItem, $user, $rank, $importMd, $dataRoot);
+	            break;
+
+	        case 'cut':
+	            $this->_doCutPaste($itemToPaste, $newParentItem, $user, $rank);
+	            break;
+	    }
+	    $this->event_manager->processEvent('send_notifications', array());
+	}
+
+    function paste($params) {
+		$this->doPaste($this->_controler->_actionParams['itemToPaste'],
+					   $this->_controler->_actionParams['item'],
+					   $this->_controler->_actionParams['rank'],
+					   $this->_controler->_actionParams['importMd'],
+                       $this->_controler->_actionParams['srcMode']);
+    }
+
+    function _get_definition_index_for_permission($p) {
+        switch ($p) {
+            case 'PLUGIN_DOCMAN_READ':
+                return 1;
+                break;
+            case 'PLUGIN_DOCMAN_WRITE':
+                return 2;
+                break;
+            case 'PLUGIN_DOCMAN_MANAGE':
+                return 3;
+                break;
+            default:
+                return 100;
+                break;
+        }
+    }
+
     /**
     * User has asked to set or to change permissions on an item
     * This method is the direct action of the docman controler but can also be called internally (@see createItem)
@@ -1317,83 +1498,6 @@ class Docman_Actions extends Actions {
                 }
             }
         }
-    }
-
-    function action_copy($params) {
-        //
-        // Param
-        $user = $this->_controler->getUser();
-        $item = $this->_controler->_actionParams['item'];
-
-        //
-        // Action
-        $itemFactory =& $this->_getItemFactory();
-
-        $itemFactory->delCopyPreference();
-        $itemFactory->setCopyPreference($item);
-
-        //
-        // Message
-        $type = $itemFactory->getItemTypeForItem($item);
-        if(PLUGIN_DOCMAN_ITEM_TYPE_FOLDER == $type) {
-            $_itemtype = 'folder';
-        }
-        else {
-            $_itemtype = 'doc';
-        }
-        
-        $_logmsg = $GLOBALS['Language']->getText('plugin_docman', 'info_copy_notify_cp_'.$_itemtype).' '.$GLOBALS['Language']->getText('plugin_docman', 'info_copy_notify_cp');
-        
-        $this->_controler->feedback->log('info', $_logmsg, CODENDI_PURIFIER_LIGHT);
-    }
-
-    function paste($params) {
-        //
-        // Param
-        $user        = $this->_controler->getUser();
-        $item        = $this->_controler->_actionParams['item'];
-        $rank        = $this->_controler->_actionParams['rank'];
-        $itemToPaste = $this->_controler->_actionParams['itemToPaste'];
-        $importMd    = $this->_controler->_actionParams['importMd'];
-        $dataRoot    = $this->_controler->getProperty('docman_root');
-        $mdMapping   = false;
-
-        $srcMdFactory = new Docman_MetadataFactory($itemToPaste->getGroupId());
-
-        // Import metadata if asked
-        if($importMd) {
-            $srcMdFactory->exportMetadata($item->getGroupId());
-        }
-        
-        // Get mapping between the 2 definitions
-        $mdMapping = array();
-        $srcMdFactory->getMetadataMapping($item->getGroupId(), $mdMapping);
-
-        // Permissions
-        if($itemToPaste->getGroupId() != $item->getGroupId()) {
-            $ugroupsMapping = false;
-        } else {
-            $ugroupsMapping = true;
-        }
-
-        //
-        // Action
-        $itemFactory =& $this->_getItemFactory();
-        $itemFactory->cloneItems($itemToPaste->getGroupId(),
-                                 $item->getGroupId(),
-                                 $user, 
-                                 $mdMapping,
-                                 $ugroupsMapping,
-                                 $dataRoot, 
-                                 $itemToPaste->getId(),
-                                 $item->getId(), 
-                                 $rank);
-
-        $itemFactory->delCopyPreference();
-
-        //
-        // Message
-        
     }
 
     /**
