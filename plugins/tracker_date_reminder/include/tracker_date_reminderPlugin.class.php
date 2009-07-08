@@ -155,6 +155,9 @@ class tracker_date_reminderPlugin extends Plugin {
                     if ((!isset($_REQUEST['notified_users']) || (isset($_REQUEST['notified_users']) && $_REQUEST['notified_users'] == NULL)) && _
                     (!isset($_REQUEST['notified_groups']) || (isset($_REQUEST['notified_groups']) && $_REQUEST['notified_groups'] == NULL))) {
                         $GLOBALS['Response']->addFeedback('error',$GLOBALS['Language']->getText('tracker_admin_index','specify_notified_users'));
+                    } else if (count($_REQUEST['notified_users']) == 1 && $_REQUEST['notified_users'][0] == 100 &&
+                        count($_REQUEST['notified_groups']) == 1 && $_REQUEST['notified_groups'][0] == 100) {
+                        $GLOBALS['Response']->addFeedback('error',$GLOBALS['Language']->getText('tracker_admin_index','specify_notified_users'));
                     } else if (!isset($_REQUEST['start']) || (isset($_REQUEST['start']) && $_REQUEST['start'] == NULL)) {
                         $GLOBALS['Response']->addFeedback('error',$GLOBALS['Language']->getText('tracker_admin_index','specify_notification_start'));
                     } else if (!ereg("^[0-9]+$",$_REQUEST['start']) || $_REQUEST['start'] < 0) {
@@ -168,16 +171,22 @@ class tracker_date_reminderPlugin extends Plugin {
                     } else if (!ereg("^[0-9]+$",$_REQUEST['recurse']) || $_REQUEST['recurse'] < 0) {
                         $GLOBALS['Response']->addFeedback('error',$GLOBALS['Language']->getText('tracker_admin_index','positive_value'));
                     } else {
+                        
 
                         //merge notified_users and notified_groups into one array
+                        $notified = array();
                         if (isset($_REQUEST['notified_users'])) {
-                            $notified = $_REQUEST['notified_users'];
-                        } else {
-                            $notified = array();
+                            foreach($_REQUEST['notified_users'] as $u) {
+                                if ($u != 100) {
+                                    $notified[] = $u;
+                                }
+                            }
                         }
                         if (isset($_REQUEST['notified_groups'])) {
                             foreach ($_REQUEST['notified_groups'] as $gr) {
-                                array_push($notified,$gr);
+                                if ($gr != 100) {
+                                    $notified[] = $gr;
+                                }
                             }
                         }
                         // now update the reminder settings
