@@ -113,9 +113,13 @@ class Docman_ActionsDeleteVisitor /* implements Visitor */ {
     }
 
     function _deleteItem($item, $params) {
-       if ($this->docman->userCanWrite($item->getId())) {
-
-            // The event must be processed before the item is deleted
+        if ($this->docman->userCanWrite($item->getId())) {
+            $item->setDeleteDate($this->deleteDate);
+            $dIF =& $this->_getItemFactory();
+            $dIF->delCutPreferenceForAllUsers($item->getId());
+            $dIF->delCopyPreferenceForAllUsers($item->getId());
+            $dao = $this->_getItemDao();
+            $dao->updateFromRow($item->toRow());
             $em =& $this->_getEventManager();
             $em->processEvent('plugin_docman_event_del', array(
                 'group_id' => $item->getGroupId(),
