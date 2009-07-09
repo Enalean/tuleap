@@ -35,12 +35,12 @@
   */
  require_once($gitphp_conf['smarty_prefix'] . "Smarty.class.php");
  $tpl =& new Smarty;
- if (isset($_GET['a']) &&
-     ($_GET['a'] != "commitdiff_plain") &&
-     ($_GET['a'] != "blob_plain") &&
-     ($_GET['a'] != "blobdiff_plain") &&
-     ($_GET['a'] != "rss") &&
-     ($_GET['a'] != "opml")) {
+ if ((!isset($_GET['a'])) || (
+     	($_GET['a'] != "commitdiff_plain") &&
+     	($_GET['a'] != "blob_plain") &&
+     	($_GET['a'] != "blobdiff_plain") &&
+     	($_GET['a'] != "rss") &&
+     	($_GET['a'] != "opml"))) {
 	$tpl->load_filter('output','trimwhitespace');
 }
 
