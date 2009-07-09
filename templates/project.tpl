@@ -57,7 +57,7 @@
          {if $smarty.section.tag.index == 16}
            <td><a href="{$SCRIPT_NAME}?p={$project}&a=tags">...</a></td>
          {else}
-           <td><i>{$taglist[tag].age}</i></td>
+           <td><i>{$taglist[tag].age_string}</i></td>
            <td><a href="{$SCRIPT_NAME}?p={$project}&a={$taglist[tag].reftype}&h={$taglist[tag].refid}" class="list"><b>{$taglist[tag].name}</b></a></td>
            <td>
              {if $taglist[tag].comment}
@@ -86,7 +86,7 @@
          {if $smarty.section.head.index == 16}
            <td><a href="{$SCRIPT_NAME}?p={$project}&a=heads">...</a></td>
          {else}
-           <td><i>{$headlist[head].age}</i></td>
+           <td><i>{$headlist[head].age_string}</i></td>
            <td><a href="{$SCRIPT_NAME}?p={$project}&a=shortlog&h=refs/heads/{$headlist[head].name}" class="list"><b>{$headlist[head].name}</b></td>
            <td class="link"><a href="{$SCRIPT_NAME}?p={$project}&a=shortlog&h=refs/heads/{$headlist[head].name}">shortlog</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=log&h=refs/heads/{$headlist[head].name}">log</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=tree&h=refs/heads/{$headlist[head].name}&hb={$headlist[head].name}">tree</a></td>
          {/if}

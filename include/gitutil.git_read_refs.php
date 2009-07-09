@@ -46,7 +46,7 @@ function git_read_refs($projectroot,$project,$refdir)
 			$ref_item['type'] = $type;
 			$ref_item['id'] = $ref_id;
 			$ref_item['epoch'] = 0;
-			$ref_item['age'] = "unknown";
+			$ref_item['age_string'] = "unknown";
 
 			if ($type == "tag") {
 				$tag = git_read_tag($projectroot . $project, $ref_id);
@@ -54,11 +54,13 @@ function git_read_refs($projectroot,$project,$refdir)
 				if ($tag['type'] == "commit") {
 					$co = git_read_commit($projectroot . $project, $tag['object']);
 					$ref_item['epoch'] = $co['committer_epoch'];
-					$ref_item['age'] = $co['age_string'];
+					$ref_item['age_string'] = $co['age_string'];
+					$ref_item['age'] = $co['age'];
 				} else if (isset($tag['epoch'])) {
 					$age = time() - $tag['epoch'];
 					$ref_item['epoch'] = $tag['epoch'];
-					$ref_item['age'] = age_string($age);
+					$ref_item['age_string'] = age_string($age);
+					$ref_item['age'] = $age;
 				}
 				$ref_item['reftype'] = $tag['type'];
 				$ref_item['name'] = $tag['name'];
@@ -70,7 +72,8 @@ function git_read_refs($projectroot,$project,$refdir)
 				$ref_item['title'] = $co['title'];
 				$ref_item['refid'] = $ref_id;
 				$ref_item['epoch'] = $co['committer_epoch'];
-				$ref_item['age'] = $co['age_string'];
+				$ref_item['age_string'] = $co['age_string'];
+				$ref_item['age'] = $co['age'];
 			}
 			$reflist[] = $ref_item;
 		}

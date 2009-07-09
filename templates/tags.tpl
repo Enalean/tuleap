@@ -20,7 +20,7 @@
  <table cellspacing="0">
    {section name=tag loop=$taglist}
      <tr class="{cycle values="light,dark"}">
-       <td><i>{$taglist[tag].age}</i></td>
+       <td><i>{$taglist[tag].age_string}</i></td>
        <td><a href="{$SCRIPT_NAME}?p={$project}&a={$taglist[tag].reftype}&h={$taglist[tag].refid}" class="list"><b>{$taglist[tag].name}</b></a></td>
        <td>
          {if count($taglist[tag].comment) > 0}
