@@ -1,0 +1,1 @@
+This directory contents the eac plugin which allow export and access project data

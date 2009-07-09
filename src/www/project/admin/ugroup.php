@@ -13,6 +13,7 @@
 
 require_once('pre.php');
 require_once('www/project/admin/permissions.php');
+require_once('common/event/EventManager.class.php');
 
 function format_html_row($row, &$row_num) {
     echo "<tr class=\"". util_get_alt_row_color($row_num++) ."\">\n";
@@ -128,9 +129,11 @@ if ($group_id != 100) {
   }
 }
 
+$em = EventManager::instance();
+$em->processEvent("project_data_export_table_users", $group_id);
+
 echo "</table>\n";
 echo "<p>".$Language->getText('project_admin_ugroup','predef_g')."</p>\n";
-
 
 project_admin_footer(array());
 
