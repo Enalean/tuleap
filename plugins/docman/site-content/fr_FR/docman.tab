@@ -1,3 +1,4 @@
+plugin_docman	action_doc_id	Id. document : 
 plugin_docman	action_approval	Table d'approbation
 plugin_docman	action_copy	Copier
 plugin_docman	action_delete	Supprimer
@@ -13,6 +14,9 @@ plugin_docman	action_permissions	Permissions
 plugin_docman	action_update	Mise à jour
 plugin_docman	action_show	Afficher
 plugin_docman	action_showactions	Afficher les options
+plugin_docman	action_lock_add	Réserver l'édition
+plugin_docman	action_lock_del	Annuler réservation
+plugin_docman	action_lock_info	réservé
 
 plugin_docman	approval_force_notify_success	Les approbateurs ont été notfiés.
 plugin_docman	approval_review_state_0	Pas encore
@@ -158,6 +162,11 @@ plugin_docman	admin_permissions_descr	Définir qui peut administrer le gestionna
 plugin_docman	admin_permissions_instructions	Sélectionnez les groupes d'utilisateurs qui peuvent administrer le gestionnaire de documents :
 plugin_docman	admin_report_title	Gérer les rapports de recherche
 plugin_docman	admin_report_descr	Modifier la portée des rapports.
+plugin_docman	admin_lock_infos_title	Documents Réservés
+plugin_docman	admin_lock_infos_descr	Afficher la liste des documents réservés.
+plugin_docman	admin_lock_infos_help	Ceci est la liste de tous les documents du projet $1 qui sont réservés.
+plugin_docman	admin_lock_infos_who	Qui
+plugin_docman	admin_lock_infos_when	When
 plugin_docman	admin_title	Administration
 plugin_docman	admin_view_title	Gérer les préférence d'affichage
 plugin_docman	admin_view_descr	Définir la vue par défaut pour le gestionnaire de documents.
@@ -211,6 +220,7 @@ plugin_docman	details_actions_update_apptable_copy	Copier la table précédente 
 plugin_docman	details_actions_update_apptable_empty	Créer une nouvelle table vide.
 plugin_docman	details_actions_update_apptable_reset	Réinitialiser le cycle d'approbation (ex. mise à jour majeure).
 plugin_docman	details_actions_update_apptable_help	<p>Si vous décidez de :<ul><li><strong>Copier la table précédente</strong> : une nouvelle table d'approbation sera créée à partir de l'actuelle. Les approbateurs, commentaires et engagements sont conservés.</li><li><strong>Réinitialiser le cycle d'approbation</strong> : similaire à l'option précédente mais seule la structure de la table est conservée (description, type de notification, liste des approbateurs). En fait, la nouvelle table sera identique à l'ancienne à ceci près que les commentaires et engagements des approbateurs seront remis à zero.</li><li><strong>Créer une nouvelle table vide</strong> : recommencer le cycle avec une table totalement nouvelle.</li></ul>Dans tous les cas : Les <strong>approbateurs ne sont pas notifiés automatiquement</strong>.</p>
+plugin_docman	details_actions_update_lock	Garder la réservation : 
 plugin_docman	details_approval	Table d'approbation
 plugin_docman	details_approval_approval_title	Détails du cycle d'approbation
 plugin_docman	details_approval_admin	Admin
@@ -351,6 +361,8 @@ plugin_docman	details_properties_edit	Editer les propriétés
 plugin_docman	details_properties_folder	Propriétés du dossier
 plugin_docman	details_properties_view_doc_lbl	Lien direct :
 plugin_docman	details_properties_view_doc_val	Cliquer pour ouvrir le document
+plugin_docman	details_properties_lock_who	Ce document est <strong>réservé</strong> par $1 depuis le $2.
+plugin_docman	details_properties_lock_info	Vous ne pouvez pas le modifier tant que le propriétaire du verrou ou un gestionnaire du document ne l'a pas retiré.
 plugin_docman	details_title	Détails de $1
 plugin_docman	details_update_title	Mise à jour de $1
 plugin_docman	details_update_recursion_warning	<h3>Confirmation de l'application récursive des valeurs par défaut.</h3><p>Vous êtes sur le point d'appliquer les valeurs sélectionnées dans dans l'ensemble de champ <strong>Valeur par défaut</strong> ci-dessous sur <strong>$1 documents and $2 folders</strong>.</p>
@@ -371,7 +383,6 @@ plugin_docman	details_statistics_item_type_folder	Dossiers :
 
 plugin_docman	docman_browserns4	Votre navigateur (Netscape 4) est trop vieux pour pouvoir accéder au gestionnaire de document. Nous ne garantissons pas la compatibilité du service avec ce navigateur.
 
-plugin_docman	docman_wiki_perms_notice	<strong>Attention: </strong>Pour une page wiki, un 'Lecteur' peut également editer le document.
 plugin_docman	error_alreadyinstalled	Gestionnaire de documents déjà installé.
 plugin_docman	error_cannot_delete_hc_md	Vous n'êtes pas autorisés à supprimer les propriétés systemes.
 plugin_docman	error_create_initversion	Erreur lors de la création de la version initiale.
@@ -428,6 +439,8 @@ plugin_docman	event_metadataupdate	Mise à jour de propriété
 plugin_docman	event_wiki_page_updated	Nouvelle version de la page Wiki
 plugin_docman	event_set_version_author	Auteur de la version
 plugin_docman	event_set_version_date	Date de la version
+plugin_docman	event_lock_add	Réservation du document
+plugin_docman	event_lock_del	Réservation annulée
 
 plugin_docman	field_description	Description :
 plugin_docman	field_rank	Rang :
@@ -680,6 +693,8 @@ plugin_docman	specificfield_url	Url :
 
 plugin_docman	title	Documentation du projet
 
+plugin_docman	document	Document
+
 plugin_docman	toolbar_admin	Admin
 plugin_docman	toolbar_docman	Documentation projet
 
@@ -726,8 +741,10 @@ plugin_docman	docman_wiki_other_location	Autre chemin:
 plugin_docman	docman_wiki_other_locations	Autres chemins:
 plugin_docman	docman_wiki_breadcrumbs_locations	Chemins:
 plugin_docman	docman_wiki_perms_label	Permissions controllées par le gestionnaire de documents
+plugin_docman	docman_wiki_page_locked	Cette page wiki est réservée par $1. Vous ne pouvez pas la modifier tant que le propriétaire du verrou ou un gestionnaire du document ne l'a pas retiré.
+plugin_docman	docman_wiki_page_locked_elsewhere	Cette page wiki a été déjà vérouillée via "$1".
 
-widget_categ_label	plugin_docman	Gestionnaire de documents
+plugin_docman	widget_categ_label	Gestionnaire de documents
 plugin_docman	widget_description_my_docman	Affiche la liste des documents en attente d'approbation.
 plugin_docman	widget_title_embedded	Visionneur du gestionnaire de document
 plugin_docman	widget_description_embedded	Permet d'afficher un élément du gestionnaire de document directement dans le dashboard. <br /><em>Pour le moment seuls les fichiers embarqués sont supportés</em>.

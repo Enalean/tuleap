@@ -49,6 +49,7 @@ class DocmanPlugin extends Plugin {
         $this->_addHook('wiki_page_updated',                 'wiki_page_updated',                 false);
         $this->_addHook('wiki_before_content',               'wiki_before_content',               false);
         $this->_addHook('isWikiPageReferenced',              'isWikiPageReferenced',              false);
+        $this->_addHook('isWikiPageEditable',                'isWikiPageEditable',                false);
         $this->_addHook('userCanAccessWikiDocument',         'userCanAccessWikiDocument',         false);
         $this->_addHook('getPermsLabelForWiki',              'getPermsLabelForWiki',              false);
         $this->_addHook('ajax_reference_tooltip',            'ajax_reference_tooltip',            false);
@@ -306,6 +307,12 @@ class DocmanPlugin extends Plugin {
         $params['action'] = 'check_whether_wiki_page_is_referenced';
         $request = new Docman_WikiRequest($params);
         $this->_getWikiController($request)->process(); 
+    }
+
+    function isWikiPageEditable($params) {
+        require_once('Docman_WikiRequest.class.php');
+        $request = new Docman_WikiRequest($params);
+        $this->_getWikiController($request)->process();
     }
 
     function userCanAccessWikiDocument($params) {

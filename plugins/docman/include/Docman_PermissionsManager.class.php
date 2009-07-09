@@ -22,55 +22,72 @@
 
 require_once('Docman_PermissionsManagerDao.class.php');
 require_once('Docman_SubItemsWritableVisitor.class.php');
+require_once('Docman_LockFactory.class.php');
 
 class Docman_PermissionsManager {
-    var $groupId;
-    var $cache_access;
-    var $cache_read;
-    var $cache_write;
-    var $cache_manage;
-    var $cache_admin;
-    var $dao;
-    var $currentUser;
+    protected $groupId;
+    protected $cache_access = array();
+    protected $cache_read   = array();
+    protected $cache_write  = array();
+    protected $cache_manage = array();
+    protected $cache_admin  = array();
+    protected $dao          = null;
 
     // No cache, just convenient accessor.
-    var $subItemsWritableVisitor;
+    protected $subItemsWritableVisitor = null;
 
-    private static $instance;
-    
-    private function Docman_PermissionsManager($groupId) {
+    private $lockFactory = null; 
+
+    private static $instance = array();
+
+    /**
+     * Constructor, private to enforce singleton (use instance() instead)
+     * 
+     * @param Integer $groupId
+     * 
+     * @return void
+     */
+    private function __construct($groupId) {
         $this->groupId = $groupId;
-        $this->cache_access = array();
-        $this->cache_read = array();
-        $this->cache_write = array();
-        $this->cache_manage = array();
-        $this->cache_admin = array();
-        $this->dao = null;
-        $this->currentUser = null;
-
-        $this->subItemsWritableVisitor = null;
     }
 
     /**
      * The manager is a singleton
+     * 
+     * @param Integer $groupId Project id
+     * 
+     * @return Docman_PermissionsManager
      */
-    function instance($groupId) {
+    public static function instance($groupId) {
         if(!isset(self::$instance[$groupId])) {
             self::$instance[$groupId] = new Docman_PermissionsManager($groupId);
         }
         return self::$instance[$groupId];
     }
 
+    /**
+     * A singleton cannot be cloned.
+     * 
+     * @return void
+     */
     public function __clone() {
         trigger_error('Clone is not allowed.', E_USER_ERROR);
     }
     
-    function &_getPermissionManagerInstance() {
-        $pm =& PermissionsManager::instance();
-        return $pm;
+    /**
+     * Wrapper for PermissionManager
+     * 
+     * @return PermissionsManager
+     */
+    function _getPermissionManagerInstance() {
+        return PermissionsManager::instance();
     }
 
-    function &getDao() {
+    /**
+     * Wrapper for Docman_PermissionsManagerDao
+     * @return Docman_PermissionsManagerDao
+     */
+    function getDao() {
         if($this->dao === null) {
             $this->dao = new Docman_PermissionsManagerDao(CodendiDataAccess::instance(), $this->groupId);
         }
@@ -88,18 +105,30 @@ class Docman_PermissionsManager {
     }
 
     /**
+     * Wrapper for LockFactory
+     *  
+     * @return Docman_LockFactory
+     */
+    function getLockFactory() {
+        if (!isset($this->lockFactory)) {
+            $this->lockFactory = new Docman_LockFactory();
+        }
+        return $this->lockFactory;
+    }
+    
+    /**
     * Return true if the user can access the item
     * 
     * can access = user can read the item && user can access its parent
     * 
     * @return boolean
     */
-    function userCanAccess(&$user, $item_id) {
+    function userCanAccess($user, $item_id) {
         if (!isset($this->cache_access[$user->getId()][$item_id])) {
             $can_read = $this->userCanRead($user, $item_id);
             if ($can_read) {
-                $item_factory =& $this->_getItemFactory();
-                $item =& $item_factory->getItemFromDb($item_id);
+                $item_factory = $this->_getItemFactory();
+                $item = $item_factory->getItemFromDb($item_id);
                 $can_access_parent = $item->getParentId() == 0 || $this->userCanAccess($user, $item->getParentId());
                 $this->cache_access[$user->getId()][$item_id] = $can_access_parent;
             } else {
@@ -115,18 +144,23 @@ class Docman_PermissionsManager {
     * User can read an item if:
     * - he is super user,
     * - he is admin of the current docman,
-    * - he can write the item (@see userCanWrite),
+    * - he can write the item (@see _userHasWritePermission),
+    *   --> Please note that we test the write permission and not is user can
+    *       actually write the item (in case of lock). So user may not have
+    *       'userCanWrite = true' but being able to see a document because of
+    *       the access rights 
     * - or one of his ugroups has READ permission on the item
     * @return boolean
     */
-    function userCanRead(&$user, $item_id) {
+    function userCanRead($user, $item_id) {
         if(!isset($this->cache_read[$user->getId()][$item_id])) {
-            $pm =& $this->_getPermissionManagerInstance();
-            $this->cache_read[$user->getId()][$item_id] = $user->isSuperUser() 
+            $pm = $this->_getPermissionManagerInstance();
+            $canRead = $user->isSuperUser() 
                 || $this->userCanAdmin($user) //There are default perms for admin
                 || $pm->userHasPermission($item_id, 'PLUGIN_DOCMAN_READ', $user->getUgroups($this->groupId, array())) 
-                || $this->userCanWrite($user, $item_id);
-                
+                || $this->_userHasWritePermission($user, $item_id);
+
+            $this->_setCanRead($user->getId(), $item_id, $canRead);
         }
         return $this->cache_read[$user->getId()][$item_id];
     }
@@ -134,26 +168,83 @@ class Docman_PermissionsManager {
     /**
     * Return true if the user can write the item
     * 
+    * This method takes into account permissions and lock.
+    * 
     * User can read an item if:
     * - he is super user,
     * - he is admin of the current docman,
     * - he can manage the item (@see userCanManage),
-    * - or one of his ugroups has WRITE permission on the item
+    * - one of his ugroups has WRITE permission on the item
+    * - item is not locked or if user is lock owner.
+    *
     * @return boolean
     */
-    function userCanWrite(&$user, $item_id) {
+    function userCanWrite($user, $item_id) {
         if(!isset($this->cache_write[$user->getId()][$item_id])) {
-            $pm =& $this->_getPermissionManagerInstance();
-            $this->cache_write[$user->getId()][$item_id] = $user->isSuperUser() 
+            // Check permissions
+            $hasWritePerm = $this->_userHasWritePermission($user, $item_id);
+            // Check lock status
+            $itemLocked = $this->_itemIsLockedForUser($user, $item_id);
+
+            $canWrite = false;
+            if(!$itemLocked) {
+                $canWrite = $hasWritePerm;
+            }
+
+            $this->_setCanWrite($user->getId(), $item_id, $canWrite);
+        }
+        return $this->cache_write[$user->getId()][$item_id];
+    }
+
+    /**
+     * Check if user as write permission on item
+     * 
+     * This method only deals with the permissions set on item. If user has
+     * write permission, it will automatically gives read permission too.
+     * 
+     * @param User    $user
+     * @param Integer $item_id
+     * 
+     * @return Boolean
+     */
+    function _userHasWritePermission($user, $item_id) {
+        $pm = $this->_getPermissionManagerInstance();
+        $canWrite = $user->isSuperUser() 
                 || $this->userCanAdmin($user) //There are default perms for admin
                 || $pm->userHasPermission($item_id, 'PLUGIN_DOCMAN_WRITE', $user->getUgroups($this->groupId, array())) 
                 || $this->userCanManage($user, $item_id);
-
-            if($this->cache_write[$user->getId()][$item_id] == true) {
-                $this->cache_read[$user->getId()][$item_id] = true;
-            }
+        if($canWrite) {
+            $this->_setCanRead($user->getId(), $item_id, true);
         }
-        return $this->cache_write[$user->getId()][$item_id];
+        return $canWrite;
+    }
+
+    /**
+     * Check if the item is locked for the user.
+     * 
+     * Return true if there is no lock on the item or if there is one but user
+     * is owner of the lock. This method doesn't check write permission.
+     * 
+     * @param User    $user
+     * @param Integer $item_id
+     * 
+     * @return Boolean
+     */
+    function _itemIsLockedForUser($user, $item_id) {
+        $locked = true;
+        $lockFactory = $this->getLockFactory();
+        if($lockFactory->itemIsLockedByItemId($item_id)) {
+            if($lockFactory->userIsLockerByItemId($item_id, $user)) {
+                $locked = false;
+            } else {
+                if($this->userCanManage($user, $item_id)) {
+                    $locked = false;
+                }
+            }
+        } else {
+            $locked = false;
+        }
+        return $locked;
     }
 
     /**
@@ -165,16 +256,13 @@ class Docman_PermissionsManager {
     * - or one of his ugroups has MANAGE permission on the item
     * @return boolean
     */
-    function userCanManage(&$user, $item_id) {
+    function userCanManage($user, $item_id) {
         if(!isset($this->cache_manage[$user->getId()][$item_id])) {
-            $pm =& $this->_getPermissionManagerInstance();
-            $this->cache_manage[$user->getId()][$item_id] = $user->isSuperUser() 
+            $pm = $this->_getPermissionManagerInstance();
+            $canManage = $user->isSuperUser() 
                 || $this->userCanAdmin($user) //There are default perms for admin
                 || $pm->userHasPermission($item_id, 'PLUGIN_DOCMAN_MANAGE', $user->getUgroups($this->groupId, array())) ;
-            if($this->cache_manage[$user->getId()][$item_id] == true) {
-                $this->cache_write[$user->getId()][$item_id] = true;
-                $this->cache_read[$user->getId()][$item_id] = true;
-            }
+            $this->_setCanManage($user->getId(), $item_id, $canManage);
         }
         return $this->cache_manage[$user->getId()][$item_id];
     }
@@ -209,7 +297,7 @@ class Docman_PermissionsManager {
     * Return true if the user can administrate the current docman
     * @return boolean
     */
-    function userCanAdmin(&$user) {
+    function userCanAdmin($user) {
         if(!isset($this->cache_admin[$user->getId()][$this->groupId])) {
             //Todo: see if this code already exists in permission_xxx
                         
@@ -229,7 +317,7 @@ class Docman_PermissionsManager {
     * @see userCanAdmin
     */
     function currentUserCanAdmin() {
-        $user =& $this->getCurrentUser();
+        $user = $this->getCurrentUser();
         return $this->userCanAdmin($user);
     }
 
@@ -241,7 +329,7 @@ class Docman_PermissionsManager {
      * @return boolean
      */
     function currentUserCanWriteSubItems($itemId) {
-        $user =& $this->getCurrentUser();
+        $user = $this->getCurrentUser();
         return $this->userCanWriteSubItems($user, $itemId);
     }
 
@@ -252,8 +340,8 @@ class Docman_PermissionsManager {
      * @param $itemId Integer The parent item id.
      * @return boolean
      */
-    function userCanWriteSubItems(&$user, $itemId) {
-        $item    =& $this->_getItemTreeForPermChecking($itemId, $user);
+    function userCanWriteSubItems($user, $itemId) {
+        $item = $this->_getItemTreeForPermChecking($itemId, $user);
         $this->subItemsWritableVisitor = new Docman_SubItemsWritableVisitor($this->groupId, $user);
         return $item->accept($this->subItemsWritableVisitor);
     }
@@ -266,7 +354,7 @@ class Docman_PermissionsManager {
      * WARNING: use the result tree carfully as you may expose protected data
      * by mistake.
      */
-    function &_getItemTreeForPermChecking($itemId, $user) {
+    function _getItemTreeForPermChecking($itemId, $user) {
         $itemFactory = $this->_getItemFactory($this->groupId);
         $srcItem = $itemFactory->getItemFromDb($itemId);
         $item =& $itemFactory->getItemSubTree($srcItem, $user, true, true);
@@ -276,24 +364,24 @@ class Docman_PermissionsManager {
     /**
      * Setup the 'IsWritable' visitor object.
      */
-    function &getSubItemsWritableVisitor() {
+    function getSubItemsWritableVisitor() {
         return $this->subItemsWritableVisitor;
     }
 
     function cloneItemPermissions($srcItemId, $dstItemId, $toGroupId) {
         $perms = array('PLUGIN_DOCMAN_READ', 'PLUGIN_DOCMAN_WRITE', 'PLUGIN_DOCMAN_MANAGE');
-        $pm =& $this->_getPermissionManagerInstance();
+        $pm = $this->_getPermissionManagerInstance();
         $pm->clonePermissions($srcItemId, $dstItemId, $perms, $toGroupId);
     }
 
     function cloneDocmanPermissions($srcGroupId, $dstGroupId) {
         $perms = array('PLUGIN_DOCMAN_ADMIN');
-        $pm =& $this->_getPermissionManagerInstance();
+        $pm = $this->_getPermissionManagerInstance();
         $pm->clonePermissions($srcGroupId, $dstGroupId, $perms, $dstGroupId);
     }
 
     function setDefaultItemPermissions($itemId, $force=false) {
-        $dao =& $this->getDao();
+        $dao = $this->getDao();
 
         $dao->setDefaultPermissions($itemId, 'PLUGIN_DOCMAN_READ', $force);
         $dao->setDefaultPermissions($itemId, 'PLUGIN_DOCMAN_WRITE', $force);
@@ -301,50 +389,69 @@ class Docman_PermissionsManager {
     }
 
     function setDefaultDocmanPermissions($groupId) {
-        $dao =& $this->getDao();
+        $dao = $this->getDao();
 
         $dao->setDefaultPermissions($groupId, 'PLUGIN_DOCMAN_ADMIN');
     }
 
+    /**
+     * Retreive and cache all read permissions for a list of itemIds
+     * 
+     * In order to reduce the perf overhead of permission checking, fetch one for
+     * all the permissions set on all given items and store them in cache.
+     * 
+     * @param Array $itemsIds
+     * @param User $user
+     * 
+     * @return void
+     */
     function retreiveReadPermissionsForItems($itemsIds, $user){
-        $dao =& $this->getDao();
-
+        $dao    = $this->getDao();
         $userId = $user->getId();
 
-        // do not compute a perm twice
+        // Collect the item ids we need to check
         $objIds = array();
         foreach($itemsIds as $itemid) {
-            // Docman admin has all rights
             if($this->userCanAdmin($user)) {
-                $this->_setCanManage($userId, $itemid);
+                // Docman admin has all rights
+                $this->_setCanManage($userId, $itemid, true);
             } else {
-                // Would be even better to check each perm level in order to fetch
-                // all permissions related to the item.
-                if(!isset($this->cache_read[$userId][$itemid])) {
-                    $this->_setNoAccess($userId, $itemid);
-                    $objIds[] = $itemid;
-                }
+                // Otherwise, initialize the perm to "nothing". This is possible here
+                // as we fetch all the permissions related to an item in the same time
+                // if we only get READ for an item, the item will only be readable, later
+                // userCanWrite doesn't need to fetch permissions again.
+                // This is very specific to this method. With "traditional" userCanRead,
+                // without cache, fetching read permission gives no info about WRITE or
+                // MANAGE perms.
+                $this->_setNoAccess($userId, $itemid);
+                $objIds[] = $itemid;
             }
         }
 
         if(count($objIds) > 0) {
             $perms = array("'PLUGIN_DOCMAN_READ'", "'PLUGIN_DOCMAN_WRITE'", "'PLUGIN_DOCMAN_MANAGE'");
             $dar = $dao->retreivePermissionsForItems($objIds, $perms, $user->getUgroups($this->groupId, array()));
-            $dar->rewind();
-            while($dar->valid()) {
-                $row = $dar->current();
+            foreach($dar as $row) {
                 switch($row['permission_type']) {
                 case 'PLUGIN_DOCMAN_MANAGE':
-                    $this->_setCanManage($userId, $row['object_id']);
+                    $this->_setCanManage($userId, $row['object_id'], true);
                     break;
                 case 'PLUGIN_DOCMAN_WRITE':
-                    $this->_setCanWrite($userId, $row['object_id']);
+                    $this->_setCanWrite($userId, $row['object_id'], true);
                     break;
                 case 'PLUGIN_DOCMAN_READ':
-                    $this->_setCanRead($userId, $row['object_id']);
+                    $this->_setCanRead($userId, $row['object_id'], true);
                     break;
                 }
-                $dar->next();
+            }
+
+            // Locks
+            // Iter on all given item_ids and disable write if current user is not
+            // lock owner and not doc manager.
+            foreach($this->getLockFactory()->retreiveLocksForItems($objIds) as $row){
+                if($row['user_id'] != $userId && !$this->cache_manage[$userId][$row['item_id']]) {
+                    $this->cache_write[$userId][$row['item_id']] = false;
+                }
             }
         }
     }
@@ -353,54 +460,74 @@ class Docman_PermissionsManager {
      * Revoke all access to the user if not already set.
      */
     function _setNoAccess($userId, $objectId) {
-        if(!isset($this->cache_read[$userId][$objectId])) {
-            $this->cache_read[$userId][$objectId] = false;
-        }
-        if(!isset($this->cache_write[$userId][$objectId])) {
-            $this->cache_write[$userId][$objectId] = false;
-        }
-        if(!isset($this->cache_manage[$userId][$objectId])) {
-            $this->cache_manage[$userId][$objectId] = false;
-        }
+        $this->_revokeIfNotGranted($this->cache_read, $userId, $objectId);
+        $this->_revokeIfNotGranted($this->cache_write, $userId, $objectId);
+        $this->_revokeIfNotGranted($this->cache_manage, $userId, $objectId);
     }
-    
+
     /**
-     * Set READ access to the user. Block WRITE and MANAGE accesses if not set.
+     * Set READ access to the user 
+     * 
+     * If userCanRead, cache it. Otherwise, if read is not already granted, 
+     * block it.
      */
-    function _setCanRead($userId, $objectId) {
-        $this->cache_read[$userId][$objectId] = true;
-        if(!isset($this->cache_write[$userId][$objectId])) {
-            $this->cache_write[$userId][$objectId] = false;
-        }
-        if(!isset($this->cache_manage[$userId][$objectId])) {
-            $this->cache_manage[$userId][$objectId] = false;
+    function _setCanRead($userId, $objectId, $canRead) {
+        if($canRead) {
+            $this->cache_read[$userId][$objectId] = true;
+        } else {
+            $this->_revokeIfNotGranted($this->cache_read, $userId, $objectId);
         }
     }
 
     /**
-     * Set WRITE and READ accesses to the user. Block MANAGE access if not set.
+     * Set WRITE and READ accesses to the user. 
+     * 
+     * If userCanWrite, cache it. Otherwise, if write is not already granted,
+     * block it.
      */
-    function _setCanWrite($userId, $objectId) {
-        $this->cache_read[$userId][$objectId] = true;
-        $this->cache_write[$userId][$objectId] = true;
-        if(!isset($this->cache_manage[$userId][$objectId])) {
-            $this->cache_manage[$userId][$objectId] = false;
+    function _setCanWrite($userId, $objectId, $canWrite) {
+        if($canWrite) {
+            $this->cache_read[$userId][$objectId] = true;
+            $this->cache_write[$userId][$objectId] = true;
+        } else {
+            $this->_revokeIfNotGranted($this->cache_write, $userId, $objectId);
         }
     }
 
     /**
      * Set MANAGE, WRITE and READ accesses to the user.
+     * 
+     * If user cannot manage and manage is not already granted, block it.
      */
-    function _setCanManage($userId, $objectId) {
-        $this->cache_read[$userId][$objectId] = true;
-        $this->cache_write[$userId][$objectId] = true;
-        $this->cache_manage[$userId][$objectId] = true;
+    function _setCanManage($userId, $objectId, $canManage) {
+        if($canManage) {
+            $this->cache_read[$userId][$objectId]   = true;
+            $this->cache_write[$userId][$objectId]  = true;
+            $this->cache_manage[$userId][$objectId] = true;
+        } else {
+            $this->_revokeIfNotGranted($this->cache_manage, $userId, $objectId);
+        }
     }
 
+    /**
+     * Set given permission cache array to false if not already to true.
+     * 
+     * @param Array   $array    A cache array ($this->cache_read, write, manage)
+     * @param Integer $userId   User id
+     * @param Integer $objectId Item id
+     * 
+     * @return void
+     */
+    function _revokeIfNotGranted(&$array, $userId, $objectId) {
+        if (!isset($array[$userId][$objectId])) {
+            $array[$userId][$objectId] = false;
+        }
+    }
+    
     function oneFolderIsWritable($user) {
         $oneWritable = false;
 
-        $dao =& $this->getDao();
+        $dao = $this->getDao();
 
         if($this->userCanAdmin($user)) {
             $oneWritable = true;
@@ -412,12 +539,8 @@ class Docman_PermissionsManager {
         return $oneWritable;
     }
 
-    function &getCurrentUser() {
-        if($this->currentUser === null) {
-            $um =& UserManager::instance();
-            $this->currentUser = $um->getCurrentUser();
-        }
-        return $this->currentUser;
+    function getCurrentUser() {
+        return UserManager::instance()->getCurrentUser();
     }
     
     /**

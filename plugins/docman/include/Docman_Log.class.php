@@ -198,13 +198,19 @@ class Docman_Log { /* implements EventListener */
                 $txt = $GLOBALS['Language']->getText('plugin_docman','event_metadataupdate');
                 break;
             case PLUGIN_DOCMAN_EVENT_WIKIPAGE_UPDATE:
-                $txt = $GLOBALS['Language']->getText('plugin_docman', 'event_wiki_page_updated');                
+                $txt = $GLOBALS['Language']->getText('plugin_docman', 'event_wiki_page_updated');
                 break;
             case PLUGIN_DOCMAN_EVENT_SET_VERSION_AUTHOR:
                 $txt = $GLOBALS['Language']->getText('plugin_docman', 'event_set_version_author');    
                 break;
             case PLUGIN_DOCMAN_EVENT_SET_VERSION_DATE:
                 $txt = $GLOBALS['Language']->getText('plugin_docman', 'event_set_version_date');    
+                break;
+            case PLUGIN_DOCMAN_EVENT_LOCK_ADD:
+                $txt = $GLOBALS['Language']->getText('plugin_docman', 'event_lock_add');
+                break;
+            case PLUGIN_DOCMAN_EVENT_LOCK_DEL:
+                $txt = $GLOBALS['Language']->getText('plugin_docman', 'event_lock_del');
                 break;
             default:
                 break;

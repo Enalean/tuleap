@@ -74,6 +74,7 @@ class PageEditor
     }
 
     function editPage () {
+
         global $WikiTheme;
         $saveFailed = false;
         $tokens = &$this->tokens;

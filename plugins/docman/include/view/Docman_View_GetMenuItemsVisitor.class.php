@@ -6,7 +6,7 @@
 *
 * Docman_View_GetMenuItemsVisitor
 */
-
+require_once dirname(__FILE__).'/../Docman_LockFactory.class.php';
 
 class Docman_View_GetMenuItemsVisitor /* implements Visitor*/ {
     var $actions;
@@ -42,7 +42,20 @@ class Docman_View_GetMenuItemsVisitor /* implements Visitor*/ {
         if(!$this->if->isRoot($item) && $this->dPm->userCanWrite($this->user, $item->getId()) && $this->dPm->userCanWrite($this->user, $item->getParentId())) {
             $this->actions['canDelete'] = true;
         }
+
+        // Lock
+        if($this->dPm->getLockFactory()->itemIsLockedByItemId($item->getId())) {
+            $this->actions['canLockInfo'] = true;
+            if($this->dPm->userCanWrite($this->user, $item->getId())) {
+                $this->actions['canUnlock'] = true;
+            }
+        } else {
+            $this->actions['canLock'] = true;
+        }
+
+        // Approval tables
         $this->actions['canApproval'] = true;
+
         return $this->actions;
     }
     
@@ -54,7 +67,12 @@ class Docman_View_GetMenuItemsVisitor /* implements Visitor*/ {
                 $this->actions['canPaste'] = true;
             }
         }
-        return $this->visitItem($item, $params);
+        $actions = $this->visitItem($item, $params);
+        
+        // Cannot lock nor unlock a folder yet.
+        $this->actions['canUnlock'] = false;
+        $this->actions['canLock']   = false;
+        return $this->actions;
     }
     
     function visitDocument($item, $params = array()) {

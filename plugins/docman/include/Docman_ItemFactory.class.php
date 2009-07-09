@@ -171,7 +171,32 @@ class Docman_ItemFactory {
         else {   
             return null;   
         }   
-    } 
+    }
+
+    /**
+    * This looks for possible references of a wiki page from docman
+    *
+    * @param string $wiki_page
+    * @param string $group_id
+    *
+    * @return Array items that reference the same given wiki page.
+    */
+    function getWikiPageReferencers($wiki_page, $group_id) {
+        $items = array();
+        $item_dao =& $this->_getItemDao();
+        if($item_dao->isWikiPageReferenced($wiki_page, $group_id)) {
+            $items_ids = $item_dao->getItemIdByWikiPageAndGroupId($wiki_page, $group_id);
+            if(is_array($items_ids)){
+                foreach($items_ids as $key => $id) {
+                    $items[] = $this->getItemFromDb($id);
+                }
+            }
+            else {
+                $items[] =& $this->getItemFromDb($items_ids);
+            }
+        }
+        return $items;
+    }
 
     function &getItemFromDb($id, $params = array()) {
         $_id = (int) $id;

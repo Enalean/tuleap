@@ -53,6 +53,18 @@ class Docman_View_ItemDetailsSectionNewVersion extends Docman_View_ItemDetailsSe
         return $html;
     }
 
+    function _getReleaseLock() {
+        $content = '';
+        $dPm = Docman_PermissionsManager::instance($this->item->getGroupId());
+        if($dPm->getLockFactory()->itemIsLocked($this->item)) {
+            $content .= '<tr style="vertical-align:top;">';
+            $content .= '<td><label>'.$GLOBALS['Language']->getText('plugin_docman', 'details_actions_update_lock').'</label></td>';
+            $content .= '<td><input type="checkbox" name="lock_document" value="lock" /></td>';
+            $content .= '</tr>';
+        }
+        return $content;
+    }
+
     function visitFolder(&$item, $params = array()) {
         return "";
     }
@@ -80,6 +92,9 @@ class Docman_View_ItemDetailsSectionNewVersion extends Docman_View_ItemDetailsSe
             $content .= '<td><label>'. $field->getLabel().'</label></td>';
             $content .= '<td>'. $field->getField() .'</td></tr>';
         }
+        // Release lock
+        $content .= $this->_getReleaseLock();
+
         $content .= '</table>';
         $content .= '</dd>';
 

@@ -215,7 +215,26 @@ class UserHelper {
         }
         return $display;
     }
-    
+
+    /**
+     * Get a link on user profile with name according to user prefs.
+     * 
+     * @param Integer $user_id User id
+     * 
+     * @return String
+     */
+    function getLinkOnUserFromUserId($user_id) {
+        $hp = CodeX_HTMLPurifier::instance();
+        $um = $this->_getUserManager();
+        $user = $um->getUserById($user_id);
+        if($user && !$user->isNone()) {
+            return '<a href="/users/'.urlencode($user->getName()).'">'.$hp->purify($this->getDisplayNameFromUser($user), CODEX_PURIFIER_CONVERT_HTML).'</a>';
+        } else {
+            $username = $user ? $user->getName() : '';
+            return  $hp->purify($username, CODEX_PURIFIER_CONVERT_HTML) ;
+        }
+    }
+
     /**
      * _isUserNameNone
      *
