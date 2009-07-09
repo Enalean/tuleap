@@ -22,13 +22,7 @@
   */
  require_once('config/gitphp.conf.php');
 
- /*
-  * Debug
-  */
- if ($gitphp_conf['debug']) {
- 	define('GITPHP_START_TIME', microtime(true));
-	error_reporting(E_ALL|E_STRICT);
- }
+ $extraoutput = FALSE;
 
  /*
   * Instantiate Smarty
@@ -42,7 +36,18 @@
      	($_GET['a'] != "rss") &&
      	($_GET['a'] != "opml"))) {
 	$tpl->load_filter('output','trimwhitespace');
+	$extraoutput = TRUE;
 }
+
+ /*
+  * Debug
+  */
+ if ($gitphp_conf['debug']) {
+ 	if ($extraoutput) {
+		define('GITPHP_START_TIME', microtime(true));
+		error_reporting(E_ALL|E_STRICT);
+	}
+ }
 
 /*
  * Setup global assigns used everywhere (such as header/footer)
@@ -187,7 +192,7 @@ if ($gitphp_conf['filesearch'])
  	git_project_list($gitphp_conf['projectroot'],$git_projects,(isset($_GET['o']) ? $_GET['o'] : "project"));
  }
 
- if ($gitphp_conf['debug'])
+ if ($gitphp_conf['debug'] && $extraoutput)
  	echo "Execution time: " . round(microtime(true) - GITPHP_START_TIME, 8) . " sec";
 
 ?>
