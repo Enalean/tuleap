@@ -665,16 +665,16 @@ class Docman_Actions extends Actions {
                         'parent'  => &$newParentItem,
                         'user'    => &$user)
                 );
-                $hp = CodeX_HTMLPurifier::instance();
+                $hp = Codendi_HTMLPurifier::instance();
                 $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'info_item_moved', array(
                             $itemToMove->getGroupId(),
                             $old_parent->getId(),
-                            $hp->purify($old_parent->getTitle(), CODEX_PURIFIER_CONVERT_HTML) ,
+                            $hp->purify($old_parent->getTitle(), CODENDI_PURIFIER_CONVERT_HTML) ,
                             $newParentItem->getId(),
-                            $hp->purify($newParentItem->getTitle(), CODEX_PURIFIER_CONVERT_HTML)
+                            $hp->purify($newParentItem->getTitle(), CODENDI_PURIFIER_CONVERT_HTML)
                             )
                         ), 
-                    CODEX_PURIFIER_DISABLED);
+                    CODENDI_PURIFIER_DISABLED);
                     $item_factory->delCopyPreference();
                     $item_factory->delCutPreference();
             } else {
@@ -792,7 +792,7 @@ class Docman_Actions extends Actions {
         // Param
         $user = $this->_controler->getUser();
         $item = $this->_controler->_actionParams['item'];
-        $hp   = CodeX_HTMLPurifier::instance();
+        $hp   = Codendi_HTMLPurifier::instance();
 
         //
         // Action
@@ -812,7 +812,7 @@ class Docman_Actions extends Actions {
         // Param
         $user = $this->_controler->getUser();
         $item = $this->_controler->_actionParams['item'];
-        $hp   = CodeX_HTMLPurifier::instance();
+        $hp   = Codendi_HTMLPurifier::instance();
         
         //
         // Action
@@ -825,7 +825,7 @@ class Docman_Actions extends Actions {
         //
         // Message
         $msg = $hp->purify($item->getTitle()).' '.$GLOBALS['Language']->getText('plugin_docman', 'info_copy_notify_cp');
-        $this->_controler->feedback->log('info', $msg, CODEX_PURIFIER_DISABLED);
+        $this->_controler->feedback->log('info', $msg, CODENDI_PURIFIER_DISABLED);
     }
 
     /**

@@ -26,10 +26,10 @@ require_once 'Docman_View_ProjectHeader.class.php';
 class Docman_View_PasteInProgress extends Docman_View_ProjectHeader {
     
     function _getTitle($params) {
-        $hp = CodeX_HTMLPurifier::instance();
+        $hp = Codendi_HTMLPurifier::instance();
         return $GLOBALS['Language']->getText('plugin_docman', 'details_paste_inprogress_title', array( 
-            $hp->purify($params['itemToPaste']->getTitle(), CODEX_PURIFIER_CONVERT_HTML) , 
-            $hp->purify($params['item']->getTitle(), CODEX_PURIFIER_CONVERT_HTML) 
+            $hp->purify($params['itemToPaste']->getTitle(), CODENDI_PURIFIER_CONVERT_HTML) , 
+            $hp->purify($params['item']->getTitle(), CODENDI_PURIFIER_CONVERT_HTML) 
         ));
     }
     
