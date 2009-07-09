@@ -470,17 +470,17 @@ class ArtifactDateReminderFactory extends Error {
 
         $mail =& new Mail();
         $mail->setFrom($GLOBALS['sys_noreply']);
-        $mail->setSubject("[" . $this->getTrackerName()."] ".$GLOBALS['Language']->getText('tracker_admin_index','reminder_mail_subject',array($field->getLabel(),date("j F Y",$this->getDateValue()),$art->getSummary())));
+        $mail->setSubject("[" . $this->getTrackerName()."] ".$GLOBALS['Language']->getText('plugin_tracker_date_reminder','reminder_mail_subject',array($field->getLabel(),date("j F Y",$this->getDateValue()),$art->getSummary())));
 
-        $body = "\n".$GLOBALS['Language']->getText('tracker_admin_index','reminder_mail_body_header',array($field->getLabel(),date("l j F Y",$this->getDateValue()),$week)).
-		"\n\n".$GLOBALS['Language']->getText('tracker_admin_index','reminder_mail_body_project',array($prj_name)).
-		"\n".$GLOBALS['Language']->getText('tracker_admin_index','reminder_mail_body_tracker',array($this->getTrackerName())).
-		"\n".$GLOBALS['Language']->getText('tracker_admin_index','reminder_mail_body_art',array($art->getSummary())).
+        $body = "\n".$GLOBALS['Language']->getText('plugin_tracker_date_reminder','reminder_mail_body_header',array($field->getLabel(),date("l j F Y",$this->getDateValue()),$week)).
+		"\n\n".$GLOBALS['Language']->getText('plugin_tracker_date_reminder','reminder_mail_body_project',array($prj_name)).
+		"\n".$GLOBALS['Language']->getText('plugin_tracker_date_reminder','reminder_mail_body_tracker',array($this->getTrackerName())).
+		"\n".$GLOBALS['Language']->getText('plugin_tracker_date_reminder','reminder_mail_body_art',array($art->getSummary())).
 		"\n".$field->getLabel().": ".date("D j F Y",$this->getDateValue()).
-		"\n\n".$GLOBALS['Language']->getText('tracker_admin_index','reminder_mail_body_art_link').
+		"\n\n".$GLOBALS['Language']->getText('plugin_tracker_date_reminder','reminder_mail_body_art_link').
 		"\n".get_server_url()."/tracker/?func=detail&aid=".$this->getArtifactId()."&atid=".$this->getGroupArtifactId()."&group_id=".$this->getGroupId().
 		"\n\n______________________________________________________________________".
-		"\n".$GLOBALS['Language']->getText('tracker_admin_index','reminder_mail_footer')."\n";
+		"\n".$GLOBALS['Language']->getText('plugin_tracker_date_reminder','reminder_mail_footer')."\n";
         $mail->setBody($body);
         foreach ($this->getNotifiedPeople() as $notified) {
             $mail->setTo($notified);

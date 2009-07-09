@@ -62,16 +62,16 @@ class TrackerDateReminder_ArtifactFieldHtml {
             <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$at->Group->getID().'">
             <INPUT TYPE="HIDDEN" NAME="atid" VALUE="'.$at->getID().'">';
 
-        $out .= '<h3>'.$GLOBALS['Language']->getText('tracker_include_type','notif_settings_field',array($field->getLabel())).'</h3>';
+        $out .= '<h3>'.$GLOBALS['Language']->getText('plugin_tracker_date_reminder','notif_settings_field',array($field->getLabel())).'</h3>';
          
         $out .= '<fieldset>
-            <TABLE BORDER="0" WIDTH="930px"><TR height="30"><TD>'.$GLOBALS['Language']->getText('tracker_include_type','reminder_form_part1',array($field->getLabel())).
+            <TABLE BORDER="0" WIDTH="930px"><TR height="30"><TD>'.$GLOBALS['Language']->getText('plugin_tracker_date_reminder','reminder_form_part1',array($field->getLabel())).
             '</TD><TD> <INPUT TYPE="TEXT" NAME="start" SIZE="5" VALUE="'.$start.'"> '.$GLOBALS['Language']->getText('tracker_include_type','days').'</TD><TD colspan=3">
             <SELECT NAME="notif_type">
-                <OPTION VALUE="0" '.$before.'>'.$GLOBALS['Language']->getText('tracker_include_type','notify_before').'
-                <OPTION VALUE="1" '.$after.'>'.$GLOBALS['Language']->getText('tracker_include_type','notify_after').'
-            </SELECT> '.$GLOBALS['Language']->getText('tracker_include_type','reminder_form_part2').
-            '</TD></TR><TR><TD valign="top">'.$GLOBALS['Language']->getText('tracker_include_type','reminder_form_part3').' <INPUT TYPE="TEXT" NAME="recurse" SIZE="5" VALUE="'.$recurse.'"> '.$GLOBALS['Language']->getText('tracker_include_type','reminder_form_part4').
+                <OPTION VALUE="0" '.$before.'>'.$GLOBALS['Language']->getText('plugin_tracker_date_reminder','notify_before').'
+                <OPTION VALUE="1" '.$after.'>'.$GLOBALS['Language']->getText('plugin_tracker_date_reminder','notify_after').'
+            </SELECT> '.$GLOBALS['Language']->getText('plugin_tracker_date_reminder','reminder_form_part2').
+            '</TD></TR><TR><TD valign="top">'.$GLOBALS['Language']->getText('plugin_tracker_date_reminder','reminder_form_part3').' <INPUT TYPE="TEXT" NAME="recurse" SIZE="5" VALUE="'.$recurse.'"> '.$GLOBALS['Language']->getText('plugin_tracker_date_reminder','reminder_form_part4').
             '</TD><TD valign="top"> ';
 
         $artRoleNames = array(array('value' => '1', 'text' => $GLOBALS['Language']->getText('tracker_common_types','role_SUBMITTER_short_desc')),
@@ -97,10 +97,10 @@ class TrackerDateReminder_ArtifactFieldHtml {
         $out .= html_build_multiple_select_box_from_array($groupNames, 'notified_groups[]', $notified_groups, 8, true, '', false, '', false, '', false);
         
         $out .= '</SELECT></TD><TD valign="top">'.
-        $GLOBALS['Language']->getText('tracker_include_type','reminder_form_part5').
+        $GLOBALS['Language']->getText('plugin_tracker_date_reminder','reminder_form_part5').
             ' <INPUT TYPE="TEXT" NAME="frequency" SIZE="5" VALUE="'.$frequency.'"> '.$GLOBALS['Language']->getText('tracker_include_type','days').
-            '.</TD></TR></TABLE><INPUT TYPE="SUBMIT" NAME="submit_notif_settings" value="'.$GLOBALS['Language']->getText('global', 'btn_update').'"></P></FORM></fieldset><P>'.$GLOBALS['Language']->getText('tracker_include_type','reminder_form_part6',array($field->getLabel())).
-            '<P>'.$GLOBALS['Language']->getText('tracker_include_type','reminder_form_part7',array($field->getLabel())).'</P>'.
+            '.</TD></TR></TABLE><INPUT TYPE="SUBMIT" NAME="submit_notif_settings" value="'.$GLOBALS['Language']->getText('global', 'btn_update').'"></P></FORM></fieldset><P>'.$GLOBALS['Language']->getText('plugin_tracker_date_reminder','reminder_form_part6',array($field->getLabel())).
+            '<P>'.$GLOBALS['Language']->getText('plugin_tracker_date_reminder','reminder_form_part7',array($field->getLabel())).'</P>'.
             '<P>';
         echo $out;
 
