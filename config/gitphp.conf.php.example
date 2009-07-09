@@ -186,6 +186,13 @@ $gitphp_conf['debug'] = FALSE;
 $gitphp_conf['cache'] = FALSE;
 
 /*
+ * cacheexpire
+ * Attempts to automatically expire cache when a new commit renders
+ * it out of date.
+ */
+$gitphp_conf['cacheexpire'] = TRUE;
+
+/*
  * cachelifetime
  * Sets how long a page will be cached, in seconds
  * This will vary greatly depending on how active your projects are.

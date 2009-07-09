@@ -56,6 +56,10 @@
  if ($gitphp_conf['cache']) {
  	$tpl->caching = 2;
 	$tpl->cache_lifetime = $gitphp_conf['cachelifetime'];
+	if ($gitphp_conf['cacheexpire']) {
+		require_once('include/cache.cache_expire.php');
+		cache_expire($gitphp_conf['projectroot'], (isset($_GET['p']) ? $_GET['p'] : null), $git_projects);
+	}
  }
 
 /*
@@ -90,7 +94,12 @@ if ($gitphp_conf['filesearch'])
 	$tpl->assign("filesearch",TRUE);
 
 
- if (isset($_GET['a']) && $_GET['a'] == "opml") {
+ if (isset($_GET['a']) && $_GET['a'] == "expire") {
+ 	require_once('include/cache.cache_expire.php');
+	require_once('include/display.git_message.php');
+	cache_expire(null, null, null, true);
+	git_message("Cache expired", true);
+ } else if (isset($_GET['a']) && $_GET['a'] == "opml") {
 	require_once('include/display.git_opml.php');
 	git_opml($gitphp_conf['projectroot'],$git_projects);
  } else if (isset($_GET['a']) && $_GET['a'] == "project_index") {
