@@ -50,6 +50,14 @@
  }
 
 /*
+ * Caching
+ */
+ if ($gitphp_conf['cache']) {
+ 	$tpl->caching = 2;
+	$tpl->cache_lifetime = $gitphp_conf['cachelifetime'];
+ }
+
+/*
  * Setup global assigns used everywhere (such as header/footer)
  */
  $tpl->assign("stylesheet",$gitphp_conf['stylesheet']);

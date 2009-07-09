@@ -15,18 +15,23 @@ function git_tag($projectroot, $project, $hash)
 {
 	global $tpl;
 
-	$head = git_read_head($projectroot . $project);
-	$tpl->assign("head",$head);
-	$tpl->assign("hash", $hash);
+	$cachekey = sha1($project) . "|" . $hash;
 
-	$tag = git_read_tag($projectroot . $project, $hash);
+	if (!$tpl->is_cached('tag.tpl', $cachekey)) {
 
-	$tpl->assign("tag",$tag);
-	if (isset($tag['author'])) {
-		$ad = date_str($tag['epoch'],$tag['tz']);
-		$tpl->assign("datedata",$ad);
+		$head = git_read_head($projectroot . $project);
+		$tpl->assign("head",$head);
+		$tpl->assign("hash", $hash);
+
+		$tag = git_read_tag($projectroot . $project, $hash);
+
+		$tpl->assign("tag",$tag);
+		if (isset($tag['author'])) {
+			$ad = date_str($tag['epoch'],$tag['tz']);
+			$tpl->assign("datedata",$ad);
+		}
 	}
-	$tpl->display("tag.tpl");
+	$tpl->display('tag.tpl', $cachekey);
 }
 
 ?>

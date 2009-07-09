@@ -13,22 +13,27 @@
 function git_opml($projectroot,$projectlist)
 {
 	global $tpl,$gitphp_conf;
-	$projlist = git_read_projects($projectroot,$projectlist);
-	header("Content-type: text/xml; charset=UTF-8");
-	$tpl->assign("title",$gitphp_conf['title']);
-	$tpl->assign("self",script_url());
-	$opmllist = array();
-	foreach ($projlist as $cat => $plist) {
-		if (is_array($plist)) {
-			foreach ($plist as $i => $proj) {
-				$opmllist[] = $proj;
+
+	$cachekey = sha1(serialize($projectlist));
+
+	if (!$tpl->is_cached('opml.tpl', $cachekey)) {
+		header("Content-type: text/xml; charset=UTF-8");
+		$projlist = git_read_projects($projectroot,$projectlist);
+		$tpl->assign("title",$gitphp_conf['title']);
+		$tpl->assign("self",script_url());
+		$opmllist = array();
+		foreach ($projlist as $cat => $plist) {
+			if (is_array($plist)) {
+				foreach ($plist as $i => $proj) {
+					$opmllist[] = $proj;
+				}
+			} else {
+				$opmllist[] = $plist;
 			}
-		} else {
-			$opmllist[] = $plist;
 		}
+		$tpl->assign("opmllist",$opmllist);
 	}
-	$tpl->assign("opmllist",$opmllist);
-	$tpl->display("opml.tpl");
+	$tpl->display('opml.tpl', $cachekey);
 }
 
 ?>

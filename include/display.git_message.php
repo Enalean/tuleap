@@ -10,12 +10,17 @@
 function git_message($message, $error = FALSE, $standalone = TRUE)
 {
 	global $tpl;
-	$tpl->assign("message",$message);
-	if ($error)
-		$tpl->assign("error", TRUE);
-	if ($standalone)
-		$tpl->assign("standalone", TRUE);
-	$tpl->display("message.tpl");
+
+	$cachekey = sha1($message) . "|" . ($error ? "1" : "0") . "|" . ($standalone ? "1" : "0");
+
+	if (!$tpl->is_cached('message.tpl', $cachekey)) {
+		$tpl->assign("message",$message);
+		if ($error)
+			$tpl->assign("error", TRUE);
+		if ($standalone)
+			$tpl->assign("standalone", TRUE);
+	}
+	$tpl->display('message.tpl', $cachekey);
 }
 
 ?>
