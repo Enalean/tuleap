@@ -34,7 +34,8 @@
      	($_GET['a'] != "blob_plain") &&
      	($_GET['a'] != "blobdiff_plain") &&
      	($_GET['a'] != "rss") &&
-     	($_GET['a'] != "opml"))) {
+     	($_GET['a'] != "opml")
+     	($_GET['a'] != "snapshot"))) {
 	$tpl->load_filter('output','trimwhitespace');
 	$extraoutput = TRUE;
 }
