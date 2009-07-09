@@ -30,7 +30,6 @@ class EacPlugin extends Plugin {
         parent::__construct($id);
         $this->setScope(self::SCOPE_PROJECT);
         $this->_addHook('project_export_entry', 'project_export_entry', false);
-        $this->_addHook('project_data_export_table_users', 'project_data_export_table_users', false);
     }
     
     /**
@@ -38,11 +37,10 @@ class EacPlugin extends Plugin {
      *  @param void
      *  @return void
      */
-         
-    function &getPluginInfo() {
+    function getPluginInfo() {
         if (!is_a($this->pluginInfo, 'EacPluginInfo')) {
             require_once('EacPluginInfo.class.php');
-            $this->pluginInfo =& new EacPluginInfo($this);
+            $this->pluginInfo = new EacPluginInfo($this);
         }
         return $this->pluginInfo;
     }
@@ -53,26 +51,24 @@ class EacPlugin extends Plugin {
      *  @return void
      */   
     function project_export_entry($params) {
+        // Docman perms
         $url  = $this->getPluginPath().'/export_permissions.php?group_id='.$params['group_id'];
-        $params['labels']['plugin_eac']                           = $GLOBALS['Language']->getText('plugin_eac','Export_perms');
-        $params['data_export_links']['plugin_eac']                = $url.'&export=csv';
-        $params['data_export_format_links']['plugin_eac']         = $url.'&export=format';
-        $params['history_export_links']['plugin_eac']             = null;
-        $params['history_export_format_links']['plugin_eac']      = null;
-        $params['dependencies_export_links']['plugin_eac']        = null;
-        $params['dependencies_export_format_links']['plugin_eac'] = null;
-    }
-
-    /**
-     *  hook to display the link to export project list of users
-     *  @param void
-     *  @return void
-     */   
-     
-    function project_data_export_table_users($group_id) {
-        echo '<tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td align="center"><a href="'.$this->getPluginPath().'/export_users_ugroups.php?group_id='.$group_id.'">' .
-                '<b>'.$GLOBALS['Language']->getText('plugin_eac','export_definitions').'</b>' .
-                        '</a></td></tr>';
+        $params['labels']['plugin_eac_docman']                           = $GLOBALS['Language']->getText('plugin_eac','Project_access_permission');
+        $params['data_export_links']['plugin_eac_docman']                = $url.'&export=csv';
+        $params['data_export_format_links']['plugin_eac_docman']         = $url.'&export=format';
+        $params['history_export_links']['plugin_eac_docman']             = null;
+        $params['history_export_format_links']['plugin_eac_docman']      = null;
+        $params['dependencies_export_links']['plugin_eac_docman']        = null;
+        $params['dependencies_export_format_links']['plugin_eac_docman'] = null;
+        
+        // UGroups
+        $params['labels']['plugin_eac_ugroups']                           = $GLOBALS['Language']->getText('plugin_eac','export_definitions');
+        $params['data_export_links']['plugin_eac_ugroups']                = $this->getPluginPath().'/export_users_ugroups.php?group_id='.$params['group_id'];
+        $params['data_export_format_links']['plugin_eac_ugroups']         = null;
+        $params['history_export_links']['plugin_eac_ugroups']             = null;
+        $params['history_export_format_links']['plugin_eac_ugroups']      = null;
+        $params['dependencies_export_links']['plugin_eac_ugroups']        = null;
+        $params['dependencies_export_format_links']['plugin_eac_ugroups'] = null;
     }
 }
 

@@ -1,10 +1,8 @@
 plugin_eac	descriptor_description	Complex view of permissions and access rights
 plugin_eac	descriptor_name	Extract Access Control
 plugin_eac	db_error	data base error 
-plugin_eac	export_definitions	Export Definitions
-plugin_eac	Project_access_permission	Docman : Project Access Permissions
-plugin_eac	Export_perms	Export
-plugin_eac	Show_format	Show Format
+plugin_eac	export_definitions	User Groups definition
+plugin_eac	Project_access_permission	Document Manager Permissions
 plugin_eac	no_group_id	No project was choosen
 plugin_eac	export_format	Project data export
 plugin_eac	perm_exp_format	Docman permission export format
