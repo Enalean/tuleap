@@ -23,6 +23,7 @@
  * 
  */
 require_once('pre.php');
+require_once('../include/Docman_PermissionExport.class.php');
 
 $vGroupId = new Valid_UInt('group_id');
 $vExport = new Valid_WhiteList('export', array('format','csv'));
@@ -33,12 +34,12 @@ if($vGroupId->validate($group_id) && $request->valid($vExport) ) {
         $feedback .= $Language->getText('plugin_eac','error_not_admin');
         exit_not_logged_in();
     }
-    require_once('../include/permsVisitor.class.php');
-    $visitor = new permsVisitor($group_id);        	
+    
+    $permExport = new Docman_PermissionExport($group_id);
     if ($export == 'csv') {
-        $visitor->render();
+        $permExport->toCSV();
     } else { // export = format
-        $visitor->renderDefinitionFormat();
+        $permExport->renderDefinitionFormat();
     }
 }else {
     exit_no_group();

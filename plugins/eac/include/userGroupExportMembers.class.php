@@ -25,13 +25,14 @@
 
 require_once('pre.php');
 require_once('www/project/export/project_export_utils.php');
+require_once('www/project/admin/ugroup_utils.php');
 
 class userGroupExportMembers {   
 
     var $sep; 
     
     public function __construct() {
-    	$this->sep = get_csv_separator();
+        $this->sep = get_csv_separator();
     }
     
     /**
@@ -39,19 +40,23 @@ class userGroupExportMembers {
      * @param  int group_id project id
      * @return null
      */
-    
     public function render($group_id) {
         header('Content-Disposition: filename=export_userGroups_members.csv');
         header('Content-Type: text/csv');
-        echo "User group".$this->sep."User name".PHP_EOL;
-        require_once('www/project/admin/ugroup_utils.php');
-        $ugs  = ugroup_db_get_existing_ugroups($group_id, array($GLOBALS['UGROUP_REGISTERED'], $GLOBALS['UGROUP_PROJECT_MEMBERS'], $GLOBALS['UGROUP_PROJECT_ADMIN']));
-        
+        echo $GLOBALS['Language']->getText('plugin_eac', 'export_user_group');
+        echo $this->sep.$GLOBALS['Language']->getText('plugin_eac', 'export_user_username', array($GLOBALS['sys_name']));
+        echo $this->sep.$GLOBALS['Language']->getText('plugin_eac', 'export_user_realname').PHP_EOL;
+        $ugs = ugroup_db_get_existing_ugroups($group_id, array($GLOBALS['UGROUP_PROJECT_MEMBERS'], $GLOBALS['UGROUP_PROJECT_ADMIN']));
+        $um  = UserManager::instance();
         while($ugrp = db_fetch_array($ugs)) {
-            $sqlUsers  = ugroup_db_get_members($ugrp['ugroup_id']);
+            if ($ugrp['ugroup_id'] <= 100) {
+                $sqlUsers = ugroup_db_get_dynamic_members($ugrp['ugroup_id'], false, $group_id);
+            } else {
+                $sqlUsers = ugroup_db_get_members($ugrp['ugroup_id']);
+            }
             $users = db_query($sqlUsers);
             while ($user = db_fetch_array($users)) {
-                echo $ugrp['name'].$this->sep.$user['user_name'].PHP_EOL;
+                echo util_translate_name_ugroup($ugrp['name']).$this->sep.$user['user_name'].$this->sep.$um->getUserById($user['user_id'])->getRealname().PHP_EOL;
             }
         }
     }

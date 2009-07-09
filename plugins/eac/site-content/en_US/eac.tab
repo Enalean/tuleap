@@ -12,12 +12,11 @@ plugin_eac	format_sample	Sample value
 plugin_eac	format_description	Description
 plugin_eac	format_path	Path
 plugin_eac	format_path_desc	The Item path in docman tree
-plugin_eac	format_user_group	User Group
-plugin_eac	format_user_group_desc	The User Group having the related permission
-plugin_eac	format_read	Read
-plugin_eac	format_read_desc	The permission to read the document
-plugin_eac	format_write	Write
-plugin_eac	format_write_desc	The permission to write on the document
-plugin_eac	format_manage	Manage
-plugin_eac	format_manage_desc	The permission to manage the document
-plugin_eac	error_not_admin	You have no right to do this export. You must be docman admin. 
+plugin_eac	format_type	Type
+plugin_eac	format_type_desc	Kind of item (file, link, wiki,...)
+plugin_eac	format_user_group	User Groups...
+plugin_eac	format_user_group_desc	One user group per column. Each one can have either READ, WRITE or MANAGE permission. An empty row means no access.
+plugin_eac	error_not_admin	You have no right to do this export. You must be docman admin.
+plugin_eac	export_user_group	Group
+plugin_eac	export_user_username	$1 user name
+plugin_eac	export_user_realname	Real name

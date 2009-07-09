@@ -14,12 +14,11 @@ plugin_eac	format_sample	Valeur exemple
 plugin_eac	format_description	Description
 plugin_eac	format_path	Chemin
 plugin_eac	format_path_desc	Le chemin vers l'item
-plugin_eac	format_user_group	Utilisateurs et Groupes
-plugin_eac	format_user_group_desc	L'utilisateur/group qui possède la permission
-plugin_eac	format_read	Read
-plugin_eac	format_read_desc	La permission de lecture du document
-plugin_eac	format_write	Write
-plugin_eac	format_write_desc	La permission d'écriture du document
-plugin_eac	format_manage	Manage
-plugin_eac	format_manage_desc	La permission de gestion du document
+plugin_eac	format_type	Type
+plugin_eac	format_type_desc	Nature de l'item (fichier, lien, wiki, ...)
+plugin_eac	format_user_group	List des groupes d'utilisateurs...
+plugin_eac	format_user_group_desc	Un group par colonne. Chaque groupe peut avoir soit la permission "READ", "WRITE" ou "MANAGE". Une cellule vide signifie que le group correspondant n'as pas accès à la ressource.
 plugin_eac	error_not_admin	Vous n'avez pas les droits pour faire cet export (Administrateurs seulement). 
+plugin_eac	export_user_group	Groupe
+plugin_eac	export_user_username	Nom $1
+plugin_eac	export_user_realname	Nom complet
