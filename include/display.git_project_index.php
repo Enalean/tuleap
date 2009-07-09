@@ -11,16 +11,20 @@
 
 function git_project_index($projectroot, $projectlist)
 {
-	$projlist = git_read_projects($projectroot, $projectlist);
+	global $tpl, $git_projects;
+
 	header("Content-type: text/plain; charset=utf-8");
 	header("Content-Disposition: inline; filename=\"index.aux\"");
-	foreach ($projlist as $cat => $plist) {
-		if (is_array($plist)) {
-			foreach ($plist as $i => $proj)
-				echo $proj . "\n";
-		} else
-			echo $plist . "\n";
+
+	$cachekey = sha1(serialize($projectlist));
+
+	if (!$tpl->is_cached('projectindex.tpl', $cachekey)) {
+		if (isset($git_projects))
+			$tpl->assign("categorized", TRUE);
+		$projlist = git_read_projects($projectroot, $projectlist);
+		$tpl->assign("projlist", $projlist);
 	}
+	$tpl->display('projectindex.tpl', $cachekey);
 }
 
 ?>
