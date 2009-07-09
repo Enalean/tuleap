@@ -176,7 +176,7 @@ class Docman_WikiController extends Docman_Controller {
         }
 
         // TODO: find another way to return a value. 
-        // CodeX_Request->params should not be public
+        // Codendi_Request->params should not be public
         if($canWrite) { // User can edit the wiki page.
             $this->request->params['response'] = true;
         } else {

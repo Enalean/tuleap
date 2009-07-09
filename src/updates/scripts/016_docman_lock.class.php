@@ -1,5 +1,5 @@
 <?php
-require_once 'CodeXUpgrade.class.php';
+require_once 'CodendiUpgrade.class.php';
 
 /**
  * Add table to keep locked items.

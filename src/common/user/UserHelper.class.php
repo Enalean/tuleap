@@ -224,14 +224,14 @@ class UserHelper {
      * @return String
      */
     function getLinkOnUserFromUserId($user_id) {
-        $hp = CodeX_HTMLPurifier::instance();
+        $hp = Codendi_HTMLPurifier::instance();
         $um = $this->_getUserManager();
         $user = $um->getUserById($user_id);
         if($user && !$user->isNone()) {
             return '<a href="/users/'.urlencode($user->getName()).'">'.$hp->purify($this->getDisplayNameFromUser($user), CODEX_PURIFIER_CONVERT_HTML).'</a>';
         } else {
             $username = $user ? $user->getName() : '';
-            return  $hp->purify($username, CODEX_PURIFIER_CONVERT_HTML) ;
+            return  $hp->purify($username, CODENDI_PURIFIER_CONVERT_HTML) ;
         }
     }
 
