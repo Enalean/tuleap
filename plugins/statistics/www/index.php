@@ -30,6 +30,11 @@ if (!$p || !$pluginManager->isPluginAvailable($p)) {
     header('Location: '.get_server_url());
 }
 
+// Grant access only to site admin
+if (!UserManager::instance()->getCurrentUser()->isSuperUser()) {
+    header('Location: '.get_server_url());
+}
+
 $title = 'Various statistics';
 $GLOBALS['HTML']->header(array('title' => $title));
 echo '<h1>'.$title.'</h1>';

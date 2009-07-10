@@ -31,6 +31,11 @@ if (!$p || !$pluginManager->isPluginAvailable($p)) {
     header('Location: '.get_server_url());
 }
 
+// Grant access only to site admin
+if (!UserManager::instance()->getCurrentUser()->isSuperUser()) {
+    header('Location: '.get_server_url());
+}
+
 // Ajax response needed to fill the list of days per month used in simple search
 if ($request->get('method') == 'daylist') {
     echo '<option value="0">All</option>'.PHP_EOL;

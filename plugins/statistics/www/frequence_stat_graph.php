@@ -1147,6 +1147,11 @@ if (!$p || !$pluginManager->isPluginAvailable($p)) {
     header('Location: '.get_server_url());
 }
 
+// Grant access only to site admin
+if (!UserManager::instance()->getCurrentUser()->isSuperUser()) {
+    header('Location: '.get_server_url());
+}
+
 $sampleFactory = new SampleFactory();
 
 $request = HTTPRequest::instance();
