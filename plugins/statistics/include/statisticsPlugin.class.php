@@ -24,13 +24,13 @@
 require_once 'common/plugin/Plugin.class.php';
 
 class StatisticsPlugin extends Plugin {
-	
-	function __construct($id) {
-		parent::__construct($id);
+
+    function __construct($id) {
+        parent::__construct($id);
         $this->_addHook('site_admin_option_hook', 'site_admin_option_hook', false);
-        $this->_addHook('session_set_new', 'session_set_new', false);
-	}
-	
+        $this->_addHook('codendi_daily_start', 'codendi_daily_start', false);
+    }
+
     function getPluginInfo() {
         if (!$this->pluginInfo instanceof StatisticsPluginInfo) {
             include_once('StatisticsPluginInfo.class.php');
@@ -43,9 +43,21 @@ class StatisticsPlugin extends Plugin {
         echo '<li><a href="'.$this->getPluginPath().'/">Statistics</a></li>';
     }
     
-    function session_set_new($params) {
+    function codendi_daily_start($params) {
+        $max = 0;
+        $sql = 'SELECT MAX(time) as max FROM plugin_statistics_user_session';
+        $res = db_query($sql);
+        var_dump($sql);
+        if ($res && db_numrows($res) == 1) {
+            $row = db_fetch_array($res);
+            if($row['max'] != null) {
+                $max = $row['max']; 
+            }
+        }
+        
         $sql = 'INSERT INTO plugin_statistics_user_session (user_id, time)'.
-               ' VALUES ('.db_ei($params['user_id']).','.db_ei($params['time']).')';
+               ' SELECT user_id, time FROM session WHERE time > '.$max;
+        var_dump($sql);
         db_query($sql);
     }
 }
