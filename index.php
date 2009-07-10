@@ -98,7 +98,7 @@ if ($gitphp_conf['filesearch'])
  	require_once('include/cache.cache_expire.php');
 	require_once('include/display.git_message.php');
 	cache_expire(null, null, null, true);
-	git_message("Cache expired", true);
+	git_message("Cache expired");
  } else if (isset($_GET['a']) && $_GET['a'] == "opml") {
 	require_once('include/display.git_opml.php');
 	git_opml($gitphp_conf['projectroot'],$git_projects);
