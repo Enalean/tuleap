@@ -38,26 +38,37 @@ class StatisticsPlugin extends Plugin {
         }
         return $this->pluginInfo;
     }
-    
+
     function site_admin_option_hook($params) {
         echo '<li><a href="'.$this->getPluginPath().'/">Statistics</a></li>';
     }
-    
+
+    /**
+     * Hook.
+     *
+     * Each day, load sessions info from elapsed day.
+     * We need to do that because sessions are deleted from DB when user logout
+     * or when session expire.
+     *
+     * This not perfect because with very short session (few hours for instance)
+     * do data will survive in this session table.
+     *
+     * @param $params
+     * @return void
+     */
     function codendi_daily_start($params) {
         $max = 0;
         $sql = 'SELECT MAX(time) as max FROM plugin_statistics_user_session';
         $res = db_query($sql);
-        var_dump($sql);
         if ($res && db_numrows($res) == 1) {
             $row = db_fetch_array($res);
             if($row['max'] != null) {
-                $max = $row['max']; 
+                $max = $row['max'];
             }
         }
-        
+
         $sql = 'INSERT INTO plugin_statistics_user_session (user_id, time)'.
                ' SELECT user_id, time FROM session WHERE time > '.$max;
-        var_dump($sql);
         db_query($sql);
     }
 }
