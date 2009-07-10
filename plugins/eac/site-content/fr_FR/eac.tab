@@ -9,6 +9,8 @@ plugin_eac	no_group_id	Le projet est invalide
 plugin_eac	export_format	Export des données du projet
 plugin_eac	perm_exp_format	Format d'export des données du Docman
 plugin_eac	perm_exp_format_msg	Le format d'export des données du Docman
+plugin_eac	format_id	Id
+plugin_eac	format_id_desc	Document id
 plugin_eac	format_label	Label
 plugin_eac	format_sample	Valeur exemple
 plugin_eac	format_description	Description

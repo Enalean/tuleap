@@ -72,13 +72,15 @@ class Docman_PermissionExport {
         $sep = get_csv_separator();
         header('Content-Disposition: filename=export_permissions.csv');
         header('Content-Type: text/csv');
+        echo $GLOBALS['Language']->getText('plugin_eac','format_id').$sep;
         echo $GLOBALS['Language']->getText('plugin_eac','format_path').$sep;
         echo $GLOBALS['Language']->getText('plugin_eac','format_type').$sep;
         foreach($this->getUgroups() as $id => $name) {
             echo $name.$sep;
         }
         echo PHP_EOL;
-        foreach($output as $row) {
+        foreach($output as $itemid => $row) {
+            echo $itemid.$sep;
             echo tocsv($row['title']).$sep;
             echo $this->itemTypeToString($row['type']).$sep;
             foreach($this->getUgroups() as $id => $name) {
@@ -143,7 +145,13 @@ class Docman_PermissionExport {
         );
         echo  html_build_list_table_top ($title_arr);
         $i = 0;
-        
+
+        echo "<tr class='". util_get_alt_row_color($i++) ."'>";
+        echo "<td><b>".$GLOBALS['Language']->getText('plugin_eac','format_id')."</b></td>";
+        echo "<td>53</td>";
+        echo "<td>".$GLOBALS['Language']->getText('plugin_eac','format_id_desc')."</td>";
+        echo "</tr>";
+
         echo "<tr class='". util_get_alt_row_color($i++) ."'>";
         echo "<td><b>".$GLOBALS['Language']->getText('plugin_eac','format_path')."</b></td>";
         echo "<td>/My Folder/My Document</td>";

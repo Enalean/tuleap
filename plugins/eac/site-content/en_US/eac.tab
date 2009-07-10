@@ -7,6 +7,8 @@ plugin_eac	no_group_id	No project was choosen
 plugin_eac	export_format	Project data export
 plugin_eac	perm_exp_format	Docman permission export format
 plugin_eac	perm_exp_format_msg	Docman permission export format
+plugin_eac	format_id	Id
+plugin_eac	format_id_desc	Document id
 plugin_eac	format_label	Label
 plugin_eac	format_sample	Sample value
 plugin_eac	format_description	Description
