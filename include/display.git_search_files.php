@@ -17,7 +17,7 @@ function git_search_files($projectroot, $project, $hash, $search, $page = 0)
 {
 	global $tpl,$gitphp_conf;
 
-	$cachekey = sha1($project) . "|" . $hash . "|" . "filesearch" . "|" . sha1($search) . "|" . $page;
+	$cachekey = sha1($project) . "|" . $hash . "|" . "filesearch" . "|" . sha1($search) . "|" . (isset($page) ? $page : 0);
 
 	if (!$tpl->is_cached('searchfiles.tpl', $cachekey)) {
 

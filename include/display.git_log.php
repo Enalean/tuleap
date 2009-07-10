@@ -17,7 +17,7 @@ function git_log($projectroot,$project,$hash,$page)
 {
 	global $tpl;
 
-	$cachekey = sha1($project) . "|" . $hash . "|" . $page;
+	$cachekey = sha1($project) . "|" . $hash . "|" . (isset($page) ? $page : 0);
 
 	if (!$tpl->is_cached('log.tpl', $cachekey)) {
 		$head = git_read_head($projectroot . $project);
