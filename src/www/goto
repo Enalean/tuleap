@@ -30,7 +30,12 @@ if ((!$request->valid($vKey))
 
 $keyword=$request->get('key');
 $args=array();
-$args =explode("/",$request->get('val'));
+
+if ($keyword=='wiki') {
+    $args[]=$request->get('val');
+} else {
+    $args=explode("/",$request->get('val'));
+}
 
 $ref=& $reference_manager->loadReferenceFromKeywordAndNumArgs($keyword,$group_id,count($args));
 if (!$ref) {
@@ -117,7 +122,7 @@ if ($request->isAjax()) {
             $rev_id = $request->get('val');
             $result = svn_data_get_revision_detail($group_id, 0, $rev_id);
             $date = format_date($GLOBALS['Language']->getText('system', 'datefmt'), db_result($result, 0, 'date'));
-            $list_log = '<pre>'.util_make_links(util_line_wrap(db_result($result, 0, 'description')), $group_id).'</pre>';
+            $list_log = '<pre>'.util_line_wrap(db_result($result, 0, 'description'), $group_id).'</pre>';
             echo '<table>';
             echo ' <tr>';
             echo '  <td><strong>' . $GLOBALS['Language']->getText('svn_utils','date') . ':</strong></td>';
