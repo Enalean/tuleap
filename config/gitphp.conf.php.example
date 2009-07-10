@@ -178,10 +178,7 @@ $gitphp_conf['debug'] = FALSE;
 /*
  * cache
  * Turns on smarty caching
- * Be very careful with this!  Due to varying cache lifetimes,
- * you could end up seeing a mix of pages from before and after
- * a commit!
- * If in doubt, leave this off
+ * Be careful with this.  If in doubt, leave it off
  */
 $gitphp_conf['cache'] = FALSE;
 
@@ -189,20 +186,25 @@ $gitphp_conf['cache'] = FALSE;
  * cacheexpire
  * Attempts to automatically expire cache when a new commit renders
  * it out of date.
+ * This is a good option for most users because it ensures the cache
+ * is always up to date and users are seeing correct information,
+ * although it is a slight performance hit.
+ * However, if your commits are coming in so quickly that the cache
+ * is constantly being expired, turn this off.
  */
 $gitphp_conf['cacheexpire'] = TRUE;
 
 /*
  * cachelifetime
  * Sets how long a page will be cached, in seconds
- * This will vary greatly depending on how active your projects are.
- * If you set it too high, commits that happen close to one another
- * will appear to be mixed together as the user navigates between
- * pages, depending on when each page was previously accessed and
- * its current cache lifetime.
- * If in doubt, set it to something extremely low, like 3 seconds.
+ * If you are automatically expiring the cache
+ * (see the 'cacheexpire' option above), then this can be set
+ * relatively high - 3600 seconds (1 hour) or even longer.
+ * -1 means no timeout.
+ * If you have turned cacheexpire off because of too many
+ * cache expirations, set this low, like 3-5 seconds.
  */
-$gitphp_conf['cachelifetime'] = 3;
+$gitphp_conf['cachelifetime'] = 3600;
 
 /*
  * git_projects
