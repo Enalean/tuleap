@@ -744,7 +744,7 @@ plugin_docman	docman_wiki_perms_label	Permissions controlled by documents manage
 plugin_docman	docman_wiki_page_locked	$1 locked this page. You cannot modify it until the lock owner or a document manager release the lock.
 plugin_docman	docman_wiki_page_locked_elsewhere	This wiki page is already locked through "$1".
 
-plugin_docman	widget_categ_label	Document Manager
+widget_categ_label	plugin_docman	Document Manager
 plugin_docman	widget_description_my_docman	List the documents under review.
 plugin_docman	widget_description_embedded	Allow you to view an embedded documents directly in the widget.
 plugin_docman	widget_title_embedded	Docman Viewer
