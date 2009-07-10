@@ -4,7 +4,7 @@ require_once 'CodendiUpgrade.class.php';
 /**
  * Add table to keep locked items.
  */
-class Update_016 extends CodeXUpgrade {
+class Update_016 extends CodendiUpgrade {
 
     function _process() {
         echo "Execution of script : ".get_class($this);
