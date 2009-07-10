@@ -194,7 +194,7 @@ class Docman_LockFactory {
      * @return Docman_LockDao
      */
     function getDao() {
-        return new Docman_LockDao(CodexDataAccess::instance());
+        return new Docman_LockDao(CodendiDataAccess::instance());
     }
 }
 
