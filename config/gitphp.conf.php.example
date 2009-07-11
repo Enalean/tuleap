@@ -202,7 +202,7 @@ $gitphp_conf['cacheexpire'] = TRUE;
  * relatively high - 3600 seconds (1 hour) or even longer.
  * -1 means no timeout.
  * If you have turned cacheexpire off because of too many
- * cache expirations, set this low, like 3-5 seconds.
+ * cache expirations, set this low (5-10 seconds).
  */
 $gitphp_conf['cachelifetime'] = 3600;
 
