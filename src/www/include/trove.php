@@ -128,7 +128,8 @@ function trove_project_categorized($group_id) {
         .'FROM trove_cat,trove_group_link '
         .'WHERE trove_cat.trove_cat_id=trove_group_link.trove_cat_id '
         .'AND trove_group_link.group_id='.db_ei($group_id).' '
-        .'ORDER BY trove_cat.fullpath');
+        .'ORDER BY trove_cat.trove_cat_id '
+        .'LIMIT 1');
     if (db_numrows($res_trovecat) < 1) {
         return false;
     } else {
