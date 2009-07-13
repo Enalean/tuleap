@@ -1382,14 +1382,14 @@ function util_check_allowed_anonymous_url($script_name) {
     $enable_anonymous_url = false;
     $allowed_scripts = array();
     // Customizable settings for anonymous Url:
-    include($GlOBALS['Language']->getContent('include/allowed_url_anonymously','en_US'));
+    include($GLOBALS['Language']->getContent('include/allowed_url_anonymously','en_US'));
     // End of customization
     if ($enable_anonymous_url == false) {
         return false;
     }
     $allowed = false;
     foreach ($allowed_scripts as $key => $value) {
-        if (substr($script_name,0,strlen($value)) == $value){
+        if (strncmp($script_name, $value ,strlen($value))){
             return true;
         }
     }
