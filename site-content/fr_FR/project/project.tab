@@ -1,5 +1,5 @@
 #
-# Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+# Copyright (c) Xerox Corporation, CodeX, Codendi 2007-2009.
 # This file is licensed under the GNU General Public License version 2. See the file COPYING.
 #
 #-----------------------------------------------
@@ -92,7 +92,6 @@ project_admin_editservice	conf_inherited	Configuration héritée
 project_admin_editservice	conf_inherited_no	-
 project_admin_editservice	conf_inherited_partially	Partiellement
 project_admin_editservice	conf_inherited_yes	Oui
-#
 #-----------------------------------------------
 # Script: SF/www/project/admin/editugroup.php
 #
@@ -843,6 +842,7 @@ project_showdetails	proj_details	Information détaillée sur le projet
 project_showdetails	no_detail	Aucune information détaillée disponible pour ce projet
 project_showdetails	proj_not_found	Erreur - Projet introuvable
 project_showdetails	back_main	[Retour au sommaire]
+project_showdetails	references	Patrons de référence
 #
 #-----------------------------------------------
 # Script: 

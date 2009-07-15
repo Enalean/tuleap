@@ -6,8 +6,51 @@
 //
 // 
 require_once('pre.php');
+require_once('common/include/ReferenceManager.class.php');
 
 $hp = Codendi_HTMLPurifier::instance();
+
+function getReferenceRow($ref, $row_num) {
+    $html = '';
+    
+    if ($ref->isActive() && $ref->getId() != 100) {
+        if (strpos($ref->getDescription(),"_desc_key")!==false) {
+            $description = $GLOBALS['Language']->getText('project_reference',$ref->getDescription());
+        } else {
+            $description = $ref->getDescription();
+        }
+                
+        $html .= '<TR class="'. util_get_alt_row_color($row_num) .'">';
+        $html .= '<TD>'.$ref->getKeyword().'</TD>';
+        $html .= '<TD>'.$description.'</TD>';
+        $html .= '<TD>'.$ref->getLink().'</TD>';
+        $html .= '</TR>';
+    }
+    
+    return $html;
+}
+    
+function getReferencesTable($groupId) {
+    $html = '';
+    $html .= '<h3>'.$GLOBALS['Language']->getText('project_showdetails','references').'</h3>';
+    
+    $title_arr[]=$GLOBALS['Language']->getText('project_reference','r_keyword');
+    $title_arr[]=$GLOBALS['Language']->getText('project_reference','r_desc');
+    $title_arr[]=$GLOBALS['Language']->getText('project_reference','r_link');
+    $html .= html_build_list_table_top($title_arr, false, false, true);
+    
+    $referenceManager =& ReferenceManager::instance();
+    $references =& $referenceManager->getReferencesByGroupId($groupId); // References are sorted by scope first
+    $row_num = 0;
+    foreach ($references as $ref) {
+        $html .= getReferenceRow($ref, $row_num);
+        $row_num++;
+    }
+        
+    $html .= '</table>';
+    return $html;
+}
+
 // Check if group_id is valid
 $vGroupId = new Valid_GroupId();
 $vGroupId->required();
@@ -37,16 +80,14 @@ if (!$result || db_numrows($result) < 1) {
 $license_other = db_result($result,0,'license_other');
 
 $currentproject->displayProjectsDescFieldsValue();	
-	
-?>
-
-<?php
 
 if ($license_other != '') {
 	print '<P>';
 	print '<b><u>'.$Language->getText('project_admin_editgroupinfo','license_comment').'</u></b>';
 	print '<P>'.$hp->purify(util_unconvert_htmlspecialchars($license_other), CODENDI_PURIFIER_BASIC, $group_id);
 }
+
+echo getReferencesTable($group_id);
 
 print '<P><a href="/project/?group_id='.$group_id .'"> '.$Language->getText('project_showdetails','back_main').' </a>';
 
