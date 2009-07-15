@@ -36,7 +36,8 @@
 require_once('pre.php');
 require_once('timezones.php');
 require_once('account.php');
-require_once('../include/UserLdap.class.php');
+require_once('../include/LDAP_UserManager.class.php');
+require_once('common/valid/ValidFactory.class.php');
 
 function welcome_exit_error($title,$text) {
     global $HTML,$Language,$pv;
@@ -50,69 +51,74 @@ function welcome_exit_error($title,$text) {
 	exit;
 }
 
-function update_account($user_id, $tz='None', $mail_site=0, $mail_va=0) {
-    global $TZs;
-
-    $_user_id = (int) $user_id;
-    if(!in_array($tz, $TZs)) {
-        $_tz = 'None';
-    }
-    else {
-        $_tz = $tz;
-    }
-    
-    $_mail_site = (int) $mail_site;
-    $_mail_va = (int) $mail_va;
-
-    $sql = 'UPDATE user SET '
-        . ' mail_siteupdates='.$_mail_site
-        . ', mail_va='.$_mail_va
-        . ', timezone="'.$_tz.'"'
-        . ' WHERE user_id='.$_user_id;
-
-    $res = db_query($sql);
-    if (!$res) {
-        return false;
-    }
-    return true;    
+// LDAP plugin enabled
+$pluginManager = PluginManager::instance();
+$ldapPlugin = $pluginManager->getPluginByName('ldap');
+if (!$ldapPlugin || !$pluginManager->isPluginAvailable($ldapPlugin)) {
+    $GLOBALS['Response']->redirect('/my');
 }
 
 
-$user_id = user_getid();
+$um = UserManager::instance();
+$currentUser = $um->getCurrentUser();
+$user_id = $currentUser->getId();
 
-if($_POST['action'] == 'update_reg') {   
-    if ($_POST['timezone'] == 'None') {
+if($request->isPost() && $request->existAndNonEmpty('action')) {
+    if(!is_valid_timezone($request->get('timezone'))) {
         welcome_exit_error($Language->getText('plugin_ldap', 'welcome_error_up'),
                            $Language->getText('plugin_ldap', 'welcome_err_notz'));        
     }
-
-    // Update DB
-    if(!update_account($user_id,
-                       $_POST['timezone'],
-                       $_POST['form_mail_site'],
-                       $_POST['form_mail_va'])) {
-        welcome_exit_error($Language->getText('plugin_ldap', 'welcome_error_up'),
-                           $Language->getText('plugin_ldap', 'welcome_error_up_expl', array(db_error())));
+    
+    $mailSite = 0;
+    $vMailSite = new Valid_WhiteList('form_mail_site', array('1'));
+    $vMailSite->required();
+    if($request->valid($vMailSite)) {
+        $mailSite = 1;
     }
-            
+    
+    $mailVa = 0;
+    $vMailVa = new Valid_WhiteList('form_mail_va', array('1'));
+    $vMailVa->required();
+    if($request->valid($vMailVa)) {
+        $mailVa = 1;
+    }
+    
+    if ($currentUser) {
+        $currentUser->setTimezone($timezone);
+        $currentUser->setMailVA($mailVa);
+        $currentUser->setMailSiteUpdates($mailSite);
+        $currentUser->setUnixStatus('A');
+        if ($um->updateDb($currentUser)) {
+            $ldapUserDao = new LDAP_UserDao(CodendiDataAccess::instance());
+            $ldapUserDao->setLoginDate($user_id, $_SERVER['REQUEST_TIME']);
+        } else {
+            welcome_exit_error($Language->getText('plugin_ldap', 'welcome_error_up'),
+                               $Language->getText('plugin_ldap', 'welcome_error_up_expl', array('')));
+        }
+    }
     account_redirect_after_login();
 }
 else {
+    $pv = 0;
+    $vPv = new Valid_Pv();
+    if($request->valid($vPv)) {
+        $pv = $request->get('pv');
+    }
+    $timezone = $request->existAndNonEmpty('timezone') ? $request->get('timezone') : 'None';
 
-    $timezone = (isset($HTTP_POST_VARS['timezone'])?stripslashes($timezone):'None');
-    $title_type = $GLOBALS['sys_auth_type'];
-
-    $lr =& UserLdap::getLdapResultSetFromUserId(user_getid());
+    $ldapUm = new LDAP_UserManager($ldapPlugin->getLdap());
+    $lr = $ldapUm->getLdapFromUserId($user_id);
     $ldap_name = $lr->getLogin();
 
     $star = '<span class="highlight"><big>*</big></span>';
 
-    if (isset($pv) && $pv == 2)  
+    if ($pv == 2)  {
         $HTML->pv_header(array());
-    else	
-	$HTML->header(array('title'=>$Language->getText('plugin_ldap', 'welcome_title', array($lr->getCommonName()))
-                        ,'registeration_process' => true));
-
+    } else {
+        $HTML->header(array('title'=>$Language->getText('plugin_ldap', 'welcome_title', array($lr->getCommonName())),
+                            'registeration_process' => true));
+    }
+    
     print '<h2>';
     print $Language->getText('plugin_ldap', 'welcome_title', array($lr->getCommonName()));
     print '</h2>';
@@ -133,7 +139,7 @@ else {
     }
    
     print '
-<form name="welcome" action="/plugins/ldap/welcome.php" method="post">
+<form name="welcome" action="'.$ldapPlugin->getPluginPath().'/welcome.php" method="post">
 <input type="hidden" name="return_to" value="'.$return_to.'">
 <input type="hidden" name="action" value="update_reg">
 <input type="hidden" name="pv" value="'.$pv.'">
@@ -163,11 +169,11 @@ else {
 </tr>
 <tr>
 <td>'.$Language->getText('plugin_ldap', 'welcome_email').'</td>
-<td><strong>'.user_getemail(user_getid()).'</strong></td>
+<td><strong>'.$currentUser->getEmail().'</strong></td>
 </tr>
 <tr>
 <td>'.$Language->getText('plugin_ldap', 'welcome_codendi_login', array($GLOBALS['sys_name'])).'</td>
-<td>'.user_getname(user_getid()).'<br>
+<td>'.$currentUser->getUserName().'<br>
 '.$Language->getText('plugin_ldap', 'welcome_codendi_login_j', array($GLOBALS['sys_name'])).'
 </td>
 </tr>
@@ -175,6 +181,6 @@ else {
 
     print '</fieldset>';    
 
-    (isset($pv) && $pv == 2) ? $HTML->pv_footer(array()) : $HTML->footer(array());
+    ($pv == 2) ? $HTML->pv_footer(array()) : $HTML->footer(array());
 }
 ?>

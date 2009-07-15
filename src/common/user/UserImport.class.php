@@ -80,21 +80,20 @@ class UserImport extends Error {
 
     /**
      * Insert the imported users into the db
-     * @param array parsed_users: array of the form (column_number => login name) containing
+     * @param array parsed_users: array of the form (column_number => user id) containing
      *                            all the users parsed from import file
      * @return true if parse ok, false if errors occurred
      */
     function updateDB($parsed_users) {
-        //add users to the project
-        for ($i=0;$i<count($parsed_users);$i++) {
-            $res = account_add_user_to_group($this->group_id, $parsed_users[$i]);
-    
-            if (!$res) {
-                return false;
-                exit;
-            }    
+        $res = true;
+        $um = UserManager::instance();
+        foreach($parsed_users as $user_id) {
+            $user = $um->getUserById($user_id);
+            if ($user) {
+                $res = $res & account_add_user_obj_to_group($this->group_id, $user);
+            }
         }
-        return true;
+        return $res;
     }
 
 }

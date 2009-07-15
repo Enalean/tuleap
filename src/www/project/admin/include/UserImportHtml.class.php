@@ -103,7 +103,7 @@ class UserImportHtml extends UserImport {
             <INPUT TYPE="HIDDEN" NAME="mode" VALUE="import">';
         
         foreach ($parsed_users as $current_user) {
-            echo '<INPUT TYPE="HIDDEN" NAME="parsed_users[]" VALUE="'.$current_user->getName().'">';
+            echo '<INPUT TYPE="HIDDEN" NAME="parsed_users[]" VALUE="'.$current_user->getId().'">';
         }
     
         echo '</FORM><A href="/project/admin/userimport.php?group_id='.$this->group_id.'"> ['.$Language->getText('global','back').']</A>';

@@ -278,44 +278,14 @@ class BackendSVN extends Backend {
         }
 
         $fp = fopen($svnaccess_file_new, 'w');
+
+        // Codendi specifc
         fwrite($fp, "$default_block_start");
-        fwrite($fp, "[groups]\n");
-
-        // Special case for project members
-        fwrite($fp, "members = ");
-        $members_id_array=$project->getMembersUserNames();
-        $first=true;
-        foreach ($members_id_array as $member) {
-            if (!$first) {
-                fwrite($fp, ', ');
-            }
-            $first=false;
-            fwrite($fp, strtolower($member['user_name']));
-        }
-        fwrite($fp, "\n");
-
-
-        // Get all static ugroups
-        $ugroup_dao = $this->getUGroupDao();
-        $dar = $ugroup_dao->searchByGroupId($group_id);
-        foreach ($dar as $row) {
-            $ugroup = $this->getUGroupFromRow($row);
-            // User names must be in lowercase
-            $members_list = strtolower(implode(", ", $ugroup->getMembersUserName()));
-            if ($ugroup->getName() && $members_list) {
-                fwrite($fp, $ugroup->getName()." = ".$members_list."\n");
-            }
-        }
-        fwrite($fp, "\n");
-        fwrite($fp, "[/]\n");
-        $is_private = !$project->isPublic() || $project->isSVNPrivate();
-        if ($is_private) {
-            fwrite($fp, "* = \n");
-        } else {
-            fwrite($fp, "* = r\n");
-        }
-        fwrite($fp, "@members = rw\n");
+        fwrite($fp, $this->getSVNAccessGroups($project));
+        fwrite($fp, $this->getSVNAccessRootPathDef($project));
         fwrite($fp, "$default_block_end");
+
+        // Custom permissions
         if ($custom_perms) {
             fwrite($fp, $custom_perms);
         }
@@ -331,6 +301,83 @@ class BackendSVN extends Backend {
         chmod("$svnaccess_file", 0775);
         
         return true;
+    }
+
+    /**
+     * SVNAccessFile groups definitions
+     *
+     * @param Project $project
+     * @return String
+     */
+    function getSVNAccessGroups($project) {
+        $conf = "[groups]\n";
+        $conf .= $this->getSVNAccessProjectMembers($project);
+        $conf .= $this->getSVNAccessUserGroupMembers($project);
+        $conf .= "\n";
+        return $conf;
+    }
+
+    /**
+     * SVNAccessFile project members group definition
+     *
+     * User names must be in lowercase
+     *
+     * @param Project $project
+     *
+     * @return String
+     */
+    function getSVNAccessProjectMembers($project) {
+        $list  = "";
+        $first = true;
+        foreach ($project->getMembersUserNames() as $member) {
+            if (!$first) {
+                $list .= ', ';
+            }
+            $first = false;
+            $list .= strtolower($member['user_name']);
+        }
+        return "members = ".$list."\n";
+    }
+
+    /**
+     * SVNAccessFile ugroups definitions
+     *
+     * @param Project $project
+     *
+     * @return String
+     */
+    function getSVNAccessUserGroupMembers($project) {
+        $conf = "";
+        $ugroup_dao = $this->getUGroupDao();
+        $dar = $ugroup_dao->searchByGroupId($project->getId());
+        foreach ($dar as $row) {
+            $ugroup = $this->getUGroupFromRow($row);
+            // User names must be in lowercase
+            $members_list = strtolower(implode(", ", $ugroup->getMembersUserName()));
+            if ($ugroup->getName() && $members_list) {
+                $conf .= $ugroup->getName()." = ".$members_list."\n";
+            }
+        }
+        $conf .= "\n";
+        return $conf;
+    }
+
+    /**
+     * SVNAccessFile definition for repository root
+     *
+     * @param Project $project
+     *
+     * @return String
+     */
+    function getSVNAccessRootPathDef($project) {
+        $conf = "[/]\n";
+        if (!$project->isPublic() || $project->isSVNPrivate()) {
+            $conf .= "* = \n";
+        } else {
+            $conf .= "* = r\n";
+        }
+        $conf .= "@members = rw\n";
+        return $conf;
     }
 
     /**
@@ -379,28 +426,8 @@ class BackendSVN extends Backend {
         $service_dao = $this->_getServiceDao();
         $dar = $service_dao->searchActiveUnixGroupByUsedService('svn');
         foreach ($dar as $row) {
-
-            // Replace double quotes by single quotes in project name (conflict with Apache realm name)
-            $group_name = strtr($row['group_name'], "\"", "'");
-
             // Write repository definition
-            fwrite($fp, "<Location /svnroot/".$row['unix_group_name'].">\n");
-            fwrite($fp, "    DAV svn\n");
-            fwrite($fp, "    SVNPath ".$GLOBALS['svn_prefix']."/".$row['unix_group_name']."\n");
-            fwrite($fp, "    AuthzSVNAccessFile ".$GLOBALS['svn_prefix']."/".$row['unix_group_name']."/.SVNAccessFile\n");
-            fwrite($fp, "    Require valid-user\n");
-            fwrite($fp, "    AuthType Basic\n");
-            fwrite($fp, "    AuthName \"Subversion Authorization (".$group_name.")\"\n");
-            fwrite($fp, "    AuthMYSQLEnable on\n");
-            fwrite($fp, "    AuthMySQLUser ".$GLOBALS['sys_dbauth_user']."\n");
-            fwrite($fp, "    AuthMySQLPassword ".$GLOBALS['sys_dbauth_passwd']."\n");
-            fwrite($fp, "    AuthMySQLDB ".$GLOBALS['sys_dbname']."\n");
-            fwrite($fp, "    AuthMySQLUserTable \"user, user_group\"\n");
-            fwrite($fp, "    AuthMySQLNameField user.user_name\n");
-            fwrite($fp, "    AuthMySQLPasswordField user.unix_pw\n");
-            fwrite($fp, "    AuthMySQLUserCondition \"(user.status='A' or (user.status='R' AND user_group.user_id=user.user_id and user_group.group_id=".$row['group_id']."))\"\n");
-            fwrite($fp, "    SVNIndexXSLT \"/svn/repos-web/view/repos.xsl\"\n");
-            if (!fwrite($fp, "</Location>\n\n")) {
+            if (!fwrite($fp, $this->getProjectSVNApacheConf($row))) {
                 $this->log("Error while writing to $svn_root_file_new", Backend::LOG_ERROR);
                 return false;
             }
@@ -416,8 +443,49 @@ class BackendSVN extends Backend {
         return $this->installNewFileVersion($svn_root_file_new, $svn_root_file, $svn_root_file_old, true);
     }
 
+    /**
+     * Replace double quotes by single quotes in project name (conflict with Apache realm name)
+     * 
+     * @param String $str
+     * @return String
+     */
+    function escapeStringForApacheConf($str) {
+        return strtr($str, "\"", "'");
+    }
+    
+    protected function getProjectSVNApacheConf($row) {
+        $conf = '';
+        $conf .= "<Location /svnroot/".$row['unix_group_name'].">\n";
+        $conf .= "    DAV svn\n";
+        $conf .= "    SVNPath ".$GLOBALS['svn_prefix']."/".$row['unix_group_name']."\n";
+        $conf .= "    SVNIndexXSLT \"/svn/repos-web/view/repos.xsl\"\n";
+        $conf .= $this->getProjectSVNApacheConfAuthz($row);
+        $conf .= $this->getProjectSVNApacheConfAuth($row);
+        $conf .= "</Location>\n\n";
+        return $conf;
+    }
 
+    protected function getProjectSVNApacheConfAuth($row) {
+        $conf = '';
+        $conf .= "    Require valid-user\n";
+        $conf .= "    AuthType Basic\n";
+        $conf .= "    AuthName \"Subversion Authorization (".$this->escapeStringForApacheConf($row['group_name']).")\"\n";
+        $conf .= "    AuthMYSQLEnable on\n";
+        $conf .= "    AuthMySQLUser ".$GLOBALS['sys_dbauth_user']."\n";
+        $conf .= "    AuthMySQLPassword ".$GLOBALS['sys_dbauth_passwd']."\n";
+        $conf .= "    AuthMySQLDB ".$GLOBALS['sys_dbname']."\n";
+        $conf .= "    AuthMySQLUserTable \"user, user_group\"\n";
+        $conf .= "    AuthMySQLNameField user.user_name\n";
+        $conf .= "    AuthMySQLPasswordField user.unix_pw\n";
+        $conf .= "    AuthMySQLUserCondition \"(user.status='A' or (user.status='R' AND user_group.user_id=user.user_id and user_group.group_id=".$row['group_id']."))\"\n";
+        return $conf;
+    }
 
+    protected function getProjectSVNApacheConfAuthz($row) {
+        $conf = "    AuthzSVNAccessFile ".$GLOBALS['svn_prefix']."/".$row['unix_group_name']."/.SVNAccessFile\n";
+        return $conf;
+    }
+    
     /**
      * Archive SVN repository: stores a tgz in temp dir, and remove the directory
      *

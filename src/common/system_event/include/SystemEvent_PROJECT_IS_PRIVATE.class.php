@@ -52,14 +52,14 @@ class SystemEvent_PROJECT_IS_PRIVATE extends SystemEvent {
         if ($project = $this->getProject($group_id)) {
             
             if ($project->usesCVS()) {
-                if (!BackendCVS::instance()->setCVSPrivacy($project, $project_is_private)) {
+                if (!BackendFactory::getCVS()->setCVSPrivacy($project, $project_is_private)) {
                     $this->error("Could not set cvs privacy for project $group_id");
                     return false;
                 }
             }
             
             if ($project->usesSVN()) {
-                $backendSVN    = BackendSVN::instance();
+                $backendSVN    = BackendFactory::getSVN();
                 if (!$backendSVN->setSVNPrivacy($project, $project_is_private)) {
                     $this->error("Could not set svn privacy for project $group_id");
                     return false;

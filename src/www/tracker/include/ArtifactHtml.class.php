@@ -261,7 +261,7 @@ class ArtifactHtml extends Artifact {
             if ($pv == 0) {
                 $html .= $Language->getText('tracker_include_artifact','fill_cc_list_msg');
                 $html .= $Language->getText('tracker_include_artifact','fill_cc_list_lbl');
-                $html .= '<input type="text" name="add_cc" id="tracker_cc" size="30">';
+                $html .= '<textarea type="text" name="add_cc" id="tracker_cc" rows="2" cols="60" wrap="soft"></textarea>';
                 $html .= '<B>&nbsp;&nbsp;&nbsp;'.$Language->getText('tracker_include_artifact','fill_cc_list_cmt').":&nbsp</b>";
                 $html .= '<input type="text" name="cc_comment" size="40" maxlength="255">';
                 //$html .= autocomplete_for_lists_users('tracker_cc', 'tracker_cc_autocomplete');
@@ -679,7 +679,7 @@ class ArtifactHtml extends Artifact {
         $html = '';
         $html .= $Language->getText('tracker_include_artifact','fill_cc_list_msg');
         $html .= $Language->getText('tracker_include_artifact','fill_cc_list_lbl');
-        $html .= '<input type="text" name="add_cc" id="tracker_cc" size="30">';
+        $html .= '<textarea type="text" name="add_cc" id="tracker_cc" rows="2" cols="60" wrap="soft"></textarea>';
         $html .= '<B>&nbsp;&nbsp;&nbsp;'.$Language->getText('tracker_include_artifact','fill_cc_list_cmt').":&nbsp</b>";
         $html .= '<input type="text" name="cc_comment" size="40" maxlength="255">';
         //$html .= autocomplete_for_lists_users('tracker_cc', 'tracker_cc_autocomplete');
@@ -1023,7 +1023,7 @@ class ArtifactHtml extends Artifact {
         $html = '';
         $html .= $Language->getText('tracker_include_artifact','fill_cc_list_msg');
         $html .= $Language->getText('tracker_include_artifact','fill_cc_list_lbl');
-        $html .= '<input type="text" name="add_cc" id="tracker_cc" size="30">';
+        $html .= '<textarea type="text" name="add_cc" id="tracker_cc" rows="2" cols="60" wrap="soft"></textarea>';
         $html .= '<B>&nbsp;&nbsp;&nbsp;'.$Language->getText('tracker_include_artifact','fill_cc_list_cmt').":&nbsp</b>";
         $html .= '<input type="text" name="cc_comment" size="40" maxlength="255">';
         //$html .= autocomplete_for_lists_users('tracker_cc', 'tracker_cc_autocomplete');

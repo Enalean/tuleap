@@ -75,7 +75,7 @@ class UGroup {
      */
     public function getMembers() {
         if (!$this->members) {
-            $this->$members=array();
+            $this->members=array();
             $ugroupuser_dao =& $this->_getUGroupUserDao();
             $dar =& $ugroupuser_dao->searchUserByStaticUGroupId($this->id);
             foreach($dar as $row) {

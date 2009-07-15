@@ -30,18 +30,21 @@
  *
  * @see LDAPResult
  */
-class LDAPResultIterator /*implements Iterator*/ {
+class LDAPResultIterator implements SeekableIterator, Countable {
+
     var $list;
     var $key;
     var $valid;
-
+    protected $ldapParams;
+    
     /**
      * Constructor
      */
-    function LDAPResultIterator(&$info) {
-        $this->list  =& $info;
+    function __construct($info, $ldapParams) {
+        $this->list  = $info;
         $this->key   = 0;
         $this->valid = ($this->count() > 0);
+        $this->ldapParams = $ldapParams;
     }
 
     
@@ -102,23 +105,7 @@ class LDAPResultIterator /*implements Iterator*/ {
         }
     }
 
-    /**
-     * Return current entry in the result set and move key forward
-     *
-     * @return LDAPResult or false
-     */
-    function iterate() {
-        if($this->valid()) {
-            $res =& $this->current();
-            $this->next();
-            return $res;
-        }
-        else {
-            return false;
-        }
-    }
-
-
+    
     /**
      * Return true if result set is not empty.
      *
@@ -130,16 +117,6 @@ class LDAPResultIterator /*implements Iterator*/ {
 
     
     /**
-     * Display the result set
-     */
-    function raw() {
-        print "<pre>\n";
-        print_r($this->list);
-        print "</pre>\n";
-    }
-
-
-    /**
      * Return the current element.
      *
      * Standard function implemented from Iterator interface
@@ -147,7 +124,7 @@ class LDAPResultIterator /*implements Iterator*/ {
      * @return LDAPResult
      */
     function current() {
-        return new LDAPResult($this->list[$this->key]);
+        return new LDAPResult($this->list[$this->key], $this->ldapParams);
     }
 
 
@@ -201,47 +178,94 @@ class LDAPResultIterator /*implements Iterator*/ {
 /**
  * This class is wrapper to access to an LDAP entry
  *
+ * Used as an iterator, it allows to iterate on all the fields in the LDAP
+ * result set:
+ * <pre>
+ * foreach($lr as $field) {
+ *     echo "$field: ".$lr->get($field);
+ * }
+ * </pre>
+ * 
  * @see LDAPResultIterator
  */
-class LDAPResult {
-    var $info;
+class LDAPResult implements Iterator, Countable {
+    protected $ldapParams;
+    protected $info;
+    protected $index;
 
-    function LDAPResult($info) {
-        $this->info = $info;
+    function __construct($info, $ldapParams) {
+        $this->ldapParams = $ldapParams;
+        $this->info  = $info;
+        $this->index = 0;
     }
 
     function getEmail() {
-        if(array_key_exists('sys_ldap_mail', $GLOBALS))
-            return $this->get($GLOBALS['sys_ldap_mail']);
-        return null;
+        return $this->get($this->ldapParams['mail']);
     }
 
     function getCommonName() {
-        if(array_key_exists('sys_ldap_cn', $GLOBALS))
-            return $this->get($GLOBALS['sys_ldap_cn']);
-        return null;
+        return $this->get($this->ldapParams['cn']);
     }
 
     function getLogin() {
-        if(array_key_exists('sys_ldap_login', $GLOBALS))
-            return $this->get($GLOBALS['sys_ldap_login']);
-        return null;
+        return $this->get($this->ldapParams['uid']);
     }
 
     function getEdUid() {
-        if(array_key_exists('sys_ldap_eduid', $GLOBALS))
-            return $this->get($GLOBALS['sys_ldap_eduid']);
-        return null;
+        return $this->get($this->ldapParams['eduid']);
     }
-  
+
     function getDn() {
         return $this->info['dn'];
     }
 
+    function getGroupMembers() {
+        $memberAttr = strtolower($this->ldapParams['grp_member']);
+        if(isset($this->info[$memberAttr])) {
+            $members = $this->info[$memberAttr];
+            // Remove count from the info to be able to iterate on result
+            unset($members['count']);
+            return $members;
+        } else {
+            return array();
+        }
+    }
+        
+    /**
+     * Returns the first entry for a given field
+     * 
+     * An LDAP Directory can store several values for each field (for instance
+     * server common names gives $this->info['cn'][0], $this->info['cn'][1], ...
+     * This method only returns the first entry. 
+     * 
+     * @param String $arg Entry to get
+     * 
+     * @return String
+     */
     function get($arg) {
-        return $this->info[$arg][0];
+        $v = $this->getAll($arg);
+        if ($v) {
+            return $v[0];
+        }
+        return $v;
     }
 
+    /**
+     * Returns all entries for a given field
+     *
+     * @param String $arg Entry to get
+     *
+     * @return Array
+     */
+    function getAll($arg) {
+        $arg = strtolower($arg);
+        if(isset($this->info[$arg])) {
+            return $this->info[$arg];
+        } else {
+            return null;
+        }
+    }
+    
     function isEmpty() {
         return empty($this->info);
     }
@@ -250,6 +274,29 @@ class LDAPResult {
         return !$this->isEmpty();
     }
 
+    function count() {
+        return $this->info['count'];
+    }
+    
+    function valid() {
+        return $this->index < $this->info['count'];
+    }
+    
+    function next() {
+        $this->index++;
+    }
+    
+    function rewind() {
+        $this->index = 0;
+    }
+    
+    function current() {
+        return $this->info[$this->index];
+    }
+    
+    function key() {
+        return $this->index;
+    }
 }
 
 ?>

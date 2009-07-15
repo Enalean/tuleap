@@ -230,15 +230,22 @@ unless (-d _)
 use DBI;
 use HTTP::Request::Common qw(POST);
 use LWP::UserAgent;
-
+use Net::LDAP;
+use Cwd; # needed by ldap account auto create
 
 $utils_path = $ENV{'CODENDI_UTILS_PREFIX'} || "/usr/share/codendi/src/utils";
 require $utils_path."/include.pl";
 require $utils_path."/group.pl";
 require $utils_path."/svn/svn-checkins.pl";
 require $utils_path."/hudson.pl";
+require $utils_path."/ldap.pl";
 
 &db_connect;
+
+# Load LDAP config
+my $ldapIncFile = $sys_custompluginsroot.'/ldap/etc/ldap.inc';
+&load_local_config($ldapIncFile);
+&ldap_connect;
 
 # retrieve the group_id
 my $gname = $repos;
@@ -305,6 +312,25 @@ my @log = map { "$_\n" } @svnlooklines;
 # Codendi - Figure out what the real user name and email are
 #
 
+my $fullname = "";
+my $mailname = "";
+my $codexuid = "";
+if(ldap_enabled_for_project($group_id))
+{
+    ($fullname, $mailname, $ldap_id) = ldap_get_svncommitinfo_from_login($author);
+    if($ldap_id != -1) {
+       $codexuid = db_get_field('user','ldap_id', $ldap_id, 'user_id');
+        if($codexuid eq "0") {
+            $codexuid = ldap_account_create_auto($ldap_id);
+        }
+    }
+    if($debug) {
+        print STDERR "LDAP id: $ldap_id\n";
+        print STDERR "Codex uid: $codexuid\n";
+    }
+}
+else
+{
 local ($login, $gecos);
 $login = $author;
 if (! $login)
@@ -342,6 +368,8 @@ else
         }
     }
     $mailname = "$login\@$hostdomain";
+}
+$codexuid = db_get_field('user','user_name', $author, 'user_id');
 }
 
 if ($debug) {
@@ -665,7 +693,7 @@ foreach my $project (@project_settings_list)
 
 # Now add the Subversion information in the Codendi tracking database
 if (&isGroupSvnTracked) {
-  $commit_id = db_get_commit($group_id,$repos,$rev,$unix_gmtime,$author,@log_for_db);
+  $commit_id = db_get_commit($group_id,$repos,$rev,$unix_gmtime,$codexuid,@log_for_db);
 
   for $file (@changed_files) {
     print STDERR "file_path = ".$file->{'path'}."\n" if $debug;

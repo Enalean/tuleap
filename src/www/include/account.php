@@ -41,57 +41,65 @@ function account_set_password($user_id,$password) {
 
 // Add user to an existing project
 function account_add_user_to_group ($group_id,&$user_unix_name) {
-    global $Language;
-	
-	$ret = false;
-	
     $um = UserManager::instance();
     $user = $um->findUser($user_unix_name);
     if ($user) {
+        return account_add_user_obj_to_group($group_id, $user);
+    } else {
+        //user doesn't exist
+        $GLOBALS['Response']->addFeedback('error', $Language->getText('include_account','user_not_exist'));
+        return false;
+    }
+}
 
-        //user was found but if it's a pending account adding
-        //is not allowed
-        if (!$user->isActive() && !$user->isRestricted()) {
-            $GLOBALS['Response']->addFeedback('error', $Language->getText('include_account', 'account_notactive',$user_unix_name));
-            return false;
-        }
+/**
+ * Add a new user into a given project
+ * 
+ * @param Integer $group_id Project id
+ * @param User    $user     User to add
+ * 
+ * @return Boolean
+ */
+function account_add_user_obj_to_group ($group_id, User $user) {
+    //user was found but if it's a pending account adding
+    //is not allowed
+    if (!$user->isActive() && !$user->isRestricted()) {
+        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('include_account', 'account_notactive', $user->getUserName()));
+        return false;
+    }
 
         //if not already a member, add it
-        $res_member = db_query("SELECT user_id FROM user_group WHERE user_id=".$user->getId()." AND group_id='".db_ei($group_id)."'");
-        if (db_numrows($res_member) < 1) {
-			//not already a member
-			db_query("INSERT INTO user_group (user_id,group_id) VALUES (".db_ei($user->getId()).",".db_ei($group_id).")");
+    $res_member = db_query("SELECT user_id FROM user_group WHERE user_id=".$user->getId()." AND group_id='".db_ei($group_id)."'");
+    if (db_numrows($res_member) < 1) {
+        //not already a member
+        db_query("INSERT INTO user_group (user_id,group_id) VALUES (".db_ei($user->getId()).",".db_ei($group_id).")");
 
-			//if no unix account, give them a unix_uid
-			if ($user->getUnixStatus() == 'N' || !$user->getUnixUid()) {
-			    $um->assignNextUnixUid($user);
 
-			    $user->setUnixStatus('A');
-			    $um->updateDb($user);
-			}
-            
-            // Raise an event
-            $em =& EventManager::instance();
-            $em->processEvent('project_admin_add_user', array(
+        //if no unix account, give them a unix_uid
+        if ($user->getUnixStatus() == 'N' || !$user->getUnixUid()) {
+            $user->setUnixStatus('A');
+            $um = UserManager::instance();
+            $um->assignNextUnixUid($user);
+            $um->updateDb($user);
+        }
+
+        // Raise an event
+        $em = EventManager::instance();
+        $em->processEvent('project_admin_add_user', array(
                 'group_id'       => $group_id,
                 'user_id'        => $user->getId(),
                 'user_unix_name' => $user->getUserName(),
-            ));
-            
-			$GLOBALS['Response']->addFeedback('info', $Language->getText('include_account','user_added'));
-            account_send_add_user_to_group_email($group_id, $user->getId());
-            group_add_history('added_user', $user->getUserName(), $group_id, array($user->getUserName()));
-			$ret = true;
-		} else {
-			//user was a member
-			$GLOBALS['Response']->addFeedback('error', $Language->getText('include_account','user_already_member'));
-		}
-	} else {
-		//user doesn't exist
-		$GLOBALS['Response']->addFeedback('error', $Language->getText('include_account','user_not_exist'));
-	}
+        ));
 
-	return $ret;
+        $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('include_account','user_added'));
+        account_send_add_user_to_group_email($group_id, $user->getId());
+        group_add_history('added_user', $user->getUserName(), $group_id, array($user->getUserName()));
+
+        return true;
+    } else {
+        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('include_account','user_already_member'));
+    }
+    return false;
 }
 
 // Warn user she has been added to a project

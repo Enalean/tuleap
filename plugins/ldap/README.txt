@@ -7,6 +7,7 @@ See the Codendi Installation Guide for more information.
 Installation
 ------------
 
-1. Copy and adjust variables defined in etc/ldap.inc to your local.inc,
-2. Go to the "Plugins Administration" web page and finish the installation of the plugin.
+1. Install perl-LDAP RPM (mandatory because backend scripts rely on it)
+2. Copy and adjust variables defined in etc/ldap.inc to your local.inc,
+3. Go to the "Plugins Administration" web page and finish the installation of the plugin.
 

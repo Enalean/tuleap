@@ -1,17 +1,48 @@
 <?php
-
-require_once('common/plugin/Plugin.class.php');
-require_once('LDAP.class.php');
-require_once('UserLdap.class.php');
+/**
+ * Copyright (c) STMicroelectronics, 2008. All Rights Reserved.
+ *
+ * Originally written by Manuel Vacelet, 2008
+ *
+ * This file is a part of Codendi.
+ *
+ * Codendi is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Codendi is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Codendi; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
+require_once 'common/plugin/Plugin.class.php';
+require_once 'common/dao/CodendiDataAccess.class.php';
+require_once 'LdapPluginInfo.class.php';
+require_once 'LDAP_UserManager.class.php';
+require_once 'LDAP_UserDao.class.php';
+require_once 'LDAP_GroupManager.class.php';
+require_once 'LDAP_UserGroupManager.class.php';
+require_once 'LDAP_ProjectGroupManager.class.php';
+require_once 'LDAP.class.php';
+require_once 'LDAP_BackendSVN.class.php';
 
 class LdapPlugin extends Plugin {
-    
-    function LdapPlugin($id) {
-        $this->Plugin($id);
+    /**
+     * @type LDAP
+     */
+    private $ldapInstance;
+
+    function __construct($id) {
+        parent::__construct($id);
 
         // Layout
         $this->_addHook('display_newaccount', 'forbidIfLdapAuth', false);
-
+        
         // Search
         $this->_addHook('search_type_entry', 'ldapSearchEntry', false);
         $this->_addHook('search_type', 'ldapSearch', false);
@@ -23,9 +54,10 @@ class LdapPlugin extends Plugin {
         // Login
         $this->_addHook('display_lostpw_createaccount', 'forbidIfLdapAuth', false);
         $this->_addHook('login_after_form', 'loginAfterForm', false);
+        $this->_addHook('account_redirect_after_login', 'account_redirect_after_login', false);
 
         // User finder
-        $this->_addHook('user_finder', 'userFinder', false);
+        $this->_addHook('user_manager_find_user', 'user_manager_find_user', false);
         $this->_addHook('user_manager_get_user_by_identifier', 'user_manager_get_user_by_identifier', false);
 
         // User Home
@@ -51,46 +83,121 @@ class LdapPlugin extends Plugin {
         $this->_addHook('usergroup_update_form', 'addLdapInput', false);
         $this->_addHook('usergroup_update', 'updateLdapID', false);
 
-
+        // Project admin
+        $this->_addHook('ugroup_table_title', 'ugroup_table_title', false);
+        $this->_addHook('ugroup_table_row', 'ugroup_table_row', false);
+        $this->_addHook('project_admin_add_user_form', 'project_admin_add_user_form', false);
+        
+        // Svn intro
+        $this->_addHook('svn_intro', 'svn_intro', false);
+        $this->_addHook('svn_check_access_username', 'svn_check_access_username', false);
 
         $this->_addHook('before_register', 'redirectToLogin', false);
+
+        // Search as you type user
+        $this->_addHook('ajax_search_user', 'ajax_search_user', false);
+        
+        // Project creation
+        $this->_addHook('register_project_creation', 'register_project_creation', false);
+        
+        // Backend SVN
+        $this->_addHook('backend_factory_get_svn', 'backend_factory_get_svn', false);
     }
     
-    function &getPluginInfo() {
-        if (!is_a($this->pluginInfo, 'LdapPluginInfo')) {
-            require_once('LdapPluginInfo.class.php');
-            $this->pluginInfo =& new LdapPluginInfo($this);
+    /**
+     * @return LdapPluginInfo
+     */
+    function getPluginInfo() {
+        if (! $this->pluginInfo instanceof LdapPluginInfo) {
+            $this->pluginInfo = new LdapPluginInfo($this);
         }
         return $this->pluginInfo;
     }
 
-    function CallHook($hook, $params) {
-        // do nothing        
+    /**
+     * @return LDAP
+     */
+    function getLdap() {
+        if (!isset($this->ldapInstance)) {
+            $ldapParams = array();
+            $keys = $this->getPluginInfo()->propertyDescriptors->getKeys()->iterator();
+            foreach ($keys as $k) {
+                $nk = str_replace('sys_ldap_', '', $k);
+                $ldapParams[$nk] = $this->getPluginInfo()->getPropertyValueForName($k);
+            }
+            $this->ldapInstance = new LDAP($ldapParams);
+        }
+        return $this->ldapInstance;
     }
-    
-    function ldapSearchEntry($params) {        
-        // IN  $params['type_of_search']
-        // OUT $params['output']
 
+    /**
+     * Hook
+     * 
+     * IN  $params['type_of_search']
+     * OUT $params['output']
+     * 
+     * @param Array $params
+     * 
+     * @return void
+     */
+    function ldapSearchEntry($params) {
         $params['output'] .= "\t<OPTION value=\"people_ldap\"".( $params['type_of_search'] == "people_ldap" ? " SELECTED" : "" ).">".$GLOBALS['Language']->getText('plugin_ldap', 'people_ldap')."</OPTION>\n";
     }
 
+    /**
+     * Hook
+     * 
+     * IN  $params['codendiUserOnly']
+     * IN  $params['limit']
+     * IN  $params['searchToken']
+     * IN  $params['validEmail']
+     * OUT $params['userList']
+     * OUT $params['pluginAnswered']
+     * 
+     * @param Array $params
+     * 
+     * @return void
+     */
+    function ajax_search_user($params) {
+        if(!$params['codendiUserOnly']) {
+            $params['pluginAnswered'] = true;
+
+            $validEmail = isset($params['validEmail']) ? $params['validEmail'] : false;
+
+            $ldap = $this->getLdap();
+            $lri  = $ldap->searchUserAsYouType($params['searchToken'], $params['limit'], $validEmail);
+            foreach($lri as $lr) {
+                $params['userList'][] = $lr->getCommonName().' ('.$lr->getLogin().')';
+            }
+            if($ldap->getErrno() == LDAP::ERR_SIZELIMIT) {
+                $params['userList'][] = "<strong>...</strong>";
+            }
+        }
+    }
+
+    /**
+     * Hook
+     * 
+     * IN  $params['words']
+     * IN  $params['offset'];
+     * IN  $params['nbRows'];
+     * IN  $params['type_of_search']
+     * OUT $params['search_type']
+     * OUT $params['rows_returned']
+     * OUT $params['rows']
+     * 
+     * @param Array $params
+     * 
+     * @return void
+     */
     function ldapSearch($params) {
-        // params
-        // IN  $params['words']
-        // IN  $params['offset'];
-        // IN  $params['nbRows'];
-        // IN  $params['type_of_search']
-        // OUT $params['search_type']
-        // OUT $params['rows_returned']
-        // OUT $params['rows']
         global $Language;
 
         if($params['type_of_search'] === "people_ldap") {
             $params['search_type'] = true;
             
-            $ldap =& LDAP::instance();
-            $lri  =& $ldap->searchUser($params['words']);
+            $ldap = $this->getLdap();
+            $lri  = $ldap->searchUser($params['words']);
             $rows = $rows_returned = $lri->count();
   
             if ($rows < 1) {
@@ -110,31 +217,35 @@ class LdapPlugin extends Plugin {
                 echo html_build_list_table_top ($title_arr);
 
                 echo "\n";
-    
+
+                $um = UserManager::instance();
+
                 $lri->seek($params['offset']);
                 $i = $params['nbRows'];
-                while(($ldapres = $lri->iterate()) && $i > 0) {
+                while($lri->valid() && $i > 0) {
+                    $ldapres = $lri->current();
 
                     print "<TR class=\"". html_get_alt_row_color($i) ."\">\n";
 
                     print "<TD>";
                     print $this->buildLinkToDirectory($ldapres, $ldapres->getCommonName());
                     print "</TD>\n";
-         
-                    print "<TD>";
 
-                    $dbres = UserLdap::getUserResultSet($ldapres->getEdUid());
-                    if($dbres && db_numrows($dbres) === 1) {
-                        $user_name = db_result($dbres, 0, 'user_name');
-                        print '<a href="/users/'.$user_name.'">'
+                    print "<TD>";
+                    if ($ldapres->getEdUid() != false) {
+                        $user = $um->getUserByLdapId($ldapres->getEdUid());
+                        if($user) {
+                            print '<a href="/users/'.$user->getUserName().'">'
                             .'<img src="'.util_get_image_theme('msg.png').'" border="0" height="12" width="10" />&nbsp;'
-                            .$user_name
+                            .$user->getUserName()
                             .'</a>';
+                        }
                     }
-                    print "</TD>\n";                  
+                    print "</TD>\n";
 
                     print "</TR>\n";
 
+                    $lri->next();
                     $i--;
                 }
                 echo "</TABLE>\n";
@@ -143,90 +254,88 @@ class LdapPlugin extends Plugin {
             $params['rows_returned'] = $rows_returned;
         }
     }
-       
+
     /**
+     * Hook
+     * 
      * @params $params $params['login']
      *                 $params['password']
      *                 $params['auth_success']
      *                 $params['auth_user_id']
      *                 $params['auth_user_status']
      */
-    function authenticate($params) {       
-        global $Language,$pv;
+    function authenticate($params) {
+        global $Language;
 
         if ($GLOBALS['sys_auth_type'] == 'ldap') {
-            
             $params['auth_success'] = false;
             
-            $ldap =& LDAP::instance();
+            $ldap = $this->getLdap();
             
             // Perform LDAP authentication        
             if ($ldap->authenticate($params['loginname'], $params['passwd'])) {
-                $lri =& $ldap->searchLogin($params['loginname']);
+                $lri = $ldap->searchLogin($params['loginname']);
                 if($lri->count() === 1) {
                     // Check if this user is a codendi user or not. 
-                    $lr = $lri->get(0);        
-                    $qry = "SELECT user_id,status"
-                        . " FROM user"
-                        . " WHERE ldap_id='".db_es($lr->getEdUid())."'";
-                    $res = db_query($qry);
-                    if (!$res || db_numrows($res) < 1) {
+                    $lr = $lri->get(0);
+                    $user = UserManager::instance()->getUserByLdapId($lr->getEdUid());
+                    $ldapUm = new LDAP_UserManager($ldap);
+                    if ($user === null) {
                         // Authenticated user
                         // without codendi account
-                        // create account!                        
-                        UserLdap::register($lr, 
-                                           $params['passwd'], 
-                                           $params['auth_user_id'], 
-                                           $params['auth_user_status'],
-                                           $params['auth_success']);
-                        
-                        // WARNING HACK: Here we are modifing a query argument
-                        // (that should be read only I guess) but this is very
-                        // practical to use the generic return_to mecanisme
-                        // even for account creation.
-                        $return_to_arg = '';;
-                        if(array_key_exists('return_to', $_REQUEST) && $_REQUEST['return_to'] != '') {
-                            $return_to_arg ='?return_to='.urlencode($_REQUEST['return_to']);
-                            if (isset($pv) && $pv == 2) $return_to_arg .= '&pv='.$pv;
-                        } else {
-                            if (isset($pv) && $pv == 2) $return_to_arg .= '?pv='.$pv;
-                        }                        
-                        $_REQUEST['return_to'] = '/plugins/ldap/welcome.php'.$return_to_arg;
+                        // create account!
+                        $user = $ldapUm->createAccountFromLdap($lr);
+                        if ($user) {
+                            $params['auth_user_id']     = $user->getId();
+                            $params['auth_user_status'] = $user->getStatus();
+                            $params['auth_success']     = true;
+                        }
                     }
                     else {
-                        UserLdap::synchronizeUserWithLdap(db_result($res,0,'user_id'), $lr, $params['passwd']);
-
-                        $params['auth_user_id']      = db_result($res,0,'user_id');
-                        $params['auth_user_status']  = db_result($res,0,'status');
+                        $ldapUm->synchronizeUser($user, $lr, $params['passwd']);
+                        $params['auth_user_id']      = $user->getId();
+                        $params['auth_user_status']  = $user->getStatus();
                         $params['auth_success']      = true;
                     }
                 }      
                 else {
-                    if (! $ldap->isError()) {
-                        // @todo: transfert to plugin site-content
-                        $GLOBALS['feedback'] .= $Language->getText('include_session','invalid_ldap_name') .'. ';
-                    } else {
-                        $GLOBALS['feedback'] .= $ldap->getErrorMessage().". ";
-                    }
+                    $GLOBALS['Response']->addFeedback('error', $Language->getText('include_session','invalid_ldap_name'));
                 }
-            }
-            else {
-                // password is invalid or user does not exist
-
-                // @todo: transfert to plugin site-content
-                $GLOBALS['feedback'] .= $GLOBALS['sys_org_name'].' '.$Language->getText('include_session','dir_authent').': '.$ldap->getErrorMessage() .'. ';
             }
         }
     }
-    
-    
+
+    /** Hook
+     * When redirection after login happens, check if user as already filled
+     * his personal info or not. If it's not the case, it means that the
+     * account was automatically created and user must complete his
+     * registeration.
+     */
+    function account_redirect_after_login() {
+        if ($GLOBALS['sys_auth_type'] == 'ldap') {
+            $ldapUserDao = new LDAP_UserDao(CodendiDataAccess::instance());
+            if(!$ldapUserDao->alreadyLoggedInOnce(user_getid())) {
+                $return_to_arg = "";
+                if(array_key_exists('return_to', $_REQUEST) && $_REQUEST['return_to'] != '') {
+                    $return_to_arg ='?return_to='.urlencode($_REQUEST['return_to']);
+                    if (isset($pv) && $pv == 2) $return_to_arg .= '&pv='.$pv;
+                } else {
+                    if (isset($pv) && $pv == 2) $return_to_arg .= '?pv='.$pv;
+                }
+                $_REQUEST['return_to'] = '/plugins/ldap/welcome.php'.$return_to_arg;
+            }
+        }
+    }
+
     /**
      * @params $params $params['user_id'] IN
      *                 $params['allow_codendi_login'] IN/OUT
      */
     function allowCodendiLogin($params) {
         if ($GLOBALS['sys_auth_type'] == 'ldap') {
-            if(UserLdap::isLdapUser($params['user_id'])) {
+            $ldapUm = new LDAP_UserManager($this->getLdap());
+            $lr = $ldapUm->getLdapFromUserId($params['user_id']);
+            if($lr) {
                 $params['allow_codendi_login'] = false;
                 $GLOBALS['feedback'] .= ' '.$GLOBALS['Language']->getText('plugin_ldap',
                                                                           'login_pls_use_ldap',
@@ -248,32 +357,42 @@ class LdapPlugin extends Plugin {
     }
 
     /**
+     * Get a User object from an LDAP iterator
+     * 
+     * @param LDAPResultIterator $lri An LDAP result iterator
+     * 
+     * @return User
+     */
+    protected function getUserFromLdapIterator($lri) {
+        if($lri && count($lri) === 1) {
+            $ldapUm = new LDAP_UserManager($this->getLdap());
+            return $ldapUm->getUserFromLdap($lri->current()); 
+        }
+        return null;
+    }
+
+    /**
      * Hook
      * Params:
      *  IN  $params['ident']
-     *  IN  $params['strict'] If set to true, $ident must be a valid codendi user.
-     *  OUT $params['best_codendi_identifier']
+     *  IN/OUT  $params['user'] User object if found or null.
      */
-    function userFinder($params) {
-        $ldap =& LDAP::instance();
-        $lri  =& $ldap->searchUser($params['ident']);
-        
-        $bestCodendiIdentifier = '';
-        if(!$ldap->isError() && ($lri->count() == 1)) {          
-            $lr =& $lri->get(0);
-
-            $res1 = UserLdap::getUserResultSet($lr->getEdUid());
-            
-            if(db_numrows($res1) === 1) {
-                $bestCodendiIdentifier = db_result($res1, 0, 'user_name');
+    function user_manager_find_user($params) {
+        $ldap = $this->getLdap();
+        // First, test if its provided by autocompleter: "Common Name (login name)"
+        $matches = array();
+        if(preg_match('/^(.*) \((.*)\)$/', $params['ident'], $matches)) {
+            if(trim($matches[2]) != '') {
+                $lri  = $ldap->searchLogin($matches[2]);
+            } else {
+                $lri  = $ldap->searchCommonName($matches[1]);
             }
-            elseif(!$params['strict']) {
-                $bestCodendiIdentifier = $lr->getEmail();
-            }
+        } else {
+            // Otherwise, search as defined in config most of the time
+            // (uid, email, common name)
+            $lri  = $ldap->searchUser($params['ident']);
         }
-        if($bestCodendiIdentifier != '') {
-            $params['best_codendi_identifier'] = $bestCodendiIdentifier;
-        }
+        $params['user'] = $this->getUserFromLdapIterator($lri);
     }
 
     /**
@@ -290,7 +409,7 @@ class LdapPlugin extends Plugin {
             $type = strtolower(substr($params['identifier'], 0, $separatorPosition));
             $value = strtolower(substr($params['identifier'], $separatorPosition + 1));
             
-            $ldap = LDAP::instance();
+            $ldap = $this->getLdap();
             $lri = null;
             switch ($type) {
                 case 'ldapid':
@@ -299,29 +418,17 @@ class LdapPlugin extends Plugin {
                     break;
                 case 'ldapdn':
                     $params['tokenFound'] = true;
-                    //$lri = $ldap->searchDn($value);
+                    $lri = $ldap->searchDn($value);
                     break;
                 case 'ldapuid':
                     $params['tokenFound'] = true;
                     $lri = $ldap->searchLogin($value);
                     break;
             }
-            if($lri instanceof LDAPResultIterator) {
-                if($lri->count() == 1) {
-                    $lr = $lri->current();
-                    $um = UserManager::instance();
-                    $user = $um->getUserByLdapId($lr->getEdUid());
-                    if($user == null) {
-                        // Create account
-                    }
-                    $params['user'] = $user;
-                } elseif($lri->count() > 1) {
-                    throw new Exception("Several accounts share the same LDAP identifier '$value'");
-                }
-            }
+            $params['user'] = $this->getUserFromLdapIterator($lri);
         }
     }
-    
+
     /**
      * Hook
      * Params:
@@ -332,8 +439,8 @@ class LdapPlugin extends Plugin {
     function personalInformationEntry($params) {
         if($GLOBALS['sys_auth_type'] == 'ldap') {
             $params['entry_label'][$this->getId()] = $GLOBALS['Language']->getText('plugin_ldap', 'ldap_login');
-
-            $lr =& UserLdap::getLdapResultSetFromUserId($params['user_id']);
+            $ldapUm = new LDAP_UserManager($this->getLdap());
+            $lr = $ldapUm->getLdapFromUserId($params['user_id']);
             if($lr) {
                 $link = $this->buildLinkToDirectory($lr, $lr->getLogin());
                 $params['entry_value'][$this->getId()] = $link;
@@ -341,7 +448,7 @@ class LdapPlugin extends Plugin {
             else {
                 $params['entry_value'][$this->getId()] = $GLOBALS['Language']->getText('plugin_ldap', 'no_ldap_login_found');
             }
-        }            
+        }
     }     
 
     /**
@@ -354,9 +461,9 @@ class LdapPlugin extends Plugin {
      */
     function accountPiEntry($params) {
         if($GLOBALS['sys_auth_type'] == 'ldap') {
-            if(UserLdap::isLdapUser($params['user_id'])) {
-                $lr =& UserLdap::getLdapResultSetFromUserId($params['user_id']);
-
+            $ldapUm = new LDAP_UserManager($this->getLdap());
+            $lr = $ldapUm->getLdapFromUserId($params['user_id']);
+            if($lr) {
                 $params['entry_label'][$this->getId()] = $GLOBALS['Language']->getText('plugin_ldap', 'ldap_login');
                 $params['entry_value'][$this->getId()] = $lr->getLogin();
                 $params['entry_change'][$this->getId()] = '';
@@ -366,31 +473,25 @@ class LdapPlugin extends Plugin {
                 $params['entry_value'][$this->getId()] = $GLOBALS['Language']->getText('plugin_ldap', 'no_ldap_login_found');
                 $params['entry_change'][$this->getId()] = '';
             }
-        }      
+        }
     }
 
     /**
      * Hook
      */
     function personalInformationTail($params) {
-        global $Language;
-
-        print '<TR>';        
+        print '<TR>';
         $this->displayUserDetails($params['showdir']
                                   ,$params['user_name']);
         print '</TR>';
     }
 
-
-
     function buildLinkToDirectory(&$lr, $value='') {
-        global $Language;        
-
         if($value === '') {
             $value = $lr->getLogin();
         }
 
-        include_once($Language->getContent('ldap/directory_redirect'));
+        include_once($GLOBALS['Language']->getContent('directory_redirect', 'en_US', 'ldap', '.php'));
         if(function_exists('custom_build_link_to_directory')) {
             $link = custom_build_link_to_directory($lr, $value);
         }
@@ -401,63 +502,30 @@ class LdapPlugin extends Plugin {
     }
 
     function displayUserDetails($showdir, $user_name) {
-        global $Language;
+        include($GLOBALS['Language']->getContent('user_home', null, 'ldap', '.php'));
 
-        if (!$showdir) {
-            echo '<td colspan="2" align="center"><a href="/users/'.$user_name.'/?showdir=1"><hr>[ '.$Language->getText('plugin_ldap','more_from_directory',$GLOBALS['sys_org_name']).'... ]</a><td>';
-            
+        if (!$showdir && $my_html_ldap_format) {
+            echo '<td colspan="2" align="center"><a href="/users/'.$user_name.'/?showdir=1"><hr>[ '.$GLOBALS['Language']->getText('plugin_ldap','more_from_directory',$GLOBALS['sys_org_name']).'... ]</a><td>';
+
         } else {
-            $res_user = user_get_result_set_from_unix($user_name);
+            $ldapUm = new LDAP_UserManager($this->getLdap());
+            $lr = $ldapUm->getLdapFromUserName($user_name);
 
-            include($Language->getContent('include/user_home'));
-            
-            if ($GLOBALS['sys_ldap_filter']) {
-                $ldap_filter = $GLOBALS['sys_ldap_filter'];
+            if (!$lr) {
+                //$feedback = $GLOBALS['sys_org_name'].' '.$Language->getText('plugin_ldap','directory').': '.$ldap->getErrorMessage();
+                echo '<td colspan="2" align="center"><hr><b>'.$feedback.'</b></td>';
             } else {
-                $ldap_filter = "mail=%email%";
-            }
-            preg_match_all("/%([\w\d\-\_]+)%/", $ldap_filter, $match);
-            while (list(,$v) = each($match[1])) {
-                $ldap_filter = str_replace("%$v%", db_result($res_user,0,$v),$ldap_filter);
-            }
-            
-            $ldap =& LDAP::instance();
-            $info = $ldap->search($GLOBALS['sys_ldap_dn'],$ldap_filter);
-            if (!$info) {
-                $feedback = $GLOBALS['sys_org_name'].' '.$Language->getText('plugin_ldap','directory').': '.$ldap->getErrorMessage();
-            } else {
-                // Format LDAP output based on templates given in user_home.txt
-                if ( $my_html_ldap_format ) {
-                    preg_match_all("/%([\w\d\-\_]+)%/", $my_html_ldap_format, $match);
-                    $html = $my_html_ldap_format;
-                    while (list(,$v) = each($match[1])) {
-                        $value = (isset($info[0][$v]) ? $info[0][$v][0] : "-");
-                        $value = $info[0][$v][0];
-                        $html = str_replace("%$v%", $value, $html);
+                // Format LDAP output based on templates given in user_home.php
+
+                if ($my_html_ldap_format) {
+                    preg_match_all("/%([\w\d\-\_]+)%/", $my_html_ldap_format, $matches);
+                    foreach($matches[1] as $field) {
+                        $value = $lr->get($field) ? $lr->get($field) : "-";
+                        $my_html_ldap_format  = str_replace("%$field%", $value, $my_html_ldap_format);
                     }
-                    print $html;
-                } else {
-                    // if no html template then produce a raw output
-                    print '<td colspan="2" align="center"><hr><td>';
-                    print '<tr valign="top"><td colspan="2">'.$Language->getText('plugin_ldap','total_entries').': '.$info["count"]."</td></tr>";
-                    
-                    for ($i=0; $i<$info["count"]; $i++) {
-                        print '<tr valign="top"><td colspan="2"><b>'.$Language->getText('plugin_ldap','entry_#').' '.$i."</b></td></tr>";
-                        print '<tr valign="top"><td>&nbsp;&nbsp;'.$Language->getText('plugin_ldap','entry_dn').' </td><td>'.$info[$i]["dn"]."</td></tr>";
-                        print '<tr valign="top"><td>&nbsp;&nbsp;# '.$Language->getText('plugin_ldap','attributes').' </td><td>'.$info[$i]["count"]."</td></tr>";
-                    
-                        for ($j=0; $j<$info[$i]["count"]; $j++) {
-                            $attrib_name = $info[$i][$j];
-                            $nb_values = $info[$i][$attrib_name]["count"];
-                            unset($info[$i][$attrib_name]["count"]);
-                            print '<tr valign="top"><td>&nbsp;&nbsp;'.$attrib_name.'</td><td>'.join('<br>',$info[$i][$attrib_name])."</td></tr>";
-                        }
-                    }
+                    echo $my_html_ldap_format;
                 }
             }
-
-            if ($feedback)
-                echo '<td colspan="2" align="center"><hr><b>'.$feedback.'</b></td>';
         }
     }
 
@@ -469,13 +537,13 @@ class LdapPlugin extends Plugin {
             exit_permission_denied();
         }
     }
-    
+
     /**
      * Hook
      */
     function cancelChangeAndUserLdap($params) {
-        $um =& UserManager::instance();
-        $user =& $um->getCurrentUser();
+        $um = UserManager::instance();
+        $user = $um->getCurrentUser();
         $user_info = $user->data_array;
         if($GLOBALS['sys_auth_type'] == 'ldap' && $user_info['ldap_id']!='') {
             exit_permission_denied();
@@ -494,7 +562,6 @@ class LdapPlugin extends Plugin {
         }
     }
 
-
     function warnNoPwChange($params) {
         global $Language;
         if($GLOBALS['sys_auth_type'] == 'ldap') {
@@ -511,11 +578,19 @@ class LdapPlugin extends Plugin {
         }
     }
 
+    /**
+     * Hook
+     * 
+     * $params['user_id']
+     * 
+     * @param $params
+     * 
+     * @return void
+     */
     function updateLdapID($params) {
-        //$params['user_id']
         global $Language;
         if ($GLOBALS['sys_auth_type'] == 'ldap') {
-            $request =& HTTPRequest::instance();
+            $request = HTTPRequest::instance();
             $ldapId = $request->getValidated('ldap_id', 'string', false);
             if($ldapId !== false) {
                 $result = db_query("UPDATE user SET ldap_id='".db_es($ldapId)."' WHERE user_id=".db_ei($params['user_id']));
@@ -529,20 +604,195 @@ class LdapPlugin extends Plugin {
         }
     }
 
-
+    /**
+     * Hook
+     * 
+     * $params['allow']
+     * 
+     * @param Array $params
+     * 
+     * @return void
+     */
     function forbidIfLdapAuth($params) {
-        //$params['allow']
         if ($GLOBALS['sys_auth_type'] == 'ldap') {
             $params['allow']=false;
         }
     }
-    
+
+    /**
+     * Hook
+     * 
+     * OUT $params['allow']
+     * 
+     * @param Array $params
+     * 
+     * @return void
+     */
     function forbidIfLdapAuthAndUserLdap($params) {
-        //OUT $params['allow']
-        $um =& UserManager::instance();
-        $user =& $um->getCurrentUser();
+        $um = UserManager::instance();
+        $user = $um->getCurrentUser();
         if ($GLOBALS['sys_auth_type'] == 'ldap' && $user->getLdapId() != '') {
             $params['allow']=false;
+        }
+    }
+
+    /**
+     * Replace the default svn message.
+     *
+     * $params['svn_intro_in_plugin'] OUT: set it to true if output sth here
+     * $params['user_id']
+     * $params['group_id']
+     * $params['svn_url']
+     */
+    function svn_intro($params) {
+        $svnProjectManager = new LDAP_ProjectManager();
+        if($GLOBALS['sys_auth_type'] == 'ldap' && isset($params['group_id']) && $svnProjectManager->hasSVNLDAPAuth($params['group_id'])) {
+            $svn_url = $params['svn_url'];
+            $ldapUm = new LDAP_UserManager($this->getLdap());
+            $lr = $ldapUm->getLdapFromUserId($params['user_id']);
+            require($GLOBALS['Language']->getContent('svn_intro', null, 'ldap'));
+            $params['svn_intro_in_plugin'] = true;
+        }
+    }
+
+    /**
+     * Modify the Codendi user name before to check if user has access to given
+     * ldap ressource (because users in .SVNAccessFile are defined with their
+     * ldap login
+     *
+     * $params['groupname']
+     * $params['username']
+     */
+    function svn_check_access_username($params) {
+        $svnProjectManager = new LDAP_ProjectManager();
+        if($GLOBALS['sys_auth_type'] == 'ldap'
+           && isset($params['groupname'])
+           && $svnProjectManager->hasSVNLDAPAuthByName($params['groupname'])) {
+               $ldapUm = new LDAP_UserManager($this->getLdap());
+               $lr     =  $ldapUm->getLdapFromUserName($params['username']);
+               if($lr !== false) {
+                   // Must lower the username because LDAP is case insensitive
+                   // while svn permission comparator is case sensitive and in
+                   // backend the .SVNAccessFile is generated with lowercase
+                   // usernames
+                   $params['username'] = strtolower($lr->getLogin());
+               }
+        }
+    }
+
+    /**
+     * Hook in ugroup edition.
+     *
+     * @param array $params
+     */
+    function ugroup_table_title($params) {
+        if($GLOBALS['sys_auth_type'] == 'ldap') {
+            $params['html_array'][150] = $GLOBALS['Language']->getText('plugin_ldap', 'ugroup_list_ldap_title');
+        }
+    }
+
+    /**
+     * Hook in upgroup edition
+     * $params['row'] A row from ugroup table
+     *
+     * @param Array $params
+     */
+    function ugroup_table_row($params) {
+        if($GLOBALS['sys_auth_type'] == 'ldap') {
+            // No ldap for project 100
+            if($params['row']['group_id'] == 100) {
+                $params['html_array'][150] = array('value' => '-', 'html_attrs' => 'align="center"');
+            } else {
+                $hp = Codendi_HTMLPurifier::instance();
+                $ldapUserGroupManager = new LDAP_UserGroupManager($this->getLdap());
+                
+                $baseUrl = $this->getPluginPath().'/ugroup_edit.php?ugroup_id='.$params['row']['ugroup_id'];
+                
+                $urlAdd = $this->getPluginPath().'/ugroup_add_user.php?ugroup_id='.$params['row']['ugroup_id'].'&func=add_user';
+                $linkAdd = '<a href="'.$urlAdd.'">- '.$GLOBALS['Language']->getText('plugin_ldap', 'ugroup_list_add_users').'</a>';
+                
+                $ldapGroup = $ldapUserGroupManager->getLdapGroupByGroupId($params['row']['ugroup_id']);
+                if($ldapGroup !== null) {
+                    $grpName = $hp->purify($ldapGroup->getCommonName());
+                    $title = $GLOBALS['Language']->getText('plugin_ldap', 'ugroup_list_add_upd_binding', $grpName);
+                } else {
+                    $title = $GLOBALS['Language']->getText('plugin_ldap', 'ugroup_list_add_set_binding');
+                }
+                
+                $urlBind = $this->getPluginPath().'/ugroup_edit.php?ugroup_id='.$params['row']['ugroup_id'].'&func=bind_with_group';
+                $linkBind = '<a href="'.$urlBind.'">- '.$title.'</a>';
+                
+                $link = $linkAdd.'<br/>'.$linkBind;
+                
+                $params['html_array'][150] = array('value' => $link, 'html_attrs' => 'align="center"');
+            }
+        }
+    }
+
+    /**
+     * Display form elements to bind project members and an LDAP group
+     *
+     * @param array $params
+     * 
+     * @return void
+     */
+    function project_admin_add_user_form(array $params) {
+        $projectMembersManager = new LDAP_ProjectGroupManager($this->getLdap());
+        $ldapGroup = $projectMembersManager->getLdapGroupByGroupId($params['groupId']);
+        if ($ldapGroup) {
+            $groupName = $ldapGroup->getCommonName();
+        } else {
+            $groupName = '';
+        }
+
+        $html = '<hr />'.PHP_EOL;
+        $html .= '<strong>'.$GLOBALS['Language']->getText('plugin_ldap', 'project_admin_add_ugroup').'</strong>'.PHP_EOL;
+        $html .= '<form method="post" action="'.$this->getPluginPath().'/admin.php?group_id='.$params['groupId'].'">'.PHP_EOL;
+        $html .= '<input type="text" value="'.$groupName.'" name="ldap_group" id="project_admin_add_ldap_group" size="60" />'.PHP_EOL;
+        $html .= '<br />'.PHP_EOL;
+        $html .= '<input type="checkbox" id="preserve_members" name="preserve_members" />'.PHP_EOL;
+        $html .= '<label for="preserve_members">'.$GLOBALS['Language']->getText('plugin_ldap', 'ugroup_edit_group_preserve_members_option').' ('.$GLOBALS['Language']->getText('plugin_ldap', 'ugroup_edit_group_preserve_members_info').')</label>'.PHP_EOL;
+        $html .= '<br />'.PHP_EOL;
+        $html .= '<input type="submit" name="delete" value="'.$GLOBALS['Language']->getText('global', 'btn_delete').'" />'.PHP_EOL;
+        $html .= '<input type="submit" name="check" value="'.$GLOBALS['Language']->getText('global', 'btn_update').'" />'.PHP_EOL;
+        $html .= '</form>'.PHP_EOL;
+
+        $GLOBALS['Response']->includeFooterJavascriptFile($this->getPluginPath().'/scripts/autocomplete.js');
+        $js = "new LdapGroupAutoCompleter('project_admin_add_ldap_group',
+                           '".$this->getPluginPath()."',
+                           '".util_get_dir_image_theme()."',
+                           'project_admin_add_ldap_group',
+                           false);";
+        $GLOBALS['Response']->includeFooterJavascriptSnippet($js);
+
+        echo $html;
+    }
+
+    /**
+     * Project creation hook
+     * 
+     * If set, activate LDAP based authentication for this new project
+     *
+     * @param Array $params
+     */
+    function register_project_creation(array $params)
+    {
+        if($GLOBALS['sys_auth_type'] == 'ldap' && $this->getLdap()->getLDAPParam('svn_auth') == 1) {
+            $svnProjectManager = new LDAP_ProjectManager();
+            $svnProjectManager->setLDAPAuthForSVN($params['group_id']);
+        }
+    }
+
+    /**
+     * Hook
+     * 
+     * @param Array $params
+     * 
+     * @return void
+     */
+    function backend_factory_get_svn(array $params) {
+        if ($GLOBALS['sys_auth_type'] == 'ldap') {
+            $params['backend'] = LDAP_BackendSVN::instance($this->getLdap());
         }
     }
 }

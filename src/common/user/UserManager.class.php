@@ -33,6 +33,9 @@ class UserManager {
     }
     
     protected static $_instance;
+    /**
+     * @return UserManager
+     */
     public static function instance() {
         if (!isset(self::$_instance)) {
             $c = __CLASS__;

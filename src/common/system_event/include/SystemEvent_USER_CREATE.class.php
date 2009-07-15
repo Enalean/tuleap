@@ -54,16 +54,16 @@ class SystemEvent_USER_CREATE extends SystemEvent {
         }
 
         // Need to add new user alias
-        BackendAliases::instance()->setNeedUpdateMailAliases();
+        BackendFactory::getAliases()->setNeedUpdateMailAliases();
 
         // Create user home directory
-        if (!BackendSystem::instance()->createUserHome($user_id)) {
+        if (!BackendFactory::getSystem()->createUserHome($user_id)) {
             $this->error("Could not create user home");
             return false;
         }
         
         // Need to update system user cache
-        BackendSystem::instance()->setNeedRefreshUserCache();
+        BackendFactory::getSystem()->setNeedRefreshUserCache();
 
         $this->done();
         return true;

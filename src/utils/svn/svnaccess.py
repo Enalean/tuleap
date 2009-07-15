@@ -26,6 +26,7 @@ import sys
 import string
 import user
 import group
+import codendildap
 
 global SVNACCESS, SVNGROUPS
 SVNACCESS = None
@@ -72,7 +73,9 @@ def fetch_access_file(svnrepo):
                 if m is not None:
                     group = m.group(1)
                     users = m.group(2)
-                    SVNGROUPS[group.lower()] = string.split(string.replace(users.lower(),' ',''),",")
+                    # Apply stripName lambda on each element of the list of
+                    # user names
+                    SVNGROUPS[group.lower()] = map(string.strip, string.split(users.lower(),","))
                 
             elif state == ST_PATH: 
                 m = perm_pat.match(line)
@@ -95,13 +98,25 @@ def fetch_access_file(svnrepo):
         #print SVNGROUPS
         #print SVNACCESS
 
+# Specific to LDAP plugin: if the current repository is handled by LDAP
+# authentication we must check user access with it's ldap name instead of codex
+# name because they can be different (ldap login: 'john doe' => 'john_doe')
+def get_name_for_svn_access(svnrepo, username):
+    if codendildap.project_has_ldap_auth(svnrepo):
+        return codendildap.get_login_from_username(username)
+    else:
+        return username.lower()
 
 def check_read_access(username, svnrepo, svnpath):
     
     global SVNACCESS, SVNGROUPS
-    
+
     # make sure that usernames are lowercase
-    username = username.lower()
+    username = get_name_for_svn_access(svnrepo, username)
+
+    #f = open('/tmp/viewvc.log', 'a');
+    #f.write(svnrepo+": "+username+"\n");
+    #f.close();
     
     if user.user_is_super_user():
         return True

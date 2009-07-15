@@ -54,10 +54,10 @@ class SystemEvent_USER_DELETE extends SystemEvent {
         }
 
         // Need to remove user alias
-        BackendAliases::instance()->setNeedUpdateMailAliases();
+        BackendFactory::getAliases()->setNeedUpdateMailAliases();
 
         // Archive user home directory
-        if (!BackendSystem::instance()->archiveUserHome($user_id)) {
+        if (!BackendFactory::getSystem()->archiveUserHome($user_id)) {
             $this->error("Could not archive user home");
             return false;
         }

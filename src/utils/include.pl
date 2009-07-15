@@ -145,3 +145,5 @@ sub service_available_on_server {
 	    || ($location eq "master" && $server_is_master) 
 	    || ($location eq "satellite" &&  $server_id == $sys_server_id));
 }
+
+1;

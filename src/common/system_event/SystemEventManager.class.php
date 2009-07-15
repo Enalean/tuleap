@@ -41,13 +41,7 @@ require_once('common/system_event/include/SystemEvent_UGROUP_MODIFY.class.php');
 require_once('common/system_event/include/SystemEvent_EDIT_SSH_KEYS.class.php');
 
 // Backends
-require_once('common/backend/Backend.class.php');
-require_once('common/backend/BackendSystem.class.php');
-require_once('common/backend/BackendAliases.class.php');
-require_once('common/backend/BackendSVN.class.php');
-require_once('common/backend/BackendCVS.class.php');
-require_once('common/backend/BackendMailingList.class.php');
-
+require_once('common/backend/BackendFactory.class.php');
 
 /**
 * Manager of system events
@@ -114,7 +108,7 @@ class SystemEventManager {
     }
 
     function _getBackend() {
-        return Backend::instance();
+        return BackendFactory::getBackend();
     }
 
     /*
@@ -265,37 +259,37 @@ class SystemEventManager {
                 
                 // Process $sysevent
                 if ($sysevent) {
-                    Backend::instance()->log("Processing event #".$sysevent->getId()." ".$sysevent->getType()."(".$sysevent->getParameters().")", Backend::LOG_INFO);
+                    BackendFactory::getBackend()->log("Processing event #".$sysevent->getId()." ".$sysevent->getType()."(".$sysevent->getParameters().")", Backend::LOG_INFO);
                     $sysevent->process();
                     $this->dao->close($sysevent);
                     $sysevent->notify();
-                    Backend::instance()->log("Processing event #".$sysevent->getId().": done.", Backend::LOG_INFO);
+                    BackendFactory::getBackend()->log("Processing event #".$sysevent->getId().": done.", Backend::LOG_INFO);
                     // Output errors???
                 }
             }
         }
         // Since generating aliases may be costly, do it only once everything else is processed
-        if (BackendAliases::instance()->aliasesNeedUpdate()) {
-            BackendAliases::instance()->update();
+        if (BackendFactory::getAliases()->aliasesNeedUpdate()) {
+            BackendFactory::getAliases()->update();
         }
 
         // Update CVS root allow file once everything else is processed
-        if (BackendCVS::instance()->getCVSRootListNeedUpdate()) {
-            BackendCVS::instance()->CVSRootListUpdate();
+        if (BackendFactory::getCVS()->getCVSRootListNeedUpdate()) {
+            BackendFactory::getCVS()->CVSRootListUpdate();
         }
 
         // Update SVN root definition for Apache once everything else is processed
-        if (BackendSVN::instance()->getSVNApacheConfNeedUpdate()) {
-            BackendSVN::instance()->generateSVNApacheConf();
+        if (BackendFactory::getSVN()->getSVNApacheConfNeedUpdate()) {
+            BackendFactory::getSVN()->generateSVNApacheConf();
             // Need to refresh apache (reload): display something if different from 'OK'
             system('/sbin/service httpd reload | grep -v OK');
         }
         // Update system user and group caches once everything else is processed
-        if (BackendSystem::instance()->getNeedRefreshUserCache()) {
-            BackendSystem::instance()->refreshUserCache();
+        if (BackendFactory::getSystem()->getNeedRefreshUserCache()) {
+            BackendFactory::getSystem()->refreshUserCache();
         }
-        if (BackendSystem::instance()->getNeedRefreshGroupCache()) {
-            BackendSystem::instance()->refreshGroupCache();
+        if (BackendFactory::getSystem()->getNeedRefreshGroupCache()) {
+            BackendFactory::getSystem()->refreshGroupCache();
         }
     }
     

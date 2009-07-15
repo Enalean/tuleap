@@ -37,7 +37,7 @@ class SystemEvent_USER_EMAIL_CHANGED extends SystemEvent {
     public function process() {
 
         // Need to update aliases
-        BackendAliases::instance()->setNeedUpdateMailAliases();
+        BackendFactory::getAliases()->setNeedUpdateMailAliases();
             
         $this->done();
         return true;

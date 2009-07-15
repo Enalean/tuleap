@@ -74,6 +74,16 @@ class UserDao extends DataAccessObject {
             $this->da->quoteSmart($email));
         return $this->retrieve($sql);
     }
+
+    /**
+     * Searches User by ldapid
+     * @return DataAccessResult
+     */
+    function searchByLdapId($ldap_id) {
+        $sql = sprintf("SELECT * FROM user WHERE ldap_id = %s",
+            $this->da->quoteSmart($ldap_id));
+        return $this->retrieve($sql);
+    }
     
     public function searchSSHKeys() {
         $sql = "SELECT user_name, authorized_keys 
@@ -133,7 +143,7 @@ class UserDao extends DataAccessObject {
         if (isset($user['password'])) {
             $stmt[] = 'user_pw='.$this->da->quoteSmart(md5($user['password']));
             $stmt[] = 'unix_pw='.$this->da->quoteSmart(account_genunixpw($user['password']));
-            $stmt[] = 'windows_pw='.$this->da->quoteSmart(account_genwinpw($user['password']));
+            //$stmt[] = 'windows_pw='.$this->da->quoteSmart(account_genwinpw($user['password']));
             $stmt[] = 'last_pwd_update='.$_SERVER['REQUEST_TIME'];
             unset($user['password']);
         }

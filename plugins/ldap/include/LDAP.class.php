@@ -1,15 +1,9 @@
 <?php
-//
 // Codendi
 // Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
 // http://www.codendi.com
-//
-// 
-//
 
-
-require_once('common/include/Error.class.php');
-require_once('LDAPResult.class.php');
+require_once 'LDAPResult.class.php';
 
 /**
  * LDAP class definition
@@ -19,52 +13,77 @@ require_once('LDAPResult.class.php');
  * The ldap object is initialized with global parameters (from local.inc):
  * servers, query templates, etc.
  */
-class LDAP extends Error {
-    var $serverList; /** Array of LDAP server */
-    var $ds;         /** LDAP link identifier */
-    var $default_bind_dn;     /** Needed for searching servers that don't support anonymous bind */
-    var $default_bind_passwd; /** Needed for searching servers that don't support anonymous bind */
-    var $auth_dn_template; /** Needed to compute authentication DN from login name */
+class LDAP {
+    /**
+     * This is equivalent to searching the entire directory. 
+     */
+    const SCOPE_SUBTREE  = 1;
+    
+    /**
+     * LDAP_SCOPE_ONELEVEL means that the search should only return information 
+     * that is at the level immediately below the base_dn given in the call. 
+     * (Equivalent to typing "ls" and getting a list of files and folders in 
+     * the current working directory.)
+     */
+    const SCOPE_ONELEVEL = 2;
+    
+    /**
+     * It is equivalent to reading an entry from the directory. 
+     */
+    const SCOPE_BASE     = 3;
 
-    // LDAP object constructor. Use gloabals for initialization.
-    function LDAP() {
-        global $Language;
-
-        $this->Error(); 
-        $this->serverList   = explode(",",$GLOBALS['sys_ldap_server']);
-        if(array_key_exists('sys_ldap_bind_dn', $GLOBALS)) {
-            $this->default_bind_dn    = $GLOBALS['sys_ldap_bind_dn'];
-        }
-        if(array_key_exists('sys_ldap_bind_passwd', $GLOBALS)) {
-            $this->default_bind_passwd= $GLOBALS['sys_ldap_bind_passwd'];
-        }
-        $this->auth_dn_template   = $GLOBALS['sys_ldap_auth_dn'];
+    /**
+     * Error value when search exceed either server or client size limit. 
+     */
+    const ERR_SIZELIMIT = 0x04 ;
+    
+    const ERR_SUCCESS   = 0x00;
+    
+    private $ds;
+    private $bound;
+    private $errorsTrapped;
+    private $ldapParams;
+    
+    /**
+     * LDAP object constructor. Use gloabals for initialization.
+     */
+    function __construct(array $ldapParams) {
+        $this->ldapParams    =  $ldapParams;
+        $this->bound         = false;
+        $this->errorsTrapped = true;
+    }
+    
+    /**
+     * Returns the whole LDAP parameters set by admin
+     * 
+     * @return array
+     */
+    function getLDAPParams() {
+        return $this->ldapParams;
     }
 
-    function &instance() {
-        static $_ldap_instance;
-        if (!$_ldap_instance) {
-            $_ldap_instance = new LDAP();
-        }
-        else {
-            $_ldap_instance->error_state=false;
-            $_ldap_instance->error_message=null;
-        }
-        return $_ldap_instance;
+    /**
+     * Returns one parameter from the list set by admin
+     * 
+     * @param String $key Parameter name
+     * 
+     * @return String
+     */
+    function getLDAPParam($key) {
+        return $this->ldapParams[$key];
     }
-
-    //
-    // Private methods: should not be called directly
-    //
-
-    // Connect to LDAP server.
-    // If several servers are listed, try first server first, then second, etc.
-    // This funtion should not be called directly: it is always called
-    // by a public function: authenticate() or search().
-    // @return true if connect was successful, false otherwise.
+    
+    /**
+     * Connect to LDAP server.
+     * If several servers are listed, try first server first, then second, etc.
+     * This funtion should not be called directly: it is always called
+     * by a public function: authenticate() or search().
+     * 
+     * @return Boolean true if connect was successful, false otherwise.
+     */ 
     function connect() {
         if (!$this->ds) {
-            foreach ($this->serverList as $ldap_server) {  	    
+            foreach (split('[,;]', $this->ldapParams['server']) as $ldap_server) {  	    
                 $this->ds = ldap_connect($ldap_server);
                 if($this->ds) {
                     // MV:
@@ -78,171 +97,213 @@ class LDAP extends Error {
                 }
             }
             return false;
-        }
-        else {
+        } else {
             return true;
         }
     }
     
-
-    // Perform LDAP binding.
-    // - Some servers allow anonymous bindings for searching. Otherwise, set
-    //  sys_ldap_bind_dn and sys_ldap_bind_passwd in local.inc
-    // - binding is also used for user authentication. A successful bind
-    //   means that the user/password is valid.
-    // @return true if bind was successful, false otherwise.
+    /**
+     * Perform LDAP binding.
+     * - Some servers allow anonymous bindings for searching. Otherwise, set
+     *  sys_ldap_bind_dn and sys_ldap_bind_passwd in local.inc
+     * - binding is also used for user authentication. A successful bind
+     *   means that the user/password is valid.
+     *
+     * @param String $binddn DN to use to bind with
+     * @param String $bindpw Password associated to the DN
+     * 
+     * @return Boolean true if bind was successful, false otherwise.
+     */
     function bind($binddn=null, $bindpw=null) {
-        global $Language;
+        if(!$this->bound) {
+            // For active directory...
+            ldap_set_option($this->ds, LDAP_OPT_PROTOCOL_VERSION, 3);
+            ldap_set_option($this->ds, LDAP_OPT_REFERRALS, 0);
 
-        // For active directory...
-        ldap_set_option($this->ds, LDAP_OPT_PROTOCOL_VERSION, 3);
-        ldap_set_option($this->ds, LDAP_OPT_REFERRALS, 0);
+            if (!$binddn) {
+                $binddn=isset($this->ldapParams['bind_dn']) ? $this->ldapParams['bind_dn'] : null;
+                $bindpw=isset($this->ldapParams['bind_passwd']) ? $this->ldapParams['bind_passwd'] : null;
+            }
+            if ($binddn && (!$bindpw)) {
+                // Prevent successful binding if a username is given and the server
+                // accepts anonymous connections
+                //$this->setError($Language->getText('ldap_class','err_bind_nopasswd',$binddn));
+                $this->bound = false;
+            }
 
-        if (!$binddn) {
-            $binddn=$this->default_bind_dn;
-            $bindpw=$this->default_bind_passwd;
+            if ($bind_result = @ldap_bind($this->ds, $binddn, $bindpw)) {
+                $this->bound = true;
+            } else {
+                //$this->setError($Language->getText('ldap_class','err_bind_invpasswd',$binddn));
+                $this->bound = false;
+            }
         }
-        if ($binddn && (!$bindpw)) {
-            // Prevent successful binding if a username is given and the server
-            // accepts anonymous connections
-            $this->setError($Language->getText('ldap_class','err_bind_nopasswd',$binddn));
-            return false;
-        }
-
-        if ($bind_result = @ldap_bind($this->ds, $binddn, $bindpw)) {
-            return true;
-        } else {
-            $this->setError($Language->getText('ldap_class','err_bind_invpasswd',$binddn));
-            return false;
-        }
+        return $this->bound;
     }
 
-
-    //
-    // Public methods
-    //
-
-
-    // LDAP authentication:
-    // Both direct and two-step authentication are possible.
-    // If 'auth_dn_template' contains '%ldap_name%', then it is a direct authentication.
-    // Else, make a search for the right DN before binding.
-    // @return true if the login and password match, false otherwise
-    function authenticate($login, $passwd) {
-        global $Language;
-        if (!$passwd) {
-            // avoid a successful bind on LDAP servers accepting anonymous connections
-            $this->setError($Language->getText('ldap_class','err_nopasswd'));
-            return false;;
-        }
-        
+    /**
+     * Unbinds from the LDAP directory
+     * 
+     * According to http://www.php.net/manual/en/function.ldap-unbind.php#17203
+     * ldap_unbind kills the link descriptor so we just have to force the rebind
+     * for next query
+     */
+    function unbind() {
+        $this->bound = false;
+    }
+    
+    /**
+     * Connect and bind to the LDAP Directory
+     *
+     * @return Boolean
+     */
+    function _connectAndBind() {
         if (!$this->connect()) {
-            $this->setError($Language->getText('ldap_class','err_cant_connect'));
+            //$this->setError($Language->getText('ldap_class','err_cant_connect'));
             return false;
         }
-
-        // Do we have the right DN?
-        $pos = strpos($this->auth_dn_template, "%ldap_name%");
-
-        if ($pos === false) {
-            // The auth DN does not contain any %ldap_name% -> two-step authentication
-            // Do a search to recover the right DN.
-            // Now run the ldap search
-
-            if ($GLOBALS['sys_ldap_auth_filter']) {
-                $ldap_filter = $GLOBALS['sys_ldap_auth_filter'];
-            } else {
-                $ldap_filter = "uid=%ldap_name%";
-            }
-            $ldap_filter = str_replace("%ldap_name%", $login, $ldap_filter);
-            $sr=ldap_search($this->ds,$this->auth_dn_template,$ldap_filter);
-            if (!$sr) {
-                $this->setError($Language->getText('ldap_class','err_auth_search'));
-                return false;
-            }
-            // Ideally we should only have one reply from the LDAP server
-            $info = ldap_get_entries($this->ds, $sr);
-            if ($info['count'] < 1) {
-                $this->setError($Language->getText('ldap_class','err_nouser'));
-                return false;
-            }
-            $auth_dn = $info[0]["dn"];
-
-        } else {
-
-            // One step authentication: compute DN for this user
-            $auth_dn = str_replace("%ldap_name%", $login, $this->auth_dn_template);
-        }
-        // Now bind with DN/password to check authentication
-        if (!$this->bind($auth_dn,$passwd)) {
-            $this->setError($Language->getText('ldap_class','err_badpasswd'));
+        if (!$this->bind()) {
+            //$this->setError($Language->getText('ldap_class','err_cant_bind'));
             return false;
         }
         return true;
     }
-
-
-    // Search the LDAP directory with the given DN and filter.
-    // @return array of result entries
-    function search($dn,$filter,$args=null) {
-        global $Language;
-        if (!$this->connect()) {
-            $this->setError($Language->getText('ldap_class','err_cant_connect'));
-            return false;
-        }
-        if (!$this->bind()) {
-            $this->setError($Language->getText('ldap_class','err_cant_bind'));
-            return false;
-        }
-        // Now run the ldap search
-	if(is_array($args)) {
-	  $sr=ldap_search($this->ds,$dn,$filter,$args);
-	}
-	else {
-        $sr=ldap_search($this->ds,$dn,$filter);
-	}
-        if (!$sr) {
-            $this->setError($Language->getText('ldap_class','err_search'));
-            return false;
-        }
-        // Ideally we should only have one reply from the LDAP server
-        $info = ldap_get_entries($this->ds, $sr);
-        if ($info['count'] < 1) {
-            $this->setError($Language->getText('ldap_class','err_nores'));
-            return false;
-        }
-        return $info;
+    
+    /**
+     * Escape String before passing them to LDAP server.
+     *
+     * From: http://www.php.net/manual/en/function.ldap-search.php#83774
+     * Escape string
+     * see: RFC2254
+     * 
+     * @param String $str String to escape
+     *  
+     * @todo see escaping defined in pear package (http://pear.php.net/package/Net_LDAP2/)
+     * 
+     * @return String
+     */
+    function escapeString($str){
+        $metaChars = array('\\', '(', ')', '#', '*');
+        $quotedMetaChars = array();
+        // Convert the meta chars in their hexadecimal value.
+        foreach ($metaChars as $key => $value) $quotedMetaChars[$key] = '\\'.dechex(ord($value));
+        $str=str_replace($metaChars,$quotedMetaChars,$str); //replace them
+        return ($str);
     }
-
 
     /**
-     * aseach return a Iterator on the result of the LDAP search made on the
-     * given argument (filter)
+     * Return last error state
+     * 
+     * @return Integer
+     */
+    function getErrno() {
+        return ldap_errno($this->ds);
+    }    
+    
+    /** 
+     * Perform LDAP authentication of a user based on its login.
+     * 
+     * First search the DN of the user based on its login then try to bind
+     * with this DN and the given password
      *
-     * @param $filter string LDAP filter
+     * @param String $login  Login name to authenticate with
+     * @param String $passwd Password associated to the login
+     * 
+     * @return Boolean true if the login and password match, false otherwise
+     */
+    function authenticate($login, $passwd) {
+        if (!$passwd) {
+            // avoid a successful bind on LDAP servers accepting anonymous connections
+            //$this->setError($Language->getText('ldap_class','err_nopasswd'));
+            return false;
+        }
+
+        // Do a search to recover the right DN based on given login
+        $lri = $this->searchLogin($login);
+        if (count($lri) === 1) {
+            $auth_dn = $lri->current()->getDn();
+        } else {
+            return false;
+        }
+
+        // Now bind with DN/password to check authentication
+        // /!\ Be sure not to reuse a previously bound connexion (otherwise
+        // authentication will always be successfull.
+        $this->unbind();
+        if (!$this->bind($auth_dn,$passwd)) {
+            //$this->setError($Language->getText('ldap_class','err_badpasswd'));
+            return false;
+        }
+        return true;
+    }
+    
+    /**
+     * Search in the LDAP directory
+     * 
+     * @see http://php.net/ldap_search
+     * 
+     * @param String  $baseDn     Base DN where to search
+     * @param String  $filter     Specific LDAP query
+     * @param Integer $scope      How to search (SCOPE_ SUBTREE, ONELEVEL or BASE)
+     * @param Array   $attributes LDAP fields to retreive
+     * @param Integer $attrsOnly  Retreive both field value and name (keep it to 0)
+     * @param Integer $sizeLimit  Limit the size of the result set
+     * @param Integer $timeLimit  Limit the time spend to search for results
+     * @param Integer $deref      Dereference result
+     * 
      * @return LDAPResultIterator
      */
-    function asearch($filter, $args=null) {
-        return new LDAPResultIterator($this->search($GLOBALS['sys_ldap_dn'], $filter, $args));    
+    function search($baseDn, $filter, $scope=self::SCOPE_SUBTREE, $attributes=array(), $attrsOnly=0, $sizeLimit=0, $timeLimit=0, $deref=LDAP_DEREF_NEVER) {
+        if($this->_connectAndBind()) {
+            $this->_initErrorHandler();
+            switch ($scope) {
+            case self::SCOPE_BASE:
+                $sr = ldap_read($this->ds, $baseDn, $filter, $attributes, $attrsOnly, $sizeLimit, $timeLimit, $deref);
+                break;
+            
+            case self::SCOPE_ONELEVEL:
+                $sr = ldap_list($this->ds, $baseDn, $filter, $attributes, $attrsOnly, $sizeLimit, $timeLimit, $deref);
+                break;
+            
+            case self::SCOPE_SUBTREE:
+            default:
+                $sr = ldap_search($this->ds, $baseDn, $filter, $attributes, $attrsOnly, $sizeLimit, $timeLimit, $deref);
+            }
+            $this->_restoreErrorHandler();
+
+            if ($sr !== false) {
+                $entries = ldap_get_entries($this->ds, $sr);
+                if ($entries !== false) {
+                    return new LDAPResultIterator($entries, $this->ldapParams);
+                }
+            }
+        }
+        return false;
     }
 
+    /**
+     * Search a specific Distinguish Name
+     *
+     * @param String $dn         DN to retreive
+     * @param Array  $attributes Restrict the LDAP fields to fetch
+     * 
+     * @return LDAPResultIterator
+     */
+    function searchDn($dn, $attributes=array()) {
+        return $this->search($dn, 'objectClass=*', self::SCOPE_BASE, $attributes);
+    }
 
     /**
      * Search if given argument correspond to a LDAP login (generally this
      * correspond to ldap 'uid' field).
      *
-     * @param $name string login
+     * @param String $name login
+     * 
      * @return LDAPResultIterator
      */    
     function searchLogin($name) {
-        if ($GLOBALS['sys_ldap_auth_filter']) {
-            $ldap_filter = $GLOBALS['sys_ldap_auth_filter'];
-        } else {
-            $ldap_filter = "uid=%ldap_name%";
-        }
-        $ldap_filter = str_replace("%ldap_name%", $name, $ldap_filter);
-    
-        return $this->asearch($ldap_filter);
+        $filter = $this->ldapParams['uid'].'='.$name;
+        return $this->search($this->ldapParams['dn'], $filter, self::SCOPE_SUBTREE);
     }
 
     
@@ -250,38 +311,174 @@ class LDAP extends Error {
      * Search if given argument correspond to a LDAP Identifier. This is the
      * uniq number that represent a user.
      *
-     * @param $name string LDAP Id
+     * @param String $name LDAP Id
+     * 
      * @return LDAPResultIterator
      */  
     function searchEdUid($name) {
-        if ($GLOBALS['sys_ldap_eduid_filter']) {
-            $ldap_filter = $GLOBALS['sys_ldap_eduid_filter'];
-        } else {
-            $ldap_filter = "eduid=%eduid%";
-        }
-        $ldap_filter = str_replace("%eduid%", $name, $ldap_filter);
-
-        return $this->asearch($ldap_filter);
+        $filter = $this->ldapParams['eduid'].'='.$name;
+        return $this->search($this->ldapParams['dn'], $filter, self::SCOPE_SUBTREE);
     }
 
 
     /**
      * Search if a LDAP user match a filter defined in local conf.
      *
-     * @param $name string
+     * @param String $words User name to search
+     * 
      * @return LDAPResultIterator
-     */  
+     */
     function searchUser($words) {
-        if(array_key_exists('sys_ldap_search_user', $GLOBALS)) {
-            $ldap_filter = $GLOBALS['sys_ldap_search_user'];
-        }
-        else {
-            $ldap_filter = 'cn=%words%';
-        }
-        $ldap_filter = str_replace("%words%", $words, $ldap_filter);
+        $filter = str_replace("%words%", $words, $this->ldapParams['search_user']);
+        $attributes = array($this->getLDAPParam('cn'),
+                            $this->getLDAPParam('eduid'),
+                            $this->getLDAPParam('mail'),
+                            $this->getLDAPParam('uid'));
+        return $this->search($this->ldapParams['dn'], $filter, self::SCOPE_SUBTREE, $attributes);
+    }
 
-        return $this->asearch($ldap_filter);
-    }       
+    /**
+     * Search if given identifier match a Common Name in the LDAP.
+     *
+     * @param String $name Common name to search
+     * 
+     * @return LDAPResultIterator
+     */
+    function searchCommonName($name) {
+        $filter = $this->ldapParams['cn'].'='.$name;
+        return $this->search($this->ldapParams['dn'], $filter, self::SCOPE_SUBTREE);
+    }
+
+    /**
+     * Search ldap group by name
+     *
+     * @param String $name Group name to search
+     * 
+     * @return LDAPResultIterator
+     */
+    function searchGroup($name) {
+        $filter = $this->ldapParams['grp_cn'].'='.$name;
+        return $this->search($this->ldapParams['dn'], $filter, self::SCOPE_SUBTREE);
+    }
+    
+    /**
+     * List members of a LDAP group
+     * 
+     * @param String $groupDn Group DN
+     * 
+     * @return LDAPResultIterator
+     */
+    function searchGroupMembers($groupDn) {
+        return $this->search($groupDn, 'objectClass=*', self::SCOPE_SUBTREE, array($this->ldapParams['grp_member']));
+    }
+
+    /**
+     * Specific search of user common name, only the common name is returned
+     *
+     * This method is designed for speed and to limit the number of returned values.
+     * 
+     * @param String   $name      Name of the group to look for
+     * @param Integer  $sizeLimit Limit the amount of result sent
+     * 
+     * @return LDAPResultIterator
+     */
+    function searchUserAsYouType($name, $sizeLimit, $validEmail=false) {
+        $lri = false;
+        if($this->_connectAndBind()) {
+            $filter = '('.$this->ldapParams['cn'].'=*'.$name.'*)';
+            if($validEmail) {
+                // Only search people with a non empty mail field
+                $filter = '(&'.$filter.'('.$this->ldapParams['mail'].'=*))';
+            }
+            // We only care about Common name and Login (lower the amount of data
+            // to fetch speed up the request.
+            $attrs  = array($this->ldapParams['cn'], $this->ldapParams['uid']);
+            // We want types and values
+            $attrsOnly = 0;
+            // Catch errors to detect if there are more results available than
+            // the list actually returned (helps to refine the search)
+            $this->trapErrors();
+            // Use SCOPE_ONELEVEL to only search in "sys_ldap_people_dn" branch 
+            // of the directory to speed up the search.
+            $lri = $this->search($this->ldapParams['people_dn'], $filter, self::SCOPE_ONELEVEL, $attrs, $attrsOnly, $sizeLimit);
+        }
+        if ($lri === false) {
+            return new LDAPResultIterator(array(), array());
+        } else {
+            return $lri;
+        }
+    }
+
+    /**
+     * Specific search of group common name, only the common name is returned
+     *
+     * This method is designed for speed and to limit the number of returned values.
+     * 
+     * @param String   $name      Name of the group to look for
+     * @param Integer $sizeLimit Limit the amount of result sent
+     * 
+     * @return LDAPResultIterator
+     */
+    function searchGroupAsYouType($name, $sizeLimit) {
+        $lri = false;
+        if($this->_connectAndBind()) {
+            $filter = '('.$this->ldapParams['grp_cn'].'=*'.$name.'*)';
+            // We only care about Common name
+            $attrs  = array($this->ldapParams['grp_cn']);
+            // We want types and values
+            $attrsOnly = 0; 
+            // Catch errors to detect if there are more results available than
+            // the list actually returned (helps to refine the search)
+            $this->trapErrors();
+            // Use SCOPE_ONELEVEL to only search in "sys_ldap_grp_dn" branch 
+            // of the directory to speed up the search.
+            $lri = $this->search($this->ldapParams['grp_dn'], $filter, self::SCOPE_ONELEVEL, $attrs, $attrsOnly, $sizeLimit);
+        }
+        if ($lri === false) {
+            return new LDAPResultIterator(array(), array());
+        } else {
+            return $lri;
+        }
+    }
+    
+    /**
+     * Enable fake error handler
+     * 
+     * The fake error handler is enabled only for one query.
+     * 
+     * @see _initErrorHandler()
+     */
+    private function trapErrors() {
+        $this->errorsTrapped = true;
+    }
+    
+    /**
+     * Setup fake error handler to be able to catch an error without displaying it
+     *
+     * This is not very clean but it's the only way to get some ldap errors
+     * without displaying them to final users. In some cases errors are meaningful
+     * and even expected (see searchAsYouType*) because we set very restrictive
+     * limits and of course the limit is exceeded easily. We need to catch it
+     * but not to display a warning to the user.
+     * 
+     * Note: don't enable it for each request, otherwise, you may hide unwanted
+     * errors.
+     */
+    private function _initErrorHandler() {
+        if ($this->errorsTrapped) {
+            set_error_handler(create_function('',''));
+        }
+    }
+
+    /**
+     * After LDAP query, restore the PHP error handler to its previous state.
+     */
+    private function _restoreErrorHandler() {
+        if ($this->errorsTrapped) {
+            restore_error_handler();
+        }
+        $this->errorsTrapped = false;
+    }
 }
 
 ?>

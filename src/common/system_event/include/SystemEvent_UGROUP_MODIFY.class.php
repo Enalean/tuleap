@@ -54,7 +54,7 @@ class SystemEvent_UGROUP_MODIFY extends SystemEvent {
         if ($project = $this->getProject($group_id)) {
             // Update SVN access file
             if ($project->usesSVN()) {
-                $backendSVN = BackendSVN::instance();
+                $backendSVN = BackendFactory::getSVN();
                 if (!$backendSVN->updateSVNAccess($group_id)) {
                     $this->error("Could not update SVN access file ($group_id)");
                     return false;

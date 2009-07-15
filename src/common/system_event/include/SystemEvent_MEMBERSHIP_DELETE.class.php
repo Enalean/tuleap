@@ -56,7 +56,7 @@ class SystemEvent_MEMBERSHIP_DELETE extends SystemEvent {
             
             // CVS writers
             if ($project->usesCVS()) {
-                if (!BackendCVS::instance()->updateCVSwriters($group_id)) {
+                if (!BackendFactory::getCVS()->updateCVSwriters($group_id)) {
                     $this->error("Could not update CVS writers for group $group_id");
                     return false;
                 }
@@ -64,14 +64,14 @@ class SystemEvent_MEMBERSHIP_DELETE extends SystemEvent {
             
             // SVN access file
             if ($project->usesSVN()) {
-                if (!BackendSVN::instance()->updateSVNAccess($group_id)) {
+                if (!BackendFactory::getSVN()->updateSVNAccess($group_id)) {
                     $this->error("Could not update SVN access file ($group_id)");
                     return false;
                 }
             }
 
             // Need to update system group cache
-            BackendSystem::instance()->setNeedRefreshGroupCache();
+            BackendFactory::getSystem()->setNeedRefreshGroupCache();
 
             
             $this->done();

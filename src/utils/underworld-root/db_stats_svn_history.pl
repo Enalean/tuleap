@@ -30,8 +30,18 @@
 use DBI;
 use Time::Local;
 use POSIX qw( strftime );
+use Net::LDAP;
+use Cwd; # needed by ldap account auto create
+
 require("../include.pl");  # Include all the predefined functions
+require("../ldap.pl");
+
 &db_connect;
+
+# Load LDAP config
+my $ldapIncFile = $sys_custompluginsroot.'/ldap/etc/ldap.inc';
+&load_local_config($ldapIncFile);
+&ldap_connect;
 
 my ($logfile, $sql, $res, $temp, %groups, $group_id, $errors );
 my ($sql_del, $res_del, %users, $user_id);
@@ -49,9 +59,6 @@ my ($query,$repopath, $group_name);
 my %svn_access = ();
 my %svn_access_by_group = ();
 
-&db_connect;
-
-
 if ( $ARGV[0] && $ARGV[1] && $ARGV[2] ) {
   $day_begin = timegm( 0, 0, 0, $ARGV[2], $ARGV[1] - 1, $ARGV[0] - 1900 );
 } else {
@@ -68,6 +75,7 @@ $day      = strftime("%d", gmtime( $day_begin ) );
 $day_date = "$year$month$day";
 
 $file = "$chronolog_basedir/$year/$month/svn_$year$month$day.log";
+#$file = '/var/log/httpd/access_log';
 
 print "Running year $year, month $month, day $day from \'$file\'\n" if $verbose;
 print "Beginning Subversion access parsing logfile \'$file\'...\n" if $verbose;			
@@ -100,18 +108,32 @@ while ( $temp = $res->fetchrow_arrayref() ) {
 # And we now do the same for users since we log stats about
 # users as well in Codendi (See group_svn_full_history table)
 print "Caching user information from user table.\n" if $verbose;
-$sql = "SELECT user_id,user_name FROM user";
+$sql = "SELECT user_id,user_name,ldap_id FROM user";
 $res = $dbh->prepare($sql);
 $res->execute();
 while ( $temp = $res->fetchrow_arrayref() ) {
   ${$temp}[1] =~ tr/A-Z/a-z/; # Unix users are lower case only
   $users{${$temp}[1]} = ${$temp}[0];
+  $usersLdapId{${$temp}[2]} = ${$temp}[0];
+}
+
+# Cache the projects that uses LDAP to authenticate svn users instead of
+# codex crendentials.
+print "Caching ldap powered svn repositories.\n" if $verbose;
+my %svn_ldap_groups;
+my $query_ldap = "SELECT g.group_id".
+    " FROM groups g JOIN plugin_ldap_svn_repository svnrep USING (group_id)".
+    " WHERE svnrep.ldap_auth = 1";
+my $res_ldap = $dbh->prepare($query_ldap);
+$res_ldap->execute();
+while(my ($group_id) = $res_ldap->fetchrow()) {
+    $svn_ldap_groups{$group_id} = 1;
 }
 
 while (<LOGFILE>) {
   chomp($_);
 
-  $_ =~ m/^([\d\.]+)\s.+\s(.+)\s\[(.+)\]\s(.+)\s(\d\d\d)\s\".*\"/;
+  $_ =~ m/^([\d\.]+)\s-\s(.+)\s\[(.+)\]\s\"\w+\s(.+)\sHTTP.+(\d\d\d)\s([\d-]+)/;
 
   $ip   = $1;
   $user = $2;
@@ -137,17 +159,35 @@ while (<LOGFILE>) {
     }
     $svn_access_by_group{$group_id} += 1;
 
-
     if ($user ne '-') {
-      $user_id = $users{$user};
+	if(defined($svn_ldap_groups{$group_id})) {
+	    # LDAP users
+	    #print "Find Ldap user: $user\n";
+	    $ldap_id = ldap_get_ldap_id_from_login($user);
+	    if( $ldap_id == -1 ) {
+		print STDERR "$_";
+		print STDERR " db_stats_svn_history.pl: Faild to find \'$user\' in LDAP\n";
+		next;
+	    }
+        if(!defined($usersLdapId{$ldap_id})) {
+            # No user with this ldap Id, create a new account
+            $user_id = ldap_account_create_auto($ldap_id);
+        } else {
+            $user_id = $usersLdapId{$ldap_id};
+        }
+	} else {
+	    # CodeX users
+	    $user_id = $users{$user};
+	}
 
-      if ( $user_id == 0 ) {
-	print STDERR "$_";
-	print STDERR "db_stats_svn_history.pl: bad user_name \'$user\' \n";
-	next;
-      }
-
-      $svn_access{$group_id}{$user_id} += 1;
+	if ( $user_id == 0 ) {
+	    print STDERR "$_";
+	    print STDERR "db_stats_svn_history.pl: bad user_name \'$user\' \n";
+	    next;
+	}
+	
+	#print "$user_id acceded to $group_id\n";
+	$svn_access{$group_id}{$user_id} += 1;
     }
 
   } else {
@@ -155,6 +195,7 @@ while (<LOGFILE>) {
   }
 }
 close(LOGFILE);
+#exit 1;
 
 # loop through the group_id/user_id array and insert svn access entries
 print "Saving Subversion access in database \'$file\'...\n" if $verbose;

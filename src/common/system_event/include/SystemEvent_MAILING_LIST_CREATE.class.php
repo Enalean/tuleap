@@ -53,13 +53,13 @@ class SystemEvent_MAILING_LIST_CREATE extends SystemEvent {
             return $this->setErrorBadParam();
         }
 
-        if (!BackendMailingList::instance()->createList($group_list_id)) {
+        if (!BackendFactory::getMailingList()->createList($group_list_id)) {
             $this->error("Could not create mailing list $group_list_id");
             return false;
         }
             
         // Need to add list aliases
-        BackendAliases::instance()->setNeedUpdateMailAliases();
+        BackendFactory::getAliases()->setNeedUpdateMailAliases();
             
         $this->done();
         return true;

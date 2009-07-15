@@ -92,8 +92,8 @@ sub db_add_record {
 
 sub db_get_commit {
 
-  my ($group_id, $repo, $revision, $date, $who, @desc) = @_;
-  my ($query, $uid, $c, $res, $fulldesc);
+  my ($group_id, $repo, $revision, $date, $uid, @desc) = @_;
+  my ($query, $c, $res, $fulldesc);
 
   @desc_escaped = @desc;
   foreach(@desc_escaped) { s/\\/\\\\/g }
@@ -105,7 +105,7 @@ sub db_get_commit {
   $fulldesc = join("&gt;",split(">", $fulldesc));
   $fulldesc = join("&lt;",split("<", $fulldesc));
 
-  $uid = db_get_field('user','user_name', $who, 'user_id');
+  #$uid = db_get_field('user','user_name', $who, 'user_id');
   $repo_id = db_get_index('svn_repositories','repository', $repo);
 
   $query = "INSERT INTO svn_commits (group_id,repositoryid,revision,date,whoid,description) ".
