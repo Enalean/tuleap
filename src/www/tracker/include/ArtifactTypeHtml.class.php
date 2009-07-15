@@ -2144,11 +2144,12 @@ EOS;
 		    echo "</tr>\n";
 		}
 		
-		echo'
-		</table>
+		echo "</table>\n";
 		
-		<HR>
-		<P align="center"><INPUT type="submit" name="submit" value="'.$Language->getText('tracker_include_artifact','submit').'">
+		$em = EventManager::instance();
+		$em->processEvent('artifact_type_html_display_notification_form', array('at' => $this, 'group_id' => $group_id, 'art_field_fact' => $GLOBALS['art_field_fact']));
+		
+		echo '<P align="center"><INPUT type="submit" name="submit" value="'.$Language->getText('tracker_include_artifact','submit').'">
 		</FORM>';
 			
 		

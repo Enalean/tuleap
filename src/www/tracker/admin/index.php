@@ -818,7 +818,9 @@ if ($group_id && !$atid) {
         $field_id = $request->getValidated('field_id', 'uint', 0);
 		$field = $art_field_fact->getFieldFromId($field_id);
 		if ( $field ) {
-            
+            $em = EventManager::instance();
+            $em->processEvent('tracker_admin_field_delete', array('field' => $field, 'ath' => $ath));
+
             //clear permissions
             permission_clear_all_fields_tracker($group_id, $atid, $field->getID());
             
@@ -1053,7 +1055,7 @@ if ($group_id && !$atid) {
 		}
 		
 		$em =& EventManager::instance();
-		$em->processEvent('tracker_graphic_report_admin',null);		
+		$em->processEvent('tracker_graphic_report_admin', array('ath' => $ath, 'atf' => $atf, 'art_field_fact' => $art_field_fact));
 		$ath->adminHeader(array('title'=>$ath->getName().' '.$Language->getText('tracker_admin_field_usage','tracker_admin'),'help' => 'TrackerAdministration.html'));
 		$ath->displayAdminTracker($group_id,$atid);
 		$ath->footer(array());

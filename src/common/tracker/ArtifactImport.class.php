@@ -1063,6 +1063,9 @@ function getUsedFields() {
         $agnf =& new ArtifactGlobalNotificationFactory();
         $ah->mailFollowupWithPermissions($agnf->getAllAddresses($this->ath->getID(), $update = false));
     }
+    
+    $em = EventManager::instance();
+    $em->processEvent('artifact_import_insert_artifact', array('ah' => $ah, 'ath' => $this->ath));
   }
   return true;
   }

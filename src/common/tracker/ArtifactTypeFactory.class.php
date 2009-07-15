@@ -317,7 +317,10 @@ class ArtifactTypeFactory extends Error {
 		
         //Remove permissions
         permission_clear_all_tracker($this->Group->getID(), $atid);
-        
+
+        $em = EventManager::instance();
+        $em->processEvent("artifact_type_factory_delete_artifact_type", array('tracker_id' => $atid));
+
 		return true;
 	}
 	
