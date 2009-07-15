@@ -122,14 +122,10 @@ function trove_getallroots() {
 
 // return boolean true when project is categorized 
 function trove_project_categorized($group_id) { 
-    $res_trovecat = db_query('SELECT trove_cat.fullpath AS fullpath,'
-        .'trove_cat.fullpath_ids AS fullpath_ids,'
-        .'trove_cat.trove_cat_id AS trove_cat_id '
+    $res_trovecat = db_query('SELECT NULL '
         .'FROM trove_cat,trove_group_link '
         .'WHERE trove_cat.trove_cat_id=trove_group_link.trove_cat_id '
-        .'AND trove_group_link.group_id='.db_ei($group_id).' '
-        .'ORDER BY trove_cat.trove_cat_id '
-        .'LIMIT 1');
+        .'AND trove_group_link.group_id='.db_ei($group_id));
     if (db_numrows($res_trovecat) < 1) {
         return false;
     } else {
