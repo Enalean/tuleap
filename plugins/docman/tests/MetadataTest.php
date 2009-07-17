@@ -35,9 +35,12 @@ require_once(dirname(__FILE__).'/../include/Docman_MetadataFactory.class.php');
 //require_once('BaseLanguage.class.php');
 //Mock::generate('BaseLanguage');
 
+require_once('common/event/EventManager.class.php');
+Mock::generate('EventManager');
+
 Mock::generate('Docman_MetadataListOfValuesElementFactory');
 Mock::generate('Docman_MetadataFactory');
-Mock::generatePartial('Docman_MetadataFactory', 'MetadataFactoryMockedForCloneOneMd', array('_getMetadataFactory', '_getListOfValuesElementFactory'));
+Mock::generatePartial('Docman_MetadataFactory', 'MetadataFactoryMockedForCloneOneMd', array('_getMetadataFactory', '_getListOfValuesElementFactory', '_getEventManager'));
 Mock::generatePartial('Docman_MetadataFactory', 'MetadataFactoryMockedForCloneRealMd', array('getRealMetadataList', '_cloneOneMetadata'));
 
 class MetadataTest extends UnitTestCase {
@@ -61,9 +64,13 @@ class MetadataTest extends UnitTestCase {
         $srcMd->setType(PLUGIN_DOCMAN_METADATA_TYPE_STRING);
         $metadataMapping = array();
         
+
         // Factory to test
         $srcMdF = new MetadataFactoryMockedForCloneOneMd($this);
-        
+
+        $eventManager = new MockEventManager($this);
+        $srcMdF->setReturnReference('_getEventManager', $eventManager);
+
         $dstMdF = new MockDocman_MetadataFactory($this);
         $dstMdF->setReturnValue('create', 401);
         $dstMdF->expectOnce('create');
@@ -91,7 +98,10 @@ class MetadataTest extends UnitTestCase {
         
         // Factory to test
         $srcMdF = new MetadataFactoryMockedForCloneOneMd($this);
-        
+
+        $eventManager = new MockEventManager($this);
+        $srcMdF->setReturnReference('_getEventManager', $eventManager);
+
         $dstMdF = new MockDocman_MetadataFactory($this);
         $dstMdF->setReturnValue('create', 401);
         $dstMdF->expectOnce('create');
@@ -129,6 +139,9 @@ class MetadataTest extends UnitTestCase {
         // Factory to test
         $srcMdF = new MetadataFactoryMockedForCloneOneMd($this);
         
+        $eventManager = new MockEventManager($this);
+        $srcMdF->setReturnReference('_getEventManager', $eventManager);
+
         // First Call setup
         $srcMd1 = new Docman_ListMetadata();
         $srcMd1->setId(301);

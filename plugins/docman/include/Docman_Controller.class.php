@@ -1415,6 +1415,11 @@ class Docman_Controller extends Controler {
             break;
             
         default:
+            $event_manager =& EventManager::instance();
+            $eParams = array('view'            => $view,
+                             'docmanPath'      => $this->pluginPath,
+                             'docmanThemePath' => $this->themePath);
+            $event_manager->processEvent('plugin_docman_after_dispacher', $eParams);
             die(htmlspecialchars($view) .' is not supported');
             break;
         }

@@ -148,6 +148,7 @@ class Docman_Actions extends Actions {
         $iFactory =& $this->_getItemFactory();
 
         $uploadSucceded = false;
+        $newVersion     = null; 
 
         $number = 0;
         $version = $item->getCurrentVersion();
@@ -276,6 +277,11 @@ class Docman_Actions extends Actions {
                             'date'      => $date);
             $vId = $vFactory->create($vArray);
             
+            // Create a new version object
+            $vArray['id'] = $vId;
+            $vArray['date'] = $_SERVER['REQUEST_TIME'];
+            $newVersion = new Docman_Version($vArray);
+            
             $eArray = array('group_id' => $item->getGroupId(),
                             'item'     => &$item, 
                             'version'  => $vId,
@@ -306,6 +312,7 @@ class Docman_Actions extends Actions {
             //Maybe cancel item ?
             $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_create_'.$_action_type));
         }
+        return $newVersion;
     }
 
     function createFolder() {
@@ -416,9 +423,10 @@ class Docman_Actions extends Actions {
                     }
                     $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'info_document_created'));
                     
+                    $new_version = null;
                     if($item['item_type'] == PLUGIN_DOCMAN_ITEM_TYPE_FILE ||
                        $item['item_type'] == PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE) {
-                        $this->_storeFile($new_item);
+                        $new_version = $this->_storeFile($new_item);
                     }
                     
                     // Create metatata
@@ -446,6 +454,16 @@ class Docman_Actions extends Actions {
                     
                     $folderFactory = $this->_getFolderFactory();
                     $folderFactory->expand($parent);
+                    
+                    // Warn users about watermarking
+                    if($new_version !== null) {
+                        $this->event_manager->processEvent('plugin_docman_after_new_document', array(
+                                                           'item'     => $new_item,
+                                                           'user'     => $user,
+                                                           'version'  => $new_version,
+                                                           'docmanControler' => $this->_controler)
+                        );
+                    }
                 }
             }
         }
@@ -626,13 +644,13 @@ class Docman_Actions extends Actions {
             $item =& $item_factory->getItemFromDb($request->get('id'));
             $item_type = $item_factory->getItemTypeForItem($item);
             if ($item_type == PLUGIN_DOCMAN_ITEM_TYPE_FILE || $item_type == PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE) {
-                $this->_storeFile($item);
+                $new_version =& $this->_storeFile($item);
                 
                 // We update the update_date of the document only if no version date was given
                 if (!$request->existAndNonEmpty('date')) {
                     $item_factory->update(array('id' => $item->getId()));    
                 }
-                
+
                 // Manage lock
                 $dPm = Docman_PermissionsManager::instance($item->getGroupId());
                 if ($request->existAndNonEmpty('lock_document')) {
@@ -644,6 +662,14 @@ class Docman_Actions extends Actions {
                     $dPm->getLockFactory()->unlock($item);
                     $this->_raiseUnlockEvent($item, $user);
                 }
+
+                // Warn users about watermarking
+                $this->event_manager->processEvent('plugin_docman_after_new_version', array(
+                                                    'item'     => $item,
+                                                    'user'     => $user,
+                                                    'version'  => $new_version,
+                                                    'docmanControler' => $this->_controler)
+                );
             }
         }
         $this->event_manager->processEvent('send_notifications', array());
