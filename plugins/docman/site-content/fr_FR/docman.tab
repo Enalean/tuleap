@@ -731,3 +731,21 @@ widget_categ_label	plugin_docman	Gestionnaire de documents
 plugin_docman	widget_description_my_docman	Affiche la liste des documents en attente d'approbation.
 plugin_docman	widget_title_embedded	Visionneur du gestionnaire de document
 plugin_docman	widget_description_embedded	Permet d'afficher un élément du gestionnaire de document directement dans le dashboard. <br /><em>Pour le moment seuls les fichiers embarqués sont supportés</em>.
+
+plugin_docman	Project_access_permission	Documents : permissions
+plugin_docman	export_format	Export des données du projet
+plugin_docman	perm_exp_format	Format d'export des données du Docman
+plugin_docman	perm_exp_format_msg	Le format d'export des données du Docman
+plugin_docman	format_export_date	Date de l'export
+plugin_docman	format_export_project	Projet
+plugin_docman	format_id	Id
+plugin_docman	format_id_desc	Document id
+plugin_docman	format_label	Label
+plugin_docman	format_sample	Valeur exemple
+plugin_docman	format_description	Description
+plugin_docman	format_path	Chemin
+plugin_docman	format_path_desc	Le chemin vers l'item
+plugin_docman	format_type	Type
+plugin_docman	format_type_desc	Nature de l'item (fichier, lien, wiki, ...)
+plugin_docman	format_user_group	List des groupes d'utilisateurs...
+plugin_docman	format_user_group_desc	Un group par colonne. Chaque groupe peut avoir soit la permission "READ", "WRITE" ou "MANAGE". Une cellule vide signifie que le group correspondant n'as pas accès à la ressource.

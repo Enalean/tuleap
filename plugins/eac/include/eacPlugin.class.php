@@ -51,16 +51,6 @@ class EacPlugin extends Plugin {
      *  @return void
      */   
     function project_export_entry($params) {
-        // Docman perms
-        /*$url  = $this->getPluginPath().'/export_permissions.php?group_id='.$params['group_id'];
-        $params['labels']['plugin_eac_docman']                           = $GLOBALS['Language']->getText('plugin_eac','Project_access_permission');
-        $params['data_export_links']['plugin_eac_docman']                = $url.'&export=csv';
-        $params['data_export_format_links']['plugin_eac_docman']         = $url.'&export=format';
-        $params['history_export_links']['plugin_eac_docman']             = null;
-        $params['history_export_format_links']['plugin_eac_docman']      = null;
-        $params['dependencies_export_links']['plugin_eac_docman']        = null;
-        $params['dependencies_export_format_links']['plugin_eac_docman'] = null;*/
-        
         // UGroups
         $params['labels']['plugin_eac_ugroups']                           = $GLOBALS['Language']->getText('plugin_eac','export_definitions');
         $params['data_export_links']['plugin_eac_ugroups']                = $this->getPluginPath().'/export_users_ugroups.php?group_id='.$params['group_id'];

@@ -357,7 +357,7 @@ class DocmanPlugin extends Plugin {
     function project_export_entry($params) {
         // Docman perms
         $url  = '?group_id='.$params['group_id'].'&export=plugin_docman_perms';
-        $params['labels']['plugin_eac_docman']                           = $GLOBALS['Language']->getText('plugin_eac','Project_access_permission');
+        $params['labels']['plugin_eac_docman']                           = $GLOBALS['Language']->getText('plugin_docman','Project_access_permission');
         $params['data_export_links']['plugin_eac_docman']                = $url.'&show=csv';
         $params['data_export_format_links']['plugin_eac_docman']         = $url.'&show=format';
         $params['history_export_links']['plugin_eac_docman']             = null;
@@ -375,7 +375,7 @@ class DocmanPlugin extends Plugin {
         if($params['export'] == 'plugin_docman_perms') {
             include_once('Docman_PermissionsExport.class.php');
             $request = HTTPRequest::instance();
-            $permExport = new Docman_PermissionsExport($params['project']->getId());
+            $permExport = new Docman_PermissionsExport($params['project']);
             if ($request->get('show') == 'csv') {
                 $permExport->toCSV();
             } else { // show = format

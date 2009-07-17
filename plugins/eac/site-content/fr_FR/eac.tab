@@ -2,24 +2,9 @@ plugin_eac	descriptor_description	Vue avancée des permissions de Codendi.
 plugin_eac	descriptor_name	Extraction des contrôles d'accès
 plugin_eac	db_error	Erreur base de données
 plugin_eac	export_definitions	Définition des groupes
-plugin_eac	Project_access_permission	Documents : permissions
-plugin_eac	Export_perms	Export
-plugin_eac	Show_format	Afficher le format
+
 plugin_eac	no_group_id	Le projet est invalide
-plugin_eac	export_format	Export des données du projet
-plugin_eac	perm_exp_format	Format d'export des données du Docman
-plugin_eac	perm_exp_format_msg	Le format d'export des données du Docman
-plugin_eac	format_id	Id
-plugin_eac	format_id_desc	Document id
-plugin_eac	format_label	Label
-plugin_eac	format_sample	Valeur exemple
-plugin_eac	format_description	Description
-plugin_eac	format_path	Chemin
-plugin_eac	format_path_desc	Le chemin vers l'item
-plugin_eac	format_type	Type
-plugin_eac	format_type_desc	Nature de l'item (fichier, lien, wiki, ...)
-plugin_eac	format_user_group	List des groupes d'utilisateurs...
-plugin_eac	format_user_group_desc	Un group par colonne. Chaque groupe peut avoir soit la permission "READ", "WRITE" ou "MANAGE". Une cellule vide signifie que le group correspondant n'as pas accès à la ressource.
+
 plugin_eac	error_not_admin	Vous n'avez pas les droits pour faire cet export (Administrateurs seulement). 
 plugin_eac	export_user_group	Groupe
 plugin_eac	export_user_username	Nom $1
