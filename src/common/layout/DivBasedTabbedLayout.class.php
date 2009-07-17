@@ -438,6 +438,8 @@ echo $this->outerTabs($params);
 			$exact = 1;
 		}
 
+        $em =& EventManager::instance();
+
 		$output = '
 		<form action="/search/" method="post"><table style="text-align:left;float:right"><tr style="vertical-align:top;"><td>
 		';
@@ -456,13 +458,17 @@ echo $this->outerTabs($params);
             $output .= "\t<OPTION value=\"wiki\"".( $type_of_search == "wiki" ? " SELECTED" : "" ).">".$Language->getText('include_menu','this_wiki')."</OPTION>\n";
         }           
 
+        $em->processEvent('layout_searchbox_options', array('option_html' => &$output,
+                                                        'type_of_search' => $type_of_search
+                                                    ));
+
         $output .= "\t<OPTION value=\"soft\"".( $type_of_search == "soft" ? " SELECTED" : "" ).">".$Language->getText('include_menu','software_proj')."</OPTION>\n";
         if ($GLOBALS['sys_use_snippet'] != 0) {
             $output .= "\t<OPTION value=\"snippets\"".( ($type_of_search == "snippets" || $is_snippet_page) ? " SELECTED" : "" ).">".$Language->getText('include_menu','code_snippets')."</OPTION>\n";
         }
         $output .= "\t<OPTION value=\"people\"".( $type_of_search == "people" ? " SELECTED" : "" ).">".$Language->getText('include_menu','people')."</OPTION>\n";
+
         $search_type_entry_output = '';
-        $em =& EventManager::instance();
         $eParams = array('type_of_search' => $type_of_search,
                          'output'         => &$search_type_entry_output);
         $em->processEvent('search_type_entry', $eParams);      
@@ -500,6 +506,9 @@ echo $this->outerTabs($params);
         if ( isset($group_id) ) {
            $output .= "\t<INPUT TYPE=\"HIDDEN\" VALUE=\"$group_id\" NAME=\"group_id\">\n";
         }
+
+        $em->processEvent('layout_searchbox_hiddenInputs', array('input_html' => &$output));
+
 		$output .= '';
         
 		$output .= '<input style="font-size:0.8em" type="text" size="22" name="words" value="'. htmlentities(stripslashes($words), ENT_QUOTES, 'UTF-8').'" /><br />';

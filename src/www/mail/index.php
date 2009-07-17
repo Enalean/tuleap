@@ -14,20 +14,28 @@ require_once('common/include/HTTPRequest.class.php');
 $pv=isset($pv)?$pv:false;
 
 function display_ml_details($group_id, $list_server, $result, $i) {
-    $list_name = db_result($result, $i, 'list_name');
+    
+    echo '<IMG SRC="'.util_get_image_theme("ic/cfolder15.png").'" HEIGHT="13" WIDTH="15" BORDER="0">&nbsp;<b>'.db_result($result, $i, 'list_name').'</b> [';
     $list_is_public = db_result($result, $i, 'is_public');
-    
-    echo '<IMG SRC="'.util_get_image_theme("ic/cfolder15.png").'" HEIGHT="13" WIDTH="15" BORDER="0">&nbsp;<b>'.$list_name.'</b> [';
-            if ($list_is_public) {
-                echo ' <A HREF="?group_id='. $group_id .'&amp;action=pipermail&amp;id='. db_result($result, $i, 'group_list_id') .'">'.$GLOBALS['Language']->getText('mail_index','archive').'</A>';
-            } else {
-                echo ' '.$GLOBALS['Language']->getText('mail_index','archive').': <A HREF="?group_id='. $group_id .'&amp;action=pipermail&amp;id='. db_result($result, $i, 'group_list_id') .'">'.$GLOBALS['Language']->getText('mail_index','public').'</A>/<A HREF="?group_id='. $group_id .'&amp;action=private&amp;id='. db_result($result, $i, 'group_list_id') .'">'.$GLOBALS['Language']->getText('mail_index','private').'</A>';
-            }
-  
+    $html_a = '';
+    $em =& EventManager::instance();
+    $em->processEvent('browse_archives', array('html' => &$html_a,
+                                               'group_list_id' => db_result($result, $i, 'group_list_id')
+                                            ));
+    if($html_a) {
+        echo $html_a;
+    }
+    else {
+        if ($list_is_public) {
+            echo ' <A HREF="?group_id='. $group_id .'&amp;action=pipermail&amp;id='. db_result($result, $i, 'group_list_id') .'">'.$GLOBALS['Language']->getText('mail_index','archive').'</A>';
+        } else {
+            echo ' '.$GLOBALS['Language']->getText('mail_index','archive').': <A HREF="?group_id='. $group_id .'&amp;action=pipermail&amp;id='. db_result($result, $i, 'group_list_id') .'">'.$GLOBALS['Language']->getText('mail_index','public').'</A>/<A HREF="?group_id='. $group_id .'&amp;action=private&amp;id='. db_result($result, $i, 'group_list_id') .'">'.$GLOBALS['Language']->getText('mail_index','private').'</A>';
+        }
+    }
+
     echo ' | <A HREF="?group_id='. $group_id .'&amp;action=listinfo&amp;id='. db_result($result, $i, 'group_list_id') .'">'.$GLOBALS['Language']->getText('mail_index','unsubscribe').'</A>)';
-    echo ' | <A HREF="?group_id='. $group_id .'&amp;action=admin&amp;id='. db_result($result, $i, 'group_list_id') .'">'.$GLOBALS['Language']->getText('mail_index','ml_admin').'</A> ]';
-    
-    echo '<br>&nbsp;'.  db_result($result, $i, 'description') .'<p>';
+    echo ' | <A HREF="?group_id='. $group_id .'&amp;action=admin&amp;id='. db_result($result, $i, 'group_list_id') .'">'.$GLOBALS['Language']->getText('mail_index','ml_admin').'</A>';
+    echo ' ]<br>&nbsp;'.  db_result($result, $i, 'description') .'<p>';
 }
 
 if ($group_id) {

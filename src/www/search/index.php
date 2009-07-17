@@ -16,20 +16,23 @@ require_once('common/tracker/Artifact.class.php');
 require_once('common/tracker/ArtifactFieldFactory.class.php');
 
 
-if ($type_of_search !== "tracker" &&
-    $type_of_search !== "wiki") {
-    $HTML->header(array('title'=>$Language->getText('search_index','search')));
-    echo "<P><CENTER>";
-    $HTML->bodySearchBox();
+$em =& EventManager::instance();   
+$plugins_powered_search = false;   
+$em->processEvent('plugins_powered_search', array('type_of_search' => $type_of_search,
+                                                'plugins_powered_search' => &$plugins_powered_search)); 
+
+
+if ($type_of_search !== "tracker" && $type_of_search !== "wiki" && !$plugins_powered_search) {
+        $HTML->header(array('title'=>$Language->getText('search_index','search')));
+        echo "<P><CENTER>";
+        $HTML->bodySearchBox();
 }
 $hp = Codendi_HTMLPurifier::instance();
 /*
 	Force them to enter at least three characters
 */
 if ($words && (strlen($words) < 3)) {
-	if ($type_of_search == "all_trackers" ||
-        $type_of_search == "tracker" ||
-        $type_of_search == "wiki") {
+	if ($type_of_search == "tracker" || $type_of_search == "wiki" || $plugins_powered_search) {
         $HTML->header(array('title'=>$Language->getText('search_index','search')));
     }
     echo '<H2>'.$Language->getText('search_index','at_least_3_ch').'</H2>';
@@ -38,9 +41,7 @@ if ($words && (strlen($words) < 3)) {
 }
 
 if (!$words) {
-    if ($type_of_search == "all_trackers" ||
-        $type_of_search == "tracker" ||
-        $type_of_search == "wiki") {
+    if ($type_of_search == "tracker" || $type_of_search == "wiki" || $plugins_powered_search) {
         $HTML->header(array('title'=>$Language->getText('search_index','search')));
     }
 	echo '<BR>'.$Language->getText('search_index','enter_s_words');
@@ -684,6 +685,7 @@ if ($type_of_search == "soft") {
     $eParams['search_type']    =& $matchingSearchTypeFound; 
     $eParams['rows_returned']  =& $rows_returned;
     $eParams['rows']           =& $rows;
+
     $em =& EventManager::instance();
     $em->processEvent('search_type', $eParams);
 

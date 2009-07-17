@@ -225,7 +225,7 @@ class Mail {
         }
 
         $header = "From: ".$this->getFrom().$GLOBALS['sys_lf'];
-        $header .= "Content-type: ".$this->getMimeType()."; charset=".$this->getBodyCharset().$GLOBALS['sys_lf'];
+    	$header .= "Content-type: ".$this->getMimeType()."; charset=".$this->getBodyCharset().$GLOBALS['sys_lf'];
         $cc = $this->getCc();
         if (strlen($cc) > 0) {
             $header .= "Cc: ".$cc.$GLOBALS['sys_lf'];

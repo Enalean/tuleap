@@ -1593,6 +1593,8 @@ class Layout extends Response {
             $exact = 1;
         }
         
+        $em =& EventManager::instance();
+        
         $output = "\t<CENTER>\n";
         $output .= "\t<FORM action=\"/search/\" method=\"post\">\n";
         
@@ -1610,6 +1612,11 @@ class Layout extends Response {
         } else if ($group_id && $is_wiki_page) {
             $output .= "\t<OPTION value=\"wiki\"".( $type_of_search == "wiki" ? " SELECTED" : "" ).">".$Language->getText('include_menu','this_wiki')."</OPTION>\n";
         }
+
+        $em->processEvent('layout_searchbox_options', array('option_html' => &$output,
+                                                        'type_of_search' => $type_of_search
+                                                    ));
+
         if ($group_id) {
             $output .= "\t<OPTION value=\"all_trackers\"".( $type_of_search == "all_trackers" ? " SELECTED" : "" ).">".$Language->getText('include_menu','all_trackers')."</OPTION>\n";
         }
@@ -1620,7 +1627,7 @@ class Layout extends Response {
         $output .= "\t<OPTION value=\"people\"".( $type_of_search == "people" ? " SELECTED" : "" ).">".$Language->getText('include_menu','people')."</OPTION>\n";
 
         $search_type_entry_output = '';
-        $em =& EventManager::instance();
+
         $eParams = array('type_of_search' => $type_of_search,
                          'output'         => &$search_type_entry_output);
         $em->processEvent('search_type_entry', $eParams);      
@@ -1656,6 +1663,8 @@ class Layout extends Response {
         if ( isset($group_id) ) {
            $output .= "\t<INPUT TYPE=\"HIDDEN\" VALUE=\"$group_id\" NAME=\"group_id\">\n";
         }
+
+        $em->processEvent('layout_searchbox_hiddenInputs', array('input_html' => &$output));
         
         $output .= '<INPUT TYPE="text" SIZE="16" NAME="words" VALUE="'. htmlentities(stripslashes($words), ENT_QUOTES, 'UTF-8') .'">';
         $output .= "\t<BR>\n";
