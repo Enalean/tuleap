@@ -28,10 +28,10 @@ require_once('common/dao/UserDao.class.php');
 //
 // Input treatment
 //
-$vUserName = new Valid_String('user_name');
+$vUserName = new Valid_String('name');
 $vUserName->required();
 if($request->valid($vUserName)) {
-    $userName = $request->get('user_name');
+    $userName = $request->get('name');
 } else {
     // Finish script, no output
     exit;

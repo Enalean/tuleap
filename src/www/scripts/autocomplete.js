@@ -1,9 +1,7 @@
-/**
- * Usage:
- * new UserAutoCompleter('form_unix_name', '".util_get_dir_image_theme()."', false)
- 
+/*
+ * Abstract class to manage autocompletion, see after for concret classes
  */
-var UserAutoCompleter = Class.create({
+var AutoCompleter = Class.create({
     /**
      * Constructor
      */
@@ -16,7 +14,11 @@ var UserAutoCompleter = Class.create({
         }
         this.options['imgPath']  = imgPath;
         this.options['multiple'] = multiple;
-
+        // The url to call to get completion list
+        this.url                 = '';
+        // Default value acts as hint
+        this.options['defaultValueActsAsHint'] = true;
+        
         this.registerOnLoadEvent = this.registerOnLoad.bindAsEventListener(this);
         document.observe('dom:loaded', this.registerOnLoadEvent);
     },
@@ -26,11 +28,10 @@ var UserAutoCompleter = Class.create({
      */
     registerOnLoad: function () {
         this.element = $(this.elementId);
-        
-        var url = '/user/autocomplete.php';
-        if(this.options.codendiUsersOnly == 1) {
-            url += '?codendi_user_only=1';
+        if (this.options['defaultValueActsAsHint']) {
+            this.element.defaultValueActsAsHint();
         }
+
         var tokens = '';
         if(this.options.multiple == true) {
             tokens = [',', ';'];
@@ -41,7 +42,7 @@ var UserAutoCompleter = Class.create({
             var img = Builder.node('img', {
                 'src': this.options.imgPath+"/ic/spinner.gif",
                 'alt': 'Working...'});
-            var span_img = Builder.node('span', {id: 'user_search_indicator'});
+            var span_img = Builder.node('span', {id: 'search_indicator'});
             span_img.appendChild(img);
             Element.hide(span_img);
             if(!$(this.options.spinnerParent)) {
@@ -52,23 +53,56 @@ var UserAutoCompleter = Class.create({
 
             // List div
             var update = Builder.node('div', {
-                'id':    'user_search_choices',
+                'id':    'search_choices',
                 'class': 'searchAsYouType'});
             Element.hide(update);
             
             // Insert the div at the bottom of the document because the old way
-	        // this.element.parentNode was not working in some cases with
-	        // IE6. This case happens in cc fields in trackers (probably
-	        // related to the deep of the tree).
+            // this.element.parentNode was not working in some cases with
+            // IE6. This case happens in cc fields in trackers (probably
+            // related to the deep of the tree).
             document.body.appendChild(update);
 
             // Autocomplete
-            new Ajax.Autocompleter(this.element, update, url, {
+            new Ajax.Autocompleter(this.element, update, this.url, {
                 'tokens': tokens,
                 'minChars': '3',
-                'paramName': 'user_name',
-                'indicator': 'user_search_indicator'
+                'paramName': 'name',
+                'indicator': 'search_indicator'
             });
         }
+    }
+});
+
+/**
+ * Usage:
+ * new UserAutoCompleter('form_unix_name', '".util_get_dir_image_theme()."', false)
+ 
+ */
+var UserAutoCompleter = Class.create(AutoCompleter, {
+    /**
+     * Constructor
+     */
+    initialize: function($super, elementId, imgPath, multiple, options) {
+        $super(elementId, imgPath, multiple, options);
+        this.url = '/user/autocomplete.php';
+        if(this.options.codendiUsersOnly == 1) {
+            this.url += '?codendi_user_only=1';
+        }
+    }
+});
+
+/**
+ * Usage:
+ * new ProjectAutoCompleter('form_unix_name', '".util_get_dir_image_theme()."', false)
+ 
+ */
+var ProjectAutoCompleter = Class.create(AutoCompleter, {
+    /**
+     * Constructor
+     */
+    initialize: function($super, elementId, imgPath, multiple, options) {
+        $super(elementId, imgPath, multiple, options);
+        this.url = '/project/autocomplete.php';
     }
 });

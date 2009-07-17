@@ -50,6 +50,7 @@ class ProjectManager {
     
     /**
      * ProjectManager is a singleton
+     * @return ProjectManager
      */
     public static function instance() {
         if (!isset(self::$_instance)) {
@@ -97,13 +98,79 @@ class ProjectManager {
         $projects = array();
         $dao = new ProjectDao(CodendiDataAccess::instance());
         foreach($dao->searchByStatus($status) as $row) {
-            if (!isset($this->_cached_projects[$row['group_id']])) {
-                $p = $this->createProjectInstance($row);
-                $this->_cached_projects[$row['group_id']] = $p;
-            }
-            $projects[$row['group_id']] = $this->_cached_projects[$row['group_id']];
+            $projects[$row['group_id']] = $this->getAndCacheProject($row);
         }
         return $projects;
+    }
+    
+    /**
+     * Look for project with name like given one
+     * 
+     * @param String  $name
+     * @param Integer $limit
+     * @param Integer $nbFound
+     * @param User    $user
+     * @param Boolean $isMember
+     * @param Boolean $isAdmin
+     * 
+     * @return Array of Project
+     */
+    public function searchProjectsNameLike($name, $limit, &$nbFound, $user=null, $isMember=false, $isAdmin=false) {
+        $projects = array();
+        $dao = new ProjectDao(CodendiDataAccess::instance());
+        $dar = $dao->searchProjectsNameLike($name, $limit, $user->getId(), $isMember, $isAdmin);
+        $nbFound = $dao->foundRows();
+        foreach($dar as $row) {
+            $projects[] = $this->getAndCacheProject($row);
+        }
+        return $projects; 
+    }
+
+    /**
+     * Try to find the project that match what can be entred in autocompleter
+     * 
+     * This can be either:
+     * - The autocomplter result: Public Name (unixname)
+     * - The group id: 101
+     * - The project unix name: unixname
+     * 
+     * @return mixed Project or false
+     */
+    public function getProjectFromAutocompleter($name) {
+        $matches = array();
+        $dao = new ProjectDao(CodendiDataAccess::instance());
+        if (preg_match('/^(.*) \((.*)\)$/', $name, $matches)) {
+            // Autocompleter "normal" form: Public Name (unix_name); {
+            $dar = $dao->searchByUnixGroupName($matches[2]);
+        }
+        elseif (is_numeric($name)) {
+            // Only group_id (for codex guru or psychopath, more or less the same thing anyway)
+            $dar = $dao->searchById($name);
+        }
+        else {
+            // Give it a try with only the given name
+            $dar = $dao->searchByUnixGroupName($name);
+        }
+
+        if ($dar && !$dar->isError() && $dar->rowCount() == 1) {
+            return $this->getAndCacheProject($dar->getRow());
+        }
+        return false;
+    }
+    
+    /**
+     * Create new Project object from row or get it from cache if already built
+     *
+     * @param Array $row
+     * 
+     * @return Project
+     */
+    protected function getAndCacheProject($row) {
+        if (!isset($this->_cached_projects[$row['group_id']])) {
+            $p = $this->createProjectInstance($row);
+            $this->_cached_projects[$row['group_id']] = $p;
+        }
+        return $this->_cached_projects[$row['group_id']];
     }
 }
 ?>

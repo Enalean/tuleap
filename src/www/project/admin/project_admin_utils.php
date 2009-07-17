@@ -27,6 +27,10 @@ function project_admin_header($params) {
 	<A HREF="/project/admin/editgroupinfo.php?group_id='.$group_id.'">'.$Language->getText('project_admin_utils','edit_public_info').'</A> |
 	<A HREF="/project/admin/servicebar.php?group_id='.$group_id.'">'.$Language->getText('project_admin_editservice','s_conf').'</A> |
 	<A HREF="/project/admin/reference.php?group_id='.$group_id.'">'.$Language->getText('project_admin_utils','references').'</A>';
+        
+    $em = EventManager::instance();
+    $em->processEvent('admin_toolbar_configuration', array('group_id' => $group_id));
+
         echo '</td><td>';
 	if (isset($params['help'])) {
 	    echo help_button($params['help'],false,$Language->getText('global','help'));

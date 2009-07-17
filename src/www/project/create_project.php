@@ -353,7 +353,8 @@ function create_project($data, $do_not_exit = false) {
             'reportMapping'  => $report_mapping,
             'trackerMapping' => $tracker_mapping,
             'ugroupsMapping' => $ugroup_mapping,
-            'group_id'       => $group_id
+            'group_id'       => $group_id,
+            'template_id'    => $template_id
         ));
         if (!$do_not_exit) {
             $content = '';

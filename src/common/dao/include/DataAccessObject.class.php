@@ -223,5 +223,19 @@ class DataAccessObject {
         }
         return $newRank;
     }
+
+    /**
+     * Return the result of 'FOUND_ROWS()' SQL method for the last query.
+     */
+    function foundRows() {
+        $sql = "SELECT FOUND_ROWS() as nb";
+        $dar = $this->retrieve($sql);
+        if($dar && !$dar->isError()) {
+            $row = $dar->getRow();
+            return $row['nb'];
+        } else {
+            return false;
+        }
+    }
 }
 ?>
