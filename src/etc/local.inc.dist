@@ -248,6 +248,10 @@ $sys_lf = "\n";
 // Should be disabled if no DNS delegation
 $sys_disable_subdomains = 0;
 
+//Display boxes in Codendi Home Page
+$sys_display_homepage_boxes = 1;
+
+
 //
 // Authentication scheme
 //

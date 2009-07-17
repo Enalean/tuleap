@@ -31,8 +31,10 @@ $HTML->box1_bottom();
 
 echo '<TD width="35%" VALIGN="TOP">';
 
-echo show_features_boxes();
-
+// Allow front page to restricted users but not the boxes that may disclose informations
+if($GLOBALS['sys_display_homepage_boxes'] != 0) {
+    echo show_features_boxes();
+}
 ?>
 
 </TD></TR>
