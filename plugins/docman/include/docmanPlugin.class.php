@@ -373,7 +373,7 @@ class DocmanPlugin extends Plugin {
      */
     function project_export($params) {
         if($params['export'] == 'plugin_docman_perms') {
-            include_once('Docman_PermissionExport.class.php');
+            include_once('Docman_PermissionsExport.class.php');
             $request = HTTPRequest::instance();
             $permExport = new Docman_PermissionsExport($params['project']->getId());
             if ($request->get('show') == 'csv') {
