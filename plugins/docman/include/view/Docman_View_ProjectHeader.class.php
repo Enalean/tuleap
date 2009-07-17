@@ -32,6 +32,7 @@ require_once('Docman_View_Header.class.php');
                     'report_custom_fltr'       => $GLOBALS['Language']->getText('plugin_docman','report_custom_fltr'),
                     'report_name_new'          => $GLOBALS['Language']->getText('plugin_docman','report_name_new'),
                     'report_name_upd'          => $GLOBALS['Language']->getText('plugin_docman','report_name_upd'),
+                    'action_doc_id'            => $GLOBALS['Language']->getText('plugin_docman','action_doc_id'),
                     'action_newfolder'         => $GLOBALS['Language']->getText('plugin_docman','action_newfolder'),
                     'action_newdocument'       => $GLOBALS['Language']->getText('plugin_docman','action_newdocument'),
                     'action_details'           => $GLOBALS['Language']->getText('plugin_docman','action_details'),
@@ -45,6 +46,9 @@ require_once('Docman_View_Header.class.php');
                     'action_cut'               => $GLOBALS['Language']->getText('plugin_docman', 'action_cut'),
                     'action_copy'              => $GLOBALS['Language']->getText('plugin_docman','action_copy'),
                     'action_paste'             => $GLOBALS['Language']->getText('plugin_docman','action_paste'),
+                    'action_lock_add'          => $GLOBALS['Language']->getText('plugin_docman','action_lock_add'),
+                    'action_lock_del'          => $GLOBALS['Language']->getText('plugin_docman','action_lock_del'),
+                    'action_lock_info'         => $GLOBALS['Language']->getText('plugin_docman','action_lock_info'),
                     'action_approval'          => $GLOBALS['Language']->getText('plugin_docman','action_approval'),
                     'feedback_cut'             => $GLOBALS['Language']->getText('plugin_docman','info_cut_notify_cut'),
                     'feedback_copy'            => $GLOBALS['Language']->getText('plugin_docman','info_copy_notify_cp')

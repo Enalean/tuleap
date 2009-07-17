@@ -80,18 +80,7 @@ class Docman_View_ItemDetailsSectionPermissions extends Docman_View_ItemDetailsS
             $content .= '</tr>';
         }
         $content .= '</table>';
-        // This message will only be displayed if current docman item is a wiki page.
-        require_once(dirname(__FILE__).'/../Docman_ItemFactory.class.php');
-        $dIF =& Docman_ItemFactory::instance($this->item->getGroupId());
-        $item_type = $dIF->getItemTypeForItem($this->item);
-	
-        if ($item_type == PLUGIN_DOCMAN_ITEM_TYPE_WIKI) { 
-            // We display a notice that warn users that 'DOCUMENT_READER' permission on wiki pages means edit possibility.
-            $content .= '<div class="docman_wiki_perms_notice">';
-            $content .= $GLOBALS['Language']->getText('plugin_docman', 'docman_wiki_perms_notice');
-            $content .= '</div>';
-        }
-        // wiki msg end.
+
         if (is_a($this->item, 'Docman_Folder')) {
             $content .= '<div>';
             $content .= '<input type="checkbox" name="recursive" id="docman_recusrsive_permissions" value="1" /><label for="docman_recusrsive_permissions">'. $GLOBALS['Language']->getText('plugin_docman','details_permissions_recursive') .'</label>';

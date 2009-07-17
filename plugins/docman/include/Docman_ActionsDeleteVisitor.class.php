@@ -114,12 +114,19 @@ class Docman_ActionsDeleteVisitor /* implements Visitor */ {
 
     function _deleteItem($item, $params) {
         if ($this->docman->userCanWrite($item->getId())) {
+            // Delete Lock if any
+            $lF = $this->_getLockFactory();
+            if($lF->itemIsLocked($item)) {
+                $lF->unlock($item);
+            }
+
             $item->setDeleteDate($this->deleteDate);
             $dIF =& $this->_getItemFactory();
             $dIF->delCutPreferenceForAllUsers($item->getId());
             $dIF->delCopyPreferenceForAllUsers($item->getId());
             $dao = $this->_getItemDao();
             $dao->updateFromRow($item->toRow());
+
             $em =& $this->_getEventManager();
             $em->processEvent('plugin_docman_event_del', array(
                 'group_id' => $item->getGroupId(),
@@ -151,6 +158,13 @@ class Docman_ActionsDeleteVisitor /* implements Visitor */ {
         }
         return $this->item_factory;
     }
+    var $lock_factory;
+    function &_getLockFactory() {
+        if (!$this->lock_factory) {
+            $this->lock_factory =& new Docman_LockFactory();
+        }
+        return $this->lock_factory;
+    }    
     function &_getFileStorage() {
         $fs = new Docman_FileStorage();
         return $fs;

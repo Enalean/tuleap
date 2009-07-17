@@ -88,6 +88,8 @@ class Docman_Controller extends Controler {
                          'plugin_docman_event_metadata_update',
                          'plugin_docman_event_set_version_author',
                          'plugin_docman_event_set_version_date',
+                         'plugin_docman_event_lock_add',
+                         'plugin_docman_event_lock_del'
                      );
                      
         $this->logger  =& new Docman_Log();
@@ -775,6 +777,10 @@ class Docman_Controller extends Controler {
             $this->view = 'Admin_Obsolete';
             break;
 
+        case 'admin_lock_infos':
+            $this->view = 'Admin_LockInfos';
+            break;
+
         case 'move':
             if (!$this->userCanWrite($item->getId()) || !$this->userCanWrite($item->getParentId())) {
                 $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_perms_move'));
@@ -1393,7 +1399,17 @@ class Docman_Controller extends Controler {
             $this->_viewParams['default_url_params'] = array('action'  => 'report_settings');
             $this->view = 'RedirectAfterCrud';
             break;
-                                    
+
+        case 'action_lock_add':
+            $this->_actionParams['item'] = $item;
+            $this->action = 'action_lock_add';
+            break;
+
+        case 'action_lock_del':
+            $this->_actionParams['item'] = $item;
+            $this->action = 'action_lock_del';
+            break;
+
         case 'ajax_reference_tooltip':
             $this->view = 'AjaxReferenceTooltip';
             break;

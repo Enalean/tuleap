@@ -59,6 +59,8 @@ class Docman_WikiController extends Docman_Controller {
             case 'getPermsLabelForWiki':
                 $this->getPermsLabelForWiki();
                 break;
+            case 'is_wiki_page_editable':
+                $this->isWikiPageEditable();
             default:
                 break;
         }
@@ -87,7 +89,8 @@ class Docman_WikiController extends Docman_Controller {
         require_once 'Docman_PermissionsManager.class.php';
         $dPM =& Docman_PermissionsManager::instance($group_id);
 
-        $references = $this->_getDocmanReferences($wiki_page, $group_id);
+        $item_factory =& $this->_getItemFactory();
+        $references = $item_factory->getWikiPageReferencers($wiki_page, $group_id);
 
         require_once 'common/user/UserManager.class.php';
         $uM =& UserManager::instance();
@@ -106,10 +109,11 @@ class Docman_WikiController extends Docman_Controller {
 
     function wikiPageUpdated() {
         $event_manager =& $this->_getEventManager();
+        $item_factory =& $this->_getItemFactory();
         
         $wiki_page = $this->request->get('wiki_page');
         $group_id = $this->request->get('group_id');
-        $documents = $this->_getDocmanReferences($wiki_page, $group_id);
+        $documents = $item_factory->getWikiPageReferencers($wiki_page, $group_id);
         $item_dao =& new Docman_ItemDao(CodendiDataAccess::instance());
         foreach($documents as $key => $document) {
             // Update the item's update date attribute.
@@ -132,29 +136,64 @@ class Docman_WikiController extends Docman_Controller {
         $this->request->params['label'] = $GLOBALS['Language']->getText('plugin_docman', 'docman_wiki_perms_label');
     }
 
+    /**
+    *  This checks whether a wiki page is editable by checking if the user have write permission on it (including items lock check ) 
+    *
+    */
+    function isWikiPageEditable() {
+        $item_factory =& $this->_getItemFactory();
+        $wiki_page = $this->request->get('wiki_page');
+        $group_id = $this->request->get('group_id');
+        
+        $referers = $item_factory->getWikiPageReferencers($wiki_page, $group_id);
+        
+        $uM = UserManager::instance();
+        $user = $uM->getCurrentUser();
+        $dPM = Docman_PermissionsManager::instance($group_id);
+        $canWrite = false;
+        if(count($referers) > 0) {
+            foreach($referers as $item) {
+                //Check if some of referers has locked this wiki page. (should be done through new LockFactory).
+                if(!$dPM->userCanWrite($user, $item->getId())) {
+                    $canWrite = false;
+                    if($dPM->getLockFactory()->itemIsLocked($item) === true) {
+                        if(!$dPM->getLockFactory()->userIsLocker($item, $user)) {
+                            $lockInfos = $dPM->getLockFactory()->getLockInfoForItem($item);
+                            if($lockInfos) {
+                                $uH = UserHelper::instance();
+                                $locker = $uH->getDisplayNameFromUserId($lockInfos['user_id']);
+                                $message = $GLOBALS['Language']->getText('plugin_docman', 'docman_wiki_page_locked', array($locker));
+                            }
+                            break;
+                        }
+                    }
+                } else {
+                    $canWrite = true;
+                }
+            }
+        } else {
+            $canWrite = true;
+        }
+
+        // TODO: find another way to return a value. 
+        // Codendi_Request->params should not be public
+        if($canWrite) { // User can edit the wiki page.
+            $this->request->params['response'] = true;
+        } else {
+            $this->request->params['response'] = false;
+            if(isset($lockInfos) && $lockInfos) { // User can NOT edit the page because there is a lock on the page and user is not page locker
+                $this->feedback->log('warning', $message);
+            } else { // User can NOT edit the page because he don't have write permission on it.
+                $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_perms_edit'));
+            }
+        }
+    }
+
     function process() {
         if($this->request->get('action')) {
             $this->actionsManagement();
         }
         return $this->viewsManagement();
-    }
-
-    function _getDocmanReferences($wiki_page, $group_id) {
-        $items = array();
-        $item_dao =& $this->_getItemDao();
-        if($item_dao->isWikiPageReferenced($wiki_page, $group_id)) {
-            $items_ids = $item_dao->getItemIdByWikiPageAndGroupId($wiki_page, $group_id);
-            $item_factory =& $this->_getItemFactory();
-            if(is_array($items_ids)){
-                foreach($items_ids as $key => $id) {
-                    $items[] =& $item_factory->getItemFromDb($id);
-                }
-            }
-            else {
-                $items[] =& $item_factory->getItemFromDb($items_ids);
-            }
-        }
-        return $items;
     }
 
     function wiki_before_content() {

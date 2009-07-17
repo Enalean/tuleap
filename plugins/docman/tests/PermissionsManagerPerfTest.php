@@ -25,7 +25,7 @@
 require_once(dirname(__FILE__).'/../include/Docman_PermissionsManager.class.php');
 require_once('common/user/User.class.php');
 
-Mock::generatePartial('Docman_PermissionsManager', 'Docman_PermissionsManagerTestPerfVersion', array('_getPermissionManagerInstance', '_isUserDocmanAdmin'));
+Mock::generatePartial('Docman_PermissionsManager', 'Docman_PermissionsManagerTestPerfVersion', array('_getPermissionManagerInstance', '_isUserDocmanAdmin', '_itemIsLockedForUser'));
 Mock::generate('User');
 Mock::generate('PermissionsManager');
 
@@ -34,15 +34,23 @@ class PermissionsManagerPerfTest extends UnitTestCase {
     var $docmanPm;
     var $refOnNull;
 
-    function MetadataTest($name = 'Docman_PermissionsPerfManager test') {
-        $this->UnitTestCase($name);
+    function __construct($name = 'Docman_PermissionsPerfManager test') {
+        parent::__construct($name);
     }
 
     function setUp() {
         $this->user =& new MockUser($this);
         $this->docmanPm =& new Docman_PermissionsManagerTestPerfVersion($this);
+        $this->docmanPm->setReturnValue('_itemIsLockedForUser', false);
         $this->refOnNull = null;
     }
+    
+    function tearDown() {
+        unset($this->user);
+        unset($this->docmanPm);
+        unset($this->refOnNull);
+    }
+    
 
     function testSuperAdminHasAllAccess() {
         $this->docmanPm->setReturnValue('_isUserDocmanAdmin', false);
@@ -177,10 +185,16 @@ class PermissionsManagerPerfTest extends UnitTestCase {
 
         $this->docmanPm->expectCallCount('_isUserDocmanAdmin', 1);
 
-        // 2 userHasPerm call
+        // 3 userHasPerm call:
+        // userCanRead:
+        // 1. one for READ (no matching value found)
+        // 2. one for WRITE (one result found), not cached because only test
+        //    write perm (not lock).
+        // userCanWrite
+        // 3. one for WRITE (and eventually lock, but not in this test).
         $pm =& new MockPermissionsManager($this);
         $pm->setReturnValue('userHasPermission', true, array($itemId, 'PLUGIN_DOCMAN_WRITE', 'test'));
-        $pm->expectCallCount('userHasPermission', 2);
+        $pm->expectCallCount('userHasPermission', 3);
         $this->docmanPm->setReturnReference('_getPermissionManagerInstance', $pm);
         
         // test read

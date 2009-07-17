@@ -1022,10 +1022,26 @@ class WikiRequest extends Request {
     }
 
     function action_edit () {
-        $this->buffer_output();
-        include "lib/editpage.php";
-        $e = new PageEditor ($this);
-        $e->editPage();
+        // {{{ Codendi hook to check if this wiki page is editable
+        $em =& EventManager::instance();
+        $response = false;
+        $html = HTML();
+        $em->processEvent('isWikiPageEditable', array(
+                        'action'    => 'is_wiki_page_editable',
+                        'group_id'  => GROUP_ID,
+                        'wiki_page' => $this->getArg('pagename'),
+                        'response'  => &$response,
+            ));
+        // }}} /Codendi hook
+
+        if($response) {
+            $this->buffer_output();
+            include "lib/editpage.php";
+            $e = new PageEditor ($this);
+            $e->editPage();
+        } else {
+            $this->action_browse();
+        }
     }
 
     function action_create () {

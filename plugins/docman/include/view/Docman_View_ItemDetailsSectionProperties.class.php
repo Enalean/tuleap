@@ -24,6 +24,7 @@
  */
 require_once('Docman_View_ItemDetailsSection.class.php');
 require_once('Docman_View_GetFieldsVisitor.class.php');
+require_once dirname(__FILE__).'/../Docman_LockFactory.class.php';
 
 class Docman_View_ItemDetailsSectionProperties extends Docman_View_ItemDetailsSection {
     var $user_can_write;
@@ -87,6 +88,9 @@ class Docman_View_ItemDetailsSectionProperties extends Docman_View_ItemDetailsSe
 
     function _getPropertiesFields($params) {
         $html = '';
+
+        // Lock details
+        $html .= $this->_getlockInfo();
 
         $params['theme_path'] = $this->theme_path;
         $get_fields =& new Docman_View_GetFieldsVisitor();
@@ -180,6 +184,23 @@ class Docman_View_ItemDetailsSectionProperties extends Docman_View_ItemDetailsSe
         $html .= '<h3>'.$GLOBALS['Language']->getText('plugin_docman', 'details_properties_dfltv').'</h3>';
         $html .= '<p>'.$GLOBALS['Language']->getText('plugin_docman', 'details_properties_dfltv_desc').'</p>';
         $html .= $this->_getDefaultValues();
+        return $html;
+    }
+
+    function _getlockInfo() {
+        $html = '';
+        $dpm = Docman_PermissionsManager::instance($this->item->getGroupId());
+        if($dpm->getLockFactory()->itemIsLocked($this->item)) {
+            $lockInfos = $dpm->getLockFactory()->getLockInfoForItem($this->item);
+            $locker = UserHelper::instance()->getLinkOnUserFromUserId($lockInfos['user_id']);
+            $lockDate = format_date($GLOBALS['sys_datefmt'], $lockInfos['lock_date']);
+            $html .= '<p>';
+            $html .= $GLOBALS['Language']->getText('plugin_docman', 'details_properties_lock_who', array($locker, $lockDate));
+            if (!$this->user_can_write) {
+                $html .= $GLOBALS['Language']->getText('plugin_docman', 'details_properties_lock_info');
+            }
+            $html .= '</p>';
+        }
         return $html;
     }
 }

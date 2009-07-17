@@ -1,14 +1,3 @@
-.docman_wiki_perms_notice {
- width: 41em;
- background:url(../images/ic/warning.png) no-repeat;
- background-position: 5px center;
- border: 1px solid #DDDDDD;
- padding: 0.5em;
- padding-left: 40px;
- margin: 2em;
- margin-left: 10em;
-}
-
 h3, h4 {
   border-bottom: 1px solid #999999;
 }
@@ -287,6 +276,25 @@ a img {
     font-size:0.8em;
     padding-left:2px;
 }
+
+/*
+ * For an unknown reason, adding <p> or <span> in .docman_item_menu breaks the
+ * randering of the whole menu. The only solution I found is to repeat the rule
+ * just for move.
+ */
+.docman_item_option_id_info {
+    font-size:0.8em;
+    border:1px solid #e8e8e0;
+    padding-top: 0px;
+    padding-right: 1em;
+    padding-bottom: 0px;
+    text-decoration: none;
+    display: inline;
+    background-repeat:no-repeat;
+    background-position:2px 1px;
+    text-align: right;
+}
+
 .docman_item_option_details {
     background-image:url('../images/ic/item-details.png');
 }
@@ -347,6 +355,14 @@ a img {
 
 .docman_item_option_approval {
     background-image:url('../images/ic/approval.png');
+}
+
+.docman_item_option_lock_add {
+    background-image:url('../images/ic/lock_add.png');
+}
+
+.docman_item_option_lock_del {
+    background-image:url('../images/ic/lock_delete.png');
 }
 
 .docman_item_option_separator {

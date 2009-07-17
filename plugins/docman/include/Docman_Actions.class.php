@@ -31,6 +31,7 @@ require_once('Docman_FileStorage.class.php');
 require_once('Docman_MetadataValueFactory.class.php');
 require_once('Docman_ExpandAllHierarchyVisitor.class.php');
 require_once('Docman_ApprovalTableFactory.class.php');
+require_once('Docman_LockFactory.class.php');
 
 require_once('view/Docman_View_Browse.class.php');
 
@@ -103,6 +104,36 @@ class Docman_Actions extends Actions {
 
         $this->event_manager->processEvent('plugin_docman_event_metadata_update',
                                            $logEventParam);
+    }
+
+    /**
+     * Raise "Lock add" event
+     *
+     * @param Docman_Item $item Locked item
+     * @param User        $user Who locked the item
+     *
+     * @return void
+     */
+    function _raiseLockEvent($item, $user) {
+        $p = array('group_id' => $item->getGroupId(),
+                   'item'     => $item,
+                   'user'     => $user);
+        $this->event_manager->processEvent('plugin_docman_event_lock_add', $p);
+    }
+
+    /**
+     * Raise "Lock deletion" event
+     *
+     * @param Docman_Item $item Unlocked item
+     * @param User        $user Who unlocked the item
+     *
+     * @return void
+     */
+    function _raiseUnlockEvent($item, $user) {
+        $p = array('group_id' => $item->getGroupId(),
+                   'item'     => $item,
+                   'user'     => $user);
+        $this->event_manager->processEvent('plugin_docman_event_lock_del', $p);
     }
 
     /**
@@ -600,6 +631,18 @@ class Docman_Actions extends Actions {
                 // We update the update_date of the document only if no version date was given
                 if (!$request->existAndNonEmpty('date')) {
                     $item_factory->update(array('id' => $item->getId()));    
+                }
+                
+                // Manage lock
+                $dPm = Docman_PermissionsManager::instance($item->getGroupId());
+                if ($request->existAndNonEmpty('lock_document')) {
+                    if (!$dPm->getLockFactory()->itemIsLocked($item)) {
+                        $dPm->getLockFactory()->lock($item);
+                        $this->_raiseLockEvent($item, $user);
+                    }
+                } else {
+                    $dPm->getLockFactory()->unlock($item);
+                    $this->_raiseUnlockEvent($item, $user);
                 }
             }
         }
@@ -1904,6 +1947,51 @@ class Docman_Actions extends Actions {
             }
         } else {
             $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_perms_generic'));
+        }
+    }
+
+    function action_lock_add() {
+        $item = $this->_controler->_actionParams['item'];
+        if ($this->_controler->userCanWrite($item->getId())) {
+            $user = $this->_controler->getUser();
+            $lockFactory = new Docman_LockFactory();
+            $dIF = $this->_getItemFactory();
+            $canLock = true;
+            
+            // Cannot lock a wiki with a page already locked 
+            if($dIF->getItemTypeForItem($item) == PLUGIN_DOCMAN_ITEM_TYPE_WIKI) {
+                $pagename = $item->getPagename();
+                $group_id = $item->getGroupId();
+                $referencers = $dIF->getWikiPageReferencers($pagename, $group_id);
+                foreach($referencers as $referencer) {
+                    if($lockFactory->itemIsLockedByItemId($referencer->getId())) {
+                        $canLock = false;
+                        break;
+                        // wiki page is locked by another item.
+                    }
+                }
+            }
+
+            // Cannot lock a folder
+            if($dIF->getItemTypeForItem($item) == PLUGIN_DOCMAN_ITEM_TYPE_FOLDER) {
+                $canLock = false;
+            }
+
+            if($canLock) {
+                if ($lockFactory->lock($item, $user)) {
+                    $this->_raiseLockEvent($item, $user);
+                }
+            }
+        }
+    }
+
+    function action_lock_del() {
+        $item = $this->_controler->_actionParams['item'];
+        $user = $this->_controler->getUser();
+        $lockFactory = new Docman_LockFactory();
+        if ($this->_controler->userCanWrite($item->getId())) {
+            $lockFactory->unlock($item);
+            $this->_raiseUnlockEvent($item, $user);
         }
     }
 }

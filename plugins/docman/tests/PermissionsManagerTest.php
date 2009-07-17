@@ -25,7 +25,7 @@
 require_once(dirname(__FILE__).'/../include/Docman_PermissionsManager.class.php');
 require_once('common/user/User.class.php');
 
-Mock::generatePartial('Docman_PermissionsManager', 'Docman_PermissionsManagerTestVersion', array('_getPermissionManagerInstance', '_isUserDocmanAdmin', 'getDao'));
+Mock::generatePartial('Docman_PermissionsManager', 'Docman_PermissionsManagerTestVersion', array('_getPermissionManagerInstance', '_isUserDocmanAdmin', 'getDao', '_itemIsLockedForUser'));
 Mock::generate('User');
 Mock::generate('PermissionsManager');
 Mock::generate('Docman_PermissionsManagerDao');
@@ -36,8 +36,8 @@ class PermissionsManagerTest extends UnitTestCase {
     var $docmanPm;
     var $refOnNull;
 
-    function MetadataTest($name = 'Docman_PermissionsManager test') {
-        $this->UnitTestCase($name);
+    function __construct($name = 'Docman_PermissionsManager test') {
+        parent::__construct($name);
     }
 
     function setUp() {
@@ -47,8 +47,15 @@ class PermissionsManagerTest extends UnitTestCase {
         $this->refOnNull = null;
     }
 
+    function tearDown() {
+        unset($this->user);
+        unset($this->docmanPm);
+        unset($this->refOnNull);
+    }
+    
     // Functional test (should never change)
     function testSuperUserHasAllAccess() {
+        $this->docmanPm->setReturnValue('_itemIsLockedForUser', false);
         $this->docmanPm->setReturnValue('_isUserDocmanAdmin', false);
         $this->user->setReturnValue('isSuperUser', true);
 
@@ -60,6 +67,7 @@ class PermissionsManagerTest extends UnitTestCase {
 
     // Functional test (should never change)
     function testDocmanAdminHasAllAccess() {
+        $this->docmanPm->setReturnValue('_itemIsLockedForUser', false);
         $this->docmanPm->setReturnValue('_isUserDocmanAdmin', true);
         $this->user->setReturnValue('isSuperUser', false);
 
@@ -76,6 +84,7 @@ class PermissionsManagerTest extends UnitTestCase {
 
     // Functional test (should never change)
     function testManageRightGivesReadAndWriteRights() {
+        $this->docmanPm->setReturnValue('_itemIsLockedForUser', false);
         // user is not docman admin
         $this->docmanPm->setReturnValue('_isUserDocmanAdmin', false);
         // user is not super admin
@@ -105,6 +114,7 @@ class PermissionsManagerTest extends UnitTestCase {
     
     // Functional test (should never change)
     function testWriteRightGivesReadRight() {
+        $this->docmanPm->setReturnValue('_itemIsLockedForUser', false);
         // user is not docman admin
         $this->docmanPm->setReturnValue('_isUserDocmanAdmin', false);
         // user is not super admin
@@ -134,6 +144,7 @@ class PermissionsManagerTest extends UnitTestCase {
 
     // Functional test (should never change)
     function testReadRight() {
+        $this->docmanPm->setReturnValue('_itemIsLockedForUser', false);
         // user is not docman admin
         $this->docmanPm->setReturnValue('_isUserDocmanAdmin', false);
         // user is not super admin
@@ -158,6 +169,7 @@ class PermissionsManagerTest extends UnitTestCase {
 
     // Functional test (should never change)
     function testNoRight() {
+        $this->docmanPm->setReturnValue('_itemIsLockedForUser', false);
         // user is not docman admin
         $this->docmanPm->setReturnValue('_isUserDocmanAdmin', false);
         // user is not super admin
@@ -180,7 +192,31 @@ class PermissionsManagerTest extends UnitTestCase {
         $this->assertFalse($this->docmanPm->userCanRead($this->user, $itemId));
     }
 
+    function testUserCanWriteButItemIsLockedBySomeoneelse() {
+        // item is locked
+        $this->docmanPm->setReturnValue('_itemIsLockedForUser', true);
+        
+        // user is not docman admin
+        $this->docmanPm->setReturnValue('_isUserDocmanAdmin', false);
+        // user is not super admin
+        $this->user->setReturnValue('isSuperUser', false);
+
+        $this->user->setReturnValue('getUgroups', 'test');
+
+        $itemId = 1515;
+
+        // User has write permission
+        $pm = new MockPermissionsManager($this);
+        $pm->setReturnValue('userHasPermission', true, array($itemId, 'PLUGIN_DOCMAN_WRITE', 'test'));
+        $this->docmanPm->setReturnReference('_getPermissionManagerInstance', $pm);
+
+        $this->assertTrue($this->docmanPm->userCanRead($this->user, $itemId));
+        $this->assertFalse($this->docmanPm->userCanWrite($this->user, $itemId));
+        $this->assertFalse($this->docmanPm->userCanManage($this->user, $itemId));
+    }
+
     function testExpectedQueriesOnRead() {
+        $this->docmanPm->setReturnValue('_itemIsLockedForUser', false);
          // user is not docman admin
         $this->docmanPm->setReturnValue('_isUserDocmanAdmin', false);
         // user is not super admin
@@ -209,6 +245,7 @@ class PermissionsManagerTest extends UnitTestCase {
     }
 
     function testExpectedQueriesOnWrite() {
+        $this->docmanPm->setReturnValue('_itemIsLockedForUser', false);
          // user is not docman admin
         $this->docmanPm->setReturnValue('_isUserDocmanAdmin', false);
         // user is not super admin
@@ -236,6 +273,7 @@ class PermissionsManagerTest extends UnitTestCase {
     }
 
     function testExpectedQueriesOnManage() {
+        $this->docmanPm->setReturnValue('_itemIsLockedForUser', false);
          // user is not docman admin
         $this->docmanPm->setReturnValue('_isUserDocmanAdmin', false);
         // user is not super admin
@@ -263,6 +301,7 @@ class PermissionsManagerTest extends UnitTestCase {
 
 
     function testCacheUserCanRead() {
+        $this->docmanPm->setReturnValue('_itemIsLockedForUser', false);
         // user is not docman admin
         $this->docmanPm->setReturnValue('_isUserDocmanAdmin', false);
         // user is not super admin
@@ -318,6 +357,7 @@ class PermissionsManagerTest extends UnitTestCase {
     }
 
     function testCacheUserCanWrite() { 
+        $this->docmanPm->setReturnValue('_itemIsLockedForUser', false);
         // user is not docman admin
         $this->docmanPm->setReturnValue('_isUserDocmanAdmin', false);
         // user is not super admin
@@ -372,6 +412,7 @@ class PermissionsManagerTest extends UnitTestCase {
     }
 
     function testCacheUserCanManage() {
+        $this->docmanPm->setReturnValue('_itemIsLockedForUser', false);
         // user is not docman admin
         $this->docmanPm->setReturnValue('_isUserDocmanAdmin', false);
         // user is not super admin
@@ -425,6 +466,7 @@ class PermissionsManagerTest extends UnitTestCase {
     }
 
     function testPermissionsBatchRetreivalForDocmanAdmin() {
+        $this->docmanPm->setReturnValue('_itemIsLockedForUser', false);
         $this->docmanPm->setReturnValue('_isUserDocmanAdmin', true);
         $this->user->setReturnValue('isSuperUser', false);
 
@@ -445,6 +487,7 @@ class PermissionsManagerTest extends UnitTestCase {
     }
 
     function testPermissionsBatchRetreivalForSuperUser() {
+        $this->docmanPm->setReturnValue('_itemIsLockedForUser', false);
         $this->docmanPm->setReturnValue('_isUserDocmanAdmin', false);
         $this->user->setReturnValue('isSuperUser', true);
 
@@ -464,5 +507,149 @@ class PermissionsManagerTest extends UnitTestCase {
         $dao->tally();
     }
 
+     // {{{ Test all combination for batch permission settings (see retreiveReadPermissionsForItems)
+
+    function testSetUserCanManage() {
+        // Ensure everything comes from cache
+        $this->docmanPm->expectCallCount('_isUserDocmanAdmin', 0);
+        $this->docmanPm->expectCallCount('_getPermissionManagerInstance', 0);
+        $this->user->expectCallCount('isSuperUser', 0);
+
+        $itemId = 1515;
+        $this->docmanPm->_setCanManage($this->user->getId(), $itemId, true);
+        $this->assertTrue($this->docmanPm->userCanManage($this->user, $itemId));
+        $this->assertTrue($this->docmanPm->userCanWrite($this->user, $itemId));
+        $this->assertTrue($this->docmanPm->userCanRead($this->user, $itemId));
+    }
+
+    function testSetUserCanWrite() {
+        // Ensure everything comes from cache
+        $this->docmanPm->expectCallCount('_isUserDocmanAdmin', 0);
+        $this->docmanPm->expectCallCount('_getPermissionManagerInstance', 0);
+        $this->user->expectCallCount('isSuperUser', 0);
+
+        $itemId = 1515;
+        $this->docmanPm->_setCanWrite($this->user->getId(), $itemId, true);
+        $this->assertTrue($this->docmanPm->userCanWrite($this->user, $itemId));
+        $this->assertTrue($this->docmanPm->userCanRead($this->user, $itemId));
+    }
+
+    function testSetUserCanRead() {
+        // Ensure everything comes from cache
+        $this->docmanPm->expectCallCount('_isUserDocmanAdmin', 0);
+        $this->docmanPm->expectCallCount('_getPermissionManagerInstance', 0);
+        $this->user->expectCallCount('isSuperUser', 0);
+
+        $itemId = 1515;
+        $this->docmanPm->_setCanRead($this->user->getId(), $itemId, true);
+        $this->assertTrue($this->docmanPm->userCanRead($this->user, $itemId));
+    }
+
+    // Read comes from cache but must look for write in DB
+    function testSetUserCanWriteAfterCanRead() {
+        $this->docmanPm->setReturnValue('_isUserDocmanAdmin', false);
+        $this->user->setReturnValue('isSuperUser', false);
+        $this->user->setReturnValue('getUgroups', 'test');
+        
+        $itemId = 1515;
+        
+        $pm = new MockPermissionsManager($this);
+        $pm->setReturnValue('userHasPermission', true, array($itemId, 'PLUGIN_DOCMAN_WRITE', 'test'));
+        $this->docmanPm->setReturnReference('_getPermissionManagerInstance', $pm);
+        
+        $this->docmanPm->_setCanRead($this->user->getId(), $itemId, true);
+        $this->assertTrue($this->docmanPm->userCanWrite($this->user, $itemId));
+        $this->assertTrue($this->docmanPm->userCanRead($this->user, $itemId));
+    }
+
+    // Read comes from cache but must look for manage in DB
+    function testSetUserCanManageAfterCanRead() {
+        $this->docmanPm->setReturnValue('_isUserDocmanAdmin', false);
+        $this->user->setReturnValue('isSuperUser', false);
+        $this->user->setReturnValue('getUgroups', 'test');
+        
+        $itemId = 1515;
+        
+        $pm = new MockPermissionsManager($this);
+        $pm->setReturnValue('userHasPermission', true, array($itemId, 'PLUGIN_DOCMAN_MANAGE', 'test'));
+        $this->docmanPm->setReturnReference('_getPermissionManagerInstance', $pm);
+        
+        $this->docmanPm->_setCanRead($this->user->getId(), $itemId, true);
+        $this->assertTrue($this->docmanPm->userCanManage($this->user, $itemId));
+        $this->assertTrue($this->docmanPm->userCanRead($this->user, $itemId));
+    }
+
+    function testSetUserCanReadWrite() {
+        $itemId = 1515;
+        $this->docmanPm->_setCanRead($this->user->getId(), $itemId, true);
+        $this->docmanPm->_setCanWrite($this->user->getId(), $itemId, true);
+        $this->assertTrue($this->docmanPm->userCanWrite($this->user, $itemId));
+        $this->assertTrue($this->docmanPm->userCanRead($this->user, $itemId));
+    }
+
+    function testSetUserCanReadWriteManage() {
+        $itemId = 1515;
+        $this->docmanPm->_setCanRead($this->user->getId(), $itemId, true);
+        $this->docmanPm->_setCanWrite($this->user->getId(), $itemId, true);
+        $this->docmanPm->_setCanManage($this->user->getId(), $itemId, true);
+        $this->assertTrue($this->docmanPm->userCanManage($this->user, $itemId));
+        $this->assertTrue($this->docmanPm->userCanWrite($this->user, $itemId));
+        $this->assertTrue($this->docmanPm->userCanRead($this->user, $itemId));
+    }
+
+    function testSetUserCanReadManage() {
+        $itemId = 1515;
+        $this->docmanPm->_setCanRead($this->user->getId(), $itemId, true);
+        $this->docmanPm->_setCanManage($this->user->getId(), $itemId, true);
+        $this->assertTrue($this->docmanPm->userCanManage($this->user, $itemId));
+        $this->assertTrue($this->docmanPm->userCanWrite($this->user, $itemId));
+        $this->assertTrue($this->docmanPm->userCanRead($this->user, $itemId));
+    }
+
+    function testSetUserCanManageWrite() {
+        $itemId = 1515;
+        $this->docmanPm->_setCanManage($this->user->getId(), $itemId, true);
+        $this->docmanPm->_setCanWrite($this->user->getId(), $itemId, true);
+        $this->assertTrue($this->docmanPm->userCanManage($this->user, $itemId));
+        $this->assertTrue($this->docmanPm->userCanWrite($this->user, $itemId));
+        $this->assertTrue($this->docmanPm->userCanRead($this->user, $itemId));
+    }
+
+    function testSetUserCanManageRead() {
+        $itemId = 1515;
+        $this->docmanPm->_setCanManage($this->user->getId(), $itemId, true);
+        $this->docmanPm->_setCanRead($this->user->getId(), $itemId, true);
+        $this->assertTrue($this->docmanPm->userCanManage($this->user, $itemId));
+        $this->assertTrue($this->docmanPm->userCanWrite($this->user, $itemId));
+        $this->assertTrue($this->docmanPm->userCanRead($this->user, $itemId));
+    }
+
+    function testSetUserCanWriteRead() {
+        $itemId = 1515;
+        $this->docmanPm->_setCanWrite($this->user->getId(), $itemId, true);
+        $this->docmanPm->_setCanRead($this->user->getId(), $itemId, true);
+        $this->assertTrue($this->docmanPm->userCanWrite($this->user, $itemId));
+        $this->assertTrue($this->docmanPm->userCanRead($this->user, $itemId));
+    }
+
+    // }}} Test all combination for batch permission settings (see retreiveReadPermissionsForItems)
+
+    function testSetUserCanManageButCannotRead() {
+        $itemId = 1515;
+        $this->docmanPm->_setCanManage($this->user->getId(), $itemId, true);
+        $this->docmanPm->_setCanRead($this->user->getId(), $itemId, false);
+        $this->assertTrue($this->docmanPm->userCanManage($this->user, $itemId));
+        $this->assertTrue($this->docmanPm->userCanWrite($this->user, $itemId));
+        $this->assertTrue($this->docmanPm->userCanRead($this->user, $itemId));
+    }
+    
+    function testSetUserCannotReadButCanManage() {
+        $itemId = 1515;
+        $this->docmanPm->_setCanRead($this->user->getId(), $itemId, false);
+        $this->docmanPm->_setCanManage($this->user->getId(), $itemId, true);
+        $this->assertTrue($this->docmanPm->userCanManage($this->user, $itemId));
+        $this->assertTrue($this->docmanPm->userCanWrite($this->user, $itemId));
+        $this->assertTrue($this->docmanPm->userCanRead($this->user, $itemId));
+    }
 }
 ?>

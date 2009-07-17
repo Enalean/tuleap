@@ -315,6 +315,18 @@ CREATE TABLE plugin_docman_widget_embedded(
     KEY (owner_id, owner_type)
 );
 
+--
+-- Table structure for table 'plugin_docman_item_lock'
+-- Host informations about locked items
+--
+DROP TABLE IF EXISTS plugin_docman_item_lock;
+CREATE TABLE plugin_docman_item_lock (
+  item_id INT(11) UNSIGNED NOT NULL DEFAULT 0,
+  user_id INT(11) NOT NULL DEFAULT 0,
+  lock_date INT(11) UNSIGNED NOT NULL DEFAULT 0,
+  PRIMARY KEY (item_id)
+);
+
 -- Enable service for project 1 and 100
 INSERT INTO service(group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES ( 100 , 'plugin_docman:service_lbl_key' , 'plugin_docman:service_desc_key' , 'docman', '/plugins/docman/?group_id=$group_id', 1 , 1 , 'system',  95 );
 INSERT INTO service(group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES ( 1   , 'plugin_docman:service_lbl_key' , 'plugin_docman:service_desc_key' , 'docman', '/plugins/docman/?group_id=1', 1 , 1 , 'system',  95 );

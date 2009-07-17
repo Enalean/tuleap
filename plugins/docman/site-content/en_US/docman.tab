@@ -1,3 +1,4 @@
+plugin_docman	action_doc_id	Document id:
 plugin_docman	action_approval	Approval table
 plugin_docman	action_cut	Cut
 plugin_docman	action_copy	Copy
@@ -14,6 +15,9 @@ plugin_docman	action_permissions	Permissions
 plugin_docman	action_update	Update
 plugin_docman	action_show	Show
 plugin_docman	action_showactions	Show options
+plugin_docman	action_lock_add	Lock for edition
+plugin_docman	action_lock_del	Release lock
+plugin_docman	action_lock_info	locked
 
 plugin_docman	approval_force_notify_success	Reviewers were notified.
 plugin_docman	approval_review_state_0	Not Yet
@@ -159,6 +163,11 @@ plugin_docman	admin_permissions_descr	Define who can administrate the document m
 plugin_docman	admin_permissions_instructions	Please select user groups that can administrate the document manager:
 plugin_docman	admin_report_title	Manage Search Report
 plugin_docman	admin_report_descr	Modify the scope of the reports.
+plugin_docman	admin_lock_infos_title	Locked Documents
+plugin_docman	admin_lock_infos_descr	List of locked documents.
+plugin_docman	admin_lock_infos_help	This is the list of all locked documents in $1 project.
+plugin_docman	admin_lock_infos_who	Who
+plugin_docman	admin_lock_infos_when	When
 plugin_docman	admin_title	Administration
 plugin_docman	admin_view_title	Manage Display Preferences
 plugin_docman	admin_view_descr	Define the default view for the document manager.
@@ -217,6 +226,7 @@ plugin_docman	details_actions_update_apptable_copy	Copy the previous approval ta
 plugin_docman	details_actions_update_apptable_empty	Create an new empty table.
 plugin_docman	details_actions_update_apptable_reset	Reset the approval cycle (e.g. for major rewrite).
 plugin_docman	details_actions_update_apptable_help	<p>If you choose to:<ul><li><strong>Copy the previous approval table:</strong> A new approval table will be created from the previous one. Keeps reviewers, comments and commitments.</li><li><strong>Reset the approval cycle:</strong> Only the table structure will be kept (description, notification type, reviewer list.). Actually, the new table will be identical to the previous one, but without reviewer comments and commitements.</li><li><strong>Create an new empty table:</strong> Start over with a completly new approval table.</li></ul>In all cases, There is <strong>no automatic notification</strong> of the reviewers.</p>
+plugin_docman	details_actions_update_lock	Keep the lock: 
 plugin_docman	details_approval	Approval Table
 plugin_docman	details_approval_approval_title	Approval cycle details
 plugin_docman	details_approval_admin	Admin
@@ -362,6 +372,8 @@ plugin_docman	details_properties_edit	Edit properties
 plugin_docman	details_properties_folder	Folder Properties
 plugin_docman	details_properties_view_doc_lbl	Direct link:
 plugin_docman	details_properties_view_doc_val	Click to open the document
+plugin_docman	details_properties_lock_who	$1 <strong>locked</strong> this document on $2.
+plugin_docman	details_properties_lock_info	You cannot modify it until the lock owner or a document manager release the lock.
 plugin_docman	details_title	Details of $1
 plugin_docman	details_update_title	Update $1
 plugin_docman	details_update_recursion_warning	<h3>Confirm recursive application of default values.</h3><p>You are about to apply the values selected in <strong>Default Values</strong> field set below on <strong>$1 documents and $2 folders</strong>.</p>
@@ -382,7 +394,6 @@ plugin_docman	details_statistics_item_type_folder	Folders:
 
 plugin_docman	docman_browserns4	Your browser (Netscape 4) is too old to access to the document manager. We do not guaranty the compatibility of the service with your browser.
 
-plugin_docman	docman_wiki_perms_notice	<strong>Warning: </strong>For wiki pages, a 'Document Reader' can update the page.
 plugin_docman	error_alreadyinstalled	Document Manager already installed.
 plugin_docman	error_cannot_delete_hc_md	You are not allowed to delete system properties.
 plugin_docman	error_create_initversion	Error while creating initial version.
@@ -439,6 +450,8 @@ plugin_docman	event_metadataupdate	Property change
 plugin_docman	event_wiki_page_updated	Wiki page content change
 plugin_docman	event_set_version_author	Version author
 plugin_docman	event_set_version_date	Version date
+plugin_docman	event_lock_add	Locked document
+plugin_docman	event_lock_del	Released lock
 
 plugin_docman	field_description	Description:
 plugin_docman	field_rank	Rank:
@@ -692,6 +705,8 @@ plugin_docman	specificfield_url	Url:
 
 plugin_docman	title	Project Documentation
 
+plugin_docman	document	Document
+
 plugin_docman	toolbar_admin	Admin
 plugin_docman	toolbar_docman	Project Documentation
 
@@ -738,6 +753,8 @@ plugin_docman	docman_wiki_other_location	Other location:
 plugin_docman	docman_wiki_other_locations	Other locations:
 plugin_docman	docman_wiki_breadcrumbs_locations	Locations:
 plugin_docman	docman_wiki_perms_label	Permissions controlled by documents manager
+plugin_docman	docman_wiki_page_locked	$1 locked this page. You cannot modify it until the lock owner or a document manager release the lock.
+plugin_docman	docman_wiki_page_locked_elsewhere	This wiki page is already locked through "$1".
 
 widget_categ_label	plugin_docman	Document Manager
 plugin_docman	widget_description_my_docman	List the documents under review.
