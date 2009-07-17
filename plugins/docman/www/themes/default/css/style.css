@@ -273,7 +273,7 @@ a img {
   padding-bottom: 0px;
   padding-left: 24px;
   text-decoration: none;
-  display: block;
+  /*display: block;*/
   background-repeat:no-repeat;
   background-position:2px 1px;
 }
@@ -299,7 +299,21 @@ a img {
 .docman_item_option_newversion {
     background-image:url('../images/ic/file-newversion.png');
 }
+/*
+ * For an unknown reason, adding <p> or <span> in .docman_item_menu breaks the 
+ * randering of the whole menu. The only solution I found is to repeat the rule
+ * just for move.
+ */
 .docman_item_option_move {
+    border:1px solid #e8e8e0;
+    padding-top: 0px;
+    padding-right: 1em;
+    padding-bottom: 0px;
+    padding-left: 24px;
+    text-decoration: none;
+    display: inline;
+    background-repeat:no-repeat;
+    background-position:2px 1px;
     background-image:url('../images/ic/item-move.png');
 }
 .docman_item_option_history {
@@ -322,12 +336,24 @@ a img {
     background-image:url('../images/ic/copy.png');
 }
 
+.docman_item_option_cut {
+    background-image:url('../images/ic/cut.png');
+}
+
 .docman_item_option_paste {
+	display: inline;
     background-image:url('../images/ic/paste.png');
 }
 
 .docman_item_option_approval {
     background-image:url('../images/ic/approval.png');
+}
+
+.docman_item_option_separator {
+	width: 10em;
+	padding: 0;
+	margin-top: 0.25em;
+	margin-bottom: 0;
 }
 
 /**********/

@@ -618,6 +618,15 @@ Object.extend(com.xerox.codendi.Menu.prototype, {
                 return false;
             }
         }.bindAsEventListener(this));
+
+        // Display the pointer when the mouse is over the image (as a link does)
+        Event.observe(im, 'mouseover', function (evt) {
+               Element.setStyle(document.body, {cursor:'pointer'});
+        });
+        Event.observe(im, 'mouseout', function (evt) {
+               Element.setStyle(document.body, {cursor:'default'});
+        });
+
         return im;
     },
     _appendQuickMoveIcon: function (element, action) {
@@ -663,17 +672,14 @@ Object.extend(com.xerox.codendi.Menu.prototype, {
         return this._createLi(a);
     },
     _getMove: function () {
-        var a = Builder.node('a', {
-            'href': this.defaultUrl+'&action=move',
-            'class': 'docman_item_option_move',
-            'title': this.docman.options.language.action_move});
-        var title_txt = document.createTextNode(this.docman.options.language.action_move);
-        a.appendChild(title_txt);
-        this._appendQuickMoveIcon(a, 'move-up');
-        this._appendQuickMoveIcon(a, 'move-down');
-        this._appendQuickMoveIcon(a, 'move-beginning');
-        this._appendQuickMoveIcon(a, 'move-end');
-        return this._createLi(a);
+        var txtNode = Builder.node('span', {'class': 'docman_item_option_move'});
+        txtNode.appendChild(document.createTextNode(this.docman.options.language.action_move));
+        var li = this._createLi(txtNode);
+        this._appendQuickMoveIcon(li, 'move-up');
+        this._appendQuickMoveIcon(li, 'move-down');
+        this._appendQuickMoveIcon(li, 'move-beginning');
+        this._appendQuickMoveIcon(li, 'move-end');
+        return li;
     },
     _getPermissions: function () {
         var a = Builder.node('a', {
@@ -718,6 +724,52 @@ Object.extend(com.xerox.codendi.Menu.prototype, {
             'title': this.docman.options.language.action_update});
         var title_txt = document.createTextNode(this.docman.options.language.action_update);
         a.appendChild(title_txt);
+        return this._createLi(a);
+    },
+    _getCut: function () {
+        var a = Builder.node('a', {
+            'href': this.defaultUrl+'&action=action_cut',
+            'class': 'docman_item_option_cut',
+            'title': this.docman.options.language.action_cut});
+        var title_txt = document.createTextNode(this.docman.options.language.action_cut);
+        a.appendChild(title_txt);
+        Event.observe(a, 'click', function (evt) {
+            new Ajax.Request(this.defaultUrl+'&action=action_cut&ajax_cut=true', {
+                'onComplete': function() {
+                    // Hide menu
+                    this.hide();
+
+                    // Display feedback message
+                    var li = Builder.node('li');
+
+                    // Search item title
+                    var title = $('docman_item_title_link_'+this.item_id).firstChild.nodeValue;
+                    li.innerHTML = '"'+title+'" '+this.docman.options.language.feedback_cut;
+
+                    if($('item_cut')) {
+                        $('item_cut').remove();
+                    }
+                    var ul = Builder.node('ul', {'class': 'feedback_info', 'id': 'item_cut'});
+                    ul.appendChild(li);
+                    var feedback = $('feedback');
+                    feedback.appendChild(ul);
+                    feedback.show();
+
+                    // There is sth to paste.
+                    //this.docman.actionsForItem[this.item_id].canPaste = true;
+
+                    // There is something to paste & user have write permission on a folder -> user can paste inside that folder.
+                    $H(this.docman.actionsForItem).keys().each(function (id) {
+                        if (this.docman.actionsForItem[id].canNewDocument) {
+                            this.docman.actionsForItem[id].canPaste = true;
+                        }
+                    }.bind(this));
+
+                }.bindAsEventListener(this)
+            });
+            Event.stop(evt);
+            return false;
+        }.bindAsEventListener(this));
         return this._createLi(a);
     },
     _getCopy: function () {
@@ -767,13 +819,63 @@ Object.extend(com.xerox.codendi.Menu.prototype, {
         return this._createLi(a);
     },
     _getPaste: function () {
+        var title_txt = document.createTextNode(this.docman.options.language.action_paste);
         var a = Builder.node('a', {
             'href': this.defaultUrl+'&action=action_paste',
             'class': 'docman_item_option_paste',
             'title': this.docman.options.language.action_paste});
         var title_txt = document.createTextNode(this.docman.options.language.action_paste);
         a.appendChild(title_txt);
-        return this._createLi(a);
+
+        spanCancel = Builder.node('span', {'style': 'width:100%; align: right; vertical-align: middle;'});
+        spanCancel.appendChild(this._getCancelPaste());
+
+        li = this._createLi(a);
+        li.appendChild(spanCancel);
+        return li;
+    },
+    _getCancelPaste: function () {
+        this.docman.options.language.action_paste_cancel = "Cancel paste"
+        var im = Builder.node('img', {
+            'src':   this.docman.options.themePath+'/images/ic/cancel.png',
+            'style': 'margin:0; padding:0, border:0;',
+            'title': ''
+        });
+
+        Event.observe(im, 'click', function (evt) {
+            new Ajax.Request(this.defaultUrl+'&action=paste_cancel', {
+                    'onComplete': function() {
+                        // Hide menu
+                        this.hide();
+
+                        // There disable paste for all items
+                        $H(this.docman.actionsForItem).keys().each(function (id) {
+                            this.docman.actionsForItem[id].canPaste = false;
+                        }.bind(this));
+
+                        // Hide previous feedback
+                        if ($('item_copied')) {
+                            $('item_copied').remove();
+                        }
+                        if ($('item_cut')) {
+                            $('item_cut').remove();
+                        }
+
+                    }.bindAsEventListener(this)
+            });
+            Event.stop(evt);
+            return false;
+        }.bindAsEventListener(this));
+
+        // Display the pointer when the mouse is over the image (as a link does)
+        Event.observe(im, 'mouseover', function (evt) {
+               Element.setStyle(document.body, {cursor:'pointer'});
+        });
+        Event.observe(im, 'mouseout', function (evt) {
+               Element.setStyle(document.body, {cursor:'default'});
+        });
+
+        return im;
     },
     _getApproval: function () {
         var a = Builder.node('a', {
@@ -783,6 +885,11 @@ Object.extend(com.xerox.codendi.Menu.prototype, {
         var title_txt = document.createTextNode(this.docman.options.language.action_approval);
         a.appendChild(title_txt);
         return this._createLi(a);
+    },
+    _getSeparator: function () {
+       var sepLi = Builder.node('li');
+       sepLi.appendChild(Builder.node('hr', {'class': 'docman_item_option_separator'}));
+       return sepLi;
     },
     show:function(evt) {
         var menu = 'docman_item_menu_'+this.item_id;
@@ -823,21 +930,34 @@ Object.extend(com.xerox.codendi.Menu.prototype, {
             //
             // All the supported actions
             //
+
+            var writeAction = false;
             
             // New folder
-            if(this.docman.actionsForItem[this.item_id].canNewFolder)
+            if(this.docman.actionsForItem[this.item_id].canNewFolder) {
                 ul.appendChild(this._getNewFolder(this.item_id));
+                writeAction = true;
+            }
             // New document
-            if(this.docman.actionsForItem[this.item_id].canNewDocument)
+            if(this.docman.actionsForItem[this.item_id].canNewDocument) {
                 ul.appendChild(this._getNewDocument(this.item_id));
-            // Properties
-            ul.appendChild(this._getProperties());
+                writeAction = true;
+            }
             // New version (files)
-            if(this.docman.actionsForItem[this.item_id].canNewVersion)
+            if(this.docman.actionsForItem[this.item_id].canUpdate) {
                 ul.appendChild(this._getNewVersion());
+                writeAction = true;
+            }
             // Update (empty, wiki, link)
-            if(this.docman.actionsForItem[this.item_id].canUpdate)
+            if(this.docman.actionsForItem[this.item_id].canUpdate){
                ul.appendChild(this._getUpdate());
+               writeAction = true;
+            }
+
+            if(writeAction == true) {
+               ul.appendChild(this._getSeparator());
+            }
+
             // Notification
             ul.appendChild(this._getNotification());
             // History
@@ -848,18 +968,32 @@ Object.extend(com.xerox.codendi.Menu.prototype, {
             // Approval table
             if(this.docman.actionsForItem[this.item_id].canApproval)
                 ul.appendChild(this._getApproval());
+
+            ul.appendChild(this._getSeparator());
+
             // Move
             if(this.docman.actionsForItem[this.item_id].canMove)
                 ul.appendChild(this._getMove());
+            // Cut
+            if(this.docman.actionsForItem[this.item_id].canCut)
+                ul.appendChild(this._getCut());
             // Copy
             ul.appendChild(this._getCopy());
             // Paste
             if(this.docman.actionsForItem[this.item_id].canPaste)
                 ul.appendChild(this._getPaste());
+
+            ul.appendChild(this._getSeparator());
+
             // Delete
-            if(this.docman.actionsForItem[this.item_id].canDelete)
+            if(this.docman.actionsForItem[this.item_id].canDelete) {
                 ul.appendChild(this._getDelete());
-                
+                ul.appendChild(this._getSeparator());
+            }
+
+            // Properties
+            ul.appendChild(this._getProperties());
+
             actions_panel.appendChild(ul);
             
             //dimensions
@@ -946,4 +1080,3 @@ function change_obsolescence_date(form) {
   // Write new date  
   input.value = newdatestr;
 }
-

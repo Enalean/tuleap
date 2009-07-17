@@ -895,44 +895,72 @@ class Docman_Controller extends Controler {
             }
             break;
 
+        case 'action_cut':
+            $_action = $this->request->get('orig_action');
+            $_id = (int) $this->request->get('orig_id');
+            $this->_actionParams['item'] = $item;
+
+            $this->action = $view;
+            if(!$this->request->exist('ajax_cut')) {
+                $this->_viewParams['default_url_params'] = array('action'  => $_action,
+                                                                 'id'      => $_id);
+                $this->view = 'RedirectAfterCrud';
+            }
+            break;
+
         case 'action_paste':
             $itemToPaste = null;
-            $allowed = $this->checkPasteIsAllowed($item, $itemToPaste);
+            $mode        = null;
+            $allowed = $this->checkPasteIsAllowed($item, $itemToPaste, $mode);
             if(!$allowed) {
                 $this->view = 'Details';
             }
             else {
                 $this->_viewParams['itemToPaste'] = $itemToPaste;
+                $this->_viewParams['srcMode']     = $mode;
                 $this->view = 'Paste';
             }
             break;
 
+        case 'paste_cancel':
+            // intend to be only called through ajax call
+            $item_factory->delCopyPreference();
+            $item_factory->delCutPreference();
+            break;
+            
         case 'paste':
             if($this->request->exist('cancel')) {
                 $this->_viewParams['default_url_params'] = array('action'  => 'show');
                 $this->view = 'RedirectAfterCrud';
             } else {
                 $itemToPaste = null;
-                $allowed = $this->checkPasteIsAllowed($item, $itemToPaste);
+                $mode        = null;
+                $allowed = $this->checkPasteIsAllowed($item, $itemToPaste, $mode);
                 if(!$allowed) {
                     $this->view = 'Details';
                 }
                 else {
-                    $this->_actionParams['importMd'] = false;
+                    $this->_viewParams['importMd'] = false;
                     if($this->userCanAdmin()) {
                         if($this->request->exist('import_md') &&
                            $this->request->get('import_md') == '1') {
                             $this->_actionParams['importMd'] = true;
                         }
                     }
-                    $this->_actionParams['item'] = $item;
-                    $this->_actionParams['rank'] = $this->request->get('rank');
-                    $this->_actionParams['itemToPaste'] = $itemToPaste;
-                    $this->action = $view;
+                    $this->_viewParams['item'] = $item;
+                    $this->_viewParams['rank'] = $this->request->get('rank');
+                    $this->_viewParams['itemToPaste'] = $itemToPaste;
+                    $this->_viewParams['srcMode']     = $mode;
+                    /*$this->action = $view;
                                                 
                     $this->_viewParams['default_url_params'] = array('action'  => 'show',
                                                                      'id'      => $item->getId());
-                    $this->view = 'RedirectAfterCrud';
+                    $this->view = 'RedirectAfterCrud';*/
+                    $this->_viewParams['item']        = $item;
+                    $this->_viewParams['rank']        = $this->request->get('rank');
+                    $this->_viewParams['itemToPaste'] = $itemToPaste;
+                    $this->_viewParams['srcMode']     = $mode;
+                    $this->view                       = 'PasteInProgress';
                 }
             }
             break;
@@ -1522,7 +1550,7 @@ class Docman_Controller extends Controler {
         return $valid;
     }
     
-    function checkPasteIsAllowed($item, &$itemToPaste) {
+    function checkPasteIsAllowed($item, &$itemToPaste, &$mode) {
         $isAllowed = false;
         
         $itemFactory =& $this->_getItemFactory();
@@ -1536,8 +1564,22 @@ class Docman_Controller extends Controler {
             $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_perms_edit'));
         } 
         else {
-            $itemIdToPaste = $itemFactory->getCopyPreference($user);
-            $itemToPaste = $itemFactory->getItemFromDb($itemIdToPaste);
+            $copiedItemId = $itemFactory->getCopyPreference($user);
+            $cutItemId    = $itemFactory->getCutPreference($user, $item->getGroupId());
+            $itemToPaste  = null;
+            
+            if ($copiedItemId !== false && $cutItemId === false) {
+                $itemToPaste = $itemFactory->getItemFromDb($copiedItemId);
+                $mode        = 'copy'; 
+            }
+            elseif ($copiedItemId === false && $cutItemId !== false) {
+                $itemToPaste = $itemFactory->getItemFromDb($cutItemId);
+                $mode        = 'cut';
+            } 
+            else {
+                $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_paste_no_valid_item'));
+                return false;
+            }
             
             if($itemToPaste == null) {
                 $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_paste_no_valid_item'));
