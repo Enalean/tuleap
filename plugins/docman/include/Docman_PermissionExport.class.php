@@ -1,6 +1,6 @@
 <?php
 
-require_once(dirname(__FILE__).'/../../docman/include/Docman_ItemFactory.class.php');
+require_once('Docman_ItemFactory.class.php');
 require_once('www/project/export/project_export_utils.php');
 require_once('www/project/admin/project_admin_utils.php');
 

@@ -60,6 +60,8 @@ $groupname = $project->getUnixName();
 $dbname = "cx_".str_replace("-","",$groupname);
 $pg_title = $Language->getText('project_admin_utils','project_data_export').' '.$groupname;
 
+$em->processEvent('project_export', array('export' => $export, 'project' => $project));
+
 switch ($export) {
 
  case 'artifact':

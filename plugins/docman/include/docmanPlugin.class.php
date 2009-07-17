@@ -52,6 +52,8 @@ class DocmanPlugin extends Plugin {
         $this->_addHook('userCanAccessWikiDocument',         'userCanAccessWikiDocument',         false);
         $this->_addHook('getPermsLabelForWiki',              'getPermsLabelForWiki',              false);
         $this->_addHook('ajax_reference_tooltip',            'ajax_reference_tooltip',            false);
+        $this->_addHook('project_export_entry',              'project_export_entry',              false);
+        $this->_addHook('project_export',                    'project_export',                    false);
 	}
 	function permission_get_name($params) {
         if (!$params['name']) {
@@ -344,6 +346,42 @@ class DocmanPlugin extends Plugin {
             ));
             $controler =& new Docman_CoreController($this, $this->getPluginPath(), $this->getThemePath(), $request);
             $controler->process();
+        }
+    }
+
+    /**
+     *  hook to display the link to export project data
+     *  @param void
+     *  @return void
+     */
+    function project_export_entry($params) {
+        // Docman perms
+        $url  = '?group_id='.$params['group_id'].'&export=plugin_docman_perms';
+        $params['labels']['plugin_eac_docman']                           = $GLOBALS['Language']->getText('plugin_eac','Project_access_permission');
+        $params['data_export_links']['plugin_eac_docman']                = $url.'&show=csv';
+        $params['data_export_format_links']['plugin_eac_docman']         = $url.'&show=format';
+        $params['history_export_links']['plugin_eac_docman']             = null;
+        $params['history_export_format_links']['plugin_eac_docman']      = null;
+        $params['dependencies_export_links']['plugin_eac_docman']        = null;
+        $params['dependencies_export_format_links']['plugin_eac_docman'] = null;
+    }
+
+    /**
+     *  hook to display the link to export project data
+     *  @param void
+     *  @return void
+     */
+    function project_export($params) {
+        if($params['export'] == 'plugin_docman_perms') {
+            include_once('Docman_PermissionExport.class.php');
+            $request = HTTPRequest::instance();
+            $permExport = new Docman_PermissionExport($params['project']->getId());
+            if ($request->get('show') == 'csv') {
+                $permExport->toCSV();
+            } else { // show = format
+                $permExport->renderDefinitionFormat();
+            }
+            exit;
         }
     }
 }
