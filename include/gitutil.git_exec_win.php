@@ -10,7 +10,10 @@
 function git_exec_win($project, $command)
 {
 	global $gitphp_conf;
-	$cmd = $gitphp_conf['gitbin'] . " --git-dir=" . $project . " " . $command;
+	$cmd = $gitphp_conf['gitbin'];
+	if (isset($project) && (strlen($project) > 0))
+		$cmd .= " --git-dir=" . $project;
+	$cmd .= " " . $command;
 	return shell_exec($cmd);
 }
 
