@@ -9,9 +9,9 @@
 
  require_once('gitutil.git_rev_list.php');
 
-function git_read_revlist($proj,$head,$count,$skip = NULL)
+function git_read_revlist($proj,$head,$count = NULL,$skip = NULL,$header = FALSE,$parents = FALSE,$greptype = NULL, $search = NULL)
 {
-	$revs = trim(git_rev_list($proj,$head,$count, $skip));
+	$revs = trim(git_rev_list($proj,$head,$count, $skip, $header, $parents, $greptype, $search));
 	$revlist = explode("\n",$revs);
 	return $revlist;
 }

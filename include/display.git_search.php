@@ -10,7 +10,7 @@
 require_once('defs.constants.php');
 require_once('util.highlight.php');
 require_once('gitutil.git_read_commit.php');
-require_once('gitutil.git_rev_list.php');
+require_once('gitutil.git_read_revlist.php');
 require_once('display.git_message.php');
 
 function git_search($projectroot, $project, $hash, $search, $searchtype, $page = 0)
@@ -37,7 +37,7 @@ function git_search($projectroot, $project, $hash, $search, $searchtype, $page =
 
 		$co = git_read_commit($projectroot . $project, $hash);
 
-		$revlist = explode("\n",trim(git_rev_list($projectroot . $project, $hash, 101, ($page * 100), FALSE, FALSE, $searchtype, $search)));
+		$revlist = git_read_revlist($projectroot . $project, $hash, 101, ($page * 100), FALSE, FALSE, $searchtype, $search);
 		if (count($revlist) < 1 || (strlen($revlist[0]) < 1)) {
 			git_message("No matches for '" . $search . "'.", FALSE, TRUE);
 			return;

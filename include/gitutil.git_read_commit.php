@@ -9,12 +9,11 @@
 
  require_once('defs.constants.php');
  require_once('util.age_string.php');
- require_once('gitutil.git_rev_list.php');
+ require_once('gitutil.git_read_revlist.php');
 
 function git_read_commit($proj,$head)
 {
-	$revlist = git_rev_list($proj,$head,1,NULL,TRUE,TRUE);
-	$lines = explode("\n",$revlist);
+	$lines = git_read_revlist($proj,$head,1,NULL,TRUE,TRUE);
 	if (!($lines[0]) || !ereg("^[0-9a-fA-F]{40}",$lines[0]))
 		return null;
 	$commit = array();

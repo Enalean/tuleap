@@ -12,7 +12,7 @@
  require_once('util.script_url.php');
  require_once('gitutil.git_read_commit.php');
  require_once('gitutil.git_diff_tree.php');
- require_once('gitutil.git_rev_list.php');
+ require_once('gitutil.git_read_revlist.php');
  require_once('gitutil.read_info_ref.php');
  require_once('gitutil.git_diff.php');
 
@@ -37,14 +37,12 @@ function git_commitdiff_plain($projectroot,$project,$hash,$hash_parent)
 		$diffout = git_diff_tree($projectroot . $project, $hash_parent . " " . $hash);
 		$difftree = explode("\n",$diffout);
 		$refs = read_info_ref($projectroot . $project,"tags");
-		$listout = git_rev_list($projectroot . $project, "HEAD");
-		$tok = strtok($listout,"\n");
-		while ($tok !== false) {
-			if (isset($refs[$tok]))
-				$tagname = $refs[$tok];
-			if ($tok == $hash)
+		$listout = git_read_revlist($projectroot . $project, "HEAD");
+		foreach ($listout as $i => $rev) {
+			if (isset($refs[$rev]))
+				$tagname = $refs[$rev];
+			if ($rev == $hash)
 				break;
-			$tok = strtok("\n");
 		}
 		$ad = date_str($co['author_epoch'],$co['author_tz']);
 		$tpl->assign("from",$co['author']);
