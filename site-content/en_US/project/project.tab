@@ -649,6 +649,7 @@ project_export_index	export_x	Export $1
 project_export_index	support_request	Support Request
 project_export_index	survey_responses	Survey Responses
 project_export_index	access_logs	Project Access Logs
+project_export_index	user_groups	User groups definition
 project_export_index	direct_db_access	Direct Database Access 
 project_export_index	generate_full_db	Generate Full Project Database</a> </b> (<- Click to generate)
 project_export_index	db_connection_params	Database connection parameters:
@@ -724,6 +725,18 @@ project_export_access_logs_export	user_desc	Author of the access
 project_export_access_logs_export	email_desc	E-mail address of access author
 project_export_access_logs_export	page_desc	Wiki page accessed
 project_export_access_logs_export	local_time_desc	Local time of the access (H:m)
+#
+#-----------------------------------------------
+# Script: src/www/project/export/user_groups_export.php
+#
+project_export_user_groups	user_group	Group
+project_export_user_groups	user_username	$1 user name
+project_export_user_groups	user_realname	Real name
+project_export_user_groups	user_group_desc	Group name
+project_export_user_groups	user_username_desc	User login on $1
+project_export_user_groups	user_realname_desc	User real name
+project_export_user_groups	exp_format	User groups export format
+project_export_user_groups	exp_format_msg	The user groups export provides you with the following informations.
 #
 #-----------------------------------------------
 # Script: SF/www/project/export/task_assigned_to_export.php
