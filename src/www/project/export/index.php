@@ -60,6 +60,8 @@ $groupname = $project->getUnixName();
 $dbname = "cx_".str_replace("-","",$groupname);
 $pg_title = $Language->getText('project_admin_utils','project_data_export').' '.$groupname;
 
+$em->processEvent('project_export', array('export' => $export, 'project' => $project));
+
 switch ($export) {
 
  case 'artifact':
@@ -201,6 +203,16 @@ switch ($export) {
      require('./access_logs_export.php');
      site_project_footer( array() );
      break;
+
+ case 'user_groups':
+     require('./user_groups_export.php');
+     break;
+
+ case 'user_groups_format':
+     project_admin_header(array('title'=>$pg_title));
+     require('./user_groups_export.php');
+     site_project_footer( array() );
+     break;
      
  case 'project_db':
      project_admin_header(array('title'=>$pg_title));
@@ -236,156 +248,125 @@ echo '
      site_project_footer( array() );
      break;
 
- default: 
-     project_admin_header(array('title'=>$pg_title,
-				'help' => 'ProjectDataExport.html'));
-    // Display the welcome screen
+ default:
+     project_admin_header(array('title'=>$pg_title, 'help' => 'ProjectDataExport.html'));
+     // Display the welcome screen
 
-echo '
-<P> '.$Language->getText('project_export_index','export_to_csv_or_db',array(help_button('ProjectDataExport.html',false,$Language->getText('project_export_index','online_help')))).'</p>';
+     echo '
+<p> '.$Language->getText('project_export_index','export_to_csv_or_db',array(help_button('ProjectDataExport.html',false,$Language->getText('project_export_index','online_help')))).'</p>';
 
-echo '
+     echo '
 <h3> '.$Language->getText('project_export_index','export_to_csv_hdr',array(help_button('ProjectDataExport.html#TextFileExport'))).'</h3>';
 
-echo '
+     echo '
 <p> '.$Language->getText('project_export_index','export_to_csv_msg').'</p>';
-		
-	// Show all the fields currently available in the system
 
-	echo '<p><TABLE WIDTH="100%" BORDER="0" CELLSPACING="1" CELLPADDING="2">';
-	echo '
-  <tr class="boxtable"> 
-    <td class="boxtitle">&nbsp;</td>
-    <td class="boxtitle"> 
-      <div align="center"><b>'.$Language->getText('project_export_index','art_data').'</b></div>
-    </td>
-    <td class="boxtitle"> 
-      <div align="center"><b>'.$Language->getText('project_export_index','history').'</b></div>
-    </td>
-    <td class="boxtitle"> 
-      <div align="center"><b>'.$Language->getText('project_export_index','dependencies').'</b></div>
-    </td>
-  </tr>';
-  	$iu = 0;
-   	echo '
-  <tr class="'.util_get_alt_row_color($iu).'"> 
-    <td><b>'.$Language->getText('project_export_index','access_logs').'</b></td>
-    <td align="center"> 
-      <a href="'.$PHP_SELF.'?group_id='.$group_id.'&export=access_logs">'.$Language->getText('project_export_index','export').'</a>
-      <br><a href="'.$PHP_SELF.'?group_id='.$group_id.'&export=access_logs_format">'.$Language->getText('project_export_index','show_format').'</a>
-    </td>
-    <td align="center">-<br>-</td>
-    <td align="center">-<br>-</td>
-  </tr>';
-  
-  	$iu ++;	  	
-	$legacy = ( ($project->usesTracker()) ? $Language->getText('project_export_index','legacy'):"");
+     // Show all the fields currently available in the system
+     $entry_label                           = array();
+     $entry_data_export_links               = array();
+     $entry_data_export_format_links        = array();
+     $history_data_export_links             = array();
+     $history_data_export_format_links      = array();
+     $dependencies_data_export_links        = array();
+     $dependencies_data_export_format_links = array();
+     $iu = 0;
 
-	if ($project->usesBugs()) {
-  	echo '
+     $titles = array('',
+                     $Language->getText('project_export_index','art_data'),
+                     $Language->getText('project_export_index','history'),
+                     $Language->getText('project_export_index','dependencies'));
+     echo html_build_list_table_top($titles);
+
+     $legacy = ( ($project->usesTracker()) ? $Language->getText('project_export_index','legacy'):"");
+
+     if ($project->usesBugs()) {
+         echo '
   <tr class="'.util_get_alt_row_color($iu).'"> 
     <td><b>'.$legacy.' '.$Language->getText('project_export_index','bug_tracker').'</b></td>
     <td align="center"> 
-      <a href="'.$PHP_SELF.'?group_id='.$group_id.'&export=bug">'.$Language->getText('project_export_index','export').'</a>
-      <br><a href="'.$PHP_SELF.'?group_id='.$group_id.'&export=bug_format">'.$Language->getText('project_export_index','show_format').'</a>
+      <a href="?group_id='.$group_id.'&export=bug">'.$Language->getText('project_export_index','export').'</a>
+      <br><a href="?group_id='.$group_id.'&export=bug_format">'.$Language->getText('project_export_index','show_format').'</a>
     </td>
     <td align="center"> 
-      <a href="'.$PHP_SELF.'?group_id='.$group_id.'&export=bug_history">'.$Language->getText('project_export_index','export').'</a>
-      <br><a href="'.$PHP_SELF.'?group_id='.$group_id.'&export=bug_history_format">'.$Language->getText('project_export_index','show_format').'</a>
+      <a href="?group_id='.$group_id.'&export=bug_history">'.$Language->getText('project_export_index','export').'</a>
+      <br><a href="?group_id='.$group_id.'&export=bug_history_format">'.$Language->getText('project_export_index','show_format').'</a>
     </td>
     <td align="center"> 
-      <a href="'.$PHP_SELF.'?group_id='.$group_id.'&export=bug_bug_deps">'.$Language->getText('project_export_index','export_x','Bug-Bug Deps').'</a>
-      - <a href="'.$PHP_SELF.'?group_id='.$group_id.'&export=bug_bug_deps_format">'.$Language->getText('project_export_index','show_format').'</a>
-      <br><a href="'.$PHP_SELF.'?group_id='.$group_id.'&export=bug_task_deps">'.$Language->getText('project_export_index','export_x','Bug-Task Deps').'</a>
-      - <a href="'.$PHP_SELF.'?group_id='.$group_id.'&export=bug_task_deps_format">'.$Language->getText('project_export_index','show_format').'</a>
+      <a href="?group_id='.$group_id.'&export=bug_bug_deps">'.$Language->getText('project_export_index','export_x','Bug-Bug Deps').'</a>
+      - <a href="?group_id='.$group_id.'&export=bug_bug_deps_format">'.$Language->getText('project_export_index','show_format').'</a>
+      <br><a href="?group_id='.$group_id.'&export=bug_task_deps">'.$Language->getText('project_export_index','export_x','Bug-Task Deps').'</a>
+      - <a href="?group_id='.$group_id.'&export=bug_task_deps_format">'.$Language->getText('project_export_index','show_format').'</a>
     </td>
   </tr>';
-  	$iu ++;
-	}
+         $iu ++;
+     }
 
-	if ($project->usesPm()) {
-  	echo '
-  <tr class="'.util_get_alt_row_color($iu).'"> 
-    <td><b>'.$legacy.' '.$Language->getText('project_admin_userperms','task_man').'</b></td>
-    <td align="center"> 
-      <a href="'.$PHP_SELF.'?group_id='.$group_id.'&export=task">'.$Language->getText('project_export_index','export').'</a>
-	  <br><a href="'.$PHP_SELF.'?group_id='.$group_id.'&export=task_format">'.$Language->getText('project_export_index','show_format').'</a>
-    </td>
-    <td align="center"> 
-      <a href="'.$PHP_SELF.'?group_id='.$group_id.'&export=task_history">'.$Language->getText('project_export_index','export').'</a>
-      <br><a href="'.$PHP_SELF.'?group_id='.$group_id.'&export=task_history_format">'.$Language->getText('project_export_index','show_format').'</a>
-    </td>
-    <td align="center"> 
-      <a href="'.$PHP_SELF.'?group_id='.$group_id.'&export=task_task_deps">'.$Language->getText('project_export_index','export').'</a>
-      <br><a href="'.$PHP_SELF.'?group_id='.$group_id.'&export=task_task_deps_format">'.$Language->getText('project_export_index','show_format').'</a>
-    </td>
-  </tr>';
-  	$iu ++;
-	}
+    if ($project->usesPm()) {
+        $entry_label['legacy_pm']                           = $legacy.' '.$Language->getText('project_admin_userperms','task_man');
+        $entry_data_export_links['legacy_pm']               = '?group_id='.$group_id.'&export=task';
+        $entry_data_export_format_links['legacy_pm']        = '?group_id='.$group_id.'&export=task_format';
+        $history_data_export_links['legacy_pm']             = '?group_id='.$group_id.'&export=task_history';
+        $history_data_export_format_links['legacy_pm']      = '?group_id='.$group_id.'&export=task_history_format';
+        $dependencies_data_export_links['legacy_pm']        = '?group_id='.$group_id.'&export=task_task_deps';
+        $dependencies_data_export_format_links['legacy_pm'] = '?group_id='.$group_id.'&export=task_task_deps_format';
+    }
 
-	if ($project->usesSupport()) {
-  	echo '
-  <tr class="'.util_get_alt_row_color($iu).'"> 
-    <td><b>'.$legacy.' '.$Language->getText('project_export_index','support_request').'</b></td>
-    <td align="center"> 
-      <a href="'.$PHP_SELF.'?group_id='.$group_id.'&export=support_request">'.$Language->getText('project_export_index','export').'</a>
-      <br><a href="'.$PHP_SELF.'?group_id='.$group_id.'&export=support_request_format">'.$Language->getText('project_export_index','show_format').'</a>
-    </td>
-    <td align="center">-<br>-</td>
-    <td align="center">-<br>-</td>
-  </tr>';
-  	$iu ++;
-	}
-        if ($project->usesSurvey()) {
-  	echo '
-  <tr class="'.util_get_alt_row_color($iu).'"> 
-    <td><b>'.$Language->getText('project_export_index','survey_responses').'</b></td>
-    <td align="center"> 
-      <a href="'.$PHP_SELF.'?group_id='.$group_id.'&export=survey_responses">'.$Language->getText('project_export_index','export').'</a>
-      <br><a href="'.$PHP_SELF.'?group_id='.$group_id.'&export=survey_responses_format">'.$Language->getText('project_export_index','show_format').'</a>
-    </td>
-    <td align="center">-<br>-</td>
-    <td align="center">-<br>-</td>
-  </tr>';
-  	$iu ++;
-        }		
-  
-	if ($project->usesTracker()) {
-            // Get the artfact type list
-            $at_arr = $atf->getArtifactTypes();
-	
-	if ($at_arr && count($at_arr) >= 1) {
-		for ($j = 0; $j < count($at_arr); $j++) {		  	
-		  	echo '
-		  <tr class="'.util_get_alt_row_color($iu).'"> 
-		    <td><b>'.$Language->getText('project_export_index','tracker').': '.$at_arr[$j]->getName().'</b></td>
-		    <td align="center"><a href="'.$PHP_SELF.'?group_id='.$group_id.'&atid='.$at_arr[$j]->getID().'&export=artifact">'.$Language->getText('project_export_index','export').'</a>
-		      <br><a href="'.$PHP_SELF.'?group_id='.$group_id.'&atid='.$at_arr[$j]->getID().'&export=artifact_format">'.$Language->getText('project_export_index','show_format').'</a>
-		    </td>
-		    <td align="center"> 
-		      <a href="'.$PHP_SELF.'?group_id='.$group_id.'&atid='.$at_arr[$j]->getID().'&export=artifact_history">'.$Language->getText('project_export_index','export').'</a>
-		      <br><a href="'.$PHP_SELF.'?group_id='.$group_id.'&atid='.$at_arr[$j]->getID().'&export=artifact_history_format">'.$Language->getText('project_export_index','show_format').'</a>
-		    </td>
-		    <td align="center"> 
-		      <a href="'.$PHP_SELF.'?group_id='.$group_id.'&atid='.$at_arr[$j]->getID().'&export=artifact_deps">'.$Language->getText('project_export_index','export').'</a>
-		      <br><a href="'.$PHP_SELF.'?group_id='.$group_id.'&atid='.$at_arr[$j]->getID().'&export=artifact_deps_format">'.$Language->getText('project_export_index','show_format').'</a>
-		    </td>
-		  </tr>';
-		  $iu ++;	
-		}
-	}
+    if ($project->usesSupport()) {
+        $entry_label['legacy_support']                           = $legacy.' '.$Language->getText('project_export_index','support_request');
+        $entry_data_export_links['legacy_support']               = '?group_id='.$group_id.'&export=support_request';
+        $entry_data_export_format_links['legacy_support']        = '?group_id='.$group_id.'&export=support_request_format';
+        $history_data_export_links['legacy_support']             = null;
+        $history_data_export_format_links['legacy_support']      = null;
+        $dependencies_data_export_links['legacy_support']        = null;
+        $dependencies_data_export_format_links['legacy_support'] = null;
+    }
+
+    if ($project->usesSurvey()) {
+        $entry_label['survey']                           = $Language->getText('project_export_index','survey_responses');
+        $entry_data_export_links['survey']               = '?group_id='.$group_id.'&export=survey_responses';
+        $entry_data_export_format_links['survey']        = '?group_id='.$group_id.'&export=survey_responses_format';
+        $history_data_export_links['survey']             = null;
+        $history_data_export_format_links['survey']      = null;
+        $dependencies_data_export_links['survey']        = null;
+        $dependencies_data_export_format_links['survey'] = null;
+    }
+
+    if ($project->usesTracker()) {
+        // Get the artfact type list
+        $at_arr = $atf->getArtifactTypes();
+        if ($at_arr && count($at_arr) >= 1) {
+            foreach($at_arr as $at) {
+                $idx = 'tracker_'.$at->getID();
+                $entry_label[$idx]                           = $Language->getText('project_export_index','tracker').': '.$at->getName();
+                $entry_data_export_links[$idx]               = '?group_id='.$group_id.'&atid='.$at->getID().'&export=artifact';
+                $entry_data_export_format_links[$idx]        = '?group_id='.$group_id.'&atid='.$at->getID().'&export=artifact_format';
+                $history_data_export_links[$idx]             = '?group_id='.$group_id.'&atid='.$at->getID().'&export=artifact_history';
+                $history_data_export_format_links[$idx]      = '?group_id='.$group_id.'&atid='.$at->getID().'&export=artifact_history_format';
+                $dependencies_data_export_links[$idx]        = '?group_id='.$group_id.'&atid='.$at->getID().'&export=artifact_deps';
+                $dependencies_data_export_format_links[$idx] = '?group_id='.$group_id.'&atid='.$at->getID().'&export=artifact_deps_format';
+            }
         }
-        
-    
+    }
+
+    // Access log
+    $entry_label['access_log']                           = $Language->getText('project_export_index','access_logs');
+    $entry_data_export_links['access_log']               = '?group_id='.$group_id.'&export=access_logs';
+    $entry_data_export_format_links['access_log']        = '?group_id='.$group_id.'&export=access_logs_format';
+    $history_data_export_links['access_log']             = null;
+    $history_data_export_format_links['access_log']      = null;
+    $dependencies_data_export_links['access_log']        = null;
+    $dependencies_data_export_format_links['access_log'] = null;
+
+    // User groups definitions
+    $entry_label['user_groups']                           = $Language->getText('project_export_index','user_groups');
+    $entry_data_export_links['user_groups']               = '?group_id='.$group_id.'&export=user_groups';
+    $entry_data_export_format_links['user_groups']        = '?group_id='.$group_id.'&export=user_groups_format';
+    $history_data_export_links['user_groups']             = null;
+    $history_data_export_format_links['user_groups']      = null;
+    $dependencies_data_export_links['user_groups']        = null;
+    $dependencies_data_export_format_links['user_groups'] = null;
+
     // Plugins entries
-    $entry_label = array();
-    $entry_data_export_links = array();
-    $entry_data_export_format_links = array();
-    $history_data_export_links = array();
-    $history_data_export_format_links = array();
-    $dependencies_data_export_links = array();
-    $dependencies_data_export_format_links = array();
-    
     $exportable_items = array(
                         'group_id' => $group_id,
                         'labels' => &$entry_label,
@@ -443,19 +424,18 @@ echo '
     }
     
 
-	echo '</TABLE>';
-echo '
+    echo '</TABLE>';
+    echo '
 <br>
 <h3>'.$Language->getText('project_export_index','direct_db_access').' '.help_button('ProjectDataExport.html#DirectDatabaseAccess').'</h3>
 
 <ol>';
 
-    echo '<li><b><a href="'.$PHP_SELF."?group_id=$group_id&export=project_db\">".$Language->getText('project_export_index','generate_full_db')."\n";
+    echo '<li><b><a href="?group_id='.$group_id.'&export=project_db">'.$Language->getText('project_export_index','generate_full_db')."\n";
     echo '<li>'.$Language->getText('project_export_index','db_connection_params').' ';
-?>
-</ol>
 
-<?php
+    echo '</ol>';
+
     display_db_params ();
     site_project_footer( array() );
     break;

@@ -761,3 +761,21 @@ plugin_docman	widget_description_my_docman	List the documents under review.
 plugin_docman	widget_description_embedded	Allow you to view an embedded documents directly in the widget.
 plugin_docman	widget_title_embedded	Docman Viewer
 plugin_docman	widget_description_embedded	Display a docman item directly in the dashboard. <br /><em>For now, only embedded files are supported</em>.
+
+plugin_docman	Project_access_permission	Document Manager Permissions
+plugin_docman	export_format	Project data export
+plugin_docman	perm_exp_format	Docman permission export format
+plugin_docman	perm_exp_format_msg	Docman permission export format
+plugin_docman	format_export_date	Export date
+plugin_docman	format_export_project	Project
+plugin_docman	format_id	Id
+plugin_docman	format_id_desc	Document id
+plugin_docman	format_label	Label
+plugin_docman	format_sample	Sample value
+plugin_docman	format_description	Description
+plugin_docman	format_path	Path
+plugin_docman	format_path_desc	The Item path in docman tree
+plugin_docman	format_type	Type
+plugin_docman	format_type_desc	Kind of item (file, link, wiki,...)
+plugin_docman	format_user_group	User Groups...
+plugin_docman	format_user_group_desc	One user group per column. Each one can have either READ, WRITE or MANAGE permission. An empty row means no access.
