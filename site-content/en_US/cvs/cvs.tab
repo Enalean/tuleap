@@ -62,6 +62,7 @@ cvs_browse_commit	date	Commit date
 cvs_browse_commit	pick_date	Click Here to Pick up a date
 cvs_browse_commit	nb_at_once	commits at once
 cvs_browse_commit	no_commit	No Commit matches your criteria
+cvs_browse_commit	log_message	Log message
 #
 #-----------------------------------------------
 # Script: SF/www/cvs/detail_commit.php

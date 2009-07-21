@@ -54,6 +54,8 @@ cvs_browse_commit	date	Date de commit
 cvs_browse_commit	pick_date	Cliquer ici pour choisir une date
 cvs_browse_commit	nb_at_once	commits à la fois
 cvs_browse_commit	no_commit	Aucun commit ne correspond à vos critères
+cvs_browse_commit	log_message	Message de commit
+
 #
 #-----------------------------------------------
 # Script: SF/www/cvs/detail_commit.php

@@ -755,4 +755,19 @@ function cvs_get_revisions(&$project, $offset, $chunksz, $_tag = 100, $_branch =
     
     return array($result, $totalrows);
 }
+
+function cvs_get_revision_detail($commit_id) {
+    
+    $sql = "SELECT repository, cvs_commits.comm_when as c_when, repositoryid, description, file, fileid, dir, dirid, type, branch, revision, addedlines, removedlines ".
+                    "FROM cvs_dirs, cvs_descs, cvs_files, cvs_checkins, cvs_branches, cvs_repositories, cvs_commits ".
+                    "WHERE cvs_checkins.fileid=cvs_files.id ".
+                    "   AND cvs_checkins.dirid=cvs_dirs.id ".
+                    "   AND cvs_checkins.commitid=cvs_commits.id ".
+                    "   AND cvs_checkins.branchid=cvs_branches.id ".
+                    "   AND cvs_checkins.descid=cvs_descs.id ".
+                    "   AND cvs_checkins.repositoryid=cvs_repositories.id ".
+                    "   AND cvs_checkins.commitid='$commit_id' ";
+    $result = db_query($sql);
+    return $result;
+}
 ?>
