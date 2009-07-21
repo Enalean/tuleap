@@ -42,12 +42,12 @@ tarDir=/var/lib
 
 # if NOOLD=1 -> Old full backup is deleted instread of staying
 # in a dedicated directory.
-NOOLD=0
 
 # Check arguments
 while   ((1))   # look for options
 do      case    "$1" in
-        \-noarchives)   NOOLD=1;;
+        \-keep\-n\-archives)    NOLD=$2; break;;
+        \-\noarchives) DELETEALLOLD=1; break;;
         *)      if [ ! -z "$1" ];
             then
                 echo "Invalid option $1";
@@ -57,6 +57,15 @@ do      case    "$1" in
         esac
         shift # next argument
 done
+
+# Display help in case of wrong arguments
+if [ ${HELP} ];
+then
+    echo "Usage: backup_job [-keep-n-archives] [-noarchives]";
+    echo "  -keep-n-archives: specifies the number of old backups to keep.";
+    echo "  -noarchives: removes all stored backups.";
+    echo "Note: providing no options will keep all archived backups.";
+fi 
 
 MKDIR=/bin/mkdir
 MV=/bin/mv
@@ -80,9 +89,29 @@ fi
 # back up mysql datafiles to disk
 cd ${tarDir}
 tar -vczf ${currentBackupDstDir}/sqldump.`date +%m%d%y.%H%M`.tar --exclude 'codendi-bin.*' mysql
-# If there is no archives keeping, delete old  backup
-if [ "${NOOLD}" == 1 ]; then 
-    ${RM} -rf ${oldBackupDir}
+# Delete all archived backups
+if [ ${DELETEALLOLD} ];
+then
+    echo "All archived backups will be deleted ..."
+    ${RM} -rf ${oldBackupDstDir}/*
+fi
+
+# Only keep n old archives.
+numoldarchives=`ls ${oldBackupDstDir} | wc -w`
+if [ "${NOLD}" ]; then 
+    echo "Only the $NOLD newest backups will be kept."
+    while (( 1 ))
+    do
+        if [[ ${numoldarchives} > ${NOLD} ]];
+        then
+            todelete=`ls -c --reverse ${oldBackupDstDir} | head -1`
+            echo "deleting $oldBackupDstDir/$todelete ..."
+            ${RM} -rf ${oldBackupDstDir}/${todelete}
+            numoldarchives=$(( ${numoldarchives} - 1))
+        else
+            break
+        fi
+    done
 fi
 
 /etc/init.d/mysqld start
