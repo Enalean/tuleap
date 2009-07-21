@@ -177,7 +177,8 @@ class ArtifactReportHtml extends ArtifactReport {
             //
             $query_fields = $this->getQueryFields();
             
-            $html_select .= "<table width='100%'>";
+            //the width has been removed to correct the display of the Query Form (related to the fix of STTab theme)
+            $html_select .= "<table>";
             $labels = '';
             $boxes  = '';
             // Number of search criteria (boxes) displayed in one row
@@ -194,7 +195,7 @@ class ArtifactReportHtml extends ArtifactReport {
                                     
                 // beginning of a new row
                 if ($ib % $this->fields_per_line == 0) {
-                    $align = "center";
+                    $align = "left";
                     $labels .= "\n".'<TR align="'.$align.'" valign="top">';
                     $boxes .= "\n".'<TR align="'.$align.'" valign="top">';
                 }
@@ -674,7 +675,7 @@ class ArtifactReportHtml extends ArtifactReport {
                     $html_result .= '<div id="artifacts_query" style="padding-left:16px;">';
                     if (!$user_dont_want_to_see_query) {
                         $html_result .= $this->displayQueryFields($prefs,$advsrch,$pv);
-                        $html_result .= '<div style="text-align:center"><input type="submit" value="'.$Language->getText('global','btn_submit').'" /></div>';
+                        $html_result .= '<div style="text-align:left"><input type="submit" value="'.$Language->getText('global','btn_submit').'" /></div>';
                     }
                     $html_result .= '</div>';
                 }
