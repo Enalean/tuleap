@@ -199,6 +199,32 @@ class Docman_ItemFactory {
         return $items;
     }
 
+    /**
+    * This deletes an existant wiki page and all its stored data and infos from codendi db.
+    *
+    * @param string $wiki_page name of the wiki page
+    * @param int $group_id project id.
+    *
+    * @return true if there was no error.
+    */
+    function deleteWikiPage($wiki_page, $group_id) {
+        $wiki_dao = $this->_getWikiDao();
+        $id_in_wiki = $wiki_dao->retrieveWikiPageId($wiki_page, $group_id);
+        if($id_in_wiki !== null) {
+            if($wiki_dao->deleteWikiPage($id_in_wiki)
+                && $wiki_dao->deleteWikiPageVersion($id_in_wiki)
+                && $wiki_dao->deleteLinksFromToWikiPage($id_in_wiki)
+                && $wiki_dao->deleteWikiPageFromNonEmptyList($id_in_wiki)
+                && $wiki_dao->deleteWikiPageRecentInfos($id_in_wiki)) {
+                return true;
+            } else {
+                return false;   
+            }
+        } else {
+            return false;
+        } 
+    }
+
     function &getItemFromDb($id, $params = array()) {
         $_id = (int) $id;
         $dao =& $this->_getItemDao();

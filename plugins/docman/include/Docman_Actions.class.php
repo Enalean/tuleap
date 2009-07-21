@@ -1218,6 +1218,12 @@ class Docman_Actions extends Actions {
         $_sGroupId = (int) $request->get('group_id');
         $_sId      = (int) $request->get('id');
 
+        if($request->exist('cascadeWikiPageDeletion') && $request->get('cascadeWikiPageDeletion') == 'on'){
+            $cascade = true;
+        } else {
+            $cascade = false;
+        }
+
         $itemFactory = new Docman_ItemFactory($_sGroupId);
         $parentItem = $itemFactory->getItemFromDb($_sId);
 
@@ -1231,7 +1237,9 @@ class Docman_Actions extends Actions {
                 $item =& $itemFactory->getItemSubTree($parentItem, $user, false, true);
                 if ($item) {
                     $deletor =& new Docman_ActionsDeleteVisitor($this->_getFileStorage(), $this->_controler);
-                    if ($item->accept($deletor, array('user' => &$user, 'parent' => $itemFactory->getItemFromDb($item->getParentId())))) {
+                    if ($item->accept($deletor, array('user'  => &$user, 
+                                                    'parent'  => $itemFactory->getItemFromDb($item->getParentId()),
+                                                    'cascadeWikiPageDeletion' => $cascade))) {
                         $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'info_item_deleted'));
                     }
                 }

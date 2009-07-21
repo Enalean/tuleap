@@ -87,5 +87,66 @@ class WikiDao extends DataAccessObject {
         }
         return $version;
     }
+
+    /**
+     * Delete entry from wiki_page table identified by wiki page Id.
+     *
+     * @param int $id id of wiki page
+     * @return true if there is no error
+     */
+    function deleteWikiPage($id) {
+        $sql = sprintf('DELETE FROM wiki_page'.
+                    ' WHERE id=%d', $id);
+        return $this->update($sql);
+    }
+
+    /**
+     * Delete all entries from wiki_version table that refers to the same wiki page identified by  its Id
+     *
+     * @param int $id id of wiki page
+     * @return true if there is no error
+     */
+    function deleteWikiPageVersion($id) {
+        $sql = sprintf('DELETE FROM wiki_version'.
+                    ' WHERE id=%d', $id);
+        return $this->update($sql);
+    }
+
+    /**
+     * Delete links from and to wiki page identified by  its Id
+     *
+     * @param int $id id of wiki page
+     * @return true if there is no error
+     */
+    function deleteLinksFromToWikiPage($id) {
+        $sql = sprintf('DELETE FROM wiki_link'.
+                    ' WHERE linkfrom=%d'.
+                    ' OR linkto=%d', $id, $id);
+        return $this->update($sql);
+    }
+
+    /**
+     * Delete wiki page identified by  its Id from non empty pages list
+     *
+     * @param int $id id of wiki page
+     * @return true if there is no error
+     */
+    function deleteWikiPageFromNonEmptyList($id) {
+        $sql = sprintf('DELETE FROM wiki_nonempty'.
+                    ' WHERE id=%d', $id);
+        return $this->update($sql);
+    }
+
+    /**
+     * Delete recent infos of wiki page identified by  its Id.
+     *
+     * @param int $id id of wiki page
+     * @return true if there is no error
+     */
+    function deleteWikiPageRecentInfos($id) {
+        $sql = sprintf('DELETE FROM wiki_recent'.
+                    ' WHERE id=%d', $id);
+        return $this->update($sql);
+    }
 }
 ?>
