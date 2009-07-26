@@ -56,7 +56,7 @@
  if ($gitphp_conf['cache']) {
  	$tpl->caching = 2;
 	$tpl->cache_lifetime = $gitphp_conf['cachelifetime'];
-	if ($gitphp_conf['cacheexpire']) {
+	if (!(isset($gitphp_conf['cacheexpire']) && ($gitphp_conf['cacheexpire'] === FALSE))) {
 		require_once('include/cache.cache_expire.php');
 		cache_expire($gitphp_conf['projectroot'], (isset($_GET['p']) ? $_GET['p'] : null), $git_projects);
 	}
