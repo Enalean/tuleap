@@ -193,7 +193,7 @@ class Docman_View_ItemDetailsSectionProperties extends Docman_View_ItemDetailsSe
         if($dpm->getLockFactory()->itemIsLocked($this->item)) {
             $lockInfos = $dpm->getLockFactory()->getLockInfoForItem($this->item);
             $locker = UserHelper::instance()->getLinkOnUserFromUserId($lockInfos['user_id']);
-            $lockDate = format_date($GLOBALS['sys_datefmt'], $lockInfos['lock_date']);
+            $lockDate = format_date($GLOBALS['Language']->getText('system', 'datefmt'), $lockInfos['lock_date']);
             $html .= '<p>';
             $html .= $GLOBALS['Language']->getText('plugin_docman', 'details_properties_lock_who', array($locker, $lockDate));
             if (!$this->user_can_write) {

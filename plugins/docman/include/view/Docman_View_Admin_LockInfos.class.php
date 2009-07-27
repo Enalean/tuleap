@@ -77,7 +77,7 @@ class Docman_View_Admin_LockInfos extends Docman_View_Extra {
                 $content .=  '<a href="'. $this->defaultUrl. '&action=show&id='. $parent->getId(). '">' .$parent->getTitle() .'</a></td>';
             }
             $content .= '<td>'. $uH->getDisplayNameFromUserId($row['user_id']) .'</td>';
-            $content .= '<td>'. format_date($GLOBALS['sys_datefmt'], $row['lock_date']) .'</td>';
+            $content .= '<td>'. format_date($GLOBALS['Language']->getText('system', 'datefmt'), $row['lock_date']) .'</td>';
             $content .= '</tr>';
         }
 
