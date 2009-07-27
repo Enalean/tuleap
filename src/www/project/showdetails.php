@@ -6,7 +6,7 @@
 //
 // 
 require_once('pre.php');
-require_once('common/include/ReferenceManager.class.php');
+require_once('common/reference/ReferenceManager.class.php');
 
 $hp = Codendi_HTMLPurifier::instance();
 
