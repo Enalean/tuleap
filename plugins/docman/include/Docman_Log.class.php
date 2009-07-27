@@ -122,8 +122,8 @@ class Docman_Log { /* implements EventListener */
                                     $_new_v = $_new_e->getName();
                                 }                            
                             } else if ($md->getType() == PLUGIN_DOCMAN_METADATA_TYPE_DATE){
-                                $_old_v = format_date($GLOBALS['sys_datefmt'], $_old_v);
-                                $_new_v = format_date($GLOBALS['sys_datefmt'], $_new_v);
+                                $_old_v = format_date($GLOBALS['Language']->getText('system', 'datefmt'), $_old_v);
+                                $_new_v = format_date($GLOBALS['Language']->getText('system', 'datefmt'), $_new_v);
                             }
                             $html .= '<td>'.$GLOBALS['Language']->getText('plugin_docman','details_history_logs_change_field', array($md->getName())).'</td>';
                             $html .= '<td>'.$_old_v.'</td>';
@@ -147,7 +147,7 @@ class Docman_Log { /* implements EventListener */
                             $html .= "<td>$newUser</td>";
                         }
                         elseif ($row['type'] == PLUGIN_DOCMAN_EVENT_SET_VERSION_DATE) {
-                            $newDate = format_date($GLOBALS['sys_datefmt'], $row['new_value']);
+                            $newDate = format_date($GLOBALS['Language']->getText('system', 'datefmt'), $row['new_value']);
                             $html .= '<td>'. $this->getText($row['type']) .'</td>';
                             $html .= "<td>&nbsp;</td>";
                             $html .= "<td>$newDate</td>";
