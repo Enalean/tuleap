@@ -228,7 +228,7 @@ class UserHelper {
         $um = $this->_getUserManager();
         $user = $um->getUserById($user_id);
         if($user && !$user->isNone()) {
-            return '<a href="/users/'.urlencode($user->getName()).'">'.$hp->purify($this->getDisplayNameFromUser($user), CODEX_PURIFIER_CONVERT_HTML).'</a>';
+            return '<a href="/users/'.urlencode($user->getName()).'">'.$hp->purify($this->getDisplayNameFromUser($user), CODENDI_PURIFIER_CONVERT_HTML).'</a>';
         } else {
             $username = $user ? $user->getName() : '';
             return  $hp->purify($username, CODENDI_PURIFIER_CONVERT_HTML) ;
