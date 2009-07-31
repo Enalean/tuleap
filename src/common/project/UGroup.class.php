@@ -27,12 +27,22 @@ require_once('common/dao/UGroupUserDao.class.php');
  * 
  */
 class UGroup {
+    const NOBODY             = 100;
+    const ANONYMOUS          = 1;
+    const REGISTERED         = 2;
+    const PROJECT_MEMBERS    = 3;
+    const PROJECT_ADMIN      = 4;
+    const FILE_MANAGER_ADMIN = 11;
+    const DOCUMENT_TECH      = 12;
+    const DOCUMENT_ADMIN     = 13;
+    const WIKI_ADMIN         = 14;
+    const TRACKER_ADMIN      = 15;
 
     protected $id;
     protected $group_id;
     protected $name;
     protected $description;
-    protected $is_dynamic;
+    //protected $is_dynamic;
 
     protected $members=null;
 
@@ -44,13 +54,29 @@ class UGroup {
         $this->name          = isset($row['name'])                 ? $row['name']                 : null;
         $this->description   = isset($row['description'])          ? $row['description']          : null;
         $this->group_id      = isset($row['group_id'])             ? $row['group_id']             : 0;
-        if ($this->id < 100) {
+        /*if ($this->id < 100) {
             $is_dynamic = true;
         } else {
             $is_dynamic = false;
-        }
+        }*/
     }
-
+    
+    public function getId() {
+        return $this->id;
+    }
+    
+    public function getName() {
+        return $this->name;
+    }
+    
+    public function getDescription() {
+        return $this->description;
+    }
+    
+    public function getGroupId() {
+        return $this->group_id;
+    }
+    
     protected function _getUGroupDao() {
         if (!$this->_ugroupdao) {
             $this->_ugroupdao = new UGroupDao(CodendiDataAccess::instance());
@@ -63,10 +89,6 @@ class UGroup {
             $this->_ugroupuserdao = new UGroupUserDao(CodendiDataAccess::instance());
         }
         return $this->_ugroupuserdao;
-    }
-
-    public function getName() {
-        return $this->name;
     }
 
     /**
@@ -106,5 +128,39 @@ class UGroup {
         return $username_array;
     }
 
+    public function getParent() {
+        
+    }
+
+    /**
+     * Add a user as a member
+     * 
+     * @param User $user
+     * 
+     * @return Boolean
+     */
+    public function addUser($user) {
+        $this->members[] = $user;
+    }
+    
+    /**
+     * Remove user from members
+     * 
+     * @param User $user
+     * 
+     * @return Boolean
+     */
+    public function removeUser($user) {
+        
+    }
+
+    /**
+     * Wrapper for EventManager
+     *
+     * @return EventManager
+     */
+    function getEventManager() {
+        return EventManager::instance();
+    }
 }
 ?>

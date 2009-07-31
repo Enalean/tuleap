@@ -91,9 +91,12 @@ $row_num=0;
 $result = db_query("SELECT * FROM ugroup WHERE group_id=100 ORDER BY ugroup_id");
 while ($row = db_fetch_array($result)) {
     if ($project->usesDocman() || ($row['name'] != 'ugroup_document_tech_name_key' && $row['name'] != 'ugroup_document_admin_name_key')) {
-        $ugroupRow[100] = util_translate_name_ugroup($row['name']).' *';
+        $ugroupRow[100] = '<a href="/project/admin/editugroup.php?group_id='.$group_id.'&ugroup_id='.$row['ugroup_id'].'&func=edit">'.util_translate_name_ugroup($row['name']);' *</a>';
         $ugroupRow[200] = util_translate_desc_ugroup($row['description']);
-        $ugroupRow[300] = array('value' => '-', 'html_attrs' => 'align="center"');
+               $sql = ugroup_db_get_dynamic_members($row['ugroup_id'], false, $group_id);
+        $res = db_query($sql);
+        $nb = db_numrows($res);
+        $ugroupRow[300] = array('value' => $nb, 'html_attrs' => 'align="center"');
         $ugroupRow[400] = array('value' => '-', 'html_attrs' => 'align="center"');
         $em->processEvent('ugroup_table_row', array('row' => $row, 'html_array' => &$ugroupRow));
         ksort($ugroupRow);
