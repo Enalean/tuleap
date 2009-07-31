@@ -13,7 +13,6 @@ require_once('pre.php');
 require_once('www/project/admin/permissions.php');
 require_once('www/file/file_utils.php');
 require_once('www/docman/doc_utils.php');
-require_once('common/project/UGroupFactory.class.php');
 
 $hp = Codendi_HTMLPurifier::instance();
 function display_name_and_desc_form($ugroup_name,$ugroup_description) {
@@ -108,7 +107,7 @@ if (($func=='edit')||($func=='do_create')) {
 
     project_admin_header(array('title'=>$Language->getText('project_admin_editugroup','edit_ug'),'group'=>$group_id,
 			   'help' => 'UserGroups.html#UGroupCreation'));
-    print '<P><h2>'.$Language->getText('project_admin_editugroup','ug_admin',util_translate_name_ugroup($ugroup_name)).'</h2>';
+    print '<P><h2>'.$Language->getText('project_admin_editugroup','ug_admin',$ugroup_name).'</h2>';
     echo '<p>'.$Language->getText('project_admin_editugroup','upd_ug_name').'</p>';
     echo '<form method="post" name="form_create" action="/project/admin/ugroup.php?group_id='.$group_id.'" onSubmit="return selIt();">
 	<input type="hidden" name="func" value="do_update">
@@ -123,22 +122,20 @@ if (($func=='edit')||($func=='do_create')) {
     echo '<div style="padding-left:10px">';
     
     // Get existing members from group
-    //UGroupManager::getGroupById($request->get('ugroup_id'), true);
-    $uGroup = UGroupFactory::instance()->getGroupById($request->get('ugroup_id'), $group_id, true);
-    //$sql="SELECT user_id FROM ugroup_user WHERE ugroup_id = ". db_ei($request->get('ugroup_id'));
-    //$res = db_query($sql);
-    if ($uGroup) {
+    $sql="SELECT user_id FROM ugroup_user WHERE ugroup_id = ". db_ei($request->get('ugroup_id'));
+    $res = db_query($sql);
+    if (db_numrows($res)>0) {
         echo '<form action="ugroup_remove_user.php" method="POST">';
-        echo '<input type="hidden" name="group_id" value="'.$uGroup->getGroupId().'">';
-        echo '<input type="hidden" name="ugroup_id" value="'.$uGroup->getId().'">';
+        echo '<input type="hidden" name="group_id" value="'.$group_id.'">';
+        echo '<input type="hidden" name="ugroup_id" value="'.$ugroup_id.'">';
         echo '<table>';
         $i = 0;
         $hp = Codendi_HTMLPurifier::instance();
-        foreach($uGroup->getMembers() as $user) {
+        while ($data = db_fetch_array($res)) {
             echo '<tr class="'. html_get_alt_row_color(++$i) .'">';
-            echo '<td>'. user_get_name_display_from_id($user->getId()) .'</td>';
+            echo '<td>'. user_get_name_display_from_id($data['user_id']) .'</td>';
             echo '<td>';
-            project_admin_display_bullet_user($user->getId(), 'remove', 'ugroup_remove_user.php?group_id='. $uGroup->getGroupId(). '&ugroup_id='. $uGroup->getId() .'&user_id='. $user->getId());
+            project_admin_display_bullet_user($data['user_id'], 'remove', 'ugroup_remove_user.php?group_id='. $group_id. '&ugroup_id='. $ugroup_id .'&user_id='. $data['user_id']);
             echo '</td>';
             echo '</tr>';
         }

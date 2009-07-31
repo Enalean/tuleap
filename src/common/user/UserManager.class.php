@@ -101,7 +101,12 @@ class UserManager {
         }
         return $user;
     }
-
+    
+    function _getUserInstanceFromRow($row) {
+        $u = new User($row);
+        return $u;
+    }
+    
     /**
      * @param  string Ldap identifier
      * @return User or null if the user is not found
@@ -126,30 +131,7 @@ class UserManager {
         }
         return $user;
     }
-
-    public function getUserByRow($row) {
-        $u = $this->_getUserInstanceFromRow($row);
-        $this->cacheUser($u);
-        return $u;
-    }
     
-    protected function cacheUser($u) {
-        if ($u->getId() > 0) {
-            $this->_users[$u->getId()] = $u;
-        }
-        if ($u->getName() != '') {
-            $this->_userid_bynames[$u->getName()] = $u->getId();
-        }
-        if ($u->getLdapId() != '') {
-            $this->_userid_byldapid[$u->getLdapId()] = $u->getId();
-        }
-    }
-    
-    function _getUserInstanceFromRow($row) {
-        $u = new User($row);
-        return $u;
-    }
-
     /**
      * Try to find a user that match the given identifier
      * 
