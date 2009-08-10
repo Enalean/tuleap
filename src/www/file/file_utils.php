@@ -376,7 +376,7 @@ function frs_display_release_form($is_update, &$release, $group_id, $title, $url
     file_utils_admin_header(array (
         'title' => $GLOBALS['Language']->getText('file_admin_editreleases',
         'release_new_file_version'
-    ), 'help' => 'QuickFileRelease.html'));
+    ), 'help' => 'FileReleaseDelivery.html'));
     echo '<H3>'.$hp->purify($title, CODENDI_PURIFIER_CONVERT_HTML).'</H3>';
     $sql = "SELECT * FROM frs_processor WHERE (group_id = 100 OR group_id = ".db_ei($group_id).") ORDER BY rank";
     $result = db_query($sql);

@@ -1207,6 +1207,7 @@ function util_check_private_access($request_uri) {
 */
 
 function util_check_restricted_access($request_uri, $script_name) {
+    
     global $Language;
     
     $url = new URL();
@@ -1217,6 +1218,7 @@ function util_check_restricted_access($request_uri, $script_name) {
     
     $user = UserManager::instance()->getCurrentUser();
     if ($user->isRestricted()) {
+        
          // Make sure the URI starts with a single slash
         $req_uri='/'.trim($request_uri, "/");
         $user_is_allowed=false;
@@ -1306,10 +1308,11 @@ function util_check_restricted_access($request_uri, $script_name) {
             $user_is_allowed=true;
         }
         
-        if ($allow_news_browsing) {
-             $user_is_allowed=true;
-        }
-                    
+        if (strpos($req_uri,'/news/') !== false && 
+            $allow_news_browsing) {
+            $user_is_allowed=true;
+         }
+        
         if (isset($allow_access_to_project_forums[$group_id])) {
               $user_is_allowed=true;
          }
@@ -1339,7 +1342,7 @@ function util_check_restricted_access($request_uri, $script_name) {
             isset($allow_access_to_project_frs[$group_id])) {
             $user_is_allowed=true;
         }
-
+        
         // References
         if (strpos($req_uri,'/goto') !== false &&
             isset($allow_access_to_project_refs[$group_id])) {

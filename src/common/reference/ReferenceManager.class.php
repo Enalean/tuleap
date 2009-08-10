@@ -47,6 +47,7 @@ class ReferenceManager {
     var $referenceDao;
     var $reservedKeywords=array("art","artifact","doc","file","wiki","cvs","svn","news","forum","msg","cc","git","tracker","release","tag","thread","im","project","folder","plugin","img","commit","rev","revision","patch","bug","sr","task","proj","dossier"); //should be elsewhere?
     var $groupIdByName;
+    var $groupIdByNameLower;
     
     const REFERENCE_NATURE_ARTIFACT = 'artifact';
     const REFERENCE_NATURE_DOCUMENT = 'document';
@@ -343,7 +344,15 @@ class ReferenceManager {
                               $row['scope'],$row['service_short_name'],$row['nature'],$row['is_active'],$row['group_id']);
         return $ref;
     }
-
+    
+    /**
+     * the regexp used to find a reference
+     * @return $exp the string which may the regexp 
+     */
+    function _getExpForRef() {
+        $exp = '/(\w+) #([\w-_]+:)?([\w\/&]+)+/u';
+        return $exp;
+    }
 
     /**
      * insert html links in text
@@ -351,11 +360,16 @@ class ReferenceManager {
      */
     function insertReferences(&$html,$group_id) {
         $this->tmpGroupIdForCallbackFunction = $group_id;
+        
+        $locale = setlocale(LC_CTYPE, null);
+         setlocale(LC_CTYPE, 'fr_FR.ISO-8859-1');
         if (!preg_match('/[^\s]{5000,}/', $html)) {
-            $html = preg_replace_callback('/(\w+) #(\w+:)?([\w\/&]+)+/',
+            $exp = $this->_getExpForRef();
+            $html = preg_replace_callback($exp,
                                       array(&$this,"_insertRefCallback"), // method _insertRefCallback of this class
                                       $html);
         }
+        setlocale(LC_CTYPE, $locale);
         $this->tmpGroupIdForCallbackFunction = null;
     }
 
@@ -366,7 +380,11 @@ class ReferenceManager {
      * @return array of matches
      */
     function _extractAllMatches($html) {
-		$count=preg_match_all('/(\w+) #([\w-_]+:)?([\w\/&]+)+/', $html, $matches,PREG_SET_ORDER);
+        $locale = setlocale(LC_CTYPE, null);
+        setlocale(LC_CTYPE, 'fr_FR.ISO-8859-1');
+        $exp = $this->_getExpForRef();
+        $count=preg_match_all($exp, $html, $matches,PREG_SET_ORDER);
+        setlocale(LC_CTYPE, $locale);
     	return $matches;
     }
     
@@ -456,9 +474,12 @@ class ReferenceManager {
 	            } else {
 	                // project name instead...
 	                $this->_initGroupHash();
+                    
 	                if (isset($this->groupIdByName[$target_project])) {
-	                    $ref_gid = $this->groupIdByName[$target_project];
-	                } else {
+                         $ref_gid = $this->groupIdByName[$target_project];
+	                } else if(isset($this->groupIdByNameLower[$target_project])) {
+                        $ref_gid = $this->groupIdByNameLower[$target_project];
+                    }else {
 	                    return null;
 	                }
 	            }
@@ -572,10 +593,12 @@ class ReferenceManager {
                 $ref_gid = $target_project;
             } else {
                 // project name instead...
-                $this->_initGroupHash();
+                $this->_initGroupHash();                
                 if (isset($this->groupIdByName[$target_project])) {
                     $ref_gid = $this->groupIdByName[$target_project];
-                } else {
+                } else if (isset($this->groupIdByNameLower[$target_project])) {
+                    $ref_gid = $this->groupIdByNameLower[$target_project];
+                }else {
                     return null;
                 }
             }
@@ -643,11 +666,14 @@ class ReferenceManager {
         if (!isset($this->groupIdByName)) {
                 $gf = new GroupFactory();
                 $p=array();
+                $pl=array();
                 $results = $gf->getAllGroups();
                 while ($groups_array = db_fetch_array($results)) {
                     $p[$groups_array["unix_group_name"]]=$groups_array["group_id"];
-                }
+                    $pl[strtolower($groups_array["unix_group_name"])]=$groups_array["group_id"];
+                }                
                 $this->groupIdByName =& $p;
+                $this->groupIdByNameLower =& $pl;               
             }
     }
 

@@ -54,6 +54,7 @@ SERVICE='/sbin/service'
 PERL='/usr/bin/perl'
 DIFF='/usr/bin/diff'
 PHP='/usr/bin/php'
+UNAME='/bin/uname'
 
 CHCON='/usr/bin/chcon'
 SELINUX_CONTEXT="root:object_r:httpd_sys_content_t";
@@ -70,10 +71,16 @@ MKDIR RPM CHOWN CHMOD FIND TOUCH CAT MAKE TAIL GREP CHKCONFIG \
 SERVICE PERL DIFF"
 
 # Functions
-create_group() {
+create_group_withid() {
     # $1: groupname, $2: groupid
     $GROUPDEL "$1" 2>/dev/null
     $GROUPADD -g "$2" "$1"
+}
+
+create_group() {
+    # $1: groupname
+    $GROUPDEL "$1" 2>/dev/null
+    $GROUPADD -r "$1"
 }
 
 build_dir() {
@@ -120,6 +127,17 @@ for cmd in `echo ${CMD_LIST}`
 do
     [ ! -x ${!cmd} ] && die "Command line tool '${!cmd}' not available. Stopping installation!"
 done
+
+
+
+##############################################
+# Detect architecture
+$UNAME -m | $GREP -q x86_64
+if [ $? -ne 0 ]; then
+  ARCH=i386
+else
+  ARCH=x86_64
+fi
 
 ##############################################
 # Check we are running on RHEL 5.3 
@@ -215,11 +233,12 @@ do
 done
 
 # Create Groups
-create_group codendiadm 104
-create_group dummy 103
-create_group mailman 106
-create_group ftpadmin 96
-create_group ftp 50
+# mailman: user ID hard coded in RPM
+create_group_withid mailman 106
+create_group codendiadm
+create_group dummy
+create_group ftpadmin
+create_group ftp
 
 # Ask for domain name and other installation parameters
 read -p "Codendi Domain name: " sys_default_domain
@@ -297,20 +316,20 @@ mm_encpasswd=`python -c "$py_cmd"`
 #$USERMOD -p "$rt_encpasswd" root
 
 $USERDEL codendiadm 2>/dev/null 1>&2
-$USERADD -c 'Owner of Codendi directories' -M -d '/home/codendiadm' -p "$codendi_encpasswd" -u 104 -g 104 -s '/bin/bash' -G ftpadmin,mailman codendiadm
+$USERADD -c 'Owner of Codendi directories' -M -d '/home/codendiadm' -p "$codendi_encpasswd" -r -g codendiadm -s '/bin/bash' -G ftpadmin,mailman codendiadm
 # mailman group needed to write in /var/log/mailman/ directory
 
 $USERDEL mailman 2>/dev/null 1>&2
 $USERADD -c 'Owner of Mailman directories' -M -d '/usr/lib/mailman' -p "$mm_encpasswd" -u 106 -g 106 -s '/sbin/nologin' mailman
 
 $USERDEL ftpadmin 2>/dev/null 1>&2
-$USERADD -c 'FTP Administrator' -M -d '/var/lib/codendi/ftp' -u 96 -g 96 ftpadmin
+$USERADD -c 'FTP Administrator' -M -d '/var/lib/codendi/ftp' -r -g ftpadmin ftpadmin
 
 $USERDEL ftp 2>/dev/null 1>&2
-$USERADD -c 'FTP User' -M -d '/var/lib/codendi/ftp' -u 14 -g 50 ftp
+$USERADD -c 'FTP User' -M -d '/var/lib/codendi/ftp' -r -g ftp ftp
 
 $USERDEL dummy 2>/dev/null 1>&2
-$USERADD -c 'Dummy Codendi User' -M -d '/var/lib/codendi/dumps' -u 103 -g 103 dummy
+$USERADD -c 'Dummy Codendi User' -M -d '/var/lib/codendi/dumps' -r -g dummy dummy
 
 # Build file structure
 
@@ -430,7 +449,7 @@ $RPM -e --allmatches cvs 2>/dev/null
 echo "Installing CVS RPMs for Codendi...."
 cd "${RPMS_DIR}/cvs"
 newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
-$RPM -Uvh ${newest_rpm}/cvs-1.*.i386.rpm
+$RPM -Uvh ${newest_rpm}/$ARCH/cvs-1.*.rpm
 
 # -> subversion
 # Neon is used by other RPMS (cadaver...) that will conflict when upgrading the RPM
@@ -451,36 +470,36 @@ $RPM -e --allmatches neon 2>/dev/null
 echo "Installing Subversion, Neon and recent SQLite RPMs for Codendi...."
 cd "${RPMS_DIR}/subversion"
 newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
-cd ${newest_rpm}
+cd ${newest_rpm}/$ARCH
 # Update SQLite first: version above 3.4 is required for SVN 1.6, and RHEL5 only provides version 3.3.
 # Need to upgrade both sqlite and sqlite-devel at once
-$RPM -Uvh sqlite-3*.i386.rpm sqlite-devel-3*.i386.rpm
+$RPM -Uvh sqlite-3*.rpm sqlite-devel-3*.rpm
 
 
-$RPM -ivh neon-0.*.i386.rpm neon-devel*.i386.rpm subversion-1.*.i386.rpm mod_dav_svn*.i386.rpm subversion-perl*.i386.rpm subversion-python*.i386.rpm 
+$RPM -ivh neon-0.*.rpm neon-devel*.rpm subversion-1.*.rpm mod_dav_svn*.rpm subversion-perl*.rpm subversion-python*.rpm 
 # Dependency error with Perl ??
-#$RPM --nodeps -Uvh subversion-tools*.i386.rpm
+$RPM --nodeps -Uvh subversion-tools*.rpm
 
 # -> libnss-mysql (system authentication based on MySQL)
 $RPM -e --allmatches libnss-mysql 2>/dev/null
 echo "Installing libnss-mysql RPM for Codendi...."
 cd "${RPMS_DIR}/libnss-mysql"
 newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
-$RPM -Uvh --nosignature ${newest_rpm}/libnss-mysql-1*i?86.rpm
+$RPM -Uvh --nosignature ${newest_rpm}/$ARCH/libnss-mysql-1*.rpm
 
 # -> cvsgraph 
 $RPM -e --allmatches cvsgraph 2>/dev/null
 echo "Installing cvsgraph RPM for Codendi...."
 cd "${RPMS_DIR}/cvsgraph"
 newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
-$RPM -Uvh ${newest_rpm}/cvsgraph-1*i?86.rpm
+$RPM -Uvh ${newest_rpm}/$ARCH/cvsgraph-1*.rpm
 
 # -> highlight
 $RPM -e --allmatches highlight 2>/dev/null
 echo "Installing highlight RPM for Codendi...."
 cd "${RPMS_DIR}/highlight"
 newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
-$RPM -Uvh ${newest_rpm}/highlight-2*i?86.rpm
+$RPM -Uvh ${newest_rpm}/$ARCH/highlight-2*.rpm
 
 # -> JPGraph
 $RPM -e jpgraph jpgraphs-docs 2>/dev/null
@@ -510,7 +529,7 @@ $RPM -e php-pecl-apc 2>/dev/null
 echo "Installing APC (PHP cache) RPM for Codendi...."
 cd "${RPMS_DIR}/php-pecl-apc"
 newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
-$RPM -Uvh ${newest_rpm}/php-pecl-apc-*.i?86.rpm
+$RPM -Uvh ${newest_rpm}/$ARCH/php-pecl-apc-*.rpm
 
 # -> mailman
 echo "Removing installed mailman if any .."
@@ -518,7 +537,7 @@ $RPM -e --allmatches mailman 2>/dev/null
 echo "Installing mailman RPM for Codendi...."
 cd "${RPMS_DIR}/mailman"
 newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
-$RPM -Uvh ${newest_rpm}/mailman-2*i?86.rpm
+$RPM -Uvh ${newest_rpm}/$ARCH/mailman-2*.rpm
 
 # Munin
 echo "Removing installed Munin if any .."
@@ -526,14 +545,14 @@ $RPM -e --allmatches `rpm -qa 'munin*' 'perl-HTML-Template*' 'perl-Net-Server' '
 echo "Installing Munin RPMs for Codendi...."
 cd "${RPMS_DIR}/munin"
 newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
-$RPM --nosignature -Uvh ${newest_rpm}/perl-Net-Server*.noarch.rpm
-$RPM --nosignature -Uvh ${newest_rpm}/perl-Crypt-DES*.i386.rpm
-$RPM --nosignature -Uvh ${newest_rpm}/perl-Net-SNMP-*.noarch.rpm
-$RPM --nosignature -Uvh ${newest_rpm}/perl-Config-General-*.noarch.rpm
-$RPM --nosignature -Uvh ${newest_rpm}/perl-HTML-Template*.noarch.rpm
-$RPM --nosignature -Uvh ${newest_rpm}/rrdtool-*.i386.rpm ${newest_rpm}/perl-rrdtool-*.i386.rpm
-$RPM -Uvh ${newest_rpm}/munin-node-*.noarch.rpm
-$RPM -Uvh ${newest_rpm}/munin-1*.noarch.rpm
+$RPM --nosignature -Uvh ${newest_rpm}/noarch/perl-Net-Server*.noarch.rpm
+$RPM --nosignature -Uvh ${newest_rpm}/$ARCH/perl-Crypt-DES*.rpm
+$RPM --nosignature -Uvh ${newest_rpm}/noarch/perl-Net-SNMP-*.noarch.rpm
+$RPM --nosignature -Uvh ${newest_rpm}/noarch/perl-Config-General-*.noarch.rpm
+$RPM --nosignature -Uvh ${newest_rpm}/noarch/perl-HTML-Template*.noarch.rpm
+$RPM --nosignature -Uvh ${newest_rpm}/$ARCH/rrdtool-*.rpm ${newest_rpm}/$ARCH/perl-rrdtool-*.rpm
+$RPM -Uvh ${newest_rpm}/noarch/munin-node-*.noarch.rpm
+$RPM -Uvh ${newest_rpm}/noarch/munin-1*.noarch.rpm
 
 # -> HTML Purifier
 echo "Removing installed htmlpurifier if any .."
@@ -1109,7 +1128,7 @@ EOF
 # TODO check if already there
 echo "codendi-admin:          root" >> /etc/aliases
 
-todo "Finish sendmail settings (see installation Guide) and create codendi-contact and codendi-admin aliases in /etc/aliases"
+todo "Finish sendmail settings (see installation Guide). By default, emails sent to codendi-admin are redirected to root (see /etc/aliases)"
 
 ##############################################
 # CVS configuration
@@ -1245,48 +1264,54 @@ fi
 # Crontab configuration
 #
 echo "Installing root user crontab..."
-$CAT <<'EOF' >/tmp/cronfile
-# Once a minute, process Codendi system events
+crontab -u root -l > /tmp/cronfile
+
+$GREP -q "Codendi" /tmp/cronfile
+if [ $? -ne 0 ]; then
+    $CAT <<'EOF' >>/tmp/cronfile
+# Codendi: Once a minute, process Codendi system events
 * * * * * (cd /usr/share/codendi/src/utils; ./php-launcher.sh ./process_system_events.php)
 #
-# Regularly launch a system_check event (e.g. every half-hour) 
+# Codendi: Regularly launch a system_check event (e.g. every half-hour) 
 0,30 * * * * (cd /usr/share/codendi/src/utils; ./php-launcher.sh ./launch_system_check.php)
 #
-# run the daily statistics script just a little bit after
+# Codendi: run the daily statistics script just a little bit after
 # midnight so that it computes stats for the day before
 # Run at 0:30 am
 30 0 * * * /usr/share/codendi/src/utils/compute_all_daily_stats.sh
 #
-# run the weekly stats for projects. Run it on Monday morning so that
+# Codendi: run the weekly stats for projects. Run it on Monday morning so that
 # it computes the stats for the week before
 # Run on Monday at 1am
 0 1 * * Mon (cd /usr/share/codendi/src/utils/underworld-root; ./db_project_weekly_metric.pl)
 #
-# daily incremental backup of subversion repositories
+# Codendi: daily incremental backup of subversion repositories
 45 23 * * 1-6 /usr/lib/codendi/bin/backup_subversion.sh -i
 #
-# weekly full backup of subversion repositories (0:15 on Sunday)
+# Codendi: weekly full backup of subversion repositories (0:15 on Sunday)
 15 0 * * Sun /usr/lib/codendi/bin/backup_subversion.sh -noarchives
 #
-# weekly backup preparation (mysql shutdown, file dump and restart)
+# Codendi: weekly backup preparation (mysql shutdown, file dump and restart)
 45 0 * * Sun /usr/lib/codendi/bin/backup_job
 
-# Delete all files in FTP incoming that are older than 2 weeks (336 hours)
+# Codendi: Delete all files in FTP incoming that are older than 2 weeks (336 hours)
 #
 0 3 * * * /usr/sbin/tmpwatch -m -f 336 /var/lib/codendi/ftp/incoming
 #
-# It looks like we have memory leaks in Apache in some versions so restart it
+# Codendi: It looks like we have memory leaks in Apache in some versions so restart it
 # on Sunday. Do it while the DB is down for backup
 50 0 * * Sun /sbin/service httpd restart
 #
 EOF
-crontab -u root /tmp/cronfile
+    crontab -u root /tmp/cronfile
+fi
+
 
 echo "Installing  codendiadm user crontab..."
 $CAT <<'EOF' >/tmp/cronfile
-# Daily Codendi PHP cron (obsolete documents...)
+# Codendi: Daily PHP cron (obsolete documents...)
 10 0 * * * /usr/share/codendi/src/utils/php-launcher.sh /usr/share/codendi/src/utils/codendi_daily.php
-# Re-generate the Codendi User Guides on a daily basis
+# Codendi: Re-generate the Codendi User Guides on a daily basis
 00 03 * * * /usr/share/codendi/src/utils/generate_doc.sh
 30 03 * * * /usr/share/codendi/src/utils/generate_programmer_doc.sh
 45 03 * * * /usr/share/codendi/src/utils/generate_cli_package.sh

@@ -274,7 +274,7 @@ class Rule_UserNameFormat
 extends Rule {
 
     function containsIllegalChars($val) {
-        return (strspn($val,"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_") != strlen($val));
+        return (strspn($val,"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_.") != strlen($val));
     }
 
     function isNotLegalName($val) {

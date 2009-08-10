@@ -27,7 +27,7 @@ class PluginIMMucChangeTopicLogDao extends DataAccessObject {
     * @return DataAccessResult
     */
     function & searchAll() {
-        $sql = "SELECT * FROM mucConversationLog WHERE body IS NULL AND subject IS NOT NULL";
+        $sql = "SELECT * FROM ofMucConversationLog WHERE body IS NULL AND subject IS NOT NULL";
         return $this->retrieve($sql);
     }
     
@@ -37,7 +37,7 @@ class PluginIMMucChangeTopicLogDao extends DataAccessObject {
     */
     function & searchByMucName($muc_name) {
         $sql = sprintf("SELECT cl.*, SUBSTRING_INDEX(cl.sender, '@', 1) AS username  
-                        FROM mucConversationLog cl, mucRoom r
+                        FROM ofMucConversationLog cl, ofMucRoom r
                         WHERE cl.roomID = r.roomID AND
                               r.name = %s AND 
                               cl.body IS NULL AND cl.subject IS NOT NULL
@@ -52,7 +52,7 @@ class PluginIMMucChangeTopicLogDao extends DataAccessObject {
     */
     function & searchByMucNameBeforeDate($muc_name, $end_date) {
         $sql = sprintf("SELECT cl.*, SUBSTRING_INDEX(cl.sender, '@', 1) AS username
-                        FROM mucConversationLog cl, mucRoom r
+                        FROM ofMucConversationLog cl, ofMucRoom r
                         WHERE cl.roomID = r.roomID AND
                               r.name = %s AND
                               cl.logTime <=  UNIX_TIMESTAMP(ADDDATE(%s, 1)) * 1000 AND
@@ -70,7 +70,7 @@ class PluginIMMucChangeTopicLogDao extends DataAccessObject {
     */
     function & searchByMucNameAfterDate($muc_name, $start_date) {
         $sql = sprintf("SELECT cl.*, SUBSTRING_INDEX(cl.sender, '@', 1) AS username  
-                        FROM mucConversationLog cl, mucRoom r
+                        FROM ofMucConversationLog cl, ofMucRoom r
                         WHERE cl.roomID = r.roomID AND
                               r.name = %s AND
                               cl.logTime >=  UNIX_TIMESTAMP(%s) * 1000 AND
@@ -88,7 +88,7 @@ class PluginIMMucChangeTopicLogDao extends DataAccessObject {
     */
     function & searchByMucNameBetweenDates($muc_name, $start_date, $end_date) {
         $sql = sprintf("SELECT cl.*, SUBSTRING_INDEX(cl.sender, '@', 1) AS username  
-                        FROM mucConversationLog cl, mucRoom r
+                        FROM ofMucConversationLog cl, ofMucRoom r
                         WHERE cl.roomID = r.roomID AND
                               r.name = %s AND
                               cl.logTime >=  UNIX_TIMESTAMP(%s) * 1000 AND

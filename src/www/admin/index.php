@@ -68,7 +68,17 @@ $validated_users = $row['count'];
 <p><i><?php echo $Language->getText('admin_main', 'message'); ?></i>
 
 
+<h3><?php // Documentation
+echo $Language->getText('admin_main', 'documentation'); ?></h3>
+<ul>
+<li><a href="/documentation/installation_guide/html/Codendi_Installation_Guide.html">
+    <?php echo $Language->getText('admin_main', 'install_guide'); ?></a></li>
+<li><a href="/documentation/administration_guide/html/Codendi_Administration_Guide.html">
+    <?php echo $Language->getText('admin_main', 'admin_guide'); ?></a></li>
+</ul>
+
 <h3><?php 
+
 //Display of Site Statistics
 echo $Language->getText('admin_main', 'header_sstat'); ?></h3>
 <ul>

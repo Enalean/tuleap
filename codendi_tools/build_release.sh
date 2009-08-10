@@ -1,24 +1,58 @@
 #!/bin/sh
-date
-#CODENDI_VERSION='Codendi_Pro_4.0'
-#CODENDI_SHORT_VERSION='pro.4.0'
-CODENDI_VERSION='labs'
-CODENDI_SHORT_VERSION='labs'
-PACKAGE_DIR=/root/Codendi_Packaging/$CODENDI_VERSION/packages
-SOURCE_DIR=/root/Codendi_Packaging/$CODENDI_VERSION/codendi
-BUILD_DIR=/root/Codendi_Packaging/$CODENDI_VERSION/build
-SOURCE_TMPDIR=/root/Codendi_Packaging/$CODENDI_VERSION/tmpsrc
-
-echo "Building ISO image for version: $CODENDI_VERSION"
-yn="0"
-read -p "Update source and package working copies? [y|n]:" yn
-if [ "$yn" = "y" ]; then
-  echo `cd $SOURCE_DIR; svn update`
-  echo `cd $PACKAGE_DIR; svn update`
+if [ -z $1 ]
+then 
+    INTERACTIVE=1
+else
+    if [ $1 == "--non-interactive" ]
+    then
+        INTERACTIVE=0
+    else
+        echo "Unknown argument: $1.";
+    fi
 fi
-CODENDI_REVISION=`svn info $SOURCE_DIR | grep Revision | sed 's/Revision: //'`
-ISO_LABEL="Codendi $CODENDI_SHORT_VERSION"
-ISO_FILE="/root/Codendi_Packaging/$CODENDI_VERSION/iso_images/codendi-$CODENDI_SHORT_VERSION.r$CODENDI_REVISION.iso"
+
+# Version parameters
+if [ -z "$CODENDI_VERSION" ]; then 
+    CODENDI_VERSION='Codendi_4.0'
+    #CODENDI_VERSION='labs'
+fi
+if [ -z "$CODENDI_SHORT_VERSION" ]; then 
+    CODENDI_SHORT_VERSION='4.0'
+    #CODENDI_SHORT_VERSION='labs'
+fi
+
+
+if [ -z "$BASE_DIR" ]; then 
+    BASE_DIR=`pwd`
+    #BASE_DIR=/root/Codendi_Packaging/$CODENDI_VERSION
+fi
+if [ -z "$PACKAGE_DIR" ]; then 
+    PACKAGE_DIR=$BASE_DIR/packages
+fi
+if [ -z "$SOURCE_DIR" ]; then 
+    SOURCE_DIR=$BASE_DIR/codendi
+fi
+if [ -z "$BUILD_DIR" ]; then 
+    BUILD_DIR=$BASE_DIR/build
+fi
+if [ -z "$SOURCE_TMPDIR" ]; then 
+    SOURCE_TMPDIR=$BASE_DIR/tmpsrc
+fi
+if [ -z "$ISO_DIR" ]; then 
+    ISO_DIR=$BASE_DIR/iso_images
+fi
+if [ -z "$ARCH" ]; then 
+    ARCH=i386
+fi
+
+if [ ! -e $PACKAGE_DIR ]; then
+    echo "Please checkout package dir in $PACKAGE_DIR";
+    exit 1;
+fi
+if [ ! -e $SOURCE_DIR ]; then
+    echo "Please checkout source dir in $SOURCE_DIR";
+    exit 1;
+fi
 
 # Shell commands used
 LS='/bin/ls'
@@ -32,6 +66,26 @@ RSYNC='/usr/bin/rsync'
 GREP='/bin/grep'
 RM='/bin/rm'
 MV='/bin/mv'
+MKISOFS='/usr/bin/mkisofs'
+
+$MKDIR -p $BUILD_DIR
+$MKDIR -p $SOURCE_TMPDIR
+$MKDIR -p $ISO_DIR
+
+echo "Building ISO image for version: $CODENDI_VERSION"
+
+if [ $INTERACTIVE == 1 ]; then 
+    yn="0"
+    read -p "Update source and package working copies? [y|n]:" yn
+    if [ "$yn" = "y" ]; then
+      echo `cd $SOURCE_DIR; svn update`
+      echo `cd $PACKAGE_DIR; svn update`
+    fi
+fi
+CODENDI_REVISION=`svn info $SOURCE_DIR | grep Revision | sed 's/Revision: //'`
+ISO_LABEL="Codendi $CODENDI_SHORT_VERSION"
+ISO_FILE="$ISO_DIR/codendi-$CODENDI_SHORT_VERSION.r$CODENDI_REVISION.$ARCH.iso"
+
 
 # Misc functions
 die() {
@@ -44,9 +98,6 @@ die() {
 [ `id -u` -ne 0 ] && die "Must be root to execute this script!"
 
 # Clean up build dir
-echo "Creating clean build directory..."
-#rm -rf $BUILD_DIR; 
-$MKDIR -p $BUILD_DIR
 cd $BUILD_DIR
 $RM -f codendi_install.sh INSTALL migration_* README  RELEASE_NOTES
 # Copy the install script at the top directory
@@ -67,9 +118,8 @@ fi
 
 # Copy the entire Codendi and nonRPMS_Codendi dir
 echo "Copying the Codendi software and nonRPMS packages... :"
-$RSYNC -a --exclude='.svn' --delete $PACKAGE_DIR/nonRPMS_Codendi $BUILD_DIR
-mkdir -p $BUILD_DIR/Codendi
-mkdir -p $SOURCE_TMPDIR
+$RSYNC -a --exclude='.svn' --delete --delete-excluded $PACKAGE_DIR/nonRPMS_Codendi $BUILD_DIR
+$MKDIR -p $BUILD_DIR/Codendi
 
 BRANCH_NAME=`echo $SOURCE_DIR|sed 's/.*\///'`
 if [ -e $SOURCE_TMPDIR/src ]; then
@@ -81,7 +131,7 @@ if [ "$CODENDI_SHORT_VERSION" != 'labs' ]; then
 else
   FILTER="--exclude-from=$SOURCE_DIR/codendi_tools/build_filter.txt"
 fi
-$RSYNC -a $FILTER --delete $SOURCE_DIR $SOURCE_TMPDIR
+$RSYNC -a $FILTER --delete --delete-excluded $SOURCE_DIR $SOURCE_TMPDIR
 $MV $SOURCE_TMPDIR/$BRANCH_NAME $SOURCE_TMPDIR/src
 # Only copy the latest RPMs from RPMS Codendi
 echo "Copying the Codendi RPMS packages..."
@@ -91,8 +141,7 @@ cd $PACKAGE_DIR/RPMS_Codendi
 if [ "$CODENDI_SHORT_VERSION" != 'labs' ]; then
   FILTER=""
 else
-  # does not work??
-  FILTER="--exclude=\"*src*\""
+  FILTER="--exclude=*src*"
 fi
 
 RPM_LIST=`ls -1`
@@ -101,7 +150,14 @@ do
     cd $PACKAGE_DIR/RPMS_Codendi/$i
     newest_rpm=`$LS -1 -I old | $TAIL -1`
     $MKDIR -p $BUILD_DIR/RPMS_Codendi/$i
-    $RSYNC -a --exclude='.svn' --exclude="*src*" --delete $newest_rpm $BUILD_DIR/RPMS_Codendi/$i
+    if [ "$ARCH" = 'i386' ]; then
+        ARCH_FILTER="--exclude=x86_64"
+    else 
+        if [ "$ARCH" = 'x86_64' ]; then
+            ARCH_FILTER="--exclude=i386"
+        fi
+    fi
+    $RSYNC -a --exclude='.svn' $ARCH_FILTER $FILTER --delete --delete-excluded $newest_rpm $BUILD_DIR/RPMS_Codendi/$i
     cd $BUILD_DIR/RPMS_Codendi/$i
     old_rpms=`$LS -1 | $GREP -v $newest_rpm`
     for j in $old_rpms
@@ -301,10 +357,9 @@ EOF
 
 # Build ISO image
 echo "Building ISO image in $ISO_FILE"
-mkisofs -quiet -A "$ISO_LABEL" -V "$ISO_LABEL" -J -R -x ./lost+found -x .. -o "$ISO_FILE" $BUILD_DIR
+$MKISOFS -quiet -A "$ISO_LABEL" -V "$ISO_LABEL" -J -R -x ./lost+found -x .. -o "$ISO_FILE" $BUILD_DIR
 
 echo "Codendi ISO image available at $ISO_FILE ..."
-date
 echo "Done!"
 exit 0
 # end of it

@@ -118,12 +118,6 @@ class JabbeXInstaller {
 			$xml->database->defaultProvider->addChild('username',$parameters["USER_OF_DB"]);
 			$xml->database->defaultProvider->addChild('password',$parameters["PWD_OF_DB"]);
 
-			$xml->jdbcProvider->addChild('driver',$parameters["CD_DB_DRIVER"]);
-			$xml->jdbcProvider->addChild('connectionString',$parameters["CD_DB_URI"]."?user=".$parameters["USER_CD_DB"]."&amp;password=".$parameters["PWD_CD_DB"]);
-			
-			// provider->auth->className done in openfire.tpl.xml
-			$xml->jdbcAuthProvider->addChild('codendiUserSessionIdSQL', "SELECT session_hash FROM session WHERE session.user_id = (SELECT user_id FROM user WHERE user.user_name = ?)");
-
 			if( $xml->asXML($conf_file) ){
 
 				// Granting permission -rw-r--r-- 1 daemon daemon
@@ -572,7 +566,7 @@ class JabbeXInstaller {
 	function _property_exists($property){
 		$this->_db_connect($this->arguments["USER_OF_DB"],$this->arguments["PWD_OF_DB"],$this->arguments["OF_DB_HOST"],$this->arguments["OF_DB_PORT"],$this->arguments["OF_DB_NAME"]);
 		
-		$query = "SELECT * FROM `jiveProperty` WHERE `name` LIKE '$property'";
+		$query = "SELECT * FROM `ofProperty` WHERE `name` LIKE '$property'";
 		$result = mysql_query($query) or die('ERROR: Unable to query DB.\n');
 		return mysql_fetch_array($result);
 		
@@ -585,15 +579,43 @@ class JabbeXInstaller {
 		$this->_db_connect($this->arguments["USER_OF_DB"],$this->arguments["PWD_OF_DB"],$this->arguments["OF_DB_HOST"],$this->arguments["OF_DB_PORT"],$this->arguments["OF_DB_NAME"]);
 		
 		if( ! $this->_property_exists($property) ){
-			$query = "INSERT INTO `openfire`.`jiveProperty` (`name`, `propValue`) VALUES ('$property', '$value')";
+			$query = "INSERT INTO `openfire`.`ofProperty` (`name`, `propValue`) VALUES ('$property', '$value')";
 			mysql_query($query) or die('ERROR: Unable to insert property '.$property.' into the Openfire\'s DB.\n');
 		}
 		else{
-			$query = "UPDATE `openfire`.`jiveProperty` SET `propValue` = '$value' WHERE `jiveProperty`.`name` = '$property'";
+			$query = "UPDATE `openfire`.`ofProperty` SET `propValue` = '$value' WHERE `ofProperty`.`name` = '$property'";
 			mysql_query($query) or die('ERROR: Unable to update property '.$property.' in the Openfire\'s DB.\n');
 		}
 	}
 
+    /*
+	 * Checks whether a given muc property is set on the Openfire's DB.
+	 * Returns the muc property value if so and FALSE if it doesn't exist.
+	 */
+	function _muc_property_exists($property){
+		$this->_db_connect($this->arguments["USER_OF_DB"],$this->arguments["PWD_OF_DB"],$this->arguments["OF_DB_HOST"],$this->arguments["OF_DB_PORT"],$this->arguments["OF_DB_NAME"]);
+		
+		$query = "SELECT * FROM `ofMucServiceProp` WHERE `serviceID` = 1 AND `name` LIKE '$property'";
+		$result = mysql_query($query) or die('ERROR: Unable to query DB.\n');
+		return mysql_fetch_array($result);
+		
+	}
+
+	/*
+	 * Adds/updates a muc property's value to the Openfire's DB.
+	 */
+	function _add_muc_property($property,$value){
+		$this->_db_connect($this->arguments["USER_OF_DB"],$this->arguments["PWD_OF_DB"],$this->arguments["OF_DB_HOST"],$this->arguments["OF_DB_PORT"],$this->arguments["OF_DB_NAME"]);
+		
+		if( ! $this->_muc_property_exists($property) ){
+			$query = "INSERT INTO `openfire`.`ofMucServiceProp` (`serviceID`, `name`, `propValue`) VALUES (1, '$property', '$value')";
+			mysql_query($query) or die('ERROR: Unable to insert property '.$property.' into the Openfire\'s DB.\n');
+		}
+		else{
+			$query = "UPDATE `openfire`.`ofMucServiceProp` SET `propValue` = '$value' WHERE `serviceID` = 1 AND `ofMucServiceProp`.`name` = '$property'";
+			mysql_query($query) or die('ERROR: Unable to update property '.$property.' in the Openfire\'s DB.\n');
+		}
+	}
 	
 	/*
 	 * Adds the necessary properties to allow JabbeX's default user to manage
@@ -607,13 +629,13 @@ class JabbeXInstaller {
 		$this->_add_property("plugin.helga.group.admin",$this->arguments["GROUP_JABBEX"]);
 		
 		// Add xmpp.muc.create.jid = <JABBEX_USER_JID>
-		$this->_add_property("xmpp.muc.create.jid",$this->arguments["USER_JABBEX"]."@".$this->arguments["OF_JABBER_URI"]);
+		$this->_add_muc_property("xmpp.muc.create.jid",$this->arguments["USER_JABBEX"]."@".$this->arguments["OF_JABBER_URI"]);
 		
 		// Add xmpp.muc.sysadmin.jid = <JABBEX_USER_JID>
-		$this->_add_property("xmpp.muc.sysadmin.jid",$this->arguments["USER_JABBEX"]."@".$this->arguments["OF_JABBER_URI"]);
+		$this->_add_muc_property("xmpp.muc.sysadmin.jid",$this->arguments["USER_JABBEX"]."@".$this->arguments["OF_JABBER_URI"]);
 		
 		// Only admins can create MUC: xmpp.muc.create.anyone = true
-		$this->_add_property("xmpp.muc.create.anyone","true");      
+		$this->_add_muc_property("xmpp.muc.create.anyone","true");      
         
 	}
 	
@@ -951,8 +973,8 @@ class JabbeXInstaller {
 		$this->_add_property("xmpp.httpbind.client.requests.wait", "10");
 		$this->_add_property("xmpp.httpbind.scriptSyntax.enabled", "true");
 		
-		$this->_add_property("xmpp.muc.history.type", "number");	// show 30 last messages when log on chat room
-		$this->_add_property("xmpp.muc.history.maxNumber", "30");
+		$this->_add_muc_property("xmpp.muc.history.type", "number");	// show 30 last messages when log on chat room
+		$this->_add_muc_property("xmpp.muc.history.maxNumber", "30");
 		
 		// monitoring plugin
 		$this->_add_property("conversation.idleTime", "11");
@@ -961,6 +983,45 @@ class JabbeXInstaller {
         $this->_add_property("conversation.metadataArchiving", "true");
         $this->_add_property("conversation.roomArchiving", "true");
 	}
+    
+    /**
+     * Configure Openfire for Codendi integration.
+     * This was done before in openfire.xml configuration file.
+     * This is now managed in database.
+     * 
+     * This function uses the global parameters so you want to run command_line_args and get_openfire_conf_path 
+	 * prior to calling it.
+     */
+    function configure_openfire_for_codendi() {
+        $parameters = $this->arguments;
+        
+        $this->_add_property("jdbcProvider.driver", $parameters["CD_DB_DRIVER"]);
+        $this->_add_property("jdbcProvider.connectionString", $parameters["CD_DB_URI"]."?user=".$parameters["USER_CD_DB"]."&password=".$parameters["PWD_CD_DB"]);
+        
+        $this->_add_property("provider.auth.className", "org.jivesoftware.openfire.auth.CodendiJDBCAuthProvider");
+        $this->_add_property("provider.group.className", "org.jivesoftware.openfire.group.JDBCGroupProvider");
+        $this->_add_property("provider.user.className", "org.jivesoftware.openfire.user.JDBCUserProvider");
+        
+        $this->_add_property("jdbcAuthProvider.passwordSQL", "SELECT LOWER(user_pw) FROM user WHERE user_name=?");
+        $this->_add_property("jdbcAuthProvider.passwordType", "md5");
+        $this->_add_property("jdbcAuthProvider.codendiUserSessionIdSQL", "SELECT session_hash FROM session WHERE session.user_id = (SELECT user_id FROM user WHERE user.user_name = ?)");
+        
+        $this->_add_property("jdbcUserProvider.loadUserSQL", "SELECT realname , email FROM user WHERE user_name=?");
+        $this->_add_property("jdbcUserProvider.userCountSQL", "SELECT COUNT(*) FROM user WHERE status = \'A\'");
+        $this->_add_property("jdbcUserProvider.allUsersSQL", "SELECT LOWER(user_name) FROM user WHERE status = \'A\'");
+        $this->_add_property("jdbcUserProvider.searchSQL", "SELECT LOWER(user_name) FROM user WHERE");
+        $this->_add_property("jdbcUserProvider.usernameField", "user_name");
+        $this->_add_property("jdbcUserProvider.nameField", "realname");
+        $this->_add_property("jdbcUserProvider.emailField", "email");
+        
+        $this->_add_property("jdbcGroupProvider.groupCountSQL", "SELECT count(*) FROM groups WHERE status = \'A\'");
+        $this->_add_property("jdbcGroupProvider.allGroupsSQL", "SELECT LOWER(unix_group_name) FROM groups WHERE status = \'A\'");
+        $this->_add_property("jdbcGroupProvider.userGroupsSQL", "SELECT LOWER(groups.unix_group_name) FROM groups, user, user_group WHERE groups.group_id=user_group.group_id AND user_group.user_id=user.user_id AND groups.status = \'A\' AND user.user_name=?");
+        $this->_add_property("jdbcGroupProvider.descriptionSQL", "SELECT short_description FROM groups WHERE unix_group_name=?");
+        $this->_add_property("jdbcGroupProvider.loadMembersSQL", "SELECT LOWER(user.user_name) FROM user, groups, user_group WHERE groups.group_id=user_group.group_id AND user_group.user_id=user.user_id AND groups.unix_group_name=? AND user_group.admin_flags NOT LIKE \'A\' AND user.status = \'A\'");
+        $this->_add_property("jdbcGroupProvider.loadAdminsSQL", "SELECT LOWER(user.user_name) FROM user, groups, user_group WHERE groups.group_id=user_group.group_id AND user_group.user_id=user.user_id AND groups.unix_group_name=? AND user_group.admin_flags=\'A\'");
+        
+    }
 	
 	function copyAuthenticationJarFile() {
 		$curent_dir = dirname(__FILE__);
@@ -1004,23 +1065,37 @@ else $installer->print_usage();
 
 $installer->explode_uri();
 //$installer->install_openfire();
+
+// stop openfire if openfire is started
 $installer->openfire_status();
+
 //$installer->install_helga();
 //$installer->install_presence_plugin();
 //$installer->install_subscription_plugin();
 
+// create openfire database
 $installer->create_openfire_db();
+
+// configure openfire properties
 $installer->configure_openfire();
+// configure specific openfire properties for webmuc
 $installer->configure_openfire_for_webmuc();
-
+// configure openfire properties
 $installer->configure_jabbex_user();
-$installer->changeJabbexUserPasswordInCodendiDatabase();  
+// update Jabbex user password in Codendi database
+$installer->changeJabbexUserPasswordInCodendiDatabase();
 
+// configure specific openfire properties for plugins
 $installer->configure_presence_plugin();
 $installer->configure_subscription_plugin();
 
+// find and backup openfire configuration file (openfire.xml)
 $installer->get_openfire_conf_path();
+
 $installer->create_of_conf_file();
+
+// configure openfire for codendi integration
+$installer->configure_openfire_for_codendi();
 
 
 $installer->configure_jabbex();

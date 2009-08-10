@@ -54,51 +54,5 @@
       <connectionTimeout>1.0</connectionTimeout> 
     </defaultProvider> 
   </database>  
-  <setup>true</setup>  
-  
-  
-  <!--
-	Codendi DB Integration
-  -->  
-  <jdbcProvider> 
-  </jdbcProvider>  
-  <provider> 
-    <auth> 
-      <className>org.jivesoftware.openfire.auth.CodendiJDBCAuthProvider</className> 
-    </auth>  
-    <user> 
-      <className>org.jivesoftware.openfire.user.JDBCUserProvider</className> 
-    </user>  
-    <group> 
-      <className>org.jivesoftware.openfire.group.JDBCGroupProvider</className> 
-    </group> 
-  </provider>  
-
-  <!-- Authentication  -->  
-  <jdbcAuthProvider> 
-    <passwordSQL>SELECT LOWER(user_pw) FROM user WHERE user_name=?</passwordSQL>  
-    <passwordType>md5</passwordType> 
-  </jdbcAuthProvider>  
-
-  <!-- Users info  -->  
-  <jdbcUserProvider> 
-    <loadUserSQL>SELECT realname , email FROM user WHERE user_name=?</loadUserSQL>  
-    <userCountSQL>SELECT COUNT(*) FROM user WHERE status = "A"</userCountSQL>  
-    <allUsersSQL>SELECT LOWER(user_name) FROM user WHERE status = "A"</allUsersSQL>  
-    <searchSQL>SELECT LOWER(user_name) FROM user WHERE</searchSQL>  
-    <usernameField>user_name</usernameField>  
-    <nameField>realname</nameField>  
-    <emailField>email</emailField> 
-  </jdbcUserProvider>  
-
-  <!-- Groups info   -->  
-  <jdbcGroupProvider> 
-    <groupCountSQL>SELECT count(*) FROM groups WHERE status = "A"</groupCountSQL>  
-    <allGroupsSQL>SELECT LOWER(unix_group_name) FROM groups WHERE status = "A"</allGroupsSQL>  
-    <userGroupsSQL>SELECT LOWER(groups.unix_group_name) FROM groups, user, user_group WHERE groups.group_id=user_group.group_id AND user_group.user_id=user.user_id AND groups.status = "A" AND user.user_name=?</userGroupsSQL>  
-    <descriptionSQL>SELECT short_description FROM groups WHERE unix_group_name=?</descriptionSQL>  
-    <loadMembersSQL>SELECT LOWER(user.user_name) FROM user, groups, user_group WHERE groups.group_id=user_group.group_id AND user_group.user_id=user.user_id AND groups.unix_group_name=? AND user_group.admin_flags NOT LIKE 'A' AND user.status = 'A'</loadMembersSQL>  
-    <loadAdminsSQL>SELECT LOWER(user.user_name) FROM user, groups, user_group WHERE groups.group_id=user_group.group_id AND user_group.user_id=user.user_id AND groups.unix_group_name=? AND user_group.admin_flags='A'</loadAdminsSQL> 
-  </jdbcGroupProvider> 
-
+  <setup>true</setup>
 </jive>

@@ -218,6 +218,15 @@ if [ "$yn" = "n" ]; then
     exit 1
 fi
 
+##############################################
+# Detect architecture
+$UNAME -m | $GREP -q x86_64
+if [ $? -ne 0 ]; then
+  ARCH=i386
+else
+  ARCH=x86_64
+fi
+
 
 ##############################################
 # Check Required Stock RedHat RPMs are installed
@@ -297,15 +306,15 @@ $RPM -e --allmatches subversion 2>/dev/null
 $RPM -e --allmatches neon-devel 2>/dev/null
 $RPM -e --allmatches neon 2>/dev/null
 echo "Installing Subversion, Neon and recent SQLite RPMs for Codendi...."
-cd "${RPMS_DIR}/subversion"
+cd "${RPMS_DIR}/subversion/$ARCH"
 newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
 cd ${newest_rpm}
 # Update SQLite first: version above 3.4 is required for SVN 1.6, and RHEL5 only provides version 3.3.
 # Need to upgrade both sqlite and sqlite-devel at once
-$RPM -Uvh sqlite-3*.i386.rpm sqlite-devel-3*.i386.rpm
-$RPM -ivh neon-0.*.i386.rpm neon-devel*.i386.rpm subversion-1.*.i386.rpm mod_dav_svn*.i386.rpm subversion-perl*.i386.rpm subversion-python*.i386.rpm 
+$RPM -Uvh sqlite-3*.rpm sqlite-devel-3*.rpm
+$RPM -ivh neon-0.*.rpm neon-devel*.rpm subversion-1.*.rpm mod_dav_svn*.rpm subversion-perl*.rpm subversion-python*.rpm 
 # Dependency error with Perl ??
-#$RPM --nodeps -Uvh subversion-tools*.i386.rpm
+$RPM --nodeps -ivh subversion-tools*.rpm
 
 
 # -> libnss-mysql (system authentication based on MySQL)
@@ -313,14 +322,14 @@ $RPM -e --allmatches libnss-mysql 2>/dev/null
 echo "Installing libnss-mysql RPM for Codendi...."
 cd "${RPMS_DIR}/libnss-mysql"
 newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
-$RPM -Uvh --nosignature ${newest_rpm}/libnss-mysql-1*i?86.rpm
+$RPM -Uvh --nosignature ${newest_rpm}/$ARCH/libnss-mysql-1*.rpm
 	 
 # -> APC
 $RPM -e php-pecl-apc 2>/dev/null
 echo "Installing APC (PHP cache) RPM for Codendi...."
 cd "${RPMS_DIR}/php-pecl-apc"
 newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
-$RPM -Uvh ${newest_rpm}/php-pecl-apc-*.i?86.rpm
+$RPM -Uvh ${newest_rpm}/$ARCH/php-pecl-apc-*.rpm
 
 
 ##############################################
@@ -441,7 +450,7 @@ $RPM -e --allmatches cvs 2>/dev/null
 echo "Installing CVS RPMs for Codendi...."
 cd "${RPMS_DIR}/cvs"
 newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
-$RPM -Uvh ${newest_rpm}/cvs-1.*.i386.rpm
+$RPM -Uvh ${newest_rpm}/$ARCH/cvs-1.*.rpm
 
 # -> JPGraph
 $RPM -e jpgraph jpgraphs-docs 2>/dev/null
@@ -475,7 +484,7 @@ $RPM -e --allmatches mailman 2>/dev/null
 echo "Installing mailman RPM for Codendi...."
 cd "${RPMS_DIR}/mailman"
 newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
-$RPM -Uvh ${newest_rpm}/mailman-2*i?86.rpm
+$RPM -Uvh ${newest_rpm}/$ARCH/mailman-2*.rpm
 
 # Recover config
 $CP /usr/lib/mailman/Mailman/mm_cfg.py.rpmsave /usr/lib/mailman/Mailman/mm_cfg.py
@@ -486,14 +495,14 @@ $RPM -e --allmatches `rpm -qa 'munin*' 'perl-HTML-Template*' 'perl-Net-Server' '
 echo "Installing Munin RPMs for Codendi...."
 cd "${RPMS_DIR}/munin"
 newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
-$RPM --nosignature -Uvh ${newest_rpm}/perl-Net-Server*.noarch.rpm
-$RPM --nosignature -Uvh ${newest_rpm}/perl-Crypt-DES*.i386.rpm
-$RPM --nosignature -Uvh ${newest_rpm}/perl-Net-SNMP-*.noarch.rpm
-$RPM --nosignature -Uvh ${newest_rpm}/perl-Config-General-*.noarch.rpm
-$RPM --nosignature -Uvh ${newest_rpm}/perl-HTML-Template*.noarch.rpm
-$RPM --nosignature -Uvh ${newest_rpm}/rrdtool-*.i386.rpm ${newest_rpm}/perl-rrdtool-*.i386.rpm
-$RPM -Uvh ${newest_rpm}/munin-node-*.noarch.rpm
-$RPM -Uvh ${newest_rpm}/munin-1*.noarch.rpm
+$RPM --nosignature -Uvh ${newest_rpm}/noarch/perl-Net-Server*.noarch.rpm
+$RPM --nosignature -Uvh ${newest_rpm}/$ARCH/perl-Crypt-DES*.rpm
+$RPM --nosignature -Uvh ${newest_rpm}/noarch/perl-Net-SNMP-*.noarch.rpm
+$RPM --nosignature -Uvh ${newest_rpm}/noarch/perl-Config-General-*.noarch.rpm
+$RPM --nosignature -Uvh ${newest_rpm}/noarch/perl-HTML-Template*.noarch.rpm
+$RPM --nosignature -Uvh ${newest_rpm}/$ARCH/rrdtool-*.rpm ${newest_rpm}/$ARCH/perl-rrdtool-*.rpm
+$RPM -Uvh ${newest_rpm}/noarch/munin-node-*.noarch.rpm
+$RPM -Uvh ${newest_rpm}/noarch/munin-1*.noarch.rpm
 
 # -> HTML Purifier
 echo "Removing installed htmlpurifier if any .."

@@ -127,16 +127,6 @@ if ($errmsg) $msg = HTML(HTML::h4(array('class' => 'errors'), $errmsg),HTML::hr(
 <?php } ?>
 
 <table border="0">
-<?php if ($isForm and $user->mayChangePass()) { ?>
-  <tr><td colspan="3"><h2><?= ($request->getPref('passwd') ?  _("Change Password") :  _("Set Password")) ?></h2></td></tr>
-
-    <tr><td align="right"><?=_("New password")?>:</td>
-        <td><input type="password" name="pref[passwd]" size="16" maxlength="16" class="text" value="" /></td>
-        <td></td></tr>
-    <tr><td align="right"><?=_("Type it again")?>:</td>
-        <td><input type="password" name="pref[passwd2]" size="16" maxlength="16" class="text" value="" /></td>
-        <td></td></tr>
-<?php } ?>
 
 <?php if (ENABLE_USER_NEW) { ?>
   <tr><td colspan="3"><h2><?=_("E-mail")?></h2></td></tr>
