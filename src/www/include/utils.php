@@ -1389,7 +1389,7 @@ function util_check_allowed_anonymous_url($script_name) {
     }
     $allowed = false;
     foreach ($allowed_scripts as $key => $value) {
-        if (strncmp($script_name, $value ,strlen($value))){
+        if (!strncmp($script_name, $value ,strlen($value))){
             return true;
         }
     }
