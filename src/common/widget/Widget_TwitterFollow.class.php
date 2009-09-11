@@ -189,7 +189,7 @@ class Widget_TwitterFollow extends Widget {
         return 'general';
     }
     function getFeedUrl($user) {
-        return 'http://search.twitter.com/search.atom?q=from:'. $user;
+        return 'http://search.twitter.com/search.atom?q=+from%3A'. $user;
     }
     function getReplyToUrl($user, $status_id) {
         return 'http://twitter.com/home?status=@'. urlencode($user) .'%20&in_reply_to_status_id='. urlencode($status_id) .'&in_reply_to='. urlencode($user);

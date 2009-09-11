@@ -9,6 +9,8 @@
 require_once('common/mvc/Actions.class.php');
 require_once('common/include/HTTPRequest.class.php');
 require_once('common/reference/ReferenceManager.class.php');
+require_once('common/dao/CrossReferenceDao.class.php');
+require_once('common/dao/ArtifactGroupListDao.class.php');
 
 class ReferenceAdministrationActions extends Actions {
     
@@ -100,7 +102,9 @@ class ReferenceAdministrationActions extends Actions {
                     $service_short_name="";
                 } else { $service_short_name=$request->get('service_short_name');}
             }
-
+            
+            $old_keyword = $ref->getKeyword();
+            //Update table 'reference'
             $new_ref=& new Reference($request->get('reference_id'),
                                      $request->get('keyword'),
                                      $request->get('description'),
@@ -111,9 +115,22 @@ class ReferenceAdministrationActions extends Actions {
                                      $request->get('is_used'),
                                      $request->get('group_id'));
             $result=$reference_manager->updateReference($new_ref,$force);
+ 
             if (!$result) {
                 exit_error($GLOBALS['Language']->getText('global','error'),$GLOBALS['Language']->getText('project_reference','edit_fail',db_error()));
-            } 
+            } else {
+                
+                if ( $old_keyword != $request->get('keyword')) {                    
+                     //Update table 'cross_reference'
+                    $reference_dao = $this->getCrossReferenceDao();
+                    $result = $reference_dao->updateTargetKeyword($old_keyword, $request->get('keyword'), $request->get('group_id'));
+                    $result2 = $reference_dao->updateSourceKeyword($old_keyword, $request->get('keyword'), $request->get('group_id'));
+       
+                    //Update table 'artifact_group_list'
+                    $reference_dao = $this->getArtifactGroupListDao();
+                    $result = $reference_dao->updateItemName($request->get('group_id'), $old_keyword, $request->get('keyword'));
+                }
+            }
         }
     }
 
@@ -153,7 +170,14 @@ class ReferenceAdministrationActions extends Actions {
             exit_error($GLOBALS['Language']->getText('global','error'),$GLOBALS['Language']->getText('project_reference','del_fail',db_error()));
         } 
     }
-
+    
+    function getCrossReferenceDao() {
+        return new CrossReferenceDao(CodendiDataAccess::instance());
+    }
+    
+    function getArtifactGroupListDao() {
+        return new ArtifactGroupListDao(CodendiDataAccess::instance());
+    }
 }
 
 

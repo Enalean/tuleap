@@ -707,7 +707,7 @@ tracker_common_type	invalid	No Valid Group Object
 tracker_common_type	no_match	Group_id in db result does not match Group Object
 tracker_common_type	perm_fail	Failed to create user permission: $1
 tracker_common_type	name_requ	Name, Description, and Short Name are required.
-tracker_common_type	invalid_shortname	Invalid short name: $1. Please use only alphanumerical characters. Press the "Back" button and update this information.
+tracker_common_type	invalid_shortname	Invalid short name: $1. Please use only alphanumerical characters or an unreserved reference. Press the "Back" button and update this information.
 tracker_common_type	invalid_templ	Invalid group_id_template
 tracker_common_type	load_fail	failed to load the new tracker
 tracker_common_type	invalid_at	Invalid ArtifactTypeID

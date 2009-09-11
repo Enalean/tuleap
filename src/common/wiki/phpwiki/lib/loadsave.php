@@ -1283,6 +1283,7 @@ function SetupWiki (&$request)
     {
         $page = gettext($f);
         $epage = urlencode($page);
+        
         if (! $dbi->isWikiPage($page) ) {
             // translated version provided?
             if ($lf = FindLocalizedFile($pgsrc . $finder->_pathsep . $epage, 1)) {
@@ -1296,9 +1297,30 @@ function SetupWiki (&$request)
             trigger_error(sprintf("Mandatory file %s couldn't be loaded!", $page),
                           E_USER_WARNING);
         }
+ 
+           
+       //WARNING  CODENDI CODE : give permissions to the administration pages of the wiki
+        $pages = array("AdministrationDePhpWiki", "AdministrationDePhpWiki/Supprimer", "AdministrationDePhpWiki/Remplacer", 
+           "AdministrationDePhpWiki/Renommer", "PhpWikiAdministration", "PhpWikiAdministration/Replace",
+           "PhpWikiAdministration/Remove", "PhpWikiAdministration/Rename");
+        
+        if (in_array($page, $pages)) {
+            
+            $group_id = $request->getArg ('group_id');
+            
+            $wikiPage = new WikiPage($group_id, $page);
+            $id = $wikiPage->getId();
+            
+            $pm = PermissionsManager::instance();
+            $pm->addPermission('WIKIPAGE_READ', $id, $GLOBALS['UGROUP_PROJECT_ADMIN']);
+            $pm->addPermission('WIKIPAGE_READ', $id, $GLOBALS['UGROUP_WIKI_ADMIN']);
+        }
+        //END WARNING
+        
     }
 
     echo "</dl>\n";
+    
     EndLoadDump($request);
 }
 

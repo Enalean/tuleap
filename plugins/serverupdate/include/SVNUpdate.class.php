@@ -104,7 +104,6 @@ class SVNUpdate {
         $svn_infos = $this->getSVNInfos();
         $this->setWorkingCopyRevision($svn_infos['revision']);
         $this->setRepository($svn_infos['repository']);
-        
         $this->setCommits($this->_getAllSVNCommit());
         
     }
@@ -151,20 +150,25 @@ class SVNUpdate {
     function _getAllSVNCommit() {
         $commits = array();
         $xml_commits = $this->_SVNCommand("cd ".$this->getWorkingCopyDirectory()." ; " . self::SVN_BIN . " log --xml -v -r ".($this->getWorkingCopyRevision()).":HEAD 2>&1");
+        // Bad authentication?
+        if (preg_match('/authorization failed/',$xml_commits)) {
+            $GLOBALS['Response']->addFeedback('error', 'svn: authorization failed');
+            return false;
+        } else {
+          // test if the function svn log returns an error
+          eregi('(svn: PROPFIND of \'.*\': )(.*)', $xml_commits, $regs);
         
-        // test if the function svn log returns an error
-        eregi('(svn: PROPFIND of \'.*\': )(.*)', $xml_commits, $regs);
-        
-        if ($regs[2]) {
+          if ($regs[2]) {
             // we write the error we caught into the stderr
             $this->writeStdErr($xml_commits);
             $GLOBALS['Response']->addFeedback('error', $regs[1].$regs[2]);
             return false;
-        } else if (strpos($xml_commits, 'svn: This client is too old to work with working copy') === 0) {
+          } else if (strpos($xml_commits, 'svn: This client is too old to work with working copy') === 0) {
             $GLOBALS['Response']->addFeedback('error', 'svn: This client is too old to work with working copy');
             return false;
-        } else {
+          } else {
             $commits = $this->_setCommitsFromXML($xml_commits);
+          }
         }
         
         // We skip the first commit, which is the commit corresponding to the current revision
@@ -650,7 +654,6 @@ class SVNUpdate {
     function getSVNInfos() {
         $svn_infos = array();
         $infos = $this->_SVNCommand("cd ".$this->getWorkingCopyDirectory()." ; " . self::SVN_BIN . " info");
-        
         $svn_infos['revision'] = $this->_getSVNInfoRevision($infos);
         $svn_infos['repository'] = $this->_getSVNInfoRepository($infos);
         

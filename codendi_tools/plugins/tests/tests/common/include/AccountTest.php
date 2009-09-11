@@ -34,13 +34,13 @@ class AccountTest extends UnitTestCase {
         $this->assertTrue(account_namevalid("abc"));
         $this->assertTrue(account_namevalid("abc456789012345678901234567890"));
         $this->assertTrue(account_namevalid("abc-def_"));
+        $this->assertTrue(account_namevalid("abc.def"));
 
         $this->assertFalse(account_namevalid("abc4567890123456789012345678901"));
         $this->assertFalse(account_namevalid("abc def"));
         $this->assertFalse(account_namevalid("abc/def"));
         $this->assertFalse(account_namevalid("abc=def"));
         $this->assertFalse(account_namevalid("abc:def"));
-        $this->assertFalse(account_namevalid("abc.def"));
         $this->assertFalse(account_namevalid("a"));
         $this->assertFalse(account_namevalid("ab"));
         $this->assertFalse(account_namevalid("1abcdef"));

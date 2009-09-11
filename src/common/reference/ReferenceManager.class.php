@@ -126,7 +126,7 @@ class ReferenceManager {
         return $p;
     }
 
-    // Create a referenec
+    // Create a reference
     // First, check that keyword is valid, except if $force is true
     function createReference(&$ref,$force=false) {
         $reference_dao =& $this->_getReferenceDao();
@@ -221,6 +221,7 @@ class ReferenceManager {
         $rgid = $reference_dao->update_ref_group($ref->getId(),
                                                  $ref->isActive(),
                                                  $ref->getGroupId());
+        
         return $rgid;
     }
 
@@ -362,8 +363,8 @@ class ReferenceManager {
         $this->tmpGroupIdForCallbackFunction = $group_id;
         
         $locale = setlocale(LC_CTYPE, null);
-         setlocale(LC_CTYPE, 'fr_FR.ISO-8859-1');
-        if (!preg_match('/[^\s]{5000,}/', $html)) {
+        setlocale(LC_CTYPE, 'fr_FR.ISO-8859-1');
+        if (!preg_match('/[^\s]{5000,}/', $html)) {             
             $exp = $this->_getExpForRef();
             $html = preg_replace_callback($exp,
                                       array(&$this,"_insertRefCallback"), // method _insertRefCallback of this class
@@ -709,7 +710,17 @@ class ReferenceManager {
         }
         return false;
     }
-
+    
+    public function checkKeyword($keyword) {
+            // Check if keyword is valid [a-z0-9]
+           if (!$this->_isValidKeyword($keyword)) return false;
+            // Check that there is no system reference with the same keyword
+            if ($this->_isSystemKeyword($keyword)) return false;
+            // Check list of reserved keywords 
+            if ($this->_isReservedKeyword($keyword)) return false;
+            return true;
+    }
+    
     function _keywordAndNumArgsExists($keyword,$num_args,$group_id) {
         $reference_dao =& $this->_getReferenceDao();
         $dar=$reference_dao->searchByKeywordAndGroupId($keyword,$group_id);

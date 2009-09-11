@@ -35,7 +35,7 @@ fi
 if [ -e '/etc/codendi/plugins/salome/etc/database_salome.inc' ] ; then
     substitute '/etc/codendi/plugins/salome/etc/database_salome.inc' "$old_domain" "$new_domain"
 fi
-if [ -e '/etc/codendi/plugins/IM/etc/jabbex_conf.xml ] ; then
+if [ -e '/etc/codendi/plugins/IM/etc/jabbex_conf.xml' ] ; then
     substitute '/etc/codendi/plugins/IM/etc/jabbex_conf.xml' "$old_domain" "$new_domain"
 fi
 

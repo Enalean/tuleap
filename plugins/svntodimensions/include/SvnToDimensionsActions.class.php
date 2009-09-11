@@ -151,7 +151,10 @@ class SvnToDimensionsActions extends Actions {
                                             $version_tag_log = array();
                                             $this->_controler->parseGoRoCo($row['tag'], $version_tag_log);
                                             if($row['design_part'] == $pl){
-                                                if($version_tag_log['GO'] <= $version_tag_svn['GO'] 
+                                                if($version_tag_log['GO'] < $version_tag_svn['GO'] ) {
+                                                   //tag antérieur déjà transféré pour ce PL
+                                                   $ant_GoRo = true; 
+                                                } else if ($version_tag_log['GO'] == $version_tag_svn['GO']
                                                    && $version_tag_log['RO'] < $version_tag_svn['RO']){
                                                        
                                                    //tag antérieur déjà transféré pour ce PL
@@ -220,8 +223,27 @@ class SvnToDimensionsActions extends Actions {
                                             }else{
                                                 //alimenter workset par la derniere baseline
                                                 $last_baseline = & $p26c_dao->searchLastBaselineByProduct($product_name, $pl);
-                                                $last_baseline_array = $this->_resultset_to_array($last_baseline, "BASE_SEQ_NO");
-                                                $baseline_elements = & $p26c_dao->searchBaselineElements($last_baseline_array[0]);
+                                                $col_names = array (
+                                                                'BASELINE_ID',
+                                                                'BASE_SEQ_NO'
+                                                             );
+                                                $last_baseline_array = $this->_resultset_to_array($last_baseline, $col_names);
+                                                $last_baseline_cols=$last_baseline_array[0];
+
+                                                // Compute intial workset
+                                                $pattern = '/.*(G\d\dR\d\d)/';
+                                                if (preg_match($pattern, $last_baseline_cols['BASELINE_ID'] , $matches)) {
+                                                    $goro=$matches[1];
+                                                }
+                                                $initial_workset="WS_DEV_".$goro;
+
+                                                // Set current workset to initial one
+                                                $cmd_set_current_workset = '-cmd \'SCWS "' . $product_name . ':' . $initial_workset . '"\' 2>&1';
+                                                $output = shell_exec($dmcli_authent . $cmd_set_current_workset);
+                                                $errors = $this->_get_dmcli_errors($output);
+
+
+                                                $baseline_elements = & $p26c_dao->searchBaselineElements($last_baseline_cols['BASE_SEQ_NO']);
                                                 $col_names = array (
                                                                 'ITEM_ID',
                                                                 'ITEM_TYPE',

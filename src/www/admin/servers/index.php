@@ -230,9 +230,10 @@ class ServerAdmin {
 }
 
 //Process request
+
 if (!isset($_GET['r']) || !$_GET['r']) {
     $_REQUEST['action'] = 'index';
-} else {
+ } else {
     $r = explode('/', $r);
     $_REQUEST['action'] = $r[0];
     if (isset($r[1])) {
@@ -243,7 +244,8 @@ require_once('common/include/HTTPRequest.class.php');
 $request =& HTTPRequest::instance();
 
 $server_admin =& new ServerAdmin();
-$method = $request->get('action');
+$method = $_REQUEST['action'];
+
 if (method_exists($server_admin, $method)) {
     $html = $server_admin->$method($request);
     site_admin_header(array('title'=> $server_admin->title));

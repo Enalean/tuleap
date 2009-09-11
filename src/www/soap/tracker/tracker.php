@@ -1494,16 +1494,20 @@ function artifacttype_to_soap($at) {
                     $result = $field->getFieldPredefinedValues($at->getID(), false, false, false, false);
                     $rows=db_numrows($result);
                     $cols=db_numfields($result);
-                    for ($j=0; $j<$rows; $j++) {     
-                        $availablevalues[] = array (
-                            'field_id' => $field->getID(),
-                            'group_artifact_id' => $at->getID(),
-                            'value_id' => db_result($result,$j,0),
-                            'value' => SimpleSanitizer::unsanitize(db_result($result,$j,1)),
-                            'description' => SimpleSanitizer::unsanitize(($cols > 2) ? db_result($result,$j,4) : ''),
-                            'order_id' => ($cols > 2) ? db_result($result,$j,5) : 0,
-                            'status' => ($cols > 2) ? db_result($result,$j,6) : ''
-                        );
+                    for ($j=0; $j<$rows; $j++) {
+                        $field_status = ($cols > 2) ? db_result($result,$j,6) : '';
+                        // we don't send hidden values (status == 'H')
+                        if ($field_status != 'H') {
+                            $availablevalues[] = array (
+                                'field_id' => $field->getID(),
+                                'group_artifact_id' => $at->getID(),
+                                'value_id' => db_result($result,$j,0),
+                                'value' => SimpleSanitizer::unsanitize(db_result($result,$j,1)),
+                                'description' => SimpleSanitizer::unsanitize(($cols > 2) ? db_result($result,$j,4) : ''),
+                                'order_id' => ($cols > 2) ? db_result($result,$j,5) : 0,
+                                'status' => $field_status
+                            );
+                        }
                     }
                     // For bound-values select boxes, we add the none value.
                     if (($field->isMultiSelectBox() || $field->isSelectBox()) && ($field->isBound())) {
@@ -1981,8 +1985,12 @@ function setArtifactData($status_id, $close_date, $summary, $details, $severity,
     
     // set extra fields data
     if (is_array($extra_fields) && count($extra_fields) > 0) {
+       
         foreach ($extra_fields as $e => $extra_field) {
-        
+            if(is_object($extra_field)) {
+                $extra_field = objectToArray($extra_field);
+            }
+            
             $field = $art_field_fact->getFieldFromId($extra_field['field_id']);
             if ($field->isStandardField()) {
                 continue;
@@ -2026,6 +2034,7 @@ function setArtifactData($status_id, $close_date, $summary, $details, $severity,
  */
 function addArtifact($sessionKey, $group_id, $group_artifact_id, $status_id, $close_date, $summary, $details, $severity, $extra_fields) {
     global $art_field_fact, $ath; 
+    
     if (session_continue($sessionKey)) {
         $user_id = UserManager::instance()->getCurrentUser()->getId();
         $pm = ProjectManager::instance();
@@ -2066,10 +2075,12 @@ function addArtifact($sessionKey, $group_id, $group_artifact_id, $status_id, $cl
         // 1) The permissions check will be done in the Artifact create function
         // 2) Check the allow empty value and the default value for each field.
         $all_used_fields = $art_field_fact->getAllUsedFields();
-        foreach($all_used_fields as $used_field) {
-            // We only check the field the user is allowed to submit
+        
+        foreach($all_used_fields as $used_field) {           
+             // We only check the field the user is allowed to submit
             // because the Artifact create function expect only these fields in the array $vfl
             if ($used_field->userCanSubmit($group_id, $group_artifact_id, $user_id)) {
+                
                 // We skip these 4 fields, because their value is automatically filled
                 if ($used_field->getName() == 'open_date' || $used_field->getName() == 'last_update_date' || $used_field->getName() == 'submitted_by' || $used_field->getName() == 'artifact_id') {
                     continue;
@@ -2077,9 +2088,12 @@ function addArtifact($sessionKey, $group_id, $group_artifact_id, $status_id, $cl
                 
                 // check the allow empty value. If the empty value is not allowed and the field not filled, we put the default value.
                 if (!$used_field->isEmptyOk()) {
+                    
                     // the field must be filled, so we will check if it is
                     if ($used_field->isStandardField()) {
+                       
                         $used_field_name = $used_field->getName();
+                        
                         if (! isset($$used_field_name)) {
                             // $$ : dynamic variable. The variable will be $status_id, $close_date, $summary depend on the corresponding field
                             if (is_array($used_field->getDefaultValue())) {
@@ -2093,12 +2107,19 @@ function addArtifact($sessionKey, $group_id, $group_artifact_id, $status_id, $cl
                     } else {
                         $used_field_present = false;
                         // We will search if the field is filled
+                       
                         foreach($extra_fields as $extra_field) {
+                            if(is_object($extra_field)) {
+                                $extra_field = objectToArray($extra_field);
+                            }
+                            
                             if ($extra_field['field_id'] == $used_field->getID()) {
-                                $used_field_present = true;
+                                 $used_field_present = true;
                             }
                         }
+                        
                         if (! $used_field_present) {
+                            
                             // the field is required, but there is no value, so we put the default value
                             $extra_field_to_add = array();
                             $extra_field_to_add['field_id'] = $used_field->getID();
@@ -2146,6 +2167,13 @@ function addArtifact($sessionKey, $group_id, $group_artifact_id, $status_id, $cl
     }
 }
 
+function objectToArray($object) {
+    foreach ($object as $key => $value) {
+        $array[$key] = $value;
+    }
+    return $array;
+}
+
 /**
  * addArtifactWithFieldNames - add an artifact in tracker $tracjer_name of the project $group_id with given valuess
  *
@@ -2168,6 +2196,7 @@ function addArtifact($sessionKey, $group_id, $group_artifact_id, $status_id, $cl
  */
 function addArtifactWithFieldNames($sessionKey, $group_id, $group_artifact_id, $status_id, $close_date, $summary, $details, $severity, $extra_fields) {
 	global $art_field_fact, $ath; 
+    
     if (session_continue($sessionKey)) {
         $pm = ProjectManager::instance();
         $grp = $pm->getProject($group_id);
@@ -3731,6 +3760,8 @@ function history_to_soap($group_id,$group_artifact_id,$history) {
     }
     return $return;
 } 
+
+
 
 $server->addFunction(
     	array(

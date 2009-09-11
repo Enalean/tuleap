@@ -19,6 +19,9 @@
  */
 require_once('www/project/admin/permissions.php');
 require_once('common/tracker/ArtifactFieldSetFactory.class.php');
+require_once('common/dao/ReferenceDao.class.php');
+require_once('common/dao/CrossReferenceDao.class.php');
+require_once('common/dao/ArtifactGroupListDao.class.php');
 
 
 class ArtifactType extends Error {
@@ -853,7 +856,7 @@ class ArtifactType extends Error {
 	function update($name,$description,$itemname,$allow_copy,
 		            $submit_instructions,$browse_instructions,$instantiate_for_new_projects) {
 	  global $Language;
-
+     
 		if ( !$this->userIsAdmin() ) {
 			$this->setError('ArtifactType: '.$Language->getText('tracker_common_canned','perm_denied'));
 			return false;
@@ -868,27 +871,35 @@ class ArtifactType extends Error {
             $hp = Codendi_HTMLPurifier::instance();
             $this->setError($Language->getText('tracker_common_type','invalid_shortname', $hp->purify($itemname, CODENDI_PURIFIER_CONVERT_HTML) ));
             return false;
-        }
+        }        
         
 		$allow_copy = ((!$allow_copy) ? 0 : $allow_copy);
-                $instantiate_for_new_projects = ((!$instantiate_for_new_projects) ? 0 : $instantiate_for_new_projects); 
-
-		$sql="UPDATE artifact_group_list SET 
-			name='". db_es($name) ."',
-			description='". db_es($description) ."',
-			item_name='". db_es($itemname) ."',
-                        allow_copy='". db_ei($allow_copy) ."',
-			submit_instructions='". db_es($submit_instructions) ."',
-			browse_instructions='". db_es($browse_instructions) ."',
-                        instantiate_for_new_projects='". db_ei($instantiate_for_new_projects) ."'
-			WHERE 
-			group_artifact_id='".  db_ei($this->getID())  ."' 
-			AND group_id='".  db_ei($this->Group->getID())  ."'";
-
-		//echo $sql;
-		
-		$res=db_query($sql);
-		if (!$res) {
+        $instantiate_for_new_projects = ((!$instantiate_for_new_projects) ? 0 : $instantiate_for_new_projects); 
+       
+       $old_item_name=$this->getItemName() ;
+       
+       if ($old_item_name != $itemname) {
+           $reference_manager = ReferenceManager::instance();
+           
+           if(!$reference_manager->checkKeyword($itemname) ) {
+              $this->setError($Language->getText('tracker_common_type','invalid_shortname',$itemname));
+              return false;
+           }
+           //Update table 'reference'
+           $reference_dao =$this->getReferenceDao();
+           $result =$reference_dao->update_keyword($old_item_name, $itemname, $this->Group->getID());
+       
+           //Update table 'cross_reference'
+           $reference_dao = $this->getCrossReferenceDao();
+           $result =$reference_dao->updateTargetKeyword($old_item_name, $itemname, $this->Group->getID());
+           $result2 =$reference_dao->updateSourceKeyword($old_item_name, $itemname, $this->Group->getID());
+       }
+       
+       //Update table 'artifact_group_list'
+       $reference_dao = $this->getArtifactGroupListDao();
+       $result = $reference_dao->updateArtifactGroupList($this->getID(), $this->Group->getID(), $name, $description, $itemname, $allow_copy, $submit_instructions, $browse_instructions, $instantiate_for_new_projects);
+               
+		if (!$result) {
 			$this->setError('ArtifactType::Update(): '.db_error());
 			return false;
 		} else {
@@ -897,8 +908,7 @@ class ArtifactType extends Error {
 		}
 	}
 
-
-	/**
+    /**
 	 *  updateNotificationSettings - use this to update this ArtifactType in the database.
 	 *
 	 *  @param	int	uid the user to set watches on
@@ -1876,6 +1886,18 @@ class ArtifactType extends Error {
 
 	   return $res;
 	}
+    
+    function getReferenceDao() {
+        return new ReferenceDao(CodendiDataAccess::instance());
+    }
+    
+    function getCrossReferenceDao() {
+        return new CrossReferenceDao(CodendiDataAccess::instance());
+    }
+    
+    function getArtifactGroupListDao() {
+        return new ArtifactGroupListDao(CodendiDataAccess::instance());
+    }
 }
 
 ?>

@@ -84,13 +84,13 @@ if ($rows < 1) {
 	      if ($group_id) {
 	      echo '
 		<A HREF="/forum/forum.php?forum_id='.db_result($result, $j, 'forum_id').
-		'&group_id='.$group_id.'">'.
-	        '<IMG SRC="'.util_get_image_theme("ic/cfolder15.png").'" HEIGHT=13 WIDTH=15 BORDER=0> &nbsp;'.
+		'&group_id='.$group_id.
+	        '"><IMG SRC="'.util_get_image_theme("ic/cfolder15.png").'" HEIGHT=13 WIDTH=15 BORDER=0> &nbsp;'.
 	        stripslashes(db_result($result, $j, 'summary')).'</A> ';
 	      } else {
 	        echo '
 		  <A HREF="/forum/forum.php?forum_id='.db_result($result, $j, 'forum_id').
-	          '<IMG SRC="'.util_get_image_theme("ic/cfolder15.png").'" HEIGHT=13 WIDTH=15 BORDER=0> &nbsp;'.
+	          '"><IMG SRC="'.util_get_image_theme("ic/cfolder15.png").'" HEIGHT=13 WIDTH=15 BORDER=0> &nbsp;'.
 	          stripslashes(db_result($result, $j, 'summary')).'</A> ';
 	      }
 		echo '

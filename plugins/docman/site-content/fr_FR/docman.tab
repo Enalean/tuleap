@@ -486,7 +486,8 @@ plugin_docman	filters_item_type_link	Lien
 plugin_docman	filters_item_type_folder	Dossier
 
 plugin_docman	info_cut_notify_cut	coupé. vous pouvez maintenant le coller où vous voulez avec l'action 'Coller' dans le menu popup.
-plugin_docman	info_copy_notify_cp	copié. vous pouvez maintenant le coller où vous voulez (même entre différents projets) avec l'action 'Coller' dans le menu popup.<br />Attention, la copie ne garde <strong>ni les tables d'approbations, ni les notifications</strong> à la différence du déplacement (couper/coller).
+plugin_docman	info_copy_notify_cp	copié. vous pouvez maintenant le coller où vous voulez (même entre différents projets) avec l'action 'Coller' dans le menu popup.<br />Attention, la copie ne garde <strong>ni les tables d'approbations, ni les notifications</strong> à la différence du déplacement (couper/coller).<br /> Attention, le <strong>contenu des pages wiki </strong>n'est pas copié, seul le lien est copié.
+
 plugin_docman	info_create_initversion	Version initiale créée.
 plugin_docman	info_create_newversion	Nouvelle version créée.
 plugin_docman	info_document_created	Document créé.

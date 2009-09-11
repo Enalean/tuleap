@@ -61,6 +61,7 @@ SERVICE='/sbin/service'
 PERL='/usr/bin/perl'
 DIFF='/usr/bin/diff'
 PHP='/usr/bin/php'
+UNAME='/bin/uname'
 
 CMD_LIST="GROUPADD GROUDEL GROUPMOD USERADD USERDEL USERMOD MV CP LN LS RM TAR \
 MKDIR RPM CHOWN CHMOD FIND MYSQL TOUCH CAT MAKE TAIL GREP CHKCONFIG \
@@ -306,9 +307,9 @@ $RPM -e --allmatches subversion 2>/dev/null
 $RPM -e --allmatches neon-devel 2>/dev/null
 $RPM -e --allmatches neon 2>/dev/null
 echo "Installing Subversion, Neon and recent SQLite RPMs for Codendi...."
-cd "${RPMS_DIR}/subversion/$ARCH"
+cd "${RPMS_DIR}/subversion"
 newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
-cd ${newest_rpm}
+cd ${newest_rpm}/$ARCH
 # Update SQLite first: version above 3.4 is required for SVN 1.6, and RHEL5 only provides version 3.3.
 # Need to upgrade both sqlite and sqlite-devel at once
 $RPM -Uvh sqlite-3*.rpm sqlite-devel-3*.rpm
@@ -503,6 +504,8 @@ $RPM --nosignature -Uvh ${newest_rpm}/noarch/perl-HTML-Template*.noarch.rpm
 $RPM --nosignature -Uvh ${newest_rpm}/$ARCH/rrdtool-*.rpm ${newest_rpm}/$ARCH/perl-rrdtool-*.rpm
 $RPM -Uvh ${newest_rpm}/noarch/munin-node-*.noarch.rpm
 $RPM -Uvh ${newest_rpm}/noarch/munin-1*.noarch.rpm
+# Fix ownership issues.
+$CHOWN -R munin:munin /var/www/munin
 
 # -> HTML Purifier
 echo "Removing installed htmlpurifier if any .."
@@ -658,6 +661,10 @@ $CHMOD 751 $VAR_LIB_DIR/cvsroot/
 $CHMOD 751 $VAR_LIB_DIR/svnroot/
 $CHMOD 771 /home/users
 $CHMOD 771 /home/groups
+
+# Remove some privacy on project directories: private data should now be stored in the "private" directory
+# This is needed because codendiadm is no longer member of all private projects.
+$CHMOD o+x /home/groups/*
 
 # NSCD is the Name Service Caching Daemon.
 # It is very useful when libnss_mysql is used for authentication
@@ -902,7 +909,7 @@ echo "Starting DB update for Codendi 4.0 This might take a few minutes."
 
 echo "- rename codex db as codendi"
 mysqldump --max_allowed_packet=512M -u root $pass_opt codex > /tmp/dump.codex.sql
-$MYSQL -u root $pass_opt mysql -e "CREATE DATABASE codendi;"
+$MYSQL -u root $pass_opt mysql -e "CREATE DATABASE codendi DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;"
 $MYSQL -u root $pass_opt codendi < /tmp/dump.codex.sql
 
 mysqldump -u root $pass_opt mysql > /tmp/dump.mysql.sql
@@ -1348,9 +1355,6 @@ echo "- Upgrade docman"
 $CAT <<EOF | $MYSQL $pass_opt codendi 
 ALTER TABLE plugin_docman_approval CHANGE COLUMN version_id version_id INT(11) UNSIGNED UNSIGNED NULL DEFAULT NULL;
 ALTER TABLE plugin_docman_approval CHANGE COLUMN wiki_version_id wiki_version_id INT(11) UNSIGNED UNSIGNED NULL DEFAULT NULL;
-mysql_add_unique  'plugin_docman_approval' 'version_id' 'version_id'
-mysql_drop_index 'plugin_docman_approval' 'item_wiki'    
-mysql_add_unique  'plugin_docman_approval' 'item_id' 'item_id,wiki_version_id'
 
 CREATE TABLE IF NOT EXISTS plugin_docman_widget_embedded (
   id int(11) unsigned NOT NULL auto_increment,
@@ -1363,6 +1367,10 @@ CREATE TABLE IF NOT EXISTS plugin_docman_widget_embedded (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 EOF
+
+mysql_add_unique  'plugin_docman_approval' 'version_id' 'version_id'
+mysql_drop_index 'plugin_docman_approval' 'item_wiki'
+mysql_add_unique  'plugin_docman_approval' 'item_id' 'item_id,wiki_version_id'
 
 echo "- Perfs"
 mysql_drop_index 'artifact_field_value' 'idx_field_id'
@@ -1473,8 +1481,8 @@ echo "Upgrade repositories to SVN 1.6"
 find /svnroot/ -maxdepth 1 -mindepth 1 -name "*" -exec sudo -u codendiadm svnadmin upgrade {} \;  2>/dev/null 1>&2
 
 ###############################################################################
-# Create 'private' directories in /home/group/
-echo "Creating private directories in /home/group/"
+# Create 'private' directories in /home/groups/
+echo "Creating private directories in /home/groups/"
 find /home/groups/ -maxdepth 1 -mindepth 1 -type d -exec mkdir -p --mode=2770 '{}/private' \; -exec chown dummy '{}/private' \;
 
 
@@ -1735,6 +1743,9 @@ cd "${RPMS_DIR}/openfire"
 newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
 $CP ${newest_rpm}/monitoring.jar /opt/openfire/plugins
 
+echo "- Upgrade to openfire 3.6"
+cd "${newest_rpm}"
+./migration_openfire_3.5.2_to_3.6.4.sh
 
 #
 # Re-copy files that have been modified

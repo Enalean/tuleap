@@ -4,7 +4,7 @@ require_once('lib/Template.php');
 
 function RemovePage (&$request) {
     global $WikiTheme;
-
+    
     $page = $request->getPage();
     $pagelink = WikiLink($page);
 
@@ -49,12 +49,35 @@ function RemovePage (&$request) {
                      HTML::p(fmt("Since you started the deletion process, someone has saved a new version of %s.  Please check to make sure you still want to permanently remove the page from the database.", $pagelink)));
     }
     else {
-        // Codendi specific: remove permissions for this page @codenditodo: may be transferable otherwhere.
+        // Codendi specific: remove the deleted wiki page from ProjectWantedPages       
+        $projectPageName='ProjectWantedPages';
+        $pagename = $page->getName();
+        
+        $dbi = $request->getDbh();
+        require_once(PHPWIKI_DIR."/lib/loadsave.php");
+        $pagehandle = $dbi->getPage($projectPageName);
+        if ($pagehandle->exists()) {// don't replace default contents
+            $current = $pagehandle->getCurrentRevision();
+            $version = $current->getVersion();
+            $text = $current->getPackedContent();
+            $meta = $current->_data;
+        }
+        
+        $text = str_replace("* [$pagename]", "", $text);
+       
+        $meta['summary'] =  $GLOBALS['Language']->getText('wiki_lib_wikipagewrap',
+                                                      'page_added',
+                                                      array($pagename));
+        $meta['author'] = user_getname();
+        $pagehandle->save($text, $version + 1, $meta);
+        
+        //Codendi specific: remove permissions for this page @codenditodo: may be transferable otherwhere.
         require_once('common/wiki/lib/WikiPage.class.php');
         $wiki_page = new WikiPage(GROUP_ID, $_REQUEST['pagename']);
+        
         $wiki_page->resetPermissions();
         // Real delete.
-        $pagename = $page->getName();
+        //$pagename = $page->getName();
         $dbi = $request->getDbh();
         $dbi->deletePage($pagename);
         $dbi->touch();

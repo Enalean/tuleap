@@ -236,6 +236,13 @@ class ReferenceDao extends DataAccessObject {
         return $this->update($sql);
     }    
 
+    function update_keyword($old_keyword, $keyword, $group_id) {
+        $sql = sprintf("UPDATE reference, reference_group SET keyword=%s WHERE reference.keyword = %s and reference.id=reference_group.reference_id and reference_group.group_id=%s",
+                       $this->da->quoteSmart($keyword),
+                       $this->da->quoteSmart($old_keyword),
+                       $this->da->quoteSmart($group_id));        
+        return $this->update($sql);
+    }
     
     function removeById($id) {
         $sql = sprintf("DELETE FROM reference WHERE id = %s",

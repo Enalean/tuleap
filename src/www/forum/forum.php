@@ -455,43 +455,34 @@ if ($request->valid(new Valid_UInt('forum_id'))) {
 			This code puts the nice next/prev.
 		*/
             if (($offset != 0)||(db_numrows($result) > $i)) {
-		if (($style == 'nested')||($style == 'flat')) {
-                    $ret_val .= '<TABLE WIDTH="100%" BORDER="0">';
-                }
-                $ret_val .= '
-				<TR class="threadbody"><TD WIDTH="50%">';
+
+                $ret_val .= '<TABLE WIDTH="100%" BORDER="0">';
+                $ret_val .= '<TR class="threadbody"><TD ALIGN="LEFT" WIDTH="50%">';
                 if ($offset != 0) {
-                    $ret_val .= '<B><span class="normal">
-				<A HREF="javascript:history.back()">
-				<B><IMG SRC="'.util_get_image_theme("t2.png").'" HEIGHT=15 WIDTH=15 BORDER=0 ALIGN=center> '.$Language->getText('forum_forum','prev_msg').'</A></B></span>';
+                     $ret_val .= '<B><span>
+                        <A HREF="javascript:history.back()">
+                        <B><IMG SRC="'.util_get_image_theme("t2.png").'" HEIGHT=15 WIDTH=15 BORDER=0 ALIGN=center> '
+                        .$Language->getText('forum_forum','prev_msg').'</A></B></span>';
                 } else {
                     $ret_val .= '&nbsp;';
                 }
                 
-                $ret_val .= '</TD><TD>&nbsp;</TD><TD ALIGN="RIGHT" WIDTH="50%">';
+                $ret_val .= '</TD><TD ALIGN="RIGHT" WIDTH="50%">';
                 if (db_numrows($result) > $i) {
                     if (isset($pv)) {
                         $pv_param = "&pv=".$pv;
                     } else {
                         $pv_param = "";
                     }               
-                    $ret_val .= '<B><span class="normal">
-				<A HREF="/forum/forum.php?max_rows='.$max_rows.'&style='.$style.'&offset='.($offset+$i).'&forum_id='.$forum_id.''.$pv_param.'">
-				<B>'.$Language->getText('forum_forum','next_msg').' <IMG SRC="'.util_get_image_theme("t.png").'" HEIGHT=15 WIDTH=15 BORDER=0 ALIGN=center></A></span>';
+                     $ret_val .= '<B><span>
+                     <A HREF="/forum/forum.php?max_rows='.$max_rows.'&style='.$style.'&offset='.($offset+$i).'&forum_id='.$forum_id.''.$pv_param.'">
+                     <B>'.$Language->getText('forum_forum','next_msg').
+                     ' <IMG SRC="'.util_get_image_theme("t.png").'" HEIGHT=15 WIDTH=15 BORDER=0 ALIGN=center></A></span>';
                 } else {
                     $ret_val .= '&nbsp;';
                 }
-                
-		if (($style == 'nested')||($style == 'flat')) {
-                    $ret_val .= '</TABLE>';
-                }
+                 $ret_val .= '</TD></TABLE>';
             }
-
-            // Close table when not in nested or flat mode
-            if (($style != 'nested')&&($style != 'flat')) {
-                    $ret_val .= '</TABLE>';
-            }
-
 
 	}
 

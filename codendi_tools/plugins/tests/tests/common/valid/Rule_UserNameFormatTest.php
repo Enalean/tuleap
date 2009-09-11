@@ -108,7 +108,10 @@ class Rule_UserNameFormatTest extends UnitTestCase {
         // Punctuation
         $this->assertFalse($r->isValid("user a"));
         $this->assertFalse($r->isValid("user;a"));
-        $this->assertFalse($r->isValid("user.a"));
+        
+        // Since rev #12892, this char is allowed
+        $this->assertTrue($r->isValid("user.a"));
+        
         $this->assertFalse($r->isValid("user,a"));
         $this->assertFalse($r->isValid("user:a"));
         $this->assertFalse($r->isValid("user'a"));

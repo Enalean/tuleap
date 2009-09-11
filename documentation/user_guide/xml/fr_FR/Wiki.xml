@@ -94,6 +94,18 @@
       l'utilisateur de taper son texte. Ce mécanisme permet d'éviter
       les pages orphelines qui ne seraient référencées nulle part dans
       le Wiki.</para>
+      
+      <important>
+        <title>Attention</title>
+
+        <para>Si vous souhaitez créer une référence à une page wiki d'un autre projet et si le nom de celle-ci est écrit en CasseChameau,
+        vous devrez utiliser un lien à la place de la syntaxe habituelle.
+     
+        <para>
+        Exemple : Utiliser "[http://yourserver/wiki/index.php?group_id=N&pagename=WiKiPageName]" à la place de "wiki #N:WikiPageName"
+        </para>
+        
+      </important>
     </section>
 
     <section id="WikiSearching">

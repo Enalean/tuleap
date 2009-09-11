@@ -486,7 +486,8 @@ plugin_docman	filters_item_type_link	Link
 plugin_docman	filters_item_type_folder	Folder
 
 plugin_docman	info_cut_notify_cut	cut. You can now paste it wherever you want with 'Paste' action in popup menu.
-plugin_docman	info_copy_notify_cp	copied. you can now paste it wherever you want (even across projects) with 'Paste' action in popup menu.<br />Note that copy keeps <strong>neither approval tables nor notifications</strong> while cut does.
+plugin_docman	info_copy_notify_cp	copied. you can now paste it wherever you want (even across projects) with 'Paste' action in popup menu.<br />Note that copy keeps <strong>neither approval tables nor notifications</strong> while cut does. <br />Note that only the link of the <strong>wiki pages</strong> is copied, not the <strong>content</strong>.
+
 plugin_docman	info_create_initversion	Initial version successfully created.
 plugin_docman	info_create_newversion	New version successfully created.
 plugin_docman	info_document_created	Document successfully created.

@@ -113,5 +113,13 @@ class Widget_MyLatestSvnCommits extends Widget {
     function isAjax() {
         return true;
     }
+    function getAjaxUrl($owner_id, $owner_type) {
+        $request =& HTTPRequest::instance();
+        $ajax_url = parent::getAjaxUrl($owner_id, $owner_type);
+        if ($request->exist('hide_item_id') || $request->exist('hide_my_svn_group')) {
+            $ajax_url .= '&hide_item_id=' . $request->get('hide_item_id') . '&hide_my_svn_group=' . $request->get('hide_my_svn_group');
+        }
+        return $ajax_url;
+    }
 }
 ?>

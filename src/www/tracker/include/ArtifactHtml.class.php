@@ -317,8 +317,8 @@ class ArtifactHtml extends Artifact {
                 'artifact_section_dependencies',
                 $Language->getText('tracker_include_artifact','dependencies').' '.($pv == 0 ? help_button('ArtifactUpdate.html#ArtifactDependencies') : ''),
                 $html,
-                db_numrows($this->getDependencies()),
-                db_numrows($this->getDependencies()) ? '' : '<div>'. $Language->getText('tracker_include_artifact','dep_list_empty') .'</div>'
+               (db_numrows($this->getDependencies()) || db_numrows($this->getInverseDependencies())),
+               (db_numrows($this->getDependencies()) || db_numrows($this->getInverseDependencies())) ? '' : '<div>'. $Language->getText('tracker_include_artifact','dep_list_empty') .'</div>'
             );
             //
             // Artifact Cross References

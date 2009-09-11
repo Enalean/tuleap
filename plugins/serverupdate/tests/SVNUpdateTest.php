@@ -202,7 +202,7 @@ class SVNUpdateTest extends UnitTestCase {
     	
     	$su =& new SVNUpdateTestVersion($this);
         $conflictedLines = $su->getConflictedLines($svn_merge_txt);
-        var_dump($conflictedLines);
+        
         $this->assertEqual(count($conflictedLines), 0);
     }
     

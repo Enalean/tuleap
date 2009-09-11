@@ -204,13 +204,13 @@ class ArtifactFieldHtml extends ArtifactField {
 	 */
 	function multipleFieldDate($date_begin='',$date_end='',$size=10,$maxlength=10,$ro=false) {
 	  global $Language;
-
+      
 	    // CAUTION!!!! The Javascript below assumes that the date always appear
 	    // in a field called 'artifact_form'
 	$hp = Codendi_HTMLPurifier::instance();
 	    if ($ro)
 			if ($date_begin || $date_end) {
-			    $html = $Language->getText('tracker_include_field','start')."&nbsp;$date_begin<br>".$Language->getText('tracker_include_field','end')."&nbsp;$date_end";
+                $html = $Language->getText('tracker_include_field','start')."&nbsp;$date_begin<br>".$Language->getText('tracker_include_field','end')."&nbsp;$date_end";
 			} else {
 			    $html = $Language->getText('tracker_include_field','any_time');
 		    } else {
@@ -219,10 +219,10 @@ class ArtifactFieldHtml extends ArtifactField {
 		
 				
                 $html = $Language->getText('tracker_include_field','start');
-                $html .= $GLOBALS['HTML']->getDatePicker("field_".$this->field_id, $this->getName(), "", $size, $maxlength);
+                $html .= $GLOBALS['HTML']->getDatePicker("field_".$this->field_id, $this->getName(), $date_begin, $size, $maxlength);
                 $html .= "<br />";
                 $html .= $Language->getText('tracker_include_field','end');
-                $html .= $GLOBALS['HTML']->getDatePicker("field_".$this->field_id."_end", $this->getName()."_end", "", $size, $maxlength);
+                $html .= $GLOBALS['HTML']->getDatePicker("field_".$this->field_id."_end", $this->getName()."_end", $date_end, $size, $maxlength);
 		    }
 	
 	    return($html);

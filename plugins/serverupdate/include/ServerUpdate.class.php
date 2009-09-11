@@ -85,9 +85,9 @@ class ServerUpdate extends Controler {
                     ini_set('display_errors', $display_errors);
                     if ($svnupdate->getRepository() != "") {
                         $commits = $svnupdate->getCommits();
-                        
-                        $nb_commits = count($commits);
-                        if ($nb_commits > 0) {
+                        if (is_array($commits)) { 
+                          $nb_commits = count($commits);
+                          if ($nb_commits > 0) {
                             $nb_critical_updates = 0;
                             $critical_updates = false;
                             foreach($commits as $commit) {
@@ -108,6 +108,11 @@ class ServerUpdate extends Controler {
                             $value   = $GLOBALS['Language']->getText('plugin_serverupdate_widgets', 'my_serverupdates_up_to_date');
                             $bgcolor = 'green';
                         }
+                      } else {
+                        // authentication error?
+                        $value   = $GLOBALS['Language']->getText('plugin_serverupdate_widgets', 'my_serverupdates_norepository');
+                        $bgcolor = 'black';
+                      }
                     } else {
                         $value   = $GLOBALS['Language']->getText('plugin_serverupdate_widgets', 'my_serverupdates_norepository');
                         $bgcolor = 'black';

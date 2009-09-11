@@ -191,7 +191,7 @@ manual software installation<br>
     </tr>
     <tr>
       <td valign="top">codendiadm</td>
-      <td valign="top">104<br>
+      <td valign="top"><br>
       </td>
       <td valign="top">-<br>
       </td>
@@ -200,7 +200,7 @@ manual software installation<br>
     </tr>
     <tr>
       <td valign="top">dummy</td>
-      <td valign="top">103<br>
+      <td valign="top"><br>
       </td>
       <td valign="top">-<br>
       </td>
@@ -218,7 +218,7 @@ manual software installation<br>
     </tr>
     <tr>
       <td valign="top">ftpadmin</td>
-      <td valign="top">96<br>
+      <td valign="top"><br>
       </td>
       <td valign="top">ftpadmin, codendiadm</td>
       <td valign="top"><br>
@@ -1206,8 +1206,8 @@ max_allowed_packet=128M</span><br style="font-family: monospace;">
 </span>
 <hr>
 <h1><a name="Mail_Configuration"></a>Mail Configuration</h1>
-Codendi uses sendmail as Mail transfer agent but it is possible to use
-any other MTA like Postfix, Exim or other. You need to setup <br>
+By default, Codendi uses sendmail as Mail transfer agent but it is possible to use
+any other MTA like Postfix, Exim or other.<br>
 <br>
 <h2>Sendmail settings</h2>
 <u>In /etc/mail/sendmail.cf:</u><br>
@@ -1257,6 +1257,39 @@ Or edit /etc/sysconfig/network and enter the machine fully qualified name as HOS
 <br><b>OR</b> edit /etc/hosts and add codendi.xerox.com in the first line. E.g.
 <pre>127.0.0.1       codendi.xerox.com atlas localhost.localdomain localhost</pre>
 
+<h2>Postfix settings</h2>
+<p>It is possible to use Postfix as MTA, but this is not automated at the moment.
+</br>If you would like to use postfix instead of sendmail, you first need to properly install this package:
+<pre>
+# Install RPM
+yum install postfix
+# Stop Sendmail if it is running
+service sendmail stop
+# Prevent sendmail from starting after a reboot
+chkconfig sendmail off
+# Make postfix start instead
+chkconfig --add postfix
+</pre>
+<p>Then you should edit the postfix configuration file /etc/postfix/main.cf, and replace the value of these parameters:
+<ul><li>inet_interfaces = all (instead of 'localhost' by default).
+<li>myhostname = my_server_url.com
+<li>alias_maps = hash:/etc/aliases, hash:/etc/aliases.codendi
+<li>mydestination = $myhostname, localhost.$mydomain, localhost, lists.$myhostname
+</ul>
+<br>The modification of "mydestination" is only needed when subdomains are enabled.
+
+<p>Last, you should customize the mailman configuration for postfix.
+Simply add this at the end of /etc/mailman/mm_cfg.py
+<pre>
+MTA = 'Postfix'
+POSTFIX_STYLE_VIRTUAL_DOMAINS = 'false'
+</pre>
+<p>Don't forget to restart mailman and postfix
+<pre>
+service postfix restart
+service mailman restart
+</pre>
+
 <h2>Aliases</h2>
 <u>/etc/aliases</u><br>
 <br>
@@ -1269,16 +1302,6 @@ aliases.codendi is generated automatically bo the Codendi cron job (see
 below) and contains the aliases for all the mailing lists in the
 @lists.codendi.xerox.com domain and the email aliases for users. **Never
 edit this file by hand**<br>
-<br>
-<u>/usr/share/codendi/src/utils/underworld-dummy/aliases.zone</u><br>
-<br>
-This is where you can define Codendi level aliases like codendi-contact,
-codendi-admin, etc. This file is currently under version control so if you
-are
-managing your own site it might be a better idea to add these aliases
-in
-/etc/aliases to avoid conflict when merging new code from Codendi source
-repository<br>
 <br>
 <h2>Sendmail shell wrappers</h2>
 In the Codendi Configuration, sendmail uses a number of shell wrappers
@@ -1934,6 +1957,73 @@ multiple directories or mirrors by using a comma separated list of servers. To s
 <li>When a two-step LDAP authentication is in place (see above), this filter is used in the initial LDAP query run to extract the user DN needed for the authentication.
 </ul>
 </ul>
+<h2>Example LDAP settings</h2>
+
+<h3>Active Directory</h3>
+<pre>
+// Should be either 'ldap' or 'codendi'
+$sys_auth_type = 'ldap';
+
+$sys_ldap_server = 'ldapserver.mycompany.com';
+
+// To enable LDAP information on Codendi users, also define the DN 
+// (distinguised name) to use in LDAP queries.
+// The ldap filter is the filter to use to query the LDAP directory
+// (%name% are substituted with the value from the user table)
+$sys_ldap_dn     = 'DC=mygroup,DC=mycompany,DC=com';
+$sys_ldap_filter = 'sAMAccountName=%ldap_name%';
+
+// For LDAP systems that do not accept anonymous binding, define here
+// a valid DN and password:
+$sys_ldap_bind_dn = "AD-DOMAIN\special_login";
+$sys_ldap_bind_passwd = "xxxxx";
+
+// LDAP authentication:
+$sys_ldap_auth_dn     = 'DC=mygroup,DC=mycompany,DC=com';
+$sys_ldap_auth_filter = 'sAMAccountName=%ldap_name%';
+
+$sys_ldap_search_user='(|(sAMAccountName=%words%)(cn=%words%)(mail=%words%))';
+$sys_ldap_eduid_filter='sAMAccountName=%eduid%';
+
+$sys_ldap_eduid = 'samaccountname';   
+$sys_ldap_cn    = 'cn';
+$sys_ldap_mail  = 'mail';
+$sys_ldap_login = 'samaccountname';
+</pre>
+
+<h3>OpenLDAP</h3>
+
+<pre>
+// Should be either 'ldap' or 'codendi'
+$sys_auth_type = 'ldap';
+
+$sys_ldap_server = 'myldapserver';
+
+// To enable LDAP information on CodeX users, also define the DN
+// (distinguised name) to use in LDAP queries.
+// The ldap filter is the filter to use to query the LDAP directory
+// (%name% are substituted with the value from the user table)
+$sys_ldap_dn     = 'DC=mygroup,DC=mycompany,DC=com';
+$sys_ldap_filter = 'mail=%email%';
+
+// For LDAP systems that do not accept anonymous binding, define here
+// a valid DN and password:
+//$sys_ldap_bind_dn = "ldapsearch";
+//$sys_ldap_bind_passwd = "xxxxxxxxx";
+
+// LDAP authentication:
+$sys_ldap_auth_dn = 'uid=%ldap_name%,ou=People,dc=mygroup,dc=mycompany,dc=com';
+$sys_ldap_auth_filter = 'uid=%ldap_name%';
+
+$sys_ldap_search_user='(|(uid=%words%)(cn=%words%)(mail=%words%))';
+$sys_ldap_eduid_filter='uid=%eduid%';
+
+$sys_ldap_eduid = 'uid';
+$sys_ldap_cn    = 'displayname';
+$sys_ldap_mail  = 'mail';
+$sys_ldap_login = 'uid';
+
+</pre>
 <hr>
 <h1><a name="Backend_Scripts"></a>Backend Scripts<br>
 </h1>
@@ -1947,10 +2037,9 @@ configuration.<br>
 <hr>
 <h1><a name="Cron_Jobs"></a>Cron Jobs</h1>
 Codendi runs a number of cron job in the background. The most important
-one is run once every 2hours on the Codendi site to map the Codendi
+one is run once every 30 minutes on the Codendi site to check the mapping of
 user/project permission to the Linux user/group permission mechanism.
-it
-also create all the user and project related directories automatically.<br>
+it also checks that all the user and project related directories are properly created.<br>
 <br>
 Other cron jobs run daily and weekly statistics.<br>
 <br>

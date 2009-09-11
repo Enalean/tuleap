@@ -699,7 +699,7 @@ tracker_common_type	invalid	Pas d'objet de groupe valide
 tracker_common_type	no_match	Group_id dans la BDD ne correspond pas à l'objet Group
 tracker_common_type	perm_fail	La création des permissions utilisateurs a échoué&nbsp;: $1
 tracker_common_type	name_requ	Le nom , la description et la nom court sont obligatoires.
-tracker_common_type	invalid_shortname	Nom court invalide&nbsp;: $1. Veuillez utiliser uniquement des caractères alphanumériques. Retournez à la page précédente et modifiez ce champ.
+tracker_common_type	invalid_shortname	Nom court invalide&nbsp;: $1. Veuillez utiliser uniquement des caractères alphanumériques ou un nom court non réservé. Retournez à la page précédente et modifiez ce champ.
 tracker_common_type	invalid_templ	group_id_template invalide.
 tracker_common_type	load_fail	impossible de charger le nouvel outil de suivi
 tracker_common_type	invalid_at	ArtifactTypeID invalide

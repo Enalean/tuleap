@@ -338,6 +338,7 @@ INSERT INTO frs_filetype VALUES ('8003','pdf');
 INSERT INTO frs_filetype VALUES ('9999','Other');
 
 INSERT INTO frs_processor VALUES ('1000','i386','10','100');
+INSERT INTO frs_processor VALUES ('1500','x86_64','15','100');
 INSERT INTO frs_processor VALUES ('2000','PPC','20','100');
 INSERT INTO frs_processor VALUES ('3000','MIPS','30','100');
 INSERT INTO frs_processor VALUES ('4000','Sparc','40','100');

@@ -459,12 +459,11 @@ class ArtifactTypeFactory extends Error {
 			return false;
 		}
 
-                // Necessary test to avoid issues when exporting the tracker to a DB (e.g. '-' not supported as table name)
-                if (!eregi("^[a-zA-Z0-9_]+$",$itemname)) {
-                    $this->setError($Language->getText('tracker_common_type','invalid_shortname',$itemname));
-			return false;
-                }
-
+         // Necessary test to avoid issues when exporting the tracker to a DB (e.g. '-' not supported as table name)               
+        if (!eregi("^[a-zA-Z0-9_]+$",$itemname)) {
+             $this->setError($Language->getText('tracker_common_type','invalid_shortname',$itemname));
+                return false;
+         }
 		//	get the template Group object
 		$pm = ProjectManager::instance();
         $template_group = $pm->getProject($group_id_template);

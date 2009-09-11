@@ -70,11 +70,11 @@
       CamelCase). The term CamelCase comes from the uppercase "bumps"
       in the middle of the compound word, suggesting the bumps of a
       camel.</para>
-
+      
       <para> &SYS_PRODUCT_NAME; wikis also allow other ways of creating wiki links
       by putting anything into square brackets. This allows the
       creation of page titles containing blank characters.</para>
-
+      
       <para>New pages in a wiki are created simply by creating the
       appropriate links on a topically related page. If the link does
       not exist, it is emphasized as a "new" link. Following that link
@@ -82,6 +82,18 @@
       text for the new page. This mechanism ensures that so-called
       "orphan" pages (which have no links pointing to them) are rarely
       created.</para>
+      
+      <important>
+        <title>Warning</title>
+
+        <para>Please note that if you need to make a reference to a wikipage of another project
+        and if the name of this wiki page is in CamelCase style, you will have to use the direct link, instead of the usual syntax.
+     
+        <para>
+        Example : Use "[http://yourserver/wiki/index.php?group_id=N&pagename=WiKiPageName]" instead of "wiki #N:WikiPageName"
+        </para>
+        
+      </important>
     </section>
 
     <section id="WikiSearching">

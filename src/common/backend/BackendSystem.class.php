@@ -277,10 +277,9 @@ class BackendSystem extends Backend {
             chmod($backupfile,0600);
             $this->recurseDeleteInDir($homedir);
             rmdir($homedir);
-            return true;
-        } else {
-            return false;
         }
+        return true;
+
     }
 
 

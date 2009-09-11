@@ -124,5 +124,13 @@ class Widget_MyMonitoredFp extends Widget {
     function isAjax() {
         return true;
     }
+    function getAjaxUrl($owner_id, $owner_type) {
+        $request =& HTTPRequest::instance();
+        $ajax_url = parent::getAjaxUrl($owner_id, $owner_type);
+        if ($request->exist('hide_item_id') || $request->exist('hide_frs')) {
+            $ajax_url .= '&hide_item_id=' . $request->get('hide_item_id') . '&hide_frs=' . $request->get('hide_frs');
+        }
+        return $ajax_url;
+    }
 }
 ?>
