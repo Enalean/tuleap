@@ -52,7 +52,7 @@ use strict;
 
 $ENV{'PATH'} = '/usr/bin:/bin';
 
-my $logfile = "/var/tmp/forumml_hook.log";
+my $logfile = "/var/log/codendi/forumml_hook.log";
 
 my $listname = validate_listname($ARGV[0]);
 if($listname eq "") {
@@ -74,7 +74,7 @@ open STDOUT, ">>", $logfile or die "cannot append to '$logfile': $!\n";
 open STDERR, ">&STDOUT" or die "cannot append STDERR to STDOUT: $!\n";
 
 # store mail in ForumML DB
-exec "/usr/bin/php -e -q -c /etc/php.ini  /usr/share/codendi/plugins/forumml/bin/mail_2_DB.php $listname 1 $temp";
+exec "/usr/share/codendi/src/utils/php-launcher.sh  /usr/share/codendi/plugins/forumml/bin/mail_2_DB.php $listname 1 $temp";
 
 close STDOUT;
 close STDERR;

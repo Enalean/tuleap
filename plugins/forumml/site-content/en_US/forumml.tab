@@ -75,6 +75,10 @@ plugin_forumml	missing_param	Missing 'date' and/or 'filename' parameters.
 #-----------------------------------------------
 # Script:plugins/forumml/www/forumml_utils.php
 #
+plugin_forumml	show_message_from	From:
+plugin_forumml	show_message_cc	Cc:
+plugin_forumml	show_message_date	Date:
+plugin_forumml	show_message_subject	Subject:
 plugin_forumml	begin	First messages
 plugin_forumml	previous	Previous $1 messages
 plugin_forumml	threads	Threads

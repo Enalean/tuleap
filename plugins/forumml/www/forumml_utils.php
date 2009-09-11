@@ -363,11 +363,11 @@ function show_message($p,$hp,$id_message,$id_parent,$view,$class,$headerclass,$c
 	if ($view == "flat") {
 		// specific thread       	
 		print " <tr class='".$class."'><a name='".$id_message."'></a>
-                <td width='10%'><b><font class='".$headerclass."'>From:</font></b></td>
+                <td width='10%'><b><font class='".$headerclass."'>".$GLOBALS['Language']->getText('plugin_forumml','show_message_from')." </font></b></td>
                 <td width='90%'><font class='".$headerclass."'>".$from."</font></td>
                 </tr>
                 <tr class='".$class."'>
-                    <td><b><font class='".$headerclass."'>Cc:</font></b></td>";
+                    <td><b><font class='".$headerclass."'>".$GLOBALS['Language']->getText('plugin_forumml','show_message_cc')." </font></b></td>";
 
         // get CC
     	$cc = has_cc($id_message);
@@ -382,11 +382,11 @@ function show_message($p,$hp,$id_message,$id_parent,$view,$class,$headerclass,$c
 
         print " </tr>
                 <tr class='".$class."'>
-                    <td><b><font class='".$headerclass."'>Date:</font></b></td>
+                    <td><b><font class='".$headerclass."'>".$GLOBALS['Language']->getText('plugin_forumml','show_message_date')." </font></b></td>
                     <td><font class='".$headerclass."'>".$date."</font></td>
                 </tr>
                 <tr class='".$class."'>
-                    <td><b><font class='".$headerclass."'>Subject:</font></b></td>
+                    <td><b><font class='".$headerclass."'>".$GLOBALS['Language']->getText('plugin_forumml','show_message_subject')." </font></b></td>
                     <td><b><font class='".$headerclass."'>".$subject."</font><b></td>
                 </tr>";
     	

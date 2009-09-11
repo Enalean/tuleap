@@ -100,8 +100,8 @@ if ($argv[2] == 2) {
 }
 
 require_once('pre.php');
-require_once(dirname(__FILE__).'/../include/mbox.php');
-require_once(dirname(__FILE__).'/../include/mimeDecode.php');
+require_once('Mail/mbox.php');
+require_once('Mail/mimeDecode.php');
 require_once(dirname(__FILE__).'/../include/ForumMLInsert.class.php');
 require_once(dirname(__FILE__).'/../include/ForumML_FileStorage.class.php');
 require_once('common/plugin/PluginManager.class.php');

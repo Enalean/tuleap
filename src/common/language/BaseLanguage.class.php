@@ -279,8 +279,11 @@ class BaseLanguage {
                 $this->parseLanguageFile($dir."/".$matches[1].".tab", $text_array);
             } else {
                 $line = explode("\t", $ary[$i], 3);
-                $text_array[$line[0]][$line[1]] = chop(str_replace('\n', "\n", ($line[2])));
-                //echo "(".strlen(trim($ary[$i])).")"."Reading msg :".$line[0]."<b> | </b>".$line[1]."<b> | </b>".$text_array[$line[0]][$line[1]]."<br>";
+                if (!isset($line[0]) || !isset($line[1]) || !isset($line[2])) {
+                    echo "*** ERROR in $fname L$i: ".$ary[$i]."<br>".PHP_EOL;
+                } else {
+                    $text_array[$line[0]][$line[1]] = chop(str_replace('\n', "\n", ($line[2])));
+                }
             }
         }
     }

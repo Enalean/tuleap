@@ -20,9 +20,7 @@
  # You should have received a copy of the GNU General Public License
  # along with codendi; if not, write to the Free Software
  # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- #
- # $Id$
- #
+
 
 =pod
 
@@ -53,15 +51,11 @@ sub validate_listname {
     return $listname;
 }
 
-use strict;
+#use strict;
 use DBI;
 
 require "/usr/share/codendi/src/utils/include.pl";
-
-## load local.inc variables
-&load_local_config();
-
-my $dbh = &db_connect();
+&db_connect;
 
 # get all active mailing-lists
 my $query = "SELECT list_name, group_id FROM mail_group_list WHERE status = 1";
@@ -71,6 +65,6 @@ while (my ($list_name,$group_id) = $req->fetchrow()) {
 	my $list = validate_listname($list_name);
 	if(! $list eq "") {
 		print "Processing ".$list." mailing-list ... \n";
-		system("/usr/bin/php -e -q -c /etc/php.ini /usr/share/codendi/plugins/forumml/bin/mail_2_DB.php $list 2");
+		system("/usr/share/codendi/src/utils/php-launcher.sh /usr/share/codendi/plugins/forumml/bin/mail_2_DB.php $list 2");
 	}
 }

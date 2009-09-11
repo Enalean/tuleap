@@ -8,10 +8,14 @@
 ## Install ForumMl hook
 /usr/bin/install -g codendiadm -o codendiadm -m 06755 /usr/share/codendi/plugins/forumml/bin/mail_2_DB.pl /usr/lib/codendi/bin
 
-## Update /etc/php.ini
-include_path = "/usr/share/codendi/src/www/include:/usr/share/codendi/src:/usr/share/pear:."
+## Install requested RPMS:
+# Standard rpm (shiped with RHEL/CentOs):
+php-pear
 
-## Rebuild mailman RPM and install it
+# Codendi rpm (you might need to rebuild them, see below):
+mailman-2.1.9-5.codendi.i386.rpm
+php-pear-Mail-Mbox-0.1.2-1.codendi.noarch.rpm
+php-pear-Mail-Mime-1.3.0-1.codendi.noarch.rpm
 
 ## Update Mailman config to enable the Hook
 # edit /etc/mm_cfg.py and set
@@ -27,8 +31,15 @@ service mailman restart
 run 'mail_2_DB.php' script.
 1st argument: list name
 2nd argument: 2
-$> php-launcher plugins/forumml/bin/mail_2_DB.php codex-support 2
+$> /usr/share/codendi/src/utils/php-launcher /usr/share/codendi/plugins/forumml/bin/mail_2_DB.php codex-support 2
 
 ## To import ML archives of all Codendi projects, for which the plugin is enabled
 run 'ml_arch_2_DB.pl' script:
-$> ./plugins/forumml/bin/ml_arch_2_DB.pl
+$> /usr/share/codendi/plugins/forumml/bin/ml_arch_2_DB.pl
+
+==== REBUILD RPMS ====
+## You might need to rebuild few RPMs:
+cd /usr/share/codendi/rpm/SPECS
+rpmbuild -ba mailman.codendi.spec
+rpmbuild -ba php-pear-Mail-Mime.spec
+rpmbuild -ba php-pear-Mail-Mbox.spec
