@@ -1,7 +1,6 @@
 <?php
-
 /**
- * Copyright © STMicroelectronics, 2009. All Rights Reserved.
+ * Copyright ï¿½ STMicroelectronics, 2009. All Rights Reserved.
  * 
  * Originally written by Sabri LABBENE 2009.
  * 

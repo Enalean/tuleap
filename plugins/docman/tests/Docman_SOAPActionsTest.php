@@ -38,7 +38,9 @@ Mock::generate('UserManager');
 Mock::generate('User');
 Mock::generate('EventManager');
 Mock::generate('PermissionsManager');
+Mock::generate('Docman_PermissionsManager');
 Mock::generate('SOAPRequest');
+Mock::generate('Docman_LockFactory');
 Mock::generatePartial('Docman_SOAPActions', 'Docman_SOAPActions_Test', 
     array(
         '_getItemFactory',
@@ -47,6 +49,7 @@ Mock::generatePartial('Docman_SOAPActions', 'Docman_SOAPActions_Test',
         '_getUserManagerInstance',
         '_getVersionFactory',
         '_getPermissionsManagerInstance',
+        '_getDocmanPermissionsManagerInstance',
         '_getEventManager',
         '_getFileStorage',
     ));
@@ -60,8 +63,10 @@ class Docman_SOAPActionsTest extends UnitTestCase {
     private $folderFactory;
     private $action;
     private $permissionManager;
+    private $docmanPermissionsManager;
     private $fileStorage;
-    
+    private $lockFactory;
+
     function Docman_SOAPActionsTest($name = 'Docman_Actions test') {
         $this->UnitTestCase($name);
     }
@@ -103,9 +108,14 @@ class Docman_SOAPActionsTest extends UnitTestCase {
         
         $versionFactory = new MockDocman_VersionFactory();
         $versionFactory->setReturnValue('getAllVersionForItem', array($version));
-        
+
+        $this->lockFactory = new MockDocman_LockFactory();
+
         $this->permissionManager = new MockPermissionsManager();
-        
+
+        $this->docmanPermissionsManager = new MockDocman_PermissionsManager();
+        $this->docmanPermissionsManager->setReturnValue('getLockFactory', $this->lockFactory);
+
         // Partial mock of Docman_SOAPActions
         $this->action = new Docman_SOAPActions_Test();
         $this->action->setReturnValue('_getItemFactory', $this->itemFactory);
@@ -114,6 +124,7 @@ class Docman_SOAPActionsTest extends UnitTestCase {
         $this->action->setReturnValue('_getUserManagerInstance', $userManager);
         $this->action->setReturnValue('_getVersionFactory', $versionFactory);
         $this->action->setReturnValue('_getPermissionsManagerInstance', $this->permissionManager);
+        $this->action->setReturnValue('_getDocmanPermissionsManagerInstance', $this->docmanPermissionsManager);
         $this->action->setReturnValue('_getEventManager', new MockEventManager());
         $this->action->setReturnValue('_getFileStorage', $this->fileStorage);
         $this->action->Docman_SOAPActions($controller);
@@ -125,7 +136,9 @@ class Docman_SOAPActionsTest extends UnitTestCase {
               $this->fileStorage,
               $this->MD5Map,
               $this->permissionManager,
-              $this->action);
+              $this->docmanPermissionsManager,
+              $this->action,
+              $this->lockFactory);
     }
     
     /**
@@ -230,7 +243,9 @@ class Docman_SOAPActionsTest extends UnitTestCase {
      */
     public function test_new_version_update() {
         $action = $this->action;
-        
+
+        $this->lockFactory->setReturnValue('itemIsLocked', false);
+
         $params = array(
                       'id'    => 128000,
                       'group_id'=> 2,

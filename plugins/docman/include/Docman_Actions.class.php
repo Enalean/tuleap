@@ -652,15 +652,17 @@ class Docman_Actions extends Actions {
                 }
 
                 // Manage lock
-                $dPm = Docman_PermissionsManager::instance($item->getGroupId());
+                $dPm = $this->_getDocmanPermissionsManagerInstance($item->getGroupId());
                 if ($request->existAndNonEmpty('lock_document')) {
                     if (!$dPm->getLockFactory()->itemIsLocked($item)) {
                         $dPm->getLockFactory()->lock($item);
                         $this->_raiseLockEvent($item, $user);
                     }
                 } else {
-                    $dPm->getLockFactory()->unlock($item);
-                    $this->_raiseUnlockEvent($item, $user);
+                    if ($dPm->getLockFactory()->itemIsLocked($item)) {
+                        $dPm->getLockFactory()->unlock($item);
+                        $this->_raiseUnlockEvent($item, $user);
+                    }
                 }
 
                 // Warn users about watermarking
@@ -704,7 +706,11 @@ class Docman_Actions extends Actions {
         }
         return $this->permissions_manager;
     }
-    
+
+    function _getDocmanPermissionsManagerInstance($groupId) {
+        return Docman_PermissionsManager::instance($groupId);
+    }
+
     protected $userManager;
     function _getUserManagerInstance(){
         if(!$this->userManager){
