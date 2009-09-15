@@ -243,6 +243,7 @@ class ArtifactFactory extends Error {
         
         // Filter part
         if (is_array($criteria)) {
+            
             foreach($criteria as $cr) {
                 $af = $art_field_fact->getFieldFromName($cr->field_name);
                 if (!$af || !is_object($af)) {
@@ -257,12 +258,19 @@ class ArtifactFactory extends Error {
                     $this->setError('You cannot filter on field '.$cr->field_name.': it is not a query field for report '.$report_id);
                     return false;
                 }
-                
+               
                 if ($af->isSelectBox() || $af->isMultiSelectBox()) {
                     $prefs[$cr->field_name] = explode("," , $cr->field_value);
+                                        
                 } else {
                     $prefs[$cr->field_name] = array($cr->field_value);
+                    if (isset($cr->operator)) {
+                        $prefs[$cr->field_name] []= $cr->operator;
+                    }
+                    
                 }
+                
+                
             }
         }
         

@@ -87,10 +87,10 @@
         <title>Warning</title>
 
         <para>Please note that if you need to make a reference to a wikipage of another project
-        and if the name of this wiki page is in CamelCase style, you will have to use the direct link, instead of the usual syntax.
+        and if the name of this wiki page is in CamelCase style, you will have to use the direct link, instead of the usual syntax.</para>
      
         <para>
-        Example : Use "[http://yourserver/wiki/index.php?group_id=N&pagename=WiKiPageName]" instead of "wiki #N:WikiPageName"
+        Example : Use "[http://yourserver/wiki/index.php?group_id=N&amp;pagename=WiKiPageName]" instead of "wiki #N:WikiPageName"
         </para>
         
       </important>

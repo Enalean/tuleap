@@ -771,7 +771,6 @@ class Artifact extends Error {
      */
     function handleUpdate ($artifact_id_dependent,$canned_response,&$changes,$masschange=false,$vfl=false,$import=false){
     	global $art_field_fact,$HTTP_POST_VARS,$Language;
-            
 	    if ($masschange && !$this->ArtifactType->userIsAdmin()) exit_permission_denied();
         
 	    if (!$import) {
@@ -1358,10 +1357,9 @@ class Artifact extends Error {
         
         if ( !$artifact_id_dependent ) 
             return true;
-                        
+        
         $ok = true;
         $ids = explode(",",$artifact_id_dependent);
-           
         while (list(,$id) = each($ids)) {
             // Add this id only if not already exist
             //echo "add id=".$id."<br>";
@@ -1371,12 +1369,13 @@ class Artifact extends Error {
             
             // Check existance
             if (!$this->validArtifact($id)) {
+                
                 // at import stage, $id can have value "None" or "Aucun"
                 if ( ! $import || $id != $Language->getText('global','none')) {
                     $ok = false;
                     $GLOBALS['Response']->addFeedback('error', $Language->getText('tracker_common_artifact','invalid_art',$id));
                 }
-            }
+            }            
             if ($ok && ($id != $this->getID()) && !$this->existDependency($id)) {
                 $res = $this->insertDependency($id);
                 if (!$res) { $ok = false; }
@@ -1708,9 +1707,11 @@ class Artifact extends Error {
     function getDependencies() {
                 
     	$sql="SELECT d.artifact_depend_id, d.is_dependent_on_artifact_id, d.artifact_id, a.summary, afvl.value as status, ag.group_artifact_id, ag.name, g.group_id, g.group_name ".
-            "FROM artifact_dependencies d, artifact_group_list ag, groups g, artifact a, artifact_field_value_list afvl ".
+            "FROM artifact_dependencies d, artifact_group_list ag, groups g, artifact a, artifact_field_value_list afvl, artifact_field f ".
             "WHERE d.is_dependent_on_artifact_id = a.artifact_id AND ".
-            "afvl.field_id = 2 AND ". //status hard coded
+            "afvl.field_id = f.field_id AND ".
+            "f.group_artifact_id = a.group_artifact_id AND ".
+            "f.field_name = 'status_id' AND ".
             "afvl.value_id = a.status_id AND ".
             "afvl.group_artifact_id = a.group_artifact_id AND ".
             "a.group_artifact_id = ag.group_artifact_id AND ".
@@ -1728,9 +1729,11 @@ class Artifact extends Error {
     function getInverseDependencies() {
                 
         $sql="SELECT d.artifact_depend_id, d.is_dependent_on_artifact_id, d.artifact_id, a.summary, afvl.value as status, ag.group_artifact_id, ag.name, g.group_id, g.group_name ".
-            "FROM artifact_dependencies d, artifact_group_list ag, groups g, artifact a, artifact_field_value_list afvl ".
+            "FROM artifact_dependencies d, artifact_group_list ag, groups g, artifact a, artifact_field_value_list afvl, artifact_field f ".
             "WHERE d.artifact_id = a.artifact_id AND ".
-            "afvl.field_id = 2 AND ". //status hard coded
+            "afvl.field_id = f.field_id AND ".
+            "f.group_artifact_id = a.group_artifact_id AND ".
+            "f.field_name = 'status_id' AND ".
             "afvl.value_id = a.status_id AND ".
             "afvl.group_artifact_id = a.group_artifact_id AND ".
             "a.group_artifact_id = ag.group_artifact_id AND ".

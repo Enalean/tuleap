@@ -638,16 +638,17 @@ class ArtifactReport extends Error {
 	 * @return string
 	 */
 	function createQueryReport($prefs,$morder,$advsrch,$offset,$chunksz,$aids) {
-
+        
 		$this->getResultQueryElements($prefs,$morder,$advsrch,$aids,$select,$from,$where,$order_by);
-		
+		$limit ="";
 		// Final query
-		$limit = " LIMIT ". db_ei($offset) .",". db_ei($chunksz) ;
+        if($offset!=0 && $chunksz!=0) {
+            $limit = " LIMIT ". db_ei($offset) .",". db_ei($chunksz) ;
+        }
 		
         //We need group by due to multi assign-to. However, the performances with big trackers are really bad.
         $sql = $select." ".$from." ".$where." GROUP BY artifact_id ".$order_by.$limit;
-        
-        //echo "<DBG> query=".$sql."<br>";
+         //echo "<DBG> query=".$sql."<br>";
 		
 		return $sql;
 	
@@ -720,8 +721,13 @@ class ArtifactReport extends Error {
 		
 		
 			} else {
-		
-			    $operator = $prefs[$field->getName().'_op'][0];
+               
+                if(isset($prefs[$field->getName()][1])) {
+                    $operator = $prefs[$field->getName()][1];
+                }else {
+                    $operator = $prefs[$field->getName().'_op'][0];
+                }
+               
 			    // '=' means that day between 00:00 and 23:59
 			    if ($operator == '=') {
 					list($year,$month,$day) = util_date_explode($prefs[$field->getName()][0]);
