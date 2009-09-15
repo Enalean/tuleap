@@ -20,33 +20,35 @@
 
 require_once('Docman_NotificationsManager.class.php');
 require_once('Docman_Path.class.php');
+
 class Docman_NotificationsManager_Move extends Docman_NotificationsManager { 
 
-    var $MESSAGE_MOVED      = 'moved';      // X has been moved from to
-    var $MESSAGE_MOVED_FROM = 'moved_from'; // X has been moved from
-    var $MESSAGE_MOVED_TO   = 'moved_to';   // X has been moved to
+    const MESSAGE_MOVED      = 'moved';      // X has been moved from to
+    const MESSAGE_MOVED_FROM = 'moved_from'; // X has been moved from
+    const MESSAGE_MOVED_TO   = 'moved_to';   // X has been moved to
     
-    function Docman_NotificationsManager_Move($group_id, $url, &$feedback) {
-        parent::Docman_NotificationsManager($group_id, $url, $feedback);
+    function __construct($group_id, $url, &$feedback) {
+        parent::__construct($group_id, $url, $feedback);
     }
+
     function somethingHappen($event, $params) {
         if ($event == 'plugin_docman_event_move') {
             if ($params['item']->getParentId() != $params['parent']->getId()) {
-                $params['path'] =& $this->_getDocmanPath();
-                $this->_buildMessagesForUsers($this->_getListeningUsers($params['item']->getId()), $this->MESSAGE_MOVED, $params);
-                $this->_buildMessagesForUsers($this->_getListeningUsers($params['parent']->getId()), $this->MESSAGE_MOVED_TO, $params);
-                $this->_buildMessagesForUsers($this->_getListeningUsers($params['item']->getParentId()), $this->MESSAGE_MOVED_FROM, $params);
+                $params['path'] = $this->_getDocmanPath();
+                $this->_buildMessagesForUsers($this->_getListeningUsers($params['item']->getId()), self::MESSAGE_MOVED, $params);
+                $this->_buildMessagesForUsers($this->_getListeningUsers($params['parent']->getId()), self::MESSAGE_MOVED_TO, $params);
+                $this->_buildMessagesForUsers($this->_getListeningUsers($params['item']->getParentId()), self::MESSAGE_MOVED_FROM, $params);
             }
         }
     }
     var $do_not_send_notifications_to;
     function _buildMessagesForUsers(&$users, $type, $params) {
         if ($users) {
-            $um =& $this->_getUserManager();
+            $um = $this->_getUserManager();
             while($users->valid()) {
-                $u = $users->current();
-                $user =& $um->getUserById($u['user_id']);
-                $dpm =& $this->_getPermissionsManager();
+                $u    = $users->current();
+                $user = $um->getUserById($u['user_id']);
+                $dpm  = $this->_getPermissionsManager();
                 if ($dpm->userCanRead($user, $params['item']->getId()) && ($dpm->userCanAccess($user, $params['parent']->getId()) || $dpm->userCanAccess($user, $params['item']->getParentId())) && ($u['object_id'] == $params['item']->getId() || $dpm->userCanAccess($user, $u['object_id']))) {
                     if (!isset($this->do_not_send_notifications_to[$user->getId()])) {
                         $this->_buildMessage(array_merge($params, array('user_monitor' => &$user)), $user, $type);
@@ -58,10 +60,10 @@ class Docman_NotificationsManager_Move extends Docman_NotificationsManager {
         }
     }
     function _buildMessage($params, $user, $type) {
-        $params['old_parent'] =& $this->_item_factory->getItemFromDb($params['item']->getParentId());
+        $params['old_parent'] = $this->_item_factory->getItemFromDb($params['item']->getParentId());
         $this->_addMessage(
             $user, 
-            $type == $this->MESSAGE_MOVED ? $params['item']->getTitle() : (  $type == $this->MESSAGE_MOVED_FROM ? $params['old_parent']->getTitle() : $params['parent']->getTitle() ),
+            $type == self::MESSAGE_MOVED ? $params['item']->getTitle() : (  $type == self::MESSAGE_MOVED_FROM ? $params['old_parent']->getTitle() : $params['parent']->getTitle() ),
             $this->_getMessageForUser(
                 $params['user'], 
                 $type, 
@@ -71,9 +73,9 @@ class Docman_NotificationsManager_Move extends Docman_NotificationsManager {
     }
     function _getMessageForUser(&$user, $message_type, $params) {
         $msg = '';
-        $dpm =& $this->_getPermissionsManager();
+        $dpm = $this->_getPermissionsManager();
         switch($message_type) {
-            case $this->MESSAGE_MOVED:
+            case self::MESSAGE_MOVED:
                 $msg .= $GLOBALS['Language']->getText('plugin_docman', 'notifications_moved_mail_body_begin', 
                                                                 array($params['item']->getTitle(),
                                                                             $user->getRealName(),
@@ -95,7 +97,7 @@ class Docman_NotificationsManager_Move extends Docman_NotificationsManager {
                                                                 array( $this->_url,
                                                                              $params['item']->getId()));
                  break;
-            case $this->MESSAGE_MOVED_FROM:
+            case self::MESSAGE_MOVED_FROM:
                 $msg .= $GLOBALS['Language']->getText('plugin_docman', 'notifications_moved_from_mail_body_begin', 
                                                                 array($params['path']->get($params['old_parent']),
                                                                             $user->getRealName(),
@@ -114,7 +116,7 @@ class Docman_NotificationsManager_Move extends Docman_NotificationsManager {
                                                                 array( $this->_url,
                                                                              $params['old_parent']->getId()));
                 break;
-            case $this->MESSAGE_MOVED_TO:
+            case self::MESSAGE_MOVED_TO:
                 $msg .= $GLOBALS['Language']->getText('plugin_docman', 'notifications_moved_from_mail_body_begin', 
                                                                 array($params['path']->get($params['parent']),
                                                                             $user->getRealName(),

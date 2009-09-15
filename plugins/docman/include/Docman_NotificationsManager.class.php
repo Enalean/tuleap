@@ -26,9 +26,9 @@ require_once('DocmanConstants.class.php');
 
 class Docman_NotificationsManager extends NotificationsManager { 
 
-    var $MESSAGE_MODIFIED   = 'modified';
-    var $MESSAGE_NEWVERSION = 'new_version';
-    var $MESSAGE_WIKI_NEWVERSION = 'new_wiki_version';
+    const MESSAGE_MODIFIED        = 'modified';
+    const MESSAGE_NEWVERSION      = 'new_version';
+    const MESSAGE_WIKI_NEWVERSION = 'new_wiki_version';
     
     var $_listeners;
     var $_feedback;
@@ -37,47 +37,45 @@ class Docman_NotificationsManager extends NotificationsManager {
     var $_url;
     var $_group_id;
     var $_group_name;
-    function Docman_NotificationsManager($group_id, $url, &$feedback) {
-        parent::NotificationsManager();
+
+    function __construct($group_id, $url, &$feedback) {
+        parent::__construct();
+
         $this->_group_id     =  $group_id;
         $this->_url          =  $url;
         $this->_listeners    =  array();
         $this->_feedback     =& $feedback;
-        $this->_item_factory =& $this->_getItemFactory();
+        $this->_item_factory =  $this->_getItemFactory();
         $this->_messages     =  array();
-        if ($g =& $this->_groupGetObject($group_id)) {
+        if ($g = $this->_groupGetObject($group_id)) {
             $this->_group_name = $g->getPublicName();
         }
     }
-    function &_getItemFactory() {
-        $if = new Docman_ItemFactory();
-        return $if;
+    function _getItemFactory() {
+        return new Docman_ItemFactory();
     }
-    function &_groupGetObject($group_id) {
-        $pm = ProjectManager::instance();
-        $go = $pm->getProject($group_id);
-        return $go;
+    function _groupGetObject($group_id) {
+        return ProjectManager::instance()->getProject($group_id);
     }
-    function &_getUserManager() {
+    function _getUserManager() {
         return UserManager::instance();
     }
-    function &_getPermissionsManager() {
+    function _getPermissionsManager() {
         return Docman_PermissionsManager::instance($this->_group_id);
     }
-    function &_getDocmanPath() {
-        $p = new Docman_Path();
-        return $p;
+    function _getDocmanPath() {
+        return new Docman_Path();
     }
     function somethingHappen($event, $params) {
-        $um =& $this->_getUserManager();
-        $params['path'] =& $this->_getDocmanPath();
-        $users = $this->_getListeningUsers($this->_getListeningUsersItemId($params));
+        $um             = $this->_getUserManager();
+        $params['path'] = $this->_getDocmanPath();
+        $users          = $this->_getListeningUsers($this->_getListeningUsersItemId($params));
         if ($users) {
             while($users->valid()) {
-                $u = $users->current();
-                $user =& $um->getUserById($u['user_id']);
+                $u    = $users->current();
+                $user = $um->getUserById($u['user_id']);
                 if ($user->isActive() || $user->isRestricted()) {
-                    $dpm =& $this->_getPermissionsManager();
+                    $dpm = $this->_getPermissionsManager();
                     if ($dpm->userCanAccess($user, $params['item']->getId()) && $dpm->userCanAccess($user, $u['object_id'])) {
                         $this->_buildMessage($event, $params, $user);
                     }
@@ -103,7 +101,7 @@ class Docman_NotificationsManager extends NotificationsManager {
                     $cc .= ','. $recipient->getEmail();
                 }
                 $m->setBcc($cc);
-                $success &= $m->send();
+                $success = $m->send();
             }
         }
         if (!$success) {
@@ -129,7 +127,7 @@ class Docman_NotificationsManager extends NotificationsManager {
                     $u->next();
                 }
             }
-            if ($item =& $this->_item_factory->getItemFromDb($id)) {
+            if ($item = $this->_item_factory->getItemFromDb($id)) {
                 $this->_getListeningUsersForAscendantHierarchy($item->getParentId(), $users, $type);
             }
         }
@@ -139,13 +137,13 @@ class Docman_NotificationsManager extends NotificationsManager {
         switch($event) {
             case 'plugin_docman_event_edit':
             case 'plugin_docman_event_metadata_update':
-                $type = $this->MESSAGE_MODIFIED;
+                $type = self::MESSAGE_MODIFIED;
                 break;
             case 'plugin_docman_event_new_version':
-                $type = $this->MESSAGE_NEWVERSION;
+                $type = self::MESSAGE_NEWVERSION;
                 break;
             case 'plugin_docman_event_wikipage_update':
-                $type = $this->MESSAGE_WIKI_NEWVERSION;
+                $type = self::MESSAGE_WIKI_NEWVERSION;
                 break;
             default:
                 break;
@@ -174,12 +172,12 @@ class Docman_NotificationsManager extends NotificationsManager {
     function _getMessageForUser(&$user, $message_type, $params) {
         $msg = '';
         switch($message_type) {
-            case $this->MESSAGE_MODIFIED:
-            case $this->MESSAGE_NEWVERSION:
+            case self::MESSAGE_MODIFIED:
+            case self::MESSAGE_NEWVERSION:
                 $msg .= $params['path']->get($params['item']) .' has been modified by '. $user->getRealName() .".\n";
                 $msg .= $this->_url .'&action=details&id='. $params['item']->getId() ."\n";
                 break;
-            case $this->MESSAGE_WIKI_NEWVERSION:
+            case self::MESSAGE_WIKI_NEWVERSION:
                 $msg .= 'New version of ' . $params['wiki_page'] . 'wiki page was created by ' . $user->getRealName() . ".\n";
                 $msg .= $params['url'] . "\n";
                 break;

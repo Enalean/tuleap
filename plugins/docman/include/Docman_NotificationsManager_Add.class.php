@@ -20,12 +20,13 @@
 
 require_once('Docman_NotificationsManager.class.php');
 require_once('Docman_Path.class.php');
+
 class Docman_NotificationsManager_Add extends Docman_NotificationsManager { 
 
-    var $MESSAGE_ADDED = 'added'; // X has been added
+    const MESSAGE_ADDED = 'added'; // X has been added
     
-    function Docman_NotificationsManager_Add($group_id, $url, &$feedback) {
-        parent::Docman_NotificationsManager($group_id, $url, $feedback);
+    function __construct($group_id, $url, &$feedback) {
+        parent::__construct($group_id, $url, $feedback);
     }
     function _getListeningUsersItemId($params) {
         return $params['parent']->getId();
@@ -33,13 +34,13 @@ class Docman_NotificationsManager_Add extends Docman_NotificationsManager {
     function _buildMessage($event, $params, $user) {
         switch($event) {
             case 'plugin_docman_event_add':
-                $parent =& $this->_item_factory->getItemFromDb($params['item']->getParentId());
+                $parent = $this->_item_factory->getItemFromDb($params['item']->getParentId());
                 $this->_addMessage(
                     $user, 
                     $parent->getTitle(), 
                     $this->_getMessageForUser(
                         $params['user'], 
-                        $this->MESSAGE_ADDED, 
+                        self::MESSAGE_ADDED, 
                         $params
                     )
                 );
@@ -51,7 +52,7 @@ class Docman_NotificationsManager_Add extends Docman_NotificationsManager {
     function _getMessageForUser(&$user, $message_type, $params) {
         $msg = '';
         switch($message_type) {
-            case $this->MESSAGE_ADDED:
+            case self::MESSAGE_ADDED:
                 $msg .= $GLOBALS['Language']->getText('plugin_docman', 'notifications_added_mail_body', array($params['path']->get($params['parent']), 
                                                               $user->getRealName(),
                                                               $this->_url,

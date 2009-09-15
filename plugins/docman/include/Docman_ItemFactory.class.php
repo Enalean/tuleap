@@ -636,11 +636,14 @@ class Docman_ItemFactory {
 
     function update($row) {
         // extract cross references
-        $reference_manager =& ReferenceManager::instance();
-        $reference_manager->extractCrossRef($row['title'], $row['id'], ReferenceManager::REFERENCE_NATURE_DOCUMENT, $this->groupId);
-        $reference_manager->extractCrossRef($row['description'], $row['id'], ReferenceManager::REFERENCE_NATURE_DOCUMENT, $this->groupId);   
-        
-        $dao =& $this->_getItemDao();
+        $reference_manager = ReferenceManager::instance();
+        if (isset($row['title'])) {
+            $reference_manager->extractCrossRef($row['title'], $row['id'], ReferenceManager::REFERENCE_NATURE_DOCUMENT, $this->groupId);
+        }
+        if (isset($row['description'])) {
+            $reference_manager->extractCrossRef($row['description'], $row['id'], ReferenceManager::REFERENCE_NATURE_DOCUMENT, $this->groupId);
+        }
+        $dao = $this->_getItemDao();
         return $dao->updateFromRow($row);
     }
 

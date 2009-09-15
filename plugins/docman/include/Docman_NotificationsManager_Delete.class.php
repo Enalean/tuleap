@@ -20,23 +20,24 @@
 
 require_once('Docman_NotificationsManager.class.php');
 require_once('Docman_Path.class.php');
+
 class Docman_NotificationsManager_Delete extends Docman_NotificationsManager { 
 
-    var $MESSAGE_REMOVED_FROM = 'removed_from'; // X has been removed from folder F
-    var $MESSAGE_REMOVED      = 'removed'; // X has been removed
+    const MESSAGE_REMOVED_FROM = 'removed_from'; // X has been removed from folder F
+    const MESSAGE_REMOVED      = 'removed'; // X has been removed
     
-    function Docman_NotificationsManager_Delete($group_id, $url, &$feedback) {
-        parent::Docman_NotificationsManager($group_id, $url, $feedback);
+    function __construct($group_id, $url, &$feedback) {
+        parent::__construct($group_id, $url, $feedback);
     }
     function somethingHappen($event, $params) {
         //search for users who monitor the item
         if ($event == 'plugin_docman_event_del') {
-            $this->_storeEvents($params['item']->getId(), $this->MESSAGE_REMOVED, $params);
-            $this->_storeEvents($params['item']->getParentId(), $this->MESSAGE_REMOVED_FROM, $params);
+            $this->_storeEvents($params['item']->getId(), self::MESSAGE_REMOVED, $params);
+            $this->_storeEvents($params['item']->getParentId(), self::MESSAGE_REMOVED_FROM, $params);
         }
     }
     function sendNotifications($event, $params) {
-        $path =& new Docman_Path();
+        $path = $this->_getDocmanPath();
         foreach($this->_listeners as $l) {
             if (count($l['items']) > 1) {
                 //A folder and its content have been deleted
@@ -54,7 +55,7 @@ class Docman_NotificationsManager_Delete extends Docman_NotificationsManager {
                 }
                 $this->_addMessage(
                     $l['user'],
-                    $t == $this->MESSAGE_REMOVED ? $last['item']->getTitle() : $p->getTitle(),
+                    $t == self::MESSAGE_REMOVED ? $last['item']->getTitle() : $p->getTitle(),
                     $this->_getMessageForUser($u, $t, array('path' => &$path, 'parent' => &$p, 'item' => &$last['item'])),
                     $p
                 );
@@ -75,7 +76,7 @@ class Docman_NotificationsManager_Delete extends Docman_NotificationsManager {
                     $found = false;
                     reset($i['events']);
                     while (!$found && (list($k,$v) = each($i['events']))) {
-                        $found = $v['type'] == $this->MESSAGE_REMOVED;
+                        $found = $v['type'] == self::MESSAGE_REMOVED;
                     }
                     if ($found) {
                         $e = $v;
@@ -85,7 +86,7 @@ class Docman_NotificationsManager_Delete extends Docman_NotificationsManager {
                     }
                 } else {
                     $e = end($i['events']);
-                    if ($e['type'] == $this->MESSAGE_REMOVED_FROM) {
+                    if ($e['type'] == self::MESSAGE_REMOVED_FROM) {
                         $title = $e['parent']->getTitle();
                     } else {
                         $title = $i['item']->getTitle();
@@ -106,12 +107,12 @@ class Docman_NotificationsManager_Delete extends Docman_NotificationsManager {
     function _getMessageForUser(&$user, $message_type, $params) {
         $msg = '';
         switch($message_type) {
-            case $this->MESSAGE_REMOVED:
+            case self::MESSAGE_REMOVED:
                 $msg .= $GLOBALS['Language']->getText('plugin_docman', 'notifications_removed_mail_body', array($params['path']->get($params['item']), 
                                                               $user->getRealName(),
                                                               $this->_url));
                 break;
-            case $this->MESSAGE_REMOVED_FROM:
+            case self::MESSAGE_REMOVED_FROM:
                 $msg .= $GLOBALS['Language']->getText('plugin_docman', 'notifications_removed_from_mail_body', array($params['path']->get($params['parent']), 
                                                               $user->getRealName(),
                                                               $this->_url,
@@ -125,13 +126,13 @@ class Docman_NotificationsManager_Delete extends Docman_NotificationsManager {
         return $msg;
     }
     function _storeEvents($id, $message_type, $params) {
-        $dpm =& Docman_PermissionsManager::instance($this->_group_id);
+        $dpm   = $this->_getPermissionsManager();
         $users = $this->_getListeningUsers($id);
         while($users->valid()) {
             $row  = $users->current();
             if (!isset($this->_listeners[$row['user_id']])) {
-                $um =& UserManager::instance();
-                $user =& $um->getuserById($row['user_id']);
+                $um   = $this->_getUserManager();
+                $user = $um->getUserById($row['user_id']);
                 if ($user && $dpm->userCanRead($user, $params['item']->getId()) && $dpm->userCanAccess($user, $params['item']->getParentId()) && $dpm->userCanAccess($user, $row['object_id'])) {
                     $this->_listeners[$user->getId()] = array(
                         'user'   => &$user,
