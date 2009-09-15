@@ -640,6 +640,7 @@ class Docman_Actions extends Actions {
     function new_version() {
         $request =& $this->_controler->request;
         if ($request->exist('id')) {
+            $user = $this->_controler->getUser();
             $item_factory =& $this->_getItemFactory();
             $item =& $item_factory->getItemFromDb($request->get('id'));
             $item_type = $item_factory->getItemTypeForItem($item);
