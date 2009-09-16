@@ -6,13 +6,28 @@
 # Note: WORKSPACE is a variable of Hudson
 #
 
+# JUnit plugin configuration
+# XML test report: **/codendi_unit_tests_report.xml
+
+# CheckStyle plugin configuration:
+# Checkstyle results: **/checkstyle.xml
+
+cd /local/vm16/codev/servers/ldap-4.0
+. env.sh
+
+set -x
+
 sys_default_domain=$1;
 sys_ip_address=$2;
 local_module_directory=$3;
 port="80";
-sys_org_name="Xerox";
-sys_long_org_name="Xerox Corporation";
+sys_org_name="ST";
+sys_long_org_name="STMicroelectronics";
 codendi_dir="$WORKSPACE";
+JPGRAPH_DIR="/local/vm16/codev/servers/ldap-4.0/usr/share/jpgraph"
+HTMLPURIFIER_DIR="/local/vm16/codev/servers/ldap-4.0/usr/share/htmlpurifier"
+PHPCS="/home/vm16/codex/ci/tools/PHP_CodeSniffer-1.2.0/scripts/phpcs"
+DOCBOOK_LIBS_HOME="/home/vm16/codex/ci/tools/docbook"
 
 cd $WORKSPACE/$local_module_directory/
 
@@ -54,8 +69,8 @@ substitute '../etc/codendi/conf/local.inc' '\/var\/log\/codendi' "$codendi_dir/v
 substitute '../etc/codendi/conf/local.inc' '\/etc\/codendi' "$codendi_dir/etc/codendi"
 substitute '../etc/codendi/conf/local.inc' '\/usr\/lib\/codendi\/bin' "$codendi_dir/etc/codendi"
 substitute '../etc/codendi/conf/local.inc' '^\$sys_https_host ' "// \\\$sys_https_host"
-substitute '../etc/codendi/conf/local.inc' '\/usr\/share\/htmlpurifier' "/usr/share/htmlpurifier"
-substitute '../etc/codendi/conf/local.inc' '\/usr\/share\/jpgraph' "/usr/share/jpgraph"
+substitute '../etc/codendi/conf/local.inc' '\/usr\/share\/htmlpurifier' "$HTMLPURIFIER_DIR"
+substitute '../etc/codendi/conf/local.inc' '\/usr\/share\/jpgraph' "$JPGRAPH_DIR"
 substitute '../etc/codendi/conf/local.inc' '\/var\/tmp' "$codendi_dir/var/tmp"
 
 # Set environment var CODENDI_LOCAL_INC
@@ -71,15 +86,18 @@ cd tests/www/
 php -d include_path="$WORKSPACE/$local_module_directory/src/www/include:$WORKSPACE/$local_module_directory/src:." -d memory_limit=196M test_all.php
 
 # Checkstyle
-php -d memory_limit=256M /usr/bin/phpcs --standard=$WORKSPACE/$local_module_directory/codendi_tools/utils/phpcs/Codendi $WORKSPACE/$local_module_directory/src/common/chart $WORKSPACE/$local_module_directory/src/common/backend --report=checkstyle -n --ignore=*/phpwiki/* > $WORKSPACE/var/tmp/checkstyle.xml 
+php -d memory_limit=256M $PHPCS --standard=$WORKSPACE/$local_module_directory/codendi_tools/utils/phpcs/Codendi $WORKSPACE/$local_module_directory/src/common/chart $WORKSPACE/$local_module_directory/src/common/backend --report=checkstyle -n --ignore=*/phpwiki/* > $WORKSPACE/var/tmp/checkstyle.xml
+
+echo $?
 
 #################
 # DOCUMENTATION #
 #################
 
+exit
+
 BASEDIR="$WORKSPACE/$local_module_directory/documentation"
 
-DOCBOOK_LIBS_HOME="/usr/share/hudson/share"
 SAXON_HOME="$DOCBOOK_LIBS_HOME/saxon/"
 FOP_HOME="$DOCBOOK_LIBS_HOME/fop"
 JIMI_HOME="$DOCBOOK_LIBS_HOME/jimi"
