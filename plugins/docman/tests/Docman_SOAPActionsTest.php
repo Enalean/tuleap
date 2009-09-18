@@ -259,8 +259,10 @@ class Docman_SOAPActionsTest extends UnitTestCase {
         
         $this->fileStorage->expectOnce('store');
         $this->itemFactory->expectOnce('update');
-        $action->event_manager->expectOnce('processEvent', array('send_notifications', '*'));
-        
+        //Modification of unit test to handle the warn of waterdocument
+        $action->event_manager->expectAt('0','processEvent', array('plugin_docman_after_new_version', '*'));
+        $action->event_manager->expectAt('1','processEvent', array('send_notifications', '*'));
+        $action->event_manager->expectCallCount('processEvent','2');
         $action->new_version();
     }
     
@@ -285,7 +287,10 @@ class Docman_SOAPActionsTest extends UnitTestCase {
         
         $this->fileStorage->expectOnce('store');
         $this->itemFactory->expectNever('update');
-        $action->event_manager->expectOnce('processEvent', array('send_notifications', '*'));
+        //Modification of unit test to handle the warn of waterdocument
+        $action->event_manager->expectAt('0','processEvent', array('plugin_docman_after_new_version', '*'));
+        $action->event_manager->expectAt('1','processEvent', array('send_notifications', '*'));
+        $action->event_manager->expectCallCount('processEvent','2');
         
         $action->new_version();
     }
