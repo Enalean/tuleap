@@ -14,7 +14,7 @@
 function git_read_commit($proj,$head)
 {
 	$lines = git_read_revlist($proj,$head,1,NULL,TRUE,TRUE);
-	if (!($lines[0]) || !ereg("^[0-9a-fA-F]{40}",$lines[0]))
+	if (!($lines[0]) || !preg_match("/^[0-9a-fA-F]{40}/",$lines[0]))
 		return null;
 	$commit = array();
 	$tok = strtok($lines[0]," ");
@@ -30,25 +30,25 @@ function git_read_commit($proj,$head)
 		$commit['parent'] = $parents[0];
 	$comment = array();
 	foreach ($lines as $i => $line) {
-		if (ereg("^tree ([0-9a-fA-F]{40})$",$line,$regs))
+		if (preg_match("/^tree ([0-9a-fA-F]{40})$/",$line,$regs))
 			$commit['tree'] = $regs[1];
-		else if (ereg("^author (.*) ([0-9]+) (.*)$",$line,$regs)) {
+		else if (preg_match("/^author (.*) ([0-9]+) (.*)$/",$line,$regs)) {
 			$commit['author'] = $regs[1];
 			$commit['author_epoch'] = $regs[2];
 			$commit['author_tz'] = $regs[3];
-			if (ereg("^([^<]+) <",$commit['author'],$r))
+			if (preg_match("/^([^<]+) </",$commit['author'],$r))
 				$commit['author_name'] = $r[1];
 			else
 				$commit['author_name'] = $commit['author'];
-		} else if (ereg("^committer (.*) ([0-9]+) (.*)$",$line,$regs)) {
+		} else if (preg_match("/^committer (.*) ([0-9]+) (.*)$/",$line,$regs)) {
 			$commit['committer'] = $regs[1];
 			$commit['committer_epoch'] = $regs[2];
 			$commit['committer_tz'] = $regs[3];
 			$commit['committer_name'] = $commit['committer'];
-			$commit['committer_name'] = ereg_replace(" <.*","",$commit['committer_name']);
+			$commit['committer_name'] = preg_replace("/ <.*/","",$commit['committer_name']);
 		} else {
 			$trimmed = trim($line);
-			if ((strlen($trimmed) > 0) && !ereg("^[0-9a-fA-F]{40}",$trimmed) && !ereg("^parent [0-9a-fA-F]{40}",$trimmed)) {
+			if ((strlen($trimmed) > 0) && !preg_match("/^[0-9a-fA-F]{40}/",$trimmed) && !preg_match("/^parent [0-9a-fA-F]{40}/",$trimmed)) {
 				if (!isset($commit['title'])) {
 					$commit['title'] = $trimmed;
 					if (strlen($trimmed) > GITPHP_TRIM_LENGTH)

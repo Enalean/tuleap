@@ -54,7 +54,7 @@ function git_commitdiff_plain($projectroot,$project,$hash,$hash_parent)
 		$tpl->assign("comment",$co['comment']);
 		$diffs = array();
 		foreach ($difftree as $i => $line) {
-			if (ereg("^:([0-7]{6}) ([0-7]{6}) ([0-9a-fA-F]{40}) ([0-9a-fA-F]{40}) (.)\t(.*)$",$line,$regs)) {
+			if (preg_match("/^:([0-7]{6}) ([0-7]{6}) ([0-9a-fA-F]{40}) ([0-9a-fA-F]{40}) (.)\t(.*)$/",$line,$regs)) {
 				if ($regs[5] == "A")
 					$diffs[] = git_diff($projectroot . $project, null, "/dev/null", $regs[4], "b/" . $regs[6]);
 				else if ($regs[5] == "D")

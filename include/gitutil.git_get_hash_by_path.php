@@ -18,7 +18,7 @@ function git_get_hash_by_path($project,$base,$path,$type = null)
 		$lsout = git_ls_tree($project, $tree);
 		$entries = explode("\n",$lsout);
 		foreach ($entries as $j => $line) {
-			if (ereg("^([0-9]+) (.+) ([0-9a-fA-F]{40})\t(.+)$",$line,$regs)) {
+			if (preg_match("/^([0-9]+) (.+) ([0-9a-fA-F]{40})\t(.+)$/",$line,$regs)) {
 				if ($regs[4] == $part) {
 					if ($i == ($partcount)-1)
 						return $regs[3];

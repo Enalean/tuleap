@@ -41,7 +41,7 @@ function git_commitdiff($projectroot,$project,$hash,$hash_parent)
 		$tpl->assign("comment",$co['comment']);
 		$difftreelines = array();
 		foreach ($difftree as $i => $line) {
-			if (ereg("^:([0-7]{6}) ([0-7]{6}) ([0-9a-fA-F]{40}) ([0-9a-fA-F]{40}) (.)\t(.*)$",$line,$regs)) {
+			if (preg_match("/^:([0-7]{6}) ([0-7]{6}) ([0-9a-fA-F]{40}) ([0-9a-fA-F]{40}) (.)\t(.*)$/",$line,$regs)) {
 				$difftreeline = array();
 				$difftreeline["from_mode"] = $regs[1];
 				$difftreeline["to_mode"] = $regs[2];

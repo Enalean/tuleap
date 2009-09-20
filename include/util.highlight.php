@@ -9,7 +9,7 @@
 
 function highlight($haystack, $needle, $highlightclass, $trimlen = NULL, $escape = false)
 {
-	if (eregi("(.*)(" . quotemeta($needle) . ")(.*)",$haystack,$regs)) {
+	if (preg_match("/(.*)(" . quotemeta($needle) . ")(.*)/i",$haystack,$regs)) {
 		if (isset($trimlen) && ($trimlen > 0)) {
 			$linelen = strlen($regs[0]);
 			if ($linelen > $trimlen) {

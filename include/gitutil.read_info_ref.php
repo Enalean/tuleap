@@ -17,7 +17,7 @@ function read_info_ref($project, $type = "")
 	$showrefs = git_exec($project, $cmd);
 	$lines = explode("\n",$showrefs);
 	foreach ($lines as $no => $line) {
-		if (ereg("^([0-9a-fA-F]{40}) .*" . $type . "/([^\^]+)",$line,$regs)) {
+		if (preg_match("`^([0-9a-fA-F]{40}) .*" . $type . "/([^\^]+)`",$line,$regs)) {
 			if (isset($refs[$regs[1]]))
 				$refs[$regs[1]] .= " / " . $regs[2];
 			else

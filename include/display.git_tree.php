@@ -50,7 +50,7 @@ function git_tree($projectroot,$project,$hash,$file,$hashbase)
 		$treelines = array();
 		$tok = strtok($lsout,"\0");
 		while ($tok !== false) {
-			if (ereg("^([0-9]+) (.+) ([0-9a-fA-F]{40})\t(.+)$",$tok,$regs)) {
+			if (preg_match("/^([0-9]+) (.+) ([0-9a-fA-F]{40})\t(.+)$/",$tok,$regs)) {
 				$treeline = array();
 				$treeline["filemode"] = mode_str($regs[1]);
 				$treeline["type"] = $regs[2];

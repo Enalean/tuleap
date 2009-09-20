@@ -17,13 +17,13 @@ function git_read_tag($project, $tag_id)
 	$comment = array();
 	$tok = strtok($tagout,"\n");
 	while ($tok !== false) {
-		if (ereg("^object ([0-9a-fA-F]{40})$",$tok,$regs))
+		if (preg_match("/^object ([0-9a-fA-F]{40})$/",$tok,$regs))
 			$tag['object'] = $regs[1];
-		else if (ereg("^type (.+)$",$tok,$regs))
+		else if (preg_match("/^type (.+)$/",$tok,$regs))
 			$tag['type'] = $regs[1];
-		else if (ereg("^tag (.+)$",$tok,$regs))
+		else if (preg_match("/^tag (.+)$/",$tok,$regs))
 			$tag['name'] = $regs[1];
-		else if (ereg("^tagger (.*) ([0-9]+) (.*)$",$tok,$regs)) {
+		else if (preg_match("/^tagger (.*) ([0-9]+) (.*)$/",$tok,$regs)) {
 			$tag['author'] = $regs[1];
 			$tag['epoch'] = $regs[2];
 			$tag['tz'] = $regs[3];
