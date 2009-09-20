@@ -208,7 +208,11 @@ if ($gitphp_conf['filesearch'])
 	}
  } else {
 	require_once('include/display.git_project_list.php');
- 	git_project_list($gitphp_conf['projectroot'],$git_projects,(isset($_GET['o']) ? $_GET['o'] : "project"));
+	if (isset($git_projects)) {
+		git_project_list($gitphp_conf['projectroot'],$git_projects,(isset($_GET['o']) ? $_GET['o'] : "project"));
+	} else {
+		git_project_list($gitphp_conf['projectroot'],NULL,(isset($_GET['o']) ? $_GET['o'] : "project"));
+	}
  }
 
  if ($gitphp_conf['debug'] && $extraoutput)
