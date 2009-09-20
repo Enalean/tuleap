@@ -44,8 +44,19 @@ function git_read_refs($projectroot,$project,$refdir)
 	}
 
 	$packedrefs = git_read_packed_refs($projectroot, $project, $refdir);
-	if (isset($packedrefs) && count($packedrefs) > 0)
-		$reflist = array_merge($reflist, $packedrefs);
+	if (isset($packedrefs) && count($packedrefs) > 0) {
+		foreach ($packedrefs as $packedref) {
+			$found = false;
+			foreach ($reflist as $ref) {
+				if (strcmp($ref["name"], $packedref["name"]) === 0) {
+					$found = true;
+					break;
+				}
+			}
+			if (!$found)
+				$reflist[] = $packedref;
+		}
+	}
 
 	usort($reflist,"epochcmp");
 	return $reflist;
