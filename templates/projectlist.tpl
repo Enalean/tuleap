@@ -58,7 +58,7 @@
             <td>
               <a href="{$SCRIPT_NAME}?p={$plist[proj].project}&a=summary" class="list {if $categ != "none"}indent{/if}">{$plist[proj].project}</a>
             </td>
-            <td>{$plist[proj].descr}</td>
+            <td><a href="{$SCRIPT_NAME}?p={$plist[proj].project}&a=summary" class="list {if $categ != "none"}indent{/if}">{$plist[proj].descr}</a></td>
             <td><i>{$plist[proj].owner}</i></td>
             <td>
               {if $plist[proj].age < 7200}   {* 60*60*2, or 2 hours *}
@@ -82,7 +82,7 @@
           <td>
             <a href="{$SCRIPT_NAME}?p={$projects[proj].project}&a=summary" class="list">{$projects[proj].project}</a>
           </td>
-          <td>{$projects[proj].descr}</td>
+          <td><a href="{$SCRIPT_NAME}?p={$projects[proj].project}&a=summary" class="list">{$projects[proj].descr}</a></td>
           <td><i>{$projects[proj].owner}</i></td>
           <td>
             {if $projects[proj].age < 7200}   {* 60*60*2, or 2 hours *}
