@@ -1093,7 +1093,8 @@ Object.extend(com.xerox.codendi.Menu.prototype, {
     },
     hide:function(evt) {
         if (com.xerox.codendi.openedMenu) {
-            ['docman_item_menu_invisible_iframe', com.xerox.codendi.openedMenu].each(function (element) { Element.hide(element); });
+	    $('docman_item_menu_invisible_iframe').hide();
+	    $(com.xerox.codendi.openedMenu).remove();
             com.xerox.codendi.openedMenu = null;
         }
         if (evt) {
