@@ -1006,7 +1006,7 @@ Object.extend(com.xerox.codendi.Menu.prototype, {
                 writeAction = true;
             }
             // New version (files)
-            if(this.docman.actionsForItem[this.item_id].canUpdate) {
+            if(this.docman.actionsForItem[this.item_id].canNewVersion) {
                 ul.appendChild(this._getNewVersion());
                 writeAction = true;
             }
