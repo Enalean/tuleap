@@ -12,7 +12,6 @@ Content-Transfer-Encoding: binary
 <?plugin CreateToc jshide||=1 with_toclink||=1 ?>
 ----
 ! Synopsis
-TextFormattingRules%%%
 *Emphasis:* <tt>~_</tt> for _italics_, <tt>~*</tt> for *bold*,
 <tt>~_~*</tt> for _*both*_, <tt>~=</tt> for =fixed width=.%%%
 *Lists:* <tt>~*</tt> for bullet lists, <tt>#</tt> for numbered lists,

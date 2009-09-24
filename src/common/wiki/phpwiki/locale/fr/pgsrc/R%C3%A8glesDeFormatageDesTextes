@@ -11,7 +11,6 @@ Content-Transfer-Encoding: binary
 
 ----
 ! Vue d'ensemble
-RèglesDeFormatageDesTextes%%%
 *Emphase :* <tt>~_</tt> pour _italique_, <tt>~*</tt> pour *bold*,
 <tt>~_~*</tt> pour _*les deux*_, <tt>~=</tt> pour =chasse fixe=.%%%
 *Listes :* <tt>~*</tt> pour listes pointées, <tt>#</tt> pour listes numérotées,
