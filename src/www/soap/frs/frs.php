@@ -285,6 +285,25 @@ $server->register(
     'encoded',
     'Get the file names of the file present in the incoming directory on the server.'
 );
+
+$server->register(
+    'deleteFile',
+    array(
+        'sessionKey'=>'xsd:string',
+        'group_id'=>'xsd:int',
+        'package_id'=>'xsd:int',
+        'release_id'=>'xsd:int',
+        'file_id'=>'xsd:int'
+        ),
+    array('deleteFileResponse'=>'xsd:boolean'),
+    $uri,
+    $uri.'#deleteFile',
+    'rpc',
+    'encoded',
+    'Delete the file file_id in release release_id in package package_id.
+    Returns true if succeed, or a soap fault if an error occured.'
+);
+
 	
 } else {
 
@@ -891,6 +910,71 @@ function getUploadedFiles($sessionKey, $group_id) {
     }
 }
 
+/**
+ * deletefile - delete the file $file_id of the release $release_id in the package $package_id
+ *
+ * @param string $sessionKey the session hash associated with the session opened by the person who calls the service
+ * @param int $group_id the ID of the group we want to delete the file
+ * @param int $package_id the ID of the package we want to delete the file
+ * @param int $release_id the ID of the release we want to delete the file
+ * @param int $file_id the ID of the file we want to delete
+ * @return boolean true if the file was deleted, or a soap fault if:
+ *                 - group_id does not match with a valid project,
+ *                 - the package_id, release_id, file_id does not match
+ *                 - the user does not have permissions to delete this file
+ *                 - the system was not able to delete the file.
+ */
+function deleteFile($sessionKey, $group_id, $package_id, $release_id, $file_id) {
+    if (session_continue($sessionKey)) {
+         
+        $pm = ProjectManager::instance();
+        $group = $pm->getProject($group_id);
+        if (!$group || !is_object($group)) {
+            return new SoapFault(get_group_fault,'Could Not Get Group','deleteFile');
+        } elseif ($group->isError()) {
+            return new SoapFault(get_group_fault, $group->getErrorMessage(),'deleteFile');
+        }
+        if (!checkRestrictedAccess($group)) {
+            return new SoapFault(get_group_fault, 'Restricted user: permission denied.', 'deleteFile');
+        }
+        
+        // retieve the package
+        $pkg_fact = new FRSPackageFactory();
+        $package =& $pkg_fact->getFRSPackageFromDb($package_id);
+        if (!$package || $package->getGroupID() != $group_id) {
+            return new SoapFault(invalid_package_fault,'Invalid Package','deleteFile');
+        }
+        
+        // retrieve the release
+        $release_fact = new FRSReleaseFactory();
+        $release =& $release_fact->getFRSReleaseFromDb($release_id);
+        if (!$release || $release->getPackageID() != $package_id) {
+            return new SoapFault(invalid_release_fault,'Invalid Release','deleteFile');
+        }
+        
+        if ($release_fact->userCanUpdate($group_id, $release_id)) {
+            // retrieve the file
+            $file_fact = new FRSFileFactory();
+            $file_info =& $file_fact->getFRSFileInfoListFromDb($group_id, $file_id);
+            if (count($file_info) == 0) {
+                return new SoapFault(invalid_file_fault,'Invalid File','deleteFile');
+            }
+
+            // delete the file
+            if ( ! $file_fact->delete_file($group_id, $file_id)) {
+                return new SoapFault(invalid_file_fault,'Impossible to delete file','deleteFile');
+            } else {
+                return true;
+            }
+        } else {
+            return new SoapFault(invalid_release_fault,'User does not have permission to delete a file in this release.','deleteFile');
+        }
+        
+    } else {
+        return new SoapFault(invalid_session_fault,'Invalid Session','deleteFile');
+    }
+}
+    
 $server->addFunction(
     	array(
             'getPackages',
@@ -901,7 +985,8 @@ $server->addFunction(
     	    'getFile',
     	    'addFile',
     	    'addUploadedFile',
-    	    'getUploadedFiles'
+    	    'getUploadedFiles',
+            'deleteFile'
             ));
 
 }

@@ -551,7 +551,7 @@ $GLOBALS['SVNGROUPS'] = "None";
  *    (see src/utils/svn/svnaccess.py)
  */
 function svn_utils_parse_access_file($gname) {
-    global $SVNACCESS, $SVNGROUPS,$Language,$svn_prefix;
+  global $SVNACCESS, $SVNGROUPS,$Language,$svn_prefix;
   $filename = "$svn_prefix/$gname/.SVNAccessFile";
   $SVNACCESS = array();
   $SVNGROUPS = array();
@@ -631,35 +631,36 @@ function svn_utils_parse_access_file($gname) {
 
 
 function svn_utils_get_forbidden_paths($username,$gname) {
-global $SVNACCESS, $SVNGROUPS;
+    global $SVNACCESS, $SVNGROUPS;
 
- if ($SVNACCESS == "None") {
-    svn_utils_parse_access_file($gname);
-  }
+    if ($SVNACCESS == "None") {
+        svn_utils_parse_access_file($gname);
+    }
 
-  $em = EventManager::instance();
-  $em->processEvent('svn_check_access_username', array('username'  => &$username,
+    $em = EventManager::instance();
+    $em->processEvent('svn_check_access_username', array('username'  => &$username,
                                                        'groupname' => $gname));
 
- $forbidden = array();
- if (!user_is_super_user()) {   // super user have all the rights (no forbidden paths)
-     if (array_key_exists('*',$SVNACCESS)) {
-       foreach ($SVNACCESS['*'] as $path => $perm) {
-         if (strpos($perm,'r') === false) $forbidden[$path] = true;
-       }
-     }
+    $forbidden = array();
+    if (!user_is_super_user()) {   // super user have all the rights (no forbidden paths)
+        if (array_key_exists('*',$SVNACCESS)) {
+            foreach ($SVNACCESS['*'] as $path => $perm) {
+                if (strpos($perm,'r') === false) $forbidden[$path] = true;
+            }
+        }
     
-     if (array_key_exists($username,$SVNACCESS)) {
-       foreach ($SVNACCESS[$username] as $path => $perm) {
-         if (strpos($perm,'r') === false) {
-           $forbidden[$path] = true;
-         } else {
-           if (array_key_exists($path,$forbidden)) unset($forbidden[$path]);
-         }
-       }
-     }
- }
- return $forbidden;
+        if (array_key_exists(strtolower($username),$SVNACCESS)) {
+         
+            foreach ($SVNACCESS[strtolower($username)] as $path => $perm) {
+                if (strpos($perm,'r') === false) {
+                    $forbidden[$path] = true;
+                } else {
+                    if (array_key_exists($path,$forbidden)) unset($forbidden[$path]);
+                }
+            }
+        }
+    }
+    return $forbidden;
 }
 
 

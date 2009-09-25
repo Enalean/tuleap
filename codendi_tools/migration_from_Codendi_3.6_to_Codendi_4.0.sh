@@ -31,6 +31,7 @@ VAR_LIB_DIR="/var/lib/codendi"
 VAR_TMP_DIR="/var/tmp/codendi_cache"
 VAR_LOG_DIR="/var/log/codendi"
 BACKUP_DIR="/root/codex_3_6_backup"
+TMP_DUMP_DIR="/var/tmp"
 
 # path to command line tools
 GROUPADD='/usr/sbin/groupadd'
@@ -156,6 +157,8 @@ mysql_add_unique() {
 echo "Migration script from Codendi 3.6 to Codendi 4.0"
 echo "Please Make sure you read migration_from_Codendi_3.6_to_Codendi_4.0.README"
 echo "*before* running this script!"
+echo "Also, make sure you have enough disk space in $TMP_DUMP_DIR, because this script will dump the whole database in this directory"
+echo "If you don't have enough space there, please update the TMP_DUMP_DIR variable in this script"
 yn="y"
 read -p "Continue? [yn]: " yn
 if [ "$yn" = "n" ]; then
@@ -506,6 +509,9 @@ $RPM -Uvh ${newest_rpm}/noarch/munin-node-*.noarch.rpm
 $RPM -Uvh ${newest_rpm}/noarch/munin-1*.noarch.rpm
 # Fix ownership issues.
 $CHOWN -R munin:munin /var/www/munin
+$CHOWN -R munin:munin /var/run/munin
+$CHOWN -R munin:munin /var/log/munin
+$CHOWN -R munin:munin /var/lib/munin
 
 # -> HTML Purifier
 echo "Removing installed htmlpurifier if any .."
@@ -908,13 +914,13 @@ done
 echo "Starting DB update for Codendi 4.0 This might take a few minutes."
 
 echo "- rename codex db as codendi"
-mysqldump --max_allowed_packet=512M -u root $pass_opt codex > /tmp/dump.codex.sql
+mysqldump --max_allowed_packet=512M -u root $pass_opt codex > $TMP_DUMP_DIR/dump.codex.sql
 $MYSQL -u root $pass_opt mysql -e "CREATE DATABASE codendi DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;"
-$MYSQL -u root $pass_opt codendi < /tmp/dump.codex.sql
+$MYSQL -u root $pass_opt codendi < $TMP_DUMP_DIR/dump.codex.sql
 
-mysqldump -u root $pass_opt mysql > /tmp/dump.mysql.sql
-substitute '/tmp/dump.mysql.sql' 'codex' 'codendi'
-$MYSQL -u root $pass_opt mysql < /tmp/dump.mysql.sql
+mysqldump -u root $pass_opt mysql > $TMP_DUMP_DIR/dump.mysql.sql
+substitute "$TMP_DUMP_DIR/dump.mysql.sql" 'codex' 'codendi'
+$MYSQL -u root $pass_opt mysql < $TMP_DUMP_DIR/dump.mysql.sql
 
 # Restart DB.
 $SERVICE mysqld restart
@@ -1044,7 +1050,8 @@ WHERE (keyword = 'art' OR
        keyword = 'sr' OR
        keyword = 'story' OR
        keyword = 'task'
-      );
+      ) OR link LIKE '%/tracker/%';
+      
 UPDATE reference
 SET nature = 'document'
 WHERE (keyword = 'doc' OR

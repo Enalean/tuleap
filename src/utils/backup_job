@@ -72,7 +72,7 @@ MV=/bin/mv
 DUMP=/sbin/dump
 RM=/bin/rm
 # New archive directory
-oldBackupDir=${oldBackupDstDir}/`date +%m%d%y`
+oldBackupDir=${oldBackupDstDir}/`date +%y%m%d`
 
 /etc/init.d/mysqld stop
 sleep 5
@@ -88,7 +88,7 @@ fi
 
 # back up mysql datafiles to disk
 cd ${tarDir}
-tar -vczf ${currentBackupDstDir}/sqldump.`date +%m%d%y.%H%M`.tar --exclude 'codendi-bin.*' mysql
+tar -hczf ${currentBackupDstDir}/sqldump.`date +%y%m%d.%H%M`.tgz --exclude 'codendi-bin.*' mysql
 # Delete all archived backups
 if [ ${DELETEALLOLD} ];
 then

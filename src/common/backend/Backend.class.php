@@ -351,11 +351,12 @@ class Backend {
      *
      * Precisely: move 'file_new' to 'file' if they are different or if 'file' does not exist.
      * Also, move 'file' to 'file_old' and remove previous 'file_old'
+     * Won't move file_new if it is empty.
      * 
      * @param string $file_new Path to the new file.
      * @param string $file     Path to the current file.
      * @param string $file_old Path to the old file.
-     * @param string $force    Force install. Default is false.
+     * @param string $force    Force install even if the files are the same or file is empty. Default is false.
      *
      * @return boolean true on success or false on failure.
      */
@@ -365,7 +366,14 @@ class Backend {
             if (! $force) {
                 // Read file contents 
                 $current_string = serialize(file($file));
-                $new_string     = serialize(file($file_new));
+                $new_array      = file($file_new);
+                if (empty($new_array)) {
+                    // Do not replace existing file with empty file
+                    // might be due to disk full
+                    $this->log("Won't install empty file $file_new", self::LOG_WARNING);
+                    return false;
+                }
+                $new_string     = serialize($new_array);
             }
             if ($force || ($current_string !== $new_string)) {
                 if (is_file($file_old)) {

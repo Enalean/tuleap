@@ -23,6 +23,8 @@ class ArtifactImportTest_ArtifactField {
 }
 Mock::generate('ArtifactImportTest_ArtifactField','ArtifactFieldImportVersion');
 
+Mock::generatePartial('ArtifactImport','ArtifactImportFollowUpCommentsTestVersion', array());
+
 require_once('common/tracker/ArtifactFieldFactory.class.php');
 Mock::generate('ArtifactFieldFactory');
 /*class ArtifactImportTest_ArtifactFieldFactory {
@@ -400,6 +402,13 @@ Problem also occurs for new bugs posted to a project *with* a New Bugs address. 
       *  real insertion, real update (can not access DB)
       *  follow-up comment is already in DB or not
       */
+    }
+    
+    function testSplitFollowUpComments() {
+        $aitv = new ArtifactImportFollowUpCommentsTestVersion($this);
+        $followup_comments = file_get_contents(dirname(__FILE__) . '/_fixtures/followup_comments1.txt');
+        $comments = $aitv->splitFollowUpComments($followup_comments);
+        $this->assertEqual(count($comments), 4 + 1); // + 1 because the follow-up comments header is returned
     }
 }
 

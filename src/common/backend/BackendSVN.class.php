@@ -549,8 +549,8 @@ class BackendSVN extends Backend {
         $need_owner_update = false;
         foreach ($files_to_check as $file) {
             // Get file stat 
-            $stat = stat("$svnroot/$file");
-            if ($stat) {
+            if (file_exists("$svnroot/$file")) {
+                $stat = stat("$svnroot/$file");
                 if ( ($stat['uid'] != $this->getHTTPUserUID())
                      || ($stat['gid'] != $project->getUnixGID()) ) {
                     $need_owner_update = true;

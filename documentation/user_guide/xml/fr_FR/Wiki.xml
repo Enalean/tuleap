@@ -98,7 +98,7 @@
       <important>
         <title>Attention</title>
 
-        <para>Si vous souhaitez créer une référence à une page wiki d'un autre projet et si le nom de celle-ci est écrit en CasseChameau,
+        <para>Si vous souhaitez créer une référence à une page wiki d'un autre projet et si le nom de celle-ci est écrit en CasseChameau ou contient des espaces,
         vous devrez utiliser un lien à la place de la syntaxe habituelle.</para>
      
         <para>

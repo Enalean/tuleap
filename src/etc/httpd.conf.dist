@@ -735,7 +735,7 @@ ForceLanguagePriority Prefer Fallback
 # in HTML content to override this choice, comment out this
 # directive:
 #
-AddDefaultCharset UTF-8
+#AddDefaultCharset UTF-8
 
 #
 # AddType allows you to add to or override the MIME configuration

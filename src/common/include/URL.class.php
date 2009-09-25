@@ -44,12 +44,12 @@ class URL {
              // /projects/ and /viewvc/
              if ((strpos($req_uri,'/projects/') !== false)||(strpos($req_uri,'/viewvc.php/') !== false)) {
            
-                 if (strpos($req_uri,'/projects/') !== false){
-                     $pieces = explode("/", $url);
-                     $this_proj_name=$pieces[2];
-                 } else if (strpos($req_uri,'/viewvc.php/') !== false) {
+                 if (strpos($req_uri,'/viewvc.php/') !== false) {
                      preg_match("/root=([a-zA-Z0-9_-]+)/",$req_uri, $matches);
                      $this_proj_name=$matches[1];
+                 }else if (strpos($req_uri,'/projects/') !== false) {
+                     $pieces = explode("/", $url);
+                     $this_proj_name=$pieces[2];                     
                  }
                  
                  $dao = $this->getProjectDao();

@@ -685,7 +685,7 @@ function getUsedFields() {
     global $sys_lf, $user_id,$Language;
     
     //echo "<br>\n";
-    $comments = split("------------------------------------------------------------------",$followup_comments);
+    $comments = $this->splitFollowUpcomments($followup_comments);
     
     $i = 0;
     while (list(,$comment) = each($comments)) {
@@ -789,6 +789,20 @@ function getUsedFields() {
     return true;
   }
 
+  /**
+   * Split follow-up comments string coming from imported file into follow-ups
+   * 
+   * Note that the first element returned will be the follow-up header
+   *
+   * @param string $followup_comment the string containing the follow-up comments
+   * @return array of string the follow-up comments extracted from the string $followup_comments or false if an error occured
+   */
+  function splitFollowUpComments($followup_comments) {
+      // A follow-up comment is delimited by:
+      // A carriage return, 66 "-", a carriage return
+      $comments = split("(\n|\r|\r\n)[-]{66}(\n|\r|\r\n)",$followup_comments);
+      return $comments;
+  }
 
   /** check whether this is really a valid comment_type
    * and if it is the case return its id else return false 
