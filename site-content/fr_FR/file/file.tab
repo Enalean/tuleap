@@ -174,6 +174,7 @@ file_admin_editreleases	upload_file_deleted	Vous avez récemment supprimez le fi
 file_admin_editreleases	create_new_release	Créer une nouvelle version
 file_admin_editreleases	create_canceled	Création de la version annulée
 file_admin_editreleases	update_canceled	Mise à jour de la version annulée
+file_admin_editreleases	upload_file_msg	(La taille maximum autorisée est de $1 Mb - <u>Veuillez compresser vos fichiers</u>)
 #
 #-----------------------------------------------
 # Script: SF/www/file/admin/index.php
