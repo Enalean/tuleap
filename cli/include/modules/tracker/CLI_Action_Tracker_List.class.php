@@ -72,7 +72,7 @@ class CLI_Action_Tracker_List extends CLI_Action {
     }
 
     function sort_parameters($p1, $p2) {
-        $order = array('group_id', 'group_artifact_id', 'criteria', 'max_rows', 'offset');
+        $order = array('group_id', 'group_artifact_id', 'criteria', 'offset', 'max_rows');
         $order_flip = array_flip($order);
         return $order_flip[$p1] > $order_flip[$p2];
     }

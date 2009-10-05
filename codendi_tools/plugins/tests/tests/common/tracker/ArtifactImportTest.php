@@ -21,9 +21,15 @@ class ArtifactImportTest_ArtifactField {
   function isSelectBox() {}
   function isMultiSelectBox() {}
 }
+
+
 Mock::generate('ArtifactImportTest_ArtifactField','ArtifactFieldImportVersion');
 
 Mock::generatePartial('ArtifactImport','ArtifactImportFollowUpCommentsTestVersion', array());
+Mock::generatePartial('ArtifactImport', 'ArtifactImportTestVersion', array('getUserManager', 'getUserByUserName'));
+
+require_once('common/user/User.class.php');
+Mock::generate('User');
 
 require_once('common/tracker/ArtifactFieldFactory.class.php');
 Mock::generate('ArtifactFieldFactory');
@@ -33,6 +39,11 @@ Mock::generate('ArtifactFieldFactory');
 }
 Mock::generate('ArtifactImportTest_ArtifactFieldFactory','ArtifactFieldFactory');
 */
+
+require_once('common/user/UserManager.class.php');
+Mock::generate('UserManager');
+
+
 
 require_once('common/tracker/ArtifactType.class.php');
 Mock::generatePartial('ArtifactType','ArtifactTypeTestVersion',array('getName','allowsAnon','getID','userIsAdmin'));
@@ -313,8 +324,19 @@ class ArtifactImportTest extends UnitTestCase {
 8/17/2004 4:24:38 PM DCO: Accepted for investigation, Prio Major 2 Assigned Cyrkin, Tonya
 9/14/2004 2:13:03 PM DCO: Waiting on new database from Craig DeHond.
 ";
-      $test->parseFollowUpComments($followup_comments,$parsed_comments,$art_id,true);
-      $this->assertFalse($test->isError());
+
+      $um = new MockUserManager($this);
+      $ai = new ArtifactImportTestVersion($this);
+      $user =new MockUser($this);
+      
+      $ai->setReturnReference('getUserManager', $um);
+      $um->setReturnReference('getUserByUserName', $user);
+      
+      $ai->ArtifactImport($at,$aff,'group');
+     
+      $ai->parseFollowUpComments($followup_comments,$parsed_comments,$art_id,true);
+      
+      $this->assertFalse($ai->isError());
       $this->assertEqual($parsed_comments[0]['date'],'2005-09-02 18:18');
       $this->assertEqual($parsed_comments[0]['type'],$GLOBALS['Language']->getText('global','none'));
       $this->assertEqual($parsed_comments[0]['by'],'doswald');
@@ -334,8 +356,8 @@ Excel issue, reassigned to Gene, reduced to Ordinary
 1/18/2005 10:10:58 AM DCO: Accepted for investigation, Prio Major  Assigned Unassigned
 ";
 
-      $test->parseFollowUpComments($followup_comments,$parsed_comments,$art_id,true);
-      $this->assertFalse($test->isError());
+      $ai->parseFollowUpComments($followup_comments,$parsed_comments,$art_id,true);
+      $this->assertFalse($ai->isError());
       $this->assertEqual($parsed_comments[0]['date'],'2005-10-19 18:28');
       $this->assertEqual($parsed_comments[0]['type'],$GLOBALS['Language']->getText('global','none'));
       $this->assertEqual($parsed_comments[0]['by'],'doswald');

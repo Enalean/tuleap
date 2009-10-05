@@ -754,7 +754,11 @@ class WikiPageName
 
     function _check($pagename) {
         // Compress internal white-space to single space character.
-        $pagename = preg_replace('/[\s\xa0]+/', ' ', $orig = $pagename);
+         //WARNING : MODIFICATIONS FOR CODENDI 
+        //change for utf-8 encoding
+        $pagename = preg_replace('/[\s\xc2\xa0]+/u', ' ', $orig = $pagename);
+        //$pagename = preg_replace('/[\s\xa0]+/', ' ', $orig = $pagename);
+        
         if ($pagename != $orig)
             $this->_warnings[] = _("White space converted to single space");
     
@@ -1078,7 +1082,7 @@ function SplitPagename ($page) {
             $RE[] = "/(?<= |${sep}|^)([AI])([[:upper:]][[:lower:]])/";
             break;
         case 'fr': 
-            $RE[] = "/(?<= |${sep}|^)([À])([[:upper:]][[:lower:]])/";
+            $RE[] = "/(?<= |${sep}|^)([ï¿½])([[:upper:]][[:lower:]])/";
             break;
         }
         // Split numerals from following letters.

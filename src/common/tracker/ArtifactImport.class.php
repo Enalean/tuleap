@@ -672,7 +672,10 @@ function getUsedFields() {
       return false;
     }
   }
-
+  
+  function getUserManager() {
+      return UserManager::instance();
+  }
   /** assume that the 
    * @param followup_comments (IN): comments have the form that we get when exporting follow-up comments in csv format
    *                      (see ArtifactHtml->showFollowUpComments(ascii = true))
@@ -700,38 +703,40 @@ function getUsedFields() {
       
       //skip the "Date: "
       if (strpos($comment, $Language->getText('tracker_import_utils','date').":") === false) {
-	//if no date given, consider this whole string as the comment
+          //if no date given, consider this whole string as the comment
 	
-	//try nevertheless if we can apply legacy Bug and Task export format
-	if ($this->parseLegacyDetails($followup_comments,$parsed_comments,$for_parse_report)) {
-	  return true;
-	} else {
-	  if ($for_parse_report) {
-	    $date= format_date($GLOBALS['Language']->getText('system', 'datefmt'),time());
-	    $this->getImportUser($sub_user_id,$sub_user_name);
-	    $arr["date"] = "<I>$date</I>";
-	    $arr["by"] = "<I>$sub_user_name</I>";
-	    $arr["type"] = "<I>".$Language->getText('global','none')."</I>";
-	  } else {
-	    $arr["date"] = time();
-	    $arr["by"] = $user_id;
-	    $arr["type"] = 100;
-	  }
-	  $arr["comment"] = $comment;
-	  if (!$this->checkCommentExist($arr,$art_id)) {
-	    $parsed_comments[] = $arr;
-	  }
-	  continue;
-	}
+          //try nevertheless if we can apply legacy Bug and Task export format
+	    if ($this->parseLegacyDetails($followup_comments,$parsed_comments,$for_parse_report)) {
+            return true;
+        } else {
+            if ($for_parse_report) {
+                $date= format_date($GLOBALS['Language']->getText('system', 'datefmt'),time());
+                $this->getImportUser($sub_user_id,$sub_user_name);
+                $arr["date"] = "<I>$date</I>";
+                $arr["by"] = "<I>$sub_user_name</I>";
+                $arr["type"] = "<I>".$Language->getText('global','none')."</I>";
+            } else {
+                $arr["date"] = time();
+                $arr["by"] = $user_id;
+                $arr["type"] = 100;
+            }
+            $arr["comment"] = $comment;
+            if (!$this->checkCommentExist($arr,$art_id)) {
+                $parsed_comments[] = $arr;
+            }
+            continue;
+        }
       }
       
       // here starts reel parsing
       $comment = substr($comment, strlen($Language->getText('tracker_import_utils','date').":"));
       $by_position = strpos($comment,$Language->getText('global','by').": ");
+      
       if ($by_position === false) {
-	$this->setError($Language->getText('tracker_import_utils','specify_originator',array($i-1,$comment)));
-	return false;
+          $this->setError($Language->getText('tracker_import_utils','specify_originator',array($i-1,$comment)));
+          return false;
       }
+      
       $date_str = trim(substr($comment, 0, $by_position));
       //echo "$date_str<br>";
       if ($for_parse_report) $date = $date_str;
@@ -744,36 +749,41 @@ function getUsedFields() {
       $comment = trim(substr($comment,strlen($by)+1));
       
       if ($by == $Language->getText('global','none')) {
-	$this->setError($Language->getText('tracker_import_utils','specify_valid_user',$i-1));
-	return false;
+          $this->setError($Language->getText('tracker_import_utils','specify_valid_user',$i-1));
+          return false;
+      } else {
+          $user = $this->getUserManager()->getUserByUserName($by);
+          if ($user == null) {
+              $this->setError($Language->getText('tracker_import_utils','not_a_user',array($by,$i-1)));
+              return false;
+          }
       }
       if (!$for_parse_report) {
-	$res = user_get_result_set_from_unix($by);
-	if (db_numrows($res) > 0) {
-	  $by = db_result($res,0,'user_id');
-	} else if (validate_email($by)) {
-	  //ok, $by remains what it is
-	} else {
-	  $this->setError($Language->getText('tracker_import_utils','not_a_user',array($by,$i-1)));
-	  return false;
-	}
+          $res = user_get_result_set_from_unix($by);
+          if (db_numrows($res) > 0) {
+              $by = db_result($res,0,'user_id');
+          } else if (validate_email($by)) {
+              //ok, $by remains what it is
+          } else {
+              $this->setError($Language->getText('tracker_import_utils','not_a_user',array($by,$i-1)));
+              return false;
+          }
       }
       
       //see if there is comment-type or none
       $comment_type_id = false;
       $type_end_pos = strpos($comment,"]");
       if (strpos($comment,"[") == 0 &&  $type_end_pos!= false) {
-	$comment_type = substr($comment, 1, ($type_end_pos-1));
-	$comment = trim(substr($comment,($type_end_pos+1)));
-	
-	$comment_type_id = $this->checkCommentType($comment_type);
+          $comment_type = substr($comment, 1, ($type_end_pos-1));
+          $comment = trim(substr($comment,($type_end_pos+1)));
+          $comment_type_id = $this->checkCommentType($comment_type);
       }
       
       if ($comment_type_id === false) {
-	if ($for_parse_report) $comment_type_id = $Language->getText('global','none');
-	else $comment_type_id = 100;
+          if ($for_parse_report) $comment_type_id = $Language->getText('global','none');
+          else $comment_type_id = 100;
       } else if ($for_parse_report) {
-	$comment_type_id = $comment_type;
+          $comment_type_id = $comment_type;
       }
       
       $arr["date"] = $date;
@@ -781,7 +791,8 @@ function getUsedFields() {
       $arr["type"] = $comment_type_id;
       $arr["comment"] = $comment;
       //if (!$this->checkCommentExist($arr,$art_id)) {
-	$parsed_comments[] = $arr;
+      $parsed_comments[] = $arr;
+      
       //}
       unset($comment_type_id);
     }

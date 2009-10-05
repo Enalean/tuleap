@@ -20,6 +20,7 @@
 
 require_once('common/include/Error.class.php');
 require_once('FRSReleaseFactory.class.php');
+require_once('common/include/Codendi_HTTP_Download.php');
 
 class FRSFile extends Error {
 	
@@ -349,6 +350,14 @@ class FRSFile extends Error {
      */
     function download() {
         $file_location = $this->getFileLocation();
+        if (class_exists('Codendi_HTTP_Download')) {
+            return !PEAR::isError(Codendi_HTTP_Download::staticSend(array(
+                'file'               => $this->getFileLocation(),
+                'cache'              => false,
+                'contentdisposition' => array(HTTP_DOWNLOAD_ATTACHMENT, basename($this->getFileName())),
+                )
+            ));
+        } else { //old school to be removed in 4.2
         $file_size = $this->getFileSize();
 
         // Make sure this URL is not cached anywhere otherwise download
@@ -389,6 +398,7 @@ class FRSFile extends Error {
         }
             
         return true;
+        }
     }
     
     /**

@@ -310,6 +310,7 @@ DocumentRoot "/usr/share/codendi/src/www"
     AcceptPathInfo On
     Order allow,deny
     Allow from all
+    SetEnvIfNoCase Request_URI /file/download\.php no-gzip dont-vary
 </Directory>
 
 # Don't allow access to API for anyone.

@@ -642,7 +642,8 @@ class ArtifactReport extends Error {
 		$this->getResultQueryElements($prefs,$morder,$advsrch,$aids,$select,$from,$where,$order_by);
 		$limit ="";
 		// Final query
-        if($offset!=0 && $chunksz!=0) {
+        if ($offset != 0 || $chunksz != 0) {
+            // there is no limit only in case where offset==0 and chunksz==0, in any other case, there is a limit
             $limit = " LIMIT ". db_ei($offset) .",". db_ei($chunksz) ;
         }
 		
