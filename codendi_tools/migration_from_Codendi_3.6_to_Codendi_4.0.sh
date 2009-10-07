@@ -314,16 +314,16 @@ $RPM --nodeps -ivh subversion-tools*.rpm
 # -> libnss-mysql (system authentication based on MySQL)
 $RPM -e --allmatches libnss-mysql 2>/dev/null
 echo "Installing libnss-mysql RPM for Codendi...."
-cd "${RPMS_DIR}/libnss-mysql/$ARCH"
+cd "${RPMS_DIR}/libnss-mysql"
 newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
-$RPM -Uvh --nosignature ${newest_rpm}/libnss-mysql-1*.rpm
+$RPM -Uvh --nosignature ${newest_rpm}/$ARCH/libnss-mysql-1*.rpm
 	 
 # -> APC
 $RPM -e php-pecl-apc 2>/dev/null
 echo "Installing APC (PHP cache) RPM for Codendi...."
-cd "${RPMS_DIR}/php-pecl-apc/$ARCH"
+cd "${RPMS_DIR}/php-pecl-apc"
 newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
-$RPM -Uvh ${newest_rpm}/php-pecl-apc-*.rpm
+$RPM -Uvh ${newest_rpm}/$ARCH/php-pecl-apc-*.rpm
 
 ##############################################
 # Stop some services before upgrading
@@ -347,15 +347,15 @@ $USERMOD -d /var/lib/codendi/ftp ftpadmin 2> /dev/null
 $USERMOD  -c 'Dummy Codendi User' -d /var/lib/codendi/dumps dummy 2> /dev/null
 echo "done"
 
-# ##############################################
-# # Install the Codendi software 
-# #
-# echo "Installing the Codendi software..."
-# #$MV /usr/share/codex $BACKUP_INSTALL_DIR
-# #$MKDIR $INSTALL_DIR;
-# cd $INSTALL_DIR
-# $TAR xfz "${Codendi_DIR}"/codendi*.tgz
-# $CHOWN -R codendiadm.codendiadm $INSTALL_DIR
+##############################################
+# Install the Codendi software 
+#
+echo "Installing the Codendi software..."
+$MV /usr/share/codex $BACKUP_INSTALL_DIR
+$MKDIR $INSTALL_DIR;
+cd $INSTALL_DIR
+$TAR xfz "${Codendi_DIR}"/codendi*.tgz
+$CHOWN -R codendiadm.codendiadm $INSTALL_DIR
 
 echo "Setting up fileperms on installed files and directory"
 $FIND $INSTALL_DIR -type f -exec $CHMOD u+rw,g+rw,o-w+r {} \;
@@ -1401,7 +1401,7 @@ find /home/groups/ -maxdepth 1 -mindepth 1 -type d -exec mkdir -p --mode=2770 '{
 ###############################################################################
 # Remove old backend script from crontab
 echo "Add new system scripts in root crontab"
-$CAT <<'EOF' > $TMP_DIR/root_cronfile
+$CAT <<'EOF' > $TMP_DUMP_DIR/root_cronfile
 # Once a minute, process Codendi system events
 * * * * * (cd /usr/share/codendi/src/utils; ./php-launcher.sh ./process_system_events.php)
 #
@@ -1411,21 +1411,21 @@ $CAT <<'EOF' > $TMP_DIR/root_cronfile
 EOF
 
 echo "Remove xerox_crontab script from root crontab"
-crontab -u root -l >> $TMP_DIR/root_cronfile
-$PERL -i'.orig' -p -e's/^(.*xerox_crontab.sh.*)$/#\1/' $TMP_DIR/root_cronfile
+crontab -u root -l >> $TMP_DUMP_DIR/root_cronfile
+$PERL -i'.orig' -p -e's/^(.*xerox_crontab.sh.*)$/#\1/' $TMP_DUMP_DIR/root_cronfile
 # Also remove this line (done in SYSTEM_CHECK event)
-$PERL -pi -e's/^(.*chmod u\+s log_accum fileforge.*)$/#\1/' $TMP_DIR/root_cronfile
+$PERL -pi -e's/^(.*chmod u\+s log_accum fileforge.*)$/#\1/' $TMP_DUMP_DIR/root_cronfile
 
 # Codendification of crontab
-codendification "$TMP_DIR/root_cronfile"
+codendification "$TMP_DUMP_DIR/root_cronfile"
 
-substitute "$TMP_DIR/root_cronfile" "xerox_all_daily_stats" "compute_all_daily_stats" 
+substitute "$TMP_DUMP_DIR/root_cronfile" "xerox_all_daily_stats" "compute_all_daily_stats" 
 
-crontab -u root $TMP_DIR/root_cronfile
+crontab -u root $TMP_DUMP_DIR/root_cronfile
 
 
 echo "Installing  codendiadm user crontab..."
-$CAT <<'EOF' >$TMP_DIR/cronfile
+$CAT <<'EOF' >$TMP_DUMP_DIR/cronfile
 # Daily Codendi PHP cron (obsolete documents...)
 10 0 * * * /usr/share/codendi/src/utils/php-launcher.sh /usr/share/codendi/src/utils/codendi_daily.php
 # Re-generate the Codendi User Guides on a daily basis
@@ -1433,7 +1433,7 @@ $CAT <<'EOF' >$TMP_DIR/cronfile
 30 03 * * * /usr/share/codendi/src/utils/generate_programmer_doc.sh
 45 03 * * * /usr/share/codendi/src/utils/generate_cli_package.sh
 EOF
-crontab -u codendiadm $TMP_DIR/cronfile
+crontab -u codendiadm $TMP_DUMP_DIR/cronfile
 
 # Move away codexadm crontab
 if [ -f '/var/spool/cron/codexadm' ]; then
