@@ -236,16 +236,6 @@ fi
 # Check Required Stock RedHat RPMs are installed
 #
 
-$RPM -q java-1.6.0-openjdk  2>/dev/null 1>&2
-if [ $? -eq 1 ]; then
-   echo "Java is now supported by RHEL/CentOS with the OpenJDK. If you wish to use it, you can install the package java-1.6.0-openjdk with yum and uninstall the JRE."
-   read -p "Continue with current Java configuration? [yn]: " yn
-   if [ "$yn" = "n" ]; then
-       echo "Bye now!"
-       exit 1
-   fi
-fi
-
 rpms_ok=1
 for rpm in nscd php-pear mod_auth_mysql
 do
@@ -324,17 +314,16 @@ $RPM --nodeps -ivh subversion-tools*.rpm
 # -> libnss-mysql (system authentication based on MySQL)
 $RPM -e --allmatches libnss-mysql 2>/dev/null
 echo "Installing libnss-mysql RPM for Codendi...."
-cd "${RPMS_DIR}/libnss-mysql"
+cd "${RPMS_DIR}/libnss-mysql/$ARCH"
 newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
-$RPM -Uvh --nosignature ${newest_rpm}/$ARCH/libnss-mysql-1*.rpm
+$RPM -Uvh --nosignature ${newest_rpm}/libnss-mysql-1*.rpm
 	 
 # -> APC
 $RPM -e php-pecl-apc 2>/dev/null
 echo "Installing APC (PHP cache) RPM for Codendi...."
-cd "${RPMS_DIR}/php-pecl-apc"
+cd "${RPMS_DIR}/php-pecl-apc/$ARCH"
 newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
-$RPM -Uvh ${newest_rpm}/$ARCH/php-pecl-apc-*.rpm
-
+$RPM -Uvh ${newest_rpm}/php-pecl-apc-*.rpm
 
 ##############################################
 # Stop some services before upgrading
@@ -344,7 +333,7 @@ $SERVICE openfire stop
 $SERVICE crond stop
 $SERVICE httpd stop
 $SERVICE mysqld stop
-$SERVICE sendmail stop
+$SERVICE postfix stop
 $SERVICE mailman stop
 $SERVICE smb stop
 
@@ -358,15 +347,15 @@ $USERMOD -d /var/lib/codendi/ftp ftpadmin 2> /dev/null
 $USERMOD  -c 'Dummy Codendi User' -d /var/lib/codendi/dumps dummy 2> /dev/null
 echo "done"
 
-##############################################
-# Install the Codendi software 
-#
-echo "Installing the Codendi software..."
-$MV /usr/share/codex $BACKUP_INSTALL_DIR
-$MKDIR $INSTALL_DIR;
-cd $INSTALL_DIR
-$TAR xfz "${Codendi_DIR}"/codendi*.tgz
-$CHOWN -R codendiadm.codendiadm $INSTALL_DIR
+# ##############################################
+# # Install the Codendi software 
+# #
+# echo "Installing the Codendi software..."
+# #$MV /usr/share/codex $BACKUP_INSTALL_DIR
+# #$MKDIR $INSTALL_DIR;
+# cd $INSTALL_DIR
+# $TAR xfz "${Codendi_DIR}"/codendi*.tgz
+# $CHOWN -R codendiadm.codendiadm $INSTALL_DIR
 
 echo "Setting up fileperms on installed files and directory"
 $FIND $INSTALL_DIR -type f -exec $CHMOD u+rw,g+rw,o-w+r {} \;
@@ -474,14 +463,6 @@ $RPM -Uvh ${newest_rpm}/viewvc-*.noarch.rpm
 # Use new conf file
 $CP /etc/codendi/conf/viewvc.conf.rpmnew /etc/codendi/conf/viewvc.conf
 
-# -> phpMyAdmin
-$RPM -e phpMyAdmin 2>/dev/null
-$RPM -e phpmyadmin 2>/dev/null
-echo "Installing phpMyAdmin RPM for Codendi...."
-cd "${RPMS_DIR}/phpMyAdmin"
-newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
-$RPM -Uvh ${newest_rpm}/phpmyadmin-*.noarch.rpm
-
 # -> mailman
 echo "Removing installed mailman if any .."
 $RPM -e --allmatches mailman 2>/dev/null
@@ -542,19 +523,6 @@ echo "Installing Eclipse plugin RPM...."
 cd "${RPMS_DIR}/codendi-eclipse"
 newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
 $RPM -Uvh ${newest_rpm}/codendi-eclipse-*noarch.rpm
-
-# -> codendi-salome-tmf
-echo "Removing installed SalomeTMF plugin if any .."
-$RPM -e --allmatches codex-salome-tmf 2>/dev/null
-echo "Installing SalomeTMF plugin RPM...."
-cd "${RPMS_DIR}/codendi-salome-tmf"
-newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
-$RPM -Uvh ${newest_rpm}/codendi-salome-tmf-*noarch.rpm
-# And re-copy key
-if [ -f "$BACKUP_INSTALL_DIR/plugins/salome/www/webapps/jdbc_client/cfg/key.txt" ]; then
-  $CP $BACKUP_INSTALL_DIR/plugins/salome/www/webapps/jdbc_client/cfg/key.txt $INSTALL_DIR/plugins/salome/www/webapps/jdbc_client/cfg/
-fi
-      
 
 ##############################################
 # Now install various precompiled utilities
@@ -699,130 +667,130 @@ fi
 
 
 
-###############################################################################
-echo "Updating local.inc"
+# ###############################################################################
+# echo "Updating local.inc"
 
-# Remove $sys_win_domain
-$PERL -pi -e 's/(\$sys_win_domain.*)/\/\/\1 DEPRECATED/g' $ETC_DIR/conf/local.inc
+# # Remove $sys_win_domain
+# $PERL -pi -e 's/(\$sys_win_domain.*)/\/\/\1 DEPRECATED/g' $ETC_DIR/conf/local.inc
 
-# Remove $apache_htpasswd
-$PERL -pi -e 's/(\$apache_htpasswd.*)/\/\/\1 DEPRECATED/g' $ETC_DIR/conf/local.inc
+# # Remove $apache_htpasswd
+# $PERL -pi -e 's/(\$apache_htpasswd.*)/\/\/\1 DEPRECATED/g' $ETC_DIR/conf/local.inc
 
-# Remove sys_crondelay
-$PERL -pi -e 's/(\$sys_crondelay.*)/\/\/\1 DEPRECATED/g' $ETC_DIR/conf/local.inc
+# # Remove sys_crondelay
+# $PERL -pi -e 's/(\$sys_crondelay.*)/\/\/\1 DEPRECATED/g' $ETC_DIR/conf/local.inc
 
-# dbauthuser and password
-$GREP -q ^\$sys_dbauth_user  $ETC_DIR/conf/local.inc
-if [ $? -ne 0 ]; then
-  # Remove end PHP marker
-  substitute '/etc/codendi/conf/local.inc' '\?\>' ''
+# # dbauthuser and password
+# $GREP -q ^\$sys_dbauth_user  $ETC_DIR/conf/local.inc
+# if [ $? -ne 0 ]; then
+#   # Remove end PHP marker
+#   substitute '/etc/codendi/conf/local.inc' '\?\>' ''
 
-  $CAT <<EOF >> /etc/codendi/conf/local.inc
-// DB user for http authentication (must have access to user/group/user_group tables)
-\$sys_dbauth_user = "dbauthuser";
-\$sys_dbauth_passwd = '$dbauth_passwd';
-?>
-EOF
-fi
+#   $CAT <<EOF >> /etc/codendi/conf/local.inc
+# // DB user for http authentication (must have access to user/group/user_group tables)
+# \$sys_dbauth_user = "dbauthuser";
+# \$sys_dbauth_passwd = '$dbauth_passwd';
+# ?>
+# EOF
+# fi
 
-# sys_pending_account_lifetime
-$GREP -q ^\$sys_pending_account_lifetime  $ETC_DIR/conf/local.inc
-if [ $? -ne 0 ]; then
-  # Remove end PHP marker
-  substitute '/etc/codendi/conf/local.inc' '\?\>' ''
+# # sys_pending_account_lifetime
+# $GREP -q ^\$sys_pending_account_lifetime  $ETC_DIR/conf/local.inc
+# if [ $? -ne 0 ]; then
+#   # Remove end PHP marker
+#   substitute '/etc/codendi/conf/local.inc' '\?\>' ''
 
-  $CAT <<EOF >> /etc/codendi/conf/local.inc
-// Duration before deleting pending accounts which have not been activated
-// (in days)
-// Default value is 60 days
-\$sys_pending_account_lifetime = 60;
-?>
-EOF
-fi
+#   $CAT <<EOF >> /etc/codendi/conf/local.inc
+# // Duration before deleting pending accounts which have not been activated
+# // (in days)
+# // Default value is 60 days
+# \$sys_pending_account_lifetime = 60;
+# ?>
+# EOF
+# fi
 
-# unix_uid_add
-$GREP -q ^\$unix_uid_add  $ETC_DIR/conf/local.inc
-if [ $? -ne 0 ]; then
-  # Remove end PHP marker
-  substitute '/etc/codendi/conf/local.inc' '\?\>' ''
+# # unix_uid_add
+# $GREP -q ^\$unix_uid_add  $ETC_DIR/conf/local.inc
+# if [ $? -ne 0 ]; then
+#   # Remove end PHP marker
+#   substitute '/etc/codendi/conf/local.inc' '\?\>' ''
 
-  $CAT <<EOF >> /etc/codendi/conf/local.inc
-// How much to add to the database unix_uid to get the actual unix uid
-\$unix_uid_add  = "20000";
-?>
-EOF
-fi
+#   $CAT <<EOF >> /etc/codendi/conf/local.inc
+# // How much to add to the database unix_uid to get the actual unix uid
+# \$unix_uid_add  = "20000";
+# ?>
+# EOF
+# fi
 
-# unix_gid_add
-$GREP -q ^\$unix_gid_add  $ETC_DIR/conf/local.inc
-if [ $? -ne 0 ]; then
-  # Remove end PHP marker
-  substitute '/etc/codendi/conf/local.inc' '\?\>' ''
+# # unix_gid_add
+# $GREP -q ^\$unix_gid_add  $ETC_DIR/conf/local.inc
+# if [ $? -ne 0 ]; then
+#   # Remove end PHP marker
+#   substitute '/etc/codendi/conf/local.inc' '\?\>' ''
 
-  $CAT <<EOF >> /etc/codendi/conf/local.inc
-// How much to add to the database group_id to get the unix gid
-\$unix_gid_add  = "1000";
-?>
-EOF
-fi
+#   $CAT <<EOF >> /etc/codendi/conf/local.inc
+# // How much to add to the database group_id to get the unix gid
+# \$unix_gid_add  = "1000";
+# ?>
+# EOF
+# fi
 
-# cvs_hook_tmp_dir
-$GREP -q ^\$cvs_hook_tmp_dir  $ETC_DIR/conf/local.inc
-if [ $? -ne 0 ]; then
-  # Remove end PHP marker
-  substitute '/etc/codendi/conf/local.inc' '\?\>' ''
+# # cvs_hook_tmp_dir
+# $GREP -q ^\$cvs_hook_tmp_dir  $ETC_DIR/conf/local.inc
+# if [ $? -ne 0 ]; then
+#   # Remove end PHP marker
+#   substitute '/etc/codendi/conf/local.inc' '\?\>' ''
 
-  $CAT <<EOF >> /etc/codendi/conf/local.inc
-\$cvs_hook_tmp_dir    = "/var/run/log_accum"; // temporary directory used by CVS commit hooks
+#   $CAT <<EOF >> /etc/codendi/conf/local.inc
+# \$cvs_hook_tmp_dir    = "/var/run/log_accum"; // temporary directory used by CVS commit hooks
 
-?>
-EOF
-fi
+# ?>
+# EOF
+# fi
 
-# svn_root_file 
-$GREP -q ^\$svn_root_file  $ETC_DIR/conf/local.inc
-if [ $? -ne 0 ]; then
-  # Remove end PHP marker
-  substitute '/etc/codendi/conf/local.inc' '\?\>' ''
+# # svn_root_file 
+# $GREP -q ^\$svn_root_file  $ETC_DIR/conf/local.inc
+# if [ $? -ne 0 ]; then
+#   # Remove end PHP marker
+#   substitute '/etc/codendi/conf/local.inc' '\?\>' ''
 
-  $CAT <<EOF >> /etc/codendi/conf/local.inc
-\$svn_root_file = "/etc/httpd/conf.d/codendi_svnroot.conf"; // File containing SVN repository definitions for Apache
+#   $CAT <<EOF >> /etc/codendi/conf/local.inc
+# \$svn_root_file = "/etc/httpd/conf.d/codendi_svnroot.conf"; // File containing SVN repository definitions for Apache
 
-?>
-EOF
-fi
+# ?>
+# EOF
+# fi
 
-# alias_file 
-$GREP -q ^\$alias_file  $ETC_DIR/conf/local.inc
-if [ $? -ne 0 ]; then
-  # Remove end PHP marker
-  substitute '/etc/codendi/conf/local.inc' '\?\>' ''
+# # alias_file 
+# $GREP -q ^\$alias_file  $ETC_DIR/conf/local.inc
+# if [ $? -ne 0 ]; then
+#   # Remove end PHP marker
+#   substitute '/etc/codendi/conf/local.inc' '\?\>' ''
 
-  $CAT <<EOF >> /etc/codendi/conf/local.inc
+#   $CAT <<EOF >> /etc/codendi/conf/local.inc
 
-// Sendmail alias
-\$alias_file      = "/etc/aliases.codendi";
+# // Sendmail alias
+# \$alias_file      = "/etc/aliases.codendi";
 
-?>
-EOF
-fi
+# ?>
+# EOF
+# fi
 
-# sys_supported_languages 
-$GREP -q ^\$sys_supported_languages  $ETC_DIR/conf/local.inc
-if [ $? -ne 0 ]; then
-  # Remove end PHP marker
-  substitute '/etc/codendi/conf/local.inc' '\?\>' ''
+# # sys_supported_languages 
+# $GREP -q ^\$sys_supported_languages  $ETC_DIR/conf/local.inc
+# if [ $? -ne 0 ]; then
+#   # Remove end PHP marker
+#   substitute '/etc/codendi/conf/local.inc' '\?\>' ''
 
-  $CAT <<EOF >> /etc/codendi/conf/local.inc
+#   $CAT <<EOF >> /etc/codendi/conf/local.inc
 
-// Supported languages (separated comma)
-// Only en_US and fr_FR are available for now
-// Exemple: 'en_US,fr_FR'
-\$sys_supported_languages = 'en_US,fr_FR';
+# // Supported languages (separated comma)
+# // Only en_US and fr_FR are available for now
+# // Exemple: 'en_US,fr_FR'
+# \$sys_supported_languages = 'en_US,fr_FR';
 
-?>
-EOF
-fi
+# ?>
+# EOF
+# fi
 
 
 ###############################################################################
@@ -839,51 +807,6 @@ substitute '/etc/httpd/conf.d/munin.conf' '%sys_dbauth_passwd%' "$dbauth_passwd"
 
 
 ##############################################
-# Analyze site-content 
-#
-echo "Analysing your site-content (in $ETC_DIR/site-content/)..."
-
-#Only in etc => removed
-removed=`$DIFF -q -r \
- $ETC_DIR/site-content/ \
- $INSTALL_DIR/site-content/        \
- | grep -v '.svn'  \
- | sed             \
- -e "s|^Only in $ETC_DIR/site-content/\([^:]*\): \(.*\)|@\1/\2|g" \
- -e "/^[^@]/ d"  \
- -e "s/@//g"     \
- -e '/^$/ d'`
-if [ "$removed" != "" ]; then
-  echo "The following files do not exist in the site-content of Codendi:"
-  echo "$removed"
-fi
-
-#Differ => modified
-one_has_been_found=0
-for i in `$DIFF -q -r \
-            $ETC_DIR/site-content/ \
-            $INSTALL_DIR/site-content/        \
-            | grep -v '.svn'  \
-            | sed             \
-            -e "s|^Files $ETC_DIR/site-content/\(.*\) and $INSTALL_DIR/site-content/\(.*\) differ|@\1|g" \
-            -e "/^[^@]/ d"  \
-            -e "s/@//g"     \
-            -e '/^$/ d'` 
-do
-   if [ $one_has_been_found -eq 0 ]; then
-      echo "  The following files differ from the site-content of Codendi:"
-      one_has_been_found=1
-   fi
-   echo "    $i"
-done
-
-if [ $one_has_been_found -eq 1 ]; then
-   echo "  Please check those files"
-fi
-
-echo "Analysis done."
-
-##############################################
 # MySQL config
 echo "Updating /etc/my.cnf..."
 codendification "/etc/my.cnf"
@@ -893,9 +816,10 @@ $PERL -pi -e "s/(\[mysqld\])/\1\n# Skip logging openfire db (for instant messagi
 ##############################################
 # Database Structure and initvalues upgrade
 #
+
 echo "Updating the database..."
 
-$SERVICE mysqld start
+$SERVICE mysqld restart
 sleep 5
 
 
@@ -1360,9 +1284,6 @@ EOF
 
 echo "- Upgrade docman"
 $CAT <<EOF | $MYSQL $pass_opt codendi 
-ALTER TABLE plugin_docman_approval CHANGE COLUMN version_id version_id INT(11) UNSIGNED UNSIGNED NULL DEFAULT NULL;
-ALTER TABLE plugin_docman_approval CHANGE COLUMN wiki_version_id wiki_version_id INT(11) UNSIGNED UNSIGNED NULL DEFAULT NULL;
-
 CREATE TABLE IF NOT EXISTS plugin_docman_widget_embedded (
   id int(11) unsigned NOT NULL auto_increment,
   owner_id int(11) unsigned NOT NULL,
@@ -1374,22 +1295,6 @@ CREATE TABLE IF NOT EXISTS plugin_docman_widget_embedded (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 EOF
-
-mysql_add_unique  'plugin_docman_approval' 'version_id' 'version_id'
-mysql_drop_index 'plugin_docman_approval' 'item_wiki'
-mysql_add_unique  'plugin_docman_approval' 'item_id' 'item_id,wiki_version_id'
-
-echo "- Perfs"
-mysql_drop_index 'artifact_field_value' 'idx_field_id'
-mysql_drop_index 'artifact_field_value' 'idx_artifact_id'
-mysql_drop_index 'artifact_field_value' 'idx_art_field_id'
-mysql_drop_index 'artifact_field_value' 'valueInt'
-mysql_add_index  'artifact_field_value' 'idx_valueInt' 'artifact_id, field_id, valueInt'
-mysql_add_index  'artifact_field_value' 'xtrk_valueInt' 'valueInt'
-mysql_add_index  'user'                 'idx_user_name' 'user_name(10)'
-mysql_drop_index 'artifact_field_usage' 'idx_fk_field_id'
-mysql_drop_index 'artifact_field_usage' 'idx_fk_group_artifact_id'
-mysql_add_index  'artifact_field_usage' 'idx_fk' 'field_id, group_artifact_id'
 
 echo "- Files can now be browsed and downloaded by anonymous users (default permissions do not change, we only allow it)"
 $CAT <<EOF | $MYSQL $pass_opt codendi 
@@ -1496,7 +1401,7 @@ find /home/groups/ -maxdepth 1 -mindepth 1 -type d -exec mkdir -p --mode=2770 '{
 ###############################################################################
 # Remove old backend script from crontab
 echo "Add new system scripts in root crontab"
-$CAT <<'EOF' > /tmp/root_cronfile
+$CAT <<'EOF' > $TMP_DIR/root_cronfile
 # Once a minute, process Codendi system events
 * * * * * (cd /usr/share/codendi/src/utils; ./php-launcher.sh ./process_system_events.php)
 #
@@ -1506,21 +1411,21 @@ $CAT <<'EOF' > /tmp/root_cronfile
 EOF
 
 echo "Remove xerox_crontab script from root crontab"
-crontab -u root -l >> /tmp/root_cronfile
-$PERL -i'.orig' -p -e's/^(.*xerox_crontab.sh.*)$/#\1/' /tmp/root_cronfile
+crontab -u root -l >> $TMP_DIR/root_cronfile
+$PERL -i'.orig' -p -e's/^(.*xerox_crontab.sh.*)$/#\1/' $TMP_DIR/root_cronfile
 # Also remove this line (done in SYSTEM_CHECK event)
-$PERL -pi -e's/^(.*chmod u\+s log_accum fileforge.*)$/#\1/' /tmp/root_cronfile
+$PERL -pi -e's/^(.*chmod u\+s log_accum fileforge.*)$/#\1/' $TMP_DIR/root_cronfile
 
 # Codendification of crontab
-codendification '/tmp/root_cronfile'
+codendification "$TMP_DIR/root_cronfile"
 
-substitute '/tmp/root_cronfile' "xerox_all_daily_stats" "compute_all_daily_stats" 
+substitute "$TMP_DIR/root_cronfile" "xerox_all_daily_stats" "compute_all_daily_stats" 
 
-crontab -u root /tmp/root_cronfile
+crontab -u root $TMP_DIR/root_cronfile
 
 
 echo "Installing  codendiadm user crontab..."
-$CAT <<'EOF' >/tmp/cronfile
+$CAT <<'EOF' >$TMP_DIR/cronfile
 # Daily Codendi PHP cron (obsolete documents...)
 10 0 * * * /usr/share/codendi/src/utils/php-launcher.sh /usr/share/codendi/src/utils/codendi_daily.php
 # Re-generate the Codendi User Guides on a daily basis
@@ -1528,7 +1433,7 @@ $CAT <<'EOF' >/tmp/cronfile
 30 03 * * * /usr/share/codendi/src/utils/generate_programmer_doc.sh
 45 03 * * * /usr/share/codendi/src/utils/generate_cli_package.sh
 EOF
-crontab -u codendiadm /tmp/cronfile
+crontab -u codendiadm $TMP_DIR/cronfile
 
 # Move away codexadm crontab
 if [ -f '/var/spool/cron/codexadm' ]; then
@@ -1719,11 +1624,11 @@ cd $INSTALL_DIR/src/utils
 ##############################################
 # Restarting some services
 #
-echo "Starting services..."
-$SERVICE crond start
-$SERVICE httpd start
-$SERVICE sendmail start
-$SERVICE mailman start
+#echo "Starting services..."
+#$SERVICE crond start
+#$SERVICE httpd start
+#$SERVICE postfix start
+#$SERVICE mailman start
 
 
 
@@ -1789,12 +1694,12 @@ EOF
 ##############################################
 # Generate Documentation
 #
-echo "Generating the Codendi Manuals. This will take a few minutes."
-su -c "$INSTALL_DIR/src/utils/generate_doc.sh -f" - codendiadm 2> /dev/null &
-su -c "$INSTALL_DIR/src/utils/generate_programmer_doc.sh -f" - codendiadm 2> /dev/null &
-su -c "$INSTALL_DIR/src/utils/generate_cli_package.sh -f" - codendiadm 2> /dev/null &
-$CHOWN -R codendiadm.codendiadm $INSTALL_DIR/documentation
-$CHOWN -R codendiadm.codendiadm $INSTALL_DIR/downloads
+# echo "Generating the Codendi Manuals. This will take a few minutes."
+# su -c "$INSTALL_DIR/src/utils/generate_doc.sh -f" - codendiadm 2> /dev/null &
+# su -c "$INSTALL_DIR/src/utils/generate_programmer_doc.sh -f" - codendiadm 2> /dev/null &
+# su -c "$INSTALL_DIR/src/utils/generate_cli_package.sh -f" - codendiadm 2> /dev/null &
+# $CHOWN -R codendiadm.codendiadm $INSTALL_DIR/documentation
+# $CHOWN -R codendiadm.codendiadm $INSTALL_DIR/downloads
 
 
 # End of it
