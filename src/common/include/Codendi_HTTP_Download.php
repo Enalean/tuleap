@@ -20,8 +20,9 @@
 
 require_once 'Codendi_File.class.php';
 
-
-include_once 'HTTP/Download.php';    //do not stop script if pear package is not installed
+if (file_exists("/usr/share/pear/HTTP/Download.php")) {
+  include_once 'HTTP/Download.php';    //do not stop script if pear package is not installed
+}
 if (class_exists('HTTP_Download')) { //to be removed in 4.2 (replace by a require_once)
     
 /** 

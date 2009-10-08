@@ -500,14 +500,19 @@ class WidgetLayoutManager {
                         $row .= '<div class="widget-preview '. $widget->getPreviewCssClass() .'">';
                         $row .= '<strong>'. $widget->getTitle()  .'</strong>';
                         $row .= '<p>'. $widget->getDescription() .'</p>';
-                        $row .= $widget->getInstallPreferences();
-                        $row .= '</div><div style="text-align:right; border-bottom:1px solid #ddd; padding-bottom:10px; margin-bottom:20px;">';
-                        if ($widget->isUnique() && in_array($widget_name, $used_widgets)) {
-                            $row .= '<em>'. $GLOBALS['Language']->getText('widget_add', 'already_used') .'</em>';
+                        if ($widget->isInstallAllowed()) {
+	                        $row .= $widget->getInstallPreferences();
+	                        $row .= '</div><div style="text-align:right; border-bottom:1px solid #ddd; padding-bottom:10px; margin-bottom:20px;">';
+	                        if ($widget->isUnique() && in_array($widget_name, $used_widgets)) {
+	                            $row .= '<em>'. $GLOBALS['Language']->getText('widget_add', 'already_used') .'</em>';
+	                        } else {
+	                            $row .= '<input type="submit" name="name['. $widget_name .'][add]" value="'. $GLOBALS['Language']->getText('widget_add', 'add') .'" />';
+	                        }
+	                        $row .= '</div>';
                         } else {
-                            $row .= '<input type="submit" name="name['. $widget_name .'][add]" value="'. $GLOBALS['Language']->getText('widget_add', 'add') .'" />';
+                        	$row .= $widget->getInstallNotAllowedMessage();
+                            $row .= '</div><div style="text-align:right; border-bottom:1px solid #ddd; padding-bottom:10px; margin-bottom:20px;"></div>';
                         }
-                        $row .= '</div>';
                         $widget_rows[$widget->getTitle()] = $row;
                     }
                     uksort($widget_rows, 'strnatcasecmp');

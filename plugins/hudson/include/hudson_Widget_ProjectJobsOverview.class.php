@@ -18,7 +18,6 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 require_once('HudsonOverviewWidget.class.php');
 require_once('common/user/UserManager.class.php');
 require_once('common/include/HTTPRequest.class.php');
@@ -31,7 +30,7 @@ class hudson_Widget_ProjectJobsOverview extends HudsonOverviewWidget {
     var $group_id;
     
     var $_not_monitored_jobs;
-    var $_use_global_status = true;
+    var $_use_global_status;
     var $_all_status;
     var $_global_status;
     var $_global_status_icon;
@@ -42,6 +41,12 @@ class hudson_Widget_ProjectJobsOverview extends HudsonOverviewWidget {
         
         $request =& HTTPRequest::instance();
         $this->group_id = $request->get('group_id');
+        
+        $this->_use_global_status = user_get_preference('plugin_hudson_use_global_status' . $this->group_id);
+        if ($this->_use_global_status === false) {
+            $this->_use_global_status = "false";
+            user_set_preference('plugin_hudson_use_global_status' . $this->group_id, $this->_use_global_status);
+        }
         
         if ($this->_use_global_status == "true") {
             $this->_all_status = array(
@@ -72,6 +77,40 @@ class hudson_Widget_ProjectJobsOverview extends HudsonOverviewWidget {
         }
     }
     
+    function isInstallAllowed() {
+        $jobs = $this->getJobsByGroup($this->group_id);
+        return count($jobs) > 0;
+    }
+    function getInstallNotAllowedMessage() {
+        $jobs = $this->getJobsByGroup($this->group_id);
+        if (count($jobs) <= 0) {
+            // no hudson jobs available
+            return '<span class="feedback_warning">' . $GLOBALS['Language']->getText('plugin_hudson', 'widget_no_job_project', array($this->group_id)) . '</span>'; 
+        } else {
+            return '';
+        }
+    }
+    
+    function hasPreferences() {
+        return true;
+    }
+    function getPreferences() {
+        $prefs  = '';
+        // Use global status
+        $prefs .= '<strong>'.$GLOBALS['Language']->getText('plugin_hudson', 'use_global_status').'</strong>';
+        $prefs .= '<input type="checkbox" name="use_global_status" value="use_global" '.(($this->_use_global_status == "true")?'checked="checked"':'').'><br />';
+        return $prefs;
+    }
+    function updatePreferences(&$request) {
+        $request->valid(new Valid_String('cancel'));
+        if (!$request->exist('cancel')) {
+            $use_global_status = $request->get('use_global_status');
+            $this->_use_global_status = ($use_global_status !== false)?"true":"false";
+            user_set_preference('plugin_hudson_use_global_status' . $this->group_id, $this->_use_global_status);
+        }
+        return true;
+    }
+    
     function getTitle() {
         $title = '';
         if ($this->_use_global_status == "true") {
@@ -87,8 +126,8 @@ class hudson_Widget_ProjectJobsOverview extends HudsonOverviewWidget {
     
     function getContent() {
         $jobs = $this->getJobsByGroup($this->group_id);
+        $html = '';
         if (sizeof($jobs) > 0) {
-            $html = '';            
             $html .= '<table style="width:100%">';
             $cpt = 1;
             
@@ -111,8 +150,10 @@ class hudson_Widget_ProjectJobsOverview extends HudsonOverviewWidget {
                 }
             }
             $html .= '</table>';
-            return $html;
+        } else {
+        	$html .= $GLOBALS['Language']->getText('plugin_hudson', 'widget_no_job_project', array($this->group_id));
         }
+        return $html;
     }
 }
 

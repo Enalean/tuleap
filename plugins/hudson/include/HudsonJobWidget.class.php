@@ -36,11 +36,11 @@ abstract class HudsonJobWidget extends HudsonWidget {
     
     function create(&$request) {
         $content_id = false;
-        $vId = new Valid_Uint('job_id');
+        $vId = new Valid_Uint($this->widget_id . '_job_id');
         $vId->setErrorMessage("Can't add empty job id");
         $vId->required();
         if ($request->valid($vId)) {
-            $job_id = $request->get('job_id');
+            $job_id = $request->get($this->widget_id . '_job_id');
             $sql = 'INSERT INTO plugin_hudson_widget (widget_name, owner_id, owner_type, job_id) VALUES ("' . $this->id . '", '. $this->owner_id .", '". $this->owner_type ."', " . db_escape_int($job_id) ." )";
             $res = db_query($sql);
             $content_id = db_insertid($res);
@@ -53,15 +53,40 @@ abstract class HudsonJobWidget extends HudsonWidget {
         db_query($sql);
     }
     
+    function isInstallAllowed() {
+    	$jobs = $this->getAvailableJobs();
+        return count($jobs) > 0;
+    }
+    function getInstallNotAllowedMessage() {
+    	$jobs = $this->getAvailableJobs();
+        if (count($jobs) <= 0) {
+    	    // no hudson jobs available
+    	    if ($this->owner_type == WidgetLayoutManager::OWNER_TYPE_GROUP) {
+    	    	return '<span class="feedback_warning">' . $GLOBALS['Language']->getText('plugin_hudson', 'widget_no_job_project', array($this->group_id)) . '</span>'; 
+    	    } else {
+                return '<span class="feedback_warning">' . $GLOBALS['Language']->getText('plugin_hudson', 'widget_no_job_my') . '</span>';
+    	    }
+        } else {
+            return '';
+        }
+    }
+    
     function getInstallPreferences() {
         $prefs  = '';
         $prefs .= '<strong>'.$GLOBALS['Language']->getText('plugin_hudson', 'monitored_job').'</strong><br />';
         
+        $selected_jobs_id = $this->getSelectedJobsId();
         $jobs = $this->getAvailableJobs();
         
-        foreach ($jobs as $job_id => $job) {
-            $prefs .= '<input type="radio" name="job_id" value="'.$job_id.'"> '.$job->getName().'<br />';
-        }
+        $only_one_job = (count($jobs) == 1);
+	    foreach ($jobs as $job_id => $job) {
+	      	$selected = ($only_one_job)?'checked="checked"':'';
+	        $prefs .= '<input type="radio" name="' . $this->widget_id . '_job_id" value="'.$job_id.'" ' . $selected . '> ' . $job->getName() ;
+	        if (in_array($job_id, $selected_jobs_id)) {
+	        	$prefs .= ' <em>('. $GLOBALS['Language']->getText('widget_add', 'already_used') .')</em>';
+	        }
+	        $prefs .= '<br />';
+	    }
         return $prefs;
     }
     function hasPreferences() {
@@ -75,7 +100,7 @@ abstract class HudsonJobWidget extends HudsonWidget {
         
         foreach ($jobs as $job_id => $job) {
             $selected = ($job_id == $this->job_id)?'checked="checked"':'';
-            $prefs .= '<input type="radio" name="' . $this->id . '" value="'.$job_id.'" ' . $selected . '> '.$job->getName().'<br />';
+            $prefs .= '<input type="radio" name="' . $this->widget_id . '_job_id" value="'.$job_id.'" ' . $selected . '> '.$job->getName().'<br />';
         }
         return $prefs;
     }
@@ -83,11 +108,25 @@ abstract class HudsonJobWidget extends HudsonWidget {
     function updatePreferences(&$request) {
         $request->valid(new Valid_String('cancel'));
         if (!$request->exist('cancel')) {
-            $job_id = $request->get($this->id);
+            $job_id = $request->get($this->widget_id . '_job_id');
             $sql = "UPDATE plugin_hudson_widget SET job_id=". $job_id ." WHERE owner_id = ". $this->owner_id ." AND owner_type = '". $this->owner_type ."' AND id = ". (int)$request->get('content_id');
             $res = db_query($sql); 
         }
         return true;
+    }
+    
+    /**
+     * Returns the jobs selected for this widget
+     */
+    function getSelectedJobsId() {
+        $sql = "SELECT * FROM plugin_hudson_widget WHERE widget_name='" . $this->widget_id . "' AND owner_id = ". $this->owner_id ." AND owner_type = '". $this->owner_type ."'";
+        $res = db_query($sql);
+        
+        $selected_jobs_id = array();
+        while ($data = db_fetch_array($res)) {
+        	$selected_jobs_id[] = $data['job_id'];
+        }
+        return $selected_jobs_id;
     }
     
 }

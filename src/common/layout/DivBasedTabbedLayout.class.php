@@ -82,8 +82,9 @@ NB: Original OsdnNavBar has been removed from first cell. <td align="center">'.$
             
             $html .= '<li class="header_actions_nolink">'.$GLOBALS['Language']->getText('include_menu','logged_in').': '.user_getname().'</li>';
             $html .= '<li><a href="/account/logout.php">'.$GLOBALS['Language']->getText('include_menu','logout').'</a></li>';
-            $html .= '<li><a href="/project/register.php">'.$GLOBALS['Language']->getText('include_menu','register_new_proj').'</a></li>';
-                                    
+            if((isset($GLOBALS['sys_use_project_registration']) && $GLOBALS['sys_use_project_registration'] ==1) || !isset($GLOBALS['sys_use_project_registration'])) {
+                $html .= '<li><a href="/project/register.php">'.$GLOBALS['Language']->getText('include_menu','register_new_proj').'</a></li>';
+            } 
             if (!HTTPRequest::instance()->isPost()) {
                 $bookmark_title = urlencode( str_replace($GLOBALS['sys_name'].': ', '', $params['title']));
                 $html .= '<li class="bookmarkpage"><a href="/my/bookmark_add.php?bookmark_url='.urlencode($_SERVER['REQUEST_URI']).'&bookmark_title='.$bookmark_title.'">'.$GLOBALS['Language']->getText('include_menu','bookmark_this_page').'</a></li>';

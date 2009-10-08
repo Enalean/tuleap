@@ -12,7 +12,13 @@ require_once('proj_email.php');
 
 $request =& HTTPRequest::instance();
 
-$res_user = db_query("SELECT * FROM user WHERE user_name='".db_es($request->get('form_user'))."'");
+if($request->get('user_name')!=null){
+    $user_name= $request->get('user_name');
+} else {
+    $user_name = $request->get('form_user');
+}
+
+$res_user = db_query("SELECT * FROM user WHERE user_name='$user_name'");
 $row_user = db_fetch_array($res_user);
 
 // only mail if pending

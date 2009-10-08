@@ -88,6 +88,12 @@ require_once('common/widget/Widget_ProjectSvnStats.class.php');
         $prefs .= '</form>';
         return $prefs;
     }
+    function isInstallAllowed() {
+        return true;
+    }
+    function getInstallNotAllowedMessage() {
+        return '';
+    }
     function getInstallPreferences() {
         return '';
     }

@@ -92,6 +92,22 @@ class hudson_Widget_MyMonitoredJobs extends HudsonOverviewWidget {
         }
     }
     
+    function isInstallAllowed() {
+        $jobs = $this->getJobsByGroup($this->group_id);
+        return count($jobs) > 0;
+    }
+    function getInstallNotAllowedMessage() {
+    	$user = UserManager::instance()->getCurrentUser();
+        $job_dao = new PluginHudsonJobDao(CodendiDataAccess::instance());
+        $dar = $job_dao->searchByUserID($user->getId());
+        if ($dar->rowCount() <= 0) {
+            // no hudson jobs available
+            return '<span class="feedback_warning">' . $GLOBALS['Language']->getText('plugin_hudson', 'widget_no_job_my') . '</span>'; 
+        } else {
+        	return '';
+        }
+    }
+    
     function getTitle() {
         $title = '';
         if ($this->_use_global_status == "true") {
@@ -160,42 +176,52 @@ class hudson_Widget_MyMonitoredJobs extends HudsonOverviewWidget {
     }
     
     function getContent() {
-        $monitored_jobs = $this->_getMonitoredJobsByUser();
-        if (sizeof($monitored_jobs) > 0) {
-            $html = '';            
-            $html .= '<table style="width:100%">';
-            $cpt = 1;
-            
-            foreach ($monitored_jobs as $monitored_job) {
-                try {
-                    
-                    $job_dao = new PluginHudsonJobDao(CodendiDataAccess::instance());
-                    $dar = $job_dao->searchByJobID($monitored_job);
-                    if ($dar->valid()) {
-                        $row = $dar->current();
-                        $job_url = $row['job_url'];
-                        $job_id = $row['job_id'];
-                        $group_id = $row['group_id'];
-                        $job = new HudsonJob($job_url);
-                        
-                        $html .= '<tr class="'. util_get_alt_row_color($cpt) .'">';
-                        $html .= ' <td>';
-                        $html .= ' <img src="'.$job->getStatusIcon().'" title="'.$job->getStatus().'" >';
-                        $html .= ' </td>';
-                        $html .= ' <td style="width:99%">';
-                        $html .= '  <a href="/plugins/hudson/?action=view_job&group_id='.$group_id.'&job_id='.$job_id.'">'.$job->getName().'</a><br />';
-                        $html .= ' </td>';
-                        $html .= '</tr>';
-                        
-                        $cpt++;
-                    }
-                } catch (Exception $e) {
-                    // Do not display wrong jobs
-                }
-            }
-            $html .= '</table>';
-            return $html;
+    	$html = '';
+    	
+    	$user = UserManager::instance()->getCurrentUser();
+        $job_dao = new PluginHudsonJobDao(CodendiDataAccess::instance());
+        $dar = $job_dao->searchByUserID($user->getId());
+    	if ($dar->rowCount() > 0) {
+	        $monitored_jobs = $this->_getMonitoredJobsByUser();
+	        if (sizeof($monitored_jobs) > 0) {            
+	            $html .= '<table style="width:100%">';
+	            $cpt = 1;
+	            
+	            foreach ($monitored_jobs as $monitored_job) {
+	                try {
+	                    
+	                    $job_dao = new PluginHudsonJobDao(CodendiDataAccess::instance());
+	                    $dar = $job_dao->searchByJobID($monitored_job);
+	                    if ($dar->valid()) {
+	                        $row = $dar->current();
+	                        $job_url = $row['job_url'];
+	                        $job_id = $row['job_id'];
+	                        $group_id = $row['group_id'];
+	                        $job = new HudsonJob($job_url);
+	                        
+	                        $html .= '<tr class="'. util_get_alt_row_color($cpt) .'">';
+	                        $html .= ' <td>';
+	                        $html .= ' <img src="'.$job->getStatusIcon().'" title="'.$job->getStatus().'" >';
+	                        $html .= ' </td>';
+	                        $html .= ' <td style="width:99%">';
+	                        $html .= '  <a href="/plugins/hudson/?action=view_job&group_id='.$group_id.'&job_id='.$job_id.'">'.$job->getName().'</a><br />';
+	                        $html .= ' </td>';
+	                        $html .= '</tr>';
+	                        
+	                        $cpt++;
+	                    }
+	                } catch (Exception $e) {
+	                    // Do not display wrong jobs
+	                }
+	            }
+	            $html .= '</table>';
+	        } else {
+	        	$html .= $GLOBALS['Language']->getText('plugin_hudson', 'widget_no_monitoredjob_my');
+	        }
+        } else {
+        	$html .= $GLOBALS['Language']->getText('plugin_hudson', 'widget_no_job_my');
         }
+        return $html;
     }
     
     function _getMonitoredJobsByUser() {

@@ -141,6 +141,8 @@ admin_approve_pending_users	email_title	Welcome to $1!
 admin_approve_pending_users	data_not_parsed	Sorry - Expiration Date entry could not be parsed. It must be in YYYY-MM-DD format.
 admin_approve_pending_users	expiry_date	Expiration Date
 admin_approve_pending_users	expiry_date_directions	<em><strong>Remark:</strong> The account will be suspended when this date is reached. Leave blank if you don't want an expiration date.</em>
+admin_approve_pending_users	resend	Resend
+admin_approve_pending_users	resend_notice	Resend the account registration email
 
 #
 #-----------------------------------------------
