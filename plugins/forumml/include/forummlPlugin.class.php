@@ -1,14 +1,33 @@
 <?php
+/**
+ * Copyright (c) STMicroelectronics, 2004-2009. All rights reserved
+ *
+ * This file is a part of Codendi.
+ *
+ * Codendi is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Codendi is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ */
 
 require_once('common/plugin/Plugin.class.php');
 
 class ForumMLPlugin extends Plugin {
-	
-	function ForumMLPlugin($id) {
-		$this->Plugin($id);
-        $this->_addHook('site_admin_option_hook', 'siteAdminHooks', false);
+
+	function __construct($id) {
+        parent::__construct($id);
+
         $this->_addHook('browse_archives','forumml_browse_archives',false);
         $this->_addHook('cssfile','cssFile',false);
+        $this->_addHook('javascript_file',                   'jsFile',                            false);
         $this->_addHook('search_type', 'search_type', false);
         $this->_addHook('layout_searchbox_options', 'forumml_searchbox_option', false);
         $this->_addHook('layout_searchbox_hiddenInputs', 'forumml_searchbox_hiddenInput', false);
@@ -60,15 +79,19 @@ class ForumMLPlugin extends Plugin {
 			$params['html'] = '<A href="/plugins/forumml/message.php?group_id='.$group_id.'&list='.$params['group_list_id'].'"> '.$GLOBALS['Language']->getText('plugin_forumml','archives').'</A>';
     	}
     }
-       
-    function siteAdminHooks($params) {
-        echo '<li><a href="/plugins/forumml/">ForumML</a></li>';
-    }
-    
+
     function cssFile($params) {
     	$request =& HTTPRequest::instance();
         if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
             echo '<link rel="stylesheet" type="text/css" href="'.$this->getThemePath().'/css/style.css" />'."\n";
+        }
+    }
+
+    function jsFile($params) {
+    	//$request =& HTTPRequest::instance();
+        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
+            //echo '<link rel="stylesheet" type="text/css" href="'.$this->getThemePath().'/css/style.css" />'."\n";
+            echo '<script type="text/javascript" src="'.$this->getPluginPath().'/scripts/forumml.js"></script>'."\n";
         }
     }
 

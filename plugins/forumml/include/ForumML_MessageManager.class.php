@@ -18,12 +18,27 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('common/plugin/PluginDescriptor.class.php');
+require_once 'ForumML_MessageDao.class.php';
 
-class ForumMLPluginDescriptor extends PluginDescriptor {
-    
-    function __construct() {
-        parent::__construct('ForumML', 'v2.0', $GLOBALS['Language']->getText('plugin_forumml', 'descriptor_description'));
+class ForumML_MessageManager {
+    private $_dao;
+
+    function getHeaderValue($messageId, $headerId) {
+        $dar = $this->getDao()->searchHeaderValue($messageId, $headerId);
+        if ($dar && !$dar->isError()) {
+            $row = $dar->current();
+            return $row['value'];
+        }
+        return false;
     }
+
+    function getDao() {
+        if (!isset($this->_dao)) {
+            $this->_dao = new ForumML_MessageDao(CodendiDataAccess::instance());
+        }
+        return $this->_dao;
+    }
+
 }
+
 ?>

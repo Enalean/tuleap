@@ -37,7 +37,8 @@ plugin_forumml	post	Soumettre un nouveau thread
 plugin_forumml	archives	Archives
 plugin_forumml	browse_arch	Naviguer dans les archives
 plugin_forumml	attach_file	Attacher un fichier
-plugin_forumml	list_arch	Mailing-Liste '$1' - Archives
+plugin_forumml	title_root	List de diffusion '$1'
+plugin_forumml	list_arch	Archives
 plugin_forumml	list_new_thread	Mailing-Liste '$1' - Nouveau thread
 plugin_forumml	new_thread	Soumettre un nouveau thread:
 plugin_forumml	subject_exist	Le sujet choisi existe déjà, veuillez le changer...
@@ -55,6 +56,7 @@ plugin_forumml	specify_list	Vous devez spécifier l'identificateur (id) de la ma
 plugin_forumml	type_subject	L'envoi a échoué. Vous devez spécifier le sujet du mail.
 plugin_forumml	warn_post_without_confirm	Veuillez bien vérifier votre message avant de l'envoyer. Le message va être envoyé sans confirmation.
 plugin_forumml	delay_redirection	Il peut y avoir un délai avant de voir le message dans les archives.<br>Vous allez être redirigé vers la page des archives, veuillez patienter... <img src="$1" border="0" width="16" height="16"> <br> Si la page de destination n'est pas entrain de se charger, essayez ce <i><a href="/plugins/forumml/message.php?group_id=$2&list=$3&topic=$4">lien</a></i>
+plugin_forumml	back_to_list	Retour à la liste
 #
 #-----------------------------------------------
 # Script:plugins/forumml/www/message.php
@@ -71,13 +73,14 @@ plugin_forumml	found	Fil(s) trouvés
 # Script:plugins/forumml/www/upload.php
 #
 plugin_forumml	missing_param	Les paramètres 'date' et/ou 'filename' sont manquants.
+plugin_forumml	attchment_not_found	Attachement manquant
 #
 #-----------------------------------------------
 # Script:plugins/forumml/www/forumml_utils.php
 #
 plugin_forumml	show_message_from	De :
 plugin_forumml	show_message_cc	Cc :
-plugin_forumml	show_message_date	Date :
+plugin_forumml	show_message_date	le $1
 plugin_forumml	show_message_subject	Sujet :
 plugin_forumml	begin	Premiers fils
 plugin_forumml	previous	Les $1 fils précédents
@@ -88,6 +91,7 @@ plugin_forumml	invalid_mail	Echec d'envoi. Adresse courriel en Cc non valide.<br
 plugin_forumml	mail_succeed	E-mail envoyé avec succès.
 plugin_forumml	mail_fail	Echec d'envoi de l'e-mail.
 plugin_forumml	msg_html_format	Message (en format HTML)
+plugin_forumml	toggle_font	Changer la police (courier/normal)
 #
 #-----------------------------------------------
 # Script:plugins/forumml/include/forummlPlugin.class.php

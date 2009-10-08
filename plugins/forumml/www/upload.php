@@ -26,97 +26,62 @@
 require_once('pre.php');
 require_once('www/mail/mail_utils.php');
 require_once('common/plugin/PluginManager.class.php');
-require_once(dirname(__FILE__).'/../include/ForumML_FileStorage.class.php');
+require_once(dirname(__FILE__).'/../include/ForumML_Attachment.class.php');
 
-$plugin_manager =& PluginManager::instance();
-$p =& $plugin_manager->getPluginByName('forumml');
-
+$plugin_manager = PluginManager::instance();
+$p              = $plugin_manager->getPluginByName('forumml');
 if ($p && $plugin_manager->isPluginAvailable($p) && $p->isAllowed()) {
-	
-	$request =& HTTPRequest::instance();
-	
-	$vList = new Valid_UInt('list');
-	$vList->required();
-	// Checks 'list' parameter
-	if (! $request->valid($vList)) {
-		exit_error($GLOBALS["Language"]->getText('global','error'),$GLOBALS["Language"]->getText('plugin_forumml','specify_list'));
-	} else {
-		$list_id = $request->get('list');
-		if (!user_isloggedin() || (!mail_is_list_public($list_id) && !user_ismember($request->get('group_id')))) {
-			exit_error($GLOBALS["Language"]->getText('global','error'),$GLOBALS["Language"]->getText('include_exit','no_perm'));
-		}		
-		if (!mail_is_list_active($list_id)) {
-			exit_error($GLOBALS["Language"]->getText('global','error'),$GLOBALS["Language"]->getText('plugin_forumml','wrong_list'));
-		}
-	}
-	
-	$vFname = new Valid_String('filename');
-	$vFname->required();
-	$vDate = new Valid_String('date');
-	$vDate->required(); 
-	if ($request->valid($vDate) && $request->valid($vFname)) {
-		
-		$list_name = mail_get_listname_from_list_id($list_id);
-		$date  = $request->get('date');
-		$filename  = $request->get('filename');
+    $request = HTTPRequest::instance();
 
-		// Retrieve the uploaded file type
-		switch(strtoupper(strrchr($filename,".")))
-		{
-			case ".GZ":
-				$type = "application/x-gzip";
-				break;
-			case ".TGZ":
-				$type = "application/x-gzip";
-				break;
-			case ".ZIP":
-				$type = "application/zip";
-				break;
-			case ".PDF":
-				$type = "application/pdf";
-				break;
-			case ".PNG":
-				$type = "image/png";
-				break;
-			case ".GIF":
-				$type = "image/gif";
-				break;
-			case ".JPG":
-				$type = "image/jpeg";
-				break;
-			case ".TXT":
-				$type = "text/plain";
-				break;
-			case ".HTM":
-				$type = "text/html";
-				break;
-			case ".HTML":
-				$type = "text/html";
-				break;
-			default:
-				$type = "application/octet-stream";
-				break;
-		}
+    $groupId = $request->getValidated('group_id', 'UInt', 0);
 
-		$info =& $p->getPluginInfo();
-		$forumml_dir = $info->getPropertyValueForName('forumml_dir');
-		$fstore =& new ForumML_FileStorage($forumml_dir);
-		$file_path = $fstore->_getPath($filename,$list_name,$date,"store"); 		
+    $vList = new Valid_UInt('list');
+    $vList->required();
+    // Checks 'list' parameter
+    if (! $request->valid($vList)) {
+        exit_error($GLOBALS["Language"]->getText('global','error'),$GLOBALS["Language"]->getText('plugin_forumml','specify_list'));
+    } else {
+        $list_id = $request->get('list');
+        if (!user_isloggedin() || (!mail_is_list_public($list_id) && !user_ismember($groupId))) {
+            exit_error($GLOBALS["Language"]->getText('global','error'),$GLOBALS["Language"]->getText('include_exit','no_perm'));
+        }
+        if (!mail_is_list_active($list_id)) {
+            exit_error($GLOBALS["Language"]->getText('global','error'),$GLOBALS["Language"]->getText('plugin_forumml','wrong_list'));
+        }
+    }
 
-		header("Content-disposition: filename=$filename");
-		header("Content-Type: $type");
-		header("Content-Transfer-Encoding: $type\n");
-		header("Content-Length: ".filesize($file_path));
-		header("Pragma: no-cache");
-		header("Cache-Control: must-revalidate, post-check=0, pre-check=0, public");
-		header("Expires: 0");
-		readfile($file_path);
-	} else {
-		exit_error($GLOBALS["Language"]->getText('global','error'),$GLOBALS["Language"]->getText('plugin_forumml','missing_param'));	
-	}
+    // Topic
+    $vTopic = new Valid_UInt('topic');
+    $vTopic->required();
+    if ($request->valid($vTopic)) {
+        $topic = $request->get('topic');
+    } else {
+        $topic = 0;
+    }
 
+    $attchmentId = $request->getValidated('id', 'UInt', 0);
+    if ($attchmentId) {
+        $fmlAttch = new ForumML_Attachment();
+        $attch = $fmlAttch->getById($attchmentId);
+        if ($attch && file_exists($attch['file_path'])) {
+            header("Content-disposition: filename=".$attch['file_name']);
+            header("Content-Type: ".$attch['type']);
+            header("Content-Transfer-Encoding: ".$attch['type']);
+            header("Content-Length: ".$attch['file_size']);
+            header("Pragma: no-cache");
+            header("Cache-Control: must-revalidate, post-check=0, pre-check=0, public");
+            header("Expires: 0");
+            readfile($attch['file_path']);
+            exit;
+        } else {
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS["Language"]->getText('plugin_forumml','attchment_not_found'));
+        }
+    } else {
+        $GLOBALS['Response']->addFeedback('error', $GLOBALS["Language"]->getText('plugin_forumml','missing_param'));
+    }
+    $GLOBALS['Response']->redirect('/plugins/forumml/message.php?group_id='.$groupId.'&list='.$list_id.'&topic='.$topic);
 } else {
-	header('Location: '.get_server_url());
+    header('Location: '.get_server_url());
 }
 
 ?>

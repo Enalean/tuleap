@@ -1,11 +1,14 @@
+-- alter table plugin_forumml_message add column last_thread_update int unsigned not null default 0 after body;
 CREATE TABLE plugin_forumml_attachment (
   id_attachment INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
   id_message INTEGER UNSIGNED NOT NULL,
   file_name TEXT NOT NULL,
   file_type VARCHAR(80) NOT NULL,
   file_size INTEGER UNSIGNED NOT NULL,
+  file_path VARCHAR(255) NOT NULL,
+  content_id varchar(255) not null default '',
   PRIMARY KEY(id_attachment),
-  KEY idx_fk_id_message (id_message)
+  KEY idx_fk_id_message (id_message, content_id(10)),
 );
 
 CREATE TABLE plugin_forumml_header (
@@ -20,6 +23,9 @@ CREATE TABLE plugin_forumml_message (
   id_list INTEGER UNSIGNED NOT NULL,
   id_parent INTEGER UNSIGNED NOT NULL,
   body TEXT NULL,
+  last_thread_update INTEGER   UNSIGNED NOT NULL DEFAULT 0,
+  msg_type varchar(30) not null default '',
+  cached_html mediumtext default null,
   PRIMARY KEY(id_message),
   KEY idx_fk_id_list (id_list),
   KEY idx_fk_id_parent (id_parent)

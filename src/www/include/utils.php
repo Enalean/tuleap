@@ -1581,24 +1581,4 @@ foreach($times as $key => $time) {
     echo $key ."\t\t\t". util_time_ago_in_words($time, false) ."\t\t\t". util_time_ago_in_words($time, true) ."\n";
 }
 */
-
-/**
- * Check file existence with effective UID/GID
- *
- * This function aims to replace php file_exists that perform its test with
- * real UID/GID. It means that if you use those function in a SUID/SGID script
- * (like forumml hook) it will fails.
- *
- * @param string Path of the file to test
- * @return boolean
- */
-function util_file_exists($path) {
-    clearstatcache();
-    if(@stat($path)) {
-        return true;
-    } else {
-        return false;
-    }
-}
-
 ?>

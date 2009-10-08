@@ -18,12 +18,19 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('common/plugin/PluginDescriptor.class.php');
+require_once 'common/dao/include/DataAccessObject.class.php';
 
-class ForumMLPluginDescriptor extends PluginDescriptor {
-    
-    function __construct() {
-        parent::__construct('ForumML', 'v2.0', $GLOBALS['Language']->getText('plugin_forumml', 'descriptor_description'));
+class ForumML_AttachmentDao extends DataAccessObject {
+
+    function __construct($da) {
+        parent::__construct($da);
     }
+    
+    function getById($id) {
+        $sql = 'SELECT * FROM plugin_forumml_attachment WHERE id_attachment = '.$this->da->quoteSmart($id);
+        return $this->retrieve($sql);
+    }
+
 }
+
 ?>

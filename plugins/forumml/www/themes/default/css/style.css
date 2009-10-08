@@ -32,8 +32,11 @@ th.forumml {
 .info {font-size: small;}
 
 blockquote.grep {
-	color: #848696;
-    margin-left: 10px;
+    color: #848696;
+    margin: 0;
+    margin-left: 1em;
+    padding: 0;
+    border: 0;
 }
 
 font.headerlabel {
@@ -44,20 +47,58 @@ font.headerlabelalt {
     color: #8a604a
 }
 
-table.reply {
-	width:100%;
-    border-collapse: collapse;
-	border-left: 2px solid #cdcdc1;
-	border-right: 2px solid #cdcdc1;
-	border-top: 2px solid #cdcdc1;
-	border-bottom: 2px solid #cdcdc1;
+.plugin_forumml_message {
+	border: 2px solid #cdcdc1;
+    margin-bottom: 1em;
+}
+.plugin_forumml_message_header {
+    color:#999;
+}
+.plugin_forumml_message_header_subject {
+    float:right;
+    padding-right:1em;
+}
+.plugin_forumml_message_header_cc,
+.plugin_forumml_message_header_attachments {
+    padding-left:20px;
+}
+.plugin_forumml_message_header_from {
+    white-space:nowrap;
+    font-size:1.2em;
+    font-weight:bold;
+    color:#666;
 }
 
-table.border {
-    border-collapse: collapse;
-	border-left: 2px solid #cdcdc1;
-	border-right: 2px solid #cdcdc1;
-	border-top: 2px solid #cdcdc1;
-	border-bottom: 2px solid #cdcdc1;
+.plugin_forumml_toggle_font {
+    font-size: x-small;
 }
+
+.plugin_forumml_message_content_pre {
+    padding: 0.5em;
+    font-family: courier, monospace;
+}
+
+.plugin_forumml_message_content_std {
+    padding: 0.5em;
+}
+
+.plugin_forumml_message_footer {
+    border-top: 1px solid #cdcdc1;
+}
+
+.plugin_forumml_message_reply {
+    padding-left: 1em;
+}
+
+
+.plugin_forumml_message_content blockquote {
+    border-left:1px solid blue;
+    padding-left:1em;
+    margin-left:0.5em;
+}
+.plugin_forumml_message_content blockquote blockquote                                  { border-color:red; }
+.plugin_forumml_message_content blockquote blockquote blockquote                       { border-color:green; }
+.plugin_forumml_message_content blockquote blockquote blockquote blockquote            { border-color:darkorange; }
+.plugin_forumml_message_content blockquote blockquote blockquote blockquote blockquote { border-color:#8A2BE2; }
+
 /* }}} */

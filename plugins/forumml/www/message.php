@@ -35,6 +35,7 @@ require_once('common/mail/Mail.class.php');
 require_once('common/plugin/PluginManager.class.php');
 require_once(dirname(__FILE__).'/../include/ForumML_FileStorage.class.php');
 require_once(dirname(__FILE__).'/../include/ForumML_HTMLPurifier.class.php');
+require_once(dirname(__FILE__).'/../include/ForumML_MessageManager.class.php');
 
 $plugin_manager =& PluginManager::instance();
 $p =& $plugin_manager->getPluginByName('forumml');
@@ -50,13 +51,16 @@ if ($p && $plugin_manager->isPluginAvailable($p) && $p->isAllowed()) {
 		$group_id = "";
 	}
 	
-	$vTopic = new Valid_UInt('topic');
-	$vTopic->required();
-	if ($request->valid($vTopic)) {
-		$topic = $request->get('topic');
-	} else {
-		$topic = 0;
-	}
+    $vTopic = new Valid_UInt('topic');
+    $vTopic->required();
+    if ($request->valid($vTopic)) {
+        $topic         = $request->get('topic');
+        $fmlMessageMgr = new ForumML_MessageManager();
+        $topicSubject  = $fmlMessageMgr->getHeaderValue($topic, FORUMML_SUBJECT);
+    } else {
+        $topic        = 0;
+        $topicSubject = '';
+    }
 	
 	$vOff = new Valid_UInt('offset');
 	$vOff->required();
@@ -65,7 +69,16 @@ if ($p && $plugin_manager->isPluginAvailable($p) && $p->isAllowed()) {
 	} else {
 		$offset = 0;
 	}
-			
+
+    // Do we need to pure html cache
+    $vPurge = new Valid_WhiteList('purge_cache', array('true'));
+    $vPurge->required();
+    if ($request->valid($vPurge)) {
+        $purgeCache = true;
+    } else {
+        $purgeCache = false;
+    }
+	
 	// Checks 'list' parameter
 	$vList = new Valid_UInt('list');
 	$vList->required();
@@ -96,7 +109,7 @@ if ($p && $plugin_manager->isPluginAvailable($p) && $p->isAllowed()) {
 	$vSrep->required();
 	if ($request->valid($vSrep)) {
 		// process the mail
-		$ret = process_mail($p,true);
+		$ret = plugin_forumml_process_mail($p,true);
 		if ($ret) {
 			$GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('plugin_forumml','delay_redirection',array($p->getThemePath()."/images/ic/spinner-greenie.gif",$group_id,$list_id,$topic)), CODENDI_PURIFIER_DISABLED);
 		}
@@ -106,7 +119,11 @@ if ($p && $plugin_manager->isPluginAvailable($p) && $p->isAllowed()) {
 	if ($request->valid($vRep)) {	
 		$GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('plugin_forumml','warn_post_without_confirm'));
 	}
-	$params['title'] = util_get_group_name_from_id($group_id).' - ForumML';
+
+    $params['title'] = util_get_group_name_from_id($group_id).' - ForumML - '.$list_name;
+    if ($topicSubject) {
+        $params['title'] .= ' - '.$topicSubject;   
+    }
 	$params['group'] = $group_id;
 	$params['toptab']='mail';
 	$params['help'] = "CommunicationServices.html#MailingLists";
@@ -122,17 +139,34 @@ if ($p && $plugin_manager->isPluginAvailable($p) && $p->isAllowed()) {
 		}		
 	}
 
-	$list_link = '<a href="/plugins/forumml/message.php?group_id='.$group_id.'&list='.$list_id.'">'.$list_name.'</a>';
-	echo '<H2><b>'.$GLOBALS['Language']->getText('plugin_forumml','list_arch',array($list_link)).'</b></H2>';
+    $list_link = '<a href="/plugins/forumml/message.php?group_id='.$group_id.'&list='.$list_id.'">'.$list_name.'</a>';
+    $title     = $GLOBALS['Language']->getText('plugin_forumml','title_root',array($list_link));
+    if ($topic) {
+        $fmlMessageMgr = new ForumML_MessageManager();
+        $value = $fmlMessageMgr->getHeaderValue($topic, FORUMML_SUBJECT);
+        if ($value) {
+            $title = $value;
+        }
+    } else {
+        $title .= $GLOBALS['Language']->getText('plugin_forumml','list_arch');
+    }
+	echo '<h2>'.$title.'</h2>';
 
 	if (! $request->exist('pv') || ($request->exist('pv') && $request->get('pv') == 0)) {
 		echo "<table border=0 width=100%>
-		<tr>
-			<td align='left'>
-				<a href='/plugins/forumml/index.php?group_id=".$group_id."&list=".$list_id."'>
+		<tr>";
+
+        echo "<td align='left'>";
+        if ($topic) {
+            echo '<a href="/plugins/forumml/message.php?group_id='.$group_id.'&list='.$list_id.'">['.$GLOBALS['Language']->getText('plugin_forumml','back_to_list').']</a>';
+        } else {
+            echo "		<a href='/plugins/forumml/index.php?group_id=".$group_id."&list=".$list_id."'>
 					[".$GLOBALS['Language']->getText('plugin_forumml','post_thread')."]
-				</a>
-			</td>
+				</a>";
+        }
+        echo "</td>";
+
+        echo "
 			<td align='right'>
 				(<a href='/plugins/forumml/message.php?group_id=".$group_id."&list=".$list_id."&topic=".$topic."&offset=".$offset."&search=".($request->exist('search') ? $request->get('search') : "")."&pv=1'>
 					<img src='".util_get_image_theme("msg.png")."' border='0'>&nbsp;".$GLOBALS['Language']->getText('global','printer_version')."
@@ -148,32 +182,17 @@ if ($p && $plugin_manager->isPluginAvailable($p) && $p->isAllowed()) {
 		// Check if there are archives to browse
 		$qry = sprintf('SELECT NULL'.
 						' FROM plugin_forumml_message'.
-						' WHERE id_list = %d',
+						' WHERE id_list = %d'.
+                        ' LIMIT 1',
 						db_ei($list_id));
 		$res = db_query($qry);
 		if (db_numrows($res) > 0) {
 			// Call to show_thread() function to display the archives			
 			if (isset($topic) && $topic != 0) {
 				// specific thread
-				$child_array = get_thread_children($topic);
-				$qry = sprintf('SELECT id_message, id_parent, body'.
-					 			' FROM plugin_forumml_message'.
-	 							' WHERE id_list = %d'.
-								' AND (id_parent IN (%s) OR id_message = %d)'.
-								' ORDER BY id_message',
-								db_ei($list_id),db_es(implode(",",$child_array)),db_ei($topic));
-				$result = db_query($qry);				
-				show_thread($p,$list_id,$topic,$result,$offset);
+				plugin_forumml_show_thread($p, $list_id, $topic, $purgeCache);
 			} else {
-				// all threads
-				$qry = sprintf('SELECT id_message, body'.
-			 					' FROM plugin_forumml_message'.
-	 							' WHERE id_list = %d'.
-								' AND id_parent = 0'.
-								' ORDER BY id_message DESC',
-								db_ei($list_id));
-				$result = db_query($qry);								
-				show_thread($p,$list_id,$topic,$result,$offset);
+				plugin_forumml_show_all_threads($p,$list_id,$list_name,$offset);
 			}	
 		} else {
 			echo "<H2>".$GLOBALS["Language"]->getText('plugin_forumml','empty_archives')."</H2>";
@@ -192,7 +211,7 @@ if ($p && $plugin_manager->isPluginAvailable($p) && $p->isAllowed()) {
 		$result = db_query($sql);
 		echo "<H3>".$GLOBALS['Language']->getText('plugin_forumml','search_result',$request->get('search'))." (".db_numrows($result)." ".$GLOBALS["Language"]->getText('plugin_forumml','found').")</H3>";
 		if (db_numrows($result) > 0) {
-			show_search_results($p,$result,$group_id,$list_id);
+			plugin_forumml_show_search_results($p,$result,$group_id,$list_id);
 		}
 	}
 
