@@ -91,14 +91,19 @@ font.headerlabelalt {
 }
 
 
-.plugin_forumml_message_content blockquote {
+.plugin_forumml_message_content_std blockquote, .plugin_forumml_message_content_pre blockquote{
     border-left:1px solid blue;
     padding-left:1em;
     margin-left:0.5em;
 }
-.plugin_forumml_message_content blockquote blockquote                                  { border-color:red; }
-.plugin_forumml_message_content blockquote blockquote blockquote                       { border-color:green; }
-.plugin_forumml_message_content blockquote blockquote blockquote blockquote            { border-color:darkorange; }
-.plugin_forumml_message_content blockquote blockquote blockquote blockquote blockquote { border-color:#8A2BE2; }
+.plugin_forumml_message_content_std blockquote blockquote                                  { border-color:red; }
+.plugin_forumml_message_content_std blockquote blockquote blockquote                       { border-color:green; }
+.plugin_forumml_message_content_std blockquote blockquote blockquote blockquote            { border-color:darkorange; }
+.plugin_forumml_message_content_std blockquote blockquote blockquote blockquote blockquote { border-color:#8A2BE2; }
+
+.plugin_forumml_message_content_pre blockquote blockquote                                  { border-color:red; }
+.plugin_forumml_message_content_pre blockquote blockquote blockquote                       { border-color:green; }
+.plugin_forumml_message_content_pre blockquote blockquote blockquote blockquote            { border-color:darkorange; }
+.plugin_forumml_message_content_pre blockquote blockquote blockquote blockquote blockquote { border-color:#8A2BE2; }
 
 /* }}} */
