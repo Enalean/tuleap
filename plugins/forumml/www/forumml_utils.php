@@ -348,6 +348,7 @@ function plugin_forumml_insert_msg_attach(&$thread, $result) {
         if ($attch) {
             $thread[$curMsg]['attachments'][] = $attch;
         }
+        $prev = $row['id_message'];
     }
     return $parents;
 }
