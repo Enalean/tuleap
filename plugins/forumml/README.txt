@@ -23,15 +23,20 @@ mailman-2.1.9-5.codendi.i386.rpm
 # See Upgrade PEAR below if needed
 
 # Server with internet access
+# You need following packages/min versions:
+# Mail             1.1.14
+# Mail_Mbox        0.6.1
+# Mail_Mime        1.5.2
+# Mail_mimeDecode  1.5.0
 pear install Mail Mail_Mbox Mail_mimeDecode Mail_Mime
 
 # Server without internet access
 Mail-1.1.14.tgz
-Mail_Mbox-0.6.0.tgz
+Mail_Mbox-0.6.1.tgz
 Mail_mimeDecode-1.5.0.tgz
 Mail_Mime-1.5.2.tgz
 
-pear install Mail-1.1.14.tgz Mail_Mbox-0.6.0.tgz Mail_mimeDecode-1.5.0.tgz Mail_Mime-1.5.2.tgz
+pear install Mail-1.1.14.tgz Mail_Mbox-0.6.1.tgz Mail_mimeDecode-1.5.0.tgz Mail_Mime-1.5.2.tgz
 
 ## Update /etc/httpd/conf.d/php.conf
 Add /usr/share/pear in include_path

@@ -35,7 +35,7 @@ ini_set('max_execution_time', 0);
 ini_set('memory_limit', -1);
 
 require_once('pre.php');
-require_once(dirname(__FILE__).'/../include/ForumML_Mbox.class.php');
+require 'Mail/Mbox.php';
 require_once(dirname(__FILE__).'/../include/ForumML_mimeDecode.class.php');
 require_once(dirname(__FILE__).'/../include/ForumMLInsert.class.php');
 require_once(dirname(__FILE__).'/../include/ForumML_FileStorage.class.php');
@@ -95,7 +95,7 @@ if ($p && $plugin_manager->isPluginAvailable($p) && $plugin_manager->isPluginAll
 	}
 
 	// Open the mail that has been temporary stored
-    $mbox = new ForumML_Mbox($mbox_file);
+    $mbox = new Mail_Mbox($mbox_file);
 	$mbox->open();
 	if (PEAR::isError($mbox)) {
 		print "Unable to open mbox: ".$mbox->getMessage().PHP_EOL;
