@@ -950,7 +950,7 @@ class Docman_Controller extends Controler {
                     if($this->userCanAdmin()) {
                         if($this->request->exist('import_md') &&
                            $this->request->get('import_md') == '1') {
-                            $this->_actionParams['importMd'] = true;
+                            $this->_viewParams['importMd'] = true;
                         }
                     }
                     $this->_viewParams['item'] = $item;
