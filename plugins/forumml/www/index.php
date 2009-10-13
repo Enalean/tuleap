@@ -72,7 +72,7 @@ if ($p && $plugin_manager->isPluginAvailable($p) && $p->isAllowed()) {
 			$GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_forumml','type_subject'));
 		} else {
 			// process the mail
-			$return = process_mail($p);
+			$return = plugin_forumml_process_mail($p);
 			if ($return) {
 				$GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('plugin_forumml','delay_redirection',array($p->getThemePath()."/images/ic/spinner-greenie.gif",$group_id,$list_id,0)), CODENDI_PURIFIER_DISABLED);
 			}
