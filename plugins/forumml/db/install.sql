@@ -8,7 +8,7 @@ CREATE TABLE plugin_forumml_attachment (
   file_path VARCHAR(255) NOT NULL,
   content_id varchar(255) not null default '',
   PRIMARY KEY(id_attachment),
-  KEY idx_fk_id_message (id_message, content_id(10)),
+  KEY idx_fk_id_message (id_message, content_id(10))
 );
 
 CREATE TABLE plugin_forumml_header (

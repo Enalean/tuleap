@@ -62,9 +62,8 @@ if (db_numrows($res) > 0) {
 
 $plugin_manager =& PluginManager::instance();
 $p =& $plugin_manager->getPluginByName('forumml');
-$info =& $p->getPluginInfo();
-
 if ($p && $plugin_manager->isPluginAvailable($p) && $plugin_manager->isPluginAllowedForProject($p, $gr_id)) {
+    $info =& $p->getPluginInfo();
 	if ($argv[2] == 2) {
 		// get list archive		
 		$forumml_arch = $info->getPropertyValueForName('forumml_arch');
@@ -127,22 +126,23 @@ if ($p && $plugin_manager->isPluginAvailable($p) && $plugin_manager->isPluginAll
                 }
 			}
 		}
+
+        // Display message when importing a mail archive
+        if ($argv[2] == 2) {
+            if ($num_msg == $nbMailInserted) {
+                echo 'Operation Completed.'.$num_msg.' imported'.PHP_EOL;
+            } else {
+                echo '*** Error: '.$num_msg.' in '.$mbox_file.' file but '. $nbMailInserted.' stored in database'.PHP_EOL;
+            }
+        }
 	}
- }
+}
 
 // delete temporary file
 if ($argv[2] == 1) {
 	if (is_file($mbox_file)) {
 		unlink($mbox_file);
 	}
-}
-
-if ($argv[2] == 2) {
-    if ($num_msg == $nbMailInserted) {
-        echo 'Operation Completed.'.$num_msg.' imported'.PHP_EOL;
-    } else {
-        echo '*** Error: '.$num_msg.' in '.$mbox_file.' file but '. $nbMailInserted.' stored in database'.PHP_EOL;
-    }
 }
 
 ?>

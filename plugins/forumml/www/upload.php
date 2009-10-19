@@ -64,7 +64,7 @@ if ($p && $plugin_manager->isPluginAvailable($p) && $p->isAllowed()) {
         $fmlAttch = new ForumML_Attachment();
         $attch = $fmlAttch->getById($attchmentId);
         if ($attch && file_exists($attch['file_path'])) {
-            header("Content-disposition: filename=".$attch['file_name']);
+            header('Content-disposition: filename="'.$attch['file_name'].'"');
             header("Content-Type: ".$attch['type']);
             header("Content-Transfer-Encoding: ".$attch['type']);
             header("Content-Length: ".$attch['file_size']);
