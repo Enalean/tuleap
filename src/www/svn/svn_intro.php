@@ -54,6 +54,8 @@ if ($row_grp['svn_preamble'] != '') {
     } else {
        $svn_url = 'http://svn.'. $row_grp['unix_group_name'] .'.'. $host;
     }
+    // Domain name must be lowercase (issue with some SVN clients)
+    $svn_url = strtolower($svn_url);
     $svn_url .= '/svnroot/'. $row_grp['unix_group_name'];
 
     // Hook to replace the default information about subversion

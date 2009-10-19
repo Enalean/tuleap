@@ -114,4 +114,7 @@ if [ "${NOLD}" ]; then
     done
 fi
 
+# Delete mysql codendi-bin files
+${RM} -rf ${binaryLogDir}/codendi-bin*
+
 /etc/init.d/mysqld start

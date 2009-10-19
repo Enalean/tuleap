@@ -15,8 +15,12 @@ if (!user_isloggedin()) {
 }
 print ' Donnez votre mot passe quand il vous est demandé.';
 
-echo '<P><span class="command">svn checkout --username '.$username.' '.
+echo '<P><span class="command">svn checkout --username '.strtolower($username).' '.
 $svn_url .'</span>';
+
+if (strtolower($username) != $username) {
+   echo "<p>Attention à bien utiliser votre nom d'utilisateur en minuscules.";
+}
 
 print '<P>'.help_button('VersionControlWithSubversion.html',false,'[Plus d\'information sur l\'utilisation de Subversion &hellip;]');
 ?>

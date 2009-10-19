@@ -285,7 +285,7 @@ class User {
             //Codendi admins always return true
             $is_member = true;
         } else if (isset($group_data[$group_id])) {
-            if ($type === 0) {
+            if ($type == 0) {
                 //We just want to know if the user is member of the group regardless the role
                 $is_member = true;
             } else {

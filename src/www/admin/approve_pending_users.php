@@ -164,7 +164,7 @@ if (db_numrows($res) < 1) {
             <TABLE WIDTH="70%">
             <TR>
         <?php 
-        if($GLOBALS['sys_user_approval'] == 1 && $page=='pending' && !$GLOBALS['sys_allow_restricted_users']){
+        if($GLOBALS['sys_user_approval'] == 1 && $page=='pending' && !$GLOBALS['sys_allow_restricted_users']) {
             
             // Can select Activate/validate
             echo '<TD>
@@ -182,14 +182,18 @@ if (db_numrows($res) < 1) {
             '.$Language->getText('admin_approve_pending_users','account').'          
             <INPUT TYPE="HIDDEN" NAME="list_of_users" VALUE="'.$row['user_id'].'">
             <INPUT type="submit" name="submit" value="'.$Language->getText('admin_approve_pending_users','ok').'">            
-            </FORM>
-            <p><FORM name="resend" action="/account/pending-resend.php?user_name='.$row['user_name'].'" method="POST">'
-                .$Language->getText('admin_approve_pending_users','resend_notice').' <INPUT type="submit" name="submit" value="'.$Language->getText('admin_approve_pending_users','resend').'">            
-            </FORM>
-            </p>
-            </TD>';
+            </FORM>';
             
-        } else if($GLOBALS['sys_user_approval'] == 1 && $page=='pending' && $GLOBALS['sys_allow_restricted_users']){
+            if($row['status']=='V' ||$row['status']=='W') {
+                echo '<p><FORM name="resend" action="/account/pending-resend.php?user_name='.$row['user_name'].'" method="POST">'
+                    .$Language->getText('admin_approve_pending_users','resend_notice').' <INPUT type="submit" name="submit" value="'.$Language->getText('admin_approve_pending_users','resend').'">            
+                    </FORM>
+                    </p>';
+             }
+            echo '</TD>';
+            
+        } else if($GLOBALS['sys_user_approval'] == 1 && $page=='pending' && $GLOBALS['sys_allow_restricted_users']) {
+             
            // Can select Std/Restricted and Activate/validate
            echo '<TD>
             <FORM name="pending_user'.$row['user_id'].'" action="'.$PHP_SELF.'?page='.$page.'" method="POST">';
@@ -211,12 +215,14 @@ if (db_numrows($res) < 1) {
             </select>
             <INPUT TYPE="HIDDEN" NAME="list_of_users" VALUE="'.$row['user_id'].'">
             <INPUT type="submit" name="submit" value="'.$Language->getText('admin_approve_pending_users','ok').'">            
-            </FORM>
-            <p><FORM name="resend" action="/account/pending-resend.php?user_name='.$row['user_name'].'" method="POST">'
-                .$Language->getText('admin_approve_pending_users','resend_notice').' <INPUT type="submit" name="submit" value="'.$Language->getText('admin_approve_pending_users','resend').'">            
-            </FORM>
-            </p>
-            </TD>';      
+            </FORM>';
+             if($row['status']=='V' ||$row['status']=='W') {
+                 echo '<p><FORM name="resend" action="/account/pending-resend.php?user_name='.$row['user_name'].'" method="POST">'
+                    .$Language->getText('admin_approve_pending_users','resend_notice').' <INPUT type="submit" name="submit" value="'.$Language->getText('admin_approve_pending_users','resend').'">            
+                    </FORM>
+                    </p>';               
+             }
+            echo '</TD>';   
             
         } else {
            // Can select Std/Restricted but only Activate
@@ -251,13 +257,15 @@ if (db_numrows($res) < 1) {
             }     
             echo '<INPUT TYPE="HIDDEN" NAME="list_of_users" VALUE="'.$row['user_id'].'">
             <INPUT type="submit" name="submit" value="'.$Language->getText('admin_approve_pending_users','ok').'">            
-            </FORM>
-            <p><FORM name="resend" action="/account/pending-resend.php?user_name='.$row['user_name'].'" method="POST">'
-                .$Language->getText('admin_approve_pending_users','resend_notice').' <INPUT type="submit" name="submit" value="'.$Language->getText('admin_approve_pending_users','resend').'">            
-            </FORM>
-            </p>
-            </TD>';
+            </FORM>';
+            if ($GLOBALS['sys_user_approval'] == 0 || ($row['status']=='V' ||$row['status']=='W')) {
+                echo '<p><FORM name="resend" action="/account/pending-resend.php?user_name='.$row['user_name'].'" method="POST">'
+                    .$Language->getText('admin_approve_pending_users','resend_notice').' <INPUT type="submit" name="submit" value="'.$Language->getText('admin_approve_pending_users','resend').'">            
+                    </FORM>
+                    </p>';
+            }
             
+            echo '</TD>';
 
         }
         ?>

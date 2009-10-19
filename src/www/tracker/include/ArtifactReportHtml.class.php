@@ -233,8 +233,7 @@ class ArtifactReportHtml extends ArtifactReport {
                         $field_html->display($this->group_artifact_id,$values,
                                           false,false,($pv != 0?true:false),false,true,$Language->getText('global','none'), true,$Language->getText('global','any'));
             
-                } else if ( $field->isMultiSelectBox() ) {
-            
+                } else if ( $field->isMultiSelectBox() ) {                    
                     $boxes .= 
                         $field_html->display($this->group_artifact_id,
                                           $prefs[$field->getName()],
@@ -469,10 +468,11 @@ class ArtifactReportHtml extends ArtifactReport {
 						}    
 	                        
 				    } else if ( $field->isUsername() ) {        
-						if ($nolink)
-						    $html_result .= "<TD $width>".util_user_link($value)."</TD>\n";
-						else
+						if ($nolink) {
+						    $html_result .= "<TD $width>".util_multi_user_nolink($value)."</TD>\n";
+						}else {
 						    $html_result .= "<TD $width>".util_multi_user_link($value)."</TD>\n";
+                        }
 					
 					} else if ( $field->isFloat() ) {
 						$html_result .= "<TD $width>". number_format($value,2) .'&nbsp;</TD>'."\n";
@@ -773,6 +773,7 @@ class ArtifactReportHtml extends ArtifactReport {
                 
                 $em =& EventManager::instance();
                 $em->processEvent('tracker_after_report',array('group_id' => $group_id, 'atid' => (int)$this->group_artifact_id, 'url' => $url));
+                
         }
 
         /**

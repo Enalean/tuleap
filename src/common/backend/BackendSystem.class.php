@@ -107,11 +107,18 @@ class BackendSystem extends Backend {
         //echo "Creating $homedir\n";
 
         if (!is_dir($homedir)) {
-            if (mkdir($homedir,0751)) {
+            if (is_dir(strtolower($homedir))) {
+                // Codendi 3.6 to 4.0 migration
+                if (!rename(strtolower($homedir),$homedir)) {
+                    $this->log("Can't rename user home ".strtolower($homedir)." to $homedir", Backend::LOG_ERROR);
+                    return false;
+                }
+            } else if (mkdir($homedir,0751)) {
                 // copy the contents of the $codendi_shell_skel dir into homedir
                 if (is_dir($GLOBALS['codendi_shell_skel'])) {
                     system("cd ".$GLOBALS['codendi_shell_skel']."; tar cf - . | (cd  $homedir ; tar xf - )");
                 }
+                touch($homedir);
                 $this->recurseChownChgrp($homedir,$user->getUserName(),$user->getUserName());
 
                 return true;

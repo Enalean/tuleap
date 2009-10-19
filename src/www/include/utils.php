@@ -461,12 +461,22 @@ function util_make_reference_links ($data,$group_id) {
 }
 
 function util_user_link ($username) {
+    
     global $Language;
     $hp = Codendi_HTMLPurifier::instance();
     if ( $username == $Language->getText('global','none') || empty($username)) { 
         return  $hp->purify($username, CODENDI_PURIFIER_CONVERT_HTML) ; 
     }
     return '<a href="/users/'.urlencode($username).'">'. $hp->purify(UserHelper::instance()->getDisplayNameFromUserName($username), CODENDI_PURIFIER_CONVERT_HTML) .'</a>';
+}
+
+function util_user_nolink($username) {
+    global $Language;
+    $hp = Codendi_HTMLPurifier::instance();
+    if ( $username == $Language->getText('global','none') || empty($username)) { 
+        return  $hp->purify($username, CODENDI_PURIFIER_CONVERT_HTML) ; 
+    }
+    return $hp->purify(UserHelper::instance()->getDisplayNameFromUserName($username), CODENDI_PURIFIER_CONVERT_HTML) ;
 }
 
 function util_multi_user_link ($usernames) {
@@ -485,6 +495,25 @@ function util_multi_user_link ($usernames) {
 	} else {
 		// Single user name
 		return util_user_link ($usernames);
+	}
+}
+
+function util_multi_user_nolink ($usernames) {
+	
+	$users = explode(", ",$usernames);
+	if ( count($users) > 1 ) {
+		// Multiple users
+				
+		$str = "";
+		for($i=0;$i<count($users)-1;$i++) {
+			$str .= util_user_nolink($users[$i]).", ";
+		}
+		$str .= util_user_nolink($users[$i]);
+		return $str;
+		
+	} else {
+		// Single user name
+		return util_user_nolink ($usernames);
 	}
 }
 

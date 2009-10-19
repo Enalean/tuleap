@@ -1082,7 +1082,7 @@ function SplitPagename ($page) {
             $RE[] = "/(?<= |${sep}|^)([AI])([[:upper:]][[:lower:]])/";
             break;
         case 'fr': 
-            $RE[] = "/(?<= |${sep}|^)([�])([[:upper:]][[:lower:]])/";
+            $RE[] = "/(?<= |${sep}|^)([Á])([[:upper:]][[:lower:]])/";
             break;
         }
         // Split numerals from following letters.
