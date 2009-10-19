@@ -96,11 +96,11 @@ class tracker_date_reminderPlugin extends Plugin {
 
                 // no notification status/settings for special Date field (Submitted on)
                 if (!$field->isSpecial()) {
-                    $notif_settings = '<A href="/tracker/admin/index.php?func=date_field_notification&group_id='.$params['group_id'].'&atid='.$params['at']->getID().'&field_id='.$field->getID().'">'.$GLOBALS['Language']->getText('tracker_include_type','edit_notif_settings').'</A>';
+                    $notif_settings = '<A href="/tracker/admin/index.php?func=date_field_notification&group_id='.$params['group_id'].'&atid='.$params['at']->getID().'&field_id='.$field->getID().'">'.$GLOBALS['Language']->getText('plugin_tracker_date_reminder','edit_notif_settings').'</A>';
                     if ($tdrArtifactFieldFactory->notificationEnabled($field->getID())) {
-                        $notif_status = $GLOBALS['Language']->getText('tracker_include_type','active');
+                        $notif_status = $GLOBALS['Language']->getText('plugin_tracker_date_reminder','active');
                     } else {
-                        $notif_status = $GLOBALS['Language']->getText('tracker_include_type','disabled');
+                        $notif_status = $GLOBALS['Language']->getText('plugin_tracker_date_reminder','disabled');
                     }
 
                     $out .= sprintf($fmt,
