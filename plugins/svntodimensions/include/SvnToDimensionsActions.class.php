@@ -387,7 +387,7 @@ class SvnToDimensionsActions extends Actions {
             if (!in_array($file_path, $svn_files)) {
                     $spec_item = $product . ':' . $file['ID'] . '.' . $file['VARIANT'] . '-' . $file['TYPE'] . ';' . $file['REVISION'];
                     $cmd_remove_file = '-cmd \'RIWS "' . $spec_item . '" ' .
-                    '/WORKSET="' . $product . ':' . $workset . '"\' 2>&1';echo $cmd_remove_file;
+                    '/WORKSET="' . $product . ':' . $workset . '"\' 2>&1';
                     $output = shell_exec($dmcli_authent . $cmd_remove_file);
                     $errors = $this->_get_dmcli_errors($output);
                     if (count($errors) > 0) {

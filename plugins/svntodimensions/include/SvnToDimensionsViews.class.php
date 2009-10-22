@@ -70,12 +70,22 @@ class SvnToDimensionsViews extends Views {
         }
     	$output .= '<h2>'.$GLOBALS['Language']->getText('plugin_svntodimensions', 'transfer_title').'</h2>';
     	$output .= $GLOBALS['Language']->getText('plugin_svntodimensions', 'transfer_text');
+
+        // We need prototype
+        $output .= '<script type="text/javascript" src="/scripts/prototype/prototype.js"></script>'."\n";
+
+        $output .= '<script language="JavaScript" type="text/javascript">'."\n";
+        $output .= '<!-- '."\n".'function change_radio() {'."\n";
+        $output .= '  $(\'id2\').select(\'select\').each( function (s) { s.disabled=!$(\'r2\').checked;  });'."\n";
+        $output .=   '$(\'id1\').select(\'select\').each( function (s) { s.disabled=!$(\'r1\').checked; }); }'."\n";
+        $output .= 'document.observe(\'dom:loaded\', change_radio); // --> </script>';
         
-        $output .= '<FIELDSET><LEGEND>Paramètres<LEGEND>';
+        $output .= "\n<FIELDSET><LEGEND>Param&egrave;tres</LEGEND>\n";
+
         $output .= $this->_fillRefreshForm($initialized, $row, $request, $group_id);
         $output .= '</FIELDSET>';
 //       / $output .= '<br>';
-        $output .= '<FIELDSET><LEGEND>Transferts<LEGEND>';
+        $output .= "\n<FIELDSET><LEGEND>Transferts</LEGEND>\n";
         $output .= $this->_fillTransferForm($group_id, $request);
     	$output .= '</FIELDSET>';
 		
@@ -198,24 +208,24 @@ class SvnToDimensionsViews extends Views {
         $output = '';
         $output .= '<form action="?group_id='.$group_id.'&action=doTransfer" method="post">';
         
-        $output .= '<table >';
+        $output .= "\n<table>\n";
         
         $output .= '<tr>';
         $output .= '<td valign="top">';
         $output .= $this->_fillAppliTag($group_id, $request);
-        $output .= '</td>';
-        $output .= '<td> </td>';
+        $output .= "</td>\n";
+        $output .= "<td> </td>\n";
         $output .= '<td>';
         $output .= $this->_fillPlTag($group_id, $request);
         $output .= '</td>';
-        $output .= '</tr>';
+        $output .= "</tr>\n";
 
         $output .= '<tr>';
         
-        $output .= '<td colspan="3" align="center"><b>'.$GLOBALS['Language']->getText('plugin_svntodimensions', 'transfer_password').' : </b>';
+        $output .= '<td colspan="3" align="center"><b>'.$GLOBALS['Language']->getText('plugin_svntodimensions', 'transfer_password')." : </b>\n";
         $output .= '<input type="password" name="password" value="" size="10" maxlength="20"></td>';
 
-        $output .= '</tr>';
+        $output .= "</tr>\n";
         
         $output .= '<tr>';
         
@@ -227,7 +237,7 @@ class SvnToDimensionsViews extends Views {
         }
         $output .= '></td></tr>';
         $output .= '</table>';
-        $output .= '</form>';
+        $output .= "</form>\n";
         
         
         return $output;
@@ -240,15 +250,15 @@ class SvnToDimensionsViews extends Views {
         $transferInProgress = $this->_controler->transferInProgress;
         $output .= '<tr>';
         $output .= '<td align="left">';
-        $output .= '<input type="radio" name="transfert_type" value="appli" ';
+        $output .= '<input type="radio" name="transfert_type" value="appli" id="r1" onClick="change_radio();" ';
         if($transferInProgress){
 		$output .= 'disabled = "true"';
         }
-        $output .= ' checked><b>'.$GLOBALS['Language']->getText('plugin_svntodimensions', 'transfer_appli').'</b>';
+        $output .= ' ><b>'.$GLOBALS['Language']->getText('plugin_svntodimensions', 'transfer_appli').'</b>';
         $output .= '</td>';
         $output .= '</tr>';
         
-        $output .= '<tr>';
+        $output .= '<tr id="id1">';
         $output .= '<td align="center">';
         $output .= '<select name="tag_appli"';
         if($transferInProgress){
@@ -283,7 +293,7 @@ class SvnToDimensionsViews extends Views {
         
         $output .= '<tr>';
         $output .= '<td align="left">';
-        $output .= '<input type="radio" name="transfert_type" value="pl" ';
+        $output .= '<input type="radio" name="transfert_type" value="pl"  id="r2" onClick="change_radio();" ';
         if($no_pl || $transferInProgress){
             $output .= 'disabled ="true" ';
         }
@@ -294,7 +304,7 @@ class SvnToDimensionsViews extends Views {
         $output .= '<tr>';
         $output .= '<td align="center">';
        
-        $output .= '<table border="1">';
+        $output .= '<table border="1" id="id2">';
         $output .= '<tr>';
         $output .= '<td>';
         $output .= '<table>';
