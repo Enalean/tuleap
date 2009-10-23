@@ -66,7 +66,7 @@
      {foreach from=$lines item=line name=lines}
        <tr>
          <td class="num"><a id="l{$smarty.foreach.lines.iteration}" href="#l{$smarty.foreach.lines.iteration}" class="linenr">{$smarty.foreach.lines.iteration}</a></td>
-	 <td class="codeline">{$line|escape:'htmlall'}</td>
+	 <td class="codeline">{$line|escape:'html'}</td>
      {/foreach}
      </table>
    {/if}
