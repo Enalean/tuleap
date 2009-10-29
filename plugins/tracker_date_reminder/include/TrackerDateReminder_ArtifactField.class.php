@@ -75,7 +75,7 @@ class TrackerDateReminder_ArtifactField {
                 $insert = 'INSERT INTO artifact_date_reminder_settings'.
                           '(field_id, group_artifact_id, notification_start, notification_type, frequency, recurse, notified_people)'.
                           ' VALUES'.
-                          ' ('.db_ei($field->getId()).','.db_ei($group_artifact_id).','.db_ei($start).','.db_ei($notif_type).','.db_ei($frequency).','.db_ei($recurse).','.db_es($notified_users).')';
+                          ' ('.db_ei($field->getId()).','.db_ei($group_artifact_id).','.db_ei($start).','.db_ei($notif_type).','.db_ei($frequency).','.db_ei($recurse).',"'.db_es($notified_users).'")';
                 $inserted = db_query($insert);
                 if ($inserted) {
                     $this->populateProcessingForField($at, $field->getId(), $group_artifact_id);
