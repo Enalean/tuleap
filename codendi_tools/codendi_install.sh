@@ -1006,7 +1006,7 @@ fi
 
 # Delete the Salome DB if asked for
 if [ "$yn" = "y" ]; then
-    $MYSQL -u root $pass_optl -e "drop database salome"
+    $MYSQL -u root $pass_opt -e "drop database salome"
 fi
 
 

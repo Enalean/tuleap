@@ -554,11 +554,9 @@ INSERT INTO bug_field \
   VALUES (107,'bug_group_id','SB','','Bug Group','Characterizes the nature of the bug (e.g. Feature Request, Action Request, Crash Error, Documentation Typo, Installation Problem,...','P',0,1,1,0,0,NULL);
 INSERT INTO bug_field \
   VALUES (108,'resolution_id','SB','','Resolution','How you have decided to fix the bug (Fixed, Work for me, Duplicate,..)','S',1,1,1,0,0,NULL);
-#
-# --------------------
-#
-# New Extension fields second
-#
+
+-- New Extension fields second
+
 INSERT INTO bug_field \
   VALUES (200,'category_version_id','SB','','Component Version','The version of the System Component (aka Bug Category) impacted by the bug','P',0,1,1,0,0,NULL);
 INSERT INTO bug_field \
@@ -1742,7 +1740,7 @@ INSERT INTO artifact_field_value_list VALUES (10,5,8,'8','',80,'P');
 INSERT INTO artifact_field_value_list VALUES (10,5,9,'9 - Critical','',90,'P');
 
 INSERT INTO artifact_field_value_list VALUES (12,5,1,'Accepted','The artifact will be worked on. If it won\'t be worked on, indicate why and close it',10,'A'); 
---' For proper syntax highlighting in emacs :-)
+-- ' For proper syntax highlighting in emacs :-)
 INSERT INTO artifact_field_value_list VALUES (12,5,2,'Declined','The artifact was not accepted.',50,'A');
 
 
@@ -2864,7 +2862,7 @@ INSERT INTO reference_group SET reference_id='14', group_id='46', is_active='1';
 
 
 --
---Add forums in Template project (group 100)
+-- Add forums in Template project (group 100)
 --
 INSERT INTO forum_group_list (group_id,forum_name,is_public,description) VALUES ('100','Open Discussion','1' ,'General Discussion');
 INSERT INTO forum_group_list (group_id,forum_name,is_public,description) VALUES ('100','Help','1' ,'Get Help');
@@ -2975,18 +2973,9 @@ INSERT INTO owner_layouts (owner_id, owner_type, layout_id, is_default)
 SELECT group_id, 'g', 1, 1 
 FROM groups;
 
--- only if FRS is used
+-- First column
 INSERT INTO layouts_contents (owner_id, owner_type, layout_id, column_id, name, rank) 
-SELECT group_id, 'g', 1, 1, 'projectlatestfilereleases', 0
-FROM service
-WHERE short_name = 'file' AND is_active = 1 AND is_used = 1;
-
-INSERT INTO layouts_contents (owner_id, owner_type, layout_id, column_id, name, rank) 
-SELECT group_id, 'g', 1, 1, 'projectpublicareas', 1
-FROM groups;
-
-INSERT INTO layouts_contents (owner_id, owner_type, layout_id, column_id, name, rank) 
-SELECT group_id, 'g', 1, 1, 'projectmembers', 1
+SELECT group_id, 'g', 1, 1, 'projectdescription', 0
 FROM groups;
 
 INSERT INTO layouts_contents (owner_id, owner_type, layout_id, column_id, name, rank) 
@@ -2994,24 +2983,35 @@ SELECT group_id, 'g', 1, 1, 'projectclassification', 1
 FROM groups;
 
 INSERT INTO layouts_contents (owner_id, owner_type, layout_id, column_id, name, rank) 
-SELECT group_id, 'g', 1, 1, 'projectdescription', 1
+SELECT group_id, 'g', 1, 1, 'projectpublicareas', 2
+FROM groups;
+
+-- Second column
+INSERT INTO layouts_contents (owner_id, owner_type, layout_id, column_id, name, rank) 
+SELECT group_id, 'g', 1, 2, 'projectmembers', 0
 FROM groups;
 
 -- only if News is used
 INSERT INTO layouts_contents (owner_id, owner_type, layout_id, column_id, name, rank) 
-SELECT group_id, 'g', 1, 2, 'projectlatestnews', 0
+SELECT group_id, 'g', 1, 2, 'projectlatestnews', 1
 FROM service
 WHERE short_name = 'news' AND is_active = 1 AND is_used = 1;
 
+-- only if FRS is used
+INSERT INTO layouts_contents (owner_id, owner_type, layout_id, column_id, name, rank) 
+SELECT group_id, 'g', 1, 2, 'projectlatestfilereleases', 2
+FROM service
+WHERE short_name = 'file' AND is_active = 1 AND is_used = 1;
+
 -- only if SVN is used
 INSERT INTO layouts_contents (owner_id, owner_type, layout_id, column_id, name, rank) 
-SELECT group_id, 'g', 1, 2, 'projectlatestsvncommits', 1
+SELECT group_id, 'g', 1, 2, 'projectlatestsvncommits', 3
 FROM service
 WHERE short_name = 'svn' AND is_active = 1 AND is_used = 1;
 
 -- only if CVS is used
 INSERT INTO layouts_contents (owner_id, owner_type, layout_id, column_id, name, rank) 
-SELECT group_id, 'g', 1, 2, 'projectlatestcvscommits', 2
+SELECT group_id, 'g', 1, 2, 'projectlatestcvscommits', 4
 FROM service
 WHERE short_name = 'cvs' AND is_active = 1 AND is_used = 1;
 

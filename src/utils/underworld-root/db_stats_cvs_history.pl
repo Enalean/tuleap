@@ -81,7 +81,6 @@ $sql = "SELECT user_id,user_name FROM user";
 $res = $dbh->prepare($sql);
 $res->execute();
 while ( $temp = $res->fetchrow_arrayref() ) {
-        ${$temp}[1] =~ tr/A-Z/a-z/; # Unix users are lower case only
 	$users{${$temp}[1]} = ${$temp}[0];
 }
 
