@@ -19,6 +19,8 @@
  */
 
 require_once('include/DataAccessObject.class.php');
+require_once('www/include/account.php');
+
 
 /**
  *  Data Access Object for User 
