@@ -207,6 +207,29 @@ $gitphp_conf['cacheexpire'] = TRUE;
 $gitphp_conf['cachelifetime'] = 3600;
 
 /*
+ * cloneurl
+ * Sets the base clone url to display for a project.
+ * This is the publicly-accessible url of the projectroot
+ * that gets prepended to the project path to create the clone
+ * url.  It can be any format, for example:
+ *
+ * http://server.com/
+ * ssh://server.com/git/
+ * git://server.com/gitprojects/
+ * (don't forget trailing slash)
+ * 
+ * If left blank/commented, no clone url will display.
+ */
+//$gitphp_conf['cloneurl'] = "http://localhost/git/";
+
+/*
+ * pushurl
+ * Sets the base push url to display for a project.
+ * Works the same as cloneurl.
+ */
+//$gitphp_conf['pushurl'] = "ssh://localhost/git/";
+
+/*
  * git_projects
  * Two-dimensional array list of projects
  * First array index is the name of the category the projects

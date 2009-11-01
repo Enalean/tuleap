@@ -19,6 +19,12 @@
    <tr><td>description</td><td>{$description}</td></tr>
    <tr><td>owner</td><td>{$owner}</td></tr>
    <tr><td>last change</td><td>{$lastchange}</td></tr>
+   {if $cloneurl}
+     <tr><td>clone url</td><td>{$cloneurl}</td></tr>
+   {/if}
+   {if $pushurl}
+     <tr><td>push url</td><td>{$pushurl}</td></tr>
+   {/if}
  </table>
  <div>
    <a class="title" href="{$SCRIPT_NAME}?p={$project}&a=shortlog">shortlog</a>
