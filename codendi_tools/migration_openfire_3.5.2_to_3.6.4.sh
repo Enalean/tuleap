@@ -1,3 +1,8 @@
+#!/bin/bash
+
+MYSQL_PARAMS=""
+TMP_DUMP_DIR="/var/tmp"
+
 #########################################################
 # 
 # Codendi migration from openfire 3.5.2 to openfire 3.6.4
@@ -55,14 +60,14 @@ cp -r /opt/openfire /opt/openfire.bak
 echo "Backing up the Openfire database..."
 pass_opt=""
 # See if MySQL root account is password protected
-mysqlshow 2>&1 | grep password
+mysqlshow $MYSQL_PARAMS 2>&1 | grep password
 while [ $? -eq 0 ]; do
     read -s -p "Existing DB is password protected. What is the Mysql root password?: " old_passwd
     echo
-    mysqlshow --password=$old_passwd 2>&1 | grep password
+    mysqlshow $MYSQL_PARAMS --password=$old_passwd 2>&1 | grep password
 done
 [ "X$old_passwd" != "X" ] && pass_opt="--password=$old_passwd"
-mysqldump --max_allowed_packet=512M -u root $pass_opt openfire > /tmp/dump.openfire.sql
+mysqldump $MYSQL_PARAMS --max_allowed_packet=512M -u root $pass_opt openfire > /tmp/dump.openfire.sql
 
 # 6. Install the new RPM. Execute rpm -Uvf openfire-x.x.x-x.i386.rpm to update your current install
 echo "Installing the new openfire RPM"
@@ -83,7 +88,7 @@ service openfire stop
 
 # 9. Update openfire database:
 echo "Updating openfire configuration"
-mysql -u openfireadm --password=$OPENFIRE_DB_PASSWORD openfire -e "INSERT INTO openfire.ofProperty (name, propValue) VALUES ('jdbcAuthProvider.codendiUserSessionIdSQL', 'SELECT session_hash FROM session WHERE session.user_id = (SELECT user_id FROM user WHERE user.user_name = ?)');"
+mysql $MYSQL_PARAMS -u openfireadm --password=$OPENFIRE_DB_PASSWORD openfire -e "INSERT INTO openfire.ofProperty (name, propValue) VALUES ('jdbcAuthProvider.codendiUserSessionIdSQL', 'SELECT session_hash FROM session WHERE session.user_id = (SELECT user_id FROM user WHERE user.user_name = ?)');"
 
 # 10. Copy new codendi_auth jar (set daemon as owner of the file)
 echo "Copying codendi_auth.jar into /opt/openfire/lib"

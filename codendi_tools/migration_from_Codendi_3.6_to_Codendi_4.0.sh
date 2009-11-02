@@ -52,6 +52,8 @@ CHOWN='/bin/chown'
 CHMOD='/bin/chmod'
 FIND='/usr/bin/find'
 export MYSQL='/usr/bin/mysql'
+# For instance -hdb.codendi.com
+MYSQL_PARAMS=""
 TOUCH='/bin/touch'
 CAT='/bin/cat'
 MAKE='/usr/bin/make'
@@ -826,11 +828,11 @@ sleep 5
 
 pass_opt=""
 # See if MySQL root account is password protected
-mysqlshow 2>&1 | grep password
+mysqlshow $MYSQL_PARAMS 2>&1 | grep password
 while [ $? -eq 0 ]; do
     read -s -p "Existing DB is password protected. What is the Mysql root password?: " old_passwd
     echo
-    mysqlshow --password=$old_passwd 2>&1 | grep password
+    mysqlshow $MYSQL_PARAMS --password=$old_passwd 2>&1 | grep password
 done
 [ "X$old_passwd" != "X" ] && pass_opt="--password=$old_passwd"
 
@@ -838,13 +840,13 @@ done
 echo "Starting DB update for Codendi 4.0 This might take a few minutes."
 
 echo "- rename codex db as codendi"
-mysqldump --max_allowed_packet=512M -u root $pass_opt codex > $TMP_DUMP_DIR/dump.codex.sql
-$MYSQL -u root $pass_opt mysql -e "CREATE DATABASE codendi DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;"
-$MYSQL -u root $pass_opt codendi < $TMP_DUMP_DIR/dump.codex.sql
+mysqldump $MYSQL_PARAMS --max_allowed_packet=512M -u root $pass_opt codex > $TMP_DUMP_DIR/dump.codex.sql
+$MYSQL $MYSQL_PARAMS -u root $pass_opt mysql -e "CREATE DATABASE codendi DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;"
+$MYSQL $MYSQL_PARAMS -u root $pass_opt codendi < $TMP_DUMP_DIR/dump.codex.sql
 
-mysqldump -u root $pass_opt mysql > $TMP_DUMP_DIR/dump.mysql.sql
+mysqldump $MYSQL_PARAMS -u root $pass_opt mysql > $TMP_DUMP_DIR/dump.mysql.sql
 substitute "$TMP_DUMP_DIR/dump.mysql.sql" 'codex' 'codendi'
-$MYSQL -u root $pass_opt mysql < $TMP_DUMP_DIR/dump.mysql.sql
+$MYSQL $MYSQL_PARAMS -u root $pass_opt mysql < $TMP_DUMP_DIR/dump.mysql.sql
 
 # Restart DB.
 $SERVICE mysqld restart
@@ -852,7 +854,7 @@ sleep 5
  
 
 echo "- Create dbauthuser, needed for MySQL-based authentication for HTTP (SVN), libNSS-mysql and Openfire"
-$CAT <<EOF | $MYSQL -u root mysql $pass_opt
+$CAT <<EOF | $MYSQL $MYSQL_PARAMS -u root mysql $pass_opt
 GRANT SELECT ON codendi.user to dbauthuser@localhost identified by '$dbauth_passwd';
 GRANT SELECT ON codendi.groups to dbauthuser@localhost;
 GRANT SELECT ON codendi.user_group to dbauthuser@localhost;
@@ -862,19 +864,19 @@ EOF
 
 
 echo "- Add support for > 2GB files in DB (FRS and Wiki)"
-$CAT <<EOF | $MYSQL $pass_opt codendi
+$CAT <<EOF | $MYSQL $MYSQL_PARAMS $pass_opt codendi
 ALTER TABLE frs_file CHANGE file_size file_size BIGINT NOT NULL DEFAULT '0';
 ALTER TABLE wiki_attachment_revision CHANGE size size BIGINT NOT NULL;
 EOF
 
 echo "- Remove nobody permissions FRS and update permissions table"
-$CAT <<EOF | $MYSQL $pass_opt codendi
+$CAT <<EOF | $MYSQL $MYSQL_PARAMS $pass_opt codendi
 DELETE FROM permissions_values WHERE (permission_type='PACKAGE_READ' or permission_type='RELEASE_READ') and ugroup_id='100';
 UPDATE permissions SET ugroup_id='4' WHERE (permission_type='PACKAGE_READ' or permission_type='RELEASE_READ') and ugroup_id='100';
 EOF
 
 echo "- Remove useless tables"
-$CAT <<EOF | $MYSQL $pass_opt codendi
+$CAT <<EOF | $MYSQL $MYSQL_PARAMS $pass_opt codendi
 DROP TABLE intel_agreement;
 DROP TABLE user_diary;
 DROP TABLE user_diary_monitor;
@@ -887,18 +889,18 @@ EOF
 
 
 echo "- Account approver"
-$CAT <<EOF | $MYSQL $pass_opt codendi
+$CAT <<EOF | $MYSQL $MYSQL_PARAMS $pass_opt codendi
 ALTER TABLE user ADD COLUMN approved_by int(11) NOT NULL default '0' AFTER add_date;
 EOF
 
 
 echo "- Windows password no longer needed"
-$CAT <<EOF | $MYSQL $pass_opt codendi
+$CAT <<EOF | $MYSQL $MYSQL_PARAMS $pass_opt codendi
 ALTER TABLE user DROP COLUMN windows_pw;
 EOF
 
 echo "- Table structure for System Events"
-$CAT <<EOF | $MYSQL $pass_opt codendi
+$CAT <<EOF | $MYSQL $MYSQL_PARAMS $pass_opt codendi
 # 
 # Table structure for System Events
 # 
@@ -939,7 +941,7 @@ EOF
 
 
 echo "- Artifact permissions"
-$CAT <<EOF | $MYSQL $pass_opt codendi
+$CAT <<EOF | $MYSQL $MYSQL_PARAMS $pass_opt codendi
 ALTER TABLE artifact ADD COLUMN use_artifact_permissions tinyint(1) NOT NULL DEFAULT '0' AFTER group_artifact_id;
 
 INSERT INTO permissions_values (permission_type,ugroup_id,is_default) VALUES ('TRACKER_ARTIFACT_ACCESS',1,1);
@@ -951,19 +953,19 @@ EOF
 
 
 echo "- Mandatory reference in SVN commit message"
-$CAT <<EOF | $MYSQL $pass_opt codendi
+$CAT <<EOF | $MYSQL $MYSQL_PARAMS $pass_opt codendi
 ALTER TABLE groups 
     ADD svn_mandatory_ref TINYINT NOT NULL DEFAULT '0' AFTER svn_tracker,
     ADD svn_accessfile text NULL AFTER svn_preamble;
 EOF
 
 echo "- Cross references : add a new field 'nature'"
-$CAT <<EOF | $MYSQL $pass_opt codendi
+$CAT <<EOF | $MYSQL $MYSQL_PARAMS $pass_opt codendi
 ALTER TABLE reference ADD nature VARCHAR( 64 ) NOT NULL;
 EOF
 
 echo "- Set the nature for existing references"
-$CAT <<EOF | $MYSQL $pass_opt codendi
+$CAT <<EOF | $MYSQL $MYSQL_PARAMS $pass_opt codendi
 UPDATE reference
 SET nature = 'artifact'
 WHERE (keyword = 'art' OR
@@ -1033,25 +1035,25 @@ WHERE (nature = '' OR nature IS NULL);
 EOF
 
 echo "- Cross-references change the type of column to handle wiki references (not int)"
-$CAT <<EOF | $MYSQL $pass_opt codendi
+$CAT <<EOF | $MYSQL $MYSQL_PARAMS $pass_opt codendi
 ALTER TABLE cross_references CHANGE source_id source_id VARCHAR( 255 ) NOT NULL DEFAULT '0';
 ALTER TABLE cross_references CHANGE target_id target_id VARCHAR( 255 ) NOT NULL DEFAULT '0';
 EOF
 
 echo "- Cross references : add two fields"
-$CAT <<EOF | $MYSQL $pass_opt codendi
+$CAT <<EOF | $MYSQL $MYSQL_PARAMS $pass_opt codendi
 ALTER TABLE cross_references ADD source_keyword VARCHAR( 32 ) NOT NULL AFTER source_type;
 ALTER TABLE cross_references ADD target_keyword VARCHAR( 32 ) NOT NULL AFTER target_type;
 EOF
 
 echo "- Change type of existing cross references from 'revision_svn' to 'svn_revision'"
-$CAT <<EOF | $MYSQL $pass_opt codendi
+$CAT <<EOF | $MYSQL $MYSQL_PARAMS $pass_opt codendi
 UPDATE cross_references SET source_type = 'svn_revision' WHERE source_type LIKE 'revision_svn';
 UPDATE cross_references SET target_type = 'svn_revision' WHERE target_type LIKE 'revision_svn';
 EOF
 
 echo "- Set keywords"
-$CAT <<EOF | $MYSQL $pass_opt codendi
+$CAT <<EOF | $MYSQL $MYSQL_PARAMS $pass_opt codendi
 UPDATE cross_references SET source_keyword = 'art' WHERE source_type LIKE 'artifact';
 UPDATE cross_references SET source_keyword = 'doc' WHERE source_type LIKE 'document';
 UPDATE cross_references SET source_keyword = 'cvs' WHERE source_type LIKE 'cvs_commit';
@@ -1077,7 +1079,7 @@ UPDATE cross_references SET target_keyword = 'wiki' WHERE target_type LIKE 'wiki
 EOF
 
 echo "- fix references > services"
-$CAT <<EOF | $MYSQL $pass_opt codendi
+$CAT <<EOF | $MYSQL $MYSQL_PARAMS $pass_opt codendi
 UPDATE reference
 SET service_short_name = 'tracker'
 WHERE scope = 'P'
@@ -1086,7 +1088,7 @@ AND link LIKE '/tracker/%func=detail%';
 EOF
 
 echo "- add new reference for IM chat"
-$CAT <<EOF | $MYSQL $pass_opt codendi
+$CAT <<EOF | $MYSQL $MYSQL_PARAMS $pass_opt codendi
 INSERT INTO reference SET 
     keyword='chat', 
     description='plugin_im:reference_chat_desc_key', 
@@ -1102,7 +1104,7 @@ EOF
 # IM plugin
 
 echo "- Add IM service"
-$CAT <<EOF | $MYSQL $pass_opt codendi
+$CAT <<EOF | $MYSQL $MYSQL_PARAMS $pass_opt codendi
 INSERT INTO service(group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES ( 100 , 'plugin_im:service_lbl_key' , 'plugin_im:service_desc_key' , 'IM', '/plugins/IM/?group_id=\$group_id', 1 , 1 , 'system',  210 );
 INSERT INTO service(group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES ( 1   , 'plugin_im:service_lbl_key' , 'plugin_im:service_desc_key' , 'IM', '/plugins/IM/?group_id=1', 1 , 0 , 'system',  210 );
 # Create IM service for all other projects (but disabled)
@@ -1116,14 +1118,14 @@ WHERE group_id NOT IN (SELECT group_id
 EOF
 
 echo "- IM plugin : grant privileges for openfireadm on session table (required for webmuc)"
-$CAT <<EOF | $MYSQL $pass_opt codendi
+$CAT <<EOF | $MYSQL $MYSQL_PARAMS $pass_opt codendi
 GRANT SELECT ON codendi.session to openfireadm@localhost;
 FLUSH PRIVILEGES;
 EOF
 
 # IM openfire configuration
 echo "- Specific configuration for webmuc"
-$CAT <<EOF | $MYSQL $pass_opt codendi
+$CAT <<EOF | $MYSQL $MYSQL_PARAMS $pass_opt codendi
 REPLACE INTO openfire.jiveProperty (name, propValue) VALUES 
 	("httpbind.enabled", "true"),
 	("httpbind.port.plain", "7070"),
@@ -1141,14 +1143,14 @@ EOF
 
 echo "- CI with Hudson plugin"
 echo "- install and enable hudson plugin"
-$CAT <<EOF | $MYSQL $pass_opt codendi
+$CAT <<EOF | $MYSQL $MYSQL_PARAMS $pass_opt codendi
 INSERT INTO plugin (name, available) VALUES ('hudson', '1');
 EOF
 
-$CAT $INSTALL_DIR/plugins/hudson/db/install.sql | $MYSQL $pass_opt codendi
+$CAT $INSTALL_DIR/plugins/hudson/db/install.sql | $MYSQL $MYSQL_PARAMS $pass_opt codendi
 
 echo "- Update user language"
-$CAT <<EOF | $MYSQL $pass_opt codendi
+$CAT <<EOF | $MYSQL $MYSQL_PARAMS $pass_opt codendi
 ALTER TABLE user CHANGE language_id language_id VARCHAR( 17 ) NOT NULL DEFAULT 'en_US';
 
 UPDATE user 
@@ -1174,7 +1176,7 @@ EOF
 
 
 echo "- Add 3 new widgets on project summary page"
-$CAT <<EOF | $MYSQL $pass_opt codendi
+$CAT <<EOF | $MYSQL $MYSQL_PARAMS $pass_opt codendi
 INSERT INTO layouts_contents(owner_id, owner_type, layout_id, column_id, name, rank)
 SELECT group_id, 'g', 1, 1, 'projectclassification', R.rank
 FROM groups 
@@ -1211,7 +1213,7 @@ WHERE hide_members = 0;
 EOF
 
 echo "- Add system_events widgets on admin dashboard"
-$CAT <<EOF | $MYSQL $pass_opt codendi
+$CAT <<EOF | $MYSQL $MYSQL_PARAMS $pass_opt codendi
 INSERT INTO layouts_contents(owner_id, owner_type, layout_id, column_id, name, rank)
 SELECT user_id, 'u', layout_id, column_id, 'mysystemevent', R.rank
 FROM user_group 
@@ -1226,18 +1228,18 @@ WHERE group_id = 1
 EOF
 
 echo "- Delete hide_members column"
-$CAT <<EOF | $MYSQL $pass_opt codendi
+$CAT <<EOF | $MYSQL $MYSQL_PARAMS $pass_opt codendi
 # (not needed anymore, please do it after previous request)
 ALTER TABLE groups DROP hide_members;
 EOF
 
 echo "- Add cvs_is_private"
-$CAT <<EOF | $MYSQL $pass_opt codendi 
+$CAT <<EOF | $MYSQL $MYSQL_PARAMS $pass_opt codendi 
 ALTER TABLE groups ADD cvs_is_private TINYINT( 1 ) NOT NULL DEFAULT '0' AFTER cvs_preamble ;
 EOF
 
 echo "- Layouts for dashboard"
-$CAT <<EOF | $MYSQL $pass_opt codendi 
+$CAT <<EOF | $MYSQL $MYSQL_PARAMS $pass_opt codendi 
 INSERT INTO layouts(id, name, description, scope) VALUES
 (2, '3 columns', 'Simple layout made of 3 columns', 'S'),
 (3, 'Left', 'Simple layout made of a main column and a small, left sided, column', 'S'),
@@ -1283,7 +1285,7 @@ CREATE TABLE IF NOT EXISTS widget_wikipage (
 EOF
 
 echo "- Upgrade docman"
-$CAT <<EOF | $MYSQL $pass_opt codendi 
+$CAT <<EOF | $MYSQL $MYSQL_PARAMS $pass_opt codendi 
 CREATE TABLE IF NOT EXISTS plugin_docman_widget_embedded (
   id int(11) unsigned NOT NULL auto_increment,
   owner_id int(11) unsigned NOT NULL,
@@ -1297,7 +1299,7 @@ CREATE TABLE IF NOT EXISTS plugin_docman_widget_embedded (
 EOF
 
 echo "- Files can now be browsed and downloaded by anonymous users (default permissions do not change, we only allow it)"
-$CAT <<EOF | $MYSQL $pass_opt codendi 
+$CAT <<EOF | $MYSQL $MYSQL_PARAMS $pass_opt codendi 
 INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('PACKAGE_READ',1);
 INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('RELEASE_READ',1);
 EOF
@@ -1375,7 +1377,7 @@ EOF
 
 
 echo "- Rename codexjri to codendijri"
-$CAT <<EOF | $MYSQL $pass_opt codendi
+$CAT <<EOF | $MYSQL $MYSQL_PARAMS $pass_opt codendi
 UPDATE plugin
 SET name = 'codendijri'
 WHERE name = 'codexjri';
@@ -1384,7 +1386,7 @@ EOF
 ###############################################################################
 # Run 'analyse' on all MySQL DB
 echo "Analyzing and optimizing MySQL databases (this might take a few minutes)"
-mysqlcheck -Aaos $pass_opt
+mysqlcheck $MYSQL_PARAMS -Aaos $pass_opt
 
 ##############################################
 # Upgrade to SVN 1.6
@@ -1683,7 +1685,7 @@ $CHMOD 755 commit-email.pl codendi_svn_pre_commit.php
 # Paths Codendification 
 #
 echo "- Rename codex to codendi"
-$CAT <<EOF | $MYSQL $pass_opt codendi
+$CAT <<EOF | $MYSQL $MYSQL_PARAMS $pass_opt codendi
 UPDATE svn_repositories 
 SET repository=replace(repository, '/var/lib/codex', '/var/lib/codendi');
 UPDATE plugin_docman_version 
