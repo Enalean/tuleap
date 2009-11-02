@@ -2877,8 +2877,8 @@ INSERT INTO layouts (id, name, description, scope) VALUES
 (3, 'Left', 'Simple layout made of a main column and a small, left sided, column', 'S'),
 (4, 'Right', 'Simple layout made of a main column and a small, right sided, column', 'S');
 
-INSERT INTO layouts_rows (id, layout_id, rank) VALUES (1, 1, 0);
-INSERT INTO layouts_rows_columns (id, layout_row_id, width) VALUES (1, 1, 50), (2, 1, 50);
+INSERT INTO layouts_rows (id, layout_id, rank) VALUES (1, 1, 0), (2, 2, 0),(3, 3, 0), (4, 4, 0);
+INSERT INTO layouts_rows_columns (id, layout_row_id, width) VALUES (1, 1, 50), (2, 1, 50), (3, 2, 33), (4, 2, 33), (5, 2, 33), (6, 3, 33), (7, 3, 66), (8, 4, 66), (9, 4, 33);
 
 -- Users
 
