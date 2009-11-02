@@ -608,6 +608,7 @@ class User {
         return $this->user_pw;
     }
     
+    
     /**
      * @return String User shell
      */
@@ -655,6 +656,35 @@ class User {
     function getPassword() {
         return $this->clear_password; 
     }
+    
+   /** 
+     * @return String Register purpose
+     */
+    function getRegisterPurpose() {
+        return $this->register_purpose; 
+    }
+    
+    /** 
+     * @return String new email
+     */
+    function getNewMail() {
+         return $this->email_new; 
+    }
+    
+    /** 
+     * @return String expiry date
+     */
+    function getExpiryDate() {
+         return $this->expiry_date; 
+    }
+    
+    /** 
+     * @return String Confirm Hash
+     */
+    function getConfirmHash() {
+         return $this->confirm_hash; 
+    }
+    
     /**
      * isActive - test if the user is active or not
      * 
@@ -774,12 +804,14 @@ class User {
      * 'R' = Restricted
      * 'D' = Deleted
      * 'S' = Suspended
+     * 'P' = Pending
      */
     function setStatus($status) {
     	$allowedStatus = array('A' => true,
     	                       'R' => true,
     	                       'D' => true,
-    	                       'S' => true);
+    	                       'S' => true,
+    	                       'P' => true);
     	if (isset($allowedStatus[$status])) {
             $this->status = $status;
     	}
@@ -941,6 +973,42 @@ class User {
      */
     function setPassword($password) {
         $this->clear_password = $password;
+    }
+    
+    /**
+     * Set new Email
+     * 
+     * @param  String $new_email
+     */
+    function setNewMail($newEmail) {
+        $this->email_new = $newEmail;
+    }
+    
+    /**
+     * Set Register Purpose
+     * 
+     * @param  String $regiter_purpose
+     */
+    function setRegisterPurpose($registerPurpose) {
+        $this->register_purpose = $registerPurpose;
+    }
+    
+    /**
+     * Set Confirm Hash
+     * 
+     * @param  String $confirm_hash
+     */
+    function setConfirmHash($confirmHash) {
+        $this->confirm_hash = $confirmHash;
+    }
+    
+/**
+     * Set Expiry Date
+     * 
+     * @param  String $expiry date
+     */
+    function setExpiryDate($expiryDate) {
+        $this->expiry_date = $expiryDate;
     }
 
     //

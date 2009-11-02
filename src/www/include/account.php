@@ -17,6 +17,8 @@ require_once('common/event/EventManager.class.php');
 require_once('common/valid/Rule.class.php');
 
 
+
+
 // ***** function account_pwvalid()
 // ***** check for valid password
 function account_pwvalid($pw, &$errors) {
@@ -29,14 +31,10 @@ function account_pwvalid($pw, &$errors) {
 
 // Set user password (Unix, Web)
 function account_set_password($user_id,$password) {
-    $res = db_query("UPDATE user SET user_pw='" . md5($password) . "',"
-                    . "unix_pw='" . account_genunixpw($password) . "',"
-                    . "last_pwd_update='".time()."'"
-                    ." WHERE user_id=" . db_ei($user_id));
-    if (! $res) {
-        return false;
-    }
-    return true;
+    $um   = UserManager::instance();
+    $user = $um->getUserById($user_id);
+    $user->setPassword($password);
+    return $um->updateDb($user);
 }
 
 // Add user to an existing project
@@ -199,55 +197,55 @@ function account_make_login_from_email($email) {
 
 function account_namevalid($name, $key = '') {
   global $Language;
-	// no spaces
-	if (strrpos($name,' ') > 0) {
+    // no spaces
+    if (strrpos($name,' ') > 0) {
         if ($key == '') {
             $k = 'login_err';
         } else {
             $k = $key . '_spaces';
         }
-		$GLOBALS['register_error'] = $Language->getText('include_account', $k);	
-		return 0;
-	}
+        $GLOBALS['register_error'] = $Language->getText('include_account', $k);	
+        return 0;
+    }
 
     $rule = new Rule_UserNameFormat();
 
-	// must have at least one character
+    // must have at least one character
     // MV: not useful because we already have both 'min length' and
     // 'valid chars' rules
     // NT: still useful since it checks if the name does not start with a digit
     if (strspn($name,"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ") == 0) {
-    	$GLOBALS['register_error'] = $Language->getText('include_account','char_err');
-    	return 0;
+        $GLOBALS['register_error'] = $Language->getText('include_account','char_err');
+        return 0;
     }
 
-	// must contain all legal characters
-	if ($rule->containsIllegalChars($name)) {
-		$GLOBALS['register_error'] = $Language->getText('include_account','illegal_char');
-		return 0;
-	}
+    // must contain all legal characters
+    if ($rule->containsIllegalChars($name)) {
+        $GLOBALS['register_error'] = $Language->getText('include_account','illegal_char');
+        return 0;
+    }
 
-	// min and max length
-	if ($rule->lessThanMin($name)) {
-		$GLOBALS['register_error'] = $Language->getText('include_account','name_too_short');
-		return 0;
-	}
-	if ($rule->greaterThanMax($name)) {
-		$GLOBALS['register_error'] = $Language->getText('include_account','name_too_long');
-		return 0;
-	}
+    // min and max length
+    if ($rule->lessThanMin($name)) {
+        $GLOBALS['register_error'] = $Language->getText('include_account','name_too_short');
+        return 0;
+    }
+    if ($rule->greaterThanMax($name)) {
+        $GLOBALS['register_error'] = $Language->getText('include_account','name_too_long');
+        return 0;
+    }
 
-	// illegal names
-	if ($rule->isNotLegalName($name)) {
-		$GLOBALS['register_error'] = $Language->getText('include_account','reserved');
-		return 0;
-	}
-	if ($rule->isCvsAccount($name)) {
-		$GLOBALS['register_error'] = $Language->getText('include_account','reserved_cvs');
-		return 0;
-	}
-		
-	return 1;
+    // illegal names
+    if ($rule->isNotLegalName($name)) {
+        $GLOBALS['register_error'] = $Language->getText('include_account','reserved');
+        return 0;
+    }
+    if ($rule->isCvsAccount($name)) {
+        $GLOBALS['register_error'] = $Language->getText('include_account','reserved_cvs');
+        return 0;
+    }
+        
+    return 1;
 }
 
 function account_groupnamevalid($name) {
@@ -256,65 +254,37 @@ function account_groupnamevalid($name) {
 	
 	// illegal names
 	if (eregi("^((www[0-9]?)|(cvs[0-9]?)|(shell[0-9]?)|(ftp[0-9]?)|(irc[0-9]?)|(news[0-9]?)"
-		. "|(mail[0-9]?)|(ns[0-9]?)|(download[0-9]?)|(pub)|(users)|(compile)|(lists)"
-		. "|(slayer)|(orbital)|(tokyojoe)|(webdev)|(projects)|(cvs)|(slayer)|(monitor)|(mirrors?))$",$name)) {
-		$GLOBALS['register_error'] = $Language->getText('include_account','reserved');
-		return 0;
+        . "|(mail[0-9]?)|(ns[0-9]?)|(download[0-9]?)|(pub)|(users)|(compile)|(lists)"
+        . "|(slayer)|(orbital)|(tokyojoe)|(webdev)|(projects)|(cvs)|(slayer)|(monitor)|(mirrors?))$",$name)) {
+        $GLOBALS['register_error'] = $Language->getText('include_account','reserved');
+        return 0;
 	}
 
     //Group name cannot contain underscore for DNS reasons.
 	if (eregi("_",$name)) {
-		$GLOBALS['register_error'] = $Language->getText('include_account','dns_error');
-		return 0;
+        $GLOBALS['register_error'] = $Language->getText('include_account','dns_error');
+        return 0;
 	}
 
 	return 1;
 }
-function rannum(){	     
-		mt_srand((double)microtime()*1000000);		  
-		$num = mt_rand(46,122);		  
-		return $num;		  
-	}	     
-	function genchr(){
-		do {	  
-			$num = rannum();		  
-		} while ( ( $num > 57 && $num < 65 ) || ( $num > 90 && $num < 97 ) );	  
-		$char = chr($num);	  
-		return $char;	  
-	}
-// The following is a random salt generator
-function account_gensalt(){
-		   
 
-	$a = genchr(); 
-	$b = genchr();
-// (LJ) Adding $1$ at the beginning of the salt
-// forces the MD5 encryption so the system has to
-// have MD5 pam module installed for Unix passwd file.
-	$salt = "$1$" . "$a$b";
-	return $salt;	
-}
-
-// generate unix pw
-function account_genunixpw($plainpw) {
-	return crypt($plainpw,account_gensalt());
-}
 
 // print out shell selects
 function account_shellselects($current) {
 	$shells = file("/etc/shells");
 
 	for ($i = 0; $i < count($shells); $i++) {
-		$this_shell = chop($shells[$i]);
+        $this_shell = chop($shells[$i]);
 
-		if ($current == $this_shell) {
-			echo "<option selected value=$this_shell>$this_shell</option>\n";
-		} else {
-			echo "<option value=$this_shell>$this_shell</option>\n";
-		}
+        if ($current == $this_shell) {
+        	echo "<option selected value=$this_shell>$this_shell</option>\n";
+        } else {
+        	echo "<option value=$this_shell>$this_shell</option>\n";
+        }
 	}
 }
-
+// Set user password (Unix, Web)
 function account_create($loginname=''
                         ,$pw=''
                         ,$ldap_id=''
@@ -330,47 +300,32 @@ function account_create($loginname=''
                         ,$unix_status='N'
                         ,$expiry_date=0
                         ) {
+    $um   = UserManager::instance();
+    $user = new User();
+    $user->setUserName($loginname);
+    $user->setPassword($pw);
+    $user->setLdapId($ldap_id);
+    $user->setRegisterPurpose($register_purpose);
+    $user->setEmail($email);
+    $user->setStatus($status);
+    $user->setConfirmHash($confirm_hash);
+    $user->setMailSiteUpdates($mail_site);
+    $user->setMailVA($mail_va);
+    $user->setTimezone($timezone);
+    $user->setLanguageID($lang_id);
+    $user->setUnixStatus($unix_status);
+    $user->setExpiryDate($expiry_date);
     
-    global $Language;
-
-    $result=db_query("INSERT INTO user"
-                     ." SET user_name='".db_es($loginname)."'"
-                     ." ,user_pw='".md5($pw)."'"
-                     ." ,unix_pw='".account_genunixpw($pw)."'"
-                     ." ,ldap_id='".db_es($ldap_id)."'"
-                     ." ,realname='".db_es($realname)."'"
-                     ." ,register_purpose='".db_es($register_purpose)."'"
-                     ." ,email='".db_es($email)."'"
-                     ." ,add_date=".time()
-                     ." ,last_pwd_update=".time()
-                     ." ,status='".db_es($status)."'"
-                     ." ,confirm_hash='".db_es($confirm_hash)."'"
-                     ." ,mail_siteupdates=".db_ei($mail_site)
-                     ." ,mail_va=".db_ei($mail_va)
-                     ." ,timezone='".db_es($timezone)."'"
-                     ." ,language_id='".db_es($lang_id) ."'"
-                     ." ,unix_status='".db_es($unix_status)."'"
-                     ." ,expiry_date=".db_ei($expiry_date));
-    
-    if (!$result) {
-        exit_error($Language->getText('include_exit', 'error'), db_error());
-        return 0;
+    $u = $um->createAccount($user);
+    if ($u) {
+        return $u->getId();
     } else {
-        $user_id = db_insertid($result);
-        $um = UserManager::instance();
-        $user = $um->getUserById($user_id);
-        $um->assignNextUnixUid($user);
-        account_create_mypage($user_id);
-        if ($status=='A' or $status=='R') {
-            $em =& EventManager::instance();
-            $em->processEvent('project_admin_activate_user', array('user_id' => $user_id));
-        }
-        return $user_id;
+        return $u;
     }
 }
 function account_create_mypage($user_id) {
-    $lm = new WidgetLayoutManager();
-    $lm->createDefaultLayoutForUser($user_id);
+    $um   = UserManager::instance();
+    return $um->accountCreateMyPage($user_id);
 }
 
 function account_redirect_after_login() {

@@ -6,39 +6,29 @@
 //
 // 
 
-require_once('pre.php');    
-require_once('account.php');
- 
+require_once('pre.php');
 
-// ###### function register_valid()
-// ###### checks for valid register from form post
-
-$request =& HTTPRequest::instance();
+$request = HTTPRequest::instance();
 
 $confirm_hash = $request->get('confirm_hash');
 
-$res_lostuser = db_query("SELECT * FROM user WHERE confirm_hash='".db_es($confirm_hash)."'");
-if (db_numrows($res_lostuser) > 1) {
+$um   = UserManager::instance();
+$user = $um->getUserByConfirmHash($confirm_hash);
+
+if ($user == null) {
     exit_error($Language->getText('include_exit', 'error'),
-	       $Language->getText('account_lostlogin', 'duplicate_hash'));
+               $Language->getText('account_lostlogin', 'invalid_hash'));
 }
-if (db_numrows($res_lostuser) < 1) {
-	exit_error($Language->getText('include_exit', 'error'),
-		   $Language->getText('account_lostlogin', 'invalid_hash'));
-}
-$row_lostuser = db_fetch_array($res_lostuser);
 
 if ($request->isPost()
     && $request->exist('Update')
     && $request->existAndNonEmpty('form_pw')
     && !strcmp($request->get('form_pw'), $request->get('form_pw2'))) {
-    $form_pw = $request->get('form_pw');
-	db_query("UPDATE user SET "
-		. "user_pw='" . md5($form_pw) . "',"
-		. "unix_pw='" . account_genunixpw($form_pw) . "' WHERE "
-		. "confirm_hash='".db_es($confirm_hash)."'");
 
-	session_redirect("/");
+    $user->setPassword($request->get('form_pw'));
+    $um->updateDb($user);
+
+    session_redirect("/");
 }
 
 $purifier =& Codendi_HTMLPurifier::instance();
@@ -46,7 +36,7 @@ $purifier =& Codendi_HTMLPurifier::instance();
 $HTML->header(array('title'=>$Language->getText('account_lostlogin', 'title')));
 ?>
 <p><b><?php echo $Language->getText('account_lostlogin', 'title'); ?></b>
-<P><?php echo $Language->getText('account_lostlogin', 'message', array($purifier->purify($row_lostuser['realname'], CODENDI_PURIFIER_CONVERT_HTML))); ?>.
+<P><?php echo $Language->getText('account_lostlogin', 'message', array($purifier->purify($user->getRealName(), CODENDI_PURIFIER_CONVERT_HTML))); ?>.
 
 <form action="lostlogin.php" method="post">
 <p><?php echo $Language->getText('account_lostlogin', 'newpasswd'); ?>:

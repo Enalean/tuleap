@@ -143,7 +143,7 @@ class UserManager {
         $user = null;
         $eParams = array('ident' => $ident,
                          'user'  => &$user);
-        $this->getEventManager()->processEvent('user_manager_find_user', $eParams);
+        $this->_getEventManager()->processEvent('user_manager_find_user', $eParams);
         if (!$user) {
             // No valid user found, try an internal lookup for username
             if(preg_match('/^(.*) \((.*)\)$/', $ident, $matches)) {
@@ -227,7 +227,23 @@ class UserManager {
         }
         return $user;
     }
-    
+
+    /**
+     * Get a user with the string genereated at user creation
+     * 
+     * @param String $hash
+     * 
+     * @return User
+     */
+    public function getUserByConfirmHash($hash) {
+        $dar = $this->getDao()->searchByConfirmHash($hash);
+        if ($dar->rowCount() !== 1) {
+            return null;
+        } else {
+            return $this->_getUserInstanceFromRow($dar->getRow());
+        }
+    }
+
     /**
      * @param $session_hash string Optional parameter. If given, this will force 
      *                             the load of the user with the given session_hash. 
@@ -508,9 +524,34 @@ class UserManager {
         }
         return false;
     }
-    
-    function getEventManager() {
-        return EventManager::instance();
+
+    /**
+     * Create new account
+     * 
+     * @param User $user
+     * 
+     * @return User
+     */
+    function createAccount($user){
+        $dao = $this->getDao();
+        $user_id = $dao->create($user->getUserName(),$user->getEmail(),$user->getPassword(),$user->getRealName(),$user->getRegisterPurpose(),$user->getStatus(),$user->getShell(),$user->getUserPw(),$user->getUnixStatus(),$user->getUnixUid(),$user->getUnixBox(),$user->getLdapId(),$_SERVER['REQUEST_TIME'],$user->getConfirmHash(),$user->getMailSiteUpdates(), $user->getMailVA(),$user->getStickyLogin(),$user->getAuthorizedKeys(),$user->getNewMail(),$user->getPeopleViewSkills(),$user->getPeopleResume(),$user->getTimeZone(),$user->getFontSize(),$user->getTheme(),$user->getLanguageID(),$user->getExpiryDate(),$_SERVER['REQUEST_TIME']);
+        if (!$user_id) {
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('include_exit','error'));
+            return 0;
+        } else {
+            $user = $this->getUserById($user_id);
+            $this->assignNextUnixUid($user);
+            
+            // Create the first layout for the user and add some initial widgets
+            $lm = new WidgetLayoutManager();
+            $lm->createDefaultLayoutForUser($user_id);
+            
+            if ($user->getStatus()=='A' or $user->getStatus()=='R') {
+                $em =$this->_getEventManager();
+                $em->processEvent('project_admin_activate_user', array('user_id' => $user_id));
+            }
+            return $user;
+        }
     }
 }
 

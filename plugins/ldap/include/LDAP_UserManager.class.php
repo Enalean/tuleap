@@ -238,43 +238,33 @@ class LDAP_UserManager {
      * @return User
      */
     function createAccount($eduid, $uid, $cn, $email) {
-        include_once 'account.php';
-
         if(trim($uid) == '' || trim($eduid) == '') {
             return false;
         }
 
-        // Generate a Codendi login
-        $form_loginname = $this->generateLogin($uid);
+        $user = new User();
+        $user->setUserName($this->generateLogin($uid));
+        $user->setLdapId($eduid);
+        $user->setRealName($cn);
+        $user->setEmail($email);
         // Generates a pseudo-random password. Its not full secure but its
         // better than nothing.
-        $password = md5((string)mt_rand(10000, 999999).time());
-        $status = $this->getLdap()->getLDAPParam('default_user_status');
-        $register_purpose= 'LDAP';
-        $unixStatus = 'S';
-        $mailSite = 0;
-        $mailVa = 0;
-        $confirm_hash='';
-        $timezone='GMT';
+        $user->setPassword(md5((string)mt_rand(10000, 999999).time()));
 
-        // Create Codendi account
-        if($new_userid = account_create($form_loginname,
-                                        $password,
-                                        $eduid,
-                                        $cn,
-                                        $register_purpose,
-                                        $email,
-                                        $status,
-                                        $confirm_hash,
-                                        $mailSite,
-                                        $mailVa,
-                                        $timezone,
-                                        $GLOBALS['Language']->getText('conf','language_id'),
-                                        $unixStatus)) {
+        // Default LDAP
+        $user->setStatus($this->getLdap()->getLDAPParam('default_user_status'));
+        $user->setRegisterPurpose('LDAP');
+        $user->setUnixStatus('S');
+        $user->setTimezone('GMT');
+        $user->setLanguageID($GLOBALS['Language']->getText('conf','language_id'));
+
+        $um = $this->getUserManager();
+        $u  = $um->createAccount($user);
+        if ($u) {
             // Create an entry in the ldap user db
             $ldapUserDao = $this->getDao();
-            $ldapUserDao->createLdapUser($new_userid, 0, $uid);
-            return $this->getUserManager()->getUserById($new_userid);
+            $ldapUserDao->createLdapUser($u->getId(), 0, $uid);
+            return $u;
         }
         return false;
     }

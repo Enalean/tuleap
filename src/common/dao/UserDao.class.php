@@ -19,7 +19,6 @@
  */
 
 require_once('include/DataAccessObject.class.php');
-require_once('www/include/account.php');
 
 
 /**
@@ -96,39 +95,34 @@ class UserDao extends DataAccessObject {
                   AND authorized_keys IS NOT NULL";
         return $this->retrieve($sql);
     }
-    
+
+    /**
+     * Search user by confirm hash
+     * 
+     * @param String $hash
+     * 
+     * @return DataAccessResult
+     */
+    public function searchByConfirmHash($hash) {
+        $sql = 'SELECT * FROM user WHERE confirm_hash='.$this->da->quoteSmart($hash);
+        return $this->retrieve($sql);
+    }
+
     /**
     * create a row in the table user 
     * @return true or id(auto_increment) if there is no error
     */
-    function create($user_name, $email, $user_pw, $realname, $register_purpose, $status, $shell, $unix_pw, $unix_status, $unix_uid, $unix_box, $ldap_id, $add_date, $confirm_hash, $mail_siteupdates, $mail_va, $sticky_login, $authorized_keys, $email_new, $people_view_skills, $people_resume, $timezone, $fontsize, $theme, $language_id) {
-		$sql = sprintf("INSERT INTO user (user_name, email, user_pw, realname, register_purpose, status, shell, unix_pw, unix_status, unix_uid, unix_box, ldap_id, add_date, confirm_hash, mail_siteupdates, mail_va, sticky_login, authorized_keys, email_new, people_view_skills, people_resume, timezone, fontsize, theme, language_id) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
-            $this->da->quoteSmart($user_name),
-            $this->da->quoteSmart($email),
-            $this->da->quoteSmart($user_pw),
-            $this->da->quoteSmart($realname),
-            $this->da->quoteSmart($register_purpose),
-            $this->da->quoteSmart($status),
-            $this->da->quoteSmart($shell),
-            $this->da->quoteSmart($unix_pw),
-            $this->da->quoteSmart($unix_status),
-            $this->da->quoteSmart($unix_uid),
-            $this->da->quoteSmart($unix_box),
-            $this->da->quoteSmart($ldap_id),
-            $this->da->quoteSmart($add_date),
-            $this->da->quoteSmart($confirm_hash),
-            $this->da->quoteSmart($mail_siteupdates),
-            $this->da->quoteSmart($mail_va),
-            $this->da->quoteSmart($sticky_login),
-            $this->da->quoteSmart($authorized_keys),
-            $this->da->quoteSmart($email_new),
-            $this->da->quoteSmart($people_view_skills),
-            $this->da->quoteSmart($people_resume),
-            $this->da->quoteSmart($timezone),
-            $this->da->quoteSmart($fontsize),
-            $this->da->quoteSmart($theme),
-            $this->da->quoteSmart($language_id));
-        $inserted = $this->update($sql);
+    function create($user_name, $email, $user_pw, $realname, $register_purpose, $status, $shell, $unix_pw, $unix_status, $unix_uid, $unix_box, $ldap_id, $add_date, $confirm_hash, $mail_siteupdates, $mail_va, $sticky_login, $authorized_keys, $email_new, $people_view_skills, $people_resume, $timezone, $fontsize, $theme, $language_id ,$expiry_date,$last_pwd_update) {
+        $sql =' INSERT INTO user (user_name, email, user_pw, realname, register_purpose, status, shell, unix_pw, unix_status, unix_uid, unix_box, ldap_id, add_date, confirm_hash, mail_siteupdates, mail_va, sticky_login, authorized_keys, email_new, people_view_skills, people_resume, timezone, fontsize, theme, language_id ,expiry_date,last_pwd_update) VALUES ('
+            .$this->da->quoteSmart($user_name).' , '.$this->da->quoteSmart($email).' , '.$this->da->quoteSmart(md5($user_pw)).' , '.$this->da->quoteSmart($realname).' , '.$this->da->quoteSmart($register_purpose).' , '
+            .$this->da->quoteSmart($status).' , '.$this->da->quoteSmart($shell).' , '.$this->da->quoteSmart($this->_generateUnixPwd ($unix_pw)).' , '.$this->da->quoteSmart($unix_status).' , '
+            .$this->da->quoteSmart($unix_uid).' , '.$this->da->quoteSmart($unix_box).' , '.$this->da->quoteSmart($ldap_id).' , '.$this->da->quoteSmart($add_date).' , '
+            .$this->da->quoteSmart($confirm_hash).' , '.$this->da->quoteSmart($mail_siteupdates).' , '.$this->da->quoteSmart($mail_va).' , '.$this->da->quoteSmart($sticky_login).' , '
+            .$this->da->quoteSmart($authorized_keys).' , '.$this->da->quoteSmart($email_new).' , '.$this->da->quoteSmart($people_view_skills).' , '
+            .$this->da->quoteSmart($people_resume).' , '.$this->da->quoteSmart($timezone).' , '.$this->da->quoteSmart($fontsize).' , '
+            .$this->da->quoteSmart($theme).' , '.$this->da->quoteSmart($language_id).' , '.$this->da->quoteSmart($expiry_date).' , '.$this->da->quoteSmart($last_pwd_update).')';
+        
+            $inserted = $this->update($sql);
         if ($inserted) {
             $dar =& $this->retrieve("SELECT LAST_INSERT_ID() AS id");
             if ($row = $dar->getRow()) {
@@ -144,7 +138,7 @@ class UserDao extends DataAccessObject {
         $stmt = array();
         if (isset($user['password'])) {
             $stmt[] = 'user_pw='.$this->da->quoteSmart(md5($user['password']));
-            $stmt[] = 'unix_pw='.$this->da->quoteSmart(account_genunixpw($user['password']));
+            $stmt[] = 'unix_pw='.$this->da->quoteSmart($this->_generateUnixPwd($user['password']));
             //$stmt[] = 'windows_pw='.$this->da->quoteSmart(account_genwinpw($user['password']));
             $stmt[] = 'last_pwd_update='.$_SERVER['REQUEST_TIME'];
             unset($user['password']);
@@ -164,7 +158,57 @@ class UserDao extends DataAccessObject {
         }
         return false;
     }
-    
+
+    /**
+     * Generate a random number between 46 and 122
+     * 
+     * @return Integer
+     */
+    protected function _ranNum(){
+        mt_srand((double)microtime()*1000000);
+        $num = mt_rand(46,122);
+        return $num;
+    }
+
+    /**
+     * Generate a random alphanum character
+     * 
+     * @return String
+     */
+    protected function _genChr(){
+        do {
+            $num = $this->_ranNum();
+        } while ( ( $num > 57 && $num < 65 ) || ( $num > 90 && $num < 97 ) );
+        $char = chr($num);
+        return $char;
+    }
+
+    /**
+     * Random salt generator
+     * 
+     * @return String
+     */ 
+    protected function _genSalt(){
+        $a = $this->_genChr();
+        $b = $this->_genChr();
+        // (LJ) Adding $1$ at the beginning of the salt
+        // forces the MD5 encryption so the system has to
+        // have MD5 pam module installed for Unix passwd file.
+        $salt = "$1$" . "$a$b";
+        return $salt;
+    }
+
+    /**
+     * Generate Unix shadow password
+     *
+     * @param String $plainpw Clear password
+     * 
+     * @return String
+     */
+    protected function _generateUnixPwd($plainpw) {
+        return crypt($plainpw, $this->_genSalt());
+    }
+
     /**
      * Assign to given user the next available unix_uid
      * 
@@ -327,7 +371,6 @@ class UserDao extends DataAccessObject {
             return false;
         }
     }
+     
 }
-
-
 ?>
