@@ -320,16 +320,18 @@ class Docman_ReportFactory {
 
     function createReport($report) {
         $dao =& $this->getDao();
-
-        // report
-        $id = $dao->create($report->getName(), $report->getTitle(), $report->getGroupId(), $report->getUserId(), $report->getItemId(), $report->getScope(), $report->getIsDefault(), $report->getAdvancedSearch(), $report->getDescription(), $report->getImage());
+        $res= $dao->verifyQueryUnicity($report->getName(), $report->getGroupId(), $report->getUserId(), $report->getScope()); 
+        if ($res){
+            // report
+            $id = $dao->create($report->getName(), $report->getTitle(), $report->getGroupId(), $report->getUserId(), $report->getItemId(), $report->getScope(), $report->getIsDefault(), $report->getAdvancedSearch(), $report->getDescription(), $report->getImage());
         
-        if($id) {
-            $report->setId($id);
-            // filters
-            $filterFactory = new Docman_FilterFactory($this->groupId);
-            $filterFactory->createFiltersFromReport($report);
-            return $id;
+            if($id) {
+                $report->setId($id);
+                // filters
+                $filterFactory = new Docman_FilterFactory($this->groupId);
+                $filterFactory->createFiltersFromReport($report);
+                return $id;
+            }
         }
         return false;
     }
