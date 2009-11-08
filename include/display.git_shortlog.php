@@ -39,7 +39,7 @@ function git_shortlog($projectroot,$project,$hash,$page)
 
 		$commitlines = array();
 		$commitcount = min(100,count($revlist));
-		for ($i = 0; $i < $commitcount; $i++) {
+		for ($i = 0; $i < $commitcount; ++$i) {
 			$commit = $revlist[$i];
 			if (strlen(trim($commit)) > 0) {
 				$commitline = array();

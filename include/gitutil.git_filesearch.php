@@ -73,7 +73,7 @@ function git_filesearch($project, $hash, $search, $case = false, $skip = 0, $cou
 		foreach ($matches as $i => $val) {
 			if ($index > $count)
 				unset($matches[$i]);
-			$index++;
+			++$index;
 		}
 	}
 

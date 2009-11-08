@@ -29,7 +29,7 @@ function git_rss($projectroot,$project)
 
 		$commitlines = array();
 		$revlistcount = count($revlist);
-		for ($i = 0; $i < $revlistcount; $i++) {
+		for ($i = 0; $i < $revlistcount; ++$i) {
 			$commit = $revlist[$i];
 			$co = git_read_commit($projectroot . $project, $commit);
 			if (($i >= 20) && ((time() - $co['committer_epoch']) > 48*60*60))

@@ -36,7 +36,7 @@ function git_read_revlist($proj,$head,$count = NULL,$skip = NULL,$header = FALSE
 	if ((!$canskip) && ($skip > 0)) {
 		$tmp = array();
 		$revcount = count($revlist);
-		for ($i = $skip; $i < $revcount; $i++)
+		for ($i = $skip; $i < $revcount; ++$i)
 			$tmp[] = $revlist[$i];
 		return $tmp;
 	}

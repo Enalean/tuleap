@@ -37,7 +37,7 @@ function git_read_projects($projectroot,$projectlist,$projdata = FALSE)
 				$projects = git_recurse_projects($projectroot);
 				$len = count($projects);
 				$cut = strlen($projectroot);
-				for ($i = 0; $i < $len; $i++) {
+				for ($i = 0; $i < $len; ++$i) {
 					$p = substr($projects[$i],$cut + 1);
 					if ($projdata)
 						$projects[$i] = git_project_info($projectroot, $p);

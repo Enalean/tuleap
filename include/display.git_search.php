@@ -56,7 +56,7 @@ function git_search($projectroot, $project, $hash, $search, $searchtype, $page =
 
 		$commitlines = array();
 		$commitcount = min(100,$revlistcount);
-		for ($i = 0; $i < $commitcount; $i++) {
+		for ($i = 0; $i < $commitcount; ++$i) {
 			$commit = $revlist[$i];
 			if (strlen(trim($commit)) > 0) {
 				$commitline = array();

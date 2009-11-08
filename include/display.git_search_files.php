@@ -88,7 +88,7 @@ function git_search_files($projectroot, $project, $hash, $search, $page = 0)
 					$filesearchline["matches"] = $matches;
 			}
 			$filesearchlines[] = $filesearchline;
-			$i++;
+			++$i;
 			if ($i >= 100)
 				break;
 		}

@@ -45,7 +45,7 @@ function git_log($projectroot,$project,$hash,$page)
 
 		$commitlines = array();
 		$commitcount = min(100,$revlistcount);
-		for ($i = 0; $i < $commitcount; $i++) {
+		for ($i = 0; $i < $commitcount; ++$i) {
 			$commit = $revlist[$i];
 			if (isset($commit) && strlen($commit) > 1) {
 				$commitline = array();
