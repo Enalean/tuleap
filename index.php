@@ -22,6 +22,17 @@
   */
  require_once('config/gitphp.conf.php');
 
+ $project = null;
+
+ if (isset($_GET['p'])) {
+ 	$fullpath = realpath($gitphp_conf['projectroot'] . $_GET['p']);
+	$realprojroot = realpath($gitphp_conf['projectroot']);
+	$pathpiece = substr($fullpath, 0, strlen($realprojroot));
+	if (strcmp($pathpiece, $realprojroot) === 0) {
+		$project = str_replace(chr(0), '', $_GET['p']);
+	}
+ }
+
  $extraoutput = FALSE;
 
  /*
@@ -66,7 +77,7 @@
 		$tpl->cache_lifetime = $gitphp_conf['cachelifetime'];
 	if (!(isset($gitphp_conf['cacheexpire']) && ($gitphp_conf['cacheexpire'] === FALSE))) {
 		require_once('include/cache.cache_expire.php');
-		cache_expire($gitphp_conf['projectroot'], (isset($_GET['p']) ? $_GET['p'] : null), (isset($git_projects) ? $git_projects : null));
+		cache_expire($gitphp_conf['projectroot'], $project, (isset($git_projects) ? $git_projects : null));
 	}
  }
 
@@ -76,11 +87,11 @@
  $tpl->assign("stylesheet",$gitphp_conf['stylesheet']);
  $tpl->assign("version",$gitphp_version);
  $tpl->assign("pagetitle",$gitphp_conf['title']);
- if (isset($_GET['p'])) {
+ if ($project) {
 	$tpl->assign("validproject",TRUE);
-	$tpl->assign("project",$_GET['p']);
+	$tpl->assign("project",$project);
 	require_once('include/gitutil.git_project_descr.php');
-	$tpl->assign("projectdescription",git_project_descr($gitphp_conf['projectroot'],$_GET['p']));
+	$tpl->assign("projectdescription",git_project_descr($gitphp_conf['projectroot'],$project));
 	if (isset($_GET['a'])) {
 		$tpl->assign("action",$_GET['a']);
 		$tpl->assign("validaction", TRUE);
@@ -113,97 +124,97 @@ if ($gitphp_conf['filesearch'])
  } else if (isset($_GET['a']) && $_GET['a'] == "project_index") {
 	require_once('include/display.git_project_index.php');
 	git_project_index($gitphp_conf['projectroot'],$git_projects);
- } else if (isset($_GET['p'])) {
- 	if (!is_dir($gitphp_conf['projectroot'] . $_GET['p'])) {
+ } else if ($project) {
+ 	if (!is_dir($gitphp_conf['projectroot'] . $project)) {
 		$tpl->assign("validproject",FALSE);
 		require_once('include/display.git_message.php');
 		git_message("No such directory",TRUE);
-	} else if (!is_file($gitphp_conf['projectroot'] . $_GET['p'] . "/HEAD")) {
+	} else if (!is_file($gitphp_conf['projectroot'] . $project . "/HEAD")) {
 		$tpl->assign("validproject",FALSE);
 		require_once('include/display.git_message.php');
 		git_message("No such project",TRUE);
 	} else {
 		if (!isset($_GET['a'])) {
 			require_once('include/display.git_summary.php');
-			git_summary($gitphp_conf['projectroot'],$_GET['p']);
+			git_summary($gitphp_conf['projectroot'],$project);
 		} else {
 			switch ($_GET['a']) {
 				case "summary":
 					require_once('include/display.git_summary.php');
-					git_summary($gitphp_conf['projectroot'],$_GET['p']);
+					git_summary($gitphp_conf['projectroot'],$project);
 					break;
 				case "tree":
 					require_once('include/display.git_tree.php');
-					git_tree($gitphp_conf['projectroot'], $_GET['p'], (isset($_GET['h']) ? $_GET['h'] : NULL), (isset($_GET['f']) ? $_GET['f'] : NULL), (isset($_GET['hb']) ? $_GET['hb'] : NULL));
+					git_tree($gitphp_conf['projectroot'], $project, (isset($_GET['h']) ? $_GET['h'] : NULL), (isset($_GET['f']) ? $_GET['f'] : NULL), (isset($_GET['hb']) ? $_GET['hb'] : NULL));
 					break;
 				case "shortlog":
 					require_once('include/display.git_shortlog.php');
-					git_shortlog($gitphp_conf['projectroot'],$_GET['p'],(isset($_GET['h']) ? $_GET['h'] : NULL), (isset($_GET['pg']) ? $_GET['pg'] : NULL));
+					git_shortlog($gitphp_conf['projectroot'],$project,(isset($_GET['h']) ? $_GET['h'] : NULL), (isset($_GET['pg']) ? $_GET['pg'] : NULL));
 					break;
 				case "log":
 					require_once('include/display.git_log.php');
-					git_log($gitphp_conf['projectroot'],$_GET['p'], (isset($_GET['h']) ? $_GET['h'] : NULL), (isset($_GET['pg']) ? $_GET['pg'] : NULL));
+					git_log($gitphp_conf['projectroot'],$project, (isset($_GET['h']) ? $_GET['h'] : NULL), (isset($_GET['pg']) ? $_GET['pg'] : NULL));
 					break;
 				case "commit":
 					require_once('include/display.git_commit.php');
-					git_commit($gitphp_conf['projectroot'],$_GET['p'],$_GET['h']);
+					git_commit($gitphp_conf['projectroot'],$project,$_GET['h']);
 					break;
 				case "commitdiff":
 					require_once('include/display.git_commitdiff.php');
-					git_commitdiff($gitphp_conf['projectroot'],$_GET['p'],$_GET['h'], (isset($_GET['hp']) ? $_GET['hp'] : NULL));
+					git_commitdiff($gitphp_conf['projectroot'],$project,$_GET['h'], (isset($_GET['hp']) ? $_GET['hp'] : NULL));
 					break;
 				case "commitdiff_plain":
 					require_once('include/display.git_commitdiff_plain.php');
-					git_commitdiff_plain($gitphp_conf['projectroot'],$_GET['p'],$_GET['h'],(isset($_GET['hp']) ? $_GET['hp'] : NULL));
+					git_commitdiff_plain($gitphp_conf['projectroot'],$project,$_GET['h'],(isset($_GET['hp']) ? $_GET['hp'] : NULL));
 					break;
 				case "heads":
 					require_once('include/display.git_heads.php');
-					git_heads($gitphp_conf['projectroot'],$_GET['p']);
+					git_heads($gitphp_conf['projectroot'],$project);
 					break;
 				case "tags":
 					require_once('include/display.git_tags.php');
-					git_tags($gitphp_conf['projectroot'],$_GET['p']);
+					git_tags($gitphp_conf['projectroot'],$project);
 					break;
 				case "rss":
 					require_once('include/display.git_rss.php');
-					git_rss($gitphp_conf['projectroot'],$_GET['p']);
+					git_rss($gitphp_conf['projectroot'],$project);
 					break;
 				case "blob":
 					require_once('include/display.git_blob.php');
-					git_blob($gitphp_conf['projectroot'],$_GET['p'], (isset($_GET['h']) ? $_GET['h'] : NULL), (isset($_GET['f']) ? $_GET['f'] : NULL), (isset($_GET['hb']) ? $_GET['hb'] : NULL));
+					git_blob($gitphp_conf['projectroot'],$project, (isset($_GET['h']) ? $_GET['h'] : NULL), (isset($_GET['f']) ? $_GET['f'] : NULL), (isset($_GET['hb']) ? $_GET['hb'] : NULL));
 					break;
 				case "blob_plain":
 					require_once('include/display.git_blob_plain.php');
-					git_blob_plain($gitphp_conf['projectroot'],$_GET['p'],$_GET['h'],(isset($_GET['f']) ? $_GET['f'] : NULL));
+					git_blob_plain($gitphp_conf['projectroot'],$project,$_GET['h'],(isset($_GET['f']) ? $_GET['f'] : NULL));
 					break;
 				case "blobdiff":
 					require_once('include/display.git_blobdiff.php');
-					git_blobdiff($gitphp_conf['projectroot'],$_GET['p'],$_GET['h'],$_GET['hb'],$_GET['hp'],(isset($_GET['f']) ? $_GET['f'] : NULL));
+					git_blobdiff($gitphp_conf['projectroot'],$project,$_GET['h'],$_GET['hb'],$_GET['hp'],(isset($_GET['f']) ? $_GET['f'] : NULL));
 					break;
 				case "blobdiff_plain":
 					require_once('include/display.git_blobdiff_plain.php');
-					git_blobdiff_plain($gitphp_conf['projectroot'],$_GET['p'],$_GET['h'],$_GET['hb'],$_GET['hp'], (isset($_GET['f']) ? $_GET['f'] : NULL));
+					git_blobdiff_plain($gitphp_conf['projectroot'],$project,$_GET['h'],$_GET['hb'],$_GET['hp'], (isset($_GET['f']) ? $_GET['f'] : NULL));
 					break;
 				case "snapshot":
 					require_once('include/display.git_snapshot.php');
-					git_snapshot($gitphp_conf['projectroot'],$_GET['p'], (isset($_GET['h']) ? $_GET['h'] : NULL));
+					git_snapshot($gitphp_conf['projectroot'],$project, (isset($_GET['h']) ? $_GET['h'] : NULL));
 					break;
 				case "history":
 					require_once('include/display.git_history.php');
-					git_history($gitphp_conf['projectroot'],$_GET['p'], (isset($_GET['h']) ? $_GET['h'] : NULL),$_GET['f']);
+					git_history($gitphp_conf['projectroot'],$project, (isset($_GET['h']) ? $_GET['h'] : NULL),$_GET['f']);
 					break;
 				case "search":
 					if (isset($_GET['st']) && ($_GET['st'] == 'file')) {
 						require_once('include/display.git_search_files.php');
-						git_search_files($gitphp_conf['projectroot'],$_GET['p'],(isset($_GET['h']) ? $_GET['h'] : NULL),(isset($_GET['s']) ? $_GET['s'] : NULL),(isset($_GET['pg']) ? $_GET['pg'] : 0));
+						git_search_files($gitphp_conf['projectroot'],$project,(isset($_GET['h']) ? $_GET['h'] : NULL),(isset($_GET['s']) ? $_GET['s'] : NULL),(isset($_GET['pg']) ? $_GET['pg'] : 0));
 					} else {
 						require_once('include/display.git_search.php');
-						git_search($gitphp_conf['projectroot'],$_GET['p'],(isset($_GET['h']) ? $_GET['h'] : NULL),(isset($_GET['s']) ? $_GET['s'] : NULL),(isset($_GET['st']) ? $_GET['st'] : "commit"),(isset($_GET['pg']) ? $_GET['pg'] : 0));
+						git_search($gitphp_conf['projectroot'],$project,(isset($_GET['h']) ? $_GET['h'] : NULL),(isset($_GET['s']) ? $_GET['s'] : NULL),(isset($_GET['st']) ? $_GET['st'] : "commit"),(isset($_GET['pg']) ? $_GET['pg'] : 0));
 					}
 					break;
 				case "tag":
 					require_once('include/display.git_tag.php');
-					git_tag($gitphp_conf['projectroot'],$_GET['p'],$_GET['h']);
+					git_tag($gitphp_conf['projectroot'],$project,$_GET['h']);
 					break;
 				default:
 					$tpl->assign("validaction", FALSE);
