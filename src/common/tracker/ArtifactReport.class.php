@@ -460,19 +460,20 @@ class ArtifactReport extends Error {
             $pm          =& PermissionsManager::instance();
             $permissions = $pm->getPermissionsAndUgroupsByObjectid($this->group_artifact_id, $ugroups);
             
-            
-            //artifact permissions
-            $from  .= " LEFT JOIN permissions 
+            if(!$u->isSuperUser()) {
+                //artifact permissions
+                $from  .= " LEFT JOIN permissions 
                              ON (permissions.object_id = CONVERT(a.artifact_id USING utf8) 
                                  AND 
                                  permissions.permission_type = 'TRACKER_ARTIFACT_ACCESS') ";
-            $where .= " AND (a.use_artifact_permissions = 0
+                $where .= " AND (a.use_artifact_permissions = 0
                              OR 
                              (
                                  permissions.ugroup_id IN (". implode(',', $ugroups) .")
                              )
                        ) ";
             
+            }
             
             $aids = array();
             //Does the user member of at least one group which has ACCESS_FULL ?

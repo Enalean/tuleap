@@ -543,7 +543,7 @@ class UserManager {
             $this->assignNextUnixUid($user);
             
             // Create the first layout for the user and add some initial widgets
-            $lm = new WidgetLayoutManager();
+            $lm = $this->_getWidgetLayoutManager();
             $lm->createDefaultLayoutForUser($user_id);
             
             if ($user->getStatus()=='A' or $user->getStatus()=='R') {
@@ -552,6 +552,23 @@ class UserManager {
             }
             return $user;
         }
+    }
+
+    /**
+     * Wrapper for WidgetLayoutManager
+     * 
+     * This wrapper is needed to include "WidgetLayoutManager" and so on in the
+     * context of LDAP plugin. In LDAP plugin, when a user is added into a ugroup
+     * WidgetLayoutManager is not loaded so there is a fatal error. But if we add
+     * WidgetLayoutManager.class.php in the include list, it makes the process_system_event.php
+     * cry because at some include degree there are the Artifact stuff that raises Warnings
+     * (call-tim pass-by-reference).
+     * 
+     * @return WidgetLayoutManager
+     */
+    protected function _getWidgetLayoutManager() {
+        include_once 'common/widget/WidgetLayoutManager.class.php';
+        return new WidgetLayoutManager();
     }
 }
 

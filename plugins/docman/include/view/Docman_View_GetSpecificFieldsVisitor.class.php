@@ -214,11 +214,11 @@ class Docman_View_GetSpecificFieldsVisitor {
     
     function visitEmbeddedFile(&$item, $params = array()) {
         $content = '';
-        $version =& $item->getCurrentVersion();
-        if ($version && is_file($version->getPath())) {
-            $content = file_get_contents($version->getPath());
+        $version = $item->getCurrentVersion();
+        if ($version) {
+            $content = $version->getContent();
         }
-        return array(new Docman_MetadataHtmlEmbeddedFile($content));    
+        return array(new Docman_MetadataHtmlEmbeddedFile($content));
     }
     
     function visitEmpty(&$item, $params = array()) {

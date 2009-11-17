@@ -292,27 +292,6 @@ fi
 ###############################################################################
 echo "Updating Packages"
 
-echo "Upgrading to Subversion 1.6"
-$RPM -e --allmatches subversion-tools  2>/dev/null
-$RPM -e --allmatches subversion-devel 2>/dev/null
-$RPM -e --allmatches mod_dav_svn 2>/dev/null
-$RPM -e --allmatches subversion-perl 2>/dev/null
-$RPM -e --allmatches subversion-python 2>/dev/null
-$RPM -e --allmatches subversion 2>/dev/null
-$RPM -e --allmatches neon-devel 2>/dev/null
-$RPM -e --allmatches neon 2>/dev/null
-echo "Installing Subversion, Neon and recent SQLite RPMs for Codendi...."
-cd "${RPMS_DIR}/subversion"
-newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
-cd ${newest_rpm}/$ARCH
-# Update SQLite first: version above 3.4 is required for SVN 1.6, and RHEL5 only provides version 3.3.
-# Need to upgrade both sqlite and sqlite-devel at once
-$RPM -Uvh sqlite-3*.rpm sqlite-devel-3*.rpm
-$RPM -ivh neon-0.*.rpm neon-devel*.rpm subversion-1.*.rpm mod_dav_svn*.rpm subversion-perl*.rpm subversion-python*.rpm 
-# Dependency error with Perl ??
-$RPM --nodeps -ivh subversion-tools*.rpm
-
-
 # -> libnss-mysql (system authentication based on MySQL)
 $RPM -e --allmatches libnss-mysql 2>/dev/null
 echo "Installing libnss-mysql RPM for Codendi...."
@@ -616,7 +595,7 @@ $CAT <<'EOF' >>/etc/logrotate.d/httpd
     daily
     rotate 4
     postrotate
-        /sbin/service httpd reload > /dev/null || true
+        /sbin/service httpd graceful > /dev/null || true
      year=`date +%Y`
      month=`date +%m`
      day=`date +%d`
@@ -669,130 +648,130 @@ fi
 
 
 
-# ###############################################################################
-# echo "Updating local.inc"
+###############################################################################
+echo "Updating local.inc"
 
-# # Remove $sys_win_domain
-# $PERL -pi -e 's/(\$sys_win_domain.*)/\/\/\1 DEPRECATED/g' $ETC_DIR/conf/local.inc
+# Remove $sys_win_domain
+$PERL -pi -e 's/(\$sys_win_domain.*)/\/\/\1 DEPRECATED/g' $ETC_DIR/conf/local.inc
 
-# # Remove $apache_htpasswd
-# $PERL -pi -e 's/(\$apache_htpasswd.*)/\/\/\1 DEPRECATED/g' $ETC_DIR/conf/local.inc
+# Remove $apache_htpasswd
+$PERL -pi -e 's/(\$apache_htpasswd.*)/\/\/\1 DEPRECATED/g' $ETC_DIR/conf/local.inc
 
-# # Remove sys_crondelay
-# $PERL -pi -e 's/(\$sys_crondelay.*)/\/\/\1 DEPRECATED/g' $ETC_DIR/conf/local.inc
+# Remove sys_crondelay
+$PERL -pi -e 's/(\$sys_crondelay.*)/\/\/\1 DEPRECATED/g' $ETC_DIR/conf/local.inc
 
-# # dbauthuser and password
-# $GREP -q ^\$sys_dbauth_user  $ETC_DIR/conf/local.inc
-# if [ $? -ne 0 ]; then
-#   # Remove end PHP marker
-#   substitute '/etc/codendi/conf/local.inc' '\?\>' ''
+# dbauthuser and password
+$GREP -q ^\$sys_dbauth_user  $ETC_DIR/conf/local.inc
+if [ $? -ne 0 ]; then
+  # Remove end PHP marker
+  substitute '/etc/codendi/conf/local.inc' '\?\>' ''
 
-#   $CAT <<EOF >> /etc/codendi/conf/local.inc
-# // DB user for http authentication (must have access to user/group/user_group tables)
-# \$sys_dbauth_user = "dbauthuser";
-# \$sys_dbauth_passwd = '$dbauth_passwd';
-# ?>
-# EOF
-# fi
+  $CAT <<EOF >> /etc/codendi/conf/local.inc
+// DB user for http authentication (must have access to user/group/user_group tables)
+\$sys_dbauth_user = "dbauthuser";
+\$sys_dbauth_passwd = '$dbauth_passwd';
+?>
+EOF
+fi
 
-# # sys_pending_account_lifetime
-# $GREP -q ^\$sys_pending_account_lifetime  $ETC_DIR/conf/local.inc
-# if [ $? -ne 0 ]; then
-#   # Remove end PHP marker
-#   substitute '/etc/codendi/conf/local.inc' '\?\>' ''
+# sys_pending_account_lifetime
+$GREP -q ^\$sys_pending_account_lifetime  $ETC_DIR/conf/local.inc
+if [ $? -ne 0 ]; then
+  # Remove end PHP marker
+  substitute '/etc/codendi/conf/local.inc' '\?\>' ''
 
-#   $CAT <<EOF >> /etc/codendi/conf/local.inc
-# // Duration before deleting pending accounts which have not been activated
-# // (in days)
-# // Default value is 60 days
-# \$sys_pending_account_lifetime = 60;
-# ?>
-# EOF
-# fi
+  $CAT <<EOF >> /etc/codendi/conf/local.inc
+// Duration before deleting pending accounts which have not been activated
+// (in days)
+// Default value is 60 days
+\$sys_pending_account_lifetime = 60;
+?>
+EOF
+fi
 
-# # unix_uid_add
-# $GREP -q ^\$unix_uid_add  $ETC_DIR/conf/local.inc
-# if [ $? -ne 0 ]; then
-#   # Remove end PHP marker
-#   substitute '/etc/codendi/conf/local.inc' '\?\>' ''
+# unix_uid_add
+$GREP -q ^\$unix_uid_add  $ETC_DIR/conf/local.inc
+if [ $? -ne 0 ]; then
+  # Remove end PHP marker
+  substitute '/etc/codendi/conf/local.inc' '\?\>' ''
 
-#   $CAT <<EOF >> /etc/codendi/conf/local.inc
-# // How much to add to the database unix_uid to get the actual unix uid
-# \$unix_uid_add  = "20000";
-# ?>
-# EOF
-# fi
+  $CAT <<EOF >> /etc/codendi/conf/local.inc
+// How much to add to the database unix_uid to get the actual unix uid
+\$unix_uid_add  = "20000";
+?>
+EOF
+fi
 
-# # unix_gid_add
-# $GREP -q ^\$unix_gid_add  $ETC_DIR/conf/local.inc
-# if [ $? -ne 0 ]; then
-#   # Remove end PHP marker
-#   substitute '/etc/codendi/conf/local.inc' '\?\>' ''
+# unix_gid_add
+$GREP -q ^\$unix_gid_add  $ETC_DIR/conf/local.inc
+if [ $? -ne 0 ]; then
+  # Remove end PHP marker
+  substitute '/etc/codendi/conf/local.inc' '\?\>' ''
 
-#   $CAT <<EOF >> /etc/codendi/conf/local.inc
-# // How much to add to the database group_id to get the unix gid
-# \$unix_gid_add  = "1000";
-# ?>
-# EOF
-# fi
+  $CAT <<EOF >> /etc/codendi/conf/local.inc
+// How much to add to the database group_id to get the unix gid
+\$unix_gid_add  = "1000";
+?>
+EOF
+fi
 
-# # cvs_hook_tmp_dir
-# $GREP -q ^\$cvs_hook_tmp_dir  $ETC_DIR/conf/local.inc
-# if [ $? -ne 0 ]; then
-#   # Remove end PHP marker
-#   substitute '/etc/codendi/conf/local.inc' '\?\>' ''
+# cvs_hook_tmp_dir
+$GREP -q ^\$cvs_hook_tmp_dir  $ETC_DIR/conf/local.inc
+if [ $? -ne 0 ]; then
+  # Remove end PHP marker
+  substitute '/etc/codendi/conf/local.inc' '\?\>' ''
 
-#   $CAT <<EOF >> /etc/codendi/conf/local.inc
-# \$cvs_hook_tmp_dir    = "/var/run/log_accum"; // temporary directory used by CVS commit hooks
+  $CAT <<EOF >> /etc/codendi/conf/local.inc
+\$cvs_hook_tmp_dir    = "/var/run/log_accum"; // temporary directory used by CVS commit hooks
 
-# ?>
-# EOF
-# fi
+?>
+EOF
+fi
 
-# # svn_root_file 
-# $GREP -q ^\$svn_root_file  $ETC_DIR/conf/local.inc
-# if [ $? -ne 0 ]; then
-#   # Remove end PHP marker
-#   substitute '/etc/codendi/conf/local.inc' '\?\>' ''
+# svn_root_file 
+$GREP -q ^\$svn_root_file  $ETC_DIR/conf/local.inc
+if [ $? -ne 0 ]; then
+  # Remove end PHP marker
+  substitute '/etc/codendi/conf/local.inc' '\?\>' ''
 
-#   $CAT <<EOF >> /etc/codendi/conf/local.inc
-# \$svn_root_file = "/etc/httpd/conf.d/codendi_svnroot.conf"; // File containing SVN repository definitions for Apache
+  $CAT <<EOF >> /etc/codendi/conf/local.inc
+\$svn_root_file = "/etc/httpd/conf.d/codendi_svnroot.conf"; // File containing SVN repository definitions for Apache
 
-# ?>
-# EOF
-# fi
+?>
+EOF
+fi
 
-# # alias_file 
-# $GREP -q ^\$alias_file  $ETC_DIR/conf/local.inc
-# if [ $? -ne 0 ]; then
-#   # Remove end PHP marker
-#   substitute '/etc/codendi/conf/local.inc' '\?\>' ''
+# alias_file 
+$GREP -q ^\$alias_file  $ETC_DIR/conf/local.inc
+if [ $? -ne 0 ]; then
+  # Remove end PHP marker
+  substitute '/etc/codendi/conf/local.inc' '\?\>' ''
 
-#   $CAT <<EOF >> /etc/codendi/conf/local.inc
+  $CAT <<EOF >> /etc/codendi/conf/local.inc
 
-# // Sendmail alias
-# \$alias_file      = "/etc/aliases.codendi";
+// Sendmail alias
+\$alias_file      = "/etc/aliases.codendi";
 
-# ?>
-# EOF
-# fi
+?>
+EOF
+fi
 
-# # sys_supported_languages 
-# $GREP -q ^\$sys_supported_languages  $ETC_DIR/conf/local.inc
-# if [ $? -ne 0 ]; then
-#   # Remove end PHP marker
-#   substitute '/etc/codendi/conf/local.inc' '\?\>' ''
+# sys_supported_languages 
+$GREP -q ^\$sys_supported_languages  $ETC_DIR/conf/local.inc
+if [ $? -ne 0 ]; then
+  # Remove end PHP marker
+  substitute '/etc/codendi/conf/local.inc' '\?\>' ''
 
-#   $CAT <<EOF >> /etc/codendi/conf/local.inc
+  $CAT <<EOF >> /etc/codendi/conf/local.inc
 
-# // Supported languages (separated comma)
-# // Only en_US and fr_FR are available for now
-# // Exemple: 'en_US,fr_FR'
-# \$sys_supported_languages = 'en_US,fr_FR';
+// Supported languages (separated comma)
+// Only en_US and fr_FR are available for now
+// Exemple: 'en_US,fr_FR'
+\$sys_supported_languages = 'en_US,fr_FR';
 
-# ?>
-# EOF
-# fi
+?>
+EOF
+fi
 
 
 ###############################################################################

@@ -78,14 +78,23 @@ class Docman_View_ItemDetailsSectionNewVersion extends Docman_View_ItemDetailsSe
         return $this->visitDocument($item, $params);
     }
     function visitFile(&$item, $params = array()) {
+        $label = '';
+        if (isset($this->_controller->_viewParams['label'])) {
+            $label = $this->_controller->_viewParams['label'];
+        }
+        $changelog = '';
+        if (isset($this->_controller->_viewParams['changelog'])) {
+            $changelog = $this->_controller->_viewParams['changelog'];
+        }
+
         $content = '';
-        $content .= '<form action="'. $this->url .'&amp;id='. $this->item->getId() .'" method="post" enctype="multipart/form-data">';
+        $content .= '<form action="'. $this->url .'&amp;id='. $this->item->getId() .'" method="post" enctype="multipart/form-data" id= "plugin_docman_new_version_form">';
 
         $content .= '<dl>';
         $content .= '<dt>'. $GLOBALS['Language']->getText('plugin_docman', 'details_actions_update') .'</dt><dd>';
         $content .= '<table>';
-        $content .= '<tr style="vertical-align:top"><td>'. $GLOBALS['Language']->getText('plugin_docman', 'details_actions_newversion_label') .'</td><td><input type="text" name="version[label]" value="" /></td></tr>';
-        $content .= '<tr style="vertical-align:top"><td>'. $GLOBALS['Language']->getText('plugin_docman', 'details_actions_newversion_changelog') .'</td><td><textarea name="version[changelog]" rows="7" cols="80"></textarea></td></tr>';
+        $content .= '<tr style="vertical-align:top"><td>'. $GLOBALS['Language']->getText('plugin_docman', 'details_actions_newversion_label') .'</td><td><input type="text" name="version[label]" value="'.$label.'" /></td></tr>';
+        $content .= '<tr style="vertical-align:top"><td>'. $GLOBALS['Language']->getText('plugin_docman', 'details_actions_newversion_changelog') .'</td><td><textarea name="version[changelog]" rows="7" cols="80">'.$changelog.'</textarea></td></tr>';
         $fields = $item->accept(new Docman_View_GetSpecificFieldsVisitor(), array('force_item' => $this->force, 'request' => &$this->controller->request));
         foreach($fields as $field) {
             $content .= '<tr style="vertical-align:top;">';
@@ -111,7 +120,16 @@ class Docman_View_ItemDetailsSectionNewVersion extends Docman_View_ItemDetailsSe
 
         $content .= '</dl>';
         $content .= '</form>';
-
+        $snippet = '
+        document.observe("dom:loaded", function () {
+            $("plugin_docman_new_version_form").observe("submit", function (e) {
+                if (!docman.approvalTableCheck($("plugin_docman_new_version_form"))) {
+                    e.stop();
+                }
+            });
+        });
+        ';
+        $GLOBALS['Response']->includeFooterJavascriptSnippet($snippet);
         return $content;
     }
     function visitEmbeddedFile(&$item, $params = array()) {

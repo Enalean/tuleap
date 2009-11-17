@@ -37,7 +37,7 @@ if (!document.getElementsByClassNames) {
             }
             return elements;
         });
-    }
+    };
 }
 
 com.xerox.codendi.Docman = Class.create();
@@ -539,7 +539,7 @@ Object.extend(com.xerox.codendi.Docman.prototype, {
             }
         } else {
             // Update existing report
-            var selectedValue = parseInt(value)
+            var selectedValue = parseInt(value);
             if(selectedValue > 0) {
                 var name = window.prompt(this.options.language.report_name_upd, select.options[select.selectedIndex].innerHTML.unescapeHTML());
                 if(name != null && name.strip() != '') {
@@ -556,7 +556,8 @@ Object.extend(com.xerox.codendi.Docman.prototype, {
     //{{{----------------------------- Approval table create
     approvalTableCreate: function(form) {
         var selected;
-        for(var i = 0; i < form['app_table_import'].length; i++) {
+        var len = form['app_table_import'].length;
+        for(var i = 0; i < len; i++) {
             if(form['app_table_import'][i].checked) {
                 selected = form['app_table_import'][i].value;
             }
@@ -583,6 +584,40 @@ Object.extend(com.xerox.codendi.Docman.prototype, {
             }
             break;
         }
+    },
+    //}}}
+    //{{{----------------------------- Approval table check
+    approvalTableCheck: function(form) {
+        var selected;
+        var len = form['app_table_import'].length;
+        for(var i = 0; i < len ; i++) {
+            if(form['app_table_import'][i].checked) {
+                selected = form['app_table_import'][i].value;
+            }
+        }
+        var res;
+        switch(selected) {
+        case "copy":
+        case "reset":
+        case "empty":   
+            res = true;
+            break;
+        default:
+            res = false;
+            break;
+        }
+        // Display feedback message
+        if ((!res) && (!($('plugin_docman_approvaltable_error')))){
+            var li = Builder.node('li', {'id': 'plugin_docman_approvaltable_error'});
+            var errorMsg = document.createTextNode(this.options.language.new_approvaltable);
+            li.appendChild(errorMsg);
+            var ul = Builder.node('ul', {'class': 'feedback_error'});
+            ul.appendChild(li);
+            var feedback = $('feedback');
+            feedback.appendChild(ul);
+            feedback.show();
+        }
+        return res;
     }
 });
 

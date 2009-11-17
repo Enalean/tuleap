@@ -51,7 +51,8 @@ require_once('Docman_View_Header.class.php');
                     'action_lock_info'         => $GLOBALS['Language']->getText('plugin_docman','action_lock_info'),
                     'action_approval'          => $GLOBALS['Language']->getText('plugin_docman','action_approval'),
                     'feedback_cut'             => $GLOBALS['Language']->getText('plugin_docman','info_cut_notify_cut'),
-                    'feedback_copy'            => $GLOBALS['Language']->getText('plugin_docman','info_copy_notify_cp')
+                    'feedback_copy'            => $GLOBALS['Language']->getText('plugin_docman','info_copy_notify_cp'),
+                    'new_approvaltable'        => $GLOBALS['Language']->getText('plugin_docman','error_no_option')
                 )
             ),
             $this->_getJSDocmanParameters($params)

@@ -441,6 +441,7 @@ plugin_docman	error_append_filechunk	Une erreur est survenue durant l'ajout du m
 plugin_docman	error_not_a_file	L'élément spécifié n'est pas un fichier.
 plugin_docman	error_get_checksum	Erreur lors de la récupération de la somme de contrôle du fichier.
 plugin_docman	error_item_id_missing	Erreur: pas d'élément à traiter (ID).
+plugin_docman	error_no_option	Veuillez choisir une option pour la création de la table d'approbation
 
 plugin_docman	event_add	Création
 plugin_docman	event_edit	Edition

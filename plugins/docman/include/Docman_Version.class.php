@@ -38,6 +38,7 @@ class Docman_Version {
         $this->filesize  = null;
         $this->filetype  = null;
         $this->path      = null;
+        $this->_content  = null;
         if ($data) {
             $this->initFromRow($data);
         }
@@ -138,7 +139,18 @@ class Docman_Version {
     function setEeee($eeee) { 
         $this->eeee = $eeee;
     }
-    
+
+    protected $_content;
+    public function getContent() {
+        if ($this->_content === null && is_file($this->getPath())) {
+            $this->_content = file_get_contents($this->getPath());
+        }
+        return $this->_content;
+    }
+    public function setContent($content) {
+        $this->_content = $content;
+    }
+
     function initFromRow($row) {
         $this->setId($row['id']);
         $this->setAuthorId($row['user_id']);

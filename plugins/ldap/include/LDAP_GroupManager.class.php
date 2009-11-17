@@ -195,7 +195,7 @@ abstract class LDAP_GroupManager
      */
     public function getUsersToBeAdded($option)
     {
-        if (!$this->usersToAdd) {
+        if ($this->usersToAdd === null) {
             $this->diffDbAndDirectory($option);
         }
         return $this->usersToAdd;
@@ -209,7 +209,7 @@ abstract class LDAP_GroupManager
      */
     public function getUsersToBeRemoved($option)
     {
-        if (!$this->usersToAdd) {
+        if ($this->usersToAdd === null) {
             $this->diffDbAndDirectory($option);
         }
         return $this->usersToRemove;
@@ -223,7 +223,7 @@ abstract class LDAP_GroupManager
      */
     public function getUsersNotImpacted($option)
     {
-        if (!$this->usersToAdd) {
+        if ($this->usersToAdd === null) {
             $this->diffDbAndDirectory($option);
         }
         return $this->usersNotImpacted;
@@ -242,16 +242,24 @@ abstract class LDAP_GroupManager
         $ldap     = $this->getLdap();
         $groupDef = $ldap->searchGroupMembers($groupDn);
         if ($groupDef && $groupDef->count() == 1) {
-            $ldapGroup = $groupDef->current();
+            $ldapGroup   = $groupDef->current();
+            $baseGroupDn = strtolower($ldap->getLDAPParam('grp_dn'));
             foreach ($ldapGroup->getGroupMembers() as $memberDn) {
-            	$attrs = array($ldap->getLDAPParam('eduid'),
-            	               $ldap->getLDAPParam('cn'),
-            	               $ldap->getLDAPParam('uid'),
-            	               $ldap->getLDAPParam('mail'));
-                $ldapUserResI = $ldap->searchDn($memberDn, $attrs);
-                if ($ldapUserResI && $ldapUserResI->count() == 1) {
-                    $lr = $ldapUserResI->current();
-                    $ldapIds[$lr->getEdUid()] = $lr;
+                $memberDn = strtolower($memberDn);
+                if (strpos($memberDn, $baseGroupDn) !== false) {
+                    $ids = $this->getLdapGroupMembers($memberDn);
+                    $ldapIds = array_merge($ldapIds, $ids);
+                } else {
+                    // Assume it's a user definition
+                    $attrs = array($ldap->getLDAPParam('eduid'),
+                    $ldap->getLDAPParam('cn'),
+                    $ldap->getLDAPParam('uid'),
+                    $ldap->getLDAPParam('mail'));
+                    $ldapUserResI = $ldap->searchDn($memberDn, $attrs);
+                    if ($ldapUserResI && $ldapUserResI->count() == 1) {
+                        $lr = $ldapUserResI->current();
+                        $ldapIds[$lr->getEdUid()] = $lr;
+                    }
                 }
             }
         }

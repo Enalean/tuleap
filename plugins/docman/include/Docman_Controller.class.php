@@ -1291,7 +1291,7 @@ class Docman_Controller extends Controler {
                         $valid = $this->_validateRequest($item->accept(new Docman_View_GetFieldsVisitor()));
                     } else {
                         $this->updateItemFromUserInput($item);
-                        $valid = $this->_validateRequest($item->accept(new Docman_View_GetSpecificFieldsVisitor(), array('request' => &$this->request)));
+                        $valid = (($this->_validateApprovalTable($this->request))&&($this->_validateRequest($item->accept(new Docman_View_GetSpecificFieldsVisitor(), array('request' => &$this->request)))));
                     }
                     //Actions
                     if ($valid && $updateConfirmed) {
@@ -1312,6 +1312,14 @@ class Docman_Controller extends Controler {
                     if ($view == 'update_wl') {
                         $this->view = 'Update';
                     } else if ($view == 'new_version') {
+                        // Keep fields values
+                        $v = $this->request->get('version');
+                        $this->_viewParams['label']     = $v['label'];
+                        $this->_viewParams['changelog'] = $v['changelog'];
+                        if ($item instanceof Docman_EmbeddedFile) {
+                            $v = $item->getCurrentVersion();
+                            $v->setContent($this->request->get('content'));
+                        }
                         $this->view = 'NewVersion';
                     } else {
                         $mdFactory = new Docman_MetadataFactory($this->_viewParams['group_id']);
@@ -1448,7 +1456,20 @@ class Docman_Controller extends Controler {
     function forceView($view) {
         $this->view = $view;
     }
-    
+ 
+    function _validateApprovalTable($request){
+        $valid = false;
+        if ($request->valid(new Valid_WhiteList('app_table_import', array('copy', 'reset', 'empty')))) {
+            $select = $request->get('app_table_import');
+            if (($select != 'empty')&&($select != 'copy')&&($select != 'reset')) {
+                $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_no_option'));
+                return $valid;
+            }
+            $valid = true;
+            return $valid;
+        }
+        return $valid;
+    }
     function _validateRequest($fields) {
         $valid = true;
         foreach($fields as $field) {

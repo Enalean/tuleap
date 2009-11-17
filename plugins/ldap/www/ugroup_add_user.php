@@ -90,13 +90,6 @@ $clean_ugroupName = $hp->purify($ugroupName);
 
 project_admin_header(array('title'=>$Language->getText('project_admin_editugroup','edit_ug'),'group'=>$group_id));
 
-echo '
-<script type="text/javascript" src="/scripts/prototype/prototype.js"></script>
-<script type="text/javascript" src="/scripts/scriptaculous/scriptaculous.js"></script>
-<script type="text/javascript" src="/scripts/autocomplete.js"></script>
-<script type="text/javascript" src="'.$pluginPath.'/scripts/autocomplete.js"></script>
-';
-
 echo '<h2>'.$Language->getText('project_admin_editugroup','ug_admin', $clean_ugroupName).'</h2>';
 
 echo '<p>'.$GLOBALS['Language']->getText('plugin_ldap', 'ugroup_edit_group_add_users_help').'</p>';
@@ -109,7 +102,6 @@ echo '<p>'.$GLOBALS['Language']->getText('plugin_ldap', 'ugroup_edit_group_add_u
 echo '<input type="submit" name="submit" value="'.$btn_update.'" />';
 
 // JS code for autocompletion on "add_user" field defined on top.
-$GLOBALS['Response']->includeFooterJavascriptFile('/scripts/autocomplete.js');
 $js = "new UserAutoCompleter('user_add',
                         '".util_get_dir_image_theme()."',
                         true);";
