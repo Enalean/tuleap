@@ -105,24 +105,36 @@ class ReferenceAdministrationViews extends Views {
 ';
 
     }
-    
-    function _display_reference_row($ref, &$row_num) {
-        global $Language;
-        
-        if ($ref->getId()==100) return; // 'None' reference
-        
+
+    /**
+     * Return ready to display description of a reference
+     * 
+     * @param Reference $ref Reference
+     * @return String
+     */
+    public static function getReferenceDescription(Reference $ref) {
+        $description = '';
         if (strpos($ref->getDescription(),"_desc_key")!==false) {
             if (preg_match('/(.*):(.*)/', $ref->getDescription(), $matches)) {
-                if ($Language->hasText($matches[1], $matches[2])) {
-                    $description = $Language->getText($matches[1], $matches[2]);
+                if ($GLOBALS['Language']->hasText($matches[1], $matches[2])) {
+                    $description = $GLOBALS['Language']->getText($matches[1], $matches[2]);
                 }
             } else {
-                $description = $Language->getText('project_reference',$ref->getDescription());
+                $description = $GLOBALS['Language']->getText('project_reference',$ref->getDescription());
             }
         } else {
             $description=$ref->getDescription();
         }
+        return $description;
+    }
+
+    function _display_reference_row($ref, &$row_num) {
+        global $Language;
         
+        if ($ref->getId()==100) return; // 'None' reference
+
+        $description = $this->getReferenceDescription($ref);
+
         if (array_key_exists($ref->getNature(), $this->natures)) {
             $nature_desc = $this->natures[$ref->getNature()]['label'];
         } else {

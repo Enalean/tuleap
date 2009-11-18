@@ -7,6 +7,7 @@
 // 
 require_once('pre.php');
 require_once('common/reference/ReferenceManager.class.php');
+require_once('www/project/admin/include/ReferenceAdministrationViews.class.php');
 
 $hp = Codendi_HTMLPurifier::instance();
 
@@ -14,15 +15,9 @@ function getReferenceRow($ref, $row_num) {
     $html = '';
     
     if ($ref->isActive() && $ref->getId() != 100) {
-        if (strpos($ref->getDescription(),"_desc_key")!==false) {
-            $description = $GLOBALS['Language']->getText('project_reference',$ref->getDescription());
-        } else {
-            $description = $ref->getDescription();
-        }
-                
         $html .= '<TR class="'. util_get_alt_row_color($row_num) .'">';
         $html .= '<TD>'.$ref->getKeyword().'</TD>';
-        $html .= '<TD>'.$description.'</TD>';
+        $html .= '<TD>'.ReferenceAdministrationViews::getReferenceDescription($ref).'</TD>';
         $html .= '<TD>'.$ref->getLink().'</TD>';
         $html .= '</TR>';
     }
