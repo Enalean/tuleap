@@ -1458,17 +1458,18 @@ class Docman_Controller extends Controler {
     }
  
     function _validateApprovalTable($request){
-        $valid = false;
-        if ($request->valid(new Valid_WhiteList('app_table_import', array('copy', 'reset', 'empty')))) {
-            $select = $request->get('app_table_import');
-            if (($select != 'empty')&&($select != 'copy')&&($select != 'reset')) {
-                $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_no_option'));
-                return $valid;
+        if($request->exist('app_table_import')){
+            if ($request->valid(new Valid_WhiteList('app_table_import', array('copy', 'reset', 'empty')))) {
+                $select = $request->get('app_table_import');
+                if (($select != 'empty')&&($select != 'copy')&&($select != 'reset')) {
+                    $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_no_option'));
+                    return false;
+                }
+                return true;
             }
-            $valid = true;
-            return $valid;
+            return false;
         }
-        return $valid;
+        return true;
     }
     function _validateRequest($fields) {
         $valid = true;
