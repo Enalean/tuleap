@@ -26,7 +26,7 @@ class Docman_NotificationsManager_Delete extends Docman_NotificationsManager {
     const MESSAGE_REMOVED_FROM = 'removed_from'; // X has been removed from folder F
     const MESSAGE_REMOVED      = 'removed'; // X has been removed
     
-    function __construct($group_id, $url, &$feedback) {
+    function __construct($group_id, $url, $feedback) {
         parent::__construct($group_id, $url, $feedback);
     }
     function somethingHappen($event, $params) {

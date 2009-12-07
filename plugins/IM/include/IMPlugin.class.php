@@ -653,21 +653,8 @@ class IMPlugin extends Plugin {
         }
         
         function provide_exportable_items($exportable_items) {
-            $entry_label['im_muc_logs'] = $GLOBALS['Language']->getText('plugin_im', 'muc_logs_title');
-            $entry_data_export_links['im_muc_logs'] = '/plugins/IM/?log_start_date=&log_end_date=&action=muc_logs&type=export&group_id='.$exportable_items['group_id'];
-            $entry_data_export_format_links['im_muc_logs'] = null;
-            $entry_history_data_export_links['im_muc_logs'] = null;
-            $entry_history_data_export_format_links['im_muc_logs'] = null;
-            $entry_dependencies_data_export_links['im_muc_logs'] = null;
-            $entry_dependencies_data_export_format_links['im_muc_logs'] = null;
-            
-            $exportable_items['labels'] = $entry_label;
-            $exportable_items['data_export_links'] = $entry_data_export_links;
-            $exportable_items['data_export_format_links'] = $entry_data_export_format_links;
-            $exportable_items['history_data_export_links'] = $entry_history_data_export_links;
-            $exportable_items['history_data_export_format_links'] = $entry_history_data_export_format_links;
-            $exportable_items['dependencies_data_export_links'] = $entry_dependencies_data_export_links;
-            $exportable_items['dependencies_data_export_format_links'] = $entry_dependencies_data_export_format_links;
+            $exportable_items['labels']['im_muc_logs']            = $GLOBALS['Language']->getText('plugin_im', 'muc_logs_title');
+            $exportable_items['data_export_links']['im_muc_logs'] = '/plugins/IM/?log_start_date=&log_end_date=&action=muc_logs&type=export&group_id='.$exportable_items['group_id'];
         }
         
 	/**

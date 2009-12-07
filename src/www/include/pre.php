@@ -10,17 +10,12 @@ if (version_compare(phpversion(), '5.1.6', '<')) {
     die('Codendi must be run on a PHP 5.1.6 (or greater) engine');
 }
 
-
-define('TTF_DIR','/usr/share/fonts/');
-
-
-/*
-	redirect to proper hostname to get around certificate problem on IE 5
-*/
-
 // Defines all of the Codendi settings first (hosts, databases, etc.)
 require(getenv('CODENDI_LOCAL_INC')?getenv('CODENDI_LOCAL_INC'):'/etc/codendi/conf/local.inc');
 require($GLOBALS['db_config_file']);
+
+define('TTF_DIR',isset($GLOBALS['ttf_font_dir']) ? $GLOBALS['ttf_font_dir'] : '/usr/share/fonts/');
+
 require_once('common/include/CookieManager.class.php');
 require_once('common/include/HTTPRequest.class.php');
 require_once('common/include/SimpleSanitizer.class.php');

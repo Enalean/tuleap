@@ -216,6 +216,8 @@ class Docman_View_ReportSettings extends Docman_View_Extra {
     }
 
     function _getImportForm() {
+        $GLOBALS['HTML']->includeFooterJavascriptSnippet("new ProjectAutoCompleter('import_search_report_from_group', '".util_get_dir_image_theme()."', false);");
+
         $html = '';
 
         $html .= '<form name="docman_report_import" method="post" action="?">';
@@ -228,36 +230,17 @@ class Docman_View_ReportSettings extends Docman_View_Extra {
         $html .= '<tr>';
         $html .= '<td valign="bottom">'.$GLOBALS['Language']->getText('plugin_docman', 'report_settings_import_sel_prj').'</td>';
         // Group id selector
-        $html .= '<td align="center">';
-        $html .= '<strong>'.$GLOBALS['Language']->getText('plugin_docman', 'report_settings_import_sel_prj_id').'</strong><br>';
-        $html .= '<input type="text" name="import_group_id" value="" />';
+        $html .= '<td>';
+        $html .= '<input type="text" id="import_search_report_from_group" name="import_search_report_from_group" size="60" value="';
+        $html .= $GLOBALS['Language']->getText('plugin_docman', 'report_settings_import_sel_prj_hint');
+        $html .= '" />';
         $html .= '</td>';
-
-        /*
-        // Group name selector
-        $html .= '<td align="center" style="background-color: #DDDDDD;">';
-        $html .= '<strong style="color: #444444;"><em>Select by project name</em></strong><br>';
-        $html .= '<input type="text" id="import_group_autocomplete" name="import_group_name" value="" style="background-color: #EEEEEE;"/><div id="import_group_autocomplete_choices" class="autocomplete"></div>';
-        $html .= '</td>';
-        $html .= "<script>";
-        $html .= 'new Ajax.Autocompleter("import_group_autocomplete", "import_group_autocomplete_choices", "/projectlist.php", {})';
-        $html .= "</script>";
-        
-
-        // Project list
-        $html .= '<td align="center" style="background-color: #DDDDDD;">';
-        $html .= '<strong style="color: #444444;"><em>Select in your projects</em></strong><br>';
-        $html .= '<select style="background-color: #EEEEEE;"><option>--</option><option>Guinea Pig</option></select>';
-        $html .= '</td>';
-        */
-
         $html .= '</tr>';
 
         // Select report
         $html .= '<tr>';
-        $html .= '<td valign="bottom">'.$GLOBALS['Language']->getText('plugin_docman', 'report_settings_import_sel_rpt').'</td>';
-        $html .= '<td align="center" colspan="1">';
-        $html .= '<strong>'.$GLOBALS['Language']->getText('plugin_docman', 'report_settings_import_sel_rpt_id').'</strong><br>';
+        $html .= '<td valign="bottom">'.$GLOBALS['Language']->getText('plugin_docman', 'report_settings_import_sel_rpt').'('.$GLOBALS['Language']->getText('plugin_docman', 'report_settings_import_sel_rpt_id').')'.'</td>';
+        $html .= '<td>';
         $html .= '<input type="text" name="import_report_id" value="" />';
         $html .= '</td>';       
         $html .= '</tr>';

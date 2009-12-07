@@ -350,7 +350,7 @@ class FRSFile extends Error {
      */
     function download() {
         $file_location = $this->getFileLocation();
-        if (class_exists('Codendi_HTTP_Download')) {
+        if (false && class_exists('Codendi_HTTP_Download')) {
             return !PEAR::isError(Codendi_HTTP_Download::staticSend(array(
                 'file'               => $this->getFileLocation(),
                 'cache'              => false,

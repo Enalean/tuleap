@@ -871,20 +871,37 @@ class ArtifactType extends Error {
             $hp = Codendi_HTMLPurifier::instance();
             $this->setError($Language->getText('tracker_common_type','invalid_shortname', $hp->purify($itemname, CODENDI_PURIFIER_CONVERT_HTML) ));
             return false;
-        }        
+        }
         
+        $group_id = $this->Group->getID();
+        $old_name = $this->getName();
+        
+        if ($old_name != $name) {
+            $atf = new ArtifactTypeFactory($this->Group);
+            if($atf->isNameExists($name, $group_id)) {
+                $this->setError($Language->getText('tracker_common_type','name_already_exists',$itemname));
+                return false;
+            }
+        }         
+         
 		$allow_copy = ((!$allow_copy) ? 0 : $allow_copy);
         $instantiate_for_new_projects = ((!$instantiate_for_new_projects) ? 0 : $instantiate_for_new_projects); 
        
-       $old_item_name=$this->getItemName() ;
+        $old_item_name=$this->getItemName() ;
        
-       if ($old_item_name != $itemname) {
-           $reference_manager = ReferenceManager::instance();
+        if ($old_item_name != $itemname) {
+            $reference_manager = ReferenceManager::instance();
            
-           if(!$reference_manager->checkKeyword($itemname) ) {
-              $this->setError($Language->getText('tracker_common_type','invalid_shortname',$itemname));
-              return false;
-           }
+            if(!$reference_manager->checkKeyword($itemname) ) {
+                $this->setError($Language->getText('tracker_common_type','invalid_shortname',$itemname));
+                return false;
+            }
+           
+            if($reference_manager->_isKeywordExists($itemname, $group_id)) {
+                $this->setError($Language->getText('tracker_common_type','shortname_already_exists',$itemname));
+                return false;
+            }
+         
            //Update table 'reference'
            $reference_dao =$this->getReferenceDao();
            $result =$reference_dao->update_keyword($old_item_name, $itemname, $this->Group->getID());

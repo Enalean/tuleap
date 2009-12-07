@@ -84,12 +84,12 @@ class CLI_Action_Frs_AddFile extends CLI_Action {
                     $loaded_params['soap']['filename']  = $loaded_params['others']['local_file'];
                     $loaded_params['soap']['is_upload'] = true;
                     fclose($fh);
-                    
-                    // sort the parameters in the right order
-                    uksort($loaded_params['soap'], array($this, "sort_parameters"));
-                    
                 }
             }
+            
+            // sort the parameters in the right order
+            uksort($loaded_params['soap'], array($this, "sort_parameters"));
+            
         }
     }
     

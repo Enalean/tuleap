@@ -748,17 +748,30 @@ class Docman_Controller extends Controler {
             break;
 
         case 'admin_import_metadata_check':
-            if($this->request->existAndNonEmpty('import_group_id')) {
-                $this->_viewParams['sSrcGroupId'] = (int) $this->request->get('import_group_id');
+            $ok = false;
+            if($this->request->existAndNonEmpty('plugin_docman_metadata_import_group')) {
+                $pm = ProjectManager::instance();
+                $srcGroup = $pm->getProjectFromAutocompleter($this->request->get('plugin_docman_metadata_import_group'));
+                if ($srcGroup && !$srcGroup->isError()) {
+                    $this->_viewParams['sSrcGroupId'] = $srcGroup->getGroupId();
+                    $this->view = 'Admin_MetadataImport';
+                    $ok = true;
+                }
             }
-            $this->view = 'Admin_MetadataImport';
+            if (!$ok) {
+                $this->view = 'RedirectAfterCrud';
+                $this->_viewParams['default_url_params'] = array('action' => 'admin_metadata');
+            }
             break;
 
         case 'admin_import_metadata':
             if($this->request->existAndNonEmpty('confirm')) {
                                             
-                if($this->request->existAndNonEmpty('import_group_id')) {
-                    $this->_actionParams['sSrcGroupId'] = (int) $this->request->get('import_group_id');
+                if($this->request->existAndNonEmpty('plugin_docman_metadata_import_group')) {
+                    $pm = ProjectManager::instance();
+                    $srcGroup = $pm->getProjectFromAutocompleter($this->request->get('plugin_docman_metadata_import_group'));
+                    $srcGroupId = $srcGroup->getGroupId();
+                    $this->_actionParams['sSrcGroupId'] = $srcGroupId;
                     $this->_actionParams['sGroupId'] = $this->_viewParams['group_id'];
 
                     $this->action = $view;
@@ -1394,14 +1407,18 @@ class Docman_Controller extends Controler {
             break;
 
         case 'report_import':
-            if($this->request->exist('import_group_id')) {
-                $this->_actionParams['sGroupId']       = $this->_viewParams['group_id'];
-                $this->_actionParams['sImportGroupId'] = (int) $this->request->get('import_group_id');
-                $this->_actionParams['sImportReportId'] = null;
-                if($this->request->exist('import_report_id') && trim($this->request->get('import_report_id')) != '') {
-                    $this->_actionParams['sImportReportId'] = (int) $this->request->get('import_report_id');
+            if($this->request->exist('import_search_report_from_group')) {
+                $pm = ProjectManager::instance();
+                $srcGroup = $pm->getProjectFromAutocompleter($this->request->get('import_search_report_from_group'));
+                if ($srcGroup && !$srcGroup->isError()) {
+                    $this->_actionParams['sGroupId']       = $this->_viewParams['group_id'];
+                    $this->_actionParams['sImportGroupId'] = $srcGroup->getGroupId();
+                    $this->_actionParams['sImportReportId'] = null;
+                    if($this->request->exist('import_report_id') && trim($this->request->get('import_report_id')) != '') {
+                        $this->_actionParams['sImportReportId'] = (int) $this->request->get('import_report_id');
+                    }
+                    $this->action = $view;
                 }
-                $this->action = $view;
             }
                                         
             $this->_viewParams['default_url_params'] = array('action'  => 'report_settings');

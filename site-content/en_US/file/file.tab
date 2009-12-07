@@ -181,7 +181,6 @@ file_admin_editreleases	upload_file_deleted	You recently deleted the file $1, yo
 file_admin_editreleases	create_new_release	Create a new release
 file_admin_editreleases	create_canceled	Release creation canceled
 file_admin_editreleases	update_canceled	Release update canceled
-file_admin_editreleases	update_canceled	Release update canceled
 file_admin_editreleases	upload_file_msg	(The maximum upload file size is $1 Mb - <u>Please compress your files</u>)
 #
 #-----------------------------------------------

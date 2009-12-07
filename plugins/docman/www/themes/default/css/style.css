@@ -387,7 +387,7 @@ a img {
 /*
  * Metadata import
  */
-.docman_md_missing, .docman_md_equivalent {
+.docman_md_missing, .docman_md_equivalent, .docman_md_conflict {
     text-align:center;
     /* This color is orange light */
     background-color: rgb(253, 185, 111);

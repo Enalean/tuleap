@@ -711,9 +711,19 @@ class ReferenceManager {
         return false;
     }
     
-    public function checkKeyword($keyword) {
-            // Check if keyword is valid [a-z0-9]
-           if (!$this->_isValidKeyword($keyword)) return false;
+    function _isKeywordExists($keyword, $group_id) {
+        $reference_dao =& $this->_getReferenceDao();
+        $dar=$reference_dao->searchByKeywordAndGroupId($keyword,$group_id);
+        $row = $dar->getRow();
+        while ($row = $dar->getRow()) {
+            if ($keyword == $row['keyword']) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    public function checkKeyword($keyword) {            
             // Check that there is no system reference with the same keyword
             if ($this->_isSystemKeyword($keyword)) return false;
             // Check list of reserved keywords 

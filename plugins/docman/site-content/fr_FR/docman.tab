@@ -111,13 +111,15 @@ plugin_docman	admin_md_import_tbl_diff	Différences<br />entre $1 et $2
 plugin_docman	admin_md_import_tbl_dstprj	Destination
 plugin_docman	admin_md_import_tbl_action	Actions d'import<br />dans $1
 plugin_docman	admin_md_import_tbl_act_update_md	Surchargera les paramètres de <strong>$1</strong> dans $2 : $3
-plugin_docman	admin_md_import_tbl_act_import_md	Créeara la propriété <strong>$1</strong> avec les mêmes paramètres et valeurs
+plugin_docman	admin_md_import_tbl_act_import_md	Créera la propriété <strong>$1</strong> avec les mêmes paramètres et valeurs
 plugin_docman	admin_md_import_tbl_act_import_love	Créera la valeur <strong>$1</strong>
+plugin_docman	admin_md_import_tbl_act_conflict	Une propriété avec le même nom mais un type différent existe déjà.
 plugin_docman	admin_md_import_tbl_status_equals	Déjà à jour
 plugin_docman	admin_md_import_tbl_status_equivalent	Les paramètres diffèrent
 plugin_docman	admin_md_import_tbl_status_exists	Présent
 plugin_docman	admin_md_import_tbl_status_missing	N'existe pas
 plugin_docman	admin_md_import_tbl_status_onlydst	Présent
+plugin_docman	admin_md_import_tbl_status_conflit	Conflit de nommage
 plugin_docman	admin_md_import_param_desc	Description : <strong><em>nouveau texte</em></strong>
 plugin_docman	admin_md_import_param_allowempty	Autoriser la valeur vide : <strong>$1</strong>
 plugin_docman	admin_md_import_param_allowmultiplevalue	Autoriser la sélection multiple : <strong>$1</strong>
@@ -128,6 +130,7 @@ plugin_docman	admin_md_import_param_1	Activé
 
 plugin_docman	admin_metadata_title	Gérer les propriétés
 plugin_docman	admin_metadata_import_desc	Vous pouvez importer des propriétés de n'importe quel projet auquel vous avez accès.
+plugin_docman	admin_metadata_import_hint	Entrez le nom ou l'identificateur d'un project ici.
 plugin_docman	admin_metadata_import_title	Importer les propriétés d'un projet
 plugin_docman	admin_metadata_import_submit	Vérification avant import
 plugin_docman	admin_metadata_list_title	Propriétés disponibles
@@ -669,9 +672,9 @@ plugin_docman	report_settings_delete_alt	Supprimer le rapport '$1'
 plugin_docman	report_settings_description	Description :
 plugin_docman	report_settings_import_intro	Vous pouvez importer dans ce projet un rapport défini dans un autre projet (parmis vos rapports personnels ou n'importe quel rapport 'projet'). L'import ne fonctionnera que si les propriétés et les valeurs sont les mêmes dans les deux projets (même nom, sensible à la casse). L'import fera de son mieux pour importer le plus de données possible.
 plugin_docman	report_settings_import_sel_prj	Projet :
-plugin_docman	report_settings_import_sel_prj_id	Selectionner par group_id
+plugin_docman	report_settings_import_sel_prj_hint	Entrez le nom ou l'identificateur d'un project ici. 
 plugin_docman	report_settings_import_sel_rpt	Rapport :
-plugin_docman	report_settings_import_sel_rpt_id	Selectionner par report_id
+plugin_docman	report_settings_import_sel_rpt_id	report_id
 plugin_docman	report_settings_import_title	Importer les rapports d'un autre projet.
 plugin_docman	report_settings_my	Afficher mes recherche sauvegardées
 plugin_docman	report_settings_report_name	Rapport

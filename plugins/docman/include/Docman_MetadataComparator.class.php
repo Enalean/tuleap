@@ -235,7 +235,14 @@ class Docman_MetadataComparator {
                     $sthToImport = true;
                 }
             } else {
-                $sthToImport = true;
+                // The metadata is not in the metadata map list, check if it's
+                // not a name conflict
+                $dstMdi = $dstMdFactory->findByName($srcMd->getName());
+                if ($dstMdi->count() == 1) {
+                    $dstMdStatus = 'conflict';
+                } else {
+                    $sthToImport = true;
+                }
             }
 
 
@@ -269,6 +276,7 @@ class Docman_MetadataComparator {
             switch($dstMdStatus) {
             case 'equivalent':
             case 'missing':
+            case 'conflict':
                 $html .= $GLOBALS['Language']->getText('plugin_docman', 'admin_md_import_tbl_status_'.$dstMdStatus);
                 break;
             }
@@ -290,6 +298,9 @@ class Docman_MetadataComparator {
                 break;
             case 'missing':
                 $html .= $GLOBALS['Language']->getText('plugin_docman', 'admin_md_import_tbl_act_import_md', array($srcMd->getName()));
+                break;
+            case 'conflict':
+                $html .= $GLOBALS['Language']->getText('plugin_docman', 'admin_md_import_tbl_act_conflict');
                 break;
             }
             $html .= "</td>";

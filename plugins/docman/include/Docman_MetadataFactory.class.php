@@ -641,24 +641,28 @@ class Docman_MetadataFactory {
     function _cloneOneMetadata($dstGroupId, $md, &$metadataMapping) {
         $dstMdFactory = $this->_getMetadataFactory($dstGroupId);
 
-        $newMd = clone $md;
-        $newMdId = $dstMdFactory->create($newMd);
-        $newMd->setId($newMdId);
-        
-        $metadataMapping['md'][$md->getId()] = $newMdId;
-        
-        // If current metadata is a list of values, clone values
-        if($newMdId > 0 && $md->getType() == PLUGIN_DOCMAN_METADATA_TYPE_LIST) {
-            $srcLoveFactory = $this->_getListOfValuesElementFactory($md->getId());
-            $values = $srcLoveFactory->cloneValues($md, $newMd);
-            foreach($values as $srcId => $dstId) {
-                $metadataMapping['love'][$srcId] = $dstId;
+        $dstMdIter = $dstMdFactory->findByName($md->getName());
+        if ($dstMdIter->count() == 0) {
+            $newMd   = clone $md;
+            $newMdId = $dstMdFactory->create($newMd);
+            $newMd->setId($newMdId);
+
+            $metadataMapping['md'][$md->getId()] = $newMdId;
+
+            // If current metadata is a list of values, clone values
+            if($newMdId > 0 && $md->getType() == PLUGIN_DOCMAN_METADATA_TYPE_LIST) {
+                $srcLoveFactory = $this->_getListOfValuesElementFactory($md->getId());
+                $values = $srcLoveFactory->cloneValues($md, $newMd);
+                foreach($values as $srcId => $dstId) {
+                    $metadataMapping['love'][$srcId] = $dstId;
+                }
             }
-        }
-        $event_manager = $this->_getEventManager();
-        $event_manager->processEvent('plugin_docman_after_metadata_clone', array('srcProjectId'    => $this->groupId,
+
+            $event_manager = $this->_getEventManager();
+            $event_manager->processEvent('plugin_docman_after_metadata_clone', array('srcProjectId'    => $this->groupId,
                                      'targetProjectId' => $dstGroupId,
                                      'md'              => $md));
+        }
     }
 
     /**

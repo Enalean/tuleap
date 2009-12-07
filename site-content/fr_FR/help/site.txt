@@ -23,7 +23,7 @@
 ?>
 <h2>Aide</h2>
 <ul>
-    <li><a href="/documentation/user_guide/html/en_US/"><b>Index de l'aide</b></a></li>
+    <li><a href="/documentation/user_guide/html/fr_FR/"><b>Index de l'aide</b></a></li>
     <li><a href="/plugins/docman/?group_id=1">Documentation site</b></a></li>
     <li><a href="/mail/?group_id=1">Canaux développeurs</b></a></li>
     <li><a href="/forum/?group_id=1">Forums de discussions</b></a><br /></li>

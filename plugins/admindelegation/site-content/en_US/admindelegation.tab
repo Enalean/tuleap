@@ -1,0 +1,7 @@
+plugin_admindelegation	descriptor_description	Delegation of site admin rights to mere mortals
+plugin_admindelegation	descriptor_name	AdminDelegation
+
+plugin_admindelegation	title	AdminDelegation
+# Widget
+plugin_admindelegation	widget_title	Site admin delegation
+plugin_admindelegation	widget_description	Site admins can delegate some accesses to you

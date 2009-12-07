@@ -154,11 +154,14 @@ class Docman_View_Admin_Metadata extends Docman_View_Extra {
      * Import metadata from a given project
      */
     function getImportForm($groupId) {
+        $GLOBALS['HTML']->includeFooterJavascriptSnippet("new ProjectAutoCompleter('plugin_docman_metadata_import_group', '".util_get_dir_image_theme()."', false);");
         $content = '';
         $content .= '<h3>'.$GLOBALS['Language']->getText('plugin_docman', 'admin_metadata_import_title').'</h3>'."\n";
         $content .= '<p>'.$GLOBALS['Language']->getText('plugin_docman', 'admin_metadata_import_desc').'</p>'."\n";
         $content .= '<form name="admin_import_metadata" method="post" action="?group_id='.$groupId.'&action=admin_import_metadata_check">';
-        $content .= '<input name="import_group_id" type="text" value="" /><br />';
+        $content .= '<input id="plugin_docman_metadata_import_group" name="plugin_docman_metadata_import_group" type="text" size="60" value="';
+        $content .= $GLOBALS['Language']->getText('plugin_docman', 'admin_metadata_import_hint');
+        $content .= '" /><br />';
         $content .= '<input name="submit" type="submit" value="'.$GLOBALS['Language']->getText('plugin_docman', 'admin_metadata_import_submit').'" />';
         $content .= '</form>';
         return $content;

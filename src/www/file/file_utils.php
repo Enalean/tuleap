@@ -61,7 +61,6 @@ function file_utils_admin_header($params) {
         $pm = ProjectManager::instance();
         $p = $pm->getProject($group_id);
         
-		
         echo '<strong>';
         echo '<a href="/file/?group_id='.$group_id.'">'. $p->services['file']->getLabel() .'</a>';
         echo ' | <a href="/file/admin/?group_id='.$group_id.'">'.$Language->getText('file_file_utils','admin').'</a>';
@@ -69,8 +68,6 @@ function file_utils_admin_header($params) {
 	if (!isset($params['help'])) { $params['help'] = "FileRelease.html";}
 	echo ' | '.help_button($params['help'],false,$Language->getText('global','help'));
         echo "</strong><br><hr>";
-	
-
     }
 }
 
@@ -406,7 +403,7 @@ function frs_display_release_form($is_update, &$release, $group_id, $title, $url
     echo "var scp_ftp_files = '" . $GLOBALS['Language']->getText('file_admin_editreleases', 'scp_ftp_files') . "';";
     echo "var upload_text = '" . $GLOBALS['Language']->getText('file_admin_editreleases', 'upload') . "';";
     echo "var add_file_text = '" . $GLOBALS['Language']->getText('file_admin_editreleases', 'add_file') . "';";
-	echo "var add_change_log_text = '" . $GLOBALS['Language']->getText('file_admin_editreleases', 'add_change_log') . "';";
+    echo "var add_change_log_text = '" . $GLOBALS['Language']->getText('file_admin_editreleases', 'add_change_log') . "';";
     echo "var view_change_text = '" . $GLOBALS['Language']->getText('file_admin_editreleases', 'view_change') . "';";
     echo "var refresh_files_list = '". $GLOBALS['Language']->getText('file_admin_editreleases','refresh_file_list') . "';";
     echo "var release_mode = '". ($is_update ? 'edition' : 'creation' ) ."';";
@@ -504,21 +501,19 @@ function frs_display_release_form($is_update, &$release, $group_id, $title, $url
             <tbody id="files_body">
     
     <?php
-		
         $files = & $release->getFiles();
         for ($i = 0; $i < count($files); $i++) {
             $fname = $files[$i]->getFileName();
             $list = split('/', $fname);
             $fname = $list[sizeof($list) - 1];
             echo '<TR>';
-			echo '<TD><INPUT TYPE="CHECKBOX" NAME="release_files_to_delete[]" VALUE="' . $files[$i]->getFileID() . '"</TD>';
+            echo '<TD><INPUT TYPE="CHECKBOX" NAME="release_files_to_delete[]" VALUE="' . $files[$i]->getFileID() . '"</TD>';
             echo '<TD>' . $hp->purify($fname, CODENDI_PURIFIER_CONVERT_HTML) . '<INPUT TYPE="HIDDEN" NAME="release_files[]" VALUE="' . $files[$i]->getFileID() . '"></TD>';
             echo '<TD>' . frs_show_processor_popup($group_id,$name = 'release_file_processor[]', $files[$i]->getProcessorID()) . '</TD>';
             echo '<TD>' . frs_show_filetype_popup($name = 'release_file_type[]', $files[$i]->getTypeID()) . '</TD>';
             echo '<TD>' . frs_show_release_popup2($group_id, $name = 'new_release_id[]', $files[$i]->getReleaseID()) . '</TD>';
             echo '<TD><INPUT TYPE="TEXT" NAME="release_time[]" VALUE="' . format_date('Y-m-d', $files[$i]->getReleaseTime()) . '" SIZE="10" MAXLENGTH="10"></TD></TR>';
         }
-		
         echo '<INPUT TYPE="HIDDEN" id="nb_files" NAME="nb_files" VALUE="' . count($files) . '">';
     ?>
                         
@@ -531,7 +526,7 @@ function frs_display_release_form($is_update, &$release, $group_id, $title, $url
     <?php
     
     //iterate and show the files in the upload directory
-	$file_list = $frsff->getUploadedFileNames();
+    $file_list = $frsff->getUploadedFileNames();
     foreach ($file_list as $file) {
         echo '<option value="' . $file . '">' . $hp->purify($file, CODENDI_PURIFIER_CONVERT_HTML) . '</option>';
     }

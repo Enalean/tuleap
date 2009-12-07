@@ -357,6 +357,120 @@ class UserDao extends DataAccessObject {
     }
 
     /**
+     * Suspend user account according to a condition
+     * 
+     * @param String $condition SQL condition
+     * 
+     * @return Boolean
+     */
+    function suspendAccount($condition) {
+        $sql = 'UPDATE user SET status = "S", unix_status = "S"'.
+               ' WHERE '.$condition;
+        return $this->update($sql);
+    }
+
+    /**
+     * Suspend user account according to given date
+     *
+     * @param Integer $time
+     *
+     * @return Boolean
+     */
+    function suspendExpiredAccounts($time) {
+        $condition = 'expiry_date != 0'.
+                     ' AND expiry_date < '.$this->da->escapeInt($time);
+        return $this->suspendAccount($condition);
+    }
+
+    /**
+     * Suspend account of users who didn't access the platform after given date
+     * 
+     * @param Integer $time Unix timestamp of a date
+     * 
+     * @return Boolean
+     */
+    function suspendInactiveAccounts($time) {
+        $condition = 'last_access_date != 0'.
+                     ' AND last_access_date < '.$time;
+        return $this->suspendAccount($condition);
+    }
+
+    /**
+     * Return list of user_id that are not member of any project
+     * 
+     */
+    function returnNotProjectMembers(){
+        $sql = 'SELECT user_id FROM user LEFT JOIN user_group USING(user_id) WHERE group_id IS NULL and status in ("A","R")';
+        $dar = $this->retrieve($sql);
+        if($dar && !$dar->isError() && $dar->rowCount() > 0) {
+            // user who is no more member of any project.
+            return $dar;
+        } else {
+            return false;
+        }
+    }
+
+     /**
+     * Return the last date of being removed from the last project
+     * 
+     */
+    function delayForBeingNotProjectMembers($user_id){
+        $req = 'SELECT date from group_history where field_name = "removed_user" and old_value REGEXP "[(]'.$this->da->escapeInt($user_id).'[)]$" order by date desc LIMIT 1';
+        return $this->retrieve($req);
+    }
+
+    /**
+     * Return 1 row if delay allowed to  be subscribed without belonging to any project has expired 
+     * else 0 row
+     */
+    function delayForBeingSubscribed($user_id, $time){
+        //Return delay for being subscribed and not being added to any project
+        $select = 'SELECT NULL from user where user_id = '.$this->da->escapeInt($user_id).' and add_date < '.$this->da->escapeInt($time);
+        return $this->retrieve($select);
+    }
+
+     /**
+     * Suspend account of user who is no more member of any project
+     * 
+     */
+    function suspendUserNotProjectMembers($time){
+        $dar = $this->returnNotProjectMembers();
+        if ($dar){
+            //we should verify the delay for it user has been no more belonging to any project
+            foreach ($dar as $row){
+                //we split the treatment in two methods to distinguish between 0 row returned  
+                //by the fact that there is no "removed user" entry for this user_id and the case  
+                //where it is the result of comparing the date 
+                $res = $this->delayForBeingNotProjectMembers($row['user_id']);
+                if($res && !$res->isError()){
+                    //user is not member of any project yet
+                    if ($res->rowCount() == 0) {
+                        //Verify add_date
+                        $resultat = $this->delayForBeingSubscribed($row['user_id'],$time);
+                        if ($resultat && !$resultat->isError() && $resultat->rowCount() == 1){
+                            $condition = 'user.user_id = '.$this->da->escapeInt($row['user_id']);
+                            return $this->suspendAccount($condition);
+                        }else{
+                            return;
+                        }
+                    } else {
+                        //verify if delay has not expired yet
+                        $rowLastRemove = $res->current();
+                        if ($rowLastRemove['date'] > $time ){
+                            return;
+                        } else {
+                            $condition = 'user.user_id = '.$this->da->escapeInt($row['user_id']);
+                            return $this->suspendAccount($condition);	
+                        }
+                    }
+                    
+                }
+            }
+        }
+        return;
+    }
+
+    /**
      * Return the result of  'FOUND_ROWS()' SQL method for the last query.
      */
     function foundRows() {

@@ -27,7 +27,7 @@ class Docman_NotificationsManager_Move extends Docman_NotificationsManager {
     const MESSAGE_MOVED_FROM = 'moved_from'; // X has been moved from
     const MESSAGE_MOVED_TO   = 'moved_to';   // X has been moved to
     
-    function __construct($group_id, $url, &$feedback) {
+    function __construct($group_id, $url, $feedback) {
         parent::__construct($group_id, $url, $feedback);
     }
 

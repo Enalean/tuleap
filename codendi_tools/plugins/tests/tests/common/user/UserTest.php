@@ -6,6 +6,11 @@ Mock::generatePartial(
     'UserTestVersion',
     array('getStatus', 'getUnixStatus', 'getPreferencesDao', 'getId', 'isAnonymous')
 );
+Mock::generatePartial(
+    'User',
+    'UserTestVersion2',
+    array('getUserGroupData')
+);
 
 require_once('common/dao/UserPreferencesDao.class.php');
 Mock::generate('UserPreferencesDao');
@@ -133,5 +138,98 @@ class UserTest extends UnitTestCase {
         $user->setReturnValue('getId', 666);
         $this->assertFalse($user->isNone());
     }
+    
+    function testIsMemberSiteAdmin() {
+        $siteadmin = new UserTestVersion2($this);
+        $ug_siteadmin = array(
+            '1' => array(
+                    'user_group_id' => '1',
+                    'user_id' => '101',
+                    'group_id' => '1',
+                    'admin_flags' => 'A',
+                    'bug_flags' => '2',
+                    'forum_flags' => '2',
+                    'project_flags' => '2',
+                    'patch_flags' => '2',
+                    'support_flags' => '2',
+                    'doc_flags' => '1',
+                    'file_flags' => '2',
+                    'wiki_flags' => '2',
+                    'svn_flags' => '2',
+                    'news_flags' => '2'
+                  ));
+        $siteadmin->setReturnValue('getUserGroupData', $ug_siteadmin);
+        
+        $this->assertTrue($siteadmin->isMember(1));
+        $this->assertTrue($siteadmin->isMember(1, 'A'));
+        // Site admin is member and admin of any project
+        $this->assertTrue($siteadmin->isMember(123));
+        $this->assertTrue($siteadmin->isMember(123, 'A'));
+    }
+    
+    function testIsMemberProjectAdmin() {
+        $projectadmin = new UserTestVersion2($this);
+        $ug_project_admin = array(
+            '123' => array(
+                    'user_group_id' => '1',
+                    'user_id' => '101',
+                    'group_id' => '123',
+                    'admin_flags' => 'A',
+                    'bug_flags' => '2',
+                    'forum_flags' => '2',
+                    'project_flags' => '2',
+                    'patch_flags' => '2',
+                    'support_flags' => '2',
+                    'doc_flags' => '1',
+                    'file_flags' => '2',
+                    'wiki_flags' => '2',
+                    'svn_flags' => '2',
+                    'news_flags' => '2'
+                  ));
+        $projectadmin->setReturnValue('getUserGroupData', $ug_project_admin);
+        
+        // Project admin is member and admin of only her projects
+        $this->assertTrue($projectadmin->isMember(123));
+        $this->assertTrue($projectadmin->isMember(123, 'A'));
+        $this->assertFalse($projectadmin->isMember(456));
+        $this->assertFalse($projectadmin->isMember(456, 'A'));
+        $this->assertFalse($projectadmin->isMember(1));
+        $this->assertFalse($projectadmin->isMember(1, 'A'));
+        
+    }
+    
+    /**
+     * This test reproduce bug #20456 on codex.xerox.com
+     */
+    function testIsMemberProjectMember() {
+        $projectmember = new UserTestVersion2($this);
+        $ug_project_member = array(
+            '789' => array(
+                    'user_group_id' => '1',
+                    'user_id' => '101',
+                    'group_id' => '789',
+                    'admin_flags' => '',
+                    'bug_flags' => '2',
+                    'forum_flags' => '2',
+                    'project_flags' => '2',
+                    'patch_flags' => '2',
+                    'support_flags' => '2',
+                    'doc_flags' => '1',
+                    'file_flags' => '2',
+                    'wiki_flags' => '2',
+                    'svn_flags' => '2',
+                    'news_flags' => '2'
+                  ));
+        $projectmember->setReturnValue('getUserGroupData', $ug_project_member);
+        
+        // Project member is member of only her project
+        $this->assertTrue($projectmember->isMember(789));
+        $this->assertFalse($projectmember->isMember(789, 'A'));
+        $this->assertFalse($projectmember->isMember(456));
+        $this->assertFalse($projectmember->isMember(456, 'A'));
+        $this->assertFalse($projectmember->isMember(1));
+        $this->assertFalse($projectmember->isMember(1, 'A'));
+    }
+    
 }
 ?>

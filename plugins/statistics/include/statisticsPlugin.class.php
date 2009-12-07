@@ -22,13 +22,14 @@
  */
 
 require_once 'common/plugin/Plugin.class.php';
+require_once 'Statistics_DiskUsageManager.class.php';
 
 class StatisticsPlugin extends Plugin {
 
     function __construct($id) {
         parent::__construct($id);
         $this->_addHook('site_admin_option_hook', 'site_admin_option_hook', false);
-        $this->_addHook('codendi_daily_start', 'codendi_daily_start', false);
+        $this->_addHook('root_daily_start', 'root_daily_start', false);
     }
 
     function getPluginInfo() {
@@ -44,19 +45,14 @@ class StatisticsPlugin extends Plugin {
     }
 
     /**
-     * Hook.
-     *
      * Each day, load sessions info from elapsed day.
      * We need to do that because sessions are deleted from DB when user logout
      * or when session expire.
      *
      * This not perfect because with very short session (few hours for instance)
      * do data will survive in this session table.
-     *
-     * @param $params
-     * @return void
      */
-    function codendi_daily_start($params) {
+    protected function _archiveSessions() {
         $max = 0;
         $sql = 'SELECT MAX(time) as max FROM plugin_statistics_user_session';
         $res = db_query($sql);
@@ -70,6 +66,25 @@ class StatisticsPlugin extends Plugin {
         $sql = 'INSERT INTO plugin_statistics_user_session (user_id, time)'.
                ' SELECT user_id, time FROM session WHERE time > '.$max;
         db_query($sql);
+    }
+
+    /**
+     *
+     */
+    protected function _diskUsage() {
+        $dum = new Statistics_DiskUsageManager();
+        $dum->collectAll();
+    }
+
+    /**
+     * Hook.
+     *
+     * @param $params
+     * @return void
+     */
+    function root_daily_start($params) {
+        $this->_archiveSessions();
+        $this->_diskUsage();
     }
 }
 

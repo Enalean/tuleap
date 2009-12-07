@@ -75,15 +75,15 @@ class ProjectDao extends DataAccessObject {
             if ($isMember || $isAdmin) {
                 // Manage if we search project the user is member or admin of
                 $join  .= ' JOIN user_group ug ON (ug.group_id = g.group_id)';
-                $where .= ' AND ug.user_id = '.$userId;
+                $where .= ' AND ug.user_id = '.$this->da->escapeInt($userId);
                 if ($isAdmin) {
                     $where .= ' AND ug.admin_flags = "A"';
                 }
             } else {
                 // Either public projects or private projects the user is member of
                 $join  .= ' LEFT JOIN user_group ug ON (ug.group_id = g.group_id)';
-                $where .= ' AND g.is_public = 1'.
-                          ' OR (g.is_public = 0 and ug.user_id IS NOT NULL)';
+                $where .= ' AND (g.is_public = 1'.
+                          ' OR (g.is_public = 0 and ug.user_id IS NOT NULL))';
             }
             $groupby .= ' GROUP BY g.group_id';
         } else {
@@ -94,14 +94,13 @@ class ProjectDao extends DataAccessObject {
         $sql = "SELECT SQL_CALC_FOUND_ROWS g.*".
                " FROM ".$this->table_name." g".
                $join.
-               " WHERE (g.group_name like '".db_es($name)."%'".
-               " OR g.unix_group_name like '".db_es($name)."%')".
+               " WHERE (g.group_name like ".$this->da->quoteSmart($name.'%').
+               " OR g.unix_group_name like ".$this->da->quoteSmart($name.'%').")".
                " AND g.status='A'".
                $where.
                $groupby.
                " ORDER BY group_name".
-               " LIMIT ".db_ei($limit);
-        //var_dump($sql);
+               " LIMIT ".$this->da->escapeInt($limit);
         return $this->retrieve($sql);
     }
 }

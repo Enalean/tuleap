@@ -60,5 +60,12 @@ class ArtifactGroupListDao extends DataAccessObject {
             
         return $this->update($sql);
     }
+    
+    public function searchNameByGroupId($group_id) {
+        $group_id = $this->da->quoteSmart($group_id);
+        $sql = "SELECT * FROM $this->table_name WHERE group_id=$group_id";
+        return $this->retrieve($sql);
+    }
+    
 }
 ?>

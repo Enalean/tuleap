@@ -21,7 +21,8 @@
 //require_once('common/include/Error.class.php');
 require_once('common/tracker/ArtifactType.class.php');
 require_once('common/tracker/ArtifactCanned.class.php');
-
+require_once('common/dao/ArtifactGroupListDao.class.php');
+require_once('common/dao/CodendiDataAccess.class.php');
 
 class ArtifactTypeFactory extends Error {
 
@@ -438,8 +439,24 @@ class ArtifactTypeFactory extends Error {
 	  $sql = "SELECT group_artifact_id FROM artifact_group_list WHERE group_id=".db_ei($this->Group->getGroupId()) ." AND instantiate_for_new_projects=1 AND status = 'A'";
 	    return db_query($sql);
 	}
-
-
+    
+    /**
+     * Check if the name of the tracker is already used
+     *@param string $name the name of the tracker we are lokking for
+     * @param int $group_id th ID of the group     
+     * @return boolean
+     */
+    function isNameExists($name, $group_id) {
+        $reference_dao = $this->getArtifactGroupListDao();
+        $dar=$reference_dao->searchNameByGroupId($group_id);
+        while ($row = $dar->getRow()) {
+            if ($name == $row['name']) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
 	/**
 	 *	create - use this to create a new ArtifactType in the database.
 	 *
@@ -461,12 +478,25 @@ class ArtifactTypeFactory extends Error {
 
          // Necessary test to avoid issues when exporting the tracker to a DB (e.g. '-' not supported as table name)               
         if (!eregi("^[a-zA-Z0-9_]+$",$itemname)) {
-             $this->setError($Language->getText('tracker_common_type','invalid_shortname',$itemname));
+                $this->setError($Language->getText('tracker_common_type','invalid_shortname',$itemname));
                 return false;
          }
-		//	get the template Group object
+         
+         $reference_manager = ReferenceManager::instance();
+         if($reference_manager->_isKeywordExists($itemname, $group_id)) {
+             $this->setError($Language->getText('tracker_common_type','shortname_already_exists',$itemname));
+                return false;
+         }
+         
+         if($this->isNameExists($name, $group_id)) {
+             $this->setError($Language->getText('tracker_common_type','name_already_exists',$itemname));
+             return false;
+         }
+         
+         //	get the template Group object
 		$pm = ProjectManager::instance();
         $template_group = $pm->getProject($group_id_template);
+        
 		if (!$template_group || !is_object($template_group) || $template_group->isError()) {
 			$this->setError('ArtifactTypeFactory: '.$Language->getText('tracker_common_type','invalid_templ'));
 		}
@@ -585,6 +615,10 @@ class ArtifactTypeFactory extends Error {
 			}
 		}
 	}
+    
+    public function getArtifactGroupListDao() {
+        return new ArtifactGroupListDao(CodendiDataAccess::instance());
+    }
 
 }
 

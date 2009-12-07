@@ -570,6 +570,60 @@ class UserManager {
         include_once 'common/widget/WidgetLayoutManager.class.php';
         return new WidgetLayoutManager();
     }
+
+    /**
+     * Check user account validity against several rules
+     * - Account expiry date
+     * - Last user access
+     * - User not member of a project
+     */
+    function checkUserAccountValidity() {
+        // All rules applies at midnight
+        $current_date = format_date('Y-m-d', $_SERVER['REQUEST_TIME']);
+        $date_list    = split("-", $current_date, 3);
+        $midnightTime = mktime(0, 0, 0, $date_list[1], $date_list[2], $date_list[0]);
+
+        $this->suspendExpiredAccounts($midnightTime);
+        $this->suspendInactiveAccounts($midnightTime);
+        $this->suspendUserNotProjectMembers($midnightTime);
+    }
+
+    /**
+     * Change account status to suspended when the account expiry date is passed
+     *
+     * @param Integer $time Timestamp of the date when this apply
+     * 
+     * @return Boolean
+     */
+    function suspendExpiredAccounts($time) {
+        return $this->getDao()->suspendExpiredAccounts($time);
+    }
+
+    /**
+     * Suspend accounts that without activity since date defined in configuration
+     *
+     * @param Integer $time Timestamp of the date when this apply
+     *
+     * @return Boolean
+     */
+    function suspendInactiveAccounts($time) {
+        if (isset($GLOBALS['sys_suspend_inactive_accounts_delay']) && $GLOBALS['sys_suspend_inactive_accounts_delay'] > 0) {
+            $lastValidAccess = $time - ($GLOBALS['sys_suspend_inactive_accounts_delay'] * 24 * 3600);
+            return $this->getDao()->suspendInactiveAccounts($lastValidAccess);
+        }
+    }
+    
+    /**
+     * Change account status to suspended when user is no more member of any project
+     * @return Boolean
+     * 
+     */
+    function suspendUserNotProjectMembers($time) {
+        if (isset($GLOBALS['sys_suspend_non_project_member_delay']) && $GLOBALS['sys_suspend_non_project_member_delay'] > 0) {
+            $lastRemove = $time - ($GLOBALS['sys_suspend_non_project_member_delay'] * 24 * 3600);
+            return $this->getDao()->suspendUserNotProjectMembers($lastRemove);
+        }
+    }
 }
 
 ?>

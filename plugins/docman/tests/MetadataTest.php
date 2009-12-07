@@ -38,6 +38,8 @@ require_once(dirname(__FILE__).'/../include/Docman_MetadataFactory.class.php');
 require_once('common/event/EventManager.class.php');
 Mock::generate('EventManager');
 
+Mock::generate('ArrayIterator');
+
 Mock::generate('Docman_MetadataListOfValuesElementFactory');
 Mock::generate('Docman_MetadataFactory');
 Mock::generatePartial('Docman_MetadataFactory', 'MetadataFactoryMockedForCloneOneMd', array('_getMetadataFactory', '_getListOfValuesElementFactory', '_getEventManager'));
@@ -74,7 +76,11 @@ class MetadataTest extends UnitTestCase {
         $dstMdF = new MockDocman_MetadataFactory($this);
         $dstMdF->setReturnValue('create', 401);
         $dstMdF->expectOnce('create');
-        
+
+        $iter = new MockArrayIterator($this);
+        $iter->setReturnValue('count', 0);
+        $dstMdF->setReturnValue('findByName', $iter);
+
         $srcMdF->setReturnReference('_getMetadataFactory', $dstMdF);
         $srcMdF->expectOnce('_getMetadataFactory', array($dstGroupId));
         
@@ -105,7 +111,11 @@ class MetadataTest extends UnitTestCase {
         $dstMdF = new MockDocman_MetadataFactory($this);
         $dstMdF->setReturnValue('create', 401);
         $dstMdF->expectOnce('create');
-        
+
+        $iter = new MockArrayIterator($this);
+        $iter->setReturnValue('count', 0);
+        $dstMdF->setReturnValue('findByName', $iter);
+
         $srcMdF->setReturnReference('_getMetadataFactory', $dstMdF);
         $srcMdF->expectOnce('_getMetadataFactory', array($dstGroupId));
         
@@ -135,7 +145,10 @@ class MetadataTest extends UnitTestCase {
         $dstGroupId = '321';
         $metadataMapping = array();
         $metadataMapping['love'] = array();
-        
+
+        $findIter = new MockArrayIterator($this);
+        $findIter->setReturnValue('count', 0);
+
         // Factory to test
         $srcMdF = new MetadataFactoryMockedForCloneOneMd($this);
         
@@ -150,8 +163,9 @@ class MetadataTest extends UnitTestCase {
         $dstMdF1 = new MockDocman_MetadataFactory($this);
         $dstMdF1->setReturnValue('create', 401);
         $dstMdF1->expectOnce('create');
+        $dstMdF1->setReturnValue('findByName', $findIter);
         $srcMdF->setReturnReferenceAt(0, '_getMetadataFactory', $dstMdF1);
-        
+
         $dstLoveF1 = new MockDocman_MetadataListOfValuesElementFactory($this);
         $dstLoveF1->setReturnValue('cloneValues', array(101 => 201, 102 => 202));
         $srcMdF->setReturnReferenceAt(0, '_getListOfValuesElementFactory', $dstLoveF1);
@@ -164,6 +178,7 @@ class MetadataTest extends UnitTestCase {
         $dstMdF2 = new MockDocman_MetadataFactory($this);
         $dstMdF2->setReturnValue('create', 402);
         $dstMdF2->expectOnce('create');
+        $dstMdF2->setReturnValue('findByName', $findIter);
         $srcMdF->setReturnReferenceAt(1, '_getMetadataFactory', $dstMdF2);
         
         $dstLoveF2 = new MockDocman_MetadataListOfValuesElementFactory($this);

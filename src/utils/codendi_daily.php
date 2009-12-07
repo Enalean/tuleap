@@ -29,16 +29,10 @@ require_once('common/event/EventManager.class.php');
 // Include for services
 
 //
-$em =& EventManager::instance();
+$em = EventManager::instance();
 $em->processEvent("codendi_daily_start", null);
 
-//change account status to suspended when the account expiry date is passed
-$current_date = format_date('Y-m-d',time());
-$date_list = split("-", $current_date, 3);
-$unix_time = mktime(0, 0, 0, $date_list[1], $date_list[2], $date_list[0]);
-
-db_query("UPDATE user SET status='S', unix_status='S'"
-                    ." WHERE expiry_date!=0 and expiry_date<" . $unix_time );
-
+$um = UserManager::instance();
+$um->checkUserAccountValidity();
 
 ?>

@@ -25,7 +25,7 @@ class Docman_NotificationsManager_Add extends Docman_NotificationsManager {
 
     const MESSAGE_ADDED = 'added'; // X has been added
     
-    function __construct($group_id, $url, &$feedback) {
+    function __construct($group_id, $url, $feedback) {
         parent::__construct($group_id, $url, $feedback);
     }
     function _getListeningUsersItemId($params) {

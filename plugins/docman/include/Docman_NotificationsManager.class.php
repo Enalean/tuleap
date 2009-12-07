@@ -38,13 +38,13 @@ class Docman_NotificationsManager extends NotificationsManager {
     var $_group_id;
     var $_group_name;
 
-    function __construct($group_id, $url, &$feedback) {
+    function __construct($group_id, $url, $feedback) {
         parent::__construct();
 
         $this->_group_id     =  $group_id;
         $this->_url          =  $url;
         $this->_listeners    =  array();
-        $this->_feedback     =& $feedback;
+        $this->_feedback     = $feedback;
         $this->_item_factory =  $this->_getItemFactory();
         $this->_messages     =  array();
         if ($g = $this->_groupGetObject($group_id)) {
@@ -65,6 +65,9 @@ class Docman_NotificationsManager extends NotificationsManager {
     }
     function _getDocmanPath() {
         return new Docman_Path();
+    }
+    function _getMail() {
+        return new Mail();
     }
     function somethingHappen($event, $params) {
         $um             = $this->_getUserManager();
@@ -90,7 +93,7 @@ class Docman_NotificationsManager extends NotificationsManager {
     function sendNotifications($event, $params) {
         $success = true;
         foreach($this->_messages as $message) {
-            $m = new Mail();
+            $m = $this->_getMail();
             $m->setFrom($GLOBALS['sys_noreply']);
             $m->setSubject($message['title']);
             $m->setBody($message['content']);
@@ -101,7 +104,7 @@ class Docman_NotificationsManager extends NotificationsManager {
                     $cc .= ','. $recipient->getEmail();
                 }
                 $m->setBcc($cc);
-                $success = $m->send();
+                $success &= $m->send();
             }
         }
         if (!$success) {
@@ -167,7 +170,7 @@ class Docman_NotificationsManager extends NotificationsManager {
                 'to'      => array()
             );
         }
-        $this->_messages[$md5]['to'][$to->getId()] =& $to;
+        $this->_messages[$md5]['to'][$to->getId()] = $to;
     }
     function _getMessageForUser(&$user, $message_type, $params) {
         $msg = '';

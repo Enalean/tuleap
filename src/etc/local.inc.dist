@@ -203,6 +203,8 @@ $sys_custom_themeroot = $sys_custom_dir . "/themes";
 $htmlpurifier_dir = "/usr/share/htmlpurifier";
 $jpgraph_dir      = "/usr/share/jpgraph";
 
+// TrueType font dir (be careful, the leading / is mandatory).
+$ttf_font_dir     = "/usr/share/fonts/";
 
 // How much to add to the database unix_uid to get the actual unix uid
 // NOTE: if you change the default value, you need to update /etc/libnss-mysql.cfg
@@ -372,6 +374,14 @@ $sys_pending_account_lifetime = 60;
 // after 'sys_password_lifetime' days.
 // 0 = no duration
 $sys_password_lifetime = 0;
+
+// Suspend user account after a given period of inactivity (in days)
+// 0 = no inactivity checking
+$sys_suspend_inactive_accounts_delay = 0;
+
+// Suspend user account if he has been no  more member of any project (in days)
+// 0 = never desactivate "not project members" account
+$sys_suspend_non_project_member_delay = 0;
 
 // Max upload size for quick release, documentation, patch and code snippet.
 // in bytes. E.g. 67108864 for 64 MB
