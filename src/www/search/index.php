@@ -448,7 +448,7 @@ if ($type_of_search == "soft") {
                                user.user_name
                        FROM artifact INNER JOIN user ON user.user_id=artifact.submitted_by 
                           LEFT JOIN artifact_history ON artifact_history.artifact_id=artifact.artifact_id 
-                          LEFT JOIN permissions ON (permissions.object_id = artifact.artifact_id AND permissions.permission_type = 'TRACKER_ARTIFACT_ACCESS')
+                          LEFT JOIN permissions ON (permissions.object_id = CAST(artifact.artifact_id AS CHAR) AND permissions.permission_type = 'TRACKER_ARTIFACT_ACCESS')
                        WHERE artifact.group_artifact_id='". db_ei($atid) ."' 
                          AND (
                                artifact.use_artifact_permissions = 0
@@ -575,7 +575,7 @@ if ($type_of_search == "soft") {
                    user.user_name
            FROM artifact INNER JOIN user ON user.user_id=artifact.submitted_by 
               LEFT JOIN artifact_history ON artifact_history.artifact_id=artifact.artifact_id 
-              LEFT JOIN permissions ON (permissions.object_id = artifact.artifact_id AND permissions.permission_type = 'TRACKER_ARTIFACT_ACCESS')
+              LEFT JOIN permissions ON (permissions.object_id = CAST(artifact.artifact_id AS CHAR) AND permissions.permission_type = 'TRACKER_ARTIFACT_ACCESS')
            WHERE artifact.group_artifact_id='". db_ei($atid) ."' 
              AND (
                    artifact.use_artifact_permissions = 0
