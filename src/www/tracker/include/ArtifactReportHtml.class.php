@@ -477,10 +477,11 @@ class ArtifactReportHtml extends ArtifactReport {
 					} else if ( $field->isFloat() ) {
 						$html_result .= "<TD $width>". number_format($value,2) .'&nbsp;</TD>'."\n";
 					} else if( $field->isTextArea()){
-                        $text = str_replace("\t", "&nbsp;&nbsp;&nbsp;&nbsp;", $value);
+                        $unsane = util_unconvert_htmlspecialchars($value);
+                        $text = str_replace("\t", "&nbsp;&nbsp;&nbsp;&nbsp;", $hp->purify($unsane, CODENDI_PURIFIER_BASIC, $group_id));
                         $text = str_replace('  ', '&nbsp; ', $text);
                         $text = str_replace('  ', '&nbsp; ', $text);
-                        $html_result .= '<TD '. $width .' style="font-family:monospace; font-size:10pt;">'.  $hp->purify($text, CODENDI_PURIFIER_BASIC, $group_id) . '&nbsp;</TD>';
+                        $html_result .= '<TD '. $width .' style="font-family:monospace; font-size:10pt;">'. $text . '&nbsp;</TD>';
                     } else if($field->getName() == 'status_id') {
                         $html_result .= "<TD $width>";
                         $html_result .= '<div id="status_id_'. $i .'">';
@@ -494,10 +495,8 @@ class ArtifactReportHtml extends ArtifactReport {
                             }
                         }
                         $html_result .= "</TD>\n";
-				    } else if ($field->getName() == 'summary') {
-				    	$html_result .= "<TD $width>".  $hp->purify(util_unconvert_htmlspecialchars($value), CODENDI_PURIFIER_BASIC, $group_id)  .'&nbsp;</TD>'."\n";
                     } else {
-				    	$html_result .= "<TD $width>".  $hp->purify($value, CODENDI_PURIFIER_BASIC, $group_id)  .'&nbsp;</TD>'."\n";
+				    	$html_result .= "<TD $width>".  $hp->purify(util_unconvert_htmlspecialchars($value), CODENDI_PURIFIER_BASIC, $group_id)  .'&nbsp;</TD>'."\n";
 				    }                             
                                 
                 } // while 
