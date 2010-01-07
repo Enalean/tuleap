@@ -66,7 +66,10 @@ class BackendCVSTest extends UnitTestCase {
         mkdir($GLOBALS['cvs_prefix'] . '/' . 'toto');
     }
     
+    
     function tearDown() {
+        //clear the cache between each tests
+        Backend::clearInstances();
         rmdir($GLOBALS['cvs_prefix'] . '/' . 'toto');
         unset($GLOBALS['cvs_prefix']);
         unset($GLOBALS['cvslock_prefix']);

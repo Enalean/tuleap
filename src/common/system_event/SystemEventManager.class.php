@@ -42,7 +42,7 @@ require_once('common/system_event/include/SystemEvent_EDIT_SSH_KEYS.class.php');
 require_once('common/system_event/include/SystemEvent_ROOT_DAILY.class.php');
 
 // Backends
-require_once('common/backend/BackendFactory.class.php');
+require_once('common/backend/Backend.class.php');
 
 /**
 * Manager of system events
@@ -110,7 +110,7 @@ class SystemEventManager {
     }
 
     function _getBackend() {
-        return BackendFactory::getBackend();
+        return Backend::instance('Backend');
     }
 
     /*
@@ -219,6 +219,7 @@ class SystemEventManager {
                                SystemEvent::PRIORITY_MEDIUM);
             break;
         default:
+
             break;
         }
     }
@@ -226,7 +227,7 @@ class SystemEventManager {
     /**
      * Create a new event, store it in the db and send notifications
      */
-    protected function createEvent($type, $parameters, $priority) {
+    public function createEvent($type, $parameters, $priority) {
         if ($id = $this->dao->store($type, $parameters, $priority, SystemEvent::STATUS_NEW, $_SERVER['REQUEST_TIME'])) {
             $klass = 'SystemEvent_'. $type;
             $sysevent = new $klass($id, 
@@ -258,45 +259,44 @@ class SystemEventManager {
     /**
      * Process stored events. Should this be moved to a new class?
      */
-    function processEvents() {
-        while (($dar=$this->dao->checkOutNextEvent()) != null) {
+    function processEvents() {        
+        while (($dar=$this->dao->checkOutNextEvent()) != null) {            
             if ($row = $dar->getRow()) {
                 //echo "Processing event ".$row['id']." (".$row['type'].")\n";
-                $sysevent = $this->getInstanceFromRow($row);
-                
+                $sysevent = $this->getInstanceFromRow($row);               
                 // Process $sysevent
                 if ($sysevent) {
-                    BackendFactory::getBackend()->log("Processing event #".$sysevent->getId()." ".$sysevent->getType()."(".$sysevent->getParameters().")", Backend::LOG_INFO);
+                    Backend::instance('Backend')->log("Processing event #".$sysevent->getId()." ".$sysevent->getType()."(".$sysevent->getParameters().")", Backend::LOG_INFO);
                     $sysevent->process();
                     $this->dao->close($sysevent);
                     $sysevent->notify();
-                    BackendFactory::getBackend()->log("Processing event #".$sysevent->getId().": done.", Backend::LOG_INFO);
+                    Backend::instance('Backend')->log("Processing event #".$sysevent->getId().": done.", Backend::LOG_INFO);
                     // Output errors???
                 }
             }
         }
         // Since generating aliases may be costly, do it only once everything else is processed
-        if (BackendFactory::getAliases()->aliasesNeedUpdate()) {
-            BackendFactory::getAliases()->update();
+        if (Backend::instance('Aliases')->aliasesNeedUpdate()) {
+            Backend::instance('Aliases')->update();
         }
 
         // Update CVS root allow file once everything else is processed
-        if (BackendFactory::getCVS()->getCVSRootListNeedUpdate()) {
-            BackendFactory::getCVS()->CVSRootListUpdate();
+        if (Backend::instance('CVS')->getCVSRootListNeedUpdate()) {
+            Backend::instance('CVS')->CVSRootListUpdate();
         }
 
         // Update SVN root definition for Apache once everything else is processed
-        if (BackendFactory::getSVN()->getSVNApacheConfNeedUpdate()) {
-            BackendFactory::getSVN()->generateSVNApacheConf();
-            // Need to refresh apache (graceful)
-            system('/sbin/service httpd graceful');
+        if (Backend::instance('SVN')->getSVNApacheConfNeedUpdate()) {
+            Backend::instance('SVN')->generateSVNApacheConf();
+            // Need to refresh apache (reload): display something if different from 'OK'
+            system('/sbin/service httpd reload | grep -v OK');
         }
         // Update system user and group caches once everything else is processed
-        if (BackendFactory::getSystem()->getNeedRefreshUserCache()) {
-            BackendFactory::getSystem()->refreshUserCache();
+        if (Backend::instance('System')->getNeedRefreshUserCache()) {
+            Backend::instance('System')->refreshUserCache();
         }
-        if (BackendFactory::getSystem()->getNeedRefreshGroupCache()) {
-            BackendFactory::getSystem()->refreshGroupCache();
+        if (Backend::instance('System')->getNeedRefreshGroupCache()) {
+            Backend::instance('System')->refreshGroupCache();
         }
     }
     
@@ -309,6 +309,7 @@ class SystemEventManager {
      */
     protected function getInstanceFromRow($row) {
         $sysevent = null;
+        $klass    = null;
         switch ($row['type']) {
         case SystemEvent::TYPE_SYSTEM_CHECK:
         case SystemEvent::TYPE_EDIT_SSH_KEYS:
@@ -325,20 +326,23 @@ class SystemEventManager {
         case SystemEvent::TYPE_CVS_IS_PRIVATE:
         case SystemEvent::TYPE_PROJECT_IS_PRIVATE:
         case SystemEvent::TYPE_SERVICE_USAGE_SWITCH:
-        case SystemEvent::TYPE_ROOT_DAILY:
-            $klass = 'SystemEvent_'. $row['type'];
-            $sysevent = new $klass($row['id'], 
-                                   $row['type'], 
-                                   $row['parameters'], 
+            $klass = 'SystemEvent_'. $row['type'];            
+            break;
+        default:
+            $em = EventManager::instance();
+            $em->processEvent(Event::GET_SYSTEM_EVENT_CLASS, array('type'=>$row['type'], 'class'=>&$klass) );
+            break;
+        }
+        if (!empty($klass)) {
+            $sysevent = new $klass($row['id'],
+                                   $row['type'],
+                                   $row['parameters'],
                                    $row['priority'],
-                                   $row['status'], 
-                                   $row['create_date'], 
-                                   $row['process_date'], 
+                                   $row['status'],
+                                   $row['create_date'],
+                                   $row['process_date'],
                                    $row['end_date'],
                                    $row['log']);
-            break;
-        default:              
-            break;
         }
         return $sysevent;
     }

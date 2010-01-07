@@ -29,23 +29,6 @@ class BackendMailingList extends Backend {
 
     protected $_mailinglistdao = null;
 
-
-    /**
-     * Hold an instance of the class
-     */
-    protected static $_instance;
-    
-    /**
-     * Backends are singletons
-     */
-    public static function instance() {
-        if (!isset(self::$_instance)) {
-            $c = __CLASS__;
-            self::$_instance = new $c;
-        }
-        return self::$_instance;
-    }
-
     /**
      * @return MailingListDao
      */
@@ -148,7 +131,7 @@ class BackendMailingList extends Backend {
                 chmod($backupfile,0600);
 
                 // Delete the mailing list if asked to and the mailing exists (archive deleted as well)
-                system($GLOBALS['mailman_bin_dir']. '/rmlist -a '. $list->getListName .' >/dev/null');
+                system($GLOBALS['mailman_bin_dir']. '/rmlist -a '. $list->getListName() .' >/dev/null');
                 
                 return true;
             }

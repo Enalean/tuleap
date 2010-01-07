@@ -117,6 +117,16 @@ NB: Original OsdnNavBar has been removed from first cell. <td align="center">'.$
 
 <body>
 <div id="wrapper">
+
+<?php
+    // Include site configurable banner if any
+    // empty.txt returned when no motd file found
+    $motd = $GLOBALS['Language']->getContent('others/motd');
+    if (!strpos($motd,"empty.txt")) {
+        include($motd);
+    }
+?>
+
 <div id="header"><?php echo $this->getBodyHeader($params); ?></div>
 
 <div id="navigation">

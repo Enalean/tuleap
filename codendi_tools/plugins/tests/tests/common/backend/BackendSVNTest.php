@@ -61,7 +61,10 @@ class BackendSVNTest extends UnitTestCase {
         mkdir($GLOBALS['svn_prefix'] . '/' . 'toto');
     }
     
+    
     function tearDown() {
+        //clear the cache between each tests
+        Backend::clearInstances();
         rmdir($GLOBALS['svn_prefix'] . '/' . 'toto');
         unset($GLOBALS['svn_prefix']);
         unset($GLOBALS['tmp_dir']);

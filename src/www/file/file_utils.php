@@ -39,7 +39,10 @@ function file_utils_get_size($file) {
     //return filesize($file);
 
     if (!(strtoupper(substr(PHP_OS, 0, 3)) == 'WIN')) {
-        $size = trim(`stat -c%s $file`);
+        //if filename containing spaces
+        $filename = escapeshellarg($file);
+        $size =trim(`stat -c%s $filename`);
+        //$size = filesize($file);   
     } else {
         // Not tested...
         $fsobj = new COM("Scripting.FileSystemObject");

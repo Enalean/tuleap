@@ -27,25 +27,14 @@ class LDAP_BackendSVN extends BackendSVN {
     private $ldapProjectManager = null;
     private $ldapUrl            = null;
     private $ldapUserManager    = null;
-    protected static $ldapBackendSVN = null;
-    /**
-     * Constructor
-     */
-    protected function __construct(LDAP $ldap) {
-        $this->ldap = $ldap;
-        parent::__construct();
-    }
 
     /**
-     * Backends are singletons
+     * Setup backend
      *
-     * @return LDAP_BackendSVN
+     * @param LDAP $ldap The ldap connexion
      */
-    public static function instance(LDAP $ldap) {
-        if (!isset(self::$ldapBackendSVN)) {
-            self::$ldapBackendSVN = new LDAP_BackendSVN($ldap);
-        }
-        return self::$ldapBackendSVN;
+    public function setUp(LDAP $ldap) {
+        $this->ldap = $ldap;
     }
 
     /**

@@ -34,24 +34,6 @@ class BackendSVN extends Backend {
     protected $SVNApacheConfNeedUpdate;
 
     /**
-     * Hold an instance of the class
-     */
-    protected static $instance;
-    
-    /**
-     * Backends are singletons
-     *
-     * @return BackendSVN
-     */
-    public static function instance() {
-        if (!isset(self::$instance)) {
-            $c = __CLASS__;
-            self::$instance = new $c;
-        }
-        return self::$instance;
-    }
-
-    /**
      * Constructor
      */
     protected function __construct() {

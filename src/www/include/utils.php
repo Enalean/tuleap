@@ -1333,7 +1333,8 @@ function util_check_restricted_access($request_uri, $script_name) {
         }
 
         // Forum and news. Each published news is a special forum of project 'news'
-        if (isset($allow_access_to_project_news[$group_id])) {
+        if (strpos($req_uri,'/news/') !== false &&
+            isset($allow_access_to_project_news[$group_id])) {
             $user_is_allowed=true;
         }
         
@@ -1342,7 +1343,8 @@ function util_check_restricted_access($request_uri, $script_name) {
             $user_is_allowed=true;
          }
         
-        if (isset($allow_access_to_project_forums[$group_id])) {
+        if (strpos($req_uri,'/forum/') !== false &&
+            isset($allow_access_to_project_forums[$group_id])) {
               $user_is_allowed=true;
          }
 

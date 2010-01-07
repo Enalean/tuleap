@@ -1,0 +1,24 @@
+Author can be reached by sending e-mail to:
+
+Heikki Hokkanen <hoxu at users.sf.net>
+
+Please begin the subject line with [viewgit], or it may get caught in my spam
+filters.
+
+
+An up-to-date and complete list of people who have submitted patches for the
+project can be viewed with:
+
+$ git shortlog -e -s
+
+in the git repository, which is (at the time of writing this) available at:
+
+http://repo.or.cz/w/viewgit.git
+-> git://repo.or.cz/viewgit.git
+
+and:
+
+http://gitorious.org/viewgit
+-> git://gitorious.org/viewgit/mainline.git
+
+See doc/LICENSE for information about third party licenses and authors.

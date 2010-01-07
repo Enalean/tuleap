@@ -43,11 +43,11 @@ class SystemEvent_SYSTEM_CHECK extends SystemEvent {
      */
     function process() {
         
-        $backendSystem      = BackendFactory::getSystem();
-        $backendAliases     = BackendFactory::getAliases();
-        $backendSVN         = BackendFactory::getSVN();
-        $backendCVS         = BackendFactory::getCVS();
-        $backendMailingList = BackendFactory::getMailingList();
+        $backendSystem      = Backend::instance('System');
+        $backendAliases     = Backend::instance('Aliases');
+        $backendSVN         = Backend::instance('SVN');
+        $backendCVS         = Backend::instance('CVS');
+        $backendMailingList = Backend::instance('MailingList');
         
         //TODO: 
         // User: unix_status vs status??

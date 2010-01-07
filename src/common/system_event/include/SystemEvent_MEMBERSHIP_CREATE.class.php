@@ -56,7 +56,7 @@ class SystemEvent_MEMBERSHIP_CREATE extends SystemEvent {
             
             // CVS writers
             if ($project->usesCVS()) {
-                if (!BackendFactory::getCVS()->updateCVSwriters($group_id)) {
+                if (!Backend::instance('CVS')->updateCVSwriters($group_id)) {
                     $this->error("Could not update CVS writers for group $group_id");
                     return false;
                 }
@@ -64,14 +64,14 @@ class SystemEvent_MEMBERSHIP_CREATE extends SystemEvent {
             
             // SVN access file
             if ($project->usesSVN()) {
-                if (!BackendFactory::getSVN()->updateSVNAccess($group_id)) {
+                if (!Backend::instance('SVN')->updateSVNAccess($group_id)) {
                     $this->error("Could not update SVN access file ($group_id)");
                     return false;
                 }
             }
             
             // Need to update system group cache
-            BackendFactory::getSystem()->setNeedRefreshGroupCache();
+            Backend::instance('System')->setNeedRefreshGroupCache();
 
             $this->done();
             return true;

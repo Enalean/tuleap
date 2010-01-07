@@ -792,7 +792,8 @@ class LdapPlugin extends Plugin {
      */
     function backend_factory_get_svn(array $params) {
         if ($GLOBALS['sys_auth_type'] == 'ldap') {
-            $params['backend'] = LDAP_BackendSVN::instance($this->getLdap());
+            $params['base']  = 'LDAP_BackendSVN';
+            $params['setup'] = array($this->getLdap());
         }
     }
 }

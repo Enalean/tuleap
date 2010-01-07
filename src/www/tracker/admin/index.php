@@ -374,6 +374,7 @@ if ($group_id && !$atid) {
 			exit_not_logged_in();
 			return;
 		}
+        
         switch($request->getValidated('action')) {
           case 'remove_global':
               $ok = false;
@@ -428,6 +429,7 @@ if ($group_id && !$atid) {
                   )
               );
               */
+              
               if ($submitted_notifications) {
                   $agnf =& new ArtifactGlobalNotificationFactory();
                   $notifs = $agnf->getGlobalNotificationsForTracker($atid);
@@ -441,6 +443,19 @@ if ($group_id && !$atid) {
                       }
                   }
               }
+              
+              if (is_array($request->get('add_global_notification'))) {
+                  foreach($request->get('add_global_notification') as $new_global_notif) {
+                      if ((isset($new_global_notif['addresses']) && trim($new_global_notif['addresses']))&&
+                            isset($new_global_notif['all_updates']) &&
+                            isset($new_global_notif['check_permissions'])){
+                                if ($id = $agnf->addGlobalNotificationForTracker($atid)) {
+                                    $ok = $agnf->updateGlobalNotification($id, $new_global_notif) && $ok;
+                                }
+                      }
+                  }
+              } 
+                      
               //}}}
 		  }
 

@@ -37,7 +37,7 @@ class SystemEvent_EDIT_SSH_KEYS extends SystemEvent {
     public function process() {
         $user_id = $this->getIdFromParam($this->parameters);
         if ($user = UserManager::instance()->getUserById($user_id)) {
-            if (!BackendFactory::getSystem()->dumpSSHKeysForUser($user)) {
+            if (!Backend::instance('System')->dumpSSHKeysForUser($user)) {
                 $this->error("Could not dump ssh keys for user ". $user->getUserName());
                 return false;
             }

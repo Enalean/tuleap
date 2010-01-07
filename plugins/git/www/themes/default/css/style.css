@@ -1,0 +1,18 @@
+.help {
+  width: auto;
+  background:url(../images/help.png) no-repeat;
+  background-position: 5px center;
+  border: 1px solid #DDDDDD;
+  padding: 0.5em;
+  padding-left: 40px;
+  margin: 0.5em;
+}
+
+.repository {
+    width:auto;
+}
+
+textarea.text {
+    height:50px;
+    width:400px;
+}

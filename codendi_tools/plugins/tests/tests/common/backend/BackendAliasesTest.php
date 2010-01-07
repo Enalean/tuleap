@@ -47,8 +47,9 @@ class BackendAliasesTest extends UnitTestCase {
     
     function tearDown() {
         unset($GLOBALS['alias_file']);
+        //clear the cache between each tests
+        Backend::clearInstances();
     }
-    
     
     function testUpdate() { 
         $udao = new MockUserDao();

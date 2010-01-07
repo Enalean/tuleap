@@ -56,7 +56,7 @@ class SystemEvent_PROJECT_CREATE extends SystemEvent {
         foreach ($groups as $group_id) {
         
             if ($project = $this->getProject($group_id)) {
-                $backendSystem = BackendFactory::getSystem();
+                $backendSystem = Backend::instance('System');
                 if (!$backendSystem->createProjectHome($group_id)) {
                     $this->error("Could not create project home");
                     return false;
@@ -64,7 +64,7 @@ class SystemEvent_PROJECT_CREATE extends SystemEvent {
             
             
                 if ($project->usesCVS()) {
-                    $backendCVS    = BackendFactory::getCVS();
+                    $backendCVS    = Backend::instance('CVS');
                     if (!$backendCVS->createProjectCVS($group_id)) {
                         $this->error("Could not create/initialize project CVS repository");
                         return false;
@@ -74,7 +74,7 @@ class SystemEvent_PROJECT_CREATE extends SystemEvent {
                 }
             
                 if ($project->usesSVN()) {
-                    $backendSVN    = BackendFactory::getSVN();
+                    $backendSVN    = Backend::instance('SVN');
                     if (!$backendSVN->createProjectSVN($group_id)) {
                         $this->error("Could not create/initialize project SVN repository");
                         return false;

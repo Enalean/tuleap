@@ -10,7 +10,7 @@ class TemplatePlugin extends Plugin {
         $this->_addHook('site_admin_option_hook', 'siteAdminHooks', false);
 	}
 	
-    function &getPluginInfo() {
+    function getPluginInfo() {
         if (!is_a($this->pluginInfo, 'TemplatePluginInfo')) {
             require_once('TemplatePluginInfo.class.php');
             $this->pluginInfo =& new TemplatePluginInfo($this);
@@ -26,6 +26,11 @@ class TemplatePlugin extends Plugin {
     
     function siteAdminHooks($params) {
         echo '<li><a href="'.$this->getPluginPath().'/">Template</a></li>';
+    }
+    
+    function process() {
+        echo '<h1>Template</h1>';
+        echo $this->getPluginInfo()->getpropVal('answer');
     }
 }
 

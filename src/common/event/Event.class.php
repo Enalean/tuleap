@@ -47,5 +47,77 @@ class Event {
      * No expected results
      */
     const USER_EMAIL_CHANGED = 'user_email_changed';
+    
+    /**
+     * We are retrieving an instance of Backend. 
+     * Shortcut for BACKEND_FACTORY_GET_PREFIX . 'Backend'
+     *
+     * @see BACKEND_FACTORY_GET_PREFIX
+     */
+    const BACKEND_FACTORY_GET_BACKEND = 'backend_factory_get_backend';
+    
+    /**
+     * We are retrieving an instance of BackendSystem. 
+     * Shortcut for BACKEND_FACTORY_GET_PREFIX . 'system'
+     *
+     * @see BACKEND_FACTORY_GET_PREFIX
+     */
+    const BACKEND_FACTORY_GET_SYSTEM = 'backend_factory_get_system';
+    
+    /**
+     * We are retrieving an instance of BackendAliases. 
+     * Shortcut for BACKEND_FACTORY_GET_PREFIX . 'Aliases'
+     *
+     * @see BACKEND_FACTORY_GET_PREFIX
+     */
+    const BACKEND_FACTORY_GET_ALIASES = 'backend_factory_get_aliases';
+    
+    /**
+     * We are retrieving an instance of BackendMailingList. 
+     * Shortcut for BACKEND_FACTORY_GET_PREFIX . 'MailingList'
+     *
+     * @see BACKEND_FACTORY_GET_PREFIX
+     */
+    const BACKEND_FACTORY_GET_MAILINGLIST = 'backend_factory_get_mailinglist';
+    
+    /**
+     * We are retrieving an instance of BackendCVS. 
+     * Shortcut for BACKEND_FACTORY_GET_PREFIX . 'CVS'
+     *
+     * @see BACKEND_FACTORY_GET_PREFIX
+     */
+    const BACKEND_FACTORY_GET_CVS = 'backend_factory_get_cvs';
+    
+    /**
+     * We are retrieving an instance of BackendSVN. 
+     * Shortcut for BACKEND_FACTORY_GET_PREFIX . 'SVN'
+     *
+     * @see BACKEND_FACTORY_GET_PREFIX
+     */
+    const BACKEND_FACTORY_GET_SVN = 'backend_factory_get_svn';
+    
+    /**
+     * Use this prefix to override plugin's backend.
+     * eg: If docman uses its backend the event:
+     *   BACKEND_FACTORY_GET_PREFIX . 'plugin_docman' 
+     * will be launch to allow overriding.
+     *
+     * /!\ Please use this syntax only for non-core backends.
+     * /!\ For core backends, use BACKEND_FACTORY_GET_SYSTEM & co
+     * 
+     * Listeners can override the backend by providing a subclass.
+     *
+     * Parameters:
+     * 'base' => null
+     * 
+     * A backend class name in the 'base' parameter if needed.
+     * The subclass must inherit from the wanted backend.
+     */
+    const BACKEND_FACTORY_GET_PREFIX = 'backend_factory_get_';
+    
+    /**
+     *
+     */
+     const GET_SYSTEM_EVENT_CLASS = 'get_system_event_class';
 }
 ?>

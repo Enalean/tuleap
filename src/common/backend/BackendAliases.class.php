@@ -29,25 +29,6 @@ class BackendAliases extends Backend {
     protected $userdao = null;
     protected $mailinglistdao = null;
 
-
-    /**
-     * Hold an instance of the class
-     */
-    protected static $instance;
-    
-    /**
-     * Backends are singletons
-     * 
-     * @return BackendAliases
-     */
-    public static function instance() {
-        if (!isset(self::$instance)) {
-            $c = __CLASS__;
-            self::$instance = new $c;
-        }
-        return self::$instance;
-    }
-
     /**
      * Get the user dao
      * 

@@ -52,7 +52,10 @@ class BackendSystemTest extends UnitTestCase {
         $GLOBALS['tmp_dir']                   = dirname(__FILE__) . '/_fixtures/var/tmp';
     }
     
+    
     function tearDown() {
+        //clear the cache between each tests
+        Backend::clearInstances();
         unset($GLOBALS['homedir_prefix']);
         unset($GLOBALS['grpdir_prefix']);
         unset($GLOBALS['codendi_shell_skel']);

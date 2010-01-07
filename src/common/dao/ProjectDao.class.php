@@ -21,6 +21,14 @@
 require_once('include/DataAccessObject.class.php');
 
 class ProjectDao extends DataAccessObject {
+
+    const TABLE_NAME       = 'groups';
+    const GROUP_ID         = 'group_id';
+    const STATUS           = 'status';
+    const UNIX_GROUP_NAME  = 'unix_group_name';
+    const IS_PUBLIC        = 'is_public';
+   
+
     public function __construct($da) {
         parent::__construct($da);
         $this->table_name = 'groups';

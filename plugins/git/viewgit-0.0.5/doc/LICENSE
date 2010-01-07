@@ -1,0 +1,37 @@
+ViewGit is licensed under GNU Affero General Public License version 3, see the
+agpl-3.0.txt file.
+
+Third party licenses
+====================
+
+The Silk icon set has been created by Mark James.
+<http://www.famfamfam.com/lab/icons/silk/>
+
+The license is CC-BY-3 with the following requirement:
+"As an author, I would appreciate a reference to my authorship of the Silk icon
+set contents within a readme file or equivalent documentation for the software
+which includes the set or a subset of the icons contained within."
+<http://creativecommons.org/licenses/by/3.0/>
+
+Contributions
+=============
+
+Contributions should be sent under "AGPLv3 or older" to allow me to upgrade the
+license later on.
+
+Complying with the license
+==========================
+
+NOTE: This is just an interpretation - you still need to follow the license.
+
+Shortly put, compared to GPLv3, AGPLv3 requires you to share any modifications
+you make to the source with any network users who use your copy of the
+software.
+
+[ this naturally excludes inc/localconfig.php which is not part of the software,
+just a configuration file - at least as long as you use it for that purpose only. ]
+
+Simple way to comply with this requirement is to "git clone" the whole ViewGit
+history, and commit your changes on top of the history. Then you can publish
+the .git directory using ViewGit itself.
+

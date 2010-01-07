@@ -32,22 +32,6 @@ class BackendSystem extends Backend {
 
 
     /**
-     * Hold an instance of the class
-     */
-    protected static $_instance;
-    
-    /**
-     * Backends are singletons
-     */
-    public static function instance() {
-        if (!isset(self::$_instance)) {
-            $c = __CLASS__;
-            self::$_instance = new $c;
-        }
-        return self::$_instance;
-    }
-
-    /**
      * Warn system that the user lists has been updated (new user)
      * This is required so that nscd (name service caching daemon) knows that it needs
      * to update its user data.
@@ -392,22 +376,39 @@ class BackendSystem extends Backend {
     protected function writeSSHKeys($username, $ssh_keys) {
         $ssh_keys = str_replace('###', "\n", $ssh_keys);
         $username = strtolower($username);
-        $ssh_dir = $GLOBALS['homedir_prefix'] ."/$username/.ssh";
-        
+        $ssh_dir  = $GLOBALS['homedir_prefix'] ."/$username/.ssh";
+
+        #execute the command as the user's key uid
+        $user     = posix_getpwnam($username);
+        if ( empty($user['uid']) || empty($user['gid']) ) {
+            return false;
+        }
+        if ( !(posix_setegid($user['gid']) && posix_seteuid($user['uid'])) ) {
+            return false;
+        }
         if (!is_dir($ssh_dir)) {
             mkdir($ssh_dir);
             $this->chmod($ssh_dir, 0755);
             $this->chown($ssh_dir, $username);
             $this->chgrp($ssh_dir, $username);
+        }        
+        if ( file_put_contents("$ssh_dir/authorized_keys_new", $ssh_keys) === false) {
+            posix_seteuid(0);
+            $this->log("Enable to write authorized_keys_new file for $username", Backend::LOG_ERROR);
+            return false;
         }
-        
-        file_put_contents("$ssh_dir/authorized_keys_new", $ssh_keys);
-        rename("$ssh_dir/authorized_keys_new", "$ssh_dir/authorized_keys");
+        if ( rename("$ssh_dir/authorized_keys_new", "$ssh_dir/authorized_keys") === false ) {
+            posix_seteuid(0);
+            $this->log("Enable to rename authorized_keys_new file for $username", Backend::LOG_ERROR);
+            return false;
+        }
+        #set effective id to root's
         $this->chmod("$ssh_dir/authorized_keys", 0644);
         $this->chown("$ssh_dir/authorized_keys", $username);
         $this->chgrp("$ssh_dir/authorized_keys", $username);
-        
+        posix_seteuid(0);
         $this->log("Authorized_keys for $username written.", Backend::LOG_INFO);
+        return true;
     }
 
 }

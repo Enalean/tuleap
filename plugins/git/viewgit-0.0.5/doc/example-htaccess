@@ -1,0 +1,7 @@
+Options -Indexes
+php_flag register_globals off
+php_flag magic_quotes_gpc off
+
+RewriteEngine On
+RewriteBase /~hoxu/viewgit/
+RewriteRule ^([^.]*).git/(.*)	?a=co&p=$1&r=$2

@@ -65,7 +65,6 @@ if (file_put_contents($pathToPidFile,getmypid()) === FALSE) {
 
 // Now start the real script.
 require_once('pre.php');
-
 $system_event_manager->processEvents();
 
 // Remove PID file when finished.

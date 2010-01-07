@@ -53,13 +53,13 @@ class SystemEvent_MAILING_LIST_DELETE extends SystemEvent {
             return $this->setErrorBadParam();
         }
 
-        if (!BackendFactory::getMailingList()->deleteList($group_list_id)) {
+        if (!Backend::instance('MailingList')->deleteList($group_list_id)) {
             $this->error("Could not delete mailing list $group_list_id");
             return false;
         }
             
         // Need to add list aliases
-        BackendFactory::getAliases()->setNeedUpdateMailAliases();
+        Backend::instance('Aliases')->setNeedUpdateMailAliases();
             
         $this->done();
         return true;

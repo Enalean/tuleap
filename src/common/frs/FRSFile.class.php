@@ -374,7 +374,9 @@ class FRSFile extends Error {
         }
         header("Content-Type: application/octet-stream");
         header('Content-Disposition: attachment; filename="'. basename($this->getFileName()) .'"');
-        header("Content-Length:  $file_size");
+        if ($file_size > 0){
+            header("Content-Length:  $file_size");
+        }
         header("Content-Transfer-Encoding: binary\n");
 
         //reset time limit for big files

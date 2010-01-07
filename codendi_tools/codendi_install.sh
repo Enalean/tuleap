@@ -605,7 +605,6 @@ cd "${RPMS_DIR}/codendi-salome-tmf"
 newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
 $RPM -Uvh ${newest_rpm}/codendi-salome-tmf-*noarch.rpm
 
-
 ##############################################
 echo "Prevent yum from auto-updating some packages (cvs, mailman)"
 
@@ -1558,6 +1557,8 @@ $PHP $INSTALL_DIR/plugins/IM/include/jabbex_api/installation/install.php -a -orp
 # Hudson plugin
 $CAT $INSTALL_DIR/plugins/hudson/db/install.sql | $MYSQL -u codendiadm codendi --password=$codendiadm_passwd
 
+#Git plugin
+bash $INSTALL_DIR/plugins/git/bin/install.sh
 
 ##############################################
 # Generate Documentation

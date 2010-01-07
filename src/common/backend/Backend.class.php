@@ -19,6 +19,13 @@
  *
  * 
  */
+require_once('common/event/Event.class.php');
+require_once('common/event/EventManager.class.php');
+require_once('common/backend/BackendSystem.class.php');
+require_once('common/backend/BackendAliases.class.php');
+require_once('common/backend/BackendSVN.class.php');
+require_once('common/backend/BackendCVS.class.php');
+require_once('common/backend/BackendMailingList.class.php');
 
 /**
  * Base class to work on Codendi backend
@@ -29,6 +36,13 @@ class Backend {
     const LOG_INFO    = "info";
     const LOG_WARNING = "warn";
     const LOG_ERROR   = "error";
+    
+    const SVN         = 'SVN';
+    const CVS         = 'CVS';
+    const MAILINGLIST = 'MailingList';
+    const BACKEND     = 'Backend';
+    const SYSTEM      = 'System';
+    const ALIASES     = 'Aliases';
     
     public $block_marker_start = "# !!! Codendi Specific !!! DO NOT REMOVE (NEEDED CODENDI MARKER)\n";
     public $block_marker_end   = "# END OF NEEDED CODENDI BLOCK\n";
@@ -41,7 +55,7 @@ class Backend {
     /**
      * Constructor
      */
-    protected function Backend() {
+    protected function __construct() {
 
         /* Make sure umask is properly positioned for the
          entire session. Root has umask 022 by default
@@ -52,23 +66,79 @@ class Backend {
         // Problem: "Avoid using this function in multithreaded webservers" http://us2.php.net/manual/en/function.umask.php
         //umask(002);
     }
-
-    /**
-     * Hold an instance of the class
-     */
-    protected static $instance;
     
+    private static $backend_instances = array();
     /**
-     * Backends are singletons
+     * Return a Backend instance
+     *
+     * Let plugins propose their own backend. If none provided, use the default one.
+     *
+     * @param string $type  SVN | CVS | MailingList | System | Backend | Aliases | plugin_git | ... Default is 'Backend' (itself)
+     * @param string $base  The name of the base backend class. Useless for core backends, mandatory for plugin ones
+     * @param array  $setup The parameters to setUp the plugin, if needed. Null if no parameters
+     *
+     * @throw Exception if $setup is filled and the backend doesn't have a setUp() method
      *
      * @return Backend
      */
-    public static function instance() {
-        if (!isset(self::$instance)) {
-            $c = __CLASS__;
-            self::$instance = new $c;
+    public static final function instance($type = self::BACKEND, $base = null, $setup = null) {
+        if (!isset(self::$backend_instances[$type])) {
+            $backend = null;
+            
+            //determine the base class of the plugin if it is not define at the call
+            if (!$base) {
+                $base = 'Backend';
+                if ($type !== self::BACKEND) {
+                    //BackendSVN, BackendSystem, ...
+                    $base .= $type;
+                }
+            }
+            $wanted_base = $base;
+            
+            //Ask to the whole world if someone wants to provide its own backend
+            //for example plugin ldap will override BackendSVN 
+            $params   = array(
+                'base'  => &$base,
+                'setup' => &$setup
+            );
+            $event    = Event::BACKEND_FACTORY_GET_PREFIX . strtolower($type);
+            EventManager::instance()->processEvent($event, $params);
+            
+            //make sure that there is no problem between the keyboard and the chair
+            if (!class_exists($base)) {
+                throw new RuntimeException("Class '$base' not found");
+            }
+            //Create a new instance of the wanted backend
+            $backend = new $base();
+            
+            //check that all is ok
+            if (!is_a($backend, $wanted_base)) {
+                throw new Exception('Backend should inherit from '. $wanted_base .'. Received: "'. get_class($backend) .'"');
+            }
+            
+            //SetUp if needed
+            if (is_array($setup)) {
+                if (method_exists($backend, 'setUp')) {
+                    call_user_func_array(array($backend, 'setUp'), $setup);
+                } else {
+                    throw new Exception($base .' does not have setUp.');
+                }
+            }
+            
+            //cache the instance to save ticks
+            self::$backend_instances[$type] = $backend;
         }
-        return self::$instance;
+        return self::$backend_instances[$type];
+    }
+    
+    /**
+     * Clear the cache of instances.
+     * Main goal is for unit tests. Useless in prod.
+     *
+     * @return void
+     */
+    public static function clearInstances() {
+        self::$backend_instances = array();
     }
 
     /**
@@ -140,12 +210,12 @@ class Backend {
      * Create system function to allow mocking in unit tests 
      *
      * @param string $cmd The command that will be executed
-     *
+     * @param Integer $rval command return value
      * @return mixed Returns the last line of the command output on success, and false 
      * on failure.
      */
-    protected function system($cmd) {
-        return system($cmd);
+    protected function system($cmd, &$rval=0) {        
+        return system($cmd, $rval);
     }
 
     /**
@@ -248,7 +318,32 @@ class Backend {
     }
 
     /**
-     * Recursive rm function.
+    /**
+     * Recursive chmod (only) function.
+     *
+     * @param string $mypath Path to the file (or directory)
+     * @param mixed  $uid    A user name (or number??).
+     *
+     * @return void
+     */
+    public function recurseChmod($mypath, $mode) {
+        $this->chmod($mypath, $mode);
+        $d = opendir($mypath);
+        while (($file = readdir($d)) !== false) {
+            if ($file != "." && $file != "..") {
+                $typepath = $mypath . "/" . $file ;
+                if (filetype($typepath) == 'dir') {
+                    $this->recurseChmod($typepath, $mode);
+                } else {
+                    $this->chmod($typepath, $mode);
+                }
+            }
+        }
+        closedir($d);
+    }
+
+    /**
+     * Recursive chmod function.
      * see: http://us2.php.net/manual/en/function.rmdir.php#87385
      * Note: the function will empty everything in the given directory but won't remove the directory itself
      * 
@@ -398,7 +493,6 @@ class Backend {
         }
         return true;
     }
-
 }
 
 ?>
