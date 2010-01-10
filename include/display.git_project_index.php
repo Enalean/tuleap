@@ -11,7 +11,7 @@
 
 function git_project_index($projectroot, $projectlist)
 {
-	global $tpl, $git_projects;
+	global $tpl;
 
 	header("Content-type: text/plain; charset=utf-8");
 	header("Content-Disposition: inline; filename=\"index.aux\"");
@@ -19,7 +19,7 @@ function git_project_index($projectroot, $projectlist)
 	$cachekey = sha1(serialize($projectlist));
 
 	if (!$tpl->is_cached('projectindex.tpl', $cachekey)) {
-		if (isset($git_projects))
+		if (is_array($projectlist))
 			$tpl->assign("categorized", TRUE);
 		$projlist = git_read_projects($projectroot, $projectlist);
 		$tpl->assign("projlist", $projlist);

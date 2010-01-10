@@ -15,7 +15,7 @@ function git_read_packed_refs($projectroot, $project, $refdir)
 		return null;
 
 	$refs = array();
-        $refs = explode("\n",git_read_hash($projectroot . $project . "/" . 'packed-refs'));
+	$refs = explode("\n",git_read_hash($projectroot . $project . "/" . 'packed-refs'));
 	$reflist = array();
 
 	$dirlen = strlen($refdir);
@@ -29,7 +29,7 @@ function git_read_packed_refs($projectroot, $project, $refdir)
 					$reflist[] = $refobj;
 			}
 		}
-        }
+	}
 
 	return $reflist;
 }

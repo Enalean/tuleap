@@ -15,7 +15,7 @@
 
 function git_project_list($projectroot,$projectlist,$order = "project")
 {
-	global $tpl,$git_projects;
+	global $tpl;
 
 	$cachekey = sha1(serialize($projectlist)) . "|" . sha1($order);
 
@@ -25,7 +25,7 @@ function git_project_list($projectroot,$projectlist,$order = "project")
 			if (count($projects) > 0) {
 				if ($order)
 					$tpl->assign("order",$order);
-				if (!isset($git_projects)) {
+				if (!is_array($projectlist)) {
 					switch ($order) {
 						case "project":
 							usort($projects,"projectcmp");

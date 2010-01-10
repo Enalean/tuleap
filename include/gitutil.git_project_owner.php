@@ -9,7 +9,25 @@
 
 function git_project_owner($projectroot,$project)
 {
-	if (function_exists('posix_getpwuid')) {
+	global $git_projects;
+
+	if (is_file($git_projects)) {
+		if (!($fp = fopen($git_projects, 'r')))
+			return "Failed to open projects.list";
+
+		while (!feof($fp) && ($line = fgets($fp)))
+		{
+			$pinfo = explode(' ', $line);
+			$ppath = $pinfo[0];
+			if ($ppath == $project)
+			{
+				fclose($fp);
+				return urldecode($pinfo[1]);
+			}
+		}
+
+		fclose($fp);
+	} elseif (function_exists('posix_getpwuid')) {
 		$data = posix_getpwuid(fileowner($projectroot . $project));
 		if (isset($data['gecos']) && (strlen($data['gecos']) > 0))
 			return $data['gecos'];

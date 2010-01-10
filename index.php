@@ -40,13 +40,9 @@
   */
  require_once($gitphp_conf['smarty_prefix'] . "Smarty.class.php");
  $tpl = new Smarty;
- if ((!isset($_GET['a'])) || (
-     	($_GET['a'] != "commitdiff_plain") &&
-     	($_GET['a'] != "blob_plain") &&
-     	($_GET['a'] != "blobdiff_plain") &&
-     	($_GET['a'] != "rss") &&
-     	($_GET['a'] != "opml") &&
-	($_GET['a'] != "snapshot"))) {
+ if (!isset($_GET['a']) ||
+	!in_array($_GET['a'], array('commitdiff_plain', 'blob_plain',
+		'blobdiff_plain', 'rss', 'opml', 'snapshot'))) {
 	$tpl->load_filter('output','trimwhitespace');
 	$extraoutput = TRUE;
 }
@@ -77,7 +73,7 @@
 		$tpl->cache_lifetime = $gitphp_conf['cachelifetime'];
 	if (!(isset($gitphp_conf['cacheexpire']) && ($gitphp_conf['cacheexpire'] === FALSE))) {
 		require_once('include/cache.cache_expire.php');
-		cache_expire($gitphp_conf['projectroot'], $project, (isset($git_projects) ? $git_projects : null));
+		cache_expire($gitphp_conf['projectroot'], $project, (is_array($git_projects) ? $git_projects : null));
 	}
  }
 
@@ -226,7 +222,7 @@ if ($gitphp_conf['filesearch'])
 	}
  } else {
 	require_once('include/display.git_project_list.php');
-	git_project_list($gitphp_conf['projectroot'], (isset($git_projects) ? $git_projects : null), (isset($_GET['o']) ? $_GET['o'] : "project"));
+	git_project_list($gitphp_conf['projectroot'], $git_projects, (isset($_GET['o']) ? $_GET['o'] : "project"));
  }
 
  if ($gitphp_conf['debug'] && $extraoutput)
