@@ -19,7 +19,7 @@ function git_read_projects($projectroot,$projectlist,$projdata = FALSE)
 		return "Projectroot is not a directory";
 
 	$projects = array();
-	if (is_file($projectlist)) {
+	if (is_string($projectlist) && is_file($projectlist)) {
 		if (!($fp = fopen($projectlist, 'r')))
 			return "Failed to open projects.list";
 

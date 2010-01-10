@@ -11,7 +11,8 @@ function git_project_owner($projectroot,$project)
 {
 	global $git_projects;
 
-	if (is_file($git_projects)) {
+	if (is_string($git_projects) 
+		&& is_file($git_projects)) {
 		if (!($fp = fopen($git_projects, 'r')))
 			return "Failed to open projects.list";
 
