@@ -21,7 +21,7 @@ function git_read_projects($projectroot,$projectlist,$projdata = FALSE)
 	$projects = array();
 	if (is_string($projectlist) && is_file($projectlist)) {
 		if (!($fp = fopen($projectlist, 'r')))
-			return "Failed to open projects.list";
+			return "Failed to open project list file: " . $projectlist;
 
 		while (!feof($fp) && ($line = fgets($fp)))
 		{
