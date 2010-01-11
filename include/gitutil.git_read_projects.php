@@ -26,7 +26,7 @@ function git_read_projects($projectroot,$projectlist,$projdata = FALSE)
 		while (!feof($fp) && ($line = fgets($fp)))
 		{
 			$pinfo = explode(' ', $line);
-			$ppath = $pinfo[0];
+			$ppath = trim($pinfo[0]);
 			if (is_file($projectroot . $ppath . "/HEAD"))
 			{
 				if ($projdata)

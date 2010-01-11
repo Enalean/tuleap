@@ -13,28 +13,33 @@ function git_project_owner($projectroot,$project)
 
 	if (is_string($git_projects) 
 		&& is_file($git_projects)) {
-		if (!($fp = fopen($git_projects, 'r')))
-			return "Failed to open projects.list";
 
-		while (!feof($fp) && ($line = fgets($fp)))
-		{
-			$pinfo = explode(' ', $line);
-			$ppath = $pinfo[0];
-			if ($ppath == $project)
+		if ($fp = fopen($git_projects, 'r')) {
+
+			while (!feof($fp) && ($line = fgets($fp)))
 			{
-				fclose($fp);
-				return urldecode($pinfo[1]);
+				$pinfo = explode(' ', $line);
+				$ppath = trim($pinfo[0]);
+				if (($ppath == $project) && isset($pinfo[1]))
+				{
+					fclose($fp);
+					return trim(urldecode($pinfo[1]));
+				}
 			}
-		}
 
-		fclose($fp);
-	} elseif (function_exists('posix_getpwuid')) {
+			fclose($fp);
+
+		}
+	} 
+	
+	if (function_exists('posix_getpwuid')) {
 		$data = posix_getpwuid(fileowner($projectroot . $project));
 		if (isset($data['gecos']) && (strlen($data['gecos']) > 0))
 			return $data['gecos'];
 		return $data['name'];
-	} else
-		return "";
+	}
+
+	return "";
 }
 
 ?>
