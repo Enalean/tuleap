@@ -41,15 +41,17 @@ function git_filesearch($project, $hash, $search, $case = false, $skip = 0, $cou
 	 $entries = explode("\n",$lsout);
 	 foreach ($entries as $j => $line) {
 		$ret = preg_match("/^([0-9]+) (.+) ([0-9a-fA-F]{40})\t(.+)/",$line,$regs);
-		$fname = trim($regs[4]);
+		$fname = "";
+		if (isset($regs[4]))
+			$fname = trim($regs[4]);
 		if (isset($matches[$fname])) {
 			$matches[$fname]['hash'] = $regs[3];
 			$matches[$fname]['type'] = $regs[2];
 		} else {
 			if ($case)
-				$ret = preg_match("/^([0-9]+) (.+) ([0-9a-fA-F]{40})\t(.*" . quotemeta($search) . "[^/]*)$/",$line,$regs);
+				$ret = preg_match("/^([0-9]+) (.+) ([0-9a-fA-F]{40})\t(.*" . quotemeta($search) . "[^\/]*)$/",$line,$regs);
 			else
-				$ret = preg_match("/^([0-9]+) (.+) ([0-9a-fA-F]{40})\t(.*" . quotemeta($search) . "[^/]*)$/i",$line,$regs);
+				$ret = preg_match("/^([0-9]+) (.+) ([0-9a-fA-F]{40})\t(.*" . quotemeta($search) . "[^\/]*)$/i",$line,$regs);
 			if ($ret) {
 				$fname = trim($regs[4]);
 				$matches[$fname] = array();
