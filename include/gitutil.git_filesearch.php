@@ -23,7 +23,7 @@ function git_filesearch($project, $hash, $search, $case = false, $skip = 0, $cou
 		if ($case)
 			$ret = preg_match("/^([^:]+):([^:]+):(.*" . quotemeta($search) . ".*)/",$line,$regs);
 		else
-			$ret = preg_match(("/^([^:]+):([^:]+):(.*" . quotemeta($search) . ".*)/i",$line,$regs);
+			$ret = preg_match("/^([^:]+):([^:]+):(.*" . quotemeta($search) . ".*)/i",$line,$regs);
 		if ($ret) {
 			$fname = trim($regs[2]);
 			if (!isset($matches[$fname])) {
