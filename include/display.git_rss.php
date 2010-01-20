@@ -35,16 +35,6 @@ function git_rss($projectroot,$project)
 			if (($i >= 20) && ((time() - $co['committer_epoch']) > 48*60*60))
 				break;
 			$cd = date_str($co['committer_epoch']);
-			$difftree = array();
-			if (isset($co['parent'])) {
-				$diffout = git_diff_tree($projectroot . $project, $co['parent'] . " " . $co['id']);
-				$tok = strtok($diffout,"\n");
-				while ($tok !== false) {
-					if (preg_match("/^:([0-7]{6}) ([0-7]{6}) ([0-9a-fA-F]{40}) ([0-9a-fA-F]{40}) (.)([0-9]{0,3})\t(.*)$/",$tok,$regs))
-						$difftree[] = $regs[7];
-					$tok = strtok("\n");
-				}
-			}
 			$commitline = array();
 			$commitline["cdmday"] = $cd['mday'];
 			$commitline["cdmonth"] = $cd['month'];
@@ -55,7 +45,19 @@ function git_rss($projectroot,$project)
 			$commitline["cdrfc2822"] = $cd['rfc2822'];
 			$commitline["commit"] = $commit;
 			$commitline["comment"] = $co['comment'];
-			$commitline["difftree"] = $difftree;
+
+			if (isset($co['parent'])) {
+				$difftree = array();
+				$diffout = git_diff_tree($projectroot . $project, $co['parent'] . " " . $co['id']);
+				$tok = strtok($diffout,"\n");
+				while ($tok !== false) {
+					if (preg_match("/^:([0-7]{6}) ([0-7]{6}) ([0-9a-fA-F]{40}) ([0-9a-fA-F]{40}) (.)([0-9]{0,3})\t(.*)$/",$tok,$regs))
+						$difftree[] = $regs[7];
+					$tok = strtok("\n");
+				}
+				$commitline["difftree"] = $difftree;
+			}
+
 			$commitlines[] = $commitline;
 		}
 		$tpl->assign("commitlines",$commitlines);
