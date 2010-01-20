@@ -27,7 +27,7 @@ function git_commitdiff($projectroot,$project,$hash,$hash_parent)
 			return;
 		}
 		$co = git_read_commit($projectroot . $project, $hash);
-		if (!isset($hash_parent))
+		if ((!isset($hash_parent)) && (isset($co['parent'])))
 			$hash_parent = $co['parent'];
 		$diffout = git_diff_tree($projectroot . $project, $hash_parent . " " . $hash);
 		$difftree = explode("\n",$diffout);
