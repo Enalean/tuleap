@@ -29,7 +29,28 @@
 	$realprojroot = realpath($gitphp_conf['projectroot']);
 	$pathpiece = substr($fullpath, 0, strlen($realprojroot));
 	if (strcmp($pathpiece, $realprojroot) === 0) {
-		$project = str_replace(chr(0), '', $_GET['p']);
+		if (is_string($git_projects) && is_file($git_projects)) {
+			if ($fp = fopen($git_projects, 'r')) {
+				while (!feof($fp) && ($line = fgets($fp))) {
+					$pinfo = explode(' ', $line);
+					$ppath = trim($pinfo[0]);
+					if ($ppath == $_GET['p']) {
+						$project = str_replace(chr(0), '', $_GET['p']);
+						break;
+					}
+				}
+				fclose($fp);
+			}
+		} else if (is_array($git_projects)) {
+			foreach ($git_projects as $category) {
+				if (array_search($_GET['p'], $category)) {
+					$project = str_replace(chr(0), '', $_GET['p']);
+					break;
+				}
+			}
+		} else {
+			$project = str_replace(chr(0), '', $_GET['p']);
+		}
 	}
  }
 
