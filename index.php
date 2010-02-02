@@ -35,7 +35,7 @@
 					$pinfo = explode(' ', $line);
 					$ppath = trim($pinfo[0]);
 					if ($ppath == $_GET['p']) {
-						$project = str_replace(chr(0), '', $_GET['p']);
+						$project = $_GET['p'];
 						break;
 					}
 				}
@@ -44,13 +44,15 @@
 		} else if (is_array($git_projects)) {
 			foreach ($git_projects as $category) {
 				if (array_search($_GET['p'], $category)) {
-					$project = str_replace(chr(0), '', $_GET['p']);
+					$project = $_GET['p'];
 					break;
 				}
 			}
 		} else {
-			$project = str_replace(chr(0), '', $_GET['p']);
+			$project = $_GET['p'];
 		}
+		if (isset($project))
+			$project = str_replace(chr(0), '', $project);
 	}
  }
 
