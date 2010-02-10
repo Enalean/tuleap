@@ -17,6 +17,7 @@ function date_str($epoch,$tz = "-0000")
 	$date['month'] = date("M",$epoch);
 	$date['rfc2822'] = date("r",$epoch);
 	$date['mday-time'] = date("d M H:i",$epoch);
+	$date['ymd-time'] = date("Y-m-d H:i",$epoch);
 	if (preg_match("/^([+\-][0-9][0-9])([0-9][0-9])$/",$tz,$regs)) {
 		$local = $epoch + ((((int)$regs[1]) + ($regs[2]/60)) * 3600);
 		$date['hour_local'] = date("H",$local);

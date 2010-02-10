@@ -214,6 +214,10 @@ if ($gitphp_conf['filesearch'])
 					require_once('include/display.git_blobdiff_plain.php');
 					git_blobdiff_plain($gitphp_conf['projectroot'],$project,$_GET['h'],$_GET['hb'],$_GET['hp'], (isset($_GET['f']) ? $_GET['f'] : NULL));
 					break;
+				case "blame":
+					require_once('include/display.git_blame.php');
+					git_blame($gitphp_conf['projectroot'],$project, (isset($_GET['h']) ? $_GET['h'] : NULL), (isset($_GET['f']) ? $_GET['f'] : NULL), (isset($_GET['hb']) ? $_GET['hb'] : NULL));
+					break;
 				case "snapshot":
 					require_once('include/display.git_snapshot.php');
 					git_snapshot($gitphp_conf['projectroot'],$project, (isset($_GET['h']) ? $_GET['h'] : NULL));

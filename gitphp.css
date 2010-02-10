@@ -110,11 +110,17 @@ div.error {
 }
 table.code td {
 	padding: 0px 0px;
-	font-family:monospace; font-size:12px; white-space:pre;
 }
 table.code td.num {
 	text-align: right;
+	font-family:monospace; font-size:12px; white-space:pre;
 }
 table.code td.codeline {
 	padding-left: 5px;
+	font-family:monospace; font-size:12px; white-space:pre;
 }
+table.code td.author, table.code td.date {
+	white-space: nowrap;
+}
+table.code tr.light:hover { background-color:#ffffff; }
+table.code tr.dark:hover { background-color:#f6f6f0; }

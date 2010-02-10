@@ -1,9 +1,9 @@
 {*
- *  blob.tpl
- *  gitphp: A PHP git repository browser
- *  Component: Blob view template
+ * blame.tpl
+ * gitphp: A PHP git repository browser
+ * Component: Blame view template
  *
- *  Copyright (C) 2009 Christopher Han <xiphux@gmail.com>
+ * Copyright (C) 2010 Christopher Han <xiphux@gmail.com>
  *}
 
  {include file='header.tpl'}
@@ -15,11 +15,11 @@
      {if $file}
        <a href="{$SCRIPT_NAME}?p={$project}&a=blob_plain&h={$hash}&f={$file}">plain</a> | 
        {if ($hashbase != "HEAD") && ($hashbase != $head)}
-         <a href="{$SCRIPT_NAME}?p={$project}&a=blob&hb=HEAD&f={$file}">HEAD</a>
+         <a href="{$SCRIPT_NAME}?p={$project}&a=blame&hb=HEAD&f={$file}">HEAD</a>
        {else}
          HEAD
        {/if}
-        | <a href="{$SCRIPT_NAME}?p={$project}&a=blame&h={$hash}&f={$file}&hb={$hashbase}">blame</a>
+        | blame
        <br />
      {else}
        <a href="{$SCRIPT_NAME}?p={$project}&a=blob_plain&h={$hash}">plain</a><br />
@@ -53,24 +53,22 @@
    </b>
  </div>
  <div class="page_body">
-   {if $mime && $data}
-     {* We're trying to display an image *}
-     <div>
-       <img src="data:{$mime};base64,{$data}" />
-     </div>
-   {elseif $geshiout}
-     {* We're using the highlighted output from geshi *}
-     {$geshiout}
-   {else}
-     {* Just plain display *}
-     <table class="code">
-     {foreach from=$lines item=line name=lines}
-       <tr>
-         <td class="num"><a id="l{$smarty.foreach.lines.iteration}" href="#l{$smarty.foreach.lines.iteration}" class="linenr">{$smarty.foreach.lines.iteration}</a></td>
-	 <td class="codeline">{$line|escape:'html'}</td>
-     {/foreach}
-     </table>
-   {/if}
+ 	<table class="code">
+	{counter name=linecount start=0 print=false}
+	{foreach from=$blamedata item=blameitem}
+		{cycle values="light,dark" assign=rowclass}
+		{foreach from=$blameitem.lines name=linegroup item=blameline}
+		{counter name=linecount assign=linenum}
+		<tr class="{$rowclass}">
+			<td class="num"><a id="l{$linenum}" href="#l{$linenum}" class="linenr">{$linenum}</a></td>
+			<td class="date">{$blameitem.commitdata.authordate}</td>
+			<td class="author">{if $smarty.foreach.linegroup.first}{$blameitem.commitdata.author}{/if}</td>
+			<td>{if $blameitem.commit}{if $smarty.foreach.linegroup.first}<a href="{$SCRIPT_NAME}?p={$project}&a=commit&h={$blameitem.commit}" title="{$blameitem.commitdata.summary}">commit</a>{/if}{/if}</td>
+			<td class="codeline">{$blameline}</td>
+		</tr>
+		{/foreach}
+	{/foreach}
+	</table>
  </div>
 
  {include file='footer.tpl'}

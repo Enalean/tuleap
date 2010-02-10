@@ -15,5 +15,6 @@ define('GIT_REV_PARSE','rev-parse');
 define('GIT_SHOW_REF','show-ref');
 define('GIT_ARCHIVE','archive');
 define('GIT_GREP','grep');
+define('GIT_BLAME','blame');
 
 ?>
