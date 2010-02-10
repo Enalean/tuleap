@@ -81,13 +81,6 @@
  }
 
 /*
- * Development
- */
- if (!(isset($gitphp_conf['dev']) && $gitphp_conf['dev'])) {
- 	$tpl->compile_check = false;
- }
-
-/*
  * Caching
  */
  if ($gitphp_conf['cache']) {
