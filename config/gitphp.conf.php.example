@@ -46,7 +46,7 @@ $gitphp_conf['diffbin'] = "/usr/bin/diff";
  * Location for temporary files for diffs
  * (don't forget trailing slash!)
  */
-$gitphp_conf['gittmp'] = "/tmp/gitphp/";
+$gitphp_conf['gittmp'] = "/tmp/";
 
 /*
  * title
@@ -90,7 +90,7 @@ $gitphp_conf['title'] = "$gitphp_appstring";
  * Leave blank to just search in the root of the php include directories
  * like /usr/share/php/Smarty.class.php, /usr/lib/php/Smarty.class.php, etc.
  */
-$gitphp_conf['smarty_prefix'] = "smarty/";
+$gitphp_conf['smarty_prefix'] = "lib/smarty/libs/";
 
 /*
  * compressformat
@@ -120,7 +120,7 @@ $gitphp_conf['compresslevel'] = 9;
  * Run blob output through geshi syntax highlighting
  * and line numbering
  */
-$gitphp_conf['geshi'] = FALSE;
+$gitphp_conf['geshi'] = TRUE;
 
 /*
  * geshiroot
@@ -130,7 +130,7 @@ $gitphp_conf['geshi'] = FALSE;
  * Leave blank if geshi.php is in the gitphp root
  * (don't forget trailing slash!)
  */
-$gitphp_conf['geshiroot'] = "geshi/";
+$gitphp_conf['geshiroot'] = "lib/geshi/";
 
 /*
  * filemimetype
