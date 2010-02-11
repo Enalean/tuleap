@@ -26,7 +26,7 @@
   <body>
     <div class="page_header">
       <a href="http://www.kernel.org/pub/software/scm/git/docs/" title="git documentation">
-        <img src="git-logo.png" width="72" height="27" alt="git" class="logo" />
+        <img src="images/git-logo.png" width="72" height="27" alt="git" class="logo" />
       </a>
       <a href="index.php">projects</a> / 
       {if $project && $validproject}
