@@ -19,7 +19,7 @@
        {else}
          HEAD
        {/if}
-        | <a href="{$SCRIPT_NAME}?p={$project}&a=blame&h={$hash}&f={$file}&hb={$hashbase}">blame</a>
+       {if !$mime && !$data} | <a href="{$SCRIPT_NAME}?p={$project}&a=blame&h={$hash}&f={$file}&hb={$hashbase}">blame</a>{/if}
        <br />
      {else}
        <a href="{$SCRIPT_NAME}?p={$project}&a=blob_plain&h={$hash}">plain</a><br />
