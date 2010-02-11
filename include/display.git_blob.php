@@ -70,11 +70,13 @@ function git_blob($projectroot, $project, $hash, $file, $hashbase)
 						if (isset($file))
 							$lang = $geshi->get_language_name_from_extension(substr(strrchr($file,'.'),1));
 						if (isset($lang) && (strlen($lang) > 0)) {
+							$geshi->enable_classes();
 							$geshi->set_source($catout);
 							$geshi->set_language($lang);
 							$geshi->set_header_type(GESHI_HEADER_DIV);
 							$geshi->enable_line_numbers(GESHI_FANCY_LINE_NUMBERS);
 							$tpl->assign("geshiout",$geshi->parse_code());
+							$tpl->assign("extracss",$geshi->get_stylesheet());
 							$usedgeshi = TRUE;
 						}
 					}

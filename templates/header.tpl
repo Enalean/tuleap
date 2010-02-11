@@ -16,6 +16,11 @@
       <link rel="alternate" title="{$project} log" href="{$SCRIPT_NAME}?p={$project}&a=rss" type="application/rss+xml" />
     {/if}
     <link rel="stylesheet" href="{$stylesheet}" type="text/css" />
+    <style type="text/css">
+    <!--
+    {$extracss}
+    -->
+    </style></head>
     {$smarty.capture.header}
   </head>
   <body>
