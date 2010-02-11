@@ -71,7 +71,7 @@
 			{/if}
 			</td>
 			<td class="author">{if $smarty.foreach.linegroup.first}{$blameitem.commitdata.author}{/if}</td>
-			<td class="codeline">{$blameline}</td>
+			<td class="codeline">{$blameline|escape}</td>
 		</tr>
 		{/foreach}
 	{/foreach}
