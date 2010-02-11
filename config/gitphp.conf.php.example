@@ -12,7 +12,10 @@
  * Absolute filesystem path prepended to project paths
  * (don't forget trailing slash!)
  */
-$gitphp_conf['projectroot'] = "/git/";
+//$gitphp_conf['projectroot'] = "/pub/gitprojects/";
+
+
+
 
 /*
  * stylesheet
