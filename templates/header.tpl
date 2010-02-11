@@ -15,7 +15,7 @@
     {if $validproject}
       <link rel="alternate" title="{$project} log" href="{$SCRIPT_NAME}?p={$project}&a=rss" type="application/rss+xml" />
     {/if}
-    <link rel="stylesheet" href="{$stylesheet}" type="text/css" />
+    <link rel="stylesheet" href="css/{$stylesheet}" type="text/css" />
     <style type="text/css">
     <!--
     {$extracss}
