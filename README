@@ -5,7 +5,6 @@ git
 diff
 Apache (or other php-compatible webserver)
 PHP
-Smarty (smarty.net)
 
 
 To begin, you need to have your git repositories set up in a directory that the
@@ -63,18 +62,9 @@ The most important setting is the 'projectroot' setting, which specifies
 where your git repositories are - following the previous example, it would
 be set up as "/gitprojects/".
 
-If you installed Smarty in a nonstandard directory (ie not in a standard
-php include directory, and not as a subdirectory inside your GitPHP
-directory), then you will need to set the 'smarty_prefix' config item.
-
 If you want to set up categories for your projects, you need to set up the
 $git_projects array - the definition and structure of this is explained in
 the config file.
-
-If you want to use syntax highlighting with GeSHi (http://qbnz.com/highlighter/),
-you will need to change the config key 'geshi' to true and set up the
-'geshiroot' key to point to the geshi directory if it's not in a standard php
-include directory or a subdirectory of GitPHP, same as with smarty.
 
 If you want to edit the text header that appears above the project list on the
 home page, edit templates/hometext.tpl.
