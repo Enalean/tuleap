@@ -61,9 +61,16 @@
 		{counter name=linecount assign=linenum}
 		<tr class="{$rowclass}">
 			<td class="num"><a id="l{$linenum}" href="#l{$linenum}" class="linenr">{$linenum}</a></td>
-			<td class="date">{if $smarty.foreach.linegroup.first}{$blameitem.commitdata.authordate}{/if}</td>
+			<td class="date">
+			{if $smarty.foreach.linegroup.first}
+			{if $blameitem.commit}
+			<a href="{$SCRIPT_NAME}?p={$project}&a=commit&h={$blameitem.commit}" title="{$blameitem.commitdata.summary}">{$blameitem.commitdata.authordate}</a>
+			{else}
+			{$blameitem.commitdata.authordate}
+			{/if}
+			{/if}
+			</td>
 			<td class="author">{if $smarty.foreach.linegroup.first}{$blameitem.commitdata.author}{/if}</td>
-			<td>{if $blameitem.commit}{if $smarty.foreach.linegroup.first}<a href="{$SCRIPT_NAME}?p={$project}&a=commit&h={$blameitem.commit}" title="{$blameitem.commitdata.summary}">commit</a>{/if}{/if}</td>
 			<td class="codeline">{$blameline}</td>
 		</tr>
 		{/foreach}
