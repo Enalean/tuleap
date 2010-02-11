@@ -8,17 +8,17 @@
  */
 
 /*
- * stylesheet
- * Path to page stylesheet
- */
-$gitphp_conf['stylesheet'] = "gitphp.css";
-
-/*
  * projectroot
  * Absolute filesystem path prepended to project paths
  * (don't forget trailing slash!)
  */
 $gitphp_conf['projectroot'] = "/git/";
+
+/*
+ * stylesheet
+ * Path to page stylesheet
+ */
+$gitphp_conf['stylesheet'] = "gitphp.css";
 
 /*
  * gitbin
@@ -105,7 +105,7 @@ $gitphp_conf['smarty_prefix'] = "lib/smarty/libs/";
  * If you choose a compression format and your php does not support it,
  * gitphp will fall back to uncompressed tar archives
  */
-$gitphp_conf['compressformat'] = GITPHP_COMPRESS_BZ2;
+$gitphp_conf['compressformat'] = GITPHP_COMPRESS_ZIP;
 
 /*
  * compresslevel
