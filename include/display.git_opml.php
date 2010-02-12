@@ -12,14 +12,14 @@
 
 function git_opml($projectroot,$projectlist)
 {
-	global $tpl,$gitphp_conf;
+	global $tpl,$gitphp_appstring;
 
 	$cachekey = sha1(serialize($projectlist));
 
 	if (!$tpl->is_cached('opml.tpl', $cachekey)) {
 		header("Content-type: text/xml; charset=UTF-8");
 		$projlist = git_read_projects($projectroot,$projectlist);
-		$tpl->assign("title",$gitphp_conf['title']);
+		$tpl->assign("title", Config::GetInstance()->GetValue('title', $gitphp_appstring));
 		$tpl->assign("self",script_url());
 		$opmllist = array();
 		foreach ($projlist as $cat => $plist) {

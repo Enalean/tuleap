@@ -15,13 +15,13 @@ require_once('display.git_message.php');
 
 function git_search_files($projectroot, $project, $hash, $search, $page = 0)
 {
-	global $tpl,$gitphp_conf;
+	global $tpl;
 
 	$cachekey = sha1($project) . "|" . $hash . "|" . "filesearch" . "|" . sha1($search) . "|" . (isset($page) ? $page : 0);
 
 	if (!$tpl->is_cached('searchfiles.tpl', $cachekey)) {
 
-		if (!($gitphp_conf['search'] && $gitphp_conf['filesearch'])) {
+		if (!(Config::GetInstance()->GetValue('search', true) && Config::GetInstance()->GetValue('filesearch', true))) {
 			git_message("File search has been disabled", TRUE, TRUE);
 			return;
 		}

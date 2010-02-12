@@ -9,10 +9,8 @@
 
 function script_url()
 {
-	global $gitphp_conf;
-
-	if (isset($gitphp_conf['self']))
-		return $gitphp_conf['self'];
+	if (Config::GetInstance()->HasKey('self'))
+		return Config::GetInstance()->GetValue('self');
 
 	if (isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] == 'on'))
 		$scriptstr = "https://";

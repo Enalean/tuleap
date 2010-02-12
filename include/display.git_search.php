@@ -15,13 +15,13 @@ require_once('display.git_message.php');
 
 function git_search($projectroot, $project, $hash, $search, $searchtype, $page = 0)
 {
-	global $tpl,$gitphp_conf;
+	global $tpl;
 
 	$cachekey = sha1($project) . "|" . $hash . "|" . sha1($searchtype) . "|" . sha1($search) . "|" . (isset($page) ? $page : 0);
 
 	if (!$tpl->is_cached('search.tpl', $cachekey)) {
 
-		if (!$gitphp_conf['search']) {
+		if (!Config::GetInstance()->GetValue('search', true)) {
 			git_message("Search has been disabled", TRUE, TRUE);
 			return;
 		}

@@ -9,8 +9,7 @@
 
 function git_exec_win($project, $command)
 {
-	global $gitphp_conf;
-	$cmd = $gitphp_conf['gitbin'];
+	$cmd = Config::GetInstance()->GetValue('gitbin', 'C:\\Progra~1\\Git\\bin\\git.exe');
 	if (isset($project) && (strlen($project) > 0))
 		$cmd .= " --git-dir=" . $project;
 	$cmd .= " " . $command;

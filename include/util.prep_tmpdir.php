@@ -9,15 +9,15 @@
 
 function prep_tmpdir()
 {
-	global $gitphp_conf;
-	if (file_exists($gitphp_conf['gittmp'])) {
-		if (is_dir($gitphp_conf['gittmp'])) {
-			if (!is_writeable($gitphp_conf['gittmp']))
+	$tmpdir = Config::GetInstance()->GetValue('gittmp', '/tmp/gitphp/');
+	if (file_exists($tmpdir)) {
+		if (is_dir($tmpdir)) {
+			if (!is_writeable($tmpdir))
 				return "Specified tmpdir is not writeable!";
 		} else
 			return "Specified tmpdir is not a directory";
 	} else
-		if (!mkdir($gitphp_conf['gittmp'],0700))
+		if (!mkdir($tmpdir, 0700))
 			return "Could not create tmpdir";
 	return TRUE;
 }

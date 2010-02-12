@@ -9,8 +9,7 @@
 
  function git_exec_nix($project, $command)
  {
- 	global $gitphp_conf;
-	$cmd = $gitphp_conf['gitbin'];
+	$cmd = Config::GetInstance()->GetValue('gitbin', 'git');
 	if (isset($project) && (strlen($project) > 0))
 		$cmd .= " --git-dir=" . $project;
 	$cmd .= " " . $command;

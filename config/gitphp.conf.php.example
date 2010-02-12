@@ -49,7 +49,7 @@ $gitphp_conf['diffbin'] = "/usr/bin/diff";
  * Location for temporary files for diffs
  * (don't forget trailing slash!)
  */
-$gitphp_conf['gittmp'] = "/tmp/";
+$gitphp_conf['gittmp'] = "/tmp/gitphp/";
 
 /*
  * title

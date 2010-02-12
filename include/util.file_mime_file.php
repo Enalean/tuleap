@@ -11,8 +11,6 @@
 
 function file_mime_file($buffer)
 {
-	global $gitphp_conf;
-
 	if ($buffer && (strtoupper(substr(PHP_OS, 0, 3)) !== 'WIN')) {
 		$descspec = array(
 			0 => array("pipe", "r"),

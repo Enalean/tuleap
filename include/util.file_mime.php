@@ -13,8 +13,6 @@ require_once('util.file_mime_ext.php');
 
 function file_mime($buffer, $file = NULL)
 {
-	global $gitphp_conf;
-
 	if (!$buffer)
 		return FALSE;
 

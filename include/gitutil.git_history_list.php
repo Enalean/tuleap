@@ -12,8 +12,7 @@
 
 function git_history_list($proj,$hash,$file)
 {
-	global $gitphp_conf;
-	$cmd = GIT_REV_LIST . " " . $hash . " | " . $gitphp_conf['gitbin'] . " --git-dir=" . $proj . " " . GIT_DIFF_TREE . " -r --stdin -- " . $file;
+	$cmd = GIT_REV_LIST . " " . $hash . " | " . Config::GetInstance()->GetValue('gitbin', 'git') . " --git-dir=" . $proj . " " . GIT_DIFF_TREE . " -r --stdin -- " . $file;
 	return git_exec($proj, $cmd);
 }
 

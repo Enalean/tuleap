@@ -18,7 +18,7 @@
 
 function git_summary($projectroot,$project)
 {
-	global $tpl,$gitphp_conf;
+	global $tpl;
 
 	$cachekey = sha1($project);
 
@@ -33,10 +33,10 @@ function git_summary($projectroot,$project)
 		$tpl->assign("description",$descr);
 		$tpl->assign("owner",$owner);
 		$tpl->assign("lastchange",$commitdate['rfc2822']);
-		if (isset($gitphp_conf['cloneurl']))
-			$tpl->assign('cloneurl', $gitphp_conf['cloneurl'] . $project);
-		if (isset($gitphp_conf['pushurl']))
-			$tpl->assign('pushurl', $gitphp_conf['pushurl'] . $project);
+		if (Config::GetInstance()->HasKey('cloneurl'))
+			$tpl->assign('cloneurl', Config::GetInstance()->GetValue('cloneurl') . $project);
+		if (Config::GetInstance()->HasKey('pushurl'))
+			$tpl->assign('pushurl', Config::GetInstance()->GetValue('pushurl') . $project);
 		$revlist = git_read_revlist($projectroot . $project, $head, 17);
 		foreach ($revlist as $i => $rev) {
 			$revdata = array();

@@ -12,7 +12,7 @@
 
 function git_blob_plain($projectroot,$project,$hash,$file)
 {
-	global $gitphp_conf, $tpl;
+	global $tpl;
 
 	$cachekey = sha1($project) . "|" . $hash . "|" . sha1($file);
 
@@ -27,7 +27,7 @@ function git_blob_plain($projectroot,$project,$hash,$file)
 
 		$buffer = git_cat_file($projectroot . $project, $hash);
 
-		if ($gitphp_conf['filemimetype'])
+		if (Config::GetInstance()->GetValue('filemimetype', true))
 			$mime = file_mime($buffer, $file);
 
 		$headers = array();

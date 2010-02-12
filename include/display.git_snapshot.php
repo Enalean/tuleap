@@ -12,7 +12,7 @@ require_once('defs.constants.php');
 
 function git_snapshot($projectroot,$project,$hash)
 {
-	global $gitphp_conf, $tpl;
+	global $tpl;
 
 	if (!isset($hash))
 		$hash = "HEAD";
@@ -22,15 +22,17 @@ function git_snapshot($projectroot,$project,$hash)
 	$bzcompress = false;
 	$gzencode = false;
 
+	$compressformat = Config::GetInstance()->GetValue('compressformat', GITPHP_COMPRESS_ZIP);
+
 	$rname = str_replace(array("/",".git"),array("-",""),$project);
-	if ($gitphp_conf['compressformat'] == GITPHP_COMPRESS_ZIP) {
+	if ($compressformat == GITPHP_COMPRESS_ZIP) {
 		header("Content-Type: application/x-zip");
 		header("Content-Disposition: attachment; filename=" . $rname . ".zip");
-	} else if (($gitphp_conf['compressformat'] == GITPHP_COMPRESS_BZ2) && function_exists("bzcompress")) {
+	} else if (($compressformat == GITPHP_COMPRESS_BZ2) && function_exists("bzcompress")) {
 		$bzcompress = true;
 		header("Content-Type: application/x-bzip2");
 		header("Content-Disposition: attachment; filename=" . $rname . ".tar.bz2");
-	} else if (($gitphp_conf['compressformat'] == GITPHP_COMPRESS_GZ) && function_exists("gzencode")) {
+	} else if (($compressformat == GITPHP_COMPRESS_GZ) && function_exists("gzencode")) {
 		$gzencode = true;
 		header("Content-Type: application/x-gzip");
 		header("Content-Disposition: attachment; filename=" . $rname . ".tar.gz");
@@ -42,12 +44,12 @@ function git_snapshot($projectroot,$project,$hash)
 	if (!$tpl->is_cached('snapshot.tpl', $cachekey)) {
 
 		$arc = git_archive($projectroot . $project, $hash, $rname,
-			(($gitphp_conf['compressformat'] == GITPHP_COMPRESS_ZIP) ? "zip" : "tar"));
+			(($compressformat == GITPHP_COMPRESS_ZIP) ? "zip" : "tar"));
 
-		if (($gitphp_conf['compressformat'] == GITPHP_COMPRESS_BZ2) && $bzcompress) {
-			$arc = bzcompress($arc,(isset($gitphp_conf['compresslevel'])?$gitphp_conf['compresslevel']:4));
-		} else if (($gitphp_conf['compressformat'] == GITPHP_COMPRESS_GZ) && $gzencode) {
-			$arc = gzencode($arc,(isset($gitphp_conf['compresslevel'])?$gitphp_conf['compresslevel']:-1));
+		if (($compressformat == GITPHP_COMPRESS_BZ2) && $bzcompress) {
+			$arc = bzcompress($arc, Config::GetInstance()->GetValue('compresslevel', 4));
+		} else if (($compressformat == GITPHP_COMPRESS_GZ) && $gzencode) {
+			$arc = gzencode($arc, Config::GetInstance()->GetValue('compresslevel', -1));
 		}
 		$tpl->assign("archive",$arc);
 	}
