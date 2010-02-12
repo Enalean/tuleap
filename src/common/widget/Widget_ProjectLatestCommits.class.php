@@ -53,13 +53,19 @@ class Widget_ProjectLatestCommits extends Widget {
     function getContent() {
         $html = '';
         $i = 1;
-        $UH = new UserHelper();
+        $UH = UserHelper::instance();
         $hp = Codendi_HTMLPurifier::instance(); 
         while($data = db_fetch_array($this->getLatestRevisions())) {
             $html .= '<div class="'. util_get_alt_row_color($i++) .'" style="border-bottom:1px solid #ddd">';
             $html .= '<div style="font-size:0.98em;">';
             $html .= '<a href="'. $this->_getLinkToCommit($data) .'">#'.$data['revision'].'</a>';
-            $html .= ' by '.$hp->purify($UH->getDisplayNameFromUserName($data['who']), CODENDI_PURIFIER_CONVERT_HTML) .' on ';
+            $html .= ' by ';
+            if (isset($data['whoid'])) {
+                $name = $UH->getDisplayNameFromUserId($data['whoid']);
+            } else {
+                $name = $UH->getDisplayNameFromUserName($data['who']);
+            }
+            $html .= $hp->purify($name, CODENDI_PURIFIER_CONVERT_HTML).' on ';
             //In the db, svn dates are stored as int whereas cvs dates are stored as timestamp
             $html .= format_date($GLOBALS['Language']->getText('system', 'datefmt'), (is_numeric($data['date']) ? $data['date'] : strtotime($data['date'])));
             $html .= '</div>';
@@ -77,7 +83,7 @@ class Widget_ProjectLatestCommits extends Widget {
         return $html;
     }
     function isAvailable() {
-        return $this->getLatestRevisions() && user_isloggedin() ? true : false;
+        return user_isloggedin() ? true : false;
     }
     function hasRss() {
         return false;
@@ -86,6 +92,11 @@ class Widget_ProjectLatestCommits extends Widget {
     function getCategory() {
         return 'scm';
     }
+
+    function isAjax() {
+        return true;
+    }
+
     /*
     Do not use rss for this widget because we don't resolved authentification issue
     function displayRss() {

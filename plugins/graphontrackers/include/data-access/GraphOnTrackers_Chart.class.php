@@ -136,7 +136,7 @@ abstract class GraphOnTrackers_Chart {
     protected function buildGraph() {
         //Define the artifacts which must be added to the chart
         //based on the user pref (last report, last query
-        $geup =  new graphicEngineUserPrefs($this->graphic_report->getAtid());
+        $geup =  new GraphicEngineUserPrefs($this->graphic_report->getAtid());
         $geup->fetchPrefs();
         $artifacts = $geup->getArtifactsInOrder();
         

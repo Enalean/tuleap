@@ -42,7 +42,7 @@ class URL {
  
              $req_uri='/'.trim($url, "/");
              // /projects/ and /viewvc/
-             if ((strpos($req_uri,'/projects/') !== false)||(strpos($req_uri,'/viewvc.php/') !== false)) {
+             if ((strpos($req_uri,'/projects/') === 0)||(strpos($req_uri,'/viewvc.php/') !== false)) {
            
                  if (strpos($req_uri,'/viewvc.php/') !== false) {
                      preg_match("/root=([a-zA-Z0-9_-]+)/",$req_uri, $matches);
@@ -62,7 +62,7 @@ class URL {
              }
         
              // Forum and news. Each published news is a special forum of project 'news'
-             if (strpos($req_uri,'/forum/') !== false) {
+             if (strpos($req_uri,'/forum/') === 0) {
                  if (array_key_exists('forum_id', $_REQUEST) && $_REQUEST['forum_id']) {
                      // Get corresponding project
                      $dao = $this->getForumDao();
@@ -82,12 +82,12 @@ class URL {
                  }
              }
              // File downloads. It might be a good idea to restrict access to shownotes.php too...
-             if (strpos($req_uri,'/file/download.php') !== false) {
+             if (strpos($req_uri,'/file/download.php') === 0) {
                  list(,$group_id, $file_id) = explode('/', $GLOBALS['PATH_INFO']);
              }
 
              // Artifact attachment download...
-             if (strpos($req_uri,'/tracker/download.php') !== false) {
+             if (strpos($req_uri,'/tracker/download.php') === 0) {
                  if (isset($_REQUEST['artifact_id'])) {
                      $dao = $this->getArtifactDao();
                      $result = $dao->searchArtifactId($_REQUEST['artifact_id']);

@@ -49,6 +49,18 @@ class AdminDelegation_UserServiceDao extends DataAccessObject {
         }
     }
 
+    /**
+     * Return all user granted for this service
+     *
+     * @param  Integer  $serviceId 
+     * @return DataAccessResult
+     */
+    public function searchAllUserService($serviceId) {
+        $sql = 'SELECT user_id FROM plugin_admindelegation_service_user'.
+               ' WHERE service_id = '.$this->da->quoteSmart($serviceId);
+        return $this->retrieve($sql);
+    }
+
     public function isUserGranted($userId) {
         $sql = 'SELECT NULL FROM plugin_admindelegation_service_user'.
                ' WHERE user_id = '.$this->da->quoteSmart($userId).

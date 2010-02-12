@@ -53,8 +53,7 @@ if (isset($_REQUEST['SUBMIT'])) {
     	export_wiki_pg_logs($project, $period, $who,0);
     	export_wiki_att_logs($project, $period, $who);
   	}
-  	// Need a hook?
-    export_document_logs($project, $period, $who);
+    export_all_plugins_logs($project, $period, $who);
     exit;
 
 }

@@ -154,14 +154,20 @@ class Docman_LogDao extends DataAccessObject {
         
         return $inserted;
     }
-    function getSqlStatementForLogsDaily($group_id, $logs_cond, $type) {
-        return 'SELECT log.time AS time, user.user_name AS user_name, user.realname AS realname, user.email AS email, item.title AS title '
-        .' FROM plugin_docman_log AS log, user, plugin_docman_item AS item '
-        .' WHERE '. $logs_cond
-        .' AND log.group_id = '. $this->da->quoteSmart($group_id)
-        .' AND item.item_id = log.item_id '
-        .' AND type = '. $this->da->quoteSmart($type)
-        .' ORDER BY time DESC ';
+    function getSqlStatementForLogsDaily($group_id, $logs_cond) {
+        return 'SELECT log.time AS time, '
+               .'CASE WHEN log.type = 1 THEN '.$this->da->quoteSmart($GLOBALS['Language']->getText('plugin_docman','action_add')).
+               ' WHEN log.type = 2 THEN '.$this->da->quoteSmart($GLOBALS['Language']->getText('plugin_docman','action_edit')).
+               ' WHEN log.type = 3 THEN '.$this->da->quoteSmart($GLOBALS['Language']->getText('plugin_docman','action_move')).
+               ' WHEN log.type = 4 THEN '.$this->da->quoteSmart($GLOBALS['Language']->getText('plugin_docman','action_delete')).
+               ' WHEN log.type = 5 THEN '.$this->da->quoteSmart($GLOBALS['Language']->getText('plugin_docman','action_access')).
+               ' END as type, user.user_name AS user_name, user.realname AS realname, user.email AS email, CONCAT(item.item_id," - ",item.title) AS title '
+               .' FROM plugin_docman_log AS log, user, plugin_docman_item AS item '
+               .' WHERE '. $logs_cond
+               .' AND log.group_id = '. $this->da->quoteSmart($group_id)
+               .' AND item.item_id = log.item_id '
+               .' AND log.type in (1,2,3,4,5) '
+               .' ORDER BY time DESC ';
     }
 }
 

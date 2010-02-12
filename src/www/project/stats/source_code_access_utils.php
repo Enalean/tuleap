@@ -49,43 +49,49 @@ function logs_cond($project, $span, $who) {
  * Process SQL query and display corresponding result
  */
 function logs_display($sql, $span, $field, $title='') {
-  $hp = Codendi_HTMLPurifier::instance();
-  // Executions will continue until morale improves.
-  $res = db_query( $sql );
+    $hp = Codendi_HTMLPurifier::instance();
+    // Executions will continue until morale improves.
+    $res = db_query( $sql );
 
-  print '<p><u><b>'.$GLOBALS['Language']->getText('project_stats_source_code_access_utils','access_for_past_x_days',array($title,$span));
-	if ( ($nb_downloads = db_numrows( $res )) >= 1 ) {
+    print '<p><u><b>'.$GLOBALS['Language']->getText('project_stats_source_code_access_utils','access_for_past_x_days',array($title,$span));
+    if ( ($nb_downloads = db_numrows( $res )) >= 1 ) {
+        $row = db_fetch_array($res);
+        print ' - '.$GLOBALS['Language']->getText('project_stats_source_code_access_utils','in_total',$nb_downloads).'</u></b>';
 
-    print ' - '.$GLOBALS['Language']->getText('project_stats_source_code_access_utils','in_total',$nb_downloads).'</u></b>';
+        print '<table width="100%" cellpadding="2" cellspacing="0" border="0">'."\n"
+            . '<tr valign="top">'."\n"
+            . ' <th>'.$GLOBALS['Language']->getText('project_admin_utils','date').'</th>'."\n";
+        
+        if (isset($row['type'])){
+            print ' <th>'.$GLOBALS['Language']->getText('project_admin_utils','action').'</th>'."\n";
+        }
+        print ' <th>'.$GLOBALS['Language']->getText('project_export_utils','user').'</th>'."\n"
+            . ' <th>'.$GLOBALS['Language']->getText('project_export_artifact_history_export','email').'</th>'."\n"
+            . ' <th>'.$field.'</th>'."\n"
+            . ' <th align="right">'.$GLOBALS['Language']->getText('project_stats_source_code_access_utils','time').'</th>'."\n"
+            . '</tr>'."\n";
+        $i = 0;
+        do {
+            print '<tr class="'. util_get_alt_row_color($i++). '">'
+            .' <td>'.strftime("%e %b %Y", $row['time'] ).'</td>';
+            if (isset($row['type'])){
+                print' <td>'.$row['type'].'</td>';
+            }
 
-    print '<table width="100%" cellpadding="2" cellspacing="0" border="0">'."\n"
-      . '<tr valign="top">'."\n"
-      . ' <th>'.$GLOBALS['Language']->getText('project_admin_utils','date').'</th>'."\n"
-      . ' <th>'.$GLOBALS['Language']->getText('project_export_utils','user').'</th>'."\n"
-      . ' <th>'.$GLOBALS['Language']->getText('project_export_artifact_history_export','email').'</th>'."\n"
-      . ' <th>'.$field.'</th>'."\n"
-      . ' <th align="right">'.$GLOBALS['Language']->getText('project_stats_source_code_access_utils','time').'</th>'."\n"
-      . '</tr>'."\n";
-		$i = 0;
-		while ( $row = db_fetch_array($res) ) {
-			$i++;
- 
-      print '<tr class="'. util_get_alt_row_color($i). '">'
-	.' <td>'.strftime("%e %b %Y", $row["time"] ).'</td>'
-	.' <td> <a href="/users/'.$row["user_name"].'/">'.$row["user_name"].'</a> ('. $hp->purify($row["realname"], CODENDI_PURIFIER_CONVERT_HTML) .')</td>'
-	.' <td>'.$row["email"].'</td>'
-	.' <td>'. $hp->purify($row["title"], CODENDI_PURIFIER_CONVERT_HTML) .'</td>'
-	.' <td align="right">'.strftime("%H:%M", $row["time"]).'</td>'
-	.'</tr>'."\n";
-		}
+            print ' <td> <a href="/users/'.$row["user_name"].'/">'.$row["user_name"].'</a> ('. $hp->purify($row["realname"], CODENDI_PURIFIER_CONVERT_HTML) .')</td>'
+                .' <td>'.$row["email"].'</td>';
+            print ' <td>';
+            print $hp->purify($row["title"], CODENDI_PURIFIER_CONVERT_HTML) .'</td>'
+                .' <td align="right">'.strftime("%H:%M", $row["time"]).'</td>'
+                .'</tr>'."\n";
+        } while ($row = db_fetch_array($res));
 
-    print '</table>';
+        print '</table>';
 
-	}
-  else {
-    echo "</u></b>
-<p>".$GLOBALS['Language']->getText('project_stats_source_code_access_utils','no_access')."</p>";
-  }
+    } else {
+        echo "</u></b>
+        <p>".$GLOBALS['Language']->getText('project_stats_source_code_access_utils','no_access')."</p>";
+    }
 }
 
 function filedownload_logs_extract($project,$span,$who) {

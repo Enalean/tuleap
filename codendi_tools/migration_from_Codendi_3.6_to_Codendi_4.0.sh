@@ -426,6 +426,9 @@ cd "${RPMS_DIR}/cvs"
 newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
 $RPM -Uvh ${newest_rpm}/$ARCH/cvs-1.*.rpm
 
+# Recover config
+$CP /etc/xinetd.d/cvs.rpmsave /etc/xinetd.d/cvs
+
 # -> JPGraph
 $RPM -e jpgraph jpgraphs-docs 2>/dev/null
 echo "Installing JPGraph RPM for Codendi...."

@@ -37,6 +37,11 @@ class LdapPlugin extends Plugin {
      */
     private $ldapInstance;
 
+    /**
+     * @type LDAP_UserManager
+     */
+    private $_ldapUmInstance;
+
     function __construct($id) {
         parent::__construct($id);
 
@@ -128,6 +133,18 @@ class LdapPlugin extends Plugin {
             $this->ldapInstance = new LDAP($ldapParams);
         }
         return $this->ldapInstance;
+    }
+
+    /**
+     * Wrapper
+     *
+     * @return LDAP_UserManager
+     */
+    protected function _getLdapUserManager() {
+        if (!isset($this->_ldapUmInstance)) {
+            $this->_ldapUmInstance = new LDAP_UserManager($this->getLdap());
+        }
+        return $this->_ldapUmInstance;
     }
 
     /**
@@ -333,7 +350,7 @@ class LdapPlugin extends Plugin {
      */
     function allowCodendiLogin($params) {
         if ($GLOBALS['sys_auth_type'] == 'ldap') {
-            $ldapUm = new LDAP_UserManager($this->getLdap());
+            $ldapUm = $this->_getLdapUserManager();
             $lr = $ldapUm->getLdapFromUserId($params['user_id']);
             if($lr) {
                 $params['allow_codendi_login'] = false;
@@ -365,7 +382,7 @@ class LdapPlugin extends Plugin {
      */
     protected function getUserFromLdapIterator($lri) {
         if($lri && count($lri) === 1) {
-            $ldapUm = new LDAP_UserManager($this->getLdap());
+            $ldapUm = $this->_getLdapUserManager();
             return $ldapUm->getUserFromLdap($lri->current()); 
         }
         return null;
@@ -439,7 +456,7 @@ class LdapPlugin extends Plugin {
     function personalInformationEntry($params) {
         if($GLOBALS['sys_auth_type'] == 'ldap') {
             $params['entry_label'][$this->getId()] = $GLOBALS['Language']->getText('plugin_ldap', 'ldap_login');
-            $ldapUm = new LDAP_UserManager($this->getLdap());
+            $ldapUm = $this->_getLdapUserManager();
             $lr = $ldapUm->getLdapFromUserId($params['user_id']);
             if($lr) {
                 $link = $this->buildLinkToDirectory($lr, $lr->getLogin());
@@ -461,7 +478,7 @@ class LdapPlugin extends Plugin {
      */
     function accountPiEntry($params) {
         if($GLOBALS['sys_auth_type'] == 'ldap') {
-            $ldapUm = new LDAP_UserManager($this->getLdap());
+            $ldapUm = $this->_getLdapUserManager();
             $lr = $ldapUm->getLdapFromUserId($params['user_id']);
             if($lr) {
                 $params['entry_label'][$this->getId()] = $GLOBALS['Language']->getText('plugin_ldap', 'ldap_login');
@@ -508,7 +525,7 @@ class LdapPlugin extends Plugin {
             echo '<td colspan="2" align="center"><a href="/users/'.$user_name.'/?showdir=1"><hr>[ '.$GLOBALS['Language']->getText('plugin_ldap','more_from_directory',$GLOBALS['sys_org_name']).'... ]</a><td>';
 
         } else {
-            $ldapUm = new LDAP_UserManager($this->getLdap());
+            $ldapUm = $this->_getLdapUserManager();
             $lr = $ldapUm->getLdapFromUserName($user_name);
 
             if (!$lr) {
@@ -648,7 +665,7 @@ class LdapPlugin extends Plugin {
         $svnProjectManager = new LDAP_ProjectManager();
         if($GLOBALS['sys_auth_type'] == 'ldap' && isset($params['group_id']) && $svnProjectManager->hasSVNLDAPAuth($params['group_id'])) {
             $svn_url = $params['svn_url'];
-            $ldapUm = new LDAP_UserManager($this->getLdap());
+            $ldapUm = $this->_getLdapUserManager();
             $lr = $ldapUm->getLdapFromUserId($params['user_id']);
             require($GLOBALS['Language']->getContent('svn_intro', null, 'ldap'));
             $params['svn_intro_in_plugin'] = true;
@@ -668,8 +685,8 @@ class LdapPlugin extends Plugin {
         if($GLOBALS['sys_auth_type'] == 'ldap'
            && isset($params['groupname'])
            && $svnProjectManager->hasSVNLDAPAuthByName($params['groupname'])) {
-               $ldapUm = new LDAP_UserManager($this->getLdap());
-               $lr     =  $ldapUm->getLdapFromUserName($params['username']);
+               $ldapUm = $this->_getLdapUserManager();
+               $lr     = $ldapUm->getLdapFromUserName($params['username']);
                if($lr !== false) {
                    // Must lower the username because LDAP is case insensitive
                    // while svn permission comparator is case sensitive and in

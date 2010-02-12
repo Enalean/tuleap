@@ -351,7 +351,12 @@ class ReferenceManager {
      * @return $exp the string which may the regexp 
      */
     function _getExpForRef() {
-        $exp = '/(\w+) #([\w-_]+:)?([\w\/&]+)+/u';
+        $exp = "`(\w+)       #reference
+                           \s          #separator
+                           \#          #dash (2 en 1)
+                           ([\w-_]+:)? #optional project name (followed by a colon)
+                           ((?:&amp;|\w|/|&)+) #any combination of &, &amp;, a word or a slash
+                          `xu";
         return $exp;
     }
 

@@ -1,9 +1,12 @@
 plugin_docman	action_doc_id	Document id:
+plugin_docman	action_add	Add
+plugin_docman	action_access	Access
 plugin_docman	action_approval	Approval table
 plugin_docman	action_cut	Cut
 plugin_docman	action_copy	Copy
 plugin_docman	action_delete	Delete
 plugin_docman	action_details	Properties
+plugin_docman	action_edit	Edit
 plugin_docman	action_history	History
 plugin_docman	action_move	Move
 plugin_docman	action_newdocument	New document
@@ -445,6 +448,7 @@ plugin_docman	error_not_a_file	The specified item is not a file.
 plugin_docman	error_get_checksum	Error while getting file checksum.
 plugin_docman	error_item_id_missing	Error: item ID is missing.
 plugin_docman	error_no_option	Please choose option for creating approval table
+plugin_docman	error_perm_file_denied	You do not have the permission to access the document
 
 plugin_docman	event_add	Create
 plugin_docman	event_edit	Edit
@@ -517,6 +521,7 @@ plugin_docman	max_size_msg	(The maximum upload file size is $1 MByte)
 plugin_docman	my_reviews	Documents under review
 plugin_docman	my_reviews_reviewer	Reviewer
 plugin_docman	my_reviews_requester	Requester
+plugin_docman	my_docman_search	Document Id Search
 plugin_docman	my_no_review	No document under review.
 plugin_docman	my_no_request	No review requested.
 
@@ -789,3 +794,6 @@ plugin_docman	format_type	Type
 plugin_docman	format_type_desc	Kind of item (file, link, wiki,...)
 plugin_docman	format_user_group	User Groups...
 plugin_docman	format_user_group_desc	One user group per column. Each one can have either READ, WRITE or MANAGE permission. An empty row means no access.
+plugin_docman	widget_description_my_docman_search	Redirect to document with given id.
+plugin_docman	widget_my_docman_search_label	Search document id:
+plugin_docman	widget_my_docman_search_btn	Search

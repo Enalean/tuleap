@@ -60,12 +60,14 @@ class Docman_Log { /* implements EventListener */
     
     function logsDaily($params) {
         $params['logs'][] = array(
-            'sql'   => $this->dao->getSqlStatementForLogsDaily($params['group_id'], $params['logs_cond'], PLUGIN_DOCMAN_EVENT_ACCESS),
+            'sql'   => $this->dao->getSqlStatementForLogsDaily($params['group_id'], $params['logs_cond']),
             'field' => $GLOBALS['Language']->getText('plugin_docman','logsdaily_field'),
             'title' => $GLOBALS['Language']->getText('plugin_docman','logsdaily_title')
         );
+       
+       
     }
-    
+        
     var $dao;
     function _getDao() {
         if (!$this->dao) {

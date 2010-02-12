@@ -90,6 +90,28 @@ if ($request->isPost()) {
                 $GLOBALS['Response']->addFeedback('error', 'Bad user');
             }
             break;
+            
+        case 'revoke_user_service':
+            $vService = new Valid_WhiteList('plugin_admindelegation_service', AdminDelegation_Service::getAllServices());
+            $vService->required();
+            if ($request->valid($vService)){
+                $serviceId = $request->get('plugin_admindelegation_service');
+            } 
+            $vUser = new Valid_UInt('users_to_revoke');
+            $vUser->required();
+            if ($request->validArray($vUser)) {
+                foreach ($request->get('users_to_revoke') as $userId) {
+                    $user = $um->getUserById($userId);
+                    if ($user) {
+                        $usm->removeUserService($user, $serviceId);
+                    } else {
+                        $GLOBALS['Response']->addFeedback('error', 'Bad user');
+                    }
+                }
+            } else {
+                $GLOBALS['Response']->addFeedback('error', 'Bad user');
+            }
+            break;
 
         default:
             $GLOBALS['Response']->addFeedback('error', 'Bad action');
@@ -99,17 +121,17 @@ if ($request->isPost()) {
 }
 
 
-$GLOBALS['HTML']->header(array('title' => 'Admin rights delegation / Permissions'));
-echo '<h1>Admin rights delegation / Permissions</h1>';
+$GLOBALS['HTML']->header(array('title' => $GLOBALS['Language']->getText('plugin_admindelegation','permissions_page_title')));
+echo '<h1>'.$GLOBALS['Language']->getText('plugin_admindelegation','permissions_page_title').'</h1>';
 
-echo '<h2>Grant user</h2>';
+echo '<h2>'.$GLOBALS['Language']->getText('plugin_admindelegation','permissions_grant_user_title').'</h2>';
 
 echo '<form method="post" action="?">';
-echo 'Grant ';
+echo $GLOBALS['Language']->getText('plugin_admindelegation','permissions_grant');
 echo html_build_select_box_from_arrays(AdminDelegation_Service::getAllServices(), AdminDelegation_Service::getAllLabels(), 'service', 100, true);
-echo ' to user ';
+echo '&nbsp;'.$GLOBALS['Language']->getText('plugin_admindelegation','permissions_to_user').'&nbsp;';
 echo '<input type="hidden" name="func" value="grant_user_service" />';
-echo '<input type="text" name="user_to_grant" value="Type user name (autcompletion)" id="granted_user" />';
+echo '<input type="text" name="user_to_grant" value="'.$GLOBALS['Language']->getText('plugin_admindelegation','permissions_autocomplete').'" id="granted_user" />';
 echo '&nbsp;';
 echo '<input type="submit" value="'.$GLOBALS['Language']->getText('global', 'btn_apply').'"/>';
 echo '</form>';
@@ -118,15 +140,15 @@ $GLOBALS['HTML']->includeFooterJavascriptSnippet($js);
 
 $uh = UserHelper::instance();
 
+echo '<h2>'.$GLOBALS['Language']->getText('plugin_admindelegation','permissions_granted_users_title').'</h2>';
 echo '<form method="post" action="?">';
 echo '<input type="hidden" name="func" value="revoke_user" />';
-echo '<h2>Granted users</h2>';
 echo '<table border="1">';
 echo '<thead>';
 echo '<tr>';
 echo '<th>&nbsp;</th>';
-echo '<th>User</th>';
-echo '<th>Service</th>';
+echo '<th>'.$GLOBALS['Language']->getText('plugin_admindelegation','permissions_user_col').'</th>';
+echo '<th>'.$GLOBALS['Language']->getText('plugin_admindelegation','permissions_service_col').'</th>';
 echo '</tr>';
 echo '</thead>';
 echo '<tbody>';
@@ -150,8 +172,45 @@ echo '</table>';
 echo '<input type="submit" value="'.$GLOBALS['Language']->getText('global', 'btn_delete').'"/>';
 echo '</form>';
 
-//echo '<h2>Granted users per permission</h2>';
+foreach (AdminDelegation_Service::getAllServices() as $serviceId) {
+    displayDeleteUserPerService($usm, $uh, $serviceId);
+}
 
 $GLOBALS['HTML']->footer(array());
+
+/*
+ * 
+ */
+function displayDeleteUserPerService($usm, $uh, $serviceId) {
+
+
+    $userDar = $usm->getGrantedUsersForService($serviceId);
+
+    echo '<h2>'.$GLOBALS['Language']->getText('plugin_admindelegation','permissions_granted_users_service_title',array(AdminDelegation_Service::getLabel($serviceId))).'</h2>';
+    if ($userDar && !$userDar->isError() && ($userDar->rowCount() > 0)) {
+
+        echo '<form method="post" action="?">';
+        echo '<input type="hidden" name="func" value="revoke_user_service" />';
+        echo '<input type="hidden" name="plugin_admindelegation_service" value="'.$serviceId.'"/>';
+        echo '<table border="1">';
+        echo '<thead>';
+        echo '<tr>';
+        echo '<th>&nbsp;</th>';
+        echo '<th>'.$GLOBALS['Language']->getText('plugin_admindelegation','permissions_user_col').'</th>';
+        echo '</tr>';
+        echo '</thead>';
+        echo '<tbody>';
+
+        foreach ($userDar as $row) {
+            echo '<tr><td><input type="checkbox" name="users_to_revoke[]" value="'.$row['user_id'].'" /></td>';
+            echo '<td>'.$uh->getDisplayNameFromUserId($row['user_id']).'</td></tr>';
+        }
+        echo '</tbody>';
+        echo '</table>';
+        echo '<input type="submit" value="'.$GLOBALS['Language']->getText('global', 'btn_delete').'"/>';
+        echo '</form>';
+    }
+
+}
 
 ?>

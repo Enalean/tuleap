@@ -148,7 +148,9 @@ then
 
   ## Archive previous backup
   # Move current full backup into the archive
-  /bin/mv current/* ${OldBackupPathFull} || true
+  if [[ "$(ls current/|wc -l)" != "0" ]]; then
+      /bin/mv current/* ${OldBackupPathFull} || true
+  fi
   
   # Move current incremental backup into the archive
   /bin/mv ${SvnIncrBackupPath}/* ${OldBackupPathIncr} || true

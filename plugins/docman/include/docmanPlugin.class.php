@@ -236,6 +236,10 @@ class DocmanPlugin extends Plugin {
                 require_once('Docman_Widget_ProjectEmbedded.class.php');
                 $params['instance'] = new Docman_Widget_ProjectEmbedded($this->getPluginPath());
                 break;
+            case 'plugin_docman_mydocman_search':
+                require_once('Docman_Widget_MyDocmanSearch.class.php');
+                $params['instance'] = new Docman_Widget_MyDocmanSearch($this->getPluginPath());
+                break;
             default:
                 break;
         }
@@ -244,6 +248,7 @@ class DocmanPlugin extends Plugin {
         require_once('common/widget/WidgetLayoutManager.class.php');
         if ($params['owner_type'] == WidgetLayoutManager::OWNER_TYPE_USER) {
             $params['codendi_widgets'][] = 'plugin_docman_mydocman';
+            $params['codendi_widgets'][] = 'plugin_docman_mydocman_search';
             $params['codendi_widgets'][] = 'plugin_docman_my_embedded';
         }
         if ($params['owner_type'] == WidgetLayoutManager::OWNER_TYPE_GROUP) {

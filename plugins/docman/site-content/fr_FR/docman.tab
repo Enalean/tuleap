@@ -1,9 +1,12 @@
 plugin_docman	action_doc_id	Id. document : 
+plugin_docman	action_add	Ajout
+plugin_docman	action_access	Accès
 plugin_docman	action_approval	Table d'approbation
 plugin_docman	action_cut	Couper
 plugin_docman	action_copy	Copier
 plugin_docman	action_delete	Supprimer
 plugin_docman	action_details	Propriétés
+plugin_docman	action_edit	Modification
 plugin_docman	action_history	Historique
 plugin_docman	action_move	Déplacer
 plugin_docman	action_newdocument	Nouveau document
@@ -445,6 +448,7 @@ plugin_docman	error_not_a_file	L'élément spécifié n'est pas un fichier.
 plugin_docman	error_get_checksum	Erreur lors de la récupération de la somme de contrôle du fichier.
 plugin_docman	error_item_id_missing	Erreur: pas d'élément à traiter (ID).
 plugin_docman	error_no_option	Veuillez choisir une option pour la création de la table d'approbation
+plugin_docman	error_perm_file_denied	Vous n'avez pas les droits suffisants pour accéder à ce document.
 
 plugin_docman	event_add	Création
 plugin_docman	event_edit	Edition
@@ -518,6 +522,7 @@ plugin_docman	my_reviews	Documents en attente d'approbation
 plugin_docman	my_reviews_reviewer	Approbateur
 plugin_docman	my_reviews_requester	Demandeur d'approbation
 plugin_docman	my_no_review	Pas de documents à approuver.
+plugin_docman	my_docman_search	Recherche des Documents par Id
 plugin_docman	my_no_request	Pas d'approbation demandée.
 
 plugin_docman	md_bo_badlabel	Nom de propriété '$1' inconnu.
@@ -788,3 +793,6 @@ plugin_docman	format_type	Type
 plugin_docman	format_type_desc	Nature de l'item (fichier, lien, wiki, ...)
 plugin_docman	format_user_group	List des groupes d'utilisateurs...
 plugin_docman	format_user_group_desc	Un group par colonne. Chaque groupe peut avoir soit la permission "READ", "WRITE" ou "MANAGE". Une cellule vide signifie que le group correspondant n'as pas accès à la ressource.
+plugin_docman	widget_description_my_docman_search	Redirige au document correspondant à l'ID donné
+plugin_docman	widget_my_docman_search_label	Cherche un document par id :
+plugin_docman	widget_my_docman_search_btn	Rechercher

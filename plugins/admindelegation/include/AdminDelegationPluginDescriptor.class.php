@@ -21,17 +21,14 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-
 require_once 'common/plugin/PluginDescriptor.class.php';
-
 
 /**
  * AdminDelegationPluginDescriptor
  */
 class AdminDelegationPluginDescriptor extends PluginDescriptor {
-    
     public function __construct() {
-        parent::__construct($GLOBALS['Language']->getText('plugin_admindelegation', 'descriptor_name'), '1.0', $GLOBALS['Language']->getText('plugin_admindelegation', 'descriptor_description'));
+        parent::__construct($GLOBALS['Language']->getText('plugin_admindelegation', 'descriptor_name'), '2.0', $GLOBALS['Language']->getText('plugin_admindelegation', 'descriptor_description'));
     }
 }
 ?>

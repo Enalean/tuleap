@@ -19,9 +19,11 @@
  * You should have received a copy of the GNU General Public License
  * along with Codendi; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
- * $Id$
  */
+
+// Backend scripts should never ends because of lack of time or memory
+ini_set('max_execution_time', 0);
+ini_set('memory_limit', -1);
 
 require_once('pre.php');
 require_once('common/event/EventManager.class.php');

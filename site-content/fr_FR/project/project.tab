@@ -413,6 +413,7 @@ project_admin_utils	menu_config	Configuration&nbsp;:
 project_admin_utils	menu_permissions	Permissions&nbsp;: 
 project_admin_utils	menu_data	Données&nbsp;: 
 project_admin_utils	group_type	Type de projet modifié
+project_admin_utils	action	Action
 #... end of values
 #
 #-----------------------------------------------

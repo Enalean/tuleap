@@ -261,7 +261,7 @@ class Statistics_DiskUsageManager {
     public function getDirSize($dir) {
         if (is_dir($dir)) {
             $output = array();
-            exec("du -s --block-size=1 $dir", $output, $returnValue);
+            exec("nice -n 19 du -s --block-size=1 $dir", $output, $returnValue);
             if ($returnValue === 0) {
                 $size = split("\t", $output[0]);
                 return $size[0];
@@ -371,7 +371,7 @@ class Statistics_DiskUsageManager {
     public function storeDf() {
         $output      = array();
         $returnValue = -1;
-        exec("df --sync -k --portability --block-size=1", $output, $returnValue);
+        exec("nice -n 19 df --sync -k --portability --block-size=1", $output, $returnValue);
         if ($returnValue === 0) {
             $dao   = $this->_getDao();
             $first = true;

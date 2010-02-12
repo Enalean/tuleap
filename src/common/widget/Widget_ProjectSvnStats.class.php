@@ -73,7 +73,7 @@ class Widget_ProjectSvnStats extends Widget {
             foreach($stats as $whoid => $stat) {
                 $tmp_stats = array();
                 for($i = $start_of_period ; $i <= $today ; $i += $week) {
-                    $w = date('W', $i);
+                    $w = (int)date('W', $i);
                     $tmp_stats[$w] = isset($stat['by_week'][$w]) ? $stat['by_week'][$w] : '0';
                 }
                 $stats[$whoid]['by_week'] = $tmp_stats;

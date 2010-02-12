@@ -43,7 +43,7 @@ class AdminDelegation_UserWidget extends Widget {
      * @return String
      */
     function getTitle() {
-        return $GLOBALS['Language']->getText('plugin_admindelegation', 'widget_title');
+        return $GLOBALS['Language']->getText('plugin_admindelegation', 'widget_admins_title');
     }
 
     /**
@@ -54,7 +54,7 @@ class AdminDelegation_UserWidget extends Widget {
      * @return String
      */
     function getDescription() {
-        return $GLOBALS['Language']->getText('plugin_admindelegation','widget_description');
+        return $GLOBALS['Language']->getText('plugin_admindelegation','widget_admins_description');
     }
 
     /**
@@ -67,9 +67,11 @@ class AdminDelegation_UserWidget extends Widget {
      * @param Project $project
      */
     function canBeUsedByProject(Project $project) {
-        //$dao = $this->getProjectLinksDao();
-        //return $dao->projectUsesProjectLinks($project->getID);
-        return true;
+        return false;
+    }
+
+    function getCategory() {
+        return 'plugin_admindelegation';
     }
 
     function getProjectAdmins($groupId) {
@@ -82,7 +84,7 @@ class AdminDelegation_UserWidget extends Widget {
         }
         return $admins;
     }
-
+    
     protected function _showProjectAdmins() {
         $html = '';
         
@@ -100,7 +102,7 @@ class AdminDelegation_UserWidget extends Widget {
         if ($request->valid($vGroup)) {
             $pm      = ProjectManager::instance();
             $project = $pm->getProjectFromAutocompleter($request->get('plugin_admindelegation_group'));
-            if ($project) {
+            if ($project && $project->isActive()) {
                 $groupValue = $project->getPublicName().' ('.$project->getUnixName().')';
             } else {
                 $groupValue = '';
@@ -111,41 +113,51 @@ class AdminDelegation_UserWidget extends Widget {
         }
 
         $html .= '<form method="post" action="?">';
-        $html .= '<label>Show administrators of project: </label>';
+        $html .= '<label>'.$GLOBALS['Language']->getText('plugin_admindelegation','widget_admins_label').'</label>';
         $html .= '<input type="hidden" name="plugin_admindelegation_func" value="show_admins" />';
         $html .= '<input type="text" name="plugin_admindelegation_group" value="'.$groupValue.'" id="plugin_admindelegation_group" />';
         $html .= '&nbsp;';
-        $html .= '<input type="submit" />';
+        $html .= '<input type="submit" value="'.$GLOBALS['Language']->getText('plugin_admindelegation', 'widget_btn_search').'"/>';
         $html .= '</form>';
 
         $js = "new ProjectAutoCompleter('plugin_admindelegation_group', '".util_get_dir_image_theme()."', false);";
         $GLOBALS['HTML']->includeFooterJavascriptSnippet($js);
 
-        if ($func == 'show_admins' && $project) {
+        if ($func == 'show_admins' && $project && $project->isActive()) {
+            $allAdmins = array();
             $users = $this->getProjectAdmins($project->getId());
             if (count($users) > 0) {
                 $uh = UserHelper::instance();
                 $html .= '<table width="100%">';
                 $html .= '<theader>';
                 $html .= '<tr>';
-                $html .= '<th>Name</th>';
-                $html .= '<th>Email</th>';
+                $html .= '<th>'.$GLOBALS['Language']->getText('plugin_admindelegation','widget_admins_name').'</th>';
+                $html .= '<th>'.$GLOBALS['Language']->getText('plugin_admindelegation','widget_admins_email').'</th>';
                 $html .= '</tr>';
                 $html .= '</theader>';
                 $html .= '<tbody>';
+                $i = 1;
                 foreach ($users as $u) {
-                    $html .= '<tr>';
+                    $mailto = $u->getRealname().' &lt;'.$u->getEmail().'&gt;';
+                    $allAdmins[] = $mailto;
+                    $html .= '<tr class="'. util_get_alt_row_color($i++) .'">';
                     $html .= '<td>'.$uh->getDisplayNameFromUser($u).'</td>';
-                    $html .= '<td><a href="mailto:'.$u->getRealname().' &lt;'.$u->getEmail().'&gt;">'.$u->getEmail().'</a></td>';
+                    $html .= '<td><a href="mailto:'.$mailto.'">'.$u->getEmail().'</a></td>';
                     $html .= '</tr>';
                 }
                 $html .= '</tbody>';
                 $html .= '</table>';
+
+                // Mail to all admins
+                $html .= '<div style="text-align:center" class="'. util_get_alt_row_color($i++) .'">';
+                $html .= '<a href="mailto:'.implode(',', $allAdmins).'?Subject='.$GLOBALS['Language']->getText('plugin_admindelegation','widget_admins_mass_mail_subject', array($GLOBALS['sys_name'], $project->getPublicName())).'">'.$GLOBALS['Language']->getText('plugin_admindelegation','widget_admins_mass_mail').'</a>';
+                $html .= '</div>';
             }
         }
-        return $html;
+       return $html;
     }
     
+        
     /**
      * Widget content
      * 
@@ -158,6 +170,7 @@ class AdminDelegation_UserWidget extends Widget {
         if ($usm->isUserGrantedForService(UserManager::instance()->getCurrentUser(), AdminDelegation_Service::SHOW_PROJECT_ADMINS)) {
             $html .= $this->_showProjectAdmins();
         }
+        
         return $html;
     }
 }

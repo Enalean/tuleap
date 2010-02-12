@@ -30,6 +30,11 @@ class AdminDelegation_UserServiceManager {
         $usDao = $this->_getUserServiceDao();
         return $usDao->searchAllUsers();
     }
+    
+    public function getGrantedUsersForService($serviceId) {
+        $usDao = $this->_getUserServiceDao();
+        return $usDao->searchAllUserService($serviceId);
+    }
 
     public function addUserService($user, $service) {
         $usDao = $this->_getUserServiceDao();

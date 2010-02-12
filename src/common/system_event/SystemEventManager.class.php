@@ -288,8 +288,8 @@ class SystemEventManager {
         // Update SVN root definition for Apache once everything else is processed
         if (Backend::instance('SVN')->getSVNApacheConfNeedUpdate()) {
             Backend::instance('SVN')->generateSVNApacheConf();
-            // Need to refresh apache (reload): display something if different from 'OK'
-            system('/sbin/service httpd reload | grep -v OK');
+            // Need to refresh apache (graceful)
+            system('/sbin/service httpd graceful');
         }
         // Update system user and group caches once everything else is processed
         if (Backend::instance('System')->getNeedRefreshUserCache()) {
@@ -326,6 +326,7 @@ class SystemEventManager {
         case SystemEvent::TYPE_CVS_IS_PRIVATE:
         case SystemEvent::TYPE_PROJECT_IS_PRIVATE:
         case SystemEvent::TYPE_SERVICE_USAGE_SWITCH:
+        case SystemEvent::TYPE_ROOT_DAILY:
             $klass = 'SystemEvent_'. $row['type'];            
             break;
         default:

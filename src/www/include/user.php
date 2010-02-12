@@ -262,9 +262,9 @@ function user_get_preference($preference_name) {
 				return false;
 			} else {
 				//iterate and put the results into an array
-				for ($i=0; $i<db_numrows($result); $i++) {
-					$user_pref[db_result($result,$i,'preference_name')]=db_result($result,$i,'preference_value');
-				}
+                while($row = db_fetch_array($result)) {
+                    $user_pref[$row['preference_name']]=$row['preference_value'];
+                }
 				if (isset($user_pref["$preference_name"])) {
 					//we have fetched prefs - return part of array
 			                return $user_pref["$preference_name"];

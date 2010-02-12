@@ -355,6 +355,7 @@ class FRSFile extends Error {
                 'file'               => $this->getFileLocation(),
                 'cache'              => false,
                 'contentdisposition' => array(HTTP_DOWNLOAD_ATTACHMENT, basename($this->getFileName())),
+                'buffersize'         => 8192,
                 )
             ));
         } else { //old school to be removed in 4.2

@@ -46,20 +46,12 @@ if ($p && $plugin_manager->isPluginAvailable($p)) {
             exit();
         }
 
-        $at = new ArtifactType($group,$atid);
-        $art_field_fact = new ArtifactFieldFactory($at);
-        $art_field_fact->fetchData($atid);
-        $geup = new GraphicEngineUserPrefs($atid);
-        $geup->fetchPrefs();
-        $artifacts = $geup->getArtifactsInOrder();
-        if(count($artifacts)>0) { 
-            if ($request->valid(new Valid_UInt('id'))) {
-                $id = $request->get('id');
-                $gr = new GraphOnTrackers_Report($report_graphic_id);
-                if ($c = $gr->getChart($id)) {
-                    $c->stroke($group_id,$atid);
-                    //Layout::showDebugInfo();
-                }
+        if ($request->valid(new Valid_UInt('id'))) {
+            $id = $request->get('id');
+            $gr = new GraphOnTrackers_Report($report_graphic_id);
+            if ($c = $gr->getChart($id)) {
+                $c->stroke($group_id,$atid);
+                //Layout::showDebugInfo();
             }
         }
     }

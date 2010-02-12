@@ -22,8 +22,6 @@ $hp =& Codendi_HTMLPurifier::instance();
 
 $title = $Language->getText('include_project_home','proj_info').' - '. $project->getPublicName();
 
-$HTML->includeJavascriptFile('/scripts/scriptaculous/scriptaculous.js');
-
 require_once 'common/user/User.class.php';
 $uM = UserManager::instance();
 $user = $uM->getCurrentUser();

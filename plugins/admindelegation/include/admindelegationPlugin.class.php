@@ -26,11 +26,27 @@ require_once 'AdminDelegation_UserServiceManager.class.php';
 
 /**
  * AdminDelegationPlugin
+ * 
+ * This plugin is made of two parts:
+ * - The admin one, that allows to delegate some rights (called services to 
+ *   selected users).
+ * - The user one, made of widget in personal page, for the granted (selected)
+ *   user to access to the information.
+ * 
+ * Each admin action (grant/revoke) is logged but as of today, the log is only in
+ * the database.
+ * 
+ * There is no table dedicated to store services, the services are identified by
+ * their id and a label. The id is a constant in the AdminDelegation_Service class.
+ * 
+ * @see AdminDelegation_Service
+ * 
  */
 class AdminDelegationPlugin extends Plugin {
 
     public function __construct($id) {
         parent::__construct($id);
+        $this->_addHook('cssfile',                'cssFile',                false);
         $this->_addHook('site_admin_option_hook', 'site_admin_option_hook', false);
         $this->_addHook('widget_instance',        'widget_instance',        false);
         $this->_addHook('widgets',                'widgets',                false);
@@ -44,33 +60,78 @@ class AdminDelegationPlugin extends Plugin {
         return $this->pluginInfo;
     }
 
-    protected function _userCanViewWidget() {
-        $allowed = false;
+    /**
+     * Check if current user is allowed to use given widget
+     * 
+     * @param String  $widget
+     * 
+     * @return Boolean
+     */
+    protected function _userCanViewWidget($widget) {
         $um      = UserManager::instance();
         $user    = $um->getCurrentUser();
         if ($user) {
-            $usm = new AdminDelegation_UserServiceManager();
-            $allowed = $usm->isUserGranted($user);
+            $service = AdminDelegation_Service::getServiceFromWidget($widget);
+            if ($service) {
+                $usm = new AdminDelegation_UserServiceManager();
+                return $usm->isUserGrantedForService($user, $service);
+            }
         }
-        return $allowed;
+        return false;
     }
 
+    public function cssFile($params) {
+        // Only show the stylesheet if we're actually in the Docman pages.
+        // This stops styles inadvertently clashing with the main site.
+        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0 ||
+            strpos($_SERVER['REQUEST_URI'], '/widgets/') === 0
+        ) {
+            echo '<link rel="stylesheet" type="text/css" href="'.$this->getThemePath().'/css/style.css" />'."\n";
+        }
+    }
+    
+    /**
+     * Hook: admin link to plugin
+     *
+     * @param Array $params
+     */
     public function site_admin_option_hook($params) {
         echo '<li><a href="'.$this->getPluginPath().'/">Admin delegation</a></li>';
     }
 
+    /**
+     * Hook: event raised when widget are instanciated
+     * 
+     * @param Array $params
+     */
     public function widget_instance($params) {
-        if ($params['widget'] == 'admindelegation' && $this->_userCanViewWidget()) {
+        if ($params['widget'] == 'admindelegation' && $this->_userCanViewWidget('admindelegation')) {
             include_once 'AdminDelegation_UserWidget.class.php';
             $params['instance'] = new AdminDelegation_UserWidget($this);
         }
+        if ($params['widget'] == 'admindelegation_projects' && $this->_userCanViewWidget('admindelegation_projects')) {
+            include_once 'AdminDelegation_ShowProjectWidget.class.php';
+            $params['instance'] = new AdminDelegation_ShowProjectWidget($this);
+        }
+         
     }
 
+    /**
+     * Hook: event raised when user lists all available widget
+     *
+     * @param Array $params
+     */
     public function widgets($params) {
         include_once 'common/widget/WidgetLayoutManager.class.php';
-        if ($params['owner_type'] == WidgetLayoutManager::OWNER_TYPE_USER  && $this->_userCanViewWidget()) {
-            include_once 'AdminDelegation_UserWidget.class.php';
-            $params['codendi_widgets'][] = 'admindelegation';
+        if ($params['owner_type'] == WidgetLayoutManager::OWNER_TYPE_USER) {
+            if ($this->_userCanViewWidget('admindelegation')) {
+                include_once 'AdminDelegation_UserWidget.class.php';
+                $params['codendi_widgets'][] = 'admindelegation';
+            }
+            if ($this->_userCanViewWidget('admindelegation_projects')) {
+                include_once 'AdminDelegation_ShowProjectWidget.class.php';
+                $params['codendi_widgets'][] = 'admindelegation_projects';
+            }
         }
     }
 }

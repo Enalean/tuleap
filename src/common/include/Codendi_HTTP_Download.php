@@ -19,6 +19,7 @@
  */
 
 require_once 'Codendi_File.class.php';
+require_once('lib/PHP_BigFile.class.php');
 
 if (file_exists("/usr/share/pear/HTTP/Download.php")) {
   include_once 'HTTP/Download.php';    //do not stop script if pear package is not installed
@@ -59,7 +60,7 @@ class Codendi_HTTP_Download extends HTTP_Download {
             );
         }
         $this->setLastModified(filemtime($file));
-        $this->file = $file;
+        $this->file = PHP_BigFile::stream($file);
         $this->size = Codendi_File::getSize($file);
         return true;
     }   

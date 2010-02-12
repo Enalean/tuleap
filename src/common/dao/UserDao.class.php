@@ -112,19 +112,123 @@ class UserDao extends DataAccessObject {
     * create a row in the table user 
     * @return true or id(auto_increment) if there is no error
     */
-    function create($user_name, $email, $user_pw, $realname, $register_purpose, $status, $shell, $unix_pw, $unix_status, $unix_uid, $unix_box, $ldap_id, $add_date, $confirm_hash, $mail_siteupdates, $mail_va, $sticky_login, $authorized_keys, $email_new, $people_view_skills, $people_resume, $timezone, $fontsize, $theme, $language_id ,$expiry_date,$last_pwd_update) {
-        $sql =' INSERT INTO user (user_name, email, user_pw, realname, register_purpose, status, shell, unix_pw, unix_status, unix_uid, unix_box, ldap_id, add_date, confirm_hash, mail_siteupdates, mail_va, sticky_login, authorized_keys, email_new, people_view_skills, people_resume, timezone, fontsize, theme, language_id ,expiry_date,last_pwd_update) VALUES ('
-            .$this->da->quoteSmart($user_name).' , '.$this->da->quoteSmart($email).' , '.$this->da->quoteSmart(md5($user_pw)).' , '.$this->da->quoteSmart($realname).' , '.$this->da->quoteSmart($register_purpose).' , '
-            .$this->da->quoteSmart($status).' , '.$this->da->quoteSmart($shell).' , '.$this->da->quoteSmart($this->_generateUnixPwd ($unix_pw)).' , '.$this->da->quoteSmart($unix_status).' , '
-            .$this->da->quoteSmart($unix_uid).' , '.$this->da->quoteSmart($unix_box).' , '.$this->da->quoteSmart($ldap_id).' , '.$this->da->quoteSmart($add_date).' , '
-            .$this->da->quoteSmart($confirm_hash).' , '.$this->da->quoteSmart($mail_siteupdates).' , '.$this->da->quoteSmart($mail_va).' , '.$this->da->quoteSmart($sticky_login).' , '
-            .$this->da->quoteSmart($authorized_keys).' , '.$this->da->quoteSmart($email_new).' , '.$this->da->quoteSmart($people_view_skills).' , '
-            .$this->da->quoteSmart($people_resume).' , '.$this->da->quoteSmart($timezone).' , '.$this->da->quoteSmart($fontsize).' , '
-            .$this->da->quoteSmart($theme).' , '.$this->da->quoteSmart($language_id).' , '.$this->da->quoteSmart($expiry_date).' , '.$this->da->quoteSmart($last_pwd_update).')';
-        
-            $inserted = $this->update($sql);
+    function create($user_name, $email, $user_pw, $realname, $register_purpose, $status, $shell, $unix_status, $unix_uid, $unix_box, $ldap_id, $add_date, $confirm_hash, $mail_siteupdates, $mail_va, $sticky_login, $authorized_keys, $email_new, $people_view_skills, $people_resume, $timezone, $fontsize, $theme, $language_id, $expiry_date, $last_pwd_update) {
+
+        $columns = array();
+        $values  = array();
+
+        if ($user_name !== null) {
+            $columns[] = 'user_name';
+            $values[]  = $user_name;
+        }
+        if ($email !== null) {
+            $columns[] = 'email';
+            $values[]  = $email;
+        }
+        if ($user_pw !== null) {
+            $columns[] = 'user_pw';
+            $values[]  = md5($user_pw);
+
+            $columns[] = 'unix_pw';
+            $values[]  = $this->_generateUnixPwd($user_pw);
+        }
+        if ($realname !== null) {
+            $columns[] = 'realname';
+            $values[]  = $realname;
+        }
+        if ($register_purpose !== null) {
+            $columns[] = 'register_purpose';
+            $values[]  = $register_purpose;
+        }
+        if ($status !== null) {
+            $columns[] = 'status';
+            $values[]  = $status;
+        }
+        if ($shell !== null) {
+            $columns[] = 'shell';
+            $values[]  = $shell;
+        }
+        if ($unix_status !== null) {
+            $columns[] = 'unix_status';
+            $values[]  = $unix_status;
+        }
+        if ($unix_uid !== null) {
+            $columns[] = 'unix_uid';
+            $values[]  = $unix_uid;
+        }
+        if ($unix_box !== null) {
+            $columns[] = 'unix_box';
+            $values[]  = $unix_box;
+        }
+        if ($ldap_id !== null) {
+            $columns[] = 'ldap_id';
+            $values[]  = $ldap_id;
+        }
+        if ($add_date !== null) {
+            $columns[] = 'add_date';
+            $values[]  = $add_date;
+        }
+        if ($confirm_hash !== null) {
+            $columns[] = 'confirm_hash';
+            $values[]  = $confirm_hash;
+        }
+        if ($mail_siteupdates !== null) {
+            $columns[] = 'mail_siteupdates';
+            $values[]  = $mail_siteupdates;
+        }
+        if ($mail_va !== null) {
+            $columns[] = 'mail_va';
+            $values[]  = $mail_va;
+        }
+        if ($sticky_login !== null) {
+            $columns[] = 'sticky_login';
+            $values[]  = $sticky_login;
+        }
+        if ($authorized_keys !== null) {
+            $columns[] = 'authorized_keys';
+            $values[]  = $authorized_keys;
+        }
+        if ($email_new !== null) {
+            $columns[] = 'email_new';
+            $values[]  = $email_new;
+        }
+        if ($people_view_skills !== null) {
+            $columns[] = 'people_view_skills';
+            $values[]  = $people_view_skills;
+        }
+        if ($people_resume !== null) {
+            $columns[] = 'people_resume';
+            $values[]  = $people_resume;
+        }
+        if ($timezone !== null) {
+            $columns[] = 'timezone';
+            $values[]  = $timezone;
+        }
+        if ($fontsize !== null) {
+            $columns[] = 'fontsize';
+            $values[]  = $fontsize;
+        }
+        if ($theme !== null) {
+            $columns[] = 'theme';
+            $values[]  = $theme;
+        }
+        if ($language_id !== null) {
+            $columns[] = 'language_id';
+            $values[]  = $language_id;
+        }
+        if ($expiry_date !== null) {
+            $columns[] = 'expiry_date';
+            $values[]  = $expiry_date;
+        }
+        if ($last_pwd_update !== null) {
+            $columns[] = 'last_pwd_update';
+            $values[]  = $last_pwd_update;
+        }
+
+        $sql = 'INSERT INTO user ('.implode(',', $columns).') VALUES ('.$this->da->quoteSmartImplode(',', $values).')';
+        $inserted = $this->update($sql);
         if ($inserted) {
-            $dar =& $this->retrieve("SELECT LAST_INSERT_ID() AS id");
+            $dar = $this->retrieve("SELECT LAST_INSERT_ID() AS id");
             if ($row = $dar->getRow()) {
                 $inserted = $row['id'];
             } else {
@@ -292,27 +396,26 @@ class UserDao extends DataAccessObject {
      * actions on an execution.
      */
     function storeLoginSuccess($user_id, $time) {
-        $sql = "UPDATE user 
+       $sql = 'UPDATE LOW_PRIORITY user 
                 SET nb_auth_failure = 0,
                     prev_auth_success = last_auth_success,
-                    last_auth_success = ". $this->da->escapeInt($time) .",
-                    ". $this->_getLastAccessUpdate($time) ."
-                WHERE user_id = ". $this->da->escapeInt($user_id);
+                    last_auth_success = '. $this->da->escapeInt($time).',
+                    last_access_date ='.$this->da->escapeInt($time).'
+                WHERE user_id = '. $this->da->escapeInt($user_id);
         $this->update($sql);
     }
     
-    /**
+     /**
      * Don't log access if already accessed in the past 6 hours (scalability+privacy)
+     * @param  $user_id Integer
+     * @param  $time    Integer
+     * @return Boolean
      */
-    function _getLastAccessUpdate($time) {
-        return "last_access_date  = IF(". $this->da->escapeInt($time) ." - last_access_date > 21600, ". $this->da->escapeInt($time) .", last_access_date)";
-    }
-    
     function storeLastAccessDate($user_id, $time) {
-        $sql = "UPDATE user 
-                SET ". $this->_getLastAccessUpdate($time) ."
-                WHERE user_id = ". $this->da->escapeInt($user_id);
-        $this->update($sql);
+        $sql = 'UPDATE LOW_PRIORITY user
+                SET last_access_date  = '.$this->da->escapeInt($time).'
+                WHERE user_id = '. $this->da->escapeInt($user_id);
+        return $this->update($sql);
     }
     
     /**
@@ -323,7 +426,7 @@ class UserDao extends DataAccessObject {
      * newer than 'last_auth_failure') the counter is reset to 1.
      */
     function storeLoginFailure($login, $time) {
-        $sql = "UPDATE user 
+        $sql = "UPDATE LOW_PRIORITY user 
                 SET nb_auth_failure = IF(last_auth_success >= last_auth_failure, 1, nb_auth_failure + 1), 
                 last_auth_failure = ". $this->da->escapeInt($time) ."
                 WHERE user_name = ". $this->da->quoteSmart($login);

@@ -230,22 +230,14 @@ unless (-d _)
 use DBI;
 use HTTP::Request::Common qw(POST);
 use LWP::UserAgent;
-use Net::LDAP;
-use Cwd; # needed by ldap account auto create
 
 $utils_path = $ENV{'CODENDI_UTILS_PREFIX'} || "/usr/share/codendi/src/utils";
 require $utils_path."/include.pl";
 require $utils_path."/group.pl";
 require $utils_path."/svn/svn-checkins.pl";
 require $utils_path."/hudson.pl";
-require $utils_path."/ldap.pl";
 
 &db_connect;
-
-# Load LDAP config
-my $ldapIncFile = $sys_custompluginsroot.'/ldap/etc/ldap.inc';
-&load_local_config($ldapIncFile);
-&ldap_connect;
 
 # retrieve the group_id
 my $gname = $repos;
@@ -315,18 +307,35 @@ my @log = map { "$_\n" } @svnlooklines;
 my $fullname = "";
 my $mailname = "";
 my $codexuid = "";
-if(ldap_enabled_for_project($group_id))
-{
-    ($fullname, $mailname, $ldap_id) = ldap_get_svncommitinfo_from_login($author);
-    if($ldap_id != -1) {
-       $codexuid = db_get_field('user','ldap_id', $ldap_id, 'user_id');
-        if($codexuid eq "0") {
-            $codexuid = ldap_account_create_auto($ldap_id);
-        }
-    }
-    if($debug) {
-        print STDERR "LDAP id: $ldap_id\n";
-        print STDERR "Codex uid: $codexuid\n";
+
+# Test whether LDAP plugin is enabled or not
+my $query_plugin_ldap = "SELECT NULL FROM plugin WHERE name='ldap' AND available=1";
+my $c_plugin_ldap     = $dbh->prepare($query_plugin_ldap);
+my $res_plugin_ldap   = $c_plugin_ldap->execute();
+if ($res_plugin_ldap && ($c_plugin_ldap->rows > 0)) {
+    use Net::LDAP;
+    use Cwd; # needed by ldap account auto create
+
+    # Load LDAP config
+    require $utils_path."/ldap.pl";
+    my $ldapIncFile = $sys_custompluginsroot.'/ldap/etc/ldap.inc';
+    &load_local_config($ldapIncFile);
+
+    &ldap_connect;
+
+    if (ldap_enabled_for_project($group_id))
+    {
+	($fullname, $mailname, $ldap_id) = ldap_get_svncommitinfo_from_login($author);
+	if ($ldap_id != -1) {
+	    $codexuid = db_get_field('user','ldap_id', $ldap_id, 'user_id');
+	    if ($codexuid eq "0") {
+		$codexuid = ldap_account_create_auto($ldap_id);
+	    }
+	}
+	if ($debug) {
+	    print STDERR "LDAP id: $ldap_id\n";
+	    print STDERR "Codex uid: $codexuid\n";
+	}
     }
 }
 else
@@ -898,43 +907,4 @@ sub date_to_gmtime() {
   $shift = ($shift_hrs*60+$shift_min)*60;
   $shift = -$shift if ($plusorminus eq '-');
   return (timegm($sec, $min, $hours, $mday, $mon-1, $year) - $shift);
-}
-
-sub trigger_hudson_builds() {
-    my ($query, $c, $res);
-    $query = "SELECT * FROM plugin_hudson_job WHERE group_id='$group_id' AND use_trigger=1";
-    $c = $dbh->prepare($query);
-    $res = $c->execute();
-    if ($res && ($c->rows > 0)) {
-      # Use Codendi HTTP API
-      my $ua = LWP::UserAgent->new;
-      $ua->agent('Codendi CI Perl Agent');
-      $ua->timeout(10);
-
-      while ($trigger_row = $c->fetchrow_hashref) {
-	my $job_url = $trigger_row->{'job_url'};
-        my $token = $trigger_row->{'token'};
-        my $token_url = '';
-        if ($token ne '') {
-          $token_url = "?token=$token";
-        }
-        my $req = POST "$job_url/build$token_url";
-        my $response = $ua->request($req);
-        
-        if ($response->is_success) {
-        } else {
-          if ($response->code eq 302) {
-            # 302 is the http code for redirect (http response for Hudson build)
-            # so we consider it as a success
-          } else {
-            my $logfile = "$codendi_log/hudson_log";
-            my $statusline = $response->status_line;
-            if (open(LOGFILE, ">> $logfile")) {
-              print LOGFILE "Hudson build error with build url $job_url/build$token_url : $statusline \n";
-              close LOGFILE;
-            }
-          }
-        }
-      }
-    }
 }

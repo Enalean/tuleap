@@ -37,12 +37,31 @@ class AdminDelegation_Service {
     public static function getLabel($service) {
         switch ($service) {
             case self::SHOW_PROJECT_ADMINS:
-                return "See project administrators";
+                return $GLOBALS['Language']->getText('plugin_admindelegation','service_SHOW_PROJECT_ADMINS');
                 break;
             case self::SHOW_PROJECTS:
-                return "See all projects";
+                return $GLOBALS['Language']->getText('plugin_admindelegation','service_SHOW_PROJECTS');
                 break;
         }
+    }
+
+    /**
+     * Widget to const translator
+     *
+     * @param String $widget
+     *
+     * @return Integer
+     */
+    public static function getServiceFromWidget($widget) {
+        switch ($widget) {
+            case 'admindelegation':
+                return self::SHOW_PROJECT_ADMINS;
+                break;
+            case 'admindelegation_projects':
+                return self::SHOW_PROJECTS;
+                break;
+        }
+        return false;
     }
 }
 

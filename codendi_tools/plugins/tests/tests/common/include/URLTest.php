@@ -66,10 +66,18 @@ class URLTest extends UnitTestCase {
         $exists->setReturnValue('rowCount', 1);
         $exists->setReturnValue('getRow', false);
         $exists->setReturnValueAt(0, 'getRow', array('group_id' => '1'));
-        $dao->setReturnReference('searchByUnixGroupName', $exists);
+
+        $exists1 = new MockDataAccessResult($this);
+        $exists1->setReturnValue('rowCount', 1);
+        $exists1->setReturnValue('getRow', false);
+        $exists1->setReturnValueAt(0, 'getRow', array('group_id' => '1'));
+
+        $dao->setReturnReferenceAt(0, 'searchByUnixGroupName', $exists);
+        $dao->setReturnReferenceAt(1, 'searchByUnixGroupName', $exists1);
         
         $url->setReturnReference('getProjectDao', $dao);
         $this->assertEqual($url->getGroupIdFromURL('/projects/exist/'), 1);
+        $this->assertNotEqual($url->getGroupIdFromURL('/toto/projects/exist/'), 1);
     }
     
     function testViewVcDontExist() {
@@ -112,13 +120,17 @@ class URLTest extends UnitTestCase {
         $url = new URLTestVersion($this);
         $dao = new MockForumDao($this);
         $exists = new MockDataAccessResult($this);
-        
         $exists->setReturnValue('getRow', false);
         $exists->setReturnValueAt(0, 'getRow', array('group_id' => '1'));
-        $dao->setReturnReference('searchByGroupForumId', $exists);
+        $exists1 = new MockDataAccessResult($this);
+        $exists1->setReturnValue('getRow', false);
+        $exists1->setReturnValueAt(0, 'getRow', array('group_id' => '1'));
+        $dao->setReturnReferenceAt(0, 'searchByGroupForumId', $exists);
+        $dao->setReturnReferenceAt(1, 'searchByGroupForumId', $exists1);
         $_REQUEST['forum_id']=1;
         $url->setReturnReference('getForumDao', $dao);
         $this->assertEqual($url->getGroupIdFromURL('/forum/forum.php?forum_id=exist'), 1);
+        $this->assertNotEqual($url->getGroupIdFromURL('/toto/forum/forum.php?forum_id=exist'), 1);
     }
     
    function testNewsBytesDontExist() {
@@ -174,16 +186,24 @@ class URLTest extends UnitTestCase {
         $exists = new MockDataAccessResult($this);
         $exists->setReturnValue('getRow', false);
         $exists->setReturnValueAt(0, 'getRow', array('group_id' => '1'));
-        $dao->setReturnReference('searchArtifactId', $exists);
+
+        $exists1 = new MockDataAccessResult($this);
+        $exists1->setReturnValue('getRow', false);
+        $exists1->setReturnValueAt(0, 'getRow', array('group_id' => '1'));
+
+        $dao->setReturnReferenceAt(0, 'searchArtifactId', $exists);
+        $dao->setReturnReferenceAt(1, 'searchArtifactId', $exists1);
         $_REQUEST['artifact_id']=1;
         $url->setReturnReference('getArtifactDao', $dao);
         $this->assertEqual($url->getGroupIdFromURL('/tracker/download.php?artifact_id=exist'), 1);
+        $this->assertNotEqual($url->getGroupIdFromURL('/toto/tracker/download.php?artifact_id=exist'), 1);
     }
     
     function testFileDownload() {
         $url = new URL();
         $GLOBALS['PATH_INFO'] = '/101/1/p9_r4/toto.csv';
         $this->assertEqual($url->getGroupIdFromURL('/file/download.php/101/1/p9_r4/toto.csv'), 101);
+        $this->assertNotEqual($url->getGroupIdFromURL('/toto/file/download.php/101/1/p9_r4/toto.csv'), 101);
     }
 
 }

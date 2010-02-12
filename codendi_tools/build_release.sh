@@ -68,6 +68,11 @@ RM='/bin/rm'
 MV='/bin/mv'
 MKISOFS='/usr/bin/mkisofs'
 
+if [ ! -e "$MKISOFS" ];then
+    echo "$MKISOFS not found"
+    exit 0
+fi
+
 $MKDIR -p $BUILD_DIR
 $MKDIR -p $SOURCE_TMPDIR
 $MKDIR -p $ISO_DIR

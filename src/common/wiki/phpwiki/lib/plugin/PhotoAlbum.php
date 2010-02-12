@@ -484,7 +484,8 @@ display_slides();"));
                         $html->pushcontent(HTML::span($row));
                     else
                         $html->pushcontent(HTML::tr($row));
-                    $row->setContent('');
+                    unset($row);
+                    $row = HTML();
             }
         }
 

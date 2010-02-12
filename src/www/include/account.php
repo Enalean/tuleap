@@ -303,6 +303,7 @@ function account_create($loginname=''
     $um   = UserManager::instance();
     $user = new User();
     $user->setUserName($loginname);
+    $user->setRealName($realname);
     $user->setPassword($pw);
     $user->setLdapId($ldap_id);
     $user->setRegisterPurpose($register_purpose);

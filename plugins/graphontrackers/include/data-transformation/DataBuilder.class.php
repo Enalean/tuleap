@@ -72,7 +72,7 @@ class DataBuilder {
         }
         
         if ($af_x->isUsed() && (!isset($af_y) || $af_y->isUsed())) {
-            $select   = "SELECT ";
+            $select   = "SELECT STRAIGHT_JOIN ";
             $from     = "FROM ";
             $where    = "WHERE ";
             $group_by = "GROUP BY ";
@@ -102,10 +102,10 @@ class DataBuilder {
                 //echo "3";
                 $field     = "afvl.value_id";
                 $select   .= "afvl.value AS field1 ";
-                $from     .= "INNER JOIN artifact_field_value_list afvl";
-                $from     .= " ON (afvl.group_artifact_id = a.group_artifact_id AND afvl.field_id = ".db_ei($af_x->getId()).") ";
                 $from     .= "INNER JOIN artifact_field_value afv";
-                $from     .= " ON (afv.artifact_id = a.artifact_id AND afv.field_id = afvl.field_id AND afv.valueInt = afvl.value_id) ";
+                $from     .= " ON (afv.artifact_id = a.artifact_id AND afv.field_id = ".db_ei($af_x->getId()).") ";
+                $from     .= "INNER JOIN artifact_field_value_list afvl";
+                $from     .= " ON (afvl.group_artifact_id = a.group_artifact_id AND afvl.field_id = afv.field_id AND afvl.value_id = afv.valueInt) ";
             } else { //if (!$af_x->isStandardField() && ($af_x->isUsername()))
                 //echo "4";
                 $field     = "u.user_id";
@@ -138,10 +138,10 @@ class DataBuilder {
                     //echo " : 3<br>";
                     $field     = "afvl1.value_id";
                     $select   .= ",afvl1.value AS field2 ";
-                    $from     .= "INNER JOIN artifact_field_value_list afvl1";
-                    $from     .= " ON (afvl1.group_artifact_id = a.group_artifact_id AND afvl1.field_id = ".db_ei($af_y->getId()).") ";
                     $from     .= "INNER JOIN artifact_field_value afv1";
-                    $from     .= " ON (afv1.artifact_id = a.artifact_id AND afv1.field_id = afvl1.field_id AND afv1.valueInt = afvl1.value_id) ";
+                    $from     .= " ON (afv1.artifact_id = a.artifact_id AND afv1.field_id = ".db_ei($af_y->getId()).") ";
+                    $from     .= "INNER JOIN artifact_field_value_list afvl1";
+                    $from     .= " ON (afvl1.group_artifact_id = a.group_artifact_id AND afvl1.field_id = afv1.field_id AND afvl1.value_id = afv1.valueInt) ";
                 } else { //if (!$af_y->isStandardField() && ($af_y->isUsername()))
                     //echo " : 4<br>";
                     $field   = "u1.user_id";

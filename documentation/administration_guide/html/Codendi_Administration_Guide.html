@@ -2141,6 +2141,13 @@ chown -R codendiadm.projectname /svnroot/projectname</pre>
 
 You're done!
 
+<h3>Merging multiple repositories</h3>
+<p>It is possible to merge several repositories by using <a href="http://www.coelho.net/svn-merge-repos.html">svn-merge-repos.pl</a> script</p>
+<li>One must first get local copy of all repositories to merge into the codendi project repository, then issue the following command</li>
+<pre>
+perl svn-merge-repos.pl -t /var/lib/codendi/svnroot/project_name/ /local/path/to/repo1/:target_path_for_src1 /local/path/to/repo2/:trunk/target_path_for_src2
+</pre>
+
 <hr>
 <h2><a name="HowTo_Regenerate_VC"></a>Regenerating a fresh CVS or SVN repository for a Codendi project</h2>
 <em>When the first import goes wrong or the project team screwed up everything and want to start again from scratch</em>

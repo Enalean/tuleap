@@ -260,7 +260,12 @@ class UserManager {
                 if ($row = $dar->getRow()) {
                     $this->_currentuser = $this->_getUserInstanceFromRow($row);
                     $this->_currentuser->setSessionHash($session_hash);
-                    $this->getDao()->storeLastAccessDate($this->_currentuser->getId(), time());
+                    $now = $_SERVER['REQUEST_TIME'];
+                    $break_time = $now - $this->_currentuser->getLastAccessDate();
+                    //if the access is not later than 6 hours, it is not necessary to log it
+                    if ($break_time > 21600){
+                        $this->getDao()->storeLastAccessDate($this->_currentuser->getId(), $now);
+                    }
                 }
             }
             if (!isset($this->_currentuser)) {
@@ -298,7 +303,7 @@ class UserManager {
      */
     function login($name, $pwd, $allowpending = false) {
         $logged_in = false;
-        $now = time();
+        $now = $_SERVER['REQUEST_TIME'];
         
         $auth_success     = false;
         $auth_user_id     = null;
@@ -534,7 +539,32 @@ class UserManager {
      */
     function createAccount($user){
         $dao = $this->getDao();
-        $user_id = $dao->create($user->getUserName(),$user->getEmail(),$user->getPassword(),$user->getRealName(),$user->getRegisterPurpose(),$user->getStatus(),$user->getShell(),$user->getUserPw(),$user->getUnixStatus(),$user->getUnixUid(),$user->getUnixBox(),$user->getLdapId(),$_SERVER['REQUEST_TIME'],$user->getConfirmHash(),$user->getMailSiteUpdates(), $user->getMailVA(),$user->getStickyLogin(),$user->getAuthorizedKeys(),$user->getNewMail(),$user->getPeopleViewSkills(),$user->getPeopleResume(),$user->getTimeZone(),$user->getFontSize(),$user->getTheme(),$user->getLanguageID(),$user->getExpiryDate(),$_SERVER['REQUEST_TIME']);
+        $user_id = $dao->create($user->getUserName(),
+                                $user->getEmail(),
+                                $user->getPassword(),
+                                $user->getRealName(),
+                                $user->getRegisterPurpose(),
+                                $user->getStatus(),
+                                $user->getShell(),
+                                $user->getUnixStatus(),
+                                $user->getUnixUid(),
+                                $user->getUnixBox(),
+                                $user->getLdapId(),
+                                $_SERVER['REQUEST_TIME'],
+                                $user->getConfirmHash(),
+                                $user->getMailSiteUpdates(),
+                                $user->getMailVA(),
+                                $user->getStickyLogin(),
+                                $user->getAuthorizedKeys(),
+                                $user->getNewMail(),
+                                $user->getPeopleViewSkills(),
+                                $user->getPeopleResume(),
+                                $user->getTimeZone(),
+                                $user->getFontSize(),
+                                $user->getTheme(),
+                                $user->getLanguageID(),
+                                $user->getExpiryDate(),
+                                $_SERVER['REQUEST_TIME']);
         if (!$user_id) {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('include_exit','error'));
             return 0;

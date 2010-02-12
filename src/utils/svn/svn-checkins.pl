@@ -49,7 +49,8 @@ sub db_get_index {
     $res = $hash_ref->{'id'};
   } else {
     ## new repository to create
-    $query = "INSERT INTO $table (id, $fieldname) VALUES ('', '$value')";
+    $query = sprintf "INSERT INTO $table (id, $fieldname) VALUES ('', %s)",
+                $dbh->quote($value);
     $sth = $dbh->prepare($query);
     $res = $sth->execute();
     if (!$res) {
@@ -106,6 +107,9 @@ sub db_get_commit {
   $fulldesc = join("&lt;",split("<", $fulldesc));
 
   #$uid = db_get_field('user','user_name', $who, 'user_id');
+  if ( int $uid <= 0 ) {
+    $uid = 100;
+  }
   $repo_id = db_get_index('svn_repositories','repository', $repo);
 
   $query = "INSERT INTO svn_commits (group_id,repositoryid,revision,date,whoid,description) ".

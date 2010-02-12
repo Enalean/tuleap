@@ -446,12 +446,13 @@ td.artifact_spacer { width: 5%; }
     height:24px;
     padding:9px 15px 0;
     font-weight:normal;
+    background:#DC4900 url(../images/tabs/level2_bg.png) top left;
 }
 
 #level_2 ul li a:hover, 
 #level_2 ul li a.current {
     color:#fff;
-    background:#fff7f0 url(../images/tabs/level2_bg.png) repeat-x top left;
+    background:#fff7f0 url(../images/tabs/level2_bg.png) top left;
     text-decoration:none;
 }
 

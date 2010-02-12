@@ -196,7 +196,6 @@ function svn_utils_show_revision_list ($result,$offset,$total_rows,$set='any', $
 	}
 	
 
-	$rows=db_numrows($result);
 	$url .= "&order=";
 	$title_arr=array();
 	$title_arr[]=$Language->getText('svn_browse_revision','rev');
@@ -215,20 +214,17 @@ function svn_utils_show_revision_list ($result,$offset,$total_rows,$set='any', $
 
 	echo html_build_list_table_top ($title_arr,$links_arr);
 
-	for ($i=0; $i < $rows; $i++) {
-
-	    $id_str = db_result($result, $i, 'commit_id');
-	    $rev = db_result($result, $i, 'revision');
-	    $id_link = '&commit_id='.$id_str;
-	    $id_sublink = '';
-	    
+    $i = 0;
+    $uh = UserHelper::instance();
+    $hp = Codendi_HTMLPurifier::instance();
+    while ($row = db_fetch_array($result)) {
 	    echo '
-			<TR class="'. util_get_alt_row_color($i) .'">'.
-			'<TD class="small"><b><A HREF="'.$_SERVER['PHP_SELF'].'?func=detailrevision&group_id='.$group_id.$id_link.$filter_str.'">'.$rev.
+			<TR class="'. util_get_alt_row_color($i++) .'">'.
+			'<TD class="small"><b><A HREF="'.$_SERVER['PHP_SELF'].'?func=detailrevision&group_id='.$group_id.'&commit_id='.$row['commit_id'].$filter_str.'">'.$row['revision'].
 		  '</b></A></TD>'.
-			'<TD class="small">'.util_make_links(join('<br>', split("\n",db_result($result, $i, 'description'))),$group_id).$id_sublink.'</TD>'.
-			'<TD class="small">'.format_date($GLOBALS['Language']->getText('system', 'datefmt'), db_result($result, $i, 'date')).'</TD>'.
-			'<TD class="small">'.util_user_link(db_result($result,$i,'who')).'</TD></TR>';
+			'<TD class="small">'.$hp->purify($row['description'], CODENDI_PURIFIER_BASIC, $group_id).'</TD>'.
+			'<TD class="small">'.format_date($GLOBALS['Language']->getText('system', 'datefmt'), $row['date']).'</TD>'.
+			'<TD class="small">'.$uh->getLinkOnUserFromUserId($row['whoid']).'</TD></TR>';
 
 	}
 
@@ -729,34 +725,48 @@ function svn_utils_is_there_specific_permission($gname) {
     return !$specifics || $specifics != '';
 }
 
-function svn_get_revisions(&$project, $offset, $chunksz, $_rev_id = '', $_commiter = '', $_srch = '', $order_by = '', $pv = 0) {
+function svn_get_revisions(&$project, $offset, $chunksz, $_rev_id = '', $_commiter = '', $_srch = '', $order_by = '', $pv = 0, $foundRows=true) {
     global $_path;
     global $SVNACCESS, $SVNGROUPS;
-    $select = 'SELECT SQL_CALC_FOUND_ROWS DISTINCT svn_commits.revision as revision, svn_commits.id as commit_id, svn_commits.description as description, svn_commits.date as date, user.user_name as who ';
-    $from = "FROM svn_commits,user ";
-    $where = "WHERE svn_commits.group_id=". db_ei($project->getGroupId()) ." AND user.user_id=svn_commits.whoid ";
+
+    $um = UserManager::instance();
 
     //check user access rights
-    $forbidden = svn_utils_get_forbidden_paths(user_getname(),$project->getUnixName(false));
+    $forbidden = svn_utils_get_forbidden_paths($um->getCurrentUser()->getName(), $project->getUnixName(false));
+
+    $select   = 'SELECT';
+    $group_by = '';
+
+    if ($foundRows) {
+        $select .= ' SQL_CALC_FOUND_ROWS';
+    }
+    $select .= ' svn_commits.revision as revision, svn_commits.id as commit_id, svn_commits.description as description, svn_commits.date as date, svn_commits.whoid';
+
+    $from = " FROM svn_commits";
+    $where = " WHERE svn_commits.group_id=". db_ei($project->getGroupId());
+
+    //check user access rights
     if (!empty($forbidden)) {
-        $from .= ",svn_dirs,svn_checkins ";
-        $join = "";
+        $from .= " INNER JOIN svn_checkins ON (svn_checkins.commitid = svn_commits.id)";
+        $from .= " INNER JOIN svn_dirs ON (svn_dirs.id = svn_checkins.dirid)";
         $where_forbidden = "";
-        while (list($no_access,) = each($forbidden)) {
+        foreach ($forbidden as $no_access => $v) {
             if ($no_access == $_path) {
                 $_path = '';
             }
-            $join= " AND svn_checkins.dirid=svn_dirs.id AND svn_checkins.commitid=svn_commits.id "; 
-            $where_forbidden .= " AND svn_dirs.dir not like '%".db_es(substr($no_access,1))."%' ";
+            $where_forbidden .= " AND svn_dirs.dir not like '".db_es(substr($no_access,1))."%'";
         }
-        $where .= $join.$where_forbidden;
+        $where .= $where_forbidden;
+        $group_by .= ' GROUP BY revision';
     }
 
     //if status selected, and more to where clause
     if ($_path != '') {
-        $path_str = " AND svn_checkins.dirid=svn_dirs.id AND svn_checkins.commitid=svn_commits.id AND svn_dirs.dir like '%".db_es($_path)."%' ";
+        $path_str = " AND svn_dirs.dir like '%".db_es($_path)."%'";
         if (!isset($forbidden) || empty($forbidden)) {
-          $from .= ",svn_dirs,svn_checkins ";
+            $from .= " INNER JOIN svn_checkins ON (svn_checkins.commitid = svn_commits.id)";
+            $from .= " INNER JOIN svn_dirs ON (svn_dirs.id = svn_checkins.dirid)";
+            $group_by .= ' GROUP BY revision';
         }
     } else {
         $path_str = "";
@@ -771,14 +781,14 @@ function svn_get_revisions(&$project, $offset, $chunksz, $_rev_id = '', $_commit
     }
 
     if (isset($_commiter) && $_commiter && ($_commiter != 100)) {
-        $commiter_str=" AND user.user_name='".db_es($_commiter)."' ";
+        $commiter_str=" AND svn_commits.whoid='".db_ei($um->getUserByUserName($_commiter)->getId())."' ";
     } else {
         //no assigned to was chosen, so don't add it to where clause
         $commiter_str='';
     }
 
     if (isset($_srch) && $_srch != '') {
-        $srch_str = "AND svn_commits.description like '%".db_es(htmlspecialchars($_srch))."%' ";
+        $srch_str = " AND svn_commits.description like '%".db_es(htmlspecialchars($_srch))."%'";
     } else {
         $srch_str = "";
     }
@@ -791,19 +801,22 @@ function svn_get_revisions(&$project, $offset, $chunksz, $_rev_id = '', $_commit
     // SQLi Warning: no real possibility to escape $order_by here.
     // We rely on a proper filtering of user input by calling methods.
     if (!isset($order_by) || $order_by == '') {
-        $order_by = " ORDER BY revision desc ";
+        $order_by = " ORDER BY revision DESC ";
     }
 
-    $sql=$select.$from.$where.$order_by.$limit;
-
+    $sql=$select.$from.$where.$group_by.$order_by.$limit;
+    //echo $sql."<br>\n";
     $result=db_query($sql);
 
     // Compute the number of rows.
-    $sql1 = 'SELECT FOUND_ROWS() as nb';
-    $result1 = db_query($sql1);
-    if($result1 && !db_error($result1)) {
-        $row1 = db_fetch_array($result1);
-        $totalrows = $row1['nb'];
+    $totalrows = -1;
+    if ($foundRows) {
+        $sql1 = 'SELECT FOUND_ROWS() as nb';
+        $result1 = db_query($sql1);
+        if($result1 && !db_error($result1)) {
+            $row1 = db_fetch_array($result1);
+            $totalrows = $row1['nb'];
+        }
     }
 
     return array($result, $totalrows);
