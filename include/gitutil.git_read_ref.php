@@ -12,8 +12,16 @@
  require_once('gitutil.git_read_tag.php');
  require_once('gitutil.git_read_commit.php');
 
- function git_read_ref($projectroot, $project, $ref_id, $ref_file)
+ function git_read_ref($ref_id, $ref_file)
  {
+ 	global $gitphp_current_project;
+
+	if (!$gitphp_current_project)
+		return null;
+
+	$projectroot = GitPHP_Config::GetInstance()->GetValue('projectroot');
+	$project = $gitphp_current_project->GetProject();
+
 	$type = git_get_type($projectroot . $project, $ref_id);
 
 	if (!$type)

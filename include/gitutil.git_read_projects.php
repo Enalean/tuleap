@@ -10,10 +10,10 @@
  require_once('gitutil.git_recurse_projects.php');
  require_once('gitutil.git_project_info.php');
 
-function git_read_projects($projectroot,$projectlist,$projdata = FALSE)
+function git_read_projects($projdata = FALSE)
 {
-	if (!isset($projectroot))
-		return "No projectroot set";
+	$projectroot = GitPHP_Config::GetInstance()->GetValue('projectroot');
+	$projectlist = GitPHP_ProjectList::GetInstance()->GetConfig();
 
 	if (!is_dir($projectroot))
 		return "Projectroot is not a directory";

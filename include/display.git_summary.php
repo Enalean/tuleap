@@ -15,20 +15,25 @@
  require_once(GITPHP_INCLUDEDIR . 'gitutil.read_info_ref.php');
  require_once(GITPHP_INCLUDEDIR . 'git/Project.class.php');
 
-function git_summary($projectroot,$project)
+function git_summary()
 {
-	global $tpl;
+	global $tpl, $gitphp_current_project;
+
+	if (!$gitphp_current_project)
+		return;
+
+	$project = $gitphp_current_project->GetProject();
 
 	$cachekey = sha1($project);
 
 	if (!$tpl->is_cached('project.tpl', $cachekey)) {
-		$projectObj = new GitPHP_Project($project);
+		$projectroot = GitPHP_Config::GetInstance()->GetValue('projectroot');
 
-		$descr = $projectObj->GetDescription();
+		$descr = $gitphp_current_project->GetDescription();
 		$head = git_read_head($projectroot . $project);
 		$commit = git_read_commit($projectroot . $project, $head);
 		$commitdate = date_str($commit['committer_epoch'],$commit['committer_tz']);
-		$owner = $projectObj->GetOwner();
+		$owner = $gitphp_current_project->GetOwner();
 		$refs = read_info_ref($projectroot . $project);
 		$tpl->assign("head",$head);
 		$tpl->assign("description",$descr);
@@ -57,7 +62,7 @@ function git_summary($projectroot,$project)
 		}
 		$tpl->assign("revlist",$revlist);
 
-		$taglist = git_read_refs($projectroot,$project,"refs/tags");
+		$taglist = git_read_refs("refs/tags");
 		if (isset($taglist) && (count($taglist) > 0)) {
 			foreach ($taglist as $i => $tag) {
 				if (isset($tag['comment'])) {
@@ -70,7 +75,7 @@ function git_summary($projectroot,$project)
 			$tpl->assign("taglist",$taglist);
 		}
 
-		$headlist = git_read_refs($projectroot,$project,"refs/heads");
+		$headlist = git_read_refs("refs/heads");
 		if (isset($headlist) && (count($headlist) > 0)) {
 			$tpl->assign("headlist",$headlist);
 		}

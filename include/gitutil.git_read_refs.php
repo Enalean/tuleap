@@ -12,8 +12,16 @@
  require_once('gitutil.git_read_ref.php');
  require_once('gitutil.git_read_packed_refs.php');
 
-function git_read_refs($projectroot,$project,$refdir)
+function git_read_refs($refdir)
 {
+	global $gitphp_current_project;
+
+	if (!$gitphp_current_project)
+		return null;
+
+	$projectroot = GitPHP_Config::GetInstance()->GetValue('projectroot');
+	$project = $gitphp_current_project->GetProject();
+
 	if (!is_dir($projectroot . $project . "/" . $refdir))
 		return null;
 	$refs = array();
@@ -38,12 +46,12 @@ function git_read_refs($projectroot,$project,$refdir)
 	$reflist = array();
 	foreach ($refs as $i => $ref_file) {
 		$ref_id = git_read_hash($projectroot . $project . "/" . $refdir . "/" . $ref_file);
-		$refobj = git_read_ref($projectroot, $project, $ref_id, $ref_file);
+		$refobj = git_read_ref($ref_id, $ref_file);
 		if (isset($refobj))
 			$reflist[] = $refobj;
 	}
 
-	$packedrefs = git_read_packed_refs($projectroot, $project, $refdir);
+	$packedrefs = git_read_packed_refs($refdir);
 	if (isset($packedrefs) && count($packedrefs) > 0) {
 		foreach ($packedrefs as $packedref) {
 			$found = false;

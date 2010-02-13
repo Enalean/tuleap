@@ -19,7 +19,7 @@ function git_tags($projectroot,$project)
 	if (!$tpl->is_cached('tags.tpl', $cachekey)) {
 		$head = git_read_head($projectroot . $project);
 		$tpl->assign("head",$head);
-		$taglist = git_read_refs($projectroot, $project, "refs/tags");
+		$taglist = git_read_refs("refs/tags");
 		if (isset($taglist) && (count($taglist) > 0)) {
 			$tpl->assign("taglist",$taglist);
 		}

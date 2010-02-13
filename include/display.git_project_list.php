@@ -13,14 +13,16 @@
  require_once('util.agecmp.php');
  require_once('gitutil.git_read_projects.php');
 
-function git_project_list($projectroot,$projectlist,$order = "project")
+function git_project_list($order = "project")
 {
 	global $tpl;
+
+	$projectlist = GitPHP_ProjectList::GetInstance()->GetConfig();
 
 	$cachekey = sha1(serialize($projectlist)) . "|" . sha1($order);
 
 	if (!$tpl->is_cached('projectlist.tpl', $cachekey)) {
-		$projects = git_read_projects($projectroot,$projectlist, TRUE);
+		$projects = git_read_projects(true);
 		if (is_array($projects)) {
 			if (count($projects) > 0) {
 				if ($order)

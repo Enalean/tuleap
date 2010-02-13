@@ -19,7 +19,7 @@ function git_heads($projectroot,$project)
 	if (!$tpl->is_cached('heads.tpl', $cachekey)) {
 		$head = git_read_head($projectroot . $project);
 		$tpl->assign("head",$head);
-		$headlist = git_read_refs($projectroot, $project, "refs/heads");
+		$headlist = git_read_refs("refs/heads");
 		$tpl->assign("headlist",$headlist);
 	}
 	$tpl->display('heads.tpl', $cachekey);

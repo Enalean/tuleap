@@ -10,15 +10,15 @@
  require_once('util.script_url.php');
  require_once('gitutil.git_read_projects.php');
 
-function git_opml($projectroot,$projectlist)
+function git_opml()
 {
 	global $tpl,$gitphp_appstring;
 
-	$cachekey = sha1(serialize($projectlist));
+	$cachekey = sha1(serialize(GitPHP_ProjectList::GetInstance()->GetConfig()));
 
 	if (!$tpl->is_cached('opml.tpl', $cachekey)) {
 		header("Content-type: text/xml; charset=UTF-8");
-		$projlist = git_read_projects($projectroot,$projectlist);
+		$projlist = git_read_projects();
 		$tpl->assign("title", GitPHP_Config::GetInstance()->GetValue('title', $gitphp_appstring));
 		$tpl->assign("self",script_url());
 		$opmllist = array();
