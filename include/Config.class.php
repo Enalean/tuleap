@@ -4,7 +4,7 @@
  * Configfile reader class
  *
  * @author Christopher Han <xiphux@gmail.com>
- * @copyright (c) 2010 Christopher Han
+ * @copyright Copyright (c) 2010 Christopher Han
  * @package GitPHP
  */
 
