@@ -9,8 +9,8 @@
 
 function script_url()
 {
-	if (Config::GetInstance()->HasKey('self'))
-		return Config::GetInstance()->GetValue('self');
+	if (GitPHP_Config::GetInstance()->HasKey('self'))
+		return GitPHP_Config::GetInstance()->GetValue('self');
 
 	if (isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] == 'on'))
 		$scriptstr = "https://";

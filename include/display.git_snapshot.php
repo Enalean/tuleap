@@ -22,7 +22,7 @@ function git_snapshot($projectroot,$project,$hash)
 	$bzcompress = false;
 	$gzencode = false;
 
-	$compressformat = Config::GetInstance()->GetValue('compressformat', GITPHP_COMPRESS_ZIP);
+	$compressformat = GitPHP_Config::GetInstance()->GetValue('compressformat', GITPHP_COMPRESS_ZIP);
 
 	$rname = str_replace(array("/",".git"),array("-",""),$project);
 	if ($compressformat == GITPHP_COMPRESS_ZIP) {
@@ -47,9 +47,9 @@ function git_snapshot($projectroot,$project,$hash)
 			(($compressformat == GITPHP_COMPRESS_ZIP) ? "zip" : "tar"));
 
 		if (($compressformat == GITPHP_COMPRESS_BZ2) && $bzcompress) {
-			$arc = bzcompress($arc, Config::GetInstance()->GetValue('compresslevel', 4));
+			$arc = bzcompress($arc, GitPHP_Config::GetInstance()->GetValue('compresslevel', 4));
 		} else if (($compressformat == GITPHP_COMPRESS_GZ) && $gzencode) {
-			$arc = gzencode($arc, Config::GetInstance()->GetValue('compresslevel', -1));
+			$arc = gzencode($arc, GitPHP_Config::GetInstance()->GetValue('compresslevel', -1));
 		}
 		$tpl->assign("archive",$arc);
 	}

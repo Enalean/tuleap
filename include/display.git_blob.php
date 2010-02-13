@@ -49,7 +49,7 @@ function git_blob($projectroot, $project, $hash, $file, $hashbase)
 		$paths = git_path_trees($projectroot . $project, $hashbase, $file);
 		$tpl->assign("paths",$paths);
 
-		if (Config::GetInstance()->GetValue('filemimetype', true)) {
+		if (GitPHP_Config::GetInstance()->GetValue('filemimetype', true)) {
 			$mime = file_mime($catout,$file);
 			if ($mime)
 				$mimetype = strtok($mime, "/");
@@ -59,10 +59,10 @@ function git_blob($projectroot, $project, $hash, $file, $hashbase)
 			$tpl->assign("mime", $mime);
 			$tpl->assign("data", base64_encode($catout));
 		} else {
-			$usedgeshi = Config::GetInstance()->GetValue('geshi', true);
+			$usedgeshi = GitPHP_Config::GetInstance()->GetValue('geshi', true);
 			if ($usedgeshi) {
 				$usedgeshi = FALSE;
-				include_once(Config::GetInstance()->GetValue('geshiroot', 'lib/geshi/') . "geshi.php");
+				include_once(GitPHP_Config::GetInstance()->GetValue('geshiroot', 'lib/geshi/') . "geshi.php");
 				if (class_exists("GeSHi")) {
 					$geshi = new GeSHi("",'php');
 					if ($geshi) {

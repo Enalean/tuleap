@@ -13,7 +13,7 @@
 
 function git_project_info($projectroot,$project)
 {
-	$projectObj = new Project($project);
+	$projectObj = new GitPHP_Project($project);
 
 	$projinfo = array();
 	$projinfo["project"] = $project;

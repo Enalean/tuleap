@@ -27,7 +27,7 @@ function git_blob_plain($projectroot,$project,$hash,$file)
 
 		$buffer = git_cat_file($projectroot . $project, $hash);
 
-		if (Config::GetInstance()->GetValue('filemimetype', true))
+		if (GitPHP_Config::GetInstance()->GetValue('filemimetype', true))
 			$mime = file_mime($buffer, $file);
 
 		$headers = array();

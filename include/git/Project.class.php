@@ -15,7 +15,7 @@ require_once(GITPHP_INCLUDEDIR . 'defs.constants.php');
  *
  * @package GitPHP
  */
-class Project
+class GitPHP_Project
 {
 
 	/**
@@ -87,7 +87,7 @@ class Project
 	 */
 	private function SetProject($project)
 	{
-		$projectRoot = Config::GetInstance()->GetValue('projectroot');
+		$projectRoot = GitPHP_Config::GetInstance()->GetValue('projectroot');
 		$realProjectRoot = realpath($projectRoot);
 		$fullPath = realpath($projectRoot . $project);
 
@@ -171,7 +171,7 @@ class Project
 	 */
 	public function GetPath()
 	{
-		return Config::GetInstance()->GetValue('projectroot') . $this->project;
+		return GitPHP_Config::GetInstance()->GetValue('projectroot') . $this->project;
 	}
 
 	/**

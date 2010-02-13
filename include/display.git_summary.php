@@ -22,7 +22,7 @@ function git_summary($projectroot,$project)
 	$cachekey = sha1($project);
 
 	if (!$tpl->is_cached('project.tpl', $cachekey)) {
-		$projectObj = new Project($project);
+		$projectObj = new GitPHP_Project($project);
 
 		$descr = $projectObj->GetDescription();
 		$head = git_read_head($projectroot . $project);
@@ -34,10 +34,10 @@ function git_summary($projectroot,$project)
 		$tpl->assign("description",$descr);
 		$tpl->assign("owner",$owner);
 		$tpl->assign("lastchange",$commitdate['rfc2822']);
-		if (Config::GetInstance()->HasKey('cloneurl'))
-			$tpl->assign('cloneurl', Config::GetInstance()->GetValue('cloneurl') . $project);
-		if (Config::GetInstance()->HasKey('pushurl'))
-			$tpl->assign('pushurl', Config::GetInstance()->GetValue('pushurl') . $project);
+		if (GitPHP_Config::GetInstance()->HasKey('cloneurl'))
+			$tpl->assign('cloneurl', GitPHP_Config::GetInstance()->GetValue('cloneurl') . $project);
+		if (GitPHP_Config::GetInstance()->HasKey('pushurl'))
+			$tpl->assign('pushurl', GitPHP_Config::GetInstance()->GetValue('pushurl') . $project);
 		$revlist = git_read_revlist($projectroot . $project, $head, 17);
 		foreach ($revlist as $i => $rev) {
 			$revdata = array();

@@ -13,7 +13,7 @@
  *
  * @package GitPHP
  */
-class Config
+class GitPHP_Config
 {
 	
 	/**
@@ -56,7 +56,7 @@ class Config
 	public static function GetInstance()
 	{
 		if (!self::$instance) {
-			self::$instance = new Config();
+			self::$instance = new GitPHP_Config();
 		}
 		return self::$instance;
 	}

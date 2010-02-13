@@ -10,7 +10,7 @@
 function file_mime_fileinfo($buffer)
 {
 	if ($buffer && function_exists("finfo_buffer")) {
-		$finfo = finfo_open(FILEINFO_MIME, Config::GetInstance()->GetValue('magicdb', '/usr/share/misc/magic.mgc'));
+		$finfo = finfo_open(FILEINFO_MIME, GitPHP_Config::GetInstance()->GetValue('magicdb', '/usr/share/misc/magic.mgc'));
 		if ($finfo) {
 			$mime = finfo_buffer($finfo, $buffer, FILEINFO_MIME);
 			if ($mime && strpos($mime,"/")) {

@@ -17,7 +17,7 @@ function git_diff($proj,$from,$from_name,$to,$to_name)
 		$pid = posix_getpid();
 	else
 		$pid = rand();
-	$tmpdir = Config::GetInstance()->GetValue('gittmp', '/tmp/gitphp/');
+	$tmpdir = GitPHP_Config::GetInstance()->GetValue('gittmp', '/tmp/gitphp/');
 	if (isset($from)) {
 		$from_tmp = $tmpdir . "gitphp_" . $pid . "_from";
 		git_cat_file($proj,$from,$from_tmp);
@@ -26,7 +26,7 @@ function git_diff($proj,$from,$from_name,$to,$to_name)
 		$to_tmp = $tmpdir . "gitphp_" . $pid . "_to";
 		git_cat_file($proj,$to,$to_tmp);
 	}
-	$out = shell_exec(Config::GetInstance()->GetValue('diffbin', 'diff') . " -u -p -L '" . $from_name . "' -L '" . $to_name . "' " . $from_tmp . " " . $to_tmp);
+	$out = shell_exec(GitPHP_Config::GetInstance()->GetValue('diffbin', 'diff') . " -u -p -L '" . $from_name . "' -L '" . $to_name . "' " . $from_tmp . " " . $to_tmp);
 	if (isset($from))
 		unlink($from_tmp);
 	if (isset($to))

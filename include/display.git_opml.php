@@ -19,7 +19,7 @@ function git_opml($projectroot,$projectlist)
 	if (!$tpl->is_cached('opml.tpl', $cachekey)) {
 		header("Content-type: text/xml; charset=UTF-8");
 		$projlist = git_read_projects($projectroot,$projectlist);
-		$tpl->assign("title", Config::GetInstance()->GetValue('title', $gitphp_appstring));
+		$tpl->assign("title", GitPHP_Config::GetInstance()->GetValue('title', $gitphp_appstring));
 		$tpl->assign("self",script_url());
 		$opmllist = array();
 		foreach ($projlist as $cat => $plist) {

@@ -21,7 +21,7 @@ function git_search($projectroot, $project, $hash, $search, $searchtype, $page =
 
 	if (!$tpl->is_cached('search.tpl', $cachekey)) {
 
-		if (!Config::GetInstance()->GetValue('search', true)) {
+		if (!GitPHP_Config::GetInstance()->GetValue('search', true)) {
 			git_message("Search has been disabled", TRUE, TRUE);
 			return;
 		}

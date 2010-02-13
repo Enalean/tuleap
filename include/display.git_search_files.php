@@ -21,7 +21,7 @@ function git_search_files($projectroot, $project, $hash, $search, $page = 0)
 
 	if (!$tpl->is_cached('searchfiles.tpl', $cachekey)) {
 
-		if (!(Config::GetInstance()->GetValue('search', true) && Config::GetInstance()->GetValue('filesearch', true))) {
+		if (!(GitPHP_Config::GetInstance()->GetValue('search', true) && GitPHP_Config::GetInstance()->GetValue('filesearch', true))) {
 			git_message("File search has been disabled", TRUE, TRUE);
 			return;
 		}

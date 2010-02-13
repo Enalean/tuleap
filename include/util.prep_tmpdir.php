@@ -9,7 +9,7 @@
 
 function prep_tmpdir()
 {
-	$tmpdir = Config::GetInstance()->GetValue('gittmp', '/tmp/gitphp/');
+	$tmpdir = GitPHP_Config::GetInstance()->GetValue('gittmp', '/tmp/gitphp/');
 	if (file_exists($tmpdir)) {
 		if (is_dir($tmpdir)) {
 			if (!is_writeable($tmpdir))
