@@ -1,6 +1,7 @@
 <?php
 /**
- * GitPHP
+ * GitPHP Config
+ *
  * Configfile reader class
  *
  * @author Christopher Han <xiphux@gmail.com>

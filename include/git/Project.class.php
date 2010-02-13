@@ -1,11 +1,13 @@
 <?php
 /**
- * GitPHP
- * Project class
+ * GitPHP Project
+ * 
+ * Represents a single git project
  *
  * @author Christopher Han <xiphux@gmail.com>
  * @copyright Copyright (c) 2010 Christopher Han
  * @package GitPHP
+ * @subpackage Git
  */
 
 require_once(GITPHP_INCLUDEDIR . 'defs.constants.php');
@@ -14,6 +16,7 @@ require_once(GITPHP_INCLUDEDIR . 'defs.constants.php');
  * Project class
  *
  * @package GitPHP
+ * @subpackage Git
  */
 class GitPHP_Project
 {
@@ -63,6 +66,15 @@ class GitPHP_Project
 	 * @access protected
 	 */
 	protected $readDescription = false;
+
+	/**
+	 * category
+	 *
+	 * Stores the category internally
+	 *
+	 * @access protected
+	 */
+	protected $category = "";
 
 	/**
 	 * __construct
@@ -206,6 +218,32 @@ class GitPHP_Project
 	 */
 	public function GetAge()
 	{
+	}
+
+	/**
+	 * GetCategory
+	 *
+	 * Gets the project's category
+	 *
+	 * @access public
+	 * @return string category
+	 */
+	public function GetCategory()
+	{
+		return $this->category;
+	}
+
+	/**
+	 * SetCategory
+	 * 
+	 * Sets the project's category
+	 *
+	 * @access public
+	 * @param string $category category
+	 */
+	public function SetCategory($category)
+	{
+		$this->category = $category;
 	}
 
 }

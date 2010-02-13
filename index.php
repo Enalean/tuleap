@@ -27,7 +27,6 @@ define('GITPHP_INCLUDEDIR', GITPHP_BASEDIR . 'include/');
  /*
   * Configuration
   */
- require_once(GITPHP_CONFIGDIR . 'gitphp.conf.php');
  require_once(GITPHP_INCLUDEDIR . 'Config.class.php');
  try {
  	GitPHP_Config::GetInstance()->LoadConfig(GITPHP_CONFIGDIR . 'gitphp.conf.php.example');
@@ -35,39 +34,17 @@ define('GITPHP_INCLUDEDIR', GITPHP_BASEDIR . 'include/');
  }
  GitPHP_Config::GetInstance()->LoadConfig(GITPHP_CONFIGDIR . 'gitphp.conf.php');
 
+ /**
+  * Project list
+  */
+ require_once(GITPHP_INCLUDEDIR . 'git/ProjectList.class.php');
+ GitPHP_ProjectList::Instantiate(GITPHP_CONFIGDIR . 'gitphp.conf.php');
 
  $project = null;
 
  if (isset($_GET['p'])) {
- 	$fullpath = realpath(GitPHP_Config::GetInstance()->GetValue('projectroot') . $_GET['p']);
-	$realprojroot = realpath(GitPHP_Config::GetInstance()->GetValue('projectroot'));
-	$pathpiece = substr($fullpath, 0, strlen($realprojroot));
-	if (strcmp($pathpiece, $realprojroot) === 0) {
-		if (is_string($git_projects) && is_file($git_projects)) {
-			if ($fp = fopen($git_projects, 'r')) {
-				while (!feof($fp) && ($line = fgets($fp))) {
-					$pinfo = explode(' ', $line);
-					$ppath = trim($pinfo[0]);
-					if ($ppath == $_GET['p']) {
-						$project = $_GET['p'];
-						break;
-					}
-				}
-				fclose($fp);
-			}
-		} else if (is_array($git_projects)) {
-			foreach ($git_projects as $category) {
-				if (array_search($_GET['p'], $category)) {
-					$project = $_GET['p'];
-					break;
-				}
-			}
-		} else {
-			$project = $_GET['p'];
-		}
-		if (isset($project))
-			$project = str_replace(chr(0), '', $project);
-	}
+ 	if (GitPHP_ProjectList::GetInstance()->HasProject($_GET['p']))
+		$project = str_replace(chr(0), '', $_GET['p']);
  }
 
  $extraoutput = FALSE;
@@ -103,7 +80,7 @@ define('GITPHP_INCLUDEDIR', GITPHP_BASEDIR . 'include/');
 		$tpl->cache_lifetime = GitPHP_Config::GetInstance()->GetValue('cachelifetime');
 	if (GitPHP_Config::GetInstance()->GetValue('cacheexpire', true) === false) {
 		require_once(GITPHP_INCLUDEDIR . 'cache.cache_expire.php');
-		cache_expire(GitPHP_Config::GetInstance()->GetValue('projectroot'), $project, (isset($git_projects) ? $git_projects : null));
+		cache_expire(GitPHP_Config::GetInstance()->GetValue('projectroot'), $project, GitPHP_ProjectList::GetInstance()->GetConfig());
 	}
  }
 
@@ -116,8 +93,7 @@ define('GITPHP_INCLUDEDIR', GITPHP_BASEDIR . 'include/');
  if ($project) {
 	$tpl->assign("validproject",TRUE);
 	$tpl->assign("project",$project);
-	require_once(GITPHP_INCLUDEDIR . 'git/Project.class.php');
-	$projectObj = new GitPHP_Project($project);
+	$projectObj = GitPHP_ProjectList::GetInstance()->GetProject($project);
 	$tpl->assign("projectdescription", $projectObj->GetDescription());
 	if (isset($_GET['a'])) {
 		$tpl->assign("action",$_GET['a']);
@@ -147,10 +123,10 @@ if (GitPHP_Config::GetInstance()->GetValue('filesearch', true))
 	git_message("Cache expired");
  } else if (isset($_GET['a']) && $_GET['a'] == "opml") {
 	require_once(GITPHP_INCLUDEDIR . 'display.git_opml.php');
-	git_opml(GitPHP_Config::GetInstance()->GetValue('projectroot'), (isset($git_projects) ? $git_projects : null));
+	git_opml(GitPHP_Config::GetInstance()->GetValue('projectroot'), GitPHP_ProjectList::GetInstance()->GetConfig());
  } else if (isset($_GET['a']) && $_GET['a'] == "project_index") {
 	require_once(GITPHP_INCLUDEDIR . 'display.git_project_index.php');
-	git_project_index(GitPHP_Config::GetInstance()->GetValue('projectroot'),(isset($git_projects) ? $git_projects : null));
+	git_project_index(GitPHP_Config::GetInstance()->GetValue('projectroot'), GitPHP_ProjectList::GetInstance()->GetConfig());
  } else if ($project) {
  	if (!is_dir(GitPHP_Config::GetInstance()->GetValue('projectroot') . $project)) {
 		$tpl->assign("validproject",FALSE);
@@ -257,7 +233,7 @@ if (GitPHP_Config::GetInstance()->GetValue('filesearch', true))
 	}
  } else {
 	require_once(GITPHP_INCLUDEDIR . 'display.git_project_list.php');
-	git_project_list(GitPHP_Config::GetInstance()->GetValue('projectroot'), (isset($git_projects) ? $git_projects : null), (isset($_GET['o']) ? $_GET['o'] : "project"));
+	git_project_list(GitPHP_Config::GetInstance()->GetValue('projectroot'), GitPHP_ProjectList::GetInstance()->GetConfig(), (isset($_GET['o']) ? $_GET['o'] : "project"));
  }
 
  if (GitPHP_Config::GetInstance()->GetValue('debug', false) && $extraoutput)

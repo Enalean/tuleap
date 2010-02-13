@@ -9,11 +9,10 @@
 
  require_once(GITPHP_INCLUDEDIR . 'gitutil.git_read_head.php');
  require_once(GITPHP_INCLUDEDIR . 'gitutil.git_read_commit.php');
- require_once(GITPHP_INCLUDEDIR . 'git/Project.class.php');
 
 function git_project_info($projectroot,$project)
 {
-	$projectObj = new GitPHP_Project($project);
+	$projectObj = GitPHP_ProjectList::GetInstance()->GetProject($project);
 
 	$projinfo = array();
 	$projinfo["project"] = $project;
