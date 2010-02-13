@@ -7,26 +7,33 @@
  *  Copyright (C) 2006 Christopher Han <xiphux@gmail.com>
  */
 
+/**
+ * Define some paths
+ */
+define('GITPHP_BASEDIR', dirname(__FILE__) . '/');
+define('GITPHP_CONFIGDIR', GITPHP_BASEDIR . 'config/');
+define('GITPHP_INCLUDEDIR', GITPHP_BASEDIR . 'include/');
+
  /*
   * Version
   */
- include_once('include/version.php');
+ include_once(GITPHP_INCLUDEDIR . 'version.php');
 
  /*
   * Constants
   */
- require_once('include/defs.constants.php');
+ require_once(GITPHP_INCLUDEDIR . 'defs.constants.php');
 
  /*
   * Configuration
   */
- require_once('config/gitphp.conf.php');
- require_once('include/Config.class.php');
+ require_once(GITPHP_CONFIGDIR . 'gitphp.conf.php');
+ require_once(GITPHP_INCLUDEDIR . 'Config.class.php');
  try {
- 	Config::GetInstance()->LoadConfig('config/gitphp.conf.php.example');
+ 	Config::GetInstance()->LoadConfig(GITPHP_CONFIGDIR . 'gitphp.conf.php.example');
  } catch (Exception $e) {
  }
- Config::GetInstance()->LoadConfig('config/gitphp.conf.php');
+ Config::GetInstance()->LoadConfig(GITPHP_CONFIGDIR . 'gitphp.conf.php');
 
 
  $project = null;
@@ -95,7 +102,7 @@
 	if (Config::GetInstance()->HasKey('cachelifetime'))
 		$tpl->cache_lifetime = Config::GetInstance()->GetValue('cachelifetime');
 	if (Config::GetInstance()->GetValue('cacheexpire', true) === false) {
-		require_once('include/cache.cache_expire.php');
+		require_once(GITPHP_INCLUDEDIR . 'cache.cache_expire.php');
 		cache_expire(Config::GetInstance()->GetValue('projectroot'), $project, (isset($git_projects) ? $git_projects : null));
 	}
  }
@@ -109,8 +116,9 @@
  if ($project) {
 	$tpl->assign("validproject",TRUE);
 	$tpl->assign("project",$project);
-	require_once('include/gitutil.git_project_descr.php');
-	$tpl->assign("projectdescription",git_project_descr(Config::GetInstance()->GetValue('projectroot'), $project));
+	require_once(GITPHP_INCLUDEDIR . 'git/Project.class.php');
+	$projectObj = new Project($project);
+	$tpl->assign("projectdescription", $projectObj->GetDescription());
 	if (isset($_GET['a'])) {
 		$tpl->assign("action",$_GET['a']);
 		$tpl->assign("validaction", TRUE);
@@ -133,122 +141,122 @@ if (Config::GetInstance()->GetValue('filesearch', true))
 
 
  if (isset($_GET['a']) && $_GET['a'] == "expire") {
- 	require_once('include/cache.cache_expire.php');
-	require_once('include/display.git_message.php');
+ 	require_once(GITPHP_INCLUDEDIR . 'cache.cache_expire.php');
+	require_once(GITPHP_INCLUDEDIR . 'display.git_message.php');
 	cache_expire(null, null, null, true);
 	git_message("Cache expired");
  } else if (isset($_GET['a']) && $_GET['a'] == "opml") {
-	require_once('include/display.git_opml.php');
+	require_once(GITPHP_INCLUDEDIR . 'display.git_opml.php');
 	git_opml(Config::GetInstance()->GetValue('projectroot'), (isset($git_projects) ? $git_projects : null));
  } else if (isset($_GET['a']) && $_GET['a'] == "project_index") {
-	require_once('include/display.git_project_index.php');
+	require_once(GITPHP_INCLUDEDIR . 'display.git_project_index.php');
 	git_project_index(Config::GetInstance()->GetValue('projectroot'),(isset($git_projects) ? $git_projects : null));
  } else if ($project) {
  	if (!is_dir(Config::GetInstance()->GetValue('projectroot') . $project)) {
 		$tpl->assign("validproject",FALSE);
-		require_once('include/display.git_message.php');
+		require_once(GITPHP_INCLUDEDIR . 'display.git_message.php');
 		git_message("No such directory",TRUE);
 	} else if (!is_file(Config::GetInstance()->GetValue('projectroot') . $project . "/HEAD")) {
 		$tpl->assign("validproject",FALSE);
-		require_once('include/display.git_message.php');
+		require_once(GITPHP_INCLUDEDIR . 'display.git_message.php');
 		git_message("No such project",TRUE);
 	} else {
 		if (!isset($_GET['a'])) {
-			require_once('include/display.git_summary.php');
+			require_once(GITPHP_INCLUDEDIR . 'display.git_summary.php');
 			git_summary(Config::GetInstance()->GetValue('projectroot'),$project);
 		} else {
 			switch ($_GET['a']) {
 				case "summary":
-					require_once('include/display.git_summary.php');
+					require_once(GITPHP_INCLUDEDIR . 'display.git_summary.php');
 					git_summary(Config::GetInstance()->GetValue('projectroot'),$project);
 					break;
 				case "tree":
-					require_once('include/display.git_tree.php');
+					require_once(GITPHP_INCLUDEDIR . 'display.git_tree.php');
 					git_tree(Config::GetInstance()->GetValue('projectroot'), $project, (isset($_GET['h']) ? $_GET['h'] : NULL), (isset($_GET['f']) ? $_GET['f'] : NULL), (isset($_GET['hb']) ? $_GET['hb'] : NULL));
 					break;
 				case "shortlog":
-					require_once('include/display.git_shortlog.php');
+					require_once(GITPHP_INCLUDEDIR . 'display.git_shortlog.php');
 					git_shortlog(Config::GetInstance()->GetValue('projectroot'),$project,(isset($_GET['h']) ? $_GET['h'] : NULL), (isset($_GET['pg']) ? $_GET['pg'] : NULL));
 					break;
 				case "log":
-					require_once('include/display.git_log.php');
+					require_once(GITPHP_INCLUDEDIR . 'display.git_log.php');
 					git_log(Config::GetInstance()->GetValue('projectroot'),$project, (isset($_GET['h']) ? $_GET['h'] : NULL), (isset($_GET['pg']) ? $_GET['pg'] : NULL));
 					break;
 				case "commit":
-					require_once('include/display.git_commit.php');
+					require_once(GITPHP_INCLUDEDIR . 'display.git_commit.php');
 					git_commit(Config::GetInstance()->GetValue('projectroot'),$project,$_GET['h']);
 					break;
 				case "commitdiff":
-					require_once('include/display.git_commitdiff.php');
+					require_once(GITPHP_INCLUDEDIR . 'display.git_commitdiff.php');
 					git_commitdiff(Config::GetInstance()->GetValue('projectroot'),$project,$_GET['h'], (isset($_GET['hp']) ? $_GET['hp'] : NULL));
 					break;
 				case "commitdiff_plain":
-					require_once('include/display.git_commitdiff_plain.php');
+					require_once(GITPHP_INCLUDEDIR . 'display.git_commitdiff_plain.php');
 					git_commitdiff_plain(Config::GetInstance()->GetValue('projectroot'),$project,$_GET['h'],(isset($_GET['hp']) ? $_GET['hp'] : NULL));
 					break;
 				case "heads":
-					require_once('include/display.git_heads.php');
+					require_once(GITPHP_INCLUDEDIR . 'display.git_heads.php');
 					git_heads(Config::GetInstance()->GetValue('projectroot'),$project);
 					break;
 				case "tags":
-					require_once('include/display.git_tags.php');
+					require_once(GITPHP_INCLUDEDIR . 'display.git_tags.php');
 					git_tags(Config::GetInstance()->GetValue('projectroot'),$project);
 					break;
 				case "rss":
-					require_once('include/display.git_rss.php');
+					require_once(GITPHP_INCLUDEDIR . 'display.git_rss.php');
 					git_rss(Config::GetInstance()->GetValue('projectroot'),$project);
 					break;
 				case "blob":
-					require_once('include/display.git_blob.php');
+					require_once(GITPHP_INCLUDEDIR . 'display.git_blob.php');
 					git_blob(Config::GetInstance()->GetValue('projectroot'),$project, (isset($_GET['h']) ? $_GET['h'] : NULL), (isset($_GET['f']) ? $_GET['f'] : NULL), (isset($_GET['hb']) ? $_GET['hb'] : NULL));
 					break;
 				case "blob_plain":
-					require_once('include/display.git_blob_plain.php');
+					require_once(GITPHP_INCLUDEDIR . 'display.git_blob_plain.php');
 					git_blob_plain(Config::GetInstance()->GetValue('projectroot'),$project,$_GET['h'],(isset($_GET['f']) ? $_GET['f'] : NULL));
 					break;
 				case "blobdiff":
-					require_once('include/display.git_blobdiff.php');
+					require_once(GITPHP_INCLUDEDIR . 'display.git_blobdiff.php');
 					git_blobdiff(Config::GetInstance()->GetValue('projectroot'),$project,$_GET['h'],$_GET['hb'],$_GET['hp'],(isset($_GET['f']) ? $_GET['f'] : NULL));
 					break;
 				case "blobdiff_plain":
-					require_once('include/display.git_blobdiff_plain.php');
+					require_once(GITPHP_INCLUDEDIR . 'display.git_blobdiff_plain.php');
 					git_blobdiff_plain(Config::GetInstance()->GetValue('projectroot'),$project,$_GET['h'],$_GET['hb'],$_GET['hp'], (isset($_GET['f']) ? $_GET['f'] : NULL));
 					break;
 				case "blame":
-					require_once('include/display.git_blame.php');
+					require_once(GITPHP_INCLUDEDIR . 'display.git_blame.php');
 					git_blame(Config::GetInstance()->GetValue('projectroot'),$project, (isset($_GET['h']) ? $_GET['h'] : NULL), (isset($_GET['f']) ? $_GET['f'] : NULL), (isset($_GET['hb']) ? $_GET['hb'] : NULL));
 					break;
 				case "snapshot":
-					require_once('include/display.git_snapshot.php');
+					require_once(GITPHP_INCLUDEDIR . 'display.git_snapshot.php');
 					git_snapshot(Config::GetInstance()->GetValue('projectroot'),$project, (isset($_GET['h']) ? $_GET['h'] : NULL));
 					break;
 				case "history":
-					require_once('include/display.git_history.php');
+					require_once(GITPHP_INCLUDEDIR . 'display.git_history.php');
 					git_history(Config::GetInstance()->GetValue('projectroot'),$project, (isset($_GET['h']) ? $_GET['h'] : NULL),$_GET['f']);
 					break;
 				case "search":
 					if (isset($_GET['st']) && ($_GET['st'] == 'file')) {
-						require_once('include/display.git_search_files.php');
+						require_once(GITPHP_INCLUDEDIR . 'display.git_search_files.php');
 						git_search_files(Config::GetInstance()->GetValue('projectroot'),$project,(isset($_GET['h']) ? $_GET['h'] : NULL),(isset($_GET['s']) ? $_GET['s'] : NULL),(isset($_GET['pg']) ? $_GET['pg'] : 0));
 					} else {
-						require_once('include/display.git_search.php');
+						require_once(GITPHP_INCLUDEDIR . 'display.git_search.php');
 						git_search(Config::GetInstance()->GetValue('projectroot'),$project,(isset($_GET['h']) ? $_GET['h'] : NULL),(isset($_GET['s']) ? $_GET['s'] : NULL),(isset($_GET['st']) ? $_GET['st'] : "commit"),(isset($_GET['pg']) ? $_GET['pg'] : 0));
 					}
 					break;
 				case "tag":
-					require_once('include/display.git_tag.php');
+					require_once(GITPHP_INCLUDEDIR . 'display.git_tag.php');
 					git_tag(Config::GetInstance()->GetValue('projectroot'),$project,$_GET['h']);
 					break;
 				default:
 					$tpl->assign("validaction", FALSE);
-					require_once('include/display.git_message.php');
+					require_once(GITPHP_INCLUDEDIR . 'display.git_message.php');
 					git_message("Unknown action", TRUE);
 					break;
 			}
 		}
 	}
  } else {
-	require_once('include/display.git_project_list.php');
+	require_once(GITPHP_INCLUDEDIR . 'display.git_project_list.php');
 	git_project_list(Config::GetInstance()->GetValue('projectroot'), (isset($git_projects) ? $git_projects : null), (isset($_GET['o']) ? $_GET['o'] : "project"));
  }
 

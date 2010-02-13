@@ -7,17 +7,18 @@
  *  Copyright (C) 2009 Christopher Han <xiphux@gmail.com>
  */
 
- require_once('gitutil.git_project_descr.php');
- require_once('gitutil.git_project_owner.php');
- require_once('gitutil.git_read_head.php');
- require_once('gitutil.git_read_commit.php');
+ require_once(GITPHP_INCLUDEDIR . 'gitutil.git_read_head.php');
+ require_once(GITPHP_INCLUDEDIR . 'gitutil.git_read_commit.php');
+ require_once(GITPHP_INCLUDEDIR . 'git/Project.class.php');
 
 function git_project_info($projectroot,$project)
 {
+	$projectObj = new Project($project);
+
 	$projinfo = array();
 	$projinfo["project"] = $project;
-	$projinfo["descr"] = git_project_descr($projectroot,$project,TRUE);
-	$projinfo["owner"] = git_project_owner($projectroot,$project);
+	$projinfo["descr"] = $projectObj->GetDescription(true);
+	$projinfo["owner"] = $projectObj->GetOwner();;
 	$head = git_read_head($projectroot . $project);
 	$commit = git_read_commit($projectroot . $project,$head);
 	$projinfo["age"] = $commit['age'];

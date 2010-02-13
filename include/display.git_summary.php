@@ -7,14 +7,13 @@
  *  Copyright (C) 2008 Christopher Han <xiphux@gmail.com>
  */
 
- require_once('util.date_str.php');
- require_once('gitutil.git_project_descr.php');
- require_once('gitutil.git_project_owner.php');
- require_once('gitutil.git_read_head.php');
- require_once('gitutil.git_read_commit.php');
- require_once('gitutil.git_read_revlist.php');
- require_once('gitutil.git_read_refs.php');
- require_once('gitutil.read_info_ref.php');
+ require_once(GITPHP_INCLUDEDIR . 'util.date_str.php');
+ require_once(GITPHP_INCLUDEDIR . 'gitutil.git_read_head.php');
+ require_once(GITPHP_INCLUDEDIR . 'gitutil.git_read_commit.php');
+ require_once(GITPHP_INCLUDEDIR . 'gitutil.git_read_revlist.php');
+ require_once(GITPHP_INCLUDEDIR . 'gitutil.git_read_refs.php');
+ require_once(GITPHP_INCLUDEDIR . 'gitutil.read_info_ref.php');
+ require_once(GITPHP_INCLUDEDIR . 'git/Project.class.php');
 
 function git_summary($projectroot,$project)
 {
@@ -23,11 +22,13 @@ function git_summary($projectroot,$project)
 	$cachekey = sha1($project);
 
 	if (!$tpl->is_cached('project.tpl', $cachekey)) {
-		$descr = git_project_descr($projectroot,$project);
+		$projectObj = new Project($project);
+
+		$descr = $projectObj->GetDescription();
 		$head = git_read_head($projectroot . $project);
 		$commit = git_read_commit($projectroot . $project, $head);
 		$commitdate = date_str($commit['committer_epoch'],$commit['committer_tz']);
-		$owner = git_project_owner($projectroot,$project);
+		$owner = $projectObj->GetOwner();
 		$refs = read_info_ref($projectroot . $project);
 		$tpl->assign("head",$head);
 		$tpl->assign("description",$descr);
