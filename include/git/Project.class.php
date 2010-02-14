@@ -11,6 +11,7 @@
  */
 
 require_once(GITPHP_INCLUDEDIR . 'defs.commands.php');
+require_once(GITPHP_INCLUDEDIR . 'git/GitExe.class.php');
 require_once(GITPHP_INCLUDEDIR . 'git/Commit.class.php');
 
 /**
