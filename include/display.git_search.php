@@ -8,16 +8,19 @@
  */
 
 require_once('defs.constants.php');
+require_once('util.age_string.php');
 require_once('util.highlight.php');
-require_once('gitutil.git_read_commit.php');
 require_once('gitutil.git_read_revlist.php');
 require_once('display.git_message.php');
 
-function git_search($projectroot, $project, $hash, $search, $searchtype, $page = 0)
+function git_search($hash, $search, $searchtype, $page = 0)
 {
-	global $tpl;
+	global $tpl, $gitphp_current_project;
+	
+	if (!$gitphp_current_project)
+		return;
 
-	$cachekey = sha1($project) . "|" . $hash . "|" . sha1($searchtype) . "|" . sha1($search) . "|" . (isset($page) ? $page : 0);
+	$cachekey = sha1($gitphp_current_project->GetProject()) . "|" . $hash . "|" . sha1($searchtype) . "|" . sha1($search) . "|" . (isset($page) ? $page : 0);
 
 	if (!$tpl->is_cached('search.tpl', $cachekey)) {
 
@@ -31,11 +34,10 @@ function git_search($projectroot, $project, $hash, $search, $searchtype, $page =
 			return;
 		}
 		if (!isset($hash)) {
-			//$hash = git_read_head();
-			$hash = "HEAD";
+			$hash = 'HEAD';
 		}
 
-		$co = git_read_commit($hash);
+		$co = $gitphp_current_project->GetCommit($hash);
 
 		$revlist = git_read_revlist($hash, 101, ($page * 100), FALSE, FALSE, $searchtype, $search);
 		if (count($revlist) < 1 || (strlen($revlist[0]) < 1)) {
@@ -44,7 +46,7 @@ function git_search($projectroot, $project, $hash, $search, $searchtype, $page =
 		}
 
 		$tpl->assign("hash",$hash);
-		$tpl->assign("treehash",$co['tree']);
+		$tpl->assign("treehash", $co->GetTree()->GetHash());
 
 		$tpl->assign("search",$search);
 		$tpl->assign("searchtype",$searchtype);
@@ -52,31 +54,42 @@ function git_search($projectroot, $project, $hash, $search, $searchtype, $page =
 		$revlistcount = count($revlist);
 		$tpl->assign("revlistcount",$revlistcount);
 
-		$tpl->assign("title",$co['title']);
+		$tpl->assign("title", $co->GetTitle());
 
+		date_default_timezone_set('UTC');
 		$commitlines = array();
 		$commitcount = min(100,$revlistcount);
 		for ($i = 0; $i < $commitcount; ++$i) {
 			$commit = $revlist[$i];
 			if (strlen(trim($commit)) > 0) {
 				$commitline = array();
-				$co2 = git_read_commit($commit);
+				$co2 = $gitphp_current_project->GetCommit($commit);
 				$commitline["commit"] = $commit;
-				$commitline["agestringage"] = $co2['age_string_age'];
-				$commitline["agestringdate"] = $co2['age_string_date'];
-				$commitline["authorname"] = $co2['author_name'];
-				$commitline["title_short"] = $co2['title_short'];
-				if (strlen($co2['title_short']) < strlen($co2['title']))
-					$commitline["title"] = $co2['title'];
-				$commitline["committree"] = $co2['tree'];
+				$age = $co2->GetAge();
+				if ($age > 60*60*24*7*2) {
+					$commitline['agestringdate'] = date('Y-m-d', $co2->GetCommitterEpoch());
+					$commitline['agestringage'] = age_string($age);
+				} else {
+					$commitline['agestringdate'] = age_string($age);
+					$commitline['agestringage'] = date('Y-m-d', $co2->GetCommitterEpoch());
+				}
+				$commitline["authorname"] = $co2->GetAuthorName();
+				$title = $co2->GetTitle();
+				$titleshort = $co2->GetTitle(GITPHP_TRIM_LENGTH);
+				$commitline["title_short"] = $titleshort;
+				if (strlen($titleshort) < strlen($title))
+					$commitline["title"] = $title;
+				$commitline["committree"] = $co2->GetTree()->GetHash();
 				$matches = array();
-				foreach ($co2['comment'] as $comline) {
+				$commentlines = $co2->GetComment();
+				foreach ($commentlines as $comline) {
 					$hl = highlight($comline, $search, "searchmatch", GITPHP_TRIM_LENGTH);
 					if ($hl && (strlen($hl) > 0))
 						$matches[] = $hl;
 				}
 				$commitline["matches"] = $matches;
 				$commitlines[] = $commitline;
+				unset($co2);
 			}
 		}
 		

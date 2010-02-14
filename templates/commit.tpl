@@ -56,8 +56,8 @@
      {foreach from=$parents item=par}
        <tr>
          <td>parent</td>
-	 <td class="monospace"><a href="{$SCRIPT_NAME}?p={$project}&a=commit&h={$par}" class="list">{$par}</a></td>
-         <td class="link"><a href="{$SCRIPT_NAME}?p={$project}&a=commit&h={$par}">commit</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=commitdiff&h={$hash}&hp={$par}">commitdiff</a></td>
+	 <td class="monospace"><a href="{$SCRIPT_NAME}?p={$project}&a=commit&h={$par->GetHash()}" class="list">{$par->GetHash()}</a></td>
+         <td class="link"><a href="{$SCRIPT_NAME}?p={$project}&a=commit&h={$par->GetHash()}">commit</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=commitdiff&h={$hash}&hp={$par->GetHash()}">commitdiff</a></td>
        </tr>
      {/foreach}
    </table>

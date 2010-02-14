@@ -9,6 +9,7 @@
 
 function date_str($epoch,$tz = "-0000")
 {
+	date_default_timezone_set('UTC');
 	$date = array();
 	$date['hour'] = date("H",$epoch);
 	$date['minute'] = date("i",$epoch);

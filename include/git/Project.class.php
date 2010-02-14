@@ -10,7 +10,8 @@
  * @subpackage Git
  */
 
-require_once(GITPHP_INCLUDEDIR . 'defs.constants.php');
+require_once(GITPHP_INCLUDEDIR . 'defs.commands.php');
+require_once(GITPHP_INCLUDEDIR . 'git/Commit.class.php');
 
 /**
  * Project class
@@ -74,7 +75,35 @@ class GitPHP_Project
 	 *
 	 * @access protected
 	 */
-	protected $category = "";
+	protected $category = '';
+
+	/**
+	 * head
+	 *
+	 * Stores the head hash internally
+	 *
+	 * @access protected
+	 */
+	protected $head;
+
+	/**
+	 * readHead
+	 *
+	 * Stores whether the head ref has been read yet
+	 *
+	 * @access protected
+	 */
+	protected $readHead;
+
+	/**
+	 * commitCache
+	 *
+	 * Caches fetched commit objects in case of
+	 * repeated requests for the same object
+	 *
+	 * @access protected
+	 */
+	protected $commitCache = array();
 
 	/**
 	 * __construct
@@ -192,32 +221,20 @@ class GitPHP_Project
 	 * Gets the project description
 	 *
 	 * @access public
-	 * @param $trim true to trim the description length
+	 * @param $trim length to trim description to (0 for no trim)
 	 * @return string project description
 	 */
-	public function GetDescription($trim = false)
+	public function GetDescription($trim = 0)
 	{
 		if (!$this->readDescription) {
 			$this->description = file_get_contents($this->GetPath() . '/description');
 		}
-
-		if ((!$trim) || (strlen($this->description) < GITPHP_TRIM_LENGTH)) {
-			return $this->description;
+		
+		if (($trim > 0) && (strlen($this->description) > $trim)) {
+			return substr($this->description, 0, $trim) . '...';
 		}
 
-		return substr($this->description, 0, GITPHP_TRIM_LENGTH) . '...';
-	}
-
-	/**
-	 * GetAge
-	 *
-	 * Gets the project's age (last change time)
-	 *
-	 * @access public
-	 * @return mixed date
-	 */
-	public function GetAge()
-	{
+		return $this->description;
 	}
 
 	/**
@@ -244,6 +261,62 @@ class GitPHP_Project
 	public function SetCategory($category)
 	{
 		$this->category = $category;
+	}
+
+	/**
+	 * GetHeadCommit
+	 *
+	 * Gets the head commit for this project
+	 * Shortcut for getting the tip commit of the HEAD branch
+	 *
+	 * @access public
+	 * @return mixed head commit
+	 */
+	public function GetHeadCommit()
+	{
+		if (!$this->readHead)
+			$this->ReadHeadCommit();
+
+		return $this->GetCommit($this->head);
+	}
+
+	/**
+	 * ReadHeadCommit
+	 *
+	 * Reads the head commit hash
+	 *
+	 * @access protected
+	 */
+	public function ReadHeadCommit()
+	{
+		$this->readHead = true;
+
+		$exe = new GitPHP_GitExe(GitPHP_Config::GetInstance()->GetValue('gitbin'), $this);
+		$args = array();
+		$args[] = '--verify';
+		$args[] = 'HEAD';
+		$this->head = trim($exe->Execute(GIT_REV_PARSE, $args));
+	}
+
+	/**
+	 * GetCommit
+	 *
+	 * Get a commit for this project
+	 *
+	 * @access public
+	 */
+	public function GetCommit($hash)
+	{
+		if (empty($hash))
+			return null;
+
+		if ($hash === 'HEAD')
+			return $this->GetHeadCommit();
+
+		if (!isset($this->commitCache[$hash]))
+			$this->commitCache[$hash] = new GitPHP_Commit($this, $hash);
+
+		return $this->commitCache[$hash];
 	}
 
 }

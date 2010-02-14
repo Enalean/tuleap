@@ -7,22 +7,23 @@
  *  Copyright (C) 2008 Christopher Han <xiphux@gmail.com>
  */
 
- require_once('gitutil.git_read_head.php');
  require_once('gitutil.git_get_hash_by_path.php');
  require_once('gitutil.git_cat_file.php');
- require_once('gitutil.git_read_commit.php');
  require_once('gitutil.git_path_trees.php');
  require_once('gitutil.read_info_ref.php');
  require_once('util.file_mime.php');
 
-function git_blob($projectroot, $project, $hash, $file, $hashbase)
+function git_blob($hash, $file, $hashbase)
 {
-	global $tpl;
+	global $tpl, $gitphp_current_project;
 
-	$cachekey = sha1($project) . "|" . $hashbase . "|" . $hash . "|" . sha1($file);
+	if (!$gitphp_current_project)
+		return;
+
+	$cachekey = sha1($gitphp_current_project->GetProject()) . "|" . $hashbase . "|" . $hash . "|" . sha1($file);
 
 	if (!$tpl->is_cached('blob.tpl',$cachekey)) {
-		$head = git_read_head();
+		$head = $gitphp_current_project->GetHeadCommit()->GetHash();
 		if (!isset($hashbase))
 			$hashbase = $head;
 		if (!isset($hash) && isset($file))
@@ -31,11 +32,12 @@ function git_blob($projectroot, $project, $hash, $file, $hashbase)
 		$tpl->assign("hash",$hash);
 		$tpl->assign("hashbase",$hashbase);
 		$tpl->assign("head", $head);
-		if ($co = git_read_commit($hashbase)) {
+		$co = $gitphp_current_project->GetCommit($hashbase);
+		if ($co) {
 			$tpl->assign("fullnav",TRUE);
 			$refs = read_info_ref();
-			$tpl->assign("tree",$co['tree']);
-			$tpl->assign("title",$co['title']);
+			$tpl->assign("tree",$co->GetTree()->GetHash());
+			$tpl->assign("title",$co->GetTitle());
 			if (isset($file))
 				$tpl->assign("file",$file);
 			if ($hashbase == "HEAD") {

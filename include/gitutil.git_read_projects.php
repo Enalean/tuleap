@@ -30,7 +30,7 @@ function git_read_projects($projdata = FALSE)
 			if (is_file($projectroot . $ppath . "/HEAD"))
 			{
 				if ($projdata)
-					$ppath = git_project_info($projectroot, $ppath);
+					$ppath = git_project_info($ppath);
 				$projects[] = $ppath;
 			}
 		}
@@ -43,7 +43,7 @@ function git_read_projects($projdata = FALSE)
 				foreach ($plist as $pname => $ppath) {
 					if (is_file($projectroot . $ppath . "/HEAD")) {
 						if ($projdata)
-							$projs[] = git_project_info($projectroot, $ppath);
+							$projs[] = git_project_info($ppath);
 						else
 							$projs[] = $ppath;
 					}
@@ -61,7 +61,7 @@ function git_read_projects($projdata = FALSE)
 		for ($i = 0; $i < $len; ++$i) {
 			$p = substr($projects[$i],$cut + 1);
 			if ($projdata)
-				$projects[$i] = git_project_info($projectroot, $p);
+				$projects[$i] = git_project_info($p);
 			else
 				$projects[$i] = $p;
 		}

@@ -156,43 +156,43 @@ if (GitPHP_Config::GetInstance()->GetValue('filesearch', true))
 					break;
 				case "tree":
 					require_once(GITPHP_INCLUDEDIR . 'display.git_tree.php');
-					git_tree(GitPHP_Config::GetInstance()->GetValue('projectroot'), $project, (isset($_GET['h']) ? $_GET['h'] : NULL), (isset($_GET['f']) ? $_GET['f'] : NULL), (isset($_GET['hb']) ? $_GET['hb'] : NULL));
+					git_tree((isset($_GET['h']) ? $_GET['h'] : NULL), (isset($_GET['f']) ? $_GET['f'] : NULL), (isset($_GET['hb']) ? $_GET['hb'] : NULL));
 					break;
 				case "shortlog":
 					require_once(GITPHP_INCLUDEDIR . 'display.git_shortlog.php');
-					git_shortlog(GitPHP_Config::GetInstance()->GetValue('projectroot'),$project,(isset($_GET['h']) ? $_GET['h'] : NULL), (isset($_GET['pg']) ? $_GET['pg'] : NULL));
+					git_shortlog((isset($_GET['h']) ? $_GET['h'] : NULL), (isset($_GET['pg']) ? $_GET['pg'] : NULL));
 					break;
 				case "log":
 					require_once(GITPHP_INCLUDEDIR . 'display.git_log.php');
-					git_log(GitPHP_Config::GetInstance()->GetValue('projectroot'),$project, (isset($_GET['h']) ? $_GET['h'] : NULL), (isset($_GET['pg']) ? $_GET['pg'] : NULL));
+					git_log((isset($_GET['h']) ? $_GET['h'] : NULL), (isset($_GET['pg']) ? $_GET['pg'] : NULL));
 					break;
 				case "commit":
 					require_once(GITPHP_INCLUDEDIR . 'display.git_commit.php');
-					git_commit(GitPHP_Config::GetInstance()->GetValue('projectroot'),$project,$_GET['h']);
+					git_commit($_GET['h']);
 					break;
 				case "commitdiff":
 					require_once(GITPHP_INCLUDEDIR . 'display.git_commitdiff.php');
-					git_commitdiff(GitPHP_Config::GetInstance()->GetValue('projectroot'),$project,$_GET['h'], (isset($_GET['hp']) ? $_GET['hp'] : NULL));
+					git_commitdiff($_GET['h'], (isset($_GET['hp']) ? $_GET['hp'] : NULL));
 					break;
 				case "commitdiff_plain":
 					require_once(GITPHP_INCLUDEDIR . 'display.git_commitdiff_plain.php');
-					git_commitdiff_plain(GitPHP_Config::GetInstance()->GetValue('projectroot'),$project,$_GET['h'],(isset($_GET['hp']) ? $_GET['hp'] : NULL));
+					git_commitdiff_plain($_GET['h'],(isset($_GET['hp']) ? $_GET['hp'] : NULL));
 					break;
 				case "heads":
 					require_once(GITPHP_INCLUDEDIR . 'display.git_heads.php');
-					git_heads(GitPHP_Config::GetInstance()->GetValue('projectroot'),$project);
+					git_heads();
 					break;
 				case "tags":
 					require_once(GITPHP_INCLUDEDIR . 'display.git_tags.php');
-					git_tags(GitPHP_Config::GetInstance()->GetValue('projectroot'),$project);
+					git_tags();
 					break;
 				case "rss":
 					require_once(GITPHP_INCLUDEDIR . 'display.git_rss.php');
-					git_rss(GitPHP_Config::GetInstance()->GetValue('projectroot'),$project);
+					git_rss();
 					break;
 				case "blob":
 					require_once(GITPHP_INCLUDEDIR . 'display.git_blob.php');
-					git_blob(GitPHP_Config::GetInstance()->GetValue('projectroot'),$project, (isset($_GET['h']) ? $_GET['h'] : NULL), (isset($_GET['f']) ? $_GET['f'] : NULL), (isset($_GET['hb']) ? $_GET['hb'] : NULL));
+					git_blob((isset($_GET['h']) ? $_GET['h'] : NULL), (isset($_GET['f']) ? $_GET['f'] : NULL), (isset($_GET['hb']) ? $_GET['hb'] : NULL));
 					break;
 				case "blob_plain":
 					require_once(GITPHP_INCLUDEDIR . 'display.git_blob_plain.php');
@@ -200,7 +200,7 @@ if (GitPHP_Config::GetInstance()->GetValue('filesearch', true))
 					break;
 				case "blobdiff":
 					require_once(GITPHP_INCLUDEDIR . 'display.git_blobdiff.php');
-					git_blobdiff(GitPHP_Config::GetInstance()->GetValue('projectroot'),$project,$_GET['h'],$_GET['hb'],$_GET['hp'],(isset($_GET['f']) ? $_GET['f'] : NULL));
+					git_blobdiff($_GET['h'],$_GET['hb'],$_GET['hp'],(isset($_GET['f']) ? $_GET['f'] : NULL));
 					break;
 				case "blobdiff_plain":
 					require_once(GITPHP_INCLUDEDIR . 'display.git_blobdiff_plain.php');
@@ -208,7 +208,7 @@ if (GitPHP_Config::GetInstance()->GetValue('filesearch', true))
 					break;
 				case "blame":
 					require_once(GITPHP_INCLUDEDIR . 'display.git_blame.php');
-					git_blame(GitPHP_Config::GetInstance()->GetValue('projectroot'),$project, (isset($_GET['h']) ? $_GET['h'] : NULL), (isset($_GET['f']) ? $_GET['f'] : NULL), (isset($_GET['hb']) ? $_GET['hb'] : NULL));
+					git_blame((isset($_GET['h']) ? $_GET['h'] : NULL), (isset($_GET['f']) ? $_GET['f'] : NULL), (isset($_GET['hb']) ? $_GET['hb'] : NULL));
 					break;
 				case "snapshot":
 					require_once(GITPHP_INCLUDEDIR . 'display.git_snapshot.php');
@@ -216,20 +216,20 @@ if (GitPHP_Config::GetInstance()->GetValue('filesearch', true))
 					break;
 				case "history":
 					require_once(GITPHP_INCLUDEDIR . 'display.git_history.php');
-					git_history(GitPHP_Config::GetInstance()->GetValue('projectroot'),$project, (isset($_GET['h']) ? $_GET['h'] : NULL),$_GET['f']);
+					git_history((isset($_GET['h']) ? $_GET['h'] : NULL),$_GET['f']);
 					break;
 				case "search":
 					if (isset($_GET['st']) && ($_GET['st'] == 'file')) {
 						require_once(GITPHP_INCLUDEDIR . 'display.git_search_files.php');
-						git_search_files(GitPHP_Config::GetInstance()->GetValue('projectroot'),$project,(isset($_GET['h']) ? $_GET['h'] : NULL),(isset($_GET['s']) ? $_GET['s'] : NULL),(isset($_GET['pg']) ? $_GET['pg'] : 0));
+						git_search_files((isset($_GET['h']) ? $_GET['h'] : NULL),(isset($_GET['s']) ? $_GET['s'] : NULL),(isset($_GET['pg']) ? $_GET['pg'] : 0));
 					} else {
 						require_once(GITPHP_INCLUDEDIR . 'display.git_search.php');
-						git_search(GitPHP_Config::GetInstance()->GetValue('projectroot'),$project,(isset($_GET['h']) ? $_GET['h'] : NULL),(isset($_GET['s']) ? $_GET['s'] : NULL),(isset($_GET['st']) ? $_GET['st'] : "commit"),(isset($_GET['pg']) ? $_GET['pg'] : 0));
+						git_search((isset($_GET['h']) ? $_GET['h'] : NULL),(isset($_GET['s']) ? $_GET['s'] : NULL),(isset($_GET['st']) ? $_GET['st'] : "commit"),(isset($_GET['pg']) ? $_GET['pg'] : 0));
 					}
 					break;
 				case "tag":
 					require_once(GITPHP_INCLUDEDIR . 'display.git_tag.php');
-					git_tag(GitPHP_Config::GetInstance()->GetValue('projectroot'),$project,$_GET['h']);
+					git_tag($_GET['h']);
 					break;
 				default:
 					$tpl->assign("validaction", FALSE);

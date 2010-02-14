@@ -7,17 +7,19 @@
  *  Copyright (C) 2008 Christopher Han <xiphux@gmail.com>
  */
 
- require_once('gitutil.git_read_head.php');
  require_once('gitutil.git_read_refs.php');
 
-function git_heads($projectroot,$project)
+function git_heads()
 {
-	global $tpl;
+	global $tpl, $gitphp_current_project;
 
-	$cachekey = sha1($project);
+	if (!$gitphp_current_project)
+		return;
+
+	$cachekey = sha1($gitphp_current_project->GetProject());
 
 	if (!$tpl->is_cached('heads.tpl', $cachekey)) {
-		$head = git_read_head();
+		$head = $gitphp_current_project->GetHeadCommit()->GetHash();
 		$tpl->assign("head",$head);
 		$headlist = git_read_refs("refs/heads");
 		$tpl->assign("headlist",$headlist);

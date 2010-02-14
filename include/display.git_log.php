@@ -8,19 +8,21 @@
  */
 
  require_once('util.date_str.php');
- require_once('gitutil.git_read_head.php');
+ require_once('util.age_string.php');
  require_once('gitutil.git_read_revlist.php');
- require_once('gitutil.git_read_commit.php');
  require_once('gitutil.read_info_ref.php');
 
-function git_log($projectroot,$project,$hash,$page)
+function git_log($hash,$page)
 {
-	global $tpl;
+	global $tpl, $gitphp_current_project;
 
-	$cachekey = sha1($project) . "|" . $hash . "|" . (isset($page) ? $page : 0);
+	if (!$gitphp_current_project)
+		return;
+
+	$cachekey = sha1($gitphp_current_project->GetProject()) . "|" . $hash . "|" . (isset($page) ? $page : 0);
 
 	if (!$tpl->is_cached('log.tpl', $cachekey)) {
-		$head = git_read_head();
+		$head = $gitphp_current_project->GetHeadCommit()->GetHash();
 		if (!isset($hash))
 			$hash = $head;
 		if (!isset($page))
@@ -39,8 +41,8 @@ function git_log($projectroot,$project,$hash,$page)
 
 		if (!$revlist) {
 			$tpl->assign("norevlist",TRUE);
-			$co = git_read_commit($hash);
-			$tpl->assign("lastchange",$co['age_string']);
+			$co = $gitphp_current_project->GetCommit($hash);
+			$tpl->assign("lastchange", age_string($co->GetAge()));
 		}
 
 		$commitlines = array();
@@ -49,18 +51,19 @@ function git_log($projectroot,$project,$hash,$page)
 			$commit = $revlist[$i];
 			if (isset($commit) && strlen($commit) > 1) {
 				$commitline = array();
-				$co = git_read_commit($commit);
-				$ad = date_str($co['author_epoch']);
-				$commitline["project"] = $project;
+				$co = $gitphp_current_project->GetCommit($commit);
+				$ad = date_str($co->GetAuthorEpoch());
+				$commitline["project"] = $gitphp_current_project->GetProject();
 				$commitline["commit"] = $commit;
 				if (isset($refs[$commit]))
 					$commitline["commitref"] = $refs[$commit];
-				$commitline["agestring"] = $co['age_string'];
-				$commitline["title"] = $co['title'];
-				$commitline["authorname"] = $co['author_name'];
+				$commitline["agestring"] = age_string($co->GetAge());
+				$commitline["title"] = $co->GetTitle();
+				$commitline["authorname"] = $co->GetAuthorName();
 				$commitline["rfc2822"] = $ad['rfc2822'];
-				$commitline["comment"] = $co['comment'];
+				$commitline["comment"] = $co->GetComment();
 				$commitlines[] = $commitline;
+				unset($co);
 			}
 		}
 		$tpl->assign("commitlines",$commitlines);

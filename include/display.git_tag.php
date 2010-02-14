@@ -9,17 +9,19 @@
 
  require_once('util.date_str.php');
  require_once('gitutil.git_read_tag.php');
- require_once('gitutil.git_read_head.php');
 
-function git_tag($projectroot, $project, $hash)
+function git_tag($hash)
 {
-	global $tpl;
+	global $tpl, $gitphp_current_project;
 
-	$cachekey = sha1($project) . "|" . $hash;
+	if (!$gitphp_current_project)
+		return;
+
+	$cachekey = sha1($gitphp_current_project->GetProject()) . "|" . $hash;
 
 	if (!$tpl->is_cached('tag.tpl', $cachekey)) {
 
-		$head = git_read_head();
+		$head = $gitphp_current_project->GetHeadCommit()->GetHash();
 		$tpl->assign("head",$head);
 		$tpl->assign("hash", $hash);
 

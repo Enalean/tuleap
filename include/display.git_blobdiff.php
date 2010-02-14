@@ -8,16 +8,18 @@
  */
 
  require_once('util.prep_tmpdir.php');
- require_once('gitutil.git_read_commit.php');
  require_once('gitutil.read_info_ref.php');
  require_once('gitutil.git_path_trees.php');
  require_once('gitutil.git_diff.php');
 
-function git_blobdiff($projectroot,$project,$hash,$hashbase,$hashparent,$file)
+function git_blobdiff($hash,$hashbase,$hashparent,$file)
 {
-	global $tpl;
+	global $tpl, $gitphp_current_project;
 
-	$cachekey = sha1($project) . "|" . $hashbase . "|" . $hash . "|" . $hashparent . "|" . sha1($file);
+	if (!$gitphp_current_project)
+		return;
+
+	$cachekey = sha1($gitphp_current_project->GetProject()) . "|" . $hashbase . "|" . $hash . "|" . $hashparent . "|" . sha1($file);
 
 	if (!$tpl->is_cached('blobdiff.tpl', $cachekey)) {
 		$ret = prep_tmpdir();
@@ -30,10 +32,11 @@ function git_blobdiff($projectroot,$project,$hash,$hashbase,$hashparent,$file)
 		$tpl->assign("hashbase",$hashbase);
 		if (isset($file))
 			$tpl->assign("file",$file);
-		if ($co = git_read_commit($hashbase)) {
+		$co = $gitphp_current_project->GetCommit($hashbase);
+		if ($co) {
 			$tpl->assign("fullnav",TRUE);
-			$tpl->assign("tree",$co['tree']);
-			$tpl->assign("title",$co['title']);
+			$tpl->assign("tree",$co->GetTree()->GetHash());
+			$tpl->assign("title",$co->GetTitle());
 			$refs = read_info_ref();
 			if (isset($refs[$hashbase]))
 				$tpl->assign("hashbaseref",$refs[$hashbase]);

@@ -10,7 +10,6 @@
  require_once('util.age_string.php');
  require_once('gitutil.git_get_type.php');
  require_once('gitutil.git_read_tag.php');
- require_once('gitutil.git_read_commit.php');
 
  function git_read_ref($ref_id, $ref_file)
  {
@@ -37,10 +36,10 @@
 		$tag = git_read_tag($ref_id);
 		$ref_item['comment'] = $tag['comment'];
 		if ($tag['type'] == "commit") {
-			$co = git_read_commit($tag['object']);
-			$ref_item['epoch'] = $co['committer_epoch'];
-			$ref_item['age_string'] = $co['age_string'];
-			$ref_item['age'] = $co['age'];
+			$co = $gitphp_current_project->GetCommit($tag['object']);
+			$ref_item['epoch'] = $co->GetCommitterEpoch();
+			$ref_item['age_string'] = age_string($co->GetAge());
+			$ref_item['age'] = $co->GetAge();
 		} else if (isset($tag['epoch'])) {
 			$age = time() - $tag['epoch'];
 			$ref_item['epoch'] = $tag['epoch'];
@@ -51,14 +50,14 @@
 		$ref_item['name'] = $tag['name'];
 		$ref_item['refid'] = $tag['object'];
 	} else if ($type == "commit") {
-		$co = git_read_commit($ref_id);
+		$co = $gitphp_current_project->GetCommit($ref_id);
 		$ref_item['reftype'] = "commit";
 		$ref_item['name'] = $ref_file;
-		$ref_item['title'] = $co['title'];
+		$ref_item['title'] = $co->GetTitle();
 		$ref_item['refid'] = $ref_id;
-		$ref_item['epoch'] = $co['committer_epoch'];
-		$ref_item['age_string'] = $co['age_string'];
-		$ref_item['age'] = $co['age'];
+		$ref_item['epoch'] = $co->GetCommitterEpoch();
+		$ref_item['age_string'] = age_string($co->GetAge());
+		$ref_item['age'] = $co->GetAge();
 	}
 
 	return $ref_item;

@@ -10,14 +10,16 @@
 require_once('defs.constants.php');
 require_once('util.highlight.php');
 require_once('gitutil.git_filesearch.php');
-require_once('gitutil.git_read_commit.php');
 require_once('display.git_message.php');
 
-function git_search_files($projectroot, $project, $hash, $search, $page = 0)
+function git_search_files($hash, $search, $page = 0)
 {
-	global $tpl;
+	global $tpl, $gitphp_current_project;
 
-	$cachekey = sha1($project) . "|" . $hash . "|" . "filesearch" . "|" . sha1($search) . "|" . (isset($page) ? $page : 0);
+	if (!$gitphp_current_project)
+		return;
+
+	$cachekey = sha1($gitphp_current_project->GetProject()) . "|" . $hash . "|" . "filesearch" . "|" . sha1($search) . "|" . (isset($page) ? $page : 0);
 
 	if (!$tpl->is_cached('searchfiles.tpl', $cachekey)) {
 
@@ -31,11 +33,8 @@ function git_search_files($projectroot, $project, $hash, $search, $page = 0)
 			return;
 		}
 		if (!isset($hash)) {
-			//$hash = git_read_head();
 			$hash = "HEAD";
 		}
-
-		$co = git_read_commit($hash);
 
 		$filesearch = git_filesearch($hash, $search, false, ($page * 100), 101);
 
@@ -45,7 +44,15 @@ function git_search_files($projectroot, $project, $hash, $search, $page = 0)
 		}
 
 		$tpl->assign("hash",$hash);
-		$tpl->assign("treehash",$co['tree']);
+
+		$co = $gitphp_current_project->GetCommit($hash);
+
+		if ($co) {
+			$tree = $co->GetTree();
+			if ($tree)
+				$tpl->assign("treehash", $tree->GetHash());
+			$tpl->assign("title", $co->GetTitle());
+		}
 
 		$tpl->assign("search",$search);
 		$tpl->assign("searchtype","file");
@@ -53,7 +60,6 @@ function git_search_files($projectroot, $project, $hash, $search, $page = 0)
 		$filesearchcount = count($filesearch);
 		$tpl->assign("filesearchcount",$filesearchcount);
 
-		$tpl->assign("title",$co['title']);
 
 		$filesearchlines = array();
 		$i = 0;

@@ -8,38 +8,42 @@
  */
 
  require_once('util.mode_str.php');
- require_once('gitutil.git_read_head.php');
  require_once('gitutil.git_get_hash_by_path.php');
  require_once('gitutil.git_ls_tree.php');
  require_once('gitutil.read_info_ref.php');
- require_once('gitutil.git_read_commit.php');
  require_once('gitutil.git_path_trees.php');
 
-function git_tree($projectroot,$project,$hash,$file,$hashbase)
+function git_tree($hash,$file,$hashbase)
 {
-	global $tpl;
+	global $tpl, $gitphp_current_project;
 
-	$cachekey = sha1($project) . "|" . $hashbase . "|" . $hash . "|" . sha1($file);
+	if (!$gitphp_current_project)
+		return;
+
+	$cachekey = sha1($gitphp_current_project->GetProject()) . "|" . $hashbase . "|" . $hash . "|" . sha1($file);
 
 	if (!$tpl->is_cached('tree.tpl', $cachekey)) {
+		
 		if (!isset($hash)) {
-			$hash = git_read_head();
+			$hash = $gitphp_current_project->GetHeadCommit()->GetHash();
 			if (isset($file))
 				$hash = git_get_hash_by_path(($hashbase?$hashbase:$hash),$file,"tree");
-				if (!isset($hashbase))
-					$hashbase = $hash;
 		}
+		if (!isset($hashbase))
+			$hashbase = $hash;
 		$lsout = git_ls_tree($hash, TRUE);
 		$refs = read_info_ref();
 		$tpl->assign("hash",$hash);
 		if (isset($hashbase))
 			$tpl->assign("hashbase",$hashbase);
-		if (isset($hashbase) && ($co = git_read_commit($hashbase))) {
-			$basekey = $hashbase;
-			$tpl->assign("fullnav",TRUE);
-			$tpl->assign("title",$co['title']);
-			if (isset($refs[$hashbase]))
-				$tpl->assign("hashbaseref",$refs[$hashbase]);
+		if (isset($hashbase)) {
+			$co = $gitphp_current_project->GetCommit($hashbase);
+			if ($co) {
+				$tpl->assign("fullnav",TRUE);
+				$tpl->assign("title",$co->GetTitle());
+				if (isset($refs[$hashbase]))
+					$tpl->assign("hashbaseref",$refs[$hashbase]);
+			}
 		}
 		$paths = git_path_trees($hashbase, $file);
 		$tpl->assign("paths",$paths);

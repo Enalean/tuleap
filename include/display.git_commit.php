@@ -9,23 +9,26 @@
 
  require_once('util.file_type.php');
  require_once('util.date_str.php');
- require_once('gitutil.git_read_commit.php');
  require_once('gitutil.git_diff_tree.php');
  require_once('gitutil.read_info_ref.php');
 
-function git_commit($projectroot,$project,$hash)
+function git_commit($hash)
 {
-	global $tpl;
+	global $tpl, $gitphp_current_project;
 
-	$cachekey = sha1($project) . "|" . $hash;
+	if (!$gitphp_current_project)
+		return;
+
+	$cachekey = sha1($gitphp_current_project->GetProject()) . "|" . $hash;
 
 	if (!$tpl->is_cached('commit.tpl', $cachekey)) {
-		$co = git_read_commit($hash);
-		$ad = date_str($co['author_epoch'],$co['author_tz']);
-		$cd = date_str($co['committer_epoch'],$co['committer_tz']);
-		if (isset($co['parent'])) {
+		$commit = $gitphp_current_project->GetCommit($hash);
+		$ad = date_str($commit->GetAuthorEpoch(), $commit->GetAuthorTimezone());
+		$cd = date_str($commit->GetCommitterEpoch(), $commit->GetCommitterTimezone());
+		$parentObj = $commit->GetParent();
+		if ($parentObj) {
 			$root = "";
-			$parent = $co['parent'];
+			$parent = $parentObj->GetHash();
 		} else {
 			$root = "--root";
 			$parent = "";
@@ -33,26 +36,28 @@ function git_commit($projectroot,$project,$hash)
 		$diffout = git_diff_tree($root . " " . $parent . " " . $hash, TRUE);
 		$difftree = explode("\n",$diffout);
 		$tpl->assign("hash",$hash);
-		$tpl->assign("tree",$co['tree']);
-		if (isset($co['parent']))
-			$tpl->assign("parent",$co['parent']);
-		$tpl->assign("title",$co['title']);
+		$treeObj = $commit->GetTree();
+		if ($treeObj)
+			$tpl->assign("tree", $treeObj->GetHash());
+		if ($parentObj)
+			$tpl->assign("parent", $parentObj->GetHash());
+		$tpl->assign("title", $commit->GetTitle());
 		$refs = read_info_ref();
-		if (isset($refs[$co['id']]))
-			$tpl->assign("commitref",$refs[$co['id']]);
-		$tpl->assign("author",$co['author']);
+		if (isset($refs[$commit->GetHash()]))
+			$tpl->assign("commitref",$refs[$commit->GetHash()]);
+		$tpl->assign("author", $commit->GetAuthorName());
 		$tpl->assign("adrfc2822",$ad['rfc2822']);
 		$tpl->assign("adhourlocal",$ad['hour_local']);
 		$tpl->assign("adminutelocal",$ad['minute_local']);
 		$tpl->assign("adtzlocal",$ad['tz_local']);
-		$tpl->assign("committer",$co['committer']);
+		$tpl->assign("committer", $commit->GetCommitterName());
 		$tpl->assign("cdrfc2822",$cd['rfc2822']);
 		$tpl->assign("cdhourlocal",$cd['hour_local']);
 		$tpl->assign("cdminutelocal",$cd['minute_local']);
 		$tpl->assign("cdtzlocal",$cd['tz_local']);
-		$tpl->assign("id",$co['id']);
-		$tpl->assign("parents",$co['parents']);
-		$tpl->assign("comment",$co['comment']);
+		$tpl->assign("id", $commit->GetHash());
+		$tpl->assign("parents", $commit->GetParents());
+		$tpl->assign("comment", $commit->GetComment());
 		$tpl->assign("difftreesize",count($difftree)+1);
 		$difftreelines = array();
 		foreach ($difftree as $i => $line) {
