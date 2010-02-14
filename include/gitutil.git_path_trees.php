@@ -10,17 +10,17 @@
 require_once('gitutil.git_path_tree.php');
 require_once('gitutil.git_get_hash_by_path.php');
 
-function git_path_trees($project,$base,$filename)
+function git_path_trees($base,$filename)
 {
 	$paths = array();
-	$path = git_path_tree($project,$base,$filename);
+	$path = git_path_tree($base,$filename);
 	if ($path != null)
 		$paths[] = $path;
 	$pos = strrpos($filename, "/");
 	while ($pos !== false) {
 		$filename = substr($filename,0,$pos);
 		
-		$path = git_path_tree($project, $base, $filename);
+		$path = git_path_tree($base, $filename);
 		if ($path != null)
 			$paths[] = $path;
 

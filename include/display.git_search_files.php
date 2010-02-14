@@ -31,13 +31,13 @@ function git_search_files($projectroot, $project, $hash, $search, $page = 0)
 			return;
 		}
 		if (!isset($hash)) {
-			//$hash = git_read_head($projectroot . $project);
+			//$hash = git_read_head();
 			$hash = "HEAD";
 		}
 
-		$co = git_read_commit($projectroot . $project, $hash);
+		$co = git_read_commit($hash);
 
-		$filesearch = git_filesearch($projectroot . $project, $hash, $search, false, ($page * 100), 101);
+		$filesearch = git_filesearch($hash, $search, false, ($page * 100), 101);
 
 		if (count($filesearch) < 1) {
 			git_message("No matches for '" . $search . "'.", FALSE, TRUE);

@@ -9,10 +9,10 @@
 
  require_once('gitutil.git_cat_file.php');
 
-function git_read_tag($project, $tag_id)
+function git_read_tag($tag_id)
 {
 	$tag = array();
-	$tagout = git_cat_file($project, $tag_id, NULL, "tag");
+	$tagout = git_cat_file($tag_id, NULL, "tag");
 	$tag['id'] = $tag_id;
 	$comment = array();
 	$tok = strtok($tagout,"\n");

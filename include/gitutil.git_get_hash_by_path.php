@@ -9,13 +9,13 @@
 
 require_once('gitutil.git_ls_tree.php');
 
-function git_get_hash_by_path($project,$base,$path,$type = null)
+function git_get_hash_by_path($base,$path,$type = null)
 {
 	$tree = $base;
 	$parts = explode("/",$path);
 	$partcount = count($parts);
 	foreach ($parts as $i => $part) {
-		$lsout = git_ls_tree($project, $tree);
+		$lsout = git_ls_tree($tree);
 		$entries = explode("\n",$lsout);
 		foreach ($entries as $j => $line) {
 			if (preg_match("/^([0-9]+) (.+) ([0-9a-fA-F]{40})\t(.+)$/",$line,$regs)) {

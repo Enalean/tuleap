@@ -8,16 +8,27 @@
  */
 
  require_once('defs.commands.php');
- require_once('gitutil.git_exec.php');
+ require_once(GITPHP_INCLUDEDIR . 'git/GitExe.class.php');
 
-function git_ls_tree($proj,$hash,$nullterm = FALSE, $recurse = FALSE)
+function git_ls_tree($hash,$nullterm = FALSE, $recurse = FALSE)
 {
-	$cmd = GIT_LS_TREE;
+	global $gitphp_current_project;
+
+	if (!$gitphp_current_project)
+		return '';
+
+	$exe = new GitPHP_GitExe(GitPHP_Config::GetInstance()->GetValue('gitbin'), $gitphp_current_project);
+
+	$args = array();
 	if ($nullterm)
-		$cmd .= " -z";
-	if ($recurse)
-		$cmd .= " -r -t --full-name";
-	return git_exec($proj, $cmd . " " . $hash);
+		$args[] = '-z';
+	if ($recurse) {
+		$args[] = '-r';
+		$args[] = '-t';
+		$args[] = '--full-name';
+	}
+	$args[] = $hash;
+	return $exe->Execute(GIT_LS_TREE, $args);
 }
 
 ?>

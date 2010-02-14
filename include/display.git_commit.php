@@ -20,7 +20,7 @@ function git_commit($projectroot,$project,$hash)
 	$cachekey = sha1($project) . "|" . $hash;
 
 	if (!$tpl->is_cached('commit.tpl', $cachekey)) {
-		$co = git_read_commit($projectroot . $project, $hash);
+		$co = git_read_commit($hash);
 		$ad = date_str($co['author_epoch'],$co['author_tz']);
 		$cd = date_str($co['committer_epoch'],$co['committer_tz']);
 		if (isset($co['parent'])) {
@@ -30,14 +30,14 @@ function git_commit($projectroot,$project,$hash)
 			$root = "--root";
 			$parent = "";
 		}
-		$diffout = git_diff_tree($projectroot . $project, $root . " " . $parent . " " . $hash, TRUE);
+		$diffout = git_diff_tree($root . " " . $parent . " " . $hash, TRUE);
 		$difftree = explode("\n",$diffout);
 		$tpl->assign("hash",$hash);
 		$tpl->assign("tree",$co['tree']);
 		if (isset($co['parent']))
 			$tpl->assign("parent",$co['parent']);
 		$tpl->assign("title",$co['title']);
-		$refs = read_info_ref($projectroot . $project);
+		$refs = read_info_ref();
 		if (isset($refs[$co['id']]))
 			$tpl->assign("commitref",$refs[$co['id']]);
 		$tpl->assign("author",$co['author']);

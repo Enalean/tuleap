@@ -20,19 +20,19 @@ function git_log($projectroot,$project,$hash,$page)
 	$cachekey = sha1($project) . "|" . $hash . "|" . (isset($page) ? $page : 0);
 
 	if (!$tpl->is_cached('log.tpl', $cachekey)) {
-		$head = git_read_head($projectroot . $project);
+		$head = git_read_head();
 		if (!isset($hash))
 			$hash = $head;
 		if (!isset($page))
 			$page = 0;
-		$refs = read_info_ref($projectroot . $project);
+		$refs = read_info_ref();
 		$tpl->assign("hash",$hash);
 		$tpl->assign("head",$head);
 
 		if ($page)
 			$tpl->assign("page",$page);
 
-		$revlist = git_read_revlist($projectroot . $project, $hash, 101, ($page * 100));
+		$revlist = git_read_revlist($hash, 101, ($page * 100));
 
 		$revlistcount = count($revlist);
 		$tpl->assign("revlistcount",$revlistcount);
@@ -49,7 +49,7 @@ function git_log($projectroot,$project,$hash,$page)
 			$commit = $revlist[$i];
 			if (isset($commit) && strlen($commit) > 1) {
 				$commitline = array();
-				$co = git_read_commit($projectroot . $project, $commit);
+				$co = git_read_commit($commit);
 				$ad = date_str($co['author_epoch']);
 				$commitline["project"] = $project;
 				$commitline["commit"] = $commit;

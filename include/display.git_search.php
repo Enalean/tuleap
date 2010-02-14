@@ -31,13 +31,13 @@ function git_search($projectroot, $project, $hash, $search, $searchtype, $page =
 			return;
 		}
 		if (!isset($hash)) {
-			//$hash = git_read_head($projectroot . $project);
+			//$hash = git_read_head();
 			$hash = "HEAD";
 		}
 
-		$co = git_read_commit($projectroot . $project, $hash);
+		$co = git_read_commit($hash);
 
-		$revlist = git_read_revlist($projectroot . $project, $hash, 101, ($page * 100), FALSE, FALSE, $searchtype, $search);
+		$revlist = git_read_revlist($hash, 101, ($page * 100), FALSE, FALSE, $searchtype, $search);
 		if (count($revlist) < 1 || (strlen($revlist[0]) < 1)) {
 			git_message("No matches for '" . $search . "'.", FALSE, TRUE);
 			return;
@@ -60,7 +60,7 @@ function git_search($projectroot, $project, $hash, $search, $searchtype, $page =
 			$commit = $revlist[$i];
 			if (strlen(trim($commit)) > 0) {
 				$commitline = array();
-				$co2 = git_read_commit($projectroot . $project, $commit);
+				$co2 = git_read_commit($commit);
 				$commitline["commit"] = $commit;
 				$commitline["agestringage"] = $co2['age_string_age'];
 				$commitline["agestringdate"] = $co2['age_string_date'];

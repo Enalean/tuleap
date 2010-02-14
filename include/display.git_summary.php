@@ -30,11 +30,11 @@ function git_summary()
 		$projectroot = GitPHP_Config::GetInstance()->GetValue('projectroot');
 
 		$descr = $gitphp_current_project->GetDescription();
-		$head = git_read_head($projectroot . $project);
-		$commit = git_read_commit($projectroot . $project, $head);
+		$head = git_read_head();
+		$commit = git_read_commit($head);
 		$commitdate = date_str($commit['committer_epoch'],$commit['committer_tz']);
 		$owner = $gitphp_current_project->GetOwner();
-		$refs = read_info_ref($projectroot . $project);
+		$refs = read_info_ref();
 		$tpl->assign("head",$head);
 		$tpl->assign("description",$descr);
 		$tpl->assign("owner",$owner);
@@ -43,10 +43,10 @@ function git_summary()
 			$tpl->assign('cloneurl', GitPHP_Config::GetInstance()->GetValue('cloneurl') . $project);
 		if (GitPHP_Config::GetInstance()->HasKey('pushurl'))
 			$tpl->assign('pushurl', GitPHP_Config::GetInstance()->GetValue('pushurl') . $project);
-		$revlist = git_read_revlist($projectroot . $project, $head, 17);
+		$revlist = git_read_revlist($head, 17);
 		foreach ($revlist as $i => $rev) {
 			$revdata = array();
-			$revco = git_read_commit($projectroot . $project, $rev);
+			$revco = git_read_commit($rev);
 			$authordate = date_str($revco['author_epoch']);
 			$revdata["commit"] = $rev;
 			if (isset($refs[$rev]))

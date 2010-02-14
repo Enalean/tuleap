@@ -22,18 +22,18 @@ function git_blob($projectroot, $project, $hash, $file, $hashbase)
 	$cachekey = sha1($project) . "|" . $hashbase . "|" . $hash . "|" . sha1($file);
 
 	if (!$tpl->is_cached('blob.tpl',$cachekey)) {
-		$head = git_read_head($projectroot . $project);
+		$head = git_read_head();
 		if (!isset($hashbase))
 			$hashbase = $head;
 		if (!isset($hash) && isset($file))
-			$hash = git_get_hash_by_path($projectroot . $project, $hashbase,$file,"blob");
-		$catout = git_cat_file($projectroot . $project, $hash);
+			$hash = git_get_hash_by_path($hashbase,$file,"blob");
+		$catout = git_cat_file($hash);
 		$tpl->assign("hash",$hash);
 		$tpl->assign("hashbase",$hashbase);
 		$tpl->assign("head", $head);
-		if ($co = git_read_commit($projectroot . $project, $hashbase)) {
+		if ($co = git_read_commit($hashbase)) {
 			$tpl->assign("fullnav",TRUE);
-			$refs = read_info_ref($projectroot . $project);
+			$refs = read_info_ref();
 			$tpl->assign("tree",$co['tree']);
 			$tpl->assign("title",$co['title']);
 			if (isset($file))
@@ -46,7 +46,7 @@ function git_blob($projectroot, $project, $hash, $file, $hashbase)
 					$tpl->assign("hashbaseref",$refs[$hashbase]);
 			}
 		}
-		$paths = git_path_trees($projectroot . $project, $hashbase, $file);
+		$paths = git_path_trees($hashbase, $file);
 		$tpl->assign("paths",$paths);
 
 		if (GitPHP_Config::GetInstance()->GetValue('filemimetype', true)) {

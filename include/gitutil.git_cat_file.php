@@ -8,14 +8,23 @@
  */
 
  require_once('defs.commands.php');
- require_once('gitutil.git_exec.php');
+ require_once(GITPHP_INCLUDEDIR . 'git/GitExe.class.php');
 
-function git_cat_file($proj,$hash,$pipeto = NULL, $type = "blob")
+function git_cat_file($hash,$pipeto = NULL, $type = "blob")
 {
-	$cmd = GIT_CAT_FILE . " " . $type . " " . $hash;
+	global $gitphp_current_project;
+
+	if (!$gitphp_current_project)
+		return '';
+
+	$exe = new GitPHP_GitExe(GitPHP_Config::GetInstance()->GetValue('gitbin'), $gitphp_current_project);
+
+	$args = array();
+	$args[] = $type;
+	$args[] = $hash;
 	if ($pipeto)
-		$cmd .= " > " . $pipeto;
-	return git_exec($proj, $cmd);
+		$args[] = ' > ' . $pipeto;
+	return $exe->Execute(GIT_CAT_FILE, $args);
 }
 
 ?>

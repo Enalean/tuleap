@@ -9,7 +9,7 @@
 
 require_once('gitutil.git_get_hash_by_path.php');
 
-function git_path_tree($project,$base,$filename)
+function git_path_tree($base,$filename)
 {
 	if (strlen($filename) < 1)
 		return null;
@@ -20,7 +20,7 @@ function git_path_tree($project,$base,$filename)
 	if ($spos !== false)
 		$spath = substr($spath, $spos+1);
 	$path['short'] = $spath;
-	$path['tree'] = git_get_hash_by_path($project, $base, $filename);
+	$path['tree'] = git_get_hash_by_path($base, $filename);
 	return $path;
 }
 

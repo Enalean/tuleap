@@ -23,25 +23,25 @@ function git_tree($projectroot,$project,$hash,$file,$hashbase)
 
 	if (!$tpl->is_cached('tree.tpl', $cachekey)) {
 		if (!isset($hash)) {
-			$hash = git_read_head($projectroot . $project);
+			$hash = git_read_head();
 			if (isset($file))
-				$hash = git_get_hash_by_path($projectroot . $project, ($hashbase?$hashbase:$hash),$file,"tree");
+				$hash = git_get_hash_by_path(($hashbase?$hashbase:$hash),$file,"tree");
 				if (!isset($hashbase))
 					$hashbase = $hash;
 		}
-		$lsout = git_ls_tree($projectroot . $project, $hash, TRUE);
-		$refs = read_info_ref($projectroot . $project);
+		$lsout = git_ls_tree($hash, TRUE);
+		$refs = read_info_ref();
 		$tpl->assign("hash",$hash);
 		if (isset($hashbase))
 			$tpl->assign("hashbase",$hashbase);
-		if (isset($hashbase) && ($co = git_read_commit($projectroot . $project, $hashbase))) {
+		if (isset($hashbase) && ($co = git_read_commit($hashbase))) {
 			$basekey = $hashbase;
 			$tpl->assign("fullnav",TRUE);
 			$tpl->assign("title",$co['title']);
 			if (isset($refs[$hashbase]))
 				$tpl->assign("hashbaseref",$refs[$hashbase]);
 		}
-		$paths = git_path_trees($projectroot . $project, $hashbase, $file);
+		$paths = git_path_trees($hashbase, $file);
 		$tpl->assign("paths",$paths);
 
 		if (isset($file))

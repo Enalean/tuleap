@@ -22,7 +22,7 @@
 	$projectroot = GitPHP_Config::GetInstance()->GetValue('projectroot');
 	$project = $gitphp_current_project->GetProject();
 
-	$type = git_get_type($projectroot . $project, $ref_id);
+	$type = git_get_type($ref_id);
 
 	if (!$type)
 		return null;
@@ -34,10 +34,10 @@
 	$ref_item['age_string'] = "unknown";
 
 	if ($type == "tag") {
-		$tag = git_read_tag($projectroot . $project, $ref_id);
+		$tag = git_read_tag($ref_id);
 		$ref_item['comment'] = $tag['comment'];
 		if ($tag['type'] == "commit") {
-			$co = git_read_commit($projectroot . $project, $tag['object']);
+			$co = git_read_commit($tag['object']);
 			$ref_item['epoch'] = $co['committer_epoch'];
 			$ref_item['age_string'] = $co['age_string'];
 			$ref_item['age'] = $co['age'];
@@ -51,7 +51,7 @@
 		$ref_item['name'] = $tag['name'];
 		$ref_item['refid'] = $tag['object'];
 	} else if ($type == "commit") {
-		$co = git_read_commit($projectroot . $project, $ref_id);
+		$co = git_read_commit($ref_id);
 		$ref_item['reftype'] = "commit";
 		$ref_item['name'] = $ref_file;
 		$ref_item['title'] = $co['title'];

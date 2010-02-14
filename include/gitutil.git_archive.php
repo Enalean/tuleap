@@ -8,15 +8,23 @@
  */
 
  require_once('defs.commands.php');
- require_once('gitutil.git_exec.php');
+ require_once(GITPHP_INCLUDEDIR . 'git/GitExe.class.php');
 
-function git_archive($proj,$hash,$rname = NULL, $fmt = "tar")
+function git_archive($hash,$rname = NULL, $fmt = "tar")
 {
-	$cmd = GIT_ARCHIVE . " --format=" . $fmt;
+	global $gitphp_current_project;
+
+	if (!$gitphp_current_project)
+		return '';
+
+	$exe = new GitPHP_GitExe(GitPHP_Config::GetInstance()->GetValue('gitbin'), $gitphp_current_project);
+
+	$args = array();
+	$args[] = '--format=' . $fmt;
 	if ($rname)
-		$cmd .= " --prefix=" . $rname . "/";
-	$cmd .= " " . $hash;
-	return git_exec($proj, $cmd);
+		$args[] = '--prefix=' . $rname . '/';
+	$args[] = $hash;
+	return $exe->Execute(GIT_ARCHIVE, $args);
 }
 
 ?>

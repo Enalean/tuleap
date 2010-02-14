@@ -17,9 +17,9 @@ function git_project_info($projectroot,$project)
 	$projinfo = array();
 	$projinfo["project"] = $project;
 	$projinfo["descr"] = $projectObj->GetDescription(true);
-	$projinfo["owner"] = $projectObj->GetOwner();;
-	$head = git_read_head($projectroot . $project);
-	$commit = git_read_commit($projectroot . $project,$head);
+	$projinfo["owner"] = $projectObj->GetOwner();
+	$head = git_read_head();
+	$commit = git_read_commit($head);
 	$projinfo["age"] = $commit['age'];
 	$projinfo["age_string"] = $commit['age_string'];
 	return $projinfo;

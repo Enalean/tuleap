@@ -31,13 +31,13 @@ function git_commitdiff_plain($projectroot,$project,$hash,$hash_parent)
 			echo $ret;
 			return;
 		}
-		$co = git_read_commit($projectroot . $project, $hash);
+		$co = git_read_commit($hash);
 		if (!isset($hash_parent))
 			$hash_parent = $co['parent'];
-		$diffout = git_diff_tree($projectroot . $project, $hash_parent . " " . $hash);
+		$diffout = git_diff_tree($hash_parent . " " . $hash);
 		$difftree = explode("\n",$diffout);
-		$refs = read_info_ref($projectroot . $project,"tags");
-		$listout = git_read_revlist($projectroot . $project, "HEAD");
+		$refs = read_info_ref('tags');
+		$listout = git_read_revlist('HEAD');
 		foreach ($listout as $i => $rev) {
 			if (isset($refs[$rev]))
 				$tagname = $refs[$rev];
@@ -56,11 +56,11 @@ function git_commitdiff_plain($projectroot,$project,$hash,$hash_parent)
 		foreach ($difftree as $i => $line) {
 			if (preg_match("/^:([0-7]{6}) ([0-7]{6}) ([0-9a-fA-F]{40}) ([0-9a-fA-F]{40}) (.)\t(.*)$/",$line,$regs)) {
 				if ($regs[5] == "A")
-					$diffs[] = git_diff($projectroot . $project, null, "/dev/null", $regs[4], "b/" . $regs[6]);
+					$diffs[] = git_diff(null, "/dev/null", $regs[4], "b/" . $regs[6]);
 				else if ($regs[5] == "D")
-					$diffs[] = git_diff($projectroot . $project, $regs[3], "a/" . $regs[6], null, "/dev/null");
+					$diffs[] = git_diff($regs[3], "a/" . $regs[6], null, "/dev/null");
 				else if ($regs[5] == "M")
-					$diffs[] = git_diff($projectroot . $project, $regs[3], "a/" . $regs[6], $regs[4], "b/" . $regs[6]);
+					$diffs[] = git_diff($regs[3], "a/" . $regs[6], $regs[4], "b/" . $regs[6]);
 			}
 		}
 		$tpl->assign("diffs",$diffs);

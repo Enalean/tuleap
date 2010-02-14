@@ -43,7 +43,7 @@ function git_snapshot($projectroot,$project,$hash)
 
 	if (!$tpl->is_cached('snapshot.tpl', $cachekey)) {
 
-		$arc = git_archive($projectroot . $project, $hash, $rname,
+		$arc = git_archive($hash, $rname,
 			(($compressformat == GITPHP_COMPRESS_ZIP) ? "zip" : "tar"));
 
 		if (($compressformat == GITPHP_COMPRESS_BZ2) && $bzcompress) {

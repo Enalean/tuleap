@@ -23,15 +23,15 @@ function git_rss($projectroot,$project)
 	$cachekey = sha1($project);
 
 	if (!$tpl->is_cached('rss.tpl', $cachekey)) {
-		$head = git_read_head($projectroot . $project);
-		$revlist = git_read_revlist($projectroot . $project, $head, GITPHP_RSS_ITEMS);
+		$head = git_read_head();
+		$revlist = git_read_revlist($head, GITPHP_RSS_ITEMS);
 		$tpl->assign("self",script_url());
 
 		$commitlines = array();
 		$revlistcount = count($revlist);
 		for ($i = 0; $i < $revlistcount; ++$i) {
 			$commit = $revlist[$i];
-			$co = git_read_commit($projectroot . $project, $commit);
+			$co = git_read_commit($commit);
 			if (($i >= 20) && ((time() - $co['committer_epoch']) > 48*60*60))
 				break;
 			$cd = date_str($co['committer_epoch']);
@@ -48,7 +48,7 @@ function git_rss($projectroot,$project)
 
 			if (isset($co['parent'])) {
 				$difftree = array();
-				$diffout = git_diff_tree($projectroot . $project, $co['parent'] . " " . $co['id']);
+				$diffout = git_diff_tree($co['parent'] . " " . $co['id']);
 				$tok = strtok($diffout,"\n");
 				while ($tok !== false) {
 					if (preg_match("/^:([0-7]{6}) ([0-7]{6}) ([0-9a-fA-F]{40}) ([0-9a-fA-F]{40}) (.)([0-9]{0,3})\t(.*)$/",$tok,$regs))

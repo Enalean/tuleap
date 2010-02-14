@@ -8,14 +8,24 @@
  */
 
 require_once('defs.commands.php');
-require_once('gitutil.git_exec.php');
+require_once(GITPHP_INCLUDEDIR . 'git/GitExe.class.php');
 
-function git_read_blame($proj, $file, $rev = null)
+function git_read_blame($file, $rev = null)
 {
-	$cmd = GIT_BLAME . " -p";
+	global $gitphp_current_project;
+
+	if (!$gitphp_current_project)
+		return '';
+
+	$exe = new GitPHP_GitExe(GitPHP_Config::GetInstance()->GetValue('gitbin'), $gitphp_current_project);
+
+	$args = array();
+
+	$args[] = '-p';	
 	if ($rev)
-		$cmd .= " " . $rev;
-	return git_exec($proj, $cmd . " " . $file);
+		$args[] = $rev;
+	$args[] = $file;
+	return $exe->Execute(GIT_BLAME, $args);
 }
 
 ?>

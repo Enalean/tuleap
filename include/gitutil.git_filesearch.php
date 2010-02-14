@@ -10,14 +10,14 @@
 require_once('gitutil.git_grep.php');
 require_once('gitutil.git_ls_tree.php');
 
-function git_filesearch($project, $hash, $search, $case = false, $skip = 0, $count = 100)
+function git_filesearch($hash, $search, $case = false, $skip = 0, $count = 100)
 {
 	$matches = array();
 	
 	/*
 	 * Search file contents
 	 */
-	$grepout = git_grep($project, $hash, $search, $case, false, true);
+	$grepout = git_grep($hash, $search, $case, false, true);
 	$lines = explode("\n",$grepout);
 	foreach ($lines as $j => $line) {
 		if ($case)
@@ -37,7 +37,7 @@ function git_filesearch($project, $hash, $search, $case = false, $skip = 0, $cou
 	/*
 	 * Search filenames
 	 */
-	 $lsout = git_ls_tree($project, $hash, false, true);
+	 $lsout = git_ls_tree($hash, false, true);
 	 $entries = explode("\n",$lsout);
 	 foreach ($entries as $j => $line) {
 		$ret = preg_match("/^([0-9]+) (.+) ([0-9a-fA-F]{40})\t(.+)/",$line,$regs);

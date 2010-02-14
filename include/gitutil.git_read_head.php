@@ -8,12 +8,21 @@
  */
 
 require_once('defs.commands.php');
-require_once('gitutil.git_exec.php');
+require_once(GITPHP_INCLUDEDIR . 'git/GitExe.class.php');
 
-function git_read_head($proj)
+function git_read_head()
 {
-	$cmd = GIT_REV_PARSE . " --verify HEAD";
-	return trim(git_exec($proj, $cmd));
+	global $gitphp_current_project;
+
+	if (!$gitphp_current_project)
+		return '';
+
+	$exe = new GitPHP_GitExe(GitPHP_Config::GetInstance()->GetValue('gitbin'), $gitphp_current_project);
+
+	$args = array();
+	$args[] = '--verify';
+	$args[] = 'HEAD';
+	return trim($exe->Execute(GIT_REV_PARSE, $args));
 }
 
 ?>

@@ -19,11 +19,11 @@ function git_tag($projectroot, $project, $hash)
 
 	if (!$tpl->is_cached('tag.tpl', $cachekey)) {
 
-		$head = git_read_head($projectroot . $project);
+		$head = git_read_head();
 		$tpl->assign("head",$head);
 		$tpl->assign("hash", $hash);
 
-		$tag = git_read_tag($projectroot . $project, $hash);
+		$tag = git_read_tag($hash);
 
 		$tpl->assign("tag",$tag);
 		if (isset($tag['author'])) {

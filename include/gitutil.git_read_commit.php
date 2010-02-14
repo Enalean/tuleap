@@ -11,9 +11,9 @@
  require_once('util.age_string.php');
  require_once('gitutil.git_read_revlist.php');
 
-function git_read_commit($proj,$head)
+function git_read_commit($head)
 {
-	$lines = git_read_revlist($proj,$head,1,NULL,TRUE,TRUE);
+	$lines = git_read_revlist($head,1,NULL,TRUE,TRUE);
 	if (!($lines[0]) || !preg_match("/^[0-9a-fA-F]{40}/",$lines[0]))
 		return null;
 	$commit = array();

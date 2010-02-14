@@ -26,12 +26,12 @@ function git_commitdiff($projectroot,$project,$hash,$hash_parent)
 			echo $ret;
 			return;
 		}
-		$co = git_read_commit($projectroot . $project, $hash);
+		$co = git_read_commit($hash);
 		if ((!isset($hash_parent)) && (isset($co['parent'])))
 			$hash_parent = $co['parent'];
-		$diffout = git_diff_tree($projectroot . $project, $hash_parent . " " . $hash);
+		$diffout = git_diff_tree($hash_parent . " " . $hash);
 		$difftree = explode("\n",$diffout);
-		$refs = read_info_ref($projectroot . $project);
+		$refs = read_info_ref();
 		$tpl->assign("hash",$hash);
 		$tpl->assign("tree",$co['tree']);
 		$tpl->assign("hashparent",$hash_parent);
@@ -52,11 +52,11 @@ function git_commitdiff($projectroot,$project,$hash,$hash_parent)
 				$difftreeline["from_type"] = file_type($regs[1]);
 				$difftreeline["to_type"] = file_type($regs[2]);
 				if ($regs[5] == "A")
-					$difftreeline['diffout'] = explode("\n",git_diff($projectroot . $project, null,"/dev/null",$regs[4],"b/" . $regs[6]));
+					$difftreeline['diffout'] = explode("\n",git_diff(null,"/dev/null",$regs[4],"b/" . $regs[6]));
 				else if ($regs[5] == "D")
-					$difftreeline['diffout'] = explode("\n",git_diff($projectroot . $project, $regs[3],"a/" . $regs[6],null,"/dev/null"));
+					$difftreeline['diffout'] = explode("\n",git_diff($regs[3],"a/" . $regs[6],null,"/dev/null"));
 				else if (($regs[5] == "M") && ($regs[3] != $regs[4]))
-					$difftreeline['diffout'] = explode("\n",git_diff($projectroot . $project, $regs[3],"a/" . $regs[6],$regs[4],"b/" . $regs[6]));
+					$difftreeline['diffout'] = explode("\n",git_diff($regs[3],"a/" . $regs[6],$regs[4],"b/" . $regs[6]));
 				$difftreelines[] = $difftreeline;
 			}
 		}

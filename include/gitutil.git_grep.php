@@ -8,19 +8,28 @@
  */
 
 require_once('defs.commands.php');
-require_once('gitutil.git_exec.php');
+require_once(GITPHP_INCLUDEDIR . 'git/GitExe.class.php');
 
-function git_grep($project, $hash, $search, $case = false, $binary = false, $fullname = true)
+function git_grep($hash, $search, $case = false, $binary = false, $fullname = true)
 {
-	$cmd = GIT_GREP;
+	global $gitphp_current_project;
+
+	if (!$gitphp_current_project)
+		return '';
+
+	$exe = new GitPHP_GitExe(GitPHP_Config::GetInstance()->GetValue('gitbin'), $gitphp_current_project);
+
+	$args = array();
 	if (!$binary)
-		$cmd .= " -I";
+		$args[] = '-I';
 	if ($fullname)
-		$cmd .= " --full-name";
+		$args[] = '--full-name';
 	if (!$case)
-		$cmd .= " --ignore-case";
-	$cmd .= " -e " . $search;
-	return git_exec($project, $cmd . " " . $hash);
+		$args[] = '--ignore-case';
+	$args[] = '-e';
+	$args[] = $search;
+	$args[] = $hash;
+	return $exe->Execute(GIT_GREP, $args);
 }
 
 ?>

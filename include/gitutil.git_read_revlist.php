@@ -10,7 +10,7 @@
  require_once('gitutil.git_rev_list.php');
  require_once('gitutil.git_version.php');
 
-function git_read_revlist($proj,$head,$count = NULL,$skip = NULL,$header = FALSE,$parents = FALSE,$greptype = NULL, $search = NULL)
+function git_read_revlist($head,$count = NULL,$skip = NULL,$header = FALSE,$parents = FALSE,$greptype = NULL, $search = NULL)
 {
 	$passedskip = $skip;
 	$passedcount = $count;
@@ -30,7 +30,7 @@ function git_read_revlist($proj,$head,$count = NULL,$skip = NULL,$header = FALSE
 		}
 	}
 
-	$revs = trim(git_rev_list($proj,$head, $passedcount, $passedskip, $header, $parents, $greptype, $search));
+	$revs = trim(git_rev_list($head, $passedcount, $passedskip, $header, $parents, $greptype, $search));
 	$revlist = explode("\n",$revs);
 
 	if ((!$canskip) && ($skip > 0)) {

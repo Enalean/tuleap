@@ -8,29 +8,38 @@
  */
 
  require_once('defs.commands.php');
- require_once('gitutil.git_exec.php');
+ require_once(GITPHP_INCLUDEDIR . 'git/GitExe.class.php');
 
-function git_rev_list($proj,$head,$count = NULL,$skip = NULL,$header = FALSE,$parents = FALSE,$greptype = NULL, $search = NULL)
+function git_rev_list($head,$count = NULL,$skip = NULL,$header = FALSE,$parents = FALSE,$greptype = NULL, $search = NULL)
 {
-	$cmd = GIT_REV_LIST . " ";
+	global $gitphp_current_project;
+
+	if (!$gitphp_current_project)
+		return '';
+
+	$exe = new GitPHP_GitExe(GitPHP_Config::GetInstance()->GetValue('gitbin'), $gitphp_current_project);
+
+	$args = array();
+
 	if ($header)
-		$cmd .= "--header ";
+		$args[] = '--header';
 	if ($parents)
-		$cmd .= "--parents ";
+		$args[] = '--parents';
 	if ($count)
-		$cmd .= "--max-count=" . $count . " ";
+		$args[] = '--max-count=' . $count;
 	if ($skip)
-		$cmd .= "--skip=" . $skip . " ";
+		$args[] = '--skip=' . $skip;
 	if ($greptype && $search) {
-		if ($greptype == "commit")
-			$cmd .= "--grep=" . $search . " ";
-		else if ($greptype == "author")
-			$cmd .= "--author=" . $search . " ";
-		else if ($greptype == "committer")
-			$cmd .= "--committer=" . $search . " ";
-		$cmd .= "--regexp-ignore-case ";
+		if ($greptype == 'commit')
+			$args[] = '--grep=\'' . $search . '\'';
+		else if ($greptype == 'author')
+			$args[] = '--author=\'' . $search . '\'';
+		else if ($greptype == 'committer')
+			$args[] = '--committer=\'' . $search . '\'';
+		$args[] = '--regexp-ignore-case';
 	}
-	return git_exec($proj, $cmd . " " . $head);
+	$args[] = $head;
+	return $exe->Execute(GIT_REV_LIST, $args);
 }
 
 ?>

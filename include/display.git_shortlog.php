@@ -20,19 +20,19 @@ function git_shortlog($projectroot,$project,$hash,$page)
 	$cachekey = sha1($project) . "|" . $hash . "|" . (isset($page) ? $page : 0);
 
 	if (!$tpl->is_cached('shortlog.tpl', $cachekey)) {
-		$head = git_read_head($projectroot . $project);
+		$head = git_read_head();
 		if (!isset($hash))
 			$hash = $head;
 		if (!isset($page))
 			$page = 0;
-		$refs = read_info_ref($projectroot . $project);
+		$refs = read_info_ref();
 		$tpl->assign("hash",$hash);
 		$tpl->assign("head",$head);
 
 		if ($page)
 			$tpl->assign("page",$page);
 
-		$revlist = git_read_revlist($projectroot . $project, $hash, 101, ($page * 100));
+		$revlist = git_read_revlist($hash, 101, ($page * 100));
 
 		$revlistcount = count($revlist);
 		$tpl->assign("revlistcount",$revlistcount);
@@ -45,7 +45,7 @@ function git_shortlog($projectroot,$project,$hash,$page)
 				$commitline = array();
 				if (isset($refs[$commit]))
 					$commitline["commitref"] = $refs[$commit];
-				$co = git_read_commit($projectroot . $project, $commit);
+				$co = git_read_commit($commit);
 				$ad = date_str($co['author_epoch']);
 				$commitline["commit"] = $commit;
 				$commitline["agestringage"] = $co['age_string_age'];

@@ -8,12 +8,27 @@
  */
 
  require_once('defs.commands.php');
- require_once('gitutil.git_exec.php');
+ require_once(GITPHP_INCLUDEDIR . 'git/GitExe.class.php');
 
-function git_history_list($proj,$hash,$file)
+function git_history_list($hash,$file)
 {
-	$cmd = GIT_REV_LIST . " " . $hash . " | " . GitPHP_Config::GetInstance()->GetValue('gitbin', 'git') . " --git-dir=" . $proj . " " . GIT_DIFF_TREE . " -r --stdin -- " . $file;
-	return git_exec($proj, $cmd);
+	global $gitphp_current_project;
+
+	if (!$gitphp_current_project)
+		return '';
+
+	$exe = new GitPHP_GitExe(GitPHP_Config::GetInstance()->GetValue('gitbin'), $gitphp_current_project);
+
+	$args = array();
+	$args[] = $hash;
+	$args[] = '|';
+	$args[] = $exe->GetBinary();
+	$args[] = '--git-dir=' . $gitphp_current_project->GetPath();
+	$args[] = GIT_DIFF_TREE;
+	$args[] = '-r';
+	$args[] = '--stdin';
+	$args[] = $file;
+	return $exe->Execute(GIT_REV_LIST, $args);
 }
 
 ?>

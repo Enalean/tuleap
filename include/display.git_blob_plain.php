@@ -25,7 +25,7 @@ function git_blob_plain($projectroot,$project,$hash,$file)
 		else
 			$saveas = $hash . ".txt";
 
-		$buffer = git_cat_file($projectroot . $project, $hash);
+		$buffer = git_cat_file($hash);
 
 		if (GitPHP_Config::GetInstance()->GetValue('filemimetype', true))
 			$mime = file_mime($buffer, $file);
@@ -51,7 +51,7 @@ function git_blob_plain($projectroot,$project,$hash,$file)
 
 	if (!$tpl->is_cached('blobplain.tpl', $cachekey)) {
 		if (!$buffer)
-			$buffer = git_cat_file($projectroot . $project, $hash);
+			$buffer = git_cat_file($hash);
 		$tpl->assign("blob", $buffer);
 	}
 	$tpl->display('blobplain.tpl', $cachekey);

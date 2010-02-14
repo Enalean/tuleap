@@ -9,9 +9,9 @@
 
 require_once('gitutil.git_cat_file.php');
 
-function git_get_type($project, $hash)
+function git_get_type($hash)
 {
-	return trim(git_cat_file($project,$hash,NULL,"-t"));
+	return trim(git_cat_file($hash,NULL,"-t"));
 }
 
 ?>

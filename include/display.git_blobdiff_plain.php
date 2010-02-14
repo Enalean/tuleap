@@ -24,7 +24,7 @@ function git_blobdiff_plain($projectroot,$project,$hash,$hashbase,$hashparent,$f
 			echo $ret;
 			return;
 		}
-		$tpl->assign("blobdiff",git_diff($projectroot . $project, $hashparent,($file?"a/".$file:$hashparent),$hash,($file?"b/".$file:$hash)));
+		$tpl->assign("blobdiff",git_diff($hashparent,($file?"a/".$file:$hashparent),$hash,($file?"b/".$file:$hash)));
 	}
 	$tpl->display('blobdiffplain.tpl', $cachekey);
 }

@@ -9,7 +9,7 @@
 
 require_once('gitutil.git_cat_file.php');
 
-function git_diff($proj,$from,$from_name,$to,$to_name)
+function git_diff($from,$from_name,$to,$to_name)
 {
 	$from_tmp = "/dev/null";
 	$to_tmp = "/dev/null";
@@ -20,11 +20,11 @@ function git_diff($proj,$from,$from_name,$to,$to_name)
 	$tmpdir = GitPHP_Config::GetInstance()->GetValue('gittmp', '/tmp/gitphp/');
 	if (isset($from)) {
 		$from_tmp = $tmpdir . "gitphp_" . $pid . "_from";
-		git_cat_file($proj,$from,$from_tmp);
+		git_cat_file($from,$from_tmp);
 	}
 	if (isset($to)) {
 		$to_tmp = $tmpdir . "gitphp_" . $pid . "_to";
-		git_cat_file($proj,$to,$to_tmp);
+		git_cat_file($to,$to_tmp);
 	}
 	$out = shell_exec(GitPHP_Config::GetInstance()->GetValue('diffbin', 'diff') . " -u -p -L '" . $from_name . "' -L '" . $to_name . "' " . $from_tmp . " " . $to_tmp);
 	if (isset($from))

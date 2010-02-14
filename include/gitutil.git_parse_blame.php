@@ -10,9 +10,9 @@
 require_once('gitutil.git_read_blame.php');
 require_once('util.date_str.php');
 
-function git_parse_blame($proj, $file, $rev = null)
+function git_parse_blame($file, $rev = null)
 {
-	$lines = explode("\n", git_read_blame($proj, $file, $rev));
+	$lines = explode("\n", git_read_blame($file, $rev));
 
 	if (count($lines) < 1)
 		return null;
