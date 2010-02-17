@@ -384,7 +384,7 @@ class GitPHP_Commit extends GitPHP_GitObject
 		$this->dataRead = true;
 
 		/* get data from git_rev_list */
-		$exe = new GitPHP_GitExe(GitPHP_Config::GetInstance()->GetValue('gitbin'), $this->project);
+		$exe = new GitPHP_GitExe($this->project);
 		$args = array();
 		$args[] = '--header';
 		$args[] = '--parents';

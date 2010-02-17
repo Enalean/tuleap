@@ -17,7 +17,7 @@ function git_rev_list($head,$count = NULL,$skip = NULL,$header = FALSE,$parents 
 	if (!$gitphp_current_project)
 		return '';
 
-	$exe = new GitPHP_GitExe(GitPHP_Config::GetInstance()->GetValue('gitbin'), $gitphp_current_project);
+	$exe = new GitPHP_GitExe($gitphp_current_project);
 
 	$args = array();
 

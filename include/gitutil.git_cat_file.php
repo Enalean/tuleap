@@ -17,7 +17,7 @@ function git_cat_file($hash,$pipeto = NULL, $type = "blob")
 	if (!$gitphp_current_project)
 		return '';
 
-	$exe = new GitPHP_GitExe(GitPHP_Config::GetInstance()->GetValue('gitbin'), $gitphp_current_project);
+	$exe = new GitPHP_GitExe($gitphp_current_project);
 
 	$args = array();
 	$args[] = $type;

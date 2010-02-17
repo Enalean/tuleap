@@ -11,7 +11,7 @@
 
  function git_version()
  {
- 	$exe = new GitPHP_GitExe(GitPHP_Config::GetInstance()->GetValue('gitbin'));
+ 	$exe = new GitPHP_GitExe();
 	$out = $exe->Execute('', array('--version'));
 
  	$verstr = explode(" ", $out);

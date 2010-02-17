@@ -292,7 +292,7 @@ class GitPHP_Project
 	{
 		$this->readHead = true;
 
-		$exe = new GitPHP_GitExe(GitPHP_Config::GetInstance()->GetValue('gitbin'), $this);
+		$exe = new GitPHP_GitExe($this);
 		$args = array();
 		$args[] = '--verify';
 		$args[] = 'HEAD';

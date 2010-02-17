@@ -17,7 +17,7 @@ function git_diff_tree($hashes,$renames = FALSE)
 	if (!$gitphp_current_project)
 		return '';
 
-	$exe = new GitPHP_GitExe(GitPHP_Config::GetInstance()->GetValue('gitbin'), $gitphp_current_project);
+	$exe = new GitPHP_GitExe($gitphp_current_project);
 
 	$args = array();
 	$args[] = '-r';

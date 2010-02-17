@@ -17,7 +17,7 @@ function read_info_ref($type = "")
 	if (!$gitphp_current_project)
 		return;
 
-	$exe = new GitPHP_GitExe(GitPHP_Config::GetInstance()->GetValue('gitbin'), $gitphp_current_project);
+	$exe = new GitPHP_GitExe($gitphp_current_project);
 	
 	$showrefs = $exe->Execute(GIT_SHOW_REF, array('--dereference'));
 

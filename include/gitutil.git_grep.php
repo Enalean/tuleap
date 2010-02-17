@@ -17,7 +17,7 @@ function git_grep($hash, $search, $case = false, $binary = false, $fullname = tr
 	if (!$gitphp_current_project)
 		return '';
 
-	$exe = new GitPHP_GitExe(GitPHP_Config::GetInstance()->GetValue('gitbin'), $gitphp_current_project);
+	$exe = new GitPHP_GitExe($gitphp_current_project);
 
 	$args = array();
 	if (!$binary)
