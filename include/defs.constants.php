@@ -15,6 +15,4 @@ define("GITPHP_COMPRESS_BZ2", 1);
 define("GITPHP_COMPRESS_GZ", 2);
 define("GITPHP_COMPRESS_ZIP", 3);
 
-define('GITPHP_NO_CATEGORY', 'none');
-
 ?>

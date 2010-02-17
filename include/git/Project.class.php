@@ -320,4 +320,86 @@ class GitPHP_Project
 		return $this->commitCache[$hash];
 	}
 
+	/**
+	 * CompareProject
+	 *
+	 * Compares two projects by project name
+	 *
+	 * @access public
+	 * @static
+	 * @param mixed $a first project
+	 * @param mixed $b second project
+	 * @return integer comparison result
+	 */
+	public static function CompareProject($a, $b)
+	{
+		$catCmp = strcmp($a->GetCategory(), $b->GetCategory());
+		if ($catCmp !== 0)
+			return $catCmp;
+
+		return strcmp($a->GetProject(), $b->GetProject());
+	}
+
+	/**
+	 * CompareDescription
+	 *
+	 * Compares two projects by description
+	 *
+	 * @access public
+	 * @static
+	 * @param mixed $a first project
+	 * @param mixed $b second project
+	 * @return integer comparison result
+	 */
+	public static function CompareDescription($a, $b)
+	{
+		$catCmp = strcmp($a->GetCategory(), $b->GetCategory());
+		if ($catCmp !== 0)
+			return $catCmp;
+
+		return strcmp($a->GetDescription(), $b->GetDescription());
+	}
+
+	/**
+	 * CompareOwner
+	 *
+	 * Compares two projects by owner
+	 *
+	 * @access public
+	 * @static
+	 * @param mixed $a first project
+	 * @param mixed $b second project
+	 * @return integer comparison result
+	 */
+	public static function CompareOwner($a, $b)
+	{
+		$catCmp = strcmp($a->GetCategory(), $b->GetCategory());
+		if ($catCmp !== 0)
+			return $catCmp;
+
+		return strcmp($a->GetOwner(), $b->GetOwner());
+	}
+
+	/**
+	 * CompareAge
+	 *
+	 * Compares two projects by age
+	 *
+	 * @access public
+	 * @static
+	 * @param mixed $a first project
+	 * @param mixed $b second project
+	 * @return integer comparison result
+	 */
+	public static function CompareAge($a, $b)
+	{
+		$catCmp = strcmp($a->GetCategory(), $b->GetCategory());
+		if ($catCmp !== 0)
+			return $catCmp;
+
+		if ($a->GetHeadCommit()->GetAge() === $b->GetHeadCommit()->GetAge())
+			return 0;
+		return ($a->GetHeadCommit()->GetAge() < $b->GetHeadCommit()->GetAge() ? -1 : 1);
+	}
+
 }

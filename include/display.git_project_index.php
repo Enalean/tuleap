@@ -7,8 +7,6 @@
  *  Copyright (C) 2008 Christopher Han <xiphux@gmail.com>
  */
 
- require_once('gitutil.git_read_projects.php');
-
 function git_project_index()
 {
 	global $tpl;
@@ -16,15 +14,10 @@ function git_project_index()
 	header("Content-type: text/plain; charset=utf-8");
 	header("Content-Disposition: inline; filename=\"index.aux\"");
 
-	$projectlist = GitPHP_ProjectList::GetInstance()->GetConfig();
-
-	$cachekey = sha1(serialize($projectlist));
+	$cachekey = sha1(serialize(GitPHP_ProjectList::GetInstance()->GetConfig()));
 
 	if (!$tpl->is_cached('projectindex.tpl', $cachekey)) {
-		if (is_array($projectlist))
-			$tpl->assign("categorized", TRUE);
-		$projlist = git_read_projects();
-		$tpl->assign("projlist", $projlist);
+		$tpl->assign("projlist", GitPHP_ProjectList::GetInstance());
 	}
 	$tpl->display('projectindex.tpl', $cachekey);
 }

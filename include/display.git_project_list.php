@@ -7,69 +7,20 @@
  *  Copyright (C) 2008 Christopher Han <xiphux@gmail.com>
  */
 
- require_once('util.projectcmp.php');
- require_once('util.descrcmp.php');
- require_once('util.ownercmp.php');
- require_once('util.agecmp.php');
- require_once('gitutil.git_read_projects.php');
-
 function git_project_list($order = "project")
 {
 	global $tpl;
 
-	$projectlist = GitPHP_ProjectList::GetInstance()->GetConfig();
+	$projectlist = GitPHP_ProjectList::GetInstance();
 
-	$cachekey = sha1(serialize($projectlist)) . "|" . sha1($order);
+	$cachekey = sha1(serialize($projectlist->GetConfig())) . "|" . sha1($order);
 
 	if (!$tpl->is_cached('projectlist.tpl', $cachekey)) {
-		$projects = git_read_projects(true);
-		if (is_array($projects)) {
-			if (count($projects) > 0) {
-				if ($order)
-					$tpl->assign("order",$order);
-				if (!is_array($projectlist)) {
-					switch ($order) {
-						case "project":
-							usort($projects,"projectcmp");
-							break;
-						case "descr":
-							usort($projects,"descrcmp");
-							break;
-						case "owner":
-							usort($projects,"ownercmp");
-							break;
-						case "age":
-							usort($projects,"agecmp");
-							break;
-					}
-					$tpl->assign("projects",$projects);
-				} else {
-					foreach ($projects as $cat => $plist) {
-						switch ($order) {
-							case "project":
-								usort($projects[$cat],"projectcmp");
-								break;
-							case "descr":
-								usort($projects[$cat],"descrcmp");
-								break;
-							case "owner":
-								usort($projects[$cat],"ownercmp");
-								break;
-							case "age":
-								usort($projects[$cat],"agecmp");
-								break;
-						}
-					}
-					$tpl->assign("categorizedprojects",$projects);
-				}
-			} else {
-				$tpl->assign("message","No projects found");
-				$tpl->assign("error",TRUE);
-			}
-		} else {
-			$tpl->assign("message",$projects);
-			$tpl->assign("error",TRUE);
-		}
+		if ($order)
+			$tpl->assign("order",$order);
+		$projectlist->Sort($order);
+		if ($projectlist->Count() > 0)
+			$tpl->assign("projectlist", $projectlist);
 	}
 	$tpl->display('projectlist.tpl', $cachekey);
 }

@@ -10,6 +10,13 @@
  * @subpackage Git
  */
 
+require_once(GITPHP_INCLUDEDIR . 'git/Project.class.php');
+
+define('GITPHP_SORT_PROJECT', 'project');
+define('GITPHP_SORT_DESCRIPTION', 'descr');
+define('GITPHP_SORT_OWNER', 'owner');
+define('GITPHP_SORT_AGE', 'age');
+
 /**
  * ProjectListBase class
  *
@@ -17,7 +24,7 @@
  * @subpackage Git
  * @abstract
  */
-abstract class GitPHP_ProjectListBase
+abstract class GitPHP_ProjectListBase implements Iterator
 {
 	/**
 	 * projects
@@ -48,6 +55,7 @@ abstract class GitPHP_ProjectListBase
 	{
 		$this->projects = array();
 		$this->PopulateProjects();
+		$this->Sort();
 	}
 
 	/**
@@ -108,5 +116,95 @@ abstract class GitPHP_ProjectListBase
 	 * @access protected
 	 */
 	abstract protected function PopulateProjects();
+
+	/**
+	 * rewind
+	 *
+	 * Rewinds the iterator
+	 */
+	function rewind()
+	{
+		return reset($this->projects);
+	}
+
+	/**
+	 * current
+	 *
+	 * Returns the current element in the array
+	 */
+	function current()
+	{
+		return current($this->projects);
+	}
+
+	/**
+	 * key
+	 *
+	 * Returns the current key
+	 */
+	function key()
+	{
+		return key($this->projects);
+	}
+
+	/**
+	 * next
+	 * 
+	 * Advance the pointer
+	 */
+	function next()
+	{
+		return next($this->projects);
+	}
+
+	/**
+	 * valid
+	 *
+	 * Test for a valid pointer
+	 */
+	function valid()
+	{
+		return key($this->projects) !== null;
+	}
+
+	/**
+	 * Sort
+	 *
+	 * Sorts the project list
+	 *
+	 * @access public
+	 * @param string $sortBy sort method
+	 */
+	public function Sort($sortBy = GITPHP_SORT_PROJECT)
+	{
+		switch ($sortBy) {
+			case GITPHP_SORT_DESCRIPTION:
+				usort($this->projects, array('GitPHP_Project', 'CompareDescription'));
+				break;
+			case GITPHP_SORT_OWNER:
+				usort($this->projects, array('GitPHP_Project', 'CompareOwner'));
+				break;
+			case GITPHP_SORT_AGE:
+				usort($this->projects, array('GitPHP_Project', 'CompareAge'));
+				break;
+			case GITPHP_SORT_PROJECT:
+			default:
+				usort($this->projects, array('GitPHP_Project', 'CompareProject'));
+				break;
+		}
+	}
+
+	/**
+	 * Count
+	 *
+	 * Gets the count of projects
+	 *
+	 * @access public
+	 * @return integer number of projects
+	 */
+	public function Count()
+	{
+		return count($this->projects);
+	}
 
 }

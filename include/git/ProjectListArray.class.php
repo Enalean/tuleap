@@ -14,6 +14,8 @@ require_once(GITPHP_INCLUDEDIR . 'defs.constants.php');
 require_once(GITPHP_INCLUDEDIR . 'git/ProjectListBase.class.php');
 require_once(GITPHP_INCLUDEDIR . 'git/Project.class.php');
 
+define('GITPHP_NO_CATEGORY', 'none');
+
 /**
  * ProjectListArray class
  *

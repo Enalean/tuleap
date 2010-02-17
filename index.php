@@ -69,6 +69,9 @@ if (!GitPHP_Config::GetInstance()->GetValue('projectroot', null)) {
 	$extraoutput = TRUE;
 }
 
+require_once(GITPHP_INCLUDEDIR . 'util.age_string.php');
+$tpl->register_modifier('agestring', 'age_string');
+
  /*
   * Debug
   */
