@@ -67,12 +67,12 @@
            <td><a href="{$SCRIPT_NAME}?p={$project}&a={$taglist[tag].reftype}&h={$taglist[tag].refid}" class="list"><b>{$taglist[tag].name}</b></a></td>
            <td>
              {if $taglist[tag].comment}
-               <a class="list" href="{$SCRIPT_NAME}?p={$project}&a=tag&h={$taglist[tag].id}">{$taglist[tag].comment}</a>
+               <a class="list" href="{$SCRIPT_NAME}?p={$project}&a=tag&h={$taglist[tag].name}">{$taglist[tag].comment}</a>
              {/if}
            </td>
            <td class="link">
              {if $taglist[tag].type == "tag"}
-   	       <a href="{$SCRIPT_NAME}?p={$project}&a=tag&h={$taglist[tag].id}">tag</a> | 
+   	       <a href="{$SCRIPT_NAME}?p={$project}&a=tag&h={$taglist[tag].name}">tag</a> | 
              {/if}
              <a href="{$SCRIPT_NAME}?p={$project}&a={$taglist[tag].reftype}&h={$taglist[tag].refid}">{$taglist[tag].reftype}</a>{if $taglist[tag].reftype == "commit"} | <a href="{$SCRIPT_NAME}?p={$project}&a=shortlog&h=refs/tags/{$taglist[tag].name}">shortlog</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=log&h=refs/tags/{$taglist[tag].name}">log</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=snapshot&h={$taglist[tag].refid}">snapshot</a>{/if}
            </td>

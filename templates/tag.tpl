@@ -15,19 +15,20 @@
  </div>
  {* Tag data *}
  <div>
-   <a href="{$SCRIPT_NAME}?p={$project}&a=commit&h={$hash}" class="title">{$tag.name}</a>
+   <a href="{$SCRIPT_NAME}?p={$project}&a=commit&h={$hash}" class="title">{$tag->GetName()}</a>
  </div>
  <div class="title_text">
    <table cellspacing="0">
      <tr>
        <td>object</td>
-       <td class="monospace"><a href="{$SCRIPT_NAME}?p={$project}&a={$tag.type}&h={$tag.object}" class="list">{$tag.object}</a></td>
-       <td class="link"><a href="{$SCRIPT_NAME}?p={$project}&a={$tag.type}&h={$tag.object}">{$tag.type}</a></td>
+       {assign var=object value=$tag->GetObject()}
+       <td class="monospace"><a href="{$SCRIPT_NAME}?p={$project}&a={$tag->GetType()}&h={$object->GetHash()}" class="list">{$object->GetHash()}</a></td>
+       <td class="link"><a href="{$SCRIPT_NAME}?p={$project}&a={$tag->GetType()}&h={$object->GetHash()}">{$tag->GetType()}</a></td>
      </tr>
-     {if $tag.author}
+     {if $tag->GetTagger()}
        <tr>
          <td>author</td>
-	 <td>{$tag.author}</td>
+	 <td>{$tag->GetTagger()}</td>
        </tr>
        <tr>
          <td></td>
@@ -38,7 +39,7 @@
    </table>
  </div>
  <div class="page_body">
-   {foreach from=$tag.comment item=line}
+   {foreach from=$tag->GetComment() item=line}
      {$line}<br />
    {/foreach}
  </div>

@@ -24,12 +24,12 @@
        <td><a href="{$SCRIPT_NAME}?p={$project}&a={$taglist[tag].reftype}&h={$taglist[tag].refid}" class="list"><b>{$taglist[tag].name}</b></a></td>
        <td>
          {if count($taglist[tag].comment) > 0}
-           <a href="{$SCRIPT_NAME}?p={$project}&a=tag&h={$taglist[tag].id}" class="list">{$taglist[tag].comment[0]}</a>
+           <a href="{$SCRIPT_NAME}?p={$project}&a=tag&h={$taglist[tag].name}" class="list">{$taglist[tag].comment[0]}</a>
          {/if}
        </td>
        <td class="link">
          {if $taglist[tag].type == "tag"}
-	   <a href="{$SCRIPT_NAME}?p={$project}&a=tag&h={$taglist[tag].id}">tag</a> | 
+	   <a href="{$SCRIPT_NAME}?p={$project}&a=tag&h={$taglist[tag].name}">tag</a> | 
 	 {/if}
 	 <a href="{$SCRIPT_NAME}?p={$project}&a={$taglist[tag].reftype}&h={$taglist[tag].refid}">{$taglist[tag].reftype}</a>
 	 {if $taglist[tag].reftype == "commit"}
