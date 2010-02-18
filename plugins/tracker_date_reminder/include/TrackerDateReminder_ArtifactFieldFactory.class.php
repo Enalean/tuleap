@@ -37,3 +37,4 @@ class TrackerDateReminder_ArtifactFieldFactory {
         return isset($this->fieldsWithNotification[$field_id]);
     }
 }
+?>
