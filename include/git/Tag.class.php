@@ -92,13 +92,14 @@ class GitPHP_Tag extends GitPHP_Ref
 	 *
 	 * @access public
 	 * @param mixed $project the project
-	 * @param string $hash object hash
+	 * @param string $tag tag name
+	 * @param string $tagHash tag hash
 	 * @return mixed git object
 	 * @throws Exception exception on invalid hash
 	 */
-	public function __construct($project, $tag)
+	public function __construct($project, $tag, $tagHash = '')
 	{
-		parent::__construct($project, 'tags', $tag);
+		parent::__construct($project, 'tags', $tag, $tagHash);
 	}
 
 	/**
@@ -192,6 +193,24 @@ class GitPHP_Tag extends GitPHP_Ref
 	}
 
 	/**
+	 * LightTag
+	 *
+	 * Tests if this is a light tag (tag without tag object)
+	 *
+	 * @access public
+	 */
+	public function LightTag()
+	{
+		if (!$this->dataRead)
+			$this->ReadData();
+
+		if (!$this->object)
+			return true;
+
+		return $this->object->GetHash() === $this->hash;
+	}
+
+	/**
 	 * ReadData
 	 *
 	 * Reads the tag data
@@ -202,8 +221,20 @@ class GitPHP_Tag extends GitPHP_Ref
 	{
 		$this->dataRead = true;
 
-		/* get data from tag object */
 		$exe = new GitPHP_GitExe($this->project);
+		$args = array();
+		$args[] = '-t';
+		$args[] = $this->hash;
+		$ret = trim($exe->Execute(GIT_CAT_FILE, $args));
+		
+		if ($ret === 'commit') {
+			/* light tag */
+			$this->object = $this->project->GetCommit($this->hash);
+			$this->type = 'commit';
+			return;
+		}
+
+		/* get data from tag object */
 		$args = array();
 		$args[] = 'tag';
 		$args[] = $this->GetName();
@@ -259,6 +290,36 @@ class GitPHP_Tag extends GitPHP_Ref
 			/* TODO: add other types */
 		}
 
+	}
+
+	/**
+	 * CompareAge
+	 *
+	 * Compares two tags by age
+	 *
+	 * @access public
+	 * @static
+	 * @param mixed $a first tag
+	 * @param mixed $b second tag
+	 * @return integer comparison result
+	 */
+	public static function CompareAge($a, $b)
+	{
+		$aObj = $a->GetObject();
+		$bObj = $b->GetObject();
+		if (($aObj instanceof GitPHP_Commit) && ($bObj instanceof GitPHP_Commit)) {
+			if ($aObj->GetAge() === $bObj->GetAge())
+				return 0;
+			return ($aObj->GetAge() < $bObj->GetAge() ? -1 : 1);
+		}
+
+		if ($aObj instanceof GitPHP_Commit)
+			return 1;
+
+		if ($bObj instanceof GitPHP_Commit)
+			return -1;
+
+		return strcmp($a->GetName(), $b->GetName());
 	}
 
 }

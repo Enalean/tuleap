@@ -38,14 +38,14 @@
        </tr>
      {else}
          <tr class="{cycle name=revs values="light,dark"}">
-         <td><i>{$revlist[rev].commitage}</i></td>
-         <td><i>{$revlist[rev].commitauthor}</i></td>
+         <td><em>{$revlist[rev].commitage}</em></td>
+         <td><em>{$revlist[rev].commitauthor}</em></td>
          <td>
-           <a href="{$SCRIPT_NAME}?p={$project}&a=commit&h={$revlist[rev].commit}" class="list" {if $revlist[rev].title}title="{$revlist[rev].title}"{/if}><b>{$revlist[rev].title_short}
+           <a href="{$SCRIPT_NAME}?p={$project}&a=commit&h={$revlist[rev].commit}" class="list" {if $revlist[rev].title}title="{$revlist[rev].title}"{/if}><strong>{$revlist[rev].title_short}
              {if $revlist[rev].commitref}
                <span class="tag">{$revlist[rev].commitref}</span>
              {/if}
-           </b>
+           </strong>
          </td>
          <td class="link"><a href="{$SCRIPT_NAME}?p={$project}&a=commit&h={$revlist[rev].commit}">commit</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=commitdiff&h={$revlist[rev].commit}">commitdiff</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=tree&h={$revlist[rev].commit}&hb={$revlist[rev].commit}">tree</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=snapshot&h={$revlist[rev].commit}">snapshot</a></td>
        </tr>
@@ -63,18 +63,22 @@
          {if $smarty.section.tag.index == 16}
            <td><a href="{$SCRIPT_NAME}?p={$project}&a=tags">...</a></td>
          {else}
-           <td><i>{$taglist[tag].age_string}</i></td>
-           <td><a href="{$SCRIPT_NAME}?p={$project}&a={$taglist[tag].reftype}&h={$taglist[tag].refid}" class="list"><b>{$taglist[tag].name}</b></a></td>
+	   {assign var=object value=$taglist[tag]->GetObject()}
+           <td><em>{$object->GetAge()|agestring}</em></td>
+           <td><a href="{$SCRIPT_NAME}?p={$project}&a={$taglist[tag]->GetType()}&h={$object->GetHash()}" class="list"><strong>{$taglist[tag]->GetName()}</strong></a></td>
            <td>
-             {if $taglist[tag].comment}
-               <a class="list" href="{$SCRIPT_NAME}?p={$project}&a=tag&h={$taglist[tag].name}">{$taglist[tag].comment}</a>
+	     {assign var=comment value=$taglist[tag]->GetComment()}
+             {if count($comment) > 0}
+               <a class="list" href="{$SCRIPT_NAME}?p={$project}&a=tag&h={$taglist[tag]->GetName()}">{$comment[0]}</a>
              {/if}
            </td>
            <td class="link">
-             {if $taglist[tag].type == "tag"}
-   	       <a href="{$SCRIPT_NAME}?p={$project}&a=tag&h={$taglist[tag].name}">tag</a> | 
+             {if !$taglist[tag]->LightTag()}
+   	       <a href="{$SCRIPT_NAME}?p={$project}&a=tag&h={$taglist[tag]->GetName()}">tag</a> | 
              {/if}
-             <a href="{$SCRIPT_NAME}?p={$project}&a={$taglist[tag].reftype}&h={$taglist[tag].refid}">{$taglist[tag].reftype}</a>{if $taglist[tag].reftype == "commit"} | <a href="{$SCRIPT_NAME}?p={$project}&a=shortlog&h=refs/tags/{$taglist[tag].name}">shortlog</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=log&h=refs/tags/{$taglist[tag].name}">log</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=snapshot&h={$taglist[tag].refid}">snapshot</a>{/if}
+             <a href="{$SCRIPT_NAME}?p={$project}&a={$taglist[tag]->GetType()}&h={$taglist[tag]->GetHash()}">{$taglist[tag]->GetType()}</a>
+	     {if $taglist[tag]->GetType() == "commit"}
+	      | <a href="{$SCRIPT_NAME}?p={$project}&a=shortlog&h=refs/tags/{$taglist[tag]->GetName()}">shortlog</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=log&h=refs/tags/{$taglist[tag]->GetName()}">log</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=snapshot&h={$object->GetHash()}">snapshot</a>{/if}
            </td>
          {/if}
        </tr>
@@ -92,8 +96,8 @@
          {if $smarty.section.head.index == 16}
            <td><a href="{$SCRIPT_NAME}?p={$project}&a=heads">...</a></td>
          {else}
-           <td><i>{$headlist[head].age_string}</i></td>
-           <td><a href="{$SCRIPT_NAME}?p={$project}&a=shortlog&h=refs/heads/{$headlist[head].name}" class="list"><b>{$headlist[head].name}</b></td>
+           <td><em>{$headlist[head].age_string}</em></td>
+           <td><a href="{$SCRIPT_NAME}?p={$project}&a=shortlog&h=refs/heads/{$headlist[head].name}" class="list"><strong>{$headlist[head].name}</strong></td>
            <td class="link"><a href="{$SCRIPT_NAME}?p={$project}&a=shortlog&h=refs/heads/{$headlist[head].name}">shortlog</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=log&h=refs/heads/{$headlist[head].name}">log</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=tree&h=refs/heads/{$headlist[head].name}&hb={$headlist[head].name}">tree</a></td>
          {/if}
        </tr>

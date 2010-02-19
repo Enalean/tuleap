@@ -48,15 +48,20 @@ class GitPHP_Ref extends GitPHP_GitObject
 	 * @param mixed $project the project
 	 * @param string $refDir the ref directory
 	 * @param string $refName the ref name
+	 * @param string $refHash the ref hash
 	 * @throws Exception if not a valid ref
 	 * @return mixed git ref
 	 */
-	public function __construct($project, $refDir, $refName)
+	public function __construct($project, $refDir, $refName, $refHash = '')
 	{
 		$this->project = $project;
 		$this->refDir = $refDir;
 		$this->refName = $refName;
-		$this->FindHash();
+		if (!empty($refHash)) {
+			$this->SetHash($refHash);
+		} else {
+			$this->FindHash();
+		}
 	}
 
 	/**
@@ -69,34 +74,17 @@ class GitPHP_Ref extends GitPHP_GitObject
 	 */
 	protected function FindHash()
 	{
-		/* Regular ref */
-		if (is_file($this->GetFullPath())) {
-			$hash = file_get_contents($this->GetFullPath());
-			try {
-				$this->SetHash($hash);
-				return;
-			} catch (Exception $e) {
-			}
-		}
+		$exe = new GitPHP_GitExe($this->project);
+		$args = array();
+		$args[] = '--hash';
+		$args[] = '--verify';
+		$args[] = $this->GetRefPath();
+		$hash = trim($exe->Execute(GIT_SHOW_REF, $args));
 
-		/* Packed ref */
-		if (is_file($this->project->GetPath() . '/packed-refs')) {
-			$packedRefs = explode("\n", file_get_contents($this->project->GetPath() . '/packed-refs'));
-			foreach ($packedRefs as $refLine) {
-				if (preg_match('/^([0-9a-f]{40}) (.*)$/i', trim($refLine), $regs)) {
-					if (strcmp($regs[2], $this->GetRefPath()) === 0) {
-						try {
-							$this->SetHash($regs[1]);
-							return;
-						} catch (Exception $e) {
-						}
-					}
-				}
-			}
-		}
+		if (empty($hash))
+			throw new Exception('Invalid ref ' . $this->GetRefPath());
 
-		/* Didn't find anything */
-		throw new Exception('Invalid ref ' . $this->GetRefPath());
+		$this->SetHash($hash);
 	}
 
 	/**

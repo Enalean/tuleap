@@ -63,16 +63,8 @@ function git_summary()
 		}
 		$tpl->assign("revlist",$revlist);
 
-		$taglist = git_read_refs("refs/tags");
+		$taglist = $gitphp_current_project->GetTags();
 		if (isset($taglist) && (count($taglist) > 0)) {
-			foreach ($taglist as $i => $tag) {
-				if (isset($tag['comment'])) {
-					$com = trim($tag['comment'][0]);
-					if (strlen($com) > GITPHP_TRIM_LENGTH)
-						$com = substr($trimmed,0,GITPHP_TRIM_LENGTH) . "...";
-					$taglist[$i]['comment'] = $com;
-				}
-			}
 			$tpl->assign("taglist",$taglist);
 		}
 

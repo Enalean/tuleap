@@ -13,6 +13,7 @@
 require_once(GITPHP_INCLUDEDIR . 'defs.commands.php');
 require_once(GITPHP_INCLUDEDIR . 'git/GitExe.class.php');
 require_once(GITPHP_INCLUDEDIR . 'git/Commit.class.php');
+require_once(GITPHP_INCLUDEDIR . 'git/Tag.class.php');
 
 /**
  * Project class
@@ -88,13 +89,49 @@ class GitPHP_Project
 	protected $head;
 
 	/**
-	 * readHead
+	 * readHeadRef
 	 *
 	 * Stores whether the head ref has been read yet
 	 *
 	 * @access protected
 	 */
-	protected $readHead;
+	protected $readHeadRef = false;
+
+	/**
+	 * heads
+	 *
+	 * Stores the heads for the project
+	 *
+	 * @access protected
+	 */
+	protected $heads = array();
+
+	/**
+	 * readHeads
+	 *
+	 * Stores whether heads have been read yet
+	 *
+	 * @access protected
+	 */
+	protected $readHeads = false;
+
+	/**
+	 * tags
+	 *
+	 * Stores the tags for the project
+	 *
+	 * @access protected
+	 */
+	protected $tags = array();
+
+	/**
+	 * readTags
+	 *
+	 * Stores whether tags have been read yet
+	 *
+	 * @access protected
+	 */
+	protected $readTags = false;
 
 	/**
 	 * commitCache
@@ -275,7 +312,7 @@ class GitPHP_Project
 	 */
 	public function GetHeadCommit()
 	{
-		if (!$this->readHead)
+		if (!$this->readHeadRef)
 			$this->ReadHeadCommit();
 
 		return $this->GetCommit($this->head);
@@ -290,7 +327,7 @@ class GitPHP_Project
 	 */
 	public function ReadHeadCommit()
 	{
-		$this->readHead = true;
+		$this->readHeadRef = true;
 
 		$exe = new GitPHP_GitExe($this);
 		$args = array();
@@ -401,5 +438,93 @@ class GitPHP_Project
 			return 0;
 		return ($a->GetHeadCommit()->GetAge() < $b->GetHeadCommit()->GetAge() ? -1 : 1);
 	}
+
+	/**
+	 * GetRefsForHash
+	 *
+	 * Get refs pointing to this hash
+	 *
+	 * @access public
+	 * @param string $hash hash
+	 * @param string $type ref type
+	 * @return array array of refs
+	 */
+	public function GetRefsForHash($hash, $type)
+	{
+	}
+
+	/**
+	 * GetTags
+	 *
+	 * Gets list of tags for this project
+	 *
+	 * @access public
+	 * @return array array of tags
+	 */
+	public function GetTags()
+	{
+		if (!$this->readTags)
+			$this->ReadTagList();
+
+		return $this->tags;
+	}
+
+	/**
+	 * ReadTagList
+	 *
+	 * Reads tag list
+	 *
+	 * @access protected
+	 */
+	protected function ReadTagList()
+	{
+		$this->readTags = true;
+
+		$exe = new GitPHP_GitExe($this);
+		$args = array();
+		$args[] = '--tags';
+		$ret = $exe->Execute(GIT_SHOW_REF, $args);
+		unset($exe);
+
+		$lines = explode("\n", $ret);
+
+		foreach ($lines as $line) {
+			if (preg_match('/^([0-9a-fA-F]{40}) refs\/tags\/(.+)$/', $line, $regs)) {
+				try {
+					$this->tags[] = new GitPHP_Tag($this, $regs[2], $regs[1]);
+				} catch (Exception $e) {
+				}
+			}
+		}
+
+		usort($this->tags, array('GitPHP_Tag', 'CompareAge'));
+	}
+
+	/**
+	 * GetHeads
+	 *
+	 * Gets list of heads for this project
+	 *
+	 * @access public
+	 * @return array array of heads
+	 */
+	public function GetHeads()
+	{
+		if (!$this->readHeads)
+			$this->ReadHeadList();
+	}
+
+	/**
+	 * ReadHeadList
+	 *
+	 * Reads head list
+	 *
+	 * @access protected
+	 */
+	protected function ReadHeadList()
+	{
+		$this->readHeads = true;
+	}
+
 
 }

@@ -7,8 +7,6 @@
  *  Copyright (C) 2008 Christopher Han <xiphux@gmail.com>
  */
 
- require_once('gitutil.git_read_refs.php');
-
 function git_tags()
 {
 	global $tpl, $gitphp_current_project;
@@ -21,7 +19,8 @@ function git_tags()
 	if (!$tpl->is_cached('tags.tpl', $cachekey)) {
 		$head = $gitphp_current_project->GetHeadCommit()->GetHash();
 		$tpl->assign("head",$head);
-		$taglist = git_read_refs("refs/tags");
+
+		$taglist = $gitphp_current_project->GetTags();
 		if (isset($taglist) && (count($taglist) > 0)) {
 			$tpl->assign("taglist",$taglist);
 		}
