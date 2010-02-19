@@ -88,14 +88,14 @@ class GitPHP_Tag extends GitPHP_Ref
 	/**
 	 * __construct
 	 *
-	 * Instantiates object
+	 * Instantiates tag
 	 *
 	 * @access public
 	 * @param mixed $project the project
 	 * @param string $tag tag name
 	 * @param string $tagHash tag hash
-	 * @return mixed git object
-	 * @throws Exception exception on invalid hash
+	 * @return mixed tag object
+	 * @throws Exception exception on invalid tag or hash
 	 */
 	public function __construct($project, $tag, $tagHash = '')
 	{
@@ -108,6 +108,7 @@ class GitPHP_Tag extends GitPHP_Ref
 	 * Gets the object this tag points to
 	 *
 	 * @access public
+	 * @return mixed object for this tag
 	 */
 	public function GetObject()
 	{
@@ -123,6 +124,7 @@ class GitPHP_Tag extends GitPHP_Ref
 	 * Gets the tag type
 	 *
 	 * @access public
+	 * @return string tag type
 	 */
 	public function GetType()
 	{
@@ -138,6 +140,7 @@ class GitPHP_Tag extends GitPHP_Ref
 	 * Gets the tagger
 	 *
 	 * @access public
+	 * @return string tagger
 	 */
 	public function GetTagger()
 	{
@@ -153,6 +156,7 @@ class GitPHP_Tag extends GitPHP_Ref
 	 * Gets the tagger epoch
 	 *
 	 * @access public
+	 * @return string tagger epoch
 	 */
 	public function GetTaggerEpoch()
 	{
@@ -168,6 +172,7 @@ class GitPHP_Tag extends GitPHP_Ref
 	 * Gets the tagger timezone
 	 *
 	 * @access public
+	 * @return string tagger timezone
 	 */
 	public function GetTaggerTimezone()
 	{
@@ -183,6 +188,7 @@ class GitPHP_Tag extends GitPHP_Ref
 	 * Gets the tag comment
 	 *
 	 * @access public
+	 * @return array comment lines
 	 */
 	public function GetComment()
 	{
@@ -198,6 +204,7 @@ class GitPHP_Tag extends GitPHP_Ref
 	 * Tests if this is a light tag (tag without tag object)
 	 *
 	 * @access public
+	 * @return boolean true if tag is light (has no object)
 	 */
 	public function LightTag()
 	{
