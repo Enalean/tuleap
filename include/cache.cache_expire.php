@@ -7,8 +7,6 @@
  *  Copyright (C) 2009 Christopher Han <xiphux@gmail.com>
  */
 
-require_once('gitutil.git_read_refs.php');
-
 function cache_expire($expireall = false)
 {
 	global $tpl, $gitphp_current_project;
@@ -21,12 +19,12 @@ function cache_expire($expireall = false)
 	if (!$gitphp_current_project)
 		return;
 
-	$headlist = git_read_refs("refs/heads");
+	$headlist = $gitphp_current_project->GetHeads();
 
 	if (count($headlist) > 0) {
-		$age = $headlist[0]['age'];
+		$age = $headlist[0]->GetCommit()->GetAge();
 
-		$tpl->clear_cache(null, sha1($project), null, $age);
+		$tpl->clear_cache(null, sha1($gitphp_current_project->GetProject()), null, $age);
 
 		$tpl->clear_cache('projectlist.tpl', sha1(serialize(GitPHP_ProjectList::GetInstance()->GetConfig())), null, $age);
 	}

@@ -89,7 +89,7 @@ $tpl->register_modifier('agestring', 'age_string');
  	$tpl->caching = 2;
 	if (GitPHP_Config::GetInstance()->HasKey('cachelifetime'))
 		$tpl->cache_lifetime = GitPHP_Config::GetInstance()->GetValue('cachelifetime');
-	if (GitPHP_Config::GetInstance()->GetValue('cacheexpire', true) === false) {
+	if (GitPHP_Config::GetInstance()->GetValue('cacheexpire', true) === true) {
 		require_once(GITPHP_INCLUDEDIR . 'cache.cache_expire.php');
 		cache_expire();
 	}
@@ -104,8 +104,7 @@ $tpl->register_modifier('agestring', 'age_string');
  if ($project) {
 	$tpl->assign("validproject",TRUE);
 	$tpl->assign("project",$project);
-	$projectObj = GitPHP_ProjectList::GetInstance()->GetProject($project);
-	$tpl->assign("projectdescription", $projectObj->GetDescription());
+	$tpl->assign("projectdescription", $gitphp_current_project->GetDescription());
 	if (isset($_GET['a'])) {
 		$tpl->assign("action",$_GET['a']);
 		$tpl->assign("validaction", TRUE);

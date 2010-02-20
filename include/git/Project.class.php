@@ -13,6 +13,7 @@
 require_once(GITPHP_INCLUDEDIR . 'defs.commands.php');
 require_once(GITPHP_INCLUDEDIR . 'git/GitExe.class.php');
 require_once(GITPHP_INCLUDEDIR . 'git/Commit.class.php');
+require_once(GITPHP_INCLUDEDIR . 'git/Head.class.php');
 require_once(GITPHP_INCLUDEDIR . 'git/Tag.class.php');
 
 /**
@@ -512,6 +513,8 @@ class GitPHP_Project
 	{
 		if (!$this->readHeads)
 			$this->ReadHeadList();
+
+		return $this->heads;
 	}
 
 	/**
@@ -524,6 +527,26 @@ class GitPHP_Project
 	protected function ReadHeadList()
 	{
 		$this->readHeads = true;
+
+		$exe = new GitPHP_GitExe($this);
+		$args = array();
+		$args[] = '--heads';
+		$ret = $exe->Execute(GIT_SHOW_REF, $args);
+		unset($exe);
+
+		$lines = explode("\n", $ret);
+
+		foreach ($lines as $line) {
+			if (preg_match('/^([0-9a-fA-F]{40}) refs\/heads\/(.+)$/', $line, $regs)) {
+				try {
+					$this->heads[] = new GitPHP_Head($this, $regs[2], $regs[1]);
+				} catch (Exception $e) {
+				}
+			}
+		}
+
+		usort($this->heads, array('GitPHP_Head', 'CompareAge'));
+
 	}
 
 

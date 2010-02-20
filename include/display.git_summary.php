@@ -11,7 +11,6 @@
  require_once(GITPHP_INCLUDEDIR . 'util.date_str.php');
  require_once(GITPHP_INCLUDEDIR . 'util.age_string.php');
  require_once(GITPHP_INCLUDEDIR . 'gitutil.git_read_revlist.php');
- require_once(GITPHP_INCLUDEDIR . 'gitutil.git_read_refs.php');
  require_once(GITPHP_INCLUDEDIR . 'gitutil.read_info_ref.php');
  require_once(GITPHP_INCLUDEDIR . 'git/Project.class.php');
 
@@ -68,7 +67,7 @@ function git_summary()
 			$tpl->assign("taglist",$taglist);
 		}
 
-		$headlist = git_read_refs("refs/heads");
+		$headlist = $gitphp_current_project->GetHeads();
 		if (isset($headlist) && (count($headlist) > 0)) {
 			$tpl->assign("headlist",$headlist);
 		}

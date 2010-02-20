@@ -96,9 +96,10 @@
          {if $smarty.section.head.index == 16}
            <td><a href="{$SCRIPT_NAME}?p={$project}&a=heads">...</a></td>
          {else}
-           <td><em>{$headlist[head].age_string}</em></td>
-           <td><a href="{$SCRIPT_NAME}?p={$project}&a=shortlog&h=refs/heads/{$headlist[head].name}" class="list"><strong>{$headlist[head].name}</strong></td>
-           <td class="link"><a href="{$SCRIPT_NAME}?p={$project}&a=shortlog&h=refs/heads/{$headlist[head].name}">shortlog</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=log&h=refs/heads/{$headlist[head].name}">log</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=tree&h=refs/heads/{$headlist[head].name}&hb={$headlist[head].name}">tree</a></td>
+	   {assign var=commit value=$headlist[head]->GetCommit()}
+           <td><em>{$commit->GetAge()|agestring}</em></td>
+           <td><a href="{$SCRIPT_NAME}?p={$project}&a=shortlog&h=refs/heads/{$headlist[head]->GetName()}" class="list"><strong>{$headlist[head]->GetName()}</strong></td>
+           <td class="link"><a href="{$SCRIPT_NAME}?p={$project}&a=shortlog&h=refs/heads/{$headlist[head]->GetName()}">shortlog</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=log&h=refs/heads/{$headlist[head]->GetName()}">log</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=tree&h=refs/heads/{$headlist[head]->GetName()}&hb={$commit->GetHash()}">tree</a></td>
          {/if}
        </tr>
      {/section}
