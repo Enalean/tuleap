@@ -443,4 +443,50 @@ class GitPHP_Commit extends GitPHP_GitObject
 		}
 	}
 
+	/**
+	 * GetHeads
+	 *
+	 * Gets heads that point to this commit
+	 * 
+	 * @access public
+	 * @return array array of heads
+	 */
+	public function GetHeads()
+	{
+		$heads = array();
+
+		$projectHeads = $this->project->GetHeads();
+
+		foreach ($projectHeads as $head) {
+			if ($head->GetCommit()->GetHash() === $this->hash) {
+				$heads[] = $head;
+			}
+		}
+
+		return $heads;
+	}
+
+	/**
+	 * GetTags
+	 *
+	 * Gets tags that point to this commit
+	 *
+	 * @access public
+	 * @return array array of tags
+	 */
+	public function GetTags()
+	{
+		$tags = array();
+
+		$projectTags = $this->project->GetTags();
+
+		foreach ($projectTags as $tag) {
+			if ($tag->GetObject()->GetHash() === $this->hash) {
+				$tags[] = $tag;
+			}
+		}
+
+		return $tags;
+	}
+
 }

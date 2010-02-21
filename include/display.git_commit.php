@@ -10,7 +10,6 @@
  require_once('util.file_type.php');
  require_once('util.date_str.php');
  require_once('gitutil.git_diff_tree.php');
- require_once('gitutil.read_info_ref.php');
 
 function git_commit($hash)
 {
@@ -35,29 +34,20 @@ function git_commit($hash)
 		}
 		$diffout = git_diff_tree($root . " " . $parent . " " . $hash, TRUE);
 		$difftree = explode("\n",$diffout);
-		$tpl->assign("hash",$hash);
 		$treeObj = $commit->GetTree();
 		if ($treeObj)
 			$tpl->assign("tree", $treeObj->GetHash());
 		if ($parentObj)
 			$tpl->assign("parent", $parentObj->GetHash());
-		$tpl->assign("title", $commit->GetTitle());
-		$refs = read_info_ref();
-		if (isset($refs[$commit->GetHash()]))
-			$tpl->assign("commitref",$refs[$commit->GetHash()]);
-		$tpl->assign("author", $commit->GetAuthorName());
+		$tpl->assign("commit", $commit);
 		$tpl->assign("adrfc2822",$ad['rfc2822']);
 		$tpl->assign("adhourlocal",$ad['hour_local']);
 		$tpl->assign("adminutelocal",$ad['minute_local']);
 		$tpl->assign("adtzlocal",$ad['tz_local']);
-		$tpl->assign("committer", $commit->GetCommitterName());
 		$tpl->assign("cdrfc2822",$cd['rfc2822']);
 		$tpl->assign("cdhourlocal",$cd['hour_local']);
 		$tpl->assign("cdminutelocal",$cd['minute_local']);
 		$tpl->assign("cdtzlocal",$cd['tz_local']);
-		$tpl->assign("id", $commit->GetHash());
-		$tpl->assign("parents", $commit->GetParents());
-		$tpl->assign("comment", $commit->GetComment());
 		$tpl->assign("difftreesize",count($difftree)+1);
 		$difftreelines = array();
 		foreach ($difftree as $i => $line) {

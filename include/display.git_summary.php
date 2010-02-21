@@ -11,7 +11,6 @@
  require_once(GITPHP_INCLUDEDIR . 'util.date_str.php');
  require_once(GITPHP_INCLUDEDIR . 'util.age_string.php');
  require_once(GITPHP_INCLUDEDIR . 'gitutil.git_read_revlist.php');
- require_once(GITPHP_INCLUDEDIR . 'gitutil.read_info_ref.php');
  require_once(GITPHP_INCLUDEDIR . 'git/Project.class.php');
 
 function git_summary()
@@ -30,7 +29,6 @@ function git_summary()
 		$headCommit = $gitphp_current_project->GetHeadCommit();
 		$commitdate = date_str($headCommit->GetCommitterEpoch(), $headCommit->GetCommitterTimezone());
 		$owner = $gitphp_current_project->GetOwner();
-		$refs = read_info_ref();
 		$tpl->assign("head", $headCommit->GetHash());
 		$tpl->assign("description",$descr);
 		$tpl->assign("owner",$owner);
@@ -41,24 +39,7 @@ function git_summary()
 			$tpl->assign('pushurl', GitPHP_Config::GetInstance()->GetValue('pushurl') . $gitphp_current_project->GetProject());
 		$revlist = git_read_revlist($headCommit->GetHash(), 17);
 		foreach ($revlist as $i => $rev) {
-			$revdata = array();
-			$revdata["commit"] = $rev;
-			if (isset($refs[$rev]))
-				$revdata["commitref"] = $refs[$rev];
-			$revco = $gitphp_current_project->GetCommit($rev);
-			if ($revco) {
-				$revdata["commitage"] = age_string($revco->GetAge());
-				$revdata["commitauthor"] = $revco->GetAuthorName();
-				$title = $revco->GetTitle();
-				$title_short = $revco->GetTitle(GITPHP_TRIM_LENGTH);
-				if (strlen($title_short) < strlen($title)) {
-					$revdata["title"] = $title;
-					$revdata["title_short"] = $title_short;
-				} else
-					$revdata["title_short"] = $title;
-				unset($revco);
-			}
-			$revlist[$i] = $revdata;
+			$revlist[$i] = $gitphp_current_project->GetCommit($rev);
 		}
 		$tpl->assign("revlist",$revlist);
 

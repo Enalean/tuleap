@@ -16,11 +16,17 @@ div.page_path { padding:8px; border:solid #d9d8d1; border-width:0px 0px 1px}
 div.page_footer { height:17px; padding:4px 8px; background-color: #d9d8d1; }
 div.page_footer_text { float:left; color:#555555; font-style:italic; }
 div.page_body { padding:8px; }
-div.title, a.title {
-	display:block; padding:6px 8px;
-	font-weight:bold; background-color:#edece6; text-decoration:none; color:#000000;
+div.title {
+	padding:6px 8px;
+	background-color:#edece6;
 }
-a.title:hover { background-color: #d9d8d1; }
+div.title a.title {
+	font-weight:bold; text-decoration:none; color:#000000;
+}
+div.title a.title:hover {
+	color:#880000; text-decoration: underline;
+}
+div.title:hover { background-color: #d9d8d1; }
 div.title_text { padding:6px 0px; border: solid #d9d8d1; border-width:0px 0px 1px; }
 div.log_body { padding:8px 8px 8px 150px; }
 span.age { position:relative; float:left; width:142px; font-style:italic; }
@@ -55,9 +61,19 @@ a.rss_logo {
 	text-align:center; text-decoration:none;
 }
 a.rss_logo:hover { background-color:#ee5500; }
+span.refs a {
+	color: #000000; text-decoration: none;
+}
+span.refs a:hover {
+	color: #880000; text-decoration: underline;
+}
 span.tag {
 	padding:0px 4px; font-size:10px; font-weight:normal;
 	background-color:#ffffaa; border:1px solid; border-color:#ffffcc #ffee00 #ffee00 #ffffcc;
+}
+span.head {
+	padding:0px 4px; font-size:10px; font-weight:normal;
+	background-color:#aaffaa; border:1px solid; border-color:#ccffcc #00cc33 #00cc33 #ccffcc;
 }
 .diffplus {
 	color: #008800;
