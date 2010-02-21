@@ -242,6 +242,27 @@ class GitPHP_Project
 	}
 
 	/**
+	 * GetSlug
+	 *
+	 * Gets the project as a filename/url friendly slug
+	 *
+	 * @access public
+	 * @return string the slug
+	 */
+	public function GetSlug()
+	{
+		$from = array(
+			'/',
+			'.git'
+		);
+		$to = array(
+			'-',
+			''
+		);
+		return str_replace($from, $to, $this->project);
+	}
+
+	/**
 	 * GetPath
 	 *
 	 * Gets the full project path

@@ -14,6 +14,10 @@ require_once(GITPHP_INCLUDEDIR . 'defs.commands.php');
 require_once(GITPHP_INCLUDEDIR . 'git/GitObject.class.php');
 require_once(GITPHP_INCLUDEDIR . 'git/Tree.class.php');
 
+define("GITPHP_COMPRESS_BZ2", 1);
+define("GITPHP_COMPRESS_GZ", 2);
+define("GITPHP_COMPRESS_ZIP", 3);
+
 /**
  * Commit class
  *
@@ -487,6 +491,37 @@ class GitPHP_Commit extends GitPHP_GitObject
 		}
 
 		return $tags;
+	}
+
+	/**
+	 * GetArchive
+	 *
+	 * Gets an archive of this commit
+	 *
+	 * @access public
+	 * @return string the archive data
+	 * @param format the archive format
+	 */
+	public function GetArchive($format)
+	{
+		$exe = new GitPHP_GitExe($this->project);
+		$args = array();
+		if ($format == GITPHP_COMPRESS_ZIP)
+			$args[] = '--format=zip';
+		else
+			$args[] = '--format=tar';
+		$args[] = '--prefix=' . $this->project->GetSlug() . '/';
+		$args[] = $this->hash;
+		$data = $exe->Execute(GIT_ARCHIVE, $args);
+		unset($exe);
+
+		if (($format == GITPHP_COMPRESS_BZ2) && function_exists('bzcompress')) {
+			return bzcompress($data, GitPHP_Config::GetInstance()->GetValue('compresslevel', 4));
+		} else if (($format == GITPHP_COMPRESS_gz) && function_exists('gzencode')) {
+			return gzencode($arc, GitPHP_Config::GetInstance()->GetValue('compresslevel', -1));
+		}
+
+		return $data;
 	}
 
 }
