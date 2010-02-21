@@ -14,10 +14,6 @@ require_once(GITPHP_INCLUDEDIR . 'defs.commands.php');
 require_once(GITPHP_INCLUDEDIR . 'git/GitObject.class.php');
 require_once(GITPHP_INCLUDEDIR . 'git/Tree.class.php');
 
-define("GITPHP_COMPRESS_BZ2", 1);
-define("GITPHP_COMPRESS_GZ", 2);
-define("GITPHP_COMPRESS_ZIP", 3);
-
 /**
  * Commit class
  *
@@ -517,7 +513,7 @@ class GitPHP_Commit extends GitPHP_GitObject
 
 		if (($format == GITPHP_COMPRESS_BZ2) && function_exists('bzcompress')) {
 			return bzcompress($data, GitPHP_Config::GetInstance()->GetValue('compresslevel', 4));
-		} else if (($format == GITPHP_COMPRESS_gz) && function_exists('gzencode')) {
+		} else if (($format == GITPHP_COMPRESS_GZ) && function_exists('gzencode')) {
 			return gzencode($arc, GitPHP_Config::GetInstance()->GetValue('compresslevel', -1));
 		}
 
