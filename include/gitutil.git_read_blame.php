@@ -8,7 +8,7 @@
  */
 
 require_once('defs.commands.php');
-require_once(GITPHP_INCLUDEDIR . 'git/GitExe.class.php');
+require_once(GITPHP_GITOBJECTDIR . 'GitExe.class.php');
 
 function git_read_blame($file, $rev = null)
 {

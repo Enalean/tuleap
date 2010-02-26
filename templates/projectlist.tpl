@@ -11,7 +11,7 @@
 {include file='hometext.tpl'}
 
 <table cellspacing="0">
-  {foreach name=projects from=$projectlist item=project}
+  {foreach name=projects from=$projectlist item=proj}
     {if $smarty.foreach.projects.first}
       {* Header *}
       <tr>
@@ -39,8 +39,8 @@
       </tr>
     {/if}
 
-    {if $currentcategory != $project->GetCategory()}
-      {assign var=currentcategory value=$project->GetCategory()}
+    {if $currentcategory != $proj->GetCategory()}
+      {assign var=currentcategory value=$proj->GetCategory()}
       {if $currentcategory != ''}
         <tr class="light">
           <th>{$currentcategory}</th>
@@ -54,12 +54,12 @@
 
     <tr class="{cycle values="light,dark"}">
       <td>
-        <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=summary" class="list {if $currentcategory != ''}indent{/if}">{$project->GetProject()}</a>
+        <a href="{$SCRIPT_NAME}?p={$proj->GetProject()}&a=summary" class="list {if $currentcategory != ''}indent{/if}">{$proj->GetProject()}</a>
       </td>
-      <td><a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=summary" class="list">{$project->GetDescription()}</a></td>
-      <td><em>{$project->GetOwner()}</em></td>
+      <td><a href="{$SCRIPT_NAME}?p={$proj->GetProject()}&a=summary" class="list">{$proj->GetDescription()}</a></td>
+      <td><em>{$proj->GetOwner()}</em></td>
       <td>
-        {assign var=projecthead value=$project->GetHeadCommit()}
+        {assign var=projecthead value=$proj->GetHeadCommit()}
         {if $projecthead->GetAge() < 7200}   {* 60*60*2, or 2 hours *}
           <span class="agehighlight"><strong><em>{$projecthead->GetAge()|agestring}</em></strong></span>
         {elseif $projecthead->GetAge() < 172800}   {* 60*60*24*2, or 2 days *}
@@ -69,11 +69,11 @@
         {/if}
       </td>
       <td class="link">
-        <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=summary">summary</a> | 
-	<a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=shortlog">shortlog</a> | 
-	<a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=log">log</a> | 
-	<a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=tree">tree</a> | 
-	<a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=snapshot&h=HEAD">snapshot</a>
+        <a href="{$SCRIPT_NAME}?p={$proj->GetProject()}&a=summary">summary</a> | 
+	<a href="{$SCRIPT_NAME}?p={$proj->GetProject()}&a=shortlog">shortlog</a> | 
+	<a href="{$SCRIPT_NAME}?p={$proj->GetProject()}&a=log">log</a> | 
+	<a href="{$SCRIPT_NAME}?p={$proj->GetProject()}&a=tree">tree</a> | 
+	<a href="{$SCRIPT_NAME}?p={$proj->GetProject()}&a=snapshot&h=HEAD">snapshot</a>
       </td>
     </tr>
   {foreachelse}

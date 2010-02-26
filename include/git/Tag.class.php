@@ -10,8 +10,8 @@
  * @subpackage Git
  */
 
-require_once(GITPHP_INCLUDEDIR . 'git/GitExe.class.php');
-require_once(GITPHP_INCLUDEDIR . 'git/Ref.class.php');
+require_once(GITPHP_GITOBJECTDIR . 'GitExe.class.php');
+require_once(GITPHP_GITOBJECTDIR . 'Ref.class.php');
 
 /**
  * Tag class

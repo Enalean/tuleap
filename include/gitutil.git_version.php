@@ -7,7 +7,7 @@
  *  Copyright (C) 2009 Christopher Han <xiphux@gmail.com>
  */
 
- require_once(GITPHP_INCLUDEDIR . 'git/GitExe.class.php');
+ require_once(GITPHP_GITOBJECTDIR . 'GitExe.class.php');
 
  function git_version()
  {

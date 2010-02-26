@@ -39,15 +39,15 @@
             <div class="search">
               <input type="hidden" name="p" value="{$project}" />
               <input type="hidden" name="a" value="search" />
-              <input type ="hidden" name="h" value="{if $currentsearchhash}{$currentsearchhash}{else}HEAD{/if}" />
+              <input type ="hidden" name="h" value="{if $hashbase}{$hashbase}{elseif $hash}{$hash}{else}HEAD{/if}" />
               <select name="st">
-                <option {if $currentsearchtype == 'commit'}selected="selected"{/if} value="commit">commit</option>
-                <option {if $currentsearchtype == 'author'}selected="selected"{/if} value="author">author</option>
-                <option {if $currentsearchtype == 'committer'}selected="selected"{/if} value="committer">committer</option>
+                <option {if $searchtype == 'commit'}selected="selected"{/if} value="commit">commit</option>
+                <option {if $searchtype == 'author'}selected="selected"{/if} value="author">author</option>
+                <option {if $searchtype == 'committer'}selected="selected"{/if} value="committer">committer</option>
                 {if $filesearch}
-                  <option {if $currentsearchtype == 'file'}selected="selected"{/if} value="file">file</option>
+                  <option {if $searchtype == 'file'}selected="selected"{/if} value="file">file</option>
                 {/if}
-              </select> search: <input type="text" name="s" {if $currentsearch}value="{$currentsearch}"{/if} />
+              </select> search: <input type="text" name="s" {if $search}value="{$search}"{/if} />
             </div>
           </form>
         {/if}

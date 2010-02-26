@@ -10,7 +10,7 @@
  * @subpackage Git
  */
 
-require_once(GITPHP_INCLUDEDIR . 'git/Ref.class.php');
+require_once(GITPHP_GITOBJECTDIR . 'Ref.class.php');
 
 /**
  * Head class

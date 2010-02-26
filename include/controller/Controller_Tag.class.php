@@ -1,0 +1,103 @@
+<?php
+/**
+ * GitPHP Controller Tag
+ *
+ * Controller for displaying a tag
+ *
+ * @author Christopher Han <xiphux@gmail.com>
+ * @copyright Copyright (c) 2010 Christopher Han
+ * @package GitPHP
+ * @subpackage Controller
+ */
+
+require_once(GITPHP_INCLUDEDIR . 'util.date_str.php');
+
+/**
+ * Tag controller class
+ *
+ * @package GitPHP
+ * @subpackage Controller
+ */
+class GitPHP_Controller_Tag extends GitPHP_ControllerBase
+{
+
+	/**
+	 * __construct
+	 *
+	 * Constructor
+	 *
+	 * @access public
+	 * @return controller
+	 */
+	public function __construct()
+	{
+		parent::__construct();
+		if (!$this->project) {
+			throw new GitPHP_MessageException('Project is required for tag', true);
+		}
+	}
+
+	/**
+	 * GetTemplate
+	 *
+	 * Gets the template for this controller
+	 *
+	 * @access protected
+	 * @return string template filename
+	 */
+	protected function GetTemplate()
+	{
+		return 'tag.tpl';
+	}
+
+	/**
+	 * GetCacheKey
+	 *
+	 * Gets the cache key for this controller
+	 *
+	 * @access protected
+	 * @return string cache key
+	 */
+	protected function GetCacheKey()
+	{
+		return isset($this->params['hash']) ? sha1($this->params['hash']) : '';
+	}
+
+	/**
+	 * ReadQuery
+	 *
+	 * Read query into parameters
+	 *
+	 * @access protected
+	 */
+	protected function ReadQuery()
+	{
+		if (isset($_GET['h'])) {
+			$this->params['hash'] = $_GET['h'];
+		}
+	}
+
+	/**
+	 * LoadData
+	 *
+	 * Loads data for this template
+	 *
+	 * @access protected
+	 */
+	protected function LoadData()
+	{
+		$head = $this->project->GetHeadCommit()->GetHash();
+		$this->tpl->assign("head",$head);
+		$this->tpl->assign("hash", $this->params['hash']);
+
+		$tag = new GitPHP_Tag($this->project, $this->params['hash']);
+
+		$this->tpl->assign("tag", $tag);
+		$tagger = $tag->GetTagger();
+		if (!empty($tagger)) {
+			$ad = date_str($tag->GetTaggerEpoch(), $tag->GetTaggerTimezone());
+			$this->tpl->assign("datedata",$ad);
+		}
+	}
+
+}

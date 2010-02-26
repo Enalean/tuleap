@@ -10,10 +10,9 @@
  * @subpackage Git
  */
 
-require_once(GITPHP_INCLUDEDIR . 'Config.class.php');
-require_once(GITPHP_INCLUDEDIR . 'git/ProjectListDirectory.class.php');
-require_once(GITPHP_INCLUDEDIR . 'git/ProjectListFile.class.php');
-require_once(GITPHP_INCLUDEDIR . 'git/ProjectListArray.class.php');
+require_once(GITPHP_GITOBJECTDIR . 'ProjectListDirectory.class.php');
+require_once(GITPHP_GITOBJECTDIR . 'ProjectListFile.class.php');
+require_once(GITPHP_GITOBJECTDIR . 'ProjectListArray.class.php');
 
 /**
  * ProjectList class
@@ -46,10 +45,6 @@ class GitPHP_ProjectList
 	 */
 	public static function GetInstance()
 	{
-		if (!self::$instance) {
-			throw new Exception('ProjectList has not been instantiated.');
-		}
-
 		return self::$instance;
 	}
 
@@ -70,17 +65,11 @@ class GitPHP_ProjectList
 
 		if (!empty($file) && is_file($file) && include($file)) {
 			if (is_string($git_projects)) {
-				try {
 					self::$instance = new GitPHP_ProjectListFile($git_projects);
 					return;
-				} catch (Exception $e) {
-				}
 			} else if (is_array($git_projects)) {
-				try {
 					self::$instance = new GitPHP_ProjectListArray($git_projects);
 					return;
-				} catch (Exception $e) {
-				}
 			}
 		}
 

@@ -11,8 +11,8 @@
  */
 
 require_once(GITPHP_INCLUDEDIR . 'Config.class.php');
-require_once(GITPHP_INCLUDEDIR . 'git/ProjectListBase.class.php');
-require_once(GITPHP_INCLUDEDIR . 'git/Project.class.php');
+require_once(GITPHP_GITOBJECTDIR . 'ProjectListBase.class.php');
+require_once(GITPHP_GITOBJECTDIR . 'Project.class.php');
 
 /**
  * ProjectListFile class
@@ -35,7 +35,7 @@ class GitPHP_ProjectListFile extends GitPHP_ProjectListBase
 	public function __construct($projectFile)
 	{
 		if (!(is_string($projectFile) && is_file($projectFile))) {
-			throw new Exception($projectFile . ' is not a file.');
+			throw new Exception($projectFile . ' is not a file');
 		}
 
 		$this->projectConfig = $projectFile;
@@ -54,7 +54,7 @@ class GitPHP_ProjectListFile extends GitPHP_ProjectListBase
 	protected function PopulateProjects()
 	{
 		if (!($fp = fopen($this->projectConfig, 'r'))) {
-			throw new Exception('Failed to open project list file ' . $this->projectConfig . '.');
+			throw new Exception('Failed to open project list file ' . $this->projectConfig);
 		}
 
 		$projectRoot = GitPHP_Config::GetInstance()->GetValue('projectroot');

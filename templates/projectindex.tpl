@@ -5,6 +5,6 @@
  *
  *  Copyright (C) 2009 Christopher Han <xiphux@gmail.com>
  *}
-{foreach from=$projlist item=proj}
+{foreach from=$projectlist item=proj}
 {$proj->GetProject()}
 {/foreach}

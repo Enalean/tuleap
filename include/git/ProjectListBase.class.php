@@ -10,7 +10,7 @@
  * @subpackage Git
  */
 
-require_once(GITPHP_INCLUDEDIR . 'git/Project.class.php');
+require_once(GITPHP_GITOBJECTDIR . 'Project.class.php');
 
 define('GITPHP_SORT_PROJECT', 'project');
 define('GITPHP_SORT_DESCRIPTION', 'descr');

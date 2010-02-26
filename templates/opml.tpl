@@ -8,12 +8,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <opml version="1.0">
   <head>
-    <title>{$title} OPML Export</title>
+    <title>{$pagetitle} OPML Export</title>
   </head>
   <body>
     <outline text="git RSS feeds">
 
-      {foreach from=$opmllist item=proj}
+      {foreach from=$projectlist item=proj}
       <outline type="rss" text="{$proj->GetProject()}" title="{$proj->GetProject()}" xmlUrl="{$self}?p={$proj->GetProject()}&amp;a=rss" htmlUrl="{$self}?p={$proj->GetProject()}&amp;a=summary" />
 
       {/foreach}

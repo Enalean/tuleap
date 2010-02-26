@@ -11,8 +11,8 @@
  */
 
 require_once(GITPHP_INCLUDEDIR . 'defs.commands.php');
-require_once(GITPHP_INCLUDEDIR . 'git/GitObject.class.php');
-require_once(GITPHP_INCLUDEDIR . 'git/Tree.class.php');
+require_once(GITPHP_GITOBJECTDIR . 'GitObject.class.php');
+require_once(GITPHP_GITOBJECTDIR . 'Tree.class.php');
 
 /**
  * Commit class

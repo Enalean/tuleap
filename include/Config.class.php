@@ -78,7 +78,7 @@ class GitPHP_Config
 		global $gitphp_version, $gitphp_appstring;
 
 		if (!is_file($configFile)) {
-			throw new Exception('Invalid config file ' . $configFile);
+			throw new Exception('Could not load config file ' . $configFile);
 		}
 
 		if (!include($configFile)) {
