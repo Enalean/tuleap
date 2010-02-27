@@ -32,7 +32,13 @@
        </tr>
        <tr>
          <td></td>
-	 <td> {$datedata.rfc2822} ({if $datedata.hour_local < 6}<span class="latenight">{/if}{$datedata.hour_local}:{$datedata.minute_local}{if $datedata.hour_local < 6}</span>{/if} {$datedata.tz_local})
+	 <td> {$tag->GetTaggerEpoch()|date_format:"%a, %d %b %Y %H:%M:%S %z"} 
+	 {assign var=hourlocal value=$tag->GetTaggerLocalEpoch()|date_format:"%H"}
+	 {if $hourlocal < 6}
+	 (<span class="latenight">{$tag->GetTaggerLocalEpoch()|date_format:"%R"}</span> {$tag->GetTaggerTimezone()})
+	 {else}
+	 ({$tag->GetTaggerLocalEpoch()|date_format:"%R"} {$tag->GetTaggerTimezone()})
+	 {/if}
          </td>
        </tr>
      {/if}

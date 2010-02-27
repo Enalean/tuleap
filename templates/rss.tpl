@@ -15,9 +15,9 @@
 
     {section name=rssitem loop=$commitlines}
       <item>
-        <title>{$commitlines[rssitem].cdmday} {$commitlines[rssitem].cdmonth} {$commitlines[rssitem].cdhour}:{$commitlines[rssitem].cdminute} - {$commitlines[rssitem].title|escape:'html'}</title>
+        <title>{$commitlines[rssitem].committerepoch|date_format:"%d %b %R"} - {$commitlines[rssitem].title|escape:'html'}</title>
         <author>{$commitlines[rssitem].author|escape:'html'}</author>
-        <pubDate>{$commitlines[rssitem].cdrfc2822}</pubDate>
+        <pubDate>{$commitlines[rssitem].committerepoch|date_format:"%a, %d %b %Y %H:%M:%S %z"}</pubDate>
         <guid isPermaLink="true">{$self}?p={$project}&amp;a=commit&amp;h={$commitlines[rssitem].commit}</guid>
         <link>{$self}?p={$project}&amp;a=commit&amp;h={$commitlines[rssitem].commit}</link>
         <description>{$commitlines[rssitem].title|escape:'html'}</description>

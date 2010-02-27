@@ -10,7 +10,6 @@
  * @subpackage Controller
  */
 
-require_once(GITPHP_INCLUDEDIR . 'util.date_str.php');
 require_once(GITPHP_INCLUDEDIR . 'gitutil.git_read_revlist.php');
 require_once(GITPHP_INCLUDEDIR . 'gitutil.git_diff_tree.php');
 
@@ -106,15 +105,10 @@ class GitPHP_Controller_Rss extends GitPHP_ControllerBase
 			$co = $this->project->GetCommit($commit);
 			if (($i >= 20) && ((time() - $co->GetCommitterEpoch()) > 48*60*60))
 				break;
-			$cd = date_str($co->GetCommitterEpoch());
 			$commitline = array();
-			$commitline["cdmday"] = $cd['mday'];
-			$commitline["cdmonth"] = $cd['month'];
-			$commitline["cdhour"] = $cd['hour'];
-			$commitline["cdminute"] = $cd['minute'];
+			$commitline["committerepoch"] = $co->GetCommitterEpoch();
 			$commitline["title"] = $co->GetTitle();
 			$commitline["author"] = $co->GetAuthor();
-			$commitline["cdrfc2822"] = $cd['rfc2822'];
 			$commitline["commit"] = $commit;
 			$commitline["comment"] = $co->GetComment();
 

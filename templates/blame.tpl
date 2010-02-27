@@ -64,9 +64,9 @@
 			<td class="date">
 			{if $smarty.foreach.linegroup.first}
 			{if $blameitem.commit}
-			<a href="{$SCRIPT_NAME}?p={$project}&a=commit&h={$blameitem.commit}" title="{$blameitem.commitdata.summary}">{$blameitem.commitdata.authordate}</a>
+			<a href="{$SCRIPT_NAME}?p={$project}&a=commit&h={$blameitem.commit}" title="{$blameitem.commitdata.summary}">{$blameitem.commitdata.authortime|date_format:"%F %X"}</a>
 			{else}
-			{$blameitem.commitdata.authordate}
+			{$blameitem.commitdata.authortime|date_format:"%F %X"}
 			{/if}
 			{/if}
 			</td>

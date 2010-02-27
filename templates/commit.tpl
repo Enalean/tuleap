@@ -48,7 +48,13 @@
      </tr>
      <tr>
        <td></td>
-       <td> {$adrfc2822} ({if $adhourlocal < 6}<span class="latenight">{/if}{$adhourlocal}:{$adminutelocal}{if $adhourlocal < 6}</span>{/if} {$adtzlocal})</td>
+       <td> {$commit->GetAuthorEpoch()|date_format:"%a, %d %b %Y %H:%M:%S %z"} 
+       {assign var=hourlocal value=$commit->GetAuthorLocalEpoch()|date_format:"%H"}
+       {if $hourlocal < 6}
+       (<span class="latenight">{$commit->GetAuthorLocalEpoch()|date_format:"%R"}</span> {$commit->GetAuthorTimezone()})</td>
+       {else}
+       ({$commit->GetAuthorLocalEpoch()|date_format:"%R"} {$commit->GetAuthorTimezone()})</td>
+       {/if}
      </tr>
      <tr>
        <td>committer</td>
@@ -56,7 +62,7 @@
      </tr>
      <tr>
        <td></td>
-       <td> {$cdrfc2822} ({$cdhourlocal}:{$cdminutelocal} {$cdtzlocal})</td>
+       <td> {$commit->GetCommitterEpoch()|date_format:"%a, %d %b %Y %H:%M:%S %z"} ({$commit->GetCommitterLocalEpoch()|date_format:"%R"} {$commit->GetCommitterTimezone()})</td>
      </tr>
      <tr>
        <td>commit</td>

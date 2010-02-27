@@ -35,6 +35,8 @@ require_once(GITPHP_GITOBJECTDIR . 'ProjectList.class.php');
 require_once(GITPHP_INCLUDEDIR . 'MessageException.class.php');
 require_once(GITPHP_CONTROLLERDIR . 'Controller.class.php');
 
+date_default_timezone_set('UTC');
+
 try {
 
 	/*

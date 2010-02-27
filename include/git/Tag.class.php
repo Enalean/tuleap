@@ -167,6 +167,25 @@ class GitPHP_Tag extends GitPHP_Ref
 	}
 
 	/**
+	 * GetTaggerLocalEpoch
+	 *
+	 * Gets the tagger local epoch
+	 *
+	 * @access public
+	 * @return string tagger local epoch
+	 */
+	public function GetTaggerLocalEpoch()
+	{
+		$epoch = $this->GetTaggerEpoch();
+		$tz = $this->GetTaggerTimezone();
+		if (preg_match('/^([+\-][0-9][0-9])([0-9][0-9])$/', $tz, $regs)) {
+			$local = $epoch + ((((int)$regs[1]) + ($regs[2]/60)) * 3600);
+			return $local;
+		}
+		return $epoch;
+	}
+
+	/**
 	 * GetTaggerTimezone
 	 *
 	 * Gets the tagger timezone

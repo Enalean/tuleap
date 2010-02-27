@@ -8,7 +8,6 @@
  */
 
 require_once('gitutil.git_read_blame.php');
-require_once('util.date_str.php');
 
 function git_parse_blame($file, $rev = null)
 {
@@ -43,14 +42,14 @@ function git_parse_blame($file, $rev = null)
 			$commitgroup['commitdata']['author'] = $regs[1];
 			$commitcache[$commitgroup['commit']]['author'] = $regs[1];
 		} else if (preg_match("/^author-mail (.*)$/",$line,$regs)) {
-			$commitgroup['commitdata']['author-mail'] = $regs[1];
-			$commitcache[$commitgroup['commit']]['author-mail'] = $regs[1];
+			$commitgroup['commitdata']['authormail'] = $regs[1];
+			$commitcache[$commitgroup['commit']]['authormail'] = $regs[1];
 		} else if (preg_match("/^author-time (.*)$/",$line,$regs)) {
-			$commitgroup['commitdata']['author-time'] = $regs[1];
-			$commitcache[$commitgroup['commit']]['author-time'] = $regs[1];
+			$commitgroup['commitdata']['authortime'] = $regs[1];
+			$commitcache[$commitgroup['commit']]['authortime'] = $regs[1];
 		} else if (preg_match("/^author-tz (.*)$/",$line,$regs)) {
-			$commitgroup['commitdata']['author-tz'] = $regs[1];
-			$commitcache[$commitgroup['commit']]['author-tz'] = $regs[1];
+			$commitgroup['commitdata']['authortz'] = $regs[1];
+			$commitcache[$commitgroup['commit']]['authortz'] = $regs[1];
 		} else if (preg_match("/^summary (.*)$/",$line,$regs)) {
 			$commitgroup['commitdata']['summary'] = $regs[1];
 			$commitcache[$commitgroup['commit']]['summary'] = $regs[1];
@@ -61,26 +60,6 @@ function git_parse_blame($file, $rev = null)
 	}
 	if ($commitgroup)
 		$blamedata[] = $commitgroup;
-
-	$len = count($blamedata);
-	for ($i = 0; $i < $len; $i++) {
-		if (isset($blamedata[$i]['commitdata']['author-time'])) {
-			$authortime = $blamedata[$i]['commitdata']['author-time'];
-			$authortz = "-0000";
-			if (isset($blamedata[$i]['commitdata']['author-tz']))
-				$authortz = $blamedata[$i]['commitdata']['author-tz'];
-			$date = date_str($authortime, $authortz);
-			$blamedata[$i]['commitdata']['authordate'] = $date['ymd-time'];
-		}
-		if (isset($blamedata[$i]['commitdata']['committer-time'])) {
-			$committertime = $blamedata[$i]['commitdata']['committer-time'];
-			$committertz = "-0000";
-			if (isset($blamedata[$i]['commitdata']['committer-tz']))
-				$committertz = $blamedata[$i]['commitdata']['committer-tz'];
-			$date = date_str($committertime, $committertz);
-			$blamedata[$i]['commitdata']['committerdate'] = $date['ymd-time'];
-		}
-	}
 
 	return $blamedata;
 }

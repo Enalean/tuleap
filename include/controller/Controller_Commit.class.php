@@ -11,7 +11,6 @@
  */
 
 require_once(GITPHP_INCLUDEDIR . 'util.file_type.php');
-require_once(GITPHP_INCLUDEDIR . 'util.date_str.php');
 require_once(GITPHP_INCLUDEDIR . 'gitutil.git_diff_tree.php');
 
 /**
@@ -90,8 +89,6 @@ class GitPHP_Controller_Commit extends GitPHP_ControllerBase
 	protected function LoadData()
 	{
 		$commit = $this->project->GetCommit($this->params['hash']);
-		$ad = date_str($commit->GetAuthorEpoch(), $commit->GetAuthorTimezone());
-		$cd = date_str($commit->GetCommitterEpoch(), $commit->GetCommitterTimezone());
 		$parentObj = $commit->GetParent();
 		if ($parentObj) {
 			$root = "";
@@ -108,14 +105,6 @@ class GitPHP_Controller_Commit extends GitPHP_ControllerBase
 		if ($parentObj)
 			$this->tpl->assign("parent", $parentObj->GetHash());
 		$this->tpl->assign("commit", $commit);
-		$this->tpl->assign("adrfc2822",$ad['rfc2822']);
-		$this->tpl->assign("adhourlocal",$ad['hour_local']);
-		$this->tpl->assign("adminutelocal",$ad['minute_local']);
-		$this->tpl->assign("adtzlocal",$ad['tz_local']);
-		$this->tpl->assign("cdrfc2822",$cd['rfc2822']);
-		$this->tpl->assign("cdhourlocal",$cd['hour_local']);
-		$this->tpl->assign("cdminutelocal",$cd['minute_local']);
-		$this->tpl->assign("cdtzlocal",$cd['tz_local']);
 		$this->tpl->assign("difftreesize",count($difftree)+1);
 		$difftreelines = array();
 		foreach ($difftree as $i => $line) {

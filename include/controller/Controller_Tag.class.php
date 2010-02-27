@@ -10,8 +10,6 @@
  * @subpackage Controller
  */
 
-require_once(GITPHP_INCLUDEDIR . 'util.date_str.php');
-
 /**
  * Tag controller class
  *
@@ -93,11 +91,6 @@ class GitPHP_Controller_Tag extends GitPHP_ControllerBase
 		$tag = new GitPHP_Tag($this->project, $this->params['hash']);
 
 		$this->tpl->assign("tag", $tag);
-		$tagger = $tag->GetTagger();
-		if (!empty($tagger)) {
-			$ad = date_str($tag->GetTaggerEpoch(), $tag->GetTaggerTimezone());
-			$this->tpl->assign("datedata",$ad);
-		}
 	}
 
 }

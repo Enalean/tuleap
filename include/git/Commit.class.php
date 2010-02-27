@@ -237,6 +237,25 @@ class GitPHP_Commit extends GitPHP_GitObject
 	}
 
 	/**
+	 * GetAuthorLocalEpoch
+	 *
+	 * Gets the author's local epoch
+	 *
+	 * @access public
+	 * @return string author local epoch
+	 */
+	public function GetAuthorLocalEpoch()
+	{
+		$epoch = $this->GetAuthorEpoch();
+		$tz = $this->GetAuthorTimezone();
+		if (preg_match('/^([+\-][0-9][0-9])([0-9][0-9])$/', $tz, $regs)) {
+			$local = $epoch + ((((int)$regs[1]) + ($regs[2]/60)) * 3600);
+			return $local;
+		}
+		return $epoch;
+	}
+
+	/**
 	 * GetAuthorTimezone
 	 *
 	 * Gets the author's timezone
@@ -287,10 +306,10 @@ class GitPHP_Commit extends GitPHP_GitObject
 	/**
 	 * GetCommitterEpoch
 	 *
-	 * Gets the author's epoch
+	 * Gets the committer's epoch
 	 *
 	 * @access public
-	 * @return string author epoch
+	 * @return string committer epoch
 	 */
 	public function GetCommitterEpoch()
 	{
@@ -298,6 +317,25 @@ class GitPHP_Commit extends GitPHP_GitObject
 			$this->ReadData();
 
 		return $this->committerEpoch;
+	}
+
+	/**
+	 * GetCommitterLocalEpoch
+	 *
+	 * Gets the committer's local epoch
+	 *
+	 * @access public
+	 * @return string committer local epoch
+	 */
+	public function GetCommitterLocalEpoch()
+	{
+		$epoch = $this->GetCommitterEpoch();
+		$tz = $this->GetCommitterTimezone();
+		if (preg_match('/^([+\-][0-9][0-9])([0-9][0-9])$/', $tz, $regs)) {
+			$local = $epoch + ((((int)$regs[1]) + ($regs[2]/60)) * 3600);
+			return $local;
+		}
+		return $epoch;
 	}
 
 	/**

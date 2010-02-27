@@ -54,7 +54,7 @@
        <a href="{$SCRIPT_NAME}?p={$project}&a=commit&h={$commitlines[log].commit}">commit</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=commitdiff&h={$commitlines[log].commit}">commitdiff</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=tree&h={$commitlines[log].commit}&hb={$commitlines[log].commit}">tree</a>
        <br />
      </div>
-     <i>{$commitlines[log].authorname} [{$commitlines[log].rfc2822}]</i><br />
+     <em>{$commitlines[log].authorname} [{$commitlines[log].authorepoch|date_format:"%a, %d %b %Y %H:%M:%S %z"}]</em><br />
    </div>
    <div class="log_body">
      {foreach from=$commitlines[log].comment item=line}

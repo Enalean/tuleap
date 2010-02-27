@@ -6,7 +6,7 @@
  *  Copyright (C) 2006 Christopher Han <xiphux@gmail.com>
  *}
 From: {$from}
-Date: {$date}
+Date: {$date|date_format:"%a, %d %b %Y %H:%M:%S %z"}
 Subject: {$subject}
 {if $tagname}
 X-Git-Tag: {$tagname}

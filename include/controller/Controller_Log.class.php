@@ -10,7 +10,6 @@
  * @subpackage Controller
  */
 
-require_once(GITPHP_INCLUDEDIR . 'util.date_str.php');
 require_once(GITPHP_INCLUDEDIR . 'util.age_string.php');
 require_once(GITPHP_INCLUDEDIR . 'gitutil.git_read_revlist.php');
 require_once(GITPHP_INCLUDEDIR . 'gitutil.read_info_ref.php');
@@ -127,7 +126,6 @@ class GitPHP_Controller_Log extends GitPHP_ControllerBase
 			if (isset($commit) && strlen($commit) > 1) {
 				$commitline = array();
 				$co = $this->project->GetCommit($commit);
-				$ad = date_str($co->GetAuthorEpoch());
 				$commitline["project"] = $this->project->GetProject();
 				$commitline["commit"] = $commit;
 				if (isset($refs[$commit]))
@@ -135,7 +133,7 @@ class GitPHP_Controller_Log extends GitPHP_ControllerBase
 				$commitline["agestring"] = age_string($co->GetAge());
 				$commitline["title"] = $co->GetTitle();
 				$commitline["authorname"] = $co->GetAuthorName();
-				$commitline["rfc2822"] = $ad['rfc2822'];
+				$commitline["authorepoch"] = $co->GetAuthorEpoch();
 				$commitline["comment"] = $co->GetComment();
 				$commitlines[] = $commitline;
 				unset($co);
@@ -174,7 +172,6 @@ class GitPHP_Controller_Log extends GitPHP_ControllerBase
 				if (isset($refs[$commit]))
 					$commitline["commitref"] = $refs[$commit];
 				$co = $this->project->GetCommit($commit);
-				$ad = date_str($co->GetAuthorEpoch());
 				$commitline["commit"] = $commit;
 				$age = $co->GetAge();
 				if ($age > 60*60*24*7*2) {

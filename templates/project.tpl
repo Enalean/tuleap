@@ -18,7 +18,7 @@
  <table cellspacing="0">
    <tr><td>description</td><td>{$description}</td></tr>
    <tr><td>owner</td><td>{$owner}</td></tr>
-   <tr><td>last change</td><td>{$lastchange}</td></tr>
+   <tr><td>last change</td><td>{$lastchange|date_format:"%a, %d %b %Y %H:%M:%S %z"}</td></tr>
    {if $cloneurl}
      <tr><td>clone url</td><td>{$cloneurl}</td></tr>
    {/if}

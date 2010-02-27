@@ -10,7 +10,6 @@
  * @subpackage Controller
  */
 
-require_once(GITPHP_INCLUDEDIR . 'util.date_str.php');
 require_once(GITPHP_INCLUDEDIR . 'util.age_string.php');
 require_once(GITPHP_INCLUDEDIR . 'gitutil.git_read_revlist.php');
 
@@ -86,12 +85,11 @@ class GitPHP_Controller_Project extends GitPHP_ControllerBase
 	{
 		$descr = $this->project->GetDescription();
 		$headCommit = $this->project->GetHeadCommit();
-		$commitdate = date_str($headCommit->GetCommitterEpoch(), $headCommit->GetCommitterTimezone());
 		$owner = $this->project->GetOwner();
 		$this->tpl->assign("head", $headCommit->GetHash());
 		$this->tpl->assign("description",$descr);
 		$this->tpl->assign("owner",$owner);
-		$this->tpl->assign("lastchange",$commitdate['rfc2822']);
+		$this->tpl->assign("lastchange",$headCommit->GetCommitterEpoch());
 		if (GitPHP_Config::GetInstance()->HasKey('cloneurl'))
 			$this->tpl->assign('cloneurl', GitPHP_Config::GetInstance()->GetValue('cloneurl') . $this->project->GetProject());
 		if (GitPHP_Config::GetInstance()->HasKey('pushurl'))

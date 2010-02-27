@@ -10,7 +10,6 @@
  * @subpackage Controller
  */
 
-require_once(GITPHP_INCLUDEDIR . 'util.date_str.php');
 require_once(GITPHP_INCLUDEDIR . 'util.file_type.php');
 require_once(GITPHP_INCLUDEDIR . 'util.prep_tmpdir.php');
 require_once(GITPHP_INCLUDEDIR . 'gitutil.git_diff_tree.php');
@@ -134,9 +133,8 @@ class GitPHP_Controller_Commitdiff extends GitPHP_ControllerBase
 				if ($rev == $this->params['hash'])
 					break;
 			}
-			$ad = date_str($co->GetAuthorEpoch(), $co->GetAuthorTimezone());
 			$this->tpl->assign("from", $co->GetAuthor());
-			$this->tpl->assign("date",$ad['rfc2822']);
+			$this->tpl->assign("date",$co->GetAuthorEpoch());
 			$this->tpl->assign("subject", $co->GetTitle());
 			if (isset($tagname))
 				$this->tpl->assign("tagname",$tagname);
