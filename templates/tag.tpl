@@ -10,20 +10,20 @@
 
  {* Nav *}
  <div class="page_nav">
-   <a href="{$SCRIPT_NAME}?p={$project}&a=summary">summary</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=shortlog">shortlog</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=log">log</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=commit&h={$head}">commit</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=commitdiff&h={$head}">commitdiff</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=tree&hb={$head}">tree</a>
+   <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=summary">summary</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=shortlog">shortlog</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=log">log</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=commit&h={$head}">commit</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=commitdiff&h={$head}">commitdiff</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=tree&hb={$head}">tree</a>
    <br /><br />
  </div>
  {* Tag data *}
  <div>
-   <a href="{$SCRIPT_NAME}?p={$project}&a=commit&h={$hash}" class="title">{$tag->GetName()}</a>
+   <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=commit&h={$hash}" class="title">{$tag->GetName()}</a>
  </div>
  <div class="title_text">
    <table cellspacing="0">
      <tr>
        <td>object</td>
        {assign var=object value=$tag->GetObject()}
-       <td class="monospace"><a href="{$SCRIPT_NAME}?p={$project}&a={$tag->GetType()}&h={$object->GetHash()}" class="list">{$object->GetHash()}</a></td>
-       <td class="link"><a href="{$SCRIPT_NAME}?p={$project}&a={$tag->GetType()}&h={$object->GetHash()}">{$tag->GetType()}</a></td>
+       <td class="monospace"><a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a={$tag->GetType()}&h={$object->GetHash()}" class="list">{$object->GetHash()}</a></td>
+       <td class="link"><a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a={$tag->GetType()}&h={$object->GetHash()}">{$tag->GetType()}</a></td>
      </tr>
      {if $tag->GetTagger()}
        <tr>

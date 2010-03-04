@@ -10,22 +10,22 @@
 
  {* Nav *}
  <div class="page_nav">
-   <a href="{$SCRIPT_NAME}?p={$project}&a=summary">summary</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=shortlog&h={$hash}">shortlog</a> | log | <a href="{$SCRIPT_NAME}?p={$project}&a=commit&h={$hash}">commit</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=commitdiff&h={$hash}">commitdiff</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=tree&h={$hash}&hb={$hash}">tree</a>
+   <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=summary">summary</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=shortlog&h={$hash}">shortlog</a> | log | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=commit&h={$hash}">commit</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=commitdiff&h={$hash}">commitdiff</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=tree&h={$hash}&hb={$hash}">tree</a>
    <br />
    {if ($hash != $head) || $page}
-     <a href="{$SCRIPT_NAME}?p={$project}&a=log">HEAD</a>
+     <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=log">HEAD</a>
    {else}
      HEAD
    {/if}
    &sdot; 
    {if $page > 0}
-     <a href="{$SCRIPT_NAME}?p={$project}&a=log&h={$hash}&pg={$page-1}" accesskey="p" title="Alt-p">prev</a>
+     <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=log&h={$hash}&pg={$page-1}" accesskey="p" title="Alt-p">prev</a>
    {else}
      prev
    {/if}
    &sdot; 
    {if $revlistcount > 100}
-     <a href="{$SCRIPT_NAME}?p={$project}&a=log&h={$hash}&pg={$page+1}" accesskey="n" title="Alt-n">next</a>
+     <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=log&h={$hash}&pg={$page+1}" accesskey="n" title="Alt-n">next</a>
    {else}
      next
    {/if}
@@ -33,7 +33,7 @@
  </div>
  {if $norevlist}
    <div>
-     <a href="{$SCRIPT_NAME}?p={$project}&a=summary" class="title">&nbsp</a>
+     <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=summary" class="title">&nbsp</a>
    </div>
    <div class="page_body">
      Last change {$lastchange}.
@@ -43,7 +43,7 @@
  {* Display each commit *}
  {section name=log loop=$commitlines}
    <div>
-     <a href="{$SCRIPT_NAME}?p={$project}&a=commit&h={$commitlines[log].commit}" class="title"><span class="age">{$commitlines[log].agestring}</span>{$commitlines[log].title}
+     <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=commit&h={$commitlines[log].commit}" class="title"><span class="age">{$commitlines[log].agestring}</span>{$commitlines[log].title}
        {if $commitlines[log].commitref}
          <span class="tag">{$commitlines[log].commitref}</span>
        {/if}
@@ -51,7 +51,7 @@
    </div>
    <div class="title_text">
      <div class="log_link">
-       <a href="{$SCRIPT_NAME}?p={$project}&a=commit&h={$commitlines[log].commit}">commit</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=commitdiff&h={$commitlines[log].commit}">commitdiff</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=tree&h={$commitlines[log].commit}&hb={$commitlines[log].commit}">tree</a>
+       <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=commit&h={$commitlines[log].commit}">commit</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=commitdiff&h={$commitlines[log].commit}">commitdiff</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=tree&h={$commitlines[log].commit}&hb={$commitlines[log].commit}">tree</a>
        <br />
      </div>
      <em>{$commitlines[log].authorname} [{$commitlines[log].authorepoch|date_format:"%a, %d %b %Y %H:%M:%S %z"}]</em><br />

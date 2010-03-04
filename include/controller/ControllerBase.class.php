@@ -218,11 +218,8 @@ abstract class GitPHP_ControllerBase
 		$this->tpl->assign('stylesheet', GitPHP_Config::GetInstance()->GetValue('stylesheet', 'gitphp.css'));
 		$this->tpl->assign('pagetitle', GitPHP_Config::GetInstance()->GetValue('title', $gitphp_appstring));
 		$this->tpl->assign("self",script_url());
-		if ($this->project) {
-			$this->tpl->assign('validproject', true);
-			$this->tpl->assign('project', $this->project->GetProject());
-			$this->tpl->assign('projectdescription', $this->project->GetDescription());
-		}
+		if ($this->project)
+			$this->tpl->assign('project', $this->project);
 		if (GitPHP_Config::GetInstance()->GetValue('search', true))
 			$this->tpl->assign('enablesearch', true);
 		if (GitPHP_Config::GetInstance()->GetValue('filesearch', true))

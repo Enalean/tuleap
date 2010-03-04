@@ -10,10 +10,10 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
   <!-- gitphp web interface {$version}, (C) 2006 Christopher Han <xiphux@gmail.com> -->
   <head>
-    <title>{$pagetitle}{if $project && $validproject} :: {$project}{if $action && $validaction}/{$action}{/if}{/if}</title>
+    <title>{$pagetitle}{if $project} :: {$project->GetProject()}{if $action && $validaction}/{$action}{/if}{/if}</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    {if $validproject}
-      <link rel="alternate" title="{$project} log" href="{$SCRIPT_NAME}?p={$project}&a=rss" type="application/rss+xml" />
+    {if $project}
+      <link rel="alternate" title="{$project->GetProject()} log" href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=rss" type="application/rss+xml" />
     {/if}
     <link rel="stylesheet" href="css/{$stylesheet}" type="text/css" />
     <style type="text/css">
@@ -29,15 +29,15 @@
         <img src="images/git-logo.png" width="72" height="27" alt="git" class="logo" />
       </a>
       <a href="index.php">projects</a> / 
-      {if $project && $validproject}
-        <a href="{$SCRIPT_NAME}?p={$project}&a=summary">{$project}</a>
+      {if $project}
+        <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=summary">{$project->GetProject()}</a>
         {if $action && $validaction}
            / {$action}
         {/if}
         {if $enablesearch}
           <form method="get" action="index.php" enctype="application/x-www-form-urlencoded">
             <div class="search">
-              <input type="hidden" name="p" value="{$project}" />
+              <input type="hidden" name="p" value="{$project->GetProject()}" />
               <input type="hidden" name="a" value="search" />
               <input type ="hidden" name="h" value="{if $hashbase}{$hashbase}{elseif $hash}{$hash}{else}HEAD{/if}" />
               <select name="st">

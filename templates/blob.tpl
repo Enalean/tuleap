@@ -11,18 +11,18 @@
  {* If we managed to look up commit info, we have enough info to display the full header - othewise just use a simple header *}
  <div class="page_nav">
    {if $fullnav}
-     <a href="{$SCRIPT_NAME}?p={$project}&a=summary">summary</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=shortlog">shortlog</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=log">log</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=commit&h={$hashbase}">commit</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=commitdiff&h={$hashbase}">commitdiff</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=tree&h={$tree}&hb={$hashbase}">tree</a><br />
+     <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=summary">summary</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=shortlog">shortlog</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=log">log</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=commit&h={$hashbase}">commit</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=commitdiff&h={$hashbase}">commitdiff</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=tree&h={$tree}&hb={$hashbase}">tree</a><br />
      {if $file}
-       <a href="{$SCRIPT_NAME}?p={$project}&a=blob_plain&h={$hash}&f={$file}">plain</a> | 
+       <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=blob_plain&h={$hash}&f={$file}">plain</a> | 
        {if ($hashbase != "HEAD") && ($hashbase != $head)}
-         <a href="{$SCRIPT_NAME}?p={$project}&a=blob&hb=HEAD&f={$file}">HEAD</a>
+         <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=blob&hb=HEAD&f={$file}">HEAD</a>
        {else}
          HEAD
        {/if}
-       {if !$mime && !$data} | <a href="{$SCRIPT_NAME}?p={$project}&a=blame&h={$hash}&f={$file}&hb={$hashbase}">blame</a>{/if}
+       {if !$mime && !$data} | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=blame&h={$hash}&f={$file}&hb={$hashbase}">blame</a>{/if}
        <br />
      {else}
-       <a href="{$SCRIPT_NAME}?p={$project}&a=blob_plain&h={$hash}">plain</a><br />
+       <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=blob_plain&h={$hash}">plain</a><br />
      {/if}
    {else}
      <br /><br />
@@ -30,7 +30,7 @@
  </div>
  <div>
    {if $fullnav}
-     <a href="{$SCRIPT_NAME}?p={$project}&a=commit&h={$hashbase}" class="title">{$title}
+     <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=commit&h={$hashbase}" class="title">{$title}
      {if $hashbaseref}
        <span class="tag">{$hashbaseref}</span>
      {/if}
@@ -42,12 +42,12 @@
  <div class="page_path">
    {* The path to the file, with directories broken into tree links *}
    <b>
-     <a href="{$SCRIPT_NAME}?p={$project}&a=tree&hb={$hashbase}&h={$hashbase}">[{$project}]</a> / 
+     <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=tree&hb={$hashbase}&h={$hashbase}">[{$project->GetProject()}]</a> / 
      {foreach from=$paths item=path name=paths}
        {if $smarty.foreach.paths.last}
-         <a href="{$SCRIPT_NAME}?p={$project}&a=blob_plain&h={$path.tree}&f={$path.full}">{$path.short}</a>
+         <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=blob_plain&h={$path.tree}&f={$path.full}">{$path.short}</a>
        {else}
-         <a href="{$SCRIPT_NAME}?p={$project}&a=tree&hb={$hashbase}&h={$path.tree}&f={$path.full}">{$path.short}</a> / 
+         <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=tree&hb={$hashbase}&h={$path.tree}&f={$path.full}">{$path.short}</a> / 
        {/if}
      {/foreach}
    </b>
