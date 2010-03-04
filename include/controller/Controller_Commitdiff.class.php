@@ -53,7 +53,7 @@ class GitPHP_Controller_Commitdiff extends GitPHP_ControllerBase
 	protected function GetTemplate()
 	{
 		if (isset($this->params['plain']) && ($this->params['plain'] === true)) {
-			return 'diff_plaintext.tpl';
+			return 'commitdiffplain.tpl';
 		}
 		return 'commitdiff.tpl';
 	}

@@ -1,5 +1,5 @@
 {*
- *  diff_plaintext.tpl
+ *  commitdiffplain.tpl
  *  gitphp: A PHP git repository browser
  *  Component: Plaintext diff template
  *
