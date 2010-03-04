@@ -32,7 +32,7 @@
    <br />
  </div>
  {if $norevlist}
-   <div>
+   <div class="title">
      <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=summary" class="title">&nbsp</a>
    </div>
    <div class="page_body">
@@ -42,7 +42,7 @@
  {/if}
  {* Display each commit *}
  {section name=log loop=$commitlines}
-   <div>
+   <div class="title">
      <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=commit&h={$commitlines[log].commit}" class="title"><span class="age">{$commitlines[log].agestring}</span>{$commitlines[log].title}
        {if $commitlines[log].commitref}
          <span class="tag">{$commitlines[log].commitref}</span>

@@ -13,7 +13,7 @@
    <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=summary">summary</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=shortlog">shortlog</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=log">log</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=commit&h={$hash}">commit</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=commitdiff&h={$hash}">commitdiff</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=tree&h={$tree}&hb={$hash}">tree</a>
    <br /><br />
  </div>
- <div>
+ <div class="title">
    <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=commit&h={$hash}" class="title">{$title}
    {if $hashbaseref}
      <span class="tag">{$hashbaseref}</span>
@@ -37,8 +37,8 @@
    {* Display each history line *}
    {section name=history loop=$historylines}
      <tr class="{cycle values="light,dark"}">
-       <td title="{$historylines[history].agestringage}"><i>{$historylines[history].agestringdate}</i></td>
-       <td><i>{$historylines[history].authorname}</i></td>
+       <td title="{$historylines[history].agestringage}"><em>{$historylines[history].agestringdate}</em></td>
+       <td><em>{$historylines[history].authorname}</em></td>
        <td><a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=commit&h={$historylines[history].commit}" class="list"><b>{$historylines[history].title}{if $historylines[history].commitref} <span class="tag">{$historylines[history].commitref}</span>{/if}</b></a></td>
        <td class="link"><a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=commit&h={$historylines[history].commit}">commit</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=commitdiff&h={$historylines[history].commit}">commitdiff</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=blob&hb={$historylines[history].commit}&f={$historylines[history].file}">blob</a>{if $historylines[history].blob && $historylines[history].blobparent} | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=blobdiff&h={$historylines[history].blob}&hp={$historylines[history].blobparent}&hb={$historylines[history].commit}&f={$historylines[history].file}">diff to current</a>{/if}
        </td>

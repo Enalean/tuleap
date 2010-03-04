@@ -31,7 +31,7 @@
    {/if}
    <br />
  </div>
- <div>
+ <div class="title">
    <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=summary" class="title">&nbsp;</a>
  </div>
  <table cellspacing="0">

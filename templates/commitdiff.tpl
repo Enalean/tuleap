@@ -15,7 +15,7 @@
  <div>
    <br /><br />
  </div>
- <div>
+ <div class="title">
    <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=commit&h={$hash}" class="title">{$title}{if $commitref} <span class="tag">{$commitref}</span>{/if}</a>
  </div>
  <div class="page_body">

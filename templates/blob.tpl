@@ -28,7 +28,7 @@
      <br /><br />
    {/if}
  </div>
- <div>
+ <div class="title">
    {if $fullnav}
      <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=commit&h={$hashbase}" class="title">{$title}
      {if $hashbaseref}

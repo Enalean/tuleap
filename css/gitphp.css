@@ -21,10 +21,7 @@ div.title {
 	background-color:#edece6;
 }
 div.title a.title {
-	font-weight:bold; text-decoration:none; color:#000000;
-}
-div.title a.title:hover {
-	color:#880000; text-decoration: underline;
+	display: block; font-weight:bold; text-decoration:none; color:#000000;
 }
 div.title:hover { background-color: #d9d8d1; }
 div.title_text { padding:6px 0px; border: solid #d9d8d1; border-width:0px 0px 1px; }

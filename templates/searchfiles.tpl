@@ -31,7 +31,7 @@
   {/if}
   <br />
 </div>
-<div>
+<div class="title">
   <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=commit&h={$hash}" class="title">{$title}</a>
 </div>
 <table cellspacing="0">

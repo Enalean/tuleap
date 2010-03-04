@@ -14,7 +14,7 @@
    <br /><br />
  </div>
  {* Tag data *}
- <div>
+ <div class="title">
    <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=commit&h={$hash}" class="title">{$tag->GetName()}</a>
  </div>
  <div class="title_text">
