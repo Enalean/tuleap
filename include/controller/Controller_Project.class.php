@@ -10,9 +10,6 @@
  * @subpackage Controller
  */
 
-require_once(GITPHP_INCLUDEDIR . 'util.age_string.php');
-require_once(GITPHP_INCLUDEDIR . 'gitutil.git_read_revlist.php');
-
 /**
  * Project controller class
  *
@@ -83,22 +80,21 @@ class GitPHP_Controller_Project extends GitPHP_ControllerBase
 	 */
 	protected function LoadData()
 	{
-		$descr = $this->project->GetDescription();
-		$headCommit = $this->project->GetHeadCommit();
-		$owner = $this->project->GetOwner();
-		$this->tpl->assign("head", $headCommit->GetHash());
-		$this->tpl->assign("description",$descr);
-		$this->tpl->assign("owner",$owner);
-		$this->tpl->assign("lastchange",$headCommit->GetCommitterEpoch());
+		$this->tpl->assign('head', $this->project->GetHeadCommit());
+
 		if (GitPHP_Config::GetInstance()->HasKey('cloneurl'))
 			$this->tpl->assign('cloneurl', GitPHP_Config::GetInstance()->GetValue('cloneurl') . $this->project->GetProject());
 		if (GitPHP_Config::GetInstance()->HasKey('pushurl'))
 			$this->tpl->assign('pushurl', GitPHP_Config::GetInstance()->GetValue('pushurl') . $this->project->GetProject());
-		$revlist = git_read_revlist($headCommit->GetHash(), 17);
-		foreach ($revlist as $i => $rev) {
-			$revlist[$i] = $this->project->GetCommit($rev);
+
+		$revlist = $this->project->GetLog('HEAD', 17);
+		if ($revlist) {
+			if (count($revlist) > 16) {
+				$this->tpl->assign('hasmorerevs', true);
+				$revlist = array_slice($revlist, 0, 16);
+			}
+			$this->tpl->assign('revlist', $revlist);
 		}
-		$this->tpl->assign("revlist",$revlist);
 
 		$taglist = $this->project->GetTags();
 		if (isset($taglist) && (count($taglist) > 0)) {

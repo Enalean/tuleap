@@ -10,15 +10,15 @@
 
  {* Nav *}
  <div class="page_nav">
-   summary | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=shortlog">shortlog</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=log">log</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=commit&h={$head}">commit</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=commitdiff&h={$head}">commitdiff</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=tree">tree</a>
+   summary | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=shortlog">shortlog</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=log">log</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=commit&h={$head->GetHash()}">commit</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=commitdiff&h={$head->GetHash()}">commitdiff</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=tree">tree</a>
    <br /><br />
  </div>
  <div class="title">&nbsp;</div>
  {* Project brief *}
  <table cellspacing="0">
-   <tr><td>description</td><td>{$description}</td></tr>
-   <tr><td>owner</td><td>{$owner}</td></tr>
-   <tr><td>last change</td><td>{$lastchange|date_format:"%a, %d %b %Y %H:%M:%S %z"}</td></tr>
+   <tr><td>description</td><td>{$project->GetDescription()}</td></tr>
+   <tr><td>owner</td><td>{$project->GetOwner()}</td></tr>
+   <tr><td>last change</td><td>{$head->GetCommitterEpoch()|date_format:"%a, %d %b %Y %H:%M:%S %z"}</td></tr>
    {if $cloneurl}
      <tr><td>clone url</td><td>{$cloneurl}</td></tr>
    {/if}
@@ -30,41 +30,33 @@
    <a class="title" href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=shortlog">shortlog</a>
  </div>
  <table cellspacing="0">
-   {* Recent revisions *}
-   {section name=rev max=17 loop=$revlist}
-     {if $smarty.section.rev.index == 16}
-       <tr class="light">
-         <td><a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=shortlog">...</a></td>
-       </tr>
-     {else}
-         <tr class="{cycle name=revs values="light,dark"}">
-         <td><em>{$revlist[rev]->GetAge()|agestring}</em></td>
-         <td><em>{$revlist[rev]->GetAuthorName()}</em></td>
-         <td>
-           <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=commit&h={$revlist[rev]->GetHash()}" class="list" title="{$revlist[rev]->GetTitle()}"><strong>{$revlist[rev]->GetTitle(50)}</strong></a>
-	   <span class="refs">
-	   {assign var=revheads value=$revlist[rev]->GetHeads()}
-	   {if count($revheads) > 0}
-	     {foreach item=revhead from=$revheads}
-	     <span class="head">
-	       <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=shortlog&h=refs/heads/{$revhead->GetName()}">{$revhead->GetName()}</a>
-	     </span>
-	     {/foreach}
-	   {/if}
-	   {assign var=revtags value=$revlist[rev]->GetTags()}
-	   {if count($revtags) > 0}
-	     {foreach item=revtag from=$revtags}
-	     <span class="tag">
-	       <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=tag&h={$revtag->GetName()}">{$revtag->GetName()}</a>
-	     </span>
-	     {/foreach}
-	   {/if}
-	   </span>
-         </td>
-         <td class="link"><a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=commit&h={$revlist[rev]->GetHash()}">commit</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=commitdiff&h={$revlist[rev]->GetHash()}">commitdiff</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=tree&h={$revlist[rev]->GetHash()}&hb={$revlist[rev]->GetHash()}">tree</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=snapshot&h={$revlist[rev]->GetHash()}">snapshot</a></td>
-       </tr>
-     {/if}
-   {/section}
+   {foreach from=$revlist item=rev}
+     <tr class="{cycle name=revs values="light,dark"}">
+     <td><em>{$rev->GetAge()|agestring}</em></td>
+     <td><em>{$rev->GetAuthorName()}</em></td>
+     <td>
+       <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=commit&h={$rev->GetHash()}" class="list" {if strlen($rev->GetTitle()) > 50}title="{$rev->GetTitle()}"{/if}><strong>{$rev->GetTitle(50)}</strong></a>
+       <span class="refs">
+       {foreach item=revhead from=$rev->GetHeads()}
+         <span class="head">
+           <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=shortlog&h=refs/heads/{$revhead->GetName()}">{$revhead->GetName()}</a>
+         </span>
+       {/foreach}
+       {foreach item=revtag from=$rev->GetTags()}
+         <span class="tag">
+           <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=tag&h={$revtag->GetName()}">{$revtag->GetName()}</a>
+         </span>
+       {/foreach}
+       </span>
+     </td>
+     <td class="link"><a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=commit&h={$rev->GetHash()}">commit</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=commitdiff&h={$rev->GetHash()}">commitdiff</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=tree&h={$rev->GetHash()}&hb={$rev->GetHash()}">tree</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=snapshot&h={$rev->GetHash()}">snapshot</a></td>
+     </tr>
+   {/foreach}
+   {if $hasmorerevs}
+     <tr class="light">
+       <td><a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=shortlog">...</a></td>
+     </tr>
+   {/if}
  </table>
  {if $taglist}
    {* Tags *}
