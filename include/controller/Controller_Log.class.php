@@ -11,7 +11,6 @@
  */
 
 require_once(GITPHP_INCLUDEDIR . 'util.age_string.php');
-require_once(GITPHP_INCLUDEDIR . 'gitutil.git_read_revlist.php');
 require_once(GITPHP_INCLUDEDIR . 'gitutil.read_info_ref.php');
 
 /**
@@ -96,102 +95,18 @@ class GitPHP_Controller_Log extends GitPHP_ControllerBase
 	 */
 	protected function LoadData()
 	{
-		if (isset($this->params['short']) && ($this->params['short'] === true)) {
-			$this->LoadDataShort();
-			return;
-		}
-		$head = $this->project->GetHeadCommit()->GetHash();
-		$refs = read_info_ref();
-		$this->tpl->assign("hash",$this->params['hash']);
-		$this->tpl->assign("head",$head);
+		$this->tpl->assign('hash', $this->project->GetCommit($this->params['hash']));
+		$this->tpl->assign('head', $this->project->GetHeadCommit());
+		$this->tpl->assign('page',$this->params['page']);
 
-		if ($this->params['page'])
-			$this->tpl->assign("page",$this->params['page']);
-
-		$revlist = git_read_revlist($this->params['hash'], 101, ($this->params['page'] * 100));
-
-		$revlistcount = count($revlist);
-		$this->tpl->assign("revlistcount",$revlistcount);
-
-		if (!$revlist) {
-			$this->tpl->assign("norevlist",TRUE);
-			$co = $this->project->GetCommit($this->params['hash']);
-			$this->tpl->assign("lastchange", age_string($co->GetAge()));
-		}
-
-		$commitlines = array();
-		$commitcount = min(100,$revlistcount);
-		for ($i = 0; $i < $commitcount; ++$i) {
-			$commit = $revlist[$i];
-			if (isset($commit) && strlen($commit) > 1) {
-				$commitline = array();
-				$co = $this->project->GetCommit($commit);
-				$commitline["project"] = $this->project->GetProject();
-				$commitline["commit"] = $commit;
-				if (isset($refs[$commit]))
-					$commitline["commitref"] = $refs[$commit];
-				$commitline["agestring"] = age_string($co->GetAge());
-				$commitline["title"] = $co->GetTitle();
-				$commitline["authorname"] = $co->GetAuthorName();
-				$commitline["authorepoch"] = $co->GetAuthorEpoch();
-				$commitline["comment"] = $co->GetComment();
-				$commitlines[] = $commitline;
-				unset($co);
+		$revlist = $this->project->GetLog($this->params['hash'], 101, ($this->params['page'] * 100));
+		if ($revlist) {
+			if (count($revlist) > 100) {
+				$this->tpl->assign('hasmore', true);
+				$revlist = array_slice($revlist, 0, 100);
 			}
+			$this->tpl->assign('revlist', $revlist);
 		}
-		$this->tpl->assign("commitlines",$commitlines);
-	}
-
-	/**
-	 * LoadDataShort
-	 *
-	 * Load data for shortlog
-	 * TODO: temporary until templates get cleaned up more
-	 */
-	private function LoadDataShort()
-	{
-		$head = $this->project->GetHeadCommit();;
-		$refs = read_info_ref();
-		$this->tpl->assign("hash",$this->params['hash']);
-		$this->tpl->assign("head",$head->GetHash());
-
-		if ($page)
-			$this->tpl->assign("page",$page);
-
-		$revlist = git_read_revlist($this->params['hash'], 101, ($page * 100));
-
-		$revlistcount = count($revlist);
-		$this->tpl->assign("revlistcount",$revlistcount);
-
-		$commitlines = array();
-		$commitcount = min(100,count($revlist));
-		for ($i = 0; $i < $commitcount; ++$i) {
-			$commit = $revlist[$i];
-			if (strlen(trim($commit)) > 0) {
-				$commitline = array();
-				if (isset($refs[$commit]))
-					$commitline["commitref"] = $refs[$commit];
-				$co = $this->project->GetCommit($commit);
-				$commitline["commit"] = $commit;
-				$age = $co->GetAge();
-				if ($age > 60*60*24*7*2) {
-					$commitline["agestringdate"] = date('Y-m-d', $co->GetCommitterEpoch());
-					$commitline["agestringage"] = age_string($age);
-				} else {
-					$commitline["agestringdate"] = age_string($age);
-					$commitline["agestringage"] = date('Y-m-d', $co->GetCommitterEpoch());
-				}
-				$commitline["authorname"] = $co->GetAuthorName();
-				$titleshort = $co->GetTitle(GITPHP_TRIM_LENGTH);
-				$title = $co->GetTitle();
-				$commitline["title_short"] = $titleshort;
-				if (strlen($titleshort) < strlen($title))
-					$commitline["title"] = $title;
-				$commitlines[] = $commitline;
-				unset($co);
-			}
-		}
-		$this->tpl->assign("commitlines",$commitlines);
 	}
 
 }

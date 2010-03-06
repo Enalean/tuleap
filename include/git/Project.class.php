@@ -570,5 +570,75 @@ class GitPHP_Project
 
 	}
 
+	/**
+	 * GetLogHash
+	 *
+	 * Gets log entries as an array of hashes
+	 *
+	 * @access public
+	 * @param string $hash hash to start the log at
+	 * @param integer $count number of entries to get
+	 * @param integer $skip number of entries to skip
+	 * @return array array of hashes
+	 */
+	public function GetLogHash($hash, $count = 50, $skip = 0)
+	{
+		if ($count < 1)
+			return;
+
+		$exe = new GitPHP_GitExe($this);
+
+		$canSkip = true;
+		
+		if ($skip > 0)
+			$canSkip = $exe->CanSkip();
+
+		$args = array();
+
+		if ($canSkip) {
+			$args[] = '--max-count=' . $count;
+			if ($skip > 0) {
+				$args[] = '--skip=' . $skip;
+			}
+		} else {
+			$args[] = '--max-count=' . ($count + $skip);
+		}
+
+		$args[] = $hash;
+
+		$revlist = explode("\n", $exe->Execute(GIT_REV_LIST, $args));
+
+		if (!$revlist[count($revlist)-1]) {
+			/* the last newline creates a null entry */
+			array_splice($revlist, -1, 1);
+		}
+
+		if (($skip > 0) && (!$exe->CanSkip())) {
+			return array_slice($revlist, $skip, $count);
+		}
+
+		return $revlist;
+	}
+
+	/**
+	 * GetLog
+	 *
+	 * Gets log entries as an array of commit objects
+	 *
+	 * @access public
+	 * @param string $hash hash to start the log at
+	 * @param integer $count number of entries to get
+	 * @param integer $skip number of entries to skip
+	 * @return array array of commit objects
+	 */
+	public function GetLog($hash, $count = 50, $skip = 0)
+	{
+		$log = $this->GetLogHash($hash, $count, $skip);
+		$len = count($log);
+		for ($i = 0; $i < $len; ++$i) {
+			$log[$i] = $this->GetCommit($log[$i]);
+		}
+		return $log;
+	}
 
 }

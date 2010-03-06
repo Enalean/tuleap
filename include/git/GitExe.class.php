@@ -100,12 +100,53 @@ class GitPHP_GitExe
 	 *
 	 * Gets the binary for this executable
 	 *
-	 * @return string $param
+	 * @return string binary
 	 * @access public
 	 */
 	public function GetBinary()
 	{
 		return $this->binary;
+	}
+
+	/**
+	 * GetVersion
+	 *
+	 * Gets the version of the git binary
+	 *
+	 * @return string version
+	 * @access public
+	 */
+	public function GetVersion()
+	{
+		$versionCommand = $this->binary . ' --version';
+		$ret = trim(shell_exec($versionCommand));
+		if (preg_match('/^git version ([0-9\.]+)$/i', $ret, $regs)) {
+			return $regs[1];
+		}
+		return '';
+	}
+
+	/**
+	 * CanSkip
+	 *
+	 * Tests if this version of git can skip through the revision list
+	 *
+	 * @access public
+	 * @return boolean true if we can skip
+	 */
+	public function CanSkip()
+	{
+		$version = $this->GetVersion();
+		if (!empty($version)) {
+			$splitver = explode('.', $version);
+
+			/* Skip only appears in git >= 1.5.0 */
+			if (($splitver[0] < 1) || (($splitver[0] == 1) && ($splitver[1] < 5))) {
+				return false;
+			}
+		}
+
+		return true;
 	}
 
 }
