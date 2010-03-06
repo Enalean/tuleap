@@ -82,11 +82,6 @@ class GitPHP_Controller_Project extends GitPHP_ControllerBase
 	{
 		$this->tpl->assign('head', $this->project->GetHeadCommit());
 
-		if (GitPHP_Config::GetInstance()->HasKey('cloneurl'))
-			$this->tpl->assign('cloneurl', GitPHP_Config::GetInstance()->GetValue('cloneurl') . $this->project->GetProject());
-		if (GitPHP_Config::GetInstance()->HasKey('pushurl'))
-			$this->tpl->assign('pushurl', GitPHP_Config::GetInstance()->GetValue('pushurl') . $this->project->GetProject());
-
 		$revlist = $this->project->GetLog('HEAD', 17);
 		if ($revlist) {
 			if (count($revlist) > 16) {

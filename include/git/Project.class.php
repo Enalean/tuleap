@@ -324,6 +324,38 @@ class GitPHP_Project
 	}
 
 	/**
+	 * GetCloneUrl
+	 *
+	 * Gets the clone URL for this repository, if specified
+	 *
+	 * @access public
+	 * @return string clone url
+	 */
+	public function GetCloneUrl()
+	{
+		$cloneurl = GitPHP_Config::GetInstance()->GetValue('cloneurl', '');
+		if (!empty($cloneurl))
+			$cloneurl .= $this->project;
+		return $cloneurl;
+	}
+
+	/**
+	 * GetPushUrl
+	 *
+	 * Gets the push URL for this repository, if specified
+	 *
+	 * @access public
+	 * @return string push url
+	 */
+	public function GetPushUrl()
+	{
+		$pushurl = GitPHP_Config::GetInstance()->GetValue('pushurl', '');
+		if (!empty($pushurl))
+			$pushurl .= $this->project;
+		return $pushurl;
+	}
+
+	/**
 	 * GetHeadCommit
 	 *
 	 * Gets the head commit for this project

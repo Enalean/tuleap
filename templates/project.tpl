@@ -19,11 +19,11 @@
    <tr><td>description</td><td>{$project->GetDescription()}</td></tr>
    <tr><td>owner</td><td>{$project->GetOwner()}</td></tr>
    <tr><td>last change</td><td>{$head->GetCommitterEpoch()|date_format:"%a, %d %b %Y %H:%M:%S %z"}</td></tr>
-   {if $cloneurl}
-     <tr><td>clone url</td><td>{$cloneurl}</td></tr>
+   {if $project->GetCloneUrl()}
+     <tr><td>clone url</td><td>{$project->GetCloneUrl()}</td></tr>
    {/if}
-   {if $pushurl}
-     <tr><td>push url</td><td>{$pushurl}</td></tr>
+   {if $project->GetPushUrl()}
+     <tr><td>push url</td><td>{$project->GetPushUrl()}</td></tr>
    {/if}
  </table>
  <div class="title">
