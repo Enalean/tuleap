@@ -10,12 +10,8 @@
  * @subpackage Controller
  */
 
-require_once(GITPHP_INCLUDEDIR . 'util.file_type.php');
-require_once(GITPHP_INCLUDEDIR . 'util.prep_tmpdir.php');
-require_once(GITPHP_INCLUDEDIR . 'gitutil.git_diff_tree.php');
 require_once(GITPHP_INCLUDEDIR . 'gitutil.git_read_revlist.php');
 require_once(GITPHP_INCLUDEDIR . 'gitutil.read_info_ref.php');
-require_once(GITPHP_INCLUDEDIR . 'gitutil.git_diff.php');
 
 /**
  * Commitdiff controller class
@@ -110,19 +106,12 @@ class GitPHP_Controller_Commitdiff extends GitPHP_ControllerBase
 	 */
 	protected function LoadData()
 	{
-		$ret = prep_tmpdir();
-		if ($ret !== TRUE) {
-			echo $ret;
-			return;
-		}
 		$co = $this->project->GetCommit($this->params['hash']);
-		if (!isset($this->params['hashparent'])) {
-			$parent = $co->GetParent();
-			if ($parent)
-				$this->params['hashparent'] = $parent->GetHash();
-		}
-		$diffout = git_diff_tree($this->params['hashparent'] . " " . $this->params['hash']);
-		$difftree = explode("\n",$diffout);
+		$this->tpl->assign('hash', $co);
+		$this->tpl->assign("hashparent",$this->params['hashparent']);
+
+		$treediff = new GitPHP_TreeDiff($this->project, $this->params['hash'], $this->params['hashparent']);
+		$this->tpl->assign('treediff', $treediff);
 
 		if (isset($this->params['plain']) && ($this->params['plain'] === true)) {
 			$refs = read_info_ref('tags');
@@ -133,58 +122,15 @@ class GitPHP_Controller_Commitdiff extends GitPHP_ControllerBase
 				if ($rev == $this->params['hash'])
 					break;
 			}
-			$this->tpl->assign("from", $co->GetAuthor());
-			$this->tpl->assign("date",$co->GetAuthorEpoch());
-			$this->tpl->assign("subject", $co->GetTitle());
 			if (isset($tagname))
 				$this->tpl->assign("tagname",$tagname);
-			$this->tpl->assign("url",script_url() . "?p=" . $this->project->GetProject() . "&a=commitdiff&h=" . $this->params['hash']);
-			$this->tpl->assign("comment", $co->GetComment());
-			$diffs = array();
-			foreach ($difftree as $i => $line) {
-				if (preg_match("/^:([0-7]{6}) ([0-7]{6}) ([0-9a-fA-F]{40}) ([0-9a-fA-F]{40}) (.)\t(.*)$/",$line,$regs)) {
-					if ($regs[5] == "A")
-						$diffs[] = git_diff(null, "/dev/null", $regs[4], "b/" . $regs[6]);
-					else if ($regs[5] == "D")
-						$diffs[] = git_diff($regs[3], "a/" . $regs[6], null, "/dev/null");
-					else if ($regs[5] == "M")
-						$diffs[] = git_diff($regs[3], "a/" . $regs[6], $regs[4], "b/" . $regs[6]);
-				}
-			}
-			$this->tpl->assign("diffs",$diffs);
 		} else {
 			$refs = read_info_ref();
-			$this->tpl->assign("hash",$this->params['hash']);
 			$tree = $co->GetTree();
 			if ($tree)
 				$this->tpl->assign("tree", $tree->GetHash());
-			$this->tpl->assign("hashparent",$this->params['hashparent']);
-			$this->tpl->assign("title", $co->GetTitle());
 			if (isset($refs[$co->GetHash()]))
 				$this->tpl->assign("commitref",$refs[$co->GetHash()]);
-			$this->tpl->assign("comment",$co->GetComment());
-			$difftreelines = array();
-			foreach ($difftree as $i => $line) {
-				if (preg_match("/^:([0-7]{6}) ([0-7]{6}) ([0-9a-fA-F]{40}) ([0-9a-fA-F]{40}) (.)\t(.*)$/",$line,$regs)) {
-					$difftreeline = array();
-					$difftreeline["from_mode"] = $regs[1];
-					$difftreeline["to_mode"] = $regs[2];
-					$difftreeline["from_id"] = $regs[3];
-					$difftreeline["to_id"] = $regs[4];
-					$difftreeline["status"] = $regs[5];
-					$difftreeline["file"] = $regs[6];
-					$difftreeline["from_type"] = file_type($regs[1]);
-					$difftreeline["to_type"] = file_type($regs[2]);
-					if ($regs[5] == "A")
-						$difftreeline['diffout'] = explode("\n",git_diff(null,"/dev/null",$regs[4],"b/" . $regs[6]));
-					else if ($regs[5] == "D")
-						$difftreeline['diffout'] = explode("\n",git_diff($regs[3],"a/" . $regs[6],null,"/dev/null"));
-					else if (($regs[5] == "M") && ($regs[3] != $regs[4]))
-						$difftreeline['diffout'] = explode("\n",git_diff($regs[3],"a/" . $regs[6],$regs[4],"b/" . $regs[6]));
-					$difftreelines[] = $difftreeline;
-				}
-			}
-			$this->tpl->assign("difftreelines",$difftreelines);
 		}
 	}
 

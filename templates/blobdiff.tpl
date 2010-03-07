@@ -48,7 +48,7 @@
      blob:<a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=blob&h={$hashparent}&hb={$hashbase}&f={$file}">{if $file}a/{$file}{else}{$hashparent}{/if}</a> -&gt; blob:<a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=blob&h={$hash}&hb={$hashbase}&f={$file}">{if $file}b/{$file}{else}{$hash}{/if}</a>
    </div>
    {* Display the diff *}
-   {include file='filediff.tpl'}
+   {include file='filediff.tpl' diff=$filediff->GetDiff($file, false, true)}
  </div>
 
  {include file='footer.tpl'}

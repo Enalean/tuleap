@@ -30,6 +30,33 @@ class GitPHP_FileDiff
 	protected $diffInfoRead = false;
 
 	/**
+	 * diffDataRead
+	 *
+	 * Stores whether diff data has been read
+	 *
+	 * @access protected
+	 */
+	protected $diffDataRead = false;
+
+	/**
+	 * diffData
+	 *
+	 * Stores the diff data
+	 *
+	 * @access protected
+	 */
+	protected $diffData;
+
+	/**
+	 * diffDataName
+	 *
+	 * Filename used on last data diff
+	 *
+	 * @access protected
+	 */
+	protected $diffDataName;
+
+	/**
 	 * fromMode
 	 *
 	 * Stores the from file mode
@@ -147,11 +174,12 @@ class GitPHP_FileDiff
 		if ($this->ParseDiffTreeLine($fromHash))
 			return;
 
-		if (!(preg_match('/^[0-9a-fA-F]{40}$/', $fromHash) && preg_match('/^[0-9]a-fA-F]{40}$/', $toHash))) {
+		if (!(preg_match('/^[0-9a-fA-F]{40}$/', $fromHash) && preg_match('/^[0-9a-fA-F]{40}$/', $toHash))) {
 			throw new Exception('Invalid parameters for FileDiff');
 		}
 
-		
+		$this->fromHash = $fromHash;
+		$this->toHash = $toHash;
 	}
 
 	/**
@@ -452,4 +480,131 @@ class GitPHP_FileDiff
 
 		return (octdec($this->toMode) & 0x8000) == 0x8000;
 	}
+
+	/**
+	 * GetDiff
+	 *
+	 * Gets the diff output
+	 *
+	 * @access public
+	 * @param string $file override the filename on the diff
+	 * @return string diff output
+	 */
+	public function GetDiff($file = '', $readFileData = true, $explode = false)
+	{
+		if ($this->diffDataRead && ($file == $this->diffDataName)) {
+			if ($explode)
+				return explode("\n", $this->diffData);
+			else
+				return $this->diffData;
+		}
+
+		if ((!$this->diffInfoRead) && $readFileData)
+			$this->ReadDiffInfo();
+
+		$this->diffDataName = $file;
+		$this->diffDataRead = true;
+
+		if ((!empty($this->status)) && ($this->status != 'A') && ($this->status != 'D') && ($this->status != 'M')) {
+			$this->diffData = '';
+			return;
+		}
+
+		if (!GitPHP_Config::GetInstance()->GetValue('tmpdirprepared'))
+			GitPHP_FileDiff::PrepareTempDir();
+
+		$tmpdir = GitPHP_Config::GetInstance()->GetValue('gittmp', '/tmp/gitphp/');
+
+		$pid = 0;
+		if (function_exists('posix_getpid'))
+			$pid = posix_getpid();
+		else
+			$pid = rand();
+
+		$fromFile = '/dev/null';
+		$hasFrom = false;
+		$toFile = '/dev/null';
+		$hasTo = false;
+
+		$fromName = 'a/';
+		$toName = 'b/';
+
+		if ((empty($this->status)) || ($this->status == 'D') || ($this->status == 'M')) {
+			$fromBlob = $this->project->GetBlob($this->fromHash);
+			$fromFile = $tmpdir . 'gitphp_' . $pid . '_from';
+			$fromBlob->PipeData($fromFile);
+			$hasFrom = true;
+
+			if (!empty($file)) {
+				$fromName .= $file;
+			} else if (!empty($this->fromFile)) {
+				$fromName .= $this->fromFile;
+			} else {
+				$fromName .= $this->fromHash;
+			}
+		}
+
+		if ((empty($this->status)) || ($this->status == 'A') || ($this->status == 'M')) {
+			$toBlob = $this->project->GetBlob($this->toHash);
+			$toFile = $tmpdir . 'gitphp_' . $pid . '_to';
+			$toBlob->PipeData($toFile);
+			$hasTo = true;
+
+			if (!empty($file)) {
+				$toName .= $file;
+			} else if (!empty($this->toFile)) {
+				$toName .= $this->toFile;
+			} else {
+				$toName .= $this->toHash;
+			}
+		}
+
+		$this->diffData = shell_exec(GitPHP_Config::GetInstance()->GetValue('diffbin', 'diff') . ' -u -p -L "' . $fromName . '" -L "' . $toName . '" ' . $fromFile . ' ' . $toFile);
+
+		if ($hasFrom) {
+			unlink($fromFile);
+		}
+
+		if ($hasTo) {
+			unlink($toFile);
+		}
+
+		if ($explode)
+			return explode("\n", $this->diffData);
+		else
+			return $this->diffData;
+	}
+
+	/**
+	 * PrepareTempDir
+	 *
+	 * Prepares the temporary directory
+	 *
+	 * @access private
+	 * @static
+	 * @throws Exception exception on error
+	 */
+	private static function PrepareTempDir()
+	{
+		GitPHP_Config::GetInstance()->SetValue('tmpdirprepared', true);
+
+		$tmpdir = GitPHP_Config::GetInstance()->GetValue('gittmp', '/tmp/gitphp/');
+
+		if (empty($tmpdir)) {
+			throw new Exception('No tmpdir defined');
+		}
+
+		if (file_exists($tmpdir)) {
+			if (is_dir($tmpdir)) {
+				if (!is_writeable($tmpdir)) {
+					throw new Exception('Specified tmpdir ' . $tmpdir . ' is not writeable');
+				}
+			} else {
+				throw new Exception('Specified tmpdir ' . $tmpdir . ' is not a directory');
+			}
+		} else if (!mkdir($tmpdir, 0700)) {
+			throw new Exception('Could not create tmpdir ' . $tmpdir);
+		}
+	}
+	
 }

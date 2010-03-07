@@ -11,7 +11,6 @@
  */
 
 require_once(GITPHP_INCLUDEDIR . 'gitutil.git_get_hash_by_path.php');
-require_once(GITPHP_INCLUDEDIR . 'gitutil.git_cat_file.php');
 require_once(GITPHP_INCLUDEDIR . 'gitutil.git_path_trees.php');
 require_once(GITPHP_INCLUDEDIR . 'gitutil.read_info_ref.php');
 require_once(GITPHP_INCLUDEDIR . 'util.file_mime.php');
@@ -104,9 +103,10 @@ class GitPHP_Controller_Blob extends GitPHP_ControllerBase
 				if (isset($this->params['file']))
 					$saveas = $this->params['file'];
 				else
-					$saveas = $hash . ".txt";
+					$saveas = $this->params['hash'] . ".txt";
 
-				$buffer = git_cat_file($hash);
+				$blob = $this->project->GetBlob($this->params['hash']);
+				$buffer = $blob->GetData();
 
 				if (GitPHP_Config::GetInstance()->GetValue('filemimetype', true))
 					$mime = file_mime($buffer, $this->params['file']);
@@ -142,13 +142,15 @@ class GitPHP_Controller_Blob extends GitPHP_ControllerBase
 			$this->params['hash'] = git_get_hash_by_path($this->params['hashbase'], $this->params['file'], 'blob');
 		}
 
+		$blob = $this->project->GetBlob($this->params['hash']);
+
 		if ($this->params['plain']) {
-			$this->tpl->assign("blob", git_cat_file($this->params['hash']));
+			$this->tpl->assign("blob", $blob->GetData());
 			return;
 		}
 
 		$head = $this->project->GetHeadCommit()->GetHash();
-		$catout = git_cat_file($this->params['hash']);
+		$catout = $blob->GetData();
 		$this->tpl->assign("hash",$this->params['hash']);
 		$this->tpl->assign("hashbase",$this->params['hashbase']);
 		$this->tpl->assign("head", $head);

@@ -10,10 +10,8 @@
  * @subpackage Controller
  */
 
-require_once(GITPHP_INCLUDEDIR . 'util.prep_tmpdir.php');
 require_once(GITPHP_INCLUDEDIR . 'gitutil.read_info_ref.php');
 require_once(GITPHP_INCLUDEDIR . 'gitutil.git_path_trees.php');
-require_once(GITPHP_INCLUDEDIR . 'gitutil.git_diff.php');
 
 /**
  * Blobdiff controller class
@@ -111,22 +109,19 @@ class GitPHP_Controller_Blobdiff extends GitPHP_ControllerBase
 	 */
 	protected function LoadData()
 	{
-		$ret = prep_tmpdir();
-		if ($ret !== TRUE) {
-			echo $ret;
+		if (isset($this->params['file']))
+			$this->tpl->assign("file",$this->params['file']);
+		$filediff = new GitPHP_FileDiff($this->project, $this->params['hashparent'], $this->params['hash']);
+		$this->tpl->assign('filediff', $filediff);
+
+		if (isset($this->params['plain']) && ($this->params['plain'] === true)) {
 			return;
 		}
 
-		if (isset($this->params['plain']) && ($this->params['plain'] === true)) {
-			$this->tpl->assign("blobdiff",git_diff($this->params['hashparent'],($this->params['file']?"a/".$this->params['file']:$this->params['hashparent']),$this->params['hash'],($this->params['file']?"b/".$this->params['file']:$this->params['hash'])));
-			return;
-		}
 
 		$this->tpl->assign("hash",$this->params['hash']);
 		$this->tpl->assign("hashparent",$this->params['hashparent']);
 		$this->tpl->assign("hashbase",$this->params['hashbase']);
-		if (isset($this->params['file']))
-			$this->tpl->assign("file",$this->params['file']);
 		$co = $this->project->GetCommit($this->params['hashbase']);
 		if ($co) {
 			$this->tpl->assign("fullnav",TRUE);
@@ -138,8 +133,6 @@ class GitPHP_Controller_Blobdiff extends GitPHP_ControllerBase
 		}
 		$paths = git_path_trees($this->params['hashbase'], $this->params['file']);
 		$this->tpl->assign("paths",$paths);
-		$diffout = explode("\n",git_diff($this->params['hashparent'],($this->params['file']?$this->params['file']:$this->params['hashparent']),$this->params['hash'],($this->params['file']?$this->params['file']:$this->params['hash'])));
-		$this->tpl->assign("diff",$diffout);
 	}
 
 }

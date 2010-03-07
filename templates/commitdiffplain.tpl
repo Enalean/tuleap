@@ -5,20 +5,20 @@
  *
  *  Copyright (C) 2006 Christopher Han <xiphux@gmail.com>
  *}
-From: {$from}
-Date: {$date|date_format:"%a, %d %b %Y %H:%M:%S %z"}
-Subject: {$subject}
+From: {$hash->GetAuthor()}
+Date: {$hash->GetAuthorEpoch()|date_format:"%a, %d %b %Y %H:%M:%S %z"}
+Subject: {$hash->GetTitle()}
 {if $tagname}
 X-Git-Tag: {$tagname}
 {/if}
-X-Git-Url: {$url}
+X-Git-Url: {$self}?p={$project->GetProject()}&a=commitdiff&h={$hash->GetHash()}
 ---
-{foreach from=$comment item=line}
+{foreach from=$hash->GetComment() item=line}
 {$line}
 {/foreach}
 ---
 
 
-{foreach from=$diffs item=diffout}
-{$diffout}
+{foreach from=$treediff item=filediff}
+{$filediff->GetDiff()}
 {/foreach}

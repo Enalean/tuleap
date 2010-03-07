@@ -145,6 +145,16 @@ class GitPHP_Project
 	protected $commitCache = array();
 
 	/**
+	 * blobCache
+	 *
+	 * Caches blob objects in case of
+	 * repeated requests
+	 *
+	 * @access protected
+	 */
+	protected $blobCache = array();
+
+	/**
 	 * __construct
 	 *
 	 * Class constructor
@@ -494,20 +504,6 @@ class GitPHP_Project
 	}
 
 	/**
-	 * GetRefsForHash
-	 *
-	 * Get refs pointing to this hash
-	 *
-	 * @access public
-	 * @param string $hash hash
-	 * @param string $type ref type
-	 * @return array array of refs
-	 */
-	public function GetRefsForHash($hash, $type)
-	{
-	}
-
-	/**
 	 * GetTags
 	 *
 	 * Gets list of tags for this project
@@ -671,6 +667,25 @@ class GitPHP_Project
 			$log[$i] = $this->GetCommit($log[$i]);
 		}
 		return $log;
+	}
+
+	/**
+	 * GetBlob
+	 *
+	 * Gets a blob from this project
+	 *
+	 * @access public
+	 * @param string $hash blob hash
+	 */
+	public function GetBlob($hash)
+	{
+		if (empty($hash))
+			return null;
+
+		if (!isset($this->blobCache[$hash]))
+			$this->blobCache[$hash] = new GitPHP_Blob($this, $hash);
+
+		return $this->blobCache[$hash];
 	}
 
 }

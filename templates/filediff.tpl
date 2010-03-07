@@ -7,14 +7,14 @@
  *}
 <div class="pre">
 {foreach from=$diff item=diffline}
-  {if substr($diffline,0,1)=="+"}
-    <span class="diffplus">{$diffline|escape:'html'}</span>
-  {elseif substr($diffline,0,1)=="-"}
-    <span class="diffminus">{$diffline|escape:'html'}</span>
-  {elseif substr($diffline,0,1)=="@"}
-    <span class="diffat">{$diffline|escape:'html'}</span>
-  {else}
-    <span>{$diffline|escape:'html'}</span>
-  {/if}
+{if substr($diffline,0,1)=="+"}
+<span class="diffplus">{$diffline|escape:'html'}</span>
+{elseif substr($diffline,0,1)=="-"}
+<span class="diffminus">{$diffline|escape:'html'}</span>
+{elseif substr($diffline,0,1)=="@"}
+<span class="diffat">{$diffline|escape:'html'}</span>
+{else}
+<span>{$diffline|escape:'html'}</span>
+{/if}
 {/foreach}
 </div>

@@ -5,4 +5,4 @@
  *
  *  Copyright (C) 2009 Christopher Han <xiphux@gmail.com>
  *}
-{$blobdiff}
+{$filediff->GetDiff($file, false)}
