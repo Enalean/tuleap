@@ -475,11 +475,14 @@ class GitPHP_Commit extends GitPHP_GitObject
 					$trimmed = trim($line);
 					if (empty($this->title) && (strlen($trimmed) > 0))
 						$this->title = $trimmed;
-					if (!empty($this->title))
-						$this->comment[] = $trimmed;
+					if (!empty($this->title)) {
+						if ((strlen($trimmed) > 0) || ($i < (count($lines)-1)))
+							$this->comment[] = $trimmed;
+					}
 				}
 			}
 		}
+
 	}
 
 	/**
