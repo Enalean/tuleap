@@ -141,7 +141,7 @@ class GitPHP_TreeDiff implements Iterator
 		foreach ($diffTreeLines as $line) {
 			$trimmed = trim($line);
 			if (strlen($trimmed) > 0) {
-				$this->fileDiffs[] = new GitPHP_FileDiff($trimmed);
+				$this->fileDiffs[] = new GitPHP_FileDiff($this->project, $trimmed);
 			}
 		}
 

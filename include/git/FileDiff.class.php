@@ -120,18 +120,30 @@ class GitPHP_FileDiff
 	protected $toFileType;
 
 	/**
+	 * project
+	 *
+	 * Stores the project
+	 *
+	 * @access protected
+	 */
+	protected $project;
+
+	/**
 	 * __construct
 	 *
 	 * Constructor
 	 *
 	 * @access public
+	 * @param mixed $project project
 	 * @param string $fromHash source hash, can also be a diff-tree info line
 	 * @param string $toHash target hash, required if $fromHash is a hash
 	 * @return mixed FileDiff object
 	 * @throws Exception on invalid parameters
 	 */
-	public function __construct($fromHash, $toHash = '')
+	public function __construct($project, $fromHash, $toHash = '')
 	{
+		$this->project = $project;
+
 		if ($this->ParseDiffTreeLine($fromHash))
 			return;
 
