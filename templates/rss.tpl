@@ -13,26 +13,26 @@
     <description>{$project->GetProject()} log</description>
     <language>en</language>
 
-    {section name=rssitem loop=$commitlines}
+    {foreach from=$log item=logitem}
       <item>
-        <title>{$commitlines[rssitem].committerepoch|date_format:"%d %b %R"} - {$commitlines[rssitem].title|escape:'html'}</title>
-        <author>{$commitlines[rssitem].author|escape:'html'}</author>
-        <pubDate>{$commitlines[rssitem].committerepoch|date_format:"%a, %d %b %Y %H:%M:%S %z"}</pubDate>
-        <guid isPermaLink="true">{$self}?p={$project->GetProject()}&amp;a=commit&amp;h={$commitlines[rssitem].commit}</guid>
-        <link>{$self}?p={$project->GetProject()}&amp;a=commit&amp;h={$commitlines[rssitem].commit}</link>
-        <description>{$commitlines[rssitem].title|escape:'html'}</description>
+        <title>{$logitem->GetCommitterEpoch()|date_format:"%d %b %R"} - {$logitem->GetTitle()|escape:'html'}</title>
+        <author>{$logitem->GetAuthor()|escape:'html'}</author>
+        <pubDate>{$logitem->GetCommitterEpoch()|date_format:"%a, %d %b %Y %H:%M:%S %z"}</pubDate>
+        <guid isPermaLink="true">{$self}?p={$project->GetProject()}&amp;a=commit&amp;h={$logitem->GetHash()}</guid>
+        <link>{$self}?p={$project->GetProject()}&amp;a=commit&amp;h={$logitem->GetHash()}</link>
+        <description>{$logitem->GetTitle()|escape:'html'}</description>
         <content:encoded>
           <![CDATA[
-          {foreach from=$commitlines[rssitem].comment item=line}
+          {foreach from=$logitem->GetComment() item=line}
             {$line}<br />
           {/foreach}
-          {foreach from=$commitlines[rssitem].difftree item=line}
-            {$line}<br />
+          {foreach from=$logitem->DiffToParent() item=diffline}
+            {$diffline->GetToFile()}<br />
           {/foreach}
           ]]>
         </content:encoded>
       </item>
-    {/section}
+    {/foreach}
 
   </channel>
 </rss>

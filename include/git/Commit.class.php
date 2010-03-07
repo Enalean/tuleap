@@ -13,6 +13,7 @@
 require_once(GITPHP_INCLUDEDIR . 'defs.commands.php');
 require_once(GITPHP_GITOBJECTDIR . 'GitObject.class.php');
 require_once(GITPHP_GITOBJECTDIR . 'Tree.class.php');
+require_once(GITPHP_GITOBJECTDIR . 'TreeDiff.class.php');
 
 /**
  * Commit class
@@ -556,6 +557,19 @@ class GitPHP_Commit extends GitPHP_GitObject
 		}
 
 		return $data;
+	}
+
+	/**
+	 * DiffToParent
+	 *
+	 * Diffs this commit with its immediate parent
+	 *
+	 * @access public
+	 * @return mixed Tree diff
+	 */
+	public function DiffToParent()
+	{
+		return new GitPHP_TreeDiff($this->project, $this->hash);
 	}
 
 }

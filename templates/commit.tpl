@@ -10,12 +10,12 @@
 
  <div class="page_nav">
    {* Nav *}
-   <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=summary">summary</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=shortlog&h={$commit->GetHash()}">shortlog</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=log&h={$commit->GetHash()}">log</a> | commit | {if $parent}<a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=commitdiff&h={$commit->GetHash()}">commitdiff</a> | {/if}<a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=tree&h={$tree}&hb={$commit->GetHash()}">tree</a>
+   <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=summary">summary</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=shortlog&h={$commit->GetHash()}">shortlog</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=log&h={$commit->GetHash()}">log</a> | commit | {if $commit->GetParent()}<a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=commitdiff&h={$commit->GetHash()}">commitdiff</a> | {/if}<a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=tree&h={$tree->GetHash()}&hb={$commit->GetHash()}">tree</a>
    <br /><br />
  </div>
  <div class="title">
    {* Commit header *}
-   {if $parent}
+   {if $commit->GetParent()}
      <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=commitdiff&h={$commit->GetHash()}" class="title">{$commit->GetTitle()}</a>
      <span class="refs">
      {assign var=heads value=$commit->GetHeads()}
@@ -36,7 +36,7 @@
      {/if}
      </span>
    {else}
-     <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=tree&h={$tree}&hb={$commit->GetHash()}" class="title">{$commit->GetTitle()}</a>
+     <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=tree&h={$tree->GetHash()}&hb={$commit->GetHash()}" class="title">{$commit->GetTitle()}</a>
    {/if}
  </div>
  <div class="title_text">
@@ -70,8 +70,8 @@
      <tr>
      <tr>
        <td>tree</td>
-       <td class="monospace"><a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=tree&h={$tree}&hb={$commit->GetHash()}" class="list">{$tree}</a></td>
-       <td class="link"><a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=tree&h={$tree}&hb={$commit->GetHash()}">tree</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=snapshot&h={$commit->GetHash()}">snapshot</a></td>
+       <td class="monospace"><a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=tree&h={$tree->GetHash()}&hb={$commit->GetHash()}" class="list">{$tree->GetHash()}</a></td>
+       <td class="link"><a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=tree&h={$tree->GetHash()}&hb={$commit->GetHash()}">tree</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=snapshot&h={$commit->GetHash()}">snapshot</a></td>
      </tr>
      {foreach from=$commit->GetParents() item=par}
        <tr>
@@ -88,42 +88,127 @@
    {/foreach}
  </div>
  <div class="list_head">
-   {if $difftreesize > 11}
-     {$difftreesize} files changed:
+   {if $treediff->Count() > 10}
+     {$treediff->Count()} files changed:
    {/if}
  </div>
  <table cellspacing="0">
    {* Loop and show files changed *}
-   {section name=difftree loop=$difftreelines}
+   {foreach from=$treediff item=diffline}
      <tr class="{cycle values="light,dark"}">
 	 
-       {if $difftreelines[difftree].status == "A"}
-         <td><a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=blob&h={$difftreelines[difftree].to_id}&hb={$commit->GetHash()}&f={$difftreelines[difftree].file}" class="list">{$difftreelines[difftree].file}</a></td>
-         <td><span class="newfile">[new {$difftreelines[difftree].to_filetype}{if $difftreelines[difftree].isreg} with mode: {$difftreelines[difftree].to_mode_cut}{/if}]</span></td>
-         <td class="link"><a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=blob&h={$difftreelines[difftree].to_id}&hb={$commit->GetHash()}&f={$difftreelines[difftree].file}">blob</a></td>
-       {elseif $difftreelines[difftree].status == "D"}
-         <td><a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=blob&h={$difftreelines[difftree].from_id}&hb={$commit->GetHash()}&f={$difftreelines[difftree].file}" class="list">{$difftreelines[difftree].file}</a></td>
-         <td><span class="deletedfile">[deleted {$difftreelines[difftree].from_filetype}]</span></td>
-         <td class="link"><a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=blob&h={$difftreelines[difftree].from_id}&hb={$commit->GetHash()}&f={$difftreelines[difftree].file}">blob</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=history&h={$commit->GetHash()}&f={$difftreelines[difftree].file}">history</a></td>
-       {elseif $difftreelines[difftree].status == "M" || $difftreelines[difftree].status == "T"}
+       {if $diffline->GetStatus() == "A"}
          <td>
-           {if $difftreelines[difftree].to_id != $difftreelines[difftree].from_id}
-             <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=blobdiff&h={$difftreelines[difftree].to_id}&hp={$difftreelines[difftree].from_id}&hb={$commit->GetHash()}&f={$difftreelines[difftree].file}" class="list">{$difftreelines[difftree].file}</a>
+	   <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=blob&h={$diffline->GetToHash()}&hb={$commit->GetHash()}&f={$diffline->GetFromFile()}" class="list">
+	     {$diffline->GetFromFile()}
+	   </a>
+	 </td>
+         <td>
+	   <span class="newfile">
+	     [
+	     {if $diffline->ToFileIsRegular()}
+	     new {$diffline->GetToFileType()} with mode: {$diffline->GetToModeShort()}
+	     {else}
+	     new {$diffline->GetToFileType()}
+	     {/if}
+	     ]
+	   </span>
+	 </td>
+         <td class="link">
+	   <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=blob&h={$diffline->GetToHash()}&hb={$commit->GetHash()}&f={$diffline->GetFromFile()}">blob</a>
+	 </td>
+       {elseif $diffline->GetStatus() == "D"}
+         <td>
+	   <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=blob&h={$diffline->GetFromHash()}&hb={$commit->GetHash()}&f={$diffline->GetFromFile()}" class="list">
+	     {$diffline->GetFromFile()}
+	   </a>
+	 </td>
+         <td>
+	   <span class="deletedfile">
+	     [ deleted {$diffline->GetFromFileType()} ]
+	   </span>
+	 </td>
+         <td class="link">
+	   <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=blob&h={$diffline->GetFromHash()}&hb={$commit->GetHash()}&f={$diffline->GetFromFile()}">blob</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=history&h={$commit->GetHash()}&f={$diffline->GetFromFile()}">history</a>
+	 </td>
+       {elseif $diffline->GetStatus() == "M" || $diffline->GetStatus() == "T"}
+         <td>
+           {if $diffline->GetToHash() != $diffline->GetFromHash()}
+             <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=blobdiff&h={$diffline->GetToHash()}&hp={$diffline->GetFromHash()}&hb={$commit->GetHash()}&f={$diffline->GetToFile()}" class="list">
+	       {$diffline->GetToFile()}
+	     </a>
            {else}
-             <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=blob&h={$difftreelines[difftree].to_id}&hb={$commit->GetHash()}&f={$difftreelines[difftree].file}" class="list">{$difftreelines[difftree].file}</a>
+             <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=blob&h={$diffline->GetToHash()}&hb={$commit->GetHash()}&f={$diffline->GetToFile()}" class="list">
+	       {$diffline->GetToFile()}
+	     </a>
            {/if}
          </td>
-         <td>{if $difftreelines[difftree].from_mode != $difftreelines[difftree].to_mode} <span class="changedfile">[changed{$difftreelines[difftree].modechange}]</span>{/if}</td>
+         <td>
+	   {if $diffline->GetFromMode() != $diffline->GetToMode()}
+	     <span class="changedfile">
+	       [
+	       {if $diffline->FileTypeChanged()}
+	         {if $diffline->FileModeChanged()}
+		   {if $diffline->FromFileIsRegular() && $diffline->ToFileIsRegular()}
+		     changed from {$diffline->GetFromFileType()} to {$diffline->GetToFileType()} mode: {$diffline->GetFromModeShort()} -&gt; {$diffline->GetToModeShort()}
+		   {elseif $diffline->ToFileIsRegular()}
+		     changed from {$diffline->GetFromFileType()} to {$diffline->GetToFileType()} mode: {$diffline->GetToModeShort()}
+		   {else}
+		     changed from {$diffline->GetFromFileType()} to {$diffline->GetToFileType()}
+		   {/if}
+		 {else}
+		   changed from {$diffline->GetFromFileType()} to {$diffline->GetToFileType()}
+		 {/if}
+	       {else}
+	         {if $diffline->FileModeChanged()}
+		   {if $diffline->FromFileIsRegular() && $diffline->ToFileIsRegular()}
+		     changed mode: {$diffline->GetFromModeShort()} -&gt; {$diffline->GetToModeShort()}
+		   {elseif $diffline->ToFileIsRegular()}
+		     changed mode: {$diffline->GetToModeShort()}
+		   {else}
+		     changed
+		   {/if}
+		 {else}
+		   changed
+		 {/if}
+	       {/if}
+	       ]
+	     </span>
+	   {/if}
+	 </td>
          <td class="link">
-           <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=blob&h={$difftreelines[difftree].to_id}&hb={$commit->GetHash()}&f={$difftreelines[difftree].file}">blob</a>{if $difftreelines[difftree].to_id != $difftreelines[difftree].from_id} | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=blobdiff&h={$difftreelines[difftree].to_id}&hp={$difftreelines[difftree].from_id}&hb={$commit->GetHash()}&f={$difftreelines[difftree].file}">diff</a>{/if} | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=history&h={$commit->GetHash()}&f={$difftreelines[difftree].file}">history</a></td>
-       {elseif $difftreelines[difftree].status == "R"}
-         <td><a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=blob&h={$difftreelines[difftree].to_id}&hb={$commit->GetHash()}&f={$difftreelines[difftree].to_file}" class="list">{$difftreelines[difftree].to_file}</a></td>
-         <td><span class="movedfile">[moved from <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=blob&h={$difftreelines[difftree].from_id}&hb={$commit->GetHash()}&f={$difftreelines[difftree].from_file}" class="list">{$difftreelines[difftree].from_file}</a> with {$difftreelines[difftree].similarity}% similarity{$difftreelines[difftree].simmodechg}]</span></td>
-         <td class="link"><a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=blob&h={$difftreelines[difftree].to_id}&hb={$commit->GetHash()}&f={$difftreelines[difftree].to_file}">blob</a>{if $difftreelines[difftree].to_id != $difftreelines[difftree].from_id} | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=blobdiff&h={$difftreelines[difftree].to_id}&hp={$difftreelines[difftree].from_id}&hb={$commit->GetHash()}&f={$difftreelines[difftree].to_file}">diff</a>{/if}</td>
+           <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=blob&h={$diffline->GetToHash()}&hb={$commit->GetHash()}&f={$diffline->GetToFile()}">blob</a>
+	   {if $diffline->GetToHash() != $diffline->GetFromHash()}
+	     | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=blobdiff&h={$diffline->GetToHash()}&hp={$diffline->GetFromHash()}&hb={$commit->GetHash()}&f={$diffline->GetToFile()}">diff</a>
+	   {/if}
+	     | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=history&h={$commit->GetHash()}&f={$diffline->GetFromFile()}">history</a>
+	 </td>
+       {elseif $diffline->GetStatus() == "R"}
+         <td>
+	   <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=blob&h={$diffline->GetToHash()}&hb={$commit->GetHash()}&f={$diffline->GetToFile()}" class="list">
+	     {$diffline->GetToFile()}</a>
+	 </td>
+         <td>
+	   <span class="movedfile">
+	     [
+	     {if $diffline->GetFromMode() != $diffline->GetToMode()}
+	       moved from <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=blob&h={$diffline->GetFromHash()}&hb={$commit->GetHash()}&f={$diffline->GetFromFile()}" class="list">{$diffline->GetFromFile()}</a> with {$diffline->GetSimilarity()}% similarity, mode: {$diffline->GetToModeShort()}
+	     {else}
+	       moved from <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=blob&h={$diffline->GetFromHash()}&hb={$commit->GetHash()}&f={$diffline->GetFromFile()}" class="list">{$diffline->GetFromFile()}</a> with {$diffline->GetSimilarity()}% similarity
+	     {/if}
+	     ]
+	   </span>
+	 </td>
+         <td class="link">
+	   <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=blob&h={$diffline->GetToHash()}&hb={$commit->GetHash()}&f={$diffline->GetToFile()}">blob</a>
+	   {if $diffline->GetToHash() != $diffline->GetFromHash()}
+	     | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=blobdiff&h={$diffline->GetToHash()}&hp={$diffline->GetFromHash()}&hb={$commit->GetHash()}&f={$diffline->GetToFile()}">diff</a>
+	   {/if}
+	 </td>
        {/if}
 
      </tr>
-   {/section}
+   {/foreach}
  </table>
 
  {include file='footer.tpl'}

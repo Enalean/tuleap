@@ -10,8 +10,7 @@
  * @subpackage Controller
  */
 
-require_once(GITPHP_INCLUDEDIR . 'gitutil.git_read_revlist.php');
-require_once(GITPHP_INCLUDEDIR . 'gitutil.git_diff_tree.php');
+define('GITPHP_RSS_ITEMS', 150);
 
 /**
  * RSS controller class
@@ -95,40 +94,24 @@ class GitPHP_Controller_Rss extends GitPHP_ControllerBase
 	 */
 	protected function LoadData()
 	{
-		$head = $this->project->GetHeadCommit();;
-		$revlist = git_read_revlist($head->GetHash(), GITPHP_RSS_ITEMS);
+		$log = $this->project->GetLog('HEAD', GITPHP_RSS_ITEMS);
 
-		$commitlines = array();
-		$revlistcount = count($revlist);
-		for ($i = 0; $i < $revlistcount; ++$i) {
-			$commit = $revlist[$i];
-			$co = $this->project->GetCommit($commit);
-			if (($i >= 20) && ((time() - $co->GetCommitterEpoch()) > 48*60*60))
-				break;
-			$commitline = array();
-			$commitline["committerepoch"] = $co->GetCommitterEpoch();
-			$commitline["title"] = $co->GetTitle();
-			$commitline["author"] = $co->GetAuthor();
-			$commitline["commit"] = $commit;
-			$commitline["comment"] = $co->GetComment();
+		$entries = count($log);
 
-			$parent = $co->GetParent();
-			if ($parent) {
-				$difftree = array();
-				$diffout = git_diff_tree($parent->GetHash() . " " . $co->GetHash());
-				$tok = strtok($diffout,"\n");
-				while ($tok !== false) {
-					if (preg_match("/^:([0-7]{6}) ([0-7]{6}) ([0-9a-fA-F]{40}) ([0-9a-fA-F]{40}) (.)([0-9]{0,3})\t(.*)$/",$tok,$regs))
-						$difftree[] = $regs[7];
-					$tok = strtok("\n");
+		if ($entries > 20) {
+			/*
+			 * Don't show commits older than 48 hours,
+			 * but show a minimum of 20 entries
+			 */
+			for ($i = 20; $i < $entries; ++$i) {
+				if ((time() - $log[$i]->GetCommitterEpoch()) > 48*60*60) {
+					$log = array_slice($log, 0, $i);
+					break;
 				}
-				$commitline["difftree"] = $difftree;
 			}
-
-			$commitlines[] = $commitline;
-			unset($co);
 		}
-		$this->tpl->assign("commitlines",$commitlines);
+
+		$this->tpl->assign('log', $log);
 	}
 
 }
