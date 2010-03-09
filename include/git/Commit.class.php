@@ -393,6 +393,26 @@ class GitPHP_Commit extends GitPHP_GitObject
 	}
 
 	/**
+	 * SearchComment
+	 *
+	 * Gets the lines of the comment matching the given pattern
+	 *
+	 * @access public
+	 * @param string $pattern pattern to find
+	 * @return array matching lines of comment
+	 */
+	public function SearchComment($pattern)
+	{
+		if (empty($pattern))
+			return $this->GetComment();
+
+		if (!$this->dataRead)
+			$this->ReadData();
+
+		return preg_grep('/' . $pattern . '/', $this->comment);
+	}
+
+	/**
 	 * GetAge
 	 *
 	 * Gets the age of the commit

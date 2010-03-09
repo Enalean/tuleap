@@ -10,10 +10,13 @@
  * @subpackage Controller
  */
 
-require_once(GITPHP_INCLUDEDIR . 'util.age_string.php');
 require_once(GITPHP_INCLUDEDIR . 'util.highlight.php');
-require_once(GITPHP_INCLUDEDIR . 'gitutil.git_read_revlist.php');
 require_once(GITPHP_INCLUDEDIR . 'gitutil.git_filesearch.php');
+
+define('GITPHP_SEARCH_COMMIT', 'commit');
+define('GITPHP_SEARCH_AUTHOR', 'author');
+define('GITPHP_SEARCH_COMMITTER', 'committer');
+define('GITPHP_SEARCH_FILE', 'file');
 
 /**
  * Search controller class
@@ -56,7 +59,7 @@ class GitPHP_Controller_Search extends GitPHP_ControllerBase
 	 */
 	protected function GetTemplate()
 	{
-		if (isset($this->params['searchtype']) && ($this->params['searchtype'] == 'file')) {
+		if ($this->params['searchtype'] == GITPHP_SEARCH_FILE) {
 			return 'searchfiles.tpl';
 		}
 		return 'search.tpl';
@@ -84,18 +87,15 @@ class GitPHP_Controller_Search extends GitPHP_ControllerBase
 	 */
 	protected function ReadQuery()
 	{
-		if (isset($_GET['st']))
-			$this->params['searchtype'] = $_GET['st'];
+		if (!isset($this->params['searchtype']))
+			$this->params['searchtype'] = GITPHP_SEARCH_COMMIT;
 
-		if (isset($this->params['searchtype']) && ($this->params['searchtype'] == 'file')) {
+		if ($this->params['searchtype'] == GITPHP_SEARCH_FILE) {
 			if (!GitPHP_Config::GetInstance()->GetValue('filesearch', true)) {
 				throw new GitPHP_MessageException('File search has been disabled', true);
 			}
 
 		}
-
-		if (isset($_GET['s']))
-			$this->params['search'] = $_GET['s'];
 
 		if ((!isset($this->params['search'])) || (strlen($this->params['search']) < 2)) {
 			throw new GitPHP_MessageException('You must enter search text of at least 2 characters', true);
@@ -107,6 +107,8 @@ class GitPHP_Controller_Search extends GitPHP_ControllerBase
 			$this->params['hash'] = 'HEAD';
 		if (isset($_GET['pg']))
 			$this->params['page'] = $_GET['pg'];
+		else
+			$this->params['page'] = 0;
 	}
 
 	/**
@@ -118,67 +120,48 @@ class GitPHP_Controller_Search extends GitPHP_ControllerBase
 	 */
 	protected function LoadData()
 	{
-		if (isset($this->params['searchtype']) && ($this->params['searchtype'] == 'file')) {
+		if ($this->params['searchtype'] == GITPHP_SEARCH_FILE) {
 			$this->LoadFilesearchData();
 			return;
 		}
 
-		$co = $this->project->GetCommit($this->params['hash']);
+		$results = array();
+		switch ($this->params['searchtype']) {
 
-		$revlist = git_read_revlist($this->params['hash'], 101, ($this->params['page'] * 100), FALSE, FALSE, $this->params['searchtype'], $this->params['search']);
-		if (count($revlist) < 1 || (strlen($revlist[0]) < 1)) {
+			case GITPHP_SEARCH_COMMIT:
+				$results = $this->project->SearchCommit($this->params['search'], $this->params['hash'], 101, ($this->params['page'] * 100));
+				break;
+
+			case GITPHP_SEARCH_AUTHOR:
+				$results = $this->project->SearchAuthor($this->params['search'], $this->params['hash'], 101, ($this->params['page'] * 100));
+				break;
+
+			case GITPHP_SEARCH_COMMITTER:
+				$results = $this->project->SearchCommitter($this->params['search'], $this->params['hash'], 101, ($this->params['page'] * 100));
+				break;
+
+			default:
+				throw new GitPHP_MessageException('Invalid search type');
+
+		}
+
+		if (count($results) < 1) {
 			throw new GitPHP_MessageException('No matches for "' . $this->params['search'] . '"', false);
 		}
 
-		$this->tpl->assign("hash",$this->params['hash']);
-		$this->tpl->assign("treehash", $co->GetTree()->GetHash());
-
-		$this->tpl->assign("search",$this->params['search']);
-		$this->tpl->assign("searchtype",$this->params['searchtype']);
-		$this->tpl->assign("page",$this->params['page']);
-		$revlistcount = count($revlist);
-		$this->tpl->assign("revlistcount",$revlistcount);
-
-		$this->tpl->assign("title", $co->GetTitle());
-
-		date_default_timezone_set('UTC');
-		$commitlines = array();
-		$commitcount = min(100,$revlistcount);
-		for ($i = 0; $i < $commitcount; ++$i) {
-			$commit = $revlist[$i];
-			if (strlen(trim($commit)) > 0) {
-				$commitline = array();
-				$co2 = $this->project->GetCommit($commit);
-				$commitline["commit"] = $commit;
-				$age = $co2->GetAge();
-				if ($age > 60*60*24*7*2) {
-					$commitline['agestringdate'] = date('Y-m-d', $co2->GetCommitterEpoch());
-					$commitline['agestringage'] = age_string($age);
-				} else {
-					$commitline['agestringdate'] = age_string($age);
-					$commitline['agestringage'] = date('Y-m-d', $co2->GetCommitterEpoch());
-				}
-				$commitline["authorname"] = $co2->GetAuthorName();
-				$title = $co2->GetTitle();
-				$titleshort = $co2->GetTitle(GITPHP_TRIM_LENGTH);
-				$commitline["title_short"] = $titleshort;
-				if (strlen($titleshort) < strlen($title))
-					$commitline["title"] = $title;
-				$commitline["committree"] = $co2->GetTree()->GetHash();
-				$matches = array();
-				$commentlines = $co2->GetComment();
-				foreach ($commentlines as $comline) {
-					$hl = highlight($comline, $this->params['search'], "searchmatch", GITPHP_TRIM_LENGTH);
-					if ($hl && (strlen($hl) > 0))
-						$matches[] = $hl;
-				}
-				$commitline["matches"] = $matches;
-				$commitlines[] = $commitline;
-				unset($co2);
-			}
+		if (count($results) > 100) {
+			$this->tpl->assign('hasmore', true);
+			$results = array_slice($results, 0, 100);
 		}
-		
-		$this->tpl->assign("commitlines",$commitlines);
+		$this->tpl->assign('results', $results);
+
+		$co = $this->project->GetCommit($this->params['hash']);
+		$this->tpl->assign('hash', $co);
+		$this->tpl->assign('tree', $co->GetTree());
+		$this->tpl->assign('treehash', $co->GetTree());
+
+		$this->tpl->assign('page', $this->params['page']);
+
 	}
 	
 	/**

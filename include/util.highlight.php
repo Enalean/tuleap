@@ -7,7 +7,7 @@
  *  Copyright (C) 2008 Christopher Han <xiphux@gmail.com>
  */
 
-function highlight($haystack, $needle, $highlightclass, $trimlen = NULL, $escape = false)
+function highlight($haystack, $needle, $highlightclass = 'searchmatch', $trimlen = NULL, $escape = false)
 {
 	if (preg_match("/(.*)(" . quotemeta($needle) . ")(.*)/i",$haystack,$regs)) {
 		if (isset($trimlen) && ($trimlen > 0)) {
@@ -43,7 +43,7 @@ function highlight($haystack, $needle, $highlightclass, $trimlen = NULL, $escape
 		return $ret;
 	}
 
-	return false;
+	return $haystack;
 }
 
 ?>

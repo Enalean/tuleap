@@ -74,6 +74,8 @@ abstract class GitPHP_ControllerBase
 
 		require_once(GITPHP_INCLUDEDIR . 'util.age_string.php');
 		$this->tpl->register_modifier('agestring', 'age_string');
+		require_once(GITPHP_INCLUDEDIR . 'util.highlight.php');
+		$this->tpl->register_modifier('highlight', 'highlight');
 
 		if (GitPHP_Config::GetInstance()->GetValue('cache', false)) {
 			$this->tpl->caching = 2;
@@ -88,6 +90,11 @@ abstract class GitPHP_ControllerBase
 				throw new GitPHP_MessageException('Invalid project ' . $_GET['p'], true);
 			}
 		}
+
+		if (isset($_GET['s']))
+			$this->params['search'] = $_GET['s'];
+		if (isset($_GET['st']))
+			$this->params['searchtype'] = $_GET['st'];
 
 		$this->ReadQuery();
 	}
@@ -224,6 +231,8 @@ abstract class GitPHP_ControllerBase
 			$this->tpl->assign('enablesearch', true);
 		if (GitPHP_Config::GetInstance()->GetValue('filesearch', true))
 			$this->tpl->assign('filesearch', true);
+		$this->tpl->assign('search', $this->params['search']);
+		$this->tpl->assign('searchtype', $this->params['searchtype']);
 	}
 
 	/**

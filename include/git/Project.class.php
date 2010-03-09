@@ -611,41 +611,7 @@ class GitPHP_Project
 	 */
 	public function GetLogHash($hash, $count = 50, $skip = 0)
 	{
-		if ($count < 1)
-			return;
-
-		$exe = new GitPHP_GitExe($this);
-
-		$canSkip = true;
-		
-		if ($skip > 0)
-			$canSkip = $exe->CanSkip();
-
-		$args = array();
-
-		if ($canSkip) {
-			$args[] = '--max-count=' . $count;
-			if ($skip > 0) {
-				$args[] = '--skip=' . $skip;
-			}
-		} else {
-			$args[] = '--max-count=' . ($count + $skip);
-		}
-
-		$args[] = $hash;
-
-		$revlist = explode("\n", $exe->Execute(GIT_REV_LIST, $args));
-
-		if (!$revlist[count($revlist)-1]) {
-			/* the last newline creates a null entry */
-			array_splice($revlist, -1, 1);
-		}
-
-		if (($skip > 0) && (!$exe->CanSkip())) {
-			return array_slice($revlist, $skip, $count);
-		}
-
-		return $revlist;
+		return $this->RevList($hash, $count, $skip);
 	}
 
 	/**
@@ -686,6 +652,145 @@ class GitPHP_Project
 			$this->blobCache[$hash] = new GitPHP_Blob($this, $hash);
 
 		return $this->blobCache[$hash];
+	}
+
+	/**
+	 * SearchCommit
+	 *
+	 * Gets a list of commits with commit messages matching the given pattern
+	 *
+	 * @access public
+	 * @param string $pattern search pattern
+	 * @param string $hash hash to start searching from
+	 * @param integer $count number of results to get
+	 * @param integer $skip number of results to skip
+	 * @return array array of matching commits
+	 */
+	public function SearchCommit($pattern, $hash = 'HEAD', $count = 50, $skip = 0)
+	{
+		if (empty($pattern))
+			return;
+
+		$args = array();
+		$args[] = '--regexp-ignore-case';
+		$args[] = '--grep=\'' . $pattern . '\'';
+
+		$ret = $this->RevList($hash, $count, $skip, $args);
+		$len = count($ret);
+
+		for ($i = 0; $i < $len; ++$i) {
+			$ret[$i] = $this->GetCommit($ret[$i]);
+		}
+		return $ret;
+	}
+
+	/**
+	 * SearchAuthor
+	 *
+	 * Gets a list of commits with authors matching the given pattern
+	 *
+	 * @access public
+	 * @param string $pattern search pattern
+	 * @param string $hash hash to start searching from
+	 * @param integer $count number of results to get
+	 * @param integer $skip number of results to skip
+	 * @return array array of matching commits
+	 */
+	public function SearchAuthor($pattern, $hash = 'HEAD', $count = 50, $skip = 0)
+	{
+		if (empty($pattern))
+			return;
+
+		$args = array();
+		$args[] = '--regexp-ignore-case';
+		$args[] = '--author=\'' . $pattern . '\'';
+
+		$ret = $this->RevList($hash, $count, $skip, $args);
+		$len = count($ret);
+
+		for ($i = 0; $i < $len; ++$i) {
+			$ret[$i] = $this->GetCommit($ret[$i]);
+		}
+		return $ret;
+	}
+
+	/**
+	 * SearchCommitter
+	 *
+	 * Gets a list of commits with committers matching the given pattern
+	 *
+	 * @access public
+	 * @param string $pattern search pattern
+	 * @param string $hash hash to start searching from
+	 * @param integer $count number of results to get
+	 * @param integer $skip number of results to skip
+	 * @return array array of matching commits
+	 */
+	public function SearchCommitter($pattern, $hash = 'HEAD', $count = 50, $skip = 0)
+	{
+		if (empty($pattern))
+			return;
+
+		$args = array();
+		$args[] = '--regexp-ignore-case';
+		$args[] = '--committer=\'' . $pattern . '\'';
+
+		$ret = $this->RevList($hash, $count, $skip, $args);
+		$len = count($ret);
+
+		for ($i = 0; $i < $len; ++$i) {
+			$ret[$i] = $this->GetCommit($ret[$i]);
+		}
+		return $ret;
+	}
+
+	/**
+	 * RevList
+	 *
+	 * Common code for using rev-list command
+	 *
+	 * @access private
+	 * @param string $hash hash to list from
+	 * @param integer $count number of results to get
+	 * @param integer $skip number of results to skip
+	 * @param array $args args to give to rev-list
+	 * @return array array of hashes
+	 */
+	private function RevList($hash, $count = 50, $skip = 0, $args = array())
+	{
+		if ($count < 1)
+			return;
+
+		$exe = new GitPHP_GitExe($this);
+
+		$canSkip = true;
+		
+		if ($skip > 0)
+			$canSkip = $exe->CanSkip();
+
+		if ($canSkip) {
+			$args[] = '--max-count=' . $count;
+			if ($skip > 0) {
+				$args[] = '--skip=' . $skip;
+			}
+		} else {
+			$args[] = '--max-count=' . ($count + $skip);
+		}
+
+		$args[] = $hash;
+
+		$revlist = explode("\n", $exe->Execute(GIT_REV_LIST, $args));
+
+		if (!$revlist[count($revlist)-1]) {
+			/* the last newline creates a null entry */
+			array_splice($revlist, -1, 1);
+		}
+
+		if (($skip > 0) && (!$exe->CanSkip())) {
+			return array_slice($revlist, $skip, $count);
+		}
+
+		return $revlist;
 	}
 
 }
