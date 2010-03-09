@@ -9,6 +9,9 @@
  * @package GitPHP
  */
 
+define('GITPHP_START_TIME', microtime(true));
+define('GITPHP_START_MEM', memory_get_usage());
+
 /**
  * Define some paths
  */
@@ -30,6 +33,8 @@ require_once(GITPHP_INCLUDEDIR . 'defs.constants.php');
 
 require_once(GITPHP_INCLUDEDIR . 'Config.class.php');
 
+require_once(GITPHP_INCLUDEDIR . 'Log.class.php');
+
 require_once(GITPHP_GITOBJECTDIR . 'ProjectList.class.php');
 
 require_once(GITPHP_INCLUDEDIR . 'MessageException.class.php');
@@ -47,6 +52,14 @@ try {
 	} catch (Exception $e) {
 	}
 	GitPHP_Config::GetInstance()->LoadConfig(GITPHP_CONFIGDIR . 'gitphp.conf.php');
+
+	/*
+	 * Debug
+	 */
+	if (GitPHP_Log::GetInstance()->GetEnabled()) {
+		GitPHP_Log::GetInstance()->SetStartTime(GITPHP_START_TIME);
+		GitPHP_Log::GetInstance()->SetStartMemory(GITPHP_START_MEM);
+	}
 
 	/*
 	 * Project list
@@ -81,6 +94,13 @@ try {
 	}
 	$controller->Render();
 
+}
+
+if (GitPHP_Log::GetInstance()->GetEnabled()) {
+	$entries = GitPHP_Log::GetInstance()->GetEntries();
+	foreach ($entries as $logline) {
+		echo "\n" . $logline;
+	}
 }
 
 ?>

@@ -92,7 +92,13 @@ class GitPHP_GitExe
 		
 		$fullCommand = $this->binary . ' ' . $gitDir . ' ' . $command . ' ' . implode(' ', $args);
 
-		return shell_exec($fullCommand);
+		GitPHP_Log::GetInstance()->Log('Begin executing "' . $fullCommand . '"');
+
+		$ret = shell_exec($fullCommand);
+
+		GitPHP_Log::GetInstance()->Log('Finish executing "' . $fullCommand . '"');
+
+		return $ret;
 	}
 
 	/**
