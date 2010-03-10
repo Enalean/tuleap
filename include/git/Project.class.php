@@ -415,6 +415,20 @@ class GitPHP_Project
 		if ($hash === 'HEAD')
 			return $this->GetHeadCommit();
 
+		if (substr_compare($hash, 'refs/heads/', 0, 11) === 0) {
+			$head = $this->GetHead(substr($hash, 11));
+			if ($head != null)
+				return $head->GetCommit();
+		} else if (substr_compare($hash, 'refs/tags/', 0, 10) === 0) {
+			$tag = $this->GetTag(substr($hash, 10));
+			if ($tag != null) {
+				$obj = $tag->GetObject();
+				if ($obj != null) {
+					return $obj;
+				}
+			}
+		}
+
 		if (!isset($this->commitCache[$hash]))
 			$this->commitCache[$hash] = new GitPHP_Commit($this, $hash);
 
@@ -520,6 +534,32 @@ class GitPHP_Project
 	}
 
 	/**
+	 * GetTag
+	 *
+	 * Gets a single tag
+	 *
+	 * @access public
+	 * @param string $tag tag to find
+	 * @return mixed tag object
+	 */
+	public function GetTag($tag)
+	{
+		if (empty($tag))
+			return null;
+
+		if (!$this->readTags)
+			$this->ReadTagList();
+
+		foreach ($this->tags as $t) {
+			if ($t->GetName() === $tag) {
+				return $t;
+			}
+		}
+
+		return null;
+	}
+
+	/**
 	 * ReadTagList
 	 *
 	 * Reads tag list
@@ -564,6 +604,32 @@ class GitPHP_Project
 			$this->ReadHeadList();
 
 		return $this->heads;
+	}
+
+	/**
+	 * GetHead
+	 *
+	 * Gets a single head
+	 *
+	 * @access public
+	 * @param string $head head to find
+	 * @return mixed head object
+	 */
+	public function GetHead($head)
+	{
+		if (empty($head))
+			return null;
+
+		if (!$this->readHeads)
+			$this->ReadHeadList();
+
+		foreach ($this->heads as $h) {
+			if ($h->GetName() === $head) {
+				return $h;
+			}
+		}
+		
+		return null;
 	}
 
 	/**
