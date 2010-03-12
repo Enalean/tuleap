@@ -10,7 +10,7 @@
  * @subpackage Git
  */
 
-require_once(GITPHP_GITOBJECTDIR . 'GitObject.class.php');
+require_once(GITPHP_GITOBJECTDIR . 'FilesystemObject.class.php');
 require_once(GITPHP_GITOBJECTDIR . 'GitExe.class.php');
 
 /**
@@ -19,7 +19,7 @@ require_once(GITPHP_GITOBJECTDIR . 'GitExe.class.php');
  * @package GitPHP
  * @subpackage Git
  */
-class GitPHP_Blob extends GitPHP_GitObject
+class GitPHP_Blob extends GitPHP_FilesystemObject
 {
 
 	/**
@@ -41,6 +41,15 @@ class GitPHP_Blob extends GitPHP_GitObject
 	protected $dataRead = false;
 
 	/**
+	 * size
+	 *
+	 * Stores the size
+	 *
+	 * @access protected
+	 */
+	protected $size;
+
+	/**
 	 * __construct
 	 *
 	 * Instantiates object
@@ -48,7 +57,7 @@ class GitPHP_Blob extends GitPHP_GitObject
 	 * @access public
 	 * @param mixed $project the project
 	 * @param string $hash object hash
-	 * @return mixed git object
+	 * @return mixed blob object
 	 * @throws Exception exception on invalid hash
 	 */
 	public function __construct($project, $hash)
@@ -131,6 +140,32 @@ class GitPHP_Blob extends GitPHP_GitObject
 		else if (($mode & 0x8000) == 0x8000)
 			return 'file';
 		return 'unknown';
+	}
+
+	/**
+	 * GetSize
+	 *
+	 * Gets the blob size
+	 *
+	 * @access public
+	 * @return integer size
+	 */
+	public function GetSize()
+	{
+		return $this->size;
+	}
+
+	/**
+	 * SetSize
+	 *
+	 * Sets the blob size
+	 *
+	 * @access public
+	 * @param integer $size size
+	 */
+	public function SetSize($size)
+	{
+		$this->size = $size;
 	}
 
 }

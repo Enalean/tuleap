@@ -124,6 +124,60 @@ class GitPHP_Commit extends GitPHP_GitObject
 	protected $comment = array();
 
 	/**
+	 * treeHashes
+	 *
+	 * Stores tree name to hash mappings
+	 *
+	 * @access protected
+	 */
+	protected $treeHashes = array();
+
+	/**
+	 * blobHashes
+	 *
+	 * Stores blob name to hash mappings
+	 *
+	 * @access protected
+	 */
+	protected $blobHashes = array();
+
+	/**
+	 * readTree
+	 *
+	 * Stores whether tree filenames have been read
+	 *
+	 * @access protected
+	 */
+	protected $readTree = false;
+
+	/**
+	 * blobPaths
+	 *
+	 * Stores blob hash to path mappings
+	 *
+	 * @access protected
+	 */
+	protected $blobPaths = array();
+
+	/**
+	 * treePaths
+	 *
+	 * Stores tree hash to path mappings
+	 *
+	 * @access protected
+	 */
+	protected $treePaths = array();
+
+	/**
+	 * hashPathsRead
+	 *
+	 * Stores whether hash paths have been read
+	 *
+	 * @access protected
+	 */
+	protected $hashPathsRead = false;
+
+	/**
 	 * __construct
 	 *
 	 * Instantiates object
@@ -476,7 +530,11 @@ class GitPHP_Commit extends GitPHP_GitObject
 			if (preg_match('/^tree ([0-9a-fA-F]{40})$/', $line, $regs)) {
 				/* Tree */
 				try {
-					$this->tree = new GitPHP_Tree($this->project, $regs[1]);
+					$tree = $this->project->GetTree($regs[1]);
+					if ($tree) {
+						$tree->SetCommit($this);
+						$this->tree = $tree;
+					}
 				} catch (Exception $e) {
 				}
 			} else if (preg_match('/^author (.*) ([0-9]+) (.*)$/', $line, $regs)) {
@@ -593,6 +651,99 @@ class GitPHP_Commit extends GitPHP_GitObject
 	public function DiffToParent()
 	{
 		return new GitPHP_TreeDiff($this->project, $this->hash);
+	}
+
+	/**
+	 * PathToHash
+	 *
+	 * Given a filepath, get its hash
+	 *
+	 * @access public
+	 * @param string $path path
+	 * @return string hash
+	 */
+	public function PathToHash($path)
+	{
+		if (empty($file))
+			return '';
+
+		if (!$this->hashPathsRead)
+			$this->ReadHashPaths();
+
+		foreach ($this->blobPaths as $h => $p) {
+			if ($path == $p) {
+				return $h;
+			}
+		}
+
+		foreach ($this->treePaths as $h => $p) {
+			if ($path == $p) {
+				return $h;
+			}
+		}
+
+		return '';
+	}
+
+	/**
+	 * HashToPath
+	 *
+	 * Given a blob/tree hash, get its path
+	 *
+	 * @access public
+	 * @param string $hash hash
+	 * @return string path
+	 */
+	public function HashToPath($hash)
+	{
+		if (empty($hash))
+			return '';
+
+		if (!$this->hashPathsRead)
+			$this->ReadHashPaths();
+
+		if (isset($this->blobPaths[$hash]))
+			return $this->blobPaths[$hash];
+
+		if (isset($this->treePaths[$hash]))
+			return $this->treePaths[$hash];
+
+		return '';
+	}
+
+	/**
+	 * ReadHashPaths
+	 *
+	 * Read hash to path mappings
+	 *
+	 * @access private
+	 */
+	private function ReadHashPaths()
+	{
+		$this->hashPathsRead = true;
+
+		$exe = new GitPHP_GitExe($this->project);
+
+		$args = array();
+		$args[] = '--full-name';
+		$args[] = '-r';
+		$args[] = '-t';
+		$args[] = $this->hash;
+
+		$lines = explode("\n", $exe->Execute(GIT_LS_TREE, $args));
+
+		foreach ($lines as $line) {
+			if (preg_match("/^([0-9]+) (.+) ([0-9a-fA-F]{40})\t(.+)$/", $line, $regs)) {
+				switch ($regs[2]) {
+					case 'tree':
+						$this->treePaths[$regs[3]] = trim($regs[4]);
+						break;
+					case 'blob';
+						$this->blobPaths[$regs[4]] = trim($regs[4]);
+						break;
+				}
+			}
+		}
 	}
 
 }

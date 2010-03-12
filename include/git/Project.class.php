@@ -155,6 +155,15 @@ class GitPHP_Project
 	protected $blobCache = array();
 
 	/**
+	 * treeCache
+	 *
+	 * Caches tree objects in case of repeated requests
+	 *
+	 * @access protected
+	 */
+	protected $treeCache = array();
+
+	/**
 	 * __construct
 	 *
 	 * Class constructor
@@ -718,6 +727,25 @@ class GitPHP_Project
 			$this->blobCache[$hash] = new GitPHP_Blob($this, $hash);
 
 		return $this->blobCache[$hash];
+	}
+
+	/**
+	 * GetTree
+	 *
+	 * Gets a tree from this project
+	 *
+	 * @access public
+	 * @param string $hash tree hash
+	 */
+	public function GetTree($hash)
+	{
+		if (empty($hash))
+			return null;
+
+		if (!isset($this->treeCache[$hash]))
+			$this->treeCache[$hash] = new GitPHP_Tree($this, $hash);
+
+		return $this->treeCache[$hash];
 	}
 
 	/**

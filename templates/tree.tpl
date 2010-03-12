@@ -9,53 +9,60 @@
  {include file='header.tpl'}
 
  {* Nav *}
- {if $fullnav}
    <div class="page_nav">
-     <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=summary">summary</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=shortlog&h={$hashbase}">shortlog</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=log&h={$hashbase}">log</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=commit&h={$hashbase}">commit</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=commitdiff&h={$hashbase}">commitdiff</a> | tree<br /><br />
+     <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=summary">summary</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=shortlog&h={$hashbase->GetHash()}">shortlog</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=log&h={$hashbase->GetHash()}">log</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=commit&h={$hashbase->GetHash()}">commit</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=commitdiff&h={$hashbase->GetHash()}">commitdiff</a> | tree<br /><br />
    </div>
    <div class="title">
-     <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=commit&h={$hashbase}" class="title">{$title}
-       {if $hashbaseref}
-         <span class="tag">{$hashbaseref}</span>
-       {/if}
-     </a>
+     <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=commit&h={$hashbase->GetHash()}" class="title">{$hashbase->GetTitle()}</a>
+     <span class="refs">
+     {assign var=heads value=$hashbase->GetHeads()}
+     {foreach name=head item=head from=$heads}
+       <span class="head">
+         <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=shortlog&h=refs/heads/{$head->GetName()}">{$head->GetName()}</a>
+       </span>
+     {/foreach}
+     {assign var=tags value=$hashbase->GetTags()}
+     {foreach name=tag item=tag from=$tags}
+       <span class="tag">
+         <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=tag&h={$tag->GetName()}">{$tag->GetName()}</a>
+       </span>
+     {/foreach}
+     </span>
    </div>
- {else}
-   <div class="page_nav"><br /><br /></div>
-   <div class="title">{$hash}</div>
- {/if}
  {* Path *}
  <div class="page_path">
    <b>
-     <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=tree&hb={$hashbase}&h={$hashbase}">[{$project->GetProject()}]</a> / 
+     <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=tree&hb={$hashbase->GetHash()}">[{$project->GetProject()}]</a> / 
      {foreach from=$paths item=path}
-       <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=tree&hb={$hashbase}&h={$path.tree}&f={$path.full}">{$path.short}</a> / 
+       <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=tree&hb={$hashbase->GetHash()}&h={$path.tree}&f={$path.full}">{$path.short}</a> / 
      {/foreach}
    </b>
  </div>
  <div class="page_body">
    {* List files *}
    <table cellspacing="0">
-     {section name=tree loop=$treelines}
+     {foreach from=$tree->GetContents() item=treeitem}
        <tr class="{cycle values="light,dark"}">
-         <td class="monospace">{$treelines[tree].filemode}</td>
-         {if $treelines[tree].type == "blob"}
+         <td class="monospace">{$treeitem->GetModeString()}</td>
+         {if $treeitem instanceof GitPHP_Blob}
+	   <td>{$treeitem->GetSize()}</td>
            <td class="list">
-             <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=blob&h={$treelines[tree].hash}{if $hashbase}&hb={$hashbase}{/if}&f={if $base}{$base}{/if}{$treelines[tree].name}" class="list">{$treelines[tree].name}</a>
+             <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=blob&h={$treeitem->GetHash()}&hb={$hashbase->GetHash()}&f={$treeitem->GetPath()}" class="list">{$treeitem->GetName()}</a>
 	   </td>
            <td class="link">
-	     <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=blob&h={$treelines[tree].hash}{if $hashbase}&hb={$hashbase}{/if}&f={if $base}{$base}{/if}{$treelines[tree].name}">blob</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=history&h={$hashbase}&f={if $base}{$base}{/if}{$treelines[tree].name}">history</a>
+	     <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=blob&h={$treeitem->GetHash()}&hb={$hashbase->GetHash()}&f={$treeitem->GetPath()}">blob</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=history&h={$hashbase->GetHash()}&f={$treeitem->GetPath()}">history</a>
 	   </td>
-         {elseif $treelines[tree].type == "tree"}
+         {elseif $treeitem instanceof GitPHP_Tree}
+	   <td></td>
            <td class="list">
-             <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=tree&h={$treelines[tree].hash}{if $hashbase}&hb={$hashbase}{/if}&f={if $base}{$base}{/if}{$treelines[tree].name}">{$treelines[tree].name}</a>
+             <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=tree&h={$treeitem->GetHash()}&hb={$hashbase->GetHash()}&f={$treeitem->GetPath()}">{$treeitem->GetName()}</a>
 	   </td>
            <td class="link">
-	     <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=tree&h={$treelines[tree].hash}{if $hashbase}&hb={$hashbase}{/if}&f={if $base}{$base}{/if}{$treelines[tree].name}">tree</a>
+	     <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=tree&h={$treeitem->GetHash()}&hb={$hashbase->GetHash()}&f={$treeitem->GetPath()}">tree</a>
 	   </td>
          {/if}
        </tr>
-     {/section}
+     {/foreach}
    </table>
  </div>
 

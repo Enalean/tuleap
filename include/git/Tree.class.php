@@ -10,7 +10,8 @@
  * @subpackge Git
  */
 
-require_once(GITPHP_GITOBJECTDIR . 'GitObject.class.php');
+require_once(GITPHP_GITOBJECTDIR . 'FilesystemObject.class.php');
+require_once(GITPHP_GITOBJECTDIR . 'GitExe.class.php');
 
 /**
  * Tree class
@@ -18,6 +19,105 @@ require_once(GITPHP_GITOBJECTDIR . 'GitObject.class.php');
  * @package GitPHP
  * @subpackage Git
  */
-class GitPHP_Tree extends GitPHP_GitObject
+class GitPHP_Tree extends GitPHP_FilesystemObject
 {
+
+	/**
+	 * contents
+	 *
+	 * Tree contents
+	 *
+	 * @access protected
+	 */
+	protected $contents = array();
+
+	/**
+	 * contentsRead
+	 *
+	 * Stores whether contents were read
+	 *
+	 * @access protected
+	 */
+	protected $contentsRead = false;
+
+	/**
+	 * __construct
+	 *
+	 * Instantiates object
+	 *
+	 * @access public
+	 * @param mixed $project the project
+	 * @param string $hash tree hash
+	 * @return mixed tree object
+	 * @throws Exception exception on invalid hash
+	 */
+	public function __construct($project, $hash)
+	{
+		parent::__construct($project, $hash);
+	}
+
+	/**
+	 * GetContents
+	 *
+	 * Gets the tree contents
+	 *
+	 * @access public
+	 * @return array array of objects for contents
+	 */
+	public function GetContents()
+	{
+		if (!$this->contentsRead)
+			$this->ReadContents();
+
+		return $this->contents;
+	}
+
+	/**
+	 * ReadContents
+	 *
+	 * Reads the tree contents
+	 *
+	 * @access protected
+	 */
+	protected function ReadContents()
+	{
+		$this->contentsRead = true;
+
+		$exe = new GitPHP_GitExe($this->project);
+
+		$args = array();
+		$args[] = '--full-name';
+		$args[] = '-l';
+		$args[] = '-t';
+		$args[] = $this->hash;
+		
+		$lines = explode("\n", $exe->Execute(GIT_LS_TREE, $args));
+
+		foreach ($lines as $line) {
+			if (preg_match("/^([0-9]+) (.+) ([0-9a-fA-F]{40})\s+([0-9]+|-)\s+(.+)$/", $line, $regs)) {
+				switch($regs[2]) {
+					case 'tree':
+						$t = $this->project->GetTree($regs[3]);
+						$t->SetMode($regs[1]);
+						$t->SetName($regs[5]);
+						$t->SetParent($this);
+						if ($this->commit)
+							$t->SetCommit($this->commit);
+						$this->contents[] = $t;
+						break;
+					case 'blob':
+						$b = $this->project->GetBlob($regs[3]);
+						$b->SetMode($regs[1]);
+						$b->SetName($regs[5]);
+						$b->SetSize($regs[4]);
+						$b->SetParent($this);
+						if ($this->commit)
+							$b->SetCommit($this->commit);
+						$this->contents[] = $b;
+						break;
+				}
+			}
+		}
+	}
+
 }
