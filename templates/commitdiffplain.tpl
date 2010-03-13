@@ -8,8 +8,9 @@
 From: {$hash->GetAuthor()}
 Date: {$hash->GetAuthorEpoch()|date_format:"%a, %d %b %Y %H:%M:%S %z"}
 Subject: {$hash->GetTitle()}
-{if $tagname}
-X-Git-Tag: {$tagname}
+{assign var=tag value=$hash->GetContainingTag()}
+{if $tag}
+X-Git-Tag: {$tag->GetName()}
 {/if}
 X-Git-Url: {$self}?p={$project->GetProject()}&a=commitdiff&h={$hash->GetHash()}
 ---

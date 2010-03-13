@@ -10,7 +10,6 @@
  * @subpackage Controller
  */
 
-require_once(GITPHP_INCLUDEDIR . 'gitutil.git_read_revlist.php');
 require_once(GITPHP_INCLUDEDIR . 'gitutil.read_info_ref.php');
 
 /**
@@ -113,18 +112,7 @@ class GitPHP_Controller_Commitdiff extends GitPHP_ControllerBase
 		$treediff = new GitPHP_TreeDiff($this->project, $this->params['hash'], $this->params['hashparent']);
 		$this->tpl->assign('treediff', $treediff);
 
-		if (isset($this->params['plain']) && ($this->params['plain'] === true)) {
-			$refs = read_info_ref('tags');
-			$listout = git_read_revlist('HEAD');
-			foreach ($listout as $i => $rev) {
-				if (isset($refs[$rev]))
-					$tagname = $refs[$rev];
-				if ($rev == $this->params['hash'])
-					break;
-			}
-			if (isset($tagname))
-				$this->tpl->assign("tagname",$tagname);
-		} else {
+		if (!(isset($this->params['plain']) && ($this->params['plain'] === true))) {
 			$refs = read_info_ref();
 			$tree = $co->GetTree();
 			if ($tree)

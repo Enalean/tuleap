@@ -178,6 +178,24 @@ class GitPHP_Commit extends GitPHP_GitObject
 	protected $hashPathsRead = false;
 
 	/**
+	 * containingTag
+	 *
+	 * Stores the tag containing the changes in this commit
+	 *
+	 * @access protected
+	 */
+	protected $containingTag = null;
+
+	/**
+	 * containingTagRead
+	 *
+	 * Stores whether the containing tag has been looked up
+	 *
+	 * @access public
+	 */
+	protected $containingTagRead = false;
+
+	/**
 	 * __construct
 	 *
 	 * Instantiates object
@@ -607,6 +625,55 @@ class GitPHP_Commit extends GitPHP_GitObject
 		}
 
 		return $tags;
+	}
+
+	/**
+	 * GetContainingTag
+	 *
+	 * Gets the tag that contains the changes in this commit
+	 *
+	 * @access public
+	 * @return tag object
+	 */
+	public function GetContainingTag()
+	{
+		if (!$this->containingTagRead)
+			$this->ReadContainingTag();
+
+		return $this->containingTag;
+	}
+
+	/**
+	 * ReadContainingTag
+	 *
+	 * Looks up the tag that contains the changes in this commit
+	 *
+	 * @access private
+	 */
+	public function ReadContainingTag()
+	{
+		$this->containingTagRead = true;
+
+		$tags = array();
+
+		$projectTags = $this->project->GetTags();
+
+		foreach ($projectTags as $pTag) {
+			$tags[$pTag->GetObject()->GetHash()] = $pTag;
+		}
+
+		$exe = new GitPHP_GitExe($this->project);
+		$args = array();
+		$args[] = 'HEAD';
+		$revs = explode("\n", $exe->Execute(GIT_REV_LIST, $args));
+
+		$this->containingTag = null;
+		foreach ($revs as $rev) {
+			if (isset($tags[$rev]))
+				$this->containingTag = $tags[$rev];
+			if ($rev == $this->hash)
+				break;
+		}
 	}
 
 	/**
