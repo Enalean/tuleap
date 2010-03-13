@@ -10,13 +10,26 @@
 
  {* Nav *}
  <div class="page_nav">
-   <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=summary">summary</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=shortlog&h={$hash->GetHash()}">shortlog</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=log&h={$hash->GetHash()}">log</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=commit&h={$hash->GetHash()}">commit</a> | commitdiff | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=tree&h={$tree}&hb={$hash->GetHash()}">tree</a><br /><a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=commitdiff_plain&h={$hash->GetHash()}{if $hashparent}&hp={$hashparent}{/if}">plain</a>
+   {assign var=tree value=$hash->GetTree()}
+   <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=summary">summary</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=shortlog&h={$hash->GetHash()}">shortlog</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=log&h={$hash->GetHash()}">log</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=commit&h={$hash->GetHash()}">commit</a> | commitdiff | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=tree&h={$tree->GetHash()}&hb={$hash->GetHash()}">tree</a><br /><a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=commitdiff_plain&h={$hash->GetHash()}{if $hashparent}&hp={$hashparent}{/if}">plain</a>
  </div>
  <div>
    <br /><br />
  </div>
  <div class="title">
-   <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=commit&h={$hash->GetHash()}" class="title">{$hash->GetTitle()}{if $commitref} <span class="tag">{$commitref}</span>{/if}</a>
+   <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=commit&h={$hash->GetHash()}" class="title">{$hash->GetTitle()}</a>
+   <span class="refs">
+   {foreach name=head item=head from=$hash->GetHeads()}
+     <span class="head">
+       <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=shortlog&h=refs/heads/{$head->GetName()}">{$head->GetName()}</a>
+     </span>
+   {/foreach}
+   {foreach name=tag item=tag from=$hash->GetTags()}
+     <span class="tag">
+       <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=tag&h={$tag->GetName()}">{$tag->GetName()}</a>
+     </span>
+   {/foreach}
+   </span>
  </div>
  <div class="page_body">
    {foreach from=$hash->GetComment() item=line}

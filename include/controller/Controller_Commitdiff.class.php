@@ -10,8 +10,6 @@
  * @subpackage Controller
  */
 
-require_once(GITPHP_INCLUDEDIR . 'gitutil.read_info_ref.php');
-
 /**
  * Commitdiff controller class
  *
@@ -111,15 +109,6 @@ class GitPHP_Controller_Commitdiff extends GitPHP_ControllerBase
 
 		$treediff = new GitPHP_TreeDiff($this->project, $this->params['hash'], $this->params['hashparent']);
 		$this->tpl->assign('treediff', $treediff);
-
-		if (!(isset($this->params['plain']) && ($this->params['plain'] === true))) {
-			$refs = read_info_ref();
-			$tree = $co->GetTree();
-			if ($tree)
-				$this->tpl->assign("tree", $tree->GetHash());
-			if (isset($refs[$co->GetHash()]))
-				$this->tpl->assign("commitref",$refs[$co->GetHash()]);
-		}
 	}
 
 }
