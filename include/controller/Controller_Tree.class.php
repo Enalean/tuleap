@@ -10,7 +10,6 @@
  * @subpackage Controller
  */
 
-require_once(GITPHP_INCLUDEDIR . 'util.mode_str.php');
 require_once(GITPHP_INCLUDEDIR . 'gitutil.git_path_trees.php');
 
 /**
