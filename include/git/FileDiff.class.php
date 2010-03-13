@@ -526,8 +526,8 @@ class GitPHP_FileDiff
 		$toFile = '/dev/null';
 		$hasTo = false;
 
-		$fromName = 'a/';
-		$toName = 'b/';
+		$fromName = '/dev/null';
+		$toName = '/dev/null';
 
 		if ((empty($this->status)) || ($this->status == 'D') || ($this->status == 'M')) {
 			$fromBlob = $this->project->GetBlob($this->fromHash);
@@ -535,6 +535,7 @@ class GitPHP_FileDiff
 			$fromBlob->PipeData($fromFile);
 			$hasFrom = true;
 
+			$fromName = 'a/';
 			if (!empty($file)) {
 				$fromName .= $file;
 			} else if (!empty($this->fromFile)) {
@@ -550,6 +551,7 @@ class GitPHP_FileDiff
 			$toBlob->PipeData($toFile);
 			$hasTo = true;
 
+			$toName = 'b/';
 			if (!empty($file)) {
 				$toName .= $file;
 			} else if (!empty($this->toFile)) {
