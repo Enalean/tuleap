@@ -13,7 +13,6 @@
 require_once(GITPHP_INCLUDEDIR . 'gitutil.git_get_hash_by_path.php');
 require_once(GITPHP_INCLUDEDIR . 'gitutil.git_path_trees.php');
 require_once(GITPHP_INCLUDEDIR . 'gitutil.read_info_ref.php');
-require_once(GITPHP_INCLUDEDIR . 'util.file_mime.php');
 
 /**
  * Blob controller class
@@ -106,12 +105,12 @@ class GitPHP_Controller_Blob extends GitPHP_ControllerBase
 					$saveas = $this->params['hash'] . ".txt";
 
 				$blob = $this->project->GetBlob($this->params['hash']);
-				$buffer = $blob->GetData();
-
-				if (GitPHP_Config::GetInstance()->GetValue('filemimetype', true))
-					$mime = file_mime($buffer, $this->params['file']);
+				$blob->SetName($this->params['file']);
 
 				$headers = array();
+
+				if (GitPHP_Config::GetInstance()->GetValue('filemimetype', true))
+					$mime = $blob->FileMime();
 
 				if ($mime)
 					$headers[] = "Content-type: " . $mime;
@@ -143,6 +142,7 @@ class GitPHP_Controller_Blob extends GitPHP_ControllerBase
 		}
 
 		$blob = $this->project->GetBlob($this->params['hash']);
+		$blob->SetName($this->params['file']);
 
 		if ($this->params['plain']) {
 			$this->tpl->assign("blob", $blob->GetData());
@@ -174,9 +174,9 @@ class GitPHP_Controller_Blob extends GitPHP_ControllerBase
 		$this->tpl->assign("paths",$paths);
 
 		if (GitPHP_Config::GetInstance()->GetValue('filemimetype', true)) {
-			$mime = file_mime($catout,$this->params['file']);
+			$mime = $blob->FileMime();
 			if ($mime)
-				$mimetype = strtok($mime, "/");
+				$mimetype = strtok($mime, '/');
 		}
 
 		if ($mimetype == "image") {

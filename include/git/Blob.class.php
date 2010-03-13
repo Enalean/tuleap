@@ -168,4 +168,147 @@ class GitPHP_Blob extends GitPHP_FilesystemObject
 		$this->size = $size;
 	}
 
+	/**
+	 * FileMime
+	 *
+	 * Get the file mimetype
+	 *
+	 * @access public
+	 * @param boolean $short true to only the type group
+	 * @return string mime
+	 */
+	public function FileMime($short = false)
+	{
+		$mime = $this->FileMime_Fileinfo();
+
+		if (empty($mime))
+			$mime = $this->FileMime_File();
+
+		if (empty($mime))
+			$mime = $this->FileMime_Extension();
+
+		if ((!empty($mime)) && $short) {
+			$mime = strtok($mime, '/');
+		}
+
+		return $mime;
+	}
+
+	/** 
+	 * FileMime_Fileinfo
+	 *
+	 * Get the file mimetype using fileinfo
+	 *
+	 * @access private
+	 * @return string mimetype
+	 */
+	private function FileMime_Fileinfo()
+	{
+		if (!function_exists('finfo_buffer'))
+			return '';
+
+		if (!$this->dataRead)
+			$this->ReadData();
+
+		if (!$this->data)
+			return '';
+
+		$mime = '';
+
+		$finfo = finfo_open(FILEINFO_MIME, GitPHP_Config::GetInstance()->GetValue('magicdb', null));
+		if ($finfo) {
+			$mime = finfo_buffer($finfo, $this->data, FILEINFO_MIME);
+			if ($mime && strpos($mime, '/')) {
+				if (strpos($mime, ';')) {
+					$mime = strtok($mime, ';');
+				}
+			}
+		}
+		finfo_close($finfo);
+
+		return $mime;
+	}
+
+	/**
+	 * FileMime_File
+	 *
+	 * Get the file mimetype using file command
+	 *
+	 * @access private
+	 * @return string mimetype
+	 */
+	private function FileMime_File()
+	{
+		if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+			return '';
+		}
+
+		if (!$this->dataRead)
+			$this->ReadData();
+
+		if (!$this->data)
+			return '';
+
+		$descspec = array(
+			0 => array('pipe', 'r'),
+			1 => array('pipe', 'w')
+		);
+
+		$proc = proc_open('file -b --mime -', $descspec, $pipes);
+		if (is_resource($proc)) {
+			fwrite($pipes[0], $this->data);
+			fclose($pipes[0]);
+			$mime = stream_get_contents($pipes[1]);
+			fclose($pipes[1]);
+			proc_close($proc);
+
+			if ($mime && strpos($mime, '/')) {
+				if (strpos($mime, ';')) {
+					$mime = strtok($mime, ';');
+				}
+				return $mime;
+			}
+		}
+
+		return '';
+	}
+
+	/**
+	 * FileMime_Extension
+	 *
+	 * Get the file mimetype using the file extension
+	 *
+	 * @access private
+	 * @return string mimetype
+	 */
+	private function FileMime_Extension()
+	{
+		$file = $this->GetName();
+
+		if (empty($file))
+			$file = $this->GetPath();
+
+		if (empty($file))
+			return '';
+
+		$dotpos = strrpos($file, '.');
+		if ($dotpos !== FALSE)
+			$file = substr($file, $dotpos+1);
+		switch ($file) {
+			case 'jpg':
+			case 'jpeg':
+			case 'jpe':
+				return 'image/jpeg';
+				break;
+			case 'gif':
+				return 'image/gif';
+				break;
+			case 'png';
+				return 'image/png';
+				break;
+		}
+
+		return '';
+	}
+
 }
