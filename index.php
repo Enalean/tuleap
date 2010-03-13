@@ -42,7 +42,7 @@ require_once(GITPHP_CONTROLLERDIR . 'Controller.class.php');
 
 date_default_timezone_set('UTC');
 
-try {
+//try {
 
 	/*
 	 * Configuration
@@ -82,19 +82,19 @@ try {
 		$controller->Render();
 	}
 
-} catch (Exception $e) {
-
-	require_once(GITPHP_CONTROLLERDIR . 'Controller_Message.class.php');
-	$controller = new GitPHP_Controller_Message();
-	$controller->SetParam('message', $e->getMessage());
-	if ($e instanceof GitPHP_MessageException) {
-		$controller->SetParam('error', $e->Error);
-	} else {
-		$controller->SetParam('error', true);
-	}
-	$controller->Render();
-
-}
+//} catch (Exception $e) {
+//
+//	require_once(GITPHP_CONTROLLERDIR . 'Controller_Message.class.php');
+//	$controller = new GitPHP_Controller_Message();
+//	$controller->SetParam('message', $e->getMessage());
+//	if ($e instanceof GitPHP_MessageException) {
+//		$controller->SetParam('error', $e->Error);
+//	} else {
+//		$controller->SetParam('error', true);
+//	}
+//	$controller->Render();
+//
+//}
 
 if (GitPHP_Log::GetInstance()->GetEnabled()) {
 	$entries = GitPHP_Log::GetInstance()->GetEntries();
