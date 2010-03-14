@@ -195,10 +195,11 @@ class GitPHP_Controller_Blob extends GitPHP_ControllerBase
 							$lang = $geshi->get_language_name_from_extension(substr(strrchr($this->params['file'],'.'),1));
 						if (isset($lang) && (strlen($lang) > 0)) {
 							$geshi->enable_classes();
+							$geshi->enable_strict_mode(GESHI_MAYBE);
 							$geshi->set_source($catout);
 							$geshi->set_language($lang);
-							$geshi->set_header_type(GESHI_HEADER_DIV);
-							$geshi->enable_line_numbers(GESHI_FANCY_LINE_NUMBERS);
+							$geshi->set_header_type(GESHI_HEADER_PRE_TABLE);
+							$geshi->enable_line_numbers(GESHI_NORMAL_LINE_NUMBERS);
 							$this->tpl->assign("geshiout",$geshi->parse_code());
 							$this->tpl->assign("extracss",$geshi->get_stylesheet());
 							$usedgeshi = TRUE;
