@@ -10,70 +10,65 @@
 
  {* If we managed to look up commit info, we have enough info to display the full header - othewise just use a simple header *}
  <div class="page_nav">
-   {if $fullnav}
-     <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=summary">summary</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=shortlog">shortlog</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=log">log</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=commit&h={$hashbase}">commit</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=commitdiff&h={$hashbase}">commitdiff</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=tree&h={$tree}&hb={$hashbase}">tree</a><br />
-     {if $file}
-       <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=blob_plain&h={$hash}&f={$file}">plain</a> | 
-       {if ($hashbase != "HEAD") && ($hashbase != $head)}
-         <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=blame&hb=HEAD&f={$file}">HEAD</a>
-       {else}
-         HEAD
-       {/if}
-        | blame
-       <br />
-     {else}
-       <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=blob_plain&h={$hash}">plain</a><br />
-     {/if}
+   <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=summary">summary</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=shortlog">shortlog</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=log">log</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=commit&h={$hashbase->GetHash()}">commit</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=commitdiff&h={$hashbase->GetHash()}">commitdiff</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=tree&h={$tree->GetHash()}&hb={$hashbase->GetHash()}">tree</a><br />
+   <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=blob_plain&h={$hash->GetHash()}&f={$hash->GetPath()}">plain</a> | 
+   {if $hashbase->GetHash() != $head->GetHash()}
+     <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=blame&hb=HEAD&f={$hash->GetPath()}">HEAD</a>
    {else}
-     <br /><br />
+     HEAD
    {/if}
+    | blame
+   <br />
  </div>
  <div class="title">
-   {if $fullnav}
-     <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=commit&h={$hashbase}" class="title">{$title}
-     {if $hashbaseref}
-       <span class="tag">{$hashbaseref}</span>
-     {/if}
-     </a>
-   {else}
-     <div class="title">{$hash}</div>
-   {/if}
+   <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=commit&h={$hashbase->GetHash()}" class="title">{$hashbase->GetTitle()}</a>
+   <span class="refs">
+   {foreach from=$hashbase->GetHeads() item=head}
+     <span class="head">
+       <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=shortlog&h=refs/heads/{$head->GetName()}">{$head->GetName()}</a>
+     </span>
+   {/foreach}
+   {foreach from=$hashbase->GetTags() item=tag}
+     <span class="tag">
+       <a href="{$SCIRPT_NAME}?p={$project->GetProject()}&a=tag&h={$tag->GetName()}">{$tag->GetName()}</a>
+     </span>
+   {/foreach}
+   </span>
  </div>
  <div class="page_path">
    {* The path to the file, with directories broken into tree links *}
    <b>
-     <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=tree&hb={$hashbase}&h={$hashbase}">[{$project->GetProject()}]</a> / 
+     <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=tree&hb={$hashbase->GetHash()}&h={$hashbase->GetHash()}">[{$project->GetProject()}]</a> / 
      {foreach from=$paths item=path name=paths}
        {if $smarty.foreach.paths.last}
          <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=blob_plain&h={$path.tree}&f={$path.full}">{$path.short}</a>
        {else}
-         <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=tree&hb={$hashbase}&h={$path.tree}&f={$path.full}">{$path.short}</a> / 
+         <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=tree&hb={$hashbase->GetHash()}&h={$path.tree}&f={$path.full}">{$path.short}</a> / 
        {/if}
      {/foreach}
    </b>
  </div>
  <div class="page_body">
  	<table class="code">
-	{counter name=linecount start=0 print=false}
-	{foreach from=$blamedata item=blameitem}
-		{cycle values="light,dark" assign=rowclass}
-		{foreach from=$blameitem.lines name=linegroup item=blameline}
-		{counter name=linecount assign=linenum}
-		<tr class="{$rowclass}">
-			<td class="num"><a id="l{$linenum}" href="#l{$linenum}" class="linenr">{$linenum}</a></td>
-			<td class="date">
-			{if $smarty.foreach.linegroup.first}
-			{if $blameitem.commit}
-			<a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=commit&h={$blameitem.commit}" title="{$blameitem.commitdata.summary}">{$blameitem.commitdata.authortime|date_format:"%F %X"}</a>
-			{else}
-			{$blameitem.commitdata.authortime|date_format:"%F %X"}
-			{/if}
-			{/if}
-			</td>
-			<td class="author">{if $smarty.foreach.linegroup.first}{$blameitem.commitdata.author}{/if}</td>
-			<td class="codeline">{$blameline|escape}</td>
-		</tr>
-		{/foreach}
+	{foreach from=$hash->GetData(true) item=blobline name=blob}
+	  {assign var=blamecommit value=$blame[$smarty.foreach.blob.iteration]}
+	  {if $blamecommit}
+	    {cycle values="light,dark" assign=rowclass}
+	  {/if}
+	  <tr class="{$rowclass}">
+	    <td class="date">
+	      {if $blamecommit}
+	        <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=commit&h={$blamecommit->GetHash()}" title="{$blamecommit->GetTitle()}">{$blamecommit->GetAuthorEpoch()|date_format:"%F %X"}</a>
+	      {/if}
+	    </td>
+	    <td class="author">
+	      {if $blamecommit}
+	        {$blamecommit->GetAuthor()}
+	      {/if}
+	    </td>
+	    <td class="num"><a id="l{$smarty.foreach.blob.iteration}" href="#l{$smarty.foreach.blob.iteration}" class="linenr">{$smarty.foreach.blob.iteration}</a></td>
+	    <td class="codeline">{$blobline|escape}</td>
+	  </tr>
 	{/foreach}
 	</table>
  </div>

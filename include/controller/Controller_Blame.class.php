@@ -10,8 +10,6 @@
  * @subpackage Controller
  */
 
-require_once(GITPHP_INCLUDEDIR . 'gitutil.git_parse_blame.php');
-require_once(GITPHP_INCLUDEDIR . 'gitutil.read_info_ref.php');
 require_once(GITPHP_INCLUDEDIR . 'gitutil.git_path_trees.php');
 
 /**
@@ -94,34 +92,27 @@ class GitPHP_Controller_Blame extends GitPHP_ControllerBase
 	 */
 	protected function LoadData()
 	{
+		$head = $this->project->GetHeadCommit();
+		$this->tpl->assign('head', $head);
+
+		$hashbase = $this->project->GetCommit($this->params['hashbase']);
+		$this->tpl->assign('hashbase', $hashbase);
+
 		if ((!isset($this->params['hash'])) && (isset($this->params['file']))) {
-			$this->params['hash'] = git_get_hash_by_path($this->params['hashbase'], $this->params['file'], 'blob');
+			$this->params['hash'] = $hashbase->PathToHash($this->params['file']);
 		}
-		$head = $this->project->GetHeadCommit()->GetHash();
-		$this->tpl->assign("hash", $this->params['hash']);
-		$this->tpl->assign("hashbase", $this->params['hashbase']);
-		$this->tpl->assign("head", $head);
-		$co = $this->project->GetCommit($this->params['hashbase']);
-		if ($co) {
-			$this->tpl->assign("fullnav",TRUE);
-			$refs = read_info_ref();
-			$this->tpl->assign("tree",$co->GetTree()->GetHash());
-			$this->tpl->assign("title",$co->GetTitle());
-			if (isset($this->params['file']))
-				$this->tpl->assign("file",$this->params['file']);
-			if ($this->params['hashbase'] == "HEAD") {
-				if (isset($refs[$head]))
-					$this->tpl->assign("hashbaseref",$refs[$head]);
-			} else {
-				if (isset($refs[$this->params['hashbase']]))
-					$this->tpl->assign("hashbaseref",$refs[$this->params['hashbase']]);
-			}
-		}
+		
+		$hash = $this->project->GetBlob($this->params['hash']);
+		$hash->SetCommit($hashbase);
+		$this->tpl->assign('hash', $hash);
+
+		$this->tpl->assign('tree', $hashbase->GetTree());
+
 		$paths = git_path_trees($this->params['hashbase'], $this->params['file']);
 		$this->tpl->assign("paths",$paths);
 
-		$blamedata = git_parse_blame($this->params['file'], $this->params['hashbase']);
-		$this->tpl->assign("blamedata",$blamedata);
+		$blame = $hash->GetBlame();
+		$this->tpl->assign('blame', $hash->GetBlame());
 	}
 
 }

@@ -68,6 +68,24 @@ class GitPHP_Blob extends GitPHP_FilesystemObject
 	protected $historyRead = false;
 
 	/**
+	 * blame
+	 *
+	 * Stores blame info
+	 *
+	 * @access protected
+	 */
+	protected $blame = array();
+
+	/**
+	 * blameRead
+	 *
+	 * Stores whether blame was read
+	 *
+	 * @access protected
+	 */
+	protected $blameRead = false;
+
+	/**
 	 * __construct
 	 *
 	 * Instantiates object
@@ -89,14 +107,18 @@ class GitPHP_Blob extends GitPHP_FilesystemObject
 	 * Gets the blob data
 	 *
 	 * @access public
+	 * @param boolean $explode true to explode data into an array of lines
 	 * @return string blob data
 	 */
-	public function GetData()
+	public function GetData($explode = false)
 	{
 		if (!$this->dataRead)
 			$this->ReadData();
 
-		return $this->data;
+		if ($explode)
+			return explode("\n", $this->data);
+		else
+			return $this->data;
 	}
 
 	/**
@@ -386,6 +408,58 @@ class GitPHP_Blob extends GitPHP_FilesystemObject
 				} catch (Exception $e) {
 				}
 				unset ($commit);
+			}
+		}
+	}
+
+	/**
+	 * GetBlame
+	 *
+	 * Gets blame info
+	 *
+	 * @access public
+	 * @return array blame array (line to commit mapping)
+	 */
+	public function GetBlame()
+	{
+		if (!$this->blameRead)
+			$this->ReadBlame();
+
+		return $this->blame;
+	}
+
+	/**
+	 * ReadBlame
+	 *
+	 * Read blame info
+	 *
+	 * @access private
+	 */
+	private function ReadBlame()
+	{
+		$this->blameRead = true;
+
+		$exe = new GitPHP_GitExe($this->project);
+
+		$args = array();
+		$args[] = '-s';
+		$args[] = '-l';
+		if ($this->commit)
+			$args[] = $this->commit->GetHash();
+		else
+			$args[] = 'HEAD';
+		$args[] = '--';
+		$args[] = $this->GetPath();
+
+		$blamelines = explode("\n", $exe->Execute(GIT_BLAME, $args));
+
+		$lastcommit = '';
+		foreach ($blamelines as $line) {
+			if (preg_match('/^([0-9a-fA-F]{40})\s+([0-9]+)\)/', $line, $regs)) {
+				if ($regs[1] != $lastcommit) {
+					$this->blame[(int)($regs[2])] = $this->project->GetCommit($regs[1]);
+					$lastcommit = $regs[1];
+				}
 			}
 		}
 	}
