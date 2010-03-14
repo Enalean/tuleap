@@ -10,8 +10,6 @@
  * @subpackage Controller
  */
 
-require_once(GITPHP_INCLUDEDIR . 'gitutil.read_info_ref.php');
-
 /**
  * Log controller class
  *
