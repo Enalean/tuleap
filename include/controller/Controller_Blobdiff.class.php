@@ -10,7 +10,6 @@
  * @subpackage Controller
  */
 
-require_once(GITPHP_INCLUDEDIR . 'gitutil.read_info_ref.php');
 require_once(GITPHP_INCLUDEDIR . 'gitutil.git_path_trees.php');
 
 /**
@@ -110,7 +109,8 @@ class GitPHP_Controller_Blobdiff extends GitPHP_ControllerBase
 	protected function LoadData()
 	{
 		if (isset($this->params['file']))
-			$this->tpl->assign("file",$this->params['file']);
+			$this->tpl->assign('file', $this->params['file']);
+
 		$filediff = new GitPHP_FileDiff($this->project, $this->params['hashparent'], $this->params['hash']);
 		$this->tpl->assign('filediff', $filediff);
 
@@ -118,19 +118,18 @@ class GitPHP_Controller_Blobdiff extends GitPHP_ControllerBase
 			return;
 		}
 
+		$hash = $this->project->GetBlob($this->params['hash']);
+		$this->tpl->assign('hash', $hash);
 
-		$this->tpl->assign("hash",$this->params['hash']);
-		$this->tpl->assign("hashparent",$this->params['hashparent']);
-		$this->tpl->assign("hashbase",$this->params['hashbase']);
-		$co = $this->project->GetCommit($this->params['hashbase']);
-		if ($co) {
-			$this->tpl->assign("fullnav",TRUE);
-			$this->tpl->assign("tree",$co->GetTree()->GetHash());
-			$this->tpl->assign("title",$co->GetTitle());
-			$refs = read_info_ref();
-			if (isset($refs[$this->params['hashbase']]))
-				$this->tpl->assign("hashbaseref",$refs[$this->params['hashbase']]);
-		}
+		$hashparent = $this->project->GetBlob($this->params['hashparent']);
+		$this->tpl->assign('hashparent', $hashparent);
+
+		$hashbase = $this->project->GetCommit($this->params['hashbase']);
+		$this->tpl->assign('hashbase', $hashbase);
+
+		$tree = $hashbase->GetTree();
+		$this->tpl->assign('tree', $tree);
+
 		$paths = git_path_trees($this->params['hashbase'], $this->params['file']);
 		$this->tpl->assign("paths",$paths);
 	}
