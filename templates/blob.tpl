@@ -8,66 +8,62 @@
 
  {include file='header.tpl'}
 
- {* If we managed to look up commit info, we have enough info to display the full header - othewise just use a simple header *}
  <div class="page_nav">
-   {if $fullnav}
-     <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=summary">summary</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=shortlog">shortlog</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=log">log</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=commit&h={$hashbase}">commit</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=commitdiff&h={$hashbase}">commitdiff</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=tree&h={$tree}&hb={$hashbase}">tree</a><br />
-     {if $file}
-       <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=blob_plain&h={$hash}&f={$file}">plain</a> | 
-       {if ($hashbase != "HEAD") && ($hashbase != $head)}
-         <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=blob&hb=HEAD&f={$file}">HEAD</a>
-       {else}
-         HEAD
-       {/if}
-       {if !$mime && !$data} | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=blame&h={$hash}&f={$file}&hb={$hashbase}">blame</a>{/if}
-       <br />
-     {else}
-       <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=blob_plain&h={$hash}">plain</a><br />
-     {/if}
+   <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=summary">summary</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=shortlog">shortlog</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=log">log</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=commit&h={$hashbase->GetHash()}">commit</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=commitdiff&h={$hashbase->GetHash()}">commitdiff</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=tree&h={$tree->GetHash()}&hb={$hashbase->GetHash()}">tree</a><br />
+   <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=blob_plain&h={$hash->GetHash()}&f={$file}">plain</a> | 
+   {if $hashbase->GetHash() != $head->GetHash()}
+     <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=blob&hb=HEAD&f={$file}">HEAD</a>
    {else}
-     <br /><br />
+     HEAD
    {/if}
+   {if !$datatag} | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=blame&h={$hash->GetHash()}&f={$file}&hb={$hashbase->GetHash()}">blame</a>{/if}
+   <br />
  </div>
  <div class="title">
-   {if $fullnav}
-     <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=commit&h={$hashbase}" class="title">{$title}
-     {if $hashbaseref}
-       <span class="tag">{$hashbaseref}</span>
-     {/if}
-     </a>
-   {else}
-     <div class="title">{$hash}</div>
-   {/if}
+   <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=commit&h={$hashbase->GetHash()}" class="title">{$hashbase->GetTitle()}</a>
+   <span class="refs">
+   {foreach from=$hashbase->GetHeads() item=hashhead}
+     <span class="head">
+       <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=shortlog&h=refs/heads/{$hashhead->GetName()}">{$hashhead->GetName()}</a>
+     </span>
+   {/foreach}
+   {foreach from=$hashbase->GetTags() item=hashtag}
+     <span class="tag">
+       <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=tag&h={$hashtag->GetName()}">{$hashtag->GetName()}</a>
+     </span>
+   {/foreach}
+   </span>
  </div>
  <div class="page_path">
    {* The path to the file, with directories broken into tree links *}
    <b>
-     <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=tree&hb={$hashbase}&h={$hashbase}">[{$project->GetProject()}]</a> / 
+     <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=tree&hb={$hashbase->GetHash()}&h={$hashbase->GetHash()}">[{$project->GetProject()}]</a> / 
      {foreach from=$paths item=path name=paths}
        {if $smarty.foreach.paths.last}
          <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=blob_plain&h={$path.tree}&f={$path.full}">{$path.short}</a>
        {else}
-         <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=tree&hb={$hashbase}&h={$path.tree}&f={$path.full}">{$path.short}</a> / 
+         <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=tree&hb={$hashbase->GetHash()}&h={$path.tree}&f={$path.full}">{$path.short}</a> / 
        {/if}
      {/foreach}
    </b>
  </div>
  <div class="page_body">
-   {if $mime && $data}
+   {if $datatag}
      {* We're trying to display an image *}
      <div>
        <img src="data:{$mime};base64,{$data}" />
      </div>
-   {elseif $geshiout}
+   {elseif $geshi}
      {* We're using the highlighted output from geshi *}
      {$geshiout}
    {else}
      {* Just plain display *}
      <table class="code">
-     {foreach from=$lines item=line name=lines}
+     {foreach from=$bloblines item=line name=bloblines}
        <tr>
-         <td class="num"><a id="l{$smarty.foreach.lines.iteration}" href="#l{$smarty.foreach.lines.iteration}" class="linenr">{$smarty.foreach.lines.iteration}</a></td>
-	 <td class="codeline">{$line|escape:'html'}</td>
+         <td class="num"><a id="l{$smarty.foreach.bloblines.iteration}" href="#l{$smarty.foreach.bloblines.iteration}" class="linenr">{$smarty.foreach.bloblines.iteration}</a></td>
+	 <td class="codeline">{$line|escape}</td>
+       </tr>
      {/foreach}
      </table>
    {/if}

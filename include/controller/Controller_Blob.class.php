@@ -10,9 +10,7 @@
  * @subpackage Controller
  */
 
-require_once(GITPHP_INCLUDEDIR . 'gitutil.git_get_hash_by_path.php');
 require_once(GITPHP_INCLUDEDIR . 'gitutil.git_path_trees.php');
-require_once(GITPHP_INCLUDEDIR . 'gitutil.read_info_ref.php');
 
 /**
  * Blob controller class
@@ -137,82 +135,68 @@ class GitPHP_Controller_Blob extends GitPHP_ControllerBase
 	 */
 	protected function LoadData()
 	{
+		$hashbase = $this->project->GetCommit($this->params['hashbase']);
+		$this->tpl->assign('hashbase', $hashbase);
+
 		if ((!isset($this->params['hash'])) && (isset($this->params['file']))) {
-			$this->params['hash'] = git_get_hash_by_path($this->params['hashbase'], $this->params['file'], 'blob');
+			$this->params['hash'] = $hashbase->PathToHash($this->params['file']);
 		}
 
-		$blob = $this->project->GetBlob($this->params['hash']);
-		$blob->SetName($this->params['file']);
+		$hash = $this->project->GetBlob($this->params['hash']);
+		if ($this->params['file'])
+			$hash->SetName($this->params['file']);
+		$hash->SetCommit($hashbase);
+		$this->tpl->assign('hash', $hash);
 
 		if ($this->params['plain']) {
-			$this->tpl->assign("blob", $blob->GetData());
+			$this->tpl->assign('blob', $hash->GetData());
 			return;
 		}
 
-		$head = $this->project->GetHeadCommit()->GetHash();
-		$catout = $blob->GetData();
-		$this->tpl->assign("hash",$this->params['hash']);
-		$this->tpl->assign("hashbase",$this->params['hashbase']);
-		$this->tpl->assign("head", $head);
-		$co = $this->project->GetCommit($this->params['hashbase']);
-		if ($co) {
-			$this->tpl->assign("fullnav",TRUE);
-			$refs = read_info_ref();
-			$this->tpl->assign("tree",$co->GetTree()->GetHash());
-			$this->tpl->assign("title",$co->GetTitle());
-			if (isset($this->params['file']))
-				$this->tpl->assign("file",$this->params['file']);
-			if ($this->params['hashbase'] == "HEAD") {
-				if (isset($refs[$head]))
-					$this->tpl->assign("hashbaseref",$refs[$head]);
-			} else {
-				if (isset($refs[$this->params['hashbase']]))
-					$this->tpl->assign("hashbaseref",$refs[$this->params['hashbase']]);
-			}
-		}
+		$head = $this->project->GetHeadCommit();
+		$this->tpl->assign('head', $head);
+
+		$this->tpl->assign('tree', $hashbase->GetTree());
+
 		$paths = git_path_trees($this->params['hashbase'], $this->params['file']);
 		$this->tpl->assign("paths",$paths);
 
 		if (GitPHP_Config::GetInstance()->GetValue('filemimetype', true)) {
-			$mime = $blob->FileMime();
+			$mime = $hash->FileMime();
 			if ($mime)
 				$mimetype = strtok($mime, '/');
 		}
 
-		if ($mimetype == "image") {
-			$this->tpl->assign("mime", $mime);
-			$this->tpl->assign("data", base64_encode($catout));
-		} else {
-			$usedgeshi = GitPHP_Config::GetInstance()->GetValue('geshi', true);
-			if ($usedgeshi) {
-				$usedgeshi = FALSE;
-				include_once(GitPHP_Config::GetInstance()->GetValue('geshiroot', 'lib/geshi/') . "geshi.php");
-				if (class_exists("GeSHi")) {
-					$geshi = new GeSHi("",'php');
-					if ($geshi) {
-						$lang = "";
-						if (isset($this->params['file']))
-							$lang = $geshi->get_language_name_from_extension(substr(strrchr($this->params['file'],'.'),1));
-						if (isset($lang) && (strlen($lang) > 0)) {
-							$geshi->enable_classes();
-							$geshi->enable_strict_mode(GESHI_MAYBE);
-							$geshi->set_source($catout);
-							$geshi->set_language($lang);
-							$geshi->set_header_type(GESHI_HEADER_PRE_TABLE);
-							$geshi->enable_line_numbers(GESHI_NORMAL_LINE_NUMBERS);
-							$this->tpl->assign("geshiout",$geshi->parse_code());
-							$this->tpl->assign("extracss",$geshi->get_stylesheet());
-							$usedgeshi = TRUE;
-						}
+		if ($mime && (strtok($mime, '/') == 'image')) {
+			$this->tpl->assign('datatag', true);
+			$this->tpl->assign('mime', $mime);
+			$this->tpl->assign('data', base64_encode($hash->GetData()));
+			return;
+		}
+
+		if (GitPHP_Config::GetInstance()->GetValue('geshi', true)) {
+			include_once(GitPHP_Config::GetInstance()->GetValue('geshiroot', 'lib/geshi/') . "geshi.php");
+			if (class_exists('GeSHi')) {
+				$geshi = new GeSHi("",'php');
+				if ($geshi) {
+					$lang = $geshi->get_language_name_from_extension(substr(strrchr($hash->GetPath(),'.'),1));
+					if (!empty($lang)) {
+						$geshi->enable_classes();
+						$geshi->enable_strict_mode(GESHI_MAYBE);
+						$geshi->set_source($hash->GetData());
+						$geshi->set_language($lang);
+						$geshi->set_header_type(GESHI_HEADER_PRE_TABLE);
+						$geshi->enable_line_numbers(GESHI_NORMAL_LINE_NUMBERS);
+						$this->tpl->assign('geshiout', $geshi->parse_code());
+						$this->tpl->assign('extracss', $geshi->get_stylesheet());
+						$this->tpl->assign('geshi', true);
+						return;
 					}
 				}
 			}
-
-			if (!$usedgeshi) {
-				$lines = explode("\n",$catout);
-				$this->tpl->assign("lines",$lines);
-			}
 		}
+
+		$this->tpl->assign('bloblines', $hash->GetData(true));
 	}
 
 }
