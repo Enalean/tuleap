@@ -103,6 +103,8 @@ class GitPHP_Controller_Blame extends GitPHP_ControllerBase
 		}
 		
 		$hash = $this->project->GetBlob($this->params['hash']);
+		if ($this->params['file'])
+			$hash->SetName($this->params['file']);
 		$hash->SetCommit($hashbase);
 		$this->tpl->assign('hash', $hash);
 

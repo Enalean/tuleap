@@ -8,7 +8,6 @@
 
  {include file='header.tpl'}
 
- {* If we managed to look up commit info, we have enough info to display the full header - othewise just use a simple header *}
  <div class="page_nav">
    <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=summary">summary</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=shortlog">shortlog</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=log">log</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=commit&h={$hashbase->GetHash()}">commit</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=commitdiff&h={$hashbase->GetHash()}">commitdiff</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=tree&h={$tree->GetHash()}&hb={$hashbase->GetHash()}">tree</a><br />
    <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=blob_plain&h={$hash->GetHash()}&f={$hash->GetPath()}">plain</a> | 
@@ -23,14 +22,14 @@
  <div class="title">
    <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=commit&h={$hashbase->GetHash()}" class="title">{$hashbase->GetTitle()}</a>
    <span class="refs">
-   {foreach from=$hashbase->GetHeads() item=head}
+   {foreach from=$hashbase->GetHeads() item=hashhead}
      <span class="head">
-       <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=shortlog&h=refs/heads/{$head->GetName()}">{$head->GetName()}</a>
+       <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=shortlog&h=refs/heads/{$hashhead->GetName()}">{$hashhead->GetName()}</a>
      </span>
    {/foreach}
-   {foreach from=$hashbase->GetTags() item=tag}
+   {foreach from=$hashbase->GetTags() item=hashtag}
      <span class="tag">
-       <a href="{$SCIRPT_NAME}?p={$project->GetProject()}&a=tag&h={$tag->GetName()}">{$tag->GetName()}</a>
+       <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=tag&h={$hashtag->GetName()}">{$hashtag->GetName()}</a>
      </span>
    {/foreach}
    </span>
