@@ -156,6 +156,15 @@ class GitPHP_FileDiff
 	protected $project;
 
 	/**
+	 * commit
+	 *
+	 * Stores the commit that caused this filediff
+	 *
+	 * @access protected
+	 */
+	protected $commit;
+
+	/**
 	 * __construct
 	 *
 	 * Constructor
@@ -607,6 +616,32 @@ class GitPHP_FileDiff
 		} else if (!mkdir($tmpdir, 0700)) {
 			throw new Exception('Could not create tmpdir ' . $tmpdir);
 		}
+	}
+
+	/**
+	 * GetCommit
+	 *
+	 * Gets the commit for this filediff
+	 *
+	 * @access public
+	 * @return commit object
+	 */
+	public function GetCommit()
+	{
+		return $this->commit;
+	}
+
+	/**
+	 * SetCommit
+	 *
+	 * Sets the commit for this filediff
+	 *
+	 * @access public
+	 * @param mixed $commit commit object
+	 */
+	public function SetCommit($commit)
+	{
+		$this->commit = $commit;
 	}
 	
 }

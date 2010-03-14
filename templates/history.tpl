@@ -10,40 +10,62 @@
 
  {* Page header *}
  <div class="page_nav">
-   <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=summary">summary</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=shortlog">shortlog</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=log">log</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=commit&h={$hash}">commit</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=commitdiff&h={$hash}">commitdiff</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=tree&h={$tree}&hb={$hash}">tree</a>
+   <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=summary">summary</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=shortlog">shortlog</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=log">log</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=commit&h={$hash->GetHash()}">commit</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=commitdiff&h={$hash->GetHash()}">commitdiff</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=tree&h={$tree->GetHash()}&hb={$hash->GetHash()}">tree</a>
    <br /><br />
  </div>
  <div class="title">
-   <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=commit&h={$hash}" class="title">{$title}
-   {if $hashbaseref}
-     <span class="tag">{$hashbaseref}</span>
-   {/if}
-   </a>
+   <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=commit&h={$hash->GetHash()}" class="title">{$hash->GetTitle()}</a>
+   <span class="refs">
+   {foreach from=$hash->GetHeads() item=head}
+     <span class="head">
+       <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=shortlog&h=refs/heads/{$head->GetName()}">{$head->GetName()}</a>
+     </span>
+   {/foreach}
+   {foreach from=$hash->GetTags() item=tag}
+     <span class="tag">
+       <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=tag&h={$tag->GetName()}">{$tag->GetName()}</a>
+     </span>
+   {/foreach}
+   </span>
  </div>
  <div class="page_path">
    {* File path *}
    <b>
-     <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=tree&hb={$hash}&h={$hash}">[{$project->GetProject()}]</a> / 
+     <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=tree&hb={$hash->GetHash()}&h={$tree->GetHash()}">[{$project->GetProject()}]</a> / 
      {foreach from=$paths item=path name=paths}
        {if $smarty.foreach.paths.last}
          <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=blob&h={$path.tree}&f={$path.full}">{$path.short}</a>
        {else}
-         <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=tree&hb={$hash}&h={$path.tree}&f={$path.full}">{$path.short}</a> / 
+         <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=tree&hb={$hash->GetHash()}&h={$path.tree}&f={$path.full}">{$path.short}</a> / 
        {/if}
      {/foreach}
    </b>
  </div>
  <table cellspacing="0">
    {* Display each history line *}
-   {section name=history loop=$historylines}
+   {foreach from=$blob->GetHistory() item=historyitem}
+     {assign var=historycommit value=$historyitem->GetCommit()}
      <tr class="{cycle values="light,dark"}">
-       <td title="{$historylines[history].agestringage}"><em>{$historylines[history].agestringdate}</em></td>
-       <td><em>{$historylines[history].authorname}</em></td>
-       <td><a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=commit&h={$historylines[history].commit}" class="list"><b>{$historylines[history].title}{if $historylines[history].commitref} <span class="tag">{$historylines[history].commitref}</span>{/if}</b></a></td>
-       <td class="link"><a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=commit&h={$historylines[history].commit}">commit</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=commitdiff&h={$historylines[history].commit}">commitdiff</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=blob&hb={$historylines[history].commit}&f={$historylines[history].file}">blob</a>{if $historylines[history].blob && $historylines[history].blobparent} | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=blobdiff&h={$historylines[history].blob}&hp={$historylines[history].blobparent}&hb={$historylines[history].commit}&f={$historylines[history].file}">diff to current</a>{/if}
+       <td title="{if $historycommit->GetAge() > 60*60*24*7*2}{$historycommit->GetAge()|agestring}{else}{$historycommit->GetCommitterEpoch()|date_format:"%F"}{/if}"><em>{if $historycommit->GetAge() > 60*60*24*7*2}{$historycommit->GetCommitterEpoch()|date_format:"%F"}{else}{$historycommit->GetAge()|agestring}{/if}</em></td>
+       <td><em>{$historycommit->GetAuthorName()}</em></td>
+       <td><a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=commit&h={$historycommit->GetHash()}" class="list" {if strlen($historycommit->GetTitle()) > 50}title="{$historycommit->GetTitle()}"{/if}><strong>{$historycommit->GetTitle(50)}</strong></a>
+       <span class="refs">
+       {foreach from=$historycommit->GetHeads() item=historyhead}
+         <span class="head">
+	   <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=shortlog&h=refs/heads/{$historyhead->GetName()}">{$historyhead->GetName()}</a>
+	 </span>
+       {/foreach}
+       {foreach from=$historycommit->GetTags() item=historytag}
+         <span class="tag">
+	   <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=tag&h={$historytag->GetName()}">{$historytag->GetName()}</a>
+	 </span>
+       {/foreach}
+       </span>
+       </td>
+       <td class="link"><a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=commit&h={$historycommit->GetHash()}">commit</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=commitdiff&h={$historycommit->GetHash()}">commitdiff</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=blob&hb={$historycommit->GetHash()}&f={$blob->GetPath()}">blob</a>{if $blob->GetHash() != $historyitem->GetToHash()} | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=blobdiff&h={$blob->GetHash()}&hp={$historyitem->GetToHash()}&hb={$historycommit->GetHash()}&f={$blob->GetPath()}">diff to current</a>{/if}
        </td>
      </tr>
-   {/section}
+   {/foreach}
  </table>
 
  {include file='footer.tpl'}

@@ -731,7 +731,7 @@ class GitPHP_Commit extends GitPHP_GitObject
 	 */
 	public function PathToHash($path)
 	{
-		if (empty($file))
+		if (empty($path))
 			return '';
 
 		if (!$this->hashPathsRead)
@@ -806,7 +806,7 @@ class GitPHP_Commit extends GitPHP_GitObject
 						$this->treePaths[$regs[3]] = trim($regs[4]);
 						break;
 					case 'blob';
-						$this->blobPaths[$regs[4]] = trim($regs[4]);
+						$this->blobPaths[$regs[3]] = trim($regs[4]);
 						break;
 				}
 			}
