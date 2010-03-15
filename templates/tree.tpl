@@ -12,23 +12,9 @@
    <div class="page_nav">
      <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=summary">summary</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=shortlog&h={$hashbase->GetHash()}">shortlog</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=log&h={$hashbase->GetHash()}">log</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=commit&h={$hashbase->GetHash()}">commit</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=commitdiff&h={$hashbase->GetHash()}">commitdiff</a> | tree<br /><br />
    </div>
-   <div class="title">
-     <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=commit&h={$hashbase->GetHash()}" class="title">{$hashbase->GetTitle()}</a>
-     <span class="refs">
-     {assign var=heads value=$hashbase->GetHeads()}
-     {foreach name=head item=head from=$heads}
-       <span class="head">
-         <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=shortlog&h=refs/heads/{$head->GetName()}">{$head->GetName()}</a>
-       </span>
-     {/foreach}
-     {assign var=tags value=$hashbase->GetTags()}
-     {foreach name=tag item=tag from=$tags}
-       <span class="tag">
-         <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=tag&h={$tag->GetName()}">{$tag->GetName()}</a>
-       </span>
-     {/foreach}
-     </span>
-   </div>
+
+ {include file='title.tpl' titlecommit=$hashbase}
+ 
  {* Path *}
  <div class="page_path">
    <b>

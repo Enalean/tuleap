@@ -31,9 +31,9 @@
   {/if}
   <br />
 </div>
-<div class="title">
-  <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=commit&h={$hash->GetHash()}" class="title">{$hash->GetTitle()}</a>
-</div>
+
+{include file='title.tpl' titlecommit=$hash}
+
 <table cellspacing="0">
   {* Print each match *}
   {foreach from=$results item=result}

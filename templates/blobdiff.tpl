@@ -14,21 +14,9 @@
    <br />
    <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=blobdiff_plain&h={$hash->GetHash()}&hp={$hashparent->GetHash()}&f={$file}">plain</a>
  </div>
- <div class="title">
-   <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=commit&h={$hashbase->GetHash()}" class="title">{$hashbase->GetTitle()}</a>
-   <span class="refs">
-   {foreach from=$hashbase->GetHeads() item=head}
-     <span class="head">
-       <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=shortlog&h=refs/heads/{$head->GetName()}">{$head->GetName()}</a>
-     </span>
-   {/foreach}
-   {foreach from=$hashbase->GetTags() item=tag}
-     <span class="tag">
-       <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=tag&h={$tag->GetName()}">{$tag->GetName()}</a>
-     </span>
-   {/foreach}
-   </span>
- </div>
+
+ {include file='title.tpl' titlecommit=$hashbase}
+ 
  <div class="page_path">
    {* The path to the file, with directories broken into tree links *}
    <b>

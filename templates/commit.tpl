@@ -13,32 +13,13 @@
    <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=summary">summary</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=shortlog&h={$commit->GetHash()}">shortlog</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=log&h={$commit->GetHash()}">log</a> | commit | {if $commit->GetParent()}<a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=commitdiff&h={$commit->GetHash()}">commitdiff</a> | {/if}<a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=tree&h={$tree->GetHash()}&hb={$commit->GetHash()}">tree</a>
    <br /><br />
  </div>
- <div class="title">
-   {* Commit header *}
-   {if $commit->GetParent()}
-     <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=commitdiff&h={$commit->GetHash()}" class="title">{$commit->GetTitle()}</a>
-     <span class="refs">
-     {assign var=heads value=$commit->GetHeads()}
-     {if count($heads) > 0}
-       {foreach name=head item=head from=$heads}
-         <span class="head">
-	   <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=shortlog&h=refs/heads/{$head->GetName()}">{$head->GetName()}</a>
-	 </span>
-       {/foreach}
-     {/if}
-     {assign var=tags value=$commit->GetTags()}
-     {if count($tags) > 0}
-       {foreach name=tag item=tag from=$tags}
-         <span class="tag">
-           <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=tag&h={$tag->GetName()}">{$tag->GetName()}</a>
-         </span>
-       {/foreach}
-     {/if}
-     </span>
-   {else}
-     <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=tree&h={$tree->GetHash()}&hb={$commit->GetHash()}" class="title">{$commit->GetTitle()}</a>
-   {/if}
- </div>
+
+{if $commit->GetParent()}
+ 	{include file='title.tpl' titlecommit=$commit target='commitdiff'}
+{else}
+	{include file='title.tpl' titlecommit=$commit titletree=$tree target='tree'}
+{/if}
+ 
  <div class="title_text">
    {* Commit data *}
    <table cellspacing="0">

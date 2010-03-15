@@ -13,7 +13,9 @@
    summary | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=shortlog">shortlog</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=log">log</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=commit&h={$head->GetHash()}">commit</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=commitdiff&h={$head->GetHash()}">commitdiff</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=tree">tree</a>
    <br /><br />
  </div>
- <div class="title">&nbsp;</div>
+
+ {include file='title.tpl'}
+
  {* Project brief *}
  <table cellspacing="0">
    <tr><td>description</td><td>{$project->GetDescription()}</td></tr>
@@ -26,9 +28,9 @@
      <tr><td>push url</td><td>{$project->GetPushUrl()}</td></tr>
    {/if}
  </table>
- <div class="title">
-   <a class="title" href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=shortlog">shortlog</a>
- </div>
+
+ {include file='title.tpl' target='shortlog'}
+ 
  <table cellspacing="0">
    {foreach from=$revlist item=rev}
      <tr class="{cycle name=revs values="light,dark"}">
@@ -60,9 +62,9 @@
  </table>
  {if $taglist}
    {* Tags *}
-   <div class="title">
-     <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=tags" class="title">tags</a>
-   </div>
+  
+  {include file='title.tpl' target='tags'}
+   
    <table cellspacing="0">
      {section name=tag max=17 loop=$taglist}
        <tr class="{cycle name=tags values="light,dark"}">
@@ -93,9 +95,9 @@
  {/if}
  {if $headlist}
    {* Heads *}
-   <div class="title">
-     <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=heads" class="title">heads</a>
-   </div>
+
+  {include file='title.tpl' target='heads'}
+
    <table cellspacing="0">
      {section name=head max=17 loop=$headlist}
        <tr class="{cycle name=heads values="light,dark"}">

@@ -19,21 +19,9 @@
    {if !$datatag} | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=blame&h={$hash->GetHash()}&f={$file}&hb={$hashbase->GetHash()}">blame</a>{/if}
    <br />
  </div>
- <div class="title">
-   <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=commit&h={$hashbase->GetHash()}" class="title">{$hashbase->GetTitle()}</a>
-   <span class="refs">
-   {foreach from=$hashbase->GetHeads() item=hashhead}
-     <span class="head">
-       <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=shortlog&h=refs/heads/{$hashhead->GetName()}">{$hashhead->GetName()}</a>
-     </span>
-   {/foreach}
-   {foreach from=$hashbase->GetTags() item=hashtag}
-     <span class="tag">
-       <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=tag&h={$hashtag->GetName()}">{$hashtag->GetName()}</a>
-     </span>
-   {/foreach}
-   </span>
- </div>
+
+ {include file='title.tpl' titlecommit=$hashbase}
+ 
  <div class="page_path">
    {* The path to the file, with directories broken into tree links *}
    <b>
