@@ -28,6 +28,9 @@ include_account	reserved	Name is reserved.
 include_account	reserved_cvs	Name is reserved for CVS.
 include_account	reserved_dns	Name is reserved for DNS purposes.
 include_account	dns_error	Short name cannot contain underscore.
+include_account	used_by_svn	This short name is not available: An SVN directory already exists with this name  
+include_account	used_by_cvs	This short name is not available: An CVS directory already exists with this name
+include_account	used_by_sys	This short name is not available: A home project already exists with this name
 #
 #-----------------------------------------------
 # Script: SF/www/include/account.php

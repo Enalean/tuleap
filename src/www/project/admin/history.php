@@ -16,7 +16,25 @@ project_admin_header(array('title'=>$Language->getText('project_admin_history','
 
 echo $Language->getText('project_admin_history','proj_change_log_msg');
 
-echo show_grouphistory($group_id);
+$request = HTTPRequest::instance();
+
+// Check if group_id is valid
+$vGroupId = new Valid_GroupId();
+$vGroupId->required();
+if($request->valid($vGroupId)) {
+    $group_id = $request->get('group_id');
+} else {
+    exit_no_group();
+}
+
+$offset = $request->getValidated('offset', 'uint', 0);
+if ( !$offset || $offset < 0 ) {
+    $offset = 0;
+}
+$limit  = 50;
+
+//for pagination
+echo show_grouphistory($group_id, $offset, $limit);
 
 project_admin_footer(array());
 ?>

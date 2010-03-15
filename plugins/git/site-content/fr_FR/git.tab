@@ -18,6 +18,7 @@ plugin_git	info_access_title	Accès aux dépôts Git
 plugin_git	info_access_content	les dépôts sont accessibles via l'url ci-dessous, dans laquelle REPO_NAME doit être remplacé par le nom du dépôt.<br /> Pour tout problème de permissions contactez l'administrateur du site.
 
 plugin_git	bread_crumb_home	Liste des dépôts
+plugin_git	bread_crumb_help	Aide
 
 plugin_git	tree_title_available_repo	Liste des dépôts
 plugin_git	tree_msg_no_available_repo	Aucun dépôt trouvé
@@ -66,6 +67,7 @@ plugin_git	actions_repo_not_found	Le dépôt n'existe pas
 plugin_git	actions_repo_access	Les droits d'accès au dépôt vont être modifiés dans quelques secondes
 plugin_git	actions_save_repo_process	Les données du dépôt ont été enregistrées
 plugin_git	actions_delete_backup	Une sauvegarde du dépôt sera disponible dans le repertoire
+plugin_git	actions_name_not_available	Un fichier existe déjà avec ce nom sous gitroot
 
 plugin_git	view_repo_description	Description
 plugin_git	view_repo_creator	Crée par
@@ -83,3 +85,5 @@ plugin_git	yes	Oui
 plugin_git	no	Non
 
 plugin_git	project_service_not_available	Le service n'est pas disponible pour votre projet (Contactez l'administrateur du site)
+plugin_git	reference_commit_nature_key	Commit Git
+plugin_git	reference_commit_desc_key	Commit Git

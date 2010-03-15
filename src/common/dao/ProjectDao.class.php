@@ -111,6 +111,35 @@ class ProjectDao extends DataAccessObject {
                " LIMIT ".$this->da->escapeInt($limit);
         return $this->retrieve($sql);
     }
+
+    /**
+     * Update the http_domain and service when renaming the group
+     * @param Project $project
+     * @param String  $new_name
+     * @return Boolean
+     */
+    public function renameProject($project,$new_name){
+        //Update 'groups' table
+        $sql = ' UPDATE groups SET unix_group_name= '.$this->da->quoteSmart($new_name).' , 
+                 http_domain=REPLACE (http_domain,'.$this->da->quoteSmart($project->getUnixName(false)).','.$this->da->quoteSmart($new_name).')
+                 WHERE group_id= '.$this->da->quoteSmart($project->getID());
+        $res_groups = $this->update($sql);
+
+        //Update 'service' table
+        if ($res_groups){
+            $sql_summary  = ' UPDATE service SET link= REPLACE (link,'.$this->da->quoteSmart($project->getUnixName(false)).','.$this->da->quoteSmart($new_name).')
+                              WHERE short_name="summary"
+                              AND group_id= '.$this->da->quoteSmart($project->getID());
+            $res_summary = $this->update($sql_summary);
+            if ($res_summary){
+                $sql_homePage = ' UPDATE service SET link= REPLACE (link,'.$this->da->quoteSmart($project->getUnixName(false)).','.$this->da->quoteSmart($new_name).')
+                                  WHERE short_name="homepage"
+                                  AND group_id= '.$this->da->quoteSmart($project->getID());
+                return $this->update($sql_homePage);
+            }
+        }
+        return false;
+    }
 }
 
 ?>

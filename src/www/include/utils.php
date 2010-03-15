@@ -445,10 +445,11 @@ function util_make_links ($data='',$group_id = 0) {
     
 	// john.doe@yahoo.com => <a href="mailto:...">...</a>
     $data = eregi_replace("(([a-z0-9_]|\\-|\\.)+@([^[:space:]<&>]*)([[:alnum:]-]))", "<a href=\"mailto:\\1\" target=\"_new\">\\1</a>", $data);
-
-    if ($group_id)
+    if ($group_id) {
       return util_make_reference_links ($data,$group_id);
-    else return $data;
+    } else {
+      return $data;
+    }
 }
 
 function util_make_reference_links ($data,$group_id) {

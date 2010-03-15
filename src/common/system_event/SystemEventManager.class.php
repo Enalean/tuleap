@@ -27,6 +27,7 @@ require_once('common/event/EventManager.class.php');
 require_once('common/system_event/include/SystemEvent_SYSTEM_CHECK.class.php');
 require_once('common/system_event/include/SystemEvent_PROJECT_CREATE.class.php');
 require_once('common/system_event/include/SystemEvent_PROJECT_DELETE.class.php');
+require_once('common/system_event/include/SystemEvent_PROJECT_RENAME.class.php');
 require_once('common/system_event/include/SystemEvent_MEMBERSHIP_CREATE.class.php');
 require_once('common/system_event/include/SystemEvent_MEMBERSHIP_DELETE.class.php');
 require_once('common/system_event/include/SystemEvent_USER_CREATE.class.php');
@@ -62,6 +63,7 @@ class SystemEventManager {
             Event::SYSTEM_CHECK, 
             Event::USER_EMAIL_CHANGED, 
             Event::EDIT_SSH_KEYS,
+            Event::PROJECT_RENAME,
             'approve_pending_project',
             'project_is_deleted',
             'project_admin_add_user',
@@ -144,6 +146,11 @@ class SystemEventManager {
             $this->createEvent(SystemEvent::TYPE_PROJECT_DELETE,
                                $params['group_id'],
                                SystemEvent::PRIORITY_LOW);
+            break;
+        case Event::PROJECT_RENAME:
+        	$this->createEvent(SystemEvent::TYPE_PROJECT_RENAME,
+                               $this->concatParameters($params, array('group_id', 'new_name')),
+                               SystemEvent::PRIORITY_HIGH);
             break;
         case 'project_admin_add_user':
             $this->createEvent(SystemEvent::TYPE_MEMBERSHIP_CREATE, 
@@ -315,6 +322,7 @@ class SystemEventManager {
         case SystemEvent::TYPE_EDIT_SSH_KEYS:
         case SystemEvent::TYPE_PROJECT_CREATE:
         case SystemEvent::TYPE_PROJECT_DELETE:
+        case SystemEvent::TYPE_PROJECT_RENAME:
         case SystemEvent::TYPE_MEMBERSHIP_CREATE:
         case SystemEvent::TYPE_MEMBERSHIP_DELETE:
         case SystemEvent::TYPE_UGROUP_MODIFY:

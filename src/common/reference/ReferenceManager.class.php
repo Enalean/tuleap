@@ -45,7 +45,7 @@ class ReferenceManager {
      */
     var $referencesByProject;
     var $referenceDao;
-    var $reservedKeywords=array("art","artifact","doc","file","wiki","cvs","svn","news","forum","msg","cc","git","tracker","release","tag","thread","im","project","folder","plugin","img","commit","rev","revision","patch","bug","sr","task","proj","dossier"); //should be elsewhere?
+    var $reservedKeywords=array("art","artifact","doc","file","wiki","cvs","svn","news","forum","msg","cc","tracker","release","tag","thread","im","project","folder","plugin","img","commit","rev","revision","patch","bug","sr","task","proj","dossier"); //should be elsewhere?
     var $groupIdByName;
     var $groupIdByNameLower;
     
@@ -71,6 +71,11 @@ class ReferenceManager {
    
     function ReferenceManager() {
         $this->activeReferencesByProject = array();
+        //retrieve reserved keywords from plugins
+        $plugins_reserved_keywords = array();
+        $em = EventManager::instance();
+        $em->processEvent( Event::GET_PLUGINS_AVAILABLE_KEYWORDS_REFERENCES, array('keywords' => &$plugins_reserved_keywords));
+        $this->reservedKeywords = array_merge($this->reservedKeywords, $plugins_reserved_keywords);
     }
 
     function &instance() {
@@ -390,7 +395,7 @@ class ReferenceManager {
         setlocale(LC_CTYPE, 'fr_FR.ISO-8859-1');
         $exp = $this->_getExpForRef();
         $count=preg_match_all($exp, $html, $matches,PREG_SET_ORDER);
-        setlocale(LC_CTYPE, $locale);
+        setlocale(LC_CTYPE, $locale);        
     	return $matches;
     }
     
@@ -401,8 +406,7 @@ class ReferenceManager {
      * @param $group_id the group_id of the project
      * @return array of {ReferenceInstance} : an array of project references extracted in the text $html
      */
-    function extractReferences($html,$group_id) {
-
+    function extractReferences($html,$group_id) {        
         $referencesInstances=array();
         $matches = $this->_extractAllMatches($html);
         foreach ($matches as $match) {
@@ -454,8 +458,7 @@ class ReferenceManager {
     }
     
     function extractCrossRef($html,$source_id, $source_type, $source_gid, $user_id=0) {
-		$referencesInstances=array();
-		
+		$referencesInstances=array();		
 		$available_natures = $this->getAvailableNatures();
 		if ($source_type == self::REFERENCE_NATURE_ARTIFACT) {
 		    $source_key = $this->getArtifactKeyword($source_id, $source_gid);
@@ -646,7 +649,7 @@ class ReferenceManager {
 
     /**
      */
-    function _initProjectReferences($group_id) {
+    function _initProjectReferences($group_id) {        
         if (!isset($this->activeReferencesByProject[$group_id])) {
             $p = array();
             $reference_dao =& $this->_getReferenceDao();

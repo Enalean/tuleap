@@ -16,14 +16,33 @@ require_once('common/event/EventManager.class.php');
 session_require(array('group'=>'1','admin_flags'=>'A'));
 $pm = ProjectManager::instance();
 $group = $pm->getProject($group_id,false,true);
-
+$request = HTTPRequest::instance();
 $currentproject= new project($group_id);
 
+$em =& EventManager::instance();
+
+$Rename=$request->get('Rename');
+if ($Rename) {
+    $new_name =$request->get('new_name');
+    if (isset($new_name) && $group_id) {
+        $rule = new Rule_ProjectName();
+        if (!$rule->isValid($new_name)) {
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('admin_groupedit','invalid_short_name'));
+            $GLOBALS['Response']->addFeedback('error', $rule->getErrorMessage());
+        } else {
+            $em->processEvent(Event::PROJECT_RENAME, array('group_id' => $group_id,
+                                                           'new_name' => $new_name));
+            //update group history
+            group_add_history('rename_request', $group->getUnixName(false).' :: '.$new_name, $group_id);
+        
+            $GLOBALS['Response']->addFeedback('info', $Language->getText('admin_groupedit','rename_project_msg', array($group->getUnixName(false), $new_name )));
+        }
+    }
+}        
 // group public choice
 $Update=$request->get('Update');
 if ($Update) {
-    $em =& EventManager::instance();
-	$res_grp = db_query("SELECT * FROM groups WHERE group_id=$group_id");
+    $res_grp = db_query("SELECT * FROM groups WHERE group_id=$group_id");
 
 	//audit trail
         if ($group->getStatus() != $form_status)
@@ -79,13 +98,12 @@ site_admin_header(array('title'=>$Language->getText('admin_groupedit','title')))
 echo '<H2>'.$row_grp['group_name'].'</H2>' ;?>
 
 <p>
-<A href="/project/admin/?group_id=<?php print $group_id; ?>"><H3>[<?php echo $Language->getText('admin_groupedit','proj_admin'); ?>]</H3></A>
-
-<P>
-<A href="userlist.php?group_id=<?php print $group_id; ?>"><H3>[<?php echo $Language->getText('admin_groupedit','proj_member'); ?>]</H3></A>
+<A href="/project/admin/?group_id=<?php print $group_id; ?>"><B><BIG>[<?php echo $Language->getText('admin_groupedit','proj_admin'); ?>]</BIG></B></A><BR/>
+<A href="userlist.php?group_id=<?php print $group_id; ?>"><B><BIG>[<?php echo $Language->getText('admin_groupedit','proj_member'); ?>]</BIG></B></A>
+</p>
 
 <p>
-<FORM action="<?php echo $PHP_SELF; ?>" method="POST">
+<FORM action="?" method="POST">
 <B><?php echo $Language->getText('admin_groupedit','group_type'); ?>:</B>
 <?php
 
@@ -145,20 +163,46 @@ echo $template->showTypeBox('group_type',$group->getType());
 
 // ########################## OTHER INFO
 
-print "<P><B>".$Language->getText('admin_groupedit','other_info')."</B>";
-print "<br><u>".$Language->getText('admin_groupedit','unix_grp')."</u>: $row_grp[unix_group_name]";
+print "<h3>".$Language->getText('admin_groupedit','other_info')."</h3>";
+print $Language->getText('admin_groupedit','unix_grp').": $row_grp[unix_group_name]";
+?>
+<FORM action="?" method="POST">
+<INPUT type="hidden" name="group_id" value="<?php print $group_id; ?>">
+<?php echo $Language->getText('admin_groupedit','rename_project_label'); ?>:
+<INPUT type="text" name="new_name" value="<?php $new_name; ?>" id="new_name">
+<INPUT type="submit" name="Rename" value="<?php echo $Language->getText('global','btn_update'); ?>">
+</FORM>
 
+<?php 
 $currentproject->displayProjectsDescFieldsValue();
-	
-print "<br><u>".$Language->getText('admin_groupedit','license_other')."</u>: <br> $row_grp[license_other]";
+
+print "<h3>".$Language->getText('admin_groupedit','license_other')."</h3> $row_grp[license_other]";
 
 $template_group = $pm->getProject($group->getTemplate());
-print "<br><u>".$Language->getText('admin_groupedit','built_from_template').'</u>: <br> <A href="/projects/'.$template_group->getUnixName().'"> <B> '.$template_group->getPublicname().' </B></A>';
+print "<h3>".$Language->getText('admin_groupedit','built_from_template').':</h3> <a href="/projects/'.$template_group->getUnixName().'"> <B> '.$template_group->getPublicname().' </B></A>';
+
+
+
+// Check if group_id is valid
+$vGroupId = new Valid_GroupId();
+$vGroupId->required();
+if($request->valid($vGroupId)) {
+    $group_id = $request->get('group_id');
+} else {
+    exit_no_group();
+}
+
+$offset = $request->getValidated('offset', 'uint', 0);
+if ( !$offset || $offset < 0 ) {
+    $offset = 0;
+}
+$limit  = 50;
+
 
 echo "<P><HR><P>";
 
 echo '
-<P>'.show_grouphistory ($group_id);
+<P>'.show_grouphistory ($group_id, $offset, $limit);
 
 site_admin_footer(array());
 

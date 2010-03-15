@@ -157,8 +157,14 @@ class BackendSystem extends Backend {
             }
         }
 
-        if ($projdir != strtolower($projdir)) {
-            $lcprojlnk=strtolower($projdir);
+        // /!\ Be careful not to lowercase the whole path as it will also modify
+        // parents case and will lead to errors. Eg:
+        // /Toto/home/groups/TestProj -> /toto/home/groups/testproj
+        // instead of
+        // /Toto/home/groups/TestProj -> /Toto/home/groups/testproj
+        $lcProjectDir = $GLOBALS['grpdir_prefix']."/".$project->getUnixName(true);
+        if ($projdir != $lcProjectDir) {
+            $lcprojlnk = $lcProjectDir;
             if (!is_link($lcprojlnk)) {
                 if (!symlink($projdir,$lcprojlnk)) {
                     $this->log("Can't create project link: $lcprojlnk", Backend::LOG_ERROR);
@@ -410,6 +416,114 @@ class BackendSystem extends Backend {
         $this->log("Authorized_keys for $username written.", Backend::LOG_INFO);
         return true;
     }
+     /**
+     * Check if repository of given project exists
+     * @param Project
+     * @return true is repository already exists, false otherwise
+     */
+    function projectHomeExists($project) {
+        $unix_group_name=$project->getUnixName(false); // May contain upper-case letters
+        $home_dir=$GLOBALS['grpdir_prefix']."/".$unix_group_name;
+        if (is_dir($home_dir)) {
+            return true;
+        } else return false; 
+    }
+
+    /**
+     * Check if given name is not used by a repository or a file or a link
+     * 
+     * @param String $name
+     * 
+     * @return false if repository or file  or link already exists:
+     **  with the same name under the grp_dir
+     **  with its lower case name under the grp_dir 
+     **  under FRS
+     **  under ftp anon 
+     * true otherwise
+     */
+    function isNameAvailable($name) {
+        $dir = $GLOBALS['grpdir_prefix']."/".$name;
+        $frs = $GLOBALS['ftp_frs_dir_prefix']."/".$name;
+        $ftp = $GLOBALS['ftp_anon_dir_prefix']."/".$name;
+        
+        if ($this->fileExists($dir)) {
+            return false;
+        } else if ($name != strtolower ($name)) {
+            $link = $GLOBALS['grpdir_prefix']."/".strtolower($name);
+            if ($this->fileExists($link)) {
+                return false;
+            }
+        }
+        if ($this->fileExists($frs)) {
+            return false;
+        } else if ($this->fileExists($ftp)) {
+            return false;
+        }
+        return true;
+    }
+    
+    
+    /**
+     * Rename project home directory (following project unix_name change)
+     * 
+     * @param Project $project
+     * @param String  $newName
+     * 
+     * @return Boolean
+     */
+    public function renameProjectHomeDirectory($project, $newName) {
+        if (is_link($GLOBALS['grpdir_prefix'].'/'.$newName)) {
+            unlink($GLOBALS['grpdir_prefix'].'/'.$newName);
+            return rename($GLOBALS['grpdir_prefix'].'/'.$project->getUnixName(false), $GLOBALS['grpdir_prefix'].'/'.$newName);
+        } else {
+            $renamed = rename($GLOBALS['grpdir_prefix'].'/'.$project->getUnixName(false), $GLOBALS['grpdir_prefix'].'/'.$newName);
+            if ($renamed) {
+                if (is_link($GLOBALS['grpdir_prefix'].'/'.$project->getUnixName(true))) {
+                    unlink($GLOBALS['grpdir_prefix'].'/'.$project->getUnixName(true));
+                }
+                if (strtolower($newName) != $newName) {
+                    return symlink($GLOBALS['grpdir_prefix'].'/'.$newName,$GLOBALS['grpdir_prefix'].'/'.strtolower($newName));
+                } else {
+                    return true;
+                }
+            }
+            return $renamed;
+        }
+    }
+    
+    /**
+     * Rename Directory where the released files are located (following project unix_name change)
+     * 
+     * @param Project $project
+     * @param String  $newName
+     * 
+     * @return Boolean
+     */
+    public function renameFileReleasedDirectory($project, $newName) {
+        if (is_dir($GLOBALS['ftp_frs_dir_prefix'].'/'.$project->getUnixName(false))){
+            return rename($GLOBALS['ftp_frs_dir_prefix'].'/'.$project->getUnixName(false), $GLOBALS['ftp_frs_dir_prefix'].'/'.$newName);
+        } else {
+            return true;
+        }
+    }
+    
+    /**
+     * Rename anon ftp project homedir (following project unix_name change)
+     * 
+     * @param Project $project
+     * @param String  $newName
+     * 
+     * @return Boolean
+     */
+    public function renameAnonFtpDirectory($project, $newName) {
+        if (is_dir($GLOBALS['ftp_anon_dir_prefix'].'/'.$project->getUnixName(false))){
+            return rename($GLOBALS['ftp_anon_dir_prefix'].'/'.$project->getUnixName(false), $GLOBALS['ftp_anon_dir_prefix'].'/'.$newName);
+        } else {
+            return true;
+        }
+    }
+    
+    
 
 }
 

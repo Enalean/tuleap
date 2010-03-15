@@ -59,10 +59,6 @@ class AdminDelegation_UserWidget extends Widget {
 
     /**
      * Tell if a widget can by used by a project
-     *
-     * This method is used only when a during project clone. As widgets are 
-     * cloned before the plugins, at this time we don't know if the project links
-     * are activated or not. So just say yes all the time.
      * 
      * @param Project $project
      */

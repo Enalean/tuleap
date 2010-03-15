@@ -17,6 +17,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
+
+require_once('include/DataAccessObject.class.php');
+
 class SystemEventsFollowersDao extends DataAccessObject {
     public function __construct($da) {
         parent::__construct($da);

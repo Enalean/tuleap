@@ -194,79 +194,38 @@ function account_make_login_from_email($email) {
     return strtolower($name);
 }
 
-
+/**
+ * Check username validity. DEPRECATED
+ * 
+ * @deprecated
+ * @see Valid_UserNameFormat
+ * @param String $name
+ * @return Integer
+ */
 function account_namevalid($name, $key = '') {
-  global $Language;
-    // no spaces
-    if (strrpos($name,' ') > 0) {
-        if ($key == '') {
-            $k = 'login_err';
-        } else {
-            $k = $key . '_spaces';
-        }
-        $GLOBALS['register_error'] = $Language->getText('include_account', $k);	
+    $rule = new Rule_UserName();
+    if (!$rule->isValid($name)) {
+        $GLOBALS['register_error'] = $rule->getErrorMessage();
         return 0;
     }
-
-    $rule = new Rule_UserNameFormat();
-
-    // must have at least one character
-    // MV: not useful because we already have both 'min length' and
-    // 'valid chars' rules
-    // NT: still useful since it checks if the name does not start with a digit
-    if (strspn($name,"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ") == 0) {
-        $GLOBALS['register_error'] = $Language->getText('include_account','char_err');
-        return 0;
-    }
-
-    // must contain all legal characters
-    if ($rule->containsIllegalChars($name)) {
-        $GLOBALS['register_error'] = $Language->getText('include_account','illegal_char');
-        return 0;
-    }
-
-    // min and max length
-    if ($rule->lessThanMin($name)) {
-        $GLOBALS['register_error'] = $Language->getText('include_account','name_too_short');
-        return 0;
-    }
-    if ($rule->greaterThanMax($name)) {
-        $GLOBALS['register_error'] = $Language->getText('include_account','name_too_long');
-        return 0;
-    }
-
-    // illegal names
-    if ($rule->isNotLegalName($name)) {
-        $GLOBALS['register_error'] = $Language->getText('include_account','reserved');
-        return 0;
-    }
-    if ($rule->isCvsAccount($name)) {
-        $GLOBALS['register_error'] = $Language->getText('include_account','reserved_cvs');
-        return 0;
-    }
-        
     return 1;
 }
 
+/**
+ * Check groupname validity. DEPRECATED
+ * 
+ * @deprecated
+ * @see Rule_ProjectName
+ * @param String $name
+ * @return Integer
+ */
 function account_groupnamevalid($name) {
-  global $Language;
-	if (!account_namevalid($name, 'project')) return 0;
-	
-	// illegal names
-	if (eregi("^((www[0-9]?)|(cvs[0-9]?)|(shell[0-9]?)|(ftp[0-9]?)|(irc[0-9]?)|(news[0-9]?)"
-        . "|(mail[0-9]?)|(ns[0-9]?)|(download[0-9]?)|(pub)|(users)|(compile)|(lists)"
-        . "|(slayer)|(orbital)|(tokyojoe)|(webdev)|(projects)|(cvs)|(slayer)|(monitor)|(mirrors?))$",$name)) {
-        $GLOBALS['register_error'] = $Language->getText('include_account','reserved');
+    $rule = new Rule_ProjectName();
+    if (!$rule->isValid($name)) {
+        $GLOBALS['register_error'] = $rule->getErrorMessage();
         return 0;
-	}
-
-    //Group name cannot contain underscore for DNS reasons.
-	if (eregi("_",$name)) {
-        $GLOBALS['register_error'] = $Language->getText('include_account','dns_error');
-        return 0;
-	}
-
-	return 1;
+    }
+    return 1;
 }
 
 

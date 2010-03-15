@@ -64,3 +64,8 @@ function removeHeader(divNum)
   var olddiv = document.getElementById(divNum);
   d.removeChild(olddiv);
 }
+
+<?php
+// Waiting for a better script, this comment just to make test
+// BlankAfterClosingPhpTag happy...
+?>

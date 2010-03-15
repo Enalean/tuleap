@@ -149,4 +149,5 @@ class WikiDao extends DataAccessObject {
         return $this->update($sql);
     }
 }
+
 ?>

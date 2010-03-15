@@ -33,7 +33,8 @@ class BlankAfterClosingPhpTagTest extends UnitTestCase {
         $this->exclude_wholedir = '`(?:'. implode('|', array(
                                 'plugins/IM/include/jabbex_api/tests',
                                 'plugins/IM/www/webmuc/lib/jsjac/utils',
-                                'plugins/git/viewgit-0.0.5',
+                                'plugins/git/gitphp',
+                                'plugins/git/gitphp-0.1.0'
                                 )) .')$`';
         
         //Those files are allowed to contains something before opening tag

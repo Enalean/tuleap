@@ -25,16 +25,17 @@
  * @author    Guillaume Storchi
  * @license   http://opensource.org/licenses/gpl-license.php GPL
  */
-require_once('common/include/HTTPRequest.class.php');
+
+require_once('common/include/Codendi_HTMLPurifier.class.php');
 
 class PluginViews {
     
     protected $request;
     protected $controller;
-    
+
     public function __construct($controller) {
       $this->controller   = $controller;
-      $this->request      = HTTPRequest::instance();
+      $this->request      = $controller->getRequest();
       $this->HTMLPurifier = Codendi_HTMLPurifier::instance();
       $this->user         = $controller->getUser();
     }

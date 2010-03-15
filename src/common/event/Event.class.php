@@ -116,8 +116,26 @@ class Event {
     const BACKEND_FACTORY_GET_PREFIX = 'backend_factory_get_';
     
     /**
-     *
+     * Use this event to get the class name of an external event type (plugins)
+     * see git plugin for implementation example
      */
      const GET_SYSTEM_EVENT_CLASS = 'get_system_event_class';
+
+     /**
+      * This event is used to get all reserved keywords provided by plugins for reference
+      */
+     const GET_PLUGINS_AVAILABLE_KEYWORDS_REFERENCES = 'get_plugins_available_keywords_references';
+
+    /**
+     * Project unix name changed
+     *
+     * Parameters:
+     *  'group_id' => Project ID
+     *  'new_name' => The new unix name
+     *
+     * No expected results
+     */
+    const PROJECT_RENAME = 'project_rename';
+
 }
 ?>

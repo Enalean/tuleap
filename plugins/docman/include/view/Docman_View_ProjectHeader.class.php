@@ -43,7 +43,7 @@ require_once('Docman_View_Header.class.php');
                     'action_notifications'     => $GLOBALS['Language']->getText('plugin_docman','action_notifications'),
                     'action_delete'            => $GLOBALS['Language']->getText('plugin_docman','action_delete'),
                     'action_update'            => $GLOBALS['Language']->getText('plugin_docman','action_update'),
-                    'action_cut'               => $GLOBALS['Language']->getText('plugin_docman', 'action_cut'),
+                    'action_cut'               => $GLOBALS['Language']->getText('plugin_docman','action_cut'),
                     'action_copy'              => $GLOBALS['Language']->getText('plugin_docman','action_copy'),
                     'action_paste'             => $GLOBALS['Language']->getText('plugin_docman','action_paste'),
                     'action_lock_add'          => $GLOBALS['Language']->getText('plugin_docman','action_lock_add'),

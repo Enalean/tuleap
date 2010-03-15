@@ -19,7 +19,6 @@
   * along with Codendi. If not, see <http://www.gnu.org/licenses/
   */
 require_once('mvc/PluginActions.class.php');
-require_once('common/include/HTTPRequest.class.php');
 require_once('events/SystemEvent_GIT_REPO_CREATE.class.php');
 require_once('events/SystemEvent_GIT_REPO_CLONE.class.php');
 require_once('events/SystemEvent_GIT_REPO_DELETE.class.php');
@@ -28,10 +27,10 @@ require_once('common/system_event/SystemEventManager.class.php');
 require_once('GitBackend.class.php');
 require_once('GitRepository.class.php');
 require_once('GitDao.class.php');
-require_once('common/include/Codendi_HTMLPurifier.class.php');
 
 /**
  * GitActions
+ * @todo call Event class instead of SystemEvent
  * @author Guillaume Storchi
  */
 class GitActions extends PluginActions {
@@ -40,7 +39,8 @@ class GitActions extends PluginActions {
     public function __construct($controller) {
         parent::__construct($controller);
         $this->systemEventManager = SystemEventManager::instance();
-	}
+
+    }
 
     protected function getText($key) {
         return $GLOBALS['Language']->getText('plugin_git', $key);
@@ -62,7 +62,7 @@ class GitActions extends PluginActions {
         $repository->setId( $repositoryId );
         if ( $repository->hasChild() ) {
             $c->addError( $this->getText('backend_delete_haschild_error') );
-            $c->redirect('/plugins/git/?action=view&group_id='.$projectId.'&repo_id='.$repositoryId);
+            $c->redirect('/plugins/git/index.php/'.$projectId.'/view/'.$repositoryId.'/');
             return false;
         }
         $this->systemEventManager->createEvent(
@@ -109,7 +109,7 @@ class GitActions extends PluginActions {
         }
         if ( GitDao::checkName($forkName) === false ) {
             $c->addError( $this->getText('actions_input_format_error').' '.GitDao::REPO_NAME_MAX_LENGTH );
-            $c->redirect('/plugins/git/?action=view&group_id='.$projectId.'&repo_id='.$parentId);
+            $c->redirect('/plugins/git/index.php/'.$projectId.'/view/'.$parentId.'/');
             return false;
         }
         $parentRepo = new GitRepository();
@@ -118,7 +118,7 @@ class GitActions extends PluginActions {
             $parentRepo->load();
             if ( !$parentRepo->isInitialized() ) {
                 $c->addError( $this->getText('repo_not_initialized') );
-                $c->redirect('/plugins/git/?action=view&group_id='.$projectId.'&repo_id='.$parentId);
+                $c->redirect('/plugins/git/index.php/'.$projectId.'/view/'.$parentId.'/');
                 return false;
             }
         } catch ( GitDaoException $e ) {
@@ -132,7 +132,7 @@ class GitActions extends PluginActions {
             SystemEvent::PRIORITY_MEDIUM
         );
         $c->addInfo( $this->getText('actions_create_repo_process') );
-        $c->redirect('/plugins/git/?action=view&group_id='.$projectId.'&repo_id='.$parentId );
+        $c->redirect('/plugins/git/index.php/'.$projectId.'/view/'.$parentId.'/');
         return;
     }
 
@@ -194,7 +194,7 @@ class GitActions extends PluginActions {
         }
         if ( empty($repoAccess) || empty($repoDescription) ) {
             $c->addError( $this->getText('actions_params_error') );
-            $c->redirect('/plugins/git/?action=view&repo_id='.$repoId.'&group_id='.$projectId);
+            $c->redirect('/plugins/git/index.php/'.$projectId.'/view/'.$repoId.'/');
             return false;
         }        
         $repository = new GitRepository();
@@ -226,16 +226,71 @@ class GitActions extends PluginActions {
             $repository->save();
         } catch (GitDaoException $e) {
             $c->addError( $e->getMessage() );             
-            $c->redirect('/plugins/git/?action=view&repo_id='.$repoId.'&group_id='.$projectId);
+             $c->redirect('/plugins/git/index.php/'.$projectId.'/view/'.$repoId.'/');
             return false;
         }
         $c->addInfo( $this->getText('actions_save_repo_process') );
-        $c->redirect('/plugins/git/?action=view&group_id='.$projectId.'&repo_id='.$repoId );
+        $c->redirect('/plugins/git/index.php/'.$projectId.'/view/'.$repoId.'/');
         return;
     }
 
+    /**
+     * Internal method called by SystemEvent_PROJECT_IS_PRIVATE
+     * @param <type> $projectId
+     * @param <type> $isPublic
+     * @return <type>
+     */
+    public static function changeProjectRepositoriesAccess($projectId, $isPrivate) {
+        //if the project is private, then no changes may be applied to repositories,
+        //in other words only if project is set to private, its repositories have to be set to private
+        if ( empty($isPrivate) ) {
+            return;
+        }
+        $dao          = new GitDao();
+        $repositories = $dao->getProjectRepositoryList($projectId);
+        if ( empty($repositories) ) {
+            return false;
+        }
 
-    
+        foreach ( $repositories as $repoId=>$repoData ) {
+            $r = new GitRepository();
+            $r->setId($repoId);
+            if ( !$r->exists() ) {
+                continue;
+            }
+            $newAccess = !empty($isPrivate) ? GitRepository::PRIVATE_ACCESS : GitRepository::PUBLIC_ACCESS;
+            if ( $r->getAccess() == $newAccess ) {
+                continue;
+            }
+            $r->setAccess( $newAccess );
+            $r->changeAccess();
+            unset($r);
+        }
+
+    }
+
+    /**
+     * Method called by SystemEvent_PROJECT_RENAME event
+     *
+     * @param Project $project Project to modify
+     * @param String  $newName New unix group name
+     *
+     * @return Boolean
+     */
+    public static function renameProject(Project $project, $newName) {
+        $r = new GitRepository();
+        return $r->renameProject($project, $newName);
+    }
+
+    public static function isNameAvailable($newName, &$error) {
+        $r = new GitRepository();
+        if (! $r->isNameAvailable($newName)) {
+            $error = $GLOBALS['Language']->getText('plugin_git', 'actions_name_not_available');
+            return false;
+        }
+        return true;
+    }
+
 }
 
 

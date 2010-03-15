@@ -481,6 +481,99 @@ class BackendCVS extends Backend {
             unlink($file);
         }
     }
+    
+    /**
+     * Check if given name is not used by a repository or a file or a link
+     * 
+     * @param String $name
+     * 
+     * @return false if repository or file  or link already exists, true otherwise
+     */
+    function isNameAvailable($name) {
+        $path = $GLOBALS['cvs_prefix']."/".$name;
+        return  (!$this->fileExists($path));
+    }
+    
+
+    /**
+     * Rename cvs repository (following project unix_name change)
+     *
+     * @param Project $project Project to rename
+     * @param String  $newName New name
+     *
+     * @return Boolean
+     */
+    public function renameCVSRepository($project, $newName) {
+        if (rename($GLOBALS['cvs_prefix'].'/'.$project->getUnixName(false), $GLOBALS['cvs_prefix'].'/'.$newName)) {
+            $this->renameLockDir($project, $newName);
+            $this->renameLogInfoFile($project, $newName);
+            $this->renameCommitInfoFile($project, $newName);
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Rename CVS lock dir and corresponding file in repository
+     *
+     * @param Project $project Project to rename
+     * @param String  $newName New name
+     *
+     * @return Boolean
+     */
+    public function renameLockDir($project, $newName) {
+        $oldLockDir = $GLOBALS['cvslock_prefix'].'/'.$project->getUnixName(false);
+        $newLockDir = $GLOBALS['cvslock_prefix'].'/'.$newName;
+        if (is_dir($oldLockDir)) {
+            rename($oldLockDir, $newLockDir);
+        }
+
+        $filename = $GLOBALS['cvs_prefix'].'/'.$newName.'/CVSROOT/config';
+        $this->_RcsCheckout($filename);
+        $file = file_get_contents($filename);
+        $file = preg_replace('%'.$oldLockDir.'%m', $newLockDir, $file);
+        file_put_contents($filename, $file);
+        $this->_RcsCommit($filename);
+
+        return true;
+    }
+
+    /**
+     * Rename all project occurrences in the loginfo file
+     *
+     * @param Project $project Project to rename
+     * @param String  $newName New name
+     *
+     * @return Boolean
+     */
+    public function renameLogInfoFile($project, $newName) {
+        $filename = $GLOBALS['cvs_prefix'].'/'.$newName.'/CVSROOT/loginfo';
+        $this->_RcsCheckout($filename);
+        $file = file_get_contents($filename);
+        $file = preg_replace('%(\s+)'.$project->getUnixName(false).'(\s+)%m', '$1'.$newName.'$2', $file);
+        $file = preg_replace('%'.$GLOBALS['cvs_prefix'].'/'.$project->getUnixName(false).'%m', $GLOBALS['cvs_prefix'].'/'.$newName, $file);
+        file_put_contents($filename, $file);
+        $this->_RcsCommit($filename);
+        return true;
+    }
+
+    /**
+     * Rename all project occurrences in the commit file
+     *
+     * @param Project $project Project to rename
+     * @param String  $newName New name
+     *
+     * @return Boolean
+     */
+    public function renameCommitInfoFile($project, $newName) {
+        $filename = $GLOBALS['cvs_prefix'].'/'.$newName.'/CVSROOT/commitinfo';
+        $this->_RcsCheckout($filename);
+        $file = file_get_contents($filename);
+        $file = preg_replace('%(\s+)'.$project->getUnixName(false).'(\s+)%m', '$1'.$newName.'$2', $file);
+        file_put_contents($filename, $file);
+        $this->_RcsCommit($filename);
+        return true;
+    }
 }
 
 ?>

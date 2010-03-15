@@ -50,7 +50,7 @@ class ForumMLInsert {
 
     // Insert values into forumml_attachment table 
     function insertAttachment($id_message, $filename,$filetype,$filepath,$content_id="") {
-        if (file_exists($filepath)) {
+        if (is_file($filepath)) {
             $filesize = filesize($filepath);
         } else {
             $filesize = 0;

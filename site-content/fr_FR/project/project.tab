@@ -357,6 +357,8 @@ project_admin_utils	event	Evènement
 project_admin_utils	val	Valeur
 project_admin_utils	date	Date
 project_admin_utils	no_g_change	Aucun changement effectué sur ce projet
+project_admin_utils	previous	Précédent
+project_admin_utils	next	Suivant
 # ... message for the group_history field_name
 # they do not appear in the code !!!!
 project_admin_utils	approved	Approuvé
@@ -387,6 +389,9 @@ project_admin_utils	perm_granted_for	Permission accordée à l'utilisateur $1
 project_admin_utils	changed_sr_settings	Modification de la configuration des demandes de support
 project_admin_utils	mass_change	Mise à jour massive dans un outil de suivi
 project_admin_utils	import	Importation de données
+project_admin_utils	rename_request	Demande de renommage du projet
+project_admin_utils	rename_done	Renommage du projet effectué
+project_admin_utils	rename_with_error	Renommage du projet effectué avec des erreurs
 # There must be one message here for each return value of
 # the permission_get_object_type function in www/project/admin/permissions.php
 project_admin_utils	perm_reset_for_field	Réinitialisation des permissions pour le champ $1

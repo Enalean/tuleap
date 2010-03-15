@@ -60,10 +60,6 @@ class AdminDelegation_ShowProjectWidget extends Widget {
     /**
      * Tell if a widget can by used by a project
      *
-     * This method is used only when a during project clone. As widgets are 
-     * cloned before the plugins, at this time we don't know if the project links
-     * are activated or not. So just say yes all the time.
-     * 
      * @param Project $project
      */
     function canBeUsedByProject(Project $project) {
@@ -77,25 +73,23 @@ class AdminDelegation_ShowProjectWidget extends Widget {
     function getAllProject($offset, $limit, $condition, $pattern) {
         $projects = array();
         if (count($condition)> 0){
-            $statements = '(';
-            $i = 0;
-            for($i; $i < count($condition)-1; $i++){
+            $statements   = '(';
+            $i            = 0;
+            $nbConditions = count($condition) - 1;
+            for($i; $i < $nbConditions; $i++){
                 $statements .= db_es($condition[$i]).' LIKE "%'.db_es($pattern).'%" OR ';
             }
             $statements .= db_es($condition[$i]).' LIKE "%'.db_es($pattern).'%") AND ';
         }
         
-        $sql = 'SELECT SQL_CALC_FOUND_ROWS group_name, group_id FROM groups WHERE '.$statements.' status = "A" ORDER BY register_time DESC LIMIT '.db_ei($offset).', '.db_ei($limit);
+        $sql = 'SELECT SQL_CALC_FOUND_ROWS group_name, group_id, unix_group_name, is_public FROM groups WHERE '.$statements.' status = "A" ORDER BY register_time DESC LIMIT '.db_ei($offset).', '.db_ei($limit);
         $res = db_query($sql);
-        while ($row = db_fetch_array($res)) {
-            $projects[$row['group_id']] = $row['group_name'];
-        }
 
         $sql = 'SELECT FOUND_ROWS() as nb';
-        $res = db_query($sql);
-        $row = db_fetch_array($res);
+        $res_numrows = db_query($sql);
+        $row = db_fetch_array($res_numrows);
 
-        return array('projects' => $projects, 'numrows' => $row['nb']);
+        return array('projects' => $res, 'numrows' => $row['nb']);
     }
 
     protected function _showAllProject() {
@@ -176,10 +170,15 @@ class AdminDelegation_ShowProjectWidget extends Widget {
 
                 $html .= '<tbody>';
                 $i = 1;
-                foreach ($res['projects'] as $projectId => $projectName){
+                while ($row = db_fetch_array($res['projects'])) {
                     $html .= '<tr class="'. util_get_alt_row_color($i++) .'">';
-                    $html .= '<td>'.$projectName.'</td>';
-                    $html .= '<td>'.$projectId.'</td>';
+                    $html .= '<td>';
+                    $html .= '<a href="/projects/'.$row['unix_group_name'].'">'.$row['group_name'].'</a>';
+                    if (!$row['is_public']) {
+                        $html .= '&nbsp;(*)';
+                    }
+                    $html .= '</td>';
+                    $html .= '<td>'.$row['group_id'].'</td>';
                     $html .= '</tr>';
                 }
                 $html .= '</tbody>';
@@ -195,6 +194,10 @@ class AdminDelegation_ShowProjectWidget extends Widget {
                     $html .= '&nbsp;';
                     $html .= '<a href="?plugin_admindelegation_func=show_projects&offset='.($offset+$limit).$urlParam.'&plugin_admindelegation_pattern='.$pattern.'">[ '.$GLOBALS['Language']->getText('plugin_admindelegation', 'widget_projects_next').' ]</a>';
                 }
+                $html .= '</div>';
+                $html .= '<div style="text-align:left" class="'. util_get_alt_row_color($i++) .'">';
+                $html .= '(*)&nbsp;'.$GLOBALS['Language']->getText('my_index', 'priv_proj');
+                $html .= '&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;'.$GLOBALS['Language']->getText('plugin_admindelegation', 'widget_projects_nb_projects_found', array($res['numrows']));
                 $html .= '</div>';
             }
         }

@@ -55,8 +55,11 @@ class DocmanPlugin extends Plugin {
         $this->_addHook('ajax_reference_tooltip',            'ajax_reference_tooltip',            false);
         $this->_addHook('project_export_entry',              'project_export_entry',              false);
         $this->_addHook('project_export',                    'project_export',                    false);
-	}
-	function permission_get_name($params) {
+        $this->_addHook('SystemEvent_PROJECT_RENAME',        'renameProject',                     false);
+        $this->_addHook('file_exists_in_data_dir',           'file_exists_in_data_dir',           false);
+    }
+
+    function permission_get_name($params) {
         if (!$params['name']) {
             switch($params['permission_type']) {
                 case 'PLUGIN_DOCMAN_READ':
@@ -394,6 +397,36 @@ class DocmanPlugin extends Plugin {
                 $permExport->renderDefinitionFormat();
             }
             exit;
+        }
+    }
+
+    /**
+     * Hook called when a project is being renamed
+     * @param Array $params
+     * @return Boolean
+     */
+    function renameProject($params) {
+        $docmanPath = $this->getPluginInfo()->getPropertyValueForName('docman_root').'/';
+        //Is this project using docman
+        if (is_dir($docmanPath.$params['project']->getUnixName())){
+            require_once('Docman_VersionFactory.class.php');
+            $version      = new Docman_VersionFactory(); 
+            return $version->renameProject($docmanPath, $params['project'], $params['new_name']);
+        }
+        return true;
+    }
+    
+    /**
+     * Hook called before renaming project to check the name validity
+     * @param Array $params
+     */
+    function file_exists_in_data_dir($params) {
+        $docmanPath = $this->getPluginInfo()->getPropertyValueForName('docman_root').'/';
+        $path = $docmanPath.$params['new_name'];
+        
+        if (Backend::fileExists($path)) {
+            $params['result']= false;
+            $params['error'] = $GLOBALS['Language']->getText('plugin_docman','name_validity');
         }
     }
 }

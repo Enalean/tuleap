@@ -23,7 +23,7 @@ require_once('common/project/ProjectManager.class.php');
 require_once('common/user/UserManager.class.php');
 /**
  * Description of GitDaoclass
- *
+ * @todo change date format to timestamp instead of mysql date format
  * @author Guillaume Storchi
  */
 class GitDao extends DataAccessObject {
@@ -175,6 +175,15 @@ class GitDao extends DataAccessObject {
             return true;
         }
         return false;
+    }
+
+    public function renameProject(Project $project, $newName) {
+        $oldPath = $this->da->quoteSmart($project->getUnixName().'/');
+        $newPath = $this->da->quoteSmart($newName.'/');
+        $sql = 'UPDATE '.$this->getTable().
+               ' SET '.self::REPOSITORY_PATH.' = REPLACE ('.self::REPOSITORY_PATH.','.$oldPath.','.$newPath.') '.
+               ' WHERE '.self::FK_PROJECT_ID.' = '.$this->da->escapeInt($project->getId());
+        return $this->update($sql);
     }
 
     public function getProjectRepositoryList($projectId) {

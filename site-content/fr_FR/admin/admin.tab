@@ -171,6 +171,11 @@ admin_groupedit	unix_grp	Nom unix du groupe
 admin_groupedit	description	Description
 admin_groupedit	license_other	Autre licence
 admin_groupedit	built_from_template	Créé à partir du patron
+admin_groupedit	rename_project_title	Renommage du Projet	
+admin_groupedit	rename_project_label	Renommage du Projet en 
+admin_groupedit	rename_project_msg	Projet sera renommé de $1 en $2.
+admin_groupedit	invalid_short_name	Nom court du projet invalide
+
 #
 #-----------------------------------------------
 # Script: SF/www/admin/grouplist.php

@@ -131,14 +131,6 @@ class Docman_Version {
     function setPath($path) { 
         $this->path = $path;
     }
-    
-    var $eeee;
-    function getEeee() { 
-        return $this->eeee; 
-    }
-    function setEeee($eeee) { 
-        $this->eeee = $eeee;
-    }
 
     protected $_content;
     public function getContent() {

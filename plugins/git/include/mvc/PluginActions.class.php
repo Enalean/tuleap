@@ -29,6 +29,7 @@ class PluginActions {
     public function __construct( $controller ) {
         $this->controller = $controller;
         $this->user       = $controller->getUser();
+        $this->request    = $controller->getRequest();
     }
 
     public function getController() {

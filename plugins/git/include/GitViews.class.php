@@ -31,7 +31,7 @@ class GitViews extends PluginViews {
         parent::__construct($controller);
         $this->groupId     = (int)$this->request->get('group_id');
         $this->projectName = ProjectManager::instance()->getProject($this->groupId)->getUnixName();        
-        $this->userName    = $this->user->getName();
+        $this->userName    = $this->user->getName();        
     }
 
     public function header() {
@@ -111,8 +111,8 @@ class GitViews extends PluginViews {
         /**
          * REPO VIEW
          */
-        public function view() {
-            echo '<br />';
+        public function view() {                    
+            $gitphp      = '';
             $params       = $this->getData();
             if ( empty($params['repository']) ) {
                 $this->getController()->redirect('/plugins/git/?action=index&group_id='.$this->groupId);
@@ -131,6 +131,19 @@ class GitViews extends PluginViews {
                 $creatorName  = $creator->getName();
             }
             $creationDate = $repository->getCreationDate();
+
+            if ( $initialized ) {
+                ob_start();
+                $this->getView($repository);
+                $gitphp = ob_get_contents();
+                ob_end_clean();    
+            }
+            //download
+            if ( $this->request->get('noheader') == 1 ) {
+                die($gitphp);
+            }
+
+            echo '<br />';
             if ( !$initialized ) {
                 echo '<div class="feedback_warning">'.$this->getText('help_init_reference_msg').'</div>';
                 $this->help('init', array('repo_name'=>$repoName));
@@ -139,11 +152,11 @@ class GitViews extends PluginViews {
 
          echo '<h2>'.$repoName.'</h2>';
 ?>
-<form id="repoAction" name="repoAction" method="POST" action="?group_id=<?php echo $this->groupId?>">
+<form id="repoAction" name="repoAction" method="POST" action="/plugins/git/?group_id=<?php echo $this->groupId?>">
     <input type="hidden" id="action" name="action" value="edit" />
     <input type="hidden" id="repo_id" name="repo_id" value="<?php echo $repoId?>" />
     <em style="vertical-align:top;"><?php echo $this->getText('view_repo_description');
-            ?> : </em><textarea class="text" id="repo_desc" name="repo_desc"><?php echo Codendi_HTMLPurifier::instance()->purify($description, CODENDI_PURIFIER_CONVERT_HTML, $this->groupId);
+            ?> : </em><textarea class="text" id="repo_desc" name="repo_desc"><?php echo $this->HTMLPurifier->purify($description, CODENDI_PURIFIER_CONVERT_HTML, $this->groupId);
         ?></textarea>
     <br />
     <em><?php echo $this->getText('view_repo_creator');
@@ -218,20 +231,47 @@ class GitViews extends PluginViews {
 </form>
         <?php
         $this->help('fork', array('display'=>'none'));
+        if ( $initialized ) {
+            echo $gitphp;
+        }
     }    
 
     /**
      * TREE VIEW
      */
-    public function index() {
-        //$this->headLinks();
-        $params = $this->getData();        
+    public function index() {        
+        $params = $this->getData();
+        $this->_getBreadCrumb();
         $this->_tree($params);
         if ( $this->getController()->isAPermittedAction('add') ) {
             $this->_createForm();
         }
     }
 
+    public function getView($repository) {
+        require_once('../../../src/common/include/Codendi_HTMLPurifier.class.php');        
+        if ( empty($_REQUEST['a']) )  {
+            $_REQUEST['a'] = 'summary';
+        }
+        set_time_limit(300);
+        $_GET['a'] = $_REQUEST['a'];        
+        $_REQUEST['group_id']      = $this->groupId;
+        $_REQUEST['repo_id']       = $repository->getId();
+        $_REQUEST['repo_name']     = $repository->getName();
+        $_GET['p']                 = $_REQUEST['repo_name'].'.git';
+        $_REQUEST['repo_path']     = $repository->getPath();
+	$_REQUEST['project_dir']   = $repository->getProject()->getUnixName();
+        $_REQUEST['git_root_path'] = GitBackend::GIT_ROOT_PATH;
+        $_REQUEST['action']        = 'view';
+        if ( empty($_REQUEST['noheader']) ) {
+            echo '<hr>';
+            echo '<div id="gitphp">';
+        }
+        include( dirname(__FILE__).'/../gitphp/index.php' );
+        if ( empty($_REQUEST['noheader']) ) {
+            echo '</div>';
+        }
+    }
     /**
      * CONFIRM_DELETION
      * @todo make a generic function ?
@@ -248,10 +288,10 @@ class GitViews extends PluginViews {
         }
         ?>
     <div class="confirm">
-        <form id="confirm_deletion" method="POST" action="?group_id=<?php echo $this->groupId; ?>" >
+        <form id="confirm_deletion" method="POST" action="/plugins/git/?group_id=<?php echo $this->groupId; ?>" >
         <input type="hidden" id="action" name="action" value="del" />
         <input type="hidden" id="repo_id" name="repo_id" value="<?php echo $repoId; ?>" />
-        <input type="submit" id="submit" name="submit" value="<?php echo $this->getText('yes') ?>"/><span><input type="button" value="<?php echo $this->getText('no')?>" onclick="window.location='<?php echo $_SERVER['PHP_SELF']?>?action=view&group_id=<?php echo $this->groupId;?>&repo_id=<?php echo $repoId?>'"/> </span>
+        <input type="submit" id="submit" name="submit" value="<?php echo $this->getText('yes') ?>"/><span><input type="button" value="<?php echo $this->getText('no')?>" onclick="window.location='/plugins/git/?action=view&group_id=<?php echo $this->groupId;?>&repo_id=<?php echo $repoId?>'"/> </span>
         </form>
     </div>
         <?php
@@ -264,7 +304,7 @@ class GitViews extends PluginViews {
         ?>
 <h3><?php echo $this->getText('admin_reference_creation_title');
         ?><a href="#" onclick="$('help_create').toggle();$('help_init').toggle()"> [?]</a></h3>
-<form id="addRepository" action="?group_id=<?php echo $this->groupId ?>" method="POST">
+<form id="addRepository" action="/plugins/git/?group_id=<?php echo $this->groupId ?>" method="POST">
     <input type="hidden" id="action" name="action" value="add" />
     <table>
         <tr>
@@ -284,7 +324,9 @@ class GitViews extends PluginViews {
      * @todo make a breadcrumb out of the repository hierarchie ?
      */
     protected function _getBreadCrumb() {
-        echo $this->linkTo( $this->getText('bread_crumb_home'), $_SERVER['PHP_SELF'].'?group_id='.$this->groupId);
+        echo $this->linkTo( '<b>'.$this->getText('bread_crumb_home').'</b>', '/plugins/git/?group_id='.$this->groupId, 'class=""');
+        echo ' | ';
+        echo $this->linkTo( '<b>'.$this->getText('bread_crumb_help').'</b>', 'javascript:help_window(\'/documentation/user_guide/html/'.$this->user->getLocale().'/VersionControlWithGit.html\')');
     }
     
     /**
@@ -294,11 +336,11 @@ class GitViews extends PluginViews {
      */
     protected function _getRepositoryUrl($repositoryName) {
         $serverName  = $_SERVER['SERVER_NAME'];
-        return  $this->userName.'@'.$serverName.':'.GitBackend::GIT_ROOT_PATH.$this->projectName.'/'.$repositoryName.'.git';
+        return  $this->userName.'@'.$serverName.':/gitroot/'.$this->projectName.'/'.$repositoryName.'.git';
     }
 
     protected function _getRepositoryPageUrl($repoId, $repoName) {
-        return $this->linkTo($repoName,'/plugins/git/?action=view&repo_id='.$repoId.'&group_id='.$this->groupId);
+        return $this->linkTo($repoName,'/plugins/git/index.php/'.$this->groupId.'/view/'.$repoId.'/');
     }
 
     /**
@@ -364,8 +406,6 @@ class GitViews extends PluginViews {
             }
         }
     }
-
 }
-
 
 ?>

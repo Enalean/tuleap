@@ -30,6 +30,9 @@ require_once('common/user/UserManager.class.php');
 class SystemEvent_GIT_REPO_CREATE extends SystemEvent {
 
     public function process() {
+
+        global $sys_allow_restricted_users;
+
         $parameters  = $this->getParametersAsArray();
         $project     = null;
         if ( !empty($parameters[0]) ) {
@@ -60,6 +63,13 @@ class SystemEvent_GIT_REPO_CREATE extends SystemEvent {
 
         try {
             $repository = new GitRepository();
+            $repository->setDescription('-- Default description --');
+            //default access is private when restricted users are allowed
+            if ( $sys_allow_restricted_users == 1) {
+                $repository->setAccess( GitRepository::PRIVATE_ACCESS );
+            } else {
+                $repository->setAccess( GitRepository::PUBLIC_ACCESS );
+            }
             $user = null;
             if ( !empty($userId) ) {
                 $user = UserManager::instance()->getUserById($userId);

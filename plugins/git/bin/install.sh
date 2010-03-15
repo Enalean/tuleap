@@ -16,6 +16,11 @@ function dieOnError() {
 	fi
 }
 
+function getNewestPackageDir() {
+	local name=$1
+	local newest=`ls -1 -tr | grep -E "^${name}-[0-9]" | tail -1`
+	echo $newest
+}
 
 SCRIPT_DIR=`dirname $0`
 RPMS_DIR="$SCRIPT_DIR/../RPMS"
@@ -27,14 +32,25 @@ if [ "`uname -i`" != 'x86_64' ];then
     ARCH='i386'
 fi
 
+
+#Plugin dependencies rpms
+echo " -> Removing installed dependencies if any ..."
+rpm -e --allmatches geshi 
+rpm -e --allmatches php-Smarty
+echo " -> Installing plugin dependencies RPM ..."
+rpm -Uvh `getNewestPackageDir geshi`/noarch/geshi*.rpm 
+rpm -Uvh `getNewestPackageDir php-Smarty`/noarch/php-Smarty*.rpm 
+
+#Git rpms
 echo "  -> Removing installed Git if any ..."
 rpm -e --allmatches git perl-Git perl-Error 
 echo "  -> Installing Git plugin RPM ..."
-newest_rpm=`ls -1  -I old -I TRANS.TBL | tail -1`
-rpm -Uvh ${newest_rpm}/${ARCH}/*.rpm
+rpm -Uvh `getNewestPackageDir git`/noarch/*.rpm
+dieOnError 'Unable to install some rpms'
+rpm -Uvh `getNewestPackageDir git`/${ARCH}/*.rpm
 dieOnError 'Unable to install git rpm'
 
-# Git Plugin
+#git cmd and git shell
 GIT=`which git`
 dieOnError 'git command not found'
 GIT_SHELL=`which git-shell`
@@ -44,4 +60,19 @@ if [ $? -eq 0 ];then
 else
     echo $GIT_SHELL >> /etc/shells	
 fi
+
+#root dir
+GITROOT_DIR=/var/lib/codendi/gitroot
+if [ ! -d "$GITROOT_DIR"  ];then
+    mkdir -p $GITROOT_DIR
+fi
+chown codendiadm:codendiadm $GITROOT_DIR
+chmod 775 $GITROOT_DIR
+
+if [ ! -L '/gitroot'  ];then
+   ln -s $GITROOT_DIR /gitroot
+fi
+
+chmod -R u+rwx $SCRIPT_DIR/../gitphp/templates_c
+
 exit 0

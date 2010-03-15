@@ -27,10 +27,12 @@ function register_valid($confirm_hash)	{
 
     $request =& HTTPRequest::instance();
     
-    if (!$request->existAndNonEmpty('form_loginname')) {
-	$GLOBALS['Response']->addFeedback('error', $Language->getText('account_register', 'err_nouser'));
-	return 0;
+    $vLoginName = new Valid_UserNameFormat('form_loginname');
+    $vLoginName->required();
+    if (!$request->valid($vLoginName)) {
+        return 0;
     }
+
     if (!$request->existAndNonEmpty('form_pw')) {
 	$GLOBALS['Response']->addFeedback('error', $Language->getText('account_register', 'err_nopasswd'));
 	return 0;
@@ -49,15 +51,7 @@ function register_valid($confirm_hash)	{
 	$GLOBALS['Response']->addFeedback('error', $Language->getText('account_register', 'err_email'));
 	return 0;
     }
-    if (!account_namevalid($request->get('form_loginname'))) {
-	$GLOBALS['Response']->addFeedback('error', $Language->getText('account_register', 'err_name'));
-	return 0;
-    }
-    if ( (db_numrows(db_query("SELECT user_id FROM user WHERE user_name LIKE '".db_es($request->get('form_loginname'))."'")) > 0 )
-        || (db_numrows(db_query("SELECT group_id FROM groups WHERE unix_group_name LIKE '".db_es($request->get('form_loginname'))."'")) > 0) ) {
-	$GLOBALS['Response']->addFeedback('error', $Language->getText('account_register', 'err_exist'));
-	return 0;
-    }
+    
     if ($request->get('page')!="admin_creation" && $request->get('form_pw') != $request->get('form_pw2')) {
         $GLOBALS['Response']->addFeedback('error', $Language->getText('account_register', 'err_passwd'));
         return 0;

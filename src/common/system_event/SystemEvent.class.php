@@ -22,6 +22,7 @@
 
 require_once('common/dao/SystemEventsFollowersDao.class.php');
 require_once('common/mail/Mail.class.php');
+require_once('common/event/EventManager.class.php');
 
 /**
  * System Event class
@@ -44,6 +45,7 @@ abstract class SystemEvent {
     const TYPE_EDIT_SSH_KEYS         = "EDIT_SSH_KEYS";
     const TYPE_PROJECT_CREATE        = "PROJECT_CREATE";
     const TYPE_PROJECT_DELETE        = "PROJECT_DELETE";
+    const TYPE_PROJECT_RENAME        = "PROJECT_RENAME";
     const TYPE_UGROUP_MODIFY         = "UGROUP_MODIFY";
     const TYPE_USER_CREATE           = "USER_CREATE";
     const TYPE_USER_DELETE           = "USER_DELETE";
@@ -237,7 +239,15 @@ abstract class SystemEvent {
     function process() {
         return null;
     }
-    
+
+    /**
+     * This function allows one to call all listeners (e.g. plugins) of an event related to the current processed system event
+     * @param string $eventName
+     */
+    protected function callSystemEventListeners( $eventName ) {
+        EventManager::instance()->processEvent( $eventName , $this->getParametersAsArray() );
+    }
+
     /**
      * Private. Use error() | done() | ... instead
      * @param string $status the status
@@ -292,6 +302,15 @@ abstract class SystemEvent {
         }
         
         return $project;
+    }
+
+    /**
+     * Wrapper for event manager
+     * 
+     * @return EventManager
+     */
+    protected function getEventManager() {
+        return EventManager::instance();
     }
     
     /**

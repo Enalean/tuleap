@@ -109,7 +109,8 @@ extends Valid {
 class Valid_UserNameFormat
 extends Valid_String {
     function validate($value) {
-        $this->addRule(new Rule_UserNameFormat());
+        $this->addRule(new Rule_String());
+        $this->addRule(new Rule_UserName());
         return parent::validate($value);
     }
 }

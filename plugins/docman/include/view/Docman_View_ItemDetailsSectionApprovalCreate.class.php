@@ -328,9 +328,6 @@ extends Docman_View_ItemDetailsSectionApproval {
 
         if($onTableUpdate) {
             $html .= '<input type="radio" name="app_table_import" checked="checked" '.$onChange.'/> '.$GLOBALS['Language']->getText('plugin_docman', 'details_actions_update_apptable_keep').'<br />';
-            $copyChecked = '';
-        } else {
-            $copyChecked = ' checked="checked"';
         }
         $html .= '<input type="radio" name="app_table_import" value="copy"  '.$onChange.'/> '.$GLOBALS['Language']->getText('plugin_docman', 'details_actions_update_apptable_copy').'<br />';
         $html .= '<input type="radio" name="app_table_import" value="reset" '.$onChange.'/> '.$GLOBALS['Language']->getText('plugin_docman', 'details_actions_update_apptable_reset').'<br />';

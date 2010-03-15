@@ -29,13 +29,6 @@ class DocmanWatermark_HTTPController extends DocmanWatermark_Controller {
         parent::__construct($plugin, $docmanPath,$pluginPath, $themePath, HTTPRequest::instance());
     }
 
-
-    function _checkBrowserCompliance() {
-        if($this->request->browserIsNetscape4()) {
-            $this->feedback->log('warning', $GLOBALS['Language']->getText('plugin_docmanwatermark', 'docmanwatermark_browserns4'));
-        }
-    }
-
     function _includeView() {
         $className = 'DocmanWatermark_View_'. $this->view;
         if(file_exists(dirname(__FILE__).'/view/'. $className .'.class.php')) {

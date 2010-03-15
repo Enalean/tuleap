@@ -28,7 +28,7 @@ class ProjectManager {
     /**
      * The Projects dao used to fetch data
      */
-    //protected $_dao;
+    protected $_dao;
     
     /**
      * stores the fetched projects
@@ -61,11 +61,14 @@ class ProjectManager {
     }
     
     /**
-     * @return DataAccessObject the projects dao
+     * @return ProjectDao
      */
-    //public function getDao() {
-    //    return new GroupDao(CodendiDataAccess::instance());
-    //}
+    public function _getDao() {
+        if (!isset($this->_dao)) {
+            $this->_dao = new ProjectDao(CodendiDataAccess::instance());
+        }
+        return $this->_dao;
+    }
     
     /**
      * @param $group_id int The id of the project to look for
@@ -171,6 +174,48 @@ class ProjectManager {
             $this->_cached_projects[$row['group_id']] = $p;
         }
         return $this->_cached_projects[$row['group_id']];
+    }
+
+    /**
+     * Return the project that match given unix name
+     *  
+     * @param String $name
+     * 
+     * @return Project
+     */
+    public function getProjectByUnixName($name) {
+        $p = null;
+        $dar = $this->_getDao()->searchByUnixGroupName($name);
+        if ($dar && !$dar->isError() && $dar->rowCount() === 1) {
+            $p = $this->createProjectInstance($dar->getRow());
+        }
+        return $p;
+    }
+
+    /**
+     * Rename project
+     * 
+     * @param Project $project
+     * @param String  $new_name
+     * 
+     * @return Boolean
+     */
+    public function renameProject($project,$new_name){
+        //Remove the project from the cache, because it will be modified
+        $this->clear($project->getId());
+        $dao = $this->_getDao();
+        return $dao->renameProject($project, $new_name);
+    }
+
+    /**
+     * Return true if project id is cached
+     * 
+     * @param Integer $group_id
+     * 
+     * @return Boolean
+     */
+    public function isCached($group_id) {
+        return (isset($this->_cached_projects[$group_id]));
     }
 }
 ?>

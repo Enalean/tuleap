@@ -3,3 +3,7 @@ rule_file	error_upload_nofile	File upload error($1). No file was uploaded.
 rule_file	error_upload_partial	File upload error($1). The uploaded file was only partially uploaded.
 rule_file	error_upload_size	File upload error($1). The uploaded file exceeds the maximum allowed file size.
 rule_file	error_upload_unknown	File upload error($1). Unknown error code.
+
+rule_user_name	error_exists	Login name already exists.
+
+rule_group_name	error_exists	Short name already exists

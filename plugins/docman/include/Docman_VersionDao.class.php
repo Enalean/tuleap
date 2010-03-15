@@ -208,7 +208,21 @@ class Docman_VersionDao extends DataAccessObject {
         }
         return $inserted;
     }
-
+    
+    /**
+     * Update the path for stored files when a project is being renamed
+     * @param  String  $docman_path
+     * @param  Project $project
+     * @param  String  $new_name
+     * @return Boolean
+     */
+    function renameProject($docman_path, $project, $new_name){
+    
+        $sql_update = 'UPDATE plugin_docman_version '.
+                      'SET path = REPLACE (path,'.$this->da->quoteSmart($docman_path.$project->getUnixName(true).'/').' ,'.$this->da->quoteSmart($docman_path.strtolower($new_name).'/').') '. 
+                      'WHERE path LIKE "%"'.$this->da->quoteSmart($docman_path.$project->getUnixName(true).'/').'"%"';
+        return $this->update($sql_update);
+    }
 }
 
 

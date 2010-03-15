@@ -50,6 +50,7 @@ See the file COPYING.
 <dd><dl>
 <dt><a href="#HowTo_Import">Importing an existing CVS repository in Codendi</a></dt>
 <dt><a href="#HowTo_Import_SVN">Importing an existing Subversion repository in Codendi</a></dt>
+<dt><a href="#HowTo_Import_Git">Importing an existing Git repository in Codendi (bare repository)</a></dt>
 <dt><a href="#HowTo_Regenerate_VC">Regenerating a fresh CVS or SVN repository for a Codendi project</a></dt>
 <dt><a href="#HowTo_Change_User_Name">Changing a User Name on Codendi</a></dt>
 <dt><a href="#HowTo_Change_Project_Name">Changing a Project Short Name on Codendi</a></dt>
@@ -2148,6 +2149,30 @@ You're done!
 perl svn-merge-repos.pl -t /var/lib/codendi/svnroot/project_name/ /local/path/to/repo1/:target_path_for_src1 /local/path/to/repo2/:trunk/target_path_for_src2
 </pre>
 
+
+<hr>
+<h2><a name="HowTo_Import_Git"></a>Importing an existing Git repository in Codendi (bare repository)</h2>
+
+<p> All repositories are stored under /var/lib/codendi/gitroot/. Each project has a project directory 'myproject',
+    for instance /var/lib/codendi/gitroot/myproject/reference1.git with persmissions (drwxrwsr-x codendiadm myproject).
+    Several steps must be achieved before being able to use a git repoitory in codendi.
+</p>
+<ul>
+    <li>Create the repository from within the web interface</li>
+    <li>Replace the empty repository with the one you want to import</li>
+    <li>Set permissions :
+        <ul>
+            <li><tt>$> chown -R codendiadm:myproject /var/lib/codendi/gitroot/myproject/myrepo.git</tt></li>
+            <li><tt>$> find /var/lib/codendi/gitroot/myproject/myrepo.git -type d | xargs chmod u+rwx,g+rwxs,o-rwx </tt></li>
+            <li><tt>$> chmod g+w /var/lib/codendi/gitroot/myproject/myrepo.git/HEAD</tt></li>
+            <li>make a private repo : <tt>$> find  /var/lib/codendi/gitroot/myproject/myrepo.git -type d ! -path "*hooks*" | xargs chmod o-rwx </tt></li>
+            <li>make a private repo : <tt>$> find  /var/lib/codendi/gitroot/myproject/myrepo.git -type f ! -path "*hooks*" | xargs chmod o-rwx </tt> </li>
+            <li>NOTICE : Do not forget to check hooks permissions</li>
+        </ul>
+    </li>
+    <li>Test it through the web interface</li>
+</ul>
+
 <hr>
 <h2><a name="HowTo_Regenerate_VC"></a>Regenerating a fresh CVS or SVN repository for a Codendi project</h2>
 <em>When the first import goes wrong or the project team screwed up everything and want to start again from scratch</em>
@@ -2491,41 +2516,15 @@ RPM release space ( <a href="https://codendi.partners.xrce.xerox.com/packages/">
 <h2><a name="HowTo_Change_PW"></a>Change privileged account passwords</h2>
 <p><em>Steps to change privileged account passwords</em>
 <p>Some companies have specific policies regarding passwords.
-<p>For instance, the Xerox Electronic Standards Security Guide (v3.0) states that all
-privileged account passwords must be changed at least every 30 days.
-</p>
-<p>See http://taweb.mc.xerox.com/Get/File-84236/ESS.doc, Section 4.3.2
-Passwords, for details. (Intranet)
 
 </p>
-<p>At Xerox, passwords will be changed the first Monday of each month.
-</p>
-<p>1) Change the passwords for the following accounts:
-<br>
-<b>root</b>
-<br>
-<b>codendiadm</b>
-<br>
-<b>admin</b>
-<br>
-<b>mailman</b>
-<br>
 
-2) Change the codendiadm password in /etc/codendi/conf/local.inc. (Restarting
-services is not necessary.)
-<br>
-3) Send note to codendi-admin@lists.codendi.example.com
-stating passwords have been changed.
-<br>
-4) All Codendi admins need to change the password on
-their privileged personal account.
-</p>
 <p><b>root</b> account:
 <br>
 1) Change <i>unix</i> password from <b>root </b>account:
 <br>
 
-- password (cr)
+password (cr)
 <br>
 [enter new password]
 <br>
@@ -2533,31 +2532,30 @@ their privileged personal account.
 <br>
 2) Change <i>mysql</i> password:
 <br>
-- mysqladmin - -user=root -p password [enter new password]
+mysqladmin --user=root -p password [new_password]
 <br>
 enter password: [enter old password]
 </p>
+
 <p><b>codendiadm</b> account:
 
 <br>
-1) Change <i>unix</i> password from <b>codendiadm</b>
-account:
+1) Change <i>unix</i> password from <b>codendiadm</b> account:
 <br>
-- password (cr)
+password (cr)
 <br>
 [enter new password]
 <br>
 [retype new password to confirm]
 <br>
 2) Change <i>mysql </i>password:
-
 <br>
-- mysqladmin - -user=codendiadm -p password [enter new password]
+mysqladmin --user=codendiadm -p password [new_password]
 <br>
 enter password: [enter old password]
 <br>
-3) Modify /etc/codendi/conf/local.inc - change <b>codendiadm</b>
-password<br>
+3) Modify /etc/codendi/conf/database.inc 
+<br>- change <b>codendiadm</b> password<br>
 </p>
 <p><b>admin</b> account:
 
@@ -2570,25 +2568,20 @@ projects.
 <br>
 - The "admin" <i>unix</i> account is not a privileged account.
 <br>
-1) Change <i>unix</i> and <i>mysql</i> password for
-
-<b>admin</b>
-from Codendi website:
+- If you have defined other site administrators, you might as well suspend the "admin" account
+  (thus, you won't need to update its password).
 <br>
-- Go to
-http://codendi.example.com
+1) Change <i>unix</i> and <i>mysql</i> password for <b>admin</b> from Codendi website:
 <br>
-- Log
-in as <b>admin</b>
+- Go to the Codendi web site
 <br>
-<b> - </b>Click
-"Account Maintenance" in left bar
+- Log in as <b>admin</b>
 <br>
-- Click
-"[Change Password]"
+- Click "Account Maintenance" in left bar
 <br>
-- Follow
-directions for changing password
+- Click "[Change Password]"
+<br>
+- Follow directions for changing password
 
 </p>
 <p><b>mailman</b> account:
@@ -2598,19 +2591,15 @@ for mailing lists.
 <br>
 1) su -
 <br>
-2) su mailman
+2) cd /usr/lib/mailman/bin
 <br>
-3) cd /usr/lib/mailman/bin
+3) ./mmsitepass
 <br>
-4) <b>.</b>/mmsitepass
-<br>
-
 [enter new password when prompted]
 <br>
-5) Change <i>unix</i> password from <b>root</b> account:
+4) Change <i>unix</i> password from <b>root</b> account:
 <br>
-- password
-mailman
+password mailman
 <br>
 [enter new password when prompted]
 <br>
@@ -2622,11 +2611,9 @@ mailman
 - Go to
 http://lists.codendi.example.com/mailman/admin
 <br>
-- Click
-on any mailing list
+- Click on any mailing list
 <br>
-- Type
-new global admin password
+- Type new global admin password
 <br>
 If you see the admin page
 of the selected mailing list, then it is OK.

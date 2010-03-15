@@ -77,7 +77,7 @@ class AdminDelegation_UserServiceManager {
 
     public function isUserGrantedForService($user, $service) {
         $usDao  = $this->_getUserServiceDao();
-        return $usDao->searchUserService($user->getId(), $service);
+        return $usDao->isUserGrantedForService($user->getId(), $service);
     }
 
     protected function _getUserServiceLogDao() {

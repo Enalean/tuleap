@@ -392,10 +392,7 @@ class Docman_MetadataFactory {
                 return $this->getRealMetadata($match[1]);
             }
             else {
-                trigger_error($GLOBALS['Language']->getText('plugin_docman',
-                                                            'md_bo_badlabel',
-                                                            array($label)), 
-                              E_USER_ERROR);
+                trigger_error($GLOBALS['Language']->getText('plugin_docman', 'md_bo_badlabel', array($label)), E_USER_ERROR);
                 return null;
             }
         }

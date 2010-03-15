@@ -21,6 +21,10 @@ include_account	reserved	Le nom est réservé.
 include_account	reserved_cvs	Le nom est réservé pour CVS.
 include_account	reserved_dns	Le nom est réservé pour le DNS.
 include_account	dns_error	Les noms de projet ne peuvent comporter de caractères soulignés.
+include_account	used_by_svn	Ce nom n'est pas disponible : Un répertoire SVN existe déjà avec ce nom.   
+include_account	used_by_cvs	Ce nom n'est pas disponible : Un répertoire CVS existe déjà avec ce nom.
+include_account	used_by_sys	Ce nom n'est pas disponible : Un home projet  existe déjà avec ce nom.
+
 #
 #-----------------------------------------------
 # Script: SF/www/include/account.php

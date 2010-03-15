@@ -75,15 +75,22 @@ function project_admin_footer($params) {
 
 */
 
-function group_get_history ($group_id=false) {
-	$sql="select group_history.field_name,group_history.old_value,group_history.date,user.user_name ".
-		"FROM group_history,user ".
-		"WHERE group_history.mod_by=user.user_id ".
-		"AND group_id='$group_id' ORDER BY group_history.date DESC";
-	return db_query($sql);
-}	       
-	
-function group_add_history ($field_name,$old_value,$group_id,$args=false) {
+function group_get_history ($offset, $limit, $group_id=false) {
+
+    $sql='select SQL_CALC_FOUND_ROWS group_history.field_name,group_history.old_value,group_history.date,user.user_name '.
+         'FROM group_history,user '.
+         'WHERE group_history.mod_by=user.user_id '.
+         'AND group_id='.db_ei($group_id).' ORDER BY group_history.date DESC LIMIT '.db_ei($offset).', '.db_ei($limit);
+
+    $res = db_query($sql);
+    $sql = 'SELECT FOUND_ROWS() as nb';
+    $res_numrows = db_query($sql);
+    $row = db_fetch_array($res_numrows);
+    
+    return array('history' => $res, 'numrows' => $row['nb']);
+}       
+
+function group_add_history ($field_name,$old_value,$group_id, $args=false) {
 	/*      
 		handle the insertion of history for these parameters
 		$args is an array containing a list of parameters to use when
@@ -96,28 +103,34 @@ function group_add_history ($field_name,$old_value,$group_id,$args=false) {
     if ($args) {
 	    $field_name .= " %% ".implode("||", $args);
 	}
-	$sql="insert into group_history(group_id,field_name,old_value,mod_by,date) ".
-		"VALUES ('$group_id','$field_name','$old_value','". user_getid() ."','".time()."')";
+	$user_id = user_getid();
+	if ($user_id == 0){
+		$user_id = 100;
+	}
+	$sql= 'insert into group_history(group_id,field_name,old_value,mod_by,date) '.
+		'VALUES ('.db_ei($group_id).' , "'.db_es($field_name). '", "'.db_es($old_value).'" , '.db_ei($user_id).' , '.db_ei(time()).')';
 	return db_query($sql);
 }	       
 
 /*
-
-	Nicely html-formatted output of this group's audit trail
-
+ * Nicely html-formatted output of this group's audit trail
+ * @param Integer $group_id
+ * @param Integer $offset  
+ * @param Intager $limit
+ * 
 */
-
-function show_grouphistory ($group_id) {
+function show_grouphistory ($group_id, $offset, $limit) {
 	/*      
 		show the group_history rows that are relevant to 
 		this group_id
 	*/
 	global $Language;
-	$result=group_get_history($group_id);
-	$rows=db_numrows($result);
+	
+	$res = group_get_history($offset, $limit, $group_id );	
+	
 	$hp =& Codendi_HTMLPurifier::instance();
 
-	if ($rows > 0) {
+	if ($res['numrows'] > 0) {
 	
 		echo '
 		<H3>'.$Language->getText('project_admin_utils','g_change_history').'</H3>
@@ -129,11 +142,12 @@ function show_grouphistory ($group_id) {
 		$title_arr[]=$Language->getText('global','by');
 		
 		echo html_build_list_table_top ($title_arr);
+		$i=1;
 		
-		for ($i=0; $i < $rows; $i++) { 
-			$field=db_result($result, $i, 'field_name');
+		while ($row = db_fetch_array($res['history'])) {
+			$field = $row['field_name'];
 
-			// see if there are any arguments after the message key 
+            // see if there are any arguments after the message key 
 			// format is "msg_key ## arg1||arg2||...
 			// If msg_key cannot be found in the localized message
 			// catalog then display the msg has is because this is very
@@ -153,8 +167,8 @@ function show_grouphistory ($group_id) {
 			}
 
 			echo '
-			<TR class="'. html_get_alt_row_color($i) .'"><TD>'. $hp->purify($msg, CODENDI_PURIFIER_BASIC, $group_id).'</TD><TD>';
-			$val = db_result($result, $i, 'old_value');
+			<TR class="'. html_get_alt_row_color($i++) .'"><TD>'. $hp->purify($msg, CODENDI_PURIFIER_BASIC, $group_id).'</TD><TD>';
+			$val = $row['old_value'];
 			if ($msg_key == "perm_granted_for_field") {
 			  $pattern = '/ugroup_([^ ,]*)_name_key/';
 			  preg_match_all($pattern,$val,$matches);
@@ -172,13 +186,28 @@ function show_grouphistory ($group_id) {
 			echo $hp->purify($val);
 						
 			echo '</TD>'.
-				'<TD>'.format_date($GLOBALS['Language']->getText('system', 'datefmt'),db_result($result, $i, 'date')).'</TD>'.
-				'<TD>'.user_get_name_display_from_unix(db_result($result, $i, 'user_name')).'</TD></TR>';
+				'<TD>'.format_date($GLOBALS['Language']->getText('system', 'datefmt'),$row['date']).'</TD>'.
+				'<TD>'.user_get_name_display_from_unix($row['user_name']).'</TD></TR>';
 		}	       
 				
 		echo '	 
-		</TABLE>';      
+		</TABLE>'; 
 		
+			echo '<div style="text-align:center" class="'. util_get_alt_row_color($i++) .'">';
+			
+			if ($offset > 0) {
+				echo  '<a href="?group_id='.$group_id.'&offset='.($offset-$limit).'">[ '.$Language->getText('project_admin_utils', 'previous').'  ]</a>';
+                echo '&nbsp;';
+            }
+            if (($offset + $limit) < $res['numrows']) {
+                echo '&nbsp;';
+                echo '<a href="?group_id='.$group_id.'&offset='.($offset+$limit).'">[ '.$Language->getText('project_admin_utils', 'next').' ]</a>';
+            }
+            echo '</div>';
+            echo '<div style="text-align:center" class="'. util_get_alt_row_color($i++) .'">';
+            echo ($offset+$i-3).'/'.$res['numrows'];
+            echo '</div>';
+        
 	} else {
 		echo '  
 		<H3>'.$Language->getText('project_admin_utils','no_g_change').'</H3>';

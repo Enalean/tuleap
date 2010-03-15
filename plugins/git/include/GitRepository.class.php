@@ -33,7 +33,8 @@ require_once('exceptions/GitRepositoryException.class.php');
 class GitRepository implements DVCSRepository {
 
       
-    const REPO_EXT             = '.git';
+    const REPO_EXT       = '.git';
+   
     const PRIVATE_ACCESS       = 'private';
     const PUBLIC_ACCESS        = 'public';
     
@@ -113,7 +114,7 @@ class GitRepository implements DVCSRepository {
         //loading failed
         return $this->loaded;
     }
-
+    
     /**
      * Save current GitRepostiroy object to the database
      */
@@ -313,7 +314,7 @@ class GitRepository implements DVCSRepository {
         $this->rootPath = $dir;
     }
 
-    /**
+    /*
      * Gives the root path which is the project directory
      * @return String
      */
@@ -379,7 +380,7 @@ class GitRepository implements DVCSRepository {
     }
 
     /**
-     * Clone a repository
+     * Clone a repository, it inherits access
      * @param String forkName
      */
     public function fork($forkName) {        
@@ -389,6 +390,7 @@ class GitRepository implements DVCSRepository {
         $clone->setParent( $this );               
         $clone->setCreationDate( date('Y-m-d H:i:s') );
         $clone->setCreator( $this->getCreator() );
+        $clone->setAccess( $this->getAccess() );
         $clone->setIsInitialized(1);
         $this->getBackend()->createFork($clone);
     }
@@ -426,6 +428,24 @@ class GitRepository implements DVCSRepository {
         $this->getBackend()->delete($this);
     }
 
+    /**
+     * Rename project
+     */
+    public function renameProject(Project $project, $newName) {
+        $newName = strtolower($newName);
+        if ($this->getBackend()->renameProject($project, $newName)) {
+            return $this->dao->renameProject($project, $newName);
+        }
+        return false;
+    }
+
+    /**
+     * Verify if given name is not already reserved on filesystem
+     */
+    public function isNameAvailable($newName) {
+        $newName = strtolower($newName);
+        return $this->getBackend()->isNameAvailable($newName);
+    }
 }
 
 ?>

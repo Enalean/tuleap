@@ -50,6 +50,8 @@ class BackendSystemTest extends UnitTestCase {
         $GLOBALS['grpdir_prefix']             = dirname(__FILE__) . '/_fixtures/home/groups';
         $GLOBALS['codendi_shell_skel']        = dirname(__FILE__) . '/_fixtures/etc/skel_codendi';
         $GLOBALS['tmp_dir']                   = dirname(__FILE__) . '/_fixtures/var/tmp';
+        $GLOBALS['ftp_frs_dir_prefix']       = dirname(__FILE__) . '/_fixtures/var/lib/codendi/ftp/codendi';
+        $GLOBALS['ftp_anon_dir_prefix']      = dirname(__FILE__) . '/_fixtures/var/lib/codendi/ftp/pub';
     }
     
     
@@ -60,6 +62,8 @@ class BackendSystemTest extends UnitTestCase {
         unset($GLOBALS['grpdir_prefix']);
         unset($GLOBALS['codendi_shell_skel']);
         unset($GLOBALS['tmp_dir']);
+        unset($GLOBALS['ftp_frs_dir_prefix']);
+        unset($GLOBALS['ftp_anon_dir_prefix']);
     }
     
     function testConstructor() {
@@ -92,6 +96,43 @@ class BackendSystemTest extends UnitTestCase {
         $backend->recurseDeleteInDir($GLOBALS['homedir_prefix']."/codendiadm");
         rmdir($GLOBALS['homedir_prefix']."/codendiadm");
    
+    }
+    
+    function testCreateProjectHome() {
+
+        $project = new MockProject($this);
+        $project->setReturnValue('getUnixName', 'TestPrj',array(false));
+        $project->setReturnValue('getUnixName', 'testprj',array(true));
+
+        $pm = new MockProjectManager();
+        $pm->setReturnReference('getProject', $project, array(142));
+       
+
+        $backend = new BackendTestVersion($this);
+        $backend->setReturnValue('getProjectManager', $pm);
+
+        $projdir=$GLOBALS['grpdir_prefix']."/TestPrj";
+        $ftpdir = $GLOBALS['ftp_anon_dir_prefix']."/TestPrj";
+        $frsdir = $GLOBALS['ftp_frs_dir_prefix']."/TestPrj";
+      
+        $this->assertEqual($backend->createProjectHome(142),True);
+        $this->assertTrue(is_dir($projdir),"Project Home should be created");
+        $this->assertTrue(is_dir($ftpdir),"Ftp dir should be created");
+        $this->assertTrue(is_dir($frsdir),"Frs dir should be created");
+      
+        // Check that a wrong project id does not raise an error
+        $this->assertEqual($backend->createProjectHome(99999),False);
+        
+        // Cleanup
+        $backend->recurseDeleteInDir($projdir);
+        unlink($GLOBALS['grpdir_prefix']."/testprj");
+        rmdir($projdir);
+  
+        $backend->recurseDeleteInDir($ftpdir);
+        rmdir($ftpdir);
+       
+        $backend->recurseDeleteInDir($frsdir);
+        rmdir($frsdir);
     }
 
     function testArchiveUserHome() {
@@ -152,6 +193,166 @@ class BackendSystemTest extends UnitTestCase {
         // Cleanup
         unlink($GLOBALS['tmp_dir']."/TestProj.tgz");
     }
+    
+    public function testRenameProjectHomeDirectory() {
+        $project = new MockProject($this);
+        $project->setReturnValue('getUnixName', 'TestProject',array(false));
+        $project->setReturnValue('getUnixName', 'testproject',array(true));
+        
+        $pm = new MockProjectManager();
+        $pm->setReturnReference('getProject', $project, array(142));
 
+       
+        $backend = new BackendTestVersion($this);
+        $backend->setReturnValue('getProjectManager', $pm);
+      
+
+        $backend->createProjectHome(142);
+        
+        $this->assertEqual($backend->renameProjectHomeDirectory($project, "FooBar"), true);
+        
+        $this->assertFalse(file_exists($GLOBALS['grpdir_prefix']."/TestProject"), "Old project home should no longer exists");
+        $this->assertTrue(is_dir($GLOBALS['grpdir_prefix']."/FooBar"), "Project home should be renamed");
+        
+        $this->assertFalse(file_exists($GLOBALS['grpdir_prefix']."/testproject"), "Old project home lowercase version should no longer exists");
+        $this->assertTrue(is_link($GLOBALS['grpdir_prefix']."/foobar"), "Project home lowercase version should be renamed");
+        $this->assertEqual(readlink($GLOBALS['grpdir_prefix']."/foobar"), $GLOBALS['grpdir_prefix']."/FooBar", "Project home lowercase version should be link to the uppercase version");
+
+        // Cleanup
+        $backend->recurseDeleteInDir($GLOBALS['grpdir_prefix']."/FooBar");
+        unlink($GLOBALS['grpdir_prefix']."/foobar");
+        rmdir($GLOBALS['grpdir_prefix']."/FooBar");
+        
+        rmdir($GLOBALS['ftp_anon_dir_prefix']."/TestProject");
+        rmdir($GLOBALS['ftp_frs_dir_prefix']."/TestProject");
+    }
+    
+    /**
+     * Special case when the project rename is just about changing case
+     * TestProject -> testproject
+     */
+    public function testRenameProjectHomeDirectoryToLowerCase() {
+        $project = new MockProject($this);
+        $project->setReturnValue('getUnixName', 'TestProject',array(false));
+        $project->setReturnValue('getUnixName', 'testproject',array(true));
+        
+        $pm = new MockProjectManager();
+        $pm->setReturnReference('getProject', $project, array(142));
+
+       
+        $backend = new BackendTestVersion($this);
+        $backend->setReturnValue('getProjectManager', $pm);
+      
+
+        $backend->createProjectHome(142);
+        
+        $this->assertEqual($backend->renameProjectHomeDirectory($project, "testproject"), true);
+        
+        $this->assertFalse(file_exists($GLOBALS['grpdir_prefix']."/TestProject"), "Old project home should no longer exists");
+        $this->assertTrue(is_dir($GLOBALS['grpdir_prefix']."/testproject"), "Project home should be renamed");
+
+        // Cleanup
+        $backend->recurseDeleteInDir($GLOBALS['grpdir_prefix']."/testproject");
+        rmdir($GLOBALS['grpdir_prefix']."/testproject");
+        
+        rmdir($GLOBALS['ftp_anon_dir_prefix']."/TestProject");
+        rmdir($GLOBALS['ftp_frs_dir_prefix']."/TestProject");
+    }
+    
+   /**
+     * Special case when the project rename is just about changing case
+     * testproject -> TestProject
+     */
+    public function testRenameProjectHomeDirectoryToUpperCase() {
+        $project = new MockProject($this);
+        $project->setReturnValue('getUnixName', 'testproject',array(false));
+        $project->setReturnValue('getUnixName', 'testproject',array(true));
+        
+        $pm = new MockProjectManager();
+        $pm->setReturnReference('getProject', $project, array(142));
+
+       
+        $backend = new BackendTestVersion($this);
+        $backend->setReturnValue('getProjectManager', $pm);
+      
+
+        $backend->createProjectHome(142);
+        
+        $this->assertEqual($backend->renameProjectHomeDirectory($project, "TestProject"), true);
+        
+        // Not test possible with is_dir because is_dir resolve the link.
+        // Testing lower case as a link is enough (see below).
+        //$this->assertFalse(is_dir($GLOBALS['grpdir_prefix']."/testproject"), "Old project home should no longer exists as directory (it's a link now)");
+        $this->assertTrue(is_dir($GLOBALS['grpdir_prefix']."/TestProject"), "Project home should be renamed");
+        $this->assertEqual(readlink($GLOBALS['grpdir_prefix'].'/testproject'),$GLOBALS['grpdir_prefix'].'/TestProject',"The lower case of project should be a link");
+        
+
+        // Cleanup
+        $backend->recurseDeleteInDir($GLOBALS['grpdir_prefix']."/TestProject");
+        rmdir($GLOBALS['grpdir_prefix']."/TestProject");
+        unlink($GLOBALS['grpdir_prefix'].'/testproject');
+        
+        rmdir($GLOBALS['ftp_anon_dir_prefix']."/testproject");
+        rmdir($GLOBALS['ftp_frs_dir_prefix']."/testproject");
+    }
+
+    /**
+     * testproject -> projecttest
+     */
+    public function testRenameProjectHomeDirectoryLowerCase() {
+        $project = new MockProject($this);
+        $project->setReturnValue('getUnixName', 'testproject',array(false));
+        $project->setReturnValue('getUnixName', 'testproject',array(true));
+        
+        $pm = new MockProjectManager();
+        $pm->setReturnReference('getProject', $project, array(142));
+
+       
+        $backend = new BackendTestVersion($this);
+        $backend->setReturnValue('getProjectManager', $pm);
+      
+
+        $backend->createProjectHome(142);
+        
+        $this->assertEqual($backend->renameProjectHomeDirectory($project, "projecttest"), true);
+        
+        $this->assertFalse(file_exists($GLOBALS['grpdir_prefix']."/testproject"), "Old project home should no longer exists");
+        $this->assertTrue(is_dir($GLOBALS['grpdir_prefix']."/projecttest"), "Project home should be renamed");
+
+        // Cleanup
+        $backend->recurseDeleteInDir($GLOBALS['grpdir_prefix']."/projecttest");
+        rmdir($GLOBALS['grpdir_prefix']."/projecttest");
+        
+        rmdir($GLOBALS['ftp_anon_dir_prefix']."/testproject");
+        rmdir($GLOBALS['ftp_frs_dir_prefix']."/testproject");
+    }
+
+    public function testIsNameAvailableWithExistingFileInProjectHome() {
+        touch($GLOBALS['grpdir_prefix']."/testproject");
+        $backend = new BackendTestVersion($this);
+        $this->assertFalse($backend->isNameAvailable('testproject'), 'A file with the same name exists in home/groups/');
+        unlink($GLOBALS['grpdir_prefix']."/testproject");
+    }
+
+    public function testIsNameAvailableWithExistingFileInProjectHomeWithMixedCase() {
+        touch($GLOBALS['grpdir_prefix']."/testproject");
+        $backend = new BackendTestVersion($this);
+        $this->assertFalse($backend->isNameAvailable('TestProject'), 'A file with the same name in lowercase exists in home/groups/');
+        unlink($GLOBALS['grpdir_prefix']."/testproject");
+    }
+    
+    public function testIsNameAvailableWithExistingFileInFRS() {
+        touch($GLOBALS['ftp_frs_dir_prefix']."/testproject");
+        $backend = new BackendTestVersion($this);
+        $this->assertFalse($backend->isNameAvailable('testproject'), 'A file with the same name exists in var/lib/codendi/ftp/codendi');
+        unlink($GLOBALS['ftp_frs_dir_prefix']."/testproject");
+    }
+    
+    public function testIsNameAvailableWithExistingFileInAnnoFtp() {
+        touch($GLOBALS['ftp_anon_dir_prefix']."/testproject");
+        $backend = new BackendTestVersion($this);
+        $this->assertFalse($backend->isNameAvailable('testproject'), 'A file with the same name exists in var/lib/codendi/ftp/pub');
+        unlink($GLOBALS['ftp_anon_dir_prefix']."/testproject");
+    }
 }
 ?>

@@ -761,6 +761,58 @@ Object.extend(com.xerox.codendi.Menu.prototype, {
         a.appendChild(title_txt);
         return this._createLi(a);
     },
+    _getLock: function () {
+        var a = Builder.node('a', {
+            'href': this.defaultUrl+'&action=action_lock_add',
+            'class': 'docman_item_option_lock_add',
+            'title': this.docman.options.language.action_lock_add});
+        var title_txt = document.createTextNode(this.docman.options.language.action_lock_add);
+        a.appendChild(title_txt);
+        Event.observe(a, 'click', function (evt) {
+            new Ajax.Request(this.defaultUrl+'&action=action_lock_add&ajax=true', {
+                'onComplete': function() {
+                    // Hide menu
+                    this.hide();
+                    
+                    this.docman.actionsForItem[this.item_id].canUnlock   = true;
+                    this.docman.actionsForItem[this.item_id].canLockInfo = true;
+
+                    // Disable other "edit actions"
+                    this.docman.actionsForItem[this.item_id].canLock       = false;
+                    //this.docman.actionsForItem[this.item_id].canDelete     = false;
+                    //this.docman.actionsForItem[this.item_id].canMove       = false;
+                    //this.docman.actionsForItem[this.item_id].canUpdate     = false;
+                    //this.docman.actionsForItem[this.item_id].canNewVersion = true
+                }.bindAsEventListener(this)
+            });
+            Event.stop(evt);
+            return false;
+        }.bindAsEventListener(this));
+        return this._createLi(a);
+    },
+    _getUnlock: function () {
+        var a = Builder.node('a', {
+            'href': this.defaultUrl+'&action=action_lock_del',
+            'class': 'docman_item_option_lock_del',
+            'title': this.docman.options.language.action_lock_del});
+        var title_txt = document.createTextNode(this.docman.options.language.action_lock_del);
+        a.appendChild(title_txt);
+        Event.observe(a, 'click', function (evt) {
+            new Ajax.Request(this.defaultUrl+'&action=action_lock_del&ajax=true', {
+                'onComplete': function() {
+                    // Hide menu
+                    this.hide();
+                    
+                    this.docman.actionsForItem[this.item_id].canLock     = true;
+                    this.docman.actionsForItem[this.item_id].canLockInfo = false;
+                    this.docman.actionsForItem[this.item_id].canUnlock   = false;
+                }.bindAsEventListener(this)
+            });
+            Event.stop(evt);
+            return false;
+        }.bindAsEventListener(this));
+        return this._createLi(a);
+    },
     _getCut: function () {
         var a = Builder.node('a', {
             'href': this.defaultUrl+'&action=action_cut',
@@ -800,58 +852,6 @@ Object.extend(com.xerox.codendi.Menu.prototype, {
                         }
                     }.bind(this));
 
-                }.bindAsEventListener(this)
-            });
-            Event.stop(evt);
-            return false;
-        }.bindAsEventListener(this));
-        return this._createLi(a);
-    },
-    _getLock: function () {
-        var a = Builder.node('a', {
-            'href': this.defaultUrl+'&action=action_lock_add',
-            'class': 'docman_item_option_lock_add',
-            'title': this.docman.options.language.action_lock_add});
-        var title_txt = document.createTextNode(this.docman.options.language.action_lock_add);
-        a.appendChild(title_txt);
-        Event.observe(a, 'click', function (evt) {
-            new Ajax.Request(this.defaultUrl+'&action=action_lock_add&ajax=true', {
-                'onComplete': function() {
-                    // Hide menu
-                    this.hide();
-                    
-                    this.docman.actionsForItem[this.item_id].canUnlock   = true;
-                    this.docman.actionsForItem[this.item_id].canLockInfo = true;
-
-                    // Disable other "edit actions"
-                    this.docman.actionsForItem[this.item_id].canLock       = false;
-                    this.docman.actionsForItem[this.item_id].canDelete     = false;
-                    this.docman.actionsForItem[this.item_id].canMove       = false;
-                    this.docman.actionsForItem[this.item_id].canUpdate     = false;
-                    this.docman.actionsForItem[this.item_id].canNewVersion = false
-                }.bindAsEventListener(this)
-            });
-            Event.stop(evt);
-            return false;
-        }.bindAsEventListener(this));
-        return this._createLi(a);
-    },
-    _getUnlock: function () {
-        var a = Builder.node('a', {
-            'href': this.defaultUrl+'&action=action_lock_del',
-            'class': 'docman_item_option_lock_del',
-            'title': this.docman.options.language.action_lock_del});
-        var title_txt = document.createTextNode(this.docman.options.language.action_lock_del);
-        a.appendChild(title_txt);
-        Event.observe(a, 'click', function (evt) {
-            new Ajax.Request(this.defaultUrl+'&action=action_lock_del&ajax=true', {
-                'onComplete': function() {
-                    // Hide menu
-                    this.hide();
-                    
-                    this.docman.actionsForItem[this.item_id].canLock     = true;
-                    this.docman.actionsForItem[this.item_id].canLockInfo = false;
-                    this.docman.actionsForItem[this.item_id].canUnlock   = false;
                 }.bindAsEventListener(this)
             });
             Event.stop(evt);
@@ -1060,10 +1060,10 @@ Object.extend(com.xerox.codendi.Menu.prototype, {
                 ul.appendChild(this._getUnlock());
                 writeAction = true;
             }
+
             if(writeAction == true) {
                ul.appendChild(this._getSeparator());
             }
-
 
             // Notification
             ul.appendChild(this._getNotification());

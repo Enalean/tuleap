@@ -308,5 +308,34 @@ class BackendSVNTest extends UnitTestCase {
         $this->assertFalse($backend->setSVNPrivacy($project, true));
         $this->assertFalse($backend->setSVNPrivacy($project, false));
     }
+    
+    public function testRenameSVNRepository() {
+        $project = new MockProject($this);
+        $project->setReturnValue('getUnixName', 'TestProj',array(false));
+        $project->setReturnValue('getUnixName', 'testproj',array(true));
+        $project->setReturnValue('isSVNTracked',false);
+
+        $project->setReturnValue('getMembersUserNames',array());
+
+        $pm = new MockProjectManager();
+        $pm->setReturnReference('getProject', $project, array(142));
+
+        $ugdao = new MockUGroupDao();
+        $ugdao->setReturnValue('searchByGroupId', array());
+
+        $backend = new BackendSVNTestVersion($this);
+        $backend->setReturnValue('getProjectManager', $pm);
+        $backend->setReturnValue('getUGroupDao', $ugdao);
+
+        $backend->createProjectSVN(142);
+        
+        $this->assertEqual($backend->renameSVNRepository($project, "foobar"), true);
+        
+        $this->assertTrue(is_dir($GLOBALS['svn_prefix']."/foobar"),"SVN dir should be renamed");
+
+        // Cleanup
+        $backend->recurseDeleteInDir($GLOBALS['svn_prefix']."/foobar");
+        rmdir($GLOBALS['svn_prefix']."/foobar");
+    }
 }
 ?>

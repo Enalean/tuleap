@@ -70,22 +70,14 @@ if ($action=='remove_user_from_group') {
     	} else {
     		$feedback .= ' '.$Language->getText('admin_usergroup','success_upd_u');
             
-            if ($request->get('form_loginname')) {
+            $vLoginName = new Valid_UserNameFormat('form_loginname');
+            $vLoginName->required();
+            if ($request->valid($vLoginName)) {
                 //first get the user status to see if we can update it
                 $res = db_query('SELECT * FROM user WHERE user_id = '. (int)$user_id);
                 if ($res && ($row = db_fetch_array($res))) {
                     if (in_array($row['status'], array('P', 'V', 'W')) && $row['user_name'] != $request->get('form_loginname')) {
-                        //Now check that the new loginname is valid
-                        if (account_namevalid($request->get('form_loginname'))) {
-                            if ( (db_numrows(db_query("SELECT user_id FROM user WHERE user_name LIKE '".db_es($request->get('form_loginname'))."'")) == 0 )
-                                && (db_numrows(db_query("SELECT group_id FROM groups WHERE unix_group_name LIKE '".db_es($request->get('form_loginname'))."'")) == 0) ) {
-                                db_query("UPDATE user SET user_name='". db_es($request->get('form_loginname')) ."' WHERE user_id=". (int)$user_id);
-                            } else {
-                                $GLOBALS['Response']->addFeedback('error', $Language->getText('account_register', 'err_exist'));
-                            }
-                        } else {
-                            $GLOBALS['Response']->addFeedback('error', $Language->getText('account_register', 'err_name'));
-                        }
+                        db_query("UPDATE user SET user_name='". db_es($request->get('form_loginname')) ."' WHERE user_id=". (int)$user_id);
                     }
                 }
             }

@@ -21,6 +21,8 @@
 
 require_once('common/plugin/Plugin.class.php');
 require_once('common/system_event/SystemEvent.class.php');
+require_once('GitActions.class.php');
+
 /**
  * GitPlugin
  */
@@ -34,6 +36,11 @@ class GitPlugin extends Plugin {
         $this->_addHook('cssfile', 'cssFile', false);
         $this->_addHook('javascript_file', 'jsFile', false);
         $this->_addHook(Event::GET_SYSTEM_EVENT_CLASS, 'getSystemEventClass', false);
+        $this->_addHook(Event::GET_PLUGINS_AVAILABLE_KEYWORDS_REFERENCES, 'getReferenceKeywords', false);
+        $this->_addHook('get_available_reference_natures', 'getReferenceNatures', false);
+        $this->_addHook('SystemEvent_PROJECT_IS_PRIVATE', 'changeProjectRepositoriesAccess', false);
+        $this->_addHook('SystemEvent_PROJECT_RENAME', 'systemEventProjectRename', false);
+        $this->_addHook('file_exists_in_data_dir',    'file_exists_in_data_dir',  false);
     }
 
     public function getPluginInfo() {
@@ -53,6 +60,7 @@ class GitPlugin extends Plugin {
         // This stops styles inadvertently clashing with the main site.
         if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
             echo '<link rel="stylesheet" type="text/css" href="'.$this->getThemePath().'/css/style.css" />';
+            echo '<link rel="stylesheet" type="text/css" href="'.$this->getThemePath().'/css/gitphp.css" />';
         }
     }
 
@@ -88,6 +96,29 @@ class GitPlugin extends Plugin {
             default:
                 break;
         }
+    }
+
+    public function getReferenceKeywords($params) {
+        $params['keywords'] = array_merge($params['keywords'], array('git') );
+    }
+
+    public function getReferenceNatures($params) {
+        $params['natures'] = array_merge( $params['natures'],
+                array( 'git_commit'=>array('keyword'=>'git', 'label'=> $GLOBALS['Language']->getText('plugin_git', 'reference_commit_nature_key') ) ) );
+    }
+
+    public function changeProjectRepositoriesAccess($params) {
+        $groupId   = $params[0];
+        $isPrivate = $params[1];
+        GitActions::changeProjectRepositoriesAccess($groupId, $isPrivate);
+    }
+
+    public function systemEventProjectRename($params) {
+        GitActions::renameProject($params['project'], $params['new_name']);
+    }
+
+    public function file_exists_in_data_dir($params) {
+        $params['result'] = GitActions::isNameAvailable($params['new_name'], $params['error']);
     }
 
     public function process() {

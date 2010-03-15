@@ -66,6 +66,21 @@ class Docman_VersionFactory {
         }
         return $version;
     }
+    
+    /**
+     * @param  String  $docman_path
+     * @param  Project $project
+     * @param  String  $new_name
+     * @return Boolean
+     */
+    function renameProject($docman_path, $project, $new_name){
+        $updateSystem = rename($docman_path.$project->getUnixName(true), $docman_path.strtolower($new_name));
+        if ($updateSystem){
+            $dao = $this->_getVersionDao();
+            return $dao->renameProject($docman_path, $project, $new_name);
+        }
+        return false;
+    }
 }
 
 ?>

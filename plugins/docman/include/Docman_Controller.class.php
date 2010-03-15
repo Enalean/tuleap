@@ -1304,7 +1304,7 @@ class Docman_Controller extends Controler {
                         $valid = $this->_validateRequest($item->accept(new Docman_View_GetFieldsVisitor()));
                     } else {
                         $this->updateItemFromUserInput($item);
-                        $valid = (($this->_validateApprovalTable($this->request))&&($this->_validateRequest($item->accept(new Docman_View_GetSpecificFieldsVisitor(), array('request' => &$this->request)))));
+                        $valid = (($this->_validateApprovalTable($this->request, $item))&&($this->_validateRequest($item->accept(new Docman_View_GetSpecificFieldsVisitor(), array('request' => &$this->request)))));
                     }
                     //Actions
                     if ($valid && $updateConfirmed) {
@@ -1474,20 +1474,19 @@ class Docman_Controller extends Controler {
         $this->view = $view;
     }
  
-    function _validateApprovalTable($request){
-        if($request->exist('app_table_import')){
-            if ($request->valid(new Valid_WhiteList('app_table_import', array('copy', 'reset', 'empty')))) {
-                $select = $request->get('app_table_import');
-                if (($select != 'empty')&&($select != 'copy')&&($select != 'reset')) {
-                    $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_no_option'));
-                    return false;
-                }
-                return true;
+    function _validateApprovalTable($request, $item) {
+        $atf = Docman_ApprovalTableFactory::getFromItem($item);
+        if($atf && $atf->tableExistsForItem()) {
+            $vAppTable = new Valid_WhiteList('app_table_import', array('copy', 'reset', 'empty'));
+            $vAppTable->required();
+            if (!$request->valid($vAppTable)) {
+                $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_no_option'));
+                return false;
             }
-            return false;
         }
         return true;
     }
+
     function _validateRequest($fields) {
         $valid = true;
         foreach($fields as $field) {

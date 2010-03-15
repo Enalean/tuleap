@@ -16,7 +16,7 @@ plugin_admindelegation	permissions_granted_users_title	Utilisateurs autorisés
 plugin_admindelegation	permissions_user_col	Utilisateur
 plugin_admindelegation	permissions_service_col	Service
 plugin_admindelegation	permissions_granted_users_service_title	Utilisateurs autorisés pour le service : $1
- 
+
 # All widgets
 plugin_admindelegation	widget_btn_search	Rechercher
 
@@ -40,6 +40,7 @@ plugin_admindelegation	widget_projects_col_project_name	Nom du projet
 plugin_admindelegation	widget_projects_col_project_id	Id du projet
 plugin_admindelegation	widget_projects_previous	Précédent
 plugin_admindelegation	widget_projects_next	Suivant
+plugin_admindelegation	widget_projects_nb_projects_found	$1 projet(s) trouvé(s)
 
 # Widget category
 widget_categ_label	plugin_admindelegation	Délégation d'admin

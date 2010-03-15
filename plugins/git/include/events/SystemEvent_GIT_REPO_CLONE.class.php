@@ -29,7 +29,8 @@ require_once('common/user/UserManager.class.php');
  */
 class SystemEvent_GIT_REPO_CLONE extends SystemEvent {
 
-    public function process() {
+    public function process() {        
+
         $parameters  = $this->getParametersAsArray();
         print_r($parameters);
         $project     = null;

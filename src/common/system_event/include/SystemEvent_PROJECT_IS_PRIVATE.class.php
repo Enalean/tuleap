@@ -70,6 +70,9 @@ class SystemEvent_PROJECT_IS_PRIVATE extends SystemEvent {
                 }
             }
             
+            //allows to link plugins to this system event            
+            $this->callSystemEventListeners( __CLASS__ );
+
             $this->done();
             return true;
         }

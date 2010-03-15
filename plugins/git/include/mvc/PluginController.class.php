@@ -26,6 +26,9 @@
  * @author    guillaume storchi
  * @license   http://opensource.org/licenses/gpl-license.php GPL
  */
+require_once('common/include/HTTPRequest.class.php');
+require_once('common/user/UserManager.class.php');
+
 class PluginController {
 
     /**
@@ -54,7 +57,12 @@ class PluginController {
         $this->views            = array('header'=> array(), 'footer'=> array());
         $this->actions          = array();
         $this->actionResultData = array('dummy'=>'dummy');
-        $this->user             = UserManager::instance()->getCurrentUser();
+        $this->user             = UserManager::instance()->getCurrentUser();        
+        $this->request          = HTTPRequest::instance();
+    }
+
+    public function getRequest() {
+        return $this->request;
     }
 
     public function getUser() {

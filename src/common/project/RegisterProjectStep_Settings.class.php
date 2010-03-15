@@ -46,18 +46,13 @@ class RegisterProjectStep_Settings extends RegisterProjectStep {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('register_projectname', 'info_missed'));
         } else {
             //check for valid group name
-            $form_unix_name = strtolower($data['project']['form_unix_name']);
-            if (!account_groupnamevalid($form_unix_name)) {
+            $form_unix_name = $data['project']['form_unix_name'];
+            $rule = new Rule_ProjectName();
+            if (!$rule->isValid($form_unix_name)) {
                 $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('register_license','invalid_short_name'));
-                $GLOBALS['Response']->addFeedback('error', $GLOBALS['register_error']);
+                $GLOBALS['Response']->addFeedback('error', $rule->getErrorMessage());
             } else {
-                if ((db_numrows(db_query("SELECT group_id FROM groups WHERE unix_group_name LIKE '$form_unix_name'")) > 0) 
-                    || (db_numrows(db_query("SELECT user_id FROM user WHERE user_name LIKE '$form_unix_name'")) > 0)) {
-                  // also avoid name/group conflict (see SR #1001)
-                  $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('register_license','g_name_exist'));
-                } else {
-                    $is_valid = true;
-                }
+                $is_valid = true;
             }
         }
         return $is_valid;

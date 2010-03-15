@@ -93,6 +93,14 @@
     }
 
     /**
+     * Add a param and/or set its value
+     *
+     */
+    function set($name, $value) {
+        $this->params[$name] = $value;
+    }
+
+    /**
      * Get value of $idx[$variable] in $this->params (user submitted values).
      *
      * @param string The index of the variable array in $this->params.

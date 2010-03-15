@@ -51,6 +51,8 @@ class BackendCVSTestVersion extends BackendCVSTestVersionInit {
     }
 }
 
+Mock::generatePartial('BackendCVS', 'BackendCVS4RenameCVSNT', array('useCVSNT', '_RcsCheckout', '_RcsCommit'));
+
 class BackendCVSTest extends UnitTestCase {
     
     function __construct($name = 'BackendCVS test') {
@@ -251,6 +253,135 @@ class BackendCVSTest extends UnitTestCase {
         
         $this->assertFalse($backend->setCVSPrivacy($project, true));
         $this->assertFalse($backend->setCVSPrivacy($project, false));
+    }
+
+    public function testRenameCVSRepository() {
+        $project = new MockProject($this);
+        $project->setReturnValue('getUnixName', 'TestProj',array(false));
+        $project->setReturnValue('getUnixName', 'testproj',array(true));
+        $project->setReturnValue('isCVSTracked', false);
+
+        $project->setReturnValue('getMembersUserNames',array());
+
+        $pm = new MockProjectManager();
+        $pm->setReturnReference('getProject', $project, array(142));
+
+        $backend = new BackendCVSTestVersion($this);
+        $backend->setReturnValue('getProjectManager', $pm);
+        
+        $backend->createProjectCVS(142);
+        
+        $this->assertEqual($backend->renameCVSRepository($project, "foobar"), true);
+        
+        // Test repo location
+        $repoPath = $GLOBALS['cvs_prefix']."/foobar";
+        $this->assertTrue(is_dir($repoPath),"CVS dir should be renamed");
+
+        // Test Lock dir
+        $this->assertTrue(is_dir($GLOBALS['cvslock_prefix']."/foobar"),"CVS lock dir should be renamed");
+        $file = file_get_contents($repoPath."/CVSROOT/config");
+        $this->assertTrue(preg_match('#^LockDir='.$GLOBALS['cvslock_prefix']."/foobar$#m", $file), "CVS lock dir should be renamed");
+        $this->assertFalse(preg_match("/TestProj/", $file), "There should no longer be any occurence of old project name in CVSROOT/config");
+
+        // Test loginfo file
+        $file = file_get_contents($repoPath."/CVSROOT/loginfo");
+        $this->assertTrue(preg_match('#^ALL \(cat;chgrp -R foobar '.$GLOBALS['cvs_prefix']."/foobar\)>/dev/null 2>&1$#m", $file), "CVS loginfo chrp should use new project name");
+        $this->assertFalse(preg_match("/TestProj/", $file), "There should no longer be any occurence of old project name in CVSROOT/loginfo");
+
+        // Test loginfo file
+        $file = file_get_contents($repoPath."/CVSROOT/commitinfo");
+        $this->assertFalse(preg_match("/TestProj/", $file), "There should no longer be any occurence of old project name in CVSROOT/commitinfo");
+
+        // Cleanup
+        $backend->recurseDeleteInDir($GLOBALS['cvs_prefix']."/foobar");
+        rmdir($GLOBALS['cvs_prefix']."/foobar");
+        rmdir($GLOBALS['cvslock_prefix']."/foobar");
+    }
+
+    public function testRenameCVSRepositoryTracked() {
+        $project = new MockProject($this);
+        $project->setReturnValue('getUnixName', 'TestProj',array(false));
+        $project->setReturnValue('getUnixName', 'testproj',array(true));
+        $project->setReturnValue('isCVSTracked', true);
+
+        $project->setReturnValue('getMembersUserNames',array());
+
+        $pm = new MockProjectManager();
+        $pm->setReturnReference('getProject', $project, array(142));
+
+        $backend = new BackendCVSTestVersion($this);
+        $backend->setReturnValue('getProjectManager', $pm);
+        
+        $backend->createProjectCVS(142);
+        
+        $this->assertEqual($backend->renameCVSRepository($project, "foobar"), true);
+        
+        // Test repo location
+        $repoPath = $GLOBALS['cvs_prefix']."/foobar";
+        $this->assertTrue(is_dir($repoPath),"CVS dir should be renamed");
+
+        // Test Lock dir
+        $this->assertTrue(is_dir($GLOBALS['cvslock_prefix']."/foobar"),"CVS lock dir should be renamed");
+        $file = file_get_contents($repoPath."/CVSROOT/config");
+        $this->assertTrue(preg_match('#^LockDir='.$GLOBALS['cvslock_prefix']."/foobar$#m", $file), "CVS lock dir should be renamed");
+        $this->assertFalse(preg_match("/TestProj/", $file), "There should no longer be any occurence of old project name in CVSROOT/config");
+
+        // Test loginfo file
+        $file = file_get_contents($repoPath."/CVSROOT/loginfo");
+        $this->assertTrue(preg_match('#^ALL \(cat;chgrp -R foobar '.$GLOBALS['cvs_prefix']."/foobar\)>/dev/null 2>&1$#m", $file), "CVS loginfo chrp should use new project name");
+        $this->assertTrue(preg_match('#^ALL \('.$GLOBALS['codendi_bin_prefix']."/log_accum -T foobar -C foobar -s %{sVv}\)>/dev/null 2>&1$#m", $file), "CVS loginfo log_accum should use new project name");
+        $this->assertFalse(preg_match("/TestProj/", $file), "There should no longer be any occurence of old project name in CVSROOT/loginfo");
+
+        // Test loginfo file
+        $file = file_get_contents($repoPath."/CVSROOT/commitinfo");
+        $this->assertTrue(preg_match('#^ALL '.$GLOBALS['codendi_bin_prefix']."/commit_prep -T foobar -r$#m", $file), "CVS commitinfo should use new project name");
+        $this->assertFalse(preg_match("/TestProj/", $file), "There should no longer be any occurence of old project name in CVSROOT/commitinfo");
+
+        // Cleanup
+        $backend->recurseDeleteInDir($GLOBALS['cvs_prefix']."/foobar");
+        rmdir($GLOBALS['cvs_prefix']."/foobar");
+        rmdir($GLOBALS['cvslock_prefix']."/foobar");
+    }
+
+    public function testRenameCVSRepositoryWithCVSNT() {
+        $project = new MockProject($this);
+        $project->setReturnValue('getUnixName', 'TestProj',array(false));
+        $project->setReturnValue('getUnixName', 'testproj',array(true));
+        
+        // Simulate loginfo generated for CVSNT
+        $cvsdir = $GLOBALS['cvs_prefix'].'/foobar';
+        mkdir($cvsdir);
+        mkdir($cvsdir.'/CVSROOT');
+        $file = file_get_contents(dirname(__FILE__) . '/_fixtures/cvsroot/loginfo.cvsnt');
+        $file = str_replace('%unix_group_name%', 'TestProj', $file);
+        $file = str_replace('%cvs_dir%', $GLOBALS['cvs_prefix'].'/TestProj', $file);
+        $file = str_replace('%codendi_bin_prefix%', $GLOBALS['codendi_bin_prefix'], $file);
+        file_put_contents($cvsdir.'/CVSROOT/loginfo', $file);
+
+        $backend = new BackendCVS4RenameCVSNT($this);
+        $backend->setReturnValue('useCVSNT', true);
+        $backend->renameLogInfoFile($project, 'foobar');
+        
+        // Test loginfo file
+        $file = file_get_contents($cvsdir."/CVSROOT/loginfo");
+        $this->assertTrue(preg_match('#^DEFAULT chgrp -f -R\s*foobar '.$cvsdir.'$#m', $file), "CVS loginfo should use new project name");
+        $this->assertTrue(preg_match('#^ALL '.$GLOBALS['codendi_bin_prefix'].'/log_accum -T foobar -C foobar -s %{sVv}$#m', $file), "CVS loginfo should use new project name");
+        $this->assertFalse(preg_match("/TestProj/", $file), "There should no longer be any occurence of old project name in CVSROOT/loginfo");
+        
+        $backend->recurseDeleteInDir($cvsdir);
+        rmdir($cvsdir);
+    }
+    
+    public function testIsNameAvailable() {
+        $cvsdir = $GLOBALS['cvs_prefix'].'/foobar';
+        mkdir ($cvsdir);
+     
+        $backend = new BackendCVSTestVersion($this);
+        $this->assertEqual($backend->isNameAvailable("foobar"), false);
+         
+        $backend->recurseDeleteInDir($cvsdir);
+        
+        rmdir($cvsdir);
     }
 }
 ?>

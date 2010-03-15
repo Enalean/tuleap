@@ -67,7 +67,9 @@ if ($p && $plugin_manager->isPluginAvailable($p) && $p->isAllowed()) {
             header('Content-disposition: filename="'.$attch['file_name'].'"');
             header("Content-Type: ".$attch['type']);
             header("Content-Transfer-Encoding: ".$attch['type']);
-            header("Content-Length: ".$attch['file_size']);
+            if ($attch['file_size'] > 0) {
+                header("Content-Length: ".$attch['file_size']);
+            }
             header("Pragma: no-cache");
             header("Cache-Control: must-revalidate, post-check=0, pre-check=0, public");
             header("Expires: 0");

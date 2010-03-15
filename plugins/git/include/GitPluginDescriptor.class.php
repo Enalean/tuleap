@@ -29,7 +29,7 @@ require_once('common/plugin/PluginDescriptor.class.php');
 class GitPluginDescriptor extends PluginDescriptor {
     
     function GitPluginDescriptor() {
-        $this->PluginDescriptor($GLOBALS['Language']->getText('plugin_git', 'descriptor_name'), '0.3', $GLOBALS['Language']->getText('plugin_git', 'descriptor_description'));
+        $this->PluginDescriptor($GLOBALS['Language']->getText('plugin_git', 'descriptor_name'), '1.2', $GLOBALS['Language']->getText('plugin_git', 'descriptor_description'));
     }
 }
 ?>

@@ -23,7 +23,7 @@
 /**
  * @package Codendi
  */
-class Rule {
+abstract class Rule {
     /**
      * @access private
      */
@@ -35,9 +35,7 @@ class Rule {
      * @param String $val Value to check.
      * @return Boolean
      */
-    function isValid($val) {
-        trigger_error(get_class($this).'::isValid() => Not yet implemented', E_USER_ERROR);
-    }
+    abstract function isValid($val);
 
     /**
      * Default error message if rule is not apply on value.
@@ -70,7 +68,7 @@ extends Rule {
 /**
  * Abstract class that define left-hand operand for a comparison.
  */
-class Rule_Comparator
+abstract class Rule_Comparator
 extends Rule {
     /**
      * @access private
@@ -265,42 +263,347 @@ extends Rule {
     }
 }
 
+
 /**
  * Check if value match Codendi user names format.
  *
  * This rule doesn't check that user actually exists.
  */
-class Rule_UserNameFormat
+class Rule_UserName
 extends Rule {
 
-    function containsIllegalChars($val) {
-        return (strspn($val,"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_.") != strlen($val));
+    /**
+     * Test if value is a name on underlying OS.
+     * 
+     * @param String $val Value to test
+     * 
+     * @return Boolean
+     */
+    public function isSystemName($val) {
+        $backend = $this->_getBackend();
+        if ($backend->unixUserExists($val) || $backend->unixGroupExists($val)) {
+            $this->error = $this->_getErrorExists();
+            return true;
+        }
+        return false;
     }
 
-    function isNotLegalName($val) {
-        return preg_match('/^((root)|(bin)|(daemon)|(adm)|(lp)|(sync)|(shutdown)|(halt)|(mail)|(news)'
-                          .'|(uucp)|(operator)|(games)|(mysql)|(httpd)|(nobody)|(dummy)'
-                          .'|(www)|(cvs)|(shell)|(ftp)|(irc)|(debian)|(ns)|(download))$/i', $val);
+    /**
+     * Test is the value is Codendi username 
+     * 
+     * @param String $val Value to test
+     * 
+     * @return Boolean
+     */
+    public function isAlreadyUserName($val) {
+        $um = $this->_getUserManager();
+        if ($um->getUserByUserName($val) !== null) {
+            $this->error = $this->_getErrorExists();
+            return true;
+        }
+        return false;
     }
 
-    function isCvsAccount($val) {
-        return preg_match('/^anoncvs_/i', $val);
+    /**
+     * Test if the value is a project name
+     * 
+     * @param String $val Value to test
+     * 
+     * @return Boolean
+     */
+    public function isAlreadyProjectName($val) {
+        $pm = $this->_getProjectManager();
+        if ($pm->getProjectByUnixName($val) !== null) {
+            $this->error = $this->_getErrorExists();
+            return true;
+        }
+        return false;
     }
 
-    function lessThanMin($val) {
-        return (strlen($val) < 3);
+    /**
+     * Test if the value contains spaces
+     * 
+     * @param String $val Value to test
+     * 
+     * @return Boolean
+     */
+    public function noSpaces($val) {
+        if (strrpos($val,' ') !== false) {
+            $this->error = $this->_getErrorNoSpaces();
+            return false;
+        }
+        return true;
     }
 
-    function greaterThanMax($val) {
-        return (strlen($val) > 30);
+    /**
+     * Needs to check the name start by a char
+     * 
+     * @param String $val
+     * 
+     * @return Boolean
+     */
+    public function atLeastOneChar($val) {
+        if (strspn($val,"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ") == 0) {
+            $this->error = $GLOBALS['Language']->getText('include_account','char_err');
+            return false;
+        }
+        return true;
     }
 
-    function isValid($val) {
-        return !$this->isNotLegalName($val)
+    /**
+     * Test if the name contains illegal chars
+     * 
+     * @param String $val Value to test
+     * 
+     * @return Boolean
+     */
+    public function containsIllegalChars($val) {
+        if (strspn($val,"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_.") != strlen($val)) {
+            $this->error = $GLOBALS['Language']->getText('include_account','illegal_char');
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Test if the name is already reserved
+     * 
+     * @param String $val Value to test
+     * 
+     * @return Boolean
+     */
+    public function isReservedName($val) {
+        if (preg_match('/^('.
+             '(www[0-9]?)|(cvs[0-9]?)|(shell[0-9]?)|(ftp[0-9]?)|(irc[0-9]?)|(news[0-9]?)'.
+             '|(mail[0-9]?)|(ns[0-9]?)|(download[0-9]?)|(pub)|(users)|(compile)|(lists)'.
+             '|(slayer)|(orbital)|(tokyojoe)|(webdev)|(projects)|(cvs)|(monitor)|(mirrors?)'.
+             '|(root)|(bin)|(daemon)|(adm)|(lp)|(sync)|(shutdown)|(halt)|(mail)'.
+             '|(uucp)|(operator)|(games)|(mysql)|(httpd)|(nobody)|(dummy)|(debian)'.
+             '|(munin)|(mailman)|(ftpadmin)|(codendiadm)|(imadmin-bot)|(apache)|(nscd)'.
+             ')$/i', $val) != 0) {
+            $this->error = $GLOBALS['Language']->getText('include_account','reserved');
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Test if the name corresponds to a CVS user account
+     * 
+     * @param String $val Value to test
+     * 
+     * @return Boolean
+     */
+    public function isCvsAccount($val) {
+        if (preg_match('/^anoncvs_/i', $val)) {
+            $this->error = $GLOBALS['Language']->getText('include_account','reserved_cvs');
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Test minimal length of name
+     * 
+     * @param String $val Value to test
+     * 
+     * @return Boolean
+     */
+    public function lessThanMin($val) {
+        if (strlen($val) < 3) {
+            $this->error = $GLOBALS['Language']->getText('include_account','name_too_short');
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Test maximal length of name
+     * 
+     * @param String $val Value to test
+     * 
+     * @return Boolean
+     */
+    public function greaterThanMax($val) {
+        if (strlen($val) > 30) {
+            $this->error = $GLOBALS['Language']->getText('include_account','name_too_long');
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Test if name is valid
+     * 
+     * @param String $val Value to test
+     * 
+     * @return Boolean
+     */
+    public function isValid($val) {
+        return $this->noSpaces($val) 
+            && $this->atLeastOneChar($val)
+            && !$this->isReservedName($val)
             && !$this->isCvsAccount($val)
             && !$this->lessThanMin($val)
             && !$this->greaterThanMax($val)
-            && !$this->containsIllegalChars($val);
+            && !$this->containsIllegalChars($val)
+            && !$this->isAlreadyUserName($val)
+            && !$this->isAlreadyProjectName($val)
+            && !$this->isSystemName($val);
+    }
+
+    /**
+     * Error message
+     *
+     * @return String
+     */
+    public function getErrorMessage() {
+        return $this->error;
+    }
+
+    /**
+     * Returns error message when the username already exists
+     * 
+     * Dedicate a method to be able to override it in descendent classes
+     * 
+     * @param String $val Value to test
+     * 
+     * @return Boolean
+     */
+    protected function _getErrorExists() {
+        return $GLOBALS['Language']->getText('rule_user_name', 'error_exists');
+    }
+
+    /**
+     * Returns error message when name contains a space
+     * 
+     * Dedicate a method to be able to override it in descendent classes
+     *  
+     * @param String $val Value to test
+     * 
+     * @return Boolean
+     */
+    protected function _getErrorNoSpaces() {
+        return $GLOBALS['Language']->getText('include_account', 'login_err');
+    }
+
+    /**
+     * Wrapper
+     *
+     * @return ProjectManager
+     */
+    protected function _getProjectManager() {
+        return ProjectManager::instance();
+    }
+
+    /**
+     * Wrapper
+     *
+     * @return UserManager
+     */
+    protected function _getUserManager() {
+        return UserManager::instance();
+    }
+
+    /**
+     * Wrapper
+     *
+     * @return Backend
+     */
+    protected function _getBackend($type='') {
+        return Backend::instance($type);
+    }
+}
+
+/**
+ * Check if a project name is valid
+ *
+ * This extends the user name validation
+ */
+class Rule_ProjectName
+extends Rule_UserName {
+
+    /**
+     * Group name cannot contain underscore for DNS reasons.
+     *
+     * @param String $val
+     *
+     * @return Boolean
+     */
+    public function isDNSCompliant($val) {
+        if (strpos($val, '_') === false) {
+            return true;
+        }
+        $this->error = $GLOBALS['Language']->getText('include_account','dns_error');
+        return false;
+    }
+
+    /**
+     * Verify group name availability in the FS
+     *
+     * @param String $val
+     *
+     * @return Boolean
+     */
+    public function isNameAvailable($val) {
+        
+        $backendSVN = $this->_getBackend('SVN');
+        if (!$backendSVN->isNameAvailable($val)){
+            $this->error = $GLOBALS['Language']->getText('include_account','used_by_svn');
+            return false;
+        } else {
+            $backendCVS = $this->_getBackend('CVS');
+            if (!$backendCVS->isNameAvailable($val)) {
+                $this->error = $GLOBALS['Language']->getText('include_account','used_by_cvs');
+                return false;
+            } else {
+                $backendSystem = $this->_getBackend('System');
+                if (!$backendSystem->isNameAvailable($val)){
+                    $this->error = $GLOBALS['Language']->getText('include_account','used_by_sys');
+                    return false;
+                } else {
+                    $result = true;
+                    // Add Hook for plugins to check the name validity under plugins directories
+                    $this->getEventManager()->processEvent('file_exists_in_data_dir',
+                        array('new_name'  => $val,
+                              'result'     => &$result,
+                              'error' => &$error)
+                         
+                            );
+                    if ($result == false){
+                        $this->error = $error;
+                        return false;
+                    }
+                } 
+            }
+        }
+        return true;
+    }
+     /**
+     * Wrapper for event manager
+     * 
+     * @return EventManager
+     */
+    protected function getEventManager() {
+        return EventManager::instance();
+    }
+    /**
+     * Check validity
+     *
+     * @param String $val
+     *
+     * @return Boolean
+     */
+    public function isValid($val) {
+        return $this->isDNSCompliant($val) && parent::isValid($val)  && $this->isNameAvailable($val);
+    }
+
+    protected function _getErrorExists() {
+        return $GLOBALS['Language']->getText('rule_group_name', 'error_exists');
+    }
+
+    protected function _getErrorNoSpaces() {
+        return $GLOBALS['Language']->getText('include_account', 'project_spaces');
     }
 }
 

@@ -180,6 +180,11 @@ admin_groupedit	unix_grp	Unix Group Name
 admin_groupedit	description	Description
 admin_groupedit	license_other	License Other
 admin_groupedit	built_from_template	Built from template
+admin_groupedit	rename_project_title	Rename Project
+admin_groupedit	rename_project_label	Rename Project to
+admin_groupedit	rename_project_msg	The project is being renamed from $1 to $2
+admin_groupedit	invalid_short_name	Invalid Short Name
+
 #
 #-----------------------------------------------
 # Script: SF/www/admin/grouplist.php

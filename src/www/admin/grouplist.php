@@ -19,7 +19,6 @@ if (!$form_catroot) {
 	$form_catroot = 1;
 }
 
-print "<br><a href=\"groupedit-add.php\">[".$Language->getText('admin_grouplist','add_group')."]</a>";
 print "<p>".$Language->getText('admin_grouplist','for_categ').": ";
 
 if ($form_catroot == 1) {

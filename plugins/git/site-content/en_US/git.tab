@@ -17,6 +17,7 @@ plugin_git	info_access_title	Git access
 plugin_git	info_access_content	Repositories are accessible through the following url, where REPO_NAME must be replaced with the actual repository name.<br /> For any access permission issue please contact your site admin.
 
 plugin_git	bread_crumb_home	Repository list
+plugin_git	bread_crumb_help	Help
 
 plugin_git	tree_title_available_repo	Repository list
 plugin_git	tree_msg_no_available_repo	No repository found
@@ -62,10 +63,12 @@ plugin_git	actions_params_error	Empty required parameter(s)
 plugin_git	actions_delete_process	Repository will be removed in a few seconds
 plugin_git	actions_input_format_error	Repository name is not well formatted only alphanumeric and - _ characters are allowed, max lenght is
 plugin_git	actions_create_repo_process	Repository will be created in a few seconds
+
 plugin_git	actions_repo_not_found	The repository does not exist
 plugin_git	actions_repo_access	Repository access permissions are going to be modified in a few seconds
 plugin_git	actions_save_repo_process	Repository informations have been saved
 plugin_git	actions_delete_backup	A repository backup will be available in the backup directory
+plugin_git	actions_name_not_available	     A file already exists with this name under gitroot
 
 plugin_git	view_repo_description	Description
 plugin_git	view_repo_creator	Created by
@@ -84,3 +87,5 @@ plugin_git	yes	Yes
 plugin_git	no	No
 
 plugin_git	project_service_not_available	Service not available for your project (Please contact site administrator)
+plugin_git	reference_commit_desc_key	Git commit
+plugin_git	reference_commit_nature_key	Git commit

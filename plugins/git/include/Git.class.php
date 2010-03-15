@@ -20,11 +20,9 @@
   */
 
 require_once('mvc/PluginController.class.php');
-require_once('common/include/HTTPRequest.class.php');
 require_once('GitViews.class.php');
 require_once('GitActions.class.php');
 require_once('GitRepository.class.php');
-require_once('common/user/UserManager.class.php');
 /**
  * Git
  * @author Guillaume Storchi
@@ -32,21 +30,45 @@ require_once('common/user/UserManager.class.php');
 class Git extends PluginController {
     
     public function __construct(GitPlugin $plugin) {
-
+        
+        $matches = array();
         parent::__construct();
-        $this->request     = HTTPRequest::instance();
+        
+        if ( preg_match_all('/^\/plugins\/git\/index.php\/(\d+)\/([^\/][a-zA-Z]+)\/([a-zA-Z\-\_0-9]+)\/\?{0,1}.*/', $_SERVER['REQUEST_URI'], $matches) ) {
+            $this->request->set('group_id', $matches[1][0]);
+            $this->request->set('action', $matches[2][0]);
+            $repo_id = 0;            
+            //repository id is passed            
+            if ( preg_match('/^([0-9]+)$/', $matches[3][0]) === 1 ) {
+               $repo_id = $matches[3][0];
+            } else {
+            //get repository by name and group id to retrieve repo id
+               $repo = new GitRepository();
+               $repo->setName($matches[3][0]);
+               $repo->setProject( ProjectManager::instance()->getProject($matches[1][0]) );
+               try {
+                   $repo->load();
+               } catch (Exception $e) {                   
+                   $this->addError('Bad request');
+                   $this->redirect('/');                   
+               }
+               $repo_id = $repo->getId();               
+            }
+            $this->request->set('repo_id', $repo_id);
+        }        
         $this->plugin      = $plugin;
         $this->groupId     = (int)$this->request->get('group_id');
         $this->action      = $this->request->get('action');
         $this->nonMember   = false;
+
         if (  empty($this->action) ) {
             $this->action = 'index';
-        }
-        if ( empty($this->groupId) ) {
+        }                  
+        if ( empty($this->groupId) ) {            
             $this->addError('Bad request');
             $this->redirect('/');
-        }        
-        
+        }
+      
         $this->projectName      = ProjectManager::instance()->getProject($this->groupId)->getUnixName();
         if ( !PluginManager::instance()->isPluginAllowedForProject($this->plugin, $this->groupId) ) {
             $this->addError( $this->getText('project_service_not_available') );
@@ -59,13 +81,13 @@ class Git extends PluginController {
             $this->permittedActions = array('index','view', 'edit', 'clone', 'add', 'del', 'create', 'confirm_deletion', 'save');
         } else if ( $this->user->isMember($this->groupId) === true ) {
             $this->permittedActions = array('index','view', 'edit', 'clone');
-        } else if ( !$this->user->isRestricted() ) {
+        } else if ( !$this->user->isAnonymous() && !$this->user->isRestricted() ) {
             //public repository access
             $this->permittedActions = array('index');
             $this->nonMember        = true;
-        }        
+        }
 
-        if ( empty($this->permittedActions) ) {
+        if ( empty($this->permittedActions) ) {            
             $this->addError( $this->getText('controller_access_denied') );
             $this->redirect('/projects/'.$this->projectName.'/');
         }                
@@ -91,7 +113,7 @@ class Git extends PluginController {
         //check permissions
         if (  !empty($this->action) && !$this->isAPermittedAction($this->action) ) {
             $this->addError( $this->getText('controller_action_permission_denied') );
-            $this->redirect('?group_id='.$this->groupId);
+            $this->redirect('/plugins/git/?group_id='.$this->groupId);
             return;
         }
 
@@ -102,7 +124,7 @@ class Git extends PluginController {
                 break;
             #admin
             case 'view':
-                $this->addAction( 'getRepositoryDetails', array($this->groupId, $repoId) );
+                $this->addAction( 'getRepositoryDetails', array($this->groupId, $repoId) );                
                 $this->addView('view');
                 break;
            

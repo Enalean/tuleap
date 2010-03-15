@@ -74,9 +74,10 @@ class GitBackend extends Backend {
         $forkPath    = $this->getGitRootPath().DIRECTORY_SEPARATOR.$forkPath;        
         $this->getDriver()->fork($parentPath, $forkPath);
         $this->getDriver()->activateHook('post-update', $forkPath, 'codendiadm', $clone->getProject()->getUnixName());
-        $this->setRepositoryPermissions($clone);
+        $this->setRepositoryPermissions($clone);        
         $id = $this->getDao()->save($clone);
-        $clone->setId($id);                
+        $clone->setId($id);
+        $this->changeRepositoryAccess($clone);
         return true;
     }
 
@@ -101,10 +102,10 @@ class GitBackend extends Backend {
         chdir($path);
         $this->getDriver()->init($bare=true);
         $this->getDriver()->activateHook('post-update', $path, 'codendiadm', $repository->getProject()->getUnixName());
-        $this->setRepositoryPermissions($repository);
+        $this->setRepositoryPermissions($repository);        
         $id = $this->getDao()->save($repository);
         $repository->setId($id);
-        
+        $this->changeRepositoryAccess($repository);
         return true;
     }
 
@@ -131,6 +132,13 @@ class GitBackend extends Backend {
             $this->getDriver()->setDescription( $path, $description );
         }
         $this->getDao()->save($repository);
+    }
+
+    public function renameProject(Project $project, $newName) {
+        if (is_dir(self::GIT_ROOT_PATH.'/'.$project->getUnixName())) {
+            return rename(self::GIT_ROOT_PATH.'/'.$project->getUnixName(), self::GIT_ROOT_PATH.'/'.$newName);
+        }
+        return true;
     }
 
     public function isInitialized($repository) {
@@ -213,6 +221,13 @@ class GitBackend extends Backend {
         }
         return true;
     }    
+
+    /**
+     * Verify if given name is not already reserved on filesystem
+     */
+    public function isNameAvailable($newName) {
+        return ! $this->fileExists(self::GIT_ROOT_PATH.'/'.$newName);
+    }
 }
 
 ?>

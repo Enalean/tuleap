@@ -227,9 +227,8 @@ class Project extends Group {
         return isset($this->use_service[$service_short_name]) && $this->use_service[$service_short_name];
     }
 
-
     /*
-		The URL for this project's home page
+        The URL for this project's home page
     */
     function getHomePage() {
         return $this->service_data_array['homepage']['link'];
@@ -404,10 +403,10 @@ class Project extends Group {
         		}
     		}
 			
-			echo "<P><b><u>".$hp->purify($descname,CODENDI_PURIFIER_LIGHT,$this->getGroupId())."</u></b></P>";
-			echo "<P>";
+			echo "<h3>".$hp->purify($descname,CODENDI_PURIFIER_LIGHT,$this->getGroupId())."</h3>";
+			echo "<p>";
 			echo ($displayfieldvalue[$i] == '') ? $Language->getText('global','none') : $hp->purify($displayfieldvalue[$i], CODENDI_PURIFIER_LIGHT,$this->getGroupId())  ;
-			echo "</P>";
+			echo "</p>";
 			
 		}
     	

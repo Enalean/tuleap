@@ -495,7 +495,6 @@ plugin_docman	filters_item_type_folder	Folder
 
 plugin_docman	info_cut_notify_cut	cut. You can now paste it wherever you want with 'Paste' action in popup menu.
 plugin_docman	info_copy_notify_cp	copied. you can now paste it wherever you want (even across projects) with 'Paste' action in popup menu.<br />Note that copy keeps <strong>neither approval tables nor notifications</strong> while cut does. <br />Note that only the link of the <strong>wiki pages</strong> is copied, not the <strong>content</strong>.
-
 plugin_docman	info_create_initversion	Initial version successfully created.
 plugin_docman	info_create_newversion	New version successfully created.
 plugin_docman	info_document_created	Document successfully created.
@@ -626,7 +625,7 @@ plugin_docman	notifications_moved_from	from: \n $1
 plugin_docman	notifications_moved_mail_body_begin	$1 has been modified by $2\n$3&action=show&id=$4\n\nMoved
 plugin_docman	notifications_moved_mail_body_end	\n\n--------------------------------------------------------------------\nYou are receiving this message because you are monitoring this item.\nTo stop monitoring, please visit:\n$1&action=details&section=notifications&id=$2
 plugin_docman	notifications_moved_from_mail_body_begin	 $1 has been modified by $2\n$3&action=show&id=$4\n\n $5 moved	
-	
+
 plugin_docman	obso_warn_email_subject	[$1] Document '$2' will be obsolete in one month
 plugin_docman	obso_warn_email_body	As document owner, you are notified of the obsolescence in one month of the\ndocument:\nTitle: $1\nProject: $2\nObsolescence date: $3\nDirect Link: <$4>\n\nThis document will disappear from your document manager in one month if you\ndo nothing. The document will remain accessible through the administration\ninterface though.\nYou can change the obsolescence date of your document or make it permanent with\nthe following link:\n<$5>\n\n--\nThis is an automatic message sent by a robot. Please do not reply to this email.\n
 
@@ -765,15 +764,14 @@ plugin_docman	docman_wiki_other_location	Other location:
 plugin_docman	docman_wiki_other_locations	Other locations:
 plugin_docman	docman_wiki_breadcrumbs_locations	Locations:
 plugin_docman	docman_wiki_perms_label	Permissions controlled by documents manager
-plugin_docman	docman_wiki_page_locked	$1 locked this page. You cannot modify it until the lock owner or a document manager release the lock.
-plugin_docman	docman_wiki_page_locked_elsewhere	This wiki page is already locked through "$1".
 plugin_docman	docman_wiki_delete_cascade	Cascade deletion to wiki service
 plugin_docman	docman_wiki_delete_wiki_page_success	Wiki page successfully deleted from wiki service.
 plugin_docman	docman_wiki_delete_wiki_page_failed	Error while trying to delete the wiki page from wiki service.
+plugin_docman	docman_wiki_page_locked	$1 locked this page. You cannot modify it until the lock owner or a document manager release the lock.
+plugin_docman	docman_wiki_page_locked_elsewhere	This wiki page is already locked through "$1".
 
 widget_categ_label	plugin_docman	Document Manager
 plugin_docman	widget_description_my_docman	List the documents under review.
-plugin_docman	widget_description_embedded	Allow you to view an embedded documents directly in the widget.
 plugin_docman	widget_title_embedded	Docman Viewer
 plugin_docman	widget_description_embedded	Display a docman item directly in the dashboard. <br /><em>For now, only embedded files are supported</em>.
 
@@ -797,3 +795,5 @@ plugin_docman	format_user_group_desc	One user group per column. Each one can hav
 plugin_docman	widget_description_my_docman_search	Redirect to document with given id.
 plugin_docman	widget_my_docman_search_label	Search document id:
 plugin_docman	widget_my_docman_search_btn	Search
+
+plugin_docman	name_validity	A directory already exists with this name under docman

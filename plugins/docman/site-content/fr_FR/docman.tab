@@ -175,7 +175,7 @@ plugin_docman	admin_lock_infos_help	Ceci est la liste de tous les documents du p
 plugin_docman	admin_lock_infos_who	Qui
 plugin_docman	admin_lock_infos_when	When
 plugin_docman	admin_title	Administration
-plugin_docman	admin_view_title	Gérer les préférence d'affichage
+plugin_docman	admin_view_title	Gérer les préférences d'affichage
 plugin_docman	admin_view_descr	Définir la vue par défaut pour le gestionnaire de documents.
 plugin_docman	admin_view_instructions	Selectionnez la vue par défaut pour le parcours des documents. Notez que ce paramètre pourra être ignoré selon les préférences utilisateurs.
 
@@ -191,7 +191,7 @@ plugin_docman	descriptor_description	Gestionnaire de documents
 plugin_docman	descriptor_name	Gestionnaire de Documents
 
 plugin_docman	details_actions	Actions
-plugin_docman	details_actions_cut	Cut
+plugin_docman	details_actions_cut	Couper
 plugin_docman	details_actions_copy	Copier
 plugin_docman	details_actions_cut_cancut_document	Vous pouvez <a href="$1">couper ce document</a>.
 plugin_docman	details_actions_cut_cancut_folder	Vous pouvez <a href="$1">couper ce dossier</a>.
@@ -494,8 +494,7 @@ plugin_docman	filters_item_type_link	Lien
 plugin_docman	filters_item_type_folder	Dossier
 
 plugin_docman	info_cut_notify_cut	coupé. vous pouvez maintenant le coller où vous voulez avec l'action 'Coller' dans le menu popup.
-plugin_docman	info_copy_notify_cp	copié. vous pouvez maintenant le coller où vous voulez (même entre différents projets) avec l'action 'Coller' dans le menu popup.<br />Attention, la copie ne garde <strong>ni les tables d'approbations, ni les notifications</strong> à la différence du déplacement (couper/coller).<br /> Attention, le <strong>contenu des pages wiki </strong>n'est pas copié, seul le lien est copié.
-
+plugin_docman	info_copy_notify_cp	copié. Vous pouvez maintenant le coller où vous voulez (même entre différents projets) avec l'action 'Coller' dans le menu popup.<br />Attention, la copie ne garde <strong>ni les tables d'approbations, ni les notifications</strong> à la différence du déplacement (couper/coller).<br /> Attention, le <strong>contenu des pages wiki </strong>n'est pas copié, seul le lien est copié.
 plugin_docman	info_create_initversion	Version initiale créée.
 plugin_docman	info_create_newversion	Nouvelle version créée.
 plugin_docman	info_document_created	Document créé.
@@ -765,11 +764,11 @@ plugin_docman	docman_wiki_other_location	Autre chemin:
 plugin_docman	docman_wiki_other_locations	Autres chemins:
 plugin_docman	docman_wiki_breadcrumbs_locations	Chemins:
 plugin_docman	docman_wiki_perms_label	Permissions controllées par le gestionnaire de documents
-plugin_docman	docman_wiki_page_locked	Cette page wiki est réservée par $1. Vous ne pouvez pas la modifier tant que le propriétaire du verrou ou un gestionnaire du document ne l'a pas retiré.
-plugin_docman	docman_wiki_page_locked_elsewhere	Cette page wiki a été déjà vérouillée via "$1".
 plugin_docman	docman_wiki_delete_cascade	Propager la suppression au service wiki
 plugin_docman	docman_wiki_delete_wiki_page_success	Page wiki supprimé du service wiki avec succès.
 plugin_docman	docman_wiki_delete_wiki_page_failed	Erreur lors de la suppression de la page wiki à partir du service wiki.
+plugin_docman	docman_wiki_page_locked	Cette page wiki est réservée par $1. Vous ne pouvez pas la modifier tant que le propriétaire du verrou ou un gestionnaire du document ne l'a pas retiré.
+plugin_docman	docman_wiki_page_locked_elsewhere	Cette page wiki a été déjà vérouillée via "$1".
 
 widget_categ_label	plugin_docman	Gestionnaire de documents
 plugin_docman	widget_description_my_docman	Affiche la liste des documents en attente d'approbation.
@@ -796,3 +795,5 @@ plugin_docman	format_user_group_desc	Un group par colonne. Chaque groupe peut av
 plugin_docman	widget_description_my_docman_search	Redirige au document correspondant à l'ID donné
 plugin_docman	widget_my_docman_search_label	Cherche un document par id :
 plugin_docman	widget_my_docman_search_btn	Rechercher
+
+plugin_docman	name_validity	Un répertoire Docman existe déjà avec ce nom.

@@ -117,7 +117,7 @@ extends WikiPlugin
     function createPngFile($imagepath, $imagename) {
         // to create dvi file from the latex file
         $commandes = $this->latexbin . " temp.tex;";
-        exec("cd $imagepath;$commandes");
+        exec("cd $imagepath;HOME=/home/codendiadm $commandes");
         // to create png file from the dvi file
         // there is no option but it is possible
         // to add one (scale for example)

@@ -549,6 +549,29 @@ class BackendSVN extends Backend {
 
         return true;
     }
+    /**
+     * Check if given name is not used by a repository or a file or a link
+     * 
+     * @param String $name
+     * 
+     * @return false if repository or file  or link already exists, true otherwise
+     */
+    function isNameAvailable($name) {
+        $path = $GLOBALS['svn_prefix']."/".$name;
+        return (!$this->fileExists($path));
+    }
+    
+    /**
+     * Rename svn repository (following project unix_name change)
+     * 
+     * @param Project $project
+     * @param String  $newName
+     * 
+     * @return Boolean
+     */
+    public function renameSVNRepository($project, $newName) {
+        return rename($GLOBALS['svn_prefix'].'/'.$project->getUnixName(false), $GLOBALS['svn_prefix'].'/'.$newName);
+    }
 }
 
 ?>
