@@ -10,8 +10,6 @@
  * @subpackage Controller
  */
 
-require_once(GITPHP_INCLUDEDIR . 'gitutil.git_path_trees.php');
-
 /**
  * Blobdiff controller class
  *
@@ -118,20 +116,18 @@ class GitPHP_Controller_Blobdiff extends GitPHP_ControllerBase
 			return;
 		}
 
-		$hash = $this->project->GetBlob($this->params['hash']);
-		$this->tpl->assign('hash', $hash);
-
-		$hashparent = $this->project->GetBlob($this->params['hashparent']);
-		$this->tpl->assign('hashparent', $hashparent);
-
 		$hashbase = $this->project->GetCommit($this->params['hashbase']);
 		$this->tpl->assign('hashbase', $hashbase);
 
+		$hashparent = $this->project->GetBlob($this->params['hashparent']);
+		$hashparent->SetCommit($hashbase);
+		$this->tpl->assign('hashparent', $hashparent);
+
+		$hash = $this->project->GetBlob($this->params['hash']);
+		$this->tpl->assign('hash', $hash);
+
 		$tree = $hashbase->GetTree();
 		$this->tpl->assign('tree', $tree);
-
-		$paths = git_path_trees($this->params['hashbase'], $this->params['file']);
-		$this->tpl->assign("paths",$paths);
 	}
 
 }

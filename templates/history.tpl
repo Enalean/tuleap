@@ -16,19 +16,8 @@
 
  {include file='title.tpl' titlecommit=$hash}
 
- <div class="page_path">
-   {* File path *}
-   <b>
-     <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=tree&hb={$hash->GetHash()}&h={$tree->GetHash()}">[{$project->GetProject()}]</a> / 
-     {foreach from=$paths item=path name=paths}
-       {if $smarty.foreach.paths.last}
-         <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=blob&h={$path.tree}&f={$path.full}">{$path.short}</a>
-       {else}
-         <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=tree&hb={$hash->GetHash()}&h={$path.tree}&f={$path.full}">{$path.short}</a> / 
-       {/if}
-     {/foreach}
-   </b>
- </div>
+ {include file='path.tpl' pathobject=$blob target='blob'}
+ 
  <table cellspacing="0">
    {* Display each history line *}
    {foreach from=$blob->GetHistory() item=historyitem}

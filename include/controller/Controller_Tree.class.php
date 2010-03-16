@@ -10,8 +10,6 @@
  * @subpackage Controller
  */
 
-require_once(GITPHP_INCLUDEDIR . 'gitutil.git_path_trees.php');
-
 /**
  * Tree controller class
  *
@@ -118,9 +116,6 @@ class GitPHP_Controller_Tree extends GitPHP_ControllerBase
 
 		if (!isset($this->params['file']))
 			$this->params['file'] = $tree->GetPath();
-
-		$paths = git_path_trees($this->params['hashbase'], $this->params['file']);
-		$this->tpl->assign("paths",$paths);
 	}
 
 }

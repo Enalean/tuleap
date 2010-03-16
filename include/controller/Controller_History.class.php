@@ -10,8 +10,6 @@
  * @subpackage Controller
  */
 
-require_once(GITPHP_INCLUDEDIR . 'gitutil.git_path_trees.php');
-
 /**
  * History controller class
  *
@@ -98,9 +96,6 @@ class GitPHP_Controller_History extends GitPHP_ControllerBase
 		$blob = $this->project->GetBlob($blobhash);
 		$blob->SetCommit($co);
 		$this->tpl->assign('blob', $blob);
-
-		$paths = git_path_trees($this->params['hash'], $this->params['file']);
-		$this->tpl->assign("paths",$paths);
 	}
 
 }

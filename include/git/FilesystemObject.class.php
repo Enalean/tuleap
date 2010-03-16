@@ -58,6 +58,24 @@ abstract class GitPHP_FilesystemObject extends GitPHP_GitObject
 	protected $commit;
 
 	/**
+	 * pathTree
+	 *
+	 * Stores the trees of this object's base path
+	 *
+	 * @access protected
+	 */
+	protected $pathTree;
+
+	/**
+	 * pathTreeRead
+	 *
+	 * Stores whether the trees of the object's base path have been read
+	 *
+	 * @access protected
+	 */
+	protected $pathTreeRead = false;
+
+	/**
 	 * __construct
 	 *
 	 * Instantiates object
@@ -83,7 +101,13 @@ abstract class GitPHP_FilesystemObject extends GitPHP_GitObject
 	 */
 	public function GetName()
 	{
-		return $this->name;
+		if (!empty($this->name))
+			return $this->name;
+
+		if ($this->commit)
+			return basename($this->commit->HashToPath($this->hash));
+
+		return '';
 	}
 
 	/**
@@ -237,6 +261,58 @@ abstract class GitPHP_FilesystemObject extends GitPHP_GitObject
 	public function SetCommit($commit)
 	{
 		$this->commit = $commit;
+	}
+
+	/**
+	 * GetPathTree
+	 *
+	 * Gets the objects of the base path
+	 *
+	 * @access public
+	 * @return array array of tree objects
+	 */
+	public function GetPathTree()
+	{
+		if (!$this->pathTreeRead)
+			$this->ReadPathTree();
+
+		return $this->pathTree;
+	}
+
+	/**
+	 * ReadPathTree
+	 *
+	 * Reads the objects of the base path
+	 *
+	 * @access private
+	 */
+	private function ReadPathTree()
+	{
+		$this->pathTreeRead = true;
+
+		$path = $this->GetPath();
+		
+		if (empty($path)) {
+			/* this is a top level tree, it has no subpath */
+			$this->SetName('[' . $this->project->GetProject() . ']');
+			return;
+		}
+
+		while (($pos = strrpos($path, '/')) !== false) {
+			$path = substr($path, 0, $pos);
+			$pathhash = $this->commit->PathToHash($path);
+			if (!empty($pathhash)) {
+				$parent = $this->project->GetTree($pathhash);
+				$parent->SetName(basename($path));
+				$this->pathTree[] = $parent;
+			}
+		}
+
+		$parent = $this->commit->GetTree();
+		$parent->SetName('[' . $this->project->GetProject() . ']');
+		$this->pathTree[] = $parent;
+
+		$this->pathTree = array_reverse($this->pathTree);
 	}
 
 }

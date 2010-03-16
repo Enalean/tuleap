@@ -10,8 +10,6 @@
  * @subpackage Controller
  */
 
-require_once(GITPHP_INCLUDEDIR . 'gitutil.git_path_trees.php');
-
 /**
  * Blob controller class
  *
@@ -157,9 +155,6 @@ class GitPHP_Controller_Blob extends GitPHP_ControllerBase
 		$this->tpl->assign('head', $head);
 
 		$this->tpl->assign('tree', $hashbase->GetTree());
-
-		$paths = git_path_trees($this->params['hashbase'], $this->params['file']);
-		$this->tpl->assign("paths",$paths);
 
 		if (GitPHP_Config::GetInstance()->GetValue('filemimetype', true)) {
 			$mime = $hash->FileMime();

@@ -10,8 +10,6 @@
  * @subpackage Controller
  */
 
-require_once(GITPHP_INCLUDEDIR . 'gitutil.git_path_trees.php');
-
 /**
  * Blame controller class
  *
@@ -109,9 +107,6 @@ class GitPHP_Controller_Blame extends GitPHP_ControllerBase
 		$this->tpl->assign('hash', $hash);
 
 		$this->tpl->assign('tree', $hashbase->GetTree());
-
-		$paths = git_path_trees($this->params['hashbase'], $this->params['file']);
-		$this->tpl->assign("paths",$paths);
 
 		$blame = $hash->GetBlame();
 		$this->tpl->assign('blame', $hash->GetBlame());

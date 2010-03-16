@@ -21,20 +21,9 @@
  </div>
 
  {include file='title.tpl' titlecommit=$hashbase}
+
+ {include file='path.tpl' pathobject=$hash target='blob'}
  
- <div class="page_path">
-   {* The path to the file, with directories broken into tree links *}
-   <b>
-     <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=tree&hb={$hashbase->GetHash()}&h={$hashbase->GetHash()}">[{$project->GetProject()}]</a> / 
-     {foreach from=$paths item=path name=paths}
-       {if $smarty.foreach.paths.last}
-         <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=blob_plain&h={$path.tree}&f={$path.full}">{$path.short}</a>
-       {else}
-         <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=tree&hb={$hashbase->GetHash()}&h={$path.tree}&f={$path.full}">{$path.short}</a> / 
-       {/if}
-     {/foreach}
-   </b>
- </div>
  <div class="page_body">
  	<table class="code">
 	{foreach from=$hash->GetData(true) item=blobline name=blob}

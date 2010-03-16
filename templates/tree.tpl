@@ -14,16 +14,9 @@
    </div>
 
  {include file='title.tpl' titlecommit=$hashbase}
+
+ {include file='path.tpl' pathobject=$tree target='tree'}
  
- {* Path *}
- <div class="page_path">
-   <b>
-     <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=tree&hb={$hashbase->GetHash()}">[{$project->GetProject()}]</a> / 
-     {foreach from=$paths item=path}
-       <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=tree&hb={$hashbase->GetHash()}&h={$path.tree}&f={$path.full}">{$path.short}</a> / 
-     {/foreach}
-   </b>
- </div>
  <div class="page_body">
    {* List files *}
    <table cellspacing="0">
