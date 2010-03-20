@@ -70,12 +70,6 @@ date_default_timezone_set('UTC');
 		throw new GitPHP_MessageException('A projectroot must be set in the config', true);
 	}
 
-	$gitphp_current_project = null;
-
-	if (isset($_GET['p'])) {
-		$gitphp_current_project = GitPHP_ProjectList::GetInstance()->GetProject(str_replace(chr(0), '', $_GET['p']));
-	}
-
 	$controller = GitPHP_Controller::GetController((isset($_GET['a']) ? $_GET['a'] : null));
 	if ($controller) {
 		$controller->RenderHeaders();
