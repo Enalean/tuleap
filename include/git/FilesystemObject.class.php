@@ -315,4 +315,20 @@ abstract class GitPHP_FilesystemObject extends GitPHP_GitObject
 		$this->pathTree = array_reverse($this->pathTree);
 	}
 
+	/**
+	 * ComparePath
+	 *
+	 * Compares two objects by path
+	 *
+	 * @access public
+	 * @static
+	 * @param mixed $a first object
+	 * @param mixed $b second object
+	 * @return integer comparison result
+	 */
+	public static function ComparePath($a, $b)
+	{
+		return strcmp($a->GetPath(), $b->GetPath());
+	}
+
 }

@@ -10,57 +10,59 @@
 
 {* Nav *}
 <div class="page_nav">
-  <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=summary">summary</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=shortlog&h={$hash}">shortlog</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=log&h={$hash}">log</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=commit&h={$hash}">commit</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=commitdiff&h={$hash}">commitdiff</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=tree&h={$treehash}&hb={$hash}">tree</a>
+  <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=summary">summary</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=shortlog&h={$hash->GetHash()}">shortlog</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=log&h={$hash->GetHash()}">log</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=commit&h={$hash->GetHash()}">commit</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=commitdiff&h={$hash->GetHash()}">commitdiff</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=tree&h={$tree->GetHash()}&hb={$hash->GetHash()}">tree</a>
   <br />
   {if $page > 0}
-    <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=search&h={$hash}&s={$search}&st={$searchtype}">first</a>
+    <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=search&h={$hash->GetHash()}&s={$search}&st={$searchtype}">first</a>
   {else}
     first
   {/if}
     &sdot; 
   {if $page > 0}
-    <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=search&h={$hash}&s={$search}&st={$searchtype}{if $page > 1}&pg={$page-1}{/if}" accesskey="p" title="Alt-p">prev</a>
+    <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=search&h={$hash->GetHash()}&s={$search}&st={$searchtype}{if $page > 1}&pg={$page-1}{/if}" accesskey="p" title="Alt-p">prev</a>
   {else}
     prev
   {/if}
     &sdot; 
-  {if $filesearchcount > 100}
-    <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=search&h={$hash}&s={$search}&st={$searchtype}&pg={$page+1}" accesskey="n" title="Alt-n">next</a>
+  {if $hasmore}
+    <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=search&h={$hash->GetHash()}&s={$search}&st={$searchtype}&pg={$page+1}" accesskey="n" title="Alt-n">next</a>
   {else}
     next
   {/if}
   <br />
 </div>
 <div class="title">
-  <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=commit&h={$hash}" class="title">{$title}</a>
+  <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=commit&h={$hash->GetHash()}" class="title">{$hash->GetTitle()}</a>
 </div>
 <table cellspacing="0">
   {* Print each match *}
-  {section name=match loop=$filesearchlines}
+  {foreach from=$results item=result key=path}
     <tr class="{cycle values="light,dark"}">
-      <td>
-        {if $filesearchlines[match].tree}
-          <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=tree&h={$filesearchlines[match].hash}&hb={$hash}&f={$filesearchlines[match].file}" class="list"><b>{$filesearchlines[match].filename}</b></a>
-        {else}
-          <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=blob&h={$filesearchlines[match].hash}&hb={$hash}&f={$filesearchlines[match].file}" class="list"><b>{$filesearchlines[match].filename}</b></a>
-          {foreach from=$filesearchlines[match].matches item=line name=match}
-            {if $smarty.foreach.match.first}<br />{/if}<span class="respectwhitespace">{$line}</span><br />
-          {/foreach}
-        {/if}
-      </td>
-      <td class="link">
-        {if $filesearchlines[match].tree}
-          <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=tree&h={$filesearchlines[match].hash}&hb={$hash}&f={$filesearchlines[match].file}">tree</a>
-        {else}
-          <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=blob&h={$filesearchlines[match].hash}&hb={$hash}&f={$filesearchlines[match].file}">blob</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=history&h={$hash}&f={$filesearchlines[match].file}">history</a>
-        {/if}
-      </td>
+      {assign var=resultobject value=$result.object}
+      {if $resultobject instanceof GitPHP_Tree}
+	      <td>
+		  <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=tree&h={$resultobject->GetHash()}&hb={$hash->GetHash()}&f={$path}" class="list"><strong>{$path}</strong></a>
+	      </td>
+	      <td class="link">
+		  <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=tree&h={$resultobject->GetHash()}&hb={$hash->GetHash()}&f={$path}">tree</a>
+	      </td>
+      {else}
+	      <td>
+		  <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=blob&h={$result.object->GetHash()}&hb={$hash->GetHash()}&f={$path}" class="list"><strong>{$path}</strong></a>
+		  {foreach from=$result.lines item=line name=match}
+		    {if $smarty.foreach.match.first}<br />{/if}<span class="respectwhitespace">{$line|escape}</span><br />
+		  {/foreach}
+	      </td>
+	      <td class="link">
+		  <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=blob&h={$resultobject->GetHash()}&hb={$hash->GetHash()}&f={$path}">blob</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=history&h={$hash->GetHash()}&f={$path}">history</a>
+	      </td>
+      {/if}
     </tr>
-  {/section}
+  {/foreach}
 
-  {if $filesearchcount > 100}
+  {if $hasmore}
     <tr>
-      <td><a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=search&h={$hash}&s={$search}&st={$searchtype}&pg={$page+1}" title="Alt-n">next</a></td>
+      <td><a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=search&h={$hash->GetHash()}&s={$search}&st={$searchtype}&pg={$page+1}" title="Alt-n">next</a></td>
     </tr>
   {/if}
 </table>

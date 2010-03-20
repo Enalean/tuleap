@@ -812,5 +812,123 @@ class GitPHP_Commit extends GitPHP_GitObject
 			}
 		}
 	}
+	
+	/**
+	 * SearchFilenames
+	 *
+	 * Returns array of objects matching pattern
+	 *
+	 * @access public
+	 * @param string $pattern pattern to find
+	 * @return array array of objects
+	 */
+	public function SearchFilenames($pattern)
+	{
+		if (empty($pattern))
+			return;
+
+		if (!$this->hashPathsRead)
+			$this->ReadHashPaths();
+
+		$results = array();
+
+		foreach ($this->treePaths as $hash => $path) {
+			if (preg_match('/' . $pattern . '/i', $path)) {
+				$obj = $this->project->GetTree($hash);
+				$obj->SetCommit($this);
+				$results[$path] = $obj;
+			}
+		}
+
+		foreach ($this->blobPaths as $hash => $path) {
+			if (preg_match('/' . $pattern . '/i', $path)) {
+				$obj = $this->project->GetBlob($hash);
+				$obj->SetCommit($this);
+				$results[$path] = $obj;
+			}
+		}
+
+		ksort($results);
+
+		return $results;
+	}
+
+	/**
+	 * SearchFileContents
+	 *
+	 * Searches for a pattern in file contents
+	 *
+	 * @access public
+	 * @param string $pattern pattern to search for
+	 * @return array multidimensional array of results
+	 */
+	public function SearchFileContents($pattern)
+	{
+		if (empty($pattern))
+			return;
+
+		$exe = new GitPHP_GitExe($this->project);
+
+		$args = array();
+		$args[] = '-I';
+		$args[] = '--full-name';
+		$args[] = '--ignore-case';
+		$args[] = '-n';
+		$args[] = '-e';
+		$args[] = $pattern;
+		$args[] = $this->hash;
+		
+		$lines = explode("\n", $exe->Execute(GIT_GREP, $args));
+
+		$results = array();
+
+		foreach ($lines as $line) {
+			if (preg_match('/^[^:]+:([^:]+):([0-9]+):(.+)$/', $line, $regs)) {
+				if (!isset($results[$regs[1]]['object'])) {
+					$hash = $this->PathToHash($regs[1]);
+					if (!empty($hash)) {
+						$obj = $this->project->GetBlob($hash);
+						$obj->SetCommit($this);
+						$results[$regs[1]]['object'] = $obj;
+					}
+				}
+				$results[$regs[1]]['lines'][(int)($regs[2])] = $regs[3];
+			}
+		}
+
+		return $results;
+	}
+
+	/**
+	 * SearchFiles
+	 *
+	 * Searches filenames and file contents for a pattern
+	 *
+	 * @access public
+	 * @param string $pattern pattern to search
+	 * @param integer $count number of results to get
+	 * @param integer $skip number of results to skip
+	 * @return array array of results
+	 */
+	public function SearchFiles($pattern, $count = 100, $skip = 0)
+	{
+		if (empty($pattern))
+			return;
+
+		$grepresults = $this->SearchFileContents($pattern);
+
+		$nameresults = $this->SearchFilenames($pattern);
+
+		/* Merge the results together */
+		foreach ($nameresults as $path => $obj) {
+			if (!isset($grepresults[$path]['object'])) {
+				$grepresults[$path]['object'] = $obj;
+			}
+		}
+
+		ksort($grepresults);
+
+		return array_slice($grepresults, $skip, $count, true);
+	}
 
 }

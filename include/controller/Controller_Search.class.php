@@ -10,9 +10,6 @@
  * @subpackage Controller
  */
 
-require_once(GITPHP_INCLUDEDIR . 'util.highlight.php');
-require_once(GITPHP_INCLUDEDIR . 'gitutil.git_filesearch.php');
-
 define('GITPHP_SEARCH_COMMIT', 'commit');
 define('GITPHP_SEARCH_AUTHOR', 'author');
 define('GITPHP_SEARCH_COMMITTER', 'committer');
@@ -120,26 +117,26 @@ class GitPHP_Controller_Search extends GitPHP_ControllerBase
 	 */
 	protected function LoadData()
 	{
-		if ($this->params['searchtype'] == GITPHP_SEARCH_FILE) {
-			$this->LoadFilesearchData();
-			return;
-		}
+		$co = $this->project->GetCommit($this->params['hash']);
+		$this->tpl->assign('hash', $co);
 
 		$results = array();
 		switch ($this->params['searchtype']) {
 
 			case GITPHP_SEARCH_COMMIT:
-				$results = $this->project->SearchCommit($this->params['search'], $this->params['hash'], 101, ($this->params['page'] * 100));
+				$results = $this->project->SearchCommit($this->params['search'], $co->GetHash(), 101, ($this->params['page'] * 100));
 				break;
 
 			case GITPHP_SEARCH_AUTHOR:
-				$results = $this->project->SearchAuthor($this->params['search'], $this->params['hash'], 101, ($this->params['page'] * 100));
+				$results = $this->project->SearchAuthor($this->params['search'], $co->GetHash(), 101, ($this->params['page'] * 100));
 				break;
 
 			case GITPHP_SEARCH_COMMITTER:
-				$results = $this->project->SearchCommitter($this->params['search'], $this->params['hash'], 101, ($this->params['page'] * 100));
+				$results = $this->project->SearchCommitter($this->params['search'], $co->GetHash(), 101, ($this->params['page'] * 100));
 				break;
-
+			case GITPHP_SEARCH_FILE:
+				$results = $co->SearchFiles($this->params['search'], 101, ($this->params['page'] * 100));
+				break;
 			default:
 				throw new GitPHP_MessageException('Invalid search type');
 
@@ -151,12 +148,10 @@ class GitPHP_Controller_Search extends GitPHP_ControllerBase
 
 		if (count($results) > 100) {
 			$this->tpl->assign('hasmore', true);
-			$results = array_slice($results, 0, 100);
+			$results = array_slice($results, 0, 100, true);
 		}
 		$this->tpl->assign('results', $results);
 
-		$co = $this->project->GetCommit($this->params['hash']);
-		$this->tpl->assign('hash', $co);
 		$this->tpl->assign('tree', $co->GetTree());
 		$this->tpl->assign('treehash', $co->GetTree());
 
@@ -164,75 +159,4 @@ class GitPHP_Controller_Search extends GitPHP_ControllerBase
 
 	}
 	
-	/**
-	 * LoadFilesearchData
-	 *
-	 * TODO temporary until templates are cleaned up
-	 */
-	private function LoadFilesearchData()
-	{
-		$filesearch = git_filesearch($this->params['hash'], $this->params['search'], false, ($this->params['page'] * 100), 101);
-
-		if (count($filesearch) < 1) {
-			throw new GitPHP_MessageException('No matches for "' . $this->params['search'] . '"');
-		}
-
-		$this->tpl->assign("hash",$this->params['hash']);
-
-		$co = $this->project->GetCommit($this->params['hash']);
-
-		if ($co) {
-			$tree = $co->GetTree();
-			if ($tree)
-				$this->tpl->assign("treehash", $tree->GetHash());
-			$this->tpl->assign("title", $co->GetTitle());
-		}
-
-		$this->tpl->assign("search",$this->params['search']);
-		$this->tpl->assign("searchtype","file");
-		$this->tpl->assign("page",$this->params['page']);
-		$filesearchcount = count($filesearch);
-		$this->tpl->assign("filesearchcount",$filesearchcount);
-
-
-		$filesearchlines = array();
-		$i = 0;
-		foreach ($filesearch as $file => $data) {
-			$filesearchline = array();
-			$filesearchline["file"] = $file;
-			if (strpos($file,"/") !== false) {
-				$f = basename($file);
-				$d = dirname($file);
-				if ($d == "/")
-					$d = "";
-				$hlt = highlight($f, $this->params['search'], "searchmatch");
-				if ($hlt)
-					$hlt = $d . "/" . $hlt;
-			} else
-				$hlt = highlight($file, $this->params['search'], "searchmatch");
-			if ($hlt)
-				$filesearchline["filename"] = $hlt;
-			else
-				$filesearchline["filename"] = $file;
-			$filesearchline["hash"] = $data['hash'];
-			if ($data['type'] == "tree")
-				$filesearchline["tree"] = TRUE;
-			if (isset($data['lines'])) {
-				$matches = array();
-				foreach ($data['lines'] as $line) {
-					$hlt = highlight($line,$this->params['search'],"searchmatch",floor(GITPHP_TRIM_LENGTH*1.5),true);
-					if ($hlt)
-						$matches[] = $hlt;
-				}
-				if (count($matches) > 0)
-					$filesearchline["matches"] = $matches;
-			}
-			$filesearchlines[] = $filesearchline;
-			++$i;
-			if ($i >= 100)
-				break;
-		}
-		$this->tpl->assign("filesearchlines",$filesearchlines);
-	}
-
 }
