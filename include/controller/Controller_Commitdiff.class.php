@@ -104,7 +104,7 @@ class GitPHP_Controller_Commitdiff extends GitPHP_ControllerBase
 	protected function LoadData()
 	{
 		$co = $this->project->GetCommit($this->params['hash']);
-		$this->tpl->assign('hash', $co);
+		$this->tpl->assign('commit', $co);
 		$this->tpl->assign("hashparent",$this->params['hashparent']);
 
 		$treediff = new GitPHP_TreeDiff($this->project, $this->params['hash'], $this->params['hashparent']);

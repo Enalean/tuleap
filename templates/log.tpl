@@ -10,22 +10,22 @@
 
  {* Nav *}
  <div class="page_nav">
-   <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=summary">summary</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=shortlog&h={$hash->GetHash()}">shortlog</a> | log | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=commit&h={$hash->GetHash()}">commit</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=commitdiff&h={$hash->GetHash()}">commitdiff</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=tree&h={$hash->GetHash()}&hb={$hash->GetHash()}">tree</a>
+   <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=summary">summary</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=shortlog&h={$commit->GetHash()}">shortlog</a> | log | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=commit&h={$commit->GetHash()}">commit</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=commitdiff&h={$commit->GetHash()}">commitdiff</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=tree&h={$commit->GetHash()}&hb={$commit->GetHash()}">tree</a>
    <br />
-   {if ($hash->GetHash() != $head->GetHash()) || ($page > 0)}
+   {if ($commit->GetHash() != $head->GetHash()) || ($page > 0)}
      <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=log">HEAD</a>
    {else}
      HEAD
    {/if}
    &sdot; 
    {if $page > 0}
-     <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=log&h={$hash->GetHash()}&pg={$page-1}" accesskey="p" title="Alt-p">prev</a>
+     <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=log&h={$commit->GetHash()}&pg={$page-1}" accesskey="p" title="Alt-p">prev</a>
    {else}
      prev
    {/if}
    &sdot; 
    {if $hasmore}
-     <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=log&h={$hash->GetHash()}&pg={$page+1}" accesskey="n" title="Alt-n">next</a>
+     <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=log&h={$commit->GetHash()}&pg={$page+1}" accesskey="n" title="Alt-n">next</a>
    {else}
      next
    {/if}
@@ -67,7 +67,7 @@
      <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=summary" class="title">&nbsp</a>
    </div>
    <div class="page_body">
-     Last change {$hash->GetAge()|agestring}.
+     Last change {$commit->GetAge()|agestring}.
      <br /><br />
    </div>
  {/foreach}

@@ -14,14 +14,14 @@
    <br /><br />
  </div>
  {* Tag data *}
+ {assign var=object value=$tag->GetObject()}
  <div class="title">
-   <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=commit&h={$hash}" class="title">{$tag->GetName()}</a>
+   <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=commit&h={$object->GetHash()}" class="title">{$tag->GetName()}</a>
  </div>
  <div class="title_text">
    <table cellspacing="0">
      <tr>
        <td>object</td>
-       {assign var=object value=$tag->GetObject()}
        <td class="monospace"><a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a={$tag->GetType()}&h={$object->GetHash()}" class="list">{$object->GetHash()}</a></td>
        <td class="link"><a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a={$tag->GetType()}&h={$object->GetHash()}">{$tag->GetType()}</a></td>
      </tr>

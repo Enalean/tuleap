@@ -92,7 +92,7 @@ class GitPHP_Controller_Log extends GitPHP_ControllerBase
 	 */
 	protected function LoadData()
 	{
-		$this->tpl->assign('hash', $this->project->GetCommit($this->params['hash']));
+		$this->tpl->assign('commit', $this->project->GetCommit($this->params['hash']));
 		$this->tpl->assign('head', $this->project->GetHeadCommit());
 		$this->tpl->assign('page',$this->params['page']);
 

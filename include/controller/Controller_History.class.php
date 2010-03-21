@@ -89,7 +89,7 @@ class GitPHP_Controller_History extends GitPHP_ControllerBase
 	protected function LoadData()
 	{
 		$co = $this->project->GetCommit($this->params['hash']);
-		$this->tpl->assign('hash', $co);
+		$this->tpl->assign('commit', $co);
 		$this->tpl->assign('tree', $co->GetTree());
 
 		$blobhash = $co->PathToHash($this->params['file']);

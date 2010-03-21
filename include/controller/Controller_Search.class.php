@@ -118,7 +118,7 @@ class GitPHP_Controller_Search extends GitPHP_ControllerBase
 	protected function LoadData()
 	{
 		$co = $this->project->GetCommit($this->params['hash']);
-		$this->tpl->assign('hash', $co);
+		$this->tpl->assign('commit', $co);
 
 		$results = array();
 		switch ($this->params['searchtype']) {
@@ -153,7 +153,6 @@ class GitPHP_Controller_Search extends GitPHP_ControllerBase
 		$this->tpl->assign('results', $results);
 
 		$this->tpl->assign('tree', $co->GetTree());
-		$this->tpl->assign('treehash', $co->GetTree());
 
 		$this->tpl->assign('page', $this->params['page']);
 

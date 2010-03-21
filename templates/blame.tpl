@@ -9,9 +9,9 @@
  {include file='header.tpl'}
 
  <div class="page_nav">
-   <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=summary">summary</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=shortlog">shortlog</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=log">log</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=commit&h={$hashbase->GetHash()}">commit</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=commitdiff&h={$hashbase->GetHash()}">commitdiff</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=tree&h={$tree->GetHash()}&hb={$hashbase->GetHash()}">tree</a><br />
+   <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=summary">summary</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=shortlog">shortlog</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=log">log</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=commit&h={$commit->GetHash()}">commit</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=commitdiff&h={$commit->GetHash()}">commitdiff</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=tree&h={$tree->GetHash()}&hb={$commit->GetHash()}">tree</a><br />
    <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=blob_plain&h={$hash->GetHash()}&f={$hash->GetPath()}">plain</a> | 
-   {if $hashbase->GetHash() != $head->GetHash()}
+   {if $commit->GetHash() != $head->GetHash()}
      <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=blame&hb=HEAD&f={$hash->GetPath()}">HEAD</a>
    {else}
      HEAD
@@ -20,7 +20,7 @@
    <br />
  </div>
 
- {include file='title.tpl' titlecommit=$hashbase}
+ {include file='title.tpl' titlecommit=$commit}
 
  {include file='path.tpl' pathobject=$hash target='blob'}
  

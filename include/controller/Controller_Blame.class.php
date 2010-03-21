@@ -93,20 +93,20 @@ class GitPHP_Controller_Blame extends GitPHP_ControllerBase
 		$head = $this->project->GetHeadCommit();
 		$this->tpl->assign('head', $head);
 
-		$hashbase = $this->project->GetCommit($this->params['hashbase']);
-		$this->tpl->assign('hashbase', $hashbase);
+		$commit = $this->project->GetCommit($this->params['hashbase']);
+		$this->tpl->assign('commit', $commit);
 
 		if ((!isset($this->params['hash'])) && (isset($this->params['file']))) {
-			$this->params['hash'] = $hashbase->PathToHash($this->params['file']);
+			$this->params['hash'] = $commit->PathToHash($this->params['file']);
 		}
 		
 		$hash = $this->project->GetBlob($this->params['hash']);
 		if ($this->params['file'])
 			$hash->SetName($this->params['file']);
-		$hash->SetCommit($hashbase);
+		$hash->SetCommit($commit);
 		$this->tpl->assign('hash', $hash);
 
-		$this->tpl->assign('tree', $hashbase->GetTree());
+		$this->tpl->assign('tree', $commit->GetTree());
 
 		$blame = $hash->GetBlame();
 		$this->tpl->assign('blame', $hash->GetBlame());

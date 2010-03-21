@@ -19,11 +19,11 @@
  <table cellspacing="0">
    {* Loop and display each head *}
    {foreach from=$headlist item=head}
-     {assign var=commit value=$head->GetCommit()}
+     {assign var=headcommit value=$head->GetCommit()}
      <tr class="{cycle values="light,dark"}">
-       <td><em>{$commit->GetAge()|agestring}</em></td>
+       <td><em>{$headcommit->GetAge()|agestring}</em></td>
        <td><a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=shortlog&h=refs/heads/{$head->GetName()}" class="list"><strong>{$head->GetName()}</strong></a></td>
-       <td class="link"><a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=shortlog&h=refs/heads/{$head->GetName()}">shortlog</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=log&h=refs/heads/{$head->GetName()}">log</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=tree&h=refs/heads/{$head->GetName()}&hb={$commit->GetHash()}">tree</a></td>
+       <td class="link"><a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=shortlog&h=refs/heads/{$head->GetName()}">shortlog</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=log&h=refs/heads/{$head->GetName()}">log</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=tree&h=refs/heads/{$head->GetName()}&hb={$headcommit->GetHash()}">tree</a></td>
      </tr>
    {/foreach}
  </table>

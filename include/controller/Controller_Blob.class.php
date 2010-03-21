@@ -133,17 +133,17 @@ class GitPHP_Controller_Blob extends GitPHP_ControllerBase
 	 */
 	protected function LoadData()
 	{
-		$hashbase = $this->project->GetCommit($this->params['hashbase']);
-		$this->tpl->assign('hashbase', $hashbase);
+		$commit = $this->project->GetCommit($this->params['hashbase']);
+		$this->tpl->assign('commit', $commit);
 
 		if ((!isset($this->params['hash'])) && (isset($this->params['file']))) {
-			$this->params['hash'] = $hashbase->PathToHash($this->params['file']);
+			$this->params['hash'] = $commit->PathToHash($this->params['file']);
 		}
 
 		$hash = $this->project->GetBlob($this->params['hash']);
 		if ($this->params['file'])
 			$hash->SetName($this->params['file']);
-		$hash->SetCommit($hashbase);
+		$hash->SetCommit($commit);
 		$this->tpl->assign('hash', $hash);
 
 		if ($this->params['plain']) {
@@ -154,7 +154,7 @@ class GitPHP_Controller_Blob extends GitPHP_ControllerBase
 		$head = $this->project->GetHeadCommit();
 		$this->tpl->assign('head', $head);
 
-		$this->tpl->assign('tree', $hashbase->GetTree());
+		$this->tpl->assign('tree', $commit->GetTree());
 
 		if (GitPHP_Config::GetInstance()->GetValue('filemimetype', true)) {
 			$mime = $hash->FileMime();

@@ -14,7 +14,7 @@
 		{if $target == 'commitdiff'}
 			<a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=commitdiff&h={$titlecommit->GetHash()}" class="title">{$titlecommit->GetTitle()}</a>
 		{elseif $target == 'tree'}
-			<a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=tree&h={$titletree->GetHash()}&hb={$titlecommit->GetHash()}" class="title">{$commit->GetTitle()}</a>
+			<a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=tree&h={$titletree->GetHash()}&hb={$titlecommit->GetHash()}" class="title">{$titlecommit->GetTitle()}</a>
 		{else}
 			<a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=commit&h={$titlecommit->GetHash()}" class="title">{$titlecommit->GetTitle()}</a>
 		{/if}

@@ -10,10 +10,10 @@
 
  {* Nav *}
    <div class="page_nav">
-     <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=summary">summary</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=shortlog&h={$hashbase->GetHash()}">shortlog</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=log&h={$hashbase->GetHash()}">log</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=commit&h={$hashbase->GetHash()}">commit</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=commitdiff&h={$hashbase->GetHash()}">commitdiff</a> | tree<br /><br />
+     <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=summary">summary</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=shortlog&h={$commit->GetHash()}">shortlog</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=log&h={$commit->GetHash()}">log</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=commit&h={$commit->GetHash()}">commit</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=commitdiff&h={$commit->GetHash()}">commitdiff</a> | tree<br /><br />
    </div>
 
- {include file='title.tpl' titlecommit=$hashbase}
+ {include file='title.tpl' titlecommit=$commit}
 
  {include file='path.tpl' pathobject=$tree target='tree'}
  
@@ -26,18 +26,18 @@
          {if $treeitem instanceof GitPHP_Blob}
 	   <td>{$treeitem->GetSize()}</td>
            <td class="list">
-             <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=blob&h={$treeitem->GetHash()}&hb={$hashbase->GetHash()}&f={$treeitem->GetPath()}" class="list">{$treeitem->GetName()}</a>
+             <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=blob&h={$treeitem->GetHash()}&hb={$commit->GetHash()}&f={$treeitem->GetPath()}" class="list">{$treeitem->GetName()}</a>
 	   </td>
            <td class="link">
-	     <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=blob&h={$treeitem->GetHash()}&hb={$hashbase->GetHash()}&f={$treeitem->GetPath()}">blob</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=history&h={$hashbase->GetHash()}&f={$treeitem->GetPath()}">history</a>
+	     <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=blob&h={$treeitem->GetHash()}&hb={$commit->GetHash()}&f={$treeitem->GetPath()}">blob</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=history&h={$commit->GetHash()}&f={$treeitem->GetPath()}">history</a>
 	   </td>
          {elseif $treeitem instanceof GitPHP_Tree}
 	   <td></td>
            <td class="list">
-             <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=tree&h={$treeitem->GetHash()}&hb={$hashbase->GetHash()}&f={$treeitem->GetPath()}">{$treeitem->GetName()}</a>
+             <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=tree&h={$treeitem->GetHash()}&hb={$commit->GetHash()}&f={$treeitem->GetPath()}">{$treeitem->GetName()}</a>
 	   </td>
            <td class="link">
-	     <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=tree&h={$treeitem->GetHash()}&hb={$hashbase->GetHash()}&f={$treeitem->GetPath()}">tree</a>
+	     <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=tree&h={$treeitem->GetHash()}&hb={$commit->GetHash()}&f={$treeitem->GetPath()}">tree</a>
 	   </td>
          {/if}
        </tr>
