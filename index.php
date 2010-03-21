@@ -21,14 +21,8 @@ define('GITPHP_INCLUDEDIR', GITPHP_BASEDIR . 'include/');
 define('GITPHP_GITOBJECTDIR', GITPHP_INCLUDEDIR . 'git/');
 define('GITPHP_CONTROLLERDIR', GITPHP_INCLUDEDIR . 'controller/');
 
-/*
- * Version
- */
 include_once(GITPHP_INCLUDEDIR . 'version.php');
 
-/*
- * Constants
- */
 require_once(GITPHP_INCLUDEDIR . 'defs.constants.php');
 
 require_once(GITPHP_INCLUDEDIR . 'Config.class.php');
@@ -38,6 +32,7 @@ require_once(GITPHP_INCLUDEDIR . 'Log.class.php');
 require_once(GITPHP_GITOBJECTDIR . 'ProjectList.class.php');
 
 require_once(GITPHP_INCLUDEDIR . 'MessageException.class.php');
+
 require_once(GITPHP_CONTROLLERDIR . 'Controller.class.php');
 
 date_default_timezone_set('UTC');

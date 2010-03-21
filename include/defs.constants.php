@@ -7,8 +7,6 @@
  *  Copyright (C) 2009 Christopher Han <xiphux@gmail.com>
  */
 
-define("GITPHP_TRIM_LENGTH", 50);
-
 define("GITPHP_COMPRESS_BZ2", 1);
 define("GITPHP_COMPRESS_GZ", 2);
 define("GITPHP_COMPRESS_ZIP", 3);
