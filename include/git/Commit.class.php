@@ -481,7 +481,7 @@ class GitPHP_Commit extends GitPHP_GitObject
 		if (!$this->dataRead)
 			$this->ReadData();
 
-		return preg_grep('/' . $pattern . '/', $this->comment);
+		return preg_grep('/' . $pattern . '/i', $this->comment);
 	}
 
 	/**
