@@ -10,7 +10,6 @@
  * @subpackage Git
  */
 
-require_once(GITPHP_INCLUDEDIR . 'defs.commands.php');
 require_once(GITPHP_GITOBJECTDIR . 'GitExe.class.php');
 require_once(GITPHP_GITOBJECTDIR . 'Commit.class.php');
 require_once(GITPHP_GITOBJECTDIR . 'Head.class.php');
