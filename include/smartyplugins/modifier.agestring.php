@@ -1,13 +1,13 @@
 <?php
 /*
- *  util.age_string.php
+ *  modifier.agestring.php
  *  gitphp: A PHP git repository browser
  *  Component: Utility - convert age to a readable string
  *
  *  Copyright (C) 2008 Christopher Han <xiphux@gmail.com>
  */
 
-function age_string($age)
+function smarty_modifier_agestring($age)
 {
 	if ($age > 60*60*24*365*2)
 		return (int)($age/60/60/24/365) . " years ago";

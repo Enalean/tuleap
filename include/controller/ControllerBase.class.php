@@ -71,11 +71,7 @@ abstract class GitPHP_ControllerBase
 	{
 		require_once(GitPHP_Config::GetInstance()->GetValue('smarty_prefix', 'lib/smarty/libs/') . 'Smarty.class.php');
 		$this->tpl = new Smarty;
-
-		require_once(GITPHP_INCLUDEDIR . 'util.age_string.php');
-		$this->tpl->register_modifier('agestring', 'age_string');
-		require_once(GITPHP_INCLUDEDIR . 'util.highlight.php');
-		$this->tpl->register_modifier('highlight', 'highlight');
+		$this->tpl->plugins_dir[] = GITPHP_INCLUDEDIR . 'smartyplugins';
 
 		if (GitPHP_Config::GetInstance()->GetValue('cache', false)) {
 			$this->tpl->caching = 2;
