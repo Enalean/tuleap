@@ -45,7 +45,7 @@ class GitPHP_Controller_Blob extends GitPHP_ControllerBase
 	 */
 	protected function GetTemplate()
 	{
-		if ($this->params['plain'])
+		if (isset($this->params['plain']) && $this->params['plain'])
 			return 'blobplain.tpl';
 		return 'blob.tpl';
 	}
@@ -92,7 +92,7 @@ class GitPHP_Controller_Blob extends GitPHP_ControllerBase
 	 */
 	protected function LoadHeaders()
 	{
-		if ($this->params['plain']) {
+		if (isset($this->params['plain']) && $this->params['plain']) {
 			// XXX: Nasty hack to cache headers
 			if (!$this->tpl->is_cached('blobheaders.tpl', $this->GetFullCacheKey())) {
 				if (isset($this->params['file']))
@@ -146,7 +146,7 @@ class GitPHP_Controller_Blob extends GitPHP_ControllerBase
 		$blob->SetCommit($commit);
 		$this->tpl->assign('blob', $blob);
 
-		if ($this->params['plain']) {
+		if (isset($this->params['plain']) && $this->params['plain']) {
 			return;
 		}
 

@@ -10,8 +10,6 @@
  * @subpackage Controller
  */
 
-require_once(GITPHP_INCLUDEDIR . 'util.script_url.php');
-
 /**
  * ControllerBase class
  *
@@ -127,7 +125,7 @@ abstract class GitPHP_ControllerBase
 	 */
 	private function GetCacheKeyPrefix()
 	{
-		$cacheKeyPrefix = sha1(serialize(GitPHP_ProjectList::GetInstance()->GetConfig));
+		$cacheKeyPrefix = sha1(serialize(GitPHP_ProjectList::GetInstance()->GetConfig()));
 		if ($this->project) {
 			$cacheKeyPrefix .= '|' . sha1($this->project->GetProject());
 		}
@@ -220,15 +218,16 @@ abstract class GitPHP_ControllerBase
 		$this->tpl->assign('version', $gitphp_version);
 		$this->tpl->assign('stylesheet', GitPHP_Config::GetInstance()->GetValue('stylesheet', 'gitphp.css'));
 		$this->tpl->assign('pagetitle', GitPHP_Config::GetInstance()->GetValue('title', $gitphp_appstring));
-		$this->tpl->assign("self",script_url());
 		if ($this->project)
 			$this->tpl->assign('project', $this->project);
 		if (GitPHP_Config::GetInstance()->GetValue('search', true))
 			$this->tpl->assign('enablesearch', true);
 		if (GitPHP_Config::GetInstance()->GetValue('filesearch', true))
 			$this->tpl->assign('filesearch', true);
-		$this->tpl->assign('search', $this->params['search']);
-		$this->tpl->assign('searchtype', $this->params['searchtype']);
+		if (isset($this->params['search']))
+			$this->tpl->assign('search', $this->params['search']);
+		if (isset($this->params['searchtype']))
+			$this->tpl->assign('searchtype', $this->params['searchtype']);
 	}
 
 	/**

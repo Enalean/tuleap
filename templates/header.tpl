@@ -10,7 +10,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
   <!-- gitphp web interface {$version}, (C) 2006-2010 Christopher Han <xiphux@gmail.com> -->
   <head>
-    <title>{$pagetitle}{if $project} :: {$project->GetProject()}{if $action && $validaction}/{$action}{/if}{/if}</title>
+    <title>{$pagetitle}{if $project} :: {$project->GetProject()}{if $action}/{$action}{/if}{/if}</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     {if $project}
       <link rel="alternate" title="{$project->GetProject()} log" href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=rss" type="application/rss+xml" />
@@ -31,7 +31,7 @@
       <a href="index.php">projects</a> / 
       {if $project}
         <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=summary">{$project->GetProject()}</a>
-        {if $action && $validaction}
+        {if $action}
            / {$action}
         {/if}
         {if $enablesearch}
