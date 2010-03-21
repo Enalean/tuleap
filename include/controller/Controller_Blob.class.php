@@ -140,14 +140,13 @@ class GitPHP_Controller_Blob extends GitPHP_ControllerBase
 			$this->params['hash'] = $commit->PathToHash($this->params['file']);
 		}
 
-		$hash = $this->project->GetBlob($this->params['hash']);
+		$blob = $this->project->GetBlob($this->params['hash']);
 		if ($this->params['file'])
-			$hash->SetName($this->params['file']);
-		$hash->SetCommit($commit);
-		$this->tpl->assign('hash', $hash);
+			$blob->SetName($this->params['file']);
+		$blob->SetCommit($commit);
+		$this->tpl->assign('blob', $blob);
 
 		if ($this->params['plain']) {
-			$this->tpl->assign('blob', $hash->GetData());
 			return;
 		}
 
@@ -157,7 +156,7 @@ class GitPHP_Controller_Blob extends GitPHP_ControllerBase
 		$this->tpl->assign('tree', $commit->GetTree());
 
 		if (GitPHP_Config::GetInstance()->GetValue('filemimetype', true)) {
-			$mime = $hash->FileMime();
+			$mime = $blob->FileMime();
 			if ($mime)
 				$mimetype = strtok($mime, '/');
 		}
@@ -165,7 +164,7 @@ class GitPHP_Controller_Blob extends GitPHP_ControllerBase
 		if ($mime && (strtok($mime, '/') == 'image')) {
 			$this->tpl->assign('datatag', true);
 			$this->tpl->assign('mime', $mime);
-			$this->tpl->assign('data', base64_encode($hash->GetData()));
+			$this->tpl->assign('data', base64_encode($blob->GetData()));
 			return;
 		}
 
@@ -174,11 +173,11 @@ class GitPHP_Controller_Blob extends GitPHP_ControllerBase
 			if (class_exists('GeSHi')) {
 				$geshi = new GeSHi("",'php');
 				if ($geshi) {
-					$lang = $geshi->get_language_name_from_extension(substr(strrchr($hash->GetPath(),'.'),1));
+					$lang = $geshi->get_language_name_from_extension(substr(strrchr($blob->GetPath(),'.'),1));
 					if (!empty($lang)) {
 						$geshi->enable_classes();
 						$geshi->enable_strict_mode(GESHI_MAYBE);
-						$geshi->set_source($hash->GetData());
+						$geshi->set_source($blob->GetData());
 						$geshi->set_language($lang);
 						$geshi->set_header_type(GESHI_HEADER_PRE_TABLE);
 						$geshi->enable_line_numbers(GESHI_NORMAL_LINE_NUMBERS);
@@ -191,7 +190,7 @@ class GitPHP_Controller_Blob extends GitPHP_ControllerBase
 			}
 		}
 
-		$this->tpl->assign('bloblines', $hash->GetData(true));
+		$this->tpl->assign('bloblines', $blob->GetData(true));
 	}
 
 }

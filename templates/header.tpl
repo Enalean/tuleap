@@ -39,7 +39,7 @@
             <div class="search">
               <input type="hidden" name="p" value="{$project->GetProject()}" />
               <input type="hidden" name="a" value="search" />
-              <input type ="hidden" name="h" value="{if $commit}{$commit->GetHash()}{elseif $hash instanceof GitPHP_Commit}{$hash->GetHash()}{elseif $hash}{$hash}{else}HEAD{/if}" />
+              <input type ="hidden" name="h" value="{if $commit}{$commit->GetHash()}{else}HEAD{/if}" />
               <select name="st">
                 <option {if $searchtype == 'commit'}selected="selected"{/if} value="commit">commit</option>
                 <option {if $searchtype == 'author'}selected="selected"{/if} value="author">author</option>

@@ -10,9 +10,9 @@
 
  <div class="page_nav">
    <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=summary">summary</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=shortlog">shortlog</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=log">log</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=commit&h={$commit->GetHash()}">commit</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=commitdiff&h={$commit->GetHash()}">commitdiff</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=tree&h={$tree->GetHash()}&hb={$commit->GetHash()}">tree</a><br />
-   <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=blob_plain&h={$hash->GetHash()}&f={$hash->GetPath()}">plain</a> | 
+   <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=blob_plain&h={$blob->GetHash()}&f={$blob->GetPath()}">plain</a> | 
    {if $commit->GetHash() != $head->GetHash()}
-     <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=blame&hb=HEAD&f={$hash->GetPath()}">HEAD</a>
+     <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=blame&hb=HEAD&f={$blob->GetPath()}">HEAD</a>
    {else}
      HEAD
    {/if}
@@ -22,11 +22,11 @@
 
  {include file='title.tpl' titlecommit=$commit}
 
- {include file='path.tpl' pathobject=$hash target='blob'}
+ {include file='path.tpl' pathobject=$blob target='blob'}
  
  <div class="page_body">
  	<table class="code">
-	{foreach from=$hash->GetData(true) item=blobline name=blob}
+	{foreach from=$blob->GetData(true) item=blobline name=blob}
 	  {assign var=blamecommit value=$blame[$smarty.foreach.blob.iteration]}
 	  {if $blamecommit}
 	    {cycle values="light,dark" assign=rowclass}
