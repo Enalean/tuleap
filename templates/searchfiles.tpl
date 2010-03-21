@@ -48,9 +48,9 @@
 	      </td>
       {else}
 	      <td>
-		  <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=blob&h={$result.object->GetHash()}&hb={$commit->GetHash()}&f={$path}" class="list"><strong>{$path}</strong></a>
-		  {foreach from=$result.lines item=line name=match}
-		    {if $smarty.foreach.match.first}<br />{/if}<span class="respectwhitespace">{$line|escape}</span><br />
+		  <a href="{$SCRIPT_NAME}?p={$project->GetProject()}&a=blob&h={$result.object->GetHash()}&hb={$commit->GetHash()}&f={$path}" class="list"><strong>{$path|highlight:$search}</strong></a>
+		  {foreach from=$result.lines item=line name=match key=lineno}
+		    {if $smarty.foreach.match.first}<br />{/if}<span class="respectwhitespace">{$lineno}. {$line|highlight:$search:50:true}</span><br />
 		  {/foreach}
 	      </td>
 	      <td class="link">
