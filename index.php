@@ -23,8 +23,6 @@ define('GITPHP_CONTROLLERDIR', GITPHP_INCLUDEDIR . 'controller/');
 
 include_once(GITPHP_INCLUDEDIR . 'version.php');
 
-require_once(GITPHP_INCLUDEDIR . 'defs.constants.php');
-
 require_once(GITPHP_INCLUDEDIR . 'Config.class.php');
 
 require_once(GITPHP_INCLUDEDIR . 'Log.class.php');
@@ -38,6 +36,11 @@ require_once(GITPHP_CONTROLLERDIR . 'Controller.class.php');
 date_default_timezone_set('UTC');
 
 //try {
+
+	// Define these here because these get used in the config file
+	define('GITPHP_COMPRESS_BZ2', 1);
+	define('GITPHP_COMPRESS_GZ', 2);
+	define('GITPHP_COMPRESS_ZIP', 3);
 
 	/*
 	 * Configuration

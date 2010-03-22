@@ -10,7 +10,6 @@
  * @subpackage Git
  */
 
-require_once(GITPHP_INCLUDEDIR . 'defs.constants.php');
 require_once(GITPHP_GITOBJECTDIR . 'ProjectListBase.class.php');
 require_once(GITPHP_GITOBJECTDIR . 'Project.class.php');
 
