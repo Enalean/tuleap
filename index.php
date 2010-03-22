@@ -56,14 +56,14 @@ date_default_timezone_set('UTC');
 		GitPHP_Log::GetInstance()->SetStartMemory(GITPHP_START_MEM);
 	}
 
+	if (!GitPHP_Config::GetInstance()->GetValue('projectroot', null)) {
+		throw new GitPHP_MessageException('A projectroot must be set in the config', true);
+	}
+
 	/*
 	 * Project list
 	 */
 	GitPHP_ProjectList::Instantiate(GITPHP_CONFIGDIR . 'gitphp.conf.php');
-
-	if (!GitPHP_Config::GetInstance()->GetValue('projectroot', null)) {
-		throw new GitPHP_MessageException('A projectroot must be set in the config', true);
-	}
 
 	$controller = GitPHP_Controller::GetController((isset($_GET['a']) ? $_GET['a'] : null));
 	if ($controller) {
