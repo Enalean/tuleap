@@ -65,6 +65,19 @@ class GitPHP_Controller_Commitdiff extends GitPHP_ControllerBase
 	}
 
 	/**
+	 * GetName
+	 *
+	 * Gets the name of this controller's action
+	 *
+	 * @access public
+	 * @return string action name
+	 */
+	public function GetName()
+	{
+		return 'commitdiff';
+	}
+
+	/**
 	 * ReadQuery
 	 *
 	 * Read query into parameters

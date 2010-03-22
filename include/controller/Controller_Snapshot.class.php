@@ -62,6 +62,19 @@ class GitPHP_Controller_Snapshot extends GitPHP_ControllerBase
 	}
 
 	/**
+	 * GetName
+	 *
+	 * Gets the name of this controller's action
+	 *
+	 * @access public
+	 * @return string action name
+	 */
+	public function GetName()
+	{
+		return 'snapshot';
+	}
+
+	/**
 	 * ReadQuery
 	 *
 	 * Read query into parameters

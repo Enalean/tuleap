@@ -69,6 +69,24 @@ class GitPHP_Controller_ProjectList extends GitPHP_ControllerBase
 	}
 
 	/**
+	 * GetName
+	 *
+	 * Gets the name of this controller's action
+	 *
+	 * @access public
+	 * @return string action name
+	 */
+	public function GetName()
+	{
+		if (isset($this->params['opml']) && ($this->params['opml'] === true)) {
+			return 'opml';
+		} else if (isset($this->params['txt']) && ($this->params['txt'] === true)) {
+			return 'project index';
+		}
+		return 'projects';
+	}
+
+	/**
 	 * ReadQuery
 	 *
 	 * Read query into parameters

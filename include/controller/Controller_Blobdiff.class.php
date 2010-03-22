@@ -65,6 +65,19 @@ class GitPHP_Controller_Blobdiff extends GitPHP_ControllerBase
 	}
 
 	/**
+	 * GetName
+	 *
+	 * Gets the name of this controller's action
+	 *
+	 * @access public
+	 * @return string action name
+	 */
+	public function GetName()
+	{
+		return 'blobdiff';
+	}
+
+	/**
 	 * ReadQuery
 	 *
 	 * Read query into parameters

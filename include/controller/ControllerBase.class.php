@@ -154,6 +154,17 @@ abstract class GitPHP_ControllerBase
 	}
 
 	/**
+	 * GetName
+	 *
+	 * Gets the name of this controller's action
+	 *
+	 * @abstract
+	 * @access public
+	 * @return string action name
+	 */
+	public abstract function GetName();
+
+	/**
 	 * ReadQuery
 	 *
 	 * Read query into parameters
@@ -218,6 +229,7 @@ abstract class GitPHP_ControllerBase
 		$this->tpl->assign('version', $gitphp_version);
 		$this->tpl->assign('stylesheet', GitPHP_Config::GetInstance()->GetValue('stylesheet', 'gitphp.css'));
 		$this->tpl->assign('pagetitle', GitPHP_Config::GetInstance()->GetValue('title', $gitphp_appstring));
+		$this->tpl->assign('action', $this->GetName());
 		if ($this->project)
 			$this->tpl->assign('project', $this->project);
 		if (GitPHP_Config::GetInstance()->GetValue('search', true))

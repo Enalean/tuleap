@@ -65,6 +65,22 @@ class GitPHP_Controller_Log extends GitPHP_ControllerBase
 	}
 
 	/**
+	 * GetName
+	 *
+	 * Gets the name of this controller's action
+	 *
+	 * @access public
+	 * @return string action name
+	 */
+	public function GetName()
+	{
+		if (isset($this->params['short']) && ($this->params['short'] === true)) {
+			return 'shortlog';
+		}
+		return 'log';
+	}
+
+	/**
 	 * ReadQuery
 	 *
 	 * Read query into parameters

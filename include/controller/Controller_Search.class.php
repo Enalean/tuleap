@@ -76,6 +76,19 @@ class GitPHP_Controller_Search extends GitPHP_ControllerBase
 	}
 
 	/**
+	 * GetName
+	 *
+	 * Gets the name of this controller's action
+	 *
+	 * @access public
+	 * @return string action name
+	 */
+	public function GetName()
+	{
+		return 'search';
+	}
+
+	/**
 	 * ReadQuery
 	 *
 	 * Read query into parameters

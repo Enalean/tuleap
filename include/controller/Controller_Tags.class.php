@@ -62,6 +62,19 @@ class GitPHP_Controller_Tags extends GitPHP_ControllerBase
 	}
 
 	/**
+	 * GetName
+	 *
+	 * Gets the name of this controller's action
+	 *
+	 * @access public
+	 * @return string action name
+	 */
+	public function GetName()
+	{
+		return 'tags';
+	}
+
+	/**
 	 * ReadQuery
 	 *
 	 * Read query into parameters

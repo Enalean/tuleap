@@ -62,6 +62,19 @@ class GitPHP_Controller_Heads extends GitPHP_ControllerBase
 	}
 
 	/**
+	 * GetName
+	 *
+	 * Gets the name of this controller's action
+	 *
+	 * @access public
+	 * @return string action name
+	 */
+	public function GetName()
+	{
+		return 'heads';
+	}
+
+	/**
 	 * ReadQuery
 	 *
 	 * Read query into parameters

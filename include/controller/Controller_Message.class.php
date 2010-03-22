@@ -61,6 +61,20 @@ class GitPHP_Controller_Message extends GitPHP_ControllerBase
 	}
 
 	/**
+	 * GetName
+	 *
+	 * Gets the name of this controller's action
+	 *
+	 * @access public
+	 * @return string action name
+	 */
+	public function GetName()
+	{
+		// This isn't a real controller
+		return '';
+	}
+
+	/**
 	 * ReadQuery
 	 *
 	 * Read query into parameters
