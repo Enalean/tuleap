@@ -57,7 +57,7 @@ class GitPHP_GitExe
 	 */
 	public function __construct($project = null)
 	{
-		$this->binary = GitPHP_Config::GetInstance()->GetValue('gitbin');
+		$binary = GitPHP_Config::GetInstance()->GetValue('gitbin');
 		if (empty($binary)) {
 			// try to pick a reasonable default
 			if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
