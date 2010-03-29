@@ -570,7 +570,16 @@ class GitPHP_FileDiff
 			}
 		}
 
-		$this->diffData = shell_exec(GitPHP_Config::GetInstance()->GetValue('diffbin', 'diff') . ' -u -p -L "' . $fromName . '" -L "' . $toName . '" ' . $fromFile . ' ' . $toFile);
+		$diffExe = GitPHP_Config::GetInstance()->GetValue('diffbin');
+		if (empty($diffExe)) {
+			if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+				$diffExe = 'C:\\Progra~1\\Git\\bin\\diff.exe';
+			} else {
+				$diffExe = 'diff';
+			}
+		}
+
+		$this->diffData = shell_exec($diffExe . ' -u -p -L "' . $fromName . '" -L "' . $toName . '" ' . $fromFile . ' ' . $toFile);
 
 		if ($hasFrom) {
 			unlink($fromFile);
