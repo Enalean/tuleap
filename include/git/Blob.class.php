@@ -255,7 +255,16 @@ class GitPHP_Blob extends GitPHP_FilesystemObject
 
 		$mime = '';
 
-		$finfo = finfo_open(FILEINFO_MIME, GitPHP_Config::GetInstance()->GetValue('magicdb', null));
+		$magicdb = GitPHP_Config::GetInstance()->GetValue('magicdb', null);
+		if (empty($magicdb)) {
+			if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+				$magicdb = 'C:\\wamp\\php\\extras\\magic';
+			} else {
+				$magicdb = '/usr/share/misc/magic';
+			}
+		}
+
+		$finfo = finfo_open(FILEINFO_MIME, $magicdb);
 		if ($finfo) {
 			$mime = finfo_buffer($finfo, $this->data, FILEINFO_MIME);
 			if ($mime && strpos($mime, '/')) {
@@ -263,8 +272,8 @@ class GitPHP_Blob extends GitPHP_FilesystemObject
 					$mime = strtok($mime, ';');
 				}
 			}
+			finfo_close($finfo);
 		}
-		finfo_close($finfo);
 
 		return $mime;
 	}
