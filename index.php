@@ -45,10 +45,6 @@ date_default_timezone_set('UTC');
 	/*
 	 * Configuration
 	 */
-	try {
-		GitPHP_Config::GetInstance()->LoadConfig(GITPHP_CONFIGDIR . 'gitphp.conf.php.example');
-	} catch (Exception $e) {
-	}
 	GitPHP_Config::GetInstance()->LoadConfig(GITPHP_CONFIGDIR . 'gitphp.conf.php');
 
 	/*
