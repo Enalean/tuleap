@@ -87,14 +87,15 @@ class GitPHP_Tree extends GitPHP_FilesystemObject
 
 		$args = array();
 		$args[] = '--full-name';
-		$args[] = '-l';
+		if ($exe->CanShowSizeInTree())
+			$args[] = '-l';
 		$args[] = '-t';
 		$args[] = $this->hash;
 		
 		$lines = explode("\n", $exe->Execute(GIT_LS_TREE, $args));
 
 		foreach ($lines as $line) {
-			if (preg_match("/^([0-9]+) (.+) ([0-9a-fA-F]{40})\s+([0-9]+|-)\s+(.+)$/", $line, $regs)) {
+			if (preg_match("/^([0-9]+) (.+) ([0-9a-fA-F]{40})(\s+[0-9]+|\s+-)?\t(.+)$/", $line, $regs)) {
 				switch($regs[2]) {
 					case 'tree':
 						$t = $this->project->GetTree($regs[3]);
@@ -109,7 +110,9 @@ class GitPHP_Tree extends GitPHP_FilesystemObject
 						$b = $this->project->GetBlob($regs[3]);
 						$b->SetMode($regs[1]);
 						$b->SetName($regs[5]);
-						$b->SetSize($regs[4]);
+						$size = trim($regs[4]);
+						if (!empty($size))
+							$b->SetSize($regs[4]);
 						$b->SetParent($this);
 						if ($this->commit)
 							$b->SetCommit($this->commit);

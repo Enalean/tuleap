@@ -165,4 +165,31 @@ class GitPHP_GitExe
 		return true;
 	}
 
+	/**
+	 * CanShowSizeInTree
+	 *
+	 * Tests if this version of git can show the size of a blob when listing a tree
+	 *
+	 * @access public
+	 * @return true if we can show sizes
+	 */
+	public function CanShowSizeInTree()
+	{
+		$version = $this->GetVersion();
+		if (!empty($version)) {
+			$splitver = explode('.', $version);
+
+			/*
+			 * ls-tree -l only appears in git 1.5.3
+			 * (technically 1.5.3-rc0 but i'm not getting that fancy)
+			 */
+			if (($splitver[0] < 1) || (($splitver[0] == 1) && ($splitver[1] < 5)) || (($splitver[0] == 1) && ($splitver[1] == 5) && ($splitver[2] < 3))) {
+				return false;
+			}
+		}
+
+		return true;
+
+	}
+
 }
