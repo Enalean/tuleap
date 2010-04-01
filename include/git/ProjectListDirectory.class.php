@@ -77,11 +77,12 @@ class GitPHP_ProjectListDirectory extends GitPHP_ProjectListBase
 			return;
 
 		if ($dh = opendir($dir)) {
+			$trimlen = strlen(GitPHP_Config::GetInstance()->GetValue('projectroot')) + 1;
 			while (($file = readdir($dh)) !== false) {
 				$fullPath = $dir . '/' . $file;
 				if ((strpos($file, '.') !== 0) && is_dir($fullPath)) {
 					if (is_file($fullPath . '/HEAD')) {
-						$projectPath = substr($fullPath, strlen(GitPHP_Config::GetInstance()->GetValue('projectroot')) + 1);
+						$projectPath = substr($fullPath, $trimlen);
 						try {
 							$this->projects[] = new GitPHP_Project($projectPath);
 						} catch (Exception $e) {
