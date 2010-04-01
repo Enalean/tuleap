@@ -85,7 +85,8 @@ class GitPHP_Config
 			throw new Exception('Could not read config file ' . $configFile);
 		}
 
-		$this->values = array_merge($this->values, $gitphp_conf);
+		if (isset($gitphp_conf) && is_array($gitphp_conf))
+			$this->values = array_merge($this->values, $gitphp_conf);
 
 		$this->configs[] = $configFile;
 	}
