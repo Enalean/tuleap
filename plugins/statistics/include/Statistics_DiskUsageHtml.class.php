@@ -190,6 +190,7 @@ class Statistics_DiskUsageHtml extends Statistics_DiskUsageOutput {
             echo '<thead>';
             echo '<tr>';
             echo "<th>Project Id</th>";
+            echo "<th>Project Name</th>";
             echo "<th>Start size</th>";
             echo "<th>End size</th>";
             echo "<th>Size Evolution</th>";
@@ -200,6 +201,7 @@ class Statistics_DiskUsageHtml extends Statistics_DiskUsageOutput {
             foreach ($res as $row){
                 echo '<tr>';
                 echo '<td>'.$groupId.'</td>';
+                echo '<td>'.$row['group_name'].'</td>';
                 $this->_displayEvolutionData($row);
                 echo '</tr>';
             }

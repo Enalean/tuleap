@@ -227,7 +227,29 @@ switch ($func) {
 
         echo '<label> Project: </label>';
         echo '<input type="text" name="group_id" id="plugin_statistics_project" value="'.$groupId.'" />';
-       
+        echo '<br></br>';
+        $selected = array();
+        $urlParam    = '';
+        $first    = true;
+        foreach ($selectedServices as $serv) {
+            if ($first != true) {
+                $urlParam .= '&';
+            }
+            $urlParam           .= 'services[]='.$serv;
+            $selected[$serv] = true;
+            $first           = false;
+        }
+        
+         
+        foreach ($duMgr->getProjectServices() as $service) {
+            $sel = '';
+            if (isset($selected[$service])) {
+                $sel = ' checked="checked"';
+            }
+            echo '<input type="checkbox" name="services[]" value="'.$service.'"'.$sel.'/>'.$duHtml->getServiceTitle($service).'<br/>';
+        }
+      
+           
         echo '<label>Group by:</label>';
         echo html_build_select_box_from_array($groupByDate, 'group_by', $selectedGroupByDate, 1).'<br />';
 
@@ -254,7 +276,7 @@ switch ($func) {
             $duHtml->getProject($groupId);
             $duHtml->getProjectEvolutionForPeriod($groupId , $startDate, $endDate);
             
-            $urlParam .= 'start_date='.$startDate.'&end_date='.$endDate;
+            $urlParam .= '&start_date='.$startDate.'&end_date='.$endDate;
             $urlParam .= '&group_by='.$selectedGroupByDate;
             $urlParam .= '&group_id='.$groupId;
             $urlParam .= '&graph_type=graph_project';

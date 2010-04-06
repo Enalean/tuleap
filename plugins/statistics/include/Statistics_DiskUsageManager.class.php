@@ -235,13 +235,13 @@ class Statistics_DiskUsageManager {
          
     }
     
-    public function getWeeklyEvolutionProjectData($groupId,$groupBy, $startDate, $endDate){
+    public function getWeeklyEvolutionProjectData($services, $groupId,$groupBy, $startDate, $endDate){
         $groupBy = strtoupper($groupBy);
         $dao  = $this->_getDao();
-        $dar = $dao->searchSizePerProjectForPeriod($groupId, $groupBy, $startDate, $endDate);
+        $dar = $dao->searchSizePerServiceForPeriod($services, $groupBy, $startDate, $endDate, $groupId);
         if ($dar && !$dar->isError()) {
             foreach ($dar as $row) {
-                $res[$this->getKeyFromGroupBy($row, $groupBy)] = $row['size'];
+                $res[$row['service']][$this->getKeyFromGroupBy($row, $groupBy)] = $row['size'];
             }
             return $res;
         }

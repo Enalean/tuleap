@@ -167,17 +167,18 @@ class Statistics_DiskUsageGraph extends Statistics_DiskUsageOutput {
    
      /**
      * 
-     * @param int $groupId
-     * @param unknown_type $groupBy
-     * @param unknown_type $startDate
-     * @param unknown_type $endDate
+     * @param Integer $groupId
+     * @param Array   $services
+     * @param String  $groupBy
+     * @param Date    $startDate
+     * @param Date    $endDate
      * @param Boolean $absolute Is y-axis relative to data set or absolute (starting from 0)
      */
-    function displayProjectGraph($groupId, $groupBy, $startDate, $endDate, $absolute=true){
-        $graph = new Chart(650,450,"auto");
+    function displayProjectGraph($groupId, $services, $groupBy, $startDate, $endDate, $absolute=true){
+       $graph = new Chart(650,450,"auto");
         $graph->img->SetMargin(70,50,20,20);
-        $graph->SetScale("textlin");
-        $graph->title->Set("Project growth over the time");
+        $graph->SetScale("textint");
+        $graph->title->Set("Project by service growth over the time");
 
         $graph->yaxis->title->Set("Size");
         $graph->yaxis->SetTitleMargin(60);
@@ -186,20 +187,28 @@ class Statistics_DiskUsageGraph extends Statistics_DiskUsageOutput {
             $graph->yaxis->scale->SetAutoMin(0);
         }
 
-        $data = $this->_dum->getWeeklyEvolutionProjectData($groupId, $groupBy, $startDate, $endDate);
+        $data = $this->_dum->getWeeklyEvolutionProjectData($services, $groupId, $groupBy, $startDate, $endDate);
+        $i = 0;
         $dates = array();
-        $ydata = array();
-        foreach ($data as $xdate => $values) {
-            $dates[] = $xdate;
-            $ydata[] = (float)$values;
+        foreach ($data as $service => $values) {
+            $ydata = array();
+            foreach ($values as $date => $size) {
+                $dates[] = $date;
+                $ydata[] = $size;
+            }
+            $lineplot = new LinePlot($ydata);
+
+            $color = $this->getServiceColor($service);
+            $lineplot->SetColor($color);
+            $lineplot->SetFillColor($color.':1.5');
+            $lineplot->SetLegend($this->getServiceTitle($service));
+
+            //$lineplot->value->show();
+            $lineplot->value->SetFont($graph->getFont(), FS_NORMAL, 8);
+            $lineplot->value->setFormatCallback(array($this, 'sizeReadable'));
+            $graph->Add($lineplot);
+            $i++;
         }
-               
-        $lineplot = new BarPlot($ydata);
-        $lineplot->SetColor('lavender');
-      
-        $lineplot->value->SetFont($graph->getFont(), FS_NORMAL, 8);
-        $lineplot->value->setFormatCallback(array($this, 'sizeReadable'));
-        $graph->Add($lineplot);
 
         $graph->xaxis->title->Set("Weeks");
         $graph->xaxis->SetTitleMargin(15);

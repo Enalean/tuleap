@@ -127,17 +127,28 @@ class Statistics_DiskUsageDao extends DataAccessObject {
 
     /**
      * Compute average size of a list of service
+     *
+     * If group Id is given, the average size will be computed for this project 
+     * else it is for all projects 
      * 
-     * @param Array $service
-     * 
+     * @param Array   $service
+     * @param String  $dateMethod
+     * @param Date    $startDate
+     * @param Date    $endDate
+     * @param Integer $groupId
      * @return DataAccessResult
      */
-    public function searchSizePerServiceForPeriod($service, $dateMethod='DAY', $startDate, $endDate) {
+    public function searchSizePerServiceForPeriod($service, $dateMethod='DAY', $startDate, $endDate, $groupId = NULL) {
+        $stm ='';
+        if ($groupId != NULL) {
+            $stm =   '   AND group_id='.$this->da->escapeInt($groupId);
+        }
         $this->_getGroupByFromDateMethod($dateMethod, $select, $groupBy);
         $sql = 'SELECT service, avg(size) as size, YEAR(date) as year'.$select.
                ' FROM (SELECT service, sum(size) as size, date'.
                '       FROM plugin_statistics_diskusage_group'.
                '       WHERE service IN ('.$this->da->quoteSmartImplode(',', $service).')'.
+               $stm.
                '       AND date > "'.$startDate.' 00:00:00"'.
                '       AND date < "'.$endDate.' 23:59:59"'.
                '       GROUP BY service, date) as p'.
@@ -270,7 +281,7 @@ class Statistics_DiskUsageDao extends DataAccessObject {
      * @return DataAccessResult
      */
     public function returnProjectEvolutionForPeriod($groupId, $startDate ,$endDate){
-        $sql = 'SELECT  end_size, start_size, (end_size - start_size) as evolution, (end_size/start_size) as evolution_rate'.
+        $sql = 'SELECT  group_name, end_size, start_size, (end_size - start_size) as evolution, (end_size/start_size) as evolution_rate'.
                ' FROM (SELECT group_id,  sum(size) as start_size 
                        FROM plugin_statistics_diskusage_group
                        WHERE '.$this->findFirstDateGreaterThan($startDate, 'plugin_statistics_diskusage_group').'
@@ -281,8 +292,8 @@ class Statistics_DiskUsageDao extends DataAccessObject {
                        WHERE '.$this->findFirstDateLowerThan($endDate, 'plugin_statistics_diskusage_group').'
                        AND group_id = '.$this->da->escapeInt($groupId).'
                        GROUP BY group_id ) as end'.
-                ' USING (group_id)';
-                
+                ' USING (group_id)'.
+                ' LEFT JOIN groups using(group_id)';
         return $this->retrieve($sql);
     }
     
