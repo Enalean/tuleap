@@ -19,7 +19,7 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('/prj/codex/terzino/servers/codex-cc/src/updates/scripts/CodendiUpgrade.class.php');
+require_once('CodendiUpgrade.class.php');
 
 class Update_026 extends CodendiUpgrade {
 
