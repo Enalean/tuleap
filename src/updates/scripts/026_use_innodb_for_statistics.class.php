@@ -50,6 +50,11 @@ class Update_026 extends CodendiUpgrade {
         }
         
         echo $this->getLineSeparator();
+        
+        //we disabled the automatic commit
+        //The DB modification will not be stored in the DB unless we explicitly COMMIT
+        $sql = ' SET @@autocommit= 0 ';
+        $this->update($sql);
 
     }
 }
