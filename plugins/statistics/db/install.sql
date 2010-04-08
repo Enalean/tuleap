@@ -32,5 +32,3 @@ CREATE TABLE plugin_statistics_diskusage_site (
     size BIGINT UNSIGNED DEFAULT 0 NOT NULL,
     INDEX idx_date (date, service(5))
 ) TYPE = InnoDB;
-
-SET @@autocommit= 0;

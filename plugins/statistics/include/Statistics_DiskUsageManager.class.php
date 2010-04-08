@@ -305,7 +305,9 @@ class Statistics_DiskUsageManager {
      */
     public function collectProjects() {
         //We start the transaction, it is not stored in the DB unless we COMMIT
-        $sql = mysql_query('BEGIN');
+        //With START TRANSACTION, autocommit remains disabled until we end the transaction with COMMIT or ROLLBACK. 
+        $sql = db_query('START TRANSACTION');
+        
         $dao = $this->_getDao();
         $dar = $dao->searchAllGroups();
         foreach($dar as $row) {
@@ -352,29 +354,29 @@ class Statistics_DiskUsageManager {
             $dao->addGroup($previous, 'plugin_forumml', $sForumML, $_SERVER['REQUEST_TIME']);
         }
         //We commit all the DB modification
-        $sql = mysql_query('COMMIT');
+        $sql = db_query('COMMIT');
         
     }
 
     public function collectUsers() {
-        $sql = mysql_query('BEGIN');
+        $sql = db_query('START TRANSACTION');
         $dao = $this->_getDao();
         $dar = $dao->searchAllUsers();
         foreach($dar as $row) {
             $this->storeForUser($row['user_id'], self::USR_HOME, $GLOBALS['homedir_prefix']."/".$row['user_name']);
         }
-        $sql = mysql_query('COMMIT');
+        $sql = db_query('COMMIT');
     }
 
     // dfMYSQL, LOG, backup
     public function collectSite() {
-        $sql = mysql_query('BEGIN');
+        $sql = db_query('START TRANSACTION');
         $this->storeForSite('mysql', '/var/lib/mysql');
         $this->storeForSite('codendi_log', '/var/log/codendi');
         $this->storeForSite('backup', '/var/lib/codendi/backup');
         $this->storeForSite('backup_old', '/var/lib/codendi/backup/old');
         $this->storeDf();
-        $sql = mysql_query('COMMIT');
+        $sql = db_query('COMMIT');
         
     }
 
