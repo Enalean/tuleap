@@ -203,6 +203,7 @@ class Statistics_DiskUsageDao extends DataAccessObject {
                 ' LEFT JOIN groups USING (group_id)'.
                 ' ORDER BY '.$order.' DESC'.
                 ' LIMIT '.$this->da->escapeInt($limit);
+      
         return $this->retrieve($sql);
     }
     
@@ -365,6 +366,34 @@ class Statistics_DiskUsageDao extends DataAccessObject {
             ' VALUES ('.$this->da->quoteSmart($service).',FROM_UNIXTIME('.$this->da->escapeInt($time).'),'.$this->da->quoteSmart($size).')';
         //echo $sql.PHP_EOL;
         return $this->update($sql);
+    }
+    /**
+     * Computes size of project for a given service
+     * @param Date    $startDate
+     * @param Date    $endDate
+     * @param String  $service
+     * @param String  $order
+     * @param Integer $limit 
+     */
+    public function getProjectContributionForService($startDate, $endDate, $service, $order, $limit=10) {
+        $sql = 'SELECT group_id, group_name, end_size, start_size, (end_size - start_size) as evolution, (end_size/start_size) as evolution_rate'.
+               ' FROM (SELECT group_id, service, sum(size) as start_size 
+                       FROM plugin_statistics_diskusage_group
+                       WHERE '.$this->findFirstDateGreaterThan($startDate, 'plugin_statistics_diskusage_group').' 
+                       AND  service = '.$this->da->quoteSmart($service ).'  group by group_id) as start'. 
+               ' LEFT JOIN (SELECT group_id, service, sum(size) as end_size 
+                       FROM plugin_statistics_diskusage_group 
+                       WHERE '.$this->findFirstDateLowerThan($endDate, 'plugin_statistics_diskusage_group').' 
+                       AND service = '.$this->da->quoteSmart($service ).' group by group_id) as end'.
+                ' USING (group_id)'.
+                ' LEFT JOIN groups USING (group_id)'.
+                ' Group by group_id'.
+                 ' ORDER BY '.$order.' DESC'.
+                ' LIMIT '.$this->da->escapeInt($limit);
+      
+        
+        return $this->retrieve($sql);
+    
     }
 }
 
