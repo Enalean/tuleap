@@ -161,36 +161,6 @@ class Statistics_DiskUsageHtml extends Statistics_DiskUsageOutput {
         }
     }
 
-    /**
-     * 
-     * Displays the top projects by service
-     * 
-     * @param Date $startDate
-     * @param Date $endDate
-     * @param String $service
-     * @param String $order
-     * 
-     */
-    public function getProjectContributionForService($startDate, $endDate, $service, $order) {
-        $res =  $res = $this->_dum->getProjectContributionForService($startDate, $endDate, $service, $order);
-        if ($res) {
-            $titles = array('Rank', 'Id', 'Name', 'Service' ,'Start size', 'End size', 'Evolution Size ', 'Evolution Rate (%)');
-            echo html_build_list_table_top($titles);
-            $i = 1;
-            foreach ($res as $row) {
-                echo '<tr>';
-                echo '<td>'.$i++.'</td>';
-                echo '<td>'.$row['group_id'].'</td>';
-                echo '<td>'.$row['group_name'].'</td>';
-                echo '<td>'.$this->getServiceTitle($service).'</td>';
-                $this->_displayEvolutionData($row);
-                echo '</tr>';
-            }
-            echo '</table>';
-        }
-    
-    }
-
     public function getProject($groupId) {
         $res = $this->_dum->getProject($groupId);
         if ($res) {
@@ -234,36 +204,10 @@ class Statistics_DiskUsageHtml extends Statistics_DiskUsageOutput {
         }
     }
     
-     public function getProjectEvolutionForPeriod($groupId,$startDate, $endDate) {
-        $res = $this->_dum->returnProjectEvolutionForPeriod($groupId,$startDate, $endDate);
-        if ($res) {
-            echo '<table border="1">';
-            echo '<thead>';
-            echo '<tr>';
-            echo "<th>Project Id</th>";
-            echo "<th>Project Name</th>";
-            echo "<th>Start size</th>";
-            echo "<th>End size</th>";
-            echo "<th>Size Evolution</th>";
-            echo "<th>Rate Evolution (%)</th>";
-            echo '</tr>';
-            echo '</thead>';
-            echo '<tbody>';
-            foreach ($res as $row){
-                echo '<tr>';
-                echo '<td>'.$groupId.'</td>';
-                echo '<td>'.$row['group_name'].'</td>';
-                $this->_displayEvolutionData($row);
-                echo '</tr>';
-            }
-            echo '</tbody>';
-            echo '</table>';
-        }
-    }
     /**
      * 
      * Displays the table of service evolution for a given period
-     * for a specific project if the group_id is given else for alla projects
+     * for a specific project if the group_id is given else for all projects
      * 
      * @param Date $startDate
      * @param Date $endDate
