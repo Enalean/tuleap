@@ -1,2 +1,13 @@
 plugin_statistics	descriptor_description	Collection d'outils et de scripts de statistiques sur les donnÃ©es du site
 plugin_statistics	descriptor_name	Statistiques
+
+
+plugin_statistics_show_service	usage_per_service	Utilisation par service
+plugin_statistics_show_service	service_growth	Croissance des services
+
+plugin_statistics_show_one_project	usage_per_project	Utilisation par projet
+
+plugin_statistics_show_top_user	top_users	Top des utilisateurs
+
+plugin_statistics_show_one_user	user_growth	Croissance de l'utilisateur
+plugin_statistics_show_one_user	user_detail	Les détails de l'utilisateur

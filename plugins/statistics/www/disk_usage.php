@@ -156,7 +156,7 @@ echo '<p>
 
 switch ($func) {
     case 'show_service':
-        echo '<h2>Usage per service</h2>';
+        echo '<h2>'.$GLOBALS['Language']->getText('plugin_statistics_show_service', 'usage_per_service').'</h2>';
         $duHtml->getDataPerService();
 
         // Prepare params
@@ -172,7 +172,7 @@ switch ($func) {
             $first           = false;
         }
         
-        echo '<h2>Service growth over the time</h2>';
+        echo '<h2>'.$GLOBALS['Language']->getText('plugin_statistics_show_service', 'service_growth').'</h2>';
         
         echo '<form name="progress_by_service" method="get" action="?">';
         echo '<input type="hidden" name="func" value="show_service" />';
@@ -219,7 +219,7 @@ switch ($func) {
         $urlParam = '';
         // Prepare params
         $urlParam = '?func=show_top_projects&start_date='.$startDate.'&end_date='.$endDate.'&';
-        echo '<h2>Usage per project</h2>';
+        echo '<h2>'.$GLOBALS['Language']->getText('plugin_statistics_show_one_project', 'usage_per_project').'</h2>';
      
         $selected = array();
         $first    = true;
@@ -262,7 +262,7 @@ switch ($func) {
         break;
 
     case 'show_one_project':
-        echo '<h2>Usage per service</h2>';
+        echo '<h2>'.$GLOBALS['Language']->getText('plugin_statistics_show_service', 'usage_per_service').'</h2>';
         $duHtml->getDataPerService($groupId);
 
         // Prepare params
@@ -278,7 +278,7 @@ switch ($func) {
             $first           = false;
         }
         
-        echo '<h2>Service growth over the time</h2>';
+        echo '<h2>'.$GLOBALS['Language']->getText('plugin_statistics_show_service', 'service_growth').'</h2>';
         
         echo '<form name="progress_by_project" method="get" action="?">';
         echo '<input type="hidden" name="func" value="show_one_project" />';
@@ -331,7 +331,7 @@ switch ($func) {
         $urlParam = '';
         $urlParam .= '?func=show_top_users&start_date='.$startDate.'&end_date='.$endDate;
 
-        echo '<h2>Top Users</h2>';
+        echo '<h2>'.$GLOBALS['Language']->getText('plugin_statistics_show_top_user', 'top_users').'</h2>';
         echo '<form name="top_users" method="get" action="?">';
         echo '<input type="hidden" name="func" value="show_top_users" />';
 
@@ -353,9 +353,9 @@ switch ($func) {
                   
         // Prepare params
         $urlParam    = '';
-                
-        echo '<h2>User growth over the time</h2>';
-        
+             
+        echo '<h2>'.$GLOBALS['Language']->getText('plugin_statistics_show_one_user', 'user_growth').'</h2>';
+              
         echo '<form name="progress_by_user" method="get" action="?">';
         echo '<input type="hidden" name="func" value="show_one_user" />';
 
@@ -385,7 +385,7 @@ switch ($func) {
         echo '</form>';
         
         if (($userId) && ($startDate) && ($endDate)) {
-            echo '<h3>User details</h3>';
+            echo '<h3>'.$GLOBALS['Language']->getText('plugin_statistics_show_one_user', 'user_detail').'</h3>';
             $duHtml->getUserDetails($userId);
             $duHtml->getUserEvolutionForPeriod($userId, $startDate, $endDate);
             

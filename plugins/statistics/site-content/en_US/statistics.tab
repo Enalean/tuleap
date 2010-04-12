@@ -1,2 +1,12 @@
 plugin_statistics	descriptor_description	A collection of Codendi related statistics tools & scripts
 plugin_statistics	descriptor_name	Statistics
+
+plugin_statistics_show_service	usage_per_service	Usage per service
+plugin_statistics_show_service	service_growth	Service growth over the time
+
+plugin_statistics_show_one_project	usage_per_project	Usage per project
+
+plugin_statistics_show_top_user	top_users	Top Users
+
+plugin_statistics_show_one_user	user_growth	User growth over the time
+plugin_statistics_show_one_user	user_detail	User details
