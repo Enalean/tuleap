@@ -120,8 +120,8 @@ class Statistics_DiskUsageHtml extends Statistics_DiskUsageOutput {
         echo '</table>';
     }
 
-    public function getTopProjects($startDate, $endDate, $order, $url) {
-        $res = $this->_dum->getTopProjects($startDate, $endDate, $order);
+    public function getTopProjects($startDate, $endDate, $service, $order, $url) {
+        $res = $this->_dum->getTopProjects($startDate, $endDate, $service, $order);
         if ($res) {
             $titles = array('Rank', 'Id', 'Name', 'Start size', 'End size', 'Evolution Size ', 'Evolution Rate (%)');
             $links  = array('', '', '', $url.'&order=start_size', $url.'&order=end_size', $url.'&order=evolution', $url.'&order=evolution_rate');

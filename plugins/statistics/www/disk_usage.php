@@ -90,7 +90,17 @@ $vServices->required();
 if ($request->validArray($vServices)) {
     $selectedServices = $request->get('services');
 } else {
-    $selectedServices = array(Statistics_DiskUsageManager::SVN);
+    switch ($func) {
+        case 'show_service':
+        case 'show_one_project':
+            $selectedServices = array(Statistics_DiskUsageManager::SVN);
+            break;
+        case 'show_top_projects':
+            $selectedServices = $duMgr->getProjectServices();
+            break;
+        default:
+    }
+    
 }
 
 $groupByDate = array('Day', 'Week', 'Month', 'Year');
@@ -198,39 +208,44 @@ switch ($func) {
     case 'show_top_projects':
         $urlParam = '';
         // Prepare params
+        $urlParam = '?func=show_top_projects&start_date='.$startDate.'&end_date='.$endDate.'&';
+        echo '<h2>Usage per project</h2>';
+     
         $selected = array();
+        $first    = true;
         foreach ($selectedServices as $serv) {
+            if ($first != true) {
+                $urlParam .= '&';
+            }
+            $urlParam           .= 'services[]='.$serv;
             $selected[$serv] = true;
+            $first           = false;
         }
+        
        
-        $urlParam .= '?func=show_top_projects&start_date='.$startDate.'&end_date='.$endDate;
-
-        echo '<h2>Usage per projects</h2>';
         echo '<form name="top_projects" method="get" action="?">';
         echo '<input type="hidden" name="func" value="show_top_projects" />';
 
+        foreach ($duMgr->getProjectServices() as $service) {
+            $sel = '';
+            if (isset($selected[$service])) {
+                $sel = ' checked="checked"';
+            }
+            echo '<input type="checkbox" name="services[]" value="'.$service.'"'.$sel.'/>'.$duHtml->getServiceTitle($service).'<br/>';
+        }
+       
         echo '<label>Start:</label>';
         echo (html_field_date('start_date', $startDate, false, 10, 10, 'top_projects', false)).'<br />';
 
         echo '<label>End:</label>';
         echo (html_field_date('end_date', $endDate, false, 10, 10, 'top_projects', false)).'<br />';
 
-       
-        $duHtml->getTopProjects($startDate, $endDate, $order, $urlParam);
-        
-        echo '<h2>Usage per service/projects</h2>';
-        foreach ($duMgr->getProjectServices() as $service) {
-            $sel = '';
-            if (isset($selected[$service])) {
-                $sel = ' checked="checked"';
-            }
-            echo '<input type="radio" name="services[]" value="'.$service.'"'.$sel.'/>'.$duHtml->getServiceTitle($service).'<br/>';
-        }
         echo '<input type="submit" value="'.$GLOBALS['Language']->getText('global', 'btn_submit').'"/>';
         echo '</form>';
-        
+      
+     
         if (($startDate) && ($endDate) && ($selectedServices)) {
-            $duHtml->getProjectContributionForService($startDate, $endDate, $selectedServices[0], $order);
+            $duHtml->getTopProjects($startDate, $endDate, $selectedServices, $order, $urlParam);
         }
         
         break;
@@ -248,7 +263,7 @@ switch ($func) {
         echo '<input type="text" name="group_id" id="plugin_statistics_project" value="'.$groupId.'" />';
         echo '<br></br>';
         $selected = array();
-        $urlParam    = '';
+       
         $first    = true;
         foreach ($selectedServices as $serv) {
             if ($first != true) {

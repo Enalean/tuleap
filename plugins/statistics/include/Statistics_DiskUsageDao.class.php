@@ -380,11 +380,11 @@ class Statistics_DiskUsageDao extends DataAccessObject {
                ' FROM (SELECT group_id, service, sum(size) as start_size 
                        FROM plugin_statistics_diskusage_group
                        WHERE '.$this->findFirstDateGreaterThan($startDate, 'plugin_statistics_diskusage_group').' 
-                       AND  service = '.$this->da->quoteSmart($service ).'  group by group_id) as start'. 
+                       AND  service IN ('.$this->da->quoteSmartImplode(',', $service).') group by group_id) as start'. 
                ' LEFT JOIN (SELECT group_id, service, sum(size) as end_size 
                        FROM plugin_statistics_diskusage_group 
                        WHERE '.$this->findFirstDateLowerThan($endDate, 'plugin_statistics_diskusage_group').' 
-                       AND service = '.$this->da->quoteSmart($service ).' group by group_id) as end'.
+                       AND service IN ('.$this->da->quoteSmartImplode(',', $service).') group by group_id) as end'.
                 ' USING (group_id)'.
                 ' LEFT JOIN groups USING (group_id)'.
                 ' Group by group_id'.

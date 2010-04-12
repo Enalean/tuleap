@@ -122,9 +122,9 @@ class Statistics_DiskUsageManager {
          
     }
 
-    public function getTopProjects($startDate, $endDate, $order) {
+    public function getTopProjects($startDate, $endDate, $service, $order) {
         $dao = $this->_getDao();
-        return $dao->searchTopProjects($startDate, $endDate, $order);
+        return $dao->getProjectContributionForService($startDate, $endDate, $service, $order);
     }
    
     public function getProjectContributionForService($startDate, $endDate, $service, $order) {
