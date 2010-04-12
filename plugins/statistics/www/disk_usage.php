@@ -128,6 +128,14 @@ if ($request->valid($vOrder)) {
     $order = 'end_size';
 }
 
+$vOffset = new Valid_UInt('offset');
+$vOffset->required();
+if ($request->valid($vOffset)) {
+    $offset = $request->get('offset');
+} else {
+    $offset = 0;
+}
+
 $title = 'Disk usage';
 $GLOBALS['HTML']->includeCalendarScripts();
 $GLOBALS['HTML']->header(array('title' => $title));
@@ -179,11 +187,13 @@ switch ($func) {
         echo '<label>Group by:</label>';
         echo html_build_select_box_from_array($groupByDate, 'group_by', $selectedGroupByDate, 1).'<br />';
 
-        echo '<label>Start:</label>';
-        echo (html_field_date('start_date', $startDate, false, 10, 10, 'progress_by_service', false)).'<br />';
+        echo '<label>Start: </label>';
+        list($timestamp,) = util_date_to_unixtime($startDate);
+        echo (html_field_date('start_date', $startDate, false, 10, 10, 'progress_by_service', false)).'&nbsp;<em>'.util_time_ago_in_words($timestamp).'</em><br />';
 
-        echo '<label>End:</label>';
-        echo (html_field_date('end_date', $endDate, false, 10, 10, 'progress_by_service', false)).'<br />';
+        echo '<label>End: </label>';
+        list($timestamp,) = util_date_to_unixtime($endDate);
+        echo (html_field_date('end_date', $endDate, false, 10, 10, 'progress_by_service', false)).'&nbsp;<em>'.util_time_ago_in_words($timestamp).'</em><br />';
 
         $sel = '';
         if ($relative) {
@@ -234,18 +244,19 @@ switch ($func) {
             echo '<input type="checkbox" name="services[]" value="'.$service.'"'.$sel.'/>'.$duHtml->getServiceTitle($service).'<br/>';
         }
        
-        echo '<label>Start:</label>';
-        echo (html_field_date('start_date', $startDate, false, 10, 10, 'top_projects', false)).'<br />';
-
-        echo '<label>End:</label>';
-        echo (html_field_date('end_date', $endDate, false, 10, 10, 'top_projects', false)).'<br />';
+        echo '<label>Start: </label>';
+        list($timestamp,) = util_date_to_unixtime($startDate);
+        echo (html_field_date('start_date', $startDate, false, 10, 10, 'top_projects', false)).'&nbsp;<em>'.util_time_ago_in_words($timestamp).'</em><br />';
+        
+        echo '<label>End: </label>';
+        list($timestamp,) = util_date_to_unixtime($endDate);
+        echo (html_field_date('end_date', $endDate, false, 10, 10, 'top_projects', false)).'&nbsp;<em>'.util_time_ago_in_words($timestamp).'</em><br />';
 
         echo '<input type="submit" value="'.$GLOBALS['Language']->getText('global', 'btn_submit').'"/>';
         echo '</form>';
-      
-     
+
         if (($startDate) && ($endDate) && ($selectedServices)) {
-            $duHtml->getTopProjects($startDate, $endDate, $selectedServices, $order, $urlParam);
+            $duHtml->getTopProjects($startDate, $endDate, $selectedServices, $order, $urlParam, $offset);
         }
         
         break;
@@ -287,13 +298,14 @@ switch ($func) {
         echo '<label>Group by:</label>';
         echo html_build_select_box_from_array($groupByDate, 'group_by', $selectedGroupByDate, 1).'<br />';
 
-        echo '<label>Start:</label>';
-        echo (html_field_date('start_date', $startDate, false, 10, 10, 'progress_by_project', false)).'<br />';
+        echo '<label>Start: </label>';
+        list($timestamp,) = util_date_to_unixtime($startDate);
+        echo (html_field_date('start_date', $startDate, false, 10, 10, 'progress_by_project', false)).'&nbsp;<em>'.util_time_ago_in_words($timestamp).'</em><br />';
 
         echo '<label>End:</label>';
-        echo (html_field_date('end_date', $endDate, false, 10, 10, 'progress_by_project', false)).'<br />';
-       
-        
+        list($timestamp,) = util_date_to_unixtime($endDate);
+        echo (html_field_date('end_date', $endDate, false, 10, 10, 'progress_by_project', false)).'&nbsp;<em>'.util_time_ago_in_words($timestamp).'</em><br />';
+
         $sel = '';
         if ($relative) {
             $sel = ' checked="checked"';
@@ -328,11 +340,13 @@ switch ($func) {
         echo '<form name="top_users" method="get" action="?">';
         echo '<input type="hidden" name="func" value="show_top_users" />';
 
-        echo '<label>Start:</label>';
-        echo (html_field_date('start_date', $startDate, false, 10, 10, 'top_users', false)).'<br />';
+        echo '<label>Start: </label>';
+        list($timestamp,) = util_date_to_unixtime($startDate);
+        echo (html_field_date('start_date', $startDate, false, 10, 10, 'top_users', false)).'&nbsp;<em>'.util_time_ago_in_words($timestamp).'</em><br />';
 
-        echo '<label>End:</label>';
-        echo (html_field_date('end_date', $endDate, false, 10, 10, 'top_users', false)).'<br />';
+        echo '<label>End: </label>';
+        list($timestamp,) = util_date_to_unixtime($endDate);
+        echo (html_field_date('end_date', $endDate, false, 10, 10, 'top_users', false)).'&nbsp;<em>'.util_time_ago_in_words($timestamp).'</em><br />';
 
         echo '<input type="submit" value="'.$GLOBALS['Language']->getText('global', 'btn_submit').'"/>';
         echo '</form>';
@@ -356,13 +370,14 @@ switch ($func) {
         echo '<label>Group by:</label>';
         echo html_build_select_box_from_array($groupByDate, 'group_by', $selectedGroupByDate, 1).'<br />';
 
-        echo '<label>Start:</label>';
-        echo (html_field_date('start_date', $startDate, false, 10, 10, 'progress_by_user', false)).'<br />';
+        echo '<label>Start: </label>';
+        list($timestamp,) = util_date_to_unixtime($startDate);
+        echo (html_field_date('start_date', $startDate, false, 10, 10, 'progress_by_user', false)).'&nbsp;<em>'.util_time_ago_in_words($timestamp).'</em><br />';
 
-        echo '<label>End:</label>';
-        echo (html_field_date('end_date', $endDate, false, 10, 10, 'progress_by_user', false)).'<br />';
-       
-        
+        echo '<label>End: </label>';
+        list($timestamp,) = util_date_to_unixtime($endDate);
+        echo (html_field_date('end_date', $endDate, false, 10, 10, 'progress_by_user', false)).'&nbsp;<em>'.util_time_ago_in_words($timestamp).'</em><br />';
+
         $sel = '';
         if ($relative) {
             $sel = ' checked="checked"';
