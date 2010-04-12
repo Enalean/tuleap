@@ -51,13 +51,13 @@ class Statistics_DiskUsageManager {
         return array(self::SVN, self::CVS, self::FRS, self::FTP, self::GRP_HOME, self::WIKI, self::PLUGIN_DOCMAN, self::PLUGIN_WEBDAV, self::MAILMAN, self::PLUGIN_FORUMML);
     }
     
-    public function getGeneralData($date) {
+    public function getGeneralData($date, $groupId = NULL) {
         $res = array();
         $dao  = $this->_getDao();
         if ($date) {
             $res['date'] = $date;
 
-            $dar = $dao->searchSizePerService($date);
+            $dar = $dao->searchSizePerService($date, $groupId);
             if ($dar && !$dar->isError()) {
                 foreach ($dar as $row) {
                     $res['service'][$row['service']] = $row['size'];
@@ -84,10 +84,10 @@ class Statistics_DiskUsageManager {
         }
         return $res;
     }
-    public function getLatestData() {
+    public function getLatestData($groupId = NULL) {
         $dao  = $this->_getDao();
         $date = $dao->searchMostRecentDate();
-        return  $this->getGeneralData($date);
+        return  $this->getGeneralData($date, $groupId);
     }
 
     function getKeyFromGroupBy($row, $groupBy) {
@@ -158,9 +158,9 @@ class Statistics_DiskUsageManager {
         return false;
     }
     
-    public function returnServiceEvolutionForPeriod($startDate , $endDate){
+    public function returnServiceEvolutionForPeriod($startDate , $endDate, $groupId =NULL){
         $dao = $this->_getDao();
-        $dar = $dao->returnServiceEvolutionForPeriod($startDate , $endDate);
+        $dar = $dao->returnServiceEvolutionForPeriod($startDate , $endDate, $groupId);
         if ($dar && !$dar->isError()) {
             return $dar;
         }

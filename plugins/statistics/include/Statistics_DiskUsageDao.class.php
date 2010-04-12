@@ -98,8 +98,14 @@ class Statistics_DiskUsageDao extends DataAccessObject {
         return false;
     }
 
-    public function searchSizePerService($date) {
-        $sql = 'SELECT service, sum(size) as size FROM plugin_statistics_diskusage_group WHERE '.$this->returnDateStatement($date).' GROUP BY service order by service';
+    public function searchSizePerService($date, $groupId = NULL) {
+        $stm ='';
+        if ($groupId != NULL) {
+            $stm =   '   AND group_id='.$this->da->escapeInt($groupId);
+        }
+        $sql = ' SELECT service, sum(size) as size FROM plugin_statistics_diskusage_group'. 
+               ' WHERE '.$this->returnDateStatement($date).
+               $stm.' GROUP BY service order by service';
         return $this->retrieve($sql);
     }
 
@@ -160,22 +166,33 @@ class Statistics_DiskUsageDao extends DataAccessObject {
     /**
      * Compute evolution size of  service in a given period
      * 
-     * @param date $dateEnd , date $dateStart
-     * 
+     * @param date $startDate
+     * @param date $endDate 
+     * @param Integer $groupId = NULL 
      * @return DataAccessResult
      */
-    public function returnServiceEvolutionForPeriod($startDate , $endDate){
-        $sql = 'SELECT service, end_size, start_size, (end_size - start_size) as evolution, (end_size/start_size) as evolution_rate'.
-               ' FROM (SELECT service, sum(size) as start_size 
-                       FROM plugin_statistics_diskusage_group
-                       WHERE '.$this->findFirstDateGreaterThan($startDate, 'plugin_statistics_diskusage_group').' 
-                       GROUP BY service) as start'. 
-               ' LEFT JOIN (SELECT service, sum(size) as end_size 
-                       FROM plugin_statistics_diskusage_group 
-                       WHERE '.$this->findFirstDateLowerThan($endDate, 'plugin_statistics_diskusage_group').' 
-                       GROUP BY service) as end'.
-                ' USING (service)'.
-                ' ORDER BY service';
+    public function returnServiceEvolutionForPeriod($startDate , $endDate, $groupId = NULL){
+        $stmColumn = '';
+        $stmClause = '';
+        $stmJoin   = '';
+        if ($groupId != NULL) {
+            $stmColumn =   '   start.group_id, group_name, ';
+            $stmClause =   '   AND group_id='.$this->da->escapeInt($groupId);
+            $stmJoin   =   '   LEFT JOIN groups on (start.group_id =groups.group_id) ';
+        }     
+        $sql =' SELECT  '.$stmColumn.' service, end_size, start_size, (end_size - start_size) as evolution, (end_size/start_size) as evolution_rate  
+                    FROM (SELECT group_id, service, sum(size) as start_size 
+                        FROM plugin_statistics_diskusage_group dug  WHERE '.$this->findFirstDateGreaterThan($startDate, 'plugin_statistics_diskusage_group').
+                        $stmClause.' group by service) as start 
+                        LEFT JOIN (SELECT group_id, service, sum(size) as end_size FROM plugin_statistics_diskusage_group dug 
+                        WHERE '.$this->findFirstDateGreaterThan($startDate, 'plugin_statistics_diskusage_group').
+                        $stmClause.'  group by service) as end 
+                        USING (service) 
+                    LEFT JOIN groups 
+                    ON (groups.group_id = start.group_id) 
+                    Group by service 
+                    ORDER BY service DESC'; 
+    
         return $this->retrieve($sql);
     }
 

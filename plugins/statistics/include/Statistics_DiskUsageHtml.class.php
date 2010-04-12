@@ -36,8 +36,8 @@ class Statistics_DiskUsageHtml extends Statistics_DiskUsageOutput {
         }
     }
     
-    public function getDataPerService() {
-        $res = $this->_dum->getLatestData();
+    public function getDataPerService($groupId = NULL) {
+        $res = $this->_dum->getLatestData($groupId);
 
         echo '<table border="1">';
         echo '<thead>';
@@ -260,9 +260,18 @@ class Statistics_DiskUsageHtml extends Statistics_DiskUsageOutput {
             echo '</table>';
         }
     }
-    
-    public function getServiceEvolutionForPeriod($startDate , $endDate) {
-        $res = $this->_dum->returnServiceEvolutionForPeriod($startDate , $endDate);
+    /**
+     * 
+     * Displays the table of service evolution for a given period
+     * for a specific project if the group_id is given else for alla projects
+     * 
+     * @param Date $startDate
+     * @param Date $endDate
+     * @param Integer $groupId
+     *
+     */
+    public function getServiceEvolutionForPeriod($startDate , $endDate, $groupId = NULL) {
+        $res = $this->_dum->returnServiceEvolutionForPeriod($startDate , $endDate, $groupId);
         if ($res) {
             echo '<table border="1">';
             echo '<thead>';

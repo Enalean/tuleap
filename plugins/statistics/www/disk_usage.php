@@ -262,19 +262,12 @@ switch ($func) {
         break;
 
     case 'show_one_project':
-        // Prepare params
-        $urlParam    = '';
-                
-        echo '<h2>Project growth over the time</h2>';
-        
-        echo '<form name="progress_by_project" method="get" action="?">';
-        echo '<input type="hidden" name="func" value="show_one_project" />';
+        echo '<h2>Usage per service</h2>';
+        $duHtml->getDataPerService($groupId);
 
-        echo '<label> Project: </label>';
-        echo '<input type="text" name="group_id" id="plugin_statistics_project" value="'.$groupId.'" />';
-        echo '<br></br>';
+        // Prepare params
         $selected = array();
-       
+        $urlParam    = '';
         $first    = true;
         foreach ($selectedServices as $serv) {
             if ($first != true) {
@@ -285,7 +278,15 @@ switch ($func) {
             $first           = false;
         }
         
-         
+        echo '<h2>Service growth over the time</h2>';
+        
+        echo '<form name="progress_by_project" method="get" action="?">';
+        echo '<input type="hidden" name="func" value="show_one_project" />';
+        echo '<label> Project: </label>';
+        echo '<input type="text" name="group_id" id="plugin_statistics_project" value="'.$groupId.'" />';
+        echo '<br></br>';
+       
+
         foreach ($duMgr->getProjectServices() as $service) {
             $sel = '';
             if (isset($selected[$service])) {
@@ -293,8 +294,6 @@ switch ($func) {
             }
             echo '<input type="checkbox" name="services[]" value="'.$service.'"'.$sel.'/>'.$duHtml->getServiceTitle($service).'<br/>';
         }
-      
-           
         echo '<label>Group by:</label>';
         echo html_build_select_box_from_array($groupByDate, 'group_by', $selectedGroupByDate, 1).'<br />';
 
@@ -302,7 +301,7 @@ switch ($func) {
         list($timestamp,) = util_date_to_unixtime($startDate);
         echo (html_field_date('start_date', $startDate, false, 10, 10, 'progress_by_project', false)).'&nbsp;<em>'.util_time_ago_in_words($timestamp).'</em><br />';
 
-        echo '<label>End:</label>';
+        echo '<label>End: </label>';
         list($timestamp,) = util_date_to_unixtime($endDate);
         echo (html_field_date('end_date', $endDate, false, 10, 10, 'progress_by_project', false)).'&nbsp;<em>'.util_time_ago_in_words($timestamp).'</em><br />';
 
@@ -316,20 +315,16 @@ switch ($func) {
         
         echo '<input type="submit" value="'.$GLOBALS['Language']->getText('global', 'btn_submit').'"/>';
         echo '</form>';
+
+        $urlParam .= '&start_date='.$startDate.'&end_date='.$endDate;
+        $urlParam .= '&group_by='.$selectedGroupByDate;
+        $urlParam .= '&group_id='.$groupId;
+        $urlParam .= '&graph_type=graph_project';
+        echo '<p><img src="disk_usage_graph.php?'.$urlParam.'"  title="Test result" /></p>';
         
         if (($groupId) && ($startDate) && ($endDate)) {
-            echo '<h3>Project details</h3>';
-            $duHtml->getProject($groupId);
-            $duHtml->getProjectEvolutionForPeriod($groupId , $startDate, $endDate);
-            
-            $urlParam .= '&start_date='.$startDate.'&end_date='.$endDate;
-            $urlParam .= '&group_by='.$selectedGroupByDate;
-            $urlParam .= '&group_id='.$groupId;
-            $urlParam .= '&graph_type=graph_project';
-            
-            echo '<p><img src="disk_usage_graph.php?'.$urlParam.'"  title="Test result" /></p>';
-        }    
-    
+            $duHtml->getServiceEvolutionForPeriod($startDate, $endDate, $groupId);
+        }       
         break;
 
     case 'show_top_users':
