@@ -375,8 +375,8 @@ class Statistics_DiskUsageDao extends DataAccessObject {
      * @param String  $order
      * @param Integer $limit 
      */
-    public function getProjectContributionForService($startDate, $endDate, $service, $order, $limit=10) {
-        $sql = 'SELECT group_id, group_name, end_size, start_size, (end_size - start_size) as evolution, (end_size/start_size) as evolution_rate'.
+    public function getProjectContributionForService($startDate, $endDate, $service, $order, $offset=0, $limit=10) {
+        $sql = 'SELECT SQL_CALC_FOUND_ROWS group_id, group_name, end_size, start_size, (end_size - start_size) as evolution, (end_size/start_size) as evolution_rate'.
                ' FROM (SELECT group_id, service, sum(size) as start_size 
                        FROM plugin_statistics_diskusage_group
                        WHERE '.$this->findFirstDateGreaterThan($startDate, 'plugin_statistics_diskusage_group').' 
@@ -389,7 +389,7 @@ class Statistics_DiskUsageDao extends DataAccessObject {
                 ' LEFT JOIN groups USING (group_id)'.
                 ' Group by group_id'.
                  ' ORDER BY '.$order.' DESC'.
-                ' LIMIT '.$this->da->escapeInt($limit);
+                ' LIMIT '.$this->da->escapeInt($offset).','.$this->da->escapeInt($limit);
       
         
         return $this->retrieve($sql);
