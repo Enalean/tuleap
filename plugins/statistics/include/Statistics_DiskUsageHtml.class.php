@@ -228,12 +228,24 @@ class Statistics_DiskUsageHtml extends Statistics_DiskUsageOutput {
             echo '</tr>';
             echo '</thead>';
             echo '<tbody>';
+            $totalStartSize = 0;
+            $totalEndSize   = 0;
+            $totalEvolution = 0;
             foreach ($res as $row){
                 echo '<tr>';
                 echo '<td>'.$row['service'].'</td>';
+                $totalStartSize  +=$row['start_size'];
+                $totalEndSize    +=$row['end_size'];
+                $totalEvolution  +=$row['evolution'];
                 $this->_displayEvolutionData($row);
                 echo '</tr>';
             }
+            echo '<tr>';
+            echo '<td>Total size</td>';
+            echo '<td>'.$this->sizeReadable($totalStartSize).'</td>';
+            echo '<td>'.$this->sizeReadable($totalEndSize).'</td>';
+            echo '<td>'.$this->sizeReadable($totalEvolution).'</td>';
+            echo '</tr>';
             echo '</tbody>';
             echo '</table>';
         }
