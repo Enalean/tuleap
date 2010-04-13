@@ -10,4 +10,4 @@ plugin_statistics_show_one_project	usage_per_project	Utilisation par projet
 plugin_statistics_show_top_user	top_users	Top des utilisateurs
 
 plugin_statistics_show_one_user	user_growth	Croissance de l'utilisateur
-plugin_statistics_show_one_user	user_detail	Les détails de l'utilisateur
+plugin_statistics_show_one_user	user_detail	Les details de l'utilisateur

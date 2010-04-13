@@ -185,7 +185,7 @@ class Statistics_DiskUsageDao extends DataAccessObject {
                         FROM plugin_statistics_diskusage_group dug  WHERE '.$this->findFirstDateGreaterThan($startDate, 'plugin_statistics_diskusage_group').
                         $stmClause.' group by service) as start 
                         LEFT JOIN (SELECT group_id, service, sum(size) as end_size FROM plugin_statistics_diskusage_group dug 
-                        WHERE '.$this->findFirstDateGreaterThan($startDate, 'plugin_statistics_diskusage_group').
+                        WHERE '.$this->findFirstDateGreaterThan($endDate, 'plugin_statistics_diskusage_group').
                         $stmClause.'  group by service) as end 
                         USING (service) 
                     LEFT JOIN groups 
