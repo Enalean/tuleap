@@ -245,6 +245,11 @@ class Statistics_DiskUsageHtml extends Statistics_DiskUsageOutput {
             echo '<td>'.$this->sizeReadable($totalStartSize).'</td>';
             echo '<td>'.$this->sizeReadable($totalEndSize).'</td>';
             echo '<td>'.$this->sizeReadable($totalEvolution).'</td>';
+            if ($totalEvolution == 0) {
+                echo '<td>-</td>';
+            } else {
+                echo '<td>'.sprintf('%01.2f %%', (($totalEndSize/$totalStartSize)-1)*100).'</td>';
+            }
             echo '</tr>';
             echo '</tbody>';
             echo '</table>';
