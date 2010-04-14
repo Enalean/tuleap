@@ -43,36 +43,7 @@ class Statistics_DiskUsageHtml extends Statistics_DiskUsageOutput {
         echo '<thead>';
         echo '<tr>';
         echo "<th>Date</th>";
-        if (isset($res['service'][Statistics_DiskUsageManager::SVN])) {
-            echo "<th>SVN</th>";
-        }
-        if (isset($res['service'][Statistics_DiskUsageManager::CVS])) {
-            echo "<th>CVS</th>";
-        }
-        if (isset($res['service'][Statistics_DiskUsageManager::FRS])) {
-            echo "<th>FRS</th>";
-        }
-        if (isset($res['service'][Statistics_DiskUsageManager::FTP])) {
-            echo "<th>FTP</th>";
-        }
-        if (isset($res['service'][Statistics_DiskUsageManager::WIKI])) {
-            echo "<th>Wiki</th>";
-        }
-        if (isset($res['service'][Statistics_DiskUsageManager::MAILMAN])) {
-            echo "<th>Mailman</th>";
-        }
-        if (isset($res['service'][Statistics_DiskUsageManager::PLUGIN_DOCMAN])) {
-            echo "<th>Docman</th>";
-        }
-        if (isset($res['service'][Statistics_DiskUsageManager::PLUGIN_FORUMML])) {
-            echo "<th>ForumML</th>";
-        }
-        if (isset($res['service'][Statistics_DiskUsageManager::PLUGIN_WEBDAV])) {
-            echo "<th>Webdav</th>";
-        }
-        if (isset($res['service'][Statistics_DiskUsageManager::GRP_HOME])) {
-            echo "<th>Groups</th>";
-        }
+        
         if (isset($res['service'][Statistics_DiskUsageManager::USR_HOME])) {
             echo "<th>Users</th>";
         }
@@ -97,16 +68,6 @@ class Statistics_DiskUsageHtml extends Statistics_DiskUsageOutput {
         echo '<tbody>';
         echo '<tr>';
         echo '<td>'.date('Y-m-d', strtotime($res['date'])).'</td>';
-        echo $this->getReadable($res, Statistics_DiskUsageManager::SVN);
-        echo $this->getReadable($res, Statistics_DiskUsageManager::CVS);
-        echo $this->getReadable($res, Statistics_DiskUsageManager::FRS);
-        echo $this->getReadable($res, Statistics_DiskUsageManager::FTP);
-        echo $this->getReadable($res, Statistics_DiskUsageManager::WIKI);
-        echo $this->getReadable($res, Statistics_DiskUsageManager::MAILMAN);
-        echo $this->getReadable($res, Statistics_DiskUsageManager::PLUGIN_DOCMAN);
-        echo $this->getReadable($res, Statistics_DiskUsageManager::PLUGIN_FORUMML);
-        echo $this->getReadable($res, Statistics_DiskUsageManager::PLUGIN_WEBDAV);
-        echo $this->getReadable($res, Statistics_DiskUsageManager::GRP_HOME);
         echo $this->getReadable($res, Statistics_DiskUsageManager::USR_HOME);
         echo $this->getReadable($res, Statistics_DiskUsageManager::MYSQL);
         echo $this->getReadable($res, Statistics_DiskUsageManager::CODENDI_LOGS);
@@ -241,7 +202,7 @@ class Statistics_DiskUsageHtml extends Statistics_DiskUsageOutput {
                 echo '</tr>';
             }
             echo '<tr>';
-            echo '<td>Total size</td>';
+            echo '<th>Total size</th>';
             echo '<td>'.$this->sizeReadable($totalStartSize).'</td>';
             echo '<td>'.$this->sizeReadable($totalEndSize).'</td>';
             echo '<td>'.$this->sizeReadable($totalEvolution).'</td>';
