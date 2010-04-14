@@ -36,8 +36,7 @@ $ldapPlugin    = $pluginManager->getPluginByName('ldap');
 if ($pluginManager->isPluginAvailable($ldapPlugin)) {
 
     $ldapQuery = new LDAP_DirectorySynchronization($ldapPlugin->getLdap());
-    $ldapQuery->iterateOnAllUsers();
-    $ldapQuery->updateUsers();
+    $ldapQuery->syncAll();
 
     $time_end = microtime(true);
     $time = $time_end - $time_start;

@@ -148,6 +148,19 @@ class WikiDao extends DataAccessObject {
                     ' WHERE id=%d', $id);
         return $this->update($sql);
     }
+    
+    /**
+     * Update wiki page
+     * @param User   $user
+     * @param String $new_name
+     * @return Boolean
+     */
+    function updatePageName($user, $new_name) {
+        $sql = 'UPDATE wiki_page SET pagename = '.$this->da->quoteSmart($new_name). 
+               ' WHERE pagename = '.$this->da->quoteSmart($user->getUserName());
+        return $this->update($sql);
+    }
+    
 }
 
 ?>

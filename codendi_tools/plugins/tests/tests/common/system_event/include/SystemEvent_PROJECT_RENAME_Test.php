@@ -76,7 +76,7 @@ class SystemEvent_PROJECT_RENAME_Test extends UnitTestCase {
         // System
         $backendSystem = new MockBackendSystem($this);
         $backendSystem->setReturnValue('projectHomeExists', true);
-        $backendSystem->setReturnValue('isNameAvailable', true);
+        $backendSystem->setReturnValue('isProjectNameAvailable', true);
         $backendSystem->setReturnValue('renameProjectHomeDirectory', true);
         $backendSystem->expectOnce('renameProjectHomeDirectory',array($project, 'FooBar'));
         $backendSystem->expectOnce('setNeedRefreshGroupCache');
@@ -303,7 +303,7 @@ class SystemEvent_PROJECT_RENAME_Test extends UnitTestCase {
         // System
         $backendSystem = new MockBackendSystem($this);
         $backendSystem->setReturnValue('projectHomeExists', true);
-        $backendSystem->setReturnValue('isNameAvailable', true);
+        $backendSystem->setReturnValue('isProjectNameAvailable', true);
         $backendSystem->expectOnce('renameProjectHomeDirectory',array($project, 'FooBar'));
         $backendSystem->setReturnValue('renameProjectHomeDirectory', false);
         $backendSystem->expectNever('setNeedRefreshGroupCache');

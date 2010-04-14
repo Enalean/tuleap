@@ -14,43 +14,41 @@ session_require(array('group'=>'1','admin_flags'=>'A'));
 
 site_admin_header(array('title'=>$Language->getText('admin_grouplist','title')));
 
-// start from root if root not passed in
-if (!$form_catroot) {
-	$form_catroot = 1;
-}
 
 print "<p>".$Language->getText('admin_grouplist','for_categ').": ";
-
-if ($form_catroot == 1) {
-
-	if (isset($group_name_search)) {
-	    print "<b>".$Language->getText('admin_grouplist','begins_with',array($group_name_search))."</b>\n";
-		$res = db_query("SELECT group_name,unix_group_name,group_id,is_public,status,license,type "
-			. "FROM groups WHERE group_name LIKE '$group_name_search%' "
-			. ($form_pending?"AND WHERE status='P' ":"")
-			. " ORDER BY group_name");
-	} else {
-	    print "<b>".$Language->getText('admin_grouplist','all_categ')."</b>\n";
-		$res = db_query("SELECT group_name,unix_group_name,group_id,is_public,status,license,type "
-			. "FROM groups "
-			. ($status?"WHERE status='$status' ":"")
-			. "ORDER BY group_name");
-	}
-} else {
-	print "<b>" . category_fullname($form_catroot) . "</b>\n";
-
-	$res = db_query("SELECT groups.group_name,groups.unix_group_name,groups.group_id,"
-		. "groups.is_public,"
-		. "groups.license,"
-		. "groups.status "
-		. "groups.type "
-		. "FROM groups,group_category "
-		. "WHERE groups.group_id=group_category.group_id AND "
-		. "group_category.category_id=$GLOBALS[form_catroot] ORDER BY groups.group_name");
+$dao = new ProjectDao(CodendiDataAccess::instance());
+$offset = $request->getValidated('offset', 'uint', 0);
+if ( !$offset || $offset < 0 ) {
+    $offset = 0;
 }
+$limit  = 50;
+
+$group_name_search = "0";
+$vGroupNameSearch = new Valid_String('group_name_search');
+if($request->valid($vGroupNameSearch)) {
+    if ($request->exist('group_name_search')) {
+        $group_name_search = $request->get('group_name_search');
+    }
+}
+
+$status ="";
+$vStatus = new Valid_WhiteList('status', array('I','D'));
+if($request->valid($vStatus)) {
+    if ($request->exist('status')) {
+        $status = $request->get('status');
+    }
+}
+
+if ($group_name_search !="0") {
+    print "<b>".$Language->getText('admin_grouplist','begins_with',array($group_name_search))."</b>\n";
+} else {
+    print "<b>".$Language->getText('admin_grouplist','all_categ')."</b>\n";
+}
+//return projects matching given parameters
+$res = $dao->returnAllProjects($offset, $limit, $status, $group_name_search);
+
 ?>
 
-<P>
 <TABLE width=100% border=1>
 <TR>
 <TD><b><?php echo $Language->getText('admin_groupedit','grp_name')." ".$Language->getText('admin_grouplist','click');?></b></TD>
@@ -59,7 +57,6 @@ if ($form_catroot == 1) {
 <TD><B><?php echo $Language->getText('admin_groupedit','group_type'); ?></B></TD>
 <TD><b><?php echo $Language->getText('admin_groupedit','public'); ?></b></TD>
 <TD><b><?php echo $Language->getText('admin_groupedit','license'); ?></b></TD>
-<TD><b><?php echo $Language->getText('admin_grouplist','categ'); ?></b></TD>
 <TD><B><?php echo $Language->getText('admin_grouplist','members'); ?></B></TD>
 </TR>
 
@@ -68,33 +65,58 @@ $odd_even = array('boxitem', 'boxitemalt');
 $i = 0;
 // Get project type label
 $template =& TemplateSingleton::instance();
-while ($grp = db_fetch_array($res)) {
-	print "<tr class=\"". $odd_even[$i++ % count($odd_even)] ."\">";
-	print '<td><a href="groupedit.php?group_id='.$grp['group_id'].'">'.$grp['group_name'].'</a></td>';
-	print '<td>'.$grp['unix_group_name'].'</td>';
-	print '<td>'.$grp['status'].'</td>';
-	// group type
-	print "<td>".$template->getLabel($grp['type'])."</td>";
 
-	print '<td>'.$grp['is_public'].'</td>';
-	print '<td>'.$grp['license'].'</td>';
-	
-	// categories
-	$count = db_query("SELECT group_id FROM group_category WHERE "
-                . "group_id=$grp[group_id]");
-        print ("<td>" . db_numrows($count) . "</td>");
-
-	// members
-	$res_count = db_query("SELECT user_id FROM user_group WHERE group_id=$grp[group_id]");
-	print "<TD>" . db_numrows($res_count) . "</TD>";
-
-	print "</tr>\n";
+if ($group_name_search != "0") {
+    $group_name_param="&group_name_search=$group_name_search";
+} else {
+    $group_name_param="";
 }
-?>
 
-</TABLE>
+if ($status !="") {
+    $status_param = "&status=$status";
+} else  {
+    $status_param ="";
+}
 
-<?php
+if ($res['numrows'] > 0) {
+    $daoUsers = new UserGroupDao(CodendiDataAccess::instance());
+    while ($grp = db_fetch_array($res['projects'])) {
+        print "<tr class=\"". $odd_even[$i++ % count($odd_even)] ."\">";
+        print '<td><a href="groupedit.php?group_id='.$grp['group_id'].'">'.$grp['group_name'].'</a></td>';
+        print '<td>'.$grp['unix_group_name'].'</td>';
+        print '<td>'.$grp['status'].'</td>';
+        // group type
+        print "<td>".$template->getLabel($grp['type'])."</td>";
+
+        print '<td>'.$grp['is_public'].'</td>';
+        print '<td>'.$grp['license'].'</td>';
+
+        // members
+        print '<td>'.$daoUsers->returnUsersNumberByGroupId($grp['group_id']).'</td>';
+
+        print "</tr>\n";
+    }
+
+    echo '</TABLE>'.PHP_EOL;
+ 
+    echo '<div style="text-align:center">';
+
+    if ($offset > 0) {
+        echo  '<a href="?offset='.($offset-$limit).$group_name_param.$status_param.'">[ '.$Language->getText('project_admin_utils', 'previous').'  ]</a>';
+        echo '&nbsp;';
+    }
+    
+    echo ($offset+$i).'/'.$res['numrows'];
+    
+    if (($offset + $limit) < $res['numrows']) {
+        echo '&nbsp;';
+        echo '<a href="?offset='.($offset+$limit).$group_name_param.$status_param.'">[ '.$Language->getText('project_admin_utils', 'next').' ]</a>';
+    }
+    echo '</div>';
+} else {
+    echo '</TABLE>'.PHP_EOL;
+}
+
 site_admin_footer(array());
 
 ?>

@@ -23,7 +23,7 @@
  */
 
 require_once('common/valid/Rule.class.php');
-Mock::generatePartial('Rule_UserName', 'Rule_UserNameIntegration', array('_getProjectManager', '_getUserManager', '_getBackend'));
+Mock::generatePartial('Rule_UserName', 'Rule_UserNameIntegration', array('_getProjectManager', '_getUserManager', '_getBackend', '_getSystemEventManager'));
 
 require_once('common/user/UserManager.class.php');
 Mock::generate('UserManager');
@@ -38,6 +38,9 @@ Mock::generate('BaseLanguage');
 
 require_once('common/backend/Backend.class.php');
 Mock::generate('Backend');
+
+require_once('common/system_event/SystemEventManager.class.php');
+Mock::generate('SystemEventManager');
 
 class Rule_UserNameIntegrationTest extends UnitTestCase {
 
@@ -64,10 +67,16 @@ class Rule_UserNameIntegrationTest extends UnitTestCase {
         $backend->setReturnValue('unixUserExists', false);
         $backend->setReturnValue('unixGroupExists', false);
         
+        
+        $sm = new MockSystemEventManager($this);
+        $sm->setReturnValue('isUserNameAvailable', true);
+        
+        
         $r = new Rule_UserNameIntegration($this);
         $r->setReturnValue('_getUserManager', $um);
         $r->setReturnValue('_getProjectManager', $pm);
         $r->setReturnValue('_getBackend', $backend);
+        $r->setReturnValue('_getSystemEventManager', $sm);
 
         $this->assertTrue($r->isValid("user"));
         $this->assertTrue($r->isValid("user_name"));
@@ -86,10 +95,15 @@ class Rule_UserNameIntegrationTest extends UnitTestCase {
         $backend->setReturnValue('unixUserExists', false);
         $backend->setReturnValue('unixGroupExists', false);
         
+        $sm = new MockSystemEventManager($this);
+        $sm->setReturnValue('isUserNameAvailable', true);
+       
+        
         $r = new Rule_UserNameIntegration($this);
         $r->setReturnValue('_getUserManager', $um);
         $r->setReturnValue('_getProjectManager', $pm);
         $r->setReturnValue('_getBackend', $backend);
+        $r->setReturnValue('_getSystemEventManager', $sm);
 
         $this->assertFalse($r->isValid("user"));
     }
@@ -106,9 +120,13 @@ class Rule_UserNameIntegrationTest extends UnitTestCase {
         $backend->setReturnValue('unixUserExists', false);
         $backend->setReturnValue('unixGroupExists', false);
         
+        $sm = new MockSystemEventManager($this);
+        $sm->setReturnValue('isUserNameAvailable', true);
+       
         $r = new Rule_UserNameIntegration($this);
         $r->setReturnValue('_getUserManager', $um);
         $r->setReturnValue('_getProjectManager', $pm);
+        $r->setReturnValue('_getSystemEventManager', $sm);
 
         $this->assertFalse($r->isValid("user"));
     }
@@ -123,11 +141,15 @@ class Rule_UserNameIntegrationTest extends UnitTestCase {
         $backend = new MockBackend($this);
         $backend->setReturnValue('unixUserExists', false);
         $backend->setReturnValue('unixGroupExists', false);
-        
+
+        $sm = new MockSystemEventManager($this);
+        $sm->setReturnValue('isUserNameAvailable', true);
+       
         $r = new Rule_UserNameIntegration($this);
         $r->setReturnValue('_getUserManager', $um);
         $r->setReturnValue('_getProjectManager', $pm);
         $r->setReturnValue('_getBackend', $backend);
+        $r->setReturnValue('_getSystemEventManager', $sm);
 
         $this->assertFalse($r->isValid("user name"));
     }
@@ -142,11 +164,16 @@ class Rule_UserNameIntegrationTest extends UnitTestCase {
         $backend = new MockBackend($this);
         $backend->setReturnValue('unixUserExists', true);
         $backend->setReturnValue('unixGroupExists', false);
-        
+
+
+        $sm = new MockSystemEventManager($this);
+        $sm->setReturnValue('isUserNameAvailable', true);
+       
         $r = new Rule_UserNameIntegration($this);
         $r->setReturnValue('_getUserManager', $um);
         $r->setReturnValue('_getProjectManager', $pm);
         $r->setReturnValue('_getBackend', $backend);
+        $r->setReturnValue('_getSystemEventManager', $sm);
 
         $this->assertFalse($r->isValid("user"));
     }
@@ -162,10 +189,15 @@ class Rule_UserNameIntegrationTest extends UnitTestCase {
         $backend->setReturnValue('unixUserExists', false);
         $backend->setReturnValue('unixGroupExists', true);
         
+        $sm = new MockSystemEventManager($this);
+        $sm->setReturnValue('isUserNameAvailable', true);
+       
+        
         $r = new Rule_UserNameIntegration($this);
         $r->setReturnValue('_getUserManager', $um);
         $r->setReturnValue('_getProjectManager', $pm);
         $r->setReturnValue('_getBackend', $backend);
+        $r->setReturnValue('_getSystemEventManager', $sm);
 
         $this->assertFalse($r->isValid("user"));
     }

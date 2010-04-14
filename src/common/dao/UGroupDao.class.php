@@ -37,7 +37,18 @@ class UGroupDao extends DataAccessObject {
                 WHERE group_id = $group_id ORDER BY name";
         return $this->retrieve($sql);
     }
-
-
+    
+    /**
+    * Searches group that user belongs to one of its static ugroup
+    * return all groups 
+    * @param Integer $userId
+    * @return DataAccessResult
+    */
+    function searchGroupByUserId($userId) {
+        $sql = 'SELECT group_id FROM ugroup 
+                JOIN ugroup_user USING (ugroup_id) 
+                WHERE user_id = '.$this->da->escapeInt($userId);
+        return $this->retrieve($sql);
+    }
 }
 ?>

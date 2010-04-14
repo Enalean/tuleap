@@ -182,7 +182,9 @@ admin_groupedit	license_other	License Other
 admin_groupedit	built_from_template	Built from template
 admin_groupedit	rename_project_title	Rename Project
 admin_groupedit	rename_project_label	Rename Project to
-admin_groupedit	rename_project_msg	The project is being renamed from $1 to $2
+admin_groupedit	rename_project_msg	Propagation of project's name update on system queued ($1 -> $2). It will be processed in a little while.
+admin_groupedit	rename_project_warn	Project name update will be effective only after system event processing.
+admin_groupedit	rename_project_already_queued	There is already an event scheduled to rename this project. Please check <a href="/admin/system_events/">System Event Monitor</a>.
 admin_groupedit	invalid_short_name	Invalid Short Name
 
 #
@@ -293,9 +295,12 @@ admin_usergroup	email	Email
 admin_usergroup	expiry_date	Expiry Date
 admin_usergroup	data_not_parsed	Sorry - Expiry Date entry could not be parsed. It must be in YYYY-MM-DD format.
 admin_usergroup	ldap_id	LDAP Identifier
-admin_usergroup	unix_status	Unix Account Status
-admin_usergroup	no_account	No Unix Account
+admin_usergroup	unix_details	Unix details:
+admin_usergroup	unix_status	Unix status
+admin_usergroup	status	Status
+admin_usergroup	no_account	No unix account
 admin_usergroup	active	Active
+admin_usergroup	restricted	Restricted
 admin_usergroup	suspended	Suspended
 admin_usergroup	deleted	Deleted
 admin_usergroup	current_groups	Current Groups
@@ -303,12 +308,21 @@ admin_usergroup	remove_ug	Remove User from Group
 admin_usergroup	admin_flags	Administration Flags
 admin_usergroup	add_ug	Add User to Group (group id)
 admin_usergroup	change_passwd	Change User Password
+admin_usergroup	was	Was:
+admin_usergroup	rename_user_msg	Propagation of user's login name update on system queued ($1 -> $2). It will be processed in a little while.
+admin_usergroup	rename_user_warn	Login name update will be effective only after system event processing.
+admin_usergroup	rename_user_already_queued	There is already an event scheduled to rename this user. Please check <a href="/admin/system_events/">System Event Monitor</a>.
+admin_usergroup	account_details	Account details:
+admin_usergroup	last_pwd_update	Last password update
+admin_usergroup	last_access_date	Last access date
+admin_usergroup	cannot_change_status	Cannot change status before account validation
+admin_usergroup	user_public_profile	Public profile
 #
 #-----------------------------------------------
 # Script: SF/www/admin/userlist.php
 #
 admin_userlist	title	Administration - User List
-admin_userlist	legend	Status Legend:&nbsp;&nbsp;<B>Active</B>&nbsp;&nbsp;<u>Restricted</u>&nbsp;&nbsp;(v)Validated&nbsp;&nbsp; (vr)Validated Restricted&nbsp;&nbsp;<I>Deleted</I>&nbsp;&nbsp;Suspended&nbsp;&nbsp;(*)Pending
+admin_userlist	legend	Status Legend: <span class="site_admin_user_status_A">&nbsp;</span><B>Active</B><span class="site_admin_user_status_R">&nbsp;</span><u>Restricted</u><span class="site_admin_user_status_V">&nbsp;</span>(v)Validated<span class="site_admin_user_status_W">&nbsp;</span>(vr)Validated Restricted<span class="site_admin_user_status_D">&nbsp;</span><I>Deleted</I><span class="site_admin_user_status_S">&nbsp;</span>Suspended<span class="site_admin_user_status_P">&nbsp;</span>(*)Pending
 admin_userlist	user_deleted	User Updated to DELETE Status - UNIX account scheduled for deletion
 admin_userlist	user_active	User Updated to ACTIVE status
 admin_userlist	user_validated	User Updated to VALIDATED status
@@ -322,14 +336,17 @@ admin_userlist	group	Group $1
 admin_userlist	uid_toadd	User ID to add
 admin_userlist	active	Active
 admin_userlist	validated	Validated
+admin_userlist	validated_restricted	Validated Restricted
 admin_userlist	restricted	Restricted
 admin_userlist	deleted	Deleted
 admin_userlist	suspended	Suspended
+admin_userlist	pending	Pending
 admin_userlist	activate	Activate
 admin_userlist	validate	Validate
 admin_userlist	restrict	Restrict
 admin_userlist	delete	Delete
 admin_userlist	suspend	Suspend
+admin_userlist	status	Status
 #
 #-----------------------------------------------
 # Script: SF/www/admin/trove/trove_cat_add.php

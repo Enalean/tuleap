@@ -23,6 +23,7 @@
 
 require_once 'LDAP_UserDao.class.php';
 require_once 'LDAP.class.php';
+require_once 'LDAP_UserSync.class.php';
 require_once 'common/user/UserManager.class.php';
 
 /**
@@ -278,17 +279,13 @@ class LDAP_UserManager {
      * @return Boolean
      */
     function synchronizeUser(User $user, LDAPResult $lr, $password) {
-        // Generic operations on synchro: update password, name and email
         $user->setPassword($password);
-        $user->setRealName($lr->getCommonName());
-        $user->setEmail($lr->getEmail());
 
-        // Allow sites to configure whatever they want
-        include($GLOBALS['Language']->getContent('synchronize_user','en_US', 'ldap', '.php'));
+        $sync = LDAP_UserSync::instance();
+        $sync->sync($user, $lr);
 
         // Perform DB update
         $userUpdated = $this->getUserManager()->updateDb($user);
-
         $ldapUpdated = $this->updateLdapUid($user->getId(), $lr->getLogin());
         return ($userUpdated || $ldapUpdated);
     }

@@ -327,32 +327,56 @@ class BackendSystemTest extends UnitTestCase {
         rmdir($GLOBALS['ftp_frs_dir_prefix']."/testproject");
     }
 
-    public function testIsNameAvailableWithExistingFileInProjectHome() {
+    public function testIsProjectNameAvailableWithExistingFileInProjectHome() {
         touch($GLOBALS['grpdir_prefix']."/testproject");
         $backend = new BackendTestVersion($this);
-        $this->assertFalse($backend->isNameAvailable('testproject'), 'A file with the same name exists in home/groups/');
+        $this->assertFalse($backend->isProjectNameAvailable('testproject'), 'A file with the same name exists in home/groups/');
         unlink($GLOBALS['grpdir_prefix']."/testproject");
     }
 
-    public function testIsNameAvailableWithExistingFileInProjectHomeWithMixedCase() {
+    public function testIsProjectNameAvailableWithExistingFileInProjectHomeWithMixedCase() {
         touch($GLOBALS['grpdir_prefix']."/testproject");
         $backend = new BackendTestVersion($this);
-        $this->assertFalse($backend->isNameAvailable('TestProject'), 'A file with the same name in lowercase exists in home/groups/');
+        $this->assertFalse($backend->isProjectNameAvailable('TestProject'), 'A file with the same name in lowercase exists in home/groups/');
         unlink($GLOBALS['grpdir_prefix']."/testproject");
     }
     
-    public function testIsNameAvailableWithExistingFileInFRS() {
+    public function testIsProjectNameAvailableWithExistingFileInFRS() {
         touch($GLOBALS['ftp_frs_dir_prefix']."/testproject");
         $backend = new BackendTestVersion($this);
-        $this->assertFalse($backend->isNameAvailable('testproject'), 'A file with the same name exists in var/lib/codendi/ftp/codendi');
+        $this->assertFalse($backend->isProjectNameAvailable('testproject'), 'A file with the same name exists in var/lib/codendi/ftp/codendi');
         unlink($GLOBALS['ftp_frs_dir_prefix']."/testproject");
     }
     
-    public function testIsNameAvailableWithExistingFileInAnnoFtp() {
+    public function testIsProjectNameAvailableWithExistingFileInAnnoFtp() {
         touch($GLOBALS['ftp_anon_dir_prefix']."/testproject");
         $backend = new BackendTestVersion($this);
-        $this->assertFalse($backend->isNameAvailable('testproject'), 'A file with the same name exists in var/lib/codendi/ftp/pub');
+        $this->assertFalse($backend->isProjectNameAvailable('testproject'), 'A file with the same name exists in var/lib/codendi/ftp/pub');
         unlink($GLOBALS['ftp_anon_dir_prefix']."/testproject");
     }
+    
+    public function testRenameUserHomeDirectory() {
+        $user = new MockUser($this);
+        // We use codendiadm uid/gid to avoid chown warnings (because test is not run as root)
+        $user->setReturnValue('getUserName', 'codendiadm');
+
+        $um = new MockUserManager();
+        $um->setReturnReference('getUserById', $user, array(104));
+        
+        $backend = new BackendTestVersion($this);
+        $backend->setReturnValue('getUserManager', $um);
+        
+        $backend->createUserHome(104);
+        $this->assertEqual($backend->renameUserHomeDirectory($user, 'toto'),True);
+        $this->assertTrue(is_dir($GLOBALS['homedir_prefix']."/toto"),"Home dir should be created");
+
+        $this->assertFalse(is_dir($GLOBALS['homedir_prefix']."/codendiadm"),"Home dir should no more exists");
+        
+        // Cleanup
+        $backend->recurseDeleteInDir($GLOBALS['homedir_prefix']."/toto");
+        rmdir($GLOBALS['homedir_prefix']."/toto");
+   
+    }
+    
 }
 ?>

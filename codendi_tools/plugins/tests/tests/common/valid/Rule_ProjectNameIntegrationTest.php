@@ -19,7 +19,7 @@
  */
 
 require_once('common/valid/Rule.class.php');
-Mock::generatePartial('Rule_ProjectName', 'Rule_ProjectNameIntegration', array('_getProjectManager', '_getUserManager', '_getBackend', 'isNameAvailable'));
+Mock::generatePartial('Rule_ProjectName', 'Rule_ProjectNameIntegration', array('_getProjectManager', '_getUserManager', '_getBackend', 'isNameAvailable', '_getSystemEventManager'));
 
 require_once('common/language/BaseLanguage.class.php');
 Mock::generate('BaseLanguage');
@@ -52,14 +52,23 @@ class Rule_ProjectNameIntegrationTest extends UnitTestCase {
         $backend->setReturnValue('unixUserExists', false);
         $backend->setReturnValue('unixGroupExists', false);
 
+        $sm = new MockSystemEventManager($this);
+        $sm->setReturnValue('isUserNameAvailable', true);
+        $sm->setReturnValue('isProjectNameAvailable', true);
+       
+        
         $r = new Rule_ProjectNameIntegration($this);
         $r->setReturnValue('_getUserManager', $um);
         $r->setReturnValue('_getProjectManager', $pm);
         $r->setReturnValue('_getBackend', $backend);
+        $r->setReturnValue('_getSystemEventManager', $sm);
+        
+        
         $r->setReturnValue('isNameAvailable', true, array ("group-test"));
         $r->setReturnValue('isNameAvailable', true, array ("test"));
         $r->setReturnValue('isNameAvailable', true, array ("test1"));
         
+         
         $this->assertTrue($r->isValid("group-test"));
         $this->assertTrue($r->isValid("test"));
         $this->assertTrue($r->isValid("test1"));

@@ -1524,7 +1524,11 @@ function util_return_to($url) {
 * inspired from ActionView::Helpers::DateHelper in RubyOnRails
 */
 function util_time_ago_in_words($time, $include_seconds = false) {
-    return $GLOBALS['Language']->getText('include_utils', 'time_ago', util_distance_of_time_in_words($time, time(), $include_seconds));
+    if ($time) {
+        return $GLOBALS['Language']->getText('include_utils', 'time_ago', util_distance_of_time_in_words($time, time(), $include_seconds));
+    } else {
+        return '-';
+    }
 }
 function util_distance_of_time_in_words($from_time, $to_time, $include_seconds = false) {    
     $distance_in_minutes = round((abs($to_time - $from_time))/60);

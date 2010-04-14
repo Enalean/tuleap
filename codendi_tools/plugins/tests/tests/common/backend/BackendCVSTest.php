@@ -51,7 +51,8 @@ class BackendCVSTestVersion extends BackendCVSTestVersionInit {
     }
 }
 
-Mock::generatePartial('BackendCVS', 'BackendCVS4RenameCVSNT', array('useCVSNT', '_RcsCheckout', '_RcsCommit'));
+Mock::generatePartial('BackendCVS', 'BackendCVS4RenameCVSNT', array('useCVSNT', '_RcsCheckout', '_RcsCommit','updateCVSwriters',
+'repositoryExists', 'getProjectManager'));
 
 class BackendCVSTest extends UnitTestCase {
     
@@ -382,6 +383,48 @@ class BackendCVSTest extends UnitTestCase {
         $backend->recurseDeleteInDir($cvsdir);
         
         rmdir($cvsdir);
+    }
+    
+    public function testUpdateCVSWritersForGivenMember() {
+    
+        $backend = new BackendCVS4RenameCVSNT($this);
+
+        // The user
+        $user = new MockUser($this);
+        $user->setReturnValue('getId', array(142));
+       
+        $project1 = new MockProject($this);
+        $project1->setReturnValue('getId', 102);
+       
+        $project2 = new MockProject($this);
+        $project2->setReturnValue('getId', 101);
+       
+        $projects =  array(102, 101);
+        $user->setReturnValue('getProjects', $projects);
+         
+        
+        $backend->setReturnValue('repositoryExists', true);
+        $backend->setReturnValue('updateCVSwriters', true);
+        
+        $pm = new MockProjectManager();
+        $backend->setReturnValue('getProjectManager', $pm);
+       
+        $pm->setReturnReference('getProject', $project1, array(102));
+        $pm->setReturnReference('getProject', $project2, array(101));
+      
+        
+        $this->assertEqual($backend->updateCVSWritersForGivenMember($user), true);
+        
+        
+        $backend->expectCallCount('repositoryExists', 2);
+        $backend->expectArgumentsAt(0, 'repositoryExists', array($project1));
+        $backend->expectArgumentsAt(1, 'repositoryExists', array($project2));
+       
+        $backend->expectCallCount('updateCVSwriters', 2);
+        $backend->expectArgumentsAt(0, 'updateCVSwriters', array(102));
+        $backend->expectArgumentsAt(1, 'updateCVSwriters', array(101));
+       
+            
     }
 }
 ?>

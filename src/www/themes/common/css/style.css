@@ -1050,3 +1050,29 @@ ul.ServiceMenu li.current {
     background:#eef;
 }
 /* }}}*/
+
+/* {{{ Site admin */
+.site_admin_user_status_A,
+.site_admin_user_status_R,
+.site_admin_user_status_S,
+.site_admin_user_status_D,
+.site_admin_user_status_P,
+.site_admin_user_status_V,
+.site_admin_user_status_W {
+    border: 1px solid black;
+    padding-left: 1em;
+    margin: 1em;
+}
+.site_admin_user_status_A {
+    background-color: #00aa00; 
+}
+.site_admin_user_status_R {
+    background-color: #ddff55;
+}
+.site_admin_user_status_D {
+    background-color: #ffaa00;
+}
+.site_admin_user_status_S {
+    background-color: blue;
+}
+/* }}}*/

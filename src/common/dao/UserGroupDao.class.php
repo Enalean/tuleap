@@ -45,7 +45,25 @@ class UserGroupDao extends DataAccessObject {
                   AND groups.status = 'A'";
         return $this->retrieve($sql);
     }
-
+    
+    
+    /**
+     * return users count, members of given project
+     *
+     * @param Integer $groupId
+     *
+     * @return Integer
+     *        
+     */
+    function returnUsersNumberByGroupId($groupId) {
+        $groupId = $this->da->escapeInt($groupId);
+        $sql = 'SELECT count(*) as numrows 
+                FROM user_group 
+                WHERE group_id ='.$groupId;
+        $row = $this->retrieve($sql)->getRow();
+        return $row['numrows'];
+    }
+ 
 }
 
 

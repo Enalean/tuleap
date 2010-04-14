@@ -142,7 +142,7 @@ class Rule_ProjectNameTest extends UnitTestCase {
         $r->setReturnValue('_getBackend', $backendCVS, array('CVS'));
        
         $backendSystem = new MockBackendSystem($this);
-        $backendSystem->setReturnValue('isNameAvailable', true, array('foobar'));
+        $backendSystem->setReturnValue('isProjectNameAvailable', true, array('foobar'));
         $r->setReturnValue('_getBackend', $backendSystem, array('System'));
     
         $this->assertTrue($r->isNameAvailable('foobar'));
@@ -175,7 +175,7 @@ class Rule_ProjectNameTest extends UnitTestCase {
        
         
         $backendSystem = new MockBackendSystem($this);
-        $backendSystem->expectNever('isNameAvailable', array('foobar'));
+        $backendSystem->expectNever('isProjectNameAvailable', array('foobar'));
         
         $this->assertFalse($r->isNameAvailable('foobar'));
     }
@@ -192,7 +192,7 @@ class Rule_ProjectNameTest extends UnitTestCase {
         $r->setReturnValue('_getBackend', $backendCVS, array('CVS'));
        
         $backendSystem = new MockBackendSystem($this);
-        $backendSystem->setReturnValue('isNameAvailable', false, array('foobar'));
+        $backendSystem->setReturnValue('isProjectNameAvailable', false, array('foobar'));
         $r->setReturnValue('_getBackend', $backendSystem, array('System'));
     
         $this->assertFalse($r->isNameAvailable('foobar'));

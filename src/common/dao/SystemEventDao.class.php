@@ -116,6 +116,38 @@ class SystemEventDao extends DataAccessObject {
                 LIMIT $offset, $limit";
         return $this->retrieve($sql);
     }
+    /**
+     * 
+     * The searched parameter may be at one of these positions:
+     * $val::someThing (position == head)
+     * someThing::$val (position == tail)
+     * someThing::$val::someThing (position == middle)
+     * 
+     * @param String $position
+     * @param String $val
+     * @param Array $type
+     * @param Array $status
+     * @return DataAccessResult
+     */
+    public function searchWithParam($position, $val, $type, $status, $separator = SystemEvent::PARAMETER_SEPARATOR) {
+        if ($position == 'head') {
+            $stm    = $this->da->quoteSmart($val.$separator).'"%"';
+        } else if ($position == 'tail') {
+            $stm = '"%"'.$this->da->quoteSmart($separator.$val);
+        } else {
+            $stm    = '"%"'.$this->da->quoteSmart($separator.$val.$separator).'"%"';
+        }
+        
+        $type   = $this->da->quoteSmartImplode(", ", $type);
+        $status = $this->da->quoteSmartImplode(", ", $status);
+        
+        $sql = 'SELECT  * FROM system_event 
+                 WHERE type   IN ('.$type.') 
+                 AND status IN ('.$status.')
+                 AND parameters LIKE '.$stm;
+
+        return $this->retrieve($sql);
+    }
 }
 
 ?>

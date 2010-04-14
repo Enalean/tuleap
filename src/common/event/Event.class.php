@@ -136,6 +136,16 @@ class Event {
      * No expected results
      */
     const PROJECT_RENAME = 'project_rename';
-
+    
+    /**
+     * User name changed
+     *
+     * Parameters:
+     *  'user_id' => User ID
+     *  'new_name' => The new user name
+     *
+     * No expected results
+     */
+    const USER_RENAME = 'user_rename';
 }
 ?>

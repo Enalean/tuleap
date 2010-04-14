@@ -104,7 +104,7 @@ class SystemEvent_PROJECT_RENAME extends SystemEvent {
             // Rename system home/groups
             $backendSystem = $this->getBackend('System');
             if ($backendSystem->projectHomeExists($project)) {
-                if ($backendSystem->isNameAvailable($new_name)) {
+                if ($backendSystem->isProjectNameAvailable($new_name)) {
                     if (!$backendSystem->renameProjectHomeDirectory($project, $new_name)) {
                         $this->error("Could not rename project home");
                         $renameState = $renameState & false;
@@ -180,17 +180,6 @@ class SystemEvent_PROJECT_RENAME extends SystemEvent {
      */
     protected function addProjectHistory($field_name, $old_value, $group_id) {
         return group_add_history($field_name, $old_value, $group_id);
-    }
-
-    /**
-     * Wrapper for Backend
-     * 
-     * @param String $type Backend type
-     * 
-     * @return Backend
-     */
-    protected function getBackend($type) {
-        return Backend::instance($type);
     }
 }
 

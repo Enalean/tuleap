@@ -35,6 +35,9 @@ class Docman_View_Download extends Docman_View_View {
                                              'version'   => $version,
                                              'docmanControler' => &$this->_controller
                                             ));
+                header('Expires: Mon, 26 Nov 1962 00:00:00 GMT');  // IE & HTTPS
+                header('Pragma: private');                         // IE & HTTPS
+                header('Cache-control: private, must-revalidate'); // IE & HTTPS
                 header('Content-Type: '. $version->getFiletype());
                 header('Content-Length: '. $version->getFilesize());
                 header('Content-Disposition: filename="'. $version->getFilename() .'"');

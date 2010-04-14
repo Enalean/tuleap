@@ -53,9 +53,19 @@ class User {
      * The user is deleted
      */
     const STATUS_DELETED    = 'D';
+
+    /**
+     * Site admin validated the account as active
+     */
+    const STATUS_VALIDATED = 'V';
+    
+    /**
+     * Site admin validated the account as restricted
+     */
+    const STATUS_VALIDATED_RESTRICTED = 'W';
     
     
-    
+
     /**
      * the id of the user
      * = 0 if anonymous
@@ -105,6 +115,7 @@ class User {
      * The locale of the user
      */
     protected $locale;
+    
     
     /**
      * The preferences
@@ -1002,7 +1013,7 @@ class User {
         $this->confirm_hash = $confirmHash;
     }
     
-/**
+    /**
      * Set Expiry Date
      * 
      * @param  String $expiry date
@@ -1010,8 +1021,6 @@ class User {
     function setExpiryDate($expiryDate) {
         $this->expiry_date = $expiryDate;
     }
-
-    //
     // Preferences
     //
     
@@ -1100,7 +1109,34 @@ class User {
      function getSessionHash() {
          return $this->session_hash;
      }
-     
+
+     /**
+      * Return all valid status
+      *
+      * @return Array
+      */
+     public static function getAllUnixStatus() {
+         return array('N', 'A', 'S', 'D');
+     }
+
+     /**
+      * Return all possible shells
+      *
+      * @return Array
+      */
+     public static function getAllUnixShells() {
+         return file('/etc/shells', FILE_IGNORE_NEW_LINES);
+     }
+
+     /**
+      * Return all "working" status (after validation step)
+      *
+      * @return Array
+      */
+     public static function getAllWorkingStatus() {
+         return array(self::STATUS_ACTIVE, self::STATUS_RESTRICTED, self::STATUS_SUSPENDED, self::STATUS_DELETED);
+     }
+
 }
 
 ?>

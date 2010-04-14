@@ -51,6 +51,7 @@ abstract class SystemEvent {
     const TYPE_USER_DELETE           = "USER_DELETE";
     const TYPE_USER_EMAIL_CHANGED    = "USER_EMAIL_CHANGED";
     const TYPE_USER_MODIFY           = "USER_MODIFY";
+    const TYPE_USER_RENAME           = "USER_RENAME";
     const TYPE_MEMBERSHIP_CREATE     = "MEMBERSHIP_CREATE";
     const TYPE_MEMBERSHIP_DELETE     = "MEMBERSHIP_DELETE";
     const TYPE_MEMBERSHIP_MODIFY     = "MEMBERSHIP_MODIFY";
@@ -305,6 +306,24 @@ abstract class SystemEvent {
     }
 
     /**
+     * Initialize a user from the given $user_id
+     * @param int $user_id the id of the User
+     * @return User
+     */
+    protected function getUser($user_id) {
+        if (!$user_id) {
+            return $this->setErrorBadParam();
+        }
+        
+        $user = UserManager::instance()->getUserById($user_id);
+        
+        if (!$user) {
+            $this->error("Could not create/initialize user object");
+        }
+        
+        return $user;
+    }
+    /**
      * Wrapper for event manager
      * 
      * @return EventManager
@@ -343,6 +362,17 @@ End Date:     {$this->getEndDate()}
 ");
             $m->send();
         }
+    }
+    
+    /**
+     * Wrapper for Backend
+     * 
+     * @param String $type Backend type
+     * 
+     * @return Backend
+     */
+    protected function getBackend($type) {
+        return Backend::instance($type);
     }
 }
 

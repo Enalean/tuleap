@@ -5,5 +5,6 @@ rule_file	error_upload_size	File upload error($1). The uploaded file exceeds the
 rule_file	error_upload_unknown	File upload error($1). Unknown error code.
 
 rule_user_name	error_exists	Login name already exists.
+rule_user_name	error_event_reserved	$1 is already reserved for another rename operation. Please check System Event Monitor.
 
 rule_group_name	error_exists	Short name already exists

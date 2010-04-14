@@ -20,6 +20,7 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once('common/system_event/SystemEventManager.class.php');
 /**
  * @package Codendi
  */
@@ -431,7 +432,20 @@ extends Rule {
         }
         return false;
     }
-
+    /**
+     * Prevent from renaming two users on the same name
+     * before that the rename is performed by the system
+     * 
+     * @param String $val
+     */
+    public function getPendingUserRename($val) {
+        $sm = $this->_getSystemEventManager();
+        if (!$sm->isUserNameAvailable($val)) {
+            $this->error = $GLOBALS['Language']->getText('rule_user_name', 'error_event_reserved', array($val));
+            return false;
+        }
+        return true;
+    }
     /**
      * Test if name is valid
      * 
@@ -449,7 +463,8 @@ extends Rule {
             && !$this->containsIllegalChars($val)
             && !$this->isAlreadyUserName($val)
             && !$this->isAlreadyProjectName($val)
-            && !$this->isSystemName($val);
+            && !$this->isSystemName($val)
+            && $this->getPendingUserRename($val);
     }
 
     /**
@@ -513,6 +528,15 @@ extends Rule {
     protected function _getBackend($type='') {
         return Backend::instance($type);
     }
+    
+    /**
+     * Wrapper
+     *
+     * @return SystemEventManager
+     */
+    protected function _getSystemEventManager() {
+        return SystemEventManager::instance();
+    }
 }
 
 /**
@@ -558,7 +582,7 @@ extends Rule_UserName {
                 return false;
             } else {
                 $backendSystem = $this->_getBackend('System');
-                if (!$backendSystem->isNameAvailable($val)){
+                if (!$backendSystem->isProjectNameAvailable($val)){
                     $this->error = $GLOBALS['Language']->getText('include_account','used_by_sys');
                     return false;
                 } else {
@@ -579,6 +603,23 @@ extends Rule_UserName {
         }
         return true;
     }
+    
+    /**
+     * Prevent from renaming two projects on the same name
+     * before that the rename is performed by the system
+     * 
+     * @param String $val
+     */
+    public function getPendingProjectRename($val) {
+        $sm = $this->_getSystemEventManager();
+        if (!$sm->isProjectNameAvailable($val)) {
+            $this->error = $GLOBALS['Language']->getText('rule_user_name', 'error_event_reserved', array($val));
+            return false;
+        }
+        return true;
+    }
+    
+    
      /**
      * Wrapper for event manager
      * 
@@ -595,7 +636,8 @@ extends Rule_UserName {
      * @return Boolean
      */
     public function isValid($val) {
-        return $this->isDNSCompliant($val) && parent::isValid($val)  && $this->isNameAvailable($val);
+        return $this->isDNSCompliant($val) && parent::isValid($val)  && $this->isNameAvailable($val) 
+                   && $this->getPendingProjectRename($val);
     }
 
     protected function _getErrorExists() {

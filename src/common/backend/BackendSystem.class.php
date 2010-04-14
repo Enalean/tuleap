@@ -114,7 +114,7 @@ class BackendSystem extends Backend {
     }
 
     public function userHomeExists($username) {
-      return (is_dir($GLOBALS['homedir_prefix']."/".$username));
+    	return (is_dir($GLOBALS['homedir_prefix']."/".$username));
     }
     /**
      * Create project home directory
@@ -133,10 +133,10 @@ class BackendSystem extends Backend {
         $ftp_frs_dir=$GLOBALS['ftp_frs_dir_prefix']."/".$unix_group_name;
 
         if (!is_dir($projdir)) {
-	    // Lets create the group's homedir.
-	    // (put the SGID sticky bit on all dir so that all files
-	    // in there are owned by the project group and not
-	    // the user own group
+        	// Lets create the group's homedir.
+	        // (put the SGID sticky bit on all dir so that all files
+	        // in there are owned by the project group and not
+	        // the user own group
             // Moreover, we need to chmod after mkdir because the umask may not allow the precised mode
             if (mkdir($projdir,0775)) {
                 $this->chown($projdir, "dummy");
@@ -242,7 +242,7 @@ class BackendSystem extends Backend {
             $perms = fileperms($private_dir);
             // 'others' should have no right on the repository
             if (($perms & 0x0004) || ($perms & 0x0002) || ($perms & 0x0001) || ($perms & 0x0200)) {
-              $this->chmod($private_dir, 02770);		
+            	$this->chmod($private_dir, 02770);		
             }
             // Get directory stat 
             $stat = stat("$private_dir");
@@ -430,7 +430,7 @@ class BackendSystem extends Backend {
     }
 
     /**
-     * Check if given name is not used by a repository or a file or a link
+     * Check if given name is not used by a repository or a file or a link under project directories
      * 
      * @param String $name
      * 
@@ -441,7 +441,7 @@ class BackendSystem extends Backend {
      **  under ftp anon 
      * true otherwise
      */
-    function isNameAvailable($name) {
+    function isProjectNameAvailable($name) {
         $dir = $GLOBALS['grpdir_prefix']."/".$name;
         $frs = $GLOBALS['ftp_frs_dir_prefix']."/".$name;
         $ftp = $GLOBALS['ftp_anon_dir_prefix']."/".$name;
@@ -460,6 +460,18 @@ class BackendSystem extends Backend {
             return false;
         }
         return true;
+    }
+    
+    /**
+     * Check if given name is not used by a repository or a file or a link under user directory
+     * 
+     * @param String $name
+     * 
+     * @return false if repository or file  or link already exists, true otherwise
+     */
+    function isUserNameAvailable($name) {
+        $path = $GLOBALS['homedir_prefix']."/".$name;
+        return (!$this->fileExists($path));
     }
     
     
@@ -500,7 +512,7 @@ class BackendSystem extends Backend {
      * @return Boolean
      */
     public function renameFileReleasedDirectory($project, $newName) {
-        if (is_dir($GLOBALS['ftp_frs_dir_prefix'].'/'.$project->getUnixName(false))){
+        if (is_dir($GLOBALS['ftp_frs_dir_prefix'].'/'.$project->getUnixName(false))) {
             return rename($GLOBALS['ftp_frs_dir_prefix'].'/'.$project->getUnixName(false), $GLOBALS['ftp_frs_dir_prefix'].'/'.$newName);
         } else {
             return true;
@@ -522,6 +534,19 @@ class BackendSystem extends Backend {
             return true;
         }
     }
+    
+    /**
+     * Rename User home directory 
+     * 
+     * @param User $user
+     * @param String  $newName
+     * 
+     * @return Boolean
+     */
+    public function renameUserHomeDirectory($user, $newName) {
+        return rename($GLOBALS['homedir_prefix'].'/'.$user->getUserName(), $GLOBALS['homedir_prefix'].'/'.$newName);
+    }
+    
     
     
 

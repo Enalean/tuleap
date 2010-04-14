@@ -2367,8 +2367,7 @@ class Artifact extends Error {
         $mail->addAdditionalHeader("X-Codendi-Artifact",    $this->ArtifactType->getItemName());
         $mail->addAdditionalHeader("X-Codendi-Artifact-ID", $this->getID());
         
-        
-	    //treat anonymous users
+         //treat anonymous users
 	    $body = $this->createMailForUsers(array($GLOBALS['UGROUP_ANONYMOUS']),$changes,$group_id,$group_artifact_id,$ok,$subject);
 	    
 	    if ($ok) { //don't send the mail if nothing permitted for this user group
@@ -2399,7 +2398,6 @@ class Artifact extends Error {
 	    $this->groupNotificationList(array_keys($concerned_ids),$user_sets,$ugroup_sets);
 
 	    //echo "<br>user_sets = "; print_r($user_sets); echo ", ugroup_sets = "; print_r($ugroup_sets);
-
 	    reset($ugroup_sets);
 	    while (list($x,$ugroups) = each($ugroup_sets)) {
             unset($arr_addresses);
@@ -2451,7 +2449,7 @@ class Artifact extends Error {
       }
 
 	  $summ = "";
-	  if (!$field_perm || ($field_perm['summary'] && permission_can_read_field($field_perm['summary']))) {
+	  if ($field_perm === false || (isset($field_perm['summary']) && $field_perm['summary'] && permission_can_read_field($field_perm['summary']))) {
 	    $summ = util_unconvert_htmlspecialchars($this->getValue('summary'));
 	  }
 	  $subject='['.$this->ArtifactType->getCapsItemName().' #'.$this->getID().'] '.$summ;
@@ -2462,14 +2460,13 @@ class Artifact extends Error {
 	    // artifact fields
 	    // Generate the message preamble with all required
 	    // artifact fields - Changes first if there are some.
-	    if ($changes) {
+	    if ($changes && $field_perm) {
 		$body = $GLOBALS['sys_lf']."=============   ".strtoupper(SimpleSanitizer::unsanitize($this->ArtifactType->getName()))." #".$this->getID().
 		    ": ".$Language->getText('tracker_include_artifact','latest_modif')."   =============". $GLOBALS['sys_lf'] . $artifact_href . $GLOBALS['sys_lf'] . $GLOBALS['sys_lf'] . 
 		  $this->formatChanges($changes,$field_perm,$visible_change) . $GLOBALS['sys_lf'] . $GLOBALS['sys_lf'] . $GLOBALS['sys_lf'] . $GLOBALS['sys_lf'] ."";
 
 		if (!$visible_change) return;
 	    }
-        
 	    $ok = true;
 	    
             
@@ -2494,7 +2491,7 @@ class Artifact extends Error {
 
                 $field_name = $field->getName();
 
-                if (!$field_perm || (isset($field_perm[$field_name]) && $field_perm[$field_name] && permission_can_read_field($field_perm[$field_name]))) {
+                if ($field_perm === false || (isset($field_perm[$field_name]) && $field_perm[$field_name] && permission_can_read_field($field_perm[$field_name]))) {
             
                     $field_html = new ArtifactFieldHtml($field);
                     
@@ -2584,96 +2581,94 @@ class Artifact extends Error {
 	}
 
 	
-        /**
-         * Format the changes
-         *
-         * @param changes: array of changes
-	 * @param $field_perm an array with the permission associated to each field. false to no check perms
-	 * @param $visible_change only needed when using permissions. Returns true if there is any change 
-	 * that the user has permission to see
-         *
-         * @return string
-         */
-        function formatChanges($changes,$field_perm,&$visible_change) {
-        
-            global $art_field_fact,$Language;
-	    $visible_change = false;
-            $out_hdr = '';
-            $out = '';
-            $out_com = '';
-            $out_att = '';
-            reset($changes);
-            $fmt = "%20s | %-25s | %s".$GLOBALS['sys_lf'];
-        
-
-	    if (!$field_perm || ( 
-		((isset($field_perm['assigned_to']) && $field_perm['assigned_to'] && permission_can_read_field($field_perm['assigned_to'])) || 
-		 (isset($field_perm['multi_assigned_to']) && $field_perm['multi_assigned_to'] && permission_can_read_field($field_perm['multi_assigned_to'])) ||
-         (!isset($field_perm['assigned_to']) && !isset($field_perm['multi_assigned_to']))))) {
-	      if (user_isloggedin()) {
-		$user_id = user_getid();
-		$out_hdr = $Language->getText('tracker_include_artifact','changes_by').' '.user_getrealname($user_id).' <'.user_getemail($user_id).">". $GLOBALS['sys_lf'] ."";
-		$out_hdr .= $Language->getText('tracker_import_utils','date').': '.format_date($GLOBALS['Language']->getText('system', 'datefmt'),time()).' ('.user_get_timezone().')';
-	      } else {
-		$out_hdr = $Language->getText('tracker_include_artifact','changes_by').' '.$Language->getText('tracker_include_artifact','anon_user').'        '.$Language->getText('tracker_import_utils','date').': '.format_date($GLOBALS['Language']->getText('system', 'datefmt'),time());
-	      }
-	    }
-            //Process special cases first: follow-up comment
-	    if (array_key_exists('comment', $changes) && $changes['comment']) {
-	      $visible_change = true;
-	      $out_com = $GLOBALS['sys_lf'] . $GLOBALS['sys_lf'] ."---------------   ".$Language->getText('tracker_include_artifact','add_flup_comment')."   ----------------". $GLOBALS['sys_lf'] ."";
-	    
-	      if (isset($changes['comment']['type']) && $changes['comment']['type'] != $Language->getText('global','none') && $changes['comment']['type'] != '') {
-		$out_com .= "[".$changes['comment']['type']."]".$GLOBALS['sys_lf'];
-	      }
-	      $out_com .= util_unconvert_htmlspecialchars($changes['comment']['add']);
-	      unset($changes['comment']);
-	    }
-        
-            //Process special cases first: file attachment
-	    if (array_key_exists('attach', $changes) && $changes['attach']) {
-	      $visible_change = true;
-	      $out_att = "". $GLOBALS['sys_lf'] . $GLOBALS['sys_lf'] ."---------------    ".$Language->getText('tracker_include_artifact','add_attachment')."     -----------------". $GLOBALS['sys_lf'] ."";
-	      $out_att .= sprintf($Language->getText('tracker_include_artifact','file_name')." %-30s ".$Language->getText('tracker_include_artifact','size').":%d KB". $GLOBALS['sys_lf'] ."",$changes['attach']['name'],
-				  intval($changes['attach']['size']/1024) );
-	      $out_att .= $changes['attach']['description'] . $GLOBALS['sys_lf'] . $changes['attach']['href'];
-	      unset($changes['attach']);
-	    }
-        
-            // All the rest of the fields now
-            reset($changes);
-            while ( list($field_name,$h) = each($changes)) {
-	      
-	      // If both removed and added items are empty skip - Sanity check
-	      if (((!isset($h['del']) || !$h['del']) && (!isset($h['add']) || !$h['add'])) ||
-		  $field_perm && (
-          !isset($field_perm[$field_name]) ||
-		  !$field_perm[$field_name] || 
-		  !permission_can_read_field($field_perm[$field_name]))) { continue; }
-	      
-	      $visible_change = true;
-	      $label = $field_name;
-	      $field = $art_field_fact->getFieldFromName($field_name);
-	      if ( $field ) {
-		$label = $field->getLabel();
-        if (isset($h['del'])) {
-            $h['del'] = SimpleSanitizer::unsanitize(util_unconvert_htmlspecialchars($h['del']));
+    /**
+    * Format the changes
+    *
+    * @param changes: array of changes
+    * @param $field_perm an array with the permission associated to each field. false to no check perms
+    * @param $visible_change only needed when using permissions. Returns true if there is any change 
+    * that the user has permission to see
+    *
+    * @return string
+    */
+    function formatChanges($changes,$field_perm,&$visible_change) {
+    
+        global $art_field_fact,$Language;
+        $visible_change = false;
+        $out_hdr = '';
+        $out = '';
+        $out_com = '';
+        $out_att = '';
+        reset($changes);
+        $fmt = "%20s | %-25s | %s".$GLOBALS['sys_lf'];
+    
+    
+        if ($field_perm === false || (
+            ((isset($field_perm['assigned_to']) && $field_perm['assigned_to'] && permission_can_read_field($field_perm['assigned_to'])) || 
+            (isset($field_perm['multi_assigned_to']) && $field_perm['multi_assigned_to'] && permission_can_read_field($field_perm['multi_assigned_to'])) ||
+            (!isset($field_perm['assigned_to']) && !isset($field_perm['multi_assigned_to']))))) {
+               if (user_isloggedin()) {
+                      $user_id = user_getid();
+                      $out_hdr = $Language->getText('tracker_include_artifact','changes_by').' '.user_getrealname($user_id).' <'.user_getemail($user_id).">". $GLOBALS['sys_lf'] ."";
+                      $out_hdr .= $Language->getText('tracker_import_utils','date').': '.format_date($GLOBALS['Language']->getText('system', 'datefmt'),time()).' ('.user_get_timezone().')';
+               } else {
+                      $out_hdr = $Language->getText('tracker_include_artifact','changes_by').' '.$Language->getText('tracker_include_artifact','anon_user').'        '.$Language->getText('tracker_import_utils','date').': '.format_date($GLOBALS['Language']->getText('system', 'datefmt'),time());
+               }
         }
-        if (isset($h['add'])) {
-            $h['add'] = SimpleSanitizer::unsanitize(util_unconvert_htmlspecialchars($h['add']));
+        //Process special cases first: follow-up comment
+        if (array_key_exists('comment', $changes) && $changes['comment']) {
+          $visible_change = true;
+          $out_com = $GLOBALS['sys_lf'] . $GLOBALS['sys_lf'] ."---------------   ".$Language->getText('tracker_include_artifact','add_flup_comment')."   ----------------". $GLOBALS['sys_lf'] ."";
+        
+          if (isset($changes['comment']['type']) && $changes['comment']['type'] != $Language->getText('global','none') && $changes['comment']['type'] != '') {
+                 $out_com .= "[".$changes['comment']['type']."]".$GLOBALS['sys_lf'];
+          }
+          $out_com .= util_unconvert_htmlspecialchars($changes['comment']['add']);
+          unset($changes['comment']);
         }
-	      }
-	      $out .= sprintf($fmt, SimpleSanitizer::unsanitize($label), isset($h['del'])?$h['del']:"",isset($h['add'])?$h['add']:"");
-	    } // while
-	    
-	    if ($out) {
-	      $out = $GLOBALS['sys_lf'] . $GLOBALS['sys_lf'] . sprintf($fmt,$Language->getText('tracker_include_artifact','what').'    ',$Language->getText('tracker_include_artifact','removed'),$Language->getText('tracker_include_artifact','added')).
-		"------------------------------------------------------------------". $GLOBALS['sys_lf'] . $out;
+        
+           //Process special cases first: file attachment
+        if (array_key_exists('attach', $changes) && $changes['attach']) {
+          $visible_change = true;
+          $out_att = "". $GLOBALS['sys_lf'] . $GLOBALS['sys_lf'] ."---------------    ".$Language->getText('tracker_include_artifact','add_attachment')."     -----------------". $GLOBALS['sys_lf'] ."";
+          $out_att .= sprintf($Language->getText('tracker_include_artifact','file_name')." %-30s ".$Language->getText('tracker_include_artifact','size').":%d KB". $GLOBALS['sys_lf'] ."",$changes['attach']['name'],
+         intval($changes['attach']['size']/1024) );
+          $out_att .= $changes['attach']['description'] . $GLOBALS['sys_lf'] . $changes['attach']['href'];
+          unset($changes['attach']);
+        }
+    
+        // All the rest of the fields now
+        reset($changes);
+        while ( list($field_name,$h) = each($changes)) {
+            // If both removed and added items are empty skip - Sanity check
+            if (((!isset($h['del']) || !$h['del']) && (!isset($h['add']) || !$h['add'])) ||
+                ($field_perm && (
+                !isset($field_perm[$field_name]) ||
+                !$field_perm[$field_name] || 
+                !permission_can_read_field($field_perm[$field_name])))) { continue; }
+    
+            $visible_change = true;
+            $label = $field_name;
+            $field = $art_field_fact->getFieldFromName($field_name);
+            if ( $field ) {
+                $label = $field->getLabel();
+                if (isset($h['del'])) {
+                    $h['del'] = SimpleSanitizer::unsanitize(util_unconvert_htmlspecialchars($h['del']));
+                }
+                if (isset($h['add'])) {
+                    $h['add'] = SimpleSanitizer::unsanitize(util_unconvert_htmlspecialchars($h['add']));
+                }
             }
-	    
-            return($out_hdr.$out.$out_com.$out_att);
-	    
-        }
+            $out .= sprintf($fmt, SimpleSanitizer::unsanitize($label), isset($h['del'])?$h['del']:"",isset($h['add'])?$h['add']:"");
+        } // while
+    
+        if ($out) {
+            $out = $GLOBALS['sys_lf'] . $GLOBALS['sys_lf'] . sprintf($fmt,$Language->getText('tracker_include_artifact','what').'    ',$Language->getText('tracker_include_artifact','removed'),$Language->getText('tracker_include_artifact','added')).
+                "------------------------------------------------------------------". $GLOBALS['sys_lf'] . $out;
+            }
+    
+        return($out_hdr.$out.$out_com.$out_att);	    
+    }
 
         
         /**

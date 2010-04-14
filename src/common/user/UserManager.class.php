@@ -20,6 +20,7 @@
 
 require_once('common/user/User.class.php');
 require_once('common/dao/UserDao.class.php');
+require_once('common/dao/WikiDao.class.php');
 
 class UserManager {
     
@@ -654,6 +655,24 @@ class UserManager {
             return $this->getDao()->suspendUserNotProjectMembers($lastRemove);
         }
     }
+    /**
+     * Update user name in different tables containing the old user name  
+     * @param User $user
+     * @param String $newName
+     * @return Boolean
+     */
+    public function renameUser($user, $newName) {
+        $dao = $this->getDao();
+        if ($dao->renameUser($user, $newName)) {
+            $wiki = new WikiDao(CodendiDataAccess::instance());
+            if ($wiki->updatePageName($user, $newName)) {
+                $user->setUserName($newName);
+                return ($this->updateDb($user));
+            }
+        }
+        return false;
+    }
+    
 }
 
 ?>

@@ -5,5 +5,6 @@ rule_file	error_upload_size	Erreur de chargement de fichier($1). Le fichier est 
 rule_file	error_upload_unknown	Erreur de chargement de fichier($1). Code d'erreur inconnu.
 
 rule_user_name	error_exists	Ce nom d'utilisateur existe déjà
+rule_user_name	error_event_reserved	$1 est déjà réservé pour un autre renommage d'utilisateur. Merci de consulter les Événements Système.
 
 rule_group_name	error_exists	Ce nom court est déjà utilisé

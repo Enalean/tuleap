@@ -62,24 +62,38 @@ if($request->valid(new Valid_WhiteList('stay_in_ssl', array(0,1)))) {
 // Application
 //
 
+$um = UserManager::instance();
+
 // first check for valid login, if so, redirect
 $success = false;
-$status = null;
+$status  = null;
+$user    = null;
 if ($request->isPost()) {
     if (!$_rVar['form_loginname'] || !$_rVar['form_pw']) {
         $GLOBALS['Response']->addFeedback('error', $Language->getText('include_session','missing_pwd'));
     } else {
-        $user = UserManager::instance()->login($_rVar['form_loginname'], $_rVar['form_pw']);
-        if ($user->isLoggedIn()) {
-            account_redirect_after_login();
-        }
+        $user = $um->login($_rVar['form_loginname'], $_rVar['form_pw']);
         $status = $user->getStatus();
     }
 }
 
-//nuke their old session
-UserManager::instance()->logout();
+// Redirect user to the right page:
+// If the user is valid either because is just succeeded to login or because
+// she has a valid session, tries to redirect to the right value. This may happens
+// if you receive a mail with 2 docs to read. You click on both link and you get
+// 2 login forms. You identicate in the first tab and you reload the second one.
+// The reload (a /account/login.php?return_to=... url) should redirect you to the
+// doc instead of displaying login page again.
+if ($user === null) {
+    $user = $um->getCurrentUser();
+}
+if ($user->isLoggedIn()) {
+    account_redirect_after_login();
+}
 
+//
+// Display login page
+//
 $purifier =& Codendi_HTMLPurifier::instance();
 
 $userStatusBox = '';

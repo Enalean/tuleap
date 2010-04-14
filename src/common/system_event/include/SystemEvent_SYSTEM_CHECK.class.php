@@ -64,7 +64,9 @@ class SystemEvent_SYSTEM_CHECK extends SystemEvent {
         
         // Force global updates: aliases, CVS roots, SVN roots
         $backendCVS->setCVSRootListNeedUpdate();
-        $backendSVN->setSVNApacheConfNeedUpdate();
+        // Do not force SVN as it flushes the caches (APC, ldap)
+        // reload only when needed.
+        //$backendSVN->setSVNApacheConfNeedUpdate();
         $backendAliases->setNeedUpdateMailAliases();
         $backendSystem->setNeedRefreshUserCache();
         $backendSystem->setNeedRefreshGroupCache();
@@ -136,6 +138,7 @@ class SystemEvent_SYSTEM_CHECK extends SystemEvent {
                     }
                     $backendSVN->updateSVNAccess($project->getId());
                     $backendSVN->setSVNPrivacy($project, !$project->isPublic() || $project->isSVNPrivate());
+                    $backendSVN->setSVNApacheConfNeedUpdate();
                 }
                 $backendSVN->updateHooks($project);
 

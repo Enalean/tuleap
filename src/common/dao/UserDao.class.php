@@ -586,6 +586,111 @@ class UserDao extends DataAccessObject {
             return false;
         }
     }
-     
+
+    /**
+     * Replace all occurences of $search in $subject replaced by $replace
+     *
+     * This method takes into account strings separted by coma.
+     * We assume that we search about tazmani, it may be saved in addresses field like this:
+     * (1)tazmani,mickey
+     * (2)mickey,tazmani
+     * (3)mickey,tazmani,minnie
+     * (4)tazmani
+     *
+     * @param String $subject The original string
+     * @param String $search  The value to being searched for
+     * @param String $replace The replacement value that replaces found search values
+     *
+     * @return String
+     */
+    public function replaceStringInList($subject, $search, $replace) {
+        $tokens = explode(',', $subject);
+        foreach($tokens as $k => $str) {
+            $tokens[$k] = preg_replace('%^(\s*)'.$search.'(\s*)$%', '$1'.$replace.'$2', $str);
+        }
+        return implode(',', $tokens);
+    }
+
+    /* Update user name in fields may be involved when renaming user
+     * 
+     * @param User   $user
+     * @param String $newName
+     * @return Boolean
+     */
+    function renameUser($user, $newName) {
+        $sqlArtcc = ' UPDATE artifact_cc SET email ='.$this->da->quoteSmart($newName).
+                     ' WHERE email = '.$this->da->quoteSmart($user->getUserName());
+        if ($this->update($sqlArtcc)) {
+            $sqlSel = 'SELECT addresses, id FROM artifact_global_notification 
+                       WHERE addresses LIKE "%"'.$this->da->quoteSmart($user->getUserName()).'"%"';
+            
+            $dar = $this->retrieve($sqlSel);
+            if ($dar && !$dar->isError() && $dar->rowCount()> 0) {
+                $res = true; 
+                foreach ($dar as $row) {
+                    $row['addresses'] = $this->replaceStringInList($row['addresses'], $user->getUserName(), $newName); 
+                    $sqlArtgn = 'UPDATE artifact_global_notification SET addresses = '.$this->da->quoteSmart($row['addresses']).'
+                                 WHERE id = '.$this->da->escapeInt($row['id']);
+                    $res = $res & $this->update($sqlArtgn);
+                }
+                return $res;
+                
+            } else return true;
+                
+        } else return false;
+        
+    }
+
+    /**
+     * return array of all users or users matching the pattern if $pattern is not empty
+     * 
+     * @param String $pattern
+     * @param Integer $offset
+     * @param Integer $limit
+     * 
+     * @return Array
+     */
+    function listAllUsers ($pattern = "", $offset, $limit) {
+        $stm = "";
+        if ($pattern!="") {
+            $stm = ' WHERE user_name LIKE '.$this->da->quoteSmart($pattern.'%');
+        }
+    
+        $sql='SELECT SQL_CALC_FOUND_ROWS * FROM user ' 
+             .$stm.' ORDER BY user_name 
+               ASC LIMIT '.$this->da->escapeInt($offset).', '.$this->da->escapeInt($limit);
+        
+        $res = db_query($sql);
+        
+        return array('users' => $res, 'numrows' => $this->foundRows());
+    }
+
+
+    
+   /**
+    * return all users of a given group id
+    * 
+    * @param Integer $groupId
+    * @param Integer $offset
+    * @param Integer $limit
+    * 
+    * @return Array
+    */
+    function listAllUsersForGroup($groupId, $offset=0, $limit=0) {
+        $stm ="";
+        if ($limit!=0) {
+            $stm = ' ASC LIMIT '.$this->da->escapeInt($offset).', '.$this->da->escapeInt($limit);
+        }
+        $sql ='SELECT SQL_CALC_FOUND_ROWS user.user_id AS user_id,user.user_name 
+                  AS user_name, user.realname AS realname,user.status AS status 
+               FROM user, user_group 
+               WHERE user.user_id=user_group.user_id 
+               AND user_group.group_id='.$this->da->escapeInt($groupId).' 
+               ORDER BY user.user_name'.$stm;
+               
+        $res = db_query($sql);
+        return array('users' => $res, 'numrows' => $this->foundRows());
+    }
+   
 }
 ?>

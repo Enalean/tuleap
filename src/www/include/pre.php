@@ -118,7 +118,7 @@ if (!file_exists($GLOBALS['codendi_cache_dir'])) {
 
 // Instantiate System Event listener
 require_once('common/system_event/SystemEventManager.class.php');
-$system_event_manager = new SystemEventManager();
+$system_event_manager = SystemEventManager::instance();
 
 //Load plugins
 require_once('common/plugin/PluginManager.class.php');

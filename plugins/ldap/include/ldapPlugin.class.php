@@ -508,7 +508,7 @@ class LdapPlugin extends Plugin {
             $value = $lr->getLogin();
         }
 
-        include_once($GLOBALS['Language']->getContent('directory_redirect', 'en_US', 'ldap', '.php'));
+        include_once($GLOBALS['Language']->getContent('directory_redirect', 'en_US', 'ldap'));
         if(function_exists('custom_build_link_to_directory')) {
             $link = custom_build_link_to_directory($lr, $value);
         }
@@ -519,7 +519,7 @@ class LdapPlugin extends Plugin {
     }
 
     function displayUserDetails($showdir, $user_name) {
-        include($GLOBALS['Language']->getContent('user_home', null, 'ldap', '.php'));
+        include($GLOBALS['Language']->getContent('user_home', null, 'ldap'));
 
         if (!$showdir && $my_html_ldap_format) {
             echo '<td colspan="2" align="center"><a href="/users/'.$user_name.'/?showdir=1"><hr>[ '.$GLOBALS['Language']->getText('plugin_ldap','more_from_directory',$GLOBALS['sys_org_name']).'... ]</a><td>';

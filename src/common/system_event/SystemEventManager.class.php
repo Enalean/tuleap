@@ -33,6 +33,7 @@ require_once('common/system_event/include/SystemEvent_MEMBERSHIP_DELETE.class.ph
 require_once('common/system_event/include/SystemEvent_USER_CREATE.class.php');
 require_once('common/system_event/include/SystemEvent_USER_DELETE.class.php');
 require_once('common/system_event/include/SystemEvent_USER_EMAIL_CHANGED.class.php');
+require_once('common/system_event/include/SystemEvent_USER_RENAME.class.php');
 require_once('common/system_event/include/SystemEvent_MAILING_LIST_CREATE.class.php');
 require_once('common/system_event/include/SystemEvent_MAILING_LIST_DELETE.class.php');
 require_once('common/system_event/include/SystemEvent_CVS_IS_PRIVATE.class.php');
@@ -55,7 +56,7 @@ class SystemEventManager {
     var $dao;
 
     // Constructor
-    function SystemEventManager() {
+    private function __construct() {
         $this->_getDao();
 
         $event_manager = $this->_getEventManager();
@@ -64,6 +65,7 @@ class SystemEventManager {
             Event::USER_EMAIL_CHANGED, 
             Event::EDIT_SSH_KEYS,
             Event::PROJECT_RENAME,
+            Event::USER_RENAME,
             'approve_pending_project',
             'project_is_deleted',
             'project_admin_add_user',
@@ -88,9 +90,21 @@ class SystemEventManager {
         }
     }
 
+    /**
+     * Prevent Clone
+     * 
+     * @return void
+     */
+    private function __clone() {
+        throw new Exception('Cannot clone singleton');
+    }
+
     protected static $_instance;
+
     /**
      * SystemEventManager is singleton
+     * 
+     * @return SystemEventManager
      */
     public static function instance() {
         if (!isset(self::$_instance)) {
@@ -148,7 +162,7 @@ class SystemEventManager {
                                SystemEvent::PRIORITY_LOW);
             break;
         case Event::PROJECT_RENAME:
-        	$this->createEvent(SystemEvent::TYPE_PROJECT_RENAME,
+            $this->createEvent(SystemEvent::TYPE_PROJECT_RENAME,
                                $this->concatParameters($params, array('group_id', 'new_name')),
                                SystemEvent::PRIORITY_HIGH);
             break;
@@ -171,6 +185,11 @@ class SystemEventManager {
             $this->createEvent(SystemEvent::TYPE_USER_DELETE,
                                $params['user_id'],
                                SystemEvent::PRIORITY_LOW);
+            break;
+        case Event::USER_RENAME:
+            $this->createEvent(SystemEvent::TYPE_USER_RENAME,
+                               $this->concatParameters($params, array('user_id', 'new_name')),
+                               SystemEvent::PRIORITY_HIGH);
             break;
         case 'cvs_is_private':
             $params['cvs_is_private'] = $params['cvs_is_private'] ? 1 : 0;
@@ -329,6 +348,7 @@ class SystemEventManager {
         case SystemEvent::TYPE_USER_CREATE:
         case SystemEvent::TYPE_USER_DELETE:
         case SystemEvent::TYPE_USER_EMAIL_CHANGED:
+        case SystemEvent::TYPE_USER_RENAME:
         case SystemEvent::TYPE_MAILING_LIST_CREATE:
         case SystemEvent::TYPE_MAILING_LIST_DELETE:
         case SystemEvent::TYPE_CVS_IS_PRIVATE:
@@ -482,6 +502,61 @@ class SystemEventManager {
         
         }
         return $html;
+    }
+    /**
+     * Return true if there is no pending rename event of this user, otherwise false
+     * 
+     * @param User $user 
+     * @return Boolean
+     */
+    public function canRenameUser($user) {
+        $dar = $this->_getDao()->searchWithParam('head', $user->getId(), array(SystemEvent::TYPE_USER_RENAME), array(SystemEvent::STATUS_NEW, SystemEvent::STATUS_RUNNING));
+        if ($dar && !$dar->isError() && $dar->rowCount() == 0) {
+            return true;
+        }
+        return false;
+    }
+    
+    /**
+     * Return true if there is no pending rename event of this project, otherwise false
+     * 
+     * @param User $user 
+     * @return Boolean
+     */
+    public function canRenameProject($project) {
+        $dar = $this->_getDao()->searchWithParam('head', $project->getId(), array(SystemEvent::TYPE_PROJECT_RENAME), array(SystemEvent::STATUS_NEW, SystemEvent::STATUS_RUNNING));
+        if ($dar && !$dar->isError() && $dar->rowCount() == 0) {
+            return true;
+        }
+        return false;
+    }
+    
+    
+    /**
+     * Return true if there is no pending rename user event on this new name
+     * @param String $new_name
+     * @return Boolean
+     */
+    public function isUserNameAvailable($newName) {
+        $dar = $this->_getDao()->searchWithParam('tail', $newName, array(SystemEvent::TYPE_USER_RENAME), array(SystemEvent::STATUS_NEW, SystemEvent::STATUS_RUNNING));
+        if ($dar && !$dar->isError() && $dar->rowCount() == 0) {
+            return true;
+        }
+        return false;
+    }
+    
+    
+    /**
+     * Return true if there is no pending rename project event on this new name
+     * @param String $new_name
+     * @return Boolean
+     */
+    public function isProjectNameAvailable($newName) {
+        $dar = $this->_getDao()->searchWithParam('tail', $newName, array(SystemEvent::TYPE_PROJECT_RENAME), array(SystemEvent::STATUS_NEW, SystemEvent::STATUS_RUNNING));
+        if ($dar && !$dar->isError() && $dar->rowCount() == 0) {
+            return true;
+        }
+        return false;
     }
 
 }

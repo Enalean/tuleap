@@ -244,10 +244,30 @@ class BackendCVS extends Backend {
         // Get list of project members (Unix names)
         $members_id_array=$project->getMembersUserNames();
         $members_name_array = array();
-        foreach ($members_id_array as $member){
-	  $members_name_array[] = strtolower($member['user_name'])."\n";
+        foreach ($members_id_array as $member) {
+        $members_name_array[] = strtolower($member['user_name'])."\n";
         }
         return $this->writeArrayToFile($members_name_array,$cvswriters_file);
+    }
+    /*
+     * Update CVS writers into all projects that given user belongs to
+     * @param User $user
+     * @return Boolean 
+     */
+    public function updateCVSWritersForGivenMember($user) {
+        $projects = $user->getProjects();
+        if (isset($projects)) {
+            $pm = $this->getProjectManager();
+            foreach ($projects as $groupId) {
+                $project = $pm->getProject($groupId);
+                if ($this->repositoryExists($project)) {
+                    if (!$this->updateCVSwriters($groupId)) {
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
     }
 
 
@@ -264,7 +284,7 @@ class BackendCVS extends Backend {
 
 
         // Add notify command if cvs_watch_mode is on
-        if ($project->getCVSWatchMode()){
+        if ($project->getCVSWatchMode()) {
             $filename = "$cvs_dir/CVSROOT/notify";
             $file_array=file($filename);
             if (!in_array($this->block_marker_start,$file_array)) {
@@ -351,11 +371,11 @@ class BackendCVS extends Backend {
     public function CVSRootListUpdate() {
         $cvs_root_allow_array = array();
         $projlist = array();
-	$repolist = array();
+        $repolist = array();
 
         $service_dao = $this->_getServiceDao();
         $dar = $service_dao->searchActiveUnixGroupByUsedService('cvs');
-        foreach($dar as $row) {
+        foreach ($dar as $row) {
             $repolist[]="/cvsroot/".$row['unix_group_name'];
         }
 
@@ -387,9 +407,9 @@ class BackendCVS extends Backend {
   
             // and recopy other configuration instructions
             $configlines=0;
-            foreach($cvs_config_array as $line) {
-                if ($configlines) { fwrite($fp,$line); }
-                if (strpos($line,$cvsnt_marker)) { $configlines=1;}
+            foreach ($cvs_config_array as $line) {
+                if ($configlines) { fwrite($fp, $line); }
+                if (strpos($line, $cvsnt_marker)) { $configlines=1;}
             }
         } else {
             // CVS: simple list of allowed CVS roots

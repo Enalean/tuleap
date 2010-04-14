@@ -49,7 +49,7 @@ class BackendSVN extends Backend {
     protected function getUGroupDao() {
         return new UGroupDao(CodendiDataAccess::instance());
     }
-    /**
+     /**
      * For mocking (unit tests)
      *
      * @param array $row a row from the db for a ugroup
@@ -362,6 +362,48 @@ class BackendSVN extends Backend {
         return $conf;
     }
 
+    /**
+     * return all projects that a given member belongs to 
+     * and also the projects that he is a member of its static ugroup
+     * 
+     * @param User $user
+     * @return Array
+     */
+    public function getAllProjects($user) {
+        $projects = array();
+        
+        $uGroupDao = $this->getUGroupDao();
+        $dar = $uGroupDao->searchGroupByUserId($user->getId());
+        foreach ($dar as $row) {
+            $projects[] =$row['group_id'];
+        }
+        $projects = array_merge($projects, $user->getProjects());
+        return $projects;
+    }
+
+    /**
+     * Update SVN access files into all projects that a given user belongs to
+     * 
+     * @param User $user
+     * 
+     * @return Boolean
+     */
+    public function updateSVNAccessForGivenMember($user) {
+        $projects = $this->getAllProjects($user); 
+    
+        if (isset($projects)) {
+            foreach ($projects as $groupId) {
+                $project = $this->getProjectManager()->getProject($groupId);
+                if ($this->repositoryExists($project)) {
+                    if (!$this->updateSVNAccess($groupId)) {
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
+    }
+  
     /**
      * Force apache conf update
      *

@@ -79,7 +79,7 @@ class ProjectDao extends DataAccessObject {
         $join    = '';
         $where   = '';
         $groupby = '';
-        if ($userId !== null) {
+        if ($userId != null) {
             if ($isMember || $isAdmin) {
                 // Manage if we search project the user is member or admin of
                 $join  .= ' JOIN user_group ug ON (ug.group_id = g.group_id)';
@@ -91,7 +91,7 @@ class ProjectDao extends DataAccessObject {
                 // Either public projects or private projects the user is member of
                 $join  .= ' LEFT JOIN user_group ug ON (ug.group_id = g.group_id)';
                 $where .= ' AND (g.is_public = 1'.
-                          ' OR (g.is_public = 0 and ug.user_id IS NOT NULL))';
+                          '      OR (g.is_public = 0 and ug.user_id = '.$this->da->escapeInt($userId).'))';
             }
             $groupby .= ' GROUP BY g.group_id';
         } else {
@@ -140,6 +140,44 @@ class ProjectDao extends DataAccessObject {
         }
         return false;
     }
+    
+    /**
+     * Return all projects matching given parameters
+     * 
+     * @param Integer $offset
+     * @param Integer $limit
+     * @param String  $status
+     * @param String  $groupName
+     * @return Array
+     */
+    public function returnAllProjects($offset, $limit, $status=false, $groupName=false) {
+        $cond = array();
+        if ($status != false) {
+            $cond[] = 'status='.$this->da->quoteSmart($status);
+        }
+        
+        if ($groupName != false) {
+            $cond[] = 'group_name LIKE '.$this->da->quoteSmart($groupName.'%');
+        }
+        
+        if (count($cond) > 0) {
+            $stm = ' WHERE '.implode(' AND ', $cond);
+        } else {
+            $stm = '';
+        }
+        
+        $sql = 'SELECT SQL_CALC_FOUND_ROWS *
+                FROM groups '.$stm.'
+                ORDER BY group_name 
+                ASC LIMIT '.$this->da->escapeInt($offset).', '.$this->da->escapeInt($limit);
+
+        $res = db_query($sql);
+        $sql = 'SELECT FOUND_ROWS() as nb';
+        $res_numrows = db_query($sql);
+        $row = db_fetch_array($res_numrows);
+        return array('projects' => $res, 'numrows' => $row['nb']);
+    }
+
 }
 
 ?>

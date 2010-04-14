@@ -231,17 +231,17 @@ function account_groupnamevalid($name) {
 
 // print out shell selects
 function account_shellselects($current) {
-	$shells = file("/etc/shells");
-
-	for ($i = 0; $i < count($shells); $i++) {
-        $this_shell = chop($shells[$i]);
-
-        if ($current == $this_shell) {
-        	echo "<option selected value=$this_shell>$this_shell</option>\n";
-        } else {
-        	echo "<option value=$this_shell>$this_shell</option>\n";
+    include_once 'common/user/User.class.php';
+    if (!$current) {
+        $current = '/sbin/nologin';
+    }
+    foreach (User::getAllUnixShells() as $shell) {
+        $selected = '';
+        if ($current == $shell) {
+            $selected = ' selected="selected"';
         }
-	}
+        echo '<option value="'.$shell.'"'.$selected.'>'.$shell.'</option>'.PHP_EOL;
+    }
 }
 // Set user password (Unix, Web)
 function account_create($loginname=''

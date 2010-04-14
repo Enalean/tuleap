@@ -1575,7 +1575,7 @@ class Layout extends Response {
             $hp =& Codendi_HTMLPurifier::instance();
             $tabs[] = array('link'        => $link,
                             'icon'        => null,
-                            'label'       => $short_name == 'summary' ? $hp->purify($project->getPublicName()).'&nbsp;&raquo;' : $hp->purify($service_data['label']),
+                            'label'       => $short_name == 'summary' ? $hp->purify(util_unconvert_htmlspecialchars($project->getPublicName()), CODENDI_PURIFIER_CONVERT_HTML).'&nbsp;&raquo;' : $hp->purify($service_data['label']),
                             'enabled'     => $enabled,
                             'description' => $hp->purify($service_data['description']));
         }

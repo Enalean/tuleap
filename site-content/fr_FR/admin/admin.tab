@@ -173,7 +173,9 @@ admin_groupedit	license_other	Autre licence
 admin_groupedit	built_from_template	Créé à partir du patron
 admin_groupedit	rename_project_title	Renommage du Projet	
 admin_groupedit	rename_project_label	Renommage du Projet en 
-admin_groupedit	rename_project_msg	Projet sera renommé de $1 en $2.
+admin_groupedit	rename_project_msg	Le changement du nom du projet sur le système va être traité dans quelques instants ($1 -> $2).
+admin_groupedit	rename_project_warn	La mise à jour du nom du projet ne sera effective qu'après le traitement de l'événement système correspondant.
+admin_groupedit	rename_project_already_queued	Il y a déjà une opération de renommage prévue pour ce projet. Merci de consulter les <a href="/admin/system_events/">Événements Système</a>.
 admin_groupedit	invalid_short_name	Nom court du projet invalide
 
 #
@@ -284,9 +286,12 @@ admin_usergroup	email	E-mail
 admin_usergroup	expiry_date	Date d'expiration
 admin_usergroup	data_not_parsed	Désolé, le format de la date d'expiration est incorrect. Il doit suivre le format AAAA-MM-JJ.
 admin_usergroup	ldap_id	Identifiant LDAP
+admin_usergroup	unix_details	Détails Unix :
 admin_usergroup	unix_status	Statut du compte Unix
+admin_usergroup	status	Statut
 admin_usergroup	no_account	Pas de compte Unix
 admin_usergroup	active	Actif
+admin_usergroup	restricted	Restreint
 admin_usergroup	suspended	Suspendu
 admin_usergroup	deleted	Détruit
 admin_usergroup	current_groups	Groupes actuels
@@ -294,12 +299,21 @@ admin_usergroup	remove_ug	Enlever l'utilisateur de ce groupe
 admin_usergroup	admin_flags	Drapeaux d'administration
 admin_usergroup	add_ug	Ajouter l'utilisateur au groupe (ID du groupe)
 admin_usergroup	change_passwd	Changer le mot de passe de l'utilisateur
+admin_usergroup	was	Intialement :
+admin_usergroup	rename_user_msg	Le changement de Login utilisateur sur le système va être traité dans quelques instants ($1 -> $2).
+admin_usergroup	rename_user_warn	La mise à jour du Login ne sera effective qu'après le traitement de l'événement système correspondant.
+admin_usergroup	rename_user_already_queued	Il y a déjà une opération de renommage prévue pour cet utilisteur. Merci de consulter les <a href="/admin/system_events/">Événements Système</a>.
+admin_usergroup	account_details	Détails du compte:
+admin_usergroup	last_pwd_update	Dernière mise à jour du mot de passe
+admin_usergroup	last_access_date	Dernier accès
+admin_usergroup	cannot_change_status	Impossible de changer le statut avant la validation du compte
+admin_usergroup	user_public_profile	Profil public
 #
 #-----------------------------------------------
 # Script: SF/www/admin/userlist.php
 #
 admin_userlist	title	Administration - Liste des utilisateurs
-admin_userlist	legend	Légende pour le Statut&nbsp;:&nbsp;&nbsp;<B>Actif</B>&nbsp;&nbsp;<u>Restreint</u>&nbsp;&nbsp;(v)Validé&nbsp;&nbsp;(vr)Validé et Restreint&nbsp;&nbsp;<I>Détruit</I>&nbsp;&nbsp;Suspendu&nbsp;&nbsp;(*)En attente
+admin_userlist	legend	Légende pour le Statut<span class="site_admin_user_status_A">&nbsp;</span><B>Actif</B><span class="site_admin_user_status_R">&nbsp;</span><u>Restreint</u><span class="site_admin_user_status_V">&nbsp;</span>(v)Validé<span class="site_admin_user_status_W">&nbsp;</span>(vr)Validé et Restreint<span class="site_admin_user_status_D">&nbsp;</span><I>Détruit</I><span class="site_admin_user_status_S">&nbsp;</span>Suspendu<span class="site_admin_user_status_P">&nbsp;</span>(*)En attente
 admin_userlist	user_deleted	Utilisateur mis à jour avec le statut DETRUIT - Le compte Unix est planifié pour la destruction
 admin_userlist	user_active	Utilisateur mis à jour avec le statut ACTIF
 admin_userlist	user_validated	Utilisateur mis à jour avec le statut VALIDE
@@ -313,14 +327,17 @@ admin_userlist	group	Groupe $1
 admin_userlist	uid_toadd	ID utilisateur à ajouter
 admin_userlist	active	Actif
 admin_userlist	validated	Validé
+admin_userlist	validated_restricted	Validé et Restreint
 admin_userlist	restricted	Restreint
 admin_userlist	deleted	Détruit
 admin_userlist	suspended	Suspendu
+admin_userlist	pending	En attente
 admin_userlist	activate	Activer
 admin_userlist	validate	Valider
 admin_userlist	restrict	Restreindre
 admin_userlist	delete	Détruire
 admin_userlist	suspend	Suspendre
+admin_userlist	status	Statut
 #
 #-----------------------------------------------
 # Script: SF/www/admin/trove/trove_cat_add.php

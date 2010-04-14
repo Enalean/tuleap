@@ -6,203 +6,244 @@
 //
 // 
 
-require_once('pre.php');    
+require_once('pre.php');
 require_once('account.php');
+require_once('common/event/EventManager.class.php');
+require_once('common/system_event/SystemEventManager.class.php');
+
 $GLOBALS['HTML']->includeCalendarScripts();
 
 session_require(array('group'=>'1','admin_flags'=>'A'));
 
+$request = HTTPRequest::instance();
+$um      = UserManager::instance();
+$em      = EventManager::instance();
 
-if (!isset($action)) $action='';
+$user_id = null;
+$user    = null;
 
-// user remove from group
-if ($action=='remove_user_from_group') {
-	/*
-		Remove this user from this group
-	*/
+// Validate user
+$vUserId = new Valid_UInt('user_id');
+$vUserId->required();
+if ($request->valid($vUserId)) {
+    $user_id = $request->get('user_id');
+    $user    = $um->getUserById($user_id);
+}
+if (!$user_id || !$user) {
+    $GLOBALS['Response']->addFeedback('error', 'Invalid user');
+}
 
-	$result = db_query("DELETE FROM user_group WHERE user_id='$user_id' AND group_id='$group_id'");
-	if (!$result || db_affected_rows($result) < 1) {
-		$feedback .= ' '.$Language->getText('admin_usergroup','error_del_u');
-		echo db_error();
-	} else {
-		$feedback .= ' '.$Language->getText('admin_usergroup','success_del_u');
-	}
+// Validate action
+$vAction = new Valid_Whitelist('action', array('update_user'));
+$vAction->required();
+if ($request->valid($vAction)) {
+    $action = $request->get('action');
+} else {
+    $action = '';
+}
 
-} else if ($action=='update_user_group') {
-	/*
-		Update the user/group entry
-	*/
-
-	$result = db_query("UPDATE user_group SET admin_flags='$admin_flags' "
-		. "WHERE user_id=$user_id AND "
-		. "group_id=$group_id");
-	if (!$result || db_affected_rows($result) < 1) {
-		$feedback .= ' '.$Language->getText('admin_usergroup','error_upd_ug');
-		echo db_error();
-	} else {
-		$feedback .= ' '.$Language->getText('admin_usergroup','success_upd_ug');
-	}
-
-
-} else if ($action=='update_user') {
-	/*
-		Update the user
-	*/
-    $vDate = new Valid_String();
-    if ($expiry_date != '' && !ereg("[0-9]{4}-[0-9]{1,2}-[0-9]{1,2}", $expiry_date)) {
-        $feedback .= ' '.$Language->getText('admin_usergroup','data_not_parsed');
-    }else{
-        if ($expiry_date != '' && $vDate->validate($expiry_date)) {
-            $date_list = split("-", $expiry_date, 3);
-            $unix_expiry_time = mktime(0, 0, 0, $date_list[1], $date_list[2], $date_list[0]);
-            $expiry_date = $unix_expiry_time; 
-        }
-        $result=db_query("UPDATE user 
-                          SET shell='$form_shell', 
-                              email='$email', 
-                              expiry_date='$expiry_date',
-                              realname = '". db_es($request->get('form_realname')) ."'
-                          WHERE user_id=$user_id");
-    	if (!$result) {
-    		$feedback .= ' '.$Language->getText('admin_usergroup','error_upd_u');
-                    echo db_error();
-    	} else {
-    		$feedback .= ' '.$Language->getText('admin_usergroup','success_upd_u');
-            
-            $vLoginName = new Valid_UserNameFormat('form_loginname');
-            $vLoginName->required();
-            if ($request->valid($vLoginName)) {
-                //first get the user status to see if we can update it
-                $res = db_query('SELECT * FROM user WHERE user_id = '. (int)$user_id);
-                if ($res && ($row = db_fetch_array($res))) {
-                    if (in_array($row['status'], array('P', 'V', 'W')) && $row['user_name'] != $request->get('form_loginname')) {
-                        db_query("UPDATE user SET user_name='". db_es($request->get('form_loginname')) ."' WHERE user_id=". (int)$user_id);
-                    }
+if ($request->isPost()) {
+    if ($action == 'update_user') {
+        /*
+         * Update the user
+         */
+        $vDate = new Valid('expiry_date');
+        $vDate->addRule(new Rule_Date());
+        //$vDate->required();
+        if (!$request->valid($vDate)) {
+            $GLOBALS['Response']->addFeedback('error', $Language->getText('admin_usergroup','data_not_parsed'));
+        } else {
+            if ($request->existAndNonEmpty('expiry_date')) {
+                $date_list = split('-', $request->get('expiry_date'), 3);
+                $unix_expiry_time = mktime(0, 0, 0, $date_list[1], $date_list[2], $date_list[0]);
+                if ($user->getExpiryDate() != $unix_expiry_time) {
+                    $user->setExpiryDate($unix_expiry_time);
+                }
+            } else {
+                if ($user->getExpiryDate()) {
+                    $user->setExpiryDate('');
                 }
             }
-    	}
-        
-            // Update in plugin
-            require_once('common/event/EventManager.class.php');
-            $em =& EventManager::instance();
-            $em->processEvent('usergroup_update', array('user_id' => $user_id));
-    
-    	// status changing
-    	if ($form_unixstatus != 'N') {
-    		$res_uid = db_query("SELECT unix_uid FROM user WHERE user_id=$user_id");
-    		$row_uid = db_fetch_array($res_uid);
-    		if ($row_uid['unix_uid'] == 0) {
-    			// need to create uid
-    			$um = UserManager::instance();
-    			$um->getUserById($user_id); 
-    			$um->assignNextUnixUid($user);
-    		} 
-    		// now do update
-    		$result=db_query("UPDATE user SET unix_status='$form_unixstatus' WHERE user_id=$user_id");	
-    		if (!$result) {
-    		    $feedback .= ' - '.$Language->getText('admin_usergroup','error_upd_ux');
-    		    echo db_error();
-    		} else {
-    		    $feedback .= ' - '.$Language->getText('admin_usergroup','success_upd_ux');
-    		}
-    
-    	}
-    }
 
-} else if ($action=='add_user_to_group') {
-    /*
-		Add this user to a group
-    */
-    // Check that user_id is not null, and that the user does not already belong to the group
-    if (!$user_id) {
-        $feedback .= ' '.$Language->getText('admin_usergroup','error_nouid');
-    } else if (!$group_id) {
-        $feedback .= ' '.$Language->getText('admin_usergroup','error_nogid');
-    } else {
-	$query = "SELECT user_id FROM user_group "
-		. "WHERE user_id='$user_id' AND group_id='$group_id'";
-	$res = db_query($query);
-	if (!$res || db_numrows($res) < 1) {
-            // User does not already belong to this group
-            $result=db_query("INSERT INTO user_group (user_id,group_id) VALUES ($user_id,$group_id)");
-            if (!$result || db_affected_rows($result) < 1) {
-		$feedback .= ' '.$Language->getText('admin_usergroup','error_add_ug');
-		echo db_error();
-            } else {
-		$feedback .= ' '.$Language->getText('admin_usergroup','success_add_ug');
+            $vShell = new Valid_WhiteList('form_shell', $user->getAllUnixShells());
+            $vShell->required();
+            if ($request->valid($vShell)) {
+                $user->setShell($request->get('form_shell'));
             }
-	} else {
-            $feedback .= ' '.$Language->getText('admin_usergroup','error_member',array($group_id));
-	}
+
+            $vEmail = new Valid_Email('email');
+            $vEmail->required();
+            if ($request->valid($vEmail)) {
+                $user->setEmail($request->get('email'));
+            }
+
+            $vRealName = new Valid_String('form_realname');
+            $vRealName->required();
+            if ($request->valid($vRealName)) {
+                $user->setRealName($request->get('form_realname'));
+            }
+
+            // form_unixstatus must be BEFORE form_status validation because
+            // form_status can constraint form_unixstatus
+            $vUnixStatus = new Valid_WhiteList('form_unixstatus', $user->getAllUnixStatus());
+            $vUnixStatus->required();
+            if ($request->valid($vUnixStatus)) {
+                $user->setUnixStatus($request->get('form_unixstatus'));
+            }
+
+            // New status must be valid AND user account must already be validated
+            // There are specific actions done in approve_pending scripts
+            $accountActivationEvent = null;
+            $vStatus = new Valid_WhiteList('form_status', $user->getAllWorkingStatus());
+            $vStatus->required();
+            if ($request->valid($vStatus)
+                && in_array($user->getStatus(), $user->getAllWorkingStatus())
+                && $user->getStatus() != $request->get('form_status')) {
+                switch ($request->get('form_status')) {
+                    case User::STATUS_ACTIVE:
+                        $user->setStatus($request->get('form_status'));
+                        $accountActivationEvent = 'project_admin_activate_user';
+                        break;
+
+                    case User::STATUS_RESTRICTED:
+                        if (isset($GLOBALS['sys_allow_restricted_users']) && $GLOBALS['sys_allow_restricted_users']) {
+                            $user->setStatus($request->get('form_status'));
+                            // If the user had a shell, set it to restricted shell
+                            if ($user->getShell()
+                                && ($user->getShell() != "/bin/false")
+                                && ($user->getShell() != "/sbin/nologin")) {
+                                $user->setShell($GLOBALS['codendi_bin_prefix'].'/cvssh-restricted');
+                            }
+                            $accountActivationEvent = 'project_admin_activate_user';
+                        }
+                        break;
+
+                    case User::STATUS_DELETED:
+                        $user->setStatus($request->get('form_status'));
+                        $user->setUnixStatus($user->getStatus());
+                        $accountActivationEvent = 'project_admin_delete_user';
+                        break;
+
+                    case User::STATUS_SUSPENDED:
+                        $user->setStatus($request->get('form_status'));
+                        $user->setUnixStatus($user->getStatus());
+                        break;
+                }
+            }
+
+            // Change login name
+            if ($user->getUserName() != $request->get('form_loginname')) {
+                if (SystemEventManager::instance()->canRenameUser($user)) {
+                    $vLoginName = new Valid_UserNameFormat('form_loginname');
+                    $vLoginName->required();
+                    if ($request->valid($vLoginName)) {
+                        switch ($user->getStatus()) {
+                            case User::STATUS_PENDING:
+                            case User::STATUS_VALIDATED:
+                            case User::STATUS_VALIDATED_RESTRICTED:
+                                $user->setUserName($request->get('form_loginname'));
+                                break;
+                            default:
+                                $em->processEvent(Event::USER_RENAME, array('user_id'  => $user->getId(),
+                                                                    'new_name' => $request->get('form_loginname')));
+                                $GLOBALS['Response']->addFeedback('info', $Language->getText('admin_usergroup','rename_user_msg', array($user->getUserName(), $request->get('form_loginname'))));
+                                $GLOBALS['Response']->addFeedback('warning', $Language->getText('admin_usergroup','rename_user_warn'));
+                        }
+                    }
+                } else {
+                    $GLOBALS['Response']->addFeedback('warning', $Language->getText('admin_usergroup', 'rename_user_already_queued'), CODENDI_PURIFIER_DISABLED);
+                }
+            }
+
+            if ($GLOBALS['sys_auth_type'] == 'ldap') {
+                $vLdapId = new Valid_String('ldap_id');
+                $vLdapId->required();
+                if ($request->valid($vLdapId)) {
+                    $user->setLdapId($request->get('ldap_id'));
+                }
+            }
+
+            // Run the update
+            if ($um->updateDb($user)) {
+                $GLOBALS['Response']->addFeedback('info', $Language->getText('admin_usergroup','success_upd_u'));
+                if ($accountActivationEvent) {
+                    $em->processEvent($accountActivationEvent, array('user_id' => $user->getId()));
+                }
+            }
+
+            if ($user->getUnixStatus() != 'N' && !$user->getUnixUid()) {
+                $um->assignNextUnixUid($user);
+            }
+
+            //$GLOBALS['Response']->redirect('/admin/usergroup.php?user_id='.$user->getId());
+        }
     }
 }
 
 $HTML->header(array('title'=>$Language->getText('admin_usergroup','title')));
-
-// get user info
-$res_user = db_query("SELECT * FROM user WHERE user_id=$user_id");
-$row_user = db_fetch_array($res_user);
-$hp =& Codendi_HTMLPurifier::instance();
+$hp = Codendi_HTMLPurifier::instance();
 ?>
-<h2>
-<?php echo $Language->getText('admin_usergroup','header').": ".user_getname($user_id)." (ID ".$user_id.")"; ?></h2>
-<h3>
-<?php echo $Language->getText('admin_usergroup','account_info'); ?></h3>
-<FORM method="post" name="update_user" action="<?php echo $PHP_SELF; ?>">
+
+<h2><?php echo $Language->getText('admin_usergroup','header').": ".$user->getUserName()." (ID ".$user->getId().")"; ?></h2>
+
+<h3><?php echo $Language->getText('admin_usergroup','account_info'); ?></h3>
+
+<FORM method="post" name="update_user" action="?">
 <INPUT type="hidden" name="action" value="update_user">
-<INPUT type="hidden" name="user_id" value="<?php print $user_id; ?>">
+<INPUT type="hidden" name="user_id" value="<?php echo $user->getId(); ?>">
 
 <table>
+
+<tr><td colspan="2">
+<a href="/users/<?php echo $user->getUserName(); ?>">[<?php echo $Language->getText('admin_usergroup','user_public_profile'); ?>]</a>
+</td></tr>
+
+<tr><td colspan="2">
+<a href="user_changepw.php?user_id=<?php echo $user->getId(); ?>">[<?php echo $Language->getText('admin_usergroup','change_passwd'); ?>]</a></p>
+</td></tr>
+
 <tr><td>
 <?php echo $GLOBALS['Language']->getText('account_options', 'codendi_login'); ?>:
 </td><td>
-<?php
-if (in_array($row_user['status'], array('P', 'V', 'W'))) {
-    ?><INPUT TYPE="TEXT" NAME="form_loginname" VALUE="<?php echo  $hp->purify($row_user['user_name'], CODENDI_PURIFIER_CONVERT_HTML) ; ?>" ><?php
-} else {
-    echo  $hp->purify($row_user['user_name'], CODENDI_PURIFIER_CONVERT_HTML) ;
-}
-?>
+<INPUT TYPE="TEXT" NAME="form_loginname" VALUE="<?php echo  $hp->purify($user->getUserName(), CODENDI_PURIFIER_CONVERT_HTML) ; ?>" SIZE="50">
 </td></tr>
+
 <tr><td>
 <?php echo $GLOBALS['Language']->getText('account_options', 'realname'); ?>:
 </td><td>
-<INPUT TYPE="TEXT" NAME="form_realname" VALUE="<?php echo  $hp->purify($row_user['realname'], CODENDI_PURIFIER_CONVERT_HTML) ; ?>" >
-</td></tr>
-<tr><td>
-<?php echo $Language->getText('admin_usergroup','shell'); ?>:
-</td><td>
-<SELECT name="form_shell">
-<?php account_shellselects($row_user['shell']); ?>
-</SELECT>
-</td></tr>
-<tr><td>
-<?php echo $Language->getText('admin_usergroup','unix_status'); ?>:
-</td><td>
-<SELECT name="form_unixstatus">
-<OPTION <?php echo ($row_user['unix_status'] == 'N') ? 'selected ' : ''; ?>value="N">
-<?php echo $Language->getText('admin_usergroup','no_account'); ?>
-<OPTION <?php echo ($row_user['unix_status'] == 'A') ? 'selected ' : ''; ?>value="A">
-<?php echo $Language->getText('admin_usergroup','active'); ?>
-<OPTION <?php echo ($row_user['unix_status'] == 'S') ? 'selected ' : ''; ?>value="S">
-<?php echo $Language->getText('admin_usergroup','suspended'); ?>
-<OPTION <?php echo ($row_user['unix_status'] == 'D') ? 'selected ' : ''; ?>value="D">
-<?php echo $Language->getText('admin_usergroup','deleted'); ?>
-</SELECT>
+<INPUT TYPE="TEXT" NAME="form_realname" VALUE="<?php echo  $hp->purify($user->getRealName(), CODENDI_PURIFIER_CONVERT_HTML) ; ?>" SIZE="50">
 </td></tr>
 
 <tr><td>
 <?php echo $Language->getText('admin_usergroup','email'); ?>:
 </td><td>
-<INPUT TYPE="TEXT" NAME="email" VALUE="<?php echo $row_user['email']; ?>" SIZE="35">
+<INPUT TYPE="TEXT" NAME="email" VALUE="<?php echo $hp->purify($user->getEmail(), CODENDI_PURIFIER_CONVERT_HTML); ?>" SIZE="50">
+</td></tr>
+
+<tr><td>
+<?php echo $Language->getText('admin_usergroup','status'); ?>:
+</td><td>
+<?php 
+$statusVals = $user->getAllWorkingStatus();
+if (in_array($user->getStatus(), $statusVals)) {
+    // Assume getAllWorkingStatus() order never change
+    $statusTxts = array($Language->getText('admin_usergroup','active'),
+    $Language->getText('admin_usergroup','restricted'),
+    $Language->getText('admin_usergroup','suspended'),
+    $Language->getText('admin_usergroup','deleted'));
+
+    echo html_build_select_box_from_arrays($statusVals, $statusTxts, 'form_status', $user->getStatus(), false);
+} else {
+    echo '<strong>'.$Language->getText('admin_usergroup','cannot_change_status').'</strong>';
+}
+?>
 </td></tr>
 
 <tr><td>
 <?php echo $Language->getText('admin_usergroup','expiry_date'); 
 $exp_date='';
-if($row_user['expiry_date'] != 0){
-   $exp_date = format_date('Y-m-d',$row_user['expiry_date']); 
+if($user->getExpiryDate() != 0){
+   $exp_date = format_date('Y-m-d', $user->getExpiryDate()); 
 }
 
 ?>:
@@ -210,80 +251,168 @@ if($row_user['expiry_date'] != 0){
 <?php echo $GLOBALS['HTML']->getDatePicker("expiry_date", "expiry_date", $exp_date); ?>
 </td></tr>
 
-</table>
 <?php 
-require_once('common/event/EventManager.class.php');
-$em =& EventManager::instance();
-$em->processEvent('usergroup_update_form', array('row_user' => $row_user));
-$hp = Codendi_HTMLPurifier::instance();
+
+if ($GLOBALS['sys_auth_type'] == 'ldap') {
+    echo '<tr><td>';
+    echo $Language->getText('admin_usergroup', 'ldap_id').': ';
+    echo '</td><td>';
+    echo '<input type="text" name="ldap_id" value="'.$user->getLdapId().'" size="50" />';
+    echo '</td></tr>';
+}
 ?>
 
+<tr><td colspan="2"><strong><?php echo $Language->getText('admin_usergroup','unix_details'); ?></strong></td></tr>
+
+<tr><td>
+<?php echo $Language->getText('admin_usergroup','unix_status'); ?>:
+</td><td>
+<?php 
+$unixStatusVals = $user->getAllUnixStatus();
+// Assume getAllUnixStatus() order never change
+$unixStatusTxts = array($Language->getText('admin_usergroup','no_account'),
+                        $Language->getText('admin_usergroup','active'),
+                        $Language->getText('admin_usergroup','suspended'),
+                        $Language->getText('admin_usergroup','deleted'));
+
+echo html_build_select_box_from_arrays($unixStatusVals, $unixStatusTxts, 'form_unixstatus', $user->getUnixStatus(), false);
+?>
+</td></tr>
+
+<tr><td>
+<?php echo $Language->getText('admin_usergroup','shell'); ?>:
+</td><td>
+<SELECT name="form_shell">
+<?php account_shellselects($user->getShell()); ?>
+</SELECT>
+</td></tr>
+
+<tr><td colspan="2"><strong><?php echo $Language->getText('admin_usergroup','account_details'); ?></strong></td></tr>
+
+<tr><td>
+<?php echo $Language->getText('admin_usergroup', 'last_access_date'); ?>:
+</td><td>
+<?php echo  '<span title="'. format_date($GLOBALS['Language']->getText('system', 'datefmt'), $user->getLastAccessDate()) .'">'.  $hp->purify(util_time_ago_in_words($user->getLastAccessDate()), CODENDI_PURIFIER_CONVERT_HTML)  .'</span>';?>
+</td></tr>
+
+<tr><td>
+<?php echo $Language->getText('admin_usergroup', 'last_pwd_update'); ?>:
+</td><td>
+<?php echo  '<span title="'. format_date($GLOBALS['Language']->getText('system', 'datefmt'), $user->getLastPwdUpdate()) .'">'.  $hp->purify(util_time_ago_in_words($user->getLastPwdUpdate()), CODENDI_PURIFIER_CONVERT_HTML)  .'</span>';?>
+</td></tr>
+
+<tr><td>
+<?php echo $Language->getText('account_options', 'auth_attempt_last_success'); ?>
+</td><td>
+<?php echo  '<span title="'. format_date($GLOBALS['Language']->getText('system', 'datefmt'), $user->getLastAuthSuccess()) .'">'.  $hp->purify(util_time_ago_in_words($user->getLastAuthSuccess()), CODENDI_PURIFIER_CONVERT_HTML)  .'</span>';?>
+</td></tr>
+
+<tr><td>
+<?php echo $Language->getText('account_options', 'auth_attempt_last_failure'); ?>
+</td><td>
+<?php echo  '<span title="'. format_date($GLOBALS['Language']->getText('system', 'datefmt'), $user->getLastAuthFailure()) .'">'.  $hp->purify(util_time_ago_in_words($user->getLastAuthFailure()), CODENDI_PURIFIER_CONVERT_HTML)  .'</span>';?>
+</td></tr>
+
+<tr><td>
+<?php echo $Language->getText('account_options', 'auth_attempt_nb_failure'); ?>
+</td><td>
+<?php echo format_date($GLOBALS['Language']->getText('system', 'datefmt'), $user->getNbAuthFailure()); ?>
+</td></tr>
+
+<tr><td>
+<?php echo $Language->getText('account_options', 'auth_attempt_prev_success'); ?>
+</td><td>
+<?php echo  '<span title="'. format_date($GLOBALS['Language']->getText('system', 'datefmt'), $user->getPreviousAuthSuccess()) .'">'.  $hp->purify(util_time_ago_in_words($user->getPreviousAuthSuccess()), CODENDI_PURIFIER_CONVERT_HTML)  .'</span>';?>
+</td></tr>
+
+<tr><td>
+<?php echo $Language->getText('include_user_home','member_since'); ?>:
+</td><td>
+<?php echo  '<span title="'. format_date($GLOBALS['Language']->getText('system', 'datefmt'), $user->getAddDate()) .'">'.  $hp->purify(util_time_ago_in_words($user->getAddDate()), CODENDI_PURIFIER_CONVERT_HTML)  .'</span>';?>
+</td></tr>
+
+
+<?php 
+if(isset($GLOBALS['sys_enable_user_skills']) && $GLOBALS['sys_enable_user_skills']) {
+    echo '<tr><td>';
+    echo $Language->getText('include_user_home','user_prof').': ';
+    echo '</td><td>';
+    echo '<a href="/people/viewprofile.php?user_id='.$user->getId().'">'.$Language->getText('include_user_home','see_skills').'</a>';
+    echo '</td></tr>';
+}
+?>
+
+<?php
+// Plugins entries
+$entry_label = array();
+$entry_value = array();
+
+$eParams = array();
+$eParams['user_id']     =  $user->getId();
+$eParams['entry_label'] =& $entry_label;
+$eParams['entry_value'] =& $entry_value;
+$em->processEvent('user_home_pi_entry', $eParams);
+
+foreach($entry_label as $key => $label) {
+    $value = $entry_value[$key];
+    echo '<tr><td>';
+    echo $label;
+    echo '</td><td>';
+    echo $value;
+    echo '</td></tr>';
+}
+?>
+
+</table>
+
 <INPUT type="submit" name="Update_Unix" value="<?php echo $Language->getText('global','btn_update'); ?>">
+
 </FORM>
+
 
 <?php if($GLOBALS['sys_user_approval'] == 1){ ?>
 <HR>
 <H3><?php echo $Language->getText('admin_approve_pending_users','purpose'); ?>:</H3>
-<?php echo  $hp->purify($row_user['register_purpose'], CODENDI_PURIFIER_CONVERT_HTML) ; 
+<?php echo  $hp->purify($user->getRegisterPurpose(), CODENDI_PURIFIER_CONVERT_HTML) ; 
 }?>
+
 <HR>
 
-<p>
 <H3><?php echo $Language->getText('admin_usergroup','current_groups'); ?></H3>
-&nbsp;
 
+<ul>
 <?php
 /*
-	Iterate and show groups this user is in
-*/
+ Iterate and show groups this user is in
+ */
 $res_cat = db_query("SELECT groups.group_name AS group_name, "
-	. "groups.group_id AS group_id, "
-	. "user_group.admin_flags AS admin_flags FROM "
-	. "groups,user_group WHERE user_group.user_id=$user_id AND "
-	. "groups.group_id=user_group.group_id");
-    
-	while ($row_cat = db_fetch_array($res_cat)) {
-		$pm = ProjectManager::instance();
-        print ('<br><a href="groupedit.php?group_id='. $row_cat['group_id'] .'"><b>'. $pm->getProject($row_cat['group_id'])->getPublicName() . '</b></a>'
-			. "&nbsp;&nbsp;&nbsp;<a href=\"usergroup.php?user_id=$user_id&action=remove_user_from_group&group_id=$row_cat[group_id]\">"
-			. "[".$Language->getText('admin_usergroup','remove_ug')."]</a>");
-		// editing for flags
-		?>
-		<form action="<?php echo $PHP_SELF; ?>" method="post">
-		<INPUT type="hidden" name="action" value="update_user_group">
-		<input name="user_id" type="hidden" value="<?php print $user_id; ?>">
-		<input name="group_id" type="hidden" value="<?php print $row_cat['group_id']; ?>">
-		<br>
-		<?php echo $Language->getText('admin_usergroup','admin_flags'); ?>: 
-		<BR>
-		<input type="text" name="admin_flags" value="<?php print $row_cat['admin_flags']; ?>">
-		<BR>
-		<input type="submit" name="Update_Group" value="<?php echo $Language->getText('global','btn_update'); ?>">
-		</form>
-		<?php
-	}
+. "groups.group_id AS group_id, "
+. "user_group.admin_flags AS admin_flags FROM "
+. "groups,user_group WHERE user_group.user_id=".db_ei($user->getId())." AND "
+. "groups.group_id=user_group.group_id");
 
-/*
-	Show a form so a user can be added to a group
-*/
+$pm = ProjectManager::instance();
+
+while ($row_cat = db_fetch_array($res_cat)) {
+    echo '<li>';
+    echo '<a href="groupedit.php?group_id='. $row_cat['group_id'] .'"><b>'. $pm->getProject($row_cat['group_id'])->getPublicName() . '</b></a>';
+    if ($row_cat['admin_flags'] === 'A') {
+        echo '&nbsp;(admin)';
+    }
+    echo '</li>';
+
+}
+
 ?>
-<hr>
-<P>
-<form action="<?php echo $PHP_SELF; ?>" method="post">
-<INPUT type="hidden" name="action" value="add_user_to_group">
-<input name="user_id" type="hidden" value="<?php print $user_id; ?>">
-<p>
-<?php echo $Language->getText('admin_usergroup','add_ug'); ?>:
-<br>
-<input type="text" name="group_id" LENGTH="4" MAXLENGTH="5">
-<p>
-<input type="submit" name="Submit" value="<?php echo $Language->getText('global','btn_submit'); ?>">
-</form>
+</ul>
 
-<P><A href="user_changepw.php?user_id=<?php print $user_id; ?>">[<?php echo $Language->getText('admin_usergroup','change_passwd'); ?>]</A>
+<script type="text/javascript">
+codendi.locales['admin_usergroup'] = {
+        'was': '<?php echo $Language->getText('admin_usergroup','was'); ?>'
+};
+</script>
+<script type="text/javascript" src="usergroup.js"></script>
 
 <?php
-html_feedback_bottom($feedback);
 $HTML->footer(array());
-
 ?>

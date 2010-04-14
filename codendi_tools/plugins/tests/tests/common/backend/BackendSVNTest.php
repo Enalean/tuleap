@@ -47,7 +47,12 @@ Mock::generatePartial('BackendSVN', 'BackendSVNTestVersion', array('getUserManag
                                                                    'chmod',
                                                                    ));
 
-
+Mock::generatePartial('BackendSVN', 'BackendSVNAccessTestVersion', array('updateSVNAccess',
+                                                                         'repositoryExists',
+                                                                         'getAllProjects',
+                                                                         'getProjectManager',
+                                                                        ));
+                                                                   
 class BackendSVNTest extends UnitTestCase {
     
     function __construct($name = 'BackendSVN test') {
@@ -337,5 +342,46 @@ class BackendSVNTest extends UnitTestCase {
         $backend->recurseDeleteInDir($GLOBALS['svn_prefix']."/foobar");
         rmdir($GLOBALS['svn_prefix']."/foobar");
     }
+    
+    public function testUpdateSVNAccessForGivenMember() {
+    
+        $backend = new BackendSVNAccessTestVersion($this);
+
+        // The user
+        $user = new MockUser($this);
+        $user->setReturnValue('getId', array(142));
+       
+        $project1 = new MockProject($this);
+        $project1->setReturnValue('getId', 102);
+       
+        $project2 = new MockProject($this);
+        $project2->setReturnValue('getId', 101);
+       
+        $projects =  array(102, 101);
+        $backend->setReturnValue('getAllProjects', $projects);
+         
+        $pm = new MockProjectManager();
+        $backend->setReturnValue('getProjectManager', $pm);
+       
+        $pm->setReturnReference('getProject', $project1, array(102));
+        $pm->setReturnReference('getProject', $project2, array(101));
+      
+ 
+        $backend->setReturnValue('repositoryExists', true);
+        $backend->setReturnValue('updateSVNAccess', true);
+       
+        $this->assertEqual($backend->updateSVNAccessForGivenMember($user), true);
+       
+        $backend->expectCallCount('repositoryExists', 2);
+        $backend->expectArgumentsAt(0, 'repositoryExists', array($project1));
+        $backend->expectArgumentsAt(1, 'repositoryExists', array($project2));
+       
+        $backend->expectCallCount('updateSVNAccess', 2);
+        $backend->expectArgumentsAt(0, 'updateSVNAccess', array(102));
+        $backend->expectArgumentsAt(1, 'updateSVNAccess', array(101));
+       
+            
+    }
+    
 }
 ?>
