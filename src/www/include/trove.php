@@ -138,13 +138,13 @@ function trove_get_html_cat_selectfull($node,$selected,$name) {
     global $Language;
 	$html = "";
     $html .= '<BR><SELECT name="'. $name .'">';
-	$html .= '  <OPTION value="0">'.$Language->getText('include_trove','none_selected')."\n".'</OPTION>';
+	$html .= '  <OPTION value="0">'.$Language->getText('include_trove','none_selected')."\n";
 	$res_cat = db_query('SELECT trove_cat_id,fullpath FROM trove_cat WHERE '
 		.'root_parent='.db_ei($node).' ORDER BY fullpath');
 	while ($row_cat = db_fetch_array($res_cat)) {
 		$html .= '  <OPTION value="'.$row_cat['trove_cat_id'].'"';
 		if ($selected == $row_cat['trove_cat_id']) $html .= (' selected');
-		$html .= '>'.$row_cat['fullpath']."\n".'</OPTION>';
+		$html .= '>'.$row_cat['fullpath']."\n";
 	}
 	$html .= "</SELECT>\n";
     return $html;
@@ -154,7 +154,7 @@ function trove_get_html_cat_select_parent($selected = 0, $ignore_fullpath = fals
     global $Language;
 	$html = "";
     $html .= '<BR><SELECT name="form_parent">';
-	$html .= '  <OPTION value="0">'.$Language->getText('admin_trove_cat_edit','root')."\n".'</OPTION>';
+	$html .= '  <OPTION value="0">'.$Language->getText('admin_trove_cat_edit','root')."\n";
     $sql = "SELECT trove_cat_id,fullpath FROM trove_cat ";
     if ($ignore_fullpath) {
         $sql .= " WHERE fullpath NOT LIKE '".db_escape_string($ignore_fullpath)." ::%' AND fullpath NOT LIKE '".db_escape_string($ignore_fullpath)."' ";
@@ -164,7 +164,7 @@ function trove_get_html_cat_select_parent($selected = 0, $ignore_fullpath = fals
 	while ($row_cat = db_fetch_array($res_cat)) {
 		$html .= '  <OPTION value="'.$row_cat['trove_cat_id'].'"';
 		if ($selected == $row_cat['trove_cat_id']) $html .= (' selected');
-		$html .= '>'.$row_cat['fullpath']."\n".'</OPTION>';
+		$html .= '>'.$row_cat['fullpath']."\n";
 	}
 	$html .= "</SELECT>\n";
     return $html;
