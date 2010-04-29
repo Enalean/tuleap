@@ -2460,7 +2460,7 @@ class Artifact extends Error {
 	    // artifact fields
 	    // Generate the message preamble with all required
 	    // artifact fields - Changes first if there are some.
-	    if ($changes && $field_perm) {
+	    if ($changes) {
 		$body = $GLOBALS['sys_lf']."=============   ".strtoupper(SimpleSanitizer::unsanitize($this->ArtifactType->getName()))." #".$this->getID().
 		    ": ".$Language->getText('tracker_include_artifact','latest_modif')."   =============". $GLOBALS['sys_lf'] . $artifact_href . $GLOBALS['sys_lf'] . $GLOBALS['sys_lf'] . 
 		  $this->formatChanges($changes,$field_perm,$visible_change) . $GLOBALS['sys_lf'] . $GLOBALS['sys_lf'] . $GLOBALS['sys_lf'] . $GLOBALS['sys_lf'] ."";
