@@ -41,7 +41,7 @@ class Statistics_DiskUsageOutput {
      * @param       string  $system      'si' for SI, 'bi' for binary prefixes
      * @param       string  $retstring   return string format
      */
-    public function sizeReadable($size, $max = null, $system = 'bi', $retstring = '%01.2f %s')
+    public function sizeReadable($size, $max = null, $system = 'bi', $retstring = '%d %s')
     {
         // Pick units
         $systems['si']['prefix'] = array('B', 'K', 'MB', 'GB', 'TB', 'PB');
