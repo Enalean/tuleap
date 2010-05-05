@@ -706,7 +706,6 @@ plugin_docman	resource_name_document	Document <a href="$1">$2</a>
 plugin_docman	resource_name_folder	 Dossier <a href="$1">$2</a>
 plugin_docman	roottitle_lbl_key	Documentation du projet
 
-plugin_docman	search_help	<ul><li>Les motifs acceptés : <ul><li>1-*pattern</li></ul><ul><li>2-*pattern*</li></ul><ul><li>3-pattern</li></ul><ul><li>4-pattern*</li></ul></li></ul><ul><li><a href="$1"> Option full text search</a> are just allowed with (3) and (4)</li></ul>
 
 plugin_docman	service_lbl_key	Documents
 plugin_docman	service_desc_key	Gestionnaire de documents
