@@ -157,6 +157,7 @@ class Docman_ReportHtml {
         $html = '';
       
         $html .= '<hr style="clear: both; margin:0.2em;" />';
+        $html .= '<div class="docman_help">'.$GLOBALS['Language']->getText('plugin_docman', 'search_help', array(1)).'</div>';
         $html .= '<div id="docman_report_options">';
         $html .= '<strong>'.$GLOBALS['Language']->getText('plugin_docman', 'report_filters_options').'</strong>&nbsp;';
         //

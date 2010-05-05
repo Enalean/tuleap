@@ -706,6 +706,8 @@ plugin_docman	resource_name_document	Document <a href="$1">$2</a>
 plugin_docman	resource_name_folder	Folder <a href="$1">$2</a>
 plugin_docman	roottitle_lbl_key	Project Documentation
 
+plugin_docman	search_help	<ul><li>Allowed pattern: <ul><li>1-*pattern</li></ul><ul><li>2-*pattern*</li></ul><ul><li>3-pattern</li></ul><ul><li>4-pattern*</li></ul></li></ul><ul><li><a href="$1"> Option full text search</a> are just allowed with (3) and (4)</li></ul>
+
 plugin_docman	service_lbl_key	Documents
 plugin_docman	service_desc_key	Document Manager
 
@@ -749,6 +751,7 @@ plugin_docman	view_itemrank_position	Position:
 plugin_docman	view_Icons	Icons
 plugin_docman	view_Table	Table
 plugin_docman	view_Tree	Tree
+plugin_docman	search_help	<ul><li>Les motifs acceptés : <ul><li>1-*pattern</li></ul><ul><li>2-*pattern*</li></ul><ul><li>3-pattern</li></ul><ul><li>4-pattern*</li></ul></li></ul><ul><li><a href="$1"> Option full text search</a> are just allowed with (3) and (4)</li></ul>
 
 plugin_docman	warn_wiki_perms	<em>Warning: the <strong>permissions</strong> on the document you are creating <strong>may be different</strong> than the one set on the wiki page.</em>
 plugin_docman	warning_missingowner	Specified owner does not exist. You are now the item owner. You can change owner in Item properties.
