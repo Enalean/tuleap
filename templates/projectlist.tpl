@@ -54,9 +54,9 @@
 
     <tr class="{cycle values="light,dark"}">
       <td>
-        <a href="{$SCRIPT_NAME}?p={$proj->GetProject()}&a=summary" class="list {if $currentcategory != ''}indent{/if}">{$proj->GetProject()}</a>
+        <a href="{$SCRIPT_NAME}?p={$proj->GetProject()|urlencode}&a=summary" class="list {if $currentcategory != ''}indent{/if}">{$proj->GetProject()}</a>
       </td>
-      <td><a href="{$SCRIPT_NAME}?p={$proj->GetProject()}&a=summary" class="list">{$proj->GetDescription()}</a></td>
+      <td><a href="{$SCRIPT_NAME}?p={$proj->GetProject()|urlencode}&a=summary" class="list">{$proj->GetDescription()}</a></td>
       <td><em>{$proj->GetOwner()}</em></td>
       <td>
         {assign var=projecthead value=$proj->GetHeadCommit()}
@@ -69,11 +69,11 @@
         {/if}
       </td>
       <td class="link">
-        <a href="{$SCRIPT_NAME}?p={$proj->GetProject()}&a=summary">summary</a> | 
-	<a href="{$SCRIPT_NAME}?p={$proj->GetProject()}&a=shortlog">shortlog</a> | 
-	<a href="{$SCRIPT_NAME}?p={$proj->GetProject()}&a=log">log</a> | 
-	<a href="{$SCRIPT_NAME}?p={$proj->GetProject()}&a=tree">tree</a> | 
-	<a href="{$SCRIPT_NAME}?p={$proj->GetProject()}&a=snapshot&h=HEAD">snapshot</a>
+        <a href="{$SCRIPT_NAME}?p={$proj->GetProject()|urlencode}&a=summary">summary</a> | 
+	<a href="{$SCRIPT_NAME}?p={$proj->GetProject()|urlencode}&a=shortlog">shortlog</a> | 
+	<a href="{$SCRIPT_NAME}?p={$proj->GetProject()|urlencode}&a=log">log</a> | 
+	<a href="{$SCRIPT_NAME}?p={$proj->GetProject()|urlencode}&a=tree">tree</a> | 
+	<a href="{$SCRIPT_NAME}?p={$proj->GetProject()|urlencode}&a=snapshot&h=HEAD">snapshot</a>
       </td>
     </tr>
   {foreachelse}
