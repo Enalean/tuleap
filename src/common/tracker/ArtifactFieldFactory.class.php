@@ -230,6 +230,47 @@ class ArtifactFieldFactory extends Error {
 	
 		}
 
+		/**
+		 * Hack to manage the case when the target is a mandatory multiple select list.
+		 * 
+		 * Without this fix we are able to by pass the mandatory checking (ie user can submit artifact with
+		 * field value == none and codendi doesn't raise any error.
+		 * This bad behaviour comes from the way the submitted values are checked:
+		 * The code above relies on what is submitted by the user, it build the list of fields
+		 * from what the user submitted, later on it will check if the values are correct.
+		 * 
+		 * For lists, it check against "none" value: if none is present but "allow empty value"
+		 * forbidden, it raises an error. It works because None is always present and is the default
+		 * value (except if configured by admin to another value).
+		 * But when there are dependencies, the none value disapear. so there is no longer any selected
+		 * value in the field (for multi select box). So when the code above populate the array of
+		 * submitted values, the multi select box is not present (because no value is submitted).
+		 * Later on, "checkEmptyValues" or field dependencies constraints are not checked because those
+		 * 2 methods rely on what this method (extractFieldList) returns.
+		 * 
+		 * So, to make a long story short: in order to make everything work, the code below loop over
+		 * all used fields and if one field is missing in $vfl, it adds it with empty value.
+		 * 
+		 * Note: mass change is not supported yet.
+		 * 
+		 * @see src/www/tracker/include/ArtifactHtml.class.php#displayAdd
+		 */
+		$user = UserManager::instance()->getCurrentUser();
+		foreach ($this->getAllUsedFields() as $field) {
+		    // if ( (!$field->isSpecial() || $field->getName()=='summary' || $field->getName()=='details') ) {
+		    // The test here restrict to multiselect box but as I have no idea of the potential
+		    // impact of doing it on all possible fields, it's more safe
+		    if ( $field->getDisplayType() == 'MB') {
+		        if (($request->get('func') == 'postadd' && $field->userCanSubmit($this->ArtifactType->getGroupId(), $this->ArtifactType->getID(), $user->getId()))
+		         || ($request->get('func') == 'postmod' && $field->userCanUpdate($this->ArtifactType->getGroupId(), $this->ArtifactType->getID(), $user->getId()))
+		           ) {
+		            if (!isset($vfl[$field->field_name])) {
+		                $vfl[$field->field_name] = '';
+		            }
+		        }
+		    }
+		}
+				
 	    return($vfl);
 	}
 

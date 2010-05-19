@@ -34,7 +34,8 @@ class BlankAfterClosingPhpTagTest extends UnitTestCase {
                                 'plugins/IM/include/jabbex_api/tests',
                                 'plugins/IM/www/webmuc/lib/jsjac/utils',
                                 'plugins/git/gitphp',
-                                'plugins/git/gitphp-0.1.0'
+                                'plugins/git/gitphp-0.1.0',
+                                'plugins/webdav/include/lib',
                                 )) .')$`';
         
         //Those files are allowed to contains something before opening tag

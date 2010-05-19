@@ -1,0 +1,4 @@
+To upgrade SabreDAV:
+
+-extract Sabre_DAV-x.x.x.tgz
+-copy the repository "lib" under "/plugins/webdav/include/"

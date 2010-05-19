@@ -73,6 +73,11 @@ class Project extends Group {
      */
     const STATUS_PENDING = 'P';
     
+    /**
+     * The project is public
+     */
+    const IS_PUBLIC = 1;
+    
     
     var $project_data_array;
 

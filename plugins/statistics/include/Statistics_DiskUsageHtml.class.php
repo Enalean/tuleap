@@ -36,43 +36,14 @@ class Statistics_DiskUsageHtml extends Statistics_DiskUsageOutput {
         }
     }
     
-    public function getDataPerService() {
-        $res = $this->_dum->getLatestData();
+    public function getDataPerService($groupId = NULL) {
+        $res = $this->_dum->getLatestData($groupId);
 
         echo '<table border="1">';
         echo '<thead>';
         echo '<tr>';
         echo "<th>Date</th>";
-        if (isset($res['service'][Statistics_DiskUsageManager::SVN])) {
-            echo "<th>SVN</th>";
-        }
-        if (isset($res['service'][Statistics_DiskUsageManager::CVS])) {
-            echo "<th>CVS</th>";
-        }
-        if (isset($res['service'][Statistics_DiskUsageManager::FRS])) {
-            echo "<th>FRS</th>";
-        }
-        if (isset($res['service'][Statistics_DiskUsageManager::FTP])) {
-            echo "<th>FTP</th>";
-        }
-        if (isset($res['service'][Statistics_DiskUsageManager::WIKI])) {
-            echo "<th>Wiki</th>";
-        }
-        if (isset($res['service'][Statistics_DiskUsageManager::MAILMAN])) {
-            echo "<th>Mailman</th>";
-        }
-        if (isset($res['service'][Statistics_DiskUsageManager::PLUGIN_DOCMAN])) {
-            echo "<th>Docman</th>";
-        }
-        if (isset($res['service'][Statistics_DiskUsageManager::PLUGIN_FORUMML])) {
-            echo "<th>ForumML</th>";
-        }
-        if (isset($res['service'][Statistics_DiskUsageManager::PLUGIN_WEBDAV])) {
-            echo "<th>Webdav</th>";
-        }
-        if (isset($res['service'][Statistics_DiskUsageManager::GRP_HOME])) {
-            echo "<th>Groups</th>";
-        }
+        
         if (isset($res['service'][Statistics_DiskUsageManager::USR_HOME])) {
             echo "<th>Users</th>";
         }
@@ -97,16 +68,6 @@ class Statistics_DiskUsageHtml extends Statistics_DiskUsageOutput {
         echo '<tbody>';
         echo '<tr>';
         echo '<td>'.date('Y-m-d', strtotime($res['date'])).'</td>';
-        echo $this->getReadable($res, Statistics_DiskUsageManager::SVN);
-        echo $this->getReadable($res, Statistics_DiskUsageManager::CVS);
-        echo $this->getReadable($res, Statistics_DiskUsageManager::FRS);
-        echo $this->getReadable($res, Statistics_DiskUsageManager::FTP);
-        echo $this->getReadable($res, Statistics_DiskUsageManager::WIKI);
-        echo $this->getReadable($res, Statistics_DiskUsageManager::MAILMAN);
-        echo $this->getReadable($res, Statistics_DiskUsageManager::PLUGIN_DOCMAN);
-        echo $this->getReadable($res, Statistics_DiskUsageManager::PLUGIN_FORUMML);
-        echo $this->getReadable($res, Statistics_DiskUsageManager::PLUGIN_WEBDAV);
-        echo $this->getReadable($res, Statistics_DiskUsageManager::GRP_HOME);
         echo $this->getReadable($res, Statistics_DiskUsageManager::USR_HOME);
         echo $this->getReadable($res, Statistics_DiskUsageManager::MYSQL);
         echo $this->getReadable($res, Statistics_DiskUsageManager::CODENDI_LOGS);
@@ -120,22 +81,43 @@ class Statistics_DiskUsageHtml extends Statistics_DiskUsageOutput {
         echo '</table>';
     }
 
-    public function getTopProjects($startDate, $endDate, $order, $url) {
-        $res = $this->_dum->getTopProjects($startDate, $endDate, $order);
+    public function getTopProjects($startDate, $endDate, $service, $order, $url, $offset) {
+        $limit  = 10;
+        list($res, $nbRows) = $this->_dum->getTopProjects($startDate, $endDate, $service, $order, $offset, $limit);
         if ($res) {
             $titles = array('Rank', 'Id', 'Name', 'Start size', 'End size', 'Evolution Size ', 'Evolution Rate (%)');
             $links  = array('', '', '', $url.'&order=start_size', $url.'&order=end_size', $url.'&order=evolution', $url.'&order=evolution_rate');
             echo html_build_list_table_top($titles, $links);
             $i = 1;
-            $url = str_replace('func=show_top_projects', 'func=show_one_project', $url);
+            $onProjectUrl = str_replace('func=show_top_projects', 'func=show_one_project', $url);
             foreach ($res as $row) {
                 echo '<tr>';
-                echo '<td>'.$i++.'</td>';
-                echo '<td><a href="'.$url.'&group_id='.$row['group_id'].'">'.$row['group_id'].'</a></td>';
+                echo '<td>'.($offset+$i++).'</td>';
+                echo '<td><a href="'.$onProjectUrl.'&group_id='.$row['group_id'].'">'.$row['group_id'].'</a></td>';
                 echo '<td>'.$row['group_name'].'</td>';
                 $this->_displayEvolutionData($row);
                 echo '</tr>';
             }
+            
+            // Paginate
+            $url .= '&order='.$order;
+            echo '<tr>';
+            echo '<td colspan="7" align="center">';
+            if ($offset > 0) {
+                echo '<a href="'.$url.'&offset='.($offset-$limit).'">[ Previous ]</a>';
+            } else {
+                echo '[ Previous ]';
+            }
+            echo '&nbsp;';
+            echo ($offset+$limit).'/'.$nbRows;
+            echo '&nbsp;';
+            if (($offset + $limit) < $nbRows) {
+                echo '<a href="'.$url.'&offset='.($offset+$limit).'">[ Next ]</a>';
+            } else {
+                echo '[ Next ]';
+            }
+            echo '</td>';
+            echo '</tr>';
             echo '</table>';
         }
     }
@@ -183,33 +165,18 @@ class Statistics_DiskUsageHtml extends Statistics_DiskUsageOutput {
         }
     }
     
-     public function getProjectEvolutionForPeriod($groupId,$startDate, $endDate) {
-        $res = $this->_dum->returnProjectEvolutionForPeriod($groupId,$startDate, $endDate);
-        if ($res) {
-            echo '<table border="1">';
-            echo '<thead>';
-            echo '<tr>';
-            echo "<th>Project Id</th>";
-            echo "<th>Start size</th>";
-            echo "<th>End size</th>";
-            echo "<th>Size Evolution</th>";
-            echo "<th>Rate Evolution (%)</th>";
-            echo '</tr>';
-            echo '</thead>';
-            echo '<tbody>';
-            foreach ($res as $row){
-                echo '<tr>';
-                echo '<td>'.$groupId.'</td>';
-                $this->_displayEvolutionData($row);
-                echo '</tr>';
-            }
-            echo '</tbody>';
-            echo '</table>';
-        }
-    }
-    
-    public function getServiceEvolutionForPeriod($startDate , $endDate) {
-        $res = $this->_dum->returnServiceEvolutionForPeriod($startDate , $endDate);
+    /**
+     * 
+     * Displays the table of service evolution for a given period
+     * for a specific project if the group_id is given else for all projects
+     * 
+     * @param Date $startDate
+     * @param Date $endDate
+     * @param Integer $groupId
+     *
+     */
+    public function getServiceEvolutionForPeriod($startDate , $endDate, $groupId = NULL) {
+        $res = $this->_dum->returnServiceEvolutionForPeriod($startDate , $endDate, $groupId);
         if ($res) {
             echo '<table border="1">';
             echo '<thead>';
@@ -222,12 +189,29 @@ class Statistics_DiskUsageHtml extends Statistics_DiskUsageOutput {
             echo '</tr>';
             echo '</thead>';
             echo '<tbody>';
+            $totalStartSize = 0;
+            $totalEndSize   = 0;
+            $totalEvolution = 0;
             foreach ($res as $row){
                 echo '<tr>';
                 echo '<td>'.$row['service'].'</td>';
+                $totalStartSize  +=$row['start_size'];
+                $totalEndSize    +=$row['end_size'];
+                $totalEvolution  +=$row['evolution'];
                 $this->_displayEvolutionData($row);
                 echo '</tr>';
             }
+            echo '<tr>';
+            echo '<th>Total size</th>';
+            echo '<td>'.$this->sizeReadable($totalStartSize).'</td>';
+            echo '<td>'.$this->sizeReadable($totalEndSize).'</td>';
+            echo '<td>'.$this->sizeReadable($totalEvolution).'</td>';
+            if ($totalEvolution == 0) {
+                echo '<td>-</td>';
+            } else {
+                echo '<td>'.sprintf('%01.2f %%', (($totalEndSize/$totalStartSize)-1)*100).'</td>';
+            }
+            echo '</tr>';
             echo '</tbody>';
             echo '</table>';
         }

@@ -51,13 +51,13 @@ class Statistics_DiskUsageManager {
         return array(self::SVN, self::CVS, self::FRS, self::FTP, self::GRP_HOME, self::WIKI, self::PLUGIN_DOCMAN, self::PLUGIN_WEBDAV, self::MAILMAN, self::PLUGIN_FORUMML);
     }
     
-    public function getGeneralData($date) {
+    public function getGeneralData($date, $groupId = NULL) {
         $res = array();
         $dao  = $this->_getDao();
         if ($date) {
             $res['date'] = $date;
 
-            $dar = $dao->searchSizePerService($date);
+            $dar = $dao->searchSizePerService($date, $groupId);
             if ($dar && !$dar->isError()) {
                 foreach ($dar as $row) {
                     $res['service'][$row['service']] = $row['size'];
@@ -84,10 +84,10 @@ class Statistics_DiskUsageManager {
         }
         return $res;
     }
-    public function getLatestData() {
+    public function getLatestData($groupId = NULL) {
         $dao  = $this->_getDao();
         $date = $dao->searchMostRecentDate();
-        return  $this->getGeneralData($date);
+        return  $this->getGeneralData($date, $groupId);
     }
 
     function getKeyFromGroupBy($row, $groupBy) {
@@ -122,9 +122,11 @@ class Statistics_DiskUsageManager {
          
     }
 
-    public function getTopProjects($startDate, $endDate, $order) {
-        $dao = $this->_getDao();
-        return $dao->searchTopProjects($startDate, $endDate, $order);
+    public function getTopProjects($startDate, $endDate, $service, $order, $offset, $limit) {
+        $dao   = $this->_getDao();
+        $dar   = $dao->getProjectContributionForService($startDate, $endDate, $service, $order, $offset, $limit);
+        $nbPrj = $dao->foundRows();
+        return array($dar, $nbPrj);
     }
    
     public function returnServiceWeeklyEvolution(){
@@ -152,9 +154,9 @@ class Statistics_DiskUsageManager {
         return false;
     }
     
-    public function returnServiceEvolutionForPeriod($startDate , $endDate){
+    public function returnServiceEvolutionForPeriod($startDate , $endDate, $groupId =NULL){
         $dao = $this->_getDao();
-        $dar = $dao->returnServiceEvolutionForPeriod($startDate , $endDate);
+        $dar = $dao->returnServiceEvolutionForPeriod($startDate , $endDate, $groupId);
         if ($dar && !$dar->isError()) {
             return $dar;
         }
@@ -235,13 +237,13 @@ class Statistics_DiskUsageManager {
          
     }
     
-    public function getWeeklyEvolutionProjectData($groupId,$groupBy, $startDate, $endDate){
+    public function getWeeklyEvolutionProjectData($services, $groupId,$groupBy, $startDate, $endDate){
         $groupBy = strtoupper($groupBy);
         $dao  = $this->_getDao();
-        $dar = $dao->searchSizePerProjectForPeriod($groupId, $groupBy, $startDate, $endDate);
+        $dar = $dao->searchSizePerServiceForPeriod($services, $groupBy, $startDate, $endDate, $groupId);
         if ($dar && !$dar->isError()) {
             foreach ($dar as $row) {
-                $res[$this->getKeyFromGroupBy($row, $groupBy)] = $row['size'];
+                $res[$row['service']][$this->getKeyFromGroupBy($row, $groupBy)] = $row['size'];
             }
             return $res;
         }
@@ -304,6 +306,10 @@ class Statistics_DiskUsageManager {
      * 'SVN', 'CVS', 'FRS', 'FTP', 'HOME', 'WIKI', 'MAILMAN', 'DOCMAN', 'FORUMML', 'WEBDAV',
      */
     public function collectProjects() {
+        //We start the transaction, it is not stored in the DB unless we COMMIT
+        //With START TRANSACTION, autocommit remains disabled until we end the transaction with COMMIT or ROLLBACK. 
+        $sql = db_query('START TRANSACTION');
+        
         $dao = $this->_getDao();
         $dar = $dao->searchAllGroups();
         foreach($dar as $row) {
@@ -349,23 +355,31 @@ class Statistics_DiskUsageManager {
             $dao->addGroup($previous, 'mailman', $sMailman, $_SERVER['REQUEST_TIME']);
             $dao->addGroup($previous, 'plugin_forumml', $sForumML, $_SERVER['REQUEST_TIME']);
         }
+        //We commit all the DB modification
+        $sql = db_query('COMMIT');
+        
     }
 
     public function collectUsers() {
+        $sql = db_query('START TRANSACTION');
         $dao = $this->_getDao();
         $dar = $dao->searchAllUsers();
         foreach($dar as $row) {
             $this->storeForUser($row['user_id'], self::USR_HOME, $GLOBALS['homedir_prefix']."/".$row['user_name']);
         }
+        $sql = db_query('COMMIT');
     }
 
     // dfMYSQL, LOG, backup
     public function collectSite() {
+        $sql = db_query('START TRANSACTION');
         $this->storeForSite('mysql', '/var/lib/mysql');
         $this->storeForSite('codendi_log', '/var/log/codendi');
         $this->storeForSite('backup', '/var/lib/codendi/backup');
         $this->storeForSite('backup_old', '/var/lib/codendi/backup/old');
         $this->storeDf();
+        $sql = db_query('COMMIT');
+        
     }
 
     public function storeDf() {

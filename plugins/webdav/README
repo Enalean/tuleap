@@ -1,0 +1,36 @@
+INSTALLATION
+============
+-Under "/etc/httpd/conf.d/codendi_aliases.conf":
+
+    if you access to webdav by "https://webdav.domain" add:
+    # 5- WebDAV plugin web/php pages 
+    AliasMatch ^/(.*) /usr/share/codendi/plugins/webdav/www/index.php
+    <DirectoryMatch "/usr/share/codendi/codendi/plugins/webdav/www/">
+        Options Indexes MultiViews
+        AllowOverride None
+        Order allow,deny
+        Allow from all
+    </DirectoryMatch>
+
+    if you access to webdav by "https://domain/webdav/" add:
+    # 5- WebDAV plugin web/php pages 
+    AliasMatch ^/webdav/(.*) /usr/share/codendi/plugins/webdav/www/index.php
+    <DirectoryMatch "/usr/share/codendi/codendi/plugins/webdav/www/">
+        Options Indexes MultiViews
+        AllowOverride None
+        Order allow,deny
+        Allow from all
+    </DirectoryMatch>
+
+
+-To add locks directory:
+
+    /usr/bin/install -d -g codendiadm -o codendiadm -m 00750 /var/tmp/codendi_cache/plugins/webdav/locks/
+
+
+CONFIGURATION
+=============
+
+1. Go to PluginsAdministartion
+3. Configure properties
+4. Make the plugin available.

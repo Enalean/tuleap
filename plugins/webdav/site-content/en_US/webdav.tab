@@ -1,0 +1,18 @@
+plugin_webdav_download	access_not_authorized	You are not authorized to access this file. Please contact a Project Administrator.
+plugin_webdav_download	file_not_available	Internal Error: File not available. Please contact the system administrator.
+plugin_webdav_download	dont_belong	The file don't belong to the given package or release.
+plugin_webdav_download	error_file_size	The file size exceed 2 GB.
+plugin_webdav_common	plugin_not_available	WebDAV plugin not avilable for this project.
+plugin_webdav_common	project_not_available	Project not avilable.
+plugin_webdav_common	project_access_not_authorized	You are not authorized to access this Project. Please contact a Project Administrator.
+plugin_webdav_common	project_have_no_frs	The file release is not activated for this project.
+plugin_webdav_common	package_not_available	Package not avilable.
+plugin_webdav_common	package_access_not_authorized	You are not authorized to access this Package. Please contact a Project Administrator.
+plugin_webdav_common	release_not_available	Release not avilable.
+plugin_webdav_common	release_access_not_authorized	You are not authorized to access this Release. Please contact a Project Administrator.
+plugin_webdav_common	authentication_required	Authentication required.
+plugin_webdav_common	wrong_input	Verify your input.
+plugin_webdav_common	hidden	 (hidden)
+plugin_webdav	descriptor_description	WebDAV server for file release and documents.
+plugin_webdav	descriptor_name	WebDAV.
+plugin_webdav_common	plugin_not_active	WebDAV plugin is not activated.

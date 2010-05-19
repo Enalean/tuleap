@@ -112,6 +112,7 @@ tracker_index	open	ouvert
 tracker_index	updated_aid	Modification de $1
 tracker_index	mass_change	Mise à jour massive
 tracker_index	invalid_field_dependency	Dépendance entre champs invalide
+tracker_index	missing_dependency	Veuillez sélectionner au moins une valeur pour le champ obligatoire $1!
 tracker_index	notification_stopped	Les notifications par email sont actuellement désactivées sur cet outil de suivi.
 tracker_index	report_definition_updated	Définition du rapport mise à jour.
 #

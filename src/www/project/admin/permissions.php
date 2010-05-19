@@ -243,7 +243,22 @@ function permission_user_allowed_to_change($group_id, $permission_type, $object_
         return (user_ismember($group_id,'W2'));
     } else if (strpos($permission_type, 'TRACKER') === 0) { // Starts with 'TRACKER'
         $pm = ProjectManager::instance();
-        $group = $pm->getProject($group_id);	
+        $group = $pm->getProject($group_id);
+        
+        //The object_id stored in the permission table when permission_type ='TRACKER_ARTIFACT_ACCESS' 
+        //corresponds to the artifact_id 
+        if ($permission_type == 'TRACKER_ARTIFACT_ACCESS') {
+            
+            $sql = 'SELECT group_artifact_id from artifact WHERE artifact_id = '.db_ei($object_id);
+            $res = db_query($sql);
+            if ($res && db_numrows($res) == 1) {
+                $row = db_fetch_array($res);
+                $object_id = $row['group_artifact_id'];
+            } else {
+                return false;
+            }
+        }
+
         $at = new ArtifactType($group, (int)$object_id);
         return $at->userIsAdmin();
     } else {

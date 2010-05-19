@@ -63,6 +63,10 @@ h3 {
   margin: 0.5em;
 }
 
+.docman_help span.code {
+    font-family:"Courier New",Courier;
+}
+
 /**
 UL/LI Based
 */

@@ -22,6 +22,7 @@ require_once('common/dao/ProjectDao.class.php');
 require_once('common/dao/ArtifactDao.class.php');
 require_once('common/dao/ForumDao.class.php');
 require_once('common/dao/NewsBytesDao.class.php');
+require_once('common/event/EventManager.class.php');
 
 class URL {
 
@@ -101,7 +102,126 @@ class URL {
              return $group_id;
          }else return null;
     }
-    
+
+    /**
+     * Return true if given request is using SSL
+     * 
+     * @param Array $server
+     * 
+     * @return true
+     */
+    public function isUsingSSL($server) {
+        return (isset($server['HTTPS']) && $server['HTTPS'] == 'on');
+    }
+
+    /**
+     * Always permit requests for localhost, or for api or soap scripts
+     *
+     * @param Array $server
+     *
+     * @return Boolean
+     */
+    function isException($server) {
+
+        return (($server['SERVER_NAME'] == 'localhost')
+             || (strcmp(substr($server['SCRIPT_NAME'],0,5),'/api/') == 0)
+             || (strcmp(substr($server['SCRIPT_NAME'],0,6),'/soap/') == 0));
+
+    }
+
+    /**
+     * Tests if the hostname is valid when HTTP is used
+     *
+     * @param Array $server
+     * @param Array $allowedServerNames
+     *
+     * @return Boolean
+     */
+    function isValidServerName($server, $allowedServerNames, $host) {
+
+        return (($server['HTTP_HOST'] == $host)
+        || (isset($allowedServerNames[$server['SERVER_NAME']]) && $allowedServerNames[$server['SERVER_NAME']]));
+
+    }
+
+    /**
+     * Tests if the hostname used to acess to Codendi is valid or not
+     *
+     * @param Array $server
+     *
+     * @return Boolean
+     */
+    public function isValidHost($server) {
+        if ($this->isException($server)) {
+            return true;
+        } else {
+            $em = $this->getEventManager();
+            $allowedServerNames = array('localhost' => true);
+            $em->processEvent('allowed_host', array('server_name' => &$allowedServerNames));
+
+            if ($this->isUsingSSL($server)) {
+                return $this->isValidServerName($server, $allowedServerNames, $GLOBALS['sys_https_host']);
+            } elseif ($GLOBALS['sys_force_ssl'] == 1) {
+                return false;
+            } else {
+                return $this->isValidServerName($server, $allowedServerNames, $GLOBALS['sys_default_domain']);
+            }
+        }
+
+    }
+
+    /**
+     * Returns the redirection URL according to SSL parameters & config
+     *
+     * This method returns the ideal URL to use to access a ressource. It doesn't
+     * check if the URL is valid or not.
+     * 
+     * @param Array $server
+     *
+     * @return String
+     */
+    function getRedirectionURL($server) {
+        if ($GLOBALS['sys_force_ssl'] == 1 || $this->isUsingSSL($server)) {
+            $location = "https://".$GLOBALS['sys_https_host'].$server['REQUEST_URI'];
+        } else {
+            $location = "http://".$GLOBALS['sys_default_domain'].$server['REQUEST_URI'];
+        }
+        return $location;
+
+    }
+
+    /**
+     * Check URL is valid and redirect to the right host/url if needed.
+     * 
+     * Force SSL mode if required except if request comes from localhost, or for api scripts
+     * 
+     * Limit responsability of each method for sake of simplicity. For instance:
+     * getRedirectionURL will not check all the server name or script name details
+     * (localhost, api, etc). It only cares about generating the right URL.
+     * 
+     * @param Array $server
+     */
+    public function assertValidUrl($server) {
+        if (!$this->isValidHost($server)) {
+            $location = $this->getRedirectionURL($server);
+            $this->header($location);
+        }
+    }
+
+    /**
+     * Wrapper of header method
+     *
+     * @param String $location
+     *
+     * @return void
+     */
+    function header($location) {
+
+        header('Location: '.$location);
+        exit;
+
+    }
+
     function getProjectDao() {
         return new ProjectDao(CodendiDataAccess::instance());
     }
@@ -116,6 +236,10 @@ class URL {
     
      function getArtifactDao() {
         return new ArtifactDao(CodendiDataAccess::instance());
+    }
+    
+    function getEventManager() {
+        return EventManager::instance();
     }
 }
 ?>

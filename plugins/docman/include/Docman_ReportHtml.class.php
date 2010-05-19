@@ -155,8 +155,7 @@ class Docman_ReportHtml {
      */   
     function getFiltersOptions($params, $displayedFilters) {
         $html = '';
-      
-        $html .= '<hr style="clear: both; margin:0.2em;" />';
+
         $html .= '<div id="docman_report_options">';
         $html .= '<strong>'.$GLOBALS['Language']->getText('plugin_docman', 'report_filters_options').'</strong>&nbsp;';
         //
@@ -294,7 +293,14 @@ class Docman_ReportHtml {
         $html .= ' '.$this->getReportSelector($params['item']);
         $html .= "</div>\n";
 
+
+
+
         $html .= "<div id=\"docman_filters_fieldset\">\n";
+
+
+
+        $html .= '<div style="float: left;">';
         $html .= '<form name="plugin_docman_filters" method="get" action="?" id="plugin_docman_report_form" >';
         $html .= '<input type="hidden" name="group_id" value="'.$this->report->getGroupId().'" />';
         $html .= '<input type="hidden" name="id" value="'.$params['item']->getId().'" />';
@@ -308,11 +314,25 @@ class Docman_ReportHtml {
         $html .= '<input id="docman_report_submit" name="filtersubmit" type="submit" value="'. $GLOBALS['Language']->getText('global', 'btn_apply') .'">';
         $html .= '&nbsp;';
         $html .= '<input id="docman_report_submit" name="clear_filters" type="submit" value="'. $GLOBALS['Language']->getText('plugin_docman', 'report_clear_filters') .'">';
-        
-        $html .= '</form>';
-        $html .= "</div>\n";
 
-        $html .= "<!-- filter list -->\n";
+        $html .= '</form>';
+        $html .= "</div> <!-- left -->\n";
+
+
+        $html .= '<div style="float: right;">';
+        //Retrieve the minimum length allowed when searching pattern
+        $dao = Docman_ReportFactory::getDao();
+        $minLen = $dao->getMinLengthForPattern();
+        $html .= '<div class="docman_help">'.$GLOBALS['Language']->getText('plugin_docman', 'search_help', array($minLen)).'</div>';
+        $html .= '</div>';
+
+
+        $html .= '<div style="clear: both;"></div>';
+
+        $html .= "</div> <!-- docman_filters_fieldset -->\n";
+
+
+        $html .= "\n<!-- filter list -->\n";
 
         return $html;
     }

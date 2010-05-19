@@ -14,6 +14,7 @@
 //require_once('include/ArtifactFieldHtml.class.php');
 //require_once('common/tracker/ArtifactFieldFactory.class.php');
 
+require_once('include/ArtifactRulesManagerHtml.class.php');
 
 // Check if this tracker is valid (not deleted)
 if ( !$ath->isValid() ) {
@@ -44,6 +45,14 @@ $ath->header($params);
 
 // artifact object (and field values) initialized in script above (index.php)
 $ah->displayCopy($ro,$pv);
+
+echo "<script type=\"text/javascript\">\n";
+$armh = new ArtifactRulesManagerHtml($ath);
+$armh->displayRulesAsJavascript();
+echo "new UserAutoCompleter('tracker_cc',
+                          '".util_get_dir_image_theme()."',
+                          true);\n";
+echo "</script>";
 
 // Display footer page
 $ath->footer($params);

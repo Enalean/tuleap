@@ -171,6 +171,18 @@ extends DataAccessObject {
                        $id);
         return $this->update($sql);
     }
+    
+    function getMinLengthForPattern() {
+        $sql = 'show variables like "ft_min_word_len"';
+        $dar = $this->retrieve($sql);
+        if ($dar && !$dar->isError() && $dar->rowCount()>0) {
+            $row = $dar->getRow();
+            return $row['Value'];
+        } else {
+            return false;
+        }
+    }
+     
 }
 
 ?>

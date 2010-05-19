@@ -808,6 +808,9 @@ class Artifact extends Error {
 	            continue; 
             }
                     
+            if ($field->isInt() && $value == '' && $field->getRequired()== 0) {
+                $value = 0;
+            }
             // we check if the given value is authorized for this field (for select box fields only)
             // we don't check here the none value, we have already check it before (we can't check here the none value because the function checkValueInPredefinedValues don't take the none value into account)
             // if the value did not change, we don't do the check (because of stored values that can be deleted now)
@@ -1072,16 +1075,21 @@ class Artifact extends Error {
      */
     function setPermissions($use_artifact_permissions, $ugroups) {
         if ($this->ArtifactType->userIsAdmin()) {
+            if ($use_artifact_permissions) {
+                $result = permission_process_selection_form($this->ArtifactType->getGroupID(), 'TRACKER_ARTIFACT_ACCESS', $this->getId(), $ugroups);
+                if (!$result[0]) {
+                    return $GLOBALS['Response']->addFeedback('error', $result[1]);
+                }
+                //If the selected ugroup corresponds to the default one (all_user), there is no need to store it
+                if ($ugroups[0] == $GLOBALS['UGROUP_ANONYMOUS']) {
+                    $use_artifact_permissions = 0;
+                }
+            }
             $sql = "UPDATE artifact 
                     SET use_artifact_permissions = ". ($use_artifact_permissions ? 1 : 0) ."
                     WHERE artifact_id=". db_ei($this->getID());
             db_query($sql);
-            if ($use_artifact_permissions) {
-                $result = permission_process_selection_form($this->ArtifactType->getGroupID(), 'TRACKER_ARTIFACT_ACCESS', $this->getId(), $ugroups);
-                if (!$result[0]) {
-                    $GLOBALS['Response']->addFeedback('error', $result[1]);
-                }
-            }
+            
         }
     }
 
@@ -1910,13 +1918,16 @@ class Artifact extends Error {
     function userCanView($my_user_id=0) {
 
         if (!$my_user_id) {
-            // Super-user has all rights...
-            if (user_is_super_user()) return true;
-            $my_user_id=user_getid();
+            $u = UserManager::instance()->getCurrentUser();
+            $my_user_id = $u->getId();
         } else {
             $u = UserManager::instance()->getUserById($my_user_id);
-            if ($u->isSuperUser()) return true;
         }
+        // Super-user and Tracker admin have all rights to see even artfact that are restricted to all users
+        if ($u->isSuperUser() || $u->isTrackerAdmin($this->ArtifactType->getGroupID(),$this->ArtifactType->getID())) {
+            return true;
+        }
+      
 
         //Individual artifact permission
         $can_access = ! $this->useArtifactPermissions();
@@ -2580,7 +2591,29 @@ class Artifact extends Error {
 	    return $body;
 	}
 
-	
+    /**
+     * Check whether $field_name is readable according to $field_perm
+     *
+     * All permissions are granted when $field_perm is equal to false.
+     * $field_perm is equal to false when addresses are added in tracker admin to
+     * "Global Email Notification with "check permission" unchecked.
+     *
+     * @param Array $field_perm ...
+     *
+     * @return Boolean
+     */
+    public function hasFieldPermission($field_perm, $field_name) {
+        $hasPerm = false;
+        if ($field_perm === false) {
+            $hasPerm = true;
+        } else {
+            if (isset($field_perm[$field_name]) && $field_perm[$field_name] && permission_can_read_field($field_perm[$field_name])) {
+                $hasPerm = true;
+            }
+        }
+        return $hasPerm;
+    }
+
     /**
     * Format the changes
     *
@@ -2603,10 +2636,9 @@ class Artifact extends Error {
         $fmt = "%20s | %-25s | %s".$GLOBALS['sys_lf'];
     
     
-        if ($field_perm === false || (
-            ((isset($field_perm['assigned_to']) && $field_perm['assigned_to'] && permission_can_read_field($field_perm['assigned_to'])) || 
-            (isset($field_perm['multi_assigned_to']) && $field_perm['multi_assigned_to'] && permission_can_read_field($field_perm['multi_assigned_to'])) ||
-            (!isset($field_perm['assigned_to']) && !isset($field_perm['multi_assigned_to']))))) {
+        if ($this->hasFieldPermission($field_perm, 'assigned_to') ||
+            $this->hasFieldPermission($field_perm, 'multi_assigned_to') ||
+            (!isset($field_perm['assigned_to']) && !isset($field_perm['multi_assigned_to']))) {
                if (user_isloggedin()) {
                       $user_id = user_getid();
                       $out_hdr = $Language->getText('tracker_include_artifact','changes_by').' '.user_getrealname($user_id).' <'.user_getemail($user_id).">". $GLOBALS['sys_lf'] ."";
@@ -2639,27 +2671,26 @@ class Artifact extends Error {
     
         // All the rest of the fields now
         reset($changes);
+        
         while ( list($field_name,$h) = each($changes)) {
             // If both removed and added items are empty skip - Sanity check
-            if (((!isset($h['del']) || !$h['del']) && (!isset($h['add']) || !$h['add'])) ||
-                ($field_perm && (
-                !isset($field_perm[$field_name]) ||
-                !$field_perm[$field_name] || 
-                !permission_can_read_field($field_perm[$field_name])))) { continue; }
-    
-            $visible_change = true;
-            $label = $field_name;
-            $field = $art_field_fact->getFieldFromName($field_name);
-            if ( $field ) {
-                $label = $field->getLabel();
-                if (isset($h['del'])) {
-                    $h['del'] = SimpleSanitizer::unsanitize(util_unconvert_htmlspecialchars($h['del']));
+            if (((isset($h['del']) && $h['del']) || (isset($h['add']) && $h['add']))
+                && $this->hasFieldPermission($field_perm, $field_name)) {
+
+                $visible_change = true;
+                $label = $field_name;
+                $field = $art_field_fact->getFieldFromName($field_name);
+                if ( $field ) {
+                    $label = $field->getLabel();
+                    if (isset($h['del'])) {
+                        $h['del'] = SimpleSanitizer::unsanitize(util_unconvert_htmlspecialchars($h['del']));
+                    }
+                    if (isset($h['add'])) {
+                        $h['add'] = SimpleSanitizer::unsanitize(util_unconvert_htmlspecialchars($h['add']));
+                    }
                 }
-                if (isset($h['add'])) {
-                    $h['add'] = SimpleSanitizer::unsanitize(util_unconvert_htmlspecialchars($h['add']));
-                }
+                $out .= sprintf($fmt, SimpleSanitizer::unsanitize($label), isset($h['del'])?$h['del']:"",isset($h['add'])?$h['add']:"");
             }
-            $out .= sprintf($fmt, SimpleSanitizer::unsanitize($label), isset($h['del'])?$h['del']:"",isset($h['add'])?$h['add']:"");
         } // while
     
         if ($out) {

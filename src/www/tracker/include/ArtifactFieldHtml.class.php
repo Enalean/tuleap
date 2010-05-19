@@ -120,13 +120,29 @@ class ArtifactFieldHtml extends ArtifactField {
     function _isValueDefaultValue($value, $default_value) {
         return (is_array($default_value) && in_array($value, $default_value)) || $value == $default_value;
     }
-    function _getValuesAsJavascript($values, $default_value) {
+    /**
+     * _getValuesAsJavascript
+     * 
+     * MV: I added the latest param in order to manage mass change in the safest way.
+     * I didn't know why the $row[0] value is casted as Int so in order to avoid clashes
+     * the value is not casted ONLY when it match $text_unchanged. We must pass the param
+     * as it may change.
+     * 
+     * @param $values
+     * @param $default_value
+     * @param $text_unchanged
+     */
+    function _getValuesAsJavascript($values, $default_value, $text_unchanged=false) {
         global $Language;
         $hp = Codendi_HTMLPurifier::instance();
             $output  = "";
             $isDefaultValuePresent = false;
             foreach ($values as $row) {
-                $output .= "\n\t.addOption('".  $hp->purify(SimpleSanitizer::unsanitize($row['1']), CODENDI_PURIFIER_JS_QUOTE) ."'.escapeHTML(), '". (int)$row['0'] ."', ". ($this->_isValueDefaultValue($row['0'], $default_value)?'true':'false') .")";
+                if ($row['0'] === $text_unchanged) {
+                    $output .= "\n\t.addOption('".  $hp->purify(SimpleSanitizer::unsanitize($row['1']), CODENDI_PURIFIER_JS_QUOTE) ."'.escapeHTML(), '". $row['0'] ."', ". ($this->_isValueDefaultValue($row['0'], $default_value)?'true':'false') .")";
+                } else {
+                    $output .= "\n\t.addOption('".  $hp->purify(SimpleSanitizer::unsanitize($row['1']), CODENDI_PURIFIER_JS_QUOTE) ."'.escapeHTML(), '". (int)$row['0'] ."', ". ($this->_isValueDefaultValue($row['0'], $default_value)?'true':'false') .")";
+                }
                 if ($row['0'] == $default_value) {
                     $isDefaultValuePresent = true;
                 }
@@ -171,6 +187,9 @@ class ArtifactFieldHtml extends ArtifactField {
             if ($show_none) {
                 $array_values[] = array(100, $text_none);
             }
+            if ($show_unchanged) {
+                $array_values[] = array($text_unchanged, $text_unchanged);
+            }
             while($row = db_fetch_array($result)) {
                 $array_values[]  = $row;
             }
@@ -183,7 +202,7 @@ class ArtifactFieldHtml extends ArtifactField {
             $output  = html_build_select_box ($result,$box_name,$checked,$show_none,$text_none,$show_any, $text_any,$show_unchanged,$text_unchanged);
             $output .= '<script type="text/javascript">';
             $output .= "\ncodendi.tracker.fields.add('".(int)$this->getID()."', '".$hp->purify($this->getName(), CODENDI_PURIFIER_JS_QUOTE)."', '".$hp->purify(SimpleSanitizer::unsanitize($this->getLabel()), CODENDI_PURIFIER_JS_QUOTE)."')";
-             $output .= $this->_getValuesAsJavascript($array_values,$checked);
+             $output .= $this->_getValuesAsJavascript($array_values,$checked, $text_unchanged);
             $output .= ';';
             $output .= "\n</script>";
            return $output;

@@ -15,6 +15,7 @@
 //require_once('include/ArtifactFieldHtml.class.php');
 //require_once('common/tracker/ArtifactFieldFactory.class.php');
 
+require_once('include/ArtifactRulesManagerHtml.class.php');
 
 // Printer version ?
 if ( !$request->exist('pv') ) {
@@ -61,6 +62,9 @@ if (strstr($submit,$Language->getText('tracker_masschange_detail','selected_item
 }
 
 echo '<script type="text/javascript">'. "\n";
+$armh =& new ArtifactRulesManagerHtml($ath);
+$armh->displayRulesAsJavascript();
+
 echo "new UserAutoCompleter('tracker_cc',
                           '".util_get_dir_image_theme()."',
                           true);\n";

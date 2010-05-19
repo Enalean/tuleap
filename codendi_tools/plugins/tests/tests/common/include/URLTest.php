@@ -24,8 +24,8 @@
 require_once('common/include/URL.class.php');
 require_once('common/dao/include/DataAccessResult.class.php');
 Mock::generate('DataAccessResult');
-Mock::generatePartial('URL', 'URLTestVersion', array('getProjectDao','getForumDao','getNewsBytesDao','getArtifactDao'));
-
+Mock::generatePartial('URL', 'URLTestVersion', array('getProjectDao','getForumDao','getNewsBytesDao','getArtifactDao', 'getEventManager'));
+Mock::generatepartial('URL', 'URLTestVersion2', array('isValidHost', 'getRedirectionURL', 'header'));
 require_once('common/dao/ProjectDao.class.php');
 Mock::generate('ProjectDao');
 require_once('common/dao/ForumDao.class.php');
@@ -34,13 +34,33 @@ require_once('common/dao/NewsBytesDao.class.php');
 Mock::generate('NewsBytesDao');
 require_once('common/dao/ArtifactDao.class.php');
 Mock::generate('ArtifactDao');
+require_once('common/event/EventManager.class.php');
+Mock::generate('EventManager');
+
+class MockEM4Url extends MockEventManager {
+   function processEvent($event, $params) {
+       foreach(parent::processEvent($event, $params) as $key => $value) {
+           $params[$key] = $value;
+       }
+   }
+} 
 
 class URLTest extends UnitTestCase {
+    private $sys_https_host;
+    private $sys_force_ssl;
+    private $sys_default_domain;
+
     function setUp() {
+        $this->sys_https_host      = $GLOBALS['sys_https_host'];
+        $this->sys_force_ssl       = $GLOBALS['sys_force_ssl'];
+        $this->sys_default_domain  = $GLOBALS['sys_default_domain'];
         $GLOBALS['sys_news_group'] = 46;
     }
     
     function tearDown() {
+        $GLOBALS['sys_https_host']     = $this->sys_https_host;
+        $GLOBALS['sys_force_ssl']      = $this->sys_force_ssl;
+        $GLOBALS['sys_default_domain'] = $this->sys_default_domain;
         unset($GLOBALS['group_id']);
         unset($GLOBALS['sys_news_group']);
         unset($_REQUEST['forum_id']);
@@ -204,6 +224,223 @@ class URLTest extends UnitTestCase {
         $GLOBALS['PATH_INFO'] = '/101/1/p9_r4/toto.csv';
         $this->assertEqual($url->getGroupIdFromURL('/file/download.php/101/1/p9_r4/toto.csv'), 101);
         $this->assertNotEqual($url->getGroupIdFromURL('/toto/file/download.php/101/1/p9_r4/toto.csv'), 101);
+    }
+
+    function testIsException() {
+        $url = new URL();
+        $this->assertTrue($url->isException(array('SERVER_NAME' => 'localhost',    'SCRIPT_NAME' => '/projects/foobar')));
+        $this->assertFalse($url->isException(array('SERVER_NAME' => 'codendi.org', 'SCRIPT_NAME' => '/projects/foobar')));
+        
+        $this->assertTrue($url->isException(array('SERVER_NAME' => 'codendi.org', 'SCRIPT_NAME' => '/api/reference/extractCross')));
+        $this->assertTrue($url->isException(array('SERVER_NAME' => 'codendi.org', 'SCRIPT_NAME' => '/soap/index.php')));
+        $this->assertFalse($url->isException(array('SERVER_NAME' => 'codendi.org', 'SCRIPT_NAME' => '/projects/foobar')));
+    }
+
+    function testValidHostHttp() {
+        $GLOBALS['sys_https_host']     = 'secure.codendi.org';
+        $GLOBALS['sys_force_ssl']      = 0;
+        $GLOBALS['sys_default_domain'] = 'codendi.org';
+        $server = array('HTTP_HOST'   => 'codendi.org',
+                        'SERVER_NAME' => 'codendi.org',
+                        'SCRIPT_NAME' => '');
+        $url = new URLTestVersion($this);
+
+        $em = new MockEventManager($this);
+        $url->setReturnValue('getEventManager', $em);
+
+        $this->assertTrue($url->isValidHost($server));
+    }
+
+    function testValidHostLocalhost() {
+        $GLOBALS['sys_https_host']     = 'secure.codendi.org';
+        $GLOBALS['sys_force_ssl']      = 0;
+        $GLOBALS['sys_default_domain'] = 'codendi.org';
+        $server = array('HTTP_HOST'   => 'localhost',
+                        'SERVER_NAME' => 'localhost',
+                        'SCRIPT_NAME' => '');
+        $url = new URLTestVersion($this);
+
+        $em = new MockEventManager($this);
+        $url->setReturnValue('getEventManager', $em);
+
+        $this->assertTrue($url->isValidHost($server));
+    }
+
+    function testValidHostLocalhostSecure() {
+        $GLOBALS['sys_https_host']     = 'secure.codendi.org';
+        $GLOBALS['sys_force_ssl']      = 1;
+        $GLOBALS['sys_default_domain'] = 'codendi.org';
+        $server = array('HTTP_HOST'   => 'localhost',
+                        'SERVER_NAME' => 'localhost',
+                        'HTTPS'       => 'on',
+                        'SCRIPT_NAME' => '');
+        $url = new URLTestVersion($this);
+
+        $em = new MockEventManager($this);
+        $url->setReturnValue('getEventManager', $em);
+
+        $this->assertTrue($url->isValidHost($server));
+    }
+
+    function testValidHostInvalidDomain() {
+        $GLOBALS['sys_https_host']     = 'secure.codendi.org';
+        $GLOBALS['sys_force_ssl']      = 0;
+        $GLOBALS['sys_default_domain'] = 'codendi.org';
+        $server = array('HTTP_HOST'   => 'test.codendi.org',
+                        'SERVER_NAME' => 'test.codendi.org',
+                        'SCRIPT_NAME' => '');
+        $url = new URLTestVersion($this);
+
+        $em = new MockEventManager($this);
+        $url->setReturnValue('getEventManager', $em);
+
+        $this->assertFalse($url->isValidHost($server));
+    }
+
+    function testValidHostHttps() {
+        $GLOBALS['sys_https_host']     = 'secure.codendi.org';
+        $GLOBALS['sys_force_ssl']      = 1;
+        $GLOBALS['sys_default_domain'] = 'codendi.org';
+        $server = array('HTTP_HOST'   => 'secure.codendi.org',
+                        'SERVER_NAME' => 'secure.codendi.org',
+                        'HTTPS'       => 'on',
+                        'SCRIPT_NAME' => '');
+        $url = new URLTestVersion($this);
+
+        $em = new MockEventManager($this);
+        $url->setReturnValue('getEventManager', $em);
+
+        $this->assertTrue($url->isValidHost($server));
+    }
+    
+    function testValidHostInvalidHttps() {
+        $GLOBALS['sys_https_host']     = 'secure.codendi.org';
+        $GLOBALS['sys_force_ssl']      = 1;
+        $GLOBALS['sys_default_domain'] = 'codendi.org';
+        $server = array('HTTP_HOST'   => 'codendi.org',
+                        'SERVER_NAME' => 'codendi.org',
+                        'HTTPS'       => 'on',
+                        'SCRIPT_NAME' => '');
+        $url = new URLTestVersion($this);
+
+        $em = new MockEventManager($this);
+        $url->setReturnValue('getEventManager', $em);
+
+        $this->assertFalse($url->isValidHost($server));
+    }
+    
+    function testValidHostByPlugin() {
+        $GLOBALS['sys_https_host']     = 'secure.codendi.org';
+        $GLOBALS['sys_force_ssl']      = 0;
+        $GLOBALS['sys_default_domain'] = 'codendi.org';
+        
+        $server = array('HTTP_HOST'   => 'webdav.codendi.org',
+                        'SERVER_NAME' => 'webdav.codendi.org',
+                        'SCRIPT_NAME' => '');
+        
+        $em = new MockEM4Url($this);
+        $em->setReturnValue('processEvent', array('server_name' => array('webdav.codendi.org' => true)));
+
+        $url = new URLTestVersion($this);
+        $url->setReturnValue('getEventManager', $em);
+        
+        $this->assertTrue($url->isValidHost($server));
+    }
+
+    function testValidHostByPluginSecure() {
+        $GLOBALS['sys_https_host']     = 'secure.codendi.org';
+        $GLOBALS['sys_force_ssl']      = 1;
+        $GLOBALS['sys_default_domain'] = 'codendi.org';
+        
+        $server = array('HTTP_HOST'   => 'webdav.codendi.org',
+                        'SERVER_NAME' => 'webdav.codendi.org',
+                        'HTTPS'       => 'on',
+                        'SCRIPT_NAME' => '');
+        
+        $em = new MockEM4Url($this);
+        $em->setReturnValue('processEvent', array('server_name' => array('webdav.codendi.org' => true)));
+        
+        $url = new URLTestVersion($this);
+        $url->setReturnValue('getEventManager', $em);
+        
+        $this->assertTrue($url->isValidHost($server));
+    }
+    
+    function testRedirectionUrlWithForcedSSL() {
+        $GLOBALS['sys_https_host']     = 'secure.codendi.org';
+        $GLOBALS['sys_force_ssl']      = 1;
+        $GLOBALS['sys_default_domain'] = 'codendi.org';
+        
+        $server = array('HTTP_HOST'   => 'codendi.org',
+                        'SERVER_NAME' => 'codendi.org',
+                        'HTTPS'       => 'on',
+                        'SCRIPT_NAME' => '/test/foo.php',
+                        'REQUEST_URI' => '/test/foo.php&group_id=bar');
+        
+        $url = new URLTestVersion($this);
+
+        $em = new MockEventManager($this);
+        $url->setReturnValue('getEventManager', $em);
+
+        $this->assertEqual($url->getRedirectionURL($server), 'https://secure.codendi.org/test/foo.php&group_id=bar');
+    }
+
+    function testRedirectionUrlWithoutForcedSSL() {
+        $GLOBALS['sys_https_host']     = 'secure.codendi.org';
+        $GLOBALS['sys_force_ssl']      = 0;
+        $GLOBALS['sys_default_domain'] = 'codendi.org';
+        
+        $server = array('HTTP_HOST'   => 'codendi.org',
+                        'SERVER_NAME' => 'codendi.org',
+                        'SCRIPT_NAME' => '/test/foo.php',
+                        'REQUEST_URI' => '/test/foo.php&group_id=bar');
+        
+        $url = new URLTestVersion($this);
+
+        $em = new MockEventManager($this);
+        $url->setReturnValue('getEventManager', $em);
+
+        $this->assertEqual($url->getRedirectionURL($server), 'http://codendi.org/test/foo.php&group_id=bar');
+    }
+    
+    function testRedirectionUrlSSLAccessWithoutForcedSSL() {
+        $GLOBALS['sys_https_host']     = 'secure.codendi.org';
+        $GLOBALS['sys_force_ssl']      = 0;
+        $GLOBALS['sys_default_domain'] = 'codendi.org';
+        
+        $server = array('HTTP_HOST'   => 'secure.codendi.org',
+                        'SERVER_NAME' => 'secure.codendi.org',
+                        'HTTPS'       => 'on',
+                        'SCRIPT_NAME' => '/test/foo.php',
+                        'REQUEST_URI' => '/test/foo.php&group_id=bar');
+        
+        $url = new URLTestVersion($this);
+
+        $em = new MockEventManager($this);
+        $url->setReturnValue('getEventManager', $em);
+
+        $this->assertEqual($url->getRedirectionURL($server), 'https://secure.codendi.org/test/foo.php&group_id=bar');
+    }
+
+    function testAssertValidUrlWithInvalidHost() {
+
+        $url = new URLTestVersion2($this);
+        $url->setReturnValue('isValidHost', false);
+        $url->expectOnce('header');
+        $server = array();
+        $url->assertValidUrl($server);
+
+    }
+
+    function testAssertValidUrlWithvalidHost() {
+
+        $url = new URLTestVersion2($this);
+        $url->setReturnValue('isValidHost', true);
+        $url->setReturnValue('getRedirectionURL', 'http://codendi.org');
+        $url->expectNever('header');
+        $server = array();
+        $url->assertValidUrl($server);
+
     }
 
 }

@@ -69,7 +69,15 @@ switch($graphType){
         $vGroupId->required();
         if($request->valid($vGroupId)) {
             $groupId = $request->get('group_id');
-        } 
+        }
+
+        $vServices = new Valid_WhiteList('services', $duMgr->getProjectServices());
+        $vServices->required();
+        if ($request->validArray($vServices)) {
+            $services = $request->get('services');
+        } else {
+            $services = array();
+        }
     break;
     
     default:
@@ -135,7 +143,7 @@ if (!$error) {
         break;
         
         case 'graph_project':
-            $graph->displayProjectGraph($groupId, $selectedGroupByDate, $startDate, $endDate, !$relative) ;
+            $graph->displayProjectGraph($groupId, $services, $selectedGroupByDate, $startDate, $endDate, !$relative) ;
         break;
         
         default:

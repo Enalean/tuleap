@@ -165,6 +165,12 @@ class ArtifactRulesManager {
                                 $pb_target_values = $this->_getSelectedValuesForField($pb_target_field_values, $target, $target_value);
                                 
                                 // detailled error message
+                                if (empty($pb_target_values)) {
+                                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('tracker_index', 'missing_dependency', $values[$target]['field']->getLabel())); 
+                                } 
+                                if (empty($pb_source_values)) {
+                                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('tracker_index', 'missing_dependency', $values[$source]['field']->getLabel())); 
+                                } 
                                 $GLOBALS['Response']->addFeedback('error', $values[$source]['field']->getLabel().'('. implode(', ', $pb_source_values) .') -> '.$values[$target]['field']->getLabel().'('. implode(', ', $pb_target_values) .')');
                             }
                         }

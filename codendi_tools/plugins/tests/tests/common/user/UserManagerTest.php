@@ -210,6 +210,8 @@ class UserManagerTest extends UnitTestCase {
         $user123->setReturnValue('getId', 123);
         $user123->setReturnValue('getUserName', 'user_123');
         $user123->setReturnValue('isAnonymous', false);
+        $user123->setReturnValue('isSuspended', false);
+        $user123->setReturnValue('isDeleted',   false);
 
         $cm->setReturnValue('getCookie', 'valid_hash');
         $um->setReturnValue('_getServerIp', '212.212.123.12');
@@ -412,7 +414,71 @@ class UserManagerTest extends UnitTestCase {
         $um->setReturnReference('getDao', $dao);
         $this->assertReference($userAnonymous, $um->login('user_123', 'bad_pwd', 0));
     }
-    
+
+    function testSuspenedUserGetSession() {
+        $cm               = new MockCookieManager($this);
+        $dar_valid_hash   = new MockDataAccessResult($this);
+        $user123          = new MockUser($this);
+        $userAnonymous    = new MockUser($this);
+        $dao              = new MockUserDao($this);
+        $um               = new UserManagerTestVersion($this);
+        
+        $user123->setReturnValue('getId', 123);
+        $user123->setReturnValue('getUserName', 'user_123');
+        $user123->setReturnValue('isAnonymous', false);
+        $user123->setReturnValue('isSuspended', true);
+        
+        $userAnonymous->setReturnValue('isAnonymous', true);
+        
+        $cm->setReturnValue('getCookie', 'valid_hash');
+        $um->setReturnValue('_getServerIp', '212.212.123.12');
+        $dar_valid_hash->setReturnValue('getRow', array('user_name' => 'user_123', 'user_id' => 123));
+        $dao->setReturnReference('searchBySessionHashAndIp', $dar_valid_hash, array('valid_hash', '212.212.123.12'));
+        $um->setReturnReference('_getUserInstanceFromRow', $user123, array(array('user_name' => 'user_123', 'user_id' => 123)));
+        $um->setReturnReference('_getUserInstanceFromRow', $userAnonymous, array(array('user_id' => 0)));
+        
+        $dao->expectNever('storeLastAccessDate');
+        $dao->expectOnce('deleteAllUserSessions', array(123));
+        
+        $um->setReturnReference('getDao', $dao);
+        $um->setReturnReference('_getCookieManager', $cm);
+        
+        $user = $um->getCurrentUser();
+        $this->assertTrue($user->isAnonymous(), 'A suspended user should not be able to use a valid session');
+    }
+
+    function testDeletedUserGetSession() {
+        $cm               = new MockCookieManager($this);
+        $dar_valid_hash   = new MockDataAccessResult($this);
+        $user123          = new MockUser($this);
+        $userAnonymous    = new MockUser($this);
+        $dao              = new MockUserDao($this);
+        $um               = new UserManagerTestVersion($this);
+        
+        $user123->setReturnValue('getId', 123);
+        $user123->setReturnValue('getUserName', 'user_123');
+        $user123->setReturnValue('isAnonymous', false);
+        $user123->setReturnValue('isDeleted', true);
+        
+        $userAnonymous->setReturnValue('isAnonymous', true);
+        
+        $cm->setReturnValue('getCookie', 'valid_hash');
+        $um->setReturnValue('_getServerIp', '212.212.123.12');
+        $dar_valid_hash->setReturnValue('getRow', array('user_name' => 'user_123', 'user_id' => 123));
+        $dao->setReturnReference('searchBySessionHashAndIp', $dar_valid_hash, array('valid_hash', '212.212.123.12'));
+        $um->setReturnReference('_getUserInstanceFromRow', $user123, array(array('user_name' => 'user_123', 'user_id' => 123)));
+        $um->setReturnReference('_getUserInstanceFromRow', $userAnonymous, array(array('user_id' => 0)));
+        
+        $dao->expectNever('storeLastAccessDate');
+        $dao->expectOnce('deleteAllUserSessions', array(123));
+        
+        $um->setReturnReference('getDao', $dao);
+        $um->setReturnReference('_getCookieManager', $cm);
+        
+        $user = $um->getCurrentUser();
+        $this->assertTrue($user->isAnonymous(), 'A deleted user should not be able to use a valid session');
+    }
+
     function testGetUserByIdentifierPluginNoAnswerWithSimpleId() {
         $em = new MockEventManager($this);
         $em->expectOnce('processEvent');   
@@ -497,10 +563,13 @@ class UserManagerTest extends UnitTestCase {
     function testUpdateDaoResultPropagated() {
     	$user = new MockUser($this);
     	$user->setReturnValue('isAnonymous', false);
+    	$user->setReturnValue('isSuspended', false);
+    	$user->setReturnValue('isDeleted',   false);
     	
     	// True
     	$daotrue = new MockUserDao($this);
         $daotrue->setReturnValue('updateByRow', true);
+        $daotrue->expectNever('deleteAllUserSessions');
     	$umtrue = new UserManagerTestVersion($this);
         $umtrue->setReturnReference('getDao', $daotrue);
         $this->assertTrue($umtrue->updateDb($user));
@@ -508,6 +577,7 @@ class UserManagerTest extends UnitTestCase {
         // False
         $daofalse = new MockUserDao($this);
         $daofalse->setReturnValue('updateByRow', false);
+        $daofalse->expectNever('deleteAllUserSessions');
         $umfalse = new UserManagerTestVersion($this);
         $umfalse->setReturnReference('getDao', $daofalse);
         $this->assertFalse($umfalse->updateDb($user));
@@ -546,7 +616,39 @@ class UserManagerTest extends UnitTestCase {
         $um->setReturnReference('getDao', $dao);
         $um->updateDb($user);
     }
-    
+
+    function testUpdateToSuspendedDeleteSessions() {
+        $user = new MockUser($this);
+        $user->setReturnValue('getId', 123);
+        $user->setReturnValue('isAnonymous', false);
+        $user->setReturnValue('isSuspended', true);
+
+        $dao = new MockUserDao($this);
+        $dao->setReturnValue('updateByRow', true);
+        $dao->expectOnce('deleteAllUserSessions', array(123));
+
+        $um = new UserManagerTestVersion($this);
+        $um->setReturnReference('getDao', $dao);
+
+        $this->assertTrue($um->updateDb($user));
+    }
+
+    function testUpdateToDeletedDeleteSessions() {
+        $user = new MockUser($this);
+        $user->setReturnValue('getId', 123);
+        $user->setReturnValue('isAnonymous', false);
+        $user->setReturnValue('isDeleted', true);
+
+        $dao = new MockUserDao($this);
+        $dao->setReturnValue('updateByRow', true);
+        $dao->expectOnce('deleteAllUserSessions', array(123));
+
+        $um = new UserManagerTestVersion($this);
+        $um->setReturnReference('getDao', $dao);
+
+        $this->assertTrue($um->updateDb($user));
+    }
+
     function testAssignNextUnixUidUpdateUser() {
         $user = new MockUser($this);
         $user->expectOnce('setUnixUid', array(1789));

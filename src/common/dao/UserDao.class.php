@@ -382,7 +382,19 @@ class UserDao extends DataAccessObject {
         }
         return $hash;
     }
-    
+
+    /**
+     * Delete all active sessions opened by a user
+     *
+     * @param Integer $userId User id
+     *
+     * @return Boolean SQL success
+     */
+    function deleteAllUserSessions($userId) {
+        $sql = 'DELETE FROM session WHERE user_id = '.$this->da->escapeInt($userId);
+        return $this->update($sql);
+    }
+
     /** 
      * Store login success.
      * 

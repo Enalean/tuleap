@@ -19,6 +19,7 @@ define('TTF_DIR',isset($GLOBALS['ttf_font_dir']) ? $GLOBALS['ttf_font_dir'] : '/
 require_once('common/include/CookieManager.class.php');
 require_once('common/include/HTTPRequest.class.php');
 require_once('common/include/SimpleSanitizer.class.php');
+require_once('common/include/URL.class.php');
 
 // Detect whether this file is called by a script running in cli mode, or in normal web mode
 if (array_key_exists('HTTP_HOST', $_SERVER) == true) {
@@ -71,44 +72,12 @@ foreach(array(
 if (!isset($GLOBALS['feedback'])) {
     $GLOBALS['feedback'] = "";  //By default the feedbak is empty
 }
-$location = "";
+
 if (!IS_SCRIPT) {
     $cookie_manager =& new CookieManager();
     $GLOBALS['session_hash'] = $cookie_manager->isCookie('session_hash') ? $cookie_manager->getCookie('session_hash') : false;
 }
 //}}}
-
-
-// Force SSL mode if required except if request comes from localhost, or for api scripts
-// HTTP needed by fopen calls (e.g.  in www/include/cache.php)
-if (!IS_SCRIPT  
-     && ((!isset($_SERVER['HTTPS']) || $_SERVER['HTTPS'] !== 'on') )
-     && $GLOBALS['sys_force_ssl'] == 1 
-     && ($_SERVER['SERVER_NAME'] != 'localhost') 
-     && (strcmp(substr($_SERVER['SCRIPT_NAME'],0,5),'/api/') !=0) ) {
-        header("Location: https://".$GLOBALS['sys_https_host'].$_SERVER['REQUEST_URI']);
-}
-
-// Check URL for valid hostname and valid protocol
-if (!IS_SCRIPT &&
-    ($_SERVER['HTTP_HOST'] != $GLOBALS['sys_default_domain'])
-    && ($_SERVER['SERVER_NAME'] != 'localhost')
-    && (strcmp(substr($_SERVER['SCRIPT_NAME'],0,5),'/api/') !=0)
-    && (strcmp(substr($_SERVER['SCRIPT_NAME'],0,6),'/soap/') !=0)
-    && (!isset($GLOBALS['sys_https_host'])||($_SERVER['HTTP_HOST'] != $GLOBALS['sys_https_host']))) {
-
-    if ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') || $GLOBALS['sys_force_ssl'] == 1) {
-        $location = "Location: https://".$GLOBALS['sys_https_host'].$_SERVER['REQUEST_URI'];
-    } else {
-        $location = "Location: http://".$GLOBALS['sys_default_domain'].$_SERVER['REQUEST_URI'];
-    }
-
-    if (isset($location) && $location) {
-        header($location);
-        exit;
-    }
-}
-
 
 // Create cache directory if needed
 if (!file_exists($GLOBALS['codendi_cache_dir'])) {
@@ -139,6 +108,12 @@ if (!$GLOBALS['sys_lang']) {
 }
 require('common/language/BaseLanguage.class.php');
 $Language = new BaseLanguage($GLOBALS['sys_supported_languages'], $GLOBALS['sys_lang']);
+
+// Check URL for valid hostname and valid protocol
+if (!IS_SCRIPT) {
+    $url = new URL();
+    $url->assertValidUrl($_SERVER);
+}
 
 //various html utilities
 require_once('utils.php');
@@ -231,7 +206,7 @@ require_once('common/project/Project.class.php');
 // loading the license.php file in the register directory when
 // invoking project/register.php
 if(!IS_SCRIPT) {
-require_once($_SERVER['DOCUMENT_ROOT'].'/include/license.php');
+require_once(dirname(__FILE__).'/license.php');
 if (license_already_declined()) {
     exit_error($Language->getText('global','error'),$Language->getText('include_pre','site_admin_declines_license',$GLOBALS['sys_email_admin']));
 }

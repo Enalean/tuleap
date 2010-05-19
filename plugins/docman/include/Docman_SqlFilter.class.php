@@ -66,6 +66,12 @@ class Docman_SqlFilterFactory {
  */
 class Docman_SqlFilter 
 extends Docman_MetadataSqlQueryChunk {
+
+    /**
+     * The search type is the full text one
+     */
+    const BOOLEAN_SEARCH_TYPE = 'IN BOOLEAN MODE';
+   
     var $filter;
     var $isRealMetadata;
 
@@ -105,6 +111,38 @@ extends Docman_MetadataSqlQueryChunk {
         $where = implode(' AND ', $whereArray);
         
         return $where;
+    }
+
+    /*
+     * There are 4 cases depending on the entered pattern:
+     ** 1-pattern   ==>The boolean mode will be chosen for perf issue
+     ** 2-pattern * ==>i.e
+     ** 3-*pattern* ==>For this case, the search type corresponds to an SQL statement with LIKE
+     ** 4-*pattern  ==>Will use the LIKE statement
+     *
+     * Return array with true in 'like' field if the pattern corresponds to (3) or (4) 
+     * and the corrsponding formatted string in 'pattern' field
+     * else return false in 'like' field for the (1) and (2) case which corresponds to the full text search 
+     *
+     *  
+     * @param String $qv
+     * 
+     * @return Array
+     */
+    function getSearchType($qv) {
+        $res = array();
+        if (preg_match ('/^\*(.+)$/', $qv)) {
+            if (preg_match ('/^\*(.+)\*$/', $qv)) {
+                $pattern = preg_replace ('/^\*(.+)\*$/', '"%$1%"', $qv);
+            } else  {
+                 $pattern = preg_replace ('/^\*(.+)$/', '"%$1"', $qv);
+            }
+            $res['like']     = true;
+            $res ['pattern'] = $pattern; 
+        } else {
+            $res['like'] = false;
+        }
+        return $res;
     }
 }
 
@@ -253,23 +291,25 @@ extends Docman_SqlFilter {
  */
 class Docman_SqlFilterText 
 extends Docman_SqlFilter {
-    var $matchMode;
 
     function Docman_SqlFilterText($filter) {
         parent::Docman_SqlFilter($filter);
-        $this->matchMode = 'IN BOOLEAN MODE';
     }
-
+    
     function _getSpecificSearchChunk() {
         $stmt = array();
         if($this->filter->getValue() !== null &&
            $this->filter->getValue() != '') {
-            $qv = DataAccess::quoteSmart($this->filter->getValue());
-            $stmt[] = 'MATCH ('.$this->field.') AGAINST ('.$qv.' '.$this->matchMode.')';
+            $qv = $this->filter->getValue();
+            $searchType = $this->getSearchType($qv);
+            if ($searchType['like']) {
+                $stmt[] =  $this->field.' LIKE '.$searchType['pattern'];
+            } else {
+                $stmt[] = 'MATCH ('.$this->field.') AGAINST ("'.$qv.'" '.Docman_SqlFilter::BOOLEAN_SEARCH_TYPE.')';
+            }
         }
         return $stmt;
     }
-
 }
 
 class Docman_SqlFilterGlobalText
@@ -294,15 +334,27 @@ extends Docman_SqlFilterText {
         $stmt = array();
         if($this->filter->getValue() !== null &&
            $this->filter->getValue() != '') {
-            $qv = DataAccess::quoteSmart($this->filter->getValue());
-
-            $matches[] = 'MATCH (i.title, i.description) AGAINST ('.$qv.' '.$this->matchMode.')';
-            $matches[] = 'MATCH (v.label, v.changelog, v.filename) AGAINST ('.$qv.' '.$this->matchMode.')';
-            foreach($this->filter->dynTextFields as $f) {
-                $matches[] = 'MATCH (mdv_'.$f.'.valueText, mdv_'.$f.'.valueString) AGAINST ('.$qv.' '.$this->matchMode.')';
+            $qv = $this->filter->getValue();
+            $searchType = $this->getSearchType($qv);
+            if ($searchType['like']) {
+                $matches[] = ' i.title LIKE '.$searchType['pattern'].'  OR i.description LIKE '.$searchType['pattern'];
+                $matches[] = ' v.label LIKE '.$searchType['pattern'].'  OR  v.changelog LIKE '.$searchType['pattern'].'  OR v.filename LIKE '.$searchType['pattern'];
+                
+                foreach($this->filter->dynTextFields as $f) {
+                    $matches[] = ' mdv_'.$f.'.valueText LIKE '.$searchType['pattern'].'  OR  mdv_'.$f.'.valueString LIKE '.$searchType['pattern'];
+                }
+                
+                $stmt[] = '('.implode(' OR ', $matches).')';
+            } else {
+                $matches[] = 'MATCH (i.title, i.description) AGAINST ("'.$qv.'" '.Docman_SqlFilter::BOOLEAN_SEARCH_TYPE.')';
+                $matches[] = 'MATCH (v.label, v.changelog, v.filename) AGAINST ("'.$qv.'" '.Docman_SqlFilter::BOOLEAN_SEARCH_TYPE.')';
+                
+                foreach($this->filter->dynTextFields as $f) {
+                    $matches[] = 'MATCH (mdv_'.$f.'.valueText, mdv_'.$f.'.valueString) AGAINST ("'.$qv.'" '.Docman_SqlFilter::BOOLEAN_SEARCH_TYPE.')';
+                }
+                
+                $stmt[] = '('.implode(' OR ', $matches).')';
             }
-
-            $stmt[] = '('.implode(' OR ', $matches).')';
         }
         return $stmt;
     }

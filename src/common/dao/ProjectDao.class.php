@@ -178,6 +178,15 @@ class ProjectDao extends DataAccessObject {
         return array('projects' => $res, 'numrows' => $row['nb']);
     }
 
+
+    public function searchByPublicStatus($IsPublic){
+        $IsPublic= $this->da->escapeInt($IsPublic);
+        $sql = "SELECT group_id
+                FROM $this->table_name
+                WHERE is_public=$IsPublic
+                AND status = 'A'";
+        return $this->retrieve($sql);
+    }
 }
 
 ?>

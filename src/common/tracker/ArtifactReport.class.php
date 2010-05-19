@@ -145,13 +145,14 @@ class ArtifactReport extends Error {
 		$res = db_query("DELETE FROM artifact_report_field WHERE report_id=". db_ei($this->report_id) );
 	
 		$res = db_query("UPDATE artifact_report 
-                         SET name='". db_es($name) ."', description='". db_es($description) ."',scope='". db_es($scope) ."',is_default='".db_es($is_default)."' 
+                         SET user_id='" . db_ei($user_id) . "',name='". db_es($name) ."', description='". db_es($description) ."',scope='". db_es($scope) ."',is_default='".db_es($is_default)."' 
                          WHERE report_id=". db_ei($this->report_id) );
 	
 	    // set other reports as not default report
 	    if ($is_default ==1 ) { 
             $res = db_query("UPDATE artifact_report SET is_default=0 WHERE report_id <>".db_ei($this->report_id)." AND group_artifact_id=".db_ei($this->group_artifact_id));
 	    }
+		$this->user_id = $user_id;
 		$this->name = $name;
 		$this->description = $description;
 		$this->scope = $scope;
@@ -460,7 +461,7 @@ class ArtifactReport extends Error {
             $pm          =& PermissionsManager::instance();
             $permissions = $pm->getPermissionsAndUgroupsByObjectid($this->group_artifact_id, $ugroups);
             
-            if(!$u->isSuperUser()) {
+            if(!$u->isSuperUser() && !$u->isTrackerAdmin($group_id,$this->group_artifact_id)) {
                 //artifact permissions
                 $from  .= " LEFT JOIN permissions 
                              ON (permissions.object_id = CONVERT(a.artifact_id USING utf8) 
@@ -477,7 +478,7 @@ class ArtifactReport extends Error {
             
             $aids = array();
             //Does the user member of at least one group which has ACCESS_FULL ?
-            if ($u->isSuperUser() || (isset($permissions['TRACKER_ACCESS_FULL']) && count(array_intersect($ugroups, $permissions['TRACKER_ACCESS_FULL'])) > 0)) {
+            if ($u->isSuperUser() || $u->isTrackerAdmin($group_id,$this->group_artifact_id) || (isset($permissions['TRACKER_ACCESS_FULL']) && count(array_intersect($ugroups, $permissions['TRACKER_ACCESS_FULL'])) > 0)) {
                 
                 $sql = "SELECT a.artifact_id ".
                        $from." ".

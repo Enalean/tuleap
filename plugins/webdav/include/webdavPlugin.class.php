@@ -1,0 +1,116 @@
+<?php
+/**
+ * Copyright (c) STMicroelectronics, 2010. All Rights Reserved.
+ *
+ * This file is a part of Codendi.
+ *
+ * Codendi is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Codendi is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Codendi; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
+
+require_once ('common/plugin/Plugin.class.php');
+require_once ('lib/Sabre.autoload.php');
+require_once ('ResolvPHP-5.1.6-Compatibility.php');
+require_once ('BrowserPlugin.class.php');
+require_once ('WebDAVAuthentication.class.php');
+require_once ('FS/WebDAVFRS.class.php');
+
+class WebDAVPlugin extends Plugin {
+
+    /**
+     * Constructor of the class
+     *
+     * @param Integer $id
+     *
+     * @return void
+     */
+    function __construct($id) {
+
+        parent::__construct($id);
+        $this->setScope(Plugin::SCOPE_PROJECT);
+        $this->_addHook('allowed_host', 'allowedHost', false);
+
+    }
+
+    /**
+     * Returns information about the plugin
+     *
+     * @return String
+     *
+     * @see src/common/plugin/Plugin#getPluginInfo()
+     */
+    function getPluginInfo() {
+
+        if (!$this->pluginInfo instanceof WebDAVPluginInfo) {
+            include_once('WebDAVPluginInfo.class.php');
+            $this->pluginInfo = new WebDAVPluginInfo($this);
+        }
+        return $this->pluginInfo;
+
+    }
+
+    /**
+     * Put the hostname used to access WebDAV to allow it
+     *
+     * @param String $ServerNames
+     *
+     * @return void
+     */
+    function allowedHost(&$params) {
+
+        $params['server_name'][$this->getPluginInfo()->getPropertyValueForName('webdav_host')] = true;
+
+    }
+
+    /**
+     * Setup then return the WebDAV server
+     *
+     * @return Sabre_DAV_Server
+     */
+    function getServer() {
+
+        // Authentication
+        $auth = new WebDAVAuthentication();
+        $user = $auth->authenticate();
+
+        // Creating the Root directory from WebDAV file system
+        $rootDirectory = new WebDAVFRS($this, $user);
+
+        // The tree manages all the file objects
+        $tree = new Sabre_DAV_ObjectTree($rootDirectory);
+
+        // Finally, we create the server object. The server object is responsible for making sense out of the WebDAV protocol
+        $server = new Sabre_DAV_Server($tree);
+
+        // Base URI is the path used to access to WebDAV server
+        $server->setBaseUri($this->getPluginInfo()->getPropertyValueForName('webdav_base_uri'));
+
+        // The lock manager is reponsible for making sure users don't overwrite each others changes.
+        // The locks repository is where temporary data related to locks is stored.
+        $lockBackend = new Sabre_DAV_Locks_Backend_FS($GLOBALS['codendi_cache_dir'].'/plugins/webdav/locks');
+        $lockPlugin = new Sabre_DAV_Locks_Plugin($lockBackend);
+        $server->addPlugin($lockPlugin);
+
+        // Creating the browser plugin
+        $plugin = new BrowserPlugin();
+        $server->addPlugin($plugin);
+
+        // The server is now ready to run
+        return $server;
+
+    }
+
+}
+
+?>

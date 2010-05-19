@@ -260,12 +260,17 @@ class UserManager {
             if ($dar = $this->getDao()->searchBySessionHashAndIp($session_hash, $this->_getServerIp())) {
                 if ($row = $dar->getRow()) {
                     $this->_currentuser = $this->_getUserInstanceFromRow($row);
-                    $this->_currentuser->setSessionHash($session_hash);
-                    $now = $_SERVER['REQUEST_TIME'];
-                    $break_time = $now - $this->_currentuser->getLastAccessDate();
-                    //if the access is not later than 6 hours, it is not necessary to log it
-                    if ($break_time > 21600){
-                        $this->getDao()->storeLastAccessDate($this->_currentuser->getId(), $now);
+                    if ($this->_currentuser->isSuspended() || $this->_currentuser->isDeleted()) {
+                        $this->getDao()->deleteAllUserSessions($this->_currentuser->getId());
+                        $this->_currentuser = null;
+                    } else {
+                        $this->_currentuser->setSessionHash($session_hash);
+                        $now = $_SERVER['REQUEST_TIME'];
+                        $break_time = $now - $this->_currentuser->getLastAccessDate();
+                        //if the access is not later than 6 hours, it is not necessary to log it
+                        if ($break_time > 21600){
+                            $this->getDao()->storeLastAccessDate($this->_currentuser->getId(), $now);
+                        }
                     }
                 }
             }
@@ -504,7 +509,11 @@ class UserManager {
         			$userRow['password'] = $user->getPassword(); 
                 }
     		}
-    		return $this->getDao()->updateByRow($userRow);
+    		$result = $this->getDao()->updateByRow($userRow);
+    		if ($result && ($user->isSuspended() || $user->isDeleted())) {
+    		    $this->getDao()->deleteAllUserSessions($user->getId());
+    		}
+    		return $result;
     	}
     	return false;
     }

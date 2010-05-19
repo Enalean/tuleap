@@ -27,14 +27,19 @@ class UGroupUserDao extends DataAccessObject {
 
     /**
     * Searches UGroup members by UGroupId 
-    * return all ugroup members
+    * 
+    * Return all Active or Restricted ugroup members
+    * Only return active & restricted to keep it coherent with Group::getMembersUserNames
+    * 
     * @return DataAccessResult
     */
     function searchUserByStaticUGroupId($ugroup_id) {
         $ugroup_id = $this->da->escapeInt($ugroup_id);
         $sql = "SELECT * 
                 FROM ugroup_user INNER JOIN user USING(user_id) 
-                WHERE ugroup_id = $ugroup_id ORDER BY user_name";
+                WHERE ugroup_id = $ugroup_id
+                AND user.status IN ('A', 'R')
+                ORDER BY user_name";
         return $this->retrieve($sql);
     }
 
