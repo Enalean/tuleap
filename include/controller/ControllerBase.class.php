@@ -301,8 +301,8 @@ abstract class GitPHP_ControllerBase
 
 		$headList = $this->project->GetHeads();
 
-		if (count($headlist) > 0) {
-			$age = $headlist[0]->GetCommit()->GetAge();
+		if (count($headList) > 0) {
+			$age = $headList[0]->GetCommit()->GetAge();
 
 			$this->tpl->clear_cache(null, $this->GetCacheKeyPrefix(), null, $age);
 			$this->tpl->clear_cache('projectlist.tpl', sha1(serialize(GitPHP_ProjectList::GetInstance()->GetConfig())), null, $age);
