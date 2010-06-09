@@ -26,26 +26,26 @@ Codendi is a web based application that address all the aspects of product devel
 # package
 
 %install
-rm -rf $RPM_BUILD_ROOT
-install -m 755 -d $RPM_BUILD_ROOT/%{CODENDI_DIR}
+%{__rm} -rf $RPM_BUILD_ROOT
+%{__install} -m 755 -d $RPM_BUILD_ROOT/%{CODENDI_DIR}
 
 # installing codendi
 for i in cli plugins site-content src; do
-	cp -ar $i $RPM_BUILD_ROOT/%{CODENDI_DIR}
+	%{__cp} -ar $i $RPM_BUILD_ROOT/%{CODENDI_DIR}
 done
 
 # Remove old scripts: not used and add unneeded perl depedencies to the package
-rm -f $RPM_BUILD_ROOT/%{CODENDI_DIR}/src/utils/DocmanUploader.pl
-rm -f $RPM_BUILD_ROOT/%{CODENDI_DIR}/src/utils/DocmanLegacyDownloader.pl
+%{__rm} -f $RPM_BUILD_ROOT/%{CODENDI_DIR}/src/utils/DocmanUploader.pl
+%{__rm} -f $RPM_BUILD_ROOT/%{CODENDI_DIR}/src/utils/DocmanLegacyDownloader.pl
 
-#rm -f $RPM_BUILD_ROOT/%{CODENDI_DIR}/src/utils/analyse_language_files.pl
-rm -f $RPM_BUILD_ROOT/%{CODENDI_DIR}/plugins/forumml/bin/ml_arch_2_DB.pl
+#%{__rm} -f $RPM_BUILD_ROOT/%{CODENDI_DIR}/src/utils/analyse_language_files.pl
+%{__rm} -f $RPM_BUILD_ROOT/%{CODENDI_DIR}/plugins/forumml/bin/ml_arch_2_DB.pl
 
 # Remove salome plugin because not used and break SELinux postinstall fix (wrong symlink)
-rm -rf $RPM_BUILD_ROOT/%{CODENDI_DIR}/plugins/salome
+%{__rm} -rf $RPM_BUILD_ROOT/%{CODENDI_DIR}/plugins/salome
 
 # Remove organization_logo (provided by codendi_st_customization package)
-rm -f $RPM_BUILD_ROOT/%{CODENDI_DIR}/src/www/themes/common/images/organization_logo.png
+%{__rm} -f $RPM_BUILD_ROOT/%{CODENDI_DIR}/src/www/themes/common/images/organization_logo.png
 
 %post
 if [ "$1" -eq "1" ]; then
@@ -61,7 +61,7 @@ fi
 
 
 %clean
-rm -rf $RPM_BUILD_ROOT
+%{__rm} -rf $RPM_BUILD_ROOT
 
 
 %files

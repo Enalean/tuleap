@@ -39,50 +39,50 @@ cat > local.inc <<EOF
 \$codendi_downloads_dir = "$PWD/downloads";
 EOF
 
-cp %{SOURCE1} cli_ParametersLocal.dtd
-cp %{SOURCE2} user_guide_ParametersLocal.dtd
+%{__cp} %{SOURCE1} cli_ParametersLocal.dtd
+%{__cp} %{SOURCE2} user_guide_ParametersLocal.dtd
 
 codendi_tools/rpm/build_release.sh
 
 %install
-rm -rf $RPM_BUILD_ROOT
+%{__rm} -rf $RPM_BUILD_ROOT
 
 # Doc: CLI
-install -m 755 -d $RPM_BUILD_ROOT/%{CODENDI_DIR}/documentation/cli
-cp -ar documentation/cli/html $RPM_BUILD_ROOT/%{CODENDI_DIR}/documentation/cli
-cp -ar documentation/cli/pdf $RPM_BUILD_ROOT/%{CODENDI_DIR}/documentation/cli
-cp -ar documentation/cli/icons $RPM_BUILD_ROOT/%{CODENDI_DIR}/documentation/cli
+%{__install} -m 755 -d $RPM_BUILD_ROOT/%{CODENDI_DIR}/documentation/cli
+%{__cp} -ar documentation/cli/html $RPM_BUILD_ROOT/%{CODENDI_DIR}/documentation/cli
+%{__cp} -ar documentation/cli/pdf $RPM_BUILD_ROOT/%{CODENDI_DIR}/documentation/cli
+%{__cp} -ar documentation/cli/icons $RPM_BUILD_ROOT/%{CODENDI_DIR}/documentation/cli
 
 # Doc: Programmer guide
-install -m 755 -d $RPM_BUILD_ROOT/%{CODENDI_DIR}/documentation/programmer_guide
-cp -ar documentation/programmer_guide/html $RPM_BUILD_ROOT/%{CODENDI_DIR}/documentation/programmer_guide
-cp -ar documentation/programmer_guide/pdf $RPM_BUILD_ROOT/%{CODENDI_DIR}/documentation/programmer_guide
-cp -ar documentation/programmer_guide/icons $RPM_BUILD_ROOT/%{CODENDI_DIR}/documentation/programmer_guide
-cp -ar documentation/programmer_guide/screenshots $RPM_BUILD_ROOT/%{CODENDI_DIR}/documentation/programmer_guide
-cp -ar documentation/programmer_guide/slides $RPM_BUILD_ROOT/%{CODENDI_DIR}/documentation/programmer_guide
+%{__install} -m 755 -d $RPM_BUILD_ROOT/%{CODENDI_DIR}/documentation/programmer_guide
+%{__cp} -ar documentation/programmer_guide/html $RPM_BUILD_ROOT/%{CODENDI_DIR}/documentation/programmer_guide
+%{__cp} -ar documentation/programmer_guide/pdf $RPM_BUILD_ROOT/%{CODENDI_DIR}/documentation/programmer_guide
+%{__cp} -ar documentation/programmer_guide/icons $RPM_BUILD_ROOT/%{CODENDI_DIR}/documentation/programmer_guide
+%{__cp} -ar documentation/programmer_guide/screenshots $RPM_BUILD_ROOT/%{CODENDI_DIR}/documentation/programmer_guide
+%{__cp} -ar documentation/programmer_guide/slides $RPM_BUILD_ROOT/%{CODENDI_DIR}/documentation/programmer_guide
 
 # Doc: User Guide
-install -m 755 -d $RPM_BUILD_ROOT/%{CODENDI_DIR}/documentation/user_guide
-cp -ar documentation/user_guide/html $RPM_BUILD_ROOT/%{CODENDI_DIR}/documentation/user_guide
-cp -ar documentation/user_guide/pdf $RPM_BUILD_ROOT/%{CODENDI_DIR}/documentation/user_guide
-cp -ar documentation/user_guide/icons $RPM_BUILD_ROOT/%{CODENDI_DIR}/documentation/user_guide
-cp -ar documentation/user_guide/screenshots $RPM_BUILD_ROOT/%{CODENDI_DIR}/documentation/user_guide
-cp -ar documentation/user_guide/slides $RPM_BUILD_ROOT/%{CODENDI_DIR}/documentation/user_guide
+%{__install} -m 755 -d $RPM_BUILD_ROOT/%{CODENDI_DIR}/documentation/user_guide
+%{__cp} -ar documentation/user_guide/html $RPM_BUILD_ROOT/%{CODENDI_DIR}/documentation/user_guide
+%{__cp} -ar documentation/user_guide/pdf $RPM_BUILD_ROOT/%{CODENDI_DIR}/documentation/user_guide
+%{__cp} -ar documentation/user_guide/icons $RPM_BUILD_ROOT/%{CODENDI_DIR}/documentation/user_guide
+%{__cp} -ar documentation/user_guide/screenshots $RPM_BUILD_ROOT/%{CODENDI_DIR}/documentation/user_guide
+%{__cp} -ar documentation/user_guide/slides $RPM_BUILD_ROOT/%{CODENDI_DIR}/documentation/user_guide
 
 # CLI package
-install -m 755 -d $RPM_BUILD_ROOT/%{CODENDI_DIR}/downloads
-cp -ar downloads/* $RPM_BUILD_ROOT/%{CODENDI_DIR}/downloads
+%{__install} -m 755 -d $RPM_BUILD_ROOT/%{CODENDI_DIR}/downloads
+%{__cp} -ar downloads/* $RPM_BUILD_ROOT/%{CODENDI_DIR}/downloads
 
 # Custom logo
-install -m 755 -d $RPM_BUILD_ROOT/%{CODENDI_DIR}/src/www/themes/common/images
-install -m 644 %{SOURCE3} $RPM_BUILD_ROOT/%{CODENDI_DIR}/src/www/themes/common/images/organization_logo.png
+%{__install} -m 755 -d $RPM_BUILD_ROOT/%{CODENDI_DIR}/src/www/themes/common/images
+%{__install} -m 644 %{SOURCE3} $RPM_BUILD_ROOT/%{CODENDI_DIR}/src/www/themes/common/images/organization_logo.png
 
 %post
 /usr/bin/chcon -R root:object_r:httpd_sys_content_t %{CODENDI_DIR}/documentation %{CODENDI_DIR}/downloads
 
 
 %clean
-rm -rf $RPM_BUILD_ROOT
+%{__rm} -rf $RPM_BUILD_ROOT
 
 
 %files
