@@ -31,8 +31,8 @@ custom_codendi: tarball
 		sed -e 's/@@SYS_HTTPS_HOST@@/codendi.org/' |\
 		sed -e 's/@@VERSION@@/$(version)/g' \
 		> $(RPM_TMP)/SPECS/codendi_st_customization.spec
-	cp *_ParametersLocal.dtd $(RPM_TMP)/SOURCES
-	cp $(BASE_DIR)/src/www/themes/common/images/organization_logo.png $(RPM_TMP)/SOURCES/codendi_organization_logo.png
+	cp *_ParametersLocal.dtd $(RPM_TMP)/SOURCES/
+	cp $(BASE_DIR)/src/www/themes/common/images/organization_logo.png $(RPM_TMP)/SOURCES/organization_logo.png
 
 	rpmbuild -bb $(RPM_TMP)/SPECS/codendi_st_customization.spec
 

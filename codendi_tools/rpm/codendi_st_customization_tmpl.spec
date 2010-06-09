@@ -16,9 +16,9 @@ License: GPL
 Group: Development/Tools
 URL: http://codendi.org
 Source0: codendi_st-%{version}.tar.gz
-Source1: %{CODENDI_PLATFORM}_cli_ParametersLocal.dtd
-Source2: %{CODENDI_PLATFORM}_user_guide_ParametersLocal.dtd
-Source3: %{CODENDI_PLATFORM}_organization_logo.png
+Source1: cli_ParametersLocal.dtd
+Source2: user_guide_ParametersLocal.dtd
+Source3: organization_logo.png
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 
 
