@@ -13,7 +13,7 @@ Summary: Codendi customization for @@PLATFORM@@ platform
 Name: %{PKG_NAME}_customization_@@PLATFORM@@
 Provides: %{PKG_NAME}_customization
 Version: @@VERSION@@
-Release: 2%{?dist}
+Release: 1%{?dist}
 BuildArch: noarch
 License: GPL
 Group: Development/Tools

@@ -10,7 +10,7 @@ Summary: Codendi forge
 Name: %{PKG_NAME}
 Provides: codendi
 Version: @@VERSION@@
-Release: 2%{?dist}
+Release: 1%{?dist}
 BuildArch: noarch
 License: GPL
 Group: Development/Tools
