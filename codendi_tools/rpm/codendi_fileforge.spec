@@ -1,8 +1,8 @@
 # Define variables
 %define PKG_NAME @@PKG_NAME@@
 %define APP_NAME codendi
-%define APP_LIB_DIR %{_libdir}/codendi
-%define APP_LIBBIN_DIR %{_libdir}/%{APP_LIB_DIR}/bin
+%define APP_LIB_DIR %{_libdir}/%{APP_NAME}
+%define APP_LIBBIN_DIR %{APP_LIB_DIR}/bin
 
 
 Summary: Codendi fileforge

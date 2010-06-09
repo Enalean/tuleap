@@ -4,18 +4,21 @@
 %define SYS_HTTPS_HOST @@SYS_HTTPS_HOST@@
 
 # Define variables
-%define CODENDI_DIR %{_datadir}/codendi
+%define PKG_NAME @@PKG_NAME@@
+%define APP_NAME codendi
+%define APP_USER codendiadm
+%define APP_DIR %{_datadir}/%{APP_NAME}
 
 Summary: Codendi customization for @@PLATFORM@@ platform
-Name: codendi_st_customization_@@PLATFORM@@
-Provides: codendi_st_customization
+Name: %{PKG_NAME}_customization_@@PLATFORM@@
+Provides: %{PKG_NAME}_customization
 Version: @@VERSION@@
-Release: 1%{?dist}
+Release: 2%{?dist}
 BuildArch: noarch
 License: GPL
 Group: Development/Tools
 URL: http://codendi.org
-Source0: codendi_st-%{version}.tar.gz
+Source0: %{PKG_NAME}-%{version}.tar.gz
 Source1: cli_ParametersLocal.dtd
 Source2: user_guide_ParametersLocal.dtd
 Source3: organization_logo.png
@@ -27,7 +30,7 @@ This package provides the documentation, CLI package and themes modifications
 that customize the Codendi application for "@@PLATFORM@@" platform.
 
 %prep
-%setup -q -n codendi_st-%{version}
+%setup -q -n %{PKG_NAME}-%{version}
 
 %build
 cat > local.inc <<EOF
@@ -48,37 +51,37 @@ codendi_tools/rpm/build_release.sh
 %{__rm} -rf $RPM_BUILD_ROOT
 
 # Doc: CLI
-%{__install} -m 755 -d $RPM_BUILD_ROOT/%{CODENDI_DIR}/documentation/cli
-%{__cp} -ar documentation/cli/html $RPM_BUILD_ROOT/%{CODENDI_DIR}/documentation/cli
-%{__cp} -ar documentation/cli/pdf $RPM_BUILD_ROOT/%{CODENDI_DIR}/documentation/cli
-%{__cp} -ar documentation/cli/icons $RPM_BUILD_ROOT/%{CODENDI_DIR}/documentation/cli
+%{__install} -m 755 -d $RPM_BUILD_ROOT/%{APP_DIR}/documentation/cli
+%{__cp} -ar documentation/cli/html $RPM_BUILD_ROOT/%{APP_DIR}/documentation/cli
+%{__cp} -ar documentation/cli/pdf $RPM_BUILD_ROOT/%{APP_DIR}/documentation/cli
+%{__cp} -ar documentation/cli/icons $RPM_BUILD_ROOT/%{APP_DIR}/documentation/cli
 
 # Doc: Programmer guide
-%{__install} -m 755 -d $RPM_BUILD_ROOT/%{CODENDI_DIR}/documentation/programmer_guide
-%{__cp} -ar documentation/programmer_guide/html $RPM_BUILD_ROOT/%{CODENDI_DIR}/documentation/programmer_guide
-%{__cp} -ar documentation/programmer_guide/pdf $RPM_BUILD_ROOT/%{CODENDI_DIR}/documentation/programmer_guide
-%{__cp} -ar documentation/programmer_guide/icons $RPM_BUILD_ROOT/%{CODENDI_DIR}/documentation/programmer_guide
-%{__cp} -ar documentation/programmer_guide/screenshots $RPM_BUILD_ROOT/%{CODENDI_DIR}/documentation/programmer_guide
-%{__cp} -ar documentation/programmer_guide/slides $RPM_BUILD_ROOT/%{CODENDI_DIR}/documentation/programmer_guide
+%{__install} -m 755 -d $RPM_BUILD_ROOT/%{APP_DIR}/documentation/programmer_guide
+%{__cp} -ar documentation/programmer_guide/html $RPM_BUILD_ROOT/%{APP_DIR}/documentation/programmer_guide
+%{__cp} -ar documentation/programmer_guide/pdf $RPM_BUILD_ROOT/%{APP_DIR}/documentation/programmer_guide
+%{__cp} -ar documentation/programmer_guide/icons $RPM_BUILD_ROOT/%{APP_DIR}/documentation/programmer_guide
+%{__cp} -ar documentation/programmer_guide/screenshots $RPM_BUILD_ROOT/%{APP_DIR}/documentation/programmer_guide
+%{__cp} -ar documentation/programmer_guide/slides $RPM_BUILD_ROOT/%{APP_DIR}/documentation/programmer_guide
 
 # Doc: User Guide
-%{__install} -m 755 -d $RPM_BUILD_ROOT/%{CODENDI_DIR}/documentation/user_guide
-%{__cp} -ar documentation/user_guide/html $RPM_BUILD_ROOT/%{CODENDI_DIR}/documentation/user_guide
-%{__cp} -ar documentation/user_guide/pdf $RPM_BUILD_ROOT/%{CODENDI_DIR}/documentation/user_guide
-%{__cp} -ar documentation/user_guide/icons $RPM_BUILD_ROOT/%{CODENDI_DIR}/documentation/user_guide
-%{__cp} -ar documentation/user_guide/screenshots $RPM_BUILD_ROOT/%{CODENDI_DIR}/documentation/user_guide
-%{__cp} -ar documentation/user_guide/slides $RPM_BUILD_ROOT/%{CODENDI_DIR}/documentation/user_guide
+%{__install} -m 755 -d $RPM_BUILD_ROOT/%{APP_DIR}/documentation/user_guide
+%{__cp} -ar documentation/user_guide/html $RPM_BUILD_ROOT/%{APP_DIR}/documentation/user_guide
+%{__cp} -ar documentation/user_guide/pdf $RPM_BUILD_ROOT/%{APP_DIR}/documentation/user_guide
+%{__cp} -ar documentation/user_guide/icons $RPM_BUILD_ROOT/%{APP_DIR}/documentation/user_guide
+%{__cp} -ar documentation/user_guide/screenshots $RPM_BUILD_ROOT/%{APP_DIR}/documentation/user_guide
+%{__cp} -ar documentation/user_guide/slides $RPM_BUILD_ROOT/%{APP_DIR}/documentation/user_guide
 
 # CLI package
-%{__install} -m 755 -d $RPM_BUILD_ROOT/%{CODENDI_DIR}/downloads
-%{__cp} -ar downloads/* $RPM_BUILD_ROOT/%{CODENDI_DIR}/downloads
+%{__install} -m 755 -d $RPM_BUILD_ROOT/%{APP_DIR}/downloads
+%{__cp} -ar downloads/* $RPM_BUILD_ROOT/%{APP_DIR}/downloads
 
 # Custom logo
-%{__install} -m 755 -d $RPM_BUILD_ROOT/%{CODENDI_DIR}/src/www/themes/common/images
-%{__install} -m 644 %{SOURCE3} $RPM_BUILD_ROOT/%{CODENDI_DIR}/src/www/themes/common/images/organization_logo.png
+%{__install} -m 755 -d $RPM_BUILD_ROOT/%{APP_DIR}/src/www/themes/common/images
+%{__install} -m 644 %{SOURCE3} $RPM_BUILD_ROOT/%{APP_DIR}/src/www/themes/common/images/organization_logo.png
 
 %post
-/usr/bin/chcon -R root:object_r:httpd_sys_content_t %{CODENDI_DIR}/documentation %{CODENDI_DIR}/downloads
+/usr/bin/chcon -R root:object_r:httpd_sys_content_t %{APP_DIR}/documentation %{APP_DIR}/downloads
 
 
 %clean
@@ -86,10 +89,10 @@ codendi_tools/rpm/build_release.sh
 
 
 %files
-%defattr(-,codendiadm,codendiadm,-)
-%{CODENDI_DIR}/documentation
-%{CODENDI_DIR}/downloads
-%{CODENDI_DIR}/src/www/themes/common/images/organization_logo.png
+%defattr(-,%{APP_USER},%{APP_USER},-)
+%{APP_DIR}/documentation
+%{APP_DIR}/downloads
+%{APP_DIR}/src/www/themes/common/images/organization_logo.png
 
 #%doc
 #%config

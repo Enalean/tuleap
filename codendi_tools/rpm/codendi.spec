@@ -1,26 +1,25 @@
+# Define variables
+%define PKG_NAME @@PKG_NAME@@
+%define APP_NAME codendi
+%define APP_USER codendiadm
+%define APP_DIR %{_datadir}/%{APP_NAME}
+%define APP_LIB_DIR %{_libdir}/%{APP_NAME}
+%define APP_LIBBIN_DIR %{APP_LIB_DIR}/bin
+
 Summary: Codendi forge
-Name: codendi_st
+Name: %{PKG_NAME}
 Provides: codendi
 Version: @@VERSION@@
-Release: 1%{?dist}
-#BuildArch: noarch
-BuildArch: i386
+Release: 2%{?dist}
+BuildArch: noarch
 License: GPL
 Group: Development/Tools
 URL: http://codendi.org
 Source0: %{name}-%{version}.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
-Requires: codendi_st_customization
-Requires: codendi_fileforge
+Requires: %{PKG_NAME}_customization
+Requires: %{PKG_NAME}_fileforge
 Packager: Manuel VACELET <manuel.vacelet@st.com>
-
-# Define variables
-%define APP_NAME codendi
-%define APP_USER codendiadm
-%define APP_DIR %{_datadir}/%{APP_NAME}
-%define APP_LIB_DIR %{_libdir}/codendi-test
-%define APP_LIBBIN_DIR %{_libdir}/codendi-test/bin
-
 
 %description
 Codendi is a web based application that address all the aspects of product development.
@@ -29,11 +28,7 @@ Codendi is a web based application that address all the aspects of product devel
 %setup -q
 
 %build
-# build fileforge
-%{__cc} src/utils/fileforge.c -o src/utils/fileforge
-#gcc src/utils/fileforge.c -o src/utils/fileforge
-#cd src/utils
-#%{__make}
+# Nothing to do
 
 %install
 %{__rm} -rf $RPM_BUILD_ROOT
@@ -51,14 +46,13 @@ done
 %{__rm} -f $RPM_BUILD_ROOT/%{APP_DIR}/plugins/forumml/bin/ml_arch_2_DB.pl
 # Remove salome plugin because not used and breaks SELinux postinstall fix (wrong symlink)
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/salome
-# Remove organization_logo (provided by codendi_st_customization package)
+# Remove organization_logo (provided by codendi_customization package)
 %{__rm} -f $RPM_BUILD_ROOT/%{APP_DIR}/src/www/themes/common/images/organization_logo.png
 
 #
 # Install Codendi executables
 %{__install} -m 00755 -d $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
 %{__install} -m 00755 src/utils/gotohell $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
-%{__install} -m 04755 src/utils/fileforge $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
 %{__install} -m 00740 src/utils/backup_job $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
 %{__install} -m 00740 src/utils/svn/backup_subversion.sh $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
 %{__install} -m 04755 src/utils/cvs1/log_accum $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
@@ -95,7 +89,6 @@ fi
 %attr(755,%{APP_USER},%{APP_USER}) %dir %{APP_LIB_DIR}
 %attr(755,%{APP_USER},%{APP_USER}) %dir %{APP_LIBBIN_DIR}
 %attr(-,%{APP_USER},%{APP_USER}) %{APP_LIBBIN_DIR}/gotohell
-%attr(-,root,root) %{APP_LIBBIN_DIR}/fileforge
 %attr(-,root,root) %{APP_LIBBIN_DIR}/backup_job
 %attr(-,%{APP_USER},%{APP_USER}) %{APP_LIBBIN_DIR}/backup_subversion.sh
 %attr(-,%{APP_USER},%{APP_USER}) %{APP_LIBBIN_DIR}/log_accum
