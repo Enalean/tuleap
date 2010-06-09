@@ -6,23 +6,30 @@ endif
 BASE_DIR=$(shell cd ../..; pwd)
 version=$(shell LANG=C cat $(BASE_DIR)/ST-VERSION)
 
-forgename=codendi_st
+PKG_NAME=codendi_st
 
 rpmprep:
 	mkdir -p $(RPM_TMP)
-	cd $(RPM_TMP) && mkdir BUILD RPMS SOURCES SPECS SRPMS TMP
+	cd $(RPM_TMP) && mkdir -p BUILD RPMS SOURCES SPECS SRPMS TMP
 	echo "%_topdir $(RPM_TMP)" > ~/.rpmmacros
 	echo '%_tmppath %{_topdir}/TMP' >> ~/.rpmmacros
 	echo '%_buildroot %{_tmppath}/%{name}-root' >> ~/.rpmmacros
 	echo '%_sysconfdir /etc' >> ~/.rpmmacros
 
 tarball:
-	cd $(BASE_DIR) && find . -type f -or -type l | grep -v '/.svn/' | cpio -pdumB --quiet $(RPM_TMP)/SOURCES/$(forgename)-$(version)
-	cd $(RPM_TMP)/SOURCES && tar czf $(forgename)-$(version).tar.gz $(forgename)-$(version)
+	cd $(BASE_DIR) && find . -type f -or -type l | grep -v '/.svn/' | cpio -pdumB --quiet $(RPM_TMP)/SOURCES/$(PKG_NAME)-$(version)
+	cd $(RPM_TMP)/SOURCES && tar czf $(PKG_NAME)-$(version).tar.gz $(PKG_NAME)-$(version)
 
 codendi: rpmprep tarball
-	sed -e 's/@@VERSION@@/$(version)/g' < $(forgename).spec > $(RPM_TMP)/SPECS/$(forgename).spec
-	rpmbuild -bb $(RPM_TMP)/SPECS/$(forgename).spec
+	sed -e 's/@@VERSION@@/$(version)/g' < $(PKG_NAME).spec > $(RPM_TMP)/SPECS/$(PKG_NAME).spec
+	rpmbuild -bb $(RPM_TMP)/SPECS/$(PKG_NAME).spec
+
+fileforge:
+	cat codendi_fileforge.spec |\
+		sed -e 's/@@VERSION@@/$(version)/g' |\
+		sed -e 's/@@PKG_NAME@@/$(PKG_NAME)/g' \
+		> $(RPM_TMP)/SPECS/codendi_fileforge.spec
+	rpmbuild -bb $(RPM_TMP)/SPECS/codendi_fileforge.spec
 
 custom_codendi: tarball
 	cat codendi_st_customization_tmpl.spec |\
