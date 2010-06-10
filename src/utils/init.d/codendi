@@ -1,0 +1,135 @@
+#!/bin/sh
+#
+# Codendi    This shell script starts and stops Codendi backend
+#
+# This file is a copy/modify/paste of mailman equivalent. Thanks to
+# them!
+#
+# Copyright (C) 2001-2003 by the Free Software Foundation, Inc.
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+#
+# Copy this file to /etc/init.d/ (or /etc/rc.d/init.d/ depending on
+# your system) and activate it as such:
+#
+# On Debian, type "update-rc.d codendi defaults"
+# On RedHat, and derivatives, install with "chkconfig --add codendi"
+
+
+CODENDI_HOME=/usr/share/codendi
+
+# We used to install the mailman cron jobs when the mailman rpm was
+# installed, irrespective of whether mailman was actually being
+# run. Although the cron jobs didn't create any problems if someone
+# wasn't running mailman some users complained about the cron log file
+# filling up, resource usage, and power consumption since systems
+# wouldn't really idle. It really only makes sense to run the mailman
+# cron jobs if the mailman service is turned on and not just merely
+# having the rpm installed. This init.d script is an obvious place to
+# install or remove the cron jobs based on the service being enabled
+# or not.
+
+SRC_CRON_SCRIPT_ON=$CODENDI_HOME/src/utils/cron.d/codendi
+SRC_CRON_SCRIPT_OFF=$CODENDI_HOME/src/utils/cron.d/codendi-stop
+
+DST_CRON_SCRIPT=/etc/cron.d/codendi
+
+function InstallCron()
+{
+    install -m644 -o root -g root $SRC_CRON_SCRIPT_ON $DST_CRON_SCRIPT
+}
+
+function RemoveCron()
+{
+    install -m644 -o root -g root $SRC_CRON_SCRIPT_OFF $DST_CRON_SCRIPT
+}
+
+# Source function library.
+#. /etc/rc.d/init.d/functions
+
+RETVAL=0
+prog="codendi"
+
+function start()
+{
+    echo -n $"Starting $prog: "
+    InstallCron
+    echo "[OK]"
+    RETVAL=$?
+    return $RETVAL
+}
+
+function stop()
+{
+    echo -n $"Shutting down $prog: "
+    RemoveCron
+    echo "[OK]"
+    RETVAL=$?
+    return $RETVAL
+}
+
+function restart()
+{
+    stop
+    start
+    RETVAL=$?
+    return $RETVAL
+}
+
+function status()
+{
+    cmp -s "$DST_CRON_SCRIPT" "SRC_CRON_SCRIPT_ON"
+    RETVAL=$?
+    return $RETVAL
+}
+
+case "$1" in
+'start')
+    start
+    RETVAL=$?
+    ;;
+
+'stop')
+    stop
+    RETVAL=$?
+    ;;
+
+'restart')
+    restart
+    RETVAL=$?
+    ;;
+
+'condrestart')
+    status
+    retval=$?
+    if [ $retval -eq 0 ]
+    then
+        restart
+        RETVAL=$?
+    fi
+    ;;
+
+'status')
+    status
+    RETVAL=$?
+    ;;
+
+*)
+    echo $"Usage: $prog {start|stop|restart|condrestart}"
+	RETVAL=3
+    ;;
+
+esac
+exit $RETVAL

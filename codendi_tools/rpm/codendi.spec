@@ -17,9 +17,13 @@ Group: Development/Tools
 URL: http://codendi.org
 Source0: %{name}-%{version}.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
+Packager: Manuel VACELET <manuel.vacelet@st.com>
+
+#Prereq: /sbin/chkconfig, /sbin/service
 Requires: %{PKG_NAME}-customization
 Requires: %{PKG_NAME}-fileforge
-Packager: Manuel VACELET <manuel.vacelet@st.com>
+Requires: vixie-cron >= 4.1-9
+
 
 %description
 Codendi is a web based application that address all the aspects of product development.
@@ -63,6 +67,18 @@ done
 %{__install} -m 00755 src/utils/svn/codendi_svn_pre_commit.php $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
 %{__install} -m 06755 plugins/forumml/bin/mail_2_DB.pl $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
 
+# Install init.d script
+%{__install} -m 00755 -d $RPM_BUILD_ROOT/etc/rc.d/init.d
+%{__install} -m 00755 src/utils/init.d/%{APP_NAME} $RPM_BUILD_ROOT/etc/rc.d/init.d/
+
+# Install cron.d script
+%{__install} -m 00755 -d $RPM_BUILD_ROOT/etc/cron.d
+%{__install} -m 00644 src/utils/cron.d/codendi-stop $RPM_BUILD_ROOT/etc/cron.d/%{APP_NAME}
+
+
+#
+#
+#
 %post
 if [ "$1" -eq "1" ]; then
 	# Install
@@ -75,11 +91,38 @@ fi
 # In any cases fix the context
 /usr/bin/chcon -R root:object_r:httpd_sys_content_t $RPM_BUILD_ROOT/%{APP_DIR}
 
+# This adds the proper /etc/rc*.d links for the script that runs the codendi backend
+#/sbin/chkconfig --add %{APP_NAME}
 
+
+#
+#
+#
+#%preun
+
+# if [ $1 = 0 ]' checks that this is the actual deinstallation of
+# the package, as opposed to just removing the old package on upgrade.
+
+#if [ $1 = 0 ]; then
+    # These statements stop the service, and remove the /etc/rc*.d links.
+    #/sbin/service %{APP_NAME} stop >/dev/null 2>&1
+    #/sbin/chkconfig --del %{APP_NAME}
+#    true
+#fi
+# rpm should not abort if last command run had non-zero exit status, exit cleanly
+#exit 0
+
+
+#
+#
+#
 %clean
 %{__rm} -rf $RPM_BUILD_ROOT
 
 
+#
+#
+#
 %files
 %defattr(-,%{APP_USER},%{APP_USER},-)
 %dir %{APP_DIR}
@@ -99,8 +142,10 @@ fi
 %attr(-,%{APP_USER},%{APP_USER}) %{APP_LIBBIN_DIR}/commit-email.pl
 %attr(-,%{APP_USER},%{APP_USER}) %{APP_LIBBIN_DIR}/codendi_svn_pre_commit.php
 %attr(-,%{APP_USER},%{APP_USER}) %{APP_LIBBIN_DIR}/mail_2_DB.pl
+%attr(00755,root,root) /etc/rc.d/init.d/%{APP_NAME}
+%attr(00644,root,root) /etc/cron.d/%{APP_NAME}
 
-#%doc 
+#%doc
 #%config
 
 
