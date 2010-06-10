@@ -73,9 +73,11 @@ class DisplayPermissionDenied {
         $mail->setSubject($subject);
        
         if (!$mail->send()) {
-            $GLOBALS['feedback'] .= "<p>".$GLOBALS['Language']->getText('global', 'mail_failed', array($GLOBALS['sys_email_admin']))."</p>";
+            exit_error($GLOBALS['Language']->getText('global', 'error'), $GLOBALS['Language']->getText('global', 'mail_failed', array($GLOBALS['sys_email_admin'])));
         } else {
+            site_header(array('title'=>'')); 
             $GLOBALS['feedback'] .= "<p>Your request has been sent to project administrator. You will be informed about any news</p>";
+            site_footer(array());
         }
        
     }

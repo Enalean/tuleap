@@ -9,12 +9,14 @@
 require_once('pre.php');    
 require_once('common/mail/Mail.class.php');
 require_once('common/include/DisplayPermissionDenied_PrivateProject.class.php');
+require_once('common/include/HTTPRequest.class.php');
 
 
 $request =HTTPRequest::instance();
+
 if ($request->isPost() && $request->exist('Submit') &&  $request->existAndNonEmpty('admin_msg')) {
     $display = new displayPermissionDenied_PrivateProject();
-    $display->customizeMessage();
+    return $display->customizeMessage();
 }
 
 

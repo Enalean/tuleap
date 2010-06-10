@@ -48,8 +48,8 @@ class DisplayPermissionDenied_PrivateProject extends DisplayPermissionDenied {
         echo '<br></br>';
         echo '<form action="/sendmessage.php" method="POST" name="display_form"  enctype="multipart/form-data">
                  <textarea wrap="virtual" rows="5" cols="70" name="admin_msg"></textarea></p>
-                 <input TYPE="HIDDEN" id="groupId" name="group_id" VALUE="' .$groupId. '">
-                 <input TYPE="HIDDEN" id="userId" name="user_id" VALUE="' .$userId. '">
+                 <input TYPE="HIDDEN" id="groupId" name="groupId" VALUE="' .$groupId. '">
+                 <input TYPE="HIDDEN" id="userId" name="userId" VALUE="' .$userId. '">
                  <br><input name="Submit" type="submit" value="Send"/></br>';
         echo '</form>';
     }
@@ -62,10 +62,10 @@ class DisplayPermissionDenied_PrivateProject extends DisplayPermissionDenied {
         $request =HTTPRequest::instance();
         
         $pm = $this->getProjectManager();
-        $project = $pm->getProject($request->get('group_id'));
+        $project = $pm->getProject($request->get('groupId'));
     
         $um = $this->getUserManager();
-        $user = $um->getUserById($request->get('user_id'));
+        $user = $um->getUserById($request->get('userId'));
         
 
         $messageToAdmin = trim($request->get('admin_msg'));

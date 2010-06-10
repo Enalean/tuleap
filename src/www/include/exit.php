@@ -53,11 +53,28 @@ function exit_restricted_user_permission_denied() {
 }
 
 function exit_private_project_permission_denied() {
-    site_header(array('title'=>''));
-    $display = new DisplayPermissionDenied_PrivateProject();
-    $display->displayInterface();
-    site_footer(array());
-} 
+    global $HTML,$Language;
+
+    // if the error comes from the SOAP API, we don't display the site_header and footer, but a soap fault (xml).
+    if (substr($_SERVER['SCRIPT_NAME'], 1, 4) != "soap") {
+        site_header(array('title'=>$Language->getText('include_exit','exit_error')));
+        $display = new DisplayPermissionDenied_PrivateProject();
+        $display->displayInterface();
+        $HTML->footer(array('showfeedback' => false));
+    } else {
+        header('Content-type: text/xml');
+        // Sometimes, there is nothing in $text, so we take the feedback in the $GLOBALS['Response']
+        if (array_key_exists('Response', $GLOBALS)) {
+            $text = $GLOBALS['Response']->getRawFeedback();
+        }
+        $fault_code = "1000";
+        $fault_factor = 'exit_error';
+        $fault_string = strip_tags($text);
+        $fault_detail = strip_tags($text);
+        print_soap_fault($fault_code, $fault_factor, $fault_string, $fault_detail);
+    }
+    exit;
+   } 
 
 function exit_not_logged_in() {
   global $Language;
