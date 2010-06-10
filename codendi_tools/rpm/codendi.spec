@@ -17,8 +17,8 @@ Group: Development/Tools
 URL: http://codendi.org
 Source0: %{name}-%{version}.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
-Requires: %{PKG_NAME}_customization
-Requires: %{PKG_NAME}_fileforge
+Requires: %{PKG_NAME}-customization
+Requires: %{PKG_NAME}-fileforge
 Packager: Manuel VACELET <manuel.vacelet@st.com>
 
 %description
@@ -82,6 +82,7 @@ fi
 
 %files
 %defattr(-,%{APP_USER},%{APP_USER},-)
+%dir %{APP_DIR}
 %{APP_DIR}/cli
 %{APP_DIR}/plugins
 %{APP_DIR}/site-content

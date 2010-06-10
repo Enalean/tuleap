@@ -10,8 +10,8 @@
 %define APP_DIR %{_datadir}/%{APP_NAME}
 
 Summary: Codendi customization for @@PLATFORM@@ platform
-Name: %{PKG_NAME}_customization_@@PLATFORM@@
-Provides: %{PKG_NAME}_customization
+Name: %{PKG_NAME}-customization-@@PLATFORM@@
+Provides: %{PKG_NAME}-customization
 Version: @@VERSION@@
 Release: 1%{?dist}
 BuildArch: noarch

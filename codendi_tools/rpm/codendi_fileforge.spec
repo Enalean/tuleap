@@ -6,7 +6,7 @@
 
 
 Summary: Codendi fileforge
-Name: %{PKG_NAME}_fileforge
+Name: %{PKG_NAME}-fileforge
 Version: @@VERSION@@
 Release: 1%{?dist}
 License: GPL
