@@ -29,23 +29,23 @@ codendi: rpmprep tarball
 	rpmbuild -bb $(RPM_TMP)/SPECS/codendi.spec
 
 fileforge: tarball
-	cat codendi_fileforge.spec |\
+	cat codendi-fileforge.spec |\
 		sed -e 's/@@VERSION@@/$(version)/g' |\
 		sed -e 's/@@PKG_NAME@@/$(PKG_NAME)/g' \
-		> $(RPM_TMP)/SPECS/codendi_fileforge.spec
-	rpmbuild -bb $(RPM_TMP)/SPECS/codendi_fileforge.spec
+		> $(RPM_TMP)/SPECS/codendi-fileforge.spec
+	rpmbuild -bb $(RPM_TMP)/SPECS/codendi-fileforge.spec
 
 custom_codendi: tarball
-	cat codendi_customization_tmpl.spec |\
+	cat codendi-customization.spec |\
 		sed -e 's/@@PLATFORM@@/codendi/' |\
 		sed -e 's/@@SYS_DEFAULT_DOMAIN@@/codendi.org/' |\
 		sed -e 's/@@SYS_HTTPS_HOST@@/codendi.org/' |\
 		sed -e 's/@@VERSION@@/$(version)/g' |\
 		sed -e 's/@@PKG_NAME@@/$(PKG_NAME)/g' \
-		> $(RPM_TMP)/SPECS/codendi_customization.spec
+		> $(RPM_TMP)/SPECS/codendi-customization.spec
 	cp *_ParametersLocal.dtd $(RPM_TMP)/SOURCES/
 	cp $(BASE_DIR)/src/www/themes/common/images/organization_logo.png $(RPM_TMP)/SOURCES/organization_logo.png
-	rpmbuild -bb $(RPM_TMP)/SPECS/codendi_customization.spec
+	rpmbuild -bb $(RPM_TMP)/SPECS/codendi-customization.spec
 
 clean:
 	-rm -Rf $(RPM_TMP)/*
