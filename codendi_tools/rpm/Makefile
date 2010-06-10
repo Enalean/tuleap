@@ -15,6 +15,7 @@ rpmprep:
 	echo '%_tmppath %{_topdir}/TMP' >> ~/.rpmmacros
 	echo '%_buildroot %{_tmppath}/%{name}-root' >> ~/.rpmmacros
 	echo '%_sysconfdir /etc' >> ~/.rpmmacros
+	#echo '%dist -zata' >> ~/.rpmmacros
 
 tarball:
 	cd $(BASE_DIR) && find . -type f -or -type l | grep -v '/.svn/' | cpio -pdumB --quiet $(RPM_TMP)/SOURCES/$(PKG_NAME)-$(version)
