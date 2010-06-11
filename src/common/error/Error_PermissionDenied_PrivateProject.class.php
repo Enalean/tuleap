@@ -43,15 +43,15 @@ class Error_PermissionDenied_PrivateProject extends Error_PermissionDenied {
         echo "<b>".$GLOBALS['Language']->getText('include_exit','perm_denied')."</b>";
         echo '<br></br>';
         echo "<br>".$GLOBALS['Language']->getText('include_exit','private_project_no_perm');
-        echo "<em> Or you can request to be added as member to this project by just adding a message here and hinting send button.</em>";
-        
+        echo $GLOBALS['Language']->getText('include_exit','request_to_admin');
+                
         echo '<br></br>';
         echo '<form action="/sendmessage.php" method="POST" name="display_form"  enctype="multipart/form-data">
                  <textarea wrap="virtual" rows="5" cols="70" name="msg_private_project"></textarea></p>
                  <input TYPE="HIDDEN" id="func" name="func" VALUE="private_project_request">
                  <input TYPE="HIDDEN" id="groupId" name="groupId" VALUE="' .$groupId. '">
                  <input TYPE="HIDDEN" id="userId" name="userId" VALUE="' .$userId. '">
-                 <br><input name="Submit" type="submit" value="Send"/></br>';
+                 <br><input name="Submit" type="submit" value="'.$GLOBALS['Language']->getText('include_exit', 'send_mail').'"/></br>';
         echo '</form>';
     }
 
@@ -78,7 +78,8 @@ class Error_PermissionDenied_PrivateProject extends Error_PermissionDenied {
         $body = $user->getRealName()." as(".$user->getName().") has just asked to be member of ".$project->getPublicName()."\n\n".
                 $user->getName()." has added this personal message:  ".$messageToAdmin."\n\n".
                 "Please click on the following URL to approve the add\n".
-                $hrefApproval."  or not and communicate that information to him \n\n";
+                $hrefApproval."  or not and communicate that information to him \n\n".
+                "-- The ".$GLOBALS['sys_name']." Team";
                 
         return $this->sendMail($project, $subject, $body);
     }
