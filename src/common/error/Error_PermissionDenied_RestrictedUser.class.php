@@ -56,44 +56,6 @@ class Error_PermissionDenied_RestrictedUser extends Error_PermissionDenied {
         echo '</form>';
     }
 
-
-    /**
-     * Prepare the mail inputs
-     */
-    function processMail() {
-        $request =HTTPRequest::instance();
-        
-        $pm = $this->getProjectManager();
-        $project = $pm->getProject($request->get('groupId'));
-    
-        $um = $this->getUserManager();
-        $user = $um->getUserById($request->get('userId'));
-        
-
-        $messageToAdmin = trim($request->get('msg_restricted_user'));
-        $messageToAdmin = ereg_replace("(\r\n)|(\n)","###", $messageToAdmin);
-        
-        $hrefApproval = get_server_url().'/project/admin/?group_id='.$request->get('groupId');
-        
-        $subject = "Request for restricted user membership: ".$project->getPublicName();
-        $body = "Dear Administrator(s),\n\n".
-                        " The user ".$user->getRealName()." as(".$user->getName().") has no access to this data ".
-                        $request->get('url_data').".\n".
-                        " The concerned project is ".$project->getPublicName()." available here: ".$hrefApproval.".\n". 
-                        " The user is not a member of your project. He requests to be a member and to have correct". 
-                        " access right to consult the above data.\n".
-                        " If you decide to accept the request, please take the appropriate actions to grant access ".
-                        " and communicate that information to him.\n".
-                        " Otherwise, please inform the requester that he will not get access to the requested data.\n\n".
-                        " This is the requester message for you:\n\n".
-                        $messageToAdmin."\n\n".
-                        " This is an automatic message please do not reply.\n\n".
-                        " Best regards,\n".
-                        "-- The ".$GLOBALS['sys_name']." Team";
-                        
-        return $this->sendMail($project, $subject, $body);
-    }
- 
 }
 ?>
 

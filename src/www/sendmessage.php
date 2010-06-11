@@ -17,10 +17,14 @@ $func = $request->getValidated('func', new Valid_WhiteList('restricted_user_requ
 if ($request->isPost() && $request->exist('Submit') &&  $request->existAndNonEmpty('func')) {
     if ($request->get('func') == 'restricted_user_request') {
         $display = new Error_PermissionDenied_RestrictedUser();
+        $subject = "Request for restricted user membership: "; 
+        $messageToAdmin = $request->get('msg_restricted_user');
     } else {
         $display = new Error_PermissionDenied_PrivateProject();
+        $subject = "Request for private project membership: "; 
+        $messageToAdmin = $request->get('msg_private_project');
     }
-    $display->processMail();
+    $display->processMail($subject, $messageToAdmin);
     exit;
 }
 
