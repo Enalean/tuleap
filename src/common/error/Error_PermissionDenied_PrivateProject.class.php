@@ -39,7 +39,6 @@ class Error_PermissionDenied_PrivateProject extends Error_PermissionDenied {
         $url= new URL();
         $groupId =  (isset($GLOBALS['group_id'])) ? $GLOBALS['group_id'] : $url->getGroupIdFromUrl($_SERVER['REQUEST_URI']);
         $userId = $this->getUserManager()->getCurrentUser()->getId();
-        
         echo "<b>".$GLOBALS['Language']->getText('include_exit','perm_denied')."</b>";
         echo '<br></br>';
         echo "<br>".$GLOBALS['Language']->getText('include_exit','private_project_no_perm');
@@ -51,6 +50,7 @@ class Error_PermissionDenied_PrivateProject extends Error_PermissionDenied {
                  <input TYPE="HIDDEN" id="func" name="func" VALUE="private_project_request">
                  <input TYPE="HIDDEN" id="groupId" name="groupId" VALUE="' .$groupId. '">
                  <input TYPE="HIDDEN" id="userId" name="userId" VALUE="' .$userId. '">
+                 <input TYPE="HIDDEN" id="data" name="url_data" VALUE="' .$_SERVER['SCRIPT_URI']. '">
                  <br><input name="Submit" type="submit" value="'.$GLOBALS['Language']->getText('include_exit', 'send_mail').'"/></br>';
         echo '</form>';
     }
@@ -61,28 +61,36 @@ class Error_PermissionDenied_PrivateProject extends Error_PermissionDenied {
      */
     function processMail() {
         $request =HTTPRequest::instance();
-        
+
         $pm = $this->getProjectManager();
         $project = $pm->getProject($request->get('groupId'));
-    
+
         $um = $this->getUserManager();
         $user = $um->getUserById($request->get('userId'));
-        
+
 
         $messageToAdmin = trim($request->get('msg_private_project'));
         $messageToAdmin = ereg_replace("(\r\n)|(\n)","###", $messageToAdmin);
-        
+
         $hrefApproval = get_server_url().'/project/admin/?group_id='.$request->get('groupId');
-        
+
         $subject = "Request for private project membership: ".$project->getPublicName();
-        $body = $user->getRealName()." as(".$user->getName().") has just asked to be member of ".$project->getPublicName()."\n\n".
-                $user->getName()." has added this personal message:  ".$messageToAdmin."\n\n".
-                "Please click on the following URL to approve the add\n".
-                $hrefApproval."  or not and communicate that information to him \n\n".
-                "-- The ".$GLOBALS['sys_name']." Team";
-                
+        $body = "Dear Administrator(s),\n\n".
+                        " The user ".$user->getRealName()." as(".$user->getName().") has no access to this data ".
+                        $request->get('url_data').".\n".
+                        " The concerned project is ".$project->getPublicName()." available here: ".$hrefApproval.".\n". 
+                        " The user is not a member of your project. He requests to be a member and to have correct". 
+                        " access right to consult the above data.\n".
+                        " If you decide to accept the request, please take the appropriate actions to grant access ".
+                        " and communicate that information to him.\n".
+                        " Otherwise, please inform the requester that he will not get access to the requested data.\n\n".
+                        " This is the requester message for you:\n\n".
+                        $messageToAdmin."\n\n".
+                        " This is an automatic message please do not reply.\n\n".
+                        " Best regards,\n".
+                        "-- The ".$GLOBALS['sys_name']." Team";
         return $this->sendMail($project, $subject, $body);
     }
- 
+
 }
 ?>
