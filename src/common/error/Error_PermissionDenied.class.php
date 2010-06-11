@@ -18,13 +18,13 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_Once('URL.class.php');
+require_Once('common/include/URL.class.php');
 require_once('common/mail/Mail.class.php');
 require_once('common/project/Project.class.php');
 require_once('common/user/User.class.php');
 
 
-class DisplayPermissionDenied {
+class Error_PermissionDenied {
     /**
      * Constructor of the class
      *

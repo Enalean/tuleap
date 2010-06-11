@@ -8,15 +8,20 @@
 
 require_once('pre.php');    
 require_once('common/mail/Mail.class.php');
-require_once('common/include/DisplayPermissionDenied_PrivateProject.class.php');
 require_once('common/include/HTTPRequest.class.php');
 
 
 $request =HTTPRequest::instance();
+$func = $request->getValidated('func', new Valid_WhiteList('restricted_user_request', 'private_project_request'), '');
 
-if ($request->isPost() && $request->exist('Submit') &&  $request->existAndNonEmpty('admin_msg')) {
-    $display = new displayPermissionDenied_PrivateProject();
-    return $display->customizeMessage();
+if ($request->isPost() && $request->exist('Submit') &&  $request->existAndNonEmpty('func')) {
+    if ($request->get('func') == 'restricted_user_request') {
+        $display = new Error_PermissionDenied_RestrictedUser();
+    } else {
+        $display = new Error_PermissionDenied_PrivateProject();
+    }
+    $display->processMail();
+    exit;
 }
 
 

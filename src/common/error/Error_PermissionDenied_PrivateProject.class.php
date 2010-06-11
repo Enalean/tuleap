@@ -19,9 +19,9 @@
  */
 
 
-require_once('DisplayPermissionDenied.class.php');
+require_once('Error_PermissionDenied.class.php');
 
-class DisplayPermissionDenied_PrivateProject extends DisplayPermissionDenied {
+class Error_PermissionDenied_PrivateProject extends Error_PermissionDenied {
     /**
      * Constructor of the class
      *
@@ -47,7 +47,8 @@ class DisplayPermissionDenied_PrivateProject extends DisplayPermissionDenied {
         
         echo '<br></br>';
         echo '<form action="/sendmessage.php" method="POST" name="display_form"  enctype="multipart/form-data">
-                 <textarea wrap="virtual" rows="5" cols="70" name="admin_msg"></textarea></p>
+                 <textarea wrap="virtual" rows="5" cols="70" name="msg_private_project"></textarea></p>
+                 <input TYPE="HIDDEN" id="func" name="func" VALUE="private_project_request">
                  <input TYPE="HIDDEN" id="groupId" name="groupId" VALUE="' .$groupId. '">
                  <input TYPE="HIDDEN" id="userId" name="userId" VALUE="' .$userId. '">
                  <br><input name="Submit" type="submit" value="Send"/></br>';
@@ -58,7 +59,7 @@ class DisplayPermissionDenied_PrivateProject extends DisplayPermissionDenied {
     /**
      * Prepare the mail inputs
      */
-    function customizeMessage() {
+    function processMail() {
         $request =HTTPRequest::instance();
         
         $pm = $this->getProjectManager();
@@ -68,13 +69,17 @@ class DisplayPermissionDenied_PrivateProject extends DisplayPermissionDenied {
         $user = $um->getUserById($request->get('userId'));
         
 
-        $messageToAdmin = trim($request->get('admin_msg'));
+        $messageToAdmin = trim($request->get('msg_private_project'));
         $messageToAdmin = ereg_replace("(\r\n)|(\n)","###", $messageToAdmin);
+        
+        $hrefApproval = get_server_url().'/project/admin/?group_id='.$request->get('groupId');
         
         $subject = "Request for private project membership: ".$project->getPublicName();
         $body = $user->getRealName()." as(".$user->getName().") has just asked to be member of ".$project->getPublicName()."\n\n".
-                $user->getName()." has added his personal message:  ".$messageToAdmin."\n\n".
-                " Please take the appropriate actions to grant him access or not and communicate that information to him \n\n";
+                $user->getName()." has added this personal message:  ".$messageToAdmin."\n\n".
+                "Please click on the following URL to approve the add\n".
+                $hrefApproval."  or not and communicate that information to him \n\n";
+                
         return $this->sendMail($project, $subject, $body);
     }
  
