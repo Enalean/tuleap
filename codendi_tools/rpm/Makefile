@@ -52,3 +52,8 @@ clean:
 	-rm -Rf ~/.rpmmacros
 
 all: clean codendi custom_codendi fileforge
+
+dist:
+	mkdir -p $(RPM_TMP)/yum
+	cp -ar $(RPM_TMP)/RPMS/* $(RPM_TMP)/yum
+	createrepo $(RPM_TMP)/yum
