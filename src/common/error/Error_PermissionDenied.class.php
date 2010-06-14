@@ -23,7 +23,10 @@ require_once('common/mail/Mail.class.php');
 require_once('common/project/Project.class.php');
 require_once('common/user/User.class.php');
 
-
+/**
+ * It allows the management of permission denied error.
+ * It offres to user the possibility to request the project membership directly.
+ */
 class Error_PermissionDenied {
     /**
      * Constructor of the class
@@ -68,7 +71,7 @@ class Error_PermissionDenied {
 
         $messageToAdmin = trim($messageToAdmin);
         $messageToAdmin ='>'.$messageToAdmin;
-        $messageToAdmin = ereg_replace("(\r\n)|(\n)","\n>", $messageToAdmin);
+        $messageToAdmin = str_replace(array("\r\n"),"\n>", $messageToAdmin);
         
         $hrefApproval = get_server_url().'/project/admin/?group_id='.$request->get('groupId');
         $urlData = $request->get('url_data');
