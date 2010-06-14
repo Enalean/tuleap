@@ -46,12 +46,12 @@ class Error_PermissionDenied_RestrictedUser extends Error_PermissionDenied {
         echo $GLOBALS['Language']->getText('include_exit', 'request_to_admin');
         
         echo '<br></br>';
-        echo '<form action="/sendmessage.php" method="POST" name="display_form"  enctype="multipart/form-data">
+        echo '<form action="/sendmessage.php" method="post" name="display_form">
                  <textarea wrap="virtual" rows="5" cols="70" name="msg_restricted_user"></textarea></p>
-                 <input TYPE="HIDDEN" id="func" name="func" VALUE="restricted_user_request">
-                 <input TYPE="HIDDEN" id="groupId" name="groupId" VALUE="' .$groupId. '">
-                 <input TYPE="HIDDEN" id="userId" name="userId" VALUE="' .$userId. '">
-                 <input TYPE="HIDDEN" id="data" name="url_data" VALUE="' .$_SERVER['SCRIPT_URI']. '">
+                 <input type="hidden" id="func" name="func" value="restricted_user_request">
+                 <input type="hidden" id="groupId" name="groupId" value="' .$groupId. '">
+                 <input type="hidden" id="userId" name="userId" value="' .$userId. '">
+                 <input type="hidden" id="data" name="url_data" value="' .$_SERVER['SCRIPT_URI']. '">
                  <br><input name="Submit" type="submit" value="'.$GLOBALS['Language']->getText('include_exit', 'send_mail').'"/></br>';
         echo '</form>';
     }

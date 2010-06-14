@@ -47,10 +47,10 @@ class Error_PermissionDenied_PrivateProject extends Error_PermissionDenied {
         echo '<br></br>';
         echo '<form action="/sendmessage.php" method="POST" name="display_form"  enctype="multipart/form-data">
                  <textarea wrap="virtual" rows="5" cols="70" name="msg_private_project"></textarea></p>
-                 <input TYPE="HIDDEN" id="func" name="func" VALUE="private_project_request">
-                 <input TYPE="HIDDEN" id="groupId" name="groupId" VALUE="' .$groupId. '">
-                 <input TYPE="HIDDEN" id="userId" name="userId" VALUE="' .$userId. '">
-                 <input TYPE="HIDDEN" id="data" name="url_data" VALUE="' .$_SERVER['SCRIPT_URI']. '">
+                 <input type="hidden" id="func" name="func" value="private_project_request">
+                 <input type="hidden" id="groupId" name="groupId" value="' .$groupId. '">
+                 <input type="hidden" id="userId" name="userId" value="' .$userId. '">
+                 <input type="hidden" id="data" name="url_data" value="' .$_SERVER['SCRIPT_URI']. '">
                  <br><input name="Submit" type="submit" value="'.$GLOBALS['Language']->getText('include_exit', 'send_mail').'"/></br>';
         echo '</form>';
     }

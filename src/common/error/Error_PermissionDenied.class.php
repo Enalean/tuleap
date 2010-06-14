@@ -18,7 +18,7 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_Once('common/include/URL.class.php');
+require_once('common/include/URL.class.php');
 require_once('common/mail/Mail.class.php');
 require_once('common/project/Project.class.php');
 require_once('common/user/User.class.php');
@@ -45,12 +45,12 @@ class Error_PermissionDenied {
     function extractReceiver($project) {
         $admins = array();
         $um = $this->getUserManager();
-        $sql = 'SELECT email FROM user u JOIN user_group ug USING(user_id) WHERE ug.admin_flags="A" AND u.status IN ("A", "R") AND ug.group_id = '.db_ei($project->getId());
+        $sql = 'SELECT email, language_id FROM user u JOIN user_group ug USING(user_id) WHERE ug.admin_flags="A" AND u.status IN ("A", "R") AND ug.group_id = '.db_ei($project->getId());
         $res = db_query($sql);
         while ($row = db_fetch_array($res)) {
-            $admins[] = $row['email'];
+            $admins[$row['email']] = $row['language_id'];
         }
-        return implode(",", $admins);
+        return $admins;
     }
 
     /**
@@ -67,27 +67,14 @@ class Error_PermissionDenied {
         
 
         $messageToAdmin = trim($messageToAdmin);
-        $messageToAdmin = ereg_replace("(\r\n)|(\n)","###", $messageToAdmin);
+        $messageToAdmin ='>'.$messageToAdmin;
+        $messageToAdmin = ereg_replace("(\r\n)|(\n)","\n>", $messageToAdmin);
         
         $hrefApproval = get_server_url().'/project/admin/?group_id='.$request->get('groupId');
+        $urlData = $request->get('url_data');
         
         $subject = $subject.$project->getPublicName();
-        $body = "Dear Administrator(s),\n\n".
-                        " The user ".$user->getRealName()." as(".$user->getName().") has no access to this data ".
-                        $request->get('url_data').".\n".
-                        " The concerned project is ".$project->getPublicName()." available here: ".$hrefApproval.".\n". 
-                        " The user is not a member of your project. He requests to be a member and to have correct". 
-                        " access right to consult the above data.\n".
-                        " If you decide to accept the request, please take the appropriate actions to grant access ".
-                        " and communicate that information to him.\n".
-                        " Otherwise, please inform the requester that he will not get access to the requested data.\n\n".
-                        " This is the requester message for you:\n\n".
-                        $messageToAdmin."\n\n".
-                        " This is an automatic message please do not reply.\n\n".
-                        " Best regards,\n".
-                        "-- The ".$GLOBALS['sys_name']." Team";
-                        
-        return $this->sendMail($project, $subject, $body);
+        return $this->sendMail($project, $subject, $user, $urlData, $hrefApproval,$messageToAdmin);
     }
     
     /**
@@ -97,26 +84,30 @@ class Error_PermissionDenied {
      * @param String  $subject
      * @param String  $body
      */
-    function sendMail($project, $subject, $body) {
-        $to = $this->extractReceiver($project);
+    function sendMail($project, $subject, $user, $urlData, $hrefApproval,$messageToAdmin) {
+        $adminList = $this->extractReceiver($project);
         $from = $GLOBALS['sys_noreply'];
         $hdrs = 'From: '.$from."\n";
-        
-        // Send a notification message to the project administrator(s)
-        $mail = new Mail();
-        $mail->setTo($to);
-        $mail->setFrom($from);
-        $mail->setBody($body);
-        $mail->setSubject($subject);
-       
-        if (!$mail->send()) {
-            exit_error($GLOBALS['Language']->getText('global', 'error'), $GLOBALS['Language']->getText('global', 'mail_failed', array($GLOBALS['sys_email_admin'])));
-        } else {
-            site_header(array('title'=>'')); 
-            $GLOBALS['feedback'] .= "<p>Your request has been sent to project administrator. You will be informed about any news</p>";
-            site_footer(array());
+        foreach ($adminList as $to => $lang) {
+            // Send a notification message to the project administrator
+            //according to his prefered language
+            $mail = new Mail();
+            $mail->setTo($to);
+            $mail->setFrom($from);
+            $mail->setSubject($subject);
+            $Language = new BaseLanguage($GLOBALS['sys_supported_languages'], $GLOBALS['sys_lang']);
+            $Language->loadLanguage($lang);
+            $body = $Language->getText('include_exit', 'mail_content', array($user->getRealName(), $user->getName(), 
+                    $urlData, $project->getPublicName(), $hrefApproval, $messageToAdmin, $GLOBALS['sys_name']));
+            $mail->setBody($body);
+             
+            if (!$mail->send()) {
+                exit_error($GLOBALS['Language']->getText('global', 'error'), $GLOBALS['Language']->getText('global', 'mail_failed', array($GLOBALS['sys_email_admin'])));
+            }
         }
-       
+        site_header(array('title'=>''));
+        $GLOBALS['feedback'] .= $GLOBALS['Language']->getText('include_exit', 'request_sent');
+        site_footer(array());
     }
 
     /**
