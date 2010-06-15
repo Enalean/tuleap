@@ -49,17 +49,7 @@ class Error_PermissionDenied_RestrictedUser extends Error_PermissionDenied {
      * Dispaly interface to ask for membership
      */
     function displayInterface() {
-        $url= new URL();
-        $groupId =  (isset($GLOBALS['group_id'])) ? $GLOBALS['group_id'] : $url->getGroupIdFromUrl($_SERVER['REQUEST_URI']);
-        $userId = $this->getUserManager()->getCurrentUser()->getId();
-        
-        echo "<b>".$GLOBALS['Language']->getText('include_exit','perm_denied')."</b>";
-        echo '<br></br>';
-        echo "<br>".$GLOBALS['Language']->getText('include_exit','restricted_user_no_perm');
-        echo $GLOBALS['Language']->getText('include_exit', 'request_to_admin');
-        
-        echo '<br></br>';
-        echo $this->buildInterface('msg_restricted_user', 'restricted_user_request', $groupId, $userId);
+        $this->buildInterface('msg_restricted_user', 'restricted_user_request', 'restricted_user_no_perm');
     }
 
 }

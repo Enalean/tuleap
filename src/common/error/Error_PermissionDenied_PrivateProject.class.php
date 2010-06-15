@@ -47,16 +47,7 @@ class Error_PermissionDenied_PrivateProject extends Error_PermissionDenied {
      * Dispaly interface to ask for membership
      */
     function displayInterface() {
-        $url= new URL();
-        $groupId =  (isset($GLOBALS['group_id'])) ? $GLOBALS['group_id'] : $url->getGroupIdFromUrl($_SERVER['REQUEST_URI']);
-        $userId = $this->getUserManager()->getCurrentUser()->getId();
-        echo "<b>".$GLOBALS['Language']->getText('include_exit','perm_denied')."</b>";
-        echo '<br></br>';
-        echo "<br>".$GLOBALS['Language']->getText('include_exit','private_project_no_perm');
-        echo $GLOBALS['Language']->getText('include_exit','request_to_admin');
-                
-        echo '<br></br>';
-        echo $this->buildInterface('msg_private_project', 'private_project_request', $groupId, $userId);
+       echo $this->buildInterface('msg_private_project', 'private_project_request', 'private_project_no_perm');
     }
 
 }
