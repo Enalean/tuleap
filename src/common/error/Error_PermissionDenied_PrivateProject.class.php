@@ -22,6 +22,7 @@
 require_once('Error_PermissionDenied.class.php');
 
 class Error_PermissionDenied_PrivateProject extends Error_PermissionDenied {
+
     /**
      * Constructor of the class
      *
@@ -31,16 +32,8 @@ class Error_PermissionDenied_PrivateProject extends Error_PermissionDenied {
         parent::__construct();
     }
 
-    /**
-     * Returns the mail subject according to language given on parameters 
-     * 
-     * @param BaseLanguage $language
-     * @param Project $project
-     * 
-     * @return String
-     */
-    function formatSubject($language, $project) {
-        return $language->getText('include_exit', 'mail_subject_private_project', array($project->getPublicName()));
+    function getType() {
+        return 'private_project';
     }
 
     /**

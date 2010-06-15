@@ -27,7 +27,8 @@ require_once('common/user/User.class.php');
  * It allows the management of permission denied error.
  * It offres to user the possibility to request the project membership directly.
  */
-class Error_PermissionDenied {
+abstract class Error_PermissionDenied {
+
     /**
      * Constructor of the class
      *
@@ -36,7 +37,14 @@ class Error_PermissionDenied {
     function __construct() {
         
     }
-    
+
+    /**
+     * Returns the type of the error to manage
+     *
+     * @return String
+     */
+    abstract function getType();
+
     /**
      * Build the user interface to ask for membership
      * 
@@ -135,7 +143,7 @@ class Error_PermissionDenied {
             $language = new BaseLanguage($GLOBALS['sys_supported_languages'], $GLOBALS['sys_lang']);
             $language->loadLanguage($lang);
             
-            $mail->setSubject($this->formatSubject($language, $project));
+            $mail->setSubject($language->getText('include_exit', 'mail_subject_'.$this->getType(), array($project->getPublicName())));
             
             $body = $language->getText('include_exit', 'mail_content', array($user->getRealName(), $user->getName(), 
                     $urlData, $project->getPublicName(), $hrefApproval, $messageToAdmin, $GLOBALS['sys_name']));
