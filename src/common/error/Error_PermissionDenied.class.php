@@ -54,17 +54,19 @@ abstract class Error_PermissionDenied {
      */
     function buildInterface($name, $func, $index) {
         $url= new URL();
-        $groupId =  (isset($GLOBALS['group_id'])) ? $GLOBALS['group_id'] : $url->getGroupIdFromUrl($_SERVER['REQUEST_URI']);
+        $groupId =  $url->getGroupIdFromUrl($_SERVER['REQUEST_URI']);
         $userId = $this->getUserManager()->getCurrentUser()->getId();
         
         echo "<b>".$GLOBALS['Language']->getText('include_exit','perm_denied')."</b>";
         echo '<br></br>';
         echo "<br>".$GLOBALS['Language']->getText('include_exit',$index);
-        echo $GLOBALS['Language']->getText('include_exit', 'request_to_admin');
         
-        echo '<br></br>';
-        
-        echo '<form action="/sendmessage.php" method="post" name="display_form">
+        //In case of restricted user, we only show the zone text area to ask for membership 
+        //just when the requested page belongs to a project
+        if (!(($func == 'restricted_user_request') && (!isset($groupId)))) {
+            echo $GLOBALS['Language']->getText('include_exit', 'request_to_admin');
+            echo '<br></br>';
+            echo '<form action="/sendmessage.php" method="post" name="display_form">
                   <textarea wrap="virtual" rows="5" cols="70" name="'.$name.'"></textarea></p>
                   <input type="hidden" id="func" name="func" value="'.$func.'">
                   <input type="hidden" id="groupId" name="groupId" value="' .$groupId. '">
@@ -72,6 +74,7 @@ abstract class Error_PermissionDenied {
                   <input type="hidden" id="data" name="url_data" value="' .$_SERVER['SCRIPT_URI']. '">
                   <br><input name="Submit" type="submit" value="'.$GLOBALS['Language']->getText('include_exit', 'send_mail').'"/></br>
               </form>';
+        }
     }
     
     /**
@@ -114,7 +117,7 @@ abstract class Error_PermissionDenied {
         $urlData = $request->get('url_data');
         
         
-        return $this->sendMail($project, $user, $urlData, $hrefApproval,$messageToAdmin);
+        return $this->sendMail($project, $user, $urlData, $hrefApproval, $messageToAdmin);
     }
     
 
