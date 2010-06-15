@@ -59,7 +59,7 @@ class Error_PermissionDenied {
     /**
      * Prepare the mail inputs
      */
-    function processMail($subject, $messageToAdmin) {
+    function processMail($messageToAdmin) {
         $request =HTTPRequest::instance();
         
         $pm = $this->getProjectManager();
@@ -68,7 +68,13 @@ class Error_PermissionDenied {
         $um = $this->getUserManager();
         $user = $um->getUserById($request->get('userId'));
         
-
+        if ($this instanceof Error_PermissionDenied_PrivateProject) {
+            $subject = "Request for private project membership: "; 
+        } else {
+            $subject = "Request for restricted user membership: ";
+        }
+        $subject = $subject.$project->getPublicName();
+        
         $messageToAdmin = trim($messageToAdmin);
         $messageToAdmin ='>'.$messageToAdmin;
         $messageToAdmin = str_replace(array("\r\n"),"\n>", $messageToAdmin);
@@ -76,8 +82,8 @@ class Error_PermissionDenied {
         $hrefApproval = get_server_url().'/project/admin/?group_id='.$request->get('groupId');
         $urlData = $request->get('url_data');
         
-        $subject = $subject.$project->getPublicName();
-        return $this->sendMail($project, $subject, $user, $urlData, $hrefApproval,$messageToAdmin);
+        
+        return $this->sendMail($project, $user, $subject, $urlData, $hrefApproval,$messageToAdmin);
     }
     
     /**
@@ -87,10 +93,11 @@ class Error_PermissionDenied {
      * @param String  $subject
      * @param String  $body
      */
-    function sendMail($project, $subject, $user, $urlData, $hrefApproval,$messageToAdmin) {
+    function sendMail($project, $user, $subject, $urlData, $hrefApproval,$messageToAdmin) {
         $adminList = $this->extractReceiver($project);
         $from = $GLOBALS['sys_noreply'];
         $hdrs = 'From: '.$from."\n";
+        
         foreach ($adminList as $to => $lang) {
             // Send a notification message to the project administrator
             //according to his prefered language
@@ -108,8 +115,9 @@ class Error_PermissionDenied {
                 exit_error($GLOBALS['Language']->getText('global', 'error'), $GLOBALS['Language']->getText('global', 'mail_failed', array($GLOBALS['sys_email_admin'])));
             }
         }
+
+        $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('include_exit', 'request_sent'));
         site_header(array('title'=>''));
-        $GLOBALS['feedback'] .= $GLOBALS['Language']->getText('include_exit', 'request_sent');
         site_footer(array());
     }
 

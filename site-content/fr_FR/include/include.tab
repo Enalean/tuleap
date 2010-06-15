@@ -48,7 +48,7 @@ include_exit	missing_param_err	Erreur - Paramètres manquants
 include_exit	private_project_no_perm	Project Privé. Vous ne pouvez accéder qu'aux projets privés dont vous êtes membre.<p><a href="/my/">Retourner à votre page personnelle.</a>
 include_exit	request_to_admin	<em> Ou demander  à  être membre en ajoutant juste un message puis envoyer.</em>
 include_exit	send_mail	Envoyer mail
-include_exit	request_sent	<p>Votre demande a bien été envoyée. Vous serez informer de la d�cision des administrateurs.</p>
+include_exit	request_sent	Votre demande a bien été envoyée. Vous serez informer de la décision des administrateurs.
 include_exit	mail_content	Cher administrateur,\n\n L'utilisateur $1 ($2) n'est pas autorisé   à  accéder $3\n Le projet en question est $4 accessible ici: $5\n L'utilisateur n'est pas membre de votre projet. Il demande à  le devenir et avoir les droits pour pouvoir consulter ces données.\n Si vous décider de lui donner les droits, veuillez les lui attribuer et l'informer de cette action.\nSinon, veuillez l'informer qu'il n'aura pas l'accès.\n\n Ceci est le message de l'utilisateur:\n\n$6\n\n C'est un mail automatique, veuillez ne pas répondre.\n\nCordialement,\n-- L'équipe de $7
   
 

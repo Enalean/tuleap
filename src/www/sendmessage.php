@@ -15,16 +15,21 @@ $request =HTTPRequest::instance();
 $func = $request->getValidated('func', new Valid_WhiteList('restricted_user_request', 'private_project_request'), '');
 
 if ($request->isPost() && $request->exist('Submit') &&  $request->existAndNonEmpty('func')) {
-    if ($request->get('func') == 'restricted_user_request') {
-        $display = new Error_PermissionDenied_RestrictedUser();
-        $subject = "Request for restricted user membership: "; 
-        $messageToAdmin = $request->get('msg_restricted_user');
-    } else {
-        $display = new Error_PermissionDenied_PrivateProject();
-        $subject = "Request for private project membership: "; 
-        $messageToAdmin = $request->get('msg_private_project');
+    switch ($func) {
+        case 'restricted_user_request':
+            $sendMail = new Error_PermissionDenied_RestrictedUser();
+            $messageToAdmin = $request->get('msg_restricted_user');
+            break;
+
+        case 'private_project_request':
+            $sendMail = new Error_PermissionDenied_PrivateProject();
+            $messageToAdmin = $request->get('msg_private_project');
+            break;
+
+        default:
+            break;
     }
-    $display->processMail($subject, $messageToAdmin);
+    $sendMail->processMail($messageToAdmin);
     exit;
 }
 

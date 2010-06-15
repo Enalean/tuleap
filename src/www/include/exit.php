@@ -21,16 +21,7 @@ function exit_error($title,$text) {
         echo '<p>',$text,'</p>';
 	    $HTML->footer(array('showfeedback' => false));
     } else {
-        header('Content-type: text/xml');
-        // Sometimes, there is nothing in $text, so we take the feedback in the $GLOBALS['Response']
-        if (array_key_exists('Response', $GLOBALS)) {
-            $text .= $GLOBALS['Response']->getRawFeedback();
-        }
-        $fault_code = "1000";
-        $fault_factor = 'exit_error';
-        $fault_string = strip_tags($text);
-        $fault_detail = strip_tags($text);
-        print_soap_fault($fault_code, $fault_factor, $fault_string, $fault_detail);
+        exit_display_soap_error();
     }
     exit;
 }
