@@ -156,8 +156,7 @@ abstract class Error_PermissionDenied {
 
         $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('include_exit', 'request_sent'));
         $GLOBALS['Response']->redirect('/my');
-        site_header(array('title'=>''));
-        site_footer(array());
+        exit;
     }
 
     /**

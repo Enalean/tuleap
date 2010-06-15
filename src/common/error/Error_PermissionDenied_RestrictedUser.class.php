@@ -36,13 +36,6 @@ class Error_PermissionDenied_RestrictedUser extends Error_PermissionDenied {
         return 'restricted_user';
     }
 
-    /**
-     * Dispaly interface to ask for membership
-     */
-    function displayInterface() {
-        $this->buildInterface('msg_restricted_user', 'restricted_user_request', 'restricted_user_no_perm');
-    }
-
 }
 ?>
 

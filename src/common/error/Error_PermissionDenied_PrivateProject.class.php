@@ -36,12 +36,5 @@ class Error_PermissionDenied_PrivateProject extends Error_PermissionDenied {
         return 'private_project';
     }
 
-    /**
-     * Dispaly interface to ask for membership
-     */
-    function displayInterface() {
-       echo $this->buildInterface('msg_private_project', 'private_project_request', 'private_project_no_perm');
-    }
-
 }
 ?>
