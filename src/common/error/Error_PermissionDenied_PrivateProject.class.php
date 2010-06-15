@@ -31,6 +31,17 @@ class Error_PermissionDenied_PrivateProject extends Error_PermissionDenied {
         parent::__construct();
     }
 
+    /**
+     * Returns the mail subject according to language given on parameters 
+     * 
+     * @param BaseLanguage $language
+     * @param Project $project
+     * 
+     * @return String
+     */
+    function formatSubject($language, $project) {
+        return $language->getText('include_exit', 'mail_subject_private_project', array($project->getPublicName()));
+    }
 
     /**
      * Dispaly interface to ask for membership
@@ -45,14 +56,7 @@ class Error_PermissionDenied_PrivateProject extends Error_PermissionDenied {
         echo $GLOBALS['Language']->getText('include_exit','request_to_admin');
                 
         echo '<br></br>';
-        echo '<form action="/sendmessage.php" method="POST" name="display_form"  enctype="multipart/form-data">
-                 <textarea wrap="virtual" rows="5" cols="70" name="msg_private_project"></textarea></p>
-                 <input type="hidden" id="func" name="func" value="private_project_request">
-                 <input type="hidden" id="groupId" name="groupId" value="' .$groupId. '">
-                 <input type="hidden" id="userId" name="userId" value="' .$userId. '">
-                 <input type="hidden" id="data" name="url_data" value="' .$_SERVER['SCRIPT_URI']. '">
-                 <br><input name="Submit" type="submit" value="'.$GLOBALS['Language']->getText('include_exit', 'send_mail').'"/></br>';
-        echo '</form>';
+        echo $this->buildInterface('msg_private_project', 'private_project_request', $groupId, $userId);
     }
 
 }

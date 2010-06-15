@@ -36,7 +36,19 @@ class Error_PermissionDenied {
     function __construct() {
         
     }
-
+    
+    function buildInterface($name, $func, $groupId, $userId) {
+        $messageArea =  '<form action="/sendmessage.php" method="post" name="display_form">
+                             <textarea wrap="virtual" rows="5" cols="70" name="'.$name.'"></textarea></p>
+                             <input type="hidden" id="func" name="func" value="'.$func.'">
+                             <input type="hidden" id="groupId" name="groupId" value="' .$groupId. '">
+                             <input type="hidden" id="userId" name="userId" value="' .$userId. '">
+                             <input type="hidden" id="data" name="url_data" value="' .$_SERVER['SCRIPT_URI']. '">
+                             <br><input name="Submit" type="submit" value="'.$GLOBALS['Language']->getText('include_exit', 'send_mail').'"/></br>
+                         </form>';
+        return $messageArea;
+    }
+    
     /**
      * 
      * Returns the administrators' list of a given project
@@ -68,13 +80,6 @@ class Error_PermissionDenied {
         $um = $this->getUserManager();
         $user = $um->getUserById($request->get('userId'));
         
-        if ($this instanceof Error_PermissionDenied_PrivateProject) {
-            $subject = "Request for private project membership: "; 
-        } else {
-            $subject = "Request for restricted user membership: ";
-        }
-        $subject = $subject.$project->getPublicName();
-        
         $messageToAdmin = trim($messageToAdmin);
         $messageToAdmin ='>'.$messageToAdmin;
         $messageToAdmin = str_replace(array("\r\n"),"\n>", $messageToAdmin);
@@ -83,7 +88,7 @@ class Error_PermissionDenied {
         $urlData = $request->get('url_data');
         
         
-        return $this->sendMail($project, $user, $subject, $urlData, $hrefApproval,$messageToAdmin);
+        return $this->sendMail($project, $user, $urlData, $hrefApproval,$messageToAdmin);
     }
     
     /**
@@ -93,7 +98,7 @@ class Error_PermissionDenied {
      * @param String  $subject
      * @param String  $body
      */
-    function sendMail($project, $user, $subject, $urlData, $hrefApproval,$messageToAdmin) {
+    function sendMail($project, $user, $urlData, $hrefApproval,$messageToAdmin) {
         $adminList = $this->extractReceiver($project);
         $from = $GLOBALS['sys_noreply'];
         $hdrs = 'From: '.$from."\n";
@@ -104,10 +109,13 @@ class Error_PermissionDenied {
             $mail = new Mail();
             $mail->setTo($to);
             $mail->setFrom($from);
-            $mail->setSubject($subject);
-            $Language = new BaseLanguage($GLOBALS['sys_supported_languages'], $GLOBALS['sys_lang']);
-            $Language->loadLanguage($lang);
-            $body = $Language->getText('include_exit', 'mail_content', array($user->getRealName(), $user->getName(), 
+ 
+            $language = new BaseLanguage($GLOBALS['sys_supported_languages'], $GLOBALS['sys_lang']);
+            $language->loadLanguage($lang);
+            
+            $mail->setSubject($this->formatSubject($language, $project));
+            
+            $body = $language->getText('include_exit', 'mail_content', array($user->getRealName(), $user->getName(), 
                     $urlData, $project->getPublicName(), $hrefApproval, $messageToAdmin, $GLOBALS['sys_name']));
             $mail->setBody($body);
              
@@ -117,6 +125,7 @@ class Error_PermissionDenied {
         }
 
         $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('include_exit', 'request_sent'));
+        $GLOBALS['Response']->redirect('/my');
         site_header(array('title'=>''));
         site_footer(array());
     }

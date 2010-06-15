@@ -30,6 +30,19 @@ class Error_PermissionDenied_RestrictedUser extends Error_PermissionDenied {
     function __construct() {
         parent::__construct();
     }
+    
+    /**
+     * Returns the mail subject according to language given on parameters 
+     * 
+     * @param BaseLanguage $language
+     * @param Project $project
+     * 
+     * @return String
+     */
+    function formatSubject($language, $project) {
+        return $language->getText('include_exit', 'mail_subject_restricted_user', array($project->getPublicName()));
+    }
+    
 
 
     /**
@@ -46,14 +59,7 @@ class Error_PermissionDenied_RestrictedUser extends Error_PermissionDenied {
         echo $GLOBALS['Language']->getText('include_exit', 'request_to_admin');
         
         echo '<br></br>';
-        echo '<form action="/sendmessage.php" method="post" name="display_form">
-                 <textarea wrap="virtual" rows="5" cols="70" name="msg_restricted_user"></textarea></p>
-                 <input type="hidden" id="func" name="func" value="restricted_user_request">
-                 <input type="hidden" id="groupId" name="groupId" value="' .$groupId. '">
-                 <input type="hidden" id="userId" name="userId" value="' .$userId. '">
-                 <input type="hidden" id="data" name="url_data" value="' .$_SERVER['SCRIPT_URI']. '">
-                 <br><input name="Submit" type="submit" value="'.$GLOBALS['Language']->getText('include_exit', 'send_mail').'"/></br>';
-        echo '</form>';
+        echo $this->buildInterface('msg_restricted_user', 'restricted_user_request', $groupId, $userId);
     }
 
 }
