@@ -37,6 +37,14 @@ class Error_PermissionDenied {
         
     }
     
+    /**
+     * Build the user interface to ask for membership
+     * 
+     * @param String $name
+     * @param String $func
+     * @param String $groupId
+     * @param String $userId
+     */
     function buildInterface($name, $func, $groupId, $userId) {
         $messageArea =  '<form action="/sendmessage.php" method="post" name="display_form">
                              <textarea wrap="virtual" rows="5" cols="70" name="'.$name.'"></textarea></p>
@@ -55,7 +63,7 @@ class Error_PermissionDenied {
      *  
      * @param Project $project
      * 
-     * @return string
+     * @return Array
      */
     function extractReceiver($project) {
         $admins = array();
@@ -70,6 +78,7 @@ class Error_PermissionDenied {
 
     /**
      * Prepare the mail inputs
+     * @return String $messageToAdmin
      */
     function processMail($messageToAdmin) {
         $request =HTTPRequest::instance();
@@ -91,12 +100,16 @@ class Error_PermissionDenied {
         return $this->sendMail($project, $user, $urlData, $hrefApproval,$messageToAdmin);
     }
     
+
+
     /**
      * Send mail to administrators with the apropriate subject and body   
      * 
      * @param Project $project
-     * @param String  $subject
-     * @param String  $body
+     * @param User    $user
+     * @param String  $urlData
+     * @param String  $hrefApproval
+     * @param String  $messageToAdmin
      */
     function sendMail($project, $user, $urlData, $hrefApproval,$messageToAdmin) {
         $adminList = $this->extractReceiver($project);
