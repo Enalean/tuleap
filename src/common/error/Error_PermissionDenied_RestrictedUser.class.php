@@ -38,4 +38,3 @@ class Error_PermissionDenied_RestrictedUser extends Error_PermissionDenied {
 
 }
 ?>
-
