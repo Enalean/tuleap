@@ -52,8 +52,6 @@ include_exit	request_sent	Votre demande a bien été envoyée. Vous serez inform
 include_exit	mail_content	Cher administrateur,\n\n L'utilisateur $1 ($2) n'est pas autorisé   à  accéder $3\n Le projet en question est $4 accessible ici: $5\n L'utilisateur n'est pas membre de votre projet. Il demande à  le devenir et avoir les droits pour pouvoir consulter ces données.\n Si vous décider de lui donner les droits, veuillez les lui attribuer et l'informer de cette action.\nSinon, veuillez l'informer qu'il n'aura pas l'accès.\n\n Ceci est le message de l'utilisateur:\n\n$6\n\n C'est un mail automatique, veuillez ne pas répondre.\n\nCordialement,\n-- L'équipe de $7
 include_exit	mail_subject_private_project	Demande pour devenir membre du projet privé: $1
 include_exit	mail_subject_restricted_user	Demande pour devenir membre pour un utilisateur restreint: $1
-  
-
 #
 #-----------------------------------------------
 # Script: SF/www/include/features_boxes.php
