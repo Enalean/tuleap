@@ -146,10 +146,9 @@ abstract class Error_PermissionDenied {
             $language = new BaseLanguage($GLOBALS['sys_supported_languages'], $GLOBALS['sys_lang']);
             $language->loadLanguage($lang);
             
-            $mail->setSubject($language->getText('include_exit', 'mail_subject_'.$this->getType(), array($project->getPublicName())));
+            $mail->setSubject($language->getText('include_exit', 'mail_subject_'.$this->getType(), array($project->getPublicName(), $user->getRealName())));
             
-            $body = $language->getText('include_exit', 'mail_content', array($user->getRealName(), $user->getName(), 
-                    $urlData, $project->getPublicName(), $hrefApproval, $messageToAdmin, $GLOBALS['sys_name']));
+            $body = $language->getText('include_exit', 'mail_content', array($user->getRealName(), $user->getName(), $urlData, $project->getPublicName(), $hrefApproval, $messageToAdmin, $user->getEmail()));
             $mail->setBody($body);
              
             if (!$mail->send()) {
