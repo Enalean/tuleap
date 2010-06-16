@@ -49,8 +49,8 @@ include_exit	private_project_no_perm	Project Privé. Vous ne pouvez accéder qu'
 include_exit	request_to_admin	<em> Ou demander  à  être membre en ajoutant juste un message puis envoyer.</em>
 include_exit	send_mail	Envoyer mail
 include_exit	request_sent	Votre demande a bien été envoyée. Vous serez informer de la décision des administrateurs.
-include_exit	mail_content_private_project	Cher administrateur,\n\n$1 (login: $2) demande l'accès au projet $4 ressource:\n$3\n\n$1 a écrit un message pour vous:\n$6\n\nCe projet est privé, seulement les membres du projet peuvent accéder.\nSi vous accepter sa demande, veuillez prendre les mesures nécessaires pour lui permettre l'accès et lui communiquer cette information $5.\nAutrement, veuiller informer ($7) qu'il n'aura pas accès aux pages demandées.\n\nVeuillez noter que l'ajout de $1 comme membre du projet peut se révéler insuffisant si vous avez mis des permissions spécifiques  à  la ressource demandée.\n--\nC'est un message automatique, veuillez ne pas répondre.
-include_exit	mail_content_restricted_user	Cher administrateur,\n\n$1 (login: $2) demande l'accès au projet $4 ressource:\n$3\n\n$1 a écrit un message pour vous:\n$6\n\nC'est un utilisateur restreint, il ne peut accéder qu'aux projets dont il est membre.\nSi vous accepter sa demande, veuillez prendre les mesures nécessaires pour lui permettre l'accès et lui communiquer cette information $5.\nAutrement, veuiller informer ($7) qu'il n'aura pas accès aux pages demandées.\n\nVeuillez noter que l'ajout de $1 comme membre du projet peut se révéler insuffisant si vous avez mis des permissions spécifiques  à  la ressource demandée.\n--\nC'est un message automatique, veuillez ne pas répondre.
+include_exit	mail_content_private_project	Cher administrateur,\n\n$1 (login: $2) demande l'accès à la ressource suivante du projet $4 :\n$3\n\n$1 a écrit un message pour vous:\n$6\n\nCe projet est privé, seuls les membres du projet peuvent accéder.\nSi vous accepter sa demande, veuillez prendre les mesures nécessaires pour lui permettre l'accès et lui communiquer cette information $5.\nAutrement, veuiller l'informer ($7) qu'il n'aura pas accès aux pages demandées.\n\nVeuillez noter que l'ajout de $1 comme membre du projet peut se révéler insuffisant si vous avez mis des permissions spécifiques  à  la ressource demandée.\n--\nC'est un message automatique, veuillez ne pas répondre.
+include_exit	mail_content_restricted_user	Cher administrateur,\n\n$1 (login: $2) demande l'accès à la ressource suivante du projet $4 :\n$3\n\n$1 a écrit un message pour vous:\n$6\n\nC'est un utilisateur restreint, il ne peut accéder qu'aux projets dont il est membre.\nSi vous accepter sa demande, veuillez prendre les mesures nécessaires pour lui permettre l'accès et lui communiquer cette information $5.\nAutrement, veuiller l'informer ($7) qu'il n'aura pas accès aux pages demandées.\n\nVeuillez noter que l'ajout de $1 comme membre du projet peut se révéler insuffisant si vous avez mis des permissions spécifiques  à  la ressource demandée.\n--\nC'est un message automatique, veuillez ne pas répondre.
 include_exit	mail_subject_private_project	$2  demande à  être membre  du projet privé $1
 include_exit	mail_subject_restricted_user	L'utilisateur restreint $2 demande à  être membre  du projet $1
 #
@@ -94,7 +94,7 @@ include_html	highest	Maximum
 include_html	g_not_exist	Ce groupe n'existe pas.
 include_html	invalid_g	Groupe invalide
 include_html	unknown_value	*** valeur inconnue ***
-include_html	no_trovcat	Ce projet n'est pas categoris� pri�re de selectionner <a href="$1">[Cat�gorisation]</a>
+include_html	no_trovcat	Ce projet n'est pas categoris� pri�re de selectionner <a href="$1">[Cat�gorisation]</a>
 #
 #-----------------------------------------------
 # Script: SF/www/include/layout.php
