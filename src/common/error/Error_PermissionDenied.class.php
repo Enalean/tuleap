@@ -71,7 +71,7 @@ abstract class Error_PermissionDenied {
                   <input type="hidden" id="func" name="func" value="'.$func.'">
                   <input type="hidden" id="groupId" name="groupId" value="' .$groupId. '">
                   <input type="hidden" id="userId" name="userId" value="' .$userId. '">
-                  <input type="hidden" id="data" name="url_data" value="' .$_SERVER['REQUEST_URI']. '">
+                  <input type="hidden" id="data" name="url_data" value="' .urlencode($_SERVER['REQUEST_URI']). '">
                   <br><input name="Submit" type="submit" value="'.$GLOBALS['Language']->getText('include_exit', 'send_mail').'"/></br>
               </form>';
         }
