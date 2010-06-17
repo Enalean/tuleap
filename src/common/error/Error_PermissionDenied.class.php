@@ -156,7 +156,7 @@ abstract class Error_PermissionDenied {
             }
         }
 
-        $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('include_exit', 'request_sent'));
+        $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('include_exit', 'request_sent'), CODENDI_PURIFIER_DISABLED);
         $GLOBALS['Response']->redirect('/my');
         exit;
     }
