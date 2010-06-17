@@ -28,13 +28,6 @@ codendi: rpmprep tarball
 		> $(RPM_TMP)/SPECS/codendi.spec
 	rpmbuild -bb $(RPM_TMP)/SPECS/codendi.spec
 
-fileforge: tarball
-	cat codendi-fileforge.spec |\
-		sed -e 's/@@VERSION@@/$(version)/g' |\
-		sed -e 's/@@PKG_NAME@@/$(PKG_NAME)/g' \
-		> $(RPM_TMP)/SPECS/codendi-fileforge.spec
-	rpmbuild -bb $(RPM_TMP)/SPECS/codendi-fileforge.spec
-
 custom_codendi: tarball
 	cat codendi-customization.spec |\
 		sed -e 's/@@PLATFORM@@/codendi/' |\
@@ -51,7 +44,7 @@ clean:
 	-rm -Rf $(RPM_TMP)/*
 	-rm -Rf ~/.rpmmacros
 
-all: clean codendi custom_codendi fileforge
+all: clean codendi custom_codendi
 
 dist:
 	mkdir -p $(RPM_TMP)/yum

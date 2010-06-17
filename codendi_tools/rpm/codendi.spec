@@ -21,7 +21,6 @@ Packager: Manuel VACELET <manuel.vacelet@st.com>
 
 #Prereq: /sbin/chkconfig, /sbin/service
 Requires: %{PKG_NAME}-customization
-Requires: %{PKG_NAME}-fileforge
 Requires: vixie-cron >= 4.1-9
 
 
@@ -55,25 +54,26 @@ done
 
 #
 # Install Codendi executables
-%{__install} -m 00755 -d $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
-%{__install} -m 00755 src/utils/gotohell $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
-%{__install} -m 00740 src/utils/backup_job $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
-%{__install} -m 00740 src/utils/svn/backup_subversion.sh $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
-%{__install} -m 04755 src/utils/cvs1/log_accum $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
-%{__install} -m 00755 src/utils/cvs1/commit_prep $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
-%{__install} -m 00755 src/utils/cvs1/cvssh $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
-%{__install} -m 00755 src/utils/cvs1/cvssh-restricted $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
-%{__install} -m 00755 src/utils/svn/commit-email.pl $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
-%{__install} -m 00755 src/utils/svn/codendi_svn_pre_commit.php $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
-%{__install} -m 06755 plugins/forumml/bin/mail_2_DB.pl $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
+%{__install} -d $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
+%{__install} src/utils/gotohell $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
+%{__install} src/utils/backup_job $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
+%{__install} src/utils/svn/backup_subversion.sh $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
+%{__install} src/utils/cvs1/log_accum $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
+%{__install} src/utils/cvs1/commit_prep $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
+%{__install} src/utils/cvs1/cvssh $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
+%{__install} src/utils/cvs1/cvssh-restricted $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
+%{__install} src/utils/svn/commit-email.pl $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
+%{__install} src/utils/svn/codendi_svn_pre_commit.php $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
+%{__install} src/utils/fileforge.pl $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}/fileforge
+%{__install} plugins/forumml/bin/mail_2_DB.pl $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
 
 # Install init.d script
-%{__install} -m 00755 -d $RPM_BUILD_ROOT/etc/rc.d/init.d
-%{__install} -m 00755 src/utils/init.d/%{APP_NAME} $RPM_BUILD_ROOT/etc/rc.d/init.d/
+%{__install} -d $RPM_BUILD_ROOT/etc/rc.d/init.d
+%{__install} src/utils/init.d/%{APP_NAME} $RPM_BUILD_ROOT/etc/rc.d/init.d/
 
 # Install cron.d script
-%{__install} -m 00755 -d $RPM_BUILD_ROOT/etc/cron.d
-%{__install} -m 00644 src/utils/cron.d/codendi-stop $RPM_BUILD_ROOT/etc/cron.d/%{APP_NAME}
+%{__install} -d $RPM_BUILD_ROOT/etc/cron.d
+%{__install} src/utils/cron.d/codendi-stop $RPM_BUILD_ROOT/etc/cron.d/%{APP_NAME}
 
 
 #
@@ -132,16 +132,17 @@ fi
 %{APP_DIR}/src
 %attr(755,%{APP_USER},%{APP_USER}) %dir %{APP_LIB_DIR}
 %attr(755,%{APP_USER},%{APP_USER}) %dir %{APP_LIBBIN_DIR}
-%attr(-,%{APP_USER},%{APP_USER}) %{APP_LIBBIN_DIR}/gotohell
-%attr(-,root,root) %{APP_LIBBIN_DIR}/backup_job
-%attr(-,%{APP_USER},%{APP_USER}) %{APP_LIBBIN_DIR}/backup_subversion.sh
-%attr(-,%{APP_USER},%{APP_USER}) %{APP_LIBBIN_DIR}/log_accum
-%attr(-,%{APP_USER},%{APP_USER}) %{APP_LIBBIN_DIR}/commit_prep
-%attr(-,root,root) %{APP_LIBBIN_DIR}/cvssh
-%attr(-,root,root) %{APP_LIBBIN_DIR}/cvssh-restricted
-%attr(-,%{APP_USER},%{APP_USER}) %{APP_LIBBIN_DIR}/commit-email.pl
-%attr(-,%{APP_USER},%{APP_USER}) %{APP_LIBBIN_DIR}/codendi_svn_pre_commit.php
-%attr(-,%{APP_USER},%{APP_USER}) %{APP_LIBBIN_DIR}/mail_2_DB.pl
+%attr(00755,%{APP_USER},%{APP_USER}) %{APP_LIBBIN_DIR}/gotohell
+%attr(00740,root,root) %{APP_LIBBIN_DIR}/backup_job
+%attr(00740,%{APP_USER},%{APP_USER}) %{APP_LIBBIN_DIR}/backup_subversion.sh
+%attr(04755,%{APP_USER},%{APP_USER}) %{APP_LIBBIN_DIR}/log_accum
+%attr(00755,%{APP_USER},%{APP_USER}) %{APP_LIBBIN_DIR}/commit_prep
+%attr(00755,root,root) %{APP_LIBBIN_DIR}/cvssh
+%attr(00755,root,root) %{APP_LIBBIN_DIR}/cvssh-restricted
+%attr(00755,%{APP_USER},%{APP_USER}) %{APP_LIBBIN_DIR}/commit-email.pl
+%attr(00755,%{APP_USER},%{APP_USER}) %{APP_LIBBIN_DIR}/codendi_svn_pre_commit.php
+%attr(04755,root,root) %{APP_LIBBIN_DIR}/fileforge
+%attr(06755,%{APP_USER},%{APP_USER}) %{APP_LIBBIN_DIR}/mail_2_DB.pl
 %attr(00755,root,root) /etc/rc.d/init.d/%{APP_NAME}
 %attr(00644,root,root) /etc/cron.d/%{APP_NAME}
 
