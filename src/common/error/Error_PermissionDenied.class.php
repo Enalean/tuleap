@@ -54,7 +54,7 @@ abstract class Error_PermissionDenied {
      */
     function buildInterface($name, $func, $index) {
         $url= new URL();
-        $groupId =  $url->getGroupIdFromUrl($_SERVER['REQUEST_URI']);
+        $groupId =  (isset($GLOBALS['group_id'])) ? $GLOBALS['group_id'] : $url->getGroupIdFromUrl($_SERVER['REQUEST_URI']);
         $userId = $this->getUserManager()->getCurrentUser()->getId();
         
         echo "<b>".$GLOBALS['Language']->getText('include_exit','perm_denied')."</b>";
@@ -71,7 +71,7 @@ abstract class Error_PermissionDenied {
                   <input type="hidden" id="func" name="func" value="'.$func.'">
                   <input type="hidden" id="groupId" name="groupId" value="' .$groupId. '">
                   <input type="hidden" id="userId" name="userId" value="' .$userId. '">
-                  <input type="hidden" id="data" name="url_data" value="' .$_SERVER['SCRIPT_URI']. '">
+                  <input type="hidden" id="data" name="url_data" value="' .$_SERVER['REQUEST_URI']. '">
                   <br><input name="Submit" type="submit" value="'.$GLOBALS['Language']->getText('include_exit', 'send_mail').'"/></br>
               </form>';
         }
@@ -114,7 +114,7 @@ abstract class Error_PermissionDenied {
         $messageToAdmin = str_replace(array("\r\n"),"\n>", $messageToAdmin);
         
         $hrefApproval = get_server_url().'/project/admin/?group_id='.$request->get('groupId');
-        $urlData = $request->get('url_data');
+        $urlData = get_server_url().$request->get('url_data');
         
         
         return $this->sendMail($project, $user, $urlData, $hrefApproval, $messageToAdmin);
@@ -133,7 +133,7 @@ abstract class Error_PermissionDenied {
      */
     function sendMail($project, $user, $urlData, $hrefApproval,$messageToAdmin) {
         $adminList = $this->extractReceiver($project);
-        $from = $GLOBALS['sys_noreply'];
+        $from = $user->getEmail();
         $hdrs = 'From: '.$from."\n";
         
         foreach ($adminList as $to => $lang) {
