@@ -152,6 +152,8 @@ fi
 %{APP_DIR}/plugins
 %{APP_DIR}/site-content
 %{APP_DIR}/src
+%{APP_DIR}/ST-ChangeLog
+%{APP_DIR}/ST-VERSION
 %attr(755,%{APP_USER},%{APP_USER}) %dir %{APP_LIB_DIR}
 %attr(755,%{APP_USER},%{APP_USER}) %dir %{APP_LIBBIN_DIR}
 %attr(00755,%{APP_USER},%{APP_USER}) %{APP_LIBBIN_DIR}/gotohell
