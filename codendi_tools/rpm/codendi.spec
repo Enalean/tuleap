@@ -91,6 +91,9 @@ fi
 # In any cases fix the context
 /usr/bin/chcon -R root:object_r:httpd_sys_content_t $RPM_BUILD_ROOT/%{APP_DIR}
 
+# Re-generate language files
+%{APP_DIR}/src/utils/php-launcher.sh %{APP_DIR}/src/utils/generate_language_files.php
+
 # This adds the proper /etc/rc*.d links for the script that runs the codendi backend
 #/sbin/chkconfig --add %{APP_NAME}
 
