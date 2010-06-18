@@ -39,7 +39,7 @@ Codendi is a web based application that address all the aspects of product devel
 #
 # Install codendi application
 %{__install} -m 755 -d $RPM_BUILD_ROOT/%{APP_DIR}
-for i in cli plugins site-content src; do
+for i in cli plugins site-content src ST-ChangeLog ST-VERSION; do
 	%{__cp} -ar $i $RPM_BUILD_ROOT/%{APP_DIR}
 done
 # Remove old scripts: not used and add unneeded perl depedencies to the package
@@ -76,6 +76,18 @@ done
 %{__install} src/utils/cron.d/codendi-stop $RPM_BUILD_ROOT/etc/cron.d/%{APP_NAME}
 
 
+##
+## On package install
+##
+
+#
+#
+#
+%pre
+# Stop the services
+/sbin/service httpd stop
+/etc/init.d/codendi stop
+
 #
 #
 #
@@ -97,6 +109,13 @@ fi
 # This adds the proper /etc/rc*.d links for the script that runs the codendi backend
 #/sbin/chkconfig --add %{APP_NAME}
 
+# Restart the services
+/sbin/service httpd stop
+/etc/init.d/codendi stop
+
+##
+## On package un-install
+##
 
 #
 #
