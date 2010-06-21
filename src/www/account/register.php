@@ -201,7 +201,7 @@ if ($GLOBALS['sys_user_approval'] == 1 || $page == "admin_creation") {
 </p>
 <?php
 
-if($page == "admin_creation" && $GLOBALS['sys_allow_restricted_users']){
+if($page == "admin_creation" && $GLOBALS['sys_allow_restricted_users'] == 1){
 
 	if($request->isPost() && $request->exist('Register') && !($request->get('form_restricted')==1)){
 
