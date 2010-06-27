@@ -13,21 +13,21 @@
    <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=summary">{$resources->GetResource('summary')}</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=shortlog&h={$commit->GetHash()}">{$resources->GetResource('shortlog')}</a> | {$resources->GetResource('log')} | <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=commit&h={$commit->GetHash()}">{$resources->GetResource('commit')}</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=commitdiff&h={$commit->GetHash()}">{$resources->GetResource('commitdiff')}</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=tree&h={$commit->GetHash()}&hb={$commit->GetHash()}">{$resources->GetResource('tree')}</a>
    <br />
    {if ($commit->GetHash() != $head->GetHash()) || ($page > 0)}
-     <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=log">HEAD</a>
+     <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=log">{$resources->GetResource('HEAD')}</a>
    {else}
-     HEAD
+     {$resources->GetResource('HEAD')}
    {/if}
    &sdot; 
    {if $page > 0}
-     <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=log&h={$commit->GetHash()}&pg={$page-1}" accesskey="p" title="Alt-p">prev</a>
+     <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=log&h={$commit->GetHash()}&pg={$page-1}" accesskey="p" title="Alt-p">{$resources->GetResource('prev')}</a>
    {else}
-     prev
+     {$resources->GetResource('prev')}
    {/if}
    &sdot; 
    {if $hasmore}
-     <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=log&h={$commit->GetHash()}&pg={$page+1}" accesskey="n" title="Alt-n">next</a>
+     <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=log&h={$commit->GetHash()}&pg={$page+1}" accesskey="n" title="Alt-n">{$resources->GetResource('next')}</a>
    {else}
-     next
+     {$resources->GetResource('next')}
    {/if}
    <br />
  </div>

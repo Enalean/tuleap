@@ -12,7 +12,7 @@
  <div class="page_nav">
    <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=summary">{$resources->GetResource('summary')}</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=shortlog">{$resources->GetResource('shortlog')}</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=log">{$resources->GetResource('log')}</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=commit&h={$commit->GetHash()}">{$resources->GetResource('commit')}</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=commitdiff&h={$commit->GetHash()}">{$resources->GetResource('commitdiff')}</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=tree&h={$tree->GetHash()}&hb={$commit->GetHash()}">{$resources->GetResource('tree')}</a>
    <br />
-   <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=blobdiff_plain&h={$blob->GetHash()}&hp={$blobparent->GetHash()}&f={$file}">plain</a>
+   <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=blobdiff_plain&h={$blob->GetHash()}&hp={$blobparent->GetHash()}&f={$file}">{$resources->GetResource('plain')}</a>
  </div>
 
  {include file='title.tpl' titlecommit=$commit}

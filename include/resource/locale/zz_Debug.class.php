@@ -209,6 +209,37 @@ class GitPHP_Resource_zz_Debug extends GitPHP_ResourceBase
 		 */
 		$this->resources['file'] = '{fìlé•}';
 		
+		/*
+		 * Used as a link to a plaintext version of a page
+		 * English: plain
+		 */
+		$this->resources['plain'] = '{plain••}';
+		
+		/*
+		 * Used as a link to the first page in a list of search results
+		 * English: first
+		 */
+		$this->resources['first'] = '{fĩrst••}';
+		
+		/*
+		 * Used as a link to the next page in a list of results
+		 * English: next
+		 */
+		$this->resources['next'] = '{nėxt•}';
+		
+		/*
+		 * Used as a link to the previous page in a list of results
+		 * English: prev
+		 */
+		$this->resources['prev'] = '{prēv•}';
+		
+		/*
+		 * Used as a link to the HEAD of a project for a log or file
+		 * (note: HEAD is standard git terminology)
+		 * English: HEAD
+		 */
+		$this->resources['HEAD'] = '{HĒĂD•}';
+		
 		
 		/*
 		 * Used to indicate the number of files changed in a commit
