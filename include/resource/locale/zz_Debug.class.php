@@ -240,6 +240,80 @@ class GitPHP_Resource_zz_Debug extends GitPHP_ResourceBase
 		 */
 		$this->resources['deleted %1$s'] = '{*%1$s* dĕlętēd•••}';
 		
+		/*
+		 * Used to indicate a file type changed, including original
+		 * and new file modes
+		 * (when both original and new files are regular files)
+		 * English: changed from %1$s to %2$s mode: %3$s -> %4$s
+		 * %1$s: the original file type
+		 * %2$s: the new file type
+		 * %3$s: the original file mode
+		 * %4$s: the new file mode
+		 */
+		$this->resources['changed from %1$s to %2$s mode: %3$s -> %4$s'] = '{tō *%2$s* frŏm *%1$s* mōde *%3$s* -> *%4$s*•••••}';
+		
+		/*
+		 * Used to indicate a file type changed, with only new file mode
+		 * (when old file type wasn't a normal file)
+		 * English: changed from %1$s to %2$s mode: %3$s
+		 * %1$s: the original file type
+		 * %1$s: the new file type
+		 * %3$s: the original file mode
+		 * $4$s: the new file mode
+		 */
+		$this->resources['changed from %1$s to %2$s mode: %3$s'] = '{tō *%2$s* frŏm *%1$s* mōde: *%3$s*•••••}';
+		
+		/*
+		 * Used to indicate a file type changed
+		 * (without any modes)
+		 * English: changed from %1$s to %2$s
+		 * %1$s: the original file type
+		 * %2$s: the new file type
+		 */
+		$this->resources['changed from %1$s to %2$s'] = '{tŏ *%2$s* frōm *%1$s*••••}';
+		
+		/*
+		 * Used to indicate a file mode changed
+		 * (when both original and new modes are normal files)
+		 * English: changed mode: %1$s -> %2$s
+		 * %1$s: the original file mode
+		 * %2$s: the new file mode
+		 */
+		$this->resources['changed mode: %1$s -> %2$s'] = '{mōdę chǡngē *%1$s* -> *%2$s*••••}';
+		
+		/*
+		 * Used to indicate a file mode changed
+		 * (when only the new mode is a normal file)
+		 * English: changed mode: %1$s
+		 * %1$s: the new file mode
+		 */
+		$this->resources['changed mode: %1$s'] = '{mōdė chăngē *%1$s*•••}';
+		
+		/*
+		 * Used to indicate a file mode changed, but neither the original
+		 * nor new file modes are normal file modes
+		 * (we don't have any more information than the fact that it changed)
+		 * English: changed
+		 */
+		$this->resources['changed'] = '{chăngėd••}';
+		
+		/*
+		 * Used to indicate a file was moved and the file mode changed
+		 * English: moved from %1$s with %2$d%% similarity, mode: %3$s
+		 * %1$s: the old file
+		 * %2$d: the similarity as a percent number
+		 * %3$s: the new file mode
+		 */
+		$this->resources['moved from %1$s with %2$d%% similarity, mode: %3$s'] = '{wąs *%1$s* wĩth *%2$d*%% sīmĭlārĩty mōdę: *%3$s*•••••••}';
+		
+		/*
+		 * Used to indicate a file was moved
+		 * English: moved from %1$s with %2$d%% similarity
+		 * %1$s: the old file
+		 * %2$d: the similarity as a percent number
+		 */
+		$this->resources['moved from %1$s with %2$d%% similarity'] = '{wās *%1$s* wĩth *%2$d*%% sımįlārīty•••••••}';
+		
 		
 		/*
 		 * Age strings
@@ -345,6 +419,126 @@ class GitPHP_Resource_zz_Debug extends GitPHP_ResourceBase
 		 * English: Actions
 		 */
 		$this->resources['Actions_Header'] = '{Åctĩøns••}';
+	}
+	
+	/*
+	 * GetResource
+	 *
+	 * Overridde GetResource to gibberize resources
+	 *
+	 * @access public
+	 * @param string $resource resource to fetch
+	 * @param string $domain domain of string (for multiple translations of the same string)
+	 * @return string resource
+	 */
+	public function GetResource($resource, $domain = '')
+	{
+		return $this->Gibberize($resource);
+	}
+	
+	/*
+	 * characterMap
+	 *
+	 * Maps regular characters to gibberish characters
+	 *
+	 * @access private
+	 */
+	private $characterMap = array(
+		'a' => array('à', 'á', 'â', 'ã', 'ä', 'å', 'ā', 'ă', 'ą', 'ǎ', 'ǟ', 'ǡ', 'ǻ', 'ȁ', 'ȃ', 'ȧ', 'ḁ', 'ạ', 'ả', 'ấ', 'ầ', 'ẩ', 'ẫ', 'ậ', 'ắ', 'ằ', 'ẳ', 'ẵ', 'ặ'),
+		'b' => array('ḃ', 'ḅ', 'ḇ'),
+		'c' => array('ç', 'ć', 'ĉ', 'ċ', 'č', 'ḉ'),
+		'd' => array('ḋ', 'ḍ', 'ḏ', 'ḑ', 'ḓ'),
+		'e' => array('è', 'é', 'ê', 'ë', 'ē', 'ĕ', 'ė', 'ę', 'ě', 'ȅ', 'ȇ', 'ȩ', 'ḕ', 'ḗ', 'ḙ', 'ḛ', 'ḝ', 'ẹ', 'ẻ', 'ẽ', 'ế', 'ề', 'ể', 'ễ', 'ệ'),
+		'f' => array('ḟ'),
+		'g' => array('ĝ', 'ğ', 'ġ', 'ģ', 'ǧ', 'ǵ', 'ḡ'),
+		'h' => array('ĥ', 'ȟ', 'ḣ', 'ḥ', 'ḧ', 'ḩ', 'ḫ', 'ẖ'),
+		'i' => array('ì', 'í', 'î', 'ï', 'ĩ', 'ī', 'ĭ', 'į', 'ı', 'ǐ', 'ȉ', 'ȋ', 'ḭ', 'ḯ', 'ỉ', 'ị'),
+		'j' => array('ĵ', 'ǰ'),
+		'k' => array('ǩ', 'ḱ', 'ḳ'),
+		'l' => array('ĺ', 'ļ', 'ľ', 'ḷ', 'ḹ', 'ḻ', 'ḽ'),
+		'm' => array('ḿ', 'ṁ', 'ṃ'),
+		'n' => array('ñ', 'ń', 'ņ', 'ň', 'ǹ', 'ṅ', 'ṇ', 'ṉ', 'ṋ'),
+		'o' => array('ò', 'ó', 'ô', 'õ', 'ö', 'ō', 'ŏ', 'ő', 'ơ', 'ǒ', 'ǫ', 'ǭ', 'ȍ', 'ȏ', 'ȫ', 'ȭ', 'ȯ', 'ȱ', 'ṍ', 'ṏ', 'ṑ', 'ṓ', 'ọ', 'ỏ', 'ố', 'ồ', 'ổ', 'ỗ', 'ộ', 'ớ', 'ờ', 'ở', 'ỡ', 'ợ'),
+		'p' => array('ṕ', 'ṗ'),
+		//'q' => array(),
+		'r' => array('ŕ', 'ŗ', 'ř', 'ȑ', 'ȓ', 'ṙ', 'ṛ', 'ṝ', 'ṟ'),
+		's' => array('ś', 'ŝ', 'ş', 'š', 'ș', 'ṡ', 'ṣ', 'ṥ', 'ṧ', 'ṩ'),
+		't' => array('ţ', 'ť', 'ț', 'ṭ', 'ṯ', 'ṱ', 'ẗ'),
+		'u' => array('ù', 'ú', 'û', 'ü', 'ũ', 'ū', 'ŭ', 'ů', 'ű', 'ų', 'ư', 'ǔ', 'ǖ', 'ǘ', 'ǚ','ǜ', 'ȕ', 'ȗ', 'ṳ', 'ṵ', 'ṷ', 'ṹ', 'ṻ', 'ụ', 'ủ', 'ứ', 'ừ', 'ử', 'ữ', 'ự'),
+		'v' => array('ṽ', 'ṿ'),
+		'w' => array('ŵ', 'ẁ', 'ẃ', 'ẅ', 'ẇ', 'ẉ', 'ẘ'),
+		'x' => array('ẋ', 'ẍ'),
+		'y' => array('ý', 'ÿ', 'ŷ', 'ȳ', 'ẏ', 'ẙ', 'ỳ', 'ỵ'),
+		'z' => array('ź', 'ż', 'ž', 'ẑ', 'ẓ', 'ẕ'),
+		'A' => array('À', 'Á', 'Â', 'Ã', 'Ä', 'Å', 'Ā', 'Ă', 'Ą', 'Ǎ', 'Ǟ', 'Ǡ', 'Ǻ', 'Ȁ', 'Ȃ', 'Ȧ', 'Ḁ', 'Ạ', 'Ả', 'Ấ', 'Ầ', 'Ẩ', 'Ẫ', 'Ậ', 'Ắ', 'Ằ', 'Ẳ', 'Ẵ', 'Ặ', 'Å'),
+		'B' => array('Ḃ', 'Ḅ', 'Ḇ'),
+		'C' => array('Ç', 'Ć', 'Ĉ', 'Ċ', 'Č', 'Ḉ'),
+		'D' => array('Ď', 'Ḋ', 'Ḍ', 'Ḏ', 'Ḑ', 'Ḓ'),
+		'E' => array('È', 'É', 'Ê', 'Ë', 'Ē', 'Ĕ', 'Ė', 'Ę', 'Ě', 'Ȅ', 'Ȇ', 'Ȩ', 'Ḕ', 'Ḗ', 'Ḙ', 'Ḛ', 'Ḝ', 'Ẹ', 'Ẻ', 'Ẽ', 'Ế', 'Ề', 'Ể', 'Ễ', 'Ệ'),
+		'F' => array('Ḟ'),
+		'G' => array('Ĝ', 'Ğ', 'Ġ', 'Ģ', 'Ǧ', 'Ǵ', 'Ḡ'),
+		'H' => array('Ĥ', 'Ȟ', 'Ḣ', 'Ḥ', 'Ḧ', 'Ḩ', 'Ḫ'),
+		'I' => array('Ì', 'Í', 'Î', 'Ï', 'Ĩ', 'Ī', 'Ĭ', 'Į', 'İ', 'Ǐ', 'Ȉ', 'Ȋ', 'Ḯ', 'Ỉ', 'Ị'),
+		'J' => array('Ĵ'),
+		'K' => array('Ķ', 'Ǩ', 'Ḱ', 'Ḳ', 'Ḵ'),
+		'L' => array('Ĺ', 'Ļ', 'Ľ', 'Ḷ', 'Ḹ', 'Ḻ', 'Ḽ'),
+		'M' => array('Ḿ', 'Ṁ', 'Ṃ'),
+		'N' => array('Ñ', 'Ń', 'Ņ', 'Ň', 'Ǹ', 'Ṅ', 'Ṇ', 'Ṉ', 'Ṋ'),
+		'O' => array('Ò', 'Ó', 'Ô', 'Õ', 'Ö', 'Ō', 'Ŏ', 'Ő', 'Ơ', 'Ǒ', 'Ǫ', 'Ǭ', 'Ȍ', 'Ȏ', 'Ȫ', 'Ȭ', 'Ȯ', 'Ȱ', 'Ṍ', 'Ṏ', 'Ỗ', 'Ổ', 'Ồ', 'Ố', 'Ỏ', 'Ọ', 'Ṓ', 'Ṑ', 'Ộ', 'Ớ', 'Ờ', 'Ở', 'Ỡ', 'Ợ'),
+		'P' => array('Ṕ', 'Ṗ'),
+		//'Q' => array(),
+		'R' => array('Ŕ', 'Ŗ', 'Ř', 'Ȑ', 'Ȓ', 'Ṙ', 'Ṛ', 'Ṝ', 'Ṟ'),
+		'S' => array('Ś', 'Ŝ', 'Ş', 'Š', 'Ș', 'Ṡ', 'Ṣ', 'Ṥ', 'Ṧ', 'Ṩ'),
+		'T' => array('Ţ', 'Ť', 'Ț', 'Ṫ', 'Ṭ', 'Ṯ', 'Ṱ'),
+		'U' => array('Ù', 'Ú', 'Û', 'Ü', 'Ũ', 'Ū', 'Ŭ', 'Ů', 'Ű', 'Ų', 'Ư', 'Ǔ', 'Ǖ', 'Ǘ', 'Ǚ', 'Ǜ', 'Ȕ', 'Ȗ', 'Ṳ', 'Ṵ', 'Ṷ', 'Ṹ', 'Ṻ', 'Ụ', 'Ủ', 'Ứ', 'Ừ', 'Ử', 'Ữ'),
+		'V' => array('Ṽ', 'Ṿ'),
+		'W' => array('Ŵ', 'Ẁ', 'Ẃ', 'Ẅ', 'Ẇ', 'Ẉ'),
+		'X' => array('Ẋ', 'Ẍ'),
+		'Y' => array('Ý', 'Ŷ', 'Ÿ', 'Ȳ', 'Ẏ', 'Ỳ', 'Ỵ', 'Ỷ', 'Ỹ'),
+		'Z' => array('Ź', 'Ż', 'Ž', 'Ẑ', 'Ẓ', 'Ẕ')
+	);
+	
+	/*
+	 * Gibberize
+	 *
+	 * Translates string into readable gibberish for testing i18n
+	 *
+	 * @access private
+	 * @param string $resource string to gibberize
+	 * @return string gibberized string
+	 */
+	private function Gibberize($resource)
+	{
+		if (empty($resource))
+			return '';
+			
+		$len = strlen($resource);
+		
+		/*
+		 * Wrap tokens so you can see where inserted content is
+		 */
+		$newstr = preg_replace('/(\%[1-9]+\$[a-z])/', '*\1*', $resource);
+		
+		/*
+		 * Replace characters with readable characters from beyond standard ascii
+		 */
+		foreach ($this->characterMap as $letter => $replacements) {
+			$replacements[] = $letter;
+			$newstr = preg_replace('/([^\$]|^)' . $letter . '/', '\1' . $replacements[array_rand($replacements)], $newstr);
+		}
+		
+		/*
+		 * Add translation padding, since some languages translate the same
+		 * sentence using more characters - 30% is about average
+		 */
+		$newstr .= str_repeat('•', (int)($len * 0.3));
+		
+		/*
+		 * Wrap string in braces to catch sentence construction
+		 */
+		$newstr = '{' . $newstr . '}';
+		
+		return $newstr;
 	}
 
 }

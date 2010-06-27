@@ -70,7 +70,7 @@
  </div>
  <div class="list_head">
    {if $treediff->Count() > 10}
-     {$resources->Format('%1$d files changed:', $treediff->Count())}
+     {$resources->Format('%1$d files changed:', $treediff->Count())|escape}
    {/if}
  </div>
  <table cellspacing="0">
@@ -89,9 +89,9 @@
 	     {assign var=localtotype value=$resources->GetResource($diffline->GetToFileType())}
 	     [
 	     {if $diffline->ToFileIsRegular()}
-	     {$resources->Format('new %1$s with mode %2$s', $localtotype, $diffline->GetToModeShort())}
+	     {$resources->Format('new %1$s with mode %2$s', $localtotype, $diffline->GetToModeShort())|escape}
 	     {else}
-	     {$resources->Format('new %1$s', $localtotype)}
+	     {$resources->Format('new %1$s', $localtotype)|escape}
 	     {/if}
 	     ]
 	   </span>
@@ -108,7 +108,7 @@
          <td>
 	   <span class="deletedfile">
 	     {assign var=localfromtype value=$resources->GetResource($diffline->GetFromFileType())}
-	     [ {$resources->Format('deleted %1$s', $localfromtype)} ]
+	     [ {$resources->Format('deleted %1$s', $localfromtype)|escape} ]
 	   </span>
 	 </td>
          <td class="link">
@@ -131,28 +131,30 @@
 	     <span class="changedfile">
 	       [
 	       {if $diffline->FileTypeChanged()}
+	     	 {assign var=localfromtype value=$resources->GetResource($diffline->GetFromFileType())}
+	     	 {assign var=localtotype value=$resources->GetResource($diffline->GetToFileType())}
 	         {if $diffline->FileModeChanged()}
 		   {if $diffline->FromFileIsRegular() && $diffline->ToFileIsRegular()}
-		     changed from {$diffline->GetFromFileType()} to {$diffline->GetToFileType()} mode: {$diffline->GetFromModeShort()} -&gt; {$diffline->GetToModeShort()}
+		     {$resources->Format('changed from %1$s to %2$s mode: %3$s -> %4$s', $localfromtype, $localtotype, $diffline->GetFromModeShort(), $diffline->GetToModeShort())|escape}
 		   {elseif $diffline->ToFileIsRegular()}
-		     changed from {$diffline->GetFromFileType()} to {$diffline->GetToFileType()} mode: {$diffline->GetToModeShort()}
+		     {$resources->Format('changed from %1$s to %2$s mode: %3$s', $localfromtype, $localtotype, $diffline->GetToModeShort())|escape}
 		   {else}
-		     changed from {$diffline->GetFromFileType()} to {$diffline->GetToFileType()}
+		     {$resources->Format('changed from %1$s to %2$s', $localfromtype, $localtotype)|escape}
 		   {/if}
 		 {else}
-		   changed from {$diffline->GetFromFileType()} to {$diffline->GetToFileType()}
+		   {$resources->Format('changed from %1$s to %2$s', $localfromtype, $localtotype)|escape}
 		 {/if}
 	       {else}
 	         {if $diffline->FileModeChanged()}
 		   {if $diffline->FromFileIsRegular() && $diffline->ToFileIsRegular()}
-		     changed mode: {$diffline->GetFromModeShort()} -&gt; {$diffline->GetToModeShort()}
+		     {$resources->Format('changed mode: %1$s -> %2$s', $diffline->GetFromModeShort(), $diffline->GetToModeShort())|escape}
 		   {elseif $diffline->ToFileIsRegular()}
-		     changed mode: {$diffline->GetToModeShort()}
+		     {$resources->Format('changed mode: %1$s', $diffline->GetToModeShort())|escape}
 		   {else}
-		     changed
+		     {$resources->GetResource('changed')}
 		   {/if}
 		 {else}
-		   changed
+		   {$resources->GetResource('changed')}
 		 {/if}
 	       {/if}
 	       ]
@@ -173,11 +175,14 @@
 	 </td>
          <td>
 	   <span class="movedfile">
+	     {capture assign=fromfilelink}
+	     <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=blob&h={$diffline->GetFromHash()}&hb={$commit->GetHash()}&f={$diffline->GetFromFile()}" class="list">{$diffline->GetFromFile()}</a>
+	     {/capture}
 	     [
 	     {if $diffline->GetFromMode() != $diffline->GetToMode()}
-	       moved from <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=blob&h={$diffline->GetFromHash()}&hb={$commit->GetHash()}&f={$diffline->GetFromFile()}" class="list">{$diffline->GetFromFile()}</a> with {$diffline->GetSimilarity()}% similarity, mode: {$diffline->GetToModeShort()}
+	       {$resources->Format('moved from %1$s with %2$d%% similarity, mode: %3$s', $fromfilelink, $diffline->GetSimilarity(), $diffline->GetToModeShort())}
 	     {else}
-	       moved from <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=blob&h={$diffline->GetFromHash()}&hb={$commit->GetHash()}&f={$diffline->GetFromFile()}" class="list">{$diffline->GetFromFile()}</a> with {$diffline->GetSimilarity()}% similarity
+	       {$resources->Format('moved from %1$s with %2$d%% similarity', $fromfilelink, $diffline->GetSimilarity())}
 	     {/if}
 	     ]
 	   </span>
