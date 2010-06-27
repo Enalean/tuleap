@@ -10,7 +10,7 @@
 
  {* Nav *}
    <div class="page_nav">
-     <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=summary">summary</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=shortlog&h={$commit->GetHash()}">shortlog</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=log&h={$commit->GetHash()}">log</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=commit&h={$commit->GetHash()}">commit</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=commitdiff&h={$commit->GetHash()}">commitdiff</a> | tree<br /><br />
+     <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=summary">{$resources->GetResource('summary')}</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=shortlog&h={$commit->GetHash()}">{$resources->GetResource('shortlog')}</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=log&h={$commit->GetHash()}">{$resources->GetResource('log')}</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=commit&h={$commit->GetHash()}">{$resources->GetResource('commit')}</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=commitdiff&h={$commit->GetHash()}">{$resources->GetResource('commitdiff')}</a> | {$resources->GetResource('tree')}<br /><br />
    </div>
 
  {include file='title.tpl' titlecommit=$commit}
@@ -29,7 +29,7 @@
              <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=blob&h={$treeitem->GetHash()}&hb={$commit->GetHash()}&f={$treeitem->GetPath()}" class="list">{$treeitem->GetName()}</a>
 	   </td>
            <td class="link">
-	     <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=blob&h={$treeitem->GetHash()}&hb={$commit->GetHash()}&f={$treeitem->GetPath()}">blob</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=history&h={$commit->GetHash()}&f={$treeitem->GetPath()}">history</a>
+	     <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=blob&h={$treeitem->GetHash()}&hb={$commit->GetHash()}&f={$treeitem->GetPath()}">{$resources->GetResource('blob')}</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=history&h={$commit->GetHash()}&f={$treeitem->GetPath()}">{$resources->GetResource('history')}</a>
 	   </td>
          {elseif $treeitem instanceof GitPHP_Tree}
 	   <td></td>
@@ -37,7 +37,7 @@
              <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=tree&h={$treeitem->GetHash()}&hb={$commit->GetHash()}&f={$treeitem->GetPath()}">{$treeitem->GetName()}</a>
 	   </td>
            <td class="link">
-	     <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=tree&h={$treeitem->GetHash()}&hb={$commit->GetHash()}&f={$treeitem->GetPath()}">tree</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=snapshot&h={$commit->GetHash()}&f={$treeitem->GetPath()}">snapshot</a>
+	     <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=tree&h={$treeitem->GetHash()}&hb={$commit->GetHash()}&f={$treeitem->GetPath()}">{$resources->GetResource('tree')}</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=snapshot&h={$commit->GetHash()}&f={$treeitem->GetPath()}">{$resources->GetResource('snapshot')}</a>
 	   </td>
          {/if}
        </tr>

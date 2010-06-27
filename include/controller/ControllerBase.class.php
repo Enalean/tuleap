@@ -241,6 +241,7 @@ abstract class GitPHP_ControllerBase
 			$this->tpl->assign('search', $this->params['search']);
 		if (isset($this->params['searchtype']))
 			$this->tpl->assign('searchtype', $this->params['searchtype']);
+		$this->tpl->assign('resources', GitPHP_Resource::GetInstance());
 	}
 
 	/**

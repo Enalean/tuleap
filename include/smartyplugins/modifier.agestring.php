@@ -10,20 +10,20 @@
 function smarty_modifier_agestring($age)
 {
 	if ($age > 60*60*24*365*2)
-		return (int)($age/60/60/24/365) . " years ago";
+		return sprintf(GitPHP_Resource::GetInstance()->GetResource('%1$d years ago'), (int)($age/60/60/24/365));
 	else if ($age > 60*60*24*(365/12)*2)
-		return (int)($age/60/60/24/(365/12)) . " months ago";
+		return sprintf(GitPHP_Resource::GetInstance()->GetResource('%1$d months ago'), (int)($age/60/60/24/(365/12)));
 	else if ($age > 60*60*24*7*2)
-		return (int)($age/60/60/24/7) . " weeks ago";
+		return sprintf(GitPHP_Resource::GetInstance()->GetResource('%1$d weeks ago'), (int)($age/60/60/24/7));
 	else if ($age > 60*60*24*2)
-		return (int)($age/60/60/24) . " days ago";
+		return sprintf(GitPHP_Resource::GetInstance()->GetResource('%1$d days ago'), (int)($age/60/60/24));
 	else if ($age > 60*60*2)
-		return (int)($age/60/60) . " hours ago";
+		return sprintf(GitPHP_Resource::GetInstance()->GetResource('%1$d hours ago'), (int)($age/60/60));
 	else if ($age > 60*2)
-		return (int)($age/60) . " min ago";
+		return sprintf(GitPHP_Resource::GetInstance()->GetResource('%1$d min ago'), (int)($age/60));
 	else if ($age > 2)
-		return (int)$age . " sec ago";
-	return "right now";
+		return sprintf(GitPHP_Resource::GetInstance()->GetResource('%1$d sec ago'), (int)$age);
+	return GitPHP_Resource::GetInstance()->GetResource('right now');
 }
 
 ?>

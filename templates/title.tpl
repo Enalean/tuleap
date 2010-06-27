@@ -34,11 +34,11 @@
 		{if $target == 'summary'}
 			<a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=summary" class="title">&nbsp;</a>
 		{elseif $target == 'shortlog'}
-			<a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=shortlog" class="title">shortlog</a>
+			<a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=shortlog" class="title">{$resources->GetResource('shortlog')}</a>
 		{elseif $target == 'tags'}
-			<a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=tags" class="title">tags</a>
+			<a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=tags" class="title">{$resources->GetResource('tags')}</a>
 		{elseif $target == 'heads'}
-			<a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=heads" class="title">heads</a>
+			<a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=heads" class="title">{$resources->GetResource('heads')}</a>
 		{else}
 			&nbsp;
 		{/if}

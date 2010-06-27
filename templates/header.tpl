@@ -40,11 +40,11 @@
       <a href="http://git-scm.com" title="git homepage">
         <img src="images/git-logo.png" width="72" height="27" alt="git" class="logo" />
       </a>
-      <a href="index.php">projects</a> / 
+      <a href="index.php">{$resources->GetResource('projects')}</a> / 
       {if $project}
         <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=summary">{$project->GetProject()}</a>
         {if $action}
-           / {$action}
+           / {$resources->GetResource($action)}
         {/if}
         {if $enablesearch}
           <form method="get" action="index.php" enctype="application/x-www-form-urlencoded">
@@ -53,13 +53,13 @@
               <input type="hidden" name="a" value="search" />
               <input type ="hidden" name="h" value="{if $commit}{$commit->GetHash()}{else}HEAD{/if}" />
               <select name="st">
-                <option {if $searchtype == 'commit'}selected="selected"{/if} value="commit">commit</option>
-                <option {if $searchtype == 'author'}selected="selected"{/if} value="author">author</option>
-                <option {if $searchtype == 'committer'}selected="selected"{/if} value="committer">committer</option>
+                <option {if $searchtype == 'commit'}selected="selected"{/if} value="commit">{$resources->GetResource('commit')}</option>
+                <option {if $searchtype == 'author'}selected="selected"{/if} value="author">{$resources->GetResource('author')}</option>
+                <option {if $searchtype == 'committer'}selected="selected"{/if} value="committer">{$resources->GetResource('committer')}</option>
                 {if $filesearch}
-                  <option {if $searchtype == 'file'}selected="selected"{/if} value="file">file</option>
+                  <option {if $searchtype == 'file'}selected="selected"{/if} value="file">{$resources->GetResource('file')}</option>
                 {/if}
-              </select> search: <input type="text" name="s" {if $search}value="{$search}"{/if} />
+              </select> {$resources->GetResource('search')}: <input type="text" name="s" {if $search}value="{$search}"{/if} />
             </div>
           </form>
         {/if}

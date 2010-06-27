@@ -10,7 +10,7 @@
 
  <div class="page_nav">
    {* Nav *}
-   <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=summary">summary</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=shortlog&h={$commit->GetHash()}">shortlog</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=log&h={$commit->GetHash()}">log</a> | commit | {if $commit->GetParent()}<a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=commitdiff&h={$commit->GetHash()}">commitdiff</a> | {/if}<a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=tree&h={$tree->GetHash()}&hb={$commit->GetHash()}">tree</a>
+   <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=summary">{$resources->GetResource('summary')}</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=shortlog&h={$commit->GetHash()}">{$resources->GetResource('shortlog')}</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=log&h={$commit->GetHash()}">{$resources->GetResource('log')}</a> | {$resources->GetResource('commit')} | {if $commit->GetParent()}<a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=commitdiff&h={$commit->GetHash()}">{$resources->GetResource('commitdiff')}</a> | {/if}<a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=tree&h={$tree->GetHash()}&hb={$commit->GetHash()}">{$resources->GetResource('tree')}</a>
    <br /><br />
  </div>
 
@@ -24,7 +24,7 @@
    {* Commit data *}
    <table cellspacing="0">
      <tr>
-       <td>author</td>
+       <td>{$resources->GetResource('author')}</td>
        <td>{$commit->GetAuthorName()}</td>
      </tr>
      <tr>
@@ -38,7 +38,7 @@
        {/if}
      </tr>
      <tr>
-       <td>committer</td>
+       <td>{$resources->GetResource('committer')}</td>
        <td>{$commit->GetCommitterName()}</td>
      </tr>
      <tr>
@@ -46,19 +46,19 @@
        <td> {$commit->GetCommitterEpoch()|date_format:"%a, %d %b %Y %H:%M:%S %z"} ({$commit->GetCommitterLocalEpoch()|date_format:"%R"} {$commit->GetCommitterTimezone()})</td>
      </tr>
      <tr>
-       <td>commit</td>
+       <td>{$resources->GetResource('commit')}</td>
        <td class="monospace">{$commit->GetHash()}</td>
      <tr>
      <tr>
-       <td>tree</td>
+       <td>{$resources->GetResource('tree')}</td>
        <td class="monospace"><a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=tree&h={$tree->GetHash()}&hb={$commit->GetHash()}" class="list">{$tree->GetHash()}</a></td>
-       <td class="link"><a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=tree&h={$tree->GetHash()}&hb={$commit->GetHash()}">tree</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=snapshot&h={$commit->GetHash()}">snapshot</a></td>
+       <td class="link"><a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=tree&h={$tree->GetHash()}&hb={$commit->GetHash()}">{$resources->GetResource('tree')}</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=snapshot&h={$commit->GetHash()}">{$resources->GetResource('snapshot')}</a></td>
      </tr>
      {foreach from=$commit->GetParents() item=par}
        <tr>
-         <td>parent</td>
+         <td>{$resources->GetResource('parent')}</td>
 	 <td class="monospace"><a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=commit&h={$par->GetHash()}" class="list">{$par->GetHash()}</a></td>
-         <td class="link"><a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=commit&h={$par->GetHash()}">commit</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=commitdiff&h={$commit->GetHash()}&hp={$par->GetHash()}">commitdiff</a></td>
+         <td class="link"><a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=commit&h={$par->GetHash()}">{$resources->GetResource('commit')}</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=commitdiff&h={$commit->GetHash()}&hp={$par->GetHash()}">{$resources->GetResource('commitdiff')}</a></td>
        </tr>
      {/foreach}
    </table>
@@ -70,7 +70,7 @@
  </div>
  <div class="list_head">
    {if $treediff->Count() > 10}
-     {$treediff->Count()} files changed:
+     {$resources->Format('%1$d files changed:', $treediff->Count())}
    {/if}
  </div>
  <table cellspacing="0">
@@ -86,17 +86,18 @@
 	 </td>
          <td>
 	   <span class="newfile">
+	     {assign var=localtotype value=$resources->GetResource($diffline->GetToFileType())}
 	     [
 	     {if $diffline->ToFileIsRegular()}
-	     new {$diffline->GetToFileType()} with mode: {$diffline->GetToModeShort()}
+	     {$resources->Format('new %1$s with mode %2$s', $localtotype, $diffline->GetToModeShort())}
 	     {else}
-	     new {$diffline->GetToFileType()}
+	     {$resources->Format('new %1$s', $localtotype)}
 	     {/if}
 	     ]
 	   </span>
 	 </td>
          <td class="link">
-	   <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=blob&h={$diffline->GetToHash()}&hb={$commit->GetHash()}&f={$diffline->GetFromFile()}">blob</a>
+	   <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=blob&h={$diffline->GetToHash()}&hb={$commit->GetHash()}&f={$diffline->GetFromFile()}">{$resources->GetResource('blob')}</a>
 	 </td>
        {elseif $diffline->GetStatus() == "D"}
          <td>
@@ -106,11 +107,12 @@
 	 </td>
          <td>
 	   <span class="deletedfile">
-	     [ deleted {$diffline->GetFromFileType()} ]
+	     {assign var=localfromtype value=$resources->GetResource($diffline->GetFromFileType())}
+	     [ {$resources->Format('deleted %1$s', $localfromtype)} ]
 	   </span>
 	 </td>
          <td class="link">
-	   <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=blob&h={$diffline->GetFromHash()}&hb={$commit->GetHash()}&f={$diffline->GetFromFile()}">blob</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=history&h={$commit->GetHash()}&f={$diffline->GetFromFile()}">history</a>
+	   <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=blob&h={$diffline->GetFromHash()}&hb={$commit->GetHash()}&f={$diffline->GetFromFile()}">{$resources->GetResource('blob')}</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=history&h={$commit->GetHash()}&f={$diffline->GetFromFile()}">{$resources->GetResource('history')}</a>
 	 </td>
        {elseif $diffline->GetStatus() == "M" || $diffline->GetStatus() == "T"}
          <td>
@@ -158,11 +160,11 @@
 	   {/if}
 	 </td>
          <td class="link">
-           <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=blob&h={$diffline->GetToHash()}&hb={$commit->GetHash()}&f={$diffline->GetToFile()}">blob</a>
+           <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=blob&h={$diffline->GetToHash()}&hb={$commit->GetHash()}&f={$diffline->GetToFile()}">{$resources->GetResource('blob')}</a>
 	   {if $diffline->GetToHash() != $diffline->GetFromHash()}
-	     | <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=blobdiff&h={$diffline->GetToHash()}&hp={$diffline->GetFromHash()}&hb={$commit->GetHash()}&f={$diffline->GetToFile()}">diff</a>
+	     | <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=blobdiff&h={$diffline->GetToHash()}&hp={$diffline->GetFromHash()}&hb={$commit->GetHash()}&f={$diffline->GetToFile()}">{$resources->GetResource('diff')}</a>
 	   {/if}
-	     | <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=history&h={$commit->GetHash()}&f={$diffline->GetFromFile()}">history</a>
+	     | <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=history&h={$commit->GetHash()}&f={$diffline->GetFromFile()}">{$resources->GetResource('history')}</a>
 	 </td>
        {elseif $diffline->GetStatus() == "R"}
          <td>
@@ -181,9 +183,9 @@
 	   </span>
 	 </td>
          <td class="link">
-	   <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=blob&h={$diffline->GetToHash()}&hb={$commit->GetHash()}&f={$diffline->GetToFile()}">blob</a>
+	   <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=blob&h={$diffline->GetToHash()}&hb={$commit->GetHash()}&f={$diffline->GetToFile()}">{$resources->GetResource('blob')}</a>
 	   {if $diffline->GetToHash() != $diffline->GetFromHash()}
-	     | <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=blobdiff&h={$diffline->GetToHash()}&hp={$diffline->GetFromHash()}&hb={$commit->GetHash()}&f={$diffline->GetToFile()}">diff</a>
+	     | <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=blobdiff&h={$diffline->GetToHash()}&hp={$diffline->GetFromHash()}&hb={$commit->GetHash()}&f={$diffline->GetToFile()}">{$resources->GetResource('diff')}</a>
 	   {/if}
 	 </td>
        {/if}
