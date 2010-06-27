@@ -240,6 +240,18 @@ class GitPHP_Resource_zz_Debug extends GitPHP_ResourceBase
 		 */
 		$this->resources['HEAD'] = '{HĒĂD•}';
 		
+		/*
+		 * Used when diffing a file, to indicate that it's a new file
+		 * English: (new)
+		 */
+		$this->resources['(new)'] = '{(nęw)•}';
+		
+		/*
+		 * Used when diffing a file, to indicate that it's been deleted
+		 * English: (deleted)
+		 */
+		$this->resources['(deleted)'] = '{(dělȇtȩd)•••}';
+		
 		
 		/*
 		 * Used to indicate the number of files changed in a commit
