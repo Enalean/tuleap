@@ -40,6 +40,7 @@ require_once('Docman_NotificationsManager_Move.class.php');
 
 require_once('Docman_Log.class.php');
 require_once('common/event/EventManager.class.php');
+require_once('Docman_Error_PermissionDenied.class.php');
 
 require_once('Docman_PermissionsManager.class.php');
 
@@ -349,6 +350,8 @@ class Docman_Controller extends Controler {
     }
 
     function request() {
+        global $HTML;
+        
         if ($this->request->exist('action') 
             && ($this->request->get('action') == 'plugin_docman_approval_reviewer' 
                 || $this->request->get('action') == 'plugin_docman_approval_requester'
@@ -481,8 +484,13 @@ class Docman_Controller extends Controler {
                             if ($this->request->get('action') == 'ajax_reference_tooltip') {
                                 $this->_setView('AjaxReferenceTooltipError');
                             } else {
-                                $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_perms_view'));
-                                $this->_setView('ProjectError');
+                                site_header(array('title'=>$GLOBALS['Language']->getText('include_exit','exit_error')));
+                                $sendMail = new Docman_Error_PermissionDenied();
+                                $sendMail->buildInterface('msg_docman_access', 'docman_access_request', 'docman_no_perm');
+                                $HTML->footer(array('showfeedback' => false));
+                                exit;
+                                //$this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_perms_view'));
+                                //$this->_setView('ProjectError');
                             }
                         } else {
                             $mdFactory = new Docman_MetadataFactory($this->_viewParams['group_id']);

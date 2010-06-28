@@ -57,14 +57,19 @@ abstract class Error_PermissionDenied {
         $groupId =  (isset($GLOBALS['group_id'])) ? $GLOBALS['group_id'] : $url->getGroupIdFromUrl($_SERVER['REQUEST_URI']);
         $userId = $this->getUserManager()->getCurrentUser()->getId();
         
-        echo "<b>".$GLOBALS['Language']->getText('include_exit','perm_denied')."</b>";
+        $base = 'include_exit';
+        if ($this->getType() == 'docman_permission_denied') {
+            $base = 'plugin_docman';
+        }
+        
+        echo "<b>".$GLOBALS['Language']->getText($base,'perm_denied')."</b>";
         echo '<br></br>';
-        echo "<br>".$GLOBALS['Language']->getText('include_exit',$index);
+        echo "<br>".$GLOBALS['Language']->getText($base,$index);
         
         //In case of restricted user, we only show the zone text area to ask for membership 
         //just when the requested page belongs to a project
         if (!(($func == 'restricted_user_request') && (!isset($groupId)))) {
-            echo $GLOBALS['Language']->getText('include_exit', 'request_to_admin');
+            echo $GLOBALS['Language']->getText($base, 'request_to_admin');
             echo '<br></br>';
             echo '<form action="/sendmessage.php" method="post" name="display_form">
                   <textarea wrap="virtual" rows="5" cols="70" name="'.$name.'"></textarea></p>
@@ -116,7 +121,6 @@ abstract class Error_PermissionDenied {
         $hrefApproval = get_server_url().'/project/admin/?group_id='.$request->get('groupId');
         $urlData = get_server_url().$request->get('url_data');
         
-        
         return $this->sendMail($project, $user, $urlData, $hrefApproval, $messageToAdmin);
     }
     
@@ -135,22 +139,35 @@ abstract class Error_PermissionDenied {
         $adminList = $this->extractReceiver($project);
         $from = $user->getEmail();
         $hdrs = 'From: '.$from."\n";
+        $base  = 'include_exit';
         
+        //Add information about service 
+        if ($this->getType() == 'docman_permission_denied') {
+            $urlData = ' "'.$this->urlTransform($urlData).'" ';
+            $base = 'plugin_docman';
+        } else {
+            $link = $urlData;
+        }
+
         foreach ($adminList as $to => $lang) {
             // Send a notification message to the project administrator
             //according to his prefered language
             $mail = new Mail();
             $mail->setTo($to);
             $mail->setFrom($from);
- 
+
             $language = new BaseLanguage($GLOBALS['sys_supported_languages'], $GLOBALS['sys_lang']);
             $language->loadLanguage($lang);
-            
-            $mail->setSubject($language->getText('include_exit', 'mail_subject_'.$this->getType(), array($project->getPublicName(), $user->getRealName())));
-            
-            $body = $language->getText('include_exit', 'mail_content_'.$this->getType(), array($user->getRealName(), $user->getName(), $urlData, $project->getPublicName(), $hrefApproval, $messageToAdmin, $user->getEmail()));
+
+            $mail->setSubject($language->getText($base, 'mail_subject_'.$this->getType(), array($project->getPublicName(), $user->getRealName())));
+
+            if ($this->getType() == 'docman_permission_denied') {
+                $link = $urlData."  ".$language->getText('include_exit', 'data_type').' "'.$this->getServiceType($urlData).'"';
+             }
+
+            $body = $language->getText($base, 'mail_content_'.$this->getType(), array($user->getRealName(), $user->getName(), $link, $project->getPublicName(), $hrefApproval, $messageToAdmin, $user->getEmail()));
             $mail->setBody($body);
-             
+
             if (!$mail->send()) {
                 exit_error($GLOBALS['Language']->getText('global', 'error'), $GLOBALS['Language']->getText('global', 'mail_failed', array($GLOBALS['sys_email_admin'])));
             }
@@ -160,6 +177,31 @@ abstract class Error_PermissionDenied {
         $GLOBALS['Response']->redirect('/my');
         exit;
     }
+
+    /**
+     * Returns the corresponding service according to a given url
+     * @param String $url
+     * 
+     * @return String
+     */
+    protected function getServiceType($url) {
+        $type = '';
+        //document
+        if (preg_match('/\/plugins\/docman\//', $url)) {
+            $type = 'Document';
+            //Forum or News
+        } else if ((preg_match('/\/forum\//', $url))) {
+            $type = 'Forum';
+         //FRS
+        } else if (preg_match('/\/file\//', $url)) {
+            $type = 'File release';
+        //Tracker
+        } else if (preg_match('/\/tracker\//', $url)) {
+            $type = 'Tracker';
+        }
+        return $type;
+    }
+
 
     /**
      * Get an instance of UserManager. Mainly used for mock
