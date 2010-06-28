@@ -60,8 +60,6 @@ include_exit	mail_content_restricted_user	Dear project administrator,\n\n$1 (log
 include_exit	mail_subject_private_project	$2 requests to be member of "$1" private project
 include_exit	mail_subject_restricted_user	Restricted user $2 requests to be member of "$1" project
 include_exit	data_type	related to service:
-
-
 #
 #-----------------------------------------------
 # Script: SF/www/include/features_boxes.php

@@ -57,4 +57,3 @@ class Docman_Error_PermissionDenied extends Error_PermissionDenied {
     }
 }
 ?>
-
