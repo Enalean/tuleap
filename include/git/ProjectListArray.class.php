@@ -34,7 +34,7 @@ class GitPHP_ProjectListArray extends GitPHP_ProjectListBase
 	public function __construct($projectArray)
 	{
 		if (!is_array($projectArray)) {
-			throw new Exception('An array of projects is required.');
+			throw new Exception('An array of projects is required');
 		}
 
 		$this->projectConfig = $projectArray;

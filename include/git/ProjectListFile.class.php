@@ -35,7 +35,7 @@ class GitPHP_ProjectListFile extends GitPHP_ProjectListBase
 	public function __construct($projectFile)
 	{
 		if (!(is_string($projectFile) && is_file($projectFile))) {
-			throw new Exception($projectFile . ' is not a file');
+			throw new Exception(GitPHP_Resource::GetInstance()->Format('%1$s is not a file', $projectFile));
 		}
 
 		$this->projectConfig = $projectFile;
@@ -54,7 +54,7 @@ class GitPHP_ProjectListFile extends GitPHP_ProjectListBase
 	protected function PopulateProjects()
 	{
 		if (!($fp = fopen($this->projectConfig, 'r'))) {
-			throw new Exception('Failed to open project list file ' . $this->projectConfig);
+			throw new Exception(GitPHP_Resource::GetInstance()->Format('Failed to open project list file %1$s', $this->projectConfig));
 		}
 
 		$projectRoot = GitPHP_Config::GetInstance()->GetValue('projectroot');

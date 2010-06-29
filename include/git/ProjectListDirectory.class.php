@@ -44,7 +44,7 @@ class GitPHP_ProjectListDirectory extends GitPHP_ProjectListBase
 	public function __construct($projectDir)
 	{
 		if (!is_dir($projectDir)) {
-			throw new Exception($projectDir . ' is not a directory.');
+			throw new Exception(GitPHP_Resource::GetInstance()->Format('%1$s is not a directory', $projectDir));
 		}
 
 		$this->projectDir = $projectDir;

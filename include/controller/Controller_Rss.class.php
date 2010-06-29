@@ -32,7 +32,7 @@ class GitPHP_Controller_Rss extends GitPHP_ControllerBase
 	{
 		parent::__construct();
 		if (!$this->project) {
-			throw new GitPHP_MessageException('Project is required for RSS', true);
+			throw new GitPHP_MessageException(GitPHP_Resource::GetInstance()->GetResource('Project is required'), true);
 		}
 	}
 

@@ -462,6 +462,138 @@ class GitPHP_Resource_zz_Debug extends GitPHP_ResourceBase
 		 * English: Actions
 		 */
 		$this->resources['Actions_Header'] = '{Åctĩøns••}';
+		
+		
+		/*
+		 * Error messages
+		 */
+		
+		/*
+		 * Error message when user tries to do an action that requires a project
+		 * but a project isn't specified
+		 * English: Project is required
+		 */
+		$this->resources['Project is required'] = '{Prōjĕct is rēquĩrěd••••}';
+		
+		/*
+		 * Error message when user tries to access a project that doesn't exist
+		 * English: Invalid project %1$s
+		 * %1$s: the project the user tried to access
+		 */
+		$this->resources['Invalid project %1$s'] = '{İnvălıd prōjĕct *%1$s*•••}';
+		
+		/*
+		 * Error message when a user tries to search but searching has been disabled
+		 * in the config
+		 * English: Search has been disabled
+		 */
+		$this->resources['Search has been disabled'] = '{Sęārch hăs bėęn dĭsăblėd••••}';
+		
+		/*
+		 * Error message when a user tries to do a file search but searching files
+		 * has been disabled in the config
+		 * English: File search has been disabled
+		 */
+		$this->resources['File search has been disabled'] = '{Fīlĕ sēărch hąs bėęn dĭsąblēd•••••}';
+		
+		/*
+		 * Error message when a user's search query is too short (less than 2 characters)
+		 * English: You must enter search text of at least 2 characters
+		 */
+		$this->resources['You must enter search text of at least 2 characters'] = '{Yōu mũst ēntĕr sėärch tęxt ōf åt lēäst 2 chårãctĕrs••••••••••••}';
+		
+		/*
+		 * Error message when a user's search didn't produce any results
+		 * English: No matches for "%1$s"
+		 * %1$s: the user's search string
+		 */
+		$this->resources['No matches for "%1$s"'] = '{Nō mątchēs fōr "*%1$s*"•••••••}';
+		
+		/*
+		 * Error message when user tries to specify a file with a list of the projects,
+		 * but it isn't a file
+		 * English: %1$s is not a file
+		 * %1$s: the path the user specified
+		 */
+		$this->resources['%1$s is not a file'] = '{*%1$s* ĩs nōt ă fįlě••••••}';
+		
+		/*
+		 * Error message when user tries to specify a file with a list of the projects,
+		 * but the system can't read the file
+		 * English: Failed to open project list file %1$s
+		 * %1$s: the file the user specified
+		 */
+		$this->resources['Failed to open project list file %1$s'] = '{Făılĕd tō ŏpėn prōjĕct lĩst fĭle *%1$s*•••••••}';
+		
+		/*
+		 * Error message when user specifies a path for a project root or project,
+		 * but the path given isn't a directory
+		 * English: %1$s is not a directory
+		 * %1$s: the path the user specified
+		 */
+		$this->resources['%1$s is not a directory'] = '{*%1$s* ĭs nōt ă dīrěctōry••••••}';
+		
+		/*
+		 * Error message when a hash specified in a URL isn't a valid git hash
+		 * English: Invalid hash %1$s
+		 * %1$s: the hash entered
+		 */
+		$this->resources['Invalid hash %1$s'] = '{Ĭnvălıd hāsh *%1$s*•••••}';
+		
+		/*
+		 * Error message when a temporary directory isn't specified in the config
+		 * English: No temp dir defined
+		 */
+		$this->resources['No tmpdir defined'] = '{Nō tmpdĩr dēfĩněd••••••}';
+		
+		/*
+		 * Error message when the system attempts to create the temporary directory but can't
+		 * English: Could not create tmpdir %1$s
+		 * %1$s: the temp dir it's trying to create
+		 */
+		$this->resources['Could not create tmpdir %1$s'] = '{Cōūld nōt crĕatę tmpdĭr *%1$s*••••}';
+		
+		/*
+		 * Error message when the temporary directory specified isn't a directory
+		 * English: Specified tmpdir %1$s is not a directory
+		 * %1$s: the temp dir specified
+		 */
+		$this->resources['Specified tmpdir %1$s is not a directory'] = '{Spĕcĩfīėd tmpdır *%1$s* ĭs nōt ã dīréctōry•••••}';
+		
+		/*
+		 * Error message when the system can't write to the temporary directory
+		 * English: Specified tmpdir %1$s is not writeable
+		 * %1$s: the temp dir specified
+		 */
+		$this->resources['Specified tmpdir %1$s is not writeable'] = '{Spĕcĭfīęd tmpdır %1$s īs nōt wrĩtėáblé•••••}';
+		
+		/*
+		 * Error message when a path specified in the config is not a git repository
+		 * English: %1$s is not a git repository
+		 * %1$s: the specified path
+		 */
+		$this->resources['%1$s is not a git repository'] = '{*%1$s* ís nøt ā gīt rępōsıtōry•••••}';
+		
+		/*
+		 * Error message when a path specified is using '..' to break out of the
+		 * project root (a hack attempt)
+		 * English: %1$s is attempting directory traversal
+		 * %1$s: The specified path
+		 */
+		$this->resources['%1$s is attempting directory traversal'] = '{*%1$s* ıs āttěmptĭng dīrėctöry trãvêrsál•••••}';
+		
+		/*
+		 * Error message when a path specified is outside of the project root
+		 * English: %1$s is outside of the projectroot
+		 * %1$s: The specified path
+		 */
+		$this->resources['%1$s is outside of the projectroot'] = '{*%1$s* ìs ōūtsıde ōf thĕ prōjēctrōŏt•••••}';
+		
+		/*
+		 * Error message when the user enters an unsupported search type
+		 * English: Invalid search type
+		 */
+		$this->resources['Invalid search type'] = '{Invălĩd sėąrch typė••••••}';
 	}
 	
 	/*
@@ -474,10 +606,10 @@ class GitPHP_Resource_zz_Debug extends GitPHP_ResourceBase
 	 * @param string $domain domain of string (for multiple translations of the same string)
 	 * @return string resource
 	 */
-	public function GetResource($resource, $domain = '')
-	{
-		return $this->Gibberize($resource);
-	}
+//	public function GetResource($resource, $domain = '')
+//	{
+//		return $this->Gibberize($resource);
+//	}
 	
 	/*
 	 * characterMap

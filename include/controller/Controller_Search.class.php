@@ -35,13 +35,13 @@ class GitPHP_Controller_Search extends GitPHP_ControllerBase
 	public function __construct()
 	{
 		if (!GitPHP_Config::GetInstance()->GetValue('search', true)) {
-			throw new GitPHP_MessageException('Search has been disabled', true);
+			throw new GitPHP_MessageException(GitPHP_Resource::GetInstance()->GetResource('Search has been disabled'), true);
 		}
 
 		parent::__construct();
 
 		if (!$this->project) {
-			throw new GitPHP_MessageException('Project is required for search', true);
+			throw new GitPHP_MessageException(GitPHP_Resource::GetInstance()->GetResource('Project is required'), true);
 		}
 
 	}
@@ -102,13 +102,13 @@ class GitPHP_Controller_Search extends GitPHP_ControllerBase
 
 		if ($this->params['searchtype'] == GITPHP_SEARCH_FILE) {
 			if (!GitPHP_Config::GetInstance()->GetValue('filesearch', true)) {
-				throw new GitPHP_MessageException('File search has been disabled', true);
+				throw new GitPHP_MessageException(GitPHP_Resource::GetInstance()->GetResource('File search has been disabled'), true);
 			}
 
 		}
 
 		if ((!isset($this->params['search'])) || (strlen($this->params['search']) < 2)) {
-			throw new GitPHP_MessageException('You must enter search text of at least 2 characters', true);
+			throw new GitPHP_MessageException(GitPHP_Resource::GetInstance()->GetResource('You must enter search text of at least 2 characters'), true);
 		}
 
 		if (isset($_GET['h']))
@@ -151,12 +151,12 @@ class GitPHP_Controller_Search extends GitPHP_ControllerBase
 				$results = $co->SearchFiles($this->params['search'], 101, ($this->params['page'] * 100));
 				break;
 			default:
-				throw new GitPHP_MessageException('Invalid search type');
+				throw new GitPHP_MessageException(GitPHP_Resource::GetInstance()->GetResource('Invalid search type'));
 
 		}
 
 		if (count($results) < 1) {
-			throw new GitPHP_MessageException('No matches for "' . $this->params['search'] . '"', false);
+			throw new GitPHP_MessageException(GitPHP_Resource::GetInstance()->Format('No matches for "%1$s"', $this->params['search']), false);
 		}
 
 		if (count($results) > 100) {
