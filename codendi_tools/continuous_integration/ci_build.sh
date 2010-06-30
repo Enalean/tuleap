@@ -1,5 +1,7 @@
 #!/bin/sh
 
+set -ex
+
 #
 # CI build: build Codendi project on a Continuous Integration server
 # Usage: sh ci_build.sh
@@ -76,7 +78,7 @@ php -d include_path="$codendi_src/src/www/include:$codendi_src/src:/usr/share/pe
 
 # Checkstyle
 pushd .
-cd $codendi_src
+cd "$codendi_src"
 files=$(php "$codendi_src/codendi_tools/continuous_integration/findFilesToSniff.php")
 popd
 
