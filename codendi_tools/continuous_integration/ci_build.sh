@@ -75,7 +75,7 @@ cd tests/www/
 php -d include_path="$codendi_src/src/www/include:$codendi_src/src:/usr/share/pear:." -d memory_limit=196M test_all.php
 
 # Checkstyle
-pushd
+pushd .
 cd $codendi_src
 files=$(php "$codendi_src/codendi_tools/continuous_integration/findFilesToSniff.php")
 popd
