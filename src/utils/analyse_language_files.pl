@@ -69,6 +69,19 @@ push @files,"$source_dir/www/projects";
 push @files,"$source_dir/www/users";
 
 
+#  remove the check on file common/error/Error_PermissionDenied.class.php
+# becaus eit uses a variable as base
+my $position = 0;
+chomp $position;
+foreach my $case (@files) {
+    if ($case =~/\/common\/error\/Error_PermissionDenied.class.php/ ) {
+        last;
+    }
+    $position++;
+}
+@files = @files[0..($position-1),($position+1)..$#files];
+
+
 print "***\n" if ($verbose_mode);
 print "*** Reading Source Code\n" unless ($silent_mode);
 print "***\n" if ($verbose_mode);
