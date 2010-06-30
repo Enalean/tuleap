@@ -85,8 +85,8 @@ done
 #
 %pre
 # Stop the services
-/etc/init.d/codendi stop
-/sbin/service httpd stop
+#/etc/init.d/codendi stop
+#/sbin/service httpd stop
 
 #
 #
@@ -110,8 +110,8 @@ fi
 #/sbin/chkconfig --add %{APP_NAME}
 
 # Restart the services
-/sbin/service httpd start
-/etc/init.d/codendi start
+#/sbin/service httpd start
+#/etc/init.d/codendi start
 
 ##
 ## On package un-install
