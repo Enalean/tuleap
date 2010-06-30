@@ -1,6 +1,6 @@
 #!/bin/sh
 
-set -ex
+set -e
 
 #
 # CI build: build Codendi project on a Continuous Integration server
@@ -82,4 +82,4 @@ cd "$codendi_src"
 files=$(php "$codendi_src/codendi_tools/continuous_integration/findFilesToSniff.php")
 popd
 
-php -d memory_limit=256M /usr/bin/phpcs --standard="$codendi_src/codendi_tools/utils/phpcs/Codendi" "$codendi_src/src/common/chart" "$codendi_src/src/common/backend" --report=checkstyle -n --ignore=*/phpwiki/* --ignore="*/webdav/lib/*" $files > $WORKSPACE/var/tmp/checkstyle.xml
+php -d memory_limit=256M /usr/bin/phpcs --standard="$codendi_src/codendi_tools/utils/phpcs/Codendi" "$codendi_src/src/common/chart" "$codendi_src/src/common/backend" --report=checkstyle -n --ignore=*/phpwiki/* --ignore="*/webdav/lib/*" $files > $WORKSPACE/var/tmp/checkstyle.xml || true
