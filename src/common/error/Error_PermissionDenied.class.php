@@ -44,36 +44,57 @@ abstract class Error_PermissionDenied {
      * @return String
      */
     abstract function getType();
+    
+    /**
+     * Returns the base on language file
+     *
+     * @return String
+     */
+    function getTextBase() {
+        return 'include_exit';
+    }
+    
+    
+     /**
+     * Returns the build interface parameters
+     *
+     * @return Array
+     */
+    abstract function returnBuildInterfaceParam();
+    
+    /**
+     * Returns the url link after modification if needed else returns the same string
+     *  
+     * @param String $link
+     * @param BaseLanguage $language
+     */
+    function returnURLData($link, $language) {
+        return $link;
+    }
 
     /**
      * Build the user interface to ask for membership
      * 
-     * @param String $name
-     * @param String $func
-     * @param String $index
      */
-    function buildInterface($name, $func, $index) {
+    function buildInterface() {
         $url= new URL();
         $groupId =  (isset($GLOBALS['group_id'])) ? $GLOBALS['group_id'] : $url->getGroupIdFromUrl($_SERVER['REQUEST_URI']);
         $userId = $this->getUserManager()->getCurrentUser()->getId();
         
-        $base = 'include_exit';
-        if ($this->getType() == 'docman_permission_denied') {
-            $base = 'plugin_docman';
-        }
+        $param = $this->returnBuildInterfaceParam();
         
-        echo "<b>".$GLOBALS['Language']->getText($base,'perm_denied')."</b>";
+        echo "<b>".$GLOBALS['Language']->getText($this->getTextBase(), 'perm_denied')."</b>";
         echo '<br></br>';
-        echo "<br>".$GLOBALS['Language']->getText($base,$index);
+        echo "<br>".$GLOBALS['Language']->getText($this->getTextBase(), $param['index']);
         
         //In case of restricted user, we only show the zone text area to ask for membership 
         //just when the requested page belongs to a project
-        if (!(($func == 'restricted_user_request') && (!isset($groupId)))) {
-            echo $GLOBALS['Language']->getText($base, 'request_to_admin');
+        if (!(($param['func'] == 'restricted_user_request') && (!isset($groupId)))) {
+            echo $GLOBALS['Language']->getText($this->getTextBase(), 'request_to_admin');
             echo '<br></br>';
-            echo '<form action="/sendmessage.php" method="post" name="display_form">
-                  <textarea wrap="virtual" rows="5" cols="70" name="'.$name.'"></textarea></p>
-                  <input type="hidden" id="func" name="func" value="'.$func.'">
+            echo '<form action="'.$param['action'].'" method="post" name="display_form">
+                  <textarea wrap="virtual" rows="5" cols="70" name="'.$param['name'].'"></textarea></p>
+                  <input type="hidden" id="func" name="func" value="'.$param['func'].'">
                   <input type="hidden" id="groupId" name="groupId" value="' .$groupId. '">
                   <input type="hidden" id="userId" name="userId" value="' .$userId. '">
                   <input type="hidden" id="data" name="url_data" value="' .$_SERVER['REQUEST_URI']. '">
@@ -139,16 +160,7 @@ abstract class Error_PermissionDenied {
         $adminList = $this->extractReceiver($project);
         $from = $user->getEmail();
         $hdrs = 'From: '.$from."\n";
-        $base  = 'include_exit';
         
-        //Add information about service 
-        if ($this->getType() == 'docman_permission_denied') {
-            $urlData = ' "'.$this->urlTransform($urlData).'" ';
-            $base = 'plugin_docman';
-        } else {
-            $link = $urlData;
-        }
-
         foreach ($adminList as $to => $lang) {
             // Send a notification message to the project administrator
             //according to his prefered language
@@ -159,13 +171,10 @@ abstract class Error_PermissionDenied {
             $language = new BaseLanguage($GLOBALS['sys_supported_languages'], $GLOBALS['sys_lang']);
             $language->loadLanguage($lang);
 
-            $mail->setSubject($language->getText($base, 'mail_subject_'.$this->getType(), array($project->getPublicName(), $user->getRealName())));
+            $mail->setSubject($language->getText($this->getTextBase(), 'mail_subject_'.$this->getType(), array($project->getPublicName(), $user->getRealName())));
 
-            if ($this->getType() == 'docman_permission_denied') {
-                $link = $urlData."  ".$language->getText('include_exit', 'data_type').' "'.$this->getServiceType($urlData).'"';
-             }
-
-            $body = $language->getText($base, 'mail_content_'.$this->getType(), array($user->getRealName(), $user->getName(), $link, $project->getPublicName(), $hrefApproval, $messageToAdmin, $user->getEmail()));
+            $link = $this->returnURLData($urlData, $language);
+            $body = $language->getText($this->getTextBase(), 'mail_content_'.$this->getType(), array($user->getRealName(), $user->getName(), $link, $project->getPublicName(), $hrefApproval, $messageToAdmin, $user->getEmail()));
             $mail->setBody($body);
 
             if (!$mail->send()) {

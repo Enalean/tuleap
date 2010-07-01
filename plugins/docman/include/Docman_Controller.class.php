@@ -486,7 +486,7 @@ class Docman_Controller extends Controler {
                             } else {
                                 site_header(array('title'=>$GLOBALS['Language']->getText('include_exit','exit_error')));
                                 $sendMail = new Docman_Error_PermissionDenied();
-                                $sendMail->buildInterface('msg_docman_access', 'docman_access_request', 'docman_no_perm');
+                                $sendMail->buildInterface();
                                 $HTML->footer(array('showfeedback' => false));
                                 exit;
                                 //$this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_perms_view'));

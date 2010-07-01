@@ -35,6 +35,26 @@ class Docman_Error_PermissionDenied extends Error_PermissionDenied {
     function getType() {
         return 'docman_permission_denied';
     }
+    
+    function getTextBase() {
+        return 'plugin_docman';
+    }
+    
+
+    /**
+     * Returns the parameters needed to build interface 
+     * according to the classe which makes the call
+     * 
+     * @return Array
+     */
+    function returnBuildInterfaceParam() {
+        $param = array();
+        $param['name']   = 'msg_docman_access';
+        $param['func']   = 'docman_access_request';
+        $param['action'] = '/plugins/docman/sendmessage.php';
+        $param['index']  = 'docman_no_perm';
+        return $param;
+    }
 
 
     /**
@@ -54,6 +74,14 @@ class Docman_Error_PermissionDenied extends Error_PermissionDenied {
         } else {
             return $url;
         }
+    }
+    
+    function returnURLData($urlData, $language) {
+       //Add information about service 
+       $urlData = ' "'.$this->urlTransform($urlData).'" ';
+       $link = $urlData."  ".$language->getText('include_exit', 'data_type').' "'.$this->getServiceType($urlData).'"';
+       return $link;
+        
     }
 }
 ?>

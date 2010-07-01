@@ -9,7 +9,6 @@
 require_once('pre.php');    
 require_once('common/mail/Mail.class.php');
 require_once('common/include/HTTPRequest.class.php');
-require_once('plugins/docman/include/Docman_Error_PermissionDenied.class.php');
 
 
 $request = HTTPRequest::instance();
@@ -26,12 +25,6 @@ if ($request->isPost() && $request->exist('Submit') &&  $request->existAndNonEmp
             $sendMail = new Error_PermissionDenied_PrivateProject();
             $messageToAdmin = $request->get('msg_private_project');
             break;
-
-       case 'docman_access_request':
-            $sendMail = new Docman_Error_PermissionDenied();
-            $messageToAdmin = $request->get('msg_docman_access');
-            break;
-            
 
         default:
             break;
