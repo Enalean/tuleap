@@ -40,7 +40,6 @@ require_once('Docman_NotificationsManager_Move.class.php');
 
 require_once('Docman_Log.class.php');
 require_once('common/event/EventManager.class.php');
-require_once('Docman_Error_PermissionDenied.class.php');
 
 require_once('Docman_PermissionsManager.class.php');
 

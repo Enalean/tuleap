@@ -76,10 +76,18 @@ class Docman_Error_PermissionDenied extends Error_PermissionDenied {
         }
     }
     
-    function returnURLData($urlData, $language) {
-       //Add information about service 
+    /**
+     *  Returns the url after modifying it and add information about the concerned service
+     *  
+     * @param String $urlData
+     * @param BaseLanguage $language
+     * 
+     * @return String
+     */
+    function processUrlLink($urlData, $language) {
        $urlData = ' "'.$this->urlTransform($urlData).'" ';
-       $link = $urlData."  ".$language->getText('include_exit', 'data_type').' "'.$this->getServiceType($urlData).'"';
+       //Add information about service 
+       $link = $urlData."  ".$language->getText('include_exit', 'data_type').' "Document" ';
        return $link;
         
     }

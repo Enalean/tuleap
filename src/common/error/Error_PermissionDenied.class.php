@@ -68,7 +68,7 @@ abstract class Error_PermissionDenied {
      * @param String $link
      * @param BaseLanguage $language
      */
-    function returnURLData($link, $language) {
+    function processUrlLink($link, $language) {
         return $link;
     }
 
@@ -173,7 +173,7 @@ abstract class Error_PermissionDenied {
 
             $mail->setSubject($language->getText($this->getTextBase(), 'mail_subject_'.$this->getType(), array($project->getPublicName(), $user->getRealName())));
 
-            $link = $this->returnURLData($urlData, $language);
+            $link = $this->processUrlLink($urlData, $language);
             $body = $language->getText($this->getTextBase(), 'mail_content_'.$this->getType(), array($user->getRealName(), $user->getName(), $link, $project->getPublicName(), $hrefApproval, $messageToAdmin, $user->getEmail()));
             $mail->setBody($body);
 
@@ -186,31 +186,6 @@ abstract class Error_PermissionDenied {
         $GLOBALS['Response']->redirect('/my');
         exit;
     }
-
-    /**
-     * Returns the corresponding service according to a given url
-     * @param String $url
-     * 
-     * @return String
-     */
-    protected function getServiceType($url) {
-        $type = '';
-        //document
-        if (preg_match('/\/plugins\/docman\//', $url)) {
-            $type = 'Document';
-            //Forum or News
-        } else if ((preg_match('/\/forum\//', $url))) {
-            $type = 'Forum';
-         //FRS
-        } else if (preg_match('/\/file\//', $url)) {
-            $type = 'File release';
-        //Tracker
-        } else if (preg_match('/\/tracker\//', $url)) {
-            $type = 'Tracker';
-        }
-        return $type;
-    }
-
 
     /**
      * Get an instance of UserManager. Mainly used for mock
