@@ -5,7 +5,7 @@ Version 4.0.9 (Not released yet)
 	[root@server]# service httpd stop
 	[root@server]# service crond stop
 
-	2. Remove codendi specific cron jobs (as root):
+	2. Remove codendi specific cron jobs, except backups (as root):
 	[root@server]# crontab -e
 	[root@server]# crontab -u codendiadm -e
 
@@ -13,7 +13,7 @@ Version 4.0.9 (Not released yet)
 	[root@server]# vi /etc/yum.repos.d/codendi.repo
 	[codendi]
 	name=Codendi
-	baseurl=ftp://codex.cro.st.com/pub/codex-cc/yum/rhel5/codendi-stable
+	baseurl=ftp://codex.cro.st.com/pub/codex-cc/yum/codendi/4.0/i386
 	enabled=1
 	gpgcheck=0
 
