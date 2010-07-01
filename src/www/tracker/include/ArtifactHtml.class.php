@@ -345,8 +345,8 @@ class ArtifactHtml extends Artifact {
                 }
                 $html = '';
                 $html .= '<p>';
-                $html .= '<input type="hidden" name="use_artifact_permissions" value="0" />';
-                $html .= '<input type="checkbox" name="use_artifact_permissions" id="use_artifact_permissions" value="1" '. $checked .' />';
+                $html .= '<input type="hidden" name="use_artifact_permissions_name" value="0" />';
+                $html .= '<input type="checkbox" name="use_artifact_permissions_name" id="use_artifact_permissions" value="1" '. $checked .' />';
                 $html .= '<label for="use_artifact_permissions">'. $GLOBALS['Language']->getText('tracker_include_artifact', 'permissions_label') .'</label>';
                 $html .= '</p>';
                 $html .= permission_fetch_selection_field('TRACKER_ARTIFACT_ACCESS', $this->getId(), $group_id);
@@ -356,7 +356,7 @@ class ArtifactHtml extends Artifact {
                     if ( ! $('use_artifact_permissions').checked) {
                         $('ugroups').disable();
                     }
-                    $('use_artifact_permissions').observe('change', function(evt) {
+                    $('use_artifact_permissions').observe('click', function(evt) {
                         if (this.checked) {
                             $('ugroups').enable();
                         } else {
@@ -1062,8 +1062,8 @@ class ArtifactHtml extends Artifact {
             }
             $html = '';
             $html .= '<p>';
-            $html .= '<input type="hidden" name="use_artifact_permissions" value="0" />';
-            $html .= '<input type="checkbox" name="use_artifact_permissions" id="use_artifact_permissions" value="1" '. $checked .' />';
+            $html .= '<input type="hidden" name="use_artifact_permissions_name" value="0" />';
+            $html .= '<input type="checkbox" name="use_artifact_permissions_name" id="use_artifact_permissions" value="1" '. $checked .' />';
             $html .= '<label for="use_artifact_permissions">'. $GLOBALS['Language']->getText('tracker_include_artifact', 'permissions_label') .'</label>';
             $html .= '</p>';
             $html .= permission_fetch_selection_field('TRACKER_ARTIFACT_ACCESS', $this->getId(), $group_id);
@@ -1073,7 +1073,7 @@ class ArtifactHtml extends Artifact {
                 if ( ! $('use_artifact_permissions').checked) {
                     $('ugroups').disable();
                 }
-                $('use_artifact_permissions').observe('change', function(evt) {
+                $('use_artifact_permissions').observe('click', function(evt) {
                     if (this.checked) {
                         $('ugroups').enable();
                     } else {

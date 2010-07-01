@@ -45,7 +45,7 @@ function account_add_user_to_group ($group_id,&$user_unix_name) {
         return account_add_user_obj_to_group($group_id, $user);
     } else {
         //user doesn't exist
-        $GLOBALS['Response']->addFeedback('error', $Language->getText('include_account','user_not_exist'));
+        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('include_account','user_not_exist'));
         return false;
     }
 }

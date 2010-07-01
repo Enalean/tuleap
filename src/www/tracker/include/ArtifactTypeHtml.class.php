@@ -2513,8 +2513,8 @@ EOS;
                     $checked = '';
                     $html = '';
                     $html .= '<p>';
-                    $html .= '<input type="hidden" name="use_artifact_permissions" value="0" />';
-                    $html .= '<input type="checkbox" name="use_artifact_permissions" id="use_artifact_permissions" value="1" '. $checked .' />';
+                    $html .= '<input type="hidden" name="use_artifact_permissions_name" value="0" />';
+                    $html .= '<input type="checkbox" name="use_artifact_permissions_name" id="use_artifact_permissions" value="1" '. $checked .' />';
                     $html .= '<label for="use_artifact_permissions">'. $GLOBALS['Language']->getText('tracker_include_artifact', 'permissions_label') .'</label>';
                     $html .= '</p>';
                     $html .= permission_fetch_selection_field('TRACKER_ARTIFACT_ACCESS', 0, $group_id);
@@ -2522,7 +2522,7 @@ EOS;
                     $html .= "
                     document.observe('dom:loaded', function() {
                         //init
-                        if ( ! $('use_artifact_permissions').checked  || ! $('use_artifact_permissions').checked ) {
+                        if ( ! $('use_artifact_permissions')|| ! $('use_artifact_permissions').checked ) {
                             $('ugroups').disable();
                         }
                         if ( ! $('change_permissions').checked) {

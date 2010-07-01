@@ -577,7 +577,7 @@ class Artifact extends Error {
         // artifact permissions
         $request = HTTPRequest::instance();
         $this->data_array['artifact_id'] = $artifact_id; // cheat
-        $this->setPermissions($request->get('use_artifact_permissions'), $request->get('ugroups'));
+        $this->setPermissions($request->get('use_artifact_permissions_name'), $request->get('ugroups'));
         
         // All ok then reload the artifact data to make sure it is cached
         // correctly in memory
@@ -1063,7 +1063,7 @@ class Artifact extends Error {
             return false;
         } else {
             if (!$request->exist('change_permissions') || $request->get('change_permissions')) {
-                $this->setPermissions($request->get('use_artifact_permissions'), $request->get('ugroups'));
+                $this->setPermissions($request->get('use_artifact_permissions_name'), $request->get('ugroups'));
             }
             return true;
         }

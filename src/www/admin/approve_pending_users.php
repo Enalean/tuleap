@@ -164,7 +164,7 @@ if (db_numrows($res) < 1) {
             <TABLE WIDTH="70%">
             <TR>
         <?php 
-        if($GLOBALS['sys_user_approval'] == 1 && $page=='pending' && !$GLOBALS['sys_allow_restricted_users']) {
+        if($GLOBALS['sys_user_approval'] == 1 && $page=='pending' && $GLOBALS['sys_allow_restricted_users'] == 0) {
             
             // Can select Activate/validate
             echo '<TD>
@@ -192,7 +192,7 @@ if (db_numrows($res) < 1) {
              }
             echo '</TD>';
             
-        } else if($GLOBALS['sys_user_approval'] == 1 && $page=='pending' && $GLOBALS['sys_allow_restricted_users']) {
+        } else if($GLOBALS['sys_user_approval'] == 1 && $page=='pending' && $GLOBALS['sys_allow_restricted_users'] == 1) {
              
            // Can select Std/Restricted and Activate/validate
            echo '<TD>
@@ -244,7 +244,7 @@ if (db_numrows($res) < 1) {
                 <option value="delete">'.$Language->getText('admin_approve_pending_users','delete').'        
                 </select>
             '.$Language->getText('admin_approve_pending_users','account');
-            if($GLOBALS['sys_allow_restricted_users']) {
+            if($GLOBALS['sys_allow_restricted_users'] == 1) {
                 echo ' '.$Language->getText('admin_approve_pending_users','status').'
             <select name="status" size="1">
                 <option value="standard" ';
@@ -307,7 +307,7 @@ if (db_numrows($res) < 1) {
             <FORM action="'.$PHP_SELF.'?page='.$page.'" method="POST">
             '.$Language->getText('admin_approve_pending_users','activate').'
             '.$Language->getText('admin_approve_pending_users','all_accounts').' ';
-            if($GLOBALS['sys_allow_restricted_users']) {
+            if($GLOBALS['sys_allow_restricted_users'] ==1) {
                 echo $Language->getText('admin_approve_pending_users','status').'
             <select name="status" size="1">
                 <option value="standard" selected>'.$Language->getText('admin_approve_pending_users','status_standard').'
@@ -322,7 +322,7 @@ if (db_numrows($res) < 1) {
             </TD>';
         }
 
-    if ($GLOBALS['sys_allow_restricted_users'] && $page=='pending') {
+    if ($GLOBALS['sys_allow_restricted_users'] == 1 && $page=='pending') {
 
         echo '<TD>
             <FORM action="'.$PHP_SELF.'?page='.$page.'" method="POST">
@@ -342,7 +342,7 @@ if (db_numrows($res) < 1) {
             </TD>';        
     }
  
-        if($GLOBALS['sys_user_approval'] == 1 && $page=='pending' && !$GLOBALS['sys_allow_restricted_users']){
+        if($GLOBALS['sys_user_approval'] == 1 && $page=='pending' && $GLOBALS['sys_allow_restricted_users'] == 0){
             echo '<TD>
             <FORM action="'.$PHP_SELF.'?page='.$page.'" method="POST">
                 <select name="action_select" size="1">

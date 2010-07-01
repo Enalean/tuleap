@@ -7,6 +7,10 @@
 // 
 
 
+
+require_once('common/error/Error_PermissionDenied_PrivateProject.class.php');
+require_once('common/error/Error_PermissionDenied_RestrictedUser.class.php');
+
 function exit_error($title,$text) {
     global $HTML,$Language;
     $GLOBALS['feedback'] .= $title;
@@ -17,16 +21,7 @@ function exit_error($title,$text) {
         echo '<p>',$text,'</p>';
 	    $HTML->footer(array('showfeedback' => false));
     } else {
-        header('Content-type: text/xml');
-        // Sometimes, there is nothing in $text, so we take the feedback in the $GLOBALS['Response']
-        if (array_key_exists('Response', $GLOBALS)) {
-            $text .= $GLOBALS['Response']->getRawFeedback();
-        }
-        $fault_code = "1000";
-        $fault_factor = 'exit_error';
-        $fault_string = strip_tags($text);
-        $fault_detail = strip_tags($text);
-        print_soap_fault($fault_code, $fault_factor, $fault_string, $fault_detail);
+        exit_display_soap_error();
     }
     exit;
 }
@@ -45,15 +40,50 @@ function exit_permission_denied() {
   }
 }
 
-function exit_restricted_user_permission_denied() {
-  global $feedback,$Language;
-    exit_error($Language->getText('include_exit','perm_denied'),$Language->getText('include_exit','restricted_user_no_perm').'<p>'.$feedback);
+function exit_display_soap_error() {
+    header('Content-type: text/xml');
+    // Sometimes, there is nothing in $text, so we take the feedback in the $GLOBALS['Response']
+    if (array_key_exists('Response', $GLOBALS)) {
+        $text = $GLOBALS['Response']->getRawFeedback();
+    }
+    $fault_code = "1000";
+    $fault_factor = 'exit_error';
+    $fault_string = strip_tags($text);
+    $fault_detail = strip_tags($text);
+    print_soap_fault($fault_code, $fault_factor, $fault_string, $fault_detail);
 }
 
+
+function exit_restricted_user_permission_denied() {
+    global $HTML,$Language;
+
+    // if the error comes from the SOAP API, we don't display the site_header and footer, but a soap fault (xml).
+    if (substr($_SERVER['SCRIPT_NAME'], 1, 4) != "soap") {
+        site_header(array('title'=>$Language->getText('include_exit','exit_error')));
+        $sendMail = new Error_PermissionDenied_RestrictedUser();
+        $sendMail->buildInterface('msg_restricted_user', 'restricted_user_request', 'restricted_user_no_perm');
+        $HTML->footer(array('showfeedback' => false));
+    } else {
+        exit_display_soap_error();
+    }
+    exit;
+}
+
+
 function exit_private_project_permission_denied() {
-    global $feedback,$Language;
-    exit_error($Language->getText('include_exit','perm_denied'),$Language->getText('include_exit','private_project_no_perm').'<p>'.$feedback);
-} 
+    global $HTML,$Language;
+
+    // if the error comes from the SOAP API, we don't display the site_header and footer, but a soap fault (xml).
+    if (substr($_SERVER['SCRIPT_NAME'], 1, 4) != "soap") {
+        site_header(array('title'=>$Language->getText('include_exit','exit_error')));
+        $sendMail = new Error_PermissionDenied_PrivateProject();
+        $sendMail->buildInterface('msg_private_project', 'private_project_request', 'private_project_no_perm');
+        $HTML->footer(array('showfeedback' => false));
+    } else {
+        exit_display_soap_error();
+    }
+    exit;
+}
 
 function exit_not_logged_in() {
   global $Language;

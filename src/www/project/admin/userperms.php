@@ -12,6 +12,31 @@ require_once('common/tracker/ArtifactType.class.php');
 require_once('common/tracker/ArtifactTypeFactory.class.php');
 require_once('www/project/admin/ugroup_utils.php');
 require_once('common/user/UserHelper.class.php');
+/**
+ * Returns filter according to the search pattern 
+ *  * 
+ * @param String $search 
+ * 
+ * @return String
+ */
+function getUserFilter($search) {
+    $um = UserManager::instance();
+    $userArray = explode(',' , $search);
+    $users = array();
+    foreach ($userArray as $user) {
+        $user = $um->findUser($user);
+        if ($user) {
+            $users[] = $user->getId();
+        }
+    }
+    
+    if (count($users) > 0) {
+        $filter = ' AND user.user_id IN ('.implode (',', $users).')';
+    } else {
+        $filter = ' AND user.user_name LIKE "%'.db_es($search).'%"'; 
+    }
+    return $filter;
+}
 
 
 //	  
@@ -46,29 +71,26 @@ if (isset($submit)) {
     while ($row_dev = db_fetch_array($res_dev)) {
         
         if($request ->exist("admin_user_$row_dev[user_id]")){
-         //
-		// cannot turn off their own admin flag if no other admin in project -- set it back to 'A'
-		//
-        
-		    if (user_getid() == $row_dev['user_id']) {
-                        $admin_flags="admin_user_$row_dev[user_id]";
-                        if ($$admin_flags != 'A') {
-                            // Check that there is still at least one admin
-                            $res_dev2 = db_query("SELECT user_id FROM user_group WHERE group_id=$group_id");
-                            $other_admin_exists=false;
-                            while ($row_dev2 = db_fetch_array($res_dev2)) {
-                            // Go through all users and see if there is at least one with admin flag.
-                                $flag_var="admin_user_$row_dev2[user_id]";
-                                    if ($$flag_var=='A') {
-                                            $other_admin_exists=true;
-                                            break;
-                                    }
-                            }
-                            if (!$other_admin_exists) {
-                                $GLOBALS['Response']->addFeedback('error', $Language->getText('project_admin_userperms','cannot_remove_admin_stat'));
-                                $$admin_flags='A';
-                            }
-                        }
+        //
+        // cannot turn off their own admin flag if no other admin in project -- set it back to 'A'
+        //
+            if (user_getid() == $row_dev['user_id']) {
+                $admin_flags="admin_user_$row_dev[user_id]";
+                if ($$admin_flags != 'A') {
+                    $other_admin_exists=false;
+                    // Check that there is still at least one admin
+                    $sql = "SELECT NULL FROM user_group WHERE user_id != ".db_ei($row_dev['user_id'])." AND admin_flags='A' AND group_id=".db_ei($group_id).' LIMIT 1';
+                    $res_dev2 = db_query($sql);
+                    
+                    if (db_numrows($res_dev2) > 0 ) {
+                        $other_admin_exists=true;
+                    }
+                            
+                    if (!$other_admin_exists) {
+                        $GLOBALS['Response']->addFeedback('error', $Language->getText('project_admin_userperms','cannot_remove_admin_stat'));
+                        $$admin_flags='A';
+                    }
+                }
             } else {
                 $admin_flags="admin_user_$row_dev[user_id]";
             }
@@ -147,6 +169,14 @@ if (isset($submit)) {
 	$GLOBALS['Response']->addFeedback('info', $Language->getText('project_admin_userperms','perm_upd'));
 }
 
+$vPattern = new Valid_String('search');
+$vPattern->required();
+if($request->valid($vPattern)) {
+    $pattern = $request->get('search');
+} else {
+	$pattern = '';
+}
+
 $offset = $request->getValidated('offset', 'uint', 0);
 if (!$offset) {
     $offset = 0;
@@ -171,6 +201,14 @@ $sql['select'] = "SELECT SQL_CALC_FOUND_ROWS user.user_name AS user_name,
 $sql['from']  = " FROM user,user_group ";
 $sql['where'] = " WHERE user.user_id = user_group.user_id 
                     AND user_group.group_id = ". db_ei($group_id);
+
+if ($request->exist('search') && $request->get('search') != null) {
+    $sql['filter'] = getUserFilter($search);  
+} else {
+    $sql['filter'] = '';
+
+}
+
 $sql['order'] = " ORDER BY user.user_name ";
 $sql['limit'] = " LIMIT ". db_ei($offset) .", ". db_ei($number_per_page);
 
@@ -183,8 +221,11 @@ if ($project->usesTracker()&&$at_arr ) {
                                     AND artifact_perm_". $atid .".group_artifact_id = ". $atid .") ";
     }
 }
-$res_dev = db_query($sql['select'] . $sql['from'] . $sql['where'] . $sql['order'] . $sql['limit']);
+$res_dev = db_query($sql['select'] . $sql['from'] . $sql['where'] . $sql['filter'] . $sql['order'] . $sql['limit']);
 
+if (!$res_dev || db_numrows($res_dev)==0 || $number_per_page < 1) {
+    $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('project_admin_userperms','no_users_found'));
+}
 $sql = 'SELECT FOUND_ROWS() AS nb';
 $res = db_query($sql);
 $row = db_fetch_array($res);
@@ -204,9 +245,19 @@ project_admin_header(array('title'=>$Language->getText('project_admin_utils','us
 		     'help' => 'UserPermissions.html'));
 
 echo '
-<h2>'.$Language->getText('project_admin_utils','user_perms').'</h2>
-<FORM action="userperms.php" method="post">
+<h2>'.$Language->getText('project_admin_utils','user_perms').'</h2>';
+echo '<FORM action="userperms.php" name = "form_search" method="post">';
+echo $Language->getText('project_admin_utils','search_user');
+echo '&nbsp;';
+echo '<INPUT type="text" name="search" value="'.$pattern.'" id="search_user">
 <INPUT type="hidden" name="group_id" value="'.$group_id.'">';
+$js = "new UserAutoCompleter('search_user',
+                          '".util_get_dir_image_theme()."',
+                          true);";
+$GLOBALS['Response']->includeFooterJavascriptSnippet($js);
+
+echo '<INPUT type="submit" name ="searchUser" value="'.$Language->getText('admin_main', 'search').'">';
+echo '</FORM>';
 /*
 $abc_array = array('A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z');
 $used_abc_array = array();
@@ -228,6 +279,12 @@ for ($i=0; $i < count($abc_array); $i++) {
     }
 }
 */
+
+if ($res_dev && db_numrows($res_dev) > 0 && $number_per_page > 0) {
+
+echo '<FORM action="userperms.php" name= "form_update" method="post">
+<INPUT type="hidden" name="group_id" value="'.$group_id.'">
+<INPUT type="hidden" name="offset" value="'.$offset.'">';
 
 echo '<TABLE width="100%" cellspacing=1 cellpadding=2 border=0>';
 
@@ -293,12 +350,7 @@ $head .= '<TD class="boxtitle">'.$Language->getText('project_admin_userperms','m
 $head .= '</tr>';
 
 echo $head;
-?>
 
-<?php
-if (!$res_dev || $number_per_page < 1) {
-    echo '<H2>'.$Language->getText('project_admin_userperms','no_users_found').'</H2>';
-} else {
     $i=0;
     function userperms_add_cell($user_name, $cell) {
         global $k;
@@ -479,13 +531,19 @@ if (!$res_dev || $number_per_page < 1) {
         }
     } // while
 
-}
+
 
 echo '</TABLE>';
 if ($num_total_rows && $number_per_page < $num_total_rows) {
     //Jump to page
     $nb_of_pages = ceil($num_total_rows / $number_per_page);
     $current_page = round($offset / $number_per_page);
+    if (isset($pattern) && $pattern != '') {
+    	$search = '&amp;search='.$pattern;
+    } else {
+    	$search = '';
+    	
+    }
     echo '<div style="font-family:Verdana">Page: ';
     $width = 10;
     for ($i = 0 ; $i < $nb_of_pages ; ++$i) {
@@ -493,6 +551,7 @@ if ($num_total_rows && $number_per_page < $num_total_rows) {
             echo '<a href="?'.
                 'group_id='. (int)$group_id .
                 '&amp;offset='. (int)($i * $number_per_page) .
+                $search.
                 '">';
             if ($i == $current_page) {
                 echo '<b>'. ($i + 1) .'</b>';
@@ -508,8 +567,8 @@ if ($num_total_rows && $number_per_page < $num_total_rows) {
 }
 
 echo '<P align="center"><INPUT type="submit" name="submit" value="'.$Language->getText('project_admin_userperms','upd_user_perm').'">
-</FORM>',
-
+</FORM>';
+}
 
 project_admin_footer(array());
 ?>

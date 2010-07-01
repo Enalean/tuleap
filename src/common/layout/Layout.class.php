@@ -1107,6 +1107,10 @@ class Layout extends Response {
     function generic_footer($params) {
 
         global $Language;
+
+        // Codendi version number
+        $version = trim(file_get_contents($GLOBALS['codendi_dir'].'/ST-VERSION'));
+
         include($Language->getContent('layout/footer'));
             
         if ( isset($GLOBALS['DEBUG_MODE']) && $GLOBALS['DEBUG_MODE'] && ($GLOBALS['DEBUG_DISPLAY_FOR_ALL'] || user_ismember(1, 'A')) ) {

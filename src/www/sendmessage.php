@@ -8,6 +8,30 @@
 
 require_once('pre.php');    
 require_once('common/mail/Mail.class.php');
+require_once('common/include/HTTPRequest.class.php');
+
+
+$request =HTTPRequest::instance();
+$func = $request->getValidated('func', new Valid_WhiteList('restricted_user_request', 'private_project_request'), '');
+
+if ($request->isPost() && $request->exist('Submit') &&  $request->existAndNonEmpty('func')) {
+    switch ($func) {
+        case 'restricted_user_request':
+            $sendMail = new Error_PermissionDenied_RestrictedUser();
+            $messageToAdmin = $request->get('msg_restricted_user');
+            break;
+
+        case 'private_project_request':
+            $sendMail = new Error_PermissionDenied_PrivateProject();
+            $messageToAdmin = $request->get('msg_private_project');
+            break;
+
+        default:
+            break;
+    }
+    $sendMail->processMail($messageToAdmin);
+    exit;
+}
 
 
 if (!isset($toaddress) && !isset($touser)) {

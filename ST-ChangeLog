@@ -1,0 +1,42 @@
+Version 4.0.9 (Not released yet)
+	== Upgrade/install procedure ==
+	Switch to RPM distribution:
+	1. Stop application
+	[root@server]# service httpd stop
+	[root@server]# service crond stop
+
+	2. Remove codendi specific cron jobs (as root):
+	[root@server]# crontab -e
+	[root@server]# crontab -u codendiadm -e
+
+	3. Add new yum repository
+	[root@server]# vi /etc/yum.repos.d/codendi.repo
+	[codendi]
+	name=Codendi
+	baseurl=ftp://codex.cro.st.com/pub/codex-cc/yum/rhel5/codendi-stable
+	enabled=1
+	gpgcheck=0
+
+	4. Install packages (replace XYZ by the name of the platform:
+	stcodex, codexstn or steerforge)
+	[root@server]# yum install forgeupgrade codendi_st codendi_st-customization-XYZ
+
+	5. Restart applications
+	[root@server]# service httpd start
+	[root@server]# service crond start
+	[root@server]# /etc/init.d/codendi start
+
+	== New features ==
+	This release introduce 2 main components:
+	* ForgeUpgrade
+	* Install of Codendi via RPMS.
+
+	Other new features:
+        * branch #102157: Improve permission denied error for private project and restricted user (Nouha TERZI).
+
+	== Bug fix ==
+	* backlog #101260: Impossible to add user without username
+	* backlog #97577:  Cannot remove project admin right
+	* backlog #101500: Artifact permissions section disabled when using IE
+	* backlog #101176: MS office 2007 documents are not supported with IE
+        * backlog #103085: Impossible to set user to restricted 

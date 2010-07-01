@@ -23,7 +23,7 @@ require_once 'common/user/UserManager.class.php';
 
 // Partial because of inheritance issues
 Mock::generatePartial('LDAPResult', 'LDAPResultTestVersion', array('getEmail', 'getCommonName', 'get'));
-Mock::generatePartial('User', 'UserTestVersion', array('getRealName', 'getEmail', 'getStatus', 'setRealName', 'setEmail', 'setStatus'));
+Mock::generatePartial('User', 'User4LDAPUserSync', array('getRealName', 'getEmail', 'getStatus', 'setRealName', 'setEmail', 'setStatus'));
 
 // Override instance to test the right file
 class LDAP_UserSyncTestVersion extends LDAP_UserSync {
@@ -36,7 +36,7 @@ class LDAP_UserSyncTestVersion extends LDAP_UserSync {
 class LDAP_UserSyncTest extends UnitTestCase {
 
     function testNoUpdateWhenNoDifference() {
-        $user = new UserTestVersion($this);
+        $user = new User4LDAPUserSync($this);
         $user->setReturnValue('getRealName', 'toto');
         $user->setReturnValue('getEmail',    'toto');
         $user->expectNever('setRealName');
@@ -51,7 +51,7 @@ class LDAP_UserSyncTest extends UnitTestCase {
     }
     
     function testUserUpdateEmailIfLdapDoesntMatch() {
-        $user = new UserTestVersion($this);
+        $user = new User4LDAPUserSync($this);
         $user->setReturnValue('getRealName', 'toto');
         $user->setReturnValue('getEmail',    'toto');
         $user->expectNever('setRealName');
@@ -67,7 +67,7 @@ class LDAP_UserSyncTest extends UnitTestCase {
     
 
     function testUserUpdateRealnameIfLdapDoesntMatch() {
-        $user = new UserTestVersion($this);
+        $user = new User4LDAPUserSync($this);
         $user->setReturnValue('getRealName', 'toto');
         $user->setReturnValue('getEmail',    'toto');
         $user->expectOnce('setRealName', array('foobar'));
@@ -82,7 +82,7 @@ class LDAP_UserSyncTest extends UnitTestCase {
     }
 
     function testChangeUserStatusWithDedicatedCode() {
-        $user = new UserTestVersion($this);
+        $user = new User4LDAPUserSync($this);
         $user->setReturnValue('getRealName', 'toto');
         $user->setReturnValue('getEmail',    'toto');
         $user->setReturnValue('getStatus',   User::STATUS_ACTIVE);

@@ -100,9 +100,16 @@ function viewvc_utils_passcommand() {
   // is set to 0 in the ViewVC config file
   $found = false;
   $line = strtok($content,"\n\t\r\0\x0B");
+  $pathInfo = pathinfo($path);
   while ($line && !$found) {
 	if (preg_match('/^Content-Type:(.*)$/',$line,$matches)) {
-		$viewvc_content_type=$matches[1];
+	    //Until Apache will support the office 2007 mime types by default
+        //We should keep test on extension for IE to set the right Mime Type.
+	    if (in_array($pathInfo['extension'], array('docx', 'xslx', 'pptx', 'dotx'))) {
+            $viewvc_content_type = 'application/vnd.openxmlformats';
+        } else {
+            $viewvc_content_type=$matches[1];
+        }
  		$found = true;
  	}
 	$line = strtok("\n\t\r\0\x0B");	

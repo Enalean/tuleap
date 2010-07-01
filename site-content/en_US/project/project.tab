@@ -358,8 +358,12 @@ project_admin_utils	event	Event
 project_admin_utils	val	Value
 project_admin_utils	date	Date
 project_admin_utils	no_g_change	No Changes Have Been Made to This Group
+
 project_admin_utils	previous	Previous
 project_admin_utils	next	Next
+
+project_admin_utils	search_user	Search by user name:
+
 # ... message for the group_history field_name
 # they do not appear in the code !!!!
 project_admin_utils	approved	Approved
@@ -520,7 +524,7 @@ project_admin_userperms	doc_man	Doc. Manager
 project_admin_userperms	file_man	File Manager
 project_admin_userperms	tracker	Tracker:<br>$1
 project_admin_userperms	member_ug	Member of user groups:
-project_admin_userperms	no_users_found	No Users Found
+project_admin_userperms	no_users_found	No corresponding project members found
 project_admin_userperms	tech_only	Tech Only
 project_admin_userperms	admin_only	Admin Only
 project_admin_userperms	admin	Admin

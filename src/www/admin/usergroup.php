@@ -106,7 +106,7 @@ if ($request->isPost()) {
                         break;
 
                     case User::STATUS_RESTRICTED:
-                        if (isset($GLOBALS['sys_allow_restricted_users']) && $GLOBALS['sys_allow_restricted_users']) {
+                        if (isset($GLOBALS['sys_allow_restricted_users']) && $GLOBALS['sys_allow_restricted_users'] == 1) {
                             $user->setStatus($request->get('form_status'));
                             // If the user had a shell, set it to restricted shell
                             if ($user->getShell()

@@ -62,9 +62,11 @@ db_query("SELECT count(*) AS count FROM user WHERE status='V' OR status='W'");
 $row = db_fetch_array();
 $validated_users = $row['count'];
 
+$version = trim(file_get_contents($GLOBALS['codendi_dir'].'/ST-VERSION'));
+
 ?>
  
-<h2><?php echo $Language->getText('admin_main', 'header'); ?></h2>
+<h2><?php echo $Language->getText('admin_main', 'header').' ('.$version.')'; ?></h2>
 <p><i><?php echo $Language->getText('admin_main', 'message'); ?></i>
 
 

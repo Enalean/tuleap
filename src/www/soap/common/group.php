@@ -252,7 +252,7 @@ function getGroupById($sessionKey, $group_id) {
  * @return boolean true if the current session user has access to this project, false otherwise
  */
 function checkRestrictedAccess($group) {
-    if (array_key_exists('sys_allow_restricted_users', $GLOBALS) && $GLOBALS['sys_allow_restricted_users']) {
+    if (array_key_exists('sys_allow_restricted_users', $GLOBALS) && $GLOBALS['sys_allow_restricted_users'] == 1) {
         if ($group) {
             $user = UserManager::instance()->getCurrentUser();
             if ($user) {
