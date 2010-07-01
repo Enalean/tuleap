@@ -68,7 +68,7 @@ abstract class Error_PermissionDenied {
      * @param String $link
      * @param BaseLanguage $language
      */
-    function processUrlLink($link, $language) {
+    function getRedirectLink($link, $language) {
         return $link;
     }
 
@@ -173,7 +173,7 @@ abstract class Error_PermissionDenied {
 
             $mail->setSubject($language->getText($this->getTextBase(), 'mail_subject_'.$this->getType(), array($project->getPublicName(), $user->getRealName())));
 
-            $link = $this->processUrlLink($urlData, $language);
+            $link = $this->getRedirectLink($urlData, $language);
             $body = $language->getText($this->getTextBase(), 'mail_content_'.$this->getType(), array($user->getRealName(), $user->getName(), $link, $project->getPublicName(), $hrefApproval, $messageToAdmin, $user->getEmail()));
             $mail->setBody($body);
 
