@@ -134,46 +134,20 @@ class PermissionsManager {
      }
      
     /**
-     * Returns docman manager users information  for a given item and permission type
-     * 
-     * @param  Integer     $objectId       The id of the object
-     * @param  String      $permissionType The type of permission asked
-     * @param  Project     $project        The related project
-     * 
-     * @return Array 
+     * Returns all ugroup id for a given object_id and permission_type
+     * @param  int     $object_id       The id of the object
+     * @param  string  $permission_type The type of permission asked
      */
-     function getDocmanManagerUsers($objectId, $permissionType, $project){
-         $dar =& $this->_permission_dao->searchUgroupByObjectIdAndPermissionType($objectId, $permissionType);
+     function getUgroupIdByObjectIdAndPermissionType($object_id, $permission_type){
+         $dar =& $this->_permission_dao->searchUgroupByObjectIdAndPermissionType($object_id, $permission_type);
          if ($dar->isError() || !$dar->valid()) {
-             return;
-         }
-
-         $userArray = array ();
-         foreach ($dar as $row ) {
-             if ($row['ugroup_id'] != 3 && $row['ugroup_id'] != 4) {
-                 $darUg = $this->_permission_dao->getUserInfoByUgroup($row['ugroup_id']);
-                 foreach ($darUg as $rowUg) {
-                     $userArray[$rowUg['email']] = $rowUg['language_id'];
-                 }
-             //If docman_Manager permission set to project member, we notified docman admin 
-             //because it may be a big number of members 
-             } else if ($row['ugroup_id'] == 3) {
-                 $darDm = $this->_permission_dao->getDocmanAdmin($project);
-                 foreach ($darDm as $rowDm) {
-                     $userArray[$rowDm['email']] = $row2['language_id'];
-                 }
-             } else {
-                 $darPm = $this->_permission_dao->getProjectAdmin($project);
-                 foreach ($darPm  as $rowPm) {
-                     $userArray[$rowPm['email']] = $rowPm['language_id'];
-                      
-                 }
-
-             }
-         }
-         return $userArray;
+            return;
+         } else {
+             return $dar;
+         } 
      }
-      
+     
+     
 
     /**
     * Returns true if user has full permissions in all cases

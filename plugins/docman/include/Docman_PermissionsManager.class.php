@@ -563,6 +563,50 @@ class Docman_PermissionsManager {
         }
     }
 
+    /**
+     * Returns docman manager users information  for a given item and permission type
+     *
+     * @param  Integer     $objectId       The id of the object
+     * @param  String      $permissionType The type of permission asked
+     * @param  Project     $project        The related project
+     *
+     * @return Array
+     */
+    function returnDocmanManagerUsers($objectId, $permissionType, $project){
+        $dao = $this->getDao();
+        $dar = $this->_getPermissionManagerInstance()->getUgroupIdByObjectIdAndPermissionType($objectId, $permissionType);
+        if ($dar->isError() || !$dar->valid()) {
+            return;
+        }
+
+        $userArray = array ();
+        foreach ($dar as $row ) {
+            if ($row['ugroup_id'] != 3 && $row['ugroup_id'] != 4) {
+                $darUg = $dao->getUserInfoByUgroup($row['ugroup_id']);
+                foreach ($darUg as $rowUg) {
+                    $userArray[$rowUg['email']] = $rowUg['language_id'];
+                }
+                //If docman_Manager permission set to project member, we notified docman admin
+                //because it may be a big number of members
+            } else if ($row['ugroup_id'] == 3) {
+                $darDm = $dao->getDocmanAdmin($project);
+                foreach ($darDm as $rowDm) {
+                    $userArray[$rowDm['email']] = $rowDm['language_id'];
+                }
+            } else {
+                $darPm = $dao->getProjectAdmin($project);
+                foreach ($darPm  as $rowPm) {
+                    $userArray[$rowPm['email']] = $rowPm['language_id'];
+
+                }
+
+            }
+        }
+        return $userArray;
+    }
+
+
+
 }
 
 ?>

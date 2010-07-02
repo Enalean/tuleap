@@ -19,6 +19,7 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 require_once('common/error/Error_PermissionDenied.class.php');
+require_once('Docman_PermissionsManager.class.php');
 
 
 class Docman_Error_PermissionDenied extends Error_PermissionDenied {
@@ -42,9 +43,9 @@ class Docman_Error_PermissionDenied extends Error_PermissionDenied {
     
 
     /**
-     * Returns the parameters needed to build interface 
+     * Returns the parameters needed to build interface
      * according to the classe which makes the call
-     * 
+     *
      * @return Array
      */
     function returnBuildInterfaceParam() {
@@ -59,7 +60,7 @@ class Docman_Error_PermissionDenied extends Error_PermissionDenied {
 
     /**
      * It redirects the show action pointed with the document url  to its details section
-     *   
+     *
      * If user requires for istance the url  "https://codendi.org/plugins/docman/?group_id=1564&action=show&id=96739"
      * the url sent to the project admin will be edited to "https://codendi.org/plugins/docman/?group_id=1564&action=details&id=96739"
      *
@@ -75,43 +76,43 @@ class Docman_Error_PermissionDenied extends Error_PermissionDenied {
             return $url;
         }
     }
-    
+
     /**
      *  Returns the url after modifying it and add information about the concerned service
-     *  
+     *
      * @param String $urlData
      * @param BaseLanguage $language
-     * 
+     *
      * @return String
      */
     function getRedirectLink($urlData, $language) {
-       $urlData = ' "'.$this->urlTransform($urlData).'" ';
-       //Add information about service 
-       $link = $urlData."  ".$language->getText('include_exit', 'data_type').' "Document" ';
-       return $link;
-        
+        $urlData = ' "'.$this->urlTransform($urlData).'" ';
+        //Add information about service
+        $link = $urlData."  ".$language->getText('include_exit', 'data_type').' "Document" ';
+        return $link;
+
     }
     /**
      * Returns the docman manager list for given item
-     * 
+     *
      * @param Project $project
      * @param String $url
-     * 
+     *
      * @return Array
      */
     function extractReceiver($project, $url) {
-        $pm = $this->_getPermissionManagerInstance();
         $item = split('&id=', $url);
-        return  $pm->getDocmanManagerUsers($item[1], 'PLUGIN_DOCMAN_MANAGE',$project);
+        $pm = $this->_getPermissionManagerInstance($project->getId());
+        return  $pm->returnDocmanManagerUsers($item[1], 'PLUGIN_DOCMAN_MANAGE',$project);
     }
-    
+
     /**
-     * Wrapper for PermissionManager
-     * 
-     * @return PermissionsManager
+     * Wrapper for Docman_PermissionManager
+     *
+     * @return Docman_PermissionsManager
      */
-    function _getPermissionManagerInstance() {
-        return PermissionsManager::instance();
+    function _getPermissionManagerInstance($groupId) {
+        return Docman_PermissionsManager::instance($groupId);
     }
     
 }
