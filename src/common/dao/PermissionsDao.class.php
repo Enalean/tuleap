@@ -72,14 +72,50 @@ class PermissionsDao extends DataAccessObject {
     }
     
     /**
-     * Searches Ugroups names from ObjectId and Permission type
+     * Searches Ugroups names and Ids from ObjectId and Permission type
      * return DataAccessResult
      */
      function & searchUgroupByObjectIdAndPermissionType($objectId, $permissionType){
-         $sql = sprintf("SELECT ug.name FROM ugroup as ug, permissions as p WHERE p.object_id = %s AND p.permission_type = %s AND ug.ugroup_id = p.ugroup_id",
+         $sql = sprintf("SELECT ug.name, ug.ugroup_id FROM ugroup as ug JOIN permissions as p using(ugroup_id) WHERE p.object_id = %s AND p.permission_type = %s",
                 "'".$objectId."'", "'".$permissionType."'");
         return $this->retrieve($sql);
      }
+      
+     /**
+      * Returns users belonging to a given Ugroup
+      *
+      * @param Integer $ugroupId
+      */
+     function getUserInfoByUgroup($ugroupId){
+         $sql = 'SELECT email, language_id from user u JOIN ugroup_user ug using (user_id)
+                     WHERE  u.status IN ("A", "R") AND ugroup_id ='.$this->da->escapeInt($ugroupId);
+         return $this->retrieve($sql);
+     }
+     
+     /**
+      * Returns docman admin for given project
+      * 
+      * @param Project $project
+      */
+     function getDocmanAdmin($project){
+         $sql = 'SELECT email, language_id from user u JOIN user_group ug using (user_id)
+                     WHERE  u.status IN ("A", "R") AND (doc_flags = 2 OR doc_flags = 3) 
+                     AND  group_id ='.$this->da->escapeInt($project->getId());
+         return $this->retrieve($sql);
+     }
+     
+     /**
+      * Returns project admin of a given project
+      * 
+      * @param Projetc $project
+      */
+     function getProjectAdmin($project){
+         $sql = 'SELECT email, language_id FROM user u
+                JOIN user_group ug USING(user_id) WHERE ug.admin_flags="A" 
+                AND u.status IN ("A", "R") AND ug.group_id = '.$this->da->escapeInt($project->getId());
+         return $this->retrieve($sql);
+     }
+
 
     /**
     * Searches Permissions by ObjectId and Ugroups

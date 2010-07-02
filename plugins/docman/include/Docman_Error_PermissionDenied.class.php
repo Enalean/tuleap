@@ -91,5 +91,28 @@ class Docman_Error_PermissionDenied extends Error_PermissionDenied {
        return $link;
         
     }
+    /**
+     * Returns the docman manager list for given item
+     * 
+     * @param Project $project
+     * @param String $url
+     * 
+     * @return Array
+     */
+    function extractReceiver($project, $url) {
+        $pm = $this->_getPermissionManagerInstance();
+        $item = split('&id=', $url);
+        return  $pm->getDocmanManagerUsers($item[1], 'PLUGIN_DOCMAN_MANAGE',$project);
+    }
+    
+    /**
+     * Wrapper for PermissionManager
+     * 
+     * @return PermissionsManager
+     */
+    function _getPermissionManagerInstance() {
+        return PermissionsManager::instance();
+    }
+    
 }
 ?>

@@ -111,7 +111,7 @@ abstract class Error_PermissionDenied {
      * 
      * @return Array
      */
-    function extractReceiver($project) {
+    function extractReceiver($project, $urlData) {
         $admins = array();
         $um = $this->getUserManager();
         $sql = 'SELECT email, language_id FROM user u JOIN user_group ug USING(user_id) WHERE ug.admin_flags="A" AND u.status IN ("A", "R") AND ug.group_id = '.db_ei($project->getId());
@@ -157,7 +157,7 @@ abstract class Error_PermissionDenied {
      * @param String  $messageToAdmin
      */
     function sendMail($project, $user, $urlData, $hrefApproval,$messageToAdmin) {
-        $adminList = $this->extractReceiver($project);
+        $adminList = $this->extractReceiver($project, $urlData);
         $from = $user->getEmail();
         $hdrs = 'From: '.$from."\n";
         
