@@ -65,7 +65,7 @@ function ugroup_db_get_members($ugroup_id, $with_display_preferences=false) {
         $sqlname=$uh->getDisplayNameSQLQuery();
         $sqlorder=$uh->getDisplayNameSQLOrder();
     }
-	  $sql="(SELECT user.user_id, ".$sqlname." ". 
+	  $sql="(SELECT user.user_id, user.email, user.language_id, ".$sqlname." ". 
     "FROM ugroup_user, user ".
     "WHERE user.user_id = ugroup_user.user_id ".
     "AND ugroup_user.ugroup_id=".$ugroup_id." ORDER BY ".$sqlorder.")";
@@ -259,7 +259,7 @@ function ugroup_db_get_dynamic_members($ugroup_id, $atid, $group_id, $with_displ
         return "(SELECT user.user_id, ".$sqlname." FROM user, user_group ug WHERE user.user_id = ug.user_id AND ug.group_id = $group_id AND wiki_flags = '2' AND ( user.status='A' OR user.status='R' ) ORDER BY ".$sqlorder.")";
     } else if ($ugroup_id==$GLOBALS['UGROUP_PROJECT_ADMIN']) {
         // Project admins
-        return "(SELECT user.user_id, ".$sqlname." FROM user, user_group ug WHERE user.user_id = ug.user_id AND ug.group_id = $group_id AND admin_flags = 'A' AND ( user.status='A' OR user.status='R' ) ORDER BY ".$sqlorder.")";
+        return "(SELECT user.user_id, user.email, user.language_id, ".$sqlname." FROM user, user_group ug WHERE user.user_id = ug.user_id AND ug.group_id = $group_id AND admin_flags = 'A' AND ( user.status='A' OR user.status='R' ) ORDER BY ".$sqlorder.")";
     } else if ($ugroup_id==$GLOBALS['UGROUP_TRACKER_ADMIN']) {
         // Tracker admins
         return "(SELECT user.user_id, ".$sqlname." FROM artifact_perm ap, user WHERE (user.user_id = ap.user_id) and group_artifact_id=$atid AND perm_level in (2,3) AND ( user.status='A' OR user.status='R' ) ORDER BY ".$sqlorder.")";

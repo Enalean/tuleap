@@ -581,23 +581,18 @@ class Docman_PermissionsManager {
 
         $userArray = array ();
         foreach ($dar as $row ) {
-            if ($row['ugroup_id'] != 3 && $row['ugroup_id'] != 4) {
-                $darUg = $dao->getUserInfoByUgroup($row['ugroup_id']);
-                foreach ($darUg as $rowUg) {
-                    $userArray[$rowUg['email']] = $rowUg['language_id'];
-                }
-                //If docman_Manager permission set to project member, we notified docman admin
-                //because it may be a big number of members
-            } else if ($row['ugroup_id'] == 3) {
-                $darDm = $dao->getDocmanAdmin($project);
-                foreach ($darDm as $rowDm) {
-                    $userArray[$rowDm['email']] = $rowDm['language_id'];
+            if ($row['ugroup_id'] == $GLOBALS['UGROUP_ANONYMOUS'] || $row['ugroup_id'] == $GLOBALS['UGROUP_REGISTERED']
+            || $row['ugroup_id'] == $GLOBALS['UGROUP_NONE'] || $row['ugroup_id'] == $GLOBALS['UGROUP_PROJECT_MEMBERS']
+            || $row['ugroup_id'] ==$GLOBALS['UGROUP_PROJECT_ADMIN']) {
+                //If one of these ugroups is set to be docman manager, we notify project admin
+                $darDu = $dao->getDynamicUgroupMembers($project, $GLOBALS['UGROUP_PROJECT_ADMIN']);
+                foreach ($darDu as $rowDu) {
+                    $userArray[$rowDu['email']] = $rowDu['language_id'];
                 }
             } else {
-                $darPm = $dao->getProjectAdmin($project);
-                foreach ($darPm  as $rowPm) {
-                    $userArray[$rowPm['email']] = $rowPm['language_id'];
-
+                $darUg = $dao->getUgroupMembers($row['ugroup_id']);
+                foreach ($darUg as $rowUg) {
+                    $userArray[$rowUg['email']] = $rowUg['language_id'];
                 }
 
             }

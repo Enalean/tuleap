@@ -66,40 +66,29 @@ class Docman_PermissionsManagerDao extends DataAccessObject {
     }
     
 
-     /**
-      * Returns users belonging to a given Ugroup
-      *
-      * @param Integer $ugroupId
-      */
-     function getUserInfoByUgroup($ugroupId){
-         $sql = 'SELECT email, language_id from user u JOIN ugroup_user ug using (user_id)
-                     WHERE  u.status IN ("A", "R") AND ugroup_id ='.$this->da->escapeInt($ugroupId);
-         return $this->retrieve($sql);
-     }
-     
-     /**
-      * Returns docman admin for given project
-      * 
-      * @param Project $project
-      */
-     function getDocmanAdmin($project){
-         $sql = 'SELECT email, language_id from user u JOIN user_group ug using (user_id)
-                     WHERE  u.status IN ("A", "R") AND (doc_flags = 2 OR doc_flags = 3) 
-                     AND  group_id ='.$this->da->escapeInt($project->getId());
-         return $this->retrieve($sql);
-     }
-     
-     /**
-      * Returns project admin of a given project
-      * 
-      * @param Projetc $project
-      */
-     function getProjectAdmin($project){
-         $sql = 'SELECT email, language_id FROM user u
-                JOIN user_group ug USING(user_id) WHERE ug.admin_flags="A" 
-                AND u.status IN ("A", "R") AND ug.group_id = '.$this->da->escapeInt($project->getId());
-         return $this->retrieve($sql);
-     }
+    /**
+     * Returns ugroup members of dynamic ugroups
+     * 
+     * @param Project $project
+     * @param Integer $groupId
+     */
+    function getDynamicUgroupMembers($project, $ugroupId) {
+        $sql = ugroup_db_get_dynamic_members($ugroupId, 0, $project->getId());
+        return $this->retrieve($sql); 
+    }
+    
+    /**
+     * Returns ugroup members of ugroups
+     * 
+     * @param Integer $groupId
+     */
+    function getUgroupMembers($ugroupId) {
+        $sql = ugroup_db_get_members($ugroupId);
+        return $this->retrieve($sql);
+    }
+
+    
+    
 
 }
 
