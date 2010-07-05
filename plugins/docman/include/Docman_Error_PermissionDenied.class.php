@@ -62,14 +62,14 @@ class Docman_Error_PermissionDenied extends Error_PermissionDenied {
      * It redirects the show action pointed with the document url  to its details section
      *
      * If user requires for istance the url  "https://codendi.org/plugins/docman/?group_id=1564&action=show&id=96739"
-     * the url sent to the project admin will be edited to "https://codendi.org/plugins/docman/?group_id=1564&action=details&id=96739"
+     * the url sent to the project admin will be edited to "https://codendi.org/plugins/docman/?group_id=1564&action=details&section=permissions&id=96739"
      *
      * @parameter String $url
      *
      * @return String
      */
     function urlTransform($url) {
-        $urlTransform = preg_replace('/action=show([^\d]|$)/', 'action=details$1', $url);
+        $urlTransform = preg_replace('/action=show([^\d]|$)/', 'action=details&section=permissions$1', $url);
         if ($urlTransform) {
             return $urlTransform;
         } else {
@@ -93,7 +93,14 @@ class Docman_Error_PermissionDenied extends Error_PermissionDenied {
 
     }
 
-    function extractIdFromUrl($url) {
+    /**
+     * Transform query part of string URL to an hashmap indexed by variables
+     *
+     * @param String $url The URL
+     *
+     * @return Array
+     */
+    function urlQueryToArray($url) {
         $params = array();
         $query  = explode('&', parse_url($url, PHP_URL_QUERY));
         foreach($query as $tok) {
@@ -112,7 +119,7 @@ class Docman_Error_PermissionDenied extends Error_PermissionDenied {
      * @return Array
      */
     function extractReceiver($project, $url) {
-        $query = $this->extractIdFromUrl($url);
+        $query = $this->urlQueryToArray($url);
         if (isset($query['id'])) {
             $id = $query['id'];
         } else {
