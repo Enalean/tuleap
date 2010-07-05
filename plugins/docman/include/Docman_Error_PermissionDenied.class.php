@@ -92,6 +92,17 @@ class Docman_Error_PermissionDenied extends Error_PermissionDenied {
         return $link;
 
     }
+
+    function extractIdFromUrl($url) {
+        $params = array();
+        $query  = explode('&', parse_url($url, PHP_URL_QUERY));
+        foreach($query as $tok) {
+            list($var, $val) = explode('=', $tok);
+            $params[$var] = urldecode($val);
+        }
+        return $params;
+    }
+
     /**
      * Returns the docman manager list for given item
      *
@@ -101,9 +112,19 @@ class Docman_Error_PermissionDenied extends Error_PermissionDenied {
      * @return Array
      */
     function extractReceiver($project, $url) {
-        $item = split('&id=', $url);
+        $query = $this->extractIdFromUrl($url);
+        if (isset($query['id'])) {
+            $id = $query['id'];
+        } else {
+            if (isset($query['item'])) {
+                //
+            } else {
+                return array();
+            }
+        }
+
         $pm = $this->_getPermissionManagerInstance($project->getId());
-        return  $pm->returnDocmanManagerUsers($item[1], 'PLUGIN_DOCMAN_MANAGE',$project);
+        return  $pm->returnDocmanManagerUsers($query['id'], 'PLUGIN_DOCMAN_MANAGE',$project);
     }
 
     /**
