@@ -2,7 +2,6 @@
 /**
  * Copyright (c) STMicroelectronics, 2010. All Rights Reserved.
  *
- * 
  * This file is a part of Codendi.
  *
  * Codendi is free software; you can redistribute it and/or modify
@@ -19,13 +18,13 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('src/www/include/pre.php');    
-require_once('src/common/include/HTTPRequest.class.php');
-require_once('/prj/codex/terzino/servers/sources/Webdav_proj/plugins/docman/include/Docman_Error_PermissionDenied.class.php');
+require_once('pre.php');
+require_once('common/include/HTTPRequest.class.php');
+require_once(dirname(__FILE__).'/../include/Docman_Error_PermissionDenied.class.php');
 
 
 $request = HTTPRequest::instance();
-$func = $request->getValidated('func', new Valid_WhiteList('docman_access_request'));
+$func = $request->getValidated('func', new Valid_WhiteList('func', array('docman_access_request')));
 
 if ($request->isPost() && $request->exist('Submit') &&  $request->existAndNonEmpty('func') && $func == 'docman_access_request') {
         $sendMail = new Docman_Error_PermissionDenied();
