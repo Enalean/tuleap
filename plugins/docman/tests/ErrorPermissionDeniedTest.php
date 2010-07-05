@@ -44,6 +44,39 @@ class Docman_ErrorPermissionDeniedTest extends UnitTestCase {
         $this->assertEqual($res, 'https://codendi.org/plugins/docman/?group_id=1564&id=96739&action=details&section=permissions');
     }
 
+    function testUrlTransformWoAction() {
+        $e   = new Docman_Error_PermissionDenied();
+        $res = $e->urlTransform('https://codendi.org/plugins/docman/?group_id=1564&id=96739');
+        $this->assertEqual($res, 'https://codendi.org/plugins/docman/?group_id=1564&id=96739&action=details&section=permissions');
+    }
+
+    function testUrlTransformActionDetailsWoSection() {
+        $e   = new Docman_Error_PermissionDenied();
+        $res = $e->urlTransform('https://codendi.org/plugins/docman/?group_id=1564&id=96739&action=details');
+        $this->assertEqual($res, 'https://codendi.org/plugins/docman/?group_id=1564&id=96739&action=details&section=permissions');
+    }
+
+    function testUrlTransformActionDetailsSectionDifferentMiddle() {
+        $e   = new Docman_Error_PermissionDenied();
+        $res = $e->urlTransform('https://codendi.org/plugins/docman/?group_id=1564&id=96739&section=pouet&action=details');
+        $this->assertEqual($res, 'https://codendi.org/plugins/docman/?group_id=1564&id=96739&section=permissions&action=details');
+    }
+
+    function testUrlTransformActionDetailsSectionDifferentStart() {
+        $e   = new Docman_Error_PermissionDenied();
+        $res = $e->urlTransform('https://codendi.org/plugins/docman/?section=pouet&group_id=1564&id=96739&action=details');
+        $this->assertEqual($res, 'https://codendi.org/plugins/docman/?section=permissions&group_id=1564&id=96739&action=details');
+    }
+
+
+    function testUrlTransformActionDetailsSectionDifferentEnd() {
+        $e   = new Docman_Error_PermissionDenied();
+        $res = $e->urlTransform('https://codendi.org/plugins/docman/?group_id=1564&id=96739&action=details&section=pouet');
+        $this->assertEqual($res, 'https://codendi.org/plugins/docman/?group_id=1564&id=96739&action=details&section=permissions');
+    }
+
+
+
 
     function testUrlQueryToArrayWithIdMiddle() {
         $e   = new Docman_Error_PermissionDenied();

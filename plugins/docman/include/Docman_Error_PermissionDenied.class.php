@@ -69,12 +69,22 @@ class Docman_Error_PermissionDenied extends Error_PermissionDenied {
      * @return String
      */
     function urlTransform($url) {
-        $urlTransform = preg_replace('/action=show([^\d]|$)/', 'action=details&section=permissions$1', $url);
-        if ($urlTransform) {
-            return $urlTransform;
+        $query = $this->urlQueryToArray($url);
+        if (!isset($query['action'])) {
+            $url = $url.'&action=details&section=permissions';
         } else {
-            return $url;
+            if ($query['action'] == 'details') {
+                if (!isset($query['section'])) {
+                    $url = $url.'&section=permissions';
+                } else {
+                    // replace any existing section by 'permissions'
+                    $url = preg_replace('/section=([^&]+|$)/', 'section=permissions', $url);
+                }
+            } else {
+                $url = preg_replace('/action=show([^\d]|$)/', 'action=details&section=permissions$1', $url);
+            }
         }
+        return $url;
     }
 
     /**
