@@ -588,14 +588,11 @@ class Docman_PermissionsManager {
                     foreach ($darDu as $rowDu) {
                         $userArray[$rowDu['email']] = $rowDu['language_id'];
                     }
-                    break;
-
-                default:
+                } else {
                     $darUg = $dao->getUgroupMembers($row['ugroup_id']);
                     foreach ($darUg as $rowUg) {
                         $userArray[$rowUg['email']] = $rowUg['language_id'];
                     }
-
                 }
             }
         }
