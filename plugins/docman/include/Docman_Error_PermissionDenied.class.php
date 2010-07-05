@@ -86,10 +86,7 @@ class Docman_Error_PermissionDenied extends Error_PermissionDenied {
      * @return String
      */
     function getRedirectLink($urlData, $language) {
-        $urlData = ' "'.$this->urlTransform($urlData).'" ';
-        //Add information about service
-        $link = $urlData."  ".$language->getText('include_exit', 'data_type').' "Document" ';
-        return $link;
+        return $this->urlTransform($urlData);
 
     }
 
