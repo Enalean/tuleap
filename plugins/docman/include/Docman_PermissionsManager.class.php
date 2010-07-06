@@ -563,6 +563,44 @@ class Docman_PermissionsManager {
         }
     }
 
+    /**
+     * Returns docman manager users information  for a given item and permission type
+     *
+     * For dynamics ugroups, we decided to force notification to project admin to avoid
+     * notification of a lot of people if "Document Manager" set to "project_members" or
+     * "all_users".
+     *
+     * @param  Integer     $objectId       The id of the object
+     * @param  String      $permissionType The type of permission asked
+     * @param  Project     $project        The related project
+     *
+     * @return Array
+     */
+    function returnDocmanManagerUsers($objectId, $permissionType, $project){
+        $userArray = array();
+        $dar = $this->_getPermissionManagerInstance()->getUgroupIdByObjectIdAndPermissionType($objectId, $permissionType);
+        if ($dar && !$dar->isError()) {
+            foreach ($dar as $row) {
+                $dao = $this->getDao();
+                if ($row['ugroup_id'] <= 100) {
+                    //If one of these ugroups is set to be docman manager, we notify project admin
+                    $darDu = $dao->getDynamicUgroupMembers($project, $GLOBALS['UGROUP_PROJECT_ADMIN']);
+                    foreach ($darDu as $rowDu) {
+                        $userArray[$rowDu['email']] = $rowDu['language_id'];
+                    }
+                } else {
+                    $darUg = $dao->getUgroupMembers($row['ugroup_id']);
+                    foreach ($darUg as $rowUg) {
+                        $userArray[$rowUg['email']] = $rowUg['language_id'];
+                    }
+                }
+            }
+        }
+        return $userArray;
+    }
+
+
+
 }
 
 ?>

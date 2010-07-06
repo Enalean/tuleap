@@ -132,7 +132,23 @@ class PermissionsManager {
         }
         return $ugroups_name;
      }
-    
+     
+    /**
+     * Returns all ugroup id for a given object_id and permission_type
+     * @param  int     $object_id       The id of the object
+     * @param  string  $permission_type The type of permission asked
+     */
+     function getUgroupIdByObjectIdAndPermissionType($object_id, $permission_type){
+         $dar =& $this->_permission_dao->searchUgroupByObjectIdAndPermissionType($object_id, $permission_type);
+         if ($dar->isError() || !$dar->valid()) {
+            return;
+         } else {
+             return $dar;
+         } 
+     }
+     
+     
+
     /**
     * Returns true if user has full permissions in all cases
     * 

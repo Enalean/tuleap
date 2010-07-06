@@ -44,31 +44,57 @@ abstract class Error_PermissionDenied {
      * @return String
      */
     abstract function getType();
+    
+    /**
+     * Returns the base on language file
+     *
+     * @return String
+     */
+    function getTextBase() {
+        return 'include_exit';
+    }
+    
+    
+     /**
+     * Returns the build interface parameters
+     *
+     * @return Array
+     */
+    abstract function returnBuildInterfaceParam();
+    
+    /**
+     * Returns the url link after modification if needed else returns the same string
+     *  
+     * @param String $link
+     * @param BaseLanguage $language
+     */
+    function getRedirectLink($link, $language) {
+        return $link;
+    }
 
     /**
      * Build the user interface to ask for membership
      * 
-     * @param String $name
-     * @param String $func
-     * @param String $index
      */
-    function buildInterface($name, $func, $index) {
+    function buildInterface() {
         $url= new URL();
         $groupId =  (isset($GLOBALS['group_id'])) ? $GLOBALS['group_id'] : $url->getGroupIdFromUrl($_SERVER['REQUEST_URI']);
         $userId = $this->getUserManager()->getCurrentUser()->getId();
         
-        echo "<b>".$GLOBALS['Language']->getText('include_exit','perm_denied')."</b>";
+        $param = $this->returnBuildInterfaceParam();
+        
+        echo "<b>".$GLOBALS['Language']->getText($this->getTextBase(), 'perm_denied')."</b>";
         echo '<br></br>';
-        echo "<br>".$GLOBALS['Language']->getText('include_exit',$index);
+        echo "<br>".$GLOBALS['Language']->getText($this->getTextBase(), $param['index']);
         
         //In case of restricted user, we only show the zone text area to ask for membership 
         //just when the requested page belongs to a project
-        if (!(($func == 'restricted_user_request') && (!isset($groupId)))) {
-            echo $GLOBALS['Language']->getText('include_exit', 'request_to_admin');
+        if (!(($param['func'] == 'restricted_user_request') && (!isset($groupId)))) {
+            echo $GLOBALS['Language']->getText($this->getTextBase(), 'request_to_admin');
             echo '<br></br>';
-            echo '<form action="/sendmessage.php" method="post" name="display_form">
-                  <textarea wrap="virtual" rows="5" cols="70" name="'.$name.'"></textarea></p>
-                  <input type="hidden" id="func" name="func" value="'.$func.'">
+            echo '<form action="'.$param['action'].'" method="post" name="display_form">
+                  <textarea wrap="virtual" rows="5" cols="70" name="'.$param['name'].'"></textarea></p>
+                  <input type="hidden" id="func" name="func" value="'.$param['func'].'">
                   <input type="hidden" id="groupId" name="groupId" value="' .$groupId. '">
                   <input type="hidden" id="userId" name="userId" value="' .$userId. '">
                   <input type="hidden" id="data" name="url_data" value="' .$_SERVER['REQUEST_URI']. '">
@@ -85,7 +111,7 @@ abstract class Error_PermissionDenied {
      * 
      * @return Array
      */
-    function extractReceiver($project) {
+    function extractReceiver($project, $urlData) {
         $admins = array();
         $um = $this->getUserManager();
         $sql = 'SELECT email, language_id FROM user u JOIN user_group ug USING(user_id) WHERE ug.admin_flags="A" AND u.status IN ("A", "R") AND ug.group_id = '.db_ei($project->getId());
@@ -116,7 +142,6 @@ abstract class Error_PermissionDenied {
         $hrefApproval = get_server_url().'/project/admin/?group_id='.$request->get('groupId');
         $urlData = get_server_url().$request->get('url_data');
         
-        
         return $this->sendMail($project, $user, $urlData, $hrefApproval, $messageToAdmin);
     }
     
@@ -132,7 +157,7 @@ abstract class Error_PermissionDenied {
      * @param String  $messageToAdmin
      */
     function sendMail($project, $user, $urlData, $hrefApproval,$messageToAdmin) {
-        $adminList = $this->extractReceiver($project);
+        $adminList = $this->extractReceiver($project, $urlData);
         $from = $user->getEmail();
         $hdrs = 'From: '.$from."\n";
         
@@ -142,15 +167,16 @@ abstract class Error_PermissionDenied {
             $mail = new Mail();
             $mail->setTo($to);
             $mail->setFrom($from);
- 
+
             $language = new BaseLanguage($GLOBALS['sys_supported_languages'], $GLOBALS['sys_lang']);
             $language->loadLanguage($lang);
-            
-            $mail->setSubject($language->getText('include_exit', 'mail_subject_'.$this->getType(), array($project->getPublicName(), $user->getRealName())));
-            
-            $body = $language->getText('include_exit', 'mail_content_'.$this->getType(), array($user->getRealName(), $user->getName(), $urlData, $project->getPublicName(), $hrefApproval, $messageToAdmin, $user->getEmail()));
+
+            $mail->setSubject($language->getText($this->getTextBase(), 'mail_subject_'.$this->getType(), array($project->getPublicName(), $user->getRealName())));
+
+            $link = $this->getRedirectLink($urlData, $language);
+            $body = $language->getText($this->getTextBase(), 'mail_content_'.$this->getType(), array($user->getRealName(), $user->getName(), $link, $project->getPublicName(), $hrefApproval, $messageToAdmin, $user->getEmail()));
             $mail->setBody($body);
-             
+
             if (!$mail->send()) {
                 exit_error($GLOBALS['Language']->getText('global', 'error'), $GLOBALS['Language']->getText('global', 'mail_failed', array($GLOBALS['sys_email_admin'])));
             }

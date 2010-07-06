@@ -1,4 +1,8 @@
-Version 4.0.9 (Not released yet)
+Version 4.0.10 (Not released yet)
+        == New features ==
+        backlog #103963: Permission denied improvement: docman items.
+
+Version 4.0.9 - Friday, 2nd July 2010
 	== Upgrade/install procedure ==
 	Switch to RPM distribution:
 	1. Stop application

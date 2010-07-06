@@ -82,7 +82,7 @@ class Docman_Widget_MyDocmanSearch extends Widget {
                 }
             
             }
-            $html .= '<p>'.$GLOBALS['Language']->getText('plugin_docman','error_perm_file_denied').'</p>';
+            $html .= '<p>'.$GLOBALS['Language']->getText('plugin_docman','perm_denied').'</p>';
              
         }
         

@@ -64,6 +64,31 @@ class Docman_PermissionsManagerDao extends DataAccessObject {
             return false;
         }
     }
+    
+
+    /**
+     * Returns ugroup members of dynamic ugroups
+     * 
+     * @param Project $project
+     * @param Integer $groupId
+     */
+    function getDynamicUgroupMembers($project, $ugroupId) {
+        $sql = ugroup_db_get_dynamic_members($ugroupId, 0, $project->getId());
+        return $this->retrieve($sql); 
+    }
+    
+    /**
+     * Returns ugroup members of ugroups
+     * 
+     * @param Integer $groupId
+     */
+    function getUgroupMembers($ugroupId) {
+        $sql = ugroup_db_get_members($ugroupId);
+        return $this->retrieve($sql);
+    }
+
+    
+    
 
 }
 

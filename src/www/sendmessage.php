@@ -11,7 +11,7 @@ require_once('common/mail/Mail.class.php');
 require_once('common/include/HTTPRequest.class.php');
 
 
-$request =HTTPRequest::instance();
+$request = HTTPRequest::instance();
 $func = $request->getValidated('func', new Valid_WhiteList('restricted_user_request', 'private_project_request'), '');
 
 if ($request->isPost() && $request->exist('Submit') &&  $request->existAndNonEmpty('func')) {

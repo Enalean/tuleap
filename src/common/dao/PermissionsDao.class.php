@@ -72,14 +72,16 @@ class PermissionsDao extends DataAccessObject {
     }
     
     /**
-     * Searches Ugroups names from ObjectId and Permission type
+     * Searches Ugroups names and Ids from ObjectId and Permission type
      * return DataAccessResult
      */
      function & searchUgroupByObjectIdAndPermissionType($objectId, $permissionType){
-         $sql = sprintf("SELECT ug.name FROM ugroup as ug, permissions as p WHERE p.object_id = %s AND p.permission_type = %s AND ug.ugroup_id = p.ugroup_id",
+         $sql = sprintf("SELECT ug.name, ug.ugroup_id FROM ugroup as ug JOIN permissions as p using(ugroup_id) WHERE p.object_id = %s AND p.permission_type = %s",
                 "'".$objectId."'", "'".$permissionType."'");
         return $this->retrieve($sql);
      }
+      
+
 
     /**
     * Searches Permissions by ObjectId and Ugroups

@@ -36,5 +36,20 @@ class Error_PermissionDenied_RestrictedUser extends Error_PermissionDenied {
         return 'restricted_user';
     }
 
+    /**
+     * Returns the parameters needed to build interface 
+     * according to the classe which makes the call
+     * 
+     * @return Array
+     */
+    function returnBuildInterfaceParam() {
+        $param = array();
+        $param['name']   = 'msg_restricted_user';
+        $param['func']   = 'restricted_user_request';
+        $param['action'] = '/sendmessage.php';
+        $param['index']  = 'restricted_user_no_perm';
+        return $param;
+    }
+
 }
 ?>

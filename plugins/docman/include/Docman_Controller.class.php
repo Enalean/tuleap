@@ -482,7 +482,7 @@ class Docman_Controller extends Controler {
                                 $this->_setView('AjaxReferenceTooltipError');
                             } else {
                                 $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_perms_view'));
-                                $this->_setView('ProjectError');
+                                $this->_setView('PermissionDeniedError');
                             }
                         } else {
                             $mdFactory = new Docman_MetadataFactory($this->_viewParams['group_id']);

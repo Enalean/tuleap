@@ -36,5 +36,21 @@ class Error_PermissionDenied_PrivateProject extends Error_PermissionDenied {
         return 'private_project';
     }
 
+    /**
+     * Returns the parameters needed to build interface 
+     * according to the classe which makes the call
+     * 
+     * @return Array
+     */
+    function returnBuildInterfaceParam() {
+        $param = array();
+        $param['name']   = 'msg_private_project';
+        $param['func']   = 'private_project_request';
+        $param['action'] = '/sendmessage.php';
+        $param['index']  = 'private_project_no_perm';
+        return $param;
+    }
+    
+
 }
 ?>
