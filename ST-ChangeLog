@@ -1,2 +1,4 @@
 Not released yet:
     branch #102157: Improve permission denied error for private project and restricted user (Nouha TERZI).
+	backlog #103963: Permission denied improvement: docman items.
+
