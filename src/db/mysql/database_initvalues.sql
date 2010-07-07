@@ -2559,7 +2559,7 @@ INSERT INTO plugin (name, available) VALUES ('pluginsadministration', '1');
 INSERT INTO plugin (name, available) VALUES ('docman', '1');
 
 -- install and enable serverupdate plugin
-INSERT INTO plugin (name, available) VALUES ('serverupdate', '1');
+-- INSERT INTO plugin (name, available) VALUES ('serverupdate', '1');
 
 -- install and enable eclipse plugin
 INSERT INTO plugin (name, available) VALUES ('eclipse', '1');
@@ -2568,13 +2568,13 @@ INSERT INTO plugin (name, available) VALUES ('eclipse', '1');
 INSERT INTO plugin (name, available) VALUES ('codendijri', '1');
 
 -- install and enable salome plugin
-INSERT INTO plugin (name, available) VALUES ('salome', '1');
+-- INSERT INTO plugin (name, available) VALUES ('salome', '1');
 
 -- install and enable graphontracker plugin
 INSERT INTO plugin (name, available) VALUES ('graphontrackers', '1');
 
 -- install and enable instant messaging plugin
-INSERT INTO plugin (name, available) VALUES ('IM', '1');
+-- INSERT INTO plugin (name, available) VALUES ('IM', '1');
 
 -- install and enable hudson plugin
 INSERT INTO plugin (name, available) VALUES ('hudson', '1');
