@@ -3,7 +3,6 @@
 
 Summary: Codendi dependencies
 Name: %{PKG_NAME}-all-deps
-Provides: %{PKG_NAME}-all-deps
 Version: @@VERSION@@
 Release: 1%{?dist}
 BuildArch: noarch

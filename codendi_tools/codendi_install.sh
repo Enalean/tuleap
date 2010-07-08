@@ -175,6 +175,9 @@ todo "WHAT TO DO TO FINISH THE CODENDI INSTALLATION (see $TODO_FILE)"
 #
 # Those rpms requires codendiadm user so cannot be installed before codendi
 # package as dependencies
+#
+# The right solution would be to add codendi as a dependency of those packages
+#
 
 # -> mailman
 # add exclude mailman in base yum
