@@ -40,11 +40,19 @@ custom_codendi: tarball
 	cp $(BASE_DIR)/src/www/themes/common/images/organization_logo.png $(RPM_TMP)/SOURCES/organization_logo.png
 	rpmbuild -bb $(RPM_TMP)/SPECS/codendi-customization.spec
 
+codendi-all-deps: codendi-all-deps.spec
+	cat $< |\
+		sed -e 's/@@VERSION@@/$(version)/g' |\
+		sed -e 's/@@PKG_NAME@@/$(PKG_NAME)/g' \
+		> $(RPM_TMP)/SPECS/$<
+	cp README.all-deps $(RPM_TMP)/SOURCES/
+	rpmbuild -bb $(RPM_TMP)/SPECS/$<
+
 clean:
 	-rm -Rf $(RPM_TMP)/*
 	-rm -Rf ~/.rpmmacros
 
-all: clean codendi custom_codendi
+all: clean codendi custom_codendi codendi-all-deps
 
 dist:
 	mkdir -p $(RPM_TMP)/yum

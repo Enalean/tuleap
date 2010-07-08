@@ -170,99 +170,11 @@ fi
 rm -f $TODO_FILE
 todo "WHAT TO DO TO FINISH THE CODENDI INSTALLATION (see $TODO_FILE)"
 
-
-##############################################
-# Check Required Stock RedHat RPMs are installed
-#
-# gd-devel freetype-devel libpng-devel libjpeg-devel -> cvsgraph
-# xorg-x11-deprecated-libs -> docbook/java
-# libart_lgpl perl-Digest-SHA1 perl-Digest-HMAC perl-Socket6 -> munin
-# zip, unzip -> CLI client
-# dump -> backup_job
-# dejavu-lgc-fonts -> jpgraph
-# cpp-3.4.6-3.i386.rpm gcc-3.4.6-3.i386.rpm  libgcc-3.4.6-3.i386.rpm gcc-c++-3.4.6-3.i386.rpm gcc-g77-3.4.6-3.i386.rpm gcc-java-3.4.6-3.i386.rpm libstdc++-* libf2c-3.4.6-3.i386.rpm libgcj-3.4.6-3.i386.rpm libgcj-devel-3.4.6-3.i386.rpm
-# php-xml -> jabbex
-# compat-libstdc++-33 -> CVSnt
-# apr apr-util -> svn
-# xinetd -> cvs
-#    policycoreutils coreutils selinux-policy selinux-policy-targeted libselinux -> SELinux 
-rpms_ok=1
-for rpm in openssh-server openssh openssh-clients \
-   httpd  apr apr-util mod_ssl vsftpd \
-   openssl openldap perl perl-DBI perl-DBD-MySQL gd \
-   bind bind-chroot caching-nameserver ntp python perl-suidperl \
-   python-devel rcs perl-URI perl-HTML-Tagset \
-   perl-HTML-Parser perl-libwww-perl php php-ldap php-mysql mysql-server \
-   mysql MySQL-python php-mbstring php-gd php-soap php-xml php-pear \
-   perl-DateManip sysstat curl aspell \
-   dejavu-lgc-fonts \
-   compat-libstdc++-33 \
-   policycoreutils coreutils selinux-policy selinux-policy-targeted libselinux \
-   java-1.6.0-openjdk jpackage-utils giflib\
-   zip unzip enscript xinetd mod_auth_mysql nss nscd
-do
-    $RPM -q $rpm  2>/dev/null 1>&2
-    if [ $? -eq 1 ]; then
-	rpms_ok=0
-	missing_rpms="$missing_rpms $rpm"
-    fi
-done
-
-
-######
-# Now install Codendi specific RPMS (and remove RedHat RPMs)
-#
-
-# -> cvs
-# add exclude cvs in base yum
-missing_rpms="$missing_rpms cvs-1.11.22-5.codendi"
-
-# -> subversion
-# Neon is used by other RPMS (cadaver...) that will conflict when upgrading the RPM
-$YUM remove cadaver
-missing_rpms="$missing_rpms subversion subversion-tools mod_dav_svn subversion-perl subversion-python"
-
-
-# -> libnss-mysql (system authentication based on MySQL)
-missing_rpms="$missing_rpms libnss-mysql"
-
-
-# -> cvsgraph
-missing_rpms="$missing_rpms cvsgraph"
-
-# -> highlight
-missing_rpms="$missing_rpms highlight"
-
-# -> JPGraph
-missing_rpms="$missing_rpms jpgraph-2.3.4-0.codendi"
-
-
-# -> phpMyAdmin
-#missing_rpms="$missing_rpms phpmyadmin"
-
-# -> APC
-missing_rpms="$missing_rpms php-pecl-apc"
-
-
-# Munin
-missing_rpms="$missing_rpms munin-1.2.5-1.codendi munin-node-1.2.5-1.codendi"
-
-# -> HTML Purifier
-missing_rpms="$missing_rpms htmlpurifier"
-
-
-# -> OpenFire
-#missing_rpms="$missing_rpms openfire"
-
-#echo "Installing OpenFire plugins"
-# To be delivered as rpm too
-#cd ${newest_rpm}
-#$CP helga.jar presence.jar subscription.jar monitoring.jar /opt/openfire/plugins
-
 #####
 # Codendi RPMS
 #
-# Those rpms requires codendiadm user
+# Those rpms requires codendiadm user so cannot be installed before codendi
+# package as dependencies
 
 # -> mailman
 # add exclude mailman in base yum
@@ -275,13 +187,7 @@ missing_rpms="$missing_rpms viewvc-1.0.7-1.codendi"
 # -> codendi-jri & eclipse
 missing_rpms="$missing_rpms codendi-jri codendi-eclipse"
 
-#echo "Installing the Codendi software..."
-missing_rpms="$missing_rpms forgeupgrade"
-
-if [ $rpms_ok -eq 0 ]; then
-    msg="The following Redhat Linux RPMs must be installed first:\n"
-    msg="${msg}$missing_rpms\n"
-    msg="${msg}Get them from your Redhat CDROM or FTP site, install them and re-run the installation script"
+if [ ! -z "$missing_rpms" ]; then
     $YUM install $missing_rpms
 fi
 echo "All requested RedHat RPMS installed... good!"
@@ -947,7 +853,7 @@ $CAT <<'EOF' >/etc/logrotate.d/httpd
      cp /var/log/httpd/vhosts-access_log.1 $destdir/$destfile
     endscript
 }
-                                                                              
+
 /var/log/httpd/error_log {
     missingok
     daily
@@ -1040,10 +946,10 @@ cat <<EOM
 -------------------------------------
 W E L C O M E   T O   C O D E N D I !
 -------------------------------------
-                                                                               
+
 You are currently in your user home directory: $HOME
 EOM
-                                                                               
+
 echo "Your project home directories (Web site) are in:"
 for i in $grplist
 do
@@ -1052,13 +958,13 @@ done
 
 cat <<EOM
 Corresponding CVS and Subversion repositories are in /cvsroot and /svnroot
-                                                                               
+
              *** IMPORTANT REMARK ***
 The Codendi server hosts very valuable yet publicly available
 data. Therefore we recommend that you keep working only in
 the directories listed above for which you have full rights
 and responsibilities.
-                                                                               
+
 EOM
 EOF
 
@@ -1081,6 +987,7 @@ $CHKCONFIG crond on
 /etc/init.d/codendi start
 
 $SERVICE httpd restart
+$SERVICE crond restart
 
 # NSCD is the Name Service Caching Daemon.
 # It is very useful when libnss-mysql is used for authentication
