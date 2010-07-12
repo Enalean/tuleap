@@ -55,6 +55,7 @@ PERL='/usr/bin/perl'
 DIFF='/usr/bin/diff'
 PHP='/usr/bin/php'
 UNAME='/bin/uname'
+YUM='/usr/bin/yum -qy'
 
 CHCON='/usr/bin/chcon'
 SELINUX_CONTEXT="root:object_r:httpd_sys_content_t";
@@ -169,76 +170,35 @@ fi
 rm -f $TODO_FILE
 todo "WHAT TO DO TO FINISH THE CODENDI INSTALLATION (see $TODO_FILE)"
 
-
-##############################################
-# Check Required Stock RedHat RPMs are installed
+#####
+# Codendi RPMS
 #
-# gd-devel freetype-devel libpng-devel libjpeg-devel -> cvsgraph
-# xorg-x11-deprecated-libs -> docbook/java
-# libart_lgpl perl-Digest-SHA1 perl-Digest-HMAC perl-Socket6 -> munin
-# zip, unzip -> CLI client
-# dump -> backup_job
-# dejavu-lgc-fonts -> jpgraph
-# cpp-3.4.6-3.i386.rpm gcc-3.4.6-3.i386.rpm  libgcc-3.4.6-3.i386.rpm gcc-c++-3.4.6-3.i386.rpm gcc-g77-3.4.6-3.i386.rpm gcc-java-3.4.6-3.i386.rpm libstdc++-* libf2c-3.4.6-3.i386.rpm libgcj-3.4.6-3.i386.rpm libgcj-devel-3.4.6-3.i386.rpm
-# php-xml -> jabbex
-# compat-libstdc++-33 -> CVSnt
-# apr apr-util -> svn
-# xinetd -> cvs
-#    policycoreutils coreutils selinux-policy selinux-policy-targeted libselinux -> SELinux 
-rpms_ok=1
-for rpm in openssh-server openssh openssh-clients \
-   httpd  apr apr-util mod_ssl vsftpd \
-   openssl openldap perl perl-DBI perl-DBD-MySQL gd \
-   sendmail telnet bind bind-chroot caching-nameserver ntp python perl-suidperl \
-   python-devel rcs sendmail-cf perl-URI perl-HTML-Tagset perl-Digest-SHA1 perl-Digest-HMAC perl-Socket6 \
-   perl-HTML-Parser perl-libwww-perl php php-ldap php-mysql mysql-server \
-   mysql MySQL-python php-mbstring php-gd php-soap php-xml php-pear \
-   perl-DateManip sysstat curl aspell \
-   gd-devel freetype-devel libpng-devel libjpeg-devel \
-   libart_lgpl  \
-   dump \
-   dejavu-lgc-fonts \
-   compat-libstdc++-33 \
-   policycoreutils coreutils selinux-policy selinux-policy-targeted libselinux \
-   java-1.6.0-openjdk jpackage-utils giflib\
-   zip unzip enscript xinetd mod_auth_mysql nss nscd
-do
-    $RPM -q $rpm  2>/dev/null 1>&2
-    if [ $? -eq 1 ]; then
-	rpms_ok=0
-	missing_rpms="$missing_rpms $rpm"
-    fi
-done
-if [ $rpms_ok -eq 0 ]; then
-    msg="The following Redhat Linux RPMs must be installed first:\n"
-    msg="${msg}$missing_rpms\n"
-    msg="${msg}Get them from your Redhat CDROM or FTP site, install them and re-run the installation script"
-    die "$msg"
+# Those rpms requires codendiadm user so cannot be installed before codendi
+# package as dependencies
+#
+# The right solution would be to add codendi as a dependency of those packages
+#
+
+# -> mailman
+# add exclude mailman in base yum
+missing_rpms="$missing_rpms mailman-2.1.9-4.codendi"
+
+# -> ViewVC
+# Need codendiadm user & group
+missing_rpms="$missing_rpms viewvc-1.0.7-1.codendi"
+
+# -> codendi-jri & eclipse
+missing_rpms="$missing_rpms codendi-jri codendi-eclipse"
+
+if [ ! -z "$missing_rpms" ]; then
+    $YUM install $missing_rpms
 fi
 echo "All requested RedHat RPMS installed... good!"
 
 
-##############################################
-# Create Groups and Users
-#
-
-make_backup /etc/passwd
-make_backup /etc/shadow
-make_backup /etc/group
-
-# Delete users that could be part of the groups (otherwise groupdel fails!)
-for u in mailman dummy codendiadm ftp ftpadmin
-do
-    $USERDEL $u 2>/dev/null 1>&2
-done
-
-# Create Groups
-# mailman: user ID hard coded in RPM
-create_group_withid mailman 106
-create_group codendiadm
-create_group dummy
-create_group ftpadmin
-create_group ftp
+echo
+echo "Configuration questions"
+echo
 
 # Ask for domain name and other installation parameters
 read -p "Codendi Domain name: " sys_default_domain
@@ -276,21 +236,13 @@ while [ "$mm_passwd" != "$mm_passwd2" ]; do
     echo
 done
 
-slm_passwd="a"; slm_passwd2="b";
-while [ "$slm_passwd" != "$slm_passwd2" ]; do
-    read -s -p "Password for Salome DB user: " slm_passwd
-    echo
-    read -s -p "Retype password for Salome DB user: " slm_passwd2
-    echo
-done
-
-openfire_passwd="a"; openfire_passwd2="b";
-while [ "$openfire_passwd" != "$openfire_passwd2" ]; do
-    read -s -p "Password for Openfire DB user: " openfire_passwd
-    echo
-    read -s -p "Retype password for Openfire DB user: " openfire_passwd2
-    echo
-done
+# openfire_passwd="a"; openfire_passwd2="b";
+# while [ "$openfire_passwd" != "$openfire_passwd2" ]; do
+#     read -s -p "Password for Openfire DB user: " openfire_passwd
+#     echo
+#     read -s -p "Retype password for Openfire DB user: " openfire_passwd2
+#     echo
+# done
 
 echo "DB authentication user: MySQL user that will be used for user authentication"
 echo "  Please do not reuse a password here, as this password will be stored in clear on the filesystem and will be accessible to all logged-in user."
@@ -303,38 +255,16 @@ while [ "$dbauth_passwd" != "$dbauth_passwd2" ]; do
     echo
 done
 
-#py_cmd="import crypt; print crypt.crypt(\"$rt_passwd\",\"\$1\$e4h67niB\$\")"
-#rt_encpasswd=`python -c "$py_cmd"`
 py_cmd="import crypt; print crypt.crypt(\"$codendiadm_passwd\",\"\$1\$h67e4niB\$\")"
 codendi_encpasswd=`python -c "$py_cmd"`
 py_cmd="import crypt; print crypt.crypt(\"$mm_passwd\",\"\$1\$eniB4h67\$\")"
 mm_encpasswd=`python -c "$py_cmd"`
 
-# Create Users
-
-# No longer modify root password. It is not safe to do this in a script.
-#$USERMOD -p "$rt_encpasswd" root
-
-$USERDEL codendiadm 2>/dev/null 1>&2
-$USERADD -c 'Owner of Codendi directories' -M -d '/home/codendiadm' -p "$codendi_encpasswd" -r -g codendiadm -s '/bin/bash' -G ftpadmin,mailman codendiadm
-# mailman group needed to write in /var/log/mailman/ directory
-
-$USERDEL mailman 2>/dev/null 1>&2
-$USERADD -c 'Owner of Mailman directories' -M -d '/usr/lib/mailman' -p "$mm_encpasswd" -u 106 -g 106 -s '/sbin/nologin' mailman
-
-$USERDEL ftpadmin 2>/dev/null 1>&2
-$USERADD -c 'FTP Administrator' -M -d '/var/lib/codendi/ftp' -r -g ftpadmin ftpadmin
-
-$USERDEL ftp 2>/dev/null 1>&2
-$USERADD -c 'FTP User' -M -d '/var/lib/codendi/ftp' -r -g ftp ftp
-
-$USERDEL dummy 2>/dev/null 1>&2
-$USERADD -c 'Dummy Codendi User' -M -d '/var/lib/codendi/dumps' -r -g dummy dummy
+# Update codendi user password
+$USERMOD -p "$codendi_encpasswd" codendiadm
 
 # Build file structure
 
-build_dir $INSTALL_DIR codendiadm codendiadm 775
-#build_dir $INSTALL_DIR/downloads codendiadm codendiadm 775
 build_dir /home/users codendiadm codendiadm 771
 build_dir /home/groups codendiadm codendiadm 771
 
@@ -344,9 +274,6 @@ build_dir /home/codendiadm codendiadm codendiadm 700
 build_dir /var/lib/codendi codendiadm codendiadm 755
 build_dir /var/lib/codendi/dumps dummy dummy 755
 build_dir /var/lib/codendi/ftp root ftp 755
-#build_dir /var/lib/codendi/ftp/bin ftpadmin ftpadmin 111
-#build_dir /var/lib/codendi/ftp/etc ftpadmin ftpadmin 111
-#build_dir /var/lib/codendi/ftp/lib ftpadmin ftpadmin 755
 build_dir /var/lib/codendi/ftp/codendi root root 711
 build_dir /var/lib/codendi/ftp/pub ftpadmin ftpadmin 755
 build_dir /var/lib/codendi/ftp/incoming ftpadmin ftpadmin 3777
@@ -360,9 +287,6 @@ build_dir /var/lib/codendi/docman codendiadm codendiadm 700
 build_dir /var/log/codendi codendiadm codendiadm 755
 build_dir /var/log/codendi/cvslogs codendiadm codendiadm 775
 build_dir /var/tmp/codendi_cache codendiadm codendiadm 755
-# bin dirs
-build_dir /usr/lib/codendi codendiadm codendiadm 755
-build_dir /usr/lib/codendi/bin codendiadm codendiadm 755
 # config dirs
 build_dir /etc/skel_codendi root root 755
 build_dir /etc/codendi codendiadm codendiadm 755
@@ -381,7 +305,6 @@ build_dir /etc/codendi/themes codendiadm codendiadm 755
 build_dir /etc/codendi/plugins codendiadm codendiadm 755
 build_dir /etc/codendi/plugins/docman codendiadm codendiadm 755
 build_dir /etc/codendi/plugins/pluginsadministration codendiadm codendiadm 755
-build_dir /etc/codendi/plugins/serverupdate codendiadm codendiadm 755
 # SCM dirs
 build_dir /var/run/log_accum root root 777
 build_dir /var/lib/codendi/cvsroot codendiadm codendiadm 751
@@ -438,266 +361,9 @@ do
 done
 cd - > /dev/null
 
-######
-# Now install Codendi specific RPMS (and remove RedHat RPMs)
-#
-
-
-# -> cvs
-echo "Removing existing CVS .."
-$RPM -e --allmatches cvs 2>/dev/null
-echo "Installing CVS RPMs for Codendi...."
-cd "${RPMS_DIR}/cvs"
-newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
-$RPM -Uvh ${newest_rpm}/$ARCH/cvs-1.*.rpm
-
-# -> subversion
-# Neon is used by other RPMS (cadaver...) that will conflict when upgrading the RPM
-$RPM --quiet -q cadaver
-if [ $? -eq 0 ]; then
-  echo "Removing Cadaver RPM (conflicts with newer Neon libs)"
-  $RPM -e --allmatches cadaver
-fi
-echo "Removing existing Subversion and Neon RPMs if any...."
-$RPM -e --allmatches subversion-tools  2>/dev/null
-$RPM -e --allmatches subversion-devel 2>/dev/null
-$RPM -e --allmatches mod_dav_svn 2>/dev/null
-$RPM -e --allmatches subversion-perl 2>/dev/null
-$RPM -e --allmatches subversion-python 2>/dev/null
-$RPM -e --allmatches subversion 2>/dev/null
-$RPM -e --allmatches neon-devel 2>/dev/null
-$RPM -e --allmatches neon 2>/dev/null
-echo "Installing Subversion, Neon and recent SQLite RPMs for Codendi...."
-cd "${RPMS_DIR}/subversion"
-newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
-cd ${newest_rpm}/$ARCH
-# Update SQLite first: version above 3.4 is required for SVN 1.6, and RHEL5 only provides version 3.3.
-# Need to upgrade both sqlite and sqlite-devel at once
-$RPM -Uvh sqlite-3*.rpm sqlite-devel-3*.rpm
-
-
-$RPM -ivh neon-0.*.rpm neon-devel*.rpm subversion-1.*.rpm mod_dav_svn*.rpm subversion-perl*.rpm subversion-python*.rpm 
-# Dependency error with Perl ??
-$RPM --nodeps -Uvh subversion-tools*.rpm
-
-# -> libnss-mysql (system authentication based on MySQL)
-$RPM -e --allmatches libnss-mysql 2>/dev/null
-echo "Installing libnss-mysql RPM for Codendi...."
-cd "${RPMS_DIR}/libnss-mysql"
-newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
-$RPM -Uvh --nosignature ${newest_rpm}/$ARCH/libnss-mysql-1*.rpm
-
-# -> cvsgraph 
-$RPM -e --allmatches cvsgraph 2>/dev/null
-echo "Installing cvsgraph RPM for Codendi...."
-cd "${RPMS_DIR}/cvsgraph"
-newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
-$RPM -Uvh ${newest_rpm}/$ARCH/cvsgraph-1*.rpm
-
-# -> highlight
-$RPM -e --allmatches highlight 2>/dev/null
-echo "Installing highlight RPM for Codendi...."
-cd "${RPMS_DIR}/highlight"
-newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
-$RPM -Uvh ${newest_rpm}/$ARCH/highlight-2*.rpm
-
-# -> JPGraph
-$RPM -e jpgraph jpgraphs-docs 2>/dev/null
-echo "Installing JPGraph RPM for Codendi...."
-cd "${RPMS_DIR}/jpgraph"
-newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
-$RPM -Uvh ${newest_rpm}/jpgraph-2*noarch.rpm
-$RPM -Uvh ${newest_rpm}/jpgraph-docs-2*noarch.rpm
-
-# -> ViewVC
-$RPM -e --nodeps viewcvs 2>/dev/null
-$RPM -e --nodeps viewvc 2>/dev/null
-echo "Installing viewvc RPM for Codendi...."
-cd "${RPMS_DIR}/viewvc"
-newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
-$RPM -Uvh ${newest_rpm}/viewvc-*.noarch.rpm
-
-# -> phpMyAdmin
-$RPM -e phpMyAdmin phpmyadmin 2>/dev/null
-echo "Installing phpMyAdmin RPM for Codendi...."
-cd "${RPMS_DIR}/phpMyAdmin"
-newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
-$RPM -Uvh ${newest_rpm}/phpmyadmin-*.noarch.rpm
-
-# -> APC
-$RPM -e php-pecl-apc 2>/dev/null
-echo "Installing APC (PHP cache) RPM for Codendi...."
-cd "${RPMS_DIR}/php-pecl-apc"
-newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
-$RPM -Uvh ${newest_rpm}/$ARCH/php-pecl-apc-*.rpm
-
-# -> mailman
-echo "Removing installed mailman if any .."
-$RPM -e --allmatches mailman 2>/dev/null
-echo "Installing mailman RPM for Codendi...."
-cd "${RPMS_DIR}/mailman"
-newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
-$RPM -Uvh ${newest_rpm}/$ARCH/mailman-2*.rpm
-
-# Munin
-echo "Removing installed Munin if any .."
-$RPM -e --allmatches `rpm -qa 'munin*' 'perl-HTML-Template*' 'perl-Net-Server' 'perl-rrdtool*' 'rrdtool*' 'perl-Crypt-DES' 'perl-Net-SNMP' 'perl-Config-General'` 2>/dev/null
-echo "Installing Munin RPMs for Codendi...."
-cd "${RPMS_DIR}/munin"
-newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
-$RPM --nosignature -Uvh ${newest_rpm}/noarch/perl-Net-Server*.noarch.rpm
-$RPM --nosignature -Uvh ${newest_rpm}/$ARCH/perl-Crypt-DES*.rpm
-$RPM --nosignature -Uvh ${newest_rpm}/noarch/perl-Net-SNMP-*.noarch.rpm
-$RPM --nosignature -Uvh ${newest_rpm}/noarch/perl-Config-General-*.noarch.rpm
-$RPM --nosignature -Uvh ${newest_rpm}/noarch/perl-HTML-Template*.noarch.rpm
-$RPM --nosignature -Uvh ${newest_rpm}/$ARCH/rrdtool-*.rpm ${newest_rpm}/$ARCH/perl-rrdtool-*.rpm
-$RPM -Uvh ${newest_rpm}/noarch/munin-node-*.noarch.rpm
-$RPM -Uvh ${newest_rpm}/noarch/munin-1*.noarch.rpm
-
-# -> HTML Purifier
-echo "Removing installed htmlpurifier if any .."
-$RPM -e htmlpurifier 2>/dev/null
-$RPM -e htmlpurifier-docs 2>/dev/null
-echo "Installing htmlpurifier RPM for Codendi...."
-cd "${RPMS_DIR}/htmlpurifier"
-newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
-$RPM -Uvh ${newest_rpm}/htmlpurifier-3*.noarch.rpm
-$RPM -Uvh ${newest_rpm}/htmlpurifier-docs*.noarch.rpm
-
-
-# -> OpenFire
-echo "Removing installed OpenFire if any .."
-$RPM -e --allmatches openfire 2>/dev/null
-echo "Installing OpenFire Jabber Server...."
-cd "${RPMS_DIR}/openfire"
-newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
-$RPM -Uvh ${newest_rpm}/openfire-*.i386.rpm
-
-echo "Installing OpenFire plugins"
-cd ${newest_rpm}
-$CP helga.jar presence.jar subscription.jar monitoring.jar /opt/openfire/plugins
-
-#####
-# Codendi RPMS
-
-# -> codendi-jri
-echo "Removing installed Codendi JRI if any .."
-$RPM -e --allmatches codendi-jri 2>/dev/null
-echo "Installing Codendi JRI RPM...."
-cd "${RPMS_DIR}/codendi-jri"
-newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
-$RPM -Uvh ${newest_rpm}/codendi-jri-*noarch.rpm
-
-
-# -> codendi-eclipse
-echo "Removing installed Eclipse plugin if any .."
-$RPM -e --allmatches codendi-eclipse 2>/dev/null
-echo "Installing Eclipse plugin RPM...."
-cd "${RPMS_DIR}/codendi-eclipse"
-newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
-$RPM -Uvh ${newest_rpm}/codendi-eclipse-*noarch.rpm
-
-# -> codendi-salome-tmf
-echo "Removing installed SalomeTMF plugin if any .."
-$RPM -e --allmatches codendi-salome-tmf 2>/dev/null
-echo "Installing SalomeTMF plugin RPM...."
-cd "${RPMS_DIR}/codendi-salome-tmf"
-newest_rpm=`$LS -1  -I old -I TRANS.TBL | $TAIL -1`
-$RPM -Uvh ${newest_rpm}/codendi-salome-tmf-*noarch.rpm
-
-##############################################
-echo "Prevent yum from auto-updating some packages (cvs, mailman)"
-
-if [ -f /etc/yum.conf ]; then
-    $GREP -q ^exclude  /etc/yum.conf
-    if [ $? -ne 0 ]; then
-        # Add all
-        echo "# Codendi specific" >> /etc/yum.conf
-        echo "exclude=mailman cvs" >> /etc/yum.conf
-    else
-        # mailman
-        $GREP ^exclude  /etc/yum.conf | $GREP -q mailman
-        if [ $? -ne 0 ]; then
-             $PERL -i'.orig' -p -e "s/^exclude(.*)/exclude\1 mailman/" /etc/yum.conf
-        fi
-        # cvs
-        $GREP ^exclude  /etc/yum.conf | $GREP -q cvs
-        if [ $? -ne 0 ]; then
-             $PERL -i'.orig' -p -e "s/^exclude(.*)/exclude\1 cvs/" /etc/yum.conf
-        fi
-    fi
-fi
-
 
 $PERL -pi -e "s/^#ftpd_banner=.*/ftpd_banner=Welcome to Codendi FTP service./g" /etc/vsftpd/vsftpd.conf 
 
-
-######
-# Now install the non RPMs stuff 
-#
-# -> saxon
-
-echo "Installing Saxon...."
-cd /usr/local
-$RM -rf saxon*
-$TAR xfz "${nonRPMS_DIR}"/docbook/saxon-*.tgz
-dir_entry=`$LS -1d saxon-*`
-$LN -sf ${dir_entry} saxon
-
-# -> fop
-echo "Installing FOP...."
-cd /usr/local
-$RM -rf fop*
-$TAR xfz "${nonRPMS_DIR}"/docbook/fop-*.tgz
-dir_entry=`$LS -1d fop-*`
-$LN -sf ${dir_entry} fop
-
-# -> Jimi
-echo "Installing Jimi...."
-cd /usr/local
-$RM -rf [jJ]imi*
-$TAR xfz "${nonRPMS_DIR}"/docbook/Jimi-*.tgz
-dir_entry=`$LS -1d [jJ]imi-*`
-$LN -sf ${dir_entry} jimi
-
-# -> Docbook DTD
-echo "Installing DocBook DTD...."
-cd /usr/local
-$RM -rf docbook-dtd*
-$TAR xfz "${nonRPMS_DIR}"/docbook/docbook-dtd-*.tgz
-dir_entry=`$LS -1d docbook-dtd-*`
-$LN -sf ${dir_entry} docbook-dtd
-
-# -> Docbook XSL
-echo "Installing DocBook XSL...."
-cd /usr/local
-$RM -rf docbook-xsl*
-$TAR xfz "${nonRPMS_DIR}"/docbook/docbook-xsl-*.tgz
-dir_entry=`$LS -1d docbook-xsl-*`
-$LN -sf ${dir_entry} docbook-xsl
-
-# -> Tomcat (for SalomeTMF)
-#echo "Installing tomcat...."
-#cd /usr/share
-#$TAR xfz ${nonRPMS_DIR}/tomcat/apache-tomcat-6.*.tar.gz
-#dir_entry=`$LS -1d apache-tomcat-6.*`
-#$RM -f apache-tomcat-6
-#$LN -sf ${dir_entry} apache-tomcat-6
-#TOMCAT_DIR=/usr/share/apache-tomcat-6
-#echo "export JAVA_HOME=/usr/lib/jvm/java-1.6.0-openjdk-1.6.0.0/jre" >> /home/codendiadm/.profile
-#echo "export CATALINA_HOME=$TOMCAT_DIR" >> /home/codendiadm/.profile
-
-#echo "Creating tomcat config file..."
-#TOMCAT_USERS_XML=$TOMCAT_DIR/conf/tomcat-users.xml
-#$CAT <<'EOF' > $TOMCAT_USERS_XML
-#<?xml version='1.0' encoding='utf-8'?>
-#<tomcat-users>
-#  <role rolename="manager"/>
-#  <user username="codendiadm" password="$codendiadm_passwd" roles="manager"/>
-#</tomcat-users>
-#EOF
-#$CHMOD 0600 $TOMCAT_USERS_XML
-#$CHOWN -R codendiadm.codendiadm $TOMCAT_DIR
 
 echo "Creating MySQL conf file..."
 $CAT <<'EOF' >/etc/my.cnf
@@ -718,7 +384,7 @@ old_passwords=1
 # Skip logging openfire db (for instant messaging)
 # The 'monitor' openfire plugin creates large codendi-bin files
 # Comment this line if you prefer to be safer.
-set-variable  = binlog-ignore-db=openfire
+# set-variable  = binlog-ignore-db=openfire
 
 [mysql.server]
 user=mysql
@@ -738,33 +404,8 @@ echo "***************************************"
 
 
 ##############################################
-# Now install various precompiled utilities
-#
-cd "${nonRPMS_DIR}/utilities"
-for f in *
-do
-  $CP $f /usr/lib/codendi/bin
-  $CHOWN codendiadm.codendiadm /usr/lib/codendi/bin/$f
-done
-$CHOWN root.root /usr/lib/codendi/bin/fileforge
-$CHMOD u+s /usr/lib/codendi/bin/fileforge
-
-##############################################
 # Install the Codendi software 
 #
-echo "Installing the Codendi software..."
-cd $INSTALL_DIR
-$TAR xfz "${Codendi_DIR}"/codendi*.tgz
-$CHOWN -R codendiadm.codendiadm $INSTALL_DIR
-$FIND $INSTALL_DIR -type f -exec $CHMOD u+rw,g+rw,o-w+r {} \;
-$FIND $INSTALL_DIR -type d -exec $CHMOD 775 {} \;
-
-LABS=1;
-if [ -f $INSTALL_DIR/plugins/serverupdate/db/install.sql ]; then
-  LABS=0
-fi
-
-
 
 echo "Installing configuration files..."
 #echo " You should overwrite existing files"
@@ -830,40 +471,6 @@ else
 fi
 
 
-
-# Codendi User Guide
-# a) copy the local parameters file in custom area and customize it
-# b) create the html target directory
-# c) create the PDF target directory
-#
-
-$CP $INSTALL_DIR/src/etc/ParametersLocal.dtd.dist /etc/codendi/documentation/user_guide/xml/ParametersLocal.dtd
-$CP $INSTALL_DIR/src/etc/ParametersLocal.cli.dtd.dist /etc/codendi/documentation/cli/xml/ParametersLocal.dtd
-# replace string patterns in ParametersLocal.dtd
-substitute '/etc/codendi/documentation/user_guide/xml/ParametersLocal.dtd' '%sys_default_domain%' "$sys_default_domain" 
-substitute '/etc/codendi/documentation/user_guide/xml/ParametersLocal.dtd' '%sys_org_name%' "$sys_org_name" 
-substitute '/etc/codendi/documentation/user_guide/xml/ParametersLocal.dtd' '%sys_long_org_name%' "$sys_long_org_name" 
-# For CLI: only one parameter
-substitute '/etc/codendi/documentation/cli/xml/ParametersLocal.dtd' '%sys_default_domain%' "$sys_default_domain" 
-
-for lang in en_US fr_FR
-do
-    $MKDIR -p  /etc/codendi/documentation/user_guide/xml/$lang
-    $MKDIR -p  /etc/codendi/documentation/cli/xml/$lang
-    $MKDIR -p  $INSTALL_DIR/documentation/user_guide/pdf/$lang
-    $MKDIR -p  $INSTALL_DIR/documentation/user_guide/html/$lang
-    $MKDIR -p  $INSTALL_DIR/documentation/cli/pdf/$lang
-    $MKDIR -p  $INSTALL_DIR/documentation/cli/html/$lang
-done
-$CHOWN -R codendiadm.codendiadm /etc/codendi/documentation
-$CHOWN -R codendiadm.codendiadm $INSTALL_DIR/documentation
-$CP $INSTALL_DIR/src/utils/backup_job /usr/lib/codendi/bin
-$CHOWN root.root /usr/lib/codendi/bin/backup_job
-$CHMOD 740 /usr/lib/codendi/bin/backup_job
-$CP $INSTALL_DIR/src/utils/svn/backup_subversion.sh /usr/lib/codendi/bin
-$CHOWN root:root /usr/lib/codendi/bin/backup_subversion.sh
-$CHMOD 740 /usr/lib/codendi/bin/backup_subversion.sh
-
 # replace string patterns in local.inc
 substitute '/etc/codendi/conf/local.inc' '%sys_default_domain%' "$sys_default_domain" 
 substitute '/etc/codendi/conf/local.inc' '%sys_ldap_server%' "$sys_ldap_server" 
@@ -911,14 +518,7 @@ if [ $SELINUX_ENABLED ]; then
     $CHCON -R -h $SELINUX_CONTEXT /usr/share/codendi
 fi
 
-if [ ! $LABS ]; then
-  build_dir /etc/codendi/plugins/serverupdate codendiadm codendiadm 755
-  # Create .subversion directory in codendiadm home dir.
-  su -c 'svn info --non-interactive https://partners.xrce.xerox.com/svnroot/codendi/dev/trunk' - codendiadm 2> /dev/null &
-fi
-
 todo "Customize /etc/codendi/conf/local.inc and /etc/codendi/conf/database.inc"
-todo "Customize /etc/codendi/documentation/user_guide/xml/ParametersLocal.dtd and /etc/codendi/documentation/cli/xml/ParametersLocal.dtd"
 todo "You may also want to customize /etc/httpd/conf/httpd.conf /usr/lib/codendi/bin/backup_job and /usr/lib/codendi/bin/backup_subversion.sh"
 
 ##############################################
@@ -930,10 +530,6 @@ todo "You may also want to customize /etc/httpd/conf/httpd.conf /usr/lib/codendi
 $USERMOD -a -G apache codendiadm
 # Allow read/write access to DAV lock dir for codendiadm in case we want ot enable WebDAV.
 $CHMOD 770 /var/lib/dav/
-
-# Add PmaAbsoluteUri parameter? seems useless now
-#$PERL -i'.orig' -p -e "s/(\?\>)/\\\$cfg['PmaAbsoluteUri'] = 'http:\/\/$sys_default_domain\/phpMyAdmin'\;\n\1/;" /var/www/phpMyAdmin/config.inc.php
-#todo "If you want to run the site in https only, edit the phpMyAdmin configuration file at /var/www/phpMyAdmin/config.inc.php, and replace 'http' by 'https' for the line \$cfg['PmaAbsoluteUri']"
 
 ##############################################
 # Installing the Codendi database
@@ -990,42 +586,6 @@ GRANT SELECT ON codendi.user_group to dbauthuser@localhost;
 FLUSH PRIVILEGES;
 EOF
 fi
-
-
-##############################################
-# Installing the SalomeTMF database
-#
-echo "Creating the SalomeTMF database..."
-
-yn="-"
-freshdb=0
-if [ -d "/var/lib/mysql/salome" ]; then
-    read -p "Salome Database already exists. Overwrite? [y|n]:" yn
-fi
-
-# Delete the Salome DB if asked for
-if [ "$yn" = "y" ]; then
-    $MYSQL -u root $pass_opt -e "drop database salome"
-fi
-
-
-if [ ! -d "/var/lib/mysql/salome" ]; then
-    freshdb=1
-    $MYSQL -u root $pass_opt -e "create database salome DEFAULT CHARACTER SET latin1"
-    $CAT <<EOF | $MYSQL -u root mysql $pass_opt
-GRANT ALL PRIVILEGES ON salome.* TO salomeadm IDENTIFIED BY '$slm_passwd';
-FLUSH PRIVILEGES;
-EOF
-fi
-
-if [ $freshdb -eq 1 ]; then
-echo "Populating the SalomeTMF database..."
-cd $INSTALL_DIR/plugins/salome/db
-$MYSQL -u salomeadm salome --password="$slm_passwd" < salome_structure.sql   # create the DB
-$MYSQL -u salomeadm salome --password="$slm_passwd" < salome_initvalues.sql  # init the DB
-fi
-
-
 
 ##############################################
 # SSL Certificate creation
@@ -1107,20 +667,20 @@ $SERVICE mailman start
 
 ##############################################
 # Installing and configuring Sendmail
-#
-echo "##############################################"
-echo "Installing sendmail shell wrappers and configuring sendmail..."
-cd /etc/smrsh
-$LN -sf /usr/lib/codendi/bin/gotohell
-#$LN -sf $MAILMAN_DIR/mail/mailman Now done in RPM install
+# #
+# echo "##############################################"
+# echo "Installing sendmail shell wrappers and configuring sendmail..."
+# cd /etc/smrsh
+# $LN -sf /usr/lib/codendi/bin/gotohell
+# #$LN -sf $MAILMAN_DIR/mail/mailman Now done in RPM install
 
-$PERL -i'.orig' -p -e's:^O\s*AliasFile.*:O AliasFile=/etc/aliases,/etc/aliases.codendi:' /etc/mail/sendmail.cf
-cat <<EOF >/etc/mail/local-host-names
-# local-host-names - include all aliases for your machine here.
-$sys_default_domain
-lists.$sys_default_domain
-users.$sys_default_domain
-EOF
+# $PERL -i'.orig' -p -e's:^O\s*AliasFile.*:O AliasFile=/etc/aliases,/etc/aliases.codendi:' /etc/mail/sendmail.cf
+# cat <<EOF >/etc/mail/local-host-names
+# # local-host-names - include all aliases for your machine here.
+# $sys_default_domain
+# lists.$sys_default_domain
+# users.$sys_default_domain
+# EOF
 
 
 # Default: codex-admin is redirected to root
@@ -1152,32 +712,10 @@ service cvspserver
 }
 EOF
 
-cd $INSTALL_DIR/src/utils/cvs1
-$CP log_accum /usr/lib/codendi/bin
-$CP commit_prep /usr/lib/codendi/bin
-$CP cvssh /usr/lib/codendi/bin
-$CP cvssh-restricted /usr/lib/codendi/bin
-
 $CAT <<'EOF' >> /etc/shells
 /usr/lib/codendi/bin/cvssh
 /usr/lib/codendi/bin/cvssh-restricted
 EOF
-
-cd /usr/lib/codendi/bin
-$CHOWN codendiadm.codendiadm log_accum commit_prep
-$CHMOD 755 log_accum commit_prep cvssh cvssh-restricted
-$CHMOD u+s log_accum   # sets the uid bit (-rwsr-xr-x)
-
-
-##############################################
-# Subversion configuration
-#
-echo "Configuring the Subversion server and tracking tools..."
-cd $INSTALL_DIR/src/utils/svn
-$CP commit-email.pl codendi_svn_pre_commit.php /usr/lib/codendi/bin
-cd /usr/lib/codendi/bin
-$CHOWN codendiadm.codendiadm commit-email.pl codendi_svn_pre_commit.php
-$CHMOD 755 commit-email.pl codendi_svn_pre_commit.php
 
 
 ##############################################
@@ -1268,21 +806,6 @@ crontab -u root -l > /tmp/cronfile
 $GREP -q "Codendi" /tmp/cronfile
 if [ $? -ne 0 ]; then
     $CAT <<'EOF' >>/tmp/cronfile
-# Codendi: Once a minute, process Codendi system events
-* * * * * (cd /usr/share/codendi/src/utils; ./php-launcher.sh ./process_system_events.php)
-#
-# Codendi: Regularly launch a system_check event (e.g. every half-hour) 
-0,30 * * * * (cd /usr/share/codendi/src/utils; ./php-launcher.sh ./launch_system_check.php)
-#
-# Codendi: run the daily statistics script just a little bit after
-# midnight so that it computes stats for the day before
-# Run at 0:30 am
-30 0 * * * /usr/share/codendi/src/utils/compute_all_daily_stats.sh
-#
-# Codendi: run the weekly stats for projects. Run it on Monday morning so that
-# it computes the stats for the week before
-# Run on Monday at 1am
-0 1 * * Mon (cd /usr/share/codendi/src/utils/underworld-root; ./db_project_weekly_metric.pl)
 #
 # Codendi: daily incremental backup of subversion repositories
 45 23 * * 1-6 /usr/lib/codendi/bin/backup_subversion.sh -i
@@ -1292,31 +815,9 @@ if [ $? -ne 0 ]; then
 #
 # Codendi: weekly backup preparation (mysql shutdown, file dump and restart)
 45 0 * * Sun /usr/lib/codendi/bin/backup_job
-
-# Codendi: Delete all files in FTP incoming that are older than 2 weeks (336 hours)
-#
-0 3 * * * /usr/sbin/tmpwatch -m -f 336 /var/lib/codendi/ftp/incoming
-#
-# Codendi: It looks like we have memory leaks in Apache in some versions so restart it
-# on Sunday. Do it while the DB is down for backup
-50 0 * * Sun /sbin/service httpd restart
-#
 EOF
     crontab -u root /tmp/cronfile
 fi
-
-
-echo "Installing  codendiadm user crontab..."
-$CAT <<'EOF' >/tmp/cronfile
-# Codendi: Daily PHP cron (obsolete documents...)
-10 0 * * * /usr/share/codendi/src/utils/php-launcher.sh /usr/share/codendi/src/utils/codendi_daily.php
-# Codendi: Re-generate the Codendi User Guides on a daily basis
-00 03 * * * /usr/share/codendi/src/utils/generate_doc.sh
-30 03 * * * /usr/share/codendi/src/utils/generate_programmer_doc.sh
-45 03 * * * /usr/share/codendi/src/utils/generate_cli_package.sh
-EOF
-crontab -u codendiadm /tmp/cronfile
-
 
 ##############################################
 # Log Files rotation configuration
@@ -1355,7 +856,7 @@ $CAT <<'EOF' >/etc/logrotate.d/httpd
      cp /var/log/httpd/vhosts-access_log.1 $destdir/$destfile
     endscript
 }
-                                                                              
+
 /var/log/httpd/error_log {
     missingok
     daily
@@ -1448,10 +949,10 @@ cat <<EOM
 -------------------------------------
 W E L C O M E   T O   C O D E N D I !
 -------------------------------------
-                                                                               
+
 You are currently in your user home directory: $HOME
 EOM
-                                                                               
+
 echo "Your project home directories (Web site) are in:"
 for i in $grplist
 do
@@ -1460,13 +961,13 @@ done
 
 cat <<EOM
 Corresponding CVS and Subversion repositories are in /cvsroot and /svnroot
-                                                                               
+
              *** IMPORTANT REMARK ***
 The Codendi server hosts very valuable yet publicly available
 data. Therefore we recommend that you keep working only in
 the directories listed above for which you have full rights
 and responsibilities.
-                                                                               
+
 EOM
 EOF
 
@@ -1483,9 +984,13 @@ $CHKCONFIG cvs on
 $CHKCONFIG mailman on
 $CHKCONFIG munin-node on
 $CHKCONFIG vsftpd on
-$CHKCONFIG openfire on
+$CHKCONFIG crond on
+#$CHKCONFIG openfire on
+
+/etc/init.d/codendi start
 
 $SERVICE httpd restart
+$SERVICE crond restart
 
 # NSCD is the Name Service Caching Daemon.
 # It is very useful when libnss-mysql is used for authentication
@@ -1514,61 +1019,37 @@ $CP $INSTALL_DIR/plugins/docman/etc/docman.inc.dist /etc/codendi/plugins/docman/
 $CHOWN codendiadm.codendiadm /etc/codendi/plugins/docman/etc/docman.inc
 $CHMOD 644 /etc/codendi/plugins/docman/etc/docman.inc
 
-if [ ! $LABS ]; then
-  # serverupdate plugin
-  $CAT $INSTALL_DIR/plugins/serverupdate/db/install.sql | $MYSQL -u codendiadm codendi --password=$codendiadm_passwd
-fi
-
-# salome plugin
-$CAT $INSTALL_DIR/plugins/salome/db/install.sql | $MYSQL -u codendiadm codendi --password=$codendiadm_passwd
-build_dir /etc/codendi/plugins/salome/etc codendiadm codendiadm 755
-$CP $INSTALL_DIR/plugins/salome/etc/salome.inc.dist /etc/codendi/plugins/salome/etc/salome.inc
-$CP $INSTALL_DIR/plugins/salome/etc/database_salome.inc.dist /etc/codendi/plugins/salome/etc/database_salome.inc
-substitute '/etc/codendi/plugins/salome/etc/database_salome.inc' '%sys_salomedbpasswd%' "$slm_passwd" 
-$CHOWN codendiadm.codendiadm /etc/codendi/plugins/salome/etc/*
-$CHMOD 644 /etc/codendi/plugins/salome/etc/*
-java -jar $INSTALL_DIR/plugins/salome/tools/keygen.jar $slm_passwd $INSTALL_DIR/plugins/salome/www/webapps/jdbc_client/cfg/
-#java -jar $INSTALL_DIR/plugins/salome/tools/keygen.jar $slm_passwd $TOMCAT_DIR/webapps/salome_tmf-soap-server-3/cfg
 
 #GraphOnTrackers plugin
 $CAT $INSTALL_DIR/plugins/graphontrackers/db/install.sql | $MYSQL -u codendiadm codendi --password=$codendiadm_passwd
 $CAT $INSTALL_DIR/plugins/graphontrackers/db/initvalues.sql | $MYSQL -u codendiadm codendi --password=$codendiadm_passwd
 
 # IM plugin
-build_dir /etc/codendi/plugins/IM/etc codendiadm codendiadm 755
-# Create openfireadm MySQL user
-$CAT <<EOF | $MYSQL -u root mysql $pass_opt
-GRANT ALL PRIVILEGES on openfire.* to openfireadm@localhost identified by '$openfire_passwd';
-GRANT SELECT ON codendi.user to openfireadm@localhost;
-GRANT SELECT ON codendi.groups to openfireadm@localhost;
-GRANT SELECT ON codendi.user_group to openfireadm@localhost;
-GRANT SELECT ON codendi.session to openfireadm@localhost;
-FLUSH PRIVILEGES;
-EOF
-# Install plugin
-$CAT $INSTALL_DIR/plugins/IM/db/install.sql | $MYSQL -u codendiadm codendi --password=$codendiadm_passwd
-# Initialize Jabbex
-IM_ADMIN_GROUP='imadmingroup'
-IM_ADMIN_USER='imadmin-bot'
-IM_ADMIN_USER_PW='1M@dm1n'
-IM_MUC_PW='Mu6.4dm1n' # Doesn't need to change
-$PHP $INSTALL_DIR/plugins/IM/include/jabbex_api/installation/install.php -a -orp $rt_passwd -uod openfireadm -pod $openfire_passwd -ucd openfireadm -pcd $openfire_passwd -odb jdbc:mysql://localhost:3306/openfire -cdb jdbc:mysql://localhost:3306/codendi -ouri $sys_default_domain -gjx $IM_ADMIN_GROUP -ujx $IM_ADMIN_USER -pjx $IM_ADMIN_USER_PW -pmuc $IM_MUC_PW
+# build_dir /etc/codendi/plugins/IM/etc codendiadm codendiadm 755
+# # Create openfireadm MySQL user
+# $CAT <<EOF | $MYSQL -u root mysql $pass_opt
+# GRANT ALL PRIVILEGES on openfire.* to openfireadm@localhost identified by '$openfire_passwd';
+# GRANT SELECT ON codendi.user to openfireadm@localhost;
+# GRANT SELECT ON codendi.groups to openfireadm@localhost;
+# GRANT SELECT ON codendi.user_group to openfireadm@localhost;
+# GRANT SELECT ON codendi.session to openfireadm@localhost;
+# FLUSH PRIVILEGES;
+# EOF
+# # Install plugin
+# $CAT $INSTALL_DIR/plugins/IM/db/install.sql | $MYSQL -u codendiadm codendi --password=$codendiadm_passwd
+# # Initialize Jabbex
+# IM_ADMIN_GROUP='imadmingroup'
+# IM_ADMIN_USER='imadmin-bot'
+# IM_ADMIN_USER_PW='1M@dm1n'
+# IM_MUC_PW='Mu6.4dm1n' # Doesn't need to change
+# $PHP $INSTALL_DIR/plugins/IM/include/jabbex_api/installation/install.php -a -orp $rt_passwd -uod openfireadm -pod $openfire_passwd -ucd openfireadm -pcd $openfire_passwd -odb jdbc:mysql://localhost:3306/openfire -cdb jdbc:mysql://localhost:3306/codendi -ouri $sys_default_domain -gjx $IM_ADMIN_GROUP -ujx $IM_ADMIN_USER -pjx $IM_ADMIN_USER_PW -pmuc $IM_MUC_PW
 
 # Hudson plugin
 $CAT $INSTALL_DIR/plugins/hudson/db/install.sql | $MYSQL -u codendiadm codendi --password=$codendiadm_passwd
 
 #Git plugin
-bash $INSTALL_DIR/plugins/git/bin/install.sh
-
-##############################################
-# Generate Documentation
-#
-echo "Generating the Codendi Manuals. This will take a few minutes."
-su -c "$INSTALL_DIR/src/utils/generate_doc.sh -f" - codendiadm 2> /dev/null &
-su -c "$INSTALL_DIR/src/utils/generate_programmer_doc.sh -f" - codendiadm 2> /dev/null &
-su -c "$INSTALL_DIR/src/utils/generate_cli_package.sh -f" - codendiadm 2> /dev/null &
-$CHOWN -R codendiadm.codendiadm $INSTALL_DIR/documentation
-$CHOWN -R codendiadm.codendiadm $INSTALL_DIR/downloads
+#$YUM install rsync
+#bash $INSTALL_DIR/plugins/git/bin/install.sh
 
 ##############################################
 # End of installation

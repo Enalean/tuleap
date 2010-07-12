@@ -6,6 +6,20 @@
 %define APP_LIB_DIR %{_libdir}/%{APP_NAME}
 %define APP_LIBBIN_DIR %{APP_LIB_DIR}/bin
 
+# Check values in Codendi's mailman .spec file
+%define mailman_groupid  106
+%define mailman_group    mailman
+%define mailman_userid   106
+%define mailman_user     mailman
+%define app_group        codendiadm
+%define app_user         codendiadm
+%define dummy_group      dummy
+%define dummy_user       dummy
+%define ftpadmin_group   ftpadmin
+%define ftpadmin_user    ftpadmin
+%define ftp_group        ftp
+%define ftp_user         ftp
+
 Summary: Codendi forge
 Name: %{PKG_NAME}
 Provides: codendi
@@ -20,9 +34,12 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 Packager: Manuel VACELET <manuel.vacelet@st.com>
 
 #Prereq: /sbin/chkconfig, /sbin/service
-Requires: %{PKG_NAME}-customization
+
+# Package cutting is still a bit a mess so do not force dependency on custmization package yet
+#Requires: %{PKG_NAME}-customization
 Requires: vixie-cron >= 4.1-9
 
+#Requires: forgeupgrade
 
 %description
 Codendi is a web based application that address all the aspects of product development.
@@ -39,7 +56,7 @@ Codendi is a web based application that address all the aspects of product devel
 #
 # Install codendi application
 %{__install} -m 755 -d $RPM_BUILD_ROOT/%{APP_DIR}
-for i in cli plugins site-content src ST-ChangeLog ST-VERSION; do
+for i in codendi_tools cli plugins site-content src ST-ChangeLog ST-VERSION; do
 	%{__cp} -ar $i $RPM_BUILD_ROOT/%{APP_DIR}
 done
 # Remove old scripts: not used and add unneeded perl depedencies to the package
@@ -84,27 +101,97 @@ done
 #
 #
 %pre
-# Stop the services
-#/etc/init.d/codendi stop
-#/sbin/service httpd stop
+if [ "$1" -eq "1" ]; then
+    # Install
+
+    #
+    # Make sure mandatory unix groups exist
+    #
+
+    # mailman
+    if grep -q "^%{mailman_group}:" /etc/group 2> /dev/null ; then
+        /usr/sbin/groupmod -g %{mailman_groupid} -n %{mailman_group} %{mailman_group} 2> /dev/null || :
+    else
+        /usr/sbin/groupadd -g %{mailman_groupid} %{mailman_group} 2> /dev/null || :
+    fi
+    # codendiadm
+    if ! grep -q "^%{app_group}:" /etc/group 2> /dev/null ; then
+        /usr/sbin/groupadd -r %{app_group} 2> /dev/null || :
+    fi
+    # dummy
+    if ! grep -q "^%{dummy_group}:" /etc/group 2> /dev/null ; then
+        /usr/sbin/groupadd -r %{dummy_group} 2> /dev/null || :
+    fi
+    # ftpadmin
+    if ! grep -q "^%{ftpadmin_group}:" /etc/group 2> /dev/null ; then
+        /usr/sbin/groupadd -r %{ftpadmin_group} 2> /dev/null || :
+    fi
+    # ftp
+    if ! grep -q "^%{ftp_group}:" /etc/group 2> /dev/null ; then
+        /usr/sbin/groupadd -r %{ftp_group} 2> /dev/null || :
+    fi
+
+    # Make suser mandatory unix users exist
+
+    # codendiadm
+    # mailman group needed to write in /var/log/mailman/ directory
+    if id %{app_user} >/dev/null 2>&1; then
+        /usr/sbin/usermod -c 'Owner of Codendi directories'    -d '/home/codendiadm'    -g "%{app_group}" -s '/bin/bash' -G %{ftpadmin_group},%{mailman_group} %{app_user}
+    else
+        /usr/sbin/useradd -c 'Owner of Codendi directories' -M -d '/home/codendiadm' -r -g "%{app_group}" -s '/bin/bash' -G %{ftpadmin_group},%{mailman_group} %{app_user}
+    fi
+    # mailman
+    if id %{mailman_user} >/dev/null 2>&1; then
+        /usr/sbin/usermod -c 'Owner of Mailman directories'    -d '/usr/lib/mailman' -u %{mailman_userid} -g %{mailman_groupid} -s '/sbin/nologin' %{mailman_user}
+    else
+        /usr/sbin/useradd -c 'Owner of Mailman directories' -M -d '/usr/lib/mailman' -u %{mailman_userid} -g %{mailman_groupid} -s '/sbin/nologin' %{mailman_user}
+    fi
+    # ftpadmin
+    if id %{ftpadmin_user} >/dev/null 2>&1; then
+        /usr/sbin/usermod -c 'FTP Administrator'    -d '/var/lib/codendi/ftp'    -g %{ftpadmin_group} %{ftpadmin_user}
+    else
+        /usr/sbin/useradd -c 'FTP Administrator' -M -d '/var/lib/codendi/ftp' -r -g %{ftpadmin_group} %{ftpadmin_user}
+    fi
+    # ftp
+    if id %{ftp_user} >/dev/null 2>&1; then
+        /usr/sbin/usermod -c 'FTP User'    -d '/var/lib/codendi/ftp'    -g %{ftp_group} %{ftp_user}
+    else
+        /usr/sbin/useradd -c 'FTP User' -M -d '/var/lib/codendi/ftp' -r -g %{ftp_group} %{ftp_user}
+    fi
+    # dummy
+    if id %{dummy_user} >/dev/null 2>&1; then
+        /usr/sbin/usermod -c 'Dummy Codendi User'    -d '/var/lib/codendi/dumps'    -g %{dummy_group} %{dummy_user}
+    else
+        /usr/sbin/useradd -c 'Dummy Codendi User' -M -d '/var/lib/codendi/dumps' -r -g %{dummy_group} %{dummy_user}
+    fi
+else
+    # Stop the services
+    #/etc/init.d/codendi stop
+    #/sbin/service httpd stop
+
+    true
+fi
+
 
 #
 #
 #
 %post
 if [ "$1" -eq "1" ]; then
-	# Install
-	true
+    # Install
+    true
+
 else
-	# Upgrade
-	# Launch forgeupgrade
-	true
+    # Upgrade
+    # Launch forgeupgrade
+    true
+
+    # Re-generate language files
+    %{APP_DIR}/src/utils/php-launcher.sh %{APP_DIR}/src/utils/generate_language_files.php
 fi
+
 # In any cases fix the context
 /usr/bin/chcon -R root:object_r:httpd_sys_content_t $RPM_BUILD_ROOT/%{APP_DIR}
-
-# Re-generate language files
-%{APP_DIR}/src/utils/php-launcher.sh %{APP_DIR}/src/utils/generate_language_files.php
 
 # This adds the proper /etc/rc*.d links for the script that runs the codendi backend
 #/sbin/chkconfig --add %{APP_NAME}
@@ -148,6 +235,7 @@ fi
 %files
 %defattr(-,%{APP_USER},%{APP_USER},-)
 %dir %{APP_DIR}
+%{APP_DIR}/codendi_tools
 %{APP_DIR}/cli
 %{APP_DIR}/plugins
 %{APP_DIR}/site-content
