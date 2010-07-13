@@ -48,11 +48,23 @@ codendi-all-deps: codendi-all-deps.spec
 	cp README.all-deps $(RPM_TMP)/SOURCES/
 	rpmbuild -bb $(RPM_TMP)/SPECS/$<
 
+#
+# Rebuild codendi's rpms
+#
+# Only mailman as of today
+core_rpms:
+	cp -ar $(BASE_DIR)/rpm/SPECS/* $(RPM_TMP)/SPECS
+	cp -ar $(BASE_DIR)/rpm/SOURCES/* $(RPM_TMP)/SOURCES
+	cd $(RPM_TMP)/SPECS && $(MAKE) mailman.codendi
+
 clean:
 	-rm -Rf $(RPM_TMP)/*
 	-rm -Rf ~/.rpmmacros
+	-rm -f /tmp/docbook-cug-*
+	-rm -f /tmp/log_xml2html_*
+	-rm -f /tmp/log_xml2pdf_*
 
-all: clean codendi custom_codendi codendi-all-deps
+all: clean codendi core_rpms custom_codendi codendi-all-deps
 
 dist:
 	mkdir -p $(RPM_TMP)/yum
