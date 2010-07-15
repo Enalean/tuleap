@@ -83,7 +83,6 @@ class ProjectLinks_Widget_HomePageLinks extends Widget {
         $html .= "\n<!-- PROJECT LINKS START -->\n";
         $html .= $this->getAllLinks($groupId);
         $html .= "\n<!-- PROJECT LINKS END -->\n";
-        $GLOBALS['HTML']->includeFooterJavascriptFile($this->pluginPath.'/script/toggler.js');
         return $html;
     }
 

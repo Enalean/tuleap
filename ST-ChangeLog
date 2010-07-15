@@ -1,10 +1,11 @@
 Version 4.0.10 (Not released yet)
         == New features ==
-        backlog #103963: Permission denied improvement: docman items.
+        backlog #103963: Permission denied improvement: docman items
 	backlog #104505: Installation based RPM
 
 	== Bugfix ==
 	backlog #104684: Integrate LDAP daily sync in system event
+	backlog #104715: Remove toggler.js reference in project links
 
 Version 4.0.9 - Friday, 2nd July 2010
 	== Upgrade/install procedure ==
