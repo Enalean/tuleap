@@ -1534,6 +1534,28 @@ class Layout extends Response {
         global $sys_default_domain;
         $pm = ProjectManager::instance();
         $tabs = array();
+
+        // Add a default tab to explain project privacy
+        if ($project->isPublic()) {
+            $label = '<span class="project-privacy">[Public]</span>';
+        } else {
+            $label = '<span class="project-privacy">[Private]</span>';
+        }
+        $link = '/project/privacy.php?group_id='.$project->getId();
+        $js = "document.observe('dom:loaded', function() {
+    $$('span[class=project-privacy]').each(function (a) {
+        codendi.Tooltips.push(new codendi.Tooltip(a, '".$link."'));
+    });
+});
+";
+        $this->includeFooterJavascriptSnippet($js);
+        $tabs[] = array('link'        => $link,
+                        'icon'        => null,
+                        'label'       => $label,
+                        'enabled'     => true,
+                        'description' => $privacy);
+
+
         $group_id = $project->getGroupId();
         reset($project->service_data_array);
          while (list($short_name,$service_data) = each($project->service_data_array)) {

@@ -904,3 +904,9 @@ project_desc_desc	full_desc	<b>*** IMPORTANT NOTE ***</b> Make sure you provide 
 project_desc_desc	other_comments	Anything you'd like to say about your projects that is not covered above. For instance, if your software is used in other products you might want to list them here. If the soft is being commercialized you can also give information about pricing or the person to contact, etc.
 project_desc_desc	req_soft	If your project requires the use of 3rd Party (commercial or Open Source) or other internal software to work properly, list them here.
 project_desc_desc	int_prop	If your project is covered by Patents or IPs list them here.
+#-----------------------------------------------
+# Script: /www/project/privacy.php
+#
+project_privacy	private	<p>Project privacy set to <big><strong>private</strong></big><br />Only project members can access it's content.</p>
+project_privacy	public_w_anon	<p>Project privacy set to <big><strong>public</strong></big><br />By default, it's content is available to everyone (authenticated or not).<br />Please note that more restrictive permissions might exist on some items.</p>
+project_privacy	public_wo_anon	<p>Project privacy set to <big><strong>public</strong></big><br />By default, it's content is available to all authenticated users.<br />Please note that more restrictive permissions might exist on some items.</p>
