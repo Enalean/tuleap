@@ -1,6 +1,6 @@
 #!/bin/sh
 
-set -e
+set -ex
 
 #
 # CI build: build Codendi project on a Continuous Integration server
