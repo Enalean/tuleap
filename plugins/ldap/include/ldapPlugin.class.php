@@ -30,6 +30,7 @@ require_once 'LDAP_UserGroupManager.class.php';
 require_once 'LDAP_ProjectGroupManager.class.php';
 require_once 'LDAP.class.php';
 require_once 'LDAP_BackendSVN.class.php';
+require_once 'LDAP_DirectorySynchronization.class.php';
 
 class LdapPlugin extends Plugin {
     /**
@@ -107,6 +108,9 @@ class LdapPlugin extends Plugin {
         
         // Backend SVN
         $this->_addHook('backend_factory_get_svn', 'backend_factory_get_svn', false);
+
+        // Daily codendi job
+        $this->_addHook('codendi_daily_start', 'codendi_daily_start', false);
     }
     
     /**
@@ -811,6 +815,20 @@ class LdapPlugin extends Plugin {
         if ($GLOBALS['sys_auth_type'] == 'ldap') {
             $params['base']  = 'LDAP_BackendSVN';
             $params['setup'] = array($this->getLdap());
+        }
+    }
+
+    /**
+     * Hook
+     *
+     * @param Array $params
+     *
+     * @return void
+     */
+    function codendi_daily_start(array $params) {
+        if ($GLOBALS['sys_auth_type'] == 'ldap') {
+            $ldapQuery = new LDAP_DirectorySynchronization($this->getLdap());
+            $ldapQuery->syncAll();
         }
     }
 }

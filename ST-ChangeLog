@@ -3,6 +3,9 @@ Version 4.0.10 (Not released yet)
         backlog #103963: Permission denied improvement: docman items.
 	backlog #104505: Installation based RPM
 
+	== Bugfix ==
+	backlog #104684: Integrate LDAP daily sync in system event
+
 Version 4.0.9 - Friday, 2nd July 2010
 	== Upgrade/install procedure ==
 	Switch to RPM distribution:
