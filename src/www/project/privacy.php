@@ -38,7 +38,7 @@ if ($project && !$project->isError()) {
     }
 
     if ($request->isAjax()) {
-        echo $GLOBALS['Language']->getText('project_privacy', $privacy);
+        echo $GLOBALS['Language']->getText('project_privacy', 'tooltip_'.$privacy);
     }
 }
 
