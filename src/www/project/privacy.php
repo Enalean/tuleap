@@ -20,6 +20,11 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
+/**
+ * Displays privacy tooltip when user let it's mouse over the [Private] or
+ * [Public] text in front of project summary tab
+ */
+
 require_once 'pre.php';
 
 $pm      = ProjectManager::instance();

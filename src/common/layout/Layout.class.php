@@ -1591,12 +1591,10 @@ class Layout extends Response {
                 }
                 $label .= ']</span>';
 
-                $link = '/project/privacy.php?group_id='.$project->getId();
-
                 $js = "
 document.observe('dom:loaded', function() {
     $$('span[class=project-privacy]').each(function (a) {
-        codendi.Tooltips.push(new codendi.Tooltip(a, '".$link."'));
+        codendi.Tooltips.push(new codendi.Tooltip(a, '".'/project/privacy.php?group_id='.$project->getId()."'));
     });
 });
 ";
