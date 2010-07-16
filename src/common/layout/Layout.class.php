@@ -1534,9 +1534,6 @@ class Layout extends Response {
         global $sys_default_domain;
         $pm = ProjectManager::instance();
         $tabs = array();
-
-
-
         $group_id = $project->getGroupId();
         reset($project->service_data_array);
          while (list($short_name,$service_data) = each($project->service_data_array)) {
