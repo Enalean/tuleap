@@ -2,6 +2,7 @@ Version 4.0.10 (Not released yet)
         == New features ==
         backlog #103963: Permission denied improvement: docman items
 	backlog #104505: Installation based RPM
+	backlog #104711: Highlight project privacy
 
 	== Bugfix ==
 	backlog #104684: Integrate LDAP daily sync in system event

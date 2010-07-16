@@ -1577,9 +1577,33 @@ class Layout extends Response {
             }
             $enabled = (is_numeric($toptab) && $toptab == $service_data['service_id']) || ($short_name && ($toptab == $short_name));
             $hp =& Codendi_HTMLPurifier::instance();
+            if ($short_name == 'summary') {
+
+                // Add a default tab to explain project privacy
+                $label = '<span class="project-privacy">[';
+                if ($project->isPublic()) {
+                    $label .= $GLOBALS['Language']->getText('project_privacy', 'public');
+                } else {
+                    $label .= $GLOBALS['Language']->getText('project_privacy', 'private');
+                }
+                $label .= ']</span>';
+
+                $js = "
+document.observe('dom:loaded', function() {
+    $$('span[class=project-privacy]').each(function (a) {
+        codendi.Tooltips.push(new codendi.Tooltip(a, '".'/project/privacy.php?group_id='.$project->getId()."'));
+    });
+});
+";
+                $this->includeFooterJavascriptSnippet($js);
+
+                $label .= '&nbsp;'.$hp->purify(util_unconvert_htmlspecialchars($project->getPublicName()), CODENDI_PURIFIER_CONVERT_HTML).'&nbsp;&raquo;';
+            } else {
+                $label = $hp->purify($service_data['label']);
+            }
             $tabs[] = array('link'        => $link,
                             'icon'        => null,
-                            'label'       => $short_name == 'summary' ? $hp->purify(util_unconvert_htmlspecialchars($project->getPublicName()), CODENDI_PURIFIER_CONVERT_HTML).'&nbsp;&raquo;' : $hp->purify($service_data['label']),
+                            'label'       => $label,
                             'enabled'     => $enabled,
                             'description' => $hp->purify($service_data['description']));
         }
