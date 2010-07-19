@@ -34,55 +34,80 @@ class Widget_MyProjects extends Widget {
         return $GLOBALS['Language']->getText('my_index', 'my_projects');
     }
     function getContent() {
-        $html_my_projects = '';
-        $result = db_query("SELECT groups.group_name,"
-            . "groups.group_id,"
-            . "groups.unix_group_name,"
-            . "groups.status,"
-            . "groups.is_public,"
-            . "user_group.admin_flags "
-            . "FROM groups,user_group "
-            . "WHERE groups.group_id=user_group.group_id "
-            . "AND user_group.user_id='". user_getid() ."' "
-            . "AND groups.status='A' ORDER BY group_name");
+        $html = '';
+
+        $user = UserManager::instance()->getCurrentUser();
+
+        $result = db_query("SELECT groups.group_id, groups.group_name, groups.unix_group_name, groups.status, groups.is_public, user_group.admin_flags".
+                           " FROM groups".
+                           " JOIN user_group USING (group_id)".
+                           " WHERE user_group.user_id = ".$user->getId().
+                           " AND groups.status = 'A'".
+                           " ORDER BY is_public, groups.group_name");
         $rows=db_numrows($result);
         if (!$result || $rows < 1) {
-            $html_my_projects .= $GLOBALS['Language']->getText('my_index', 'not_member');
-            $html_my_projects .= db_error();
+            $html .= $GLOBALS['Language']->getText('my_index', 'not_member');
         } else {
-            
-            $html_my_projects .= '<table style="width:100%">';
-            for ($i=0; $i<$rows; $i++) {
-                $html_my_projects .= '
-                    <TR class="'. util_get_alt_row_color($i) .'"><TD WIDTH="99%">'.
-                    '<A href="/projects/'. db_result($result,$i,'unix_group_name') .'/">'.
-                    db_result($result,$i,'group_name') .'</A>';
-                if ( db_result($result,$i,'admin_flags') == 'A' ) {
-                    $html_my_projects .= ' <small><A HREF="/project/admin/?group_id='.db_result($result,$i,'group_id').'">['.$GLOBALS['Language']->getText('my_index', 'admin_link').']</A></small>';
+            $html .= '<table cellspacing="0" style="width:100%;">';
+            $i     = 0;
+            while ($row = db_fetch_array($result)) {
+                $canQuit    = true;
+                $srvColSpan = '';
+                if ($row['admin_flags'] == 'A') {
+                    $canQuit    = false;
+                    $srvColSpan = 'colspan="2"';
                 }
-                if ( db_result($result,$i,'is_public') == 0 ) {
-                    $html_my_projects .= ' (*)';
-                    $private_shown = true;
-                }
-                if ( db_result($result,$i,'admin_flags') == 'A' ) {
-                    // User can't exit of project if she is admin
-                    $html_my_projects .= '</td><td>&nbsp;</td></TR>';
+
+                $html .= '<tr class="'. util_get_alt_row_color($i++) .'" >';
+
+                // Privacy
+                if ($row['is_public'] == 0) {
+                    $privacy = 'public';
                 } else {
-                    $html_my_projects .= '</TD>'.
-                    '<td><A href="rmproject.php?group_id='. db_result($result,$i,'group_id').
-                    '" onClick="return confirm(\''.$GLOBALS['Language']->getText('my_index', 'quit_proj').'\')">'.
-                    '<IMG SRC="'.util_get_image_theme("ic/trash.png").'" HEIGHT="16" WIDTH="16" BORDER="0"></A></TD></TR>';
+                    $privacy = 'private';
                 }
+                $html .= '<td style="padding-left: 0.5em;"><span class="project_privacy_'.$privacy.'">';
+                $html .= $GLOBALS['Language']->getText('project_privacy', $privacy);
+                $html .= '</span></td>';
+
+                // Project name
+                $html .= '<td style="padding-left: 0.5em;"><a href="/projects/'.$row['unix_group_name'].'/">'.
+                    $row['group_name'].'</a></td>';
+
+                // Admin link
+                if ($row['admin_flags'] == 'A') {
+                    $html .= '<td '.$srvColSpan.' style="padding-left: 0.5em; width: 99%; text-align: left; font-size: smaller;">';
+                    $html .= '<a href="/project/admin/?group_id='.$row['group_id'].'">['.$GLOBALS['Language']->getText('my_index', 'admin_link').']</a>';
+                    $html .= '&nbsp;</td>';
+                }
+
+                // Remove from project
+                if ($canQuit) {
+                    $html .= '<td style="padding-left: 0.5em; text-align: right;"><a href="rmproject.php?group_id='.$row['group_id'].
+                        '" onClick="return confirm(\''.$GLOBALS['Language']->getText('my_index', 'quit_proj').'\')">'.
+                        '<img src="'.util_get_image_theme("ic/trash.png").'" height="16" width="16" border="0"></a></td>';
+                }
+
+                $html .= '</tr>';
             }
-            
-            if (isset($private_shown) && $private_shown) {
-                $html_my_projects .= '
-                <TR class="'. util_get_alt_row_color($i) .'"><TD colspan="2" class="small">'.
-                '(*)&nbsp;'.$GLOBALS['Language']->getText('my_index', 'priv_proj').'</td></tr>';
-            }
-            $html_my_projects .= '</table>';
+
+            $html .= '</table>';
+
+            // Javascript for project privacy tooltip
+            $js = "
+document.observe('dom:loaded', function() {
+    $$('span[class=project_privacy_private], span[class=project_privacy_public]').each(function (span) {
+        var type = span.className.substring('project_privacy_'.length, span.className.length);
+        codendi.Tooltips.push(new codendi.Tooltip(span, '/project/privacy.php?project_type='+type));
+    });
+});
+";
+            $GLOBALS['HTML']->includeFooterJavascriptSnippet($js);
+
+
+
         }
-        return $html_my_projects;
+        return $html;
     }
     function hasRss() {
         return true;
