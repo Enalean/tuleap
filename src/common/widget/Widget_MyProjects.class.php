@@ -59,8 +59,8 @@ class Widget_MyProjects extends Widget {
                 } else {
                     $privacy = 'private';
                 }
-                $html .= '<td style="padding-left: 0.5em; width: 1%;"><span class="project_privacy_'.$privacy.'">';
-                $html .= $GLOBALS['Language']->getText('project_privacy', $privacy);
+                $html .= '<td style="width: 1%;"><span class="project_privacy_'.$privacy.'">';
+                $html .= '&nbsp;';
                 $html .= '</span></td>';
 
                 // Project name
@@ -88,6 +88,15 @@ class Widget_MyProjects extends Widget {
 
                 $html .= '</tr>';
             }
+
+            // Legend
+            $html .= '<tr>';
+            $html .= '<td colspan="4" class="'.util_get_alt_row_color($i++).'">';
+            $html .= '<strong>'.$GLOBALS['Language']->getText('my_index', 'my_projects_legend').'</strong>&nbsp;';
+            $html .= '<span class="project_privacy_private" style="padding-right: 1em;">&nbsp;'.$GLOBALS['Language']->getText('project_privacy', 'private').'</span>';
+            $html .= '<span class="project_privacy_public">&nbsp;'.$GLOBALS['Language']->getText('project_privacy', 'public').'</span>';
+            $html .= '</td>';
+            $html .= '</tr>';
 
             $html .= '</table>';
 
