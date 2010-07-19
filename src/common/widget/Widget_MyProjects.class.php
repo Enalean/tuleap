@@ -51,13 +51,6 @@ class Widget_MyProjects extends Widget {
             $html .= '<table cellspacing="0" style="width:100%;">';
             $i     = 0;
             while ($row = db_fetch_array($result)) {
-                $canQuit    = true;
-                $srvColSpan = '';
-                if ($row['admin_flags'] == 'A') {
-                    $canQuit    = false;
-                    $srvColSpan = 'colspan="2"';
-                }
-
                 $html .= '<tr class="'. util_get_alt_row_color($i++) .'" >';
 
                 // Privacy
@@ -66,27 +59,32 @@ class Widget_MyProjects extends Widget {
                 } else {
                     $privacy = 'private';
                 }
-                $html .= '<td style="padding-left: 0.5em;"><span class="project_privacy_'.$privacy.'">';
+                $html .= '<td style="padding-left: 0.5em; width: 1%;"><span class="project_privacy_'.$privacy.'">';
                 $html .= $GLOBALS['Language']->getText('project_privacy', $privacy);
                 $html .= '</span></td>';
 
                 // Project name
-                $html .= '<td style="padding-left: 0.5em;"><a href="/projects/'.$row['unix_group_name'].'/">'.
-                    $row['group_name'].'</a></td>';
+                $html .= '<td style="padding-left: 0.5em; width: 50%;"><a href="/projects/'.$row['unix_group_name'].'/">'.$row['group_name'].'</a></td>';
 
                 // Admin link
+                $html .= '<td style="padding-left: 0.5em; text-align: left; font-size: smaller;">';
                 if ($row['admin_flags'] == 'A') {
-                    $html .= '<td '.$srvColSpan.' style="padding-left: 0.5em; width: 99%; text-align: left; font-size: smaller;">';
                     $html .= '<a href="/project/admin/?group_id='.$row['group_id'].'">['.$GLOBALS['Language']->getText('my_index', 'admin_link').']</a>';
-                    $html .= '&nbsp;</td>';
+                } else {
+                    $html .= '&nbsp;';
                 }
+                $html .= '</td>';
 
                 // Remove from project
-                if ($canQuit) {
-                    $html .= '<td style="padding-left: 0.5em; text-align: right;"><a href="rmproject.php?group_id='.$row['group_id'].
+                $html .= '<td style="padding-left: 0.5em; width: 1%; text-align: right;">';
+                if ($row['admin_flags'] == 'A') {
+                    $html .= '<a href="rmproject.php?group_id='.$row['group_id'].
                         '" onClick="return confirm(\''.$GLOBALS['Language']->getText('my_index', 'quit_proj').'\')">'.
-                        '<img src="'.util_get_image_theme("ic/trash.png").'" height="16" width="16" border="0"></a></td>';
+                        '<img src="'.util_get_image_theme("ic/trash.png").'" height="16" width="16" border="0"></a>';
+                } else {
+                    $html .= '&nbsp;';
                 }
+                $html .= '</td>';
 
                 $html .= '</tr>';
             }
