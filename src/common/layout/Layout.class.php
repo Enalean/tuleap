@@ -955,11 +955,13 @@ class Layout extends Response {
             if (isset($js['file']) && !$c->isCombined($js['file'])) {
                 echo '<script type="text/javascript" src="'. $js['file'] .'"></script>'."\n";
             } else {
-                echo '<script type="text/javascript">'."\n";
-                echo '//<!--'."\n";
-                echo $js['snippet']."\n";
-                echo '//-->'."\n";
-                echo '</script>'."\n";
+                if (isset($js['snippet'])) {
+                    echo '<script type="text/javascript">'."\n";
+                    echo '//<!--'."\n";
+                    echo $js['snippet']."\n";
+                    echo '//-->'."\n";
+                    echo '</script>'."\n";
+                }
             }
         }
         echo '<script type="text/javascript">'."\n";
