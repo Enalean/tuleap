@@ -27,24 +27,21 @@
 
 require_once 'pre.php';
 
-$pm      = ProjectManager::instance();
-$project = $pm->getProject($group_id);
-if ($project && !$project->isError()) {
+$projectType = $request->getValidated('project_type', new Valid_WhiteList('project_type', array('private', 'public')), 'public');
 
-    if ($project->isPublic()) {
-        $privacy = 'public';
-        if ($GLOBALS['sys_allow_anon']) {
-            $privacy .= '_w_anon';
-        } else {
-            $privacy .= '_wo_anon';
-        }
+if ($projectType == 'public') {
+    $privacy = 'public';
+    if ($GLOBALS['sys_allow_anon']) {
+        $privacy .= '_w_anon';
     } else {
-        $privacy = 'private';
+        $privacy .= '_wo_anon';
     }
+} else {
+    $privacy = 'private';
+}
 
-    if ($request->isAjax()) {
-        echo $GLOBALS['Language']->getText('project_privacy', 'tooltip_'.$privacy);
-    }
+if ($request->isAjax()) {
+    echo $GLOBALS['Language']->getText('project_privacy', 'tooltip_'.$privacy);
 }
 
 ?>

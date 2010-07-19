@@ -1580,18 +1580,21 @@ class Layout extends Response {
             if ($short_name == 'summary') {
 
                 // Add a default tab to explain project privacy
-                $label = '<span class="project-privacy">[';
                 if ($project->isPublic()) {
-                    $label .= $GLOBALS['Language']->getText('project_privacy', 'public');
+                    $privacy = 'public';
                 } else {
-                    $label .= $GLOBALS['Language']->getText('project_privacy', 'private');
+                    $privacy = 'private';
                 }
-                $label .= ']</span>';
+                $label  = '<span class="project_privacy_'.$privacy.'">[';
+                $label .= $GLOBALS['Language']->getText('project_privacy', $privacy);
+                $label .= ']</span></td>';
 
+                // Javascript for project privacy tooltip
                 $js = "
 document.observe('dom:loaded', function() {
-    $$('span[class=project-privacy]').each(function (a) {
-        codendi.Tooltips.push(new codendi.Tooltip(a, '".'/project/privacy.php?group_id='.$project->getId()."'));
+    $$('span[class=project_privacy_private], span[class=project_privacy_public]').each(function (span) {
+        var type = span.className.substring('project_privacy_'.length, span.className.length);
+        codendi.Tooltips.push(new codendi.Tooltip(span, '/project/privacy.php?project_type='+type));
     });
 });
 ";
