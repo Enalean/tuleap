@@ -48,7 +48,7 @@ class Widget_MyProjects extends Widget {
         if (!$result || $rows < 1) {
             $html .= $GLOBALS['Language']->getText('my_index', 'not_member');
         } else {
-            $html .= '<table cellspacing="0" style="width:100%;">';
+            $html .= '<table cellspacing="0" class="widget_my_projects">';
             $i     = 0;
             while ($row = db_fetch_array($result)) {
                 $html .= '<tr class="'. util_get_alt_row_color($i++) .'" >';
@@ -59,15 +59,15 @@ class Widget_MyProjects extends Widget {
                 } else {
                     $privacy = 'private';
                 }
-                $html .= '<td style="width: 1%;"><span class="project_privacy_'.$privacy.'">';
+                $html .= '<td class="widget_my_projects_privacy"><span class="project_privacy_'.$privacy.'">';
                 $html .= '&nbsp;';
                 $html .= '</span></td>';
 
                 // Project name
-                $html .= '<td style="padding-left: 0.5em; width: 50%;"><a href="/projects/'.$row['unix_group_name'].'/">'.$row['group_name'].'</a></td>';
+                $html .= '<td class="widget_my_projects_project_name"><a href="/projects/'.$row['unix_group_name'].'/">'.$row['group_name'].'</a></td>';
 
                 // Admin link
-                $html .= '<td style="padding-left: 0.5em; text-align: left; font-size: smaller;">';
+                $html .= '<td class="widget_my_projects_actions">';
                 if ($row['admin_flags'] == 'A') {
                     $html .= '<a href="/project/admin/?group_id='.$row['group_id'].'">['.$GLOBALS['Language']->getText('my_index', 'admin_link').']</a>';
                 } else {
@@ -76,11 +76,9 @@ class Widget_MyProjects extends Widget {
                 $html .= '</td>';
 
                 // Remove from project
-                $html .= '<td style="padding-left: 0.5em; width: 1%; text-align: right;">';
+                $html .= '<td class="widget_my_projects_remove">';
                 if ($row['admin_flags'] == 'A') {
-                    $html .= '<a href="rmproject.php?group_id='.$row['group_id'].
-                        '" onClick="return confirm(\''.$GLOBALS['Language']->getText('my_index', 'quit_proj').'\')">'.
-                        '<img src="'.util_get_image_theme("ic/trash.png").'" height="16" width="16" border="0"></a>';
+                    $html .= html_trash_link('rmproject.php?group_id='.$row['group_id'], $GLOBALS['Language']->getText('my_index', 'quit_proj'), $GLOBALS['Language']->getText('my_index', 'quit_proj'));
                 } else {
                     $html .= '&nbsp;';
                 }
@@ -91,9 +89,9 @@ class Widget_MyProjects extends Widget {
 
             // Legend
             $html .= '<tr>';
-            $html .= '<td colspan="4" class="'.util_get_alt_row_color($i++).'">';
-            $html .= '<strong>'.$GLOBALS['Language']->getText('my_index', 'my_projects_legend').'</strong>&nbsp;';
-            $html .= '<span class="project_privacy_private" style="padding-right: 1em;">&nbsp;'.$GLOBALS['Language']->getText('project_privacy', 'private').'</span>';
+            $html .= '<td colspan="4" class="widget_my_projects_legend">';
+            $html .= '<span class="widget_my_projects_legend_title">'.$GLOBALS['Language']->getText('my_index', 'my_projects_legend').'</span>';
+            $html .= '<span class="project_privacy_private">&nbsp;'.$GLOBALS['Language']->getText('project_privacy', 'private').'</span>';
             $html .= '<span class="project_privacy_public">&nbsp;'.$GLOBALS['Language']->getText('project_privacy', 'public').'</span>';
             $html .= '</td>';
             $html .= '</tr>';

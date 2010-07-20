@@ -507,6 +507,45 @@ table.release tr td img {
 }
 /* }}} */
 
+/* {{{ Widget My Projects */
+.widget_my_projects {
+    width: 100%;
+}
+
+.widget_my_projects_privacy {
+    width: 1%;
+}
+
+.widget_my_projects_project_name {
+    width: 50%;
+    padding-left: 0.5em;
+}
+
+.widget_my_projects_actions {
+    padding-left: 0.5em;
+    text-align: left;
+    font-size: smaller;
+}
+
+.widget_my_projects_remove {
+    width: 1%;
+    text-align: right;
+}
+
+.widget_my_projects_legend {
+    border-top: 1px solid #bcbcad;
+}
+
+.widget_my_projects_legend_title {
+    font-weight: bold;
+    padding-right: 1em;
+}
+
+.widget_my_projects_legend span.project_privacy_private {
+    padding-right: 1em;
+}
+/* }}}*/
+
 /* {{{ lists & users autocomplete */
 .lists_users_autocomplete {
     max-height:200px;
@@ -1076,7 +1115,6 @@ ul.ServiceMenu li.current {
     background-color: blue;
 }
 /* }}}*/
-
 
 /* {{{ Projects privacy highlighting */
 .project_privacy_private, .project_privacy_public {
