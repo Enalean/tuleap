@@ -50,24 +50,30 @@ class Widget_MyProjects extends Widget {
         } else {
             $html .= '<table cellspacing="0" class="widget_my_projects">';
             $i     = 0;
+            $prevIsPublic = -1;
             while ($row = db_fetch_array($result)) {
-                $html .= '<tr class="'. util_get_alt_row_color($i++) .'" >';
+                $tdClass = '';
+                if ($prevIsPublic == 0 && $row['is_public'] == 1) {
+                    $tdClass .= ' widget_my_projects_first_public';
+                }
+
+                $html .= '<tr class="'.util_get_alt_row_color($i++).'" >';
 
                 // Privacy
-                if ($row['is_public'] == 0) {
+                if ($row['is_public'] == 1) {
                     $privacy = 'public';
                 } else {
                     $privacy = 'private';
                 }
-                $html .= '<td class="widget_my_projects_privacy"><span class="project_privacy_'.$privacy.'">';
+                $html .= '<td class="widget_my_projects_privacy'.$tdClass.'"><span class="project_privacy_'.$privacy.'">';
                 $html .= '&nbsp;';
                 $html .= '</span></td>';
 
                 // Project name
-                $html .= '<td class="widget_my_projects_project_name"><a href="/projects/'.$row['unix_group_name'].'/">'.$row['group_name'].'</a></td>';
+                $html .= '<td class="widget_my_projects_project_name'.$tdClass.'"><a href="/projects/'.$row['unix_group_name'].'/">'.$row['group_name'].'</a></td>';
 
                 // Admin link
-                $html .= '<td class="widget_my_projects_actions">';
+                $html .= '<td class="widget_my_projects_actions'.$tdClass.'">';
                 if ($row['admin_flags'] == 'A') {
                     $html .= '<a href="/project/admin/?group_id='.$row['group_id'].'">['.$GLOBALS['Language']->getText('my_index', 'admin_link').']</a>';
                 } else {
@@ -76,8 +82,8 @@ class Widget_MyProjects extends Widget {
                 $html .= '</td>';
 
                 // Remove from project
-                $html .= '<td class="widget_my_projects_remove">';
-                if ($row['admin_flags'] == 'A') {
+                $html .= '<td class="widget_my_projects_remove'.$tdClass.'">';
+                if ($row['admin_flags'] != 'A') {
                     $html .= html_trash_link('rmproject.php?group_id='.$row['group_id'], $GLOBALS['Language']->getText('my_index', 'quit_proj'), $GLOBALS['Language']->getText('my_index', 'quit_proj'));
                 } else {
                     $html .= '&nbsp;';
@@ -85,6 +91,8 @@ class Widget_MyProjects extends Widget {
                 $html .= '</td>';
 
                 $html .= '</tr>';
+
+                $prevIsPublic = $row['is_public'];
             }
 
             // Legend
@@ -108,9 +116,6 @@ document.observe('dom:loaded', function() {
 });
 ";
             $GLOBALS['HTML']->includeFooterJavascriptSnippet($js);
-
-
-
         }
         return $html;
     }
