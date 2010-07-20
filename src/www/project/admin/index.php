@@ -12,7 +12,6 @@ require_once('account.php');
 require_once('common/include/TemplateSingleton.class.php');
 require_once('common/tracker/ArtifactType.class.php');
 require_once('common/tracker/ArtifactTypeFactory.class.php');
-require_once('common/frs/FRSPackageFactory.class.php');
 require_once('www/project/admin/ugroup_utils.php');
 
 
@@ -420,31 +419,26 @@ echo '</TD>
 	<TD width=50%>';
 
 /*
-	Show filerelease info
+	Delegate notifications
 */
 if ($project->usesFile()) {
-    $HTML->box1_top($Language->getText('project_admin_index','file_rel')."&nbsp;".help_button('FileRelease.html'));
+    $HTML->box1_top($Language->getText('project_admin_index','member_request_delegation_title'));
 
-    echo '
-	&nbsp;<BR>
-	<B>'.$Language->getText('project_admin_index','packages_available').'</B>
+    echo '<tr><td colspan="2">';
+    echo $Language->getText('project_admin_index','member_request_delegation_desc');
+    echo '</td></tr>';
 
-     <P>';
-    
-    // Display the list of the packages available in this project
-    $package_factory = new FRSPackageFactory();
-    $packages = $package_factory->getFRSPackagesFromDb($group_id);
-    if (count($packages) > 0) {
-        foreach ($packages as $package) {
-            echo $package->getName();
-            echo '<br />';
-        }
-    } else {
-    	   echo $Language->getText('global','none').'<br />';
-    }
-    
+    $selectedUgroup = array($GLOBALS['UGROUP_PROJECT_ADMIN']);
+    $ugroupList = array(array('value' => $GLOBALS['UGROUP_PROJECT_ADMIN'], 'text' => util_translate_name_ugroup('project_admin')));
+    /*$res = ugroup_db_get_existing_ugroups($group_id);
+    while ($row = db_fetch_array($res)) {
+        $ugroupList[] = array('value' => $row['ugroup_id'], 'text' => $row['name']);
+        }*/
+    echo '<tr><td colspan="2">';
+    echo html_build_multiple_select_box_from_array($ugroupList, "ugroups[]", $selectedUgroup, 8, false, '', false, '', false, '', false);
+    echo '</td></tr>';
+
     echo $HTML->box1_bottom();
-    
 }
 ?>
 </TD>
