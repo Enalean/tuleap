@@ -93,7 +93,7 @@ project_admin_header(array('title'=>$Language->getText('project_admin_index','p_
 	Show top box listing trove and other info
 */
 
-echo '<TABLE width=100% cellpadding=2 cellspacing=2 border=0>
+echo '<TABLE width=100% border=0>
 <TR valign=top><TD width=50%>';
 
 $HTML->box1_top($Language->getText('project_admin_index','p_edit',$group->getPublicName())); 
@@ -150,7 +150,7 @@ if (user_is_super_user()) {
     print '<TABLE WIDTH="100%" BORDER="0">
  <TR>
   <TD><B>'.$Language->getText('project_admin_index','group_type').' '.help_button('ProjectType.html').' : </B>
-      <FORM action="'. $PHP_SELF .'" method="post">
+      <FORM action="?" method="post">
       <INPUT TYPE="HIDDEN" NAME="func" VALUE="change_group_type">
       <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$group_id.'"></TD>
   <TD valign="top">'.$template->showTypeBox('form_project_type',$group->getType()).'
@@ -242,7 +242,7 @@ while ($row_memb=db_fetch_array($res_memb)) {
     if (!$display_name) {
         $display_name = $user_helper->getDisplayName($row_memb['user_name'], $row_memb['realname']);
     }
-    print '<FORM ACTION="'. $PHP_SELF .'" METHOD="POST"><INPUT TYPE="HIDDEN" NAME="func" VALUE="rmuser">'.
+    print '<FORM ACTION="?" METHOD="POST"><INPUT TYPE="HIDDEN" NAME="func" VALUE="rmuser">'.
 	'<INPUT TYPE="HIDDEN" NAME="rm_id" VALUE="'.$row_memb['user_id'].'">'.
 	'<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'. $group_id .'">'.
 	'<TR><TD ALIGN="center"><INPUT TYPE="IMAGE" NAME="DELETE" SRC="'.util_get_image_theme("ic/trash.png").'" HEIGHT="16" WIDTH="16" BORDER="0"></TD></FORM>'.
