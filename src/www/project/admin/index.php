@@ -49,54 +49,43 @@ if (!$group || !is_object($group) || $group->isError()) {
 
 $em =& EventManager::instance();
 
-if (isset($func)) {
+$vFunc = new Valid_WhiteList('func', array('adduser', 'rmuser', 'change_group_type'));
+$vFunc->required();
+if ($request->isPost() && $request->valid($vFunc)) {
     /*
       updating the database
     */
-    if ($func=='adduser') {
-        //add user to this project
+    switch ($request->get('func')) {
+    case 'adduser':
+        // add user to this project
         $res = account_add_user_to_group ($group_id,$form_unix_name);
-    } else if ($func=='rmuser') {
+        break;
+    case 'rmuser':
         // remove a user from this portal
         account_remove_user_from_group($group_id, $rm_id);
-    } else if ($func == "change_group_type") {
+        break;
 
-      if ($group->getType() != $form_project_type) {
-	group_add_history ('group_type',$group->getType(),$group_id);  
+    case 'change_group_type':
+        if (user_is_super_user() && ($group->getType() != $form_project_type)) {
+            group_add_history ('group_type',$group->getType(),$group_id);
 
-	$template =& TemplateSingleton::instance();
-	$group->setType($form_project_type);
+            $template = TemplateSingleton::instance();
+            $group->setType($form_project_type);
 
-	//set also flag on trackers to be copied or not on project instanciation
-	if ($template->isTemplate($form_project_type)) {
-	  db_query("UPDATE artifact_group_list SET instantiate_for_new_projects='1' WHERE group_id='$group_id'");
-	} else {
-	  db_query("UPDATE artifact_group_list SET instantiate_for_new_projects='0' WHERE group_id='$group_id'");
-	}
+            //set also flag on trackers to be copied or not on project instanciation
+            if ($template->isTemplate($form_project_type)) {
+                db_query("UPDATE artifact_group_list SET instantiate_for_new_projects='1' WHERE group_id='$group_id'");
+            } else {
+                db_query("UPDATE artifact_group_list SET instantiate_for_new_projects='0' WHERE group_id='$group_id'");
+            }
 
-	// get current information, force update on group and project objects
-    $group = $project = $pm->getProject($group_id,true);
+            // get current information, force update on group and project objects
+            $group = $project = $pm->getProject($group_id,true);
 
-	$feedback .= ' '.$Language->getText('project_admin_index','changed_group_type').' ';
+            $GLOBALS['Response']->addFeedback('info', $Language->getText('project_admin_index','changed_group_type'));
       }
-
-    } /* else if ($func == "import") {
-       session_require(array('group'=>$group_id,'admin_flags'=>'A'));
-      
-      //	  
-      //  get the Group object
-      //
-       $group = $pm->getProject($group_id);
-       if (!$group || !is_object($group) || $group->isError()) {
-	 exit_no_group();
-       } 		   
-       $atf = new ArtifactTypeFactory($group);
-       if (!$group || !is_object($group) || $group->isError()) {
- 	exit_error('Error','Could Not Get ArtifactTypeFactory');
-       }
-       $mode = "admin";
-       require('../../tracker/import.php');
-    } */
+      break;
+    }
 }
 $GLOBALS['HTML']->includeJavascriptFile('/scripts/scriptaculous/scriptaculous.js');
 $pm = ProjectManager::instance();
@@ -430,10 +419,10 @@ if ($project->usesFile()) {
 
     $selectedUgroup = array($GLOBALS['UGROUP_PROJECT_ADMIN']);
     $ugroupList = array(array('value' => $GLOBALS['UGROUP_PROJECT_ADMIN'], 'text' => util_translate_name_ugroup('project_admin')));
-    /*$res = ugroup_db_get_existing_ugroups($group_id);
+    $res = ugroup_db_get_existing_ugroups($group_id);
     while ($row = db_fetch_array($res)) {
         $ugroupList[] = array('value' => $row['ugroup_id'], 'text' => $row['name']);
-        }*/
+    }
     echo '<tr><td colspan="2">';
     echo html_build_multiple_select_box_from_array($ugroupList, "ugroups[]", $selectedUgroup, 8, false, '', false, '', false, '', false);
     echo '</td></tr>';
