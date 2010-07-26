@@ -42,7 +42,7 @@ if ($group->getStatus() != 'A') {
 
 $em = EventManager::instance();
 
-$vFunc = new Valid_WhiteList('func', array('adduser', 'rmuser', 'change_group_type', 'member_req_group'));
+$vFunc = new Valid_WhiteList('func', array('adduser', 'rmuser', 'change_group_type', 'member_req_notif_group'));
 $vFunc->required();
 if ($request->isPost() && $request->valid($vFunc)) {
     /*
@@ -80,12 +80,19 @@ if ($request->isPost() && $request->valid($vFunc)) {
       }
       break;
 
-    case 'member_req_group':
+    case 'member_req_notif_group':
+        $vUGroups = new Valid_UInt('ugroups');
+        $vUGroups->required();
+        if ($request->validArray($vUGroups)) {
+            $ugroups = $request->get('ugroups');
+            //$pm->setMembershipRequestNotificationUGroup();
+        } else {
+            $GLOBALS['Response']->addFeedback('error', $Language->getText('project_admin_index', 'member_request_delegation_ugroups_error'));
+        }
         break;
     }
 }
-$GLOBALS['HTML']->includeJavascriptFile('/scripts/scriptaculous/scriptaculous.js');
-$pm = ProjectManager::instance();
+
 project_admin_header(array('title'=>$Language->getText('project_admin_index','p_admin',$group->getPublicName()),'group'=>$group_id,
 			   'help' => 'ProjectAdministration.html'));
 
@@ -404,8 +411,13 @@ $res = ugroup_db_get_existing_ugroups($group_id);
 while ($row = db_fetch_array($res)) {
     $ugroupList[] = array('value' => $row['ugroup_id'], 'text' => $row['name']);
 }
-echo '<tr><td colspan="2">';
+echo '<tr><td colspan="2" style="text-align: center;">';
+echo '<form method="post" action="?">';
+echo '<input type="hidden" name="func" value="member_req_notif_group" />';
 echo html_build_multiple_select_box_from_array($ugroupList, "ugroups[]", $selectedUgroup, 8, false, '', false, '', false, '', false);
+echo '<br />';
+echo '<input type="submit" name="submit" value="'.$Language->getText('global', 'btn_update').'" />';
+echo '</form>';
 echo '</td></tr>';
 
 echo $HTML->box1_bottom();
