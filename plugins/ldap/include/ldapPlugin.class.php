@@ -825,7 +825,7 @@ class LdapPlugin extends Plugin {
      *
      * @return void
      */
-    function codendi_daily_start(array $params) {
+    function codendi_daily_start($params) {
         if ($GLOBALS['sys_auth_type'] == 'ldap') {
             $ldapQuery = new LDAP_DirectorySynchronization($this->getLdap());
             $ldapQuery->syncAll();
