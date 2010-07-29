@@ -187,6 +187,35 @@ class ProjectDao extends DataAccessObject {
                 AND status = 'A'";
         return $this->retrieve($sql);
     }
+    
+    /**
+     * Filled the ugroup to be notified when admin action is needed 
+     * 
+     * @param Integer $groupId
+     * @param Integer $ugroups
+     * 
+     * @return Boolean
+     */
+    public function setMembershipRequestNotificationUGroup($groupId, $ugroups){
+        $sql = ' INSERT INTO groups_notif_delegation (group_id, ugroup_id) 
+                 VALUE ('.$this->da->quoteSmart($groupId).', '.$this->da->quoteSmart($ugroups[0]).')';
+                return $this->update($sql);
+    }
+    
+     /**
+     * Returns the ugroup to be notified when admin action is needed for given project
+     * 
+     * @param Integer $groupId
+     * @param Integer $ugroups
+     * 
+     * @return DataAccessResult
+     */
+    public function getMembershipRequestNotificationUGroup($groupId){
+        $sql = ' SELECT ugroup_id FROM groups_notif_delegation WHERE group_id = '.$this->da->quoteSmart($groupId);
+        return $this->retrieve($sql);
+    }
+    
+   
 }
 
 ?>

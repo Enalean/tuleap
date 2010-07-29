@@ -85,7 +85,9 @@ if ($request->isPost() && $request->valid($vFunc)) {
         $vUGroups->required();
         if ($request->validArray($vUGroups)) {
             $ugroups = $request->get('ugroups');
-            //$pm->setMembershipRequestNotificationUGroup();
+            if ($pm->setMembershipRequestNotificationUGroup($group_id, $ugroups)) {
+                $GLOBALS['Response']->addFeedback('info', $Language->getText('project_admin_index', 'member_request_delegation_ugroups_msg'));
+            }
         } else {
             $GLOBALS['Response']->addFeedback('error', $Language->getText('project_admin_index', 'member_request_delegation_ugroups_error'));
         }
@@ -414,6 +416,7 @@ while ($row = db_fetch_array($res)) {
 echo '<tr><td colspan="2" style="text-align: center;">';
 echo '<form method="post" action="?">';
 echo '<input type="hidden" name="func" value="member_req_notif_group" />';
+echo '<input type="hidden" name="group_id" value="'. $group_id .'">';
 echo html_build_multiple_select_box_from_array($ugroupList, "ugroups[]", $selectedUgroup, 8, false, '', false, '', false, '', false);
 echo '<br />';
 echo '<input type="submit" name="submit" value="'.$Language->getText('global', 'btn_update').'" />';

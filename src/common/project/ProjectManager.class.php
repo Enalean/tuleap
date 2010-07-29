@@ -217,5 +217,41 @@ class ProjectManager {
     public function isCached($group_id) {
         return (isset($this->_cached_projects[$group_id]));
     }
+    
+    /**
+     * Filled the ugroup to be notified when admin action is needed
+     * 
+     * @param Integer $groupId
+     * @param Integer $ugroups
+     * 
+     * @return Boolean
+     */
+    public function setMembershipRequestNotificationUGroup($groupId, $ugroups) {
+        $dao = $this->_getDao();
+        return $dao->setMembershipRequestNotificationUGroup($groupId, $ugroups);
+    }
+
+    /**
+     * Returns the ugroups to be notified when admin action is needed
+     * If no ugroup is assugned, it returns the ugroup project admin
+     * 
+     * @param Integer $groupId
+     */
+    public function getMembershipRequestNotificationUGroup($groupId) {
+        $dao = $this->_getDao();
+        $res = $dao->getMembershipRequestNotificationUGroup($groupId);
+        if (!$res || $res->isError()) {
+            return $res;
+        }
+         
+        if ($res->rowCount() == 0) {
+            return $GLOBALS['UGROUP_PROJECT_ADMIN'];
+        }
+        $ugroups = array();
+        foreach ($res as $row) {
+            $ugroups[] = $row['ugroup_id'];
+        }
+        return $ugroups;
+    }
 }
 ?>

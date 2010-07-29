@@ -113,13 +113,25 @@ abstract class Error_PermissionDenied {
      */
     function extractReceiver($project, $urlData) {
         $admins = array();
-        $um = $this->getUserManager();
-        $sql = 'SELECT email, language_id FROM user u JOIN user_group ug USING(user_id) WHERE ug.admin_flags="A" AND u.status IN ("A", "R") AND ug.group_id = '.db_ei($project->getId());
-        $res = db_query($sql);
-        while ($row = db_fetch_array($res)) {
-            $admins[$row['email']] = $row['language_id'];
+        $pm = ProjectManager::instance();
+        $ugroups = $pm->getMembershipRequestNotificationUGroup($project->getId());
+        if ($ugroups) {
+            if ($ugroups == $GLOBALS['UGROUP_PROJECT_ADMIN']) {
+                $sql = 'SELECT email, language_id FROM user u JOIN user_group ug USING(user_id) WHERE ug.admin_flags="A" AND u.status IN ("A", "R") AND ug.group_id = '.db_ei($project->getId());
+            } else {
+                $stm = '';
+                if (in_array($GLOBALS['UGROUP_PROJECT_ADMIN'], $ugroups)) {
+                    $stm = 'SELECT email, language_id FROM user u JOIN user_group ug USING(user_id) WHERE ug.admin_flags="A" AND u.status IN ("A", "R") AND ug.group_id = '.db_ei($project->getId()). ' UNION ';
+                }
+                $sql = $stm.' SELECT email, language_id FROM user u JOIN ugroup_user ug USING(user_id) WHERE u.status IN ("A", "R") AND ug.ugroup_id IN ('.implode(",",$ugroups).')';
+            }
+            $res = db_query($sql);
+            while ($row = db_fetch_array($res)) {
+                $admins[$row['email']] = $row['language_id'];
+            }
+            return $admins;
         }
-        return $admins;
+        return false;
     }
 
     /**
@@ -158,33 +170,36 @@ abstract class Error_PermissionDenied {
      */
     function sendMail($project, $user, $urlData, $hrefApproval,$messageToAdmin) {
         $adminList = $this->extractReceiver($project, $urlData);
-        $from = $user->getEmail();
-        $hdrs = 'From: '.$from."\n";
-        
-        foreach ($adminList as $to => $lang) {
-            // Send a notification message to the project administrator
-            //according to his prefered language
-            $mail = new Mail();
-            $mail->setTo($to);
-            $mail->setFrom($from);
+        if ($adminList) {
+            $from = $user->getEmail();
+            $hdrs = 'From: '.$from."\n";
 
-            $language = new BaseLanguage($GLOBALS['sys_supported_languages'], $GLOBALS['sys_lang']);
-            $language->loadLanguage($lang);
+            foreach ($adminList as $to => $lang) {
+                // Send a notification message to the project administrator
+                //according to his prefered language
+                $mail = new Mail();
+                $mail->setTo($to);
+                $mail->setFrom($from);
 
-            $mail->setSubject($language->getText($this->getTextBase(), 'mail_subject_'.$this->getType(), array($project->getPublicName(), $user->getRealName())));
+                $language = new BaseLanguage($GLOBALS['sys_supported_languages'], $GLOBALS['sys_lang']);
+                $language->loadLanguage($lang);
 
-            $link = $this->getRedirectLink($urlData, $language);
-            $body = $language->getText($this->getTextBase(), 'mail_content_'.$this->getType(), array($user->getRealName(), $user->getName(), $link, $project->getPublicName(), $hrefApproval, $messageToAdmin, $user->getEmail()));
-            $mail->setBody($body);
+                $mail->setSubject($language->getText($this->getTextBase(), 'mail_subject_'.$this->getType(), array($project->getPublicName(), $user->getRealName())));
 
-            if (!$mail->send()) {
-                exit_error($GLOBALS['Language']->getText('global', 'error'), $GLOBALS['Language']->getText('global', 'mail_failed', array($GLOBALS['sys_email_admin'])));
+                $link = $this->getRedirectLink($urlData, $language);
+                $body = $language->getText($this->getTextBase(), 'mail_content_'.$this->getType(), array($user->getRealName(), $user->getName(), $link, $project->getPublicName(), $hrefApproval, $messageToAdmin, $user->getEmail()));
+                $mail->setBody($body);
+
+                if (!$mail->send()) {
+                    exit_error($GLOBALS['Language']->getText('global', 'error'), $GLOBALS['Language']->getText('global', 'mail_failed', array($GLOBALS['sys_email_admin'])));
+                }
             }
-        }
 
-        $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('include_exit', 'request_sent'), CODENDI_PURIFIER_DISABLED);
-        $GLOBALS['Response']->redirect('/my');
-        exit;
+            $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('include_exit', 'request_sent'), CODENDI_PURIFIER_DISABLED);
+            $GLOBALS['Response']->redirect('/my');
+            exit;
+        }
+        exit_error($GLOBALS['Language']->getText('global', 'error'), $GLOBALS['Language']->getText('global', 'mail_failed', array($GLOBALS['sys_email_admin'])));
     }
 
     /**
