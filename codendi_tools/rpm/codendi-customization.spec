@@ -72,6 +72,12 @@ codendi_tools/rpm/build_release.sh
 %{__cp} -ar documentation/user_guide/screenshots $RPM_BUILD_ROOT/%{APP_DIR}/documentation/user_guide
 %{__cp} -ar documentation/user_guide/slides $RPM_BUILD_ROOT/%{APP_DIR}/documentation/user_guide
 
+# Doc: Administration Guide
+%{__cp} -ar documentation/administration_guide $RPM_BUILD_ROOT/%{APP_DIR}/documentation
+
+# Doc: Installation Guide
+%{__cp} -ar documentation/installation_guide $RPM_BUILD_ROOT/%{APP_DIR}/documentation
+
 # CLI package
 %{__install} -m 755 -d $RPM_BUILD_ROOT/%{APP_DIR}/downloads
 %{__cp} -ar downloads/* $RPM_BUILD_ROOT/%{APP_DIR}/downloads
