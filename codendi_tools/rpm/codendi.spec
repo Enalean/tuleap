@@ -39,7 +39,7 @@ Packager: Manuel VACELET <manuel.vacelet@st.com>
 #Requires: %{PKG_NAME}-customization
 Requires: vixie-cron >= 4.1-9
 
-#Requires: forgeupgrade
+Requires: forgeupgrade >= 1.2
 
 %description
 Codendi is a web based application that address all the aspects of product development.
