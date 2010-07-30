@@ -23,7 +23,7 @@ EOT;
 
     public function postUp() {
         if (!$this->db->primaryKeyExists('groups_notif_delegation')) {
-            throw new ForgeUpgrade_Bucket_UpgradeNotCompleteException('Primary key on groups_notif_delegation table is missing');
+            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('Primary key on groups_notif_delegation table is missing');
         }
     }
 
