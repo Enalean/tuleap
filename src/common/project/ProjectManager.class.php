@@ -236,20 +236,23 @@ class ProjectManager {
      * If no ugroup is assugned, it returns the ugroup project admin
      * 
      * @param Integer $groupId
+     * 
+     * @return Array
      */
     public function getMembershipRequestNotificationUGroup($groupId) {
+        $ugroups = array();
+
         $dao = $this->_getDao();
         $res = $dao->getMembershipRequestNotificationUGroup($groupId);
-        if (!$res || $res->isError()) {
-            return $res;
-        }
-         
-        if ($res->rowCount() == 0) {
-            return $GLOBALS['UGROUP_PROJECT_ADMIN'];
-        }
-        $ugroups = array();
-        foreach ($res as $row) {
-            $ugroups[] = $row['ugroup_id'];
+
+        if ($res && !$res->isError()) {
+            if ($res->rowCount() == 0) {
+                $ugroups[] = $GLOBALS['UGROUP_PROJECT_ADMIN'];
+            } else {
+                foreach ($res as $row) {
+                    $ugroups[] = $row['ugroup_id'];
+                }
+            }
         }
         return $ugroups;
     }

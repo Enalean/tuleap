@@ -113,25 +113,32 @@ abstract class Error_PermissionDenied {
      */
     function extractReceiver($project, $urlData) {
         $admins = array();
+
         $pm = ProjectManager::instance();
         $ugroups = $pm->getMembershipRequestNotificationUGroup($project->getId());
-        if ($ugroups) {
-            if ($ugroups == $GLOBALS['UGROUP_PROJECT_ADMIN']) {
-                $sql = 'SELECT email, language_id FROM user u JOIN user_group ug USING(user_id) WHERE ug.admin_flags="A" AND u.status IN ("A", "R") AND ug.group_id = '.db_ei($project->getId());
-            } else {
-                $stm = '';
-                if (in_array($GLOBALS['UGROUP_PROJECT_ADMIN'], $ugroups)) {
-                    $stm = 'SELECT email, language_id FROM user u JOIN user_group ug USING(user_id) WHERE ug.admin_flags="A" AND u.status IN ("A", "R") AND ug.group_id = '.db_ei($project->getId()). ' UNION ';
-                }
-                $sql = $stm.' SELECT email, language_id FROM user u JOIN ugroup_user ug USING(user_id) WHERE u.status IN ("A", "R") AND ug.ugroup_id IN ('.implode(",",$ugroups).')';
+
+        /* We can face one of these composition for ugroups array:
+         1 - UGROUP_PROJECT_ADMIN
+         2 - UGROUP_PROJECT_ADMIN, UGROUP_1, UGROUP_2,.., UGROUP_n
+         3 - UGROUP_1, UGROUP_2,.., UGROUP_n */
+        if (isset($ugroups)) {
+            $sql = '';
+            if (count($ugroups) > 1 || (count($ugroups) == 1 && !in_array($GLOBALS['UGROUP_PROJECT_ADMIN'], $ugroups))) {
+                $sql .= ' SELECT email, language_id FROM user u JOIN ugroup_user ug USING(user_id) WHERE u.status IN ("A", "R") AND ug.ugroup_id IN ('.implode(",",$ugroups).')';
             }
+            if (count($ugroups) > 1 && in_array($GLOBALS['UGROUP_PROJECT_ADMIN'], $ugroups)) {
+                $sql .= ' UNION ';
+            }
+            if (in_array($GLOBALS['UGROUP_PROJECT_ADMIN'], $ugroups)) {
+                $sql .= 'SELECT email, language_id FROM user u JOIN user_group ug USING(user_id) WHERE ug.admin_flags="A" AND u.status IN ("A", "R") AND ug.group_id = '.db_ei($project->getId());
+            }
+
             $res = db_query($sql);
             while ($row = db_fetch_array($res)) {
                 $admins[$row['email']] = $row['language_id'];
             }
-            return $admins;
         }
-        return false;
+        return $admins;
     }
 
     /**
@@ -170,7 +177,7 @@ abstract class Error_PermissionDenied {
      */
     function sendMail($project, $user, $urlData, $hrefApproval,$messageToAdmin) {
         $adminList = $this->extractReceiver($project, $urlData);
-        if ($adminList) {
+        if (isset ($adminList)) {
             $from = $user->getEmail();
             $hdrs = 'From: '.$from."\n";
 
