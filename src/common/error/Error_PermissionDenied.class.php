@@ -121,7 +121,7 @@ abstract class Error_PermissionDenied {
          1 - UGROUP_PROJECT_ADMIN
          2 - UGROUP_PROJECT_ADMIN, UGROUP_1, UGROUP_2,.., UGROUP_n
          3 - UGROUP_1, UGROUP_2,.., UGROUP_n */
-        if (isset($ugroups)) {
+        if (count($ugroups) > 0) {
             $sql = '';
             if (count($ugroups) > 1 || (count($ugroups) == 1 && !in_array($GLOBALS['UGROUP_PROJECT_ADMIN'], $ugroups))) {
                 $sql .= ' SELECT email, language_id FROM user u JOIN ugroup_user ug USING(user_id) WHERE u.status IN ("A", "R") AND ug.ugroup_id IN ('.implode(",",$ugroups).')';
@@ -177,7 +177,7 @@ abstract class Error_PermissionDenied {
      */
     function sendMail($project, $user, $urlData, $hrefApproval,$messageToAdmin) {
         $adminList = $this->extractReceiver($project, $urlData);
-        if (isset ($adminList)) {
+        if (count($adminList) > 0) {
             $from = $user->getEmail();
             $hdrs = 'From: '.$from."\n";
 
