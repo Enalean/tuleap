@@ -233,15 +233,13 @@ class ProjectManager {
 
     /**
      * Returns the ugroups to be notified when admin action is needed
-     * If no ugroup is assugned, it returns the ugroup project admin
+     * If no ugroup is assigned, it returns the ugroup project admin
      * 
      * @param Integer $groupId
      * 
      * @return DataAceesResult
      */
     public function getMembershipRequestNotificationUGroup($groupId) {
-        $ugroups = array();
-
         $dao = $this->_getDao();
         return $dao->getMembershipRequestNotificationUGroup($groupId);
     }
