@@ -237,7 +237,7 @@ class ProjectManager {
      * 
      * @param Integer $groupId
      * 
-     * @return Array
+     * @return DataAceesResult
      */
     public function getMembershipRequestNotificationUGroup($groupId) {
         $ugroups = array();
