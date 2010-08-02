@@ -243,18 +243,7 @@ class ProjectManager {
         $ugroups = array();
 
         $dao = $this->_getDao();
-        $res = $dao->getMembershipRequestNotificationUGroup($groupId);
-
-        if ($res && !$res->isError()) {
-            if ($res->rowCount() == 0) {
-                $ugroups[] = $GLOBALS['UGROUP_PROJECT_ADMIN'];
-            } else {
-                foreach ($res as $row) {
-                    $ugroups[] = $row['ugroup_id'];
-                }
-            }
-        }
-        return $ugroups;
+        return $dao->getMembershipRequestNotificationUGroup($groupId);
     }
 }
 ?>

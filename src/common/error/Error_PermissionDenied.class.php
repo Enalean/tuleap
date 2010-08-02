@@ -104,33 +104,39 @@ abstract class Error_PermissionDenied {
     }
     
     /**
-     * 
+     *
      * Returns the administrators' list of a given project
-     *  
+     *
      * @param Project $project
-     * 
+     *
      * @return Array
      */
     function extractReceiver($project, $urlData) {
         $admins = array();
 
         $pm = ProjectManager::instance();
-        $ugroups = $pm->getMembershipRequestNotificationUGroup($project->getId());
-
-        /* We can face one of these composition for ugroups array:
-         1 - UGROUP_PROJECT_ADMIN
-         2 - UGROUP_PROJECT_ADMIN, UGROUP_1, UGROUP_2,.., UGROUP_n
-         3 - UGROUP_1, UGROUP_2,.., UGROUP_n */
-        if (count($ugroups) > 0) {
-            $sql = '';
-            if (count($ugroups) > 1 || (count($ugroups) == 1 && !in_array($GLOBALS['UGROUP_PROJECT_ADMIN'], $ugroups))) {
-                $sql .= ' SELECT email, language_id FROM user u JOIN ugroup_user ug USING(user_id) WHERE u.status IN ("A", "R") AND ug.ugroup_id IN ('.implode(",",$ugroups).')';
-            }
-            if (count($ugroups) > 1 && in_array($GLOBALS['UGROUP_PROJECT_ADMIN'], $ugroups)) {
-                $sql .= ' UNION ';
-            }
-            if (in_array($GLOBALS['UGROUP_PROJECT_ADMIN'], $ugroups)) {
-                $sql .= 'SELECT email, language_id FROM user u JOIN user_group ug USING(user_id) WHERE ug.admin_flags="A" AND u.status IN ("A", "R") AND ug.group_id = '.db_ei($project->getId());
+        $res = $pm->getMembershipRequestNotificationUGroup($project->getId());
+        if ($res && !$res->isError()) {
+            if ($res->rowCount() == 0) {
+                $sql = 'SELECT email, language_id FROM user u JOIN user_group ug USING(user_id) WHERE ug.admin_flags="A" AND u.status IN ("A", "R") AND ug.group_id = '.db_ei($project->getId());
+            } else {
+                /* We can face one of these composition for ugroups array:
+                 * 1 - UGROUP_PROJECT_ADMIN
+                 * 2 - UGROUP_PROJECT_ADMIN, UGROUP_1, UGROUP_2,.., UGROUP_n
+                 * 3 - UGROUP_1, UGROUP_2,.., UGROUP_n
+                 */
+                $ugroups = array();
+                foreach ($res as $row) {
+                    if ($row['ugroup_id'] == $GLOBALS['UGROUP_PROJECT_ADMIN']) {
+                        $stm [] = ' SELECT email, language_id FROM user u JOIN user_group ug USING(user_id) WHERE ug.admin_flags="A" AND u.status IN ("A", "R") AND ug.group_id = '.db_ei($project->getId());
+                    } else {
+                        $ugroups[] = $row['ugroup_id'];
+                    }
+                }
+                if (count($ugroups) > 0) {
+                    $stm[] = ' SELECT email, language_id FROM user u JOIN ugroup_user ug USING(user_id) WHERE u.status IN ("A", "R") AND ug.ugroup_id IN ('.implode(",",$ugroups).')';
+                }
+                $sql =  implode(" UNION ",$stm);
             }
 
             $res = db_query($sql);
