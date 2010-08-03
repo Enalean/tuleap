@@ -219,16 +219,18 @@ class ProjectManager {
     }
     
     /**
-     * Filled the ugroup to be notified when admin action is needed
+     * Filled the ugroups to be notified when admin action is needed 
+     * by removing unselected ones and keeping those selected
      * 
      * @param Integer $groupId
-     * @param Integer $ugroups
+     * @param Array   $removedUgroup
+     * @param Array   $addedUgroups
      * 
      * @return Boolean
      */
-    public function setMembershipRequestNotificationUGroup($groupId, $ugroups) {
+    public function setMembershipRequestNotificationUGroup($groupId, $removedUgroups, $addedUgroups) {
         $dao = $this->_getDao();
-        return $dao->setMembershipRequestNotificationUGroup($groupId, $ugroups);
+        return $dao->setMembershipRequestNotificationUGroup($groupId, $removedUgroups, $addedUgroups);
     }
 
     /**
