@@ -117,8 +117,9 @@ abstract class Error_PermissionDenied {
         $pm = ProjectManager::instance();
         $res = $pm->getMembershipRequestNotificationUGroup($project->getId());
         if ($res && !$res->isError()) {
+            $request = 'SELECT email, language_id FROM user u JOIN user_group ug USING(user_id) WHERE ug.admin_flags="A" AND u.status IN ("A", "R") AND ug.group_id = '.db_ei($project->getId());
             if ($res->rowCount() == 0) {
-                $sql = 'SELECT email, language_id FROM user u JOIN user_group ug USING(user_id) WHERE ug.admin_flags="A" AND u.status IN ("A", "R") AND ug.group_id = '.db_ei($project->getId());
+                $sql = $request;
             } else {
                 /* We can face one of these composition for ugroups array:
                  * 1 - UGROUP_PROJECT_ADMIN
@@ -134,7 +135,7 @@ abstract class Error_PermissionDenied {
                     }
                 }
                 if (count($ugroups) > 0) {
-                    $stm[] = ' SELECT email, language_id FROM user u JOIN ugroup_user ug USING(user_id) WHERE u.status IN ("A", "R") AND ug.ugroup_id IN ('.implode(",",$ugroups).')';
+                    $stm[] = $request;
                 }
                 $sql =  implode(" UNION ",$stm);
             }
