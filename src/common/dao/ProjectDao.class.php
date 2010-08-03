@@ -189,17 +189,23 @@ class ProjectDao extends DataAccessObject {
     }
     
     /**
-     * Filled the ugroup to be notified when admin action is needed 
-     * 
+     * Filled the ugroups to be notified when admin action is needed
+     *
      * @param Integer $groupId
-     * @param Integer $ugroups
-     * 
+     * @param Array $ugroups
+     *
      * @return Boolean
      */
     public function setMembershipRequestNotificationUGroup($groupId, $ugroups){
-        $sql = ' INSERT INTO groups_notif_delegation (group_id, ugroup_id) 
-                 VALUE ('.$this->da->quoteSmart($groupId).', '.$this->da->quoteSmart($ugroups[0]).')';
-                return $this->update($sql);
+        foreach ($ugroups as $ugroupId) {
+            $sql = ' INSERT INTO groups_notif_delegation (group_id, ugroup_id)
+                 VALUE ('.$this->da->quoteSmart($groupId).', '.$this->da->quoteSmart($ugroupId).') 
+                 ON DUPLICATE KEY UPDATE ugroup_id = '.$this->da->quoteSmart($ugroupId);
+            if (!$this->update($sql)) {
+                return false;
+            }
+        }
+        return true;
     }
     
      /**
