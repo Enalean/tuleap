@@ -129,13 +129,13 @@ abstract class Error_PermissionDenied {
                 $ugroups = array();
                 foreach ($res as $row) {
                     if ($row['ugroup_id'] == $GLOBALS['UGROUP_PROJECT_ADMIN']) {
-                        $stm [] = ' SELECT email, language_id FROM user u JOIN user_group ug USING(user_id) WHERE ug.admin_flags="A" AND u.status IN ("A", "R") AND ug.group_id = '.db_ei($project->getId());
+                        $stm [] = $request;
                     } else {
                         $ugroups[] = $row['ugroup_id'];
                     }
                 }
                 if (count($ugroups) > 0) {
-                    $stm[] = $request;
+                    $stm[] = ' SELECT email, language_id FROM user u JOIN ugroup_user ug USING(user_id) WHERE u.status IN ("A", "R") AND ug.ugroup_id IN ('.implode(",",$ugroups).')';
                 }
                 $sql =  implode(" UNION ",$stm);
             }
