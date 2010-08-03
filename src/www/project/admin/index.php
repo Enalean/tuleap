@@ -12,7 +12,6 @@ require_once('account.php');
 require_once('common/include/TemplateSingleton.class.php');
 require_once('common/tracker/ArtifactType.class.php');
 require_once('common/tracker/ArtifactTypeFactory.class.php');
-require_once('common/frs/FRSPackageFactory.class.php');
 require_once('www/project/admin/ugroup_utils.php');
 
 
@@ -24,115 +23,102 @@ if(!$request->valid($vGroupId)) {
 }
 $group_id = $request->get('group_id');
 
-// get current information
-$pm = ProjectManager::instance();
-$grp = $pm->getProject($group_id);
-if (!$grp) {
-  exit_error($Language->getText('project_admin_index','invalid_p'),$Language->getText('project_admin_index','p_not_found'));
-}
-
-//if the project isn't active, require you to be a member of the super-admin group
-if ($grp->getStatus() != 'A') {
-    session_require(array('group'=>1));
-}
-
 //must be a project admin
 session_require(array('group'=>$group_id,'admin_flags'=>'A'));
 
-//	  
+//
 //  get the Group object
-//	  
-$pm = ProjectManager::instance();
+//
+$pm    = ProjectManager::instance();
 $group = $pm->getProject($group_id);
 if (!$group || !is_object($group) || $group->isError()) {
   exit_no_group();
 }
 
-$em =& EventManager::instance();
+//if the project isn't active, require you to be a member of the super-admin group
+if ($group->getStatus() != 'A') {
+    session_require(array('group'=>1));
+}
 
-if (isset($func)) {
+$em = EventManager::instance();
+
+$vFunc = new Valid_WhiteList('func', array('adduser', 'rmuser', 'change_group_type', 'member_req_notif_group'));
+$vFunc->required();
+if ($request->isPost() && $request->valid($vFunc)) {
     /*
       updating the database
     */
-    if ($func=='adduser') {
-        //add user to this project
+    switch ($request->get('func')) {
+    case 'adduser':
+        // add user to this project
         $res = account_add_user_to_group ($group_id,$form_unix_name);
-    } else if ($func=='rmuser') {
+        break;
+
+    case 'rmuser':
         // remove a user from this portal
         account_remove_user_from_group($group_id, $rm_id);
-    } else if ($func == "change_group_type") {
+        break;
 
-      if ($group->getType() != $form_project_type) {
-	group_add_history ('group_type',$group->getType(),$group_id);  
+    case 'change_group_type':
+        if (user_is_super_user() && ($group->getType() != $form_project_type)) {
+            group_add_history ('group_type',$group->getType(),$group_id);
 
-	$template =& TemplateSingleton::instance();
-	$group->setType($form_project_type);
+            $template = TemplateSingleton::instance();
+            $group->setType($form_project_type);
 
-	//set also flag on trackers to be copied or not on project instanciation
-	if ($template->isTemplate($form_project_type)) {
-	  db_query("UPDATE artifact_group_list SET instantiate_for_new_projects='1' WHERE group_id='$group_id'");
-	} else {
-	  db_query("UPDATE artifact_group_list SET instantiate_for_new_projects='0' WHERE group_id='$group_id'");
-	}
+            //set also flag on trackers to be copied or not on project instanciation
+            if ($template->isTemplate($form_project_type)) {
+                db_query("UPDATE artifact_group_list SET instantiate_for_new_projects='1' WHERE group_id='$group_id'");
+            } else {
+                db_query("UPDATE artifact_group_list SET instantiate_for_new_projects='0' WHERE group_id='$group_id'");
+            }
 
-	// get current information, force update on group and project objects
-    $group = $project = $pm->getProject($group_id,true);
+            // get current information, force update on group and project objects
+            $group = $pm->getProject($group_id, true);
 
-	$feedback .= ' '.$Language->getText('project_admin_index','changed_group_type').' ';
+            $GLOBALS['Response']->addFeedback('info', $Language->getText('project_admin_index','changed_group_type'));
       }
+      break;
 
-    } /* else if ($func == "import") {
-       session_require(array('group'=>$group_id,'admin_flags'=>'A'));
-      
-      //	  
-      //  get the Group object
-      //
-       $group = $pm->getProject($group_id);
-       if (!$group || !is_object($group) || $group->isError()) {
-	 exit_no_group();
-       } 		   
-       $atf = new ArtifactTypeFactory($group);
-       if (!$group || !is_object($group) || $group->isError()) {
- 	exit_error('Error','Could Not Get ArtifactTypeFactory');
-       }
-       $mode = "admin";
-       require('../../tracker/import.php');
-    } */
+    case 'member_req_notif_group':
+        $vUGroups = new Valid_UInt('ugroups');
+        $vUGroups->required();
+        if ($request->validArray($vUGroups)) {
+            $ugroups = $request->get('ugroups');
+            if ($pm->setMembershipRequestNotificationUGroup($group_id, $ugroups)) {
+                $GLOBALS['Response']->addFeedback('info', $Language->getText('project_admin_index', 'member_request_delegation_ugroups_msg'));
+            }
+        } else {
+            $GLOBALS['Response']->addFeedback('error', $Language->getText('project_admin_index', 'member_request_delegation_ugroups_error'));
+        }
+        break;
+    }
 }
-$GLOBALS['HTML']->includeJavascriptFile('/scripts/scriptaculous/scriptaculous.js');
-$pm = ProjectManager::instance();
-project_admin_header(array('title'=>$Language->getText('project_admin_index','p_admin',$pm->getProject($group_id)->getPublicName()),'group'=>$group_id,
+
+project_admin_header(array('title'=>$Language->getText('project_admin_index','p_admin',$group->getPublicName()),'group'=>$group_id,
 			   'help' => 'ProjectAdministration.html'));
 
 /*
 	Show top box listing trove and other info
 */
 
-echo '<TABLE width=100% cellpadding=2 cellspacing=2 border=0>
+echo '<TABLE width=100% border=0>
 <TR valign=top><TD width=50%>';
 
-$HTML->box1_top($Language->getText('project_admin_index','p_edit',$pm->getProject($group_id)->getPublicName())); 
-
-
-$project = $pm->getProject($group_id);
+$HTML->box1_top($Language->getText('project_admin_index','p_edit',$group->getPublicName())); 
 
 $hp =& Codendi_HTMLPurifier::instance();
 
 print '&nbsp;
 <BR>
-'.$Language->getText('project_admin_index','short_desc',$hp->purify($grp->getDescription(), CODENDI_PURIFIER_LIGHT));
-if ($project->usesHomePage()) {
-    print '<P>'.$Language->getText('project_admin_index','home_page_link',$project->getHomePage()).'</B>';
+'.$Language->getText('project_admin_index','short_desc',$hp->purify($group->getDescription(), CODENDI_PURIFIER_LIGHT));
+if ($group->usesHomePage()) {
+    print '<P>'.$Language->getText('project_admin_index','home_page_link',$group->getHomePage()).'</B>';
  }
 
 print '&nbsp;
 <BR><P>
 '.$Language->getText('project_admin_index','view_proj_activity',"/project/stats/?group_id=$group_id");
-
-//print '<!-- Not implemented on Codendi
-//<P align=center>
-//<A HREF="http://'.$GLOBALS['sys_cvs_host'].'/cvstarballs/'. $grp->getUnixName() .'-cvsroot.tar.gz">[ Download Your Nightly CVS Tree Tarball ]</A>
-//-->';
 
 if ($GLOBALS['sys_use_trove'] != 0) {
     print '
@@ -173,7 +159,7 @@ if (user_is_super_user()) {
     print '<TABLE WIDTH="100%" BORDER="0">
  <TR>
   <TD><B>'.$Language->getText('project_admin_index','group_type').' '.help_button('ProjectType.html').' : </B>
-      <FORM action="'. $PHP_SELF .'" method="post">
+      <FORM action="?" method="post">
       <INPUT TYPE="HIDDEN" NAME="func" VALUE="change_group_type">
       <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$group_id.'"></TD>
   <TD valign="top">'.$template->showTypeBox('form_project_type',$group->getType()).'
@@ -265,7 +251,7 @@ while ($row_memb=db_fetch_array($res_memb)) {
     if (!$display_name) {
         $display_name = $user_helper->getDisplayName($row_memb['user_name'], $row_memb['realname']);
     }
-    print '<FORM ACTION="'. $PHP_SELF .'" METHOD="POST"><INPUT TYPE="HIDDEN" NAME="func" VALUE="rmuser">'.
+    print '<FORM ACTION="?" METHOD="POST"><INPUT TYPE="HIDDEN" NAME="func" VALUE="rmuser">'.
 	'<INPUT TYPE="HIDDEN" NAME="rm_id" VALUE="'.$row_memb['user_id'].'">'.
 	'<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'. $group_id .'">'.
 	'<TR><TD ALIGN="center"><INPUT TYPE="IMAGE" NAME="DELETE" SRC="'.util_get_image_theme("ic/trash.png").'" HEIGHT="16" WIDTH="16" BORDER="0"></TD></FORM>'.
@@ -327,54 +313,47 @@ $HTML->box1_top($Language->getText('project_admin_index','s_admin').'&nbsp;'.hel
 
 echo '
 	<BR>';
-if ($project->usesForum()) {
+if ($group->usesForum()) {
     echo '	<A HREF="/forum/admin/?group_id='.$group_id.'">'.$Language->getText('project_admin_index','forum_admin').'</A><BR>';
 }
-if ($project->usesBugs()) {
+if ($group->usesBugs()) {
     echo '	<A HREF="/bugs/admin/?group_id='.$group_id.'">'.$Language->getText('project_admin_index','bug_admin').'</A><BR>';
 }
-if ($project->usesSupport()) {
+if ($group->usesSupport()) {
     echo '	<A HREF="/support/admin/?group_id='.$group_id.'">'.$Language->getText('project_admin_index','support_admin').'</A><BR>';
 }
-if ($project->usesPatch()) {
+if ($group->usesPatch()) {
     echo '	<A HREF="/patch/admin/?group_id='.$group_id.'">'.$Language->getText('project_admin_index','patch_admin').'</A><BR>';
 }
-if ($project->usesMail()) {
+if ($group->usesMail()) {
     echo '	<A HREF="/mail/admin/?group_id='.$group_id.'">'.$Language->getText('project_admin_index','lists_admin').'</A><BR>';
 }
-if ($project->usesPm()) {
+if ($group->usesPm()) {
     echo '	<A HREF="/pm/admin/?group_id='.$group_id.'">'.$Language->getText('project_admin_index','task_admin').'</A><BR>';
 }
-if ($project->usesDocman()) {
+if ($group->usesDocman()) {
     echo '	<A HREF="/docman/admin/?group_id='.$group_id.'">'.$Language->getText('project_admin_index','doc_admin').'</A><BR>';
 }
-if ($project->usesWiki()) {
+if ($group->usesWiki()) {
     echo '	<A HREF="/wiki/admin/?group_id='.$group_id.'">'.$Language->getText('project_admin_index','wiki_admin').'</A><BR>';
 }
-if ($project->usesSurvey()) {
+if ($group->usesSurvey()) {
     echo '	<A HREF="/survey/admin/?group_id='.$group_id.'">'.$Language->getText('project_admin_index','survey_admin').'</A><BR>';
 }
-if ($project->usesNews()) {
+if ($group->usesNews()) {
     echo '	<A HREF="/news/admin/?group_id='.$group_id.'">'.$Language->getText('project_admin_index','news_admin').'</A><BR>';
 }
-if ($project->usesCVS()) {
+if ($group->usesCVS()) {
     echo '	<A HREF="/cvs/?func=admin&group_id='.$group_id.'">'.$Language->getText('project_admin_index','cvs_admin').'</A><BR>';
 }
-if ($project->usesSVN()) {
+if ($group->usesSVN()) {
     echo '	<A HREF="/svn/admin/?group_id='.$group_id.'">'.$Language->getText('project_admin_index','svn_admin').'</A><BR>';
 }
-if ($project->usesFile()) {
+if ($group->usesFile()) {
     echo '	<A HREF="/file/admin/?group_id='.$group_id.'">'.$Language->getText('project_admin_index','file_admin').'</A><BR>';
 }
-if ( $project->usesTracker()) {
+if ( $group->usesTracker()) {
     echo '	<A HREF="/tracker/admin/?group_id='.$group_id.'">'.$Language->getText('project_admin_index','tracker_admin').'</A>';
-    //	  
-    //  get the Group object
-    //	  
-    $group = $pm->getProject($group_id);
-    if (!$group || !is_object($group) || $group->isError()) {
-        exit_no_group();
-    }		   
     $atf = new ArtifactTypeFactory($group);
     if (!$group || !is_object($group) || $group->isError()) {
         exit_error($Language->getText('global','error'),'Could Not Get ArtifactTypeFactory');
@@ -397,7 +376,7 @@ if ( $project->usesTracker()) {
 }
 // {{{ Plugins
 $admin_pages = array();
-$params = array('project' => &$project, 'admin_pages' => &$admin_pages);
+$params = array('project' => &$group, 'admin_pages' => &$admin_pages);
 
 $em->processEvent('service_admin_pages', $params);
 
@@ -420,32 +399,31 @@ echo '</TD>
 	<TD width=50%>';
 
 /*
-	Show filerelease info
+	Delegate notifications
 */
-if ($project->usesFile()) {
-    $HTML->box1_top($Language->getText('project_admin_index','file_rel')."&nbsp;".help_button('FileRelease.html'));
+$HTML->box1_top($Language->getText('project_admin_index','member_request_delegation_title'));
 
-    echo '
-	&nbsp;<BR>
-	<B>'.$Language->getText('project_admin_index','packages_available').'</B>
+echo '<tr><td colspan="2">';
+echo $Language->getText('project_admin_index','member_request_delegation_desc');
+echo '</td></tr>';
 
-     <P>';
-    
-    // Display the list of the packages available in this project
-    $package_factory = new FRSPackageFactory();
-    $packages = $package_factory->getFRSPackagesFromDb($group_id);
-    if (count($packages) > 0) {
-        foreach ($packages as $package) {
-            echo $package->getName();
-            echo '<br />';
-        }
-    } else {
-    	   echo $Language->getText('global','none').'<br />';
-    }
-    
-    echo $HTML->box1_bottom();
-    
+$selectedUgroup = array($GLOBALS['UGROUP_PROJECT_ADMIN']);
+$ugroupList = array(array('value' => $GLOBALS['UGROUP_PROJECT_ADMIN'], 'text' => util_translate_name_ugroup('project_admin')));
+$res = ugroup_db_get_existing_ugroups($group_id);
+while ($row = db_fetch_array($res)) {
+    $ugroupList[] = array('value' => $row['ugroup_id'], 'text' => $row['name']);
 }
+echo '<tr><td colspan="2" style="text-align: center;">';
+echo '<form method="post" action="?">';
+echo '<input type="hidden" name="func" value="member_req_notif_group" />';
+echo '<input type="hidden" name="group_id" value="'. $group_id .'">';
+echo html_build_multiple_select_box_from_array($ugroupList, "ugroups[]", $selectedUgroup, 8, false, '', false, '', false, '', false);
+echo '<br />';
+echo '<input type="submit" name="submit" value="'.$Language->getText('global', 'btn_update').'" />';
+echo '</form>';
+echo '</td></tr>';
+
+echo $HTML->box1_bottom();
 ?>
 </TD>
 </TR>
