@@ -192,20 +192,16 @@ class ProjectDao extends DataAccessObject {
      * Filled the ugroups to be notified when admin action is needed
      *
      * @param Integer $groupId
-     * @param Array   $removedUgroups
-     * @param Array   $addedUgroups
+     * @param Array   $ugroups
      *
      * @return Boolean
      */
-    public function setMembershipRequestNotificationUGroup($groupId, $removedUgroups, $addedUgroups){
-        foreach ($removedUgroups as $ugroupId) {
-            $sql = ' DELETE FROM groups_notif_delegation WHERE group_id ='.$this->da->quoteSmart($groupId).'
-            AND  ugroup_id= '.$this->da->quoteSmart($ugroupId);
-            if (!$this->update($sql)) {
-                return false;
-            }
+    public function setMembershipRequestNotificationUGroup($groupId, $ugroups){
+        $sql = ' DELETE FROM groups_notif_delegation WHERE group_id ='.$this->da->quoteSmart($groupId);
+        if (!$this->update($sql)) {
+            return false;
         }
-        foreach ($addedUgroups as $ugroupId) {
+        foreach ($ugroups as $ugroupId) {
             $sql = ' INSERT INTO groups_notif_delegation (group_id, ugroup_id)
                  VALUE ('.$this->da->quoteSmart($groupId).', '.$this->da->quoteSmart($ugroupId).') 
                  ON DUPLICATE KEY UPDATE ugroup_id = '.$this->da->quoteSmart($ugroupId);
@@ -215,7 +211,7 @@ class ProjectDao extends DataAccessObject {
         }
         return true;
     }
-    
+
      /**
      * Returns the ugroup to be notified when admin action is needed for given project
      * 
