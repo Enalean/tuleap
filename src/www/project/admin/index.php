@@ -407,7 +407,17 @@ echo '<tr><td colspan="2">';
 echo $Language->getText('project_admin_index','member_request_delegation_desc');
 echo '</td></tr>';
 
-$selectedUgroup = array($GLOBALS['UGROUP_PROJECT_ADMIN']);
+//Retrieve the saved ugroups for notification from DB
+$dar = $pm->getMembershipRequestNotificationUGroup($group_id);
+if ($dar && !$dar->isError() && $dar->rowCount() > 0) {
+    foreach ($dar as $row) {
+        $selectedUgroup[] = $row['ugroup_id'];
+    }
+} else {
+        $selectedUgroup = array($GLOBALS['UGROUP_PROJECT_ADMIN']);
+}
+
+ 
 $ugroupList = array(array('value' => $GLOBALS['UGROUP_PROJECT_ADMIN'], 'text' => util_translate_name_ugroup('project_admin')));
 $res = ugroup_db_get_existing_ugroups($group_id);
 while ($row = db_fetch_array($res)) {

@@ -219,10 +219,10 @@ class ProjectManager {
     }
     
     /**
-     * Filled the ugroup to be notified when admin action is needed
+     * Filled the ugroups to be notified when admin action is needed 
      * 
      * @param Integer $groupId
-     * @param Integer $ugroups
+     * @param Array   $ugroups
      * 
      * @return Boolean
      */

@@ -20,6 +20,7 @@
  */
 require_once('common/error/Error_PermissionDenied.class.php');
 require_once('Docman_PermissionsManager.class.php');
+require_once('Docman_ItemFactory.class.php');
 
 
 class Docman_Error_PermissionDenied extends Error_PermissionDenied {
@@ -133,7 +134,16 @@ class Docman_Error_PermissionDenied extends Error_PermissionDenied {
             if (isset($query['item'])) {
                 //
             } else {
-                return array();
+                //if no item id is filled, we retieve the root id: the id of "Project documentation"
+                if (isset($query['group_id'])) {
+                    $itemFactory = $this->_getItemFactoryInstance($project->getId());
+                    $res = $itemFactory->getRoot($project->getId());
+                    $row = $res->toRow();
+                    $query['id'] = $row['item_id'];
+
+                } else {
+                    return array();
+                }
             }
         }
 
@@ -148,6 +158,15 @@ class Docman_Error_PermissionDenied extends Error_PermissionDenied {
      */
     function _getPermissionManagerInstance($groupId) {
         return Docman_PermissionsManager::instance($groupId);
+    }
+    
+    /**
+     * Wrapper for Docman_ItemFactory
+     *
+     * @return Docman_ItemFactory
+     */
+    function _getItemFactoryInstance($groupId) {
+        return Docman_ItemFactory::instance($groupId);
     }
     
 }
