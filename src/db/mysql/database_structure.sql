@@ -3309,6 +3309,19 @@ CREATE TABLE system_events_followers (
   emails TEXT NOT NULL ,
   types VARCHAR( 31 ) NOT NULL
 );
+
+
+# --------------------------------------------------------
+
+#
+# Table structure for Groups Notif Delegation
+#
+
+CREATE TABLE groups_notif_delegation (
+  group_id int(11) NOT NULL default 0,
+  ugroup_id int(11) NOT NULL,
+  PRIMARY KEY (group_id, ugroup_id)
+);
 #
 # EOF
 #
