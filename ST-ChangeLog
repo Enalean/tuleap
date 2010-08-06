@@ -1,4 +1,4 @@
-Version 4.0.10 (Not released yet)
+Version 4.0.10 - Thursday, 5th August 2010 
         == New features ==
         backlog #103963: Permission denied improvement: docman items
 	backlog #104505: Installation based RPM
@@ -42,7 +42,7 @@ Version 4.0.9 - Friday, 2nd July 2010
 	* Install of Codendi via RPMS.
 
 	Other new features:
-        * branch #102157: Improve permission denied error for private project and restricted user (Nouha TERZI).
+        * branch #102157: Improve permission denied error for private project and restricted user.
 
 	== Bug fix ==
 	* backlog #101260: Impossible to add user without username
