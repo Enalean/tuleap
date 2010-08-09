@@ -1589,7 +1589,7 @@ class Layout extends Response {
                 }
                 $label  = '<span class="project_privacy_'.$privacy.'">[';
                 $label .= $GLOBALS['Language']->getText('project_privacy', $privacy);
-                $label .= ']</span></td>';
+                $label .= ']</span>';
 
                 // Javascript for project privacy tooltip
                 $js = "

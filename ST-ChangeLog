@@ -1,3 +1,7 @@
+Version 4.0.11 - (Not released yet)
+        == Bugfix==
+        backlog #106228: Bad dispaly of privacy icon except with 'Dawn' theme
+ 
 Version 4.0.10 - Thursday, 5th August 2010 
         == New features ==
         backlog #103963: Permission denied improvement: docman items
