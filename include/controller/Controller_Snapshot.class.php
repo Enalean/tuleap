@@ -83,8 +83,9 @@ class GitPHP_Controller_Snapshot extends GitPHP_ControllerBase
 	 */
 	protected function ReadQuery()
 	{
-		if (isset($_GET['h']))
-			$this->params['hash'] = $_GET['h'];
+		if (isset($_GET['h'])) $this->params['hash'] = $_GET['h'];
+		if (isset($_GET['path'])) $this->params['path'] = $_GET['path'];
+		if (isset($_GET['prefix'])) $this->params['prefix'] = $_GET['prefix'];
 	}
 
 	/**
@@ -131,7 +132,7 @@ class GitPHP_Controller_Snapshot extends GitPHP_ControllerBase
 		else
 			$commit = $this->project->GetCommit($hash);
 
-		$this->tpl->assign("archive", $commit->GetArchive($this->params['compressformat']));
+		$this->tpl->assign("archive", $commit->GetArchive($this->params['compressformat'], $this->params['path'], $this->params['prefix']));
 	}
 
 }

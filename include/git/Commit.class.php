@@ -684,17 +684,24 @@ class GitPHP_Commit extends GitPHP_GitObject
 	 * @access public
 	 * @return string the archive data
 	 * @param format the archive format
+	 * @param path The Path to archive
 	 */
-	public function GetArchive($format)
+	public function GetArchive($format, $path = null, $prefix = null)
 	{
+
+		if (is_null($prefix))
+			$prefix = $this->project->GetSlug() . "/";
+		
 		$exe = new GitPHP_GitExe($this->project);
 		$args = array();
 		if ($format == GITPHP_COMPRESS_ZIP)
 			$args[] = '--format=zip';
 		else
 			$args[] = '--format=tar';
-		$args[] = '--prefix=' . $this->project->GetSlug() . '/';
+		$args[] = '--prefix=' . $prefix;
 		$args[] = $this->hash;
+		if (! is_null($path)) $args[] = $path;
+
 		$data = $exe->Execute(GIT_ARCHIVE, $args);
 		unset($exe);
 
