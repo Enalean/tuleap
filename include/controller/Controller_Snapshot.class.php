@@ -84,7 +84,7 @@ class GitPHP_Controller_Snapshot extends GitPHP_ControllerBase
 	protected function ReadQuery()
 	{
 		if (isset($_GET['h'])) $this->params['hash'] = $_GET['h'];
-		if (isset($_GET['path'])) $this->params['path'] = $_GET['path'];
+		if (isset($_GET['f'])) $this->params['path'] = $_GET['f'];
 		if (isset($_GET['prefix'])) $this->params['prefix'] = $_GET['prefix'];
 	}
 
