@@ -1270,7 +1270,7 @@ function util_check_restricted_access($request_uri, $script_name) {
           '/people/',     // people skills and profile
           '/stats',       // Codendi site statistics
           '/top',         // projects rankings (active, downloads, etc)
-          '/project/register.php',    // Register a new project
+          //'/project/register.php',    // Register a new project
           '/export',      // Codendi XML feeds
           '/info.php'     // PHP info
           );
