@@ -31,9 +31,9 @@ $sql = $ath->buildExportQuery($fields,$col_list,$lbl_list,$dsc_list,$export_sele
 // For now big hack:
 // As we don't know the projects language
 $submitted_field = $art_field_fact->getFieldFromName('submitted_by');
-print_r($submitted_field);
+//print_r($submitted_field);
 
-if (strstr($submitted_field->getLabel(),"By")) {
+if (strstr(strtolower($submitted_field->getLabel()),"by")) {
     // Assume English
     $lang = 'en_US';
 } else {
