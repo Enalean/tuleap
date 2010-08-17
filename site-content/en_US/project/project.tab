@@ -586,6 +586,10 @@ project_export_artifact_export	no_art_found	No artifact found. Could not generat
 project_export_artifact_export	db_access_err	Error while accessing your artifact database. Please report the error to the $1 Administrator
 project_export_artifact_export	art_exp_format	Artifact Export Format
 project_export_artifact_export	art_exp_format_msg	The artifact export provides you with the following artifact fields. The sample values indicate what the field data types are.
+project_export_artifact_export	add_cc_lbl	CC List
+project_export_artifact_export	add_cc_dsc	List of persons to receive a carbon-copy (CC) of the email notifications (in addition to submitter, assignees, and commenters)
+project_export_artifact_export	cc_comment_lbl	CC Comment
+project_export_artifact_export	cc_comment_dsc	Explain why these CC names were added and/or who they are
 #
 #-----------------------------------------------
 # Script: SF/www/project/export/artifact_history_export.php

@@ -115,35 +115,30 @@ class ArtifactImport extends Error {
   }
 
   function localizeLabels() {
-    // TODO: Localize this properly by adding those 4 fields to the artifact table
-    // (standard fields) and the artifact field table with a special flag and make sure
-    // all tracker scripts handle them properly
-    // For now make a big hack!! (see import.php func=showformat)
-    $submitted_field = $this->art_field_fact->getFieldFromName('submitted_by');
-    if (strstr($submitted_field->getLabel(),"ubmit")) {
-      // Assume English
-      $this->lbl_list['follow_ups'] = 'Follow-up Comments';
-      $this->lbl_list['is_dependent_on'] = 'Depend on';
-      $this->lbl_list['add_cc'] = 'CC List';
-      $this->lbl_list['cc_comment'] = 'CC Comment';
+      // TODO: Localize this properly by adding those 4 fields to the artifact table
+      // (standard fields) and the artifact field table with a special flag and make sure
+      // all tracker scripts handle them properly
+      // For now make a big hack!! (see import.php func=showformat)
+      $submitted_field = $this->art_field_fact->getFieldFromName('submitted_by');
+      if (strstr(strtolower($submitted_field->getLabel()),"by")) {
+          // Assume English
+          $lang = 'en_US';
+      } else {
+          // Assume French
+          $lang = 'fr_FR';
+      }
+      $language = new BaseLanguage($GLOBALS['sys_supported_languages'], $GLOBALS['sys_lang']);
+      $language->loadLanguage($lang);
 
-      $this->dsc_list['follow_ups'] = 'All follow-up comments in one chunck of text';
-      $this->dsc_list['is_dependent_on'] = 'List of artifacts this artifact depends on';
-      $this->dsc_list['add_cc'] = 'List of persons to receive a carbon-copy (CC) of the email notifications (in addition to submitter, assignees, and commenters)';
-      $this->dsc_list['cc_comment'] = 'Explain why these CC names were added and/or who they are';
+      $this->lbl_list['follow_ups'] = $language->getText('project_export_artifact_export', 'follow_up_comments');
+      $this->lbl_list['is_dependent_on'] = $language->getText('project_export_artifact_export', 'depend_on');
+      $this->lbl_list['add_cc'] = $language->getText('project_export_artifact_export', 'add_cc_lbl');
+      $this->lbl_list['cc_comment'] = $language->getText('project_export_artifact_export', 'cc_comment_lbl');
 
-    } else {
-      // Assume French
-      $this->lbl_list['follow_ups'] = 'Commentaires';
-      $this->lbl_list['is_dependent_on'] = 'Depend de';
-      $this->lbl_list['add_cc'] = 'Liste CC';
-      $this->lbl_list['cc_comment'] = 'Commentaire CC';
-
-      $this->dsc_list['follow_ups'] = 'Tout le fil de commentaires en un seul bloc de texte';
-      $this->dsc_list['is_dependent_on'] = 'Liste des artefacts dont celui-ci depend';
-      $this->dsc_list['add_cc'] = 'Liste des pesonnes recevant une copie carbone (CC) des notifications e-mail (en plus de la personne qui l\'a soumis, a qui on l\'a confie ou qui a poste un commentaire)';
-      $this->dsc_list['cc_comment'] = 'Explique pourquoi ces personnes sont en CC ou qui elles sont';
-    }
+      $this->dsc_list['follow_ups'] = $language->getText('project_export_artifact_export', 'all_followup_comments');
+      $this->dsc_list['is_dependent_on'] = $language->getText('project_export_artifact_export', 'depend_on_list');
+      $this->dsc_list['add_cc'] = $language->getText('project_export_artifact_export', 'add_cc_dsc');;
+      $this->dsc_list['cc_comment'] = $language->getText('project_export_artifact_export', 'cc_comment_dsc');
   }
 
 
