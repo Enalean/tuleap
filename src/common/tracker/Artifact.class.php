@@ -677,7 +677,7 @@ class Artifact extends Error {
      *                              ("date" => date, "by" => user, "type" => comment-type, "comment" => comment-string)
      *  @return boolean
      */
-    function addFollowUpComments($parsed_comments,&$changes) {
+    function addFollowUpComments($parsed_comments) {
     	global $Language;
 
         $art_field_fact = new ArtifactFieldFactory($this->ArtifactType);

@@ -1130,7 +1130,7 @@ function getUsedFields() {
       if ($this->parseFollowUpComments($comments,$parsed_comments,$aid) && $parsed_comments && !empty($parsed_comments)) {
             $comments_ok = true;
             $changes = null;
-            if (!$ah->addFollowUpComments($parsed_comments, $changes)) {
+            if (!$ah->addFollowUpComments($parsed_comments)) {
                 $errors .= $Language->getText('tracker_import_utils','problem_insert_followup',$ah->getID())." ";
                 $comments_ok = false;
                 return false;
