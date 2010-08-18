@@ -585,7 +585,7 @@ project_export_artifact_export	db_access_err	Erreur lors de l'accès à la base 
 project_export_artifact_export	art_exp_format	Format d'exportation des artefacts
 project_export_artifact_export	art_exp_format_msg	Le format d'exportation des artefacts de cet outil de suivi comporte les champs suivants. Les valeurs données en exemple indique le type des données.
 project_export_artifact_export	add_cc_lbl	Liste CC
-project_export_artifact_export	add_cc_dsc	Liste des personnes recevant une copie carbone (CC) des notifications e-mail (en plus de la personne qui l\'a soumis, a qui on l\'a confie ou qui a poste un commentaire)
+project_export_artifact_export	add_cc_dsc	Liste des personnes recevant une copie carbone (CC) des notifications e-mail (en plus de la personne qui l'a soumis, a qui on l'a confie ou qui a poste un commentaire)
 project_export_artifact_export	cc_comment_lbl	Commentaire CC
 project_export_artifact_export	cc_comment_dsc	Explique pourquoi ces personnes sont en CC ou qui elles sont
 #

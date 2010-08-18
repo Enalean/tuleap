@@ -29,25 +29,13 @@ $sql = $ath->buildExportQuery($fields,$col_list,$lbl_list,$dsc_list,$export_sele
 
 // Normally these two fields should be part of the artifact_fields.
 // For now big hack:
-// As we don't know the projects language
-$submitted_field = $art_field_fact->getFieldFromName('submitted_by');
-//print_r($submitted_field);
+// As we don't know the projects language, we export it according to the user language preferences
 
-if (strstr(strtolower($submitted_field->getLabel()),"by")) {
-    // Assume English
-    $lang = 'en_US';
-} else {
-    // Assume French
-    $lang = 'fr_FR';
-}
-$language = new BaseLanguage($GLOBALS['sys_supported_languages'], $GLOBALS['sys_lang']);
-$language->loadLanguage($lang);
+$lbl_list['follow_ups']      = $Language->getText('project_export_artifact_export', 'follow_up_comments');
+$lbl_list['is_dependent_on'] = $Language->getText('project_export_artifact_export', 'depend_on');
 
-$lbl_list['follow_ups']      = $language->getText('project_export_artifact_export', 'follow_up_comments');
-$lbl_list['is_dependent_on'] = $language->getText('project_export_artifact_export', 'depend_on');
-
-$dsc_list['follow_ups'] = $language->getText('project_export_artifact_export', 'all_followup_comments');
-$dsc_list['is_dependent_on'] = $language->getText('project_export_artifact_export', 'depend_on_list');
+$dsc_list['follow_ups'] = $Language->getText('project_export_artifact_export', 'all_followup_comments');
+$dsc_list['is_dependent_on'] = $Language->getText('project_export_artifact_export', 'depend_on_list');
 
 // Add the 2 fields that we build ourselves for user convenience
 // - All follow-up comments

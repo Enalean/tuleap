@@ -115,30 +115,21 @@ class ArtifactImport extends Error {
   }
 
   function localizeLabels() {
+      global $Language;
       // TODO: Localize this properly by adding those 4 fields to the artifact table
       // (standard fields) and the artifact field table with a special flag and make sure
       // all tracker scripts handle them properly
-      // For now make a big hack!! (see import.php func=showformat)
-      $submitted_field = $this->art_field_fact->getFieldFromName('submitted_by');
-      if (strstr(strtolower($submitted_field->getLabel()),"by")) {
-          // Assume English
-          $lang = 'en_US';
-      } else {
-          // Assume French
-          $lang = 'fr_FR';
-      }
-      $language = new BaseLanguage($GLOBALS['sys_supported_languages'], $GLOBALS['sys_lang']);
-      $language->loadLanguage($lang);
+      // For now make a big hack, we export it according to user language preferences
 
-      $this->lbl_list['follow_ups'] = $language->getText('project_export_artifact_export', 'follow_up_comments');
-      $this->lbl_list['is_dependent_on'] = $language->getText('project_export_artifact_export', 'depend_on');
-      $this->lbl_list['add_cc'] = $language->getText('project_export_artifact_export', 'add_cc_lbl');
-      $this->lbl_list['cc_comment'] = $language->getText('project_export_artifact_export', 'cc_comment_lbl');
+      $this->lbl_list['follow_ups'] = $Language->getText('project_export_artifact_export', 'follow_up_comments');
+      $this->lbl_list['is_dependent_on'] = $Language->getText('project_export_artifact_export', 'depend_on');
+      $this->lbl_list['add_cc'] = $Language->getText('project_export_artifact_export', 'add_cc_lbl');
+      $this->lbl_list['cc_comment'] = $Language->getText('project_export_artifact_export', 'cc_comment_lbl');
 
-      $this->dsc_list['follow_ups'] = $language->getText('project_export_artifact_export', 'all_followup_comments');
-      $this->dsc_list['is_dependent_on'] = $language->getText('project_export_artifact_export', 'depend_on_list');
-      $this->dsc_list['add_cc'] = $language->getText('project_export_artifact_export', 'add_cc_dsc');;
-      $this->dsc_list['cc_comment'] = $language->getText('project_export_artifact_export', 'cc_comment_dsc');
+      $this->dsc_list['follow_ups'] = $Language->getText('project_export_artifact_export', 'all_followup_comments');
+      $this->dsc_list['is_dependent_on'] = $Language->getText('project_export_artifact_export', 'depend_on_list');
+      $this->dsc_list['add_cc'] = $Language->getText('project_export_artifact_export', 'add_cc_dsc');;
+      $this->dsc_list['cc_comment'] = $Language->getText('project_export_artifact_export', 'cc_comment_dsc');
   }
 
 
