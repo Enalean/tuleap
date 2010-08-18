@@ -109,12 +109,6 @@ if (!$GLOBALS['sys_lang']) {
 require('common/language/BaseLanguage.class.php');
 $Language = new BaseLanguage($GLOBALS['sys_supported_languages'], $GLOBALS['sys_lang']);
 
-// Check URL for valid hostname and valid protocol
-if (!IS_SCRIPT) {
-    $url = new URL();
-    $url->assertValidUrl($_SERVER);
-}
-
 //various html utilities
 require_once('utils.php');
 
