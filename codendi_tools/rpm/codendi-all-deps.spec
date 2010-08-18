@@ -54,12 +54,7 @@ Requires: htmlpurifier
 Requires: forgeupgrade
 
 # Openfire
-#Requires: openfire
-#echo "Installing OpenFire plugins"
-# To be delivered as rpm too
-#cd ${newest_rpm}
-#$CP helga.jar presence.jar subscription.jar monitoring.jar /opt/openfire/plugins
-
+Requires: openfire, openfire-codendi-plugins
 
 %description
 This package gather all dependencies of @@PKG_NAME@@.
