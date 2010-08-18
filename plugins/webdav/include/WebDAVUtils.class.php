@@ -1,9 +1,25 @@
 <?php
 /**
+ * Copyright (c) STMicroelectronics, 2010. All Rights Reserved.
+ *
+ * This file is a part of Codendi.
+ *
+ * Codendi is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Codendi is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+/**
  * This class contains methods used in WebDAV plugin
- *
- * @author ounish
- *
  */
 class WebDAVUtils {
 
@@ -40,17 +56,56 @@ class WebDAVUtils {
     }
 
     /**
-     * Extracts the Id from the name
-     * For example : 38-Package_v_1.0 should return 38
+     * Retuns if the filename is valid or not
      *
      * @param String $name
      *
-     * @return Integer
+     * @return Boolean
      */
-    function extractId($name) {
+    function isValidFileName($name) {
 
-        $tmp = explode('-', $name);
-        return (int)$tmp[0];
+        return util_is_valid_filename($name);
+
+    }
+
+    /**
+     * Replaces '/' and '%' by their respective ASCII code
+     *
+     * @param String $name
+     *
+     * @return String
+     */
+    function convertName($name) {
+
+        $name = str_replace('%', '%25', $name);
+        $name = str_replace('/', '%2F', $name);
+        return $name;
+
+    }
+
+    /**
+     * Retrieves the converted HTML special characters
+     *
+     * @param String $name
+     *
+     * @return String
+     */
+    function unconvertHTMLSpecialChars($name) {
+        return util_unconvert_htmlspecialchars($this->convertName($name));
+    }
+
+    /**
+     * Replaces ASCII codes of '/' and '%' by the respective characters
+     *
+     * @param String $name
+     *
+     * @return String
+     */
+    function retrieveName($name) {
+
+        $name = str_replace('%2F', '/', $name);
+        $name = str_replace('%25', '%', $name);
+        return $name;
 
     }
 
@@ -68,6 +123,82 @@ class WebDAVUtils {
         // R2 refers to File release admin
         return ($user->isSuperUser() || $user->isMember($groupId, 'A') || $user->isMember($groupId, 'R2'));
 
+    }
+
+    /**
+     * Tests if the user is Superuser, or File release admin
+     *
+     * @param User $user
+     * @param Integer $groupId
+     *
+     * @return Boolean
+     */
+    function userCanWrite($user, $groupId) {
+
+        // R2 refers to File release admin
+        return ($user->isSuperUser() || $user->isMember($groupId, 'R2'));
+
+    }
+
+    /**
+     * Returns an instance of ProjectManager
+     *
+     * @return FRSProjectManager
+     */
+    function getProjectManager() {
+
+        $pm = ProjectManager::instance();
+        return $pm;
+
+    }
+
+    /**
+     * Returns a FRSPackageFactory
+     *
+     * @return FRSPackageFactory
+     */
+    function getPackageFactory() {
+
+        return new FRSPackageFactory();
+
+    }
+
+    /**
+     * Returns a FRSReleaseFactory
+     *
+     * @return FRSReleaseFactory
+     */
+    function getReleaseFactory() {
+
+        return new FRSReleaseFactory();
+
+    }
+
+    /**
+     * Returns a FRSFileFactory
+     *
+     * @return FRSFileFactory
+     */
+    function getFileFactory() {
+
+        return new FRSFileFactory();
+
+    }
+
+    /**
+     * Returns a PermissionsManager instance
+     *
+     * @return PermissionsManager
+     */
+    function getPermissionsManager() {
+
+        $pm = & PermissionsManager::instance();
+        return $pm;
+
+    }
+
+    function getIncomingFileSize($name) {
+        return file_utils_get_size($GLOBALS['ftp_incoming_dir'].'/'.$name);
     }
 
 }

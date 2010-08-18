@@ -1,6 +1,21 @@
 <?php
 /**
- * This is the unit test of WebDAVFRSPackage
+ * Copyright (c) STMicroelectronics, 2010. All Rights Reserved.
+ *
+ * This file is a part of Codendi.
+ *
+ * Codendi is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Codendi is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
 require_once (dirname(__FILE__).'/../../../src/common/language/BaseLanguage.class.php');
@@ -8,6 +23,7 @@ Mock::generate('BaseLanguage');
 require_once (dirname(__FILE__).'/../include/lib/Sabre/DAV/Exception.php');
 require_once (dirname(__FILE__).'/../include/lib/Sabre/DAV/Exception/FileNotFound.php');
 require_once (dirname(__FILE__).'/../include/lib/Sabre/DAV/Exception/Forbidden.php');
+require_once (dirname(__FILE__).'/../include/lib/Sabre/DAV/Exception/MethodNotAllowed.php');
 require_once (dirname(__FILE__).'/../include/lib/Sabre/DAV/INode.php');
 require_once (dirname(__FILE__).'/../include/lib/Sabre/DAV/Node.php');
 require_once (dirname(__FILE__).'/../include/lib/Sabre/DAV/IFile.php');
@@ -17,23 +33,31 @@ require_once (dirname(__FILE__).'/../include/lib/Sabre/DAV/IDirectory.php');
 require_once (dirname(__FILE__).'/../include/lib/Sabre/DAV/Directory.php');
 require_once (dirname(__FILE__).'/../../../src/common/frs/FRSPackageFactory.class.php');
 Mock::generate('FRSPackageFactory');
+require_once (dirname(__FILE__).'/../../../src/common/frs/FRSReleaseFactory.class.php');
+Mock::generate('FRSReleaseFactory');
 require_once (dirname(__FILE__).'/../../../src/common/user/User.class.php');
 Mock::generate('User');
+require_once (dirname(__FILE__).'/../../../src/common/project/Project.class.php');
+Mock::generate('Project');
 require_once (dirname(__FILE__).'/../../../src/common/frs/FRSPackage.class.php');
 Mock::generate('FRSPackage');
 require_once (dirname(__FILE__).'/../../../src/common/frs/FRSRelease.class.php');
 Mock::generate('FRSRelease');
 require_once (dirname(__FILE__).'/../include/FS/WebDAVFRSRelease.class.php');
 Mock::generate('WebDAVFRSRelease');
+Mock::generate('PermissionsManager');
 require_once (dirname(__FILE__).'/../include/WebDAVUtils.class.php');
 Mock::generate('WebDAVUtils');
 require_once (dirname(__FILE__).'/../include/FS/WebDAVFRSPackage.class.php');
 Mock::generatePartial(
     'WebDAVFRSPackage',
     'WebDAVFRSPackageTestVersion',
-array('getPackage', 'getProject', 'getUtils', 'getReleaseList', 'getFRSReleaseFromId', 'getWebDAVRelease', 'userIsAdmin')
+array('getPackage', 'getPackageId', 'getProject', 'getUtils', 'getReleaseList', 'getFRSReleaseFromName', 'getWebDAVRelease', 'userIsAdmin', 'userCanWrite')
 );
 
+/**
+ * This is the unit test of WebDAVFRSPackage
+ */
 class WebDAVFRSPackageTest extends UnitTestCase {
 
     /**
@@ -114,13 +138,13 @@ class WebDAVFRSPackageTest extends UnitTestCase {
         $WebDAVRelease->setReturnValue('exist', false);
 
         $webDAVFRSPackage = new WebDAVFRSPackageTestVersion($this);
-        $webDAVFRSPackage->setReturnValue('getFRSReleaseFromId', $FRSRelease);
+        $webDAVFRSPackage->setReturnValue('getFRSReleaseFromName', $FRSRelease);
         $webDAVFRSPackage->setReturnValue('getWebDAVRelease', $WebDAVRelease);
+        $utils = new MockWebDAVUtils();
+        $webDAVFRSPackage->setReturnValue('getUtils', $utils);
 
         $this->expectException('Sabre_DAV_Exception_FileNotFound');
 
-        $utils = new MockWebDAVUtils();
-        $webDAVFRSPackage->setReturnValue('getUtils', $utils);
         $webDAVFRSPackage->getChild($WebDAVRelease->getReleaseId());
 
     }
@@ -136,13 +160,13 @@ class WebDAVFRSPackageTest extends UnitTestCase {
         $WebDAVRelease->setReturnValue('userCanRead', false);
 
         $webDAVFRSPackage = new WebDAVFRSPackageTestVersion($this);
-        $webDAVFRSPackage->setReturnValue('getFRSReleaseFromId', $FRSRelease);
+        $webDAVFRSPackage->setReturnValue('getFRSReleaseFromName', $FRSRelease);
         $webDAVFRSPackage->setReturnValue('getWebDAVRelease', $WebDAVRelease);
+        $utils = new MockWebDAVUtils();
+        $webDAVFRSPackage->setReturnValue('getUtils', $utils);
 
         $this->expectException('Sabre_DAV_Exception_Forbidden');
 
-        $utils = new MockWebDAVUtils();
-        $webDAVFRSPackage->setReturnValue('getUtils', $utils);
         $webDAVFRSPackage->getChild($WebDAVRelease->getReleaseId());
 
     }
@@ -158,11 +182,11 @@ class WebDAVFRSPackageTest extends UnitTestCase {
         $WebDAVRelease->setReturnValue('userCanRead', true);
 
         $webDAVFRSPackage = new WebDAVFRSPackageTestVersion($this);
-        $webDAVFRSPackage->setReturnValue('getFRSReleaseFromId', $FRSRelease);
+        $webDAVFRSPackage->setReturnValue('getFRSReleaseFromName', $FRSRelease);
         $webDAVFRSPackage->setReturnValue('getWebDAVRelease', $WebDAVRelease);
-
         $utils = new MockWebDAVUtils();
         $webDAVFRSPackage->setReturnValue('getUtils', $utils);
+
         $this->assertEqual($webDAVFRSPackage->getChild($WebDAVRelease->getReleaseId()), $WebDAVRelease);
 
     }
@@ -393,6 +417,195 @@ class WebDAVFRSPackageTest extends UnitTestCase {
         $user = new MockUser();
 
         $this->assertEqual($webDAVFRSPackage->userCanRead($user), true);
+
+    }
+
+
+    /**
+     * Testing delete when user is not admin
+     */
+    function testDeleteFailWithUserNotAdmin() {
+
+        $webDAVFRSPackage = new WebDAVFRSPackageTestVersion($this);
+        $webDAVFRSPackage->setReturnValue('userCanWrite', false);
+        $this->expectException('Sabre_DAV_Exception_Forbidden');
+
+        $webDAVFRSPackage->delete();
+
+    }
+
+    /**
+     * Testing delete when the package is not empty
+     */
+    function testDeleteFailWithPackageNotEmpty() {
+
+        $webDAVFRSPackage = new WebDAVFRSPackageTestVersion($this);
+        $webDAVFRSPackage->setReturnValue('userCanWrite', true);
+        $release = new MockFRSRelease();
+        $webDAVFRSPackage->setReturnValue('getReleaseList', array($release));
+        $this->expectException('Sabre_DAV_Exception_Forbidden');
+
+        $webDAVFRSPackage->delete();
+
+    }
+
+    /**
+     * Testing delete when package doesn't exist
+     */
+    function testDeletePackageNotExist() {
+
+        $webDAVFRSPackage = new WebDAVFRSPackageTestVersion($this);
+        $webDAVFRSPackage->setReturnValue('userCanWrite', true);
+        $webDAVFRSPackage->setReturnValue('getReleaseList', array());
+        $packageFactory = new MockFRSPackageFactory();
+        $packageFactory->setReturnValue('delete_package', 0);
+        $utils = new MockWebDAVUtils();
+        $utils->setReturnValue('getPackageFactory', $packageFactory);
+        $webDAVFRSPackage->setReturnValue('getUtils', $utils);
+        $project = new MockProject();
+        $webDAVFRSPackage->setReturnValue('getProject', $project);
+
+        $this->expectException('Sabre_DAV_Exception_Forbidden');
+
+        $webDAVFRSPackage->delete();
+
+    }
+
+    /**
+     * Testing succeeded delete
+     */
+    function testDeleteSucceede() {
+
+    $webDAVFRSPackage = new WebDAVFRSPackageTestVersion($this);
+    $webDAVFRSPackage->setReturnValue('userCanWrite', true);
+    $webDAVFRSPackage->setReturnValue('getReleaseList', array());
+    $packageFactory = new MockFRSPackageFactory();
+    $packageFactory->setReturnValue('delete_package', 1);
+    $utils = new MockWebDAVUtils();
+    $utils->setReturnValue('getPackageFactory', $packageFactory);
+    $webDAVFRSPackage->setReturnValue('getUtils', $utils);
+    $project = new MockProject();
+    $webDAVFRSPackage->setReturnValue('getProject', $project);
+
+    $this->assertNoErrors();
+
+    $webDAVFRSPackage->delete();
+
+    }
+
+    /**
+     * Testing setName when user is not admin
+     */
+    function testSetNameFailWithUserNotAdmin() {
+
+        $webDAVFRSPackage = new WebDAVFRSPackageTestVersion($this);
+        $packageFactory = new MockFRSPackageFactory();
+        $packageFactory->setReturnValue('userCanUpdate', false);
+        $utils = new MockWebDAVUtils();
+        $utils->setReturnValue('getPackageFactory', $packageFactory);
+        $webDAVFRSPackage->setReturnValue('getUtils', $utils);
+        $project = new MockProject();
+        $webDAVFRSPackage->setReturnValue('getProject', $project);
+        $this->expectException('Sabre_DAV_Exception_Forbidden');
+
+        $webDAVFRSPackage->setName('newName');
+
+    }
+
+    /**
+     * Testing setName when name already exist
+     */
+    function testSetNameFailWithNameExist() {
+
+    $webDAVFRSPackage = new WebDAVFRSPackageTestVersion($this);
+    $packageFactory = new MockFRSPackageFactory();
+    $packageFactory->setReturnValue('userCanUpdate', true);
+    $packageFactory->setReturnValue('isPackageNameExist', true);
+    $utils = new MockWebDAVUtils();
+    $utils->setReturnValue('getPackageFactory', $packageFactory);
+    $webDAVFRSPackage->setReturnValue('getUtils', $utils);
+    $project = new MockProject();
+    $webDAVFRSPackage->setReturnValue('getProject', $project);
+    $this->expectException('Sabre_DAV_Exception_MethodNotAllowed');
+
+    $webDAVFRSPackage->setName('newName');
+
+    }
+
+    /**
+     * Testing setName succeede
+     */
+    function testSetNameSucceede() {
+
+    $webDAVFRSPackage = new WebDAVFRSPackageTestVersion($this);
+    $packageFactory = new MockFRSPackageFactory();
+    $packageFactory->setReturnValue('userCanUpdate', true);
+    $packageFactory->setReturnValue('isPackageNameExist', false);
+    $utils = new MockWebDAVUtils();
+    $utils->setReturnValue('getPackageFactory', $packageFactory);
+    $webDAVFRSPackage->setReturnValue('getUtils', $utils);
+    $project = new MockProject();
+    $webDAVFRSPackage->setReturnValue('getProject', $project);
+    $package = new MockFRSPackage();
+    $webDAVFRSPackage->setReturnValue('getPackage', $package);
+    $this->assertNoErrors();
+
+    $webDAVFRSPackage->setName('newName');
+
+    }
+
+    /**
+     * Testing creation of release when user is not admin
+     */
+    function testCreateDirectoryFailWithUserNotAdmin() {
+
+        $webDAVFRSPackage = new WebDAVFRSPackageTestVersion($this);
+
+        $webDAVFRSPackage->setReturnValue('userCanWrite', false);
+
+        $this->expectException('Sabre_DAV_Exception_Forbidden');
+
+        $webDAVFRSPackage->createDirectory('release');
+
+    }
+
+    /**
+     * Testing creation of release when the name already exist
+     */
+    function testCreateDirectoryFailWithNameExist() {
+
+    $webDAVFRSPackage = new WebDAVFRSPackageTestVersion($this);
+
+    $webDAVFRSPackage->setReturnValue('userCanWrite', true);
+    $frsrf = new MockFRSReleaseFactory();
+    $frsrf->setReturnValue('isReleaseNameExist', true);
+    $utils = new MockWebDAVUtils();
+    $utils->setReturnValue('getReleaseFactory', $frsrf);
+    $webDAVFRSPackage->setReturnValue('getUtils', $utils);
+    $this->expectException('Sabre_DAV_Exception_MethodNotAllowed');
+
+    $webDAVFRSPackage->createDirectory('release');
+
+    }
+
+    /**
+     * Testing creation of release succeed
+     */
+    function testCreateDirectorysucceed() {
+
+    $webDAVFRSPackage = new WebDAVFRSPackageTestVersion($this);
+
+    $webDAVFRSPackage->setReturnValue('userCanWrite', true);
+    $frsrf = new MockFRSReleaseFactory();
+    $frsrf->setReturnValue('isReleaseNameExist', false);
+    $utils = new MockWebDAVUtils();
+    $utils->setReturnValue('getReleaseFactory', $frsrf);
+    $pm = new MockPermissionsManager();
+    $utils->setReturnValue('getPermissionsManager', $pm);
+    $webDAVFRSPackage->setReturnValue('getUtils', $utils);
+    $this->assertNoErrors();
+
+    $webDAVFRSPackage->createDirectory('release');
 
     }
 

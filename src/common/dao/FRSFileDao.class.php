@@ -124,6 +124,17 @@ class FRSFileDao extends DataAccessObject {
 							  '', array('frs_package AS p', 'frs_release AS r'));
     }
 
+    function searchFileByNameFromRelease($file_name, $release_id){
+    	$file_name = $this->da->quoteSmart('%/'.$file_name);
+    	$release_id = $this->da->quoteSmart($release_id);
+    	$sql = 'SELECT file_id'
+    	    .' from frs_file'
+    	    .' WHERE filename LIKE '.$file_name
+    	    .' AND release_id = '.$release_id
+    	    .' AND status = \'A\'';
+    	return $this->retrieve($sql);
+    }
+
     /**
      * create a row in the table frs_file
      *

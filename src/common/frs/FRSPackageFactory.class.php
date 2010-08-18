@@ -144,7 +144,23 @@ class FRSPackageFactory {
         return $packages;
     }
 
-    
+    function getPackageIdByName($package_name, $group_id){
+    	$_id = (int) $group_id;
+        $dao =& $this->_getFRSPackageDao();
+        $dar = $dao->searchPackageByName($package_name, $_id);
+
+        if($dar->isError()){
+            return;
+        }
+        
+        if(!$dar->valid()){
+        	return;
+        }else{
+        	$res =& $dar->current();
+        	return $res['package_id'];
+        }
+    }
+
     function isPackageNameExist($package_name, $group_id){
     	$_id = (int) $group_id;
         $dao =& $this->_getFRSPackageDao();

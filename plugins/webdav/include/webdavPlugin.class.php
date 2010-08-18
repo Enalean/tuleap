@@ -24,7 +24,9 @@ require_once ('lib/Sabre.autoload.php');
 require_once ('ResolvPHP-5.1.6-Compatibility.php');
 require_once ('BrowserPlugin.class.php');
 require_once ('WebDAVAuthentication.class.php');
-require_once ('FS/WebDAVFRS.class.php');
+require_once ('FS/WebDAVRoot.class.php');
+require_once ('WebDAVTree.class.php');
+require_once ('Webdav_URLVerification.class.php');
 
 class WebDAVPlugin extends Plugin {
 
@@ -39,7 +41,7 @@ class WebDAVPlugin extends Plugin {
 
         parent::__construct($id);
         $this->setScope(Plugin::SCOPE_PROJECT);
-        $this->_addHook('allowed_host', 'allowedHost', false);
+        $this->_addHook('url_verification_instance', 'urlVerification', false);
 
     }
 
@@ -61,16 +63,15 @@ class WebDAVPlugin extends Plugin {
     }
 
     /**
-     * Put the hostname used to access WebDAV to allow it
+     * Returns the class that will be in charge of the url verification
      *
-     * @param String $ServerNames
+     * @param Array $params
      *
      * @return void
      */
-    function allowedHost(&$params) {
-
-        $params['server_name'][$this->getPluginInfo()->getPropertyValueForName('webdav_host')] = true;
-
+    function urlVerification(&$params) {
+        $webdavHost = $this->getPluginInfo()->getPropertyValueForName('webdav_host');
+        $params['url_verification'] = new Webdav_URLVerification($webdavHost);
     }
 
     /**
@@ -85,10 +86,11 @@ class WebDAVPlugin extends Plugin {
         $user = $auth->authenticate();
 
         // Creating the Root directory from WebDAV file system
-        $rootDirectory = new WebDAVFRS($this, $user);
+        $maxFileSize = $this->getPluginInfo()->getPropertyValueForName('max_file_size');
+        $rootDirectory = new WebDAVRoot($this, $user, $maxFileSize);
 
         // The tree manages all the file objects
-        $tree = new Sabre_DAV_ObjectTree($rootDirectory);
+        $tree = new WebDAVTree($rootDirectory);
 
         // Finally, we create the server object. The server object is responsible for making sense out of the WebDAV protocol
         $server = new Sabre_DAV_Server($tree);

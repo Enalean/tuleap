@@ -1,8 +1,12 @@
+Version 4.0.12 - (Not released yet)
+        == New features ==
+        backlog #101486 : Webdav integration for service FRS: Iteration 3 (Write access)
+
 Version 4.0.11 - Monday, 9th August 2010 
         == Bugfix==
         backlog #106228: Bad dispaly of privacy icon except with 'Dawn' theme
  
-Version 4.0.10 - Thursday, 5th August 2010 
+Version 4.0.10 - Thursday, 5th August 2010 (Canceled) 
         == New features ==
         backlog #103963: Permission denied improvement: docman items
 	backlog #104505: Installation based RPM

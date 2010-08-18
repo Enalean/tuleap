@@ -1,32 +1,54 @@
 <?php
 /**
+ * Copyright (c) STMicroelectronics, 2010. All Rights Reserved.
+ *
+ * This file is a part of Codendi.
+ *
+ * Codendi is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Codendi is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+require_once ('WebDAVProject.class.php');
+require_once (dirname(__FILE__).'/../WebDAVUtils.class.php');
+require_once ('common/dao/ProjectDao.class.php');
+
+/**
  * This is the root of WebDAV virtual filesystem
  *
  * this class lists projects that the user is member of
  *
  * or all public projects in case the user is anonymous
  */
-require_once ('WebDAVFRSProject.class.php');
-require_once (dirname(__FILE__).'/../WebDAVUtils.class.php');
-require_once (dirname(__FILE__).'/../../../../src/common/dao/ProjectDao.class.php');
-
-class WebDAVFRS extends Sabre_DAV_Directory {
+class WebDAVRoot extends Sabre_DAV_Directory {
 
     private $user;
     private $plugin;
+    private $maxFileSize;
 
     /**
      * Constructor of the class
      *
      * @param Plugin $plugin
      * @param User $user
+     * @param Integer $maxFileSize
      *
      * @return void
      */
-    function __construct($plugin, $user) {
+    function __construct($plugin, $user, $maxFileSize) {
 
         $this->user = $user;
         $this->plugin = $plugin;
+        $this->maxFileSize = $maxFileSize;
 
     }
 
@@ -52,18 +74,17 @@ class WebDAVFRS extends Sabre_DAV_Directory {
     }
 
     /**
-     * Returns a new WebDAVFRSProject from the given project id
+     * Returns a new WebDAVProject from the given project id
      *
      * @param String $projectName
      *
-     * @return WebDAVFRSProject
+     * @return WebDAVProject
      *
      * @see lib/Sabre/DAV/Sabre_DAV_Directory#getChild($name)
      */
     function getChild($projectName) {
 
-        $utils = WebDAVUtils::getInstance();
-        $projectId = $utils->extractId($projectName);
+        $projectId = $this->getProjectIdByName($projectName);
 
         // Check for errors
 
@@ -86,7 +107,7 @@ class WebDAVFRS extends Sabre_DAV_Directory {
 
         // Check if the user can access to the project
         // it's important to notice that even if in the listing the user don't see all public projects
-        // he still have the right to access to all of them
+        // she still have the right to access to all of them
         if (!$project->userCanRead()) {
             // Access denied error
             throw new Sabre_DAV_Exception_Forbidden($GLOBALS['Language']->getText('plugin_webdav_common', 'project_access_not_authorized'));
@@ -111,7 +132,7 @@ class WebDAVFRS extends Sabre_DAV_Directory {
      */
     function getName() {
 
-        return 'WebDAVFRSRoot';
+        return ' WebDAV Root';
 
     }
 
@@ -140,21 +161,47 @@ class WebDAVFRS extends Sabre_DAV_Directory {
     }
 
     /**
-     * Returns a new WebDAVFRSProject from the given group Id
+     * Returns the max file size
      *
-     * @param Integer $groupId
-     *
-     * @return WebDAVFRSProject
+     * @return Integer
      */
-    function getWebDAVProject($groupId) {
+    function getMaxFileSize() {
+        return $this->maxFileSize;
+    }
 
-        $pm = ProjectManager::instance();
-        return new WebDAVFRSProject($this->getUser(), $pm->getProject($groupId));
+    /**
+     * Returns a project from its name
+     *
+     * @param String $projectName
+     *
+     * @return Integer
+     */
+    function getProjectIdByName($projectName) {
+
+        $dao = new ProjectDao(CodendiDataAccess::instance());
+        $res=$dao->searchByUnixGroupName($projectName);
+        $groupId=$res->getRow();
+        return $groupId['group_id'];
 
     }
 
     /**
-     * Generate project list of the given user
+     * Returns a new WebDAVProject from the given group Id
+     *
+     * @param Integer $groupId
+     *
+     * @return WebDAVProject
+     */
+    function getWebDAVProject($groupId) {
+
+        $utils = WebDAVUtils::getInstance();
+        $project = $utils->getProjectManager()->getProject($groupId);
+        return new WebDAVProject($this->getUser(), $project, $this->getMaxFileSize());
+
+    }
+
+    /**
+     * Generates project list of the given user
      *
      * @param User $user
      *
@@ -177,7 +224,7 @@ class WebDAVFRS extends Sabre_DAV_Directory {
     }
 
     /**
-     * Generate public projects list
+     * Generates public projects list
      *
      * @return Array
      */

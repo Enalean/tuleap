@@ -222,60 +222,14 @@ print "<p>DBG: sys_allow_anon= ".$GLOBALS['sys_allow_anon'];
 print "<p>DBG: user_isloggedin= ".user_isloggedin();
 print "<p>DBG: SCRIPT_NAME = ".$_SERVER['SCRIPT_NAME']";
 */
-$anonymous_allowed=false;
-$params = array('script_name'=>$_SERVER['SCRIPT_NAME'], 'anonymous_allowed'=>&$anonymous_allowed);
-$em =& EventManager::instance();
-$em->processEvent('anonymous_access_to_script_allowed', $params);
 
-if (!IS_SCRIPT &&
-    $_SERVER['SERVER_NAME'] != 'localhost' &&
-    $GLOBALS['sys_allow_anon'] == 0 && !user_isloggedin() &&
-    $_SERVER['SCRIPT_NAME'] != '/current_css.php'  &&
-    $_SERVER['SCRIPT_NAME'] != '/account/login.php'  &&
-    $_SERVER['SCRIPT_NAME'] != '/account/register.php'&&
-    $_SERVER['SCRIPT_NAME'] != '/account/change_pw.php'&&
-    $_SERVER['SCRIPT_NAME'] != '/include/check_pw.php'&&
-    $_SERVER['SCRIPT_NAME'] != '/account/lostpw.php' &&
-    $_SERVER['SCRIPT_NAME'] != '/account/lostlogin.php' &&
-    $_SERVER['SCRIPT_NAME'] != '/account/lostpw-confirm.php' &&
-    $_SERVER['SCRIPT_NAME'] != '/account/pending-resend.php' &&
-    $_SERVER['SCRIPT_NAME'] != '/account/verify.php' &&
-    $_SERVER['SCRIPT_NAME'] != '/scripts/check_pw.js.php' &&
-    strcmp(substr($_SERVER['SCRIPT_NAME'],0,6),'/soap/') !=0 &&
-    strcmp(substr($_SERVER['SCRIPT_NAME'],0,5),'/api/') !=0 &&
-    !$anonymous_allowed  && 
-    !util_check_allowed_anonymous_url($_SERVER['SCRIPT_NAME'])) {
-    $return_to = urlencode((($_SERVER['REQUEST_URI'] === "/")?"/my/":$_SERVER['REQUEST_URI']));
+// Check URL for valid hostname and valid protocol
 
-    //if  user  requests a page in light view, it should be redirected to light login
-    $url = parse_url($_SERVER['REQUEST_URI']);
-    if(isset($url['query'])) {
-        $query = $url['query'];
-        if (strstr($query,'pv=2')) {
-            $return_to .= "&pv=2";
-        }
-    }
-
-    if ($GLOBALS['sys_force_ssl'] == 1 || (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on')) {
-        header("Location: https://".$GLOBALS['sys_https_host']."/account/login.php?return_to=".$return_to);
-    } else {
-        header("Location: http://".$GLOBALS['sys_default_domain']."/account/login.php?return_to=".$return_to);
-    }
-    exit;
-}
-
-if (!IS_SCRIPT &&
-    $current_user->isRestricted() ) {
-    if (!util_check_restricted_access($_SERVER['REQUEST_URI'],$_SERVER['SCRIPT_NAME'])) {
-        exit_restricted_user_permission_denied();
-    }
-}
-
-if (!IS_SCRIPT &&
-    (strcmp(substr($_SERVER['SCRIPT_NAME'],0,5),'/api/') !=0)) {
-    if (!util_check_private_access($_SERVER['REQUEST_URI'])) {
-            exit_private_project_permission_denied();
-    }
+if (!IS_SCRIPT) {
+    require_once('common/include/URLVerificationFactory.class.php');
+    $urlVerifFactory = new URLVerificationFactory();
+    $urlVerif = $urlVerifFactory->getURLVerification($_SERVER);
+    $urlVerif->assertValidUrl($_SERVER);
 }
 
 require_once('common/include/URL.class.php');

@@ -180,7 +180,7 @@ class ProjectDao extends DataAccessObject {
 
 
     public function searchByPublicStatus($IsPublic){
-        $IsPublic= $this->da->escapeInt($IsPublic);
+        $IsPublic= $this->da->quoteSmart($IsPublic);
         $sql = "SELECT group_id
                 FROM $this->table_name
                 WHERE is_public=$IsPublic

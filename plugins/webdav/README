@@ -1,16 +1,22 @@
 INSTALLATION
 ============
--Under "/etc/httpd/conf.d/codendi_aliases.conf":
 
-    if you access to webdav by "https://webdav.domain" add:
-    # 5- WebDAV plugin web/php pages 
-    AliasMatch ^/(.*) /usr/share/codendi/plugins/webdav/www/index.php
-    <DirectoryMatch "/usr/share/codendi/codendi/plugins/webdav/www/">
-        Options Indexes MultiViews
-        AllowOverride None
-        Order allow,deny
-        Allow from all
-    </DirectoryMatch>
+if you access to webdav by "https://webdav.domain":
+
+Under /etc/httpd/conf/httpd.conf: add a virtual host to WebDAV domain name.
+
+if you access to webdav by "https://domain/webdav/":
+
+Under "/etc/httpd/conf.d/codendi_aliases.conf" add:
+
+# 0- WebDAV plugin web/php pages 
+AliasMatch ^/plugins/webdav/(.*) /usr/share/codendi/plugins/webdav/www/index.php
+<DirectoryMatch "/usr/share/codendi/codendi/plugins/webdav/www/">
+    Options Indexes MultiViews
+    AllowOverride None
+    Order allow,deny
+    Allow from all
+</DirectoryMatch>
 
     if you access to webdav by "https://domain/webdav/" add:
     # 5- WebDAV plugin web/php pages 

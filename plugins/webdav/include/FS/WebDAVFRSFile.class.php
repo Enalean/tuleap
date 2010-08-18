@@ -1,15 +1,33 @@
 <?php
 /**
+ * Copyright (c) STMicroelectronics, 2010. All Rights Reserved.
+ *
+ * This file is a part of Codendi.
+ *
+ * Codendi is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Codendi is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+require_once ('common/include/MIME.class.php');
+require_once ('www/project/admin/permissions.php');
+require_once (dirname(__FILE__).'/../WebDAVUtils.class.php');
+
+/**
  * This class is used to maniplulate files through WebDAV
  *
  * It's an implementation of the abstract class Sabre_DAV_File methods
  *
  */
-
-require_once (dirname(__FILE__).'/../../../../src/common/include/MIME.class.php');
-require_once (dirname(__FILE__).'/../../../../src/www/project/admin/permissions.php');
-require_once (dirname(__FILE__).'/../WebDAVUtils.class.php');
-
 class WebDAVFRSFile extends Sabre_DAV_File {
 
     private $user;
@@ -46,45 +64,6 @@ class WebDAVFRSFile extends Sabre_DAV_File {
      */
     function get() {
 
-        // Check for errors
-
-        // Check if the file is not null and is not deleted
-        if (!$this->getFile() || $this->getFile()->isDeleted()) {
-            // File not found error
-            throw new Sabre_DAV_Exception_FileNotFound($GLOBALS['Language']->getText('plugin_webdav_download', 'file_not_available'));
-        }
-
-        // Check that the file has the active status
-        if (!$this->isActive()) {
-            // Access denied error
-            throw new Sabre_DAV_Exception_Forbidden($GLOBALS['Language']->getText('plugin_webdav_download', 'access_not_authorized'));
-        }
-
-        // Check if the user can download the file
-        if (!$this->userCanDownload($this->getUser())) {
-            // Access denied error
-            throw new Sabre_DAV_Exception_Forbidden($GLOBALS['Language']->getText('plugin_webdav_download', 'access_not_authorized'));
-        }
-
-        // Check if the file exists in the database
-        if (! $this->fileExists()) {
-            // File doesn't exist error
-            throw new Sabre_DAV_Exception_FileNotFound($GLOBALS['Language']->getText('plugin_webdav_download', 'file_not_available'));
-        }
-
-        // Ceck that the file belongs to the package and the release
-        if (($this->getPackageId() != $this->getGivenPackageId()) || ($this->getReleaseId() != $this->getGivenReleaseId())) {
-            // File don't belong to package or release error
-            throw new Sabre_DAV_Exception_RequestedRangeNotSatisfiable($GLOBALS['Language']->getText('plugin_webdav_download', 'dont_belong'));
-        }
-
-        // Check the 2 GB limit (2^31 -1)
-        $fileSize = $this->getSize();
-        if ($fileSize > 2147483647) {
-            // File size error
-            throw new Sabre_DAV_Exception_RequestedRangeNotSatisfiable($GLOBALS['Language']->getText('plugin_webdav_download', 'error_file_size'));
-        }
-
         // Log the download in the Log system
         $this->logDownload($this->getUser());
 
@@ -106,7 +85,7 @@ class WebDAVFRSFile extends Sabre_DAV_File {
          *  the client able to request the file from its id
          */
         $basename = basename($this->getFile()->getFileName());
-        return $this->getFile()->getFileID()."-".$basename;
+        return $basename;
 
     }
 
@@ -139,7 +118,7 @@ class WebDAVFRSFile extends Sabre_DAV_File {
      */
     function getETag() {
 
-        return $this->getFile()->getFileID();
+        return md5_file($this->getFileLocation());
 
     }
 
@@ -180,6 +159,17 @@ class WebDAVFRSFile extends Sabre_DAV_File {
     }
 
     /**
+     * Returns the file Id
+     *
+     * @return Integer
+     */
+    function getFileId() {
+
+        return $this->getFile()->getFileID();
+
+    }
+
+    /**
      * Returns the Id of the release that file belongs to
      *
      * @return Integer
@@ -187,17 +177,6 @@ class WebDAVFRSFile extends Sabre_DAV_File {
     function getReleaseId() {
 
         return $this->getFile()->getReleaseID();
-
-    }
-
-    /**
-     * Returns the given release Id
-     *
-     * @return Integer
-     */
-    function getGivenReleaseId() {
-
-        return $this->release->getReleaseID();
 
     }
 
@@ -213,13 +192,13 @@ class WebDAVFRSFile extends Sabre_DAV_File {
     }
 
     /**
-     * Returns the given package Id
+     * Returns the project
      *
-     * @return Integer
+     * @return Project
      */
-    function getGivenPackageId() {
+    function getProject() {
 
-        return $this->package->getPackageID();
+        return $this->project;
 
     }
 
@@ -231,6 +210,17 @@ class WebDAVFRSFile extends Sabre_DAV_File {
     function getUser() {
 
         return $this->user;
+
+    }
+
+    /**
+     * Returns an instance of WebDAVUtils
+     *
+     * @return WebDAVUtils
+     */
+    function getUtils() {
+
+        return WebDAVUtils::getInstance();
 
     }
 
@@ -284,14 +274,154 @@ class WebDAVFRSFile extends Sabre_DAV_File {
     }
 
     /**
-     * Returns if the user is File release admin
+     * Returns if the user is superuser or File release admin
      *
      * @return Boolean
      */
-    function userIsAdmin() {
+    function userCanWrite() {
+        $utils = $this->getUtils();
+        return $utils->userCanWrite($this->getUser(), $this->getProject()->getGroupId());
+    }
 
-        $utils = WebDAVUtils::getInstance();
-        return $utils->userIsAdmin($this->getUser(), $this->getProject()->getGroupId());
+    /**
+     * Deletes the file
+     *
+     * @return void
+     *
+     * @see plugins/webdav/lib/Sabre/DAV/Sabre_DAV_Node#delete()
+     */
+    function delete() {
+
+        if ($this->userCanWrite()) {
+            $utils = $this->getUtils();
+            $result = $utils->getFileFactory()->delete_file($this->getProject()->getGroupId(), $this->getFileId());
+            if ($result == 0) {
+                throw new Sabre_DAV_Exception_Forbidden($GLOBALS['Language']->getText('plugin_webdav_download', 'file_not_available'));
+            }
+        } else {
+            throw new Sabre_DAV_Exception_Forbidden($GLOBALS['Language']->getText('plugin_webdav_common', 'file_denied_delete'));
+        }
+
+    }
+
+    /**
+     * Renames the file
+     *
+     * @param String $name
+     *
+     * @return void
+     *
+     * @see plugins/webdav/lib/Sabre/DAV/Sabre_DAV_Node#setName($name)
+     */
+    /*function setName($name) {
+
+        if ($this->userIsAdmin()) {
+            $utils = $this->getUtils();
+            if ($utils->isValidFileName($name)) {
+                $frsff = $utils->getFileFactory();
+                if (!$frsff->isFileBaseNameExists($name, $this->getReleaseId(), $this->getProject()->getGroupId())) {
+                    $dirname = dirname($this->getFile()->getFileName());
+                    $newFileLocation = dirname($this->getFileLocation()).'/'.htmlspecialchars($name);
+
+                    if (!$this->copyFile($this->getFileLocation(), $GLOBALS['ftp_incoming_dir'].'/'.$name)) {
+                        throw new Sabre_DAV_Exception($GLOBALS['Language']->getText('plugin_webdav_upload', 'copy_incoming_fail'));
+                    }
+                    $res = $frsff->moveFileForge($this->getProject()->getGroupId(), $name, $frsff->getUploadSubDirectory($this->getReleaseId()));
+
+                    if (!$res) {
+                        $file = $this->getFile();
+                        $oldFileName = $file->getFileName();
+                        $fileArray = array('file_id' => $file->getFileID()
+                        , 'filename' => $dirname.'/'.htmlspecialchars($name)
+                        , 'release_id' => $file->getReleaseID()
+                        , 'type_id' => $file->getTypeID()
+                        , 'processor_id' => $file->getProcessorID()
+                        , 'release_time' => $file->getReleaseTime()
+                        , 'file_size' => $file->getFileSize()
+                        , 'post_date' => $file->getPostDate()
+                        , 'status' => $file->getStatus()
+                        );
+                        $frsff->update($fileArray);
+
+                        $time = time();
+                        exec('/bin/echo "'.$oldFileName.'::'. $this->getProject()->getUnixName().'::'.$time.'" >> '.$GLOBALS['ftp_incoming_dir'].'/.delete_files');
+                    } else {
+                        throw new Sabre_DAV_Exception($GLOBALS['Language']->getText('plugin_webdav_upload', 'move_fileforge_fail'));
+                    }
+                } else {
+                    throw new Sabre_DAV_Exception_MethodNotAllowed($GLOBALS['Language']->getText('plugin_webdav_common', 'file_name_exist'));
+                }
+            } else {
+                throw new Sabre_DAV_Exception_BadRequest($GLOBALS['Language']->getText('plugin_webdav_common', 'file_name_not_valid'));
+            }
+        } else {
+            throw new Sabre_DAV_Exception_Forbidden($GLOBALS['Language']->getText('plugin_webdav_common', 'file_denied_rename'));
+        }
+
+    }*/
+
+    /**
+     * Moves the file into another release
+     *
+     * @param WebDAVFRSRelease $destination
+     *
+     * @return void
+     */
+    function move($destination) {
+
+        if ($this->userCanWrite() && $destination->userCanWrite()) {
+            $utils = $this->getUtils();
+            $frsff = $utils->getFileFactory();
+            $fileName = $this->getFile()->getFileName();
+            $name = basename($fileName);
+            if (!$frsff->isFileBaseNameExists($name, $destination->getReleaseId(), $destination->getProject()->getGroupId())) {
+                if (!$this->copyFile($this->getFileLocation(), $GLOBALS['ftp_incoming_dir'].'/'.$name)) {
+                    throw new Sabre_DAV_Exception($GLOBALS['Language']->getText('plugin_webdav_upload', 'copy_incoming_fail'));
+                }
+                $dirname = $frsff->getUploadSubDirectory($destination->getReleaseId());
+                $res = $frsff->moveFileForge($destination->getProject()->getGroupId(), $name, $dirname);
+
+                // When succeed fileforge returns value 0 and other value when failure.
+                if ($res == 0) {
+                    $file = $this->getFile();
+                    $fileArray = array('file_id' => $file->getFileID()
+                    , 'filename' => $dirname.'/'.$name
+                    , 'release_id' => $destination->getReleaseId()
+                    , 'type_id' => $file->getTypeID()
+                    , 'processor_id' => $file->getProcessorID()
+                    , 'release_time' => $file->getReleaseTime()
+                    , 'file_size' => $file->getFileSize()
+                    , 'post_date' => $file->getPostDate()
+                    , 'status' => $file->getStatus()
+                    );
+                    $unixName = $this->getProject()->getUnixName();
+                    $frsff->update($fileArray);
+
+                    $time = time();
+                    file_put_contents($GLOBALS['ftp_incoming_dir'].'/.delete_files', $fileName.'::'.$unixName.'::'.$time);
+                } else {
+                    throw new Sabre_DAV_Exception($GLOBALS['Language']->getText('plugin_webdav_upload', 'move_fileforge_fail'));
+                }
+            } else {
+                throw new Sabre_DAV_Exception_MethodNotAllowed($GLOBALS['Language']->getText('plugin_webdav_common', 'file_name_exist'));
+            }
+        } else {
+            throw new Sabre_DAV_Exception_Forbidden($GLOBALS['Language']->getText('plugin_webdav_common', 'file_denied_rename'));
+        }
+
+    }
+
+    /**
+     * A wrapper to copy
+     *
+     * @param String $source
+     * @param String $destination
+     *
+     * @return Boolean
+     */
+    function copyFile($source, $destination) {
+
+        return copy($source, $destination);
 
     }
 
