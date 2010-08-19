@@ -1,6 +1,9 @@
 Version 4.0.12 - (Not released yet)
         == New features ==
         backlog #101486 : Webdav integration for service FRS: Iteration 3 (Write access)
+        
+        == Bugfix ==
+        backlog #106503: Tracker import and export issue 
 
 Version 4.0.11 - Monday, 9th August 2010 
         == Bugfix==
