@@ -127,12 +127,12 @@ class ProjectDao extends DataAccessObject {
 
         //Update 'service' table
         if ($res_groups){
-            $sql_summary  = ' UPDATE service SET link= REPLACE (link,'.$this->da->quoteSmart($project->getUnixName(false)).','.$this->da->quoteSmart($new_name).')
+            $sql_summary  = ' UPDATE service SET link= REPLACE (link,'.$this->da->quoteSmart($project->getUnixName()).','.$this->da->quoteSmart(strtolower($new_name)).')
                               WHERE short_name="summary"
                               AND group_id= '.$this->da->quoteSmart($project->getID());
             $res_summary = $this->update($sql_summary);
             if ($res_summary){
-                $sql_homePage = ' UPDATE service SET link= REPLACE (link,'.$this->da->quoteSmart($project->getUnixName(false)).','.$this->da->quoteSmart($new_name).')
+                $sql_homePage = ' UPDATE service SET link= REPLACE (link,'.$this->da->quoteSmart($project->getUnixName()).','.$this->da->quoteSmart(strtolower($new_name)).')
                                   WHERE short_name="homepage"
                                   AND group_id= '.$this->da->quoteSmart($project->getID());
                 return $this->update($sql_homePage);
