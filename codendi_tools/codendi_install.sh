@@ -181,7 +181,7 @@ todo "WHAT TO DO TO FINISH THE CODENDI INSTALLATION (see $TODO_FILE)"
 
 # -> mailman
 # add exclude mailman in base yum
-missing_rpms="$missing_rpms mailman-2.1.9-4.codendi"
+missing_rpms="$missing_rpms mailman-2.1.9-5.codendi"
 
 # -> ViewVC
 # Need codendiadm user & group
