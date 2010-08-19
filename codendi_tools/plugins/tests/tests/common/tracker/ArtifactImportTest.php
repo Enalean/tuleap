@@ -186,7 +186,11 @@ class ArtifactImportTest extends UnitTestCase {
       $this->assertTrue($test->isError());
 
       $test = new ArtifactImport($at,$atf,'group');
-      $test->parseFieldNames(array('Follow-up Comments','Depend on','CC List','CC Comment','Assigned To','Original Submission'));
+      $test->parseFieldNames(array($GLOBALS['Language']->getText('project_export_artifact_export', 'follow_up_comments'), 
+                                   $GLOBALS['Language']->getText('project_export_artifact_export', 'depend_on'), 
+                                   $GLOBALS['Language']->getText('project_export_artifact_export', 'add_cc_lbl'), 
+                                   $GLOBALS['Language']->getText('project_export_artifact_export' ,'cc_comment_lbl'),
+                                   'Assigned To','Original Submission'));
       $this->assertFalse($test->isError());
 
 
@@ -196,7 +200,11 @@ class ArtifactImportTest extends UnitTestCase {
 
       // can not check submitted_by values (can not get user_id from here)
       $test = new ArtifactImport($at,$atf,'group');
-      $test->parseFieldNames(array('Follow-up Comments','Depend on','CC List','CC Comment','Assigned To','Original Submission'));
+      $test->parseFieldNames(array($GLOBALS['Language']->getText('project_export_artifact_export', 'follow_up_comments'),
+                                   $GLOBALS['Language']->getText('project_export_artifact_export', 'depend_on'),
+                                   $GLOBALS['Language']->getText('project_export_artifact_export', 'add_cc_lbl'),
+                                   $GLOBALS['Language']->getText('project_export_artifact_export' ,'cc_comment_lbl'),
+                                   'Assigned To','Original Submission'));
       $test->predefined_values = array();
       $test->predefined_values[4] = array('schneide'=>'');
       $data = array($GLOBALS['Language']->getText('tracker_import_utils','no_followups'),'','','','schneide','my original submission');
@@ -243,7 +251,11 @@ class ArtifactImportTest extends UnitTestCase {
 
 
       $test = new ArtifactImport($at,$atf,'group');
-      $test->parseFieldNames(array('Follow-up Comments','Depend on','CC List','CC Comment','Assigned To','Original Submission','MB Field','SB Field'));
+      $test->parseFieldNames(array($GLOBALS['Language']->getText('project_export_artifact_export', 'follow_up_comments'),
+                                   $GLOBALS['Language']->getText('project_export_artifact_export', 'depend_on'),
+                                   $GLOBALS['Language']->getText('project_export_artifact_export', 'add_cc_lbl'),
+                                   $GLOBALS['Language']->getText('project_export_artifact_export' ,'cc_comment_lbl'),
+                                   'Assigned To','Original Submission','MB Field','SB Field'));
       $test->predefined_values = array();
       $test->predefined_values[4] = array('schneide'=>'');
       $test->predefined_values[6] = array('one'=>'','two'=>'','three'=>'');
@@ -274,7 +286,11 @@ class ArtifactImportTest extends UnitTestCase {
       //test date format
       //submitted on is allowed to be void, we set it to current date on insert into DB
       $test = new ArtifactImport($at,$atf,'group');
-      $test->parseFieldNames(array('Follow-up Comments','Depend on','CC List','CC Comment','Assigned To','Original Submission','MB Field','SB Field','Submitted On'));
+      $test->parseFieldNames(array($GLOBALS['Language']->getText('project_export_artifact_export', 'follow_up_comments'),
+                                   $GLOBALS['Language']->getText('project_export_artifact_export', 'depend_on'),
+                                   $GLOBALS['Language']->getText('project_export_artifact_export', 'add_cc_lbl'),
+                                   $GLOBALS['Language']->getText('project_export_artifact_export' ,'cc_comment_lbl'),
+                                   'Assigned To','Original Submission','MB Field','SB Field','Submitted On'));
       $data = array($GLOBALS['Language']->getText('tracker_import_utils','no_followups'),'','','','schneide','my original submission','one,two,four','yellow','');
       $test->checkValues('1',$data,false);
       $this->assertFalse($test->isError());
@@ -311,7 +327,7 @@ class ArtifactImportTest extends UnitTestCase {
       $aff->setReturnValue('getFieldFromName',$last_update_date,array('last_update_date'));
 
       $test = new ArtifactImport($at,$aff,'group');
-      $test->parseFieldNames(array('Follow-up Comments'));
+      $test->parseFieldNames(array($GLOBALS['Language']->getText('project_export_artifact_export', 'follow_up_comments')));
       $parsed_comments = array();
       $art_id = '1149';
 
