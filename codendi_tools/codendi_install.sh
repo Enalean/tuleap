@@ -344,6 +344,12 @@ echo "Renaming existing Apache configuration files..."
 cd /etc/httpd/conf.d/
 for f in *.conf
 do
+    # Do not erease conf files provided by "our" packages and for which
+    # we don't have a .dist version
+    case "$f" in
+        "viewvc.conf"|"munin.conf"|"mailman.conf")
+            continue;;
+    esac
     yn="0"
     current_name="$f"
     orig_name="$f.rhel"
