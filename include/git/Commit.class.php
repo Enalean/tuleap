@@ -708,7 +708,7 @@ class GitPHP_Commit extends GitPHP_GitObject
 		if (($format == GITPHP_COMPRESS_BZ2) && function_exists('bzcompress')) {
 			return bzcompress($data, GitPHP_Config::GetInstance()->GetValue('compresslevel', 4));
 		} else if (($format == GITPHP_COMPRESS_GZ) && function_exists('gzencode')) {
-			return gzencode($arc, GitPHP_Config::GetInstance()->GetValue('compresslevel', -1));
+			return gzencode($data, GitPHP_Config::GetInstance()->GetValue('compresslevel', -1));
 		}
 
 		return $data;
