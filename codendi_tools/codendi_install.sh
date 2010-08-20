@@ -1,4 +1,4 @@
-#!/bin/bash
+cvs-1.11.22-5.codendi.i3#!/bin/bash
 #
 # Copyright (c) Xerox Corporation, Codendi 2001-2009.
 # This file is licensed under the GNU General Public License version 2. See the file COPYING.
@@ -181,7 +181,7 @@ todo "WHAT TO DO TO FINISH THE CODENDI INSTALLATION (see $TODO_FILE)"
 
 # -> mailman
 # add exclude mailman in base yum
-missing_rpms="$missing_rpms mailman-2.1.9-4.codendi"
+missing_rpms="$missing_rpms mailman-2.1.9-5.codendi"
 
 # -> ViewVC
 # Need codendiadm user & group
@@ -236,13 +236,13 @@ while [ "$mm_passwd" != "$mm_passwd2" ]; do
     echo
 done
 
-# openfire_passwd="a"; openfire_passwd2="b";
-# while [ "$openfire_passwd" != "$openfire_passwd2" ]; do
-#     read -s -p "Password for Openfire DB user: " openfire_passwd
-#     echo
-#     read -s -p "Retype password for Openfire DB user: " openfire_passwd2
-#     echo
-# done
+openfire_passwd="a"; openfire_passwd2="b";
+while [ "$openfire_passwd" != "$openfire_passwd2" ]; do
+    read -s -p "Password for Openfire DB user: " openfire_passwd
+    echo
+    read -s -p "Retype password for Openfire DB user: " openfire_passwd2
+    echo
+done
 
 echo "DB authentication user: MySQL user that will be used for user authentication"
 echo "  Please do not reuse a password here, as this password will be stored in clear on the filesystem and will be accessible to all logged-in user."
@@ -344,6 +344,12 @@ echo "Renaming existing Apache configuration files..."
 cd /etc/httpd/conf.d/
 for f in *.conf
 do
+    # Do not erease conf files provided by "our" packages and for which
+    # we don't have a .dist version
+    case "$f" in
+        "viewvc.conf"|"munin.conf"|"mailman.conf")
+            continue;;
+    esac
     yn="0"
     current_name="$f"
     orig_name="$f.rhel"
@@ -384,7 +390,7 @@ old_passwords=1
 # Skip logging openfire db (for instant messaging)
 # The 'monitor' openfire plugin creates large codendi-bin files
 # Comment this line if you prefer to be safer.
-# set-variable  = binlog-ignore-db=openfire
+set-variable  = binlog-ignore-db=openfire
 
 [mysql.server]
 user=mysql
@@ -985,7 +991,7 @@ $CHKCONFIG mailman on
 $CHKCONFIG munin-node on
 $CHKCONFIG vsftpd on
 $CHKCONFIG crond on
-#$CHKCONFIG openfire on
+$CHKCONFIG openfire on
 
 /etc/init.d/codendi start
 
@@ -1025,24 +1031,24 @@ $CAT $INSTALL_DIR/plugins/graphontrackers/db/install.sql | $MYSQL -u codendiadm 
 $CAT $INSTALL_DIR/plugins/graphontrackers/db/initvalues.sql | $MYSQL -u codendiadm codendi --password=$codendiadm_passwd
 
 # IM plugin
-# build_dir /etc/codendi/plugins/IM/etc codendiadm codendiadm 755
-# # Create openfireadm MySQL user
-# $CAT <<EOF | $MYSQL -u root mysql $pass_opt
-# GRANT ALL PRIVILEGES on openfire.* to openfireadm@localhost identified by '$openfire_passwd';
-# GRANT SELECT ON codendi.user to openfireadm@localhost;
-# GRANT SELECT ON codendi.groups to openfireadm@localhost;
-# GRANT SELECT ON codendi.user_group to openfireadm@localhost;
-# GRANT SELECT ON codendi.session to openfireadm@localhost;
-# FLUSH PRIVILEGES;
-# EOF
-# # Install plugin
-# $CAT $INSTALL_DIR/plugins/IM/db/install.sql | $MYSQL -u codendiadm codendi --password=$codendiadm_passwd
-# # Initialize Jabbex
-# IM_ADMIN_GROUP='imadmingroup'
-# IM_ADMIN_USER='imadmin-bot'
-# IM_ADMIN_USER_PW='1M@dm1n'
-# IM_MUC_PW='Mu6.4dm1n' # Doesn't need to change
-# $PHP $INSTALL_DIR/plugins/IM/include/jabbex_api/installation/install.php -a -orp $rt_passwd -uod openfireadm -pod $openfire_passwd -ucd openfireadm -pcd $openfire_passwd -odb jdbc:mysql://localhost:3306/openfire -cdb jdbc:mysql://localhost:3306/codendi -ouri $sys_default_domain -gjx $IM_ADMIN_GROUP -ujx $IM_ADMIN_USER -pjx $IM_ADMIN_USER_PW -pmuc $IM_MUC_PW
+build_dir /etc/codendi/plugins/IM/etc codendiadm codendiadm 755
+# Create openfireadm MySQL user
+$CAT <<EOF | $MYSQL -u root mysql $pass_opt
+GRANT ALL PRIVILEGES on openfire.* to openfireadm@localhost identified by '$openfire_passwd';
+GRANT SELECT ON codendi.user to openfireadm@localhost;
+GRANT SELECT ON codendi.groups to openfireadm@localhost;
+GRANT SELECT ON codendi.user_group to openfireadm@localhost;
+GRANT SELECT ON codendi.session to openfireadm@localhost;
+FLUSH PRIVILEGES;
+EOF
+# Install plugin
+$CAT $INSTALL_DIR/plugins/IM/db/install.sql | $MYSQL -u codendiadm codendi --password=$codendiadm_passwd
+# Initialize Jabbex
+IM_ADMIN_GROUP='imadmingroup'
+IM_ADMIN_USER='imadmin-bot'
+IM_ADMIN_USER_PW='1M@dm1n'
+IM_MUC_PW='Mu6.4dm1n' # Doesn't need to change
+$PHP $INSTALL_DIR/plugins/IM/include/jabbex_api/installation/install.php -a -orp $rt_passwd -uod openfireadm -pod $openfire_passwd -ucd openfireadm -pcd $openfire_passwd -odb jdbc:mysql://localhost:3306/openfire -cdb jdbc:mysql://localhost:3306/codendi -ouri $sys_default_domain -gjx $IM_ADMIN_GROUP -ujx $IM_ADMIN_USER -pjx $IM_ADMIN_USER_PW -pmuc $IM_MUC_PW
 
 # Hudson plugin
 $CAT $INSTALL_DIR/plugins/hudson/db/install.sql | $MYSQL -u codendiadm codendi --password=$codendiadm_passwd
