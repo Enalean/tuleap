@@ -59,9 +59,12 @@ INSERT INTO user SET \
         fontsize = 0, \
         theme = '', \
         language_id = 'en_US', \
-        last_pwd_update = '0', \
+        last_pwd_update = '0';
+        
+INSERT INTO user_access SET \
+        user_id = 100, \
         last_access_date = '0';
-
+        
 INSERT INTO user SET \
         user_id = 101, \
         user_name = 'admin', \
@@ -89,8 +92,12 @@ INSERT INTO user SET \
         fontsize = 0, \
         theme = '', \
         language_id = 'en_US', \
-        last_pwd_update = '0', \
+        last_pwd_update = '0';
+        
+INSERT INTO user_access SET \
+        user_id = 101, \
         last_access_date = '0';
+        
 
 #
 # Default Data for 'group_desc'
