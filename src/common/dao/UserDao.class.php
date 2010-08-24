@@ -410,7 +410,7 @@ class UserDao extends DataAccessObject {
      * actions on an execution.
      */
     function storeLoginSuccess($user_id, $time) {
-       $sql = 'UPDATE LOW_PRIORITY user_access 
+       $sql = 'UPDATE user_access 
                 SET nb_auth_failure = 0,
                     prev_auth_success = last_auth_success,
                     last_auth_success = '. $this->da->escapeInt($time).',
@@ -426,7 +426,7 @@ class UserDao extends DataAccessObject {
      * @return Boolean
      */
     function storeLastAccessDate($user_id, $time) {
-        $sql = 'UPDATE LOW_PRIORITY user_access
+        $sql = 'UPDATE user_access
                 SET last_access_date  = '.$this->da->escapeInt($time).'
                 WHERE user_id = '. $this->da->escapeInt($user_id);
         return $this->update($sql);
@@ -440,7 +440,7 @@ class UserDao extends DataAccessObject {
      * newer than 'last_auth_failure') the counter is reset to 1.
      */
     function storeLoginFailure($login, $time) {
-        $sql = "UPDATE LOW_PRIORITY user_access 
+        $sql = "UPDATE user_access 
                 SET nb_auth_failure = IF(last_auth_success >= last_auth_failure, 1, nb_auth_failure + 1), 
                 last_auth_failure = ". $this->da->escapeInt($time) ."
                 WHERE user_id = (SELECT user_id from user WHERE user_name = ". $this->da->quoteSmart($login).")";
