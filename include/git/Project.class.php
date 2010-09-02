@@ -321,6 +321,19 @@ class GitPHP_Project
 	}
 
 	/**
+	 * GetDaemonEnabled
+	 *
+	 * Returns whether gitdaemon is allowed for this project
+	 *
+	 * @access public
+	 * @return boolean git-daemon-export-ok?
+	 */
+	public function GetDaemonEnabled()
+	{
+		return file_exists($this->GetPath() . '/git-daemon-export-ok');
+	}
+
+	/**
 	 * GetCategory
 	 *
 	 * Gets the project's category

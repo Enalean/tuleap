@@ -61,7 +61,9 @@ class GitPHP_ProjectListArray extends GitPHP_ProjectListBase
 						$projObj = new GitPHP_Project($ppath);
 						if ($cat != GITPHP_NO_CATEGORY)
 							$projObj->SetCategory($cat);
-						$this->projects[] = $projObj;
+						if ($projObj->GetDaemonEnabled()) {
+							$this->projects[] = $projObj;
+						}
 					} catch (Exception $e) {
 					}
 				}
