@@ -84,7 +84,10 @@ class GitPHP_ProjectListDirectory extends GitPHP_ProjectListBase
 					if (is_file($fullPath . '/HEAD')) {
 						$projectPath = substr($fullPath, $trimlen);
 						try {
-							$this->projects[] = new GitPHP_Project($projectPath);
+							$proj = new GitPHP_Project($projectPath);
+							if ($proj->GetDaemonEnabled()) {
+								$this->projects[] = $proj;
+							}
 						} catch (Exception $e) {
 						}
 					} else {
