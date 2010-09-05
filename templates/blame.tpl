@@ -25,6 +25,25 @@
  {include file='path.tpl' pathobject=$blob target='blob'}
  
  <div class="page_body">
+   {if $geshi}
+     {$geshihead}
+       <td class="ln" id="blame">
+	{foreach from=$blob->GetData(true) item=blobline name=blob}
+	  {assign var=blamecommit value=$blame[$smarty.foreach.blob.iteration]}
+	  {if $blamecommit}
+	    {if $opened}</div>{/if}
+	    <div class="{cycle values="light,dark"}">
+	    {assign var=opened value=true}
+	    <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=commit&h={$blamecommit->GetHash()}" title="{$blamecommit->GetTitle()}">{$blamecommit->GetAuthorEpoch()|date_format:"%F %X"}</a>
+	    {$blamecommit->GetAuthor()}
+	  {/if}
+	  &nbsp;<br />
+	{/foreach}
+	{if $opened}</div>{/if}
+	</td>
+     {$geshibody}
+     {$geshifoot}
+   {else}
  	<table class="code">
 	{foreach from=$blob->GetData(true) item=blobline name=blob}
 	  {assign var=blamecommit value=$blame[$smarty.foreach.blob.iteration]}
@@ -47,6 +66,7 @@
 	  </tr>
 	{/foreach}
 	</table>
+  {/if}
  </div>
 
  {include file='footer.tpl'}

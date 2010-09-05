@@ -121,6 +121,40 @@ class GitPHP_Controller_Blame extends GitPHP_ControllerBase
 
 		$this->tpl->assign('tree', $commit->GetTree());
 
+		if (GitPHP_Config::GetInstance()->GetValue('geshi', true)) {
+			include_once(GitPHP_Config::GetInstance()->GetValue('geshiroot', 'lib/geshi/') . "geshi.php");
+			if (class_exists('GeSHi')) {
+				$geshi = new GeSHi("",'php');
+				if ($geshi) {
+					$lang = $geshi->get_language_name_from_extension(substr(strrchr($blob->GetPath(),'.'),1));
+					if (!empty($lang)) {
+						$geshi->enable_classes();
+						$geshi->enable_strict_mode(GESHI_MAYBE);
+						$geshi->set_source($blob->GetData());
+						$geshi->set_language($lang);
+						$geshi->set_header_type(GESHI_HEADER_PRE_TABLE);
+						$geshi->enable_line_numbers(GESHI_NORMAL_LINE_NUMBERS);
+						$output = $geshi->parse_code();
+
+						$bodystart = strpos($output, '<td');
+						$bodyend = strrpos($output, '</tr>');
+
+						if (($bodystart !== false) && ($bodyend !== false)) {
+							$geshihead = substr($output, 0, $bodystart);
+							$geshifoot = substr($output, $bodyend);
+							$geshibody = substr($output, $bodystart, $bodyend);
+
+							$this->tpl->assign('geshihead', $geshihead);
+							$this->tpl->assign('geshibody', $geshibody);
+							$this->tpl->assign('geshifoot', $geshifoot);
+							$this->tpl->assign('extracss', $geshi->get_stylesheet());
+							$this->tpl->assign('geshi', true);
+						}
+					}
+				}
+			}
+		}
+
 		$blame = $blob->GetBlame();
 		$this->tpl->assign('blame', $blob->GetBlame());
 	}
