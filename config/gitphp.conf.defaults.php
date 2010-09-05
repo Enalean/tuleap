@@ -30,6 +30,14 @@ throw new Exception('The defaults file should not be used as your config.');
  */
 //$gitphp_conf['projectroot'] = '/pub/gitprojects/';
 
+/*
+ * exportedonly
+ * When listing all projects in the project root,
+ * (not specifying any projects manually or using a project list file)
+ * set this to true to only allow repositories with the
+ * special file git-daemon-export-ok (see the git-daemon man page)
+ */
+$gitphp_conf['exportedonly'] = false;
 
 
 
