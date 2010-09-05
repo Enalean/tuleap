@@ -464,9 +464,9 @@ class GitPHP_Blob extends GitPHP_FilesystemObject
 
 		$lastcommit = '';
 		foreach ($blamelines as $line) {
-			if (preg_match('/^([0-9a-fA-F]{40})\s+([0-9]+)\)/', $line, $regs)) {
+			if (preg_match('/^([0-9a-fA-F]{40})(\s+.+)?\s+([0-9]+)\)/', $line, $regs)) {
 				if ($regs[1] != $lastcommit) {
-					$this->blame[(int)($regs[2])] = $this->project->GetCommit($regs[1]);
+					$this->blame[(int)($regs[3])] = $this->project->GetCommit($regs[1]);
 					$lastcommit = $regs[1];
 				}
 			}
