@@ -1,8 +1,9 @@
 <?php
 /**
- * GitPHP ProjectListArray
+ * GitPHP ProjectListArrayLegacy
  *
  * Lists all projects in a multidimensional array
+ * Legacy array format
  *
  * @author Christopher Han <xiphux@gmail.com>
  * @copyright Copyright (c) 2010 Christopher Han
@@ -16,12 +17,12 @@ require_once(GITPHP_GITOBJECTDIR . 'Project.class.php');
 define('GITPHP_NO_CATEGORY', 'none');
 
 /**
- * ProjectListArray class
+ * ProjectListArrayLegacy class
  *
  * @package GitPHP
  * @subpackage Git
  */
-class GitPHP_ProjectListArray extends GitPHP_ProjectListBase
+class GitPHP_ProjectListArrayLegacy extends GitPHP_ProjectListBase
 {
 
 	/**
@@ -54,14 +55,13 @@ class GitPHP_ProjectListArray extends GitPHP_ProjectListBase
 	 */
 	protected function PopulateProjects()
 	{
-		foreach ($this->projectConfig as $projData) {
-			if (is_array($projData)) {
-				if (isset($projData['project'])) {
+		foreach ($this->projectConfig as $cat => $plist) {
+			if (is_array($plist)) {
+				foreach ($plist as $pname => $ppath) {
 					try {
-						$projObj = new GitPHP_Project($projData['project']);
-						if (isset($projData['category']) && is_string($projData['category'])) {
-							$projObj->SetCategory($projData['category']);
-						}
+						$projObj = new GitPHP_Project($ppath);
+						if ($cat != GITPHP_NO_CATEGORY)
+							$projObj->SetCategory($cat);
 						$this->projects[] = $projObj;
 					} catch (Exception $e) {
 					}

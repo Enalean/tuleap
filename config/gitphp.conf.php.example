@@ -20,41 +20,6 @@
 
 
 /*
- * git_projects
- * List of projects
- *
- * There are three ways to list projects:
- *
- * 1. Two dimensional array of projects with categories
- * First array index is the name of the category the projects
- * belong to, and the second array index is a human-readable
- * name for the project (not used, just for organizational
- * purposes), and the value is the path to the project
- * (minus the projectroot).
- * Any projects belonging to the special category "none"
- * will be listed without a category.
- */
-//$git_projects['Core']['FBX'] = 'core/fbx.git';
-//$git_projects['PHP']['gitphp'] = 'php/gitphp.git';
-//$git_projects['PHP']['MDB'] = 'php/mdb.git';
-//$git_projects['PHP']['xxcache'] = 'php/xxcache.git';
-//$git_projects['Websites']['bth'] = 'websites/bth.git';
-
-/*
- * 2. Path to file with list of projects
- * Points to a flat file with a list of projects,
- * one on each line. Can also read Gitosis project lists.
- */
-//$git_projects = '/git/projectlist.txt';
-
-/*
- * 3. Leave commented to read all projects in the project root
- */
-
-
-
-
-/*
  * cache
  * Turns on caching. If in doubt, leave it off
  * You will need to create a directory 'cache' and make it

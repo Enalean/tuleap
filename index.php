@@ -62,7 +62,11 @@ date_default_timezone_set('UTC');
 	/*
 	 * Project list
 	 */
-	GitPHP_ProjectList::Instantiate(GITPHP_CONFIGDIR . 'gitphp.conf.php');
+	if (file_exists(GITPHP_CONFIGDIR . 'projects.conf.php')) {
+		GitPHP_ProjectList::Instantiate(GITPHP_CONFIGDIR . 'projects.conf.php', false);
+	} else {
+		GitPHP_ProjectList::Instantiate(GITPHP_CONFIGDIR . 'gitphp.conf.php', true);
+	}
 
 	$controller = GitPHP_Controller::GetController((isset($_GET['a']) ? $_GET['a'] : null));
 	if ($controller) {

@@ -13,6 +13,7 @@
 require_once(GITPHP_GITOBJECTDIR . 'ProjectListDirectory.class.php');
 require_once(GITPHP_GITOBJECTDIR . 'ProjectListFile.class.php');
 require_once(GITPHP_GITOBJECTDIR . 'ProjectListArray.class.php');
+require_once(GITPHP_GITOBJECTDIR . 'ProjectListArrayLegacy.class.php');
 
 /**
  * ProjectList class
@@ -56,20 +57,25 @@ class GitPHP_ProjectList
 	 * @access private
 	 * @static
 	 * @param string $file config file with git projects
+	 * @param boolean $legacy true if this is the legacy project config
 	 * @throws Exception if there was an error reading the file
 	 */
-	public static function Instantiate($file = null)
+	public static function Instantiate($file = null, $legacy = false)
 	{
 		if (self::$instance)
 			return;
 
 		if (!empty($file) && is_file($file) && include($file)) {
 			if (is_string($git_projects)) {
-					self::$instance = new GitPHP_ProjectListFile($git_projects);
-					return;
+				self::$instance = new GitPHP_ProjectListFile($git_projects);
+				return;
 			} else if (is_array($git_projects)) {
+				if ($legacy) {
+					self::$instance = new GitPHP_ProjectListArrayLegacy($git_projects);
+				} else {
 					self::$instance = new GitPHP_ProjectListArray($git_projects);
-					return;
+				}
+				return;
 			}
 		}
 

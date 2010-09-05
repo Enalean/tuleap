@@ -1,0 +1,64 @@
+<?php
+/**
+ * GitPHP Project config file
+ *
+ * Copy this example file to config/projects.conf.php
+ *
+ * @author Christopher Han <xiphux@gmail.com>
+ * @copyright Copyright (c) 2010 Christopher Han
+ * @package GitPHP
+ * @subpackage Config
+ */
+
+
+/*
+ * git_projects
+ * List of projects
+ *
+ * There are three ways to list projects:
+ *
+ * 1. Two dimensional array of projects with categories
+ *
+ * The top level is the full array of projects.
+ * Each project itself is an array with the following keys:
+ * 'project': the path to the project, minus the projectroot
+ * 'category': the category for the project. This is optional.
+ */
+//$git_projects = array(
+//	array(
+//		'project' => 'gentoo.git'
+//	),
+//	array(
+//		'project' => 'core/fbx.git',
+//		'category' => 'Core'
+//	),
+//	array(
+//		'project' => 'php/gitphp.git',
+//		'category' => 'PHP',
+//	),
+//	array(
+//		'project' => 'php/mdb.git',
+//		'category' => 'PHP'
+//	),
+//	array(
+//		'project' => 'php/xxcache.git',
+//		'category' => 'PHP'
+//	),
+//	array(
+//		'project' => 'websites/bth.git',
+//		'category' => 'Websites'
+//	)
+//);
+
+
+/*
+ * 2. Path to file with list of projects
+ * Points to a flat file with a list of projects,
+ * one on each line. Can also read Gitosis project lists.
+ */
+//$git_projects = '/git/projectlist.txt';
+
+/*
+ * 3. Leave commented to read all projects in the project root
+ */
+
