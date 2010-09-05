@@ -24,7 +24,7 @@
        <tr class="{cycle values="light,dark"}">
          <td class="monospace">{$treeitem->GetModeString()}</td>
          {if $treeitem instanceof GitPHP_Blob}
-	   <td>{$treeitem->GetSize()}</td>
+	   <td class="filesize">{$treeitem->GetSize()}</td>
            <td class="list">
              <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=blob&h={$treeitem->GetHash()}&hb={$commit->GetHash()}&f={$treeitem->GetPath()}" class="list">{$treeitem->GetName()}</a>
 	   </td>
