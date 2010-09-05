@@ -115,7 +115,7 @@ class GitPHP_Controller_Blame extends GitPHP_ControllerBase
 		
 		$blob = $this->project->GetBlob($this->params['hash']);
 		if ($this->params['file'])
-			$blob->SetName($this->params['file']);
+			$blob->SetName(basename($this->params['file']));
 		$blob->SetCommit($commit);
 		$this->tpl->assign('blob', $blob);
 
