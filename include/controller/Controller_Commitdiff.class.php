@@ -118,9 +118,12 @@ class GitPHP_Controller_Commitdiff extends GitPHP_ControllerBase
 	{
 		$co = $this->project->GetCommit($this->params['hash']);
 		$this->tpl->assign('commit', $co);
-		$this->tpl->assign("hashparent",$this->params['hashparent']);
 
-		$treediff = new GitPHP_TreeDiff($this->project, $this->params['hash'], $this->params['hashparent']);
+		if (isset($this->params['hashparent'])) {
+			$this->tpl->assign("hashparent", $this->params['hashparent']);
+		}
+
+		$treediff = new GitPHP_TreeDiff($this->project, $this->params['hash'], (isset($this->params['hashparent']) ? $this->params['hashparent'] : ''));
 		$this->tpl->assign('treediff', $treediff);
 	}
 
