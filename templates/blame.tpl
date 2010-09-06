@@ -27,7 +27,7 @@
  <div class="page_body">
    {if $geshi}
      {$geshihead}
-       <td class="ln" id="blame">
+       <td class="ln de1" id="blame">
 	{foreach from=$blob->GetData(true) item=blobline name=blob}
 	  {assign var=blamecommit value=$blame[$smarty.foreach.blob.iteration]}
 	  {if $blamecommit}
