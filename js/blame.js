@@ -10,7 +10,9 @@
 
 function initBlame() {
 
-	$('a#blameLink').toggle(function() {
+	var blameLink = $('a#blameLink');
+
+	blameLink.toggle(function() {
 
 		var blameCol = $('table#blobData td#blameData');
 		if (blameCol && blameCol.size() > 0) {
@@ -37,14 +39,24 @@ function initBlame() {
 			$('table#blobData tr:first').prepend(col);
 			col.show('fast');
 
-			$.get($('a#blameLink').attr('href'), { o: 'js' },
+			$.get(blameLink.attr('href'), { o: 'js' },
 			function(data) {
-				$('td#blameData').fadeOut('fast', function() {
-					$('td#blameData').html(data);
-					$('td#blameData').addClass('de1');
+
+				blameCol = $('td#blameData');
+				
+				var insertBlame = function() {
+					blameCol.html(data).addClass('de1');
 					initTooltips();
-					$('td#blameData').fadeIn('fast');
-				});
+				}
+
+				if (blameCol.css('display') == 'none') {
+					insertBlame();
+				} else {
+					blameCol.fadeOut('fast', function() {
+						insertBlame();
+						blameCol.fadeIn('fast');
+					});
+				}
 			});
 		}
 
