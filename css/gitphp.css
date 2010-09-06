@@ -40,9 +40,9 @@ a.text:visited { text-decoration:none; color:#880000; }
 a.text:hover { text-decoration:underline; color:#880000; }
 table { padding:8px 4px; }
 th { padding:2px 5px; font-size:12px; text-align:left; }
-.light:hover { background-color:#edece6; }
-.dark { background-color:#f6f6f0; }
-.dark:hover { background-color:#edece6; }
+tr.light:hover { background-color:#edece6; }
+tr.dark { background-color:#f6f6f0; }
+tr.dark:hover { background-color:#edece6; }
 td { padding:2px 5px; font-size:12px; vertical-align:top; }
 td.link { padding:2px 5px; font-family:sans-serif; font-size:10px; }
 td.filesize { text-align: right; }
@@ -143,3 +143,6 @@ td#blame {
 	white-space: nowrap;
 	text-align: left;
 }
+td#blame div.light:hover { background-color:#edece6; }
+td#blame div.dark { background-color:#f6f6f0; }
+td#blame div.dark:hover { background-color:#edece6; }
