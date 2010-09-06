@@ -16,11 +16,13 @@
       <link rel="alternate" title="{$project->GetProject()} log" href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=rss" type="application/rss+xml" />
     {/if}
     <link rel="stylesheet" href="css/{$stylesheet}" type="text/css" />
+    {if $extracss}
     <style type="text/css">
     <!--
     {$extracss}
     -->
     </style>
+    {/if}
     {if $javascript}
     <link rel="stylesheet" href="css/ext/jquery.qtip.css" type="text/css" />
     <script language="javascript" src="js/ext/jquery-1.4.2.min.js"></script>
