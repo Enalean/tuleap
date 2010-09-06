@@ -27,20 +27,9 @@
  <div class="page_body">
    {if $geshi}
      {$geshihead}
-       <td class="ln de1" id="blame">
-	{foreach from=$blob->GetData(true) item=blobline name=blob}
-	  {assign var=blamecommit value=$blame[$smarty.foreach.blob.iteration]}
-	  {if $blamecommit}
-	    {if $opened}</div>{/if}
-	    <div class="{cycle values="light,dark"}">
-	    {assign var=opened value=true}
-	    <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=commit&h={$blamecommit->GetHash()}" title="{$blamecommit->GetTitle()}" class="commitTip">{$blamecommit->GetAuthorEpoch()|date_format:"%F %X"}</a>
-	    {$blamecommit->GetAuthor()}
-	  {/if}
-	  &nbsp;<br />
-	{/foreach}
-	{if $opened}</div>{/if}
-	</td>
+       <td class="ln de1" id="blameData">
+        {include file='blamedata.tpl'}
+       </td>
      {$geshibody}
      {$geshifoot}
    {else}

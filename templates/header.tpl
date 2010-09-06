@@ -28,6 +28,9 @@
     <script language="javascript" src="js/ext/jquery-1.4.2.min.js"></script>
     <script language="javascript" src="js/ext/jquery.qtip.min.js"></script>
     <script language="javascript" src="js/tooltips.js"></script>
+    {foreach from=$extrascripts item=script}
+    <script language="javascript" src="{$script}"></script>
+    {/foreach}
     {/if}
     </head>
     {$smarty.capture.header}

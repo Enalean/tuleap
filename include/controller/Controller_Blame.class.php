@@ -45,6 +45,9 @@ class GitPHP_Controller_Blame extends GitPHP_ControllerBase
 	 */
 	protected function GetTemplate()
 	{
+		if (isset($this->params['js']) && $this->params['js']) {
+			return 'blamedata.tpl';
+		}
 		return 'blame.tpl';
 	}
 
@@ -92,6 +95,10 @@ class GitPHP_Controller_Blame extends GitPHP_ControllerBase
 		if (isset($_GET['h'])) {
 			$this->params['hash'] = $_GET['h'];
 		}
+		if (isset($_GET['o']) && ($_GET['o'] == 'js')) {
+			$this->params['js'] = true;
+			GitPHP_Log::GetInstance()->SetEnabled(false);
+		}
 	}
 
 	/**
@@ -118,6 +125,13 @@ class GitPHP_Controller_Blame extends GitPHP_ControllerBase
 			$blob->SetName(basename($this->params['file']));
 		$blob->SetCommit($commit);
 		$this->tpl->assign('blob', $blob);
+
+		$blame = $blob->GetBlame();
+		$this->tpl->assign('blame', $blob->GetBlame());
+
+		if (isset($this->params['js']) && $this->params['js']) {
+			return;
+		}
 
 		$this->tpl->assign('tree', $commit->GetTree());
 
@@ -154,9 +168,6 @@ class GitPHP_Controller_Blame extends GitPHP_ControllerBase
 				}
 			}
 		}
-
-		$blame = $blob->GetBlame();
-		$this->tpl->assign('blame', $blob->GetBlame());
 	}
 
 }

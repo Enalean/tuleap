@@ -139,10 +139,10 @@ table.code td.author, table.code td.date {
 table.code tr.light:hover { background-color:#ffffff; }
 table.code tr.dark:hover { background-color:#f6f6f0; }
 
-td#blame {
+td#blameData {
 	white-space: nowrap;
 	text-align: left;
 }
-td#blame div.light:hover { background-color:#edece6; }
-td#blame div.dark { background-color:#f6f6f0; }
-td#blame div.dark:hover { background-color:#edece6; }
+td#blameData div.light:hover { background-color:#edece6; }
+td#blameData div.dark { background-color:#f6f6f0; }
+td#blameData div.dark:hover { background-color:#edece6; }

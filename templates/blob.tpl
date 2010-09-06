@@ -16,7 +16,7 @@
    {else}
      HEAD
    {/if}
-   {if !$datatag} | <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=blame&h={$blob->GetHash()}&f={$blob->GetPath()}&hb={$commit->GetHash()}">blame</a>{/if}
+   {if !$datatag} | <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=blame&h={$blob->GetHash()}&f={$blob->GetPath()}&hb={$commit->GetHash()}" id="blameLink">blame</a>{/if}
    <br />
  </div>
 
@@ -35,7 +35,7 @@
      {$geshiout}
    {else}
      {* Just plain display *}
-     <table class="code">
+     <table class="code" id="blobData">
      {foreach from=$bloblines item=line name=bloblines}
        <tr>
          <td class="num"><a id="l{$smarty.foreach.bloblines.iteration}" href="#l{$smarty.foreach.bloblines.iteration}" class="linenr">{$smarty.foreach.bloblines.iteration}</a></td>
