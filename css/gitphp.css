@@ -146,3 +146,6 @@ td#blameData {
 td#blameData div.light:hover { background-color:#edece6; }
 td#blameData div.dark { background-color:#f6f6f0; }
 td#blameData div.dark:hover { background-color:#edece6; }
+#blobData .de1, #blobData .de2 {font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;}
+#blobData  {font-family:monospace;}
+#blobData li, #blobData .li1 {font-weight: normal; vertical-align:top;}

@@ -35,14 +35,25 @@
      {$geshiout}
    {else}
      {* Just plain display *}
-     <table class="code" id="blobData">
-     {foreach from=$bloblines item=line name=bloblines}
-       <tr>
-         <td class="num"><a id="l{$smarty.foreach.bloblines.iteration}" href="#l{$smarty.foreach.bloblines.iteration}" class="linenr">{$smarty.foreach.bloblines.iteration}</a></td>
-	 <td class="codeline">{$line|escape}</td>
-       </tr>
-     {/foreach}
-     </table>
+<table class="code" id="blobData">
+<tbody>
+<tr class="li1">
+<td class="ln">
+<pre class="de1">
+{foreach from=$bloblines item=line name=bloblines}
+<a id="l{$smarty.foreach.bloblines.iteration}" href="#1{$smarty.foreach.bloblines.iteration}" class="linenr">{$smarty.foreach.bloblines.iteration}</a>
+{/foreach}
+</pre></td>
+<td class="de1">
+<pre class="de1">
+{foreach from=$bloblines item=line name=bloblines}
+{$line|escape}
+{/foreach}
+</pre>
+</td>
+</tr>
+</tbody>
+</table>
    {/if}
  </div>
 
