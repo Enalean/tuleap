@@ -228,6 +228,7 @@ abstract class GitPHP_ControllerBase
 
 		$this->tpl->assign('version', $gitphp_version);
 		$this->tpl->assign('stylesheet', GitPHP_Config::GetInstance()->GetValue('stylesheet', 'gitphp.css'));
+		$this->tpl->assign('javascript', GitPHP_Config::GetInstance()->GetValue('javascript', true));
 		$this->tpl->assign('pagetitle', GitPHP_Config::GetInstance()->GetValue('title', $gitphp_appstring));
 		$this->tpl->assign('action', $this->GetName());
 		if ($this->project)

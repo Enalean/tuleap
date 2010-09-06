@@ -97,6 +97,11 @@ $gitphp_conf['self'] = 'http://localhost/gitphp/';
  */
 $gitphp_conf['stylesheet'] = 'gitphp.css';
 
+/*
+ * javascript
+ * Toggles on javascript features
+ */
+$gitphp_conf['javascript'] = true;
 
 
 
