@@ -16,11 +16,16 @@
       <link rel="alternate" title="{$project->GetProject()} log" href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=rss" type="application/rss+xml" />
     {/if}
     <link rel="stylesheet" href="css/{$stylesheet}" type="text/css" />
+    <link rel="stylesheet" href="css/ext/jquery.qtip.css" type="text/css" />
     <style type="text/css">
     <!--
     {$extracss}
     -->
-    </style></head>
+    </style>
+    <script language="javascript" src="js/ext/jquery-1.4.2.min.js"></script>
+    <script language="javascript" src="js/ext/jquery.qtip.min.js"></script>
+    <script language="javascript" src="js/tooltips.js"></script>
+    </head>
     {$smarty.capture.header}
   </head>
   <body>

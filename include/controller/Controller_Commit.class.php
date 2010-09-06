@@ -45,6 +45,9 @@ class GitPHP_Controller_Commit extends GitPHP_ControllerBase
 	 */
 	protected function GetTemplate()
 	{
+		if (isset($this->params['jstip']) && $this->params['jstip']) {
+			return 'committip.tpl';
+		}
 		return 'commit.tpl';
 	}
 
@@ -87,6 +90,10 @@ class GitPHP_Controller_Commit extends GitPHP_ControllerBase
 			$this->params['hash'] = $_GET['h'];
 		else
 			$this->params['hash'] = 'HEAD';
+
+		if (isset($_GET['o']) && ($_GET['o'] == 'jstip')) {
+			$this->params['jstip'] = true;
+		}
 	}
 
 	/**

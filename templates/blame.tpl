@@ -34,7 +34,7 @@
 	    {if $opened}</div>{/if}
 	    <div class="{cycle values="light,dark"}">
 	    {assign var=opened value=true}
-	    <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=commit&h={$blamecommit->GetHash()}" title="{$blamecommit->GetTitle()}">{$blamecommit->GetAuthorEpoch()|date_format:"%F %X"}</a>
+	    <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=commit&h={$blamecommit->GetHash()}" title="{$blamecommit->GetTitle()}" class="commitTip">{$blamecommit->GetAuthorEpoch()|date_format:"%F %X"}</a>
 	    {$blamecommit->GetAuthor()}
 	  {/if}
 	  &nbsp;<br />
@@ -53,7 +53,7 @@
 	  <tr class="{$rowclass}">
 	    <td class="date">
 	      {if $blamecommit}
-	        <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=commit&h={$blamecommit->GetHash()}" title="{$blamecommit->GetTitle()}">{$blamecommit->GetAuthorEpoch()|date_format:"%F %X"}</a>
+	        <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=commit&h={$blamecommit->GetHash()}" title="{$blamecommit->GetTitle()}" class="commitTip">{$blamecommit->GetAuthorEpoch()|date_format:"%F %X"}</a>
 	      {/if}
 	    </td>
 	    <td class="author">
