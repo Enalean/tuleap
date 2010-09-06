@@ -17,7 +17,7 @@ function initTooltips() {
 			return;
 		}
 
-		project = project[1];
+		project = unescape(project[1]);
 
 		var commitHash = $(this).attr('href').match(/h=([0-9a-fA-F]{40}|HEAD)/);
 		if (!commitHash) {
