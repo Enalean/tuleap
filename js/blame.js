@@ -34,6 +34,7 @@ function initBlame() {
 			function(data) {
 				$('td#blameData').html(data);
 				$('td#blameData').addClass('de1');
+				initTooltips();
 			});
 		}
 
