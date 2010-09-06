@@ -40,6 +40,9 @@ function initTooltips() {
 					},
 					type: 'GET'
 				}
+			},
+			style: {
+				classes: 'ui-tooltip-light'
 			}
 		});
 	});
