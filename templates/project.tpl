@@ -37,7 +37,7 @@
      <td><em>{$rev->GetAge()|agestring}</em></td>
      <td><em>{$rev->GetAuthorName()}</em></td>
      <td>
-       <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=commit&h={$rev->GetHash()}" class="list" {if strlen($rev->GetTitle()) > 50}title="{$rev->GetTitle()}"{/if}><strong>{$rev->GetTitle(50)}</strong></a>
+       <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=commit&h={$rev->GetHash()}" class="list commitTip" {if strlen($rev->GetTitle()) > 50}title="{$rev->GetTitle()}"{/if}><strong>{$rev->GetTitle(50)}</strong></a>
        <span class="refs">
        {foreach item=revhead from=$rev->GetHeads()}
          <span class="head">
