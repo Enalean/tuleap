@@ -66,16 +66,18 @@ class GitPHP_ProjectList
 			return;
 
 		if (!empty($file) && is_file($file) && include($file)) {
-			if (is_string($git_projects)) {
-				self::$instance = new GitPHP_ProjectListFile($git_projects);
-				return;
-			} else if (is_array($git_projects)) {
-				if ($legacy) {
-					self::$instance = new GitPHP_ProjectListArrayLegacy($git_projects);
-				} else {
-					self::$instance = new GitPHP_ProjectListArray($git_projects);
+			if (isset($git_projects)) {
+				if (is_string($git_projects)) {
+					self::$instance = new GitPHP_ProjectListFile($git_projects);
+					return;
+				} else if (is_array($git_projects)) {
+					if ($legacy) {
+						self::$instance = new GitPHP_ProjectListArrayLegacy($git_projects);
+					} else {
+						self::$instance = new GitPHP_ProjectListArray($git_projects);
+					}
+					return;
 				}
-				return;
 			}
 		}
 
