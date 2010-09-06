@@ -93,6 +93,7 @@ class GitPHP_Controller_Commit extends GitPHP_ControllerBase
 
 		if (isset($_GET['o']) && ($_GET['o'] == 'jstip')) {
 			$this->params['jstip'] = true;
+			GitPHP_Log::GetInstance()->SetEnabled(false);
 		}
 	}
 
