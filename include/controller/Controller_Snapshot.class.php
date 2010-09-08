@@ -58,7 +58,7 @@ class GitPHP_Controller_Snapshot extends GitPHP_ControllerBase
 	 */
 	protected function GetCacheKey()
 	{
-		return isset($this->params['hash']) ? $this->params['hash'] : '';
+		return (isset($this->params['hash']) ? $this->params['hash'] : '') . '|' . (isset($this->params['path']) ? $this->params['path'] : '') . '|' . (isset($this->params['prefix']) ? $this->params['prefix'] : '');
 	}
 
 	/**
@@ -86,6 +86,7 @@ class GitPHP_Controller_Snapshot extends GitPHP_ControllerBase
 		if (isset($_GET['h'])) $this->params['hash'] = $_GET['h'];
 		if (isset($_GET['f'])) $this->params['path'] = $_GET['f'];
 		if (isset($_GET['prefix'])) $this->params['prefix'] = $_GET['prefix'];
+		GitPHP_Log::GetInstance()->SetEnabled(false);
 	}
 
 	/**
@@ -132,7 +133,7 @@ class GitPHP_Controller_Snapshot extends GitPHP_ControllerBase
 		else
 			$commit = $this->project->GetCommit($hash);
 
-		$this->tpl->assign("archive", $commit->GetArchive($this->params['compressformat'], $this->params['path'], $this->params['prefix']));
+		$this->tpl->assign("archive", $commit->GetArchive($this->params['compressformat'], (isset($this->params['path']) ? $this->params['path'] : null), (isset($this->params['prefix']) ? $this->params['prefix'] : null)));
 	}
 
 }
