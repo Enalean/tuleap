@@ -31,7 +31,12 @@ EOT;
                                   prev_auth_success, last_auth_success, 
                                   last_auth_failure, nb_auth_failure 
                            FROM user';
-        $this->db->copyTable('user', 'user_access', $sql);
+        if ($this->db->tableNameExists('user') && $this->db->tableNameExists('user_access')) {
+            $res = $this->db->dbh->exec($sql);
+            if ($res === false) {
+                throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured copying from  table user to table user_access');
+            }
+        }
 
         $sql = 'ALTER TABLE user DROP COLUMN last_access_date';
         $this->db->alterTable('user', 'last_access_date', 'drop_column', $sql);
@@ -47,7 +52,7 @@ EOT;
 
         $sql = 'ALTER TABLE user DROP COLUMN  nb_auth_failure';
         $this->db->alterTable('user', 'nb_auth_failure', 'drop_column', $sql);
-   }
+    }
 
     public function postUp() {
         if (!$this->db->tableNameExists('user_access')) {
