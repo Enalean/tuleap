@@ -102,6 +102,8 @@ class GitPHP_Controller_Commitdiff extends GitPHP_ControllerBase
 	protected function LoadHeaders()
 	{
 		if (isset($this->params['plain']) && ($this->params['plain'] === true)) {
+			GitPHP_Log::GetInstance()->SetEnabled(false);
+
 			$this->headers[] = 'Content-type: text/plain; charset=UTF-8';
 			$this->headers[] = 'Content-disposition: inline; filename="git-' . $this->params['hash'] . '.patch"';
 		}
