@@ -357,6 +357,19 @@ class GitPHP_Resource_zz_Debug extends GitPHP_ResourceBase
 		 */
 		$this->resources['moved from %1$s with %2$d%% similarity'] = '{wās *%1$s* wĩth *%2$d*%% sımįlārīty•••••••}';
 		
+		/*
+		 * Used as an alternate text on javascript "loading" images
+		 * English: Loading...
+		 */
+		$this->resources['Loading...'] = '{Lȭȧdīng•••}';
+		
+		/*
+		 * Used as a loading message while blame data is being pulled
+		 * from the server
+		 * English: Loading blame data...
+		 */
+		$this->resources['Loading blame data...'] = '{Lōădīng blămĕ dātą•••}';
+		
 		
 		/*
 		 * Age strings

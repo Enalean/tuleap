@@ -357,6 +357,19 @@ class GitPHP_Resource_en_US extends GitPHP_ResourceBase
 		 */
 		$this->resources['moved from %1$s with %2$d%% similarity'] = 'moved from %1$s with %2$d%% similarity';
 		
+		/*
+		 * Used as an alternate text on javascript "loading" images
+		 * English: Loading...
+		 */
+		$this->resources['Loading...'] = 'Loading...';
+		
+		/*
+		 * Used as a loading message while blame data is being pulled
+		 * from the server
+		 * English: Loading blame data...
+		 */
+		$this->resources['Loading blame data...'] = 'Loading blame data...';
+		
 		
 		/*
 		 * Age strings

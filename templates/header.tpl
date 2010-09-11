@@ -24,6 +24,10 @@
     </style>
     {/if}
     {if $javascript}
+    <script language="javascript">
+      var GITPHP_RES_LOADING="{$resources->GetResource('Loading...')}";
+      var GITPHP_RES_LOADING_BLAME_DATA="{$resources->GetResource('Loading blame data...')}";
+    </script>
     <link rel="stylesheet" href="css/ext/jquery.qtip.css" type="text/css" />
     <script language="javascript" src="js/ext/jquery-1.4.2.min.js"></script>
     <script language="javascript" src="js/ext/jquery.qtip.min.js"></script>

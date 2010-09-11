@@ -29,7 +29,7 @@ function initTooltips() {
 		$(this).qtip(
 		{
 			content: {
-				text: '<img src="images/tooltip-loader.gif" alt="Loading..." />',
+				text: '<img src="images/tooltip-loader.gif" alt="' + GITPHP_RES_LOADING + '" />',
 				ajax: {
 					url: 'index.php',
 					data: {

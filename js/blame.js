@@ -23,7 +23,7 @@ function initBlame() {
 			col.css('display', 'none');
 
 			var p = jQuery(document.createElement('p'));
-			p.text("Loading blame data...");
+			p.text(GITPHP_RES_LOADING_BLAME_DATA);
 			p.appendTo(col);
 
 			var div = jQuery(document.createElement('div'));
@@ -31,7 +31,7 @@ function initBlame() {
 
 			var img = jQuery(document.createElement('img'));
 			img.attr('src', "images/blame-loader.gif");
-			img.attr('alt', "Loading...");
+			img.attr('alt', GITPHP_RES_LOADING);
 			img.appendTo(div);
 
 			div.appendTo(col);
