@@ -497,10 +497,11 @@ class GitPHP_Resource_zz_Debug extends GitPHP_ResourceBase
 		$this->resources['File search has been disabled'] = '{Fīlĕ sēărch hąs bėęn dĭsąblēd•••••}';
 		
 		/*
-		 * Error message when a user's search query is too short (less than 2 characters)
-		 * English: You must enter search text of at least 2 characters
+		 * Error message when a user's search query is too short
+		 * English: You must enter search text of at least %1$d characters
+		 * %1$d: the minimum number of characters
 		 */
-		$this->resources['You must enter search text of at least 2 characters'] = '{Yōu mũst ēntĕr sėärch tęxt ōf åt lēäst 2 chårãctĕrs••••••••••••}';
+		$this->resources['You must enter search text of at least %1$d characters'] = '{Yōu mũst ēntĕr sėärch tęxt ōf åt lēäst %1$d chårãctĕrs••••••••••••}';
 		
 		/*
 		 * Error message when a user's search didn't produce any results

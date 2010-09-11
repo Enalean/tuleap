@@ -46,6 +46,13 @@ $gitphp_conf['exportedonly'] = false;
  */
 
 /*
+ * locale
+ * This is the default locale/language used in the interface.
+ * The locale must exist in include/resources/locale
+ */
+$gitphp_conf['locale'] = 'en_US';
+
+/*
  * title
  * The string that will be used as the page title
  * The variable '$gitphp_appstring' will expand to
