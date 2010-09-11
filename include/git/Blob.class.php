@@ -335,9 +335,6 @@ class GitPHP_Blob extends GitPHP_FilesystemObject
 		$file = $this->GetName();
 
 		if (empty($file))
-			$file = $this->GetPath();
-
-		if (empty($file))
 			return '';
 
 		$dotpos = strrpos($file, '.');

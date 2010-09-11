@@ -744,43 +744,13 @@ class GitPHP_Commit extends GitPHP_GitObject
 		if (!$this->hashPathsRead)
 			$this->ReadHashPaths();
 
-		foreach ($this->blobPaths as $h => $p) {
-			if ($path == $p) {
-				return $h;
-			}
+		if (isset($this->blobPaths[$path])) {
+			return $this->blobPaths[$path];
 		}
 
-		foreach ($this->treePaths as $h => $p) {
-			if ($path == $p) {
-				return $h;
-			}
+		if (isset($this->treePaths[$path])) {
+			return $this->treePaths[$path];
 		}
-
-		return '';
-	}
-
-	/**
-	 * HashToPath
-	 *
-	 * Given a blob/tree hash, get its path
-	 *
-	 * @access public
-	 * @param string $hash hash
-	 * @return string path
-	 */
-	public function HashToPath($hash)
-	{
-		if (empty($hash))
-			return '';
-
-		if (!$this->hashPathsRead)
-			$this->ReadHashPaths();
-
-		if (isset($this->blobPaths[$hash]))
-			return $this->blobPaths[$hash];
-
-		if (isset($this->treePaths[$hash]))
-			return $this->treePaths[$hash];
 
 		return '';
 	}
@@ -810,10 +780,10 @@ class GitPHP_Commit extends GitPHP_GitObject
 			if (preg_match("/^([0-9]+) (.+) ([0-9a-fA-F]{40})\t(.+)$/", $line, $regs)) {
 				switch ($regs[2]) {
 					case 'tree':
-						$this->treePaths[$regs[3]] = trim($regs[4]);
+						$this->treePaths[trim($regs[4])] = $regs[3];
 						break;
 					case 'blob';
-						$this->blobPaths[$regs[3]] = trim($regs[4]);
+						$this->blobPaths[trim($regs[4])] = $regs[3];
 						break;
 				}
 			}
@@ -839,7 +809,7 @@ class GitPHP_Commit extends GitPHP_GitObject
 
 		$results = array();
 
-		foreach ($this->treePaths as $hash => $path) {
+		foreach ($this->treePaths as $path => $hash) {
 			if (preg_match('/' . $pattern . '/i', $path)) {
 				$obj = $this->project->GetTree($hash);
 				$obj->SetCommit($this);
@@ -847,7 +817,7 @@ class GitPHP_Commit extends GitPHP_GitObject
 			}
 		}
 
-		foreach ($this->blobPaths as $hash => $path) {
+		foreach ($this->blobPaths as $path => $hash) {
 			if (preg_match('/' . $pattern . '/i', $path)) {
 				$obj = $this->project->GetBlob($hash);
 				$obj->SetCommit($this);

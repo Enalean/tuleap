@@ -22,13 +22,13 @@ abstract class GitPHP_FilesystemObject extends GitPHP_GitObject
 {
 
 	/**
-	 * name
+	 * path
 	 *
-	 * Stores the object name
+	 * Stores the object path
 	 *
 	 * @access protected
 	 */
-	protected $name = '';
+	protected $path = '';
 
 	/**
 	 * mode
@@ -101,11 +101,8 @@ abstract class GitPHP_FilesystemObject extends GitPHP_GitObject
 	 */
 	public function GetName()
 	{
-		if (!empty($this->name))
-			return $this->name;
-
-		if ($this->commit)
-			return basename($this->commit->HashToPath($this->hash));
+		if (!empty($this->path))
+			return basename($this->path);
 
 		return '';
 	}
@@ -120,36 +117,23 @@ abstract class GitPHP_FilesystemObject extends GitPHP_GitObject
 	 */
 	public function GetPath()
 	{
-		if ($this->commit) {
-			$name = $this->commit->HashToPath($this->hash);
-			if (!empty($name)) {
-				return $name;
-			}
-		}
+		if (!empty($this->path))
+			return $this->path;
 
-		$name = $this->name;
-
-		if ($this->parent) {
-			$parentname = $this->parent->GetPath();
-			if (!empty($parentname)) {
-				$name = $parentname . '/' . $this->name;
-			}
-		}
-
-		return $name;
+		return '';
 	}
 
 	/**
-	 * SetName
+	 * SetPath
 	 *
-	 * Sets the object name
+	 * Sets the object path
 	 *
 	 * @access public
-	 * @param string $name tree name
+	 * @param string $path object path
 	 */
-	public function SetName($name)
+	public function SetPath($path)
 	{
-		$this->name = $name;
+		$this->path = $path;
 	}
 
 	/**
@@ -290,29 +274,26 @@ abstract class GitPHP_FilesystemObject extends GitPHP_GitObject
 	{
 		$this->pathTreeRead = true;
 
-		$path = $this->GetPath();
-		
-		if (empty($path)) {
+		if (empty($this->path)) {
 			/* this is a top level tree, it has no subpath */
-			$this->SetName('[' . $this->project->GetProject() . ']');
 			return;
 		}
+
+		$path = $this->path;
 
 		while (($pos = strrpos($path, '/')) !== false) {
 			$path = substr($path, 0, $pos);
 			$pathhash = $this->commit->PathToHash($path);
 			if (!empty($pathhash)) {
 				$parent = $this->project->GetTree($pathhash);
-				$parent->SetName(basename($path));
+				$parent->SetPath($path);
 				$this->pathTree[] = $parent;
 			}
 		}
 
-		$parent = $this->commit->GetTree();
-		$parent->SetName('[' . $this->project->GetProject() . ']');
-		$this->pathTree[] = $parent;
-
-		$this->pathTree = array_reverse($this->pathTree);
+		if (count($this->pathTree) > 0) {
+			$this->pathTree = array_reverse($this->pathTree);
+		}
 	}
 
 	/**

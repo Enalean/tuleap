@@ -11,8 +11,10 @@
 <div class="page_path">
 	{if $pathobject}
 		{assign var=pathobjectcommit value=$pathobject->GetCommit()}
+		{assign var=pathobjecttree value=$pathobjectcommit->GetTree()}
+		<a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=tree&hb={$pathobjectcommit->GetHash()}&h={$pathobjecttree->GetHash()}"><strong>[{$project->GetProject()}]</strong></a> / 
 		{foreach from=$pathobject->GetPathTree() item=pathtreepiece}
-			<a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=tree&hb={$pathobjectcommit->GetHash()}&h={$pathtreepiece->GetHash()}"><strong>{$pathtreepiece->GetName()}</strong></a> / 
+			<a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=tree&hb={$pathobjectcommit->GetHash()}&h={$pathtreepiece->GetHash()}&f={$pathtreepiece->GetPath()}"><strong>{$pathtreepiece->GetName()}</strong></a> / 
 		{/foreach}
 		{if $pathobject instanceof GitPHP_Blob}
 			{if $target == 'blobplain'}
@@ -22,9 +24,9 @@
 			{else}
 				<strong>{$pathobject->GetName()}</strong>
 			{/if}
-		{else}
+		{elseif $pathobject->GetName()}
 			{if $target == 'tree'}
-				<a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=tree&hb={$pathobjectcommit->GetHash()}&h={$pathobject->GetHash()}"><strong>{$pathobject->GetName()}</strong></a> / 
+				<a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=tree&hb={$pathobjectcommit->GetHash()}&h={$pathobject->GetHash()}&f={$pathobject->GetPath()}"><strong>{$pathobject->GetName()}</strong></a> / 
 			{else}
 				<strong>{$pathobject->GetName()}</strong> / 
 			{/if}

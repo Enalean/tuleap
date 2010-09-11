@@ -125,10 +125,10 @@ class GitPHP_Controller_Tree extends GitPHP_ControllerBase
 		if (!$tree->GetCommit()) {
 			$tree->SetCommit($commit);
 		}
+		if (isset($this->params['file'])) {
+			$tree->SetPath($this->params['file']);
+		}
 		$this->tpl->assign('tree', $tree);
-
-		if (!isset($this->params['file']))
-			$this->params['file'] = $tree->GetPath();
 	}
 
 }

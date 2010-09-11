@@ -114,7 +114,7 @@ class GitPHP_Controller_Blob extends GitPHP_ControllerBase
 					$saveas = $this->params['hash'] . ".txt";
 
 				$blob = $this->project->GetBlob($this->params['hash']);
-				$blob->SetName($this->params['file']);
+				$blob->SetPath($this->params['file']);
 
 				$headers = array();
 
@@ -155,7 +155,7 @@ class GitPHP_Controller_Blob extends GitPHP_ControllerBase
 
 		$blob = $this->project->GetBlob($this->params['hash']);
 		if ($this->params['file'])
-			$blob->SetName(basename($this->params['file']));
+			$blob->SetPath($this->params['file']);
 		$blob->SetCommit($commit);
 		$this->tpl->assign('blob', $blob);
 
@@ -188,7 +188,7 @@ class GitPHP_Controller_Blob extends GitPHP_ControllerBase
 			if (class_exists('GeSHi')) {
 				$geshi = new GeSHi("",'php');
 				if ($geshi) {
-					$lang = $geshi->get_language_name_from_extension(substr(strrchr($blob->GetPath(),'.'),1));
+					$lang = $geshi->get_language_name_from_extension(substr(strrchr($blob->GetName(),'.'),1));
 					if (!empty($lang)) {
 						$geshi->enable_classes();
 						$geshi->enable_strict_mode(GESHI_MAYBE);
