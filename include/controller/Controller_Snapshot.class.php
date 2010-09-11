@@ -128,10 +128,10 @@ class GitPHP_Controller_Snapshot extends GitPHP_ControllerBase
 	{
 		$commit = null;
 
-		if (!isset($hash))
+		if (!isset($this->params['hash']))
 			$commit = $this->project->GetHeadCommit();
 		else
-			$commit = $this->project->GetCommit($hash);
+			$commit = $this->project->GetCommit($this->params['hash']);
 
 		$this->tpl->assign("archive", $commit->GetArchive($this->params['compressformat'], (isset($this->params['path']) ? $this->params['path'] : null), (isset($this->params['prefix']) ? $this->params['prefix'] : null)));
 	}
