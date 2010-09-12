@@ -125,7 +125,13 @@ abstract class GitPHP_ControllerBase
 	 */
 	private function GetCacheKeyPrefix()
 	{
-		$cacheKeyPrefix = sha1(serialize(GitPHP_ProjectList::GetInstance()->GetConfig()));
+		$cacheKeyPrefix = '';
+
+		$projList = GitPHP_ProjectList::GetInstance();
+		if ($projList) {
+			$cacheKeyPrefix = sha1(serialize($projList->GetConfig()));
+			unset($projList);
+		}
 		if ($this->project) {
 			$cacheKeyPrefix .= '|' . sha1($this->project->GetProject());
 		}
