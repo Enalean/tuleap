@@ -834,30 +834,8 @@ class Docman_Actions extends Actions {
                     }
                 }
             }
-            if ($item && $new_parent_id) {
-                $old_parent =& $item_factory->getItemFromDb($item->getParentId());
-                if ($item_factory->setNewParent($item->getId(), $new_parent_id, $ordering)) {
-                    $new_parent =& $item_factory->getItemFromDb($new_parent_id);
-                    $this->event_manager->processEvent('plugin_docman_event_move', array(
-                        'group_id' => $request->get('group_id'),
-                        'item'    => &$item, 
-                        'parent'  => &$new_parent,
-                        'user'    => &$user)
-                    );
-                    $hp = Codendi_HTMLPurifier::instance();
-                    $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'info_item_moved', array(
-                        $item->getGroupId(),
-                        $old_parent->getId(), 
-                        $hp->purify($old_parent->getTitle(), CODENDI_PURIFIER_CONVERT_HTML) ,
-                        $new_parent->getId(), 
-                        $hp->purify($new_parent->getTitle(), CODENDI_PURIFIER_CONVERT_HTML)
-                    )), CODENDI_PURIFIER_DISABLED);
-                } else {
-                    $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_item_not_moved'));
-                }
-            }
             $newParentItem = $item_factory->getItemFromDb($new_parent_id);
-			$user          = $this->_controler->getUser();
+            $user          = $this->_controler->getUser();
             $this->_doCutPaste($item, $newParentItem, $user, $ordering);
         }
         $this->event_manager->processEvent('send_notifications', array());

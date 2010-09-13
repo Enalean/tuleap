@@ -7,6 +7,7 @@ Version 4.0.12 - (Not released yet)
         backlog #106404: Wrong link for summary page due to rename project operation  
 	backlog #106752: Fix bugs in RPM installation (munin, mailman, openfire)
         backlog #105989: Site admin cannot remove user's LDAP id
+        backlog #97573 : After a document is moved, Codex shows a blank page
 
 Version 4.0.11 - Monday, 9th August 2010 
         == Bugfix==
