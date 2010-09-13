@@ -51,18 +51,14 @@ class DataAccess {
     function DataAccess($host,$user,$pass,$db,$opt=0) {
         $this->store = array();
         $this->db = $this->connect($host, $user, $pass, $opt);
-        try {
-            if ($this->db) {
-                mysql_query("SET NAMES 'utf8'", $this->db);
-                if (!mysql_select_db($db,$this->db)) {
-                    trigger_error(mysql_error(), E_USER_ERROR);
-                }
-                $this->db_name = $db;
-            } else {
-                throw new DataAccessException('Unable to access the database. Please contact your administrator.');
+        if ($this->db) {
+            mysql_query("SET NAMES 'utf8'", $this->db);
+            if (!mysql_select_db($db,$this->db)) {
+                trigger_error(mysql_error(), E_USER_ERROR);
             }
-        } catch (DataAccessException $e){
-            echo ($e->getMessage());
+            $this->db_name = $db;
+        } else {
+            trigger_error('Unable to access the database. Please contact your administrator.', E_USER_ERROR);
         }
     }
     
