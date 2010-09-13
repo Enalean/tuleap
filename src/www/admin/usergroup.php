@@ -158,8 +158,10 @@ if ($request->isPost()) {
             if ($GLOBALS['sys_auth_type'] == 'ldap') {
                 $vLdapId = new Valid_String('ldap_id');
                 $vLdapId->required();
-                if ($request->valid($vLdapId)) {
+                if ($request->existAndNonEmpty('ldap_id') && $request->valid($vLdapId)) {
                     $user->setLdapId($request->get('ldap_id'));
+                } else {
+                    $user->setLdapId("");
                 }
             }
 
@@ -175,7 +177,7 @@ if ($request->isPost()) {
                 $um->assignNextUnixUid($user);
             }
 
-            //$GLOBALS['Response']->redirect('/admin/usergroup.php?user_id='.$user->getId());
+            $GLOBALS['Response']->redirect('/admin/usergroup.php?user_id='.$user->getId());
         }
     }
 }

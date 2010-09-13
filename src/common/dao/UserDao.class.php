@@ -251,7 +251,7 @@ class UserDao extends DataAccessObject {
         if($dar && !$dar->isError()) {
             $current = $dar->current();
             foreach ($user as $field => $value) {
-                if ($field != 'user_id' && $value != $current[$field]) {
+                if ($field != 'user_id' && $value != $current[$field] && $value !== null) {
                     $stmt[] = $field.' = '.$this->da->quoteSmart($value);
                 }
             }
