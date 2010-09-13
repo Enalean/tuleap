@@ -39,19 +39,47 @@ EOT;
         }
 
         $sql = 'ALTER TABLE user DROP COLUMN last_access_date';
-        $this->db->alterTable('user', 'last_access_date', 'drop_column', $sql);
+        if ($this->db->tableNameExists('user') && $this->db->columnNameExists('user', 'last_access_date')) {
+            $res = $this->db->dbh->exec($sql);
+            if ($res === false) {
+                throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while deleting last_access_date column from user table');
+            }
+        }
 
         $sql = 'ALTER TABLE user DROP COLUMN prev_auth_success';
-        $this->db->alterTable('user', 'prev_auth_success', 'drop_column', $sql);
+        if ($this->db->tableNameExists('user') && $this->db->columnNameExists('user', 'prev_auth_success')) {
+            $res = $this->db->dbh->exec($sql);
+            if ($res === false) {
+                throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while deleting prev_auth_success column from user table');
+            }
+        }
+
 
         $sql = 'ALTER TABLE user DROP COLUMN last_auth_success';
-        $this->db->alterTable('user', 'last_auth_success', 'drop_column', $sql);
+        if ($this->db->tableNameExists('user') && $this->db->columnNameExists('user', 'last_auth_success')) {
+            $res = $this->db->dbh->exec($sql);
+            if ($res === false) {
+                throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while deleting last_auth_success column from user table');
+            }
+        }
+
 
         $sql = 'ALTER TABLE user DROP COLUMN last_auth_failure';
-        $this->db->alterTable('user', 'last_auth_failure', 'drop_column', $sql);
+        if ($this->db->tableNameExists('user') && $this->db->columnNameExists('user', 'last_auth_failure')) {
+            $res = $this->db->dbh->exec($sql);
+            if ($res === false) {
+                throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while deleting last_auth_failure column from user table');
+            }
+        }
 
         $sql = 'ALTER TABLE user DROP COLUMN  nb_auth_failure';
-        $this->db->alterTable('user', 'nb_auth_failure', 'drop_column', $sql);
+        if ($this->db->tableNameExists('user') && $this->db->columnNameExists('user', 'nb_auth_failure')) {
+            $res = $this->db->dbh->exec($sql);
+            if ($res === false) {
+                throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while deleting nb_auth_failure column from user table');
+            }
+        }
+
     }
 
     public function postUp() {
@@ -59,19 +87,19 @@ EOT;
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('user_access table is missing');
         }
         if ($this->db->columnNameExists('user', 'last_access_date')) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('Column last_access_date is not deleted from user table');
+            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('last_access_date column is not deleted from user table');
         }
         if ($this->db->columnNameExists('user', 'prev_auth_success')) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('Column prev_auth_success is not deleted from user table');
+            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('prev_auth_success column is not deleted from user table');
         }
         if ($this->db->columnNameExists('user', 'last_auth_success')) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('Column last_auth_success is not deleted from user table');
+            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('last_auth_success column is not deleted from user table');
         }
         if ($this->db->columnNameExists('user', 'last_auth_failure')) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('Column last_auth_failure is not deleted from user table');
+            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('last_auth_failure column is not deleted from user table');
         }
         if ($this->db->columnNameExists('user', 'nb_auth_failure')) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('Column nb_auth_failure is not deleted from user table');
+            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('nb_auth_failure column is not deleted from user table');
         }
     }
 }
