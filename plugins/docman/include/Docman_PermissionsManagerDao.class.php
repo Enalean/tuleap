@@ -67,23 +67,22 @@ class Docman_PermissionsManagerDao extends DataAccessObject {
     
 
     /**
-     * Returns ugroup members of dynamic ugroups
+     * Returns project admin members for a given group
      * 
      * @param Project $project
-     * @param Integer $groupId
      */
-    function getDynamicUgroupMembers($project, $ugroupId) {
-        $sql = ugroup_db_get_dynamic_members($ugroupId, 0, $project->getId());
+    function getProjectAdminMembers($project) {
+        $sql = 'SELECT email, language_id FROM user u JOIN user_group ug USING(user_id) WHERE ug.admin_flags="A" AND u.status IN ("A", "R") AND ug.group_id = '.db_ei($project->getId());
         return $this->retrieve($sql); 
     }
     
     /**
      * Returns ugroup members of ugroups
      * 
-     * @param Integer $groupId
+     * @param Integer $ugroupId
      */
     function getUgroupMembers($ugroupId) {
-        $sql = ugroup_db_get_members($ugroupId);
+        $sql = ' SELECT email, language_id FROM user u JOIN ugroup_user ug USING(user_id) WHERE u.status IN ("A", "R") AND ug.ugroup_id = '.$ugroupId;
         return $this->retrieve($sql);
     }
 
