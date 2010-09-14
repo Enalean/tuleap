@@ -72,7 +72,7 @@ class Docman_PermissionsManagerDao extends DataAccessObject {
      * @param Project $project
      */
     function getProjectAdminMembers($project) {
-        $sql = 'SELECT email, language_id FROM user u JOIN user_group ug USING(user_id) WHERE ug.admin_flags="A" AND u.status IN ("A", "R") AND ug.group_id = '.db_ei($project->getId());
+        $sql = 'SELECT email, language_id FROM user u JOIN user_group ug USING(user_id) WHERE ug.admin_flags="A" AND u.status IN ("A", "R") AND ug.group_id = '.$this->da->escapeInt($project->getId());
         return $this->retrieve($sql); 
     }
     
@@ -82,7 +82,7 @@ class Docman_PermissionsManagerDao extends DataAccessObject {
      * @param Integer $ugroupId
      */
     function getUgroupMembers($ugroupId) {
-        $sql = ' SELECT email, language_id FROM user u JOIN ugroup_user ug USING(user_id) WHERE u.status IN ("A", "R") AND ug.ugroup_id = '.$ugroupId;
+        $sql = ' SELECT email, language_id FROM user u JOIN ugroup_user ug USING(user_id) WHERE u.status IN ("A", "R") AND ug.ugroup_id = '.$this->da->escapeInt($ugroupId);
         return $this->retrieve($sql);
     }
 
