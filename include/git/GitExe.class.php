@@ -19,6 +19,7 @@ define('GIT_SHOW_REF','show-ref');
 define('GIT_ARCHIVE','archive');
 define('GIT_GREP','grep');
 define('GIT_BLAME','blame');
+define('GIT_NAME_REV','name-rev');
 
 /**
  * Git Executable class

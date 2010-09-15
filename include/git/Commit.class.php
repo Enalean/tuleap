@@ -654,25 +654,19 @@ class GitPHP_Commit extends GitPHP_GitObject
 	{
 		$this->containingTagRead = true;
 
-		$tags = array();
-
-		$projectTags = $this->project->GetTags();
-
-		foreach ($projectTags as $pTag) {
-			$tags[$pTag->GetObject()->GetHash()] = $pTag;
-		}
-
 		$exe = new GitPHP_GitExe($this->project);
 		$args = array();
-		$args[] = 'HEAD';
-		$revs = explode("\n", $exe->Execute(GIT_REV_LIST, $args));
+		$args[] = '--tags';
+		$args[] = $this->hash;
+		$revs = explode("\n", $exe->Execute(GIT_NAME_REV, $args));
 
-		$this->containingTag = null;
-		foreach ($revs as $rev) {
-			if (isset($tags[$rev]))
-				$this->containingTag = $tags[$rev];
-			if ($rev == $this->hash)
-				break;
+		foreach ($revs as $revline) {
+			if (preg_match('/^([0-9a-fA-F]{40})\s+tags\/(.+)(\^[0-9]+|\~[0-9]+)$/', $revline, $regs)) {
+				if ($regs[1] == $this->hash) {
+					$this->containingTag = $this->project->GetTag($regs[2]);
+					break;
+				}
+			}
 		}
 	}
 
