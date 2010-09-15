@@ -15,18 +15,8 @@
  </div>
 
  {include file='title.tpl' target='summary'}
- 
- <table cellspacing="0">
-   {* Loop and display each head *}
-   {foreach from=$headlist item=head}
-     {assign var=headcommit value=$head->GetCommit()}
-     <tr class="{cycle values="light,dark"}">
-       <td><em>{$headcommit->GetAge()|agestring}</em></td>
-       <td><a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=shortlog&h=refs/heads/{$head->GetName()}" class="list"><strong>{$head->GetName()}</strong></a></td>
-       <td class="link"><a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=shortlog&h=refs/heads/{$head->GetName()}">{$resources->GetResource('shortlog')}</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=log&h=refs/heads/{$head->GetName()}">{$resources->GetResource('log')}</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=tree&hb={$headcommit->GetHash()}">{$resources->GetResource('tree')}</a></td>
-     </tr>
-   {/foreach}
- </table>
 
+ {include file='headlist.tpl'}
+ 
  {include file='footer.tpl'}
 

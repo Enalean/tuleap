@@ -73,20 +73,8 @@
 
   {include file='title.tpl' target='heads'}
 
-   <table cellspacing="0">
-     {section name=head max=17 loop=$headlist}
-       <tr class="{cycle name=heads values="light,dark"}">
-         {if $smarty.section.head.index == 16}
-           <td><a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=heads">...</a></td>
-         {else}
-	   {assign var=headcommit value=$headlist[head]->GetCommit()}
-           <td><em>{$headcommit->GetAge()|agestring}</em></td>
-           <td><a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=shortlog&h=refs/heads/{$headlist[head]->GetName()}" class="list"><strong>{$headlist[head]->GetName()}</strong></td>
-           <td class="link"><a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=shortlog&h=refs/heads/{$headlist[head]->GetName()}">{$resources->GetResource('shortlog')}</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=log&h=refs/heads/{$headlist[head]->GetName()}">{$resources->GetResource('log')}</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=tree&hb={$headcommit->GetHash()}">{$resources->GetResource('tree')}</a></td>
-         {/if}
-       </tr>
-     {/section}
-   </table>
+  {include file='headlist.tpl' max=17}
+
  {/if}
 
  {include file='footer.tpl'}
