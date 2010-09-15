@@ -584,7 +584,7 @@ class Docman_PermissionsManager {
                 $dao = $this->getDao();
                 if ($row['ugroup_id'] <= 100) {
                     //If one of these ugroups is set to be docman manager, we notify project admin
-                    $darDu = $dao->getDynamicUgroupMembers($project, $GLOBALS['UGROUP_PROJECT_ADMIN']);
+                    $darDu = $dao->getProjectAdminMembers($project);
                     foreach ($darDu as $rowDu) {
                         $userArray[$rowDu['email']] = $rowDu['language_id'];
                     }
