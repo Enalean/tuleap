@@ -115,7 +115,7 @@ class GitPHP_Controller_Log extends GitPHP_ControllerBase
 		$revlist = $this->project->GetLog($this->params['hash'], 101, ($this->params['page'] * 100));
 		if ($revlist) {
 			if (count($revlist) > 100) {
-				$this->tpl->assign('hasmore', true);
+				$this->tpl->assign('hasmorerevs', true);
 				$revlist = array_slice($revlist, 0, 100);
 			}
 			$this->tpl->assign('revlist', $revlist);

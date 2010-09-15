@@ -30,46 +30,18 @@
  </table>
 
  {include file='title.tpl' target='shortlog'}
+
+ {include file='shortloglist.tpl' source='summary'}
  
- <table cellspacing="0">
-   {foreach from=$revlist item=rev}
-     <tr class="{cycle name=revs values="light,dark"}">
-     <td><em>{$rev->GetAge()|agestring}</em></td>
-     <td><em>{$rev->GetAuthorName()}</em></td>
-     <td>
-       <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=commit&h={$rev->GetHash()}" class="list commitTip" {if strlen($rev->GetTitle()) > 50}title="{$rev->GetTitle()}"{/if}><strong>{$rev->GetTitle(50)}</strong></a>
-       <span class="refs">
-       {foreach item=revhead from=$rev->GetHeads()}
-         <span class="head">
-           <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=shortlog&h=refs/heads/{$revhead->GetName()}">{$revhead->GetName()}</a>
-         </span>
-       {/foreach}
-       {foreach item=revtag from=$rev->GetTags()}
-         <span class="tag">
-           <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=tag&h={$revtag->GetName()}">{$revtag->GetName()}</a>
-         </span>
-       {/foreach}
-       </span>
-     </td>
-     <td class="link"><a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=commit&h={$rev->GetHash()}">{$resources->GetResource('commit')}</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=commitdiff&h={$rev->GetHash()}">{$resources->GetResource('commitdiff')}</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=tree&h={$rev->GetHash()}&hb={$rev->GetHash()}">{$resources->GetResource('tree')}</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=snapshot&h={$rev->GetHash()}">{$resources->GetResource('snapshot')}</a></td>
-     </tr>
-   {/foreach}
-   {if $hasmorerevs}
-     <tr class="light">
-       <td><a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=shortlog">...</a></td>
-     </tr>
-   {/if}
- </table>
  {if $taglist}
-   {* Tags *}
   
   {include file='title.tpl' target='tags'}
 
   {include file='taglist.tpl' max=17}
    
  {/if}
+
  {if $headlist}
-   {* Heads *}
 
   {include file='title.tpl' target='heads'}
 

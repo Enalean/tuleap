@@ -24,7 +24,7 @@
      {$resources->GetResource('prev')}
    {/if}
    &sdot; 
-   {if $hasmore}
+   {if $hasmorerevs}
      <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=log&h={$commit->GetHash()}&pg={$page+1}" accesskey="n" title="Alt-n">{$resources->GetResource('next')}</a>
    {else}
      {$resources->GetResource('next')}
