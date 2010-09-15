@@ -84,6 +84,7 @@ class GitPHP_Controller_Rss extends GitPHP_ControllerBase
 	 */
 	protected function ReadQuery()
 	{
+		GitPHP_Log::GetInstance()->SetEnabled(false);
 	}
 
 	/**
