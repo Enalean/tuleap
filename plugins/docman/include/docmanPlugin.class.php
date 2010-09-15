@@ -57,7 +57,9 @@ class DocmanPlugin extends Plugin {
         $this->_addHook('project_export',                    'project_export',                    false);
         $this->_addHook('SystemEvent_PROJECT_RENAME',        'renameProject',                     false);
         $this->_addHook('file_exists_in_data_dir',           'file_exists_in_data_dir',           false);
+        // Stats plugin
         $this->_addHook('plugin_statistics_disk_usage_collect_project', 'plugin_statistics_disk_usage_collect_project', false);
+        $this->_addHook('plugin_statistics_disk_usage_service_label',   'plugin_statistics_disk_usage_service_label',   false);
     }
 
     function permission_get_name($params) {
@@ -441,6 +443,15 @@ class DocmanPlugin extends Plugin {
         $root = $this->getPluginInfo()->getPropertyValueForName('docman_root');
         $path = $root.'/'.strtolower($row['unix_group_name']);
         $params['DiskUsageManager']->storeForGroup($row['group_id'], 'plugin_docman', $path);
+    }
+
+    /**
+     * Hook to list docman in the list of serices managed by disk stats
+     * 
+     * @param array $params
+     */
+    function plugin_statistics_disk_usage_service_label($params) {
+        $params['services']['plugin_docman'] = 'Docman';
     }
 }
 

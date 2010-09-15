@@ -27,6 +27,8 @@ require_once('common/dao/include/DataAccessObject.class.php');
 class Statistics_DiskUsageManager {
     private $_dao = null;
 
+    private $_services = array();
+    
     const SVN = 'svn';
     const CVS = 'cvs';
     const FRS = 'frs';
@@ -48,7 +50,20 @@ class Statistics_DiskUsageManager {
     }
     
     public function getProjectServices() {
-        return array(self::SVN, self::CVS, self::FRS, self::FTP, self::GRP_HOME, self::WIKI, self::PLUGIN_DOCMAN, self::PLUGIN_WEBDAV, self::MAILMAN, self::PLUGIN_FORUMML);
+        if (count($this->_services) == 0) {
+            $this->_services = array(self::SVN           => 'Subversion',
+                                     self::CVS           => 'CVS',
+                                     self::FRS           => 'File releases',
+                                     self::FTP           => 'Public FTP',
+                                     self::GRP_HOME      => 'Home page',
+                                     self::WIKI          => 'Wiki',
+                                     self::MAILMAN       => 'Mailman',
+                                     self::PLUGIN_WEBDAV => 'SVN/Webdav');
+            $em     = EventManager::instance();
+            $params = array('services' => &$this->_services);
+            $em->processEvent('plugin_statistics_disk_usage_service_label', $params);
+        }
+        return $this->_services;
     }
     
     public function getGeneralData($date, $groupId = NULL) {

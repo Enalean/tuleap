@@ -65,52 +65,6 @@ class Statistics_DiskUsageOutput {
 
         return sprintf($retstring, $size, $sys['prefix'][$i]);
     }
-
-    /**
-     * Return a human readable string for service
-     * 
-     * @param String $service
-     * 
-     * @return String
-     */
-    public function getServiceTitle($service) {
-        switch($service) {
-            case Statistics_DiskUsageManager::SVN:
-                return 'SVN';
-            case Statistics_DiskUsageManager::CVS:
-                return 'CVS';
-            case Statistics_DiskUsageManager::FRS:
-                return 'File releases';
-            case Statistics_DiskUsageManager::FTP:
-                return 'Public FTP';
-            case Statistics_DiskUsageManager::WIKI:
-                return 'Wiki';
-            case Statistics_DiskUsageManager::MAILMAN:
-                return 'Mailman';
-            case Statistics_DiskUsageManager::PLUGIN_DOCMAN:
-                return 'Docman';
-            case Statistics_DiskUsageManager::PLUGIN_FORUMML:
-                return 'ForumML';
-            case Statistics_DiskUsageManager::PLUGIN_WEBDAV:
-                return 'Webdav';
-            case Statistics_DiskUsageManager::GRP_HOME:
-                return 'Groups';
-            case Statistics_DiskUsageManager::USR_HOME:
-                return 'Users';
-            case Statistics_DiskUsageManager::MYSQL:
-                return 'MySQL';
-            case Statistics_DiskUsageManager::CODENDI_LOGS:
-                return 'Codendi Logs';
-            case Statistics_DiskUsageManager::BACKUP:
-                return 'Backup';
-            case Statistics_DiskUsageManager::BACKUP_OLD:
-                return 'BackupOld';
-            default:
-                return false;
-        }
-    }
-
-
 }
 
 ?>
