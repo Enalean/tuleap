@@ -576,11 +576,8 @@ class GitPHP_Project
 		if (!$this->readTags)
 			$this->ReadTagList();
 
-		foreach ($this->tags as $t) {
-			if ($t->GetName() === $tag) {
-				return $t;
-			}
-		}
+		if (isset($this->tags[$tag]))
+			return $this->tags[$tag];
 
 		return null;
 	}
@@ -599,21 +596,30 @@ class GitPHP_Project
 		$exe = new GitPHP_GitExe($this);
 		$args = array();
 		$args[] = '--tags';
+		$args[] = '--dereference';
 		$ret = $exe->Execute(GIT_SHOW_REF, $args);
 		unset($exe);
 
 		$lines = explode("\n", $ret);
 
 		foreach ($lines as $line) {
-			if (preg_match('/^([0-9a-fA-F]{40}) refs\/tags\/(.+)$/', $line, $regs)) {
+			if (preg_match('/^([0-9a-fA-F]{40}) refs\/tags\/([^^]+)(\^{})?$/', $line, $regs)) {
 				try {
-					$this->tags[] = new GitPHP_Tag($this, $regs[2], $regs[1]);
+					if ((!empty($regs[3])) && ($regs[3] == '^{}')) {
+						$derefCommit = $this->GetCommit($regs[1]);
+						if ($derefCommit && isset($this->tags[$regs[2]])) {
+							$this->tags[$regs[2]]->SetCommit($derefCommit);
+						}
+							
+					} else {
+							$this->tags[$regs[2]] = new GitPHP_Tag($this, $regs[2], $regs[1]);
+					}
 				} catch (Exception $e) {
 				}
 			}
 		}
 
-		usort($this->tags, array('GitPHP_Tag', 'CompareAge'));
+		uasort($this->tags, array('GitPHP_Tag', 'CompareAge'));
 	}
 
 	/**

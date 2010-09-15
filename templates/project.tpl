@@ -64,35 +64,9 @@
    {* Tags *}
   
   {include file='title.tpl' target='tags'}
+
+  {include file='taglist.tpl' max=17}
    
-   <table cellspacing="0">
-     {section name=tag max=17 loop=$taglist}
-       <tr class="{cycle name=tags values="light,dark"}">
-         {if $smarty.section.tag.index == 16}
-           <td><a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=tags">...</a></td>
-         {else}
-	   {assign var=object value=$taglist[tag]->GetObject()}
-	   {assign var=objtype value=$taglist[tag]->GetType()}
-           <td><em>{$object->GetAge()|agestring}</em></td>
-           <td><a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a={$objtype}&h={$object->GetHash()}" class="list"><strong>{$taglist[tag]->GetName()}</strong></a></td>
-           <td>
-	     {assign var=comment value=$taglist[tag]->GetComment()}
-             {if count($comment) > 0}
-               <a class="list" href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=tag&h={$taglist[tag]->GetName()}">{$comment[0]}</a>
-             {/if}
-           </td>
-           <td class="link">
-             {if !$taglist[tag]->LightTag()}
-   	       <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=tag&h={$taglist[tag]->GetName()}">{$resources->GetResource('tag')}</a> | 
-             {/if}
-             <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a={$objtype}&h={$object->GetHash()}">{$resources->GetResource($objtype)}</a>
-	     {if $objtype == "commit"}
-	      | <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=shortlog&h=refs/tags/{$taglist[tag]->GetName()}">{$resources->GetResource('shortlog')}</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=log&h=refs/tags/{$taglist[tag]->GetName()}">{$resources->GetResource('log')}</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=snapshot&h={$object->GetHash()}">{$resources->GetResource('snapshot')}</a>{/if}
-           </td>
-         {/if}
-       </tr>
-     {/section}
-   </table>
  {/if}
  {if $headlist}
    {* Heads *}

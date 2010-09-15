@@ -41,6 +41,15 @@ class GitPHP_Tag extends GitPHP_Ref
 	protected $object;
 
 	/**
+	 * commit
+	 *
+	 * Stores the commit internally
+	 *
+	 * @access protected
+	 */
+	protected $commit;
+
+	/**
 	 * type
 	 *
 	 * Stores the type internally
@@ -116,6 +125,38 @@ class GitPHP_Tag extends GitPHP_Ref
 			$this->ReadData();
 
 		return $this->object;
+	}
+
+	/**
+	 * GetCommit
+	 *
+	 * Gets the commit this tag points to
+	 *
+	 * @access public
+	 * @return mixed commit for this tag
+	 */
+	public function GetCommit()
+	{
+		if (!$this->dataRead)
+			$this->ReadData();
+
+		if (!$this->commit)
+			$this->LoadCommit();
+
+		return $this->commit;
+	}
+
+	/**
+	 * SetCommit
+	 *
+	 * Sets the commit this tag points to
+	 *
+	 * @access public
+	 * @param mixed $commit commit object 
+	 */
+	public function SetCommit($commit)
+	{
+		$this->commit = $commit;
 	}
 
 	/**
@@ -256,6 +297,7 @@ class GitPHP_Tag extends GitPHP_Ref
 		if ($ret === 'commit') {
 			/* light tag */
 			$this->object = $this->project->GetCommit($this->hash);
+			$this->commit = $this->object;
 			$this->type = 'commit';
 			return;
 		}
@@ -284,10 +326,6 @@ class GitPHP_Tag extends GitPHP_Ref
 					$this->type = $regs[1];
 					continue;
 				} else if (preg_match('/^tag (.+)$/', $line, $regs)) {
-					if (strcmp($this->refName, trim($regs[1])) !== 0) {
-						/* Something is really wrong with your repo */
-						throw new Exception('Ref for tag ' . $this->refName . ' points to tag ' . $regs[1]);
-					}
 					continue;
 				} else if (preg_match('/^tagger (.*) ([0-9]+) (.*)$/', $line, $regs)) {
 					$this->tagger = $regs[1];
@@ -310,12 +348,53 @@ class GitPHP_Tag extends GitPHP_Ref
 			case 'commit':
 				try {
 					$this->object = $this->project->GetCommit($objectHash);
+					$this->commit = $this->GetObject();
 				} catch (Exception $e) {
 				}
 				break;
-			/* TODO: add other types */
+			case 'tag':
+				$exe = new GitPHP_GitExe($this->project);
+				$args = array();
+				$args[] = 'tag';
+				$args[] = $objectHash;
+				$ret = $exe->Execute(GIT_CAT_FILE, $args);
+				unset($exe);
+				$lines = explode("\n", $ret);
+				foreach ($lines as $i => $line) {
+					if (preg_match('/^tag (.+)$/', $line, $regs)) {
+						$name = trim($regs[1]);
+						$this->object = new GitPHP_Tag($this->project, $name, $objectHash);
+					}
+				}
+				break;
 		}
 
+	}
+
+	/**
+	 * ReadCommit
+	 *
+	 * Attempts to dereference the commit for this tag
+	 *
+	 * @access private
+	 */
+	private function ReadCommit()
+	{
+		$exe = new GitPHP_GitExe($this);
+		$args = array();
+		$args[] = '--tags';
+		$args[] = '--dereference';
+		$args[] = $this->refName;
+		$ret = $exe->Execute(GIT_SHOW_REF, $args);
+		unset($exe);
+
+		$lines = explode("\n", $ret);
+
+		foreach ($lines as $line) {
+			if (preg_match('/^([0-9a-fA-F]{40}) refs\/tags\/' . preg_quote($this->refName) . '(\^{})$/', $line, $regs)) {
+				$this->commit = $this->project->GetCommit($regs[1]);
+			}
+		}
 	}
 
 	/**

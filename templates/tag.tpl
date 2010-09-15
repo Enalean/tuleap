@@ -23,8 +23,13 @@
    <table cellspacing="0">
      <tr>
        <td>object</td>
-       <td class="monospace"><a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a={$objtype}&h={$object->GetHash()}" class="list">{$object->GetHash()}</a></td>
-       <td class="link"><a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a={$objtype}&h={$object->GetHash()}">{$resources->GetResource($objtype)}</a></td>
+       {if $objtype == 'commit'}
+         <td class="monospace"><a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=commit&h={$object->GetHash()}" class="list">{$object->GetHash()}</a></td>
+         <td class="link"><a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=commit&h={$object->GetHash()}">{$resources->GetResource('commit')}</a></td>
+       {elseif $objtype == 'tag'}
+         <td class="monospace"><a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=tag&h={$object->GetName()}" class="list">{$object->GetHash()}</a></td>
+         <td class="link"><a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=tag&h={$object->GetName()}">{$resources->GetResource('tag')}</a></td>
+       {/if}
      </tr>
      {if $tag->GetTagger()}
        <tr>
