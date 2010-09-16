@@ -30,7 +30,7 @@ class UserDao extends DataAccessObject {
     * @return DataAccessResult
     */
     function searchAll() {
-        $sql = "SELECT * from user";
+        $sql = "SELECT * FROM user";
         return $this->retrieve($sql);
     }
     
@@ -42,7 +42,7 @@ class UserDao extends DataAccessObject {
         if (is_array($status)) {
             $where_status=$this->da->quoteSmartImplode(" OR status = ",$status);
         } else { $where_status = $this->da->quoteSmart($status); }
-        $sql = "SELECT * from user WHERE status = $where_status";
+        $sql = "SELECT * FROM user WHERE status = $where_status";
         return $this->retrieve($sql);
     }
     
@@ -51,7 +51,7 @@ class UserDao extends DataAccessObject {
     * @return DataAccessResult
     */
     function searchByUserId($userId) {
-        $sql = sprintf("SELECT * from user WHERE user_id = %s",
+        $sql = sprintf("SELECT * FROM user WHERE user_id = %s",
             $this->da->quoteSmart($userId));
         return $this->retrieve($sql);
     }
@@ -61,7 +61,7 @@ class UserDao extends DataAccessObject {
     * @return DataAccessResult
     */
     function searchByUserName($userName) {
-        $sql = sprintf("SELECT * from user WHERE user_name = %s",
+        $sql = sprintf("SELECT * FROM user WHERE user_name = %s",
             $this->da->quoteSmart($userName));
         return $this->retrieve($sql);
     }
@@ -71,7 +71,7 @@ class UserDao extends DataAccessObject {
     * @return DataAccessResult
     */
     function searchByEmail($email) {
-        $sql = sprintf("SELECT * from user WHERE email = %s",
+        $sql = sprintf("SELECT * FROM user WHERE email = %s",
             $this->da->quoteSmart($email));
         return $this->retrieve($sql);
     }
