@@ -85,7 +85,7 @@ if ($request->valid($vUserId)) {
     $userId = '';
 }
 
-$vServices = new Valid_WhiteList('services', $duMgr->getProjectServices());
+$vServices = new Valid_WhiteList('services', array_keys($duMgr->getProjectServices()));
 $vServices->required();
 if ($request->validArray($vServices)) {
     $selectedServices = $request->get('services');
@@ -96,7 +96,7 @@ if ($request->validArray($vServices)) {
             $selectedServices = array(Statistics_DiskUsageManager::SVN);
             break;
         case 'show_top_projects':
-            $selectedServices = $duMgr->getProjectServices();
+            $selectedServices = array_keys($duMgr->getProjectServices());
             break;
         default:
     }
@@ -177,12 +177,12 @@ switch ($func) {
         echo '<form name="progress_by_service" method="get" action="?">';
         echo '<input type="hidden" name="func" value="show_service" />';
 
-        foreach ($duMgr->getProjectServices() as $service) {
+        foreach ($duMgr->getProjectServices() as $service => $label) {
             $sel = '';
             if (isset($selected[$service])) {
                 $sel = ' checked="checked"';
             }
-            echo '<input type="checkbox" name="services[]" value="'.$service.'"'.$sel.'/>'.$duHtml->getServiceTitle($service).'<br/>';
+            echo '<input type="checkbox" name="services[]" value="'.$service.'"'.$sel.'/>'.$label.'<br/>';
         }
         echo '<label>Group by:</label>';
         echo html_build_select_box_from_array($groupByDate, 'group_by', $selectedGroupByDate, 1).'<br />';
@@ -236,12 +236,12 @@ switch ($func) {
         echo '<form name="top_projects" method="get" action="?">';
         echo '<input type="hidden" name="func" value="show_top_projects" />';
 
-        foreach ($duMgr->getProjectServices() as $service) {
+        foreach ($duMgr->getProjectServices() as $service => $label) {
             $sel = '';
             if (isset($selected[$service])) {
                 $sel = ' checked="checked"';
             }
-            echo '<input type="checkbox" name="services[]" value="'.$service.'"'.$sel.'/>'.$duHtml->getServiceTitle($service).'<br/>';
+            echo '<input type="checkbox" name="services[]" value="'.$service.'"'.$sel.'/>'.$label.'<br/>';
         }
        
         echo '<label>Start: </label>';
@@ -287,12 +287,12 @@ switch ($func) {
         echo '<br></br>';
        
 
-        foreach ($duMgr->getProjectServices() as $service) {
+        foreach ($duMgr->getProjectServices() as $service => $label) {
             $sel = '';
             if (isset($selected[$service])) {
                 $sel = ' checked="checked"';
             }
-            echo '<input type="checkbox" name="services[]" value="'.$service.'"'.$sel.'/>'.$duHtml->getServiceTitle($service).'<br/>';
+            echo '<input type="checkbox" name="services[]" value="'.$service.'"'.$sel.'/>'.$label.'<br/>';
         }
         echo '<label>Group by:</label>';
         echo html_build_select_box_from_array($groupByDate, 'group_by', $selectedGroupByDate, 1).'<br />';

@@ -27,6 +27,8 @@ require_once('common/dao/include/DataAccessObject.class.php');
 class Statistics_DiskUsageManager {
     private $_dao = null;
 
+    private $_services = array();
+    
     const SVN = 'svn';
     const CVS = 'cvs';
     const FRS = 'frs';
@@ -48,7 +50,20 @@ class Statistics_DiskUsageManager {
     }
     
     public function getProjectServices() {
-        return array(self::SVN, self::CVS, self::FRS, self::FTP, self::GRP_HOME, self::WIKI, self::PLUGIN_DOCMAN, self::PLUGIN_WEBDAV, self::MAILMAN, self::PLUGIN_FORUMML);
+        if (count($this->_services) == 0) {
+            $this->_services = array(self::SVN           => 'Subversion',
+                                     self::CVS           => 'CVS',
+                                     self::FRS           => 'File releases',
+                                     self::FTP           => 'Public FTP',
+                                     self::GRP_HOME      => 'Home page',
+                                     self::WIKI          => 'Wiki',
+                                     self::MAILMAN       => 'Mailman',
+                                     self::PLUGIN_WEBDAV => 'SVN/Webdav');
+            $em     = EventManager::instance();
+            $params = array('services' => &$this->_services);
+            $em->processEvent('plugin_statistics_disk_usage_service_label', $params);
+        }
+        return $this->_services;
     }
     
     public function getGeneralData($date, $groupId = NULL) {
@@ -309,7 +324,9 @@ class Statistics_DiskUsageManager {
         //We start the transaction, it is not stored in the DB unless we COMMIT
         //With START TRANSACTION, autocommit remains disabled until we end the transaction with COMMIT or ROLLBACK. 
         $sql = db_query('START TRANSACTION');
-        
+
+        $em  = EventManager::instance();
+
         $dao = $this->_getDao();
         $dar = $dao->searchAllGroups();
         foreach($dar as $row) {
@@ -319,41 +336,37 @@ class Statistics_DiskUsageManager {
             $this->storeForGroup($row['group_id'], 'ftp', $GLOBALS['ftp_anon_dir_prefix']."/".$row['unix_group_name']);
             $this->storeForGroup($row['group_id'], self::GRP_HOME, $GLOBALS['grpdir_prefix']."/".$row['unix_group_name']);
             $this->storeForGroup($row['group_id'], 'wiki', $GLOBALS['sys_wiki_attachment_data_dir']."/".$row['group_id']);
-            $this->storeForGroup($row['group_id'], 'plugin_docman', '/var/lib/codendi/docman'."/".strtolower($row['unix_group_name']));
+            // Fake plugin for webdav/subversion
             $this->storeForGroup($row['group_id'], 'plugin_webdav', '/var/lib/codendi/webdav'."/".$row['unix_group_name']);
+            
+            $params = array('DiskUsageManager' => $this, 'project_row' => $row);
+            $em->processEvent('plugin_statistics_disk_usage_collect_project', $params);
         }
         $this->collectMailingLists();
     }
 
     public function collectMailingLists() {
         $mmArchivesPath = '/var/lib/mailman/archives/private';
-        $fmlPath        = '/var/lib/codendi/forumml';
 
         $dao = $this->_getDao();
         $dar = $dao->searchAllLists();
         $previous = -1;
         $sMailman = 0;
-        $sForumML = 0;
         foreach($dar as $row) {
             if ($row['group_id'] != $previous) {
                 if ($previous != -1) {
                     $dao->addGroup($previous, 'mailman', $sMailman, $_SERVER['REQUEST_TIME']);
-                    $dao->addGroup($previous, 'plugin_forumml', $sForumML, $_SERVER['REQUEST_TIME']);
                 }
                 $sMailman = 0;
-                $sForumML = 0;
             }
             $sMailman += $this->getDirSize($mmArchivesPath.'/'.$row['list_name'].'/');
             $sMailman += $this->getDirSize($mmArchivesPath.'/'.$row['list_name'].'.mbox/');
-            $sForumML += $this->getDirSize($fmlPath.'/'.$row['list_name'].'/');
-            $sForumML += $this->getDirSize($fmlPath.'/'.$row['group_list_id'].'/');
 
             $previous = $row['group_id'];
         }
         // Last one, don't forget it!
         if ($sMailman != 0) {
             $dao->addGroup($previous, 'mailman', $sMailman, $_SERVER['REQUEST_TIME']);
-            $dao->addGroup($previous, 'plugin_forumml', $sForumML, $_SERVER['REQUEST_TIME']);
         }
         //We commit all the DB modification
         $sql = db_query('COMMIT');

@@ -90,6 +90,8 @@ class Statistics_DiskUsageGraph extends Statistics_DiskUsageOutput {
             $graph->yaxis->scale->SetAutoMin(0);
         }
 
+        $servicesList = $this->_dum->getProjectServices();
+        
         $data = $this->_dum->getWeeklyEvolutionServiceData($services, $groupBy, $startDate, $endDate);
         $i = 0;
         $dates = array();
@@ -104,7 +106,7 @@ class Statistics_DiskUsageGraph extends Statistics_DiskUsageOutput {
             $color = $this->getServiceColor($service);
             $lineplot->SetColor($color);
             $lineplot->SetFillColor($color.':1.5');
-            $lineplot->SetLegend($this->getServiceTitle($service));
+            $lineplot->SetLegend($servicesList[$service]);
 
             //$lineplot->value->show();
             $lineplot->value->SetFont($graph->getFont(), FS_NORMAL, 8);
@@ -187,6 +189,8 @@ class Statistics_DiskUsageGraph extends Statistics_DiskUsageOutput {
             $graph->yaxis->scale->SetAutoMin(0);
         }
 
+        $servicesList = $this->_dum->getProjectServices();
+
         $data = $this->_dum->getWeeklyEvolutionProjectData($services, $groupId, $groupBy, $startDate, $endDate);
         $i = 0;
         $dates = array();
@@ -201,7 +205,7 @@ class Statistics_DiskUsageGraph extends Statistics_DiskUsageOutput {
             $color = $this->getServiceColor($service);
             $lineplot->SetColor($color);
             $lineplot->SetFillColor($color.':1.5');
-            $lineplot->SetLegend($this->getServiceTitle($service));
+            $lineplot->SetLegend($servicesList[$service]);
 
             //$lineplot->value->show();
             $lineplot->value->SetFont($graph->getFont(), FS_NORMAL, 8);

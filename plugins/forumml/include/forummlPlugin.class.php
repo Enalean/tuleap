@@ -32,6 +32,11 @@ class ForumMLPlugin extends Plugin {
         $this->_addHook('layout_searchbox_options', 'forumml_searchbox_option', false);
         $this->_addHook('layout_searchbox_hiddenInputs', 'forumml_searchbox_hiddenInput', false);
         $this->_addHook('plugins_powered_search', 'forumml_search', false);
+
+        // Stat plugin
+        $this->_addHook('plugin_statistics_disk_usage_collect_project', 'plugin_statistics_disk_usage_collect_project', false);
+        $this->_addHook('plugin_statistics_disk_usage_service_label',   'plugin_statistics_disk_usage_service_label',   false);
+
         // Set ForumML plugin scope to 'Projects' wide 
         $this->setScope(Plugin::SCOPE_PROJECT);
         $this->allowedForProject = array();
@@ -108,6 +113,37 @@ class ForumMLPlugin extends Plugin {
             $list = (int) $request->get('list');
             util_return_to('/plugins/forumml/message.php?group_id='.$group_id.'&list='.$list.'&search='.urlencode($params['words']));
         }
+    }
+
+    /**
+     * Hook to collect forumml disk size usage per project
+     * 
+     * @param array $params
+     */
+    function plugin_statistics_disk_usage_collect_project($params) {
+        $project_row  = $params['project_row'];
+        $root = $this->getPluginInfo()->getPropertyValueForName('forumml_dir');
+        $path = $root.'/'.strtolower($project_row['unix_group_name']);
+
+        $sql = 'SELECT group_list_id, list_name FROM mail_group_list WHERE group_id = '.$project_row['group_id'];
+        $res = db_query($sql);
+        $sum = 0;
+        while ($row = db_fetch_array($res)) {
+            $sum += $this->getDirSize($path.'/'.$row['list_name'].'/');
+            $sum += $this->getDirSize($path.'/'.$row['group_list_id'].'/');
+        }
+
+        $dao = $params['DiskUsageManager']->_getDao();
+        $dao->addGroup($project_row['group_id'], 'plugin_forumml', $sum, $_SERVER['REQUEST_TIME']);
+    }
+    
+    /**
+     * Hook to list forumml in the list of serices managed by disk stats
+     * 
+     * @param array $params
+     */
+    function plugin_statistics_disk_usage_service_label($params) {
+        $params['services']['plugin_forumml'] = 'ForumML';
     }
 }
 

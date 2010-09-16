@@ -47,7 +47,7 @@ switch($graphType){
 
     case 'graph_service':
 
-        $vServices = new Valid_WhiteList('services', $duMgr->getProjectServices());
+        $vServices = new Valid_WhiteList('services', array_keys($duMgr->getProjectServices()));
         $vServices->required();
         if ($request->validArray($vServices)) {
             $services = $request->get('services');
@@ -71,7 +71,7 @@ switch($graphType){
             $groupId = $request->get('group_id');
         }
 
-        $vServices = new Valid_WhiteList('services', $duMgr->getProjectServices());
+        $vServices = new Valid_WhiteList('services', array_keys($duMgr->getProjectServices()));
         $vServices->required();
         if ($request->validArray($vServices)) {
             $services = $request->get('services');
