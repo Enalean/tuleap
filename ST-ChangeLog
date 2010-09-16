@@ -1,10 +1,11 @@
 Version 4.0.13 - (Not released yet)
         == New features ==
         backlog #101486 : Webdav integration for service FRS: Iteration 3 (Write access)
-        
+	backlog #108632: Integrate Git in disk usage stats & upstream diff reduction
+
         == Bugfix ==
         backlog #106503: Tracker import and export issue
-        backlog #106404: Wrong link for summary page due to rename project operation  
+        backlog #106404: Wrong link for summary page due to rename project operation
 	backlog #106752: Fix bugs in RPM installation (munin, mailman, openfire)
         backlog #105989: Site admin cannot remove user's LDAP id
         backlog #97573 : After a document is moved, Codex shows a blank page
