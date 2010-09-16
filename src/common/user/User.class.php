@@ -186,12 +186,7 @@ class User {
         $this->theme              = isset($row['theme'])              ? $row['theme']              : null;
         $this->language_id        = isset($row['language_id'])        ? $row['language_id']        : null;
         $this->last_pwd_update    = isset($row['last_pwd_update'])    ? $row['last_pwd_update']    : null;
-        $this->last_access_date   = isset($row['last_access_date'])   ? $row['last_access_date']   : null;
         $this->expiry_date        = isset($row['expiry_date'])        ? $row['expiry_date']        : null;
-        $this->prev_auth_success  = isset($row['prev_auth_success'])  ? $row['prev_auth_success']  : null;
-        $this->last_auth_success  = isset($row['last_auth_success'])  ? $row['last_auth_success']  : null;
-        $this->last_auth_failure  = isset($row['last_auth_failure'])  ? $row['last_auth_failure']  : null;
-        $this->nb_auth_failure    = isset($row['nb_auth_failure'])    ? $row['nb_auth_failure']    : null;
         
         $this->id = $this->user_id;
         
@@ -243,12 +238,7 @@ class User {
             'theme'              => $this->theme,
             'language_id'        => $this->language_id,
             'last_pwd_update'    => $this->last_pwd_update,
-            'last_access_date'   => $this->last_access_date,
-            'expiry_date'        => $this->expiry_date,
-            'prev_auth_success'  => $this->prev_auth_success,
-            'last_auth_success'  => $this->last_auth_success,
-            'last_auth_failure'  => $this->last_auth_failure,
-            'nb_auth_failure'    => $this->nb_auth_failure,
+            'expiry_date'        => $this->expiry_date
         );
     }
     
@@ -631,36 +621,6 @@ class User {
         return $this->locale;
     }
 
-    /**
-     * @return int Timestamp of the last authentication success.
-     */
-    function getLastAuthSuccess() {
-        return $this->last_auth_success;
-    }
-    
-    /**
-     * Return the previous authentication success (the one before last auth
-     * success).
-     * @return int Timestamp of the previous authentication success.
-     */
-    function getPreviousAuthSuccess() {
-        return $this->prev_auth_success;
-    }
-    
-    /**
-     * @return int Timestamp of the last unsuccessful authencation attempt
-     */
-    function getLastAuthFailure() {
-        return $this->last_auth_failure;
-    }
-    
-    /**
-     * @return int Number of authentication failure since the last success.
-     */
-    function getNbAuthFailure() {
-        return $this->nb_auth_failure;
-    }
-
     /** 
      * @return String Clear user password
      */
@@ -949,34 +909,7 @@ class User {
     function setLocale($locale) {
         $this->locale = $locale;
     }
-    
-    /**
-     * @param int Timestamp of the last authentication success.
-     */
-    function setLastAuthSuccess($lastAuthSuccess) {
-        $this->last_auth_success = $lastAuthSuccess;
-    }
-    /**
-     * the previous authentication success (the one before last auth
-     * success).
-     * @param int Timestamp of the previous authentication success.
-     */
-    function setPreviousAuthSuccess($previousAuthSuccess) {
-        $this->prev_auth_success = $previousAuthSuccess;
-    }
-    /**
-     * @param int Timestamp of the last unsuccessful authencation attempt
-     */
-    function setLastAuthFailure($lastAuthFailure) {
-        $this->last_auth_failure = $lastAuthFailure;
-    }
-    /**
-     * @param int Number of authentication failure since the last success.
-     */
-    function setNbAuthFailure($nbAuthFailure) {
-        $this->nb_auth_failure = $nbAuthFailure;
-    }
-    
+
     /**
      * Set clear password
      * 

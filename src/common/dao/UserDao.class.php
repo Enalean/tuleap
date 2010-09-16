@@ -51,7 +51,7 @@ class UserDao extends DataAccessObject {
     * @return DataAccessResult
     */
     function searchByUserId($userId) {
-        $sql = sprintf("SELECT * from user left join user_access using (user_id) WHERE user_id = %s",
+        $sql = sprintf("SELECT * from user WHERE user_id = %s",
             $this->da->quoteSmart($userId));
         return $this->retrieve($sql);
     }
@@ -705,6 +705,23 @@ class UserDao extends DataAccessObject {
         $res = db_query($sql);
         return array('users' => $res, 'numrows' => $this->foundRows());
     }
+    /**
+     * Return the access information for a given user
+     * 
+     * @param Integer $userId
+     * 
+     * @return Array
+     */
+    function getUserAccessInfo($userId) {
+        $sql = 'SELECT * from user_access WHERE user_id = '.$this->da->escapeInt($userId);
+        $dar  = $this->retrieve($sql);
+        if($dar && !$dar->isError()) {
+            $row = $dar->getRow();
+           return $row;
+        } else {
+            return false;
+        }
+     }
    
 }
 ?>
