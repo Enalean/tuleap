@@ -1,4 +1,4 @@
-Version 4.0.12 - (Not released yet)
+Version 4.0.13 - (Not released yet)
         == New features ==
         backlog #101486 : Webdav integration for service FRS: Iteration 3 (Write access)
         
@@ -8,6 +8,9 @@ Version 4.0.12 - (Not released yet)
 	backlog #106752: Fix bugs in RPM installation (munin, mailman, openfire)
         backlog #105989: Site admin cannot remove user's LDAP id
         backlog #97573 : After a document is moved, Codex shows a blank page
+
+Version 4.0.12 - Tuesday, 14th September(Just to fix a bug regression)
+        == Bugfix==
         backlog #108647: Assigned to shows None and unkown value 
 
 Version 4.0.11 - Monday, 9th August 2010 
