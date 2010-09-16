@@ -58,7 +58,7 @@ class DataAccess {
             }
             $this->db_name = $db;
         } else {
-            trigger_error('Unable to access the database. Please contact your administrator.', E_USER_ERROR);
+            throw new DataAccessException('Unable to access the database. Please contact your administrator.');
         }
     }
     
