@@ -32,7 +32,9 @@ try {
         fclose($stderr);
     }
 } catch (DataAccessException $e) {
-    echo ($e->getMessage());
+    $stderr = fopen('php://stderr', 'w');
+    fwrite ($stderr, $e->getMessage());
+    fclose($stderr);
     exit(1);
 }
 
