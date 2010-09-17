@@ -136,7 +136,7 @@ class ReferenceManager {
     function createReference(&$ref,$force=false) {
         $reference_dao =& $this->_getReferenceDao();
         if (!$force) {
-            // Check if keyword is valid [a-z0-9]
+            // Check if keyword is valid [a-z0-9_]
             if (!$this->_isValidKeyword($ref->getKeyword())) return false;
             // Check that there is no system reference with the same keyword
             if ($this->_isSystemKeyword($ref->getKeyword())) return false;
@@ -165,7 +165,7 @@ class ReferenceManager {
     function createSystemReference($ref,$force=false) {
         $reference_dao =& $this->_getReferenceDao();
 
-        // Check if keyword is valid [a-z0-9]
+        // Check if keyword is valid [a-z0-9_]
         if (!$this->_isValidKeyword($ref->getKeyword())) return false;
         // Check that it is a system reference
         if (!$ref->isSystemReference()) return false;
@@ -191,7 +191,7 @@ class ReferenceManager {
 
     function updateReference($ref,$force=false) {
         $reference_dao =& $this->_getReferenceDao();
-        // Check if keyword is valid [a-z0-9]
+        // Check if keyword is valid [a-z0-9_]
         if (!$this->_isValidKeyword($ref->getKeyword())) return false;
 
         // Check list of existing keywords 
@@ -700,9 +700,9 @@ class ReferenceManager {
         else return false;
     }
 
-    // Only allow lower case letters and digits
+    // Only allow lower case letters, digits and underscores
     function _isValidKeyword($keyword) {
-        if (!preg_match('/^[a-z0-9]+$/',$keyword)) {
+        if (!preg_match('/^[a-z0-9_]+$/',$keyword)) {
             return false;
         } else return true;
     }
