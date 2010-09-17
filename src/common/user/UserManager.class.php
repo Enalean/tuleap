@@ -264,9 +264,10 @@ class UserManager {
                         $this->getDao()->deleteAllUserSessions($this->_currentuser->getId());
                         $this->_currentuser = null;
                     } else {
+                        $accessInfo = $this->getUserAccessInfo($this->_currentuser);
                         $this->_currentuser->setSessionHash($session_hash);
                         $now = $_SERVER['REQUEST_TIME'];
-                        $break_time = $now - $this->_currentuser->getLastAccessDate();
+                        $break_time = $now - $accessInfo['last_access_date'];
                         //if the access is not later than 6 hours, it is not necessary to log it
                         if ($break_time > 21600){
                             $this->getDao()->storeLastAccessDate($this->_currentuser->getId(), $now);

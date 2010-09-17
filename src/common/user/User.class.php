@@ -99,12 +99,7 @@ class User {
     protected $theme;
     protected $language_id;
     protected $last_pwd_update;
-    protected $last_access_date;
     protected $expiry_date;
-    protected $prev_auth_success;
-    protected $last_auth_success;
-    protected $last_auth_failure;
-    protected $nb_auth_failure;
 
     /**
      * Keep super user info
@@ -506,12 +501,6 @@ class User {
      */
     function getLastPwdUpdate() {
         return $this->last_pwd_update;
-    }
-    /**
-     * @return string the last access date of the user (timestamp format)
-     */
-    function getLastAccessDate() {
-        return $this->last_access_date;
     }
     /**
      * @return string the timezone of the user (GMT, Europe/Paris, etc ...)
