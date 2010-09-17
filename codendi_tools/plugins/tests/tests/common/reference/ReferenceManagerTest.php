@@ -47,7 +47,6 @@ class ReferenceManagerTest extends UnitTestCase {
         $rm->setReturnReference('_getReferenceDao', $dao);
 		$this->assertFalse($rm->_isValidKeyword("UPPER"));
 		$this->assertFalse($rm->_isValidKeyword("with space"));
-		$this->assertFalse($rm->_isValidKeyword("with_special_char"));
 		$this->assertFalse($rm->_isValidKeyword('with$pecialchar'));
 		$this->assertFalse($rm->_isValidKeyword("with/special/char"));
 		$this->assertFalse($rm->_isValidKeyword("with-special"));
@@ -58,6 +57,7 @@ class ReferenceManagerTest extends UnitTestCase {
 		$this->assertTrue($rm->_isValidKeyword("valid"));
 		$this->assertTrue($rm->_isValidKeyword("valid123"));
 		$this->assertTrue($rm->_isValidKeyword("123")); // should it be?
+		$this->assertTrue($rm->_isValidKeyword("with_underscore"));
 
 		$this->assertTrue($rm->_isReservedKeyword("art"));
 		$this->assertTrue($rm->_isReservedKeyword("cvs"));
