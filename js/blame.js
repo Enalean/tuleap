@@ -10,6 +10,12 @@
 
 function initBlame() {
 
+	var url = window.location.href.match(/^([^\?]+\/)/);
+	if (!url) {
+		return;
+	}
+	url = url[1];
+
 	var blameLink = $('a#blameLink');
 
 	blameLink.toggle(function() {
@@ -30,7 +36,7 @@ function initBlame() {
 			div.css('text-align', 'center');
 
 			var img = jQuery(document.createElement('img'));
-			img.attr('src', "images/blame-loader.gif");
+			img.attr('src', url + "images/blame-loader.gif");
 			img.attr('alt', GITPHP_RES_LOADING);
 			img.appendTo(div);
 

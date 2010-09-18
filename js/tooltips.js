@@ -16,6 +16,12 @@ function initTooltips() {
 	}
 	project = unescape(project[1]);
 
+	var url = window.location.href.match(/^([^\?]+\/)/);
+	if (!url) {
+		return;
+	}
+	url = url[1];
+
 	$('a.commitTip').each(function()
 	{
 		var commitHash = $(this).attr('href').match(/h=([0-9a-fA-F]{40}|HEAD)/);
@@ -28,7 +34,7 @@ function initTooltips() {
 		$(this).qtip(
 		{
 			content: {
-				text: '<img src="images/tooltip-loader.gif" alt="' + GITPHP_RES_LOADING + '" />',
+				text: '<img src="' + url + 'images/tooltip-loader.gif" alt="' + GITPHP_RES_LOADING + '" />',
 				ajax: {
 					url: 'index.php',
 					data: {
@@ -58,7 +64,7 @@ function initTooltips() {
 		$(this).qtip(
 		{
 			content: {
-				text: '<img src="images/tooltip-loader.gif" alt="' + GITPHP_RES_LOADING + '" />',
+				text: '<img src="' + url + 'images/tooltip-loader.gif" alt="' + GITPHP_RES_LOADING + '" />',
 				ajax: {
 					url: 'index.php',
 					data: {
