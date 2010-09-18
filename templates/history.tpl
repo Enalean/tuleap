@@ -26,18 +26,7 @@
        <td title="{if $historycommit->GetAge() > 60*60*24*7*2}{$historycommit->GetAge()|agestring}{else}{$historycommit->GetCommitterEpoch()|date_format:"%F"}{/if}"><em>{if $historycommit->GetAge() > 60*60*24*7*2}{$historycommit->GetCommitterEpoch()|date_format:"%F"}{else}{$historycommit->GetAge()|agestring}{/if}</em></td>
        <td><em>{$historycommit->GetAuthorName()}</em></td>
        <td><a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=commit&h={$historycommit->GetHash()}" class="list commitTip" {if strlen($historycommit->GetTitle()) > 50}title="{$historycommit->GetTitle()}"{/if}><strong>{$historycommit->GetTitle(50)}</strong></a>
-       <span class="refs">
-       {foreach from=$historycommit->GetHeads() item=historyhead}
-         <span class="head">
-	   <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=shortlog&h=refs/heads/{$historyhead->GetName()}">{$historyhead->GetName()}</a>
-	 </span>
-       {/foreach}
-       {foreach from=$historycommit->GetTags() item=historytag}
-         <span class="tag">
-	   <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=tag&h={$historytag->GetName()}">{$historytag->GetName()}</a>
-	 </span>
-       {/foreach}
-       </span>
+       {include file='refbadges.tpl' commit=$historycommit}
        </td>
        <td class="link"><a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=commit&h={$historycommit->GetHash()}">{$resources->GetResource('commit')}</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=commitdiff&h={$historycommit->GetHash()}">{$resources->GetResource('commitdiff')}</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=blob&hb={$historycommit->GetHash()}&f={$blob->GetPath()}">{$resources->GetResource('blob')}</a>{if $blob->GetHash() != $historyitem->GetToHash()} | <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=blobdiff&h={$blob->GetHash()}&hp={$historyitem->GetToHash()}&hb={$historycommit->GetHash()}&f={$blob->GetPath()}">{$resources->GetResource('diff to current')}</a>{/if}
        </td>

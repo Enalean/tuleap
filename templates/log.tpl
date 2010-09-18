@@ -34,18 +34,7 @@
  {foreach from=$revlist item=rev}
    <div class="title">
      <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=commit&h={$rev->GetHash()}" class="title"><span class="age">{$rev->GetAge()|agestring}</span>{$rev->GetTitle()}</a>
-     <span class="refs">
-     {foreach from=$rev->GetHeads() item=revhead}
-       <span class="head">
-	   <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=shortlog&h=refs/heads/{$revhead->GetName()}">{$revhead->GetName()}</a>
-	 </span>
-     {/foreach}
-     {foreach from=$rev->GetTags() item=revtag}
-       <span class="tag">
-	   <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=tag&h={$revtag->GetName()}">{$revtag->GetName()}</a>
-	 </span>
-     {/foreach}
-     </span>
+     {include file='refbadges.tpl' commit=$rev}
    </div>
    <div class="title_text">
      <div class="log_link">

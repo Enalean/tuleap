@@ -18,18 +18,7 @@
 		{else}
 			<a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=commit&h={$titlecommit->GetHash()}" class="title">{$titlecommit->GetTitle()}</a>
 		{/if}
-		<span class="refs">
-			{foreach from=$titlecommit->GetHeads() item=titlehead}
-				<span class="head">
-					<a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=shortlog&h=refs/heads/{$titlehead->GetName()}">{$titlehead->GetName()}</a>
-				</span>
-			{/foreach}
-			{foreach from=$titlecommit->GetTags() item=titletag}
-				<span class="tag">
-					<a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=tag&h={$titletag->GetName()}">{$titletag->GetName()}</a>
-				</span>
-			{/foreach}
-		</span>
+		{include file='refbadges.tpl' commit=$titlecommit}
 	{else}
 		{if $target == 'summary'}
 			<a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=summary" class="title">&nbsp;</a>
