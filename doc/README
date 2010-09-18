@@ -51,19 +51,21 @@ The only required setting is the 'projectroot' setting, which specifies
 where your git repositories are - following the previous example, it would
 be set up as "/gitprojects/".
 
-(Note for upgrades: updated versions will not overwrite your old
-gitphp.conf.php, but they will update gitphp.conf.php.example.  When you
-upgrade, you may want to check for new config options in the example file
-and copy them to your config file)
+All the available config options and their default settings are documented
+in gitphp.conf.defaults.php.  If you want to change any of the settings,
+just copy the config option from the defaults file to your normal config
+and change the setting.  Some GitPHP features are disabled by default
+since they require setting config options a certain way, so if you don't
+look through the config file you won't get those features.
 
-I recommend reading through the config file and setting up the options
-appropriately. Every config option is explained in the comments.  Many
-GitPHP features are disabled by default since they require setting config
-options a certain way, so if you don't look through the config file you won't
-get many of the features.
+During upgrades, your existing config file will not be overwritten.  However
+new options or features may be added to the defaults file, so you may want
+to check for new options every now and then.
 
-If you want to set up categories for your projects, you need to set up the
-$git_projects array - the definition and structure of this is explained in
+If you want to set up categories for your projects, or use a text file
+with a list of projects, you need to set up the $git_projects array in
+projects.conf.php.  Copy projects.conf.php.example to projects.conf.php
+and edit it - the definition and structure of this is explained in
 the config file.
 
 If you want to edit the text header that appears above the project list on the
@@ -97,6 +99,8 @@ Most users:
 * Set 'cacheexpire' to TRUE
 * Set 'cachelifetime' high, 3600 seconds (1 hour) or more.  -1 means
   cache forever
+
+These are the defaults.
 
 Extremely active projects, with commits every few seconds, or advanced
 users that know exactly how often commits come in and want to save
