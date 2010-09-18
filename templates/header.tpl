@@ -36,7 +36,6 @@
     <script language="javascript" src="{$script}"></script>
     {/foreach}
     {/if}
-    </head>
     {$smarty.capture.header}
   </head>
   <body>
