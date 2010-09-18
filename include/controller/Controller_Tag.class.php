@@ -45,6 +45,9 @@ class GitPHP_Controller_Tag extends GitPHP_ControllerBase
 	 */
 	protected function GetTemplate()
 	{
+		if (isset($this->params['jstip']) && $this->params['jstip']) {
+			return 'tagtip.tpl';
+		}
 		return 'tag.tpl';
 	}
 
@@ -85,6 +88,11 @@ class GitPHP_Controller_Tag extends GitPHP_ControllerBase
 	{
 		if (isset($_GET['h'])) {
 			$this->params['hash'] = $_GET['h'];
+		}
+
+		if (isset($_GET['o']) && ($_GET['o'] == 'jstip')) {
+			$this->params['jstip'] = true;
+			GitPHP_Log::GetInstance()->SetEnabled(false);
 		}
 	}
 

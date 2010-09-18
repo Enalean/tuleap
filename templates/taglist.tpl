@@ -29,7 +29,7 @@
            <td>
 	     {assign var=comment value=$tag->GetComment()}
              {if count($comment) > 0}
-               <a class="list" href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=tag&h={$tag->GetName()}">{$comment[0]}</a>
+               <a class="list {if !$tag->LightTag()}tagTip{/if}" href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=tag&h={$tag->GetName()}">{$comment[0]}</a>
              {/if}
            </td>
            <td class="link">
