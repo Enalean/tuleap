@@ -41,7 +41,7 @@ function initTooltips() {
 				}
 			},
 			style: {
-				classes: 'ui-tooltip-light'
+				classes: 'ui-tooltip-light ui-tooltip-shadow'
 			}
 		});
 	});
@@ -71,7 +71,7 @@ function initTooltips() {
 				}
 			},
 			style: {
-				classes: 'ui-tooltip-light'
+				classes: 'ui-tooltip-light ui-tooltip-shadow'
 			}
 		});
 	});
