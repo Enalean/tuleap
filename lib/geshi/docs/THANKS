@@ -54,8 +54,9 @@ PEOPE WHO MADE LANGUAGE FILES
 - Apt sources.list       Milian Wolff
 - ASM                    Tux
 - ASP                    Amit Gupta
+- Autoconf               Mihai Vasilian
 - AutoHotkey             Naveen Garg
-- AutoIT                 mastrboy
+- AutoIt                 mastrboy
 - AviSynth               Ryan Jones
 - Awk                    George Pollard
 - Bash                   Andreas Gohr
@@ -65,13 +66,14 @@ PEOPE WHO MADE LANGUAGE FILES
 - BNF                    Rowan Rodrik van der Molen
 - Boo                    Marcus Griep
 - Brainfuck \ Brainfork  Benny Baumann
+- C for Macs             M. Uli Kusterer
+- C#                     Alan Juden
 - C++                    Dennis Bayer, M. Uli Kusterer
 - C++/QT                 Iulian M
-- C#                     Alan Juden
-- C for Macs             M. Uli Kusterer
 - CADDCL                 Roberto Rossi
 - CadLisp                Roberto Rossi
 - CDFG                   John Horigan
+- ChaiScript             Jason Turner, Jonathan Turner
 - CIL                    Marcus Griep
 - Clojure                Jess Johnson
 - CMake                  Daniel Nelson
@@ -83,26 +85,32 @@ PEOPE WHO MADE LANGUAGE FILES
 - Delphi                 Járja Norbert, Benny Baumann
 - Div                    Gabriel Lorenzo
 - DOS                    Alessandro Staltari
+- ECMAScript             Michel Mariani
 - Eiffel                 Zoran Simic
 - eMail \ mbox           Benny Baumann
 - Erlang                 Benny Baumann, Dan Forest-Barbier, Uwe Dauernheim
 - F#                     Julien Ortin
-- FreeBasic              Roberto Rossi
 - FO (abas-ERP)          Tan-Vinh Nguyen
 - Fortran                Cedric Arrabie
+- FreeBasic              Roberto Rossi
 - GADV 4CS               Jason Curl
 - GAMBAS                 Jesus Guardon
-- glSlang                Benny Baumann
+- Genie                  Nicolas Joseph
 - Gettext                Milian Wolff
+- glSlang                Benny Baumann
+- GML                    José Jorge Enríquez Rodríguez
 - GNU make               Neil Bird
 - Gnuplot                Milian Wolff
-- GML                    José Jorge Enríquez Rodríguez
 - Groovy                 Ivan F. Villanueva B.
+- GwBasic                José Gabriel Moya Yangüela
 - Haskell                Dagit
+- HicEst                 Georg Petrich
 - HQ9+                   Benny Baumann
+- Icon                   Matt Oates
 - Ini                    Deguix
 - Inno                   Thomas Klinger
 - INTERCAL               Benny Baumann
+- J                      Ric Sherlock
 - Java 5                 Clemens Bruckmann
 - Javascript             Ben Keen
 - jQuery                 Rob Loach
@@ -118,8 +126,10 @@ PEOPE WHO MADE LANGUAGE FILES
 - LSL2                   William Fry
 - Lua                    Roberto Rossi
 - m86k                   Benny Baumann
+- MagikSF                Sjoerd van Leent
 - MapBasic               Tomasz Berus
 - mIRC                   Alberto de Areba Sánchez
+- Modula 2               Benjamin Kowarsch
 - Modula-3               Martin Bishop
 - MPASM                  Bakalex
 - MXML                   David Spurr
@@ -130,16 +140,21 @@ PEOPE WHO MADE LANGUAGE FILES
 - Objective C            M. Uli Kusterer
 - Ocaml                  Flaie
 - Ocaml-brief            Flaie
+- OpenBSD Packet Filter  David Berard
 - OpenOffice.org BASIC   Roberto Rossi
 - Oracle 8               Guy Wicks
 - Oracle 11i             Simon Redhead
+- Oxygene (Delphi Prism) Carlo Kok
+- Oz                     Wolfgang Meyer
 - Pascal                 Tux
+- PCRE                   Benny Baumann
 - Perl                   Andreas Gohr, Ben Keen
 - Perl6                  Kodi Arfer
 - PIC16xxx assembler     Phil Mattison
 - Pike                   Rick E.
 - Pixel Bender           Richard Olsson
 - PL/SQL                 Victor Engmark
+- PostgreSQL             Christophe Chauvet
 - POV-Ray                Carl Fürstenberg
 - PowerBuilder           Doug Porter
 - PowerShell             Frode Aarebrot
@@ -149,26 +164,30 @@ PEOPE WHO MADE LANGUAGE FILES
 - ProvideX               Jeff Wilder
 - PureBasic              Gustavo Julio Fiorenza
 - Python                 Roberto Rossi
+- q/kdb+                 Ian Roddis
 - R / S+                 Ron Fredericks
 - Rails                  Moises Deniz
 - Rebol                  Lecanu Guillaume
 - Reg                    SmokingRope
 - Robots                 Christian Lescuyer
+- RPM Specification File Paul Grinberg
 - Ruby                   Amit Gupta, Moises Deniz
 - SAS                    Galen Johnson
-- SDLBasic               Roberto Rossi
 - Scheme                 Jon Raphaelson
 - SciLab                 Christophe David
+- SDLBasic               Roberto Rossi
 - Smalltalk              Bananeweizen
 - Smarty                 Alan Juden
 - SystemVerilog          Sean O'Boyle
-- T-SQL                  Duncan Lock
+- TCL                    Reid van Melle
 - TeraTerm               Boris Maisuradze
 - Text                   SmokingRope
-- TCL                    Reid van Melle
 - thinBasic              Eros Olmi
+- T-SQL                  Duncan Lock
 - TypoScript             Jan-Philipp Halle
+- Unicon                 Matt Oates
 - Uno IDL                Cedric Bosdonnat
+- Vala                   Nicolas Joseph
 - VB                     Roberto Rossi
 - VB.NET                 Alan Juden
 - Verilog                Günter Dannoritzer
@@ -179,6 +198,7 @@ PEOPE WHO MADE LANGUAGE FILES
 - Whois \ RPSL format    Benny Baumann
 - Winbatch               Craig Storey
 - X++                    Simon Butcher
+- XBasic                 José Gabriel Moya Yangüela
 - Xorg config            Milian Wolff
 - Z80 Assembler          Benny Baumann
 
