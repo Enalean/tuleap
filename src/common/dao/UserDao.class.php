@@ -705,6 +705,7 @@ class UserDao extends DataAccessObject {
         $res = db_query($sql);
         return array('users' => $res, 'numrows' => $this->foundRows());
     }
+
     /**
      * Return the access information for a given user
      * 

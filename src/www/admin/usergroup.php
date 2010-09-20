@@ -291,7 +291,7 @@ echo html_build_select_box_from_arrays($unixStatusVals, $unixStatusTxts, 'form_u
 
 <tr><td>
 <?php 
-$userInfo = $um->getUserAccessInfo($user_id);
+$userInfo = $um->getUserAccessInfo($user);
 echo $Language->getText('admin_usergroup', 'last_access_date');
 ?>:
 </td><td>

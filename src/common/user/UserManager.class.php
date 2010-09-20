@@ -302,12 +302,13 @@ class UserManager {
     }
 
     /**
-     * Return the user acess information for the current user 
+     * Return the user acess information for a given user 
+     * 
+     * @param User $user
      * 
      * @return Array
      */
-    function getUserAccessInfo() {
-        $user = $this->getCurrentUser();
+    function getUserAccessInfo($user) {
         return $this->getDao()->getUserAccessInfo($user->getId());
     }
 
