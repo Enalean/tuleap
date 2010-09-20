@@ -21,7 +21,7 @@ my_header(array('title'=>$Language->getText('account_options', 'title')));
 $purifier =& Codendi_HTMLPurifier::instance();
 
 // get global user vars
-$user    = $um->getUserById($um->getCurrentUser());
+$user = $um->getUserById($um->getCurrentUser()->getId());
 
 ?>
 <p><?php echo $Language->getText('account_options', 'welcome'); ?>,
