@@ -138,8 +138,7 @@ class GitPlugin extends Plugin {
      */
     function plugin_statistics_disk_usage_collect_project($params) {
         $row  = $params['project_row'];
-        //$root = $this->getPluginInfo()->getPropertyValueForName('docman_root');
-        $root = '/local/vm16/codev/servers/ldap-4.0'.'/var/lib/codendi/gitroot';
+        $root = '/var/lib/codendi/gitroot';
         $path = $root.'/'.strtolower($row['unix_group_name']);
         $params['DiskUsageManager']->storeForGroup($row['group_id'], 'plugin_git', $path);
     }
