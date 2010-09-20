@@ -1953,16 +1953,27 @@ CREATE TABLE user (
   theme varchar(50),
   language_id VARCHAR( 17 ) NOT NULL DEFAULT 'en_US',
   last_pwd_update int(11) NOT NULL default '0',
-  last_access_date int(11) NOT NULL default '0',
   expiry_date int(11),
-  prev_auth_success INT(11) NOT NULL DEFAULT 0,
-  last_auth_success INT(11) NOT NULL DEFAULT 0,
-  last_auth_failure INT(11) NOT NULL DEFAULT 0,
-  nb_auth_failure INT(11) NOT NULL DEFAULT 0,
   PRIMARY KEY  (user_id),
   INDEX idx_user_name(user_name(10)),
   KEY idx_user_user (status)
 );
+
+
+#
+# Table structure for table 'user_access'
+#
+
+CREATE TABLE user_access (
+  user_id int(11) NOT NULL DEFAULT "0",
+  last_access_date int(11) NOT NULL DEFAULT 0,
+  prev_auth_success INT(11) NOT NULL DEFAULT 0,
+  last_auth_success INT(11) NOT NULL DEFAULT 0,
+  last_auth_failure INT(11) NOT NULL DEFAULT 0,
+  nb_auth_failure INT(11) NOT NULL DEFAULT 0,
+  PRIMARY KEY  (user_id)
+);
+
 
 #
 # Table structure for table 'user_bookmarks'

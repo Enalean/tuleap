@@ -11,6 +11,7 @@ Version 4.0.13 - (Not released yet)
         backlog #97573 : After a document is moved, Codex shows a blank page
         backlog #107125: Error stack trace may disclose credentials 
         backlog #99967 : Issue in tracker creation when shortname contains '_'
+        backlog #106110: Reduce load on user table 
 
 Version 4.0.12 - Tuesday, 14th September(Just to fix a bug regression)
         == Bugfix==

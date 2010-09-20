@@ -105,7 +105,7 @@ sub session_set {
 sub session_store_access {
   my ($uid) = @_;
 
-  my $sth = $dbh->prepare("SELECT last_access_date FROM user WHERE user_id='$uid'");
+  my $sth = $dbh->prepare("SELECT last_access_date FROM user_access WHERE user_id='$uid'");
   $sth->execute();
   $hash_ref = $sth->fetchrow_hashref; 
 
@@ -114,7 +114,7 @@ sub session_store_access {
     $current_date=time();
     # Don't log access if already accessed in the past 6 hours (scalability+privacy)
     if (abs($current_date - $hash_ref->{'last_access_date'}) > 21600) {
-      $upd_query="UPDATE user SET last_access_date='".$current_date."' WHERE user_id='$uid'";
+      $upd_query="UPDATE user_access SET last_access_date='".$current_date."' WHERE user_id='$uid'";
       $d = $dbh->prepare($upd_query);
       $d->execute();
     }

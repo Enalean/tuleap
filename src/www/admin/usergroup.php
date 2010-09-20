@@ -292,9 +292,12 @@ echo html_build_select_box_from_arrays($unixStatusVals, $unixStatusTxts, 'form_u
 <tr><td colspan="2"><strong><?php echo $Language->getText('admin_usergroup','account_details'); ?></strong></td></tr>
 
 <tr><td>
-<?php echo $Language->getText('admin_usergroup', 'last_access_date'); ?>:
+<?php 
+$userInfo = $um->getUserAccessInfo($user);
+echo $Language->getText('admin_usergroup', 'last_access_date');
+?>:
 </td><td>
-<?php echo  '<span title="'. format_date($GLOBALS['Language']->getText('system', 'datefmt'), $user->getLastAccessDate()) .'">'.  $hp->purify(util_time_ago_in_words($user->getLastAccessDate()), CODENDI_PURIFIER_CONVERT_HTML)  .'</span>';?>
+<?php echo  '<span title="'. format_date($GLOBALS['Language']->getText('system', 'datefmt'), $userInfo['last_access_date']) .'">'.  $hp->purify(util_time_ago_in_words($userInfo['last_access_date']), CODENDI_PURIFIER_CONVERT_HTML)  .'</span>';?>
 </td></tr>
 
 <tr><td>
@@ -306,25 +309,25 @@ echo html_build_select_box_from_arrays($unixStatusVals, $unixStatusTxts, 'form_u
 <tr><td>
 <?php echo $Language->getText('account_options', 'auth_attempt_last_success'); ?>
 </td><td>
-<?php echo  '<span title="'. format_date($GLOBALS['Language']->getText('system', 'datefmt'), $user->getLastAuthSuccess()) .'">'.  $hp->purify(util_time_ago_in_words($user->getLastAuthSuccess()), CODENDI_PURIFIER_CONVERT_HTML)  .'</span>';?>
+<?php echo  '<span title="'. format_date($GLOBALS['Language']->getText('system', 'datefmt'), $userInfo['last_auth_success']) .'">'.  $hp->purify(util_time_ago_in_words($userInfo['last_auth_success']), CODENDI_PURIFIER_CONVERT_HTML)  .'</span>';?>
 </td></tr>
 
 <tr><td>
 <?php echo $Language->getText('account_options', 'auth_attempt_last_failure'); ?>
 </td><td>
-<?php echo  '<span title="'. format_date($GLOBALS['Language']->getText('system', 'datefmt'), $user->getLastAuthFailure()) .'">'.  $hp->purify(util_time_ago_in_words($user->getLastAuthFailure()), CODENDI_PURIFIER_CONVERT_HTML)  .'</span>';?>
+<?php echo  '<span title="'. format_date($GLOBALS['Language']->getText('system', 'datefmt'), $userInfo['last_auth_failure']) .'">'.  $hp->purify(util_time_ago_in_words($userInfo['last_auth_failure']), CODENDI_PURIFIER_CONVERT_HTML)  .'</span>';?>
 </td></tr>
 
 <tr><td>
 <?php echo $Language->getText('account_options', 'auth_attempt_nb_failure'); ?>
 </td><td>
-<?php echo format_date($GLOBALS['Language']->getText('system', 'datefmt'), $user->getNbAuthFailure()); ?>
+<?php echo format_date($GLOBALS['Language']->getText('system', 'datefmt'), $userInfo['nb_auth_failure']); ?>
 </td></tr>
 
 <tr><td>
 <?php echo $Language->getText('account_options', 'auth_attempt_prev_success'); ?>
 </td><td>
-<?php echo  '<span title="'. format_date($GLOBALS['Language']->getText('system', 'datefmt'), $user->getPreviousAuthSuccess()) .'">'.  $hp->purify(util_time_ago_in_words($user->getPreviousAuthSuccess()), CODENDI_PURIFIER_CONVERT_HTML)  .'</span>';?>
+<?php echo  '<span title="'. format_date($GLOBALS['Language']->getText('system', 'datefmt'), $userInfo['last_auth_success']) .'">'.  $hp->purify(util_time_ago_in_words($userInfo['last_auth_success']), CODENDI_PURIFIER_CONVERT_HTML)  .'</span>';?>
 </td></tr>
 
 <tr><td>

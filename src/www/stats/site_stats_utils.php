@@ -520,7 +520,7 @@ function stats_getusers() {
 function stats_getactiveusers($since) {
 	$time_totest=time()-$since;
 	
-    $res_count = db_query("SELECT count(*) AS count FROM user WHERE last_access_date> $time_totest ");
+    $res_count = db_query("SELECT count(*) AS count FROM user_access WHERE last_access_date> $time_totest ");
     
     if (db_numrows($res_count) > 0) {
         $row_count = db_fetch_array($res_count);

@@ -264,9 +264,10 @@ class UserManager {
                         $this->getDao()->deleteAllUserSessions($this->_currentuser->getId());
                         $this->_currentuser = null;
                     } else {
+                        $accessInfo = $this->getUserAccessInfo($this->_currentuser);
                         $this->_currentuser->setSessionHash($session_hash);
                         $now = $_SERVER['REQUEST_TIME'];
-                        $break_time = $now - $this->_currentuser->getLastAccessDate();
+                        $break_time = $now - $accessInfo['last_access_date'];
                         //if the access is not later than 6 hours, it is not necessary to log it
                         if ($break_time > 21600){
                             $this->getDao()->storeLastAccessDate($this->_currentuser->getId(), $now);
@@ -299,7 +300,18 @@ class UserManager {
             $this->_getCookieManager()->removeCookie('session_hash');
         }
     }
-    
+
+    /**
+     * Return the user acess information for a given user 
+     * 
+     * @param User $user
+     * 
+     * @return Array
+     */
+    function getUserAccessInfo($user) {
+        return $this->getDao()->getUserAccessInfo($user->getId());
+    }
+
     /**
      * Login the user
      * @param $name string The login name submitted by the user
@@ -339,6 +351,8 @@ class UserManager {
                         $em->processEvent('session_after_login', $params);
                     }
                 }
+                //We retrieve the user access information  to test on it
+                $accessInfo = $this->getUserAccessInfo($this->_currentuser);
                 if ($auth_success) {
                     $allowed = false;
                     //Check the status
@@ -417,14 +431,14 @@ class UserManager {
                             // error. Moreover, in case of errors, messages are displayed as warning
                             // instead of info.
                             $level = 'info';
-                            if($this->_currentuser->getNbAuthFailure() > 0) {
+                            if($accessInfo['nb_auth_failure'] > 0) {
                                 $level = 'warning';
-                                $GLOBALS['Response']->addFeedback($level, $GLOBALS['Language']->getText('include_menu', 'auth_last_failure').' '.format_date($GLOBALS['Language']->getText('system', 'datefmt'), $this->_currentuser->getLastAuthFailure()));
-                                $GLOBALS['Response']->addFeedback($level, $GLOBALS['Language']->getText('include_menu', 'auth_nb_failure').' '.$this->_currentuser->getNbAuthFailure());
+                                $GLOBALS['Response']->addFeedback($level, $GLOBALS['Language']->getText('include_menu', 'auth_last_failure').' '.format_date($GLOBALS['Language']->getText('system', 'datefmt'), $accessInfo['last_auth_failure']));
+                                $GLOBALS['Response']->addFeedback($level, $GLOBALS['Language']->getText('include_menu', 'auth_nb_failure').' '.$accessInfo['nb_auth_failure']);
                             }
                             // Display nothing if no previous record.
-                            if($this->_currentuser->getPreviousAuthSuccess() > 0) {
-                                $GLOBALS['Response']->addFeedback($level, $GLOBALS['Language']->getText('include_menu', 'auth_prev_success').' '.format_date($GLOBALS['Language']->getText('system', 'datefmt'), $this->_currentuser->getPreviousAuthSuccess()));
+                            if($accessInfo['last_auth_success'] > 0) {
+                                $GLOBALS['Response']->addFeedback($level, $GLOBALS['Language']->getText('include_menu', 'auth_prev_success').' '.format_date($GLOBALS['Language']->getText('system', 'datefmt'), $accessInfo['last_auth_success']));
                             }
                         }
                     }
@@ -434,7 +448,7 @@ class UserManager {
                     $this->getDao()->storeLoginFailure($name, $now);
                     //Add a delay when use login fail.
                     //The delay is 2 sec/nb of bad attempt.
-                    sleep(2 * $this->_currentuser->getNbAuthFailure());
+                    sleep(2 * $accessInfo['nb_auth_failure']);
                 }
             }
         }
