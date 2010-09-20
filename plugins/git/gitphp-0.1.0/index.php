@@ -48,7 +48,10 @@
  require_once($gitphp_conf['smarty_prefix'] . "Smarty.class.php");
  $tpl = new Smarty;
  $tpl->template_dir = dirname(__FILE__).'/templates';
- $tpl->compile_dir  = dirname(__FILE__).'/templates_c';
+ $tpl->compile_dir  = $gitphp_conf['smarty_compile_dir'];
+ if ( !is_dir($tpl->compile_dir) ) {
+     mkdir($gitphp_conf['smarty_compile_dir'], 0755, true);
+ }
  
  if ((!isset($_GET['a'])) || (
      	($_GET['a'] != "commitdiff_plain") &&

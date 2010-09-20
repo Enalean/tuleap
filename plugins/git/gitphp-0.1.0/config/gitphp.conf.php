@@ -9,6 +9,11 @@ global $gitphp_conf;
  *  Copyright (C) 2006 Christopher Han <xiphux@gmail.com>
  */
 
+/**
+ * NOTICE : gitphp index.php file creates the directory if it does not exist
+ */
+$gitphp_conf['smarty_compile_dir'] = $GLOBALS['codendi_cache_dir'].'/smarty/templates_c';
+
 /*
  * stylesheet
  * Path to page stylesheet
