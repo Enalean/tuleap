@@ -35,15 +35,14 @@ fi
 
 #Plugin dependencies rpms
 echo " -> Removing installed dependencies if any ..."
-rpm -e --allmatches geshi 
-rpm -e --allmatches php-Smarty
+rpm -e --allmatches geshi php-Smarty 2>&1 | grep -v "error"
 echo " -> Installing plugin dependencies RPM ..."
 rpm -Uvh `getNewestPackageDir geshi`/noarch/geshi*.rpm 
 rpm -Uvh `getNewestPackageDir php-Smarty`/noarch/php-Smarty*.rpm 
 
 #Git rpms
 echo "  -> Removing installed Git if any ..."
-rpm -e --allmatches git perl-Git perl-Error 
+rpm -e --allmatches git perl-Git perl-Error 2>&1 | grep -v "error"
 echo "  -> Installing Git plugin RPM ..."
 rpm -Uvh `getNewestPackageDir git`/noarch/*.rpm
 dieOnError 'Unable to install some rpms'
@@ -73,6 +72,8 @@ if [ ! -L '/gitroot'  ];then
    ln -s $GITROOT_DIR /gitroot
 fi
 
-chmod -R u+rwx $SCRIPT_DIR/../gitphp/templates_c
+mkdir -p /var/tmp/codendi_cache/smarty/{templates_c,cache}
+chmod -R 755 /var/tmp/codendi_cache/smarty/
+chown -R codendiadm:codendiadm /var/tmp/codendi_cache/smarty/
 
 exit 0

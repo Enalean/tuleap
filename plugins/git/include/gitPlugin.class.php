@@ -41,6 +41,10 @@ class GitPlugin extends Plugin {
         $this->_addHook('SystemEvent_PROJECT_IS_PRIVATE', 'changeProjectRepositoriesAccess', false);
         $this->_addHook('SystemEvent_PROJECT_RENAME', 'systemEventProjectRename', false);
         $this->_addHook('file_exists_in_data_dir',    'file_exists_in_data_dir',  false);
+
+        // Stats plugin
+        $this->_addHook('plugin_statistics_disk_usage_collect_project', 'plugin_statistics_disk_usage_collect_project', false);
+        $this->_addHook('plugin_statistics_disk_usage_service_label',   'plugin_statistics_disk_usage_service_label',   false);
     }
 
     public function getPluginInfo() {
@@ -125,6 +129,27 @@ class GitPlugin extends Plugin {
         require_once('Git.class.php');
         $controler = new Git($this);
         $controler->process();
+    }
+    
+    /**
+     * Hook to collect docman disk size usage per project
+     *
+     * @param array $params
+     */
+    function plugin_statistics_disk_usage_collect_project($params) {
+        $row  = $params['project_row'];
+        $root = '/var/lib/codendi/gitroot';
+        $path = $root.'/'.strtolower($row['unix_group_name']);
+        $params['DiskUsageManager']->storeForGroup($row['group_id'], 'plugin_git', $path);
+    }
+
+    /**
+     * Hook to list docman in the list of serices managed by disk stats
+     * 
+     * @param array $params
+     */
+    function plugin_statistics_disk_usage_service_label($params) {
+        $params['services']['plugin_git'] = 'Git';
     }
 }
 
