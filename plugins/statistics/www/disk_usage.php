@@ -53,7 +53,7 @@ $vStartDate->required();
 if ($request->valid($vStartDate)) {
     $startDate = $request->get('start_date');
 } else {
-    $startDate = date('Y-m-d', strtotime('-3 month'));
+    $startDate = date('Y-m-d', strtotime('-1 week'));
 }
 
 $vEndDate = new Valid('end_date');
@@ -262,58 +262,75 @@ switch ($func) {
         break;
 
     case 'show_one_project':
-        echo '<h2>'.$GLOBALS['Language']->getText('plugin_statistics_show_service', 'usage_per_service').'</h2>';
-        $duHtml->getDataPerService($groupId);
+        $project = ProjectManager::instance()->getProject($groupId);
 
         // Prepare params
-        $selected = array();
         $urlParam    = '';
         $first    = true;
         foreach ($selectedServices as $serv) {
             if ($first != true) {
                 $urlParam .= '&';
             }
-            $urlParam           .= 'services[]='.$serv;
-            $selected[$serv] = true;
-            $first           = false;
+            $urlParam .= 'services[]='.$serv;
+            $first     = false;
         }
-        
-        echo '<h2>'.$GLOBALS['Language']->getText('plugin_statistics_show_service', 'service_growth').'</h2>';
-        
+
+        echo '<h2>'.$GLOBALS['Language']->getText('plugin_statistics_show_service', 'service_growth').' ('.$project->getPublicName().')</h2>';
+
         echo '<form name="progress_by_project" method="get" action="?">';
         echo '<input type="hidden" name="func" value="show_one_project" />';
-        echo '<label> Project: </label>';
-        echo '<input type="text" name="group_id" id="plugin_statistics_project" value="'.$groupId.'" />';
-        echo '<br></br>';
-       
+        echo '<label>Project: </label>';
+        echo '<input type="text" name="group_id" id="plugin_statistics_project" value="'.$groupId.'" size="4" />';
+        echo ' <a href="/admin/groupedit.php?group_id='.$groupId.'">'.$project->getPublicName().' ('.$project->getUnixName().')</a><br/>';
 
+        echo '<table>';
+        echo '<tr>';
+        echo '<th>Services</th>';
+        echo '<th>Group by</th>';
+        echo '<th>Start date</th>';
+        echo '<th>End date</th>';
+        echo '<th>Options</th>';
+        echo '</tr>';
+        
+        echo '<tr>';
+
+        $services = array();
         foreach ($duMgr->getProjectServices() as $service => $label) {
-            $sel = '';
-            if (isset($selected[$service])) {
-                $sel = ' checked="checked"';
-            }
-            echo '<input type="checkbox" name="services[]" value="'.$service.'"'.$sel.'/>'.$label.'<br/>';
+            $services[] = array('value' => $service, 'text' => $label);
         }
-        echo '<label>Group by:</label>';
+        echo '<td valign="top">';
+        echo html_build_multiple_select_box_from_array($services, 'services[]', $selectedServices, '6', false, '', false, '', false, '', false).' ';
+        echo '</td>';
+
+        echo '<td valign="top">';
         echo html_build_select_box_from_array($groupByDate, 'group_by', $selectedGroupByDate, 1).'<br />';
+        echo '</td>';
 
-        echo '<label>Start: </label>';
+        echo '<td valign="top">';
         list($timestamp,) = util_date_to_unixtime($startDate);
-        echo (html_field_date('start_date', $startDate, false, 10, 10, 'progress_by_project', false)).'&nbsp;<em>'.util_time_ago_in_words($timestamp).'</em><br />';
+        echo (html_field_date('start_date', $startDate, false, 10, 10, 'progress_by_project', false)).'<br /><em>'.util_time_ago_in_words($timestamp).'</em><br />';
+        echo '</td>';
 
-        echo '<label>End: </label>';
+        echo '<td valign="top">';
         list($timestamp,) = util_date_to_unixtime($endDate);
-        echo (html_field_date('end_date', $endDate, false, 10, 10, 'progress_by_project', false)).'&nbsp;<em>'.util_time_ago_in_words($timestamp).'</em><br />';
+        echo (html_field_date('end_date', $endDate, false, 10, 10, 'progress_by_project', false)).'<br /><em>'.util_time_ago_in_words($timestamp).'</em><br />';
+        echo '</td>';
 
         $sel = '';
         if ($relative) {
             $sel = ' checked="checked"';
             $urlParam .= '&relative=true';
         }
-        echo '<input type="checkbox" name="relative" value="true" '.$sel.'/>';
-        echo '<label>Relative Y-axis (depend of data set values):</label><br/>';
+        echo '<td valign="top">';
+        echo '<input type="checkbox" name="relative" value="true" '.$sel.' id="statistics_graph_relative" />';
+        echo '<label for="statistics_graph_relative">Relative Y-axis (depend of data set values)</label><br/>';
+        echo '</td>';
+
+        echo '</tr>';
+        echo '</table>';
         
         echo '<input type="submit" value="'.$GLOBALS['Language']->getText('global', 'btn_submit').'"/>';
+
         echo '</form>';
 
         $urlParam .= '&start_date='.$startDate.'&end_date='.$endDate;
