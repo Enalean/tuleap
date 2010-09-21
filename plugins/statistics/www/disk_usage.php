@@ -466,8 +466,4 @@ switch ($func) {
 
 $GLOBALS['HTML']->footer(array());
 
-//
-// Display functions
-//
-
 ?>
