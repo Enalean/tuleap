@@ -92,7 +92,6 @@ class WebDAVRootTest extends UnitTestCase {
         $user->setReturnValue('isAnonymous', true);
 
         $webDAVProject = new MockWebDAVProject();
-        $webDAVProject->setReturnValue('usesFile', true);
 
         $webDAVRoot->setReturnValue('getUser', $user);
         $webDAVRoot->setReturnValue('getWebDAVProject', $webDAVProject);
@@ -111,7 +110,6 @@ class WebDAVRootTest extends UnitTestCase {
         $user->setReturnValue('isAnonymous', true);
 
         $webDAVProject = new MockWebDAVProject();
-        $webDAVProject->setReturnValue('usesFile', true);
 
         $webDAVRoot->setReturnValue('getUser', $user);
         $webDAVRoot->setReturnValue('getWebDAVProject', $webDAVProject);
@@ -146,7 +144,6 @@ class WebDAVRootTest extends UnitTestCase {
         $user->setReturnValue('isAnonymous', false);
 
         $webDAVProject = new MockWebDAVProject();
-        $webDAVProject->setReturnValue('usesFile', true);
 
         $webDAVRoot->setReturnValue('getUser', $user);
         $webDAVRoot->setReturnValue('getWebDAVProject', $webDAVProject);
@@ -166,7 +163,6 @@ class WebDAVRootTest extends UnitTestCase {
         $user->setReturnValue('isAnonymous', false);
 
         $webDAVProject = new MockWebDAVProject();
-        $webDAVProject->setReturnValue('usesFile', true);
 
         $webDAVRoot->setReturnValue('getUser', $user);
         $webDAVRoot->setReturnValue('getWebDAVProject', $webDAVProject);
@@ -211,7 +207,7 @@ class WebDAVRootTest extends UnitTestCase {
     }
 
     /**
-     * Testing when the package is not active
+     * Testing when the project is not active
      */
     function testGetChildFailWithNotActive() {
 
@@ -231,7 +227,7 @@ class WebDAVRootTest extends UnitTestCase {
     }
 
     /**
-     * Testing when the user can't read the package
+     * Testing when the user can't access the project
      */
     function testGetChildFailWithUserCanNotRead() {
 
@@ -250,31 +246,9 @@ class WebDAVRootTest extends UnitTestCase {
         $webDAVRoot->getChild($project->getName());
 
     }
-    
-    /**
-     * Testing when the project have no file release activated
-     */
-    function testGetChildFailWithNoFRSActivated() {
-
-        $webDAVRoot = new WebDAVRootTestVersion($this);
-
-        $webDAVRoot->setReturnValue('isWebDAVAllowedForProject', true);
-        $project = new MockWebDAVProject();
-        $project->setReturnValue('exist', true);
-        $project->setReturnValue('isActive', true);
-        $project->setReturnValue('userCanRead', true);
-        $project->setReturnValue('usesFile', false);
-
-        $webDAVRoot->setReturnValue('getWebDAVProject', $project);
-
-        $this->expectException('Sabre_DAV_Exception_Forbidden');
-
-        $webDAVRoot->getChild($project->getName());
-
-    }
 
     /**
-     * Testing when the package exist, is active and user can read
+     * Testing when the project exist, is active and user can read
      */
     function testSucceedGetChild() {
 
@@ -289,7 +263,6 @@ class WebDAVRootTest extends UnitTestCase {
         $webDAVRoot->setReturnValue('getUser', $user);
 
         $project->setReturnValue('userCanRead', true);
-        $project->setReturnValue('usesFile', true);
 
         $webDAVRoot->setReturnValue('getWebDAVProject', $project);
 

@@ -218,19 +218,7 @@ class BrowserPlugin extends Sabre_DAV_Browser_Plugin {
         $node = $this->server->tree->getNodeForPath($path);
         $class = get_class($node);
 
-        switch ($class) {
-            case 'WebDAVRoot':
-                $params = array ('title' => 'WebDAV');
-                break;
-            case 'WebDAVProject':
-                $params = array ('title' => 'WebDAV' ,'group' => $node->getGroupId());
-                break;
-            default:
-                $params = array ('title' => 'WebDAV' ,'group' => $node->getProject()->getGroupId());
-                break;
-        }
-
-        //site_header($params);
+        echo $GLOBALS['HTML']->pv_header(array('title'=>' WebDAV : '.$node->getName()));
 
         ob_start();
 
@@ -240,7 +228,7 @@ class BrowserPlugin extends Sabre_DAV_Browser_Plugin {
 
         echo "<table>
         <tr><th>Name</th><th>Type</th>";
-        if ($class == 'WebDAVProject' && $node->userCanWrite()) {
+        if ($class == 'WebDAVFRS' && $node->userCanWrite()) {
             echo "<th>Delete</th><th>Rename</th>";
         }
         if ($class == 'WebDAVFRSPackage') {
@@ -298,7 +286,7 @@ class BrowserPlugin extends Sabre_DAV_Browser_Plugin {
 
             echo str_replace("%", "%25", "<tr><td><a href=\"{$fullPath}\">{$name}</a></td>");
             echo "<td>{$type}</td>";
-            if ($class == 'WebDAVProject' && $node->userCanWrite()) {
+            if ($class == 'WebDAVFRS' && $node->userCanWrite()) {
                 $this->deleteForm($file);
                 $this->renameForm($file);
             }
@@ -328,7 +316,7 @@ class BrowserPlugin extends Sabre_DAV_Browser_Plugin {
         <tr><td>";
 
         if ($this->enablePost) {
-            if ($class == 'WebDAVProject' && $node->userCanWrite()) {
+            if ($class == 'WebDAVFRS' && $node->userCanWrite()) {
                 echo '<h4>Create new package</h4>';
                 $this->mkcolForm();
             }
@@ -350,7 +338,7 @@ class BrowserPlugin extends Sabre_DAV_Browser_Plugin {
 
         echo"</table>";
 
-        //site_footer($params);
+        echo $GLOBALS['HTML']->pv_footer(array());
 
         return ob_get_clean();
 
