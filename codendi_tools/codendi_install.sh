@@ -568,6 +568,7 @@ if [ ! -d "/var/lib/mysql/codendi" ]; then
     $MYSQL -u root $pass_opt -e "create database codendi DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci"
     $CAT <<EOF | $MYSQL -u root mysql $pass_opt
 GRANT ALL PRIVILEGES on *.* to codendiadm@localhost identified by '$codendiadm_passwd' WITH GRANT OPTION;
+REVOKE SUPER ON *.* FROM codendiadm@localhost;
 GRANT ALL PRIVILEGES on *.* to root@localhost identified by '$rt_passwd';
 FLUSH PRIVILEGES;
 EOF
