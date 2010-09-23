@@ -233,6 +233,9 @@ for my $g ( keys %svn_access ) {
 			VALUES ('$g', '$u', '$day_date','$svn_access{$g}{$u}')";
       $dbh->do($sql)|| warn "SQL error in $sql: $!";
     }
+    #Update the last_access_date in user_access table
+    $sql = "Update user_access set last_access_date = $day_begin WHERE user_id=$u AND last_acces_date < $day_begin";
+    $dbh->do($sql)|| warn "SQL error in $sql: $!";
     #print "SQL -> $sql\n";
   }
 }

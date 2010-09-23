@@ -12,7 +12,8 @@ Version 4.0.13 - (Not released yet)
         backlog #107125: Error stack trace may disclose credentials 
         backlog #99967 : Issue in tracker creation when shortname contains '_'
         backlog #106110: Reduce load on user table
-        backlog #108287: LDAP synchro must take LDAP server down into account 
+        backlog #108287: LDAP synchro must take LDAP server down into account
+        backlog #108176: Account are disabled after 3 month for people that only use SVN client 
 
 Version 4.0.12 - Tuesday, 14th September(Just to fix a bug regression)
         == Bugfix==
