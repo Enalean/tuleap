@@ -309,6 +309,11 @@ switch ($func) {
 
     case 'show_one_project':
         $project = ProjectManager::instance()->getProject($groupId);
+        if ($project && !$project->isError()) {
+            $projectName = $project->getPublicName().' ('.$project->getUnixName().')';
+        } else {
+            $projectName = '';
+        }
 
         // Prepare params
         $urlParam    = '';
@@ -321,13 +326,13 @@ switch ($func) {
             $first     = false;
         }
 
-        echo '<h2>'.$GLOBALS['Language']->getText('plugin_statistics_show_service', 'service_growth').' ('.$project->getPublicName().')</h2>';
+        echo '<h2>'.$GLOBALS['Language']->getText('plugin_statistics_show_service', 'service_growth').$projectName.'</h2>';
 
         echo '<form name="progress_by_project" method="get" action="?">';
         echo '<input type="hidden" name="func" value="show_one_project" />';
         echo '<label>Project: </label>';
         echo '<input type="text" name="group_id" id="plugin_statistics_project" value="'.$groupId.'" size="4" />';
-        echo ' <a href="/admin/groupedit.php?group_id='.$groupId.'">'.$project->getPublicName().' ('.$project->getUnixName().')</a><br/>';
+        echo ' <a href="/admin/groupedit.php?group_id='.$groupId.'">'.$projectName.'</a><br/>';
 
         echo '<table>';
         echo '<tr>';
