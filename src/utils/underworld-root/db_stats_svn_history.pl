@@ -30,24 +30,47 @@
 use DBI;
 use Time::Local;
 use POSIX qw( strftime );
-use Net::LDAP;
-use Cwd; # needed by ldap account auto create
 
 require("../include.pl");  # Include all the predefined functions
-require("../ldap.pl");
 
 &db_connect;
 
-# Load LDAP config
-my $ldapIncFile = $sys_custompluginsroot.'/ldap/etc/ldap.inc';
-&load_local_config($ldapIncFile);
-&ldap_connect;
-
-my ($logfile, $sql, $res, $temp, %groups, $group_id, $errors );
+my ($logfile, $sql, $res, $temp, %groups, $group_id, $errors, %svn_ldap_groups);
 my ($sql_del, $res_del, %users, $user_id);
 
-my $verbose = 1;
+my $verbose = 0;
 my $chronolog_basedir = $codendi_log;
+my $use_ldap = 0;
+
+# Test whether LDAP plugin is enabled or not
+my $query_plugin_ldap = "SELECT NULL FROM plugin WHERE name='ldap' AND available=1";
+my $c_plugin_ldap     = $dbh->prepare($query_plugin_ldap);
+my $res_plugin_ldap   = $c_plugin_ldap->execute();
+if ($res_plugin_ldap && ($c_plugin_ldap->rows > 0)) {
+    $use_ldap = 1;
+
+    use Net::LDAP;
+    use Cwd; # needed by ldap account auto create
+
+    require("../ldap.pl");
+
+    # Load LDAP config
+    my $ldapIncFile = $sys_custompluginsroot.'/ldap/etc/ldap.inc';
+    &load_local_config($ldapIncFile);
+    &ldap_connect;
+
+    # Cache the projects that uses LDAP to authenticate svn users instead of
+    # codex crendentials.
+    print "Caching ldap powered svn repositories.\n" if $verbose;
+    my $query_ldap = "SELECT g.group_id".
+        " FROM groups g JOIN plugin_ldap_svn_repository svnrep USING (group_id)".
+        " WHERE svnrep.ldap_auth = 1";
+    my $res_ldap = $dbh->prepare($query_ldap);
+    $res_ldap->execute();
+    while(my ($group_id) = $res_ldap->fetchrow()) {
+        $svn_ldap_groups{$group_id} = 1;
+    }
+}
 
 ##
 ## Set begin and end times (in epoch seconds) of day to be run
@@ -75,7 +98,6 @@ $day      = strftime("%d", gmtime( $day_begin ) );
 $day_date = "$year$month$day";
 
 $file = "$chronolog_basedir/$year/$month/svn_$year$month$day.log";
-#$file = '/var/log/httpd/access_log';
 
 print "Running year $year, month $month, day $day from \'$file\'\n" if $verbose;
 print "Beginning Subversion access parsing logfile \'$file\'...\n" if $verbose;			
@@ -117,23 +139,10 @@ while ( $temp = $res->fetchrow_arrayref() ) {
   $usersLdapId{${$temp}[2]} = ${$temp}[0];
 }
 
-# Cache the projects that uses LDAP to authenticate svn users instead of
-# codex crendentials.
-print "Caching ldap powered svn repositories.\n" if $verbose;
-my %svn_ldap_groups;
-my $query_ldap = "SELECT g.group_id".
-    " FROM groups g JOIN plugin_ldap_svn_repository svnrep USING (group_id)".
-    " WHERE svnrep.ldap_auth = 1";
-my $res_ldap = $dbh->prepare($query_ldap);
-$res_ldap->execute();
-while(my ($group_id) = $res_ldap->fetchrow()) {
-    $svn_ldap_groups{$group_id} = 1;
-}
-
 while (<LOGFILE>) {
   chomp($_);
 
-  $_ =~ m/^([\d\.]+)\s-\s(.+)\s\[(.+)\]\s\"\w+\s(.+)\sHTTP.+(\d\d\d)\s([\d-]+)/;
+  $_ =~ m/^([\d\.]+)\s-\s(.+)\s\[(.+)\]\s(.+)\s(\d\d\d)\s\".*\"/;
 
   $ip   = $1;
   $user = $2;
@@ -153,36 +162,37 @@ while (<LOGFILE>) {
     #print "User: $user\n";
 
     if ( $group_id == 0 ) {
-      print STDERR "$_";
-      print STDERR "db_stats_svn_history.pl: bad unix_group_name \'$group\' \n";
+      #print STDERR "$_";
+      print STDERR "db_stats_svn_history.pl: bad unix_group_name \'$group\' \n" if $verbose;
       next;
     }
     $svn_access_by_group{$group_id} += 1;
 
     if ($user ne '-') {
+
 	if(defined($svn_ldap_groups{$group_id})) {
 	    # LDAP users
 	    #print "Find Ldap user: $user\n";
 	    $ldap_id = ldap_get_ldap_id_from_login($user);
 	    if( $ldap_id == -1 ) {
-		print STDERR "$_";
-		print STDERR " db_stats_svn_history.pl: Faild to find \'$user\' in LDAP\n";
+		#print STDERR "$_";
+		print STDERR "db_stats_svn_history.pl: Faild to find \'$user\' in LDAP\n" if $verbose;
 		next;
 	    }
-        if(!defined($usersLdapId{$ldap_id})) {
-            # No user with this ldap Id, create a new account
-            $user_id = ldap_account_create_auto($ldap_id);
-        } else {
-            $user_id = $usersLdapId{$ldap_id};
-        }
+            if(!defined($usersLdapId{$ldap_id})) {
+                # No user with this ldap Id, create a new account
+                $user_id = ldap_account_create_auto($ldap_id);
+            } else {
+                $user_id = $usersLdapId{$ldap_id};
+            }
 	} else {
 	    # CodeX users
 	    $user_id = $users{$user};
 	}
 
 	if ( $user_id == 0 ) {
-	    print STDERR "$_";
-	    print STDERR "db_stats_svn_history.pl: bad user_name \'$user\' \n";
+	    #print STDERR "$_";
+	    print STDERR "db_stats_svn_history.pl: bad user_name \'$user\' \n" if $verbose;
 	    next;
 	}
 	

@@ -220,7 +220,7 @@ class LDAP {
 
         // Do a search to recover the right DN based on given login
         $lri = $this->searchLogin($login);
-        if (count($lri) === 1) {
+        if ($lri && count($lri) === 1) {
             $auth_dn = $lri->current()->getDn();
         } else {
             return false;
@@ -384,8 +384,8 @@ class LDAP {
      */
     function searchUserAsYouType($name, $sizeLimit, $validEmail=false) {
         $lri = false;
-        if($this->_connectAndBind()) {
-            $filter = '('.$this->ldapParams['cn'].'=*'.$name.'*)';
+        if($name && $this->_connectAndBind()) {
+            $filter = '('.$this->ldapParams['cn'].'='.$name.'*)';
             if($validEmail) {
                 // Only search people with a non empty mail field
                 $filter = '(&'.$filter.'('.$this->ldapParams['mail'].'=*))';

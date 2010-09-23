@@ -60,7 +60,7 @@ sub ldap_connect {
     sub ldap_account_create_auto {
         my ($ldapId) = @_;
 
-        my $codexId = 0;
+        my $codendiId = 0;
 
         my $result = $ldap->search(
             filter => "$sys_ldap_eduid=$ldapId",
@@ -80,7 +80,7 @@ sub ldap_connect {
             $email =~ s/`/\\`/g;
             $email =~ s/'/\\'/g;
             
-            my $cmd = "$codex_utils_prefix/php-launcher.sh ./registerUser.php";
+            my $cmd = "$codendi_utils_prefix/php-launcher.sh ./registerUser.php";
             my $cwd = getcwd();
             chdir("$sys_pluginsroot/ldap/bin");
             $cm = "$cmd --ldapid=$ldapId --realname=$realname --email=$email --uid=$uid";
@@ -88,12 +88,12 @@ sub ldap_connect {
             foreach my $line (@lines) {
                 chomp($line);
                 if ( $line =~ m/^ID=(.*):STATUS=(.*)$/ ) {
-                    $codexId = $1;
+                    $codendiId = $1;
                 }
             }
             chdir($cwd);
         }
-        return $codexId;
+        return $codendiId;
     }
 
     sub ldap_get_svncommitinfo_from_login {
