@@ -32,7 +32,7 @@ class Statistics_DiskUsageHtml extends Statistics_DiskUsageOutput {
         if ($row['evolution'] == 0) {
             echo '<td>-</td>';
         } else {
-            echo '<td>'.sprintf('%01.2f %%', (($row['evolution_rate'])-1)*100).'</td>';
+            echo '<td>'.sprintf('%01.2f %%', (($row['evolution_rate']))*100).'</td>';
         }
     }
     
@@ -178,6 +178,7 @@ class Statistics_DiskUsageHtml extends Statistics_DiskUsageOutput {
     public function getServiceEvolutionForPeriod($startDate , $endDate, $groupId = NULL) {
         $res = $this->_dum->returnServiceEvolutionForPeriod($startDate , $endDate, $groupId);
         if ($res) {
+            $services = $this->_dum->getProjectServices();
             echo '<table border="1">';
             echo '<thead>';
             echo '<tr>';
@@ -194,7 +195,7 @@ class Statistics_DiskUsageHtml extends Statistics_DiskUsageOutput {
             $totalEvolution = 0;
             foreach ($res as $row){
                 echo '<tr>';
-                echo '<td>'.$row['service'].'</td>';
+                echo '<td>'.$services[$row['service']].'</td>';
                 $totalStartSize  +=$row['start_size'];
                 $totalEndSize    +=$row['end_size'];
                 $totalEvolution  +=$row['evolution'];
@@ -206,7 +207,7 @@ class Statistics_DiskUsageHtml extends Statistics_DiskUsageOutput {
             echo '<td>'.$this->sizeReadable($totalStartSize).'</td>';
             echo '<td>'.$this->sizeReadable($totalEndSize).'</td>';
             echo '<td>'.$this->sizeReadable($totalEvolution).'</td>';
-            if ($totalEvolution == 0) {
+            if ($totalEvolution == 0 || $totalStartSize == 0) {
                 echo '<td>-</td>';
             } else {
                 echo '<td>'.sprintf('%01.2f %%', (($totalEndSize/$totalStartSize)-1)*100).'</td>';

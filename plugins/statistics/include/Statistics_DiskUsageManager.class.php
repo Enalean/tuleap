@@ -168,17 +168,65 @@ class Statistics_DiskUsageManager {
         }
         return false;
     }
-    
-    public function returnServiceEvolutionForPeriod($startDate , $endDate, $groupId =NULL){
-        $dao = $this->_getDao();
-        $dar = $dao->returnServiceEvolutionForPeriod($startDate , $endDate, $groupId);
-        if ($dar && !$dar->isError()) {
-            return $dar;
+
+    /**
+     * Retrieve data for the two given dates and compute some statistics
+     * 
+     * @param String  $startDate
+     * @param String  $endDate
+     * @param Integer $groupId
+     * 
+     * @return Array
+     */
+    public function returnServiceEvolutionForPeriod($startDate, $endDate, $groupId=null) {
+        // Build final array based on services (ensure always same order)
+        $values = array();
+        foreach ($this->getProjectServices() as $k => $v) {
+            $values[$k] = array('service'        => $k,
+                                'start_size'     => 0,
+                                'end_size'       => 0,
+                                'evolution'      => 0,
+                                'evolution_rate' => 0);
+             
         }
-        return false;
-        
+
+        // Start values
+        $dao = $this->_getDao();
+        $dar = $dao->searchServiceSizeStart($startDate, $groupId);
+        if ($dar && !$dar->isError()) {
+            foreach ($dar as $row) {
+                if (isset($values[$row['service']])) {
+                    $values[$row['service']]['service']    = $row['service'];
+                    $values[$row['service']]['start_size'] = $row['size'];
+                }
+            }
+        }
+
+        // End values
+        $dar = $dao->searchServiceSizeEnd($endDate, $groupId);
+        if ($dar && !$dar->isError()) {
+            foreach ($dar as $row) {
+                if (isset($values[$row['service']])) {
+                    $values[$row['service']]['service']   = $row['service'];
+                    $values[$row['service']]['end_size']  = $row['size'];
+                    if (isset($values[$row['service']]['start_size'])) {
+                        $values[$row['service']]['evolution'] = $row['size'] - $values[$row['service']]['start_size'];
+                        if ($values[$row['service']]['start_size'] != 0) {
+                            $values[$row['service']]['evolution_rate'] = ($row['size'] / $values[$row['service']]['start_size']) - 1;
+                        } else {
+                            $values[$row['service']]['evolution_rate'] = 1;
+                        }
+                    } else {
+                        $values[$row['service']]['start_size']     = 0;
+                        $values[$row['service']]['evolution']      = $row['size'];
+                        $values[$row['service']]['evolution_rate'] = 1;
+                    }
+                }
+            }
+        }
+        return $values;
     }
-    
+
     public function returnProjectWeeklyEvolution($group_id){
         $dao = $this->_getDao();
         //the Collect date

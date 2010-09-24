@@ -162,38 +162,50 @@ class Statistics_DiskUsageDao extends DataAccessObject {
                ' ORDER BY date ASC, size DESC';
         return $this->retrieve($sql);
     }
-    
+
     /**
-     * Compute evolution size of  service in a given period
-     * 
-     * @param date $startDate
-     * @param date $endDate 
-     * @param Integer $groupId = NULL 
+     * Search for services size values at a given date
+     *
+     * @param String  $dateStmt Date Statement
+     * @param Integer $groupId  To restrict to a groupId if needed
+     *
      * @return DataAccessResult
      */
-    public function returnServiceEvolutionForPeriod($startDate , $endDate, $groupId = NULL){
-        $stmColumn = '';
+    public function searchServiceSize($dateStmt, $groupId = null) {
         $stmClause = '';
-        $stmJoin   = '';
-        if ($groupId != NULL) {
-            $stmColumn =   '   start.group_id, group_name, ';
-            $stmClause =   '   AND group_id='.$this->da->escapeInt($groupId);
-            $stmJoin   =   '   LEFT JOIN groups on (start.group_id =groups.group_id) ';
-        }     
-        $sql =' SELECT  '.$stmColumn.' service, end_size, start_size, (end_size - start_size) as evolution, (end_size/start_size) as evolution_rate  
-                    FROM (SELECT group_id, service, sum(size) as start_size 
-                        FROM plugin_statistics_diskusage_group dug  WHERE '.$this->findFirstDateGreaterThan($startDate, 'plugin_statistics_diskusage_group').
-                        $stmClause.' group by service) as start 
-                        LEFT JOIN (SELECT group_id, service, sum(size) as end_size FROM plugin_statistics_diskusage_group dug 
-                        WHERE '.$this->findFirstDateLowerThan($endDate, 'plugin_statistics_diskusage_group').
-                        $stmClause.'  group by service) as end 
-                        USING (service) 
-                    LEFT JOIN groups 
-                    ON (groups.group_id = start.group_id) 
-                    Group by service 
-                    ORDER BY service DESC'; 
-    
+        if ($groupId !== null) {
+            $stmClause =   ' AND group_id='.$this->da->escapeInt($groupId);
+        }
+        $sql = 'SELECT service, sum(size) as size'.
+               ' FROM plugin_statistics_diskusage_group dug  WHERE '.$dateStmt.
+               $stmClause.' GROUP BY service';
         return $this->retrieve($sql);
+    }
+
+    /**
+     * Search for services size at the first date greater than the given one
+     *
+     * @param String  $date    Date (YYYY-MM-DD)
+     * @param Integer $groupId To restrict to a groupId if needed
+     *
+     * @return DataAccessResult
+     */
+    public function searchServiceSizeStart($date, $groupId = null) {
+        $dateStmt = $this->findFirstDateGreaterThan($date, 'plugin_statistics_diskusage_group');
+        return $this->searchServiceSize($dateStmt, $groupId);
+    }
+
+    /**
+     * Search for services size at the first date lower than the given one
+     *
+     * @param String  $date    Date (YYYY-MM-DD)
+     * @param Integer $groupId To restrict to a groupId if needed
+     *
+     * @return DataAccessResult
+     */
+    public function searchServiceSizeEnd($date, $groupId = null) {
+        $dateStmt = $this->findFirstDateLowerThan($date, 'plugin_statistics_diskusage_group');
+        return $this->searchServiceSize($dateStmt, $groupId);
     }
 
     public function searchTotalUserSize($date) {
