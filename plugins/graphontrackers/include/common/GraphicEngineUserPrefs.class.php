@@ -121,9 +121,9 @@ class graphicEngineUserPrefs {
         
 
         if ($order_by == "") {
-            $sql = "SELECT DISTINCT art.artifact_id FROM (SELECT a.artifact_id $from $where $order_by) AS art";
+            $sql = "SELECT DISTINCT art.artifact_id FROM (SELECT STRAIGHT_JOIN a.artifact_id $from $where $order_by) AS art";
         } else {
-        	$sql = "SELECT DISTINCT art.artifact_id FROM (SELECT a.artifact_id $from $where $order_by,a.artifact_id ASC) AS art";
+        	$sql = "SELECT DISTINCT art.artifact_id FROM (SELECT STRAIGHT_JOIN a.artifact_id $from $where $order_by,a.artifact_id ASC) AS art";
         }
         return $ar->_ExecuteQueryForSelectReportItems($sql);
     }
