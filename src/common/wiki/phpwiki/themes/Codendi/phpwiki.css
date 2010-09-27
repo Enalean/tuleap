@@ -45,7 +45,7 @@ caption {
 /*body {
   /* ivory #ffe #fffff0*/
   background: #fffff0;
-  font-family: Arial, Helvetica, sans-serif;
+  /* font-family: Arial, Helvetica, sans-serif; */
   font-size: 85%; /* The default is too large. But enlarge monospace below */
   margin: 1.5ex 1em;
 }*/
@@ -83,8 +83,9 @@ div.wikitext {
   /*This breaks Netscape 4: (display does not go full width).
    * width: auto;
    */
+   /*line-height: 1em;*/
   clear: both;
-  font-size: 105%;
+  /*font-size: 105%;*/
 }
 /* .interwiki-map thead td { text-decoration: underline; } */
 
@@ -124,7 +125,7 @@ form.wikiadmin div { background-color: #fee; }
 a.wikiaction, a.wikiadmin, a.wiki-rc-action, a.wikiunsafe,
 input.wikiaction, input.button, input.wikiadmin {
   text-decoration: none;
-  font-family: Arial, Helvetica, sans-serif;
+  /*font-family: Arial, Helvetica, sans-serif;*/
   /* don't wrap text buttons */
   white-space: nowrap;
   /*font-size: inherit; */
@@ -168,7 +169,7 @@ a.wikiadmin, a.wikiadmin:visited, input.wikiadmin  { background-color: #fdd; }
  * headings: Georgia
  */
 h1, h2, h3, h4, h5, h6 { 
-  font-family: Arial, Helvetica, sans-serif;
+  /*font-family: Arial, Helvetica, sans-serif;*/
   border-bottom: 1px solid rgb(226,226,226);
   /*color: #630000;*/
 }
@@ -177,8 +178,8 @@ h1, h2, h3, h4, h5, h6 {
 /**
  * Tables
  */
-table, td { font-family: Arial, Helvetica, sans-serif; }
-caption { font-family: Arial, Helvetica, sans-serif; }
+table, td { /*font-family: Arial, Helvetica, sans-serif;*/ }
+caption { /*font-family: Arial, Helvetica, sans-serif;*/ }
 .pagelist { }
 .pagelist thead td {
   background: #e8e8e8;
@@ -192,7 +193,7 @@ caption { font-family: Arial, Helvetica, sans-serif; }
 th.gridbutton {
   background-color: ThreedLightShadow;
   color: black;
-  font-family: Tahoma, sans-serif, Arial, Helvetica;
+  /*font-family: Tahoma, sans-serif, Arial, Helvetica;*/
   font-size: small;
   font-weight: normal;
   /*font-style: menu;*/
@@ -209,7 +210,7 @@ input.gridbutton, a.gridbutton, a:hover.gridbutton, a:visited.gridbutton {
   font-size: small;
   font-weight: normal;
   /*font-style: menu;*/
-  font-family: Tahoma, sans-serif, Arial, Helvetica;
+  /*font-family: Tahoma, sans-serif, Arial, Helvetica;*/
   background-color: ThreedLightShadow;
   color: black;
 }
@@ -218,7 +219,7 @@ input.gridbutton, a.gridbutton, a:hover.gridbutton, a:visited.gridbutton {
 /**
  * Toolbar
  */
-.toolbar, input.button, #signin { font-family: Arial, Helvetica, sans-serif; }
+.toolbar, input.button, #signin { /*font-family: Arial, Helvetica, sans-serif;*/ }
 
 .toolbar {
   padding: 0;
@@ -238,7 +239,7 @@ input.gridbutton, a.gridbutton, a:hover.gridbutton, a:visited.gridbutton {
   padding-bottom: 1ex; /* space for h1 */
 }
 .editdate {
-  font-family: Arial, Helvetica, sans-serif;
+  /*font-family: Arial, Helvetica, sans-serif;*/
   margin: 0;
   padding: 0;
   padding-top: 0.25ex;
@@ -367,7 +368,7 @@ li.LSRow {
   /* color: #5454ff;*/
 }
 .wiki-edithelp p {
-  font-family: Arial, Helvetica, sans-serif;
+  /*font-family: Arial, Helvetica, sans-serif;*/
   padding-left:  0.5em;
   padding-right: 0.5em;
   padding-top:    0.5ex;
@@ -644,7 +645,11 @@ span.redirectfrom {
  * Vertical margins around block elements.
  */
 
-p { margin: 1em 0; }		/* Normal ("loose") paragraphs */
+.wikitext ul {
+    margin-top: 0.5em 0;
+}
+
+p { margin: 0.5em 0; }		/* Normal ("loose") paragraphs */
 li p, dd p, td p { margin: 1ex 0; } /* Paragraphs within lists are a little tighter. */
   
 /* ul, ol, dl { margin: 0.2ex 0; }	/* A little room around lists. */
@@ -652,7 +657,7 @@ li p, dd p, td p { margin: 1ex 0; } /* Paragraphs within lists are a little tigh
 dd ul, dd ol, dd dl { margin: 0 0; } /* but not around sub-lists. */
 
 /* Normal ("loose") list elements */
-li.tightenable { margin: 1em 0; }
+li.tightenable { margin: 0.5em 0; }
 dt.tightenable { margin-top: 1em; }
 dd.tightenable { margin-bottom: 1.5ex; }
 
