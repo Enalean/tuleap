@@ -52,7 +52,11 @@ caption {
 
 div.wikitext hr { height: 1px; }
 
-div.wikitext pre { font-family: monospace; }
+div.wikitext pre { 
+    font-family: monospace;
+    background-color: ivory;
+    border: 1px #d2d2d2 solid;
+  }
 
 
 /**
@@ -66,20 +70,21 @@ div.wikitext {
   /* Netscape 4 requires this 1px border.
      Without it, the paper borders below cause
      the white background to disappear. */
-  border: 1px black solid;
+  /*border: 1px black solid;*/
   /* "paper" borders */
-  border-top:  1px #e8e6df solid;
-  border-left: 1px #e8e6df solid;
-  border-bottom: 1px #d2d2d2 solid;
-  border-right:  1px #b2b2b2 solid;
+  /*border-top:  1px #e8e6df solid;
+  border-left: 1px #e8e6df solid;*/
+  border-bottom: 1px solid rgb(226,226,226);
+  /*border-right:  1px #b2b2b2 solid;
   padding-left:  0.8em; 
   padding-right: 0.8em;
   padding-top:    0.5ex;
-  padding-bottom: 0.5ex;
+  padding-bottom: 0.5ex;*/
   /*This breaks Netscape 4: (display does not go full width).
    * width: auto;
    */
   clear: both;
+  font-size: 105%;
 }
 /* .interwiki-map thead td { text-decoration: underline; } */
 
@@ -134,7 +139,6 @@ a.wikiadmin, a.wikiadmin:visited, input.wikiadmin  { background-color: #fdd; }
 /* Unknown links */
 .wikiunknown, .named-wikiunknown {
   font-weight: normal;
-  font-size: 100%;
 }
  /* QuestionMark #600 */
 .wikiunknown a, .named-wikiunknown a {
@@ -150,7 +154,7 @@ a.wikiadmin, a.wikiadmin:visited, input.wikiadmin  { background-color: #fdd; }
   text-decoration: underline;
   color: #006;
 }
-h1 .backlinks { text-decoration: underline; }
+/*h1 .backlinks { text-decoration: underline; }*/
 
 /* Interwiki links */
 /* .wikipage  { font-weight: bold; } */
@@ -163,9 +167,11 @@ h1 .backlinks { text-decoration: underline; }
 /**
  * headings: Georgia
  */
-h1, h2, h3, h4, h5, h6 { font-family: Arial, Helvetica, sans-serif; }
-
-h1 { margin: 0; font-size: 140% }
+h1, h2, h3, h4, h5, h6 { 
+  font-family: Arial, Helvetica, sans-serif;
+  border-bottom: 1px solid rgb(226,226,226);
+  /*color: #630000;*/
+}
 
 
 /**
