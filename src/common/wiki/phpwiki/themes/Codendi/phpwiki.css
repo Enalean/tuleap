@@ -890,7 +890,7 @@ img.tex {
 }
 
 /* CreateToc plugin */
-.toc dt a.named-wiki{
+.toc a.named-wiki{
   font-weight: normal;
 }
 

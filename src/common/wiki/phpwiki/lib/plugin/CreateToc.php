@@ -224,7 +224,7 @@ extends WikiPlugin
                         $manchor = MangleXmlIdentifier($anchor);
                         $texts = $s;
                         if($counter) {
-                            $texts = $this->_getCounter($tocCounter, $level).' '.$s; 
+                            $texts = $this->_getCounter($tocCounter, $level).' - '.$s; 
                         }
                         $headers[] = array('text' => $texts, 
                                            'anchor' => $anchor, 
@@ -324,12 +324,15 @@ extends WikiPlugin
         }
         $content = $current->getContent();
         $html = HTML::div(array('class' => 'toc', 'id'=>'toc'));
-        if ($liststyle == 'dl')
+        /*if ($liststyle == 'dl')
             $list = HTML::dl(array('id'=>'toclist','class' => 'toc'));
         elseif ($liststyle == 'ul')
             $list = HTML::ul(array('id'=>'toclist','class' => 'toc'));
         elseif ($liststyle == 'ol')
             $list = HTML::ol(array('id'=>'toclist','class' => 'toc'));
+            */
+        $list = HTML::ul(array('id'=>'toclist','class' => 'toc'));
+        
         if (!strstr($headers,",")) {
             $headers = array($headers);	
         } else {
@@ -353,18 +356,33 @@ extends WikiPlugin
                                              $with_toclink, $with_counter, 
                                              $levels, $basepage)) 
         {
-            foreach ($headers as $h) {
-                // proper heading indent
-                $level = $h['level'];
-                $indent = 3 - $level;
+            $container     = $list;
+            $levelRefs     = array();
+            $previousLevel = 3;
+            foreach ($headers as $k => $h) {
+                if ($h['level'] < $previousLevel) {
+                    // h2 -> h3 (level 3 -> level 2)
+                    
+                    // Keep track of previous points
+                    $levelRefs[$previousLevel] = $container;
+                    
+                    // Create new container
+                    $ul = HTML::ul();
+                    $container->pushContent($ul);
+                    $container = $ul;
+                } elseif ($h['level'] > $previousLevel) {
+                    // h4 -> h3 (level 1 -> level 2)
+                    if (isset($levelRefs[$h['level']])) {
+                        $container = $levelRefs[$h['level']];
+                    }
+                }
+
+                $h    = $headers[$k];
                 $link = new WikiPageName($pagename,$page,$h['anchor']);
-                $li = WikiLink($link,'known',$h['text']);
-                if ($liststyle == 'dl')
-                    $list->pushContent(HTML::dt(HTML::raw
-                        (str_repeat($indentstr,$indent)),$li));
-                else
-                    $list->pushContent(HTML::li(HTML::raw
-                        (str_repeat($indentstr,$indent)),$li));
+                $li   = WikiLink($link,'known',$h['text']);
+                $container->pushContent(HTML::li($li));
+
+                $previousLevel = $h['level'];
             }
         }
 	$list->setAttr('style','display:'.($jshide?'none;':'block;'));
