@@ -290,7 +290,7 @@ class Docman_WikiController extends Docman_Controller {
                     if($dpm->userCanAccess($user, $docman_item_id)) {
                         $docman_references->pushContent(HTML::strong($GLOBALS['Language']->getText('plugin_docman', 'breadcrumbs_location') . " "));
                         $docman_references->pushContent(HTML($this->getDocumentPath($docman_item_id, $group_id)));
-                        $docman_references->pushContent(HTML::br());
+                        //$docman_references->pushContent(HTML::br());
                     }
                 }
             }
