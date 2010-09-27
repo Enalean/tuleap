@@ -64,8 +64,7 @@ div.wikitext pre {
  */
 /* Main wiki text box */
 div.wikitext {
-  margin-top:    1ex;
-  margin-bottom: 0.5ex;
+  margin:    1ex 1em 0.5ex 1em;
   background: white;
   /* Netscape 4 requires this 1px border.
      Without it, the paper borders below cause
@@ -894,6 +893,13 @@ img.tex {
 }
 
 /* CreateToc plugin */
+ul.toc {
+  background-color: rgb(246, 246, 246);
+  border: 1px solid rgb(226, 226, 226);
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
+}
+
 .toc a.named-wiki {
   font-weight: normal;
 }
