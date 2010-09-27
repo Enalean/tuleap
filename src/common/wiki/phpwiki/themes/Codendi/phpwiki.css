@@ -890,9 +890,12 @@ img.tex {
 }
 
 /* CreateToc plugin */
-.toc a.named-wiki{
+.toc a.named-wiki {
   font-weight: normal;
 }
+
+.toc li {
+  list-style: none;
 
 /* For emacs users
  *
