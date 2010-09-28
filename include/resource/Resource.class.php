@@ -43,8 +43,6 @@ class GitPHP_Resource
 	 */
 	public static function GetInstance()
 	{
-		if (!self::$instance)
-			throw new Exception('Resource provider not instantiated');
 		return self::$instance;
 	}
 

@@ -89,6 +89,14 @@ try {
 		throw $e;
 	}
 
+	if (GitPHP_Resource::GetInstance() == null) {
+		/*
+		 * In case an error was thrown before instantiating
+		 * the resource manager
+		 */
+		GitPHP_Resource::Instantiate('en_US');
+	}
+
 	require_once(GITPHP_CONTROLLERDIR . 'Controller_Message.class.php');
 	$controller = new GitPHP_Controller_Message();
 	$controller->SetParam('message', $e->getMessage());
