@@ -70,7 +70,6 @@ div.wikiaction input[type=text], div.wikiadmin input[type=text], form.wikiadmin 
  */
 
 /* Make wikiaction links look like buttons */ 
-a.wikiaction, a.wikiadmin, a.wikiunsafe,
 input.wikiaction, input.wikiadmin, input.wikiunsafe, input.button {
   color: black;
 /*

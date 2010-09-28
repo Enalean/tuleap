@@ -120,7 +120,12 @@ a.wikiaction, a.wikiaction:visited, input.wikiaction, input.button { background-
 
 .wikiunsafe { background-color: #fcc; }
 
-a.wikiadmin, a.wikiadmin:visited, input.wikiadmin  { background-color: rgb(246, 246, 246); }
+input.wikiadmin  { background-color: rgb(246, 246, 246); }
+a.wikiadmin:hover {
+    background-color: white;
+    padding-top: 0.20em;
+    padding-bottom: 0.20em;
+}
 
 /* Unknown links */
 .wikiunknown, .named-wikiunknown {
@@ -207,8 +212,10 @@ input.gridbutton, a.gridbutton, a:hover.gridbutton, a:visited.gridbutton {
 .toolbar, input.button, #signin { /*font-family: Arial, Helvetica, sans-serif;*/ }
 
 .toolbar {
+  border-top: 1px solid darkgrey;
   padding: 0;
   margin:  0;
+  background-color: rgb(226, 226, 226);
 }
 .edit-toolbar {
   padding: 0;
@@ -229,8 +236,6 @@ input.gridbutton, a.gridbutton, a:hover.gridbutton, a:visited.gridbutton {
   padding: 0;
   padding-top: 0.25ex;
   padding-bottom: 0.25ex;
-  border-top: 1px solid rgb(206,206,206);
-  border-bottom: 1px solid rgb(206,206,206); 
 }
 /*
 div#logo {
