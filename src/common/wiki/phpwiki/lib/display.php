@@ -149,7 +149,6 @@ function displayPage(&$request, $template=false) {
     if ($crossref_fact->getNbReferences() > 0) {
         $ref_html .= '<h3>'.$GLOBALS['Language']->getText('cross_ref_fact_include','references').'</h3>';
         $ref_html .= $crossref_fact->getHTMLDisplayCrossRefs();
-        //$ref_html .= '<br /><br />';
     }
 
     $additional_html = false;

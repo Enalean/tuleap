@@ -66,11 +66,9 @@ div.wikitext pre {
 div.wikitext {
   margin:    1ex 1em 0.5ex 1em;
   background: white;
-  /*This breaks Netscape 4: (display does not go full width).
-   * width: auto;
-   */
   clear: both;
   font-size: 105%;
+  text-align: justify;
 }
 /* .interwiki-map thead td { text-decoration: underline; } */
 
