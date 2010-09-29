@@ -134,25 +134,27 @@ class GitPHP_Controller_Search extends GitPHP_ControllerBase
 		$this->tpl->assign('commit', $co);
 
 		$results = array();
-		switch ($this->params['searchtype']) {
+		if ($co) {
+			switch ($this->params['searchtype']) {
 
-			case GITPHP_SEARCH_COMMIT:
-				$results = $this->project->SearchCommit($this->params['search'], $co->GetHash(), 101, ($this->params['page'] * 100));
-				break;
+				case GITPHP_SEARCH_COMMIT:
+					$results = $this->project->SearchCommit($this->params['search'], $co->GetHash(), 101, ($this->params['page'] * 100));
+					break;
 
-			case GITPHP_SEARCH_AUTHOR:
-				$results = $this->project->SearchAuthor($this->params['search'], $co->GetHash(), 101, ($this->params['page'] * 100));
-				break;
+				case GITPHP_SEARCH_AUTHOR:
+					$results = $this->project->SearchAuthor($this->params['search'], $co->GetHash(), 101, ($this->params['page'] * 100));
+					break;
 
-			case GITPHP_SEARCH_COMMITTER:
-				$results = $this->project->SearchCommitter($this->params['search'], $co->GetHash(), 101, ($this->params['page'] * 100));
-				break;
-			case GITPHP_SEARCH_FILE:
-				$results = $co->SearchFiles($this->params['search'], 101, ($this->params['page'] * 100));
-				break;
-			default:
-				throw new GitPHP_MessageException(GitPHP_Resource::GetInstance()->GetResource('Invalid search type'));
+				case GITPHP_SEARCH_COMMITTER:
+					$results = $this->project->SearchCommitter($this->params['search'], $co->GetHash(), 101, ($this->params['page'] * 100));
+					break;
+				case GITPHP_SEARCH_FILE:
+					$results = $co->SearchFiles($this->params['search'], 101, ($this->params['page'] * 100));
+					break;
+				default:
+					throw new GitPHP_MessageException(GitPHP_Resource::GetInstance()->GetResource('Invalid search type'));
 
+			}
 		}
 
 		if (count($results) < 1) {

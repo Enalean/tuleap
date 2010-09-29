@@ -8,10 +8,9 @@
 
  {include file='header.tpl'}
 
- {* Nav *}
  <div class="page_nav">
-   {$resources->GetResource('summary')} | <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=shortlog">{$resources->GetResource('shortlog')}</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=log">{$resources->GetResource('log')}</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=commit&h={$head->GetHash()}">{$resources->GetResource('commit')}</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=commitdiff&h={$head->GetHash()}">{$resources->GetResource('commitdiff')}</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=tree">{$resources->GetResource('tree')}</a>
-   <br /><br />
+ {include file='nav.tpl' commit=$head current='summary'}
+ <br /><br />
  </div>
 
  {include file='title.tpl'}
@@ -20,7 +19,9 @@
  <table cellspacing="0">
    <tr><td>{$resources->GetResource('description')}</td><td>{$project->GetDescription()}</td></tr>
    <tr><td>{$resources->GetResource('owner')}</td><td>{$project->GetOwner()}</td></tr>
+   {if $head}
    <tr><td>{$resources->GetResource('last change')}</td><td>{$head->GetCommitterEpoch()|date_format:"%a, %d %b %Y %H:%M:%S %z"}</td></tr>
+   {/if}
    {if $project->GetCloneUrl()}
      <tr><td>{$resources->GetResource('clone url')}</td><td>{$project->GetCloneUrl()}</td></tr>
    {/if}
@@ -29,7 +30,11 @@
    {/if}
  </table>
 
- {include file='title.tpl' target='shortlog'}
+ {if !$head}
+   {include file='title.tpl' target='shortlog' disablelink=true}
+ {else}
+   {include file='title.tpl' target='shortlog'}
+ {/if}
 
  {include file='shortloglist.tpl' source='summary'}
  

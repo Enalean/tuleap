@@ -538,9 +538,19 @@ class GitPHP_Project
 		if ($catCmp !== 0)
 			return $catCmp;
 
-		if ($a->GetHeadCommit()->GetAge() === $b->GetHeadCommit()->GetAge())
+		$aCommit = $a->GetHeadCommit();
+		$bCommit = $b->GetHeadCommit();
+
+		if (($aCommit == null) && ($bCommit == null))
 			return 0;
-		return ($a->GetHeadCommit()->GetAge() < $b->GetHeadCommit()->GetAge() ? -1 : 1);
+		else if ($aCommit == null)
+			return 1;
+		else if ($bCommit == null)
+			return -1;
+
+		if ($aCommit->GetAge() === $bCommit->GetAge())
+			return 0;
+		return ($aCommit->GetAge() < $bCommit->GetAge() ? -1 : 1);
 	}
 
 	/**

@@ -10,9 +10,9 @@
 
  {* Nav *}
  <div class="page_nav">
-   <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=summary">{$resources->GetResource('summary')}</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=shortlog&h={$commit->GetHash()}">{$resources->GetResource('shortlog')}</a> | {$resources->GetResource('log')} | <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=commit&h={$commit->GetHash()}">{$resources->GetResource('commit')}</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=commitdiff&h={$commit->GetHash()}">{$resources->GetResource('commitdiff')}</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=tree&h={$commit->GetHash()}&hb={$commit->GetHash()}">{$resources->GetResource('tree')}</a>
+   {include file='nav.tpl' current='log' logcommit=$commit treecommit=$commit}
    <br />
-   {if ($commit->GetHash() != $head->GetHash()) || ($page > 0)}
+   {if ($commit && $head) && (($commit->GetHash() != $head->GetHash()) || ($page > 0))}
      <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=log">{$resources->GetResource('HEAD')}</a>
    {else}
      {$resources->GetResource('HEAD')}
@@ -56,7 +56,11 @@
      <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=summary" class="title">&nbsp</a>
    </div>
    <div class="page_body">
-     Last change {$commit->GetAge()|agestring}.
+     {if $commit}
+     Last change {$commit->GetAge()|agestring}
+     {else}
+     <em>No commits</em>
+     {/if}
      <br /><br />
    </div>
  {/foreach}

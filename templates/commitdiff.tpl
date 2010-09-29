@@ -10,8 +10,12 @@
 
  {* Nav *}
  <div class="page_nav">
+   {if $commit}
    {assign var=tree value=$commit->GetTree()}
-   <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=summary">{$resources->GetResource('summary')}</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=shortlog&h={$commit->GetHash()}">{$resources->GetResource('shortlog')}</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=log&h={$commit->GetHash()}">{$resources->GetResource('log')}</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=commit&h={$commit->GetHash()}">{$resources->GetResource('commit')}</a> | {$resources->GetResource('commitdiff')} | <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=tree&h={$tree->GetHash()}&hb={$commit->GetHash()}">{$resources->GetResource('tree')}</a><br /><a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=commitdiff_plain&h={$commit->GetHash()}{if $hashparent}&hp={$hashparent}{/if}">{$resources->GetResource('plain')}</a>
+   {/if}
+   {include file='nav.tpl' current='commitdiff' logcommit=$commit treecommit=$commit}
+   <br />
+   <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=commitdiff_plain&h={$commit->GetHash()}{if $hashparent}&hp={$hashparent}{/if}">{$resources->GetResource('plain')}</a>
  </div>
 
  {include file='title.tpl' titlecommit=$commit}

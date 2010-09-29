@@ -60,20 +60,25 @@
       <td><em>{$proj->GetOwner()}</em></td>
       <td>
         {assign var=projecthead value=$proj->GetHeadCommit()}
-        {if $projecthead->GetAge() < 7200}   {* 60*60*2, or 2 hours *}
-          <span class="agehighlight"><strong><em>{$projecthead->GetAge()|agestring}</em></strong></span>
-        {elseif $projecthead->GetAge() < 172800}   {* 60*60*24*2, or 2 days *}
-          <span class="agehighlight"><em>{$projecthead->GetAge()|agestring}</em></span>
-        {else}
-          <em>{$projecthead->GetAge()|agestring}</em>
-        {/if}
+	{if $projecthead}
+          {if $projecthead->GetAge() < 7200}   {* 60*60*2, or 2 hours *}
+            <span class="agehighlight"><strong><em>{$projecthead->GetAge()|agestring}</em></strong></span>
+          {elseif $projecthead->GetAge() < 172800}   {* 60*60*24*2, or 2 days *}
+            <span class="agehighlight"><em>{$projecthead->GetAge()|agestring}</em></span>
+          {else}
+            <em>{$projecthead->GetAge()|agestring}</em>
+          {/if}
+	{/if}
       </td>
       <td class="link">
-        <a href="{$SCRIPT_NAME}?p={$proj->GetProject()|urlencode}&a=summary">{$resources->GetResource('summary')}</a> | 
+        <a href="{$SCRIPT_NAME}?p={$proj->GetProject()|urlencode}&a=summary">{$resources->GetResource('summary')}</a>
+	{if $projecthead}
+	| 
 	<a href="{$SCRIPT_NAME}?p={$proj->GetProject()|urlencode}&a=shortlog">{$resources->GetResource('shortlog')}</a> | 
 	<a href="{$SCRIPT_NAME}?p={$proj->GetProject()|urlencode}&a=log">{$resources->GetResource('log')}</a> | 
 	<a href="{$SCRIPT_NAME}?p={$proj->GetProject()|urlencode}&a=tree">{$resources->GetResource('tree')}</a> | 
 	<a href="{$SCRIPT_NAME}?p={$proj->GetProject()|urlencode}&a=snapshot&h=HEAD">{$resources->GetResource('snapshot')}</a>
+	{/if}
       </td>
     </tr>
   {foreachelse}

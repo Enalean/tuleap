@@ -23,11 +23,23 @@
 		{if $target == 'summary'}
 			<a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=summary" class="title">&nbsp;</a>
 		{elseif $target == 'shortlog'}
-			<a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=shortlog" class="title">{$resources->GetResource('shortlog')}</a>
+			{if $disablelink}
+			  {$resources->GetResource('shortlog')}
+			{else}
+			  <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=shortlog" class="title">{$resources->GetResource('shortlog')}</a>
+			{/if}
 		{elseif $target == 'tags'}
-			<a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=tags" class="title">{$resources->GetResource('tags')}</a>
+			{if $disablelink}
+			  {$resources->GetResource('tags')}
+			{else}
+			  <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=tags" class="title">{$resources->GetResource('tags')}</a>
+			{/if}
 		{elseif $target == 'heads'}
-			<a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=heads" class="title">{$resources->GetResource('heads')}</a>
+			{if $disablelink}
+			  {$resources->GetResource('heads')}
+			{else}
+			  <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=heads" class="title">{$resources->GetResource('heads')}</a>
+			{/if}
 		{else}
 			&nbsp;
 		{/if}
