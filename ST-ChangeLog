@@ -15,6 +15,7 @@ Version 4.0.13 - (Not released yet)
         backlog #108287: LDAP synchro must take LDAP server down into account
         backlog #108176: Account are disabled after 3 month for people that only use SVN client
         backlog #109631: Tracker queries may overload the server
+        backlog #110057: Notice when browsing svn tree 
 
 Version 4.0.12 - Tuesday, 14th September(Just to fix a bug regression)
         == Bugfix==
