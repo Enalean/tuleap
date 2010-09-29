@@ -1,4 +1,4 @@
-Version 4.0.13 - (Not released yet)
+Version 4.0.13 - Wednesday, 29th September 2010
         == New features ==
         backlog #101486 : Webdav integration for service FRS: Iteration 3 (Write access)
         backlog #108632:  Integrate Git in disk usage stats & upstream diff reduction
