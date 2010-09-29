@@ -795,7 +795,7 @@ class Docman_ItemFactory {
                     while ($dar->valid()) {
                         $row = $dar->current();
                         $item = $this->getItemFromRow($row);
-                        if($dPm->userCanRead($user, $item->getId())) {
+                        if($dpm->userCanRead($user, $item->getId())) {
                             $itemList[$item->getId()] = $item;
                             $orphans[$item->getId()] = $item->getId();
                         } else {
