@@ -658,3 +658,19 @@ msgstr ""
 msgid "A projectroot must be set in the config"
 msgstr ""
 
+# Caption for the rss button for a project
+# rss is a standard web feed format
+#: templates/footer.tpl
+msgid "RSS"
+msgstr ""
+
+# Caption for the OPML button on the project list
+# OPML is a standard XML outline format
+#: templates/footer.tpl
+msgid "OPML"
+msgstr ""
+
+# Caption for the button to get a plaintext list of projects
+#: templates/footer.tpl
+msgid "TXT"
+msgstr ""

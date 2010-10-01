@@ -8,55 +8,40 @@ msgstr ""
 "Project-Id-Version: GitPHP 0.2.0\n"
 "Report-Msgid-Bugs-To: xiphux@gmail.com\n"
 "POT-Creation-Date: 2010-09-30 19:08-0500\n"
-"PO-Revision-Date: 2010-09-30 20:46-0600\n"
+"PO-Revision-Date: 2010-09-30 22:29-0600\n"
 "Last-Translator: Christopher Han <xiphux@gmail.com>\n"
 "Language-Team: Christopher Han <xiphux@gmail.com>\n"
 "Language: \n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=utf-8\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Poedit-Language: Gibberish\n"
 
 # Used as link to and title for page displaying a blob, which is what git calls a single file
-#: templates/tree.tpl
-#: templates/blobdiff.tpl
-#: templates/commit.tpl
-#: templates/searchfiles.tpl
-#: templates/history.tpl
+#: templates/tree.tpl templates/blobdiff.tpl templates/commit.tpl
+#: templates/searchfiles.tpl templates/history.tpl
 #: include/controller/Controller_Blob.class.php:78
 msgid "blob"
 msgstr "{blōb•}"
 
 # Used as link to and title for the file history, which displays all commits that have modified a certain file
-#: templates/tree.tpl
-#: templates/commit.tpl
-#: templates/searchfiles.tpl
+#: templates/tree.tpl templates/commit.tpl templates/searchfiles.tpl
 #: include/controller/Controller_History.class.php:76
 msgid "history"
 msgstr "{hįstőry••}"
 
 # Used as title for and link to a list of files in a directory, which git calls a 'tree'
-#: templates/tree.tpl
-#: templates/search.tpl
-#: templates/commit.tpl
-#: templates/headlist.tpl
-#: templates/nav.tpl
-#: templates/searchfiles.tpl
-#: templates/log.tpl
-#: templates/projectlist.tpl
-#: templates/shortloglist.tpl
+#: templates/tree.tpl templates/search.tpl templates/commit.tpl
+#: templates/headlist.tpl templates/nav.tpl templates/searchfiles.tpl
+#: templates/log.tpl templates/projectlist.tpl templates/shortloglist.tpl
 #: include/controller/Controller_Tree.class.php:76
 msgid "tree"
 msgstr "{trëé•}"
 
 # Used as link to download a copy of the files in a given commit
-#: templates/tree.tpl
-#: templates/search.tpl
-#: templates/commit.tpl
-#: templates/taglist.tpl
-#: templates/projectlist.tpl
-#: templates/shortloglist.tpl
+#: templates/tree.tpl templates/search.tpl templates/commit.tpl
+#: templates/taglist.tpl templates/projectlist.tpl templates/shortloglist.tpl
 #: include/controller/Controller_Snapshot.class.php:76
 msgid "snapshot"
 msgstr "{snápshŏt•••}"
@@ -67,83 +52,59 @@ msgid "object"
 msgstr "{object•••}"
 
 # Used as link to and title for page displaying info about a single commit in the project
-#: templates/tag.tpl
-#: templates/search.tpl
-#: templates/commit.tpl
-#: templates/nav.tpl
-#: templates/taglist.tpl
-#: templates/header.tpl
-#: templates/log.tpl
-#: templates/history.tpl
-#: templates/shortloglist.tpl
+#: templates/tag.tpl templates/search.tpl templates/commit.tpl
+#: templates/nav.tpl templates/taglist.tpl templates/header.tpl
+#: templates/log.tpl templates/history.tpl templates/shortloglist.tpl
 #: include/controller/Controller_Commit.class.php:79
 msgid "commit"
 msgstr "{cŏmmıt••}"
 
 # Used as link to and title for page displaying detailed info about a tag
-#: templates/tag.tpl
-#: templates/tagtip.tpl
-#: templates/taglist.tpl
+#: templates/tag.tpl templates/tagtip.tpl templates/taglist.tpl
 #: include/controller/Controller_Tag.class.php:79
 msgid "tag"
 msgstr "{tàg•}"
 
 # Used to label the author of the commit, and as a field to search
 # The author is the person who wrote the changes in the commit
-#: templates/tag.tpl
-#: templates/commit.tpl
-#: templates/committip.tpl
+#: templates/tag.tpl templates/commit.tpl templates/committip.tpl
 #: templates/header.tpl
 msgid "author"
 msgstr "{åüthōr••}"
 
 # Used as a link to a plaintext version of a page
-#: templates/blobdiff.tpl
-#: templates/blame.tpl
-#: templates/commitdiff.tpl
+#: templates/blobdiff.tpl templates/blame.tpl templates/commitdiff.tpl
 #: templates/blob.tpl
 msgid "plain"
 msgstr "{plain••}"
 
 # Used as a link to the first page in a list of results
-#: templates/search.tpl
-#: templates/searchfiles.tpl
+#: templates/search.tpl templates/searchfiles.tpl
 msgid "first"
 msgstr "{fĩrst••}"
 
 # Used as a link to the previous page in a list of results
-#: templates/search.tpl
-#: templates/searchfiles.tpl
-#: templates/log.tpl
+#: templates/search.tpl templates/searchfiles.tpl templates/log.tpl
 #: templates/shortlog.tpl
 msgid "prev"
 msgstr "{prēv•}"
 
 # Used as a link to the next page in a list of results
-#: templates/search.tpl
-#: templates/searchfiles.tpl
-#: templates/log.tpl
-#: templates/shortlog.tpl
-#: templates/shortloglist.tpl
+#: templates/search.tpl templates/searchfiles.tpl templates/log.tpl
+#: templates/shortlog.tpl templates/shortloglist.tpl
 msgid "next"
 msgstr "{nėxt•}"
 
 # Used as link to and title for the full diff of all the changes in a commit
-#: templates/search.tpl
-#: templates/commit.tpl
-#: templates/nav.tpl
-#: templates/log.tpl
-#: templates/history.tpl
-#: templates/shortloglist.tpl
+#: templates/search.tpl templates/commit.tpl templates/nav.tpl
+#: templates/log.tpl templates/history.tpl templates/shortloglist.tpl
 #: include/controller/Controller_Commitdiff.class.php:79
 msgid "commitdiff"
 msgstr "{cŏmmĭtdĩff••••}"
 
 # Used to label the committer of the commit, and as a field to search
 # The committer is the person who put the commit into this project
-#: templates/commit.tpl
-#: templates/committip.tpl
-#: templates/header.tpl
+#: templates/commit.tpl templates/committip.tpl templates/header.tpl
 msgid "committer"
 msgstr "{cōmmĭttęr•••}"
 
@@ -249,27 +210,20 @@ msgid "moved from %1 with %2%% similarity"
 msgstr "{wās *%1* wĩth *%2*%% sımįlārīty•••••••}"
 
 # Used as title for and link to the compact log view with one line abbreviated commits
-#: templates/headlist.tpl
-#: templates/nav.tpl
-#: templates/taglist.tpl
-#: templates/title.tpl
-#: templates/projectlist.tpl
+#: templates/headlist.tpl templates/nav.tpl templates/taglist.tpl
+#: templates/title.tpl templates/projectlist.tpl
 #: include/controller/Controller_Log.class.php:80
 msgid "shortlog"
 msgstr "{shǫrtlǭg•••}"
 
 # Used as title for and link to log view with full commit messages
-#: templates/headlist.tpl
-#: templates/nav.tpl
-#: templates/taglist.tpl
-#: templates/projectlist.tpl
-#: include/controller/Controller_Log.class.php:85
+#: templates/headlist.tpl templates/nav.tpl templates/taglist.tpl
+#: templates/projectlist.tpl include/controller/Controller_Log.class.php:85
 msgid "log"
 msgstr "{lǿg•}"
 
 # Used as title for and link to project summary page
-#: templates/nav.tpl
-#: templates/projectlist.tpl
+#: templates/nav.tpl templates/projectlist.tpl
 #: include/controller/Controller_Project.class.php:75
 msgid "summary"
 msgstr "{sȕmmǡry••}"
@@ -285,28 +239,23 @@ msgid "Loading blame data..."
 msgstr "{Lōădīng blămĕ dātą•••}"
 
 # Link back to the list of projects
-#: templates/header.tpl
-#: include/controller/Controller_ProjectList.class.php:94
+#: templates/header.tpl include/controller/Controller_ProjectList.class.php:94
 msgid "projects"
 msgstr "{pŕŏjēĉts•••}"
 
 # Used as a search type, to search the contents of files in the project
-#: templates/header.tpl
-#: include/git/Blob.class.php:191
+#: templates/header.tpl include/git/Blob.class.php:191
 msgid "file"
 msgstr "{fìlé•}"
 
 # Used as title for search page, and also is the label for the search box
-#: templates/header.tpl
-#: include/controller/Controller_Search.class.php:90
+#: templates/header.tpl include/controller/Controller_Search.class.php:90
 msgid "search"
 msgstr "{sėąrch••}"
 
 # Used as a link to the HEAD of a project for a log or file
 # (note: HEAD is standard git terminology)
-#: templates/blame.tpl
-#: templates/log.tpl
-#: templates/shortlog.tpl
+#: templates/blame.tpl templates/log.tpl templates/shortlog.tpl
 #: templates/blob.tpl
 msgid "HEAD"
 msgstr "{HĒĂD•}"
@@ -318,8 +267,7 @@ msgid "Last change %1"
 msgstr "{changed *%1*•••}"
 
 # Message displayed when there are no commits in the project to display
-#: templates/log.tpl
-#: templates/shortloglist.tpl
+#: templates/log.tpl templates/shortloglist.tpl
 msgid "No commits"
 msgstr "{Nŏ cōmmıts•••}"
 
@@ -329,14 +277,12 @@ msgid "diff to current"
 msgstr "{dĭff tō cũrrēnt•••••}"
 
 # Used as link to and title for page showing all tags in a project
-#: templates/title.tpl
-#: include/controller/Controller_Tags.class.php:76
+#: templates/title.tpl include/controller/Controller_Tags.class.php:76
 msgid "tags"
 msgstr "{tãgs•}"
 
 # Used as link to and title for page showing all heads in a project
-#: templates/title.tpl
-#: include/controller/Controller_Heads.class.php:76
+#: templates/title.tpl include/controller/Controller_Heads.class.php:76
 msgid "heads"
 msgstr "{hêåds•}"
 
@@ -408,8 +354,7 @@ msgid "No projects found"
 msgstr "{Nō prŏjēcts főűnd•••}"
 
 # Used as link to and title for page displaying blame info (who last touched what line) in a file
-#: templates/blob.tpl
-#: include/controller/Controller_Blame.class.php:79
+#: templates/blob.tpl include/controller/Controller_Blame.class.php:79
 msgid "blame"
 msgstr "{bläme•}"
 
@@ -656,4 +601,21 @@ msgstr "{thıs ĩnstąnt}"
 #: index.php:68
 msgid "A projectroot must be set in the config"
 msgstr "{Ā prōjěctrŏőt must be set in the config••••••••}"
+
+# Caption for the rss button for a project
+# rss is a standard web feed format
+#: templates/footer.tpl
+msgid "RSS"
+msgstr "{RSS•}"
+
+# Caption for the OPML button on the project list
+# OPML is a standard XML outline format
+#: templates/footer.tpl
+msgid "OPML"
+msgstr "{OPML•}"
+
+# Caption for the button to get a plaintext list of projects
+#: templates/footer.tpl
+msgid "TXT"
+msgstr "{TXT•}"
 
