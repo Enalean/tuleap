@@ -20,14 +20,13 @@ define('GITPHP_CONFIGDIR', GITPHP_BASEDIR . 'config/');
 define('GITPHP_INCLUDEDIR', GITPHP_BASEDIR . 'include/');
 define('GITPHP_GITOBJECTDIR', GITPHP_INCLUDEDIR . 'git/');
 define('GITPHP_CONTROLLERDIR', GITPHP_INCLUDEDIR . 'controller/');
-define('GITPHP_RESOURCEDIR', GITPHP_INCLUDEDIR . 'resource/');
 define('GITPHP_LOCALEDIR', GITPHP_BASEDIR . 'locale/');
 
 include_once(GITPHP_INCLUDEDIR . 'version.php');
 
 require_once(GITPHP_INCLUDEDIR . 'Config.class.php');
 
-require_once(GITPHP_RESOURCEDIR . 'Resource.class.php');
+require_once(GITPHP_INCLUDEDIR . 'Resource.class.php');
 
 require_once(GITPHP_INCLUDEDIR . 'Log.class.php');
 

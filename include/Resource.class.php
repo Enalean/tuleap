@@ -7,7 +7,6 @@
  * @author Christopher Han <xiphux@gmail.com>
  * @copyright Copyright (c) 2010 Christopher Han
  * @package GitPHP
- * @subpackage Resource
  */
 
 require_once(GITPHP_BASEDIR . 'lib/php-gettext/streams.php');
