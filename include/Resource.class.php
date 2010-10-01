@@ -61,7 +61,7 @@ class GitPHP_Resource
 		$reader = null;
 
 		if (!(($locale == 'en_US') || ($locale == 'en'))) {
-			$reader = new FileReader(GITPHP_LOCALEDIR . $locale . '/LC_MESSAGES/gitphp.mo');
+			$reader = new FileReader(GITPHP_LOCALEDIR . $locale . '/gitphp.mo');
 		}
 
 		self::$instance = new gettext_reader($reader);
