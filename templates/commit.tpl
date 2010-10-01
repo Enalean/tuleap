@@ -188,9 +188,9 @@
 	     {assign var=similarity value=$diffline->GetSimilarity()}
 	     {if $diffline->GetFromMode() != $diffline->GetToMode()}
 	       {assign var=tomode value=$diffline->GetToModeShort()}
-	       {t escape=0 1=$fromfilelink 2=$similarity 3=$tomode}moved from %1 with %2%% similarity, mode: %3{/t}
+	       {t escape=no 1=$fromfilelink 2=$similarity 3=$tomode}moved from %1 with %2%% similarity, mode: %3{/t}
 	     {else}
-	       {t escape=0 1=$fromfilelink 2=$similarity}moved from %1 with %2%% similarity{/t}
+	       {t escape=no 1=$fromfilelink 2=$similarity}moved from %1 with %2%% similarity{/t}
 	     {/if}
 	     ]
 	   </span>
