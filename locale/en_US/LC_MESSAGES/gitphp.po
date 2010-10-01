@@ -1,0 +1,512 @@
+# GitPHP
+# Copyright (C) 2010 Christopher Han
+# This file is distributed under the same license as the GitPHP package.
+# Christopher Han <xiphux@gmail.com>, 2010.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: GitPHP 0.2.0\n"
+"Report-Msgid-Bugs-To: xiphux@gmail.com\n"
+"POT-Creation-Date: 2010-09-30 19:08-0500\n"
+"PO-Revision-Date: 2010-09-30 19:16-0600\n"
+"Last-Translator: Christopher Han <xiphux@gmail.com>\n"
+"Language-Team: Christopher Han <xiphux@gmail.com>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Poedit-Language: English\n"
+"X-Poedit-Country: UNITED STATES\n"
+
+#: templates/tree.tpl
+#: templates/blobdiff.tpl
+#: templates/commit.tpl
+#: templates/searchfiles.tpl
+#: templates/history.tpl
+#: include/controller/Controller_Blob.class.php:78
+msgid "blob"
+msgstr ""
+
+#: templates/tree.tpl
+#: templates/commit.tpl
+#: templates/searchfiles.tpl
+#: include/controller/Controller_History.class.php:76
+msgid "history"
+msgstr ""
+
+#: templates/tree.tpl
+#: templates/search.tpl
+#: templates/commit.tpl
+#: templates/headlist.tpl
+#: templates/nav.tpl
+#: templates/searchfiles.tpl
+#: templates/log.tpl
+#: templates/projectlist.tpl
+#: templates/shortloglist.tpl
+#: include/controller/Controller_Tree.class.php:76
+msgid "tree"
+msgstr ""
+
+#: templates/tree.tpl
+#: templates/search.tpl
+#: templates/commit.tpl
+#: templates/taglist.tpl
+#: templates/projectlist.tpl
+#: templates/shortloglist.tpl
+#: include/controller/Controller_Snapshot.class.php:76
+msgid "snapshot"
+msgstr ""
+
+#: templates/tag.tpl
+msgid "object"
+msgstr ""
+
+#: templates/tag.tpl
+#: templates/search.tpl
+#: templates/commit.tpl
+#: templates/nav.tpl
+#: templates/taglist.tpl
+#: templates/header.tpl
+#: templates/log.tpl
+#: templates/history.tpl
+#: templates/shortloglist.tpl
+#: include/controller/Controller_Commit.class.php:79
+msgid "commit"
+msgstr ""
+
+#: templates/tag.tpl
+#: templates/tagtip.tpl
+#: templates/taglist.tpl
+#: include/controller/Controller_Tag.class.php:79
+msgid "tag"
+msgstr ""
+
+#: templates/tag.tpl
+#: templates/commit.tpl
+#: templates/committip.tpl
+#: templates/header.tpl
+msgid "author"
+msgstr ""
+
+#: templates/blobdiff.tpl
+#: templates/blame.tpl
+#: templates/commitdiff.tpl
+#: templates/blob.tpl
+msgid "plain"
+msgstr ""
+
+#: templates/search.tpl
+#: templates/searchfiles.tpl
+msgid "first"
+msgstr ""
+
+#: templates/search.tpl
+#: templates/searchfiles.tpl
+#: templates/log.tpl
+#: templates/shortlog.tpl
+msgid "prev"
+msgstr ""
+
+#: templates/search.tpl
+#: templates/searchfiles.tpl
+#: templates/log.tpl
+#: templates/shortlog.tpl
+#: templates/shortloglist.tpl
+msgid "next"
+msgstr ""
+
+#: templates/search.tpl
+#: templates/commit.tpl
+#: templates/nav.tpl
+#: templates/log.tpl
+#: templates/history.tpl
+#: templates/shortloglist.tpl
+#: include/controller/Controller_Commitdiff.class.php:79
+msgid "commitdiff"
+msgstr ""
+
+#: templates/commit.tpl
+#: templates/committip.tpl
+#: templates/header.tpl
+msgid "committer"
+msgstr ""
+
+#: templates/commit.tpl
+msgid "parent"
+msgstr ""
+
+#: templates/commit.tpl
+msgid "%1 file changed:"
+msgid_plural "%1 files changed:"
+msgstr[0] ""
+msgstr[1] ""
+
+#: templates/commit.tpl
+msgid "new %1 with mode %2"
+msgstr ""
+
+#: templates/commit.tpl
+msgid "new %1"
+msgstr ""
+
+#: templates/commit.tpl
+msgid "deleted %1"
+msgstr ""
+
+#: templates/commit.tpl
+msgid "changed from %1 to %2 mode: %3 -> %4"
+msgstr ""
+
+#: templates/commit.tpl
+msgid "changed from %1 to %2 mode: %3"
+msgstr ""
+
+#: templates/commit.tpl
+msgid "changed from %1 to %2"
+msgstr ""
+
+#: templates/commit.tpl
+msgid "changed mode: %1 -> %2"
+msgstr ""
+
+#: templates/commit.tpl
+msgid "changed mode: %1"
+msgstr ""
+
+#: templates/commit.tpl
+msgid "changed"
+msgstr ""
+
+#: templates/commit.tpl
+msgid "diff"
+msgstr ""
+
+#: templates/commit.tpl
+msgid "moved from %1 with %2%% similarity, mode: %3"
+msgstr ""
+
+#: templates/commit.tpl
+msgid "moved from %1 with %2%% similarity"
+msgstr ""
+
+#: templates/headlist.tpl
+#: templates/nav.tpl
+#: templates/taglist.tpl
+#: templates/title.tpl
+#: templates/projectlist.tpl
+#: include/controller/Controller_Log.class.php:80
+msgid "shortlog"
+msgstr ""
+
+#: templates/headlist.tpl
+#: templates/nav.tpl
+#: templates/taglist.tpl
+#: templates/projectlist.tpl
+#: include/controller/Controller_Log.class.php:85
+msgid "log"
+msgstr ""
+
+#: templates/nav.tpl
+#: templates/projectlist.tpl
+#: include/controller/Controller_Project.class.php:75
+msgid "summary"
+msgstr ""
+
+#: templates/header.tpl
+msgid "Loading..."
+msgstr ""
+
+#: templates/header.tpl
+msgid "Loading blame data..."
+msgstr ""
+
+#: templates/header.tpl
+#: include/controller/Controller_ProjectList.class.php:94
+msgid "projects"
+msgstr ""
+
+#: templates/header.tpl
+#: include/git/Blob.class.php:191
+msgid "file"
+msgstr ""
+
+#: templates/header.tpl
+#: include/controller/Controller_Search.class.php:90
+msgid "search"
+msgstr ""
+
+#: templates/blame.tpl
+#: templates/log.tpl
+#: templates/shortlog.tpl
+#: templates/blob.tpl
+msgid "HEAD"
+msgstr ""
+
+#: templates/log.tpl
+msgid "Last change %1"
+msgstr ""
+
+#: templates/log.tpl
+#: templates/shortloglist.tpl
+msgid "No commits"
+msgstr ""
+
+#: templates/history.tpl
+msgid "diff to current"
+msgstr ""
+
+#: templates/title.tpl
+#: include/controller/Controller_Tags.class.php:76
+msgid "tags"
+msgstr ""
+
+#: templates/title.tpl
+#: include/controller/Controller_Heads.class.php:76
+msgid "heads"
+msgstr ""
+
+#: templates/commitdiff.tpl
+msgid "(deleted)"
+msgstr ""
+
+#: templates/commitdiff.tpl
+msgid "(new)"
+msgstr ""
+
+#: templates/project.tpl
+msgid "description"
+msgstr ""
+
+#: templates/project.tpl
+msgid "owner"
+msgstr ""
+
+#: templates/project.tpl
+msgid "last change"
+msgstr ""
+
+#: templates/project.tpl
+msgid "clone url"
+msgstr ""
+
+#: templates/project.tpl
+msgid "push url"
+msgstr ""
+
+#: templates/projectlist.tpl
+msgid "Project"
+msgstr ""
+
+#: templates/projectlist.tpl
+msgid "Description"
+msgstr ""
+
+#: templates/projectlist.tpl
+msgid "Owner"
+msgstr ""
+
+#: templates/projectlist.tpl
+msgid "Last Change"
+msgstr ""
+
+#: templates/projectlist.tpl
+msgid "Actions"
+msgstr ""
+
+#: templates/projectlist.tpl
+msgid "No projects found"
+msgstr ""
+
+#: templates/blob.tpl
+#: include/controller/Controller_Blame.class.php:79
+msgid "blame"
+msgstr ""
+
+#: include/controller/Controller_Rss.class.php:35
+#: include/controller/Controller_Tree.class.php:34
+#: include/controller/Controller_Commit.class.php:34
+#: include/controller/Controller_Log.class.php:34
+#: include/controller/Controller_Blame.class.php:34
+#: include/controller/Controller_Snapshot.class.php:34
+#: include/controller/Controller_Blob.class.php:34
+#: include/controller/Controller_Tag.class.php:34
+#: include/controller/Controller_Tags.class.php:34
+#: include/controller/Controller_Project.class.php:33
+#: include/controller/Controller_Commitdiff.class.php:34
+#: include/controller/Controller_Blobdiff.class.php:34
+#: include/controller/Controller_History.class.php:34
+#: include/controller/Controller_Heads.class.php:34
+#: include/controller/Controller_Search.class.php:44
+msgid "Project is required"
+msgstr ""
+
+#: include/controller/Controller_Rss.class.php:77
+msgid "rss"
+msgstr ""
+
+#: include/controller/Controller_Blobdiff.class.php:79
+msgid "blobdiff"
+msgstr ""
+
+#: include/controller/ControllerBase.class.php:84
+#, php-format
+msgid "Invalid project %1$s"
+msgstr ""
+
+#: include/controller/Controller_ProjectList.class.php:84
+msgid "opml"
+msgstr ""
+
+#: include/controller/Controller_ProjectList.class.php:89
+msgid "project index"
+msgstr ""
+
+#: include/controller/Controller_Search.class.php:38
+msgid "Search has been disabled"
+msgstr ""
+
+#: include/controller/Controller_Search.class.php:109
+msgid "File search has been disabled"
+msgstr ""
+
+#: include/controller/Controller_Search.class.php:115
+#, php-format
+msgid "You must enter search text of at least %1$d character"
+msgid_plural "You must enter search text of at least %1$d characters"
+msgstr[0] ""
+msgstr[1] ""
+
+#: include/controller/Controller_Search.class.php:159
+msgid "Invalid search type"
+msgstr ""
+
+#: include/controller/Controller_Search.class.php:165
+#, php-format
+msgid "No matches for \"%1$s\""
+msgstr ""
+
+#: include/git/Blob.class.php:179
+msgid "directory"
+msgstr ""
+
+#: include/git/Blob.class.php:185
+msgid "symlink"
+msgstr ""
+
+#: include/git/Blob.class.php:198
+msgid "unknown"
+msgstr ""
+
+#: include/git/ProjectListDirectory.class.php:47
+#: include/git/Project.class.php:194
+#, php-format
+msgid "%1$s is not a directory"
+msgstr ""
+
+#: include/git/Project.class.php:198
+#, php-format
+msgid "%1$s is not a git repository"
+msgstr ""
+
+#: include/git/Project.class.php:202
+#, php-format
+msgid "%1$s is attempting directory traversal"
+msgstr ""
+
+#: include/git/Project.class.php:208
+#, php-format
+msgid "%1$s is outside of the projectroot"
+msgstr ""
+
+#: include/git/FileDiff.class.php:616
+msgid "No tmpdir defined"
+msgstr ""
+
+#: include/git/FileDiff.class.php:622
+#, php-format
+msgid "Specified tmpdir %1$s is not writable"
+msgstr ""
+
+#: include/git/FileDiff.class.php:625
+#, php-format
+msgid "Specified tmpdir %1$s is not a directory"
+msgstr ""
+
+#: include/git/FileDiff.class.php:628
+#, php-format
+msgid "Could not create tmpdir %1$s"
+msgstr ""
+
+#: include/git/ProjectListFile.class.php:38
+#, php-format
+msgid "%1$s is not a file"
+msgstr ""
+
+#: include/git/ProjectListFile.class.php:57
+#, php-format
+msgid "Failed to open project list file %1$s"
+msgstr ""
+
+#: include/git/GitObject.class.php:95
+#, php-format
+msgid "Invalid hash %1$s"
+msgstr ""
+
+#: include/smartyplugins/modifier.agestring.php:17
+#, php-format
+msgid "%1$d year ago"
+msgid_plural "%1$d years ago"
+msgstr[0] ""
+msgstr[1] ""
+
+#: include/smartyplugins/modifier.agestring.php:22
+#, php-format
+msgid "%1$d month ago"
+msgid_plural "%1$d months ago"
+msgstr[0] ""
+msgstr[1] ""
+
+#: include/smartyplugins/modifier.agestring.php:27
+#, php-format
+msgid "%1$d week ago"
+msgid_plural "%1$d weeks ago"
+msgstr[0] ""
+msgstr[1] ""
+
+#: include/smartyplugins/modifier.agestring.php:32
+#, php-format
+msgid "%1$d day ago"
+msgid_plural "%1$d days ago"
+msgstr[0] ""
+msgstr[1] ""
+
+#: include/smartyplugins/modifier.agestring.php:37
+#, php-format
+msgid "%1$d hour ago"
+msgid_plural "%1$d hours ago"
+msgstr[0] ""
+msgstr[1] ""
+
+#: include/smartyplugins/modifier.agestring.php:42
+#, php-format
+msgid "%1$d min ago"
+msgid_plural "%1$d min ago"
+msgstr[0] ""
+msgstr[1] ""
+
+#: include/smartyplugins/modifier.agestring.php:47
+#, php-format
+msgid "%1$d sec ago"
+msgid_plural "%1$d sec ago"
+msgstr[0] ""
+msgstr[1] ""
+
+#: include/smartyplugins/modifier.agestring.php:51
+msgid "right now"
+msgstr ""
+
+#: index.php:68
+msgid "A projectroot must be set in the config"
+msgstr ""
+
