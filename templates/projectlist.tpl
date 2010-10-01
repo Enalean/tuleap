@@ -16,26 +16,26 @@
       {* Header *}
       <tr>
         {if $order == "project"}
-          <th>{$resources->GetResource('Project', 'Header')}</th>
+          <th>{t}Project{/t}</th>
         {else}
-          <th><a class="header" href="{$SCRIPT_NAME}?o=project">{$resources->GetResource('Project', 'Header')}</a></th>
+          <th><a class="header" href="{$SCRIPT_NAME}?o=project">{t}Project{/t}</a></th>
         {/if}
         {if $order == "descr"}
-          <th>{$resources->GetResource('Description', 'Header')}</th>
+          <th>{t}Description{/t}</th>
         {else}
-          <th><a class="header" href="{$SCRIPT_NAME}?o=descr">{$resources->GetResource('Description', 'Header')}</a></th>
+          <th><a class="header" href="{$SCRIPT_NAME}?o=descr">{t}Description{/t}</a></th>
         {/if}
         {if $order == "owner"}
-          <th>{$resources->GetResource('Owner', 'Header')}</th>
+          <th>{t}Owner{/t}</th>
         {else}
-          <th><a class="header" href="{$SCRIPT_NAME}?o=owner">{$resources->GetResource('Owner', 'Header')}</a></th>
+          <th><a class="header" href="{$SCRIPT_NAME}?o=owner">{t}Owner{/t}</a></th>
         {/if}
         {if $order == "age"}
-          <th>{$resources->GetResource('Last Change', 'Header')}</th>
+          <th>{t}Last Change{/t}</th>
         {else}
-          <th><a class="header" href="{$SCRIPT_NAME}?o=age">{$resources->GetResource('Last Change', 'Header')}</a></th>
+          <th><a class="header" href="{$SCRIPT_NAME}?o=age">{t}Last Change{/t}</a></th>
         {/if}
-        <th>{$resources->GetResource('Actions', 'Header')}</th>
+        <th>{t}Actions{/t}</th>
       </tr>
     {/if}
 
@@ -71,18 +71,18 @@
 	{/if}
       </td>
       <td class="link">
-        <a href="{$SCRIPT_NAME}?p={$proj->GetProject()|urlencode}&a=summary">{$resources->GetResource('summary')}</a>
+        <a href="{$SCRIPT_NAME}?p={$proj->GetProject()|urlencode}&a=summary">{t}summary{/t}</a>
 	{if $projecthead}
 	| 
-	<a href="{$SCRIPT_NAME}?p={$proj->GetProject()|urlencode}&a=shortlog">{$resources->GetResource('shortlog')}</a> | 
-	<a href="{$SCRIPT_NAME}?p={$proj->GetProject()|urlencode}&a=log">{$resources->GetResource('log')}</a> | 
-	<a href="{$SCRIPT_NAME}?p={$proj->GetProject()|urlencode}&a=tree">{$resources->GetResource('tree')}</a> | 
-	<a href="{$SCRIPT_NAME}?p={$proj->GetProject()|urlencode}&a=snapshot&h=HEAD">{$resources->GetResource('snapshot')}</a>
+	<a href="{$SCRIPT_NAME}?p={$proj->GetProject()|urlencode}&a=shortlog">{t}shortlog{/t}</a> | 
+	<a href="{$SCRIPT_NAME}?p={$proj->GetProject()|urlencode}&a=log">{t}log{/t}</a> | 
+	<a href="{$SCRIPT_NAME}?p={$proj->GetProject()|urlencode}&a=tree">{t}tree{/t}</a> | 
+	<a href="{$SCRIPT_NAME}?p={$proj->GetProject()|urlencode}&a=snapshot&h=HEAD">{t}snapshot{/t}</a>
 	{/if}
       </td>
     </tr>
   {foreachelse}
-    <div class="message">No projects found</div>
+    <div class="message">{t}No projects found{/t}</div>
   {/foreach}
 
 </table>

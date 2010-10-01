@@ -17,16 +17,16 @@
 
  {* Project brief *}
  <table cellspacing="0">
-   <tr><td>{$resources->GetResource('description')}</td><td>{$project->GetDescription()}</td></tr>
-   <tr><td>{$resources->GetResource('owner')}</td><td>{$project->GetOwner()}</td></tr>
+   <tr><td>{t}description{/t}</td><td>{$project->GetDescription()}</td></tr>
+   <tr><td>{t}owner{/t}</td><td>{$project->GetOwner()}</td></tr>
    {if $head}
-   <tr><td>{$resources->GetResource('last change')}</td><td>{$head->GetCommitterEpoch()|date_format:"%a, %d %b %Y %H:%M:%S %z"}</td></tr>
+   <tr><td>{t}last change{/t}</td><td>{$head->GetCommitterEpoch()|date_format:"%a, %d %b %Y %H:%M:%S %z"}</td></tr>
    {/if}
    {if $project->GetCloneUrl()}
-     <tr><td>{$resources->GetResource('clone url')}</td><td>{$project->GetCloneUrl()}</td></tr>
+     <tr><td>{t}clone url{/t}</td><td>{$project->GetCloneUrl()}</td></tr>
    {/if}
    {if $project->GetPushUrl()}
-     <tr><td>{$resources->GetResource('push url')}</td><td>{$project->GetPushUrl()}</td></tr>
+     <tr><td>{t}push url{/t}</td><td>{$project->GetPushUrl()}</td></tr>
    {/if}
  </table>
 

@@ -30,7 +30,7 @@
              <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=blob&h={$treeitem->GetHash()}&hb={$commit->GetHash()}&f={$treeitem->GetPath()}" class="list">{$treeitem->GetName()}</a>
 	   </td>
            <td class="link">
-	     <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=blob&h={$treeitem->GetHash()}&hb={$commit->GetHash()}&f={$treeitem->GetPath()}">{$resources->GetResource('blob')}</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=history&h={$commit->GetHash()}&f={$treeitem->GetPath()}">{$resources->GetResource('history')}</a>
+	     <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=blob&h={$treeitem->GetHash()}&hb={$commit->GetHash()}&f={$treeitem->GetPath()}">{t}blob{/t}</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=history&h={$commit->GetHash()}&f={$treeitem->GetPath()}">{t}history{/t}</a>
 	   </td>
          {elseif $treeitem instanceof GitPHP_Tree}
 	   <td></td>
@@ -38,7 +38,7 @@
              <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=tree&h={$treeitem->GetHash()}&hb={$commit->GetHash()}&f={$treeitem->GetPath()}">{$treeitem->GetName()}</a>
 	   </td>
            <td class="link">
-	     <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=tree&h={$treeitem->GetHash()}&hb={$commit->GetHash()}&f={$treeitem->GetPath()}">{$resources->GetResource('tree')}</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=snapshot&h={$commit->GetHash()}&f={$treeitem->GetPath()}">{$resources->GetResource('snapshot')}</a>
+	     <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=tree&h={$treeitem->GetHash()}&hb={$commit->GetHash()}&f={$treeitem->GetPath()}">{t}tree{/t}</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=snapshot&h={$commit->GetHash()}&f={$treeitem->GetPath()}">{t}snapshot{/t}</a>
 	   </td>
          {/if}
        </tr>

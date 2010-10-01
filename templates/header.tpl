@@ -10,7 +10,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
   <!-- gitphp web interface {$version}, (C) 2006-2010 Christopher Han <xiphux@gmail.com> -->
   <head>
-    <title>{$pagetitle}{if $project} :: {$project->GetProject()}{if $action}/{$action}{/if}{/if}</title>
+    <title>{$pagetitle}{if $project} :: {$project->GetProject()}{if $actionlocal}/{$actionlocal}{/if}{/if}</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     {if $project}
       <link rel="alternate" title="{$project->GetProject()} log" href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=rss" type="application/rss+xml" />
@@ -25,8 +25,8 @@
     {/if}
     {if $javascript}
     <script language="javascript">
-      var GITPHP_RES_LOADING="{$resources->GetResource('Loading...')}";
-      var GITPHP_RES_LOADING_BLAME_DATA="{$resources->GetResource('Loading blame data...')}";
+      var GITPHP_RES_LOADING="{t escape='js'}Loading...{/t}";
+      var GITPHP_RES_LOADING_BLAME_DATA="{t escape='js'}Loading blame data...{/t}";
     </script>
     <link rel="stylesheet" href="css/ext/jquery.qtip.css" type="text/css" />
     <script language="javascript" src="js/ext/jquery-1.4.2.min.js"></script>
@@ -43,11 +43,11 @@
       <a href="http://git-scm.com" title="git homepage">
         <img src="images/git-logo.png" width="72" height="27" alt="git" class="logo" />
       </a>
-      <a href="index.php">{$resources->GetResource('projects')}</a> / 
+      <a href="index.php">{t}projects{/t}</a> / 
       {if $project}
         <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=summary">{$project->GetProject()}</a>
-        {if $action}
-           / {$resources->GetResource($action)}
+        {if $actionlocal}
+           / {$actionlocal}
         {/if}
         {if $enablesearch}
           <form method="get" action="index.php" enctype="application/x-www-form-urlencoded">
@@ -56,13 +56,13 @@
               <input type="hidden" name="a" value="search" />
               <input type ="hidden" name="h" value="{if $commit}{$commit->GetHash()}{else}HEAD{/if}" />
               <select name="st">
-                <option {if $searchtype == 'commit'}selected="selected"{/if} value="commit">{$resources->GetResource('commit')}</option>
-                <option {if $searchtype == 'author'}selected="selected"{/if} value="author">{$resources->GetResource('author')}</option>
-                <option {if $searchtype == 'committer'}selected="selected"{/if} value="committer">{$resources->GetResource('committer')}</option>
+                <option {if $searchtype == 'commit'}selected="selected"{/if} value="commit">{t}commit{/t}</option>
+                <option {if $searchtype == 'author'}selected="selected"{/if} value="author">{t}author{/t}</option>
+                <option {if $searchtype == 'committer'}selected="selected"{/if} value="committer">{t}committer{/t}</option>
                 {if $filesearch}
-                  <option {if $searchtype == 'file'}selected="selected"{/if} value="file">{$resources->GetResource('file')}</option>
+                  <option {if $searchtype == 'file'}selected="selected"{/if} value="file">{t}file{/t}</option>
                 {/if}
-              </select> {$resources->GetResource('search')}: <input type="text" name="s" {if $search}value="{$search}"{/if} />
+              </select> {t}search{/t}: <input type="text" name="s" {if $search}value="{$search}"{/if} />
             </div>
           </form>
         {/if}

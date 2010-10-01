@@ -10,37 +10,37 @@
  *}
 
    {if $current=='summary'}
-     {$resources->GetResource('summary')}
+     {t}summary{/t}
    {else}
-     <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=summary">{$resources->GetResource('summary')}</a>
+     <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=summary">{t}summary{/t}</a>
    {/if}
    | 
    {if $current=='shortlog' || !$commit}
-     {$resources->GetResource('shortlog')}
+     {t}shortlog{/t}
    {else}
-     <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=shortlog{if $logcommit}&h={$logcommit->GetHash()}{/if}">{$resources->GetResource('shortlog')}</a>
+     <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=shortlog{if $logcommit}&h={$logcommit->GetHash()}{/if}">{t}shortlog{/t}</a>
    {/if}
    | 
    {if $current=='log' || !$commit}
-     {$resources->GetResource('log')}
+     {t}log{/t}
    {else}
-     <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=log{if $logcommit}&h={$logcommit->GetHash()}{/if}">{$resources->GetResource('log')}</a>
+     <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=log{if $logcommit}&h={$logcommit->GetHash()}{/if}">{t}log{/t}</a>
    {/if}
    | 
    {if $current=='commit' || !$commit}
-     {$resources->GetResource('commit')}
+     {t}commit{/t}
    {else}
-     <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=commit&h={$commit->GetHash()}">{$resources->GetResource('commit')}</a>
+     <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=commit&h={$commit->GetHash()}">{t}commit{/t}</a>
    {/if}
    | 
    {if $current=='commitdiff' || !$commit}
-     {$resources->GetResource('commitdiff')}
+     {t}commitdiff{/t}
    {else}
-     <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=commitdiff&h={$commit->GetHash()}">{$resources->GetResource('commitdiff')}</a>
+     <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=commitdiff&h={$commit->GetHash()}">{t}commitdiff{/t}</a>
    {/if}
    | 
    {if $current=='tree' || !$commit}
-     {$resources->GetResource('tree')}
+     {t}tree{/t}
    {else}
-     <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=tree{if $treecommit}&hb={$treecommit->GetHash()}{/if}{if $tree}&h={$tree->GetHash()}{/if}">{$resources->GetResource('tree')}</a>
+     <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=tree{if $treecommit}&hb={$treecommit->GetHash()}{/if}{if $tree}&h={$tree->GetHash()}{/if}">{t}tree{/t}</a>
    {/if}

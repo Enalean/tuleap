@@ -10,7 +10,8 @@
  * @subpackage Resource
  */
 
-require_once(GITPHP_RESOURCEDIR . 'ResourceBase.class.php');
+require_once(GITPHP_BASEDIR . 'lib/php-gettext/streams.php');
+require_once(GITPHP_BASEDIR . 'lib/php-gettext/gettext.php');
 
 /**
  * Resource
@@ -58,19 +59,13 @@ class GitPHP_Resource
 	 */
 	public static function Instantiate($locale)
 	{
-		switch ($locale) {
-			case 'en_US':
-				require_once(GITPHP_LOCALEDIR . 'en_US.class.php');
-				self::$instance = new GitPHP_Resource_en_US();
-				break;
-			case 'zz_Debug':
-				require_once(GITPHP_LOCALEDIR . 'zz_Debug.class.php');
-				self::$instance = new GitPHP_Resource_zz_Debug();
-				break;
-			default:
-				throw new Exception('Invalid locale: ' . $locale);
-				break;
+		$reader = null;
+
+		if (!(($locale == 'en_US') || ($locale == 'en'))) {
+			$reader = new FileReader(GITPHP_LOCALEDIR . $locale . '/LC_MESSAGES/gitphp.mo');
 		}
+
+		self::$instance = new gettext_reader($reader);
 	}
 
 }

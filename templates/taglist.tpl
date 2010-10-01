@@ -34,10 +34,10 @@
            </td>
            <td class="link">
              {if !$tag->LightTag()}
-   	       <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=tag&h={$tag->GetName()}">{$resources->GetResource('tag')}</a> | 
+   	       <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=tag&h={$tag->GetName()}">{t}tag{/t}</a> | 
              {/if}
-             <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=commit&h={$tagcommit->GetHash()}">{$resources->GetResource('commit')}</a>
-	      | <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=shortlog&h={$tagcommit->GetHash()}">{$resources->GetResource('shortlog')}</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=log&h={$tagcommit->GetHash()}">{$resources->GetResource('log')}</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=snapshot&h={$tagcommit->GetHash()}">{$resources->GetResource('snapshot')}</a>
+             <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=commit&h={$tagcommit->GetHash()}">{t}commit{/t}</a>
+	      | <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=shortlog&h={$tagcommit->GetHash()}">{t}shortlog{/t}</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=log&h={$tagcommit->GetHash()}">{t}log{/t}</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=snapshot&h={$tagcommit->GetHash()}">{t}snapshot{/t}</a>
            </td>
          {/if}
        </tr>

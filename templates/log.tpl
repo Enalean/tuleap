@@ -13,21 +13,21 @@
    {include file='nav.tpl' current='log' logcommit=$commit treecommit=$commit}
    <br />
    {if ($commit && $head) && (($commit->GetHash() != $head->GetHash()) || ($page > 0))}
-     <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=log">{$resources->GetResource('HEAD')}</a>
+     <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=log">{t}HEAD{/t}</a>
    {else}
-     {$resources->GetResource('HEAD')}
+     {t}HEAD{/t}
    {/if}
    &sdot; 
    {if $page > 0}
-     <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=log&h={$commit->GetHash()}&pg={$page-1}" accesskey="p" title="Alt-p">{$resources->GetResource('prev')}</a>
+     <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=log&h={$commit->GetHash()}&pg={$page-1}" accesskey="p" title="Alt-p">{t}prev{/t}</a>
    {else}
-     {$resources->GetResource('prev')}
+     {t}prev{/t}
    {/if}
    &sdot; 
    {if $hasmorerevs}
-     <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=log&h={$commit->GetHash()}&pg={$page+1}" accesskey="n" title="Alt-n">{$resources->GetResource('next')}</a>
+     <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=log&h={$commit->GetHash()}&pg={$page+1}" accesskey="n" title="Alt-n">{t}next{/t}</a>
    {else}
-     {$resources->GetResource('next')}
+     {t}next{/t}
    {/if}
    <br />
  </div>
@@ -38,7 +38,7 @@
    </div>
    <div class="title_text">
      <div class="log_link">
-       <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=commit&h={$rev->GetHash()}">{$resources->GetResource('commit')}</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=commitdiff&h={$rev->GetHash()}">{$resources->GetResource('commitdiff')}</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=tree&h={$rev->GetHash()}&hb={$rev->GetHash()}">{$resources->GetResource('tree')}</a>
+       <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=commit&h={$rev->GetHash()}">{t}commit{/t}</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=commitdiff&h={$rev->GetHash()}">{t}commitdiff{/t}</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=tree&h={$rev->GetHash()}&hb={$rev->GetHash()}">{t}tree{/t}</a>
        <br />
      </div>
      <em>{$rev->GetAuthorName()} [{$rev->GetAuthorEpoch()|date_format:"%a, %d %b %Y %H:%M:%S %z"}]</em><br />
@@ -57,9 +57,10 @@
    </div>
    <div class="page_body">
      {if $commit}
-     Last change {$commit->GetAge()|agestring}
+       {assign var=commitage value=$commit->GetAge()|agestring}
+       {t 1=$commitage}Last change %1{/t}
      {else}
-     <em>No commits</em>
+     <em>{t}No commits{/t}</em>
      {/if}
      <br /><br />
    </div>

@@ -92,7 +92,7 @@ abstract class GitPHP_GitObject
 	protected function SetHash($hash)
 	{
 		if (!(preg_match('/[0-9a-f]{40}/i', $hash))) {
-			throw new Exception(GitPHP_Resource::GetInstance()->Format('Invalid hash %1$s', $hash));
+			throw new Exception(sprintf(GitPHP_Resource::GetInstance()->translate('Invalid hash %1$s'), $hash));
 		}
 		$this->hash = $hash;
 	}

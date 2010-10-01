@@ -10,7 +10,7 @@
  *}
 
 <div>
-{$resources->GetResource('tag')}: {$tag->GetName()}
+{t}tag{/t}: {$tag->GetName()}
 <br />
 {foreach from=$tag->GetComment() item=line}
 <br />{$line}

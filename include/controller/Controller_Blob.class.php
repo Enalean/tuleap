@@ -31,7 +31,7 @@ class GitPHP_Controller_Blob extends GitPHP_ControllerBase
 	{
 		parent::__construct();
 		if (!$this->project) {
-			throw new GitPHP_MessageException(GitPHP_Resource::GetInstance()->GetResource('Project is required'), true);
+			throw new GitPHP_MessageException(GitPHP_Resource::GetInstance()->translate('Project is required'), true);
 		}
 	}
 
@@ -69,10 +69,14 @@ class GitPHP_Controller_Blob extends GitPHP_ControllerBase
 	 * Gets the name of this controller's action
 	 *
 	 * @access public
+	 * @param boolean $local true if caller wants the localized action name
 	 * @return string action name
 	 */
-	public function GetName()
+	public function GetName($local = false)
 	{
+		if ($local) {
+			return GitPHP_Resource::GetInstance()->translate('blob');
+		}
 		return 'blob';
 	}
 

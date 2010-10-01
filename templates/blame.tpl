@@ -11,11 +11,11 @@
  <div class="page_nav">
    {include file='nav.tpl' treecommit=$commit}
    <br />
-   <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=blob_plain&h={$blob->GetHash()}&f={$blob->GetPath()}">{$resources->GetResource('plain')}</a> | 
+   <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=blob_plain&h={$blob->GetHash()}&f={$blob->GetPath()}">{t}plain{/t}</a> | 
    {if $commit->GetHash() != $head->GetHash()}
-     <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=blame&hb=HEAD&f={$blob->GetPath()}">{$resources->GetResource('HEAD')}</a>
+     <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=blame&hb=HEAD&f={$blob->GetPath()}">{t}HEAD{/t}</a>
    {else}
-     {$resources->GetResource('HEAD')}
+     {t}HEAD{/t}
    {/if}
     | blame
    <br />

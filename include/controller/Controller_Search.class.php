@@ -35,13 +35,13 @@ class GitPHP_Controller_Search extends GitPHP_ControllerBase
 	public function __construct()
 	{
 		if (!GitPHP_Config::GetInstance()->GetValue('search', true)) {
-			throw new GitPHP_MessageException(GitPHP_Resource::GetInstance()->GetResource('Search has been disabled'), true);
+			throw new GitPHP_MessageException(GitPHP_Resource::GetInstance()->translate('Search has been disabled'), true);
 		}
 
 		parent::__construct();
 
 		if (!$this->project) {
-			throw new GitPHP_MessageException(GitPHP_Resource::GetInstance()->GetResource('Project is required'), true);
+			throw new GitPHP_MessageException(GitPHP_Resource::GetInstance()->translate('Project is required'), true);
 		}
 
 	}
@@ -81,10 +81,14 @@ class GitPHP_Controller_Search extends GitPHP_ControllerBase
 	 * Gets the name of this controller's action
 	 *
 	 * @access public
+	 * @param boolean $local true if caller wants the localized action name
 	 * @return string action name
 	 */
-	public function GetName()
+	public function GetName($local = false)
 	{
+		if ($local) {
+			return GitPHP_Resource::GetInstance()->translate('search');
+		}
 		return 'search';
 	}
 
@@ -102,13 +106,13 @@ class GitPHP_Controller_Search extends GitPHP_ControllerBase
 
 		if ($this->params['searchtype'] == GITPHP_SEARCH_FILE) {
 			if (!GitPHP_Config::GetInstance()->GetValue('filesearch', true)) {
-				throw new GitPHP_MessageException(GitPHP_Resource::GetInstance()->GetResource('File search has been disabled'), true);
+				throw new GitPHP_MessageException(GitPHP_Resource::GetInstance()->translate('File search has been disabled'), true);
 			}
 
 		}
 
 		if ((!isset($this->params['search'])) || (strlen($this->params['search']) < 2)) {
-			throw new GitPHP_MessageException(GitPHP_Resource::GetInstance()->Format('You must enter search text of at least %1$d characters', 2), true);
+			throw new GitPHP_MessageException(sprintf(GitPHP_Resource::GetInstance()->ngettext('You must enter search text of at least %1$d character', 'You must enter search text of at least %1$d characters', 2), 2), true);
 		}
 
 		if (isset($_GET['h']))
@@ -152,13 +156,13 @@ class GitPHP_Controller_Search extends GitPHP_ControllerBase
 					$results = $co->SearchFiles($this->params['search'], 101, ($this->params['page'] * 100));
 					break;
 				default:
-					throw new GitPHP_MessageException(GitPHP_Resource::GetInstance()->GetResource('Invalid search type'));
+					throw new GitPHP_MessageException(GitPHP_Resource::GetInstance()->translate('Invalid search type'));
 
 			}
 		}
 
 		if (count($results) < 1) {
-			throw new GitPHP_MessageException(GitPHP_Resource::GetInstance()->Format('No matches for "%1$s"', $this->params['search']), false);
+			throw new GitPHP_MessageException(sprintf(GitPHP_Resource::GetInstance()->translate('No matches for "%1$s"'), $this->params['search']), false);
 		}
 
 		if (count($results) > 100) {

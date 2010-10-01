@@ -66,9 +66,10 @@ class GitPHP_Controller_Message extends GitPHP_ControllerBase
 	 * Gets the name of this controller's action
 	 *
 	 * @access public
+	 * @param boolean $local true if caller wants the localized action name
 	 * @return string action name
 	 */
-	public function GetName()
+	public function GetName($local = false)
 	{
 		// This isn't a real controller
 		return '';

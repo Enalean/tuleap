@@ -21,7 +21,7 @@ define('GITPHP_INCLUDEDIR', GITPHP_BASEDIR . 'include/');
 define('GITPHP_GITOBJECTDIR', GITPHP_INCLUDEDIR . 'git/');
 define('GITPHP_CONTROLLERDIR', GITPHP_INCLUDEDIR . 'controller/');
 define('GITPHP_RESOURCEDIR', GITPHP_INCLUDEDIR . 'resource/');
-define('GITPHP_LOCALEDIR', GITPHP_RESOURCEDIR . 'locale/');
+define('GITPHP_LOCALEDIR', GITPHP_BASEDIR . 'locale/');
 
 include_once(GITPHP_INCLUDEDIR . 'version.php');
 
@@ -65,7 +65,7 @@ try {
 	}
 
 	if (!GitPHP_Config::GetInstance()->GetValue('projectroot', null)) {
-		throw new GitPHP_MessageException('A projectroot must be set in the config', true);
+		throw new GitPHP_MessageException(GitPHP_Resource::GetInstance()->translate('A projectroot must be set in the config'), true);
 	}
 
 	/*

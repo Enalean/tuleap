@@ -15,7 +15,7 @@
    {/if}
    {include file='nav.tpl' current='commitdiff' logcommit=$commit treecommit=$commit}
    <br />
-   <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=commitdiff_plain&h={$commit->GetHash()}{if $hashparent}&hp={$hashparent}{/if}">{$resources->GetResource('plain')}</a>
+   <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=commitdiff_plain&h={$commit->GetHash()}{if $hashparent}&hp={$hashparent}{/if}">{t}plain{/t}</a>
  </div>
 
  {include file='title.tpl' titlecommit=$commit}
@@ -29,10 +29,10 @@
    {foreach from=$treediff item=filediff}
      <div class="diff_info">
      {if ($filediff->GetStatus() == 'D') || ($filediff->GetStatus() == 'M')}
-       {assign var=localfromtype value=$resources->GetResource($filediff->GetFromFileType())}
+       {assign var=localfromtype value=$filediff->GetFromFileType(1)}
        {$localfromtype}:<a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=blob&h={$filediff->GetFromHash()}&hb={$commit->GetHash()}{if $filediff->GetFromFile()}&f={$filediff->GetFromFile()}{/if}">{if $filediff->GetFromFile()}{$filediff->GetFromFile()}{else}{$filediff->GetFromHash()}{/if}</a>
        {if $filediff->GetStatus() == 'D'}
-         {$resources->GetResource('(deleted)')}
+         {t}(deleted){/t}
        {/if}
      {/if}
 
@@ -41,11 +41,11 @@
      {/if}
 
      {if ($filediff->GetStatus() == 'A') || ($filediff->GetStatus() == 'M')}
-       {assign var=localtotype value=$resources->GetResource($filediff->GetToFileType())}
+       {assign var=localtotype value=$filediff->GetToFileType(1)}
        {$localtotype}:<a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=blob&h={$filediff->GetToHash()}&hb={$commit->GetHash()}{if $filediff->GetToFile()}&f={$filediff->GetToFile()}{/if}">{if $filediff->GetToFile()}b/{$filediff->GetToFile()}{else}{$filediff->GetToHash()}{/if}</a>
 
        {if $filediff->GetStatus() == 'A'}
-         {$resources->GetResource('(new)')}
+         {t}(new){/t}
        {/if}
      {/if}
      </div>

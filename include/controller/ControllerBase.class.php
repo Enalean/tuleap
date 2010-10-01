@@ -81,7 +81,7 @@ abstract class GitPHP_ControllerBase
 		if (isset($_GET['p'])) {
 			$this->project = GitPHP_ProjectList::GetInstance()->GetProject(str_replace(chr(0), '', $_GET['p']));
 			if (!$this->project) {
-				throw new GitPHP_MessageException(GitPHP_Resource::GetInstance()->Format('Invalid project %1$s', $_GET['p']), true);
+				throw new GitPHP_MessageException(sprintf(GitPHP_Resource::GetInstance()->translate('Invalid project %1$s'), $_GET['p']), true);
 			}
 		}
 
@@ -166,9 +166,10 @@ abstract class GitPHP_ControllerBase
 	 *
 	 * @abstract
 	 * @access public
+	 * @param boolean $local true if caller wants the localized action name
 	 * @return string action name
 	 */
-	public abstract function GetName();
+	public abstract function GetName($local);
 
 	/**
 	 * ReadQuery
@@ -237,6 +238,7 @@ abstract class GitPHP_ControllerBase
 		$this->tpl->assign('javascript', GitPHP_Config::GetInstance()->GetValue('javascript', true));
 		$this->tpl->assign('pagetitle', GitPHP_Config::GetInstance()->GetValue('title', $gitphp_appstring));
 		$this->tpl->assign('action', $this->GetName());
+		$this->tpl->assign('actionlocal', $this->GetName(true));
 		if ($this->project)
 			$this->tpl->assign('project', $this->project);
 		if (GitPHP_Config::GetInstance()->GetValue('search', true))

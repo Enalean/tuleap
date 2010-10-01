@@ -13,21 +13,21 @@
    {include file='nav.tpl' current='shortlog' logcommit=$commit treecommit=$commit}
    <br />
    {if ($commit && $head) && (($commit->GetHash() != $head->GetHash()) || ($page > 0))}
-     <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=shortlog">{$resources->GetResource('HEAD')}</a>
+     <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=shortlog">{t}HEAD{/t}</a>
    {else}
-     {$resources->GetResource('HEAD')}
+     {t}HEAD{/t}
    {/if}
      &sdot; 
    {if $page > 0}
-     <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=shortlog&h={$commit->GetHash()}&pg={$page-1}" accesskey="p" title="Alt-p">{$resources->GetResource('prev')}</a>
+     <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=shortlog&h={$commit->GetHash()}&pg={$page-1}" accesskey="p" title="Alt-p">{t}prev{/t}</a>
    {else}
-     {$resources->GetResource('prev')}
+     {t}prev{/t}
    {/if}
      &sdot; 
    {if $hasmorerevs}
-     <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=shortlog&h={$commit->GetHash()}&pg={$page+1}" accesskey="n" title="Alt-n">{$resources->GetResource('next')}</a>
+     <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=shortlog&h={$commit->GetHash()}&pg={$page+1}" accesskey="n" title="Alt-n">{t}next{/t}</a>
    {else}
-     {$resources->GetResource('next')}
+     {t}next{/t}
    {/if}
    <br />
  </div>

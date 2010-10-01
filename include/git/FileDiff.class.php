@@ -400,14 +400,15 @@ class GitPHP_FileDiff
 	 * Gets the from file type
 	 *
 	 * @access public
+	 * @param boolean $local true if caller wants localized type
 	 * @return string from file type
 	 */
-	public function GetFromFileType()
+	public function GetFromFileType($local = false)
 	{
 		if (!$this->diffInfoRead)
 			$this->ReadDiffInfo();
 
-		return GitPHP_Blob::FileType($this->fromMode);
+		return GitPHP_Blob::FileType($this->fromMode, $local);
 	}
 
 	/**
@@ -416,14 +417,15 @@ class GitPHP_FileDiff
 	 * Gets the to file type
 	 *
 	 * @access public
+	 * @param boolean $local true if caller wants localized type
 	 * @return string to file type
 	 */
-	public function GetToFileType()
+	public function GetToFileType($local = false)
 	{
 		if (!$this->diffInfoRead)
 			$this->ReadDiffInfo();
 
-		return GitPHP_Blob::FileType($this->toMode);
+		return GitPHP_Blob::FileType($this->toMode, $local);
 	}
 
 	/**
@@ -611,19 +613,19 @@ class GitPHP_FileDiff
 		$tmpdir = GitPHP_Config::GetInstance()->GetValue('gittmp', '/tmp/gitphp/');
 
 		if (empty($tmpdir)) {
-			throw new Exception(GitPHP_Resource::GetInstance()->GetResource('No tmpdir defined'));
+			throw new Exception(GitPHP_Resource::GetInstance()->translate('No tmpdir defined'));
 		}
 
 		if (file_exists($tmpdir)) {
 			if (is_dir($tmpdir)) {
 				if (!is_writeable($tmpdir)) {
-					throw new Exception(GitPHP_Resource::GetInstance()->Format('Specified tmpdir %1$s is not writeable', $tmpdir));
+					throw new Exception(sprintf(GitPHP_Resource::GetInstance()->translate('Specified tmpdir %1$s is not writable'), $tmpdir));
 				}
 			} else {
-				throw new Exception(GitPHP_Resource::GetInstance()->Format('Specified tmpdir %1$s is not a directory', $tmpdir));
+				throw new Exception(sprintf(GitPHP_Resource::GetInstance()->translate('Specified tmpdir %1$s is not a directory'), $tmpdir));
 			}
 		} else if (!mkdir($tmpdir, 0700)) {
-			throw new Exception(GitPHP_Resource::GetInstance()->Format('Could not create tmpdir %1$s', $tmpdir));
+			throw new Exception(sprintf(GitPHP_Resource::GetInstance()->translate('Could not create tmpdir %1$s'), $tmpdir));
 		}
 	}
 

@@ -13,21 +13,21 @@
   {include file='nav.tpl' logcommit=$commit treecommit=$commit}
   <br />
   {if $page > 0}
-    <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=search&h={$commit->GetHash()}&s={$search}&st={$searchtype}">{$resources->GetResource('first')}</a>
+    <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=search&h={$commit->GetHash()}&s={$search}&st={$searchtype}">{t}first{/t}</a>
   {else}
-    {$resources->GetResource('first')}
+    {t}first{/t}
   {/if}
     &sdot; 
   {if $page > 0}
-    <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=search&h={$commit->GetHash()}&s={$search}&st={$searchtype}{if $page > 1}&pg={$page-1}{/if}" accesskey="p" title="Alt-p">{$resources->GetResource('prev')}</a>
+    <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=search&h={$commit->GetHash()}&s={$search}&st={$searchtype}{if $page > 1}&pg={$page-1}{/if}" accesskey="p" title="Alt-p">{t}prev{/t}</a>
   {else}
-    {$resources->GetResource('prev')}
+    {t}prev{/t}
   {/if}
     &sdot; 
   {if $hasmore}
-    <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=search&h={$commit->GetHash()}&s={$search}&st={$searchtype}&pg={$page+1}" accesskey="n" title="Alt-n">{$resources->GetResource('next')}</a>
+    <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=search&h={$commit->GetHash()}&s={$search}&st={$searchtype}&pg={$page+1}" accesskey="n" title="Alt-n">{t}next{/t}</a>
   {else}
-    {$resources->GetResource('next')}
+    {t}next{/t}
   {/if}
   <br />
 </div>
@@ -44,7 +44,7 @@
 		  <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=tree&h={$resultobject->GetHash()}&hb={$commit->GetHash()}&f={$path}" class="list"><strong>{$path}</strong></a>
 	      </td>
 	      <td class="link">
-		  <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=tree&h={$resultobject->GetHash()}&hb={$commit->GetHash()}&f={$path}">{$resources->GetResource('tree')}</a>
+		  <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=tree&h={$resultobject->GetHash()}&hb={$commit->GetHash()}&f={$path}">{t}tree{/t}</a>
 	      </td>
       {else}
 	      <td>
@@ -54,7 +54,7 @@
 		  {/foreach}
 	      </td>
 	      <td class="link">
-		  <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=blob&h={$resultobject->GetHash()}&hb={$commit->GetHash()}&f={$path}">{$resources->GetResource('blob')}</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=history&h={$commit->GetHash()}&f={$path}">{$resources->GetResource('history')}</a>
+		  <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=blob&h={$resultobject->GetHash()}&hb={$commit->GetHash()}&f={$path}">{t}blob{/t}</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=history&h={$commit->GetHash()}&f={$path}">{t}history{/t}</a>
 	      </td>
       {/if}
     </tr>
@@ -62,7 +62,7 @@
 
   {if $hasmore}
     <tr>
-      <td><a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=search&h={$commit->GetHash()}&s={$search}&st={$searchtype}&pg={$page+1}" title="Alt-n">{$resources->GetResource('next')}</a></td>
+      <td><a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=search&h={$commit->GetHash()}&s={$search}&st={$searchtype}&pg={$page+1}" title="Alt-n">{t}next{/t}</a></td>
     </tr>
   {/if}
 </table>

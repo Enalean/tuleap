@@ -74,14 +74,24 @@ class GitPHP_Controller_ProjectList extends GitPHP_ControllerBase
 	 * Gets the name of this controller's action
 	 *
 	 * @access public
+	 * @param boolean $local true if caller wants the localized action name
 	 * @return string action name
 	 */
-	public function GetName()
+	public function GetName($local = false)
 	{
 		if (isset($this->params['opml']) && ($this->params['opml'] === true)) {
+			if ($local) {
+				return GitPHP_Resource::GetInstance()->translate('opml');
+			}
 			return 'opml';
 		} else if (isset($this->params['txt']) && ($this->params['txt'] === true)) {
+			if ($local) {
+				return GitPHP_Resource::GetInstance()->translate('project index');
+			}
 			return 'project index';
+		}
+		if ($local) {
+			return GitPHP_Resource::GetInstance()->translate('projects');
 		}
 		return 'projects';
 	}
