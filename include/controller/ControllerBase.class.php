@@ -237,6 +237,7 @@ abstract class GitPHP_ControllerBase
 		$this->tpl->assign('stylesheet', GitPHP_Config::GetInstance()->GetValue('stylesheet', 'gitphp.css'));
 		$this->tpl->assign('javascript', GitPHP_Config::GetInstance()->GetValue('javascript', true));
 		$this->tpl->assign('pagetitle', GitPHP_Config::GetInstance()->GetValue('title', $gitphp_appstring));
+		$this->tpl->assign('homelink', GitPHP_Config::GetInstance()->GetValue('homelink', GitPHP_Resource::GetInstance()->translate('projects')));
 		$this->tpl->assign('action', $this->GetName());
 		$this->tpl->assign('actionlocal', $this->GetName(true));
 		if ($this->project)

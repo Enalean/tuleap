@@ -43,7 +43,7 @@
       <a href="http://git-scm.com" title="git homepage">
         <img src="images/git-logo.png" width="72" height="27" alt="git" class="logo" />
       </a>
-      <a href="index.php">{t}projects{/t}</a> / 
+      <a href="index.php">{if $homelink}{$homelink}{else}{t}projects{/t}{/if}</a> / 
       {if $project}
         <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=summary">{$project->GetProject()}</a>
         {if $actionlocal}

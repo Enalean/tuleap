@@ -63,6 +63,13 @@ $gitphp_conf['locale'] = 'en_US';
 $gitphp_conf['title'] = "$gitphp_appstring";
 
 /*
+ * homelink
+ * This is the text of the link in the upper left corner
+ * that takes you back to the project list.
+ */
+$gitphp_conf['homelink'] = 'projects';
+
+/*
  * cloneurl
  * Sets the base clone url to display for a project.
  * This is the publicly-accessible url of the projectroot
