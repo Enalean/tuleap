@@ -10,7 +10,7 @@
 
  {* Nav *}
  <div class="page_nav">
-   {include file='nav.tpl' current='shortlog' logcommit=$commit treecommit=$commit}
+   {include file='nav.tpl' current='shortlog' logcommit=$commit treecommit=$commit logmark=$mark}
    <br />
    {if ($commit && $head) && (($commit->GetHash() != $head->GetHash()) || ($page > 0))}
      <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=shortlog{if $mark}&m={$mark->GetHash()}{/if}">{t}HEAD{/t}</a>

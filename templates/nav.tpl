@@ -18,13 +18,13 @@
    {if $current=='shortlog' || !$commit}
      {t}shortlog{/t}
    {else}
-     <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=shortlog{if $logcommit}&h={$logcommit->GetHash()}{/if}">{t}shortlog{/t}</a>
+     <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=shortlog{if $logcommit}&h={$logcommit->GetHash()}{/if}{if $logmark}&m={$logmark->GetHash()}{/if}">{t}shortlog{/t}</a>
    {/if}
    | 
    {if $current=='log' || !$commit}
      {t}log{/t}
    {else}
-     <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=log{if $logcommit}&h={$logcommit->GetHash()}{/if}">{t}log{/t}</a>
+     <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=log{if $logcommit}&h={$logcommit->GetHash()}{/if}{if $logmark}&m={$logmark->GetHash()}{/if}">{t}log{/t}</a>
    {/if}
    | 
    {if $current=='commit' || !$commit}
