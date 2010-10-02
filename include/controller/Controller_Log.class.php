@@ -61,7 +61,7 @@ class GitPHP_Controller_Log extends GitPHP_ControllerBase
 	 */
 	protected function GetCacheKey()
 	{
-		return $this->params['hash'] . '|' . $this->params['page'];
+		return $this->params['hash'] . '|' . $this->params['page'] . '|' . (isset($this->params['mark']) ? $this->params['mark'] : '');
 	}
 
 	/**
@@ -104,6 +104,8 @@ class GitPHP_Controller_Log extends GitPHP_ControllerBase
 			$this->params['page'] = $_GET['pg'];
 		else
 			$this->params['page'] = 0;
+		if (isset($_GET['m']))
+			$this->params['mark'] = $_GET['m'];
 	}
 
 	/**
@@ -126,6 +128,10 @@ class GitPHP_Controller_Log extends GitPHP_ControllerBase
 				$revlist = array_slice($revlist, 0, 100);
 			}
 			$this->tpl->assign('revlist', $revlist);
+		}
+
+		if (isset($this->params['mark'])) {
+			$this->tpl->assign('mark', $this->project->GetCommit($this->params['mark']));
 		}
 	}
 

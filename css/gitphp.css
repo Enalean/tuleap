@@ -28,6 +28,7 @@ div.title_text { padding:6px 0px; border: solid #d9d8d1; border-width:0px 0px 1p
 div.log_body { padding:8px 8px 8px 150px; }
 span.age { position:relative; float:left; width:142px; font-style:italic; }
 div.log_link {
+	margin: -6px 0px;
 	padding:0px 8px;
 	font-size:10px; font-family:sans-serif; font-style:normal;
 	position:relative; float:left; width:136px;
