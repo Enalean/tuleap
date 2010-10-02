@@ -17,6 +17,7 @@
    {else}
      {t}HEAD{/t}
    {/if}
+    | <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=history&h={$commit->GetHash()}&f={$blob->GetPath()}">{t}history{/t}</a>
    {if !$datatag} | <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=blame&h={$blob->GetHash()}&f={$blob->GetPath()}&hb={$commit->GetHash()}" id="blameLink">{t}blame{/t}</a>{/if}
    <br />
  </div>
