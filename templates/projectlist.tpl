@@ -8,7 +8,16 @@
 
 {include file='header.tpl'}
 
+<div class="index_header">
+{if file_exists('templates/hometext.tpl') }
 {include file='hometext.tpl'}
+{else}
+{* default header *}
+<p>
+git source code archive
+</p>
+{/if}
+</div>
 
 <table cellspacing="0">
   {foreach name=projects from=$projectlist item=proj}
