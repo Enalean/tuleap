@@ -25,8 +25,8 @@
     {/if}
     {if $javascript}
     <script language="javascript">
-      var GITPHP_RES_LOADING="{t escape='js'}Loading...{/t}";
-      var GITPHP_RES_LOADING_BLAME_DATA="{t escape='js'}Loading blame data...{/t}";
+      var GITPHP_RES_LOADING="{t escape='js'}Loading…{/t}";
+      var GITPHP_RES_LOADING_BLAME_DATA="{t escape='js'}Loading blame data…{/t}";
     </script>
     <link rel="stylesheet" href="css/ext/jquery.qtip.css" type="text/css" />
     <script language="javascript" src="js/ext/jquery-1.4.2.min.js"></script>

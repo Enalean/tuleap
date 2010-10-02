@@ -332,7 +332,7 @@ class GitPHP_Project
 		}
 		
 		if (($trim > 0) && (strlen($this->description) > $trim)) {
-			return substr($this->description, 0, $trim) . '...';
+			return substr($this->description, 0, $trim) . '…';
 		}
 
 		return $this->description;

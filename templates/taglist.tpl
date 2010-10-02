@@ -13,7 +13,7 @@
    {foreach from=$taglist item=tag name=tag}
      <tr class="{cycle name=tags values="light,dark"}">
        {if ($max > 0) && ($smarty.foreach.tag.iteration == $max)}
-         <td><a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=tags">...</a></td>
+         <td><a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=tags">&hellip;</a></td>
        {elseif ($max <= 0) || ($smarty.foreach.tag.iteration < $max)}
 	   {assign var=object value=$tag->GetObject()}
 	   {assign var=tagcommit value=$tag->GetCommit()}

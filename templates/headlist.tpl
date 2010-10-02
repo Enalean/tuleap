@@ -13,7 +13,7 @@
    {* Loop and display each head *}
    {foreach from=$headlist item=head name=heads}
      {if ($max > 0) && ($smarty.foreach.heads.iteration == $max)}
-       <td><a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=heads">...</a></td>
+       <td><a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=heads">&hellip;</a></td>
      {elseif ($max <= 0) || ($smarty.foreach.heads.iteration < $max)}
        {assign var=headcommit value=$head->GetCommit()}
        <tr class="{cycle values="light,dark"}">

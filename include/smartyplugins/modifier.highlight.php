@@ -21,13 +21,13 @@ function smarty_modifier_highlight($haystack, $needle, $trimlen = NULL, $escape 
 					$leftremain = $remain;
 					if ($rightlen < $remain)
 						$leftremain += ($remain - $rightlen);
-					$regs[1] = "..." . substr($regs[1], ($leftlen - ($leftremain - 3)));
+					$regs[1] = "…" . substr($regs[1], ($leftlen - ($leftremain - 3)));
 				}
 				if ($rightlen > $remain) {
 					$rightremain = $remain;
 					if ($leftlen < $remain)
 						$rightremain += ($remain - $leftlen);
-					$regs[3] = substr($regs[3],0,$rightremain-3) . "...";
+					$regs[3] = substr($regs[3],0,$rightremain-3) . "…";
 				}
 			}
 		}

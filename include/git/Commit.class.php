@@ -442,7 +442,7 @@ class GitPHP_Commit extends GitPHP_GitObject
 			$this->ReadData();
 		
 		if (($trim > 0) && (strlen($this->title) > $trim)) {
-			return substr($this->title, 0, $trim) . '...';
+			return substr($this->title, 0, $trim) . '…';
 		}
 
 		return $this->title;
