@@ -134,6 +134,24 @@ class GitPHP_Project
 	protected $readTags = false;
 
 	/**
+	 * cloneUrl
+	 *
+	 * Stores the clone url internally
+	 *
+	 * @access protected
+	 */
+	protected $cloneUrl = null;
+
+	/**
+	 * pushUrl
+	 *
+	 * Stores the push url internally
+	 *
+	 * @access protected
+	 */
+	protected $pushUrl = null;
+
+	/**
 	 * commitCache
 	 *
 	 * Caches fetched commit objects in case of
@@ -321,6 +339,20 @@ class GitPHP_Project
 	}
 
 	/**
+	 * SetDescription
+	 *
+	 * Overrides the project description
+	 *
+	 * @access public
+	 * @param string $descr description
+	 */
+	public function SetDescription($descr)
+	{
+		$this->description = $descr;
+		$this->readDescription = true;
+	}
+
+	/**
 	 * GetDaemonEnabled
 	 *
 	 * Returns whether gitdaemon is allowed for this project
@@ -369,10 +401,26 @@ class GitPHP_Project
 	 */
 	public function GetCloneUrl()
 	{
+		if ($this->cloneUrl !== null)
+			return $this->cloneUrl;
+
 		$cloneurl = GitPHP_Config::GetInstance()->GetValue('cloneurl', '');
 		if (!empty($cloneurl))
 			$cloneurl .= $this->project;
 		return $cloneurl;
+	}
+
+	/**
+	 * SetCloneUrl
+	 *
+	 * Overrides the clone URL for this repository
+	 *
+	 * @access public
+	 * @param string $cUrl clone url
+	 */
+	public function SetCloneUrl($cUrl)
+	{
+		$this->cloneUrl = $cUrl;
 	}
 
 	/**
@@ -385,10 +433,26 @@ class GitPHP_Project
 	 */
 	public function GetPushUrl()
 	{
+		if ($this->pushUrl !== null)
+			return $this->pushUrl;
+
 		$pushurl = GitPHP_Config::GetInstance()->GetValue('pushurl', '');
 		if (!empty($pushurl))
 			$pushurl .= $this->project;
 		return $pushurl;
+	}
+
+	/**
+	 * SetPushUrl
+	 *
+	 * Overrides the push URL for this repository
+	 *
+	 * @access public
+	 * @param string $pUrl push url
+	 */
+	public function SetPushUrl($pUrl)
+	{
+		$this->pushUrl = $pUrl;
 	}
 
 	/**

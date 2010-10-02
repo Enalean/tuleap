@@ -23,6 +23,21 @@
  * Each project itself is an array with the following keys:
  * 'project': the path to the project, minus the projectroot
  * 'category': the category for the project. This is optional.
+ * 'owner': the owner of the project.  This is optional,
+ *          and overrides the actual owner
+ * 'description': the description of the project.  This is optional,
+ *                and overrides the description in the project's
+ *                description file
+ * 'cloneurl': the full clone url of the project.  This is optional,
+ *             and overrides the clone URL setting in the config for
+ *             this project.  This can also be an empty string to
+ *             override the config clone url to say that only this
+ *             project has no clone url.
+ * 'pushurl': the full push url of the project.  This is optional,
+ *            and overrides the push URL setting in the config for
+ *            this project.  This can also be an empty string to
+ *            override the config push url to say that only this
+ *            project has no push url.
  */
 //$git_projects = array(
 //	array(
@@ -35,6 +50,10 @@
 //	array(
 //		'project' => 'php/gitphp.git',
 //		'category' => 'PHP',
+//		'description' => 'GitPHP, a web-based git repository browser in PHP',
+//		'owner' => 'Christopher Han',
+//		'cloneurl' => 'http://git.xiphux.com/php/gitphp.git',
+//		'pushurl' => ''
 //	),
 //	array(
 //		'project' => 'php/mdb.git',
