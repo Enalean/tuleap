@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GitPHP 0.2.0\n"
 "Report-Msgid-Bugs-To: xiphux@gmail.com\n"
-"POT-Creation-Date: 2010-10-01 19:45-0500\n"
+"POT-Creation-Date: 2010-10-02 01:11-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -32,6 +32,7 @@ msgstr ""
 #: templates/tree.tpl
 #: templates/commit.tpl
 #: templates/searchfiles.tpl
+#: templates/blob.tpl
 #: include/controller/Controller_History.class.php:76
 msgid "history"
 msgstr ""
@@ -286,6 +287,7 @@ msgstr ""
 
 # Link back to the list of projects
 #: templates/header.tpl
+#: include/controller/ControllerBase.class.php:240
 #: include/controller/Controller_ProjectList.class.php:94
 msgid "projects"
 msgstr ""
@@ -672,4 +674,29 @@ msgstr ""
 # Caption for the button to get a plaintext list of projects
 #: templates/footer.tpl
 msgid "TXT"
+msgstr ""
+
+# Label for the selected commit, when selecting commits to diff
+#: templates/log.tpl
+#: templates/shortlog.tpl
+msgid "selected"
+msgstr ""
+
+# Link to deselect the currently selected diff
+#: templates/log.tpl
+#: templates/shortlog.tpl
+#: templates/shortloglist.tpl
+msgid "deselect"
+msgstr ""
+
+# Link beside commits - diffs this commit against the currently selected commit
+#: templates/log.tpl
+#: templates/shortloglist.tpl
+msgid "diff with selected"
+msgstr ""
+
+# Link beside commits - selects this commit to be used in a diff
+#: templates/log.tpl
+#: templates/shortloglist.tpl
+msgid "select for diff"
 msgstr ""

@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GitPHP 0.2.0\n"
 "Report-Msgid-Bugs-To: xiphux@gmail.com\n"
-"POT-Creation-Date: 2010-09-30 19:08-0500\n"
-"PO-Revision-Date: 2010-09-30 22:29-0600\n"
+"POT-Creation-Date: 2010-10-02 01:11-0500\n"
+"PO-Revision-Date: 2010-10-02 01:18-0600\n"
 "Last-Translator: Christopher Han <xiphux@gmail.com>\n"
 "Language-Team: Christopher Han <xiphux@gmail.com>\n"
 "Language: \n"
@@ -27,7 +27,7 @@ msgstr "{blōb•}"
 
 # Used as link to and title for the file history, which displays all commits that have modified a certain file
 #: templates/tree.tpl templates/commit.tpl templates/searchfiles.tpl
-#: include/controller/Controller_History.class.php:76
+#: templates/blob.tpl include/controller/Controller_History.class.php:76
 msgid "history"
 msgstr "{hįstőry••}"
 
@@ -239,7 +239,8 @@ msgid "Loading blame data..."
 msgstr "{Lōădīng blămĕ dātą•••}"
 
 # Link back to the list of projects
-#: templates/header.tpl include/controller/Controller_ProjectList.class.php:94
+#: templates/header.tpl include/controller/ControllerBase.class.php:240
+#: include/controller/Controller_ProjectList.class.php:94
 msgid "projects"
 msgstr "{pŕŏjēĉts•••}"
 
@@ -598,7 +599,7 @@ msgstr "{thıs ĩnstąnt}"
 
 # Error message when user hasn't defined a project root in the config
 # "projectroot" refers to a root directory where the user's git projects are stored
-#: index.php:68
+#: index.php:67
 msgid "A projectroot must be set in the config"
 msgstr "{Ā prōjěctrŏőt must be set in the config••••••••}"
 
@@ -618,4 +619,24 @@ msgstr "{OPML•}"
 #: templates/footer.tpl
 msgid "TXT"
 msgstr "{TXT•}"
+
+# Label for the selected commit, when selecting commits to diff
+#: templates/log.tpl templates/shortlog.tpl
+msgid "selected"
+msgstr "{sēlęctĕd•••}"
+
+# Link to deselect the currently selected diff
+#: templates/log.tpl templates/shortlog.tpl templates/shortloglist.tpl
+msgid "deselect"
+msgstr "{dėsēlĕct•••}"
+
+# Link beside commits - diffs this commit against the currently selected commit
+#: templates/log.tpl templates/shortloglist.tpl
+msgid "diff with selected"
+msgstr "{dīff wĭth sĕlēctęd•••••}"
+
+# Link beside commits - selects this commit to be used in a diff
+#: templates/log.tpl templates/shortloglist.tpl
+msgid "select for diff"
+msgstr "{sēlėct fōr dīff••••}"
 
