@@ -69,7 +69,7 @@ and edit it - the definition and structure of this is explained in
 the config file.
 
 If you want to edit the text header that appears above the project list on the
-home page, edit templates/hometext.tpl.
+home page, create templates/hometext.tpl with your header content.
 
 
 [Caching]
