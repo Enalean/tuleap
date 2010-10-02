@@ -60,19 +60,19 @@ class GitPHP_ProjectListFile extends GitPHP_ProjectListBase
 		$projectRoot = GitPHP_Config::GetInstance()->GetValue('projectroot');
 
 		while (!feof($fp) && ($line = fgets($fp))) {
-			$pinfo = explode(' ', $line);
-			$ppath = trim($pinfo[0]);
-			if (is_file($projectRoot . $ppath . '/HEAD')) {
-				try {
-					$projObj = new GitPHP_Project($ppath);
-					if (isset($pinfo[1])) {
-						$projOwner = trim($pinfo[1]);
-						if (!empty($projOwner)) {
-							$projObj->SetOwner($projOwner);
+			if (preg_match('/^([^\s]+)(\s.+)?$/', $line, $regs)) {
+				if (is_file($projectRoot . $regs[1] . '/HEAD')) {
+					try {
+						$projObj = new GitPHP_Project($regs[1]);
+						if (isset($regs[2]) && !empty($regs[2])) {
+							$projOwner = trim($regs[2]);
+							if (!empty($projOwner)) {
+								$projObj->SetOwner($projOwner);
+							}
 						}
+						$this->projects[] = $projObj;
+					} catch (Exception $e) {
 					}
-					$this->projects[] = $projObj;
-				} catch (Exception $e) {
 				}
 			}
 		}
