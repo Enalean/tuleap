@@ -32,6 +32,16 @@ class GitPHP_Resource
 	protected static $instance = null;
 
 	/**
+	 * currentLocale
+	 *
+	 * Stores the currently instantiated locale identifier
+	 *
+	 * @access protected
+	 * @static
+	 */
+	protected static $currentLocale = '';
+
+	/**
 	 * GetInstance
 	 *
 	 * Returns the singleton instance
@@ -39,11 +49,38 @@ class GitPHP_Resource
 	 * @access public
 	 * @static
 	 * @return mixed instance of resource class
-	 * @throws Exception if resource provider has not been instantiated yet
 	 */
 	public static function GetInstance()
 	{
 		return self::$instance;
+	}
+
+	/**
+	 * Instantiated
+	 *
+	 * Tests if the resource provider has been instantiated
+	 *
+	 * @access public
+	 * @static
+	 * @return boolean true if resource provider is instantiated
+	 */
+	public static function Instantiated()
+	{
+		return (self::$instance !== null);
+	}
+
+	/**
+	 * GetLocale
+	 *
+	 * Gets the currently instantiated locale
+	 *
+	 * @access public
+	 * @static
+	 * @return string locale identifier
+	 */
+	public static function GetLocale()
+	{
+		return self::$currentLocale;
 	}
 
 	/**
@@ -54,17 +91,23 @@ class GitPHP_Resource
 	 * @access public
 	 * @static
 	 * @param string $locale locale to instantiate
-	 * @throws Exception on invalid locale
+	 * @return boolean true if resource provider was instantiated successfully
 	 */
 	public static function Instantiate($locale)
 	{
-		$reader = null;
+		self::$instance = null;
+		self::$currentLocale = '';
 
+		$reader = null;
 		if (!(($locale == 'en_US') || ($locale == 'en'))) {
 			$reader = new FileReader(GITPHP_LOCALEDIR . $locale . '/gitphp.mo');
+			if (!$reader)
+				return false;
 		}
 
 		self::$instance = new gettext_reader($reader);
+		self::$currentLocale = $locale;
+		return true;
 	}
 
 }
