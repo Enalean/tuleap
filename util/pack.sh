@@ -1,0 +1,56 @@
+#!/bin/bash
+#
+# pack.sh
+#
+# pack tarballs for release
+#
+# @author Christopher Han <xiphux@gmail.com>
+# @copyright Copyright (c) 2010 Christopher Han
+# @package GitPHP
+# @package util
+#
+
+STAGEDIR="staging"
+PKGDIR="gitphp"
+
+# Prepare the staging directory
+rm -Rf "${STAGEDIR}"
+mkdir -p "${STAGEDIR}"
+
+# Get a working snapshot of the HEAD
+git archive --format=tar --prefix=${PKGDIR}/ HEAD | tar -C "${STAGEDIR}" -xvf -
+
+# Get the version
+cd "${STAGEDIR}"
+VERSION="`cat ${PKGDIR}/include/version.php | grep '^\$gitphp_version = ' | cut -d '\"' -f 2`"
+
+if [ -z "${VERSION}" ]; then
+	echo "Could not determine version"
+	exit 1
+fi
+
+# Make the snapshot versioned
+PKGVERDIR="${PKGDIR}-${VERSION}"
+mv -v "${PKGDIR}" "${PKGVERDIR}"
+cd "${PKGVERDIR}"
+
+# Build the translations
+./util/msgfmt.sh
+
+# Remove the utility scripts
+rm -rf ./util
+
+cd ..
+
+# Roll the tarballs
+rm -f ${PKGVERDIR}.zip
+rm -f ${PKGVERDIR}.tar.bz2
+rm -f ${PKGVERDIR}.tar.gz
+
+zip -r9 ${PKGVERDIR}.zip ${PKGVERDIR}
+tar -cf ${PKGVERDIR}.tar ${PKGVERDIR}/
+bzip2 -kv9 ${PKGVERDIR}.tar
+gzip -v9 ${PKGVERDIR}.tar
+
+# Remove the working copy
+rm -rf ${PKGVERDIR}
