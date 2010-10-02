@@ -8,13 +8,13 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GitPHP 0.2.0\n"
 "Report-Msgid-Bugs-To: xiphux@gmail.com\n"
-"POT-Creation-Date: 2010-10-02 01:11-0500\n"
+"POT-Creation-Date: 2010-10-02 17:12-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=utf-8\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
@@ -99,6 +99,7 @@ msgid "author"
 msgstr ""
 
 # Used as a link to a plaintext version of a page
+#: templates/tree.tpl
 #: templates/blobdiff.tpl
 #: templates/blame.tpl
 #: templates/commitdiff.tpl
@@ -273,16 +274,6 @@ msgstr ""
 #: templates/projectlist.tpl
 #: include/controller/Controller_Project.class.php:75
 msgid "summary"
-msgstr ""
-
-# Used as an alternate text on javascript "loading" images
-#: templates/header.tpl
-msgid "Loading..."
-msgstr ""
-
-# Used as a loading message while blame data is being pulled from the server
-#: templates/header.tpl
-msgid "Loading blame data..."
 msgstr ""
 
 # Link back to the list of projects
@@ -512,28 +503,28 @@ msgstr ""
 # Error message when user specifies a path for a project root or project, but the path given isn't a directory
 # %1$s: the path the user specified
 #: include/git/ProjectListDirectory.class.php:47
-#: include/git/Project.class.php:194
+#: include/git/Project.class.php:212
 #, php-format
 msgid "%1$s is not a directory"
 msgstr ""
 
 # Error message when a path specified in the config is not a git repository
 # %1$s: the specified path
-#: include/git/Project.class.php:198
+#: include/git/Project.class.php:216
 #, php-format
 msgid "%1$s is not a git repository"
 msgstr ""
 
 # Error message when a path specified is using '..' to break out of the project root (a hack attempt)
 # %1$s: The specified path
-#: include/git/Project.class.php:202
+#: include/git/Project.class.php:220
 #, php-format
 msgid "%1$s is attempting directory traversal"
 msgstr ""
 
 # Error message when a path specified is outside of the project root
 # %1$s: The specified path
-#: include/git/Project.class.php:208
+#: include/git/Project.class.php:226
 #, php-format
 msgid "%1$s is outside of the projectroot"
 msgstr ""
@@ -699,4 +690,14 @@ msgstr ""
 #: templates/log.tpl
 #: templates/shortloglist.tpl
 msgid "select for diff"
+msgstr ""
+
+# Used as an alternate text on javascript "loading" images
+#: templates/header.tpl
+msgid "Loading…"
+msgstr ""
+
+# Used as a loading message while blame data is being pulled from the server
+#: templates/header.tpl
+msgid "Loading blame data…"
 msgstr ""
