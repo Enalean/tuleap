@@ -34,6 +34,9 @@ PKGVERDIR="${PKGDIR}-${VERSION}"
 mv -v "${PKGDIR}" "${PKGVERDIR}"
 cd "${PKGVERDIR}"
 
+# Remove the debug locale, it's not useful in the released version
+rm -rf ./locale/zz_Debug
+
 # Build the translations
 ./util/msgfmt.sh
 
