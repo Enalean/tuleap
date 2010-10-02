@@ -30,7 +30,7 @@
              <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=blob&h={$treeitem->GetHash()}&hb={$commit->GetHash()}&f={$treeitem->GetPath()}" class="list">{$treeitem->GetName()}</a>
 	   </td>
            <td class="link">
-	     <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=blob&h={$treeitem->GetHash()}&hb={$commit->GetHash()}&f={$treeitem->GetPath()}">{t}blob{/t}</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=history&h={$commit->GetHash()}&f={$treeitem->GetPath()}">{t}history{/t}</a>
+	     <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=blob&h={$treeitem->GetHash()}&hb={$commit->GetHash()}&f={$treeitem->GetPath()}">{t}blob{/t}</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=history&h={$commit->GetHash()}&f={$treeitem->GetPath()}">{t}history{/t}</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=blob_plain&h={$treeitem->GetHash()}&f={$treeitem->GetPath()}">{t}plain{/t}</a>
 	   </td>
          {elseif $treeitem instanceof GitPHP_Tree}
 	   <td></td>
