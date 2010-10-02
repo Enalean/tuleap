@@ -169,7 +169,7 @@ abstract class GitPHP_ControllerBase
 	 * @param boolean $local true if caller wants the localized action name
 	 * @return string action name
 	 */
-	public abstract function GetName($local);
+	public abstract function GetName($local = false);
 
 	/**
 	 * ReadQuery
