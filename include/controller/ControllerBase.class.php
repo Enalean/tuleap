@@ -125,11 +125,11 @@ abstract class GitPHP_ControllerBase
 	 */
 	private function GetCacheKeyPrefix()
 	{
-		$cacheKeyPrefix = '';
+		$cacheKeyPrefix = GitPHP_Resource::GetLocale();
 
 		$projList = GitPHP_ProjectList::GetInstance();
 		if ($projList) {
-			$cacheKeyPrefix = sha1(serialize($projList->GetConfig()));
+			$cacheKeyPrefix .= '|' . sha1(serialize($projList->GetConfig()));
 			unset($projList);
 		}
 		if ($this->project) {
