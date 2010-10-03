@@ -43,6 +43,22 @@
       <a href="http://git-scm.com" title="git homepage">
         <img src="images/git-logo.png" width="72" height="27" alt="git" class="logo" />
       </a>
+      {if $supportedlocales}
+      <div class="lang_select">
+        <form action="{$SCRIPT_NAME}" method="get">
+	{foreach from=$requestvars key=var item=val}
+	<input type="hidden" name="{$var}" value="{$val}" />
+	{/foreach}
+	<label for="l">language:</label>
+	<select name="l">
+	  {foreach from=$supportedlocales key=locale item=language}
+	    <option {if $locale == $currentlocale}selected="selected"{/if} value="{$locale}">{$language}</option>
+	  {/foreach}
+	</select>
+	<input type="submit" value="Set" />
+	</form>
+      </div>
+      {/if}
       <a href="index.php">{if $homelink}{$homelink}{else}{t}projects{/t}{/if}</a> / 
       {if $project}
         <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=summary">{$project->GetProject()}</a>

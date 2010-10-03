@@ -251,6 +251,22 @@ abstract class GitPHP_ControllerBase
 		if (isset($this->params['searchtype']))
 			$this->tpl->assign('searchtype', $this->params['searchtype']);
 		$this->tpl->assign('resources', GitPHP_Resource::GetInstance());
+		$this->tpl->assign('currentlocale', GitPHP_Resource::GetLocale());
+		$this->tpl->assign('supportedlocales', GitPHP_Resource::SupportedLocales());
+
+		$getvars = explode('&', $_SERVER['QUERY_STRING']);
+		$getvarsmapped = array();
+		foreach ($getvars as $varstr) {
+			$eqpos = strpos($varstr, '=');
+			if ($eqpos > 0) {
+				$var = substr($varstr, 0, $eqpos);
+				$val = substr($varstr, $eqpos + 1);
+				if (!(empty($var) || empty($val))) {
+					$getvarsmapped[$var] = urldecode($val);
+				}
+			}
+		}
+		$this->tpl->assign('requestvars', $getvarsmapped);
 	}
 
 	/**

@@ -86,6 +86,70 @@ class GitPHP_Resource
 	}
 
 	/**
+	 * GetLocaleName
+	 *
+	 * Gets the current instantiated locale's name
+	 *
+	 * @access public
+	 * @static
+	 * @return string locale name
+	 */
+	public static function GetLocaleName()
+	{
+		return GitPHP_Resource::LocaleToName(self::$currentLocale);
+	}
+
+	/**
+	 * LocaleToName
+	 *
+	 * Given a locale, returns a human readable name
+	 *
+	 * @access public
+	 * @static
+	 * @param string $locale locale
+	 * return string name
+	 */
+	public static function LocaleToName($locale)
+	{
+		switch ($locale) {
+			case 'en_US':
+				return 'English';
+			case 'fr_FR':
+				return 'Français';
+			case 'zz_Debug':
+				return 'Gibberish';
+		}
+		return '';
+	}
+
+	/**
+	 * SupportedLocales
+	 *
+	 * Gets the list of supported locales and their languages
+	 *
+	 * @access public
+	 * @static
+	 * @return array list of locales mapped to languages
+	 */
+	public static function SupportedLocales()
+	{
+		$locales = array();
+
+		$locales['en_US'] = GitPHP_Resource::LocaleToName('en_US');
+
+		if ($dh = opendir(GITPHP_LOCALEDIR)) {
+			while (($file = readdir($dh)) !== false) {
+				$fullPath = GITPHP_LOCALEDIR . '/' . $file;
+				if ((strpos($file, '.') !== 0) && is_dir($fullPath) && is_file($fullPath . '/gitphp.mo')) {
+					$locales[$file] = GitPHP_Resource::LocaleToName($file);
+				}
+			}
+		}
+		
+		return $locales;
+	}
+
+	/**
 	 * Instantiate
 	 *
 	 * Instantiates the singleton instance

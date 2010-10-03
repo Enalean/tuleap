@@ -90,6 +90,14 @@ img.logo {
 	float: right;
 	border-width: 0px;
 }
+div.lang_select {
+	font-size: 12px;
+	font-weight: normal;
+	width: 300px;
+	float: right;
+	text-align: right;
+	padding-right: 10px;
+}
 .respectwhitespace {
 	white-space: pre;
 }
