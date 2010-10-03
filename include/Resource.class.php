@@ -141,6 +141,14 @@ class GitPHP_Resource
 			while (($file = readdir($dh)) !== false) {
 				$fullPath = GITPHP_LOCALEDIR . '/' . $file;
 				if ((strpos($file, '.') !== 0) && is_dir($fullPath) && is_file($fullPath . '/gitphp.mo')) {
+					if ($file == 'zz_Debug') {
+						$conf = GitPHP_Config::GetInstance();
+						if ($conf) {
+							if (!$conf->GetValue('debug', false)) {
+								continue;
+							}
+						}
+					}
 					$locales[$file] = GitPHP_Resource::LocaleToName($file);
 				}
 			}
