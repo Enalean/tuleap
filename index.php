@@ -38,20 +38,48 @@ require_once(GITPHP_CONTROLLERDIR . 'Controller.class.php');
 
 date_default_timezone_set('UTC');
 
+
 /*
  * Set the locale based on the user's preference
  */
-if (isset($_GET['l']) && !empty($_GET['l'])) {
+if ((!isset($_COOKIE[GITPHP_LOCALE_COOKIE])) || empty($_COOKIE[GITPHP_LOCALE_COOKIE])) {
+
+	/*
+	 * User's first time here, try by HTTP_ACCEPT_LANGUAGE
+	 */
+	if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
+		$httpAcceptLang = explode(',', strtok($_SERVER['HTTP_ACCEPT_LANGUAGE'], ';'));
+		$preferredLocale = GitPHP_Resource::FindPreferredLocale($httpAcceptLang);
+		if (!empty($preferredLocale)) {
+			setcookie(GITPHP_LOCALE_COOKIE, $preferredLocale);
+			GitPHP_Resource::Instantiate($preferredLocale);
+		}
+	}
+
+	if (!GitPHP_Resource::Instantiated()) {
+		/*
+		 * Create a dummy cookie to prevent browser delay
+		 */
+		setcookie(GITPHP_LOCALE_COOKIE, 0);
+	}
+
+} else if (isset($_GET['l']) && !empty($_GET['l'])) {
+
+	/*
+	 * User picked something
+	 */
 	setcookie(GITPHP_LOCALE_COOKIE, $_GET['l']);
 	GitPHP_Resource::Instantiate($_GET['l']);
+
 } else if (isset($_COOKIE[GITPHP_LOCALE_COOKIE]) && !empty($_COOKIE[GITPHP_LOCALE_COOKIE])) {
-	GitPHP_Resource::Instantiate($_COOKIE[GITPHP_LOCALE_COOKIE]);
-} else {
+
 	/*
-	 * Create the cookie to prevent browser delay
+	 * Returning visitor with a preference
 	 */
-	setcookie(GITPHP_LOCALE_COOKIE, 0);
+	GitPHP_Resource::Instantiate($_COOKIE[GITPHP_LOCALE_COOKIE]);
+
 }
+
 
 try {
 

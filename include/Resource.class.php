@@ -158,6 +158,44 @@ class GitPHP_Resource
 	}
 
 	/**
+	 * FindPreferredLocale
+	 *
+	 * Given a list of preferred locales, try to find a matching supported locale
+	 *
+	 * @access public
+	 * @static
+	 * @param array locales array of locale preferences
+	 * @return string matching locale if found
+	 */
+	public static function FindPreferredLocale($locales)
+	{
+		if (count($locales) < 1) {
+			return '';
+		}
+
+		$supportedLocales = GitPHP_Resource::SupportedLocales();
+
+		for ($i = 0; $i < count($locales); ++$i) {
+			$locale = str_replace('-', '_', $locales[$i]);
+			$loclen = strlen($locale);
+
+			foreach ($supportedLocales as $l => $lang) {
+				/* 
+				 * using strncasecmp with length of the preferred
+				 * locale means we can match both full
+				 * language + country preference specifications
+				 * (en_US) as well as just language specifications
+				 * (en)
+				 */
+				if (strncasecmp($locale, $l, $loclen) === 0) {
+					return $l;
+				}
+			}
+		}
+		return '';
+	}
+
+	/**
 	 * Instantiate
 	 *
 	 * Instantiates the singleton instance
