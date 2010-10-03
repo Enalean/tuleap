@@ -12,6 +12,8 @@
 require_once(GITPHP_BASEDIR . 'lib/php-gettext/streams.php');
 require_once(GITPHP_BASEDIR . 'lib/php-gettext/gettext.php');
 
+define('GITPHP_LOCALE_COOKIE', 'GitPHPLocale');
+
 /**
  * Resource
  *

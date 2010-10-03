@@ -38,6 +38,21 @@ require_once(GITPHP_CONTROLLERDIR . 'Controller.class.php');
 
 date_default_timezone_set('UTC');
 
+/*
+ * Set the locale based on the user's preference
+ */
+if (isset($_GET['l']) && !empty($_GET['l'])) {
+	setcookie(GITPHP_LOCALE_COOKIE, $_GET['l']);
+	GitPHP_Resource::Instantiate($_GET['l']);
+} else if (isset($_COOKIE[GITPHP_LOCALE_COOKIE]) && !empty($_COOKIE[GITPHP_LOCALE_COOKIE])) {
+	GitPHP_Resource::Instantiate($_COOKIE[GITPHP_LOCALE_COOKIE]);
+} else {
+	/*
+	 * Create the cookie to prevent browser delay
+	 */
+	setcookie(GITPHP_LOCALE_COOKIE, 0);
+}
+
 try {
 
 	// Define these here because these get used in the config file
@@ -51,9 +66,12 @@ try {
 	GitPHP_Config::GetInstance()->LoadConfig(GITPHP_CONFIGDIR . 'gitphp.conf.php');
 
 	/*
-	 * Resource
+	 * Use the default language in the config if user has no preference
+	 * with en_US as the fallback
 	 */
-	GitPHP_Resource::Instantiate(GitPHP_Config::GetInstance()->GetValue('locale', 'en_US'));
+	if (!GitPHP_Resource::Instantiated()) {
+		GitPHP_Resource::Instantiate(GitPHP_Config::GetInstance()->GetValue('locale', 'en_US'));
+	}
 
 	/*
 	 * Debug
@@ -88,7 +106,7 @@ try {
 		throw $e;
 	}
 
-	if (GitPHP_Resource::GetInstance() == null) {
+	if (!GitPHP_Resource::Instantiated()) {
 		/*
 		 * In case an error was thrown before instantiating
 		 * the resource manager
