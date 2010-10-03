@@ -48,7 +48,9 @@
       <div class="lang_select">
         <form action="{$SCRIPT_NAME}" method="get" id="frmLangSelect">
 	{foreach from=$requestvars key=var item=val}
+	{if $var != "l"}
 	<input type="hidden" name="{$var}" value="{$val}" />
+	{/if}
 	{/foreach}
 	<label for="l">language:</label>
 	<select name="l" id="selLang">
