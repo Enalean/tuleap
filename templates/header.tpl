@@ -52,13 +52,13 @@
 	<input type="hidden" name="{$var}" value="{$val}" />
 	{/if}
 	{/foreach}
-	<label for="l">language:</label>
+	<label for="l">{t}language:{/t}</label>
 	<select name="l" id="selLang">
 	  {foreach from=$supportedlocales key=locale item=language}
 	    <option {if $locale == $currentlocale}selected="selected"{/if} value="{$locale}">{$language} ({$locale})</option>
 	  {/foreach}
 	</select>
-	<input type="submit" value="Set" id="btnLangSet" />
+	<input type="submit" value="{t}set{/t}" id="btnLangSet" />
 	</form>
       </div>
       {/if}

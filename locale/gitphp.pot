@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GitPHP 0.2.0\n"
 "Report-Msgid-Bugs-To: xiphux@gmail.com\n"
-"POT-Creation-Date: 2010-10-02 17:12-0500\n"
+"POT-Creation-Date: 2010-10-02 23:01-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -646,7 +646,7 @@ msgstr ""
 
 # Error message when user hasn't defined a project root in the config
 # "projectroot" refers to a root directory where the user's git projects are stored
-#: index.php:67
+#: index.php:113
 msgid "A projectroot must be set in the config"
 msgstr ""
 
@@ -700,4 +700,15 @@ msgstr ""
 # Used as a loading message while blame data is being pulled from the server
 #: templates/header.tpl
 msgid "Loading blame data…"
+msgstr ""
+
+# Used as a label by the language selector drop-down box
+#: templates/header.tpl
+msgid "language:"
+msgstr ""
+
+# Used as a button by the language selector drop-down box to set the
+# language to the user's choice
+#: templates/header.tpl
+msgid "set"
 msgstr ""
