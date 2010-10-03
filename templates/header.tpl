@@ -55,7 +55,7 @@
 	<label for="l">language:</label>
 	<select name="l" id="selLang">
 	  {foreach from=$supportedlocales key=locale item=language}
-	    <option {if $locale == $currentlocale}selected="selected"{/if} value="{$locale}">{$language}</option>
+	    <option {if $locale == $currentlocale}selected="selected"{/if} value="{$locale}">{$language} ({$locale})</option>
 	  {/foreach}
 	</select>
 	<input type="submit" value="Set" id="btnLangSet" />
