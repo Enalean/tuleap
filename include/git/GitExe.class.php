@@ -193,4 +193,29 @@ class GitPHP_GitExe
 
 	}
 
+	/**
+	 * CanIgnoreRegexpCase
+	 *
+	 * Tests if this version of git has the regexp tuning option to ignore regexp case
+	 *
+	 * @access public
+	 * @return true if we can ignore regexp case
+	 */
+	public function CanIgnoreRegexpCase()
+	{
+		$version = $this->GetVersion();
+		if (!empty($version)) {
+			$splitver = explode('.', $version);
+
+			/*
+			 * regexp-ignore-case only appears in git 1.5.3
+			 */
+			if (($splitver[0] < 1) || (($splitver[0] == 1) && ($splitver[1] < 5)) || (($splitver[0] == 1) && ($splitver[1] == 5) && ($splitver[2] < 3))) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
 }
