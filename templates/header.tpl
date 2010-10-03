@@ -32,6 +32,7 @@
     <script language="javascript" src="js/ext/jquery-1.4.2.min.js"></script>
     <script language="javascript" src="js/ext/jquery.qtip.min.js"></script>
     <script language="javascript" src="js/tooltips.js"></script>
+    <script language="javascript" src="js/lang.js"></script>
     {foreach from=$extrascripts item=script}
     <script language="javascript" src="{$script}"></script>
     {/foreach}
@@ -45,17 +46,17 @@
       </a>
       {if $supportedlocales}
       <div class="lang_select">
-        <form action="{$SCRIPT_NAME}" method="get">
+        <form action="{$SCRIPT_NAME}" method="get" id="frmLangSelect">
 	{foreach from=$requestvars key=var item=val}
 	<input type="hidden" name="{$var}" value="{$val}" />
 	{/foreach}
 	<label for="l">language:</label>
-	<select name="l">
+	<select name="l" id="selLang">
 	  {foreach from=$supportedlocales key=locale item=language}
 	    <option {if $locale == $currentlocale}selected="selected"{/if} value="{$locale}">{$language}</option>
 	  {/foreach}
 	</select>
-	<input type="submit" value="Set" />
+	<input type="submit" value="Set" id="btnLangSet" />
 	</form>
       </div>
       {/if}
