@@ -48,8 +48,8 @@ if ((!isset($_COOKIE[GITPHP_LOCALE_COOKIE])) || empty($_COOKIE[GITPHP_LOCALE_COO
 	 * User's first time here, try by HTTP_ACCEPT_LANGUAGE
 	 */
 	if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
-		$httpAcceptLang = explode(',', strtok($_SERVER['HTTP_ACCEPT_LANGUAGE'], ';'));
-		$preferredLocale = GitPHP_Resource::FindPreferredLocale($httpAcceptLang);
+		$httpAcceptLang = explode(',', $_SERVER['HTTP_ACCEPT_LANGUAGE']);
+		$preferredLocale = GitPHP_Resource::FindPreferredLocale($_SERVER['HTTP_ACCEPT_LANGUAGE']);
 		if (!empty($preferredLocale)) {
 			setcookie(GITPHP_LOCALE_COOKIE, $preferredLocale);
 			GitPHP_Resource::Instantiate($preferredLocale);

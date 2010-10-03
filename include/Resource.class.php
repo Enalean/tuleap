@@ -164,31 +164,49 @@ class GitPHP_Resource
 	 *
 	 * @access public
 	 * @static
-	 * @param array locales array of locale preferences
+	 * @param string $httpAcceptLang HTTP Accept-Language string
 	 * @return string matching locale if found
 	 */
-	public static function FindPreferredLocale($locales)
+	public static function FindPreferredLocale($httpAcceptLang)
 	{
-		if (count($locales) < 1) {
+		if (empty($httpAcceptLang))
 			return '';
+
+		$locales = explode(',', $httpAcceptLang);
+
+		$localePref = array();
+
+		foreach ($locales as $locale) {
+			$quality = '1.0';
+			$localeData = explode(';', trim($locale));
+			if (count($localeData) > 1) {
+				$q = trim($localeData[1]);
+				if (substr($q, 0, 2) == 'q=') {
+					$quality = substr($q, 2);
+				}
+			}
+			$localePref[$quality][] = trim($localeData[0]);
 		}
+		krsort($localePref);
 
 		$supportedLocales = GitPHP_Resource::SupportedLocales();
 
-		for ($i = 0; $i < count($locales); ++$i) {
-			$locale = str_replace('-', '_', $locales[$i]);
-			$loclen = strlen($locale);
+		foreach ($localePref as $quality => $qualityArray) {
+			foreach ($qualityArray as $browserLocale) {
+				$locale = str_replace('-', '_', $browserLocale);
+				$loclen = strlen($locale);
 
-			foreach ($supportedLocales as $l => $lang) {
-				/* 
-				 * using strncasecmp with length of the preferred
-				 * locale means we can match both full
-				 * language + country preference specifications
-				 * (en_US) as well as just language specifications
-				 * (en)
-				 */
-				if (strncasecmp($locale, $l, $loclen) === 0) {
-					return $l;
+				foreach ($supportedLocales as $l => $lang) {
+					/* 
+					 * using strncasecmp with length of the preferred
+					 * locale means we can match both full
+					 * language + country preference specifications
+					 * (en_US) as well as just language specifications
+					 * (en)
+					 */
+					if (strncasecmp($locale, $l, $loclen) === 0) {
+						return $l;
+					}
 				}
 			}
 		}
