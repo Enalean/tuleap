@@ -37,6 +37,7 @@ register_confirmation	registration_deleted	Registration Deleted
 register_confirmation	project_deleted	Project registration deleted
 register_confirmation	try_again	Please try again in the future.
 register_confirmation	ins_desc_fail	INSERTING DESCRIPTION FIELD FAILED. PLEASE report to admin@$1 $2
+register_confirmation	cant_copy_msg_to_requester	ERROR - Can not copy default message to requester to access your project.
 #
 #-----------------------------------------------
 # Script: src/common/project//form.php

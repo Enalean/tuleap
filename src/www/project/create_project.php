@@ -192,6 +192,19 @@ function create_project($data, $do_not_exit = false) {
                 exit_error($GLOBALS['Language']->getText('global','error'),$GLOBALS['Language']->getText('register_confirmation','cant_create_service') .'<br>'. db_error());
             }
         }
+        //Add the import of the message to requester from the parent project if defined
+        if ($template_id != 100) {
+            $sql="SELECT msg_to_requester FROM message_notif_delegation WHERE group_id=$template_id";
+            $result=db_query($sql);
+            if (db_numrows($result) == 1) {
+                $row = db_fetch_array($result);
+                $sql="INSERT INTO message_notif_delegation (group_id, msg_to_requester) VALUES ('".$group_id."', '".$row['msg_to_requester']."')";
+                $result=db_query($sql);
+                if (!$result) {
+                    exit_error($GLOBALS['Language']->getText('global','error'),$GLOBALS['Language']->getText('register_confirmation','cant_copy_msg_to_requester'));
+                }
+            }
+        }
         
         //Copy forums from template project 
         $sql = "SELECT forum_name, is_public, description FROM forum_group_list WHERE group_id=$template_id ";
