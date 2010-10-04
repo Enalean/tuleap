@@ -102,6 +102,7 @@
 	   <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=blob_plain&h={$diffline->GetToHash()}&f={$diffline->GetFromFile()}">{t}plain{/t}</a>
 	 </td>
        {elseif $diffline->GetStatus() == "D"}
+         {assign var=parent value=$commit->GetParent()}
          <td>
 	   <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=blob&h={$diffline->GetFromHash()}&hb={$commit->GetHash()}&f={$diffline->GetFromFile()}" class="list">
 	     {$diffline->GetFromFile()}
@@ -116,7 +117,7 @@
          <td class="link">
 	   <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=blob&h={$diffline->GetFromHash()}&hb={$commit->GetHash()}&f={$diffline->GetFromFile()}">{t}blob{/t}</a>
 	    | 
-	   <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=history&h={$commit->GetHash()}&f={$diffline->GetFromFile()}">{t}history{/t}</a>
+	   <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=history&h={$parent->GetHash()}&f={$diffline->GetFromFile()}">{t}history{/t}</a>
 	    | 
 	   <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=blob_plain&h={$diffline->GetFromHash()}&f={$diffline->GetFromFile()}">{t}plain{/t}</a>
 	 </td>
