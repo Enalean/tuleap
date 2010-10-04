@@ -3322,6 +3322,20 @@ CREATE TABLE groups_notif_delegation (
   ugroup_id int(11) NOT NULL,
   PRIMARY KEY (group_id, ugroup_id)
 );
+
+
+
+# --------------------------------------------------------
+
+#
+# Table structure for Message Notif Delegation
+#
+
+CREATE TABLE message_notif_delegation (
+  group_id int(11) NOT NULL default 0,
+  msg_to_requester text NOT NULL default "",
+  PRIMARY KEY (group_id)
+);
 #
 # EOF
 #
