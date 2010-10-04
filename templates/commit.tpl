@@ -98,6 +98,8 @@
 	 </td>
          <td class="link">
 	   <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=blob&h={$diffline->GetToHash()}&hb={$commit->GetHash()}&f={$diffline->GetFromFile()}">{t}blob{/t}</a>
+	    | 
+	   <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=blob_plain&h={$diffline->GetToHash()}&f={$diffline->GetFromFile()}">{t}plain{/t}</a>
 	 </td>
        {elseif $diffline->GetStatus() == "D"}
          <td>
@@ -112,7 +114,11 @@
 	   </span>
 	 </td>
          <td class="link">
-	   <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=blob&h={$diffline->GetFromHash()}&hb={$commit->GetHash()}&f={$diffline->GetFromFile()}">{t}blob{/t}</a> | <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=history&h={$commit->GetHash()}&f={$diffline->GetFromFile()}">{t}history{/t}</a>
+	   <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=blob&h={$diffline->GetFromHash()}&hb={$commit->GetHash()}&f={$diffline->GetFromFile()}">{t}blob{/t}</a>
+	    | 
+	   <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=history&h={$commit->GetHash()}&f={$diffline->GetFromFile()}">{t}history{/t}</a>
+	    | 
+	   <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=blob_plain&h={$diffline->GetFromHash()}&f={$diffline->GetFromFile()}">{t}plain{/t}</a>
 	 </td>
        {elseif $diffline->GetStatus() == "M" || $diffline->GetStatus() == "T"}
          <td>
@@ -173,6 +179,7 @@
 	     | <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=blobdiff&h={$diffline->GetToHash()}&hp={$diffline->GetFromHash()}&hb={$par->GetHash()}&f={$diffline->GetToFile()}">{t}diff{/t}</a>
 	   {/if}
 	     | <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=history&h={$commit->GetHash()}&f={$diffline->GetFromFile()}">{t}history{/t}</a>
+             | <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=blob_plain&h={$diffline->GetToHash()}&f={$diffline->GetToFile()}">{t}plain{/t}</a>
 	 </td>
        {elseif $diffline->GetStatus() == "R"}
          <td>
@@ -200,6 +207,7 @@
 	   {if $diffline->GetToHash() != $diffline->GetFromHash()}
 	     | <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=blobdiff&h={$diffline->GetToHash()}&hp={$diffline->GetFromHash()}&hb={$par->GetHash()}&f={$diffline->GetToFile()}">{t}diff{/t}</a>
 	   {/if}
+	    | <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=blob_plain&h={$diffline->GetToHash()}&f={$diffline->GetToFile()}">{t}plain{/t}</a>
 	 </td>
        {/if}
 
