@@ -42,6 +42,7 @@ class WebDAVPlugin extends Plugin {
         parent::__construct($id);
         $this->setScope(Plugin::SCOPE_PROJECT);
         $this->_addHook('url_verification_instance', 'urlVerification', false);
+        $this->_addHook('WebDAVService', 'addDocmanService', false);
 
     }
 
@@ -72,6 +73,26 @@ class WebDAVPlugin extends Plugin {
     function urlVerification(&$params) {
         $webdavHost = $this->getPluginInfo()->getPropertyValueForName('webdav_host');
         $params['url_verification'] = new Webdav_URLVerification($webdavHost);
+    }
+
+    /**
+     * Gets the root node of docman service
+     *
+     * @param Array $params
+     *
+     * @return void
+     */
+    function addDocmanService($params) {
+        $root = null;
+        $em =& EventManager::instance();
+        $em->processEvent('webdav_root_for_service', array('project' => $params['project'],
+                                                           'service' => 'docman',
+                                                           'root'    => &$root));
+        if ($root) {
+            require_once ('FS/WebDAVDocmanFolder.class.php');
+            $docman = new WebDAVDocmanFolder($params['user'] , $params['project'], $params['maxFileSize'], $root);
+            $params['children']['Documents'] = $docman;
+        }
     }
 
     /**
