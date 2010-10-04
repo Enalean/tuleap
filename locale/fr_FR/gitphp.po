@@ -1,14 +1,15 @@
 # GitPHP
 # Copyright (C) 2010 Christopher Han
 # This file is distributed under the same license as the GitPHP package.
-# Christopher Han <xiphux@gmail.com>, 2010.
 #
+# Christopher Han <xiphux@gmail.com>, 2010.
+# Zaran Krleza <zaran.krleza@gmail.com>, 2010.
 msgid ""
 msgstr ""
 "Project-Id-Version: GitPHP 0.2.0\n"
 "Report-Msgid-Bugs-To: xiphux@gmail.com\n"
-"POT-Creation-Date: 2010-10-02 17:12-0500\n"
-"PO-Revision-Date: 2010-10-03 01:14+0200\n"
+"POT-Creation-Date: 2010-10-02 23:01-0500\n"
+"PO-Revision-Date: 2010-10-04 23:05+0200\n"
 "Last-Translator: Zaran Krleza <zaran.krleza@gmail.com>\n"
 "Language-Team: French <zaran.krleza@gmail.com>\n"
 "Language: \n"
@@ -16,6 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Lokalize 1.1\n"
 
 # Used as link to and title for page displaying a blob, which is what git calls a single file
 #: templates/tree.tpl templates/blobdiff.tpl templates/commit.tpl
@@ -588,7 +590,7 @@ msgstr "à l'instant"
 
 # Error message when user hasn't defined a project root in the config
 # "projectroot" refers to a root directory where the user's git projects are stored
-#: index.php:67
+#: index.php:113
 msgid "A projectroot must be set in the config"
 msgstr "Il faut spécifier la racine des projets dans la configuration"
 
@@ -627,7 +629,7 @@ msgstr "diff avec marqué"
 # Link beside commits - selects this commit to be used in a diff
 #: templates/log.tpl templates/shortloglist.tpl
 msgid "select for diff"
-msgstr "marqué pour diff"
+msgstr "marquer pour diff"
 
 # Used as an alternate text on javascript "loading" images
 #: templates/header.tpl
@@ -639,4 +641,14 @@ msgstr "Chargement..."
 msgid "Loading blame data…"
 msgstr "Chargement des données pour l'annotation…"
 
+# Used as a label by the language selector drop-down box
+#: templates/header.tpl
+msgid "language:"
+msgstr "langage :"
+
+# Used as a button by the language selector drop-down box to set the
+# language to the user's choice
+#: templates/header.tpl
+msgid "set"
+msgstr "choisir"
 
