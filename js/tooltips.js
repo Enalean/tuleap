@@ -48,6 +48,11 @@ function initTooltips() {
 			},
 			style: {
 				classes: 'ui-tooltip-light ui-tooltip-shadow'
+			},
+			position: {
+				adjust: {
+					screen: true
+				}
 			}
 		});
 	});
@@ -78,6 +83,11 @@ function initTooltips() {
 			},
 			style: {
 				classes: 'ui-tooltip-light ui-tooltip-shadow'
+			},
+			position: {
+				adjust: {
+					screen: true
+				}
 			}
 		});
 	});
