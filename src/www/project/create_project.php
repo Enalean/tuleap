@@ -193,20 +193,20 @@ function create_project($data, $do_not_exit = false) {
             }
         }
         //Add the import of the message to requester from the parent project if defined
-        if ($template_id != 100) {
-            $sql="SELECT msg_to_requester FROM message_notif_delegation WHERE group_id=$template_id";
-            $result=db_query($sql);
-            if (db_numrows($result) == 1) {
-                $row = db_fetch_array($result);
-                $sql="INSERT INTO message_notif_delegation (group_id, msg_to_requester) VALUES ('".$group_id."', '".$row['msg_to_requester']."')";
-                $result=db_query($sql);
-                if (!$result) {
-                    exit_error($GLOBALS['Language']->getText('global','error'),$GLOBALS['Language']->getText('register_confirmation','cant_copy_msg_to_requester'));
-                }
-            }
+        $sql='SELECT msg_to_requester FROM groups_notif_delegation_message WHERE group_id='.db_ei($template_id);
+        $result=db_query($sql);
+        if ($result && db_numrows($result) == 1) {
+            $sql = 'INSERT INTO groups_notif_delegation_message (group_id, msg_to_requester) VALUES ('.db_ei($group_id).', "'.db_es(db_result($result,0,'msg_to_requester')).'")';
+        } else {
+            $sql = 'INSERT INTO groups_notif_delegation_message (group_id, msg_to_requester) VALUES ('.db_ei($group_id).', "member_request_delegation_msg_to_requester")';
         }
-        
-        //Copy forums from template project 
+        $result=db_query($sql);
+        if (!$result) {
+            exit_error($GLOBALS['Language']->getText('global','error'),$GLOBALS['Language']->getText('register_confirmation','cant_copy_msg_to_requester'));
+        }
+
+
+        //Copy forums from template project
         $sql = "SELECT forum_name, is_public, description FROM forum_group_list WHERE group_id=$template_id ";
         $result=db_query($sql);
         while ($arr = db_fetch_array($result)) {

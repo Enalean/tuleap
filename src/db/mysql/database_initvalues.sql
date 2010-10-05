@@ -235,9 +235,9 @@ INSERT INTO groups SET \
   svn_preamble = '' ;
 
 
-INSERT INTO message_notif_delegation SET \
+INSERT INTO groups_notif_delegation_message SET \
   group_id = '100', \
-  msg_to_requester = '<In order to make administrator approve your request, please provide him with some details: Site, Organisation, Manager, Function and Your purpose. The more precise are the information the quicker will be his answer.>';
+  msg_to_requester = 'member_request_delegation_msg_to_requester';
 
 #
 # Default Data for 'user_group'

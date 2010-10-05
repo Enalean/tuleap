@@ -3331,7 +3331,7 @@ CREATE TABLE groups_notif_delegation (
 # Table structure for Message Notif Delegation
 #
 
-CREATE TABLE message_notif_delegation (
+CREATE TABLE groups_notif_delegation_message (
   group_id int(11) NOT NULL default 0,
   msg_to_requester text NOT NULL default "",
   PRIMARY KEY (group_id)
