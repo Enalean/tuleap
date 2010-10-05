@@ -26,8 +26,9 @@
  */
 class WebDAVDocmanDocument extends Sabre_DAV_File {
 
-    protected $document;
     protected $user;
+    protected $project;
+    protected $document;
 
     /**
      * Constuctor of the class
@@ -38,8 +39,9 @@ class WebDAVDocmanDocument extends Sabre_DAV_File {
      * @return void
      */
     function __construct($user, $project, $maxFileSize, $document) {
-        $this->document = $document;
         $this->user = $user;
+        $this->project = $project;
+        $this->document = $document;
     }
 
     /**
@@ -104,6 +106,24 @@ class WebDAVDocmanDocument extends Sabre_DAV_File {
      */
     function getLastModified() {
         return $this->getDocument()->getUpdateDate();
+    }
+
+    /**
+     * Returns the the project that document belongs to
+     *
+     * @return FRSProject
+     */
+    function getProject() {
+        return $this->project;
+    }
+
+    /**
+     * Returns the user
+     *
+     * @return User
+     */
+    function getUser() {
+        return $this->user;
     }
 
     /**

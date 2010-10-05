@@ -18,6 +18,7 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once (dirname(__FILE__).'/../../../docman/include/Docman_Log.class.php');
 require_once('WebDAVDocmanDocument.class.php');
 
 /**
@@ -38,13 +39,23 @@ class WebDAVDocmanFile extends WebDAVDocmanDocument {
         $item = $if->getItemFromDb($this->getDocument()->getId());
         $version = $item->getCurrentVersion();
         if (file_exists($version->getPath())) {
+            // Log the download
+            $logger = new Docman_Log();
+            $params = array('group_id' => $this->getProject()->getGroupId(),
+                            'item'     => $item,
+                            'version'  => $version->getNumber(),
+                            'user'     => $this->getUser(),
+                            'event'    => 'plugin_docman_event_access');
+            $logger->log($params['event'], $params);
+            // Wait for watermarking
             $em =& EventManager::instance();
             $em->processEvent('plugin_docman_file_before_download', array(
                                              'item'            => $this->getDocument(),
-                                             'user'            => $this->user,
+                                             'user'            => $this->getUser(),
                                              'version'         => $version,
                                              'docmanControler' => null
             ));
+            // Download the file
             header('Content-Type: '. $version->getFiletype());
             header('Content-Length: '. $version->getFilesize());
             header('Content-Disposition: filename="'. $version->getFilename() .'"');
