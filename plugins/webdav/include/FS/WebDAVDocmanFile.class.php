@@ -35,33 +35,13 @@ class WebDAVDocmanFile extends WebDAVDocmanDocument {
      * @return File
      */
     function get() {
-        $if = new Docman_ItemFactory();
-        $item = $if->getItemFromDb($this->getDocument()->getId());
+        $dif = $this->getItemFactory();
+        $item = $dif->getItemFromDb($this->getDocument()->getId());
         $version = $item->getCurrentVersion();
         if (file_exists($version->getPath())) {
             if ($this->getSize() <= $this->getMaxFileSize()) {
-                // Log the download
-                $logger = new Docman_Log();
-                $params = array('group_id' => $this->getProject()->getGroupId(),
-                            'item'     => $item,
-                            'version'  => $version->getNumber(),
-                            'user'     => $this->getUser(),
-                            'event'    => 'plugin_docman_event_access');
-                $logger->log($params['event'], $params);
-                // Wait for watermarking
-                $em =& EventManager::instance();
-                $em->processEvent('plugin_docman_file_before_download', array(
-                                             'item'            => $this->getDocument(),
-                                             'user'            => $this->getUser(),
-                                             'version'         => $version,
-                                             'docmanControler' => null
-                ));
-                // Download the file
-                header('Content-Type: '. $version->getFiletype());
-                header('Content-Length: '. $version->getFilesize());
-                header('Content-Disposition: filename="'. $version->getFilename() .'"');
-                readfile($version->getPath());
-                exit;
+                $this->logDownload($version);
+                $this->download($version);
             } else {
                 throw new Sabre_DAV_Exception_RequestedRangeNotSatisfiable($GLOBALS['Language']->getText('plugin_webdav_download', 'error_file_size'));
             }
@@ -121,6 +101,56 @@ class WebDAVDocmanFile extends WebDAVDocmanDocument {
      */
     function getMaxFileSize() {
         return $this->maxFileSize;
+    }
+
+    /**
+     * Log the download
+     *
+     * @param $version
+     *
+     * @return null
+     */
+    function logDownload($version) {
+        $logger = new Docman_Log();
+        $params = array('group_id' => $this->getProject()->getGroupId(),
+                        'item'     => $this->getDocument(),
+                        'version'  => $version->getNumber(),
+                        'user'     => $this->getUser(),
+                        'event'    => 'plugin_docman_event_access');
+        $logger->log($params['event'], $params);
+    }
+
+    /**
+     * Downloads the file
+     *
+     * @param $version
+     *
+     * @return null
+     */
+    function download($version) {
+        // Wait for watermarking
+        $em =& EventManager::instance();
+        $em->processEvent('plugin_docman_file_before_download', array(
+                                             'item'            => $this->getDocument(),
+                                             'user'            => $this->getUser(),
+                                             'version'         => $version,
+                                             'docmanControler' => null
+        ));
+        // Download the file
+        header('Content-Type: '. $version->getFiletype());
+        header('Content-Length: '. $version->getFilesize());
+        header('Content-Disposition: filename="'. $version->getFilename() .'"');
+        readfile($version->getPath());
+        exit;
+    }
+
+    /**
+     * Returns a new instance of Docman_ItemFactory
+     *
+     * @return Docman_ItemFactory
+     */
+    function getItemFactory() {
+        return new Docman_ItemFactory();
     }
 
 }
