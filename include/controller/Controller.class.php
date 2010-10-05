@@ -96,6 +96,10 @@ class GitPHP_Controller
 				if ($action === 'blob_plain')
 					$controller->SetParam('plain', true);
 				break;
+			case 'atom':
+				require_once(GITPHP_CONTROLLERDIR . 'Controller_Atom.class.php');
+				$controller = new GitPHP_Controller_Atom();
+				break;
 			case 'rss':
 				require_once(GITPHP_CONTROLLERDIR . 'Controller_Rss.class.php');
 				$controller = new GitPHP_Controller_Rss();
