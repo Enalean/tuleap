@@ -5,20 +5,19 @@
  *
  *  Copyright (C) 2009 Christopher Han <xiphux@gmail.com>
  *}
-
- {include file='header.tpl'}
+{include file='header.tpl'}
 
  <div class="page_nav">
    {include file='nav.tpl' treecommit=$commit}
    <br />
-   <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=blob_plain&h={$blob->GetHash()}&f={$blob->GetPath()}">{t}plain{/t}</a> | 
+   <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=blob_plain&amp;h={$blob->GetHash()}&amp;f={$blob->GetPath()}">{t}plain{/t}</a> | 
    {if ($commit->GetHash() != $head->GetHash()) && ($head->PathToHash($blob->GetPath()))}
-     <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=blob&hb=HEAD&f={$blob->GetPath()}">{t}HEAD{/t}</a>
+     <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=blob&amp;hb=HEAD&amp;f={$blob->GetPath()}">{t}HEAD{/t}</a>
    {else}
      {t}HEAD{/t}
    {/if}
-    | <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=history&h={$commit->GetHash()}&f={$blob->GetPath()}">{t}history{/t}</a>
-   {if !$datatag} | <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=blame&h={$blob->GetHash()}&f={$blob->GetPath()}&hb={$commit->GetHash()}" id="blameLink">{t}blame{/t}</a>{/if}
+    | <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=history&amp;h={$commit->GetHash()}&amp;f={$blob->GetPath()}">{t}history{/t}</a>
+   {if !$datatag} | <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=blame&amp;h={$blob->GetHash()}&amp;f={$blob->GetPath()}&amp;hb={$commit->GetHash()}" id="blameLink">{t}blame{/t}</a>{/if}
    <br />
  </div>
 

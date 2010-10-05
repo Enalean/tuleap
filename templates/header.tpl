@@ -13,7 +13,7 @@
     <title>{$pagetitle}{if $project} :: {$project->GetProject()}{if $actionlocal}/{$actionlocal}{/if}{/if}</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     {if $project}
-      <link rel="alternate" title="{$project->GetProject()} log" href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=rss" type="application/rss+xml" />
+      <link rel="alternate" title="{$project->GetProject()} log" href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=rss" type="application/rss+xml" />
     {/if}
     <link rel="stylesheet" href="css/{$stylesheet}" type="text/css" />
     {if $extracss}
@@ -66,7 +66,7 @@
       {/if}
       <a href="index.php">{if $homelink}{$homelink}{else}{t}projects{/t}{/if}</a> / 
       {if $project}
-        <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&a=summary">{$project->GetProject()}</a>
+        <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=summary">{$project->GetProject()}</a>
         {if $actionlocal}
            / {$actionlocal}
         {/if}
