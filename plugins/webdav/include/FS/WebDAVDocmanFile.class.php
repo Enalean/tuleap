@@ -39,7 +39,7 @@ class WebDAVDocmanFile extends WebDAVDocmanDocument {
         $item = $if->getItemFromDb($this->getDocument()->getId());
         $version = $item->getCurrentVersion();
         if (file_exists($version->getPath())) {
-            if ($this->getSize() <= $this->maxFileSize) {
+            if ($this->getSize() <= $this->getMaxFileSize()) {
                 // Log the download
                 $logger = new Docman_Log();
                 $params = array('group_id' => $this->getProject()->getGroupId(),
@@ -112,6 +112,15 @@ class WebDAVDocmanFile extends WebDAVDocmanDocument {
         $item = $if->getItemFromDb($this->getDocument()->getId());
         $version = $item->getCurrentVersion();
         return $version->getFilesize();
+    }
+
+    /**
+     * Returns the max file size
+     *
+     * @return Integer
+     */
+    function getMaxFileSize() {
+        return $this->maxFileSize;
     }
 
 }
