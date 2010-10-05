@@ -46,7 +46,7 @@
      <tr>
        <td>{t}commit{/t}</td>
        <td class="monospace">{$commit->GetHash()}</td>
-     <tr>
+     </tr>
      <tr>
        <td>{t}tree{/t}</td>
        <td class="monospace"><a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=tree&amp;h={$tree->GetHash()}&amp;hb={$commit->GetHash()}" class="list">{$tree->GetHash()}</a></td>
