@@ -28,19 +28,23 @@ class WebDAVDocmanDocument extends Sabre_DAV_File {
 
     protected $user;
     protected $project;
+    protected $maxFileSize;
     protected $document;
 
     /**
      * Constuctor of the class
      *
-     * @param Docman_Document $document
      * @param User $user
+     * @param Project $project
+     * @param Ineger $maxFileSize
+     * @param Docman_Document $document
      *
      * @return void
      */
     function __construct($user, $project, $maxFileSize, $document) {
         $this->user = $user;
         $this->project = $project;
+        $this->maxFileSize = $maxFileSize;
         $this->document = $document;
     }
 

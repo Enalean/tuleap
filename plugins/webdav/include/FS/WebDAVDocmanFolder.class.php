@@ -31,6 +31,7 @@ class WebDAVDocmanFolder extends Sabre_DAV_Directory {
 
     private $user;
     private $project;
+    private $maxFileSize;
     private $folder;
 
     /**
@@ -46,6 +47,7 @@ class WebDAVDocmanFolder extends Sabre_DAV_Directory {
     function __construct($user, $project, $maxFileSize, $folder) {
         $this->user = $user;
         $this->project = $project;
+        $this->maxFileSize = $maxFileSize;
         $this->folder = $folder;
     }
 
@@ -188,6 +190,15 @@ class WebDAVDocmanFolder extends Sabre_DAV_Directory {
     }
 
     /**
+     * Returns the max file size
+     *
+     * @return Integer
+     */
+    function getMaxFileSize() {
+        return $this->maxFileSize;
+    }
+
+    /**
      * Returns an instance of WebDAVUtils
      *
      * @return WebDAVUtils
@@ -206,7 +217,7 @@ class WebDAVDocmanFolder extends Sabre_DAV_Directory {
      * @return WebDAVDocmanFile
      */
     function getWebDAVDocmanFile($item) {
-        return new WebDAVDocmanFile($this->user, $this->getProject(), null, $item);
+        return new WebDAVDocmanFile($this->user, $this->getProject(), $this->getMaxFileSize(), $item);
     }
 
     /**
@@ -217,7 +228,7 @@ class WebDAVDocmanFolder extends Sabre_DAV_Directory {
      * @return WebDAVDocmanEmpty
      */
     function getWebDAVDocmanDocument($item) {
-        return new WebDAVDocmanDocument($this->user, $this->getProject(), null, $item);
+        return new WebDAVDocmanDocument($this->user, $this->getProject(), $this->getMaxFileSize(), $item);
     }
 
     /**
@@ -228,7 +239,7 @@ class WebDAVDocmanFolder extends Sabre_DAV_Directory {
      * @return WebDAVDocmanFolder
      */
     function getWebDAVDocmanFolder($folder) {
-        return new WebDAVDocmanFolder($this->user, $this->getProject(), null, $folder);
+        return new WebDAVDocmanFolder($this->user, $this->getProject(), $this->getMaxFileSize(), $folder);
     }
 
     /**

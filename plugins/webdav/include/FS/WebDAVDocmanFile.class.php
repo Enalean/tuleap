@@ -39,31 +39,34 @@ class WebDAVDocmanFile extends WebDAVDocmanDocument {
         $item = $if->getItemFromDb($this->getDocument()->getId());
         $version = $item->getCurrentVersion();
         if (file_exists($version->getPath())) {
-            // Log the download
-            $logger = new Docman_Log();
-            $params = array('group_id' => $this->getProject()->getGroupId(),
+            if ($this->getSize() <= $this->maxFileSize) {
+                // Log the download
+                $logger = new Docman_Log();
+                $params = array('group_id' => $this->getProject()->getGroupId(),
                             'item'     => $item,
                             'version'  => $version->getNumber(),
                             'user'     => $this->getUser(),
                             'event'    => 'plugin_docman_event_access');
-            $logger->log($params['event'], $params);
-            // Wait for watermarking
-            $em =& EventManager::instance();
-            $em->processEvent('plugin_docman_file_before_download', array(
+                $logger->log($params['event'], $params);
+                // Wait for watermarking
+                $em =& EventManager::instance();
+                $em->processEvent('plugin_docman_file_before_download', array(
                                              'item'            => $this->getDocument(),
                                              'user'            => $this->getUser(),
                                              'version'         => $version,
                                              'docmanControler' => null
-            ));
-            // Download the file
-            header('Content-Type: '. $version->getFiletype());
-            header('Content-Length: '. $version->getFilesize());
-            header('Content-Disposition: filename="'. $version->getFilename() .'"');
-            readfile($version->getPath());
-            exit;
+                ));
+                // Download the file
+                header('Content-Type: '. $version->getFiletype());
+                header('Content-Length: '. $version->getFilesize());
+                header('Content-Disposition: filename="'. $version->getFilename() .'"');
+                readfile($version->getPath());
+                exit;
+            } else {
+                throw new Sabre_DAV_Exception_RequestedRangeNotSatisfiable($GLOBALS['Language']->getText('plugin_webdav_download', 'error_file_size'));
+            }
         } else {
-            // TODO : internationalization
-            throw new Sabre_DAV_Exception_FileNotFound('File not found on the filesystem');
+            throw new Sabre_DAV_Exception_FileNotFound($GLOBALS['Language']->getText('plugin_webdav_download', 'file_not_available'));
         }
     }
 
