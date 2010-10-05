@@ -14,18 +14,19 @@ locale/en_US)
 
 2. locale/gitphp.pot contains all the extracted strings from the project,
 plus various translation comments I've added.  This file is provided by me
-and updated anytime new strings are added.  To get started, copy this file
-into your locale directory with a .po extension.  So I'd do:
+and updated anytime new strings are added.  To get started, use this file
+to initialize a new po file in your locale directory:
 
-cp locale/gitphp.pot locale/en_US/gitphp.po
+msginit --locale=en_US -i locale/gitphp.pot -o locale/en_US/gitphp.po
 
 
 3. Translate all of the strings in this file.  The easiest way to do this
 is by using a po editor.  There are quite a few out there - poEdit is a
 popular one.
-If you're doing this by hand, you will want to fill out all the headers
-at the top (Last-Translator, Plural-Forms, etc), and for each string,
-read the english in "msgid" and put the translated string into "msgstr".
+If you're doing this by hand, you will want to make sure all the headers at
+the top (Last-Translator, Plural-Forms, etc) are filled correctly, and for
+each string, read the english in "msgid" and put the translated string into
+"msgstr".
 Plural forms which have a "msgid" as well as a "msgid_plural" should have
 the singular translated string in msgstr[0] and the plural translated string
 in msgstr[1].
