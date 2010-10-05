@@ -106,7 +106,7 @@ class WebDAVDocmanFile extends WebDAVDocmanDocument {
     /**
      * Log the download
      *
-     * @param $version
+     * @param Docman_Version $version
      *
      * @return null
      */
@@ -123,7 +123,7 @@ class WebDAVDocmanFile extends WebDAVDocmanDocument {
     /**
      * Downloads the file
      *
-     * @param $version
+     * @param Docman_Version $version
      *
      * @return null
      */
