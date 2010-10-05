@@ -160,7 +160,6 @@ function create_project($data, $do_not_exit = false) {
 
         $template_id = $group->getTemplate();
         
-        $pm = ProjectManager::instance();
         $template_group = $pm->getProject($template_id);
         if (!$template_group || !is_object($template_group) || $template_group->isError()) {
           exit_no_group();
@@ -193,10 +192,10 @@ function create_project($data, $do_not_exit = false) {
             }
         }
         //Add the import of the message to requester from the parent project if defined
-        $sql='SELECT msg_to_requester FROM groups_notif_delegation_message WHERE group_id='.db_ei($template_id);
-        $result=db_query($sql);
-        if ($result && db_numrows($result) == 1) {
-            $sql = 'INSERT INTO groups_notif_delegation_message (group_id, msg_to_requester) VALUES ('.db_ei($group_id).', "'.db_es(db_result($result,0,'msg_to_requester')).'")';
+        $dar = $pm->getMessageToRequesterForAccessProject($template_id);
+        if ($dar && !$dar->isError() && $dar->rowCount() == 1) {
+            $row = $dar->getRow();
+            $sql = 'INSERT INTO groups_notif_delegation_message (group_id, msg_to_requester) VALUES ('.db_ei($group_id).', "'.db_es($row['msg_to_requester']).'")';
         } else {
             $sql = 'INSERT INTO groups_notif_delegation_message (group_id, msg_to_requester) VALUES ('.db_ei($group_id).', "member_request_delegation_msg_to_requester")';
         }

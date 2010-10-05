@@ -243,5 +243,17 @@ class ProjectManager {
         $dao = $this->_getDao();
         return $dao->getMembershipRequestNotificationUGroup($groupId);
     }
+
+    /**
+     * Returns the message to be displayed to requester asking access for a given project
+     * 
+     * @param Integer $groupId
+     * 
+     * @return DataAceesResult
+     */
+    public function getMessageToRequesterForAccessProject($groupId) {
+        $dao = $this->_getDao();
+        return $dao->getMessageToRequesterForAccessProject($groupId);
+    }
 }
 ?>
