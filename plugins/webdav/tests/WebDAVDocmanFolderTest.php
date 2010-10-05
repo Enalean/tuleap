@@ -17,9 +17,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
-/**
- * This is the unit test of WebDAVDocmanFolder
- */
 
 require_once (dirname(__FILE__).'/../../../src/common/language/BaseLanguage.class.php');
 Mock::generate('BaseLanguage');
@@ -31,6 +28,8 @@ require_once (dirname(__FILE__).'/../include/lib/Sabre/DAV/Node.php');
 require_once (dirname(__FILE__).'/../include/lib/Sabre/DAV/ICollection.php');
 require_once (dirname(__FILE__).'/../include/lib/Sabre/DAV/IDirectory.php');
 require_once (dirname(__FILE__).'/../include/lib/Sabre/DAV/Directory.php');
+require_once (dirname(__FILE__).'/../include/lib/Sabre/DAV/IFile.php');
+require_once (dirname(__FILE__).'/../include/lib/Sabre/DAV/File.php');
 require_once (dirname(__FILE__).'/../../docman/include/Docman_Item.class.php');
 Mock::generate('Docman_Item');
 //require_once (dirname(__FILE__).'/../../docman/include/Docman_Folder.class.php');
@@ -77,6 +76,9 @@ class MockDocmanFolder extends Docman_Folder {
     }
 }
 
+/**
+ * This is the unit test of WebDAVDocmanFolder
+ */
 class WebDAVDocmanFolderTest extends UnitTestCase {
 
     /**
@@ -126,9 +128,7 @@ class WebDAVDocmanFolderTest extends UnitTestCase {
      */
     function testGetChildrenDuplicateName() {
         $webDAVDocmanFolder = new WebDAVDocmanFolderTestVersion($this);
-        // TODO : make this an item after adding documents
         $item1 = new TestDocmanFolder();
-        // TODO : make this an item after adding documents
         $item2 = new TestDocmanFolder();
         $dif = new MockDocman_ItemFactory();
         $dif->setReturnValue('getChildrenFromParent', array($item1, $item2));
@@ -144,7 +144,6 @@ class WebDAVDocmanFolderTest extends UnitTestCase {
      */
     function testGetChildrenSuccess() {
         $webDAVDocmanFolder = new WebDAVDocmanFolderTestVersion($this);
-        // TODO : make this different items after adding documents
         $item1 = new TestDocmanFolder();
         $item2 = new TestDocmanFolder2();
         $dif = new MockDocman_ItemFactory();
@@ -177,7 +176,6 @@ class WebDAVDocmanFolderTest extends UnitTestCase {
      */
     function testGetChildSuccess() {
         $webDAVDocmanFolder = new WebDAVDocmanFolderTestVersion2($this);
-        // TODO : make this an item after adding documents
         $item = new MockDocmanFolder();
         $dif = new MockDocman_ItemFactory();
         $dif->setReturnValue('getChildrenFromParent', array($item));

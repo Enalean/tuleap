@@ -19,6 +19,8 @@
  */
 
 require_once (dirname(__FILE__).'/../../../docman/include/Docman_ItemFactory.class.php');
+require_once ('WebDAVDocmanDocument.class.php');
+require_once ('WebDAVDocmanFile.class.php');
 
 /**
  * This class Represents Docman folders in WebDAV
@@ -63,18 +65,45 @@ class WebDAVDocmanFolder extends Sabre_DAV_Directory {
             // userCanAccess vs userCanRead "that is the question"
             // TODO : test this for all possible cases by comparing with docman behaviour to be sure
             if ($this->getDocmanPermissionsManager()->userCanAccess($this->getUser(), $node->getId())) {
-                if ($node instanceof Docman_Folder) {
-                    if (!isset($children[$node->getTitle()])) {
-                        $children[$node->getTitle()] = $this->getWebDAVDocmanFolder($node);
-                    } else {
-                        // When it's a duplicate say it, so it can be removed later
-                        $children[$node->getTitle()] = 'duplicate';
-                    }
+                $class = get_class($node);
+                switch ($class) {
+                    case 'Docman_File':
+                        $item = $dif->getItemFromDb($node->getId());
+                        $version = $item->getCurrentVersion();
+                        if (!isset($children[$version->getFilename()])) {
+                            $children[$version->getFilename()] = $this->getWebDAVDocmanFile($node);
+                        } else {
+                            $children[$version->getFilename()] = 'duplicate';
+                        }
+                        break;
+                    case 'Docman_EmbeddedFile':
+                        if (!isset($children[$node->getTitle()])) {
+                            $children[$node->getTitle().'.html'] = $this->getWebDAVDocmanFile($node);
+                        } else {
+                            $children[$node->getTitle().'.html'] = 'duplicate';
+                        }
+                        break;
+                    case 'Docman_Empty':
+                    case 'Docman_Wiki':
+                    case 'Docman_Link':
+                        if (!isset($children[$node->getTitle()])) {
+                            $children[$node->getTitle()] = $this->getWebDAVDocmanDocument($node);
+                        } else {
+                            $children[$node->getTitle()] = 'duplicate';
+                        }
+                        break;
+                    default:
+                        if (!isset($children[$node->getTitle()])) {
+                            $children[$node->getTitle()] = $this->getWebDAVDocmanFolder($node);
+                        } else {
+                            $children[$node->getTitle()] = 'duplicate';
+                        }
+                        break;
                 }
             }
         }
         // Remove all duplicate elements
-        foreach($children as $key=>$node) {
+        foreach ($children as $key=>$node) {
             if ($node === 'duplicate') {
                 unset($children[$key]);
             }
@@ -86,6 +115,8 @@ class WebDAVDocmanFolder extends Sabre_DAV_Directory {
      * Returns the given node
      *
      * @param String $name
+     *
+     * @return mixed
      *
      * @see lib/Sabre/DAV/Sabre_DAV_Directory#getChild($name)
      */
@@ -153,6 +184,28 @@ class WebDAVDocmanFolder extends Sabre_DAV_Directory {
      */
     function getUser() {
         return $this->user;
+    }
+
+    /**
+     * Returns a new WebDAVDocmanFile
+     *
+     * @params Docman_File $item
+     *
+     * @return WebDAVDocmanFile
+     */
+    function getWebDAVDocmanFile($item) {
+        return new WebDAVDocmanFile($this->user, $this->getProject(), null, $item);
+    }
+
+    /**
+     * Returns a new WebDAVDocmanEmpty
+     *
+     * @params mixed $item
+     *
+     * @return WebDAVDocmanEmpty
+     */
+    function getWebDAVDocmanDocument($item) {
+        return new WebDAVDocmanDocument($this->user, $this->getProject(), null, $item);
     }
 
     /**
