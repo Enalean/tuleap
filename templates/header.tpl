@@ -24,17 +24,17 @@
     </style>
     {/if}
     {if $javascript}
-    <script language="javascript">
+    <script type="text/javascript">
       var GITPHP_RES_LOADING="{t escape='js'}Loading…{/t}";
       var GITPHP_RES_LOADING_BLAME_DATA="{t escape='js'}Loading blame data…{/t}";
     </script>
     <link rel="stylesheet" href="css/ext/jquery.qtip.css" type="text/css" />
-    <script language="javascript" src="js/ext/jquery-1.4.2.min.js"></script>
-    <script language="javascript" src="js/ext/jquery.qtip.min.js"></script>
-    <script language="javascript" src="js/tooltips.js"></script>
-    <script language="javascript" src="js/lang.js"></script>
+    <script type="text/javascript" src="js/ext/jquery-1.4.2.min.js"></script>
+    <script type="text/javascript" src="js/ext/jquery.qtip.min.js"></script>
+    <script type="text/javascript" src="js/tooltips.js"></script>
+    <script type="text/javascript" src="js/lang.js"></script>
     {foreach from=$extrascripts item=script}
-    <script language="javascript" src="{$script}"></script>
+    <script type="text/javascript" src="{$script}"></script>
     {/foreach}
     {/if}
     {$smarty.capture.header}
@@ -47,18 +47,20 @@
       {if $supportedlocales}
       <div class="lang_select">
         <form action="{$SCRIPT_NAME}" method="get" id="frmLangSelect">
+         <div>
 	{foreach from=$requestvars key=var item=val}
 	{if $var != "l"}
 	<input type="hidden" name="{$var}" value="{$val}" />
 	{/if}
 	{/foreach}
-	<label for="l">{t}language:{/t}</label>
+	<label for="selLang">{t}language:{/t}</label>
 	<select name="l" id="selLang">
 	  {foreach from=$supportedlocales key=locale item=language}
 	    <option {if $locale == $currentlocale}selected="selected"{/if} value="{$locale}">{if $language}{$language} ({$locale}){else}{$locale}{/if}</option>
 	  {/foreach}
 	</select>
 	<input type="submit" value="{t}set{/t}" id="btnLangSet" />
+         </div>
 	</form>
       </div>
       {/if}

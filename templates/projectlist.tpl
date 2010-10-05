@@ -5,7 +5,6 @@
  *
  *  Copyright (C) 2009 Christopher Han <xiphux@gmail.com>
  *}
-
 {include file='header.tpl'}
 
 <div class="index_header">
@@ -63,9 +62,9 @@ git source code archive
 
     <tr class="{cycle values="light,dark"}">
       <td>
-        <a href="{$SCRIPT_NAME}?p={$proj->GetProject()|urlencode}&a=summary" class="list {if $currentcategory != ''}indent{/if}">{$proj->GetProject()}</a>
+        <a href="{$SCRIPT_NAME}?p={$proj->GetProject()|urlencode}&amp;a=summary" class="list {if $currentcategory != ''}indent{/if}">{$proj->GetProject()}</a>
       </td>
-      <td><a href="{$SCRIPT_NAME}?p={$proj->GetProject()|urlencode}&a=summary" class="list">{$proj->GetDescription()}</a></td>
+      <td><a href="{$SCRIPT_NAME}?p={$proj->GetProject()|urlencode}&amp;a=summary" class="list">{$proj->GetDescription()}</a></td>
       <td><em>{$proj->GetOwner()}</em></td>
       <td>
         {assign var=projecthead value=$proj->GetHeadCommit()}
@@ -80,13 +79,13 @@ git source code archive
 	{/if}
       </td>
       <td class="link">
-        <a href="{$SCRIPT_NAME}?p={$proj->GetProject()|urlencode}&a=summary">{t}summary{/t}</a>
+        <a href="{$SCRIPT_NAME}?p={$proj->GetProject()|urlencode}&amp;a=summary">{t}summary{/t}</a>
 	{if $projecthead}
 	| 
-	<a href="{$SCRIPT_NAME}?p={$proj->GetProject()|urlencode}&a=shortlog">{t}shortlog{/t}</a> | 
-	<a href="{$SCRIPT_NAME}?p={$proj->GetProject()|urlencode}&a=log">{t}log{/t}</a> | 
-	<a href="{$SCRIPT_NAME}?p={$proj->GetProject()|urlencode}&a=tree">{t}tree{/t}</a> | 
-	<a href="{$SCRIPT_NAME}?p={$proj->GetProject()|urlencode}&a=snapshot&h=HEAD">{t}snapshot{/t}</a>
+	<a href="{$SCRIPT_NAME}?p={$proj->GetProject()|urlencode}&amp;a=shortlog">{t}shortlog{/t}</a> | 
+	<a href="{$SCRIPT_NAME}?p={$proj->GetProject()|urlencode}&amp;a=log">{t}log{/t}</a> | 
+	<a href="{$SCRIPT_NAME}?p={$proj->GetProject()|urlencode}&amp;a=tree">{t}tree{/t}</a> | 
+	<a href="{$SCRIPT_NAME}?p={$proj->GetProject()|urlencode}&amp;a=snapshot&amp;h=HEAD">{t}snapshot{/t}</a>
 	{/if}
       </td>
     </tr>
