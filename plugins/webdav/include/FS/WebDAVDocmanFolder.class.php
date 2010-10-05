@@ -62,8 +62,6 @@ class WebDAVDocmanFolder extends Sabre_DAV_Directory {
         $dif = $this->getDocmanItemFactory();
         $nodes = $dif->getChildrenFromParent($this->getFolder());
         foreach ($nodes as $node) {
-            // userCanAccess vs userCanRead "that is the question"
-            // TODO : test this for all possible cases by comparing with docman behaviour to be sure
             if ($this->getDocmanPermissionsManager()->userCanAccess($this->getUser(), $node->getId())) {
                 $class = get_class($node);
                 switch ($class) {
@@ -78,9 +76,9 @@ class WebDAVDocmanFolder extends Sabre_DAV_Directory {
                         break;
                     case 'Docman_EmbeddedFile':
                         if (!isset($children[$node->getTitle()])) {
-                            $children[$node->getTitle().'.html'] = $this->getWebDAVDocmanFile($node);
+                            $children[$node->getTitle()] = $this->getWebDAVDocmanFile($node);
                         } else {
-                            $children[$node->getTitle().'.html'] = 'duplicate';
+                            $children[$node->getTitle()] = 'duplicate';
                         }
                         break;
                     case 'Docman_Empty':
@@ -89,6 +87,7 @@ class WebDAVDocmanFolder extends Sabre_DAV_Directory {
                         if (!isset($children[$node->getTitle()])) {
                             $children[$node->getTitle()] = $this->getWebDAVDocmanDocument($node);
                         } else {
+                            // When it's a duplicate say it, so it can be removed later
                             $children[$node->getTitle()] = 'duplicate';
                         }
                         break;
@@ -116,11 +115,12 @@ class WebDAVDocmanFolder extends Sabre_DAV_Directory {
      *
      * @param String $name
      *
-     * @return mixed
+     * @return Docman_Item
      *
      * @see lib/Sabre/DAV/Sabre_DAV_Directory#getChild($name)
      */
     function getChild($name) {
+        $name = $this->getUtils()->retrieveName($name);
         // TODO : this is too heavy, try to make it lighter.
         $dif = $this->getDocmanItemFactory();
         // TODO : set $children as a member of the class to make it lighter to use.
@@ -145,7 +145,8 @@ class WebDAVDocmanFolder extends Sabre_DAV_Directory {
             // case of the root
             return 'Documents';
         }
-        return $this->getFolder()->getTitle();
+        $utils = $this->getUtils();
+        return $utils->unconvertHTMLSpecialChars($this->getFolder()->getTitle());
     }
 
     /**
@@ -184,6 +185,17 @@ class WebDAVDocmanFolder extends Sabre_DAV_Directory {
      */
     function getUser() {
         return $this->user;
+    }
+
+    /**
+     * Returns an instance of WebDAVUtils
+     *
+     * @return WebDAVUtils
+     */
+    function getUtils() {
+
+        return WebDAVUtils::getInstance();
+
     }
 
     /**

@@ -20,6 +20,7 @@
 
 require_once (dirname(__FILE__).'/../../../src/common/language/BaseLanguage.class.php');
 Mock::generate('BaseLanguage');
+require_once (dirname(__FILE__).'/../include/WebDAVUtils.class.php');
 require_once (dirname(__FILE__).'/../include/lib/Sabre/DAV/Exception.php');
 require_once (dirname(__FILE__).'/../include/lib/Sabre/DAV/Exception/Conflict.php');
 require_once (dirname(__FILE__).'/../include/lib/Sabre/DAV/Exception/FileNotFound.php');

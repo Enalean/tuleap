@@ -35,12 +35,12 @@ class WebDAVDocmanFile extends WebDAVDocmanDocument {
      */
     function get() {
         $if = new Docman_ItemFactory();
-        $item = $if->getItemFromDb($this->document->getId());
+        $item = $if->getItemFromDb($this->getDocument()->getId());
         $version = $item->getCurrentVersion();
         if (file_exists($version->getPath())) {
             $em =& EventManager::instance();
             $em->processEvent('plugin_docman_file_before_download', array(
-                                             'item'            => $this->document,
+                                             'item'            => $this->getDocument(),
                                              'user'            => $this->user,
                                              'version'         => $version,
                                              'docmanControler' => null
@@ -62,15 +62,15 @@ class WebDAVDocmanFile extends WebDAVDocmanDocument {
      * @return String
      */
     function getName() {
-        switch (get_class($this->document)) {
+        switch (get_class($this->getDocument())) {
             case 'Docman_File':
                 $dif = new Docman_ItemFactory();
-                $item = $dif->getItemFromDb($this->document->getId());
+                $item = $dif->getItemFromDb($this->getDocument()->getId());
                 $version = $item->getCurrentVersion();
                 return $version->getFilename();
                 break;
             case 'Docman_EmbeddedFile':
-                return $this->document->getTitle().'.html';
+                return $this->getDocument()->getTitle();
         }
     }
 
@@ -83,7 +83,7 @@ class WebDAVDocmanFile extends WebDAVDocmanDocument {
      */
     function getContentType() {
         $if = new Docman_ItemFactory();
-        $item = $if->getItemFromDb($this->document->getId());
+        $item = $if->getItemFromDb($this->getDocument()->getId());
         $version = $item->getCurrentVersion();
         return $version->getFiletype();
     }
@@ -95,7 +95,7 @@ class WebDAVDocmanFile extends WebDAVDocmanDocument {
      */
     function getSize() {
         $if = new Docman_ItemFactory();
-        $item = $if->getItemFromDb($this->document->getId());
+        $item = $if->getItemFromDb($this->getDocument()->getId());
         $version = $item->getCurrentVersion();
         return $version->getFilesize();
     }
