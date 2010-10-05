@@ -255,5 +255,17 @@ class ProjectManager {
         $dao = $this->_getDao();
         return $dao->getMessageToRequesterForAccessProject($groupId);
     }
+
+    /**
+     * Defines the message to be displayed to requester asking access for a given project
+     * 
+     * @param Integer $groupId
+     * @param String  $message
+     * 
+     */
+    public function setMessageToRequesterForAccessProject($groupId, $message) {
+        $dao = $this->_getDao();
+        return $dao->setMessageToRequesterForAccessProject($groupId, $message);
+    }
 }
 ?>

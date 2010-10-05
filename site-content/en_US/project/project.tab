@@ -200,6 +200,9 @@ project_admin_index	member_request_delegation_desc	When people don't have access
 project_admin_index	member_request_delegation_ugroups_error	Invalid user groups
 project_admin_index	member_request_delegation_ugroups_msg	The user group to be notified for admin delegation is added.
 project_admin_index	member_request_delegation_msg_to_requester	<In order to make administrator approve your request, please provide him with some details: Site, Organisation, Manager, Function and Your purpose. The more precise are the information the quicker will be his answer.>
+project_admin_index	member_request_delegation_msg_desc	This is the default message which will be displayed to requester. You can personnalize it.
+project_admin_index	member_request_delegation_msg_info	The default message for requester has been updated successfully.
+project_admin_index	member_request_delegation_msg_error	Can not update the default message for requester.
 project_admin_index	or	or
 project_admin_index	changed_group_type	Changed Project Type
 project_admin_index	group_type	Project Type

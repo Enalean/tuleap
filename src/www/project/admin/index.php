@@ -42,7 +42,7 @@ if ($group->getStatus() != 'A') {
 
 $em = EventManager::instance();
 
-$vFunc = new Valid_WhiteList('func', array('adduser', 'rmuser', 'change_group_type', 'member_req_notif_group'));
+$vFunc = new Valid_WhiteList('func', array('adduser', 'rmuser', 'change_group_type', 'member_req_notif_group', 'member_req_notif_message'));
 $vFunc->required();
 if ($request->isPost() && $request->valid($vFunc)) {
     /*
@@ -90,6 +90,19 @@ if ($request->isPost() && $request->valid($vFunc)) {
             }
         } else {
             $GLOBALS['Response']->addFeedback('error', $Language->getText('project_admin_index', 'member_request_delegation_ugroups_error'));
+        }
+        break;
+
+    case 'member_req_notif_message':
+        $vMessage = new Valid_Text('text');
+        $vMessage->required();
+        if ($request->valid($vMessage)) {
+            $message = $request->get('text');
+            if ($pm->setMessageToRequesterForAccessProject($group_id, $message)) {
+                $GLOBALS['Response']->addFeedback('info', $Language->getText('project_admin_index', 'member_request_delegation_msg_info'));
+            }
+        } else {
+            $GLOBALS['Response']->addFeedback('error', $Language->getText('project_admin_index', 'member_request_delegation_msg_error'));
         }
         break;
     }
@@ -431,6 +444,29 @@ echo html_build_multiple_select_box_from_array($ugroupList, "ugroups[]", $select
 echo '<br />';
 echo '<input type="submit" name="submit" value="'.$Language->getText('global', 'btn_update').'" />';
 echo '</form>';
+echo '</td></tr>';
+
+echo '<tr><td colspan="2">';
+echo $Language->getText('project_admin_index','member_request_delegation_msg_desc');
+echo '</td></tr>';
+
+$message = $GLOBALS['Language']->getText('project_admin_index', 'member_request_delegation_msg_to_requester');
+$pm = ProjectManager::instance();
+$dar = $pm->getMessageToRequesterForAccessProject($group_id);
+if ($dar && !$dar->isError() && $dar->rowCount() == 1) {
+    $row = $dar->current();
+    if ($row['msg_to_requester'] != "member_request_delegation_msg_to_requester" ) {
+        $message = $row['msg_to_requester'];
+    }
+}
+echo '<tr><td colspan="2" style="text-align: center;">';
+echo '<form method="post" action="?">
+          <textarea wrap="virtual" rows="5" cols="70" name="text">'.$message.'</textarea></p>
+          <input type="hidden" name="func" value="member_req_notif_message">
+          <input type="hidden" name="group_id" value="' .$group_id. '">
+          <br><input name="submit" type="submit" value="'.$GLOBALS['Language']->getText('global', 'btn_update').'"/></br>
+     </form>';
+
 echo '</td></tr>';
 
 echo $HTML->box1_bottom();
