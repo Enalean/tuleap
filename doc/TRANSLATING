@@ -1,0 +1,86 @@
+Translating GitPHP
+
+GitPHP uses Gettext for string tokenization.  Gettext is a standard
+translation system for software.  Going into all the details of how
+gettext translation works is beyond the scope of this document - this
+is just a high-level overview of the steps you need to take to see
+GitPHP in your language.
+
+
+1. Create a directory in the locale/ directory, named by your locale.
+(I'll use en_US as my example throughout - so I'd create directory
+locale/en_US)
+
+
+2. locale/gitphp.pot contains all the extracted strings from the project,
+plus various translation comments I've added.  This file is provided by me
+and updated anytime new strings are added.  To get started, copy this file
+into your locale directory with a .po extension.  So I'd do:
+
+cp locale/gitphp.pot locale/en_US/gitphp.po
+
+
+3. Translate all of the strings in this file.  The easiest way to do this
+is by using a po editor.  There are quite a few out there - poEdit is a
+popular one.
+If you're doing this by hand, you will want to fill out all the headers
+at the top (Last-Translator, Plural-Forms, etc), and for each string,
+read the english in "msgid" and put the translated string into "msgstr".
+Plural forms which have a "msgid" as well as a "msgid_plural" should have
+the singular translated string in msgstr[0] and the plural translated string
+in msgstr[1].
+Parameters that are passed into the string - for example, dynamic counts or
+info from the page itself - appear as %[num] with an optional $[type] behind it,
+for example %1 or %2$d.  These should stay intact in your string, and the
+parameters will be inserted at runtime.
+You can look at the debugging locale locale/zz_Debug/gitphp.po or any of the
+other existing locales as an example.
+
+
+4. Once you're done, save and compile the po into a binary mo.  This should
+be in the same directory as your po file.  So for example, I would compile
+locale/en_US/gitphp.po into locale/en_US/gitphp.mo.  Most po editors will
+do this for you - if not, you can compile it on the command line with the
+msgfmt command:
+
+msgfmt -o locale/en_US/gitphp.mo locale/en_US/gitphp.po
+
+I also have a script in the util directory that you can run from the base
+gitphp directory, which will compile all the locales in the locale
+directory:
+
+./util/msgfmt.sh
+
+
+5. The language selection box presents the language choices as
+user-friendly human-readable language names, in the user's native language.
+In order to support this, you need to create a mapping of the locale to
+your language name, in your native language, in the file
+include/Resource.class.php, function LocaleToName.  Just add a case statement
+to the switch, where the case is your locale and the return is the readable
+name.
+
+
+6. Every now and then, as the project's code changes, new strings will come out
+or strings will be modified, and your translation will be updated.  In this
+case, you will need to merge the updates from locale/gitphp.pot into your
+translation.  You can run this command to see what updates are needed
+(the order of parameters is important here):
+
+msgmerge locale/en_US/gitphp.po locale/gitphp.pot
+
+Add the -U flag to do the actual update in your file.  All your existing
+translations will be left alone, and new strings will be added for you to
+translate.  A string that was translated already but may have been changed
+slightly will be marked "fuzzy" - this means you should evaluate whether the
+existing translation is still correct for the changed string.  If it's ok
+as-is, just mark it as not fuzzy.  If it needs to be updated, update it.
+After all your updates are done, save and make sure to recompile your mo file.
+
+
+
+That's all for translation.  As long as your mo file is compiled, it will be
+available as a language choice.  If you email your translation po to me, I can
+include it with the official distribution and everyone can benefit from it :)
+
+
