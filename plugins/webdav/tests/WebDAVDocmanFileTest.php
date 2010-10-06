@@ -37,7 +37,7 @@ require_once (dirname(__FILE__).'/../include/FS/WebDAVDocmanFile.class.php');
 Mock::generatePartial(
     'WebDAVDocmanFile',
     'WebDAVDocmanFileTestVersion',
-array('getItemFactory', 'getSize', 'getMaxFileSize', 'getDocument', 'logDownload', 'download')
+array('getItemFactory', 'getSize', 'getMaxFileSize', 'getItem', 'logDownload', 'download')
 );
 
 /**
@@ -73,7 +73,7 @@ class WebDAVDocmanFileTest extends UnitTestCase {
         $dif = new MockDocman_ItemFactory();
         $dif->setReturnValue('getItemFromDb', $item);
         $webDAVDocmanFile->setReturnValue('getItemFactory', $dif);
-        $webDAVDocmanFile->setReturnValue('getDocument', $item);
+        $webDAVDocmanFile->setReturnValue('getItem', $item);
         $this->expectException('Sabre_DAV_Exception_FileNotFound');
         $webDAVDocmanFile->get();
     }
@@ -92,7 +92,7 @@ class WebDAVDocmanFileTest extends UnitTestCase {
         $dif = new MockDocman_ItemFactory();
         $dif->setReturnValue('getItemFromDb', $item);
         $webDAVDocmanFile->setReturnValue('getItemFactory', $dif);
-        $webDAVDocmanFile->setReturnValue('getDocument', $item);
+        $webDAVDocmanFile->setReturnValue('getItem', $item);
         $this->expectException('Sabre_DAV_Exception_RequestedRangeNotSatisfiable');
         $webDAVDocmanFile->get();
     }
@@ -111,7 +111,7 @@ class WebDAVDocmanFileTest extends UnitTestCase {
         $dif = new MockDocman_ItemFactory();
         $dif->setReturnValue('getItemFromDb', $item);
         $webDAVDocmanFile->setReturnValue('getItemFactory', $dif);
-        $webDAVDocmanFile->setReturnValue('getDocument', $item);
+        $webDAVDocmanFile->setReturnValue('getItem', $item);
         $this->assertNoErrors();
         $webDAVDocmanFile->get();
     }

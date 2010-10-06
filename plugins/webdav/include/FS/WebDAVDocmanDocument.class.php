@@ -58,7 +58,7 @@ class WebDAVDocmanDocument extends Sabre_DAV_File {
     function get() {
         header('Content-Type: text/plain');
         header('Content-Length: 0');
-        header('Content-Disposition: filename="'.$this->getDocument()->getTitle().'"');
+        header('Content-Disposition: filename="'.$this->getItem()->getTitle().'"');
         readfile('');
         exit;
     }
@@ -72,7 +72,7 @@ class WebDAVDocmanDocument extends Sabre_DAV_File {
      */
     function getName() {
         $utils = $this->getUtils();
-        return $utils->unconvertHTMLSpecialChars($this->getDocument()->getTitle());
+        return $utils->unconvertHTMLSpecialChars($this->getItem()->getTitle());
     }
 
     /**
@@ -84,8 +84,8 @@ class WebDAVDocmanDocument extends Sabre_DAV_File {
      */
     function getContentType() {
         $if = new Docman_ItemFactory();
-        $item = $if->getItemFromDb($this->getDocument()->getId());
-        switch (get_class($this->getDocument())) {
+        $item = $if->getItemFromDb($this->getItem()->getId());
+        switch (get_class($this->getItem())) {
             case 'Docman_Wiki':
                 return 'Wiki';
                 break;
@@ -117,7 +117,7 @@ class WebDAVDocmanDocument extends Sabre_DAV_File {
      * @see plugins/webdav/include/lib/Sabre/DAV/Sabre_DAV_Node::getLastModified()
      */
     function getLastModified() {
-        return $this->getDocument()->getUpdateDate();
+        return $this->getItem()->getUpdateDate();
     }
 
     /**
@@ -143,7 +143,7 @@ class WebDAVDocmanDocument extends Sabre_DAV_File {
      *
      * @return Docman_Document
      */
-    function getDocument() {
+    function getItem() {
         return $this->document;
     }
 

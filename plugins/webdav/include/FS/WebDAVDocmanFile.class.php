@@ -38,7 +38,7 @@ class WebDAVDocmanFile extends WebDAVDocmanDocument {
      */
     function get() {
         $dif = $this->getItemFactory();
-        $item = $dif->getItemFromDb($this->getDocument()->getId());
+        $item = $dif->getItemFromDb($this->getItem()->getId());
         $version = $item->getCurrentVersion();
         if (file_exists($version->getPath())) {
             if ($this->getSize() <= $this->getMaxFileSize()) {
@@ -60,15 +60,15 @@ class WebDAVDocmanFile extends WebDAVDocmanDocument {
      * @see plugins/webdav/include/FS/WebDAVDocmanDocument::getName()
      */
     function getName() {
-        switch (get_class($this->getDocument())) {
+        switch (get_class($this->getItem())) {
             case 'Docman_File':
                 $dif = new Docman_ItemFactory();
-                $item = $dif->getItemFromDb($this->getDocument()->getId());
+                $item = $dif->getItemFromDb($this->getItem()->getId());
                 $version = $item->getCurrentVersion();
                 return $version->getFilename();
                 break;
             case 'Docman_EmbeddedFile':
-                return $this->getDocument()->getTitle();
+                return $this->getItem()->getTitle();
         }
     }
 
@@ -81,7 +81,7 @@ class WebDAVDocmanFile extends WebDAVDocmanDocument {
      */
     function getContentType() {
         $if = new Docman_ItemFactory();
-        $item = $if->getItemFromDb($this->getDocument()->getId());
+        $item = $if->getItemFromDb($this->getItem()->getId());
         $version = $item->getCurrentVersion();
         return $version->getFiletype();
     }
@@ -95,7 +95,7 @@ class WebDAVDocmanFile extends WebDAVDocmanDocument {
      */
     function getSize() {
         $if = new Docman_ItemFactory();
-        $item = $if->getItemFromDb($this->getDocument()->getId());
+        $item = $if->getItemFromDb($this->getItem()->getId());
         $version = $item->getCurrentVersion();
         return $version->getFilesize();
     }
@@ -119,7 +119,7 @@ class WebDAVDocmanFile extends WebDAVDocmanDocument {
     function logDownload($version) {
         $logger = new Docman_Log();
         $params = array('group_id' => $this->getProject()->getGroupId(),
-                        'item'     => $this->getDocument(),
+                        'item'     => $this->getItem(),
                         'version'  => $version->getNumber(),
                         'user'     => $this->getUser(),
                         'event'    => 'plugin_docman_event_access');
@@ -137,7 +137,7 @@ class WebDAVDocmanFile extends WebDAVDocmanDocument {
         // Wait for watermarking
         $em =& EventManager::instance();
         $em->processEvent('plugin_docman_file_before_download', array(
-                                             'item'            => $this->getDocument(),
+                                             'item'            => $this->getItem(),
                                              'user'            => $this->getUser(),
                                              'version'         => $version,
                                              'docmanControler' => null

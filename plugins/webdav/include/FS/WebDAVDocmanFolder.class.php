@@ -61,7 +61,7 @@ class WebDAVDocmanFolder extends Sabre_DAV_Directory {
         $children = array();
         // hey ! for docman never add something in WebDAVUtils, docman may be not present ;)
         $dif = $this->getDocmanItemFactory();
-        $nodes = $dif->getChildrenFromParent($this->getFolder());
+        $nodes = $dif->getAllChildrenFromParent($this->getItem());
         foreach ($nodes as $node) {
             if ($this->getDocmanPermissionsManager()->userCanAccess($this->getUser(), $node->getId())) {
                 $class = get_class($node);
@@ -115,8 +115,8 @@ class WebDAVDocmanFolder extends Sabre_DAV_Directory {
     function getChildren() {
         $children = $this->getChildList();
         // Remove all duplicate elements
-        foreach ($children as $key=>$node) {
-            if ($node === 'duplicate') {
+        foreach ($children as $key => $node) {
+            if ($node === 'duplicate' || $node->getItem()->isObsolete()) {
                 unset($children[$key]);
             }
         }
@@ -141,6 +141,13 @@ class WebDAVDocmanFolder extends Sabre_DAV_Directory {
         } elseif ($children[$name] === 'duplicate') {
             // TODO : intrnationalization
             throw new Sabre_DAV_Exception_Conflict('This item is duplicated');
+        } elseif ($children[$name]->getItem()->isObsolete()) {
+            if ($this->getDocmanPermissionsManager()->userCanAdmin($this->getUser())) {
+                return $children[$name];
+            } else {
+                // TODO : intrnationalization
+                throw new Sabre_DAV_Exception_Forbidden('This item is obsolete');
+            }
         } else {
             return $children[$name];
         }
@@ -154,12 +161,12 @@ class WebDAVDocmanFolder extends Sabre_DAV_Directory {
      * @see plugins/webdav/include/lib/Sabre/DAV/Sabre_DAV_INode::getName()
      */
     function getName() {
-        if (!$this->getFolder()->getParentId()) {
+        if (!$this->getItem()->getParentId()) {
             // case of the root
             return 'Documents';
         }
         $utils = $this->getUtils();
-        return $utils->unconvertHTMLSpecialChars($this->getFolder()->getTitle());
+        return $utils->unconvertHTMLSpecialChars($this->getItem()->getTitle());
     }
 
     /**
@@ -170,7 +177,7 @@ class WebDAVDocmanFolder extends Sabre_DAV_Directory {
      * @see plugins/webdav/include/lib/Sabre/DAV/Sabre_DAV_Node::getLastModified()
      */
     function getLastModified() {
-        return $this->getFolder()->getUpdateDate();
+        return $this->getItem()->getUpdateDate();
     }
 
     /**
@@ -178,7 +185,7 @@ class WebDAVDocmanFolder extends Sabre_DAV_Directory {
      *
      * @return Docman_Folder
      */
-    function getFolder() {
+    function getItem() {
         return $this->folder;
     }
 

@@ -257,7 +257,32 @@ class Docman_ItemFactory {
         $iIter = new ArrayIterator($itemArray);
         return $iIter;
     }
-    
+
+    /**
+     * Retrieve list of children items of the given folder including obsolete ones
+     *
+     * @param Docman_Folder $item
+     */
+    function getAllChildrenFromParent($item) {
+        $dao =& $this->_getItemDao();
+
+        $itemArray = array();
+
+        $dar = $dao->searchAllByParentsId(array($item->getId()));
+        if ($dar && !$dar->isError()) {
+            while($dar->valid()) {
+                $row = $dar->current();
+
+                $itemArray[] = Docman_ItemFactory::getItemFromRow($row);
+
+                $dar->next();
+            }
+        }
+
+        $iIter = new ArrayIterator($itemArray);
+        return $iIter;
+    }
+
     /**
      * Retreive list of collapsed items for given user
      *
