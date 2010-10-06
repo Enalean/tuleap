@@ -88,7 +88,6 @@ class WebDAVDocmanFileTest extends UnitTestCase {
         $version = new MockDocman_Version();
         $version->setReturnValue('getPath', dirname(__FILE__).'/_fixtures/test.txt');
         $item = new MockDocman_File();
-        $item->setReturnValue('getId', 0);
         $item->setReturnValue('getCurrentVersion', $version);
         $dif = new MockDocman_ItemFactory();
         $dif->setReturnValue('getItemFromDb', $item);
@@ -108,7 +107,6 @@ class WebDAVDocmanFileTest extends UnitTestCase {
         $version = new MockDocman_Version();
         $version->setReturnValue('getPath', dirname(__FILE__).'/_fixtures/test.txt');
         $item = new MockDocman_File();
-        $item->setReturnValue('getId', 0);
         $item->setReturnValue('getCurrentVersion', $version);
         $dif = new MockDocman_ItemFactory();
         $dif->setReturnValue('getItemFromDb', $item);
