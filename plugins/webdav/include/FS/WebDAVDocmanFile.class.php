@@ -33,6 +33,8 @@ class WebDAVDocmanFile extends WebDAVDocmanDocument {
      * This method is used to download the file
      *
      * @return File
+     *
+     * @see plugins/webdav/include/FS/WebDAVDocmanDocument::get()
      */
     function get() {
         $dif = $this->getItemFactory();
@@ -54,6 +56,8 @@ class WebDAVDocmanFile extends WebDAVDocmanDocument {
      * Returns the name of the file
      *
      * @return String
+     *
+     * @see plugins/webdav/include/FS/WebDAVDocmanDocument::getName()
      */
     function getName() {
         switch (get_class($this->getDocument())) {
@@ -73,7 +77,7 @@ class WebDAVDocmanFile extends WebDAVDocmanDocument {
      *
      * @return String
      *
-     * @see plugins/webdav/lib/Sabre/DAV/Sabre_DAV_File#getContentType()
+     * @see plugins/webdav/include/FS/WebDAVDocmanDocument::getContentType()
      */
     function getContentType() {
         $if = new Docman_ItemFactory();
@@ -86,6 +90,8 @@ class WebDAVDocmanFile extends WebDAVDocmanDocument {
      * Returns the file size
      *
      * @return Integer
+     *
+     * @see plugins/webdav/include/FS/WebDAVDocmanDocument::getSize()
      */
     function getSize() {
         $if = new Docman_ItemFactory();

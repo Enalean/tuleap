@@ -52,6 +52,8 @@ class WebDAVDocmanDocument extends Sabre_DAV_File {
      * This method is used to download the file
      *
      * @return File
+     *
+     * @see plugins/webdav/include/lib/Sabre/DAV/Sabre_DAV_File::get()
      */
     function get() {
         header('Content-Type: text/plain');
@@ -65,6 +67,8 @@ class WebDAVDocmanDocument extends Sabre_DAV_File {
      * Returns the name of the file
      *
      * @return String
+     *
+     * @see plugins/webdav/include/lib/Sabre/DAV/Sabre_DAV_INode::getName()
      */
     function getName() {
         $utils = $this->getUtils();
@@ -76,7 +80,7 @@ class WebDAVDocmanDocument extends Sabre_DAV_File {
      *
      * @return String
      *
-     * @see plugins/webdav/lib/Sabre/DAV/Sabre_DAV_File#getContentType()
+     * @see plugins/webdav/include/lib/Sabre/DAV/Sabre_DAV_File::getContentType()
      */
     function getContentType() {
         $if = new Docman_ItemFactory();
@@ -98,6 +102,8 @@ class WebDAVDocmanDocument extends Sabre_DAV_File {
      * Returns the file size
      *
      * @return Integer
+     *
+     * @see plugins/webdav/include/lib/Sabre/DAV/Sabre_DAV_File::getSize()
      */
     function getSize() {
         return 0;
@@ -107,6 +113,8 @@ class WebDAVDocmanDocument extends Sabre_DAV_File {
      * Returns the last modification date
      *
      * @return date
+     *
+     * @see plugins/webdav/include/lib/Sabre/DAV/Sabre_DAV_Node::getLastModified()
      */
     function getLastModified() {
         return $this->getDocument()->getUpdateDate();
