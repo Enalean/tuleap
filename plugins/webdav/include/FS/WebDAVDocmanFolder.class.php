@@ -52,13 +52,12 @@ class WebDAVDocmanFolder extends Sabre_DAV_Directory {
     }
 
     /**
-     * Generates the content of the folder
+     * Returns the content of the folder
+     * including the duplicate enries
      *
      * @return Array
-     *
-     * @see lib/Sabre/DAV/Sabre_DAV_IDirectory#getChildren()
      */
-    function getChildren() {
+    function getChildList() {
         $children = array();
         // hey ! for docman never add something in WebDAVUtils, docman may be not present ;)
         $dif = $this->getDocmanItemFactory();
@@ -70,6 +69,7 @@ class WebDAVDocmanFolder extends Sabre_DAV_Directory {
                     case 'Docman_File':
                         $item = $dif->getItemFromDb($node->getId());
                         $version = $item->getCurrentVersion();
+                        // When it's a duplicate say it, so it can be processed later
                         if (!isset($children[$version->getFilename()])) {
                             $children[$version->getFilename()] = $this->getWebDAVDocmanFile($node);
                         } else {
@@ -89,7 +89,6 @@ class WebDAVDocmanFolder extends Sabre_DAV_Directory {
                         if (!isset($children[$node->getTitle()])) {
                             $children[$node->getTitle()] = $this->getWebDAVDocmanDocument($node);
                         } else {
-                            // When it's a duplicate say it, so it can be removed later
                             $children[$node->getTitle()] = 'duplicate';
                         }
                         break;
@@ -103,6 +102,18 @@ class WebDAVDocmanFolder extends Sabre_DAV_Directory {
                 }
             }
         }
+        return $children;
+    }
+
+    /**
+     * Returns the visible content of the folder
+     *
+     * @return Array
+     *
+     * @see plugins/webdav/include/lib/Sabre/DAV/Sabre_DAV_ICollection::getChildren()
+     */
+    function getChildren() {
+        $children = $this->getChildList();
         // Remove all duplicate elements
         foreach ($children as $key=>$node) {
             if ($node === 'duplicate') {
@@ -119,17 +130,17 @@ class WebDAVDocmanFolder extends Sabre_DAV_Directory {
      *
      * @return Docman_Item
      *
-     * @see lib/Sabre/DAV/Sabre_DAV_Directory#getChild($name)
+     * @see plugins/webdav/include/lib/Sabre/DAV/Sabre_DAV_Directory::getChild()
      */
     function getChild($name) {
         $name = $this->getUtils()->retrieveName($name);
-        // TODO : this is too heavy, try to make it lighter.
-        $dif = $this->getDocmanItemFactory();
-        // TODO : set $children as a member of the class to make it lighter to use.
-        $children = $this->getChildren();
+        $children = $this->getChildList();
         if (!isset($children[$name])) {
             // TODO : intrnationalization
             throw new Sabre_DAV_Exception_FileNotFound('This item doesn\'t exist');
+        } elseif ($children[$name] === 'duplicate') {
+            // TODO : intrnationalization
+            throw new Sabre_DAV_Exception_Conflict('This item is duplicated');
         } else {
             return $children[$name];
         }
@@ -138,9 +149,9 @@ class WebDAVDocmanFolder extends Sabre_DAV_Directory {
     /**
      * Returns the name of the folder
      *
-     * @see plugins/webdav/lib/Sabre/DAV/Sabre_DAV_INode#getName()
-     *
      * @return String
+     *
+     * @see plugins/webdav/include/lib/Sabre/DAV/Sabre_DAV_INode::getName()
      */
     function getName() {
         if (!$this->getFolder()->getParentId()) {
@@ -156,7 +167,7 @@ class WebDAVDocmanFolder extends Sabre_DAV_Directory {
      *
      * @return date
      *
-     * @see plugins/webdav/lib/Sabre/DAV/Sabre_DAV_Node#getLastModified()
+     * @see plugins/webdav/include/lib/Sabre/DAV/Sabre_DAV_Node::getLastModified()
      */
     function getLastModified() {
         return $this->getFolder()->getUpdateDate();

@@ -48,6 +48,11 @@ array('getDocmanItemFactory', 'getDocmanPermissionsManager')
 Mock::generatePartial(
     'WebDAVDocmanFolder',
     'WebDAVDocmanFolderTestVersion2',
+array('getChildList')
+);
+Mock::generatePartial(
+    'WebDAVDocmanFolder',
+    'WebDAVDocmanFolderTestVersion3',
 array('getDocmanItemFactory', 'getDocmanPermissionsManager', 'getWebDAVDocmanFolder')
 );
 
@@ -99,20 +104,20 @@ class WebDAVDocmanFolderTest extends UnitTestCase {
     }
 
     /**
-     * Testing when The folder have no childrens
+     * Testing when the folder have no childrens
      */
-    function testGetChildrenNoChildrens() {
+    function testGetChildListNoChildrens() {
         $webDAVDocmanFolder = new WebDAVDocmanFolderTestVersion($this);
         $dif = new MockDocman_ItemFactory();
         $dif->setReturnValue('getChildrenFromParent', array());
         $webDAVDocmanFolder->setReturnValue('getDocmanItemFactory', $dif);
-        $this->assertEqual($webDAVDocmanFolder->getChildren(), array());
+        $this->assertEqual($webDAVDocmanFolder->getChildList(), array());
     }
 
     /**
-     * Testing when The User can't access/read the child node
+     * Testing when the User can't access/read the child node
      */
-    function testGetChildrenUserCanNotAccess() {
+    function testGetChildListUserCanNotAccess() {
         $webDAVDocmanFolder = new WebDAVDocmanFolderTestVersion($this);
         $item = new MockDocman_Item();
         $dif = new MockDocman_ItemFactory();
@@ -121,13 +126,13 @@ class WebDAVDocmanFolderTest extends UnitTestCase {
         $dpm->setReturnValue('userCanAccess', false);
         $webDAVDocmanFolder->setReturnValue('getDocmanItemFactory', $dif);
         $webDAVDocmanFolder->setReturnValue('getDocmanPermissionsManager', $dpm);
-        $this->assertEqual($webDAVDocmanFolder->getChildren(), array());
+        $this->assertEqual($webDAVDocmanFolder->getChildList(), array());
     }
 
     /**
-     * Testing when The folder contain a duplicate name
+     * Testing when the folder contain a duplicate name
      */
-    function testGetChildrenDuplicateName() {
+    function testGetChildListDuplicateName() {
         $webDAVDocmanFolder = new WebDAVDocmanFolderTestVersion($this);
         $item1 = new TestDocmanFolder();
         $item2 = new TestDocmanFolder();
@@ -137,13 +142,53 @@ class WebDAVDocmanFolderTest extends UnitTestCase {
         $dpm->setReturnValue('userCanAccess', true);
         $webDAVDocmanFolder->setReturnValue('getDocmanItemFactory', $dif);
         $webDAVDocmanFolder->setReturnValue('getDocmanPermissionsManager', $dpm);
+        $children = $webDAVDocmanFolder->getChildList();
+        $this->assertTrue(isset($children['SameName']));
+        $this->assertEqual(sizeof($children), 1);
+    }
+
+    /**
+     * Testing when the folder contain some items
+     */
+    function testGetChildListFilled() {
+        $webDAVDocmanFolder = new WebDAVDocmanFolderTestVersion($this);
+        $item1 = new TestDocmanFolder();
+        $item2 = new TestDocmanFolder2();
+        $dif = new MockDocman_ItemFactory();
+        $dif->setReturnValue('getChildrenFromParent', array($item1, $item2));
+        $dpm = new MockDocman_PermissionsManager();
+        $dpm->setReturnValue('userCanAccess', true);
+        $webDAVDocmanFolder->setReturnValue('getDocmanItemFactory', $dif);
+        $webDAVDocmanFolder->setReturnValue('getDocmanPermissionsManager', $dpm);
+        $this->assertNoErrors();
+        $children = $webDAVDocmanFolder->getChildList();
+        $this->assertTrue(isset($children['SameName']));
+        $this->assertTrue(isset($children['AnotherName']));
+        $this->assertEqual(sizeof($children), 2);
+    }
+
+    /**
+     * Testing when the folder have no childrens
+     */
+    function testGetChildrenNoChildrens() {
+        $webDAVDocmanFolder = new WebDAVDocmanFolderTestVersion2($this);
+        $webDAVDocmanFolder->setReturnValue('getChildList', array());
         $this->assertEqual($webDAVDocmanFolder->getChildren(), array());
     }
 
     /**
-     * Testing when The folder contain some items
+     * Testing when the folder contain a duplicate name
      */
-    function testGetChildrenSuccess() {
+    function testGetChildrenDuplicateName() {
+        $webDAVDocmanFolder = new WebDAVDocmanFolderTestVersion2($this);
+        $webDAVDocmanFolder->setReturnValue('getChildList', array('SomeName' => 'duplicate'));
+        $this->assertEqual($webDAVDocmanFolder->getChildren(), array());
+    }
+
+    /**
+     * Testing when the folder contain some items
+     */
+    function testGetChildrenFilled() {
         $webDAVDocmanFolder = new WebDAVDocmanFolderTestVersion($this);
         $item1 = new TestDocmanFolder();
         $item2 = new TestDocmanFolder2();
@@ -161,7 +206,7 @@ class WebDAVDocmanFolderTest extends UnitTestCase {
     }
 
     /**
-     * Testing when The folder have no childrens
+     * Testing when the folder have no childrens
      */
     function testGetChildNotFound() {
         $webDAVDocmanFolder = new WebDAVDocmanFolderTestVersion($this);
@@ -173,10 +218,28 @@ class WebDAVDocmanFolderTest extends UnitTestCase {
     }
 
     /**
-     * Testing when The folder have childrens
+     * Testing when the item is duplicated
+     */
+    function testGetChildDuplicated() {
+        $webDAVDocmanFolder = new WebDAVDocmanFolderTestVersion3($this);
+        $item1 = new TestDocmanFolder();
+        $item2 = new TestDocmanFolder();
+        $dif = new MockDocman_ItemFactory();
+        $dif->setReturnValue('getChildrenFromParent', array($item1, $item2));
+        $dpm = new MockDocman_PermissionsManager();
+        $dpm->setReturnValue('userCanAccess', true);
+        $webDAVDocmanFolder->setReturnValue('getDocmanItemFactory', $dif);
+        $webDAVDocmanFolder->setReturnValue('getDocmanPermissionsManager', $dpm);
+        $webDAVDocmanFolder->setReturnValue('getWebDAVDocmanFolder', $item1);
+        $this->expectException('Sabre_DAV_Exception_Conflict');
+        $webDAVDocmanFolder->getChild('SameName');
+    }
+
+    /**
+     * Testing when the folder have childrens
      */
     function testGetChildSuccess() {
-        $webDAVDocmanFolder = new WebDAVDocmanFolderTestVersion2($this);
+        $webDAVDocmanFolder = new WebDAVDocmanFolderTestVersion3($this);
         $item = new MockDocmanFolder();
         $dif = new MockDocman_ItemFactory();
         $dif->setReturnValue('getChildrenFromParent', array($item));
