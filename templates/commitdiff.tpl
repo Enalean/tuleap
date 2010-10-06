@@ -21,7 +21,7 @@
  
  <div class="page_body">
    {foreach from=$commit->GetComment() item=line}
-     {$line}<br />
+     {$line|escape}<br />
    {/foreach}
    <br />
    {* Diff each file changed *}

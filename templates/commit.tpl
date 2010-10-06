@@ -63,7 +63,7 @@
  </div>
  <div class="page_body">
    {foreach from=$commit->GetComment() item=line}
-     {$line}<br />
+     {$line|escape}<br />
    {/foreach}
  </div>
  <div class="list_head">

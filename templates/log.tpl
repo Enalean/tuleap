@@ -68,7 +68,7 @@
    </div>
    <div class="log_body">
      {foreach from=$rev->GetComment() item=line}
-       {$line}<br />
+       {$line|escape}<br />
      {/foreach}
      {if count($rev->GetComment()) > 0}
        <br />
