@@ -43,6 +43,7 @@ sendmessage	name	Your Name
 sendmessage	subject	Subject
 sendmessage	message_body	Message
 sendmessage	send_btn	Send Message
+sendmessage	invalid_msg	Your message is not valid, you can not send the default message or an empty one.
 #
 #-----------------------------------------------
 # Script: SF/www/sflogo.php

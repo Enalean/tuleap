@@ -36,6 +36,7 @@ sendmessage	name	Votre nom
 sendmessage	subject	Sujet
 sendmessage	message_body	Message
 sendmessage	send_btn	Envoyer le message
+sendmessage	invalid_msg	Votre message est invalide, vous ne pouvez pas soumettre le texte par défaut ou un texte vide.
 #
 #-----------------------------------------------
 # Script: SF/www/sflogo.php

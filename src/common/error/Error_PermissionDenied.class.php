@@ -103,6 +103,7 @@ abstract class Error_PermissionDenied {
             echo '<br></br>';
             echo '<form action="'.$param['action'].'" method="post" name="display_form">
                   <textarea wrap="virtual" rows="5" cols="70" name="'.$param['name'].'">'.$message.' </textarea></p>
+                  <input type="hidden" id="msg" name="default_message" value="'.$message.'">
                   <input type="hidden" id="func" name="func" value="'.$param['func'].'">
                   <input type="hidden" id="groupId" name="groupId" value="' .$groupId. '">
                   <input type="hidden" id="userId" name="userId" value="' .$userId. '">

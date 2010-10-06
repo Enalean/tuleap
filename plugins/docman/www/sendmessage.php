@@ -27,10 +27,16 @@ $request = HTTPRequest::instance();
 $func = $request->getValidated('func', new Valid_WhiteList('func', array('docman_access_request')));
 
 if ($request->isPost() && $request->exist('Submit') &&  $request->existAndNonEmpty('func') && $func == 'docman_access_request') {
-        $sendMail = new Docman_Error_PermissionDenied();
+    $sendMail = new Docman_Error_PermissionDenied();
+    $vMessage = new Valid_Text('msg_docman_access');
+    $vMessage->required();
+    if ($request->valid($vMessage) && (trim($request->get('msg_docman_access')) != $request->get('default_message'))) {
         $messageToAdmin = $request->get('msg_docman_access');
-        $sendMail->processMail($messageToAdmin);
-        exit;
+    } else {
+        exit_error($Language->getText('plugin_docman', 'error'),$Language->getText('plugin_docman','invalid_msg'));
+    }
+    $sendMail->processMail($messageToAdmin);
+    exit;
 }
 
 

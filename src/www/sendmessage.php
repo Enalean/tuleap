@@ -18,12 +18,24 @@ if ($request->isPost() && $request->exist('Submit') &&  $request->existAndNonEmp
     switch ($func) {
         case 'restricted_user_request':
             $sendMail = new Error_PermissionDenied_RestrictedUser();
-            $messageToAdmin = $request->get('msg_restricted_user');
+            $vMessage = new Valid_Text('msg_restricted_user');
+            $vMessage->required();
+            if ($request->valid($vMessage) && ($request->get('msg_restricted_user')!= $request->get('default_message'))) {
+                $messageToAdmin = $request->get('msg_restricted_user');
+            } else {
+                exit_error($Language->getText('include_exit', 'error'),$Language->getText('sendmessage','invalid_msg'));
+            }
             break;
 
         case 'private_project_request':
             $sendMail = new Error_PermissionDenied_PrivateProject();
-            $messageToAdmin = $request->get('msg_private_project');
+            $vMessage = new Valid_Text('msg_private_project');
+            $vMessage->required();
+            if ($request->valid($vMessage) && (trim($request->get('msg_private_project')) != $request->get('default_message'))) {
+                $messageToAdmin = $request->get('msg_private_project');
+            } else {
+                exit_error($Language->getText('include_exit', 'error'),$Language->getText('sendmessage','invalid_msg'));
+            }
             break;
 
         default:
