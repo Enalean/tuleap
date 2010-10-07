@@ -31,7 +31,7 @@ class GitPHP_Controller_Commitdiff extends GitPHP_ControllerBase
 	{
 		parent::__construct();
 		if (!$this->project) {
-			throw new GitPHP_MessageException(GitPHP_Resource::GetInstance()->translate('Project is required'), true);
+			throw new GitPHP_MessageException(__('Project is required'), true);
 		}
 	}
 
@@ -76,7 +76,7 @@ class GitPHP_Controller_Commitdiff extends GitPHP_ControllerBase
 	public function GetName($local = false)
 	{
 		if ($local) {
-			return GitPHP_Resource::GetInstance()->translate('commitdiff');
+			return __('commitdiff');
 		}
 		return 'commitdiff';
 	}

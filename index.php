@@ -110,7 +110,7 @@ try {
 	}
 
 	if (!GitPHP_Config::GetInstance()->GetValue('projectroot', null)) {
-		throw new GitPHP_MessageException(GitPHP_Resource::GetInstance()->translate('A projectroot must be set in the config'), true);
+		throw new GitPHP_MessageException(__('A projectroot must be set in the config'), true);
 	}
 
 	/*

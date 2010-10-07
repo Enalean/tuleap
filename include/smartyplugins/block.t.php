@@ -94,9 +94,9 @@ function smarty_block_t($params, $text, &$smarty)
 	
 	// use plural if required parameters are set
 	if (isset($count) && isset($plural)) {
-		$text = GitPHP_Resource::GetInstance()->ngettext($text, $plural, $count);
+		$text = __n($text, $plural, $count);
 	} else { // use normal
-		$text = GitPHP_Resource::GetInstance()->translate($text);
+		$text = __($text);
 	}
 
 	// run strarg if there are parameters

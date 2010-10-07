@@ -81,17 +81,17 @@ class GitPHP_Controller_ProjectList extends GitPHP_ControllerBase
 	{
 		if (isset($this->params['opml']) && ($this->params['opml'] === true)) {
 			if ($local) {
-				return GitPHP_Resource::GetInstance()->translate('opml');
+				return __('opml');
 			}
 			return 'opml';
 		} else if (isset($this->params['txt']) && ($this->params['txt'] === true)) {
 			if ($local) {
-				return GitPHP_Resource::GetInstance()->translate('project index');
+				return __('project index');
 			}
 			return 'project index';
 		}
 		if ($local) {
-			return GitPHP_Resource::GetInstance()->translate('projects');
+			return __('projects');
 		}
 		return 'projects';
 	}

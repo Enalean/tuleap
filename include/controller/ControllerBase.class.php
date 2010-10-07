@@ -81,7 +81,7 @@ abstract class GitPHP_ControllerBase
 		if (isset($_GET['p'])) {
 			$this->project = GitPHP_ProjectList::GetInstance()->GetProject(str_replace(chr(0), '', $_GET['p']));
 			if (!$this->project) {
-				throw new GitPHP_MessageException(sprintf(GitPHP_Resource::GetInstance()->translate('Invalid project %1$s'), $_GET['p']), true);
+				throw new GitPHP_MessageException(sprintf(__('Invalid project %1$s'), $_GET['p']), true);
 			}
 		}
 
@@ -237,7 +237,7 @@ abstract class GitPHP_ControllerBase
 		$this->tpl->assign('stylesheet', GitPHP_Config::GetInstance()->GetValue('stylesheet', 'gitphp.css'));
 		$this->tpl->assign('javascript', GitPHP_Config::GetInstance()->GetValue('javascript', true));
 		$this->tpl->assign('pagetitle', GitPHP_Config::GetInstance()->GetValue('title', $gitphp_appstring));
-		$this->tpl->assign('homelink', GitPHP_Config::GetInstance()->GetValue('homelink', GitPHP_Resource::GetInstance()->translate('projects')));
+		$this->tpl->assign('homelink', GitPHP_Config::GetInstance()->GetValue('homelink', __('projects')));
 		$this->tpl->assign('action', $this->GetName());
 		$this->tpl->assign('actionlocal', $this->GetName(true));
 		if ($this->project)

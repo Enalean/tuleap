@@ -31,7 +31,7 @@ class GitPHP_Controller_Log extends GitPHP_ControllerBase
 	{
 		parent::__construct();
 		if (!$this->project) {
-			throw new GitPHP_MessageException(GitPHP_Resource::GetInstance()->translate('Project is required'), true);
+			throw new GitPHP_MessageException(__('Project is required'), true);
 		}
 	}
 
@@ -77,12 +77,12 @@ class GitPHP_Controller_Log extends GitPHP_ControllerBase
 	{
 		if (isset($this->params['short']) && ($this->params['short'] === true)) {
 			if ($local) {
-				return GitPHP_Resource::GetInstance()->translate('shortlog');
+				return __('shortlog');
 			}
 			return 'shortlog';
 		}
 		if ($local) {
-			return GitPHP_Resource::GetInstance()->translate('log');
+			return __('log');
 		}
 		return 'log';
 	}

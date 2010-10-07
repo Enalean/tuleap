@@ -613,19 +613,19 @@ class GitPHP_FileDiff
 		$tmpdir = GitPHP_Config::GetInstance()->GetValue('gittmp', '/tmp/gitphp/');
 
 		if (empty($tmpdir)) {
-			throw new Exception(GitPHP_Resource::GetInstance()->translate('No tmpdir defined'));
+			throw new Exception(__('No tmpdir defined'));
 		}
 
 		if (file_exists($tmpdir)) {
 			if (is_dir($tmpdir)) {
 				if (!is_writeable($tmpdir)) {
-					throw new Exception(sprintf(GitPHP_Resource::GetInstance()->translate('Specified tmpdir %1$s is not writable'), $tmpdir));
+					throw new Exception(sprintf(__('Specified tmpdir %1$s is not writable'), $tmpdir));
 				}
 			} else {
-				throw new Exception(sprintf(GitPHP_Resource::GetInstance()->translate('Specified tmpdir %1$s is not a directory'), $tmpdir));
+				throw new Exception(sprintf(__('Specified tmpdir %1$s is not a directory'), $tmpdir));
 			}
 		} else if (!mkdir($tmpdir, 0700)) {
-			throw new Exception(sprintf(GitPHP_Resource::GetInstance()->translate('Could not create tmpdir %1$s'), $tmpdir));
+			throw new Exception(sprintf(__('Could not create tmpdir %1$s'), $tmpdir));
 		}
 	}
 

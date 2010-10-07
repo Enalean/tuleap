@@ -176,26 +176,26 @@ class GitPHP_Blob extends GitPHP_FilesystemObject
 		$mode = octdec($octMode);
 		if (($mode & 0x4000) == 0x4000) {
 			if ($local) {
-				return GitPHP_Resource::GetInstance()->translate('directory');
+				return __('directory');
 			} else {
 				return 'directory';
 			}
 		} else if (($mode & 0xA000) == 0xA000) {
 			if ($local) {
-				return GitPHP_Resource::GetInstance()->translate('symlink');
+				return __('symlink');
 			} else {
 				return 'symlink';
 			}
 		} else if (($mode & 0x8000) == 0x8000) {
 			if ($local) {
-				return GitPHP_Resource::GetInstance()->translate('file');
+				return __('file');
 			} else {
 				return 'file';
 			}
 		}
 
 		if ($local) {
-			return GitPHP_Resource::GetInstance()->translate('unknown');
+			return __('unknown');
 		} else {
 			return 'unknown';
 		}
