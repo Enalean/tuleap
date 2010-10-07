@@ -626,19 +626,7 @@ class Docman_ItemDao extends DataAccessObject {
         );
         return $this->retrieve($sql);
     }
-
-    /**
-     * Get childrens of the given parents including obsolete ones
-     *
-     * @param Array $parents
-     */
-    function searchAllByParentsId($parents) {
-        $sql = sprintf('SELECT * FROM plugin_docman_item WHERE parent_id IN (%s) AND delete_date IS NULL ORDER BY rank',
-            implode(', ', $parents)
-        );
-        return $this->retrieve($sql);
-    }
-
+    
     function searchRootIdForGroupId($group_id) {
         $sql = sprintf('SELECT item_id FROM plugin_docman_item WHERE parent_id = 0 '.
             ' AND group_id = %s ',
