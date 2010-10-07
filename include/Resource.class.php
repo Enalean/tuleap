@@ -241,3 +241,24 @@ class GitPHP_Resource
 	}
 
 }
+
+
+/**
+ * Wrappers... because PHP doesn't support aliases
+ */
+function __($str)
+{
+	if (GitPHP_Resource::Instantiated())
+		return GitPHP_Resource::GetInstance()->translate($str);
+	return $str;
+}
+
+function __n($singular, $plural, $count)
+{
+	if (GitPHP_Resource::Instantiated())
+		return GitPHP_Resource::GetInstance()->ngettext($singular, $plural, $count);
+	if ($count > 1)
+		return $plural;
+	return $singular;
+}
+
