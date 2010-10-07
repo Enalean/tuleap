@@ -25,10 +25,10 @@ xgettext -d ${BUNDLE} -o "${FILE}" -p ${DIR} -j --package-name="${PKGNAME}" --pa
 rm smarty.c
 
 # Extract from include directory
-find include -iname '*.php' -type f | xgettext -ktranslate -kngettext -d ${BUNDLE} -o "${FILE}" -p ${DIR} -L PHP -j --package-name="${PKGNAME}" --package-version="${VER}" --msgid-bugs-address="${EMAIL}" --copyright-holder="${COPYRIGHT}" --from-code=utf-8 -f -
+find include -iname '*.php' -type f | xgettext -k__ -k__n -d ${BUNDLE} -o "${FILE}" -p ${DIR} -L PHP -j --package-name="${PKGNAME}" --package-version="${VER}" --msgid-bugs-address="${EMAIL}" --copyright-holder="${COPYRIGHT}" --from-code=utf-8 -f -
 
 # Extract from index
-xgettext -ktranslate -kngettext -d ${BUNDLE} -o "${FILE}" -p ${DIR} -L PHP -j --package-name="${PKGNAME}" --package-version="${VER}" --msgid-bugs-address="${EMAIL}" --copyright-holder="${COPYRIGHT}" --from-code=utf-8 index.php
+xgettext -k__ -k__n -d ${BUNDLE} -o "${FILE}" -p ${DIR} -L PHP -j --package-name="${PKGNAME}" --package-version="${VER}" --msgid-bugs-address="${EMAIL}" --copyright-holder="${COPYRIGHT}" --from-code=utf-8 index.php
 
 # File references from smarty-gettext show up as code comments,
 # convert them back to file references
