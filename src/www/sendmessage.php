@@ -15,12 +15,22 @@ $request = HTTPRequest::instance();
 $func = $request->getValidated('func', new Valid_WhiteList('restricted_user_request', 'private_project_request'), '');
 
 if ($request->isPost() && $request->exist('Submit') &&  $request->existAndNonEmpty('func')) {
+    $defaultMsg = $GLOBALS['Language']->getText('project_admin_index', 'member_request_delegation_msg_to_requester');
+    $pm = ProjectManager::instance();
+    $dar = $pm->getMessageToRequesterForAccessProject($request->get('groupId'));
+    if ($dar && !$dar->isError() && $dar->rowCount() == 1) {
+        $row = $dar->current();
+        if ($row['msg_to_requester'] != "member_request_delegation_msg_to_requester" ) {
+            $defaultMsg = $row['msg_to_requester'];
+        }
+    }
+
     switch ($func) {
         case 'restricted_user_request':
             $sendMail = new Error_PermissionDenied_RestrictedUser();
             $vMessage = new Valid_Text('msg_restricted_user');
             $vMessage->required();
-            if ($request->valid($vMessage) && ($request->get('msg_restricted_user')!= $request->get('default_message'))) {
+            if ($request->valid($vMessage) && ($request->get('msg_restricted_user')!= $defaultMsg )) {
                 $messageToAdmin = $request->get('msg_restricted_user');
             } else {
                 exit_error($Language->getText('include_exit', 'error'),$Language->getText('sendmessage','invalid_msg'));
@@ -31,7 +41,7 @@ if ($request->isPost() && $request->exist('Submit') &&  $request->existAndNonEmp
             $sendMail = new Error_PermissionDenied_PrivateProject();
             $vMessage = new Valid_Text('msg_private_project');
             $vMessage->required();
-            if ($request->valid($vMessage) && (trim($request->get('msg_private_project')) != $request->get('default_message'))) {
+            if ($request->valid($vMessage) && (trim($request->get('msg_private_project')) != $defaultMsg )) {
                 $messageToAdmin = $request->get('msg_private_project');
             } else {
                 exit_error($Language->getText('include_exit', 'error'),$Language->getText('sendmessage','invalid_msg'));
