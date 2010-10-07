@@ -237,9 +237,9 @@ class WebDAVDocmanFolderTest extends UnitTestCase {
     }
 
     /**
-     * Testing when the item is obsolete and user is not docman admin
+     * Testing when the item is obsolete
      */
-    function testGetChildObsoleteUserNotAdmin() {
+    function testGetChildObsolete() {
         $webDAVDocmanFolder = new WebDAVDocmanFolderTestVersion3($this);
         $item = new MockDocman_Item();
         $item->setReturnValue('isObsolete', true);
@@ -250,34 +250,11 @@ class WebDAVDocmanFolderTest extends UnitTestCase {
         $dif->setReturnValue('getAllChildrenFromParent', array($item));
         $dpm = new MockDocman_PermissionsManager();
         $dpm->setReturnValue('userCanAccess', true);
-        $dpm->setReturnValue('userCanAdmin', false);
         $webDAVDocmanFolder->setReturnValue('getDocmanItemFactory', $dif);
         $webDAVDocmanFolder->setReturnValue('getDocmanPermissionsManager', $dpm);
         $webDAVDocmanFolder->setReturnValue('getWebDAVDocmanFolder', $folder);
         $this->expectException('Sabre_DAV_Exception_Forbidden');
         $webDAVDocmanFolder->getChild('SomeName');
-    }
-
-    /**
-     * Testing when the item is obsolete and user is docman admin
-     */
-    function testGetChildObsoleteUserIsAdmin() {
-        $webDAVDocmanFolder = new WebDAVDocmanFolderTestVersion3($this);
-        $item = new MockDocman_Item();
-        $item->setReturnValue('isObsolete', true);
-        $item->setReturnValue('getTitle', 'SomeName');
-        $folder = new WebDAVDocmanFolderTestVersion3($this);
-        $folder->setReturnValue('getItem', $item);
-        $dif = new MockDocman_ItemFactory();
-        $dif->setReturnValue('getAllChildrenFromParent', array($item));
-        $dpm = new MockDocman_PermissionsManager();
-        $dpm->setReturnValue('userCanAccess', true);
-        $dpm->setReturnValue('userCanAdmin', true);
-        $webDAVDocmanFolder->setReturnValue('getDocmanItemFactory', $dif);
-        $webDAVDocmanFolder->setReturnValue('getDocmanPermissionsManager', $dpm);
-        $webDAVDocmanFolder->setReturnValue('getWebDAVDocmanFolder', $folder);
-        $this->assertNoErrors();
-        $this->assertEqual($webDAVDocmanFolder->getChild('SomeName'), $folder);
     }
 
     /**

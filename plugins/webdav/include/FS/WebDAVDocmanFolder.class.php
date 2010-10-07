@@ -69,36 +69,60 @@ class WebDAVDocmanFolder extends Sabre_DAV_Directory {
                     case 'Docman_File':
                         $item = $dif->getItemFromDb($node->getId());
                         $version = $item->getCurrentVersion();
-                        // When it's a duplicate say it, so it can be processed later
-                        if (!isset($children[$version->getFilename()])) {
-                            $children[$version->getFilename()] = $this->getWebDAVDocmanFile($node);
-                        } else {
-                            $children[$version->getFilename()] = 'duplicate';
-                        }
+                        $index = $version->getFilename();
+                        $method = 'getWebDAVDocmanFile';
                         break;
                     case 'Docman_EmbeddedFile':
-                        if (!isset($children[$node->getTitle()])) {
-                            $children[$node->getTitle()] = $this->getWebDAVDocmanFile($node);
-                        } else {
-                            $children[$node->getTitle()] = 'duplicate';
-                        }
+                        $index = $node->getTitle();
+                        $method = 'getWebDAVDocmanFile';
                         break;
                     case 'Docman_Empty':
                     case 'Docman_Wiki':
                     case 'Docman_Link':
-                        if (!isset($children[$node->getTitle()])) {
-                            $children[$node->getTitle()] = $this->getWebDAVDocmanDocument($node);
-                        } else {
-                            $children[$node->getTitle()] = 'duplicate';
-                        }
+                        $index = $node->getTitle();
+                        $method = 'getWebDAVDocmanDocument';
                         break;
                     default:
-                        if (!isset($children[$node->getTitle()])) {
-                            $children[$node->getTitle()] = $this->getWebDAVDocmanFolder($node);
-                        } else {
-                            $children[$node->getTitle()] = 'duplicate';
-                        }
+                        $index = $node->getTitle();
+                        $method = 'getWebDAVDocmanFolder';
                         break;
+                }
+
+                // When it's a duplicate or obsolete say it, so it can be processed later
+
+                /*             +----------+------+-----------+
+                               | obsolete | item | duplicate |
+                   +-----------+----------+------+-----------+
+                   | empty     |    _↑    |  _↑  |           |
+                   +-----------+----------+------+-----------+
+                   | obsolete  |    _↑    |  _↑  |           |
+                   +-----------+----------+------+-----------+
+                   | item      |          |  _↑  |    _↑     |
+                   +-----------+----------+------+-----------+
+                   | duplicate |          |      |    _↑     |
+                   +-----------+----------+------+-----------+
+                 */
+
+                if (!isset($children[$index])) {
+                    if ($node->isObsolete()) {
+                        $children[$index] = 'obsolete';
+                    } else {
+                        $children[$index] = call_user_func(array($this,$method), $node);
+                    }
+                } elseif ($children[$index] === 'obsolete') {
+                    if ($node->isObsolete() == false) {
+                        $children[$index] = call_user_func(array($this,$method), $node);
+                    } else {
+                        // do nothing
+                    }
+                } elseif ($node instanceof Docman_Item) {
+                    if ($node->isObsolete()) {
+                        // do nothing
+                    } else {
+                        $children[$index] = 'duplicate';
+                    }
+                } else {
+                    $children[$index] = 'duplicate';
                 }
             }
         }
@@ -114,9 +138,9 @@ class WebDAVDocmanFolder extends Sabre_DAV_Directory {
      */
     function getChildren() {
         $children = $this->getChildList();
-        // Remove all duplicate elements
+        // Remove all duplicate & obsolete elements
         foreach ($children as $key => $node) {
-            if ($node === 'duplicate' || $node->getItem()->isObsolete()) {
+            if ($node === 'duplicate' || $node === 'obsolete') {
                 unset($children[$key]);
             }
         }
@@ -139,12 +163,8 @@ class WebDAVDocmanFolder extends Sabre_DAV_Directory {
             throw new Sabre_DAV_Exception_FileNotFound($GLOBALS['Language']->getText('plugin_webdav_common', 'docman_item_not_available'));
         } elseif ($children[$name] === 'duplicate') {
             throw new Sabre_DAV_Exception_Conflict($GLOBALS['Language']->getText('plugin_webdav_common', 'docman_item_duplicated'));
-        } elseif ($children[$name]->getItem()->isObsolete()) {
-            if ($this->getDocmanPermissionsManager()->userCanAdmin($this->getUser())) {
-                return $children[$name];
-            } else {
-                throw new Sabre_DAV_Exception_Forbidden($GLOBALS['Language']->getText('plugin_webdav_common', 'docman_item_obsolete'));
-            }
+        } elseif ($children[$name] === 'obsolete') {
+            throw new Sabre_DAV_Exception_Forbidden($GLOBALS['Language']->getText('plugin_webdav_common', 'docman_item_obsolete'));
         } else {
             return $children[$name];
         }
