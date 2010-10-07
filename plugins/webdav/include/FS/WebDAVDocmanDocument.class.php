@@ -36,7 +36,7 @@ class WebDAVDocmanDocument extends Sabre_DAV_File {
      *
      * @param User $user
      * @param Project $project
-     * @param Ineger $maxFileSize
+     * @param Integer $maxFileSize
      * @param Docman_Document $document
      *
      * @return void
