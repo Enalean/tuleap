@@ -136,17 +136,14 @@ class WebDAVDocmanFolder extends Sabre_DAV_Directory {
         $name = $this->getUtils()->retrieveName($name);
         $children = $this->getChildList();
         if (!isset($children[$name])) {
-            // TODO : intrnationalization
-            throw new Sabre_DAV_Exception_FileNotFound('This item doesn\'t exist');
+            throw new Sabre_DAV_Exception_FileNotFound($GLOBALS['Language']->getText('plugin_webdav_common', 'docman_item_not_available'));
         } elseif ($children[$name] === 'duplicate') {
-            // TODO : intrnationalization
-            throw new Sabre_DAV_Exception_Conflict('This item is duplicated');
+            throw new Sabre_DAV_Exception_Conflict($GLOBALS['Language']->getText('plugin_webdav_common', 'docman_item_duplicated'));
         } elseif ($children[$name]->getItem()->isObsolete()) {
             if ($this->getDocmanPermissionsManager()->userCanAdmin($this->getUser())) {
                 return $children[$name];
             } else {
-                // TODO : intrnationalization
-                throw new Sabre_DAV_Exception_Forbidden('This item is obsolete');
+                throw new Sabre_DAV_Exception_Forbidden($GLOBALS['Language']->getText('plugin_webdav_common', 'docman_item_obsolete'));
             }
         } else {
             return $children[$name];

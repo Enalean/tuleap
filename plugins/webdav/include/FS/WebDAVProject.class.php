@@ -86,8 +86,7 @@ class WebDAVProject extends Sabre_DAV_Directory {
         if (isset($children[$service])) {
             return $children[$service];
         } else {
-            // TODO : internationalization
-            throw new Sabre_DAV_Exception_FileNotFound('This service is not existant/activated for this project');
+            throw new Sabre_DAV_Exception_FileNotFound($GLOBALS['Language']->getText('plugin_webdav_common', 'service_not_available'));
         }
     }
 
