@@ -104,7 +104,7 @@ class WebDAVDocmanFolder extends Sabre_DAV_Directory {
                  */
 
                 if (!isset($children[$index])) {
-                    if ($node->isObsolete()) {
+                    if ($node->isObsolete() == true) {
                         $children[$index] = 'obsolete';
                     } else {
                         $children[$index] = call_user_func(array($this,$method), $node);
@@ -112,13 +112,9 @@ class WebDAVDocmanFolder extends Sabre_DAV_Directory {
                 } elseif ($children[$index] === 'obsolete') {
                     if ($node->isObsolete() == false) {
                         $children[$index] = call_user_func(array($this,$method), $node);
-                    } else {
-                        // do nothing
                     }
                 } elseif ($node instanceof Docman_Item) {
-                    if ($node->isObsolete()) {
-                        // do nothing
-                    } else {
+                    if ($node->isObsolete() == false) {
                         $children[$index] = 'duplicate';
                     }
                 } else {
