@@ -195,11 +195,10 @@ function create_project($data, $do_not_exit = false) {
         $dar = $pm->getMessageToRequesterForAccessProject($template_id);
         if ($dar && !$dar->isError() && $dar->rowCount() == 1) {
             $row = $dar->getRow();
-            $sql = 'INSERT INTO groups_notif_delegation_message (group_id, msg_to_requester) VALUES ('.db_ei($group_id).', "'.db_es($row['msg_to_requester']).'")';
+            $result = $pm->setMessageToRequesterForAccessProject($group_id, $row['msg_to_requester']);
         } else {
-            $sql = 'INSERT INTO groups_notif_delegation_message (group_id, msg_to_requester) VALUES ('.db_ei($group_id).', "member_request_delegation_msg_to_requester")';
+            $result = $pm->setMessageToRequesterForAccessProject($group_id, 'member_request_delegation_msg_to_requester');
         }
-        $result=db_query($sql);
         if (!$result) {
             exit_error($GLOBALS['Language']->getText('global','error'),$GLOBALS['Language']->getText('register_confirmation','cant_copy_msg_to_requester'));
         }
