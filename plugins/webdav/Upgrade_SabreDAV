@@ -1,4 +1,8 @@
 To upgrade SabreDAV:
 
--extract Sabre_DAV-x.x.x.tgz
+-extract SabreDAV-x.y.z.zip
 -copy the repository "lib" under "/plugins/webdav/include/"
+
+NB : - This code is compatible with SabreDAV version 1.0.14
+     - The upgrade instructions may not be valid by the evolution of SabreDAV so take care to read the ChangeLog file.
+     - More details about uprade can be found here : http://code.google.com/p/sabredav/wiki/Migrating1_0to1_2
