@@ -5,6 +5,8 @@
 %define APP_DIR %{_datadir}/%{APP_NAME}
 %define APP_LIB_DIR %{_libdir}/%{APP_NAME}
 %define APP_LIBBIN_DIR %{APP_LIB_DIR}/bin
+%define APP_DATA_DIR %{_localstatedir}/lib/%{APP_NAME}
+%define APP_CACHE_DIR %{_localstatedir}/tmp/%{APP_NAME}_cache
 
 # Check values in Codendi's mailman .spec file
 %define mailman_groupid  106
@@ -48,7 +50,7 @@ Codendi is a web based application that address all the aspects of product devel
 Summary: ForumML plugin for Codendi
 Group: Development/Tools
 Version: 2.0
-Release: 2%{?dist}
+Release: 1%{?dist}
 Requires: %{name} >= %{version}, php, php-pear-Mail-mimeDecode php-pear-Mail-Mime php-pear-Mail-Mbox php-pear-Mail
 #Requires: mailman-2.1.9-5.codendi
 Provides: codendi-plugin-forumml = %{version}
@@ -56,13 +58,51 @@ Provides: codendi-plugin-forumml = %{version}
 ForumML brings to Codendi a very nice mail archive viewer and the possibility
 to send mails through the web interface. It can replace the forums.
 
+%package plugin-git
+Summary: Git plugin for Codendi
+Group: Development/Tools
+Version: 1.2
+Release: 1%{?dist}
+Requires: %{name} >= %{version}, git, geshi, php-Smarty
+Provides: codendi-plugin-git = %{version}
+%description plugin-git
+Integration of git distributed software configuration management tool together
+with Codendi
 
+%package plugin-svntodimensions
+Summary: Codendi plugin for svntodimensions
+Group: Development/Tools
+Version: 1.0
+Release: 1%{?dist}
+Requires: %{name} >= %{version}
+Provides: codendi-plugin-svntodimensions = %{version}
+%description plugin-svntodimensions
+Codendi plugin for svntodimensions
+
+%package plugin-cvstodimensions
+Summary: Codendi plugin for cvstodimensions
+Group: Development/Tools
+Version: 1.0
+Release: 1%{?dist}
+Requires: %{name} >= %{version}
+Provides: codendi-plugin-cvstodimensions = %{version}
+%description plugin-cvstodimensions
+Codendi plugin for cvstodimensions
+
+
+
+#
+# Package setup
 %prep
 %setup -q
 
+#
+# Build
 %build
 # Nothing to do
 
+#
+# Install
 %install
 %{__rm} -rf $RPM_BUILD_ROOT
 
@@ -107,8 +147,19 @@ done
 %{__install} -d $RPM_BUILD_ROOT/etc/cron.d
 %{__install} src/utils/cron.d/codendi-stop $RPM_BUILD_ROOT/etc/cron.d/%{APP_NAME}
 
+# Cache dir
+%{__install} -d $RPM_BUILD_ROOT/%{APP_CACHE_DIR}
+
 # plugin forumml
 %{__install} -d $RPM_BUILD_ROOT/%{_localstatedir}/run/forumml
+
+# plugin git
+%{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/gitroot
+%{__ln_s} var/lib/%{APP_NAME}/gitroot $RPM_BUILD_ROOT
+%{__install} -d $RPM_BUILD_ROOT/%{APP_CACHE_DIR}/smarty
+%{__install} -d $RPM_BUILD_ROOT/%{APP_CACHE_DIR}/smarty/templates_c
+%{__install} -d $RPM_BUILD_ROOT/%{APP_CACHE_DIR}/smarty/cache
+
 
 ##
 ## On package install
@@ -189,7 +240,6 @@ else
     true
 fi
 
-
 #
 #
 #
@@ -216,6 +266,16 @@ fi
 # Restart the services
 #/sbin/service httpd start
 #/etc/init.d/codendi start
+
+#
+# Post install of git plugin
+%post plugin-git
+if [ "$1" -eq "1" ]; then
+    # During install
+    if ! %{__grep} /usr/bin/git-shell /etc/shells &> /dev/null; then
+        echo /usr/bin/git-shell >> /etc/shells
+    fi
+fi
 
 ##
 ## On package un-install
@@ -261,11 +321,9 @@ fi
 %dir %{APP_DIR}/plugins
 %{APP_DIR}/plugins/admindelegation
 %{APP_DIR}/plugins/codendijri
-%{APP_DIR}/plugins/cvstodimensions
 %{APP_DIR}/plugins/docman
 %{APP_DIR}/plugins/docmanwatermark
 %{APP_DIR}/plugins/eclipse
-%{APP_DIR}/plugins/git
 %{APP_DIR}/plugins/graphontrackers
 %{APP_DIR}/plugins/hudson
 %{APP_DIR}/plugins/IM
@@ -274,8 +332,6 @@ fi
 %{APP_DIR}/plugins/projectlinks
 %{APP_DIR}/plugins/serverupdate
 %{APP_DIR}/plugins/statistics
-%{APP_DIR}/plugins/svntodimensions
-%{APP_DIR}/plugins/template
 %{APP_DIR}/plugins/tracker_date_reminder
 %{APP_DIR}/plugins/userlog
 %{APP_DIR}/plugins/webdav
@@ -293,12 +349,31 @@ fi
 %attr(04755,root,root) %{APP_LIBBIN_DIR}/fileforge
 %attr(00755,root,root) /etc/rc.d/init.d/%{APP_NAME}
 %attr(00644,root,root) /etc/cron.d/%{APP_NAME}
+%dir %{APP_CACHE_DIR}
 
 %files plugin-forumml
 %defattr(-,%{APP_USER},%{APP_USER},-)
 %{APP_DIR}/plugins/forumml
 %attr(06755,%{APP_USER},%{APP_USER}) %{APP_LIBBIN_DIR}/mail_2_DB.pl
 %attr(00750,%{APP_USER},%{APP_USER}) %{_localstatedir}/run/forumml
+
+%files plugin-git
+%defattr(-,%{APP_USER},%{APP_USER},-)
+%{APP_DIR}/plugins/git
+%dir %{APP_DATA_DIR}/gitroot
+%attr(-,root,root) /gitroot
+%attr(00755,%{APP_USER},%{APP_USER}) %{APP_CACHE_DIR}/smarty
+
+%attr(06755,%{APP_USER},%{APP_USER}) %{APP_LIBBIN_DIR}/mail_2_DB.pl
+%attr(00750,%{APP_USER},%{APP_USER}) %{_localstatedir}/run/forumml
+
+%files plugin-svntodimensions
+%defattr(-,%{APP_USER},%{APP_USER},-)
+%{APP_DIR}/plugins/svntodimensions
+
+%files plugin-cvstodimensions
+%defattr(-,%{APP_USER},%{APP_USER},-)
+%{APP_DIR}/plugins/cvstodimensions
 
 #%doc
 #%config
