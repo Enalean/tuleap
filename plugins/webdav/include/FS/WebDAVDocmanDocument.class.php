@@ -45,13 +45,14 @@ class WebDAVDocmanDocument extends Sabre_DAV_File {
         $this->user = $user;
         $this->project = $project;
         $this->maxFileSize = $maxFileSize;
-        $this->document = $document;
+        $dif = new Docman_ItemFactory();
+        $this->document = $dif->getItemFromDb($document->getId());
     }
 
     /**
      * This method is used to download the file
      *
-     * @return File
+     * @return null
      *
      * @see plugins/webdav/include/lib/Sabre/DAV/Sabre_DAV_File::get()
      */
@@ -83,8 +84,6 @@ class WebDAVDocmanDocument extends Sabre_DAV_File {
      * @see plugins/webdav/include/lib/Sabre/DAV/Sabre_DAV_File::getContentType()
      */
     function getContentType() {
-        $if = new Docman_ItemFactory();
-        $item = $if->getItemFromDb($this->getItem()->getId());
         switch (get_class($this->getItem())) {
             case 'Docman_Wiki':
                 return 'Wiki';

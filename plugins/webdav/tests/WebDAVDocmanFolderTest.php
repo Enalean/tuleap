@@ -72,16 +72,6 @@ class TestDocmanFolder2 extends Docman_Folder {
 
 }
 
-class MockDocmanFolder extends Docman_Folder {
-    function getID() {
-        return 0;
-    }
-
-    function getTitle() {
-        return 'someName';
-    }
-}
-
 /**
  * This is the unit test of WebDAVDocmanFolder
  */
@@ -145,6 +135,7 @@ class WebDAVDocmanFolderTest extends UnitTestCase {
         $children = $webDAVDocmanFolder->getChildList();
         $this->assertTrue(isset($children['SameName']));
         $this->assertEqual(sizeof($children), 1);
+        $this->assertEqual($children['SameName'], 'duplicate');
     }
 
     /**

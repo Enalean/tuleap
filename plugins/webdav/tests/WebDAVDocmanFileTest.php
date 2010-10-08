@@ -31,13 +31,11 @@ require_once (dirname(__FILE__).'/../../docman/include/Docman_Version.class.php'
 Mock::generate('Docman_Version');
 require_once (dirname(__FILE__).'/../../docman/include/Docman_File.class.php');
 Mock::generate('Docman_File');
-require_once (dirname(__FILE__).'/../../docman/include/Docman_ItemFactory.class.php');
-Mock::generate('Docman_ItemFactory');
 require_once (dirname(__FILE__).'/../include/FS/WebDAVDocmanFile.class.php');
 Mock::generatePartial(
     'WebDAVDocmanFile',
     'WebDAVDocmanFileTestVersion',
-array('getItemFactory', 'getSize', 'getMaxFileSize', 'getItem', 'logDownload', 'download')
+array('getSize', 'getMaxFileSize', 'getItem', 'logDownload', 'download')
 );
 
 /**
@@ -70,9 +68,6 @@ class WebDAVDocmanFileTest extends UnitTestCase {
         $version->setReturnValue('getPath', dirname(__FILE__).'/_fixtures/nonExistant');
         $item = new MockDocman_File();
         $item->setReturnValue('getCurrentVersion', $version);
-        $dif = new MockDocman_ItemFactory();
-        $dif->setReturnValue('getItemFromDb', $item);
-        $webDAVDocmanFile->setReturnValue('getItemFactory', $dif);
         $webDAVDocmanFile->setReturnValue('getItem', $item);
         $this->expectException('Sabre_DAV_Exception_FileNotFound');
         $webDAVDocmanFile->get();
@@ -89,9 +84,6 @@ class WebDAVDocmanFileTest extends UnitTestCase {
         $version->setReturnValue('getPath', dirname(__FILE__).'/_fixtures/test.txt');
         $item = new MockDocman_File();
         $item->setReturnValue('getCurrentVersion', $version);
-        $dif = new MockDocman_ItemFactory();
-        $dif->setReturnValue('getItemFromDb', $item);
-        $webDAVDocmanFile->setReturnValue('getItemFactory', $dif);
         $webDAVDocmanFile->setReturnValue('getItem', $item);
         $this->expectException('Sabre_DAV_Exception_RequestedRangeNotSatisfiable');
         $webDAVDocmanFile->get();
@@ -108,9 +100,6 @@ class WebDAVDocmanFileTest extends UnitTestCase {
         $version->setReturnValue('getPath', dirname(__FILE__).'/_fixtures/test.txt');
         $item = new MockDocman_File();
         $item->setReturnValue('getCurrentVersion', $version);
-        $dif = new MockDocman_ItemFactory();
-        $dif->setReturnValue('getItemFromDb', $item);
-        $webDAVDocmanFile->setReturnValue('getItemFactory', $dif);
         $webDAVDocmanFile->setReturnValue('getItem', $item);
         $this->assertNoErrors();
         $webDAVDocmanFile->get();

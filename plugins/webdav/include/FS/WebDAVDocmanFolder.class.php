@@ -53,7 +53,7 @@ class WebDAVDocmanFolder extends Sabre_DAV_Directory {
 
     /**
      * Returns the content of the folder
-     * including the duplicate enries
+     * including indication about duplicate entries
      *
      * @return Array
      */
@@ -207,9 +207,7 @@ class WebDAVDocmanFolder extends Sabre_DAV_Directory {
      * @return WebDAVUtils
      */
     function getUtils() {
-
         return WebDAVUtils::getInstance();
-
     }
 
     /**
