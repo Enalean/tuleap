@@ -30,7 +30,7 @@ if ($request->isPost() && $request->exist('Submit') &&  $request->existAndNonEmp
             $sendMail = new Error_PermissionDenied_RestrictedUser();
             $vMessage = new Valid_Text('msg_restricted_user');
             $vMessage->required();
-            if ($request->valid($vMessage) && ($request->get('msg_restricted_user')!= $defaultMsg )) {
+            if ($request->valid($vMessage) && (trim($request->get('msg_restricted_user'))!= $defaultMsg )) {
                 $messageToAdmin = $request->get('msg_restricted_user');
             } else {
                 exit_error($Language->getText('include_exit', 'error'),$Language->getText('sendmessage','invalid_msg'));
