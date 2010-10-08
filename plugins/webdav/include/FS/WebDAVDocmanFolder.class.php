@@ -62,6 +62,7 @@ class WebDAVDocmanFolder extends Sabre_DAV_Directory {
         // hey ! for docman never add something in WebDAVUtils, docman may be not present ;)
         $dif = $this->getDocmanItemFactory();
         $nodes = $dif->getChildrenFromParent($this->getItem());
+
         foreach ($nodes as $node) {
             if ($this->getDocmanPermissionsManager()->userCanAccess($this->getUser(), $node->getId())) {
                 $class = get_class($node);
@@ -129,6 +130,7 @@ class WebDAVDocmanFolder extends Sabre_DAV_Directory {
     function getChild($name) {
         $name = $this->getUtils()->retrieveName($name);
         $children = $this->getChildList();
+
         if (!isset($children[$name])) {
             throw new Sabre_DAV_Exception_FileNotFound($GLOBALS['Language']->getText('plugin_webdav_common', 'docman_item_not_available'));
         } elseif ($children[$name] === 'duplicate') {

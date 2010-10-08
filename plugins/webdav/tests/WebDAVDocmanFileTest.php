@@ -64,11 +64,13 @@ class WebDAVDocmanFileTest extends UnitTestCase {
      */
     function testGetNotFound() {
         $webDAVDocmanFile = new WebDAVDocmanFileTestVersion($this);
+
         $version = new MockDocman_Version();
         $version->setReturnValue('getPath', dirname(__FILE__).'/_fixtures/nonExistant');
         $item = new MockDocman_File();
         $item->setReturnValue('getCurrentVersion', $version);
         $webDAVDocmanFile->setReturnValue('getItem', $item);
+
         $this->expectException('Sabre_DAV_Exception_FileNotFound');
         $webDAVDocmanFile->get();
     }
@@ -78,13 +80,16 @@ class WebDAVDocmanFileTest extends UnitTestCase {
      */
     function testGetBigFile() {
         $webDAVDocmanFile = new WebDAVDocmanFileTestVersion($this);
+
         $webDAVDocmanFile->setReturnValue('getSize', 2);
         $webDAVDocmanFile->setReturnValue('getMaxFileSize', 1);
+
         $version = new MockDocman_Version();
         $version->setReturnValue('getPath', dirname(__FILE__).'/_fixtures/test.txt');
         $item = new MockDocman_File();
         $item->setReturnValue('getCurrentVersion', $version);
         $webDAVDocmanFile->setReturnValue('getItem', $item);
+
         $this->expectException('Sabre_DAV_Exception_RequestedRangeNotSatisfiable');
         $webDAVDocmanFile->get();
     }
@@ -94,13 +99,16 @@ class WebDAVDocmanFileTest extends UnitTestCase {
      */
     function testGetSuccess() {
         $webDAVDocmanFile = new WebDAVDocmanFileTestVersion($this);
+
         $webDAVDocmanFile->setReturnValue('getSize', 1);
         $webDAVDocmanFile->setReturnValue('getMaxFileSize', 1);
+
         $version = new MockDocman_Version();
         $version->setReturnValue('getPath', dirname(__FILE__).'/_fixtures/test.txt');
         $item = new MockDocman_File();
         $item->setReturnValue('getCurrentVersion', $version);
         $webDAVDocmanFile->setReturnValue('getItem', $item);
+
         $this->assertNoErrors();
         $webDAVDocmanFile->get();
     }

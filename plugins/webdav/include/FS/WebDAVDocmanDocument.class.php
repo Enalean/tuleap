@@ -152,9 +152,7 @@ class WebDAVDocmanDocument extends Sabre_DAV_File {
      * @return WebDAVUtils
      */
     function getUtils() {
-
         return WebDAVUtils::getInstance();
-
     }
 
 }

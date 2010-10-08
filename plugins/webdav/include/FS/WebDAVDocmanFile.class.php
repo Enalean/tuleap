@@ -36,6 +36,7 @@ class WebDAVDocmanFile extends WebDAVDocmanDocument {
     function get() {
         $item = $this->getItem();
         $version = $item->getCurrentVersion();
+
         if (file_exists($version->getPath())) {
             if ($this->getSize() <= $this->getMaxFileSize()) {
                 $this->logDownload($version);
@@ -135,6 +136,7 @@ class WebDAVDocmanFile extends WebDAVDocmanDocument {
                                              'version'         => $version,
                                              'docmanControler' => null
         ));
+
         // Download the file
         header('Content-Type: '. $version->getFiletype());
         header('Content-Length: '. $version->getFilesize());
