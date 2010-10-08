@@ -199,7 +199,7 @@ project_admin_index	member_request_delegation_title	Délégation des demandes d'
 project_admin_index	member_request_delegation_desc	Lorsqu'un utilisateur n'a pas accès à votre projet, que le projet soit privé ou que l'utilisateur soit restreint aux projects dont il est membre, il peut vous envoyer une demande afin d'être ajouté aux membres de projet.<br />La demande est envoyée au group d'utilisateurs suivant :
 project_admin_index	member_request_delegation_ugroups_error	Groupe d'utilisateur invalid
 project_admin_index	member_request_delegation_ugroups_msg	Le groupe d'utilisateur à  notifier pour la délégation d'opération d'admin a été ajouté.
-project_admin_index	member_request_delegation_msg_to_requester	<Afin de faciliter la tâche de l'administrateur et l'aider à approuver votre demande, veuillez lui fournir quelques détails: Site, Organisation, Manager, fonction ainsi que votre raison pour solliciter l'accès à son projet.>
+project_admin_index	member_request_delegation_msg_to_requester	Veuillez soumettre un message significatif à fin d'aider l'administateur. 
 project_admin_index	member_request_delegation_msg_desc	Ci-dessous le message par défaut qui va être affiché aux utilisateurs qui requièrent l'accès à votre projet. Vous pouvez le personnaliser.
 project_admin_index	member_request_delegation_msg_info	Le message destiné aux utilisateurs a été modifié .
 project_admin_index	member_request_delegation_msg_error	Impossible de modifier le message destiné aux utilisateurs.
