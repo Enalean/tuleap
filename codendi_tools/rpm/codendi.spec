@@ -22,7 +22,7 @@
 
 Summary: Codendi forge
 Name: %{PKG_NAME}
-Provides: codendi
+Provides: codendi = %{version}
 Version: @@VERSION@@
 Release: 1%{?dist}
 BuildArch: noarch
@@ -43,6 +43,19 @@ Requires: forgeupgrade >= 1.2
 
 %description
 Codendi is a web based application that address all the aspects of product development.
+
+%package plugin-forumml
+Summary: ForumML plugin for Codendi
+Group: Development/Tools
+Version: 2.0
+Release: 2%{?dist}
+Requires: %{name} >= %{version}, php, php-pear-Mail-mimeDecode php-pear-Mail-Mime php-pear-Mail-Mbox php-pear-Mail
+#Requires: mailman-2.1.9-5.codendi
+Provides: codendi-plugin-forumml = %{version}
+%description plugin-forumml
+ForumML brings to Codendi a very nice mail archive viewer and the possibility
+to send mails through the web interface. It can replace the forums.
+
 
 %prep
 %setup -q
@@ -66,6 +79,8 @@ done
 %{__rm} -f $RPM_BUILD_ROOT/%{APP_DIR}/plugins/forumml/bin/ml_arch_2_DB.pl
 # Remove salome plugin because not used and breaks SELinux postinstall fix (wrong symlink)
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/salome
+# No need of template
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/template
 # Remove organization_logo (provided by codendi_customization package)
 %{__rm} -f $RPM_BUILD_ROOT/%{APP_DIR}/src/www/themes/common/images/organization_logo.png
 
@@ -92,6 +107,8 @@ done
 %{__install} -d $RPM_BUILD_ROOT/etc/cron.d
 %{__install} src/utils/cron.d/codendi-stop $RPM_BUILD_ROOT/etc/cron.d/%{APP_NAME}
 
+# plugin forumml
+%{__install} -d $RPM_BUILD_ROOT/%{_localstatedir}/run/forumml
 
 ##
 ## On package install
@@ -237,11 +254,31 @@ fi
 %dir %{APP_DIR}
 %{APP_DIR}/codendi_tools
 %{APP_DIR}/cli
-%{APP_DIR}/plugins
 %{APP_DIR}/site-content
 %{APP_DIR}/src
 %{APP_DIR}/ST-ChangeLog
 %{APP_DIR}/ST-VERSION
+%dir %{APP_DIR}/plugins
+%{APP_DIR}/plugins/admindelegation
+%{APP_DIR}/plugins/codendijri
+%{APP_DIR}/plugins/cvstodimensions
+%{APP_DIR}/plugins/docman
+%{APP_DIR}/plugins/docmanwatermark
+%{APP_DIR}/plugins/eclipse
+%{APP_DIR}/plugins/git
+%{APP_DIR}/plugins/graphontrackers
+%{APP_DIR}/plugins/hudson
+%{APP_DIR}/plugins/IM
+%{APP_DIR}/plugins/ldap
+%{APP_DIR}/plugins/pluginsadministration
+%{APP_DIR}/plugins/projectlinks
+%{APP_DIR}/plugins/serverupdate
+%{APP_DIR}/plugins/statistics
+%{APP_DIR}/plugins/svntodimensions
+%{APP_DIR}/plugins/template
+%{APP_DIR}/plugins/tracker_date_reminder
+%{APP_DIR}/plugins/userlog
+%{APP_DIR}/plugins/webdav
 %attr(755,%{APP_USER},%{APP_USER}) %dir %{APP_LIB_DIR}
 %attr(755,%{APP_USER},%{APP_USER}) %dir %{APP_LIBBIN_DIR}
 %attr(00755,%{APP_USER},%{APP_USER}) %{APP_LIBBIN_DIR}/gotohell
@@ -254,9 +291,14 @@ fi
 %attr(00755,%{APP_USER},%{APP_USER}) %{APP_LIBBIN_DIR}/commit-email.pl
 %attr(00755,%{APP_USER},%{APP_USER}) %{APP_LIBBIN_DIR}/codendi_svn_pre_commit.php
 %attr(04755,root,root) %{APP_LIBBIN_DIR}/fileforge
-%attr(06755,%{APP_USER},%{APP_USER}) %{APP_LIBBIN_DIR}/mail_2_DB.pl
 %attr(00755,root,root) /etc/rc.d/init.d/%{APP_NAME}
 %attr(00644,root,root) /etc/cron.d/%{APP_NAME}
+
+%files plugin-forumml
+%defattr(-,%{APP_USER},%{APP_USER},-)
+%{APP_DIR}/plugins/forumml
+%attr(06755,%{APP_USER},%{APP_USER}) %{APP_LIBBIN_DIR}/mail_2_DB.pl
+%attr(00750,%{APP_USER},%{APP_USER}) %{_localstatedir}/run/forumml
 
 #%doc
 #%config
