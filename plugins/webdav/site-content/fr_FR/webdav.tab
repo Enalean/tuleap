@@ -42,5 +42,19 @@ plugin_webdav_common	docman_item_duplicated	Cet item possede un nom duplique.
 plugin_webdav_common	authentication_required	Authentification requise.
 plugin_webdav_common	wrong_input	Verifiez votre entree.
 plugin_webdav_common	hidden	 (cache)
+plugin_webdav_common	files	Fichiers
 plugin_webdav	descriptor_description	Serveur WebDAV pour la gestion du service de livraison de fichier et du service de documentation.
 plugin_webdav	descriptor_name	WebDAV.
+plugin_webdav_html	name	Nom
+plugin_webdav_html	size	Taille
+plugin_webdav_html	last_modified	Date de modification
+plugin_webdav_html	delete	Supprimer
+plugin_webdav_html	rename	Renommer
+plugin_webdav_html	move	Deplacer
+plugin_webdav_html	directory	Repertoire
+plugin_webdav_html	unknown	Inconnu
+plugin_webdav_html	create_package	Creer un nouveau paquet
+plugin_webdav_html	create_release	Creer une nouvelle version
+plugin_webdav_html	upload_file	Uploader un nouveau fichier
+plugin_webdav_html	optional	optionnel
+plugin_webdav_html	file	Fichier

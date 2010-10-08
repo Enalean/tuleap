@@ -104,14 +104,14 @@ class WebDAVFRS extends Sabre_DAV_Directory {
     }
 
     /**
-     * Returns the name of the project
+     * Returns the name of the service
      *
      * @return String
      *
      * @see lib/Sabre/DAV/Sabre_DAV_INode#getName()
      */
     function getName() {
-        return 'Files';
+        return $GLOBALS['Language']->getText('plugin_webdav_common', 'files');
     }
 
     /**
