@@ -99,9 +99,9 @@ class WebDAVDocmanFolderTest extends UnitTestCase {
     function testGetChildListNoChildrens() {
         $webDAVDocmanFolder = new WebDAVDocmanFolderTestVersion($this);
 
-        $dif = new MockDocman_ItemFactory();
-        $dif->setReturnValue('getChildrenFromParent', array());
-        $webDAVDocmanFolder->setReturnValue('getDocmanItemFactory', $dif);
+        $docmanItemFactory = new MockDocman_ItemFactory();
+        $docmanItemFactory->setReturnValue('getChildrenFromParent', array());
+        $webDAVDocmanFolder->setReturnValue('getDocmanItemFactory', $docmanItemFactory);
 
         $this->assertEqual($webDAVDocmanFolder->getChildList(), array());
     }
@@ -113,13 +113,13 @@ class WebDAVDocmanFolderTest extends UnitTestCase {
         $webDAVDocmanFolder = new WebDAVDocmanFolderTestVersion($this);
 
         $item = new MockDocman_Item();
-        $dif = new MockDocman_ItemFactory();
-        $dif->setReturnValue('getChildrenFromParent', array($item));
-        $webDAVDocmanFolder->setReturnValue('getDocmanItemFactory', $dif);
+        $docmanItemFactory = new MockDocman_ItemFactory();
+        $docmanItemFactory->setReturnValue('getChildrenFromParent', array($item));
+        $webDAVDocmanFolder->setReturnValue('getDocmanItemFactory', $docmanItemFactory);
 
-        $dpm = new MockDocman_PermissionsManager();
-        $dpm->setReturnValue('userCanAccess', false);
-        $webDAVDocmanFolder->setReturnValue('getDocmanPermissionsManager', $dpm);
+        $docmanPermissionManager = new MockDocman_PermissionsManager();
+        $docmanPermissionManager->setReturnValue('userCanAccess', false);
+        $webDAVDocmanFolder->setReturnValue('getDocmanPermissionsManager', $docmanPermissionManager);
 
         $this->assertEqual($webDAVDocmanFolder->getChildList(), array());
     }
@@ -132,13 +132,13 @@ class WebDAVDocmanFolderTest extends UnitTestCase {
 
         $item1 = new TestDocmanFolder();
         $item2 = new TestDocmanFolder();
-        $dif = new MockDocman_ItemFactory();
-        $dif->setReturnValue('getChildrenFromParent', array($item1, $item2));
-        $webDAVDocmanFolder->setReturnValue('getDocmanItemFactory', $dif);
+        $docmanItemFactory = new MockDocman_ItemFactory();
+        $docmanItemFactory->setReturnValue('getChildrenFromParent', array($item1, $item2));
+        $webDAVDocmanFolder->setReturnValue('getDocmanItemFactory', $docmanItemFactory);
 
-        $dpm = new MockDocman_PermissionsManager();
-        $dpm->setReturnValue('userCanAccess', true);
-        $webDAVDocmanFolder->setReturnValue('getDocmanPermissionsManager', $dpm);
+        $docmanPermissionManager = new MockDocman_PermissionsManager();
+        $docmanPermissionManager->setReturnValue('userCanAccess', true);
+        $webDAVDocmanFolder->setReturnValue('getDocmanPermissionsManager', $docmanPermissionManager);
 
         $children = $webDAVDocmanFolder->getChildList();
 
@@ -155,13 +155,13 @@ class WebDAVDocmanFolderTest extends UnitTestCase {
 
         $item1 = new TestDocmanFolder();
         $item2 = new TestDocmanFolder2();
-        $dif = new MockDocman_ItemFactory();
-        $dif->setReturnValue('getChildrenFromParent', array($item1, $item2));
-        $webDAVDocmanFolder->setReturnValue('getDocmanItemFactory', $dif);
+        $docmanItemFactory = new MockDocman_ItemFactory();
+        $docmanItemFactory->setReturnValue('getChildrenFromParent', array($item1, $item2));
+        $webDAVDocmanFolder->setReturnValue('getDocmanItemFactory', $docmanItemFactory);
 
-        $dpm = new MockDocman_PermissionsManager();
-        $dpm->setReturnValue('userCanAccess', true);
-        $webDAVDocmanFolder->setReturnValue('getDocmanPermissionsManager', $dpm);
+        $docmanPermissionManager = new MockDocman_PermissionsManager();
+        $docmanPermissionManager->setReturnValue('userCanAccess', true);
+        $webDAVDocmanFolder->setReturnValue('getDocmanPermissionsManager', $docmanPermissionManager);
 
         $this->assertNoErrors();
         $children = $webDAVDocmanFolder->getChildList();
@@ -201,13 +201,13 @@ class WebDAVDocmanFolderTest extends UnitTestCase {
 
         $item1 = new TestDocmanFolder();
         $item2 = new TestDocmanFolder2();
-        $dif = new MockDocman_ItemFactory();
-        $dif->setReturnValue('getChildrenFromParent', array($item1, $item2));
-        $webDAVDocmanFolder->setReturnValue('getDocmanItemFactory', $dif);
+        $docmanItemFactory = new MockDocman_ItemFactory();
+        $docmanItemFactory->setReturnValue('getChildrenFromParent', array($item1, $item2));
+        $webDAVDocmanFolder->setReturnValue('getDocmanItemFactory', $docmanItemFactory);
 
-        $dpm = new MockDocman_PermissionsManager();
-        $dpm->setReturnValue('userCanAccess', true);
-        $webDAVDocmanFolder->setReturnValue('getDocmanPermissionsManager', $dpm);
+        $docmanPermissionManager = new MockDocman_PermissionsManager();
+        $docmanPermissionManager->setReturnValue('userCanAccess', true);
+        $webDAVDocmanFolder->setReturnValue('getDocmanPermissionsManager', $docmanPermissionManager);
 
         $this->assertNoErrors();
         $children = $webDAVDocmanFolder->getChildren();
@@ -223,9 +223,9 @@ class WebDAVDocmanFolderTest extends UnitTestCase {
     function testGetChildNotFound() {
         $webDAVDocmanFolder = new WebDAVDocmanFolderTestVersion($this);
 
-        $dif = new MockDocman_ItemFactory();
-        $dif->setReturnValue('getChildrenFromParent', array());
-        $webDAVDocmanFolder->setReturnValue('getDocmanItemFactory', $dif);
+        $docmanItemFactory = new MockDocman_ItemFactory();
+        $docmanItemFactory->setReturnValue('getChildrenFromParent', array());
+        $webDAVDocmanFolder->setReturnValue('getDocmanItemFactory', $docmanItemFactory);
 
         $this->expectException('Sabre_DAV_Exception_FileNotFound');
         $webDAVDocmanFolder->getChild('whatever');
@@ -239,13 +239,13 @@ class WebDAVDocmanFolderTest extends UnitTestCase {
 
         $item1 = new TestDocmanFolder();
         $item2 = new TestDocmanFolder();
-        $dif = new MockDocman_ItemFactory();
-        $dif->setReturnValue('getChildrenFromParent', array($item1, $item2));
-        $webDAVDocmanFolder->setReturnValue('getDocmanItemFactory', $dif);
+        $docmanItemFactory = new MockDocman_ItemFactory();
+        $docmanItemFactory->setReturnValue('getChildrenFromParent', array($item1, $item2));
+        $webDAVDocmanFolder->setReturnValue('getDocmanItemFactory', $docmanItemFactory);
 
-        $dpm = new MockDocman_PermissionsManager();
-        $dpm->setReturnValue('userCanAccess', true);
-        $webDAVDocmanFolder->setReturnValue('getDocmanPermissionsManager', $dpm);
+        $docmanPermissionManager = new MockDocman_PermissionsManager();
+        $docmanPermissionManager->setReturnValue('userCanAccess', true);
+        $webDAVDocmanFolder->setReturnValue('getDocmanPermissionsManager', $docmanPermissionManager);
 
         $webDAVDocmanFolder->setReturnValue('getWebDAVDocmanFolder', $item1);
 
@@ -265,13 +265,13 @@ class WebDAVDocmanFolderTest extends UnitTestCase {
         $folder = new WebDAVDocmanFolderTestVersion3($this);
         $folder->setReturnValue('getItem', $item);
 
-        $dif = new MockDocman_ItemFactory();
-        $dif->setReturnValue('getChildrenFromParent', array($item));
-        $webDAVDocmanFolder->setReturnValue('getDocmanItemFactory', $dif);
+        $docmanItemFactory = new MockDocman_ItemFactory();
+        $docmanItemFactory->setReturnValue('getChildrenFromParent', array($item));
+        $webDAVDocmanFolder->setReturnValue('getDocmanItemFactory', $docmanItemFactory);
 
-        $dpm = new MockDocman_PermissionsManager();
-        $dpm->setReturnValue('userCanAccess', true);
-        $webDAVDocmanFolder->setReturnValue('getDocmanPermissionsManager', $dpm);
+        $docmanPermissionManager = new MockDocman_PermissionsManager();
+        $docmanPermissionManager->setReturnValue('userCanAccess', true);
+        $webDAVDocmanFolder->setReturnValue('getDocmanPermissionsManager', $docmanPermissionManager);
 
         $webDAVDocmanFolder->setReturnValue('getWebDAVDocmanFolder', $folder);
 

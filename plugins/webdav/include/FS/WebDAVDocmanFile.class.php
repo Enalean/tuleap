@@ -26,6 +26,8 @@ require_once('WebDAVDocmanDocument.class.php');
  */
 class WebDAVDocmanFile extends WebDAVDocmanDocument {
 
+    private static $maxFileSize;
+
     /**
      * This method is used to download the file
      *
@@ -100,7 +102,18 @@ class WebDAVDocmanFile extends WebDAVDocmanDocument {
      * @return Integer
      */
     function getMaxFileSize() {
-        return $this->maxFileSize;
+        return self::$maxFileSize;
+    }
+
+    /**
+     * Sets the max file size
+     *
+     * @param Integer $maxFileSize
+     *
+     * @return null
+     */
+    function setMaxFileSize($maxFileSize) {
+        self::$maxFileSize = $maxFileSize;
     }
 
     /**

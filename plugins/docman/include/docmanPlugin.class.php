@@ -435,15 +435,16 @@ class DocmanPlugin extends Plugin {
     }
 
     /**
-     * Hook to get the root item of a project
+     * Hook to know if docman is activated for the given project
+     * it returns the root item of that project
      *
      * @param Array $params
      */
     function getRootItemForProject($params) {
         if ($params['service'] == 'docman') {
             require_once('Docman_ItemFactory.class.php');
-            $dif =& new Docman_ItemFactory();
-            $root = $dif->getRoot($params['project']->getId());
+            $docmanItemFactory =& new Docman_ItemFactory();
+            $root = $docmanItemFactory->getRoot($params['project']->getId());
             $params['root']= $root;
         }
     }

@@ -90,7 +90,8 @@ class WebDAVPlugin extends Plugin {
                                                            'root'    => &$root));
         if ($root) {
             require_once ('FS/WebDAVDocmanFolder.class.php');
-            $docman = new WebDAVDocmanFolder($params['user'] , $params['project'], $params['maxFileSize'], $root);
+            WebDAVDocmanFile::setMaxFileSize($params['maxFileSize']);
+            $docman = new WebDAVDocmanFolder($params['user'] , $params['project'], $root);
             $params['children']['Documents'] = $docman;
         }
     }
