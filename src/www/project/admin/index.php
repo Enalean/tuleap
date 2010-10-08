@@ -97,7 +97,7 @@ if ($request->isPost() && $request->valid($vFunc)) {
         $vMessage = new Valid_Text('text');
         $vMessage->required();
         if ($request->valid($vMessage)) {
-            $message = $request->get('text');
+            $message = trim($request->get('text'));
             if ($pm->setMessageToRequesterForAccessProject($group_id, $message)) {
                 $GLOBALS['Response']->addFeedback('info', $Language->getText('project_admin_index', 'member_request_delegation_msg_info'));
             }
