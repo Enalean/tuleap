@@ -11,6 +11,6 @@
 {t}committer{/t}: {$commit->GetCommitter()} ({$commit->GetCommitterEpoch()|date_format:"%Y-%m-%d %H:%M:%S"})
 <br /><br />
 {foreach from=$commit->GetComment() item=line}
-{$line}<br />
+{$line|escape}<br />
 {/foreach}
 </div>
