@@ -77,7 +77,7 @@ class GitPHP_ProjectListDirectory extends GitPHP_ProjectListBase
 			return;
 
 		if ($dh = opendir($dir)) {
-			$trimlen = strlen(GitPHP_Config::GetInstance()->GetValue('projectroot')) + 1;
+			$trimlen = strlen($this->projectDir) + 1;
 			while (($file = readdir($dh)) !== false) {
 				$fullPath = $dir . '/' . $file;
 				if ((strpos($file, '.') !== 0) && is_dir($fullPath)) {
