@@ -28,3 +28,5 @@ pushd .
 cd "$codendi_src/codendi_tools/rpm"
 make all dist
 popd
+
+exit 0
