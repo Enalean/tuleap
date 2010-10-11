@@ -89,7 +89,6 @@ Provides: codendi-plugin-cvstodimensions = %{version}
 %description plugin-cvstodimensions
 Codendi plugin for cvstodimensions
 
-
 %package plugin-docmanwatermark
 Summary: Codendi plugin for PDF watermarking
 Group: Development/Tools
@@ -101,6 +100,17 @@ Provides: codendi-plugin-docmanwatermark = %{version}
 %description plugin-docmanwatermark
 PDF Watermark plugin. Provide the possibility to add a customizable banner to
 PDF file uploaded in Docman
+
+%package plugin-ldap
+Summary: Codendi plugin to manage LDAP integration
+Group: Development/Tools
+Version: @@PLUGIN_LDAP_VERSION@@
+Release: 1%{?dist}
+Requires: %{name} >= %{version}, php-ldap, perl-LDAP, python-ldap
+Provides: codendi-plugin-ldap = %{version}
+%description plugin-ldap
+LDAP Plugin for Codendi. Provides LDAP information, LDAP
+authentication, user and group management.
 
 #
 # Package setup
@@ -337,7 +347,6 @@ fi
 %{APP_DIR}/plugins/graphontrackers
 %{APP_DIR}/plugins/hudson
 %{APP_DIR}/plugins/IM
-%{APP_DIR}/plugins/ldap
 %{APP_DIR}/plugins/pluginsadministration
 %{APP_DIR}/plugins/projectlinks
 %{APP_DIR}/plugins/serverupdate
@@ -385,6 +394,10 @@ fi
 %files plugin-docmanwatermark
 %defattr(-,%{APP_USER},%{APP_USER},-)
 %{APP_DIR}/plugins/docmanwatermark
+
+%files plugin-ldap
+%defattr(-,%{APP_USER},%{APP_USER},-)
+%{APP_DIR}/plugins/ldap
 
 #%doc
 #%config

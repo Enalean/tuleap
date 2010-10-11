@@ -11,6 +11,7 @@ PLUGIN_GIT_VERSION=$(shell LANG=C php $(BASE_DIR)/codendi_tools/rpm/plugin_descr
 PLUGIN_SVNTODIMENSIONS_VERSION=$(shell LANG=C php $(BASE_DIR)/codendi_tools/rpm/plugin_descriptor.php SvnToDimensions)
 PLUGIN_CVSTODIMENSIONS_VERSION=$(shell LANG=C php $(BASE_DIR)/codendi_tools/rpm/plugin_descriptor.php CvsToDimensions)
 PLUGIN_DOCMANWATERMARK_VERSION=$(shell LANG=C php $(BASE_DIR)/codendi_tools/rpm/plugin_descriptor.php DocmanWatermark)
+PLUGIN_LDAP_VERSION=$(shell LANG=C php $(BASE_DIR)/codendi_tools/rpm/plugin_descriptor.php Ldap)
 
 PKG_NAME=codendi_st
 
@@ -35,6 +36,7 @@ codendi: rpmprep tarball
 		sed -e 's/@@PLUGIN_SVNTODIMENSIONS_VERSION@@/$(PLUGIN_SVNTODIMENSIONS_VERSION)/g' |\
 		sed -e 's/@@PLUGIN_CVSTODIMENSIONS_VERSION@@/$(PLUGIN_CVSTODIMENSIONS_VERSION)/g' |\
 		sed -e 's/@@PLUGIN_DOCMANWATERMARK_VERSION@@/$(PLUGIN_DOCMANWATERMARK_VERSION)/g' |\
+		sed -e 's/@@PLUGIN_LDAP_VERSION@@/$(PLUGIN_LDAP_VERSION)/g' |\
 		sed -e 's/@@PKG_NAME@@/$(PKG_NAME)/g' \
 		> $(RPM_TMP)/SPECS/codendi.spec
 	rpmbuild -bb $(RPM_TMP)/SPECS/codendi.spec

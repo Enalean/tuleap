@@ -39,8 +39,16 @@ $Language = new BaseLanguage('en_US', 'en_US');
 $Language->lang = 'en_US';
 $Language->compileLanguage('en_US');
 
+// Load plugin
+$desc = loadDesc($basedir, $argv[1]);
 
-loadDesc($basedir, $argv[1]);
+// Show version
+echo $desc->getVersion().PHP_EOL;
+
+// Show Desc
+if (isset($argv[2])) {
+    echo $desc->getDescription().PHP_EOL;
+}
 
 function loadDesc($basedir, $pluginName) {
     $lc        = strtolower($pluginName);
@@ -49,6 +57,7 @@ function loadDesc($basedir, $pluginName) {
     include $basedir.'/plugins/'.$lc.'/include/'.$className.'.class.php';
 
     $desc = new $className();
+
 
     echo $desc->getVersion().PHP_EOL;
 }

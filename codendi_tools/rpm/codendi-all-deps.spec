@@ -14,10 +14,10 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 
 Requires: openssh-server, openssh, openssh-clients
 Requires: httpd, mod_ssl, vsftpd
-Requires: openssl, openldap, perl, perl-DBI, perl-DBD-MySQL, gd
+Requires: openssl, perl, perl-DBI, perl-DBD-MySQL, gd
 Requires: bind, bind-chroot, caching-nameserver, ntp, python, perl-suidperl
 Requires: python-devel, rcs, perl-URI, perl-HTML-Tagset
-Requires: perl-HTML-Parser, perl-libwww-perl, php, php-ldap, php-mysql, mysql-server
+Requires: perl-HTML-Parser, perl-libwww-perl, php, php-mysql, mysql-server
 Requires: mysql, MySQL-python, php-mbstring, php-gd, php-soap, php-pear
 Requires: perl-DateManip, sysstat, curl, aspell
 Requires: java-1.6.0-openjdk, jpackage-utils, giflib
