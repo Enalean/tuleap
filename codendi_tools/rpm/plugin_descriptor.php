@@ -62,3 +62,5 @@ function loadDesc($basedir, $pluginName) {
 
     return new $className();
 }
+
+?>
