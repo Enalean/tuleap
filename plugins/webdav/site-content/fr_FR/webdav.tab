@@ -43,6 +43,8 @@ plugin_webdav_common	authentication_required	Authentification requise.
 plugin_webdav_common	wrong_input	Verifiez votre entree.
 plugin_webdav_common	hidden	 (cache)
 plugin_webdav_common	files	Fichiers
+plugin_webdav_common	link	Lien
+plugin_webdav_common	empty	Vide
 plugin_webdav	descriptor_description	Serveur WebDAV pour la gestion du service de livraison de fichier et du service de documentation.
 plugin_webdav	descriptor_name	WebDAV.
 plugin_webdav_html	name	Nom

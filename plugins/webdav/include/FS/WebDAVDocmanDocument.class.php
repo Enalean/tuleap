@@ -86,10 +86,10 @@ class WebDAVDocmanDocument extends Sabre_DAV_File {
                 return 'Wiki';
                 break;
             case 'Docman_Link':
-                return 'Link';
+                return $GLOBALS['Language']->getText('plugin_webdav_common', 'link');
                 break;
             case 'Docman_Empty':
-                return 'Empty';
+                return $GLOBALS['Language']->getText('plugin_webdav_common', 'empty');
                 break;
         }
     }

@@ -43,6 +43,8 @@ plugin_webdav_common	authentication_required	Authentication required.
 plugin_webdav_common	wrong_input	Verify your input.
 plugin_webdav_common	hidden	 (hidden)
 plugin_webdav_common	files	Files
+plugin_webdav_common	link	Link
+plugin_webdav_common	empty	Empty
 plugin_webdav	descriptor_description	WebDAV server for file release and documents.
 plugin_webdav	descriptor_name	WebDAV.
 plugin_webdav_html	name	Name
