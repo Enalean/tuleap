@@ -160,7 +160,6 @@ function create_project($data, $do_not_exit = false) {
 
         $template_id = $group->getTemplate();
         
-        $pm = ProjectManager::instance();
         $template_group = $pm->getProject($template_id);
         if (!$template_group || !is_object($template_group) || $template_group->isError()) {
           exit_no_group();
@@ -192,8 +191,20 @@ function create_project($data, $do_not_exit = false) {
                 exit_error($GLOBALS['Language']->getText('global','error'),$GLOBALS['Language']->getText('register_confirmation','cant_create_service') .'<br>'. db_error());
             }
         }
-        
-        //Copy forums from template project 
+        //Add the import of the message to requester from the parent project if defined
+        $dar = $pm->getMessageToRequesterForAccessProject($template_id);
+        if ($dar && !$dar->isError() && $dar->rowCount() == 1) {
+            $row = $dar->getRow();
+            $result = $pm->setMessageToRequesterForAccessProject($group_id, $row['msg_to_requester']);
+        } else {
+            $result = $pm->setMessageToRequesterForAccessProject($group_id, 'member_request_delegation_msg_to_requester');
+        }
+        if (!$result) {
+            exit_error($GLOBALS['Language']->getText('global','error'),$GLOBALS['Language']->getText('register_confirmation','cant_copy_msg_to_requester'));
+        }
+
+
+        //Copy forums from template project
         $sql = "SELECT forum_name, is_public, description FROM forum_group_list WHERE group_id=$template_id ";
         $result=db_query($sql);
         while ($arr = db_fetch_array($result)) {

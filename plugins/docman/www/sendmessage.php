@@ -27,10 +27,26 @@ $request = HTTPRequest::instance();
 $func = $request->getValidated('func', new Valid_WhiteList('func', array('docman_access_request')));
 
 if ($request->isPost() && $request->exist('Submit') &&  $request->existAndNonEmpty('func') && $func == 'docman_access_request') {
-        $sendMail = new Docman_Error_PermissionDenied();
+    $defaultMsg = $GLOBALS['Language']->getText('project_admin_index', 'member_request_delegation_msg_to_requester');
+    $pm = ProjectManager::instance();
+    $dar = $pm->getMessageToRequesterForAccessProject($request->get('groupId'));
+    if ($dar && !$dar->isError() && $dar->rowCount() == 1) {
+        $row = $dar->current();
+        if ($row['msg_to_requester'] != "member_request_delegation_msg_to_requester" ) {
+            $defaultMsg = $row['msg_to_requester'];
+        }
+    }
+
+    $sendMail = new Docman_Error_PermissionDenied();
+    $vMessage = new Valid_Text('msg_docman_access');
+    $vMessage->required();
+    if ($request->valid($vMessage) && (trim($request->get('msg_docman_access')) != $defaultMsg)) {
         $messageToAdmin = $request->get('msg_docman_access');
-        $sendMail->processMail($messageToAdmin);
-        exit;
+    } else {
+        exit_error($Language->getText('plugin_docman', 'error'),$Language->getText('plugin_docman','invalid_msg'));
+    }
+    $sendMail->processMail($messageToAdmin);
+    exit;
 }
 
 

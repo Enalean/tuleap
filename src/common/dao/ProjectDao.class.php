@@ -216,13 +216,36 @@ class ProjectDao extends DataAccessObject {
      * Returns the ugroup to be notified when admin action is needed for given project
      * 
      * @param Integer $groupId
-     * @param Integer $ugroups
      * 
      * @return DataAccessResult
      */
     public function getMembershipRequestNotificationUGroup($groupId){
         $sql = ' SELECT ugroup_id FROM groups_notif_delegation WHERE group_id = '.$this->da->quoteSmart($groupId);
         return $this->retrieve($sql);
+    }
+    
+    /**
+     * Returns the message to be displayed to requester asking access for a given project
+     *  
+     * @param Integer $groupId
+     * 
+     * @return DataAccessResult
+     */  
+    public function getMessageToRequesterForAccessProject($groupId) {
+        $sql = 'SELECT msg_to_requester FROM groups_notif_delegation_message WHERE group_id='.$this->da->quoteSmart($groupId);
+        return $this->retrieve($sql);
+    }
+
+    /**
+     * Updates the message to be displayed to requester asking access for a given project
+     *  
+     * @param Integer $groupId
+     * @param String  $message
+     */  
+    public function setMessageToRequesterForAccessProject($groupId, $message) {
+        $sql = 'INSERT INTO groups_notif_delegation_message (group_id, msg_to_requester) VALUES ('.$this->da->quoteSmart($groupId).', '.$this->da->quoteSmart($message).')'.
+                ' ON DUPLICATE KEY UPDATE msg_to_requester='.$this->da->quoteSmart($message);
+        return $this->update($sql);
     }
     
    

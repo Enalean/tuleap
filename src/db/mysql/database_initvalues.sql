@@ -241,6 +241,11 @@ INSERT INTO groups SET \
   svn_events_mailing_header = '', \
   svn_preamble = '' ;
 
+
+INSERT INTO groups_notif_delegation_message SET \
+  group_id = '100', \
+  msg_to_requester = 'member_request_delegation_msg_to_requester';
+
 #
 # Default Data for 'user_group'
 #

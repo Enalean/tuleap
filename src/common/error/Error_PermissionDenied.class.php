@@ -90,10 +90,19 @@ abstract class Error_PermissionDenied {
         //In case of restricted user, we only show the zone text area to ask for membership 
         //just when the requested page belongs to a project
         if (!(($param['func'] == 'restricted_user_request') && (!isset($groupId)))) {
+            $message = $GLOBALS['Language']->getText('project_admin_index', 'member_request_delegation_msg_to_requester');
+            $pm = ProjectManager::instance();
+            $dar = $pm->getMessageToRequesterForAccessProject($groupId);
+            if ($dar && !$dar->isError() && $dar->rowCount() == 1) {
+                $row = $dar->current();
+                if ($row['msg_to_requester'] != "member_request_delegation_msg_to_requester" ) {
+                    $message = $row['msg_to_requester'];
+                }
+            } 
             echo $GLOBALS['Language']->getText($this->getTextBase(), 'request_to_admin');
             echo '<br></br>';
             echo '<form action="'.$param['action'].'" method="post" name="display_form">
-                  <textarea wrap="virtual" rows="5" cols="70" name="'.$param['name'].'"></textarea></p>
+                  <textarea wrap="virtual" rows="5" cols="70" name="'.$param['name'].'">'.$message.' </textarea></p>
                   <input type="hidden" id="func" name="func" value="'.$param['func'].'">
                   <input type="hidden" id="groupId" name="groupId" value="' .$groupId. '">
                   <input type="hidden" id="userId" name="userId" value="' .$userId. '">
@@ -167,7 +176,6 @@ abstract class Error_PermissionDenied {
         
         $hrefApproval = get_server_url().'/project/admin/?group_id='.$request->get('groupId');
         $urlData = get_server_url().$request->get('url_data');
-        
         return $this->sendMail($project, $user, $urlData, $hrefApproval, $messageToAdmin);
     }
     

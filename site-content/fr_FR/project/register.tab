@@ -30,6 +30,7 @@ register_confirmation	registration_deleted	Enregistrement détruit
 register_confirmation	project_deleted	Enregistrement du projet détruit.
 register_confirmation	try_again	Merci de réessayer plus tard.
 register_confirmation	ins_desc_fail	ERREUR - INSERTION DE DESCRIPTION A ECHOUE. Veuillez en informer admin@$1 $2
+register_confirmation	cant_copy_msg_to_requester	ERROR - Impossible de copier le message destiné aux utilisateurs qui demandent l'accès à votre projet. 
 #
 #-----------------------------------------------
 # Script: src/common/project//form.php
