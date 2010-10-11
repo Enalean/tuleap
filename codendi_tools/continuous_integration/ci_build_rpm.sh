@@ -19,7 +19,7 @@ export RPM_TMP="$WORKSPACE/RPM"
 rm -rf "$RPM_TMP"
 
 # If ci-build was launched, clean up sources
-if [ -f "$codendi_src/plugins/tests" ]; then
+if [ -L "$codendi_src/plugins/tests" ]; then
     rm -f "$codendi_src/plugins/tests"
 fi
 
