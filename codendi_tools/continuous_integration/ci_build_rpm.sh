@@ -11,13 +11,20 @@ set -ex
 # Where application sources are checkouted
 local_module_directory="codendi-src";
 
+codendi_src="$WORKSPACE/$local_module_directory"
+
 export DOCBOOK_TOOLS_DIR="$WORKSPACE/docbook"
 export RPM_TMP="$WORKSPACE/RPM"
 
 rm -rf "$RPM_TMP"
 
+# If ci-build was launched, clean up sources
+if [ -f "$codendi_src/plugins/tests" ]; then
+    rm -f "$codendi_src/plugins/tests"
+fi
+
 # Build official codendi rpms
 pushd .
-cd "$WORKSPACE/$local_module_directory/codendi_tools/rpm"
+cd "$codendi_src/codendi_tools/rpm"
 make all dist
 popd
