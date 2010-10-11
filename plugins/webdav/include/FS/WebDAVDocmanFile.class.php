@@ -151,9 +151,16 @@ class WebDAVDocmanFile extends WebDAVDocmanDocument {
         ));
 
         // Download the file
+        header('Content-Description: File Transfer');
         header('Content-Type: '. $version->getFiletype());
+        header('Content-Disposition: attachment; filename="'. $version->getFilename() .'"');
+        header('Content-Transfer-Encoding: binary');
+        header('Expires: 0');
+        header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+        header('Pragma: public');
         header('Content-Length: '. $version->getFilesize());
-        header('Content-Disposition: filename="'. $version->getFilename() .'"');
+        ob_clean();
+        flush();
         readfile($version->getPath());
         exit;
     }

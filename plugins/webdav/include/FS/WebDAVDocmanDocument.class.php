@@ -54,9 +54,17 @@ class WebDAVDocmanDocument extends Sabre_DAV_File {
      * @see plugins/webdav/include/lib/Sabre/DAV/Sabre_DAV_File::get()
      */
     function get() {
-        header('Content-Type: text/plain');
+        // in this case download just an empty file
+        header('Content-Description: File Transfer');
+        header('Content-Type: application/octet-stream');
+        header('Content-Disposition: attachment; filename="'.$this->getItem()->getTitle().'"');
+        header('Content-Transfer-Encoding: binary');
+        header('Expires: 0');
+        header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+        header('Pragma: public');
         header('Content-Length: 0');
-        header('Content-Disposition: filename="'.$this->getItem()->getTitle().'"');
+        ob_clean();
+        flush();
         readfile('');
         exit;
     }
