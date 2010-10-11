@@ -187,9 +187,6 @@ missing_rpms="$missing_rpms mailman-2.1.9-5.codendi"
 # Need codendiadm user & group
 missing_rpms="$missing_rpms viewvc-1.0.7-1.codendi"
 
-# -> codendi-jri & eclipse
-missing_rpms="$missing_rpms codendi-jri codendi-eclipse"
-
 if [ ! -z "$missing_rpms" ]; then
     $YUM install $missing_rpms
 fi
@@ -1053,10 +1050,6 @@ $PHP $INSTALL_DIR/plugins/IM/include/jabbex_api/installation/install.php -a -orp
 
 # Hudson plugin
 $CAT $INSTALL_DIR/plugins/hudson/db/install.sql | $MYSQL -u codendiadm codendi --password=$codendiadm_passwd
-
-#Git plugin
-#$YUM install rsync
-#bash $INSTALL_DIR/plugins/git/bin/install.sh
 
 ##############################################
 # End of installation

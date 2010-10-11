@@ -112,6 +112,37 @@ Provides: codendi-plugin-ldap = %{version}
 LDAP Plugin for Codendi. Provides LDAP information, LDAP
 authentication, user and group management.
 
+%package plugin-im
+Summary: Instant Messaging Plugin for Codendi
+Group: Development/Tools
+Version: @@PLUGIN_IM_VERSION@@
+Release: 1%{?dist}
+Requires: %{name} >= %{version}, openfire, openfire-codendi-plugins
+Provides: codendi-plugin-im = %{version}
+%description plugin-im
+Provides instant messaging capabilities, based on a Jabber/XMPP server.
+
+%package plugin-jri
+Summary: Codendi Java Remote Interface plugin
+Group: Development/Tools
+Version: @@PLUGIN_JRI_VERSION@@
+Release: 1%{?dist}
+Requires: %{name} >= %{version}, codendi-jri
+Provides: codendi-plugin-jri = %{version}
+%description plugin-jri
+Codendi Java Remote Interface: the java API for Codendi
+
+%package plugin-eclipse
+Summary: Eclipse plugin for Codendi
+Group: Development/Tools
+Version: @@PLUGIN_ECLIPSE_VERSION@@
+Release: 1%{?dist}
+Requires: %{name} >= %{version}, codendi-eclipse
+Provides: codendi-plugin-eclipse = %{version}
+%description plugin-eclipse
+Plugin to install the Codendi Eclipse plugin and access the documentation
+
+
 #
 # Package setup
 %prep
@@ -341,12 +372,9 @@ fi
 %{APP_DIR}/ST-VERSION
 %dir %{APP_DIR}/plugins
 %{APP_DIR}/plugins/admindelegation
-%{APP_DIR}/plugins/codendijri
 %{APP_DIR}/plugins/docman
-%{APP_DIR}/plugins/eclipse
 %{APP_DIR}/plugins/graphontrackers
 %{APP_DIR}/plugins/hudson
-%{APP_DIR}/plugins/IM
 %{APP_DIR}/plugins/pluginsadministration
 %{APP_DIR}/plugins/projectlinks
 %{APP_DIR}/plugins/serverupdate
@@ -399,12 +427,25 @@ fi
 %defattr(-,%{APP_USER},%{APP_USER},-)
 %{APP_DIR}/plugins/ldap
 
+%files plugin-im
+%defattr(-,%{APP_USER},%{APP_USER},-)
+%{APP_DIR}/plugins/IM
+
+%files plugin-jri
+%defattr(-,%{APP_USER},%{APP_USER},-)
+%{APP_DIR}/plugins/codendijri
+
+%files plugin-eclipse
+%defattr(-,%{APP_USER},%{APP_USER},-)
+%{APP_DIR}/plugins/eclipse
+
 #%doc
 #%config
 
-
-
 %changelog
-* Thu Jun  3 2010 Manuel VACELET <manuel.vacelet@st.com> - 
+* Mon Oct 11 2010 Manuel VACELET <manuel.vacelet@st.com> -
+- Package plugins that matters (solve dependencies install issues).
+
+* Thu Jun  3 2010 Manuel VACELET <manuel.vacelet@st.com> -
 - Initial build.
 

@@ -22,7 +22,6 @@ Requires: mysql, MySQL-python, php-mbstring, php-gd, php-soap, php-pear
 Requires: perl-DateManip, sysstat, curl, aspell
 Requires: java-1.6.0-openjdk, jpackage-utils, giflib
 Requires: enscript, mod_auth_mysql, nss, nscd
-# jabbex
 Requires: php-xml
 # jpgraph
 Requires: dejavu-lgc-fonts
@@ -42,19 +41,13 @@ Requires: libnss-mysql
 Requires: cvsgraph
 # highlight
 Requires: highlight
-# phpMyAdmin
-#Requires: phpmyadmin
 # APC
 Requires: php-pecl-apc
 # Munin
 Requires: munin = 1.2.5-1.codendi, munin-node = 1.2.5-1.codendi
 # HTML Purifier
 Requires: htmlpurifier
-# ForgeUpgrade
-Requires: forgeupgrade
 
-# Openfire
-Requires: openfire, openfire-codendi-plugins
 
 %description
 This package gather all dependencies of @@PKG_NAME@@.

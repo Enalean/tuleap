@@ -51,13 +51,14 @@ if (isset($argv[2])) {
 }
 
 function loadDesc($basedir, $pluginName) {
-    $lc        = strtolower($pluginName);
     $className = $pluginName.'PluginDescriptor';
 
-    include $basedir.'/plugins/'.$lc.'/include/'.$className.'.class.php';
+    if (is_dir($basedir.'/plugins/'.$pluginName)) {
+        include $basedir.'/plugins/'.$pluginName.'/include/'.$className.'.class.php';
+    } else {
+        $lc = strtolower($pluginName);
+        include $basedir.'/plugins/'.$lc.'/include/'.$className.'.class.php';
+    }
 
-    $desc = new $className();
-
-
-    echo $desc->getVersion().PHP_EOL;
+    return new $className();
 }

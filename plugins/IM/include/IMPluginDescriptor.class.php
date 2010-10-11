@@ -12,7 +12,7 @@ require_once('common/plugin/PluginDescriptor.class.php');
 class IMPluginDescriptor extends PluginDescriptor {
     
     function IMPluginDescriptor() {
-        $this->PluginDescriptor($GLOBALS['Language']->getText('plugin_im', 'name'), $GLOBALS['Language']->getText('plugin_im', 'version'), $GLOBALS['Language']->getText('plugin_im', 'description'));
+        $this->PluginDescriptor($GLOBALS['Language']->getText('plugin_im', 'name'), '1.0', $GLOBALS['Language']->getText('plugin_im', 'description'));
     }
 }
 ?>
