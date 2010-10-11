@@ -1,24 +1,28 @@
 <?php
 /**
- * GitPHP Controller RSS
+ * GitPHP Controller Feed
  *
- * Controller for displaying a project's RSS
+ * Controller for displaying a project's feed
  *
  * @author Christopher Han <xiphux@gmail.com>
+ * @author Christian Weiske <cweiske@cweiske.de>
  * @copyright Copyright (c) 2010 Christopher Han
  * @package GitPHP
  * @subpackage Controller
  */
 
-define('GITPHP_RSS_ITEMS', 150);
+define('GITPHP_FEED_ITEMS', 150);
+
+define('GITPHP_FEED_FORMAT_RSS', 'rss');
+define('GITPHP_FEED_FORMAT_ATOM', 'atom');
 
 /**
- * RSS controller class
+ * Feed controller class
  *
  * @package GitPHP
  * @subpackage Controller
  */
-class GitPHP_Controller_Rss extends GitPHP_ControllerBase
+class GitPHP_Controller_Feed extends GitPHP_ControllerBase
 {
 	/**
 	 * __construct
@@ -46,7 +50,10 @@ class GitPHP_Controller_Rss extends GitPHP_ControllerBase
 	 */
 	protected function GetTemplate()
 	{
-		return 'rss.tpl';
+		if ($this->params['format'] == GITPHP_FEED_FORMAT_RSS)
+			return 'rss.tpl';
+		else if ($this->params['format'] == GITPHP_FEED_FORMAT_ATOM)
+			return 'atom.tpl';
 	}
 
 	/**
@@ -73,10 +80,17 @@ class GitPHP_Controller_Rss extends GitPHP_ControllerBase
 	 */
 	public function GetName($local = false)
 	{
-		if ($local) {
-			return __('rss');
+		if ($this->params['format'] == GITPHP_FEED_FORMAT_RSS) {
+			if ($local)
+				return __('rss');
+			else
+				return 'rss';
+		} else if ($this->params['format'] == GITPHP_FEED_FORMAT_ATOM) {
+			if ($local)
+				return __('atom');
+			else
+				return 'atom';
 		}
-		return 'rss';
 	}
 
 	/**
@@ -100,7 +114,15 @@ class GitPHP_Controller_Rss extends GitPHP_ControllerBase
 	 */
 	protected function LoadHeaders()
 	{
-		$this->headers[] = "Content-type: text/xml; charset=UTF-8";
+		if ((!isset($this->params['format'])) || empty($this->params['format'])) {
+			throw new Exception('A feed format is required');
+		}
+
+		if ($this->params['format'] == GITPHP_FEED_FORMAT_RSS) {
+			$this->headers[] = "Content-type: text/xml; charset=UTF-8";
+		} else if ($this->params['format'] == GITPHP_FEED_FORMAT_ATOM) {
+			$this->headers[] = "Content-type: application/atom+xml; charset=UTF-8";
+		}
 	}
 
 	/**
@@ -112,7 +134,7 @@ class GitPHP_Controller_Rss extends GitPHP_ControllerBase
 	 */
 	protected function LoadData()
 	{
-		$log = $this->project->GetLog('HEAD', GITPHP_RSS_ITEMS);
+		$log = $this->project->GetLog('HEAD', GITPHP_FEED_ITEMS);
 
 		$entries = count($log);
 

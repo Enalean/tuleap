@@ -97,12 +97,13 @@ class GitPHP_Controller
 					$controller->SetParam('plain', true);
 				break;
 			case 'atom':
-				require_once(GITPHP_CONTROLLERDIR . 'Controller_Atom.class.php');
-				$controller = new GitPHP_Controller_Atom();
-				break;
 			case 'rss':
-				require_once(GITPHP_CONTROLLERDIR . 'Controller_Rss.class.php');
-				$controller = new GitPHP_Controller_Rss();
+				require_once(GITPHP_CONTROLLERDIR . 'Controller_Feed.class.php');
+				$controller = new GitPHP_Controller_Feed();
+				if ($action == 'rss')
+					$controller->SetParam('format', GITPHP_FEED_FORMAT_RSS);
+				else if ($action == 'atom')
+					$controller->SetParam('format', GITPHP_FEED_FORMAT_ATOM);
 				break;
 			case 'commit':
 				require_once(GITPHP_CONTROLLERDIR . 'Controller_Commit.class.php');
