@@ -23,7 +23,7 @@ require_once('common/plugin/PluginDescriptor.class.php');
 class ForumMLPluginDescriptor extends PluginDescriptor {
     
     function __construct() {
-        parent::__construct('ForumML', 'v2.0', $GLOBALS['Language']->getText('plugin_forumml', 'descriptor_description'));
+        parent::__construct('ForumML', '2.0', $GLOBALS['Language']->getText('plugin_forumml', 'descriptor_description'));
     }
 }
 ?>

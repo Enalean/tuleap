@@ -4,7 +4,13 @@ endif
 
 #BUILDRESULT=${PWD}/fusionforge_repo
 BASE_DIR=$(shell cd ../..; pwd)
+
 version=$(shell LANG=C cat $(BASE_DIR)/ST-VERSION)
+PLUGIN_FORUMML_VERSION=$(shell LANG=C php $(BASE_DIR)/codendi_tools/rpm/plugin_descriptor.php ForumML)
+PLUGIN_GIT_VERSION=$(shell LANG=C php $(BASE_DIR)/codendi_tools/rpm/plugin_descriptor.php Git)
+PLUGIN_SVNTODIMENSIONS_VERSION=$(shell LANG=C php $(BASE_DIR)/codendi_tools/rpm/plugin_descriptor.php SvnToDimensions)
+PLUGIN_CVSTODIMENSIONS_VERSION=$(shell LANG=C php $(BASE_DIR)/codendi_tools/rpm/plugin_descriptor.php CvsToDimensions)
+PLUGIN_DOCMANWATERMARK_VERSION=$(shell LANG=C php $(BASE_DIR)/codendi_tools/rpm/plugin_descriptor.php DocmanWatermark)
 
 PKG_NAME=codendi_st
 
@@ -24,6 +30,11 @@ tarball:
 codendi: rpmprep tarball
 	cat codendi.spec |\
 		sed -e 's/@@VERSION@@/$(version)/g' |\
+		sed -e 's/@@PLUGIN_FORUMML_VERSION@@/$(PLUGIN_FORUMML_VERSION)/g' |\
+		sed -e 's/@@PLUGIN_GIT_VERSION@@/$(PLUGIN_GIT_VERSION)/g' |\
+		sed -e 's/@@PLUGIN_SVNTODIMENSIONS_VERSION@@/$(PLUGIN_SVNTODIMENSIONS_VERSION)/g' |\
+		sed -e 's/@@PLUGIN_CVSTODIMENSIONS_VERSION@@/$(PLUGIN_CVSTODIMENSIONS_VERSION)/g' |\
+		sed -e 's/@@PLUGIN_DOCMANWATERMARK_VERSION@@/$(PLUGIN_DOCMANWATERMARK_VERSION)/g' |\
 		sed -e 's/@@PKG_NAME@@/$(PKG_NAME)/g' \
 		> $(RPM_TMP)/SPECS/codendi.spec
 	rpmbuild -bb $(RPM_TMP)/SPECS/codendi.spec

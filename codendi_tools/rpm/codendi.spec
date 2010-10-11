@@ -49,7 +49,7 @@ Codendi is a web based application that address all the aspects of product devel
 %package plugin-forumml
 Summary: ForumML plugin for Codendi
 Group: Development/Tools
-Version: 2.0
+Version: @@PLUGIN_FORUMML_VERSION@@
 Release: 1%{?dist}
 Requires: %{name} >= %{version}, php, php-pear-Mail-mimeDecode php-pear-Mail-Mime php-pear-Mail-Mbox php-pear-Mail
 #Requires: mailman-2.1.9-5.codendi
@@ -61,7 +61,7 @@ to send mails through the web interface. It can replace the forums.
 %package plugin-git
 Summary: Git plugin for Codendi
 Group: Development/Tools
-Version: 1.2
+Version: @@PLUGIN_GIT_VERSION@@
 Release: 1%{?dist}
 Requires: %{name} >= %{version}, git, geshi, php-Smarty
 Provides: codendi-plugin-git = %{version}
@@ -72,7 +72,7 @@ with Codendi
 %package plugin-svntodimensions
 Summary: Codendi plugin for svntodimensions
 Group: Development/Tools
-Version: 1.0
+Version: @@PLUGIN_SVNTODIMENSIONS_VERSION@@
 Release: 1%{?dist}
 Requires: %{name} >= %{version}
 Provides: codendi-plugin-svntodimensions = %{version}
@@ -82,7 +82,7 @@ Codendi plugin for svntodimensions
 %package plugin-cvstodimensions
 Summary: Codendi plugin for cvstodimensions
 Group: Development/Tools
-Version: 1.0
+Version: @@PLUGIN_CVSTODIMENSIONS_VERSION@@
 Release: 1%{?dist}
 Requires: %{name} >= %{version}
 Provides: codendi-plugin-cvstodimensions = %{version}
@@ -90,6 +90,17 @@ Provides: codendi-plugin-cvstodimensions = %{version}
 Codendi plugin for cvstodimensions
 
 
+%package plugin-docmanwatermark
+Summary: Codendi plugin for PDF watermarking
+Group: Development/Tools
+Version: @@PLUGIN_DOCMANWATERMARK_VERSION@@
+Release: 1%{?dist}
+Requires: %{name} >= %{version}, php-zendframework = 1.8.1
+# Requires: codendi-plugin-docman
+Provides: codendi-plugin-docmanwatermark = %{version}
+%description plugin-docmanwatermark
+PDF Watermark plugin. Provide the possibility to add a customizable banner to
+PDF file uploaded in Docman
 
 #
 # Package setup
@@ -322,7 +333,6 @@ fi
 %{APP_DIR}/plugins/admindelegation
 %{APP_DIR}/plugins/codendijri
 %{APP_DIR}/plugins/docman
-%{APP_DIR}/plugins/docmanwatermark
 %{APP_DIR}/plugins/eclipse
 %{APP_DIR}/plugins/graphontrackers
 %{APP_DIR}/plugins/hudson
@@ -364,9 +374,6 @@ fi
 %attr(-,root,root) /gitroot
 %attr(00755,%{APP_USER},%{APP_USER}) %{APP_CACHE_DIR}/smarty
 
-%attr(06755,%{APP_USER},%{APP_USER}) %{APP_LIBBIN_DIR}/mail_2_DB.pl
-%attr(00750,%{APP_USER},%{APP_USER}) %{_localstatedir}/run/forumml
-
 %files plugin-svntodimensions
 %defattr(-,%{APP_USER},%{APP_USER},-)
 %{APP_DIR}/plugins/svntodimensions
@@ -374,6 +381,10 @@ fi
 %files plugin-cvstodimensions
 %defattr(-,%{APP_USER},%{APP_USER},-)
 %{APP_DIR}/plugins/cvstodimensions
+
+%files plugin-docmanwatermark
+%defattr(-,%{APP_USER},%{APP_USER},-)
+%{APP_DIR}/plugins/docmanwatermark
 
 #%doc
 #%config
