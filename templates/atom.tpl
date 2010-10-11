@@ -12,7 +12,9 @@
   <link href="{scripturl}?p={$project->GetProject()|urlencode}&amp;a=summary"/>
   <link rel="self" href="{scripturl}?p={$project->GetProject()|urlencode}&amp;a=atom"/>
   <id>{scripturl}?p={$project->GetProject()|urlencode}</id>
+  {if $log}
   <updated>{$log.0->GetCommitterEpoch()|date_format:"%FT%T+00:00"}</updated>
+  {/if}
 
 {foreach from=$log item=logitem}
   <entry>
