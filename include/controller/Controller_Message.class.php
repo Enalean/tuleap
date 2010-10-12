@@ -137,6 +137,8 @@ class GitPHP_Controller_Message extends GitPHP_ControllerBase
 	private function StatusCodeHeader($code)
 	{
 		switch ($code) {
+			case 500:
+				return '500 Internal Server Error';
 		}
 	}
 
