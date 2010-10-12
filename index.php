@@ -147,9 +147,11 @@ try {
 	$controller->SetParam('message', $e->getMessage());
 	if ($e instanceof GitPHP_MessageException) {
 		$controller->SetParam('error', $e->Error);
+		$controller->SetParam('statuscode', $e->StatusCode);
 	} else {
 		$controller->SetParam('error', true);
 	}
+	$controller->RenderHeaders();
 	$controller->Render();
 
 }
