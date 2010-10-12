@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: GitPHP 0.2.0\n"
+"Project-Id-Version: GitPHP 0.2.1\n"
 "Report-Msgid-Bugs-To: xiphux@gmail.com\n"
-"POT-Creation-Date: 2010-10-02 23:01-0500\n"
+"POT-Creation-Date: 2010-10-11 19:28-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -101,6 +101,7 @@ msgstr ""
 # Used as a link to a plaintext version of a page
 #: templates/tree.tpl
 #: templates/blobdiff.tpl
+#: templates/commit.tpl
 #: templates/blame.tpl
 #: templates/commitdiff.tpl
 #: templates/blob.tpl
@@ -407,7 +408,7 @@ msgid "blame"
 msgstr ""
 
 # Error message when user tries to do an action that requires a project but a project isn't specified
-#: include/controller/Controller_Rss.class.php:35
+#: include/controller/Controller_Feed.class.php:39
 #: include/controller/Controller_Tree.class.php:34
 #: include/controller/Controller_Commit.class.php:34
 #: include/controller/Controller_Log.class.php:34
@@ -427,7 +428,7 @@ msgstr ""
 
 # Used as the title of the rss controller
 # rss is a standard web feed format
-#: include/controller/Controller_Rss.class.php:77
+#: include/controller/Controller_Feed.class.php:85
 msgid "rss"
 msgstr ""
 
@@ -578,7 +579,7 @@ msgstr ""
 
 # Used to represent an age in years
 # %1$d: the number of years
-#: include/smartyplugins/modifier.agestring.php:17
+#: include/smartyplugins/modifier.agestring.php:15
 #, php-format
 msgid "%1$d year ago"
 msgid_plural "%1$d years ago"
@@ -587,7 +588,7 @@ msgstr[1] ""
 
 # Used to represent an age in months
 # %1$d: the number of months
-#: include/smartyplugins/modifier.agestring.php:22
+#: include/smartyplugins/modifier.agestring.php:20
 #, php-format
 msgid "%1$d month ago"
 msgid_plural "%1$d months ago"
@@ -596,7 +597,7 @@ msgstr[1] ""
 
 # Used to represent an age in weeks
 # %1$d: the number of weeks
-#: include/smartyplugins/modifier.agestring.php:27
+#: include/smartyplugins/modifier.agestring.php:25
 #, php-format
 msgid "%1$d week ago"
 msgid_plural "%1$d weeks ago"
@@ -605,7 +606,7 @@ msgstr[1] ""
 
 # Used to represent an age in days
 # %1$d: the number of days
-#: include/smartyplugins/modifier.agestring.php:32
+#: include/smartyplugins/modifier.agestring.php:30
 #, php-format
 msgid "%1$d day ago"
 msgid_plural "%1$d days ago"
@@ -614,7 +615,7 @@ msgstr[1] ""
 
 # Used to represent an age in hours
 # %1$d: the number of hours
-#: include/smartyplugins/modifier.agestring.php:37
+#: include/smartyplugins/modifier.agestring.php:35
 #, php-format
 msgid "%1$d hour ago"
 msgid_plural "%1$d hours ago"
@@ -623,7 +624,7 @@ msgstr[1] ""
 
 # Used to represent an age in minutes
 # %1$d: the number of minutes
-#: include/smartyplugins/modifier.agestring.php:42
+#: include/smartyplugins/modifier.agestring.php:40
 #, php-format
 msgid "%1$d min ago"
 msgid_plural "%1$d min ago"
@@ -632,7 +633,7 @@ msgstr[1] ""
 
 # Used to represent an age in seconds
 # %1$d: the number of seconds
-#: include/smartyplugins/modifier.agestring.php:47
+#: include/smartyplugins/modifier.agestring.php:45
 #, php-format
 msgid "%1$d sec ago"
 msgid_plural "%1$d sec ago"
@@ -640,7 +641,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 # Used to represent a modification time of right now
-#: include/smartyplugins/modifier.agestring.php:51
+#: include/smartyplugins/modifier.agestring.php:49
 msgid "right now"
 msgstr ""
 
@@ -711,4 +712,16 @@ msgstr ""
 # language to the user's choice
 #: templates/header.tpl
 msgid "set"
+msgstr ""
+
+# Caption for the Atom button for a project
+# Atom is a standard web feed format
+#: templates/footer.tpl
+msgid "Atom"
+msgstr ""
+
+# Used as the title of the Atom controller
+# Atom is a standard web feed format
+#: include/controller/Controller_Feed.class.php:90
+msgid "atom"
 msgstr ""
