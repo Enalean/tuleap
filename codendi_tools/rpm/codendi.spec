@@ -205,6 +205,16 @@ Provides: codendi-theme-sttab = %{version}
 %description theme-sttab
 STMicroelectronics theme for Codendi
 
+%package theme-codexstn
+Summary: CodexSTN theme for Codendi
+Group: Development/Tools
+Version: 1.0
+Release: 1%{?dist}
+Requires: %{name} >= %{version}
+Provides: codendi-theme-codexstn = %{version}
+%description theme-codexstn
+ST-Ericsson theme for Codendi
+
 #
 # Package setup
 %prep
@@ -592,6 +602,10 @@ fi
 %files theme-sttab
 %defattr(-,%{APP_USER},%{APP_USER},-)
 %{APP_DIR}/src/www/themes/STTab
+
+%files theme-codexstn
+%defattr(-,%{APP_USER},%{APP_USER},-)
+%{APP_DIR}/src/www/themes/CodexSTN
 
 #%doc
 #%config
