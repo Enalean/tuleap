@@ -1,11 +1,13 @@
 Version 4.0.14 - (Not released yet)
         == New features ==
         backlog #107554: Enhance the interface to request access from project admins
- 
+        backlog #110702: Improve PhpWiki look (font rendering, table of contents, colors, separators, etc)
+
+
 Version 4.0.13 - Wednesday, 29th September 2010
         == New features ==
-        backlog #101486 : Webdav integration for service FRS: Iteration 3 (Write access)
-        backlog #108632:  Integrate Git in disk usage stats & upstream diff reduction
+        backlog #101486: Webdav integration for service FRS: Iteration 3 (Write access)
+        backlog #108632: Integrate Git in disk usage stats & upstream diff reduction
 
         == Bugfix ==
         backlog #106503: Tracker import and export issue
@@ -19,8 +21,6 @@ Version 4.0.13 - Wednesday, 29th September 2010
         backlog #108287: LDAP synchro must take LDAP server down into account
         backlog #108176: Account are disabled after 3 month for people that only use SVN client
         backlog #109631: Tracker queries may overload the server
-        backlog #110057: Notice when browsing svn tree
-        backlog #110055: Import a search query from another project 
 
 Version 4.0.12 - Tuesday, 14th September(Just to fix a bug regression)
         == Bugfix==
