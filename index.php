@@ -36,6 +36,9 @@ require_once(GITPHP_INCLUDEDIR . 'MessageException.class.php');
 
 require_once(GITPHP_CONTROLLERDIR . 'Controller.class.php');
 
+// Need this include for the compression constants used in the config file
+require_once(GITPHP_GITOBJECTDIR . 'Archive.class.php');
+
 date_default_timezone_set('UTC');
 
 
@@ -82,11 +85,6 @@ if ((!isset($_COOKIE[GITPHP_LOCALE_COOKIE])) || empty($_COOKIE[GITPHP_LOCALE_COO
 
 
 try {
-
-	// Define these here because these get used in the config file
-	define('GITPHP_COMPRESS_BZ2', 1);
-	define('GITPHP_COMPRESS_GZ', 2);
-	define('GITPHP_COMPRESS_ZIP', 3);
 
 	/*
 	 * Configuration

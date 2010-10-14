@@ -20,6 +20,15 @@ class GitPHP_Controller_Snapshot extends GitPHP_ControllerBase
 {
 
 	/**
+	 * archive
+	 *
+	 * Stores the archive object
+	 *
+	 * @access private
+	 */
+	private $archive = null;
+
+	/**
 	 * __construct
 	 *
 	 * Constructor
@@ -102,23 +111,14 @@ class GitPHP_Controller_Snapshot extends GitPHP_ControllerBase
 	 */
 	protected function LoadHeaders()
 	{
-		$this->params['compressformat'] = GitPHP_Config::GetInstance()->GetValue('compressformat', GITPHP_COMPRESS_ZIP);
-		$rname = $this->project->GetSlug();
+		$format = GitPHP_Config::GetInstance()->GetValue('compressformat', GITPHP_COMPRESS_ZIP);
 
-		if ($this->params['compressformat'] == GITPHP_COMPRESS_ZIP) {
-			$this->headers[] = 'Content-Type: application/x-zip';
-			$this->headers[] = 'Content-Disposition: attachment; filename=' . $rname . '.zip';
-		} else if (($this->params['compressformat'] == GITPHP_COMPRESS_BZ2) && function_exists('bzcompress')) {
-			$this->headers[] = 'Content-Type: application/x-bzip2';
-			$this->headers[] = 'Content-Disposition: attachment; filename=' . $rname . '.tar.bz2';
-		} else if (($this->params['compressformat'] == GITPHP_COMPRESS_GZ) && function_exists('gzencode')) {
-			$this->headers[] = 'Content-Type: application/x-gzip';
-			$this->headers[] = 'Content-Disposition: attachment; filename=' . $rname . '.tar.gz';
-		} else {
-			$this->headers[] = 'Content-Type: application/x-tar';
-			$this->headers[] = 'Content-Disposition: attachment; filename=' . $rname . '.tar';
-		}
+		$this->archive = new GitPHP_Archive($this->project, null, $format, (isset($this->params['path']) ? $this->params['path'] : ''), (isset($this->params['prefix']) ? $this->params['prefix'] : ''));
 
+		$headers = $this->archive->GetHeaders();
+		
+		if (count($headers) > 0)
+			$this->headers = array_merge($this->headers, $headers);
 	}
 
 	/**
@@ -137,7 +137,9 @@ class GitPHP_Controller_Snapshot extends GitPHP_ControllerBase
 		else
 			$commit = $this->project->GetCommit($this->params['hash']);
 
-		$this->tpl->assign("archive", $commit->GetArchive($this->params['compressformat'], (isset($this->params['path']) ? $this->params['path'] : null), (isset($this->params['prefix']) ? $this->params['prefix'] : null)));
+		$this->archive->SetObject($commit);
+
+		$this->tpl->assign('archive', $this->archive->GetData());
 	}
 
 }

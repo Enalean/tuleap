@@ -671,44 +671,6 @@ class GitPHP_Commit extends GitPHP_GitObject
 	}
 
 	/**
-	 * GetArchive
-	 *
-	 * Gets an archive of this commit
-	 *
-	 * @access public
-	 * @return string the archive data
-	 * @param format the archive format
-	 * @param path The Path to archive
-	 */
-	public function GetArchive($format, $path = null, $prefix = null)
-	{
-
-		if (is_null($prefix))
-			$prefix = $this->project->GetSlug() . "/";
-		
-		$exe = new GitPHP_GitExe($this->project);
-		$args = array();
-		if ($format == GITPHP_COMPRESS_ZIP)
-			$args[] = '--format=zip';
-		else
-			$args[] = '--format=tar';
-		$args[] = '--prefix=' . $prefix;
-		$args[] = $this->hash;
-		if (! is_null($path)) $args[] = $path;
-
-		$data = $exe->Execute(GIT_ARCHIVE, $args);
-		unset($exe);
-
-		if (($format == GITPHP_COMPRESS_BZ2) && function_exists('bzcompress')) {
-			return bzcompress($data, GitPHP_Config::GetInstance()->GetValue('compresslevel', 4));
-		} else if (($format == GITPHP_COMPRESS_GZ) && function_exists('gzencode')) {
-			return gzencode($data, GitPHP_Config::GetInstance()->GetValue('compresslevel', -1));
-		}
-
-		return $data;
-	}
-
-	/**
 	 * DiffToParent
 	 *
 	 * Diffs this commit with its immediate parent
