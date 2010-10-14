@@ -142,6 +142,15 @@ Provides: codendi-plugin-eclipse = %{version}
 %description plugin-eclipse
 Plugin to install the Codendi Eclipse plugin and access the documentation
 
+%package plugin-hudson
+Summary: Hudson plugin for Codendi
+Group: Development/Tools/Building
+Version: @@PLUGIN_HUDSON_VERSION@@
+Release: 1%{?dist}
+Requires: %{name} >= %{version}, codendi-hudson
+Provides: codendi-plugin-hudson = %{version}
+%description plugin-hudson
+Plugin to install the Codendi Hudson plugin for continuous integration
 
 #
 # Package setup
@@ -374,7 +383,6 @@ fi
 %{APP_DIR}/plugins/admindelegation
 %{APP_DIR}/plugins/docman
 %{APP_DIR}/plugins/graphontrackers
-%{APP_DIR}/plugins/hudson
 %{APP_DIR}/plugins/pluginsadministration
 %{APP_DIR}/plugins/projectlinks
 %{APP_DIR}/plugins/serverupdate
@@ -438,6 +446,10 @@ fi
 %files plugin-eclipse
 %defattr(-,%{APP_USER},%{APP_USER},-)
 %{APP_DIR}/plugins/eclipse
+
+%files plugin-hudson
+%defattr(-,%{APP_USER},%{APP_USER},-)
+%{APP_DIR}/plugins/hudson
 
 #%doc
 #%config
