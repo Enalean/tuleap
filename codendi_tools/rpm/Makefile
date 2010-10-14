@@ -82,7 +82,7 @@ clean:
 	-rm -f /tmp/log_xml2html_*
 	-rm -f /tmp/log_xml2pdf_*
 
-all: clean codendi core_rpms custom_codendi codendi-all-deps
+all: clean codendi custom_codendi codendi-all-deps
 
 dist:
 	mkdir -p $(RPM_TMP)/yum
