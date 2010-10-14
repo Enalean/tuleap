@@ -13,10 +13,10 @@
 require_once(GITPHP_GITOBJECTDIR . 'GitExe.class.php');
 require_once(GITPHP_GITOBJECTDIR . 'Commit.class.php');
 
-define('GITPHP_COMPRESS_TAR', 0);
-define('GITPHP_COMPRESS_BZ2', 1);
-define('GITPHP_COMPRESS_GZ', 2);
-define('GITPHP_COMPRESS_ZIP', 3);
+define('GITPHP_COMPRESS_TAR', 'tar');
+define('GITPHP_COMPRESS_BZ2', 'tbz2');
+define('GITPHP_COMPRESS_GZ', 'tgz');
+define('GITPHP_COMPRESS_ZIP', 'zip');
 
 /**
  * Archive class
@@ -90,7 +90,7 @@ class GitPHP_Archive
 	 * @param integer $format the format for the archive
 	 * @return mixed git archive
 	 */
-	public function __construct($project, $gitObject, $format = 0, $path = '', $prefix = '')
+	public function __construct($project, $gitObject, $format = GITPHP_FORMAT_ZIP, $path = '', $prefix = '')
 	{
 		$this->SetProject($project);
 		$this->SetObject($gitObject);
