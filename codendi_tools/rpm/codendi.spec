@@ -153,6 +153,59 @@ Provides: codendi-plugin-hudson = %{version}
 Plugin to install the Codendi Hudson plugin for continuous integration
 
 #
+## Themes
+#
+%package theme-codex
+Summary: Codex theme for Codendi
+Group: Development/Tools
+Version: 1.0
+Release: 1%{?dist}
+Requires: %{name} >= %{version}
+Provides: codendi-theme-codex = %{version}
+%description theme-codex
+Original theme for Codendi
+
+%package theme-codextab
+Summary: CodexTab theme for Codendi
+Group: Development/Tools
+Version: 1.0
+Release: 1%{?dist}
+Requires: %{name} >= %{version}
+Provides: codendi-theme-codextab = %{version}
+%description theme-codextab
+CodexTab theme for Codendi
+
+%package theme-dawn
+Summary: Dawn theme for Codendi
+Group: Development/Tools
+Version: 1.0
+Release: 1%{?dist}
+Requires: %{name} >= %{version}
+Provides: codendi-theme-dawn = %{version}
+%description theme-dawn
+Dawn theme for Codendi
+
+%package theme-savannah
+Summary: Savannah theme for Codendi
+Group: Development/Tools
+Version: 1.0
+Release: 1%{?dist}
+Requires: %{name} >= %{version}
+Provides: codendi-theme-savannah = %{version}
+%description theme-savannah
+Savannah theme for Codendi
+
+%package theme-sttab
+Summary: STTab theme for Codendi
+Group: Development/Tools
+Version: 1.0
+Release: 1%{?dist}
+Requires: %{name} >= %{version}
+Provides: codendi-theme-sttab = %{version}
+%description theme-sttab
+STMicroelectronics theme for Codendi
+
+#
 # Package setup
 %prep
 %setup -q
@@ -376,9 +429,72 @@ fi
 %{APP_DIR}/codendi_tools
 %{APP_DIR}/cli
 %{APP_DIR}/site-content
-%{APP_DIR}/src
 %{APP_DIR}/ST-ChangeLog
 %{APP_DIR}/ST-VERSION
+# Split src for src/www/themes
+%dir %{APP_DIR}/src
+%{APP_DIR}/src/AUTHORS
+%{APP_DIR}/src/common
+%{APP_DIR}/src/CONTRIBUTING
+%{APP_DIR}/src/COPYING
+%{APP_DIR}/src/db
+%{APP_DIR}/src/etc
+%{APP_DIR}/src/INSTALL
+%{APP_DIR}/src/README
+%{APP_DIR}/src/updates
+%{APP_DIR}/src/utils
+# Split src/www for src/www/themes
+%dir %{APP_DIR}/src/www
+%{APP_DIR}/src/www/.htaccess
+%{APP_DIR}/src/www/*.php
+%{APP_DIR}/src/www/account
+%{APP_DIR}/src/www/admin
+%{APP_DIR}/src/www/api
+%{APP_DIR}/src/www/bugs
+%{APP_DIR}/src/www/codendi.css
+%{APP_DIR}/src/www/cvs
+%{APP_DIR}/src/www/docman
+%{APP_DIR}/src/www/docs
+%{APP_DIR}/src/www/export
+%{APP_DIR}/src/www/favicon.ico
+%{APP_DIR}/src/www/file
+%{APP_DIR}/src/www/forum
+%{APP_DIR}/src/www/goto
+%{APP_DIR}/src/www/help
+%{APP_DIR}/src/www/include
+%{APP_DIR}/src/www/mail
+%{APP_DIR}/src/www/my
+%{APP_DIR}/src/www/new
+%{APP_DIR}/src/www/news
+%{APP_DIR}/src/www/patch
+%{APP_DIR}/src/www/people
+%{APP_DIR}/src/www/pm
+%{APP_DIR}/src/www/project
+%{APP_DIR}/src/www/projects
+%{APP_DIR}/src/www/reference
+%{APP_DIR}/src/www/robots.txt
+%{APP_DIR}/src/www/scripts
+%{APP_DIR}/src/www/search
+%{APP_DIR}/src/www/service
+%{APP_DIR}/src/www/site
+%{APP_DIR}/src/www/snippet
+%{APP_DIR}/src/www/soap
+%{APP_DIR}/src/www/softwaremap
+%{APP_DIR}/src/www/stats
+%{APP_DIR}/src/www/support
+%{APP_DIR}/src/www/survey
+%{APP_DIR}/src/www/svn
+%dir %{APP_DIR}/src/www/themes
+%{APP_DIR}/src/www/themes/common
+%{APP_DIR}/src/www/top
+%{APP_DIR}/src/www/tos
+%{APP_DIR}/src/www/tracker
+%{APP_DIR}/src/www/user
+%{APP_DIR}/src/www/users
+%{APP_DIR}/src/www/VERSION
+%{APP_DIR}/src/www/widgets
+%{APP_DIR}/src/www/wiki
+# Plugins dir
 %dir %{APP_DIR}/plugins
 %{APP_DIR}/plugins/admindelegation
 %{APP_DIR}/plugins/docman
@@ -406,6 +522,9 @@ fi
 %attr(00644,root,root) /etc/cron.d/%{APP_NAME}
 %dir %{APP_CACHE_DIR}
 
+#
+# Plugins
+#
 %files plugin-forumml
 %defattr(-,%{APP_USER},%{APP_USER},-)
 %{APP_DIR}/plugins/forumml
@@ -450,6 +569,29 @@ fi
 %files plugin-hudson
 %defattr(-,%{APP_USER},%{APP_USER},-)
 %{APP_DIR}/plugins/hudson
+
+#
+# Themes
+#
+%files theme-codex
+%defattr(-,%{APP_USER},%{APP_USER},-)
+%{APP_DIR}/src/www/themes/CodeX
+
+%files theme-codextab
+%defattr(-,%{APP_USER},%{APP_USER},-)
+%{APP_DIR}/src/www/themes/CodeXTab
+
+%files theme-dawn
+%defattr(-,%{APP_USER},%{APP_USER},-)
+%{APP_DIR}/src/www/themes/Dawn
+
+%files theme-savannah
+%defattr(-,%{APP_USER},%{APP_USER},-)
+%{APP_DIR}/src/www/themes/savannah
+
+%files theme-sttab
+%defattr(-,%{APP_USER},%{APP_USER},-)
+%{APP_DIR}/src/www/themes/STTab
 
 #%doc
 #%config
