@@ -14,7 +14,7 @@ PLUGIN_LDAP_VERSION=$(shell LANG=C php $(BASE_DIR)/codendi_tools/rpm/plugin_desc
 PLUGIN_IM_VERSION=$(shell LANG=C php $(BASE_DIR)/codendi_tools/rpm/plugin_descriptor.php IM)
 PLUGIN_JRI_VERSION=$(shell LANG=C php $(BASE_DIR)/codendi_tools/rpm/plugin_descriptor.php CodendiJRI)
 PLUGIN_ECLIPSE_VERSION=$(shell LANG=C php $(BASE_DIR)/codendi_tools/rpm/plugin_descriptor.php Eclipse)
-PLUGIN_HUDSON_VERSION=$(shell LANG=C php $(BASE_DIR)/codendi_tools/rpm/plugin_descriptor.php Hudson)
+PLUGIN_HUDSON_VERSION=$(shell LANG=C php $(BASE_DIR)/codendi_tools/rpm/plugin_descriptor.php hudson)
 
 PKG_NAME=codendi_st
 
