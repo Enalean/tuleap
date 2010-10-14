@@ -215,6 +215,16 @@ Provides: codendi-theme-codexstn = %{version}
 %description theme-codexstn
 ST-Ericsson theme for Codendi
 
+%package theme-steerforge
+Summary: SteerForge theme for Codendi
+Group: Development/Tools
+Version: 1.0
+Release: 1%{?dist}
+Requires: %{name} >= %{version}
+Provides: codendi-theme-steerforge = %{version}
+%description theme-steerforge
+SteerForge theme for Codendi
+
 #
 # Package setup
 %prep
@@ -606,6 +616,10 @@ fi
 %files theme-codexstn
 %defattr(-,%{APP_USER},%{APP_USER},-)
 %{APP_DIR}/src/www/themes/CodexSTN
+
+%files theme-steerforge
+%defattr(-,%{APP_USER},%{APP_USER},-)
+%{APP_DIR}/src/www/themes/SteerForge
 
 #%doc
 #%config
