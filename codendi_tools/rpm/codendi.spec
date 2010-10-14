@@ -147,7 +147,7 @@ Summary: Hudson plugin for Codendi
 Group: Development/Tools/Building
 Version: @@PLUGIN_HUDSON_VERSION@@
 Release: 1%{?dist}
-Requires: %{name} >= %{version}, codendi-hudson
+Requires: %{name} >= %{version}
 Provides: codendi-plugin-hudson = %{version}
 %description plugin-hudson
 Plugin to install the Codendi Hudson plugin for continuous integration
