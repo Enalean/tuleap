@@ -1235,6 +1235,36 @@ class Docman_Actions extends Actions {
         $this->event_manager->processEvent('send_notifications', array());
     }
 
+    function deleteVersion() {
+        $user =& $this->_controler->getUser();
+        $request =& $this->_controler->request;
+
+        $_sGroupId = (int) $request->get('group_id');
+        $_sId      = (int) $request->get('id');
+        $_sVersion = (int) $request->get('version');
+
+        $itemFactory = new Docman_ItemFactory($_sGroupId);
+        $parentItem = $itemFactory->getItemFromDb($_sId);
+
+       $dPm =& Docman_PermissionsManager::instance($_sGroupId);
+            $subItemsWritable = $dPm->currentUserCanWriteSubItems($parentItem->getId());
+            if($subItemsWritable) {
+                $item =& $itemFactory->getItemSubTree($parentItem, $user, false, true);
+                if ($item) {
+                    $deletor =& new Docman_ActionsDeleteVisitor($this->_getFileStorage(), $this->_controler);
+                    if ($item->accept($deletor, array('user'  => &$user, 
+                                                    'parent'  => $itemFactory->getItemFromDb($item->getParentId()),
+                                                     'version' => $_sVersion
+                                                    ))) {
+                        $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'info_item_deleted'));
+                    }
+                }
+            } else {
+                $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_item_not_deleted_no_w'));
+            }
+        $this->event_manager->processEvent('send_notifications', array());
+    }
+
     function admin_change_view() {
         $request =& HTTPRequest::instance();
         $group_id = (int) $request->get('group_id');

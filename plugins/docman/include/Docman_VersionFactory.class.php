@@ -57,14 +57,29 @@ class Docman_VersionFactory {
         return $versions;
     }
     
-    function &getSpecificVersion(&$item, $number) {
-        $dao =& $this->_getVersionDao();
+    function getSpecificVersion($item, $number) {
+        $dao = $this->_getVersionDao();
         $dar = $dao->searchByNumber($item->getId(), $number);
         $version = null;
         if ($dar && !$dar->isError() && $dar->valid()) {
             $version = new Docman_Version($dar->current());
         }
         return $version;
+    }
+    
+    /**
+     * Delete given version of document
+     * 
+     * @param Integer $item
+     * @param Integer $number
+     * 
+     * @return Boolean
+     */
+    function deleteSpecificVersion($item, $number) {
+        $dao = $this->_getVersionDao();
+        return $dao->deleteSpecificVersion($item->getId(), $number);
+       
+        
     }
     
     /**

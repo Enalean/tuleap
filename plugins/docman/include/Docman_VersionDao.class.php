@@ -223,6 +223,19 @@ class Docman_VersionDao extends DataAccessObject {
                       'WHERE path LIKE "%"'.$this->da->quoteSmart($docman_path.$project->getUnixName(true).'/').'"%"';
         return $this->update($sql_update);
     }
+
+    /**
+     * Delete given version of document
+     * 
+     * @param Integer $itemId
+     * @param Integer $number
+     * 
+     * @return Boolean
+     */
+    function deleteSpecificVersion($itemId, $number) {
+        $sql= 'Delete from plugin_docman_version where item_id='.$itemId.' AND number='.$number;
+        return $this->update($sql);
+    }
 }
 
 

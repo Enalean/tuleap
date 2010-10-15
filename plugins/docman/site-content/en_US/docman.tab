@@ -323,6 +323,7 @@ plugin_docman	details_delete_warning_document	<h3>Confirm deletion of document $
 plugin_docman	details_delete_warning_file	<h3>Confirm deletion of document $1</h3><p>You are going to delete a file. Please note that all versions will be deleted.</p><p>Are you sure that you want to delete this file?</p>
 plugin_docman	details_delete_warning_folder	<h3>Confirm deletion of folder $1</h3><p>You are going to delete a folder. Please note that all sub-items and their versions will be deleted.</p><p>Are you sure that you want to delete this folder?</p>
 plugin_docman	details_delete_warning_wiki	<p><em>Please Note that if you check the 'Cascade deletion to wiki' option, the referenced wiki page will no longer exist in wiki service too.</em></p>
+plugin_docman	details_delete_warning_version	<h3>Confirm deletion of version $2 of document $1</h3><p>You are going to delete a version of file. </p><p>Are you sure that you want to delete this version?</p>	
 plugin_docman	details_delete_wiki_impact_on_documents	<p><em>You should also be aware that the following documents will no longer be valid if you choose to cascade deletion to wiki service:</em></p>
 plugin_docman	details_edit_title	Edit properties of $1
 plugin_docman	details_history	History

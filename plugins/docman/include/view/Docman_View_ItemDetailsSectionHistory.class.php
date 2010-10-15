@@ -49,6 +49,7 @@ class Docman_View_ItemDetailsSectionHistory extends Docman_View_ItemDetailsSecti
                     $titles[] = $GLOBALS['Language']->getText('plugin_docman','details_history_versions_label');
                     $titles[] = $GLOBALS['Language']->getText('plugin_docman','details_history_versions_changelog');
                     $titles[] = $GLOBALS['Language']->getText('plugin_docman','details_history_versions_approval');
+                    $titles[] ='Delete';
                     $content .= html_build_list_table_top($titles, false, false, false);
                     $odd_even = array('boxitem', 'boxitemalt');
                     $i = 0;
@@ -57,6 +58,11 @@ class Docman_View_ItemDetailsSectionHistory extends Docman_View_ItemDetailsSecti
                             'action' => 'show',
                             'id'     => $this->item->getId(),
                             'version_number' => $versions[$key]->getNumber()
+                        ));
+                        $delete = Docman_View_View::buildUrl($this->url, array (
+                            'action' =>'confirmDelete',
+                            'id'     => $this->item->getId(),
+                            'version' => $versions[$key]->getNumber()
                         ));
                         $user = $versions[$key]->getAuthorId() ? user_get_name_display_from_id($versions[$key]->getAuthorId()) : $GLOBALS['Language']->getText('plugin_docman','details_history_anonymous');
                         $content .= '<tr class="'. $odd_even[$i++ % count($odd_even)] .'">';
@@ -78,6 +84,7 @@ class Docman_View_ItemDetailsSectionHistory extends Docman_View_ItemDetailsSecti
                         } else {
                             $content .= '<td></td>';
                         }
+                        $content .= '<td><A href="'.$delete.'" <IMG SRC="'.util_get_image_theme("ic/trash.png").'" HEIGHT="16" WIDTH="16" BORDER="0"></A></TD>';
                         $content .= '</tr>';
                     }
                     $content .= '</table>';

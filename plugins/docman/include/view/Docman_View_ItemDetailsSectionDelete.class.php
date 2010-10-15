@@ -34,12 +34,16 @@ class Docman_View_ItemDetailsSectionDelete extends Docman_View_ItemDetailsSectio
     function getContent() {
         $folder_or_document = is_a($this->item, 'Docman_Folder') ? 'folder' : (is_a($this->item, 'Docman_File') ? 'file' : 'document');
         $item_type = $this->_controller->_getItemFactory()->getItemTypeForItem($this->item);
-        
+        $version = $this->_controller->request->get('version');
         $content = '';
         $content .= '<dl><dt>'. $GLOBALS['Language']->getText('plugin_docman', 'details_actions_delete') .'</dt><dd>';
         $content .= '<form action="'. $this->url .'" method="POST">';
         $content .= '<div class="docman_confirm_delete">';
-        $content .= $GLOBALS['Language']->getText('plugin_docman', 'details_delete_warning_'.$folder_or_document,  $this->hp->purify($this->item->getTitle(), CODENDI_PURIFIER_CONVERT_HTML) );
+        if ($version) {
+            $content .= $GLOBALS['Language']->getText('plugin_docman', 'details_delete_warning_version',  array($this->hp->purify($this->item->getTitle(), CODENDI_PURIFIER_CONVERT_HTML), $version) );
+        } else {
+            $content .= $GLOBALS['Language']->getText('plugin_docman', 'details_delete_warning_'.$folder_or_document,  $this->hp->purify($this->item->getTitle(), CODENDI_PURIFIER_CONVERT_HTML) );
+        }
         if($item_type == PLUGIN_DOCMAN_ITEM_TYPE_WIKI) {
             $content .= $this->getWikiDeleteInfo();
         }
@@ -48,7 +52,14 @@ class Docman_View_ItemDetailsSectionDelete extends Docman_View_ItemDetailsSectio
             $content .= '<input type="hidden" name="token" value="'. $this->token .'" />';
         }
         $content .= '     <input type="hidden" name="section" value="actions" />';
-        $content .= '     <input type="hidden" name="action" value="delete" />';
+        
+        if ($version) {
+            $content .= '     <input type="hidden" name="action" value="deleteVersion" />';
+            $content .= '     <input type="hidden" name="version" value="'. $version.'" />';
+        }
+        else {
+            $content .= '     <input type="hidden" name="action" value="delete" />';
+        }
         $content .= '     <input type="hidden" name="id" value="'. $this->item->getId() .'" />';
         $content .= '     <input type="submit" tabindex="2" name="confirm" value="'. $GLOBALS['Language']->getText('plugin_docman', 'details_delete_confirm') .'" />';
         $content .= '     <input type="submit" tabindex="1" name="cancel" value="'. $GLOBALS['Language']->getText('plugin_docman', 'details_delete_cancel') .'" />';

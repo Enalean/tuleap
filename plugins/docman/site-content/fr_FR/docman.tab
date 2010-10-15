@@ -323,6 +323,7 @@ plugin_docman	details_delete_warning_document	<h3>Confirmez la suppression du do
 plugin_docman	details_delete_warning_file	<h3>Confirmez la suppression du document $1</h3><p>Vous êtes sur le point de supprimer un fichier. Avant de confirmer, notez que toutes les versions seront supprimées.</p><p>Êtes-vous sûr de vouloir le supprimer ?</p>
 plugin_docman	details_delete_warning_folder	<h3>Confirmez la suppression du dossier $1</h3><p>Vous êtes sur le point de supprimer un dossier. Avant de confirmer, notez que tous les sous-éléments et leurs versions seront supprimés.</p><p>Êtes-vous sûr de vouloir le supprimer ?</p>
 plugin_docman	details_delete_warning_wiki	<p><em>Veuillez noter que si vous cochez l'option 'Propager la suppression au service wiki', la page wiki référencée par ce document sera également supprimée dans le service wiki.</em></p>
+plugin_docman	details_delete_warning_version	<h3>Confirmez la suppression de la version $2 du document $1</h3><p>Vous êtes sur le point de supprimer une version du fichier.</p><p>Êtes-vous sûr de vouloir la supprimer ?</p>	
 plugin_docman	details_delete_wiki_impact_on_documents	<p><em> Vous devez aussi noter que si vous cochez l'option 'Propager la suppression au service wiki', les documents suivants seront imacptés:</em></p>
 plugin_docman	details_edit_title	Edition des propriétés de $1
 plugin_docman	details_history	Historique
