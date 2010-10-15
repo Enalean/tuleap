@@ -7,4 +7,5 @@ To upgrade SabreDAV:
 
 NB : - This code is compatible with SabreDAV version 1.0.14
      - The upgrade instructions may not be valid by the evolution of SabreDAV so take care to read the ChangeLog file.
-     - More details about uprade can be found here : http://code.google.com/p/sabredav/wiki/Migrating1_0to1_2
+     - More details about upgrade can be found here : http://code.google.com/p/sabredav/wiki/Migrating1_0to1_2
+                                                      http://code.google.com/p/sabredav/wiki/Migrating1_2to1_3
