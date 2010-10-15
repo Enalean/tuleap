@@ -67,7 +67,7 @@ class GitPHP_Controller_Snapshot extends GitPHP_ControllerBase
 	 */
 	protected function GetCacheKey()
 	{
-		return (isset($this->params['hash']) ? $this->params['hash'] : '') . '|' . (isset($this->params['path']) ? $this->params['path'] : '') . '|' . (isset($this->params['prefix']) ? $this->params['prefix'] : '');
+		return (isset($this->params['hash']) ? $this->params['hash'] : '') . '|' . (isset($this->params['path']) ? $this->params['path'] : '') . '|' . (isset($this->params['prefix']) ? $this->params['prefix'] : '') . '|' . $this->params['format'];
 	}
 
 	/**
@@ -99,6 +99,11 @@ class GitPHP_Controller_Snapshot extends GitPHP_ControllerBase
 		if (isset($_GET['h'])) $this->params['hash'] = $_GET['h'];
 		if (isset($_GET['f'])) $this->params['path'] = $_GET['f'];
 		if (isset($_GET['prefix'])) $this->params['prefix'] = $_GET['prefix'];
+		if (isset($_GET['fmt']))
+			$this->params['format'] = $_GET['fmt'];
+		else
+			$this->params['format'] = GitPHP_Config::GetInstance()->GetValue('compressformat', GITPHP_COMPRESS_ZIP);
+			
 		GitPHP_Log::GetInstance()->SetEnabled(false);
 	}
 
@@ -111,9 +116,7 @@ class GitPHP_Controller_Snapshot extends GitPHP_ControllerBase
 	 */
 	protected function LoadHeaders()
 	{
-		$format = GitPHP_Config::GetInstance()->GetValue('compressformat', GITPHP_COMPRESS_ZIP);
-
-		$this->archive = new GitPHP_Archive($this->project, null, $format, (isset($this->params['path']) ? $this->params['path'] : ''), (isset($this->params['prefix']) ? $this->params['prefix'] : ''));
+		$this->archive = new GitPHP_Archive($this->project, null, $this->params['format'], (isset($this->params['path']) ? $this->params['path'] : ''), (isset($this->params['prefix']) ? $this->params['prefix'] : ''));
 
 		$headers = $this->archive->GetHeaders();
 		
