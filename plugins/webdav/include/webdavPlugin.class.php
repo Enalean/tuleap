@@ -20,12 +20,8 @@
  */
 
 require_once ('common/plugin/Plugin.class.php');
-require_once ('lib/Sabre.autoload.php');
 require_once ('ResolvPHP-5.1.6-Compatibility.php');
-require_once ('BrowserPlugin.class.php');
 require_once ('WebDAVAuthentication.class.php');
-require_once ('FS/WebDAVRoot.class.php');
-require_once ('WebDAVTree.class.php');
 require_once ('Webdav_URLVerification.class.php');
 
 class WebDAVPlugin extends Plugin {
@@ -107,11 +103,17 @@ class WebDAVPlugin extends Plugin {
         $auth = new WebDAVAuthentication();
         $user = $auth->authenticate();
 
+        // Include the SabreDAV library
+        $SabreDAVPath = $this->getPluginInfo()->getPropertyValueForName('sabredav_path');
+        require_once ($SabreDAVPath.'/lib/Sabre.autoload.php');
+
         // Creating the Root directory from WebDAV file system
         $maxFileSize = $this->getPluginInfo()->getPropertyValueForName('max_file_size');
+        require_once ('FS/WebDAVRoot.class.php');
         $rootDirectory = new WebDAVRoot($this, $user, $maxFileSize);
 
         // The tree manages all the file objects
+        require_once ('WebDAVTree.class.php');
         $tree = new WebDAVTree($rootDirectory);
 
         // Finally, we create the server object. The server object is responsible for making sense out of the WebDAV protocol
@@ -127,6 +129,7 @@ class WebDAVPlugin extends Plugin {
         $server->addPlugin($lockPlugin);
 
         // Creating the browser plugin
+        require_once ('BrowserPlugin.class.php');
         $plugin = new BrowserPlugin();
         $server->addPlugin($plugin);
 

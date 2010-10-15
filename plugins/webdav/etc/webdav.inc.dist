@@ -1,7 +1,12 @@
 <?php
 
+// Where the SabreDAV library is located
+// TODO : in the future the path will be "/usr/share/sabredav"
+$sabredav_path = '/usr/share/codendi/plugins/webdav/include';
+
 // Maximum file size allowed ( 2147583647 bit = 2^31-1 bit =2GB )
 $max_file_size = 2147483647;
+
 // WebDAV server base URI
 $webdav_base_uri = "/webdav/";
 

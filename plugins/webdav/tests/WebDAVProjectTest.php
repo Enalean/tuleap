@@ -20,17 +20,7 @@
 
 require_once (dirname(__FILE__).'/../../../src/common/language/BaseLanguage.class.php');
 Mock::generate('BaseLanguage');
-require_once (dirname(__FILE__).'/../include/lib/Sabre/DAV/Exception.php');
-require_once (dirname(__FILE__).'/../include/lib/Sabre/DAV/Exception/FileNotFound.php');
-require_once (dirname(__FILE__).'/../include/lib/Sabre/DAV/Exception/Forbidden.php');
-require_once (dirname(__FILE__).'/../include/lib/Sabre/DAV/Exception/MethodNotAllowed.php');
-require_once (dirname(__FILE__).'/../include/lib/Sabre/DAV/INode.php');
-require_once (dirname(__FILE__).'/../include/lib/Sabre/DAV/Node.php');
-require_once (dirname(__FILE__).'/../include/lib/Sabre/DAV/IFile.php');
-require_once (dirname(__FILE__).'/../include/lib/Sabre/DAV/File.php');
-require_once (dirname(__FILE__).'/../include/lib/Sabre/DAV/ICollection.php');
-require_once (dirname(__FILE__).'/../include/lib/Sabre/DAV/IDirectory.php');
-require_once (dirname(__FILE__).'/../include/lib/Sabre/DAV/Directory.php');
+require_once ('requirements.php');
 require_once (dirname(__FILE__).'/../../../src/common/user/User.class.php');
 Mock::generate('User');
 require_once (dirname(__FILE__).'/../../../src/common/frs/FRSPackage.class.php');
