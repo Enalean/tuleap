@@ -207,20 +207,7 @@ class GitPHP_Archive
 	 */
 	public function GetExtension()
 	{
-		switch ($this->format) {
-			case GITPHP_COMPRESS_TAR:
-				return 'tar';
-				break;
-			case GITPHP_COMPRESS_BZ2:
-				return 'tar.bz2';
-				break;
-			case GITPHP_COMPRESS_GZ:
-				return 'tar.gz';
-				break;
-			case GITPHP_COMPRESS_ZIP:
-				return 'zip';
-				break;
-		}
+		return GitPHP_Archive::FormatToExtension($this->format);
 	}
 
 	/**
@@ -407,6 +394,61 @@ class GitPHP_Archive
 		}
 
 		return $data;
+	}
+
+	/**
+	 * FormatToExtension
+	 *
+	 * Gets the extension to use for a particular format
+	 *
+	 * @access public
+	 * @static
+	 * @param string $format format to get extension for
+	 * @return string file extension
+	 */
+	public static function FormatToExtension($format)
+	{
+		switch ($format) {
+			case GITPHP_COMPRESS_TAR:
+				return 'tar';
+				break;
+			case GITPHP_COMPRESS_BZ2:
+				return 'tar.bz2';
+				break;
+			case GITPHP_COMPRESS_GZ:
+				return 'tar.gz';
+				break;
+			case GITPHP_COMPRESS_ZIP:
+				return 'zip';
+				break;
+		}
+	}
+
+	/**
+	 * SupportedFormats
+	 *
+	 * Gets the supported formats for the archiver
+	 *
+	 * @access public
+	 * @static
+	 * @return array array of formats mapped to extensions
+	 */
+	public static function SupportedFormats()
+	{
+		$formats = array();
+
+		$formats[GITPHP_COMPRESS_TAR] = GitPHP_Archive::FormatToExtension(GITPHP_COMPRESS_TAR);
+		
+		// TODO check for git > 1.4.3 for zip
+		$formats[GITPHP_COMPRESS_ZIP] = GitPHP_Archive::FormatToExtension(GITPHP_COMPRESS_ZIP);
+
+		if (function_exists('bzcompress'))
+			$formats[GITPHP_COMPRESS_BZ2] = GitPHP_Archive::FormatToExtension(GITPHP_COMPRESS_BZ2);
+
+		if (function_exists('gzencode'))
+			$formats[GITPHP_COMPRESS_GZ] = GitPHP_Archive::FormatToExtension(GITPHP_COMPRESS_GZ);
+
+		return $formats;
 	}
 
 }
