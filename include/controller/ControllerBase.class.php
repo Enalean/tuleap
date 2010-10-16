@@ -121,9 +121,10 @@ abstract class GitPHP_ControllerBase
 	 * Get the prefix for all cache keys
 	 *
 	 * @access private
+	 * @param string $projectKeys include project-specific key pieces
 	 * @return string cache key prefix
 	 */
-	private function GetCacheKeyPrefix()
+	private function GetCacheKeyPrefix($projectKeys = true)
 	{
 		$cacheKeyPrefix = GitPHP_Resource::GetLocale();
 
@@ -132,7 +133,7 @@ abstract class GitPHP_ControllerBase
 			$cacheKeyPrefix .= '|' . sha1(serialize($projList->GetConfig()));
 			unset($projList);
 		}
-		if ($this->project) {
+		if ($this->project && $projectKeys) {
 			$cacheKeyPrefix .= '|' . sha1($this->project->GetProject());
 		}
 		
@@ -333,7 +334,7 @@ abstract class GitPHP_ControllerBase
 			$age = $headList[0]->GetCommit()->GetAge();
 
 			$this->tpl->clear_cache(null, $this->GetCacheKeyPrefix(), null, $age);
-			$this->tpl->clear_cache('projectlist.tpl', sha1(serialize(GitPHP_ProjectList::GetInstance()->GetConfig())), null, $age);
+			$this->tpl->clear_cache('projectlist.tpl', $this->GetCacheKeyPrefix(false), null, $age);
 		}
 	}
 
