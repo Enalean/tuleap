@@ -78,7 +78,6 @@ $gitphp_conf['homelink'] = 'projects';
  * http://server.com/
  * ssh://server.com/git/
  * git://server.com/gitprojects/
- * (don't forget trailing slash)
  * 
  * If left blank/commented, no clone url will display.
  */

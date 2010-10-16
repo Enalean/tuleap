@@ -412,8 +412,13 @@ class GitPHP_Project
 			return $this->cloneUrl;
 
 		$cloneurl = GitPHP_Config::GetInstance()->GetValue('cloneurl', '');
-		if (!empty($cloneurl))
+		if (!empty($cloneurl)) {
+			if (substr($cloneurl, -1) != '/') {
+				$cloneurl .= '/';
+			}
 			$cloneurl .= $this->project;
+		}
+
 		return $cloneurl;
 	}
 
@@ -444,8 +449,12 @@ class GitPHP_Project
 			return $this->pushUrl;
 
 		$pushurl = GitPHP_Config::GetInstance()->GetValue('pushurl', '');
-		if (!empty($pushurl))
+		if (!empty($pushurl)) {
+			if (substr($pushurl, -1) != '/') {
+				$pushurl .= '/';
+			}
 			$pushurl .= $this->project;
+		}
 		return $pushurl;
 	}
 
