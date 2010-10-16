@@ -57,22 +57,8 @@ class GitPHP_ProjectListArray extends GitPHP_ProjectListBase
 				if (isset($projData['project'])) {
 					try {
 						$projObj = new GitPHP_Project($projData['project']);
-						if (isset($projData['category']) && is_string($projData['category'])) {
-							$projObj->SetCategory($projData['category']);
-						}
-						if (isset($projData['owner']) && is_string($projData['owner'])) {
-							$projObj->SetOwner($projData['owner']);
-						}
-						if (isset($projData['description']) && is_string($projData['description'])) {
-							$projObj->SetDescription($projData['description']);
-						}
-						if (isset($projData['cloneurl']) && is_string($projData['cloneurl'])) {
-							$projObj->SetCloneUrl($projData['cloneurl']);
-						}
-						if (isset($projData['pushurl']) && is_string($projData['pushurl'])) {
-							$projObj->SetPushUrl($projData['pushurl']);
-						}
 						$this->projects[$projData['project']] = $projObj;
+						$this->ApplyProjectOverride($projData);
 					} catch (Exception $e) {
 					}
 				}

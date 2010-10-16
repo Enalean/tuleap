@@ -204,4 +204,39 @@ abstract class GitPHP_ProjectListBase implements Iterator
 		return count($this->projects);
 	}
 
+	/**
+	 * ApplyProjectOverride
+	 *
+	 * Applies override settings for a project
+	 *
+	 * @access protected
+	 * @param array $projData project data array
+	 */
+	protected function ApplyProjectOverride($projData)
+	{
+		if ((!isset($projData['project'])) || empty($projData['project']))
+			return;
+
+		$project = $this->GetProject($projData['project']);
+		if (!$project)
+			return;
+
+
+		if (isset($projData['category']) && is_string($projData['category'])) {
+			$project->SetCategory($projData['category']);
+		}
+		if (isset($projData['owner']) && is_string($projData['owner'])) {
+			$project->SetOwner($projData['owner']);
+		}
+		if (isset($projData['description']) && is_string($projData['description'])) {
+			$project->SetDescription($projData['description']);
+		}
+		if (isset($projData['cloneurl']) && is_string($projData['cloneurl'])) {
+			$project->SetCloneUrl($projData['cloneurl']);
+		}
+		if (isset($projData['pushurl']) && is_string($projData['pushurl'])) {
+			$project->SetPushUrl($projData['pushurl']);
+		}
+	}
+
 }
