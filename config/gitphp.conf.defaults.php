@@ -211,7 +211,6 @@ $gitphp_conf['diffbin'] = 'C:\\Progra~1\\Git\\bin\\diff.exe';
 /*
  * gittmp
  * Location for temporary files for diffs
- * (don't forget trailing slash!)
  */
 $gitphp_conf['gittmp'] = '/tmp/gitphp/';
 

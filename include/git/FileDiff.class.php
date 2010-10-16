@@ -524,7 +524,7 @@ class GitPHP_FileDiff
 		if (!GitPHP_Config::GetInstance()->GetValue('tmpdirprepared'))
 			GitPHP_FileDiff::PrepareTempDir();
 
-		$tmpdir = GitPHP_Config::GetInstance()->GetValue('gittmp', '/tmp/gitphp/');
+		$tmpdir = GitPHP_Util::AddSlash(GitPHP_Config::GetInstance()->GetValue('gittmp', '/tmp/gitphp/'));
 
 		$pid = 0;
 		if (function_exists('posix_getpid'))
@@ -610,7 +610,7 @@ class GitPHP_FileDiff
 	{
 		GitPHP_Config::GetInstance()->SetValue('tmpdirprepared', true);
 
-		$tmpdir = GitPHP_Config::GetInstance()->GetValue('gittmp', '/tmp/gitphp/');
+		$tmpdir = GitPHP_Util::AddSlash(GitPHP_Config::GetInstance()->GetValue('gittmp', '/tmp/gitphp/'));
 
 		if (empty($tmpdir)) {
 			throw new Exception(__('No tmpdir defined'));
