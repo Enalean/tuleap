@@ -28,6 +28,12 @@
     <script type="text/javascript">
       var GITPHP_RES_LOADING="{t escape='js'}Loading…{/t}";
       var GITPHP_RES_LOADING_BLAME_DATA="{t escape='js'}Loading blame data…{/t}";
+      var GITPHP_RES_SNAPSHOT="{t escape='js'}snapshot{/t}";
+      var GITPHP_SNAPSHOT_FORMATS = {ldelim}
+      {foreach from=$snapshotformats key=format item=extension name=formats}
+        "{$format}": "{$extension}"{if !$smarty.foreach.formats.last},{/if}
+      {/foreach}
+      {rdelim}
     </script>
     <link rel="stylesheet" href="css/ext/jquery.qtip.css" type="text/css" />
     <script type="text/javascript" src="js/ext/jquery-1.4.2.min.js"></script>

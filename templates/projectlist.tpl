@@ -85,7 +85,7 @@ git source code archive
 	<a href="{$SCRIPT_NAME}?p={$proj->GetProject()|urlencode}&amp;a=shortlog">{t}shortlog{/t}</a> | 
 	<a href="{$SCRIPT_NAME}?p={$proj->GetProject()|urlencode}&amp;a=log">{t}log{/t}</a> | 
 	<a href="{$SCRIPT_NAME}?p={$proj->GetProject()|urlencode}&amp;a=tree">{t}tree{/t}</a> | 
-	<a href="{$SCRIPT_NAME}?p={$proj->GetProject()|urlencode}&amp;a=snapshot&amp;h=HEAD">{t}snapshot{/t}</a>
+	<a href="{$SCRIPT_NAME}?p={$proj->GetProject()|urlencode}&amp;a=snapshot&amp;h=HEAD" class="snapshotTip">{t}snapshot{/t}</a>
 	{/if}
       </td>
     </tr>

@@ -10,6 +10,46 @@
 
 function initTooltips() {
 
+	$('a.snapshotTip').each(function()
+	{
+		var href = $(this).attr('href');
+
+		var content = '<div>' + GITPHP_RES_SNAPSHOT + ': ';
+		var first = true;
+		for (type in GITPHP_SNAPSHOT_FORMATS) {
+			if (!first) {
+				content += ' | ';
+			}
+			content += '<a href="' + href + '&fmt=' + type + '">' + GITPHP_SNAPSHOT_FORMATS[type] + '</a>';
+			first = false;
+		}
+		content += '</div>';
+
+		$(this).qtip(
+		{
+			content: {
+				text: content
+			},
+			show: {
+				event: 'click'
+			},
+			hide: {
+				fixed: true,
+				delay: 150
+			},
+			style: {
+				classes: 'ui-tooltip-light ui-tooltip-shadow'
+			},
+			position: {
+				adjust: {
+					screen: true
+				}
+			}
+		});
+
+		$(this).click(function() { return false; });
+	});
+
 	var project = window.location.href.match(/p=([^&]+)/);
 	if (!project) {
 		return;
@@ -91,6 +131,7 @@ function initTooltips() {
 			}
 		});
 	});
+
 }
 
 $(document).ready(function() {

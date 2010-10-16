@@ -266,6 +266,8 @@ abstract class GitPHP_ControllerBase
 			}
 		}
 		$this->tpl->assign('requestvars', $getvarsmapped);
+
+		$this->tpl->assign('snapshotformats', GitPHP_Archive::SupportedFormats());
 	}
 
 	/**
