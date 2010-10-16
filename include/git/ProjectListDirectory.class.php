@@ -49,6 +49,9 @@ class GitPHP_ProjectListDirectory extends GitPHP_ProjectListBase
 
 		$this->projectDir = $projectDir;
 
+		if (substr($this->projectDir, -1) != '/')
+			$this->projectDir .= '/';
+
 		parent::__construct();
 	}
 

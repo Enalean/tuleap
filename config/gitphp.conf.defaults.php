@@ -26,7 +26,6 @@ throw new Exception('The defaults file should not be used as your config.');
 /*
  * projectroot
  * Full directory on server where projects are located
- * (don't forget trailing slash!)
  */
 //$gitphp_conf['projectroot'] = '/pub/gitprojects/';
 

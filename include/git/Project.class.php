@@ -204,6 +204,9 @@ class GitPHP_Project
 	private function SetProject($project)
 	{
 		$projectRoot = GitPHP_Config::GetInstance()->GetValue('projectroot');
+		if (substr($projectRoot, -1) != '/')
+			$projectRoot .= '/';
+
 		$realProjectRoot = realpath($projectRoot);
 		$path = $projectRoot . $project;
 		$fullPath = realpath($path);
@@ -313,7 +316,11 @@ class GitPHP_Project
 	 */
 	public function GetPath()
 	{
-		return GitPHP_Config::GetInstance()->GetValue('projectroot') . $this->project;
+		$projectRoot = GitPHP_Config::GetInstance()->GetValue('projectroot');
+		if (substr($projectRoot, -1) != '/')
+			$projectRoot .= '/';
+
+		return $projectRoot . $this->project;
 	}
 
 	/**

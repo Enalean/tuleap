@@ -58,6 +58,8 @@ class GitPHP_ProjectListFile extends GitPHP_ProjectListBase
 		}
 
 		$projectRoot = GitPHP_Config::GetInstance()->GetValue('projectroot');
+		if (substr($projectRoot, -1) != '/')
+			$projectRoot .= '/';
 
 		while (!feof($fp) && ($line = fgets($fp))) {
 			if (preg_match('/^([^\s]+)(\s.+)?$/', $line, $regs)) {
