@@ -96,10 +96,6 @@ $gitphp_conf['pushurl'] = 'ssh://localhost/git/';
  * in urls.  If you leave this blank/commented the script
  * will try to guess the correct URL, but you can override
  * it here if it's not being guessed correctly.
- *
- * If only specifying the directory path (and omitting the
- * index.php filename), make sure to include the trailing
- * slash!
  */
 $gitphp_conf['self'] = 'http://localhost/gitphp/';
 
