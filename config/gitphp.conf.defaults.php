@@ -280,7 +280,6 @@ $gitphp_conf['cachelifetime'] = 3600;
 /*
  * smarty_prefix
  * This is the prefix where smarty is installed.
- * (including trailing slash)
  * If an absolute (starts with /) path is given,
  * Smarty.class.php will be searched for in that directory.
  * If a relative (doesn't start with /) path is given,
@@ -304,7 +303,6 @@ $gitphp_conf['smarty_prefix'] = 'lib/smarty/libs/';
  * NOTE: this is the path to the base geshi.php file to include,
  * NOT the various other geshi php source files!
  * Leave blank if geshi.php is in the gitphp root
- * (don't forget trailing slash!)
  */
 $gitphp_conf['geshiroot'] = 'lib/geshi/';
 

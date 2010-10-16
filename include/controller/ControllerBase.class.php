@@ -67,7 +67,7 @@ abstract class GitPHP_ControllerBase
 	 */
 	public function __construct()
 	{
-		require_once(GitPHP_Config::GetInstance()->GetValue('smarty_prefix', 'lib/smarty/libs/') . 'Smarty.class.php');
+		require_once(GitPHP_Util::AddSlash(GitPHP_Config::GetInstance()->GetValue('smarty_prefix', 'lib/smarty/libs/')) . 'Smarty.class.php');
 		$this->tpl = new Smarty;
 		$this->tpl->plugins_dir[] = GITPHP_INCLUDEDIR . 'smartyplugins';
 
