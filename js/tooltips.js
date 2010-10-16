@@ -8,7 +8,7 @@
  * @package GitPHP
  */
 
-function initTooltips() {
+function initSnapshotTips() {
 
 	$('a.snapshotTip').each(function()
 	{
@@ -49,6 +49,10 @@ function initTooltips() {
 
 		$(this).click(function() { return false; });
 	});
+
+}
+
+function initCommitTips() {
 
 	var project = window.location.href.match(/p=([^&]+)/);
 	if (!project) {
@@ -97,6 +101,22 @@ function initTooltips() {
 		});
 	});
 
+}
+
+function initTagTips() {
+
+	var project = window.location.href.match(/p=([^&]+)/);
+	if (!project) {
+		return;
+	}
+	project = unescape(project[1]);
+
+	var url = window.location.href.match(/^([^\?]+\/)/);
+	if (!url) {
+		return;
+	}
+	url = url[1];
+
 	$('a.tagTip').each(function()
 	{
 		var tagName = $(this).attr('href').match(/h=([^&]+)/);
@@ -135,5 +155,7 @@ function initTooltips() {
 }
 
 $(document).ready(function() {
-	initTooltips();
+	initCommitTips();
+	initTagTips();
+	initSnapshotTips();
 });
