@@ -52,7 +52,7 @@ function initBlame() {
 				
 				var insertBlame = function() {
 					blameCol.html(data).addClass('de1');
-					initTooltips();
+					initCommitTips();
 				}
 
 				if (blameCol.css('display') == 'none') {
