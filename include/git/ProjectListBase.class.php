@@ -45,6 +45,15 @@ abstract class GitPHP_ProjectListBase implements Iterator
 	protected $projectConfig = null;
 
 	/**
+	 * projectSettings
+	 *
+	 * Stores the project settings internally
+	 *
+	 * @access protected
+	 */
+	protected $projectSettings = null;
+
+	/**
 	 * __construct
 	 *
 	 * Constructor
@@ -103,6 +112,18 @@ abstract class GitPHP_ProjectListBase implements Iterator
 	public function GetConfig()
 	{
 		return $this->projectConfig;
+	}
+
+	/**
+	 * GetSettings
+	 *
+	 * Gets the settings applied to this projectlist
+	 *
+	 * @access public
+	 */
+	public function GetSettings()
+	{
+		return $this->projectSettings;
 	}
 
 	/**
@@ -205,38 +226,62 @@ abstract class GitPHP_ProjectListBase implements Iterator
 	}
 
 	/**
-	 * ApplyProjectOverride
+	 * ApplyProjectSettings
 	 *
 	 * Applies override settings for a project
 	 *
 	 * @access protected
+	 * @param string $project the project path
 	 * @param array $projData project data array
 	 */
-	protected function ApplyProjectOverride($projData)
+	protected function ApplyProjectSettings($project, $projData)
 	{
-		if ((!isset($projData['project'])) || empty($projData['project']))
-			return;
+		if (empty($project)) {
+			if (isset($projData['project']) && !empty($projData['project']))
+				$project = $projData['project'];
+			else
+				return;
+		}
 
-		$project = $this->GetProject($projData['project']);
-		if (!$project)
+		$projectObj = $this->GetProject($project);
+		if (!$projectObj)
 			return;
-
 
 		if (isset($projData['category']) && is_string($projData['category'])) {
-			$project->SetCategory($projData['category']);
+			$projectObj->SetCategory($projData['category']);
 		}
 		if (isset($projData['owner']) && is_string($projData['owner'])) {
-			$project->SetOwner($projData['owner']);
+			$projectObj->SetOwner($projData['owner']);
 		}
 		if (isset($projData['description']) && is_string($projData['description'])) {
-			$project->SetDescription($projData['description']);
+			$projectObj->SetDescription($projData['description']);
 		}
 		if (isset($projData['cloneurl']) && is_string($projData['cloneurl'])) {
-			$project->SetCloneUrl($projData['cloneurl']);
+			$projectObj->SetCloneUrl($projData['cloneurl']);
 		}
 		if (isset($projData['pushurl']) && is_string($projData['pushurl'])) {
-			$project->SetPushUrl($projData['pushurl']);
+			$projectObj->SetPushUrl($projData['pushurl']);
 		}
+	}
+
+	/**
+	 * ApplySettings
+	 *
+	 * Applies a list of settings to the project list
+	 *
+	 * @access protected
+	 * @param array $settings the array of settings
+	 */
+	public function ApplySettings($settings)
+	{
+		if ((!$settings) || (count($settings) < 1))
+			return;
+
+		foreach ($settings as $proj => $setting) {
+			$this->ApplyProjectSettings($proj, $setting);
+		}
+
+		$this->projectSettings = $settings;
 	}
 
 }

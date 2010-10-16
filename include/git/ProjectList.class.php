@@ -69,19 +69,21 @@ class GitPHP_ProjectList
 			if (isset($git_projects)) {
 				if (is_string($git_projects)) {
 					self::$instance = new GitPHP_ProjectListFile($git_projects);
-					return;
 				} else if (is_array($git_projects)) {
 					if ($legacy) {
 						self::$instance = new GitPHP_ProjectListArrayLegacy($git_projects);
 					} else {
 						self::$instance = new GitPHP_ProjectListArray($git_projects);
 					}
-					return;
 				}
 			}
 		}
 
-		self::$instance = new GitPHP_ProjectListDirectory(GitPHP_Config::GetInstance()->GetValue('projectroot'));
+		if (!self::$instance)
+			self::$instance = new GitPHP_ProjectListDirectory(GitPHP_Config::GetInstance()->GetValue('projectroot'));
+
+		if (isset($git_projects_settings))
+			self::$instance->ApplySettings($git_projects_settings);
 	}
 
 }

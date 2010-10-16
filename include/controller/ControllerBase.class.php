@@ -130,7 +130,7 @@ abstract class GitPHP_ControllerBase
 
 		$projList = GitPHP_ProjectList::GetInstance();
 		if ($projList) {
-			$cacheKeyPrefix .= '|' . sha1(serialize($projList->GetConfig()));
+			$cacheKeyPrefix .= '|' . sha1(serialize($projList->GetConfig())) . '|' . sha1(serialize($projList->GetSettings()));
 			unset($projList);
 		}
 		if ($this->project && $projectKeys) {

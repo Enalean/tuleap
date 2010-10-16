@@ -17,56 +17,15 @@
  *
  * There are three ways to list projects:
  *
- * 1. Two dimensional array of projects with categories
- *
- * The top level is the full array of projects.
- * Each project itself is an array with the following keys:
- * 'project': the path to the project, minus the projectroot
- * 'category': the category for the project. This is optional.
- * 'owner': the owner of the project.  This is optional,
- *          and overrides the actual owner
- * 'description': the description of the project.  This is optional,
- *                and overrides the description in the project's
- *                description file
- * 'cloneurl': the full clone url of the project.  This is optional,
- *             and overrides the clone URL setting in the config for
- *             this project.  This can also be an empty string to
- *             override the config clone url to say that only this
- *             project has no clone url.
- * 'pushurl': the full push url of the project.  This is optional,
- *            and overrides the push URL setting in the config for
- *            this project.  This can also be an empty string to
- *            override the config push url to say that only this
- *            project has no push url.
+ * 1. Array of projects
  */
 //$git_projects = array(
-//	array(
-//		'project' => 'gentoo.git'
-//	),
-//	array(
-//		'project' => 'core/fbx.git',
-//		'category' => 'Core'
-//	),
-//	array(
-//		'project' => 'php/gitphp.git',
-//		'category' => 'PHP',
-//		'description' => 'GitPHP, a web-based git repository browser in PHP',
-//		'owner' => 'Christopher Han',
-//		'cloneurl' => 'http://git.xiphux.com/php/gitphp.git',
-//		'pushurl' => ''
-//	),
-//	array(
-//		'project' => 'php/mdb.git',
-//		'category' => 'PHP'
-//	),
-//	array(
-//		'project' => 'php/xxcache.git',
-//		'category' => 'PHP'
-//	),
-//	array(
-//		'project' => 'websites/bth.git',
-//		'category' => 'Websites'
-//	)
+//	'gentoo.git'
+//	'core/fbx.git',
+//	'php/gitphp.git',
+//	'php/mdb.git',
+//	'php/xxcache.git',
+//	'websites/bth.git',
 //);
 
 
@@ -81,3 +40,46 @@
  * 3. Leave commented to read all projects in the project root
  */
 
+
+/*
+ * git_projects_settings
+ *
+ * This is used to specify override settings for individual projects.
+ * This is an array, where each key is the project, and the value is an
+ * array of settings.  This can be used with any of the project list
+ * methods above.
+ *
+ * The settings array can have the following key/value settings:
+ * 'category': the category for the project.
+ * 'owner': the owner of the project.  This overrides the actual owner
+ * 'description': the description of the project.  This overrides the 
+ *		  description in the project's description file
+ * 'cloneurl': the full clone url of the project.  This overrides the
+ *	       clone URL setting in the config for this project.
+ *	       This can also be an empty string to override the global
+ *             clone url to say that only this project has no clone url.
+ * 'pushurl': the full push url of the project.  This overrides the
+ *	      push URL setting in the config for this project.
+ *	      This can also be an empty string to override the global
+ *	      push url to say that only this project has no push url.
+ */
+//$git_projects_settings['php/gitphp.git'] = array(
+//	'category' => 'PHP',
+//	'description' => 'GitPHP, a web-based git repository browser in PHP',
+//	'owner' => 'Christopher Han',
+//	'cloneurl' => 'http://git.xiphux.com/php/gitphp.git',
+//	'pushurl' => ''
+//);
+//$git_projects_settings['gentoo.git'] = array(
+//	'description' => 'Gentoo portage overlay'
+//);
+//$git_projects_settings['core/fbx.git'] = array(
+//	'description' => 'FBX music player',
+//	'category' => 'Core'
+//);
+//$git_projects_settings['php/mdb.git'] = array(
+//	'category' => 'PHP',
+//	'description' => 'MDB: Media Database',
+//	'cloneurl' => '',
+//	'pushurl' => ''
+//);
