@@ -24,6 +24,8 @@ define('GITPHP_LOCALEDIR', GITPHP_BASEDIR . 'locale/');
 
 include_once(GITPHP_INCLUDEDIR . 'version.php');
 
+require_once(GITPHP_INCLUDEDIR . 'Util.class.php');
+
 require_once(GITPHP_INCLUDEDIR . 'Config.class.php');
 
 require_once(GITPHP_INCLUDEDIR . 'Resource.class.php');

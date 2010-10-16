@@ -203,9 +203,7 @@ class GitPHP_Project
 	 */
 	private function SetProject($project)
 	{
-		$projectRoot = GitPHP_Config::GetInstance()->GetValue('projectroot');
-		if (substr($projectRoot, -1) != '/')
-			$projectRoot .= '/';
+		$projectRoot = GitPHP_Util::AddSlash(GitPHP_Config::GetInstance()->GetValue('projectroot'));
 
 		$realProjectRoot = realpath($projectRoot);
 		$path = $projectRoot . $project;
@@ -316,9 +314,7 @@ class GitPHP_Project
 	 */
 	public function GetPath()
 	{
-		$projectRoot = GitPHP_Config::GetInstance()->GetValue('projectroot');
-		if (substr($projectRoot, -1) != '/')
-			$projectRoot .= '/';
+		$projectRoot = GitPHP_Util::AddSlash(GitPHP_Config::GetInstance()->GetValue('projectroot'));
 
 		return $projectRoot . $this->project;
 	}
@@ -411,13 +407,9 @@ class GitPHP_Project
 		if ($this->cloneUrl !== null)
 			return $this->cloneUrl;
 
-		$cloneurl = GitPHP_Config::GetInstance()->GetValue('cloneurl', '');
-		if (!empty($cloneurl)) {
-			if (substr($cloneurl, -1) != '/') {
-				$cloneurl .= '/';
-			}
+		$cloneurl = GitPHP_Util::AddSlash(GitPHP_Config::GetInstance()->GetValue('cloneurl', ''), false);
+		if (!empty($cloneurl))
 			$cloneurl .= $this->project;
-		}
 
 		return $cloneurl;
 	}
@@ -448,13 +440,10 @@ class GitPHP_Project
 		if ($this->pushUrl !== null)
 			return $this->pushUrl;
 
-		$pushurl = GitPHP_Config::GetInstance()->GetValue('pushurl', '');
-		if (!empty($pushurl)) {
-			if (substr($pushurl, -1) != '/') {
-				$pushurl .= '/';
-			}
+		$pushurl = GitPHP_Util::AddSlash(GitPHP_Config::GetInstance()->GetValue('pushurl', ''), false);
+		if (!empty($pushurl))
 			$pushurl .= $this->project;
-		}
+
 		return $pushurl;
 	}
 
