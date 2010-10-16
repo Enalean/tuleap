@@ -87,11 +87,8 @@ abstract class GitPHP_ProjectListBase implements Iterator
 		if (empty($project))
 			return null;
 
-		foreach ($this->projects as $projObj) {
-			if ($projObj->GetProject() == $project) {
-				return $projObj;
-			}
-		}
+		if (isset($this->projects[$project]))
+			return $this->projects[$project];
 
 		return null;
 	}
@@ -179,17 +176,17 @@ abstract class GitPHP_ProjectListBase implements Iterator
 	{
 		switch ($sortBy) {
 			case GITPHP_SORT_DESCRIPTION:
-				usort($this->projects, array('GitPHP_Project', 'CompareDescription'));
+				uasort($this->projects, array('GitPHP_Project', 'CompareDescription'));
 				break;
 			case GITPHP_SORT_OWNER:
-				usort($this->projects, array('GitPHP_Project', 'CompareOwner'));
+				uasort($this->projects, array('GitPHP_Project', 'CompareOwner'));
 				break;
 			case GITPHP_SORT_AGE:
-				usort($this->projects, array('GitPHP_Project', 'CompareAge'));
+				uasort($this->projects, array('GitPHP_Project', 'CompareAge'));
 				break;
 			case GITPHP_SORT_PROJECT:
 			default:
-				usort($this->projects, array('GitPHP_Project', 'CompareProject'));
+				uasort($this->projects, array('GitPHP_Project', 'CompareProject'));
 				break;
 		}
 	}

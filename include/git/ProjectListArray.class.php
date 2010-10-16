@@ -72,7 +72,7 @@ class GitPHP_ProjectListArray extends GitPHP_ProjectListBase
 						if (isset($projData['pushurl']) && is_string($projData['pushurl'])) {
 							$projObj->SetPushUrl($projData['pushurl']);
 						}
-						$this->projects[] = $projObj;
+						$this->projects[$projData['project']] = $projObj;
 					} catch (Exception $e) {
 					}
 				}

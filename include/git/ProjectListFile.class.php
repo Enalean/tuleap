@@ -70,7 +70,7 @@ class GitPHP_ProjectListFile extends GitPHP_ProjectListBase
 								$projObj->SetOwner($projOwner);
 							}
 						}
-						$this->projects[] = $projObj;
+						$this->projects[$regs[1]] = $projObj;
 					} catch (Exception $e) {
 					}
 				}
