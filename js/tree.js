@@ -16,6 +16,11 @@ function initTree() {
 	}
 	url = url[1];
 
+	var collapsed = '[+]';
+	var expanded = '[–]';
+
+	$('table.treeTable td.expander').text(collapsed);
+
 	$('a.jsTree').live('click', function() {
 		var treeHash = $(this).attr('href').match(/h=([0-9a-fA-F]{40}|HEAD)/);
 		if (!treeHash) {
@@ -24,15 +29,21 @@ function initTree() {
 
 		treeHash = treeHash[1];
 
+		var cell = $(this).parent();
+		var row = cell.parent();
+
 		var treeRows = $('.' + treeHash);
 		if (treeRows && treeRows.size() > 0) {
-			if (treeRows.is(':visible'))
+			if (treeRows.is(':visible')) {
 				treeRows.hide();
-			else
+				treeRows.find('td.expander').text(collapsed);
+				row.find('td.expander').text(collapsed);
+			} else {
 				treeRows.show();
+				treeRows.find('td.expander').text(expanded);
+				row.find('td.expander').text(expanded);
+			}
 		} else {
-			var cell = $(this).parent();
-			var row = cell.parent();
 			var indent = cell.html().match(/^(—+)/);
 			if (indent)
 				indent = indent[1];
@@ -60,9 +71,11 @@ function initTree() {
 				});
 
 				subRows.find('td.fileName').prepend(indent);
+				subRows.find('td.expander').text(collapsed);
 
 				row.after(subRows);
 
+				row.find('td.expander').text(expanded);
 				cell.children('img.treeSpinner').remove();
 			});
 		}

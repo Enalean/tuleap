@@ -14,6 +14,7 @@
     <td class="monospace perms">{$treeitem->GetModeString()}</td>
     {if $treeitem instanceof GitPHP_Blob}
       <td class="filesize">{$treeitem->GetSize()}</td>
+      <td></td>
       <td class="list fileName">
         <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=blob&amp;h={$treeitem->GetHash()}&amp;hb={$commit->GetHash()}&amp;f={$treeitem->GetPath()}" class="list">{$treeitem->GetName()}</a>
       </td>
@@ -26,6 +27,7 @@
       </td>
     {elseif $treeitem instanceof GitPHP_Tree}
       <td class="filesize"></td>
+      <td class="expander"></td>
       <td class="list fileName">
         <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=tree&amp;h={$treeitem->GetHash()}&amp;hb={$commit->GetHash()}&amp;f={$treeitem->GetPath()}" class="jsTree">{$treeitem->GetName()}</a>
       </td>
