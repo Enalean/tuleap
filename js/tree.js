@@ -88,19 +88,24 @@ function initTree() {
 					}
 				});
 
-				var fileCell = subRows.find('td.fileName');
-				for (var i = 0; i < depth; i++) {
-					fileCell.prepend('—');
-				}
 				subRows.each(function() {
-					var treeLink = $(this).find('a.jsTree');
-					if (treeLink && (treeLink.size() > 0)) {
-						var a1 = jQuery(document.createElement('a'));
-						a1.attr('href', treeLink.attr('href'));
-						a1.text(collapsed);
-						a1.addClass('jsTree');
-						a1.addClass('expander');
-						$(this).find('td.expander').append(a1);
+					var fileCell = $(this).find('td.fileName');
+					for (var i = 0; i < depth; i++) {
+						if (i == 0) {
+							var treeLink = $(this).find('a.jsTree');
+							if (treeLink && (treeLink.size() > 0)) {
+								var a1 = jQuery(document.createElement('a'));
+								a1.attr('href', treeLink.attr('href'));
+								a1.text(collapsed);
+								a1.addClass('jsTree');
+								a1.addClass('expander');
+								fileCell.prepend(a1);
+							} else {
+								fileCell.prepend('—');
+							}
+						} else {
+							fileCell.prepend('—');
+						}
 					}
 				});
 
