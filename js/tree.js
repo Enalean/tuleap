@@ -19,7 +19,14 @@ function initTree() {
 	var collapsed = '[+]';
 	var expanded = '[–]';
 
-	$('table.treeTable td.expander').text(collapsed);
+	$('a.jsTree').each(function() {
+		var a = jQuery(document.createElement('a'));
+		a.attr('href', $(this).attr('href'));
+		a.text(collapsed);
+		a.addClass('jsTree');
+		a.addClass('expander');
+		$(this).parent().parent().find('td.expander').append(a);
+	});
 
 	$('a.jsTree').live('click', function() {
 		var treeHash = $(this).attr('href').match(/h=([0-9a-fA-F]{40}|HEAD)/);
@@ -40,7 +47,7 @@ function initTree() {
 					if ($(this).data('parent') == treeHash)
 						$(this).data('expanded', false);
 				});
-				row.find('td.expander').text(collapsed);
+				row.find('a.expander').text(collapsed);
 			} else {
 				treeRows.each(function() {
 					if (($(this).data('parent') == treeHash) || ($(this).data('expanded') == true)) {
@@ -48,7 +55,7 @@ function initTree() {
 						$(this).data('expanded', true);
 					}
 				});
-				row.find('td.expander').text(expanded);
+				row.find('a.expander').text(expanded);
 			}
 		} else {
 			var indent = cell.html().match(/^(—+)/);
@@ -83,11 +90,21 @@ function initTree() {
 				});
 
 				subRows.find('td.fileName').prepend(indent);
-				subRows.find('td.expander').text(collapsed);
+				subRows.each(function() {
+					var treeLink = $(this).find('a.jsTree');
+					if (treeLink && (treeLink.size() > 0)) {
+						var a1 = jQuery(document.createElement('a'));
+						a1.attr('href', treeLink.attr('href'));
+						a1.text(collapsed);
+						a1.addClass('jsTree');
+						a1.addClass('expander');
+						$(this).find('td.expander').append(a1);
+					}
+				});
 
 				row.after(subRows);
 
-				row.find('td.expander').text(expanded);
+				row.find('a.expander').text(expanded);
 				cell.children('img.treeSpinner').remove();
 			});
 		}
