@@ -19,9 +19,7 @@
  
  <div class="page_body">
    {* List files *}
-   <table cellspacing="0">
      {include file='treelist.tpl'}
-   </table>
  </div>
 
  {include file='footer.tpl'}

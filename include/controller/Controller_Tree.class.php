@@ -45,6 +45,9 @@ class GitPHP_Controller_Tree extends GitPHP_ControllerBase
 	 */
 	protected function GetTemplate()
 	{
+		if (isset($this->params['js']) && $this->params['js']) {
+			return 'treelist.tpl';
+		}
 		return 'tree.tpl';
 	}
 
@@ -97,6 +100,11 @@ class GitPHP_Controller_Tree extends GitPHP_ControllerBase
 		if (!(isset($this->params['hashbase']) || isset($this->params['hash']))) {
 			$this->params['hashbase'] = 'HEAD';
 		}
+
+		if (isset($_GET['o']) && ($_GET['o'] == 'js')) {
+			$this->params['js'] = true;
+			GitPHP_Log::GetInstance()->SetEnabled(false);
+		}
 	}
 
 	/**
@@ -133,6 +141,8 @@ class GitPHP_Controller_Tree extends GitPHP_ControllerBase
 			$tree->SetPath($this->params['file']);
 		}
 		$this->tpl->assign('tree', $tree);
+
+		$this->tpl->assign('extrascripts', array('js/tree.js'));
 	}
 
 }

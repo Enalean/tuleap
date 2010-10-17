@@ -46,7 +46,6 @@ tr.dark { background-color:#f6f6f0; }
 tr.dark:hover { background-color:#edece6; }
 td { padding:2px 5px; font-size:12px; vertical-align:top; }
 td.link { padding:2px 5px; font-family:sans-serif; font-size:10px; }
-td.filesize { text-align: right; }
 div.pre { font-family:monospace; font-size:12px; white-space:pre; }
 div.diff_info { font-family:monospace; color:#000099; background-color:#edece6; font-style:italic; }
 div.index_header { border:solid #d9d8d1; border-width:0px 0px 1px; padding:12px 8px; }
@@ -158,3 +157,8 @@ td#blameData div.dark:hover { background-color:#edece6; }
 #blobData .de1, #blobData .de2 {font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;}
 #blobData  {font-family:monospace;}
 #blobData li, #blobData .li1 {font-weight: normal; vertical-align:top;}
+table.treeTable { padding: 0px 0px; width: 600px; }
+table.treeTable td.subTree { padding:0px 0px; }
+table.treeTable td.perms { width: 75px; }
+table.treeTable td.filesize { text-align: right; width: 40px; }
+table.treeTable td.link { width: 125px; text-align: right; }
