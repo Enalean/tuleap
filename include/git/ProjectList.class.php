@@ -82,7 +82,7 @@ class GitPHP_ProjectList
 		if (!self::$instance)
 			self::$instance = new GitPHP_ProjectListDirectory(GitPHP_Config::GetInstance()->GetValue('projectroot'));
 
-		if (isset($git_projects_settings))
+		if (isset($git_projects_settings) && !$legacy)
 			self::$instance->ApplySettings($git_projects_settings);
 	}
 
