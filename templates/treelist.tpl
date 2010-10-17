@@ -9,7 +9,6 @@
  * @subpackage Template
  *}
 
-<table cellspacing="0" id="{$tree->GetHash()}" class="treeTable">
 {foreach from=$tree->GetContents() item=treeitem}
   <tr class="{cycle values="light,dark"}">
     <td class="monospace perms">{$treeitem->GetModeString()}</td>
@@ -38,4 +37,3 @@
     {/if}
   </tr>
 {/foreach}
-</table>

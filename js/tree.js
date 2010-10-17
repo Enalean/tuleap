@@ -24,26 +24,16 @@ function initTree() {
 
 		treeHash = treeHash[1];
 
-		var treeTable = $('table#' + treeHash);
-		if (treeTable && treeTable.size() > 0) {
-			if (treeTable.is(':visible'))
-				treeTable.slideUp('fast');
+		var treeRows = $('.' + treeHash);
+		if (treeRows && treeRows.size() > 0) {
+			if (treeRows.is(':visible'))
+				treeRows.hide();
 			else
-				treeTable.slideDown('fast');
+				treeRows.show();
 		} else {
-			var row = jQuery(document.createElement('tr'));
-
-			var cell = jQuery(document.createElement('td'));
-			cell.attr('colspan', '4');
-			cell.attr('id', 'td' + treeHash);
-			cell.addClass('subTree');
-			cell.appendTo(row);
-
-			$(this).parent().parent().after(row);
-
-			var par = $(this).parent();
-			var htm = par.html();
-			var indent = par.html().match(/^(—+)/);
+			var cell = $(this).parent();
+			var row = cell.parent();
+			var indent = cell.html().match(/^(—+)/);
 			if (indent)
 				indent = indent[1];
 			else
@@ -52,9 +42,20 @@ function initTree() {
 
 			$.get($(this).attr('href'), { o: 'js' },
 			function(data) {
-				var subTable = jQuery(data);
-				subTable.find('td.fileName').prepend(indent);
-				$('#td' + treeHash).html(subTable);
+				var subRows = jQuery(data);
+
+				subRows.addClass(treeHash);
+
+				var classList = row.attr('class').split(/\s+/);
+				$.each(classList, function(index, item) {
+					if (item.match(/[0-9a-fA-F]{40}/)) {
+						subRows.addClass(item);
+					}
+				});
+
+				subRows.find('td.fileName').prepend(indent);
+
+				row.after(subRows);
 			});
 		}
 

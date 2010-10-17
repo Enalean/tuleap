@@ -157,8 +157,4 @@ td#blameData div.dark:hover { background-color:#edece6; }
 #blobData .de1, #blobData .de2 {font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;}
 #blobData  {font-family:monospace;}
 #blobData li, #blobData .li1 {font-weight: normal; vertical-align:top;}
-table.treeTable { padding: 0px 0px; width: 600px; }
-table.treeTable td.subTree { padding:0px 0px; }
-table.treeTable td.perms { width: 75px; }
-table.treeTable td.filesize { text-align: right; width: 40px; }
-table.treeTable td.link { width: 125px; text-align: right; }
+table.treeTable td.filesize { text-align: right; }
