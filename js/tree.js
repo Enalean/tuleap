@@ -9,6 +9,15 @@
  * @subpackage Javascript
  */
 
+function expanderLink(href, text) {
+	var a = jQuery(document.createElement('a'));
+	a.attr('href', href);
+	a.text(text);
+	a.addClass('jsTree');
+	a.addClass('expander');
+	return a;
+}
+
 function initTree() {
 	var url = window.location.href.match(/^([^\?]+\/)/);
 	if (!url) {
@@ -18,14 +27,10 @@ function initTree() {
 
 	var collapsed = '[+]';
 	var expanded = '[–]';
+	var indent = '—';
 
 	$('a.jsTree').each(function() {
-		var a = jQuery(document.createElement('a'));
-		a.attr('href', $(this).attr('href'));
-		a.text(collapsed);
-		a.addClass('jsTree');
-		a.addClass('expander');
-		$(this).parent().parent().find('td.expander').append(a);
+		$(this).parent().parent().find('td.expander').append(expanderLink($(this).attr('href'), collapsed));
 	});
 
 	$('a.jsTree').live('click', function() {
@@ -44,8 +49,9 @@ function initTree() {
 			if (treeRows.is(':visible')) {
 				treeRows.hide();
 				treeRows.each(function() {
-					if ($(this).data('parent') == treeHash)
+					if ($(this).data('parent') == treeHash) {
 						$(this).data('expanded', false);
+					}
 				});
 				row.find('a.expander').text(collapsed);
 			} else {
@@ -75,12 +81,6 @@ function initTree() {
 
 				subRows.addClass(treeHash);
 
-				subRows.each(function() {
-					$(this).data('parent', treeHash);
-					$(this).data('expanded', true);
-					$(this).data('depth', depth);
-				});
-
 				var classList = row.attr('class').split(/\s+/);
 				$.each(classList, function(index, item) {
 					if (item.match(/[0-9a-fA-F]{40}/)) {
@@ -89,23 +89,21 @@ function initTree() {
 				});
 
 				subRows.each(function() {
+
+					$(this).data('parent', treeHash);
+					$(this).data('expanded', true);
+					$(this).data('depth', depth);
+
 					var fileCell = $(this).find('td.fileName');
-					for (var i = 0; i < depth; i++) {
-						if (i == 0) {
-							var treeLink = $(this).find('a.jsTree');
-							if (treeLink && (treeLink.size() > 0)) {
-								var a1 = jQuery(document.createElement('a'));
-								a1.attr('href', treeLink.attr('href'));
-								a1.text(collapsed);
-								a1.addClass('jsTree');
-								a1.addClass('expander');
-								fileCell.prepend(a1);
-							} else {
-								fileCell.prepend('—');
-							}
-						} else {
-							fileCell.prepend('—');
-						}
+					var treeLink = $(this).find('a.jsTree');
+					if (treeLink && (treeLink.size() > 0)) {
+						fileCell.prepend(expanderLink(treeLink.attr('href'), collapsed));
+					} else {
+						fileCell.prepend(indent);
+					}
+
+					for (var i = 1; i < depth; i++) {
+						fileCell.prepend(indent);
 					}
 				});
 
