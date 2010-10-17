@@ -58,12 +58,10 @@ function initTree() {
 				row.find('a.expander').text(expanded);
 			}
 		} else {
-			var indent = cell.html().match(/^(—+)/);
-			if (indent)
-				indent = indent[1];
-			else
-				indent = '';
-			indent += '—';
+			var depth = row.data('depth');
+			if (depth == null)
+				depth = 0;
+			depth++;
 
 			var img = jQuery(document.createElement('img'));
 			img.attr('src', url + "images/tree-loader.gif");
@@ -80,6 +78,7 @@ function initTree() {
 				subRows.each(function() {
 					$(this).data('parent', treeHash);
 					$(this).data('expanded', true);
+					$(this).data('depth', depth);
 				});
 
 				var classList = row.attr('class').split(/\s+/);
@@ -89,7 +88,10 @@ function initTree() {
 					}
 				});
 
-				subRows.find('td.fileName').prepend(indent);
+				var fileCell = subRows.find('td.fileName');
+				for (var i = 0; i < depth; i++) {
+					fileCell.prepend('—');
+				}
 				subRows.each(function() {
 					var treeLink = $(this).find('a.jsTree');
 					if (treeLink && (treeLink.size() > 0)) {
