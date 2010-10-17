@@ -40,7 +40,10 @@ function initTree() {
 				row.find('td.expander').text(collapsed);
 			} else {
 				treeRows.show();
-				treeRows.find('td.expander').text(expanded);
+				treeRows.find('td.expander').each(function() {
+					if ($(this).data('loaded'))
+						$(this).text(expanded);
+				});
 				row.find('td.expander').text(expanded);
 			}
 		} else {
@@ -76,6 +79,7 @@ function initTree() {
 				row.after(subRows);
 
 				row.find('td.expander').text(expanded);
+				row.find('td.expander').data('loaded', true);
 				cell.children('img.treeSpinner').remove();
 			});
 		}
