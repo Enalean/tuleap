@@ -36,13 +36,17 @@ function initTree() {
 		if (treeRows && treeRows.size() > 0) {
 			if (treeRows.is(':visible')) {
 				treeRows.hide();
-				treeRows.find('td.expander').text(collapsed);
+				treeRows.each(function() {
+					if ($(this).data('parent') == treeHash)
+						$(this).data('expanded', false);
+				});
 				row.find('td.expander').text(collapsed);
 			} else {
-				treeRows.show();
-				treeRows.find('td.expander').each(function() {
-					if ($(this).data('loaded'))
-						$(this).text(expanded);
+				treeRows.each(function() {
+					if (($(this).data('parent') == treeHash) || ($(this).data('expanded') == true)) {
+						$(this).show();
+						$(this).data('expanded', true);
+					}
 				});
 				row.find('td.expander').text(expanded);
 			}
@@ -66,6 +70,11 @@ function initTree() {
 
 				subRows.addClass(treeHash);
 
+				subRows.each(function() {
+					$(this).data('parent', treeHash);
+					$(this).data('expanded', true);
+				});
+
 				var classList = row.attr('class').split(/\s+/);
 				$.each(classList, function(index, item) {
 					if (item.match(/[0-9a-fA-F]{40}/)) {
@@ -79,7 +88,6 @@ function initTree() {
 				row.after(subRows);
 
 				row.find('td.expander').text(expanded);
-				row.find('td.expander').data('loaded', true);
 				cell.children('img.treeSpinner').remove();
 			});
 		}
