@@ -10,11 +10,11 @@
  */
 
 function initTree() {
-	var project = window.location.href.match(/p=([^&]+)/);
-	if (!project) {
+	var url = window.location.href.match(/^([^\?]+\/)/);
+	if (!url) {
 		return;
 	}
-	project = unescape(project[1]);
+	url = url[1];
 
 	$('a.jsTree').live('click', function() {
 		var treeHash = $(this).attr('href').match(/h=([0-9a-fA-F]{40}|HEAD)/);
@@ -40,6 +40,12 @@ function initTree() {
 				indent = '';
 			indent += '—';
 
+			var img = jQuery(document.createElement('img'));
+			img.attr('src', url + "images/tree-loader.gif");
+			img.attr('alt', GITPHP_RES_LOADING);
+			img.addClass('treeSpinner');
+			img.appendTo(cell);
+
 			$.get($(this).attr('href'), { o: 'js' },
 			function(data) {
 				var subRows = jQuery(data);
@@ -56,6 +62,8 @@ function initTree() {
 				subRows.find('td.fileName').prepend(indent);
 
 				row.after(subRows);
+
+				cell.children('img.treeSpinner').remove();
 			});
 		}
 
