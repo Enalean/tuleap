@@ -1236,7 +1236,6 @@ class Docman_Actions extends Actions {
     }
 
     function deleteVersion() {
-        $user =& $this->_controler->getUser();
         $request =& $this->_controler->request;
 
         $_sGroupId = (int) $request->get('group_id');
@@ -1245,33 +1244,38 @@ class Docman_Actions extends Actions {
         $vVersion->required();
         if ($request->valid($vVersion)) {
             $_sVersion = $request->get('version');
-        }
-        $vLabel = new Valid_String('label');
-        $vLabel->required();
-        if ($request->valid($vLabel)) {
-            $_sLabel = $request->get('label');
+        } else {
+            $_sVersion = false;
         }
 
-        $itemFactory = new Docman_ItemFactory($_sGroupId);
-        $parentItem = $itemFactory->getItemFromDb($_sId);
-
-        $dPm =& Docman_PermissionsManager::instance($_sGroupId);
-        $subItemsWritable = $dPm->currentUserCanWriteSubItems($parentItem->getId());
-        if($subItemsWritable) {
-            $item =& $itemFactory->getItemSubTree($parentItem, $user, false, true);
-            if ($item) {
-                $deletor =& new Docman_ActionsDeleteVisitor($this->_getFileStorage(), $this->_controler);
-                if ($item->accept($deletor, array('user'  => &$user,
-                                                  'label' => $_sLabel,
-                                                  'version' => $_sVersion )
-                )) {
+        $itemFactory = $this->_getItemFactory($_sGroupId);
+        $item        = $itemFactory->getItemFromDb($_sId);
+        if ($item) {
+            $type = $itemFactory->getItemTypeForItem($item);
+            if ($type == PLUGIN_DOCMAN_ITEM_TYPE_FILE || $type == PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE) {
+                $user    = $this->_controler->getUser();
+                $deletor = $this->_getActionsDeleteVisitor($this->_getFileStorage(), $this->_controler);
+                if ($item->accept($deletor, array('user'    => &$user,
+                                                  'parent'  => $itemFactory->getItemFromDb($item->getParentId()),
+                                                  'version' => $_sVersion
+                ))) {
                     $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'info_item_deleted'));
                 }
+            } else {
+                $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_item_not_deleted_nonfile_version'));
             }
-        } else {
-            $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_item_not_deleted_no_w'));
         }
-        $this->event_manager->processEvent('send_notifications', array());
+        $this->_getEventManager()->processEvent('send_notifications', array());
+    }
+
+    /**
+     * Wrapper for Docman_ActionsDeleteVisitor
+     * @param Docman_FileStorage $fs
+     * @param Docman_Controller  $ctrl
+     * @return Docman_ActionsDeleteVisitor
+     */
+    function _getActionsDeleteVisitor($fs, $ctrl) {
+        return new Docman_ActionsDeleteVisitor($fs, $ctrl);
     }
 
     function admin_change_view() {

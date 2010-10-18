@@ -458,6 +458,7 @@ plugin_docman	mail_subject_docman_permission_denied	$2 demande l'accès à un do
 plugin_docman	mail_content_docman_permission_denied	Cher gestionnaire de document,\n\n$1 (login: $2) demande l'accès au document suivant du projet "$4":\n<$3>\n\n$1 a écrit un message pour vous :\n$6\n\nQuelqu'un a restreint les permissions sur cet élément, empêchant ainsi les utilisateurs d'y avoir accès.\nSi vous acceptez sa demande, veuillez prendre les mesures nécessaires pour lui permettre l'accès et lui communiquer cette information.\nAutrement, veuiller informer ($7) qu'il n'aura pas accès aux pages demandées.\n\n--\n$1.
 plugin_docman	invalid_msg	Votre message est invalide, vous ne pouvez pas soumettre le texte par défaut ou un texte vide.
 plugin_docman	error	Erreur
+plugin_docman	error_item_not_deleted_nonfile_version	Impossible de supprimer une version d'un element qui n'est pas un fichier.
 
 plugin_docman	event_add	Création
 plugin_docman	event_edit	Edition
