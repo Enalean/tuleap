@@ -98,7 +98,7 @@ class Docman_ActionsDeleteVisitor /* implements Visitor */ {
     }
     function visitFile($item, $params = array()) {
         //delete a given version
-        if ($params['version']) {
+        if ($params['version'] !== false) {
             if ($this->docman->userCanWrite($item->getId())) {
                 $version_factory = $this->_getVersionFactory();
                 if ($version = $version_factory->getSpecificVersion($item, $params['version'])) {

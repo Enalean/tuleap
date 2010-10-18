@@ -1241,27 +1241,33 @@ class Docman_Actions extends Actions {
 
         $_sGroupId = (int) $request->get('group_id');
         $_sId      = (int) $request->get('id');
-        $_sVersion = (int) $request->get('version');
-
+        $vVersion = new Valid_UInt('version');
+        $vVersion->required();
+        if ($request->valid($vVersion)) {
+            $_sVersion = $request->get('version');
+        } else {
+            $_sVersion = false;
+        }
+        
         $itemFactory = new Docman_ItemFactory($_sGroupId);
         $parentItem = $itemFactory->getItemFromDb($_sId);
 
-       $dPm =& Docman_PermissionsManager::instance($_sGroupId);
-            $subItemsWritable = $dPm->currentUserCanWriteSubItems($parentItem->getId());
-            if($subItemsWritable) {
-                $item =& $itemFactory->getItemSubTree($parentItem, $user, false, true);
-                if ($item) {
-                    $deletor =& new Docman_ActionsDeleteVisitor($this->_getFileStorage(), $this->_controler);
-                    if ($item->accept($deletor, array('user'  => &$user, 
-                                                    'parent'  => $itemFactory->getItemFromDb($item->getParentId()),
-                                                     'version' => $_sVersion
-                                                    ))) {
-                        $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'info_item_deleted'));
-                    }
+        $dPm =& Docman_PermissionsManager::instance($_sGroupId);
+        $subItemsWritable = $dPm->currentUserCanWriteSubItems($parentItem->getId());
+        if($subItemsWritable) {
+            $item =& $itemFactory->getItemSubTree($parentItem, $user, false, true);
+            if ($item) {
+                $deletor =& new Docman_ActionsDeleteVisitor($this->_getFileStorage(), $this->_controler);
+                if ($item->accept($deletor, array('user'  => &$user,
+                                                  'parent'  => $itemFactory->getItemFromDb($item->getParentId()),
+                                                  'version' => $_sVersion
+                ))) {
+                    $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'info_item_deleted'));
                 }
-            } else {
-                $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_item_not_deleted_no_w'));
             }
+        } else {
+            $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_item_not_deleted_no_w'));
+        }
         $this->event_manager->processEvent('send_notifications', array());
     }
 
