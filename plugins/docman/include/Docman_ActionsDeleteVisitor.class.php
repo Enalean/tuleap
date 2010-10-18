@@ -56,8 +56,8 @@ class Docman_ActionsDeleteVisitor /* implements Visitor */ {
             return $this->_deleteItem($item, $params);
         }
     }
-    function visitDocument($item, $params = array(), $version = false) {
-        if ($version) {
+    function visitDocument($item, $params = array()) {
+        if (isset($params['version']) && $params['version'] !== false) {
             return $this->_deleteVersion($item, $params);
         }
         //Mark the document as deleted
@@ -104,7 +104,7 @@ class Docman_ActionsDeleteVisitor /* implements Visitor */ {
                 if ($version = $version_factory->getSpecificVersion($item, $params['version'])) {
                     $this->file_storage->delete($version->getPath());
                 }
-               return $this->visitDocument($item, $params, true);
+               return $this->visitDocument($item, $params);
             } else {
                 $this->docman->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_perms_delete_item', $item->getTitle()));
                 return false;
