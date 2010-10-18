@@ -186,11 +186,10 @@ class Docman_ActionsDeleteVisitor /* implements Visitor */ {
 
             // The event must be processed before the item is deleted
             $em =& $this->_getEventManager();
-            $em->processEvent('plugin_docman_event_del', array(
+            $em->processEvent('plugin_docman_event_del_version', array(
                 'group_id' => $item->getGroupId(),
                 'item'     => &$item,
-                'version'  => &$params['version'],
-                'parent'   => &$params['parent'],
+                'old_value'  => $params['label'].' (Version: '.$params['version'].')',
                 'user'     => &$params['user'])
             );
           $version_factory = $this->_getVersionFactory();

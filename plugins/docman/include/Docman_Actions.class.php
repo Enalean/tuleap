@@ -1245,10 +1245,13 @@ class Docman_Actions extends Actions {
         $vVersion->required();
         if ($request->valid($vVersion)) {
             $_sVersion = $request->get('version');
-        } else {
-            $_sVersion = false;
         }
-        
+        $vLabel = new Valid_String('label');
+        $vLabel->required();
+        if ($request->valid($vLabel)) {
+            $_sLabel = $request->get('label');
+        }
+
         $itemFactory = new Docman_ItemFactory($_sGroupId);
         $parentItem = $itemFactory->getItemFromDb($_sId);
 
@@ -1259,9 +1262,9 @@ class Docman_Actions extends Actions {
             if ($item) {
                 $deletor =& new Docman_ActionsDeleteVisitor($this->_getFileStorage(), $this->_controler);
                 if ($item->accept($deletor, array('user'  => &$user,
-                                                  'parent'  => $itemFactory->getItemFromDb($item->getParentId()),
-                                                  'version' => $_sVersion
-                ))) {
+                                                  'label' => $_sLabel,
+                                                  'version' => $_sVersion )
+                )) {
                     $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'info_item_deleted'));
                 }
             }

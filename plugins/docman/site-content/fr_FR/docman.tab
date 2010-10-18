@@ -5,6 +5,7 @@ plugin_docman	action_approval	Table d'approbation
 plugin_docman	action_cut	Couper
 plugin_docman	action_copy	Copier
 plugin_docman	action_delete	Supprimer
+plugin_docman	action_delete_version	Supprimer version
 plugin_docman	action_details	Propriétés
 plugin_docman	action_edit	Modification
 plugin_docman	action_history	Historique
@@ -347,6 +348,7 @@ plugin_docman	details_history_versions_label	Nom
 plugin_docman	details_history_versions_no	Il n'y a pas encore de versions
 plugin_docman	details_history_versions_version	Version
 plugin_docman	details_history_versions_approval_show	Afficher
+plugin_docman	details_history_versions_delete_version	Supprimer version
 plugin_docman	details_references	Références
 plugin_docman	details_newversion_title	Nouvelle version pour $1
 plugin_docman	details_notifications	Notifications
@@ -461,6 +463,7 @@ plugin_docman	event_add	Création
 plugin_docman	event_edit	Edition
 plugin_docman	event_move	Déplacement
 plugin_docman	event_del	Suppression
+plugin_docman	event_del_version	Suppression de version
 plugin_docman	event_access	Accès
 plugin_docman	event_newversion	Nouvelle version
 plugin_docman	event_metadataupdate	Mise à jour de propriété

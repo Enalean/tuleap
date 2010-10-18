@@ -39,6 +39,7 @@ class Docman_View_ItemDetailsSectionDelete extends Docman_View_ItemDetailsSectio
         $vVersion->required();
         if ($this->_controller->request->valid($vVersion)) {
             $version = $this->_controller->request->get('version');
+            $label = $this->_controller->request->get('label');
         } else {
             $version = false;
         }
@@ -63,6 +64,7 @@ class Docman_View_ItemDetailsSectionDelete extends Docman_View_ItemDetailsSectio
         if ($version !== false) {
             $content .= '     <input type="hidden" name="action" value="deleteVersion" />';
             $content .= '     <input type="hidden" name="version" value="'.$version.'" />';
+            $content .= '     <input type="hidden" name="label" value="'.$label.'" />';
         } else {
             $content .= '     <input type="hidden" name="action" value="delete" />';
         }

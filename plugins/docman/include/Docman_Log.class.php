@@ -42,6 +42,9 @@ class Docman_Log { /* implements EventListener */
             case PLUGIN_DOCMAN_EVENT_NEW_VERSION:
                 $this->dao->create($params['group_id'], $params['item']->getId(), $params['user']->getId(), $event, null, $params['version']);
                 break;
+           case PLUGIN_DOCMAN_EVENT_DEL_VERSION:
+                $this->dao->create($params['group_id'], $params['item']->getId(), $params['user']->getId(), $event, $params['old_value'], null);
+                break;
             case PLUGIN_DOCMAN_EVENT_METADATA_UPDATE:
                 $this->dao->create($params['group_id'], $params['item']->getId(), $params['user']->getId(), $event, $params['old_value'], $params['new_value'], $params['field']);
                 break;
@@ -154,6 +157,12 @@ class Docman_Log { /* implements EventListener */
                             $html .= "<td>&nbsp;</td>";
                             $html .= "<td>$newDate</td>";
                         }
+                        elseif ($row['type'] == PLUGIN_DOCMAN_EVENT_DEL_VERSION) {
+                            $old_version = $row['old_value'];
+                            $html .= '<td>'. $this->getText($row['type']) .'</td>';
+                            $html .= '<td align="center">'.$old_version.'</td>';
+                            $html .= '<td>&nbsp;</td>';
+                        }
                         else {
                             $html .= '<td colspan>'. $this->getText($row['type']) .'</td><td colspan="2">&nbsp;</td>';
                         }
@@ -189,6 +198,9 @@ class Docman_Log { /* implements EventListener */
                 break;
             case PLUGIN_DOCMAN_EVENT_DEL:
                 $txt = $GLOBALS['Language']->getText('plugin_docman','event_del');
+                break;
+            case PLUGIN_DOCMAN_EVENT_DEL_VERSION:
+                $txt = $GLOBALS['Language']->getText('plugin_docman','event_del_version');
                 break;
             case PLUGIN_DOCMAN_EVENT_ACCESS:
                 $txt = $GLOBALS['Language']->getText('plugin_docman','event_access');
