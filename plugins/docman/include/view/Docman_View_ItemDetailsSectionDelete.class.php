@@ -64,7 +64,6 @@ class Docman_View_ItemDetailsSectionDelete extends Docman_View_ItemDetailsSectio
         if ($version !== false) {
             $content .= '     <input type="hidden" name="action" value="deleteVersion" />';
             $content .= '     <input type="hidden" name="version" value="'.$version.'" />';
-            $content .= '     <input type="hidden" name="label" value="'.$label.'" />';
         } else {
             $content .= '     <input type="hidden" name="action" value="delete" />';
         }

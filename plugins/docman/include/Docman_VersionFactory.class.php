@@ -70,8 +70,8 @@ class Docman_VersionFactory {
     /**
      * Delete given version of document
      * 
-     * @param Integer $item
-     * @param Integer $number
+     * @param Docman_Version $item
+     * @param Integer        $number
      * 
      * @return Boolean
      */

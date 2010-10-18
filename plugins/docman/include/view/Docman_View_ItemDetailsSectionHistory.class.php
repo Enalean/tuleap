@@ -62,8 +62,7 @@ class Docman_View_ItemDetailsSectionHistory extends Docman_View_ItemDetailsSecti
                         $delete = Docman_View_View::buildUrl($this->url, array (
                             'action' =>'confirmDelete',
                             'id'     => $this->item->getId(),
-                            'version' => $versions[$key]->getNumber(),
-                            'label' => $versions[$key]->getLabel()
+                            'version' => $versions[$key]->getNumber()
                         ));
                         $user = $versions[$key]->getAuthorId() ? user_get_name_display_from_id($versions[$key]->getAuthorId()) : $GLOBALS['Language']->getText('plugin_docman','details_history_anonymous');
                         $content .= '<tr class="'. $odd_even[$i++ % count($odd_even)] .'">';

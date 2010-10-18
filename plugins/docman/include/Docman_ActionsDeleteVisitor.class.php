@@ -103,8 +103,9 @@ class Docman_ActionsDeleteVisitor /* implements Visitor */ {
                 $version_factory = $this->_getVersionFactory();
                 if ($version = $version_factory->getSpecificVersion($item, $params['version'])) {
                     $this->file_storage->delete($version->getPath());
+                    $params['label'] = $version->getLabel();
                 }
-               return $this->visitDocument($item, $params);
+                return $this->visitDocument($item, $params);
             } else {
                 $this->docman->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_perms_delete_item', $item->getTitle()));
                 return false;
