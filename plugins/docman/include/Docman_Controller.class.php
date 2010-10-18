@@ -1208,7 +1208,8 @@ class Docman_Controller extends Controler {
                 $this->view = 'Details';
             }
             break;
-                case 'deleteVersion':
+
+        case 'deleteVersion':
             if (!($this->userCanWrite($item->getId()) && $this->userCanWrite($item->getParentId()))) {
                 $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_perms_delete'));
                 $this->_set_deleteView_errorPerms();
@@ -1219,6 +1220,7 @@ class Docman_Controller extends Controler {
                 $this->view = 'Details';
             }
             break;
+
         case 'createFolder':
         case 'createDocument':
         case 'createItem':
