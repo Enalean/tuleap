@@ -108,7 +108,7 @@ class Docman_Log { /* implements EventListener */
                     if ($row['type'] != PLUGIN_DOCMAN_EVENT_ACCESS || $display_access_logs) {
                         $user = $row['user_id'] ? user_get_name_display_from_id($row['user_id']) : $GLOBALS['Language']->getText('plugin_docman','details_history_anonymous');
                         $html .= '<tr class="'. $odd_even[$i++ % count($odd_even)] .'">';
-                        $html .= '<td>'. format_date($GLOBALS['Language']->getText('system', 'datefmt'), $row['time']) .'</td>';
+                        $html .= '<td>'. html_time_ago($row['time']) .'</td>';
                         $html .= '<td>'. $user                             .'</td>';
                         if($row['type'] == PLUGIN_DOCMAN_EVENT_METADATA_UPDATE) {
                             $_old_v = $row['old_value'];
@@ -160,8 +160,7 @@ class Docman_Log { /* implements EventListener */
                         elseif ($row['type'] == PLUGIN_DOCMAN_EVENT_DEL_VERSION) {
                             $old_version = $row['old_value'];
                             $html .= '<td>'. $this->getText($row['type']) .'</td>';
-                            $html .= '<td align="center">'.$old_version.'</td>';
-                            $html .= '<td>&nbsp;</td>';
+                            $html .= '<td colspan="2" align="center">'.$old_version.'</td>';
                         }
                         else {
                             $html .= '<td colspan>'. $this->getText($row['type']) .'</td><td colspan="2">&nbsp;</td>';
