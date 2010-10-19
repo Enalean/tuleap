@@ -109,7 +109,7 @@ class DocmanActionsTest extends UnitTestCase {
         // Test log message
         $ctrl->feedback->expectOnce('log', array('info', '*'));
         $GLOBALS['Language']->setReturnValue('getText', 'bla');
-        $GLOBALS['Language']->expectOnce('getText', array('plugin_docman', 'info_item_deleted'));
+        $GLOBALS['Language']->expectOnce('getText', array('plugin_docman', 'info_item_version_deleted', array(1, 'label 5')));
 
         // Setup of the test
         $actions = new Docman_ActionsTest($this);
@@ -135,7 +135,13 @@ class DocmanActionsTest extends UnitTestCase {
         $actions->expectOnce('_getItemFactory', array(102));
 
         $vf = new MockDocman_VersionFactory($this);
-        $vf->setReturnValue('getAllVersionForItem', array(new MockDocman_Version($this), new MockDocman_Version($this)));
+        $v1 = new MockDocman_Version($this);
+        $v1->setReturnValue('getNumber', 0);
+        $v1->setReturnValue('getLabel', 'label 4');
+        $v2 = new MockDocman_Version($this);
+        $v2->setReturnValue('getNumber', 1);
+        $v2->setReturnValue('getLabel', 'label 5');
+        $vf->setReturnValue('getAllVersionForItem', array($v1, $v2));
         $actions->setReturnValue('_getVersionFactory', $vf);
 
         $actions->setReturnValue('_getEventManager', new MockEventManager($this));
