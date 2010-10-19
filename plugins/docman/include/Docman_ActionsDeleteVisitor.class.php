@@ -93,38 +93,20 @@ class Docman_ActionsDeleteVisitor /* implements Visitor */ {
     function visitLink(&$item, $params = array()) {
         return $this->visitDocument($item, $params);
     }
+
     function visitFile($item, $params = array()) {
-        //delete a given version
-        if (isset($params['version']) && $params['version'] !== false) {
-            if ($this->docman->userCanWrite($item->getId())) {
-                $version_factory = $this->_getVersionFactory();
-                if ($version = $version_factory->getSpecificVersion($item, $params['version'])) {
-                    $this->file_storage->delete($version->getPath());
-                    $params['label'] = $version->getLabel();
-                }
-                return $this->_deleteVersion($item, $params);
+        if ($this->docman->userCanWrite($item->getId())) {
+            if (isset($params['version']) && $params['version'] !== false) {
+                return $this->_deleteVersion($item, $params['version'], $params['user']);
             } else {
-                $this->docman->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_perms_delete_item', $item->getTitle()));
-                return false;
+                return $this->_deleteFile($item, $params);
             }
         } else {
-            if ($this->docman->userCanWrite($item->getId())) {
-                //Delete all versions before
-                $version_factory =& $this->_getVersionFactory();
-                if ($versions = $version_factory->getAllVersionForItem($item)) {
-                    if (count($versions)) {
-                        foreach ($versions as $key => $nop) {
-                            $this->file_storage->delete($versions[$key]->getPath());
-                        }
-                    }
-                }
-                return $this->visitDocument($item, $params);
-            } else {
-                $this->docman->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_perms_delete_item', $item->getTitle()));
-                return false;
-            }
+            $this->docman->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_perms_delete_item', $item->getTitle()));
+            return false;
         }
     }
+
     function visitEmbeddedFile(&$item, $params = array()) {
         return $this->visitFile($item, $params);
     }
@@ -178,25 +160,53 @@ class Docman_ActionsDeleteVisitor /* implements Visitor */ {
             return false;
         }
     }
-    
-    function _deleteVersion($item, $params) {
-       if ($this->docman->userCanWrite($item->getId())) {
 
-            // The event must be processed before the item is deleted
-            $em =& $this->_getEventManager();
-            $em->processEvent('plugin_docman_event_del_version', array(
-                'group_id' => $item->getGroupId(),
-                'item'     => &$item,
-                'old_value'  => $params['label'].' (Version: '.$params['version'].')',
-                'user'     => &$params['user'])
-            );
-          $version_factory = $this->_getVersionFactory();
-                return $version_factory->deleteSpecificVersion($item, $params['version']);
-        } else {
-            $this->docman->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_perms_delete_item', $item->getTitle()));
-            return false;
+    /**
+     * Delete a file (all versions of the file)
+     * 
+     * @param Docman_File $item
+     * @param Array       $params
+     * 
+     * @return Boolean
+     */
+    function _deleteFile(Docman_File $item, $params) {
+        // Delete all versions before
+        $version_factory =& $this->_getVersionFactory();
+        if ($versions = $version_factory->getAllVersionForItem($item)) {
+            if (count($versions)) {
+                foreach ($versions as $key => $nop) {
+                    $this->file_storage->delete($versions[$key]->getPath());
+                }
+            }
         }
+        return $this->visitDocument($item, $params);
     }
+
+    /**
+     * Delete a version of a file
+     * 
+     * @param Docman_File    $item
+     * @param Docman_Version $version
+     * @param User           $user
+     * 
+     * @return Boolean
+     */
+    function _deleteVersion(Docman_File $item, Docman_Version $version, User $user) {
+        // The event must be processed before the version is deleted
+        $em = $this->_getEventManager();
+        $em->processEvent('plugin_docman_event_del_version', array(
+                          'group_id'   => $item->getGroupId(),
+                          'item'       => $item,
+                          'old_value'  => $version->getLabel().' (Version: '.$version->getNumber().')',
+                          'user'       => $user)
+        );
+
+        // Proceed to deletion
+        $version_factory = $this->_getVersionFactory();
+        $this->file_storage->delete($version->getPath());
+        return $version_factory->deleteSpecificVersion($item, $version->getNumber());
+    }
+
     function &_getEventManager() {
         return EventManager::instance();
     }

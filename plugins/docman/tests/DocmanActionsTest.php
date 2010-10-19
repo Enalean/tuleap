@@ -122,15 +122,11 @@ class DocmanActionsTest extends UnitTestCase {
         $actions->_controler = $ctrl;
 
         $item = new MockDocman_File($this);
-        $item->setReturnValue('getParentId', '566');
         $item->setReturnValue('accept', true);
-
-        $parentItem = new MockDocman_Folder($this);
 
         $if = new MockDocman_ItemFactory($this);
         $if->setReturnValue('getItemFromDb', $item, array(344));
-        $if->setReturnValue('getItemFromDb', $parentItem, array(566));
-        $if->setReturnValueAt(0, 'getItemTypeForItem', PLUGIN_DOCMAN_ITEM_TYPE_FILE);
+        $if->setReturnValue('getItemTypeForItem', PLUGIN_DOCMAN_ITEM_TYPE_FILE);
         $actions->setReturnValue('_getItemFactory', $if);
         $actions->expectOnce('_getItemFactory', array(102));
 
@@ -171,15 +167,11 @@ class DocmanActionsTest extends UnitTestCase {
         $actions->_controler = $ctrl;
 
         $item = new MockDocman_File($this);
-        $item->setReturnValue('getParentId', '566');
         $item->setReturnValue('accept', true);
 
-        $parentItem = new MockDocman_Folder($this);
-        
         $if = new MockDocman_ItemFactory($this);
         $if->setReturnValue('getItemFromDb', $item, array(344));
-        $if->setReturnValue('getItemFromDb', $parentItem, array(566));
-        $if->setReturnValueAt(0, 'getItemTypeForItem', PLUGIN_DOCMAN_ITEM_TYPE_FILE);
+        $if->setReturnValue('getItemTypeForItem', PLUGIN_DOCMAN_ITEM_TYPE_FILE);
         $actions->setReturnValue('_getItemFactory', $if);
         $actions->expectOnce('_getItemFactory', array(102));
 
