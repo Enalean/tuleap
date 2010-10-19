@@ -1255,17 +1255,22 @@ class Docman_Actions extends Actions {
             if ($type == PLUGIN_DOCMAN_ITEM_TYPE_FILE || $type == PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE) {
                 $versions = $this->_getVersionFactory()->getAllVersionForItem($item); 
                 if (count($versions) > 1) {
+                    $version = false;
                     foreach ($versions as $v) {
                         if ($v->getNumber() == $_sVersion) {
                             $version = $v;
                         }
                     }
-                    $user    = $this->_controler->getUser();
-                    $deletor = $this->_getActionsDeleteVisitor($this->_getFileStorage(), $this->_controler);
-                    if ($item->accept($deletor, array('user'    => $user,
+                    if ($version !== false) {
+                        $user    = $this->_controler->getUser();
+                        $deletor = $this->_getActionsDeleteVisitor($this->_getFileStorage(), $this->_controler);
+                        if ($item->accept($deletor, array('user'    => $user,
                                                       'version' => $version
-                    ))) {
-                        $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'info_item_version_deleted', array($version->getNumber(), $version->getLabel())));
+                        ))) {
+                            $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'info_item_version_deleted', array($version->getNumber(), $version->getLabel())));
+                        }
+                    } else {
+                        $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_item_not_deleted_unknown_version'));
                     }
                 } else {
                     $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_item_not_deleted_last_file_version'));

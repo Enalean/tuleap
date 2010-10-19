@@ -184,5 +184,50 @@ class DocmanActionsTest extends UnitTestCase {
         // Run test
         $actions->deleteVersion();
     }
+    
+    function testCannotDeleteNonExistantVersion() {
+        // Definition acceptance criteria:
+        // test is complete if there is an info flash message that tells version is deleted
+        $ctrl           = new MockDocman_Controller($this);
+        $ctrl->feedback = new MockFeedback($this);
+        // Test log message
+        $ctrl->feedback->expectOnce('log', array('error', '*'));
+        $GLOBALS['Language']->setReturnValue('getText', 'bla');
+        $GLOBALS['Language']->expectOnce('getText', array('plugin_docman', 'error_item_not_deleted_unknown_version'));
+
+        // Setup of the test
+        $actions = new Docman_ActionsTest($this);
+
+        $ctrl->request = new MockHTTPRequest($this);
+        $ctrl->request->setReturnValue('get', '102', array('group_id'));
+        $ctrl->request->setReturnValue('get', '344', array('id'));
+        $ctrl->request->setReturnValue('get', '1', array('version'));
+        $ctrl->request->setReturnValue('valid', true);
+        $actions->_controler = $ctrl;
+
+        $item = new MockDocman_File($this);
+        $item->expectNever('accept');
+
+        $if = new MockDocman_ItemFactory($this);
+        $if->setReturnValue('getItemFromDb', $item, array(344));
+        $if->setReturnValue('getItemTypeForItem', PLUGIN_DOCMAN_ITEM_TYPE_FILE);
+        $actions->setReturnValue('_getItemFactory', $if);
+        $actions->expectOnce('_getItemFactory', array(102));
+
+        $vf = new MockDocman_VersionFactory($this);
+        $v1 = new MockDocman_Version($this);
+        $v1->setReturnValue('getNumber', 0);
+        $v1->setReturnValue('getLabel', 'label 4');
+        $v2 = new MockDocman_Version($this);
+        $v2->setReturnValue('getNumber', 2);
+        $v2->setReturnValue('getLabel', 'label 5');
+        $vf->setReturnValue('getAllVersionForItem', array($v1, $v2));
+        $actions->setReturnValue('_getVersionFactory', $vf);
+
+        $actions->setReturnValue('_getEventManager', new MockEventManager($this));
+
+        // Run test
+        $actions->deleteVersion();
+    }
 }
 ?>

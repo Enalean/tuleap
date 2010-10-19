@@ -422,6 +422,7 @@ plugin_docman	error_item_not_deleted	Impossible de supprimer l'élément.
 plugin_docman	error_item_not_deleted_no_w	Impossible de supprimer cet élément car il contient des items que vous ne pouvez pas modifier (pas d'accès 'Rédacteur', il se peut que vous ne puissiez pas non plus les lire). Merci de contacter votre administrateur de gestionnaire de documents
 plugin_docman	error_item_not_deleted_nonfile_version	Impossible de supprimer une version d'un element qui n'est pas un fichier.
 plugin_docman	error_item_not_deleted_last_file_version	Impossible de supprimer la dernière version d'un fichier. Si vous souhaîtez continuer, veuillez supprimer le document lui même.
+plugin_docman	error_item_not_deleted_unknown_version	Impossible de supprimer une version qui n'existe pas.
 plugin_docman	error_item_not_moved	Impossible de déplacer l'élément.
 plugin_docman	error_item_deleted	Impossible de récupérer l'élément. Il a peut-être été supprimé.
 plugin_docman	error_md_or_love	Il y a une erreur dans les paramètres. Retour vers l'écran précédent.

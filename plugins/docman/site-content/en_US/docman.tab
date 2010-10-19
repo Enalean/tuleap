@@ -422,6 +422,7 @@ plugin_docman	error_item_not_deleted	Can't delete item.
 plugin_docman	error_item_not_deleted_no_w	Cannot delete this item because it contains items you are not allowed to modify (no 'Write' access, you may even not be able to read them). Please contact your document manager administrator.
 plugin_docman	error_item_not_deleted_nonfile_version	Cannot delete a version on something that is not a file.
 plugin_docman	error_item_not_deleted_last_file_version	Cannot delete last version of a file. If you want to continue, please delete the document itself.
+plugin_docman	error_item_not_deleted_unknown_version	Cannot delete a version that doesn't exist.
 plugin_docman	error_item_not_moved	Can't move item.
 plugin_docman	error_item_deleted	Unable to retrieve item. Perhaps it was removed.
 plugin_docman	error_md_or_love	There is an error in parameters. Back to previous screen.
