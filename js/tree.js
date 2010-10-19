@@ -29,7 +29,7 @@ function initTree() {
 	var expanded = '[–]';
 	var indent = '—';
 
-	$('a.jsTree').each(function() {
+	$('a.treeLink').each(function() {
 		$(this).parent().parent().find('td.expander').append(expanderLink($(this).attr('href'), collapsed));
 	});
 
@@ -95,7 +95,7 @@ function initTree() {
 					$(this).data('depth', depth);
 
 					var fileCell = $(this).find('td.fileName');
-					var treeLink = $(this).find('a.jsTree');
+					var treeLink = $(this).find('a.treeLink');
 					if (treeLink && (treeLink.size() > 0)) {
 						fileCell.prepend(expanderLink(treeLink.attr('href'), collapsed));
 					} else {
