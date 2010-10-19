@@ -193,11 +193,15 @@ class Docman_ActionsDeleteVisitor /* implements Visitor */ {
      */
     function _deleteVersion(Docman_File $item, Docman_Version $version, User $user) {
         // The event must be processed before the version is deleted
+        $value = $version->getNumber();
+        if ($version->getLabel() !== '') {
+            $value .= ' ('.$version->getLabel().')';
+        }
         $em = $this->_getEventManager();
         $em->processEvent('plugin_docman_event_del_version', array(
                           'group_id'   => $item->getGroupId(),
                           'item'       => $item,
-                          'old_value'  => $version->getLabel().' (Version: '.$version->getNumber().')',
+                          'old_value'  => $value,
                           'user'       => $user)
         );
 
