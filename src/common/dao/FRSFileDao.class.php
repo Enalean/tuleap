@@ -309,9 +309,15 @@ class FRSFileDao extends DataAccessObject {
      * @return true if there is no error
      */
     function delete($file_id) {
-        $sql = sprintf("UPDATE frs_file SET status='D' WHERE file_id=%d",
-                       $file_id);
+        // Store file in deleted table
+        $sql = 'INSERT INTO frs_file_deleted(file_id, filename, release_id, type_id, processor_id, release_time, file_size, post_date, status, delete_date)'.
+               ' SELECT file_id, filename, release_id, type_id, processor_id, release_time, file_size, post_date, status, '.$this->da->escapeInt($_SERVER['REQUEST_TIME']).
+               ' FROM frs_file'.
+               ' WHERE file_id = '.$this->da->escapeInt($file_id);
+        $this->update($sql);
 
+        // Flag as deleted
+        $sql = "UPDATE frs_file SET status='D' WHERE file_id=".$this->da->escapeInt($file_id);
         $deleted = $this->update($sql);
         return $deleted;
     }
