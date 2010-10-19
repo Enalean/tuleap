@@ -80,7 +80,7 @@ class WebDAVPlugin extends Plugin {
      */
     function addDocmanService($params) {
         $root = null;
-        $em =& EventManager::instance();
+        $em = EventManager::instance();
         $em->processEvent('webdav_root_for_service', array('project' => $params['project'],
                                                            'service' => 'docman',
                                                            'root'    => &$root));

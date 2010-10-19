@@ -443,7 +443,7 @@ class DocmanPlugin extends Plugin {
     function getRootItemForProject($params) {
         if ($params['service'] == 'docman') {
             require_once('Docman_ItemFactory.class.php');
-            $docmanItemFactory =& new Docman_ItemFactory();
+            $docmanItemFactory = new Docman_ItemFactory();
             $root = $docmanItemFactory->getRoot($params['project']->getId());
             $params['root']= $root;
         }

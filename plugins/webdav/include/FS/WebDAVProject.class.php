@@ -66,7 +66,7 @@ class WebDAVProject extends Sabre_DAV_Directory {
                         'project'     => $this->getProject(),
                         'maxFileSize' => $this->getMaxFileSize(),
                         'children'    => &$children);
-        $em =& EventManager::instance();
+        $em = EventManager::instance();
         $em->processEvent('WebDAVService', $params);
         return $children;
 
