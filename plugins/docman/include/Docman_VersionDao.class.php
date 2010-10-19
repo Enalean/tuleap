@@ -156,6 +156,8 @@ class Docman_VersionDao extends DataAccessObject {
     /**
      * Find the greater version number between plugin_docman_version and plugin_docman_version_deleted tables and add 1
      *
+     * Return false if no previous version found
+     *
      * @param Integer $itemId
      *
      * @return Integer
@@ -167,7 +169,11 @@ class Docman_VersionDao extends DataAccessObject {
         $dar = $this->retrieve($sql);
         if ($dar && !$dar->isError()) {
             $row = $dar->getRow();
-            return max($row) + 1;
+            if ($row['v_max'] === null && $row['d_max'] === null) {
+                return false;
+            } else {
+                return max($row) + 1;
+            }
         }
         return false;
     }

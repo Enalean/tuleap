@@ -151,21 +151,20 @@ class Docman_Actions extends Actions {
         $uploadSucceded = false;
         $newVersion     = null; 
 
-        $number  = 0;
-        $nextNb = $vFactory->getNextVersionNumber($item);
-        if($nextNb) {
-            $number = $nextNb;
-        }
+        $_label     = '';
+        $_changelog = '';
 
-        $_action_type = 'initversion';
-        if($number > 0) {
+        $nextNb = $vFactory->getNextVersionNumber($item);
+        if($nextNb === false) {
+            $number       = 1;
+            $_action_type = 'initversion';
+            $_changelog   = 'Initial version';
+        } else {
+            $number       = $nextNb;
             $_action_type = 'newversion';
         }
 
-        //
         // Prepare label and changelog from user input
-        $_label = '';
-        $_changelog = '';
         $data_version = $request->get('version');
         if ($data_version) {
             if (isset($data_version['label'])) {
@@ -173,11 +172,6 @@ class Docman_Actions extends Actions {
             }
             if (isset($data_version['changelog'])) {
                 $_changelog = $data_version['changelog'];
-            }
-        }
-        else {
-            if($number == 0) {
-                $_changelog = 'Initial version';
             }
         }
 
