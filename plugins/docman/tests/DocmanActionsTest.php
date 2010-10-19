@@ -32,7 +32,8 @@ require_once(dirname(__FILE__).'/../include/Docman_Actions.class.php');
 Mock::generatePartial('Docman_Actions','Docman_ActionsTest', array('_getItemFactory',
                                                                    '_getFileStorage',
                                                                    '_getActionsDeleteVisitor',
-                                                                   '_getEventManager'));
+                                                                   '_getEventManager',
+                                                                   '_getVersionFactory'));
 
 require_once(dirname(__FILE__).'/../include/Docman_Controller.class.php');
 Mock::generate('Docman_Controller');
@@ -44,6 +45,8 @@ Mock::generate('Docman_ItemFactory');
 Mock::generate('Docman_Folder');
 Mock::generate('Docman_File');
 Mock::generate('Feedback');
+Mock::generate('Docman_VersionFactory');
+Mock::generate('Docman_Version');
 
 require_once('common/language/BaseLanguage.class.php');
 Mock::generate('BaseLanguage');
@@ -75,23 +78,23 @@ class DocmanActionsTest extends UnitTestCase {
         $GLOBALS['Language']->expectOnce('getText', array('plugin_docman', 'error_item_not_deleted_nonfile_version'));
 
         // Setup of the test
+        $actions = new Docman_ActionsTest($this);
+
         $ctrl->request = new MockHTTPRequest($this);
         $ctrl->request->setReturnValue('get', '102', array('group_id'));
         $ctrl->request->setReturnValue('get', '344', array('id'));
         $ctrl->request->setReturnValue('get', '1', array('version'));
         $ctrl->request->setReturnValue('valid', true);
+        $actions->_controler = $ctrl;
 
         $item = new MockDocman_Folder($this);
-        
-        $if = new MockDocman_ItemFactory($this);
+        $if   = new MockDocman_ItemFactory($this);
         $if->setReturnValue('getItemFromDb', $item);
         $if->expectOnce('getItemFromDb', array(344));
         $if->setReturnValue('getItemTypeForItem', PLUGIN_DOCMAN_ITEM_TYPE_FOLDER);
-        
-        $actions = new Docman_ActionsTest($this);
-        $actions->_controler = $ctrl;
         $actions->setReturnValue('_getItemFactory', $if);
         $actions->expectOnce('_getItemFactory', array(102));
+
         $actions->setReturnValue('_getEventManager', new MockEventManager($this));
 
         // Run test
@@ -100,7 +103,7 @@ class DocmanActionsTest extends UnitTestCase {
     
     function testCanDeleteVersionOfFile() {
         // Definition acceptance criteria:
-        // test is complete if there is an error and the error message is the right one
+        // test is complete if there is an info flash message that tells version is deleted
         $ctrl           = new MockDocman_Controller($this);
         $ctrl->feedback = new MockFeedback($this);
         // Test log message
@@ -109,11 +112,57 @@ class DocmanActionsTest extends UnitTestCase {
         $GLOBALS['Language']->expectOnce('getText', array('plugin_docman', 'info_item_deleted'));
 
         // Setup of the test
+        $actions = new Docman_ActionsTest($this);
+
         $ctrl->request = new MockHTTPRequest($this);
         $ctrl->request->setReturnValue('get', '102', array('group_id'));
         $ctrl->request->setReturnValue('get', '344', array('id'));
         $ctrl->request->setReturnValue('get', '1', array('version'));
         $ctrl->request->setReturnValue('valid', true);
+        $actions->_controler = $ctrl;
+
+        $item = new MockDocman_File($this);
+        $item->setReturnValue('getParentId', '566');
+        $item->setReturnValue('accept', true);
+
+        $parentItem = new MockDocman_Folder($this);
+
+        $if = new MockDocman_ItemFactory($this);
+        $if->setReturnValue('getItemFromDb', $item, array(344));
+        $if->setReturnValue('getItemFromDb', $parentItem, array(566));
+        $if->setReturnValueAt(0, 'getItemTypeForItem', PLUGIN_DOCMAN_ITEM_TYPE_FILE);
+        $actions->setReturnValue('_getItemFactory', $if);
+        $actions->expectOnce('_getItemFactory', array(102));
+
+        $vf = new MockDocman_VersionFactory($this);
+        $vf->setReturnValue('getAllVersionForItem', array(new MockDocman_Version($this), new MockDocman_Version($this)));
+        $actions->setReturnValue('_getVersionFactory', $vf);
+
+        $actions->setReturnValue('_getEventManager', new MockEventManager($this));
+
+        // Run test
+        $actions->deleteVersion();
+    }
+
+    function testCannotDeleteLastVersion() {
+        // Definition acceptance criteria:
+        // test is complete if there is an error and the error message is the right one
+        $ctrl           = new MockDocman_Controller($this);
+        $ctrl->feedback = new MockFeedback($this);
+        // Test log message
+        $ctrl->feedback->expectOnce('log', array('error', '*'));
+        $GLOBALS['Language']->setReturnValue('getText', 'bla');
+        $GLOBALS['Language']->expectOnce('getText', array('plugin_docman', 'error_item_not_deleted_last_file_version'));
+
+        // Setup of the test
+        $actions = new Docman_ActionsTest($this);
+
+        $ctrl->request = new MockHTTPRequest($this);
+        $ctrl->request->setReturnValue('get', '102', array('group_id'));
+        $ctrl->request->setReturnValue('get', '344', array('id'));
+        $ctrl->request->setReturnValue('get', '1', array('version'));
+        $ctrl->request->setReturnValue('valid', true);
+        $actions->_controler = $ctrl;
 
         $item = new MockDocman_File($this);
         $item->setReturnValue('getParentId', '566');
@@ -124,16 +173,16 @@ class DocmanActionsTest extends UnitTestCase {
         $if = new MockDocman_ItemFactory($this);
         $if->setReturnValue('getItemFromDb', $item, array(344));
         $if->setReturnValue('getItemFromDb', $parentItem, array(566));
-
         $if->setReturnValueAt(0, 'getItemTypeForItem', PLUGIN_DOCMAN_ITEM_TYPE_FILE);
-        
-        $actions = new Docman_ActionsTest($this);
-        $actions->_controler = $ctrl;
         $actions->setReturnValue('_getItemFactory', $if);
         $actions->expectOnce('_getItemFactory', array(102));
 
+        $vf = new MockDocman_VersionFactory($this);
+        $vf->setReturnValue('getAllVersionForItem', array(new MockDocman_Version($this)));
+        $actions->setReturnValue('_getVersionFactory', $vf);
+
         $actions->setReturnValue('_getEventManager', new MockEventManager($this));
-        
+
         // Run test
         $actions->deleteVersion();
     }
