@@ -225,7 +225,8 @@ class Docman_VersionDao extends DataAccessObject {
     }
 
     /**
-     * Delete given version of document
+     * Delete given version of document and save the entry on plugin_docman_version_deleted
+     * in order to ease the restore later
      * 
      * @param Integer $itemId
      * @param Integer $number
@@ -233,8 +234,26 @@ class Docman_VersionDao extends DataAccessObject {
      * @return Boolean
      */
     function deleteSpecificVersion($itemId, $number) {
-        $sql= 'Delete from plugin_docman_version where item_id='.$itemId.' AND number='.$number;
-        return $this->update($sql);
+        $sql = 'INSERT INTO plugin_docman_version_deleted (item_id, number, user_id, label, '.
+                        ' changelog, create_date,  '.
+                        ' filename, filesize, filetype, path ) '.
+                        ' SELECT item_id, number, user_id, label, '.
+                        ' changelog, date, '.
+                        ' filename, filesize, filetype, path FROM plugin_docman_version '.
+                        ' WHERE item_id='.$this->da->quoteSmart($itemId).' AND number='.$this->da->quoteSmart($number);
+        $id = $this->_createAndReturnId($sql);
+        if ($id) {
+            $sql = 'UPDATE plugin_docman_version_deleted SET delete_date = '.time().' WHERE id = '.$this->da->quoteSmart($id);
+            if ($this->update($sql)) {
+                //To be modified soon
+                $sql = 'UPDATE plugin_docman_version_deleted SET purge_date = '.time().' WHERE id = '.$this->da->quoteSmart($id);
+                if ($this->update($sql)) {
+                    $sql= 'Delete from plugin_docman_version where item_id='.$this->da->quoteSmart($itemId).' AND number='.$this->da->quoteSmart($number);
+                    return $this->update($sql);
+                }
+            }
+        }
+        return false;
     }
 }
 
