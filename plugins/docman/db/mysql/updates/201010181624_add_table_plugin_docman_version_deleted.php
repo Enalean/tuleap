@@ -17,7 +17,7 @@ EOT;
 
     public function up() {
         $sql = 'CREATE TABLE plugin_docman_version_deleted ('.
-                    ' id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT, '.
+                    ' id INT(11) UNSIGNED NOT NULL, '.
                     ' item_id INT(11) UNSIGNED NULL,'.
                     ' number INT(11) UNSIGNED NULL,'.
                     ' user_id INT(11) UNSIGNED NULL,'.
