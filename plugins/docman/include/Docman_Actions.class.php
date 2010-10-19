@@ -1264,9 +1264,7 @@ class Docman_Actions extends Actions {
                     if ($version !== false) {
                         $user    = $this->_controler->getUser();
                         $deletor = $this->_getActionsDeleteVisitor($this->_getFileStorage(), $this->_controler);
-                        if ($item->accept($deletor, array('user'    => $user,
-                                                      'version' => $version
-                        ))) {
+                        if ($item->accept($deletor, array('user' => $user, 'version' => $version))) {
                             $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'info_item_version_deleted', array($version->getNumber(), $version->getLabel())));
                         }
                     } else {
