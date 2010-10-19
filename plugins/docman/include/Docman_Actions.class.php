@@ -146,14 +146,15 @@ class Docman_Actions extends Actions {
         $user     =& $this->_controler->getUser();
         $request  =& $this->_controler->request;
         $iFactory =& $this->_getItemFactory();
+        $vFactory =& $this->_getVersionFactory();
 
         $uploadSucceded = false;
         $newVersion     = null; 
 
-        $number = 0;
-        $version = $item->getCurrentVersion();
-        if($version) {
-            $number = $version->getNumber() + 1;
+        $number  = 0;
+        $nextNb = $vFactory->getNextVersionNumber($item);
+        if($nextNb) {
+            $number = $nextNb;
         }
 
         $_action_type = 'initversion';
@@ -236,8 +237,6 @@ class Docman_Actions extends Actions {
         }
 
         if($uploadSucceded) {
-            $vFactory =& $this->_getVersionFactory();
-
             $userId = $user->getId();
             if ($request->exist('author') && ($request->get('author') != $userId)) {
                 $versionAuthor = $request->get('author');

@@ -66,7 +66,19 @@ class Docman_VersionFactory {
         }
         return $version;
     }
-    
+
+    /**
+     * Retrieve the next available version number for a file
+     *
+     * @param Docman_File $item
+     *
+     * @return Integer
+     */
+    function getNextVersionNumber($item) {
+        $dao = $this->_getVersionDao();
+        return $dao->searchNextVersionNumber($item->getId());
+    }
+
     /**
      * Delete given version of document
      * 

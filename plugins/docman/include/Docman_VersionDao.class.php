@@ -153,6 +153,24 @@ class Docman_VersionDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
+    /**
+     * Find the greater version number between plugin_docman_version and plugin_docman_version_deleted tables and add 1
+     *
+     * @param Integer $itemId
+     *
+     * @return Integer
+     */
+    function searchNextVersionNumber($itemId) {
+        $sql = 'SELECT * FROM'.
+               ' (SELECT MAX(number) AS v_max FROM plugin_docman_version WHERE item_id = '.$this->da->escapeInt($itemId).') AS v,'.
+               ' (SELECT MAX(number) AS d_max FROM plugin_docman_version_deleted WHERE item_id = '.$this->da->escapeInt($itemId).') AS d';
+        $dar = $this->retrieve($sql);
+        if ($dar && !$dar->isError()) {
+            $row = $dar->getRow();
+            return max($row) + 1;
+        }
+        return false;
+    }
 
     /**
     * create a row in the table plugin_docman_version 
