@@ -348,7 +348,7 @@ class FRSFileDao extends DataAccessObject {
      * 
      * @return DataAccessResult
      */
-    function searchDeletedFiles($time) {
+    function searchFilesToPurge($time) {
         $sql = 'SELECT * FROM frs_file_deleted'.
                ' WHERE delete_date <= '.$this->da->escapeInt($time).
                ' AND purge_date IS NULL';

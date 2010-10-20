@@ -267,7 +267,7 @@ class FRSFileFactory extends Error {
       */
      public function purgeFiles($time) {
          $dao = $this->_getFRSFileDao();
-         $dar = $dao->searchDeletedFiles($time);
+         $dar = $dao->searchFilesToPurge($time);
          if ($dar && !$dar->isError()) {
              foreach ($dar as $row) {
                  $file = new FRSFile($row);

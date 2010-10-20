@@ -63,8 +63,8 @@ class FRSFileFactoryTest extends UnitTestCase {
         $dar->setReturnValue('rowCount', 0);
         
         $dao = new MockFRSFileDao($this);
-        $dao->expectOnce('searchDeletedFiles', array(1287504083));
-        $dao->setReturnValue('searchDeletedFiles', $dar);
+        $dao->expectOnce('searchFilesToPurge', array(1287504083));
+        $dao->setReturnValue('searchFilesToPurge', $dar);
         
         $ff = new FRSFileFactoryTestPurgeFiles($this);
         $ff->setReturnValue('_getFRSFileDao', $dao);
@@ -85,8 +85,8 @@ class FRSFileFactoryTest extends UnitTestCase {
         $dar->setReturnValue('rowCount', 1);
         
         $dao = new MockFRSFileDao($this);
-        $dao->expectOnce('searchDeletedFiles', array(1287504083));
-        $dao->setReturnValue('searchDeletedFiles', $dar);
+        $dao->expectOnce('searchFilesToPurge', array(1287504083));
+        $dao->setReturnValue('searchFilesToPurge', $dar);
         
         $ff = new FRSFileFactoryTestPurgeFiles($this);
         $ff->setReturnValue('_getFRSFileDao', $dao);
