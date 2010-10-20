@@ -129,8 +129,8 @@ class ForumMLPlugin extends Plugin {
         $res = db_query($sql);
         $sum = 0;
         while ($row = db_fetch_array($res)) {
-            $sum += $this->getDirSize($path.'/'.$row['list_name'].'/');
-            $sum += $this->getDirSize($path.'/'.$row['group_list_id'].'/');
+            $sum += $params['DiskUsageManager']->getDirSize($path.'/'.$row['list_name'].'/');
+            $sum += $params['DiskUsageManager']->getDirSize($path.'/'.$row['group_list_id'].'/');
         }
 
         $dao = $params['DiskUsageManager']->_getDao();
