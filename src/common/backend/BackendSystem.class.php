@@ -311,6 +311,7 @@ class BackendSystem extends Backend {
         $time = $_SERVER['REQUEST_TIME'] - (3600*24*3);
         
         $frs = $this->getFRSFileFactory();
+        $frs->moveDeletedFilesToStagingArea();
         return $frs->purgeFiles($time);
        /* // location of the download/upload directories
         $delete_dir = $GLOBALS['ftp_frs_dir_prefix']."/DELETED";

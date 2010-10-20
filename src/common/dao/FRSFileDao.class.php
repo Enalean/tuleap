@@ -343,7 +343,11 @@ class FRSFileDao extends DataAccessObject {
     }
 
     function searchStagingCandidates() {
-        
+        $sql = 'SELECT f.*'.
+               ' FROM frs_file f LEFT JOIN frs_file_deleted d USING(file_id)'.
+               ' WHERE f.status = "D"'.
+               ' AND d.file_id IS NULL';
+        return $this->retrieve($sql);
     }
     
     /**
