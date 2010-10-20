@@ -37,7 +37,7 @@ Mock::generatePartial('BackendSystem', 'BackendTestVersion', array('getUserManag
                                                              'chown',
                                                              'chgrp',
                                                              'chmod',
-                                                             '_getFRSFileFactory',
+                                                             'getFRSFileFactory',
                                                              ));
 
 
@@ -388,7 +388,7 @@ class BackendSystemTest extends UnitTestCase {
         $ff = new MockFRSFileFactory($this);
         $ff->setReturnValue('purgeFiles', true);
         $ff->expectOnce('purgeFiles', array($dateThreeDaysBefore));
-        $backend->setReturnValue('_getFRSFileFactory', $ff);
+        $backend->setReturnValue('getFRSFileFactory', $ff);
         
         $this->assertTrue($backend->cleanupFRS());
     }
