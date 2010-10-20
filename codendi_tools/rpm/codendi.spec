@@ -44,6 +44,16 @@ Requires: forgeupgrade >= 1.2
 %description
 Codendi is a web based application that address all the aspects of product development.
 
+%package plugin-webdav
+Summary: WebDAV plugin for Codendi
+Group: Development/Tools
+Version: @@PLUGIN_WEBDAV_VERSION@@
+Release: 1%{?dist}
+Requires: %{name} >= %{version}, Sabre_DAV = 1.0.14
+Provides: codendi-plugin-webdav = %{version}
+%description plugin-webdav
+Plugin to access to file releases & docman though WebDAV
+
 %prep
 %setup -q
 
@@ -92,6 +102,8 @@ done
 %{__install} -d $RPM_BUILD_ROOT/etc/cron.d
 %{__install} src/utils/cron.d/codendi-stop $RPM_BUILD_ROOT/etc/cron.d/%{APP_NAME}
 
+# plugin webdav
+%{__install} -d $RPM_BUILD_ROOT/%{APP_CACHE_DIR}/plugins/webdav/locks
 
 ##
 ## On package install
@@ -257,6 +269,11 @@ fi
 %attr(06755,%{APP_USER},%{APP_USER}) %{APP_LIBBIN_DIR}/mail_2_DB.pl
 %attr(00755,root,root) /etc/rc.d/init.d/%{APP_NAME}
 %attr(00644,root,root) /etc/cron.d/%{APP_NAME}
+
+%files plugin-webdav
+%defattr(-,%{APP_USER},%{APP_USER},-)
+%{APP_DIR}/plugins/webdav
+%attr(00755,%{APP_USER},%{APP_USER}) %{APP_CACHE_DIR}/plugins/webdav
 
 #%doc
 #%config
