@@ -241,40 +241,58 @@ class FRSFileFactory extends Error {
     	$dao =& $this->_getFRSFileDao();
     	return $dao->delete($_id);
     }
-/*
 
-Physically delete a file from the download server and database
+    /**
+     * Mark a file as deleted
+     *
+     * @param Integer $group_id
+     * @param Integer $file_id
+     * 
+     * @return Boolean
+     */
+    function delete_file ($group_id, $file_id) {
+        $file = $this->getFRSFileFromDb($file_id, $group_id);
+        if ($file) {
+            return $this->_delete($file_id);
+        }
+        return false;
+    }
 
-First, make sure the file is theirs
-Second, delete it from the db
-Third, delete it from the download server
+     /**
+      * Permanently erase from the file system all deleted files older than given date
+      * 
+      * @param Integer $time Timestamp
+      * 
+      * @return Boolean
+      */
+     public function purgeFiles($time) {
+         $dao = $this->_getFRSFileDao();
+         $dar = $dao->searchDeletedFiles($time);
+         if ($dar && !$dar->isError()) {
+             foreach ($dar as $row) {
+                 $file = new FRSFile($row);
+                 $this->purgeFile($file);
+             }
+             return true;
+         }
+         return false;
+     }
 
-return 0 if file not deleted, 1 otherwise
-*/
-    function delete_file ($group_id,$file_id) {
-	  	GLOBAL $ftp_incoming_dir;
+     /**
+      * Erase from the file system one file
+      * 
+      * @param FRSFile $file File to delete
+      * 
+      * @return Boolean
+      */
+     public function purgeFile($file) {
+         if (unlink($file->getFileLocation())) {
+             $dao = $this->_getFRSFileDao();
+             return $dao->setPurgeDate($file->getFileID(), time());
+         }
+         return false;
+     }
 
-
-	  	$file =& $this->getFRSFileFromDb($file_id, $group_id); 
-	  	
-	  	if (!$file) {
-	    	//file not found for this project
-	    	return 0;
-	  	} else {
-	    	/*
-	    	   delete the file from the database
-	    	*/
-	    	$file_name = $file->getFileName();
-	    	$this->_delete($file_id);
-	    //append the filename and project name to a temp file for the root perl job to grab
-	    	$time = time();
-	    	$pm = ProjectManager::instance();
-            exec ('/bin/echo "'. $file_name .'::'. $pm->getProject($group_id)->getUnixName() .'::'.$time.'" >> '. $ftp_incoming_dir .'/.delete_files');
-	
-	    	return 1;
-	  	}
-	}
-    
     /** 
      * Returns true if user has permissions to add files
      * 
@@ -343,6 +361,7 @@ return 0 if file not deleted, 1 otherwise
 		//exec($GLOBALS['codendi_bin_prefix'] . "/fileforge /tmp/" . $group_unix_name . "$group_id " . $group_unix_name, $exec_res);
         $cmd = $GLOBALS['codendi_bin_prefix'] . "/fileforge $file_name " . $group_unix_name . "/" . $upload_sub_dir;
         exec($cmd, $exec_res, $ret_val);
+
         return $ret_val;
     }
 

@@ -31,11 +31,13 @@ require_once('common/project/ProjectManager.class.php');
 Mock::generate('ProjectManager');
 require_once('common/project/Project.class.php');
 Mock::generate('Project');
+Mock::generate('FRSFileFactory');
 Mock::generatePartial('BackendSystem', 'BackendTestVersion', array('getUserManager', 
                                                              'getProjectManager',
                                                              'chown',
                                                              'chgrp',
                                                              'chmod',
+                                                             '_getFRSFileFactory',
                                                              ));
 
 
@@ -378,5 +380,17 @@ class BackendSystemTest extends UnitTestCase {
    
     }
     
+    public function testCleanupFrs() {
+        $backend = new BackendTestVersion($this);
+        
+        $dateThreeDaysBefore     = $_SERVER['REQUEST_TIME'] - (24*3600*3);
+        
+        $ff = new MockFRSFileFactory($this);
+        $ff->setReturnValue('purgeFiles', true);
+        $ff->expectOnce('purgeFiles', array($dateThreeDaysBefore));
+        $backend->setReturnValue('_getFRSFileFactory', $ff);
+        
+        $this->assertTrue($backend->cleanupFRS());
+    }
 }
 ?>

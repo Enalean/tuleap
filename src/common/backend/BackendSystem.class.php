@@ -311,7 +311,12 @@ class BackendSystem extends Backend {
      * Remove deleted releases and released files
      */
     public function cleanupFRS() {
-        // location of the download/upload directories
+        // Purge all deleted files older than 3 days old
+        $time = $_SERVER['REQUEST_TIME'] - (3600*24*3);
+        
+        $frs = $this->_getFRSFileFactory();
+        return $frs->purgeFiles($time);
+       /* // location of the download/upload directories
         $delete_dir = $GLOBALS['ftp_frs_dir_prefix']."/DELETED";
 
         // list of files to be deleted
@@ -352,7 +357,7 @@ class BackendSystem extends Backend {
             system("find $delete_dir -type f -mtime +7 -exec rm {} \\;");
             system("find $delete_dir -mindepth 1 -type d -empty -exec rm -R {} \\;");
         }
-        return true;
+        return true;*/
     }
     
     /**
@@ -547,8 +552,14 @@ class BackendSystem extends Backend {
         return rename($GLOBALS['homedir_prefix'].'/'.$user->getUserName(), $GLOBALS['homedir_prefix'].'/'.$newName);
     }
     
-    
-    
+    /**
+     * Wrapper for getFRSFileFactory
+     * 
+     * @return FRSFileFactory
+     */
+    protected function _getFRSFileFactory() {
+        return new FRSFileFactory();
+    }
 
 }
 

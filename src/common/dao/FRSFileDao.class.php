@@ -340,6 +340,35 @@ class FRSFileDao extends DataAccessObject {
        $inserted = $this->update($sql);
        return $inserted;	
     }
+
+    /**
+     * Retrieve all deleted files not purged yet after a given period of time
+     * 
+     * @param Integer $time Timestamp of the date to start the search
+     * 
+     * @return DataAccessResult
+     */
+    function searchDeletedFiles($time) {
+        $sql = 'SELECT * FROM frs_file_deleted'.
+               ' WHERE delete_date <= '.$this->da->escapeInt($time).
+               ' AND purge_date IS NULL';
+        return $this->retrieve($sql);
+    }
+
+    /**
+     * Set the date of the purge of a file
+     * 
+     * @param Integer $id   File id
+     * @param Integer $time Timestamp of the deletion
+     * 
+     * @return Boolean
+     */
+    function setPurgeDate($id, $time) {
+        $sql = 'UPDATE frs_file_deleted'.
+               ' SET purge_date = '.$this->da->escapeInt($time).
+               ' WHERE file_id = '.$this->da->escapeInt($id);
+        return $this->update($sql);
+    }
 }
 
 ?>
