@@ -306,15 +306,16 @@ class FRSFileDao extends DataAccessObject {
      * Delete entry that match $release_id in frs_file
      *
      * @param $file_id int
+     * 
      * @return true if there is no error
      */
     function delete($file_id) {
         // Store file in deleted table
-        $sql = 'INSERT INTO frs_file_deleted(file_id, filename, release_id, type_id, processor_id, release_time, file_size, post_date, status, delete_date)'.
+        /*$sql = 'INSERT INTO frs_file_deleted(file_id, filename, release_id, type_id, processor_id, release_time, file_size, post_date, status, delete_date)'.
                ' SELECT file_id, filename, release_id, type_id, processor_id, release_time, file_size, post_date, status, '.$this->da->escapeInt($_SERVER['REQUEST_TIME']).
                ' FROM frs_file'.
                ' WHERE file_id = '.$this->da->escapeInt($file_id);
-        $this->update($sql);
+        $this->update($sql);*/
 
         // Flag as deleted
         $sql = "UPDATE frs_file SET status='D' WHERE file_id=".$this->da->escapeInt($file_id);
@@ -341,6 +342,10 @@ class FRSFileDao extends DataAccessObject {
        return $inserted;	
     }
 
+    function searchStagingCandidates() {
+        
+    }
+    
     /**
      * Retrieve all deleted files not purged yet after a given period of time
      * 

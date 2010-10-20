@@ -11,6 +11,7 @@ Mock::generate('FRSFile');
 Mock::generatePartial('FRSFileFactory', 'FRSFileFactoryTestVersion', array('_getFRSReleaseFactory'));
 Mock::generatePartial('FRSFileFactory', 'FRSFileFactoryTestPurgeFiles', array('_getFRSFileDao', 'purgeFile'));
 Mock::generatePartial('FRSFileFactory', 'FRSFileFactoryTestPurgeOneFile', array('_getFRSFileDao'));
+Mock::generatePartial('FRSFileFactory', 'FRSFileFactoryTestMoveToStaging', array('_getFRSFileDao', 'moveDeletedFileToStagingArea'));
 
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
@@ -27,14 +28,6 @@ class FRSFileFactoryTest extends UnitTestCase {
     function FRSFileFactoryTest($name = 'FRSfileFactory test') {
         $this->UnitTestCase($name);
     }
-    
-    /*function setUp() {
-        $GLOBALS['ftp_frs_dir_prefix'] = dirname(__FILE__) . '/_fixtures/var/lib/codendi/ftp/codendi';
-    }
-    
-    function tearDown() {
-        unset($GLOBALS['ftp_frs_dir_prefix']);
-    }*/
     
     function testgetUploadSubDirectory() {
         $package_id = rand(1, 1000);
@@ -53,6 +46,46 @@ class FRSFileFactoryTest extends UnitTestCase {
         
         $sub_dir = $file_fact->getUploadSubDirectory($release_id);
         $this->assertEqual($sub_dir, 'p'.$package_id.'_r'.$release_id);
+    }
+
+    function testMoveDeletedFilesToStagingAreaWithNoFiles() {
+        $ff = new FRSFileFactoryTestMoveToStaging($this);
+        
+        $dar = new MockDataAccessResult($this);
+        $dar->setReturnValue('isError', false);
+        $dar->setReturnValue('getRow', false);
+        $dar->setReturnValue('valid', false);
+        $dar->setReturnValue('rowCount', 0);
+        
+        $dao = new MockFRSFileDao($this);
+        $dao->expectOnce('searchStagingCandidates');
+        $dao->setReturnValue('searchStagingCandidates', $dar); 
+        $ff->setReturnValue('_getFRSFileDao', $dao);
+
+        $ff->expectNever('moveDeletedFileToStagingArea');
+        
+        $this->assertTrue($ff->moveDeletedFilesToStagingArea());
+    }
+
+    function testMoveDeletedFilesToStagingAreaWithOneFile() {
+        $ff = new FRSFileFactoryTestMoveToStaging($this);
+        
+        $dar = new MockDataAccessResult($this);
+        $dar->setReturnValue('isError', false);
+        $dar->setReturnValue('current', array('file_id' => 12));
+        $dar->setReturnValueAt(0, 'valid', true);
+        $dar->setReturnValueAt(1, 'valid', false);
+        $dar->setReturnValue('rowCount', 1);
+        
+        $dao = new MockFRSFileDao($this);
+        $dao->expectOnce('searchStagingCandidates');
+        $dao->setReturnValue('searchStagingCandidates', $dar); 
+        $ff->setReturnValue('_getFRSFileDao', $dao);
+        
+        $refFile = new FRSFile(array('file_id' => 12));
+        $ff->expectOnce('moveDeletedFileToStagingArea', array($refFile));
+        
+        $this->assertTrue($ff->moveDeletedFilesToStagingArea());
     }
 
     function testPurgeFilesWithNoFiles() {

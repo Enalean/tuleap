@@ -245,9 +245,28 @@ class FRSFileFactory extends Error {
     /**
      * Mark a file as deleted
      *
+     * Deletion of a file in FRS is a complex process.
+     * First, when user attempt to delete a file (or recursively when she deletes
+     * a release or a whole package) files are not immedialty deleted:
+     * #1: Flag the file as deleted (status = D, no longer appears in web interface)
+     * #2: Move flaged files into a staging area for a while
+     * #3: Every so often permanently erase from the file system the files from
+     *     the stagging area that are older than a given threshold.
+     * Why such complex process ?
+     * #1: To allow files to be backed-up even if files are uploaded and deleted
+     *     before a backup job occurs.
+     * #2: The staging area/period allows site admin to magically restore files
+     *     if they were removed by mistake.
+     * #3: Previous step 2 needs to be done by 'root' because files might no be
+     *     owned by Codendiadm user.
+     * #4: Whe need to move files in a staging area because otherwise people would
+     *     not be able to upload a file with the same name in the same release
+     *     because the new file will override the deleted one and when the job
+     *     comes to purge the file it will remove the new one (valid).
+     *
      * @param Integer $group_id
      * @param Integer $file_id
-     * 
+     *
      * @return Boolean
      */
     function delete_file ($group_id, $file_id) {
@@ -258,40 +277,56 @@ class FRSFileFactory extends Error {
         return false;
     }
 
-     /**
-      * Permanently erase from the file system all deleted files older than given date
-      * 
-      * @param Integer $time Timestamp
-      * 
-      * @return Boolean
-      */
-     public function purgeFiles($time) {
-         $dao = $this->_getFRSFileDao();
-         $dar = $dao->searchFilesToPurge($time);
-         if ($dar && !$dar->isError()) {
-             foreach ($dar as $row) {
-                 $file = new FRSFile($row);
-                 $this->purgeFile($file);
-             }
-             return true;
-         }
-         return false;
-     }
+    public function moveDeletedFilesToStagingArea() {
+        $dao = $this->_getFRSFileDao();
+        $dar = $dao->searchStagingCandidates();
+        if ($dar && !$dar->isError()) {
+            foreach ($dar as $row) {
+                $this->moveDeletedFileToStagingArea(new FRSFile($row));
+            }
+            return true;
+        }
+        return false;
+    }
 
-     /**
-      * Erase from the file system one file
-      * 
-      * @param FRSFile $file File to delete
-      * 
-      * @return Boolean
-      */
-     public function purgeFile($file) {
-         if (unlink($file->getFileLocation())) {
-             $dao = $this->_getFRSFileDao();
-             return $dao->setPurgeDate($file->getFileID(), time());
-         }
-         return false;
-     }
+    public function moveDeletedFileToStagingArea($file) {
+
+    }
+
+    /**
+     * Permanently erase from the file system all deleted files older than given date
+     *
+     * @param Integer $time Timestamp
+     *
+     * @return Boolean
+     */
+    public function purgeFiles($time) {
+        $dao = $this->_getFRSFileDao();
+        $dar = $dao->searchFilesToPurge($time);
+        if ($dar && !$dar->isError()) {
+            foreach ($dar as $row) {
+                $file = new FRSFile($row);
+                $this->purgeFile($file);
+            }
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Erase from the file system one file
+     *
+     * @param FRSFile $file File to delete
+     *
+     * @return Boolean
+     */
+    public function purgeFile($file) {
+        if (unlink($file->getFileLocation())) {
+            $dao = $this->_getFRSFileDao();
+            return $dao->setPurgeDate($file->getFileID(), time());
+        }
+        return false;
+    }
 
     /** 
      * Returns true if user has permissions to add files
