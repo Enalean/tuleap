@@ -60,7 +60,9 @@ class DocmanPlugin extends Plugin {
         // Stats plugin
         $this->_addHook('plugin_statistics_disk_usage_collect_project', 'plugin_statistics_disk_usage_collect_project', false);
         $this->_addHook('plugin_statistics_disk_usage_service_label',   'plugin_statistics_disk_usage_service_label',   false);
-    }
+
+        $this->_addHook('show_pending_versions',             'show_pending_versions',             false);
+	}
 
     function permission_get_name($params) {
         if (!$params['name']) {
@@ -452,6 +454,35 @@ class DocmanPlugin extends Plugin {
      */
     function plugin_statistics_disk_usage_service_label($params) {
         $params['services']['plugin_docman'] = 'Docman';
+    }
+    
+    
+    /**
+     * Hook to list pending versions of documents in site admin page
+     *
+     * @param array $params
+     */
+    function show_pending_versions($params) {
+        $title =array();
+        $title[]='Document title';
+        $title[]='Version label';
+        $title[]='Version number';
+        $title[]='Delete date';
+        $title[]='Restore version';
+
+        $sql='select SQL_CALC_FOUND_ROWS title, number,label, plugin_docman_version_deleted.delete_date  as date '.
+         'FROM plugin_docman_item, plugin_docman_version_deleted '.
+         'WHERE plugin_docman_item.item_id = plugin_docman_version_deleted.item_id '.
+         'AND group_id='.db_ei($params['group_id']).' AND plugin_docman_version_deleted.purge_date > '.$_SERVER['REQUEST_TIME'].' ORDER BY plugin_docman_version_deleted.purge_date DESC LIMIT '.db_ei($params['offset']).', '.db_ei($params['limit']);
+
+        $res = db_query($sql);
+        $sql = 'SELECT FOUND_ROWS() as nb';
+        $res_numrows = db_query($sql);
+        $row = db_fetch_array($res_numrows);
+
+        $params['pendings'] = $res;
+        $params['numrows'] = (int) $row['nb'];
+        $params['titles'] = $title;
     }
 }
 
