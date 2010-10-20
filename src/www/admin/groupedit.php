@@ -32,7 +32,7 @@ function showPendingDocuments($params, $offsetPending, $limitPending) {
             echo '</TD>'.
                 '<TD>'.$row['number'].'</TD>'.
                 '<TD>'.format_date($GLOBALS['Language']->getText('system', 'datefmt'),$row['date']).'</TD>'.
-                '<TD><A href= "<IMG SRC="'.util_get_image_theme("restore.png").'" BORDER=0 HEIGHT=12 WIDTH=10> </A></TD></TR>';
+                '<TD align="center"><a href="" ><IMG SRC="'.util_get_image_theme("trash-x.png").'" BORDER=0 HEIGHT=16 WIDTH=16></a></TD></TR>';
         }
         echo '
         </TABLE>'; 
