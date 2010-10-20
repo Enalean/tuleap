@@ -73,7 +73,7 @@ function initTree() {
 			img.attr('src', url + "images/tree-loader.gif");
 			img.attr('alt', GITPHP_RES_LOADING);
 			img.addClass('treeSpinner');
-			img.appendTo(cell);
+			row.find('a.treeLink').after(img);
 
 			$.get($(this).attr('href'), { o: 'js' },
 			function(data) {
@@ -110,7 +110,7 @@ function initTree() {
 				row.after(subRows);
 
 				row.find('a.expander').text(expanded);
-				cell.children('img.treeSpinner').remove();
+				row.find('img.treeSpinner').remove();
 			});
 		}
 
