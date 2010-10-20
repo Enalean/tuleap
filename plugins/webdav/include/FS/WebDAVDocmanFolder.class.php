@@ -31,21 +31,21 @@ class WebDAVDocmanFolder extends Sabre_DAV_Directory {
 
     private $user;
     private $project;
-    private $folder;
+    private $item;
 
     /**
      * Constructor of the class
      *
      * @param User $user
      * @param Project $project
-     * @param Docman_Folder $folder
+     * @param Docman_Folder $item
      *
      * @return void
      */
-    function __construct($user, $project, $folder) {
+    function __construct($user, $project, $item) {
         $this->user = $user;
         $this->project = $project;
-        $this->folder = $folder;
+        $this->item = $item;
     }
 
     /**
@@ -55,13 +55,15 @@ class WebDAVDocmanFolder extends Sabre_DAV_Directory {
      * @return Array
      */
     function getChildList() {
+        var_dump(time());
         $children = array();
         // hey ! for docman never add something in WebDAVUtils, docman may be not present ;)
         $docmanItemFactory = $this->getDocmanItemFactory();
         $nodes = $docmanItemFactory->getChildrenFromParent($this->getItem());
+        $docmanPermissionManager = $this->getDocmanPermissionsManager();
 
         foreach ($nodes as $node) {
-            if ($this->getDocmanPermissionsManager()->userCanAccess($this->getUser(), $node->getId())) {
+            if ($docmanPermissionManager->userCanAccess($this->getUser(), $node->getId())) {
                 $class = get_class($node);
                 switch ($class) {
                     case 'Docman_File':
@@ -170,7 +172,7 @@ class WebDAVDocmanFolder extends Sabre_DAV_Directory {
      * @return Docman_Folder
      */
     function getItem() {
-        return $this->folder;
+        return $this->item;
     }
 
     /**

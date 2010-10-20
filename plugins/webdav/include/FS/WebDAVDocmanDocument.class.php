@@ -28,22 +28,22 @@ class WebDAVDocmanDocument extends Sabre_DAV_File {
 
     protected $user;
     protected $project;
-    protected $document;
+    protected $item;
 
     /**
      * Constuctor of the class
      *
      * @param User $user
      * @param Project $project
-     * @param Docman_Document $document
+     * @param Docman_Document $item
      *
      * @return void
      */
-    function __construct($user, $project, $document) {
+    function __construct($user, $project, $item) {
         $this->user = $user;
         $this->project = $project;
         $docmanItemFactory = new Docman_ItemFactory();
-        $this->document = $docmanItemFactory->getItemFromDb($document->getId());
+        $this->item = $docmanItemFactory->getItemFromDb($item->getId());
     }
 
     /**
@@ -148,7 +148,7 @@ class WebDAVDocmanDocument extends Sabre_DAV_File {
      * @return Docman_Document
      */
     function getItem() {
-        return $this->document;
+        return $this->item;
     }
 
     /**
