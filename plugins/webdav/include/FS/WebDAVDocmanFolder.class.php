@@ -55,7 +55,6 @@ class WebDAVDocmanFolder extends Sabre_DAV_Directory {
      * @return Array
      */
     function getChildList() {
-        var_dump(time());
         $children = array();
         // hey ! for docman never add something in WebDAVUtils, docman may be not present ;)
         $docmanItemFactory = $this->getDocmanItemFactory();
