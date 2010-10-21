@@ -28,6 +28,14 @@ class FRSFileFactoryTest extends UnitTestCase {
     function FRSFileFactoryTest($name = 'FRSfileFactory test') {
         $this->UnitTestCase($name);
     }
+
+    function setUp() {
+        $GLOBALS['ftp_frs_dir_prefix'] = dirname(__FILE__).'/_fixtures';
+    }
+    
+    function tearDown() {
+        unset($GLOBALS['ftp_frs_dir_prefix']);
+    }
     
     function testgetUploadSubDirectory() {
         $package_id = rand(1, 1000);
@@ -65,6 +73,34 @@ class FRSFileFactoryTest extends UnitTestCase {
         $ff->expectNever('moveDeletedFileToStagingArea');
         
         $this->assertTrue($ff->moveDeletedFilesToStagingArea());
+    }
+
+    function testMoveDeletedFileToStagingArea() {
+        $ff = new FRSFileFactoryTestPurgeOneFile($this);
+
+        // Create temp file in a fake release
+        mkdir(dirname(__FILE__).'/_fixtures/prj/p1_r1');
+        $filepath = dirname(__FILE__).'/_fixtures/prj/p1_r1/foobar.xls';
+        touch($filepath);
+        $this->assertTrue(is_file($filepath));
+        $file = new MockFRSFile($this);
+        $file->setReturnValue('getFileID', 12);
+        $file->setReturnValue('getFileLocation', $filepath);
+
+        $dao = new MockFRSFileDao($this);
+        $dao->expectOnce('setFileInDeletedList', array(12));
+        $dao->setReturnValue('setFileInDeletedList', true);
+        $ff->setReturnValue('_getFRSFileDao', $dao);
+
+        $this->assertTrue($ff->moveDeletedFileToStagingArea($file));
+
+        $this->assertTrue(is_file($GLOBALS['ftp_frs_dir_prefix'].'/DELETED/prj/p1_r1/foobar.xls.12'));
+
+        // Clean-up
+        rmdir(dirname(__FILE__).'/_fixtures/prj/p1_r1');
+        unlink(dirname(__FILE__).'/_fixtures/DELETED/prj/p1_r1/foobar.xls.12');
+        rmdir(dirname(__FILE__).'/_fixtures/DELETED/prj/p1_r1');
+        rmdir(dirname(__FILE__).'/_fixtures/DELETED/prj');
     }
 
     function testMoveDeletedFilesToStagingAreaWithOneFile() {
@@ -130,15 +166,17 @@ class FRSFileFactoryTest extends UnitTestCase {
     }
 
     function testPurgeFile() {
+        $ff = new FRSFileFactoryTestPurgeOneFile($this);
+
         // Create temp file
-        $filepath = dirname(__FILE__) . '/_fixtures/foobar.xls';
+        $filepath = dirname(__FILE__).'/_fixtures/DELETED/prj/p1_r1/foobar.xls.12';
+        mkdir(dirname($filepath), 0750, true);
         touch($filepath);
         $this->assertTrue(is_file($filepath));
         $file = new MockFRSFile($this);
         $file->setReturnValue('getFileID', 12);
-        $file->setReturnValue('getFileLocation', $filepath);
-        
-        $ff = new FRSFileFactoryTestPurgeOneFile($this);
+        $file->setReturnValue('getFileName', 'p1_r1/foobar.xls');
+        $file->setReturnValue('getFileLocation', $GLOBALS['ftp_frs_dir_prefix'].'/prj/p1_r1/foobar.xls');
         
         $dao = new MockFRSFileDao($this);
         $dao->expectOnce('setPurgeDate', array(12, '*'));

@@ -310,14 +310,6 @@ class FRSFileDao extends DataAccessObject {
      * @return true if there is no error
      */
     function delete($file_id) {
-        // Store file in deleted table
-        /*$sql = 'INSERT INTO frs_file_deleted(file_id, filename, release_id, type_id, processor_id, release_time, file_size, post_date, status, delete_date)'.
-               ' SELECT file_id, filename, release_id, type_id, processor_id, release_time, file_size, post_date, status, '.$this->da->escapeInt($_SERVER['REQUEST_TIME']).
-               ' FROM frs_file'.
-               ' WHERE file_id = '.$this->da->escapeInt($file_id);
-        $this->update($sql);*/
-
-        // Flag as deleted
         $sql = "UPDATE frs_file SET status='D' WHERE file_id=".$this->da->escapeInt($file_id);
         $deleted = $this->update($sql);
         return $deleted;
@@ -342,6 +334,11 @@ class FRSFileDao extends DataAccessObject {
        return $inserted;	
     }
 
+    /**
+     * Retrieve all the files marked as deleted but not yet present in 'deleted' table
+     * 
+     * @return DataAccessResult
+     */
     function searchStagingCandidates() {
         $sql = 'SELECT f.*'.
                ' FROM frs_file f LEFT JOIN frs_file_deleted d USING(file_id)'.
@@ -349,7 +346,7 @@ class FRSFileDao extends DataAccessObject {
                ' AND d.file_id IS NULL';
         return $this->retrieve($sql);
     }
-    
+
     /**
      * Retrieve all deleted files not purged yet after a given period of time
      * 
@@ -362,6 +359,22 @@ class FRSFileDao extends DataAccessObject {
                ' WHERE delete_date <= '.$this->da->escapeInt($time).
                ' AND purge_date IS NULL';
         return $this->retrieve($sql);
+    }
+
+    /**
+     * Copy deleted entry in the dedicated table
+     * 
+     * @param Integer $id FileId
+     * 
+     * @return Boolean
+     */
+    function setFileInDeletedList($id) {
+        // Store file in deleted table
+        $sql = 'INSERT INTO frs_file_deleted(file_id, filename, release_id, type_id, processor_id, release_time, file_size, post_date, status, delete_date)'.
+               ' SELECT file_id, filename, release_id, type_id, processor_id, release_time, file_size, post_date, status, '.$this->da->escapeInt($_SERVER['REQUEST_TIME']).
+               ' FROM frs_file'.
+               ' WHERE file_id = '.$this->da->escapeInt($id);
+        $this->update($sql);
     }
 
     /**

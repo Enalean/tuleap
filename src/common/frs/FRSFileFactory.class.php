@@ -277,6 +277,11 @@ class FRSFileFactory extends Error {
         return false;
     }
 
+    /**
+     * Move to staging all files marked as deleted but still in the release area
+     * 
+     * @return Boolean
+     */
     public function moveDeletedFilesToStagingArea() {
         $dao = $this->_getFRSFileDao();
         $dar = $dao->searchStagingCandidates();
@@ -289,8 +294,42 @@ class FRSFileFactory extends Error {
         return false;
     }
 
+    /**
+     * Physically move one file from release area to staging
+     * 
+     * The file is renamed during the move with its file id to avoid override
+     * if someone upload and delete 2 times (or more) the same file in the same
+     * release
+     * 
+     * @param FRSFile $file
+     */
     public function moveDeletedFileToStagingArea($file) {
+        $stagingPath = $this->getStagingPath($file);
+        $stagingDir  = dirname($stagingPath);
+        if (!is_dir($stagingDir)) {
+            mkdir($stagingDir, 0750, true);
+        }
+        if (rename($file->getFileLocation(), $stagingPath)) {
+            $dao = $this->_getFRSFileDao();
+            return $dao->setFileInDeletedList($file->getFileId());
+        }
+        return false;
+    }
 
+    /**
+     * Get the path in staging area of a file
+     * 
+     * @param FRSFile $file
+     * 
+     * @return String
+     */
+    public function getStagingPath($file) {
+        $fileName    = basename($file->getFileLocation());
+        $releasePath = dirname($file->getFileLocation());
+        $relDirName  = basename($releasePath);
+        $prjDirName  = basename(dirname($releasePath));
+        $stagingPath = $GLOBALS['ftp_frs_dir_prefix'].'/DELETED/'.$prjDirName.'/'.$relDirName;
+        return $stagingPath.'/'.$fileName.'.'.$file->getFileId();
     }
 
     /**
@@ -321,7 +360,7 @@ class FRSFileFactory extends Error {
      * @return Boolean
      */
     public function purgeFile($file) {
-        if (unlink($file->getFileLocation())) {
+        if (unlink($this->getStagingPath($file))) {
             $dao = $this->_getFRSFileDao();
             return $dao->setPurgeDate($file->getFileID(), time());
         }
