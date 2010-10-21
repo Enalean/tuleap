@@ -271,6 +271,38 @@ class Docman_VersionDao extends DataAccessObject {
         }
         return false;
     }
+    
+    /**
+     * List pending versions ( marked as deleted but not physically removed yet)
+     * in order to ease the restore
+     *
+     * @param Integer $groupId
+     * @param Integer $offset
+     * @param Integer $limit
+     *
+     * @return Array
+     */
+    function listPendingVersions($groupId, $offset, $limit) {
+        $sql=' SELECT SQL_CALC_FOUND_ROWS title, number,label,'.
+             '        plugin_docman_version_deleted.delete_date  as date '.
+             ' FROM plugin_docman_item, plugin_docman_version_deleted '.
+             ' WHERE plugin_docman_item.item_id = plugin_docman_version_deleted.item_id '.
+             '        AND group_id='.db_ei($groupId). 
+             '        AND plugin_docman_version_deleted.purge_date > '.$_SERVER['REQUEST_TIME'].
+             ' ORDER BY plugin_docman_version_deleted.purge_date DESC '.
+             ' LIMIT '.db_ei($offset).', '.db_ei($limit);
+
+        $dar = $this->retrieve($sql);
+        foreach ($dar as $row) {
+            $pendings[] = $row;
+        }
+
+        $sql = 'SELECT FOUND_ROWS() as nb';
+        $resNumrows = $this->retrieve($sql);
+        $row = $resNumrows->getRow();
+        return array('pendings' => $pendings, 'numrows' => $row['nb']);
+
+    }
 }
 
 

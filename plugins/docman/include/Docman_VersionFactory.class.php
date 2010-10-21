@@ -108,6 +108,21 @@ class Docman_VersionFactory {
         }
         return false;
     }
+    
+        /**
+     * List pending versions ( marked as deleted but not physically removed yet)
+     * in order to ease the restore
+     *
+     * @param Integer $groupId
+     * @param Integer $offset
+     * @param Integer $limit
+     *
+     * @return Array
+     */
+    function listPendingVersions($groupId, $offset, $limit) {
+        $dao = $this->_getVersionDao();
+        return $dao->listPendingVersions($groupId, $offset, $limit);
+    }
 }
 
 ?>

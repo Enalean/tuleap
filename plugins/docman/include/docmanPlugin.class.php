@@ -23,6 +23,7 @@
  * 
  */
 require_once('common/plugin/Plugin.class.php');
+require_once('Docman_VersionFactory.class.php');
 
 class DocmanPlugin extends Plugin {
 	
@@ -469,19 +470,13 @@ class DocmanPlugin extends Plugin {
         $title[]='Version number';
         $title[]='Delete date';
         $title[]='Restore version';
+        
 
-        $sql='select SQL_CALC_FOUND_ROWS title, number,label, plugin_docman_version_deleted.delete_date  as date '.
-         'FROM plugin_docman_item, plugin_docman_version_deleted '.
-         'WHERE plugin_docman_item.item_id = plugin_docman_version_deleted.item_id '.
-         'AND group_id='.db_ei($params['group_id']).' AND plugin_docman_version_deleted.purge_date > '.$_SERVER['REQUEST_TIME'].' ORDER BY plugin_docman_version_deleted.purge_date DESC LIMIT '.db_ei($params['offset']).', '.db_ei($params['limit']);
+        $version = new Docman_VersionFactory(); 
+        $res = $version->listPendingVersions($params['group_id'], $params['offset'], $params['limit']);
 
-        $res = db_query($sql);
-        $sql = 'SELECT FOUND_ROWS() as nb';
-        $res_numrows = db_query($sql);
-        $row = db_fetch_array($res_numrows);
-
-        $params['pendings'] = $res;
-        $params['numrows'] = (int) $row['nb'];
+        $params['pendings'] = $res['pendings'];
+        $params['numrows'] = (int) $res['numrows'];
         $params['titles'] = $title;
     }
 }
