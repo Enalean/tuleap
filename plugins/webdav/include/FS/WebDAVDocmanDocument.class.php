@@ -49,24 +49,17 @@ class WebDAVDocmanDocument extends Sabre_DAV_File {
     /**
      * This method is used to download the file
      *
-     * @return null
+     * @return void
      *
      * @see plugins/webdav/include/lib/Sabre/DAV/Sabre_DAV_File::get()
      */
     function get() {
         // in this case download just an empty file
-        header('Content-Description: File Transfer');
-        header('Content-Type: application/octet-stream');
-        header('Content-Disposition: attachment; filename="'.$this->getItem()->getTitle().'"');
-        header('Content-Transfer-Encoding: binary');
-        header('Expires: 0');
-        header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
-        header('Pragma: public');
-        header('Content-Length: 0');
-        ob_clean();
-        flush();
-        readfile('');
-        exit;
+        $params = array('fileType' => 'application/octet-stream',
+                        'filename' => $this->getItem()->getTitle(),
+                        'fileSize' => 0,
+                        'path'     => '');
+        $this->download($params);
     }
 
     /**
@@ -158,6 +151,28 @@ class WebDAVDocmanDocument extends Sabre_DAV_File {
      */
     function getUtils() {
         return WebDAVUtils::getInstance();
+    }
+
+    /**
+     * Downloads the document
+     *
+     * @param Array $params
+     *
+     * @return void
+     */
+    function download($params) {
+        header('Content-Description: File Transfer');
+        header('Content-Type: '. $params['fileType']);
+        header('Content-Disposition: attachment; filename="'. $params['filename'] .'"');
+        header('Content-Transfer-Encoding: binary');
+        header('Expires: 0');
+        header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+        header('Pragma: public');
+        header('Content-Length: '. $params['fileSize']);
+        ob_clean();
+        flush();
+        readfile($params['path']);
+        exit;
     }
 
 }

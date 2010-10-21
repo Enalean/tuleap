@@ -31,7 +31,7 @@ class WebDAVDocmanFile extends WebDAVDocmanDocument {
     /**
      * This method is used to download the file
      *
-     * @return null
+     * @return void
      *
      * @see plugins/webdav/include/FS/WebDAVDocmanDocument::get()
      */
@@ -110,7 +110,7 @@ class WebDAVDocmanFile extends WebDAVDocmanDocument {
      *
      * @param Integer $maxFileSize
      *
-     * @return null
+     * @return void
      */
     function setMaxFileSize($maxFileSize) {
         self::$maxFileSize = $maxFileSize;
@@ -121,7 +121,7 @@ class WebDAVDocmanFile extends WebDAVDocmanDocument {
      *
      * @param Docman_Version $version
      *
-     * @return null
+     * @return void
      */
     function logDownload($version) {
         $logger = new Docman_Log();
@@ -138,7 +138,7 @@ class WebDAVDocmanFile extends WebDAVDocmanDocument {
      *
      * @param Docman_Version $version
      *
-     * @return null
+     * @return void
      */
     function download($version) {
         // Wait for watermarking
@@ -151,18 +151,11 @@ class WebDAVDocmanFile extends WebDAVDocmanDocument {
         ));
 
         // Download the file
-        header('Content-Description: File Transfer');
-        header('Content-Type: '. $version->getFiletype());
-        header('Content-Disposition: attachment; filename="'. $version->getFilename() .'"');
-        header('Content-Transfer-Encoding: binary');
-        header('Expires: 0');
-        header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
-        header('Pragma: public');
-        header('Content-Length: '. $version->getFilesize());
-        ob_clean();
-        flush();
-        readfile($version->getPath());
-        exit;
+        $params = array('fileType' => $version->getFiletype(),
+                        'filename' => $version->getFilename(),
+                        'fileSize' => $version->getFilesize(),
+                        'path'     => $version->getPath());
+        parent::download($params);
     }
 
 }
