@@ -83,3 +83,5 @@ files=$(php "$codendi_src/codendi_tools/continuous_integration/findFilesToSniff.
 
 php -d memory_limit=256M /usr/bin/phpcs --standard="$codendi_src/codendi_tools/utils/phpcs/Codendi" "$codendi_src/src/common/chart" "$codendi_src/src/common/backend" --report=checkstyle -n --ignore=*/phpwiki/* --ignore="*/webdav/lib/*" $files > $WORKSPACE/var/tmp/checkstyle.xml || true
 popd
+
+exit 0

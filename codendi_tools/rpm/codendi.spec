@@ -5,6 +5,8 @@
 %define APP_DIR %{_datadir}/%{APP_NAME}
 %define APP_LIB_DIR %{_libdir}/%{APP_NAME}
 %define APP_LIBBIN_DIR %{APP_LIB_DIR}/bin
+%define APP_DATA_DIR %{_localstatedir}/lib/%{APP_NAME}
+%define APP_CACHE_DIR %{_localstatedir}/tmp/%{APP_NAME}_cache
 
 # Check values in Codendi's mailman .spec file
 %define mailman_groupid  106
@@ -22,7 +24,7 @@
 
 Summary: Codendi forge
 Name: %{PKG_NAME}
-Provides: codendi
+Provides: codendi = %{version}
 Version: @@VERSION@@
 Release: 1%{?dist}
 BuildArch: noarch
@@ -44,12 +46,197 @@ Requires: forgeupgrade >= 1.2
 %description
 Codendi is a web based application that address all the aspects of product development.
 
+%package plugin-forumml
+Summary: ForumML plugin for Codendi
+Group: Development/Tools
+Version: @@PLUGIN_FORUMML_VERSION@@
+Release: 1%{?dist}
+Requires: %{name} >= %{version}, php, php-pear-Mail-mimeDecode php-pear-Mail-Mime php-pear-Mail-Mbox php-pear-Mail
+#Requires: mailman-2.1.9-5.codendi
+Provides: codendi-plugin-forumml = %{version}
+%description plugin-forumml
+ForumML brings to Codendi a very nice mail archive viewer and the possibility
+to send mails through the web interface. It can replace the forums.
+
+%package plugin-git
+Summary: Git plugin for Codendi
+Group: Development/Tools
+Version: @@PLUGIN_GIT_VERSION@@
+Release: 1%{?dist}
+Requires: %{name} >= %{version}, git, geshi, php-Smarty
+Provides: codendi-plugin-git = %{version}
+%description plugin-git
+Integration of git distributed software configuration management tool together
+with Codendi
+
+%package plugin-svntodimensions
+Summary: Codendi plugin for svntodimensions
+Group: Development/Tools
+Version: @@PLUGIN_SVNTODIMENSIONS_VERSION@@
+Release: 1%{?dist}
+Requires: %{name} >= %{version}
+Provides: codendi-plugin-svntodimensions = %{version}
+%description plugin-svntodimensions
+Codendi plugin for svntodimensions
+
+%package plugin-cvstodimensions
+Summary: Codendi plugin for cvstodimensions
+Group: Development/Tools
+Version: @@PLUGIN_CVSTODIMENSIONS_VERSION@@
+Release: 1%{?dist}
+Requires: %{name} >= %{version}
+Provides: codendi-plugin-cvstodimensions = %{version}
+%description plugin-cvstodimensions
+Codendi plugin for cvstodimensions
+
+%package plugin-docmanwatermark
+Summary: Codendi plugin for PDF watermarking
+Group: Development/Tools
+Version: @@PLUGIN_DOCMANWATERMARK_VERSION@@
+Release: 1%{?dist}
+Requires: %{name} >= %{version}, php-zendframework = 1.8.1
+# Requires: codendi-plugin-docman
+Provides: codendi-plugin-docmanwatermark = %{version}
+%description plugin-docmanwatermark
+PDF Watermark plugin. Provide the possibility to add a customizable banner to
+PDF file uploaded in Docman
+
+%package plugin-ldap
+Summary: Codendi plugin to manage LDAP integration
+Group: Development/Tools
+Version: @@PLUGIN_LDAP_VERSION@@
+Release: 1%{?dist}
+Requires: %{name} >= %{version}, php-ldap, perl-LDAP, python-ldap
+Provides: codendi-plugin-ldap = %{version}
+%description plugin-ldap
+LDAP Plugin for Codendi. Provides LDAP information, LDAP
+authentication, user and group management.
+
+%package plugin-im
+Summary: Instant Messaging Plugin for Codendi
+Group: Development/Tools
+Version: @@PLUGIN_IM_VERSION@@
+Release: 1%{?dist}
+Requires: %{name} >= %{version}, openfire, openfire-codendi-plugins
+Provides: codendi-plugin-im = %{version}
+%description plugin-im
+Provides instant messaging capabilities, based on a Jabber/XMPP server.
+
+%package plugin-jri
+Summary: Codendi Java Remote Interface plugin
+Group: Development/Tools
+Version: @@PLUGIN_JRI_VERSION@@
+Release: 1%{?dist}
+Requires: %{name} >= %{version}, codendi-jri
+Provides: codendi-plugin-jri = %{version}
+%description plugin-jri
+Codendi Java Remote Interface: the java API for Codendi
+
+%package plugin-eclipse
+Summary: Eclipse plugin for Codendi
+Group: Development/Tools
+Version: @@PLUGIN_ECLIPSE_VERSION@@
+Release: 1%{?dist}
+Requires: %{name} >= %{version}, codendi-eclipse
+Provides: codendi-plugin-eclipse = %{version}
+%description plugin-eclipse
+Plugin to install the Codendi Eclipse plugin and access the documentation
+
+%package plugin-hudson
+Summary: Hudson plugin for Codendi
+Group: Development/Tools/Building
+Version: @@PLUGIN_HUDSON_VERSION@@
+Release: 1%{?dist}
+Requires: %{name} >= %{version}
+Provides: codendi-plugin-hudson = %{version}
+%description plugin-hudson
+Plugin to install the Codendi Hudson plugin for continuous integration
+
+#
+## Themes
+#
+%package theme-codex
+Summary: Codex theme for Codendi
+Group: Development/Tools
+Version: 1.0
+Release: 1%{?dist}
+Requires: %{name} >= %{version}
+Provides: codendi-theme-codex = %{version}
+%description theme-codex
+Original theme for Codendi
+
+%package theme-codextab
+Summary: CodexTab theme for Codendi
+Group: Development/Tools
+Version: 1.0
+Release: 1%{?dist}
+Requires: %{name} >= %{version}
+Provides: codendi-theme-codextab = %{version}
+%description theme-codextab
+CodexTab theme for Codendi
+
+%package theme-dawn
+Summary: Dawn theme for Codendi
+Group: Development/Tools
+Version: 1.0
+Release: 1%{?dist}
+Requires: %{name} >= %{version}
+Provides: codendi-theme-dawn = %{version}
+%description theme-dawn
+Dawn theme for Codendi
+
+%package theme-savannah
+Summary: Savannah theme for Codendi
+Group: Development/Tools
+Version: 1.0
+Release: 1%{?dist}
+Requires: %{name} >= %{version}
+Provides: codendi-theme-savannah = %{version}
+%description theme-savannah
+Savannah theme for Codendi
+
+%package theme-sttab
+Summary: STTab theme for Codendi
+Group: Development/Tools
+Version: 1.0
+Release: 1%{?dist}
+Requires: %{name} >= %{version}
+Provides: codendi-theme-sttab = %{version}
+%description theme-sttab
+STMicroelectronics theme for Codendi
+
+%package theme-codexstn
+Summary: CodexSTN theme for Codendi
+Group: Development/Tools
+Version: 1.0
+Release: 1%{?dist}
+Requires: %{name} >= %{version}
+Provides: codendi-theme-codexstn = %{version}
+%description theme-codexstn
+ST-Ericsson theme for Codendi
+
+%package theme-steerforge
+Summary: SteerForge theme for Codendi
+Group: Development/Tools
+Version: 1.0
+Release: 1%{?dist}
+Requires: %{name} >= %{version}
+Provides: codendi-theme-steerforge = %{version}
+%description theme-steerforge
+SteerForge theme for Codendi
+
+#
+# Package setup
 %prep
 %setup -q
 
+#
+# Build
 %build
 # Nothing to do
 
+#
+# Install
 %install
 %{__rm} -rf $RPM_BUILD_ROOT
 
@@ -66,6 +253,8 @@ done
 %{__rm} -f $RPM_BUILD_ROOT/%{APP_DIR}/plugins/forumml/bin/ml_arch_2_DB.pl
 # Remove salome plugin because not used and breaks SELinux postinstall fix (wrong symlink)
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/salome
+# No need of template
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/template
 # Remove organization_logo (provided by codendi_customization package)
 %{__rm} -f $RPM_BUILD_ROOT/%{APP_DIR}/src/www/themes/common/images/organization_logo.png
 
@@ -91,6 +280,19 @@ done
 # Install cron.d script
 %{__install} -d $RPM_BUILD_ROOT/etc/cron.d
 %{__install} src/utils/cron.d/codendi-stop $RPM_BUILD_ROOT/etc/cron.d/%{APP_NAME}
+
+# Cache dir
+%{__install} -d $RPM_BUILD_ROOT/%{APP_CACHE_DIR}
+
+# plugin forumml
+%{__install} -d $RPM_BUILD_ROOT/%{_localstatedir}/run/forumml
+
+# plugin git
+%{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/gitroot
+%{__ln_s} var/lib/%{APP_NAME}/gitroot $RPM_BUILD_ROOT
+%{__install} -d $RPM_BUILD_ROOT/%{APP_CACHE_DIR}/smarty
+%{__install} -d $RPM_BUILD_ROOT/%{APP_CACHE_DIR}/smarty/templates_c
+%{__install} -d $RPM_BUILD_ROOT/%{APP_CACHE_DIR}/smarty/cache
 
 
 ##
@@ -172,7 +374,6 @@ else
     true
 fi
 
-
 #
 #
 #
@@ -199,6 +400,16 @@ fi
 # Restart the services
 #/sbin/service httpd start
 #/etc/init.d/codendi start
+
+#
+# Post install of git plugin
+%post plugin-git
+if [ "$1" -eq "1" ]; then
+    # During install
+    if ! %{__grep} /usr/bin/git-shell /etc/shells &> /dev/null; then
+        echo /usr/bin/git-shell >> /etc/shells
+    fi
+fi
 
 ##
 ## On package un-install
@@ -237,11 +448,84 @@ fi
 %dir %{APP_DIR}
 %{APP_DIR}/codendi_tools
 %{APP_DIR}/cli
-%{APP_DIR}/plugins
 %{APP_DIR}/site-content
-%{APP_DIR}/src
 %{APP_DIR}/ST-ChangeLog
 %{APP_DIR}/ST-VERSION
+# Split src for src/www/themes
+%dir %{APP_DIR}/src
+%{APP_DIR}/src/AUTHORS
+%{APP_DIR}/src/common
+%{APP_DIR}/src/CONTRIBUTING
+%{APP_DIR}/src/COPYING
+%{APP_DIR}/src/db
+%{APP_DIR}/src/etc
+%{APP_DIR}/src/INSTALL
+%{APP_DIR}/src/README
+%{APP_DIR}/src/updates
+%{APP_DIR}/src/utils
+# Split src/www for src/www/themes
+%dir %{APP_DIR}/src/www
+%{APP_DIR}/src/www/.htaccess
+%{APP_DIR}/src/www/*.php
+%{APP_DIR}/src/www/account
+%{APP_DIR}/src/www/admin
+%{APP_DIR}/src/www/api
+%{APP_DIR}/src/www/bugs
+%{APP_DIR}/src/www/codendi.css
+%{APP_DIR}/src/www/cvs
+%{APP_DIR}/src/www/docman
+%{APP_DIR}/src/www/docs
+%{APP_DIR}/src/www/export
+%{APP_DIR}/src/www/favicon.ico
+%{APP_DIR}/src/www/file
+%{APP_DIR}/src/www/forum
+%{APP_DIR}/src/www/goto
+%{APP_DIR}/src/www/help
+%{APP_DIR}/src/www/include
+%{APP_DIR}/src/www/mail
+%{APP_DIR}/src/www/my
+%{APP_DIR}/src/www/new
+%{APP_DIR}/src/www/news
+%{APP_DIR}/src/www/patch
+%{APP_DIR}/src/www/people
+%{APP_DIR}/src/www/pm
+%{APP_DIR}/src/www/project
+%{APP_DIR}/src/www/projects
+%{APP_DIR}/src/www/reference
+%{APP_DIR}/src/www/robots.txt
+%{APP_DIR}/src/www/scripts
+%{APP_DIR}/src/www/search
+%{APP_DIR}/src/www/service
+%{APP_DIR}/src/www/site
+%{APP_DIR}/src/www/snippet
+%{APP_DIR}/src/www/soap
+%{APP_DIR}/src/www/softwaremap
+%{APP_DIR}/src/www/stats
+%{APP_DIR}/src/www/support
+%{APP_DIR}/src/www/survey
+%{APP_DIR}/src/www/svn
+%dir %{APP_DIR}/src/www/themes
+%{APP_DIR}/src/www/themes/common
+%{APP_DIR}/src/www/top
+%{APP_DIR}/src/www/tos
+%{APP_DIR}/src/www/tracker
+%{APP_DIR}/src/www/user
+%{APP_DIR}/src/www/users
+%{APP_DIR}/src/www/VERSION
+%{APP_DIR}/src/www/widgets
+%{APP_DIR}/src/www/wiki
+# Plugins dir
+%dir %{APP_DIR}/plugins
+%{APP_DIR}/plugins/admindelegation
+%{APP_DIR}/plugins/docman
+%{APP_DIR}/plugins/graphontrackers
+%{APP_DIR}/plugins/pluginsadministration
+%{APP_DIR}/plugins/projectlinks
+%{APP_DIR}/plugins/serverupdate
+%{APP_DIR}/plugins/statistics
+%{APP_DIR}/plugins/tracker_date_reminder
+%{APP_DIR}/plugins/userlog
+%{APP_DIR}/plugins/webdav
 %attr(755,%{APP_USER},%{APP_USER}) %dir %{APP_LIB_DIR}
 %attr(755,%{APP_USER},%{APP_USER}) %dir %{APP_LIBBIN_DIR}
 %attr(00755,%{APP_USER},%{APP_USER}) %{APP_LIBBIN_DIR}/gotohell
@@ -254,16 +538,96 @@ fi
 %attr(00755,%{APP_USER},%{APP_USER}) %{APP_LIBBIN_DIR}/commit-email.pl
 %attr(00755,%{APP_USER},%{APP_USER}) %{APP_LIBBIN_DIR}/codendi_svn_pre_commit.php
 %attr(04755,root,root) %{APP_LIBBIN_DIR}/fileforge
-%attr(06755,%{APP_USER},%{APP_USER}) %{APP_LIBBIN_DIR}/mail_2_DB.pl
 %attr(00755,root,root) /etc/rc.d/init.d/%{APP_NAME}
 %attr(00644,root,root) /etc/cron.d/%{APP_NAME}
+%dir %{APP_CACHE_DIR}
+
+#
+# Plugins
+#
+%files plugin-forumml
+%defattr(-,%{APP_USER},%{APP_USER},-)
+%{APP_DIR}/plugins/forumml
+%attr(06755,%{APP_USER},%{APP_USER}) %{APP_LIBBIN_DIR}/mail_2_DB.pl
+%attr(00750,%{APP_USER},%{APP_USER}) %{_localstatedir}/run/forumml
+
+%files plugin-git
+%defattr(-,%{APP_USER},%{APP_USER},-)
+%{APP_DIR}/plugins/git
+%dir %{APP_DATA_DIR}/gitroot
+%attr(-,root,root) /gitroot
+%attr(00755,%{APP_USER},%{APP_USER}) %{APP_CACHE_DIR}/smarty
+
+%files plugin-svntodimensions
+%defattr(-,%{APP_USER},%{APP_USER},-)
+%{APP_DIR}/plugins/svntodimensions
+
+%files plugin-cvstodimensions
+%defattr(-,%{APP_USER},%{APP_USER},-)
+%{APP_DIR}/plugins/cvstodimensions
+
+%files plugin-docmanwatermark
+%defattr(-,%{APP_USER},%{APP_USER},-)
+%{APP_DIR}/plugins/docmanwatermark
+
+%files plugin-ldap
+%defattr(-,%{APP_USER},%{APP_USER},-)
+%{APP_DIR}/plugins/ldap
+
+%files plugin-im
+%defattr(-,%{APP_USER},%{APP_USER},-)
+%{APP_DIR}/plugins/IM
+
+%files plugin-jri
+%defattr(-,%{APP_USER},%{APP_USER},-)
+%{APP_DIR}/plugins/codendijri
+
+%files plugin-eclipse
+%defattr(-,%{APP_USER},%{APP_USER},-)
+%{APP_DIR}/plugins/eclipse
+
+%files plugin-hudson
+%defattr(-,%{APP_USER},%{APP_USER},-)
+%{APP_DIR}/plugins/hudson
+
+#
+# Themes
+#
+%files theme-codex
+%defattr(-,%{APP_USER},%{APP_USER},-)
+%{APP_DIR}/src/www/themes/CodeX
+
+%files theme-codextab
+%defattr(-,%{APP_USER},%{APP_USER},-)
+%{APP_DIR}/src/www/themes/CodeXTab
+
+%files theme-dawn
+%defattr(-,%{APP_USER},%{APP_USER},-)
+%{APP_DIR}/src/www/themes/Dawn
+
+%files theme-savannah
+%defattr(-,%{APP_USER},%{APP_USER},-)
+%{APP_DIR}/src/www/themes/savannah
+
+%files theme-sttab
+%defattr(-,%{APP_USER},%{APP_USER},-)
+%{APP_DIR}/src/www/themes/STTab
+
+%files theme-codexstn
+%defattr(-,%{APP_USER},%{APP_USER},-)
+%{APP_DIR}/src/www/themes/CodexSTN
+
+%files theme-steerforge
+%defattr(-,%{APP_USER},%{APP_USER},-)
+%{APP_DIR}/src/www/themes/SteerForge
 
 #%doc
 #%config
 
-
-
 %changelog
-* Thu Jun  3 2010 Manuel VACELET <manuel.vacelet@st.com> - 
+* Mon Oct 11 2010 Manuel VACELET <manuel.vacelet@st.com> -
+- Package plugins that matters (solve dependencies install issues).
+
+* Thu Jun  3 2010 Manuel VACELET <manuel.vacelet@st.com> -
 - Initial build.
 

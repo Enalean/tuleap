@@ -13,17 +13,24 @@ Source0: README.all-deps
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 
 Requires: openssh-server, openssh, openssh-clients
-Requires: httpd, mod_ssl, vsftpd
-Requires: openssl, openldap, perl, perl-DBI, perl-DBD-MySQL, gd
-Requires: bind, bind-chroot, caching-nameserver, ntp, python, perl-suidperl
-Requires: python-devel, rcs, perl-URI, perl-HTML-Tagset
-Requires: perl-HTML-Parser, perl-libwww-perl, php, php-ldap, php-mysql, mysql-server
-Requires: mysql, MySQL-python, php-mbstring, php-gd, php-soap, php-pear
-Requires: perl-DateManip, sysstat, curl, aspell
+Requires: ntp
+Requires: sysstat, curl, aspell
 Requires: java-1.6.0-openjdk, jpackage-utils, giflib
-Requires: enscript, mod_auth_mysql, nss, nscd
-# jabbex
-Requires: php-xml
+Requires: enscript
+# Apache
+Requires: httpd, mod_ssl, openssl
+# Perl
+Requires: perl, perl-DBI, perl-DBD-MySQL, perl-suidperl, perl-URI, perl-HTML-Tagset, perl-HTML-Parser, perl-libwww-perl, perl-DateManip
+# Python
+Requires: python, python-devel
+# FTP
+Requires: vsftpd
+# PHP
+Requires: php, php-mysql, php-xml, php-mbstring, php-gd, php-soap, php-pear, gd
+# Mysql
+Requires: mysql, MySQL-python, mysql-server
+# Bind
+Requires: bind, bind-chroot, caching-nameserver
 # jpgraph
 Requires: dejavu-lgc-fonts
 Requires: jpgraph = 2.3.4-0.codendi
@@ -32,29 +39,23 @@ Requires: policycoreutils, coreutils, selinux-policy, selinux-policy-targeted, l
 # CLI (build only?)
 Requires: zip, unzip
 # CVS
-Requires: xinetd, cvs = 1.11.22-5.codendi
+Requires: xinetd, rcs, cvs = 1.11.22-5.codendi
 # SVN
 Conflicts: cadaver
 Requires: subversion, subversion-tools, mod_dav_svn, subversion-perl, subversion-python
 # libnss-mysql (system authentication based on MySQL)
-Requires: libnss-mysql
+Requires: libnss-mysql, mod_auth_mysql, nss, nscd
 # cvsgraph
 Requires: cvsgraph
 # highlight
 Requires: highlight
-# phpMyAdmin
-#Requires: phpmyadmin
 # APC
 Requires: php-pecl-apc
 # Munin
 Requires: munin = 1.2.5-1.codendi, munin-node = 1.2.5-1.codendi
 # HTML Purifier
 Requires: htmlpurifier
-# ForgeUpgrade
-Requires: forgeupgrade
 
-# Openfire
-Requires: openfire, openfire-codendi-plugins
 
 %description
 This package gather all dependencies of @@PKG_NAME@@.

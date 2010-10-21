@@ -25,7 +25,7 @@ require_once 'common/plugin/PluginDescriptor.class.php';
 class DocmanWatermarkPluginDescriptor extends PluginDescriptor {
     
     function __construct() {
-        $this->PluginDescriptor($GLOBALS['Language']->getText('plugin_docmanwatermark', 'descriptor_name'), 'v2.0', $GLOBALS['Language']->getText('plugin_docmanwatermark', 'descriptor_description'));
+        $this->PluginDescriptor($GLOBALS['Language']->getText('plugin_docmanwatermark', 'descriptor_name'), '2.0', $GLOBALS['Language']->getText('plugin_docmanwatermark', 'descriptor_description'));
     }
 }
 ?>

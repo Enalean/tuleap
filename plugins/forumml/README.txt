@@ -1,4 +1,20 @@
-==== INSTALLATION ===
+==== RPM INSTALLATION ====
+
+## If you installed codendi-plugin-forumml, you just need to be sure the right
+## mailman package is installed:
+mailman-2.1.9-5.codendi
+
+## Then, update mailman configuration (/etc/mm_cfg.py) and set:
+PUBLIC_EXTERNAL_ARCHIVER = '/usr/lib/codendi/bin/mail_2_DB.pl %(listname)s ;'
+PRIVATE_EXTERNAL_ARCHIVER = '/usr/lib/codendi/bin/mail_2_DB.pl %(listname)s ;'
+
+## Restart mailman:
+service mailman restart
+
+
+
+
+==== INSTALLATION BY HAND ====
 
 ## All operations below must be run as root
 
@@ -49,6 +65,8 @@ PRIVATE_EXTERNAL_ARCHIVER = '/usr/lib/codendi/bin/mail_2_DB.pl %(listname)s ;'
 ## restart mailman
 service mailman restart
 
+
+
 ==== Import list ====
 
 ## To import ML archives of specific projects, into ForumML DB, 
@@ -60,6 +78,7 @@ $> /usr/share/codendi/src/utils/php-launcher /usr/share/codendi/plugins/forumml/
 ## To import ML archives of all Codendi projects, for which the plugin is enabled
 run 'ml_arch_2_DB.pl' script:
 $> /usr/share/codendi/plugins/forumml/bin/ml_arch_2_DB.pl
+
 
 
 ==== Ugrade PEAR ====
@@ -77,6 +96,7 @@ XML_Util-1.2.1.tgz
 Structures_Graph-1.0.2.tgz
 
 pear upgrade --force PEAR-1.9.0.tgz Archive_Tar-1.3.3.tgz Console_Getopt-1.2.3.tgz XML_Util-1.2.1.tgz Structures_Graph-1.0.2.tgz
+
 
 
 ==== REBUILD RPMS ====
