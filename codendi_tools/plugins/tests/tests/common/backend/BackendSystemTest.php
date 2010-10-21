@@ -54,6 +54,7 @@ class BackendSystemTest extends UnitTestCase {
         $GLOBALS['tmp_dir']                   = dirname(__FILE__) . '/_fixtures/var/tmp';
         $GLOBALS['ftp_frs_dir_prefix']       = dirname(__FILE__) . '/_fixtures/var/lib/codendi/ftp/codendi';
         $GLOBALS['ftp_anon_dir_prefix']      = dirname(__FILE__) . '/_fixtures/var/lib/codendi/ftp/pub';
+        $GLOBALS['sys_file_deletion_delay']   = 5;
     }
     
     
@@ -66,6 +67,7 @@ class BackendSystemTest extends UnitTestCase {
         unset($GLOBALS['tmp_dir']);
         unset($GLOBALS['ftp_frs_dir_prefix']);
         unset($GLOBALS['ftp_anon_dir_prefix']);
+        unset($GLOBALS['sys_file_deletion_delay']);
     }
     
     function testConstructor() {
@@ -383,11 +385,11 @@ class BackendSystemTest extends UnitTestCase {
     public function testCleanupFrs() {
         $backend = new BackendTestVersion($this);
         
-        $dateThreeDaysBefore     = $_SERVER['REQUEST_TIME'] - (24*3600*3);
+        $daysBefore     = $_SERVER['REQUEST_TIME'] - (24*3600*5);
         
         $ff = new MockFRSFileFactory($this);
         $ff->setReturnValue('purgeFiles', true);
-        $ff->expectOnce('purgeFiles', array($dateThreeDaysBefore));
+        $ff->expectOnce('purgeFiles', array($daysBefore));
         $backend->setReturnValue('getFRSFileFactory', $ff);
         
         $this->assertTrue($backend->cleanupFRS());

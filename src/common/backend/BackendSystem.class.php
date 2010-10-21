@@ -308,11 +308,17 @@ class BackendSystem extends Backend {
      */
     public function cleanupFRS() {
         // Purge all deleted files older than 3 days old
-        $time = $_SERVER['REQUEST_TIME'] - (3600*24*3);
+        if (!isset($GLOBALS['sys_file_deletion_delay'])) {
+            $delay = 3;
+        } else {
+            $delay = intval($GLOBALS['sys_file_deletion_delay']);
+        }
+        $time = $_SERVER['REQUEST_TIME'] - (3600*24*$delay);
         
         $frs = $this->getFRSFileFactory();
         $frs->moveDeletedFilesToStagingArea();
         return $frs->purgeFiles($time);
+
        /* // location of the download/upload directories
         $delete_dir = $GLOBALS['ftp_frs_dir_prefix']."/DELETED";
 
