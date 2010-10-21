@@ -54,14 +54,6 @@ EOT;
                 throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured copying from  table plugin_docman_item to plugin_docman_item_deleted');
             }
         }
-
-        $sql = 'DELETE FROM plugin_docman_item WHERE delete_date IS NOT NULL';
-        if ($this->db->tableNameExists('plugin_docman_item')) {
-            $res = $this->db->dbh->exec($sql);
-            if ($res === false) {
-                throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured deleting values of deleted items from table plugin_docman_item');
-            }
-        }
     }
 
     public function postUp() {

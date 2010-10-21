@@ -804,11 +804,8 @@ class Docman_ItemDao extends DataAccessObject {
                         ' wiki_page, file_is_embedded '.
                         ' FROM plugin_docman_item '.
                         ' WHERE item_id='.$this->da->quoteSmart($itemId);
-        if ($this->update($sql)) {
-            $sql = 'DELETE FROM plugin_docman_item WHERE item_id='.$this->da->quoteSmart($itemId);
-            return $this->update($sql);
-        }
-        return false;
+
+        return $this->update($sql);
     }
 }
 
