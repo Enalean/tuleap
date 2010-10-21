@@ -293,15 +293,18 @@ class Docman_VersionDao extends DataAccessObject {
              ' LIMIT '.db_ei($offset).', '.db_ei($limit);
 
         $dar = $this->retrieve($sql);
-        foreach ($dar as $row) {
-            $pendings[] = $row;
+        if ($dar && !$dar->isError() && $dar->rowCount() >0 ) {
+            $pendings = array();
+            foreach ($dar as $row) {
+                $pendings[] = $row;
+            }
+
+            $sql = 'SELECT FOUND_ROWS() as nb';
+            $resNumrows = $this->retrieve($sql);
+            $row = $resNumrows->getRow();
+            return array('pendings' => $pendings, 'numrows' => $row['nb']);
         }
-
-        $sql = 'SELECT FOUND_ROWS() as nb';
-        $resNumrows = $this->retrieve($sql);
-        $row = $resNumrows->getRow();
-        return array('pendings' => $pendings, 'numrows' => $row['nb']);
-
+        return array();
     }
 }
 

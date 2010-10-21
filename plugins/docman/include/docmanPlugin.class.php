@@ -474,10 +474,11 @@ class DocmanPlugin extends Plugin {
 
         $version = new Docman_VersionFactory(); 
         $res = $version->listPendingVersions($params['group_id'], $params['offset'], $params['limit']);
-
-        $params['pendings'] = $res['pendings'];
-        $params['numrows'] = (int) $res['numrows'];
-        $params['titles'] = $title;
+        if (isset($res) && $res) {
+            $params['pendings'] = $res['pendings'];
+            $params['numrows'] = (int) $res['numrows'];
+            $params['titles'] = $title;
+        }
     }
 }
 
