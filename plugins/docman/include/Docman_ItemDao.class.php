@@ -807,6 +807,35 @@ class Docman_ItemDao extends DataAccessObject {
 
         return $this->update($sql);
     }
+     
+    /**
+     * List pending documents
+     *
+     * @param Integer $groupId
+     * @param Integer $offset
+     * @param Integer $limit
+     * @return Array
+     */
+    function listPendingItems($groupId, $offset, $limit) {
+        $sql=' SELECT SQL_CALC_FOUND_ROWS D.item_id as id, '.
+                      ' D.title as title , I.title as location , '.
+                      ' D.user_id as user, D.purge_date  as date'.
+             ' FROM plugin_docman_item_deleted as D, plugin_docman_item as I'.
+             ' WHERE  D.group_id='.db_ei($groupId). 
+             '        AND D.purge_date < '.$_SERVER['REQUEST_TIME'].
+             '        AND D.parent_id = I.item_id '.
+             ' ORDER BY D.purge_date DESC '.
+             ' LIMIT '.db_ei($offset).', '.db_ei($limit);
+        
+        $dar = $this->retrieve($sql);
+        if ($dar && !$dar->isError() && $dar->rowCount() >0 ) {
+            $sql = 'SELECT FOUND_ROWS() as nb';
+            $resNumrows = $this->retrieve($sql);
+            $row = $resNumrows->getRow();
+            return array('items' => $dar, 'nb' => $row['nb']);
+        }
+        return array();
+    }
 }
 
 ?>
