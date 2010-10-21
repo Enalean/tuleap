@@ -3,19 +3,19 @@ require_once('pre.php');
 require_once('www/admin/admin_utils.php');
 require_once('common/event/EventManager.class.php');
 
-function showPendingDocuments($params, $offsetPending, $limitPending) {
+function showPendingVersions($params, $offsetVers, $limit) {
     global $Language;
     $hp = Codendi_HTMLPurifier::instance();
 
-    if ($params['numrows'] > 0) {
+    if ($params['nbVersions'] > 0) {
 
         echo '
         <H3> Deleted versions </H3>
         <P>';
-        echo html_build_list_table_top ($params['titles']);
+        echo html_build_list_table_top ($params['tableVers']);
         $i=1;
 
-        foreach ($params['pendings'] as $row ){
+        foreach ($params['versions'] as $row ){
             echo '
             <TR class="'. html_get_alt_row_color($i++) .'"><TD>'. $hp->purify($row['title'], CODENDI_PURIFIER_BASIC, $params['group_id']).'</TD><TD>';
             echo $hp->purify($row['label']);
@@ -29,22 +29,69 @@ function showPendingDocuments($params, $offsetPending, $limitPending) {
 
         echo '<div style="text-align:center" class="'. util_get_alt_row_color($i++) .'">';
 
-        if ($offsetPending > 0) {
-            echo  '<a href="?group_id='.$params['group_id'].'&offsetPending='.($offsetPending -$limitPending).'">[ '.$Language->getText('project_admin_utils', 'previous').'  ]</a>';
+        if ($offsetVers > 0) {
+            echo  '<a href="?group_id='.$params['group_id'].'&offsetVers='.($offsetVers -$limit).'">[ '.$Language->getText('project_admin_utils', 'previous').'  ]</a>';
             echo '&nbsp;';
         }
-        if (($offsetPending + $limitPending) < $params['numrows']) {
+        if (($offsetVers + $limit) < $params['nbVersions']) {
             echo '&nbsp;';
-            echo '<a href="?group_id='.$params['group_id'].'&offsetPending='.($offsetPending+$limitPending).'">[ '.$Language->getText('project_admin_utils', 'next').' ]</a>';
+            echo '<a href="?group_id='.$params['group_id'].'&offsetVers='.($offsetVers+$limit).'">[ '.$Language->getText('project_admin_utils', 'next').' ]</a>';
         }
         echo '</div>';
         echo '<div style="text-align:center" class="'. util_get_alt_row_color($i++) .'">';
-        echo ($offsetPending+$i-3).'/'.$params['numrows'];
+        echo ($offsetVers+$i-3).'/'.$params['nbVersions'];
         echo '</div>';
 
     } else {
         echo '
-        <H3>No pending documents</H3>';
+        <H3>No pending versions</H3>';
+    }
+
+}
+
+function showPendingItems($params, $offsetItem, $limit) {
+    global $Language;
+    $hp = Codendi_HTMLPurifier::instance();
+    $uh = UserHelper::instance();
+
+    if ($params['nbItems'] > 0) {
+
+        echo '
+        <H3> Deleted Items </H3>
+        <P>';
+        echo html_build_list_table_top ($params['tableItem']);
+        $i=1;
+
+        foreach ($params['items'] as $row ){
+            echo '
+            <TR class="'. html_get_alt_row_color($i++) .'"><TD>'. $hp->purify($row['title'], CODENDI_PURIFIER_BASIC, $params['group_id']).'</TD><TD>';
+            echo $hp->purify($row['location']);
+            echo '</TD>'.
+                '<TD>'.$uh->getDisplayNameFromUserId($row['user']).'</TD>'.
+                '<TD>'.format_date($GLOBALS['Language']->getText('system', 'datefmt'),$row['date']).'</TD>'.
+                '<TD align="center"><a href="" ><IMG SRC="'.util_get_image_theme("trash-x.png").'" BORDER=0 HEIGHT=16 WIDTH=16></a></TD></TR>';
+        }
+        echo '
+        </TABLE>'; 
+
+        echo '<div style="text-align:center" class="'. util_get_alt_row_color($i++) .'">';
+
+        if ($offsetItem > 0) {
+            echo  '<a href="?group_id='.$params['group_id'].'&offsetVers='.($offsetItem -$limit).'">[ '.$Language->getText('project_admin_utils', 'previous').'  ]</a>';
+            echo '&nbsp;';
+        }
+        if (($offsetItem + $limit) < $params['nbItems']) {
+            echo '&nbsp;';
+            echo '<a href="?group_id='.$params['group_id'].'&offsetVers='.($offsetItem+$limit).'">[ '.$Language->getText('project_admin_utils', 'next').' ]</a>';
+        }
+        echo '</div>';
+        echo '<div style="text-align:center" class="'. util_get_alt_row_color($i++) .'">';
+        echo ($offsetItem+$i-3).'/'.$params['nbItems'];
+        echo '</div>';
+
+    } else {
+        echo '
+        <H3>No pending items</H3>';
     }
 
 }
@@ -62,20 +109,31 @@ if($request->valid($vGroupId)) {
     exit_no_group();
 }
 
-$offsetPending = $request->getValidated('offsetPending', 'uint', 0);
-if ( !$offsetPending || $offsetPending < 0 ) {
-    $offsetPending = 0;
+$offsetVers = $request->getValidated('offsetVers', 'uint', 0);
+if ( !$offsetVers || $offsetVers < 0 ) {
+    $offsetVers = 0;
 }
-$limitPending  = 10;
 
-$params = array('group_id' => $group_id, 
-                'offset' => $offsetPending,
-                'limit' => $limitPending,
-                'pendings' => &$pendings,
-                'numrows' =>  &$numrows,
-                'titles' => &$titles);
-$em->processEvent('show_pending_versions', $params);
-if (isset($params['pendings']) && $params['pendings']) {
+$offsetItem = $request->getValidated('offsetItem', 'uint', 0);
+if ( !$offsetItem || $offsetItem < 0 ) {
+    $offsetItem = 0;
+}
+$limit  = 10;
+
+$params = array('service' => &$service,
+                'group_id' => $group_id,
+                'limit' => $limit, 
+                'offsetVers' => $offsetVers,
+                'versions' => &$versions,
+                'nbVersions' =>  &$nbVersions,
+                'tableVers'=>&$tableVers,
+                'offsetItem' => $offsetItem,
+                'items' => &$items,
+                'nbItems' =>&$nbItems,
+                'tableItem'=>&$tableItem);
+
+$em->processEvent('show_pending_documents', $params);
+if (isset($params['service']) && $params['service']) {
 ?>
 
 <FORM action="?" method="POST">
@@ -150,10 +208,24 @@ if (isset($params['pendings']) && $params['pendings']) {
         <div class="contenu_onglets">
             <div class="contenu_onglet" id="contenu_onglet_version">
                 <h1>Deleted Versions</h1>
-                <?php showPendingDocuments($params, $offsetPending, $limitPending);?> 
+                <?php
+                if (isset($params['versions']) && $params['versions']) {
+                    showPendingVersions($params, $offsetVers, $limit);
+                } else {
+                    echo "No pending versions";
+                }
+                ?>
             </div>
+            
             <div class="contenu_onglet" id="contenu_onglet_item">
                 <h1>Deleted items</h1>
+                <?php 
+                if (isset($params['items']) && $params['items']) {
+                    showPendingItems($params, $offsetItem, $limit);
+                } else {
+                    echo "No pending items";
+                }
+                ?> 
             </div>
         </div>
     </div>
@@ -169,6 +241,8 @@ if (isset($params['pendings']) && $params['pendings']) {
 
 </FORM>
 <?php 
+} else {
+    echo "service Docman is not activated";  
 }
 site_admin_footer(array());
 ?>

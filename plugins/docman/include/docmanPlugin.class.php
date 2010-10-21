@@ -24,6 +24,7 @@
  */
 require_once('common/plugin/Plugin.class.php');
 require_once('Docman_VersionFactory.class.php');
+require_once('Docman_ItemFactory.class.php');
 
 class DocmanPlugin extends Plugin {
 	
@@ -62,7 +63,7 @@ class DocmanPlugin extends Plugin {
         $this->_addHook('plugin_statistics_disk_usage_collect_project', 'plugin_statistics_disk_usage_collect_project', false);
         $this->_addHook('plugin_statistics_disk_usage_service_label',   'plugin_statistics_disk_usage_service_label',   false);
 
-        $this->_addHook('show_pending_versions',             'show_pending_versions',             false);
+        $this->_addHook('show_pending_documents',             'show_pending_documents',             false);
 	}
 
     function permission_get_name($params) {
@@ -459,25 +460,41 @@ class DocmanPlugin extends Plugin {
     
     
     /**
-     * Hook to list pending versions of documents in site admin page
+     * Hook to list pending documents and/or versions of documents in site admin page
      *
      * @param array $params
      */
-    function show_pending_versions($params) {
-        $title =array();
-        $title[]='Document title';
-        $title[]='Version label';
-        $title[]='Version number';
-        $title[]='Delete date';
-        $title[]='Restore version';
-        
-
-        $version = new Docman_VersionFactory(); 
-        $res = $version->listPendingVersions($params['group_id'], $params['offset'], $params['limit']);
+    function show_pending_documents($params) {
+         $title =array();
+         $title[]='Document title';
+         $title[]='Version label';
+         $title[]='Version number';
+         $title[]='Delete date';
+         $title[]='Restore version';
+         
+         $params ['service'] = 'enabled';
+        //return all pending versions for given group id
+        $version = new Docman_VersionFactory();
+        $res = $version->listPendingVersions($params['group_id'], $params['offsetVers'], $params['limit']);
         if (isset($res) && $res) {
-            $params['pendings'] = $res['pendings'];
-            $params['numrows'] = (int) $res['numrows'];
-            $params['titles'] = $title;
+            $params['versions'] = $res['versions'];
+            $params['nbVersions'] = (int) $res['nbVersions'];
+            $params['tableVers'] = $title;
+        }
+        //return all pending items for given group id
+         $title =array();
+         $title[]='Document title';
+         $title[]='Location';
+         $title[]='Owner';
+         $title[]='Delete date';
+         $title[]='Restore item';
+        
+        $item = new Docman_ItemFactory($params['group_id']);
+        $res = $item->listPendingItems($params['group_id'], $params['offsetItem'], $params['limit']);
+        if (isset($res) && $res) {
+            $params['items'] = $res['items'];
+            $params['nbItems'] = (int) $res['nbItems'];
+            $params['tableItem'] = $title;
         }
     }
 }

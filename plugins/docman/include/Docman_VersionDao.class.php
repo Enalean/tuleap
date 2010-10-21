@@ -302,7 +302,7 @@ class Docman_VersionDao extends DataAccessObject {
             $sql = 'SELECT FOUND_ROWS() as nb';
             $resNumrows = $this->retrieve($sql);
             $row = $resNumrows->getRow();
-            return array('pendings' => $pendings, 'numrows' => $row['nb']);
+            return array('versions' => $pendings, 'nbVersions' => $row['nb']);
         }
         return array();
     }

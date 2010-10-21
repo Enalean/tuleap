@@ -1084,23 +1084,12 @@ class Docman_ItemFactory {
      * @param Integer $groupId
      * @param Integer $offset
      * @param Integer $limit
+     *
      * @return Array
      */
     function listPendingItems($groupId, $offset, $limit) {
-        $uh = UserHelper::instance();
-
         $dao = $this->_getItemDao();
-        $res = $dao->listPendingItems($groupId, $offset, $limit);
-
-        foreach($res['items'] as $row) {
-            $line = array();
-            $line['title'] = $row['title'];;
-            $line['location'] = $row['location'];
-            $line['owner'] = $uh->getDisplayNameFromUserId($row['user']);
-            $line['date'] = format_date($GLOBALS['Language']->getText('system', 'datefmt'), $row['date']);
-            $pendings[] = $line;
-        }
-        return array('items' => $pendings, 'nb' => $res['nb']);
+        return $dao->listPendingItems($groupId, $offset, $limit);
     }
 }
 

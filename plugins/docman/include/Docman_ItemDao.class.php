@@ -826,13 +826,18 @@ class Docman_ItemDao extends DataAccessObject {
              '        AND D.parent_id = I.item_id '.
              ' ORDER BY D.purge_date DESC '.
              ' LIMIT '.db_ei($offset).', '.db_ei($limit);
-        
+
         $dar = $this->retrieve($sql);
         if ($dar && !$dar->isError() && $dar->rowCount() >0 ) {
+                        $pendings = array();
+            foreach ($dar as $row) {
+                $pendings[] = $row;
+            }
+            
             $sql = 'SELECT FOUND_ROWS() as nb';
             $resNumrows = $this->retrieve($sql);
             $row = $resNumrows->getRow();
-            return array('items' => $dar, 'nb' => $row['nb']);
+            return array('items' => $pendings, 'nbItems' => $row['nb']);
         }
         return array();
     }
