@@ -188,25 +188,6 @@ print "<h3>".$Language->getText('admin_groupedit','license_other')."</h3> $row_g
 $template_group = $pm->getProject($group->getTemplate());
 print "<h3>".$Language->getText('admin_groupedit','built_from_template').':</h3> <a href="/projects/'.$template_group->getUnixName().'"> <B> '.$template_group->getPublicname().' </B></A>';
 
-
-$offsetPending = $request->getValidated('offsetPending', 'uint', 0);
-if ( !$offsetPending || $offsetPending < 0 ) {
-    $offsetPending = 0;
-}
-$limitPending  = 10;
-$params = array('group_id' => $group_id, 
-                'offset' => $offsetPending,
-                'limit' => $limitPending,
-                'pendings' => &$pendings,
-                'numrows' =>  &$numrows,
-                'titles' => &$titles);
-$em->processEvent("show_pending_versions", $params);
-if (isset($params['pendings']) && $params['pendings']) {
-?>
-
-<?php 
-}
-
 // Check if group_id is valid
 $vGroupId = new Valid_GroupId();
 $vGroupId->required();
