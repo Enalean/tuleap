@@ -24,8 +24,8 @@ require_once (dirname(__FILE__).'/../include/WebDAVUtils.class.php');
 require_once ('requirements.php');
 require_once (dirname(__FILE__).'/../../docman/include/Docman_Item.class.php');
 Mock::generate('Docman_Item');
-//require_once (dirname(__FILE__).'/../../docman/include/Docman_Folder.class.php');
-//Mock::generate('Docman_Folder');
+require_once (dirname(__FILE__).'/../../docman/include/Docman_Folder.class.php');
+Mock::generate('Docman_Folder');
 require_once (dirname(__FILE__).'/../../docman/include/Docman_ItemFactory.class.php');
 Mock::generate('Docman_ItemFactory');
 require_once (dirname(__FILE__).'/../../docman/include/Docman_PermissionsManager.class.php');
@@ -46,22 +46,6 @@ Mock::generatePartial(
     'WebDAVDocmanFolderTestVersion3',
 array('getItem', 'getDocmanItemFactory', 'getDocmanPermissionsManager', 'getWebDAVDocmanFolder')
 );
-
-class TestDocmanFolder extends Docman_Folder {
-
-    function getTitle() {
-        return 'SameName';
-    }
-
-}
-
-class TestDocmanFolder2 extends Docman_Folder {
-
-    function getTitle() {
-        return 'AnotherName';
-    }
-
-}
 
 /**
  * This is the unit test of WebDAVDocmanFolder
@@ -121,8 +105,10 @@ class WebDAVDocmanFolderTest extends UnitTestCase {
     function testGetChildListDuplicateName() {
         $webDAVDocmanFolder = new WebDAVDocmanFolderTestVersion($this);
 
-        $item1 = new TestDocmanFolder();
-        $item2 = new TestDocmanFolder();
+        $item1 = new MockDocman_Folder();
+        $item1->setReturnValue('getTitle', 'SameName');
+        $item2 = new MockDocman_Folder();
+        $item2->setReturnValue('getTitle', 'SameName');
         $docmanItemFactory = new MockDocman_ItemFactory();
         $docmanItemFactory->setReturnValue('getChildrenFromParent', array($item1, $item2));
         $webDAVDocmanFolder->setReturnValue('getDocmanItemFactory', $docmanItemFactory);
@@ -144,8 +130,10 @@ class WebDAVDocmanFolderTest extends UnitTestCase {
     function testGetChildListFilled() {
         $webDAVDocmanFolder = new WebDAVDocmanFolderTestVersion($this);
 
-        $item1 = new TestDocmanFolder();
-        $item2 = new TestDocmanFolder2();
+        $item1 = new MockDocman_Folder();
+        $item1->setReturnValue('getTitle', 'SameName');
+        $item2 = new MockDocman_Folder();
+        $item2->setReturnValue('getTitle', 'AnotherName');
         $docmanItemFactory = new MockDocman_ItemFactory();
         $docmanItemFactory->setReturnValue('getChildrenFromParent', array($item1, $item2));
         $webDAVDocmanFolder->setReturnValue('getDocmanItemFactory', $docmanItemFactory);
@@ -190,8 +178,10 @@ class WebDAVDocmanFolderTest extends UnitTestCase {
     function testGetChildrenFilled() {
         $webDAVDocmanFolder = new WebDAVDocmanFolderTestVersion($this);
 
-        $item1 = new TestDocmanFolder();
-        $item2 = new TestDocmanFolder2();
+        $item1 = new MockDocman_Folder();
+        $item1->setReturnValue('getTitle', 'SameName');
+        $item2 = new MockDocman_Folder();
+        $item2->setReturnValue('getTitle', 'AnotherName');
         $docmanItemFactory = new MockDocman_ItemFactory();
         $docmanItemFactory->setReturnValue('getChildrenFromParent', array($item1, $item2));
         $webDAVDocmanFolder->setReturnValue('getDocmanItemFactory', $docmanItemFactory);
@@ -225,11 +215,37 @@ class WebDAVDocmanFolderTest extends UnitTestCase {
     /**
      * Testing when the item is duplicated
      */
-    function testGetChildDuplicated() {
+    function testGetChildDuplicatedSameCase() {
         $webDAVDocmanFolder = new WebDAVDocmanFolderTestVersion3($this);
 
-        $item1 = new TestDocmanFolder();
-        $item2 = new TestDocmanFolder();
+        $item1 = new MockDocman_Folder();
+        $item1->setReturnValue('getTitle', 'SameName');
+        $item2 = new MockDocman_Folder();
+        $item2->setReturnValue('getTitle', 'SameName');
+        $docmanItemFactory = new MockDocman_ItemFactory();
+        $docmanItemFactory->setReturnValue('getChildrenFromParent', array($item1, $item2));
+        $webDAVDocmanFolder->setReturnValue('getDocmanItemFactory', $docmanItemFactory);
+
+        $docmanPermissionManager = new MockDocman_PermissionsManager();
+        $docmanPermissionManager->setReturnValue('userCanAccess', true);
+        $webDAVDocmanFolder->setReturnValue('getDocmanPermissionsManager', $docmanPermissionManager);
+
+        $webDAVDocmanFolder->setReturnValue('getWebDAVDocmanFolder', $item1);
+
+        $this->expectException('Sabre_DAV_Exception_Conflict');
+        $webDAVDocmanFolder->getChild('SameName');
+    }
+
+    /**
+     * Testing when the item is duplicated
+     */
+    function testGetChildDuplicatedDifferentCase() {
+        $webDAVDocmanFolder = new WebDAVDocmanFolderTestVersion3($this);
+
+        $item1 = new MockDocman_Folder();
+        $item1->setReturnValue('getTitle', 'SameName');
+        $item2 = new MockDocman_Folder();
+        $item2->setReturnValue('getTitle', 'samename');
         $docmanItemFactory = new MockDocman_ItemFactory();
         $docmanItemFactory->setReturnValue('getChildrenFromParent', array($item1, $item2));
         $webDAVDocmanFolder->setReturnValue('getDocmanItemFactory', $docmanItemFactory);

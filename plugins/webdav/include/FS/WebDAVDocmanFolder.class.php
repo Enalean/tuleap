@@ -87,11 +87,15 @@ class WebDAVDocmanFolder extends Sabre_DAV_Directory {
                         break;
                 }
 
+                // When it's a duplicate say it, so it can be processed later
+                foreach ($children as $key => $value) {
+                    if (strcasecmp($key,$index) === 0) {
+                        $children[$key]   = 'duplicate';
+                        $children[$index] = 'duplicate';
+                    }
+                }
                 if (!isset($children[$index])) {
                     $children[$index] = call_user_func(array($this,$method), $node);
-                } else {
-                    // When it's a duplicate say it, so it can be processed later
-                    $children[$index] = 'duplicate';
                 }
             }
         }
