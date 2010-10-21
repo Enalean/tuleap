@@ -172,4 +172,3 @@ if (isset($params['pendings']) && $params['pendings']) {
 }
 site_admin_footer(array());
 ?>
-
