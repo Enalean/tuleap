@@ -792,6 +792,24 @@ class Docman_ItemDao extends DataAccessObject {
             , PLUGIN_DOCMAN_PREF, $this->da->quoteSmart($item_id));
         $this->update($sql);
     }
+
+    function storeDeletedItem($itemId) {
+        $sql = 'INSERT INTO plugin_docman_item_deleted (item_id, parent_id, group_id, title, '.
+                        ' description, create_date, update_date, delete_date, purge_date, '.
+                        ' user_id, status, obsolescence_date, rank, item_type, link_url, '.
+                        ' wiki_page, file_is_embedded) '.
+                        ' SELECT item_id, parent_id, group_id, title, '.
+                        ' description, create_date, update_date, delete_date, delete_date, '.
+                        ' user_id, status, obsolescence_date, rank, item_type, link_url,'.
+                        ' wiki_page, file_is_embedded '.
+                        ' FROM plugin_docman_item '.
+                        ' WHERE item_id='.$this->da->quoteSmart($itemId);
+        if ($this->update($sql)) {
+            $sql = 'DELETE FROM plugin_docman_item WHERE item_id='.$this->da->quoteSmart($itemId);
+            return $this->update($sql);
+        }
+        return false;
+    }
 }
 
 ?>

@@ -154,6 +154,7 @@ class Docman_ActionsDeleteVisitor /* implements Visitor */ {
             $dIF->delCopyPreferenceForAllUsers($item->getId());
             $dao = $this->_getItemDao();
             $dao->updateFromRow($item->toRow());
+            $dao->storeDeletedItem($item->getId());
             return true;
         } else {
             $this->docman->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_perms_delete_item', $item->getTitle()));
