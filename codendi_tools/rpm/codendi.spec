@@ -459,6 +459,7 @@ fi
 %{APP_DIR}/src/COPYING
 %{APP_DIR}/src/db
 %{APP_DIR}/src/etc
+%{APP_DIR}/src/forgeupgrade
 %{APP_DIR}/src/INSTALL
 %{APP_DIR}/src/README
 %{APP_DIR}/src/updates
