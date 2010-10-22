@@ -4,14 +4,11 @@ require_once('www/admin/admin_utils.php');
 require_once('common/event/EventManager.class.php');
 
 function showPendingVersions($params, $offsetVers, $limit) {
-    global $Language;
     $hp = Codendi_HTMLPurifier::instance();
 
     if ($params['nbVersions'] > 0) {
 
-        echo '
-        <H3> Deleted versions </H3>
-        <P>';
+        echo '<H3>'.$GLOBALS['Language']->getText('admin_show_pending_documents', 'deleted_version').'</H3><P>';
         echo html_build_list_table_top ($params['tableVers']);
         $i=1;
 
@@ -30,12 +27,12 @@ function showPendingVersions($params, $offsetVers, $limit) {
         echo '<div style="text-align:center" class="'. util_get_alt_row_color($i++) .'">';
 
         if ($offsetVers > 0) {
-            echo  '<a href="?group_id='.$params['group_id'].'&offsetVers='.($offsetVers -$limit).'">[ '.$Language->getText('project_admin_utils', 'previous').'  ]</a>';
+            echo  '<a href="?group_id='.$params['group_id'].'&offsetVers='.($offsetVers -$limit).'">[ '.$GLOBALS['Language']->getText('admin_show_pending_documents', 'previous').'  ]</a>';
             echo '&nbsp;';
         }
         if (($offsetVers + $limit) < $params['nbVersions']) {
             echo '&nbsp;';
-            echo '<a href="?group_id='.$params['group_id'].'&offsetVers='.($offsetVers+$limit).'">[ '.$Language->getText('project_admin_utils', 'next').' ]</a>';
+            echo '<a href="?group_id='.$params['group_id'].'&offsetVers='.($offsetVers+$limit).'">[ '.$GLOBALS['Language']->getText('admin_show_pending_documents', 'next').' ]</a>';
         }
         echo '</div>';
         echo '<div style="text-align:center" class="'. util_get_alt_row_color($i++) .'">';
@@ -43,22 +40,17 @@ function showPendingVersions($params, $offsetVers, $limit) {
         echo '</div>';
 
     } else {
-        echo '
-        <H3>No pending versions</H3>';
+        $GLOBALS['Response']->addFeedback('info',$GLOBALS['Language']->getText('admin_show_pending_documents', 'no_pending_versions'));
     }
 
 }
 
 function showPendingItems($params, $offsetItem, $limit) {
-    global $Language;
     $hp = Codendi_HTMLPurifier::instance();
     $uh = UserHelper::instance();
 
     if ($params['nbItems'] > 0) {
-
-        echo '
-        <H3> Deleted Items </H3>
-        <P>';
+        echo '<H3>'.$GLOBALS['Language']->getText('admin_show_pending_documents', 'deleted_item').'</H3><P>';
         echo html_build_list_table_top ($params['tableItem']);
         $i=1;
 
@@ -77,12 +69,12 @@ function showPendingItems($params, $offsetItem, $limit) {
         echo '<div style="text-align:center" class="'. util_get_alt_row_color($i++) .'">';
 
         if ($offsetItem > 0) {
-            echo  '<a href="?group_id='.$params['group_id'].'&offsetVers='.($offsetItem -$limit).'">[ '.$Language->getText('project_admin_utils', 'previous').'  ]</a>';
+            echo  '<a href="?group_id='.$params['group_id'].'&offsetVers='.($offsetItem -$limit).'">[ '.$GLOBALS['Language']->getText('admin_show_pending_documents', 'previous').'  ]</a>';
             echo '&nbsp;';
         }
         if (($offsetItem + $limit) < $params['nbItems']) {
             echo '&nbsp;';
-            echo '<a href="?group_id='.$params['group_id'].'&offsetVers='.($offsetItem+$limit).'">[ '.$Language->getText('project_admin_utils', 'next').' ]</a>';
+            echo '<a href="?group_id='.$params['group_id'].'&offsetVers='.($offsetItem+$limit).'">[ '.$GLOBALS['Language']->getText('admin_show_pending_documents', 'next').' ]</a>';
         }
         echo '</div>';
         echo '<div style="text-align:center" class="'. util_get_alt_row_color($i++) .'">';
@@ -90,12 +82,11 @@ function showPendingItems($params, $offsetItem, $limit) {
         echo '</div>';
 
     } else {
-        echo '
-        <H3>No pending items</H3>';
+       $GLOBALS['Response']->addFeedback('info',$GLOBALS['Language']->getText('admin_show_pending_documents', 'no_pending_versions'));
     }
 
 }
-site_admin_header(array('title'=>$Language->getText('admin_groupedit','title')));
+site_admin_header(array('title'=>$GLOBALS['Language']->getText('admin_groupedit','title')));
 session_require(array('group'=>'1','admin_flags'=>'A'));
 $request = HTTPRequest::instance();
 $em = EventManager::instance();
@@ -212,7 +203,7 @@ if (isset($params['service']) && $params['service']) {
                 if (isset($params['versions']) && $params['versions']) {
                     showPendingVersions($params, $offsetVers, $limit);
                 } else {
-                    echo "No pending versions";
+                    echo $GLOBALS['Language']->getText('admin_show_pending_documents', 'no_pending_versions');
                 }
                 ?>
             </div>
@@ -223,7 +214,8 @@ if (isset($params['service']) && $params['service']) {
                 if (isset($params['items']) && $params['items']) {
                     showPendingItems($params, $offsetItem, $limit);
                 } else {
-                    echo "No pending items";
+                    echo $GLOBALS['Language']->getText('admin_show_pending_documents', 'no_pending_items');
+                    
                 }
                 ?> 
             </div>
@@ -242,7 +234,7 @@ if (isset($params['service']) && $params['service']) {
 </FORM>
 <?php 
 } else {
-    echo "service Docman is not activated";  
+    $GLOBALS['Response']->addFeedback('warning',$GLOBALS['Language']->getText('admin_show_pending_documents', 'service_not_enabled'));
 }
 site_admin_footer(array());
 ?>

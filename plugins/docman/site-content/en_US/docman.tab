@@ -814,3 +814,12 @@ plugin_docman	widget_my_docman_search_label	Search document id:
 plugin_docman	widget_my_docman_search_btn	Search
 
 plugin_docman	name_validity	A directory already exists with this name under docman
+
+plugin_docman	title	Document title
+plugin_docman	label	Version label
+plugin_docman	number	Version number
+plugin_docman	delete_date	Delete date
+plugin_docman	restore_version	Restore version
+plugin_docman	location	Location
+plugin_docman	owner	Owner
+plugin_docman	restore_item	Restore item

@@ -813,3 +813,13 @@ plugin_docman	widget_my_docman_search_label	Cherche un document par id :
 plugin_docman	widget_my_docman_search_btn	Rechercher
 
 plugin_docman	name_validity	Un répertoire Docman existe déjà avec ce nom.
+
+plugin_docman	title	Le titre du document
+plugin_docman	label	Label de la version
+plugin_docman	number	Numéro de la version
+plugin_docman	delete_date	Date de suppression
+plugin_docman	restore_version	Restorer la version
+plugin_docman	location	Chemin
+plugin_docman	owner	Propriétaire
+plugin_docman	restore_item	Restorer l'item
+

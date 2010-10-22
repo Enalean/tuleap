@@ -444,4 +444,16 @@ admin_system_events	notifications	Notifications
 admin_system_events	send_email	Send an email to:
 admin_system_events	nobody	Nobody
 
+#-----------------------------------------------
+# Script: SF/www/admin/show_pending_documents.php
+#
+admin_show_pending_documents	deleted_version	Deleted versions
+admin_show_pending_documents	no_pending_versions	There are no pending versions.
+admin_show_pending_documents	deleted_item	Deleted items
+admin_show_pending_documents	no_pending_items	There are no pending items.
+admin_show_pending_documents	previous	Previous
+admin_show_pending_documents	next	Next
+admin_show_pending_documents	service_not_enabled	Documents service is not enabled. 
+ 
+
 

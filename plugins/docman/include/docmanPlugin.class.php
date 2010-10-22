@@ -465,14 +465,14 @@ class DocmanPlugin extends Plugin {
      * @param array $params
      */
     function show_pending_documents($params) {
-         $title =array();
-         $title[]='Document title';
-         $title[]='Version label';
-         $title[]='Version number';
-         $title[]='Delete date';
-         $title[]='Restore version';
+        $title =array();
+        $title[] = $GLOBALS['Language']->getText('plugin_docman','title');
+        $title[] = $GLOBALS['Language']->getText('plugin_docman','label');
+        $title[] = $GLOBALS['Language']->getText('plugin_docman','number');
+        $title[] = $GLOBALS['Language']->getText('plugin_docman','delete_date');
+        $title[] = $GLOBALS['Language']->getText('plugin_docman','restore_version');
          
-         $params ['service'] = 'enabled';
+        $params ['service'] = 'enabled';
         //return all pending versions for given group id
         $version = new Docman_VersionFactory();
         $res = $version->listPendingVersions($params['group_id'], $params['offsetVers'], $params['limit']);
@@ -482,13 +482,13 @@ class DocmanPlugin extends Plugin {
             $params['tableVers'] = $title;
         }
         //return all pending items for given group id
-         $title =array();
-         $title[]='Document title';
-         $title[]='Location';
-         $title[]='Owner';
-         $title[]='Delete date';
-         $title[]='Restore item';
-        
+        $title =array();
+        $title[] = $GLOBALS['Language']->getText('plugin_docman','title');
+        $title[] = $GLOBALS['Language']->getText('plugin_docman','location');
+        $title[] = $GLOBALS['Language']->getText('plugin_docman','owner');
+        $title[] = $GLOBALS['Language']->getText('plugin_docman','delete_date');
+        $title[] = $GLOBALS['Language']->getText('plugin_docman','restore_item');
+
         $item = new Docman_ItemFactory($params['group_id']);
         $res = $item->listPendingItems($params['group_id'], $params['offsetItem'], $params['limit']);
         if (isset($res) && $res) {
