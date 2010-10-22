@@ -55,11 +55,7 @@ class WebDAVDocmanDocument extends Sabre_DAV_File {
      */
     function get() {
         // in this case download just an empty file
-        $params = array('fileType' => 'application/octet-stream',
-                        'filename' => $this->getItem()->getTitle(),
-                        'fileSize' => 0,
-                        'path'     => '');
-        $this->download($params);
+        $this->download('application/octet-stream', 0, '');
     }
 
     /**
@@ -156,22 +152,24 @@ class WebDAVDocmanDocument extends Sabre_DAV_File {
     /**
      * Downloads the document
      *
-     * @param Array $params
+     * @param String  $fileType
+     * @param Integer $fileSize
+     * @param String  $path
      *
      * @return void
      */
-    function download($params) {
+    function download($fileType, $fileSize, $path) {
         header('Content-Description: File Transfer');
-        header('Content-Type: '. $params['fileType']);
-        header('Content-Disposition: attachment; filename="'. $params['filename'] .'"');
+        header('Content-Type: '. $fileType);
+        header('Content-Disposition: attachment; filename="'. basename($path) .'"');
         header('Content-Transfer-Encoding: binary');
         header('Expires: 0');
         header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
         header('Pragma: public');
-        header('Content-Length: '. $params['fileSize']);
+        header('Content-Length: '. $fileSize);
         ob_clean();
         flush();
-        readfile($params['path']);
+        readfile($path);
         exit;
     }
 

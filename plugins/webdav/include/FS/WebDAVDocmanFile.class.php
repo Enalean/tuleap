@@ -151,11 +151,7 @@ class WebDAVDocmanFile extends WebDAVDocmanDocument {
         ));
 
         // Download the file
-        $params = array('fileType' => $version->getFiletype(),
-                        'filename' => $version->getFilename(),
-                        'fileSize' => $version->getFilesize(),
-                        'path'     => $version->getPath());
-        parent::download($params);
+        parent::download($version->getFiletype(), $version->getFilesize(), $version->getPath());
     }
 
 }
