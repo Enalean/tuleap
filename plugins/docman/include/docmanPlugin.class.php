@@ -57,6 +57,7 @@ class DocmanPlugin extends Plugin {
         $this->_addHook('project_export',                    'project_export',                    false);
         $this->_addHook('SystemEvent_PROJECT_RENAME',        'renameProject',                     false);
         $this->_addHook('file_exists_in_data_dir',           'file_exists_in_data_dir',           false);
+        $this->_addHook('webdav_root_for_service',           'getRootItemForProject',             false);
         // Stats plugin
         $this->_addHook('plugin_statistics_disk_usage_collect_project', 'plugin_statistics_disk_usage_collect_project', false);
         $this->_addHook('plugin_statistics_disk_usage_service_label',   'plugin_statistics_disk_usage_service_label',   false);
@@ -430,6 +431,21 @@ class DocmanPlugin extends Plugin {
         if (Backend::fileExists($path)) {
             $params['result']= false;
             $params['error'] = $GLOBALS['Language']->getText('plugin_docman','name_validity');
+        }
+    }
+
+    /**
+     * Hook to know if docman is activated for the given project
+     * it returns the root item of that project
+     *
+     * @param Array $params
+     */
+    function getRootItemForProject($params) {
+        if ($params['service'] == 'docman') {
+            require_once('Docman_ItemFactory.class.php');
+            $docmanItemFactory = new Docman_ItemFactory();
+            $root = $docmanItemFactory->getRoot($params['project']->getId());
+            $params['root']= $root;
         }
     }
 

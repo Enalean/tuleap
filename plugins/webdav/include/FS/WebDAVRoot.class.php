@@ -114,10 +114,10 @@ class WebDAVRoot extends Sabre_DAV_Directory {
         }
 
         // Check if the file release service is activated for the project
-        if (!$project->usesFile()) {
+        /*if (!$project->usesFile()) {
             // Access denied error
             throw new Sabre_DAV_Exception_Forbidden($GLOBALS['Language']->getText('plugin_webdav_common', 'project_have_no_frs'));
-        }
+        }*/
 
         return $project;
 
@@ -214,7 +214,7 @@ class WebDAVRoot extends Sabre_DAV_Directory {
         foreach ($res as $groupId) {
             if ($this->isWebDAVAllowedForProject($groupId)) {
                 $project = $this->getWebDAVProject($groupId);
-                if ($project->usesFile()) {
+                if ($project->userCanRead()) {
                     $projects[] = $project;
                 }
             }
@@ -237,9 +237,7 @@ class WebDAVRoot extends Sabre_DAV_Directory {
             foreach ($res as $row) {
                 if ($this->isWebDAVAllowedForProject($row['group_id'])) {
                     $project = $this->getWebDAVProject($row['group_id']);
-                    if ($project->usesFile()) {
-                        $projects[] = $project;
-                    }
+                    $projects[] = $project;
                 }
             }
         }

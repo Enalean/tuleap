@@ -20,17 +20,7 @@
 
 require_once (dirname(__FILE__).'/../../../src/common/language/BaseLanguage.class.php');
 Mock::generate('BaseLanguage');
-require_once (dirname(__FILE__).'/../include/lib/Sabre/DAV/Exception.php');
-require_once (dirname(__FILE__).'/../include/lib/Sabre/DAV/Exception/FileNotFound.php');
-require_once (dirname(__FILE__).'/../include/lib/Sabre/DAV/Exception/Forbidden.php');
-require_once (dirname(__FILE__).'/../include/lib/Sabre/DAV/Exception/MethodNotAllowed.php');
-require_once (dirname(__FILE__).'/../include/lib/Sabre/DAV/INode.php');
-require_once (dirname(__FILE__).'/../include/lib/Sabre/DAV/Node.php');
-require_once (dirname(__FILE__).'/../include/lib/Sabre/DAV/IFile.php');
-require_once (dirname(__FILE__).'/../include/lib/Sabre/DAV/File.php');
-require_once (dirname(__FILE__).'/../include/lib/Sabre/DAV/ICollection.php');
-require_once (dirname(__FILE__).'/../include/lib/Sabre/DAV/IDirectory.php');
-require_once (dirname(__FILE__).'/../include/lib/Sabre/DAV/Directory.php');
+require_once ('requirements.php');
 require_once (dirname(__FILE__).'/../../../src/common/user/User.class.php');
 Mock::generate('User');
 require_once (dirname(__FILE__).'/../../../src/common/frs/FRSPackage.class.php');
@@ -48,7 +38,7 @@ require_once (dirname(__FILE__).'/../include/FS/WebDAVProject.class.php');
 Mock::generatePartial(
     'WebDAVProject',
     'WebDAVProjectTestVersion',
-array('getGroupId', 'getProject', 'getUser', 'getUtils', 'getPackageList','getFRSPackageFromName', 'getWebDAVPackage', 'userCanWrite')
+array('getGroupId', 'getProject', 'getUser', 'getUtils', 'getPackageList','getFRSPackageFromName', 'getWebDAVPackage', 'usesFile', 'userCanWrite')
 );
 
 /**
@@ -77,78 +67,42 @@ class WebDAVProjectTest extends UnitTestCase {
     }
 
     /**
-     * Testing when The project have no packages
+     * Testing when The project have no active services
      */
-    function testGetChildrenNoPackages() {
+    function testGetChildrenNoServices() {
 
         $webDAVProject = new WebDAVProjectTestVersion($this);
-        $webDAVProject->setReturnValue('getPackageList', array());
+        $webDAVProject->setReturnValue('usesFile', false);
         $this->assertEqual($webDAVProject->getChildren(), array());
 
     }
 
     /**
-     * Testing when the user can't read packages
+     * Testing when the user can't access to the service
      */
-    function testGetChildrenUserCanNotRead() {
+    /*function testGetChildrenFRSActive() {
 
         $webDAVProject = new WebDAVProjectTestVersion($this);
-
-        $package = new MockWebDAVFRSPackage();
-        $package->setReturnValue('userCanRead', false);
-        $webDAVProject->setReturnValue('getWebDAVPackage', $package);
-
-        $FRSPackage = new MockFRSPackage();
-        $webDAVProject->setReturnValue('getPackageList', array($FRSPackage));
-
         $this->assertEqual($webDAVProject->getChildren(), array());
 
-    }
+    }*/
 
     /**
-     * Testing when the user can read packages
-     */
-    function testGetChildrenUserCanRead() {
-
-        $webDAVProject = new WebDAVProjectTestVersion($this);
-
-        $package = new MockWebDAVFRSPackage();
-        $package->setReturnValue('userCanRead', true);
-
-        $webDAVProject->setReturnValue('getWebDAVPackage', $package);
-
-        $FRSPackage = new MockFRSPackage();
-        $webDAVProject->setReturnValue('getPackageList', array($FRSPackage));
-
-        $this->assertEqual($webDAVProject->getChildren(), array($package));
-
-    }
-
-    /**
-     * Testing when the package doesn't exist
+     * Testing when the service doesn't exist
      */
     function testGetChildFailWithNotExist() {
 
         $webDAVProject = new WebDAVProjectTestVersion($this);
-
-        $FRSPackage = new MockFRSPackage();
-        $WebDAVPackage = new MockWebDAVFRSPackage();
-        $WebDAVPackage->setReturnValue('exist', false);
-        $webDAVProject->setReturnValue('getFRSPackageFromName', $FRSPackage);
-        $webDAVProject->setReturnValue('getWebDAVPackage', $WebDAVPackage);
-
+        $webDAVProject->setReturnValue('usesFile', false);
         $this->expectException('Sabre_DAV_Exception_FileNotFound');
-
-        $utils = new MockWebDAVUtils();
-        $webDAVProject->setReturnValue('getUtils', $utils);
-        $webDAVProject->getChild($WebDAVPackage->getPackageId());
+        $webDAVProject->getChild('Files');
 
     }
 
     /**
-     * Testing when the user can't read the package
+     * Testing when the user can't access to the service
      */
-    function testGetChildFailWithUserCanNotRead() {
+    /*function testGetChildFailWithUserCanNotRead() {
 
         $webDAVProject = new WebDAVProjectTestVersion($this);
 
@@ -166,12 +120,12 @@ class WebDAVProjectTest extends UnitTestCase {
         $webDAVProject->setReturnValue('getUtils', $utils);
         $webDAVProject->getChild($WebDAVPackage->getPackageId());
 
-    }
+    }*/
 
     /**
      * Testing when the package exist and user can read
      */
-    function testSucceedGetChild() {
+    /*function testSucceedGetChild() {
 
         $webDAVProject = new WebDAVProjectTestVersion($this);
 
@@ -187,7 +141,7 @@ class WebDAVProjectTest extends UnitTestCase {
         $webDAVProject->setReturnValue('getUtils', $utils);
         $this->assertEqual($webDAVProject->getChild($WebDAVPackage->getPackageId()), $WebDAVPackage);
 
-    }
+    }*/
 
     /**
      * Testing when project is not public and user is not member and not restricted
@@ -346,61 +300,6 @@ class WebDAVProjectTest extends UnitTestCase {
         $user->setReturnValue('isRestricted', true);
         $webDAVProject->setReturnValue('getUser', $user);
         $this->assertEqual($webDAVProject->userCanRead(), true);
-
-    }
-
-    /**
-     * Testing creation of package when user is not admin
-     */
-    function testCreateDirectoryFailWithUserNotAdmin() {
-
-        $webDAVProject = new WebDAVProjectTestVersion($this);
-
-        $webDAVProject->setReturnValue('userCanWrite', false);
-
-        $this->expectException('Sabre_DAV_Exception_Forbidden');
-
-        $webDAVProject->createDirectory('pkg');
-
-    }
-
-    /**
-     * Testing creation of package when the name already exist
-     */
-    function testCreateDirectoryFailWithNameExist() {
-
-        $webDAVProject = new WebDAVProjectTestVersion($this);
-
-        $webDAVProject->setReturnValue('userCanWrite', true);
-        $frspf = new MockFRSPackageFactory();
-        $frspf->setReturnValue('isPackageNameExist', true);
-        $utils = new MockWebDAVUtils();
-        $utils->setReturnValue('getPackageFactory', $frspf);
-        $webDAVProject->setReturnValue('getUtils', $utils);
-        $this->expectException('Sabre_DAV_Exception_MethodNotAllowed');
-
-        $webDAVProject->createDirectory('pkg');
-
-    }
-
-    /**
-     * Testing creation of package succeed
-     */
-    function testCreateDirectorysucceed() {
-
-        $webDAVProject = new WebDAVProjectTestVersion($this);
-
-        $webDAVProject->setReturnValue('userCanWrite', true);
-        $frspf = new MockFRSPackageFactory();
-        $frspf->setReturnValue('isPackageNameExist', false);
-        $utils = new MockWebDAVUtils();
-        $utils->setReturnValue('getPackageFactory', $frspf);
-        $pm = new MockPermissionsManager();
-        $utils->setReturnValue('getPermissionsManager', $pm);
-        $webDAVProject->setReturnValue('getUtils', $utils);
-        $this->assertNoErrors();
-
-        $webDAVProject->createDirectory('pkg');
 
     }
 

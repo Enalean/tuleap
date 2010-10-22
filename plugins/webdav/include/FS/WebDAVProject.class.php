@@ -18,11 +18,11 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once ('WebDAVFRSPackage.class.php');
+require_once ('WebDAVFRS.class.php');
 require_once (dirname(__FILE__).'/../WebDAVUtils.class.php');
 
 /**
- * This class lists the packages of a given project
+ * This class lists the services of a given project that can be accessed using WebDAV
  *
  * It is an implementation of the abstract class Sabre_DAV_Directory methods
  *
@@ -51,56 +51,43 @@ class WebDAVProject extends Sabre_DAV_Directory {
     }
 
     /**
-     * Generates the list of packages under the project
+     * Generates the list of services under the project
      *
      * @return array
      */
     function getChildren() {
 
         $children = array();
-
-        // Generate package list of the given project
-        $packages = $this->getPackageList($this->getProject());
-        // Loop through the packages, and create objects for each node
-        foreach ($packages as $pkg) {
-            $package = $this->getWebDAVPackage($pkg);
-            if ($package->userCanRead($this->getUser())) {
-                $children[] = $package;
-            }
+        if ($this->usesFile()) {
+            $children[$GLOBALS['Language']->getText('plugin_webdav_common', 'files')] = $this->getWebDAFRS();
         }
+        // Look for another services to add to the project
+        $params = array('user'        => $this->getUser(),
+                        'project'     => $this->getProject(),
+                        'maxFileSize' => $this->getMaxFileSize(),
+                        'children'    => &$children);
+        $em = EventManager::instance();
+        $em->processEvent('WebDAVService', $params);
         return $children;
 
     }
 
     /**
-     * Returns the given package
+     * Returns the given service
      *
-     * @param String $packageName
+     * @param String $service
      *
-     * @return WebDAVFRSPackage
+     * @return WebDAVFRS
      *
      * @see lib/Sabre/DAV/Sabre_DAV_Directory#getChild($name)
      */
-    function getChild($packageName) {
-
-        $packageName = $this->getUtils()->retrieveName($packageName);
-        $package = $this->getWebDAVPackage($this->getFRSPackageFromName($packageName));
-
-        // Check for errors
-
-        // Check if Package exists
-        if (!$package->exist()) {
-            throw new Sabre_DAV_Exception_FileNotFound($GLOBALS['Language']->getText('plugin_webdav_common', 'package_not_available'));
+    function getChild($service) {
+        $children = $this->getChildren();
+        if (isset($children[$service])) {
+            return $children[$service];
+        } else {
+            throw new Sabre_DAV_Exception_FileNotFound($GLOBALS['Language']->getText('plugin_webdav_common', 'service_not_available'));
         }
-
-        if (!$package->userCanRead($this->getUser())) {
-
-            throw new Sabre_DAV_Exception_Forbidden($GLOBALS['Language']->getText('plugin_webdav_common', 'package_access_not_authorized'));
-
-        }
-
-        return $package;
-
     }
 
     /**
@@ -134,7 +121,7 @@ class WebDAVProject extends Sabre_DAV_Directory {
     /**
      * Returns the project
      *
-     * @return FRSProject
+     * @return Project
      */
     function getProject() {
 
@@ -185,47 +172,6 @@ class WebDAVProject extends Sabre_DAV_Directory {
     }
 
     /**
-     * Returns a new FRSPackage from its name
-     *
-     * @param String $packageName
-     *
-     * @return FRSPackage
-     */
-    function getFRSPackageFromName($packageName) {
-
-        $utils = $this->getUtils();
-        return $utils->getPackageFactory()->getFRSPackageFromDb($utils->getPackageFactory()->getPackageIdByName($packageName, $this->getGroupId()), $this->getGroupId());
-
-    }
-
-    /**
-     * Returns a new WebDAVFRSPackage from the given FRSPackage
-     *
-     * @param FRSPackage $package
-     *
-     * @return WebDAVFRSPackage
-     */
-    function getWebDAVPackage($package) {
-
-        return new WebDAVFRSPackage($this->getUser(), $this->getProject(), $package, $this->getMaxFileSize());
-
-    }
-
-    /**
-     * Generates package list of the given GroupId
-     *
-     * @param Integer $groupId
-     *
-     * @return Array
-     */
-    function getPackageList($project) {
-
-        $utils = $this->getUtils();
-        return $utils->getPackageFactory()->getFRSPackagesFromDb($project->getGroupId());
-
-    }
-
-    /**
      * Returns whether the project exist or not
      *
      * @return Boolean
@@ -249,6 +195,15 @@ class WebDAVProject extends Sabre_DAV_Directory {
     }
 
     /**
+     * Return a new WebDAVFRS
+     *
+     * @return WebDAVFRS
+     */
+    function getWebDAFRS() {
+        return new WebDAVFRS($this->getUser() , $this->getProject(), $this->getMaxFileSize());
+    }
+
+    /**
      * Returns whether the project uses files or not
      *
      * @return Boolean
@@ -268,46 +223,6 @@ class WebDAVProject extends Sabre_DAV_Directory {
 
         return ($this->getProject()->userIsMember()
         || ($this->getProject()->isPublic() && !$this->getUser()->isRestricted()));
-
-    }
-
-    /**
-     * Tests if the user is Superuser or File release admin
-     *
-     * @return Boolean
-     */
-    function userCanWrite() {
-        $utils = $this->getUtils();
-        return $utils->userCanWrite($this->getUser(), $this->getGroupId());
-    }
-
-    /**
-     * Creates a new package
-     *
-     * @param String $name
-     *
-     * @return void
-     *
-     * @see plugins/webdav/lib/Sabre/DAV/Sabre_DAV_Directory#createDirectory($name)
-     */
-    function createDirectory($name) {
-
-        if ($this->userCanWrite()) {
-            $utils = $this->getUtils();
-            if (!$utils->getPackageFactory()->isPackageNameExist($name, $this->getGroupId())) {
-                $packageData['name'] = htmlspecialchars($name);
-                $packageData['group_id'] = $this->getGroupId();
-                $packageData['status_id'] = 1;
-                $packageId = $utils->getPackageFactory()->create($packageData);
-                if ($packageId) {
-                    $utils->getPermissionsManager()->addPermission('PACKAGE_READ', $packageId, '2');
-                }
-            } else {
-                throw new Sabre_DAV_Exception_MethodNotAllowed($GLOBALS['Language']->getText('plugin_webdav_common', 'package_name_exist'));
-            }
-        } else {
-            throw new Sabre_DAV_Exception_Forbidden($GLOBALS['Language']->getText('plugin_webdav_common', 'package_denied_create'));
-        }
 
     }
 

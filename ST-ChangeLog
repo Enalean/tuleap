@@ -3,6 +3,7 @@ Version 4.0.14 - (Not released yet)
         backlog #107554: Enhance the interface to request access from project admins
         backlog #110702: Improve PhpWiki look (font rendering, table of contents, colors, separators, etc)
         backlog #111780: RPM: dependency management for plugins & themes
+        backlog #109427: Integration of docman in WebDAV iteration 1
 
 Version 4.0.13 - Wednesday, 29th September 2010
         == New features ==

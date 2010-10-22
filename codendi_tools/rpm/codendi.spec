@@ -225,7 +225,17 @@ Provides: codendi-theme-steerforge = %{version}
 %description theme-steerforge
 SteerForge theme for Codendi
 
-#
+%package plugin-webdav
+Summary: WebDAV plugin for Codendi
+Group: Development/Tools
+Version: @@PLUGIN_WEBDAV_VERSION@@
+Release: 1%{?dist}
+Requires: %{name} >= %{version}, Sabre_DAV = 1.0.14
+Provides: codendi-plugin-webdav = %{version}
+%description plugin-webdav
+Plugin to access to file releases & docman though WebDAV
+
+# 
 # Package setup
 %prep
 %setup -q
@@ -283,6 +293,9 @@ done
 
 # Cache dir
 %{__install} -d $RPM_BUILD_ROOT/%{APP_CACHE_DIR}
+
+# plugin webdav
+%{__install} -d $RPM_BUILD_ROOT/%{APP_CACHE_DIR}/plugins/webdav/locks
 
 # plugin forumml
 %{__install} -d $RPM_BUILD_ROOT/%{_localstatedir}/run/forumml
@@ -621,6 +634,11 @@ fi
 %files theme-steerforge
 %defattr(-,%{APP_USER},%{APP_USER},-)
 %{APP_DIR}/src/www/themes/SteerForge
+
+%files plugin-webdav
+%defattr(-,%{APP_USER},%{APP_USER},-)
+%{APP_DIR}/plugins/webdav
+%attr(00755,%{APP_USER},%{APP_USER}) %{APP_CACHE_DIR}/plugins/webdav
 
 #%doc
 #%config
