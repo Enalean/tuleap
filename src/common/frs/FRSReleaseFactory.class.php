@@ -240,21 +240,6 @@ class FRSReleaseFactory {
 
 			//delete the release from the database
 			$this->_delete($release_id);
-
-			//append the releasename and project name to a temp file for the root perl job to grab
-			if (isset($filename) && $filename) {
-				//find the last occurrence of / in the filename to get the parentdir name
-				$pos = strrpos($filename, "/");
-				if (!$pos) {
-					// not found...
-				} else {
-					$parentdir = substr($filename, 0, $pos);
-					$time = time();
-					$pm = ProjectManager::instance();
-                    exec("/bin/echo \"$parentdir::" . $pm->getProject($group_id)->getUnixName() . "::$time\" >> $ftp_incoming_dir/.delete_files");
-				}
-			}
-
 			return 1;
 		}
 	}
