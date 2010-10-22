@@ -818,8 +818,7 @@ plugin_docman	title	Le titre du document
 plugin_docman	label	Label de la version
 plugin_docman	number	Numéro de la version
 plugin_docman	delete_date	Date de suppression
-plugin_docman	restore_version	Restorer la version
+plugin_docman	restore_version	Restaurer la version
 plugin_docman	location	Chemin
 plugin_docman	owner	Propriétaire
-plugin_docman	restore_item	Restorer l'item
-
+plugin_docman	restore_item	Restaurer l'item
