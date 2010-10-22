@@ -43,18 +43,29 @@ class FRSReleaseFactory {
 		return $frs_release;
 	}
 
-	function  getFRSReleaseFromDb($release_id, $group_id=null, $package_id=null) {
+	/**
+	 * Get one or more releases from the database
+	 * 
+	 * $extraFlags allow to define if you want to include deleted releases into
+	 * the search (thanks to FRSReleaseDao::INCLUDE_DELETED constant)
+	 * 
+	 * @param $release_id
+	 * @param $group_id
+	 * @param $package_id
+	 * @param $extraFlags
+	 */
+	function  getFRSReleaseFromDb($release_id, $group_id=null, $package_id=null, $extraFlags = 0) {
 		$_id = (int) $release_id;
 		$dao = & $this->_getFRSReleaseDao();
 		if($group_id && $package_id){
 			$_group_id = (int) $group_id;
 			$_package_id = (int) $package_id;
-			$dar = $dao->searchByGroupPackageReleaseID($_id, $_group_id, $package_id);
+			$dar = $dao->searchByGroupPackageReleaseID($_id, $_group_id, $package_id, $extraFlags);
 		}else if($group_id) {
 			$_group_id = (int) $group_id;
-			$dar = $dao->searchInGroupById($_id, $_group_id);
+			$dar = $dao->searchInGroupById($_id, $_group_id, $extraFlags);
 		}else{
-			$dar = $dao->searchById($_id);
+			$dar = $dao->searchById($_id, $extraFlags);
 		}
 		
 
