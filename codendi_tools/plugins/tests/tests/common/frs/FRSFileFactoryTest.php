@@ -105,8 +105,42 @@ class FRSFileFactoryTest extends UnitTestCase {
         $this->assertTrue($ff->moveDeletedFileToStagingArea($file));
 
         $this->assertTrue(is_file($GLOBALS['ftp_frs_dir_prefix'].'/DELETED/prj/p1_r1/foobar.xls.12'));
+        $this->assertFalse(is_file(dirname(__FILE__).'/_fixtures/prj/p1_r1/foobar.xls'));
+        $this->assertFalse(is_dir(dirname(__FILE__).'/_fixtures/prj/p1_r1'));
 
         // Clean-up
+        unlink(dirname(__FILE__).'/_fixtures/DELETED/prj/p1_r1/foobar.xls.12');
+        rmdir(dirname(__FILE__).'/_fixtures/DELETED/prj/p1_r1');
+        rmdir(dirname(__FILE__).'/_fixtures/DELETED/prj');
+    }
+
+    function testMoveDeletedFileToStagingAreaReleaseNotEmpty() {
+        $ff = new FRSFileFactoryTestPurgeOneFile($this);
+
+        // Create temp file in a fake release
+        mkdir(dirname(__FILE__).'/_fixtures/prj/p1_r1');
+        $filepath = dirname(__FILE__).'/_fixtures/prj/p1_r1/foobar.xls';
+        touch($filepath);
+        $this->assertTrue(is_file($filepath));
+        $file = new MockFRSFile($this);
+        $file->setReturnValue('getFileID', 12);
+        $file->setReturnValue('getFileLocation', $filepath);
+        // Second file, not deleted
+        touch(dirname(__FILE__).'/_fixtures/prj/p1_r1/barfoo.doc');
+    
+        $dao = new MockFRSFileDao($this);
+        $dao->expectOnce('setFileInDeletedList', array(12));
+        $dao->setReturnValue('setFileInDeletedList', true);
+        $ff->setReturnValue('_getFRSFileDao', $dao);
+
+        $this->assertTrue($ff->moveDeletedFileToStagingArea($file));
+
+        $this->assertTrue(is_file($GLOBALS['ftp_frs_dir_prefix'].'/DELETED/prj/p1_r1/foobar.xls.12'));
+        $this->assertFalse(is_file(dirname(__FILE__).'/_fixtures/prj/p1_r1/foobar.xls'));
+        $this->assertTrue(is_file(dirname(__FILE__).'/_fixtures/prj/p1_r1/barfoo.doc'), 'The other file in the release must not be deleted');
+
+        // Clean-up
+        unlink(dirname(__FILE__).'/_fixtures/prj/p1_r1/barfoo.doc');
         rmdir(dirname(__FILE__).'/_fixtures/prj/p1_r1');
         unlink(dirname(__FILE__).'/_fixtures/DELETED/prj/p1_r1/foobar.xls.12');
         rmdir(dirname(__FILE__).'/_fixtures/DELETED/prj/p1_r1');

@@ -325,7 +325,20 @@ class FRSFileFactory extends Error {
         }
         if (rename($file->getFileLocation(), $stagingPath)) {
             $dao = $this->_getFRSFileDao();
-            return $dao->setFileInDeletedList($file->getFileId());
+            $deleted = $dao->setFileInDeletedList($file->getFileId());
+            
+            // Delete release directory when the last file is removed
+            $nbFiles = 0;
+            $dir = new DirectoryIterator(dirname($file->getFileLocation()));
+            foreach ($dir as $f) {
+                if (!$f->isDot()) {
+                    $nbFiles++;
+                }
+            }
+            if ($nbFiles === 0) {
+                rmdir(dirname($file->getFileLocation()));
+            }
+            return $deleted;
         }
         return false;
     }
