@@ -126,10 +126,8 @@ $params = array('service' => &$service,
 $em->processEvent('show_pending_documents', $params);
 if (isset($params['service']) && $params['service']) {
 ?>
-
 <FORM action="?" method="POST">
 <INPUT type="hidden" name="group_id" value="<?php print $group_id; ?>">
-<?php echo "<h3> Pending deleted document </h3>" ; ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -146,50 +144,10 @@ if (isset($params['service']) && $params['service']) {
                 }
         //-->
         </script>
-    <style type="text/css">
-        .onglet
-        {
-                display:inline-block;
-                margin-left:3px;
-                margin-right:3px;
-                padding:3px;
-                border:1px solid black;
-                cursor:pointer;
-        }
-        .onglet_0
-        {
-                background:#bbbbbb;
-                border-bottom:1px solid black;
-        }
-        .onglet_1
-        {
-                background:#dddddd;
-                border-bottom:0px solid black;
-                padding-bottom:4px;
-        }
-        .contenu_onglet
-        {
-                background-color:#dddddd;
-                border:1px solid black;
-                margin-top:-1px;
-                padding:5px;
-                display:none;
-        }
-        ul
-        {
-                margin-top:0px;
-                margin-bottom:0px;
-                margin-left:-10px
-        }
-        h1
-        {
-                margin:0px;
-                padding:0px;
-        }
-        </style>
+    <link rel="stylesheet" type="text/css" href="/themes/common/css/style.css">
 </head>
 <body>
-
+<?php echo "<h3> Pending deleted document </h3>" ; ?>
         <div class="systeme_onglets">
         <div class="onglets">
             <span class="onglet_0 onglet" id="onglet_version" onclick="javascript:change_onglet('version');">Deleted versions</span>
@@ -229,12 +187,8 @@ if (isset($params['service']) && $params['service']) {
         </script>
 </body>
 </html>
-
-
 </FORM>
 <?php 
-} else {
-    $GLOBALS['Response']->addFeedback('warning',$GLOBALS['Language']->getText('admin_show_pending_documents', 'service_not_enabled'));
 }
 site_admin_footer(array());
 ?>

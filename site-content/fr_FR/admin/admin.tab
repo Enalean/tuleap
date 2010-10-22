@@ -444,4 +444,3 @@ admin_show_pending_documents	deleted_item	Items supprimées
 admin_show_pending_documents	no_pending_items	Il n'existe pas d'item en suspens.
 admin_show_pending_documents	previous	Précédent
 admin_show_pending_documents	next	Suivant
-admin_show_pending_documents	service_not_enabled	Le service document n'est pas activé.
