@@ -814,7 +814,7 @@ plugin_docman	widget_my_docman_search_btn	Rechercher
 
 plugin_docman	name_validity	Un répertoire Docman existe déjà avec ce nom.
 
-plugin_docman	title	Le titre du document
+plugin_docman	doc_title	Le titre du document
 plugin_docman	label	Label de la version
 plugin_docman	number	Numéro de la version
 plugin_docman	delete_date	Date de suppression

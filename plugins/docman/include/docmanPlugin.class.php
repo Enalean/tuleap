@@ -466,7 +466,7 @@ class DocmanPlugin extends Plugin {
      */
     function show_pending_documents($params) {
         $title =array();
-        $title[] = $GLOBALS['Language']->getText('plugin_docman','title');
+        $title[] = $GLOBALS['Language']->getText('plugin_docman','doc_title');
         $title[] = $GLOBALS['Language']->getText('plugin_docman','label');
         $title[] = $GLOBALS['Language']->getText('plugin_docman','number');
         $title[] = $GLOBALS['Language']->getText('plugin_docman','delete_date');
@@ -483,7 +483,7 @@ class DocmanPlugin extends Plugin {
         }
         //return all pending items for given group id
         $title =array();
-        $title[] = $GLOBALS['Language']->getText('plugin_docman','title');
+        $title[] = $GLOBALS['Language']->getText('plugin_docman','doc_title');
         $title[] = $GLOBALS['Language']->getText('plugin_docman','location');
         $title[] = $GLOBALS['Language']->getText('plugin_docman','owner');
         $title[] = $GLOBALS['Language']->getText('plugin_docman','delete_date');

@@ -822,7 +822,7 @@ class Docman_ItemDao extends DataAccessObject {
                       ' D.user_id as user, D.purge_date  as date'.
              ' FROM plugin_docman_item_deleted as D, plugin_docman_item as I'.
              ' WHERE  D.group_id='.db_ei($groupId). 
-             '        AND D.purge_date < '.$_SERVER['REQUEST_TIME'].
+             '        AND D.purge_date > '.$_SERVER['REQUEST_TIME'].
              '        AND D.parent_id = I.item_id '.
              ' ORDER BY D.purge_date DESC '.
              ' LIMIT '.db_ei($offset).', '.db_ei($limit);
