@@ -278,6 +278,20 @@ class FRSFileFactory extends Error {
     }
 
     /**
+     * Centralize treatement of files physical deletion in FRS
+     * 
+     * @param Integer $time Date from when the files must be erased
+     * 
+     * @return Boolean
+     */
+    public function purgeDeletedFiles($time) {
+        $this->moveDeletedFilesToStagingArea();
+        $this->purgeFiles($time);
+        $this->cleanStaging();
+        return true;
+    }
+
+    /**
      * Move to staging all files marked as deleted but still in the release area
      * 
      * @return Boolean
@@ -365,6 +379,44 @@ class FRSFileFactory extends Error {
             return $dao->setPurgeDate($file->getFileID(), time());
         }
         return false;
+    }
+
+    /**
+     * Remove empty releases and project directories in staging area
+     * 
+     * @return Boolean
+     */
+    public function cleanStaging() {
+        // All projects
+        $prjIter = new DirectoryIterator($GLOBALS['ftp_frs_dir_prefix'].'/DELETED');
+        foreach ($prjIter as $prj) {
+            if (strpos($prj->getFilename(), '.') !== 0) {
+                // Releases
+                $nbRel   = 0;
+                $relIter = new DirectoryIterator($prj->getPathname());
+                foreach ($relIter as $rel) {
+                    if (!$rel->isDot()) {
+                        // Files
+                        $nbFiles  = 0;
+                        $fileIter = new DirectoryIterator($rel->getPathname());
+                        foreach ($fileIter as $file) {
+                            if (!$file->isDot()) {
+                                $nbFiles++;
+                            }
+                        }
+                        if ($nbFiles === 0) {
+                            rmdir($rel->getPathname());
+                        } else {
+                            $nbRel++;
+                        }
+                    }
+                }
+                if ($nbRel === 0) {
+                    rmdir($prj->getPathname());
+                }
+            }
+        }
+        return true;
     }
 
     /** 

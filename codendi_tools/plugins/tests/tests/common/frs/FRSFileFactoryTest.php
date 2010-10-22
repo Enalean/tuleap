@@ -12,6 +12,7 @@ Mock::generatePartial('FRSFileFactory', 'FRSFileFactoryTestVersion', array('_get
 Mock::generatePartial('FRSFileFactory', 'FRSFileFactoryTestPurgeFiles', array('_getFRSFileDao', 'purgeFile'));
 Mock::generatePartial('FRSFileFactory', 'FRSFileFactoryTestPurgeOneFile', array('_getFRSFileDao'));
 Mock::generatePartial('FRSFileFactory', 'FRSFileFactoryTestMoveToStaging', array('_getFRSFileDao', 'moveDeletedFileToStagingArea'));
+Mock::generatePartial('FRSFileFactory', 'FRSFileFactoryTestPurgeDeletedFiles', array('purgeFiles', 'moveDeletedFilesToStagingArea', 'cleanStaging'));
 
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
@@ -32,11 +33,11 @@ class FRSFileFactoryTest extends UnitTestCase {
     function setUp() {
         $GLOBALS['ftp_frs_dir_prefix'] = dirname(__FILE__).'/_fixtures';
     }
-    
+
     function tearDown() {
         unset($GLOBALS['ftp_frs_dir_prefix']);
     }
-    
+
     function testgetUploadSubDirectory() {
         $package_id = rand(1, 1000);
         $release_id = rand(1, 1000);
@@ -54,6 +55,15 @@ class FRSFileFactoryTest extends UnitTestCase {
         
         $sub_dir = $file_fact->getUploadSubDirectory($release_id);
         $this->assertEqual($sub_dir, 'p'.$package_id.'_r'.$release_id);
+    }
+
+    function testPurgeDeletedFiles() {
+        $ff = new FRSFileFactoryTestPurgeDeletedFiles($this);
+        $ff->expectOnce('moveDeletedFilesToStagingArea');
+        $ff->expectOnce('purgeFiles', array(1287504083));
+        $ff->expectOnce('cleanStaging');
+        
+        $ff->purgeDeletedFiles(1287504083);
     }
 
     function testMoveDeletedFilesToStagingAreaWithNoFiles() {
@@ -185,6 +195,35 @@ class FRSFileFactoryTest extends UnitTestCase {
         
         $this->assertTrue($ff->purgeFile($file));
         $this->assertFalse(is_file($filepath), "File should be deleted");
+        
+        // Cleanup
+        rmdir($GLOBALS['ftp_frs_dir_prefix'].'/DELETED/prj/p1_r1');
+        rmdir($GLOBALS['ftp_frs_dir_prefix'].'/DELETED/prj');
+    }
+
+    function testRemoveStagingEmptyDirectories() {
+        $ff = new FRSFileFactory();
+
+        mkdir($GLOBALS['ftp_frs_dir_prefix'].'/DELETED/prj/p1_r1', 0750, true);
+        mkdir($GLOBALS['ftp_frs_dir_prefix'].'/DELETED/prj2/p2_r5', 0750, true);
+        touch($GLOBALS['ftp_frs_dir_prefix'].'/DELETED/prj2/p2_r5/file.txt.7');
+        mkdir($GLOBALS['ftp_frs_dir_prefix'].'/DELETED/prj3/p7_r8', 0750, true);
+        mkdir($GLOBALS['ftp_frs_dir_prefix'].'/DELETED/prj3/p9_r10', 0750, true);
+        touch($GLOBALS['ftp_frs_dir_prefix'].'/DELETED/prj3/p9_r10/foo.txt.12');
+        
+        $this->assertTrue($ff->cleanStaging());
+        $this->assertFalse(is_dir($GLOBALS['ftp_frs_dir_prefix'].'/DELETED/prj'));
+        $this->assertTrue(is_file($GLOBALS['ftp_frs_dir_prefix'].'/DELETED/prj2/p2_r5/file.txt.7'));
+        $this->assertFalse(is_dir($GLOBALS['ftp_frs_dir_prefix'].'/DELETED/prj3/p7_r8'));
+        $this->assertTrue(is_file($GLOBALS['ftp_frs_dir_prefix'].'/DELETED/prj3/p9_r10/foo.txt.12'));
+
+        // Cleanup
+        unlink($GLOBALS['ftp_frs_dir_prefix'].'/DELETED/prj2/p2_r5/file.txt.7');
+        rmdir($GLOBALS['ftp_frs_dir_prefix'].'/DELETED/prj2/p2_r5');
+        rmdir($GLOBALS['ftp_frs_dir_prefix'].'/DELETED/prj2');
+        unlink($GLOBALS['ftp_frs_dir_prefix'].'/DELETED/prj3/p9_r10/foo.txt.12');
+        rmdir($GLOBALS['ftp_frs_dir_prefix'].'/DELETED/prj3/p9_r10');
+        rmdir($GLOBALS['ftp_frs_dir_prefix'].'/DELETED/prj3');
     }
 }
 ?>

@@ -388,8 +388,8 @@ class BackendSystemTest extends UnitTestCase {
         $daysBefore     = $_SERVER['REQUEST_TIME'] - (24*3600*5);
         
         $ff = new MockFRSFileFactory($this);
-        $ff->setReturnValue('purgeFiles', true);
-        $ff->expectOnce('purgeFiles', array($daysBefore));
+        $ff->setReturnValue('purgeDeletedFiles', true);
+        $ff->expectOnce('purgeDeletedFiles', array($daysBefore));
         $backend->setReturnValue('getFRSFileFactory', $ff);
         
         $this->assertTrue($backend->cleanupFRS());
