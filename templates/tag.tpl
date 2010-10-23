@@ -50,8 +50,10 @@
    </table>
  </div>
  <div class="page_body">
+   {assign var=bugpattern value=$project->GetBugPattern()}
+   {assign var=bugurl value=$project->GetBugUrl()}
    {foreach from=$tag->GetComment() item=line}
-     {$line}<br />
+     {$line|escape|buglink:$bugpattern:$bugurl}<br />
    {/foreach}
  </div>
 
