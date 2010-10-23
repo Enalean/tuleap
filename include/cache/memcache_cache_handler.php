@@ -39,7 +39,7 @@ function memcache_cache_handler($action, &$smarty_obj, &$cache_content, $tpl_fil
 
 			if (!isset($exp_time))
 				$exp_time = 0;
-			$map[$fullKey] = $exp_time;
+			$map[$fullKey] = time();
 
 			$memObj->Set($namespace . $fullKey, $cache_content, $exp_time);
 			$memObj->Set($namespace . MEMCACHE_OBJECT_MAP, $map);
@@ -63,6 +63,7 @@ function memcache_cache_handler($action, &$smarty_obj, &$cache_content, $tpl_fil
 
 			$map = $memObj->Get($namespace . MEMCACHE_OBJECT_MAP);
 			if (isset($map) && is_array($map)) {
+				$now = time();
 				/*
 				 * Search through our stored map of keys
 				 */
@@ -84,7 +85,7 @@ function memcache_cache_handler($action, &$smarty_obj, &$cache_content, $tpl_fil
 					     * If we have an expiration time,
 					     * match any keys older than that
 					     */
-					    ((!isset($exp_time)) || ($age < $exp_time))
+					    ((!isset($exp_time)) || (($now - $age) > $exp_time))
 					) {
 						$memObj->Delete($namespace . $key);
 						unset($map[$key]);
