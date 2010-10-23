@@ -266,6 +266,21 @@ $gitphp_conf['cacheexpire'] = true;
  */
 $gitphp_conf['cachelifetime'] = 3600;
 
+/*
+ * memcache
+ * Enables memcache support for caching data, instead of
+ * Smarty's standard on-disk cache.
+ * This is an array of servers.  Each server is specified as an
+ * array.
+ * Index 0 (required): The server hostname/IP
+ * Index 1 (optional): The port, default is 11211
+ * Index 2 (optional): The weight, default is 1
+ */
+//$gitphp_conf['memcache'] = array(
+//	array('127.0.0.1', 11211, 2),
+//	array('memcacheserver1', 11211),
+//	array('memcacheserver2')
+//);
 
 
 
