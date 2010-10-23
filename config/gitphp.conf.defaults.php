@@ -270,6 +270,8 @@ $gitphp_conf['cachelifetime'] = 3600;
  * memcache
  * Enables memcache support for caching data, instead of
  * Smarty's standard on-disk cache.
+ * Only applies if cache = true.  Requires either the
+ * Memcached or Memcache PHP extensions.
  * This is an array of servers.  Each server is specified as an
  * array.
  * Index 0 (required): The server hostname/IP
