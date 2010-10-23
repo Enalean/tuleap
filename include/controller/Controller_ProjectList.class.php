@@ -65,7 +65,7 @@ class GitPHP_Controller_ProjectList extends GitPHP_ControllerBase
 		} else if (isset($this->params['txt']) && ($this->params['txt'] === true)) {
 			return '';
 		}
-		return $this->params['order'];
+		return $this->params['order'] . '|' . (isset($this->params['search']) ? $this->params['search'] : '');
 	}
 
 	/**
@@ -109,6 +109,8 @@ class GitPHP_Controller_ProjectList extends GitPHP_ControllerBase
 			$this->params['order'] = $_GET['o'];
 		else
 			$this->params['order'] = 'project';
+		if (isset($_GET['s']))
+			$this->params['search'] = $_GET['s'];
 	}
 
 	/**
@@ -143,9 +145,19 @@ class GitPHP_Controller_ProjectList extends GitPHP_ControllerBase
 		
 		$projectList = GitPHP_ProjectList::GetInstance();
 		$projectList->Sort($this->params['order']);
-		
-		if ($projectList->Count() > 0)
-			$this->tpl->assign('projectlist', $projectList);
+
+		if ((empty($this->params['opml']) || ($this->params['opml'] !== true)) &&
+		    (empty($this->params['txt']) || ($this->params['txt'] !== true)) &&
+		    (!empty($this->params['search']))) {
+		    	$this->tpl->assign('search', $this->params['search']);
+			$matches = $projectList->Filter($this->params['search']);
+			if (count($matches) > 0) {
+				$this->tpl->assign('projectlist', $matches);
+			}
+		} else {
+			if ($projectList->Count() > 0)
+				$this->tpl->assign('projectlist', $projectList);
+		}
 	}
 
 }

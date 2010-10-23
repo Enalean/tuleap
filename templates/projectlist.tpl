@@ -18,6 +18,12 @@ git source code archive
 {/if}
 </div>
 
+<div class="projectSearch">
+<form method="get" action="index.php" enctype="application/x-www-form-urlencoded">
+{t}Search projects{/t}: <input type="text" name="s" {if $search}value="{$search}"{/if} /> <a href="index.php" {if !$search}style="display: none;"{/if}>X</a>
+</form>
+</div>
+
 <table cellspacing="0">
   {foreach name=projects from=$projectlist item=proj}
     {if $smarty.foreach.projects.first}

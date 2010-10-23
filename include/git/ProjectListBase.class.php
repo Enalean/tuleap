@@ -226,6 +226,33 @@ abstract class GitPHP_ProjectListBase implements Iterator
 	}
 
 	/**
+	 * Filter
+	 *
+	 * Returns a filtered list of projects
+	 *
+	 * @access public
+	 * @param string $filter filter pattern
+	 * @return array array of filtered projects
+	 */
+	public function Filter($pattern = null)
+	{
+		if (empty($pattern))
+			return $this->projects;
+
+		$matches = array();
+
+		foreach ($this->projects as $proj) {
+			if ((stripos($proj->GetProject(), $pattern) !== false) ||
+			    (stripos($proj->GetDescription(), $pattern) !== false) ||
+			    (stripos($proj->GetOwner(), $pattern) !== false)) {
+			    	$matches[] = $proj;
+			}
+		}
+
+		return $matches;
+	}
+
+	/**
 	 * ApplyProjectSettings
 	 *
 	 * Applies override settings for a project
