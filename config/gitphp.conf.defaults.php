@@ -91,6 +91,28 @@ $gitphp_conf['cloneurl'] = 'http://localhost/git/';
 $gitphp_conf['pushurl'] = 'ssh://localhost/git/';
 
 /*
+ * bugpattern
+ * Sets the regular expression to use to find bug number
+ * references in log messages.  The pattern should have a
+ * group that extracts just the bug ID to pass to the 
+ * bug tracker.
+ * For example, '/#([0-9+)/' will recognize any number
+ * with a '#' in front of it, and groups the numeric part
+ * only.  Another common example is '/bug:([0-9]+)/' to
+ * extract bug numbers with 'bug:' in front of them.
+ */
+//$gitphp_conf['bugpattern'] = '/#([0-9]+)/';
+
+/*
+ * bugurl
+ * Sets the URL for the bug tracker.  This URL must have
+ * a backreference to the group in the bug pattern that
+ * contains the ID.  For example, ${1} uses the first
+ * group.
+ */
+//$gitphp_conf['bugurl'] = 'http://localhost/mantis/view.php?id=${1}';
+
+/*
  * self
  * This is the path to the script that will be inserted
  * in urls.  If you leave this blank/commented the script
