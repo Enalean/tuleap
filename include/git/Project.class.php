@@ -152,6 +152,24 @@ class GitPHP_Project
 	protected $pushUrl = null;
 
 	/**
+	 * bugUrl
+	 *
+	 * Stores the bug url internally
+	 *
+	 * @access protected
+	 */
+	protected $bugUrl = null;
+
+	/**
+	 * bugPattern
+	 *
+	 * Stores the bug pattern internally
+	 *
+	 * @access protected
+	 */
+	protected $bugPattern = null;
+
+	/**
 	 * commitCache
 	 *
 	 * Caches fetched commit objects in case of
@@ -458,6 +476,64 @@ class GitPHP_Project
 	public function SetPushUrl($pUrl)
 	{
 		$this->pushUrl = $pUrl;
+	}
+
+	/**
+	 * GetBugUrl
+	 *
+	 * Gets the bug URL for this repository, if specified
+	 *
+	 * @access public
+	 * @return string bug url
+	 */
+	public function GetBugUrl()
+	{
+		if ($this->bugUrl != null)
+			return $this->bugUrl;
+
+		return GitPHP_Config::GetInstance()->GetValue('bugurl', '');
+	}
+
+	/**
+	 * SetBugUrl
+	 *
+	 * Overrides the bug URL for this repository
+	 *
+	 * @access public
+	 * @param string $bUrl bug url
+	 */
+	public function SetBugUrl($bUrl)
+	{
+		$this->bugUrl = $bUrl;
+	}
+
+	/**
+	 * GetBugPattern
+	 *
+	 * Gets the bug pattern for this repository, if specified
+	 *
+	 * @access public
+	 * @return string bug pattern
+	 */
+	public function GetBugPattern()
+	{
+		if ($this->bugPattern != null)
+			return $this->bugPattern;
+
+		return GitPHP_Config::GetInstance()->GetValue('bugpattern', '');
+	}
+
+	/**
+	 * SetBugPattern
+	 *
+	 * Overrides the bug pattern for this repository
+	 *
+	 * @access public
+	 * @param string $bPat bug pattern
+	 */
+	public function SetBugPattern($bPat)
+	{
+		$this->bugPattern = $bPat;
 	}
 
 	/**

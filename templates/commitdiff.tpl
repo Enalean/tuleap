@@ -20,8 +20,10 @@
  {include file='title.tpl' titlecommit=$commit}
  
  <div class="page_body">
+   {assign var=bugpattern value=$project->GetBugPattern()}
+   {assign var=bugurl value=$project->GetBugUrl()}
    {foreach from=$commit->GetComment() item=line}
-     {$line|escape}<br />
+     {$line|escape|buglink:$bugpattern:$bugurl}<br />
    {/foreach}
    <br />
    {* Diff each file changed *}
