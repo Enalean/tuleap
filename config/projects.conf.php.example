@@ -50,25 +50,43 @@
  * methods above.
  *
  * The settings array can have the following key/value settings:
+ *
  * 'category': the category for the project.
+ *
  * 'owner': the owner of the project.  This overrides the actual owner
+ *
  * 'description': the description of the project.  This overrides the 
  *		  description in the project's description file
+ *
  * 'cloneurl': the full clone url of the project.  This overrides the
  *	       clone URL setting in the config for this project.
  *	       This can also be an empty string to override the global
  *             clone url to say that only this project has no clone url.
+ *
  * 'pushurl': the full push url of the project.  This overrides the
  *	      push URL setting in the config for this project.
  *	      This can also be an empty string to override the global
  *	      push url to say that only this project has no push url.
+ *
+ * 'bugpattern': the bug number pattern of the project.  This overrides
+ *		 the bug pattern setting in the config for this project.
+ *		 This can also be an empty string to override the global
+ *		 bug pattern to say that only this project has no bug
+ *		 pattern.
+ *
+ * 'bugurl': the bug url for this project.  This overrides the bug url
+ *	     setting in the config for this project.  This can also be
+ *	     an empty string to override the global bug url to say that
+ *	     only this project has no bug url.
  */
 //$git_projects_settings['php/gitphp.git'] = array(
 //	'category' => 'PHP',
 //	'description' => 'GitPHP, a web-based git repository browser in PHP',
 //	'owner' => 'Christopher Han',
 //	'cloneurl' => 'http://git.xiphux.com/php/gitphp.git',
-//	'pushurl' => ''
+//	'pushurl' => '',
+//	'bugpattern' => '/#([0-9]+)/',
+//	'bugurl' => 'http://mantis.xiphux.com/view.php?id=${1}'
 //);
 //$git_projects_settings['gentoo.git'] = array(
 //	'description' => 'Gentoo portage overlay'

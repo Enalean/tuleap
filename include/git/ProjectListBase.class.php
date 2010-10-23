@@ -262,6 +262,12 @@ abstract class GitPHP_ProjectListBase implements Iterator
 		if (isset($projData['pushurl']) && is_string($projData['pushurl'])) {
 			$projectObj->SetPushUrl($projData['pushurl']);
 		}
+		if (isset($projData['bugpattern']) && is_string($projData['bugpattern'])) {
+			$projectObj->SetBugPattern($projData['bugpattern']);
+		}
+		if (isset($projData['bugurl']) && is_string($projData['bugurl'])) {
+			$projectObj->SetBugUrl($projData['bugurl']);
+		}
 	}
 
 	/**
