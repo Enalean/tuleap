@@ -100,7 +100,7 @@ class GitPHP_Memcache
 			$this->memcacheObj = new Memcache();
 			$this->memcacheType = GitPHP_Memcache::Memcache;
 		} else {
-			throw new GitPHP_MessageException('The Memcached or Memcache PHP extension is required for Memcache support', true, 500);
+			throw new GitPHP_MessageException(__('The Memcached or Memcache PHP extension is required for Memcache support'), true, 500);
 		}
 	}
 
