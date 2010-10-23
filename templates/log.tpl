@@ -70,7 +70,7 @@
      {assign var=bugpattern value=$project->GetBugPattern()}
      {assign var=bugurl value=$project->GetBugUrl()}
      {foreach from=$rev->GetComment() item=line}
-       {$line|escape|buglink:$bugpattern:$bugurl}<br />
+       {$line|htmlspecialchars|buglink:$bugpattern:$bugurl}<br />
      {/foreach}
      {if count($rev->GetComment()) > 0}
        <br />

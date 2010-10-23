@@ -53,7 +53,7 @@
    {assign var=bugpattern value=$project->GetBugPattern()}
    {assign var=bugurl value=$project->GetBugUrl()}
    {foreach from=$tag->GetComment() item=line}
-     {$line|escape|buglink:$bugpattern:$bugurl}<br />
+     {$line|htmlspecialchars|buglink:$bugpattern:$bugurl}<br />
    {/foreach}
  </div>
 
