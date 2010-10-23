@@ -20,6 +20,7 @@ define('GITPHP_CONFIGDIR', GITPHP_BASEDIR . 'config/');
 define('GITPHP_INCLUDEDIR', GITPHP_BASEDIR . 'include/');
 define('GITPHP_GITOBJECTDIR', GITPHP_INCLUDEDIR . 'git/');
 define('GITPHP_CONTROLLERDIR', GITPHP_INCLUDEDIR . 'controller/');
+define('GITPHP_CACHEDIR', GITPHP_INCLUDEDIR . 'cache/');
 define('GITPHP_LOCALEDIR', GITPHP_BASEDIR . 'locale/');
 
 include_once(GITPHP_INCLUDEDIR . 'version.php');
