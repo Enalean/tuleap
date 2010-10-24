@@ -241,8 +241,8 @@ class GitPHP_Cache
 
 		$this->tpl->caching = 2;
 
-		if (GitPHP_Config::GetInstance()->HasKey('cachelifetime')) {
-			$this->tpl->cache_lifetime = GitPHP_Config::GetInstance()->GetValue('cachelifetime');
+		if (GitPHP_Config::GetInstance()->HasKey('objectcachelifetime')) {
+			$this->tpl->cache_lifetime = GitPHP_Config::GetInstance()->GetValue('objectcachelifetime');
 			if ($this->tpl->cache_lifetime == 0)
 				$this->tpl->cache_lifetime = -1;
 		}
