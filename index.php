@@ -39,6 +39,8 @@ require_once(GITPHP_INCLUDEDIR . 'MessageException.class.php');
 
 require_once(GITPHP_CONTROLLERDIR . 'Controller.class.php');
 
+require_once(GITPHP_CACHEDIR . 'Cache.class.php');
+
 // Need this include for the compression constants used in the config file
 require_once(GITPHP_GITOBJECTDIR . 'Archive.class.php');
 
