@@ -12,7 +12,7 @@
 var oldSearchValue = '';
 
 function runSearch() {
-	var search = $('input.projectSearchBox').val();
+	var search = $('input.projectSearchBox').val().toLowerCase();
 	oldSearchValue = search;
 	
 	$('img.searchSpinner').show();
@@ -38,7 +38,7 @@ function runSearch() {
 
 		var projectName = $(this).find('td.projectName a').text();
 		if (projectName.length > 0) {
-			if (projectName.indexOf(search) != -1) {
+			if (projectName.toLowerCase().indexOf(search) != -1) {
 				$(this).show();
 				hasmatch = true;
 				category = $(this).data('category');
@@ -52,7 +52,7 @@ function runSearch() {
 		}
 		var projectDesc = $(this).find('td.projectDescription a').text();
 		if (projectDesc.length > 0) {
-			if (projectDesc.indexOf(search) != -1) {
+			if (projectDesc.toLowerCase().indexOf(search) != -1) {
 				$(this).show();
 				hasmatch = true;
 				category = $(this).data('category');
@@ -66,7 +66,7 @@ function runSearch() {
 		}
 		var projectOwner = $(this).find('td.projectOwner em').text();
 		if (projectOwner.length > 0) {
-			if (projectOwner.indexOf(search) != -1) {
+			if (projectOwner.toLowerCase().indexOf(search) != -1) {
 				$(this).show();
 				hasmatch = true;
 				category = $(this).data('category');
@@ -108,7 +108,7 @@ function runSearch() {
 			msgDiv.appendTo($('table.projectList'));
 		}
 
-		var msg = GITPHP_RES_NO_MATCHES_FOUND.replace(new RegExp('%1'), search);
+		var msg = GITPHP_RES_NO_MATCHES_FOUND.replace(new RegExp('%1'), $('input.projectSearchBox').val());
 		msgDiv.text(msg);
 
 		msgDiv.show();
