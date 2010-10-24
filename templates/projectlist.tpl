@@ -19,12 +19,12 @@ git source code archive
 </div>
 
 <div class="projectSearch">
-<form method="get" action="index.php" enctype="application/x-www-form-urlencoded">
-{t}Search projects{/t}: <input type="text" name="s" {if $search}value="{$search}"{/if} /> <a href="index.php" {if !$search}style="display: none;"{/if}>X</a>
+<form method="get" action="index.php" id="projectSearchForm" enctype="application/x-www-form-urlencoded">
+{t}Search projects{/t}: <input type="text" name="s" class="projectSearchBox" {if $search}value="{$search}"{/if} /> <a href="index.php" class="clearSearch" {if !$search}style="display: none;"{/if}>X</a> {if $javascript}<img src="images/search-loader.gif" class="searchSpinner" style="display: none;" />{/if}
 </form>
 </div>
 
-<table cellspacing="0">
+<table cellspacing="0" class="projectList">
   {foreach name=projects from=$projectlist item=proj}
     {if $smarty.foreach.projects.first}
       {* Header *}
@@ -56,8 +56,8 @@ git source code archive
     {if $currentcategory != $proj->GetCategory()}
       {assign var=currentcategory value=$proj->GetCategory()}
       {if $currentcategory != ''}
-        <tr class="light">
-          <th>{$currentcategory}</th>
+        <tr class="light categoryRow">
+          <th class="categoryName">{$currentcategory}</th>
           <th></th>
           <th></th>
           <th></th>
@@ -66,13 +66,13 @@ git source code archive
       {/if}
     {/if}
 
-    <tr class="{cycle values="light,dark"}">
-      <td>
+    <tr class="{cycle values="light,dark"} projectRow">
+      <td class="projectName">
         <a href="{$SCRIPT_NAME}?p={$proj->GetProject()|urlencode}&amp;a=summary" class="list {if $currentcategory != ''}indent{/if}">{$proj->GetProject()}</a>
       </td>
-      <td><a href="{$SCRIPT_NAME}?p={$proj->GetProject()|urlencode}&amp;a=summary" class="list">{$proj->GetDescription()}</a></td>
-      <td><em>{$proj->GetOwner()}</em></td>
-      <td>
+      <td class="projectDescription"><a href="{$SCRIPT_NAME}?p={$proj->GetProject()|urlencode}&amp;a=summary" class="list">{$proj->GetDescription()}</a></td>
+      <td class="projectOwner"><em>{$proj->GetOwner()}</em></td>
+      <td class="projectAge">
         {assign var=projecthead value=$proj->GetHeadCommit()}
 	{if $projecthead}
           {if $projecthead->GetAge() < 7200}   {* 60*60*2, or 2 hours *}

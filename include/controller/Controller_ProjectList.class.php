@@ -158,6 +158,11 @@ class GitPHP_Controller_ProjectList extends GitPHP_ControllerBase
 			if ($projectList->Count() > 0)
 				$this->tpl->assign('projectlist', $projectList);
 		}
+
+		if ((empty($this->params['opml']) || ($this->params['opml'] !== true)) &&
+		    (empty($this->params['txt']) || ($this->params['txt'] !== true))) {
+			$this->tpl->assign('extrascripts', array('js/projectsearch.js'));
+		}
 	}
 
 }
