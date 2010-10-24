@@ -124,24 +124,6 @@ class GitPHP_Commit extends GitPHP_GitObject
 	protected $comment = array();
 
 	/**
-	 * treeHashes
-	 *
-	 * Stores tree name to hash mappings
-	 *
-	 * @access protected
-	 */
-	protected $treeHashes = array();
-
-	/**
-	 * blobHashes
-	 *
-	 * Stores blob name to hash mappings
-	 *
-	 * @access protected
-	 */
-	protected $blobHashes = array();
-
-	/**
 	 * readTree
 	 *
 	 * Stores whether tree filenames have been read
@@ -196,6 +178,33 @@ class GitPHP_Commit extends GitPHP_GitObject
 	protected $containingTagRead = false;
 
 	/**
+	 * parentsReferenced
+	 *
+	 * Stores whether the parents have been referenced into pointers
+	 *
+	 * @access private
+	 */
+	private $parentsReferenced = false;
+
+	/**
+	 * treeReferenced
+	 *
+	 * Stores whether the tree has been referenced into a pointer
+	 *
+	 * @access private
+	 */
+	private $treeReferenced = false;
+
+	/**
+	 * containingTagReferenced
+	 *
+	 * Stores whether the containing tag has been referenced into a pointer
+	 *
+	 * @access private
+	 */
+	private $containingTagReferenced = false;
+
+	/**
 	 * __construct
 	 *
 	 * Instantiates object
@@ -224,6 +233,9 @@ class GitPHP_Commit extends GitPHP_GitObject
 		if (!$this->dataRead)
 			$this->ReadData();
 
+		if ($this->parentsReferenced)
+			$this->DereferenceParents();
+
 		if (isset($this->parents[0]))
 			return $this->parents[0];
 		return null;
@@ -242,6 +254,9 @@ class GitPHP_Commit extends GitPHP_GitObject
 		if (!$this->dataRead)
 			$this->ReadData();
 
+		if ($this->parentsReferenced)
+			$this->DereferenceParents();
+
 		return $this->parents;
 	}
 
@@ -257,6 +272,9 @@ class GitPHP_Commit extends GitPHP_GitObject
 	{
 		if (!$this->dataRead)
 			$this->ReadData();
+
+		if ($this->treeReferenced)
+			$this->DereferenceTree();
 
 		return $this->tree;
 	}
@@ -515,7 +533,7 @@ class GitPHP_Commit extends GitPHP_GitObject
 		$this->dataRead = true;
 
 		/* get data from git_rev_list */
-		$exe = new GitPHP_GitExe($this->project);
+		$exe = new GitPHP_GitExe($this->GetProject());
 		$args = array();
 		$args[] = '--header';
 		$args[] = '--parents';
@@ -538,7 +556,7 @@ class GitPHP_Commit extends GitPHP_GitObject
 		$tok = strtok(' ');
 		while ($tok !== false) {
 			try {
-				$this->parents[] = new GitPHP_Commit($this->project, $tok);
+				$this->parents[] = $this->GetProject()->GetCommit($tok);
 			} catch (Exception $e) {
 			}
 			$tok = strtok(' ');
@@ -548,7 +566,7 @@ class GitPHP_Commit extends GitPHP_GitObject
 			if (preg_match('/^tree ([0-9a-fA-F]{40})$/', $line, $regs)) {
 				/* Tree */
 				try {
-					$tree = $this->project->GetTree($regs[1]);
+					$tree = $this->GetProject()->GetTree($regs[1]);
 					if ($tree) {
 						$tree->SetCommit($this);
 						$this->tree = $tree;
@@ -579,6 +597,7 @@ class GitPHP_Commit extends GitPHP_GitObject
 			}
 		}
 
+		GitPHP_Cache::GetInstance()->Set($this->GetCacheKey(), $this);
 	}
 
 	/**
@@ -593,7 +612,7 @@ class GitPHP_Commit extends GitPHP_GitObject
 	{
 		$heads = array();
 
-		$projectHeads = $this->project->GetHeads();
+		$projectHeads = $this->GetProject()->GetHeads();
 
 		foreach ($projectHeads as $head) {
 			if ($head->GetCommit()->GetHash() === $this->hash) {
@@ -616,7 +635,7 @@ class GitPHP_Commit extends GitPHP_GitObject
 	{
 		$tags = array();
 
-		$projectTags = $this->project->GetTags();
+		$projectTags = $this->GetProject()->GetTags();
 
 		foreach ($projectTags as $tag) {
 			if ($tag->GetCommit()->GetHash() === $this->hash) {
@@ -640,6 +659,9 @@ class GitPHP_Commit extends GitPHP_GitObject
 		if (!$this->containingTagRead)
 			$this->ReadContainingTag();
 
+		if ($this->containingTagReferenced)
+			$this->DereferenceContainingTag();
+
 		return $this->containingTag;
 	}
 
@@ -654,7 +676,7 @@ class GitPHP_Commit extends GitPHP_GitObject
 	{
 		$this->containingTagRead = true;
 
-		$exe = new GitPHP_GitExe($this->project);
+		$exe = new GitPHP_GitExe($this->GetProject());
 		$args = array();
 		$args[] = '--tags';
 		$args[] = $this->hash;
@@ -663,11 +685,13 @@ class GitPHP_Commit extends GitPHP_GitObject
 		foreach ($revs as $revline) {
 			if (preg_match('/^([0-9a-fA-F]{40})\s+tags\/(.+)(\^[0-9]+|\~[0-9]+)$/', $revline, $regs)) {
 				if ($regs[1] == $this->hash) {
-					$this->containingTag = $this->project->GetTag($regs[2]);
+					$this->containingTag = $this->GetProject()->GetTag($regs[2]);
 					break;
 				}
 			}
 		}
+
+		GitPHP_Cache::GetInstance()->Set($this->GetCacheKey(), $this);
 	}
 
 	/**
@@ -680,7 +704,7 @@ class GitPHP_Commit extends GitPHP_GitObject
 	 */
 	public function DiffToParent()
 	{
-		return new GitPHP_TreeDiff($this->project, $this->hash);
+		return new GitPHP_TreeDiff($this->GetProject(), $this->hash);
 	}
 
 	/**
@@ -722,7 +746,7 @@ class GitPHP_Commit extends GitPHP_GitObject
 	{
 		$this->hashPathsRead = true;
 
-		$exe = new GitPHP_GitExe($this->project);
+		$exe = new GitPHP_GitExe($this->GetProject());
 
 		$args = array();
 		$args[] = '--full-name';
@@ -744,6 +768,8 @@ class GitPHP_Commit extends GitPHP_GitObject
 				}
 			}
 		}
+
+		GitPHP_Cache::GetInstance()->Set($this->GetCacheKey(), $this);
 	}
 	
 	/**
@@ -767,7 +793,7 @@ class GitPHP_Commit extends GitPHP_GitObject
 
 		foreach ($this->treePaths as $path => $hash) {
 			if (preg_match('/' . $pattern . '/i', $path)) {
-				$obj = $this->project->GetTree($hash);
+				$obj = $this->GetProject()->GetTree($hash);
 				$obj->SetCommit($this);
 				$results[$path] = $obj;
 			}
@@ -775,7 +801,7 @@ class GitPHP_Commit extends GitPHP_GitObject
 
 		foreach ($this->blobPaths as $path => $hash) {
 			if (preg_match('/' . $pattern . '/i', $path)) {
-				$obj = $this->project->GetBlob($hash);
+				$obj = $this->GetProject()->GetBlob($hash);
 				$obj->SetCommit($this);
 				$results[$path] = $obj;
 			}
@@ -800,7 +826,7 @@ class GitPHP_Commit extends GitPHP_GitObject
 		if (empty($pattern))
 			return;
 
-		$exe = new GitPHP_GitExe($this->project);
+		$exe = new GitPHP_GitExe($this->GetProject());
 
 		$args = array();
 		$args[] = '-I';
@@ -820,7 +846,7 @@ class GitPHP_Commit extends GitPHP_GitObject
 				if (!isset($results[$regs[1]]['object'])) {
 					$hash = $this->PathToHash($regs[1]);
 					if (!empty($hash)) {
-						$obj = $this->project->GetBlob($hash);
+						$obj = $this->GetProject()->GetBlob($hash);
 						$obj->SetCommit($this);
 						$results[$regs[1]]['object'] = $obj;
 					}
@@ -862,6 +888,175 @@ class GitPHP_Commit extends GitPHP_GitObject
 		ksort($grepresults);
 
 		return array_slice($grepresults, $skip, $count, true);
+	}
+
+	/**
+	 * ReferenceParents
+	 *
+	 * Turns the list of parents into reference pointers
+	 *
+	 * @access private
+	 */
+	private function ReferenceParents()
+	{
+		if ($this->parentsReferenced)
+			return;
+
+		if ((!isset($this->parents)) || (count($this->parents) < 1))
+			return;
+
+		for ($i = 0; $i < count($this->parents); $i++) {
+			$this->parents[$i] = $this->parents[$i]->GetHash();
+		}
+
+		$this->parentsReferenced = true;
+	}
+
+	/**
+	 * DereferenceParents
+	 *
+	 * Turns the list of parent pointers back into objects
+	 *
+	 * @access private
+	 */
+	private function DereferenceParents()
+	{
+		if (!$this->parentsReferenced)
+			return;
+
+		if ((!$this->parents) || (count($this->parents) < 1))
+			return;
+
+		for ($i = 0; $i < count($this->parents); $i++) {
+			$this->parents[$i] = $this->GetProject()->GetCommit($this->parents[$i]);
+		}
+
+		$this->parentsReferenced = false;
+	}
+
+	/**
+	 * ReferenceTree
+	 *
+	 * Turns the tree into a reference pointer
+	 *
+	 * @access private
+	 */
+	private function ReferenceTree()
+	{
+		if ($this->treeReferenced)
+			return;
+
+		if (!$this->tree)
+			return;
+
+		$this->tree = $this->tree->GetHash();
+
+		$this->treeReferenced = true;
+	}
+
+	/**
+	 * DereferenceTree
+	 *
+	 * Turns the tree pointer back into an object
+	 *
+	 * @access private
+	 */
+	private function DereferenceTree()
+	{
+		if (!$this->treeReferenced)
+			return;
+
+		if (empty($this->tree))
+			return;
+
+		$this->tree = $this->GetProject()->GetTree($this->tree);
+
+		if ($this->tree)
+			$this->tree->SetCommit($this);
+
+		$this->treeReferenced = false;
+	}
+
+	/**
+	 * ReferenceContainingTag
+	 *
+	 * Turns the containing tag into a reference pointer
+	 *
+	 * @access private
+	 */
+	private function ReferenceContainingTag()
+	{
+		if ($this->containingTagReferenced)
+			return;
+
+		if (!$this->containingTag)
+			return;
+
+		$this->containingTag = $this->containingTag->GetName();
+
+		$this->containingTagReferenced = true;
+	}
+
+	/**
+	 * DereferenceContainingTag
+	 *
+	 * Turns the containing tag pointer back into an object
+	 *
+	 * @access private
+	 */
+	private function DereferenceContainingTag()
+	{
+		if (!$this->containingTagReferenced)
+			return;
+
+		if (empty($this->containingTag))
+			return;
+
+		$this->containingTag = $this->GetProject()->GetTag($this->containingTag);
+		
+		$this->containingTagReferenced = false;
+	}
+
+	/**
+	 * __sleep
+	 *
+	 * Called to prepare the object for serialization
+	 *
+	 * @access public
+	 * @return array list of properties to serialize
+	 */
+	public function __sleep()
+	{
+		if (!$this->parentsReferenced)
+			$this->ReferenceParents();
+
+		if (!$this->treeReferenced)
+			$this->ReferenceTree();
+
+		if (!$this->containingTagReferenced)
+			$this->ReferenceContainingTag();
+
+		$properties = array('dataRead', 'parents', 'tree', 'author', 'authorEpoch', 'authorTimezone', 'committer', 'committerEpoch', 'committerTimezone', 'title', 'comment', 'readTree', 'blobPaths', 'treePaths', 'hashPathsRead', 'containingTag', 'containingTagRead', 'parentsReferenced', 'treeReferenced', 'containingTagReferenced');
+		return array_merge($properties, parent::__sleep());
+	}
+
+	/**
+	 * GetCacheKey
+	 *
+	 * Gets the cache key to use for this object
+	 *
+	 * @access public
+	 * @return string cache key
+	 */
+	public function GetCacheKey()
+	{
+		$key = parent::GetCacheKey();
+		if (!empty($key))
+			$key .= '|';
+
+		$key .= 'commit|' . $this->hash;
+
+		return $key;
 	}
 
 }

@@ -600,8 +600,14 @@ class GitPHP_Project
 			}
 		}
 
-		if (!isset($this->commitCache[$hash]))
-			$this->commitCache[$hash] = new GitPHP_Commit($this, $hash);
+		if (!isset($this->commitCache[$hash])) {
+			$cacheKey = 'project|' . $this->project . '|commit|' . $hash;
+			$cached = GitPHP_Cache::GetInstance()->Get($cacheKey);
+			if ($cached)
+				$this->commitCache[$hash] = $cached;
+			else
+				$this->commitCache[$hash] = new GitPHP_Commit($this, $hash);
+		}
 
 		return $this->commitCache[$hash];
 	}

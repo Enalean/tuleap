@@ -38,6 +38,15 @@ abstract class GitPHP_GitObject
 	protected $hash;
 
 	/**
+	 * projectReferenced
+	 *
+	 * Stores whether the project has been referenced into a pointer
+	 *
+	 * @access protected
+	 */
+	protected $projectReferenced = false;
+
+	/**
 	 * __construct
 	 *
 	 * Instantiates object
@@ -64,6 +73,9 @@ abstract class GitPHP_GitObject
 	 */
 	public function GetProject()
 	{
+		if ($this->projectReferenced)
+			$this->DereferenceProject();
+
 		return $this->project;
 	}
 
@@ -95,6 +107,75 @@ abstract class GitPHP_GitObject
 			throw new Exception(sprintf(__('Invalid hash %1$s'), $hash));
 		}
 		$this->hash = $hash;
+	}
+
+	/**
+	 * ReferenceProject
+	 *
+	 * Turns the project object into a reference pointer
+	 *
+	 * @access private
+	 */
+	private function ReferenceProject()
+	{
+		if ($this->projectReferenced)
+			return;
+
+		$this->project = $this->project->GetProject();
+
+		$this->projectReferenced = true;
+	}
+
+	/**
+	 * DereferenceProject
+	 *
+	 * Turns the project reference pointer back into an object
+	 *
+	 * @access private
+	 */
+	private function DereferenceProject()
+	{
+		if (!$this->projectReferenced)
+			return;
+
+		$this->project = GitPHP_ProjectList::GetInstance()->GetProject($this->project);
+
+		$this->projectReferenced = false;
+	}
+
+	/**
+	 * __sleep
+	 *
+	 * Called to prepare the object for serialization
+	 *
+	 * @access public
+	 * @return array list of properties to serialize
+	 */
+	public function __sleep()
+	{
+		if (!$this->projectReferenced)
+			$this->ReferenceProject();
+
+		return array('project', 'hash', 'projectReferenced');
+	}
+
+	/**
+	 * GetCacheKey
+	 *
+	 * Gets the cache key to use for this object
+	 *
+	 * @access public
+	 * @return string cache key
+	 */
+	public function GetCacheKey()
+	{
+		$projKey = 'project|';
+		if ($this->projectReferenced)
+			$projKey .= $this->project;
+		else
+			$projKey .= $this->project->GetProject();
+
+		return $projKey;
 	}
 
 }
