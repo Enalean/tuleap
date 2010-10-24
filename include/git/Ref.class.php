@@ -18,7 +18,7 @@ require_once(GITPHP_GITOBJECTDIR . 'GitObject.class.php');
  * @package GitPHP
  * @subpackage Git
  */
-class GitPHP_Ref extends GitPHP_GitObject
+abstract class GitPHP_Ref extends GitPHP_GitObject
 {
 	
 	/**
@@ -59,9 +59,23 @@ class GitPHP_Ref extends GitPHP_GitObject
 		$this->refName = $refName;
 		if (!empty($refHash)) {
 			$this->SetHash($refHash);
-		} else {
-			$this->FindHash();
 		}
+	}
+
+	/**
+	 * GetHash
+	 *
+	 * Gets the hash for this ref (overrides base)
+	 *
+	 * @access public
+	 * @return string object hash
+	 */
+	public function GetHash()
+	{
+		if (empty($this->hash))
+			$this->FindHash();
+
+		return $this->hash;
 	}
 
 	/**
@@ -74,7 +88,7 @@ class GitPHP_Ref extends GitPHP_GitObject
 	 */
 	protected function FindHash()
 	{
-		$exe = new GitPHP_GitExe($this->project);
+		$exe = new GitPHP_GitExe($this->GetProject());
 		$args = array();
 		$args[] = '--hash';
 		$args[] = '--verify';
@@ -88,7 +102,7 @@ class GitPHP_Ref extends GitPHP_GitObject
 	}
 
 	/**
-	 * GetName()
+	 * GetName
 	 *
 	 * Gets the ref name
 	 *
@@ -136,7 +150,22 @@ class GitPHP_Ref extends GitPHP_GitObject
 	 */
 	public function GetFullPath()
 	{
-		return $this->project->GetPath() . '/' . $this->GetRefPath();
+		return $this->GetProject()->GetPath() . '/' . $this->GetRefPath();
+	}
+
+	/**
+	 * __sleep
+	 *
+	 * Called to prepare the object for serialization
+	 *
+	 * @access public
+	 * @return array list of properties to serialize
+	 */
+	public function __sleep()
+	{
+		$properties = array('refName', 'refDir');
+
+		return array_merge($properties, parent::__sleep());
 	}
 
 }

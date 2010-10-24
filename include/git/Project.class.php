@@ -734,13 +734,34 @@ class GitPHP_Project
 		if (empty($tag))
 			return null;
 
-		if (!$this->readTags)
-			$this->ReadTagList();
+		if (!isset($this->tags[$tag])) {
+			$this->LoadTag($tag);
+		}
 
-		if (isset($this->tags[$tag]))
-			return $this->tags[$tag];
+		return $this->tags[$tag];
+	}
 
-		return null;
+	/**
+	 * LoadTag
+	 *
+	 * Attempts to load a cached tag, or creates a new object
+	 *
+	 * @access private
+	 * @param string $tag tag to find
+	 * @return mixed tag object
+	 */
+	private function LoadTag($tag)
+	{
+		if (empty($tag))
+			return;
+
+		$cacheKey = 'project|' . $this->project . '|tag|' . $tag;
+		$cached = GitPHP_Cache::GetInstance()->Get($cacheKey);
+		if ($cached) {
+			$this->tags[$tag] = $cached;
+		} else {
+			$this->tags[$tag] = new GitPHP_Tag($this, $tag);
+		}
 	}
 
 	/**
@@ -772,8 +793,15 @@ class GitPHP_Project
 							$this->tags[$regs[2]]->SetCommit($derefCommit);
 						}
 							
-					} else {
-							$this->tags[$regs[2]] = new GitPHP_Tag($this, $regs[2], $regs[1]);
+					} else if (!isset($this->tags[$regs[2]])) {
+							$this->LoadTag($regs[2]);
+							if (isset($this->tags[$regs[2]])) {
+								$tagHash = $this->tags[$regs[2]]->GetHash();
+								if (empty($tagHash)) {
+									// New non-cached tag object
+									$this->tags[$regs[2]]->SetHash($regs[1]);
+								}
+							}
 					}
 				} catch (Exception $e) {
 				}

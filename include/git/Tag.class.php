@@ -95,6 +95,24 @@ class GitPHP_Tag extends GitPHP_Ref
 	protected $comment = array();
 
 	/**
+	 * objectReferenced
+	 *
+	 * Stores whether the object has been referenced into a pointer
+	 *
+	 * @access private
+	 */
+	private $objectReferenced = false;
+
+	/**
+	 * commitReferenced
+	 *
+	 * Stores whether the commit has been referenced into a pointer
+	 *
+	 * @access private
+	 */
+	private $commitReferenced = false;
+
+	/**
 	 * __construct
 	 *
 	 * Instantiates tag
@@ -124,6 +142,9 @@ class GitPHP_Tag extends GitPHP_Ref
 		if (!$this->dataRead)
 			$this->ReadData();
 
+		if ($this->objectReferenced)
+			$this->DereferenceObject();
+
 		return $this->object;
 	}
 
@@ -140,8 +161,11 @@ class GitPHP_Tag extends GitPHP_Ref
 		if (!$this->dataRead)
 			$this->ReadData();
 
+		if ($this->commitReferenced)
+			$this->DereferenceCommit();
+
 		if (!$this->commit)
-			$this->LoadCommit();
+			$this->ReadCommit();
 
 		return $this->commit;
 	}
@@ -156,7 +180,11 @@ class GitPHP_Tag extends GitPHP_Ref
 	 */
 	public function SetCommit($commit)
 	{
-		$this->commit = $commit;
+		if ($this->commitReferenced)
+			$this->DereferenceCommit();
+
+		if (!$this->commit)
+			$this->commit = $commit;
 	}
 
 	/**
@@ -271,6 +299,9 @@ class GitPHP_Tag extends GitPHP_Ref
 		if (!$this->dataRead)
 			$this->ReadData();
 
+		if ($this->objectReferenced)
+			$this->DereferenceObject();
+
 		if (!$this->object)
 			return true;
 
@@ -288,7 +319,7 @@ class GitPHP_Tag extends GitPHP_Ref
 	{
 		$this->dataRead = true;
 
-		$exe = new GitPHP_GitExe($this->project);
+		$exe = new GitPHP_GitExe($this->GetProject());
 		$args = array();
 		$args[] = '-t';
 		$args[] = $this->hash;
@@ -296,9 +327,10 @@ class GitPHP_Tag extends GitPHP_Ref
 		
 		if ($ret === 'commit') {
 			/* light tag */
-			$this->object = $this->project->GetCommit($this->hash);
+			$this->object = $this->GetProject()->GetCommit($this->hash);
 			$this->commit = $this->object;
 			$this->type = 'commit';
+			GitPHP_Cache::GetInstance()->Set($this->GetCacheKey(), $this);
 			return;
 		}
 
@@ -347,13 +379,13 @@ class GitPHP_Tag extends GitPHP_Ref
 		switch ($this->type) {
 			case 'commit':
 				try {
-					$this->object = $this->project->GetCommit($objectHash);
-					$this->commit = $this->GetObject();
+					$this->object = $this->GetProject()->GetCommit($objectHash);
+					$this->commit = $this->object;
 				} catch (Exception $e) {
 				}
 				break;
 			case 'tag':
-				$exe = new GitPHP_GitExe($this->project);
+				$exe = new GitPHP_GitExe($this->GetProject());
 				$args = array();
 				$args[] = 'tag';
 				$args[] = $objectHash;
@@ -363,12 +395,16 @@ class GitPHP_Tag extends GitPHP_Ref
 				foreach ($lines as $i => $line) {
 					if (preg_match('/^tag (.+)$/', $line, $regs)) {
 						$name = trim($regs[1]);
-						$this->object = new GitPHP_Tag($this->project, $name, $objectHash);
+						$this->object = $this->GetProject()->GetTag($name);
+						if ($this->object) {
+							$this->object->SetHash($objectHash);
+						}
 					}
 				}
 				break;
 		}
 
+		GitPHP_Cache::GetInstance()->Set($this->GetCacheKey(), $this);
 	}
 
 	/**
@@ -392,10 +428,155 @@ class GitPHP_Tag extends GitPHP_Ref
 
 		foreach ($lines as $line) {
 			if (preg_match('/^([0-9a-fA-F]{40}) refs\/tags\/' . preg_quote($this->refName) . '(\^{})$/', $line, $regs)) {
-				$this->commit = $this->project->GetCommit($regs[1]);
+				$this->commit = $this->GetProject()->GetCommit($regs[1]);
+				return;
 			}
 		}
+
+		GitPHP_Cache::GetInstance()->Set($this->GetCacheKey(), $this);
 	}
+
+	/**
+	 * ReferenceObject
+	 *
+	 * Turns the object into a reference pointer
+	 *
+	 * @access private
+	 */
+	private function ReferenceObject()
+	{
+		if ($this->objectReferenced)
+			return;
+
+		if (!$this->object)
+			return;
+
+		if ($this->type == 'commit') {
+			$this->object = $this->object->GetHash();
+		} else if ($this->type == 'tag') {
+			$this->object = $this->object->GetName();
+		}
+
+		$this->objectReferenced = true;
+	}
+
+	/**
+	 * DereferenceObject
+	 *
+	 * Turns the object pointer back into an object
+	 *
+	 * @access private
+	 */
+	private function DereferenceObject()
+	{
+		if (!$this->objectReferenced)
+			return;
+
+		if (empty($this->object))
+			return;
+
+		if ($this->type == 'commit') {
+			$this->object = $this->GetProject()->GetCommit($this->object);
+		} else if ($this->type == 'tag') {
+			$this->object = $this->GetProject()->GetTag($this->object);
+		}
+
+		$this->objectReferenced = false;
+	}
+
+	/**
+	 * ReferenceCommit
+	 *
+	 * Turns the commit into a reference pointer
+	 *
+	 * @access private
+	 */
+	private function ReferenceCommit()
+	{
+		if ($this->commitReferenced)
+			return;
+
+		if (!$this->commit)
+			return;
+
+		$this->commit = $this->commit->GetHash();
+
+		$this->commitReferenced = true;
+	}
+
+	/**
+	 * DereferenceCommit
+	 *
+	 * Turns the commit pointer back into an object
+	 *
+	 * @access private
+	 */
+	private function DereferenceCommit()
+	{
+		if (!$this->commitReferenced)
+			return;
+
+		if (empty($this->commit))
+			return;
+
+		if ($this->type == 'commit') {
+			$obj = $this->GetObject();
+			if ($obj && ($obj->GetHash() == $this->commit)) {
+				/*
+				 * Light tags are type commit and the commit
+				 * and object are the same, in which case
+				 * no need to fetch the object again
+				 */
+				$this->commit = $obj;
+				$this->commitReferenced = false;
+				return;
+			}
+		}
+
+		$this->commit = $this->GetProject()->GetCommit($this->commit);
+
+		$this->commitReferenced = false;
+	}
+
+	/**
+	 * __sleep
+	 *
+	 * Called to prepare the object for serialization
+	 *
+	 * @access public
+	 * @return array list of properties to serialize
+	 */
+	public function __sleep()
+	{
+		if (!$this->objectReferenced)
+			$this->ReferenceObject();
+
+		if (!$this->commitReferenced)
+			$this->ReferenceCommit();
+
+		$properties = array('dataRead', 'object', 'commit', 'type', 'tagger', 'taggerEpoch', 'taggerTimezone', 'comment', 'objectReferenced', 'commitReferenced');
+		return array_merge($properties, parent::__sleep());
+	}
+
+	/**
+	 * GetCacheKey
+	 *
+	 * Gets the cache key to use for this object
+	 *
+	 * @access public
+	 * @return string cache key
+	 */
+	public function GetCacheKey()
+	{
+		$key = parent::GetCacheKey();
+		if (!empty($key))
+			$key .= '|';
+
+		$key .= 'tag|' . $this->refName;
+		
+		return $key;
+	}
+
 
 	/**
 	 * CompareAge
