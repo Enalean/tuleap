@@ -28,7 +28,7 @@ git source code archive
   {foreach name=projects from=$projectlist item=proj}
     {if $smarty.foreach.projects.first}
       {* Header *}
-      <tr>
+      <tr class="projectHeader">
         {if $order == "project"}
           <th>{t}Project{/t}</th>
         {else}
@@ -96,7 +96,11 @@ git source code archive
       </td>
     </tr>
   {foreachelse}
+    {if $search}
+    <div class="message">{t 1=$search}No matches found for "%1"{/t}</div>
+    {else}
     <div class="message">{t}No projects found{/t}</div>
+    {/if}
   {/foreach}
 
 </table>

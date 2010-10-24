@@ -25,9 +25,12 @@ function runSearch() {
 
 	var visibleCats = [];
 
+	var hasmatch = false;
+
 	$('table.projectList tr.projectRow').each(function() {
 		if (search.length < 1) {
 			$(this).show();
+			hasmatch = true;
 			return;
 		}
 
@@ -37,6 +40,7 @@ function runSearch() {
 		if (projectName.length > 0) {
 			if (projectName.indexOf(search) != -1) {
 				$(this).show();
+				hasmatch = true;
 				category = $(this).data('category');
 				if (category) {
 					if (jQuery.inArray(category, visibleCats) == -1) {
@@ -50,6 +54,7 @@ function runSearch() {
 		if (projectDesc.length > 0) {
 			if (projectDesc.indexOf(search) != -1) {
 				$(this).show();
+				hasmatch = true;
 				category = $(this).data('category');
 				if (category) {
 					if (jQuery.inArray(category, visibleCats) == -1) {
@@ -63,6 +68,7 @@ function runSearch() {
 		if (projectOwner.length > 0) {
 			if (projectOwner.indexOf(search) != -1) {
 				$(this).show();
+				hasmatch = true;
 				category = $(this).data('category');
 				if (category) {
 					if (jQuery.inArray(category, visibleCats) == -1) {
@@ -91,6 +97,24 @@ function runSearch() {
 		}
 	});
 
+	var msgDiv = $('div.message');
+	if (hasmatch) {
+		msgDiv.hide();
+		$('tr.projectHeader').show();
+	} else {
+		if (msgDiv.length == 0) {
+			msgDiv = jQuery(document.createElement('div'));
+			msgDiv.addClass('message');
+			msgDiv.appendTo($('table.projectList'));
+		}
+
+		var msg = GITPHP_RES_NO_MATCHES_FOUND.replace(new RegExp('%1'), search);
+		msgDiv.text(msg);
+
+		msgDiv.show();
+		$('tr.projectHeader').hide();
+	}
+
 	$('img.searchSpinner').hide();
 }
 
@@ -101,9 +125,16 @@ function initProjectSearch() {
 		}
 	});
 
+	var rows = $('table.projectList tr');
+
+	if (rows.length == 0) {
+		// No projects, just stop
+		return;
+	}
+
 	// Store project categories
 	var category = '';
-	$('table.projectList tr').each(function() {
+	rows.each(function() {
 		if ($(this).hasClass('categoryRow')) {
 			category = $(this).children('th.categoryName').text();
 		} else if ($(this).hasClass('projectRow')) {
