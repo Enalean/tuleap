@@ -916,6 +916,11 @@ class GitPHP_Project
 		if (empty($hash))
 			return null;
 
+		$cacheKey = 'project|' . $this->project . '|blob|' . $hash;
+		$cached = GitPHP_Cache::GetInstance()->Get($cacheKey);
+		if ($cached)
+			return $cached;
+
 		return new GitPHP_Blob($this, $hash);
 	}
 

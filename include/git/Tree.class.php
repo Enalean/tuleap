@@ -83,7 +83,7 @@ class GitPHP_Tree extends GitPHP_FilesystemObject
 	{
 		$this->contentsRead = true;
 
-		$exe = new GitPHP_GitExe($this->project);
+		$exe = new GitPHP_GitExe($this->GetProject());
 
 		$args = array();
 		$args[] = '--full-name';

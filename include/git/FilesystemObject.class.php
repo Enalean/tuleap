@@ -250,7 +250,7 @@ abstract class GitPHP_FilesystemObject extends GitPHP_GitObject
 			$path = substr($path, 0, $pos);
 			$pathhash = $this->commit->PathToHash($path);
 			if (!empty($pathhash)) {
-				$parent = $this->project->GetTree($pathhash);
+				$parent = $this->GetProject()->GetTree($pathhash);
 				$parent->SetPath($path);
 				$this->pathTree[] = $parent;
 			}

@@ -151,13 +151,15 @@ class GitPHP_Blob extends GitPHP_FilesystemObject
 	{
 		$this->dataRead = true;
 
-		$exe = new GitPHP_GitExe($this->project);
+		$exe = new GitPHP_GitExe($this->GetProject());
 
 		$args = array();
 		$args[] = 'blob';
 		$args[] = $this->hash;
 
 		$this->data = $exe->Execute(GIT_CAT_FILE, $args);
+
+		GitPHP_Cache::GetInstance()->Set($this->GetCacheKey(), $this);
 	}
 
 	/**
@@ -403,7 +405,7 @@ class GitPHP_Blob extends GitPHP_FilesystemObject
 	{
 		$this->historyRead = true;
 
-		$exe = new GitPHP_GitExe($this->project);
+		$exe = new GitPHP_GitExe($this->GetProject());
 		
 		$args = array();
 		if (isset($this->commit))
@@ -412,7 +414,7 @@ class GitPHP_Blob extends GitPHP_FilesystemObject
 			$args[] = 'HEAD';
 		$args[] = '|';
 		$args[] = $exe->GetBinary();
-		$args[] = '--git-dir=' . $this->project->GetPath();
+		$args[] = '--git-dir=' . $this->GetProject()->GetPath();
 		$args[] = GIT_DIFF_TREE;
 		$args[] = '-r';
 		$args[] = '--stdin';
@@ -424,10 +426,10 @@ class GitPHP_Blob extends GitPHP_FilesystemObject
 		$commit = null;
 		foreach ($historylines as $line) {
 			if (preg_match('/^([0-9a-fA-F]{40})/', $line, $regs)) {
-				$commit = $this->project->GetCommit($regs[1]);
+				$commit = $this->GetProject()->GetCommit($regs[1]);
 			} else if ($commit) {
 				try {
-					$history = new GitPHP_FileDiff($this->project, $line);
+					$history = new GitPHP_FileDiff($this->GetProject(), $line);
 					$history->SetCommit($commit);
 					$this->history[] = $history;
 				} catch (Exception $e) {
@@ -464,7 +466,7 @@ class GitPHP_Blob extends GitPHP_FilesystemObject
 	{
 		$this->blameRead = true;
 
-		$exe = new GitPHP_GitExe($this->project);
+		$exe = new GitPHP_GitExe($this->GetProject());
 
 		$args = array();
 		$args[] = '-s';
@@ -482,11 +484,45 @@ class GitPHP_Blob extends GitPHP_FilesystemObject
 		foreach ($blamelines as $line) {
 			if (preg_match('/^([0-9a-fA-F]{40})(\s+.+)?\s+([0-9]+)\)/', $line, $regs)) {
 				if ($regs[1] != $lastcommit) {
-					$this->blame[(int)($regs[3])] = $this->project->GetCommit($regs[1]);
+					$this->blame[(int)($regs[3])] = $this->GetProject()->GetCommit($regs[1]);
 					$lastcommit = $regs[1];
 				}
 			}
 		}
+	}
+
+	/**
+	 * __sleep
+	 *
+	 * Called to prepare the object for serialization
+	 *
+	 * @access public
+	 * @return array list of properties to serialize
+	 */
+	public function __sleep()
+	{
+		$properties = array('data', 'dataRead');
+
+		return array_merge($properties, parent::__sleep());
+	}
+
+	/**
+	 * GetCacheKey
+	 *
+	 * Gets the cache key to use for this object
+	 *
+	 * @access public
+	 * @return string cache key
+	 */
+	public function GetCacheKey()
+	{
+		$key = parent::GetCacheKey();
+		if (!empty($key))
+			$key .= '|';
+
+		$key .= 'blob|' . $this->hash;
+
+		return $key;
 	}
 
 }
