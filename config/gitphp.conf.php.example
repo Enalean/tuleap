@@ -20,10 +20,19 @@
 
 /*
  * cache
- * Turns on caching. If in doubt, leave it off
+ * Turns on template caching. If in doubt, leave it off
  * You will need to create a directory 'cache' and make it
  * writable by the server
  */
 //$gitphp_conf['cache'] = true;
 
+/*
+ * objectcache
+ * Turns on object caching.  This caches immutable pieces of
+ * data from the git repository.  You will need to create a
+ * directory 'cache' and make it writable by the server.
+ * This can be used in place of the template cache, or
+ * in addition to it for the maximum benefit.
+ */
+//$gitphp_conf['objectcache'] = true;
 

@@ -258,11 +258,21 @@ $gitphp_conf['magicdb'] = 'C:\\wamp\\php\\extras\\magic';
 
 /*
  * cache
- * Turns on caching. If in doubt, leave it off
+ * Turns on template caching. If in doubt, leave it off
  * You will need to create a directory 'cache' and make it
  * writable by the server
  */
 $gitphp_conf['cache'] = false;
+
+/*
+ * objectcache
+ * Turns on object caching.  This caches immutable pieces of
+ * data from the git repository.  You will need to create a
+ * directory 'cache' and make it writable by the server.
+ * This can be used in place of the template cache, or
+ * in addition to it for the maximum benefit.
+ */
+$gitphp_conf['objectcache'] = false;
 
 /*
  * cacheexpire
@@ -289,11 +299,20 @@ $gitphp_conf['cacheexpire'] = true;
 $gitphp_conf['cachelifetime'] = 3600;
 
 /*
+ * objectcachelifetime
+ * Sets how long git objects will be cached, in seconds
+ * The object cache only stores immutable objects from
+ * the git repository, so there's no harm in setting
+ * this to a high number.  Set to -1 to never expire.
+ */
+$gitphp_conf['objectcachelifetime'] = 86400;
+
+/*
  * memcache
  * Enables memcache support for caching data, instead of
  * Smarty's standard on-disk cache.
- * Only applies if cache = true.  Requires either the
- * Memcached or Memcache PHP extensions.
+ * Only applies if cache = true or objectcache = true (or both)
+ * Requires either the Memcached or Memcache PHP extensions.
  * This is an array of servers.  Each server is specified as an
  * array.
  * Index 0 (required): The server hostname/IP
