@@ -104,7 +104,6 @@ class GitPHP_Tree extends GitPHP_FilesystemObject
 						if (!empty($this->path))
 							$path = $this->path . '/' . $path;
 						$t->SetPath($path);
-						$t->SetParent($this);
 						if ($this->commit)
 							$t->SetCommit($this->commit);
 						$this->contents[] = $t;
@@ -119,7 +118,6 @@ class GitPHP_Tree extends GitPHP_FilesystemObject
 						$size = trim($regs[4]);
 						if (!empty($size))
 							$b->SetSize($regs[4]);
-						$b->SetParent($this);
 						if ($this->commit)
 							$b->SetCommit($this->commit);
 						$this->contents[] = $b;

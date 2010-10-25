@@ -196,32 +196,6 @@ abstract class GitPHP_FilesystemObject extends GitPHP_GitObject
 	}
 
 	/**
-	 * GetParent
-	 *
-	 * Gets the parent
-	 *
-	 * @access public
-	 * @return mixed parent object
-	 */
-	public function GetParent()
-	{
-		return $this->parent;
-	}
-
-	/**
-	 * SetParent
-	 *
-	 * Sets the parent
-	 *
-	 * @access public
-	 * @param mixed $parent parent object
-	 */
-	public function SetParent($parent)
-	{
-		$this->parent = $parent;
-	}
-
-	/**
 	 * GetCommit
 	 *
 	 * Gets the commit this object belongs to
