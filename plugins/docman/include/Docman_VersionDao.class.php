@@ -260,10 +260,10 @@ class Docman_VersionDao extends DataAccessObject {
     function deleteSpecificVersion($itemId, $number) {
         $sql = 'INSERT INTO plugin_docman_version_deleted (id, item_id, number, user_id, label, '.
                         ' changelog, create_date,  '.
-                        ' filename, filesize, filetype, path, delete_date, purge_date) '.
+                        ' filename, filesize, filetype, path, delete_date) '.
                         ' SELECT id, item_id, number, user_id, label, '.
                         ' changelog, date, '.
-                        ' filename, filesize, filetype, path , '.$_SERVER['REQUEST_TIME'].' , '.$_SERVER['REQUEST_TIME'].' FROM plugin_docman_version '.
+                        ' filename, filesize, filetype, path , '.$_SERVER['REQUEST_TIME'].' FROM plugin_docman_version '.
                         ' WHERE item_id='.$this->da->quoteSmart($itemId).' AND number='.$this->da->quoteSmart($number);
         if ($this->update($sql)) {
             $sql= 'DELETE FROM plugin_docman_version WHERE item_id='.$this->da->quoteSmart($itemId).' AND number='.$this->da->quoteSmart($number);
