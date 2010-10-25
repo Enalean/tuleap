@@ -306,6 +306,31 @@ class Docman_VersionDao extends DataAccessObject {
         }
         return array();
     }
+
+    /**
+     * List all pending versions in order to delete them physically
+     *
+     * @param Integer $time
+     *
+     * @return Array
+     */
+    function listVersionsToDelete($time) {
+        $sql=' SELECT * '.
+             ' FROM plugin_docman_version_deleted '.
+             ' WHERE purge_date < '.$this->da->quoteSmart($time);
+
+        $dar = $this->retrieve($sql);
+        if ($dar && !$dar->isError() && $dar->rowCount() > 0) {
+            $list = array();
+            foreach ($dar as $row) {
+                $list[] = $row;
+            }
+
+            return $list;
+        }
+        return array();
+    }
+
 }
 
 

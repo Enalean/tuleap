@@ -93,7 +93,41 @@ class Docman_VersionFactory {
        
         
     }
-    
+
+    /**
+     * Physically remove files related to deleted versions
+     *
+     * @param Integer $time
+     *
+     * @return Boolean
+     */
+    public function purgeDeletedVersions($time) {
+        $dao = $this->_getVersionDao();
+        $dar = $dao->listVersionsToDelete($time);
+        if ($dar && !$dar->isError()) {
+            foreach ($dar as $row) {
+                $version = new Docman_Version($row);
+                $this->purgeDeletedVersion($version);
+            }
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Physically remove the given version from the filesystem
+     *
+     * @param Docman_Version $version
+     *
+     * @return Boolean
+     */
+    public function purgeDeletedVersion($version) {
+        if (file_exist($version->getPath())) {
+            return $this->physicalDeleteVersion($version->getPath());
+        }
+        return false;
+    }
+
     /**
      * @param  String  $docman_path
      * @param  Project $project
@@ -123,6 +157,21 @@ class Docman_VersionFactory {
         $dao = $this->_getVersionDao();
         return $dao->listPendingVersions($groupId, $offset, $limit);
     }
+
+    /**
+     * Wrapper to unlink
+     *
+     * @param String $path
+     *
+     * @return Boolean
+     */
+    function physicalDeleteVersion($path) {
+        if (unlink($path)) {
+            return true;
+        }
+        return false;
+    }
+
 }
 
 ?>
