@@ -69,12 +69,12 @@ function showPendingItems($params, $offsetItem, $limit) {
         echo '<div style="text-align:center" class="'. util_get_alt_row_color($i++) .'">';
 
         if ($offsetItem > 0) {
-            echo  '<a href="?group_id='.$params['group_id'].'&offsetVers='.($offsetItem -$limit).'">[ '.$GLOBALS['Language']->getText('admin_show_pending_documents', 'previous').'  ]</a>';
+            echo  '<a href="?group_id='.$params['group_id'].'&offsetItem='.($offsetItem -$limit).'">[ '.$GLOBALS['Language']->getText('admin_show_pending_documents', 'previous').'  ]</a>';
             echo '&nbsp;';
         }
         if (($offsetItem + $limit) < $params['nbItems']) {
             echo '&nbsp;';
-            echo '<a href="?group_id='.$params['group_id'].'&offsetVers='.($offsetItem+$limit).'">[ '.$GLOBALS['Language']->getText('admin_show_pending_documents', 'next').' ]</a>';
+            echo '<a href="?group_id='.$params['group_id'].'&offsetItem='.($offsetItem+$limit).'">[ '.$GLOBALS['Language']->getText('admin_show_pending_documents', 'next').' ]</a>';
         }
         echo '</div>';
         echo '<div style="text-align:center" class="'. util_get_alt_row_color($i++) .'">';
@@ -147,16 +147,15 @@ if (isset($params['service']) && $params['service']) {
     <link rel="stylesheet" type="text/css" href="/themes/common/css/style.css">
 </head>
 <body>
-<?php echo "<h3> Pending deleted document </h3>" ; ?>
+<?php echo '<h3>'.$GLOBALS['Language']->getText('admin_show_pending_documents','pending_doc').'</h3>'; ?>
         <div class="systeme_onglets">
         <div class="onglets">
-            <span class="onglet_0 onglet" id="onglet_version" onclick="javascript:change_onglet('version');">Deleted versions</span>
-            <span class="onglet_0 onglet" id="onglet_item" onclick="javascript:change_onglet('item');">Deleted items</span>
+            <span class="onglet_0 onglet" id="onglet_version" onclick="javascript:change_onglet('version');"> <?php echo $GLOBALS['Language']->getText('admin_show_pending_documents','deleted_version'); ?></span>
+            <span class="onglet_0 onglet" id="onglet_item" onclick="javascript:change_onglet('item');"><?php echo $GLOBALS['Language']->getText('admin_show_pending_documents','deleted_item'); ?></span>
         
         </div>
         <div class="contenu_onglets">
             <div class="contenu_onglet" id="contenu_onglet_version">
-                <h1>Deleted Versions</h1>
                 <?php
                 if (isset($params['versions']) && $params['versions']) {
                     showPendingVersions($params, $offsetVers, $limit);
@@ -167,7 +166,6 @@ if (isset($params['service']) && $params['service']) {
             </div>
             
             <div class="contenu_onglet" id="contenu_onglet_item">
-                <h1>Deleted items</h1>
                 <?php 
                 if (isset($params['items']) && $params['items']) {
                     showPendingItems($params, $offsetItem, $limit);
