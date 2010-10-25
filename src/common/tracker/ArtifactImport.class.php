@@ -153,22 +153,25 @@ function getUsedFields() {
     //special cases for submitted by, submitted on and last_update_date that can be set
     //"unused" by the user but that will nevertheless be used by Codendi
     $submitted_by_field = $this->art_field_fact->getFieldFromName('submitted_by');
-    $submitted_by_label = $submitted_by_field->getLabel();
-    if (array_key_exists($submitted_by_label, $used_fields) === false)
-      $used_fields[$submitted_by_label] = $submitted_by_field;
-
+    if ($submitted_by_field) {
+        $submitted_by_label = $submitted_by_field->getLabel();
+        if (array_key_exists($submitted_by_label, $used_fields) === false)
+        $used_fields[$submitted_by_label] = $submitted_by_field;
+    }
     $open_date_field = $this->art_field_fact->getFieldFromName("open_date");
-    $open_date_label = $open_date_field->getLabel();
-    if (array_key_exists($open_date_label, $used_fields) === false)
-      $used_fields[$open_date_label] = $open_date_field; 
-  
+    if ($open_date_field) {
+        $open_date_label = $open_date_field->getLabel();
+        if (array_key_exists($open_date_label, $used_fields) === false)
+        $used_fields[$open_date_label] = $open_date_field;
+    }
     $last_update_date_field = $this->art_field_fact->getFieldFromName("last_update_date");
-    $last_update_date_label = $last_update_date_field->getLabel();
-    if (array_key_exists($last_update_date_label, $used_fields) === false)
-      $used_fields[$last_update_date_label] = $last_update_date_field;
-  
+    if ($last_update_date_field){
+        $last_update_date_label = $last_update_date_field->getLabel();
+        if (array_key_exists($last_update_date_label, $used_fields) === false)
+        $used_fields[$last_update_date_label] = $last_update_date_field;
+    }
     return $used_fields;
-  }
+}
 
 
 
