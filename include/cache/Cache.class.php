@@ -241,11 +241,7 @@ class GitPHP_Cache
 
 		$this->tpl->caching = 2;
 
-		if (GitPHP_Config::GetInstance()->HasKey('objectcachelifetime')) {
-			$this->tpl->cache_lifetime = GitPHP_Config::GetInstance()->GetValue('objectcachelifetime');
-			if ($this->tpl->cache_lifetime == 0)
-				$this->tpl->cache_lifetime = -1;
-		}
+		$this->tpl->cache_lifetime = GitPHP_Config::GetInstance()->GetValue('objectcachelifetime', 86400);
 
 		$servers = GitPHP_Config::GetInstance()->GetValue('memcache', null);
 		if (isset($servers) && is_array($servers) && (count($servers) > 0)) {
