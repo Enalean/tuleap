@@ -40,15 +40,6 @@ abstract class GitPHP_FilesystemObject extends GitPHP_GitObject
 	protected $mode;
 
 	/**
-	 * parent
-	 *
-	 * Stores the object parent
-	 *
-	 * @access protected
-	 */
-	protected $parent;
-
-	/**
 	 * commit
 	 *
 	 * Stores the commit this object belongs to
