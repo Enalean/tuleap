@@ -819,13 +819,13 @@ class Docman_ItemDao extends DataAccessObject {
     function listPendingItems($groupId, $offset, $limit) {
         $sql=' SELECT SQL_CALC_FOUND_ROWS D.item_id as id, '.
                       ' D.title as title , I.title as location , '.
-                      ' D.user_id as user, D.purge_date  as date'.
+                      ' D.user_id as user, D.delete_date  as date'.
              ' FROM plugin_docman_item_deleted as D, plugin_docman_item as I'.
              ' WHERE  D.group_id='.db_ei($groupId). 
-             '        AND D.purge_date > '.$_SERVER['REQUEST_TIME'].
+             '        AND D.delete_date <= '.$this->da->escapeInt($_SERVER['REQUEST_TIME']).
              '        AND D.parent_id = I.item_id '.
-             ' ORDER BY D.purge_date DESC '.
-             ' LIMIT '.db_ei($offset).', '.db_ei($limit);
+             ' ORDER BY D.delete_date DESC '.
+             ' LIMIT '.$this->da->escapeInt($offset).', '.$this->da->escapeInt($limit);
 
         $dar = $this->retrieve($sql);
         if ($dar && !$dar->isError() && $dar->rowCount() >0 ) {
