@@ -98,7 +98,7 @@ class GitPHP_Tree extends GitPHP_FilesystemObject
 			if (preg_match("/^([0-9]+) (.+) ([0-9a-fA-F]{40})(\s+[0-9]+|\s+-)?\t(.+)$/", $line, $regs)) {
 				switch($regs[2]) {
 					case 'tree':
-						$t = new GitPHP_Tree($this->project, $regs[3]);
+						$t = $this->GetProject()->GetTree($regs[3]);
 						$t->SetMode($regs[1]);
 						$path = $regs[5];
 						if (!empty($this->path))
@@ -109,7 +109,7 @@ class GitPHP_Tree extends GitPHP_FilesystemObject
 						$this->contents[] = $t;
 						break;
 					case 'blob':
-						$b = new GitPHP_Blob($this->project, $regs[3]);
+						$b = $this->GetProject()->GetBlob($regs[3]);
 						$b->SetMode($regs[1]);
 						$path = $regs[5];
 						if (!empty($this->path))

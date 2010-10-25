@@ -180,25 +180,6 @@ class GitPHP_Project
 	protected $commitCache = array();
 
 	/**
-	 * blobCache
-	 *
-	 * Caches blob objects in case of
-	 * repeated requests
-	 *
-	 * @access protected
-	 */
-	protected $blobCache = array();
-
-	/**
-	 * treeCache
-	 *
-	 * Caches tree objects in case of repeated requests
-	 *
-	 * @access protected
-	 */
-	protected $treeCache = array();
-
-	/**
 	 * __construct
 	 *
 	 * Class constructor
@@ -935,10 +916,7 @@ class GitPHP_Project
 		if (empty($hash))
 			return null;
 
-		if (!isset($this->blobCache[$hash]))
-			$this->blobCache[$hash] = new GitPHP_Blob($this, $hash);
-
-		return $this->blobCache[$hash];
+		return new GitPHP_Blob($this, $hash);
 	}
 
 	/**
@@ -954,10 +932,7 @@ class GitPHP_Project
 		if (empty($hash))
 			return null;
 
-		if (!isset($this->treeCache[$hash]))
-			$this->treeCache[$hash] = new GitPHP_Tree($this, $hash);
-
-		return $this->treeCache[$hash];
+		return new GitPHP_Tree($this, $hash);
 	}
 
 	/**
