@@ -937,6 +937,11 @@ class GitPHP_Project
 		if (empty($hash))
 			return null;
 
+		$cacheKey = 'project|' . $this->project . '|tree|' . $hash;
+		$cached = GitPHP_Cache::GetInstance()->Get($cacheKey);
+		if ($cached)
+			return $cached;
+
 		return new GitPHP_Tree($this, $hash);
 	}
 

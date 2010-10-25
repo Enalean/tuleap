@@ -41,6 +41,15 @@ class GitPHP_Tree extends GitPHP_FilesystemObject
 	protected $contentsRead = false;
 
 	/**
+	 * contentsReferenced
+	 *
+	 * Stores whether contents have been referenced into pointers
+	 *
+	 * @access private
+	 */
+	private $contentsReferenced = false;
+
+	/**
 	 * __construct
 	 *
 	 * Instantiates object
@@ -57,6 +66,25 @@ class GitPHP_Tree extends GitPHP_FilesystemObject
 	}
 
 	/**
+	 * SetCommit
+	 *
+	 * Sets the commit for this tree (overrides base)
+	 *
+	 * @access public
+	 * @param mixed $commit commit object
+	 */
+	public function SetCommit($commit)
+	{
+		parent::SetCommit($commit);
+
+		if ($this->contentsRead && !$this->contentsReferenced) {
+			foreach ($this->contents as $obj) {
+				$obj->SetCommit($commit);
+			}
+		}
+	}
+
+	/**
 	 * GetContents
 	 *
 	 * Gets the tree contents
@@ -68,6 +96,9 @@ class GitPHP_Tree extends GitPHP_FilesystemObject
 	{
 		if (!$this->contentsRead)
 			$this->ReadContents();
+
+		if ($this->contentsReferenced)
+			$this->DereferenceContents();
 
 		return $this->contents;
 	}
@@ -125,6 +156,127 @@ class GitPHP_Tree extends GitPHP_FilesystemObject
 				}
 			}
 		}
+
+		GitPHP_Cache::GetInstance()->Set($this->GetCacheKey(), $this);
+	}
+
+	/**
+	 * ReferenceContents
+	 *
+	 * Turns the contents objects into reference pointers
+	 *
+	 * @access private
+	 */
+	private function ReferenceContents()
+	{
+		if ($this->contentsReferenced)
+			return;
+
+		if (!(isset($this->contents) && (count($this->contents) > 0)))
+			return;
+
+		for ($i = 0; $i < count($this->contents); ++$i) {
+			$obj = $this->contents[$i];
+			$data = array();
+
+			$data['hash'] = $obj->GetHash();
+			$data['mode'] = $obj->GetMode();
+			$data['path'] = $obj->GetPath();
+
+			if ($obj instanceof GitPHP_Tree) {
+				$data['type'] = 'tree';
+			} else if ($obj instanceof GitPHP_Blob) {
+				$data['type'] = 'blob';
+				$data['size'] = $obj->GetSize();
+			}
+
+			$this->contents[$i] = $data;
+		}
+
+		$this->contentsReferenced = true;
+	}
+
+	/**
+	 * DereferenceContents
+	 *
+	 * Turns the contents pointers back into objects
+	 *
+	 * @access private
+	 */
+	private function DereferenceContents()
+	{
+		if (!$this->contentsReferenced)
+			return;
+
+		if (!(isset($this->contents) && (count($this->contents) > 0)))
+			return;
+
+		for ($i = 0; $i < count($this->contents); ++$i) {
+			$data = $this->contents[$i];
+			$obj = null;
+
+			if (!isset($data['hash']) || empty($data['hash']))
+				continue;
+
+			if ($data['type'] == 'tree') {
+				$obj = $this->GetProject()->GetTree($data['hash']);
+			} else if ($data['type'] == 'blob') {
+				$obj = $this->GetProject()->GetBlob($data['hash']);
+				if (isset($data['size']) && !empty($data['size']))
+					$obj->SetSize($data['size']);
+			} else {
+				continue;
+			}
+
+			if (isset($data['mode']) && !empty($data['mode']))
+				$obj->SetMode($data['mode']);
+
+			if (isset($data['path']) && !empty($data['path']))
+				$obj->SetPath($data['path']);
+
+			if ($this->commit)
+				$obj->SetCommit($this->commit);
+
+			$this->contents[$i] = $obj;
+		}
+
+		$this->contentsReferenced = false;
+	}
+
+	/**
+	 * __sleep
+	 *
+	 * Called to prepare the object for serialization
+	 *
+	 * @access public
+	 * @return array list of properties to serialize
+	 */
+	public function __sleep()
+	{
+		if (!$this->contentsReferenced)
+			$this->ReferenceContents();
+
+		$properties = array('contents', 'contentsRead', 'contentsReferenced');
+		return array_merge($properties, parent::__sleep());
+	}
+
+	/**
+	 * GetCacheKey
+	 *
+	 * Gets the cache key to use for this object
+	 *
+	 * @access public
+	 * @return string cache key
+	 */
+	public function GetCacheKey()
+	{
+		$key = parent::GetCacheKey();
+		if (!empty($key))
+			$key .= '|';
+
+		$key .= 'tree|' . $this->hash;
+
+		return $key;
 	}
 
 }
