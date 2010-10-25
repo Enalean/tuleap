@@ -75,7 +75,7 @@ abstract class GitPHP_Ref extends GitPHP_GitObject
 		if (empty($this->hash))
 			$this->FindHash();
 
-		return $this->hash;
+		return parent::GetHash();
 	}
 
 	/**
