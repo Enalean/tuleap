@@ -854,21 +854,17 @@ class Docman_ItemDao extends DataAccessObject {
      *
      * @param Integer $time
      *
-     * @return Array
+     * @return Boolean
      */
     function listItemsToPurge($time) {
-        $sql = 'SELECT * FROM plugin_docman_item_deleted '.
+        $sql = 'SELECT item_id, parent_id, group_id, title, '.
+               ' description, create_date, update_date, delete_date, '.
+               ' user_id, status, obsolescence_date, rank, item_type, link_url, '.
+               ' wiki_page, file_is_embedded '.
+               ' FROM plugin_docman_item_deleted '.
                ' WHERE delete_date < '.$this->da->escapeInt($time).
                ' AND purge_date IS NULL ';
-        $dar = $this->retrieve($sql);
-        if ($dar && !$dar->isError() && $dar->rowCount() > 0) {
-            $list = array();
-            foreach ($dar as $row) {
-                $list[] = $row;
-            }
-            return $list;
-        }
-        return array();
+        return $this->retrieve($sql);
     }
 
     /**
