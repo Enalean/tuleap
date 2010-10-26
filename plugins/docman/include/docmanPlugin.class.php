@@ -64,6 +64,8 @@ class DocmanPlugin extends Plugin {
         $this->_addHook('plugin_statistics_disk_usage_service_label',   'plugin_statistics_disk_usage_service_label',   false);
 
         $this->_addHook('show_pending_documents',             'show_pending_documents',             false);
+
+        $this->_addHook('backend_system_purge_files',  'purgeFiles',  false);
 	}
 
     function permission_get_name($params) {
@@ -497,6 +499,22 @@ class DocmanPlugin extends Plugin {
             $params['tableItem'] = $title;
         }
     }
+
+    /**
+     * Hook to purge deleted items if their agony ends today
+     *
+     * @param Array $params
+     *
+     * @return void
+     */
+    function purgeFiles(array $params) {
+        $itemFactory = new Docman_ItemFactory();
+        $itemFactory->purgeDeletedItems($params['time']);
+
+        $versionFactory = new Docman_VersionFactory();
+        $versionFactory->purgeDeletedVersions($params['time']);
+    }
+
 }
 
 ?>
