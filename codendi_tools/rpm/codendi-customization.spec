@@ -21,7 +21,6 @@ URL: http://codendi.org
 Source0: %{PKG_NAME}-%{version}.tar.gz
 Source1: cli_ParametersLocal.dtd
 Source2: user_guide_ParametersLocal.dtd
-Source3: organization_logo.png
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 
 
@@ -84,7 +83,6 @@ codendi_tools/rpm/build_release.sh
 
 # Custom logo
 %{__install} -m 755 -d $RPM_BUILD_ROOT/%{APP_DIR}/src/www/themes/common/images
-%{__install} -m 644 %{SOURCE3} $RPM_BUILD_ROOT/%{APP_DIR}/src/www/themes/common/images/organization_logo.png
 
 %post
 /usr/bin/chcon -R root:object_r:httpd_sys_content_t %{APP_DIR}/documentation %{APP_DIR}/downloads
@@ -98,7 +96,6 @@ codendi_tools/rpm/build_release.sh
 %defattr(-,%{APP_USER},%{APP_USER},-)
 %{APP_DIR}/documentation
 %{APP_DIR}/downloads
-%{APP_DIR}/src/www/themes/common/images/organization_logo.png
 
 #%doc
 #%config

@@ -255,8 +255,6 @@ done
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/salome
 # No need of template
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/template
-# Remove organization_logo (provided by codendi_customization package)
-%{__rm} -f $RPM_BUILD_ROOT/%{APP_DIR}/src/www/themes/common/images/organization_logo.png
 
 #
 # Install Codendi executables
@@ -505,6 +503,7 @@ fi
 %{APP_DIR}/src/www/support
 %{APP_DIR}/src/www/survey
 %{APP_DIR}/src/www/svn
+# Only "common" theme is embedded into the package
 %dir %{APP_DIR}/src/www/themes
 %{APP_DIR}/src/www/themes/common
 %{APP_DIR}/src/www/top
