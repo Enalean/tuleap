@@ -332,8 +332,8 @@ class Docman_VersionDao extends DataAccessObject {
      * @return Boolean
      */
     function listVersionsToPurge($time) {
-        $sql=' SELECT id, number, item_id, user_id, label, changelog,'.
-             ' delete_date AS date, filename, filesize, filetype, path '.
+        $sql=' SELECT id, item_id, number, user_id, label, changelog,'.
+             ' create_date AS date, filename, filesize, filetype, path '.
              ' FROM plugin_docman_version_deleted '.
              ' WHERE delete_date < '.$this->da->quoteSmart($time).
              ' AND purge_date IS NULL ';
