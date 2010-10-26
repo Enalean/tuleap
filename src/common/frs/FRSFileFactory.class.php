@@ -493,15 +493,15 @@ class FRSFileFactory extends Error {
         $pm = ProjectManager::instance();
         $group = $pm->getProject($group_id);
         $group_unix_name = $group->getUnixName(false);
-		$file_name = preg_replace('` `', '\\ ', $file_name);
-        $ret_val = null;
-        $exec_res = null;
-        //exec("/bin/date > /tmp/" . $group_unix_name . "$group_id", $exec_res);
-		//exec($GLOBALS['codendi_bin_prefix'] . "/fileforge /tmp/" . $group_unix_name . "$group_id " . $group_unix_name, $exec_res);
-        $cmd = $GLOBALS['codendi_bin_prefix'] . "/fileforge $file_name " . $group_unix_name . "/" . $upload_sub_dir;
-        exec($cmd, $exec_res, $ret_val);
-
-        return $ret_val;
+        $file_name = preg_replace('` `', '\\ ', $file_name);
+        if (!file_exists($GLOBALS['ftp_frs_dir_prefix'].'/'.$group_unix_name . '/' . $upload_sub_dir.'/'.$file_name)) {
+            $ret_val  = null;
+            $exec_res = null;
+            $cmd = $GLOBALS['codendi_bin_prefix'] . "/fileforge $file_name " . $group_unix_name . "/" . $upload_sub_dir;
+            exec($cmd, $exec_res, $ret_val);
+            return $ret_val;
+        }
+        return "Error";
     }
 
     /**
