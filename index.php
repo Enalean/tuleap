@@ -9,6 +9,9 @@
  * @package GitPHP
  */
 
+/**
+ * Define start time / memory for benchmarking
+ */
 define('GITPHP_START_TIME', microtime(true));
 define('GITPHP_START_MEM', memory_get_usage());
 

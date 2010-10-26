@@ -10,6 +10,9 @@
  * @subpackage Git
  */
 
+/**
+ * Constants for git commands
+ */
 define('GIT_CAT_FILE','cat-file');
 define('GIT_DIFF_TREE','diff-tree');
 define('GIT_LS_TREE','ls-tree');

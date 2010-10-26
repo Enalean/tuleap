@@ -1,12 +1,25 @@
 <?php
-/*
- *  modifier.highlight.php
- *  gitphp: A PHP git repository browser
- *  Component: Utility - highlight a string
+/**
+ * highlight
  *
- *  Copyright (C) 2008 Christopher Han <xiphux@gmail.com>
+ * Smarty modifier to highlight a substring
+ *
+ * @author Christopher Han <xiphux@gmail.com>
+ * @copyright Copyright (c) 2010 Christopher Han
+ * @package GitPHP
+ * @subpackage Smarty
  */
 
+/**
+ * highlight smarty modifier
+ *
+ * @param string $haystack string to search in
+ * @param string $needle substring to search for
+ * @param int $trimlen length to trim string to
+ * @param bool $escape true to html escape the string
+ * @param string $highlightclass CSS class to highlight with
+ * @return string highlighted string
+ */
 function smarty_modifier_highlight($haystack, $needle, $trimlen = NULL, $escape = false, $highlightclass = 'searchmatch')
 {
 	if (preg_match("/(.*)(" . quotemeta($needle) . ")(.*)/i",$haystack,$regs)) {

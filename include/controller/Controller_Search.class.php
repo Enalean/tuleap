@@ -10,6 +10,9 @@
  * @subpackage Controller
  */
 
+/**
+ * Constants for the various search types
+ */
 define('GITPHP_SEARCH_COMMIT', 'commit');
 define('GITPHP_SEARCH_AUTHOR', 'author');
 define('GITPHP_SEARCH_COMMITTER', 'committer');

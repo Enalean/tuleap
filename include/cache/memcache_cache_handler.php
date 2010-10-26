@@ -11,6 +11,9 @@
  * @subpackage Cache
  */
 
+/**
+ * Cache key for the cache contents / age map array
+ */
 define('MEMCACHE_OBJECT_MAP', 'memcache_objectmap');
 
 function memcache_cache_handler($action, &$smarty_obj, &$cache_content, $tpl_file = null, $cache_id = null, $compile_id = null, $exp_time = null)

@@ -1,12 +1,22 @@
 <?php
-/*
- *  function.scripturl.php
- *  gitphp: A PHP git repository browser
- *  Component: Utility - get running script url
+/**
+ * scripturl
  *
- *  Copyright (C) 2009 Christopher Han <xiphux@gmail.com>
+ * Smarty function to get the full url of the current script
+ *
+ * @author Christopher Han <xiphux@gmail.com>
+ * @copyright Copyright (c) 2010 Christopher Han
+ * @package GitPHP
+ * @subpackage Smarty
  */
 
+/**
+ * scripturl smarty function
+ *
+ * @param array $params function parameters
+ * @param mixed $smarty smarty object
+ * @return string script url
+ */
 function smarty_function_scripturl($params, &$smarty)
 {
 	if (GitPHP_Config::GetInstance()->HasKey('self')) {

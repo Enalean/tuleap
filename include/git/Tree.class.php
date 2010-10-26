@@ -7,7 +7,7 @@
  * @author Christopher Han <xiphux@gmail.com>
  * @copyright Copyright (c) 2010 Christopher Han
  * @package GitPHP
- * @subpackge Git
+ * @subpackage Git
  */
 
 require_once(GITPHP_GITOBJECTDIR . 'FilesystemObject.class.php');

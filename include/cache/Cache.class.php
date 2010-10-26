@@ -22,8 +22,6 @@ class GitPHP_Cache
 	 * Template
 	 *
 	 * Cache template
-	 *
-	 * @const
 	 */
 	const Template = 'data.tpl';
 

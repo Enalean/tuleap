@@ -1,12 +1,22 @@
 <?php
-/*
- *  modifier.agestring.php
- *  gitphp: A PHP git repository browser
- *  Component: Utility - convert age to a readable string
+/**
+ * agestring
  *
- *  Copyright (C) 2008 Christopher Han <xiphux@gmail.com>
+ * Smarty modifier to turn an age in seconds into a
+ * human-readable string
+ *
+ * @author Christopher Han <xiphux@gmail.com>
+ * @copyright Copyright (c) 2010 Christopher Han
+ * @package GitPHP
+ * @subpackage Smarty
  */
 
+/**
+ * agestring smarty modifier
+ *
+ * @param int $age age in seconds
+ * @return string human readable string
+ */
 function smarty_modifier_agestring($age)
 {
 	if ($age > 60*60*24*365*2) {

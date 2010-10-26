@@ -187,7 +187,7 @@ abstract class GitPHP_ControllerBase
 	 * Read query into parameters
 	 *
 	 * @abstract
-	 * @access prtected
+	 * @access protected
 	 */
 	protected abstract function ReadQuery();
 

@@ -12,6 +12,9 @@
 require_once(GITPHP_BASEDIR . 'lib/php-gettext/streams.php');
 require_once(GITPHP_BASEDIR . 'lib/php-gettext/gettext.php');
 
+/**
+ * Constant of the locale cookie in the user's browser
+ */
 define('GITPHP_LOCALE_COOKIE', 'GitPHPLocale');
 
 /**
@@ -244,7 +247,10 @@ class GitPHP_Resource
 
 
 /**
- * Wrappers... because PHP doesn't support aliases
+ * Gettext wrapper function for readability, single string
+ *
+ * @param string $str string to translate
+ * @return string translated string
  */
 function __($str)
 {
@@ -253,6 +259,14 @@ function __($str)
 	return $str;
 }
 
+/**
+ * Gettext wrapper function for readability, plural form
+ *
+ * @param string $singular singular form of string
+ * @param string $plural plural form of string
+ * @param int $count number of items
+ * @return string translated string
+ */
 function __n($singular, $plural, $count)
 {
 	if (GitPHP_Resource::Instantiated())

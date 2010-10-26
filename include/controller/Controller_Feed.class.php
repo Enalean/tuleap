@@ -11,8 +11,14 @@
  * @subpackage Controller
  */
 
+/**
+ * Constant for the number of items to load into the feed
+ */
 define('GITPHP_FEED_ITEMS', 150);
 
+/**
+ * Constants for the different feed formats
+ */
 define('GITPHP_FEED_FORMAT_RSS', 'rss');
 define('GITPHP_FEED_FORMAT_ATOM', 'atom');
 
