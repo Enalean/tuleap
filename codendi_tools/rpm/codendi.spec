@@ -152,6 +152,16 @@ Provides: codendi-plugin-hudson = %{version}
 %description plugin-hudson
 Plugin to install the Codendi Hudson plugin for continuous integration
 
+%package plugin-webdav
+Summary: WebDAV plugin for Codendi
+Group: Development/Tools
+Version: @@PLUGIN_WEBDAV_VERSION@@
+Release: 1%{?dist}
+Requires: %{name} >= %{version}, Sabre_DAV = 1.0.14
+Provides: codendi-plugin-webdav = %{version}
+%description plugin-webdav
+Plugin to access to file releases & docman though WebDAV
+
 #
 ## Themes
 #
@@ -225,16 +235,6 @@ Provides: codendi-theme-steerforge = %{version}
 %description theme-steerforge
 SteerForge theme for Codendi
 
-%package plugin-webdav
-Summary: WebDAV plugin for Codendi
-Group: Development/Tools
-Version: @@PLUGIN_WEBDAV_VERSION@@
-Release: 1%{?dist}
-Requires: %{name} >= %{version}, Sabre_DAV = 1.0.14
-Provides: codendi-plugin-webdav = %{version}
-%description plugin-webdav
-Plugin to access to file releases & docman though WebDAV
-
 # 
 # Package setup
 %prep
@@ -265,8 +265,6 @@ done
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/salome
 # No need of template
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/template
-# Remove organization_logo (provided by codendi_customization package)
-%{__rm} -f $RPM_BUILD_ROOT/%{APP_DIR}/src/www/themes/common/images/organization_logo.png
 
 #
 # Install Codendi executables
@@ -518,6 +516,7 @@ fi
 %{APP_DIR}/src/www/support
 %{APP_DIR}/src/www/survey
 %{APP_DIR}/src/www/svn
+# Only "common" theme is embedded into the package
 %dir %{APP_DIR}/src/www/themes
 %{APP_DIR}/src/www/themes/common
 %{APP_DIR}/src/www/top
@@ -539,7 +538,6 @@ fi
 %{APP_DIR}/plugins/statistics
 %{APP_DIR}/plugins/tracker_date_reminder
 %{APP_DIR}/plugins/userlog
-%{APP_DIR}/plugins/webdav
 %attr(755,%{APP_USER},%{APP_USER}) %dir %{APP_LIB_DIR}
 %attr(755,%{APP_USER},%{APP_USER}) %dir %{APP_LIBBIN_DIR}
 %attr(00755,%{APP_USER},%{APP_USER}) %{APP_LIBBIN_DIR}/gotohell
@@ -604,6 +602,11 @@ fi
 %defattr(-,%{APP_USER},%{APP_USER},-)
 %{APP_DIR}/plugins/hudson
 
+%files plugin-webdav
+%defattr(-,%{APP_USER},%{APP_USER},-)
+%{APP_DIR}/plugins/webdav
+%attr(00755,%{APP_USER},%{APP_USER}) %{APP_CACHE_DIR}/plugins/webdav
+
 #
 # Themes
 #
@@ -634,11 +637,6 @@ fi
 %files theme-steerforge
 %defattr(-,%{APP_USER},%{APP_USER},-)
 %{APP_DIR}/src/www/themes/SteerForge
-
-%files plugin-webdav
-%defattr(-,%{APP_USER},%{APP_USER},-)
-%{APP_DIR}/plugins/webdav
-%attr(00755,%{APP_USER},%{APP_USER}) %{APP_CACHE_DIR}/plugins/webdav
 
 #%doc
 #%config

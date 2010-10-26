@@ -34,7 +34,7 @@ class STTab_Theme extends DivBasedTabbedLayout
     }
 
     function getBodyHeaderLogo() {
-        return '<a  href="/"><img src="'.$this->imgroot.'codex_banner_lc.png" /></a>';
+        return '<a  href="/"><img src="'.$this->imgroot.'organization_logo.png" /></a>';
     }
 }
 
