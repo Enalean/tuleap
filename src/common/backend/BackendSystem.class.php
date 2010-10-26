@@ -316,52 +316,20 @@ class BackendSystem extends Backend {
         $time = $_SERVER['REQUEST_TIME'] - (3600*24*$delay);
         
         $frs = $this->getFRSFileFactory();
-        return $frs->purgeDeletedFiles($time);
+        $status =  $frs->purgeDeletedFiles($time);
 
-       /* // location of the download/upload directories
+        // {{{ /!\ WARNING HACK /!\
+        // We keep the good old purge mecanism for at least one release to clean
+        // the previously deleted files
+        // Delete all files under DELETE that are older than 10 days
         $delete_dir = $GLOBALS['ftp_frs_dir_prefix']."/DELETED";
+        system("find $delete_dir -type f -mtime +10 -exec rm {} \\;");
+        system("find $delete_dir -mindepth 1 -type d -empty -exec rm -R {} \\;");
+        // }}} /!\ WARNING HACK /!\
 
-        // list of files to be deleted
-        $deleting_files = $GLOBALS['ftp_incoming_dir'] ."/.delete_files";
-        $deleting_files_work = $GLOBALS['ftp_incoming_dir'] ."/.delete_files.work";
-
-        // move the list of files to delete to a temp work file
-        rename($deleting_files, $deleting_files_work);
-        touch($deleting_files);
-        $this->chown($deleting_files, $this->getHTTPUser());
-        
-        //move all files in the .delete_files
-        $waiting_files = file($deleting_files_work);
-        if ($waiting_files === false) {
-            $this->log("Cannot open $deleting_files_work", Backend::LOG_ERROR);
-            return false;
-        } else {
-            foreach($waiting_files as $line) {
-                list($file, $project, $time) = explode('::', $line);
-                $filename = $GLOBALS['ftp_frs_dir_prefix'] ."/$project/$file";
-                if (!file_exists($filename)) {
-                    $this->log("$filename doesn't exist", Backend::LOG_WARNING);
-                } else {
-                    $subdirs = dirname($file);
-                    mkdir("$delete_dir/$project/$subdirs", 0770, true);
-                    
-                    //make sure that since the deletion of the file nobody has submitted a new file with 
-                    //the same filename
-                    if (filemtime($filename) >= $time || fileatime($filename) >= $time || filectime($filename) >= $time) {
-                        $this->log("Don't delete file $project/$file (modified since deletion)", Backend::LOG_WARNING);
-                    } else {
-                        $this->log("Deleting file $project/$file", Backend::LOG_INFO);
-                        rename($filename, "$delete_dir/$project/$file-$time");
-                    }
-                }
-            }
-            //delete all files under DELETE that are older than 7 days
-            system("find $delete_dir -type f -mtime +7 -exec rm {} \\;");
-            system("find $delete_dir -mindepth 1 -type d -empty -exec rm -R {} \\;");
-        }
-        return true;*/
+        return $status;
     }
-    
+
     /**
      * dumps SSH authorized_keys into all users homedirs
      */
