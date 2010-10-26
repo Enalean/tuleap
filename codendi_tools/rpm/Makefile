@@ -15,6 +15,7 @@ PLUGIN_IM_VERSION=$(shell LANG=C php $(BASE_DIR)/codendi_tools/rpm/plugin_descri
 PLUGIN_JRI_VERSION=$(shell LANG=C php $(BASE_DIR)/codendi_tools/rpm/plugin_descriptor.php CodendiJRI)
 PLUGIN_ECLIPSE_VERSION=$(shell LANG=C php $(BASE_DIR)/codendi_tools/rpm/plugin_descriptor.php Eclipse)
 PLUGIN_HUDSON_VERSION=$(shell LANG=C php $(BASE_DIR)/codendi_tools/rpm/plugin_descriptor.php hudson)
+PLUGIN_WEBDAV_VERSION=$(shell LANG=C php $(BASE_DIR)/codendi_tools/rpm/plugin_descriptor.php WebDAV)
 
 PKG_NAME=codendi_st
 
@@ -44,6 +45,7 @@ codendi: rpmprep tarball
 		sed -e 's/@@PLUGIN_JRI_VERSION@@/$(PLUGIN_JRI_VERSION)/g' |\
 		sed -e 's/@@PLUGIN_ECLIPSE_VERSION@@/$(PLUGIN_ECLIPSE_VERSION)/g' |\
 		sed -e 's/@@PLUGIN_HUDSON_VERSION@@/$(PLUGIN_HUDSON_VERSION)/g' |\
+                sed -e 's/@@PLUGIN_WEBDAV_VERSION@@/$(PLUGIN_WEBDAV_VERSION)/g' |\
 		sed -e 's/@@PKG_NAME@@/$(PKG_NAME)/g' \
 		> $(RPM_TMP)/SPECS/codendi.spec
 	rpmbuild -bb $(RPM_TMP)/SPECS/codendi.spec

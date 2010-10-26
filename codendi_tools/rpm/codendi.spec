@@ -152,6 +152,16 @@ Provides: codendi-plugin-hudson = %{version}
 %description plugin-hudson
 Plugin to install the Codendi Hudson plugin for continuous integration
 
+%package plugin-webdav
+Summary: WebDAV plugin for Codendi
+Group: Development/Tools
+Version: @@PLUGIN_WEBDAV_VERSION@@
+Release: 1%{?dist}
+Requires: %{name} >= %{version}, Sabre_DAV = 1.0.14
+Provides: codendi-plugin-webdav = %{version}
+%description plugin-webdav
+Plugin to access to file releases & docman though WebDAV
+
 #
 ## Themes
 #
@@ -281,6 +291,9 @@ done
 
 # Cache dir
 %{__install} -d $RPM_BUILD_ROOT/%{APP_CACHE_DIR}
+
+# plugin webdav
+%{__install} -d $RPM_BUILD_ROOT/%{APP_CACHE_DIR}/plugins/webdav/locks
 
 # plugin forumml
 %{__install} -d $RPM_BUILD_ROOT/%{_localstatedir}/run/forumml
@@ -525,7 +538,6 @@ fi
 %{APP_DIR}/plugins/statistics
 %{APP_DIR}/plugins/tracker_date_reminder
 %{APP_DIR}/plugins/userlog
-%{APP_DIR}/plugins/webdav
 %attr(755,%{APP_USER},%{APP_USER}) %dir %{APP_LIB_DIR}
 %attr(755,%{APP_USER},%{APP_USER}) %dir %{APP_LIBBIN_DIR}
 %attr(00755,%{APP_USER},%{APP_USER}) %{APP_LIBBIN_DIR}/gotohell
@@ -589,6 +601,11 @@ fi
 %files plugin-hudson
 %defattr(-,%{APP_USER},%{APP_USER},-)
 %{APP_DIR}/plugins/hudson
+
+%files plugin-webdav
+%defattr(-,%{APP_USER},%{APP_USER},-)
+%{APP_DIR}/plugins/webdav
+%attr(00755,%{APP_USER},%{APP_USER}) %{APP_CACHE_DIR}/plugins/webdav
 
 #
 # Themes
