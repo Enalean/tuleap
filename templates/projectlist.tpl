@@ -72,16 +72,18 @@ git source code archive
       </td>
       <td class="projectDescription"><a href="{$SCRIPT_NAME}?p={$proj->GetProject()|urlencode}&amp;a=summary" class="list">{$proj->GetDescription()}</a></td>
       <td class="projectOwner"><em>{$proj->GetOwner()}</em></td>
+      {assign var=projecthead value=$proj->GetHeadCommit()}
       <td class="projectAge">
-        {assign var=projecthead value=$proj->GetHeadCommit()}
-	{if $projecthead}
-          {if $projecthead->GetAge() < 7200}   {* 60*60*2, or 2 hours *}
-            <span class="agehighlight"><strong><em>{$projecthead->GetAge()|agestring}</em></strong></span>
-          {elseif $projecthead->GetAge() < 172800}   {* 60*60*24*2, or 2 days *}
-            <span class="agehighlight"><em>{$projecthead->GetAge()|agestring}</em></span>
+        {if $projecthead}
+          {if $proj->GetAge() < 7200}   {* 60*60*2, or 2 hours *}
+            <span class="agehighlight"><strong><em>{$proj->GetAge()|agestring}</em></strong></span>
+          {elseif $proj->GetAge() < 172800}   {* 60*60*24*2, or 2 days *}
+            <span class="agehighlight"><em>{$proj->GetAge()|agestring}</em></span>
           {else}
-            <em>{$projecthead->GetAge()|agestring}</em>
+            <em>{$proj->GetAge()|agestring}</em>
           {/if}
+	{else}
+	  <em class="empty">{t}No commits{/t}</em>
 	{/if}
       </td>
       <td class="link">

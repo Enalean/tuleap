@@ -80,6 +80,24 @@ class GitPHP_Project
 	protected $category = '';
 
 	/**
+	 * epoch
+	 *
+	 * Stores the project epoch internally
+	 *
+	 * @access protected
+	 */
+	protected $epoch;
+
+	/**
+	 * epochRead
+	 *
+	 * Stores whether the project epoch has been read yet
+	 *
+	 * @access protected
+	 */
+	protected $epochRead = false;
+
+	/**
 	 * head
 	 *
 	 * Stores the head hash internally
@@ -670,19 +688,9 @@ class GitPHP_Project
 		if ($catCmp !== 0)
 			return $catCmp;
 
-		$aCommit = $a->GetHeadCommit();
-		$bCommit = $b->GetHeadCommit();
-
-		if (($aCommit == null) && ($bCommit == null))
+		if ($a->GetAge() === $b->GetAge())
 			return 0;
-		else if ($aCommit == null)
-			return 1;
-		else if ($bCommit == null)
-			return -1;
-
-		if ($aCommit->GetAge() === $bCommit->GetAge())
-			return 0;
-		return ($aCommit->GetAge() < $bCommit->GetAge() ? -1 : 1);
+		return ($a->GetAge() < $b->GetAge() ? -1 : 1);
 	}
 
 	/**
@@ -1097,6 +1105,69 @@ class GitPHP_Project
 		}
 
 		return $revlist;
+	}
+
+	/**
+	 * GetEpoch
+	 *
+	 * Gets this project's epoch
+	 * (time of last change)
+	 *
+	 * @access public
+	 * @return integer timestamp
+	 */
+	public function GetEpoch()
+	{
+		if (!$this->epochRead)
+			$this->ReadEpoch();
+
+		return $this->epoch;
+	}
+
+	/**
+	 * GetAge
+	 *
+	 * Gets this project's age
+	 * (time since most recent change)
+	 *
+	 * @access public
+	 * @return integer age
+	 */
+	public function GetAge()
+	{
+		if (!$this->epochRead)
+			$this->ReadEpoch();
+
+		return time() - $this->epoch;
+	}
+
+	/**
+	 * ReadEpoch
+	 *
+	 * Reads this project's epoch
+	 * (timestamp of most recent change)
+	 *
+	 * @access private
+	 */
+	private function ReadEpoch()
+	{
+		$this->epochRead = true;
+
+		$exe = new GitPHP_GitExe($this);
+
+		$args = array();
+		$args[] = '--format=\\%\\(committer\\)';
+		$args[] = '--sort=-committerdate';
+		$args[] = '--count=1';
+		$args[] = 'refs/heads';
+
+		$epochstr = trim($exe->Execute(GIT_FOR_EACH_REF, $args));
+
+		if (preg_match('/ (\d+) [-+][01]\d\d\d$/', $epochstr, $regs)) {
+			$this->epoch = $regs[1];
+		}
+
+		unset($exe);
 	}
 
 }

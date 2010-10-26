@@ -337,14 +337,14 @@ abstract class GitPHP_ControllerBase
 		if (!$this->project)
 			return;
 
-		$headList = $this->project->GetHeads();
+		$epoch = $this->project->GetEpoch();
+		if (empty($epoch))
+			return;
 
-		if (count($headList) > 0) {
-			$age = $headList[0]->GetCommit()->GetAge();
+		$age = $this->project->GetAge();
 
-			$this->tpl->clear_cache(null, $this->GetCacheKeyPrefix(), null, $age);
-			$this->tpl->clear_cache('projectlist.tpl', $this->GetCacheKeyPrefix(false), null, $age);
-		}
+		$this->tpl->clear_cache(null, $this->GetCacheKeyPrefix(), null, $age);
+		$this->tpl->clear_cache('projectlist.tpl', $this->GetCacheKeyPrefix(false), null, $age);
 	}
 
 }
