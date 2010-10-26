@@ -504,6 +504,27 @@ class FRSFileFactory extends Error {
         return $ret_val;
     }
 
+    /**
+     * restore file by moving it from staging area to its old location
+     * 
+     * @param FRSFile $file 
+     * 
+     * @return Boolean
+     */
+    function restoreFile($file) {
+        $stagingPath = $this->getStagingPath($file);
+        if (file_exists($stagingPath)) {
+            if (!is_dir(dirname($file->getFileLocation()))) {
+                mkdir(dirname($file->getFileLocation()), 0750, true);
+            }
+            if (rename($stagingPath, $file->getFileLocation())) {
+                $dao = $this->_getFRSFileDao();
+                return $dao->restoreFile($file->getFileID());
+            }
+        }
+        return false;
+    }
+
 }
 
 ?>

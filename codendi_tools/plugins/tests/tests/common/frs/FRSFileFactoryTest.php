@@ -13,6 +13,7 @@ Mock::generatePartial('FRSFileFactory', 'FRSFileFactoryTestPurgeFiles', array('_
 Mock::generatePartial('FRSFileFactory', 'FRSFileFactoryTestPurgeOneFile', array('_getFRSFileDao'));
 Mock::generatePartial('FRSFileFactory', 'FRSFileFactoryTestMoveToStaging', array('_getFRSFileDao', 'moveDeletedFileToStagingArea'));
 Mock::generatePartial('FRSFileFactory', 'FRSFileFactoryTestPurgeDeletedFiles', array('purgeFiles', 'moveDeletedFilesToStagingArea', 'cleanStaging'));
+Mock::generatePartial('FRSFileFactory', 'FRSFileFactoryTestRestore', array('_getFRSFileDao'));
 
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
@@ -258,6 +259,122 @@ class FRSFileFactoryTest extends UnitTestCase {
         unlink($GLOBALS['ftp_frs_dir_prefix'].'/DELETED/prj3/p9_r10/foo.txt.12');
         rmdir($GLOBALS['ftp_frs_dir_prefix'].'/DELETED/prj3/p9_r10');
         rmdir($GLOBALS['ftp_frs_dir_prefix'].'/DELETED/prj3');
+    }
+    
+    function testRestoreFileSucceed() {
+        $fileFactory = new FRSFileFactoryTestRestore();
+
+        // Create temp file
+        $filepath = dirname(__FILE__).'/_fixtures/DELETED/prj/p1_r1/toto.xls.12';
+        mkdir(dirname($filepath), 0750, true);
+        touch($filepath);
+        $this->assertTrue(is_dir(dirname($filepath)));
+
+        $file = new MockFRSFile($this);
+        $file->setReturnValue('getFileID', 12);
+        $file->setReturnValue('getFileName', 'p1_r1/toto.xls');
+        $file->setReturnValue('getFileLocation', $GLOBALS['ftp_frs_dir_prefix'].'/prj/p1_r1/toto.xls');
+        mkdir(dirname(__FILE__).'/_fixtures/prj/p1_r1/', 0750, true);
+        $this->assertTrue(is_dir(dirname('/prj/p1_r1/')));
+
+        $dao = new MockFRSFileDao($this);
+        $dao->expectOnce('restoreFile');
+        $dao->setReturnValue('restoreFile', true);
+        $fileFactory->setReturnValue('_getFRSFileDao', $dao);
+
+        $this->assertTrue($fileFactory->restoreFile($file));
+         
+        // Cleanup
+
+        rmdir($GLOBALS['ftp_frs_dir_prefix'].'/DELETED/prj/p1_r1');
+        rmdir($GLOBALS['ftp_frs_dir_prefix'].'/DELETED/prj');
+        unlink($GLOBALS['ftp_frs_dir_prefix'].'/prj/p1_r1/toto.xls');
+        rmdir($GLOBALS['ftp_frs_dir_prefix'].'/prj/p1_r1');
+
+    }
+
+    function testRestoreFileNotExists() {
+        $fileFactory = new FRSFileFactoryTestRestore();
+
+        // Create temp file
+        $filepath = dirname(__FILE__).'/_fixtures/DELETED/prj/p1_r1/toto.xls.5';
+        mkdir(dirname($filepath), 0750, true);
+        $this->assertFalse(file_exists($filepath));
+
+        $file = new MockFRSFile($this);
+        $file->setReturnValue('getFileID', 5);
+        $file->setReturnValue('getFileName', 'p1_r1/toto.xls');
+        $file->setReturnValue('getFileLocation', $GLOBALS['ftp_frs_dir_prefix'].'/prj/p1_r1/toto.xls');
+        $this->assertTrue(is_dir(dirname('/prj/p1_r1/')));
+
+        $dao = new MockFRSFileDao($this);
+        $dao->expectNever('restoreFile');
+        $fileFactory->setReturnValue('_getFRSFileDao', $dao);
+
+        $this->assertFalse($fileFactory->restoreFile($file));
+         
+        // Cleanup
+
+        rmdir($GLOBALS['ftp_frs_dir_prefix'].'/DELETED/prj/p1_r1');
+        rmdir($GLOBALS['ftp_frs_dir_prefix'].'/DELETED/prj');
+    }
+
+    function testRestoreFileLocationNotExists(){
+        $fileFactory = new FRSFileFactoryTestRestore();
+
+        // Create temp file
+        $filepath = dirname(__FILE__).'/_fixtures/DELETED/prj/p2_r1/toto.xls.12';
+        mkdir(dirname($filepath), 0750, true);
+        touch($filepath);
+        $this->assertTrue(is_dir(dirname($filepath)));
+
+        $file = new MockFRSFile($this);
+        $file->setReturnValue('getFileID', 12);
+        $file->setReturnValue('getFileName', 'p2_r1/toto.xls');
+        $file->setReturnValue('getFileLocation', $GLOBALS['ftp_frs_dir_prefix'].'/prj/p2_r1/toto.xls');
+        $this->assertTrue(is_dir(dirname('/prj/p2_r1/')));
+
+        $dao = new MockFRSFileDao($this);
+        $dao->expectOnce('restoreFile');
+        $dao->setReturnValue('restoreFile', true);
+        $fileFactory->setReturnValue('_getFRSFileDao', $dao);
+
+        $this->assertTrue($fileFactory->restoreFile($file));
+
+        // Cleanup
+        rmdir($GLOBALS['ftp_frs_dir_prefix'].'/DELETED/prj/p2_r1');
+        rmdir($GLOBALS['ftp_frs_dir_prefix'].'/DELETED/prj');
+        unlink($GLOBALS['ftp_frs_dir_prefix'].'/prj/p2_r1/toto.xls');
+        rmdir($GLOBALS['ftp_frs_dir_prefix'].'/prj/p2_r1');
+    }
+    
+    function testRestoreFileDBUpdateFails(){
+        $fileFactory = new FRSFileFactoryTestRestore();
+
+        // Create temp file
+        $filepath = dirname(__FILE__).'/_fixtures/DELETED/prj/p3_r1/toto.xls.12';
+        mkdir(dirname($filepath), 0750, true);
+        touch($filepath);
+        $this->assertTrue(is_dir(dirname($filepath)));
+
+        $file = new MockFRSFile($this);
+        $file->setReturnValue('getFileID', 12);
+        $file->setReturnValue('getFileName', 'p3_r1/toto.xls');
+        $file->setReturnValue('getFileLocation', $GLOBALS['ftp_frs_dir_prefix'].'/prj/p3_r1/toto.xls');
+        $this->assertTrue(is_dir(dirname('/prj/p3_r1/')));
+
+        $dao = new MockFRSFileDao($this);
+        $dao->expectOnce('restoreFile');
+        $dao->setReturnValue('restoreFile', false);
+        $fileFactory->setReturnValue('_getFRSFileDao', $dao);
+
+        $this->assertFalse($fileFactory->restoreFile($file));
+
+        // Cleanup
+        rmdir($GLOBALS['ftp_frs_dir_prefix'].'/DELETED/prj/p3_r1');
+        rmdir($GLOBALS['ftp_frs_dir_prefix'].'/DELETED/prj');
+        unlink($GLOBALS['ftp_frs_dir_prefix'].'/prj/p3_r1/toto.xls');
+        rmdir($GLOBALS['ftp_frs_dir_prefix'].'/prj/p3_r1');
     }
 }
 ?>

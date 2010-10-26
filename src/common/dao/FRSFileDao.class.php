@@ -391,6 +391,22 @@ class FRSFileDao extends DataAccessObject {
                ' WHERE file_id = '.$this->da->escapeInt($id);
         return $this->update($sql);
     }
+    
+    /**
+     * Restore file by updating its status and removing it from  frs_file_deleted
+     * 
+     * @param Integer $id   File id
+     * 
+     * @return Boolean
+     */
+    function restoreFile($id) {
+        $sql = 'UPDATE frs_file SET status = "A" WHERE file_id = '.$this->da->escapeInt($id);
+        if ($this->update($sql)) {
+            $sql = 'DELETE FROM frs_file_deleted WHERE file_id = '.$this->da->escapeInt($id);
+            return $this->update($sql);
+        }
+        return false;
+    }
 }
 
 ?>
