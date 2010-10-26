@@ -793,13 +793,20 @@ class Docman_ItemDao extends DataAccessObject {
         $this->update($sql);
     }
 
+    /**
+     * Copy the entry of the item from table of items into table of deleted items
+     *
+     * @param Integer $itemId
+     *
+     * @return Boolean
+     */
     function storeDeletedItem($itemId) {
         $sql = 'INSERT INTO plugin_docman_item_deleted (item_id, parent_id, group_id, title, '.
-                        ' description, create_date, update_date, delete_date, purge_date, '.
+                        ' description, create_date, update_date, delete_date, '.
                         ' user_id, status, obsolescence_date, rank, item_type, link_url, '.
                         ' wiki_page, file_is_embedded) '.
                         ' SELECT item_id, parent_id, group_id, title, '.
-                        ' description, create_date, update_date, delete_date, delete_date, '.
+                        ' description, create_date, update_date, delete_date, '.
                         ' user_id, status, obsolescence_date, rank, item_type, link_url,'.
                         ' wiki_page, file_is_embedded '.
                         ' FROM plugin_docman_item '.
@@ -841,6 +848,44 @@ class Docman_ItemDao extends DataAccessObject {
         }
         return array();
     }
+
+    /**
+     * List deleted items with delete date lower than the given time
+     *
+     * @param Integer $time
+     *
+     * @return Array
+     */
+    function listItemsToPurge($time) {
+        $sql = 'SELECT * FROM plugin_docman_item_deleted '.
+               ' WHERE delete_date < '.$this->da->escapeInt($time).
+               ' AND purge_date IS NULL ';
+        $dar = $this->retrieve($sql);
+        if ($dar && !$dar->isError() && $dar->rowCount() > 0) {
+            $list = array();
+            foreach ($dar as $row) {
+                $list[] = $row;
+            }
+            return $list;
+        }
+        return array();
+    }
+
+    /**
+     * Save the purge date of a deleted item
+     *
+     * @param Integer $itemId
+     * @param Integer $time
+     *
+     * @return Boolean
+     */
+    function setPurgeDate($itemId, $time) {
+        $sql = 'UPDATE plugin_docman_item_deleted'.
+               ' SET purge_date = '.$this->da->escapeInt($time).
+               ' WHERE item_id = '.$this->da->escapeInt($itemId);
+        return $this->update($sql);
+    }
+
 }
 
 ?>

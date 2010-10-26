@@ -103,7 +103,7 @@ class Docman_VersionFactory {
      */
     public function purgeDeletedVersions($time) {
         $dao = $this->_getVersionDao();
-        $dar = $dao->listVersionsToDelete($time);
+        $dar = $dao->listVersionsToPurge($time);
         if ($dar && !$dar->isError()) {
             foreach ($dar as $row) {
                 $version = new Docman_Version($row);
@@ -122,8 +122,9 @@ class Docman_VersionFactory {
      * @return Boolean
      */
     public function purgeDeletedVersion($version) {
-        if (file_exist($version->getPath())) {
-            return $this->physicalDeleteVersion($version->getPath());
+        if (file_exist($version->getPath() && $this->physicalDeleteVersion($version->getPath()))) {
+            $dao = $this->_getVersionDao();
+            return $dao->setPurgeDate($version->getId(), time());
         }
         return false;
     }
@@ -156,6 +157,27 @@ class Docman_VersionFactory {
     function listPendingVersions($groupId, $offset, $limit) {
         $dao = $this->_getVersionDao();
         return $dao->listPendingVersions($groupId, $offset, $limit);
+    }
+
+    /**
+     * List versions of the item that are not deleted
+     *
+     * @param Docman_Item $item
+     *
+     * @return Array()
+     */
+    function listVersionsToDeleteForItem($item) {
+        $dao = $this->_getVersionDao();
+        $dar = $dao->listVersionsToDeleteByItemId($item->getId());
+        if ($dar && !$dar->isError() && $dar->rowCount() > 0) {
+            $list = array();
+            foreach ($dar as $row) {
+                $version = new Docman_Version($row);
+                $list[] = $version;
+            }
+            return $list;
+        }
+        return false;
     }
 
     /**

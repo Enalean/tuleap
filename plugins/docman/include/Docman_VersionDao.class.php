@@ -308,16 +308,34 @@ class Docman_VersionDao extends DataAccessObject {
     }
 
     /**
+     * List versions of the item that are not deleted
+     *
+     * @param Integer $itemId
+     *
+     * @return Boolean
+     */
+    function listVersionsToDeleteByItemId($itemId) {
+        $sql = 'SELECT v.id, v.number, v.item_id, v.user_id, v.label, v.changelog,'.
+               ' v.date, v.filename, v.filesize, v.filetype, v.path '.
+               ' FROM plugin_docman_version v '.
+               ' LEFT OUTER JOIN plugin_docman_version_deleted vd '.
+               ' ON v.id = vd.id '.
+               ' WHERE v.item_id = ' . $this->da->quoteSmart($itemId);
+        return $this->retrieve($sql);
+    }
+
+    /**
      * List all pending versions in order to delete them physically
      *
      * @param Integer $time
      *
      * @return Array
      */
-    function listVersionsToDelete($time) {
+    function listVersionsToPurge($time) {
         $sql=' SELECT * '.
              ' FROM plugin_docman_version_deleted '.
-             ' WHERE purge_date < '.$this->da->quoteSmart($time);
+             ' WHERE delete_date < '.$this->da->quoteSmart($time).
+             ' AND purge_date IS NULL ';
 
         $dar = $this->retrieve($sql);
         if ($dar && !$dar->isError() && $dar->rowCount() > 0) {
@@ -325,10 +343,24 @@ class Docman_VersionDao extends DataAccessObject {
             foreach ($dar as $row) {
                 $list[] = $row;
             }
-
             return $list;
         }
         return array();
+    }
+
+    /**
+     * Save the purge date of a deleted version
+     *
+     * @param Integer $id
+     * @param Integer $time
+     *
+     * @return Boolean
+     */
+    function setPurgeDate($id, $time) {
+        $sql = 'UPDATE plugin_docman_version_deleted'.
+               ' SET purge_date = '.$this->da->escapeInt($time).
+               ' WHERE id = '.$this->da->escapeInt($id);
+        return $this->update($sql);
     }
 
 }

@@ -37,8 +37,8 @@ class Docman_VersionFactoryTest extends UnitTestCase {
         $dar->setReturnValue('rowCount', 0);
 
         $dao = new MockDocman_VersionDao($this);
-        $dao->expectOnce('listVersionsToDelete');
-        $dao->setReturnValue('listVersionsToDelete', $dar);
+        $dao->expectOnce('listVersionsToPurge');
+        $dao->setReturnValue('listVersionsToPurge', $dar);
         $versionFactory->setReturnValue('_getVersionDao', $dao);
 
         $versionFactory->expectNever('purgeDeletedVersion');
@@ -67,8 +67,8 @@ class Docman_VersionFactoryTest extends UnitTestCase {
         $dar->setReturnValue('rowCount', 1);
 
         $dao = new MockDocman_VersionDao($this);
-        $dao->expectOnce('listVersionsToDelete');
-        $dao->setReturnValue('listVersionsToDelete', $dar);
+        $dao->expectOnce('listVersionsToPurge');
+        $dao->setReturnValue('listVersionsToPurge', $dar);
         $versionFactory->setReturnValue('_getVersionDao', $dao);
 
         $versionFactory->expectOnce('purgeDeletedVersion');
