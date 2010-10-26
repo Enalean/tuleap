@@ -1156,7 +1156,7 @@ class GitPHP_Project
 		$exe = new GitPHP_GitExe($this);
 
 		$args = array();
-		$args[] = '--format=\\%\\(committer\\)';
+		$args[] = '--format="%(committer)"';
 		$args[] = '--sort=-committerdate';
 		$args[] = '--count=1';
 		$args[] = 'refs/heads';
