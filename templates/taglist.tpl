@@ -9,7 +9,7 @@
  * @subpackage Template
  *}
 
- <table cellspacing="0">
+ <table cellspacing="0" class="tagTable">
    {foreach from=$taglist item=tag name=tag}
      <tr class="{cycle name=tags values="light,dark"}">
        {if ($max > 0) && ($smarty.foreach.tag.iteration == $max)}

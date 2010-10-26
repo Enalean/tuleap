@@ -160,4 +160,5 @@ td#blameData div.dark:hover { background-color:#edece6; }
 #blobData li, #blobData .li1 {font-weight: normal; vertical-align:top;}
 table.treeTable td.filesize { text-align: right; }
 table.treeTable td.expander { padding-right: 0px; }
+table.tagTable td.link {text-align: right;}
 div.projectSearch { padding:8px; border:solid #d9d8d1; border-width:0px 0px 1px; }
