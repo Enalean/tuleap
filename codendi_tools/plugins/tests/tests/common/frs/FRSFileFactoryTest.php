@@ -274,8 +274,8 @@ class FRSFileFactoryTest extends UnitTestCase {
         $file->setReturnValue('getFileID', 12);
         $file->setReturnValue('getFileName', 'p1_r1/toto.xls');
         $file->setReturnValue('getFileLocation', $GLOBALS['ftp_frs_dir_prefix'].'/prj/p1_r1/toto.xls');
-        mkdir(dirname(__FILE__).'/_fixtures/prj/p1_r1/', 0750, true);
-        $this->assertTrue(is_dir(dirname('/prj/p1_r1/')));
+        mkdir($GLOBALS['ftp_frs_dir_prefix'].'/prj/p1_r1/', 0750, true);
+        $this->assertTrue(is_dir($GLOBALS['ftp_frs_dir_prefix'].'/prj/p1_r1/'));
 
         $dao = new MockFRSFileDao($this);
         $dao->expectOnce('restoreFile');
@@ -305,7 +305,7 @@ class FRSFileFactoryTest extends UnitTestCase {
         $file->setReturnValue('getFileID', 5);
         $file->setReturnValue('getFileName', 'p1_r1/toto.xls');
         $file->setReturnValue('getFileLocation', $GLOBALS['ftp_frs_dir_prefix'].'/prj/p1_r1/toto.xls');
-        $this->assertTrue(is_dir(dirname('/prj/p1_r1/')));
+        $this->assertTrue(is_dir(dirname($GLOBALS['ftp_frs_dir_prefix'].'/prj/p1_r1/')));
 
         $dao = new MockFRSFileDao($this);
         $dao->expectNever('restoreFile');
@@ -332,7 +332,7 @@ class FRSFileFactoryTest extends UnitTestCase {
         $file->setReturnValue('getFileID', 12);
         $file->setReturnValue('getFileName', 'p2_r1/toto.xls');
         $file->setReturnValue('getFileLocation', $GLOBALS['ftp_frs_dir_prefix'].'/prj/p2_r1/toto.xls');
-        $this->assertTrue(is_dir(dirname('/prj/p2_r1/')));
+        $this->assertTrue(is_dir(dirname($GLOBALS['ftp_frs_dir_prefix'].'/prj/p2_r1/')));
 
         $dao = new MockFRSFileDao($this);
         $dao->expectOnce('restoreFile');
@@ -361,7 +361,7 @@ class FRSFileFactoryTest extends UnitTestCase {
         $file->setReturnValue('getFileID', 12);
         $file->setReturnValue('getFileName', 'p3_r1/toto.xls');
         $file->setReturnValue('getFileLocation', $GLOBALS['ftp_frs_dir_prefix'].'/prj/p3_r1/toto.xls');
-        $this->assertTrue(is_dir(dirname('/prj/p3_r1/')));
+        $this->assertTrue(is_dir(dirname($GLOBALS['ftp_frs_dir_prefix'].'/prj/p3_r1/')));
 
         $dao = new MockFRSFileDao($this);
         $dao->expectOnce('restoreFile');
