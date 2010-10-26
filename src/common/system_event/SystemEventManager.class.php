@@ -83,7 +83,8 @@ class SystemEventManager {
             'mail_list_create',
             'mail_list_delete',
             'service_is_used',
-            'codendi_daily_start'
+            'codendi_daily_start',
+            'backend_system_purge_files'
             );
         foreach($events_to_listen as $event) {
             $event_manager->addListener($event, $this, 'addSystemEvent', true, 0);
@@ -243,6 +244,17 @@ class SystemEventManager {
             $this->createEvent(SystemEvent::TYPE_ROOT_DAILY,
                                '',
                                SystemEvent::PRIORITY_MEDIUM);
+            break;
+        case 'backend_system_purge_files':
+            if (!isset($GLOBALS['sys_file_deletion_delay'])) {
+                $delay = 3;
+            } else {
+                $delay = intval($GLOBALS['sys_file_deletion_delay']);
+            }
+            $time = $_SERVER['REQUEST_TIME'] - (3600*24*$delay);
+            $this->createEvent(SystemEvent::TYPE_SYSTEM_CHECK,
+                               array('time' => $time),
+                               SystemEvent::PRIORITY_LOW);
             break;
         default:
 
