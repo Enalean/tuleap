@@ -84,6 +84,10 @@ class WebDAVTree extends Sabre_DAV_ObjectTree {
     /**
      * This method moves nodes from location to another
      *
+     * Move only allowed to rename a file in a given release. Otherwise as this
+     * operation is not yet well supported by the FRS itself we cannot implement
+     * it the right way.
+     *
      * @return void
      *
      * @see lib/Sabre/DAV/Sabre_DAV_Tree#move($sourcePath, $destinationPath)
@@ -97,14 +101,15 @@ class WebDAVTree extends Sabre_DAV_ObjectTree {
             $renameable = $this->getNodeForPath($sourcePath);
             $renameable->setName($destinationName);
         } else {
-            $source = $this->getNodeForPath($sourcePath);
+            throw new Sabre_DAV_Exception_MethodNotAllowed($GLOBALS['Language']->getText('plugin_webdav_common', 'move_error'));
+            /*$source = $this->getNodeForPath($sourcePath);
             $destination = $this->getNodeForPath($destinationDir);
 
             if ($this->canBeMoved($source, $destination)) {
                 $source->move($destination);
             } else {
                 throw new Sabre_DAV_Exception_MethodNotAllowed($GLOBALS['Language']->getText('plugin_webdav_common', 'move_error'));
-            }
+            }*/
         }
 
     }

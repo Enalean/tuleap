@@ -367,7 +367,7 @@ class WebDAVFRSFile extends Sabre_DAV_File {
      *
      * @return void
      */
-    function move($destination) {
+    /*function move($destination) {
 
         if ($this->userCanWrite() && $destination->userCanWrite()) {
             $utils = $this->getUtils();
@@ -409,7 +409,7 @@ class WebDAVFRSFile extends Sabre_DAV_File {
             throw new Sabre_DAV_Exception_Forbidden($GLOBALS['Language']->getText('plugin_webdav_common', 'file_denied_rename'));
         }
 
-    }
+    }*/
 
     /**
      * A wrapper to copy

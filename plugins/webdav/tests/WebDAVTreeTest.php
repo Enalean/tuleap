@@ -228,7 +228,7 @@ class WebDAVTreeTest extends UnitTestCase {
 
         //$node->expectNever('setName');
         //$node->expectOnce('move');
-        $this->assertNoErrors();
+        $this->expectException('Sabre_DAV_Exception_MethodNotAllowed');
 
         $tree->move('project1/package1/release1', 'project1/package2/release2');
     }
