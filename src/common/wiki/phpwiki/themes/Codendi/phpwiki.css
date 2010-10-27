@@ -65,6 +65,7 @@ div.wikitext pre {
 /* Main wiki text box */
 div.wikitext {
   margin:    1ex 1em 0.5ex 1em;
+  padding: 0.5ex 0.8em;
   background: white;
   clear: both;
   font-size: 105%;
