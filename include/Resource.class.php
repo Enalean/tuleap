@@ -18,10 +18,9 @@ require_once(GITPHP_BASEDIR . 'lib/php-gettext/gettext.php');
 define('GITPHP_LOCALE_COOKIE', 'GitPHPLocale');
 
 /**
- * Resource
+ * Resource factory class
  *
  * @package GitPHP
- * @subpackage Resource
  */
 class GitPHP_Resource
 {
