@@ -16,6 +16,13 @@ PLUGIN_JRI_VERSION=$(shell LANG=C php $(BASE_DIR)/codendi_tools/rpm/plugin_descr
 PLUGIN_ECLIPSE_VERSION=$(shell LANG=C php $(BASE_DIR)/codendi_tools/rpm/plugin_descriptor.php Eclipse)
 PLUGIN_HUDSON_VERSION=$(shell LANG=C php $(BASE_DIR)/codendi_tools/rpm/plugin_descriptor.php hudson)
 PLUGIN_WEBDAV_VERSION=$(shell LANG=C php $(BASE_DIR)/codendi_tools/rpm/plugin_descriptor.php WebDAV)
+THEME_CODEX_VERSION=$(shell LANG=C cat $(BASE_DIR)/src/www/themes/CodeX/VERSION)
+THEME_CODEXTAB_VERSION=$(shell LANG=C cat $(BASE_DIR)/src/www/themes/CodeXTab/VERSION)
+THEME_DAWN_VERSION=$(shell LANG=C cat $(BASE_DIR)/src/www/themes/Dawn/VERSION)
+THEME_SAVANNAH_VERSION=$(shell LANG=C cat $(BASE_DIR)/src/www/themes/savannah/VERSION)
+THEME_STTAB_VERSION=$(shell LANG=C cat $(BASE_DIR)/src/www/themes/STTab/VERSION)
+THEME_CODEXSTN_VERSION=$(shell LANG=C cat $(BASE_DIR)/src/www/themes/CodexSTN/VERSION)
+THEME_STEERFORGE_VERSION=$(shell LANG=C cat $(BASE_DIR)/src/www/themes/SteerForge/VERSION)
 
 PKG_NAME=codendi_st
 
@@ -45,7 +52,14 @@ codendi: rpmprep tarball
 		sed -e 's/@@PLUGIN_JRI_VERSION@@/$(PLUGIN_JRI_VERSION)/g' |\
 		sed -e 's/@@PLUGIN_ECLIPSE_VERSION@@/$(PLUGIN_ECLIPSE_VERSION)/g' |\
 		sed -e 's/@@PLUGIN_HUDSON_VERSION@@/$(PLUGIN_HUDSON_VERSION)/g' |\
-                sed -e 's/@@PLUGIN_WEBDAV_VERSION@@/$(PLUGIN_WEBDAV_VERSION)/g' |\
+		sed -e 's/@@PLUGIN_WEBDAV_VERSION@@/$(PLUGIN_WEBDAV_VERSION)/g' |\
+		sed -e 's/@@THEME_CODEX_VERSION@@/$(THEME_CODEX_VERSION)/g' |\
+		sed -e 's/@@THEME_CODEXTAB_VERSION@@/$(THEME_CODEXTAB_VERSION)/g' |\
+		sed -e 's/@@THEME_DAWN_VERSION@@/$(THEME_DAWN_VERSION)/g' |\
+		sed -e 's/@@THEME_SAVANNAH_VERSION@@/$(THEME_SAVANNAH_VERSION)/g' |\
+		sed -e 's/@@THEME_STTAB_VERSION@@/$(THEME_STTAB_VERSION)/g' |\
+		sed -e 's/@@THEME_CODEXSTN_VERSION@@/$(THEME_CODEXSTN_VERSION)/g' |\
+		sed -e 's/@@THEME_STEERFORGE_VERSION@@/$(THEME_STEERFORGE_VERSION)/g' |\
 		sed -e 's/@@PKG_NAME@@/$(PKG_NAME)/g' \
 		> $(RPM_TMP)/SPECS/codendi.spec
 	rpmbuild -bb $(RPM_TMP)/SPECS/codendi.spec
