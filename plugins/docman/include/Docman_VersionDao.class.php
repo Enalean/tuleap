@@ -365,6 +365,22 @@ class Docman_VersionDao extends DataAccessObject {
     }
 
     /**
+     * Search for a deleted version
+     * 
+     * @param $itemId
+     * @param $number
+     * 
+     * @return DataAccessResult
+     */
+    function searchDeletedVersion($itemId, $number) {
+        $sql = 'SELECT * '.
+               ' FROM plugin_docman_version_deleted'.
+               ' WHERE item_id = '.$this->da->escapeInt($itemId).
+               ' AND number = '.$this->da->escapeInt($number);
+        return $this->retrieve($sql);
+    }
+
+    /**
      * Save the purge date of a deleted version
      *
      * @param Integer $id

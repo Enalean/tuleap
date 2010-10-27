@@ -139,7 +139,14 @@ class Docman_VersionFactory {
      */
     public function restore($version) {
         $dao = $this->_getVersionDao();
-        return $dao->restore($version->getItemId(), $version->getNumber());
+        $dar = $dao->searchDeletedVersion($version->getItemId(), $version->getNumber());
+        if ($dar && !$dar->isError()) {
+            $row = $dar->getRow();
+            if (!$row['purge_date']) {
+                return $dao->restore($version->getItemId(), $version->getNumber());
+            }
+        }
+        return false;
     }
 
     /**

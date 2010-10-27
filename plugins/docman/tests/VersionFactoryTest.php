@@ -79,19 +79,44 @@ class Docman_VersionFactoryTest extends UnitTestCase {
 
     function testRestoreOneVersion() {
         $versionFactory = new Docman_VersionFactoryTestVersion($this);
-        
+        $dao            = new MockDocman_VersionDao($this);
+        $versionFactory->setReturnValue('_getVersionDao', $dao);
+
+        $dar = new MockDataAccessResult($this);
+        $dar->setReturnValue('isError', false);
+        $dar->setReturnValue('getRow', array('purge_date' => null));
+        $dao->expectOnce('searchDeletedVersion', array(1664, 2));
+        $dao->setReturnValue('searchDeletedVersion', $dar);
+
+        $dao->expectOnce('restore', array(1664, 2));
+        $dao->setReturnValue('restore', true);
+
         $version = new MockDocman_Version($this);
         $version->setReturnValue('getNumber', 2);
         $version->setReturnValue('getItemId', 1664);
 
-        $dao = new MockDocman_VersionDao($this);
-        $dao->expectOnce('restore', array(1664, 2));
-        $dao->setReturnValue('restore', true);
-        $versionFactory->setReturnValue('_getVersionDao', $dao);
-        
         $this->assertTrue($versionFactory->restore($version));
     }
-    
+
+    function testRestoreOneVersionAlreadyPurged() {
+        $versionFactory = new Docman_VersionFactoryTestVersion($this);
+        $dao            = new MockDocman_VersionDao($this);
+        $versionFactory->setReturnValue('_getVersionDao', $dao);
+
+        $dar = new MockDataAccessResult($this);
+        $dar->setReturnValue('isError', false);
+        $dar->setReturnValue('getRow', array('purge_date' => 1234567890));
+        $dao->expectOnce('searchDeletedVersion', array(1664, 2));
+        $dao->setReturnValue('searchDeletedVersion', $dar);
+
+        $dao->expectNever('restore');
+
+        $version = new MockDocman_Version($this);
+        $version->setReturnValue('getNumber', 2);
+        $version->setReturnValue('getItemId', 1664);
+
+        $this->assertFalse($versionFactory->restore($version));
+    }
 }
 
 ?>
