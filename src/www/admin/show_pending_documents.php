@@ -18,21 +18,40 @@ if($request->valid($vGroupId)) {
 }
 
 $params = array('group_id' => $group_id,
-                'span' =>&$spanArray,
-                'html' => &$htmlArray
+                'id' =>&$idArray,
+               'nom'=>&$nomArray,
+               'focus' =>&$focus,
+               'html' => &$htmlArray
 );
 
 $em->processEvent('show_pending_documents', $params);
 ?>
 <FORM action="?" method="POST">
+<script type="text/javascript">
+        //<!--
+                function change_onglet(name)
+                {
+                        document.getElementById('onglet_'+anc_onglet).className = 'onglet_0 onglet';
+                        document.getElementById('onglet_'+name).className = 'onglet_1 onglet';
+                        document.getElementById('contenu_onglet_'+anc_onglet).style.display = 'none';
+                        document.getElementById('contenu_onglet_'+name).style.display = 'block';
+                        anc_onglet = name;
+                }
+        //-->
+        </script>
 <INPUT type="hidden" name="group_id" value="<?php print $group_id; ?>">
 <?php echo '<h3>'.$GLOBALS['Language']->getText('admin_show_pending_documents','pending_doc').'</h3>'; ?>
         <div class="systeme_onglets">
             <div class="onglets">
             <?php
-            if (isset($params['span']) && $params['span']) {
-                foreach($params['span'] as $span){
-                    echo $span;
+            if (isset($params['id']) && $params['id']) {
+                $i=0;
+            
+                foreach($params['id'] as $id){
+                    $nom = $params['nom'][$i++];
+                    ?>
+<span class="onglet_0 onglet" id="onglet_<?php print $id ?>" onclick="javascript:change_onglet('<?php print $id?>');"><?php print $nom?></span>
+<?php 
                 }
             }
             ?>
@@ -49,7 +68,7 @@ $em->processEvent('show_pending_documents', $params);
          </div>
          <script type='text/javascript'>
         //<!--
-                var anc_onglet = 'version';
+                var anc_onglet = '<?php print $params['focus']?>';
                 change_onglet(anc_onglet);
         //-->
         </script>

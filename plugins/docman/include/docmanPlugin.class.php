@@ -470,18 +470,6 @@ class DocmanPlugin extends Plugin {
         $request = HTTPRequest::instance();
         $limit =2;
 
-        //$GLOBALS['HTML']->includeJavascriptFile('/scripts/codendi/common.js');
-        echo  "<script type='text/javascript'>
-        //<!--
-                function change_onglet(name)
-                {
-                        document.getElementById('onglet_'+anc_onglet).className = 'onglet_0 onglet';
-                        document.getElementById('onglet_'+name).className = 'onglet_1 onglet';
-                        document.getElementById('contenu_onglet_'+anc_onglet).style.display = 'none';
-                        document.getElementById('contenu_onglet_'+name).style.display = 'block';
-                        anc_onglet = name;
-                }
-        </script>";
 
         //return all pending versions for given group id
         $offsetVers = $request->getValidated('offsetVers', 'uint', 0);
@@ -492,11 +480,11 @@ class DocmanPlugin extends Plugin {
         $res = $version->listPendingVersions($params['group_id'], $offsetVers, $limit);
         if (isset($res) && $res) {
             $html = '';
-            $span = '<span class="onglet_0 onglet" id="onglet_version" onclick="javascript:change_onglet("version");">'.$GLOBALS['Language']->getText('plugin_docman','deleted_version').'</span>';
             $html .= '<div class="contenu_onglet" id="contenu_onglet_version">';
             $html .= $this->showPendingVersions($res['versions'], $params['group_id'], $res['nbVersions'], $offsetVers, $limit);
             $html .='</div>';
-            $params['span'][] = $span;
+            $params['id'][] = 'version';
+            $params['nom'][] = $GLOBALS['Language']->getText('plugin_docman','deleted_version');
             $params['html'][]= $html;
         }
         //return all pending items for given group id
@@ -509,12 +497,17 @@ class DocmanPlugin extends Plugin {
         $res = $item->listPendingItems($params['group_id'], $offsetItem , $limit);
         if (isset($res) && $res) {
             $html = '';
-            $span = '<span class="onglet_0 onglet" id="onglet_item" onclick="javascript:change_onglet("item");">'.$GLOBALS['Language']->getText('plugin_docman','deleted_item').'</span>';
             $html .= '<div class="contenu_onglet" id="contenu_onglet_item">';
             $html .= $this->showPendingItems($res['items'], $params['group_id'], $res['nbItems'], $offsetItem, $limit);
             $html .='</div>';
-            $params['span'][] = $span;
+            $params['id'][] = 'item';
+            $params['nom'][]= $GLOBALS['Language']->getText('plugin_docman','deleted_item');
             $params['html'][]= $html;
+        }
+        if ($request->get('offsetItem') > 0 ){
+            $params['focus'] = 'item';
+        } else {
+            $params['focus'] = 'version';
         }
     }
     
@@ -585,16 +578,14 @@ class DocmanPlugin extends Plugin {
             $i=1;
             foreach ($res as $row ){
 
-                $html .='
-            <TR class="'. html_get_alt_row_color($i++) .'"><TD>'. $hp->purify($row['title'], CODENDI_PURIFIER_BASIC, $groupId).'</TD><TD>';
+                $html .='<TR class="'. html_get_alt_row_color($i++) .'"><TD>'. $hp->purify($row['title'], CODENDI_PURIFIER_BASIC, $groupId).'</TD><TD>';
                 $html .= $hp->purify($row['location']);
                 $html .= '</TD>'.
                 '<TD>'.$uh->getDisplayNameFromUserId($row['user']).'</TD>'.
                 '<TD>'.format_date($GLOBALS['Language']->getText('system', 'datefmt'),$row['date']).'</TD>'.
                 '<TD align="center"><a href="" ><IMG SRC="'.util_get_image_theme("trash-x.png").'" BORDER=0 HEIGHT=16 WIDTH=16></a></TD></TR>';
             }
-            $html .= '
-        </TABLE>'; 
+            $html .= '</TABLE>'; 
 
             $html .= '<div style="text-align:center" class="'. util_get_alt_row_color($i++) .'">';
 
