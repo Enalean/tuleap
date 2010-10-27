@@ -134,7 +134,7 @@ class Docman_VersionFactory {
      * @return Boolean
      */
     public function purgeDeletedVersion($version) {
-        if (file_exist($version->getPath() && $this->physicalDeleteVersion($version->getPath()))) {
+        if (file_exists($version->getPath()) && $this->physicalDeleteVersion($version->getPath())) {
             $dao = $this->_getVersionDao();
             return $dao->setPurgeDate($version->getId(), time());
         }

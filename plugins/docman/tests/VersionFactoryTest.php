@@ -32,6 +32,7 @@ Mock::generate('Docman_VersionDao');
 Mock::generate('Docman_Version');
 Mock::generate('Docman_ItemFactory');
 Mock::generate('Docman_File');
+Mock::generatePartial('Docman_VersionFactory', 'Docman_VersionFactoryTestVersionDeleteFile', array('_getVersionDao'));
 
 Mock::generatePartial('Docman_VersionFactory', 'Docman_VersionFactoryTestVersion', array('purgeDeletedVersion', '_getVersionDao', '_purge', '_getEventManager', '_getItemFactory', '_getUserManager'));
 
@@ -84,6 +85,49 @@ class Docman_VersionFactoryTest extends UnitTestCase {
         $versionFactory->expectOnce('purgeDeletedVersion');
 
         $this->assertTrue($versionFactory->PurgeDeletedVersions(1234567890));
+    }
+
+    function testPurgeDeletedVersionFileNotFound() {
+        $versionFactory = new Docman_VersionFactoryTestVersionDeleteFile($this);
+
+        $version = new Docman_Version(array('id'        => null,
+                                            'user_id'   => null,
+                                            'item_id'   => null,
+                                            'number'    => null,
+                                            'label'     => null,
+                                            'changelog' => null,
+                                            'date'      => null,
+                                            'filename'  => 'noFile',
+                                            'filesize'  => null,
+                                            'filetype'  => null,
+                                            'path'      => dirname(__FILE__).'/_fixtures/noFile'));
+
+        $this->assertFalse($versionFactory->PurgeDeletedVersion($version));
+    }
+
+function testPurgeDeletedVersion() {
+        $versionFactory = new Docman_VersionFactoryTestVersionDeleteFile($this);
+
+        $dao = new MockDocman_VersionDao($this);
+        $dao->setReturnValue('setPurgeDate', true);
+        $versionFactory->setReturnValue('_getVersionDao', $dao);
+
+        $version = new Docman_Version(array('id'        => null,
+                                            'user_id'   => null,
+                                            'item_id'   => null,
+                                            'number'    => null,
+                                            'label'     => null,
+                                            'changelog' => null,
+                                            'date'      => null,
+                                            'filename'  => 'fileToPurge.txt',
+                                            'filesize'  => null,
+                                            'filetype'  => null,
+                                            'path'      => dirname(__FILE__).'/_fixtures/fileToPurge_txt'));
+
+        $fp = fopen($version->getPath(), 'w');
+
+        $this->assertTrue($versionFactory->PurgeDeletedVersion($version));
+        $this->assertFalse(file_exists($version->getPath()));
     }
 
     function testRestoreOneVersion() {
