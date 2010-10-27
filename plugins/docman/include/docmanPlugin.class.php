@@ -467,37 +467,154 @@ class DocmanPlugin extends Plugin {
      * @param array $params
      */
     function show_pending_documents($params) {
+        $request = HTTPRequest::instance();
+        $limit =2;
+
+        //$GLOBALS['HTML']->includeJavascriptFile('/scripts/codendi/common.js');
+        echo  "<script type='text/javascript'>
+        //<!--
+                function change_onglet(name)
+                {
+                        document.getElementById('onglet_'+anc_onglet).className = 'onglet_0 onglet';
+                        document.getElementById('onglet_'+name).className = 'onglet_1 onglet';
+                        document.getElementById('contenu_onglet_'+anc_onglet).style.display = 'none';
+                        document.getElementById('contenu_onglet_'+name).style.display = 'block';
+                        anc_onglet = name;
+                }
+        </script>";
+
+        //return all pending versions for given group id
+        $offsetVers = $request->getValidated('offsetVers', 'uint', 0);
+        if ( !$offsetVers || $offsetVers < 0 ) {
+            $offsetVers = 0;
+        }
+        $version = new Docman_VersionFactory();
+        $res = $version->listPendingVersions($params['group_id'], $offsetVers, $limit);
+        if (isset($res) && $res) {
+            $html = '';
+            $span = '<span class="onglet_0 onglet" id="onglet_version" onclick="javascript:change_onglet("version");">'.$GLOBALS['Language']->getText('plugin_docman','deleted_version').'</span>';
+            $html .= '<div class="contenu_onglet" id="contenu_onglet_version">';
+            $html .= $this->showPendingVersions($res['versions'], $params['group_id'], $res['nbVersions'], $offsetVers, $limit);
+            $html .='</div>';
+            $params['span'][] = $span;
+            $params['html'][]= $html;
+        }
+        //return all pending items for given group id
+        $offsetItem = $request->getValidated('offsetItem', 'uint', 0);
+        if ( !$offsetItem || $offsetItem < 0 ) {
+            $offsetItem = 0;
+        }
+
+        $item = new Docman_ItemFactory($params['group_id']);
+        $res = $item->listPendingItems($params['group_id'], $offsetItem , $limit);
+        if (isset($res) && $res) {
+            $html = '';
+            $span = '<span class="onglet_0 onglet" id="onglet_item" onclick="javascript:change_onglet("item");">'.$GLOBALS['Language']->getText('plugin_docman','deleted_item').'</span>';
+            $html .= '<div class="contenu_onglet" id="contenu_onglet_item">';
+            $html .= $this->showPendingItems($res['items'], $params['group_id'], $res['nbItems'], $offsetItem, $limit);
+            $html .='</div>';
+            $params['span'][] = $span;
+            $params['html'][]= $html;
+        }
+    }
+    
+    function showPendingVersions($versions, $groupId, $nbVersions, $offset, $limit) {
+        $hp = Codendi_HTMLPurifier::instance();
+
+        $html ='';
         $title =array();
         $title[] = $GLOBALS['Language']->getText('plugin_docman','doc_title');
         $title[] = $GLOBALS['Language']->getText('plugin_docman','label');
         $title[] = $GLOBALS['Language']->getText('plugin_docman','number');
         $title[] = $GLOBALS['Language']->getText('plugin_docman','delete_date');
         $title[] = $GLOBALS['Language']->getText('plugin_docman','restore_version');
-         
-        $params ['service'] = 'enabled';
-        //return all pending versions for given group id
-        $version = new Docman_VersionFactory();
-        $res = $version->listPendingVersions($params['group_id'], $params['offsetVers'], $params['limit']);
-        if (isset($res) && $res) {
-            $params['versions'] = $res['versions'];
-            $params['nbVersions'] = (int) $res['nbVersions'];
-            $params['tableVers'] = $title;
+
+    if ($nbVersions > 0) {
+
+        $html .= '<H3>'.$GLOBALS['Language']->getText('plugin_docman', 'deleted_version').'</H3><P>';
+        $html .= html_build_list_table_top ($title);
+        $i=1;
+
+        foreach ($versions as $row ){
+            $html .= '
+            <TR class="'. html_get_alt_row_color($i++) .'"><TD>'. $hp->purify($row['title'], CODENDI_PURIFIER_BASIC, $groupId).'</TD><TD>';
+            $html .= $hp->purify($row['label']);
+            $html .= '</TD>'.
+                '<TD>'.$row['number'].'</TD>'.
+                '<TD>'.format_date($GLOBALS['Language']->getText('system', 'datefmt'),$row['date']).'</TD>'.
+                '<TD align="center"><a href="" ><IMG SRC="'.util_get_image_theme("trash-x.png").'" BORDER=0 HEIGHT=16 WIDTH=16></a></TD></TR>';
         }
-        //return all pending items for given group id
-        $title =array();
+        $html .= '
+        </TABLE>'; 
+
+
+        echo '<div style="text-align:center" class="'. util_get_alt_row_color($i++) .'">';
+
+        if ($offset > 0) {
+            $html .=  '<a href="?group_id='.$groupId.'&offsetVers='.($offset -$limit).'">[ '.$GLOBALS['Language']->getText('plugin_docman', 'previous').'  ]</a>';
+            $html .= '&nbsp;';
+        }
+        if (($offset + $limit) < $nbVersions) {
+            $html .= '&nbsp;';
+            $html .='<a href="?group_id='.$groupId.'&offsetVers='.($offset+$limit).'">[ '.$GLOBALS['Language']->getText('plugin_docman', 'next').' ]</a>';
+        }
+        $html .= '</div>';
+        $html .= '<div style="text-align:center" class="'. util_get_alt_row_color($i++) .'">';
+        $html .=($offset+$i-3).'/'.$nbVersions;
+        $html .= '</div>';
+    }
+    return $html;
+}
+
+    function showPendingItems($res, $groupId, $nbItems, $offset, $limit) {
+        $hp = Codendi_HTMLPurifier::instance();
+        $uh = UserHelper::instance();
+
+        $html ='';
+        $title =array();        
         $title[] = $GLOBALS['Language']->getText('plugin_docman','doc_title');
         $title[] = $GLOBALS['Language']->getText('plugin_docman','location');
         $title[] = $GLOBALS['Language']->getText('plugin_docman','owner');
         $title[] = $GLOBALS['Language']->getText('plugin_docman','delete_date');
         $title[] = $GLOBALS['Language']->getText('plugin_docman','restore_item');
 
-        $item = new Docman_ItemFactory($params['group_id']);
-        $res = $item->listPendingItems($params['group_id'], $params['offsetItem'], $params['limit']);
-        if (isset($res) && $res) {
-            $params['items'] = $res['items'];
-            $params['nbItems'] = (int) $res['nbItems'];
-            $params['tableItem'] = $title;
+
+        if ($nbItems > 0) {
+            $html .= '<H3>'.$GLOBALS['Language']->getText('plugin_docman', 'deleted_item').'</H3><P>';
+            $html .= html_build_list_table_top ($title);
+            $i=1;
+            foreach ($res as $row ){
+
+                $html .='
+            <TR class="'. html_get_alt_row_color($i++) .'"><TD>'. $hp->purify($row['title'], CODENDI_PURIFIER_BASIC, $groupId).'</TD><TD>';
+                $html .= $hp->purify($row['location']);
+                $html .= '</TD>'.
+                '<TD>'.$uh->getDisplayNameFromUserId($row['user']).'</TD>'.
+                '<TD>'.format_date($GLOBALS['Language']->getText('system', 'datefmt'),$row['date']).'</TD>'.
+                '<TD align="center"><a href="" ><IMG SRC="'.util_get_image_theme("trash-x.png").'" BORDER=0 HEIGHT=16 WIDTH=16></a></TD></TR>';
+            }
+            $html .= '
+        </TABLE>'; 
+
+            $html .= '<div style="text-align:center" class="'. util_get_alt_row_color($i++) .'">';
+
+            if ($offset > 0) {
+                $html .=  '<a href="?group_id='.$groupId.'&offsetItem='.($offset -$limit).'">[ '.$GLOBALS['Language']->getText('plugin_docman', 'previous').'  ]</a>';
+                $html .= '&nbsp;';
+            }
+            if (($offset + $limit) < $nbItems) {
+                $html .= '&nbsp;';
+                $html .= '<a href="?group_id='.$groupId.'&offsetItem='.($offset+$limit).'">[ '.$GLOBALS['Language']->getText('plugin_docman', 'next').' ]</a>';
+            }
+            $html .= '</div>';
+            $html .= '<div style="text-align:center" class="'. util_get_alt_row_color($i++) .'">';
+            $html .=($offset +$i-3).'/'.$nbItems;
+            $html .= '</div>';
+
+        } else {
+            $html .= $GLOBALS['Response']->addFeedback('info',$GLOBALS['Language']->getText('plugin_docman', 'no_pending_versions'));
         }
+        return $html;
     }
 
     /**

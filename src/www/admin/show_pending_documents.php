@@ -3,89 +3,6 @@ require_once('pre.php');
 require_once('www/admin/admin_utils.php');
 require_once('common/event/EventManager.class.php');
 
-function showPendingVersions($params, $offsetVers, $limit) {
-    $hp = Codendi_HTMLPurifier::instance();
-
-    if ($params['nbVersions'] > 0) {
-
-        echo '<H3>'.$GLOBALS['Language']->getText('admin_show_pending_documents', 'deleted_version').'</H3><P>';
-        echo html_build_list_table_top ($params['tableVers']);
-        $i=1;
-
-        foreach ($params['versions'] as $row ){
-            echo '
-            <TR class="'. html_get_alt_row_color($i++) .'"><TD>'. $hp->purify($row['title'], CODENDI_PURIFIER_BASIC, $params['group_id']).'</TD><TD>';
-            echo $hp->purify($row['label']);
-            echo '</TD>'.
-                '<TD>'.$row['number'].'</TD>'.
-                '<TD>'.format_date($GLOBALS['Language']->getText('system', 'datefmt'),$row['date']).'</TD>'.
-                '<TD align="center"><a href="" ><IMG SRC="'.util_get_image_theme("trash-x.png").'" BORDER=0 HEIGHT=16 WIDTH=16></a></TD></TR>';
-        }
-        echo '
-        </TABLE>'; 
-
-        echo '<div style="text-align:center" class="'. util_get_alt_row_color($i++) .'">';
-
-        if ($offsetVers > 0) {
-            echo  '<a href="?group_id='.$params['group_id'].'&offsetVers='.($offsetVers -$limit).'">[ '.$GLOBALS['Language']->getText('admin_show_pending_documents', 'previous').'  ]</a>';
-            echo '&nbsp;';
-        }
-        if (($offsetVers + $limit) < $params['nbVersions']) {
-            echo '&nbsp;';
-            echo '<a href="?group_id='.$params['group_id'].'&offsetVers='.($offsetVers+$limit).'">[ '.$GLOBALS['Language']->getText('admin_show_pending_documents', 'next').' ]</a>';
-        }
-        echo '</div>';
-        echo '<div style="text-align:center" class="'. util_get_alt_row_color($i++) .'">';
-        echo ($offsetVers+$i-3).'/'.$params['nbVersions'];
-        echo '</div>';
-
-    } else {
-        $GLOBALS['Response']->addFeedback('info',$GLOBALS['Language']->getText('admin_show_pending_documents', 'no_pending_versions'));
-    }
-
-}
-
-function showPendingItems($params, $offsetItem, $limit) {
-    $hp = Codendi_HTMLPurifier::instance();
-    $uh = UserHelper::instance();
-
-    if ($params['nbItems'] > 0) {
-        echo '<H3>'.$GLOBALS['Language']->getText('admin_show_pending_documents', 'deleted_item').'</H3><P>';
-        echo html_build_list_table_top ($params['tableItem']);
-        $i=1;
-
-        foreach ($params['items'] as $row ){
-            echo '
-            <TR class="'. html_get_alt_row_color($i++) .'"><TD>'. $hp->purify($row['title'], CODENDI_PURIFIER_BASIC, $params['group_id']).'</TD><TD>';
-            echo $hp->purify($row['location']);
-            echo '</TD>'.
-                '<TD>'.$uh->getDisplayNameFromUserId($row['user']).'</TD>'.
-                '<TD>'.format_date($GLOBALS['Language']->getText('system', 'datefmt'),$row['date']).'</TD>'.
-                '<TD align="center"><a href="" ><IMG SRC="'.util_get_image_theme("trash-x.png").'" BORDER=0 HEIGHT=16 WIDTH=16></a></TD></TR>';
-        }
-        echo '
-        </TABLE>'; 
-
-        echo '<div style="text-align:center" class="'. util_get_alt_row_color($i++) .'">';
-
-        if ($offsetItem > 0) {
-            echo  '<a href="?group_id='.$params['group_id'].'&offsetItem='.($offsetItem -$limit).'">[ '.$GLOBALS['Language']->getText('admin_show_pending_documents', 'previous').'  ]</a>';
-            echo '&nbsp;';
-        }
-        if (($offsetItem + $limit) < $params['nbItems']) {
-            echo '&nbsp;';
-            echo '<a href="?group_id='.$params['group_id'].'&offsetItem='.($offsetItem+$limit).'">[ '.$GLOBALS['Language']->getText('admin_show_pending_documents', 'next').' ]</a>';
-        }
-        echo '</div>';
-        echo '<div style="text-align:center" class="'. util_get_alt_row_color($i++) .'">';
-        echo ($offsetItem+$i-3).'/'.$params['nbItems'];
-        echo '</div>';
-
-    } else {
-       $GLOBALS['Response']->addFeedback('info',$GLOBALS['Language']->getText('admin_show_pending_documents', 'no_pending_versions'));
-    }
-
-}
 site_admin_header(array('title'=>$GLOBALS['Language']->getText('admin_groupedit','title')));
 session_require(array('group'=>'1','admin_flags'=>'A'));
 $request = HTTPRequest::instance();
@@ -100,93 +17,43 @@ if($request->valid($vGroupId)) {
     exit_no_group();
 }
 
-$offsetVers = $request->getValidated('offsetVers', 'uint', 0);
-if ( !$offsetVers || $offsetVers < 0 ) {
-    $offsetVers = 0;
-}
-
-$offsetItem = $request->getValidated('offsetItem', 'uint', 0);
-if ( !$offsetItem || $offsetItem < 0 ) {
-    $offsetItem = 0;
-}
-$limit  = 10;
-
-$params = array('service' => &$service,
-                'group_id' => $group_id,
-                'limit' => $limit, 
-                'offsetVers' => $offsetVers,
-                'versions' => &$versions,
-                'nbVersions' =>  &$nbVersions,
-                'tableVers'=>&$tableVers,
-                'offsetItem' => $offsetItem,
-                'items' => &$items,
-                'nbItems' =>&$nbItems,
-                'tableItem'=>&$tableItem);
+$params = array('group_id' => $group_id,
+                'span' =>&$spanArray,
+                'html' => &$htmlArray
+);
 
 $em->processEvent('show_pending_documents', $params);
-if (isset($params['service']) && $params['service']) {
 ?>
 <FORM action="?" method="POST">
 <INPUT type="hidden" name="group_id" value="<?php print $group_id; ?>">
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <script type="text/javascript">
-        //<!--
-                function change_onglet(name)
-                {
-                        document.getElementById('onglet_'+anc_onglet).className = 'onglet_0 onglet';
-                        document.getElementById('onglet_'+name).className = 'onglet_1 onglet';
-                        document.getElementById('contenu_onglet_'+anc_onglet).style.display = 'none';
-                        document.getElementById('contenu_onglet_'+name).style.display = 'block';
-                        anc_onglet = name;
-                }
-        //-->
-        </script>
-    <link rel="stylesheet" type="text/css" href="/themes/common/css/style.css">
-</head>
-<body>
 <?php echo '<h3>'.$GLOBALS['Language']->getText('admin_show_pending_documents','pending_doc').'</h3>'; ?>
         <div class="systeme_onglets">
-        <div class="onglets">
-            <span class="onglet_0 onglet" id="onglet_version" onclick="javascript:change_onglet('version');"> <?php echo $GLOBALS['Language']->getText('admin_show_pending_documents','deleted_version'); ?></span>
-            <span class="onglet_0 onglet" id="onglet_item" onclick="javascript:change_onglet('item');"><?php echo $GLOBALS['Language']->getText('admin_show_pending_documents','deleted_item'); ?></span>
-        
-        </div>
-        <div class="contenu_onglets">
-            <div class="contenu_onglet" id="contenu_onglet_version">
-                <?php
-                if (isset($params['versions']) && $params['versions']) {
-                    showPendingVersions($params, $offsetVers, $limit);
-                } else {
-                    echo $GLOBALS['Language']->getText('admin_show_pending_documents', 'no_pending_versions');
+            <div class="onglets">
+            <?php
+            if (isset($params['span']) && $params['span']) {
+                foreach($params['span'] as $span){
+                    echo $span;
                 }
-                ?>
+            }
+            ?>
             </div>
-            
-            <div class="contenu_onglet" id="contenu_onglet_item">
-                <?php 
-                if (isset($params['items']) && $params['items']) {
-                    showPendingItems($params, $offsetItem, $limit);
-                } else {
-                    echo $GLOBALS['Language']->getText('admin_show_pending_documents', 'no_pending_items');
-                    
+            <div class="contenu_onglets">
+            <?php 
+            if (isset($params['html']) && $params['html']) {
+                foreach($params['html'] as $html) {
+                    echo $html;
                 }
-                ?> 
+            }
+            ?>
             </div>
-        </div>
-    </div>
-    <script type="text/javascript">
+         </div>
+         <script type='text/javascript'>
         //<!--
                 var anc_onglet = 'version';
                 change_onglet(anc_onglet);
         //-->
         </script>
-</body>
-</html>
 </FORM>
 <?php 
-}
 site_admin_footer(array());
 ?>

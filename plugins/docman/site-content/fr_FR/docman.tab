@@ -824,3 +824,9 @@ plugin_docman	restore_version	Restaurer la version
 plugin_docman	location	Chemin
 plugin_docman	owner	Propriétaire
 plugin_docman	restore_item	Restaurer l'item
+plugin_docman	deleted_version	Versions supprimées
+plugin_docman	no_pending_versions	Il n'existe pas de version en suspens.
+plugin_docman	deleted_item	Items supprimées
+plugin_docman	no_pending_items	Il n'existe pas d'item en suspens.
+plugin_docman	previous	Précédent
+plugin_docman	next	Suivant

@@ -825,3 +825,9 @@ plugin_docman	restore_version	Restore version
 plugin_docman	location	Location
 plugin_docman	owner	Owner
 plugin_docman	restore_item	Restore item
+plugin_docman	deleted_version	Deleted versions
+plugin_docman	no_pending_versions	There are no pending versions.
+plugin_docman	deleted_item	Deleted items
+plugin_docman	no_pending_items	There are no pending items.
+plugin_docman	previous	Previous
+plugin_docman	next	Next

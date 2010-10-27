@@ -438,10 +438,4 @@ admin_system_events	nobody	Personne
 #-----------------------------------------------
 # Script: SF/www/admin/show_pending_documents.php
 #
-admin_show_pending_documents	deleted_version	Versions supprimées
-admin_show_pending_documents	no_pending_versions	Il n'existe pas de version en suspens.
-admin_show_pending_documents	deleted_item	Items supprimées
-admin_show_pending_documents	no_pending_items	Il n'existe pas d'item en suspens.
-admin_show_pending_documents	previous	Précédent
-admin_show_pending_documents	next	Suivant
 admin_show_pending_documents	pending_doc	Les supprimés documents en suspens
