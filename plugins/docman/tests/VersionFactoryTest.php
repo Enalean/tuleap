@@ -23,6 +23,7 @@ require_once(dirname(__FILE__).'/../include/Docman_ItemFactory.class.php');
 
 Mock::generate('DataAccessResult');
 Mock::generate('Docman_VersionDao');
+Mock::generate('Docman_Version');
 Mock::generatePartial('Docman_VersionFactory', 'Docman_VersionFactoryTestVersion', array('purgeDeletedVersion', '_getVersionDao', '_purge'));
 
 class Docman_VersionFactoryTest extends UnitTestCase {
@@ -76,6 +77,21 @@ class Docman_VersionFactoryTest extends UnitTestCase {
         $this->assertTrue($versionFactory->PurgeDeletedVersions(1234567890));
     }
 
+    function testRestoreOneVersion() {
+        $versionFactory = new Docman_VersionFactoryTestVersion($this);
+        
+        $version = new MockDocman_Version($this);
+        $version->setReturnValue('getNumber', 2);
+        $version->setReturnValue('getItemId', 1664);
+
+        $dao = new MockDocman_VersionDao($this);
+        $dao->expectOnce('restore', array(1664, 2));
+        $dao->setReturnValue('restore', true);
+        $versionFactory->setReturnValue('_getVersionDao', $dao);
+        
+        $this->assertTrue($versionFactory->restore($version));
+    }
+    
 }
 
 ?>

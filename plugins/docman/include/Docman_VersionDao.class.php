@@ -271,7 +271,30 @@ class Docman_VersionDao extends DataAccessObject {
         }
         return false;
     }
-    
+
+    /**
+     * Restore one version of an item
+     * 
+     * @param Integer $itemId
+     * @param Integer $number
+     * 
+     * @return Boolean
+     */
+    function restore($itemId, $number) {
+        $sql = 'INSERT INTO plugin_docman_version (id, item_id, number, user_id, label, '.
+                        ' changelog, date,  '.
+                        ' filename, filesize, filetype, path) '.
+                        ' SELECT id, item_id, number, user_id, label, '.
+                        ' changelog, create_date, '.
+                        ' filename, filesize, filetype, path FROM plugin_docman_version_deleted '.
+                        ' WHERE item_id='.$this->da->quoteSmart($itemId).' AND number='.$this->da->quoteSmart($number);
+        if ($this->update($sql)) {
+            $sql= 'DELETE FROM plugin_docman_version_deleted WHERE item_id='.$this->da->quoteSmart($itemId).' AND number='.$this->da->quoteSmart($number);
+            return $this->update($sql);
+        }
+        return false;
+    }
+
     /**
      * List pending versions ( marked as deleted but not physically removed yet)
      * in order to ease the restore

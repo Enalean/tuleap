@@ -129,6 +129,19 @@ class Docman_VersionFactory {
         return false;
     }
 
+
+    /**
+     * Restore one version
+     * 
+     * @param Docman_Version $version
+     * 
+     * @return Boolean
+     */
+    public function restore($version) {
+        $dao = $this->_getVersionDao();
+        return $dao->restore($version->getItemId(), $version->getNumber());
+    }
+
     /**
      * @param  String  $docman_path
      * @param  Project $project
