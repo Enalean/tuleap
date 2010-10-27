@@ -327,6 +327,9 @@ class BackendSystem extends Backend {
         system("find $delete_dir -mindepth 1 -type d -empty -exec rm -R {} \\;");
         // }}} /!\ WARNING HACK /!\
 
+        $em = EventManager::instance();
+        $em->processEvent('backend_system_purge_files', array('time' => $time));
+
         return $status;
     }
 
