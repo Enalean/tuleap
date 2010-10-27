@@ -26,7 +26,6 @@ class Docman_ActionsDeleteVisitor /* implements Visitor */ {
     function Docman_ActionsDeleteVisitor(&$file_storage, &$docman) {
         //More coherent to have only one delete date for a whole hierarchy.
         $this->deleteDate   = time();
-        $this->file_storage =& $file_storage;
         $this->docman       =& $docman;
     }
     
@@ -210,7 +209,6 @@ class Docman_ActionsDeleteVisitor /* implements Visitor */ {
 
         // Proceed to deletion
         $version_factory = $this->_getVersionFactory();
-        $this->file_storage->delete($version->getPath());
         return $version_factory->deleteSpecificVersion($item, $version->getNumber());
     }
 
