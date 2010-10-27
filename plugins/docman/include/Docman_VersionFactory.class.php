@@ -41,7 +41,19 @@ class Docman_VersionFactory {
         }
         return $this->dao;
     }
-    
+
+    function _getEventManager() {
+        return EventManager::instance();
+    }
+
+    function _getItemFactory() {
+        return new Docman_ItemFactory();
+    }
+
+    function _getUserManager() {
+        return UserManager::instance();
+    }
+
     function getAllVersionForItem(&$item) {
         $dao =& $this->_getVersionDao();
         $dar = $dao->searchByItemId($item->getId());
@@ -143,7 +155,22 @@ class Docman_VersionFactory {
         if ($dar && !$dar->isError()) {
             $row = $dar->getRow();
             if (!$row['purge_date']) {
-                return $dao->restore($version->getItemId(), $version->getNumber());
+                if ($dao->restore($version->getItemId(), $version->getNumber())) {
+                    // Log the event
+                    $item  = $this->_getItemFactory()->getItemFromDb($version->getItemId());
+                    $user  = $this->_getUserManager()->getCurrentUser();
+                    $value = $version->getNumber();
+                    if ($row['label'] !== '') {
+                        $value .= ' ('.$row['label'].')';
+                    }
+                    $this->_getEventManager()->processEvent('plugin_docman_event_restore_version', array(
+                          'group_id'   => $item->getGroupId(),
+                          'item'       => $item,
+                          'old_value'  => $value,
+                          'user'       => $user)
+                    );
+                    return true;
+                }
             }
         }
         return false;

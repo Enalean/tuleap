@@ -21,10 +21,19 @@
 
 require_once(dirname(__FILE__).'/../include/Docman_ItemFactory.class.php');
 
+require_once('common/event/EventManager.class.php');
+Mock::generate('EventManager');
+
+Mock::generate('UserManager');
+Mock::generate('User');
+
 Mock::generate('DataAccessResult');
 Mock::generate('Docman_VersionDao');
 Mock::generate('Docman_Version');
-Mock::generatePartial('Docman_VersionFactory', 'Docman_VersionFactoryTestVersion', array('purgeDeletedVersion', '_getVersionDao', '_purge'));
+Mock::generate('Docman_ItemFactory');
+Mock::generate('Docman_File');
+
+Mock::generatePartial('Docman_VersionFactory', 'Docman_VersionFactoryTestVersion', array('purgeDeletedVersion', '_getVersionDao', '_purge', '_getEventManager', '_getItemFactory', '_getUserManager'));
 
 class Docman_VersionFactoryTest extends UnitTestCase {
 
@@ -84,9 +93,24 @@ class Docman_VersionFactoryTest extends UnitTestCase {
 
         $dar = new MockDataAccessResult($this);
         $dar->setReturnValue('isError', false);
-        $dar->setReturnValue('getRow', array('purge_date' => null));
+        $dar->setReturnValue('getRow', array('purge_date' => null, 'label' => 'Ho hisse la saucisse'));
         $dao->expectOnce('searchDeletedVersion', array(1664, 2));
         $dao->setReturnValue('searchDeletedVersion', $dar);
+
+        $file = new MockDocman_File($this);
+        $file->setReturnValue('getGroupId', 114);
+        $if = new MockDocman_ItemFactory($this);
+        $if->setReturnValue('getItemFromDb', $file);
+        $versionFactory->setReturnValue('_getItemFactory', $if);
+        
+        $user = new MockUser($this);
+        $um   = new MockUserManager($this);
+        $um->setReturnValue('getCurrentUser', $user);
+        $versionFactory->setReturnValue('_getUserManager', $um);
+        
+        $em = new MockEventManager($this);
+        $em->expectOnce('processEvent', array('plugin_docman_event_restore_version', array('group_id' => 114, 'item' => $file, 'old_value' => '2 (Ho hisse la saucisse)', 'user' => $user)));
+        $versionFactory->setReturnValue('_getEventManager', $em);
 
         $dao->expectOnce('restore', array(1664, 2));
         $dao->setReturnValue('restore', true);
@@ -109,6 +133,10 @@ class Docman_VersionFactoryTest extends UnitTestCase {
         $dao->expectOnce('searchDeletedVersion', array(1664, 2));
         $dao->setReturnValue('searchDeletedVersion', $dar);
 
+        $em = new MockEventManager($this);
+        $em->expectNever('processEvent', array('plugin_docman_event_restore_version'));
+        $versionFactory->setReturnValue('_getEventManager', $em);
+        
         $dao->expectNever('restore');
 
         $version = new MockDocman_Version($this);
