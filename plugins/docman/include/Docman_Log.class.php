@@ -55,6 +55,12 @@ class Docman_Log { /* implements EventListener */
             case PLUGIN_DOCMAN_EVENT_SET_VERSION_DATE:
                 $this->dao->create($params['group_id'], $params['item']->getId(), $params['user']->getId(), $event, null, $params['new_value']);
                 break;
+            case PLUGIN_DOCMAN_EVENT_RESTAURE:
+                $this->dao->create($params['group_id'], $params['item']->getId(), $params['user']->getId(), $event, null, null);
+                break;
+            case PLUGIN_DOCMAN_EVENT_RESTAURE_VERSION:
+                $this->dao->create($params['group_id'], $params['item']->getId(), $params['user']->getId(), $event, $params['old_value'], null);
+                break;
             default:
                 $this->dao->create($params['group_id'], $params['item']->getId(), $params['user']->getId(), $event);
                 break;
@@ -162,6 +168,11 @@ class Docman_Log { /* implements EventListener */
                             $html .= '<td>'. $this->getText($row['type']) .'</td>';
                             $html .= '<td colspan="2" align="center">'.$old_version.'</td>';
                         }
+                        elseif ($row['type'] == PLUGIN_DOCMAN_EVENT_RESTAURE_VERSION) {
+                            $old_version = $row['old_value'];
+                            $html .= '<td>'. $this->getText($row['type']) .'</td>';
+                            $html .= '<td colspan="2" align="center">'.$old_version.'</td>';
+                        }
                         else {
                             $html .= '<td colspan>'. $this->getText($row['type']) .'</td><td colspan="2">&nbsp;</td>';
                         }
@@ -218,6 +229,12 @@ class Docman_Log { /* implements EventListener */
                 break;
             case PLUGIN_DOCMAN_EVENT_SET_VERSION_DATE:
                 $txt = $GLOBALS['Language']->getText('plugin_docman', 'event_set_version_date');    
+                break;
+            case PLUGIN_DOCMAN_EVENT_RESTAURE:
+                $txt = $GLOBALS['Language']->getText('plugin_docman', 'event_restaure');
+                break;
+            case PLUGIN_DOCMAN_EVENT_RESTAURE_VERSION:
+                $txt = $GLOBALS['Language']->getText('plugin_docman', 'event_restaure_version');
                 break;
             case PLUGIN_DOCMAN_EVENT_LOCK_ADD:
                 $txt = $GLOBALS['Language']->getText('plugin_docman', 'event_lock_add');
