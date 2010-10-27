@@ -16,6 +16,17 @@
  */
 define('MEMCACHE_OBJECT_MAP', 'memcache_objectmap');
 
+/**
+ * memcache cache handler function
+ *
+ * @param string $action cache action
+ * @param mixed $smarty_obj smarty object
+ * @param string $cache_content content to store/load
+ * @param string $tpl_file template file
+ * @param string $cache_id cache id
+ * @param string $compile_id compile id
+ * @param int $exp_time expiration time
+ */
 function memcache_cache_handler($action, &$smarty_obj, &$cache_content, $tpl_file = null, $cache_id = null, $compile_id = null, $exp_time = null)
 {
 	$memObj = GitPHP_Memcache::GetInstance();
