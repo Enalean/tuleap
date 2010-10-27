@@ -154,7 +154,7 @@ class Docman_VersionFactory {
         $dar = $dao->searchDeletedVersion($version->getItemId(), $version->getNumber());
         if ($dar && !$dar->isError()) {
             $row = $dar->getRow();
-            if (!$row['purge_date']) {
+            if (!$row['purge_date'] && file_exists($row['path'])) {
                 if ($dao->restore($version->getItemId(), $version->getNumber())) {
                     // Log the event
                     $item  = $this->_getItemFactory()->getItemFromDb($version->getItemId());

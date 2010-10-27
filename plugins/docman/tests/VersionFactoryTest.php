@@ -87,13 +87,15 @@ class Docman_VersionFactoryTest extends UnitTestCase {
     }
 
     function testRestoreOneVersion() {
+        $filePath       = dirname(__FILE__).'/_fixtures/version.test';
+        touch($filePath);
         $versionFactory = new Docman_VersionFactoryTestVersion($this);
         $dao            = new MockDocman_VersionDao($this);
         $versionFactory->setReturnValue('_getVersionDao', $dao);
 
         $dar = new MockDataAccessResult($this);
         $dar->setReturnValue('isError', false);
-        $dar->setReturnValue('getRow', array('purge_date' => null, 'label' => 'Ho hisse la saucisse'));
+        $dar->setReturnValue('getRow', array('purge_date' => null, 'label' => 'Ho hisse la saucisse', 'path' => $filePath));
         $dao->expectOnce('searchDeletedVersion', array(1664, 2));
         $dao->setReturnValue('searchDeletedVersion', $dar);
 
@@ -120,16 +122,44 @@ class Docman_VersionFactoryTest extends UnitTestCase {
         $version->setReturnValue('getItemId', 1664);
 
         $this->assertTrue($versionFactory->restore($version));
+        unlink($filePath);
     }
 
-    function testRestoreOneVersionAlreadyPurged() {
+    function testRestoreOneVersionButFileIsDeleted() {
+        $filePath       = dirname(__FILE__).'/_fixtures/version.test';
         $versionFactory = new Docman_VersionFactoryTestVersion($this);
         $dao            = new MockDocman_VersionDao($this);
         $versionFactory->setReturnValue('_getVersionDao', $dao);
 
         $dar = new MockDataAccessResult($this);
         $dar->setReturnValue('isError', false);
-        $dar->setReturnValue('getRow', array('purge_date' => 1234567890));
+        $dar->setReturnValue('getRow', array('purge_date' => null, 'path' => $filePath));
+        $dao->expectOnce('searchDeletedVersion', array(1664, 2));
+        $dao->setReturnValue('searchDeletedVersion', $dar);
+
+        $em = new MockEventManager($this);
+        $em->expectNever('processEvent', array('plugin_docman_event_restore_version'));
+        $versionFactory->setReturnValue('_getEventManager', $em);
+
+        $dao->expectNever('restore', array(1664, 2));
+
+        $version = new MockDocman_Version($this);
+        $version->setReturnValue('getNumber', 2);
+        $version->setReturnValue('getItemId', 1664);
+        $version->setReturnValue('getPath', $filePath);
+
+        $this->assertFalse($versionFactory->restore($version));
+    }
+
+    function testRestoreOneVersionAlreadyPurged() {
+        $filePath       = dirname(__FILE__).'/_fixtures/version.test';
+        $versionFactory = new Docman_VersionFactoryTestVersion($this);
+        $dao            = new MockDocman_VersionDao($this);
+        $versionFactory->setReturnValue('_getVersionDao', $dao);
+
+        $dar = new MockDataAccessResult($this);
+        $dar->setReturnValue('isError', false);
+        $dar->setReturnValue('getRow', array('purge_date' => 1234567890, 'path' => $filePath));
         $dao->expectOnce('searchDeletedVersion', array(1664, 2));
         $dao->setReturnValue('searchDeletedVersion', $dar);
 
@@ -145,6 +175,7 @@ class Docman_VersionFactoryTest extends UnitTestCase {
 
         $this->assertFalse($versionFactory->restore($version));
     }
+
 }
 
 ?>
