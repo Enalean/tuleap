@@ -168,7 +168,7 @@ Plugin to access to file releases & docman though WebDAV
 %package theme-codex
 Summary: Codex theme for Codendi
 Group: Development/Tools
-Version: 1.0
+Version: @@THEME_CODEX_VERSION@@
 Release: 1%{?dist}
 Requires: %{name} >= %{version}
 Provides: codendi-theme-codex = %{version}
@@ -178,7 +178,7 @@ Original theme for Codendi
 %package theme-codextab
 Summary: CodexTab theme for Codendi
 Group: Development/Tools
-Version: 1.0
+Version: @@THEME_CODEXTAB_VERSION@@
 Release: 1%{?dist}
 Requires: %{name} >= %{version}
 Provides: codendi-theme-codextab = %{version}
@@ -188,7 +188,7 @@ CodexTab theme for Codendi
 %package theme-dawn
 Summary: Dawn theme for Codendi
 Group: Development/Tools
-Version: 1.0
+Version: @@THEME_DAWN_VERSION@@
 Release: 1%{?dist}
 Requires: %{name} >= %{version}
 Provides: codendi-theme-dawn = %{version}
@@ -198,7 +198,7 @@ Dawn theme for Codendi
 %package theme-savannah
 Summary: Savannah theme for Codendi
 Group: Development/Tools
-Version: 1.0
+Version: @@THEME_SAVANNAH_VERSION@@
 Release: 1%{?dist}
 Requires: %{name} >= %{version}
 Provides: codendi-theme-savannah = %{version}
@@ -208,7 +208,7 @@ Savannah theme for Codendi
 %package theme-sttab
 Summary: STTab theme for Codendi
 Group: Development/Tools
-Version: 1.0
+Version: @@THEME_STTAB_VERSION@@
 Release: 1%{?dist}
 Requires: %{name} >= %{version}
 Provides: codendi-theme-sttab = %{version}
@@ -218,7 +218,7 @@ STMicroelectronics theme for Codendi
 %package theme-codexstn
 Summary: CodexSTN theme for Codendi
 Group: Development/Tools
-Version: 1.0
+Version: @@THEME_CODEXSTN_VERSION@@
 Release: 1%{?dist}
 Requires: %{name} >= %{version}
 Provides: codendi-theme-codexstn = %{version}
@@ -228,7 +228,7 @@ ST-Ericsson theme for Codendi
 %package theme-steerforge
 Summary: SteerForge theme for Codendi
 Group: Development/Tools
-Version: 1.0
+Version: @@THEME_STEERFORGE_VERSION@@
 Release: 1%{?dist}
 Requires: %{name} >= %{version}
 Provides: codendi-theme-steerforge = %{version}
