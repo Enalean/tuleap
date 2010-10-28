@@ -817,6 +817,7 @@ plugin_docman	widget_my_docman_search_btn	Search
 
 plugin_docman	name_validity	A directory already exists with this name under docman
 
+plugin_docman	item_id	Item Id
 plugin_docman	doc_title	Document title
 plugin_docman	label	Version label
 plugin_docman	number	Version number

@@ -516,6 +516,7 @@ class DocmanPlugin extends Plugin {
 
         $html ='';
         $title =array();
+        $title[] = $GLOBALS['Language']->getText('plugin_docman','item_id');
         $title[] = $GLOBALS['Language']->getText('plugin_docman','doc_title');
         $title[] = $GLOBALS['Language']->getText('plugin_docman','label');
         $title[] = $GLOBALS['Language']->getText('plugin_docman','number');
@@ -529,15 +530,15 @@ class DocmanPlugin extends Plugin {
             $i=1;
 
             foreach ($versions as $row ){
-                $html .= '<TR class="'. html_get_alt_row_color($i++) .'"><TD>'. $hp->purify($row['title'], CODENDI_PURIFIER_BASIC, $groupId).'</TD><TD>';
-                $html .= $hp->purify($row['label']);
-                $html .= '</TD>'.
-                '<TD>'.$row['number'].'</TD>'.
-                '<TD>'.format_date($GLOBALS['Language']->getText('system', 'datefmt'),$row['date']).'</TD>'.
-                '<TD align="center"><a href="/plugins/docman/restore_documents.php?group_id='.$groupId.'&func=confirm_restore_version&id='.$row['id'].'&item_id='.$row['item_id'].'" ><IMG SRC="'.util_get_image_theme("trash-x.png").'" onClick="return confirm(\'Confirm restore of this version\')" BORDER=0 HEIGHT=16 WIDTH=16></a></TD></TR>';
+                $html .= '<tr class="'. html_get_alt_row_color($i++) .'">'.
+                '<td>'.$row['item_id'].'</td>'.
+                '<td>'.$hp->purify($row['title'], CODENDI_PURIFIER_BASIC, $groupId).'</td>'.
+                '<td>'.$hp->purify($row['label']).'</td>'.
+                '<td>'.$row['number'].'</td>'.
+                '<td>'.format_date($GLOBALS['Language']->getText('system', 'datefmt'),$row['date']).'</td>'.
+                '<td align="center"><a href="/plugins/docman/restore_documents.php?group_id='.$groupId.'&func=confirm_restore_version&id='.$row['id'].'&item_id='.$row['item_id'].'" ><IMG SRC="'.util_get_image_theme("trash-x.png").'" onClick="return confirm(\'Confirm restore of this version\')" BORDER=0 HEIGHT=16 WIDTH=16></a></td></tr>';
             }
-            $html .= '
-        </TABLE>'; 
+            $html .= '</TABLE>'; 
 
 
             echo '<div style="text-align:center" class="'. util_get_alt_row_color($i++) .'">';
@@ -564,7 +565,8 @@ class DocmanPlugin extends Plugin {
         $uh = UserHelper::instance();
 
         $html ='';
-        $title =array();        
+        $title =array();
+        $title[] = $GLOBALS['Language']->getText('plugin_docman','item_id');
         $title[] = $GLOBALS['Language']->getText('plugin_docman','doc_title');
         $title[] = $GLOBALS['Language']->getText('plugin_docman','location');
         $title[] = $GLOBALS['Language']->getText('plugin_docman','owner');
@@ -578,12 +580,13 @@ class DocmanPlugin extends Plugin {
             $i=1;
             foreach ($res as $row ){
 
-                $html .='<TR class="'. html_get_alt_row_color($i++) .'"><TD>'. $hp->purify($row['title'], CODENDI_PURIFIER_BASIC, $groupId).'</TD><TD>';
-                $html .= $hp->purify($row['location']);
-                $html .= '</TD>'.
-                '<TD>'.$uh->getDisplayNameFromUserId($row['user']).'</TD>'.
-                '<TD>'.format_date($GLOBALS['Language']->getText('system', 'datefmt'),$row['date']).'</TD>'.
-                '<TD align="center"><a href="/plugins/docman/restore_documents.php?group_id='.$groupId.'&func=confirm_restore_item&id='.$row['id'].'" ><IMG SRC="'.util_get_image_theme("trash-x.png").'" onClick="return confirm(\'Confirm restore of this item\')" BORDER=0 HEIGHT=16 WIDTH=16></a></TD></TR>';
+                $html .='<tr class="'. html_get_alt_row_color($i++) .'">'.
+                '<td>'.$row['id'].'</td>'.
+                '<td>'. $hp->purify($row['title'], CODENDI_PURIFIER_BASIC, $groupId).'</td>'.
+                '<td>'.$hp->purify($row['location']).'</td>'.
+                '<td>'.$uh->getDisplayNameFromUserId($row['user']).'</td>'.
+                '<td>'.format_date($GLOBALS['Language']->getText('system', 'datefmt'),$row['date']).'</td>'.
+                '<td align="center"><a href="/plugins/docman/restore_documents.php?group_id='.$groupId.'&func=confirm_restore_item&id='.$row['id'].'" ><IMG SRC="'.util_get_image_theme("trash-x.png").'" onClick="return confirm(\'Confirm restore of this item\')" BORDER=0 HEIGHT=16 WIDTH=16></a></td></tr>';
             }
             $html .= '</TABLE>'; 
 
