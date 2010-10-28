@@ -25,7 +25,9 @@ require_once(dirname(__FILE__).'/../include/Docman_ItemFactory.class.php');
 
 Mock::generate('DataAccessResult');
 Mock::generate('Docman_ItemDao');
+Mock::generate('Docman_Folder');
 Mock::generatePartial('Docman_ItemFactory', 'Docman_ItemFactoryTestVersion', array('_getItemDao', 'purgeDeletedItem'));
+Mock::generatePartial('Docman_ItemFactory', 'Docman_ItemFactoryTestRestore', array('_getItemDao'));
 
 class Docman_ItemFactoryTest extends UnitTestCase {
 
@@ -307,5 +309,19 @@ class Docman_ItemFactoryTest extends UnitTestCase {
         $this->assertTrue($itemFactory->PurgeDeletedItems(1234567890));
     }
 
+    function testRestoreDeletedItemNonFile() {
+        $itemFactory = new Docman_ItemFactoryTestRestore($this);
+        
+        $dao = new MockDocman_ItemDao($this);
+        $dao->expectOnce('restore', array(112));
+        $dao->setReturnValue('restore', true);
+        $itemFactory->setReturnValue('_getItemDao', $dao);
+        
+        $item = new MockDocman_Folder($this);
+        $item->setReturnValue('getId', 112);
+        
+        $this->assertTrue($itemFactory->restore($item));
+    }
+    
 }
 ?>

@@ -1124,6 +1124,17 @@ class Docman_ItemFactory {
             return $dao->setPurgeDate($item->getId(), time());
     }
 
+    /**
+     * Restore on item
+     * 
+     * @param Docman_Item $item
+     * 
+     * @return Boolean
+     */
+    public function restore($item) {
+        $dao = $this->_getItemDao();
+        return $dao->restore($item->getId());
+    }
 }
 
 ?>

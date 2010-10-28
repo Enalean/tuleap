@@ -882,6 +882,24 @@ class Docman_ItemDao extends DataAccessObject {
         return $this->update($sql);
     }
 
+    /**
+     * Restore one item
+     * 
+     * @param Integer $itemId
+     * 
+     * @return Boolean
+     */
+    public function restore($itemId) {
+        $sql = 'UPDATE plugin_docman_item'.
+               ' SET delete_date = NULL'.
+               ' WHERE item_id = '.$this->da->escapeInt($itemId);
+        if ($this->update($sql)) {
+            $sql = 'DELETE FROM plugin_docman_item_deleted'.
+                   ' WHERE item_id = '.$this->da->escapeInt($itemId);
+            return $this->update($sql);
+        }
+        return true;
+    }
 }
 
 ?>
