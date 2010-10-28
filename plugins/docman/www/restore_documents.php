@@ -44,7 +44,7 @@ if ($request->existAndNonEmpty('func')) {
             $item = $itemFactory->getItemFromDb($request->get('id'), array('ignore_deleted' => true));
             if ($itemFactory->restore($item)) {
                 $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_docman', 'item_restored'), CODENDI_PURIFIER_DISABLED);
-                $GLOBALS['Response']->redirect('/plugins/docman/?group_id='.$request->get('group_id'));
+                $GLOBALS['Response']->redirect('/admin/show_pending_documents.php?group_id='.$request->get('group_id'));
             } else {
                 exit_error($Language->getText('plugin_docman', 'error'),$Language->getText('plugin_docman','item_not_restored'));
             }
@@ -55,7 +55,7 @@ if ($request->existAndNonEmpty('func')) {
             $version = $versionFactory->getSpecificVersionById($request->get('id'));
             if ($versionFactory->restore($version)) {
                 $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_docman', 'version_restored'), CODENDI_PURIFIER_DISABLED);
-                $GLOBALS['Response']->redirect('index.php?group_id='.$request->get('group_id').'&id='.$request->get('item_id').'&action=details&section=history');
+                $GLOBALS['Response']->redirect('/admin/show_pending_documents.php?group_id='.$request->get('group_id'));
             } else {
                 exit_error($Language->getText('plugin_docman', 'error'),$Language->getText('plugin_docman','version_not_restored'));
             }
@@ -66,6 +66,4 @@ if ($request->existAndNonEmpty('func')) {
     }
     exit;
 }
-$HTML->header(array('title'=>''));
-
 ?>
