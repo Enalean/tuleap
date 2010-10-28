@@ -331,13 +331,13 @@ class Docman_VersionDao extends DataAccessObject {
     }
 
     /**
-     * List versions of the item that are not deleted
+     * List versions of the item that are deleted but not already purged
      *
      * @param Integer $itemId
      *
      * @return Boolean
      */
-    function listVersionsToDeleteByItemId($itemId) {
+    function listVersionsToPurgeByItemId($itemId) {
         $sql = 'SELECT v.id, v.number, v.item_id, v.user_id, v.label, v.changelog,'.
                ' v.create_date as date, v.filename, v.filesize, v.filetype, v.path '.
                ' FROM plugin_docman_version_deleted v '.

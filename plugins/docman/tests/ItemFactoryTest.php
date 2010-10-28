@@ -358,8 +358,8 @@ class Docman_ItemFactoryTest extends UnitTestCase {
         $v2 = new MockDocman_Version($this);
         
         $versionFactory = new MockDocman_VersionFactory($this);
-        $versionFactory->expectOnce('listVersionsToDeleteForItem', array($item));
-        $versionFactory->setReturnValue('listVersionsToDeleteForItem', array($v1, $v2));
+        $versionFactory->expectOnce('listVersionsToPurgeForItem', array($item));
+        $versionFactory->setReturnValue('listVersionsToPurgeForItem', array($v1, $v2));
         $versionFactory->expectAt(0, 'restore', array($v1));
         $versionFactory->expectAt(1, 'restore', array($v2));
         $versionFactory->setReturnValue('restore', true);
@@ -390,8 +390,8 @@ class Docman_ItemFactoryTest extends UnitTestCase {
         $itemFactory->setReturnValue('_getItemDao', $dao);
         
         $versionFactory = new MockDocman_VersionFactory($this);
-        $versionFactory->expectOnce('listVersionsToDeleteForItem', array($item));
-        $versionFactory->setReturnValue('listVersionsToDeleteForItem', false);
+        $versionFactory->expectOnce('listVersionsToPurgeForItem', array($item));
+        $versionFactory->setReturnValue('listVersionsToPurgeForItem', false);
         $versionFactory->expectNever('restore');
         $itemFactory->setReturnValue('_getVersionFactory', $versionFactory);
 
@@ -418,8 +418,8 @@ class Docman_ItemFactoryTest extends UnitTestCase {
         $v2 = new MockDocman_Version($this);
 
         $versionFactory = new MockDocman_VersionFactory($this);
-        $versionFactory->expectOnce('listVersionsToDeleteForItem', array($item));
-        $versionFactory->setReturnValue('listVersionsToDeleteForItem', array($v1, $v2));
+        $versionFactory->expectOnce('listVersionsToPurgeForItem', array($item));
+        $versionFactory->setReturnValue('listVersionsToPurgeForItem', array($v1, $v2));
         $versionFactory->expectAt(0, 'restore', array($v1));
         $versionFactory->setReturnValueAt(0, 'restore', true);
         $versionFactory->expectAt(1, 'restore', array($v2));
@@ -454,8 +454,8 @@ class Docman_ItemFactoryTest extends UnitTestCase {
         $v2 = new MockDocman_Version($this);
 
         $versionFactory = new MockDocman_VersionFactory($this);
-        $versionFactory->expectOnce('listVersionsToDeleteForItem', array($item));
-        $versionFactory->setReturnValue('listVersionsToDeleteForItem', array($v1, $v2));
+        $versionFactory->expectOnce('listVersionsToPurgeForItem', array($item));
+        $versionFactory->setReturnValue('listVersionsToPurgeForItem', array($v1, $v2));
         $versionFactory->expectAt(0, 'restore', array($v1));
         $versionFactory->setReturnValueAt(0, 'restore', false);
         $versionFactory->expectAt(1, 'restore', array($v2));

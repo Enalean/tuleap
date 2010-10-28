@@ -1151,7 +1151,7 @@ class Docman_ItemFactory {
         if ($type == PLUGIN_DOCMAN_ITEM_TYPE_FILE || $type == PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE) {
             $isFile      = true;
             $vf          = $this->_getVersionFactory();
-            $versions    = $vf->listVersionsToDeleteForItem($item);
+            $versions    = $vf->listVersionsToPurgeForItem($item);
             if ($versions) {
                 foreach ($versions as $version) {
                     $oneRestored |= $vf->restore($version);

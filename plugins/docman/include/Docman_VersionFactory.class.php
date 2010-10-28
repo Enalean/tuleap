@@ -210,15 +210,15 @@ class Docman_VersionFactory {
     }
 
     /**
-     * List versions of the item that are not deleted
+     * List versions of the item that are deleted but not already purged
      *
      * @param Docman_Item $item
      *
      * @return Array()
      */
-    function listVersionsToDeleteForItem($item) {
+    function listVersionsToPurgeForItem($item) {
         $dao = $this->_getVersionDao();
-        $dar = $dao->listVersionsToDeleteByItemId($item->getId());
+        $dar = $dao->listVersionsToPurgeByItemId($item->getId());
         if ($dar && !$dar->isError() && $dar->rowCount() > 0) {
             $list = array();
             foreach ($dar as $row) {
