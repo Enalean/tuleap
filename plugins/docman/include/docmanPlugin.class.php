@@ -504,11 +504,6 @@ class DocmanPlugin extends Plugin {
             $params['nom'][]= $GLOBALS['Language']->getText('plugin_docman','deleted_item');
             $params['html'][]= $html;
         }
-        if ($offsetItem > 0 ){
-            $params['focus'] = 'item';
-        } else {
-            $params['focus'] = 'version';
-        }
     }
     
     function showPendingVersions($versions, $groupId, $nbVersions, $offset, $limit) {
@@ -544,12 +539,12 @@ class DocmanPlugin extends Plugin {
             echo '<div style="text-align:center" class="'. util_get_alt_row_color($i++) .'">';
 
             if ($offset > 0) {
-                $html .=  '<a href="?group_id='.$groupId.'&offsetVers='.($offset -$limit).'">[ '.$GLOBALS['Language']->getText('plugin_docman', 'previous').'  ]</a>';
+                $html .=  '<a href="?group_id='.$groupId.'&focus=version&offsetVers='.($offset -$limit).'">[ '.$GLOBALS['Language']->getText('plugin_docman', 'previous').'  ]</a>';
                 $html .= '&nbsp;';
             }
             if (($offset + $limit) < $nbVersions) {
                 $html .= '&nbsp;';
-                $html .='<a href="?group_id='.$groupId.'&offsetVers='.($offset+$limit).'">[ '.$GLOBALS['Language']->getText('plugin_docman', 'next').' ]</a>';
+                $html .='<a href="?group_id='.$groupId.'&focus=version&offsetVers='.($offset+$limit).'">[ '.$GLOBALS['Language']->getText('plugin_docman', 'next').' ]</a>';
             }
             $html .='<br>'.($offset+$i-2).'/'.$nbVersions.'</br>';
             $html .= '</div>';
@@ -593,12 +588,12 @@ class DocmanPlugin extends Plugin {
             $html .= '<div style="text-align:center" class="'. util_get_alt_row_color($i++) .'">';
 
             if ($offset > 0) {
-                $html .=  '<a href="?group_id='.$groupId.'&offsetItem='.($offset -$limit).'">[ '.$GLOBALS['Language']->getText('plugin_docman', 'previous').'  ]</a>';
+                $html .=  '<a href="?group_id='.$groupId.'&focus=item&offsetItem='.($offset -$limit).'">[ '.$GLOBALS['Language']->getText('plugin_docman', 'previous').'  ]</a>';
                 $html .= '&nbsp;';
             }
             if (($offset + $limit) < $nbItems) {
                 $html .= '&nbsp;';
-                $html .= '<a href="?group_id='.$groupId.'&offsetItem='.($offset+$limit).'">[ '.$GLOBALS['Language']->getText('plugin_docman', 'next').' ]</a>';
+                $html .= '<a href="?group_id='.$groupId.'&focus=item&offsetItem='.($offset+$limit).'">[ '.$GLOBALS['Language']->getText('plugin_docman', 'next').' ]</a>';
             }
             $html .='<br>'.($offset +$i-2).'/'.$nbItems.'</br>';
             $html .= '</div>';

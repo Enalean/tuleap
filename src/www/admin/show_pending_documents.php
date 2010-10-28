@@ -7,6 +7,8 @@ site_admin_header(array('title'=>$GLOBALS['Language']->getText('admin_groupedit'
 session_require(array('group'=>'1','admin_flags'=>'A'));
 $request = HTTPRequest::instance();
 $em = EventManager::instance();
+$pm = ProjectManager::instance();
+
 
 // Check if group_id is valid
 $vGroupId = new Valid_GroupId();
@@ -15,6 +17,11 @@ if($request->valid($vGroupId)) {
     $group_id = $request->get('group_id');
 } else {
     exit_no_group();
+}
+
+$focus = $request->get('focus');
+if (!$focus) {
+    $focus ='frs_file';
 }
 
 $idArray   = array();
@@ -47,7 +54,7 @@ $htmlArray[] = $html;
 $params = array('group_id' => $group_id,
                 'id' =>&$idArray,
                'nom'=>&$nomArray,
-               'focus' =>&$focus,
+               'focus' =>$focus,
                'html' => &$htmlArray
 );
 $em->processEvent('show_pending_documents', $params);
@@ -55,7 +62,8 @@ $params['focus'] = 'frs_file';
 ?>
 <FORM action="?" method="POST">
 <INPUT type="hidden" name="group_id" value="<?php print $group_id; ?>">
-<?php echo '<h3>'.$GLOBALS['Language']->getText('admin_show_pending_documents','pending_doc').'</h3>'; ?>
+<?php $project = $pm->getProject($group_id,false,true);
+echo '<h3>'.$GLOBALS['Language']->getText('admin_show_pending_documents','pending_doc', array ($group_id, $project->getUnixName())).'</h3>'; ?>
         <div class="systeme_onglets">
             <div class="onglets">
             <?php
@@ -98,7 +106,7 @@ $GLOBALS['HTML']->includeFooterJavascriptSnippet('
                         e.stop();
                     });
                 });
-                var anc_onglet = \''.$params['focus'].'\';
+                var anc_onglet = \''.$focus.'\';
                 change_onglet(anc_onglet);
 ');
 

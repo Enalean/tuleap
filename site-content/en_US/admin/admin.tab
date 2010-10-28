@@ -447,5 +447,6 @@ admin_system_events	nobody	Nobody
 #-----------------------------------------------
 # Script: SF/www/admin/show_pending_documents.php
 #
-admin_show_pending_documents	pending_doc	Pending deleted documents
+admin_show_pending_documents	pending_doc	Pending deleted documents for project <a href="/project/admin/?group_id=$1">$2</a> 
+
 
