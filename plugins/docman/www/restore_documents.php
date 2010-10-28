@@ -20,12 +20,21 @@
 
 require_once('pre.php');
 require_once('common/include/HTTPRequest.class.php');
+require_once('common/plugin/PluginManager.class.php');
 require_once(dirname(__FILE__).'/../include/Docman_VersionFactory.class.php');
 require_once(dirname(__FILE__).'/../include/Docman_ItemFactory.class.php');
-
-
+require_once(dirname(__FILE__).'/../include/Docman_Controller.class.php');
 
 $request = HTTPRequest::instance();
+$pm      = PluginManager::instance();
+$p       = $pm->getPluginByName('docman');
+if ($p && $pm->isPluginAvailable($p)) {
+    // Need to setup the controller so the notification & logging works (setup in controler constructor)
+    $controler = new Docman_Controller($p, $p->getPluginPath(), $p->getThemePath(), $request);
+} else {
+    $GLOBALS['Response']->redirect('/');
+}
+
 $func = $request->getValidated('func', new Valid_WhiteList('func', array('confirm_restore_item', 'confirm_restore_version')));
 if ($request->existAndNonEmpty('func')) {
 
