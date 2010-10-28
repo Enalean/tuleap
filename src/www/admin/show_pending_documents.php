@@ -31,10 +31,10 @@ $em->processEvent('show_pending_documents', $params);
         //<!--
                 function change_onglet(name)
                 {
-                        document.getElementById('onglet_'+anc_onglet).className = 'onglet_0 onglet';
-                        document.getElementById('onglet_'+name).className = 'onglet_1 onglet';
-                        document.getElementById('contenu_onglet_'+anc_onglet).style.display = 'none';
-                        document.getElementById('contenu_onglet_'+name).style.display = 'block';
+                        $('onglet_'+anc_onglet).className = 'onglet_0 onglet';
+                        $('onglet_'+name).className = 'onglet_1 onglet';
+                        $('contenu_onglet_'+anc_onglet).style.display = 'none';
+                        $('contenu_onglet_'+name).style.display = 'block';
                         anc_onglet = name;
                 }
         //-->
@@ -49,9 +49,7 @@ $em->processEvent('show_pending_documents', $params);
             
                 foreach($params['id'] as $id){
                     $nom = $params['nom'][$i++];
-                    ?>
-<span class="onglet_0 onglet" id="onglet_<?php print $id ?>" onclick="javascript:change_onglet('<?php print $id?>');"><?php print $nom?></span>
-<?php 
+                    echo '<span class="onglet_0 onglet" id="onglet_'.$id.'">'.$nom.'</span>';
                 }
             }
             ?>
@@ -68,6 +66,13 @@ $em->processEvent('show_pending_documents', $params);
          </div>
          <script type='text/javascript'>
         //<!--
+                $$('.onglet').each(function (e) {
+                    e.observe('click', function () {
+                        var id = e.id.sub('onglet_', '');
+                        change_onglet(id);
+                        e.stop();
+                    });
+                });
                 var anc_onglet = '<?php print $params['focus']?>';
                 change_onglet(anc_onglet);
         //-->
