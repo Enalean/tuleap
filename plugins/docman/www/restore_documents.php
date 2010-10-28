@@ -54,7 +54,7 @@ if ($request->existAndNonEmpty('func')) {
             $versionFactory = new Docman_VersionFactory();
             $version = $versionFactory->getSpecificVersionById($request->get('id'));
             if ($versionFactory->restore($version)) {
-                $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_docmant', 'version_restored'), CODENDI_PURIFIER_DISABLED);
+                $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_docman', 'version_restored'), CODENDI_PURIFIER_DISABLED);
                 $GLOBALS['Response']->redirect('index.php?group_id='.$request->get('group_id').'&id='.$request->get('item_id').'&action=details&section=history');
             } else {
                 exit_error($Language->getText('plugin_docman', 'error'),$Language->getText('plugin_docman','version_not_restored'));
