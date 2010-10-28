@@ -634,6 +634,10 @@ class Docman_ItemFactory {
         return $this->wikidao;
     }
 
+    protected function _getVersionFactory() {
+        return new Docman_VersionFactory();
+    }
+
     function update($row) {
         // extract cross references
         $reference_manager = ReferenceManager::instance();
@@ -1132,7 +1136,14 @@ class Docman_ItemFactory {
      * @return Boolean
      */
     public function restore($item) {
-        $dao = $this->_getItemDao();
+        $dao  = $this->_getItemDao();
+        $type = $this->getItemTypeForItem($item);
+        if ($type == PLUGIN_DOCMAN_ITEM_TYPE_FILE || $type == PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE) {
+            $vf = $this->_getVersionFactory();
+            foreach ($vf->listVersionsToDeleteForItem($item) as $version) {
+                $vf->restore($version);
+            }
+        }
         return $dao->restore($item->getId());
     }
 }
