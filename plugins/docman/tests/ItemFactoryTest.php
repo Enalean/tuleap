@@ -346,9 +346,85 @@ class Docman_ItemFactoryTest extends UnitTestCase {
         $versionFactory->setReturnValue('listVersionsToDeleteForItem', array($v1, $v2));
         $versionFactory->expectAt(0, 'restore', array($v1));
         $versionFactory->expectAt(1, 'restore', array($v2));
+        $versionFactory->setReturnValue('restore', true);
         $itemFactory->setReturnValue('_getVersionFactory', $versionFactory);
         
         $this->assertTrue($itemFactory->restore($item));
+    }
+
+    function testRestoreDeletedItemFileWithoutRestorableVersions() {
+        $itemFactory = new Docman_ItemFactoryTestRestore($this);
+        
+        $item = new MockDocman_File($this);
+        $item->setReturnValue('getId', 112);
+        $itemFactory->setReturnValue('getItemTypeForItem', PLUGIN_DOCMAN_ITEM_TYPE_FILE);
+        
+        $dao = new MockDocman_ItemDao($this);
+        $dao->expectNever('restore');
+        $itemFactory->setReturnValue('_getItemDao', $dao);
+        
+        $versionFactory = new MockDocman_VersionFactory($this);
+        $versionFactory->expectOnce('listVersionsToDeleteForItem', array($item));
+        $versionFactory->setReturnValue('listVersionsToDeleteForItem', false);
+        $versionFactory->expectNever('restore');
+        $itemFactory->setReturnValue('_getVersionFactory', $versionFactory);
+        
+        $this->assertFalse($itemFactory->restore($item));
+    }
+
+    function testRestoreDeletedItemFileWithSomeVersionRestoreFailure() {
+        $itemFactory = new Docman_ItemFactoryTestRestore($this);
+
+        $item = new MockDocman_File($this);
+        $item->setReturnValue('getId', 112);
+        $itemFactory->setReturnValue('getItemTypeForItem', PLUGIN_DOCMAN_ITEM_TYPE_FILE);
+
+        $dao = new MockDocman_ItemDao($this);
+        $dao->expectOnce('restore', array(112));
+        $dao->setReturnValue('restore', true);
+        $itemFactory->setReturnValue('_getItemDao', $dao);
+
+        $v1 = new MockDocman_Version($this);
+        $v2 = new MockDocman_Version($this);
+
+        $versionFactory = new MockDocman_VersionFactory($this);
+        $versionFactory->expectOnce('listVersionsToDeleteForItem', array($item));
+        $versionFactory->setReturnValue('listVersionsToDeleteForItem', array($v1, $v2));
+        $versionFactory->expectAt(0, 'restore', array($v1));
+        $versionFactory->setReturnValueAt(0, 'restore', true);
+        $versionFactory->expectAt(1, 'restore', array($v2));
+        $versionFactory->setReturnValueAt(1, 'restore', false);
+
+        $itemFactory->setReturnValue('_getVersionFactory', $versionFactory);
+
+        $this->assertTrue($itemFactory->restore($item));
+    }
+
+    function testRestoreDeletedItemFileWithAllVersionRestoreFailure() {
+        $itemFactory = new Docman_ItemFactoryTestRestore($this);
+
+        $item = new MockDocman_File($this);
+        $item->setReturnValue('getId', 112);
+        $itemFactory->setReturnValue('getItemTypeForItem', PLUGIN_DOCMAN_ITEM_TYPE_FILE);
+
+        $dao = new MockDocman_ItemDao($this);
+        $dao->expectNever('restore');
+        $itemFactory->setReturnValue('_getItemDao', $dao);
+
+        $v1 = new MockDocman_Version($this);
+        $v2 = new MockDocman_Version($this);
+
+        $versionFactory = new MockDocman_VersionFactory($this);
+        $versionFactory->expectOnce('listVersionsToDeleteForItem', array($item));
+        $versionFactory->setReturnValue('listVersionsToDeleteForItem', array($v1, $v2));
+        $versionFactory->expectAt(0, 'restore', array($v1));
+        $versionFactory->setReturnValueAt(0, 'restore', false);
+        $versionFactory->expectAt(1, 'restore', array($v2));
+        $versionFactory->setReturnValueAt(1, 'restore', false);
+
+        $itemFactory->setReturnValue('_getVersionFactory', $versionFactory);
+
+        $this->assertFalse($itemFactory->restore($item));
     }
 }
 ?>

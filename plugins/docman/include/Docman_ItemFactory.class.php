@@ -1139,12 +1139,21 @@ class Docman_ItemFactory {
         $dao  = $this->_getItemDao();
         $type = $this->getItemTypeForItem($item);
         if ($type == PLUGIN_DOCMAN_ITEM_TYPE_FILE || $type == PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE) {
-            $vf = $this->_getVersionFactory();
-            foreach ($vf->listVersionsToDeleteForItem($item) as $version) {
-                $vf->restore($version);
+            $oneRestored = false;
+            $vf          = $this->_getVersionFactory();
+            $versions    = $vf->listVersionsToDeleteForItem($item);
+            if ($versions) {
+                foreach ($versions as $version) {
+                    $oneRestored |= $vf->restore($version);
+                }
             }
+            if ($oneRestored) {
+                return $dao->restore($item->getId());
+            }
+        } else {
+            return $dao->restore($item->getId());
         }
-        return $dao->restore($item->getId());
+        return false;
     }
 }
 
