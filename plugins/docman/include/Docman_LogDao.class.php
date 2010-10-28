@@ -162,12 +162,14 @@ class Docman_LogDao extends DataAccessObject {
                ' WHEN log.type = 4 THEN '.$this->da->quoteSmart($GLOBALS['Language']->getText('plugin_docman','action_delete')).
                ' WHEN log.type = 5 THEN '.$this->da->quoteSmart($GLOBALS['Language']->getText('plugin_docman','action_access')).
                ' WHEN log.type = 11 THEN '.$this->da->quoteSmart($GLOBALS['Language']->getText('plugin_docman','action_delete_version')).
+               ' WHEN log.type = 12 THEN '.$this->da->quoteSmart($GLOBALS['Language']->getText('plugin_docman','event_restore')).
+               ' WHEN log.type = 13 THEN '.$this->da->quoteSmart($GLOBALS['Language']->getText('plugin_docman','event_restore_version')).
                ' END as type, user.user_name AS user_name, user.realname AS realname, user.email AS email, CONCAT(item.item_id," - ",item.title) AS title '
                .' FROM plugin_docman_log AS log, user, plugin_docman_item AS item '
                .' WHERE '. $logs_cond
                .' AND log.group_id = '. $this->da->quoteSmart($group_id)
                .' AND item.item_id = log.item_id '
-               .' AND log.type in (1,2,3,4,5,11) '
+               .' AND log.type in (1,2,3,4,5,11,12,13) '
                .' ORDER BY time DESC ';
     }
 }
