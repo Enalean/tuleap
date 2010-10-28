@@ -146,6 +146,7 @@ function testPurgeDeletedVersion() {
         $file = new MockDocman_File($this);
         $file->setReturnValue('getGroupId', 114);
         $if = new MockDocman_ItemFactory($this);
+        $if->expectOnce('getItemFromDb', array(1664, array('ignore_deleted' => true)));
         $if->setReturnValue('getItemFromDb', $file);
         $versionFactory->setReturnValue('_getItemFactory', $if);
         

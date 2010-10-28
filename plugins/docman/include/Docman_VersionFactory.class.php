@@ -157,7 +157,10 @@ class Docman_VersionFactory {
             if (!$row['purge_date'] && file_exists($row['path'])) {
                 if ($dao->restore($version->getItemId(), $version->getNumber())) {
                     // Log the event
-                    $item  = $this->_getItemFactory()->getItemFromDb($version->getItemId());
+                    // Take into account deleted items because, when we restore a deleted item
+                    // the versions are restored before the item (because we restore the item
+                    // only if at least one version was restored successfully
+                    $item  = $this->_getItemFactory()->getItemFromDb($version->getItemId(), array('ignore_deleted' => true));
                     $user  = $this->_getUserManager()->getCurrentUser();
                     $value = $version->getNumber();
                     if ($row['label'] !== '') {
