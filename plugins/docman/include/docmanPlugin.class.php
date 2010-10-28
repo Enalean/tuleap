@@ -468,7 +468,7 @@ class DocmanPlugin extends Plugin {
      */
     function show_pending_documents($params) {
         $request = HTTPRequest::instance();
-        $limit =2;
+        $limit = 10;
 
 
         //return all pending versions for given group id
@@ -504,7 +504,7 @@ class DocmanPlugin extends Plugin {
             $params['nom'][]= $GLOBALS['Language']->getText('plugin_docman','deleted_item');
             $params['html'][]= $html;
         }
-        if ($request->get('offsetItem') > 0 ){
+        if ($offsetItem > 0 ){
             $params['focus'] = 'item';
         } else {
             $params['focus'] = 'version';
@@ -522,42 +522,42 @@ class DocmanPlugin extends Plugin {
         $title[] = $GLOBALS['Language']->getText('plugin_docman','delete_date');
         $title[] = $GLOBALS['Language']->getText('plugin_docman','restore_version');
 
-    if ($nbVersions > 0) {
+        if ($nbVersions > 0) {
 
-        $html .= '<H3>'.$GLOBALS['Language']->getText('plugin_docman', 'deleted_version').'</H3><P>';
-        $html .= html_build_list_table_top ($title);
-        $i=1;
+            $html .= '<H3>'.$GLOBALS['Language']->getText('plugin_docman', 'deleted_version').'</H3><P>';
+            $html .= html_build_list_table_top ($title);
+            $i=1;
 
-        foreach ($versions as $row ){
-            $html .= '
-            <TR class="'. html_get_alt_row_color($i++) .'"><TD>'. $hp->purify($row['title'], CODENDI_PURIFIER_BASIC, $groupId).'</TD><TD>';
-            $html .= $hp->purify($row['label']);
-            $html .= '</TD>'.
+            foreach ($versions as $row ){
+                $html .= '<TR class="'. html_get_alt_row_color($i++) .'"><TD>'. $hp->purify($row['title'], CODENDI_PURIFIER_BASIC, $groupId).'</TD><TD>';
+                $html .= $hp->purify($row['label']);
+                $html .= '</TD>'.
                 '<TD>'.$row['number'].'</TD>'.
                 '<TD>'.format_date($GLOBALS['Language']->getText('system', 'datefmt'),$row['date']).'</TD>'.
                 '<TD align="center"><a href="" ><IMG SRC="'.util_get_image_theme("trash-x.png").'" BORDER=0 HEIGHT=16 WIDTH=16></a></TD></TR>';
-        }
-        $html .= '
+            }
+            $html .= '
         </TABLE>'; 
 
 
-        echo '<div style="text-align:center" class="'. util_get_alt_row_color($i++) .'">';
+            echo '<div style="text-align:center" class="'. util_get_alt_row_color($i++) .'">';
 
-        if ($offset > 0) {
-            $html .=  '<a href="?group_id='.$groupId.'&offsetVers='.($offset -$limit).'">[ '.$GLOBALS['Language']->getText('plugin_docman', 'previous').'  ]</a>';
-            $html .= '&nbsp;';
+            if ($offset > 0) {
+                $html .=  '<a href="?group_id='.$groupId.'&offsetVers='.($offset -$limit).'">[ '.$GLOBALS['Language']->getText('plugin_docman', 'previous').'  ]</a>';
+                $html .= '&nbsp;';
+            }
+            if (($offset + $limit) < $nbVersions) {
+                $html .= '&nbsp;';
+                $html .='<a href="?group_id='.$groupId.'&offsetVers='.($offset+$limit).'">[ '.$GLOBALS['Language']->getText('plugin_docman', 'next').' ]</a>';
+            }
+            $html .='<br>'.($offset+$i-2).'/'.$nbVersions.'</br>';
+            $html .= '</div>';
+          
+        } else {
+            $html .= $GLOBALS['Response']->addFeedback('info',$GLOBALS['Language']->getText('plugin_docman', 'no_pending_versions'));
         }
-        if (($offset + $limit) < $nbVersions) {
-            $html .= '&nbsp;';
-            $html .='<a href="?group_id='.$groupId.'&offsetVers='.($offset+$limit).'">[ '.$GLOBALS['Language']->getText('plugin_docman', 'next').' ]</a>';
-        }
-        $html .= '</div>';
-        $html .= '<div style="text-align:center" class="'. util_get_alt_row_color($i++) .'">';
-        $html .=($offset+$i-3).'/'.$nbVersions;
-        $html .= '</div>';
+        return $html;
     }
-    return $html;
-}
 
     function showPendingItems($res, $groupId, $nbItems, $offset, $limit) {
         $hp = Codendi_HTMLPurifier::instance();
@@ -597,13 +597,11 @@ class DocmanPlugin extends Plugin {
                 $html .= '&nbsp;';
                 $html .= '<a href="?group_id='.$groupId.'&offsetItem='.($offset+$limit).'">[ '.$GLOBALS['Language']->getText('plugin_docman', 'next').' ]</a>';
             }
-            $html .= '</div>';
-            $html .= '<div style="text-align:center" class="'. util_get_alt_row_color($i++) .'">';
-            $html .=($offset +$i-3).'/'.$nbItems;
+            $html .='<br>'.($offset +$i-2).'/'.$nbItems.'</br>';
             $html .= '</div>';
 
         } else {
-            $html .= $GLOBALS['Response']->addFeedback('info',$GLOBALS['Language']->getText('plugin_docman', 'no_pending_versions'));
+            $html .= $GLOBALS['Response']->addFeedback('info',$GLOBALS['Language']->getText('plugin_docman', 'no_pending_items'));
         }
         return $html;
     }
