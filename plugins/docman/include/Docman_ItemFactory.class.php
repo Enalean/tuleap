@@ -638,6 +638,14 @@ class Docman_ItemFactory {
         return new Docman_VersionFactory();
     }
 
+    protected function _getUserManager() {
+        return UserManager::instance();
+    }
+
+    protected function _getEventManager() {
+        return EventManager::instance();
+    }
+
     function update($row) {
         // extract cross references
         $reference_manager = ReferenceManager::instance();
@@ -1136,10 +1144,12 @@ class Docman_ItemFactory {
      * @return Boolean
      */
     public function restore($item) {
-        $dao  = $this->_getItemDao();
-        $type = $this->getItemTypeForItem($item);
+        $dao         = $this->_getItemDao();
+        $type        = $this->getItemTypeForItem($item);
+        $oneRestored = false;
+        $isFile      = false;
         if ($type == PLUGIN_DOCMAN_ITEM_TYPE_FILE || $type == PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE) {
-            $oneRestored = false;
+            $isFile      = true;
             $vf          = $this->_getVersionFactory();
             $versions    = $vf->listVersionsToDeleteForItem($item);
             if ($versions) {
@@ -1147,10 +1157,16 @@ class Docman_ItemFactory {
                     $oneRestored |= $vf->restore($version);
                 }
             }
-            if ($oneRestored) {
-                return $dao->restore($item->getId());
-            }
-        } else {
+        }
+
+        if (!$isFile || $oneRestored) {
+            // Log the event
+            $user = $this->_getUserManager()->getCurrentUser();
+            $this->_getEventManager()->processEvent('plugin_docman_event_restore', array(
+                    'group_id'   => $item->getGroupId(),
+                    'item'       => $item,
+                    'user'       => $user)
+            );
             return $dao->restore($item->getId());
         }
         return false;
