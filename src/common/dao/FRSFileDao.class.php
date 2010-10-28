@@ -350,14 +350,30 @@ class FRSFileDao extends DataAccessObject {
     /**
      * Retrieve all deleted files not purged yet after a given period of time
      * 
-     * @param Integer $time Timestamp of the date to start the search
+     * @param Integer $time    Timestamp of the date to start the search
+     * @param Integer $groupId
+     * @param Integer $offset
+     * @param Integer $limit
      * 
      * @return DataAccessResult
      */
-    function searchFilesToPurge($time) {
-        $sql = 'SELECT * FROM frs_file_deleted'.
+    function searchFilesToPurge($time, $groupId=0, $offset=0, $limit=0) {
+        $fields = '';
+        $from   = '';
+        $where  = '';
+        if ($groupId != 0) {
+            $fields .= ', rel.name as release_name, pkg.name as package_name';
+            $from   .= ' JOIN frs_release rel USING (release_id)'.
+                       ' JOIN frs_package pkg USING (package_id)';
+            $where  .= ' AND pkg.group_id = '.$this->da->escapeInt($groupId);
+        }
+        $sql = 'SELECT file.* '.
+               $fields.
+               ' FROM frs_file_deleted file'.
+               $from.
                ' WHERE delete_date <= '.$this->da->escapeInt($time).
-               ' AND purge_date IS NULL';
+               ' AND purge_date IS NULL'.
+               $where;
         return $this->retrieve($sql);
     }
 

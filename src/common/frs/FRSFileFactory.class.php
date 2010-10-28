@@ -432,6 +432,20 @@ class FRSFileFactory extends Error {
         return true;
     }
 
+    /**
+     * List all files deleted but not already purged
+     * 
+     * @param Integer $groupId
+     * @param Integer $offset
+     * @param Integer $limit
+     * 
+     * @return Boolean
+     */
+    public function listPendingFiles($groupId, $offset, $limit) {
+        $dao = $this->_getFRSFileDao();
+        return $dao->searchFilesToPurge($_SERVER['REQUEST_TIME'], $groupId, $offset, $limit);
+    }
+
     /** 
      * Returns true if user has permissions to add files
      * 
