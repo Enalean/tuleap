@@ -534,7 +534,7 @@ class DocmanPlugin extends Plugin {
                 $html .= '</TD>'.
                 '<TD>'.$row['number'].'</TD>'.
                 '<TD>'.format_date($GLOBALS['Language']->getText('system', 'datefmt'),$row['date']).'</TD>'.
-                '<TD align="center"><a href="" ><IMG SRC="'.util_get_image_theme("trash-x.png").'" BORDER=0 HEIGHT=16 WIDTH=16></a></TD></TR>';
+                '<TD align="center"><a href="/plugins/docman/restore_documents.php?group_id='.$groupId.'&func=confirm_restore_version&id='.$row['id'].'&item_id='.$row['item_id'].'" ><IMG SRC="'.util_get_image_theme("trash-x.png").'" onClick="return confirm(\'Confirm restore of this version\')" BORDER=0 HEIGHT=16 WIDTH=16></a></TD></TR>';
             }
             $html .= '
         </TABLE>'; 
@@ -583,7 +583,7 @@ class DocmanPlugin extends Plugin {
                 $html .= '</TD>'.
                 '<TD>'.$uh->getDisplayNameFromUserId($row['user']).'</TD>'.
                 '<TD>'.format_date($GLOBALS['Language']->getText('system', 'datefmt'),$row['date']).'</TD>'.
-                '<TD align="center"><a href="" ><IMG SRC="'.util_get_image_theme("trash-x.png").'" BORDER=0 HEIGHT=16 WIDTH=16></a></TD></TR>';
+                '<TD align="center"><a href="/plugins/docman/restore_documents.php?group_id='.$groupId.'&func=confirm_restore_item&id='.$row['id'].'" ><IMG SRC="'.util_get_image_theme("trash-x.png").'" onClick="return confirm(\'Confirm restore of this item\')" BORDER=0 HEIGHT=16 WIDTH=16></a></TD></TR>';
             }
             $html .= '</TABLE>'; 
 

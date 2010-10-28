@@ -830,3 +830,8 @@ plugin_docman	deleted_item	Items supprimées
 plugin_docman	no_pending_items	Il n'existe pas d'item en suspens.
 plugin_docman	previous	Précédent
 plugin_docman	next	Suivant
+plugin_docman	version_restored	La version sélectionnée a été restaurée avec succès.
+plugin_docman	item_restored	L'item sélectionné a été restauré avec succès.
+plugin_docman	version_not_restored	La version sélectionnée n'a pas pu être restaurée.
+plugin_docman	item_not_restored	L'item sélectionné n'a pas pu être restauré.
+

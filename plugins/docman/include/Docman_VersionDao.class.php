@@ -46,9 +46,9 @@ class Docman_VersionDao extends DataAccessObject {
     * Searches Docman_VersionDao by Id 
     * @return DataAccessResult
     */
-    function searchById($id) {
-        $sql = sprintf("SELECT item_id, number, user_id, label, changelog, date, filename, filesize, filetype, path FROM plugin_docman_version WHERE id = %s",
-				$this->da->quoteSmart($id));
+    function searchById($id, $table = 'plugin_docman_version') {
+        $sql = sprintf("SELECT item_id, number, user_id, label, changelog, filename, filesize, filetype, path FROM %s WHERE id = %s",
+				$table, $this->da->quoteSmart($id));
         return $this->retrieve($sql);
     }
 
@@ -306,8 +306,9 @@ class Docman_VersionDao extends DataAccessObject {
      * @return Array
      */
     function listPendingVersions($groupId, $offset, $limit) {
-        $sql=' SELECT SQL_CALC_FOUND_ROWS title, number,label,'.
-             '        plugin_docman_version_deleted.delete_date  as date '.
+        $sql=' SELECT SQL_CALC_FOUND_ROWS id, title, number,label,'.
+             '        plugin_docman_version_deleted.delete_date  as date, '.
+             '        plugin_docman_version_deleted.item_id as item_id '.
              ' FROM plugin_docman_item, plugin_docman_version_deleted '.
              ' WHERE plugin_docman_item.item_id = plugin_docman_version_deleted.item_id '.
              '        AND group_id='.db_ei($groupId). 

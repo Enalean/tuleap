@@ -144,17 +144,17 @@ class Docman_Version {
     }
 
     function initFromRow($row) {
-        $this->setId($row['id']);
-        $this->setAuthorId($row['user_id']);
-        $this->setItemId($row['item_id']);
-        $this->setNumber($row['number']);
-        $this->setLabel($row['label']);
-        $this->setChangelog($row['changelog']);
-        $this->setDate($row['date']);
-        $this->setFilename($row['filename']);
-        $this->setFilesize($row['filesize']);
-        $this->setFiletype($row['filetype']);
-        $this->setPath($row['path']);
+        if (isset($row['id'])) $this->setId($row['id']);
+        if (isset($row['user_id']))$this->setAuthorId($row['user_id']);
+        if (isset($row['item_id']))$this->setItemId($row['item_id']);
+        if (isset($row['number']))$this->setNumber($row['number']);
+        if (isset($row['label']))$this->setLabel($row['label']);
+        if (isset($row['changelog']))$this->setChangelog($row['changelog']);
+        if (isset($row['date']))$this->setDate($row['date']);
+        if (isset($row['filename']))$this->setFilename($row['filename']);
+        if (isset($row['filesize']))$this->setFilesize($row['filesize']);
+        if (isset($row['filetype']))$this->setFiletype($row['filetype']);
+        if (isset($row['path']))$this->setPath($row['path']);
     }
 }
 

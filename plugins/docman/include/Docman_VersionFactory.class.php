@@ -78,6 +78,22 @@ class Docman_VersionFactory {
         }
         return $version;
     }
+    /**
+     * Returns the version of a given id
+     * @param Integer $id
+     * 
+     * @return Docman_Version
+     */
+    function getSpecificVersionById($id) {
+        $dao = $this->_getVersionDao();
+        $dar = $dao->searchById($id, 'plugin_docman_version_deleted');
+        $version = null;
+        if ($dar && !$dar->isError() && $dar->valid()) {
+            $version = new Docman_Version($dar->current());
+        }
+        return $version;
+    }
+
 
     /**
      * Retrieve the next available version number for a file

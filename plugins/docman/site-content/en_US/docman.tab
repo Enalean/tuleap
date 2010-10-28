@@ -831,3 +831,8 @@ plugin_docman	deleted_item	Deleted items
 plugin_docman	no_pending_items	There are no pending items.
 plugin_docman	previous	Previous
 plugin_docman	next	Next
+plugin_docman	version_restored	The selected version has been successfully restored.
+plugin_docman	item_restored	The selected item has been successfully restored.
+plugin_docman	version_not_restored	The selected version has not been restored.
+plugin_docman	item_not_restored	The selected item has not been restored.
+
