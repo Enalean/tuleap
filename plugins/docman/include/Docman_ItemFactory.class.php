@@ -1124,8 +1124,8 @@ class Docman_ItemFactory {
      * @return Boolean
      */
     public function purgeDeletedItem($item) {
-            $dao = $this->_getItemDao();
-            return $dao->setPurgeDate($item->getId(), time());
+        $dao = $this->_getItemDao();
+        return $dao->setPurgeDate($item->getId(), time());
     }
 
     /**
