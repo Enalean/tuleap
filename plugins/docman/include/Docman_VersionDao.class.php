@@ -313,6 +313,7 @@ class Docman_VersionDao extends DataAccessObject {
              ' WHERE plugin_docman_item.item_id = plugin_docman_version_deleted.item_id '.
              '        AND group_id='.db_ei($groupId). 
              '        AND plugin_docman_version_deleted.delete_date <= '.$_SERVER['REQUEST_TIME'].
+             '        AND plugin_docman_version_deleted.purge_date IS NULL '.
              '        AND plugin_docman_item.delete_date IS NULL'. 
              ' ORDER BY plugin_docman_version_deleted.delete_date DESC '.
              ' LIMIT '.db_ei($offset).', '.db_ei($limit);
