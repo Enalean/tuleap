@@ -339,11 +339,10 @@ class Docman_VersionDao extends DataAccessObject {
      */
     function listVersionsToDeleteByItemId($itemId) {
         $sql = 'SELECT v.id, v.number, v.item_id, v.user_id, v.label, v.changelog,'.
-               ' v.date, v.filename, v.filesize, v.filetype, v.path '.
-               ' FROM plugin_docman_version v '.
-               ' LEFT OUTER JOIN plugin_docman_version_deleted vd '.
-               ' ON v.id = vd.id '.
+               ' v.create_date as date, v.filename, v.filesize, v.filetype, v.path '.
+               ' FROM plugin_docman_version_deleted v '.
                ' WHERE v.item_id = ' . $this->da->quoteSmart($itemId);
+               ' AND purge_date IS NULL';
         return $this->retrieve($sql);
     }
 

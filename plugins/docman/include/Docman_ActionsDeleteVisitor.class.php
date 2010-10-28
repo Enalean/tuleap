@@ -172,7 +172,7 @@ class Docman_ActionsDeleteVisitor /* implements Visitor */ {
     function _deleteFile(Docman_File $item, $params) {
         // Delete all versions before
         $version_factory =& $this->_getVersionFactory();
-        if ($versions = $version_factory->listVersionsToDeleteForItem($item)) {
+        if ($versions = $version_factory->getAllVersionForItem($item)) {
             if (count($versions)) {
                 $um =& UserManager::instance();
                 $user =& $um->getCurrentUser();
