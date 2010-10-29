@@ -831,6 +831,7 @@ class Docman_ItemDao extends DataAccessObject {
              ' WHERE  D.group_id='.db_ei($groupId). 
              '        AND D.delete_date <= '.$this->da->escapeInt($_SERVER['REQUEST_TIME']).
              '        AND D.parent_id = I.item_id '.
+             '        AND D.purge_date IS NULL '.
              ' ORDER BY D.delete_date DESC '.
              ' LIMIT '.$this->da->escapeInt($offset).', '.$this->da->escapeInt($limit);
 
