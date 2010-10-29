@@ -133,23 +133,29 @@ site_admin_footer(array());
 
 function frs_file_restore_view($group_id, $idArray, $nomArray, $htmlArray) {
     $fileFactory = new FRSFileFactory();
+    $files       = $fileFactory->listPendingFiles($group_id, 0, 0);
+
     $html  = '';
     $html .= '<div class="contenu_onglet" id="contenu_onglet_frs_file">';
-
-    $titles = array ('Filename', 'Release name', 'Package name', 'Delete date', 'Restore');
-    $html  .= html_build_list_table_top ($titles);
-    $i      = 1;
-    foreach ($fileFactory->listPendingFiles($group_id, 0, 0) as $file) {
-        $html .= '<tr class="'. html_get_alt_row_color($i++) .'">';
-        $html .= '<td>'.$file['filename'].'</td>';
-        $html .= '<td>'.$file['release_name'].'</td>';
-        $html .= '<td>'.$file['package_name'].'</td>';
-        $html .= '<td>'.format_date($GLOBALS['Language']->getText('system', 'datefmt'), $file['delete_date']).'</td>';
-        $html .= '<td align="center"><a href="?group_id='.$group_id.'&func=confirm_restore_frs_file&id='.$file['file_id'].'"><img src="'.util_get_image_theme("trash-x.png").'" onClick="return confirm(\'Confirm restore of this file\')" border="0" height="16" width="16"></a></td></tr>';
-        $html .= '</tr>';
+    $html .= '<p>Note: there might be some delay (max 30 minutes) between the time the file is deleted and time it appears here.<br />When a file is deleted by the user, it appears in this list after SYSTEM_CHECK <a href="/admin/system_events/">system event</a> is processed.</p>';
+    if ($files->rowCount() > 0) {
+        $titles = array ('Filename', 'Release name', 'Package name', 'Delete date', 'Restore');
+        $html  .= html_build_list_table_top ($titles);
+        $i      = 1;
+        foreach ($files as $file) {
+            $html .= '<tr class="'. html_get_alt_row_color($i++) .'">';
+            $html .= '<td>'.$file['filename'].'</td>';
+            $html .= '<td>'.$file['release_name'].'</td>';
+            $html .= '<td>'.$file['package_name'].'</td>';
+            $html .= '<td>'.format_date($GLOBALS['Language']->getText('system', 'datefmt'), $file['delete_date']).'</td>';
+            $html .= '<td align="center"><a href="?group_id='.$group_id.'&func=confirm_restore_frs_file&id='.$file['file_id'].'"><img src="'.util_get_image_theme("trash-x.png").'" onClick="return confirm(\'Confirm restore of this file\')" border="0" height="16" width="16"></a></td></tr>';
+            $html .= '</tr>';
+        }
+        $html .= '</table>';
+    } else {
+        $html .= '<center>No restorable files found</center>';
     }
-    $html .= '</table>';
-    $html .='</div>';
+    $html .= '</div>';
 
     $idArray[]   = 'frs_file';
     $nomArray[]  = 'File files';
