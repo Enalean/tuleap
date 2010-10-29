@@ -76,7 +76,8 @@ site_admin_header(array('title'=>$GLOBALS['Language']->getText('admin_groupedit'
 ?>
 <FORM action="?" method="POST">
 <INPUT type="hidden" name="group_id" value="<?php print $group_id; ?>">
-<?php $project = $pm->getProject($group_id,false,true);
+<?php 
+$project = $pm->getProject($group_id,false,true);
 echo '<h3>'.$GLOBALS['Language']->getText('admin_show_pending_documents','pending_doc', array ($group_id, $project->getUnixName())).'</h3>'; ?>
         <div class="systeme_onglets">
             <div class="onglets">
