@@ -25,6 +25,9 @@ require_once('common/frs/FRSFileFactory.class.php');
 
 
 class FRSRelease extends Error {
+    const STATUS_ACTIVE  = 1;
+    const STATUS_DELETED = 2;
+    const STATUS_HIDDEN  = 3;
 
 	/**
      * @var int $release_id the ID of this FRSRelease

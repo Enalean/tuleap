@@ -362,7 +362,8 @@ class FRSFileDao extends DataAccessObject {
         $from   = '';
         $where  = '';
         if ($groupId != 0) {
-            $fields .= ', rel.name as release_name, pkg.name as package_name';
+            $fields .= ', rel.name as release_name, rel.status_id as release_status';
+            $fields .= ', pkg.name as package_name, pkg.status_id as package_status';
             $from   .= ' JOIN frs_release rel USING (release_id)'.
                        ' JOIN frs_package pkg USING (package_id)';
             $where  .= ' AND pkg.group_id = '.$this->da->escapeInt($groupId);
@@ -373,7 +374,8 @@ class FRSFileDao extends DataAccessObject {
                $from.
                ' WHERE delete_date <= '.$this->da->escapeInt($time).
                ' AND purge_date IS NULL'.
-               $where;
+               $where.
+               ' ORDER BY delete_date DESC';
         return $this->retrieve($sql);
     }
 

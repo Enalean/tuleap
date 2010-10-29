@@ -28,10 +28,10 @@ require_once('www/project/admin/ugroup_utils.php');
  * 
  */
 class FRSPackageFactory {
-    
-    var $STATUS_ACTIVE = 1;
-    var $STATUS_DELETED = 2;
-    var $STATUS_HIDDEN = 3;
+    // Kept for legacy
+    var $STATUS_ACTIVE  = FRSPackage::STATUS_ACTIVE;
+    var $STATUS_DELETED = FRSPackage::STATUS_DELETED;
+    var $STATUS_HIDDEN  = FRSPackage::STATUS_HIDDEN;
 
     function FRSPackageFactory() {
         

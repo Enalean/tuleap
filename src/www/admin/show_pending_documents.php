@@ -143,13 +143,16 @@ function frs_file_restore_view($group_id, $idArray, $nomArray, $htmlArray) {
         $html  .= html_build_list_table_top ($titles);
         $i      = 1;
         foreach ($files as $file) {
-            $html .= '<tr class="'. html_get_alt_row_color($i++) .'">';
-            $html .= '<td>'.$file['filename'].'</td>';
-            $html .= '<td>'.$file['release_name'].'</td>';
-            $html .= '<td>'.$file['package_name'].'</td>';
-            $html .= '<td>'.format_date($GLOBALS['Language']->getText('system', 'datefmt'), $file['delete_date']).'</td>';
-            $html .= '<td align="center"><a href="?group_id='.$group_id.'&func=confirm_restore_frs_file&id='.$file['file_id'].'"><img src="'.util_get_image_theme("trash-x.png").'" onClick="return confirm(\'Confirm restore of this file\')" border="0" height="16" width="16"></a></td></tr>';
-            $html .= '</tr>';
+            if ($file['release_status'] != FRSRelease::STATUS_DELETED
+                && $file['package_status'] != FRSRelease::STATUS_DELETED) {
+                $html .= '<tr class="'. html_get_alt_row_color($i++) .'">';
+                $html .= '<td>'.$file['filename'].'</td>';
+                $html .= '<td>'.$file['release_name'].'</td>';
+                $html .= '<td>'.$file['package_name'].'</td>';
+                $html .= '<td>'.format_date($GLOBALS['Language']->getText('system', 'datefmt'), $file['delete_date']).'</td>';
+                $html .= '<td align="center"><a href="?group_id='.$group_id.'&func=confirm_restore_frs_file&id='.$file['file_id'].'"><img src="'.util_get_image_theme("trash-x.png").'" onClick="return confirm(\'Confirm restore of this file\')" border="0" height="16" width="16"></a></td></tr>';
+                $html .= '</tr>';
+            }
         }
         $html .= '</table>';
     } else {

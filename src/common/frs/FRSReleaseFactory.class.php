@@ -27,10 +27,10 @@ require_once('www/project/admin/ugroup_utils.php');
  * 
  */
 class FRSReleaseFactory {
-    
-    var $STATUS_ACTIVE = 1;
-    var $STATUS_DELETED = 2;
-    var $STATUS_HIDDEN = 3;
+    // Kept for legacy
+    var $STATUS_ACTIVE  = FRSRelease::STATUS_ACTIVE;
+    var $STATUS_DELETED = FRSRelease::STATUS_DELETED;
+    var $STATUS_HIDDEN  = FRSRelease::STATUS_HIDDEN;
     
 
 	function FRSReleaseFactory() {
