@@ -316,7 +316,7 @@ class BackendSystem extends Backend {
         $time = $_SERVER['REQUEST_TIME'] - (3600*24*$delay);
         
         $frs = $this->getFRSFileFactory();
-        $statusPurge =  $frs->purgeDeletedFiles($time);
+        $status =  $frs->purgeDeletedFiles($time);
 
         // {{{ /!\ WARNING HACK /!\
         // We keep the good old purge mecanism for at least one release to clean
@@ -329,9 +329,8 @@ class BackendSystem extends Backend {
 
         $em = EventManager::instance();
         $em->processEvent('backend_system_purge_files', array('time' => $time));
-        $statusRestore = $frs->restoreDeletedFiles();
 
-        return ($statusPurge && $statusRestore);
+        return ($status);
     }
 
     /**

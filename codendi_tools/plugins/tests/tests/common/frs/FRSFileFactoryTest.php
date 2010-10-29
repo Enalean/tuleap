@@ -12,7 +12,7 @@ Mock::generatePartial('FRSFileFactory', 'FRSFileFactoryTestVersion', array('_get
 Mock::generatePartial('FRSFileFactory', 'FRSFileFactoryTestPurgeFiles', array('_getFRSFileDao', 'purgeFile'));
 Mock::generatePartial('FRSFileFactory', 'FRSFileFactoryTestPurgeOneFile', array('_getFRSFileDao'));
 Mock::generatePartial('FRSFileFactory', 'FRSFileFactoryTestMoveToStaging', array('_getFRSFileDao', 'moveDeletedFileToStagingArea'));
-Mock::generatePartial('FRSFileFactory', 'FRSFileFactoryTestPurgeDeletedFiles', array('purgeFiles', 'moveDeletedFilesToStagingArea', 'cleanStaging'));
+Mock::generatePartial('FRSFileFactory', 'FRSFileFactoryTestPurgeDeletedFiles', array('purgeFiles', 'moveDeletedFilesToStagingArea', 'cleanStaging', 'restoreDeletedFiles'));
 Mock::generatePartial('FRSFileFactory', 'FRSFileFactoryTestRestore', array('_getFRSFileDao'));
 Mock::generatePartial('FRSFileFactory', 'FRSFileFactoryTestRestoreFiles', array('_getFRSFileDao', 'restoreFile'));
 /**
@@ -63,6 +63,7 @@ class FRSFileFactoryTest extends UnitTestCase {
         $ff->expectOnce('moveDeletedFilesToStagingArea');
         $ff->expectOnce('purgeFiles', array(1287504083));
         $ff->expectOnce('cleanStaging');
+        $ff->expectOnce('restoreDeletedFiles');
         
         $ff->purgeDeletedFiles(1287504083);
     }

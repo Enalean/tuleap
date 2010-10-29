@@ -288,6 +288,7 @@ class FRSFileFactory extends Error {
         $this->moveDeletedFilesToStagingArea();
         $this->purgeFiles($time);
         $this->cleanStaging();
+        $this->restoreDeletedFiles();
         return true;
     }
 
