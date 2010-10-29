@@ -137,12 +137,12 @@ function frs_file_restore_view($group_id, $idArray, $nomArray, $htmlArray) {
 
     $html  = '';
     $html .= '<div class="contenu_onglet" id="contenu_onglet_frs_file">';
-    $html .= '<p>Note: there might be some delay (max 30 minutes) between the time the file is deleted and time it appears here.<br />When a file is deleted by the user, it appears in this list after SYSTEM_CHECK <a href="/admin/system_events/">system event</a> is processed'.
-             ' Also, the restored files might take a while before appearing again in their old location.</p>';
+    $html .= '<p>Note: there might be some delay (max 30 minutes) between the time the file is deleted and time it appears here.<br />When a file is deleted by the user, it appears in this list after SYSTEM_CHECK <a href="/admin/system_events/">system event</a> is processed</p>'.
+             '<p>Please note that <strong>actual file restoration</strong> will be done by the <strong>next SYSTEM_CHECK</strong> event. This interface only schedule the restoration.</p>';
+    $i     = 1;
     if ($files->rowCount() > 0) {
         $titles = array ('Filename', 'Release name', 'Package name', 'Delete date', 'Restore');
         $html  .= html_build_list_table_top ($titles);
-        $i      = 1;
         foreach ($files as $file) {
             if ($file['release_status'] != FRSRelease::STATUS_DELETED
                 && $file['package_status'] != FRSPackage::STATUS_DELETED) {
@@ -156,7 +156,8 @@ function frs_file_restore_view($group_id, $idArray, $nomArray, $htmlArray) {
             }
         }
         $html .= '</table>';
-    } else {
+    }
+    if ($i == 1) {
         $html .= '<center>No restorable files found</center>';
     }
     $html .= '</div>';
