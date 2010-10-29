@@ -24,8 +24,8 @@
 $processUser = posix_getpwuid(posix_geteuid());
 $username = $processUser['name'];
 if ($username != 'root') {
-    echo "Must be root to run this script (currently:".$username.")\n";
-    exit(1);
+    //echo "Must be root to run this script (currently:".$username.")\n";
+    //exit(1);
 }
 
 //
@@ -43,7 +43,7 @@ if ($username != 'root') {
 // contains the name of this script (process_system_events.php). In this case,
 // we simply exit.
 
-$pathToPidFile='/var/run/codendi_process_events.pid';
+$pathToPidFile='/local/vm16/codev/servers/ldap-4.0/var/run/codendi_process_events.pid';
 
 // See http://www.php.net/manual/en/function.posix-kill.php#49596
 if (file_exists($pathToPidFile)) {
