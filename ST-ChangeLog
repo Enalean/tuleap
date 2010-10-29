@@ -5,6 +5,9 @@ Version 4.0.14 - (Not released yet)
         backlog #111780: RPM: dependency management for plugins & themes
         backlog #109427: Integration of docman in WebDAV iteration 1
 
+        == Bugfix ==
+        backlog #112816: Blank page when trying to import in a tracker created from "Scrum" template
+
 Version 4.0.13 - Wednesday, 29th September 2010
         == New features ==
         backlog #101486: Webdav integration for service FRS: Iteration 3 (Write access)
