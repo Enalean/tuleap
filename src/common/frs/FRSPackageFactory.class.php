@@ -43,14 +43,14 @@ class FRSPackageFactory {
         return $frs_package;
     }
 
-    function getFRSPackageFromDb($package_id = null, $group_id=null) {
+    function getFRSPackageFromDb($package_id = null, $group_id=null, $extraFlags = 0) {
         $_id = (int) $package_id;
         $dao =& $this->_getFRSPackageDao();
         if($group_id){
         	$_group_id = (int) $group_id;
-        	$dar = $dao->searchInGroupById($_id, $_group_id);
+        	$dar = $dao->searchInGroupById($_id, $_group_id, $extraFlags);
         }else{
-        	$dar = $dao->searchById($_id);
+        	$dar = $dao->searchById($_id, $extraFlags);
         }
         if($dar->isError()){
             return;

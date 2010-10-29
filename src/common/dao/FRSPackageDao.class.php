@@ -20,6 +20,7 @@
 require_once('include/DataAccessObject.class.php');
 
 class FRSPackageDao extends DataAccessObject {
+    const INCLUDE_DELETED = 0x0001;
     
     var $STATUS_DELETED;
 
@@ -34,15 +35,15 @@ class FRSPackageDao extends DataAccessObject {
      *
      * @return DataAccessResult
      */
-    function searchById($id) {
+    function searchById($id, $extraFlags = 0) {
         $_id = (int) $id;
-        return $this->_search(' p.package_id = '.$this->da->escapeInt($_id), '', ' ORDER BY rank DESC LIMIT 1');
+        return $this->_search(' p.package_id = '.$this->da->escapeInt($_id), '', ' ORDER BY rank DESC LIMIT 1', null, $extraFlags);
     }
     
-    function searchInGroupById($id, $group_id) {
+    function searchInGroupById($id, $group_id, $extraFlags = 0) {
         $_id = (int) $id;
         $_group_id = (int) $group_id;
-        return $this->_search(' p.package_id = '.$this->da->escapeInt($_id).' AND p.group_id = '.$this->da->escapeInt($_group_id), '', ' ORDER BY rank DESC LIMIT 1');
+        return $this->_search(' p.package_id = '.$this->da->escapeInt($_id).' AND p.group_id = '.$this->da->escapeInt($_group_id), '', ' ORDER BY rank DESC LIMIT 1', null, $extraFlags);
     }
     
     function searchByFileId($file_id){
@@ -80,13 +81,18 @@ class FRSPackageDao extends DataAccessObject {
     	return $this->_search(' group_id='.$this->da->escapeInt($_id).' AND status_id = '.$this->da->escapeInt($status_active),'','ORDER BY rank');
     }
    
-    function _search($where, $group = '', $order = '', $from = array()) {
+    function _search($where, $group = '', $order = '', $from = array(), $extraFlags = 0) {
         $sql = 'SELECT p.* '
             .' FROM frs_package AS p '
-            .(count($from) > 0 ? ', '.implode(', ', $from) : '') 
-            .(trim($where) != '' ? ' WHERE '.$where.' AND p.status_id != '.$this->da->escapeInt($this->STATUS_DELETED).' ' : '') 
-            .$group
-            .$order;
+            .(count($from) > 0 ? ', ' . implode(', ', $from) : '');
+        if (trim($where) != '') {
+            $sql .= ' WHERE ' . $where. ' ';
+            if (($extraFlags & self::INCLUDE_DELETED) == 0) {
+                $sql .= ' AND p.status_id != '.$this->da->escapeInt($this->STATUS_DELETED).' ';
+            }
+        }
+        $sql .= $group.$order;
+
         return $this->retrieve($sql);
     }
     

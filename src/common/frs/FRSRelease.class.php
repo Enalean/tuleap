@@ -195,7 +195,7 @@ class FRSRelease extends Error {
     function getGroupID() {
         $package_id = $this->getPackageID();
         $package_fact = new FRSPackageFactory();
-        $package =& $package_fact->getFRSPackageFromDb($package_id);
+        $package =& $package_fact->getFRSPackageFromDb($package_id, null, FRSPackageDao::INCLUDE_DELETED);
         $group_id = $package->getGroupID();
         return $group_id;
     }
