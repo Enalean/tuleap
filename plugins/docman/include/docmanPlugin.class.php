@@ -468,8 +468,7 @@ class DocmanPlugin extends Plugin {
      */
     function show_pending_documents($params) {
         $request = HTTPRequest::instance();
-        $limit = 10;
-
+        $limit = 25;
 
         //return all pending versions for given group id
         $offsetVers = $request->getValidated('offsetVers', 'uint', 0);
@@ -478,34 +477,38 @@ class DocmanPlugin extends Plugin {
         }
         $version = new Docman_VersionFactory();
         $res = $version->listPendingVersions($params['group_id'], $offsetVers, $limit);
+        $params['id'][] = 'version';
+        $params['nom'][] = $GLOBALS['Language']->getText('plugin_docman','deleted_version');
+        $html = '';
+        $html .= '<div class="contenu_onglet" id="contenu_onglet_version">';
         if (isset($res) && $res) {
-            $html = '';
-            $html .= '<div class="contenu_onglet" id="contenu_onglet_version">';
             $html .= $this->showPendingVersions($res['versions'], $params['group_id'], $res['nbVersions'], $offsetVers, $limit);
-            $html .='</div>';
-            $params['id'][] = 'version';
-            $params['nom'][] = $GLOBALS['Language']->getText('plugin_docman','deleted_version');
-            $params['html'][]= $html;
+        } else {
+            $html .= 'No restorable versions found';
         }
+        $html .='</div>';
+        $params['html'][]= $html;
+
         //return all pending items for given group id
         $offsetItem = $request->getValidated('offsetItem', 'uint', 0);
         if ( !$offsetItem || $offsetItem < 0 ) {
             $offsetItem = 0;
         }
-
         $item = new Docman_ItemFactory($params['group_id']);
         $res = $item->listPendingItems($params['group_id'], $offsetItem , $limit);
+        $params['id'][] = 'item';
+        $params['nom'][]= $GLOBALS['Language']->getText('plugin_docman','deleted_item');
+        $html = '';
+        $html .= '<div class="contenu_onglet" id="contenu_onglet_item">';
         if (isset($res) && $res) {
-            $html = '';
-            $html .= '<div class="contenu_onglet" id="contenu_onglet_item">';
             $html .= $this->showPendingItems($res['items'], $params['group_id'], $res['nbItems'], $offsetItem, $limit);
-            $html .='</div>';
-            $params['id'][] = 'item';
-            $params['nom'][]= $GLOBALS['Language']->getText('plugin_docman','deleted_item');
-            $params['html'][]= $html;
+        } else {
+            $html .= 'No restorable items found';
         }
+        $html .='</div>';
+        $params['html'][]= $html;
     }
-    
+
     function showPendingVersions($versions, $groupId, $nbVersions, $offset, $limit) {
         $hp = Codendi_HTMLPurifier::instance();
 
