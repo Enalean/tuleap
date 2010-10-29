@@ -536,7 +536,7 @@ class DocmanPlugin extends Plugin {
             $html .= '</TABLE>'; 
 
 
-            echo '<div style="text-align:center" class="'. util_get_alt_row_color($i++) .'">';
+            $html .= '<div style="text-align:center" class="'. util_get_alt_row_color($i++) .'">';
 
             if ($offset > 0) {
                 $html .=  '<a href="?group_id='.$groupId.'&focus=version&offsetVers='.($offset -$limit).'">[ '.$GLOBALS['Language']->getText('plugin_docman', 'previous').'  ]</a>';
