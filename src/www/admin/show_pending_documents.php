@@ -3,12 +3,20 @@ require_once('pre.php');
 require_once('www/admin/admin_utils.php');
 require_once('common/event/EventManager.class.php');
 
-site_admin_header(array('title'=>$GLOBALS['Language']->getText('admin_groupedit','title')));
 session_require(array('group'=>'1','admin_flags'=>'A'));
-$request = HTTPRequest::instance();
-$em = EventManager::instance();
-$pm = ProjectManager::instance();
 
+$request     = HTTPRequest::instance();
+$em          = EventManager::instance();
+$pm          = ProjectManager::instance();
+$fileFactory = new FRSFileFactory();
+
+$vFunc = new Valid_WhiteList('func', array('confirm_restore_frs_file'));
+$vFunc->required();
+if ($request->valid($vFunc)) {
+    $func = $request->get('func');
+} else {
+    $func = '';
+}
 
 // Check if group_id is valid
 $vGroupId = new Valid_GroupId();
@@ -18,6 +26,25 @@ if($request->valid($vGroupId)) {
 } else {
     exit_no_group();
 }
+
+//if ($request->isPost()) {
+switch ($func) {
+    case 'confirm_restore_frs_file':
+        $fileId = $request->getValidated('id', 'uint', 0);
+        if ($fileId > 0) {
+            $file = $fileFactory->getFRSFileFromDb($fileId);
+            if ($fileFactory->restoreFile($file)) {
+                $GLOBALS['Response']->addFeedback('info', 'File restored');
+            } else {
+                $GLOBALS['Response']->addFeedback('error', 'File not restored');
+            }
+        } else {
+            $GLOBALS['Response']->addFeedback('error', 'Bad file id');
+        }
+        $GLOBALS['Response']->redirect('?group_id='.$group_id);
+        break;
+}
+//}
 
 $focus = $request->get('focus');
 if (!$focus) {
@@ -30,7 +57,6 @@ $htmlArray = array();
 
 $html  = '';
 $html .= '<div class="contenu_onglet" id="contenu_onglet_frs_file">';
-$fileFactory = new FRSFileFactory();
 
 $titles = array ('Filename', 'Release name', 'Package name', 'Delete date', 'Restore');
 $html  .= html_build_list_table_top ($titles);
@@ -41,14 +67,14 @@ foreach ($fileFactory->listPendingFiles($group_id, 0, 0) as $file) {
     $html .= '<td>'.$file['release_name'].'</td>';
     $html .= '<td>'.$file['package_name'].'</td>';
     $html .= '<td>'.format_date($GLOBALS['Language']->getText('system', 'datefmt'), $file['delete_date']).'</td>';
-    $html .= '<td>todo</td>';
+    $html .= '<td align="center"><a href="?group_id='.$group_id.'&func=confirm_restore_frs_file&id='.$file['file_id'].'"><img src="'.util_get_image_theme("trash-x.png").'" onClick="return confirm(\'Confirm restore of this file\')" border="0" height="16" width="16"></a></td></tr>';
     $html .= '</tr>';
 }
 $html .= '</table>';
 $html .='</div>';
 
 $idArray[]   = 'frs_file';
-$nomArray[]  = 'File releases';
+$nomArray[]  = 'File files';
 $htmlArray[] = $html;
 
 $params = array('group_id' => $group_id,
@@ -58,7 +84,8 @@ $params = array('group_id' => $group_id,
                'html' => &$htmlArray
 );
 $em->processEvent('show_pending_documents', $params);
-$params['focus'] = 'frs_file';
+
+site_admin_header(array('title'=>$GLOBALS['Language']->getText('admin_groupedit','title')));
 ?>
 <FORM action="?" method="POST">
 <INPUT type="hidden" name="group_id" value="<?php print $group_id; ?>">
