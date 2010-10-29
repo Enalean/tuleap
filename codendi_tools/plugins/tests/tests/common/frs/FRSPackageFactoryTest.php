@@ -29,7 +29,7 @@ Mock::generatePartial('FRSPackageDao', 'FRSPackageDaoTestVersion', array('retrie
 
 class FRSPackageFactoryTest extends UnitTestCase {
 
-    function testSearch() {
+    function testGetFRSPackageFromDb() {
         $packageArray1 = array('package_id'       => 1,
                                'group_id'         => 1,
                                'name'             => 'pkg1',
