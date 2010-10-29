@@ -538,7 +538,26 @@ class FRSFileFactory extends Error {
         }
         return false;
     }
-
+    
+    /**
+     * Restore files marked to be restored
+     * 
+     * @return Boolean
+     */
+    public function restoreDeletedFiles() {
+        $dao = $this->_getFRSFileDao();
+        $dar = $dao->searchFilesToRestore();
+        if ($dar && !$dar->isError() && $dar->rowCount() >0) {
+            foreach ($dar as $row) {
+                $file = new FRSFile($row);
+                if (!$this->restoreFile($file)) {
+                    return false;
+                }
+            }
+            return true;
+        }
+        return false;
+    }
 }
 
 ?>

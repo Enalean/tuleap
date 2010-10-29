@@ -425,6 +425,20 @@ class FRSFileDao extends DataAccessObject {
         }
         return false;
     }
+    
+    /**
+     * Retrieves all the documents marked to be restored
+     * 
+     * @return DataAccessResult
+     */
+    function searchFilesToRestore() {
+        $sql = 'SELECT file.* '.
+               ' FROM frs_file_deleted file'.
+               ' WHERE delete_date IS NULL '.
+               ' AND purge_date IS NULL';
+        return $this->retrieve($sql);
+    }
+
 }
 
 ?>

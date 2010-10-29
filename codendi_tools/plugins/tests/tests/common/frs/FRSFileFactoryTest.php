@@ -14,7 +14,7 @@ Mock::generatePartial('FRSFileFactory', 'FRSFileFactoryTestPurgeOneFile', array(
 Mock::generatePartial('FRSFileFactory', 'FRSFileFactoryTestMoveToStaging', array('_getFRSFileDao', 'moveDeletedFileToStagingArea'));
 Mock::generatePartial('FRSFileFactory', 'FRSFileFactoryTestPurgeDeletedFiles', array('purgeFiles', 'moveDeletedFilesToStagingArea', 'cleanStaging'));
 Mock::generatePartial('FRSFileFactory', 'FRSFileFactoryTestRestore', array('_getFRSFileDao'));
-
+Mock::generatePartial('FRSFileFactory', 'FRSFileFactoryTestRestoreFiles', array('_getFRSFileDao', 'restoreFile'));
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  * 
@@ -375,6 +375,29 @@ class FRSFileFactoryTest extends UnitTestCase {
         rmdir($GLOBALS['ftp_frs_dir_prefix'].'/DELETED/prj');
         unlink($GLOBALS['ftp_frs_dir_prefix'].'/prj/p3_r1/toto.xls');
         rmdir($GLOBALS['ftp_frs_dir_prefix'].'/prj/p3_r1');
+    }
+    
+        function testRestoreDeletedFiles() {
+        $refFile = new FRSFile(array('file_id' => 12));
+        
+        $dar = new MockDataAccessResult($this);
+        $dar->setReturnValue('isError', false);
+        $dar->setReturnValue('current', array('file_id' => 12));
+        $dar->setReturnValueAt(0, 'valid', true);
+        $dar->setReturnValueAt(1, 'valid', false);
+        $dar->setReturnValue('rowCount', 1);
+        
+        $dao = new MockFRSFileDao($this);
+        $dao->expectOnce('searchFilesToRestore');
+        $dao->setReturnValue('searchFilesToRestore', $dar);
+        
+        $ff = new FRSFileFactoryTestRestoreFiles($this);
+        $ff->setReturnValue('_getFRSFileDao', $dao);
+        
+        $ff->expectOnce('restoreFile', array($refFile));
+        $ff->setReturnValue('restoreFile', true);
+        
+        $this->assertTrue($ff->restoreDeletedFiles());
     }
 }
 ?>
