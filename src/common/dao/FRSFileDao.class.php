@@ -438,6 +438,20 @@ class FRSFileDao extends DataAccessObject {
                ' AND purge_date IS NULL';
         return $this->retrieve($sql);
     }
+    
+    /**
+     * Mark file to be restored
+     * 
+     * @param Integer $id
+     * 
+     * @return Boolean
+     */
+    function markFileToBeRestored($id) {
+                $sql = 'UPDATE frs_file_deleted'.
+               ' SET delete_date = NULL '.
+               ' WHERE file_id = '.$this->da->escapeInt($id);
+        return $this->update($sql);
+    }
 
 }
 

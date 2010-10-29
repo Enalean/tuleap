@@ -558,6 +558,18 @@ class FRSFileFactory extends Error {
         }
         return false;
     }
+    
+    /**
+     * Mark the files that site admin wants to restore
+     * 
+     * @param FRSFile $file
+     * 
+     * @return Boolean
+     */
+    public function markFileToBeRestored($file) {
+        $dao = $this->_getFRSFileDao();
+        return $dao->markFileToBeRestored($file->getFileID());
+    }
 }
 
 ?>
