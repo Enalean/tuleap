@@ -144,7 +144,7 @@ function frs_file_restore_view($group_id, $idArray, $nomArray, $htmlArray) {
         $i      = 1;
         foreach ($files as $file) {
             if ($file['release_status'] != FRSRelease::STATUS_DELETED
-                && $file['package_status'] != FRSRelease::STATUS_DELETED) {
+                && $file['package_status'] != FRSPackage::STATUS_DELETED) {
                 $html .= '<tr class="'. html_get_alt_row_color($i++) .'">';
                 $html .= '<td>'.$file['filename'].'</td>';
                 $html .= '<td>'.$file['release_name'].'</td>';
