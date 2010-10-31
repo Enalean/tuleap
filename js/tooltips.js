@@ -16,7 +16,7 @@ function initSnapshotTips() {
 
 		var content = '<div>' + GITPHP_RES_SNAPSHOT + ': ';
 		var first = true;
-		for (type in GITPHP_SNAPSHOT_FORMATS) {
+		for (var type in GITPHP_SNAPSHOT_FORMATS) {
 			if (!first) {
 				content += ' | ';
 			}
