@@ -43,6 +43,12 @@ rm -rf ./locale/zz_Debug
 # Build the translations
 ./util/msgfmt.sh
 
+# Minify javascript
+./util/minify.sh
+
+# Remove yuicompressor after we've used it, no need to redistribute it
+rm -Rf lib/yuicompressor
+
 # Remove the utility scripts
 rm -rf ./util
 
