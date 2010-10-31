@@ -39,10 +39,22 @@
     <link rel="stylesheet" href="css/ext/jquery.qtip.css" type="text/css" />
     <script type="text/javascript" src="js/ext/jquery-1.4.2.min.js"></script>
     <script type="text/javascript" src="js/ext/jquery.qtip.min.js"></script>
+    {if file_exists('js/tooltips.min.js')}
+    <script type="text/javascript" src="js/tooltips.min.js"></script>
+    {else}
     <script type="text/javascript" src="js/tooltips.js"></script>
+    {/if}
+    {if file_exists('js/lang.min.js')}
+    <script type="text/javascript" src="js/lang.min.js"></script>
+    {else}
     <script type="text/javascript" src="js/lang.js"></script>
+    {/if}
     {foreach from=$extrascripts item=script}
+    {if file_exists("js/$script.min.js")}
+    <script type="text/javascript" src="js/{$script}.min.js"></script>
+    {else}
     <script type="text/javascript" src="js/{$script}.js"></script>
+    {/if}
     {/foreach}
     {/if}
     {$smarty.capture.header}
