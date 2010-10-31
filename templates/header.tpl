@@ -42,7 +42,7 @@
     <script type="text/javascript" src="js/tooltips.js"></script>
     <script type="text/javascript" src="js/lang.js"></script>
     {foreach from=$extrascripts item=script}
-    <script type="text/javascript" src="{$script}"></script>
+    <script type="text/javascript" src="js/{$script}.js"></script>
     {/foreach}
     {/if}
     {$smarty.capture.header}
