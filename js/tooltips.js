@@ -50,7 +50,7 @@ function initSnapshotTips() {
 		$(this).click(function() { return false; });
 	});
 
-}
+};
 
 function initCommitTips() {
 
@@ -101,7 +101,7 @@ function initCommitTips() {
 		});
 	});
 
-}
+};
 
 function initTagTips() {
 
@@ -152,7 +152,7 @@ function initTagTips() {
 		});
 	});
 
-}
+};
 
 $(document).ready(function() {
 	initCommitTips();

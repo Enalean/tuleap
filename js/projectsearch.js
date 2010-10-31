@@ -116,7 +116,7 @@ function runSearch() {
 	}
 
 	$('img.searchSpinner').hide();
-}
+};
 
 function initProjectSearch() {
 	$('#projectSearchForm').keypress(function(e) {
@@ -155,7 +155,7 @@ function initProjectSearch() {
 		if ($('input.projectSearchBox').val() != oldSearchValue)
 			runSearch();
 	});
-}
+};
 
 $(document).ready(function() {
 	initProjectSearch();

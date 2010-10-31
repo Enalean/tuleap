@@ -14,7 +14,7 @@ function initLangSelector() {
 		$("#frmLangSelect").submit();
 	});
 	$("#btnLangSet").remove();
-}
+};
 
 $(document).ready(function() {
 	initLangSelector();

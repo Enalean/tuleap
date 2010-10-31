@@ -73,7 +73,7 @@ function initBlame() {
 
 		return false;
 	});
-}
+};
 
 $(document).ready(function() {
 	initBlame();

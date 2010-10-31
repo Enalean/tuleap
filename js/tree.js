@@ -16,7 +16,7 @@ function expanderLink(href, text) {
 	a.addClass('jsTree');
 	a.addClass('expander');
 	return a;
-}
+};
 
 function initTree() {
 	var url = window.location.href.match(/^([^\?]+\/)/);
@@ -116,7 +116,7 @@ function initTree() {
 
 		return false;
 	});
-}
+};
 
 $(document).ready(function() {
 	initTree();
