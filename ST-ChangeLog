@@ -6,7 +6,8 @@ Version 4.0.14 - (Not released yet)
         backlog #109427: Integration of docman in WebDAV iteration 1
 
         == Bugfix ==
-        backlog #112816: Blank page when trying to import in a tracker created from "Scrum" template
+        backlog #112816: Blank page when trying to import a tracker created from "Scrum" template
+        backlog #110672: Request to set the correct icon for office 2007 documents
 
 Version 4.0.13 - Wednesday, 29th September 2010
         == New features ==
