@@ -530,7 +530,8 @@ class FRSFileFactory extends Error {
         $stagingPath = $this->getStagingPath($file);
         if (file_exists($stagingPath)) {
             if (!is_dir(dirname($file->getFileLocation()))) {
-                mkdir(dirname($file->getFileLocation()), 0750, true);
+                mkdir(dirname($file->getFileLocation()), 0755, true);
+                $this->chgrp(dirname($file->getFileLocation()));
             }
             if (rename($stagingPath, $file->getFileLocation())) {
                 $dao = $this->_getFRSFileDao();
@@ -570,6 +571,15 @@ class FRSFileFactory extends Error {
     public function markFileToBeRestored($file) {
         $dao = $this->_getFRSFileDao();
         return $dao->markFileToBeRestored($file->getFileID());
+    }
+    
+    /**
+     * Wrapper for chgrp function
+     * 
+     * @param String $filename
+     */
+    public function chgrp($filename) {
+        chgrp($filename, $GLOBALS['sys_http_user']);
     }
 }
 
