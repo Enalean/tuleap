@@ -169,7 +169,7 @@ class Backend {
      * 
      * @return boolean true on success or false on failure
      */
-    protected function chown($path, $uid) {
+    public function chown($path, $uid) {
         return chown($path, $uid);
     }
 
@@ -186,7 +186,7 @@ class Backend {
      * 
      * @return boolean true on success or false on failure
      */
-    protected function chgrp($path, $uid) {
+    public function chgrp($path, $uid) {
         return chgrp($path, $uid);
     }
 
@@ -202,7 +202,7 @@ class Backend {
      * 
      * @return boolean true on success or false on failure
      */
-    protected function chmod($file, $mode) {
+    public function chmod($file, $mode) {
         return chmod($file, $mode);
     }
 

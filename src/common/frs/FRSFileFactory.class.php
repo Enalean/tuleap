@@ -284,11 +284,11 @@ class FRSFileFactory extends Error {
      * 
      * @return Boolean
      */
-    public function purgeDeletedFiles($time) {
+    public function purgeDeletedFiles($time, $backend) {
         $this->moveDeletedFilesToStagingArea();
         $this->purgeFiles($time);
         $this->cleanStaging();
-        $this->restoreDeletedFiles();
+        $this->restoreDeletedFiles($backend);
         return true;
     }
 
@@ -526,12 +526,12 @@ class FRSFileFactory extends Error {
      * 
      * @return Boolean
      */
-    function restoreFile($file) {
+    function restoreFile($file, $backend) {
         $stagingPath = $this->getStagingPath($file);
         if (file_exists($stagingPath)) {
             if (!is_dir(dirname($file->getFileLocation()))) {
                 mkdir(dirname($file->getFileLocation()), 0755, true);
-                $this->chgrp(dirname($file->getFileLocation()));
+                $backend->chgrp(dirname($file->getFileLocation()), $GLOBALS['sys_http_user']);
             }
             if (rename($stagingPath, $file->getFileLocation())) {
                 $dao = $this->_getFRSFileDao();
@@ -546,13 +546,13 @@ class FRSFileFactory extends Error {
      * 
      * @return Boolean
      */
-    public function restoreDeletedFiles() {
+    public function restoreDeletedFiles($backend) {
         $dao = $this->_getFRSFileDao();
         $dar = $dao->searchFilesToRestore();
         if ($dar && !$dar->isError() && $dar->rowCount() >0) {
             foreach ($dar as $row) {
                 $file = new FRSFile($row);
-                if (!$this->restoreFile($file)) {
+                if (!$this->restoreFile($file, $backend)) {
                     return false;
                 }
             }
@@ -571,15 +571,6 @@ class FRSFileFactory extends Error {
     public function markFileToBeRestored($file) {
         $dao = $this->_getFRSFileDao();
         return $dao->markFileToBeRestored($file->getFileID());
-    }
-    
-    /**
-     * Wrapper for chgrp function
-     * 
-     * @param String $filename
-     */
-    public function chgrp($filename) {
-        chgrp($filename, $GLOBALS['sys_http_user']);
     }
 }
 

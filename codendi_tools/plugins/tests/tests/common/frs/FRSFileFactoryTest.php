@@ -2,18 +2,20 @@
 
 require_once('common/frs/FRSFileFactory.class.php');
 require_once('common/frs/FRSReleaseFactory.class.php');
+require_once('common/backend/BackendSystem.class.php');
 
 Mock::generate('DataAccessResult');
 Mock::generate('FRSReleaseFactory');
 Mock::generate('FRSRelease');
 Mock::generate('FRSFileDao');
 Mock::generate('FRSFile');
+Mock::generate('BackendSystem');
 Mock::generatePartial('FRSFileFactory', 'FRSFileFactoryTestVersion', array('_getFRSReleaseFactory'));
 Mock::generatePartial('FRSFileFactory', 'FRSFileFactoryTestPurgeFiles', array('_getFRSFileDao', 'purgeFile'));
 Mock::generatePartial('FRSFileFactory', 'FRSFileFactoryTestPurgeOneFile', array('_getFRSFileDao'));
 Mock::generatePartial('FRSFileFactory', 'FRSFileFactoryTestMoveToStaging', array('_getFRSFileDao', 'moveDeletedFileToStagingArea'));
 Mock::generatePartial('FRSFileFactory', 'FRSFileFactoryTestPurgeDeletedFiles', array('purgeFiles', 'moveDeletedFilesToStagingArea', 'cleanStaging', 'restoreDeletedFiles'));
-Mock::generatePartial('FRSFileFactory', 'FRSFileFactoryTestRestore', array('_getFRSFileDao', 'chgrp'));
+Mock::generatePartial('FRSFileFactory', 'FRSFileFactoryTestRestore', array('_getFRSFileDao'));
 Mock::generatePartial('FRSFileFactory', 'FRSFileFactoryTestRestoreFiles', array('_getFRSFileDao', 'restoreFile'));
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
@@ -58,14 +60,15 @@ class FRSFileFactoryTest extends UnitTestCase {
         $this->assertEqual($sub_dir, 'p'.$package_id.'_r'.$release_id);
     }
 
-    function testPurgeDeletedFiles() {
+   function testPurgeDeletedFiles() {
         $ff = new FRSFileFactoryTestPurgeDeletedFiles($this);
         $ff->expectOnce('moveDeletedFilesToStagingArea');
         $ff->expectOnce('purgeFiles', array(1287504083));
         $ff->expectOnce('cleanStaging');
-        $ff->expectOnce('restoreDeletedFiles');
+        $backend = new MockBackendSystem($this);
+        $ff->expectOnce('restoreDeletedFiles', array($backend));
         
-        $ff->purgeDeletedFiles(1287504083);
+        $ff->purgeDeletedFiles(1287504083, $backend);
     }
 
     function testMoveDeletedFilesToStagingAreaWithNoFiles() {
@@ -282,8 +285,8 @@ class FRSFileFactoryTest extends UnitTestCase {
         $dao->expectOnce('restoreFile');
         $dao->setReturnValue('restoreFile', true);
         $fileFactory->setReturnValue('_getFRSFileDao', $dao);
-
-        $this->assertTrue($fileFactory->restoreFile($file));
+        $backend = new MockBackendSystem($this);
+        $this->assertTrue($fileFactory->restoreFile($file, $backend));
          
         // Cleanup
 
@@ -311,8 +314,9 @@ class FRSFileFactoryTest extends UnitTestCase {
         $dao = new MockFRSFileDao($this);
         $dao->expectNever('restoreFile');
         $fileFactory->setReturnValue('_getFRSFileDao', $dao);
-
-        $this->assertFalse($fileFactory->restoreFile($file));
+        $backend = new MockBackendSystem($this);
+        $backend->setReturnValue('chgrp', true);
+        $this->assertFalse($fileFactory->restoreFile($file, $backend));
          
         // Cleanup
 
@@ -328,20 +332,20 @@ class FRSFileFactoryTest extends UnitTestCase {
         mkdir(dirname($filepath), 0750, true);
         touch($filepath);
         $this->assertTrue(is_dir(dirname($filepath)));
-
+        $backend = new MockBackendSystem($this);
         $file = new MockFRSFile($this);
         $file->setReturnValue('getFileID', 12);
         $file->setReturnValue('getFileName', 'p2_r1/toto.xls');
         $file->setReturnValue('getFileLocation', $GLOBALS['ftp_frs_dir_prefix'].'/prj/p2_r1/toto.xls');
         $this->assertTrue(is_dir(dirname($GLOBALS['ftp_frs_dir_prefix'].'/prj/p2_r1/')));
-        $fileFactory->setReturnValue('chgrp', true);
+        $backend->setReturnValue('chgrp', true);
 
         $dao = new MockFRSFileDao($this);
         $dao->expectOnce('restoreFile');
         $dao->setReturnValue('restoreFile', true);
         $fileFactory->setReturnValue('_getFRSFileDao', $dao);
 
-        $this->assertTrue($fileFactory->restoreFile($file));
+        $this->assertTrue($fileFactory->restoreFile($file, $backend));
 
         // Cleanup
         rmdir($GLOBALS['ftp_frs_dir_prefix'].'/DELETED/prj/p2_r1');
@@ -369,8 +373,9 @@ class FRSFileFactoryTest extends UnitTestCase {
         $dao->expectOnce('restoreFile');
         $dao->setReturnValue('restoreFile', false);
         $fileFactory->setReturnValue('_getFRSFileDao', $dao);
-
-        $this->assertFalse($fileFactory->restoreFile($file));
+        $backend = new MockBackendSystem($this);
+        $backend->setReturnValue('chgrp', true);
+        $this->assertFalse($fileFactory->restoreFile($file, $backend));
 
         // Cleanup
         rmdir($GLOBALS['ftp_frs_dir_prefix'].'/DELETED/prj/p3_r1');
@@ -395,11 +400,11 @@ class FRSFileFactoryTest extends UnitTestCase {
         
         $ff = new FRSFileFactoryTestRestoreFiles($this);
         $ff->setReturnValue('_getFRSFileDao', $dao);
-        
-        $ff->expectOnce('restoreFile', array($refFile));
+        $backend  = new MockBackendSystem($this);
+        $ff->expectOnce('restoreFile', array($refFile, $backend));
         $ff->setReturnValue('restoreFile', true);
         
-        $this->assertTrue($ff->restoreDeletedFiles());
+        $this->assertTrue($ff->restoreDeletedFiles($backend));
     }
 }
 ?>
