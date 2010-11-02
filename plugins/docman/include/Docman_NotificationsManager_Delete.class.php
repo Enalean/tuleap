@@ -31,7 +31,7 @@ class Docman_NotificationsManager_Delete extends Docman_NotificationsManager {
     }
     function somethingHappen($event, $params) {
         //search for users who monitor the item
-        if ($event == 'plugin_docman_event_del' || $event == 'plugin_docman_event_del_version') {
+        if ($event == 'plugin_docman_event_del') {
             $this->_storeEvents($params['item']->getId(), self::MESSAGE_REMOVED, $params);
             $this->_storeEvents($params['item']->getParentId(), self::MESSAGE_REMOVED_FROM, $params);
         }
