@@ -447,7 +447,7 @@ class FRSFileDao extends DataAccessObject {
      * @return Boolean
      */
     function markFileToBeRestored($id) {
-                $sql = 'UPDATE frs_file_deleted AS f'.
+                $sql = 'UPDATE frs_file_deleted AS f,'.
                 ' frs_release AS r '.
                 ' SET f.delete_date = NULL '.
                 ' WHERE f.file_id = '.$this->da->escapeInt($id).
