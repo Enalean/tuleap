@@ -112,9 +112,6 @@ class Docman_Controller extends Controler {
         $this->notificationsManager_Delete =& new Docman_NotificationsManager_Delete($this->getGroupId(), get_server_url().$this->getDefaultUrl(), $this->feedback);
         $event_manager->addListener('plugin_docman_event_del', $this->notificationsManager_Delete, 'somethingHappen', true, 0);
         $event_manager->addListener('send_notifications',    $this->notificationsManager_Delete, 'sendNotifications', true, 0);
-        $this->notificationsManager_Delete =& new Docman_NotificationsManager_Delete($this->getGroupId(), get_server_url().$this->getDefaultUrl(), $this->feedback);
-        $event_manager->addListener('plugin_docman_event_del_version', $this->notificationsManager_Delete, 'somethingHappen', true, 0);
-        $event_manager->addListener('send_notifications',    $this->notificationsManager_Delete, 'sendNotifications', true, 0);
         $this->notificationsManager_Move =& new Docman_NotificationsManager_Move($this->getGroupId(), get_server_url().$this->getDefaultUrl(), $this->feedback);
         $event_manager->addListener('plugin_docman_event_move', $this->notificationsManager_Move, 'somethingHappen', true, 0);
         $event_manager->addListener('send_notifications',     $this->notificationsManager_Move, 'sendNotifications', true, 0);
