@@ -22,7 +22,7 @@ Source0: %{PKG_NAME}-%{version}.tar.gz
 Source1: cli_ParametersLocal.dtd
 Source2: user_guide_ParametersLocal.dtd
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
-
+Requires: codendi
 
 %description
 This package provides the documentation, CLI package and themes modifications
