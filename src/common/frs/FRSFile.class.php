@@ -273,7 +273,7 @@ class FRSFile extends Error {
         // retrieve the release the file belongs to
         $release_id = $this->getReleaseID();
         $release_fact = new FRSReleaseFactory();
-        $release =& $release_fact->getFRSReleaseFromDb($release_id);
+        $release = $release_fact->getFRSReleaseFromDb($release_id, null, null, FRSReleaseDao::INCLUDE_DELETED);
         $group_id = $release->getGroupID();
         $group = $pm->getProject($group_id);
         return $group;

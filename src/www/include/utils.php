@@ -1525,7 +1525,7 @@ function util_return_to($url) {
 */
 function util_time_ago_in_words($time, $include_seconds = false) {
     if ($time) {
-        return $GLOBALS['Language']->getText('include_utils', 'time_ago', util_distance_of_time_in_words($time, time(), $include_seconds));
+        return $GLOBALS['Language']->getText('include_utils', 'time_ago', util_distance_of_time_in_words($time, $_SERVER['REQUEST_TIME'], $include_seconds));
     } else {
         return '-';
     }

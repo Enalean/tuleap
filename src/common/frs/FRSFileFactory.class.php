@@ -241,40 +241,212 @@ class FRSFileFactory extends Error {
     	$dao =& $this->_getFRSFileDao();
     	return $dao->delete($_id);
     }
-/*
 
-Physically delete a file from the download server and database
+    /**
+     * Mark a file as deleted
+     *
+     * Deletion of a file in FRS is a complex process.
+     * First, when user attempt to delete a file (or recursively when she deletes
+     * a release or a whole package) files are not immedialty deleted:
+     * #1: Flag the file as deleted (status = D, no longer appears in web interface)
+     * #2: Move flaged files into a staging area for a while
+     * #3: Every so often permanently erase from the file system the files from
+     *     the stagging area that are older than a given threshold.
+     * Why such complex process ?
+     * #1: To allow files to be backed-up even if files are uploaded and deleted
+     *     before a backup job occurs.
+     * #2: The staging area/period allows site admin to magically restore files
+     *     if they were removed by mistake.
+     * #3: Previous step 2 needs to be done by 'root' because files might no be
+     *     owned by Codendiadm user.
+     * #4: Whe need to move files in a staging area because otherwise people would
+     *     not be able to upload a file with the same name in the same release
+     *     because the new file will override the deleted one and when the job
+     *     comes to purge the file it will remove the new one (valid).
+     *
+     * @param Integer $group_id
+     * @param Integer $file_id
+     *
+     * @return Boolean
+     */
+    function delete_file ($group_id, $file_id) {
+        $file = $this->getFRSFileFromDb($file_id, $group_id);
+        if ($file) {
+            return $this->_delete($file_id);
+        }
+        return false;
+    }
 
-First, make sure the file is theirs
-Second, delete it from the db
-Third, delete it from the download server
+    /**
+     * Centralize treatement of files physical deletion in FRS
+     * 
+     * @param Integer $time Date from when the files must be erased
+     * 
+     * @return Boolean
+     */
+    public function purgeDeletedFiles($time, $backend) {
+        $this->moveDeletedFilesToStagingArea();
+        $this->purgeFiles($time);
+        $this->cleanStaging();
+        $this->restoreDeletedFiles($backend);
+        return true;
+    }
 
-return 0 if file not deleted, 1 otherwise
-*/
-    function delete_file ($group_id,$file_id) {
-	  	GLOBAL $ftp_incoming_dir;
+    /**
+     * Move to staging all files marked as deleted but still in the release area
+     * 
+     * @return Boolean
+     */
+    public function moveDeletedFilesToStagingArea() {
+        $dao = $this->_getFRSFileDao();
+        $dar = $dao->searchStagingCandidates();
+        if ($dar && !$dar->isError()) {
+            foreach ($dar as $row) {
+                $this->moveDeletedFileToStagingArea(new FRSFile($row));
+            }
+            return true;
+        }
+        return false;
+    }
 
+    /**
+     * Physically move one file from release area to staging
+     * 
+     * The file is renamed during the move with its file id to avoid override
+     * if someone upload and delete 2 times (or more) the same file in the same
+     * release
+     * 
+     * @param FRSFile $file
+     */
+    public function moveDeletedFileToStagingArea($file) {
+        $stagingPath = $this->getStagingPath($file);
+        $stagingDir  = dirname($stagingPath);
+        if (!is_dir($stagingDir)) {
+            mkdir($stagingDir, 0750, true);
+        }
+        if (rename($file->getFileLocation(), $stagingPath)) {
+            $dao = $this->_getFRSFileDao();
+            $deleted = $dao->setFileInDeletedList($file->getFileId());
+            
+            // Delete release directory when the last file is removed
+            $nbFiles = 0;
+            $dir = new DirectoryIterator(dirname($file->getFileLocation()));
+            foreach ($dir as $f) {
+                if (!$f->isDot()) {
+                    $nbFiles++;
+                }
+            }
+            if ($nbFiles === 0) {
+                rmdir(dirname($file->getFileLocation()));
+            }
+            return $deleted;
+        }
+        return false;
+    }
 
-	  	$file =& $this->getFRSFileFromDb($file_id, $group_id); 
-	  	
-	  	if (!$file) {
-	    	//file not found for this project
-	    	return 0;
-	  	} else {
-	    	/*
-	    	   delete the file from the database
-	    	*/
-	    	$file_name = $file->getFileName();
-	    	$this->_delete($file_id);
-	    //append the filename and project name to a temp file for the root perl job to grab
-	    	$time = time();
-	    	$pm = ProjectManager::instance();
-            exec ('/bin/echo "'. $file_name .'::'. $pm->getProject($group_id)->getUnixName() .'::'.$time.'" >> '. $ftp_incoming_dir .'/.delete_files');
-	
-	    	return 1;
-	  	}
-	}
-    
+    /**
+     * Get the path in staging area of a file
+     * 
+     * @param FRSFile $file
+     * 
+     * @return String
+     */
+    public function getStagingPath($file) {
+        $fileName    = basename($file->getFileLocation());
+        $releasePath = dirname($file->getFileLocation());
+        $relDirName  = basename($releasePath);
+        $prjDirName  = basename(dirname($releasePath));
+        $stagingPath = $GLOBALS['ftp_frs_dir_prefix'].'/DELETED/'.$prjDirName.'/'.$relDirName;
+        return $stagingPath.'/'.$fileName.'.'.$file->getFileId();
+    }
+
+    /**
+     * Permanently erase from the file system all deleted files older than given date
+     *
+     * @param Integer $time Timestamp
+     *
+     * @return Boolean
+     */
+    public function purgeFiles($time) {
+        $dao = $this->_getFRSFileDao();
+        $dar = $dao->searchFilesToPurge($time);
+        if ($dar && !$dar->isError()) {
+            foreach ($dar as $row) {
+                $file = new FRSFile($row);
+                $this->purgeFile($file);
+            }
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Erase from the file system one file
+     *
+     * @param FRSFile $file File to delete
+     *
+     * @return Boolean
+     */
+    public function purgeFile($file) {
+        if (unlink($this->getStagingPath($file))) {
+            $dao = $this->_getFRSFileDao();
+            return $dao->setPurgeDate($file->getFileID(), time());
+        }
+        return false;
+    }
+
+    /**
+     * Remove empty releases and project directories in staging area
+     * 
+     * @return Boolean
+     */
+    public function cleanStaging() {
+        // All projects
+        $prjIter = new DirectoryIterator($GLOBALS['ftp_frs_dir_prefix'].'/DELETED');
+        foreach ($prjIter as $prj) {
+            if (strpos($prj->getFilename(), '.') !== 0) {
+                // Releases
+                $nbRel   = 0;
+                $relIter = new DirectoryIterator($prj->getPathname());
+                foreach ($relIter as $rel) {
+                    if (!$rel->isDot()) {
+                        // Files
+                        $nbFiles  = 0;
+                        $fileIter = new DirectoryIterator($rel->getPathname());
+                        foreach ($fileIter as $file) {
+                            if (!$file->isDot()) {
+                                $nbFiles++;
+                            }
+                        }
+                        if ($nbFiles === 0) {
+                            rmdir($rel->getPathname());
+                        } else {
+                            $nbRel++;
+                        }
+                    }
+                }
+                if ($nbRel === 0) {
+                    rmdir($prj->getPathname());
+                }
+            }
+        }
+        return true;
+    }
+
+    /**
+     * List all files deleted but not already purged
+     * 
+     * @param Integer $groupId
+     * @param Integer $offset
+     * @param Integer $limit
+     * 
+     * @return Boolean
+     */
+    public function listPendingFiles($groupId, $offset, $limit) {
+        $dao = $this->_getFRSFileDao();
+        return $dao->searchFilesToPurge($_SERVER['REQUEST_TIME'], $groupId, $offset, $limit);
+    }
+
     /** 
      * Returns true if user has permissions to add files
      * 
@@ -336,16 +508,70 @@ return 0 if file not deleted, 1 otherwise
         $pm = ProjectManager::instance();
         $group = $pm->getProject($group_id);
         $group_unix_name = $group->getUnixName(false);
-		$file_name = preg_replace('` `', '\\ ', $file_name);
-        $ret_val = null;
-        $exec_res = null;
-        //exec("/bin/date > /tmp/" . $group_unix_name . "$group_id", $exec_res);
-		//exec($GLOBALS['codendi_bin_prefix'] . "/fileforge /tmp/" . $group_unix_name . "$group_id " . $group_unix_name, $exec_res);
-        $cmd = $GLOBALS['codendi_bin_prefix'] . "/fileforge $file_name " . $group_unix_name . "/" . $upload_sub_dir;
-        exec($cmd, $exec_res, $ret_val);
-        return $ret_val;
+        $file_name = preg_replace('` `', '\\ ', $file_name);
+        if (!file_exists($GLOBALS['ftp_frs_dir_prefix'].'/'.$group_unix_name . '/' . $upload_sub_dir.'/'.$file_name)) {
+            $ret_val  = null;
+            $exec_res = null;
+            $cmd = $GLOBALS['codendi_bin_prefix'] . "/fileforge $file_name " . $group_unix_name . "/" . $upload_sub_dir;
+            exec($cmd, $exec_res, $ret_val);
+            return $ret_val;
+        }
+        return "Error";
     }
 
+    /**
+     * restore file by moving it from staging area to its old location
+     * 
+     * @param FRSFile $file 
+     * 
+     * @return Boolean
+     */
+    function restoreFile($file, $backend) {
+        $stagingPath = $this->getStagingPath($file);
+        if (file_exists($stagingPath)) {
+            if (!is_dir(dirname($file->getFileLocation()))) {
+                mkdir(dirname($file->getFileLocation()), 0755, true);
+                $backend->chgrp(dirname($file->getFileLocation()), $GLOBALS['sys_http_user']);
+            }
+            if (rename($stagingPath, $file->getFileLocation())) {
+                $dao = $this->_getFRSFileDao();
+                return $dao->restoreFile($file->getFileID());
+            }
+        }
+        return false;
+    }
+    
+    /**
+     * Restore files marked to be restored
+     * 
+     * @return Boolean
+     */
+    public function restoreDeletedFiles($backend) {
+        $dao = $this->_getFRSFileDao();
+        $dar = $dao->searchFilesToRestore();
+        if ($dar && !$dar->isError() && $dar->rowCount() >0) {
+            foreach ($dar as $row) {
+                $file = new FRSFile($row);
+                if (!$this->restoreFile($file, $backend)) {
+                    return false;
+                }
+            }
+            return true;
+        }
+        return false;
+    }
+    
+    /**
+     * Mark the files that site admin wants to restore
+     * 
+     * @param FRSFile $file
+     * 
+     * @return Boolean
+     */
+    public function markFileToBeRestored($file) {
+        $dao = $this->_getFRSFileDao();
+        return $dao->markFileToBeRestored($file->getFileID());
+    }
 }
 
 ?>

@@ -21,6 +21,7 @@ require_once ('include/DataAccessObject.class.php');
 require_once ('common/user/UserManager.class.php');
 
 class FRSReleaseDao extends DataAccessObject {
+    const INCLUDE_DELETED = 0x0001;
 
     var $STATUS_DELETED;
 
@@ -34,20 +35,20 @@ class FRSReleaseDao extends DataAccessObject {
      *
      * @return DataAccessResult
      */
-    function searchById($id) {
+    function searchById($id, $extraFlags = 0) {
         $_id = (int) $id;
-        return $this->_search(' r.release_id = ' . $this->da->escapeInt($_id), '', ' ORDER BY release_date DESC LIMIT 1');
+        return $this->_search(' r.release_id = ' . $this->da->escapeInt($_id), '', ' ORDER BY release_date DESC LIMIT 1', array(), $extraFlags);
     }
 
-    function searchInGroupById($id, $group_id) {
+    function searchInGroupById($id, $group_id, $extraFlags = 0) {
         $_id = (int) $id;
         $_group_id = (int) $group_id;
         return $this->_search(' p.group_id=' . $this->da->escapeInt($_group_id) . ' AND r.release_id=' . $this->da->escapeInt($_id) . ' AND r.package_id=p.package_id AND p.status_id!=' . db_ei($this->STATUS_DELETED), '', ' ORDER BY release_date DESC LIMIT 1', array (
             'frs_package AS p'
-        ));
+        ), $extraFlags);
     }
 
-    function searchByGroupPackageReleaseID($release_id, $group_id, $package_id) {
+    function searchByGroupPackageReleaseID($release_id, $group_id, $package_id, $extraFlags = 0) {
         $_id = (int) $release_id;
         $_group_id = (int) $group_id;
         $_package_id = (int) $package_id;
@@ -55,7 +56,7 @@ class FRSReleaseDao extends DataAccessObject {
         return $this->_search(' p.package_id=' . $this->da->escapeInt($_package_id) . ' AND p.group_id=' . $this->da->escapeInt($_group_id) . ' AND r.release_id=' . $this->da->escapeInt($_id) .
         ' AND r.package_id=p.package_id AND p.status_id!=' . $this->da->escapeInt($this->STATUS_DELETED), '', 'ORDER BY release_date DESC LIMIT 1', array (
             'frs_package AS p'
-        ));
+        ), $extraFlags);
     }
 
     function searchByGroupPackageID($group_id, $package_id = null) {
@@ -91,13 +92,42 @@ class FRSReleaseDao extends DataAccessObject {
         return $this->_search(' package_id=' . $this->da->escapeInt($_id), '', ' ORDER BY release_date DESC, release_id DESC ');
     }
 
-    function _search($where, $group = '', $order = '', $from = array ()) {
+    /**
+     * Internal method to search releases
+     * 
+     * This method use bitwise masks to manage extraFlags.
+     * $extraFlags variable will be set with one or more parameters (only one
+     * defined yet):
+     * $extraFlags = FRSReleaseDao::INCLUDE_DELETED;
+     * $extraFlags = FRSReleaseDao::INCLUDE_DELETED | FRSReleaseDao::INCLUDE_HIDDEN;
+     * 
+     * Then, in this method we are doing a bitwise mask to check which values where set:
+     * if (($extraFlags & self::INCLUDE_DELETED) != 0) {
+     *     // Include deleted releases
+     * }
+     * if (($extraFlags & self::INCLUDE_HIDDEN) != 0) {
+     *     // Include hidden releases
+     * }
+     * 
+     * More info: http://stackoverflow.com/questions/261062/when-to-use-bitwise-operators-during-webdevelopment/261227#261227
+     * 
+     * @param $where
+     * @param $group
+     * @param $order
+     * @param $from
+     * @param $extraFlags
+     */
+    function _search($where, $group = '', $order = '', $from = array (), $extraFlags = 0) {
         $sql = 'SELECT r.* ' .
         ' FROM frs_release AS r ' .
-         (count($from) > 0 ? ', ' . implode(', ', $from) : '') .
-         (trim($where) != '' ? ' WHERE ' . $where . ' AND r.status_id!= ' . $this->da->escapeInt($this->STATUS_DELETED) . ' ' : '') .
-        $group .
-        $order;
+        (count($from) > 0 ? ', ' . implode(', ', $from) : '');
+        if (trim($where) != '') {
+            $sql .= ' WHERE ' . $where. ' ';
+            if (($extraFlags & self::INCLUDE_DELETED) == 0) {
+                $sql .= ' AND r.status_id!= ' . $this->da->escapeInt($this->STATUS_DELETED) . ' ';
+            }
+        }
+        $sql .= $group.$order;
         return $this->retrieve($sql);
     }
 

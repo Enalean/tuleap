@@ -1131,4 +1131,42 @@ ul.ServiceMenu li.current {
 .project_privacy_public {
     background-image:url('../images/ic/lock-unlock.png');
 }
+.onglet {
+    display: inline-block;
+    margin-left: 3px;
+    margin-right: 3px;
+    padding: 3px;
+    border: 1px solid black;
+    cursor: pointer;
+}
+
+.onglet_0 {
+    background: #bbbbbb;
+    border-bottom: 1px solid black;
+}
+
+.onglet_1 {
+    background: #dddddd;
+    border-bottom: 0px solid black;
+    padding-bottom: 4px;
+}
+
+.contenu_onglet {
+    background-color: #dddddd;
+    border: 1px solid black;
+    margin-top: -1px;
+    padding: 5px;
+    display: none;
+}
+
+ul {
+    margin-top: 0px;
+    margin-bottom: 0px;
+    margin-left: -10px
+}
+
+h1 {
+    margin: 0px;
+    padding: 0px;
+}
 /* }}}*/

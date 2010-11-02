@@ -42,6 +42,9 @@ class Docman_Log { /* implements EventListener */
             case PLUGIN_DOCMAN_EVENT_NEW_VERSION:
                 $this->dao->create($params['group_id'], $params['item']->getId(), $params['user']->getId(), $event, null, $params['version']);
                 break;
+           case PLUGIN_DOCMAN_EVENT_DEL_VERSION:
+                $this->dao->create($params['group_id'], $params['item']->getId(), $params['user']->getId(), $event, $params['old_value'], null);
+                break;
             case PLUGIN_DOCMAN_EVENT_METADATA_UPDATE:
                 $this->dao->create($params['group_id'], $params['item']->getId(), $params['user']->getId(), $event, $params['old_value'], $params['new_value'], $params['field']);
                 break;
@@ -51,6 +54,12 @@ class Docman_Log { /* implements EventListener */
             case PLUGIN_DOCMAN_EVENT_SET_VERSION_AUTHOR:
             case PLUGIN_DOCMAN_EVENT_SET_VERSION_DATE:
                 $this->dao->create($params['group_id'], $params['item']->getId(), $params['user']->getId(), $event, null, $params['new_value']);
+                break;
+            case PLUGIN_DOCMAN_EVENT_RESTORE:
+                $this->dao->create($params['group_id'], $params['item']->getId(), $params['user']->getId(), $event, null, null);
+                break;
+            case PLUGIN_DOCMAN_EVENT_RESTORE_VERSION:
+                $this->dao->create($params['group_id'], $params['item']->getId(), $params['user']->getId(), $event, $params['old_value'], null);
                 break;
             default:
                 $this->dao->create($params['group_id'], $params['item']->getId(), $params['user']->getId(), $event);
@@ -105,7 +114,7 @@ class Docman_Log { /* implements EventListener */
                     if ($row['type'] != PLUGIN_DOCMAN_EVENT_ACCESS || $display_access_logs) {
                         $user = $row['user_id'] ? user_get_name_display_from_id($row['user_id']) : $GLOBALS['Language']->getText('plugin_docman','details_history_anonymous');
                         $html .= '<tr class="'. $odd_even[$i++ % count($odd_even)] .'">';
-                        $html .= '<td>'. format_date($GLOBALS['Language']->getText('system', 'datefmt'), $row['time']) .'</td>';
+                        $html .= '<td>'. html_time_ago($row['time']) .'</td>';
                         $html .= '<td>'. $user                             .'</td>';
                         if($row['type'] == PLUGIN_DOCMAN_EVENT_METADATA_UPDATE) {
                             $_old_v = $row['old_value'];
@@ -154,6 +163,16 @@ class Docman_Log { /* implements EventListener */
                             $html .= "<td>&nbsp;</td>";
                             $html .= "<td>$newDate</td>";
                         }
+                        elseif ($row['type'] == PLUGIN_DOCMAN_EVENT_DEL_VERSION) {
+                            $old_version = $row['old_value'];
+                            $html .= '<td>'. $this->getText($row['type']) .'</td>';
+                            $html .= '<td colspan="2" align="center">'.$old_version.'</td>';
+                        }
+                        elseif ($row['type'] == PLUGIN_DOCMAN_EVENT_RESTORE_VERSION) {
+                            $versionNumber = $row['old_value'];
+                            $html .= '<td>'. $this->getText($row['type']) .'</td>';
+                            $html .= '<td colspan="2" align="center">'.$versionNumber.'</td>';
+                        }
                         else {
                             $html .= '<td colspan>'. $this->getText($row['type']) .'</td><td colspan="2">&nbsp;</td>';
                         }
@@ -190,6 +209,9 @@ class Docman_Log { /* implements EventListener */
             case PLUGIN_DOCMAN_EVENT_DEL:
                 $txt = $GLOBALS['Language']->getText('plugin_docman','event_del');
                 break;
+            case PLUGIN_DOCMAN_EVENT_DEL_VERSION:
+                $txt = $GLOBALS['Language']->getText('plugin_docman','event_del_version');
+                break;
             case PLUGIN_DOCMAN_EVENT_ACCESS:
                 $txt = $GLOBALS['Language']->getText('plugin_docman','event_access');
                 break;
@@ -207,6 +229,12 @@ class Docman_Log { /* implements EventListener */
                 break;
             case PLUGIN_DOCMAN_EVENT_SET_VERSION_DATE:
                 $txt = $GLOBALS['Language']->getText('plugin_docman', 'event_set_version_date');    
+                break;
+            case PLUGIN_DOCMAN_EVENT_RESTORE:
+                $txt = $GLOBALS['Language']->getText('plugin_docman', 'event_restore');
+                break;
+            case PLUGIN_DOCMAN_EVENT_RESTORE_VERSION:
+                $txt = $GLOBALS['Language']->getText('plugin_docman', 'event_restore_version');
                 break;
             case PLUGIN_DOCMAN_EVENT_LOCK_ADD:
                 $txt = $GLOBALS['Language']->getText('plugin_docman', 'event_lock_add');

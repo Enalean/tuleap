@@ -26,7 +26,6 @@ class Docman_ActionsDeleteVisitor /* implements Visitor */ {
     function Docman_ActionsDeleteVisitor(&$file_storage, &$docman) {
         //More coherent to have only one delete date for a whole hierarchy.
         $this->deleteDate   = time();
-        $this->file_storage =& $file_storage;
         $this->docman       =& $docman;
     }
     
@@ -56,7 +55,7 @@ class Docman_ActionsDeleteVisitor /* implements Visitor */ {
             return $this->_deleteItem($item, $params);
         }
     }
-    function visitDocument(&$item, $params = array()) {
+    function visitDocument($item, $params = array()) {
         //Mark the document as deleted
         return $this->_deleteItem($item, $params);
     }
@@ -93,23 +92,20 @@ class Docman_ActionsDeleteVisitor /* implements Visitor */ {
     function visitLink(&$item, $params = array()) {
         return $this->visitDocument($item, $params);
     }
-    function visitFile(&$item, $params = array()) {
+
+    function visitFile($item, $params = array()) {
         if ($this->docman->userCanWrite($item->getId())) {
-            //Delete all versions before
-            $version_factory =& $this->_getVersionFactory();
-            if ($versions = $version_factory->getAllVersionForItem($item)) {
-                if (count($versions)) {
-                    foreach ($versions as $key => $nop) {
-                        $this->file_storage->delete($versions[$key]->getPath());
-                    }
-                }
+            if (isset($params['version']) && $params['version'] !== false) {
+                return $this->_deleteVersion($item, $params['version'], $params['user']);
+            } else {
+                return $this->_deleteFile($item, $params);
             }
-            return $this->visitDocument($item, $params);
         } else {
             $this->docman->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_perms_delete_item', $item->getTitle()));
             return false;
         }
     }
+
     function visitEmbeddedFile(&$item, $params = array()) {
         return $this->visitFile($item, $params);
     }
@@ -157,18 +153,74 @@ class Docman_ActionsDeleteVisitor /* implements Visitor */ {
             $dIF->delCopyPreferenceForAllUsers($item->getId());
             $dao = $this->_getItemDao();
             $dao->updateFromRow($item->toRow());
+            $dao->storeDeletedItem($item->getId());
             return true;
         } else {
             $this->docman->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_perms_delete_item', $item->getTitle()));
             return false;
         }
     }
+
+    /**
+     * Delete a file (all versions of the file)
+     * 
+     * @param Docman_File $item
+     * @param Array       $params
+     * 
+     * @return Boolean
+     */
+    function _deleteFile(Docman_File $item, $params) {
+        // Delete all versions before
+        $version_factory =& $this->_getVersionFactory();
+        if ($versions = $version_factory->getAllVersionForItem($item)) {
+            if (count($versions)) {
+                $um =& UserManager::instance();
+                $user =& $um->getCurrentUser();
+                foreach ($versions as $version) {
+                    $this->_deleteVersion($item, $version, $user);
+                }
+            }
+        }
+        return $this->visitDocument($item, $params);
+    }
+
+    /**
+     * Delete a version of a file
+     * 
+     * @param Docman_File    $item
+     * @param Docman_Version $version
+     * @param User           $user
+     * 
+     * @return Boolean
+     */
+    function _deleteVersion(Docman_File $item, Docman_Version $version, User $user) {
+        // The event must be processed before the version is deleted
+        $value = $version->getNumber();
+        if ($version->getLabel() !== '') {
+            $value .= ' ('.$version->getLabel().')';
+        }
+        $em = $this->_getEventManager();
+        $em->processEvent('plugin_docman_event_del_version', array(
+                          'group_id'   => $item->getGroupId(),
+                          'item'       => $item,
+                          'old_value'  => $value,
+                          'user'       => $user)
+        );
+
+        // Proceed to deletion
+        $version_factory = $this->_getVersionFactory();
+        return $version_factory->deleteSpecificVersion($item, $version->getNumber());
+    }
+
     function &_getEventManager() {
         return EventManager::instance();
     }
+    var $version_factory;
     function &_getVersionFactory() {
-        $f = new Docman_VersionFactory();
-        return $f;
+        if (!$this->version_factory) {
+        $this->version_factory = new Docman_VersionFactory();
+        }
+        return $this->version_factory;
     }
     var $item_factory;
     function &_getItemFactory() {

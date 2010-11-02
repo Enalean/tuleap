@@ -383,6 +383,12 @@ $sys_suspend_inactive_accounts_delay = 0;
 // 0 = never desactivate "not project members" account
 $sys_suspend_non_project_member_delay = 0;
 
+// Delay between the date when a doc is deleted by a user and the date the
+// corresponding file is erased on the filesystem.
+// Useful for backup and to restore files that where deleted by mistake
+// Default value is 3 days
+$sys_file_deletion_delay = 3;
+
 // Max upload size for quick release, documentation, patch and code snippet.
 // in bytes. E.g. 67108864 for 64 MB
 // Make sure that php.ini and mysql configuration file (/etc/my.cnf)

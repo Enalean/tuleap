@@ -296,7 +296,7 @@ class BrowserPlugin extends Sabre_DAV_Browser_Plugin {
                     $this->deleteForm($file);
                     $this->renameForm($file);
                     $destinations = $this->getReleaseDestinations($file);
-                    $this->moveForm($file, $destinations);
+                    //$this->moveForm($file, $destinations);
                 }
             }
             if ($class == 'WebDAVFRSRelease') {
@@ -305,7 +305,7 @@ class BrowserPlugin extends Sabre_DAV_Browser_Plugin {
                 if ($node->userCanWrite()) {
                     $this->deleteForm($file);
                     $destinations = $this->getFileDestinations($file);
-                    $this->moveForm($file, $destinations);
+                    //$this->moveForm($file, $destinations);
                 }
             }
             echo "</tr>";

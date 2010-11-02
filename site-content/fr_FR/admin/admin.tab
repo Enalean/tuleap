@@ -434,3 +434,8 @@ admin_system_events	title	Événements Système
 admin_system_events	notifications	Alertes
 admin_system_events	send_email	Envoyer un email à :
 admin_system_events	nobody	Personne
+
+#-----------------------------------------------
+# Script: SF/www/admin/show_pending_documents.php
+#
+admin_show_pending_documents	pending_doc	Les supprimés documents en suspens pour le projet <a href="/project/admin/?group_id=$1"> $2 </a>

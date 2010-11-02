@@ -634,6 +634,18 @@ class Docman_ItemFactory {
         return $this->wikidao;
     }
 
+    protected function _getVersionFactory() {
+        return new Docman_VersionFactory();
+    }
+
+    protected function _getUserManager() {
+        return UserManager::instance();
+    }
+
+    protected function _getEventManager() {
+        return EventManager::instance();
+    }
+
     function update($row) {
         // extract cross references
         $reference_manager = ReferenceManager::instance();
@@ -1076,6 +1088,88 @@ class Docman_ItemFactory {
         }
         
         return $stats;
+    }
+
+    /**
+     * List pending items
+     *
+     * @param Integer $groupId
+     * @param Integer $offset
+     * @param Integer $limit
+     *
+     * @return Array
+     */
+    function listPendingItems($groupId, $offset, $limit) {
+        $dao = $this->_getItemDao();
+        return $dao->listPendingItems($groupId, $offset, $limit);
+    }
+
+    /**
+     * Purge deleted items with delete date lower than the given time
+     *
+     * @param Integer $time
+     *
+     * @return Boolean
+     */
+    function purgeDeletedItems($time) {
+        $dao = $this->_getItemDao();
+        $dar = $dao->listItemsToPurge($time);
+        if ($dar && !$dar->isError()) {
+            foreach ($dar as $row) {
+                $item = new Docman_Item($row);
+                $this->purgeDeletedItem($item);
+            }
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Mark the deleted item as purged
+     *
+     * @param Docman_Item $item
+     *
+     * @return Boolean
+     */
+    public function purgeDeletedItem($item) {
+        $dao = $this->_getItemDao();
+        return $dao->setPurgeDate($item->getId(), time());
+    }
+
+    /**
+     * Restore on item
+     * 
+     * @param Docman_Item $item
+     * 
+     * @return Boolean
+     */
+    public function restore($item) {
+        $dao         = $this->_getItemDao();
+        $type        = $this->getItemTypeForItem($item);
+        $oneRestored = false;
+        $isFile      = false;
+        if ($type == PLUGIN_DOCMAN_ITEM_TYPE_FILE || $type == PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE) {
+            $isFile      = true;
+            $vf          = $this->_getVersionFactory();
+            $versions    = $vf->listVersionsToPurgeForItem($item);
+            if ($versions) {
+                foreach ($versions as $version) {
+                    $oneRestored |= $vf->restore($version);
+                }
+            }
+        }
+
+        if (!$isFile || $oneRestored) {
+            // Log the event
+            $user = $this->_getUserManager()->getCurrentUser();
+            $this->_getEventManager()->processEvent('plugin_docman_event_restore', array(
+                    'group_id'   => $item->getGroupId(),
+                    'item'       => $item,
+                    'user'       => $user)
+            );
+            return $dao->restore($item->getId());
+        }
+        return false;
     }
 }
 

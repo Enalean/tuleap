@@ -146,25 +146,25 @@ class Docman_Actions extends Actions {
         $user     =& $this->_controler->getUser();
         $request  =& $this->_controler->request;
         $iFactory =& $this->_getItemFactory();
+        $vFactory =& $this->_getVersionFactory();
 
         $uploadSucceded = false;
         $newVersion     = null; 
 
-        $number = 0;
-        $version = $item->getCurrentVersion();
-        if($version) {
-            $number = $version->getNumber() + 1;
-        }
+        $_label     = '';
+        $_changelog = '';
 
-        $_action_type = 'initversion';
-        if($number > 0) {
+        $nextNb = $vFactory->getNextVersionNumber($item);
+        if($nextNb === false) {
+            $number       = 1;
+            $_action_type = 'initversion';
+            $_changelog   = 'Initial version';
+        } else {
+            $number       = $nextNb;
             $_action_type = 'newversion';
         }
 
-        //
         // Prepare label and changelog from user input
-        $_label = '';
-        $_changelog = '';
         $data_version = $request->get('version');
         if ($data_version) {
             if (isset($data_version['label'])) {
@@ -172,11 +172,6 @@ class Docman_Actions extends Actions {
             }
             if (isset($data_version['changelog'])) {
                 $_changelog = $data_version['changelog'];
-            }
-        }
-        else {
-            if($number == 0) {
-                $_changelog = 'Initial version';
             }
         }
 
@@ -236,8 +231,6 @@ class Docman_Actions extends Actions {
         }
 
         if($uploadSucceded) {
-            $vFactory =& $this->_getVersionFactory();
-
             $userId = $user->getId();
             if ($request->exist('author') && ($request->get('author') != $userId)) {
                 $versionAuthor = $request->get('author');
@@ -1233,6 +1226,61 @@ class Docman_Actions extends Actions {
             }
         }
         $this->event_manager->processEvent('send_notifications', array());
+    }
+
+    function deleteVersion() {
+        $request =& $this->_controler->request;
+
+        $_sGroupId = (int) $request->get('group_id');
+        $_sId      = (int) $request->get('id');
+        $vVersion  = new Valid_UInt('version');
+        $vVersion->required();
+        if ($request->valid($vVersion)) {
+            $_sVersion = $request->get('version');
+        } else {
+            $_sVersion = false;
+        }
+
+        $itemFactory = $this->_getItemFactory($_sGroupId);
+        $item        = $itemFactory->getItemFromDb($_sId);
+        if ($item) {
+            $type = $itemFactory->getItemTypeForItem($item);
+            if ($type == PLUGIN_DOCMAN_ITEM_TYPE_FILE || $type == PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE) {
+                $versions = $this->_getVersionFactory()->getAllVersionForItem($item); 
+                if (count($versions) > 1) {
+                    $version = false;
+                    foreach ($versions as $v) {
+                        if ($v->getNumber() == $_sVersion) {
+                            $version = $v;
+                        }
+                    }
+                    if ($version !== false) {
+                        $user    = $this->_controler->getUser();
+                        $deletor = $this->_getActionsDeleteVisitor($this->_getFileStorage(), $this->_controler);
+                        if ($item->accept($deletor, array('user' => $user, 'version' => $version))) {
+                            $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'info_item_version_deleted', array($version->getNumber(), $version->getLabel())));
+                        }
+                    } else {
+                        $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_item_not_deleted_unknown_version'));
+                    }
+                } else {
+                    $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_item_not_deleted_last_file_version'));
+                }
+            } else {
+                $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_item_not_deleted_nonfile_version'));
+            }
+        }
+        $this->_getEventManager()->processEvent('send_notifications', array());
+    }
+
+    /**
+     * Wrapper for Docman_ActionsDeleteVisitor
+     * @param Docman_FileStorage $fs
+     * @param Docman_Controller  $ctrl
+     * @return Docman_ActionsDeleteVisitor
+     */
+    function _getActionsDeleteVisitor($fs, $ctrl) {
+        return new Docman_ActionsDeleteVisitor($fs, $ctrl);
     }
 
     function admin_change_view() {

@@ -792,6 +792,115 @@ class Docman_ItemDao extends DataAccessObject {
             , PLUGIN_DOCMAN_PREF, $this->da->quoteSmart($item_id));
         $this->update($sql);
     }
+
+    /**
+     * Copy the entry of the item from table of items into table of deleted items
+     *
+     * @param Integer $itemId
+     *
+     * @return Boolean
+     */
+    function storeDeletedItem($itemId) {
+        $sql = 'INSERT INTO plugin_docman_item_deleted (item_id, parent_id, group_id, title, '.
+                        ' description, create_date, update_date, delete_date, '.
+                        ' user_id, status, obsolescence_date, rank, item_type, link_url, '.
+                        ' wiki_page, file_is_embedded) '.
+                        ' SELECT item_id, parent_id, group_id, title, '.
+                        ' description, create_date, update_date, delete_date, '.
+                        ' user_id, status, obsolescence_date, rank, item_type, link_url,'.
+                        ' wiki_page, file_is_embedded '.
+                        ' FROM plugin_docman_item '.
+                        ' WHERE item_id='.$this->da->quoteSmart($itemId);
+
+        return $this->update($sql);
+    }
+     
+    /**
+     * List pending documents
+     *
+     * @param Integer $groupId
+     * @param Integer $offset
+     * @param Integer $limit
+     * @return Array
+     */
+    function listPendingItems($groupId, $offset, $limit) {
+        $sql=' SELECT SQL_CALC_FOUND_ROWS D.item_id as id, '.
+                      ' D.title as title , I.title as location , '.
+                      ' D.user_id as user, D.delete_date  as date'.
+             ' FROM plugin_docman_item_deleted as D, plugin_docman_item as I'.
+             ' WHERE  D.group_id='.db_ei($groupId). 
+             '        AND D.delete_date <= '.$this->da->escapeInt($_SERVER['REQUEST_TIME']).
+             '        AND D.parent_id = I.item_id '.
+             '        AND D.purge_date IS NULL '.
+             ' ORDER BY D.delete_date DESC '.
+             ' LIMIT '.$this->da->escapeInt($offset).', '.$this->da->escapeInt($limit);
+
+        $dar = $this->retrieve($sql);
+        if ($dar && !$dar->isError() && $dar->rowCount() >0 ) {
+                        $pendings = array();
+            foreach ($dar as $row) {
+                $pendings[] = $row;
+            }
+            
+            $sql = 'SELECT FOUND_ROWS() as nb';
+            $resNumrows = $this->retrieve($sql);
+            $row = $resNumrows->getRow();
+            return array('items' => $pendings, 'nbItems' => $row['nb']);
+        }
+        return array();
+    }
+
+    /**
+     * List deleted items with delete date lower than the given time
+     *
+     * @param Integer $time
+     *
+     * @return Boolean
+     */
+    function listItemsToPurge($time) {
+        $sql = 'SELECT item_id, parent_id, group_id, title, '.
+               ' description, create_date, update_date, delete_date, '.
+               ' user_id, status, obsolescence_date, rank, item_type, link_url, '.
+               ' wiki_page, file_is_embedded '.
+               ' FROM plugin_docman_item_deleted '.
+               ' WHERE delete_date < '.$this->da->escapeInt($time).
+               ' AND purge_date IS NULL ';
+        return $this->retrieve($sql);
+    }
+
+    /**
+     * Save the purge date of a deleted item
+     *
+     * @param Integer $itemId
+     * @param Integer $time
+     *
+     * @return Boolean
+     */
+    function setPurgeDate($itemId, $time) {
+        $sql = 'UPDATE plugin_docman_item_deleted'.
+               ' SET purge_date = '.$this->da->escapeInt($time).
+               ' WHERE item_id = '.$this->da->escapeInt($itemId);
+        return $this->update($sql);
+    }
+
+    /**
+     * Restore one item
+     * 
+     * @param Integer $itemId
+     * 
+     * @return Boolean
+     */
+    public function restore($itemId) {
+        $sql = 'UPDATE plugin_docman_item'.
+               ' SET delete_date = NULL'.
+               ' WHERE item_id = '.$this->da->escapeInt($itemId);
+        if ($this->update($sql)) {
+            $sql = 'DELETE FROM plugin_docman_item_deleted'.
+                   ' WHERE item_id = '.$this->da->escapeInt($itemId);
+            return $this->update($sql);
+        }
+        return true;
+    }
 }
 
 ?>

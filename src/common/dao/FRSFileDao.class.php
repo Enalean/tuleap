@@ -306,12 +306,11 @@ class FRSFileDao extends DataAccessObject {
      * Delete entry that match $release_id in frs_file
      *
      * @param $file_id int
+     * 
      * @return true if there is no error
      */
     function delete($file_id) {
-        $sql = sprintf("UPDATE frs_file SET status='D' WHERE file_id=%d",
-                       $file_id);
-
+        $sql = "UPDATE frs_file SET status='D' WHERE file_id=".$this->da->escapeInt($file_id);
         $deleted = $this->update($sql);
         return $deleted;
     }
@@ -334,6 +333,129 @@ class FRSFileDao extends DataAccessObject {
        $inserted = $this->update($sql);
        return $inserted;	
     }
+
+    /**
+     * Retrieve all the files marked as deleted but not yet present in 'deleted' table
+     * 
+     * @return DataAccessResult
+     */
+    function searchStagingCandidates() {
+        $sql = 'SELECT f.*'.
+               ' FROM frs_file f LEFT JOIN frs_file_deleted d USING(file_id)'.
+               ' WHERE f.status = "D"'.
+               ' AND d.file_id IS NULL';
+        return $this->retrieve($sql);
+    }
+
+    /**
+     * Retrieve all deleted files not purged yet after a given period of time
+     * 
+     * @param Integer $time    Timestamp of the date to start the search
+     * @param Integer $groupId
+     * @param Integer $offset
+     * @param Integer $limit
+     * 
+     * @return DataAccessResult
+     */
+    function searchFilesToPurge($time, $groupId=0, $offset=0, $limit=0) {
+        $fields = '';
+        $from   = '';
+        $where  = '';
+        if ($groupId != 0) {
+            $fields .= ', rel.name as release_name, rel.status_id as release_status';
+            $fields .= ', pkg.name as package_name, pkg.status_id as package_status';
+            $from   .= ' JOIN frs_release rel USING (release_id)'.
+                       ' JOIN frs_package pkg USING (package_id)';
+            $where  .= ' AND pkg.group_id = '.$this->da->escapeInt($groupId);
+        }
+        $sql = 'SELECT file.* '.
+               $fields.
+               ' FROM frs_file_deleted file'.
+               $from.
+               ' WHERE delete_date <= '.$this->da->escapeInt($time).
+               ' AND purge_date IS NULL'.
+               $where.
+               ' ORDER BY delete_date DESC';
+        return $this->retrieve($sql);
+    }
+
+    /**
+     * Copy deleted entry in the dedicated table
+     * 
+     * @param Integer $id FileId
+     * 
+     * @return Boolean
+     */
+    function setFileInDeletedList($id) {
+        // Store file in deleted table
+        $sql = 'INSERT INTO frs_file_deleted(file_id, filename, release_id, type_id, processor_id, release_time, file_size, post_date, status, delete_date)'.
+               ' SELECT file_id, filename, release_id, type_id, processor_id, release_time, file_size, post_date, status, '.$this->da->escapeInt($_SERVER['REQUEST_TIME']).
+               ' FROM frs_file'.
+               ' WHERE file_id = '.$this->da->escapeInt($id);
+        $this->update($sql);
+    }
+
+    /**
+     * Set the date of the purge of a file
+     * 
+     * @param Integer $id   File id
+     * @param Integer $time Timestamp of the deletion
+     * 
+     * @return Boolean
+     */
+    function setPurgeDate($id, $time) {
+        $sql = 'UPDATE frs_file_deleted'.
+               ' SET purge_date = '.$this->da->escapeInt($time).
+               ' WHERE file_id = '.$this->da->escapeInt($id);
+        return $this->update($sql);
+    }
+    
+    /**
+     * Restore file by updating its status and removing it from  frs_file_deleted
+     * 
+     * @param Integer $id   File id
+     * 
+     * @return Boolean
+     */
+    function restoreFile($id) {
+        $sql = 'UPDATE frs_file SET status = "A" WHERE file_id = '.$this->da->escapeInt($id);
+        if ($this->update($sql)) {
+            $sql = 'DELETE FROM frs_file_deleted WHERE file_id = '.$this->da->escapeInt($id);
+            return $this->update($sql);
+        }
+        return false;
+    }
+    
+    /**
+     * Retrieves all the documents marked to be restored
+     * 
+     * @return DataAccessResult
+     */
+    function searchFilesToRestore() {
+        $sql = 'SELECT file.* '.
+               ' FROM frs_file_deleted file'.
+               ' WHERE delete_date IS NULL '.
+               ' AND purge_date IS NULL';
+        return $this->retrieve($sql);
+    }
+    
+    /**
+     * Mark file to be restored
+     * 
+     * @param Integer $id
+     * 
+     * @return Boolean
+     */
+    function markFileToBeRestored($id) {
+                $sql = 'UPDATE frs_file_deleted AS f,'.
+                ' frs_release AS r '.
+                ' SET f.delete_date = NULL '.
+                ' WHERE f.file_id = '.$this->da->escapeInt($id).
+                ' AND f.release_id = r.release_id '.
+                ' AND r.status_id != 2 ';
+        return $this->update($sql);
+    }
+
 }
 
 ?>

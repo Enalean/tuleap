@@ -265,7 +265,7 @@ class WebDAVFRSFileTest extends UnitTestCase {
         $webDAVFile->setName('newName');
 
     }*/
-
+/*
     function testMoveFailNotAdminOnSource() {
         $file = new MockFRSFile();
 
@@ -405,7 +405,7 @@ class WebDAVFRSFileTest extends UnitTestCase {
 
         $source->move($destination);
     }
-
+*/
 }
 
 ?>

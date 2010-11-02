@@ -444,4 +444,9 @@ admin_system_events	notifications	Notifications
 admin_system_events	send_email	Send an email to:
 admin_system_events	nobody	Nobody
 
+#-----------------------------------------------
+# Script: SF/www/admin/show_pending_documents.php
+#
+admin_show_pending_documents	pending_doc	Pending deleted documents for project <a href="/project/admin/?group_id=$1">$2</a> 
+
 

@@ -4,6 +4,8 @@ Version 4.0.14 - (Not released yet)
         backlog #110702: Improve PhpWiki look (font rendering, table of contents, colors, separators, etc)
         backlog #111780: RPM: dependency management for plugins & themes
         backlog #109427: Integration of docman in WebDAV iteration 1
+        backlog #110673: Request to delete specific document's version(s)
+        backlog #110676: Delayed document deletion
 
         == Bugfix ==
         backlog #112816: Blank page when trying to import a tracker created from "Scrum" template

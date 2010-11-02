@@ -27,10 +27,10 @@ require_once('www/project/admin/ugroup_utils.php');
  * 
  */
 class FRSReleaseFactory {
-    
-    var $STATUS_ACTIVE = 1;
-    var $STATUS_DELETED = 2;
-    var $STATUS_HIDDEN = 3;
+    // Kept for legacy
+    var $STATUS_ACTIVE  = FRSRelease::STATUS_ACTIVE;
+    var $STATUS_DELETED = FRSRelease::STATUS_DELETED;
+    var $STATUS_HIDDEN  = FRSRelease::STATUS_HIDDEN;
     
 
 	function FRSReleaseFactory() {
@@ -43,18 +43,29 @@ class FRSReleaseFactory {
 		return $frs_release;
 	}
 
-	function  getFRSReleaseFromDb($release_id, $group_id=null, $package_id=null) {
+	/**
+	 * Get one or more releases from the database
+	 * 
+	 * $extraFlags allow to define if you want to include deleted releases into
+	 * the search (thanks to FRSReleaseDao::INCLUDE_DELETED constant)
+	 * 
+	 * @param $release_id
+	 * @param $group_id
+	 * @param $package_id
+	 * @param $extraFlags
+	 */
+	function  getFRSReleaseFromDb($release_id, $group_id=null, $package_id=null, $extraFlags = 0) {
 		$_id = (int) $release_id;
 		$dao = & $this->_getFRSReleaseDao();
 		if($group_id && $package_id){
 			$_group_id = (int) $group_id;
 			$_package_id = (int) $package_id;
-			$dar = $dao->searchByGroupPackageReleaseID($_id, $_group_id, $package_id);
+			$dar = $dao->searchByGroupPackageReleaseID($_id, $_group_id, $package_id, $extraFlags);
 		}else if($group_id) {
 			$_group_id = (int) $group_id;
-			$dar = $dao->searchInGroupById($_id, $_group_id);
+			$dar = $dao->searchInGroupById($_id, $_group_id, $extraFlags);
 		}else{
-			$dar = $dao->searchById($_id);
+			$dar = $dao->searchById($_id, $extraFlags);
 		}
 		
 
@@ -229,21 +240,6 @@ class FRSReleaseFactory {
 
 			//delete the release from the database
 			$this->_delete($release_id);
-
-			//append the releasename and project name to a temp file for the root perl job to grab
-			if (isset($filename) && $filename) {
-				//find the last occurrence of / in the filename to get the parentdir name
-				$pos = strrpos($filename, "/");
-				if (!$pos) {
-					// not found...
-				} else {
-					$parentdir = substr($filename, 0, $pos);
-					$time = time();
-					$pm = ProjectManager::instance();
-                    exec("/bin/echo \"$parentdir::" . $pm->getProject($group_id)->getUnixName() . "::$time\" >> $ftp_incoming_dir/.delete_files");
-				}
-			}
-
 			return 1;
 		}
 	}

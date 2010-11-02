@@ -28,6 +28,9 @@ require_once('common/frs/FRSPackageFactory.class.php');
  *
  */
 class FRSPackage extends Error {
+    const STATUS_ACTIVE  = 1;
+    const STATUS_DELETED = 2;
+    const STATUS_HIDDEN  = 3;
 
     /**
      * @var int $package_id the ID of this FRSPackage
