@@ -10,6 +10,7 @@ Version 4.0.14 - (Not released yet)
         == Bugfix ==
         backlog #112816: Blank page when trying to import a tracker created from "Scrum" template
         backlog #110672: Request to set the correct icon for office 2007 documents
+        backlog #113539: Unable to search for exact pattern under 2 quotes
 
 Version 4.0.13 - Wednesday, 29th September 2010
         == New features ==
