@@ -481,6 +481,8 @@ class DocmanPlugin extends Plugin {
         $params['nom'][] = $GLOBALS['Language']->getText('plugin_docman','deleted_version');
         $html = '';
         $html .= '<div class="contenu_onglet" id="contenu_onglet_version">';
+        $html .= '<p>Note: there might be some delay between the time the version is deleted and time it appears here.<br />When a version is deleted by the user, the action appears in  <a href="/project/stats/source_code_access.php/?who=allusers&span=14&view=daily&group_id='.$params['group_id'].'">the access log</a>.</p>'.
+             '<p> This interface only schedule the restoration.</p>';
         if (isset($res) && $res) {
             $html .= $this->showPendingVersions($res['versions'], $params['group_id'], $res['nbVersions'], $offsetVers, $limit);
         } else {
@@ -500,6 +502,8 @@ class DocmanPlugin extends Plugin {
         $params['nom'][]= $GLOBALS['Language']->getText('plugin_docman','deleted_item');
         $html = '';
         $html .= '<div class="contenu_onglet" id="contenu_onglet_item">';
+        $html .= '<p>Note: there might be some delay between the time the item is deleted and time it appears here.<br />When an item is deleted by the user, the action appears in  <a href="/project/stats/source_code_access.php/?who=allusers&span=14&view=daily&group_id='.$params['group_id'].'">the access log</a>.</p>'.
+             '<p> This interface only schedule the restoration.</p>';
         if (isset($res) && $res) {
             $html .= $this->showPendingItems($res['items'], $params['group_id'], $res['nbItems'], $offsetItem, $limit);
         } else {
