@@ -529,9 +529,10 @@ class DocmanPlugin extends Plugin {
             $i=1;
 
             foreach ($versions as $row) {
+                $historyUrl = $this->getPluginPath().'/index.php?group_id='.$groupId.'&id='.$row['item_id'].'&action=details&section=history';
                 $purgeDate = strtotime('+'.$GLOBALS['sys_file_deletion_delay'].' day', $row['date']);
                 $html .= '<tr class="'. html_get_alt_row_color($i++) .'">'.
-                '<td>'.$row['item_id'].'</td>'.
+                '<td><a href="'.$historyUrl.'">'.$row['item_id'].'</a></td>'.
                 '<td>'.$hp->purify($row['title'], CODENDI_PURIFIER_BASIC, $groupId).'</td>'.
                 '<td>'.$hp->purify($row['label']).'</td>'.
                 '<td>'.$row['number'].'</td>'.
