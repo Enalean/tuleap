@@ -822,6 +822,7 @@ plugin_docman	doc_title	Document title
 plugin_docman	label	Version label
 plugin_docman	number	Version number
 plugin_docman	delete_date	Delete date
+plugin_docman	purge_date	Forcast purge date
 plugin_docman	restore_version	Restore version
 plugin_docman	location	Location
 plugin_docman	owner	Owner
