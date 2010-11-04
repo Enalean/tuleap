@@ -35,16 +35,19 @@ if ($p && $pm->isPluginAvailable($p)) {
     $GLOBALS['Response']->redirect('/');
 }
 
-$func = $request->getValidated('func', new Valid_WhiteList('func', array('confirm_restore_item', 'confirm_restore_version')));
+$func    = $request->getValidated('func', new Valid_WhiteList('func', array('confirm_restore_item', 'confirm_restore_version')));
+$groupId = $request->getValidated('group_id', 'uint', 0);
+$id      = $request->getValidated('id', 'uint', 0);
 if ($request->existAndNonEmpty('func')) {
 
     switch ($func) {
         case 'confirm_restore_item':
-            $itemFactory = new Docman_ItemFactory($request->get('group_id'));
-            $item = $itemFactory->getItemFromDb($request->get('id'), array('ignore_deleted' => true));
+            $itemFactory = new Docman_ItemFactory($groupId);
+            $item = $itemFactory->getItemFromDb($id, array('ignore_deleted' => true));
             if ($itemFactory->restore($item)) {
-                $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_docman', 'item_restored'), CODENDI_PURIFIER_DISABLED);
-                $GLOBALS['Response']->redirect('/admin/show_pending_documents.php?group_id='.$request->get('group_id').'&focus=item');
+                $url = $p->getPluginPath().'/?group_id='.$groupId.'&action=details&id='.$id.'&section=properties';
+                $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_docman', 'item_restored', array($url)), CODENDI_PURIFIER_DISABLED);
+                $GLOBALS['Response']->redirect('/admin/show_pending_documents.php?group_id='.$groupId.'&focus=item');
             } else {
                 exit_error($Language->getText('plugin_docman', 'error'),$Language->getText('plugin_docman','item_not_restored'));
             }
@@ -52,10 +55,11 @@ if ($request->existAndNonEmpty('func')) {
 
         case 'confirm_restore_version':
             $versionFactory = new Docman_VersionFactory();
-            $version = $versionFactory->getSpecificVersionById($request->get('id'));
+            $version = $versionFactory->getSpecificVersionById($id);
             if ($versionFactory->restore($version)) {
-                $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_docman', 'version_restored'), CODENDI_PURIFIER_DISABLED);
-                $GLOBALS['Response']->redirect('/admin/show_pending_documents.php?group_id='.$request->get('group_id').'&focus=version');
+                $url = $p->getPluginPath().'/?group_id='.$groupId.'&action=details&id='.$version->getItemId().'&section=history';
+                $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_docman', 'version_restored', array($url)), CODENDI_PURIFIER_DISABLED);
+                $GLOBALS['Response']->redirect('/admin/show_pending_documents.php?group_id='.$groupId.'&focus=version');
             } else {
                 exit_error($Language->getText('plugin_docman', 'error'),$Language->getText('plugin_docman','version_not_restored'));
             }
