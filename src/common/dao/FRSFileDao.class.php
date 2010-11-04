@@ -362,8 +362,8 @@ class FRSFileDao extends DataAccessObject {
         $from   = '';
         $where  = '';
         if ($groupId != 0) {
-            $fields .= ', rel.name as release_name, rel.status_id as release_status';
-            $fields .= ', pkg.name as package_name, pkg.status_id as package_status';
+            $fields .= ', rel.name as release_name, rel.status_id as release_status, rel.release_id';
+            $fields .= ', pkg.name as package_name, pkg.status_id as package_status, pkg.package_id';
             $from   .= ' JOIN frs_release rel USING (release_id)'.
                        ' JOIN frs_package pkg USING (package_id)';
             $where  .= ' AND pkg.group_id = '.$this->da->escapeInt($groupId);

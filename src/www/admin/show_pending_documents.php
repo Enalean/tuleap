@@ -151,8 +151,10 @@ function frs_file_restore_view($group_id, $idArray, $nomArray, $htmlArray) {
                 $purgeDate = strtotime('+'.$GLOBALS['sys_file_deletion_delay'].' day', $file['delete_date']);
                 $html .= '<tr class="'. html_get_alt_row_color($i++) .'">';
                 $html .= '<td>'.$file['filename'].'</td>';
-                $html .= '<td>'.$file['release_name'].'</td>';
-                $html .= '<td>'.$file['package_name'].'</td>';
+                $url   = '/file/showfiles.php?group_id='.$group_id.'#p_'.$file['package_id'].'r_'.$file['release_id'];
+                $html .= '<td><a href="'.$url.'">'.$file['release_name'].'</a></td>';
+                $url   = '/file/showfiles.php?group_id='.$group_id.'#p_'.$file['package_id'];
+                $html .= '<td><a href="'.$url.'">'.$file['package_name'].'</a></td>';
                 $html .= '<td>'.html_time_ago($file['delete_date']).'</td>';
                 $html .= '<td>'.format_date($GLOBALS['Language']->getText('system', 'datefmt'), $purgeDate).'</td>';
                 $html .= '<td align="center"><a href="?group_id='.$group_id.'&func=confirm_restore_frs_file&id='.$file['file_id'].'"><img src="'.util_get_image_theme("trash-x.png").'" onClick="return confirm(\'Confirm restore of this file\')" border="0" height="16" width="16"></a></td></tr>';
