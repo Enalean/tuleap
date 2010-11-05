@@ -569,11 +569,13 @@ class DocmanPlugin extends Plugin {
 
     function showPendingItems($res, $groupId, $nbItems, $offset, $limit) {
         $hp = Codendi_HTMLPurifier::instance();
+        $itemFactory = new Docman_ItemFactory($groupId);
         $uh = UserHelper::instance();
 
         $html ='';
         $title =array();
         $title[] = $GLOBALS['Language']->getText('plugin_docman','item_id');
+        $title[] = $GLOBALS['Language']->getText('plugin_docman','filters_item_type');
         $title[] = $GLOBALS['Language']->getText('plugin_docman','doc_title');
         $title[] = $GLOBALS['Language']->getText('plugin_docman','location');
         $title[] = $GLOBALS['Language']->getText('plugin_docman','owner');
@@ -590,6 +592,7 @@ class DocmanPlugin extends Plugin {
                 $purgeDate = strtotime('+'.$GLOBALS['sys_file_deletion_delay'].' day', $row['date']);
                 $html .='<tr class="'. html_get_alt_row_color($i++) .'">'.
                 '<td>'.$row['id'].'</td>'.
+                '<td>'.$itemFactory->getItemTypeAsText($row['item_type']).'</td>'.
                 '<td>'. $hp->purify($row['title'], CODENDI_PURIFIER_BASIC, $groupId).'</td>'.
                 '<td>'.$hp->purify($row['location']).'</td>'.
                 '<td>'.$uh->getDisplayNameFromUserId($row['user']).'</td>'.
