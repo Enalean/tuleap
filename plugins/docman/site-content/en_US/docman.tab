@@ -822,6 +822,7 @@ plugin_docman	doc_title	Document title
 plugin_docman	label	Version label
 plugin_docman	number	Version number
 plugin_docman	delete_date	Delete date
+plugin_docman	purge_date	Forcast purge date
 plugin_docman	restore_version	Restore version
 plugin_docman	location	Location
 plugin_docman	owner	Owner
@@ -832,8 +833,8 @@ plugin_docman	deleted_item	Deleted items
 plugin_docman	no_pending_items	There are no pending items.
 plugin_docman	previous	Previous
 plugin_docman	next	Next
-plugin_docman	version_restored	The selected version has been successfully restored.
-plugin_docman	item_restored	The selected item has been successfully restored.
+plugin_docman	version_restored	The <a href="$1">selected version</a> has been successfully restored.
+plugin_docman	item_restored	The <a href="$1">selected item</a> has been successfully restored.
 plugin_docman	version_not_restored	The selected version has not been restored.
 plugin_docman	item_not_restored	The selected item has not been restored.
 

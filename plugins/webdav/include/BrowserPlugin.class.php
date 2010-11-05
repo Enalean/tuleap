@@ -234,13 +234,13 @@ class BrowserPlugin extends Sabre_DAV_Browser_Plugin {
         if ($class == 'WebDAVFRSPackage') {
             echo "<th>".$GLOBALS['Language']->getText('plugin_webdav_html', 'last_modified')."</th>";
             if ($node->userCanWrite()) {
-                echo "<th>".$GLOBALS['Language']->getText('plugin_webdav_html', 'delete')."</th><th>".$GLOBALS['Language']->getText('plugin_webdav_html', 'rename')."</th><th>".$GLOBALS['Language']->getText('plugin_webdav_html', 'move')."</th>";
+                echo "<th>".$GLOBALS['Language']->getText('plugin_webdav_html', 'delete')."</th><th>".$GLOBALS['Language']->getText('plugin_webdav_html', 'rename')."</th>";/*<th>".$GLOBALS['Language']->getText('plugin_webdav_html', 'move')."</th>";*/
             }
         }
         if ($class == 'WebDAVFRSRelease') {
             echo "<th>".$GLOBALS['Language']->getText('plugin_webdav_html', 'size')."</th><th>".$GLOBALS['Language']->getText('plugin_webdav_html', 'last_modified')."</th>";
             if ($node->userCanWrite()) {
-                echo "<th>".$GLOBALS['Language']->getText('plugin_webdav_html', 'delete')."</th><th>".$GLOBALS['Language']->getText('plugin_webdav_html', 'move')."</th>";
+                echo "<th>".$GLOBALS['Language']->getText('plugin_webdav_html', 'delete')."</th>";/*<th>".$GLOBALS['Language']->getText('plugin_webdav_html', 'move')."</th>";*/
             }
         }
         echo "</tr><tr><td colspan=\"6\"><hr /></td></tr>";

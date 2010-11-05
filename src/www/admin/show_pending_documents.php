@@ -78,7 +78,9 @@ site_admin_header(array('title'=>$GLOBALS['Language']->getText('admin_groupedit'
 <INPUT type="hidden" name="group_id" value="<?php print $group_id; ?>">
 <?php 
 $project = $pm->getProject($group_id,false,true);
-echo '<h3>'.$GLOBALS['Language']->getText('admin_show_pending_documents','pending_doc', array ($group_id, $project->getUnixName())).'</h3>'; ?>
+echo '<h3>'.$GLOBALS['Language']->getText('admin_show_pending_documents','pending_doc', array ($group_id, $project->getUnixName())).'</h3>'; 
+echo '<p>'.$GLOBALS['Language']->getText('admin_show_pending_documents','delay_info', array($GLOBALS['sys_file_deletion_delay'])).'</p>';
+?>
         <div class="systeme_onglets">
             <div class="onglets">
             <?php
@@ -141,16 +143,20 @@ function frs_file_restore_view($group_id, $idArray, $nomArray, $htmlArray) {
              '<p>Please note that <strong>actual file restoration</strong> will be done by the <strong>next SYSTEM_CHECK</strong> event. This interface only schedule the restoration.</p>';
     $i     = 1;
     if ($files->rowCount() > 0) {
-        $titles = array ('Filename', 'Release name', 'Package name', 'Delete date', 'Restore');
+        $titles = array ('Filename', 'Release name', 'Package name', 'Delete date', 'Forcast purge date', 'Restore');
         $html  .= html_build_list_table_top ($titles);
         foreach ($files as $file) {
             if ($file['release_status'] != FRSRelease::STATUS_DELETED
                 && $file['package_status'] != FRSPackage::STATUS_DELETED) {
+                $purgeDate = strtotime('+'.$GLOBALS['sys_file_deletion_delay'].' day', $file['delete_date']);
                 $html .= '<tr class="'. html_get_alt_row_color($i++) .'">';
                 $html .= '<td>'.$file['filename'].'</td>';
-                $html .= '<td>'.$file['release_name'].'</td>';
-                $html .= '<td>'.$file['package_name'].'</td>';
-                $html .= '<td>'.format_date($GLOBALS['Language']->getText('system', 'datefmt'), $file['delete_date']).'</td>';
+                $url   = '/file/showfiles.php?group_id='.$group_id.'#p_'.$file['package_id'].'r_'.$file['release_id'];
+                $html .= '<td><a href="'.$url.'">'.$file['release_name'].'</a></td>';
+                $url   = '/file/showfiles.php?group_id='.$group_id.'#p_'.$file['package_id'];
+                $html .= '<td><a href="'.$url.'">'.$file['package_name'].'</a></td>';
+                $html .= '<td>'.html_time_ago($file['delete_date']).'</td>';
+                $html .= '<td>'.format_date($GLOBALS['Language']->getText('system', 'datefmt'), $purgeDate).'</td>';
                 $html .= '<td align="center"><a href="?group_id='.$group_id.'&func=confirm_restore_frs_file&id='.$file['file_id'].'"><img src="'.util_get_image_theme("trash-x.png").'" onClick="return confirm(\'Confirm restore of this file\')" border="0" height="16" width="16"></a></td></tr>';
                 $html .= '</tr>';
             }

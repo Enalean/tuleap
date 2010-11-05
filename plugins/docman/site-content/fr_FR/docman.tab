@@ -821,6 +821,7 @@ plugin_docman	doc_title	Le titre du document
 plugin_docman	label	Label de la version
 plugin_docman	number	Numéro de la version
 plugin_docman	delete_date	Date de suppression
+plugin_docman	purge_date	Date de purge prévue
 plugin_docman	restore_version	Restaurer la version
 plugin_docman	location	Chemin
 plugin_docman	owner	Propriétaire
@@ -831,8 +832,8 @@ plugin_docman	deleted_item	Items supprimées
 plugin_docman	no_pending_items	Il n'existe pas d'item en suspens.
 plugin_docman	previous	Précédent
 plugin_docman	next	Suivant
-plugin_docman	version_restored	La version sélectionnée a été restaurée avec succès.
-plugin_docman	item_restored	L'item sélectionné a été restauré avec succès.
+plugin_docman	version_restored	La <a href="$1">version sélectionnée</a> a été restaurée avec succès.
+plugin_docman	item_restored	L'<a href="$1">item sélectionné</a> a été restauré avec succès.
 plugin_docman	version_not_restored	La version sélectionnée n'a pas pu être restaurée.
 plugin_docman	item_not_restored	L'item sélectionné n'a pas pu être restauré.
 

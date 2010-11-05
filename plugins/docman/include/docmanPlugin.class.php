@@ -491,12 +491,16 @@ class DocmanPlugin extends Plugin {
         if ( !$offsetVers || $offsetVers < 0 ) {
             $offsetVers = 0;
         }
+        
+        $linkToLogMsg = '<p>When an element is deleted, the action appears in <a href="/project/stats/source_code_access.php/?who=allusers&span=14&view=daily&group_id='.$params['group_id'].'">the access log</a>.</p>';
+        
         $version = new Docman_VersionFactory();
         $res = $version->listPendingVersions($params['group_id'], $offsetVers, $limit);
         $params['id'][] = 'version';
         $params['nom'][] = $GLOBALS['Language']->getText('plugin_docman','deleted_version');
         $html = '';
         $html .= '<div class="contenu_onglet" id="contenu_onglet_version">';
+        $html .= $linkToLogMsg;
         if (isset($res) && $res) {
             $html .= $this->showPendingVersions($res['versions'], $params['group_id'], $res['nbVersions'], $offsetVers, $limit);
         } else {
@@ -516,6 +520,7 @@ class DocmanPlugin extends Plugin {
         $params['nom'][]= $GLOBALS['Language']->getText('plugin_docman','deleted_item');
         $html = '';
         $html .= '<div class="contenu_onglet" id="contenu_onglet_item">';
+        $html .= $linkToLogMsg;
         if (isset($res) && $res) {
             $html .= $this->showPendingItems($res['items'], $params['group_id'], $res['nbItems'], $offsetItem, $limit);
         } else {
@@ -535,6 +540,7 @@ class DocmanPlugin extends Plugin {
         $title[] = $GLOBALS['Language']->getText('plugin_docman','label');
         $title[] = $GLOBALS['Language']->getText('plugin_docman','number');
         $title[] = $GLOBALS['Language']->getText('plugin_docman','delete_date');
+        $title[] = $GLOBALS['Language']->getText('plugin_docman','purge_date');
         $title[] = $GLOBALS['Language']->getText('plugin_docman','restore_version');
 
         if ($nbVersions > 0) {
@@ -543,13 +549,16 @@ class DocmanPlugin extends Plugin {
             $html .= html_build_list_table_top ($title);
             $i=1;
 
-            foreach ($versions as $row ){
+            foreach ($versions as $row) {
+                $historyUrl = $this->getPluginPath().'/index.php?group_id='.$groupId.'&id='.$row['item_id'].'&action=details&section=history';
+                $purgeDate = strtotime('+'.$GLOBALS['sys_file_deletion_delay'].' day', $row['date']);
                 $html .= '<tr class="'. html_get_alt_row_color($i++) .'">'.
-                '<td>'.$row['item_id'].'</td>'.
+                '<td><a href="'.$historyUrl.'">'.$row['item_id'].'</a></td>'.
                 '<td>'.$hp->purify($row['title'], CODENDI_PURIFIER_BASIC, $groupId).'</td>'.
                 '<td>'.$hp->purify($row['label']).'</td>'.
                 '<td>'.$row['number'].'</td>'.
-                '<td>'.format_date($GLOBALS['Language']->getText('system', 'datefmt'),$row['date']).'</td>'.
+                '<td>'.html_time_ago($row['date']).'</td>'.
+                '<td>'.format_date($GLOBALS['Language']->getText('system', 'datefmt'), $purgeDate).'</td>'.
                 '<td align="center"><a href="/plugins/docman/restore_documents.php?group_id='.$groupId.'&func=confirm_restore_version&id='.$row['id'].'&item_id='.$row['item_id'].'" ><IMG SRC="'.util_get_image_theme("trash-x.png").'" onClick="return confirm(\'Confirm restore of this version\')" BORDER=0 HEIGHT=16 WIDTH=16></a></td></tr>';
             }
             $html .= '</TABLE>'; 
@@ -576,15 +585,18 @@ class DocmanPlugin extends Plugin {
 
     function showPendingItems($res, $groupId, $nbItems, $offset, $limit) {
         $hp = Codendi_HTMLPurifier::instance();
+        $itemFactory = new Docman_ItemFactory($groupId);
         $uh = UserHelper::instance();
 
         $html ='';
         $title =array();
         $title[] = $GLOBALS['Language']->getText('plugin_docman','item_id');
+        $title[] = $GLOBALS['Language']->getText('plugin_docman','filters_item_type');
         $title[] = $GLOBALS['Language']->getText('plugin_docman','doc_title');
         $title[] = $GLOBALS['Language']->getText('plugin_docman','location');
         $title[] = $GLOBALS['Language']->getText('plugin_docman','owner');
         $title[] = $GLOBALS['Language']->getText('plugin_docman','delete_date');
+        $title[] = $GLOBALS['Language']->getText('plugin_docman','purge_date');
         $title[] = $GLOBALS['Language']->getText('plugin_docman','restore_item');
 
 
@@ -593,13 +605,15 @@ class DocmanPlugin extends Plugin {
             $html .= html_build_list_table_top ($title);
             $i=1;
             foreach ($res as $row ){
-
+                $purgeDate = strtotime('+'.$GLOBALS['sys_file_deletion_delay'].' day', $row['date']);
                 $html .='<tr class="'. html_get_alt_row_color($i++) .'">'.
                 '<td>'.$row['id'].'</td>'.
+                '<td>'.$itemFactory->getItemTypeAsText($row['item_type']).'</td>'.
                 '<td>'. $hp->purify($row['title'], CODENDI_PURIFIER_BASIC, $groupId).'</td>'.
                 '<td>'.$hp->purify($row['location']).'</td>'.
                 '<td>'.$uh->getDisplayNameFromUserId($row['user']).'</td>'.
-                '<td>'.format_date($GLOBALS['Language']->getText('system', 'datefmt'),$row['date']).'</td>'.
+                '<td>'.html_time_ago($row['date']).'</td>'.
+                '<td>'.format_date($GLOBALS['Language']->getText('system', 'datefmt'), $purgeDate).'</td>'.
                 '<td align="center"><a href="/plugins/docman/restore_documents.php?group_id='.$groupId.'&func=confirm_restore_item&id='.$row['id'].'" ><IMG SRC="'.util_get_image_theme("trash-x.png").'" onClick="return confirm(\'Confirm restore of this item\')" BORDER=0 HEIGHT=16 WIDTH=16></a></td></tr>';
             }
             $html .= '</TABLE>'; 

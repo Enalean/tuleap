@@ -825,6 +825,7 @@ class Docman_ItemDao extends DataAccessObject {
      */
     function listPendingItems($groupId, $offset, $limit) {
         $sql=' SELECT SQL_CALC_FOUND_ROWS D.item_id as id, '.
+                      ' D.item_type, '.
                       ' D.title as title , I.title as location , '.
                       ' D.user_id as user, D.delete_date  as date'.
              ' FROM plugin_docman_item_deleted as D, plugin_docman_item as I'.

@@ -127,6 +127,31 @@ class Docman_ItemFactory {
         return $item;
     }
 
+    function getItemTypeAsText($itemTypeId) {
+        switch($itemTypeId) {
+        case PLUGIN_DOCMAN_ITEM_TYPE_FOLDER:
+            return $GLOBALS['Language']->getText('plugin_docman','filters_item_type_folder');
+            break;
+        case PLUGIN_DOCMAN_ITEM_TYPE_FILE:
+            return $GLOBALS['Language']->getText('plugin_docman','filters_item_type_file');
+            break;
+        case PLUGIN_DOCMAN_ITEM_TYPE_LINK:
+            return $GLOBALS['Language']->getText('plugin_docman','filters_item_type_link');
+            break;
+        case PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE:
+            return $GLOBALS['Language']->getText('plugin_docman','filters_item_type_embeddedfile');
+            break;
+        case PLUGIN_DOCMAN_ITEM_TYPE_WIKI:
+            return $GLOBALS['Language']->getText('plugin_docman','filters_item_type_wiki');
+            break;
+        case PLUGIN_DOCMAN_ITEM_TYPE_EMPTY:
+            return $GLOBALS['Language']->getText('plugin_docman','filters_item_type_empty');
+            break;
+        default:
+            return $GLOBALS['Language']->getText('include_html','unknown_value');
+        }
+    }
+
     function getItemTypeForItem(&$item) {
         $type = false;
         switch(strtolower(get_class($item))) {
