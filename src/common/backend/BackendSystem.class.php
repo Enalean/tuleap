@@ -322,9 +322,9 @@ class BackendSystem extends Backend {
         // We keep the good old purge mecanism for at least one release to clean
         // the previously deleted files
         // Delete all files under DELETE that are older than 10 days
-        $delete_dir = $GLOBALS['ftp_frs_dir_prefix']."/DELETED";
-        system("find $delete_dir -type f -mtime +10 -exec rm {} \\;");
-        system("find $delete_dir -mindepth 1 -type d -empty -exec rm -R {} \\;");
+        //$delete_dir = $GLOBALS['ftp_frs_dir_prefix']."/DELETED";
+        //system("find $delete_dir -type f -mtime +10 -exec rm {} \\;");
+        //system("find $delete_dir -mindepth 1 -type d -empty -exec rm -R {} \\;");
         // }}} /!\ WARNING HACK /!\
 
         $em = EventManager::instance();
