@@ -1,4 +1,4 @@
-cvs-1.11.22-5.codendi.i3#!/bin/bash
+#!/bin/bash
 #
 # Copyright (c) Xerox Corporation, Codendi 2001-2009.
 # This file is licensed under the GNU General Public License version 2. See the file COPYING.
