@@ -246,13 +246,13 @@ class BrowserPlugin extends Sabre_DAV_Browser_Plugin {
         if ($class == 'WebDAVFRSPackage') {
             echo "<th>Last modified</th>";
             if ($node->userCanWrite()) {
-                echo "<th>Delete</th><th>Rename</th><th>Move</th>";
+                echo "<th>Delete</th><th>Rename</th>";/*<th>Move</th>";*/
             }
         }
         if ($class == 'WebDAVFRSRelease') {
             echo "<th>Size</th><th>Last modified</th>";
             if ($node->userCanWrite()) {
-                echo "<th>Delete</th><th>Move</th>";
+                echo "<th>Delete</th>";/*<th>Move</th>";*/
             }
         }
         echo "</tr><tr><td colspan=\"6\"><hr /></td></tr>";
