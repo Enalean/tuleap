@@ -631,6 +631,7 @@ tracker_common_artifact	bad_field_permission_update	You are not allowed to updat
 tracker_common_artifact	bad_field_value	The value $2 is not a valid value for the field $1.
 tracker_common_artifact	followup_upd_succ	Follow-up Comment Update Successful.
 tracker_common_artifact	followup_upd_fail	Follow-up Comment Update Failed.
+tracker_common_artifact	mandatory_not_set	Failed to submit the artifact: Some mandatory fields which are hidden have been set to 'None' value, please contact the tracker admin. 
 #
 #-----------------------------------------------
 # Script: SF/common/tracker/ArtifactFactory.class.php

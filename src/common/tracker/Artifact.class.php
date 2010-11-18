@@ -401,6 +401,13 @@ class Artifact extends Error {
                     }
                 }
             }
+            //When user is not autorised to submit some fields
+            //we should block those artifact with mandatory fields and default value set to "None" 
+            $fieldsNotShown = $art_field_fact->getAllFieldsNotShownOnAdd();
+            if ($art_field_fact->checkEmptyFields($fieldsNotShown, false) == false) {
+                $this->setError($Language->getText('tracker_common_artifact','mandatory_not_set'));
+                return false;
+            } 
         }
         
 	if (!$import) {

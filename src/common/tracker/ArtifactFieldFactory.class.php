@@ -278,39 +278,43 @@ class ArtifactFieldFactory extends Error {
 	 * 
 	 *  Check whether empty values are allowed for the bug fields
 	 *
-	 *  @param field_array: associative array of field_name -> value
+	 *  @param Array   $field_array   associative array of field_name -> value
+	 *  @param Boolean $showFeedback default value set to true, manage the display or not of the error message with reference to the field label 
 	 *
 	 *	@return	boolean
 	 */
-	function checkEmptyFields($field_array) {
+	function checkEmptyFields($field_array, $showFeedback = true) {
 	    global $Language;
 	
 	    $bad_fields = array();
 	    reset($field_array);
 	    while ( list($key, $val) = each($field_array)) {
-
-	    	$field = $this->getFieldFromName($key);
-	    	if ( $field ) {
-
-		  if ($field->isMultiSelectBox()) {
-		    $is_empty = (implode(",",$val)=="100");
-		  } else {
-		    $is_empty = ( ($field->isSelectBox()) ? ($val==100) : ($val==''));
-		  } 
-          if ( $is_empty && !$field->isEmptyOk()) {
-		    $bad_fields[] = $field->getLabel();
-		  }
-		}
+	        //Those fields are automatically filled out
+	        if ($key != 'artifact_id' && $key != 'open_date' && $key != 'last_update_date') {
+	            $field = $this->getFieldFromName($key);
+	            if ( $field) {
+	                if ($field->isMultiSelectBox()) {
+	                    $is_empty = (implode(",",$val)=="100");
+	                } else {
+	                    $is_empty = ( ($field->isSelectBox()) ? ($val==100) : ($val==''));
+	                }
+	                if ( $is_empty && !$field->isEmptyOk()) {
+	                    $bad_fields[] = $field->getLabel();
+	                }
+	            }
+	        }
 	    }
 	
 	    if (count($bad_fields) > 0) {
-            $hp = Codendi_HTMLPurifier::instance();
-            $bad_fields_escaped = array();
-            foreach($bad_fields as $f) {
-                $bad_fields_escaped[] =  $hp->purify(SimpleSanitizer::unsanitize($f), CODENDI_PURIFIER_CONVERT_HTML);
-            }
-            $GLOBALS['Response']->addFeedback('error', $Language->getText('tracker_common_field_factory','missing',join(', ',$bad_fields_escaped)), CODENDI_PURIFIER_DISABLED);
-            $this->setError($Language->getText('tracker_common_field_factory','missing',join(', ',$bad_fields)));
+	        $hp = Codendi_HTMLPurifier::instance();
+	        $bad_fields_escaped = array();
+	        foreach($bad_fields as $f) {
+	            $bad_fields_escaped[] =  $hp->purify(SimpleSanitizer::unsanitize($f), CODENDI_PURIFIER_CONVERT_HTML);
+	        }
+	        if ($showFeedback) {
+	            $GLOBALS['Response']->addFeedback('error', $Language->getText('tracker_common_field_factory','missing',join(', ',$bad_fields_escaped)), CODENDI_PURIFIER_DISABLED);
+	            $this->setError($Language->getText('tracker_common_field_factory','missing',join(', ',$bad_fields)));
+	        }
 			return false;
 	    } else {
 			return true;
