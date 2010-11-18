@@ -169,6 +169,7 @@ project_admin_index	not_get_atf	Impossible d'obtenir un ArtifactTypeFactory
 project_admin_index	del_tracker_perm_fail	L'annulation des permissions sur l'outil de suivi ($1) a échoué
 project_admin_index	del_user_from_ug_fail	Impossible d'enlever l'utilisateur des ugroups
 project_admin_index	user_removed	Utilisateur enlevé
+project_admin_index	self_user_remove	Vous n'êtes plus membre du projet 
 project_admin_index	p_admin	Administration du projet&nbsp;: $1
 project_admin_index	p_edit	Information sur le projet&nbsp;: $1
 project_admin_index	short_desc	Description courte&nbsp;: $1

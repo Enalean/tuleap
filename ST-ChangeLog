@@ -1,3 +1,9 @@
+Version 4.0.16 = Not released yet
+        == BugFix ==
+        backlog #114221: Still have admin privileges on tracker for non members
+
+Version 4.0.15 - (Canceled)
+
 Version 4.0.14 - Monday, 8th November 2010
         == New features ==
         backlog #107554: Enhance the interface to request access from project admins

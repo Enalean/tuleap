@@ -169,6 +169,7 @@ project_admin_index	not_get_atf	Could Not Get ArtifactTypeFactory
 project_admin_index	del_tracker_perm_fail	Failed to delete tracker permission ($1)
 project_admin_index	del_user_from_ug_fail	Failed to delete user from ugroups
 project_admin_index	user_removed	Removed a User
+project_admin_index	self_user_remove	You are no longer a member of
 project_admin_index	p_admin	Project Admin: $1
 project_admin_index	p_edit	Project Info: $1
 project_admin_index	short_desc	Short Description: $1
