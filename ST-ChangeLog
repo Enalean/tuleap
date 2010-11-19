@@ -3,7 +3,9 @@ Version 4.0.16 = Not released yet
         backlog #114221: Still have admin privileges on tracker for non members
         backlog #114020: Artifact submitted with the value "None" at the mandatory field
 
-Version 4.0.15 - (Canceled)
+Version 4.0.15 - Friday, 19th november 2010
+        == Bugfix ==
+        backlog #114802: Bad display of some codex pages 
 
 Version 4.0.14 - Monday, 8th November 2010
         == New features ==
