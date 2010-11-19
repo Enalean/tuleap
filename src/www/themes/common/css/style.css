@@ -1131,6 +1131,9 @@ ul.ServiceMenu li.current {
 .project_privacy_public {
     background-image:url('../images/ic/lock-unlock.png');
 }
+/* }}}*/
+
+/* {{{ Rules  used for the section "Show pending documents" for site admin */
 .onglet {
     display: inline-block;
     margin-left: 3px;
@@ -1157,16 +1160,5 @@ ul.ServiceMenu li.current {
     margin-top: -1px;
     padding: 5px;
     display: none;
-}
-
-ul {
-    margin-top: 0px;
-    margin-bottom: 0px;
-    margin-left: -10px
-}
-
-h1 {
-    margin: 0px;
-    padding: 0px;
 }
 /* }}}*/
