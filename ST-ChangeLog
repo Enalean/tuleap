@@ -2,6 +2,7 @@ Version 4.0.16 = Not released yet
         == BugFix ==
         backlog #114221: Still have admin privileges on tracker for non members
         backlog #114020: Artifact submitted with the value "None" at the mandatory field
+        backlog #114005: Disable notifications when remove user from private project
 
 Version 4.0.15 - Friday, 19th november 2010
         == Bugfix ==

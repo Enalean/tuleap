@@ -25,6 +25,7 @@
 require_once('common/plugin/Plugin.class.php');
 require_once('Docman_VersionFactory.class.php');
 require_once('Docman_ItemFactory.class.php');
+require_once('Docman_NotificationsManager.class.php');
 
 class DocmanPlugin extends Plugin {
 	
@@ -67,6 +68,8 @@ class DocmanPlugin extends Plugin {
         $this->_addHook('show_pending_documents',             'show_pending_documents',             false);
 
         $this->_addHook('backend_system_purge_files',  'purgeFiles',  false);
+        $this->_addHook('project_admin_remove_user', 'projectRemoveUser', false);
+        $this->_addHook('project_is_private', 'projectIsPrivate', false);
 	}
 
     function permission_get_name($params) {
@@ -650,6 +653,68 @@ class DocmanPlugin extends Plugin {
 
         $versionFactory = new Docman_VersionFactory();
         $versionFactory->purgeDeletedVersions($params['time']);
+    }
+
+    /**
+     * Function called when a user is removed from a project 
+     * If a user is removed from a private project, the
+     * documents monitored by that user should be monitored no more.
+     *
+     * @param array $params
+     *
+     * @return void
+     */
+    function projectRemoveUser($params) {
+        $groupId = $params['group_id'];
+        $userId = $params['user_id'];
+
+        $pm = ProjectManager::instance();
+        $project = $pm->getProject($groupId);
+        if (!$project->isPublic()) {
+            $docmanItemFactory = new Docman_ItemFactory();
+            $root = $docmanItemFactory->getRoot($groupId);
+            if ($root) {
+                $notificationsManager = new Docman_NotificationsManager($groupId, null, null);
+                $dar = $notificationsManager->listAllMonitoredItems($groupId, $userId);
+                if($dar && !$dar->isError()) {
+                    foreach ($dar as $row) {
+                        $notificationsManager->remove($row['user_id'], $row['object_id'], $row['type']);
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Function called when a project goes from public to private so
+     * documents monitored by non member users should be monitored no more.
+     *
+     * @param array $params
+     *
+     * @return void
+     */
+    function projectIsPrivate($params) {
+        $groupId = $params['group_id'];
+        $private = $params['project_is_private'];
+
+        if ($private) {
+            $docmanItemFactory = new Docman_ItemFactory();
+            $root = $docmanItemFactory->getRoot($groupId);
+            if ($root) {
+                $notificationsManager = new Docman_NotificationsManager($groupId, null, null);
+                $dar = $notificationsManager->listAllMonitoredItems($groupId);
+                if($dar && !$dar->isError()) {
+                    $userManager = UserManager::instance();
+                    $user = null;
+                    foreach ($dar as $row) {
+                        $user = $userManager->getUserById($row['user_id']);
+                        if (!$user->isMember($groupId)) {
+                            $notificationsManager->remove($row['user_id'], $row['object_id'], $row['type']);
+                        }
+                    }
+                }
+            }
+        }
     }
 
 }
