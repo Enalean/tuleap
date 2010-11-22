@@ -34,6 +34,8 @@ if ( !$request->exist('pv') ) {
 	if ( $pv ) $ro = true;
 }
 
+$GLOBALS['HTML']->includeFooterJavascriptFile('/scripts/tiny_mce/tiny_mce.js');
+
 $GLOBALS['HTML']->addFeed(
     $group->getPublicName().' '.$ath->getName() .' #'. $ah->getId() .' - '. html_entity_decode($ah->getValue('summary'), ENT_QUOTES) .' - '. $Language->getText('tracker_include_artifact','follow_ups'), 
     '/tracker/?func=rss&aid='. $ah->getId() .'&atid='. $ath->getID() .'&group_id='. $group->getGroupId()
@@ -68,6 +70,9 @@ echo "Event.observe(window, 'load', function() {
 echo "new UserAutoCompleter('tracker_cc',
                           '".util_get_dir_image_theme()."',
                           true);\n";
+
+echo 'var embedded_rte = new Codendi_RTE_Light("tracker_artifact_comment")'.PHP_EOL;
+
 echo "</script>";
 
 // Display footer page
