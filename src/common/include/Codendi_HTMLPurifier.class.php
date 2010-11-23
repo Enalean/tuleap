@@ -105,7 +105,7 @@ class Codendi_HTMLPurifier {
      */
     function getLightConfigMarkups() {
         $eParagraph       = array('p', 'br');
-        $eLinks           = array('a[href|title|class]');
+        $eLinks           = array('a[href|title|class]', 'img[src|alt]');
         $eList            = array('ul', 'ol', 'li');
         $eContentBasedTxt = array('cite', 'code', 'blockquote', 'strong', 'em',
                                   'pre', 'b', 'i');
