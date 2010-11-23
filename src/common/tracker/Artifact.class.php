@@ -1596,7 +1596,7 @@ class Artifact extends Error {
     	$field = $art_field_fact->getFieldFromName('comment_type_id');
     	if ( $field ) {
     		// Look for project specific values first
-    		$sql="SELECT DISTINCT artifact_history.artifact_history_id,artifact_history.artifact_id,artifact_history.field_name,artifact_history.old_value,artifact_history.new_value,artifact_history.date,user.user_name,artifact_history.mod_by,artifact_history.email,artifact_history.type AS comment_type_id,artifact_field_value_list.value AS comment_type ".
+    		$sql="SELECT DISTINCT artifact_history.artifact_history_id, artifact_history.format, artifact_history.artifact_id,artifact_history.field_name,artifact_history.old_value,artifact_history.new_value,artifact_history.date,user.user_name,artifact_history.mod_by,artifact_history.email,artifact_history.type AS comment_type_id,artifact_field_value_list.value AS comment_type ".
     		"FROM artifact_history,artifact_field_value_list,artifact_field,user ".
     		"WHERE artifact_history.artifact_id=". db_ei($this->getID()) ." ".
     		"AND (artifact_history.field_name = 'comment' OR artifact_history.field_name LIKE 'lbl_%_comment') ".
@@ -1614,7 +1614,7 @@ class Artifact extends Error {
     		//echo "sql=".$sql." - rows=".$rows."<br>";
     	} else {
     		// Look for project specific values first
-    		$sql="SELECT DISTINCT artifact_history.artifact_history_id,artifact_history.artifact_id,artifact_history.field_name,artifact_history.old_value,artifact_history.new_value,artifact_history.date,user.user_name,artifact_history.mod_by,artifact_history.email,artifact_history.type AS comment_type_id,null AS comment_type ".
+    		$sql="SELECT DISTINCT artifact_history.artifact_history_id, artifact_history.format, artifact_history.artifact_id,artifact_history.field_name,artifact_history.old_value,artifact_history.new_value,artifact_history.date,user.user_name,artifact_history.mod_by,artifact_history.email,artifact_history.type AS comment_type_id,null AS comment_type ".
     		"FROM artifact_history,user ".
     		"WHERE artifact_history.artifact_id=".$this->getID()." ".
     		"AND (artifact_history.field_name = 'comment' OR artifact_history.field_name LIKE 'lbl_%_comment') ".
@@ -2713,14 +2713,15 @@ class Artifact extends Error {
 
         
         /**
-         * Return the string to display the follow ups comments
+         * Return the string to display the follow ups comments 
          *
-         * @param group_id: the group id
-         * @param ascii: ascii mode
+         * @param Integer   group_id: the group id
+         * @param Boolean   ascii ascii mode
+         * @param Boolean   display_mode    By default the display will be only in text, set to true means that html display is allowed
          *
          * @return string the follow-up comments to display in HTML or in ascii mode
          */
-        function showFollowUpComments($group_id, $pv, $ascii=false) {
+        function showFollowUpComments($group_id, $pv, $ascii=false, $display_mode = false) {
             $hp = Codendi_HTMLPurifier::instance();
             //
             //  Format the comment rows from artifact_history
@@ -2898,7 +2899,11 @@ class Artifact extends Error {
                     if ($comment_type != "") {
                         $out .= '<div class="followup_comment_content_type"><b>'.  $hp->purify($comment_type, CODENDI_PURIFIER_CONVERT_HTML)  .'</b></div>';
                     }
-                    $out .=  $hp->purify(db_result($result, $i, 'new_value'), CODENDI_PURIFIER_LIGHT, $group_id);
+                    if ($display_mode && db_result($result, $i, 'format') == 1) {
+                        $out .=  $hp->purify(util_unconvert_htmlspecialchars(db_result($result, $i, 'new_value')), CODENDI_PURIFIER_LIGHT, $group_id);
+                    } else {
+                        $out .=  $hp->purify(util_unconvert_htmlspecialchars(db_result($result, $i, 'new_value')), CODENDI_PURIFIER_BASIC, $group_id);
+                    }
                     $out .= '</div>';
                     $out .= '</div>';
                     $out .= '<script type="text/javascript">

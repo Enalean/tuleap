@@ -109,8 +109,9 @@ class Codendi_HTMLPurifier {
         $eList            = array('ul', 'ol', 'li');
         $eContentBasedTxt = array('cite', 'code', 'blockquote', 'strong', 'em',
                                   'pre', 'b', 'i');
+        $eCharacters     = array('&amp;' , '&gt;', '&lt;', '&quot;');
         
-        $aa = array_merge($eParagraph, $eLinks, $eList, $eContentBasedTxt);
+        $aa = array_merge($eParagraph, $eLinks, $eList, $eContentBasedTxt, $eCharacters);
         $allowed = implode(',', $aa);
         
         return $allowed;
