@@ -16,9 +16,9 @@ EOT;
     }
 
     public function up() {
-        // The default format is text corresponding to 10
+        // The default format is text corresponding to 0
         $sql = 'ALTER TABLE artifact_history '.
-               ' ADD format tinyint NOT NULL default \'10\'';
+               ' ADD format tinyint NOT NULL default \'0\'';
         $res = $this->db->dbh->exec($sql);
             if ($res === false) {
                 throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while adding the column format to the table artifact_history');

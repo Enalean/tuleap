@@ -2690,7 +2690,7 @@ CREATE TABLE artifact_history (
   email VARCHAR(100) NOT NULL,
   date int(11) default NULL,
   type int(11) default NULL,
-  format tinyint NOT NULL default '10',
+  format tinyint NOT NULL default '0',
   PRIMARY KEY  (artifact_history_id),
   KEY idx_artifact_history_artifact_id (artifact_id),
   KEY field_name (field_name (10))
