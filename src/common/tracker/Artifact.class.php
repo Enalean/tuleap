@@ -31,6 +31,9 @@ require_once('common/mail/Mail.class.php');
  */
 class Artifact extends Error {
 
+    const FORMAT_TEXT  = 10;
+    const FORMAT_HTML  = 11;
+
     /**
      * Artifact Type object.
      *
