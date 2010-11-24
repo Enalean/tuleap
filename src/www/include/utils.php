@@ -10,6 +10,7 @@
 require_once('common/reference/ReferenceManager.class.php');
 require_once('common/valid/Rule.class.php');
 require_once('common/include/URL.class.php');
+require_once('common/include/Codendi_HTMLPurifier.class.php');
 
 // Part about CSV format export
 // The separator for CSV export can differ regarding the Excel version.
@@ -430,22 +431,8 @@ function util_line_wrap ($text, $wrap = 80, $break = "\n") {
 function util_make_links ($data='',$group_id = 0) {
     if(empty($data)) { return $data; }
 
-    // www.yahoo.com => http://www.yahoo.com
-    $data = eregi_replace("([ \t\n])www\.","\\1http://www.",$data);
-
-    // http://www.yahoo.com => <a href="...">...</a>
-
-    // Special case for urls between brackets or double quotes 
-    // e.g. <http://www.google.com> or "http://www.google.com"
-    // In some places (e.g. tracker follow-ups) the text is already encoded, so the brackets are replaced by &lt; and &gt; See SR #652.
-    $data = eregi_replace("([[:alnum:]]+)://([^[:space:]<]*)([[:alnum:]#?/&=])&quot;", "\\1://\\2\\3\"", $data);
-    $data = eregi_replace("([[:alnum:]]+)://([^[:space:]<]*)([[:alnum:]#?/&=])&#039;", "\\1://\\2\\3'", $data);
-    $data = eregi_replace("([[:alnum:]]+)://([^[:space:]<]*)([[:alnum:]#?/&=])&gt;", "\\1://\\2\\3>", $data);
-    // Now, replace
-    $data = eregi_replace("([[:alnum:]]+)://([^[:space:]<]*)([[:alnum:]#?/&=])", "<a href=\"\\1://\\2\\3\" target=\"_blank\" target=\"_new\">\\1://\\2\\3</a>", $data);
-    
-	// john.doe@yahoo.com => <a href="mailto:...">...</a>
-    $data = eregi_replace("(([a-z0-9_]|\\-|\\.)+@([^[:space:]<&>]*)([[:alnum:]-]))", "<a href=\"mailto:\\1\" target=\"_new\">\\1</a>", $data);
+    // creation of links has moved to Codendi_HTMLPurifier::makeLinks()
+    $data = Codendi_HTMLPurifier::makeLinks($data);
     if ($group_id) {
       return util_make_reference_links ($data,$group_id);
     } else {
