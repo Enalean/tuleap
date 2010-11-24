@@ -23,6 +23,14 @@
  */
 
 require_once('common/include/Codendi_HTMLPurifier.class.php');
+Mock::generatePartial(
+    'Codendi_HTMLPurifier',
+    'Codendi_HTMLPurifierTestVersion2',
+    array('getReferenceManager')
+);
+require_once('common/reference/ReferenceManager.class.php');
+Mock::generate('ReferenceManager');
+
 
 // Need a TestVersion to by pass '_makeLinks' method (call to utils_make_links
 // that perform DB calls).
@@ -68,9 +76,15 @@ class Codendi_HTMLPurifierTest extends UnitTestCase {
     }
 
     function testStripLightForibdden() {
-        $p =& Codendi_HTMLPurifierTestVersion::instance();
+        $p = new Codendi_HTMLPurifierTestVersion2($this);
+        $rm = new MockReferenceManager();
+        $val = 'bugtest #123';
+        $rm->setReturnValue('insertReferences', $val);
+        $p->setReturnValue('getReferenceManager', $rm);
+
         $this->assertEqual('', $p->purify('<script>alert(1);</script>', CODENDI_PURIFIER_LIGHT));
         $this->assertEqual('Bolded', $p->purify('<s>Bolded</s>', CODENDI_PURIFIER_LIGHT));
+        $this->assertEqual($val, $p->purify('bugtest #123', CODENDI_PURIFIER_LIGHT, 102));
         $this->assertEqual('', $p->purify('<form name="test" method="post" action="?"><input type="submit" /></form>', CODENDI_PURIFIER_LIGHT));
         $this->anchorJsInjection(CODENDI_PURIFIER_LIGHT);
     }
