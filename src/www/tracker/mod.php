@@ -65,13 +65,13 @@ echo "Event.observe(window, 'load', function() {
                 group_id:". (int)$ath->getGroupId(). "
             });
         }
+        
+        new Codendi_RTE_Light('tracker_artifact_comment');
 });";
 
 echo "new UserAutoCompleter('tracker_cc',
                           '".util_get_dir_image_theme()."',
                           true);\n";
-
-echo 'var embedded_rte = new Codendi_RTE_Light("tracker_artifact_comment")'.PHP_EOL;
 
 echo "</script>";
 

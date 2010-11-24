@@ -22,7 +22,20 @@ var Codendi_RTE_Light = Class.create({
     initialize:function(element) {
         this.element = $(element);
         this.rte     = false;
-        Element.insert(this.element, {before: '<div><a href="javascript:embedded_rte.toggle();">Toggle rich text formatting</a></div>'});
+
+        // If there is an element named after the editor's id + label add
+        // a toggler on it
+        if ($(element+'_label')) {
+            var toggle = Builder.node('span', {'class': 'rte_toggle'});
+            toggle.appendChild(document.createTextNode(' HTML'));
+
+            toggle.observe('click', this.toggle.bindAsEventListener(this));
+
+            $(element+'_label').appendChild(toggle);
+        }
+        
+        // Can also double click on text area to activate HTML edition
+        this.element.observe('dblclick', this.toggle.bindAsEventListener(this));
     },
     init_rte: function() {
         tinyMCE.init({

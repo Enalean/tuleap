@@ -200,11 +200,11 @@ class ArtifactHtml extends Artifact {
                     $html .= '<P><B>'.$Language->getText('tracker_include_artifact','comment_type').'</B>'.
                     $field_html->fieldBox('',$group_artifact_id,$field->getDefaultValue(),true,$Language->getText('global','none')).'<BR>';
                 }
-                $html .= '<b>'.$Language->getText('tracker_include_artifact','add_comment').'</b>';
+                $html .= '<span id="tracker_artifact_comment_label"><b>'.$Language->getText('tracker_include_artifact','add_comment').'</b></span>';
                 $html .= '<TEXTAREA NAME="comment" id="tracker_artifact_comment" ROWS="10" style="width:98%" WRAP="SOFT"></TEXTAREA>';
             } else {
                 if ($pv == 0) {
-                    $html .= '<b>'.$Language->getText('tracker_include_artifact','add_comment').'</b>';
+                    $html .= '<span id="tracker_artifact_comment_label"><b>'.$Language->getText('tracker_include_artifact','add_comment').'</b></span>';
                     $html .= '<TEXTAREA NAME="comment" id="tracker_artifact_comment" ROWS="10" style="width:98%" WRAP="SOFT"></TEXTAREA>';
                 }
             }
