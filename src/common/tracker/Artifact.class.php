@@ -2716,12 +2716,11 @@ class Artifact extends Error {
          * Return the string to display the follow ups comments 
          *
          * @param Integer   group_id: the group id
-         * @param Boolean   ascii ascii mode
-         * @param Boolean   display_mode    By default the display will be only in text, set to true means that html display is allowed
+         * @param Boolean   ascii By default set to false, the displayer output is the browser 
          *
          * @return string the follow-up comments to display in HTML or in ascii mode
          */
-        function showFollowUpComments($group_id, $pv, $ascii=false, $display_mode = false) {
+        function showFollowUpComments($group_id, $pv, $ascii=false) {
             $hp = Codendi_HTMLPurifier::instance();
             //
             //  Format the comment rows from artifact_history
@@ -2793,7 +2792,14 @@ class Artifact extends Error {
                 if ($ascii) {
                     $fmt = $GLOBALS['sys_lf'] . $GLOBALS['sys_lf'] ."------------------------------------------------------------------". $GLOBALS['sys_lf'].
                         $Language->getText('tracker_import_utils','date').": %-30s".$Language->getText('global','by').": %s". $GLOBALS['sys_lf'] ."%s";
-                    $comment_txt = util_unconvert_htmlspecialchars(db_result($result, $i, 'new_value'));
+                    $value = db_result($result, $i, 'new_value');
+                    $isHtml = db_result($result, $i, 'format');
+                    //The mail body
+                    if ($isHtml == 1){
+                        $comment_txt = $hp->purify(util_unconvert_htmlspecialchars($value), CODENDI_PURIFIER_STRIP_HTML);
+                    } else {
+                        $comment_txt = $hp->purify(util_unconvert_htmlspecialchars($value), CODENDI_PURIFIER_CONVERT_HTML);
+                    }
                     $out .= sprintf($fmt,
                                     format_date(util_get_user_preferences_export_datefmt(),db_result($orig_date, 0, 'date')),
                                     (db_result($orig_subm, 0, 'mod_by')==100?db_result($orig_subm, 0, 'email'):user_getname(db_result($orig_subm, 0, 'mod_by'))),
@@ -2899,10 +2905,12 @@ class Artifact extends Error {
                     if ($comment_type != "") {
                         $out .= '<div class="followup_comment_content_type"><b>'.  $hp->purify($comment_type, CODENDI_PURIFIER_CONVERT_HTML)  .'</b></div>';
                     }
-                    if ($display_mode && db_result($result, $i, 'format') == 1) {
-                        $out .=  $hp->purify(util_unconvert_htmlspecialchars(db_result($result, $i, 'new_value')), CODENDI_PURIFIER_LIGHT, $group_id);
+                    $isHtml = db_result($result, $i, 'format');
+                    $value = db_result($result, $i, 'new_value');
+                    if ($isHtml == 1) {
+                        $out .=  $hp->purify(util_unconvert_htmlspecialchars($value), CODENDI_PURIFIER_LIGHT, $group_id);
                     } else {
-                        $out .=  $hp->purify(util_unconvert_htmlspecialchars(db_result($result, $i, 'new_value')), CODENDI_PURIFIER_BASIC, $group_id);
+                        $out .=  $hp->purify(util_unconvert_htmlspecialchars($value), CODENDI_PURIFIER_BASIC, $group_id);
                     }
                     $out .= '</div>';
                     $out .= '</div>';

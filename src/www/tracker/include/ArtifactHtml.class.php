@@ -231,8 +231,7 @@ class ArtifactHtml extends Artifact {
             }";
             $html .= '</script>';
             $html .= '</div>';
-            //The html display is allowed for browser output
-            $html .=  $this->showFollowUpComments($group_id,$pv, false, true);
+            $html .=  $this->showFollowUpComments($group_id,$pv);
             
             $title  = $Language->getText('tracker_include_artifact','follow_ups').' ';
             $title .= '<script type="text/javascript">';
