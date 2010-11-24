@@ -441,7 +441,7 @@ function util_make_links ($data='',$group_id = 0) {
     $data = eregi_replace("([[:alnum:]]+)://([^[:space:]<]*)([[:alnum:]#?/&=])&quot;", "\\1://\\2\\3\"", $data);
     $data = eregi_replace("([[:alnum:]]+)://([^[:space:]<]*)([[:alnum:]#?/&=])&gt;", "\\1://\\2\\3>", $data);
     // Now, replace
-    //$data = eregi_replace("([[:alnum:]]+)://([^[:space:]<]*)([[:alnum:]#?/&=])", "<a href=\"\\1://\\2\\3\" target=\"_blank\" target=\"_new\">\\1://\\2\\3</a>", $data);
+    $data = eregi_replace("([[:alnum:]]+)://([^[:space:]<]*)([[:alnum:]#?/&=])", "<a href=\"\\1://\\2\\3\" target=\"_blank\" target=\"_new\">\\1://\\2\\3</a>", $data);
     
 	// john.doe@yahoo.com => <a href="mailto:...">...</a>
     $data = eregi_replace("(([a-z0-9_]|\\-|\\.)+@([^[:space:]<&>]*)([[:alnum:]-]))", "<a href=\"mailto:\\1\" target=\"_new\">\\1</a>", $data);

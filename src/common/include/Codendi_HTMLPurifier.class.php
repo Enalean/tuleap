@@ -194,7 +194,16 @@ class Codendi_HTMLPurifier {
             break;
 
         case CODENDI_PURIFIER_LIGHT:
-            $html = nl2br($this->_makeLinks($html, $groupId));
+            if (empty($html)) {
+                $clean = $html;
+                break;
+            }
+            $referenceManager = ReferenceManager::instance();
+            if ($groupId) {
+                $referenceManager->insertReferences($html,$groupId);
+                $clean = nl2br($html);
+            }
+            break;
         case CODENDI_PURIFIER_STRIP_HTML:
         case CODENDI_PURIFIER_FULL:
             require_once($GLOBALS['htmlpurifier_dir'].'/HTMLPurifier.auto.php');
