@@ -439,6 +439,7 @@ function util_make_links ($data='',$group_id = 0) {
     // e.g. <http://www.google.com> or "http://www.google.com"
     // In some places (e.g. tracker follow-ups) the text is already encoded, so the brackets are replaced by &lt; and &gt; See SR #652.
     $data = eregi_replace("([[:alnum:]]+)://([^[:space:]<]*)([[:alnum:]#?/&=])&quot;", "\\1://\\2\\3\"", $data);
+    $data = eregi_replace("([[:alnum:]]+)://([^[:space:]<]*)([[:alnum:]#?/&=])&#039;", "\\1://\\2\\3\'", $data);
     $data = eregi_replace("([[:alnum:]]+)://([^[:space:]<]*)([[:alnum:]#?/&=])&gt;", "\\1://\\2\\3>", $data);
     // Now, replace
     $data = eregi_replace("([[:alnum:]]+)://([^[:space:]<]*)([[:alnum:]#?/&=])", "<a href=\"\\1://\\2\\3\" target=\"_blank\" target=\"_new\">\\1://\\2\\3</a>", $data);
