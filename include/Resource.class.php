@@ -118,6 +118,8 @@ class GitPHP_Resource
 				return 'English';
 			case 'fr_FR':
 				return 'Français';
+			case 'de_DE':
+				return 'Deutsch';
 			case 'ru_RU':
 				return 'Русский';
 			case 'zz_Debug':
