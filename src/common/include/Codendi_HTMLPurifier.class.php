@@ -230,8 +230,7 @@ class Codendi_HTMLPurifier {
                 $referenceManager = $this->getReferenceManager();
                 $referenceManager->insertReferences($html,$groupId);
             }
-            $clean = nl2br($html);
-            break;
+            $html = nl2br($html);
         case CODENDI_PURIFIER_STRIP_HTML:
         case CODENDI_PURIFIER_FULL:
             require_once($GLOBALS['htmlpurifier_dir'].'/HTMLPurifier.auto.php');
