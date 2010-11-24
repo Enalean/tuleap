@@ -198,11 +198,11 @@ class Codendi_HTMLPurifier {
                 $clean = $html;
                 break;
             }
-            $referenceManager = ReferenceManager::instance();
             if ($groupId) {
+                $referenceManager = $this->getReferenceManager();
                 $referenceManager->insertReferences($html,$groupId);
-                $clean = nl2br($html);
             }
+            $clean = nl2br($html);
             break;
         case CODENDI_PURIFIER_STRIP_HTML:
         case CODENDI_PURIFIER_FULL:
@@ -239,6 +239,15 @@ class Codendi_HTMLPurifier {
 
     function purifyMap($array, $level=0, $groupId=0) {
         return array_map(array(&$this, "purify"), $array, array($level), array($groupId));
+    }
+    
+    /**
+     * Returns an instance of ReferenceManager
+     *
+     * @return ReferenceManager
+     */
+    public function getReferenceManager() {
+        return ReferenceManager::instance();
     }
 
 }
