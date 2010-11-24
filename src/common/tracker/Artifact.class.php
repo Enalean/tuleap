@@ -309,7 +309,7 @@ class Artifact extends Error {
      *
      *  @return int : the artifact_history_id
      */
-    function addHistory ($field,$old_value,$new_value,$type=false,$email=false,$ahid=false) {
+    function addHistory ($field,$old_value,$new_value,$type=false,$email=false,$ahid=false,$comment_format=self::FORMAT_TEXT) {
     	//MLS: add case where we add CC and file_attachment into history for task #240
     	if (!is_object($field)) {
     		// "cc", "attachment", "comment", etc 
@@ -348,11 +348,17 @@ class Artifact extends Error {
                 $fld_type = ',type'; 
                 $val_type = ",'100'";
             }
-        }             
-        
+        }
+
+        // Follow-up comments might have a different format
+        if ($comment_format != self::FORMAT_TEXT) {
+            $fld_type .= ',format';
+            $val_type .= ','.db_ei($comment_format);
+        }
+
         $sql="insert into artifact_history(artifact_id,field_name,old_value,new_value,mod_by,email,date $fld_type) ".
             "VALUES (". db_ei($this->getID()) .",'". db_es($name) ."','". db_es($old_value) ."','". db_es($new_value) ."','". db_ei($user) ."','". db_es($email) ."','".time()."' $val_type)";
-        //echo $sql;
+        echo $sql;
         return db_query($sql);
     }
         
@@ -646,7 +652,7 @@ class Artifact extends Error {
      * @param comment (IN) : the comment that the user typed in
      * @param canned_response (IN) : the id of the canned response
      */
-    function addFollowUpComment($comment,$comment_type_id,$canned_response,&$changes) {
+    function addFollowUpComment($comment,$comment_type_id,$canned_response,&$changes,$comment_format=self::FORMAT_TEXT) {
     	global $art_field_fact,$Language;
       	if ($canned_response && $canned_response != 100) {
 	
@@ -663,7 +669,7 @@ class Artifact extends Error {
       	}
       
       	if ($comment != '') {
-        	$this->addHistory('comment', '', htmlspecialchars($comment), $comment_type_id);
+        	$this->addHistory('comment', '', htmlspecialchars($comment), $comment_type_id, false, false, $comment_format);
           	$changes['comment']['add'] = $comment;
 
 			$field = $art_field_fact->getFieldFromName("comment_type_id");
@@ -1009,8 +1015,10 @@ class Artifact extends Error {
         // comment text area. 
         $comment = $request->get('comment');
         $comment_type_id = array_key_exists('comment_type_id', $vfl)?$vfl['comment_type_id']:'';
+        $vFormat = new Valid_WhiteList('comment_format', array(self::FORMAT_HTML, self::FORMAT_TEXT));
+        $comment_format = $request->getValidated('comment_format', $vFormat, self::FORMAT_TEXT);
 
-	    $this->addFollowUpComment($comment,$comment_type_id,$canned_response,$changes);
+	    $this->addFollowUpComment($comment,$comment_type_id,$canned_response,$changes,$comment_format);
             
         //
         //  Enter the timestamp if we are changing to closed or declined

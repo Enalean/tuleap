@@ -66,7 +66,7 @@ echo "Event.observe(window, 'load', function() {
             });
         }
         
-        new Codendi_RTE_Light('tracker_artifact_comment');
+        new Codendi_RTE_Light_Tracker_FollowUp('tracker_artifact_comment');
 });";
 
 echo "new UserAutoCompleter('tracker_cc',

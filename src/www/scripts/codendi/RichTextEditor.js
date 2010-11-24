@@ -73,3 +73,15 @@ var Codendi_RTE_Light = Class.create({
         }
     }
 });
+
+var Codendi_RTE_Light_Tracker_FollowUp = Class.create(Codendi_RTE_Light, {
+    toggle: function ($super) {
+        // Add an hidden field that tells that the content is HTML (value 1)
+        // the value is defined in Artifact class.
+        var html = Builder.node('input', {'name':  'comment_format',
+                                          'type':  'hidden',
+                                          'value': '1'});
+        this.element.parentNode.appendChild(html);
+        $super();
+    }
+});
