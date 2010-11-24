@@ -148,13 +148,6 @@ class Codendi_HTMLPurifier {
     }
 
     /**
-     * Wrap call to util_make_links (for testing purpose).
-     */
-    function _makeLinks($str, $groupId) {
-        return util_make_links($str, $groupId);
-    }
-
-    /**
      * Transform links and emails from text to html links
      *
      * @param String $data
@@ -242,10 +235,10 @@ class Codendi_HTMLPurifier {
             break;
 
         case CODENDI_PURIFIER_BASIC:
-            $clean = nl2br($this->_makeLinks(htmlentities($html, ENT_QUOTES, 'UTF-8'), $groupId));
+            $clean = nl2br($this->makeLinks(htmlentities($html, ENT_QUOTES, 'UTF-8'), $groupId));
             break;
         case CODENDI_PURIFIER_BASIC_NOBR:
-            $clean = $this->_makeLinks(htmlentities($html, ENT_QUOTES, 'UTF-8'), $groupId);
+            $clean = $this->makeLinks(htmlentities($html, ENT_QUOTES, 'UTF-8'), $groupId);
             break;
 
         case CODENDI_PURIFIER_JS_QUOTE:

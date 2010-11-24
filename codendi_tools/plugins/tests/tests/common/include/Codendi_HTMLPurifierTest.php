@@ -32,8 +32,7 @@ require_once('common/reference/ReferenceManager.class.php');
 Mock::generate('ReferenceManager');
 
 
-// Need a TestVersion to by pass '_makeLinks' method (call to utils_make_links
-// that perform DB calls).
+// Need a TestVersion to by pass 'makeLinks' method.
 // Need to create this testversion by hand because with Mock object there is no
 // way to tell them "return the parameter as is".
 // This method to be used only when mandatory (when the is a utils_make_links call).
@@ -48,7 +47,7 @@ class Codendi_HTMLPurifierTestVersion extends Codendi_HTMLPurifier {
         }
         return self::$Codendi_HTMLPurifier_testversion_instance;
     }
-    function _makeLinks($str, $gid) {
+    function makeLinks($str) {
         return $str;
     }
 }
@@ -161,6 +160,21 @@ class Codendi_HTMLPurifierTest extends UnitTestCase {
         $p = Codendi_HTMLPurifierTestVersion::instance();
         $this->assertEqual("a<br />\nb", $p->purify("a\nb", CODENDI_PURIFIER_BASIC));
         $this->assertEqual("a\nb", $p->purify("a\nb", CODENDI_PURIFIER_BASIC_NOBR));
+    }
+
+    function testMakeLinks() {
+        $p = Codendi_HTMLPurifier::instance();
+        $this->assertEqual('<a href="http://www.example.com" target="_blank" target="_new">http://www.example.com</a>', $p->makeLinks('http://www.example.com'));
+        $this->assertEqual('"<a href="http://www.example.com" target="_blank" target="_new">http://www.example.com</a>"', $p->makeLinks('"http://www.example.com"'));
+        $this->assertEqual('\'<a href="http://www.example.com" target="_blank" target="_new">http://www.example.com</a>\'', $p->makeLinks('\'http://www.example.com\''));
+        $this->assertEqual('<<a href="http://www.example.com" target="_blank" target="_new">http://www.example.com</a>>', $p->makeLinks('<http://www.example.com>'));
+        // www.example.com with nothing before it is strangely not treated
+        //$this->assertEqual('<a href="http://www.example.com" target="_blank" target="_new">http://www.example.com</a>', $p->makeLinks('www.example.com'));
+        $this->assertEqual(' <a href="http://www.example.com" target="_blank" target="_new">http://www.example.com</a>', $p->makeLinks(' www.example.com'));
+        $this->assertEqual('<a href="mailto:john.doe@example.com" target="_new">john.doe@example.com</a>', $p->makeLinks('john.doe@example.com'));
+        $this->assertEqual('"<a href="mailto:john.doe@example.com" target="_new">john.doe@example.com</a>"', $p->makeLinks('"john.doe@example.com"'));
+        $this->assertEqual('\'<a href="mailto:john.doe@example.com" target="_new">john.doe@example.com</a>\'', $p->makeLinks('\'john.doe@example.com\''));
+        $this->assertEqual('<<a href="mailto:john.doe@example.com" target="_new">john.doe@example.com</a>>', $p->makeLinks('<john.doe@example.com>'));
     }
 }
 ?>
