@@ -151,8 +151,10 @@ class Codendi_HTMLPurifier {
      * Transform links and emails from text to html links
      *
      * @param String $data
+     *
+     * @return String
      */
-    function makeLinks($data) {
+    function makeLinks($data = '', $group_id = 0) {
         if(empty($data)) { return $data; }
 
         // www.yahoo.com => http://www.yahoo.com
@@ -171,6 +173,25 @@ class Codendi_HTMLPurifier {
 
 	    // john.doe@yahoo.com => <a href="mailto:...">...</a>
         $data = eregi_replace("(([a-z0-9_]|\\-|\\.)+@([^[:space:]<&>]*)([[:alnum:]-]))", "<a href=\"mailto:\\1\" target=\"_new\">\\1</a>", $data);
+
+        $data = self::makeReferenceLinks($data, $group_id);
+
+        return $data;
+    }
+
+    /**
+     * Transform codendi references to links
+     *
+     * @param String $data
+     * @param Integer $group_id
+     *
+     * @return String
+     */
+    function makeReferenceLinks($data, $group_id) {
+        if(empty($data)) { return $data; }
+        $reference_manager = self::getReferenceManager();
+        if ($group_id)
+            $reference_manager->insertReferences($data,$group_id);
 
         return $data;
     }

@@ -22,12 +22,15 @@
  *
  */
 
+require_once ('common/language/BaseLanguage.class.php');
+Mock::generate('BaseLanguage');
 require_once('common/include/Codendi_HTMLPurifier.class.php');
 Mock::generatePartial(
     'Codendi_HTMLPurifier',
     'Codendi_HTMLPurifierTestVersion2',
     array('getReferenceManager')
 );
+require_once('common/event/EventManager.class.php');
 require_once('common/reference/ReferenceManager.class.php');
 Mock::generate('ReferenceManager');
 
@@ -62,9 +65,11 @@ class Codendi_HTMLPurifierTest extends UnitTestCase {
     }
 
     function setUp() {
+        $GLOBALS['Language'] = new MockBaseLanguage($this);
     }
 
     function tearDown() {
+        unset($GLOBALS['Language']);
     }
 
 
@@ -164,12 +169,11 @@ class Codendi_HTMLPurifierTest extends UnitTestCase {
 
     function testMakeLinks() {
         $p = Codendi_HTMLPurifier::instance();
+        $this->assertEqual('', $p->makeLinks());
         $this->assertEqual('<a href="http://www.example.com" target="_blank" target="_new">http://www.example.com</a>', $p->makeLinks('http://www.example.com'));
         $this->assertEqual('"<a href="http://www.example.com" target="_blank" target="_new">http://www.example.com</a>"', $p->makeLinks('"http://www.example.com"'));
         $this->assertEqual('\'<a href="http://www.example.com" target="_blank" target="_new">http://www.example.com</a>\'', $p->makeLinks('\'http://www.example.com\''));
         $this->assertEqual('<<a href="http://www.example.com" target="_blank" target="_new">http://www.example.com</a>>', $p->makeLinks('<http://www.example.com>'));
-        // www.example.com with nothing before it is strangely not treated
-        //$this->assertEqual('<a href="http://www.example.com" target="_blank" target="_new">http://www.example.com</a>', $p->makeLinks('www.example.com'));
         $this->assertEqual(' <a href="http://www.example.com" target="_blank" target="_new">http://www.example.com</a>', $p->makeLinks(' www.example.com'));
         $this->assertEqual('<a href="mailto:john.doe@example.com" target="_new">john.doe@example.com</a>', $p->makeLinks('john.doe@example.com'));
         $this->assertEqual('"<a href="mailto:john.doe@example.com" target="_new">john.doe@example.com</a>"', $p->makeLinks('"john.doe@example.com"'));

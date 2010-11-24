@@ -429,24 +429,13 @@ function util_line_wrap ($text, $wrap = 80, $break = "\n") {
 }
 
 function util_make_links ($data='',$group_id = 0) {
-    if(empty($data)) { return $data; }
-
     // creation of links has moved to Codendi_HTMLPurifier::makeLinks()
-    $data = Codendi_HTMLPurifier::makeLinks($data);
-    if ($group_id) {
-      return util_make_reference_links ($data,$group_id);
-    } else {
-      return $data;
-    }
+    return Codendi_HTMLPurifier::makeLinks($data, $group_id);
 }
 
 function util_make_reference_links ($data,$group_id) {
-    if(empty($data)) { return $data; }
-    $reference_manager =& ReferenceManager::instance();
-    if ($group_id)
-        $reference_manager->insertReferences($data,$group_id);
-
-    return $data;
+    // creation of reference links has moved to Codendi_HTMLPurifier::makeReferenceLinks()
+    return Codendi_HTMLPurifier::makeReferenceLinks($data, $group_id);
 }
 
 function util_user_link ($username) {
