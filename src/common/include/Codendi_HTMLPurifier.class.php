@@ -104,16 +104,10 @@ class Codendi_HTMLPurifier {
      * - 'cite', 'code', 'blockquote', 'strong', 'em', 'pre', 'b', 'i'
      */
     function getLightConfigMarkups() {
-        $eParagraph       = array('p', 'br');
-        $eLinks           = array('a[href|title|class]', 'img[src|alt]');
-        $eList            = array('ul', 'ol', 'li');
-        $eContentBasedTxt = array('cite', 'code', 'blockquote', 'strong', 'em',
-                                  'pre', 'b', 'i');
-        $eCharacters     = array('&amp;' , '&gt;', '&lt;', '&quot;');
-        
-        $aa = array_merge($eParagraph, $eLinks, $eList, $eContentBasedTxt, $eCharacters);
-        $allowed = implode(',', $aa);
-        
+        $allowed = 'p,br,'.
+                   'a[href|title|class],img[src|alt],'.
+                   'ul,ol,li,'.
+                   'cite,code,blockquote,strong,em,pre,b,i';
         return $allowed;
     }
 
