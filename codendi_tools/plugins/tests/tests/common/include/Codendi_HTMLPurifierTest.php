@@ -22,15 +22,12 @@
  *
  */
 
-require_once ('common/language/BaseLanguage.class.php');
-Mock::generate('BaseLanguage');
 require_once('common/include/Codendi_HTMLPurifier.class.php');
 Mock::generatePartial(
     'Codendi_HTMLPurifier',
     'Codendi_HTMLPurifierTestVersion2',
     array('getReferenceManager')
 );
-require_once('common/event/EventManager.class.php');
 require_once('common/reference/ReferenceManager.class.php');
 Mock::generate('ReferenceManager');
 
@@ -65,11 +62,9 @@ class Codendi_HTMLPurifierTest extends UnitTestCase {
     }
 
     function setUp() {
-        $GLOBALS['Language'] = new MockBaseLanguage($this);
     }
 
     function tearDown() {
-        unset($GLOBALS['Language']);
     }
 
 
@@ -168,7 +163,7 @@ class Codendi_HTMLPurifierTest extends UnitTestCase {
     }
 
     function testMakeLinks() {
-        $p = Codendi_HTMLPurifier::instance();
+        $p = new Codendi_HTMLPurifierTestVersion2($this);
         $this->assertEqual('', $p->makeLinks());
         $this->assertEqual('<a href="http://www.example.com" target="_blank" target="_new">http://www.example.com</a>', $p->makeLinks('http://www.example.com'));
         $this->assertEqual('"<a href="http://www.example.com" target="_blank" target="_new">http://www.example.com</a>"', $p->makeLinks('"http://www.example.com"'));
@@ -179,16 +174,11 @@ class Codendi_HTMLPurifierTest extends UnitTestCase {
         $this->assertEqual('"<a href="mailto:john.doe@example.com" target="_new">john.doe@example.com</a>"', $p->makeLinks('"john.doe@example.com"'));
         $this->assertEqual('\'<a href="mailto:john.doe@example.com" target="_new">john.doe@example.com</a>\'', $p->makeLinks('\'john.doe@example.com\''));
         $this->assertEqual('<<a href="mailto:john.doe@example.com" target="_new">john.doe@example.com</a>>', $p->makeLinks('<john.doe@example.com>'));
-    }
 
-    function testMakeReferenceLinks() {
-        $p = new Codendi_HTMLPurifierTestVersion2($this);
         $rm = new MockReferenceManager();
         $rm->setReturnValue('insertReferences', 'link to art #1');
         $p->setReturnValue('getReferenceManager', $rm);
-        $this->assertEqual('', $p->makeReferenceLinks('', 1));
-        $this->assertEqual('link to art #1', $p->makeReferenceLinks('art #1', 1));
-
+        $this->assertEqual('link to art #1', $p->makeLinks('art #1', 1));
     }
 }
 ?>

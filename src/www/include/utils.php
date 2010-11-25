@@ -435,9 +435,12 @@ function util_make_links ($data='',$group_id = 0) {
 }
 
 function util_make_reference_links ($data,$group_id) {
-    // creation of reference links has moved to Codendi_HTMLPurifier::makeReferenceLinks()
-    $hp = Codendi_HTMLPurifier::instance();
-    return $hp->makeReferenceLinks($data, $group_id);
+    if(empty($data)) { return $data; }
+    $reference_manager =& ReferenceManager::instance();
+    if ($group_id)
+        $reference_manager->insertReferences($data,$group_id);
+
+    return $data;
 }
 
 function util_user_link ($username) {

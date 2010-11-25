@@ -168,25 +168,11 @@ class Codendi_HTMLPurifier {
 	    // john.doe@yahoo.com => <a href="mailto:...">...</a>
         $data = preg_replace("/(([a-z0-9_]|\\-|\\.)+@([^[:space:]<&>]*)([[:alnum:]-]))/i", "<a href=\"mailto:\\1\" target=\"_new\">\\1</a>", $data);
 
-        $data = $this->makeReferenceLinks($data, $group_id);
-
-        return $data;
-    }
-
-    /**
-     * Transform codendi references to links
-     *
-     * @param String $data
-     * @param Integer $group_id
-     *
-     * @return String
-     */
-    function makeReferenceLinks($data, $group_id) {
-        if(empty($data)) { return $data; }
         if ($group_id) {
             $reference_manager = $this->getReferenceManager();
             $data = $reference_manager->insertReferences($data,$group_id);
         }
+
         return $data;
     }
 
