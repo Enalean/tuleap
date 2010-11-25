@@ -2821,8 +2821,9 @@ class Artifact extends Error {
                         $toggle = 'ic/toggle_plus.png';
                     }
                     $out .= "\n".'
-                    <div class="'. util_get_alt_row_color($i) .' followup_comment" id="comment_'. $comment_id .'">
-                        <div class="followup_comment_title" style="float:left;">';
+                    <div class="followup_comment" id="comment_'. $comment_id .'">
+                        <div class="'. util_get_alt_row_color($i) .' followup_comment_header">
+                            <div class="followup_comment_title">';
                     $out .= '<script type="text/javascript">document.write(\'<span>';
                     $out .= $GLOBALS['HTML']->getImage(
                         $toggle, 
@@ -2885,8 +2886,8 @@ class Artifact extends Error {
                         $out .= '<span title="'. format_date($GLOBALS['Language']->getText('system', 'datefmt'),db_result($result, $i, 'date')) .'">'.  $hp->purify(util_time_ago_in_words(db_result($result, $i, 'date')), CODENDI_PURIFIER_CONVERT_HTML)  .'</span>';
                         $out .= '</span>'.")";
                     }
-                    $out .= '</div>';
-                    $out .= '<div style="text-align:right;">';
+                    $out .= "\n</div><!-- followup_comment_title -->\n";
+                    $out .= '<div class="followup_comment_title_toolbar">';
                     if (db_result($orig_subm, 0, 'mod_by')==100) {
                         $user_quoted = db_result($orig_subm, 0, 'email');
                     } else {
@@ -2907,8 +2908,9 @@ class Artifact extends Error {
                         $out .= $GLOBALS['HTML']->getImage('ic/close.png', array('border' => 0, 'alt' => $GLOBALS['Language']->getText('tracker_include_artifact','del')));
                         $out .= '</a>';
                     }
-                    $out .= '</div>';
+                    $out .= "\n</div><!-- followup_comment_title_toolbar -->\n";
                     $out .= '<div style="clear:both;"></div>';
+                    $out .= "\n</div><!-- followup_comment_header -->\n";
                     $out .= '<div class="followup_comment_content" '. $style .' id="comment_'. (int)$comment_id .'_content">';
                     if ($comment_type != "") {
                         $out .= '<div class="followup_comment_content_type"><b>'.  $hp->purify($comment_type, CODENDI_PURIFIER_CONVERT_HTML)  .'</b></div>';
