@@ -430,12 +430,14 @@ function util_line_wrap ($text, $wrap = 80, $break = "\n") {
 
 function util_make_links ($data='',$group_id = 0) {
     // creation of links has moved to Codendi_HTMLPurifier::makeLinks()
-    return Codendi_HTMLPurifier::makeLinks($data, $group_id);
+    $hp = Codendi_HTMLPurifier::instance();
+    return $hp->makeLinks($data, $group_id);
 }
 
 function util_make_reference_links ($data,$group_id) {
     // creation of reference links has moved to Codendi_HTMLPurifier::makeReferenceLinks()
-    return Codendi_HTMLPurifier::makeReferenceLinks($data, $group_id);
+    $hp = Codendi_HTMLPurifier::instance();
+    return $hp->makeReferenceLinks($data, $group_id);
 }
 
 function util_user_link ($username) {

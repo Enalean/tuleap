@@ -174,7 +174,7 @@ class Codendi_HTMLPurifier {
 	    // john.doe@yahoo.com => <a href="mailto:...">...</a>
         $data = eregi_replace("(([a-z0-9_]|\\-|\\.)+@([^[:space:]<&>]*)([[:alnum:]-]))", "<a href=\"mailto:\\1\" target=\"_new\">\\1</a>", $data);
 
-        $data = self::makeReferenceLinks($data, $group_id);
+        $data = $this->makeReferenceLinks($data, $group_id);
 
         return $data;
     }
@@ -189,10 +189,10 @@ class Codendi_HTMLPurifier {
      */
     function makeReferenceLinks($data, $group_id) {
         if(empty($data)) { return $data; }
-        $reference_manager = self::getReferenceManager();
-        if ($group_id)
-            $reference_manager->insertReferences($data,$group_id);
-
+        if ($group_id) {
+            $reference_manager = $this->getReferenceManager();
+            $data = $reference_manager->insertReferences($data,$group_id);
+        }
         return $data;
     }
 
@@ -242,7 +242,7 @@ class Codendi_HTMLPurifier {
             }
             if ($groupId) {
                 $referenceManager = $this->getReferenceManager();
-                $referenceManager->insertReferences($html,$groupId);
+                $html = $referenceManager->insertReferences($html,$groupId);
             }
             $html = nl2br($html);
         case CODENDI_PURIFIER_STRIP_HTML:
