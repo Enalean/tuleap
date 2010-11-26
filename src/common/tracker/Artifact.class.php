@@ -2804,11 +2804,11 @@ class Artifact extends Error {
                     $isHtml = db_result($result, $i, 'format');
                     //The mail body
                     if ($isHtml == 1){
-                        $level =  CODENDI_PURIFIER_STRIP_HTML;
+                        $comment_txt = $hp->purify(util_unconvert_htmlspecialchars($value), CODENDI_PURIFIER_STRIP_HTML);
                     } else {
-                        $level = CODENDI_PURIFIER_CONVERT_HTML;
+                        $comment_txt = $value;
                     }
-                    $comment_txt = $hp->purify(util_unconvert_htmlspecialchars($value), CODENDI_PURIFIER_STRIP_HTML);
+                    $comment_txt = util_unconvert_htmlspecialchars($comment_txt);
                     $out .= sprintf($fmt,
                                     format_date(util_get_user_preferences_export_datefmt(),db_result($orig_date, 0, 'date')),
                                     (db_result($orig_subm, 0, 'mod_by')==100?db_result($orig_subm, 0, 'email'):user_getname(db_result($orig_subm, 0, 'mod_by'))),
