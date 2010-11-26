@@ -54,7 +54,9 @@ $armh->displayRulesAsJavascript();
 echo "new UserAutoCompleter('tracker_cc',
                           '".util_get_dir_image_theme()."',
                           true);\n";
-echo "new Codendi_RTE_Light_Tracker_FollowUp(\"follow_up_comment\");";
+echo "document.observe(\"dom:loaded\", function() {
+    new Codendi_RTE_Light_Tracker_FollowUp(\"follow_up_comment\");
+});";
 echo "</script>";
 
 // Display footer page

@@ -47,7 +47,9 @@ $ah->displayEditFollowupComment($request->get('artifact_history_id'));
 $GLOBALS['HTML']->includeFooterJavascriptFile('/scripts/tiny_mce/tiny_mce.js');
 
 echo '<script type="text/javascript">
-    new Codendi_RTE_Light_Tracker_FollowUp("followup_update");
+    document.observe("dom:loaded", function() {
+        new Codendi_RTE_Light_Tracker_FollowUp("followup_update");
+    });
 </script>';
 
 // Display footer page
