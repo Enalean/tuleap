@@ -297,7 +297,9 @@ if ( $func == 'gotoid' ) {
                 $follow_up_comment = $request->get('follow_up_comment');
                 $comment_type_id = $request->get('comment_type_id');
                 $canned_response = $request->get('canned_response');
-				$ah->addFollowUpComment($follow_up_comment,$comment_type_id,$canned_response,$changes,$request->get('comment_format'));
+                $vFormat = new Valid_WhiteList('comment_format', array(ArtifactHtml::FORMAT_HTML, ArtifactHtml::FORMAT_TEXT));
+                $comment_format = $request->getValidated('comment_format', $vFormat, $ah->FORMAT_TEXT);
+				$ah->addFollowUpComment($follow_up_comment,$comment_type_id,$canned_response,$changes,$comment_format);
 
                                 // send an email to notify the user of the artifact update
                                     $agnf =& new ArtifactGlobalNotificationFactory();
@@ -846,7 +848,9 @@ if ( $func == 'gotoid' ) {
             if (user_isloggedin() && $request->exist('followup_update')) {
                 $followup_update = $request->get('followup_update');
                 $ah = new ArtifactHtml($ath,$artifact_id);
-                if ($ah->updateFollowupComment($request->get('artifact_history_id'),$followup_update,$changes,$request->get('comment_format'))) {  
+                $vFormat = new Valid_WhiteList('comment_format', array(ArtifactHtml::FORMAT_HTML, ArtifactHtml::FORMAT_TEXT));
+                $comment_format = $request->getValidated('comment_format', $vFormat, ArtifactHtml::FORMAT_TEXT);
+                if ($ah->updateFollowupComment($request->get('artifact_history_id'),$followup_update,$changes,$comment_format)) {  
                     $GLOBALS['Response']->addFeedback('info',$GLOBALS['Language']->getText('tracker_common_artifact','followup_upd_succ'));		  
                     $agnf =& new ArtifactGlobalNotificationFactory();
                     $addresses = $agnf->getAllAddresses($ath->getID(), true);
