@@ -85,6 +85,7 @@ class Codendi_HTMLPurifierTest extends UnitTestCase {
         $this->assertEqual('Bolded', $p->purify('<s>Bolded</s>', CODENDI_PURIFIER_LIGHT));
         $this->assertEqual($val, $p->purify('bugtest #123', CODENDI_PURIFIER_LIGHT, 102));
         $this->assertEqual('', $p->purify('<form name="test" method="post" action="?"><input type="submit" /></form>', CODENDI_PURIFIER_LIGHT));
+        $this->assertEqual('<a href="ftp://test.com">ftp://test.com</a>', $p->purify('ftp://test.com', CODENDI_PURIFIER_LIGHT));
         $this->anchorJsInjection(CODENDI_PURIFIER_LIGHT);
     }
 

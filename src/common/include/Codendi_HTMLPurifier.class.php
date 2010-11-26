@@ -82,12 +82,14 @@ class Codendi_HTMLPurifier {
     }
 
     /**
-     * Allow basic formatting markups.
+     * Allow basic formatting markups and enable some Autoformat attributes
+     * @see http://htmlpurifier.org/live/configdoc/plain.html#AutoFormat
      *
      */
     function getLightConfig() {
         $config = $this->getCodendiConfig();
         $config->set('HTML', 'Allowed', $this->getLightConfigMarkups());
+        $config->set('AutoFormat','Linkify', true);
         return $config;
     }
     
