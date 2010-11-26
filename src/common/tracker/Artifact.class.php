@@ -613,7 +613,7 @@ class Artifact extends Error {
      *
      *  @return boolean
      */
-    function addComment($comment,$email=false,&$changes) {
+    function addComment($comment,$email=false,&$changes,$comment_format=null) {
                         
         global $art_field_fact,$Language;
 
@@ -623,13 +623,13 @@ class Artifact extends Error {
             // For none project members force the comment type to None (100)
             if ( !user_isloggedin() ) {
                 if ( $email ) {
-                    $this->addHistory('comment', "", htmlspecialchars($comment), 100, $email);
+                    $this->addHistory('comment', "", htmlspecialchars($comment), 100, $email, null, $comment_format);
                 } else {
                     $GLOBALS['Response']->addFeedback('error', $Language->getText('tracker_common_artifact','enter_email'));
                     return false;
                 }
             } else {
-                $this->addHistory('comment', "", htmlspecialchars($comment), 100);
+                $this->addHistory('comment', "", htmlspecialchars($comment), 100, null, null, $comment_format);
             }
             $changes['comment']['add'] = stripslashes($comment);
             $changes['comment']['type'] = $Language->getText('global','none');

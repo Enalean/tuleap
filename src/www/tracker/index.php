@@ -728,7 +728,9 @@ if ( $func == 'gotoid' ) {
             $comment = $request->get('comment');
             $email   = $request->get('email');
             if ($comment) {
-                if (!$ah->addComment($comment,$email,$changes)) {
+                $vFormat = new Valid_WhiteList('comment_format', array(ArtifactHtml::FORMAT_HTML, ArtifactHtml::FORMAT_TEXT));
+                $comment_format = $request->getValidated('comment_format', $vFormat, $ah->FORMAT_TEXT);
+                if (!$ah->addComment($comment,$email,$changes,$comment_format)) {
                     exit_error($Language->getText('global','error'), $Language->getText('tracker_index','not_saved_comment'));
                 }
             }
