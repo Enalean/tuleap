@@ -2790,6 +2790,9 @@ class Artifact extends Error {
                 $field_name = db_result($result, $i, 'field_name');
                 $orig_subm = $this->getOriginalCommentSubmitter($comment_id);
                 $orig_date = $this->getOriginalCommentDate($comment_id);
+                $value = db_result($result, $i, 'new_value');
+                $isHtml = db_result($result, $i, 'format');
+                
                 
                 if ( ($comment_type_id == 100) ||($comment_type == "") ) {
                     $comment_type = '';
@@ -2800,8 +2803,6 @@ class Artifact extends Error {
                 if ($ascii) {
                     $fmt = $GLOBALS['sys_lf'] . $GLOBALS['sys_lf'] ."------------------------------------------------------------------". $GLOBALS['sys_lf'].
                         $Language->getText('tracker_import_utils','date').": %-30s".$Language->getText('global','by').": %s". $GLOBALS['sys_lf'] ."%s";
-                    $value = db_result($result, $i, 'new_value');
-                    $isHtml = db_result($result, $i, 'format');
                     //The mail body
                     if ($isHtml == 1){
                         $comment_txt = $hp->purify(util_unconvert_htmlspecialchars($value), CODENDI_PURIFIER_STRIP_HTML);
@@ -2916,8 +2917,6 @@ class Artifact extends Error {
                     if ($comment_type != "") {
                         $out .= '<div class="followup_comment_content_type"><b>'.  $hp->purify($comment_type, CODENDI_PURIFIER_CONVERT_HTML)  .'</b></div>';
                     }
-                    $isHtml = db_result($result, $i, 'format');
-                    $value = db_result($result, $i, 'new_value');
                     if ($isHtml == 1) {
                         $level = CODENDI_PURIFIER_LIGHT;
                     } else {
