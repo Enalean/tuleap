@@ -2804,10 +2804,11 @@ class Artifact extends Error {
                     $isHtml = db_result($result, $i, 'format');
                     //The mail body
                     if ($isHtml == 1){
-                        $comment_txt = $hp->purify(util_unconvert_htmlspecialchars($value), CODENDI_PURIFIER_STRIP_HTML);
+                        $level =  CODENDI_PURIFIER_STRIP_HTML;
                     } else {
-                        $comment_txt = $hp->purify(util_unconvert_htmlspecialchars($value), CODENDI_PURIFIER_CONVERT_HTML);
+                        $level = CODENDI_PURIFIER_CONVERT_HTML;
                     }
+                    $comment_txt = $hp->purify(util_unconvert_htmlspecialchars($value), CODENDI_PURIFIER_STRIP_HTML);
                     $out .= sprintf($fmt,
                                     format_date(util_get_user_preferences_export_datefmt(),db_result($orig_date, 0, 'date')),
                                     (db_result($orig_subm, 0, 'mod_by')==100?db_result($orig_subm, 0, 'email'):user_getname(db_result($orig_subm, 0, 'mod_by'))),
@@ -2918,10 +2919,11 @@ class Artifact extends Error {
                     $isHtml = db_result($result, $i, 'format');
                     $value = db_result($result, $i, 'new_value');
                     if ($isHtml == 1) {
-                        $out .=  $hp->purify(util_unconvert_htmlspecialchars($value), CODENDI_PURIFIER_LIGHT, $group_id);
+                        $level = CODENDI_PURIFIER_LIGHT;
                     } else {
-                        $out .=  $hp->purify(util_unconvert_htmlspecialchars($value), CODENDI_PURIFIER_BASIC, $group_id);
+                        $level = CODENDI_PURIFIER_BASIC;
                     }
+                    $out .=  $hp->purify(util_unconvert_htmlspecialchars($value), $level, $group_id);
                     $out .= '</div>';
                     $out .= '</div>';
                     $out .= '<script type="text/javascript">
