@@ -46,12 +46,15 @@ $ath->header($params);
 // artifact object (and field values) initialized in script above (index.php)
 $ah->displayCopy($ro,$pv);
 
+$GLOBALS['HTML']->includeFooterJavascriptFile('/scripts/tiny_mce/tiny_mce.js');
+
 echo "<script type=\"text/javascript\">\n";
 $armh = new ArtifactRulesManagerHtml($ath);
 $armh->displayRulesAsJavascript();
 echo "new UserAutoCompleter('tracker_cc',
                           '".util_get_dir_image_theme()."',
                           true);\n";
+echo "new Codendi_RTE_Light_Tracker_FollowUp(\"follow_up_comment\");";
 echo "</script>";
 
 // Display footer page

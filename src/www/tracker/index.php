@@ -297,7 +297,7 @@ if ( $func == 'gotoid' ) {
                 $follow_up_comment = $request->get('follow_up_comment');
                 $comment_type_id = $request->get('comment_type_id');
                 $canned_response = $request->get('canned_response');
-				$ah->addFollowUpComment($follow_up_comment,$comment_type_id,$canned_response,$changes);
+				$ah->addFollowUpComment($follow_up_comment,$comment_type_id,$canned_response,$changes,$request->get('comment_format'));
 
                                 // send an email to notify the user of the artifact update
                                     $agnf =& new ArtifactGlobalNotificationFactory();
