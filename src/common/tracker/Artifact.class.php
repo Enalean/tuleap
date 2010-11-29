@@ -358,7 +358,7 @@ class Artifact extends Error {
 
         $sql="insert into artifact_history(artifact_id,field_name,old_value,new_value,mod_by,email,date $fld_type) ".
             "VALUES (". db_ei($this->getID()) .",'". db_es($name) ."','". db_es($old_value) ."','". db_es($new_value) ."','". db_ei($user) ."','". db_es($email) ."','".time()."' $val_type)";
-        echo $sql;
+        //echo $sql;
         return db_query($sql);
     }
         
