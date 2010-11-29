@@ -613,7 +613,7 @@ class Artifact extends Error {
      *
      *  @return boolean
      */
-    function addComment($comment,$email=false,&$changes,$comment_format=null) {
+    function addComment($comment,$email=false,&$changes,$comment_format=self::FORMAT_TEXT) {
                         
         global $art_field_fact,$Language;
 
