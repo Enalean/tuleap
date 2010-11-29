@@ -99,7 +99,7 @@ class ArtifactHtml extends Artifact {
             $html = '';
             $html .= '<TABLE width="100%"><TR>';
             $pm = ProjectManager::instance();
-            $html .= '<TD align="left"><B>'.$Language->getText('tracker_include_artifact','project').'</B>&nbsp;</td><td COLSPAN="'.($columns_number-1).'">'. $hp->purify(util_unconvert_htmlspecialchars($pm->getProject($group_id)->getPublicName()), CODENDI_PURIFIER_CONVERT_HTML) .'</TD>';
+            //$html .= '<TD align="left"><B>'.$Language->getText('tracker_include_artifact','project').'</B>&nbsp;</td><td COLSPAN="'.($columns_number-1).'">'. $hp->purify(util_unconvert_htmlspecialchars($pm->getProject($group_id)->getPublicName()), CODENDI_PURIFIER_CONVERT_HTML) .'</TD>';
             
             // Now display the variable part of the field list (depend on the project)
             
@@ -143,7 +143,7 @@ class ArtifactHtml extends Artifact {
                 
                 // We display the fieldset only if there is at least one field inside that we can display
                 if ($display_fieldset) {
-                    $html .= '<TR><TD COLSPAN="'.(int)$columns_number.'">&nbsp</TD></TR>';
+                    //$html .= '<TR><TD COLSPAN="'.(int)$columns_number.'">&nbsp</TD></TR>';
                     $html .= '<TR class="boxtitle"><TD class="left" COLSPAN="'.(int)$columns_number.'">&nbsp;<span title="'. $hp->purify(SimpleSanitizer::unsanitize($result_fieldset->getDescriptionText()), CODENDI_PURIFIER_CONVERT_HTML) .'">'. $hp->purify(SimpleSanitizer::unsanitize($result_fieldset->getLabel()), CODENDI_PURIFIER_CONVERT_HTML) .'</span></TD></TR>';
                     $html .= $fieldset_html;
                 }
