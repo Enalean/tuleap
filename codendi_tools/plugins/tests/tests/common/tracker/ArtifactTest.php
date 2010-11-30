@@ -3,10 +3,15 @@
 require_once('common/include/Error.class.php');
 require_once('common/tracker/Artifact.class.php');
 
-Mock::generatePartial('Artifact', 'ArtifactTestVersion', array('insertDependency', 'validArtifact', 'existDependency'));
+Mock::generatePartial('Artifact', 'ArtifactTestVersion', array('insertDependency', 'validArtifact', 'existDependency', 'getHTMLPurifier'));
 
 require_once('common/include/Response.class.php');
 Mock::generate('Response');
+
+require_once('common/include/Codendi_HTMLPurifier.class.php');
+Mock::generate('Codendi_HTMLPurifier');
+
+require_once('www/include/utils.php');
 
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
@@ -56,5 +61,29 @@ class ArtifactTest extends UnitTestCase {
         $this->assertTrue($a->addDependencies("171, 171",&$changes,false), "It should be possible to add two identical dependencies in the same time, without getting an exception");
     }
     
+    function testFormatFollowUp() {
+        $art = new ArtifactTestVersion($this);
+        $hp = new MockCodendi_HTMLPurifier($this);
+
+        $art->setReturnValue('getHTMLPurifier', $hp);
+
+        $txtContent = 'testing the feature';
+        $htmlContent = '&lt;pre&gt;   function processEvent($event, $params) {&lt;br /&gt;       foreach(parent::processEvent($event, $params) as $key =&amp;gt; $value) {&lt;br /&gt;           $params[$key] = $value;&lt;br /&gt;       }&lt;br /&gt;   }&lt;br /&gt;&lt;/pre&gt; ';
+        //the output will be delivered in a mail
+        $this->assertEqual('function processEvent($event, $params) { foreach(parent::processEvent($event, $params) as $key => $value) { $params[$key] = $value; } }' , $art->formatFollowUp(102, 1,$htmlContent, true));
+        $this->assertEqual($txtContent, $art->formatFollowUp(102, 0,$txtContent,true));
+        
+        //the output is destinated to be exported
+        $this->assertEqual($htmlContent, $art->formatFollowUp(102, 1,$htmlContent,true, true));
+        $this->assertEqual($txtContent, $art->formatFollowUp(102, 0,$txtContent,true, true));
+        
+        //The output will be displayed on browser
+        $this->assertEqual('   function processEvent($event, $params) {
+       foreach(parent::processEvent($event, $params) as $key => $value) {
+           $params[$key] = $value;
+       }
+   }', $art->formatFollowUp(102, 1,$htmlContent, false));
+        $this->assertEqual($txtContent, $art->formatFollowUp(102, 0,$txtContent, false));
+    }
 }
 ?>

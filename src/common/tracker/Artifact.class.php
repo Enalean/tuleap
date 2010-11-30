@@ -2725,19 +2725,19 @@ class Artifact extends Error {
          *
          * @param Integer   group_id: the group id
          * @param Boolean   ascii By default set to false, the displayer output is the browser 
-         *
+         * @param Boolean   export By default set to false, the ascii mode if enabled reference the mail output else the CSV/database export
          * @return string the follow-up comments to display in HTML or in ascii mode
          */
-        function showFollowUpComments($group_id, $pv, $ascii=false) {
-            $hp = Codendi_HTMLPurifier::instance();
+        function showFollowUpComments($group_id, $pv, $ascii=false, $export=false) {
+            $hp = $this->getHTMLPurifier();
             //
             //  Format the comment rows from artifact_history
             //  
             global $Language;
             
-                $group = $this->ArtifactType->getGroup();
+                //$group = $this->ArtifactType->getGroup();
                 $group_artifact_id = $this->ArtifactType->getID();
-                $group_id = $group->getGroupId();
+                //$group_id = $group->getGroupId();
 
             $result=$this->getFollowups ();
             $rows=db_numrows($result);
@@ -2804,12 +2804,7 @@ class Artifact extends Error {
                     $fmt = $GLOBALS['sys_lf'] . $GLOBALS['sys_lf'] ."------------------------------------------------------------------". $GLOBALS['sys_lf'].
                         $Language->getText('tracker_import_utils','date').": %-30s".$Language->getText('global','by').": %s". $GLOBALS['sys_lf'] ."%s";
                     //The mail body
-                    if ($isHtml == 1){
-                        $comment_txt = $hp->purify(util_unconvert_htmlspecialchars($value), CODENDI_PURIFIER_STRIP_HTML);
-                    } else {
-                        $comment_txt = $value;
-                    }
-                    $comment_txt = util_unconvert_htmlspecialchars($comment_txt);
+                    $comment_txt = $this->formatFollowUp($group_id, $isHtml, $value, true); 
                     $out .= sprintf($fmt,
                                     format_date(util_get_user_preferences_export_datefmt(),db_result($orig_date, 0, 'date')),
                                     (db_result($orig_subm, 0, 'mod_by')==100?db_result($orig_subm, 0, 'email'):user_getname(db_result($orig_subm, 0, 'mod_by'))),
@@ -2917,12 +2912,7 @@ class Artifact extends Error {
                     if ($comment_type != "") {
                         $out .= '<div class="followup_comment_content_type"><b>'.  $hp->purify($comment_type, CODENDI_PURIFIER_CONVERT_HTML)  .'</b></div>';
                     }
-                    if ($isHtml == 1) {
-                        $level = CODENDI_PURIFIER_LIGHT;
-                    } else {
-                        $level = CODENDI_PURIFIER_BASIC;
-                    }
-                    $out .=  $hp->purify(util_unconvert_htmlspecialchars($value), $level, $group_id);
+                    $out .= $this->formatFollowUp($group_id, $isHtml, $value, false); 
                     $out .= '</div>';
                     $out .= '</div>';
                     $out .= '<script type="text/javascript">
@@ -3168,7 +3158,7 @@ class Artifact extends Error {
         function showAttachedFiles ($group_id,$group_artifact_id,$ascii=false, $pv = 0) {
         
             global $Language;
-            $hp = Codendi_HTMLPurifier::instance();
+            $hp = $this->getHtmlPurifier();
             //
             //  show the files attached to this artifact
             //   
@@ -3270,7 +3260,48 @@ class Artifact extends Error {
                 
         return db_query($sql);        
     }
-        
+    
+    /**
+     * Returns an instance of Codendi_HTMLPurifier
+     *
+     * @return Codendi_HTMLPurifier
+     */
+    public function getHTMLPurifier() {
+        return Codendi_HTMLPurifier::instance();
+    }
+
+    /**
+     * 
+     * Format the comment text to a given format according to parameters
+     * 
+     * @param Integer $groupId
+     * @param Boolean $isHtml
+     * @param String  $value
+     * @param Boolean $ascii
+     * @param Boolean $export
+     * 
+     * @return String
+     */
+    public function formatFollowUp($groupId, $isHtml, $value, $ascii, $export=false) {
+        $commentText = '';
+        /*$hp = $this->getHTMLPurifier();
+        if ($ascii) {
+            if ($isHtml == 1){
+                $commentText = $hp->purify(util_unconvert_htmlspecialchars($value), CODENDI_PURIFIER_STRIP_HTML);
+            } else {
+                $commentText = $value;
+            }
+            $commentText = util_unconvert_htmlspecialchars($commentText);
+        } else {
+            if ($isHtml == 1) {
+                $level = CODENDI_PURIFIER_LIGHT;
+            } else {
+                $level = CODENDI_PURIFIER_BASIC;
+            }
+            $commentText =  $hp->purify(util_unconvert_htmlspecialchars($value), $level, $groupId);
+        }*/
+        return $commentText;
+    }
 
 }
 
