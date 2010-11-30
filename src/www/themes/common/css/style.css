@@ -607,11 +607,6 @@ table.release tr td img {
     font-size: 1.5em;
 }
 
-#artifact_section_details_legend {
-    white-space: normal;
-    font-size: 1.5em;
-}
-
 .artifact fieldset {
     margin-bottom:10px;
 }
@@ -619,6 +614,7 @@ table.release tr td img {
 .artifact fieldset legend {
     font-size:1.3em;
     font-weight: bold;
+    white-space: normal;
 }
 /* }}} */
 
