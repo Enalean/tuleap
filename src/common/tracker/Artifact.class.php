@@ -3284,23 +3284,27 @@ class Artifact extends Error {
      */
     public function formatFollowUp($groupId, $isHtml, $value, $ascii, $export=false) {
         $commentText = '';
-        /*$hp = $this->getHTMLPurifier();
-        if ($ascii) {
-            if ($isHtml == 1){
-                $commentText = $hp->purify(util_unconvert_htmlspecialchars($value), CODENDI_PURIFIER_STRIP_HTML);
-            } else {
-                $commentText = $value;
-            }
-            $commentText = util_unconvert_htmlspecialchars($commentText);
+        if ($export) {
+            return $value;
         } else {
-            if ($isHtml == 1) {
-                $level = CODENDI_PURIFIER_LIGHT;
+            $hp = $this->getHTMLPurifier();
+            if ($ascii) {
+                if ($isHtml == 1){
+                    $commentText = $hp->purify(util_unconvert_htmlspecialchars($value), CODENDI_PURIFIER_STRIP_HTML);
+                } else {
+                    $commentText = $value;
+                }
+                $commentText = util_unconvert_htmlspecialchars($commentText);
             } else {
-                $level = CODENDI_PURIFIER_BASIC;
+                if ($isHtml == 1) {
+                    $level = CODENDI_PURIFIER_LIGHT;
+                } else {
+                    $level = CODENDI_PURIFIER_BASIC;
+                }
+                $commentText =  $hp->purify(util_unconvert_htmlspecialchars($value), $level, $groupId);
             }
-            $commentText =  $hp->purify(util_unconvert_htmlspecialchars($value), $level, $groupId);
-        }*/
-        return $commentText;
+            return $commentText;
+        }
     }
 
 }
