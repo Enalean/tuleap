@@ -589,14 +589,15 @@ table.release tr td img {
 /* }}} */
 
 /* {{{ Artifact */
-#tracker_toolbar_generic {
-    margin-top: 0.5em;
+#tracker_toolbar_generic, #tracker_toolbar_specific {
+    margin-top:    0.5em;
     margin-bottom: 0.5em;
+    font-weight: bold;
+}
+#tracker_toolbar_generic {
     float: left;
 }
 #tracker_toolbar_specific {
-    margin-top: 0.5em;
-    margin-bottom: 0.5em;
     float: right;
 }
 #tracker_toolbar_clear {
