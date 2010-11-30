@@ -40,6 +40,7 @@ $params=array('title'=>$group->getPublicName().' '.$ath->getName().' #'.$ah->get
               'help' => 'FollowupCommentUpdate.html');
 // Display header page
 $ath->header($params);
+echo '<div id="tracker_toolbar_clear"></div>';
 
 // 
 $ah->displayEditFollowupComment($request->get('artifact_history_id'));

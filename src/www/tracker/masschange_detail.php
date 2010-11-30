@@ -40,6 +40,7 @@ $params=array('title'=>$group->getPublicName().' '.$ath->getName().' '.$Language
               'help' => 'ArtifactMassChange.html');
 
 $ath->header($params);
+echo '<div id="tracker_toolbar_clear"></div>';
 
 $submit = $request->get('submit_btn');
 if (strstr($submit,$Language->getText('tracker_masschange_detail','selected_items'))) {

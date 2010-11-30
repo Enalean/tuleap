@@ -589,6 +589,28 @@ table.release tr td img {
 /* }}} */
 
 /* {{{ Artifact */
+#tracker_toolbar_generic {
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+    float: left;
+}
+#tracker_toolbar_specific {
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+    float: right;
+}
+#tracker_toolbar_clear {
+    clear: both;
+}
+
+#tracker_toolbar_tracker_name {
+    font-size: 1.5em;
+}
+
+#artifact_section_details_legend {
+    white-space: normal;
+    font-size: 1.5em;
+}
 
 .artifact fieldset {
     margin-bottom:10px;
@@ -597,15 +619,6 @@ table.release tr td img {
 .artifact fieldset legend {
     font-size:1.3em;
     font-weight: bold;
-}
-
-/* Special emphasis of 'detail' legend that holds bug number & summary */
-#artifact_section_details_legend {
-    font-size: 1.5em;
-}
-
-#artifact_toolbar {
-    margin-bottom: 0.5em;
 }
 /* }}} */
 

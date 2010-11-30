@@ -41,7 +41,7 @@ $params=array('title'=>$group->getPublicName().' '.$ath->getName().' #'.$ah->get
               'help' => 'ArtifactUpdate.html');
 
 $ath->header($params);
-
+echo '<div id="tracker_toolbar_clear"></div>';
 
 // artifact object (and field values) initialized in script above (index.php)
 $ah->displayCopy($ro,$pv);

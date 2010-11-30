@@ -56,9 +56,9 @@ class ArtifactTypeHtml extends ArtifactType {
 
 		site_project_header($params);
                 if (!isset($params['pv']) || $params['pv'] == 0) {
-                    echo '<h3>'.$Language->getText('tracker_import_admin','tracker').': <a href="/tracker/?group_id='.(int)$group_id.'&atid='.(int)$this->getID().'">'. $hp->purify(SimpleSanitizer::unsanitize($this->getName()), CODENDI_PURIFIER_CONVERT_HTML) .'</a></h3><p>';
+                    echo '<div id="tracker_toolbar_generic">'.$Language->getText('tracker_import_admin','tracker').' <strong><a href="/tracker/?group_id='.(int)$group_id.'&atid='.(int)$this->getID().'"><span id="tracker_toolbar_tracker_name">'. $hp->purify(SimpleSanitizer::unsanitize($this->getName()), CODENDI_PURIFIER_CONVERT_HTML) .'</span></a> | ';
 
-                    echo '<strong><a href="/tracker/?func=add&group_id='.(int)$group_id.'&atid='. (int)$this->getID() .'">'.$Language->getText('tracker_include_type','submit_new', $hp->purify($this->getCapsItemName(), CODENDI_PURIFIER_CONVERT_HTML) ).'</a>';
+                    echo '<a href="/tracker/?func=add&group_id='.(int)$group_id.'&atid='. (int)$this->getID() .'">'.$Language->getText('tracker_include_type','submit_new', $hp->purify($this->getCapsItemName(), CODENDI_PURIFIER_CONVERT_HTML) ).'</a>';
                     echo ' | <a href="/tracker/?func=browse&set=my&group_id='.(int)$group_id.'&atid='. (int)$this->getID() .'">'.$Language->getText('tracker_include_type','my', $hp->purify($this->getCapsItemName(), CODENDI_PURIFIER_CONVERT_HTML) ).'s </a>';
                     echo ' | <a href="/tracker/?func=browse&set=open&group_id='.(int)$group_id.'&atid='. (int)$this->getID() .'">'.$Language->getText('tracker_include_type','open', $hp->purify($this->getCapsItemName(), CODENDI_PURIFIER_CONVERT_HTML) ).'s </a>';
                     if ($this->userIsAdmin()) {
@@ -70,8 +70,7 @@ class ArtifactTypeHtml extends ArtifactType {
                         echo ' | '.help_button($params['help'],false,$Language->getText('global','help'));
                     }
                     
-                    echo '</strong><br>';
-                    echo '<HR NoShade SIZE="1" SIZE="90%">';
+                    echo '</div>'.PHP_EOL;
                 }
 	}
 
