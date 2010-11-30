@@ -744,7 +744,7 @@ class ArtifactReportHtml extends ArtifactReport {
                 
                         if ($pv == 0) {
                                 $html_result .= $Language->getText('tracker_include_report','multicolumn_sort',array($url_alternate_sort,$text)).'&nbsp;&nbsp;&nbsp;&nbsp;'.
-                                    '(<a href="'.$url.'&pv=1"> <img src="'.util_get_image_theme("msg.png").'" border="0">'.
+                                    '(<a href="'.$url.'&pv=1"> <img src="'.util_get_image_theme("ic/printer.png").'" border="0">'.
                                     '&nbsp;'.$Language->getText('global','printer_version').'</a>)'."\n";
                         }
                     }    

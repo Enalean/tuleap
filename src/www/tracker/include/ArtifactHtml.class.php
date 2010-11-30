@@ -60,19 +60,11 @@ class ArtifactHtml extends Artifact {
             $result_fieldsets = $art_fieldset_fact->getAllFieldSetsContainingUsedFields();
             $summary          = $this->getValue('summary');
             
-                        /*echo '<div id="artifact_toolbar">';
-            if ($this->ArtifactType->allowsCopy()) {
-              echo "<div style=\"float:left;\"><A HREF='?func=copy&aid=".(int)$this->getID()."&group_id=".(int)$group_id."&atid=".(int)$group_artifact_id."'><img src=\"".util_get_image_theme("ic/copy.png")."\" />&nbsp;".$Language->getText('tracker_include_artifact','copy_art')."</A></div>";
-            }
-            echo "<div style=\"float:right;\"><A HREF='?func=detail&aid=".(int)$this->getID()."&group_id=".(int)$group_id."&atid=".(int)$group_artifact_id."&pv=1' target='_blank'><img src='".util_get_image_theme("msg.png")."' border='0'>&nbsp;".$Language->getText('global','printer_version')."</A></div>";
-            echo '<div style="clear:both"></div>';
-            echo '</div>';*/
-            
             echo '<div id="tracker_toolbar_specific">';
             if ($this->ArtifactType->allowsCopy()) {
               echo "<A HREF='?func=copy&aid=".(int)$this->getID()."&group_id=".(int)$group_id."&atid=".(int)$group_artifact_id."'><img src=\"".util_get_image_theme("ic/copy.png")."\" />&nbsp;".$Language->getText('tracker_include_artifact','copy_art')."</A>";
             }
-            echo "&nbsp;&nbsp;<A HREF='?func=detail&aid=".(int)$this->getID()."&group_id=".(int)$group_id."&atid=".(int)$group_artifact_id."&pv=1' target='_blank'><img src='".util_get_image_theme("msg.png")."' border='0'>&nbsp;".$Language->getText('global','printer_version')."</A>";
+            echo "&nbsp;&nbsp;<A HREF='?func=detail&aid=".(int)$this->getID()."&group_id=".(int)$group_id."&atid=".(int)$group_artifact_id."&pv=1' target='_blank'><img src='".util_get_image_theme("ic/printer.png")."' border='0'>&nbsp;".$Language->getText('global','printer_version')."</A>";
             echo '</div>'.PHP_EOL;
             echo '<div id="tracker_toolbar_clear"></div>'.PHP_EOL;
             

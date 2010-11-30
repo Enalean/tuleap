@@ -1071,7 +1071,7 @@ if ( $func == 'gotoid' ) {
         } else {
             echo "<p>".$Language->getText('tracker_index','choose_tracker');
             if (!$pv) {
-                echo " ( <A HREF='?group_id=". (int)$group_id ."&pv=1'><img src='".util_get_image_theme("msg.png")."' border='0'>&nbsp;".$Language->getText('global','printer_version')."</A> )";
+                echo " ( <A HREF='?group_id=". (int)$group_id ."&pv=1'><img src='".util_get_image_theme("ic/printer.png")."' border='0'>&nbsp;".$Language->getText('global','printer_version')."</A> )";
             }
             echo "<p>";
 

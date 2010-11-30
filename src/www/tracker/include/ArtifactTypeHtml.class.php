@@ -32,47 +32,47 @@ class ArtifactTypeHtml extends ArtifactType {
 		return $this->ArtifactType($Group,$artifact_type_id,$arr);
 	}
 
-	/**
-	 *  Display the header menu for this artifact type
-	 *
-	 *  @param params: array of parameters used to display the header
-	 * 
-	 *  @return void
-	 */
-	function header($params) {
-		global $Language;
-		$group_id= $this->Group->getID();
+    /**
+     *  Display the header menu for this artifact type
+     *
+     *  @param params: array of parameters used to display the header
+     *
+     *  @return void
+     */
+    function header($params) {
+        global $Language;
+        $group_id= $this->Group->getID();
         $hp = Codendi_HTMLPurifier::instance();
-        
+
         $GLOBALS['HTML']->includeJavascriptFile("/scripts/scriptaculous/scriptaculous.js");
         $GLOBALS['HTML']->includeJavascriptFile("/scripts/fieldDependencies.js");
         $GLOBALS['HTML']->includeJavascriptFile("/scripts/fieldEditor.js");
         $GLOBALS['HTML']->includeCalendarScripts();
         
-		//required by new site_project_header
-		$params['group']=$group_id;
-		$params['toptab']='tracker';
-		$params['tabtext']=$this->getName();
+        //required by new site_project_header
+        $params['group']=$group_id;
+        $params['toptab']='tracker';
+        $params['tabtext']=$this->getName();
 
-		site_project_header($params);
-                if (!isset($params['pv']) || $params['pv'] == 0) {
-                    echo '<div id="tracker_toolbar_generic">'.$Language->getText('tracker_import_admin','tracker').' <strong><a href="/tracker/?group_id='.(int)$group_id.'&atid='.(int)$this->getID().'"><span id="tracker_toolbar_tracker_name">'. $hp->purify(SimpleSanitizer::unsanitize($this->getName()), CODENDI_PURIFIER_CONVERT_HTML) .'</span></a> | ';
+        site_project_header($params);
+        if (!isset($params['pv']) || $params['pv'] == 0) {
+            echo '<div id="tracker_toolbar_generic">'.$Language->getText('tracker_import_admin','tracker').' <a href="/tracker/?group_id='.(int)$group_id.'&atid='.(int)$this->getID().'"><span id="tracker_toolbar_tracker_name">'. $hp->purify(SimpleSanitizer::unsanitize($this->getName()), CODENDI_PURIFIER_CONVERT_HTML) .'</span></a> | ';
 
-                    echo '<a href="/tracker/?func=add&group_id='.(int)$group_id.'&atid='. (int)$this->getID() .'">'.$Language->getText('tracker_include_type','submit_new', $hp->purify($this->getCapsItemName(), CODENDI_PURIFIER_CONVERT_HTML) ).'</a>';
-                    echo ' | <a href="/tracker/?func=browse&set=my&group_id='.(int)$group_id.'&atid='. (int)$this->getID() .'">'.$Language->getText('tracker_include_type','my', $hp->purify($this->getCapsItemName(), CODENDI_PURIFIER_CONVERT_HTML) ).'s </a>';
-                    echo ' | <a href="/tracker/?func=browse&set=open&group_id='.(int)$group_id.'&atid='. (int)$this->getID() .'">'.$Language->getText('tracker_include_type','open', $hp->purify($this->getCapsItemName(), CODENDI_PURIFIER_CONVERT_HTML) ).'s </a>';
-                    if ($this->userIsAdmin()) {
-			echo ' | <a href="/tracker/?func=masschange&group_id='.(int)$group_id.'&atid='. (int)$this->getID() .'">'.$Language->getText('tracker_index','mass_change').' </a>';
-			echo ' | <a href="/tracker/?func=import&group_id='.(int)$group_id.'&atid='. (int)$this->getID() .'">'.$Language->getText('tracker_import_admin','import').' </a>';
-                    }
-                    echo ' | <a href="/tracker/admin/?group_id='.(int)$group_id.'&atid='.(int)$this->getID().'">'.$Language->getText('tracker_include_type','admin').'</a>';
-                    if ($params['help']) {
-                        echo ' | '.help_button($params['help'],false,$Language->getText('global','help'));
-                    }
-                    
-                    echo '</div>'.PHP_EOL;
-                }
-	}
+            echo '<a href="/tracker/?func=add&group_id='.(int)$group_id.'&atid='. (int)$this->getID() .'">'.$Language->getText('tracker_include_type','submit_new', $hp->purify($this->getCapsItemName(), CODENDI_PURIFIER_CONVERT_HTML) ).'</a>';
+            echo ' | <a href="/tracker/?func=browse&set=my&group_id='.(int)$group_id.'&atid='. (int)$this->getID() .'">'.$Language->getText('tracker_include_type','my', $hp->purify($this->getCapsItemName(), CODENDI_PURIFIER_CONVERT_HTML) ).'s </a>';
+            echo ' | <a href="/tracker/?func=browse&set=open&group_id='.(int)$group_id.'&atid='. (int)$this->getID() .'">'.$Language->getText('tracker_include_type','open', $hp->purify($this->getCapsItemName(), CODENDI_PURIFIER_CONVERT_HTML) ).'s </a>';
+            if ($this->userIsAdmin()) {
+                echo ' | <a href="/tracker/?func=masschange&group_id='.(int)$group_id.'&atid='. (int)$this->getID() .'">'.$Language->getText('tracker_index','mass_change').' </a>';
+                echo ' | <a href="/tracker/?func=import&group_id='.(int)$group_id.'&atid='. (int)$this->getID() .'">'.$Language->getText('tracker_import_admin','import').' </a>';
+            }
+            echo ' | <a href="/tracker/admin/?group_id='.(int)$group_id.'&atid='.(int)$this->getID().'">'.$Language->getText('tracker_include_type','admin').'</a>';
+            if ($params['help']) {
+                echo ' | '.help_button($params['help'],false,$Language->getText('global','help'));
+            }
+
+            echo '</div>'.PHP_EOL;
+        }
+    }
 
 	/**
 	 *  Display the footer for this artifact type
