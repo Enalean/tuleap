@@ -56,7 +56,8 @@ class ArtifactImportHtml extends ArtifactImport {
       $this->ath->header(array ('title'=>$Language->getText('tracker_import','art_import').$this->ath->getID(). ' - ' . $this->ath->getName(),'pagename'=>'tracker',
 			  'atid'=>$this->ath->getID(),'sectionvals'=>array($this->group->getPublicName()),
 			  'help' => 'ArtifactImport.html'));
-      
+      echo '<div id="tracker_toolbar_clear"></div>'.PHP_EOL;
+
       echo '<h2>'.$Language->getText('tracker_import','parse_report').'</h2>';
       if (!$ok) {
           $this->showErrors();
@@ -274,6 +275,8 @@ function showErrors() {
     $this->ath->header(array ('title'=>$Language->getText('tracker_import','art_import').' '.$this->ath->getID(). ' - ' . $this->ath->getName(),'pagename'=>'tracker',
 			'atid'=>$this->ath->getID(),'sectionvals'=>array($this->group->getPublicName()),
 			'help' => 'ArtifactImport.html'));
+    echo '<div id="tracker_toolbar_clear"></div>'.PHP_EOL;
+
     $sql = $this->ath->buildExportQuery($fields,$col_list,$this->lbl_list,$this->dsc_list,$select,$from,$where,$multiple_queries,$all_queries);
     
     //we need only one single record
@@ -337,7 +340,8 @@ function showErrors() {
     $this->ath->header(array ('title'=>$Language->getText('tracker_import','art_import').' '.$this->ath->getID(). ' - ' . $this->ath->getName(),'pagename'=>'tracker',
 			'atid'=>$this->ath->getID(),'sectionvals'=>array($this->group->getPublicName()),
 			'help' => 'ArtifactImport.html'));
-    
+    echo '<div id="tracker_toolbar_clear"></div>'.PHP_EOL;
+
     echo '<h3>'.$Language->getText('tracker_import','import_new_hdr', array(help_button('ArtifactImport.html'))).'</h3>';
     echo '<p>'.$Language->getText('tracker_import','import_new_msg',array('/tracker/index.php?group_id='.(int)$this->group->group_id.'&atid='.(int)$atid.'&user_id='.(int)$user_id.'&mode=showformat&func=import')).'</p>';
     
