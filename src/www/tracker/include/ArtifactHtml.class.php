@@ -79,22 +79,28 @@ class ArtifactHtml extends Artifact {
             <INPUT TYPE="HIDDEN" NAME="aid" VALUE="'.(int)$this->getID().'">';
             echo '<TABLE><TR><TD class="artifact">';
             
-            echo '<table width="100%"><tr><td><H2>[ '. $hp->purify($this->ArtifactType->getItemName(), CODENDI_PURIFIER_CONVERT_HTML) ;
+            $artTitle = '[ '. $hp->purify($this->ArtifactType->getItemName(), CODENDI_PURIFIER_CONVERT_HTML);
             $field_artifact_id = $result_fields['artifact_id'];
             if ($field_artifact_id->userCanRead($group_id, $group_artifact_id, $user_id)) {
-                echo " #". $hp->purify($this->getID(), CODENDI_PURIFIER_CONVERT_HTML) ;
+                $artTitle .= " #". $hp->purify($this->getID(), CODENDI_PURIFIER_CONVERT_HTML) ;
             }
-            echo " ] ". $hp->purify(util_unconvert_htmlspecialchars($summary), CODENDI_PURIFIER_CONVERT_HTML) ."</H2>";
+            $artTitle .= " ] ". $hp->purify(util_unconvert_htmlspecialchars($summary), CODENDI_PURIFIER_CONVERT_HTML);
+            
+            /*echo '<table width="100%"><tr><td><H2>'. $artTitle .'</H2>';
             echo "</TD>";
             
             if ( $pv == 0) {
                 echo "<TD align='right'><A HREF='?func=detail&aid=".(int)$this->getID()."&group_id=".(int)$group_id."&atid=".(int)$group_artifact_id."&pv=1' target='_blank'><img src='".util_get_image_theme("msg.png")."' border='0'>&nbsp;".$Language->getText('global','printer_version')."</A></TD></TR>";
             }
-            echo '</table>';
+            echo '</table>';*/
             
+            echo '<div id="artifact_toolbar">';
             if ($this->ArtifactType->allowsCopy()) {
-              echo "<div><A HREF='?func=copy&aid=".(int)$this->getID()."&group_id=".(int)$group_id."&atid=".(int)$group_artifact_id."'>".$Language->getText('tracker_include_artifact','copy_art')."</A></div><br />";
+              echo "<div style=\"float:left;\"><A HREF='?func=copy&aid=".(int)$this->getID()."&group_id=".(int)$group_id."&atid=".(int)$group_artifact_id."'><img src=\"".util_get_image_theme("ic/copy.png")."\" />&nbsp;".$Language->getText('tracker_include_artifact','copy_art')."</A></div>";
             }
+            echo "<div style=\"float:right;\"><A HREF='?func=detail&aid=".(int)$this->getID()."&group_id=".(int)$group_id."&atid=".(int)$group_artifact_id."&pv=1' target='_blank'><img src='".util_get_image_theme("msg.png")."' border='0'>&nbsp;".$Language->getText('global','printer_version')."</A></div>";
+            echo '<div style="clear:both"></div>';
+            echo '</div>';
         
             $html = '';
             $html .= '<TABLE width="100%"><TR>';
@@ -144,21 +150,21 @@ class ArtifactHtml extends Artifact {
                 // We display the fieldset only if there is at least one field inside that we can display
                 if ($display_fieldset) {
                     //$html .= '<TR><TD COLSPAN="'.(int)$columns_number.'">&nbsp</TD></TR>';
-                    $html .= '<TR class="boxtitle"><TD class="left" COLSPAN="'.(int)$columns_number.'">&nbsp;<span title="'. $hp->purify(SimpleSanitizer::unsanitize($result_fieldset->getDescriptionText()), CODENDI_PURIFIER_CONVERT_HTML) .'">'. $hp->purify(SimpleSanitizer::unsanitize($result_fieldset->getLabel()), CODENDI_PURIFIER_CONVERT_HTML) .'</span></TD></TR>';
+                    $html .= '<TR class="boxtitle artifact_fieldset"><TD class="left" COLSPAN="'.(int)$columns_number.'">&nbsp;<span title="'. $hp->purify(SimpleSanitizer::unsanitize($result_fieldset->getDescriptionText()), CODENDI_PURIFIER_CONVERT_HTML) .'">'. $hp->purify(SimpleSanitizer::unsanitize($result_fieldset->getLabel()), CODENDI_PURIFIER_CONVERT_HTML) .'</span></TD></TR>';
                     $html .= $fieldset_html;
                 }
 
             }
             
-            $html .= '<tr><td><p><font color="red">*</font>: '.
+            $html .= '<tr><td><font color="red">*</font>: '.
                  $Language->getText('tracker_include_type','fields_requ').
-                 '</p></td></tr></TABLE>';
+                 '</td></tr></TABLE>';
 			
 			
             
             echo $this->_getSection(
                 'artifact_section_details',
-                $Language->getText('tracker_include_artifact','details'),
+                $artTitle,
                 $html,
                 true
             );
@@ -407,7 +413,7 @@ class ArtifactHtml extends Artifact {
         * @param  help  
         */
         function _getSection($id, $title, $content, $is_open, $alternate_text = '') {
-            $html =  '<fieldset><legend>';
+            $html =  '<fieldset><legend id="'.$id.'_legend">';
             if ($is_open) {
                 $sign = 'minus';
                 $display = '';
@@ -424,7 +430,7 @@ class ArtifactHtml extends Artifact {
                     'title'  => $GLOBALS['Language']->getText('tracker_include_artifact', 'toggle')
                 )
             );
-            $html .= $title .'</legend><div id="'. $id .'_alternate" style="display:none;"></div>';
+            $html .= ' '.$title .'</legend><div id="'. $id .'_alternate" style="display:none;"></div>';
             $html .= '<script type="text/javascript">';
             $html .= "Event.observe($('". $id ."_toggle'), 'click', function (evt) {
                 var element = $('$id');
