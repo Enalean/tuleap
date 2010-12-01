@@ -27,12 +27,31 @@ var Codendi_RTE_Light = Class.create({
         // a toggler on it
         if ($(element+'_label')) {
             var toggle = Builder.node('span', {'class': 'rte_toggle'});
-            toggle.appendChild(document.createTextNode(' HTML'));
+            toggle.appendChild(document.createTextNode(' Rich text editor '));
 
             toggle.observe('click', this.toggle.bindAsEventListener(this));
 
             $(element+'_label').appendChild(toggle);
         }
+
+        // Add a radio button that tells that the content format is text
+        // The value is defined in Artifact class.
+        var text_button = Builder.node('input', {'name'     : 'comment_format',
+                                                 'type'     : 'radio',
+                                                 'value'    : '0',
+                                                 'checked'  : 'checked',
+                                                 'id'       : 'comment_format_text'});
+        $(element+'_label').appendChild(text_button);
+        $(element+'_label').appendChild(document.createTextNode('text'));
+
+        // Add a radio button that tells that the content format is HTML
+        // The value is defined in Artifact class.
+        var html_button = Builder.node('input', {'name' : 'comment_format',
+                                                 'type' : 'radio',
+                                                 'value': '1',
+                                                 'id'   : 'comment_format_html'});
+        $(element+'_label').appendChild(html_button);
+        $(element+'_label').appendChild(document.createTextNode('HTML'));
         
         // Can also double click on text area to activate HTML edition
         this.element.observe('dblclick', this.toggle.bindAsEventListener(this));
@@ -76,15 +95,10 @@ var Codendi_RTE_Light = Class.create({
 
 var Codendi_RTE_Light_Tracker_FollowUp = Class.create(Codendi_RTE_Light, {
     toggle: function ($super) {
-        // Add an hidden field that tells that the content is HTML (value 1)
-        // the value is defined in Artifact class.
-	    if ($('comment_format') == null) {
-            var html = Builder.node('input', {'name':  'comment_format',
-                                              'type':  'hidden',
-                                              'value': '1',
-                                              'id'   : 'comment_format'});
-            this.element.parentNode.appendChild(html);
-	    }
+	    // Disable the radio button that tells that the content is text
+        // Check the radio button that tells that the content is HTML
+	    $('comment_format_text').disabled = true;
+        $('comment_format_html').checked = true;
         $super();
     }
 });
