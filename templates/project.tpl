@@ -17,7 +17,7 @@
  {* Project brief *}
  <table cellspacing="0">
    <tr><td>{t}description{/t}</td><td>{$project->GetDescription()}</td></tr>
-   <tr><td>{t}owner{/t}</td><td>{$project->GetOwner()}</td></tr>
+   <tr><td>{t}owner{/t}</td><td>{$project->GetOwner()|escape:'html'}</td></tr>
    {if $head}
    <tr><td>{t}last change{/t}</td><td>{$head->GetCommitterEpoch()|date_format:"%a, %d %b %Y %H:%M:%S %z"}</td></tr>
    {/if}

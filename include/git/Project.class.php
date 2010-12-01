@@ -268,6 +268,15 @@ class GitPHP_Project
 					$this->owner = $data['name'];
 				}
 			}
+			else {
+				$exe = new GitPHP_GitExe($this);
+				$args = array();
+				$args[] = 'gitweb.owner';
+				$ret = $exe->Execute(GIT_CONFIG, $args);
+				unset($exe);
+				
+				$this->owner = $ret;
+			}
 			$this->readOwner = true;
 		}
 	

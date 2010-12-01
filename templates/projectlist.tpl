@@ -71,7 +71,7 @@ git source code archive
         <a href="{$SCRIPT_NAME}?p={$proj->GetProject()|urlencode}&amp;a=summary" class="list {if $currentcategory != ''}indent{/if}">{$proj->GetProject()}</a>
       </td>
       <td class="projectDescription"><a href="{$SCRIPT_NAME}?p={$proj->GetProject()|urlencode}&amp;a=summary" class="list">{$proj->GetDescription()}</a></td>
-      <td class="projectOwner"><em>{$proj->GetOwner()}</em></td>
+      <td class="projectOwner"><em>{$proj->GetOwner()|escape:'html'}</em></td>
       {assign var=projecthead value=$proj->GetHeadCommit()}
       <td class="projectAge">
         {if $projecthead}

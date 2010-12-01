@@ -24,6 +24,7 @@ define('GIT_GREP','grep');
 define('GIT_BLAME','blame');
 define('GIT_NAME_REV','name-rev');
 define('GIT_FOR_EACH_REF','for-each-ref');
+define('GIT_CONFIG','config');
 
 /**
  * Git Executable class
