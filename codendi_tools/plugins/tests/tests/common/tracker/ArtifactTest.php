@@ -82,7 +82,7 @@ class ArtifactTest extends UnitTestCase {
         $this->assertEqual($txtContent, $art->formatFollowUp(102, 0,$txtContent,true));
         
         //the output is destinated to be exported
-        $this->assertEqual($htmlContent, $art->formatFollowUp(102, 1,$htmlContent,true, true));
+        $this->assertEqual('<pre>   function processEvent($event, $params) {<br />       foreach(parent::processEvent($event, $params) as $key =&gt; $value) {<br />           $params[$key] = $value;<br />       }<br />   }<br /></pre> ', $art->formatFollowUp(102, 1,$htmlContent,true, true));
         $this->assertEqual($txtContent, $art->formatFollowUp(102, 0,$txtContent,true, true));
         
         //The output will be displayed on browser
