@@ -636,6 +636,47 @@ function getUsedFields() {
   }
 
 
+  /**
+   * Check if the given string can be converted using htmlspecialchar
+   * 
+   * This method address one legacy bug with CSV import. CSV import use to store
+   * in the database the follow-up comments without using 'htmlspecialchar' like
+   * it's done for comments added through th web interface.
+   * With this method, we can detect if htmlspecialchar was applied on a comment
+   * or not. So we know if we need to apply it before doing comparison.
+   * 
+   * @param String $str String to test
+   * 
+   * @return Boolean
+   */
+  function canApplyHtmlSpecialChars($str) {
+      if (strpos($str, '"') !== false) {
+          return true;
+      }
+      if (strpos($str, '<') !== false) {
+          return true;
+      }
+      if (strpos($str, '>') !== false) {
+          return true;
+      }
+      if (strpos($str, '&') !== false) {
+          if (strpos($str, '&quot;') !== false) {
+              return false;
+          }
+          if (strpos($str, '&lt;') !== false) {
+              return false;
+          }
+          if (strpos($str, '&gt;') !== false) {
+              return false;
+          }
+          if (strpos($str, '&amp;') !== false) {
+              return false;
+          }
+          return true;
+      }
+      return false;
+  }
+  
   function checkCommentExist($arr,$art_id) {
     if (!$art_id || $art_id == 0 || $art_id == '0') return false;
 

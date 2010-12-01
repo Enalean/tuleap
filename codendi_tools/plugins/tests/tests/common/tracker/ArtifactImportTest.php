@@ -448,6 +448,37 @@ Problem also occurs for new bugs posted to a project *with* a New Bugs address. 
         $comments = $aitv->splitFollowUpComments($followup_comments);
         $this->assertEqual(count($comments), 4 + 1); // + 1 because the follow-up comments header is returned
     }
+
+    function testCanApplyHtmlSpecialCharsWithBaseTranslation() {
+        $ai = new ArtifactImportTestVersion($this);
+        $this->assertTrue($ai->canApplyHtmlSpecialChars('"'));
+        $this->assertTrue($ai->canApplyHtmlSpecialChars('<'));
+        $this->assertTrue($ai->canApplyHtmlSpecialChars('>'));
+        $this->assertTrue($ai->canApplyHtmlSpecialChars('&'));
+        $this->assertFalse($ai->canApplyHtmlSpecialChars("'"));
+    }
+
+    function testCanApplyHtmlSpecialCharsWithTranslatedChars() {
+        $ai = new ArtifactImportTestVersion($this);
+        $this->assertFalse($ai->canApplyHtmlSpecialChars('&quot;'));
+        $this->assertFalse($ai->canApplyHtmlSpecialChars('&lt;'));
+        $this->assertFalse($ai->canApplyHtmlSpecialChars('&gt;'));
+        $this->assertFalse($ai->canApplyHtmlSpecialChars('&amp;'));
+        $this->assertTrue($ai->canApplyHtmlSpecialChars('&#039;'));
+    }
+    
+    function testCanApplyHtmlSpecialCharsWithAdvancedHTMLTricks() {
+        $ai = new ArtifactImportTestVersion($this);
+        $this->assertFalse($ai->canApplyHtmlSpecialChars("&lt;p&gt;this is 'my test'&lt;/p&gt;"));
+        $this->assertFalse($ai->canApplyHtmlSpecialChars("&lt;p&gt;&amp;lt;toto&amp;gt;&lt;/p&gt;"));
+        $this->assertFalse($ai->canApplyHtmlSpecialChars("&amp;#039;Test&amp;lt;"));
+    }
+    
+    function testCanApplyHtmlSpecialCharsWithRealTextTricks() {
+        $ai = new ArtifactImportTestVersion($this);
+        $this->assertTrue($ai->canApplyHtmlSpecialChars('"Description"'));
+        $this->assertFalse($ai->canApplyHtmlSpecialChars("Following today's Codex framework update, it looks better in the sense I now have access to all charts."));
+    }
 }
 
 
