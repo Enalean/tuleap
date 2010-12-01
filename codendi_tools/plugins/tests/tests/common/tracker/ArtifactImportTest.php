@@ -492,10 +492,10 @@ Problem also occurs for new bugs posted to a project *with* a New Bugs address. 
     function testUnCatchableStrings() {
         $ai = new ArtifactImportTestVersion($this);
 
-        $this->assertFalse($ai->canApplyHtmlSpecialChars("&amp;#039;Test&amp;lt;"));
-        $this->assertEqual("&amp;#039;Test&amp;lt;", htmlspecialchars("&#039;Test&lt;"));
+        $this->assertFalse($ai->canApplyHtmlSpecialChars("Test&amp;lt;"));
+        $this->assertEqual("Test&amp;lt;", htmlspecialchars("Test&lt;"));
         // Should be assertTrue here
-        $this->assertFalse($ai->canApplyHtmlSpecialChars("&#039;Test&lt;"));
+        $this->assertFalse($ai->canApplyHtmlSpecialChars("Test&lt;"));
     }
 
     function testCanApplyHtmlSpecialCharsWithRealTextTricks() {

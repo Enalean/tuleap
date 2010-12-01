@@ -639,12 +639,26 @@ function getUsedFields() {
   /**
    * Check if the given string can be converted using htmlspecialchar
    * 
+   * Warning: this method aims to workaround a bug on CSV follow-up comments storage.
+   * The bug is now fixed (htmlspecialchars on comments in Artifact::addFollowUpComments)
+   * but we still need if for legacy purpose.
+   * 
    * This method address one legacy bug with CSV import. CSV import use to store
    * in the database the follow-up comments without using 'htmlspecialchar' like
    * it's done for comments added through th web interface.
    * With this method, we can detect if htmlspecialchar was applied on a comment
    * or not. So we know if we need to apply it before doing comparison.
    * 
+   * There is a known error: if, on the web, the user entered *as text* HTML entities
+   * (for instance &lt;), then exported it in CSV and finaly imported it with
+   * CSV as well.
+   * In this case, you will have
+   * - Submitted by user (web): Test&lt;
+   * - Stored in DB: Test&amp;lt;
+   * - Exported in CSV: Test&lt;
+   * -> Comparison will fail because this method cannot detect &lt; needs to be
+   * translated to &amp;lt
+   *
    * @param String $str String to test
    * 
    * @return Boolean
