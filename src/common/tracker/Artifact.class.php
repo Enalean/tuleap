@@ -2804,7 +2804,7 @@ class Artifact extends Error {
                     $fmt = $GLOBALS['sys_lf'] . $GLOBALS['sys_lf'] ."------------------------------------------------------------------". $GLOBALS['sys_lf'].
                         $Language->getText('tracker_import_utils','date').": %-30s".$Language->getText('global','by').": %s". $GLOBALS['sys_lf'] ."%s";
                     //The mail body
-                    $comment_txt = $this->formatFollowUp($group_id, $isHtml, $value, true); 
+                    $comment_txt = $this->formatFollowUp($group_id, $isHtml, $value, true, $export); 
                     $out .= sprintf($fmt,
                                     format_date(util_get_user_preferences_export_datefmt(),db_result($orig_date, 0, 'date')),
                                     (db_result($orig_subm, 0, 'mod_by')==100?db_result($orig_subm, 0, 'email'):user_getname(db_result($orig_subm, 0, 'mod_by'))),
@@ -3285,7 +3285,7 @@ class Artifact extends Error {
     public function formatFollowUp($groupId, $isHtml, $value, $ascii, $export=false) {
         $commentText = '';
         if ($export) {
-            return $value;
+            return util_unconvert_htmlspecialchars($value);
         } else {
             $hp = $this->getHTMLPurifier();
             if ($ascii) {

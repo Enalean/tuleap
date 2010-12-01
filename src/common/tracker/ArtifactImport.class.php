@@ -651,9 +651,9 @@ function getUsedFields() {
     }
     */
 
-    $comment = str_replace("'","\'",$arr['comment']);
-
-    $res=db_query("SELECT * FROM artifact_history WHERE artifact_id = ". db_ei($art_id) ." AND field_name = 'comment' AND new_value = '". db_es($comment) ."'");
+    $comment = htmlspecialchars($arr['comment']);
+    $sql = " SELECT * FROM artifact_history WHERE artifact_id = ". db_ei($art_id) ." AND field_name = 'comment' AND new_value = '". db_es($comment) ."'";
+    $res = db_query($sql);
 
     if ($res && db_numrows($res) > 0) {
       return true;
