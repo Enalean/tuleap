@@ -466,14 +466,38 @@ Problem also occurs for new bugs posted to a project *with* a New Bugs address. 
         $this->assertFalse($ai->canApplyHtmlSpecialChars('&amp;'));
         $this->assertTrue($ai->canApplyHtmlSpecialChars('&#039;'));
     }
-    
+
     function testCanApplyHtmlSpecialCharsWithAdvancedHTMLTricks() {
         $ai = new ArtifactImportTestVersion($this);
         $this->assertFalse($ai->canApplyHtmlSpecialChars("&lt;p&gt;this is 'my test'&lt;/p&gt;"));
+        $this->assertTrue($ai->canApplyHtmlSpecialChars("<p>this is 'my test'</p>"));
+        $this->assertEqual("&lt;p&gt;this is 'my test'&lt;/p&gt;", htmlspecialchars("<p>this is 'my test'</p>"));
+
         $this->assertFalse($ai->canApplyHtmlSpecialChars("&lt;p&gt;&amp;lt;toto&amp;gt;&lt;/p&gt;"));
-        $this->assertFalse($ai->canApplyHtmlSpecialChars("&amp;#039;Test&amp;lt;"));
+        $this->assertTrue($ai->canApplyHtmlSpecialChars("<p>&lt;toto&gt;</p>"));
+        $this->assertEqual("&lt;p&gt;&amp;lt;toto&amp;gt;&lt;/p&gt;", htmlspecialchars("<p>&lt;toto&gt;</p>"));
+
+        $this->assertFalse($ai->canApplyHtmlSpecialChars("test&lt;br/&gt;"));
+        $this->assertTrue($ai->canApplyHtmlSpecialChars("test<br/>"));
+        $this->assertEqual("test&lt;br/&gt;", htmlspecialchars("test<br/>"));
     }
-    
+
+    /**
+     * This case is impossible to catch so it's a known error.
+     * 
+     * It might happens if, on the web, the user entered *as text* HTML entities 
+     * (for instance &lt;), then exported it in CSV and finaly imported it with
+     * CSV as well.
+     */
+    function testUnCatchableStrings() {
+        $ai = new ArtifactImportTestVersion($this);
+
+        $this->assertFalse($ai->canApplyHtmlSpecialChars("&amp;#039;Test&amp;lt;"));
+        $this->assertEqual("&amp;#039;Test&amp;lt;", htmlspecialchars("&#039;Test&lt;"));
+        // Should be assertTrue here
+        $this->assertFalse($ai->canApplyHtmlSpecialChars("&#039;Test&lt;"));
+    }
+
     function testCanApplyHtmlSpecialCharsWithRealTextTricks() {
         $ai = new ArtifactImportTestVersion($this);
         $this->assertTrue($ai->canApplyHtmlSpecialChars('"Description"'));
