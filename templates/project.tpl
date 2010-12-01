@@ -22,10 +22,10 @@
    <tr><td>{t}last change{/t}</td><td>{$head->GetCommitterEpoch()|date_format:"%a, %d %b %Y %H:%M:%S %z"}</td></tr>
    {/if}
    {if $project->GetCloneUrl()}
-     <tr><td>{t}clone url{/t}</td><td>{$project->GetCloneUrl()}</td></tr>
+     <tr><td>{t}clone url{/t}</td><td><a href="{$project->GetCloneUrl()}">{$project->GetCloneUrl()}</a></td></tr>
    {/if}
    {if $project->GetPushUrl()}
-     <tr><td>{t}push url{/t}</td><td>{$project->GetPushUrl()}</td></tr>
+     <tr><td>{t}push url{/t}</td><td><a href="{$project->GetPushUrl()}">{$project->GetPushUrl()}</a></td></tr>
    {/if}
  </table>
 
