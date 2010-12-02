@@ -31,6 +31,11 @@ class CLI_Action_Tracker_AddComment extends CLI_Action {
             'description'    => '--comment_type_id=<ID>       The ID of the comment type to include into the comment.',
             'parameters'     => array('comment_type_id'),
         ));
+        $this->addParam(array(
+            'name'           => 'format',
+            'description'    => '--format=<format>            The format within the comment will be posted (text/HTML).',
+            'parameters'     => array('format'),
+        ));
     }
     function validate_artifact_id(&$artifact_id) {
         if (!$artifact_id) {
@@ -47,6 +52,12 @@ class CLI_Action_Tracker_AddComment extends CLI_Action {
     function validate_body(&$body) {
         if (!$body) {
             exit_error("You must specify the message using the --message parameter");
+        }
+        return true;
+    }
+    function validate_format(&$format) {
+        if (!$format) {
+            exit_error("You must specify the format of the comment using the --format parameter");
         }
         return true;
     }
