@@ -673,7 +673,7 @@ function getUsedFields() {
       if (strpos($str, '>') !== false) {
           return true;
       }
-      if (strpos($str, '&') !== false) {
+      /*if (strpos($str, '&') !== false) {
           if (strpos($str, '&quot;') !== false) {
               return false;
           }
@@ -687,6 +687,11 @@ function getUsedFields() {
               return false;
           }
           return true;
+      }*/
+      if (strpos($str, '&') !== false) {
+          if (preg_match('/&(?!(quot;|lt;|gt;|amp;))/', $str)) {
+              return true;
+          }
       }
       return false;
   }
