@@ -502,6 +502,10 @@ Problem also occurs for new bugs posted to a project *with* a New Bugs address. 
         $ai = new ArtifactImportTestVersion($this);
         $this->assertTrue($ai->canApplyHtmlSpecialChars('"Description"'));
         $this->assertFalse($ai->canApplyHtmlSpecialChars("Following today's Codex framework update, it looks better in the sense I now have access to all charts."));
+        $this->assertTrue($ai->canApplyHtmlSpecialChars('&&lt;'));
+        $this->assertTrue($ai->canApplyHtmlSpecialChars('&&gt;'));
+        $this->assertTrue($ai->canApplyHtmlSpecialChars('&&amp;'));
+        $this->assertTrue($ai->canApplyHtmlSpecialChars('&&quot;'));
     }
 }
 
