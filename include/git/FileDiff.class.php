@@ -12,6 +12,7 @@
 
 require_once(GITPHP_GITOBJECTDIR . 'Blob.class.php');
 require_once(GITPHP_GITOBJECTDIR . 'TmpDir.class.php');
+require_once(GITPHP_GITOBJECTDIR . 'DiffExe.class.php');
 
 /**
  * Commit class
@@ -530,11 +531,11 @@ class GitPHP_FileDiff
 		else
 			$pid = rand();
 
-		$fromTmpFile = '';
-		$toTmpFile = '';
+		$fromTmpFile = null;
+		$toTmpFile = null;
 
-		$fromName = '/dev/null';
-		$toName = '/dev/null';
+		$fromName = null;
+		$toName = null;
 
 		if ((empty($this->status)) || ($this->status == 'D') || ($this->status == 'M')) {
 			$fromBlob = $this->project->GetBlob($this->fromHash);
@@ -566,16 +567,7 @@ class GitPHP_FileDiff
 			}
 		}
 
-		$diffExe = GitPHP_Config::GetInstance()->GetValue('diffbin');
-		if (empty($diffExe)) {
-			if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
-				$diffExe = 'C:\\Progra~1\\Git\\bin\\diff.exe';
-			} else {
-				$diffExe = 'diff';
-			}
-		}
-
-		$this->diffData = shell_exec($diffExe . ' -u -p -L "' . $fromName . '" -L "' . $toName . '" ' . (empty($fromTmpFile) ? '/dev/null' : ($tmpdir->GetDir() . $fromTmpFile)) . ' ' . (empty($toTmpFile) ? '/dev/null' : ($tmpdir->GetDir() . $toTmpFile)));
+		$this->diffData = GitPHP_DiffExe::Diff((empty($fromTmpFile) ? null : ($tmpdir->GetDir() . $fromTmpFile)), $fromName, (empty($toTmpFile) ? null : ($tmpdir->GetDir() . $toTmpFile)), $toName);
 
 		if (!empty($fromTmpFile)) {
 			$tmpdir->RemoveFile($fromTmpFile);
