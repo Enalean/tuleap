@@ -69,6 +69,55 @@ class GitPHP_TmpDir
 	}
 
 	/**
+	 * SystemTmpDir
+	 *
+	 * Gets the system defined temporary directory
+	 *
+	 * @access public
+	 * @static
+	 * @return string temp dir
+	 */
+	public static function SystemTmpDir()
+	{
+		$tmpdir = '';
+
+		if (function_exists('sys_get_temp_dir')) {
+			$tmpdir = sys_get_temp_dir();
+		}
+
+		if (empty($tmpdir)) {
+			$tmpdir = getenv('TMP');
+		}
+
+		if (empty($tmpdir)) {
+			$tmpdir = getenv('TEMP');
+		}
+
+		if (empty($tmpdir)) {
+			$tmpdir = getenv('TMPDIR');
+		}
+
+		if (empty($tmpdir)) {
+			$tmpfile = tempnam(__FILE__, '');
+			if (file_exists($tmpfile)) {
+				unlink($tmpfile);
+				$tmpdir = dirname($temp);
+			}
+		}
+
+		if (empty($tmpdir)) {
+			// ultimate default - should never get this far
+			if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+				$tmpdir = 'C:\\Windows\\Temp';
+			} else {
+				$tmpdir = '/tmp';
+			}
+		}
+
+		return GitPHP_Util::AddSlash(realpath($tmpdir));
+	}
+
+	/**
 	 * __construct
 	 *
 	 * Constructor
@@ -77,7 +126,11 @@ class GitPHP_TmpDir
 	 */
 	public function __construct()
 	{
-		$this->dir = GitPHP_Util::AddSlash(GitPHP_Config::GetInstance()->GetValue('gittmp', '/tmp/gitphp/'));
+		$this->dir = GitPHP_Util::AddSlash(GitPHP_Config::GetInstance()->GetValue('gittmp'));
+
+		if (empty($this->dir)) {
+			$this->dir = GitPHP_TmpDir::SystemTmpDir();
+		}
 
 		if (empty($this->dir)) {
 			throw new Exception(__('No tmpdir defined'));
