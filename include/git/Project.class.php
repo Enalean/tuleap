@@ -259,24 +259,25 @@ class GitPHP_Project
 	public function GetOwner()
 	{
 		if (empty($this->owner) && !$this->readOwner) {
-			$uid = fileowner($this->GetPath());
-			if ($uid > 0) {
-				$data = posix_getpwuid($uid);
-				if (isset($data['gecos']) && !empty($data['gecos'])) {
-					$this->owner = $data['gecos'];
-				} elseif (isset($data['name']) && !empty($data['name'])) {
-					$this->owner = $data['name'];
+
+			$exe = new GitPHP_GitExe($this);
+			$args = array();
+			$args[] = 'gitweb.owner';
+			$this->owner = $exe->Execute(GIT_CONFIG, $args);
+			unset($exe);
+			
+			if (empty($this->owner)) {
+				$uid = fileowner($this->GetPath());
+				if ($uid > 0) {
+					$data = posix_getpwuid($uid);
+					if (isset($data['gecos']) && !empty($data['gecos'])) {
+						$this->owner = $data['gecos'];
+					} elseif (isset($data['name']) && !empty($data['name'])) {
+						$this->owner = $data['name'];
+					}
 				}
 			}
-			else {
-				$exe = new GitPHP_GitExe($this);
-				$args = array();
-				$args[] = 'gitweb.owner';
-				$ret = $exe->Execute(GIT_CONFIG, $args);
-				unset($exe);
-				
-				$this->owner = $ret;
-			}
+
 			$this->readOwner = true;
 		}
 	
