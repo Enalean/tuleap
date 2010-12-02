@@ -11,6 +11,7 @@
  */
 
 require_once(GITPHP_GITOBJECTDIR . 'Blob.class.php');
+require_once(GITPHP_GITOBJECTDIR . 'TmpDir.class.php');
 
 /**
  * Commit class
@@ -521,10 +522,7 @@ class GitPHP_FileDiff
 			return;
 		}
 
-		if (!GitPHP_Config::GetInstance()->GetValue('tmpdirprepared'))
-			GitPHP_FileDiff::PrepareTempDir();
-
-		$tmpdir = GitPHP_Util::AddSlash(GitPHP_Config::GetInstance()->GetValue('gittmp', '/tmp/gitphp/'));
+		$tmpdir = GitPHP_TmpDir::GetInstance();
 
 		$pid = 0;
 		if (function_exists('posix_getpid'))
@@ -532,19 +530,16 @@ class GitPHP_FileDiff
 		else
 			$pid = rand();
 
-		$fromFile = '/dev/null';
-		$hasFrom = false;
-		$toFile = '/dev/null';
-		$hasTo = false;
+		$fromTmpFile = '';
+		$toTmpFile = '';
 
 		$fromName = '/dev/null';
 		$toName = '/dev/null';
 
 		if ((empty($this->status)) || ($this->status == 'D') || ($this->status == 'M')) {
 			$fromBlob = $this->project->GetBlob($this->fromHash);
-			$fromFile = $tmpdir . 'gitphp_' . $pid . '_from';
-			$fromBlob->PipeData($fromFile);
-			$hasFrom = true;
+			$fromTmpFile = 'gitphp_' . $pid . '_from';
+			$tmpdir->AddFile($fromTmpFile, $fromBlob->GetData());
 
 			$fromName = 'a/';
 			if (!empty($file)) {
@@ -558,9 +553,8 @@ class GitPHP_FileDiff
 
 		if ((empty($this->status)) || ($this->status == 'A') || ($this->status == 'M')) {
 			$toBlob = $this->project->GetBlob($this->toHash);
-			$toFile = $tmpdir . 'gitphp_' . $pid . '_to';
-			$toBlob->PipeData($toFile);
-			$hasTo = true;
+			$toTmpFile = 'gitphp_' . $pid . '_to';
+			$tmpdir->AddFile($toTmpFile, $toBlob->GetData());
 
 			$toName = 'b/';
 			if (!empty($file)) {
@@ -581,52 +575,20 @@ class GitPHP_FileDiff
 			}
 		}
 
-		$this->diffData = shell_exec($diffExe . ' -u -p -L "' . $fromName . '" -L "' . $toName . '" ' . $fromFile . ' ' . $toFile);
+		$this->diffData = shell_exec($diffExe . ' -u -p -L "' . $fromName . '" -L "' . $toName . '" ' . (empty($fromTmpFile) ? '/dev/null' : ($tmpdir->GetDir() . $fromTmpFile)) . ' ' . (empty($toTmpFile) ? '/dev/null' : ($tmpdir->GetDir() . $toTmpFile)));
 
-		if ($hasFrom) {
-			unlink($fromFile);
+		if (!empty($fromTmpFile)) {
+			$tmpdir->RemoveFile($fromTmpFile);
 		}
 
-		if ($hasTo) {
-			unlink($toFile);
+		if (!empty($toTmpFile)) {
+			$tmpdir->RemoveFile($toTmpFile);
 		}
 
 		if ($explode)
 			return explode("\n", $this->diffData);
 		else
 			return $this->diffData;
-	}
-
-	/**
-	 * PrepareTempDir
-	 *
-	 * Prepares the temporary directory
-	 *
-	 * @access private
-	 * @static
-	 * @throws Exception exception on error
-	 */
-	private static function PrepareTempDir()
-	{
-		GitPHP_Config::GetInstance()->SetValue('tmpdirprepared', true);
-
-		$tmpdir = GitPHP_Util::AddSlash(GitPHP_Config::GetInstance()->GetValue('gittmp', '/tmp/gitphp/'));
-
-		if (empty($tmpdir)) {
-			throw new Exception(__('No tmpdir defined'));
-		}
-
-		if (file_exists($tmpdir)) {
-			if (is_dir($tmpdir)) {
-				if (!is_writeable($tmpdir)) {
-					throw new Exception(sprintf(__('Specified tmpdir %1$s is not writable'), $tmpdir));
-				}
-			} else {
-				throw new Exception(sprintf(__('Specified tmpdir %1$s is not a directory'), $tmpdir));
-			}
-		} else if (!mkdir($tmpdir, 0700)) {
-			throw new Exception(sprintf(__('Could not create tmpdir %1$s'), $tmpdir));
-		}
 	}
 
 	/**

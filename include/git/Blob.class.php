@@ -122,25 +122,6 @@ class GitPHP_Blob extends GitPHP_FilesystemObject
 	}
 
 	/**
-	 * PipeData
-	 *
-	 * Pipes the blob data to a file
-	 *
-	 * @access public
-	 * @param string $file file to pipe to
-	 */
-	public function PipeData($file)
-	{
-		if (empty($file))
-			return;
-
-		if (!$this->dataRead)
-			$this->ReadData();
-
-		file_put_contents($file, $this->data);
-	}
-
-	/**
 	 * ReadData
 	 *
 	 * Reads the blob data
