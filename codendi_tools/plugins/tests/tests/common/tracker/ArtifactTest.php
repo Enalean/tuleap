@@ -78,16 +78,16 @@ class ArtifactTest extends UnitTestCase {
         $txtContent = 'testing the feature';
         $htmlContent = '&lt;pre&gt;   function processEvent($event, $params) {&lt;br /&gt;       foreach(parent::processEvent($event, $params) as $key =&amp;gt; $value) {&lt;br /&gt;           $params[$key] = $value;&lt;br /&gt;       }&lt;br /&gt;   }&lt;br /&gt;&lt;/pre&gt; ';
         //the output will be delivered in a mail
-        $this->assertEqual('   function processEvent($event, $params) {       foreach(parent::processEvent($event, $params) as $key => $value) {           $params[$key] = $value;       }   } ' , $art->formatFollowUp(102, 1,$htmlContent, true));
-        $this->assertEqual($txtContent, $art->formatFollowUp(102, 0,$txtContent,true));
+        $this->assertEqual('   function processEvent($event, $params) {       foreach(parent::processEvent($event, $params) as $key => $value) {           $params[$key] = $value;       }   } ' , $art->formatFollowUp(102, 1,$htmlContent, 1));
+        $this->assertEqual($txtContent, $art->formatFollowUp(102, 0,$txtContent,1));
         
         //the output is destinated to be exported
-        $this->assertEqual('<pre>   function processEvent($event, $params) {<br />       foreach(parent::processEvent($event, $params) as $key =&gt; $value) {<br />           $params[$key] = $value;<br />       }<br />   }<br /></pre> ', $art->formatFollowUp(102, 1,$htmlContent,true, true));
-        $this->assertEqual($txtContent, $art->formatFollowUp(102, 0,$txtContent,true, true));
+        $this->assertEqual('<pre>   function processEvent($event, $params) {<br />       foreach(parent::processEvent($event, $params) as $key =&gt; $value) {<br />           $params[$key] = $value;<br />       }<br />   }<br /></pre> ', $art->formatFollowUp(102, 1,$htmlContent,0));
+        $this->assertEqual($txtContent, $art->formatFollowUp(102, 0,$txtContent,0));
         
         //The output will be displayed on browser
-        $this->assertEqual('<pre>   function processEvent($event, $params) {<br />       foreach(parent::processEvent($event, $params) as $key =&gt; $value) {<br />           $params[$key] = $value;<br />       }<br />   }<br /></pre> ', $art->formatFollowUp(102, 1,$htmlContent, false));
-        $this->assertEqual($txtContent, $art->formatFollowUp(102, 0,$txtContent, false));
+        $this->assertEqual('<pre>   function processEvent($event, $params) {<br />       foreach(parent::processEvent($event, $params) as $key =&gt; $value) {<br />           $params[$key] = $value;<br />       }<br />   }<br /></pre> ', $art->formatFollowUp(102, 1,$htmlContent, 2));
+        $this->assertEqual($txtContent, $art->formatFollowUp(102, 0,$txtContent, 2));
     }
 }
 ?>
