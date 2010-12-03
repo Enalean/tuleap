@@ -753,7 +753,7 @@ function getUsedFields() {
   }
   /** assume that the 
    * @param followup_comments (IN): comments have the form that we get when exporting follow-up comments in csv format
-   *                      (see ArtifactHtml->showFollowUpComments(ascii = true))
+   *                      (see ArtifactHtml->showFollowUpComments($output == OUTPUT_EXPORT))
    * @param parsed_comments (OUT): an array (#detail => array2), where array2 is of the form
    *                              ("date" => date, "by" => user, "type" => comment-type, "comment" => comment-string)
    * @param for_parse_report (IN): if we parse the follow-up comments to show them in the parse report then we keep the labels

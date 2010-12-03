@@ -33,6 +33,11 @@ class Artifact extends Error {
 
     const FORMAT_TEXT  = 0;
     const FORMAT_HTML  = 1;
+    
+    //The diffetents mode of display
+    const OUTPUT_EXPORT  = 0;
+    const OUTPUT_MAIL    = 1;
+    const OUTPUT_BROWSER = 2;
 
     /**
      * Artifact Type object.
@@ -2580,7 +2585,7 @@ class Artifact extends Error {
 	    // Now display other special fields
         
         // Then output the history of bug comments from newest to oldest
-	    $body .= $this->showFollowUpComments($group_id, 0, true);
+	    $body .= $this->showFollowUpComments($group_id, 0, self::OUTPUT_MAIL);
 	    
 	    // Then output the CC list
 	    $body .= "". $GLOBALS['sys_lf'] . $GLOBALS['sys_lf'] . $this->showCCList($group_id, $group_artifact_id, true);
@@ -2727,11 +2732,12 @@ class Artifact extends Error {
          * Return the string to display the follow ups comments 
          *
          * @param Integer   group_id: the group id
-         * @param Boolean   ascii By default set to false, the displayer output is the browser 
-         * @param Boolean   export By default set to false, the ascii mode if enabled reference the mail output else the CSV/database export
+         * @param Integer   output By default set to OUTPUT_EXPORT, the output is an export csv/DB
+         *                         set to OUTPUT_MAIL, the followups will be displayed in mail 
+         *                         else displayed on browser
          * @return string the follow-up comments to display in HTML or in ascii mode
          */
-        function showFollowUpComments($group_id, $pv, $ascii=false, $export=false) {
+        function showFollowUpComments($group_id, $pv, $output = self::OUTPUT_EXPORT) {
             $hp = $this->getHTMLPurifier();
             //
             //  Format the comment rows from artifact_history
@@ -2747,7 +2753,7 @@ class Artifact extends Error {
         
             // No followup comment -> return now
             if ($rows <= 0) {
-                        if ($ascii)
+                        if ($output == self::OUTPUT_EXPORT || $output == self::OUTPUT_MAIL)
                             $out = $GLOBALS['sys_lf'].$GLOBALS['sys_lf']." ".$Language->getText('tracker_import_utils','no_followups').$GLOBALS['sys_lf'];
                         else
                             $out = '<H4>'.$Language->getText('tracker_import_utils','no_followups').'</H4>';
@@ -2757,7 +2763,7 @@ class Artifact extends Error {
             $out = '';
             
             // Header first
-            if ($ascii) {
+            if ($output == self::OUTPUT_EXPORT || $output == self::OUTPUT_MAIL) {
                 $out .= $Language->getText('tracker_include_artifact','follow_ups').$GLOBALS['sys_lf'].str_repeat("*",strlen($Language->getText('tracker_include_artifact','follow_ups')));
             } else {
                 if ($rows > 0) {
@@ -2803,11 +2809,11 @@ class Artifact extends Error {
                     $comment_type = '['.SimpleSanitizer::unsanitize($comment_type).']';
                 }
                 
-                if ($ascii) {
+                if ($output == self::OUTPUT_EXPORT || $output == self::OUTPUT_MAIL) {
                     $fmt = $GLOBALS['sys_lf'] . $GLOBALS['sys_lf'] ."------------------------------------------------------------------". $GLOBALS['sys_lf'].
                         $Language->getText('tracker_import_utils','date').": %-30s".$Language->getText('global','by').": %s". $GLOBALS['sys_lf'] ."%s";
                     //The mail body
-                    $comment_txt = $this->formatFollowUp($group_id, $isHtml, $value, true, $export); 
+                    $comment_txt = $this->formatFollowUp($group_id, $isHtml, $value, $output); 
                     $out .= sprintf($fmt,
                                     format_date(util_get_user_preferences_export_datefmt(),db_result($orig_date, 0, 'date')),
                                     (db_result($orig_subm, 0, 'mod_by')==100?db_result($orig_subm, 0, 'email'):user_getname(db_result($orig_subm, 0, 'mod_by'))),
@@ -2915,7 +2921,7 @@ class Artifact extends Error {
                     if ($comment_type != "") {
                         $out .= '<div class="followup_comment_content_type"><b>'.  $hp->purify($comment_type, CODENDI_PURIFIER_CONVERT_HTML)  .'</b></div>';
                     }
-                    $out .= $this->formatFollowUp($group_id, $isHtml, $value, false); 
+                    $out .= $this->formatFollowUp($group_id, $isHtml, $value, $output); 
                     $out .= '</div>';
                     $out .= '</div>';
                     $out .= '<script type="text/javascript">
@@ -2925,7 +2931,7 @@ class Artifact extends Error {
                     </script>';
                 }
             }
-            if (!$ascii) {
+            if ($output == self::OUTPUT_BROWSER) {
                 if ($rows > 0) {
                     $out .= '<div style="text-align:right">';
                     $out .= '<a href="#expand_all" onclick="tracker_expand_all_comments(); return false;">'.
@@ -2936,7 +2942,7 @@ class Artifact extends Error {
             }
         
             // final touch...
-            $out .= ($ascii ? $GLOBALS['sys_lf'] : "");
+            $out .= (($output != self::OUTPUT_BROWSER) ? $GLOBALS['sys_lf'] : "");
         
             return($out);
                 
@@ -3285,13 +3291,13 @@ class Artifact extends Error {
      * 
      * @return String
      */
-    public function formatFollowUp($groupId, $isHtml, $value, $ascii, $export=false) {
+    public function formatFollowUp($groupId, $isHtml, $value, $output) {
         $commentText = '';
-        if ($export) {
+        if ($output == self::OUTPUT_EXPORT) {
             return util_unconvert_htmlspecialchars($value);
         } else {
             $hp = $this->getHTMLPurifier();
-            if ($ascii) {
+            if ($output == self::OUTPUT_MAIL) {
                 if ($isHtml == 1){
                     $commentText = $hp->purify(util_unconvert_htmlspecialchars($value), CODENDI_PURIFIER_STRIP_HTML);
                 } else {
