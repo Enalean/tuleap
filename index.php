@@ -128,11 +128,11 @@ try {
 	 */
 	$exe = new GitPHP_GitExe(null);
 	if (!$exe->Valid()) {
-		throw new GitPHP_MessageException(sprintf(__('Could not run the git executable "%1$s".  You may need to set the "gitbin" config value.'), $exe->GetBinary()), true, 500);
+		throw new GitPHP_MessageException(sprintf(__('Could not run the git executable "%1$s".  You may need to set the "%2$s" config value.'), $exe->GetBinary(), 'gitbin'), true, 500);
 	}
 	$exe = new GitPHP_DiffExe();
 	if (!$exe->Valid()) {
-		throw new GitPHP_MessageException(sprintf(__('Could not run the diff executable "%1$s".  You may need to set the "diffbin" config value.'), $exe->GetBinary()), true, 500);
+		throw new GitPHP_MessageException(sprintf(__('Could not run the diff executable "%1$s".  You may need to set the "%2$s" config value.'), $exe->GetBinary(), 'diffbin'), true, 500);
 	}
 	unset($exe);
 
