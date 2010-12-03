@@ -733,12 +733,16 @@ function getUsedFields() {
      * @return Boolean
      */
     function checkCommentExistWithCSVImport($arr,$artifact_id) {
+        if (!$artifact_id || $artifact_id == 0 || $artifact_id == '0') return false;
+
         $comment = htmlspecialchars($arr['comment']);
         $sql = "SELECT new_value FROM artifact_history WHERE artifact_id = ". db_ei($artifact_id);
         $result = db_query($sql);
-        while ($row = db_fetch_array($result)) {
-            if ($this->canApplyHtmlSpecialChars($row['new_value']) && htmlspecialchars($row['new_value']) == $comment) {
-                return true;
+        if ($result && db_numrows($result) > 0) {
+            while ($row = db_fetch_array($result)) {
+                if ($this->canApplyHtmlSpecialChars($row['new_value']) && htmlspecialchars($row['new_value']) == $comment) {
+                    return true;
+                }
             }
         }
         return false;
