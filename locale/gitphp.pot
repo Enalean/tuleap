@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GitPHP 0.2.1\n"
 "Report-Msgid-Bugs-To: xiphux@gmail.com\n"
-"POT-Creation-Date: 2010-10-23 20:09-0500\n"
+"POT-Creation-Date: 2010-12-02 22:09-0600\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -287,13 +287,13 @@ msgstr ""
 
 # Used as a search type, to search the contents of files in the project
 #: templates/header.tpl
-#: include/git/Blob.class.php:191
+#: include/git/Blob.class.php:174
 msgid "file"
 msgstr ""
 
 # Used as title for search page, and also is the label for the search box
 #: templates/header.tpl
-#: include/controller/Controller_Search.class.php:90
+#: include/controller/Controller_Search.class.php:93
 msgid "search"
 msgstr ""
 
@@ -314,6 +314,7 @@ msgstr ""
 
 # Message displayed when there are no commits in the project to display
 #: templates/log.tpl
+#: templates/projectlist.tpl
 #: templates/shortloglist.tpl
 msgid "No commits"
 msgstr ""
@@ -409,7 +410,7 @@ msgid "blame"
 msgstr ""
 
 # Error message when user tries to do an action that requires a project but a project isn't specified
-#: include/controller/Controller_Feed.class.php:39
+#: include/controller/Controller_Feed.class.php:45
 #: include/controller/Controller_Tree.class.php:34
 #: include/controller/Controller_Commit.class.php:34
 #: include/controller/Controller_Log.class.php:34
@@ -423,13 +424,13 @@ msgstr ""
 #: include/controller/Controller_Blobdiff.class.php:34
 #: include/controller/Controller_History.class.php:34
 #: include/controller/Controller_Heads.class.php:34
-#: include/controller/Controller_Search.class.php:44
+#: include/controller/Controller_Search.class.php:47
 msgid "Project is required"
 msgstr ""
 
 # Used as the title of the rss controller
 # rss is a standard web feed format
-#: include/controller/Controller_Feed.class.php:85
+#: include/controller/Controller_Feed.class.php:91
 msgid "rss"
 msgstr ""
 
@@ -457,18 +458,18 @@ msgid "project index"
 msgstr ""
 
 # Error message when a user tries to search but searching has been disabled in the config
-#: include/controller/Controller_Search.class.php:38
+#: include/controller/Controller_Search.class.php:41
 msgid "Search has been disabled"
 msgstr ""
 
 # Error message when a user tries to do a file search but searching files has been disabled in the config
-#: include/controller/Controller_Search.class.php:109
+#: include/controller/Controller_Search.class.php:112
 msgid "File search has been disabled"
 msgstr ""
 
 # Error message when a user's search query is too short
 # %1$d: the minimum number of characters
-#: include/controller/Controller_Search.class.php:115
+#: include/controller/Controller_Search.class.php:118
 #, php-format
 msgid "You must enter search text of at least %1$d character"
 msgid_plural "You must enter search text of at least %1$d characters"
@@ -476,83 +477,83 @@ msgstr[0] ""
 msgstr[1] ""
 
 # Error message when the user enters an unsupported search type
-#: include/controller/Controller_Search.class.php:159
+#: include/controller/Controller_Search.class.php:162
 msgid "Invalid search type"
 msgstr ""
 
 # Error message when a user's search didn't produce any results
 # %1$s: the user's search string
-#: include/controller/Controller_Search.class.php:165
+#: include/controller/Controller_Search.class.php:168
 #, php-format
 msgid "No matches for \"%1$s\""
 msgstr ""
 
 # A type of filesystem object stored in a project
-#: include/git/Blob.class.php:179
+#: include/git/Blob.class.php:162
 msgid "directory"
 msgstr ""
 
 # A type of filesystem object stored in a project
-#: include/git/Blob.class.php:185
+#: include/git/Blob.class.php:168
 msgid "symlink"
 msgstr ""
 
 # Used when an object is stored in a project but git doesn't know what type it is
-#: include/git/Blob.class.php:198
+#: include/git/Blob.class.php:181
 msgid "unknown"
 msgstr ""
 
 # Error message when user specifies a path for a project root or project, but the path given isn't a directory
 # %1$s: the path the user specified
 #: include/git/ProjectListDirectory.class.php:47
-#: include/git/Project.class.php:231
+#: include/git/Project.class.php:230
 #, php-format
 msgid "%1$s is not a directory"
 msgstr ""
 
 # Error message when a path specified in the config is not a git repository
 # %1$s: the specified path
-#: include/git/Project.class.php:235
+#: include/git/Project.class.php:234
 #, php-format
 msgid "%1$s is not a git repository"
 msgstr ""
 
 # Error message when a path specified is using '..' to break out of the project root (a hack attempt)
 # %1$s: The specified path
-#: include/git/Project.class.php:239
+#: include/git/Project.class.php:238
 #, php-format
 msgid "%1$s is attempting directory traversal"
 msgstr ""
 
 # Error message when a path specified is outside of the project root
 # %1$s: The specified path
-#: include/git/Project.class.php:245
+#: include/git/Project.class.php:244
 #, php-format
 msgid "%1$s is outside of the projectroot"
 msgstr ""
 
 # Error message when a temporary directory isn't specified in the config
-#: include/git/FileDiff.class.php:616
+#: include/git/TmpDir.class.php:136
 msgid "No tmpdir defined"
 msgstr ""
 
 # Error message when the system can't write to the temporary directory
 # %1$s: the temp dir specified
-#: include/git/FileDiff.class.php:622
+#: include/git/TmpDir.class.php:142
 #, php-format
 msgid "Specified tmpdir %1$s is not writable"
 msgstr ""
 
 # Error message when the temporary directory specified isn't a directory
 # %1$s: the temp dir specified
-#: include/git/FileDiff.class.php:625
+#: include/git/TmpDir.class.php:145
 #, php-format
 msgid "Specified tmpdir %1$s is not a directory"
 msgstr ""
 
 # Error message when the system attempts to create the temporary directory but can't
 # %1$s: the temp dir it's trying to create
-#: include/git/FileDiff.class.php:628
+#: include/git/TmpDir.class.php:148
 #, php-format
 msgid "Could not create tmpdir %1$s"
 msgstr ""
@@ -573,14 +574,14 @@ msgstr ""
 
 # Error message when a hash specified in a URL isn't a valid git hash
 # %1$s: the hash entered
-#: include/git/GitObject.class.php:95
+#: include/git/GitObject.class.php:107
 #, php-format
 msgid "Invalid hash %1$s"
 msgstr ""
 
 # Used to represent an age in years
 # %1$d: the number of years
-#: include/smartyplugins/modifier.agestring.php:15
+#: include/smartyplugins/modifier.agestring.php:25
 #, php-format
 msgid "%1$d year ago"
 msgid_plural "%1$d years ago"
@@ -589,7 +590,7 @@ msgstr[1] ""
 
 # Used to represent an age in months
 # %1$d: the number of months
-#: include/smartyplugins/modifier.agestring.php:20
+#: include/smartyplugins/modifier.agestring.php:30
 #, php-format
 msgid "%1$d month ago"
 msgid_plural "%1$d months ago"
@@ -598,7 +599,7 @@ msgstr[1] ""
 
 # Used to represent an age in weeks
 # %1$d: the number of weeks
-#: include/smartyplugins/modifier.agestring.php:25
+#: include/smartyplugins/modifier.agestring.php:35
 #, php-format
 msgid "%1$d week ago"
 msgid_plural "%1$d weeks ago"
@@ -607,7 +608,7 @@ msgstr[1] ""
 
 # Used to represent an age in days
 # %1$d: the number of days
-#: include/smartyplugins/modifier.agestring.php:30
+#: include/smartyplugins/modifier.agestring.php:40
 #, php-format
 msgid "%1$d day ago"
 msgid_plural "%1$d days ago"
@@ -616,7 +617,7 @@ msgstr[1] ""
 
 # Used to represent an age in hours
 # %1$d: the number of hours
-#: include/smartyplugins/modifier.agestring.php:35
+#: include/smartyplugins/modifier.agestring.php:45
 #, php-format
 msgid "%1$d hour ago"
 msgid_plural "%1$d hours ago"
@@ -625,7 +626,7 @@ msgstr[1] ""
 
 # Used to represent an age in minutes
 # %1$d: the number of minutes
-#: include/smartyplugins/modifier.agestring.php:40
+#: include/smartyplugins/modifier.agestring.php:50
 #, php-format
 msgid "%1$d min ago"
 msgid_plural "%1$d min ago"
@@ -634,7 +635,7 @@ msgstr[1] ""
 
 # Used to represent an age in seconds
 # %1$d: the number of seconds
-#: include/smartyplugins/modifier.agestring.php:45
+#: include/smartyplugins/modifier.agestring.php:55
 #, php-format
 msgid "%1$d sec ago"
 msgid_plural "%1$d sec ago"
@@ -642,13 +643,13 @@ msgstr[0] ""
 msgstr[1] ""
 
 # Used to represent a modification time of right now
-#: include/smartyplugins/modifier.agestring.php:49
+#: include/smartyplugins/modifier.agestring.php:59
 msgid "right now"
 msgstr ""
 
 # Error message when user hasn't defined a project root in the config
 # "projectroot" refers to a root directory where the user's git projects are stored
-#: index.php:114
+#: index.php:123
 msgid "A projectroot must be set in the config"
 msgstr ""
 
@@ -723,7 +724,7 @@ msgstr ""
 
 # Used as the title of the Atom controller
 # Atom is a standard web feed format
-#: include/controller/Controller_Feed.class.php:90
+#: include/controller/Controller_Feed.class.php:96
 msgid "atom"
 msgstr ""
 
@@ -744,4 +745,24 @@ msgstr ""
 # Label for the field to search the project list
 #: templates/projectlist.tpl
 msgid "Search projects"
+msgstr ""
+
+# Error message displayed when the git executable isn't found or doesn't work
+# %1$s: the git executable the system is trying to run
+# %2$s: the config value the user needs to set to specify the correct path
+#: index.php:131
+#, php-format
+msgid ""
+"Could not run the git executable \"%1$s\".  You may need to set the \"%2$s\" "
+"config value."
+msgstr ""
+
+# Error message displayed when the diff executable isn't found or doesn't work
+# %1$s: the diff executable the system is trying to run
+# %2$s: the config value the user needs to set to specify the correct path
+#: index.php:135
+#, php-format
+msgid ""
+"Could not run the diff executable \"%1$s\".  You may need to set the \"%2$s"
+"\" config value."
 msgstr ""
