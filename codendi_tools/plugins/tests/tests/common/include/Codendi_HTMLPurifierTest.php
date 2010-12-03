@@ -52,6 +52,12 @@ class Codendi_HTMLPurifierTestVersion extends Codendi_HTMLPurifier {
     }
 }
 
+class ReferenceManagerTestMakeLinks extends MockReferenceManager {
+    function insertReferences(&$data) {
+        $data = 'link to art #1';
+    }
+}
+
 /**
  * Tests the class CodendiHTMLPurifier
  */
@@ -176,8 +182,7 @@ class Codendi_HTMLPurifierTest extends UnitTestCase {
         $this->assertEqual('\'<a href="mailto:john.doe@example.com" target="_new">john.doe@example.com</a>\'', $p->makeLinks('\'john.doe@example.com\''));
         $this->assertEqual('<<a href="mailto:john.doe@example.com" target="_new">john.doe@example.com</a>>', $p->makeLinks('<john.doe@example.com>'));
 
-        $rm = new MockReferenceManager();
-        $rm->setReturnValue('insertReferences', 'link to art #1');
+        $rm = new ReferenceManagerTestMakeLinks();
         $p->setReturnValue('getReferenceManager', $rm);
         $this->assertEqual('link to art #1', $p->makeLinks('art #1', 1));
     }

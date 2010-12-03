@@ -382,7 +382,6 @@ class ReferenceManager {
         }
         setlocale(LC_CTYPE, $locale);
         $this->tmpGroupIdForCallbackFunction = null;
-        return $html;
     }
 
     /**

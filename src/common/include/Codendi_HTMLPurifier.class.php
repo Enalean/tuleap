@@ -172,7 +172,7 @@ class Codendi_HTMLPurifier {
 
         if ($group_id) {
             $reference_manager = $this->getReferenceManager();
-            $data = $reference_manager->insertReferences($data,$group_id);
+            $reference_manager->insertReferences($data,$group_id);
         }
 
         return $data;
