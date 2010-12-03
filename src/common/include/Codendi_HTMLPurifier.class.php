@@ -224,7 +224,7 @@ class Codendi_HTMLPurifier {
             }
             if ($groupId) {
                 $referenceManager = $this->getReferenceManager();
-                $html = $referenceManager->insertReferences($html,$groupId);
+                $referenceManager->insertReferences($html,$groupId);
             }
             $html = nl2br($html);
         case CODENDI_PURIFIER_STRIP_HTML:
