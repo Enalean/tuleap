@@ -507,6 +507,13 @@ Problem also occurs for new bugs posted to a project *with* a New Bugs address. 
         $this->assertTrue($ai->canApplyHtmlSpecialChars('&&amp;'));
         $this->assertTrue($ai->canApplyHtmlSpecialChars('&&quot;'));
     }
+
+    function testCheckCommentExistInLegacyFormat() {
+        $artImp = new ArtifactImportTestVersion($this);
+        $artId = 12237;
+        $parsedFollow = array('comment' => '<pre> testing issue </pre>');
+        $this->assertTrue($artImp->checkCommentExistInLegacyFormat($parsedFollow,$artId));
+    }
 }
 
 
@@ -516,7 +523,9 @@ Problem also occurs for new bugs posted to a project *with* a New Bugs address. 
 
 //function user_getname() {return 'schneide2';}
 
-function db_query($string) {return false;}
+function db_query($string) {return true;}
+function db_numrows($string) {return 1;}
+function db_fetch_array($string) {return array ('new_value' => '<pre> testing issue </pre>');}
 function db_ei($string) {return false;}
 function db_es($string) {return false;}
 

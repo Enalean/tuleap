@@ -673,21 +673,6 @@ function getUsedFields() {
       if (strpos($str, '>') !== false) {
           return true;
       }
-      /*if (strpos($str, '&') !== false) {
-          if (strpos($str, '&quot;') !== false) {
-              return false;
-          }
-          if (strpos($str, '&lt;') !== false) {
-              return false;
-          }
-          if (strpos($str, '&gt;') !== false) {
-              return false;
-          }
-          if (strpos($str, '&amp;') !== false) {
-              return false;
-          }
-          return true;
-      }*/
       if (strpos($str, '&') !== false) {
           if (preg_match('/&(?!(quot;|lt;|gt;|amp;))/', $str)) {
               return true;
@@ -733,7 +718,7 @@ function getUsedFields() {
      *
      * @return Boolean
      */
-    function checkCommentExistInLeagacyFormat($arr,$artifact_id) {
+    function checkCommentExistInLegacyFormat($arr,$artifact_id) {
         if (!$artifact_id || $artifact_id == 0 || $artifact_id == '0') return false;
 
         $comment = htmlspecialchars($arr['comment']);
