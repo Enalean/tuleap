@@ -29,7 +29,7 @@ var Codendi_RTE_Light = Class.create({
             var toggle = Builder.node('span', {'class': 'rte_toggle'});
             toggle.appendChild(document.createTextNode(' Rich text editor '));
 
-            toggle.observe('click', this.toggle.bindAsEventListener(this));
+            Event.observe(toggle, 'click', this.toggle.bindAsEventListener(this));
 
             $(element+'_label').appendChild(toggle);
         }
