@@ -724,7 +724,7 @@ function getUsedFields() {
 
     /**
      * After checking if the comment exist check again to verify if
-     * the comment doesn't exist but in a format that needs
+     * the comment exist but in a format that needs
      * to be transformed using htmlspecialchars()
      *
      * @param $arr
