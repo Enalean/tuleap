@@ -29,6 +29,8 @@ var Codendi_RTE_Light = Class.create({
             var toggle = Builder.node('span', {'class': 'rte_toggle'});
             toggle.appendChild(document.createTextNode(' Rich text editor '));
 
+            // Must use Event.observe(toggle... instead of toggle.observe(...
+            // Otherwise IE cannot manage it. Oo
             Event.observe(toggle, 'click', this.toggle.bindAsEventListener(this));
 
             $(element+'_label').appendChild(toggle);
