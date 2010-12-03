@@ -721,7 +721,29 @@ function getUsedFields() {
       return false;
     }
   }
-  
+
+    /**
+     * After checking if the comment exist check again to verify if
+     * the comment doesn't exist but in a format that needs
+     * to be transformed using htmlspecialchars()
+     *
+     * @param $arr
+     * @param $art_id
+     *
+     * @return Boolean
+     */
+    function checkCommentExistWithCSVImport($arr,$artifact_id) {
+        $comment = htmlspecialchars($arr['comment']);
+        $sql = "SELECT new_value FROM artifact_history WHERE artifact_id = ". db_ei($artifact_id);
+        $result = db_query($sql);
+        while ($row = db_fetch_array($result)) {
+            if ($this->canApplyHtmlSpecialChars($row['new_value']) && htmlspecialchars($row['new_value']) == $comment) {
+                return true;
+            }
+        }
+        return false;
+    }
+
   function getUserManager() {
       return UserManager::instance();
   }

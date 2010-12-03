@@ -715,11 +715,13 @@ class Artifact extends Error {
 			}	
             
             if ( ! $artifact_import->checkCommentExist($arr, $this->getID())) {
-                $comment  = htmlspecialchars($arr['comment']);
-                $sql="insert into artifact_history(artifact_id,field_name,old_value,new_value,mod_by,email,date,type) ".
-		    	    "VALUES (". db_ei($this->getID()) .",'comment','','". db_es($comment) ."','". db_ei($user_id) ."','". db_es($email) ."','". db_ei($arr['date']) ."','". db_ei($arr['type']) ."')";
-				
-                db_query($sql);
+                if (!$artifact_import->checkCommentExistWithCSVImport($arr, $this->getID())) {
+                    $comment  = htmlspecialchars($arr['comment']);
+                    $sql="insert into artifact_history(artifact_id,field_name,old_value,new_value,mod_by,email,date,type) ".
+		    	         "VALUES (". db_ei($this->getID()) .",'comment','','". db_es($comment) ."','". db_ei($user_id) ."','". db_es($email) ."','". db_ei($arr['date']) ."','". db_ei($arr['type']) ."')";
+
+                    db_query($sql);
+                }
             }
 
 		}
