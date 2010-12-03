@@ -65,12 +65,7 @@ class GitPHP_GitExe
 	{
 		$binary = GitPHP_Config::GetInstance()->GetValue('gitbin');
 		if (empty($binary)) {
-			// try to pick a reasonable default
-			if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
-				$this->binary = 'C:\\Progra~1\\Git\\bin\\git.exe';
-			} else {
-				$this->binary = 'git';
-			}
+			$this->binary = GitPHP_GitExe::DefaultBinary();
 		} else {
 			$this->binary = $binary;
 		}
@@ -221,6 +216,36 @@ class GitPHP_GitExe
 		}
 
 		return true;
+	}
+
+	/**
+	 * DefaultBinary
+	 *
+	 * Gets the default binary for the platform
+	 *
+	 * @access public
+	 * @static
+	 * @return string binary
+	 */
+	public static function DefaultBinary()
+	{
+		if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+			// windows
+
+			$arch = php_uname('m');
+			if (strpos($arch, '64') !== false) {
+				// match x86_64 and x64 (64 bit)
+				// C:\Program Files (x86)\Git\bin\git.exe
+				return 'C:\\Progra~2\\Git\\bin\\git.exe';
+			} else {
+				// 32 bit
+				// C:\Program Files\Git\bin\git.exe
+				return 'C:\\Progra~1\\Git\\bin\\git.exe';
+			}
+		} else {
+			// *nix, just use PATH
+			return 'git';
+		}
 	}
 
 }

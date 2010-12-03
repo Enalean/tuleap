@@ -197,4 +197,34 @@ class GitPHP_DiffExe
 		unset($obj);
 		return $ret;
 	}
+
+	/**
+	 * DefaultBinary
+	 *
+	 * Gets the default binary for the platform
+	 *
+	 * @access public
+	 * @static
+	 * @return string binary
+	 */
+	public static function DefaultBinary()
+	{
+		if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+			// windows
+
+			$arch = php_uname('m');
+			if (strpos($arch, '64') !== false) {
+				// match x86_64 and x64 (64 bit)
+				// C:\Program Files (x86)\Git\bin\diff.exe
+				return 'C:\\Progra~2\\Git\\bin\\diff.exe';
+			} else {
+				// 32 bit
+				// C:\Program Files\Git\bin\diff.exe
+				return 'C:\\Progra~1\\Git\\bin\\diff.exe';
+			}
+		} else {
+			// *nix, just use PATH
+			$this->binary = 'diff';
+		}
+	}
 }
