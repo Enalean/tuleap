@@ -197,11 +197,11 @@ class ArtifactHtml extends Artifact {
                     $field_html->fieldBox('',$group_artifact_id,$field->getDefaultValue(),true,$Language->getText('global','none')).'<BR>';
                 }
                 $html .= '<span id="tracker_artifact_comment_label"><b>'.$Language->getText('tracker_include_artifact','add_comment').'</b></span>';
-                $html .= '<TEXTAREA NAME="comment" id="tracker_artifact_comment" ROWS="10" style="width:98%" WRAP="SOFT"></TEXTAREA>';
+                $html .= '<TEXTAREA NAME="comment" id="tracker_artifact_comment" ROWS="10" style="width:99%" WRAP="SOFT"></TEXTAREA>';
             } else {
                 if ($pv == 0) {
                     $html .= '<span id="tracker_artifact_comment_label"><b>'.$Language->getText('tracker_include_artifact','add_comment').'</b></span>';
-                    $html .= '<TEXTAREA NAME="comment" id="tracker_artifact_comment" ROWS="10" style="width:98%" WRAP="SOFT"></TEXTAREA>';
+                    $html .= '<TEXTAREA NAME="comment" id="tracker_artifact_comment" ROWS="10" style="width:99%" WRAP="SOFT"></TEXTAREA>';
                 }
             }
             if (!user_isloggedin() && ($pv == 0)) {
