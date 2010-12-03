@@ -726,13 +726,14 @@ function getUsedFields() {
      * After checking if the comment exist check again to verify if
      * the comment exist but in a format that needs
      * to be transformed using htmlspecialchars()
+     * This case is very well explained in the comment of ArtifactImport::canApplyHtmlSpecialChars()
      *
      * @param $arr
      * @param $art_id
      *
      * @return Boolean
      */
-    function checkCommentExistWithCSVImport($arr,$artifact_id) {
+    function checkCommentExistInLeagacyFormat($arr,$artifact_id) {
         if (!$artifact_id || $artifact_id == 0 || $artifact_id == '0') return false;
 
         $comment = htmlspecialchars($arr['comment']);
