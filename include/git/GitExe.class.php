@@ -219,6 +219,25 @@ class GitPHP_GitExe
 	}
 
 	/**
+	 * Valid
+	 *
+	 * Tests if this executable is valid
+	 *
+	 * @access public
+	 * @return boolean true if valid
+	 */
+	public function Valid()
+	{
+		if (empty($this->binary))
+			return false;
+
+		$code = 0;
+		$out = exec($this->binary . ' --version', $tmp, $code);
+
+		return $code == 0;
+	}
+
+	/**
 	 * DefaultBinary
 	 *
 	 * Gets the default binary for the platform

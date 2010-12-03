@@ -66,6 +66,19 @@ class GitPHP_DiffExe
 	}
 
 	/**
+	 * GetBinary
+	 *
+	 * Gets the binary for this executable
+	 *
+	 * @return string binary
+	 * @access public
+	 */
+	public function GetBinary()
+	{
+		return $this->binary;
+	}
+
+	/**
 	 * GetUnified
 	 *
 	 * Gets whether diff is running in unified mode
@@ -174,6 +187,25 @@ class GitPHP_DiffExe
 		$args[] = $toFile;
 
 		return shell_exec($this->binary . ' ' . implode(' ', $args));
+	}
+
+	/**
+	 * Valid
+	 *
+	 * Tests if this executable is valid
+	 *
+	 * @access public
+	 * @return boolean true if valid
+	 */
+	public function Valid()
+	{
+		if (empty($this->binary))
+			return false;
+
+		$code = 0;
+		$out = exec($this->binary . ' --version', $tmp, $code);
+
+		return $code == 0;
 	}
 
 	/**
