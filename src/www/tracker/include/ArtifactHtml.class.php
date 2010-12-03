@@ -227,7 +227,7 @@ class ArtifactHtml extends Artifact {
             }";
             $html .= '</script>';
             $html .= '</div>';
-            $html .=  $this->showFollowUpComments($group_id,$pv, Artifact::OUTPUT_BROWSER);
+            $html .=  $this->showFollowUpComments($group_id,$pv);
             
             $title  = $Language->getText('tracker_include_artifact','follow_ups').' ';
             $title .= '<script type="text/javascript">';

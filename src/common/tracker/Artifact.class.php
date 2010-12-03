@@ -35,9 +35,9 @@ class Artifact extends Error {
     const FORMAT_HTML  = 1;
     
     //The diffetents mode of display
-    const OUTPUT_EXPORT  = 0;
-    const OUTPUT_MAIL    = 1;
-    const OUTPUT_BROWSER = 2;
+    const OUTPUT_BROWSER      = 0;
+    const OUTPUT_EXPORT       = 1;
+    const OUTPUT_MAIL_TEXT    = 2;
 
     /**
      * Artifact Type object.
@@ -2585,7 +2585,7 @@ class Artifact extends Error {
 	    // Now display other special fields
         
         // Then output the history of bug comments from newest to oldest
-	    $body .= $this->showFollowUpComments($group_id, 0, self::OUTPUT_MAIL);
+	    $body .= $this->showFollowUpComments($group_id, 0, self::OUTPUT_MAIL_TEXT);
 	    
 	    // Then output the CC list
 	    $body .= "". $GLOBALS['sys_lf'] . $GLOBALS['sys_lf'] . $this->showCCList($group_id, $group_artifact_id, true);
@@ -2732,12 +2732,12 @@ class Artifact extends Error {
          * Return the string to display the follow ups comments 
          *
          * @param Integer   group_id: the group id
-         * @param Integer   output By default set to OUTPUT_EXPORT, the output is an export csv/DB
-         *                         set to OUTPUT_MAIL, the followups will be displayed in mail 
-         *                         else displayed on browser
+         * @param Integer   output By default set to OUTPUT_BROWSER, the output is displayed on browser 
+         *                         set to OUTPUT_MAIL_TEXT, the followups will be sent in mail 
+         *                         else is an export csv/DB
          * @return string the follow-up comments to display in HTML or in ascii mode
          */
-        function showFollowUpComments($group_id, $pv, $output = self::OUTPUT_EXPORT) {
+        function showFollowUpComments($group_id, $pv, $output = self::OUTPUT_BROWSER) {
             $hp = $this->getHTMLPurifier();
             //
             //  Format the comment rows from artifact_history
@@ -2763,7 +2763,7 @@ class Artifact extends Error {
             $out = '';
             
             // Header first
-            if ($output == self::OUTPUT_EXPORT || $output == self::OUTPUT_MAIL) {
+            if ($output == self::OUTPUT_EXPORT || $output == self::OUTPUT_MAIL_TEXT) {
                 $out .= $Language->getText('tracker_include_artifact','follow_ups').$GLOBALS['sys_lf'].str_repeat("*",strlen($Language->getText('tracker_include_artifact','follow_ups')));
             } else {
                 if ($rows > 0) {
@@ -2809,7 +2809,7 @@ class Artifact extends Error {
                     $comment_type = '['.SimpleSanitizer::unsanitize($comment_type).']';
                 }
                 
-                if ($output == self::OUTPUT_EXPORT || $output == self::OUTPUT_MAIL) {
+                if ($output == self::OUTPUT_EXPORT || $output == self::OUTPUT_MAIL_TEXT) {
                     $fmt = $GLOBALS['sys_lf'] . $GLOBALS['sys_lf'] ."------------------------------------------------------------------". $GLOBALS['sys_lf'].
                         $Language->getText('tracker_import_utils','date').": %-30s".$Language->getText('global','by').": %s". $GLOBALS['sys_lf'] ."%s";
                     //The mail body
@@ -3297,7 +3297,7 @@ class Artifact extends Error {
             return util_unconvert_htmlspecialchars($value);
         } else {
             $hp = $this->getHTMLPurifier();
-            if ($output == self::OUTPUT_MAIL) {
+            if ($output == self::OUTPUT_MAIL_TEXT) {
                 if ($isHtml == 1){
                     $commentText = $hp->purify(util_unconvert_htmlspecialchars($value), CODENDI_PURIFIER_STRIP_HTML);
                 } else {
