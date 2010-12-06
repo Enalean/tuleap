@@ -26,7 +26,7 @@ var Codendi_RTE_Light = Class.create({
         // If there is an element named after the editor's id + label add
         // a toggler on it
         if ($(element+'_label')) {
-            var toggle = Builder.node('span', {'class': 'rte_toggle'});
+            var toggle = Builder.node('a', {'class': 'rte_toggle', href: '#'});
             toggle.appendChild(document.createTextNode(' Rich text editor '));
 
             // Must use Event.observe(toggle... instead of toggle.observe(...
