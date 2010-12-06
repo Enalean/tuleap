@@ -2753,7 +2753,7 @@ class Artifact extends Error {
         
             // No followup comment -> return now
             if ($rows <= 0) {
-                        if ($output == self::OUTPUT_EXPORT || $output == self::OUTPUT_MAIL)
+                        if ($output == self::OUTPUT_EXPORT || $output == self::OUTPUT_MAIL_TEXT)
                             $out = $GLOBALS['sys_lf'].$GLOBALS['sys_lf']." ".$Language->getText('tracker_import_utils','no_followups').$GLOBALS['sys_lf'];
                         else
                             $out = '<H4>'.$Language->getText('tracker_import_utils','no_followups').'</H4>';
