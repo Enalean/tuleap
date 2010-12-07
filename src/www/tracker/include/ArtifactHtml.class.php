@@ -1094,20 +1094,41 @@ class ArtifactHtml extends Artifact {
         $group = $this->ArtifactType->getGroup();
         $group_artifact_id = $this->ArtifactType->getID();
         $group_id = $group->getGroupId();
+        $followUp = $this->getFollowUpDetails($comment_id);
         echo '<H2>'.$GLOBALS['Language']->getText('tracker_edit_comment','upd_followup').'</H2>';
         echo '<FORM ACTION="/tracker/?group_id='.(int)$group_id.'&atid='.(int)$group_artifact_id.'&func=updatecomment" METHOD="post">
         <SPAN ID="followup_update_label"></SPAN>
         <INPUT TYPE="hidden" NAME="artifact_history_id" VALUE="'.(int)$comment_id.'">
         <INPUT TYPE="hidden" NAME="artifact_id" VALUE="'.(int)$this->getID().'">
-        <P><TEXTAREA NAME="followup_update" ID="followup_update" ROWS="10"  style="width:100%" WRAP="SOFT">'. $hp->purify(util_unconvert_htmlspecialchars($this->getFollowup($comment_id)), CODENDI_PURIFIER_CONVERT_HTML) .'</TEXTAREA>
+        <P><TEXTAREA NAME="followup_update" ID="followup_update" ROWS="10"  style="width:100%" WRAP="SOFT">'. $hp->purify(util_unconvert_htmlspecialchars($followUp['new_value']), CODENDI_PURIFIER_CONVERT_HTML) .'</TEXTAREA>
         <P><INPUT TYPE="submit" VALUE="'. $GLOBALS['Language']->getText('global', 'btn_submit').'">
         </FORM>';
+        
+        if ($followUp['format'] == self::FORMAT_HTML) {
+            $format = 'html';
+        } else {
+            $format = 'text';
+        }
+        
+        $js = '
+        document.observe("dom:loaded", function() {
+            new Codendi_RTE_Light_Tracker_FollowUp("followup_update", "'.$format.'");
+        });';
+        $GLOBALS['HTML']->includeFooterJavascriptFile('/scripts/tiny_mce/tiny_mce.js');
+        $GLOBALS['HTML']->includeFooterJavascriptSnippet($js);
     }
-    
+
+    /**
+     * Output the raw follow-up comment
+     *
+     * @param Integer $comment_id Id of the follow-up comment
+     *
+     * @return void
+     */
     function displayFollowupComment($comment_id) {
         echo util_unconvert_htmlspecialchars($this->getFollowup($comment_id));
     }
-    
+
     /**
     * displayRSS
     * 

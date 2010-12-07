@@ -45,15 +45,6 @@ echo '<div id="tracker_toolbar_clear"></div>';
 // 
 $ah->displayEditFollowupComment($request->get('artifact_history_id'));
 
-$GLOBALS['HTML']->includeFooterJavascriptFile('/scripts/tiny_mce/tiny_mce.js');
-
-echo '<script type="text/javascript">
-    document.observe("dom:loaded", function() {
-        new Codendi_RTE_Light_Tracker_FollowUp("followup_update");
-    });
-</script>';
-
-// Display footer page
 $ath->footer($params);
 
 ?>

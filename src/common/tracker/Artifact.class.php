@@ -1554,18 +1554,37 @@ class Artifact extends Error {
         return db_query($sql);
     }
 
+    /**
+     * Get follow-up comment text
+     * 
+     * @param Integer $comment_id
+     * 
+     * @return String
+     */
     function getFollowup($comment_id) {
-    
-        $sql = 'SELECT new_value FROM artifact_history'
-			.' WHERE (field_name="comment" OR field_name LIKE "lbl_%_comment")'
-			.' AND artifact_history_id='. db_ei($comment_id) 
-			.' AND new_value <> ""';
-        $res = db_query($sql); 
-	$new_value = db_result($res,0,'new_value');
-	return $new_value;
-	
+        $res = $this->getFollowUpDetails($comment_id);
+        return $res['new_value'];
     }
-    
+
+    /**
+     * Get all details of a follow-up comment
+     * 
+     * @param Integer $comment_id
+     * 
+     * @return Array
+     */
+    function getFollowUpDetails($comment_id) {
+        $sql = 'SELECT * FROM artifact_history'
+        .' WHERE (field_name="comment" OR field_name LIKE "lbl_%_comment")'
+        .' AND artifact_history_id='. db_ei($comment_id)
+        .' AND new_value <> ""';
+        $res = db_query($sql);
+        if ($res && !db_error($res) && db_numrows($res) == 1) {
+            return db_fetch_array($res);
+        }
+        return false;
+    }
+
     /**
      * Return the follow ups 
      *
