@@ -36,6 +36,7 @@ class Combined {
             '/scripts/codendi/LayoutManager.js',
             '/scripts/autocomplete.js',
             '/scripts/codendi/RichTextEditor.js',
+            '/scripts/codendi/Tracker.js',
         );
         return $arr;
     }

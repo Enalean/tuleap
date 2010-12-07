@@ -208,24 +208,6 @@ class ArtifactHtml extends Artifact {
                 $html .= $Language->getText('tracker_include_artifact','not_logged_in','/account/login.php?return_to='.urlencode($_SERVER['REQUEST_URI']));
                 $html .= '<br><input type="text" name="email" maxsize="100" size="50"/><p>';
             }
-            $html .= '<script type="text/javascript">';
-            $html .= "function tracker_quote_comment(who, element) {
-                var textarea = $('tracker_artifact_comment');
-                if (textarea && element) {
-                    var str = element.textContent ? element.textContent : element.innerText;
-                    if (textarea.value.length >= 1 && textarea.value.substring(textarea.value.length - 1) != '\\n') {
-                        textarea.value += '\\n';
-                    }
-                    if (textarea.value.length >= 1 && textarea.value.substring(textarea.value.length - 2, textarea.value.length - 1) != '\\n') {
-                        textarea.value += '\\n';
-                    }
-                    textarea.value += who +':\\n> ';
-                    textarea.value += str.replace(/\\n/gi, '\\n> ');
-                    textarea.value += '\\n';
-                    textarea.scrollTop = textarea.scrollHeight;
-                }
-            }";
-            $html .= '</script>';
             $html .= '</div>';
             $html .=  $this->showFollowUpComments($group_id,$pv);
             
