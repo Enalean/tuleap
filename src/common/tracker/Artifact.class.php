@@ -2901,7 +2901,7 @@ class Artifact extends Error {
                     }
                     $user_quoted = addslashes(addslashes($user_quoted));
                     if ($pv == 0) {
-                        $out .= '<script type="text/javascript">document.write(\'<a href="#quote" onclick="tracker_quote_comment(\\\''. $user_quoted .'\\\', $(\\\'comment_'. (int)$comment_id .'_content\\\')); return false;" title="quote">';
+                        $out .= '<script type="text/javascript">document.write(\'<a href="#quote" onclick="tracker_quote_comment(\\\''. $user_quoted .'\\\', \\\''. (int)$comment_id .'\\\'); return false;" title="quote">';
                         $out .= $GLOBALS['HTML']->getImage('ic/quote.png', array('border' => 0, 'alt' => 'quote'));
                         $out .= '</a>\');</script>';
                     }
