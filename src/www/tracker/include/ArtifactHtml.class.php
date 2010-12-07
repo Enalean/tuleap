@@ -1104,6 +1104,9 @@ class ArtifactHtml extends Artifact {
         </FORM>';
     }
     
+    function displayFollowupComment($comment_id) {
+        echo util_unconvert_htmlspecialchars($this->getFollowup($comment_id));
+    }
     
     /**
     * displayRSS

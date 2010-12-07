@@ -21,16 +21,38 @@
 function tracker_quote_comment(who, element) {
     var textarea = $('tracker_artifact_comment');
     if (textarea && element) {
-        var str = element.textContent ? element.textContent : element.innerText;
-        if (textarea.value.length >= 1 && textarea.value.substring(textarea.value.length - 1) != '\\n') {
-            textarea.value += '\\n';
+        if ($('comment_format_html').checked) {
+            // Get the artifact id
+            var ahi = element.id.sub('comment_', '');
+            ahi = ahi.sub('_content', '');
+
+            // Get current query parameters
+            var qs = new String(document.location);
+            var queryParams = qs.toQueryParams();
+
+            // Build Ajax request
+            var url = '?func=getcomment';
+            url    += '&aid='+queryParams['aid'];
+            url    += '&artifact_history_id='+ahi;
+            new Ajax.Request(url, {
+                onSuccess: function (response) {
+                    textarea.value += who +":\n";
+                    textarea.value += "<blockquote>\n"+response.responseText+"\n</blockquote>\n";
+                }
+            });
+        } else {
+            var str = element.textContent ? element.textContent : element.innerText;
+            if (textarea.value.length >= 1 && textarea.value.substring(textarea.value.length - 1) != "\n") {
+                textarea.value += "\n";
+            }
+            if (textarea.value.length >= 1 && textarea.value.substring(textarea.value.length - 2, textarea.value.length - 1) != "\n") {
+                textarea.value += "\n";
+            }
+
+            textarea.value += who +":\n> ";
+            textarea.value += str.replace(/\\n/gi, "\n> ");
+            textarea.value += "\n";
         }
-        if (textarea.value.length >= 1 && textarea.value.substring(textarea.value.length - 2, textarea.value.length - 1) != '\\n') {
-            textarea.value += '\\n';
-        }
-        textarea.value += who +':\\n> ';
-        textarea.value += str.replace(/\\n/gi, '\\n> ');
-        textarea.value += '\\n';
         textarea.scrollTop = textarea.scrollHeight;
     }
 }

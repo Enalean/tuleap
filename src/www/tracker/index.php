@@ -791,7 +791,21 @@ if ( $func == 'gotoid' ) {
 	    break;
 	
 	}
-        
+
+        case 'getcomment': {
+            if (!user_isloggedin()) {
+                exit_not_logged_in();
+                return;
+            }
+            $ah = new ArtifactHtml($ath, $aid);
+            if ($ah) {
+                require('./get_comment.php');
+            } else {
+                exit_error($Language->getText('global','error'),$Language->getText('tracker_index', 'not_create_art'));
+            }
+            break;
+        }
+
         case 'import' : {
 	   if ( !user_isloggedin()) {
 	     exit_not_logged_in();
