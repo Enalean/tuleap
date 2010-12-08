@@ -197,12 +197,12 @@ class ArtifactHtml extends Artifact {
                     $field_html->fieldBox('',$group_artifact_id,$field->getDefaultValue(),true,$Language->getText('global','none')).'<BR>';
                 }
                 $html .= '<b>'.$Language->getText('tracker_include_artifact','add_comment').'</b>';
-                $html .= '<P><SPAN ID="tracker_artifact_comment_label"></SPAN></P>';
+                $html .= '<DIV ID="tracker_artifact_comment_label"></DIV>';
                 $html .= '<TEXTAREA NAME="comment" id="tracker_artifact_comment" ROWS="10" style="width:99%" WRAP="SOFT"></TEXTAREA>';
             } else {
                 if ($pv == 0) {
                     $html .= '<b>'.$Language->getText('tracker_include_artifact','add_comment').'</b>';
-                    $html .= '<P><SPAN ID="tracker_artifact_comment_label"></SPAN></P>';
+                    $html .= '<DIV ID="tracker_artifact_comment_label"></DIV>';
                     $html .= '<TEXTAREA NAME="comment" id="tracker_artifact_comment" ROWS="10" style="width:99%" WRAP="SOFT"></TEXTAREA>';
                 }
             }
@@ -627,15 +627,15 @@ class ArtifactHtml extends Artifact {
                 $html .= '<P><B>'.$Language->getText('tracker_include_artifact','comment_type').'</B>'.
                 $field_html->fieldBox('',$group_artifact_id,$field->getDefaultValue(),true,$Language->getText('global','none')).'<BR>';
             }
-            // This span id used just to show the toggle of html format
-            $html .= '<SPAN ID="follow_up_comment_label"></SPAN>';
+            // This div id used just to show the toggle of html format
+            $html .= '<DIV ID="follow_up_comment_label"></DIV>';
             $html .= '<TEXTAREA NAME="follow_up_comment" ID="follow_up_comment" ROWS="10"  style="width:100%" WRAP="SOFT">';
             $html .=  $hp->purify($Language->getText('tracker_include_artifact','is_copy',array($this->ArtifactType->getItemName(),$this->ArtifactType->getItemName().' #'.$this->getID())), CODENDI_PURIFIER_CONVERT_HTML) ;
             $html .= '</TEXTAREA>';
         } else {
             if ($pv == 0) {
                 $html .= '<b>'.$Language->getText('tracker_include_artifact','add_comment').'</b>';
-                $html .= '<P><SPAN ID="follow_up_comment_label"></SPAN></P>';
+                $html .= '<DIV ID="follow_up_comment_label"></DIV>';
                 $html .= '<TEXTAREA NAME="follow_up_comment" ID="follow_up_comment" ROWS="10"  style="width:100%" WRAP="SOFT">'. $hp->purify($Language->getText('tracker_include_artifact','is_copy',array($this->ArtifactType->getItemName(),$this->ArtifactType->getItemName().' #'.$this->getID())), CODENDI_PURIFIER_CONVERT_HTML) .'</TEXTAREA>';
             }
         }
@@ -1100,7 +1100,7 @@ class ArtifactHtml extends Artifact {
         $followUp = $this->getFollowUpDetails($comment_id);
         echo '<H2>'.$GLOBALS['Language']->getText('tracker_edit_comment','upd_followup').'</H2>';
         echo '<FORM ACTION="/tracker/?group_id='.(int)$group_id.'&atid='.(int)$group_artifact_id.'&func=updatecomment" METHOD="post">
-        <SPAN ID="followup_update_label"></SPAN>
+        <DIV ID="followup_update_label"></DIV>
         <INPUT TYPE="hidden" NAME="artifact_history_id" VALUE="'.(int)$comment_id.'">
         <INPUT TYPE="hidden" NAME="artifact_id" VALUE="'.(int)$this->getID().'">
         <P><TEXTAREA NAME="followup_update" ID="followup_update" ROWS="10"  style="width:100%" WRAP="SOFT">'. $hp->purify(util_unconvert_htmlspecialchars($followUp['new_value']), CODENDI_PURIFIER_CONVERT_HTML) .'</TEXTAREA>
