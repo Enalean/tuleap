@@ -186,5 +186,11 @@ class Codendi_HTMLPurifierTest extends UnitTestCase {
         $p->setReturnValue('getReferenceManager', $rm);
         $this->assertEqual('link to art #1', $p->makeLinks('art #1', 1));
     }
+
+    function testPurifierLight() {
+        $p = Codendi_HTMLPurifier::instance();
+        $this->assertEqual("foo\nbar", $p->purify("foo\nbar", CODENDI_PURIFIER_LIGHT));
+        $this->assertEqual("foo\nbar", $p->purify("foo\r\nbar", CODENDI_PURIFIER_LIGHT));
+    }
 }
 ?>
