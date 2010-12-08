@@ -196,11 +196,13 @@ class ArtifactHtml extends Artifact {
                     $html .= '<P><B>'.$Language->getText('tracker_include_artifact','comment_type').'</B>'.
                     $field_html->fieldBox('',$group_artifact_id,$field->getDefaultValue(),true,$Language->getText('global','none')).'<BR>';
                 }
-                $html .= '<span id="tracker_artifact_comment_label"><b>'.$Language->getText('tracker_include_artifact','add_comment').'</b></span>';
+                $html .= '<b>'.$Language->getText('tracker_include_artifact','add_comment').'</b>';
+                $html .= '<P><SPAN ID="tracker_artifact_comment_label"></SPAN></P>';
                 $html .= '<TEXTAREA NAME="comment" id="tracker_artifact_comment" ROWS="10" style="width:99%" WRAP="SOFT"></TEXTAREA>';
             } else {
                 if ($pv == 0) {
-                    $html .= '<span id="tracker_artifact_comment_label"><b>'.$Language->getText('tracker_include_artifact','add_comment').'</b></span>';
+                    $html .= '<b>'.$Language->getText('tracker_include_artifact','add_comment').'</b>';
+                    $html .= '<P><SPAN ID="tracker_artifact_comment_label"></SPAN></P>';
                     $html .= '<TEXTAREA NAME="comment" id="tracker_artifact_comment" ROWS="10" style="width:99%" WRAP="SOFT"></TEXTAREA>';
                 }
             }
@@ -632,7 +634,8 @@ class ArtifactHtml extends Artifact {
             $html .= '</TEXTAREA>';
         } else {
             if ($pv == 0) {
-                $html .= '<SPAN ID="follow_up_comment_label"><b>'.$Language->getText('tracker_include_artifact','add_comment').'</b></SPAN>';
+                $html .= '<b>'.$Language->getText('tracker_include_artifact','add_comment').'</b>';
+                $html .= '<P><SPAN ID="follow_up_comment_label"></SPAN></P>';
                 $html .= '<TEXTAREA NAME="follow_up_comment" ID="follow_up_comment" ROWS="10"  style="width:100%" WRAP="SOFT">'. $hp->purify($Language->getText('tracker_include_artifact','is_copy',array($this->ArtifactType->getItemName(),$this->ArtifactType->getItemName().' #'.$this->getID())), CODENDI_PURIFIER_CONVERT_HTML) .'</TEXTAREA>';
             }
         }

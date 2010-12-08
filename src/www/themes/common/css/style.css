@@ -1230,6 +1230,7 @@ ul.ServiceMenu li.current {
     background-repeat:   no-repeat;
     background-position: 2px 1px;
     background-image:    url('../images/ic/rte.png');
+    float:               left
 }
 /* }}} */
 
