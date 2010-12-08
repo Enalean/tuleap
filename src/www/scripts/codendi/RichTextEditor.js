@@ -81,7 +81,13 @@ var Codendi_RTE_Light_Tracker_FollowUp = Class.create(Codendi_RTE_Light, {
         $super(element);
 
         var label = $(element+'_label');
-        
+
+        // This span contains comment format selection buttons
+        var span = Builder.node('span', {'class' : 'comment_format'});
+        var bold = document.createElement("b");
+        bold.appendChild(document.createTextNode("Comment format : "));
+        span.appendChild(bold);
+
         // Add a radio button that tells that the content format is text
         // The value is defined in Artifact class.
         var text_button = Builder.node('input', {'name'     : 'comment_format',
@@ -89,8 +95,8 @@ var Codendi_RTE_Light_Tracker_FollowUp = Class.create(Codendi_RTE_Light, {
                                                  'value'    : '0',
                                                  'checked'  : 'checked',
                                                  'id'       : 'comment_format_text'});
-        label.appendChild(text_button);
-        label.appendChild(document.createTextNode('text'));
+        span.appendChild(text_button);
+        span.appendChild(document.createTextNode('Text'));
 
         // Add a radio button that tells that the content format is HTML
         // The value is defined in Artifact class.
@@ -98,9 +104,15 @@ var Codendi_RTE_Light_Tracker_FollowUp = Class.create(Codendi_RTE_Light, {
                                                  'type' : 'radio',
                                                  'value': '1',
                                                  'id'   : 'comment_format_html'});
-        label.appendChild(html_button);
-        label.appendChild(document.createTextNode('HTML'));
-        
+        span.appendChild(html_button);
+        span.appendChild(document.createTextNode('HTML'));
+
+        label.appendChild(span);
+
+        // This span is used to clear the CSS of the pervious span
+        var span_clear = Builder.node('span', {'class' : 'comment_format_clear'});
+        label.appendChild(span_clear);
+
         if (format == 'html') {
             this.switchButtonToHtml();
         } else {

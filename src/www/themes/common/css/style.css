@@ -1230,4 +1230,12 @@ ul.ServiceMenu li.current {
     background-repeat:   no-repeat;
     background-position: 2px 1px;
     background-image:    url('../images/ic/rte.png');
+}
 /* }}} */
+
+.comment_format {
+    float : right;
+}
+.comment_format_clear {
+    clear:both;
+}
