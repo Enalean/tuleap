@@ -745,13 +745,13 @@ class Artifact extends Error {
     */
     function updateFollowupComment($comment_id,$comment_txt,&$changes, $comment_format=self::FORMAT_TEXT) {
         if ($this->userCanEditFollowupComment($comment_id)) {
-            $sql = 'SELECT field_name, new_value FROM artifact_history'
+            $sql = 'SELECT field_name, new_value, type FROM artifact_history'
                 .' WHERE artifact_id='. db_ei($this->getID()) 
                 .' AND artifact_history_id='. db_ei($comment_id) 
                 .' AND (field_name="comment" OR field_name LIKE "lbl_%_comment")';
             $qry = db_query($sql);
             $new_value = db_result($qry,0,'new_value');
-    
+            $comment_type_id = db_result($qry,0,'type');
             if ($new_value == $comment_txt) {
                 //comment doesn't change
                 return false;
@@ -765,7 +765,7 @@ class Artifact extends Error {
                     $comment_lbl = "lbl_".$comment_id."_comment";    
                 }
                 //now add new comment entry
-                $this->addHistory($comment_lbl,$new_value,htmlspecialchars($comment_txt),false,false,$comment_id,$comment_format);
+                $this->addHistory($comment_lbl,$new_value,htmlspecialchars($comment_txt), $comment_type_id,false,$comment_id,$comment_format);
                 $changes['comment']['del'] = $new_value;
                 $changes['comment']['add'] = $comment_txt;
                 $reference_manager =& ReferenceManager::instance();
