@@ -2896,7 +2896,7 @@ class Artifact extends Error {
                     
                     $out .= ' </span>';
                     $out .= '<span class="followup_comment_title_date">';
-                    $out .= '<span title="'. format_date($GLOBALS['Language']->getText('system', 'datefmt'),db_result($orig_date, 0, 'date')) .'">'.  $hp->purify(util_time_ago_in_words(db_result($orig_date, 0, 'date')), CODENDI_PURIFIER_CONVERT_HTML)  .'</span>';
+                    $out .= html_time_ago(db_result($orig_date, 0, 'date'));
                     $out .= '</span>';
                     if ($field_name != "comment") {
                         $out .= "  (".$GLOBALS['Language']->getText('tracker_include_artifact','last_edited')." ";
@@ -2908,7 +2908,7 @@ class Artifact extends Error {
                         }
                         $out .= ' </span>';
                         $out .= '<span class="followup_comment_title_date">';
-                        $out .= '<span title="'. format_date($GLOBALS['Language']->getText('system', 'datefmt'),db_result($result, $i, 'date')) .'">'.  $hp->purify(util_time_ago_in_words(db_result($result, $i, 'date')), CODENDI_PURIFIER_CONVERT_HTML)  .'</span>';
+                        $out .= html_time_ago(db_result($result, $i, 'date'));
                         $out .= '</span>'.")";
                     }
                     $out .= "\n</div><!-- followup_comment_title -->\n";
