@@ -1085,20 +1085,33 @@ class ArtifactHtml extends Artifact {
     }
 
     /**
-         * Display the follow-up comment update form	 
-         *
-         * @param comment_id: id of the follow-up comment
-         * 
-         *
-         * @return void
-         */
+     * Display the follow-up comment update form
+     *
+     * @param comment_id: id of the follow-up comment
+     *
+     * @return void
+     */
     function displayEditFollowupComment($comment_id) {
-         $hp = Codendi_HTMLPurifier::instance();
+        $hp = Codendi_HTMLPurifier::instance();
         $group = $this->ArtifactType->getGroup();
         $group_artifact_id = $this->ArtifactType->getID();
         $group_id = $group->getGroupId();
         $followUp = $this->getFollowUpDetails($comment_id);
-        echo '<H2>'.$GLOBALS['Language']->getText('tracker_edit_comment','upd_followup').'</H2>';
+        
+        $result_fields     = $GLOBALS['art_field_fact']->getAllUsedFields();
+        $summary           = $this->getValue('summary');
+        $artTitle          = '[ '. $hp->purify($this->ArtifactType->getItemName(), CODENDI_PURIFIER_CONVERT_HTML);
+        $field_artifact_id = $result_fields['artifact_id'];
+        if ($field_artifact_id->userCanRead($group_id, $group_artifact_id, user_getid())) {
+            $artTitle .= " #". $hp->purify($this->getID(), CODENDI_PURIFIER_CONVERT_HTML) ;
+        }
+        $artTitle .= ' ] '.$hp->purify(util_unconvert_htmlspecialchars($summary), CODENDI_PURIFIER_CONVERT_HTML);
+        $link      = '<a href="?func=detail&aid='.$this->getID().'&atid='.$group_artifact_id.'&group_id='.$group_id.'">'.$artTitle.'</a>';
+        
+        echo '<H2>'.$link.' - '.$GLOBALS['Language']->getText('tracker_edit_comment','upd_followup').' #'.$comment_id.'</H2>';
+
+        echo '<p>'.$GLOBALS['Language']->getText('tracker_edit_comment','upd_followup_details', array(html_time_ago($followUp['date']), UserHelper::instance()->getLinkOnUserFromUserId($followUp['mod_by']))).'</p>';
+        
         echo '<FORM ACTION="/tracker/?group_id='.(int)$group_id.'&atid='.(int)$group_artifact_id.'&func=updatecomment" METHOD="post">
         <INPUT TYPE="hidden" NAME="artifact_history_id" VALUE="'.(int)$comment_id.'">
         <INPUT TYPE="hidden" NAME="artifact_id" VALUE="'.(int)$this->getID().'">

@@ -44,6 +44,7 @@ tracker_group_selection	all_proj	tous les projets
 # Script: SF/www/tracker/edit_comment.php
 #
 tracker_edit_comment	upd_followup	Editer le commentaire
+tracker_edit_comment	upd_followup_details	Commentaire soumit $1 par $2
 #
 #-----------------------------------------------
 # Script: SF/www/tracker/import_admin.php
