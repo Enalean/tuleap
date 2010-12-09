@@ -1225,18 +1225,15 @@ ul.ServiceMenu li.current {
 
 /* {{{ Rich Text Editor*/
 .rte_toggle {
-    margin-left:         1em;
     padding-left:        20px;
     background-repeat:   no-repeat;
-    background-position: 2px 1px;
     background-image:    url('../images/ic/rte.png');
-    float:               left
+    float:               left;
+}
+.rte_format {
+    float: right;
+}
+.rte_clear {
+    clear: both;
 }
 /* }}} */
-
-.comment_format {
-    float : right;
-}
-.comment_format_clear {
-    clear:both;
-}

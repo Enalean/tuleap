@@ -83,7 +83,7 @@ var Codendi_RTE_Light_Tracker_FollowUp = Class.create(Codendi_RTE_Light, {
         var label = $(element+'_label');
 
         // This span contains comment format selection buttons
-        var div = Builder.node('div', {'class' : 'comment_format'});
+        var div = Builder.node('div', {'class' : 'rte_format'});
         var bold = document.createElement("b");
         bold.appendChild(document.createTextNode("Comment format : "));
         div.appendChild(bold);
@@ -110,7 +110,7 @@ var Codendi_RTE_Light_Tracker_FollowUp = Class.create(Codendi_RTE_Light, {
         label.appendChild(div);
 
         // This div is used to clear the CSS of the pervious div
-        var div_clear = Builder.node('div', {'class' : 'comment_format_clear'});
+        var div_clear = Builder.node('div', {'class' : 'rte_clear'});
         label.appendChild(div_clear);
 
         if (format == 'html') {
