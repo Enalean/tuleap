@@ -90,7 +90,6 @@ class Codendi_HTMLPurifier {
         $config = $this->getCodendiConfig();
         $config->set('HTML', 'Allowed', $this->getLightConfigMarkups());
         $config->set('AutoFormat','Linkify', true);
-        $config->set('AutoFormat','AutoParagraph', true);
         return $config;
     }
     
