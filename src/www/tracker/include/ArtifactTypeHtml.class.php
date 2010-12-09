@@ -2424,8 +2424,8 @@ EOS;
                      echo '<P><B>'.$Language->getText('tracker_include_artifact','comment_type').'</B>'.
                           $field_html->fieldBox('',$atid,$field->getDefaultValue(),true,$Language->getText('global','none')).'<BR>';
                 }
-                // This span id used just to show the toggle of html format
-                echo '<SPAN ID="tracker_artifact_comment_label"></SPAN>';
+                // This div id used just to show the toggle of html format
+                echo '<DIV ID="tracker_artifact_comment_label"></DIV>';
                 echo '<TEXTAREA NAME="comment" ID="tracker_artifact_comment" ROWS="10"  style="width:100%" WRAP="SOFT"></TEXTAREA><p>';
                                 
         

@@ -82,7 +82,7 @@ var Codendi_RTE_Light_Tracker_FollowUp = Class.create(Codendi_RTE_Light, {
 
         var label = $(element+'_label');
 
-        // This span contains comment format selection buttons
+        // This div contains comment format selection buttons
         var div = Builder.node('div', {'class' : 'rte_format'});
         var bold = document.createElement("b");
         bold.appendChild(document.createTextNode("Comment format : "));
