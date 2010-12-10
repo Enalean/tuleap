@@ -33,7 +33,7 @@ class CLI_Action_Tracker_AddComment extends CLI_Action {
         ));
         $this->addParam(array(
             'name'           => 'format',
-            'description'    => '--format=<format>            The format within the comment will be posted (0=>text/1=>HTML).',
+            'description'    => '--format=<format>            The format within the comment will be posted (text/html).',
             'parameters'     => array('format'),
         ));
     }
@@ -56,8 +56,12 @@ class CLI_Action_Tracker_AddComment extends CLI_Action {
         return true;
     }
     function validate_format(&$format) {
-        if (!$format) {
-            exit_error("You must specify the format of the comment using the --format parameter");
+        if ($format == 'text') {
+            $format = 0;
+        } elseif ($format == 'html') {
+            $format = 1;
+        } else {
+            exit_error("You must specify the format of the comment using the --format parameter, the value maybe 'text' or 'html'");
         }
         return true;
     }
