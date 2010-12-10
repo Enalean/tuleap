@@ -3219,10 +3219,10 @@ function updateArtifactFollowUp($sessionKey, $group_id, $group_artifact_id, $art
         } elseif ($a->isError()) {
             return new SoapFault(get_artifact_fault, $a->getErrorMessage(), 'updateArtifactFollowUp');
         }
-        
 
-        
-         if(!$a->updateFollowupComment($artifact_history_id, $comment, $changes)){
+        $res = $a->getFollowUpDetails($artifact_history_id);
+
+         if(!$a->updateFollowupComment($artifact_history_id, $comment, $changes, $res['format'])){
             return new SoapFault(update_artifact_followup_fault, $a->getErrorMessage(), 'updateArtifactFollowUp');
         }else{
             
