@@ -63,7 +63,7 @@ var Codendi_RTE_Light = Class.create({
         });
         this.rte = true;
     },
-    toggle: function() {
+    toggle: function(event) {
         if (!this.rte) {
             this.init_rte();
         } else {
@@ -73,6 +73,7 @@ var Codendi_RTE_Light = Class.create({
                 tinyMCE.execCommand("mceRemoveControl", false, this.element.id);
             }
         }
+        event.stop();
     }
 });
 
@@ -121,9 +122,9 @@ var Codendi_RTE_Light_Tracker_FollowUp = Class.create(Codendi_RTE_Light, {
         
     },
 
-    toggle: function ($super) {
+    toggle: function ($super, event) {
         this.switchButtonToHtml();
-        $super();
+        $super(event);
     },
 
     /**
