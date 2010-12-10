@@ -3299,32 +3299,30 @@ class Artifact extends Error {
     }
 
     /**
-     * 
      * Format the comment text to a given format according to parameters
-     * 
-     * @param Integer $groupId
-     * @param Boolean $isHtml
-     * @param String  $value
-     * @param Boolean $ascii
-     * @param Boolean $export
-     * 
+     *
+     * @param Integer $groupId       Project id
+     * @param Boolean $commentFormat $value's format
+     * @param String  $value         Comment content
+     * @param Boolean $output        Output format
+     *
      * @return String
      */
-    public function formatFollowUp($groupId, $isHtml, $value, $output) {
+    public function formatFollowUp($groupId, $commentFormat, $value, $output) {
         $commentText = '';
         if ($output == self::OUTPUT_EXPORT) {
             return util_unconvert_htmlspecialchars($value);
         } else {
             $hp = $this->getHTMLPurifier();
             if ($output == self::OUTPUT_MAIL_TEXT) {
-                if ($isHtml == 1){
+                if ($commentFormat == self::FORMAT_HTML){
                     $commentText = $hp->purify(util_unconvert_htmlspecialchars($value), CODENDI_PURIFIER_STRIP_HTML);
                 } else {
                     $commentText = $value;
                 }
                 $commentText = util_unconvert_htmlspecialchars($commentText);
             } else {
-                if ($isHtml == 1) {
+                if ($commentFormat == self::FORMAT_HTML) {
                     $level = CODENDI_PURIFIER_LIGHT;
                 } else {
                     $level = CODENDI_PURIFIER_BASIC;
