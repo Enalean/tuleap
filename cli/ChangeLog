@@ -1,0 +1,3 @@
+1.3.3
+	* Module 'tracker': Add '--format' in 'addComment' (choose text or HTML for
+	  comment format
