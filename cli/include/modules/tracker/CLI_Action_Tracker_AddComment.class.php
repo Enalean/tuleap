@@ -33,7 +33,7 @@ class CLI_Action_Tracker_AddComment extends CLI_Action {
         ));
         $this->addParam(array(
             'name'           => 'format',
-            'description'    => '--format=<format>            The format within the comment will be posted (text/HTML).',
+            'description'    => '--format=<format>            The format within the comment will be posted (0=>text/1=>HTML).',
             'parameters'     => array('format'),
         ));
     }
