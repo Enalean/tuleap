@@ -448,6 +448,72 @@ Problem also occurs for new bugs posted to a project *with* a New Bugs address. 
         $comments = $aitv->splitFollowUpComments($followup_comments);
         $this->assertEqual(count($comments), 4 + 1); // + 1 because the follow-up comments header is returned
     }
+
+    function testCanApplyHtmlSpecialCharsWithBaseTranslation() {
+        $ai = new ArtifactImportTestVersion($this);
+        $this->assertTrue($ai->canApplyHtmlSpecialChars('"'));
+        $this->assertTrue($ai->canApplyHtmlSpecialChars('<'));
+        $this->assertTrue($ai->canApplyHtmlSpecialChars('>'));
+        $this->assertTrue($ai->canApplyHtmlSpecialChars('&'));
+        $this->assertFalse($ai->canApplyHtmlSpecialChars("'"));
+    }
+
+    function testCanApplyHtmlSpecialCharsWithTranslatedChars() {
+        $ai = new ArtifactImportTestVersion($this);
+        $this->assertFalse($ai->canApplyHtmlSpecialChars('&quot;'));
+        $this->assertFalse($ai->canApplyHtmlSpecialChars('&lt;'));
+        $this->assertFalse($ai->canApplyHtmlSpecialChars('&gt;'));
+        $this->assertFalse($ai->canApplyHtmlSpecialChars('&amp;'));
+        $this->assertTrue($ai->canApplyHtmlSpecialChars('&#039;'));
+    }
+
+    function testCanApplyHtmlSpecialCharsWithAdvancedHTMLTricks() {
+        $ai = new ArtifactImportTestVersion($this);
+        $this->assertFalse($ai->canApplyHtmlSpecialChars("&lt;p&gt;this is 'my test'&lt;/p&gt;"));
+        $this->assertTrue($ai->canApplyHtmlSpecialChars("<p>this is 'my test'</p>"));
+        $this->assertEqual("&lt;p&gt;this is 'my test'&lt;/p&gt;", htmlspecialchars("<p>this is 'my test'</p>"));
+
+        $this->assertFalse($ai->canApplyHtmlSpecialChars("&lt;p&gt;&amp;lt;toto&amp;gt;&lt;/p&gt;"));
+        $this->assertTrue($ai->canApplyHtmlSpecialChars("<p>&lt;toto&gt;</p>"));
+        $this->assertEqual("&lt;p&gt;&amp;lt;toto&amp;gt;&lt;/p&gt;", htmlspecialchars("<p>&lt;toto&gt;</p>"));
+
+        $this->assertFalse($ai->canApplyHtmlSpecialChars("test&lt;br/&gt;"));
+        $this->assertTrue($ai->canApplyHtmlSpecialChars("test<br/>"));
+        $this->assertEqual("test&lt;br/&gt;", htmlspecialchars("test<br/>"));
+    }
+
+    /**
+     * This case is impossible to catch so it's a known error.
+     * 
+     * It might happens if, on the web, the user entered *as text* HTML entities 
+     * (for instance &lt;), then exported it in CSV and finaly imported it with
+     * CSV as well.
+     */
+    function testUnCatchableStrings() {
+        $ai = new ArtifactImportTestVersion($this);
+
+        $this->assertFalse($ai->canApplyHtmlSpecialChars("Test&amp;lt;"));
+        $this->assertEqual("Test&amp;lt;", htmlspecialchars("Test&lt;"));
+        // Should be assertTrue here
+        $this->assertFalse($ai->canApplyHtmlSpecialChars("Test&lt;"));
+    }
+
+    function testCanApplyHtmlSpecialCharsWithRealTextTricks() {
+        $ai = new ArtifactImportTestVersion($this);
+        $this->assertTrue($ai->canApplyHtmlSpecialChars('"Description"'));
+        $this->assertFalse($ai->canApplyHtmlSpecialChars("Following today's Codex framework update, it looks better in the sense I now have access to all charts."));
+        $this->assertTrue($ai->canApplyHtmlSpecialChars('&&lt;'));
+        $this->assertTrue($ai->canApplyHtmlSpecialChars('&&gt;'));
+        $this->assertTrue($ai->canApplyHtmlSpecialChars('&&amp;'));
+        $this->assertTrue($ai->canApplyHtmlSpecialChars('&&quot;'));
+    }
+
+    function testCheckCommentExistInLegacyFormat() {
+        $artImp = new ArtifactImportTestVersion($this);
+        $artId = 12237;
+        $parsedFollow = array('comment' => '<pre> testing issue </pre>');
+        $this->assertTrue($artImp->checkCommentExistInLegacyFormat($parsedFollow,$artId));
+    }
 }
 
 
@@ -457,7 +523,9 @@ Problem also occurs for new bugs posted to a project *with* a New Bugs address. 
 
 //function user_getname() {return 'schneide2';}
 
-function db_query($string) {return false;}
+function db_query($string) {return true;}
+function db_numrows($string) {return 1;}
+function db_fetch_array($string) {return array ('new_value' => '<pre> testing issue </pre>');}
 function db_ei($string) {return false;}
 function db_es($string) {return false;}
 

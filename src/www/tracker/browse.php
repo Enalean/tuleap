@@ -363,6 +363,7 @@ $params=array('title'=>$_title,
 
 // Display the menus
 $ath->header($params);
+echo '<div id="tracker_toolbar_clear"></div>';
 
 $em =& EventManager::instance();
 $pref_params = array('group_id'   => $group_id,

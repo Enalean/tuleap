@@ -40,6 +40,7 @@ $params=array('title'=>$group->getPublicName().' '.$ath->getName().' '.$Language
               'help' => 'ArtifactMassChange.html');
 
 $ath->header($params);
+echo '<div id="tracker_toolbar_clear"></div>';
 
 $submit = $request->get('submit_btn');
 if (strstr($submit,$Language->getText('tracker_masschange_detail','selected_items'))) {
@@ -61,6 +62,8 @@ if (strstr($submit,$Language->getText('tracker_masschange_detail','selected_item
   $ath->displayMassChange($ro, null,$query,$art_report_html, $advsrch);
 }
 
+$GLOBALS['HTML']->includeFooterJavascriptFile('/scripts/tiny_mce/tiny_mce.js');
+
 echo '<script type="text/javascript">'. "\n";
 $armh =& new ArtifactRulesManagerHtml($ath);
 $armh->displayRulesAsJavascript();
@@ -68,6 +71,9 @@ $armh->displayRulesAsJavascript();
 echo "new UserAutoCompleter('tracker_cc',
                           '".util_get_dir_image_theme()."',
                           true);\n";
+echo "document.observe(\"dom:loaded\", function() {
+    new Codendi_RTE_Light_Tracker_FollowUp(\"tracker_artifact_comment\");
+});";
 echo "</script>\n";
 
 // Display footer page

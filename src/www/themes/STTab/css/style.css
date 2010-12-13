@@ -54,6 +54,11 @@ a:hover {
 	color: blue; 
 }
 
+fieldset {
+    border: 1px solid rgb(196,196,196);
+    margin-bottom: 1em;
+}
+
 /******** priorities **********/
 .priora { background-color: #dadada; }
 .priorb { background-color: #dad0d0; }
@@ -595,40 +600,6 @@ table.release tr td img {
     font-weight:bold;
 }
 /* }}} */
-
-/* {{{ follow-up comments */
-.followup_comment {
-    border-bottom:1px solid #ccc;
-}
-.followup_comment_title {
-}
-.followup_comment_title_user {
-    font-size:1.1em; 
-    font-weight:bold; 
-    color:#999;
-}
-.followup_comment_title_edited_user {    
-    font-weight:bold; 
-    color:#999;
-}
-.followup_comment_title_date {
-    font-size:0.95em; 
-    color:#666;
-}
-.followup_comment_content {
-    padding-left:40px;
-    margin-bottom:20px;
-    margin-top:10px;
-}
-/* }}} */
-
-.artifact fieldset {
-    margin-bottom:10px;
-}
-.artifact fieldset legend {
-    font-size:1.3em;
-    font-weight: bold;
-}
 
 /* {{{ Date Picker */
 

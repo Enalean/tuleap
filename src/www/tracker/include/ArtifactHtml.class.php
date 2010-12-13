@@ -58,10 +58,24 @@ class ArtifactHtml extends Artifact {
 
             
             $result_fieldsets = $art_fieldset_fact->getAllFieldSetsContainingUsedFields();
+            $summary          = $this->getValue('summary');
             
+            echo '<div id="tracker_toolbar_specific">';
+            if ($this->ArtifactType->allowsCopy()) {
+              echo "<A HREF='?func=copy&aid=".(int)$this->getID()."&group_id=".(int)$group_id."&atid=".(int)$group_artifact_id."'><img src=\"".util_get_image_theme("ic/copy.png")."\" />&nbsp;".$Language->getText('tracker_include_artifact','copy_art')."</A>";
+            }
+            echo "&nbsp;&nbsp;<A HREF='?func=detail&aid=".(int)$this->getID()."&group_id=".(int)$group_id."&atid=".(int)$group_artifact_id."&pv=1' target='_blank'><img src='".util_get_image_theme("ic/printer.png")."' border='0'>&nbsp;".$Language->getText('global','printer_version')."</A>";
+            echo '</div>'.PHP_EOL;
+            echo '<div id="tracker_toolbar_clear"></div>'.PHP_EOL;
+            
+            $artTitle = '[ '. $hp->purify($this->ArtifactType->getItemName(), CODENDI_PURIFIER_CONVERT_HTML);
+            $field_artifact_id = $result_fields['artifact_id'];
+            if ($field_artifact_id->userCanRead($group_id, $group_artifact_id, $user_id)) {
+                $artTitle .= " #". $hp->purify($this->getID(), CODENDI_PURIFIER_CONVERT_HTML) ;
+            }
+            $artTitle .= ' ] '.$hp->purify(util_unconvert_htmlspecialchars($summary), CODENDI_PURIFIER_CONVERT_HTML);
             
             // First display some  internal fields 
-            $summary = $this->getValue('summary');
             echo '
             <FORM ACTION="" METHOD="POST" enctype="multipart/form-data" NAME="artifact_form">
             <INPUT TYPE="hidden" name="MAX_FILE_SIZE" value="'. $sys_max_size_attachment.'">';
@@ -79,27 +93,9 @@ class ArtifactHtml extends Artifact {
             <INPUT TYPE="HIDDEN" NAME="aid" VALUE="'.(int)$this->getID().'">';
             echo '<TABLE><TR><TD class="artifact">';
             
-            echo '<table width="100%"><tr><td><H2>[ '. $hp->purify($this->ArtifactType->getItemName(), CODENDI_PURIFIER_CONVERT_HTML) ;
-            $field_artifact_id = $result_fields['artifact_id'];
-            if ($field_artifact_id->userCanRead($group_id, $group_artifact_id, $user_id)) {
-                echo " #". $hp->purify($this->getID(), CODENDI_PURIFIER_CONVERT_HTML) ;
-            }
-            echo " ] ". $hp->purify(util_unconvert_htmlspecialchars($summary), CODENDI_PURIFIER_CONVERT_HTML) ."</H2>";
-            echo "</TD>";
-            
-            if ( $pv == 0) {
-                echo "<TD align='right'><A HREF='?func=detail&aid=".(int)$this->getID()."&group_id=".(int)$group_id."&atid=".(int)$group_artifact_id."&pv=1' target='_blank'><img src='".util_get_image_theme("msg.png")."' border='0'>&nbsp;".$Language->getText('global','printer_version')."</A></TD></TR>";
-            }
-            echo '</table>';
-            
-            if ($this->ArtifactType->allowsCopy()) {
-              echo "<div><A HREF='?func=copy&aid=".(int)$this->getID()."&group_id=".(int)$group_id."&atid=".(int)$group_artifact_id."'>".$Language->getText('tracker_include_artifact','copy_art')."</A></div><br />";
-            }
-        
             $html = '';
             $html .= '<TABLE width="100%"><TR>';
             $pm = ProjectManager::instance();
-            $html .= '<TD align="left"><B>'.$Language->getText('tracker_include_artifact','project').'</B>&nbsp;</td><td COLSPAN="'.($columns_number-1).'">'. $hp->purify(util_unconvert_htmlspecialchars($pm->getProject($group_id)->getPublicName()), CODENDI_PURIFIER_CONVERT_HTML) .'</TD>';
             
             // Now display the variable part of the field list (depend on the project)
             
@@ -143,22 +139,22 @@ class ArtifactHtml extends Artifact {
                 
                 // We display the fieldset only if there is at least one field inside that we can display
                 if ($display_fieldset) {
-                    $html .= '<TR><TD COLSPAN="'.(int)$columns_number.'">&nbsp</TD></TR>';
-                    $html .= '<TR class="boxtitle"><TD class="left" COLSPAN="'.(int)$columns_number.'">&nbsp;<span title="'. $hp->purify(SimpleSanitizer::unsanitize($result_fieldset->getDescriptionText()), CODENDI_PURIFIER_CONVERT_HTML) .'">'. $hp->purify(SimpleSanitizer::unsanitize($result_fieldset->getLabel()), CODENDI_PURIFIER_CONVERT_HTML) .'</span></TD></TR>';
+                    //$html .= '<TR><TD COLSPAN="'.(int)$columns_number.'">&nbsp</TD></TR>';
+                    $html .= '<TR class="boxtitle artifact_fieldset"><TD class="left" COLSPAN="'.(int)$columns_number.'">&nbsp;<span title="'. $hp->purify(SimpleSanitizer::unsanitize($result_fieldset->getDescriptionText()), CODENDI_PURIFIER_CONVERT_HTML) .'">'. $hp->purify(SimpleSanitizer::unsanitize($result_fieldset->getLabel()), CODENDI_PURIFIER_CONVERT_HTML) .'</span></TD></TR>';
                     $html .= $fieldset_html;
                 }
 
             }
             
-            $html .= '<tr><td><p><font color="red">*</font>: '.
+            $html .= '<tr><td><font color="red">*</font>: '.
                  $Language->getText('tracker_include_type','fields_requ').
-                 '</p></td></tr></TABLE>';
+                 '</td></tr></TABLE>';
 			
 			
             
             echo $this->_getSection(
                 'artifact_section_details',
-                $Language->getText('tracker_include_artifact','details'),
+                $artTitle,
                 $html,
                 true
             );
@@ -201,35 +197,20 @@ class ArtifactHtml extends Artifact {
                     $field_html->fieldBox('',$group_artifact_id,$field->getDefaultValue(),true,$Language->getText('global','none')).'<BR>';
                 }
                 $html .= '<b>'.$Language->getText('tracker_include_artifact','add_comment').'</b>';
-                $html .= '<TEXTAREA NAME="comment" id="tracker_artifact_comment" ROWS="10" style="width:98%" WRAP="SOFT"></TEXTAREA>';
+                $html .= '<DIV ID="tracker_artifact_comment_label"></DIV>';
+                $html .= '<TEXTAREA NAME="comment" id="tracker_artifact_comment" ROWS="10" style="width:99%" WRAP="SOFT"></TEXTAREA>';
             } else {
                 if ($pv == 0) {
                     $html .= '<b>'.$Language->getText('tracker_include_artifact','add_comment').'</b>';
-                    $html .= '<TEXTAREA NAME="comment" id="tracker_artifact_comment" ROWS="10" style="width:98%" WRAP="SOFT"></TEXTAREA>';
+                    // Non authenticated user can submit only in text format
+                    //$html .= '<DIV ID="tracker_artifact_comment_label"></DIV>';
+                    $html .= '<TEXTAREA NAME="comment" id="tracker_artifact_comment" ROWS="10" style="width:99%" WRAP="SOFT"></TEXTAREA>';
                 }
             }
             if (!user_isloggedin() && ($pv == 0)) {
                 $html .= $Language->getText('tracker_include_artifact','not_logged_in','/account/login.php?return_to='.urlencode($_SERVER['REQUEST_URI']));
                 $html .= '<br><input type="text" name="email" maxsize="100" size="50"/><p>';
             }
-            $html .= '<script type="text/javascript">';
-            $html .= "function tracker_quote_comment(who, element) {
-                var textarea = $('tracker_artifact_comment');
-                if (textarea && element) {
-                    var str = element.textContent ? element.textContent : element.innerText;
-                    if (textarea.value.length >= 1 && textarea.value.substring(textarea.value.length - 1) != '\\n') {
-                        textarea.value += '\\n';
-                    }
-                    if (textarea.value.length >= 1 && textarea.value.substring(textarea.value.length - 2, textarea.value.length - 1) != '\\n') {
-                        textarea.value += '\\n';
-                    }
-                    textarea.value += who +':\\n> ';
-                    textarea.value += str.replace(/\\n/gi, '\\n> ');
-                    textarea.value += '\\n';
-                    textarea.scrollTop = textarea.scrollHeight;
-                }
-            }";
-            $html .= '</script>';
             $html .= '</div>';
             $html .=  $this->showFollowUpComments($group_id,$pv);
             
@@ -407,7 +388,7 @@ class ArtifactHtml extends Artifact {
         * @param  help  
         */
         function _getSection($id, $title, $content, $is_open, $alternate_text = '') {
-            $html =  '<fieldset><legend>';
+            $html =  '<fieldset><legend id="'.$id.'_legend">';
             if ($is_open) {
                 $sign = 'minus';
                 $display = '';
@@ -424,7 +405,7 @@ class ArtifactHtml extends Artifact {
                     'title'  => $GLOBALS['Language']->getText('tracker_include_artifact', 'toggle')
                 )
             );
-            $html .= $title .'</legend><div id="'. $id .'_alternate" style="display:none;"></div>';
+            $html .= ' '.$title .'</legend><div id="'. $id .'_alternate" style="display:none;"></div>';
             $html .= '<script type="text/javascript">';
             $html .= "Event.observe($('". $id ."_toggle'), 'click', function (evt) {
                 var element = $('$id');
@@ -647,13 +628,16 @@ class ArtifactHtml extends Artifact {
                 $html .= '<P><B>'.$Language->getText('tracker_include_artifact','comment_type').'</B>'.
                 $field_html->fieldBox('',$group_artifact_id,$field->getDefaultValue(),true,$Language->getText('global','none')).'<BR>';
             }
-            $html .= '<TEXTAREA NAME="follow_up_comment" ROWS="10"  style="width:100%" WRAP="SOFT">';
+            // This div id used just to show the toggle of html format
+            $html .= '<DIV ID="follow_up_comment_label"></DIV>';
+            $html .= '<TEXTAREA NAME="follow_up_comment" ID="follow_up_comment" ROWS="10"  style="width:100%" WRAP="SOFT">';
             $html .=  $hp->purify($Language->getText('tracker_include_artifact','is_copy',array($this->ArtifactType->getItemName(),$this->ArtifactType->getItemName().' #'.$this->getID())), CODENDI_PURIFIER_CONVERT_HTML) ;
             $html .= '</TEXTAREA>';
         } else {
             if ($pv == 0) {
                 $html .= '<b>'.$Language->getText('tracker_include_artifact','add_comment').'</b>';
-                $html .= '<TEXTAREA NAME="follow_up_comment" ROWS="10"  style="width:100%" WRAP="SOFT">'. $hp->purify($Language->getText('tracker_include_artifact','is_copy',array($this->ArtifactType->getItemName(),$this->ArtifactType->getItemName().' #'.$this->getID())), CODENDI_PURIFIER_CONVERT_HTML) .'</TEXTAREA>';
+                $html .= '<DIV ID="follow_up_comment_label"></DIV>';
+                $html .= '<TEXTAREA NAME="follow_up_comment" ID="follow_up_comment" ROWS="10"  style="width:100%" WRAP="SOFT">'. $hp->purify($Language->getText('tracker_include_artifact','is_copy',array($this->ArtifactType->getItemName(),$this->ArtifactType->getItemName().' #'.$this->getID())), CODENDI_PURIFIER_CONVERT_HTML) .'</TEXTAREA>';
             }
         }
         if (!user_isloggedin() && ($pv == 0)) {
@@ -1102,28 +1086,65 @@ class ArtifactHtml extends Artifact {
     }
 
     /**
-         * Display the follow-up comment update form	 
-         *
-         * @param comment_id: id of the follow-up comment
-         * 
-         *
-         * @return void
-         */
+     * Display the follow-up comment update form
+     *
+     * @param comment_id: id of the follow-up comment
+     *
+     * @return void
+     */
     function displayEditFollowupComment($comment_id) {
-         $hp = Codendi_HTMLPurifier::instance();
+        $hp = Codendi_HTMLPurifier::instance();
         $group = $this->ArtifactType->getGroup();
         $group_artifact_id = $this->ArtifactType->getID();
         $group_id = $group->getGroupId();
-        echo '<H2>'.$GLOBALS['Language']->getText('tracker_edit_comment','upd_followup').'</H2>';
+        $followUp = $this->getFollowUpDetails($comment_id);
+        
+        $result_fields     = $GLOBALS['art_field_fact']->getAllUsedFields();
+        $summary           = $this->getValue('summary');
+        $artTitle          = '[ '. $hp->purify($this->ArtifactType->getItemName(), CODENDI_PURIFIER_CONVERT_HTML);
+        $field_artifact_id = $result_fields['artifact_id'];
+        if ($field_artifact_id->userCanRead($group_id, $group_artifact_id, user_getid())) {
+            $artTitle .= " #". $hp->purify($this->getID(), CODENDI_PURIFIER_CONVERT_HTML) ;
+        }
+        $artTitle .= ' ] '.$hp->purify(util_unconvert_htmlspecialchars($summary), CODENDI_PURIFIER_CONVERT_HTML);
+        $link      = '<a href="?func=detail&aid='.$this->getID().'&atid='.$group_artifact_id.'&group_id='.$group_id.'">'.$artTitle.'</a>';
+        
+        echo '<H2>'.$link.' - '.$GLOBALS['Language']->getText('tracker_edit_comment','upd_followup').' #'.$comment_id.'</H2>';
+
+        echo '<p>'.$GLOBALS['Language']->getText('tracker_edit_comment','upd_followup_details', array(html_time_ago($followUp['date']), UserHelper::instance()->getLinkOnUserFromUserId($followUp['mod_by']))).'</p>';
+        
         echo '<FORM ACTION="/tracker/?group_id='.(int)$group_id.'&atid='.(int)$group_artifact_id.'&func=updatecomment" METHOD="post">
         <INPUT TYPE="hidden" NAME="artifact_history_id" VALUE="'.(int)$comment_id.'">
         <INPUT TYPE="hidden" NAME="artifact_id" VALUE="'.(int)$this->getID().'">
-        <P><TEXTAREA NAME="followup_update" ROWS="10"  style="width:100%" WRAP="SOFT">'. $hp->purify(util_unconvert_htmlspecialchars($this->getFollowup($comment_id)), CODENDI_PURIFIER_CONVERT_HTML) .'</TEXTAREA>
+        <P><DIV ID="followup_update_label"></DIV><TEXTAREA NAME="followup_update" ID="followup_update" ROWS="10"  style="width:100%" WRAP="SOFT">'. $hp->purify(util_unconvert_htmlspecialchars($followUp['new_value']), CODENDI_PURIFIER_CONVERT_HTML) .'</TEXTAREA>
         <P><INPUT TYPE="submit" VALUE="'. $GLOBALS['Language']->getText('global', 'btn_submit').'">
         </FORM>';
+        
+        if ($followUp['format'] == self::FORMAT_HTML) {
+            $format = 'html';
+        } else {
+            $format = 'text';
+        }
+        
+        $js = '
+        document.observe("dom:loaded", function() {
+            new Codendi_RTE_Light_Tracker_FollowUp("followup_update", "'.$format.'");
+        });';
+        $GLOBALS['HTML']->includeFooterJavascriptFile('/scripts/tiny_mce/tiny_mce.js');
+        $GLOBALS['HTML']->includeFooterJavascriptSnippet($js);
     }
-    
-    
+
+    /**
+     * Output the raw follow-up comment
+     *
+     * @param Integer $comment_id Id of the follow-up comment
+     *
+     * @return void
+     */
+    function displayFollowupComment($comment_id) {
+        echo util_unconvert_htmlspecialchars($this->getFollowup($comment_id));
+    }
+
     /**
     * displayRSS
     * 

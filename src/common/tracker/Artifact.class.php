@@ -31,6 +31,14 @@ require_once('common/mail/Mail.class.php');
  */
 class Artifact extends Error {
 
+    const FORMAT_TEXT  = 0;
+    const FORMAT_HTML  = 1;
+    
+    //The diffetents mode of display
+    const OUTPUT_BROWSER      = 0;
+    const OUTPUT_EXPORT       = 1;
+    const OUTPUT_MAIL_TEXT    = 2;
+
     /**
      * Artifact Type object.
      *
@@ -306,7 +314,7 @@ class Artifact extends Error {
      *
      *  @return int : the artifact_history_id
      */
-    function addHistory ($field,$old_value,$new_value,$type=false,$email=false,$ahid=false) {
+    function addHistory ($field,$old_value,$new_value,$type=false,$email=false,$ahid=false,$comment_format=self::FORMAT_TEXT) {
     	//MLS: add case where we add CC and file_attachment into history for task #240
     	if (!is_object($field)) {
     		// "cc", "attachment", "comment", etc 
@@ -345,8 +353,14 @@ class Artifact extends Error {
                 $fld_type = ',type'; 
                 $val_type = ",'100'";
             }
-        }             
-        
+        }
+
+        // Follow-up comments might have a different format
+        if ($comment_format != self::FORMAT_TEXT && user_isloggedin()) {
+            $fld_type .= ',format';
+            $val_type .= ','.db_ei($comment_format);
+        }
+
         $sql="insert into artifact_history(artifact_id,field_name,old_value,new_value,mod_by,email,date $fld_type) ".
             "VALUES (". db_ei($this->getID()) .",'". db_es($name) ."','". db_es($old_value) ."','". db_es($new_value) ."','". db_ei($user) ."','". db_es($email) ."','".time()."' $val_type)";
         //echo $sql;
@@ -604,7 +618,7 @@ class Artifact extends Error {
      *
      *  @return boolean
      */
-    function addComment($comment,$email=false,&$changes) {
+    function addComment($comment,$email=false,&$changes,$comment_format=self::FORMAT_TEXT) {
                         
         global $art_field_fact,$Language;
 
@@ -614,13 +628,13 @@ class Artifact extends Error {
             // For none project members force the comment type to None (100)
             if ( !user_isloggedin() ) {
                 if ( $email ) {
-                    $this->addHistory('comment', "", htmlspecialchars($comment), 100, $email);
+                    $this->addHistory('comment', "", htmlspecialchars($comment), 100, $email, null, $comment_format);
                 } else {
                     $GLOBALS['Response']->addFeedback('error', $Language->getText('tracker_common_artifact','enter_email'));
                     return false;
                 }
             } else {
-                $this->addHistory('comment', "", htmlspecialchars($comment), 100);
+                $this->addHistory('comment', "", htmlspecialchars($comment), 100, null, null, $comment_format);
             }
             $changes['comment']['add'] = stripslashes($comment);
             $changes['comment']['type'] = $Language->getText('global','none');
@@ -643,7 +657,7 @@ class Artifact extends Error {
      * @param comment (IN) : the comment that the user typed in
      * @param canned_response (IN) : the id of the canned response
      */
-    function addFollowUpComment($comment,$comment_type_id,$canned_response,&$changes) {
+    function addFollowUpComment($comment,$comment_type_id,$canned_response,&$changes,$comment_format=self::FORMAT_TEXT) {
     	global $art_field_fact,$Language;
       	if ($canned_response && $canned_response != 100) {
 	
@@ -660,7 +674,7 @@ class Artifact extends Error {
       	}
       
       	if ($comment != '') {
-        	$this->addHistory('comment', '', htmlspecialchars($comment), $comment_type_id);
+        	$this->addHistory('comment', '', htmlspecialchars($comment), $comment_type_id, false, false, $comment_format);
           	$changes['comment']['add'] = $comment;
 
 			$field = $art_field_fact->getFieldFromName("comment_type_id");
@@ -706,10 +720,13 @@ class Artifact extends Error {
 			}	
             
             if ( ! $artifact_import->checkCommentExist($arr, $this->getID())) {
-                $sql="insert into artifact_history(artifact_id,field_name,old_value,new_value,mod_by,email,date,type) ".
-		    	    "VALUES (". db_ei($this->getID()) .",'comment','','". db_es($arr['comment']) ."','". db_ei($user_id) ."','". db_es($email) ."','". db_ei($arr['date']) ."','". db_ei($arr['type']) ."')";
-				
-                db_query($sql);
+                if (!$artifact_import->checkCommentExistInLegacyFormat($arr, $this->getID())) {
+                    $comment  = htmlspecialchars($arr['comment']);
+                    $sql="insert into artifact_history(artifact_id,field_name,old_value,new_value,mod_by,email,date,type) ".
+		    	         "VALUES (". db_ei($this->getID()) .",'comment','','". db_es($comment) ."','". db_ei($user_id) ."','". db_es($email) ."','". db_ei($arr['date']) ."','". db_ei($arr['type']) ."')";
+
+                    db_query($sql);
+                }
             }
 
 		}
@@ -726,15 +743,15 @@ class Artifact extends Error {
     * 
     * @return boolean
     */
-    function updateFollowupComment($comment_id,$comment_txt,&$changes) {
+    function updateFollowupComment($comment_id,$comment_txt,&$changes, $comment_format=self::FORMAT_TEXT) {
         if ($this->userCanEditFollowupComment($comment_id)) {
-            $sql = 'SELECT field_name, new_value FROM artifact_history'
+            $sql = 'SELECT field_name, new_value, type FROM artifact_history'
                 .' WHERE artifact_id='. db_ei($this->getID()) 
                 .' AND artifact_history_id='. db_ei($comment_id) 
                 .' AND (field_name="comment" OR field_name LIKE "lbl_%_comment")';
             $qry = db_query($sql);
             $new_value = db_result($qry,0,'new_value');
-    
+            $comment_type_id = db_result($qry,0,'type');
             if ($new_value == $comment_txt) {
                 //comment doesn't change
                 return false;
@@ -748,7 +765,7 @@ class Artifact extends Error {
                     $comment_lbl = "lbl_".$comment_id."_comment";    
                 }
                 //now add new comment entry
-                $this->addHistory($comment_lbl,$new_value,htmlspecialchars($comment_txt),false,false,$comment_id);
+                $this->addHistory($comment_lbl,$new_value,htmlspecialchars($comment_txt), $comment_type_id,false,$comment_id,$comment_format);
                 $changes['comment']['del'] = $new_value;
                 $changes['comment']['add'] = $comment_txt;
                 $reference_manager =& ReferenceManager::instance();
@@ -1006,8 +1023,10 @@ class Artifact extends Error {
         // comment text area. 
         $comment = $request->get('comment');
         $comment_type_id = array_key_exists('comment_type_id', $vfl)?$vfl['comment_type_id']:'';
+        $vFormat = new Valid_WhiteList('comment_format', array(self::FORMAT_HTML, self::FORMAT_TEXT));
+        $comment_format = $request->getValidated('comment_format', $vFormat, self::FORMAT_TEXT);
 
-	    $this->addFollowUpComment($comment,$comment_type_id,$canned_response,$changes);
+	    $this->addFollowUpComment($comment,$comment_type_id,$canned_response,$changes,$comment_format);
             
         //
         //  Enter the timestamp if we are changing to closed or declined
@@ -1535,18 +1554,37 @@ class Artifact extends Error {
         return db_query($sql);
     }
 
+    /**
+     * Get follow-up comment text
+     * 
+     * @param Integer $comment_id
+     * 
+     * @return String
+     */
     function getFollowup($comment_id) {
-    
-        $sql = 'SELECT new_value FROM artifact_history'
-			.' WHERE (field_name="comment" OR field_name LIKE "lbl_%_comment")'
-			.' AND artifact_history_id='. db_ei($comment_id) 
-			.' AND new_value <> ""';
-        $res = db_query($sql); 
-	$new_value = db_result($res,0,'new_value');
-	return $new_value;
-	
+        $res = $this->getFollowUpDetails($comment_id);
+        return $res['new_value'];
     }
-    
+
+    /**
+     * Get all details of a follow-up comment
+     * 
+     * @param Integer $comment_id
+     * 
+     * @return Array
+     */
+    function getFollowUpDetails($comment_id) {
+        $sql = 'SELECT * FROM artifact_history'
+        .' WHERE (field_name="comment" OR field_name LIKE "lbl_%_comment")'
+        .' AND artifact_history_id='. db_ei($comment_id)
+        .' AND new_value <> ""';
+        $res = db_query($sql);
+        if ($res && !db_error($res) && db_numrows($res) == 1) {
+            return db_fetch_array($res);
+        }
+        return false;
+    }
+
     /**
      * Return the follow ups 
      *
@@ -1593,7 +1631,7 @@ class Artifact extends Error {
     	$field = $art_field_fact->getFieldFromName('comment_type_id');
     	if ( $field ) {
     		// Look for project specific values first
-    		$sql="SELECT DISTINCT artifact_history.artifact_history_id,artifact_history.artifact_id,artifact_history.field_name,artifact_history.old_value,artifact_history.new_value,artifact_history.date,user.user_name,artifact_history.mod_by,artifact_history.email,artifact_history.type AS comment_type_id,artifact_field_value_list.value AS comment_type ".
+    		$sql="SELECT DISTINCT artifact_history.artifact_history_id, artifact_history.format, artifact_history.artifact_id,artifact_history.field_name,artifact_history.old_value,artifact_history.new_value,artifact_history.date,user.user_name,artifact_history.mod_by,artifact_history.email,artifact_history.type AS comment_type_id,artifact_field_value_list.value AS comment_type ".
     		"FROM artifact_history,artifact_field_value_list,artifact_field,user ".
     		"WHERE artifact_history.artifact_id=". db_ei($this->getID()) ." ".
     		"AND (artifact_history.field_name = 'comment' OR artifact_history.field_name LIKE 'lbl_%_comment') ".
@@ -1611,7 +1649,7 @@ class Artifact extends Error {
     		//echo "sql=".$sql." - rows=".$rows."<br>";
     	} else {
     		// Look for project specific values first
-    		$sql="SELECT DISTINCT artifact_history.artifact_history_id,artifact_history.artifact_id,artifact_history.field_name,artifact_history.old_value,artifact_history.new_value,artifact_history.date,user.user_name,artifact_history.mod_by,artifact_history.email,artifact_history.type AS comment_type_id,null AS comment_type ".
+    		$sql="SELECT DISTINCT artifact_history.artifact_history_id, artifact_history.format, artifact_history.artifact_id,artifact_history.field_name,artifact_history.old_value,artifact_history.new_value,artifact_history.date,user.user_name,artifact_history.mod_by,artifact_history.email,artifact_history.type AS comment_type_id,null AS comment_type ".
     		"FROM artifact_history,user ".
     		"WHERE artifact_history.artifact_id=".$this->getID()." ".
     		"AND (artifact_history.field_name = 'comment' OR artifact_history.field_name LIKE 'lbl_%_comment') ".
@@ -2566,7 +2604,7 @@ class Artifact extends Error {
 	    // Now display other special fields
         
         // Then output the history of bug comments from newest to oldest
-	    $body .= $this->showFollowUpComments($group_id, 0, true);
+	    $body .= $this->showFollowUpComments($group_id, 0, self::OUTPUT_MAIL_TEXT);
 	    
 	    // Then output the CC list
 	    $body .= "". $GLOBALS['sys_lf'] . $GLOBALS['sys_lf'] . $this->showCCList($group_id, $group_artifact_id, true);
@@ -2710,30 +2748,31 @@ class Artifact extends Error {
 
         
         /**
-         * Return the string to display the follow ups comments
+         * Return the string to display the follow ups comments 
          *
-         * @param group_id: the group id
-         * @param ascii: ascii mode
-         *
+         * @param Integer   group_id: the group id
+         * @param Integer   output By default set to OUTPUT_BROWSER, the output is displayed on browser 
+         *                         set to OUTPUT_MAIL_TEXT, the followups will be sent in mail 
+         *                         else is an export csv/DB
          * @return string the follow-up comments to display in HTML or in ascii mode
          */
-        function showFollowUpComments($group_id, $pv, $ascii=false) {
-            $hp = Codendi_HTMLPurifier::instance();
+        function showFollowUpComments($group_id, $pv, $output = self::OUTPUT_BROWSER) {
+            $hp = $this->getHTMLPurifier();
             //
             //  Format the comment rows from artifact_history
             //  
             global $Language;
             
-                $group = $this->ArtifactType->getGroup();
+                //$group = $this->ArtifactType->getGroup();
                 $group_artifact_id = $this->ArtifactType->getID();
-                $group_id = $group->getGroupId();
+                //$group_id = $group->getGroupId();
 
             $result=$this->getFollowups ();
             $rows=db_numrows($result);
         
             // No followup comment -> return now
             if ($rows <= 0) {
-                        if ($ascii)
+                        if ($output == self::OUTPUT_EXPORT || $output == self::OUTPUT_MAIL_TEXT)
                             $out = $GLOBALS['sys_lf'].$GLOBALS['sys_lf']." ".$Language->getText('tracker_import_utils','no_followups').$GLOBALS['sys_lf'];
                         else
                             $out = '<H4>'.$Language->getText('tracker_import_utils','no_followups').'</H4>';
@@ -2743,7 +2782,7 @@ class Artifact extends Error {
             $out = '';
             
             // Header first
-            if ($ascii) {
+            if ($output == self::OUTPUT_EXPORT || $output == self::OUTPUT_MAIL_TEXT) {
                 $out .= $Language->getText('tracker_include_artifact','follow_ups').$GLOBALS['sys_lf'].str_repeat("*",strlen($Language->getText('tracker_include_artifact','follow_ups')));
             } else {
                 if ($rows > 0) {
@@ -2779,6 +2818,9 @@ class Artifact extends Error {
                 $field_name = db_result($result, $i, 'field_name');
                 $orig_subm = $this->getOriginalCommentSubmitter($comment_id);
                 $orig_date = $this->getOriginalCommentDate($comment_id);
+                $value = db_result($result, $i, 'new_value');
+                $isHtml = db_result($result, $i, 'format');
+                
                 
                 if ( ($comment_type_id == 100) ||($comment_type == "") ) {
                     $comment_type = '';
@@ -2786,10 +2828,11 @@ class Artifact extends Error {
                     $comment_type = '['.SimpleSanitizer::unsanitize($comment_type).']';
                 }
                 
-                if ($ascii) {
+                if ($output == self::OUTPUT_EXPORT || $output == self::OUTPUT_MAIL_TEXT) {
                     $fmt = $GLOBALS['sys_lf'] . $GLOBALS['sys_lf'] ."------------------------------------------------------------------". $GLOBALS['sys_lf'].
                         $Language->getText('tracker_import_utils','date').": %-30s".$Language->getText('global','by').": %s". $GLOBALS['sys_lf'] ."%s";
-                    $comment_txt = util_unconvert_htmlspecialchars(db_result($result, $i, 'new_value'));
+                    //The mail body
+                    $comment_txt = $this->formatFollowUp($group_id, $isHtml, $value, $output); 
                     $out .= sprintf($fmt,
                                     format_date(util_get_user_preferences_export_datefmt(),db_result($orig_date, 0, 'date')),
                                     (db_result($orig_subm, 0, 'mod_by')==100?db_result($orig_subm, 0, 'email'):user_getname(db_result($orig_subm, 0, 'mod_by'))),
@@ -2803,8 +2846,9 @@ class Artifact extends Error {
                         $toggle = 'ic/toggle_plus.png';
                     }
                     $out .= "\n".'
-                    <div class="'. util_get_alt_row_color($i) .' followup_comment" id="comment_'. $comment_id .'">
-                        <div class="followup_comment_title" style="float:left;">';
+                    <div class="followup_comment" id="comment_'. $comment_id .'">
+                        <div class="'. util_get_alt_row_color($i) .' followup_comment_header">
+                            <div class="followup_comment_title">';
                     $out .= '<script type="text/javascript">document.write(\'<span>';
                     $out .= $GLOBALS['HTML']->getImage(
                         $toggle, 
@@ -2852,7 +2896,7 @@ class Artifact extends Error {
                     
                     $out .= ' </span>';
                     $out .= '<span class="followup_comment_title_date">';
-                    $out .= '<span title="'. format_date($GLOBALS['Language']->getText('system', 'datefmt'),db_result($orig_date, 0, 'date')) .'">'.  $hp->purify(util_time_ago_in_words(db_result($orig_date, 0, 'date')), CODENDI_PURIFIER_CONVERT_HTML)  .'</span>';
+                    $out .= html_time_ago(db_result($orig_date, 0, 'date'));
                     $out .= '</span>';
                     if ($field_name != "comment") {
                         $out .= "  (".$GLOBALS['Language']->getText('tracker_include_artifact','last_edited')." ";
@@ -2864,11 +2908,11 @@ class Artifact extends Error {
                         }
                         $out .= ' </span>';
                         $out .= '<span class="followup_comment_title_date">';
-                        $out .= '<span title="'. format_date($GLOBALS['Language']->getText('system', 'datefmt'),db_result($result, $i, 'date')) .'">'.  $hp->purify(util_time_ago_in_words(db_result($result, $i, 'date')), CODENDI_PURIFIER_CONVERT_HTML)  .'</span>';
+                        $out .= html_time_ago(db_result($result, $i, 'date'));
                         $out .= '</span>'.")";
                     }
-                    $out .= '</div>';
-                    $out .= '<div style="text-align:right;">';
+                    $out .= "\n</div><!-- followup_comment_title -->\n";
+                    $out .= '<div class="followup_comment_title_toolbar">';
                     if (db_result($orig_subm, 0, 'mod_by')==100) {
                         $user_quoted = db_result($orig_subm, 0, 'email');
                     } else {
@@ -2876,7 +2920,7 @@ class Artifact extends Error {
                     }
                     $user_quoted = addslashes(addslashes($user_quoted));
                     if ($pv == 0) {
-                        $out .= '<script type="text/javascript">document.write(\'<a href="#quote" onclick="tracker_quote_comment(\\\''. $user_quoted .'\\\', $(\\\'comment_'. (int)$comment_id .'_content\\\')); return false;" title="quote">';
+                        $out .= '<script type="text/javascript">document.write(\'<a href="#quote" onclick="tracker_quote_comment(\\\''. $user_quoted .'\\\', \\\''. (int)$comment_id .'\\\'); return false;" title="quote">';
                         $out .= $GLOBALS['HTML']->getImage('ic/quote.png', array('border' => 0, 'alt' => 'quote'));
                         $out .= '</a>\');</script>';
                     }
@@ -2889,13 +2933,14 @@ class Artifact extends Error {
                         $out .= $GLOBALS['HTML']->getImage('ic/close.png', array('border' => 0, 'alt' => $GLOBALS['Language']->getText('tracker_include_artifact','del')));
                         $out .= '</a>';
                     }
-                    $out .= '</div>';
+                    $out .= "\n</div><!-- followup_comment_title_toolbar -->\n";
                     $out .= '<div style="clear:both;"></div>';
+                    $out .= "\n</div><!-- followup_comment_header -->\n";
                     $out .= '<div class="followup_comment_content" '. $style .' id="comment_'. (int)$comment_id .'_content">';
                     if ($comment_type != "") {
                         $out .= '<div class="followup_comment_content_type"><b>'.  $hp->purify($comment_type, CODENDI_PURIFIER_CONVERT_HTML)  .'</b></div>';
                     }
-                    $out .=  $hp->purify(db_result($result, $i, 'new_value'), CODENDI_PURIFIER_LIGHT, $group_id);
+                    $out .= $this->formatFollowUp($group_id, $isHtml, $value, $output); 
                     $out .= '</div>';
                     $out .= '</div>';
                     $out .= '<script type="text/javascript">
@@ -2905,7 +2950,7 @@ class Artifact extends Error {
                     </script>';
                 }
             }
-            if (!$ascii) {
+            if ($output == self::OUTPUT_BROWSER) {
                 if ($rows > 0) {
                     $out .= '<div style="text-align:right">';
                     $out .= '<a href="#expand_all" onclick="tracker_expand_all_comments(); return false;">'.
@@ -2916,7 +2961,7 @@ class Artifact extends Error {
             }
         
             // final touch...
-            $out .= ($ascii ? $GLOBALS['sys_lf'] : "");
+            $out .= (($output != self::OUTPUT_BROWSER) ? $GLOBALS['sys_lf'] : "");
         
             return($out);
                 
@@ -3141,7 +3186,7 @@ class Artifact extends Error {
         function showAttachedFiles ($group_id,$group_artifact_id,$ascii=false, $pv = 0) {
         
             global $Language;
-            $hp = Codendi_HTMLPurifier::instance();
+            $hp = $this->getHtmlPurifier();
             //
             //  show the files attached to this artifact
             //   
@@ -3243,7 +3288,50 @@ class Artifact extends Error {
                 
         return db_query($sql);        
     }
-        
+    
+    /**
+     * Returns an instance of Codendi_HTMLPurifier
+     *
+     * @return Codendi_HTMLPurifier
+     */
+    public function getHTMLPurifier() {
+        return Codendi_HTMLPurifier::instance();
+    }
+
+    /**
+     * Format the comment text to a given format according to parameters
+     *
+     * @param Integer $groupId       Project id
+     * @param Boolean $commentFormat $value's format
+     * @param String  $value         Comment content
+     * @param Boolean $output        Output format
+     *
+     * @return String
+     */
+    public function formatFollowUp($groupId, $commentFormat, $value, $output) {
+        $commentText = '';
+        if ($output == self::OUTPUT_EXPORT) {
+            return util_unconvert_htmlspecialchars($value);
+        } else {
+            $hp = $this->getHTMLPurifier();
+            if ($output == self::OUTPUT_MAIL_TEXT) {
+                if ($commentFormat == self::FORMAT_HTML){
+                    $commentText = $hp->purify(util_unconvert_htmlspecialchars($value), CODENDI_PURIFIER_STRIP_HTML);
+                } else {
+                    $commentText = $value;
+                }
+                $commentText = util_unconvert_htmlspecialchars($commentText);
+            } else {
+                if ($commentFormat == self::FORMAT_HTML) {
+                    $level = CODENDI_PURIFIER_LIGHT;
+                } else {
+                    $level = CODENDI_PURIFIER_BASIC;
+                }
+                $commentText =  $hp->purify(util_unconvert_htmlspecialchars($value), $level, $groupId);
+            }
+            return $commentText;
+        }
+    }
 
 }
 

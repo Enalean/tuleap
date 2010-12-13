@@ -23,9 +23,16 @@
  */
 
 require_once('common/include/Codendi_HTMLPurifier.class.php');
+Mock::generatePartial(
+    'Codendi_HTMLPurifier',
+    'Codendi_HTMLPurifierTestVersion2',
+    array('getReferenceManager')
+);
+require_once('common/reference/ReferenceManager.class.php');
+Mock::generate('ReferenceManager');
 
-// Need a TestVersion to by pass '_makeLinks' method (call to utils_make_links
-// that perform DB calls).
+
+// Need a TestVersion to by pass 'makeLinks' method.
 // Need to create this testversion by hand because with Mock object there is no
 // way to tell them "return the parameter as is".
 // This method to be used only when mandatory (when the is a utils_make_links call).
@@ -40,8 +47,14 @@ class Codendi_HTMLPurifierTestVersion extends Codendi_HTMLPurifier {
         }
         return self::$Codendi_HTMLPurifier_testversion_instance;
     }
-    function _makeLinks($str, $gid) {
+    function makeLinks($str) {
         return $str;
+    }
+}
+
+class ReferenceManagerTestMakeLinks extends MockReferenceManager {
+    function insertReferences(&$data) {
+        $data = 'link to art #1';
     }
 }
 
@@ -68,10 +81,17 @@ class Codendi_HTMLPurifierTest extends UnitTestCase {
     }
 
     function testStripLightForibdden() {
-        $p =& Codendi_HTMLPurifierTestVersion::instance();
+        $p = new Codendi_HTMLPurifierTestVersion2($this);
+        $rm = new MockReferenceManager();
+        $val = 'bugtest #123';
+        $rm->setReturnValue('insertReferences', $val);
+        $p->setReturnValue('getReferenceManager', $rm);
+
         $this->assertEqual('', $p->purify('<script>alert(1);</script>', CODENDI_PURIFIER_LIGHT));
         $this->assertEqual('Bolded', $p->purify('<s>Bolded</s>', CODENDI_PURIFIER_LIGHT));
+        $this->assertEqual($val, $p->purify('bugtest #123', CODENDI_PURIFIER_LIGHT, 102));
         $this->assertEqual('', $p->purify('<form name="test" method="post" action="?"><input type="submit" /></form>', CODENDI_PURIFIER_LIGHT));
+        $this->assertEqual('<a href="ftp://test.com">ftp://test.com</a>', $p->purify('ftp://test.com', CODENDI_PURIFIER_LIGHT));
         $this->anchorJsInjection(CODENDI_PURIFIER_LIGHT);
     }
 
@@ -147,6 +167,30 @@ class Codendi_HTMLPurifierTest extends UnitTestCase {
         $p = Codendi_HTMLPurifierTestVersion::instance();
         $this->assertEqual("a<br />\nb", $p->purify("a\nb", CODENDI_PURIFIER_BASIC));
         $this->assertEqual("a\nb", $p->purify("a\nb", CODENDI_PURIFIER_BASIC_NOBR));
+    }
+
+    function testMakeLinks() {
+        $p = new Codendi_HTMLPurifierTestVersion2($this);
+        $this->assertEqual('', $p->makeLinks());
+        $this->assertEqual('<a href="http://www.example.com" target="_blank" target="_new">http://www.example.com</a>', $p->makeLinks('http://www.example.com'));
+        $this->assertEqual('"<a href="http://www.example.com" target="_blank" target="_new">http://www.example.com</a>"', $p->makeLinks('"http://www.example.com"'));
+        $this->assertEqual('\'<a href="http://www.example.com" target="_blank" target="_new">http://www.example.com</a>\'', $p->makeLinks('\'http://www.example.com\''));
+        $this->assertEqual('<<a href="http://www.example.com" target="_blank" target="_new">http://www.example.com</a>>', $p->makeLinks('<http://www.example.com>'));
+        $this->assertEqual(' <a href="http://www.example.com" target="_blank" target="_new">http://www.example.com</a>', $p->makeLinks(' www.example.com'));
+        $this->assertEqual('<a href="mailto:john.doe@example.com" target="_new">john.doe@example.com</a>', $p->makeLinks('john.doe@example.com'));
+        $this->assertEqual('"<a href="mailto:john.doe@example.com" target="_new">john.doe@example.com</a>"', $p->makeLinks('"john.doe@example.com"'));
+        $this->assertEqual('\'<a href="mailto:john.doe@example.com" target="_new">john.doe@example.com</a>\'', $p->makeLinks('\'john.doe@example.com\''));
+        $this->assertEqual('<<a href="mailto:john.doe@example.com" target="_new">john.doe@example.com</a>>', $p->makeLinks('<john.doe@example.com>'));
+
+        $rm = new ReferenceManagerTestMakeLinks();
+        $p->setReturnValue('getReferenceManager', $rm);
+        $this->assertEqual('link to art #1', $p->makeLinks('art #1', 1));
+    }
+
+    function testPurifierLight() {
+        $p = Codendi_HTMLPurifier::instance();
+        $this->assertEqual("foo\nbar", $p->purify("foo\nbar", CODENDI_PURIFIER_LIGHT));
+        $this->assertEqual("foo\nbar", $p->purify("foo\r\nbar", CODENDI_PURIFIER_LIGHT));
     }
 }
 ?>

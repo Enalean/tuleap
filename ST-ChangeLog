@@ -1,8 +1,23 @@
 Version 4.0.16 = Not released yet
+        == New Features ==
+        backlog #113540: Support of <pre> in tracker follow-up comment
+                         * Follow-up comments can be submitted with usage of a subset
+                           of HTML markups: p, br, a, img, ul, ol, li, cite, code, blockquote, strong, em, pre, b, i
+                           This modification comes with a rich text editor in the  follow-up comment text area.
+                           It's possible to add comment in HTML with SOAP and Codendi_CLI too (but no update yet).
+
+                         * Fix wrong behaviour in CSV import/export that was leading to comments duplication.
+                           Known limitations: It's not possible to import follow-up comments in HTML format yet.
+
+                         * Improvement of Artifact edition UI: 
+                           * reduce space "lost" between tracker's toolbar and artifact info.
+                           * rework of follow-up comments layout to improve readability.
+
         == BugFix ==
         backlog #114221: Still have admin privileges on tracker for non members
         backlog #114020: Artifact submitted with the value "None" at the mandatory field
         backlog #114005: Disable notifications when remove user from private project
+        backlog #116806: Lost comment type when editing a follow up
 
 Version 4.0.15 - Friday, 19th november 2010
         == Bugfix ==

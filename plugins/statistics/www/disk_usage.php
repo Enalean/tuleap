@@ -214,12 +214,12 @@ switch ($func) {
 
         echo '<td valign="top">';
         list($timestamp,) = util_date_to_unixtime($startDate);
-        echo (html_field_date('start_date', $startDate, false, 10, 10, 'progress_by_project', false)).'<br /><em>'.util_time_ago_in_words($timestamp).'</em><br />';
+        echo (html_field_date('start_date', $startDate, false, 10, 10, 'progress_by_project', false)).'<br /><em>'.html_time_ago($timestamp).'</em><br />';
         echo '</td>';
 
         echo '<td valign="top">';
         list($timestamp,) = util_date_to_unixtime($endDate);
-        echo (html_field_date('end_date', $endDate, false, 10, 10, 'progress_by_project', false)).'<br /><em>'.util_time_ago_in_words($timestamp).'</em><br />';
+        echo (html_field_date('end_date', $endDate, false, 10, 10, 'progress_by_project', false)).'<br /><em>'.html_time_ago($timestamp).'</em><br />';
         echo '</td>';
 
         $sel = '';
@@ -287,12 +287,12 @@ switch ($func) {
 
         echo '<td valign="top">';
         list($timestamp,) = util_date_to_unixtime($startDate);
-        echo (html_field_date('start_date', $startDate, false, 10, 10, 'progress_by_project', false)).'<br /><em>'.util_time_ago_in_words($timestamp).'</em><br />';
+        echo (html_field_date('start_date', $startDate, false, 10, 10, 'progress_by_project', false)).'<br /><em>'.html_time_ago($timestamp).'</em><br />';
         echo '</td>';
 
         echo '<td valign="top">';
         list($timestamp,) = util_date_to_unixtime($endDate);
-        echo (html_field_date('end_date', $endDate, false, 10, 10, 'progress_by_project', false)).'<br /><em>'.util_time_ago_in_words($timestamp).'</em><br />';
+        echo (html_field_date('end_date', $endDate, false, 10, 10, 'progress_by_project', false)).'<br /><em>'.html_time_ago($timestamp).'</em><br />';
         echo '</td>';
 
         echo '</tr>';
@@ -359,12 +359,12 @@ switch ($func) {
 
         echo '<td valign="top">';
         list($timestamp,) = util_date_to_unixtime($startDate);
-        echo (html_field_date('start_date', $startDate, false, 10, 10, 'progress_by_project', false)).'<br /><em>'.util_time_ago_in_words($timestamp).'</em><br />';
+        echo (html_field_date('start_date', $startDate, false, 10, 10, 'progress_by_project', false)).'<br /><em>'.html_time_ago($timestamp).'</em><br />';
         echo '</td>';
 
         echo '<td valign="top">';
         list($timestamp,) = util_date_to_unixtime($endDate);
-        echo (html_field_date('end_date', $endDate, false, 10, 10, 'progress_by_project', false)).'<br /><em>'.util_time_ago_in_words($timestamp).'</em><br />';
+        echo (html_field_date('end_date', $endDate, false, 10, 10, 'progress_by_project', false)).'<br /><em>'.html_time_ago($timestamp).'</em><br />';
         echo '</td>';
 
         $sel = '';
@@ -405,11 +405,11 @@ switch ($func) {
 
         echo '<label>Start: </label>';
         list($timestamp,) = util_date_to_unixtime($startDate);
-        echo (html_field_date('start_date', $startDate, false, 10, 10, 'top_users', false)).'&nbsp;<em>'.util_time_ago_in_words($timestamp).'</em><br />';
+        echo (html_field_date('start_date', $startDate, false, 10, 10, 'top_users', false)).'&nbsp;<em>'.html_time_ago($timestamp).'</em><br />';
 
         echo '<label>End: </label>';
         list($timestamp,) = util_date_to_unixtime($endDate);
-        echo (html_field_date('end_date', $endDate, false, 10, 10, 'top_users', false)).'&nbsp;<em>'.util_time_ago_in_words($timestamp).'</em><br />';
+        echo (html_field_date('end_date', $endDate, false, 10, 10, 'top_users', false)).'&nbsp;<em>'.html_time_ago($timestamp).'</em><br />';
 
         echo '<input type="submit" value="'.$GLOBALS['Language']->getText('global', 'btn_submit').'"/>';
         echo '</form>';
@@ -427,7 +427,7 @@ switch ($func) {
         echo '<form name="progress_by_user" method="get" action="?">';
         echo '<input type="hidden" name="func" value="show_one_user" />';
 
-        echo '<label> User: </label>';
+        echo '<label>User: </label>';
         echo '<input type="text" name="user_id" id="plugin_statistics_project" value="'.$userId.'" />';
        
         echo '<label>Group by:</label>';
@@ -435,11 +435,11 @@ switch ($func) {
 
         echo '<label>Start: </label>';
         list($timestamp,) = util_date_to_unixtime($startDate);
-        echo (html_field_date('start_date', $startDate, false, 10, 10, 'progress_by_user', false)).'&nbsp;<em>'.util_time_ago_in_words($timestamp).'</em><br />';
+        echo (html_field_date('start_date', $startDate, false, 10, 10, 'progress_by_user', false)).'&nbsp;<em>'.html_time_ago($timestamp).'</em><br />';
 
         echo '<label>End: </label>';
         list($timestamp,) = util_date_to_unixtime($endDate);
-        echo (html_field_date('end_date', $endDate, false, 10, 10, 'progress_by_user', false)).'&nbsp;<em>'.util_time_ago_in_words($timestamp).'</em><br />';
+        echo (html_field_date('end_date', $endDate, false, 10, 10, 'progress_by_user', false)).'&nbsp;<em>'.html_time_ago($timestamp).'</em><br />';
 
         $sel = '';
         if ($relative) {

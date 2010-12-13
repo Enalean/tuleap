@@ -562,7 +562,7 @@ if ($type_of_search == "soft") {
           'help' => 'ArtifactBrowsing.html');
 
     $ath->header($params);
-        
+    echo '<div id="tracker_toolbar_clear"></div>';
         
     $array=explode(" ",$words);
     $words1=implode($array,"%' $crit artifact.details LIKE '%");
