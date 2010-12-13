@@ -356,7 +356,7 @@ class Artifact extends Error {
         }
 
         // Follow-up comments might have a different format
-        if ($comment_format != self::FORMAT_TEXT) {
+        if ($comment_format != self::FORMAT_TEXT && user_isloggedin()) {
             $fld_type .= ',format';
             $val_type .= ','.db_ei($comment_format);
         }
