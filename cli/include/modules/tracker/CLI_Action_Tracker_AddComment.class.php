@@ -57,9 +57,9 @@ class CLI_Action_Tracker_AddComment extends CLI_Action {
     }
     function validate_format(&$format) {
         if ($format) {
-            if ($format == 'text') {
+            if (strtolower($format) == 'text') {
                 $format = 0;
-            } elseif ($format == 'html') {
+            } elseif (strtolower($format) == 'html') {
                 $format = 1;
             } else {
                 exit_error("The format of the comment may be text or HTML, --format parameter permitted values are 'text' or 'html'");
