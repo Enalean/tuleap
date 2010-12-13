@@ -202,7 +202,8 @@ class ArtifactHtml extends Artifact {
             } else {
                 if ($pv == 0) {
                     $html .= '<b>'.$Language->getText('tracker_include_artifact','add_comment').'</b>';
-                    $html .= '<DIV ID="tracker_artifact_comment_label"></DIV>';
+                    // Non authenticated user can submit only in text format
+                    //$html .= '<DIV ID="tracker_artifact_comment_label"></DIV>';
                     $html .= '<TEXTAREA NAME="comment" id="tracker_artifact_comment" ROWS="10" style="width:99%" WRAP="SOFT"></TEXTAREA>';
                 }
             }
