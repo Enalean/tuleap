@@ -61,6 +61,18 @@ class FRSFile extends Error {
      */
     var $status;
     /**
+     * @var string $computed_md5 hash of the file computed in server side
+     */
+    var $computed_md5;
+    /**
+     * @var string $reference_md5 hash of the file submited by user (calculated in client side)
+     */
+    var $reference_md5;
+    /**
+     * @var integer $user_id id of user that created the file
+     */
+    var $user_id;
+    /**
      * @var string $file_location the full path of this FRSFile
      */
     var $file_location;
@@ -75,6 +87,9 @@ class FRSFile extends Error {
         $this->file_size     = null;
         $this->post_date     = null;
         $this->status        = null;
+        $this->computed_md5  = null;
+        $this->reference_md5 = null;
+        $this->user_id       = null;
         $this->file_location = null;
 
         if ($data_array) {
@@ -203,6 +218,34 @@ class FRSFile extends Error {
         return ($this->status == 'D');
     }
 
+    function setComputedMd5($computedMd5) {
+        $this->computed_md5 = $computedMd5;
+    }
+
+    /*function calculateMd5() {
+        return md5_file('???');
+    }*/
+
+    function getComputedMd5() {
+        return $this->computed_md5;
+    }
+
+    function setReferenceMd5($referenceMd5) {
+        $this->reference_md5 = $referenceMd5;
+    }
+
+    function getReferenceMd5() {
+        return $this->reference_md5;
+    }
+
+    function setUserId($userId) {
+        $this->user_id = $userId;
+    }
+
+    function getUserId() {
+        return $this->user_id;
+    }
+
 	function initFromArray($array) {
 		if (isset($array['file_id']))       $this->setFileID($array['file_id']);
 		if (isset($array['filename']))     $this->setFileName($array['filename']);
@@ -213,6 +256,9 @@ class FRSFile extends Error {
         if (isset($array['file_size']))     $this->setFileSize($array['file_size']);
         if (isset($array['post_date']))     $this->setPostDate($array['post_date']);
         if (isset($array['status']))        $this->setStatus($array['status']);
+        if (isset($array['computed_md5']))  $this->setComputedMd5($array['computed_md5']);
+        if (isset($array['reference_md5'])) $this->setReferenceMd5($array['reference_md5']);
+        if (isset($array['user_id']))       $this->setUserId($array['user_id']);
     }
 
     function toArray() {
@@ -227,6 +273,10 @@ class FRSFile extends Error {
         $array['file_size']     = $this->getFileSize();
         $array['post_date']     = $this->getPostDate();
         $array['status']     = $this->getStatus();
+        $array['computed_md5']  = $this->getComputedMd5();
+        $array['reference_md5'] = $this->getReferenceMd5();
+        $array['user_id']       = $this->getUserId();
+        
         return $array;
     }
     
