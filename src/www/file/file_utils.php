@@ -495,6 +495,7 @@ function frs_display_release_form($is_update, &$release, $group_id, $title, $url
     $titles[] = $GLOBALS['Language']->getText('file_admin_editreleases', 'filename');
     $titles[] = $GLOBALS['Language']->getText('file_admin_editreleases', 'processor');
     $titles[] = $GLOBALS['Language']->getText('file_admin_editreleases', 'file_type');
+    $titles[] = $GLOBALS['Language']->getText('file_admin_editreleases', 'md5sum');
     if ($is_update) {
         $titles[] = $GLOBALS['Language']->getText('file_admin_editreleasepermissions', 'release');
         $titles[] = $GLOBALS['Language']->getText('file_admin_editreleases', 'release_date');
@@ -514,6 +515,7 @@ function frs_display_release_form($is_update, &$release, $group_id, $title, $url
             echo '<TD>' . $hp->purify($fname, CODENDI_PURIFIER_CONVERT_HTML) . '<INPUT TYPE="HIDDEN" NAME="release_files[]" VALUE="' . $files[$i]->getFileID() . '"></TD>';
             echo '<TD>' . frs_show_processor_popup($group_id,$name = 'release_file_processor[]', $files[$i]->getProcessorID()) . '</TD>';
             echo '<TD>' . frs_show_filetype_popup($name = 'release_file_type[]', $files[$i]->getTypeID()) . '</TD>';
+            echo '<TD><INPUT TYPE="TEXT" NAME="md5sum" value = "'.$files[$i]->getComputedMd5().' " SIZE="34"></TD>';
             echo '<TD>' . frs_show_release_popup2($group_id, $name = 'new_release_id[]', $files[$i]->getReleaseID()) . '</TD>';
             echo '<TD><INPUT TYPE="TEXT" NAME="release_time[]" VALUE="' . format_date('Y-m-d', $files[$i]->getReleaseTime()) . '" SIZE="10" MAXLENGTH="10"></TD></TR>';
         }

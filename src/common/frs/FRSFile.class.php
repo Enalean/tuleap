@@ -238,17 +238,17 @@ class FRSFile extends Error {
         return $this->reference_md5;
     }
 
-    function setUserId($userId) {
+    function setUserID($userId) {
         $this->user_id = $userId;
     }
 
-    function getUserId() {
+    function getUserID() {
         return $this->user_id;
     }
 
 	function initFromArray($array) {
 		if (isset($array['file_id']))       $this->setFileID($array['file_id']);
-		if (isset($array['filename']))     $this->setFileName($array['filename']);
+		if (isset($array['filename']))      $this->setFileName($array['filename']);
 		if (isset($array['release_id']))    $this->setReleaseID($array['release_id']);
         if (isset($array['type_id']))       $this->setTypeID($array['type_id']);
         if (isset($array['processor_id']))  $this->setProcessorID($array['processor_id']);
@@ -258,13 +258,13 @@ class FRSFile extends Error {
         if (isset($array['status']))        $this->setStatus($array['status']);
         if (isset($array['computed_md5']))  $this->setComputedMd5($array['computed_md5']);
         if (isset($array['reference_md5'])) $this->setReferenceMd5($array['reference_md5']);
-        if (isset($array['user_id']))       $this->setUserId($array['user_id']);
+        if (isset($array['user_id']))       $this->setUserID($array['user_id']);
     }
 
     function toArray() {
         $array = array();
         $array['file_id']       = $this->getFileID();
-        $array['filename']     = $this->getFileName();
+        $array['filename']      = $this->getFileName();
         $array['release_id']    = $this->getReleaseID();
         $array['type_id']       = $this->getTypeID();
         $array['processor_id']  = $this->getProcessorID();
@@ -272,10 +272,10 @@ class FRSFile extends Error {
         $array['file_location'] = $this->getFileLocation();
         $array['file_size']     = $this->getFileSize();
         $array['post_date']     = $this->getPostDate();
-        $array['status']     = $this->getStatus();
+        $array['status']        = $this->getStatus();
         $array['computed_md5']  = $this->getComputedMd5();
         $array['reference_md5'] = $this->getReferenceMd5();
-        $array['user_id']       = $this->getUserId();
+        $array['user_id']       = $this->getUserID();
         
         return $array;
     }

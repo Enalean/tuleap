@@ -175,6 +175,7 @@ file_admin_editreleases	create_new_release	Créer une nouvelle version
 file_admin_editreleases	create_canceled	Création de la version annulée
 file_admin_editreleases	update_canceled	Mise à jour de la version annulée
 file_admin_editreleases	upload_file_msg	(La taille maximum autorisée est de $1 Mb - <u>Veuillez compresser vos fichiers</u>)
+file_admin_editreleases	md5sum	Checksum calculé
 #
 #-----------------------------------------------
 # Script: SF/www/file/admin/index.php
@@ -294,6 +295,7 @@ file_showfiles	stat_total_size	Ko
 file_showfiles	stat_total_nb_downloads	téléchargements
 file_showfiles	hidden_package	Ce paquet est caché.
 file_showfiles	hidden_release	Cette version est cachée.
+file_showfiles	md5sum	Checksum du fichier
 #
 #-----------------------------------------------
 # Script: SF/www/file/shownotes.php
