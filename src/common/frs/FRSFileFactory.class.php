@@ -184,8 +184,15 @@ class FRSFileFactory extends Error {
             return false;
         }
 
+        $path = $GLOBALS['ftp_incoming_dir'] . '/' . $name;
+
 	// Don't use filesize() : Workaround for files larger than 2 GB
- 	$filesize = file_utils_get_size($GLOBALS['ftp_incoming_dir'] . '/' . $name);
+        $filesize = file_utils_get_size($path);
+
+        $computedMd5 = md5_file($path);
+
+        $um = UserManager::instance();
+        $user = $um->getCurrentUser();
 
         $file = new FRSFile();
         $file->setFileName($name);
@@ -194,7 +201,10 @@ class FRSFileFactory extends Error {
         $file->setTypeID($type_id);
         $file->setProcessorID($processor_id);
         $file->setStatus('A');
-        
+        $file->setComputedMd5($computedMd5);
+//      $file->setReferenceMd5($referenceMd5);
+        $file->setUserID($user->getId());
+
         // retrieve the group_id
         $release_fact =& $this->_getFRSReleaseFactory();
         $release =& $release_fact->getFRSReleaseFromDb($release_id);
