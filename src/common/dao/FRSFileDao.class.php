@@ -388,8 +388,8 @@ class FRSFileDao extends DataAccessObject {
      */
     function setFileInDeletedList($id) {
         // Store file in deleted table
-        $sql = 'INSERT INTO frs_file_deleted(file_id, filename, release_id, type_id, processor_id, release_time, file_size, post_date, status, delete_date)'.
-               ' SELECT file_id, filename, release_id, type_id, processor_id, release_time, file_size, post_date, status, '.$this->da->escapeInt($_SERVER['REQUEST_TIME']).
+        $sql = 'INSERT INTO frs_file_deleted(file_id, filename, release_id, type_id, processor_id, release_time, file_size, post_date, status, computed_hash, reference_hash, user_id,delete_date)'.
+               ' SELECT file_id, filename, release_id, type_id, processor_id, release_time, file_size, post_date, status, computed_hash, reference_hash, user_id,'.$this->da->escapeInt($_SERVER['REQUEST_TIME']).
                ' FROM frs_file'.
                ' WHERE file_id = '.$this->da->escapeInt($id);
         $this->update($sql);
