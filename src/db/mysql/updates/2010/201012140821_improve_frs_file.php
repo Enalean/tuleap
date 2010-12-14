@@ -16,35 +16,35 @@ EOT;
     }
 
     public function up() {
-        $sql = 'ALTER TABLE frs_file ADD computed_hash VARCHAR(32)';
+        $sql = 'ALTER TABLE frs_file ADD computed_md5 VARCHAR(32)';
         if ($this->db->tableNameExists('frs_file')) {
             $res = $this->db->dbh->exec($sql);
             if ($res === false) {
-                throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while adding column computed_hash to table frs_file');
+                throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while adding column computed_md5 to table frs_file');
             }
         }
 
-        $sql = 'ALTER TABLE frs_file_deleted ADD computed_hash VARCHAR(32) AFTER status';
+        $sql = 'ALTER TABLE frs_file_deleted ADD computed_md5 VARCHAR(32) AFTER status';
         if ($this->db->tableNameExists('frs_file')) {
             $res = $this->db->dbh->exec($sql);
             if ($res === false) {
-                throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while adding column computed_hash to table frs_file');
+                throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while adding column computed_md5 to table frs_file_delete');
             }
         }
 
-        $sql = 'ALTER TABLE frs_file ADD reference_hash VARCHAR(32)';
+        $sql = 'ALTER TABLE frs_file ADD reference_md5 VARCHAR(32)';
         if ($this->db->tableNameExists('frs_file')) {
             $res = $this->db->dbh->exec($sql);
             if ($res === false) {
-                throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while adding column reference_hash to table frs_file');
+                throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while adding column reference_md5 to table frs_file');
             }
         }
 
-        $sql = 'ALTER TABLE frs_file_deleted ADD reference_hash VARCHAR(32) AFTER computed_hash';
+        $sql = 'ALTER TABLE frs_file_deleted ADD reference_md5 VARCHAR(32) AFTER computed_md5';
         if ($this->db->tableNameExists('frs_file')) {
             $res = $this->db->dbh->exec($sql);
             if ($res === false) {
-                throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while adding column reference_hash to table frs_file');
+                throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while adding column reference_md5 to table frs_file_delete');
             }
         }
 
@@ -56,38 +56,38 @@ EOT;
             }
         }
 
-        $sql = 'ALTER TABLE frs_file_deleted ADD user_id INT(11) AFTER reference_hash';
+        $sql = 'ALTER TABLE frs_file_deleted ADD user_id INT(11) AFTER reference_md5';
         if ($this->db->tableNameExists('frs_file')) {
             $res = $this->db->dbh->exec($sql);
             if ($res === false) {
-                throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while adding column user_id to table frs_file');
+                throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while adding column user_id to table frs_file_delete');
             }
         }
     }
 
     public function postUp() {
-        if (!$this->db->columnNameExists('frs_file', 'computed_hash')) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('computed_hash not created');
+        if (!$this->db->columnNameExists('frs_file', 'computed_md5')) {
+            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('computed_md5 not created in frs_file');
         }
 
-        if (!$this->db->columnNameExists('frs_file_deleted', 'computed_hash')) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('computed_hash not created');
+        if (!$this->db->columnNameExists('frs_file_deleted', 'computed_md5')) {
+            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('computed_md5 not created in frs_file_deleted');
         }
 
-        if (!$this->db->columnNameExists('frs_file', 'reference_hash')) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('reference_hash not created');
+        if (!$this->db->columnNameExists('frs_file', 'reference_md5')) {
+            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('reference_md5 not created in frs_file');
         }
 
-        if (!$this->db->columnNameExists('frs_file_deleted', 'reference_hash')) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('reference_hash not created');
+        if (!$this->db->columnNameExists('frs_file_deleted', 'reference_md5')) {
+            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('reference_md5 not created in frs_file_deleted');
         }
 
         if (!$this->db->columnNameExists('frs_file', 'user_id')) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('user_id not created');
+            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('user_id not created in frs_file');
         }
 
         if (!$this->db->columnNameExists('frs_file_deleted', 'user_id')) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('user_id not created');
+            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('user_id not created in frs_file_deleted');
         }
     }
 
