@@ -334,11 +334,16 @@ class FRSFile extends Error {
      * Note: won't work on large files: 2GB limit + one step read might not work.
      * @return mixed the content of the file
      */
-    function getContent() {
-        $file_location = $this->getFileLocation();
-        $file_size = $this->getFileSize();
-        if ($fp = fopen($file_location,"rb")) {
-            return fread($fp, $file_size);
+    function getContent($offset=0, $size=-1) {
+        if ($size == -1) {
+            $size = $this->getFileSize();
+        }
+        $path = realpath($this->getFileLocation());
+        if ($fp = fopen(PHP_BigFile::stream($path), "rb")) {
+            if ($offset != 0) {
+                fseek($fp, $offset);
+            }
+            return fread($fp, $size);
         } else {
             return null;
         }
