@@ -1199,7 +1199,10 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
                                             move the file to the project's fileserver directory
                                         */
                                         clearstatcache();
-                                        if (file_exists($GLOBALS['ftp_incoming_dir'] . '/' . $filename)) {
+                                        $path = $GLOBALS['ftp_incoming_dir'] . '/' . $filename;
+                                        if (file_exists($path)) {
+                                            // calculate its md5sum
+                                            $computedMd5 = md5_file($path);
                                             //move the file to a its project page using a setuid program
                                             //test if the file aldready exists in the destination directory
                                             $group = $pm->getProject($group_id);
@@ -1209,9 +1212,14 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
                                                     //echo '<h3>' . $exec_res[0], $exec_res[1] . '</H3><P>';
                                                 
                                                     //add the file to the database
-                                                    $array = array (
-                                                        'filename' => $frsff->getUploadSubDirectory($release_id
-                                                    ) . '/' . $filename, 'release_id' => $release_id, 'file_size' => file_utils_get_size($project_files_dir . '/' . $frsff->getUploadSubDirectory($release_id) . '/' . $filename), 'processor_id' => $file['processor'] , 'type_id' => $file['type'] );
+                                                    $array = array ('filename'      => $frsff->getUploadSubDirectory($release_id) . '/' . $filename,
+                                                                    'release_id'    => $release_id,
+                                                                    'file_size'     => file_utils_get_size($project_files_dir . '/' . $frsff->getUploadSubDirectory($release_id) . '/' . $filename),
+                                                                    'processor_id'  => $file['processor'],
+                                                                    'type_id'       => $file['type'],
+                                                                    'computed_md5'  => $computedMd5,
+//                                                                  'reference_md5' => $file['reference_md5'],
+                                                                    'user_id'       => user_getid());
                                                     $res = & $frsff->create($array);
         
                                                     if (!$res) {
@@ -1263,9 +1271,13 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
                                         if (!$exec_res) {
                                             //echo '<h3>' . $exec_res[0], $exec_res[1] . '</H3><P>';
                                             //add the file to the database
-                                            $array = array (
-                                                'filename' => $frsff->getUploadSubDirectory($release_id
-                                            ) . '/' . $filename, 'release_id' => $release_id, 'file_size' => file_utils_get_size($project_files_dir . '/' . $frsff->getUploadSubDirectory($release_id) . '/' . $filename), 'processor_id' => $file['processor'], 'type_id' => $file['type']);
+                                            $array = array ('filename'      => $frsff->getUploadSubDirectory($release_id) . '/' . $filename,
+                                                            'release_id'    => $release_id,
+                                                            'file_size'     => file_utils_get_size($project_files_dir . '/' . $frsff->getUploadSubDirectory($release_id) . '/' . $filename),
+                                                            'processor_id'  => $file['processor'],
+                                                            'type_id'       => $file['type'],
+//                                                          'reference_md5' => $file['reference_md5'],
+                                                            'user_id'       => user_getid());
                                             $res = $frsff->create($array);
         
                                             if (!$res) {

@@ -222,10 +222,6 @@ class FRSFile extends Error {
         $this->computed_md5 = $computedMd5;
     }
 
-    /*function calculateMd5() {
-        return md5_file('???');
-    }*/
-
     function getComputedMd5() {
         return $this->computed_md5;
     }
