@@ -328,27 +328,22 @@ class FRSFile extends Error {
         $group = $pm->getProject($group_id);
         return $group;
     }
-    
+
     /**
      * Returns the content of the file, in a raw resource
-     * Note: won't work on large files: 2GB limit + one step read might not work.
+     *
+     * +2GB safe
+     *
      * @return mixed the content of the file
      */
     function getContent($offset=0, $size=-1) {
         if ($size == -1) {
             $size = $this->getFileSize();
         }
-        $path = realpath($this->getFileLocation());
-        if ($fp = fopen(PHP_BigFile::stream($path), "rb")) {
-            if ($offset != 0) {
-                fseek($fp, $offset);
-            }
-            return fread($fp, $size);
-        } else {
-            return null;
-        }
+        $path = PHP_BigFile::stream(realpath($this->getFileLocation()));
+        return file_get_contents($path, false, NULL, $offset, $size);
     }
-    
+
     /**
      * Log the download of the file in the log system
      * 
