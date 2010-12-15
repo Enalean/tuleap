@@ -763,6 +763,12 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
     } else {
         $file_type = array();
     }
+
+    if($request->valid(new Valid_String('md5sum'))) {
+        $reference_md5 = $request->get('md5sum');
+    } else {
+        $reference_md5 = "";
+    }
     
     if($request->validArray(new Valid_UInt('ftp_file_processor'))) {
         $ftp_file_processor = $request->get('ftp_file_processor');
@@ -1111,7 +1117,8 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
                             'name' => $_FILES['file']['name'][0],
                             'tmp_name' => $_FILES['file']['tmp_name'][0],
                             'processor' => $file_processor,
-                            'type' => $file_type
+                            'type' => $file_type,
+                            'reference_md5' => $reference_md5
                         );
                     }
             } else {
@@ -1124,7 +1131,8 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
                             'name' => $_FILES['file']['name'][$i],
                             'tmp_name' => $_FILES['file']['tmp_name'][$i],
                             'processor' => $file_processor[$i],
-                            'type' => $file_type[$i]
+                            'type' => $file_type[$i],
+                            'reference_md5' => $reference_md5
                         );
                     }
                 }
@@ -1136,7 +1144,8 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
                         $ftp_files_processor_type_list[] = array (
                             'name' => $file,
                             'processor' => $ftp_file_processor[$index],
-                            'type' => $ftp_file_type[$index]
+                            'type' => $ftp_file_type[$index],
+                            'reference_md5' => $reference_md5
                         );
                         $index++;
                     }
@@ -1218,7 +1227,7 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
                                                                     'processor_id'  => $file['processor'],
                                                                     'type_id'       => $file['type'],
                                                                     'computed_md5'  => $computedMd5,
-//                                                                  'reference_md5' => $file['reference_md5'],
+                                                                    'reference_md5' => $file['reference_md5'],
                                                                     'user_id'       => user_getid());
                                                     $res = & $frsff->create($array);
         
@@ -1276,7 +1285,7 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
                                                             'file_size'     => file_utils_get_size($project_files_dir . '/' . $frsff->getUploadSubDirectory($release_id) . '/' . $filename),
                                                             'processor_id'  => $file['processor'],
                                                             'type_id'       => $file['type'],
-//                                                          'reference_md5' => $file['reference_md5'],
+                                                            'reference_md5' => $file['reference_md5'],
                                                             'user_id'       => user_getid());
                                             $res = $frsff->create($array);
         

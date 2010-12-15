@@ -230,7 +230,7 @@ td.artifact_spacer { width: 5%; }
 
 /* {{{ File Release System */
 .frs_filename_col {
-    width: 50%;
+    width: 40%;
 }
 .frs_size_col {
     width: 10%;
@@ -245,6 +245,9 @@ td.artifact_spacer { width: 5%; }
     width: 10%;
 }
 .frs_date_col {
+    width: 10%;
+}
+.frs_md5sum_col {
     width: 10%;
 }
 fieldset.package {

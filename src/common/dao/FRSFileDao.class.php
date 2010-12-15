@@ -142,7 +142,7 @@ class FRSFileDao extends DataAccessObject {
      */
     function create($file_name=null, $release_id=null, $type_id=null,
     				$processor_id=null, $release_time=null, 
-                    $file_size=null, $post_date=null, $status ='A') {
+                    $file_size=null, $reference_md5= null, $post_date=null, $status ='A') {
 
         $arg    = array();
         $values = array();
@@ -167,6 +167,10 @@ class FRSFileDao extends DataAccessObject {
             $values[] = ($this->da->escapeInt($processor_id));
         }
 
+        if($reference_md5 !== null) {
+            $arg[] = 'reference_md5';
+            $values[] = $this->da->quoteSmart($reference_md5);
+        }
 
         $arg[] = 'release_time';
         $values[] = ($this->da->escapeInt(time()));

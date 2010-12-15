@@ -135,6 +135,11 @@ function add_new_file() {
 	select.options[0].selected = 'selected';
 	cell.appendChild(select);
 	row.appendChild(cell);
+	
+
+	//Add field for computed checksum
+	var md5sum = Builder.node('input', {'type':'text', id:'md5sum_'+id, size: 34, name:'md5sum'});
+	row.appendChild(md5sum);
 
 	$('files_body').appendChild(row);
     current_select_number++;
