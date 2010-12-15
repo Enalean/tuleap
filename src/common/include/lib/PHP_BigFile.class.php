@@ -15,6 +15,8 @@
  * You should have received a copy of the GNU General Public License
  * along with PHP_BigFile. If not, see <http://www.gnu.org/licenses/>.
  *
+ * The original version might be found on:
+ * https://bitbucket.org/vaceletm/php_bigfile
  */
 
 /**
@@ -118,15 +120,58 @@ class PHP_BigFile {
      * @return boolean true on success or false on failure
      */
     public function stream_open($path, $mode, $options, &$opened_path) {
-        $this->path = preg_replace('`^'. preg_quote(self::PROTOCOL .'://') .'`', '', $path);
+        $this->path   = preg_replace('`^'. preg_quote(self::PROTOCOL .'://') .'`', '', $path);
         $this->offset = 0;
-        if (self::isFile($this->path) && is_readable($this->path)) {
-            $this->filesize = self::getSize($this->path);
-            return true;
+        $this->mode   = $mode;
+        $fileExists   = self::isFile($this->path) && is_readable($this->path);
+
+        // Modes
+        $fileMustExist  = false;
+        $mustCreateFile = false;
+        switch ($mode) {
+        case 'r':
+        case 'r+':
+        case 'rb':
+        case 'r+b':
+        case 'rb+':
+            if ($fileExists) {
+                $this->filesize = self::getSize($this->path);
+                return true;
+            }
+            return false;
+            break;
+
+        case 'w':
+        case 'wb':
+        case 'w+':
+        case 'wb+':
+        case 'w+b':
+            if ($fileExists) {
+                $cmd = '>'.escapeshellarg($this->path);
+                `$cmd`;
+                return true;
+            } else {
+                return touch($this->path);
+            }
+            break;
+
+        case 'a':
+        case 'ab':
+        case 'a+':
+        case 'ab+':
+        case 'a+b':
+            if ($fileExists) {
+                $this->offset = self::getSize($this->path);
+            } else {
+                return touch($this->path);
+            }
+            break;
+
         }
-        return false;
+
+        return true;
     }
-    
+
     /**
      * Read for stream
      *
@@ -137,21 +182,75 @@ class PHP_BigFile {
      * @return string If there are less than count bytes available, return as many as are available. If no more data is available, return either FALSE or an empty string. 
      */
     public function stream_read($count) {
+        if ($this->filesize < PHP_INT_MAX) {
+            //$read = file_get_contents($this->path, false, NULL, $this->offset, $count);
+            //$read = $this->bigRead($count);
+            $fd = fopen($this->path, 'rb');
+            fseek($fd, $this->offset);
+            $read = fread($fd, $count);
+        } else {
+            $read = $this->bigRead($count);
+        }
+        $this->offset += strlen($read);
+        return $read;
+    }
+
+    /**
+     * Manage read in files bigger than 2GB
+     *
+     * @param int $count How many bytes of data from the current position should be returned.
+     *
+     * @return string If there are less than count bytes available, return as many as are available. If no more data is available, return either FALSE or an empty string.
+     */
+    public function bigRead($count) {
         // ruby
         //$cmd = "ruby -e \"print File.read(". escapeshellarg($this->path) .", $count, $this->offset) || ''\"";
-        
+
         // PERL
         $cmd = 'perl -e "open FH, '. escapeshellarg($this->path) .'; seek(FH, '. $this->offset .', SEEK_SET); read FH, \\$d, '. $count .'; print \\$d;"';
-        
+
         // System: tail & head
         //tail --bytes=+$this->offset "$this->path" | head --bytes=$count`;
 
         //echo $cmd . PHP_EOL;
         $s = `$cmd`;
-        $this->offset += strlen($s);
         return $s;
     }
-    
+
+    /**
+     * Write for stream
+     *
+     * This method is called in response to fwrite().
+     *
+     * @param string $data
+     *
+     * @return Return the number of bytes that were successfully stored, or 0 if none could be stored.
+     */
+    public function stream_write($data) {
+        $sizeToWrite = strlen($data);
+        if ($this->offset + $sizeToWrite < PHP_INT_MAX) {
+            $written = file_put_contents($this->path, $data, FILE_APPEND);
+        } else {
+            $written = $this->bigWrite($data);
+        }
+        $this->offset += $written;
+        return $written;
+    }
+
+    /**
+     * Specific method to address files when they are bigger than 2GB
+     *
+     * @param string $data Should be stored into the underlying stream
+     *
+     * @return Return the number of bytes that were successfully stored, or 0 if none could be stored.
+     */
+    public function bigwrite($data) {
+        $cmd = 'perl -e "use MIME::Base64; open FH, '. escapeshellarg('>>'.$this->path) .'; print syswrite(FH, decode_base64(\''.base64_encode($data).'\')); close FH;"';
+        //echo $cmd.PHP_EOL;
+        $c   = `$cmd`;
+        return $c;
+    }
+
     /**
      * Tests for end-of-file on a file pointer
      *
@@ -221,6 +320,17 @@ class PHP_BigFile {
             default:
                 return false;
         }
+    }
+    
+    /**
+     * Retrieve information about a file resource
+     *
+     * This method is called in response to fstat().
+     *
+     * @return array @see http://php.net/stat
+     */
+    public function stream_stat() {
+        return stat($this->path);
     }
 
 }
