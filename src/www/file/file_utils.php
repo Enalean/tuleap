@@ -496,6 +496,7 @@ function frs_display_release_form($is_update, &$release, $group_id, $title, $url
     $titles[] = $GLOBALS['Language']->getText('file_admin_editreleases', 'processor');
     $titles[] = $GLOBALS['Language']->getText('file_admin_editreleases', 'file_type');
     $titles[] = $GLOBALS['Language']->getText('file_admin_editreleases', 'md5sum');
+    $titles[] = $GLOBALS['Language']->getText('file_admin_editreleases', 'user');
     if ($is_update) {
         $titles[] = $GLOBALS['Language']->getText('file_admin_editreleasepermissions', 'release');
         $titles[] = $GLOBALS['Language']->getText('file_admin_editreleases', 'release_date');
@@ -510,12 +511,15 @@ function frs_display_release_form($is_update, &$release, $group_id, $title, $url
             $fname = $files[$i]->getFileName();
             $list = split('/', $fname);
             $fname = $list[sizeof($list) - 1];
+            $user_id = $files[$i]->getUserID();
+            $userName =(isset($user_id)) ? UserManager::instance()->getUserById($files[$i]->getUserID())->getRealName() : "";   
             echo '<TR>';
             echo '<TD><INPUT TYPE="CHECKBOX" NAME="release_files_to_delete[]" VALUE="' . $files[$i]->getFileID() . '"</TD>';
             echo '<TD>' . $hp->purify($fname, CODENDI_PURIFIER_CONVERT_HTML) . '<INPUT TYPE="HIDDEN" NAME="release_files[]" VALUE="' . $files[$i]->getFileID() . '"></TD>';
             echo '<TD>' . frs_show_processor_popup($group_id,$name = 'release_file_processor[]', $files[$i]->getProcessorID()) . '</TD>';
             echo '<TD>' . frs_show_filetype_popup($name = 'release_file_type[]', $files[$i]->getTypeID()) . '</TD>';
-            echo '<TD><INPUT TYPE="TEXT" NAME="md5sum" value = "'.$files[$i]->getComputedMd5().' " SIZE="34"></TD>';
+            echo '<TD><INPUT TYPE="TEXT" NAME="md5sum" value = "'.$files[$i]->getComputedMd5().' " SIZE="34" readonly="true"></TD>';
+            echo '<TD><INPUT TYPE="TEXT" NAME="user" value = "'.$userName.'" readonly="true"></TD>';
             echo '<TD>' . frs_show_release_popup2($group_id, $name = 'new_release_id[]', $files[$i]->getReleaseID()) . '</TD>';
             echo '<TD><INPUT TYPE="TEXT" NAME="release_time[]" VALUE="' . format_date('Y-m-d', $files[$i]->getReleaseTime()) . '" SIZE="10" MAXLENGTH="10"></TD></TR>';
         }
@@ -1210,6 +1214,8 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
                                         clearstatcache();
                                         $path = $GLOBALS['ftp_incoming_dir'] . '/' . $filename;
                                         if (file_exists($path)) {
+                                             $um = UserManager::instance();
+                                             $user = $um->getCurrentUser();
                                             // calculate its md5sum
                                             $computedMd5 = md5_file($path);
                                             //move the file to a its project page using a setuid program
@@ -1228,7 +1234,7 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
                                                                     'type_id'       => $file['type'],
                                                                     'computed_md5'  => $computedMd5,
                                                                     'reference_md5' => $file['reference_md5'],
-                                                                    'user_id'       => user_getid());
+                                                                    'user_id'       => $user->getId());
                                                     $res = & $frsff->create($array);
         
                                                     if (!$res) {
@@ -1278,6 +1284,8 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
                                     //move the file to a its project page using a setuid program
                                         $exec_res = $frsff->moveFileForge($group_id, $filename, $frsff->getUploadSubDirectory($release_id));
                                         if (!$exec_res) {
+                                             $um = UserManager::instance();
+                                             $user = $um->getCurrentUser();
                                             //echo '<h3>' . $exec_res[0], $exec_res[1] . '</H3><P>';
                                             //add the file to the database
                                             $array = array ('filename'      => $frsff->getUploadSubDirectory($release_id) . '/' . $filename,
@@ -1286,7 +1294,7 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
                                                             'processor_id'  => $file['processor'],
                                                             'type_id'       => $file['type'],
                                                             'reference_md5' => $file['reference_md5'],
-                                                            'user_id'       => user_getid());
+                                                            'user_id'       => $user->getId());
                                             $res = $frsff->create($array);
         
                                             if (!$res) {
