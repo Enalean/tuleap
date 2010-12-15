@@ -183,8 +183,9 @@ class PHP_BigFile {
      */
     public function stream_read($count) {
         if ($this->filesize < PHP_INT_MAX) {
-            //$read = file_get_contents($this->path, false, NULL, $this->offset, $count);
-            //$read = $this->bigRead($count);
+            // PHP 5.1 doesn't seems to like file_get_contents (bus error after 24MB)...
+            // Note: it works with PHP 5.2.9 at least.
+            // $read = file_get_contents($this->path, false, NULL, $this->offset, $count);
             $fd = fopen($this->path, 'rb');
             fseek($fd, $this->offset);
             $read = fread($fd, $count);
