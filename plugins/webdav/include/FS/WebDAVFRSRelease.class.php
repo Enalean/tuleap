@@ -433,7 +433,7 @@ class WebDAVFRSRelease extends Sabre_DAV_Directory {
                         throw new Sabre_DAV_Exception_RequestedRangeNotSatisfiable($GLOBALS['Language']->getText('plugin_webdav_download', 'error_file_size'));
                     }
                     // calculate its md5sum
-                    $computedMd5 = $computedMd5 = md5_file($GLOBALS['ftp_incoming_dir'].'/'.$name);
+                    $computedMd5 = md5_file($GLOBALS['ftp_incoming_dir'].'/'.$name);
                     $frsff = $utils->getFileFactory();
                     // Call to fileforge to move the file from incoming to its destination directory
                     $res = $frsff->moveFileForge($this->getProject()->getGroupId(), $name, $frsff->getUploadSubDirectory($this->getReleaseId()));
