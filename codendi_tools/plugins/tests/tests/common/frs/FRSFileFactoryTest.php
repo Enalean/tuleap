@@ -406,5 +406,30 @@ class FRSFileFactoryTest extends UnitTestCase {
         
         $this->assertTrue($ff->restoreDeletedFiles($backend));
     }
+
+    function testCompareMd5ChecksumsFail() {
+        $fileFactory = new FRSFileFactory();
+        $this->assertFalse($fileFactory->compareMd5Checksums('da1e100dc9e7bebb810985e37875de36', 'da1e100dc9e7bebb810985e37875de38'));
+    }
+
+    function testCompareMd5ChecksumsSucceedeEmptyHashes() {
+        $fileFactory = new FRSFileFactory();
+        $this->assertTrue($fileFactory->compareMd5Checksums('', ''));
+    }
+
+    function testCompareMd5ChecksumsSucceedeEmptyReference() {
+        $fileFactory = new FRSFileFactory();
+        $this->assertTrue($fileFactory->compareMd5Checksums('da1e100dc9e7bebb810985e37875de36', ''));
+    }
+
+    function testCompareMd5ChecksumsSucceedeEmptyComputed() {
+        $fileFactory = new FRSFileFactory();
+        $this->assertTrue($fileFactory->compareMd5Checksums('', 'da1e100dc9e7bebb810985e37875de38'));
+    }
+
+    function testCompareMd5ChecksumsSucceededComparison() {
+        $fileFactory = new FRSFileFactory();
+        $this->assertTrue($fileFactory->compareMd5Checksums('da1e100dc9e7bebb810985e37875de38', 'da1e100dc9e7bebb810985e37875de38'));
+    }
 }
 ?>

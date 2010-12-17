@@ -856,11 +856,18 @@ function addUploadedFile($sessionKey,$group_id,$package_id,$release_id,$filename
         $file_fact = new FRSFileFactory();
         if ($file_fact->userCanAdd($group_id)) {
             if (! $file_fact->isFileBaseNameExists($filename, $release->getReleaseID(), $group_id)) {
-                $file_id = $file_fact->createFromIncomingFile(basename($filename),$release_id,$type_id,$processor_id);
-                if (! $file_id) {
-                    return new SoapFault(invalid_file_fault,$file_fact->getErrorMessage(),'addUploadedFile');
+                $computedMd5 = md5_file($GLOBALS['ftp_incoming_dir'] . '/' . $name);
+                // Attention : referenceMd5 is set as an empty string just for the moment before it will be provided by the user
+                $referenceMd5 = '';
+                if ($file_fact->compareMd5Checksums($computedMd5, $referenceMd5)) {
+                    $file_id = $file_fact->createFromIncomingFile(basename($filename),$release_id,$type_id,$processor_id, $computedMd5);
+                    if (! $file_id) {
+                        return new SoapFault(invalid_file_fault,$file_fact->getErrorMessage(),'addUploadedFile');
+                    } else {
+                        return $file_id;
+                    }
                 } else {
-                    return $file_id;
+                    return new SoapFault(invalid_file_fault, 'Md5 comparison failed for file "'.$filename.'"', 'addUploadedFile');
                 }
             } else {
                 return new SoapFault(invalid_file_fault, 'Filename "'.$filename.'" already exists', 'addUploadedFile');
