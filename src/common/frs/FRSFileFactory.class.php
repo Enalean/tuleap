@@ -175,7 +175,7 @@ class FRSFileFactory extends Error {
      * @return true or id(auto_increment) if there is no error
      */
     function createFromIncomingFile($name=null, $release_id=null, 
-                               $type_id=null, $processor_id=null) {
+                               $type_id=null, $processor_id=null, $computedMd5) {
         
         // check if the file exists
         $uploaded_files = $this->getUploadedFileNames();
@@ -184,12 +184,8 @@ class FRSFileFactory extends Error {
             return false;
         }
 
-        $path = $GLOBALS['ftp_incoming_dir'] . '/' . $name;
-
 	// Don't use filesize() : Workaround for files larger than 2 GB
-        $filesize = file_utils_get_size($path);
-
-        $computedMd5 = md5_file($path);
+        $filesize = file_utils_get_size($GLOBALS['ftp_incoming_dir'] . '/' . $name);
 
         $um = UserManager::instance();
         $user = $um->getCurrentUser();
@@ -202,7 +198,7 @@ class FRSFileFactory extends Error {
         $file->setProcessorID($processor_id);
         $file->setStatus('A');
         $file->setComputedMd5($computedMd5);
-//      $file->setReferenceMd5($referenceMd5);
+//      $file->setReferenceMd5($computedMd5);
         $file->setUserID($user->getId());
 
         // retrieve the group_id
@@ -581,6 +577,19 @@ class FRSFileFactory extends Error {
     public function markFileToBeRestored($file) {
         $dao = $this->_getFRSFileDao();
         return $dao->markFileToBeRestored($file->getFileID());
+    }
+
+    /**
+     * Compare md5sums to check if they fit
+     * Note : Empty fields make coparison pass
+     *
+     * @param String $computedMd5
+     * @param String $referenceMd5
+     *
+     * @return Boolean
+     */
+    function compareMd5Checksums($computedMd5, $referenceMd5) {
+        return(!($computedMd5 != '' && $referenceMd5 != '' && $computedMd5 != $referenceMd5));
     }
 }
 
