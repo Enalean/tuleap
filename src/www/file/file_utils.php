@@ -1229,6 +1229,7 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
                                              $user = $um->getCurrentUser();
                                             // calculate its md5sum
                                             $computedMd5 = md5_file($path);
+                                            if ($frsff->compareMd5Checksums($computedMd5, $file['reference_md5'])) {
                                             //move the file to a its project page using a setuid program
                                             //test if the file aldready exists in the destination directory
                                             $group = $pm->getProject($group_id);
@@ -1254,8 +1255,11 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
                                                     } else {
                                                         $addingFiles = true;
                                                     }
-                                            } else {
+                                                } else {
                                                     $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('file_admin_editreleases', 'not_add_file') . ": " . basename($filename));
+                                                }
+                                            } else {
+                                                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('file_admin_editreleases', 'md5_fail') . " : $filename");
                                             }
                                         } else {
                                             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('file_admin_editreleases', 'filename_invalid') . ": $filename");
