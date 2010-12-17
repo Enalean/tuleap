@@ -61,6 +61,7 @@ abstract class SystemEvent {
     const TYPE_MAILING_LIST_DELETE   = "MAILING_LIST_DELETE";
     const TYPE_SERVICE_USAGE_SWITCH  = "SERVICE_USAGE_SWITCH";    
     const TYPE_ROOT_DAILY            = "ROOT_DAILY";
+    const TYPE_COMPUTE_MD5SUM        = "COMPUTE_MD5SUM";
 
     // Define status value (in sync with DB enum)
     const STATUS_NONE       = "NONE";

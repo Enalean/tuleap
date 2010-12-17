@@ -460,6 +460,22 @@ class FRSFileDao extends DataAccessObject {
         return $this->update($sql);
     }
 
+    /**
+     * Insert the computed md5sum value in case of offline checksum comput
+     * e
+     * @param Integer $fileId
+     * @param String $md5Computed
+     * 
+     * @return Boolean
+     */
+    function updateComputedMd5sum($fileId, $md5Computed) {
+        $sql = ' UPDATE frs_file '. 
+               ' SET computed_md5 = '.$this->da->quoteSmart($md5Computed).
+               ' WHERE file_id= '.$this->da->escapeInt($fileId);
+        var_dump($sql);
+        return $this->update($sql);
+    }
+
 }
 
 ?>

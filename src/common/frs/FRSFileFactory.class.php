@@ -578,6 +578,20 @@ class FRSFileFactory extends Error {
         $dao = $this->_getFRSFileDao();
         return $dao->markFileToBeRestored($file->getFileID());
     }
+    
+    /**
+     * Insert the computed md5sum value in case of offline checksum comput
+     * e
+     * @param Integer $fileId
+     * @param String $md5Computed
+     * 
+     * @return Boolean
+     */
+    
+    public function updateComputedMd5sum($fileId, $md5Computed) {
+        $dao = $this->_getFRSFileDao();
+        return $dao->updateComputedMd5sum($fileId, $md5Computed);
+    }
 
     /**
      * Compare md5sums to check if they fit
