@@ -518,7 +518,7 @@ function frs_display_release_form($is_update, &$release, $group_id, $title, $url
             echo '<TD>' . $hp->purify($fname, CODENDI_PURIFIER_CONVERT_HTML) . '<INPUT TYPE="HIDDEN" NAME="release_files[]" VALUE="' . $files[$i]->getFileID() . '"></TD>';
             echo '<TD>' . frs_show_processor_popup($group_id,$name = 'release_file_processor[]', $files[$i]->getProcessorID()) . '</TD>';
             echo '<TD>' . frs_show_filetype_popup($name = 'release_file_type[]', $files[$i]->getTypeID()) . '</TD>';
-            echo '<TD><INPUT TYPE="TEXT" NAME="md5sum" value = "'.$files[$i]->getComputedMd5().' " SIZE="34" readonly="true"></TD>';
+            echo '<TD><INPUT TYPE="TEXT" NAME="computed_md5" value = "'.$files[$i]->getComputedMd5().' " SIZE="36" readonly="true"></TD>';
             echo '<TD><INPUT TYPE="TEXT" NAME="user" value = "'.$userName.'" readonly="true"></TD>';
             echo '<TD>' . frs_show_release_popup2($group_id, $name = 'new_release_id[]', $files[$i]->getReleaseID()) . '</TD>';
             echo '<TD><INPUT TYPE="TEXT" NAME="release_time[]" VALUE="' . format_date('Y-m-d', $files[$i]->getReleaseTime()) . '" SIZE="10" MAXLENGTH="10"></TD></TR>';
@@ -554,6 +554,9 @@ function frs_display_release_form($is_update, &$release, $group_id, $title, $url
                             </td>
                             <td>
                                 <?php print frs_show_filetype_popup($name = 'file_type'); ?>
+                            </td>
+                            <td>
+                                <input name="reference_md5" value="" size="36" type="TEXT">
                             </td>
                         </tr>
                     </tbody>
@@ -768,10 +771,10 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
         $file_type = array();
     }
 
-    if($request->valid(new Valid_String('md5sum'))) {
-        $reference_md5 = $request->get('md5sum');
+    if($request->validArray(new Valid_String('reference_md5'))) {
+        $reference_md5 = $request->get('reference_md5');
     } else {
-        $reference_md5 = "";
+        $reference_md5 = array();
     }
     
     if($request->validArray(new Valid_UInt('ftp_file_processor'))) {
@@ -785,7 +788,13 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
     } else {
         $ftp_file_type = array();
     }
-    
+
+    if($request->validArray(new Valid_String('ftp_reference_md5'))) {
+        $ftp_reference_md5 = $request->get('ftp_reference_md5');
+    } else {
+        $ftp_reference_md5 = array();
+    }
+
     if($request->valid(new Valid_String('release_news_subject'))) {
         $release_news_subject = $request->get('release_news_subject');
     } else {
@@ -1107,11 +1116,13 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
             $ftp_files_processor_type_list = array ();
             if (isset ($js) && $js == 'no_js') {
                 //if javascript is not allowed, there is maximum one file to upload						
+                // TODO : fix warnings due to array instead of string for "file_processor", "file_type" & "reference_md5"
                 if ($ftp_file[0] != -1) {
                     $ftp_files_processor_type_list[] = array (
                         'name' => $ftp_file[0],
                         'processor' => $file_processor,
-                        'type' => $file_type
+                        'type' => $file_type,
+                        'reference_md5' => $reference_md5
                     );
 
                 } else
@@ -1136,7 +1147,7 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
                             'tmp_name' => $_FILES['file']['tmp_name'][$i],
                             'processor' => $file_processor[$i],
                             'type' => $file_type[$i],
-                            'reference_md5' => $reference_md5
+                            'reference_md5' => $reference_md5[$i]
                         );
                     }
                 }
@@ -1149,7 +1160,7 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
                             'name' => $file,
                             'processor' => $ftp_file_processor[$index],
                             'type' => $ftp_file_type[$index],
-                            'reference_md5' => $reference_md5
+                            'reference_md5' => $ftp_reference_md5[$index]
                         );
                         $index++;
                     }

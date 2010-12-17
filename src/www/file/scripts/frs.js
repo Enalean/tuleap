@@ -137,8 +137,8 @@ function add_new_file() {
 	row.appendChild(cell);
 	
 
-	//Add field for computed checksum
-	var md5sum = Builder.node('input', {'type':'text', id:'md5sum_'+id, size: 34, name:'md5sum'});
+	//Add field for reference checksum
+	var md5sum = Builder.node('input', {'type':'text', id:'reference_md5_'+id, size: 36, name:'reference_md5'});
 	row.appendChild(md5sum);
 
 	$('files_body').appendChild(row);
@@ -161,6 +161,7 @@ function onselectchange(select, number, id, cell_trash, image) {
         Element.remove('ftp_file_'+id);
         $('processor_'+id).name='file_processor[]';
         $('type_'+id).name='file_type[]';
+        $('reference_md5_'+id).name = 'reference_md5[]';
         cell_trash.appendChild(image);
     }else if(select.options[select.selectedIndex].value != '-1'){
         var h = {};
@@ -180,6 +181,7 @@ function onselectchange(select, number, id, cell_trash, image) {
         used_ftp_files.push(select.options[select.selectedIndex].value);
         $('processor_'+id).name='ftp_file_processor[]';
         $('type_'+id).name='ftp_file_type[]';
+        $('reference_md5_'+id).name = 'ftp_reference_md5[]';
         cell_trash.appendChild(image);
         $('td_file_'+id).innerHTML += select.options[select.selectedIndex].value;
         
