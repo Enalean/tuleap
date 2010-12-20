@@ -19,7 +19,7 @@
  */
 
 require_once('common/system_event/include/SystemEvent_COMPUTE_MD5SUM.class.php');
-Mock::generatePartial('SystemEvent_COMPUTE_MD5SUM', 'SystemEvent_COMPUTE_MD5SUM_TestVersion', array('getUser','getFileFactory', 'done', 'computeFRSMd5Sum', 'updateDB'));
+Mock::generatePartial('SystemEvent_COMPUTE_MD5SUM', 'SystemEvent_COMPUTE_MD5SUM_TestVersion', array('getUser','getFileFactory', 'done', 'computeFRSMd5Sum', 'sendNotificationMail', 'updateDB'));
 
 require_once('common/user/User.class.php');
 Mock::generate('User');
@@ -90,6 +90,7 @@ class SystemEvent_COMPUTE_MD5SUM_Test extends UnitTestCase {
         $user = new MockUser($this);
         $user->setReturnValue('getEmail', 'mickey@codendi.org');
         $evt->setReturnValue('getUser', $user);
+        $evt->setReturnValue('sendNotificationMail', false);
 
         $evt->expectNever('done');
 
@@ -97,7 +98,7 @@ class SystemEvent_COMPUTE_MD5SUM_Test extends UnitTestCase {
 
         // Check errors
         $this->assertEqual($evt->getStatus(), SystemEvent::STATUS_ERROR);
-        $this->assertPattern('/Computing md5sum failed /i', $evt->getLog());
+        $this->assertPattern('/Could not send mail to inform user that computing md5sum failed/i', $evt->getLog());
 
     }
 

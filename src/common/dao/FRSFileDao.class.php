@@ -472,7 +472,6 @@ class FRSFileDao extends DataAccessObject {
         $sql = ' UPDATE frs_file '. 
                ' SET computed_md5 = '.$this->da->quoteSmart($md5Computed).
                ' WHERE file_id= '.$this->da->escapeInt($fileId);
-        var_dump($sql);
         return $this->update($sql);
     }
 

@@ -70,14 +70,7 @@ class SystemEvent_COMPUTE_MD5SUM extends SystemEvent {
             $md5Computed = $this->computeFRSMd5Sum($file->getFileLocation());
             if (!$md5Computed) {
                 $user = $this->getUser($file->getUserID());
-                $subject = $GLOBALS['sys_name'] . ' Error in '.$file->getFileLocation();
-                $body = "An error according while trying to compute md5sum in your uploaded file";
-                $mail =  new Mail();
-                $mail->setFrom($GLOBALS['sys_noreply']);
-                $mail->setBcc($user->getEmail());
-                $mail->setSubject($subject);
-                $mail->setBody($body);
-                if (!$mail->send()) {
+               if (!$this->sendNotificationMail($user, $file)) {
                     $this->error('Could not send mail to inform user that computing md5sum failed');
                     return false;
                 }
@@ -121,6 +114,25 @@ class SystemEvent_COMPUTE_MD5SUM extends SystemEvent {
      */
     function getFileFactory() {
         return new FRSFileFactory();
+    }
+    /**
+     * Manage the mail content and send it
+     * 
+     * @param User    $user
+     * @param FRSFile $file
+     * 
+     * @return Boolean
+     */
+    function sendNotificationMail($user, $file) {
+        $subject = $GLOBALS['sys_name'] . ' Error in '.$file->getFileLocation();
+        $body = "An error occures while trying to compute md5sum in your uploaded file";
+        
+        $mail =  new Mail();
+        $mail->setFrom($GLOBALS['sys_noreply']);
+        $mail->setBcc($user->getEmail());
+        $mail->setSubject($subject);
+        $mail->setBody($body);
+        return $mail->send();
     }
 }
 
