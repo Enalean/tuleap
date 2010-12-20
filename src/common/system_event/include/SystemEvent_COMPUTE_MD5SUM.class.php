@@ -66,11 +66,13 @@ class SystemEvent_COMPUTE_MD5SUM extends SystemEvent {
         if ($fileId > 0) {
             $fileFactory = $this->getFileFactory();
             $file        = $fileFactory->getFRSFileFromDb($fileId);
+            $user = $this->getUser($file->getUserID());
             //Compute Md5sum for files
             $md5Computed = $this->computeFRSMd5Sum($file->getFileLocation());
             if (!$md5Computed) {
-                $user = $this->getUser($file->getUserID());
-               if (!$this->sendNotificationMail($user, $file)) {
+                $body = 'An error occures while trying to compute md5sum in your uploaded file';
+
+                if (!$this->sendNotificationMail($user, $file, $body)) {
                     $this->error('Could not send mail to inform user that computing md5sum failed');
                     return false;
                 }
@@ -81,6 +83,20 @@ class SystemEvent_COMPUTE_MD5SUM extends SystemEvent {
             if (!$this->updateDB($fileId, $md5Computed)) {
                 $this->error('Could not update the computed checksum for file (Filename: '.$file->getFileName().')');
                 return false;
+            }
+
+            //Compare file checksum
+            $file = $fileFactory->getFRSFileFromDb($fileId);
+            if (!$this->compareMd5Checksums($file)) {
+                $body = ' The entered reference md5sum for the file  '.$file->getFileLocation().' differs from the computed one'.
+                        ' which equals = '.$md5Computed.'. Note that the file will be shown in highlight in the web interface. '.
+                        ' If you consider that the upload has been well done, you can ignore the comparison and disable the '.
+                        ' highlight from the web interface.';
+
+                if (!$this->sendNotificationMail($user, $file, $body)) {
+                    $this->error('Could not send mail to inform user that comparing md5sum failed');
+                    return false;
+                }
             }
             $this->done();
             return true;
@@ -123,16 +139,27 @@ class SystemEvent_COMPUTE_MD5SUM extends SystemEvent {
      * 
      * @return Boolean
      */
-    function sendNotificationMail($user, $file) {
-        $subject = $GLOBALS['sys_name'] . ' Error in '.$file->getFileLocation();
-        $body = "An error occures while trying to compute md5sum in your uploaded file";
+    function sendNotificationMail($user, $file, $body) {
         
         $mail =  new Mail();
+        $subject = $GLOBALS['sys_name'] . ' Error in '.$file->getFileLocation();
         $mail->setFrom($GLOBALS['sys_noreply']);
         $mail->setBcc($user->getEmail());
         $mail->setSubject($subject);
         $mail->setBody($body);
         return $mail->send();
+    }
+    
+    /**
+     * Make comparison between the computed and the reference md5sum
+     * 
+     * @param FRSFile $file
+     * 
+     * @return Boolean 
+     */
+    function compareMd5Checksums($file) {
+        $fileFactory = $this->getFileFactory();
+        return $fileFactory->compareMd5Checksums($file->getComputedMd5(), $file->getReferenceMd5());
     }
 }
 

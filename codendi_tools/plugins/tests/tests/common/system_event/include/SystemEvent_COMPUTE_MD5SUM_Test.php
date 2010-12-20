@@ -19,7 +19,7 @@
  */
 
 require_once('common/system_event/include/SystemEvent_COMPUTE_MD5SUM.class.php');
-Mock::generatePartial('SystemEvent_COMPUTE_MD5SUM', 'SystemEvent_COMPUTE_MD5SUM_TestVersion', array('getUser','getFileFactory', 'done', 'computeFRSMd5Sum', 'sendNotificationMail', 'updateDB'));
+Mock::generatePartial('SystemEvent_COMPUTE_MD5SUM', 'SystemEvent_COMPUTE_MD5SUM_TestVersion', array('getUser','getFileFactory', 'done', 'computeFRSMd5Sum', 'compareMd5Checksums', 'sendNotificationMail', 'updateDB'));
 
 require_once('common/user/User.class.php');
 Mock::generate('User');
@@ -64,7 +64,9 @@ class SystemEvent_COMPUTE_MD5SUM_Test extends UnitTestCase {
 
         // DB
         $evt->setReturnValue('updateDB', true);
-
+        
+        //Checksum comparison
+        $evt->setReturnValue('compareMd5Checksums', true);
         // Expect everything went OK
         $evt->expectOnce('done');
 
@@ -124,6 +126,38 @@ class SystemEvent_COMPUTE_MD5SUM_Test extends UnitTestCase {
         // Check errors
         $this->assertEqual($evt->getStatus(), SystemEvent::STATUS_ERROR);
         $this->assertPattern('/Could not update the computed checksum for file/i', $evt->getLog());
+    }
+    
+    public function testComparisonMd5sumFailure() {
+        $evt = new SystemEvent_COMPUTE_MD5SUM_TestVersion($this);
+        $evt->SystemEvent('1', SystemEvent::TYPE_COMPUTE_MD5SUM, '100012', SystemEvent::PRIORITY_MEDIUM, SystemEvent::STATUS_RUNNING, $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], '');
+
+        // The file
+        $fileFactory = new MockFRSFileFactory($this);
+        $file = new MockFRSFile($this);
+        $evt->setReturnValue('getFileFactory', $fileFactory);
+        $fileFactory->setReturnValue('getFRSFileFromDb', $file, array('100012'));
+        $file->setReturnValue('getFileLocation', '/var/lib/codendi/ftp/codendi/project_1/p2952_r10819/test.dump');
+        $file->setReturnValue('getUserID', 142);
+
+        $evt->setReturnValue('computeFRSMd5Sum', true);
+        $evt->setReturnValue('updateDB', true);
+        $evt->setReturnValue('compareMd5Checksums', false);
+
+        // The user
+        $user = new MockUser($this);
+        $user->setReturnValue('getEmail', 'mickey@codendi.org');
+        $evt->setReturnValue('getUser', $user);
+        $evt->setReturnValue('sendNotificationMail', false);
+
+        $evt->expectNever('done');
+
+        $this->assertFalse($evt->process());
+
+        // Check errors
+        $this->assertEqual($evt->getStatus(), SystemEvent::STATUS_ERROR);
+        $this->assertPattern('/Could not send mail to inform user that comparing md5sum failed/i', $evt->getLog());
+
     }
 }
 ?>
