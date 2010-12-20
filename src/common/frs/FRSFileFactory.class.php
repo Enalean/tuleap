@@ -603,7 +603,7 @@ class FRSFileFactory extends Error {
      * @return Boolean
      */
     function compareMd5Checksums($computedMd5, $referenceMd5) {
-        return(!($computedMd5 != '' && $referenceMd5 != '' && $computedMd5 != $referenceMd5));
+        return($computedMd5 == '' || $referenceMd5 == '' || $computedMd5 == $referenceMd5);
     }
 }
 
