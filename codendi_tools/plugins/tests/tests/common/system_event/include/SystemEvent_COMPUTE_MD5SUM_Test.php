@@ -19,7 +19,7 @@
  */
 
 require_once('common/system_event/include/SystemEvent_COMPUTE_MD5SUM.class.php');
-Mock::generatePartial('SystemEvent_COMPUTE_MD5SUM', 'SystemEvent_COMPUTE_MD5SUM_TestVersion', array('getUser', 'done', 'computeFRSMd5Sum', 'updateDB'));
+Mock::generatePartial('SystemEvent_COMPUTE_MD5SUM', 'SystemEvent_COMPUTE_MD5SUM_TestVersion', array('getUser','getFileFactory', 'done', 'computeFRSMd5Sum', 'updateDB'));
 
 require_once('common/user/User.class.php');
 Mock::generate('User');
@@ -41,12 +41,14 @@ class SystemEvent_COMPUTE_MD5SUM_Test extends UnitTestCase {
      */
     public function testComputeMd5sumSucceed() {
         $evt = new SystemEvent_COMPUTE_MD5SUM_TestVersion($this);
-        $evt->SystemEvent('1', SystemEvent::TYPE_COMPUTE_MD5SUM, '/var/lib/codendi/ftp/codendi/project_1/p2952_r10819/test.dump'.SystemEvent::PARAMETER_SEPARATOR.'100012', SystemEvent::PRIORITY_MEDIUM, SystemEvent::STATUS_RUNNING, $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], '');
+        $evt->SystemEvent('1', SystemEvent::TYPE_COMPUTE_MD5SUM, '100012', SystemEvent::PRIORITY_MEDIUM, SystemEvent::STATUS_RUNNING, $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], '');
 
         // The file
         $fileFactory = new MockFRSFileFactory($this);
         $file = new MockFRSFile($this);
+        $evt->setReturnValue('getFileFactory', $fileFactory);
         $fileFactory->setReturnValue('getFRSFileFromDb', $file, array('100012'));
+        $file->setReturnValue('getFileLocation', '/var/lib/codendi/ftp/codendi/project_1/p2952_r10819/test.dump');
 
         $evt->setReturnValue('computeFRSMd5Sum', 'd41d8cd98f00b204e9800998ecf8427e');
 
@@ -62,13 +64,14 @@ class SystemEvent_COMPUTE_MD5SUM_Test extends UnitTestCase {
 
     public function testComputeMd5sumFailure() {
         $evt = new SystemEvent_COMPUTE_MD5SUM_TestVersion($this);
-        $evt->SystemEvent('1', SystemEvent::TYPE_COMPUTE_MD5SUM, '/var/lib/codendi/ftp/codendi/project_1/p2952_r10819/test.dump'.SystemEvent::PARAMETER_SEPARATOR. '10013', SystemEvent::PRIORITY_HIGH, SystemEvent::STATUS_RUNNING, $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], '');
+        $evt->SystemEvent('1', SystemEvent::TYPE_COMPUTE_MD5SUM, '100012', SystemEvent::PRIORITY_MEDIUM, SystemEvent::STATUS_RUNNING, $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], '');
 
         // The file
         $fileFactory = new MockFRSFileFactory($this);
         $file = new MockFRSFile($this);
+        $evt->setReturnValue('getFileFactory', $fileFactory);
         $fileFactory->setReturnValue('getFRSFileFromDb', $file, array('100012'));
-
+        $file->setReturnValue('getFileLocation', '/var/lib/codendi/ftp/codendi/project_1/p2952_r10819/test.dump');
         $file->setReturnValue('getUserID', 142);
 
         $evt->setReturnValue('computeFRSMd5Sum', false);
@@ -76,7 +79,7 @@ class SystemEvent_COMPUTE_MD5SUM_Test extends UnitTestCase {
         // The user
         $user = new MockUser($this);
         $user->setReturnValue('getEmail', 'mickey@codendi.org');
-        $evt->setReturnValue('getUser', $user, array('142'));
+        $evt->setReturnValue('getUser', $user);
 
         $evt->expectNever('done');
 
@@ -90,30 +93,26 @@ class SystemEvent_COMPUTE_MD5SUM_Test extends UnitTestCase {
 
     public function testComputeMd5sumUpdateDBFailure() {
         $evt = new SystemEvent_COMPUTE_MD5SUM_TestVersion($this);
-        $evt->SystemEvent('1', SystemEvent::TYPE_COMPUTE_MD5SUM, '/var/lib/codendi/ftp/codendi/project_1/p1827_r6573/webkit-1.0.tar.gz'.SystemEvent::PARAMETER_SEPARATOR. '10013', SystemEvent::PRIORITY_HIGH, SystemEvent::STATUS_RUNNING, $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], '');
+        $evt->SystemEvent('1', SystemEvent::TYPE_COMPUTE_MD5SUM, '10013', SystemEvent::PRIORITY_MEDIUM, SystemEvent::STATUS_RUNNING, $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], '');
 
         // The file
         $fileFactory = new MockFRSFileFactory($this);
         $file = new MockFRSFile($this);
-        $fileFactory->setReturnValue('getFRSFileFromDb', $file, array('100012'));
+        $evt->setReturnValue('getFileFactory', $fileFactory);
+        $fileFactory->setReturnValue('getFRSFileFromDb', $file);
+        $file->setReturnValue('getFileLocation', '/var/lib/codendi/ftp/codendi/project_1/p1827_r6573/webkit-1.0.tar.gz');
 
-        $fileName = 'p1827_r6573/webkit-1.0.tar.gz';
-        $file->setReturnValue('getUserID', 142);
-        $file->setReturnValue('getFileName', $fileName);
-
-        $evt->setReturnValue('computeFRSMd5Sum', true);
+        $evt->setReturnValue('computeFRSMd5Sum', 'd41d8cd98f00b204e9800998ecf8427e');
 
         // DB
         $evt->setReturnValue('updateDB', false);
 
-
-        // Expect everything went OK
         $evt->expectNever('done');
         $this->assertFalse($evt->process());
 
         // Check errors
         $this->assertEqual($evt->getStatus(), SystemEvent::STATUS_ERROR);
-        $this->assertPattern('/Could not update the computed checksum for file /i', $evt->getLog());
+        $this->assertPattern('/Could not update the computed checksum for file/i', $evt->getLog());
     }
 }
 ?>

@@ -248,7 +248,7 @@ class SystemEventManager {
             break;
                case Event::COMPUTE_MD5SUM:
             $this->createEvent(SystemEvent::TYPE_COMPUTE_MD5SUM,
-                               $this->concatParameters($params, array('path', 'fileId')),
+                               $params['fileId'],
                                SystemEvent::PRIORITY_MEDIUM);
             break;
   

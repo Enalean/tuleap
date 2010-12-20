@@ -1319,7 +1319,7 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
                                                 $addingFiles = true;
                                                 $path = $project_files_dir . '/' . $frsff->getUploadSubDirectory($release_id) . '/' . $filename;
                                                 $em = EventManager::instance();
-                                                $em->processEvent(Event::COMPUTE_MD5SUM, array('path' => $path, 'fileId' =>$res,));
+                                                $em->processEvent(Event::COMPUTE_MD5SUM, array('fileId' =>$res));
                                             }
                                         } else {
                                             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('file_admin_editreleases', 'not_add_file') . ": $filename ");

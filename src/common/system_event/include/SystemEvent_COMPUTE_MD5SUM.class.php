@@ -51,9 +51,8 @@ class SystemEvent_COMPUTE_MD5SUM extends SystemEvent {
      * @return string
      */
     public function verbalizeParameters($with_link) {
-        $txt ='';
-        list($path, $fileId) = $this->getParametersAsArray();
-        $txt .= 'file: '.$fileId.' , path: '.$path;
+        $txt = '';
+        $txt .= 'File ID: #'. $this->getIdFromParam($this->parameters);
         return $txt;
     }
 
@@ -63,15 +62,15 @@ class SystemEvent_COMPUTE_MD5SUM extends SystemEvent {
      * @return Boolean
      */
     public function process() {
-        list($path, $fileId) = $this->getParametersAsArray();
+        $fileId = $this->getIdFromParam($this->parameters);
         if ($fileId > 0) {
-            $fileFactory = new FRSFileFactory();
+            $fileFactory = $this->getFileFactory();
             $file        = $fileFactory->getFRSFileFromDb($fileId);
             //Compute Md5sum for files
-            $md5Computed = $this->computeFRSMd5Sum($path);
+            $md5Computed = $this->computeFRSMd5Sum($file->getFileLocation());
             if (!$md5Computed) {
                 $user = $this->getUser($file->getUserID());
-                $subject = $GLOBALS['sys_name'] . ' Error in '.$path;
+                $subject = $GLOBALS['sys_name'] . ' Error in '.$file->getFileLocation();
                 $body = "An error according while trying to compute md5sum in your uploaded file";
                 $mail =  new Mail();
                 $mail->setFrom($GLOBALS['sys_noreply']);
@@ -94,14 +93,34 @@ class SystemEvent_COMPUTE_MD5SUM extends SystemEvent {
             return true;
         }
     }
-
+    /**
+     * Computes the md5sum for a given file
+     * 
+     * @param String $filePath
+     */
     public function computeFRSMd5Sum($filePath) {
         return md5_file($filePath);
     }
-    
+    /**
+     * 
+     * Inserts the computed md5sum for the uploaded files using ftp
+     * 
+     * @param Integer $fileId
+     * @param String $md5Computed
+     * @return Boolean
+     */
     public function updateDB($fileId, $md5Computed) {
         $fileFactory = new FRSFileFactory();
         return $fileFactory->updateComputedMd5sum($fileId, $md5Computed);
+    }
+
+    /**
+     * Returns a FRSFileFactory
+     *
+     * @return FRSFileFactory
+     */
+    function getFileFactory() {
+        return new FRSFileFactory();
     }
 }
 
