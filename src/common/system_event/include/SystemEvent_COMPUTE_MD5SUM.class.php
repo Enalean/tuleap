@@ -70,7 +70,7 @@ class SystemEvent_COMPUTE_MD5SUM extends SystemEvent {
             //Compute Md5sum for files
             $md5Computed = $this->computeFRSMd5Sum($file->getFileLocation());
             if (!$md5Computed) {
-                $body = 'An error occures while trying to compute md5sum in your uploaded file';
+                $body = 'An error occurs while trying to compute md5sum in your uploaded file';
 
                 if (!$this->sendNotificationMail($user, $file, $body)) {
                     $this->error('Could not send mail to inform user that computing md5sum failed');

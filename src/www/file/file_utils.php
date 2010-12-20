@@ -376,6 +376,13 @@ function frs_display_release_form($is_update, &$release, $group_id, $title, $url
         }
         $release =& new FRSRelease($release);
     }
+    $files = $release->getFiles();
+    for ($i = 0; $i < count($files); $i++) {
+        if (!$frsff->compareMd5Checksums($files[$i]->getComputedMd5(), $files[$i]->getReferenceMd5())) {
+            $GLOBALS['Response']->addFeedback('error',$GLOBALS['Language']->getText('file_admin_editreleases',  'md5_fail', array(basename($files[$i]->getFileName()))));
+        }
+    }
+
     file_utils_admin_header(array (
         'title' => $GLOBALS['Language']->getText('file_admin_editreleases',
         'release_new_file_version'
@@ -1259,7 +1266,7 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
                                                     $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('file_admin_editreleases', 'not_add_file') . ": " . basename($filename));
                                                 }
                                             } else {
-                                                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('file_admin_editreleases', 'md5_fail') . " : $filename");
+                                                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('file_admin_editreleases', 'md5_fail', array (basename($filename))));
                                             }
                                         } else {
                                             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('file_admin_editreleases', 'filename_invalid') . ": $filename");
