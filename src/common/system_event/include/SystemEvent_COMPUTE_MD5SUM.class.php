@@ -110,7 +110,7 @@ class SystemEvent_COMPUTE_MD5SUM extends SystemEvent {
      * @return Boolean
      */
     public function updateDB($fileId, $md5Computed) {
-        $fileFactory = new FRSFileFactory();
+        $fileFactory = $this->getFileFactory();
         return $fileFactory->updateComputedMd5sum($fileId, $md5Computed);
     }
 

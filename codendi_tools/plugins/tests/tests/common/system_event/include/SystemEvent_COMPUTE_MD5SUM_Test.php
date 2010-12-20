@@ -36,6 +36,16 @@ class SystemEvent_COMPUTE_MD5SUM_Test extends UnitTestCase {
         parent::__construct($name);
     }
 
+    function setUp() {
+        $GLOBALS['sys_name'] = 'Codendi';
+        $GLOBALS['sys_noreply'] = '"Codendi" <noreply@codendi.org>';
+    }
+
+    function tearDown() {
+        unset($GLOBALS['sys_name']);
+        unset($GLOBALS['sys_noreply']);
+    }
+
     /**
      * Compute md5sum
      */
