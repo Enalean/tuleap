@@ -220,6 +220,29 @@ $server->register(
 );
 
 $server->register(
+    'getFileChunk',
+    array(
+        'sessionKey' => 'xsd:string',
+        'group_id'   => 'xsd:int',
+        'package_id' => 'xsd:int',
+        'release_id' => 'xsd:int',
+        'file_id'    => 'xsd:int',
+        'offset'     => 'xsd:int',
+        'size'       => 'xsd:int'),
+    array('getFileChunkResponse'=>'xsd:string'),
+    $uri,
+    $uri.'#getFileChunk',
+    'rpc',
+    'encoded',
+    'Returns a part (chunk) of the <strong>content</strong>, encoded in base64, of the file contained in 
+     the release release_id in the package package_id, in the project group_id.
+     You specify the offset where the download should start and the size to transfer.
+     Returns a soap fault if the group ID does not match with a valid project, or if the package ID
+     does not match with the right group ID, or if the release ID does not match with the right package ID,
+     or if the file ID does not match with the right release ID.'
+);
+
+$server->register(
     'addFile',
     array(
         'sessionKey'=>'xsd:string',
@@ -730,6 +753,78 @@ function getFile($sessionKey,$group_id,$package_id,$release_id,$file_id) {
 }
 
 /**
+ * getFile - returns the content (encoded in base64) of FRSFiles that belongs to the release identified by file_id, part of release_id, package_id, in project group_id. 
+ *
+ * @param string $sessionKey the session hash associated with the session opened by the person who calls the service
+ * @param int $group_id the ID of the group we want to retrieve the content of file
+ * @param int $package_id the ID of the package we want to retrieve the content of file
+ * @param int $release_id the ID of the release we want to retrieve the content of file
+ * @param int $file_id the ID of the file we want to retrieve the content
+ * @return the content of the file (encoded in base64) $file_id that belongs to the project identified by $group_id, in the package $package_id, in the release $release_id 
+ *         or a soap fault if 
+ *              - group_id does not match with a valid project or 
+ *              - package_id does not match with group_id, or 
+ *              - release_id does not match with package_id, or 
+ *              - file_id does not match with release_id, or
+ *              - the file is not present on the server
+ */
+function getFileChunk($sessionKey,$group_id,$package_id,$release_id,$file_id,$offset,$size) {
+    if (session_continue($sessionKey)) {
+    
+        $pm = ProjectManager::instance();
+        $group = $pm->getProject($group_id);
+        if (!$group || !is_object($group)) {
+            return new SoapFault(get_group_fault,'Could Not Get Group','getFile');
+        } elseif ($group->isError()) {
+            return new SoapFault(get_group_fault, $group->getErrorMessage(),'getFile');
+        }
+        if (!checkRestrictedAccess($group)) {
+            return new SoapFault(get_group_fault, 'Restricted user: permission denied.', 'getFile');
+        }
+
+        // retieve the package
+        $pkg_fact = new FRSPackageFactory();
+        $package =& $pkg_fact->getFRSPackageFromDb($package_id);
+        if (!$package || $package->isDeleted() || $package->getGroupID() != $group_id) {
+            return new SoapFault(invalid_package_fault,'Invalid Package','getFile');
+        }
+        // check access rights to this package
+        if (! $package->userCanRead() || ! $package->isActive()) {
+            return new SoapFault(invalid_package_fault,'Permission to this Package denied','getFiles');
+        }
+        
+        // retrieve the release
+        $release_fact = new FRSReleaseFactory();
+        $release =& $release_fact->getFRSReleaseFromDb($release_id);
+        if (!$release || $release->isDeleted() || $release->getPackageID() != $package_id) {
+            return new SoapFault(invalid_release_fault,'Invalid Release','getFile');
+        }
+        // check access rights to this release
+        if (! $release->userCanRead() || ! $release->isActive()) {
+            return new SoapFault(invalid_release_fault,'Permission to this Release denied','getFiles');
+        }
+        
+        $file_fact = new FRSFileFactory();
+        $file =& $file_fact->getFRSFileFromDb($file_id);
+        if (!$file || $file->getReleaseID() != $release_id) {
+            return new SoapFault(invalid_file_fault,'Invalid File','getFile');
+        }
+        
+        if (!$file->fileExists()) {
+            return new SoapFault(invalid_file_fault,'File doesn\'t exist on the server','getFile');
+        }
+        
+        // Log the download action
+        $file->logDownload();
+        
+        $contents = $file->getContent($offset,$size);
+        return base64_encode($contents);
+    } else {
+        return new SoapFault(invalid_session_fault,'getFile','Invalid Session','');
+    }
+}
+
+/**
  * addFile - add a file in the file release manager, in the release $release_id, in package $package_id of the project $group_id with given values
  *
  * @param string $sessionKey the session hash associated with the session opened by the person who calls the service
@@ -990,6 +1085,7 @@ $server->addFunction(
     	    'addRelease',
     	    'getFiles',
     	    'getFile',
+    	    'getFileChunk',
     	    'addFile',
     	    'addUploadedFile',
     	    'getUploadedFiles',
