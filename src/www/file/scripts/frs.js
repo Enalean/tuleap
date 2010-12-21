@@ -78,7 +78,11 @@ function add_new_file() {
 			
 	//TR tag construction		 	
 	var row = Builder.node('tr', {id:'row_'+id});
-			
+	
+	//Add field for the ignore field to preserve the output
+	var ignore = Builder.node('td');
+	row.appendChild(ignore);
+
 	//TD tag constuction, add the trash image this tag (used to remove the line)
 	var cell_trash = Builder.node('td');
 	var image = Builder.node('img', {src:'./../images/delete.png', onclick:'delete_file(\'row_'+id+'\','+id+')', style:'cursor:pointer'});
