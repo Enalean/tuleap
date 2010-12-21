@@ -82,14 +82,17 @@ $server->wsdl->addComplexType(
     'sequence',
     '',
     array(
-        'file_id' => array('name'=>'file_id', 'type' => 'xsd:int'),
-        'release_id' => array('name'=>'release_id', 'type' => 'xsd:int'),
-        'file_name' => array('name'=>'file_name', 'type' => 'xsd:string'),
-        'file_size' => array('name'=>'file_size', 'type' => 'xsd:int'),
-        'type_id' => array('name'=>'type_id', 'type' => 'xsd:int'),
-        'processor_id' => array('name'=>'processor_id', 'type' => 'xsd:int'),
-        'release_time' => array('name'=>'release_time', 'type' => 'xsd:int'),
-        'post_date' => array('name'=>'post_date', 'type' => 'xsd:int'),
+        'file_id'       => array('name'=>'file_id',       'type' => 'xsd:int'),
+        'release_id'    => array('name'=>'release_id',    'type' => 'xsd:int'),
+        'file_name'     => array('name'=>'file_name',     'type' => 'xsd:string'),
+        'file_size'     => array('name'=>'file_size',     'type' => 'xsd:int'),
+        'type_id'       => array('name'=>'type_id',       'type' => 'xsd:int'),
+        'processor_id'  => array('name'=>'processor_id',  'type' => 'xsd:int'),
+        'release_time'  => array('name'=>'release_time',  'type' => 'xsd:int'),
+        'post_date'     => array('name'=>'post_date',     'type' => 'xsd:int'),
+        'computed_md5'  => array('name'=>'computed_md5',  'type' => 'xsd:string'),
+        'reference_md5' => array('name'=>'reference_md5', 'type' => 'xsd:string'),
+        'user_id'       => array('name'=>'user_id',       'type' => 'xsd:int'),
     )
 );
 
@@ -197,6 +200,26 @@ $server->register(
      to the package identified by package_id and to the release identfied by release_id.
      Returns a soap fault if the group ID does not match with a valid project, or if the package ID
      does not match with the right group ID, or if the release ID does not match with the right package ID.'
+);
+
+$server->register(
+    'getFileInfo',
+    array(
+        'sessionKey'=>'xsd:string',
+        'group_id'=>'xsd:int',
+        'package_id'=>'xsd:int',
+        'release_id'=>'xsd:int',
+        'file_id'=>'xsd:int'),
+    array('getFileInfoResponse'=>'tns:FRSFile'),
+    $uri,
+    $uri.'#getFileInfo',
+    'rpc',
+    'encoded',
+    'Returns the metadata of the file contained in 
+     the release release_id in the package package_id, in the project group_id.
+     Returns a soap fault if the group ID does not match with a valid project, or if the package ID
+     does not match with the right group ID, or if the release ID does not match with the right package ID,
+     or if the file ID does not match with the right release ID.'
 );
 
 $server->register(
@@ -644,6 +667,64 @@ function getFiles($sessionKey,$group_id,$package_id,$release_id) {
 }
 
 /**
+ * getFileInfo - returns an FRSFile metadata corresponding to the file identified by file_id that belongs to the release release_id, in the package package_id, in project group_id,
+ *
+ * @param string $sessionKey the session hash associated with the session opened by the person who calls the service
+ * @param int $group_id the ID of the group the file belongs to
+ * @param int $package_id the ID of the package the file belongs to
+ * @param int $release_id the ID of the release the file belongs to
+ * @param int $file_id the ID of the file we want to retrieve the metadata
+ * @return array FRSFile that belongs to the project identified by $group_id, in the package $package_id, in the release $release_id, with the ID $file_id
+ *         or a soap fault if group_id does not match with a valid project or if package_id does not match with group_id, or if release_id does not match with package_id, or if file_id does not match with release_id.
+ */
+function getFileInfo($sessionKey, $group_id, $package_id, $release_id, $file_id) {
+    if (session_continue($sessionKey)) {
+
+        $pm = ProjectManager::instance();
+        $group = $pm->getProject($group_id);
+        if (!$group || !is_object($group)) {
+            return new SoapFault(get_group_fault,'Could Not Get Group','getFileInfo');
+        } elseif ($group->isError()) {
+            return new SoapFault(get_group_fault, $group->getErrorMessage(),'getFileInfo');
+        }
+        if (!checkRestrictedAccess($group)) {
+            return new SoapFault(get_group_fault, 'Restricted user: permission denied.', 'getFileInfo');
+        }
+
+        // retieve the package
+        $pkg_fact = new FRSPackageFactory();
+        $package =& $pkg_fact->getFRSPackageFromDb($package_id);
+        if (!$package || $package->isDeleted() || $package->getGroupID() != $group_id) {
+            return new SoapFault(invalid_package_fault,'Invalid Package','getFileInfo');
+        }
+        // check access rights to this package
+        if (! $package->userCanRead() || ! $package->isActive()) {
+            return new SoapFault(invalid_package_fault,'Permission to this Package denied','getFileInfo');
+        }
+
+        // retrieve the release
+        $release_fact = new FRSReleaseFactory();
+        $release =& $release_fact->getFRSReleaseFromDb($release_id);
+        if (!$release || $release->isDeleted() || $release->getPackageID() != $package_id) {
+            return new SoapFault(invalid_release_fault,'Invalid Release','getFile');
+        }
+        // check access rights to this release
+        if (! $release->userCanRead() || ! $release->isActive()) {
+            return new SoapFault(invalid_release_fault,'Permission to this Release denied','getFileInfo');
+        }
+
+        $file_fact = new FRSFileFactory();
+        $file =& $file_fact->getFRSFileFromDb($file_id);
+        if (!$file || $file->getReleaseID() != $release_id) {
+            return new SoapFault(invalid_file_fault,'Invalid File','getFileInfo');
+        }
+        return file_to_soap($file);
+    } else {
+        return new SoapFault(invalid_session_fault,'getFileInfo','Invalid Session','');
+    }
+}
+
+/**
  * file_to_soap : return the soap FRSFile structure giving a PHP FRSFile Object.
  * @access private
  * 
@@ -659,14 +740,17 @@ function file_to_soap($file) {
     } else {
         // for the moment, no permissions on files
         $return = array(
-            'file_id' => $file->getFileID(),
-            'release_id' => $file->getReleaseID(),
-            'file_name' => $file->getFileName(),
-            'file_size' => $file->getFileSize(),
-            'type_id' => $file->getTypeID(),
-            'processor_id' => $file->getProcessorID(),
-            'release_time' => $file->getReleaseTime(),
-            'post_date' => $file->getPostDate(),
+            'file_id'       => $file->getFileID(),
+            'release_id'    => $file->getReleaseID(),
+            'file_name'     => $file->getFileName(),
+            'file_size'     => $file->getFileSize(),
+            'type_id'       => $file->getTypeID(),
+            'processor_id'  => $file->getProcessorID(),
+            'release_time'  => $file->getReleaseTime(),
+            'post_date'     => $file->getPostDate(),
+            'computed_md5'  => $file->getComputedMd5(),
+            'reference_md5' => $file->getReferenceMd5(),
+            'user_id'       => $file->getUserID(),
         );
     }
     return $return;
@@ -1084,6 +1168,7 @@ $server->addFunction(
             'getReleases',
     	    'addRelease',
     	    'getFiles',
+    	    'getFileInfo',
     	    'getFile',
     	    'getFileChunk',
     	    'addFile',
