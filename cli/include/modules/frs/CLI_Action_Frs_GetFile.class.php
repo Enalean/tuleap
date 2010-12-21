@@ -9,8 +9,6 @@ require_once(CODENDI_CLI_DIR.'/CLI_Action.class.php');
 
 class CLI_Action_Frs_GetFile extends CLI_Action {
 
-    private $fileChunkSize = 6000000; // ~6 Mo
-
     function __construct() {
         parent::__construct('getFile', 'Get the content of the file');
         $this->setSoapCommand('getFileChunk');
@@ -66,7 +64,7 @@ class CLI_Action_Frs_GetFile extends CLI_Action {
         $callParams = $soap_params;
         unset($callParams['output']);
         $callParams['offset']     = 0;
-        $callParams['chunk_size'] = $this->fileChunkSize;
+        $callParams['chunk_size'] = $GLOBALS['soap']->getFileChunkSize();
 
         // Manage screen/file output
         $output = false;
@@ -87,7 +85,7 @@ class CLI_Action_Frs_GetFile extends CLI_Action {
         $totalTran = 0;
         $i = 0;
         do {
-            $callParams['offset'] = $i * $this->fileChunkSize;
+            $callParams['offset'] = $i * $GLOBALS['soap']->getFileChunkSize();
             $content = base64_decode($GLOBALS['soap']->call($this->soapCommand, $callParams, $use_extra_params));
             $cLength = strlen($content);
             if ($output !== false) {
@@ -100,7 +98,7 @@ class CLI_Action_Frs_GetFile extends CLI_Action {
             }
             $totalTran += $cLength;
             $i++;
-        } while ($cLength >= $this->fileChunkSize);
+        } while ($cLength >= $GLOBALS['soap']->getFileChunkSize());
         $endTime = microtime(true);
 
         $transRate = $totalTran / ($endTime - $startTime);
@@ -108,6 +106,17 @@ class CLI_Action_Frs_GetFile extends CLI_Action {
 
         if ($output !== false) {
             fclose($fd);
+            
+            unset($callParams['offset']);
+            unset($callParams['chunk_size']);
+            
+            $fileInfo = $GLOBALS['soap']->call('getFileInfo', $callParams, $use_extra_params);
+            if ($fileInfo->computed_md5) {
+                $localChecksum = md5_file($output);
+                if ($localChecksum != $fileInfo->computed_md5) {
+                    exit_error("File transfer faild: md5 checksum locally computed doesn't match remote one ($fileInfo->computed_md5)");
+                }
+            }
         }
     }
 

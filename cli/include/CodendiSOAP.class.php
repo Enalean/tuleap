@@ -25,7 +25,8 @@ class CodendiSOAP extends SoapClient {
 	var $session_group_id;	// Default group
 	var $session_user;		// Logged user name
     var $session_user_id;	// Logged user ID
-	
+    protected $fileChunkSize;
+
 	/**
 	 * constructor
 	 */
@@ -38,6 +39,7 @@ class CodendiSOAP extends SoapClient {
 		$this->session_group_id = 0;		// By default don't use a group
 		$this->session_user = "";
         $this->session_user_id = 0;
+		$this->fileChunkSize = 6000000; // ~6 Mo;
 		
 		// Try to find a dir where to put the session file
 		if (array_key_exists("HOME", $_ENV)) {
@@ -76,7 +78,7 @@ class CodendiSOAP extends SoapClient {
             }
 		}
 		
-		$LOG->add("CodendiSOAP::Executing command ".$command."(".implode(', ', $params).") ...");
+		$LOG->add("CodendiSOAP::Executing command ".$command." ...");
         return call_user_func_array(array($this, $command),$params);
 	}
 	
@@ -164,6 +166,13 @@ class CodendiSOAP extends SoapClient {
 		return $this->proxy_port;
 	}
 	
+	function getFileChunkSize() {
+	    return $this->fileChunkSize;
+	}
+	function setFileChunkSize($size) {
+	    $this->fileChunkSize = $size;
+	}
+	
 	function saveSession() {
 		$handler = fopen($this->session_file, "w");
 		if (!$handler) {
@@ -177,6 +186,7 @@ class CodendiSOAP extends SoapClient {
         fputs($handler, "session_user_id=\"".$this->session_user_id."\"\n");
         fputs($handler, "proxy_host=\"".$this->proxy_host."\"\n");
         fputs($handler, "proxy_port=\"".$this->proxy_port."\"\n");
+        fputs($handler, "file_chunk_size=\"".$this->fileChunkSize."\"\n");
 		fclose($handler);
 		
 		chmod($this->session_file, 0600);
@@ -194,6 +204,9 @@ class CodendiSOAP extends SoapClient {
 				$this->wsdl_string = $session["wsdl_string"];
 				$this->proxy_host = $session["proxy_host"];
 				$this->proxy_port = $session["proxy_port"];
+				if (isset($session["file_chunk_size"])) {
+				    $this->fileChunkSize = $session["file_chunk_size"];
+				}
 			}
 		}
 	}
