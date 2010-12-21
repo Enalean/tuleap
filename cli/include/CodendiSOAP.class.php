@@ -172,26 +172,30 @@ class CodendiSOAP extends SoapClient {
 	function setFileChunkSize($size) {
 	    $this->fileChunkSize = $size;
 	}
-	
+
 	function saveSession() {
-		$handler = fopen($this->session_file, "w");
-		if (!$handler) {
+		// If file doesn't exist, create first and set the right permissions
+		if (!file_exists($this->session_file)) {
+			touch($this->session_file);
+			chmod($this->session_file, 0600);
+		}
+
+		$content = '';
+		$content .= "wsdl_string=\"".$this->wsdl_string."\"".PHP_EOL;
+		$content .= "session_string=\"".$this->session_string."\"".PHP_EOL;
+		$content .= "session_group_id=\"".$this->session_group_id."\"".PHP_EOL;
+		$content .= "session_user=\"".$this->session_user."\"".PHP_EOL;
+		$content .= "session_user_id=\"".$this->session_user_id."\"".PHP_EOL;
+		$content .= "proxy_host=\"".$this->proxy_host."\"".PHP_EOL;
+		$content .= "proxy_port=\"".$this->proxy_port."\"".PHP_EOL;
+		$content .= "file_chunk_size=\"".$this->fileChunkSize."\"".PHP_EOL;
+
+		if (!file_put_contents($this->session_file, $content)) {
 			exit_error("Could not open session file ".$this->session_file." for writing");
 		}
-		
-		fputs($handler, "wsdl_string=\"".$this->wsdl_string."\"\n");
-		fputs($handler, "session_string=\"".$this->session_string."\"\n");
-		fputs($handler, "session_group_id=\"".$this->session_group_id."\"\n");
-		fputs($handler, "session_user=\"".$this->session_user."\"\n");
-        fputs($handler, "session_user_id=\"".$this->session_user_id."\"\n");
-        fputs($handler, "proxy_host=\"".$this->proxy_host."\"\n");
-        fputs($handler, "proxy_port=\"".$this->proxy_port."\"\n");
-        fputs($handler, "file_chunk_size=\"".$this->fileChunkSize."\"\n");
-		fclose($handler);
-		
 		chmod($this->session_file, 0600);
 	}
-	
+
 	function readSession() {
 		// Read session info (if exists)
 		if (file_exists($this->session_file)) {
