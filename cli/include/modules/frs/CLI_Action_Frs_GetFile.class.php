@@ -83,6 +83,8 @@ class CLI_Action_Frs_GetFile extends CLI_Action {
             }
         }
 
+        $startTime = microtime(true);
+        $totalTran = 0;
         $i = 0;
         do {
             $callParams['offset'] = $i * $this->fileChunkSize;
@@ -96,8 +98,13 @@ class CLI_Action_Frs_GetFile extends CLI_Action {
             } else {
                 echo $content;
             }
+            $totalTran += $cLength;
             $i++;
         } while ($cLength >= $this->fileChunkSize);
+        $endTime = microtime(true);
+
+        $transRate = $totalTran / ($endTime - $startTime);
+        $GLOBALS['LOG']->add('Transfer rate: '.size_readable($transRate, null, 'bi', '%.2f %s/s'));
 
         if ($output !== false) {
             fclose($fd);
