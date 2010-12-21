@@ -36,6 +36,10 @@ class CLI_Action_Frs_AddFile extends CLI_Action {
             'name'           => 'processor_id',
             'description'    => '--processor_id=<processor_id> Id of the processor of the file',
         ));
+        $this->addParam(array(
+            'name'           => 'reference_md5',
+            'description'    => '--reference_md5=<reference_md5> Md5 checksum of the file',
+        ));
     }
     function validate_package_id(&$package_id) {
         if (!$package_id) {
@@ -58,6 +62,12 @@ class CLI_Action_Frs_AddFile extends CLI_Action {
     function validate_processor_id(&$processor_id) {
         if (!$processor_id) {
             $processor_id = 9999;
+        }
+        return true;
+    }
+    function validate_reference_md5(&$reference_md5) {
+        if (!$reference_md5) {
+            $reference_md5 = '';
         }
         return true;
     }
@@ -108,7 +118,7 @@ class CLI_Action_Frs_AddFile extends CLI_Action {
     }
     
 	function sort_parameters($p1, $p2) {
-        $order = array('group_id', 'package_id', 'release_id', 'filename', 'base64_contents', 'type_id', 'processor_id', 'is_upload');
+        $order = array('group_id', 'package_id', 'release_id', 'filename', 'base64_contents', 'type_id', 'processor_id', 'reference_md5', 'is_upload');
         $order_flip = array_flip($order);
         return $order_flip[$p1] > $order_flip[$p2];
     }
