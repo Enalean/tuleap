@@ -820,7 +820,7 @@ function getFile($sessionKey,$group_id,$package_id,$release_id,$file_id) {
         
         $file_fact = new FRSFileFactory();
         $file =& $file_fact->getFRSFileFromDb($file_id);
-        if (!$file || $file->getReleaseID() != $release_id) {
+        if (!$file || !$file->isActive() || $file->getReleaseID() != $release_id) {
             return new SoapFault(invalid_file_fault,'Invalid File','getFile');
         }
         
@@ -892,7 +892,7 @@ function getFileChunk($sessionKey,$group_id,$package_id,$release_id,$file_id,$of
         
         $file_fact = new FRSFileFactory();
         $file =& $file_fact->getFRSFileFromDb($file_id);
-        if (!$file || $file->getReleaseID() != $release_id) {
+        if (!$file || !$file->isActive() || $file->getReleaseID() != $release_id) {
             return new SoapFault(invalid_file_fault,'Invalid File','getFile');
         }
         
