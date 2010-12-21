@@ -76,7 +76,7 @@ class CodendiSOAP extends SoapClient {
             }
 		}
 		
-		$LOG->add("CodendiSOAP::Executing command ".$command."...");
+		$LOG->add("CodendiSOAP::Executing command ".$command."(".implode(', ', $params).") ...");
         return call_user_func_array(array($this, $command),$params);
 	}
 	
