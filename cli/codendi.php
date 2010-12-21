@@ -139,7 +139,7 @@ if (!$module) {
 $module->execute($params);
 
 // End script
-echo "\n";
+//echo "\n";
 exit(0);
 
 
