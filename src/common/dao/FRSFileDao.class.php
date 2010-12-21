@@ -474,6 +474,23 @@ class FRSFileDao extends DataAccessObject {
                ' WHERE file_id= '.$this->da->escapeInt($fileId);
         return $this->update($sql);
     }
+    
+    /**
+     * Insert the same computed md5sum value in the reference md5 field in case of difference
+     * 
+     * @param Integer $fileId
+     * 
+     * @return Boolean
+     */
+    function ignoreMd5Comparison($fileId) {
+        $sql = ' update frs_file '.
+               ' set reference_md5 = '.
+               '( select computed_md5 '.
+               ' from ( select * from frs_file ) as frs_tmp '.
+               ' where file_id= '.$this->da->escapeInt($fileId).') '.
+               ' where file_id= '.$this->da->escapeInt($fileId);
+        return $this->update($sql);
+    }
 
 }
 

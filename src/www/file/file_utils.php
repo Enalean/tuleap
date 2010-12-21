@@ -376,10 +376,16 @@ function frs_display_release_form($is_update, &$release, $group_id, $title, $url
         }
         $release =& new FRSRelease($release);
     }
-    $files = $release->getFiles();
-    for ($i = 0; $i < count($files); $i++) {
-        if (!$frsff->compareMd5Checksums($files[$i]->getComputedMd5(), $files[$i]->getReferenceMd5())) {
-            $GLOBALS['Response']->addFeedback('error',$GLOBALS['Language']->getText('file_admin_editreleases',  'md5_fail', array(basename($files[$i]->getFileName()))));
+    if ($is_update) {
+        $comparisonError = false;
+        $files = $release->getFiles();
+        if (count($files) > 0 ) {
+            $comparisonError = true;
+            for ($i = 0; $i < count($files); $i++) {
+                if (!$frsff->compareMd5Checksums($files[$i]->getComputedMd5(), $files[$i]->getReferenceMd5())) {
+                    $GLOBALS['Response']->addFeedback('error',$GLOBALS['Language']->getText('file_admin_editreleases',  'md5_fail', array(basename($files[$i]->getFileName()))));
+                }
+            }
         }
     }
 
@@ -498,6 +504,7 @@ function frs_display_release_form($is_update, &$release, $group_id, $title, $url
     <?php
     
     $titles = array ();
+    $titles[] = ($is_update && $comparisonError) ? $GLOBALS['Language']->getText('file_admin_editreleases', 'ignore_checksum') : '';
     $titles[] = $is_update ? $GLOBALS['Language']->getText('file_admin_editreleases', 'delete_col') : '';
     $titles[] = $GLOBALS['Language']->getText('file_admin_editreleases', 'filename');
     $titles[] = $GLOBALS['Language']->getText('file_admin_editreleases', 'processor');
@@ -521,6 +528,7 @@ function frs_display_release_form($is_update, &$release, $group_id, $title, $url
             $user_id = $files[$i]->getUserID();
             $userName =(isset($user_id)) ? UserManager::instance()->getUserById($files[$i]->getUserID())->getRealName() : "";   
             echo '<TR>';
+            echo '<td><input type="checkbox" name="filesToIgnoreChecksum[]" value="' . $files[$i]->getFileID() . '"</td>';
             echo '<TD><INPUT TYPE="CHECKBOX" NAME="release_files_to_delete[]" VALUE="' . $files[$i]->getFileID() . '"</TD>';
             echo '<TD>' . $hp->purify($fname, CODENDI_PURIFIER_CONVERT_HTML) . '<INPUT TYPE="HIDDEN" NAME="release_files[]" VALUE="' . $files[$i]->getFileID() . '"></TD>';
             echo '<TD>' . frs_show_processor_popup($group_id,$name = 'release_file_processor[]', $files[$i]->getProcessorID()) . '</TD>';
@@ -845,7 +853,13 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
         } else {
             $release_files_to_delete = array();
         }
-        
+
+        if($request->validArray(new Valid_UInt('filesToIgnoreChecksum'))) {
+            $filesToIgnoreChecksum = $request->get('filesToIgnoreChecksum');
+        } else {
+            $filesToIgnoreChecksum = array();
+        }
+
         if($request->validArray(new Valid_UInt('release_files'))) { 
             $release_files = $request->get('release_files');
         } else {
@@ -1057,13 +1071,22 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
                 foreach ($release_files_to_delete as $rel_file) {
                     $res =& $frsff->getFRSFileFromDb($rel_file);
                     $fname = $res->getFileName();
-                    $list = split('/', $fname);
-                    $fname = $list[sizeof($list) - 1];            
                     $res = $frsff->delete_file($group_id, $rel_file);
                     if ($res == 0) {
-                        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('file_admin_editreleases', 'f_not_yours', $fname));
+                        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('file_admin_editreleases', 'f_not_yours', basename($fname)));
                     } else {
-                        $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('file_admin_editreleases', 'file_deleted', $fname));
+                        $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('file_admin_editreleases', 'file_deleted', basename($fname)));
+                    }
+                }
+
+                //ignore checksum comparison for marked files
+                foreach ($filesToIgnoreChecksum as $fileID) {
+                    $file = $frsff->getFRSFileFromDb($fileID);
+                    $res = $frsff->ignoreMd5Comparison($file);
+                    if (!$res) {
+                        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('file_admin_editreleases', 'checksum_not_modified', basename($file->getFileName())));
+                    } else {
+                        $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('file_admin_editreleases', 'checksum_modified', basename($file->getFileName())));
                     }
                 }
     

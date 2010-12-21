@@ -177,7 +177,10 @@ file_admin_editreleases	create_canceled	Création de la version annulée
 file_admin_editreleases	update_canceled	Mise à jour de la version annulée
 file_admin_editreleases	upload_file_msg	(La taille maximum autorisée est de $1 Mb - <u>Veuillez compresser vos fichiers</u>)
 file_admin_editreleases	md5sum	md5 Checksum
-file_admin_editreleases	user	Utilisateur 
+file_admin_editreleases	user	Utilisateur
+file_admin_editreleases	ignore_checksum	Ignorer Checksum
+file_admin_editreleases	checksum_not_modified	Impossible d'ignorer la comparaison du md5 checksum pour le fichier "$1"
+file_admin_editreleases	checksum_modified	La comparaison du Md5 checksum a été ignorée pour le fichier "$1"  
 #
 #-----------------------------------------------
 # Script: SF/www/file/admin/index.php
