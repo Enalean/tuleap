@@ -229,7 +229,7 @@ class PHP_BigFile {
      */
     public function stream_write($data) {
         $sizeToWrite = strlen($data);
-        if ($this->offset + $sizeToWrite < PHP_INT_MAX) {
+        if ($this->offset + $sizeToWrite <= PHP_INT_MAX) {
             $written = file_put_contents($this->path, $data, FILE_APPEND);
         } else {
             $written = $this->bigWrite($data);
