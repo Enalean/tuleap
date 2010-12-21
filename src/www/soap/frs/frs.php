@@ -275,7 +275,8 @@ $server->register(
         'filename'=>'xsd:string',
         'base64_contents'=>'xsd:string',
         'type_id'=>'xsd:int',
-        'processor_id'=>'xsd:int'
+        'processor_id'=>'xsd:int',
+        'reference_md5'=>'xsd:string'
         ),
     array('addFile'=>'xsd:int'),
     $uri,
@@ -283,7 +284,7 @@ $server->register(
     'rpc',
     'encoded',
     'Add a File to the File Release Manager of the project group_id with the values given by 
-     package_id, release_id, filename, base64_contents, type_id and processor_id. 
+     package_id, release_id, filename, base64_contents, type_id, processor_id and reference_md5. 
      The content of the file must be encoded in base64.
      Returns the ID of the created file if the creation succeed.
      Returns a soap fault if the group_id is not a valid one, 
@@ -301,7 +302,8 @@ $server->register(
         'release_id'=>'xsd:int',
         'filename'=>'xsd:string',
         'type_id'=>'xsd:int',
-        'processor_id'=>'xsd:int'
+        'processor_id'=>'xsd:int',
+        'reference_md5'=>'xsd:string'
         ),
     array('addUploadedFile'=>'xsd:int'),
     $uri,
@@ -309,7 +311,7 @@ $server->register(
     'rpc',
     'encoded',
     'Add a File to the File Release Manager of the project group_id with the values given by 
-     package_id, release_id, filename, type_id and processor_id. 
+     package_id, release_id, filename, type_id, processor_id and reference_md5. 
      The file must already be present in the incoming directory.
      Returns the ID of the created file if the creation succeed.
      Returns a soap fault if the group_id is not a valid one, 
@@ -919,6 +921,7 @@ function getFileChunk($sessionKey,$group_id,$package_id,$release_id,$file_id,$of
  * @param string $base64_contents the content of the file, encoded in base64
  * @param int $type_id the ID of the type of the file
  * @param int $processor_id the ID of the processor of the file
+ * @param string reference_md5 the md5sum of the file calculated in client side
  * @return int the ID of the new created file, 
  *              or a soap fault if :
  *              - group_id does not match with a valid project, 
@@ -929,7 +932,7 @@ function getFileChunk($sessionKey,$group_id,$package_id,$release_id,$file_id,$of
  *              - the user does not have the permissions to create a file
  *              - the file creation failed.
  */
-function addFile($sessionKey,$group_id,$package_id,$release_id,$filename,$base64_contents,$type_id,$processor_id) {
+function addFile($sessionKey,$group_id,$package_id,$release_id,$filename,$base64_contents,$type_id,$processor_id,$reference_md5) {
     if (session_continue($sessionKey)) {
 
         $pm = ProjectManager::instance();
@@ -974,7 +977,7 @@ function addFile($sessionKey,$group_id,$package_id,$release_id,$filename,$base64
             
             // call addUploadedFile function
             $uploaded_filename = basename($filename);
-            return addUploadedFile($sessionKey,$group_id,$package_id,$release_id,$uploaded_filename,$type_id,$processor_id);
+            return addUploadedFile($sessionKey,$group_id,$package_id,$release_id,$uploaded_filename,$type_id,$processor_id,$reference_md5);
             
         } else {
             return new SoapFault(invalid_file_fault, 'User is not allowed to add a file', 'addFile');
@@ -994,6 +997,7 @@ function addFile($sessionKey,$group_id,$package_id,$release_id,$filename,$base64
  * @param string $filename the name of the file we want to add (only file name, not directory)
  * @param int $type_id the ID of the type of the file
  * @param int $processor_id the ID of the processor of the file
+ * @param string reference_md5 the md5sum of the file calculated in client side
  * @return int the ID of the new created file, 
  *              or a soap fault if :
  *              - group_id does not match with a valid project, 
@@ -1002,9 +1006,10 @@ function addFile($sessionKey,$group_id,$package_id,$release_id,$filename,$base64
  *              - release_id does not match with a valid release,
  *              - release_id does not belong to the project group_id,
  *              - the user does not have the permissions to create a file
+ *              - the md5 comparison failed
  *              - the file creation failed.
  */
-function addUploadedFile($sessionKey,$group_id,$package_id,$release_id,$filename,$type_id,$processor_id) {
+function addUploadedFile($sessionKey,$group_id,$package_id,$release_id,$filename,$type_id,$processor_id,$reference_md5) {
     if (session_continue($sessionKey)) {
 
         $pm = ProjectManager::instance();
@@ -1035,11 +1040,9 @@ function addUploadedFile($sessionKey,$group_id,$package_id,$release_id,$filename
         $file_fact = new FRSFileFactory();
         if ($file_fact->userCanAdd($group_id)) {
             if (! $file_fact->isFileBaseNameExists($filename, $release->getReleaseID(), $group_id)) {
-                $computedMd5 = md5_file($GLOBALS['ftp_incoming_dir'] . '/' . $name);
-                // Attention : referenceMd5 is set as an empty string just for the moment before it will be provided by the user
-                $referenceMd5 = '';
-                if ($file_fact->compareMd5Checksums($computedMd5, $referenceMd5)) {
-                    $file_id = $file_fact->createFromIncomingFile(basename($filename),$release_id,$type_id,$processor_id, $computedMd5);
+                $computed_md5 = md5_file($GLOBALS['ftp_incoming_dir'] . '/' . $name);
+                if ($file_fact->compareMd5Checksums($computed_md5, $reference_md5)) {
+                    $file_id = $file_fact->createFromIncomingFile(basename($filename),$release_id,$type_id,$processor_id,$computed_md5,$reference_md5);
                     if (! $file_id) {
                         return new SoapFault(invalid_file_fault,$file_fact->getErrorMessage(),'addUploadedFile');
                     } else {

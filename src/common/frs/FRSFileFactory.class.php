@@ -175,7 +175,7 @@ class FRSFileFactory extends Error {
      * @return true or id(auto_increment) if there is no error
      */
     function createFromIncomingFile($name=null, $release_id=null, 
-                               $type_id=null, $processor_id=null, $computedMd5) {
+                               $type_id=null, $processor_id=null, $computedMd5, $referenceMd5) {
         
         // check if the file exists
         $uploaded_files = $this->getUploadedFileNames();
@@ -198,7 +198,7 @@ class FRSFileFactory extends Error {
         $file->setProcessorID($processor_id);
         $file->setStatus('A');
         $file->setComputedMd5($computedMd5);
-//      $file->setReferenceMd5($computedMd5);
+        $file->setReferenceMd5($referenceMd5);
         $file->setUserID($user->getId());
 
         // retrieve the group_id
