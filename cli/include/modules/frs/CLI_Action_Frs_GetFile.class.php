@@ -8,8 +8,12 @@
 require_once(CODENDI_CLI_DIR.'/CLI_Action.class.php');
 
 class CLI_Action_Frs_GetFile extends CLI_Action {
-    function CLI_Action_Frs_GetFile() {
-        $this->CLI_Action('getFile', 'Get the content of the file');
+
+    private $fileChunkSize = 6000000; // ~6 Mo
+
+    function __construct() {
+        parent::__construct('getFile', 'Get the content of the file');
+        $this->setSoapCommand('getFileChunk');
         $this->addParam(array(
             'name'           => 'package_id',
             'description'    => '--package_id=<package_id>    Id of the package the returned file belong to.',
@@ -25,7 +29,6 @@ class CLI_Action_Frs_GetFile extends CLI_Action {
         $this->addParam(array(
             'name'           => 'output',
             'description'    => '--output=<location>          (Optional) Name of the file to write the file to',
-            'soap'           => false
         ));
     }
     function validate_package_id(&$package_id) {
@@ -57,27 +60,51 @@ class CLI_Action_Frs_GetFile extends CLI_Action {
         }
         return true;
     }
-    function soapResult($params, $soap_result, $fieldnames = array(), $loaded_params = array()) {
-        $file = base64_decode($soap_result);
-    
-        if ($loaded_params['others']['output']) {
-            $output = $loaded_params['others']['output'];
-            while (!($fh = @fopen($output, "wb"))) {
+
+    function soapCall($soap_params, $use_extra_params = true) {
+        // Prepare SOAP parameters
+        $callParams = $soap_params;
+        unset($callParams['output']);
+        $callParams['offset']     = 0;
+        $callParams['chunk_size'] = $this->fileChunkSize;
+
+        // Manage screen/file output
+        $output = false;
+        if ($soap_params['output']) {
+            $output = $soap_params['output'];
+        }
+        if ($output !== false) {
+            while (!($fd = @fopen($output, "wb"))) {
                 echo "Couldn't open file ".$output." for writing.\n";
                 $output = "";
                 while (!$output) {
                     $output = get_user_input("Please specify a new file name: ");
                 }
             }
-            
-            fwrite($fh, $file, strlen($file));
-            fclose($fh);
-            
-            if (!$loaded_params['others']['quiet']) echo "File retrieved successfully.\n";
-        } else {
-            if (!$loaded_params['others']['quiet']) echo $file;     // if not saving to a file, output to screen
+        }
+
+        $i = 0;
+        do {
+            $callParams['offset'] = $i * $this->fileChunkSize;
+            $content = base64_decode($GLOBALS['soap']->call($this->soapCommand, $callParams, $use_extra_params));
+            $cLength = strlen($content);
+            if ($output !== false) {
+                $written = fwrite($fd, $content);
+                if ($written != $cLength) {
+                    throw new Exception('Received '.$cLength.' of data but only '.$written.' written on Disk');
+                }
+            } else {
+                echo $content;
+            }
+            $i++;
+        } while ($cLength >= $this->fileChunkSize);
+
+        if ($output !== false) {
+            fclose($fd);
         }
     }
+
+    function soapResult($params, $soap_result, $fieldnames = array(), $loaded_params = array()) {}
 }
 
 ?>
