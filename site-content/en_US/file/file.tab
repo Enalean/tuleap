@@ -185,9 +185,6 @@ file_admin_editreleases	update_canceled	Release update canceled
 file_admin_editreleases	upload_file_msg	(The maximum upload file size is $1 Mb - <u>Please compress your files</u>)
 file_admin_editreleases	md5sum	md5 Checksum
 file_admin_editreleases	user	User
-file_admin_editreleases	ignore_checksum	Ignore Checksum
-file_admin_editreleases	checksum_not_modified	Can not ignore md5 checksum comparison for "$1"
-file_admin_editreleases	checksum_modified	Md5 checksum comparison ignored for "$1"  
 #
 #-----------------------------------------------
 # Script: SF/www/file/admin/index.php

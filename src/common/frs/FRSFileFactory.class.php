@@ -605,17 +605,6 @@ class FRSFileFactory extends Error {
     function compareMd5Checksums($computedMd5, $referenceMd5) {
         return($computedMd5 == '' || $referenceMd5 == '' || $computedMd5 == $referenceMd5);
     }
-    /**
-     * Insert the same computed md5 value in the reference md5 field in case of difference 
-     * 
-     * @param FRSFile $file
-     * 
-     * @return Boolean
-     */
-    function ignoreMd5Comparison($file) {
-        $dao = $this->_getFRSFileDao();
-        return $dao->ignoreMd5Comparison($file->getFileID());
-    }
 }
 
 ?>
