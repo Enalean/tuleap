@@ -422,8 +422,12 @@ function frs_display_release_form($is_update, &$release, $group_id, $title, $url
     echo "var refresh_files_list = '". $GLOBALS['Language']->getText('file_admin_editreleases','refresh_file_list') . "';";
     echo "var release_mode = '". ($is_update ? 'edition' : 'creation' ) ."';";
     if ($is_update) {
-        $pm = & PermissionsManager::instance();
-        $ugroups_name = $pm->getUgroupNameByObjectIdAndPermissionType($release->getReleaseID(), 'RELEASE_READ');
+        $pm  = PermissionsManager::instance();
+        $dar = $pm->getAuthorizedUgroups($release->getReleaseID(), FRSRelease::PERM_READ);
+        $ugroups_name = array();
+        foreach ($dar as $row) {
+            $ugroups_name[] = util_translate_name_ugroup($row['name']);
+        }
         echo "var ugroups_name = '" . implode(", ", $ugroups_name) . "';";
         echo "var default_permissions_text = '" . $GLOBALS['Language']->getText('file_admin_editreleases', 'release_perm') . "';";
     } else {

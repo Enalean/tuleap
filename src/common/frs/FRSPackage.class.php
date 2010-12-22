@@ -28,6 +28,8 @@ require_once('common/frs/FRSPackageFactory.class.php');
  *
  */
 class FRSPackage extends Error {
+    const PERM_READ      = 'PACKAGE_READ';
+
     const STATUS_ACTIVE  = 1;
     const STATUS_DELETED = 2;
     const STATUS_HIDDEN  = 3;
