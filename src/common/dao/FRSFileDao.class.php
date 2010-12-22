@@ -318,24 +318,38 @@ class FRSFileDao extends DataAccessObject {
         $deleted = $this->update($sql);
         return $deleted;
     }
-    
+
     /**
      * Log the file download action into the database
      * 
      * @param Object{FRSFile) $file the FRSFile Object to log the download of
-     * @param int $user_id the user that download the file (if 0, the current user will be taken)
+     * @param int $user_id the user that download the file
      * @return boolean true if there is no error, false otherwise
      */
-    function logDownload($file, $user_id = 0) {
-    	   if ($user_id == 0) {
-    	       // must take the current user
-           $user_id = user_getid();
-    	   }
-       //Insert a new entry in the file release download log table
+    function logDownload($file, $user_id) {
        $sql = "INSERT INTO filedownload_log(user_id,filerelease_id,time) "
              ."VALUES ('".$this->da->escapeInt($user_id)."','".$this->da->escapeInt($file->getFileID())."','".$this->da->escapeInt(time())."')";
-       $inserted = $this->update($sql);
-       return $inserted;	
+       return $this->update($sql);
+    }
+
+    /**
+     * Return true if a download is already logged for the user since the given time
+     *
+     * @param Integer $fileId
+     * @param Integer $userId
+     * @param Integer $time
+     *
+     * @return Boolean
+     */
+    function existsDownloadLogSince($fileId, $userId, $time) {
+        $sql = 'SELECT NULL'.
+               ' FROM filedownload_log'.
+               ' WHERE user_id = '.$this->da->escapeInt($userId).
+               ' AND filerelease_id = '.$this->da->escapeInt($fileId).
+               ' AND time >= '.$time.
+               ' LIMIT 1';
+        $dar = $this->retrieve($sql);
+        return ($dar && !$dar->isError() && $dar->rowCount() !== 0);
     }
 
     /**

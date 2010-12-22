@@ -343,15 +343,24 @@ class FRSFile extends Error {
     /**
      * Log the download of the file in the log system
      * 
+     * Only log one download attempt per file/user/hour. Driven by SOAP:getFileChunk
+     * in order to reduce the amount of download attempt logged.
+     * 
      * @param int $user_id the user that download the file (if 0, the current user will be taken)
      * @return boolean true if there is no error, false otherwise
      */
     function LogDownload($user_id = 0) {
-        $dao =& $this->_getFrsFileDao();
-        $ok = $dao->logDownload($this, $user_id);
-        return $ok;
+        if ($user_id == 0) {
+            $user_id = UserManager::instance()->getCurrentUser()->getId();
+        }
+        $time = $_SERVER['REQUEST_TIME'] - 3600;
+        $dao  = $this->_getFrsFileDao();
+        if (!$dao->existsDownloadLogSince($this->getFileID(), $user_id, $time)) {
+            return $dao->logDownload($this, $user_id);
+        }
+        return true;
     }
-    
+
     /**
      * userCanDownload : determine if the user can download the file or not
      *
