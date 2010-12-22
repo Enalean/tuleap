@@ -381,7 +381,7 @@ function frs_display_release_form($is_update, &$release, $group_id, $title, $url
         if (count($files) > 0 ) {
             for ($i = 0; $i < count($files); $i++) {
                 if (!$frsff->compareMd5Checksums($files[$i]->getComputedMd5(), $files[$i]->getReferenceMd5())) {
-                    $GLOBALS['Response']->addFeedback('error',$GLOBALS['Language']->getText('file_admin_editreleases',  'md5_fail', array(basename($files[$i]->getFileName()))));
+                    $GLOBALS['Response']->addFeedback('error',$GLOBALS['Language']->getText('file_admin_editreleases',  'md5_fail', array(basename($files[$i]->getFileName()), $files[$i]->getComputedMd5())));
                 }
             }
         }
@@ -536,7 +536,7 @@ function frs_display_release_form($is_update, &$release, $group_id, $title, $url
             //In case of difference between the inserted md5 and the computed one
             //we dispaly an editable text field to let the user insert the right value
             //to avoid the error message next time
-            $value = 'value = ""';
+            $value = 'value = "'.$files[$i]->getReferenceMd5().'"';
             if ($frsff->compareMd5Checksums($files[$i]->getComputedMd5(), $files[$i]->getReferenceMd5())) {
                 $value = 'value = "'.$files[$i]->getComputedMd5().'" readonly="true"';
             }
@@ -1286,7 +1286,7 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
                                                     $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('file_admin_editreleases', 'not_add_file') . ": " . basename($filename));
                                                 }
                                             } else {
-                                                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('file_admin_editreleases', 'md5_fail', array (basename($filename))));
+                                                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('file_admin_editreleases', 'md5_fail', array (basename($filename), $computedMd5)));
                                             }
                                         } else {
                                             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('file_admin_editreleases', 'filename_invalid') . ": $filename");
