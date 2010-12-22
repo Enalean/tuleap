@@ -1,5 +1,22 @@
 <?php
-
+/*
+ * Copyright (c) STMicroelectronics, 2010. All Rights Reserved.
+ *
+ * This file is a part of Codendi.
+ *
+ * Codendi is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Codendi is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ */
 require_once('common/frs/FRSFile.class.php');
 
 class FRSHugeFileTest extends UnitTestCase {
@@ -13,32 +30,32 @@ class FRSHugeFileTest extends UnitTestCase {
         $this->readPath  = $this->fixDir.'/file_2.5GB';
         $this->writePath = $this->fixDir.'/file_2.5GB_copy';
 
-        if (!file_exists($this->readPath)) { //save same ci time, create the big file only once
-            if (is_link($this->fixDir)) {
-                $parentPath = realpath($this->fixDir);
-            } else {
-                $parentPath = $this->fixDir;
-            }
-            if (!is_dir($parentPath)) {
-                mkdir($this->fixDir);
-            }
-            $cmd = '/bin/df --portability '.escapeshellarg($parentPath).' | tail -1 | awk \'{print $4}\'';
-            //echo $cmd.PHP_EOL;
-            $spaceLeft = `$cmd` ;
-            if ($spaceLeft < 5200000) {
-                trigger_error("No sufficient space to create ".$this->readPath.". Cannot test big files. Tip: link ".$this->fixDir." to a partition with more than 5GB available.", E_USER_WARNING);
-            } else {
-                $output      = null;
-                $returnValue = null;
-                exec('dd if=/dev/urandom of='. $this->readPath .' bs=1M count=2500', $output, $returnValue);
-                if ($returnValue != 0) {
-                    trigger_error('dd failed, unable to generate the big file');
-                }
+        // Generate big file
+        if (is_link($this->fixDir)) {
+            $parentPath = realpath($this->fixDir);
+        } else {
+            $parentPath = $this->fixDir;
+        }
+        if (!is_dir($parentPath)) {
+            mkdir($this->fixDir);
+        }
+        $cmd = '/bin/df --portability '.escapeshellarg($parentPath).' | tail -1 | awk \'{print $4}\'';
+        //echo $cmd.PHP_EOL;
+        $spaceLeft = `$cmd` ;
+        if ($spaceLeft < 5200000) {
+            trigger_error("No sufficient space to create ".$this->readPath.". Cannot test big files. Tip: link ".$this->fixDir." to a partition with more than 5GB available.", E_USER_WARNING);
+        } else {
+            $output      = null;
+            $returnValue = null;
+            exec('dd if=/dev/urandom of='. $this->readPath .' bs=1M count=2500', $output, $returnValue);
+            if ($returnValue != 0) {
+                trigger_error('dd failed, unable to generate the big file');
             }
         }
     }
 
     function tearDown() {
+        unlink(realpath($this->readPath));
         unlink(realpath($this->writePath));
     }
 
