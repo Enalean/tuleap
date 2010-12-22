@@ -529,7 +529,14 @@ function frs_display_release_form($is_update, &$release, $group_id, $title, $url
             echo '<TD>' . $hp->purify($fname, CODENDI_PURIFIER_CONVERT_HTML) . '<INPUT TYPE="HIDDEN" NAME="release_files[]" VALUE="' . $files[$i]->getFileID() . '"></TD>';
             echo '<TD>' . frs_show_processor_popup($group_id,$name = 'release_file_processor[]', $files[$i]->getProcessorID()) . '</TD>';
             echo '<TD>' . frs_show_filetype_popup($name = 'release_file_type[]', $files[$i]->getTypeID()) . '</TD>';
-            echo '<TD><INPUT TYPE="TEXT" NAME="computed_md5" value = "'.$files[$i]->getComputedMd5().' " SIZE="36" readonly="true"></TD>';
+            //In case of difference between the inserted md5 and the computed one
+            //we dispaly an editable text field to let the user insert the right value
+            //to avoid the error message next time
+            $value = 'value = ""';
+            if ($frsff->compareMd5Checksums($files[$i]->getComputedMd5(), $files[$i]->getReferenceMd5())) {
+                $value = 'value = "'.$files[$i]->getComputedMd5().'" readonly="true"';
+            }
+            echo '<TD><INPUT TYPE="TEXT" NAME="reference_md5[]" '.$value.' SIZE="36" ></TD>';
             echo '<TD><INPUT TYPE="TEXT" NAME="user" value = "'.$userName.'" readonly="true"></TD>';
             echo '<TD>' . frs_show_release_popup2($group_id, $name = 'new_release_id[]', $files[$i]->getReleaseID()) . '</TD>';
             echo '<TD><INPUT TYPE="TEXT" NAME="release_time[]" VALUE="' . format_date('Y-m-d', $files[$i]->getReleaseTime()) . '" SIZE="10" MAXLENGTH="10"></TD></TR>';
@@ -880,6 +887,12 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
             $release_time = array();
         }
         
+        if($request->validArray(new Valid_String('reference_md5'))) {
+            $reference_md5 = $request->get('reference_md5');
+        } else {
+            $reference_md5 = array();
+        }
+        
         if($request->valid(new Valid_UInt('id'))) {
             $release['release_id'] = $request->get('id');
         } else {
@@ -1102,6 +1115,7 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
                                         'release_time' => $unix_release_time,
                                         'type_id' => $release_file_type[$index],
                                         'processor_id' => $release_file_processor[$index],
+                                        'reference_md5' => ($reference_md5[$index]!= '')? $reference_md5[$index]: $files[$index]->getReferenceMd5(),
                                         'file_id' => $rel_file
                                     );
                                     $res = $frsff->update($array);
