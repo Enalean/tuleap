@@ -273,7 +273,6 @@ $server->register(
         'package_id'=>'xsd:int',
         'release_id'=>'xsd:int',
         'filename'=>'xsd:string',
-        'base64_contents'=>'xsd:string',
         'type_id'=>'xsd:int',
         'processor_id'=>'xsd:int',
         'reference_md5'=>'xsd:string'
@@ -284,13 +283,33 @@ $server->register(
     'rpc',
     'encoded',
     'Add a File to the File Release Manager of the project group_id with the values given by 
-     package_id, release_id, filename, base64_contents, type_id, processor_id and reference_md5. 
+     package_id, release_id, filename, type_id, processor_id and reference_md5. 
      The content of the file must be encoded in base64.
      Returns the ID of the created file if the creation succeed.
      Returns a soap fault if the group_id is not a valid one, 
      if the package does not match with the group ID, 
      if the release does not match with the package ID,
      or if the add failed.'
+);
+
+$server->register(
+    'addFileChunk',
+    array(
+        'sessionKey'     => 'xsd:string',
+        'filename'       => 'xsd:string',
+        'contents'       => 'xsd:string',
+        'first_chunk' => 'xsd:boolean',
+        ),
+    array('addFileChunk'=>'xsd:integer'),
+    $uri,
+    $uri.'#addFileChunk',
+    'rpc',
+    'encoded',
+    'Add a chunk to a file in the incoming directory to be released later in FRS. 
+     The content of the chunk must be encoded in base64.
+     Returns the size of the written chunk if the chunk addition succeed.
+     Returns a soap fault if the session is not valid
+     or if the addition failed.'
 );
 
 $server->register(
@@ -918,7 +937,6 @@ function getFileChunk($sessionKey,$group_id,$package_id,$release_id,$file_id,$of
  * @param int $package_id the ID of the package we want to add the file
  * @param int $release_id the ID of the release we want to add the file
  * @param string $filename the name of the file we want to add (only file name, not directory)
- * @param string $base64_contents the content of the file, encoded in base64
  * @param int $type_id the ID of the type of the file
  * @param int $processor_id the ID of the processor of the file
  * @param string reference_md5 the md5sum of the file calculated in client side
@@ -932,7 +950,7 @@ function getFileChunk($sessionKey,$group_id,$package_id,$release_id,$file_id,$of
  *              - the user does not have the permissions to create a file
  *              - the file creation failed.
  */
-function addFile($sessionKey,$group_id,$package_id,$release_id,$filename,$base64_contents,$type_id,$processor_id,$reference_md5) {
+function addFile($sessionKey,$group_id,$package_id,$release_id,$filename,$type_id,$processor_id,$reference_md5) {
     if (session_continue($sessionKey)) {
 
         $pm = ProjectManager::instance();
@@ -962,19 +980,6 @@ function addFile($sessionKey,$group_id,$package_id,$release_id,$filename,$base64
         
         $file_fact = new FRSFileFactory();
         if ($file_fact->userCanAdd($group_id)) {
-            $tmpname = tempnam("/tmp", "codendi_soap_frs");
-            $fh = fopen($tmpname, "wb");
-            if (!$fh) {
-                return new SoapFault(invalid_file_fault,'Could not create temporary file in directory /tmp', 'addFile');
-            }
-            fwrite($fh, base64_decode($base64_contents));
-            fclose($fh);
-            
-            // move the file in the incoming dir
-            if (! rename($tmpname, $GLOBALS['ftp_incoming_dir'].'/'.basename($filename))) {
-                return new SoapFault(invalid_file_fault,'Impossible to move the file in the incoming dir: '.$GLOBALS['ftp_incoming_dir'],'addFile');
-            }
-            
             // call addUploadedFile function
             $uploaded_filename = basename($filename);
             return addUploadedFile($sessionKey,$group_id,$package_id,$release_id,$uploaded_filename,$type_id,$processor_id,$reference_md5);
@@ -984,6 +989,41 @@ function addFile($sessionKey,$group_id,$package_id,$release_id,$filename,$base64
         }
     } else {
         return new SoapFault(invalid_session_fault,'Invalid Session','addFile');
+    }
+}
+
+/**
+ * addFileChunk - add a chunk of a file in the incoming directory.
+ *
+ * @param string $sessionKey the session hash associated with the session opened by the person who calls the service
+ * @param int $group_id the ID of the group we want to add the file
+ * @param string $filename the name of the file we want to add
+ * @param string $contents the content of the chunk, encoded in base64
+ * @param boolean $first_chunk indicates if the chunk to add is the first
+ * @return int size of the chunk if added, or a soap fault if:
+ *              - the sessionKey is not valid, 
+ *              - the file creation failed.
+ */
+function addFileChunk($sessionKey, $filename, $contents, $first_chunk) {
+    if (session_continue($sessionKey)) {
+        // if it's the first chunk overwrite the existing (if exists) file with the same name
+        if ($first_chunk) {
+            $mode = 'w';
+        } else {
+            $mode = 'a';
+        }
+        $fp = fopen($GLOBALS['ftp_incoming_dir'].'/'.$filename, $mode);
+        $chunk = base64_decode($contents);
+        $cLength = strlen($chunk);
+        $written = fwrite($fp, $chunk);
+        fclose($fp);
+        if ($written != $cLength) {
+            return new SoapFault(invalid_file_fault,'Sent '.$cLength.' of data but only '.$written.' saved in the server', 'addFileChunk');
+        } else {
+            return $written;
+        }
+    } else {
+        return new SoapFault(invalid_session_fault,'Invalid Session', 'addFileChunk');
     }
 }
 
@@ -1175,6 +1215,7 @@ $server->addFunction(
     	    'getFile',
     	    'getFileChunk',
     	    'addFile',
+    	    'addFileChunk',
     	    'addUploadedFile',
     	    'getUploadedFiles',
             'deleteFile'

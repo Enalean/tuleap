@@ -84,16 +84,31 @@ class CLI_Action_Frs_AddFile extends CLI_Action {
                 $loaded_params['soap']['filename']  = $loaded_params['others']['uploaded_file'];
                 $this->soapCommand = 'addUploadedFile';
             } else {
-                if (!file_exists($loaded_params['others']['local_file'])) {
-                    exit_error("File '". $loaded_params['others']['local_file'] ."' doesn't exist");
-                } else if (!($fh = fopen($loaded_params['others']['local_file'], "rb"))) {
-                    exit_error("Could not open '". $loaded_params['others']['local_file'] ."' for reading");
+                $localFileLocation = $loaded_params['others']['local_file'];
+                if (!file_exists($localFileLocation)) {
+                    exit_error("File '". $localFileLocation ."' doesn't exist");
+                } else if (!is_readable($localFileLocation)) {
+                    exit_error("Could not open '". $localFileLocation ."' for reading");
                 } else {
-                    $contents = @fread($fh, filesize($loaded_params['others']['local_file']));
-                    $loaded_params['soap']['base64_contents'] = base64_encode($contents);
+                    $path = PHP_BigFile::stream(realpath($localFileLocation));
+                    $offset = 0;
+                    $chunkSize = $GLOBALS['soap']->getFileChunkSize();
+                    $i = 0;
+                    do {
+                        $offset = $i * $chunkSize;
+                        $contents = file_get_contents($path, false, NULL, $offset, $chunkSize);
+                        $cLength = strlen($contents);
+                        $contents = base64_encode($contents);
+                        $firstChunk = !$i;
+                        $addedSize = $GLOBALS['soap']->call("addFileChunk", array('filename' => basename($path), 'contents' => $contents, $firstChunk));
+                        if ($addedSize == $cLength) {
+                            $i++;
+                        } else {
+                            exit_error("Upload of the file failed");
+                        }
+                    } while ($cLength >= $chunkSize);
                     $loaded_params['soap']['filename']  = $loaded_params['others']['local_file'];
                     $loaded_params['soap']['is_upload'] = true;
-                    fclose($fh);
                 }
             }
             
@@ -118,7 +133,7 @@ class CLI_Action_Frs_AddFile extends CLI_Action {
     }
     
 	function sort_parameters($p1, $p2) {
-        $order = array('group_id', 'package_id', 'release_id', 'filename', 'base64_contents', 'type_id', 'processor_id', 'reference_md5', 'is_upload');
+        $order = array('group_id', 'package_id', 'release_id', 'filename', 'type_id', 'processor_id', 'reference_md5', 'is_upload');
         $order_flip = array_flip($order);
         return $order_flip[$p1] > $order_flip[$p2];
     }
