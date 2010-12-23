@@ -122,7 +122,7 @@ class CLI_Action_Frs_AddFile extends CLI_Action {
                     $transRate = $totalTran / ($endTime - $startTime);
                     $GLOBALS['LOG']->add('Transfer rate: '.size_readable($transRate, null, 'bi', '%.2f %s/s'));
 
-                    $loaded_params['soap']['filename']  = $loaded_params['others']['local_file'];
+                    $loaded_params['soap']['filename']  = basename($loaded_params['others']['local_file']);
                     $loaded_params['soap']['is_upload'] = true;
                 }
             }
