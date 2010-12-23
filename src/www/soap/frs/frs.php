@@ -272,8 +272,8 @@ $server->register(
         'group_id'=>'xsd:int',
         'package_id'=>'xsd:int',
         'release_id'=>'xsd:int',
-        'base64_contents'=>'xsd:string',
         'filename'=>'xsd:string',
+        'base64_contents'=>'xsd:string',
         'type_id'=>'xsd:int',
         'processor_id'=>'xsd:int',
         'reference_md5'=>'xsd:string'

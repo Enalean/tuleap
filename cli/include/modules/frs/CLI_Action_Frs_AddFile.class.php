@@ -72,6 +72,7 @@ class CLI_Action_Frs_AddFile extends CLI_Action {
         return true;
     }
     function before_soapCall(&$loaded_params) {
+        $this->soapCommand = 'addUploadedFile';
         if (!$loaded_params['others']['uploaded_file'] && !$loaded_params['others']['local_file']) {
             exit_error("You must specify a file name with either the --local_file or --uploaded_file parameter, depending the way you want to add the file.");
         } else {
@@ -82,7 +83,6 @@ class CLI_Action_Frs_AddFile extends CLI_Action {
                     exit_error("File '". $loaded_params['others']['uploaded_file'] ."' not found in incoming directory.");
                 }
                 $loaded_params['soap']['filename']  = $loaded_params['others']['uploaded_file'];
-                $this->soapCommand = 'addUploadedFile';
             } else {
                 $localFileLocation = $loaded_params['others']['local_file'];
                 if (!file_exists($localFileLocation)) {
@@ -90,7 +90,9 @@ class CLI_Action_Frs_AddFile extends CLI_Action {
                 } else if (!is_readable($localFileLocation)) {
                     exit_error("Could not open '". $localFileLocation ."' for reading");
                 } else {
-                    $path = PHP_BigFile::stream(realpath($localFileLocation));
+                    // TODO : use PHP_BigFile
+                    //$path = PHP_BigFile::stream(realpath($localFileLocation));
+                    $path = realpath($localFileLocation);
                     $offset = 0;
                     $chunkSize = $GLOBALS['soap']->getFileChunkSize();
                     $i = 0;
