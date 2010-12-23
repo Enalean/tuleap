@@ -109,8 +109,12 @@ class CLI_Action_Frs_AddFile extends CLI_Action {
                         $contents = file_get_contents($path, false, NULL, $offset, $chunkSize);
                         $cLength = strlen($contents);
                         $contents = base64_encode($contents);
-                        $firstChunk = !$i;
-                        $addedSize = $GLOBALS['soap']->call("addFileChunk", array('filename' => basename($path), 'contents' => $contents, $firstChunk));
+                        if ($i == 0) {
+                            $firstChunk = true;
+                        } else {
+                            $firstChunk = false;
+                        }
+                        $addedSize = $GLOBALS['soap']->call("addFileChunk", array('filename' => basename($path), 'contents' => $contents, 'first_chunk' => $firstChunk));
                         if ($addedSize == $cLength) {
                             $totalTran += $cLength;
                             $i++;
