@@ -225,6 +225,41 @@ class Docman_SOAPActions extends Docman_Actions {
             $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_item_id_missing'));
         }
     }
+    
+    function getFileChunk() {
+        $request = $this->_controler->request;
+
+        if ($request->exist('item_id')) {
+            $item_id = $request->get('item_id');
+            $item_factory = $this->_getItemFactory();
+            $item = $item_factory->getItemFromDb($item_id);
+            if ($item !== null) {
+                $itemType = $item_factory->getItemTypeForItem($item);
+                if($itemType == PLUGIN_DOCMAN_ITEM_TYPE_FILE || $itemType == PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE) {
+                    if ($request->exist('version_number')) {
+                        $version_factory = $this->_getVersionFactory();
+                        $version = $version_factory->getSpecificVersion($item, $request->get('version_number'));
+                    } else {
+                        $version = $item->getCurrentVersion();
+                    }
+                    if ($version) {
+                        if (file_exists($version->getPath())) {
+                            if ($request->exist('chunk_offset') && $request->exist('chunk_size')) {
+                                $contents = file_get_contents($version->getPath(),NULL, NULL, $request->get('chunk_offset'), $request->get('chunk_size'));
+                                $this->_controler->_viewParams['action_result'] = base64_encode($contents);
+                            }
+                        }
+                    }
+                } else {
+                    $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_not_a_file'));
+                }
+            } else {
+                $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_filenotfound'));
+            }
+        } else {
+            $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_item_id_missing'));
+        }
+    }
 
 }
 

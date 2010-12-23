@@ -670,6 +670,22 @@ function moveDocmanItem($sessionKey, $group_id, $item_id, $new_parent) {
 $soapFunctions[] = array('moveDocmanItem', 'Moves an item in a new folder', 'xsd:boolean');
 
 
+
+/**
+ * Download a file given its item_id and version
+ */
+function getDocmanFileChunk($sessionKey, $group_id, $item_id, $version_number, $chunk_offset, $chunk_size) {
+        $params = array(
+        'item_id'        => $item_id,
+        'version_number' => $version_number,
+        'chunk_offset'   => $chunk_offset,
+        'chunk_size'     => $chunk_size,
+    );
+    
+    return _makeDocmanRequest($sessionKey, $group_id, 'getFileChunk', $params);
+}
+$soapFunctions[] = array('getDocmanFileChunk', 'Download an  item', 'xsd:string');
+
 /**
  * Deletes a docman item
  */
