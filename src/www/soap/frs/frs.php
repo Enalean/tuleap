@@ -272,6 +272,7 @@ $server->register(
         'group_id'=>'xsd:int',
         'package_id'=>'xsd:int',
         'release_id'=>'xsd:int',
+        'base64_contents'=>'xsd:string',
         'filename'=>'xsd:string',
         'type_id'=>'xsd:int',
         'processor_id'=>'xsd:int',
@@ -283,7 +284,7 @@ $server->register(
     'rpc',
     'encoded',
     'Add a File to the File Release Manager of the project group_id with the values given by 
-     package_id, release_id, filename, type_id, processor_id and reference_md5. 
+     package_id, release_id, filename, base64_contents, type_id, processor_id and reference_md5. 
      The content of the file must be encoded in base64.
      Returns the ID of the created file if the creation succeed.
      Returns a soap fault if the group_id is not a valid one, 
@@ -937,6 +938,7 @@ function getFileChunk($sessionKey,$group_id,$package_id,$release_id,$file_id,$of
  * @param int $package_id the ID of the package we want to add the file
  * @param int $release_id the ID of the release we want to add the file
  * @param string $filename the name of the file we want to add (only file name, not directory)
+ * @param string $base64_contents the content of the file, encoded in base64
  * @param int $type_id the ID of the type of the file
  * @param int $processor_id the ID of the processor of the file
  * @param string reference_md5 the md5sum of the file calculated in client side
@@ -950,7 +952,7 @@ function getFileChunk($sessionKey,$group_id,$package_id,$release_id,$file_id,$of
  *              - the user does not have the permissions to create a file
  *              - the file creation failed.
  */
-function addFile($sessionKey,$group_id,$package_id,$release_id,$filename,$type_id,$processor_id,$reference_md5) {
+function addFile($sessionKey,$group_id,$package_id,$release_id,$filename,$base64_contents,$type_id,$processor_id,$reference_md5) {
     if (session_continue($sessionKey)) {
 
         $pm = ProjectManager::instance();
@@ -980,6 +982,19 @@ function addFile($sessionKey,$group_id,$package_id,$release_id,$filename,$type_i
         
         $file_fact = new FRSFileFactory();
         if ($file_fact->userCanAdd($group_id)) {
+            $tmpname = tempnam("/tmp", "codendi_soap_frs");
+            $fh = fopen($tmpname, "wb");
+            if (!$fh) {
+                return new SoapFault(invalid_file_fault,'Could not create temporary file in directory /tmp', 'addFile');
+            }
+            fwrite($fh, base64_decode($base64_contents));
+            fclose($fh);
+            
+            // move the file in the incoming dir
+            if (! rename($tmpname, $GLOBALS['ftp_incoming_dir'].'/'.basename($filename))) {
+                return new SoapFault(invalid_file_fault,'Impossible to move the file in the incoming dir: '.$GLOBALS['ftp_incoming_dir'],'addFile');
+            }
+            
             // call addUploadedFile function
             $uploaded_filename = basename($filename);
             return addUploadedFile($sessionKey,$group_id,$package_id,$release_id,$uploaded_filename,$type_id,$processor_id,$reference_md5);
