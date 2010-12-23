@@ -299,7 +299,7 @@ $server->register(
         'sessionKey'     => 'xsd:string',
         'filename'       => 'xsd:string',
         'contents'       => 'xsd:string',
-        'first_chunk' => 'xsd:boolean',
+        'first_chunk'    => 'xsd:boolean',
         ),
     array('addFileChunk'=>'xsd:integer'),
     $uri,
@@ -859,7 +859,7 @@ function getFile($sessionKey,$group_id,$package_id,$release_id,$file_id) {
 }
 
 /**
- * getFile - returns the content (encoded in base64) of FRSFiles that belongs to the release identified by file_id, part of release_id, package_id, in project group_id. 
+ * getFileChunk - returns the content (encoded in base64) of FRSFiles that belongs to the release identified by file_id, part of release_id, package_id, in project group_id. 
  *
  * @param string $sessionKey the session hash associated with the session opened by the person who calls the service
  * @param int $group_id the ID of the group we want to retrieve the content of file
@@ -1095,7 +1095,7 @@ function addUploadedFile($sessionKey,$group_id,$package_id,$release_id,$filename
         $file_fact = new FRSFileFactory();
         if ($file_fact->userCanAdd($group_id)) {
             if (! $file_fact->isFileBaseNameExists($filename, $release->getReleaseID(), $group_id)) {
-                $computed_md5 = md5_file($GLOBALS['ftp_incoming_dir'] . '/' . $name);
+                $computed_md5 = md5_file($GLOBALS['ftp_incoming_dir'] . '/' . $filename);
                 if ($file_fact->compareMd5Checksums($computed_md5, $reference_md5)) {
                     $file_id = $file_fact->createFromIncomingFile(basename($filename),$release_id,$type_id,$processor_id,$computed_md5,$reference_md5);
                     if (! $file_id) {
