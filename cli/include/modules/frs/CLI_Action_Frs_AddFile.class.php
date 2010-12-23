@@ -95,7 +95,15 @@ class CLI_Action_Frs_AddFile extends CLI_Action {
                     $path = realpath($localFileLocation);
                     $offset = 0;
                     $chunkSize = $GLOBALS['soap']->getFileChunkSize();
+                    $startTime = microtime(true);
+                    $totalTran = 0;
                     $i = 0;
+                    /* During this loop the file in construction in the incoming directory
+                     * may be corrupted by concurrent access, such as releasing it
+                     * or use of addFileChunk again with the same filename.
+                     * This corruption could not be automatically detected if the reference md5
+                     * is not provided only the user can compare the computed md5 manually
+                     */ 
                     do {
                         $offset = $i * $chunkSize;
                         $contents = file_get_contents($path, false, NULL, $offset, $chunkSize);
@@ -104,11 +112,16 @@ class CLI_Action_Frs_AddFile extends CLI_Action {
                         $firstChunk = !$i;
                         $addedSize = $GLOBALS['soap']->call("addFileChunk", array('filename' => basename($path), 'contents' => $contents, $firstChunk));
                         if ($addedSize == $cLength) {
+                            $totalTran += $cLength;
                             $i++;
                         } else {
                             exit_error("Upload of the file failed");
                         }
                     } while ($cLength >= $chunkSize);
+                    $endTime = microtime(true);
+                    $transRate = $totalTran / ($endTime - $startTime);
+                    $GLOBALS['LOG']->add('Transfer rate: '.size_readable($transRate, null, 'bi', '%.2f %s/s'));
+
                     $loaded_params['soap']['filename']  = $loaded_params['others']['local_file'];
                     $loaded_params['soap']['is_upload'] = true;
                 }
