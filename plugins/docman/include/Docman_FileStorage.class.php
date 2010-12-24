@@ -62,9 +62,7 @@ class Docman_FileStorage {
         }
     }
     
-    function getFileMD5sum($group_id, $item_id, $version_number) {
-        $path = $this->_getPath('file', $group_id, $item_id, $version_number);
-        
+    function getFileMD5sum($path) {
         if (is_file($path)) {
             return md5_file($path);
         } else {

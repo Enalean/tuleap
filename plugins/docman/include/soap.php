@@ -483,8 +483,8 @@ $soapFunctions[] = array('getDocmanFileContents', 'Returns the content of a file
 /**
  * Returns the MD5 checksum of the file (last version) corresponding to the provided item ID.
  */
-function getDocmanFileMD5sum($sessionKey, $group_id, $item_id) {
-    $params = array('item_id' => $item_id);
+function getDocmanFileMD5sum($sessionKey, $group_id, $item_id, $version_number) {
+    $params = array('item_id' => $item_id, 'version' => $version_number);
     return _makeDocmanRequest($sessionKey, $group_id, 'getFileMD5sum', $params);
 }
 $soapFunctions[] = array('getDocmanFileMD5sum', 'Returns the MD5 checksum of the file (last version) corresponding to the provided item ID', 'xsd:string');

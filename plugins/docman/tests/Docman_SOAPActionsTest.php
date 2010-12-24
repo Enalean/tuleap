@@ -398,6 +398,28 @@ class Docman_SOAPActionsTest extends UnitTestCase {
         
         $action->getTreeInfo();
     }
+    
+        public function testGetFileChunk() {
+        $action = $this->action;
+        
+        $params = array('group_id'=> 10, 'item_id'=> 128000, 'chunk_offset' => 10, 'chunk_size' => 64, 'version_number' => 2);
+        $request = new MockSOAPRequest($params);
+        $request->setReturnValue('exist', true, array('group_id'));
+        $request->setReturnValue('exist', true, array('item_id'));
+        $request->setReturnValue('exist', true, array('version_number'));
+        $request->setReturnValue('exist', true, array('chunk_offset'));
+        $request->setReturnValue('exist', true, array('chunk_size'));
+        $request->setReturnValue('get', $params['group_id'], array('group_id'));
+        $request->setReturnValue('get', $params['item_id'], array('item_id'));
+        $request->setReturnValue('get', $params['chunk_offset'], array('chunk_offset'));
+        $request->setReturnValue('get', $params['chunk_size'], array('chunk_size'));
+        $request->setReturnValue('get', $params['version_number'], array('version_number'));
+        
+        $action->getControler()->request = $request;
+
+        $action->getFileChunk();
+    }
+    
 }
 
 ?>

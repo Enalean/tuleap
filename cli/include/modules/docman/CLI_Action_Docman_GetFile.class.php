@@ -109,6 +109,15 @@ class CLI_Action_Docman_GetFile extends CLI_Action {
 
             unset($callParams['chunk_offset']);
             unset($callParams['chunk_size']);
+            
+            //Check the md5sum
+            $localChecksum = md5_file($output);
+            $remoteChecksum = $GLOBALS['soap']->call('getDocmanFileMD5sum', $callParams, $use_extra_params);
+            if ($localChecksum == $remoteChecksum) {
+                echo "File downloaded successfully\n";
+            } else {
+                echo "ERROR: Local and remote checksums are not the same. Try to download it again.\n";
+            }
         }
     }
 }

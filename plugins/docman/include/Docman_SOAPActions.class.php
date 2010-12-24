@@ -80,7 +80,7 @@ class Docman_SOAPActions extends Docman_Actions {
                         $vf = $this->_getVersionFactory();
                         $versions = $vf->getAllVersionForItem($item);
                         foreach ($versions as $version) {
-                            $md5sum[$version->getNumber()] = $fs->getFileMD5sum($request->get('group_id'), $item->getId(), $version->getNumber());
+                            $md5sum[$version->getNumber()] = $fs->getFileMD5sum($version->getPath());
                         }
 
                         // Sort by version order (ascending)
@@ -90,7 +90,14 @@ class Docman_SOAPActions extends Docman_Actions {
                             $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_get_checksum'));
                         }
                     } else {
-                        $md5sum = $fs->getFileMD5sum($request->get('group_id'), $item->getId(), $item->getCurrentVersion()->getNumber());
+                        // if the version number is specified we compute the md5sum of this version else the last one
+                        if ($request->existAndNonEmpty('version')){
+                            $vf = $this->_getVersionFactory();
+                            $version = $vf->getSpecificVersion($item, $request->get('version'));
+                            $md5sum = $fs->getFileMD5sum($version->getPath());
+                        } else {
+                            $md5sum = $fs->getFileMD5sum($item->getCurrentVersion()->getPath());
+                        }
                         if (!$md5sum) {
                             $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_get_checksum'));
                         }
