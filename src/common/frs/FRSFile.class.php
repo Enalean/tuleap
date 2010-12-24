@@ -23,7 +23,14 @@ require_once('FRSReleaseFactory.class.php');
 require_once('common/include/Codendi_HTTP_Download.php');
 
 class FRSFile extends Error {
-	
+
+    const TYPE_FILE    = 3;
+
+    const FILE_CREATE  = 1;
+    const FILE_UPDATE  = 2;
+    const FILE_DELETE  = 3;
+    const FILE_RESTORE = 4;
+
 	/**
      * @var int $file_id the ID of this FRSFile
      */
