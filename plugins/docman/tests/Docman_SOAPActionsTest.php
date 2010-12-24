@@ -162,6 +162,30 @@ class Docman_SOAPActionsTest extends UnitTestCase {
         $this->assertEqual($action->getControler()->_viewParams['action_result'], $this->MD5Map[$params['item_id']]);
     }
     
+    /**
+     * Nominal case: getFileMD5sum is called with a correct file ID for a given version
+     */
+    public function testGetFileMD5sumGivenVersionNominal() {
+        $action = $this->action;
+        
+        $params = array(
+              'item_id' => 128000,
+              'group_id'=> 2,
+              'version' => 2,
+          );
+        $request = new MockSOAPRequest($params);
+        $request->setReturnValue('exist', true, array('item_id'));
+        $request->setReturnValue('get', $params['item_id'], array('item_id'));
+        $request->setReturnValue('exist', true, array('version'));
+        $request->setReturnValue('get', $params['version'], array('version'));
+        
+        $action->getControler()->request = $request;
+            
+        $action->getFileMD5sum();
+        $this->assertEqual($action->getControler()->_viewParams['action_result'], $this->MD5Map[$params['item_id']]);
+    }
+    
+
     public function testGetFileMD5sumAllVersions() {
         $action = $this->action;
         
