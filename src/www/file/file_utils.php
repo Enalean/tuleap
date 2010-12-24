@@ -540,7 +540,7 @@ function frs_display_release_form($is_update, &$release, $group_id, $title, $url
             if ($frsff->compareMd5Checksums($files[$i]->getComputedMd5(), $files[$i]->getReferenceMd5())) {
                 $value = 'value = "'.$files[$i]->getComputedMd5().'" readonly="true"';
             }
-            echo '<TD><INPUT TYPE="TEXT" NAME="reference_md5[]" '.$value.' SIZE="36" ></TD>';
+            echo '<TD><INPUT TYPE="TEXT" NAME="release_reference_md5[]" '.$value.' SIZE="36" ></TD>';
             echo '<TD><INPUT TYPE="TEXT" NAME="user" value = "'.$userName.'" readonly="true"></TD>';
             echo '<TD>' . frs_show_release_popup2($group_id, $name = 'new_release_id[]', $files[$i]->getReleaseID()) . '</TD>';
             echo '<TD><INPUT TYPE="TEXT" NAME="release_time[]" VALUE="' . format_date('Y-m-d', $files[$i]->getReleaseTime()) . '" SIZE="10" MAXLENGTH="10"></TD></TR>';
@@ -878,7 +878,12 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
         } else {
             $release_file_type = array();
         }
-        
+
+        if($request->validArray(new Valid_String('release_reference_md5'))) {
+            $release_reference_md5 = $request->get('release_reference_md5');
+        } else {
+            $release_reference_md5 = array();
+        }
         if($request->validArray(new Valid_UInt('new_release_id'))) {
             $new_release_id = $request->get('new_release_id');
         } else {
@@ -1119,7 +1124,7 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
                                         'release_time' => $unix_release_time,
                                         'type_id' => $release_file_type[$index],
                                         'processor_id' => $release_file_processor[$index],
-                                        'reference_md5' => ($reference_md5[$index]!= '')? $reference_md5[$index]: $files[$index]->getReferenceMd5(),
+                                        'reference_md5' => $release_reference_md5[$index],
                                         'file_id' => $rel_file
                                     );
                                     $res = $frsff->update($array);
