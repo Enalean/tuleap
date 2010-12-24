@@ -152,8 +152,9 @@ class Docman_SOAPActionsTest extends UnitTestCase {
               'group_id'=> 2,
           );
         $request = new MockSOAPRequest($params);
-        $request->setReturnValue('exist', true);
+        $request->setReturnValue('exist', true, array('item_id'));
         $request->setReturnValue('get', $params['item_id'], array('item_id'));
+        $request->setReturnValue('exist', false, array('version'));
         
         $action->getControler()->request = $request;
             
