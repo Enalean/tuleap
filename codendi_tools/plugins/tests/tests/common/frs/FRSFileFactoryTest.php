@@ -4,6 +4,8 @@ require_once('common/frs/FRSFileFactory.class.php');
 require_once('common/frs/FRSReleaseFactory.class.php');
 require_once('common/backend/BackendSystem.class.php');
 
+Mock::generate('User');
+Mock::generate('UserManager');
 Mock::generate('DataAccessResult');
 Mock::generate('FRSReleaseFactory');
 Mock::generate('FRSRelease');
@@ -15,7 +17,7 @@ Mock::generatePartial('FRSFileFactory', 'FRSFileFactoryTestPurgeFiles', array('_
 Mock::generatePartial('FRSFileFactory', 'FRSFileFactoryTestPurgeOneFile', array('_getFRSFileDao'));
 Mock::generatePartial('FRSFileFactory', 'FRSFileFactoryTestMoveToStaging', array('_getFRSFileDao', 'moveDeletedFileToStagingArea'));
 Mock::generatePartial('FRSFileFactory', 'FRSFileFactoryTestPurgeDeletedFiles', array('purgeFiles', 'moveDeletedFilesToStagingArea', 'cleanStaging', 'restoreDeletedFiles'));
-Mock::generatePartial('FRSFileFactory', 'FRSFileFactoryTestRestore', array('_getFRSFileDao'));
+Mock::generatePartial('FRSFileFactory', 'FRSFileFactoryTestRestore', array('_getFRSFileDao', '_getUserManager'));
 Mock::generatePartial('FRSFileFactory', 'FRSFileFactoryTestRestoreFiles', array('_getFRSFileDao', 'restoreFile'));
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
@@ -286,6 +288,12 @@ class FRSFileFactoryTest extends UnitTestCase {
         $dao->setReturnValue('restoreFile', true);
         $fileFactory->setReturnValue('_getFRSFileDao', $dao);
         $backend = new MockBackendSystem($this);
+
+        $user = new MockUser($this);
+        $um = new MockUserManager($this);
+        $um->setReturnValue('getCurrentUser', $user);
+        $fileFactory->setReturnValue('_getUserManager', $um);
+
         $this->assertTrue($fileFactory->restoreFile($file, $backend));
          
         // Cleanup
@@ -345,6 +353,11 @@ class FRSFileFactoryTest extends UnitTestCase {
         $dao->setReturnValue('restoreFile', true);
         $fileFactory->setReturnValue('_getFRSFileDao', $dao);
 
+        $user = new MockUser($this);
+        $um = new MockUserManager($this);
+        $um->setReturnValue('getCurrentUser', $user);
+        $fileFactory->setReturnValue('_getUserManager', $um);
+
         $this->assertTrue($fileFactory->restoreFile($file, $backend));
 
         // Cleanup
@@ -375,6 +388,12 @@ class FRSFileFactoryTest extends UnitTestCase {
         $fileFactory->setReturnValue('_getFRSFileDao', $dao);
         $backend = new MockBackendSystem($this);
         $backend->setReturnValue('chgrp', true);
+
+        $user = new MockUser($this);
+        $um = new MockUserManager($this);
+        $um->setReturnValue('getCurrentUser', $user);
+        $fileFactory->setReturnValue('_getUserManager', $um);
+
         $this->assertFalse($fileFactory->restoreFile($file, $backend));
 
         // Cleanup

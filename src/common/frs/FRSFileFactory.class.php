@@ -535,6 +535,16 @@ class FRSFileFactory extends Error {
     }
 
     /**
+     * Wrapper to get a UserManager instance
+     *
+     * @return UserManager
+     */
+    function _getUserManager() {
+        $um = $this->_getUserManager();
+        return $um;
+    }
+
+    /**
      * restore file by moving it from staging area to its old location
      * 
      * @param FRSFile $file 
@@ -550,9 +560,9 @@ class FRSFileFactory extends Error {
             }
             if (rename($stagingPath, $file->getFileLocation())) {
                 $dao = $this->_getFRSFileDao();
-                $um = UserManager::instance();
+                $um = $this->_getUserManager();
                 $user = $um->getCurrentUser();
-                $dao->addLog($user->getId(), $id, FRSFile::TYPE_FILE, FRSFile::FILE_RESTORE);
+                $dao->addLog($user->getId(), $file->getFileID(), FRSFile::TYPE_FILE, FRSFile::FILE_RESTORE);
                 return $dao->restoreFile($file->getFileID());
             }
         }
