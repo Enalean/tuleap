@@ -881,6 +881,18 @@ CREATE TABLE frs_release (
   KEY idx_frs_release_package (package_id)
 );
 
+#
+# Table structure for table 'frs_log'
+#
+
+CREATE TABLE frs_log (
+  time int(11) NOT NULL default 0,
+  user_id int(11) NOT NULL default 0,
+  item_id int(11) NOT NULL,
+  item_type_id int(11) NOT NULL,
+  action_id int(11) NOT NULL,
+  PRIMARY KEY (time, user_id, item_id)
+);
 
 #
 # Table structure for table 'group_cvs_full_history'
