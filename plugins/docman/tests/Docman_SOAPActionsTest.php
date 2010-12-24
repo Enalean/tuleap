@@ -93,7 +93,7 @@ class Docman_SOAPActionsTest extends UnitTestCase {
             $file->setReturnValue('getCurrentVersion', $version);
             $this->itemFactory->setReturnValue('getItemFromDb', $file, array($itemId));
             $this->itemFactory->setReturnValue('getItemTypeForItem', PLUGIN_DOCMAN_ITEM_TYPE_FILE, array($file));
-            $this->fileStorage->setReturnValue('getFileMD5sum', $md5, array('*', $itemId, '*'));
+            $this->fileStorage->setReturnValue('getFileMD5sum', $md5);
         }
         
         $user = new MockUser();
