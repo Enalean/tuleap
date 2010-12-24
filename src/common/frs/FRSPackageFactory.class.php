@@ -188,6 +188,9 @@ class FRSPackageFactory {
             $data = $data->toArray();
         }
         $dao =& $this->_getFRSPackageDao();
+        $um = UserManager::instance();
+        $user = $um->getCurrentUser();
+        $dao->addLog($user->getId(), $data['package_id'], FRSPackage::TYPE_PACKAGE, FRSPackage::PACKAGE_UPDATE);
         return $dao->updateFromArray($data);
     }
     
@@ -195,12 +198,18 @@ class FRSPackageFactory {
     function create($data_array) {
         $dao =& $this->_getFRSPackageDao();
         $id = $dao->createFromArray($data_array);
+        $um = UserManager::instance();
+        $user = $um->getCurrentUser();
+        $dao->addLog($user->getId(), $id, FRSPackage::TYPE_PACKAGE, FRSPackage::PACKAGE_CREATE);
         return $id;
     }
     
     function _delete($package_id){
         $_id = (int) $package_id;
         $dao =& $this->_getFRSPackageDao();
+        $um = UserManager::instance();
+        $user = $um->getCurrentUser();
+        $dao->addLog($user->getId(), $_id, FRSPackage::TYPE_PACKAGE, FRSPackage::PACKAGE_DELETE);
         return $dao->delete($_id, $this->STATUS_DELETED);
     }
     

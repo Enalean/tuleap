@@ -159,6 +159,9 @@ class FRSFileFactory extends Error {
     
     function update($data_array) {
         $dao =& $this->_getFRSFileDao();
+        $um = UserManager::instance();
+        $user = $um->getCurrentUser();
+        $dao->addLog($user->getId(), $data_array['file_id'], FRSFile::TYPE_FILE, FRSFile::FILE_UPDATE);
         return $dao->updateFromArray($data_array);
     }
     
@@ -166,6 +169,9 @@ class FRSFileFactory extends Error {
     function create($data_array) {
         $dao =& $this->_getFRSFileDao();
         $id = $dao->createFromArray($data_array);
+        $um = UserManager::instance();
+        $user = $um->getCurrentUser();
+        $dao->addLog($user->getId(), $id, FRSFile::TYPE_FILE, FRSFile::FILE_CREATE);
         return $id;
     }
     
@@ -245,6 +251,9 @@ class FRSFileFactory extends Error {
     function _delete($file_id){
     	$_id = (int) $file_id;
     	$dao =& $this->_getFRSFileDao();
+    	$um = UserManager::instance();
+        $user = $um->getCurrentUser();
+    	$dao->addLog($user->getId(), $_id, FRSFile::TYPE_FILE, FRSFile::FILE_DELETE);
     	return $dao->delete($_id);
     }
 
@@ -541,6 +550,9 @@ class FRSFileFactory extends Error {
             }
             if (rename($stagingPath, $file->getFileLocation())) {
                 $dao = $this->_getFRSFileDao();
+                $um = UserManager::instance();
+                $user = $um->getCurrentUser();
+                $dao->addLog($user->getId(), $id, FRSFile::TYPE_FILE, FRSFile::FILE_RESTORE);
                 return $dao->restoreFile($file->getFileID());
             }
         }
