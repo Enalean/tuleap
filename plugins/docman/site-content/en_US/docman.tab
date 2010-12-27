@@ -454,6 +454,7 @@ plugin_docman	error_not_a_file	The specified item is not a file.
 plugin_docman	error_get_checksum	Error while getting file checksum.
 plugin_docman	error_item_id_missing	Error: item ID is missing.
 plugin_docman	error_no_option	Please choose option for creating approval table
+plugin_docman	error_version_not_exist	Error: The given version of the item does not exist.
 plugin_docman	perm_denied	You do not have the permission to access the document
 plugin_docman	docman_no_perm	Permission denied set on documents. You can not view this documents unless administrator grant you access.
 plugin_docman	request_to_admin	<p><a href="/my/">Back to your personal page</a><em> or you can request it to him.</em></br> Write your message below and click on the button to send your request to the project administrators.

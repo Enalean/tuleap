@@ -256,6 +256,8 @@ class Docman_SOAPActions extends Docman_Actions {
                                 $this->_controler->_viewParams['action_result'] = base64_encode($contents);
                             }
                         }
+                    } else {
+                        $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_version_not_exist'));
                     }
                 } else {
                     $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_not_a_file'));

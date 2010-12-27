@@ -454,6 +454,7 @@ plugin_docman	error_not_a_file	L'élément spécifié n'est pas un fichier.
 plugin_docman	error_get_checksum	Erreur lors de la récupération de la somme de contrôle du fichier.
 plugin_docman	error_item_id_missing	Erreur: pas d'élément à traiter (ID).
 plugin_docman	error_no_option	Veuillez choisir une option pour la création de la table d'approbation
+plugin_docman	error_version_not_exist	Erreur: La version passée en paramètre n'existe pas.
 plugin_docman	perm_denied	Vous n'avez pas les permissions pour visualiser ce document
 plugin_docman	docman_no_perm	Des permissions ont été appliquées à ce document. Vous ne pouvez le visualiser que si un des administrateurs vous donne les privilèges requis.
 plugin_docman	request_to_admin	<p><a href="/my/">Retourner à votre page personnelle.</a> <em> ou vous pouvez lui demanderla permission.</em><br /> Ajouter juste votre message puis envoyer.
