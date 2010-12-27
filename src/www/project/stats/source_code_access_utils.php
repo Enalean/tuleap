@@ -118,7 +118,6 @@ function frs_logs_display($sql, $span, $field, $title='') {
             .' <td>'.strftime("%e %b %Y", $row['time'] ).'</td>';
             print ' <td> <a href="/users/'.$row["user_name"].'/">'.$row["user_name"].'</a> ('. $hp->purify($row["realname"], CODENDI_PURIFIER_CONVERT_HTML) .')</td>'
                 .' <td>'.$row["email"].'</td>';
-            convert_frs_action($row);
             print ' <td>'. $hp->purify($row["title"], CODENDI_PURIFIER_CONVERT_HTML) .'</td>'
                 .' <td>'.$row["action"].'</td>'
                 .' <td align="right">'.strftime("%H:%M", $row["time"]).'</td>'
@@ -133,36 +132,44 @@ function frs_logs_display($sql, $span, $field, $title='') {
     }
 }
 
-function frs_package_logs_extract($project,$span,$who) {
-    $sql = "SELECT log.time AS time, user.user_name AS user_name, user.realname AS realname, user.email AS email, frs_package.name AS title, log.action_id as action ".
-           "FROM frs_log AS log, user, frs_package ".
-           "WHERE ".logs_cond($project, $span, $who).
-           "AND ( log.action_id=1 OR log.action_id=2 OR log.action_id=3 ) ".
-           "AND log.item_id=frs_package.package_id ".
-           "AND log.project_id=".$project->getGroupId()." ".
-           "ORDER BY time DESC";
-    return $sql;
-}
-
-function frs_release_logs_extract($project,$span,$who) {
-    $sql = "SELECT log.time AS time, user.user_name AS user_name, user.realname AS realname, user.email AS email, frs_release.name AS title, log.action_id as action ".
-           "FROM frs_log AS log, user, frs_release ".
-           "WHERE ".logs_cond($project, $span, $who).
-           "AND ( log.action_id=4 OR log.action_id=5 OR log.action_id=6 ) ".
-           "AND log.item_id=frs_release.release_id ".
-           "AND log.project_id=".$project->getGroupId()." ".
-           "ORDER BY time DESC";
-    return $sql;
-}
-
-function frs_file_logs_extract($project,$span,$who) {
-    $sql = "SELECT log.time AS time, user.user_name AS user_name, user.realname AS realname, user.email AS email, frs_file.filename AS title, log.action_id as action ".
-           "FROM frs_log AS log, user, frs_file ".
-           "WHERE ".logs_cond($project, $span, $who).
-           "AND ( log.action_id=7 OR log.action_id=8 OR log.action_id=9 OR log.action_id=10 ) ".
-           "AND log.item_id=frs_file.file_id ".
-           "AND log.project_id=".$project->getGroupId()." ".
-           "ORDER BY time DESC";
+function frs_logs_extract($project,$span,$who) {
+    $sql = "SELECT log.time AS time, user.user_name AS user_name, user.realname AS realname, user.email AS email, frs_package.name AS title,".
+           " CASE WHEN log.action_id = ".FRSPackage::PACKAGE_CREATE." THEN '".$GLOBALS['Language']->getText('project_stats_source_code_access_utils','frs_add_package')."'".
+           " WHEN log.action_id = ".FRSPackage::PACKAGE_UPDATE." THEN '".$GLOBALS['Language']->getText('project_stats_source_code_access_utils','frs_update_package')."'".
+           " WHEN log.action_id = ".FRSPackage::PACKAGE_DELETE." THEN '".$GLOBALS['Language']->getText('project_stats_source_code_access_utils','frs_delete_package')."'".
+           " END as action".
+           " FROM frs_log AS log, user, frs_package".
+           " WHERE ".logs_cond($project, $span, $who).
+           " AND ( log.action_id=1 OR log.action_id=2 OR log.action_id=3 )".
+           " AND log.item_id=frs_package.package_id ".
+           " AND log.project_id=".$project->getGroupId().
+           " UNION".
+           " SELECT log.time AS time, user.user_name AS user_name, user.realname AS realname, user.email AS email, CONCAT(frs_package.name, '/', frs_release.name) AS title,".
+           " CASE WHEN log.action_id = ".FRSRelease::RELEASE_CREATE." THEN '".$GLOBALS['Language']->getText('project_stats_source_code_access_utils','frs_add_release')."'".
+           " WHEN log.action_id = ".FRSRelease::RELEASE_UPDATE." THEN '".$GLOBALS['Language']->getText('project_stats_source_code_access_utils','frs_update_release')."'".
+           " WHEN log.action_id = ".FRSRelease::RELEASE_DELETE." THEN '".$GLOBALS['Language']->getText('project_stats_source_code_access_utils','frs_delete_release')."'".
+           " END as action".
+           " FROM frs_log AS log, user, frs_release, frs_package".
+           " WHERE ".logs_cond($project, $span, $who).
+           " AND ( log.action_id=4 OR log.action_id=5 OR log.action_id=6 ) ".
+           " AND frs_package.package_id=frs_release.package_id ".
+           " AND log.item_id=frs_release.release_id ".
+           " AND log.project_id=".$project->getGroupId()." ".
+           " UNION".
+           " SELECT log.time AS time, user.user_name AS user_name, user.realname AS realname, user.email AS email, CONCAT(frs_package.name, '/', frs_release.name, '/', frs_file.filename) AS title,".
+           " CASE WHEN log.action_id = ".FRSFile::FILE_CREATE." THEN '".$GLOBALS['Language']->getText('project_stats_source_code_access_utils','frs_add_file')."'".
+           " WHEN log.action_id = ".FRSFile::FILE_UPDATE." THEN '".$GLOBALS['Language']->getText('project_stats_source_code_access_utils','frs_update_file')."'".
+           " WHEN log.action_id = ".FRSFile::FILE_DELETE." THEN '".$GLOBALS['Language']->getText('project_stats_source_code_access_utils','frs_delete_file')."'".
+           " WHEN log.action_id = ".FRSFile::FILE_RESTORE." THEN '".$GLOBALS['Language']->getText('project_stats_source_code_access_utils','frs_restore')."'".
+           " END as action".
+           " FROM frs_log AS log, user, frs_file, frs_release, frs_package".
+           " WHERE ".logs_cond($project, $span, $who).
+           " AND ( log.action_id=7 OR log.action_id=8 OR log.action_id=9 OR log.action_id=10 )".
+           " AND frs_package.package_id=frs_release.package_id ".
+           " AND frs_release.release_id=frs_file.release_id ".
+           " AND log.item_id=frs_file.file_id".
+           " AND log.project_id=".$project->getGroupId().
+           " ORDER BY time DESC";
     return $sql;
 }
 
@@ -196,17 +203,9 @@ function filedownload_logs_daily($project, $span = 7, $who="allusers") {
 	logs_display($sql, $span, $GLOBALS['Language']->getText('project_stats_source_code_access_utils','files'),
 		     $GLOBALS['Language']->getText('project_stats_source_code_access_utils','file_download'));
 
-    $sql = frs_package_logs_extract($project,$span,$who);
-    frs_logs_display($sql, $span, $GLOBALS['Language']->getText('project_stats_source_code_access_utils','packages'),
-                 $GLOBALS['Language']->getText('project_stats_source_code_access_utils','packages'));
-
-    $sql = frs_release_logs_extract($project,$span,$who);
-    frs_logs_display($sql, $span, $GLOBALS['Language']->getText('project_stats_source_code_access_utils','releases'),
-                 $GLOBALS['Language']->getText('project_stats_source_code_access_utils','releases'));
-             
-    $sql = frs_file_logs_extract($project,$span,$who);
-    frs_logs_display($sql, $span, $GLOBALS['Language']->getText('project_stats_source_code_access_utils','files'),
-                 $GLOBALS['Language']->getText('project_stats_source_code_access_utils','files'));
+    $sql = frs_logs_extract($project,$span,$who);
+    frs_logs_display($sql, $span, $GLOBALS['Language']->getText('project_stats_source_code_access_utils','frs_elements'),
+                 $GLOBALS['Language']->getText('project_stats_source_code_access_utils','frs_actions'));
 }
 
 function cvsaccess_logs_extract($project,$span,$who) {

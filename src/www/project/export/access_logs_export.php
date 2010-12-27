@@ -58,94 +58,32 @@ function export_file_logs($project, $span, $who) {
 
     $eol = "\n";
 
-    $sql_package = frs_package_logs_extract($project,$span,$who);
-    $col_list_package = array('time','user','email','title','action','local_time');
-    $package_title = array ('time'      => $GLOBALS['Language']->getText('project_stats_source_code_access_utils','packages'),
+    $sql = frs_logs_extract($project,$span,$who);
+    $col_list = array('time','user','email','title','action','local_time');
+    $title = array ('time'      => $GLOBALS['Language']->getText('project_stats_source_code_access_utils','packages'),
                             'user'       => '',
                             'email'      => '',
                             'title'      => '',
                             'action'     => '',
                             'local_time' => '');    
-    $lbl_list_package = array( 'time'      => $GLOBALS['Language']->getText('project_export_access_logs_export','time'),
+    $lbl_list = array( 'time'      => $GLOBALS['Language']->getText('project_export_access_logs_export','time'),
                                'user'       => $GLOBALS['Language']->getText('project_export_access_logs_export','user'),
                                'email'      => $GLOBALS['Language']->getText('project_export_access_logs_export','email'),
                                'title'      => $GLOBALS['Language']->getText('project_export_access_logs_export','file'),
                                'action'     => 'Action',
                                'local_time' => $GLOBALS['Language']->getText('project_export_access_logs_export','local_time'));
-    $result_package=db_query($sql_package);
-    $rows_package = db_numrows($result_package);
-    if ($result_package && $rows_package > 0) {
+    $result=db_query($sql);
+    $rows = db_numrows($result);
+    if ($result && $rows > 0) {
         // Build csv for files access logs
-    echo build_csv_header($col_list_package, $package_title).$eol;
-    echo build_csv_header($col_list_package, $lbl_list_package).$eol;
-    while ($arr_package = db_fetch_array($result_package)) {
-        convert_frs_action($arr_package);
-        prepare_access_logs_record($project->getGroupId(),$arr_package);
-        echo build_csv_record($col_list_package, $arr_package).$eol;
+    echo build_csv_header($col_list, $title).$eol;
+    echo build_csv_header($col_list, $lbl_list).$eol;
+    while ($arr = db_fetch_array($result)) {
+        prepare_access_logs_record($project->getGroupId(),$arr);
+        echo build_csv_record($col_list, $arr).$eol;
     }
-    echo build_csv_header($col_list_package, array()).$eol;
+    echo build_csv_header($col_list, array()).$eol;
     }
-
-    $eol = "\n";
-
-    $sql_release = frs_release_logs_extract($project,$span,$who);
-    $col_list_release = array('time','user','email','title','action','local_time');
-    $release_title = array ('time'      => $GLOBALS['Language']->getText('project_stats_source_code_access_utils','releases'),
-                            'user'       => '',
-                            'email'      => '',
-                            'title'      => '',
-                            'action'     => '',
-                            'local_time' => '');    
-    $lbl_list_release = array( 'time'      => $GLOBALS['Language']->getText('project_export_access_logs_export','time'),
-                               'user'       => $GLOBALS['Language']->getText('project_export_access_logs_export','user'),
-                               'email'      => $GLOBALS['Language']->getText('project_export_access_logs_export','email'),
-                               'title'      => $GLOBALS['Language']->getText('project_export_access_logs_export','file'),
-                               'action'     => 'Action',
-                               'local_time' => $GLOBALS['Language']->getText('project_export_access_logs_export','local_time'));
-    $result_release=db_query($sql_release);
-    $rows_release = db_numrows($result_release);
-    if ($result_release && $rows_release > 0) {
-        // Build csv for files access logs
-    echo build_csv_header($col_list_release, $release_title).$eol;
-    echo build_csv_header($col_list_release, $lbl_list_release).$eol;
-    while ($arr_release = db_fetch_array($result_release)) {
-        convert_frs_action($arr_release);
-        prepare_access_logs_record($project->getGroupId(),$arr_release);
-        echo build_csv_record($col_list_release, $arr_release).$eol;
-    }
-    echo build_csv_header($col_list_release, array()).$eol;
-    }
-
-    $eol = "\n";
-
-    $sql_file = frs_file_logs_extract($project,$span,$who);
-    $col_list_file = array('time','user','email','title','action','local_time');
-    $file_title = array ('time'      => $GLOBALS['Language']->getText('project_stats_source_code_access_utils','files'),
-                         'user'       => '',
-                         'email'      => '',
-                         'title'      => '',
-                         'action'     => '',
-                         'local_time' => '');    
-    $lbl_list_file = array( 'time'      => $GLOBALS['Language']->getText('project_export_access_logs_export','time'),
-                            'user'       => $GLOBALS['Language']->getText('project_export_access_logs_export','user'),
-                            'email'      => $GLOBALS['Language']->getText('project_export_access_logs_export','email'),
-                            'title'      => $GLOBALS['Language']->getText('project_export_access_logs_export','file'),
-                            'action'     => 'Action',
-                            'local_time' => $GLOBALS['Language']->getText('project_export_access_logs_export','local_time'));
-    $result_file=db_query($sql_file);
-    $rows_file = db_numrows($result_file);
-    if ($result_file && $rows_file > 0) {
-        // Build csv for files access logs
-    echo build_csv_header($col_list_file, $file_title).$eol;
-    echo build_csv_header($col_list_file, $lbl_list_file).$eol;
-    while ($arr_file = db_fetch_array($result_file)) {
-        convert_frs_action($arr_file);
-        prepare_access_logs_record($project->getGroupId(),$arr_file);
-        echo build_csv_record($col_list_file, $arr_file).$eol;
-    }
-    echo build_csv_header($col_list_file, array()).$eol;
-    }
-
 }
 
 // Export cvs access logs for this group
