@@ -828,6 +828,8 @@ project_stats_source_code_access	logs_export	Export Matching Logs
 # Script: SF/www/project/stats/source_code_access_utils.php
 #
 project_stats_source_code_access_utils	file_download	File Download 
+project_stats_source_code_access_utils	packages	Packages
+project_stats_source_code_access_utils	releases	Releases
 project_stats_source_code_access_utils	files	Files
 project_stats_source_code_access_utils	access_for_past_x_days	$1 for the past $2 days	
 project_stats_source_code_access_utils	in_total	$1 in total

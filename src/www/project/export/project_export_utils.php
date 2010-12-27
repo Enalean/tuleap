@@ -659,6 +659,31 @@ function prepare_access_logs_record($group_id, &$record) {
     }
 }
 
+function convert_frs_action(&$record){
+    if (isset($record['action'])) {
+        switch ($record['action']) {
+            case 1 :
+            case 4 :
+            case 7 :
+                $record['action'] = 'Create';
+                break;
+            case 2 :
+            case 5 :
+            case 8 :
+                $record['action'] = 'Update';
+                break;
+            case 3 :
+            case 6 :
+            case 9 :
+                $record['action'] = 'Delete';
+                break;
+            case 10 :
+                $record['action'] = 'Restore';
+                break;
+        }
+    }
+}
+
 function pe_utils_format_task_assignees ($group_id,$task_id) {
     
     global $TASK_AT;
