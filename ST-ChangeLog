@@ -18,6 +18,7 @@ Version 4.0.16 = Not released yet
         backlog #114020: Artifact submitted with the value "None" at the mandatory field
         backlog #114005: Disable notifications when remove user from private project
         backlog #116806: Lost comment type when editing a follow up
+        backlog #118054: The delete icon is not displayed with IE
 
 Version 4.0.15 - Friday, 19th november 2010
         == Bugfix ==
