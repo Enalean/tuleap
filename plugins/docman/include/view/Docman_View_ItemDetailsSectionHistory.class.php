@@ -84,7 +84,7 @@ class Docman_View_ItemDetailsSectionHistory extends Docman_View_ItemDetailsSecti
                         } else {
                             $content .= '<td></td>';
                         }
-                        $content .= '<td align="center"><a href="'.$delete.'" <img src="'.util_get_image_theme("ic/trash.png").'" height="16" width="16" border="0"></a></td>';
+                        $content .= '<td align="center"><a href="'.$delete.'"><img src="'.util_get_image_theme("ic/trash.png").'" height="16" width="16" border="0"></a></td>';
                         $content .= '</tr>';
                     }
                     $content .= '</table>';
