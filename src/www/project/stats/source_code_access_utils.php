@@ -98,34 +98,31 @@ function frs_package_logs_extract($project,$span,$who) {
     $sql = "SELECT log.time AS time, user.user_name AS user_name, user.realname AS realname, user.email AS email, frs_package.name AS title, log.action_id as action ".
            "FROM frs_log AS log, user, frs_package ".
            "WHERE ".logs_cond($project, $span, $who).
-           "AND log.item_type_id=1 ".
+           "AND ( log.action_id=1 OR log.action_id=2 OR log.action_id=3 ) ".
            "AND log.item_id=frs_package.package_id ".
-           "AND frs_package.group_id=".$project->getGroupId()." ".
+           "AND log.project_id=".$project->getGroupId()." ".
            "ORDER BY time DESC";
     return $sql;
 }
 
 function frs_release_logs_extract($project,$span,$who) {
     $sql = "SELECT log.time AS time, user.user_name AS user_name, user.realname AS realname, user.email AS email, frs_release.name AS title, log.action_id as action ".
-           "FROM frs_log AS log, user, frs_release, frs_package ".
+           "FROM frs_log AS log, user, frs_release ".
            "WHERE ".logs_cond($project, $span, $who).
-           "AND log.item_type_id=2 ".
+           "AND ( log.action_id=4 OR log.action_id=5 OR log.action_id=6 ) ".
            "AND log.item_id=frs_release.release_id ".
-           "AND frs_package.group_id=".$project->getGroupId()." ".
-           "AND frs_package.package_id=frs_release.package_id ".
+           "AND log.project_id=".$project->getGroupId()." ".
            "ORDER BY time DESC";
     return $sql;
 }
 
 function frs_file_logs_extract($project,$span,$who) {
     $sql = "SELECT log.time AS time, user.user_name AS user_name, user.realname AS realname, user.email AS email, frs_file.filename AS title, log.action_id as action ".
-           "FROM frs_log AS log, user, frs_file, frs_release, frs_package ".
+           "FROM frs_log AS log, user, frs_file ".
            "WHERE ".logs_cond($project, $span, $who).
-           "AND log.item_type_id=3 ".
+           "AND ( log.action_id=7 OR log.action_id=8 OR log.action_id=9 OR log.action_id=10 ) ".
            "AND log.item_id=frs_file.file_id ".
-           "AND frs_package.group_id=".$project->getGroupId()." ".
-           "AND frs_release.release_id=frs_file.release_id ".
-           "AND frs_package.package_id=frs_release.package_id ".
+           "AND log.project_id=".$project->getGroupId()." ".
            "ORDER BY time DESC";
     return $sql;
 }
