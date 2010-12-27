@@ -159,9 +159,10 @@ class FRSFileFactory extends Error {
     
     function update($data_array) {
         $dao =& $this->_getFRSFileDao();
+        $file = $this->getFRSFileFromDb($data_array['file_id']);
         $um = UserManager::instance();
         $user = $um->getCurrentUser();
-        $dao->addLog($user->getId(), $data_array['file_id'], FRSFile::TYPE_FILE, FRSFile::FILE_UPDATE);
+        $dao->addLog($user->getId(), $file->getGroup()->getGroupId(), $data_array['file_id'], FRSFile::FILE_UPDATE);
         return $dao->updateFromArray($data_array);
     }
     
@@ -169,9 +170,10 @@ class FRSFileFactory extends Error {
     function create($data_array) {
         $dao =& $this->_getFRSFileDao();
         $id = $dao->createFromArray($data_array);
+        $file = $this->getFRSFileFromDb($id);
         $um = UserManager::instance();
         $user = $um->getCurrentUser();
-        $dao->addLog($user->getId(), $id, FRSFile::TYPE_FILE, FRSFile::FILE_CREATE);
+        $dao->addLog($user->getId(), $file->getGroup()->getGroupId(), $id, FRSFile::FILE_CREATE);
         return $id;
     }
     
@@ -250,10 +252,11 @@ class FRSFileFactory extends Error {
     
     function _delete($file_id){
     	$_id = (int) $file_id;
+    	$file = $this->getFRSFileFromDb($_id);
     	$dao =& $this->_getFRSFileDao();
     	$um = UserManager::instance();
         $user = $um->getCurrentUser();
-    	$dao->addLog($user->getId(), $_id, FRSFile::TYPE_FILE, FRSFile::FILE_DELETE);
+    	$dao->addLog($user->getId(), $file->getGroup()->getGroupId(), $_id, FRSFile::FILE_DELETE);
     	return $dao->delete($_id);
     }
 
@@ -562,7 +565,7 @@ class FRSFileFactory extends Error {
                 $dao = $this->_getFRSFileDao();
                 $um = $this->_getUserManager();
                 $user = $um->getCurrentUser();
-                $dao->addLog($user->getId(), $file->getFileID(), FRSFile::TYPE_FILE, FRSFile::FILE_RESTORE);
+                $dao->addLog($user->getId(), $file->getGroup()->getGroupId(), $file->getFileID(), FRSFile::FILE_RESTORE);
                 return $dao->restoreFile($file->getFileID());
             }
         }

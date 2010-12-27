@@ -194,27 +194,30 @@ class FRSReleaseFactory {
 
 	function update($data_array) {
 		$dao =  $this->_getFRSReleaseDao();
+        $release = $this->getFRSReleaseFromDb($data_array['release_id']);
 		$um = UserManager::instance();
         $user = $um->getCurrentUser();
-		$dao->addLog($user->getId(), $data_array['release_id'], FRSRelease::TYPE_RELEASE, FRSRelease::RELEASE_UPDATE);
+		$dao->addLog($user->getId(), $release->getGroupID(), $data_array['release_id'], FRSRelease::RELEASE_UPDATE);
 		return $dao->updateFromArray($data_array);
 	}
 
 	function create($data_array) {
 		$dao = $this->_getFRSReleaseDao();
 		$id = $dao->createFromArray($data_array);
+		$release = $this->getFRSReleaseFromDb($id);
 		$um = UserManager::instance();
         $user = $um->getCurrentUser();
-		$dao->addLog($user->getId(), $id, FRSRelease::TYPE_RELEASE, FRSRelease::RELEASE_CREATE);
+		$dao->addLog($user->getId(), $release->getGroupID(), $id, FRSRelease::RELEASE_CREATE);
 		return $id;
 	}
 	
 	function _delete($release_id){
     	$_id = (int) $release_id;
+    	$release = $this->getFRSReleaseFromDb($_id);
     	$dao = $this->_getFRSReleaseDao();
     	$um = UserManager::instance();
         $user = $um->getCurrentUser();
-    	$dao->addLog($user->getId(), $_id, FRSRelease::TYPE_RELEASE, FRSRelease::RELEASE_DELETE);
+    	$dao->addLog($user->getId(), $release->getGroupID(), $_id, FRSRelease::RELEASE_DELETE);
     	return $dao->delete($_id,$this->STATUS_DELETED);
     }
 

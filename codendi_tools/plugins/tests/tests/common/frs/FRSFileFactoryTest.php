@@ -6,6 +6,8 @@ require_once('common/backend/BackendSystem.class.php');
 
 Mock::generate('User');
 Mock::generate('UserManager');
+require_once('common/project/Project.class.php');
+Mock::generate('Project');
 Mock::generate('DataAccessResult');
 Mock::generate('FRSReleaseFactory');
 Mock::generate('FRSRelease');
@@ -280,6 +282,8 @@ class FRSFileFactoryTest extends UnitTestCase {
         $file->setReturnValue('getFileID', 12);
         $file->setReturnValue('getFileName', 'p1_r1/toto.xls');
         $file->setReturnValue('getFileLocation', $GLOBALS['ftp_frs_dir_prefix'].'/prj/p1_r1/toto.xls');
+        $project = new MockProject($this);
+        $file->setReturnValue('getGroup', $project);
         mkdir($GLOBALS['ftp_frs_dir_prefix'].'/prj/p1_r1/', 0750, true);
         $this->assertTrue(is_dir($GLOBALS['ftp_frs_dir_prefix'].'/prj/p1_r1/'));
 
@@ -345,6 +349,8 @@ class FRSFileFactoryTest extends UnitTestCase {
         $file->setReturnValue('getFileID', 12);
         $file->setReturnValue('getFileName', 'p2_r1/toto.xls');
         $file->setReturnValue('getFileLocation', $GLOBALS['ftp_frs_dir_prefix'].'/prj/p2_r1/toto.xls');
+        $project = new MockProject($this);
+        $file->setReturnValue('getGroup', $project);
         $this->assertTrue(is_dir(dirname($GLOBALS['ftp_frs_dir_prefix'].'/prj/p2_r1/')));
         $backend->setReturnValue('chgrp', true);
 
@@ -380,6 +386,8 @@ class FRSFileFactoryTest extends UnitTestCase {
         $file->setReturnValue('getFileID', 12);
         $file->setReturnValue('getFileName', 'p3_r1/toto.xls');
         $file->setReturnValue('getFileLocation', $GLOBALS['ftp_frs_dir_prefix'].'/prj/p3_r1/toto.xls');
+        $project = new MockProject($this);
+        $file->setReturnValue('getGroup', $project);
         $this->assertTrue(is_dir(dirname($GLOBALS['ftp_frs_dir_prefix'].'/prj/p3_r1/')));
 
         $dao = new MockFRSFileDao($this);
