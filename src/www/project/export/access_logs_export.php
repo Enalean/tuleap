@@ -59,7 +59,6 @@ function export_file_logs($project, $span, $who) {
     $eol = "\n";
 
     $sql_package = frs_package_logs_extract($project,$span,$who);
-    // TODO : echo the sql just to test
     $col_list_package = array('time','user','email','title','action','local_time');
     $package_title = array ('time'      => $GLOBALS['Language']->getText('project_stats_source_code_access_utils','packages'),
                             'user'       => '',

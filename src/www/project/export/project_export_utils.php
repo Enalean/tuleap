@@ -662,22 +662,22 @@ function prepare_access_logs_record($group_id, &$record) {
 function convert_frs_action(&$record){
     if (isset($record['action'])) {
         switch ($record['action']) {
-            case 1 :
-            case 4 :
-            case 7 :
+            case FRSPackage::PACKAGE_CREATE :
+            case FRSRelease::RELEASE_CREATE :
+            case FRSFile::FILE_CREATE :
                 $record['action'] = $GLOBALS['Language']->getText('project_stats_source_code_access_utils','frs_add');
                 break;
-            case 2 :
-            case 5 :
-            case 8 :
+            case FRSPackage::PACKAGE_UPDATE :
+            case FRSRelease::RELEASE_UPDATE :
+            case FRSFile::FILE_UPDATE :
                 $record['action'] = $GLOBALS['Language']->getText('project_stats_source_code_access_utils','frs_update');
                 break;
-            case 3 :
-            case 6 :
-            case 9 :
+            case FRSPackage::PACKAGE_DELETE :
+            case FRSRelease::RELEASE_DELETE :
+            case FRSFile::FILE_DELETE :
                 $record['action'] = $GLOBALS['Language']->getText('project_stats_source_code_access_utils','frs_delete');
                 break;
-            case 10 :
+            case FRSFile::FILE_RESTORE :
                 $record['action'] = $GLOBALS['Language']->getText('project_stats_source_code_access_utils','frs_restore');
                 break;
             default :
