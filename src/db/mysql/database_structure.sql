@@ -888,10 +888,12 @@ CREATE TABLE frs_release (
 CREATE TABLE frs_log (
   time int(11) NOT NULL default 0,
   user_id int(11) NOT NULL default 0,
+  project_id int(11) NOT NULL default 0,
   item_id int(11) NOT NULL,
-  item_type_id int(11) NOT NULL,
   action_id int(11) NOT NULL,
-  PRIMARY KEY (time, user_id, item_id)
+  KEY idx_frs_log_time (time),
+  KEY idx_frs_log_project_id (project_id),
+  KEY idx_frs_log_item_id (item_id)
 );
 
 #
