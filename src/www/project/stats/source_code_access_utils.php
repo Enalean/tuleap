@@ -94,6 +94,45 @@ function logs_display($sql, $span, $field, $title='') {
     }
 }
 
+function frs_logs_display($sql, $span, $field, $title='') {
+    $hp = Codendi_HTMLPurifier::instance();
+    $res = db_query( $sql );
+
+    print '<p><u><b>'.$GLOBALS['Language']->getText('project_stats_source_code_access_utils','access_for_past_x_days',array($title,$span));
+    if ( ($nb_downloads = db_numrows( $res )) >= 1 ) {
+        $row = db_fetch_array($res);
+        print ' - '.$GLOBALS['Language']->getText('project_stats_source_code_access_utils','in_total',$nb_downloads).'</u></b>';
+
+        print '<table width="100%" cellpadding="2" cellspacing="0" border="0">'."\n"
+            . '<tr valign="top">'."\n"
+            . ' <th>'.$GLOBALS['Language']->getText('project_admin_utils','date').'</th>'."\n";
+        print ' <th>'.$GLOBALS['Language']->getText('project_export_utils','user').'</th>'."\n"
+            . ' <th>'.$GLOBALS['Language']->getText('project_export_artifact_history_export','email').'</th>'."\n"
+            . ' <th>'.$field.'</th>'."\n"
+            . ' <th>Action</th>'."\n"
+            . ' <th align="right">'.$GLOBALS['Language']->getText('project_stats_source_code_access_utils','time').'</th>'."\n"
+            . '</tr>'."\n";
+        $i = 0;
+        do {
+            print '<tr class="'. util_get_alt_row_color($i++). '">'
+            .' <td>'.strftime("%e %b %Y", $row['time'] ).'</td>';
+            print ' <td> <a href="/users/'.$row["user_name"].'/">'.$row["user_name"].'</a> ('. $hp->purify($row["realname"], CODENDI_PURIFIER_CONVERT_HTML) .')</td>'
+                .' <td>'.$row["email"].'</td>';
+            convert_frs_action($row);
+            print ' <td>'. $hp->purify($row["title"], CODENDI_PURIFIER_CONVERT_HTML) .'</td>'
+                .' <td>'.$row["action"].'</td>'
+                .' <td align="right">'.strftime("%H:%M", $row["time"]).'</td>'
+                .'</tr>'."\n";
+        } while ($row = db_fetch_array($res));
+
+        print '</table>';
+
+    } else {
+        echo "</u></b>
+        <p>".$GLOBALS['Language']->getText('project_stats_source_code_access_utils','no_access')."</p>";
+    }
+}
+
 function frs_package_logs_extract($project,$span,$who) {
     $sql = "SELECT log.time AS time, user.user_name AS user_name, user.realname AS realname, user.email AS email, frs_package.name AS title, log.action_id as action ".
            "FROM frs_log AS log, user, frs_package ".
@@ -156,6 +195,18 @@ function filedownload_logs_daily($project, $span = 7, $who="allusers") {
     	
 	logs_display($sql, $span, $GLOBALS['Language']->getText('project_stats_source_code_access_utils','files'),
 		     $GLOBALS['Language']->getText('project_stats_source_code_access_utils','file_download'));
+
+    $sql = frs_package_logs_extract($project,$span,$who);
+    frs_logs_display($sql, $span, $GLOBALS['Language']->getText('project_stats_source_code_access_utils','packages'),
+                 $GLOBALS['Language']->getText('project_stats_source_code_access_utils','packages'));
+
+    $sql = frs_release_logs_extract($project,$span,$who);
+    frs_logs_display($sql, $span, $GLOBALS['Language']->getText('project_stats_source_code_access_utils','releases'),
+                 $GLOBALS['Language']->getText('project_stats_source_code_access_utils','releases'));
+             
+    $sql = frs_file_logs_extract($project,$span,$who);
+    frs_logs_display($sql, $span, $GLOBALS['Language']->getText('project_stats_source_code_access_utils','files'),
+                 $GLOBALS['Language']->getText('project_stats_source_code_access_utils','files'));
 }
 
 function cvsaccess_logs_extract($project,$span,$who) {

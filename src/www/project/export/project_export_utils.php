@@ -665,21 +665,23 @@ function convert_frs_action(&$record){
             case 1 :
             case 4 :
             case 7 :
-                $record['action'] = 'Create';
+                $record['action'] = $GLOBALS['Language']->getText('project_stats_source_code_access_utils','frs_add');
                 break;
             case 2 :
             case 5 :
             case 8 :
-                $record['action'] = 'Update';
+                $record['action'] = $GLOBALS['Language']->getText('project_stats_source_code_access_utils','frs_update');
                 break;
             case 3 :
             case 6 :
             case 9 :
-                $record['action'] = 'Delete';
+                $record['action'] = $GLOBALS['Language']->getText('project_stats_source_code_access_utils','frs_delete');
                 break;
             case 10 :
-                $record['action'] = 'Restore';
+                $record['action'] = $GLOBALS['Language']->getText('project_stats_source_code_access_utils','frs_restore');
                 break;
+            default :
+                $record['action'] = $GLOBALS['Language']->getText('project_stats_source_code_access_utils','frs_unknown_action');
         }
     }
 }
