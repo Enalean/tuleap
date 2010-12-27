@@ -31,11 +31,9 @@ class FRSRelease extends Error {
     const STATUS_DELETED = 2;
     const STATUS_HIDDEN  = 3;
 
-    const TYPE_RELEASE   = 2;
-
-    const RELEASE_CREATE = 1;
-    const RELEASE_UPDATE = 2;
-    const RELEASE_DELETE = 3;
+    const RELEASE_CREATE = 4;
+    const RELEASE_UPDATE = 5;
+    const RELEASE_DELETE = 6;
 
 	/**
      * @var int $release_id the ID of this FRSRelease

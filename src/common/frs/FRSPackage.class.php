@@ -34,8 +34,6 @@ class FRSPackage extends Error {
     const STATUS_DELETED = 2;
     const STATUS_HIDDEN  = 3;
 
-    const TYPE_PACKAGE   = 1;
-
     const PACKAGE_CREATE = 1;
     const PACKAGE_UPDATE = 2;
     const PACKAGE_DELETE = 3;
