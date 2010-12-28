@@ -162,7 +162,11 @@ class FRSFileFactory extends Error {
         $file = $this->getFRSFileFromDb($data_array['file_id']);
         $um = UserManager::instance();
         $user = $um->getCurrentUser();
-        $dao->addLog($user->getId(), $file->getGroup()->getGroupId(), $data_array['file_id'], FRSFile::FILE_UPDATE);
+        $em = EventManager::instance();
+        $em->processEvent('frs_log', array('user_id' => $user->getId(),
+                                           'project_id' => $file->getGroup()->getGroupId(),
+                                           'item_id' => $data_array['file_id'],
+                                           'action_id' => FRSFile::FILE_UPDATE));
         return $dao->updateFromArray($data_array);
     }
     
@@ -173,7 +177,11 @@ class FRSFileFactory extends Error {
         $file = $this->getFRSFileFromDb($id);
         $um = UserManager::instance();
         $user = $um->getCurrentUser();
-        $dao->addLog($user->getId(), $file->getGroup()->getGroupId(), $id, FRSFile::FILE_CREATE);
+        $em = EventManager::instance();
+        $em->processEvent('frs_log', array('user_id' => $user->getId(),
+                                           'project_id' => $file->getGroup()->getGroupId(),
+                                           'item_id' => $id,
+                                           'action_id' => FRSFile::FILE_CREATE));
         return $id;
     }
     
@@ -256,7 +264,11 @@ class FRSFileFactory extends Error {
     	$dao =& $this->_getFRSFileDao();
     	$um = UserManager::instance();
         $user = $um->getCurrentUser();
-    	$dao->addLog($user->getId(), $file->getGroup()->getGroupId(), $_id, FRSFile::FILE_DELETE);
+        $em = EventManager::instance();
+        $em->processEvent('frs_log', array('user_id' => $user->getId(),
+                                           'project_id' => $file->getGroup()->getGroupId(),
+                                           'item_id' => $_id,
+                                           'action_id' => FRSFile::FILE_DELETE));
     	return $dao->delete($_id);
     }
 
@@ -543,8 +555,18 @@ class FRSFileFactory extends Error {
      * @return UserManager
      */
     function _getUserManager() {
-        $um = $this->_getUserManager();
+        $um = UserManager::instance();
         return $um;
+    }
+
+    /**
+     * Wrapper to get an EventManager instance
+     *
+     * @return EventManager
+     */
+    function _getEventManager() {
+        $em = EventManager::instance();
+        return $em;
     }
 
     /**
@@ -565,7 +587,11 @@ class FRSFileFactory extends Error {
                 $dao = $this->_getFRSFileDao();
                 $um = $this->_getUserManager();
                 $user = $um->getCurrentUser();
-                $dao->addLog($user->getId(), $file->getGroup()->getGroupId(), $file->getFileID(), FRSFile::FILE_RESTORE);
+                $em = $this->_getEventManager();
+                $em->processEvent('frs_log', array('user_id' => $user->getId(),
+                                  'project_id' => $file->getGroup()->getGroupId(),
+                                  'item_id' => $file->getFileID(),
+                                  'action_id' => FRSFile::FILE_RESTORE));
                 return $dao->restoreFile($file->getFileID());
             }
         }

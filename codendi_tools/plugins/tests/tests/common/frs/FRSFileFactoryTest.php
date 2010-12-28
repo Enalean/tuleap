@@ -6,6 +6,7 @@ require_once('common/backend/BackendSystem.class.php');
 
 Mock::generate('User');
 Mock::generate('UserManager');
+Mock::generate('EventManager');
 require_once('common/project/Project.class.php');
 Mock::generate('Project');
 Mock::generate('DataAccessResult');
@@ -19,7 +20,7 @@ Mock::generatePartial('FRSFileFactory', 'FRSFileFactoryTestPurgeFiles', array('_
 Mock::generatePartial('FRSFileFactory', 'FRSFileFactoryTestPurgeOneFile', array('_getFRSFileDao'));
 Mock::generatePartial('FRSFileFactory', 'FRSFileFactoryTestMoveToStaging', array('_getFRSFileDao', 'moveDeletedFileToStagingArea'));
 Mock::generatePartial('FRSFileFactory', 'FRSFileFactoryTestPurgeDeletedFiles', array('purgeFiles', 'moveDeletedFilesToStagingArea', 'cleanStaging', 'restoreDeletedFiles'));
-Mock::generatePartial('FRSFileFactory', 'FRSFileFactoryTestRestore', array('_getFRSFileDao', '_getUserManager'));
+Mock::generatePartial('FRSFileFactory', 'FRSFileFactoryTestRestore', array('_getFRSFileDao', '_getUserManager', '_getEventManager'));
 Mock::generatePartial('FRSFileFactory', 'FRSFileFactoryTestRestoreFiles', array('_getFRSFileDao', 'restoreFile'));
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
@@ -297,6 +298,8 @@ class FRSFileFactoryTest extends UnitTestCase {
         $um = new MockUserManager($this);
         $um->setReturnValue('getCurrentUser', $user);
         $fileFactory->setReturnValue('_getUserManager', $um);
+        $em = new MockEventManager($this);
+        $fileFactory->setReturnValue('_getEventManager', $em);
 
         $this->assertTrue($fileFactory->restoreFile($file, $backend));
          
@@ -363,6 +366,8 @@ class FRSFileFactoryTest extends UnitTestCase {
         $um = new MockUserManager($this);
         $um->setReturnValue('getCurrentUser', $user);
         $fileFactory->setReturnValue('_getUserManager', $um);
+        $em = new MockEventManager($this);
+        $fileFactory->setReturnValue('_getEventManager', $em);
 
         $this->assertTrue($fileFactory->restoreFile($file, $backend));
 
@@ -401,6 +406,8 @@ class FRSFileFactoryTest extends UnitTestCase {
         $um = new MockUserManager($this);
         $um->setReturnValue('getCurrentUser', $user);
         $fileFactory->setReturnValue('_getUserManager', $um);
+        $em = new MockEventManager($this);
+        $fileFactory->setReturnValue('_getEventManager', $em);
 
         $this->assertFalse($fileFactory->restoreFile($file, $backend));
 

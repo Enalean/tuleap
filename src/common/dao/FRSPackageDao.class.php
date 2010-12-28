@@ -264,27 +264,6 @@ class FRSPackageDao extends DataAccessObject {
         return $deleted;
     }
 
-    /**
-     * Add the action to FRS log
-     *
-     * @param Integer $userID
-     * @param Integer $itemID
-     * @param Integer $itemTypeID
-     * @param Integer $actionID
-     *
-     * @return Boolean
-     */
-    function addLog($userID, $projectID, $itemID, $actionID) {
-        $sql = ' INSERT INTO frs_log '.
-               ' (time, user_id, project_id, item_id, action_id) '. 
-               ' VALUES ( '.$this->da->escapeInt(time()).', '.
-               $this->da->escapeInt($userID).', '.
-               $this->da->escapeInt($projectID).', '.
-               $this->da->escapeInt($itemID).', '.
-               $this->da->escapeInt($actionID).')';
-        return $this->update($sql);
-    }
-
 }
 
 ?>

@@ -24,6 +24,8 @@ require_once('common/user/UserManager.class.php');
 require_once('common/permission/PermissionsManager.class.php');
 require_once('FRSReleaseFactory.class.php');
 require_once('www/project/admin/ugroup_utils.php');
+require_once('common/frs/FRSLog.class.php');
+
 /**
  * 
  */
@@ -34,7 +36,10 @@ class FRSPackageFactory {
     var $STATUS_HIDDEN  = FRSPackage::STATUS_HIDDEN;
 
     function FRSPackageFactory() {
-        
+        // add listener to frs_log (is it the right place here ?)
+        $log = new FRSLog($da);
+        $em = EventManager::instance();
+        $em->addListener('frs_log', $log, 'addLog', true, 0);
     }
 
     function getFRSPackageFromArray(&$array) {
@@ -190,7 +195,11 @@ class FRSPackageFactory {
         $dao =& $this->_getFRSPackageDao();
         $um = UserManager::instance();
         $user = $um->getCurrentUser();
-        $dao->addLog($user->getId(), $data['group_id'], $data['package_id'], FRSPackage::PACKAGE_UPDATE);
+        $em = EventManager::instance();
+        $em->processEvent('frs_log', array('user_id' => $user->getId(),
+                                           'project_id' => $data['group_id'],
+                                           'item_id' => $data['package_id'],
+                                           'action_id' => FRSPackage::PACKAGE_UPDATE));
         return $dao->updateFromArray($data);
     }
     
@@ -200,7 +209,11 @@ class FRSPackageFactory {
         $id = $dao->createFromArray($data_array);
         $um = UserManager::instance();
         $user = $um->getCurrentUser();
-        $dao->addLog($user->getId(), $data_array['group_id'], $id, FRSPackage::PACKAGE_CREATE);
+        $em = EventManager::instance();
+        $em->processEvent('frs_log', array('user_id' => $user->getId(),
+                                           'project_id' => $data_array['group_id'],
+                                           'item_id' => $id,
+                                           'action_id' => FRSPackage::PACKAGE_CREATE));
         return $id;
     }
     
@@ -210,7 +223,11 @@ class FRSPackageFactory {
         $dao =& $this->_getFRSPackageDao();
         $um = UserManager::instance();
         $user = $um->getCurrentUser();
-        $dao->addLog($user->getId(), $package->getGroupID(), $_id, FRSPackage::PACKAGE_DELETE);
+        $em = EventManager::instance();
+        $em->processEvent('frs_log', array('user_id' => $user->getId(),
+                                           'project_id' => $package->getGroupID(),
+                                           'item_id' => $_id,
+                                           'action_id' => FRSPackage::PACKAGE_DELETE));
         return $dao->delete($_id, $this->STATUS_DELETED);
     }
     

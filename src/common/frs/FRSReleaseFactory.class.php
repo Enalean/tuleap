@@ -197,7 +197,11 @@ class FRSReleaseFactory {
         $release = $this->getFRSReleaseFromDb($data_array['release_id']);
 		$um = UserManager::instance();
         $user = $um->getCurrentUser();
-		$dao->addLog($user->getId(), $release->getGroupID(), $data_array['release_id'], FRSRelease::RELEASE_UPDATE);
+        $em = EventManager::instance();
+        $em->processEvent('frs_log', array('user_id' => $user->getId(),
+                                           'project_id' => $release->getGroupID(),
+                                           'item_id' => $data_array['release_id'],
+                                           'action_id' => FRSRelease::RELEASE_UPDATE));
 		return $dao->updateFromArray($data_array);
 	}
 
@@ -207,7 +211,11 @@ class FRSReleaseFactory {
 		$release = $this->getFRSReleaseFromDb($id);
 		$um = UserManager::instance();
         $user = $um->getCurrentUser();
-		$dao->addLog($user->getId(), $release->getGroupID(), $id, FRSRelease::RELEASE_CREATE);
+        $em = EventManager::instance();
+        $em->processEvent('frs_log', array('user_id' => $user->getId(),
+                                           'project_id' => $release->getGroupID(),
+                                           'item_id' => $id,
+                                           'action_id' => FRSRelease::RELEASE_CREATE));
 		return $id;
 	}
 	
@@ -217,7 +225,11 @@ class FRSReleaseFactory {
     	$dao = $this->_getFRSReleaseDao();
     	$um = UserManager::instance();
         $user = $um->getCurrentUser();
-    	$dao->addLog($user->getId(), $release->getGroupID(), $_id, FRSRelease::RELEASE_DELETE);
+        $em = EventManager::instance();
+        $em->processEvent('frs_log', array('user_id' => $user->getId(),
+                                           'project_id' => $release->getGroupID(),
+                                           'item_id' => $_id,
+                                           'action_id' => FRSRelease::RELEASE_DELETE));
     	return $dao->delete($_id,$this->STATUS_DELETED);
     }
 
