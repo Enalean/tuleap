@@ -60,7 +60,7 @@ function export_file_logs($project, $span, $who) {
 
     $sql = frs_logs_extract($project,$span,$who);
     $col_list = array('time','user','email','title','action','local_time');
-    $title = array ('time'      => $GLOBALS['Language']->getText('project_stats_source_code_access_utils','packages'),
+    $title = array ('time'      => $GLOBALS['Language']->getText('project_stats_source_code_access_utils','frs_actions'),
                             'user'       => '',
                             'email'      => '',
                             'title'      => '',
@@ -69,7 +69,7 @@ function export_file_logs($project, $span, $who) {
     $lbl_list = array( 'time'      => $GLOBALS['Language']->getText('project_export_access_logs_export','time'),
                                'user'       => $GLOBALS['Language']->getText('project_export_access_logs_export','user'),
                                'email'      => $GLOBALS['Language']->getText('project_export_access_logs_export','email'),
-                               'title'      => $GLOBALS['Language']->getText('project_export_access_logs_export','file'),
+                               'title'      => $GLOBALS['Language']->getText('project_stats_source_code_access_utils','frs_elements'),
                                'action'     => 'Action',
                                'local_time' => $GLOBALS['Language']->getText('project_export_access_logs_export','local_time'));
     $result=db_query($sql);
