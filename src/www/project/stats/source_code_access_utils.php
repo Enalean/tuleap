@@ -156,7 +156,7 @@ function frs_logs_extract($project,$span,$who) {
            " AND log.item_id=frs_release.release_id ".
            " AND log.project_id=".$project->getGroupId()." ".
            " UNION".
-           " SELECT log.time AS time, user.user_name AS user_name, user.realname AS realname, user.email AS email, CONCAT(frs_package.name, '/', frs_release.name, '/', frs_file.filename) AS title,".
+           " SELECT log.time AS time, user.user_name AS user_name, user.realname AS realname, user.email AS email, CONCAT(frs_package.name, '/', frs_release.name, '/', SUBSTRING_INDEX(frs_file.filename, '/', -1)) AS title,".
            " CASE WHEN log.action_id = ".FRSFile::FILE_CREATE." THEN '".$GLOBALS['Language']->getText('project_stats_source_code_access_utils','frs_add_file')."'".
            " WHEN log.action_id = ".FRSFile::FILE_UPDATE." THEN '".$GLOBALS['Language']->getText('project_stats_source_code_access_utils','frs_update_file')."'".
            " WHEN log.action_id = ".FRSFile::FILE_DELETE." THEN '".$GLOBALS['Language']->getText('project_stats_source_code_access_utils','frs_delete_file')."'".
