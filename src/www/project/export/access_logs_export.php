@@ -59,19 +59,19 @@ function export_file_logs($project, $span, $who) {
     $eol = "\n";
 
     $sql = frs_logs_extract($project,$span,$who);
-    $col_list = array('time','user','email','title','action','local_time');
-    $title = array ('time'      => $GLOBALS['Language']->getText('project_stats_source_code_access_utils','frs_actions'),
-                            'user'       => '',
-                            'email'      => '',
-                            'title'      => '',
-                            'action'     => '',
-                            'local_time' => '');    
-    $lbl_list = array( 'time'      => $GLOBALS['Language']->getText('project_export_access_logs_export','time'),
-                               'user'       => $GLOBALS['Language']->getText('project_export_access_logs_export','user'),
-                               'email'      => $GLOBALS['Language']->getText('project_export_access_logs_export','email'),
-                               'title'      => $GLOBALS['Language']->getText('project_stats_source_code_access_utils','frs_elements'),
-                               'action'     => 'Action',
-                               'local_time' => $GLOBALS['Language']->getText('project_export_access_logs_export','local_time'));
+    $col_list = array('time','type','user','email','title','local_time');
+    $title = array ('time'  => $GLOBALS['Language']->getText('project_stats_source_code_access_utils','frs_actions'),
+                    'type'       => '',
+                    'user'       => '',
+                    'email'      => '',
+                    'title'      => '',
+                    'local_time' => '');    
+    $lbl_list = array('time'       => $GLOBALS['Language']->getText('project_export_access_logs_export','time'),
+                      'type'       => 'Action',
+                      'user'       => $GLOBALS['Language']->getText('project_export_access_logs_export','user'),
+                      'email'      => $GLOBALS['Language']->getText('project_export_access_logs_export','email'),
+                      'title'      => $GLOBALS['Language']->getText('project_stats_source_code_access_utils','frs_elements'),
+                      'local_time' => $GLOBALS['Language']->getText('project_export_access_logs_export','local_time'));
     $result=db_query($sql);
     $rows = db_numrows($result);
     if ($result && $rows > 0) {
