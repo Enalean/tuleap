@@ -198,7 +198,7 @@ class FRSReleaseFactory {
 		$um = UserManager::instance();
         $user = $um->getCurrentUser();
         $em = EventManager::instance();
-        $em->processEvent('frs_log', array('user_id' => $user->getId(),
+        $em->processEvent('frs_log_update_release', array('user_id' => $user->getId(),
                                            'project_id' => $release->getGroupID(),
                                            'item_id' => $data_array['release_id'],
                                            'action_id' => FRSRelease::RELEASE_UPDATE));
@@ -212,7 +212,7 @@ class FRSReleaseFactory {
 		$um = UserManager::instance();
         $user = $um->getCurrentUser();
         $em = EventManager::instance();
-        $em->processEvent('frs_log', array('user_id' => $user->getId(),
+        $em->processEvent('frs_log_add_release', array('user_id' => $user->getId(),
                                            'project_id' => $release->getGroupID(),
                                            'item_id' => $id,
                                            'action_id' => FRSRelease::RELEASE_CREATE));
@@ -226,7 +226,7 @@ class FRSReleaseFactory {
     	$um = UserManager::instance();
         $user = $um->getCurrentUser();
         $em = EventManager::instance();
-        $em->processEvent('frs_log', array('user_id' => $user->getId(),
+        $em->processEvent('frs_log_delete_release', array('user_id' => $user->getId(),
                                            'project_id' => $release->getGroupID(),
                                            'item_id' => $_id,
                                            'action_id' => FRSRelease::RELEASE_DELETE));

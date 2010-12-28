@@ -163,7 +163,7 @@ class FRSFileFactory extends Error {
         $um = UserManager::instance();
         $user = $um->getCurrentUser();
         $em = EventManager::instance();
-        $em->processEvent('frs_log', array('user_id' => $user->getId(),
+        $em->processEvent('frs_log_update_file', array('user_id' => $user->getId(),
                                            'project_id' => $file->getGroup()->getGroupId(),
                                            'item_id' => $data_array['file_id'],
                                            'action_id' => FRSFile::FILE_UPDATE));
@@ -178,7 +178,7 @@ class FRSFileFactory extends Error {
         $um = UserManager::instance();
         $user = $um->getCurrentUser();
         $em = EventManager::instance();
-        $em->processEvent('frs_log', array('user_id' => $user->getId(),
+        $em->processEvent('frs_log_add_file', array('user_id' => $user->getId(),
                                            'project_id' => $file->getGroup()->getGroupId(),
                                            'item_id' => $id,
                                            'action_id' => FRSFile::FILE_CREATE));
@@ -265,7 +265,7 @@ class FRSFileFactory extends Error {
     	$um = UserManager::instance();
         $user = $um->getCurrentUser();
         $em = EventManager::instance();
-        $em->processEvent('frs_log', array('user_id' => $user->getId(),
+        $em->processEvent('frs_log_delete_file', array('user_id' => $user->getId(),
                                            'project_id' => $file->getGroup()->getGroupId(),
                                            'item_id' => $_id,
                                            'action_id' => FRSFile::FILE_DELETE));
@@ -588,7 +588,7 @@ class FRSFileFactory extends Error {
                 $um = $this->_getUserManager();
                 $user = $um->getCurrentUser();
                 $em = $this->_getEventManager();
-                $em->processEvent('frs_log', array('user_id' => $user->getId(),
+                $em->processEvent('frs_log_restore_file', array('user_id' => $user->getId(),
                                   'project_id' => $file->getGroup()->getGroupId(),
                                   'item_id' => $file->getFileID(),
                                   'action_id' => FRSFile::FILE_RESTORE));

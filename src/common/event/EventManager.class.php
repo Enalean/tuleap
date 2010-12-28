@@ -21,6 +21,7 @@
 require_once('common/collection/PrioritizedMultiMap.class.php');
 require_once('common/collection/Map.class.php');
 require_once('Event.class.php');
+require_once('common/frs/FRSLog.class.php');
 
 /**
  * EventManager
@@ -31,6 +32,19 @@ class EventManager {
     
     function EventManager() {
         $this->listeners = new PrioritizedMultiMap();
+        // TODO : Put this somewhere else
+        // Add listeners for frs actions log
+        $log = new FRSLog($da);
+        $this->addListener('frs_log_add_package', $log, 'addLog', true, 0);
+        $this->addListener('frs_log_update_package', $log, 'addLog', true, 0);
+        $this->addListener('frs_log_delete_package', $log, 'addLog', true, 0);
+        $this->addListener('frs_log_add_release', $log, 'addLog', true, 0);
+        $this->addListener('frs_log_update_release', $log, 'addLog', true, 0);
+        $this->addListener('frs_log_delete_release', $log, 'addLog', true, 0);
+        $this->addListener('frs_log_add_file', $log, 'addLog', true, 0);
+        $this->addListener('frs_log_update_file', $log, 'addLog', true, 0);
+        $this->addListener('frs_log_delete_file', $log, 'addLog', true, 0);
+        $this->addListener('frs_log_restore_file', $log, 'addLog', true, 0);
     }
     
     function &instance() {

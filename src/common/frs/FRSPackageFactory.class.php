@@ -24,7 +24,6 @@ require_once('common/user/UserManager.class.php');
 require_once('common/permission/PermissionsManager.class.php');
 require_once('FRSReleaseFactory.class.php');
 require_once('www/project/admin/ugroup_utils.php');
-require_once('common/frs/FRSLog.class.php');
 
 /**
  * 
@@ -36,10 +35,6 @@ class FRSPackageFactory {
     var $STATUS_HIDDEN  = FRSPackage::STATUS_HIDDEN;
 
     function FRSPackageFactory() {
-        // add listener to frs_log (is it the right place here ?)
-        $log = new FRSLog($da);
-        $em = EventManager::instance();
-        $em->addListener('frs_log', $log, 'addLog', true, 0);
     }
 
     function getFRSPackageFromArray(&$array) {
@@ -196,7 +191,7 @@ class FRSPackageFactory {
         $um = UserManager::instance();
         $user = $um->getCurrentUser();
         $em = EventManager::instance();
-        $em->processEvent('frs_log', array('user_id' => $user->getId(),
+        $em->processEvent('frs_log_update_package', array('user_id' => $user->getId(),
                                            'project_id' => $data['group_id'],
                                            'item_id' => $data['package_id'],
                                            'action_id' => FRSPackage::PACKAGE_UPDATE));
@@ -210,7 +205,7 @@ class FRSPackageFactory {
         $um = UserManager::instance();
         $user = $um->getCurrentUser();
         $em = EventManager::instance();
-        $em->processEvent('frs_log', array('user_id' => $user->getId(),
+        $em->processEvent('frs_log_add_package', array('user_id' => $user->getId(),
                                            'project_id' => $data_array['group_id'],
                                            'item_id' => $id,
                                            'action_id' => FRSPackage::PACKAGE_CREATE));
@@ -224,7 +219,7 @@ class FRSPackageFactory {
         $um = UserManager::instance();
         $user = $um->getCurrentUser();
         $em = EventManager::instance();
-        $em->processEvent('frs_log', array('user_id' => $user->getId(),
+        $em->processEvent('frs_log_delete_package', array('user_id' => $user->getId(),
                                            'project_id' => $package->getGroupID(),
                                            'item_id' => $_id,
                                            'action_id' => FRSPackage::PACKAGE_DELETE));
