@@ -36,19 +36,6 @@ if (user_ismember($group_id, 'R2') || user_ismember($group_id, 'A')) {
     $authorized_user = true;
 }
 
-// add listener to frs_log 
-$log = new FRSLog();
-$em = EventManager::instance();
-$em->addListener('frs_log_add_package', $log, 'addLog', true, 0);
-$em->addListener('frs_log_update_package', $log, 'addLog', true, 0);
-$em->addListener('frs_log_delete_package', $log, 'addLog', true, 0);
-$em->addListener('frs_log_add_release', $log, 'addLog', true, 0);
-$em->addListener('frs_log_update_release', $log, 'addLog', true, 0);
-$em->addListener('frs_log_delete_release', $log, 'addLog', true, 0);
-$em->addListener('frs_log_add_file', $log, 'addLog', true, 0);
-$em->addListener('frs_log_update_file', $log, 'addLog', true, 0);
-$em->addListener('frs_log_delete_file', $log, 'addLog', true, 0);
-$em->addListener('frs_log_restore_file', $log, 'addLog', true, 0);
 
 $frspf = new FRSPackageFactory();
 $frsrf = new FRSReleaseFactory();

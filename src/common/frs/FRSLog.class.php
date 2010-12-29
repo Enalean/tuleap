@@ -21,6 +21,35 @@
 require_once('common/dao/FRSLogDao.class.php');
 
 class FRSLog {
+    
+    protected function __construct() {
+        $em = EventManager::instance();
+        $eventToListen = array('frs_log_add_package',
+                               'frs_log_update_package', 
+                               'frs_log_delete_package', 
+                               'frs_log_add_release',
+                               'frs_log_update_release', 
+                               'frs_log_delete_release', 
+                               'frs_log_add_file',
+                               'frs_log_update_file', 
+                               'frs_log_delete_file', 
+                               'frs_log_restore_file'
+        );
+
+        foreach($eventToListen as $event) {
+            $em->addListener($event, $this, 'addLog', true, 0);
+        }
+    }
+
+    protected static $_instance;
+    public static function instance() {
+        if (!isset(self::$_instance)) {
+            $c = __CLASS__;
+            self::$_instance = new $c;
+        }
+        return self::$_instance;
+    }
+
 
     /**
      * Process the event add_log

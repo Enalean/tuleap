@@ -24,6 +24,7 @@ require_once('common/user/UserManager.class.php');
 require_once('common/permission/PermissionsManager.class.php');
 require_once('FRSReleaseFactory.class.php');
 require_once('www/project/admin/ugroup_utils.php');
+require_once ('common/frs/FRSLog.class.php');
 
 /**
  * 
@@ -35,6 +36,7 @@ class FRSPackageFactory {
     var $STATUS_HIDDEN  = FRSPackage::STATUS_HIDDEN;
 
     function FRSPackageFactory() {
+        $log = FRSLog::instance();
     }
 
     function getFRSPackageFromArray(&$array) {

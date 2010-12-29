@@ -20,6 +20,7 @@
 
 require_once('FRSFile.class.php');
 require_once('common/dao/FRSFileDao.class.php');
+require_once ('common/frs/FRSLog.class.php');
 
 /**
  * 
@@ -27,7 +28,7 @@ require_once('common/dao/FRSFileDao.class.php');
 class FRSFileFactory extends Error {
 
     function FRSFileFactory() {
-        
+        $log = FRSLog::instance();
     }
 
     function &getFRSFileFromArray(&$array) {

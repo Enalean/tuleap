@@ -23,6 +23,7 @@ require_once ('common/dao/FRSReleaseDao.class.php');
 require_once ('common/frs/FRSFileFactory.class.php');
 require_once ('common/frs/FRSPackageFactory.class.php');
 require_once('www/project/admin/ugroup_utils.php');
+require_once ('common/frs/FRSLog.class.php');
 /**
  * 
  */
@@ -34,7 +35,7 @@ class FRSReleaseFactory {
     
 
 	function FRSReleaseFactory() {
-
+	    $log = FRSLog::instance();
 	}
 
 	function  getFRSReleaseFromArray(& $array) {
