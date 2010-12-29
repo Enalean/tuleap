@@ -103,7 +103,7 @@ function frs_logs_extract($project,$span,$who) {
            " FROM frs_log AS log".
            " JOIN user FORCE KEY(PRIMARY) USING (user_id)".
            " JOIN frs_package ON log.item_id=frs_package.package_id".
-           " WHERE log.project_id=".$project->getGroupId().
+           " WHERE log.group_id=".$project->getGroupId().
            " AND ".logs_cond($project, $span, $who).
            " AND ( log.action_id=1 OR log.action_id=2 OR log.action_id=3 )".
            " UNION".
@@ -118,7 +118,7 @@ function frs_logs_extract($project,$span,$who) {
            " JOIN frs_package using (package_id)". 
            " WHERE ".logs_cond($project, $span, $who).
            " AND ( log.action_id=4 OR log.action_id=5 OR log.action_id=6 ) ".
-           " AND log.project_id=".$project->getGroupId()." ".
+           " AND log.group_id=".$project->getGroupId()." ".
            " UNION".
            " SELECT STRAIGHT_JOIN log.time AS time, user.user_name AS user_name, user.realname AS realname, user.email AS email, CONCAT(frs_package.name, '/', frs_release.name, '/', SUBSTRING_INDEX(frs_file.filename, '/', -1)) AS title,".
            " CASE WHEN log.action_id = ".FRSFile::FILE_CREATE." THEN '".$GLOBALS['Language']->getText('project_stats_source_code_access_utils','frs_add_file')."'".
@@ -133,7 +133,7 @@ function frs_logs_extract($project,$span,$who) {
            " JOIN frs_package using (package_id) ".
            " WHERE ".logs_cond($project, $span, $who).
            " AND ( log.action_id=7 OR log.action_id=8 OR log.action_id=9 OR log.action_id=10 )".
-           " AND log.project_id=".$project->getGroupId().
+           " AND log.group_id=".$project->getGroupId().
            " ORDER BY time DESC";
     return $sql;
 }
