@@ -140,7 +140,7 @@ function frs_logs_extract($project,$span,$who) {
            " JOIN frs_release using (release_id) ".
            " JOIN frs_package using (package_id) ".
            " WHERE log.action_id=".FRSFile::FILE_RESTORE.
-           " AND log.project_id=".$project->getGroupId().
+           " AND log.group_id=".$project->getGroupId().
            " ORDER BY time DESC";
     return $sql;
 }
