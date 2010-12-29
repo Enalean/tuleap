@@ -475,8 +475,12 @@ function addPackage($sessionKey,$group_id,$package_name,$status_id,$rank=0,$appr
             if ($pkg_fact->isPackageNameExist($package_name, $group_id)) {
                 return new SoapFault(invalid_package_fault, 'Package name already exists in this project', 'addPackage');
             } else {
-                $dao =& $pkg_fact->_getFRSPackageDao();
-                $dar = $dao->create($group->getID(), $package_name, $status_id, $rank, $approve_license);
+                $pkg_array = array('group_id'        => $group->getID(),
+                                   'name'            => $package_name,
+                                   'status_id'       => $status_id,
+                                   'rank'            => $rank,
+                                   'approve_license' => $approve_license);
+                $dar = $pkg_fact->create($pkg_array);
                 if (!$dar) {
                     return new SoapFault(invalid_package_fault, $dar->isError(), 'addPackage');
                 } else {
@@ -619,8 +623,13 @@ function addRelease($sessionKey,$group_id,$package_id,$name,$notes,$changes,$sta
             if ($release_fact->isReleaseNameExist($name, $package_id)) {
                 return new SoapFault(invalid_release_fault, 'Release name already exists in this package', 'addRelease');
             } else {
-                $dao =& $release_fact->_getFRSReleaseDao();
-                $dar = $dao->create($package_id, $name, $notes, $changes, $status_id, 1, $release_date);
+                $release_array = array ('package_id' => $package_id,
+                                        'name' => $name,
+                                        'notes' => $notes,
+                                        'changes' => $changes,
+                                        'status_id' => $status_id,
+                                        'release_date' => $release_date);
+                $dar = $release_fact->create($release_array);
                 if (!$dar) {
                     return new SoapFault(invalid_release_fault, $dar->isError(), 'addRelease');
                 } else {
