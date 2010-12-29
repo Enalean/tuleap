@@ -633,6 +633,12 @@ function addRelease($sessionKey,$group_id,$package_id,$name,$notes,$changes,$sta
                 if (!$dar) {
                     return new SoapFault(invalid_release_fault, $dar->isError(), 'addRelease');
                 } else {
+                    //add the default permission inherited from package
+                    $pm = PermissionsManager::instance();
+                    $ugroupsId = $pm->getUgroupIdByObjectIdAndPermissionType($package_id, 'PACKAGE_READ');
+                    foreach ($ugroupsId as $row) {
+                        $pm->addPermission('RELEASE_READ', $dar, $row['ugroup_id']);
+                    }
                     // if there is no error, $dar contains the release_id
                     return $dar;
                 }
