@@ -651,7 +651,11 @@ function prepare_access_logs_record($group_id, &$record) {
     	$record['local_time'] = strftime("%H:%M", $time);
     }
     $uid = user_getid_from_email($record['email']);
-    $record['user'] = user_getrealname($uid)."(".user_getname($uid).")";
+    if ($uid == $GLOBALS['Language']->getText('include_user','not_found')) {
+        $record['user'] = 'N/A';
+    } else {
+        $record['user'] = user_getrealname($uid)."(".user_getname($uid).")";
+    }
     //for cvs & svn access logs
     if (isset($record['day'])) {
     	$day = $record['day'];
