@@ -120,6 +120,8 @@ class CLI_Action_Docman_GetFile extends CLI_Action {
             }
         }
     }
+
+    function soapResult($params, $soap_result, $fieldnames = array(), $loaded_params = array()) {}
 }
 
 ?>
