@@ -36,7 +36,6 @@ if (user_ismember($group_id, 'R2') || user_ismember($group_id, 'A')) {
     $authorized_user = true;
 }
 
-
 $frspf = new FRSPackageFactory();
 $frsrf = new FRSReleaseFactory();
 $frsff = new FRSFileFactory();
