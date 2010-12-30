@@ -138,8 +138,10 @@ function add_new_file() {
 	
 
 	//Add field for reference checksum
+	cell = Builder.node('td');
 	var md5sum = Builder.node('input', {'type':'text', id:'reference_md5_'+id, size: 36, name:'reference_md5'});
-	row.appendChild(md5sum);
+	cell.appendChild(md5sum);	
+	row.appendChild(cell);
 
 	$('files_body').appendChild(row);
     current_select_number++;
