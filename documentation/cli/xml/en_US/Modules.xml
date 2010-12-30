@@ -308,7 +308,7 @@ No results
                 <example>
                     <title>list command</title>
                     <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[ounis@linux codendi cli ]$ ./codendi.php tracker list --project=project1 --tracker_id=116
+[ounis@linux codendi cli ]$ ./codendi.php tracker list --tracker_id=116
 +------------------------+-----------+
 | total_artifacts_number | artifacts |
 +------------------------+-----------+
@@ -371,7 +371,7 @@ No results
                 <example>
                     <title>reportlist command</title>
                     <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[ounis@linux codendi cli ]$ ./codendi.php tracker reportlist --project=project1 --tracker_id=116
+[ounis@linux codendi cli ]$ ./codendi.php tracker reportlist --tracker_id=116
 +------------------------+-----------+
 | total_artifacts_number | artifacts |
 +------------------------+-----------+
@@ -417,7 +417,7 @@ No results
                 <example>
                     <title>reports command</title>
                     <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[ounis@linux codendi cli ]$ ./codendi.php tracker reports --project=project1 --tracker_id=116
+[ounis@linux codendi cli ]$ ./codendi.php tracker reports --tracker_id=116
 +-----------+-------------------+---------+------------------------------------+-------+--------+
 | report_id | group_artifact_id |  name   |            description             | scope | fields |
 +-----------+-------------------+---------+------------------------------------+-------+--------+
@@ -489,7 +489,7 @@ No results
                 <example>
                     <title>add command</title>
                     <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[ounis@linux codendi cli ]$ ./codendi.php tracker add --project=project1 --tracker_id=116 --summary="Back button is not working" --details="When I read my email and I press the back button, a blank page appears" --severity=4 --assigned_to=103
+[ounis@linux codendi cli ]$ ./codendi.php tracker add --tracker_id=116 --summary="Back button is not working" --details="When I read my email and I press the back button, a blank page appears" --severity=4 --assigned_to=103
 Confirm you want to add a new artifact with the following information:
 summary: Back button is not working
 details: When I read my email and I press the back button, a blank page appears
@@ -547,7 +547,7 @@ Is this information correct? (y/n): y
                 <example>
                     <title>update command</title>
                     <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[ounis@linux codendi cli ]$ ./codendi.php tracker update --project=project1 --tracker_id=116 --id=40 --severity=6
+[ounis@linux codendi cli ]$ ./codendi.php tracker update --tracker_id=116 --id=40 --severity=6
 Confirm you want to add a new artifact with the following information:
 severity: 6
 group_id: 104
@@ -584,7 +584,7 @@ Is this information correct? (y/n): y
                 <example>
                     <title>comments command</title>
                     <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[ounis@linux codendi cli ]$ ./codendi.php tracker comments --project=project1 --tracker_id=116 --id=40
+[ounis@linux codendi cli ]$ ./codendi.php tracker comments --tracker_id=116 --id=40
 +-------------+--------------+------------------+------------+---------------+-------+-------------+-----------------+--------------+------------+---------------+
 | artifact_id | follow_up_id |     comment      |    date    | original_date |  by   | original_by | comment_type_id | comment_type | field_name | user_can_edit |
 +-------------+--------------+------------------+------------+---------------+-------+-------------+-----------------+--------------+------------+---------------+
@@ -626,7 +626,7 @@ Is this information correct? (y/n): y
                 <example>
                     <title>addComment command</title>
                     <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[ounis@linux codendi cli ]$ ./codendi.php tracker addComment --project=project1 --tracker_id=116 --id=40 --format=html --message="<b>I agree with you</b>"
+[ounis@linux codendi cli ]$ ./codendi.php tracker addComment --tracker_id=116 --id=40 --format=html --message="<b>I agree with you</b>"
 +--------+
 | Result |
 +--------+
@@ -663,7 +663,7 @@ Is this information correct? (y/n): y
                 <example>
                     <title>updateComment command</title>
                     <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[ounis@linux codendi cli ]$ ./codendi.php tracker updateComment --project=project1 --tracker_id=116 --artifact_id=40 --comment_id=560  --comment="This comment will replace the former one"
+[ounis@linux codendi cli ]$ ./codendi.php tracker updateComment --tracker_id=116 --artifact_id=40 --comment_id=560  --comment="This comment will replace the former one"
 +--------+
 | Result |
 +--------+
@@ -697,7 +697,7 @@ Is this information correct? (y/n): y
                 <example>
                     <title>deleteComment command</title>
                     <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[ounis@linux codendi cli ]$ ./codendi.php tracker deleteComment --project=project1 --tracker_id=116 --artifact_id=40 --comment_id=560
+[ounis@linux codendi cli ]$ ./codendi.php tracker deleteComment --tracker_id=116 --artifact_id=40 --comment_id=560
 +--------+
 | Result |
 +--------+
@@ -728,7 +728,7 @@ Is this information correct? (y/n): y
                 <example>
                     <title>CCList command</title>
                     <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[ounis@linux codendi cli ]$ ./codendi.php tracker CCList --project=project1 --tracker_id=116 --id=40
+[ounis@linux codendi cli ]$ ./codendi.php tracker CCList --tracker_id=116 --id=40
 +----------------+-------------+----------------------+----------+---------------+---------+------------+
 | artifact_cc_id | artifact_id |        email         | added_by | added_by_name | comment |    date    |
 +----------------+-------------+----------------------+----------+---------------+---------+------------+
@@ -767,7 +767,7 @@ Is this information correct? (y/n): y
                 <example>
                     <title>addCC command</title>
                     <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[ounis@linux codendi cli ]$ ./codendi.php tracker addCC --project=project1 --tracker_id=116 --id=40 --cc_list="nouha.terzi@st.com, ounis, salma.moakhar@st.com"
+[ounis@linux codendi cli ]$ ./codendi.php tracker addCC --tracker_id=116 --id=40 --cc_list="nouha.terzi@st.com, ounis, salma.moakhar@st.com"
 +--------+
 | Result |
 +--------+
@@ -801,7 +801,7 @@ Is this information correct? (y/n): y
                 <example>
                     <title>deleteCC command</title>
                     <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[ounis@linux codendi cli ]$ ./codendi.php tracker deleteCC --project=project1 --tracker_id=116 --id=40 --cc_id=2
+[ounis@linux codendi cli ]$ ./codendi.php tracker deleteCC --tracker_id=116 --id=40 --cc_id=2
 +--------+
 | Result |
 +--------+
@@ -832,7 +832,7 @@ Is this information correct? (y/n): y
                 <example>
                     <title>dependencies command</title>
                     <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[ounis@linux codendi cli ]$ ./codendi.php tracker dependencies --project=project1 --tracker_id=116 --id=40
+[ounis@linux codendi cli ]$ ./codendi.php tracker dependencies --tracker_id=116 --id=40
 +--------------------+-------------+-----------------------------+-------------+------------+--------------+----------+------------+
 | artifact_depend_id | artifact_id | is_dependent_on_artifact_id |   summary   | tracker_id | tracker_name | group_id | group_name |
 +--------------------+-------------+-----------------------------+-------------+------------+--------------+----------+------------+
@@ -863,7 +863,7 @@ Is this information correct? (y/n): y
                 <example>
                     <title>inverseDependencies command</title>
                     <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[ounis@linux codendi cli ]$ ./codendi.php tracker inverseDependencies --project=project1 --tracker_id=116 --id=40
+[ounis@linux codendi cli ]$ ./codendi.php tracker inverseDependencies --tracker_id=116 --id=40
 +--------------------+-------------+-----------------------------+-----------------+------------+--------------+----------+------------+
 | artifact_depend_id | artifact_id | is_dependent_on_artifact_id |     summary     | tracker_id | tracker_name | group_id | group_name |
 +--------------------+-------------+-----------------------------+-----------------+------------+--------------+----------+------------+
@@ -898,7 +898,7 @@ Is this information correct? (y/n): y
                 <example>
                     <title>addDependencies command</title>
                     <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[ounis@linux codendi cli ]$ ./codendi.php tracker addDependencies --project=project1 --tracker_id=116 --id=40 --dependencies="41"
+[ounis@linux codendi cli ]$ ./codendi.php tracker addDependencies --tracker_id=116 --id=40 --dependencies="41"
 +--------+
 | Result |
 +--------+
@@ -932,7 +932,7 @@ Is this information correct? (y/n): y
                 <example>
                     <title>deleteDependency command</title>
                     <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[ounis@linux codendi cli ]$ ./codendi.php deleteDependency tracker --project=project1 --tracker_id=116 --id=40 --dependency=41
+[ounis@linux codendi cli ]$ ./codendi.php deleteDependency tracker --tracker_id=116 --id=40 --dependency=41
 +--------+
 | Result |
 +--------+
@@ -963,7 +963,7 @@ Is this information correct? (y/n): y
                 <example>
                     <title>artifactHistory command</title>
                     <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[ounis@linux codendi cli ]$ ./codendi.php tracker artifactHistory --project=project1 --tracker_id=116 --id=40
+[ounis@linux codendi cli ]$ ./codendi.php tracker artifactHistory --tracker_id=116 --id=40
 +------------+-----------------------------------------------+-----------------------------------------------+-----------------+------------+
 | field_name |                   old_value                   |                   new_value                   | modification_by |    date    |
 +------------+-----------------------------------------------+-----------------------------------------------+-----------------+------------+
@@ -1000,7 +1000,7 @@ Is this information correct? (y/n): y
                 <example>
                     <title>attachedFiles command</title>
                     <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[ounis@linux codendi cli ]$ ./codendi.php tracker attachedFiles --project=project1 --tracker_id=116 --artifact_id=40
+[ounis@linux codendi cli ]$ ./codendi.php tracker attachedFiles --tracker_id=116 --artifact_id=40
 +----+-------------+----------+-------------------+----------+----------+------------+------------+--------------+
 | id | artifact_id | filename |    description    | bin_data | filesize |  filetype  |  adddate   | submitted_by |
 +----+-------------+----------+-------------------+----------+----------+------------+------------+--------------+
@@ -1038,7 +1038,7 @@ Is this information correct? (y/n): y
                 <example>
                     <title>attachedFile command</title>
                     <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[ounis@linux codendi cli ]$ ./codendi.php tracker attachedFile --project=project1 --tracker_id=116 --artifact_id=40 --file_id=2 --output=./file2
+[ounis@linux codendi cli ]$ ./codendi.php tracker attachedFile --tracker_id=116 --artifact_id=40 --file_id=2 --output=./file2
 File retrieved successfully.
                     </programlisting>
                  </example>
@@ -1071,7 +1071,7 @@ File retrieved successfully.
                 <example>
                     <title>addAttachedFile command</title>
                     <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[ounis@linux codendi cli ]$ ./codendi.php tracker addAttachedFile --project=project1 --tracker_id=116 --artifact_id=40 --file=file2 --description="file2 description"
+[ounis@linux codendi cli ]$ ./codendi.php tracker addAttachedFile --tracker_id=116 --artifact_id=40 --file=file2 --description="file2 description"
 +--------+
 | Result |
 +--------+
@@ -1095,9 +1095,9 @@ File retrieved successfully.
     <section id="FRSFunctions">
         <title>File Release System functions</title>
         
-        <section id="FRSFunctionPackages">
-            <title>packages</title>
-            <para>packages: Display a list of available packages for a project
+        <section id="FRSFunctionGetPackages">
+            <title>getPackages</title>
+            <para>getPackages: Display a list of available packages for a project
                 <itemizedlist mark="bullet">
                     <listitem>
                         <para>--project: UNIX name of the project you want to retrieve the packages in. If none is specified, the project specified when you logged in will be used. If none was specified at that time, an error will be displayed.
@@ -1106,30 +1106,15 @@ File retrieved successfully.
                 </itemizedlist>
                 <para>
                     <example>
-                        <title>packages command</title>
+                        <title>getPackages command</title>
                         <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[mnazaria@linux codendi cli ]$ ./codendi.php frs packages --project=myproject
-Array
-(
-    [0] => Array 
-            (
-                [package_id] => 13
-                [group_id] => 121
-                [name] => &SYS_PRODUCT_NAME; installation
-                [status_id] => 1
-                [rank] => 10
-                [approve_license] => 1
-             )
-    [1] => Array 
-            (
-                [package_id] => 64
-                [group_id] => 121
-                [name] => CLI installation
-                [status_id] => 1
-                [rank] => 20
-                [approve_license] => 1
-             )
-)
+[ounis@linux codendi cli ]$ ./codendi.php frs getPackages --project=project1
++------------+----------+----------------+-----------+------+-----------------+
+| package_id | group_id |      name      | status_id | rank | approve_license |
++------------+----------+----------------+-----------+------+-----------------+
+| 198        | 104      | package2       | 1         | 1    |                 |
+| 197        | 104      | my_new_package | 1         | 2    |                 |
++------------+----------+----------------+-----------+------+-----------------+
                         </programlisting>
                     </example>
                </para>
@@ -1137,8 +1122,8 @@ Array
         </section>
 
         <section id="FRSFunctionAddPackage">
-            <title>addpackage</title>
-            <para>addpackage: Add a package to the File Release System
+            <title>addPackage</title>
+            <para>addPackage: Add a package to the File Release System
                 <itemizedlist mark="bullet">
                     <listitem>
                         <para>--name*: name of the new package that will be created.
@@ -1159,10 +1144,14 @@ Array
                 </itemizedlist>
                 <para>
                     <example>
-                        <title>addpackage command</title>
+                        <title>addPackage command</title>
                         <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[mnazaria@linux codendi cli ]$ ./codendi.php frs addpackage --project=myproject --name="my_new_package" --status_id=1
-65
+[ounis@linux codendi cli ]$ ./codendi.php frs addPackage --project=project1 --name="my_new_package" --status_id=1
++--------+
+| Result |
++--------+
+| 197    |
++--------+
                         </programlisting>
                     </example>
                     <note>Note: The value returned (65) is the ID of the new package.</note>
@@ -1170,9 +1159,9 @@ Array
             </para>
         </section>
         
-        <section id="FRSFunctionReleases">
-            <title>releases</title>
-            <para>releases: Display a list of available releases for a project and a given package
+        <section id="FRSFunctionGetReleases">
+            <title>getReleases</title>
+            <para>getReleases: Display a list of available releases for a project and a given package
                 <itemizedlist mark="bullet">
                     <listitem>
                         <para>--package_id*: the id of the package the releases belong to
@@ -1185,9 +1174,9 @@ Array
                 </itemizedlist>
                 <para>
                     <example>
-                        <title>releases command</title>
+                        <title>getReleases command</title>
                         <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[mnazaria@linux codendi cli ]$ ./codendi.php frs releases --package_id=6
+[mnazaria@linux codendi cli ]$ ./codendi.php frs getReleases --package_id=6
 Array
 (
     [0] => Array 
@@ -1221,8 +1210,8 @@ Array
         </section>
         
         <section id="FRSFunctionAddRelease">
-            <title>addrelease</title>
-            <para>addrelease: Add a release to the File Release System
+            <title>addRelease</title>
+            <para>addRelease: Add a release to the File Release System
                 <itemizedlist mark="bullet">
                     <listitem>
                         <para>--package_id*: id of the package this release will belong to
@@ -1255,10 +1244,14 @@ Array
                 </itemizedlist>
                 <para>
                     <example>
-                        <title>addrelease command</title>
+                        <title>addRelease command</title>
                         <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[mnazaria@linux codendi cli ]$ ./codendi.php frs addrelease --package_id=6 --name="new version" --notes="somes notes about this release" --changes="the changes of this new release" --status_id=1
-84
+[ounis@linux codendi cli ]$ ./codendi.php frs addRelease --package_id=197 --name="new version" --notes="somes notes about this release" --changes="the changes of this new release" --status_id=1
++--------+
+| Result |
++--------+
+| 143    |
++--------+
                         </programlisting>
                     </example>
                     <note>Note: The value returned (84) is the ID of the new release.</note>
