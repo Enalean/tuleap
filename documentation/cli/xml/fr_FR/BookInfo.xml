@@ -17,12 +17,22 @@
           <orgname>Xerox, Marc.Nazarian@xrce.xerox.com</orgname>
         </affiliation>
       </author>
+
+      <author>
+        <firstname>Hatem</firstname>
+
+        <surname>Ounis</surname>
+
+        <affiliation>
+          <orgname>STMicroelectronics, hatem.ounis@st.com</orgname>
+        </affiliation>
+      </author>
     </authorgroup>
 
     <copyright>
-      <year>2006</year>
+      <year>2010</year>
 
-      <holder>Xerox Corporation, &SYS_PRODUCT_NAME;.</holder>
+      <holder>STMicroelectronics, &SYS_PRODUCT_NAME;.</holder>
     </copyright>
 
     <legalnotice>
@@ -60,6 +70,17 @@
 
         <revremark>Ajout du module de gestion des fichiers</revremark>
       </revision>
+
+      <revision>
+        <revnumber>0.3</revnumber>
+
+        <date>30-Dec-2010</date>
+
+        <authorinitials>Hatem Ounis</authorinitials>
+
+        <revremark>Mise a jour générale</revremark>
+      </revision>
+
     </revhistory>
   </bookinfo>
 <!--

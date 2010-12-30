@@ -53,6 +53,14 @@
              <listitem>
                 <para>tracker: Tracker management module</para>
              </listitem>
+
+             <listitem>
+                <para>frs : File releases management module</para>
+             </listitem>
+
+             </listitem>
+                <para>docman : Documents management module</para>
+             </listitem>
            </itemizedlist>
           </para>
          </listitem>
