@@ -632,8 +632,8 @@ class FRSFileFactory extends Error {
     }
     
     /**
-     * Insert the computed md5sum value in case of offline checksum comput
-     * e
+     * Insert the computed md5sum value in case of offline checksum compute
+     * 
      * @param Integer $fileId
      * @param String $md5Computed
      * 
