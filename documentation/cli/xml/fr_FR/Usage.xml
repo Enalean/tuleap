@@ -59,7 +59,7 @@
                 <para>frs : Module de gestion desversions de fichiers</para>
              </listitem>
 
-             </listitem>
+             <listitem>
                 <para>docman : Module de gestion de documents</para>
              </listitem>
            </itemizedlist>
