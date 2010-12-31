@@ -1513,12 +1513,38 @@ File retrieved successfully.
                         <title>list command</title>
                         <programlisting format="linespecific" linenumbering="unnumbered" width="80">
 [terzino@linux codendi cli ]$ ./codendi.php docman list --id=110418 --project=myproject
-+---------+-----------+----------+-------------------------+-------------+-------------+-------------+-------------+---------+--------+-------------------+------+-----------+
-| item_id | parent_id | group_id |          title          | description | create_date | update_date | delete_date | user_id | status | obsolescence_date | rank | item_type |
-+---------+-----------+----------+-------------------------+-------------+-------------+-------------+-------------+---------+--------+-------------------+------+-----------+
-| 110493  | 110418    | 1        | testSoap                |             | 1293189073  | 1293189073  |             | 101     | 100    | 0                 | -2   | 2         |
-| 110491  | 110418    | 1        | Document added from CLI |             | 1293188351  | 1293188351  |             | 101     | 100    | 0                 | 1    | 3         |
-+---------+-----------+----------+-------------------------+-------------+-------------+-------------+-------------+---------+--------+-------------------+------+-----------+
++---------+-----------+----------+--------------+-------------+-------------+-------------+---------+--------+-------------------+------+-----------+
+| item_id | parent_id | group_id |    title     | create_date | update_date | delete_date | user_id | status | obsolescence_date | rank | item_type |
++---------+-----------+----------+--------------+-------------+-------------+-------------+---------+--------+-------------------+------+-----------+
+| 110493  | 110418    | 1        | testSoap     | 1293189073  | 1293189073  |             | 101     | 100    | 0                 | -2   | 2         |
+| 110491  | 110418    | 1        | CLI Document | 1293188351  | 1293188351  |             | 101     | 100    | 0                 | 1    | 3         |
++---------+-----------+----------+--------------+-------------+-------------+-------------+---------+--------+-------------------+------+-----------+
+                        </programlisting>
+                    </example>
+               </para>
+            </para>
+        </section>
+		
+		        <section id="DocmanFunctionGetRoot">
+            <title>getRoot</title>
+            <para>getRoot: Returns the document object id that is at the top of the docman given a group object
+                <itemizedlist mark="bullet">
+                    <listitem>
+                        <para>--project: UNIX name of the project you want to add the package in. If none is specified, the project specified when you logged in will be used. If none was specified at that time, an error will be displayed.
+                        </para>
+                    </listitem>
+                </itemizedlist>
+                <para>
+                    <example>
+                        <title>getRoot command</title>
+                        <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+[terzino@linux codendi cli ]$ ./codendi.php docman getRoot --project=myproject 
++--------+
+| Result |
++--------+
+| 2      |
++--------+
+
                         </programlisting>
                     </example>
                </para>
@@ -1659,7 +1685,7 @@ File retrieved successfully.
                 </itemizedlist>
                 <para>
                     <example>
-                        <title>createDocument command</title>
+                        <title>createFile command</title>
                         <programlisting format="linespecific" linenumbering="unnumbered" width="80">
 [terzino@linux codendi cli ]$ ./codendi.php docman createFile --project=myproject --parent_id=110418 --title="CLi user guide" --content="cli_user_guide.pdf"
 Sending file (100%)
@@ -1680,7 +1706,230 @@ File uploaded successfully
                </para>
             </para>
         </section>
-        
+
+		<section id="DocmanFunctionCreateEmptyDocument">
+            <title>createEmptyDocument</title>
+            <para>createEmptyDocument: Add an empty document to the document manager
+                <itemizedlist mark="bullet">
+                    <listitem>
+                        <para>--parent_id*: ID of the parent the file will be created in
+                        </para>
+                    </listitem>
+					<listitem>
+                        <para>--project:Name of the project the item belongs to. If you specified the name of
+                            the working project when you logged in, this parameter is not needed.
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--title*: Title of the new document
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--description: Description of the new document
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--status: Status to apply to the item. Available status are "none", "draft", "approved", and "rejected"
+                        </para>
+                    </listitem>
+                    <listitem>
+					    <para>--perm_read: Groups IDs that will have the permission READ separated with comma
+						</para>
+						</listitem>
+                    <listitem>
+					    <para>--perm_write: Groups IDs that will have the permission WRITE separated with comma
+					    </para>
+					</listitem>
+                    <listitem>
+					        <para>--perm_manage: Groups IDs that will have the permission MANAGE separated with comma
+					        </para>
+					</listitem>
+                    <listitem>
+					    <para>--perm_none: Groups IDs that will have no permission separated with comma(ie. those groups will not inherit the permissions of the parent folder)
+                        </para>
+                    </listitem>
+                    <listitem>
+					    <para>--properties: File that contains the properties to apply to the item
+                        </para>
+                    </listitem>
+                    <listitem>
+					    <para>--obsolescence_date: Date when the document will be obsolete (yy-mm-dd|yyyy-mm-dd)   
+                        </para>
+                    </listitem>
+					<listitem>
+                        <para>--ordering: place where the new document will be hosted. Available values are "begin" and "end"
+                        </para>
+                    </listitem>
+                </itemizedlist>
+                <para>
+                    <example>
+                        <title>createEmptyDocument command</title>
+                        <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+[terzino@linux codendi cli ]$ ./codendi.php docman createEmptyDocument --project=myproject --parent_id=110418 --title="user guide help" 
++--------+
+| Result |
++--------+
+| 110500 |
++--------+
+                        </programlisting>
+                    </example>
+               </para>
+            </para>
+        </section>
+        		<section id="DocmanFunctionCreateLink">
+            <title>createLink</title>
+            <para>createLink: Add a document link to the document manager
+                <itemizedlist mark="bullet">
+                    <listitem>
+                        <para>--parent_id*: ID of the parent the file will be created in
+                        </para>
+                    </listitem>
+					<listitem>
+                        <para>--project*:Name of the project the item belongs to. If you specified the name of
+                            the working project when you logged in, this parameter is not needed.
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--title*: Title of the new document
+                        </para>
+                    </listitem>
+					<listitem>
+                        <para>--content*: Url of the link
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--description: Description of the new document
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--status: Status to apply to the item. Available status are "none", "draft", "approved", and "rejected"
+                        </para>
+                    </listitem>
+                    <listitem>
+					    <para>--perm_read: Groups IDs that will have the permission READ separated with comma
+						</para>
+						</listitem>
+                    <listitem>
+					    <para>--perm_write: Groups IDs that will have the permission WRITE separated with comma
+					    </para>
+					</listitem>
+                    <listitem>
+					        <para>--perm_manage: Groups IDs that will have the permission MANAGE separated with comma
+					        </para>
+					</listitem>
+                    <listitem>
+					    <para>--perm_none: Groups IDs that will have no permission separated with comma(ie. those groups will not inherit the permissions of the parent folder)
+                        </para>
+                    </listitem>
+                    <listitem>
+					    <para>--properties: File that contains the properties to apply to the item
+                        </para>
+                    </listitem>
+                    <listitem>
+					    <para>--obsolescence_date: Date when the document will be obsolete (yy-mm-dd|yyyy-mm-dd)   
+                        </para>
+                    </listitem>
+					<listitem>
+                        <para>--ordering: place where the new document will be hosted. Available values are "begin" and "end"
+                        </para>
+                    </listitem>
+                </itemizedlist>
+                <para>
+                    <example>
+                        <title>createLink command</title>
+                        <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+[terzino@linux codendi cli ]$ ./codendi.php docman createLink --project=myproject --parent_id=110418 --title="user guide link" --content="codendi.org"
++--------+
+| Result |
++--------+
+| 110501 |
++--------+
+
+                        </programlisting>
+                    </example>
+               </para>
+            </para>
+        </section>
+		<section id="DocmanFunctionCreateWikiPage">
+            <title>createWikiPage</title>
+            <para>createWikiPage: Add a wiki document to the document manager
+                <itemizedlist mark="bullet">
+                    <listitem>
+                        <para>--parent_id*: ID of the parent the file will be created in
+                        </para>
+                    </listitem>
+					<listitem>
+                        <para>--title*: Title of the new document
+                        </para>
+                    </listitem>
+					<listitem>
+                        <para>--content*: Name of the wiki page
+                        </para>
+                    </listitem>
+					<listitem>
+                        <para>--project:Name of the project the item belongs to. If you specified the name of
+                            the working project when you logged in, this parameter is not needed.
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--description: Description of the new document
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--status: Status to apply to the item. Available status are "none", "draft", "approved", and "rejected"
+                        </para>
+                    </listitem>
+                    <listitem>
+					    <para>--perm_read: Groups IDs that will have the permission READ separated with comma
+						</para>
+						</listitem>
+                    <listitem>
+					    <para>--perm_write: Groups IDs that will have the permission WRITE separated with comma
+					    </para>
+					</listitem>
+                    <listitem>
+					        <para>--perm_manage: Groups IDs that will have the permission MANAGE separated with comma
+					        </para>
+					</listitem>
+                    <listitem>
+					    <para>--perm_none: Groups IDs that will have no permission separated with comma(ie. those groups will not inherit the permissions of the parent folder)
+                        </para>
+                    </listitem>
+                    <listitem>
+					    <para>--properties: File that contains the properties to apply to the item
+                        </para>
+                    </listitem>
+                    <listitem>
+					    <para>--obsolescence_date: Date when the document will be obsolete (yy-mm-dd|yyyy-mm-dd)   
+                        </para>
+                    </listitem>
+					<listitem>
+                        <para>--ordering: place where the new document will be hosted. Available values are "begin" and "end"
+                        </para>
+                    </listitem>
+                </itemizedlist>
+                <para>
+                    <example>
+                        <title>createWikiPage command</title>
+                        <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+[terzino@linux codendi cli ]$ ./codendi.php docman createWikiPage --project=myproject --parent_id=110418 --title="user guide wiki" --content="user_guide_wiki"
++--------+
+| Result |
++--------+
+| 110502 |
++--------+
+                        </programlisting>
+                    </example>
+               </para>
+               <para>
+                <note>Note: If you get a memory problem with uploading large files, you can increase the memory by modifying
+                the memory_limit directive in PHP file configuration (php.ini). The issue depends on many parameters and could 
+                still be there after this workaround. We are sorry about it, but it is due to some NuSoap technical limitation.
+                </note>
+               </para>
+            </para>
+        </section>
+
         <section id="DocmanFunctionCreateFolder">
             <title>createFolder</title>
             <para>createFolder: Add a folder to the document manager
@@ -1705,19 +1954,80 @@ File uploaded successfully
                         <para>--project: UNIX name of the project you want to add the package in. If none is specified, the project specified when you logged in will be used. If none was specified at that time, an error will be displayed.
                         </para>
                     </listitem>
+					<listitem>
+                        <para>--status: Status to apply to the item. Available status are "none", "draft", "approved", and "rejected"
+                        </para>
+                    </listitem>
+                    <listitem>
+					    <para>--perm_read: Groups IDs that will have the permission READ separated with comma
+						</para>
+						</listitem>
+                    <listitem>
+					    <para>--perm_write: Groups IDs that will have the permission WRITE separated with comma
+					    </para>
+					</listitem>
+                    <listitem>
+					    <para>--perm_manage: Groups IDs that will have the permission MANAGE separated with comma
+					    </para>
+					</listitem>
+                    <listitem>
+					    <para>--perm_none: Groups IDs that will have no permission separated with comma(ie. those groups will not inherit the permissions of the parent folder)
+                        </para>
+                    </listitem>
+                    <listitem>
+					    <para>--properties: File that contains the properties to apply to the item
+                        </para>
+                    </listitem>
                 </itemizedlist>
                 <para>
                     <example>
                         <title>createFolder command</title>
                         <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[mnazaria@linux codendi cli ]$ ./codendi.php docman createFolder --project=myproject --parent_id=60 --title="Tech docs folder"
-1
+[terzino@linux codendi cli ]$ ./codendi.php docman createFolder --project=myproject --parent_id=110418 --title="Tech docs folder"
++--------+
+| Result |
++--------+
+| 110503 |
++--------+
                         </programlisting>
                     </example>
                </para>
             </para>
         </section>
-        
+            <section id="DocmanFunctionGetFile">
+            <title>getFile</title>
+            <para>getFile: Get an item (File/Embedded file)
+                <itemizedlist mark="bullet">
+                    <listitem>
+                        <para>--id*: ID of the item to delete
+                        </para>
+                    </listitem>
+					<listitem>
+                        <para>--output: Name of the file to write the file to
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--version_number: The version that we want to download, if not specified the current one
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--project: UNIX name of the project you want to add the package in. If none is specified, the project specified when you logged in will be used. If none was specified at that time, an error will be displayed.
+                        </para>
+                    </listitem>
+                </itemizedlist>
+                <para>
+                    <example>
+                        <title>getFile command</title>
+                        <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+[terzino@linux codendi cli ]$ ./codendi.php docman getFile --project=myproject --id=110493 --version_number=1 --output=document_cli.doc
+Sending file (100%)
+File downloaded successfully
+                        </programlisting>
+                    </example>
+               </para>
+            </para>
+        </section>
+    
         <section id="DocmanFunctionDelete">
             <title>delete</title>
             <para>delete: Delete an item
@@ -1735,8 +2045,12 @@ File uploaded successfully
                     <example>
                         <title>delete command</title>
                         <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[mnazaria@linux codendi cli ]$ ./codendi.php docman delete --project=myproject --id=361
-1
+[terzino@linux codendi cli ]$ ./codendi.php docman delete --project=myproject --id=110502
++--------+
+| Result |
++--------+
+| 1      |
++--------+
                         </programlisting>
                     </example>
                </para>
@@ -1760,8 +2074,13 @@ File uploaded successfully
                     <example>
                         <title>monitor command</title>
                         <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[mnazaria@linux codendi cli ]$ ./codendi.php docman monitor --project=myproject --id=249
-1
+[terzino@linux codendi cli ]$ ./codendi.php docman monitor --project=myproject --id=110501
++--------+
+| Result |
++--------+
+| 1      |
++--------+
+
                         </programlisting>
                     </example>
                </para>
@@ -1789,8 +2108,13 @@ File uploaded successfully
                     <example>
                         <title>move command</title>
                         <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[mnazaria@linux codendi cli ]$ ./codendi.php docman move --project=myproject --id=241 --parent=59
-1
+[terzino@linux codendi cli ]$ ./codendi.php docman move --project=myproject --id=110501 --parent=110503
++--------+
+| Result |
++--------+
+| 1      |
++--------+
+
                         </programlisting>
                     </example>
                </para>
