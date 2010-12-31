@@ -48,6 +48,8 @@
       <para>This document was formatted with the DocBook XML DTD. HTML
       version rendered with DocBook HTML native renderer. PDF version
       rendered with Apache FOP.</para>
+
+      <para>Exapmles illustrated in this document are in some cases different from the real output.</para>
     </legalnotice>
 
     <revhistory>
@@ -74,7 +76,7 @@
       <revision>
         <revnumber>0.3</revnumber>
 
-        <date>30-Dec-2010</date>
+        <date>31-Dec-2010</date>
 
         <authorinitials>Hatem Ounis</authorinitials>
 
