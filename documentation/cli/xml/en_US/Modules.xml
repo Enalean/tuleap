@@ -1525,7 +1525,7 @@ File retrieved successfully.
             </para>
         </section>
 		
-		        <section id="DocmanFunctionGetRoot">
+		    <section id="DocmanFunctionGetRoot">
             <title>getRoot</title>
             <para>getRoot: Returns the document object id that is at the top of the docman given a group object
                 <itemizedlist mark="bullet">
@@ -1922,11 +1922,6 @@ File uploaded successfully
                     </example>
                </para>
                <para>
-                <note>Note: If you get a memory problem with uploading large files, you can increase the memory by modifying
-                the memory_limit directive in PHP file configuration (php.ini). The issue depends on many parameters and could 
-                still be there after this workaround. We are sorry about it, but it is due to some NuSoap technical limitation.
-                </note>
-               </para>
             </para>
         </section>
 
@@ -1999,7 +1994,7 @@ File uploaded successfully
             <para>getFile: Get an item (File/Embedded file)
                 <itemizedlist mark="bullet">
                     <listitem>
-                        <para>--id*: ID of the item to delete
+                        <para>--id*: ID of the item to download
                         </para>
                     </listitem>
 					<listitem>

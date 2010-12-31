@@ -1564,83 +1564,23 @@ File retrieved successfully.
                     <example>
                         <title>commande list</title>
                         <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[mnazaria@linux codendi cli ]$ ./codendi.php docman list --id=59 --project=myproject
-Array
-(
-    [0] => Array 
-            (
-                [item_id] => 241
-                [parent_id] => 59
-                [group_id] => 112
-                [title] => CLI User Guide
-                [description] => The PDF version of the CLI User Guide
-                [create_date] => 1170168829
-                [update_date] => 1170168829
-                [delete_date] => 
-                [user_id] => 102
-                [status] => 0
-                [obsolescence_date] => 0
-                [rank] => -2
-                [item_type] => 1
-             )
-    [1] => Array 
-            (
-                [item_id] => 296
-                [parent_id] => 59
-                [group_id] => 112
-                [title] => CLI User Guide
-                [description] => The HTML version of the CLI User Guide
-                [create_date] => 1172759281
-                [update_date] => 1172759281
-                [delete_date] => 
-                [user_id] => 102
-                [status] => 0
-                [obsolescence_date] => 0
-                [rank] => -2
-                [item_type] => 3
-             )
-    
-)
+[terzino@linux codendi cli ]$ ./codendi.php docman list --id=110418 --project=myproject
++---------+-----------+----------+--------------+-------------+-------------+-------------+---------+--------+-------------------+------+-----------+
+| item_id | parent_id | group_id |    title     | create_date | update_date | delete_date | user_id | status | obsolescence_date | rank | item_type |
++---------+-----------+----------+--------------+-------------+-------------+-------------+---------+--------+-------------------+------+-----------+
+| 110493  | 110418    | 1        | testSoap     | 1293189073  | 1293189073  |             | 101     | 100    | 0                 | -2   | 2         |
+| 110491  | 110418    | 1        | CLI Document | 1293188351  | 1293188351  |             | 101     | 100    | 0                 | 1    | 3         |
++---------+-----------+----------+--------------+-------------+-------------+-------------+---------+--------+-------------------+------+-----------+
+
                         </programlisting>
                     </example>
                </para>
             </para>
         </section>
-    
-        <section id="DocmanFunctionCreateDocument">
-            <title>createDocument</title>
-            <para>createDocument : Ajoute un document au gestionnaire de documents
+	    <section id="DocmanFunctionGetRoot">
+            <title>getRoot</title>
+            <para>getRoot: Retourne l'id de la racine du service Documents pour un projet donné
                 <itemizedlist mark="bullet">
-                    <listitem>
-                        <para>--parent_id* : identifiant du parent dans lequel le document sera créé
-                        </para>
-                    </listitem>
-                    <listitem>
-                        <para>--title* : Titre de nouveau document
-                        </para>
-                    </listitem>
-                    <listitem>
-                        <para>--description : Description du nouveau document
-                        </para>
-                    </listitem>
-                    <listitem>
-                        <para>--type* : nature du document. Les types disponibles sont "file", "link", "wiki", and "embedded_file"
-                        </para>
-                    </listitem>
-                    <listitem>
-                        <para>--content* : contenu du document, selon le type du document :
-                            <itemizedlist mark="bullet">
-                                <listitem><para>l'emplacement du fichier pour le type "file"</para></listitem>
-                                <listitem><para>l'URL pour le type "link"</para></listitem>
-                                <listitem><para>le nom de la page wiki pour le type "wiki"</para></listitem>
-                                <listitem><para>le contenu brut pour le type "embedded_file".</para></listitem>
-                            </itemizedlist>
-                        </para>
-                    </listitem>
-                    <listitem>
-                        <para>--ordering : place du document dans le dossier parent. Les valeur possibles sont "begin" et "end"
-                        </para>
-                    </listitem>
                     <listitem>
                         <para>--project : nom UNIX du projet. Si vous ne le spécifiez pas, le projet spécifié lors de la connexion sera utilisé. Si aucun projet n'a été spécifié lors du login, une erreur sera affichée.
                         </para>
@@ -1648,10 +1588,162 @@ Array
                 </itemizedlist>
                 <para>
                     <example>
-                        <title>commande createDocument</title>
+                        <title>Commande getRoot</title>
                         <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[mnazaria@linux codendi cli ]$ ./codendi.php docman createDocument --project=myproject --parent_id=60 --title="Document added from CLI" --type=link --content="http://www.xerox.com"
-1
+[terzino@linux codendi cli ]$ ./codendi.php docman getRoot --project=myproject 
++--------+
+| Result |
++--------+
+| 2      |
++--------+
+
+                        </programlisting>
+                    </example>
+               </para>
+            </para>
+        </section>
+        <section id="DocmanFunctionCreateEmbeddedFile">
+            <title>createEmbeddedFile</title>
+            <para>createEmbeddedFile: Ajoute un embedded document au gestionnaire de documents
+                <itemizedlist mark="bullet">
+                    <listitem>
+                        <para>--parent_id*: identifiant du parent dans lequel le document sera créé
+                        </para>
+                    </listitem>
+					<listitem>
+                        <para>--project*: Nom UNIX du projet. Si vous ne le spécifiez pas, le projet spécifié lors de la connexion sera utilisé. Si aucun projet n'a été spécifié lors du login, une erreur sera affichée.
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--title*: Titre de nouveau document
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--description: La description du nouveau document
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--status: Le status du nouveau item. Les status possibles sont "none", "draft", "approved", et "rejected"
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--content*: Le contenu brut pour le type "embedded_file"
+                        </para>
+                    </listitem>
+                    <listitem>
+					    <para>--perm_read: Les Groupes IDs qui vont avoir la permission de lecture, séparés par des virgules
+						</para>
+						</listitem>
+                    <listitem>
+					    <para>--perm_write: Les Groupes IDs qui vont avoir la permission d'écriture, séparés par des virgules
+					    </para>
+					</listitem>
+                    <listitem>
+					        <para>--perm_manage: Les Groups IDs qui vont avoir la permission de gestion, séparés par des virgules
+					        </para>
+					</listitem>
+                    <listitem>
+					    <para>--perm_none: Les Groups IDs qui n'auront pas de permission, séparés par des virgules(ces groupes ne vont pas hériter les permissions de l'item parent)
+                        </para>
+                    </listitem>
+                    <listitem>
+					    <para>--properties: Le fichier qui contient les propriétés qui seront appliquées sur l'item.
+                        </para>
+                    </listitem>
+                    <listitem>
+					    <para>--obsolescence_date: Date à laquelle le  document sera obsolète (aa-mm-jj|aaaa-mm-jj)   
+                        </para>
+                    </listitem>
+					<listitem>
+                        <para>--ordering: place du document dans le dossier parent. Les valeurs possibles sont "begin" et "end"
+                        </para>
+                    </listitem>
+                </itemizedlist>
+                <para>
+                    <example>
+                        <title>Commande createEmbeddedFile </title>
+                        <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+[terzino@linux codendi cli ]$ ./codendi.php docman createEmbeddedFile --project=myproject --parent_id=110418 --title="EmbeddedFile sample" --content="It is just a sample to describe how  we add an embedde file to the docman manager"
++--------+
+| Result |
++--------+
+| 110499 |
++--------+
+                        </programlisting>
+                    </example>
+               </para>
+             </para>
+        </section>
+		
+		<section id="DocmanFunctionCreateFile">
+            <title>createFile</title>
+            <para>createFile: Ajoute un fichier au gestionnaire de documents
+                <itemizedlist mark="bullet">
+                    <listitem>
+                        <para>--parent_id*: identifiant du parent dans lequel le document sera créé
+                        </para>
+                    </listitem>
+					<listitem>
+                        <para>--project*: Nom UNIX du projet. Si vous ne le spécifiez pas, le projet spécifié lors de la connexion sera utilisé. Si aucun projet n'a été spécifié lors du login, une erreur sera affichée.
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--title*: Titre de nouveau document
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--description: La description du nouveau document
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--status: Le status du nouveau item. Les status possibles sont "none", "draft", "approved", et "rejected"
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--content*: L'emplacement du fichier pour le type "file"
+                        </para>
+                    </listitem>
+                    <listitem>
+					    <para>--perm_read: Les Groupes IDs qui vont avoir la permission de lecture, séparés par des virgules
+						</para>
+						</listitem>
+                    <listitem>
+					    <para>--perm_write: Les Groupes IDs qui vont avoir la permission d'écriture, séparés par des virgules
+					    </para>
+					</listitem>
+                    <listitem>
+					        <para>--perm_manage: Les Groups IDs qui vont avoir la permission de gestion, séparés par des virgules
+					        </para>
+					</listitem>
+                    <listitem>
+					    <para>--perm_none: Les Groups IDs qui n'auront pas de permission, séparés par des virgules(ces groupes ne vont pas hériter les permissions de l'item parent)
+                        </para>
+                    </listitem>
+                    <listitem>
+					    <para>--properties: Le fichier qui contient les propriétés qui seront appliquées sur l'item.
+                        </para>
+                    </listitem>
+                    <listitem>
+					    <para>--obsolescence_date: Date à laquelle le  document sera obsolète (aa-mm-jj|aaaa-mm-jj)   
+                        </para>
+                    </listitem>
+					<listitem>
+                        <para>--ordering: place du document dans le dossier parent. Les valeurs possibles sont "begin" et "end"
+                        </para>
+                    </listitem>
+                </itemizedlist>
+                <para>
+                    <example>
+                        <title>Commande createFile </title>
+                        <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+[terzino@linux codendi cli ]$ ./codendi.php docman createFile --project=myproject --parent_id=110418 --title="CLi user guide" --content="cli_user_guide.pdf"
+Sending file (100%)
+File uploaded successfully
++--------+
+| Result |
++--------+
+| 110498 |
++--------+
                         </programlisting>
                     </example>
                </para>
@@ -1664,7 +1756,219 @@ Array
                </para>
             </para>
         </section>
-        
+		<section id="DocmanFunctionCreateEmptyDocument">
+            <title>createEmptyDocument</title>
+            <para>createEmptyDocument: Ajoute un document vide au gestionnaire de documents
+                <itemizedlist mark="bullet">
+                    <listitem>
+                        <para>--parent_id*: identifiant du parent dans lequel le document sera créé
+                        </para>
+                    </listitem>
+					<listitem>
+                        <para>--project*: Nom UNIX du projet. Si vous ne le spécifiez pas, le projet spécifié lors de la connexion sera utilisé. Si aucun projet n'a été spécifié lors du login, une erreur sera affichée.
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--title*: Titre de nouveau document
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--description: La description du nouveau document
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--status: Le status du nouveau item. Les status possibles sont "none", "draft", "approved", et "rejected"
+                        </para>
+                    </listitem>
+                    <listitem>
+					    <para>--perm_read: Les Groupes IDs qui vont avoir la permission de lecture, séparés par des virgules
+						</para>
+						</listitem>
+                    <listitem>
+					    <para>--perm_write: Les Groupes IDs qui vont avoir la permission d'écriture, séparés par des virgules
+					    </para>
+					</listitem>
+                    <listitem>
+					    <para>--perm_manage: Les Groups IDs qui vont avoir la permission de gestion, séparés par des virgules
+					    </para>
+					</listitem>
+                    <listitem>
+					    <para>--perm_none: Les Groups IDs qui n'auront pas de permission, séparés par des virgules(ces groupes ne vont pas hériter les permissions de l'item parent)
+                        </para>
+                    </listitem>
+                    <listitem>
+					    <para>--properties: Le fichier qui contient les propriétés qui seront appliquées sur l'item.
+                        </para>
+                    </listitem>
+                    <listitem>
+					    <para>--obsolescence_date: Date à laquelle le  document sera obsolète (aa-mm-jj|aaaa-mm-jj)   
+                        </para>
+                    </listitem>
+					<listitem>
+                        <para>--ordering: place du document dans le dossier parent. Les valeurs possibles sont "begin" et "end"
+                        </para>
+                    </listitem>
+                </itemizedlist>
+                <para>
+                    <example>
+                        <title>Commande createEmptyDocument</title>
+                        <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+[terzino@linux codendi cli ]$ ./codendi.php docman createEmptyDocument --project=myproject --parent_id=110418 --title="user guide help" 
++--------+
+| Result |
++--------+
+| 110500 |
++--------+
+                        </programlisting>
+                    </example>
+               </para>
+            </para>
+        </section>
+        		<section id="DocmanFunctionCreateLink">
+            <title>createLink</title>
+            <para>createLink: Ajoute un lien au gestionnaire de documents
+                <itemizedlist mark="bullet">
+                    <listitem>
+                        <para>--parent_id*: identifiant du parent dans lequel le document sera créé
+                        </para>
+                    </listitem>
+					<listitem>
+                        <para>--project*: Nom UNIX du projet. Si vous ne le spécifiez pas, le projet spécifié lors de la connexion sera utilisé. Si aucun projet n'a été spécifié lors du login, une erreur sera affichée.
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--title*: Titre de nouveau document
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--description: La description du nouveau document
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--status: Le status du nouveau item. Les status possibles sont "none", "draft", "approved", et "rejected"
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--content*: L'URL pour le type "link"
+                        </para>
+                    </listitem>
+                    <listitem>
+					    <para>--perm_read: Les Groupes IDs qui vont avoir la permission de lecture, séparés par des virgules
+						</para>
+						</listitem>
+                    <listitem>
+					    <para>--perm_write: Les Groupes IDs qui vont avoir la permission d'écriture, séparés par des virgules
+					    </para>
+					</listitem>
+                    <listitem>
+					    <para>--perm_manage: Les Groups IDs qui vont avoir la permission de gestion, séparés par des virgules
+					    </para>
+					</listitem>
+                    <listitem>
+					    <para>--perm_none: Les Groups IDs qui n'auront pas de permission, séparés par des virgules(ces groupes ne vont pas hériter les permissions de l'item parent)
+                        </para>
+                    </listitem>
+                    <listitem>
+					    <para>--properties: Le fichier qui contient les propriétés qui seront appliquées sur l'item.
+                        </para>
+                    </listitem>
+                    <listitem>
+					    <para>--obsolescence_date: Date à laquelle le  document sera obsolète (aa-mm-jj|aaaa-mm-jj)   
+                        </para>
+                    </listitem>
+					<listitem>
+                        <para>--ordering: place du document dans le dossier parent. Les valeurs possibles sont "begin" et "end"
+                        </para>
+                    </listitem>
+                </itemizedlist>
+                <para>
+                    <example>
+                        <title>createLink command</title>
+                        <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+[terzino@linux codendi cli ]$ ./codendi.php docman createLink --project=myproject --parent_id=110418 --title="user guide link" --content="codendi.org"
++--------+
+| Result |
++--------+
+| 110501 |
++--------+
+
+                        </programlisting>
+                    </example>
+               </para>
+            </para>
+        </section>
+		<section id="DocmanFunctionCreateWikiPage">
+            <title>createWikiPage</title>
+            <para>createWikiPage: Ajoute un wiki document au gestionnnaire de documents
+                <itemizedlist mark="bullet">
+                    <listitem>
+                        <para>--parent_id*: identifiant du parent dans lequel le document sera créé
+                        </para>
+                    </listitem>
+					<listitem>
+                        <para>--project*: Nom UNIX du projet. Si vous ne le spécifiez pas, le projet spécifié lors de la connexion sera utilisé. Si aucun projet n'a été spécifié lors du login, une erreur sera affichée.
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--title*: Titre de nouveau document
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--description: La description du nouveau document
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--status: Le status du nouveau item. Les status possibles sont "none", "draft", "approved", et "rejected"
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--content*: Le nom de la page wiki pour le type "wiki"
+                        </para>
+                    </listitem>
+                    <listitem>
+					    <para>--perm_read: Les Groupes IDs qui vont avoir la permission de lecture, séparés par des virgules
+						</para>
+						</listitem>
+                    <listitem>
+					    <para>--perm_write: Les Groupes IDs qui vont avoir la permission d'écriture, séparés par des virgules
+					    </para>
+					</listitem>
+                    <listitem>
+					    <para>--perm_manage: Les Groups IDs qui vont avoir la permission de gestion, séparés par des virgules
+					    </para>
+					</listitem>
+                    <listitem>
+					    <para>--perm_none: Les Groups IDs qui n'auront pas de permission, séparés par des virgules(ces groupes ne vont pas hériter les permissions de l'item parent)
+                        </para>
+                    </listitem>
+                    <listitem>
+					    <para>--properties: Le fichier qui contient les propriétés qui seront appliquées sur l'item.
+                        </para>
+                    </listitem>
+                    <listitem>
+					    <para>--obsolescence_date: Date à laquelle le document sera obsolète (aa-mm-jj|aaaa-mm-jj)   
+                        </para>
+                    </listitem>
+					<listitem>
+                        <para>--ordering: place du document dans le dossier parent. Les valeurs possibles sont "begin" et "end"
+                        </para>
+                    </listitem>
+                </itemizedlist>
+                <para>
+                    <example>
+                        <title>Commande createWikiPage </title>
+                        <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+[terzino@linux codendi cli ]$ ./codendi.php docman createWikiPage --project=myproject --parent_id=110418 --title="user guide wiki" --content="user_guide_wiki"
++--------+
+| Result |
++--------+
+| 110502 |
++--------+
+                        </programlisting>
+                    </example>
+               </para>
+            </para>
+ 
         <section id="DocmanFunctionCreateFolder">
             <title>createFolder</title>
             <para>createFolder : Ajoute un dossier au gestionnaire de documents
@@ -1694,8 +1998,46 @@ Array
                     <example>
                         <title>createFolder command</title>
                         <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[mnazaria@linux codendi cli ]$ ./codendi.php docman createFolder --project=myproject --parent_id=60 --title="Tech docs folder"
-1
+[terzino@linux codendi cli ]$ ./codendi.php docman createFolder --project=myproject --parent_id=110480 --title="Tech docs folder"
++--------+
+| Result |
++--------+
+| 110503 |
++--------+
+                        </programlisting>
+                    </example>
+               </para>
+            </para>
+        </section>
+		
+		<section id="DocmanFunctionGetFile">
+            <title>getFile</title>
+            <para>getFile: Download document (Fichier/Embedded fichier)
+                <itemizedlist mark="bullet">
+                    <listitem>
+                        <para>--id*: L'ID de l'item à télécharger
+                        </para>
+                    </listitem>
+					<listitem>
+                        <para>--output: Nom du fichier 
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--version_number: La version qu'on veut télécharger, si la version n'est pas  spécifiée la version sera la courrante
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--project : nom UNIX du projet. Si vous ne le spécifiez pas, le projet spécifié lors de la connexion sera utilisé. Si aucun projet n'a été spécifié lors du login, une erreur sera affichée.
+                        </para>
+                    </listitem>
+                </itemizedlist>
+                <para>
+                    <example>
+                        <title>getFile command</title>
+                        <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+[terzino@linux codendi cli ]$ ./codendi.php docman getFile --project=myproject --id=110493 --version_number=1 --output=document_cli.doc
+Sending file (100%)
+File downloaded successfully
                         </programlisting>
                     </example>
                </para>
@@ -1719,7 +2061,7 @@ Array
                     <example>
                         <title>commande delete</title>
                         <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[mnazaria@linux codendi cli ]$ ./codendi.php docman delete --project=myproject --id=361
+[terzino@linux codendi cli ]$ ./codendi.php docman delete --project=myproject --id=110502
 1
                         </programlisting>
                     </example>
@@ -1744,8 +2086,12 @@ Array
                     <example>
                         <title>commande monitor</title>
                         <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[mnazaria@linux codendi cli ]$ ./codendi.php docman monitor --project=myproject --id=249
-1
+[terzino@linux codendi cli ]$ ./codendi.php docman monitor --project=myproject --id=110501
++--------+
+| Result |
++--------+
+| 1      |
++--------+
                         </programlisting>
                     </example>
                </para>
@@ -1773,8 +2119,13 @@ Array
                     <example>
                         <title>move command</title>
                         <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[mnazaria@linux codendi cli ]$ ./codendi.php docman move --project=myproject --id=241 --parent=59
-1
+[terzino@linux codendi cli ]$ ./codendi.php docman move --project=myproject --id=110501 --parent=110503
++--------+
+| Result |
++--------+
+| 1      |
++--------+
+
                         </programlisting>
                     </example>
                </para>

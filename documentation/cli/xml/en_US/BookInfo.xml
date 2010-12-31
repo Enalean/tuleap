@@ -27,6 +27,16 @@
           <orgname>STMicroelectronics, hatem.ounis@st.com</orgname>
         </affiliation>
       </author>
+	  
+	  <author>
+        <firstname>Nouha</firstname>
+
+        <surname>Terzi</surname>
+
+        <affiliation>
+          <orgname>STMicroelectronics, nouha.terzi@st.com</orgname>
+        </affiliation>
+      </author>
     </authorgroup>
 
     <copyright>
@@ -78,7 +88,7 @@
 
         <date>31-Dec-2010</date>
 
-        <authorinitials>Hatem Ounis</authorinitials>
+        <authorinitials>Hatem Ounis, Nouha Terzi</authorinitials>
 
         <revremark>General update</revremark>
       </revision>
