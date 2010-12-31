@@ -1326,7 +1326,7 @@ File retrieved successfully.
                         </para>
                     </listitem>
                     <listitem>
-                        <para>--reference_md5: md5 of the file
+                        <para>--reference_md5: Le md5 du fichier
                         </para>
                     </listitem>
                     <listitem>
