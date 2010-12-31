@@ -1053,7 +1053,42 @@ File retrieved successfully.
 +--------+
                     </programlisting>
                 </example>
-                <note>Note: The value returned (12) is the ID of the new file.</note>
+                <note>Note: The value returned (2) is the ID of the deleted file.</note>
+                </para>
+            </para>
+        </section>
+
+        <section id="TrackerFunctionDeleteAttachedFile">
+            <title>deleteAttachedFile</title>
+            <para>
+                deleteAttachedFile: Delete an attached file from an artifact.
+                <itemizedlist mark="bullet">
+                    <listitem>
+                        <para>--tracker_id*: Tracker ID.</para>
+                    </listitem>
+                    <listitem>
+                        <para>--artifact_id*: Artifact ID.</para>
+                    </listitem>
+                    <listitem>
+                        <para>--file_id*: ID of the file to delete.</para>
+                    </listitem>
+                    <listitem>
+                        <para>--project: UNIX name of the project. If none is specified, the project specified when you logged in will be used. If none was specified at that time, an error will be displayed.</para>
+                    </listitem>
+                </itemizedlist>
+                <para>
+                <example>
+                    <title>deleteAttachedFile command</title>
+                    <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+[ounis@linux codendi cli ]$ ./codendi.php tracker deleteAttachedFile --tracker_id=116 --artifact_id=40 --file_id=2
++--------+
+| Result |
++--------+
+| 2      |
++--------+
+                    </programlisting>
+                </example>
+                <note>Note: The value returned (2) is the ID of the new file.</note>
                 </para>
             </para>
         </section>
@@ -1234,7 +1269,7 @@ File retrieved successfully.
                     <example>
                         <title>getFiles command</title>
                         <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[mnazaria@linux codendi cli ]$ ./codendi.php frs getFiles --package_id=197 --release_id=143
+[ounis@linux codendi cli ]$ ./codendi.php frs getFiles --package_id=197 --release_id=143
 +---------+------------+-----------------+-----------+--------------+---------+
 | file_id | release_id |    file_name    | file_size | release_time | user_id |
 +---------+------------+-----------------+-----------+--------------+---------+
@@ -1348,6 +1383,112 @@ File retrieved successfully.
                         <title>getFile command</title>
                         <programlisting format="linespecific" linenumbering="unnumbered" width="80">
 [ounis@linux codendi cli ]$ ./codendi.php frs getFile --package_id=197 --release_id=143 --file_id=419 --output=./downloaded_file
+                        </programlisting>
+                    </example>
+               </para>
+            </para>
+        </section>
+        
+    </section>
+
+        <section id="FRSFunctionGetUploadedFiles">
+            <title>getUploadedFiles</title>
+            <para>getUploadedFiles: Get the list of files uploaded using ftp into the incoming directory
+                <itemizedlist mark="bullet">
+                    <listitem>
+                        <para>--project: UNIX name of the project you want to get the file. If none is specified, the project specified when you logged in will be used. If none was specified at that time, an error will be displayed.
+                        </para>
+                    </listitem>
+                </itemizedlist>
+                <para>
+                    <example>
+                        <title>getUploadedFiles command</title>
+                        <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+[ounis@linux codendi cli ]$ ./codendi.php frs getUploadedFiles
++--------+
+| Result |
++--------+
+| file1  |
+| file2  |
++--------+
+                        </programlisting>
+                    </example>
+               </para>
+            </para>
+        </section>
+        
+    </section>
+
+        <section id="FRSFunctionDeleteFile">
+            <title>deleteFile</title>
+            <para>deleteFile: Delete a file from the File Release System
+                <itemizedlist mark="bullet">
+                    <listitem>
+                        <para>--package_id*: id of the package the file belongs to
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--release_id*: id of the release the file belongs to
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--file_id*: id of the file we want to delete
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--project: UNIX name of the project you want to delete the file. If none is specified, the project specified when you logged in will be used. If none was specified at that time, an error will be displayed.
+                        </para>
+                    </listitem>
+                </itemizedlist>
+                <para>
+                    <example>
+                        <title>deleteFile command</title>
+                        <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+[ounis@linux codendi cli ]$ /codendi.php frs deleteFile --package_id=197 --release_id=143 --file_id=420
++--------+
+| Result |
++--------+
+| 1      |
++--------+
+                        </programlisting>
+                    </example>
+               </para>
+            </para>
+        </section>
+        
+    </section>
+
+        <section id="FRSFunctionGetFileInfo">
+            <title>getFileInfo</title>
+            <para>getFileInfo: Get informations about a file in the File Release System
+                <itemizedlist mark="bullet">
+                    <listitem>
+                        <para>--package_id*: id of the package the file belongs to
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--release_id*: id of the release the file belongs to
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--file_id*: id of the file we want to get the info
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--project: UNIX name of the project you want to get the file info. If none is specified, the project specified when you logged in will be used. If none was specified at that time, an error will be displayed.
+                        </para>
+                    </listitem>
+                </itemizedlist>
+                <para>
+                    <example>
+                        <title>getFileInfo command</title>
+                        <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+[ounis@linux codendi cli ]$ ./codendi.php frs getFileInfo --package_id=197 --release_id=143 --file_id=419
++---------+------------+-----------------+-----------+--------------+---------+
+| file_id | release_id |    file_name    | file_size | release_time | user_id |
++---------+------------+-----------------+-----------+--------------+---------+
+| 419     | 143        | p197_r143/file1 | 14        | 1293787567   | 103     |
++---------+------------+-----------------+-----------+--------------+---------+
                         </programlisting>
                     </example>
                </para>

@@ -1102,7 +1102,44 @@ File retrieved successfully.
 +--------+
                     </programlisting>
                 </example>
-                <note>Note : La valeur retournée (12) correspond à l'identifiant du nouveau fichier créé.</note>
+                <note>Note : La valeur retournée (2) correspond à l'identifiant du nouveau fichier créé.</note>
+                </para>
+            </para>
+        </section>
+
+        <section id="TrackerFunctionDeleteAttachedFile">
+            <title>deleteAttachedFile</title>
+            <para>
+                deleteAttachedFile: Supprime un fichier attaché à un artefact.
+                <itemizedlist mark="bullet">
+                    <listitem>
+                        <para>--tracker_id*: ID du Tracker.</para>
+                    </listitem>
+                    <listitem>
+                        <para>--artifact_id*: ID de l'artefact.</para>
+                    </listitem>
+                    <listitem>
+                        <para>--file_id*: ID du fichier a supprimer.</para>
+                    </listitem>
+                    <listitem>
+                        <para>--project: nom UNIX du projet. Si vous ne le spécifiez pas, le projet spécifié
+                        lors de la connexion sera utilisé. Si aucun projet n'a été spécifié lors du login, 
+                        une erreur sera affichée.</para>
+                    </listitem>
+                </itemizedlist>
+                <para>
+                <example>
+                    <title>deleteAttachedFile command</title>
+                    <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+[ounis@linux codendi cli ]$ ./codendi.php tracker deleteAttachedFile --tracker_id=116 --artifact_id=40 --file_id=2
++--------+
+| Result |
++--------+
+| 2      |
++--------+
+                    </programlisting>
+                </example>
+                <note>Note: La valeur retournée (2) correspond à l'identifiant du fichier supprimé.</note>
                 </para>
             </para>
         </section>
@@ -1132,7 +1169,7 @@ File retrieved successfully.
                     <example>
                         <title>commande getPackages</title>
                         <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[mnazaria@linux codendi cli ]$ ./codendi.php frs getPackages --project=project1
+[ounis@linux codendi cli ]$ ./codendi.php frs getPackages --project=project1
 +------------+----------+----------------+-----------+------+-----------------+
 | package_id | group_id |      name      | status_id | rank | approve_license |
 +------------+----------+----------------+-----------+------+-----------------+
@@ -1284,7 +1321,7 @@ File retrieved successfully.
                     <example>
                         <title>commande getFiles</title>
                         <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[mnazaria@linux codendi cli ]$ ./codendi.php frs getFiles --package_id=197 --release_id=143
+[ounis@linux codendi cli ]$ ./codendi.php frs getFiles --package_id=197 --release_id=143
 +---------+------------+-----------------+-----------+--------------+---------+
 | file_id | release_id |    file_name    | file_size | release_time | user_id |
 +---------+------------+-----------------+-----------+--------------+---------+
@@ -1405,7 +1442,113 @@ File retrieved successfully.
         </section>
         
     </section>
-    
+
+        <section id="FRSFunctionGetUploadedFiles">
+            <title>getUploadedFiles</title>
+            <para>getUploadedFiles: Affiche une liste des fichiers uploadés avec ftp dans le répértoire incoming
+                <itemizedlist mark="bullet">
+                    <listitem>
+                        <para>--project: nom UNIX du projet. Si vous ne le spécifiez pas, le projet spécifié lors de la connexion sera utilisé. Si aucun projet n'a été spécifié lors du login, une erreur sera affichée.
+                        </para>
+                    </listitem>
+                </itemizedlist>
+                <para>
+                    <example>
+                        <title>getUploadedFiles command</title>
+                        <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+[ounis@linux codendi cli ]$ ./codendi.php frs getUploadedFiles
++--------+
+| Result |
++--------+
+| file1  |
+| file2  |
++--------+
+                        </programlisting>
+                    </example>
+               </para>
+            </para>
+        </section>
+        
+    </section>
+
+        <section id="FRSFunctionDeleteFile">
+            <title>deleteFile</title>
+            <para>deleteFile: Supprime un fichier
+                <itemizedlist mark="bullet">
+                    <listitem>
+                        <para>--package_id*: identifiant du paquet dans lequel se trouve le fichier
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--release_id*: identifiant de la version dans laquelle se trouve le fichier
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--file_id*: identifiant du fichier à supprimer
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--project: nom UNIX du projet. Si vous ne le spécifiez pas, le projet spécifié lors de la connexion sera utilisé. Si aucun projet n'a été spécifié lors du login, une erreur sera affichée.
+                        </para>
+                    </listitem>
+                </itemizedlist>
+                <para>
+                    <example>
+                        <title>deleteFile command</title>
+                        <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+[ounis@linux codendi cli ]$ /codendi.php frs deleteFile --package_id=197 --release_id=143 --file_id=420
++--------+
+| Result |
++--------+
+| 1      |
++--------+
+                        </programlisting>
+                    </example>
+               </para>
+            </para>
+        </section>
+        
+    </section>
+
+        <section id="FRSFunctionGetFileInfo">
+            <title>getFileInfo</title>
+            <para>getFileInfo: Affiche les informations relatives a un fichier donné.
+                <itemizedlist mark="bullet">
+                    <listitem>
+                        <para>--package_id*: identifiant du paquet dans lequel se trouve le fichier
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--release_id*: identifiant de la version dans laquelle se trouve le fichier
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--file_id*: identifiant du fichier dont on veut afficher les informations
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--project: nom UNIX du projet. Si vous ne le spécifiez pas, le projet spécifié lors de la connexion sera utilisé. Si aucun projet n'a été spécifié lors du login, une erreur sera affichée.
+                        </para>
+                    </listitem>
+                </itemizedlist>
+                <para>
+                    <example>
+                        <title>getFileInfo command</title>
+                        <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+[ounis@linux codendi cli ]$ ./codendi.php frs getFileInfo --package_id=197 --release_id=143 --file_id=419
++---------+------------+-----------------+-----------+--------------+---------+
+| file_id | release_id |    file_name    | file_size | release_time | user_id |
++---------+------------+-----------------+-----------+--------------+---------+
+| 419     | 143        | p197_r143/file1 | 14        | 1293787567   | 103     |
++---------+------------+-----------------+-----------+--------------+---------+
+                        </programlisting>
+                    </example>
+               </para>
+            </para>
+        </section>
+        
+    </section>
+
     <section id="DocmanFunctions">
         <title>Fonction du Gestionnaire de Documents</title>
         
