@@ -1512,55 +1512,30 @@ File retrieved successfully.
                     <example>
                         <title>list command</title>
                         <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[mnazaria@linux codendi cli ]$ ./codendi.php docman list --id=59 --project=myproject
-Array
-(
-    [0] => Array 
-            (
-                [item_id] => 241
-                [parent_id] => 59
-                [group_id] => 112
-                [title] => CLI User Guide
-                [description] => The PDF version of the CLI User Guide
-                [create_date] => 1170168829
-                [update_date] => 1170168829
-                [delete_date] => 
-                [user_id] => 102
-                [status] => 0
-                [obsolescence_date] => 0
-                [rank] => -2
-                [item_type] => 1
-             )
-    [1] => Array 
-            (
-                [item_id] => 296
-                [parent_id] => 59
-                [group_id] => 112
-                [title] => CLI User Guide
-                [description] => The HTML version of the CLI User Guide
-                [create_date] => 1172759281
-                [update_date] => 1172759281
-                [delete_date] => 
-                [user_id] => 102
-                [status] => 0
-                [obsolescence_date] => 0
-                [rank] => -2
-                [item_type] => 3
-             )
-    
-)
+[terzino@linux codendi cli ]$ ./codendi.php docman list --id=110418 --project=myproject
++---------+-----------+----------+-------------------------+-------------+-------------+-------------+-------------+---------+--------+-------------------+------+-----------+
+| item_id | parent_id | group_id |          title          | description | create_date | update_date | delete_date | user_id | status | obsolescence_date | rank | item_type |
++---------+-----------+----------+-------------------------+-------------+-------------+-------------+-------------+---------+--------+-------------------+------+-----------+
+| 110493  | 110418    | 1        | testSoap                |             | 1293189073  | 1293189073  |             | 101     | 100    | 0                 | -2   | 2         |
+| 110491  | 110418    | 1        | Document added from CLI |             | 1293188351  | 1293188351  |             | 101     | 100    | 0                 | 1    | 3         |
++---------+-----------+----------+-------------------------+-------------+-------------+-------------+-------------+---------+--------+-------------------+------+-----------+
                         </programlisting>
                     </example>
                </para>
             </para>
         </section>
         
-        <section id="DocmanFunctionCreateDocument">
-            <title>createDocument</title>
-            <para>createDocument: Add a document to the document manager
+        <section id="DocmanFunctionCreateEmbeddedFile">
+            <title>createEmbeddedFile</title>
+            <para>createEmbeddedFile: Add a document embedded file to the document manager
                 <itemizedlist mark="bullet">
                     <listitem>
-                        <para>--parent_id*: ID of the parent the document will be created in
+                        <para>--parent_id*: ID of the parent the file will be created in
+                        </para>
+                    </listitem>
+					<listitem>
+                        <para>--project*:Name of the project the item belongs to. If you specified the name of
+                            the working project when you logged in, this parameter is not needed.
                         </para>
                     </listitem>
                     <listitem>
@@ -1572,25 +1547,113 @@ Array
                         </para>
                     </listitem>
                     <listitem>
-                        <para>--type*: nature of the document. Available types are "file", "link", "wiki", and "embedded_file"
+                        <para>--status*: Status to apply to the item. Available status are "none", "draft", "approved", and "rejected"
                         </para>
                     </listitem>
                     <listitem>
-                        <para>--content*: content of the document, according to the type of the document:
-                            <itemizedlist mark="bullet">
-                                <listitem><para>the file location for "file" type</para></listitem>
-                                <listitem><para>the url for "link" type</para></listitem>
-                                <listitem><para>the name of the Wiki Page for "wiki" type</para></listitem>
-                                <listitem><para>the raw content for "embedded_file" type.</para></listitem>
-                            </itemizedlist>
+                        <para>--content*: Content of the embedded file
                         </para>
                     </listitem>
                     <listitem>
+					    <para>--perm_read*: Groups IDs that will have the permission READ separated with comma
+						</para>
+						</listitem>
+                    <listitem>
+					    <para>--perm_write*: Groups IDs that will have the permission WRITE separated with comma
+					    </para>
+					</listitem>
+                    <listitem>
+					        <para>--perm_manage*: Groups IDs that will have the permission MANAGE separated with comma
+					        </para>
+					</listitem>
+                    <listitem>
+					    <para>--perm_none*: Groups IDs that will have no permission separated with comma(ie. those groups will not inherit the permissions of the parent folder)
+                        </para>
+                    </listitem>
+                    <listitem>
+					    <para>--properties*: File that contains the properties to apply to the item
+                        </para>
+                    </listitem>
+                    <listitem>
+					    <para>--obsolescence_date*: Date when the document will be obsolete (yy-mm-dd|yyyy-mm-dd)   
+                        </para>
+                    </listitem>
+					<listitem>
                         <para>--ordering: place where the new document will be hosted. Available values are "begin" and "end"
                         </para>
                     </listitem>
+                </itemizedlist>
+                <para>
+                    <example>
+                        <title>createEmbeddedFile command</title>
+                        <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+[terzino@linux codendi cli ]$ ./codendi.php docman createEmbeddedFile --project=myproject --parent_id=110418 --title="EmbeddedFile sample" --content="It is just a sample to describe how  we add an embedde file to the docman manager"
++--------+
+| Result |
++--------+
+| 110499 |
++--------+
+                        </programlisting>
+                    </example>
+               </para>
+             </para>
+        </section>
+		
+		<section id="DocmanFunctionCreateFile">
+            <title>createFile</title>
+            <para>createFile: Add a document file to the document manager
+                <itemizedlist mark="bullet">
                     <listitem>
-                        <para>--project: UNIX name of the project you want to add the package in. If none is specified, the project specified when you logged in will be used. If none was specified at that time, an error will be displayed.
+                        <para>--parent_id*: ID of the parent the file will be created in
+                        </para>
+                    </listitem>
+					<listitem>
+                        <para>--project*:Name of the project the item belongs to. If you specified the name of
+                            the working project when you logged in, this parameter is not needed.
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--title*: Title of the new document
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--description: Description of the new document
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--status*: Status to apply to the item. Available status are "none", "draft", "approved", and "rejected"
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--content*: Content of the file "local file location"
+                        </para>
+                    </listitem>
+                    <listitem>
+					    <para>--perm_read*: Groups IDs that will have the permission READ separated with comma
+						</para>
+						</listitem>
+                    <listitem>
+					    <para>--perm_write*: Groups IDs that will have the permission WRITE separated with comma
+					    </para>
+					</listitem>
+                    <listitem>
+					        <para>--perm_manage*: Groups IDs that will have the permission MANAGE separated with comma
+					        </para>
+					</listitem>
+                    <listitem>
+					    <para>--perm_none*: Groups IDs that will have no permission separated with comma(ie. those groups will not inherit the permissions of the parent folder)
+                        </para>
+                    </listitem>
+                    <listitem>
+					    <para>--properties*: File that contains the properties to apply to the item
+                        </para>
+                    </listitem>
+                    <listitem>
+					    <para>--obsolescence_date*: Date when the document will be obsolete (yy-mm-dd|yyyy-mm-dd)   
+                        </para>
+                    </listitem>
+					<listitem>
+                        <para>--ordering: place where the new document will be hosted. Available values are "begin" and "end"
                         </para>
                     </listitem>
                 </itemizedlist>
@@ -1598,8 +1661,14 @@ Array
                     <example>
                         <title>createDocument command</title>
                         <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[mnazaria@linux codendi cli ]$ ./codendi.php docman createDocument --project=myproject --parent_id=60 --title="Document added from CLI" --type=link --content="http://www.xerox.com"
-1
+[terzino@linux codendi cli ]$ ./codendi.php docman createFile --project=myproject --parent_id=110418 --title="CLi user guide" --content="cli_user_guide.pdf"
+Sending file (100%)
+File uploaded successfully
++--------+
+| Result |
++--------+
+| 110498 |
++--------+
                         </programlisting>
                     </example>
                </para>
