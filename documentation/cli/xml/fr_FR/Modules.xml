@@ -1968,7 +1968,7 @@ File uploaded successfully
                     </example>
                </para>
             </para>
- 
+        </section> 
         <section id="DocmanFunctionCreateFolder">
             <title>createFolder</title>
             <para>createFolder : Ajoute un dossier au gestionnaire de documents
