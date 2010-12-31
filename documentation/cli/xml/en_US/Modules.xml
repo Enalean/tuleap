@@ -1388,8 +1388,6 @@ File retrieved successfully.
                </para>
             </para>
         </section>
-        
-    </section>
 
         <section id="FRSFunctionGetUploadedFiles">
             <title>getUploadedFiles</title>
@@ -1416,8 +1414,6 @@ File retrieved successfully.
                </para>
             </para>
         </section>
-        
-    </section>
 
         <section id="FRSFunctionDeleteFile">
             <title>deleteFile</title>
@@ -1455,8 +1451,6 @@ File retrieved successfully.
                </para>
             </para>
         </section>
-        
-    </section>
 
         <section id="FRSFunctionGetFileInfo">
             <title>getFileInfo</title>
@@ -1494,7 +1488,6 @@ File retrieved successfully.
                </para>
             </para>
         </section>
-        
     </section>
 
     <section id="DocmanFunctions">
