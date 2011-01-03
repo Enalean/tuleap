@@ -57,10 +57,23 @@ class MD5SumComparisonTest extends UnitTestCase {
 
     function testMd5sumDelay() {
         $startTime = microtime(true);
-        md5_file($this->readPath);
+        $md5PhpCompute = md5_file($this->readPath);
         $endTime = microtime(true);
         $delay = $endTime - $startTime;
         echo "Le delay to compute the md5sum is ".$delay;
+        exec('md5sum  '. $this->readPath, $output, $returnValue);
+        if ($returnValue == 0) {
+            $md5SystemCompute = substr($output[0], 0,32);
+            if ($md5PhpCompute === $md5SystemCompute) {
+                echo "\nThe returned value is the same and equals ".$md5PhpCompute."\n";
+            } else {
+                echo "\nThe returned value is different and equals ".$md5PhpCompute." in case of php compute and ".
+                $md5SystemCompute." in case of the system compute\n";
+            } 
+        } else {
+            echo "\nCan not compute md5sum on file";
+            
+        }
     }
 }
 ?>
