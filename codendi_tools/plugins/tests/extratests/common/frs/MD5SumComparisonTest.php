@@ -44,7 +44,7 @@ class MD5SumComparisonTest extends UnitTestCase {
         } else {
             $output      = null;
             $returnValue = null;
-            exec('dd if=/dev/urandom of='. $this->readPath .' bs=1M count=25', $output, $returnValue);
+            exec('dd if=/dev/urandom of='. $this->readPath .' bs=1M count=2500', $output, $returnValue);
             if ($returnValue != 0) {
                 trigger_error('dd failed, unable to generate the big file');
             }
