@@ -40,7 +40,7 @@
     </authorgroup>
 
     <copyright>
-      <year>2010</year>
+      <year>2011</year>
 
       <holder>STMicroelectronics, &SYS_PRODUCT_NAME;.</holder>
     </copyright>
@@ -59,7 +59,7 @@
       version rendered with DocBook HTML native renderer. PDF version
       rendered with Apache FOP.</para>
 
-      <para>Exapmles illustrated in this document are in some cases different from the real output.</para>
+      <para>Examples illustrated in this document are in some cases different from the real output.</para>
     </legalnotice>
 
     <revhistory>
