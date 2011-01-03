@@ -63,3 +63,4 @@ class MD5SumComparisonTest extends UnitTestCase {
         echo "Le delay to compute the md5sum is ".$delay;
     }
 }
+?>
