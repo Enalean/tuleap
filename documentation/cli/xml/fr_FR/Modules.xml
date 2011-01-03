@@ -137,39 +137,55 @@ Session terminated.
                         <title>commande trackerlist</title>
                         <programlisting format="linespecific" linenumbering="unnumbered" width="80">
 [ounis@linux codendi cli ]$ ./codendi.php tracker trackerlist --project=project1
-(...)
++-------------------+----------+------------------+--------------------------------------------------------------+-----------+------------+-------------+--------------+
+| group_artifact_id | group_id |       name       |                         description                          | item_name | open_count | total_count | reports_desc |
++-------------------+----------+------------------+--------------------------------------------------------------+-----------+------------+-------------+--------------+
+| 116               | 104      | Bugs             | Bugs Tracker                                                 | bug       | 0          | 1           | [1]          |
+| 119               | 104      | Salome Bug       | Salome Bug Tracker                                           | slmbug    | 0          | 0           | [2]          |
+| 120               | 104      | Scrum Backlog    | Scrum backlog used to store user stories and to plan sprints | story     | 0          | 0           | [3]          |
+| 118               | 104      | Support Requests | Support Requests Tracker                                     | SR        | 0          | 0           | [4]          |
+| 117               | 104      | Tasks            | Tasks Tracker                                                | task      | 0          | 0           | [5]          |
++-------------------+----------+------------------+--------------------------------------------------------------+-----------+------------+-------------+--------------+
+
 [1]:
-+-----------+-------------------+---------+-----------------------------------+
-| report_id | group_artifact_id |  name   |            description            |
-+-----------+-------------------+---------+-----------------------------------+
-| 116       | 116               | Bugs    | Bugs Report                       |
-| 100       | 116               | Default | The system default artifact report|
-+-----------+-------------------+---------+-----------------------------------+
-(...)
++-----------+-------------------+---------+------------------------------------+-------+
+| report_id | group_artifact_id |  name   |            description             | scope |
++-----------+-------------------+---------+------------------------------------+-------+
+| 116       | 116               | Bugs    | Bugs Report                        | P     |
+| 100       | 116               | Default | The system default artifact report | S     |
++-----------+-------------------+---------+------------------------------------+-------+
+
+[2]:
++-----------+-------------------+-------------+------------------------------------+-------+
+| report_id | group_artifact_id |    name     |            description             | scope |
++-----------+-------------------+-------------+------------------------------------+-------+
+| 119       | 119               | Salome Bugs | Salome Bugs Report                 | P     |
+| 100       | 119               | Default     | The system default artifact report | S     |
++-----------+-------------------+-------------+------------------------------------+-------+
 
 [3]:
-+-----------+-------------------+---------+-----------------------------------+
-| report_id | group_artifact_id |  name   |            description            |
-+-----------+-------------------+---------+-----------------------------------+
-| 120       | 120               | Scrum   | Scrum Report                      |
-| 100       | 120               | Default | The system default artifact report|
-+-----------+-------------------+---------+-----------------------------------+
++-----------+-------------------+---------+------------------------------------+-------+
+| report_id | group_artifact_id |  name   |            description             | scope |
++-----------+-------------------+---------+------------------------------------+-------+
+| 120       | 120               | Scrum   | Scrum Report                       | P     |
+| 100       | 120               | Default | The system default artifact report | S     |
++-----------+-------------------+---------+------------------------------------+-------+
 
 [4]:
-+-----------+-------------------+---------+-----------------------------------+
-| report_id | group_artifact_id |  name   |            description            |
-+-----------+-------------------+---------+-----------------------------------+
-| 118       | 118               | SR      | Support Requests Report           |
-| 100       | 118               | Default | The system default artifact report|
-+-----------+-------------------+---------+-----------------------------------+
++-----------+-------------------+---------+------------------------------------+-------+
+| report_id | group_artifact_id |  name   |            description             | scope |
++-----------+-------------------+---------+------------------------------------+-------+
+| 118       | 118               | SR      | Support Requests Report            | P     |
+| 100       | 118               | Default | The system default artifact report | S     |
++-----------+-------------------+---------+------------------------------------+-------+
 
 [5]:
-+-----------+-------------------+---------+-----------------------------------+
-| report_id | group_artifact_id |  name   |            description            |
-+-----------+-------------------+---------+-----------------------------------+
-| 117       | 117               | Tasks   | Tasks Report                      |
-| 100       | 117               | Default | The system default artifact report|
-+-----------+-------------------+---------+-----------------------------------+
++-----------+-------------------+---------+------------------------------------+-------+
+| report_id | group_artifact_id |  name   |            description             | scope |
++-----------+-------------------+---------+------------------------------------+-------+
+| 117       | 117               | Tasks   | Tasks Report                       | P     |
+| 100       | 117               | Default | The system default artifact report | S     |
++-----------+-------------------+---------+------------------------------------+-------+
                         </programlisting>
                     </example>
                 </para>
@@ -201,21 +217,29 @@ Session terminated.
                         <title>commande trackers</title>
                         <programlisting format="linespecific" linenumbering="unnumbered" width="80">
 [ounis@linux codendi cli ]$ ./codendi.php tracker trackers --project=project1
-(...)
++-------------------+----------+------------------+--------------------------------------------------------------+-----------+------------+-------------+-----------------+------------+--------------------+
+| group_artifact_id | group_id |       name       |                         description                          | item_name | open_count | total_count | total_file_size | field_sets | field_dependencies |
++-------------------+----------+------------------+--------------------------------------------------------------+-----------+------------+-------------+-----------------+------------+--------------------+
+| 116               | 104      | Bugs             | Bugs Tracker                                                 | bug       | -1         | 1           | 0               | [1]        | [2]                |
+| 119               | 104      | Salome Bug       | Salome Bug Tracker                                           | slmbug    | -1         | -1          | 0               | [3]        | [4]                |
+| 120               | 104      | Scrum Backlog    | Scrum backlog used to store user stories and to plan sprints | story     | -1         | -1          | 0               | [5]        | [6]                |
+| 118               | 104      | Support Requests | Support Requests Tracker                                     | SR        | -1         | -1          | 0               | [7]        | [8]                |
+| 117               | 104      | Tasks            | Tasks Tracker                                                | task      | -1         | -1          | 0               | [9]        | [10]               |
++-------------------+----------+------------------+--------------------------------------------------------------+-----------+------------+-------------+-----------------+------------+--------------------+
 [13]:
-+----------+-------------------+----------+-------+-------------+----------+
-| field_id | group_artifact_id | value_id | value | description | order_id |
-+----------+-------------------+----------+-------+-------------+----------+
-| 10       | 116               | 100      | None  |             | 10       |
-+----------+-------------------+----------+-------+-------------+----------+
++----------+-------------------+----------+-------+-------------+----------+--------+
+| field_id | group_artifact_id | value_id | value | description | order_id | status |
++----------+-------------------+----------+-------+-------------+----------+--------+
+| 10       | 116               | 100      | None  |             | 10       | P      |
++----------+-------------------+----------+-------+-------------+----------+--------+
 
 [14]:
-+----------+-------------------+----------+-------+-------------+----------+
-| field_id | group_artifact_id | value_id | value | description | order_id |
-+----------+-------------------+----------+-------+-------------+----------+
-| 7        | 116               | 103      | ounis |             | 0        |
-| 7        | 116               | 100      | None  |             | 10       |
-+----------+-------------------+----------+-------+-------------+----------+
++----------+-------------------+----------+-------+-------------+----------+--------+
+| field_id | group_artifact_id | value_id | value | description | order_id | status |
++----------+-------------------+----------+-------+-------------+----------+--------+
+| 7        | 116               | 103      | ounis |             | 0        |        |
+| 7        | 116               | 100      | None  |             | 10       | P      |
++----------+-------------------+----------+-------+-------------+----------+--------+
 
 [15]:
 No results
@@ -246,18 +270,18 @@ No results
                         <title>commande tracker</title>
                         <programlisting format="linespecific" linenumbering="unnumbered" width="80">
 [ounis@linux codendi cli ]$ ./codendi.php tracker tracker --project=project1 --tracker_id=116
-+-------------------+----------+------+--------------+-----------+------------+
-| group_artifact_id | group_id | name | description  | item_name | open_count |
-+-------------------+----------+------+--------------+-----------+------------+
-| 116               | 104      | Bugs | Bugs Tracker | bug       | -1         |
-+-------------------+----------+------+--------------+-----------+------------+
++-------------------+----------+------+--------------+-----------+------------+-------------+-----------------+------------+--------------------+
+| group_artifact_id | group_id | name | description  | item_name | open_count | total_count | total_file_size | field_sets | field_dependencies |
++-------------------+----------+------+--------------+-----------+------------+-------------+-----------------+------------+--------------------+
+| 116               | 104      | Bugs | Bugs Tracker | bug       | -1         | 1           | 0               | [1]        | [2]                |
++-------------------+----------+------+--------------+-----------+------------+-------------+-----------------+------------+--------------------+
 [1]:
-+--------------+-------------------+------+--------+
-| field_set_id | group_artifact_id | rank | fields |
-+--------------+-------------------+------+--------+
-| 49           | 116               | 10   | [1]    |
-| 50           | 116               | 20   | [2]    |
-+--------------+-------------------+------+--------+
++--------------+-------------------+-------------------------------+---------+--------------------------------+--------------------+------+--------+
+| field_set_id | group_artifact_id |             name              |  label  |          description           |  description_text  | rank | fields |
++--------------+-------------------+-------------------------------+---------+--------------------------------+--------------------+------+--------+
+| 49           | 116               | fieldset_default_bugs_lbl_key | Details | fieldset_default_bugs_desc_key | Details of the bug | 10   | [1]    |
+| 50           | 116               | fieldset_status_bugs_lbl_key  | Status  | fieldset_status_bugs_desc_key  | Status of the bug  | 20   | [2]    |
++--------------+-------------------+-------------------------------+---------+--------------------------------+--------------------+------+--------+
 (... liste des des field sets et des fields ...)
                         </programlisting>
                     </example>
@@ -303,7 +327,11 @@ No results
 +------------------------+-----------+
 
 [1]:
-(...)
++-------------+-------------------+-----------+--------------+------------+------------+------------------+---------+---------+----------+--------------+
+| artifact_id | group_artifact_id | status_id | submitted_by | open_date  | close_date | last_update_date | summary | details | severity | extra_fields |
++-------------+-------------------+-----------+--------------+------------+------------+------------------+---- ----+---------+----------+--------------+
+| 2           | 116               | 3         | 103          | 1289480620 | 1291276352 | 1291276353       | bug     | none    | 5        | [1]          |
++-------------+-------------------+-----------+--------------+------------+------------+------------------+---------+---------+----------+--------------+
 
 [1]:
 +----------+-------------+-------------+
@@ -404,40 +432,40 @@ No results
                     <title>commande reports</title>
                     <programlisting format="linespecific" linenumbering="unnumbered" width="80">
 [ounis@linux codendi cli ]$ ./codendi.php tracker reports --tracker_id=116
-+-----------+-------------------+---------+-----------------------------------+
-| report_id | group_artifact_id |  name   |            description            |
-+-----------+-------------------+---------+-----------------------------------+
-| 116       | 116               | Bugs    | Bugs Report                       |
-| 100       | 116               | Default | The system default artifact report|
-+-----------+-------------------+---------+-----------------------------------+
++-----------+-------------------+---------+------------------------------------+-------+--------+
+| report_id | group_artifact_id |  name   |            description             | scope | fields |
++-----------+-------------------+---------+------------------------------------+-------+--------+
+| 116       | 116               | Bugs    | Bugs Report                        | P     | [1]    |
+| 100       | 116               | Default | The system default artifact report | S     | [2]    |
++-----------+-------------------+---------+------------------------------------+-------+--------+
 
 [1]:
-+-----------+--------------+---------------+----------------+-------------+
-| report_id |  field_name  | show_on_query | show_on_result | place_query |
-+-----------+--------------+---------------+----------------+-------------+
-| 116       | status_id    | 1             | 0              | 40          |
-| 116       | bug_group_id | 1             | 0              | 20          |
-| 116       | category_id  | 1             | 0              | 10          |
-| 116       | artifact_id  | 0             | 1              | 0           |
-| 116       | summary      | 0             | 1              | 0           |
-| 116       | open_date    | 0             | 1              | 0           |
-| 116       | assigned_to  | 1             | 1              | 30          |
-| 116       | submitted_by | 0             | 1              | 0           |
-+-----------+--------------+---------------+----------------+-------------+
++-----------+--------------+---------------+----------------+-------------+--------------+-----------+
+| report_id |  field_name  | show_on_query | show_on_result | place_query | place_result | col_width |
++-----------+--------------+---------------+----------------+-------------+--------------+-----------+
+| 116       | status_id    | 1             | 0              | 40          | 0            | 0         |
+| 116       | bug_group_id | 1             | 0              | 20          | 0            | 0         |
+| 116       | category_id  | 1             | 0              | 10          | 0            | 0         |
+| 116       | artifact_id  | 0             | 1              | 0           | 10           | 0         |
+| 116       | summary      | 0             | 1              | 0           | 20           | 0         |
+| 116       | open_date    | 0             | 1              | 0           | 30           | 0         |
+| 116       | assigned_to  | 1             | 1              | 30          | 40           | 0         |
+| 116       | submitted_by | 0             | 1              | 0           | 50           | 0         |
++-----------+--------------+---------------+----------------+-------------+--------------+-----------+
 
 [2]:
-+-----------+--------------+---------------+----------------+-------------+
-| report_id |  field_name  | show_on_query | show_on_result | place_query |
-+-----------+--------------+---------------+----------------+-------------+
-| 100       | category_id  | 1             | 0              | 10          |
-| 100       | severity     | 0             | 0              |             |
-| 100       | status_id    | 1             | 0              | 20          |
-| 100       | artifact_id  | 1             | 1              | 50          |
-| 100       | summary      | 0             | 1              |             |
-| 100       | open_date    | 1             | 1              | 40          |
-| 100       | assigned_to  | 1             | 1              | 30          |
-| 100       | submitted_by | 0             | 1              |             |
-+-----------+--------------+---------------+----------------+-------------+
++-----------+--------------+---------------+----------------+-------------+--------------+-----------+
+| report_id |  field_name  | show_on_query | show_on_result | place_query | place_result | col_width |
++-----------+--------------+---------------+----------------+-------------+--------------+-----------+
+| 100       | category_id  | 1             | 0              | 10          |              |           |
+| 100       | severity     | 0             | 0              |             |              |           |
+| 100       | status_id    | 1             | 0              | 20          |              |           |
+| 100       | artifact_id  | 1             | 1              | 50          | 10           |           |
+| 100       | summary      | 0             | 1              |             | 20           |           |
+| 100       | open_date    | 1             | 1              | 40          | 30           |           |
+| 100       | assigned_to  | 1             | 1              | 30          | 40           |           |
+| 100       | submitted_by | 0             | 1              |             | 50           |           |
++-----------+--------------+---------------+----------------+-------------+--------------+-----------+
                     </programlisting>
                 </example>
                 </para>
@@ -580,13 +608,13 @@ Is this information correct? (y/n): y
                     <title>commande comments</title>
                     <programlisting format="linespecific" linenumbering="unnumbered" width="80">
 [ounis@linux codendi cli ]$ ./codendi.php tracker comments --tracker_id=116 --id=40
-+-------------+--------------+------------------+------------+-------+
-| artifact_id | follow_up_id |     comment      |    date    |  by   |
-+-------------+--------------+------------------+------------+-------+
-| 40          | 559          | Yet another one  | 1293718666 | ounis |
-| 40          | 558          | Another comment  | 1293718652 | ounis |
-| 40          | 556          | comment by ounis | 1293718608 | ounis |
-+-------------+--------------+------------------+------------+-------+
++-------------+--------------+------------------+------------+---------------+-------+-------------+-----------------+--------------+------------+---------------+
+| artifact_id | follow_up_id |     comment      |    date    | original_date |  by   | original_by | comment_type_id | comment_type | field_name | user_can_edit |
++-------------+--------------+------------------+------------+---------------+-------+-------------+-----------------+--------------+------------+---------------+
+| 40          | 559          | Yet another one  | 1293718666 | 1293718666    | ounis | ounis       | 100             | None         | comment    | 1             |
+| 40          | 558          | Another comment  | 1293718652 | 1293718652    | ounis | ounis       | 100             | None         | comment    | 1             |
+| 40          | 556          | comment by ounis | 1293718608 | 1293718608    | ounis | ounis       | 100             | None         | comment    | 1             |
++-------------+--------------+------------------+------------+---------------+-------+-------------+-----------------+--------------+------------+---------------+
                     </programlisting>
                 </example>
                 </para>
@@ -735,13 +763,13 @@ Is this information correct? (y/n): y
                     <title>commande CCList</title>
                     <programlisting format="linespecific" linenumbering="unnumbered" width="80">
 [ounis@linux codendi cli ]$ ./codendi.php tracker CCList --tracker_id=116 --id=40
-+----------------+-------------+----------------------+----------+------------+
-| artifact_cc_id | artifact_id |        email         | added_by |    date    |
-+----------------+-------------+----------------------+----------+------------+
-| 1              | 40          | nouha.terzi@st.com   | 103      | 1293720479 |
-| 2              | 40          | ounis                | 103      | 1293720479 |
-| 3              | 40          | salma.moakhar@st.com | 103      | 1293720479 |
-+----------------+-------------+----------------------+----------+------------+
++----------------+-------------+----------------------+----------+---------------+---------+------------+
+| artifact_cc_id | artifact_id |        email         | added_by | added_by_name | comment |    date    |
++----------------+-------------+----------------------+----------+---------------+---------+------------+
+| 1              | 40          | nouha.terzi@st.com   | 103      | ounis         |         | 1293720479 |
+| 2              | 40          | ounis                | 103      | ounis         |         | 1293720479 |
+| 3              | 40          | salma.moakhar@st.com | 103      | ounis         |         | 1293720479 |
++----------------+-------------+----------------------+----------+---------------+---------+------------+
                     </programlisting>
                 </example>
                 </para>
@@ -845,11 +873,11 @@ Is this information correct? (y/n): y
                     <title>commande dependencies</title>
                     <programlisting format="linespecific" linenumbering="unnumbered" width="80">
 [ounis@linux codendi cli ]$ ./codendi.php tracker dependencies --tracker_id=116 --id=40
-+--------------------+-------------+----------------------------+-------------+
-| artifact_depend_id | artifact_id | is_dependent_on_artifact_id|   summary   |
-+--------------------+-------------+----------------------------+-------------+
-| 25                 | 40          | 41                         | Another bug |
-+--------------------+-------------+----------------------------+-------------+
++--------------------+-------------+-----------------------------+-------------+------------+--------------+----------+------------+
+| artifact_depend_id | artifact_id | is_dependent_on_artifact_id |   summary   | tracker_id | tracker_name | group_id | group_name |
++--------------------+-------------+-----------------------------+-------------+------------+--------------+----------+------------+
+| 25                 | 40          | 41                          | Another bug | 116        | Bugs         | 104      | project 1  |
++--------------------+-------------+-----------------------------+-------------+------------+--------------+----------+------------+
                     </programlisting>
                 </example>
                 </para>
@@ -878,12 +906,12 @@ Is this information correct? (y/n): y
                     <title>commande inverseDependencies</title>
                     <programlisting format="linespecific" linenumbering="unnumbered" width="80">
 [ounis@linux codendi cli ]$ ./codendi.php tracker inverseDependencies --tracker_id=116 --id=40
-+--------------------+-------------+----------------------------+-------------+
-| artifact_depend_id | artifact_id | is_dependent_on_artifact_id|     summary |
-+--------------------+-------------+----------------------------+-------------+
-| 26                 | 41          | 40                         | Another bug |
-| 27                 | 42          | 40                         | yet another |
-+--------------------+-------------+----------------------------+-------------+
++--------------------+-------------+-----------------------------+-----------------+------------+--------------+----------+------------+
+| artifact_depend_id | artifact_id | is_dependent_on_artifact_id |     summary     | tracker_id | tracker_name | group_id | group_name |
++--------------------+-------------+-----------------------------+-----------------+------------+--------------+----------+------------+
+| 26                 | 41          | 40                          | Another bug     | 116        | Bugs         | 104      | project 1  |
+| 27                 | 42          | 40                          | yet another bug | 116        | Bugs         | 104      | project 1  |
++--------------------+-------------+-----------------------------+-----------------+------------+--------------+----------+------------+
                     </programlisting>
                 </example>
                 </para>
@@ -984,14 +1012,17 @@ Is this information correct? (y/n): y
                     <title>commande artifactHistory</title>
                     <programlisting format="linespecific" linenumbering="unnumbered" width="80">
 [ounis@linux codendi cli ]$ ./codendi.php tracker artifactHistory --tracker_id=116 --id=40
-+------------+----------------------------+-----------------------+----------+
-| field_name |         old_value          |       new_value       |   date   |
-+------------+----------------------------+-----------------------+----------+
-| comment    | I agree with you           |                       |1293720240|
-| comment    | I agree with you           | In fact i don't agree |1293719693|
-| summary    | Back button is not working | Increased priority    |1293718418|
-| severity   | 4                          | 6                     |1293718396|
-+------------+----------------------------+-----------------------+----------+
++------------+-----------------------------------------------+-----------------------------------------------+-----------------+------------+
+| field_name |                   old_value                   |                   new_value                   | modification_by |    date    |
++------------+-----------------------------------------------+-----------------------------------------------+-----------------+------------+
+| cc         | nouha.terzi@st.com,ounis,salma.moakhar@st.com | nouha.terzi@st.com,salma.moakhar@st.com       | ounis           | 1293720816 |
+| cc         |                                               | nouha.terzi@st.com,ounis,salma.moakhar@st.com | ounis           | 1293720479 |
+| comment    | I agree with you                              |                                               | ounis           | 1293720240 |
+| comment    | I agree with you                              | In fact i don't agree                         | ounis           | 1293719693 |
+| summary    | Increased priority                            | Back button is not working                    | ounis           | 1293718652 |
+| summary    | Back button is not working                    | Increased priority                            | ounis           | 1293718418 |
+| severity   | 4                                             | 6                                             | ounis           | 1293718396 |
++------------+-----------------------------------------------+-----------------------------------------------+-----------------+------------+
                     </programlisting>
                 </example>
                 </para>
@@ -1020,12 +1051,12 @@ Is this information correct? (y/n): y
                     <title>commande attachedFiles</title>
                     <programlisting format="linespecific" linenumbering="unnumbered" width="80">
 [ounis@linux codendi cli ]$ ./codendi.php tracker attachedFiles --tracker_id=116 --artifact_id=40
-+----+-------------+----------+-------------------+----------+------------+
-| id | artifact_id | filename |    description    | filesize |  adddate   |
-+----+-------------+----------+-------------------+----------+------------+
-| 2  | 40          | file2    | file2 description | 14       | 1293721808 |
-| 1  | 40          | file1    | file1 description | 14       | 1293721737 |
-+----+-------------+----------+-------------------+----------+------------+
++----+-------------+----------+-------------------+----------+----------+------------+------------+--------------+
+| id | artifact_id | filename |    description    | bin_data | filesize |  filetype  |  adddate   | submitted_by |
++----+-------------+----------+-------------------+----------+----------+------------+------------+--------------+
+| 2  | 40          | file2    | file2 description |          | 14       | text/plain | 1293721808 | ounis        |
+| 1  | 40          | file1    | file1 description |          | 14       | text/plain | 1293721737 | ounis        |
++----+-------------+----------+-------------------+----------+----------+------------+------------+--------------+
                     </programlisting>
                 </example>
                 </para>
@@ -1238,12 +1269,12 @@ File retrieved successfully.
                         <title>commande getReleases</title>
                         <programlisting format="linespecific" linenumbering="unnumbered" width="80">
 [ounis@linux codendi cli ]$ ./codendi.php frs getReleases --project=project1 --package_id=197
-+------------+------------+---------------+---------------+--------------+
-| release_id | package_id |     name      |    changes    | release_date |
-+------------+------------+---------------+---------------+--------------+
-| 144        | 197        | first version | first release | 1293725030   |
-| 143        | 197        | new version   |  new release  | 1293724925   |
-+------------+------------+---------------+---------------+--------------+
++------------+------------+---------------+--------------------------------+---------------------------------+-----------+--------------+-------------+
+| release_id | package_id |     name      |             notes              |             changes             | status_id | release_date | released_by |
++------------+------------+---------------+--------------------------------+---------------------------------+-----------+--------------+-------------+
+| 144        | 197        | first version | somes notes about this release | first release                   | 1         | 1293725030   | 103         |
+| 143        | 197        | new version   | somes notes about this release | the changes of this new release | 1         | 1293724925   | 103         |
++------------+------------+---------------+--------------------------------+---------------------------------+-----------+--------------+-------------+
                         </programlisting>
                     </example>
                </para>
@@ -1322,12 +1353,11 @@ File retrieved successfully.
                         <title>commande getFiles</title>
                         <programlisting format="linespecific" linenumbering="unnumbered" width="80">
 [ounis@linux codendi cli ]$ ./codendi.php frs getFiles --package_id=197 --release_id=143
-+---------+------------+-----------------+-----------+--------------+---------+
-| file_id | release_id |    file_name    | file_size | release_time | user_id |
-+---------+------------+-----------------+-----------+--------------+---------+
-| 419     | 143        | p197_r143/file1 | 14        | 1293787567   | 103     |
-| 420     | 143        | p197_r143/file2 | 13        | 1293787639   | 103     |
-+---------+------------+-----------------+-----------+--------------+---------+
++---------+------------+-----------------+-----------+---------+--------------+--------------+------------+----------------------------------+---------------+---------+
+| file_id | release_id |    file_name    | file_size | type_id | processor_id | release_time | post_date  |           computed_md5           | reference_md5 | user_id |
++---------+------------+-----------------+-----------+---------+--------------+--------------+------------+----------------------------------+---------------+---------+
+| 419     | 143        | p197_r143/file1 | 14        | 9999    | 9999         | 1293787567   | 1293787567 | ea7e787b05317b27af25e45409b2b9e2 |               | 103     |
++---------+------------+-----------------+-----------+---------+--------------+--------------+------------+----------------------------------+---------------+---------+
                         </programlisting>
                     </example>
                </para>
@@ -1530,11 +1560,11 @@ File retrieved successfully.
                         <title>getFileInfo command</title>
                         <programlisting format="linespecific" linenumbering="unnumbered" width="80">
 [ounis@linux codendi cli ]$ ./codendi.php frs getFileInfo --package_id=197 --release_id=143 --file_id=419
-+---------+------------+-----------------+-----------+--------------+---------+
-| file_id | release_id |    file_name    | file_size | release_time | user_id |
-+---------+------------+-----------------+-----------+--------------+---------+
-| 419     | 143        | p197_r143/file1 | 14        | 1293787567   | 103     |
-+---------+------------+-----------------+-----------+--------------+---------+
++---------+------------+-----------------+-----------+---------+--------------+--------------+------------+----------------------------------+---------------+---------+
+| file_id | release_id |    file_name    | file_size | type_id | processor_id | release_time | post_date  |           computed_md5           | reference_md5 | user_id |
++---------+------------+-----------------+-----------+---------+--------------+--------------+------------+----------------------------------+---------------+---------+
+| 419     | 143        | p197_r143/file1 | 14        | 9999    | 9999         | 1293787567   | 1293787567 | ea7e787b05317b27af25e45409b2b9e2 |               | 103     |
++---------+------------+-----------------+-----------+---------+--------------+--------------+------------+----------------------------------+---------------+---------+
                         </programlisting>
                     </example>
                </para>
