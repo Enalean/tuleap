@@ -64,14 +64,10 @@ class MD5SumComparisonTest extends UnitTestCase {
         exec('md5sum  '. $this->readPath, $output, $returnValue);
         if ($returnValue == 0) {
             $md5SystemCompute = substr($output[0], 0,32);
-            if ($md5PhpCompute === $md5SystemCompute) {
-                echo "\nThe returned value is the same and equals ".$md5PhpCompute."\n";
-            } else {
-                echo "\nThe returned value is different and equals ".$md5PhpCompute." in case of php compute and ".
-                $md5SystemCompute." in case of the system compute\n";
-            } 
+            $this->assertIdentical($md5SystemCompute , $md5PhpCompute);
+            echo "\nLe md5sum computed is ".$md5SystemCompute."\n";
         } else {
-            echo "\nCan not compute md5sum on file";
+            trigger_error('Can not compute md5sum on file');
             
         }
     }
