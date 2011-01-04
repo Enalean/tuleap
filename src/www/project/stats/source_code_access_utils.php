@@ -142,9 +142,6 @@ function frs_logs_extract($project,$span,$who) {
            " WHERE log.action_id=".FRSFile::EVT_RESTORE.
            " AND log.group_id=".$project->getGroupId().
            " ORDER BY time DESC, log_id DESC";
-$fp = fopen('/prj/codex/ounish/rpm/sql.txt', 'w');
-fwrite($fp, $sql.';');
-fclose($fp);
     return $sql;
 }
 
