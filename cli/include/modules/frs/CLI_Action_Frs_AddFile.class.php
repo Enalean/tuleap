@@ -94,8 +94,8 @@ class CLI_Action_Frs_AddFile extends CLI_Action {
                     /* During this loop the file in construction in the incoming directory
                      * may be corrupted by concurrent access, such as releasing it
                      * or use of addFileChunk again with the same filename.
-                     * This corruption could not be automatically detected if the reference md5
-                     * is not provided only the user can compare the computed md5 manually
+                     * This corruption will be automatically detected at the end of upload
+                     * when comparing the md5 sums and file will not be released.
                      */ 
                     do {
                         $offset = $i * $chunkSize;
