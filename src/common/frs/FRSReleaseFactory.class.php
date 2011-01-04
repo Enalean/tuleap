@@ -202,7 +202,7 @@ class FRSReleaseFactory {
         $em->processEvent('frs_log_update_release', array('user_id' => $user->getId(),
                                            'project_id' => $release->getGroupID(),
                                            'item_id' => $data_array['release_id'],
-                                           'action_id' => FRSRelease::RELEASE_UPDATE));
+                                           'action_id' => FRSRelease::EVT_UPDATE));
 		return $dao->updateFromArray($data_array);
 	}
 
@@ -216,7 +216,7 @@ class FRSReleaseFactory {
         $em->processEvent('frs_log_add_release', array('user_id' => $user->getId(),
                                            'project_id' => $release->getGroupID(),
                                            'item_id' => $id,
-                                           'action_id' => FRSRelease::RELEASE_CREATE));
+                                           'action_id' => FRSRelease::EVT_CREATE));
 		return $id;
 	}
 	
@@ -230,7 +230,7 @@ class FRSReleaseFactory {
         $em->processEvent('frs_log_delete_release', array('user_id' => $user->getId(),
                                            'project_id' => $release->getGroupID(),
                                            'item_id' => $_id,
-                                           'action_id' => FRSRelease::RELEASE_DELETE));
+                                           'action_id' => FRSRelease::EVT_DELETE));
     	return $dao->delete($_id,$this->STATUS_DELETED);
     }
 

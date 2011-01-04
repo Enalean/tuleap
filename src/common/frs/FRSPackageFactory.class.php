@@ -196,7 +196,7 @@ class FRSPackageFactory {
         $em->processEvent('frs_log_update_package', array('user_id' => $user->getId(),
                                            'project_id' => $data['group_id'],
                                            'item_id' => $data['package_id'],
-                                           'action_id' => FRSPackage::PACKAGE_UPDATE));
+                                           'action_id' => FRSPackage::EVT_UPDATE));
         return $dao->updateFromArray($data);
     }
     
@@ -210,7 +210,7 @@ class FRSPackageFactory {
         $em->processEvent('frs_log_add_package', array('user_id' => $user->getId(),
                                            'project_id' => $data_array['group_id'],
                                            'item_id' => $id,
-                                           'action_id' => FRSPackage::PACKAGE_CREATE));
+                                           'action_id' => FRSPackage::EVT_CREATE));
         return $id;
     }
     
@@ -224,7 +224,7 @@ class FRSPackageFactory {
         $em->processEvent('frs_log_delete_package', array('user_id' => $user->getId(),
                                            'project_id' => $package->getGroupID(),
                                            'item_id' => $_id,
-                                           'action_id' => FRSPackage::PACKAGE_DELETE));
+                                           'action_id' => FRSPackage::EVT_DELETE));
         return $dao->delete($_id, $this->STATUS_DELETED);
     }
     

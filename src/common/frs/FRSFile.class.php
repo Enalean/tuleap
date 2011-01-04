@@ -24,10 +24,10 @@ require_once('common/include/Codendi_HTTP_Download.php');
 
 class FRSFile extends Error {
 
-    const FILE_CREATE  = 7;
-    const FILE_UPDATE  = 8;
-    const FILE_DELETE  = 9;
-    const FILE_RESTORE = 10;
+    const EVT_CREATE  = 301;
+    const EVT_UPDATE  = 302;
+    const EVT_DELETE  = 303;
+    const EVT_RESTORE = 304;
 
 	/**
      * @var int $file_id the ID of this FRSFile

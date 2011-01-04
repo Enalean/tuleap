@@ -167,7 +167,7 @@ class FRSFileFactory extends Error {
         $em->processEvent('frs_log_update_file', array('user_id' => $user->getId(),
                                            'project_id' => $file->getGroup()->getGroupId(),
                                            'item_id' => $data_array['file_id'],
-                                           'action_id' => FRSFile::FILE_UPDATE));
+                                           'action_id' => FRSFile::EVT_UPDATE));
         return $dao->updateFromArray($data_array);
     }
     
@@ -182,7 +182,7 @@ class FRSFileFactory extends Error {
         $em->processEvent('frs_log_add_file', array('user_id' => $user->getId(),
                                            'project_id' => $file->getGroup()->getGroupId(),
                                            'item_id' => $id,
-                                           'action_id' => FRSFile::FILE_CREATE));
+                                           'action_id' => FRSFile::EVT_CREATE));
         return $id;
     }
     
@@ -269,7 +269,7 @@ class FRSFileFactory extends Error {
         $em->processEvent('frs_log_delete_file', array('user_id' => $user->getId(),
                                            'project_id' => $file->getGroup()->getGroupId(),
                                            'item_id' => $_id,
-                                           'action_id' => FRSFile::FILE_DELETE));
+                                           'action_id' => FRSFile::EVT_DELETE));
     	return $dao->delete($_id);
     }
 
@@ -592,7 +592,7 @@ class FRSFileFactory extends Error {
                 $em->processEvent('frs_log_restore_file', array('user_id' => $user->getId(),
                                   'project_id' => $file->getGroup()->getGroupId(),
                                   'item_id' => $file->getFileID(),
-                                  'action_id' => FRSFile::FILE_RESTORE));
+                                  'action_id' => FRSFile::EVT_RESTORE));
                 return $dao->restoreFile($file->getFileID());
             }
         }
