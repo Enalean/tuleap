@@ -101,9 +101,8 @@ class CLI_Action_Docman_GetFile extends CLI_Action {
 
         $transRate = $totalTran / ($endTime - $startTime);
         $GLOBALS['LOG']->add('Transfer rate: '.size_readable($transRate, null, 'bi', '%.2f %s/s'));
-        // Finish!
-        echo "\rSending file (100%)\n";
 
+        // Finish!
         if ($output !== false) {
             fclose($fd);
 
