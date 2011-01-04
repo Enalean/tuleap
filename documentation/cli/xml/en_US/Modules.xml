@@ -1340,10 +1340,6 @@ File retrieved successfully.
                         </para>
                     </listitem>
                     <listitem>
-                        <para>--reference_md5: md5 of the file
-                        </para>
-                    </listitem>
-                    <listitem>
                         <para>--project: UNIX name of the project you want to add the file in. If none is specified, the project specified when you logged in will be used. If none was specified at that time, an error will be displayed.
                         </para>
                     </listitem>

@@ -36,10 +36,6 @@ class CLI_Action_Frs_AddFile extends CLI_Action {
             'name'           => 'processor_id',
             'description'    => '--processor_id=<processor_id> Id of the processor of the file',
         ));
-        $this->addParam(array(
-            'name'           => 'reference_md5',
-            'description'    => '--reference_md5=<reference_md5> Md5 checksum of the file',
-        ));
     }
     function validate_package_id(&$package_id) {
         if (!$package_id) {
@@ -65,12 +61,6 @@ class CLI_Action_Frs_AddFile extends CLI_Action {
         }
         return true;
     }
-    function validate_reference_md5(&$reference_md5) {
-        if (!$reference_md5) {
-            $reference_md5 = '';
-        }
-        return true;
-    }
     function before_soapCall(&$loaded_params) {
         $this->soapCommand = 'addUploadedFile';
         if (!$loaded_params['others']['uploaded_file'] && !$loaded_params['others']['local_file']) {
@@ -93,6 +83,9 @@ class CLI_Action_Frs_AddFile extends CLI_Action {
                     // TODO : use PHP_BigFile
                     //$path = PHP_BigFile::stream(realpath($localFileLocation));
                     $path = realpath($localFileLocation);
+                    $GLOBALS['LOG']->add('Calculating md5 checksum of the file ...');
+                    $loaded_params['soap']['reference_md5'] = md5_file($path);
+                    $GLOBALS['LOG']->add('Md5 checksum calculated.');
                     $offset = 0;
                     $chunkSize = $GLOBALS['soap']->getFileChunkSize();
                     $startTime = microtime(true);
