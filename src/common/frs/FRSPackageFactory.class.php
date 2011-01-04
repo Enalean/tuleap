@@ -36,7 +36,6 @@ class FRSPackageFactory {
     var $STATUS_HIDDEN  = FRSPackage::STATUS_HIDDEN;
 
     function FRSPackageFactory() {
-        $log = FRSLog::instance();
     }
 
     function getFRSPackageFromArray(&$array) {
@@ -192,7 +191,7 @@ class FRSPackageFactory {
         $dao =& $this->_getFRSPackageDao();
         $um = UserManager::instance();
         $user = $um->getCurrentUser();
-        $em = EventManager::instance();
+        $em = $this->getEventManager();
         $em->processEvent('frs_log_update_package', array('user_id' => $user->getId(),
                                            'project_id' => $data['group_id'],
                                            'item_id' => $data['package_id'],
@@ -206,7 +205,7 @@ class FRSPackageFactory {
         $id = $dao->createFromArray($data_array);
         $um = UserManager::instance();
         $user = $um->getCurrentUser();
-        $em = EventManager::instance();
+        $em = $this->getEventManager();
         $em->processEvent('frs_log_add_package', array('user_id' => $user->getId(),
                                            'project_id' => $data_array['group_id'],
                                            'item_id' => $id,
@@ -220,7 +219,7 @@ class FRSPackageFactory {
         $dao =& $this->_getFRSPackageDao();
         $um = UserManager::instance();
         $user = $um->getCurrentUser();
-        $em = EventManager::instance();
+        $em = $this->getEventManager();
         $em->processEvent('frs_log_delete_package', array('user_id' => $user->getId(),
                                            'project_id' => $package->getGroupID(),
                                            'item_id' => $_id,
@@ -313,6 +312,16 @@ class FRSPackageFactory {
         return $ok;
     }
 
+    /**
+     * Returns an instance of EventManager
+     *
+     * @return EventManager
+     */
+    function getEventManager() {
+         $em = EventManager::instance();
+         FRSLog::instance();
+         return $em;
+    }
 }
 
 ?>

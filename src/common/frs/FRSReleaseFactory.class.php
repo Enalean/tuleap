@@ -35,7 +35,6 @@ class FRSReleaseFactory {
     
 
 	function FRSReleaseFactory() {
-	    $log = FRSLog::instance();
 	}
 
 	function  getFRSReleaseFromArray(& $array) {
@@ -198,7 +197,7 @@ class FRSReleaseFactory {
         $release = $this->getFRSReleaseFromDb($data_array['release_id']);
 		$um = UserManager::instance();
         $user = $um->getCurrentUser();
-        $em = EventManager::instance();
+        $em = $this->getEventManager();
         $em->processEvent('frs_log_update_release', array('user_id' => $user->getId(),
                                            'project_id' => $release->getGroupID(),
                                            'item_id' => $data_array['release_id'],
@@ -212,7 +211,7 @@ class FRSReleaseFactory {
 		$release = $this->getFRSReleaseFromDb($id);
 		$um = UserManager::instance();
         $user = $um->getCurrentUser();
-        $em = EventManager::instance();
+        $em = $this->getEventManager();
         $em->processEvent('frs_log_add_release', array('user_id' => $user->getId(),
                                            'project_id' => $release->getGroupID(),
                                            'item_id' => $id,
@@ -226,7 +225,7 @@ class FRSReleaseFactory {
     	$dao = $this->_getFRSReleaseDao();
     	$um = UserManager::instance();
         $user = $um->getCurrentUser();
-        $em = EventManager::instance();
+        $em = $this->getEventManager();
         $em->processEvent('frs_log_delete_release', array('user_id' => $user->getId(),
                                            'project_id' => $release->getGroupID(),
                                            'item_id' => $_id,
@@ -351,6 +350,16 @@ class FRSReleaseFactory {
         $ok = $user->isSuperUser() || $user->isMember($group_id,'R2') || $user->isMember($group_id,'A');
         return $ok;
 	}
-
+	
+    /**
+     * Returns an instance of EventManager
+     *
+     * @return EventManager
+     */
+    function getEventManager() {
+         $em = EventManager::instance();
+         FRSLog::instance();
+         return $em;
+    }
 }
 ?>

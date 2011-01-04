@@ -28,7 +28,6 @@ require_once ('common/frs/FRSLog.class.php');
 class FRSFileFactory extends Error {
 
     function FRSFileFactory() {
-        $log = FRSLog::instance();
     }
 
     function &getFRSFileFromArray(&$array) {
@@ -163,7 +162,7 @@ class FRSFileFactory extends Error {
         $file = $this->getFRSFileFromDb($data_array['file_id']);
         $um = UserManager::instance();
         $user = $um->getCurrentUser();
-        $em = EventManager::instance();
+        $em = $this->getEventManager();
         $em->processEvent('frs_log_update_file', array('user_id' => $user->getId(),
                                            'project_id' => $file->getGroup()->getGroupId(),
                                            'item_id' => $data_array['file_id'],
@@ -178,7 +177,7 @@ class FRSFileFactory extends Error {
         $file = $this->getFRSFileFromDb($id);
         $um = UserManager::instance();
         $user = $um->getCurrentUser();
-        $em = EventManager::instance();
+        $em = $this->getEventManager();
         $em->processEvent('frs_log_add_file', array('user_id' => $user->getId(),
                                            'project_id' => $file->getGroup()->getGroupId(),
                                            'item_id' => $id,
@@ -265,7 +264,7 @@ class FRSFileFactory extends Error {
     	$dao =& $this->_getFRSFileDao();
     	$um = UserManager::instance();
         $user = $um->getCurrentUser();
-        $em = EventManager::instance();
+        $em = $this->_getEventManager();
         $em->processEvent('frs_log_delete_file', array('user_id' => $user->getId(),
                                            'project_id' => $file->getGroup()->getGroupId(),
                                            'item_id' => $_id,
@@ -567,6 +566,7 @@ class FRSFileFactory extends Error {
      */
     function _getEventManager() {
         $em = EventManager::instance();
+        FRSLog::instance();
         return $em;
     }
 
