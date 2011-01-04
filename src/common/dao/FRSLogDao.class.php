@@ -22,7 +22,7 @@ require_once('include/DataAccessObject.class.php');
 
 class FRSLogDao extends DataAccessObject {
 
-    function __construct(&$da) {
+    function __construct($da) {
         parent::__construct($da);
         $this->table_name = 'frs_log';
     }
