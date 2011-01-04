@@ -67,13 +67,11 @@ class SystemEvent_COMPUTE_MD5SUM extends SystemEvent {
             $fileFactory = $this->getFileFactory();
             $file        = $fileFactory->getFRSFileFromDb($fileId);
             $user = $this->getUser($file->getUserID());
+
             //Compute Md5sum for files
             $md5Computed = $this->computeFRSMd5Sum($file->getFileLocation());
             if (!$md5Computed) {
-                $body = " Dear Files service user,\n\n An error occurs while trying to compute md5sum in your uploaded file ".$file->getFileLocation()." .\n".
-                        " Please try to upload it again.";
-
-                if (!$this->sendNotificationMail($user, $file, $body)) {
+                if (!$this->sendNotificationMail($user, $file,'md5_compute_error', array($file->getFileLocation()))) {
                     $this->error('Could not send mail to inform user that computing md5sum failed');
                     return false;
                 }
@@ -89,13 +87,7 @@ class SystemEvent_COMPUTE_MD5SUM extends SystemEvent {
             //Compare file checksum
             $file = $fileFactory->getFRSFileFromDb($fileId);
             if (!$this->compareMd5Checksums($file)) {
-                $body = " Dear Files service user, \n\nThe entered reference md5sum for the file  ".$file->getFileLocation()." differs from the computed one".
-                        " which equals = ".$md5Computed.". Note that an error message will be shown each time you display the release".
-                        " content in the web interface. \n".
-                        " If you consider that the upload has been well done, you can modify the value in the md5sum field".
-                        " by putting the right value or just letting it empty.";
-
-                if (!$this->sendNotificationMail($user, $file, $body)) {
+                if (!$this->sendNotificationMail($user, $file, 'md5_compare_error', array($file->getFileLocation(), $md5Computed))) {
                     $this->error('Could not send mail to inform user that comparing md5sum failed');
                     return false;
                 }
@@ -141,14 +133,18 @@ class SystemEvent_COMPUTE_MD5SUM extends SystemEvent {
      * 
      * @return Boolean
      */
-    function sendNotificationMail($user, $file, $body) {
+    function sendNotificationMail($user, $file, $bodyContent, $option) {
         
         $mail =  new Mail();
+        
+        $language = new BaseLanguage($GLOBALS['sys_supported_languages'], $GLOBALS['sys_lang']);
+        $language->loadLanguage($user->getLanguageID());
+        
         $subject = $GLOBALS['sys_name'] . ' Error in '.$file->getFileLocation();
         $mail->setFrom($GLOBALS['sys_noreply']);
         $mail->setBcc($user->getEmail());
         $mail->setSubject($subject);
-        $mail->setBody($body);
+        $mail->setBody($language->getText('mail_system_event', $bodyContent, $option));
         return $mail->send();
     }
     
