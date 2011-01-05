@@ -42,13 +42,17 @@ class CodendiSOAP extends SoapClient {
 		$this->fileChunkSize = 6000000; // ~6 Mo;
 		
 		// Try to find a dir where to put the session file
+		$session_dir = 0;
 		if (array_key_exists("HOME", $_ENV)) {
 			$session_dir = $_ENV["HOME"]."/";
 		} else if (array_key_exists("HOMEPATH", $_ENV) && array_key_exists("HOMEDRIVE", $_ENV)) {		// For Windows
 			$session_dir = $_ENV["HOMEDRIVE"]."\\".$_ENV["HOMEPATH"]."\\";
 		}
-		$this->session_file = $session_dir.".codendirc";
-		$this->readSession();
+		$session_file = $session_dir.".codendirc";
+		if (file_exists($session_file)) {
+			$this->session_file = $session_file;
+ 			$this->readSession();
+		}
 	}
 	
 	/**
