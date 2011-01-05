@@ -206,7 +206,9 @@ class FRSPackageFactory {
         $dao =& $this->_getFRSPackageDao();
         $id = $dao->createFromArray($data_array);
         if ($id) {
-            $this->setDefaultPermissions($id);
+            $data_array['package_id'] = $id;
+            $package = new FRSPackage($data_array);
+            $this->setDefaultPermissions($package);
 
             $um = UserManager::instance();
             $user = $um->getCurrentUser();
@@ -322,10 +324,11 @@ class FRSPackageFactory {
     /**
      * By default, a package is readable by all registered users
      *
-     * @param Integer $id Package id
+     * @param FRSPackage $package Permissions will apply on this Package
      */
-    function setDefaultPermissions($id) {
-        $this->getPermissionsManager()->addPermission(FRSPackage::PERM_READ, $id, $GLOBALS['UGROUP_REGISTERED']);
+    function setDefaultPermissions(FRSPackage $package) {
+        $this->getPermissionsManager()->addPermission(FRSPackage::PERM_READ, $package->getPackageID(), $GLOBALS['UGROUP_REGISTERED']);
+        permission_add_history($package->getGroupID(), FRSPackage::PERM_READ, $package->getPackageID());
     }
 
     /**
