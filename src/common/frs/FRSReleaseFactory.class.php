@@ -355,7 +355,23 @@ class FRSReleaseFactory {
         $ok = $user->isSuperUser() || $user->isMember($group_id,'R2') || $user->isMember($group_id,'A');
         return $ok;
 	}
-	
+
+    /**
+     * Set default permission on given release
+     *
+     * By default, release inherits it's permissions from the parent package.
+     *
+     * @param FRSRelease $release Release on which to apply permissions
+     */
+    function setDefaultPermissions(FRSRelease $release) {
+        $pm = $this->getPermissionsManager();
+        $ugroupsId = $pm->getUgroupIdByObjectIdAndPermissionType($release->getPackageID(), FRSPackage::PERM_READ);
+        foreach ($ugroupsId as $row) {
+            $pm->addPermission(FRSRelease::PERM_READ, $release->getReleaseID(), $row['ugroup_id']);
+        }
+        permission_add_history($release->getGroupID(), FRSRelease::PERM_READ, $release->getReleaseID());
+    }
+
     /**
      * Returns an instance of EventManager
      *
@@ -365,6 +381,15 @@ class FRSReleaseFactory {
          $em = EventManager::instance();
          FRSLog::instance();
          return $em;
+    }
+
+    /**
+     * Return an instance of PermissionsManager
+     *
+     * @return PermissionsManager
+     */
+    function getPermissionsManager() {
+        return PermissionsManager::instance();
     }
 }
 ?>
