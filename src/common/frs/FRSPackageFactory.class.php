@@ -203,13 +203,17 @@ class FRSPackageFactory {
     function create($data_array) {
         $dao =& $this->_getFRSPackageDao();
         $id = $dao->createFromArray($data_array);
-        $um = UserManager::instance();
-        $user = $um->getCurrentUser();
-        $em = $this->getEventManager();
-        $em->processEvent('frs_log_add_package', array('user_id' => $user->getId(),
-                                           'project_id' => $data_array['group_id'],
-                                           'item_id' => $id,
-                                           'action_id' => FRSPackage::EVT_CREATE));
+        if ($id) {
+            $this->getPermissionsManager()->addPermission(FRSPackage::PERM_READ, $id, $GLOBALS['UGROUP_REGISTERED']);
+
+            $um = UserManager::instance();
+            $user = $um->getCurrentUser();
+            $em = $this->getEventManager();
+            $em->processEvent('frs_log_add_package', array('user_id' => $user->getId(),
+                                                           'project_id' => $data_array['group_id'],
+                                                           'item_id' => $id,
+                                                           'action_id' => FRSPackage::EVT_CREATE));
+        }
         return $id;
     }
     
@@ -321,6 +325,16 @@ class FRSPackageFactory {
          $em = EventManager::instance();
          FRSLog::instance();
          return $em;
+    }
+
+
+    /**
+     * Return an instance of PermissionsManager
+     *
+     * @return PermissionsManager
+     */
+    function getPermissionsManager() {
+        return PermissionsManager::instance();
     }
 }
 
