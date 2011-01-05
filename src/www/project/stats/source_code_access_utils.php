@@ -97,7 +97,7 @@ function logs_display($sql, $span, $field, $title='') {
 function frs_logs_extract($project,$span,$who) {
     $sql = "    SELECT log.log_id, log.time AS time, user.user_name AS user_name, user.realname AS realname, user.email AS email, frs_package.name AS title,".
            "        CASE ".
-           "        WHEN log.action_id = ".FRSPackage::EVT_CREATE." THEN '".$GLOBALS['Language']->getText('project_stats_source_code_access_utils','frs_add_package')."'".
+           "        WHEN log.action_id = ".FRSPackage::EVT_CREATE." THEN '".$GLOBALS['Language']->getText('project_stats_source_code_access_utils','frs_create_package')."'".
            "        WHEN log.action_id = ".FRSPackage::EVT_UPDATE." THEN '".$GLOBALS['Language']->getText('project_stats_source_code_access_utils','frs_update_package')."'".
            "        WHEN log.action_id = ".FRSPackage::EVT_DELETE." THEN '".$GLOBALS['Language']->getText('project_stats_source_code_access_utils','frs_delete_package')."'".
            "        END as type".
@@ -110,7 +110,7 @@ function frs_logs_extract($project,$span,$who) {
            " UNION".
            "    SELECT log.log_id, log.time AS time, user.user_name AS user_name, user.realname AS realname, user.email AS email, CONCAT(frs_package.name, '/', frs_release.name) AS title,".
            "        CASE ". 
-           "        WHEN log.action_id = ".FRSRelease::EVT_CREATE." THEN '".$GLOBALS['Language']->getText('project_stats_source_code_access_utils','frs_add_release')."'".
+           "        WHEN log.action_id = ".FRSRelease::EVT_CREATE." THEN '".$GLOBALS['Language']->getText('project_stats_source_code_access_utils','frs_create_release')."'".
            "        WHEN log.action_id = ".FRSRelease::EVT_UPDATE." THEN '".$GLOBALS['Language']->getText('project_stats_source_code_access_utils','frs_update_release')."'".
            "        WHEN log.action_id = ".FRSRelease::EVT_DELETE." THEN '".$GLOBALS['Language']->getText('project_stats_source_code_access_utils','frs_delete_release')."'".
            "        END as type".
@@ -124,7 +124,7 @@ function frs_logs_extract($project,$span,$who) {
            " UNION".
            "    SELECT log.log_id, log.time AS time, user.user_name AS user_name, user.realname AS realname, user.email AS email, CONCAT(frs_package.name, '/', frs_release.name, '/', SUBSTRING_INDEX(frs_file.filename, '/', -1)) AS title,".
            "        CASE ".
-           "        WHEN log.action_id = ".FRSFile::EVT_CREATE." THEN '".$GLOBALS['Language']->getText('project_stats_source_code_access_utils','frs_add_file')."'".
+           "        WHEN log.action_id = ".FRSFile::EVT_CREATE." THEN '".$GLOBALS['Language']->getText('project_stats_source_code_access_utils','frs_create_file')."'".
            "        WHEN log.action_id = ".FRSFile::EVT_UPDATE." THEN '".$GLOBALS['Language']->getText('project_stats_source_code_access_utils','frs_update_file')."'".
            "        WHEN log.action_id = ".FRSFile::EVT_DELETE." THEN '".$GLOBALS['Language']->getText('project_stats_source_code_access_utils','frs_delete_file')."'".
            "        END as type".
