@@ -204,7 +204,7 @@ class FRSPackageFactory {
         $dao =& $this->_getFRSPackageDao();
         $id = $dao->createFromArray($data_array);
         if ($id) {
-            $this->getPermissionsManager()->addPermission(FRSPackage::PERM_READ, $id, $GLOBALS['UGROUP_REGISTERED']);
+            $this->setDefaultPermissions();
 
             $um = UserManager::instance();
             $user = $um->getCurrentUser();
@@ -262,8 +262,8 @@ class FRSPackageFactory {
 	 * @param user_id: if not given or false take the current user
 	**/ 
 	function userCanRead($group_id,$package_id,$user_id=false) {
-        $pm =& PermissionsManager::instance();
-        $um =& UserManager::instance();
+        $pm = $this->getPermissionsManager();
+        $um = UserManager::instance();
 	    if (! $user_id) {
             $user =& $um->getCurrentUser();
         } else {
@@ -282,8 +282,8 @@ class FRSPackageFactory {
      * @return boolean true of user can update the package $package_id, false otherwise
      */ 
 	function userCanUpdate($group_id,$package_id,$user_id=false) {
-        $pm =& PermissionsManager::instance();
-        $um =& UserManager::instance();
+        $pm = $this->getPermissionsManager();
+        $um = UserManager::instance();
 	    if (! $user_id) {
             $user =& $um->getCurrentUser();
         } else {
@@ -305,8 +305,8 @@ class FRSPackageFactory {
      * @return boolean true if the user has permission to create packages, false otherwise
      */ 
     function userCanCreate($group_id,$user_id=false) {
-        $pm =& PermissionsManager::instance();
-        $um =& UserManager::instance();
+        $pm = $this->getPermissionsManager();
+        $um = UserManager::instance();
         if (! $user_id) {
             $user =& $um->getCurrentUser();
         } else {
@@ -314,6 +314,13 @@ class FRSPackageFactory {
         }
         $ok = $user->isSuperUser() || $user->isMember($group_id,'R2') || $user->isMember($group_id,'A');
         return $ok;
+    }
+
+    /**
+     * By default, a package is readable by all registered users
+     */
+    function setDefaultPermissions() {
+        $this->getPermissionsManager()->addPermission(FRSPackage::PERM_READ, $id, $GLOBALS['UGROUP_REGISTERED']);
     }
 
     /**
