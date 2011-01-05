@@ -64,7 +64,7 @@ class Docman_FileStorage {
     
     function getFileMD5sum($path) {
         if (is_file($path)) {
-            return md5_file($path);
+            return file_utils_get_md5sum($path);
         } else {
             return false;
         }

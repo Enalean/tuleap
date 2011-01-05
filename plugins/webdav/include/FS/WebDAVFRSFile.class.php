@@ -118,7 +118,7 @@ class WebDAVFRSFile extends Sabre_DAV_File {
      */
     function getETag() {
 
-        return md5_file($this->getFileLocation());
+        return $this->getUtils()->getIncomingFileMd5Sum($this->getFileLocation());
 
     }
 

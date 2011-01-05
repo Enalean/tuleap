@@ -52,6 +52,14 @@ function file_utils_get_size($file) {
     return $size;
 }
 
+// Workaround for the 2GB limitation 
+//We can not use the php function md5_file
+function file_utils_get_md5sum($file) {
+        //if filename containing spaces
+        $filename = escapeshellarg($file);
+        return trim(`md5sum %s $filename`);
+}
+
 function file_utils_admin_header($params) {
   global $group_id,$Language;
 
@@ -1260,7 +1268,7 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
                                              $um = UserManager::instance();
                                              $user = $um->getCurrentUser();
                                             // calculate its md5sum
-                                            $computedMd5 = md5_file($path);
+                                            $computedMd5 = file_utils_get_md5sum($path);
                                             if ($frsff->compareMd5Checksums($computedMd5, $file['reference_md5'])) {
                                             //move the file to a its project page using a setuid program
                                             //test if the file aldready exists in the destination directory
