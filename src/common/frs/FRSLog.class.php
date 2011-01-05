@@ -24,16 +24,16 @@ class FRSLog {
     
     protected function __construct() {
         $em = EventManager::instance();
-        $eventToListen = array('frs_log_add_package',
-                               'frs_log_update_package', 
-                               'frs_log_delete_package', 
-                               'frs_log_add_release',
-                               'frs_log_update_release', 
-                               'frs_log_delete_release', 
-                               'frs_log_add_file',
-                               'frs_log_update_file', 
-                               'frs_log_delete_file', 
-                               'frs_log_restore_file'
+        $eventToListen = array('frs_create_package',
+                               'frs_update_package', 
+                               'frs_delete_package', 
+                               'frs_create_release',
+                               'frs_update_release', 
+                               'frs_delete_release', 
+                               'frs_create_file',
+                               'frs_update_file', 
+                               'frs_delete_file', 
+                               'frs_restore_file'
         );
 
         foreach($eventToListen as $event) {
@@ -58,7 +58,38 @@ class FRSLog {
         $userID = $params['user_id'];
         $projectID = $params['project_id'];
         $itemID = $params['item_id'];
-        $actionID = $params['action_id'];
+        switch ($event) {
+            case 'frs_create_package' :
+                $actionID = FRSPackage::EVT_CREATE;
+                break;
+            case 'frs_update_package' :
+                $actionID = FRSPackage::EVT_UPDATE;
+                break;
+            case 'frs_delete_package' :
+                $actionID = FRSPackage::EVT_DELETE;
+                break;
+            case 'frs_create_release' :
+                $actionID = FRSRelease::EVT_CREATE;
+                break;
+            case 'frs_update_release' :
+                $actionID = FRSRelease::EVT_UPDATE;
+                break;
+            case 'frs_delete_release' :
+                $actionID = FRSRelease::EVT_DELETE;
+                break;
+            case 'frs_create_file' :
+                $actionID = FRSFile::EVT_CREATE;
+                break;
+            case 'frs_update_file' :
+                $actionID = FRSFile::EVT_UPDATE;
+                break;
+            case 'frs_delete_file' :
+                $actionID = FRSFile::EVT_DELETE;
+                break;
+            case 'frs_restore_file' :
+                $actionID = FRSFile::EVT_RESTORE;
+                break;
+        }
         $dao = new FRSLogDao(CodendiDataAccess::instance());
         $dao->addLog($userID, $projectID, $itemID, $actionID);
     }

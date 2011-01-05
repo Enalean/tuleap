@@ -159,30 +159,33 @@ class FRSFileFactory extends Error {
     
     function update($data_array) {
         $dao =& $this->_getFRSFileDao();
-        $file = $this->getFRSFileFromDb($data_array['file_id']);
-        $um = UserManager::instance();
-        $user = $um->getCurrentUser();
-        $em = $this->getEventManager();
-        $em->processEvent('frs_log_update_file', array('user_id' => $user->getId(),
-                                           'project_id' => $file->getGroup()->getGroupId(),
-                                           'item_id' => $data_array['file_id'],
-                                           'action_id' => FRSFile::EVT_UPDATE));
-        return $dao->updateFromArray($data_array);
+        if ($dao->updateFromArray($data_array)) {
+            $file = $this->getFRSFileFromDb($data_array['file_id']);
+            $um = UserManager::instance();
+            $user = $um->getCurrentUser();
+            $this->_getEventManager()->processEvent('frs_update_file',
+                                                   array('user_id'    => $user->getId(),
+                                                         'project_id' => $file->getGroup()->getGroupId(),
+                                                         'item_id'    => $data_array['file_id']));
+            return true;
+        }
+        return false;
     }
     
     
     function create($data_array) {
         $dao =& $this->_getFRSFileDao();
-        $id = $dao->createFromArray($data_array);
-        $file = $this->getFRSFileFromDb($id);
-        $um = UserManager::instance();
-        $user = $um->getCurrentUser();
-        $em = $this->getEventManager();
-        $em->processEvent('frs_log_add_file', array('user_id' => $user->getId(),
-                                           'project_id' => $file->getGroup()->getGroupId(),
-                                           'item_id' => $id,
-                                           'action_id' => FRSFile::EVT_CREATE));
-        return $id;
+        if ($id = $dao->createFromArray($data_array)) {
+            $file = $this->getFRSFileFromDb($id);
+            $um = UserManager::instance();
+            $user = $um->getCurrentUser();
+            $this->_getEventManager()->processEvent('frs_create_file',
+                                                    array('user_id'    => $user->getId(),
+                                                          'project_id' => $file->getGroup()->getGroupId(),
+                                                          'item_id'    => $id));
+            return $id;
+        }
+        return false;
     }
     
     /**
@@ -259,17 +262,19 @@ class FRSFileFactory extends Error {
     }
     
     function _delete($file_id){
-    	$_id = (int) $file_id;
-    	$file = $this->getFRSFileFromDb($_id);
-    	$dao =& $this->_getFRSFileDao();
-    	$um = UserManager::instance();
-        $user = $um->getCurrentUser();
-        $em = $this->_getEventManager();
-        $em->processEvent('frs_log_delete_file', array('user_id' => $user->getId(),
-                                           'project_id' => $file->getGroup()->getGroupId(),
-                                           'item_id' => $_id,
-                                           'action_id' => FRSFile::EVT_DELETE));
-    	return $dao->delete($_id);
+        $_id = (int) $file_id;
+        $file = $this->getFRSFileFromDb($_id);
+        $dao =& $this->_getFRSFileDao();
+        if ($dao->delete($_id)) {
+            $um = UserManager::instance();
+            $user = $um->getCurrentUser();
+            $this->_getEventManager()->processEvent('frs_delete_file',
+                                                   array('user_id'    => $user->getId(),
+                                                         'project_id' => $file->getGroup()->getGroupId(),
+                                                         'item_id'    => $_id));
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -586,19 +591,21 @@ class FRSFileFactory extends Error {
             }
             if (rename($stagingPath, $file->getFileLocation())) {
                 $dao = $this->_getFRSFileDao();
-                $um = $this->_getUserManager();
-                $user = $um->getCurrentUser();
-                $em = $this->_getEventManager();
-                $em->processEvent('frs_log_restore_file', array('user_id' => $user->getId(),
-                                  'project_id' => $file->getGroup()->getGroupId(),
-                                  'item_id' => $file->getFileID(),
-                                  'action_id' => FRSFile::EVT_RESTORE));
-                return $dao->restoreFile($file->getFileID());
+                if ($dao->restoreFile($file->getFileID())) {
+                    $um = $this->_getUserManager();
+                    $user = $um->getCurrentUser();
+                    $this->_getEventManager()->processEvent('frs_restore_file',
+                                                           array('user_id'    => $user->getId(),
+                                                                 'project_id' => $file->getGroup()->getGroupId(),
+                                                                 'item_id'    => $file->getFileID()));
+                    return true;
+                }
+                return false;
             }
         }
         return false;
     }
-    
+
     /**
      * Restore files marked to be restored
      * 

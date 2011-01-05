@@ -192,45 +192,50 @@ class FRSReleaseFactory {
 		return $this->dao;
 	}
 
-	function update($data_array) {
-		$dao =  $this->_getFRSReleaseDao();
-        $release = $this->getFRSReleaseFromDb($data_array['release_id']);
-		$um = UserManager::instance();
-        $user = $um->getCurrentUser();
-        $em = $this->getEventManager();
-        $em->processEvent('frs_log_update_release', array('user_id' => $user->getId(),
-                                           'project_id' => $release->getGroupID(),
-                                           'item_id' => $data_array['release_id'],
-                                           'action_id' => FRSRelease::EVT_UPDATE));
-		return $dao->updateFromArray($data_array);
-	}
+    function update($data_array) {
+        $dao =  $this->_getFRSReleaseDao();
+        if ($dao->updateFromArray($data_array)) {
+            $release = $this->getFRSReleaseFromDb($data_array['release_id']);
+            $um = UserManager::instance();
+            $user = $um->getCurrentUser();
+            $this->getEventManager()->processEvent('frs_update_release',
+                                                   array('user_id'    => $user->getId(),
+                                                         'project_id' => $release->getGroupID(),
+                                                         'item_id'    => $data_array['release_id']));
+            return true;
+        }
+        return false;
+    }
 
-	function create($data_array) {
-		$dao = $this->_getFRSReleaseDao();
-		$id = $dao->createFromArray($data_array);
-		$release = $this->getFRSReleaseFromDb($id);
-		$um = UserManager::instance();
-        $user = $um->getCurrentUser();
-        $em = $this->getEventManager();
-        $em->processEvent('frs_log_add_release', array('user_id' => $user->getId(),
-                                           'project_id' => $release->getGroupID(),
-                                           'item_id' => $id,
-                                           'action_id' => FRSRelease::EVT_CREATE));
-		return $id;
-	}
-	
-	function _delete($release_id){
-    	$_id = (int) $release_id;
-    	$release = $this->getFRSReleaseFromDb($_id);
-    	$dao = $this->_getFRSReleaseDao();
-    	$um = UserManager::instance();
-        $user = $um->getCurrentUser();
-        $em = $this->getEventManager();
-        $em->processEvent('frs_log_delete_release', array('user_id' => $user->getId(),
-                                           'project_id' => $release->getGroupID(),
-                                           'item_id' => $_id,
-                                           'action_id' => FRSRelease::EVT_DELETE));
-    	return $dao->delete($_id,$this->STATUS_DELETED);
+    function create($data_array) {
+        $dao = $this->_getFRSReleaseDao();
+        if ($id = $dao->createFromArray($data_array)) {
+            $release = $this->getFRSReleaseFromDb($id);
+            $um = UserManager::instance();
+            $user = $um->getCurrentUser();
+            $this->getEventManager()->processEvent('frs_create_release',
+                                                   array('user_id'    => $user->getId(),
+                                                         'project_id' => $release->getGroupID(),
+                                                         'item_id'    => $id));
+            return $id;
+        }
+        return false;
+    }
+
+    function _delete($release_id){
+        $_id = (int) $release_id;
+        $release = $this->getFRSReleaseFromDb($_id);
+        $dao = $this->_getFRSReleaseDao();
+        if ($dao->delete($_id,$this->STATUS_DELETED)) {
+            $um = UserManager::instance();
+            $user = $um->getCurrentUser();
+            $this->getEventManager()->processEvent('frs_delete_release',
+                                                   array('user_id' => $user->getId(),
+                                                         'project_id' => $release->getGroupID(),
+                                                         'item_id' => $_id));
+            return true;
+        }
+        return false;
     }
 
 	/*

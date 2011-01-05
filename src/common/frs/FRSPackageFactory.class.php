@@ -188,15 +188,17 @@ class FRSPackageFactory {
         if (is_a($data, 'FRSPackage')) {
             $data = $data->toArray();
         }
-        $dao =& $this->_getFRSPackageDao();
-        $um = UserManager::instance();
-        $user = $um->getCurrentUser();
-        $em = $this->getEventManager();
-        $em->processEvent('frs_log_update_package', array('user_id' => $user->getId(),
-                                           'project_id' => $data['group_id'],
-                                           'item_id' => $data['package_id'],
-                                           'action_id' => FRSPackage::EVT_UPDATE));
-        return $dao->updateFromArray($data);
+        $dao = $this->_getFRSPackageDao();
+        if ($dao->updateFromArray($data)) {
+            $um = UserManager::instance();
+            $user = $um->getCurrentUser();
+            $this->getEventManager()->processEvent('frs_update_package',
+                                                   array('user_id'    => $user->getId(),
+                                                         'project_id' => $data['group_id'],
+                                                         'item_id'    => $data['package_id']));
+            return true;
+        }
+        return false;
     }
     
     
@@ -208,11 +210,10 @@ class FRSPackageFactory {
 
             $um = UserManager::instance();
             $user = $um->getCurrentUser();
-            $em = $this->getEventManager();
-            $em->processEvent('frs_log_add_package', array('user_id' => $user->getId(),
-                                                           'project_id' => $data_array['group_id'],
-                                                           'item_id' => $id,
-                                                           'action_id' => FRSPackage::EVT_CREATE));
+            $this->getEventManager()->processEvent('frs_create_package',
+                                                   array('user_id' => $user->getId(),
+                                                         'project_id' => $data_array['group_id'],
+                                                         'item_id' => $id));
         }
         return $id;
     }
@@ -220,15 +221,17 @@ class FRSPackageFactory {
     function _delete($package_id){
         $_id = (int) $package_id;
         $package = $this->getFRSPackageFromDb($_id);
-        $dao =& $this->_getFRSPackageDao();
-        $um = UserManager::instance();
-        $user = $um->getCurrentUser();
-        $em = $this->getEventManager();
-        $em->processEvent('frs_log_delete_package', array('user_id' => $user->getId(),
-                                           'project_id' => $package->getGroupID(),
-                                           'item_id' => $_id,
-                                           'action_id' => FRSPackage::EVT_DELETE));
-        return $dao->delete($_id, $this->STATUS_DELETED);
+        $dao = $this->_getFRSPackageDao();
+        if ($dao->delete($_id, $this->STATUS_DELETED)) {
+            $um = UserManager::instance();
+            $user = $um->getCurrentUser();
+            $this->getEventManager()->processEvent('frs_delete_package',
+                                                   array('user_id'    => $user->getId(),
+                                                         'project_id' => $package->getGroupID(),
+                                                         'item_id'    => $_id));
+            return true;
+        }
+        return false;
     }
     
     /*
