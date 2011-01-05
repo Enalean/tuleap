@@ -190,11 +190,8 @@ class FRSPackageFactory {
         }
         $dao = $this->_getFRSPackageDao();
         if ($dao->updateFromArray($data)) {
-            $um = UserManager::instance();
-            $user = $um->getCurrentUser();
             $this->getEventManager()->processEvent('frs_update_package',
-                                                   array('user_id'    => $user->getId(),
-                                                         'project_id' => $data['group_id'],
+                                                   array('group_id' => $data['group_id'],
                                                          'item_id'    => $data['package_id']));
             return true;
         }
@@ -207,14 +204,8 @@ class FRSPackageFactory {
         $id = $dao->createFromArray($data_array);
         if ($id) {
             $data_array['package_id'] = $id;
-            $package = new FRSPackage($data_array);
-            $this->setDefaultPermissions($package);
-
-            $um = UserManager::instance();
-            $user = $um->getCurrentUser();
             $this->getEventManager()->processEvent('frs_create_package',
-                                                   array('user_id' => $user->getId(),
-                                                         'project_id' => $data_array['group_id'],
+                                                   array('group_id' => $data_array['group_id'],
                                                          'item_id' => $id));
         }
         return $id;
@@ -225,11 +216,8 @@ class FRSPackageFactory {
         $package = $this->getFRSPackageFromDb($_id);
         $dao = $this->_getFRSPackageDao();
         if ($dao->delete($_id, $this->STATUS_DELETED)) {
-            $um = UserManager::instance();
-            $user = $um->getCurrentUser();
             $this->getEventManager()->processEvent('frs_delete_package',
-                                                   array('user_id'    => $user->getId(),
-                                                         'project_id' => $package->getGroupID(),
+                                                   array('group_id' => $package->getGroupID(),
                                                          'item_id'    => $_id));
             return true;
         }

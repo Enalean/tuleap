@@ -196,11 +196,8 @@ class FRSReleaseFactory {
         $dao =  $this->_getFRSReleaseDao();
         if ($dao->updateFromArray($data_array)) {
             $release = $this->getFRSReleaseFromDb($data_array['release_id']);
-            $um = UserManager::instance();
-            $user = $um->getCurrentUser();
             $this->getEventManager()->processEvent('frs_update_release',
-                                                   array('user_id'    => $user->getId(),
-                                                         'project_id' => $release->getGroupID(),
+                                                   array('group_id' => $release->getGroupID(),
                                                          'item_id'    => $data_array['release_id']));
             return true;
         }
@@ -211,11 +208,8 @@ class FRSReleaseFactory {
         $dao = $this->_getFRSReleaseDao();
         if ($id = $dao->createFromArray($data_array)) {
             $release = $this->getFRSReleaseFromDb($id);
-            $um = UserManager::instance();
-            $user = $um->getCurrentUser();
             $this->getEventManager()->processEvent('frs_create_release',
-                                                   array('user_id'    => $user->getId(),
-                                                         'project_id' => $release->getGroupID(),
+                                                   array('group_id' => $release->getGroupID(),
                                                          'item_id'    => $id));
             return $id;
         }
@@ -227,11 +221,8 @@ class FRSReleaseFactory {
         $release = $this->getFRSReleaseFromDb($_id);
         $dao = $this->_getFRSReleaseDao();
         if ($dao->delete($_id,$this->STATUS_DELETED)) {
-            $um = UserManager::instance();
-            $user = $um->getCurrentUser();
             $this->getEventManager()->processEvent('frs_delete_release',
-                                                   array('user_id' => $user->getId(),
-                                                         'project_id' => $release->getGroupID(),
+                                                   array('group_id' => $release->getGroupID(),
                                                          'item_id' => $_id));
             return true;
         }

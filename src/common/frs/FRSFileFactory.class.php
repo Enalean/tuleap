@@ -161,11 +161,8 @@ class FRSFileFactory extends Error {
         $dao =& $this->_getFRSFileDao();
         if ($dao->updateFromArray($data_array)) {
             $file = $this->getFRSFileFromDb($data_array['file_id']);
-            $um = UserManager::instance();
-            $user = $um->getCurrentUser();
             $this->_getEventManager()->processEvent('frs_update_file',
-                                                   array('user_id'    => $user->getId(),
-                                                         'project_id' => $file->getGroup()->getGroupId(),
+                                                   array('group_id' => $file->getGroup()->getGroupId(),
                                                          'item_id'    => $data_array['file_id']));
             return true;
         }
@@ -180,8 +177,7 @@ class FRSFileFactory extends Error {
             $um = UserManager::instance();
             $user = $um->getCurrentUser();
             $this->_getEventManager()->processEvent('frs_create_file',
-                                                    array('user_id'    => $user->getId(),
-                                                          'project_id' => $file->getGroup()->getGroupId(),
+                                                    array('group_id' => $file->getGroup()->getGroupId(),
                                                           'item_id'    => $id));
             return $id;
         }
@@ -266,11 +262,8 @@ class FRSFileFactory extends Error {
         $file = $this->getFRSFileFromDb($_id);
         $dao =& $this->_getFRSFileDao();
         if ($dao->delete($_id)) {
-            $um = UserManager::instance();
-            $user = $um->getCurrentUser();
             $this->_getEventManager()->processEvent('frs_delete_file',
-                                                   array('user_id'    => $user->getId(),
-                                                         'project_id' => $file->getGroup()->getGroupId(),
+                                                   array('group_id' => $file->getGroup()->getGroupId(),
                                                          'item_id'    => $_id));
             return true;
         }
@@ -592,11 +585,8 @@ class FRSFileFactory extends Error {
             if (rename($stagingPath, $file->getFileLocation())) {
                 $dao = $this->_getFRSFileDao();
                 if ($dao->restoreFile($file->getFileID())) {
-                    $um = $this->_getUserManager();
-                    $user = $um->getCurrentUser();
                     $this->_getEventManager()->processEvent('frs_restore_file',
-                                                           array('user_id'    => $user->getId(),
-                                                                 'project_id' => $file->getGroup()->getGroupId(),
+                                                           array('group_id' => $file->getGroup()->getGroupId(),
                                                                  'item_id'    => $file->getFileID()));
                     return true;
                 }

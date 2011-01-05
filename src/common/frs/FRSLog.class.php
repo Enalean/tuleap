@@ -21,23 +21,34 @@
 require_once('common/dao/FRSLogDao.class.php');
 
 class FRSLog {
-    
+
+    var $dao;
+
     protected function __construct() {
         $em = EventManager::instance();
-        $eventToListen = array('frs_create_package',
-                               'frs_update_package', 
-                               'frs_delete_package', 
-                               'frs_create_release',
-                               'frs_update_release', 
-                               'frs_delete_release', 
-                               'frs_create_file',
-                               'frs_update_file', 
-                               'frs_delete_file', 
-                               'frs_restore_file'
+        $packageEventToListen = array('frs_create_package',
+                                      'frs_update_package', 
+                                      'frs_delete_package'
         );
+        foreach($packageEventToListen as $event) {
+            $em->addListener($event, $this, 'addLogPackage', true, 0);
+        }
 
-        foreach($eventToListen as $event) {
-            $em->addListener($event, $this, 'addLog', true, 0);
+        $releaseEventToListen = array('frs_create_release',
+                                      'frs_update_release', 
+                                      'frs_delete_release'
+        );
+        foreach($releaseEventToListen as $event) {
+            $em->addListener($event, $this, 'addLogRelease', true, 0);
+        }
+
+        $fileEventToListen = array('frs_create_file',
+                                   'frs_update_file', 
+                                   'frs_delete_file', 
+                                   'frs_restore_file'
+        );
+        foreach($fileEventToListen as $event) {
+            $em->addListener($event, $this, 'addLogFile', true, 0);
         }
     }
 
@@ -50,14 +61,18 @@ class FRSLog {
         return self::$_instance;
     }
 
-
     /**
-     * Process the event add_log
+     * Add log for events on FRSPackage
+     *
+     * @param String $event
+     * @param Array $params
+     *
+     * @return void
      */
-    function addLog($event, $params) {
-        $userID = $params['user_id'];
-        $projectID = $params['project_id'];
-        $itemID = $params['item_id'];
+    function addLogPackage($event, $params) {
+        $userID    = $this->_getCurrentUser()->getId();
+        $projectID = $params['group_id'];
+        $itemID    = $params['item_id'];
         switch ($event) {
             case 'frs_create_package' :
                 $actionID = FRSPackage::EVT_CREATE;
@@ -68,6 +83,23 @@ class FRSLog {
             case 'frs_delete_package' :
                 $actionID = FRSPackage::EVT_DELETE;
                 break;
+        }
+        $this->addLog($userID, $projectID, $itemID, $actionID);
+    }
+
+    /**
+     * Add log for events on FRSRelease
+     *
+     * @param String $event
+     * @param Array $params
+     *
+     * @return void
+     */
+    function addLogRelease($event, $params) {
+        $userID    = $this->_getCurrentUser()->getId();
+        $projectID = $params['group_id'];
+        $itemID    = $params['item_id'];
+        switch ($event) {
             case 'frs_create_release' :
                 $actionID = FRSRelease::EVT_CREATE;
                 break;
@@ -77,6 +109,23 @@ class FRSLog {
             case 'frs_delete_release' :
                 $actionID = FRSRelease::EVT_DELETE;
                 break;
+        }
+        $this->addLog($userID, $projectID, $itemID, $actionID);
+    }
+
+    /**
+     * Add log for events on FRSFile
+     *
+     * @param String $event
+     * @param Array $params
+     *
+     * @return void
+     */
+    function addLogFile($event, $params) {
+        $userID    = $this->_getCurrentUser()->getId();
+        $projectID = $params['group_id'];
+        $itemID    = $params['item_id'];
+        switch ($event) {
             case 'frs_create_file' :
                 $actionID = FRSFile::EVT_CREATE;
                 break;
@@ -90,8 +139,39 @@ class FRSLog {
                 $actionID = FRSFile::EVT_RESTORE;
                 break;
         }
-        $dao = new FRSLogDao(CodendiDataAccess::instance());
+        $this->addLog($userID, $projectID, $itemID, $actionID);
+    }
+
+    /**
+     * Obtain an instance of FRSLogDao
+     *
+     * @return FRSLogDao
+     */
+    function _getFRSLogDao() {
+        if (!$this->dao) {
+            $this->dao = new FRSLogDao(CodendiDataAccess::instance());
+        }
+        return $this->dao;
+    }
+
+    /**
+     * Store the event in DB
+     *
+     * @return void
+     */
+    function addLog($userID, $projectID, $itemID, $actionID) {
+        $dao = $this->_getFRSLogDao();
         $dao->addLog($userID, $projectID, $itemID, $actionID);
+    }
+
+    /**
+     * Obtain the current user
+     *
+     * @return User
+     */
+    function _getCurrentUser() {
+        $um = UserManager::instance();
+        return $um->getCurrentUser();
     }
 
 }
