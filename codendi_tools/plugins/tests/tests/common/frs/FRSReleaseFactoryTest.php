@@ -23,7 +23,7 @@ require_once('common/frs/FRSReleaseFactory.class.php');
 
 Mock::generate('User');
 Mock::generate('UserManager');
-Mock::generatePartial('FRSReleaseFactory', 'FRSReleaseFactoryTestVersion', array('getPermissionsManager', 'getUserManager'));
+Mock::generatePartial('FRSReleaseFactory', 'FRSReleaseFactoryTestVersion', array('getUserManager'));
 
 class FRSReleaseFactoryTest extends UnitTestCase {
 

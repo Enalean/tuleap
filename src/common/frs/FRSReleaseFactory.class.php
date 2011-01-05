@@ -285,30 +285,33 @@ class FRSReleaseFactory {
     protected function userCanAdmin($user, $groupId) {
         return ($user->isSuperUser() || $user->isMember($groupId, 'R2') || $user->isMember($groupId, 'A'));
     }
-	
-	/** return true if user has Read or Update permission on this release 
-	 * @param group_id: the package this release is in
-	 * @param release_id: the release id 
-	 * @param user_id: if not given or false take the current user
+
+    /**
+     * Return true if user has Read or Update permission on this release
+     *
+	 * @param Integer $group_id   The project the release is in
+     * @param Integer $package_id The package this release is in
+	 * @param Integer $release_id The release id
+	 * @param Integer $user_id    If not given or false take the current user
+     *
+     * @return Boolean
      */ 
-	function userCanRead($group_id,$package_id,$release_id,$user_id=false) {
-        $pm = $this->getPermissionsManager();
+	function userCanRead($group_id, $package_id, $release_id, $user_id=false) {
         $um = $this->getUserManager();
-	    if (! $user_id) {
-            $user =& $um->getCurrentUser();
-            $user_id = $user->getId();
+	    if (!$user_id) {
+            $user = $um->getCurrentUser();
         } else {
-            $user =& $um->getUserById($user_id);    
+            $user = $um->getUserById($user_id);    
         }
         if ($this->userCanAdmin($user, $group_id)) {
             return true;
         } else {
-            if($pm->isPermissionExist($release_id, 'RELEASE_READ')){
-                $ok = $user->isSuperUser() 
-                    || $pm->userHasPermission($release_id, 'RELEASE_READ', $user->getUgroups($group_id, array()));
-            } else{
-                $frspf =& $this->_getFRSPackageFactory();
-                $ok = $frspf->userCanRead($group_id, $package_id, $user_id);
+            $pm = $this->getPermissionsManager();
+            if ($pm->isPermissionExist($release_id, 'RELEASE_READ')) {
+                $ok = $pm->userHasPermission($release_id, 'RELEASE_READ', $user->getUgroups($group_id, array()));
+            } else {
+                $frspf = $this->_getFRSPackageFactory();
+                $ok    = $frspf->userCanRead($group_id, $package_id, $user->getId());
             }
             return $ok;
         }
