@@ -95,6 +95,16 @@ function logs_display($sql, $span, $field, $title='') {
 }
 
 function frs_logs_extract($project,$span,$who) {
+    /*
+     * This request is used to obtain FRS actions log such as package, release or file : creation, update or deletion.
+     * Each SELECT statement is used to obtain logs related to an FRS element type.
+     *    SELECT #1 : Creation, update and deletion of packages.
+     *    SELECT #2 : Creation, update and deletion of releases.
+     *    SELECT #3 : Creation, update and deletion of files.
+     *    SELECT #4 : Restoration of files.
+     * Each CASE statement is used to replace log.action_id by text description corresponding to the action.
+     * So don't worry if this request seem so big and so hard to understand in fact it's a relatively simple union of selects.
+     */
     $sql = "    SELECT log.log_id, log.time AS time, user.user_name AS user_name, user.realname AS realname, user.email AS email, frs_package.name AS title,".
            "        CASE ".
            "        WHEN log.action_id = ".FRSPackage::EVT_CREATE." THEN '".$GLOBALS['Language']->getText('project_stats_source_code_access_utils','frs_create_package')."'".
