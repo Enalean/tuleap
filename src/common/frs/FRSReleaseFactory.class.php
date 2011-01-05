@@ -281,6 +281,10 @@ class FRSReleaseFactory {
     function _getFRSFileFactory() {
         return new FRSFileFactory();
     }
+
+    protected function userCanAdmin($user, $groupId) {
+        return ($user->isSuperUser() || $user->isMember($groupId, 'R2') || $user->isMember($groupId, 'A'));
+    }
 	
 	/** return true if user has Read or Update permission on this release 
 	 * @param group_id: the package this release is in
@@ -288,22 +292,26 @@ class FRSReleaseFactory {
 	 * @param user_id: if not given or false take the current user
      */ 
 	function userCanRead($group_id,$package_id,$release_id,$user_id=false) {
-        $pm =& PermissionsManager::instance();
-        $um =& UserManager::instance();
+        $pm = $this->getPermissionsManager();
+        $um = $this->getUserManager();
 	    if (! $user_id) {
             $user =& $um->getCurrentUser();
             $user_id = $user->getId();
         } else {
             $user =& $um->getUserById($user_id);    
         }
-        if($pm->isPermissionExist($release_id, 'RELEASE_READ')){
-        	$ok = $user->isSuperUser() 
-              	|| $pm->userHasPermission($release_id, 'RELEASE_READ', $user->getUgroups($group_id, array()));
-		} else{
-        	$frspf =& $this->_getFRSPackageFactory();
-        	$ok = $frspf->userCanRead($group_id, $package_id, $user_id);
+        if ($this->userCanAdmin($user, $group_id)) {
+            return true;
+        } else {
+            if($pm->isPermissionExist($release_id, 'RELEASE_READ')){
+                $ok = $user->isSuperUser() 
+                    || $pm->userHasPermission($release_id, 'RELEASE_READ', $user->getUgroups($group_id, array()));
+            } else{
+                $frspf =& $this->_getFRSPackageFactory();
+                $ok = $frspf->userCanRead($group_id, $package_id, $user_id);
+            }
+            return $ok;
         }
-        return $ok;
 	}
 
     /** return true if user has Update permission on this release 
@@ -381,6 +389,13 @@ class FRSReleaseFactory {
      */
     function getPermissionsManager() {
         return PermissionsManager::instance();
+    }
+
+    /**
+     * @return UserManager
+     */
+    function getUserManager() {
+        return UserManager::instance();
     }
 }
 ?>
