@@ -893,9 +893,7 @@ CREATE TABLE frs_log (
   item_id int(11) NOT NULL,
   action_id int(11) NOT NULL,
   PRIMARY KEY (log_id),
-  KEY idx_frs_log_time (time),
-  KEY idx_frs_log_group (group_id),
-  KEY idx_frs_log_action_item (action_id, item_id)
+  KEY idx_frs_log_group_item (group_id, item_id)
 );
 
 #
