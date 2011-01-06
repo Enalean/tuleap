@@ -250,56 +250,75 @@ class FRSPackageFactory {
             return 1;
         }
     }
-    
-	/** return true if user has Read or Update permission on this package 
-	 * @param group_id: the project this package is in
-	 * @param package_id: the package id 
-	 * @param user_id: if not given or false take the current user
-	**/ 
-	function userCanRead($group_id,$package_id,$user_id=false) {
+
+    /**
+     * Test is user can administrate FRS service of given project
+     *
+     * @param User    $user    User to test
+     * @param Integer $groupId Project
+     *
+     * @return Boolean
+     */
+    protected function userCanAdmin($user, $groupId) {
+        return ($user->isSuperUser() || $user->isMember($groupId, 'R2') || $user->isMember($groupId, 'A'));
+    }
+
+	/**
+     * Return true if user has Read or Update permission on this package
+     *
+	 * @param Integer $group_id   The project this package is in
+	 * @param Integer $package_id The package id
+	 * @param Integer $user_id    If not given or false take the current user
+     *
+     * @return Boolean
+     */ 
+	function userCanRead($group_id, $package_id, $user_id=false) {
         $pm = $this->getPermissionsManager();
         $um = $this->getUserManager();
 	    if (! $user_id) {
-            $user =& $um->getCurrentUser();
+            $user = $um->getCurrentUser();
         } else {
-            $user =& $um->getUserById($user_id);    
+            $user = $um->getUserById($user_id);    
         }
-        $ok = $user->isSuperUser() || $user->isMember($group_id,'R2') || $user->isMember($group_id,'A')
-              || $pm->userHasPermission($package_id, 'PACKAGE_READ', $user->getUgroups($group_id, array()))
-              || !$pm->isPermissionExist($package_id, 'PACKAGE_READ');
+        $ok = $this->userCanAdmin($user, $group_id)
+              || $pm->userHasPermission($package_id, FRSPackage::PERM_READ, $user->getUgroups($group_id, array()))
+              || !$pm->isPermissionExist($package_id, FRSPackage::PERM_READ);
         return $ok;
 	}
 
-    /** return true if user has Update permission on this package 
-     * @param int $group_id the project this package is in
-     * @param int $package_id the ID of the package to update
-     * @param int $user_id if not given or false, take the current user
-     * @return boolean true of user can update the package $package_id, false otherwise
+    /**
+     * Return true if user has Update permission on this package
+     *
+     * @param Integer $group_id   The project this package is in
+     * @param Integer $package_id The ID of the package to update
+     * @param Integer $user_id if Not given or false, take the current user
+     *
+     * @return Boolean true of user can update the package $package_id, false otherwise
      */ 
-	function userCanUpdate($group_id,$package_id,$user_id=false) {
+	function userCanUpdate($group_id, $package_id, $user_id=false) {
         return $this->userCanCreate($group_id, $user_id);
 	}
-    
-    /** 
+
+    /**
      * Returns true if user has permissions to Create packages
      * 
      * NOTE : At this time, there is no difference between creation and update, but in the future, permissions could be added
      * For the moment, only super admin, project admin (A) and file admin (R2) can create releases
      * 
-     * @param int $group_id the project ID this release is in
-     * @param int $user_id the ID of the user. If not given or false, take the current user
-     * @return boolean true if the user has permission to create packages, false otherwise
+     * @param Integer $group_id The project ID this release is in
+     * @param Integer $user_id  The ID of the user. If not given or false, take the current user
+     *
+     * @return Boolean true if the user has permission to create packages, false otherwise
      */ 
-    function userCanCreate($group_id,$user_id=false) {
+    function userCanCreate($group_id, $user_id=false) {
         $pm = $this->getPermissionsManager();
         $um = $this->getUserManager();
         if (! $user_id) {
-            $user =& $um->getCurrentUser();
+            $user = $um->getCurrentUser();
         } else {
-            $user =& $um->getUserById($user_id);    
+            $user = $um->getUserById($user_id);    
         }
-        $ok = $user->isSuperUser() || $user->isMember($group_id,'R2') || $user->isMember($group_id,'A');
-        return $ok;
+        return $this->userCanAdmin($user, $group_id);
     }
 
     /**
