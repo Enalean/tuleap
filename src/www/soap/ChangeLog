@@ -17,7 +17,9 @@
 	  reference_md5 MD5 of the file you submit. If not blank, it will be compared to the value computed on the server and if values differ, an error will be raised.
 
 	* getFile no longer returns deleted files.
-	
+
+	* getFiles has three new columns in the result : computed_md5, reference_md5 and user_id.
+
 	What's new ?
 	============
 	Methods
