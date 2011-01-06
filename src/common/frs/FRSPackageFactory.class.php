@@ -204,6 +204,8 @@ class FRSPackageFactory {
         $id = $dao->createFromArray($data_array);
         if ($id) {
             $data_array['package_id'] = $id;
+            $package = new FRSPackage($data_array);   
+            $this->setDefaultPermissions($package);     
             $this->getEventManager()->processEvent('frs_create_package',
                                                    array('group_id' => $data_array['group_id'],
                                                          'item_id' => $id));
