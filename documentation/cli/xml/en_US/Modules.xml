@@ -1348,7 +1348,7 @@ File retrieved successfully.
                     <example>
                         <title>addFile command</title>
                         <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[ounis@linux codendi cli ]$ ../codendi.php frs addFile --package_id=197 --release_id=143 --local_file=file1
+[ounis@linux codendi cli ]$ ./codendi.php frs addFile --package_id=197 --release_id=143 --local_file=file1
 +--------+
 | Result |
 +--------+
@@ -1465,7 +1465,7 @@ File retrieved successfully.
                     <example>
                         <title>deleteFile command</title>
                         <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[ounis@linux codendi cli ]$ /codendi.php frs deleteFile --package_id=197 --release_id=143 --file_id=420
+[ounis@linux codendi cli ]$ ./codendi.php frs deleteFile --package_id=197 --release_id=143 --file_id=420
 +--------+
 | Result |
 +--------+
