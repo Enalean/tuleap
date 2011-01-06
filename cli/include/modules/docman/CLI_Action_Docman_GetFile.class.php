@@ -17,6 +17,7 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 require_once(CODENDI_CLI_DIR.'/CLI_Action.class.php');
+require_once(CODENDI_CLI_DIR.'lib/PHP_BigFile.class.php');
 
 class CLI_Action_Docman_GetFile extends CLI_Action {
     function CLI_Action_Docman_GetFile() {
@@ -110,7 +111,7 @@ class CLI_Action_Docman_GetFile extends CLI_Action {
             unset($callParams['chunk_size']);
             
             //Check the md5sum
-            $localChecksum = md5_file($output);
+            $localChecksum = PHP_BigFile::getMd5Sum($output);
             $remoteChecksum = $GLOBALS['soap']->call('getDocmanFileMD5sum', $callParams, $use_extra_params);
             if ($localChecksum == $remoteChecksum) {
                 echo "File downloaded successfully\n";

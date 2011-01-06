@@ -6,6 +6,7 @@
 */
 
 require_once(CODENDI_CLI_DIR.'/CLI_Action.class.php');
+require_once(CODENDI_CLI_DIR.'/lib/PHP_BigFile.class.php');
 
 class CLI_Action_Frs_AddFile extends CLI_Action {
     function CLI_Action_Frs_AddFile() {
@@ -84,7 +85,7 @@ class CLI_Action_Frs_AddFile extends CLI_Action {
                     //$path = PHP_BigFile::stream(realpath($localFileLocation));
                     $path = realpath($localFileLocation);
                     $GLOBALS['LOG']->add('Calculating md5 checksum of the file ...');
-                    $loaded_params['soap']['reference_md5'] = md5_file($path);
+                    $loaded_params['soap']['reference_md5'] = PHP_BigFile::getMd5Sum(($path);
                     $GLOBALS['LOG']->add('Md5 checksum calculated.');
                     $offset = 0;
                     $chunkSize = $GLOBALS['soap']->getFileChunkSize();

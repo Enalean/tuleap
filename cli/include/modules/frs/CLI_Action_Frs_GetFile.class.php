@@ -6,6 +6,7 @@
 */
 
 require_once(CODENDI_CLI_DIR.'/CLI_Action.class.php');
+require_once(CODENDI_CLI_DIR.'lib/PHP_BigFile.class.php');
 
 class CLI_Action_Frs_GetFile extends CLI_Action {
 
@@ -112,7 +113,7 @@ class CLI_Action_Frs_GetFile extends CLI_Action {
             
             $fileInfo = $GLOBALS['soap']->call('getFileInfo', $callParams, $use_extra_params);
             if ($fileInfo->computed_md5) {
-                $localChecksum = md5_file($output);
+                $localChecksum = PHP_BigFile::getMd5Sum($output);
                 if ($localChecksum != $fileInfo->computed_md5) {
                     exit_error("File transfer faild: md5 checksum locally computed doesn't match remote one ($fileInfo->computed_md5)");
                 }

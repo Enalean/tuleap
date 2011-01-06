@@ -6,6 +6,7 @@
  */
 
 require_once('CLI_Action_Docman_CreateDocument.class.php');
+require_once(CODENDI_CLI_DIR.'/lib/PHP_BigFile.class.php');
 
 class CLI_Action_Docman_CreateFile extends CLI_Action_Docman_CreateDocument  {
 
@@ -46,7 +47,7 @@ class CLI_Action_Docman_CreateFile extends CLI_Action_Docman_CreateDocument  {
             'item_id'  => $item_id,
         );
 
-        $local_checksum = md5_file($filename);
+        $local_checksum = PHP_BigFile::getMd5Sum($filename);
 
         // For very big files, the checksum can take several minutes to be computed, so we set the socket timeout to 10 minutes
         $default_socket_timeout = ini_set('default_socket_timeout', 600);
