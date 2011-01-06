@@ -258,7 +258,7 @@ class FRSPackageFactory {
 	**/ 
 	function userCanRead($group_id,$package_id,$user_id=false) {
         $pm = $this->getPermissionsManager();
-        $um = UserManager::instance();
+        $um = $this->getUserManager();
 	    if (! $user_id) {
             $user =& $um->getCurrentUser();
         } else {
@@ -278,7 +278,7 @@ class FRSPackageFactory {
      */ 
 	function userCanUpdate($group_id,$package_id,$user_id=false) {
         $pm = $this->getPermissionsManager();
-        $um = UserManager::instance();
+        $um = $this->getUserManager();
 	    if (! $user_id) {
             $user =& $um->getCurrentUser();
         } else {
@@ -301,7 +301,7 @@ class FRSPackageFactory {
      */ 
     function userCanCreate($group_id,$user_id=false) {
         $pm = $this->getPermissionsManager();
-        $um = UserManager::instance();
+        $um = $this->getUserManager();
         if (! $user_id) {
             $user =& $um->getCurrentUser();
         } else {
