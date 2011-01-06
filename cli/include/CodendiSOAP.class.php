@@ -42,7 +42,7 @@ class CodendiSOAP extends SoapClient {
 		$this->fileChunkSize = 6000000; // ~6 Mo;
 		
 		// Try to find a dir where to put the session file
-		/*if (array_key_exists("HOME", $_ENV)) {
+		if (array_key_exists("HOME", $_ENV)) {
 
 		$session_dir = 0;
 		if (array_key_exists("HOME", $_ENV)) {
@@ -50,10 +50,8 @@ class CodendiSOAP extends SoapClient {
 		} else if (array_key_exists("HOMEPATH", $_ENV) && array_key_exists("HOMEDRIVE", $_ENV)) {		// For Windows
 			$session_dir = $_ENV["HOMEDRIVE"]."\\".$_ENV["HOMEPATH"]."\\";
 
-		}*/
-		
-		$session_dir = "/prj/codex/terzino/servers/sources/enhancement/cli/";
-		
+		}
+				
 		$this->session_file = $session_dir.".codendirc";
 		if (file_exists($this->session_file)) {
  			$this->readSession();
