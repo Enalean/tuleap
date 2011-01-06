@@ -173,17 +173,7 @@ class FRSPackageFactory {
         
         return $dar->valid();
     }
-    
-    
-    var $dao;
-    function _getFRSPackageDao() {
-        if (!$this->dao) {
-            $this->dao =& new FRSPackageDao(CodendiDataAccess::instance(), $this->STATUS_DELETED);
-        }
-        return $this->dao;
-    }
-    
-    
+        
     function update($data) {
         if (is_a($data, 'FRSPackage')) {
             $data = $data->toArray();
@@ -349,6 +339,21 @@ class FRSPackageFactory {
      */
     function getPermissionsManager() {
         return PermissionsManager::instance();
+    }
+
+    /**
+     * @return UserManager
+     */
+    function getUserManager() {
+        return UserManager::instance();
+    }
+
+    var $dao;
+    function _getFRSPackageDao() {
+        if (!$this->dao) {
+            $this->dao = new FRSPackageDao(CodendiDataAccess::instance(), $this->STATUS_DELETED);
+        }
+        return $this->dao;
     }
 }
 
