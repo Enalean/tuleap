@@ -8,6 +8,7 @@ require_once('common/frs/FRSRelease.class.php');
 require_once('common/frs/FRSReleaseFactory.class.php');
 require_once('common/frs/FRSFile.class.php');
 require_once('common/frs/FRSFileFactory.class.php');
+require_once('common/include/lib/PHP_BigFile.class.php');
 
 // define fault code constants
 define('invalid_package_fault', '3017');
@@ -1110,7 +1111,7 @@ function addUploadedFile($sessionKey,$group_id,$package_id,$release_id,$filename
         $file_fact = new FRSFileFactory();
         if ($file_fact->userCanAdd($group_id)) {
             if (! $file_fact->isFileBaseNameExists($filename, $release->getReleaseID(), $group_id)) {
-                $computed_md5 = file_utils_get_md5sum($GLOBALS['ftp_incoming_dir'] . '/' . $filename);
+                $computed_md5 = PHP_BigFile::getMd5Sum($GLOBALS['ftp_incoming_dir'] . '/' . $filename);
                 if ($file_fact->compareMd5Checksums($computed_md5, $reference_md5)) {
                     $file_id = $file_fact->createFromIncomingFile(basename($filename),$release_id,$type_id,$processor_id,$computed_md5,$reference_md5);
                     if (! $file_id) {
