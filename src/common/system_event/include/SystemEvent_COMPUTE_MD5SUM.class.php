@@ -102,7 +102,7 @@ class SystemEvent_COMPUTE_MD5SUM extends SystemEvent {
      * @param String $filePath
      */
     public function computeFRSMd5Sum($filePath) {
-        return file_utils_get_md5sum($filePath);
+        return PHP_BigFile::getMd5Sum($filePath);
     }
     /**
      * 

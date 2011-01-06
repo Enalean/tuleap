@@ -204,7 +204,7 @@ class WebDAVUtils {
     }
     
     function getIncomingFileMd5Sum($file) {
-        return file_utils_get_md5sum($file);
+        return PHP_BigFile::getMd5Sum($file);
     }
 
 }

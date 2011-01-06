@@ -90,6 +90,20 @@ class PHP_BigFile {
     }
     
     /**
+     * Workaround for the 2GB limitation
+     * We can not use the php function md5_file
+     * 
+     * @param string $file Path to the file
+     * 
+     * @return string the md5sum of the file $file
+     */
+    public static function getMd5Sum($file) {
+        //if filename containing spaces
+        $filename = escapeshellarg($file);
+        return trim(`md5sum $filename| awk '{ print $1 }'`);
+    }
+    
+    /**
      * Tell if $file is a file
      * Handle big files (is_file() doesn't)
      * @see http://us3.php.net/manual/fr/function.is-file.php#81316
