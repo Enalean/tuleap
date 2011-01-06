@@ -42,8 +42,6 @@ class CodendiSOAP extends SoapClient {
 		$this->fileChunkSize = 6000000; // ~6 Mo;
 		
 		// Try to find a dir where to put the session file
-		if (array_key_exists("HOME", $_ENV)) {
-
 		$session_dir = 0;
 		if (array_key_exists("HOME", $_ENV)) {
 			$session_dir = $_ENV["HOME"]."/";
