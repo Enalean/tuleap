@@ -23,61 +23,48 @@ require_once('common/frs/FRSReleaseFactory.class.php');
 
 Mock::generate('User');
 Mock::generate('UserManager');
-Mock::generatePartial('FRSReleaseFactory', 'FRSReleaseFactoryTestVersion', array('getUserManager'));
+Mock::generate('PermissionsManager');
+Mock::generate('FRSPackageFactory');
+Mock::generatePartial('FRSReleaseFactory', 'FRSReleaseFactoryTestVersion', array('getUserManager', 'getPermissionsManager', '_getFRSPackageFactory'));
 
 class FRSReleaseFactoryTest extends UnitTestCase {
+    protected $group_id   = 12;
+    protected $package_id = 34;
+    protected $release_id = 56;
+    protected $user_id    = 78;
 
     function testFileReleaseAdminHasAlwaysAccessToReleases() {
-        // Values
-        $group_id   = 12;
-        $package_id = 34;
-        $release_id = 56;
-        $user_id    = 78;
-
         // Setup test
         $frsrf = new FRSReleaseFactoryTestVersion($this);
 
         $user = new MockUser($this);
         $user->setReturnValue('isSuperUser', false);
-        $user->setReturnValue('isMember', true, array($group_id, 'R2'));
+        $user->setReturnValue('isMember', true, array($this->group_id, 'R2'));
 
         $um = new MockUserManager($this);
-        $um->expectOnce('getUserById', array($user_id));
+        $um->expectOnce('getUserById', array($this->user_id));
         $um->setReturnValue('getUserById', $user);
         $frsrf->setReturnValue('getUserManager', $um);
         
-        $this->assertTrue($frsrf->userCanRead($group_id, $package_id, $release_id, $user_id));
+        $this->assertTrue($frsrf->userCanRead($this->group_id, $this->package_id, $this->release_id, $this->user_id));
     }
 
     function testProjectAdminHasAlwaysAccessToReleases() {
-        // Values
-        $group_id   = 12;
-        $package_id = 34;
-        $release_id = 56;
-        $user_id    = 78;
-
         // Setup test
         $frsrf = new FRSReleaseFactoryTestVersion($this);
 
         $user = new MockUser($this);
         $user->setReturnValue('isSuperUser', false);
-        $user->setReturnValue('isMember', true, array($group_id, 'A'));
+        $user->setReturnValue('isMember', true, array($this->group_id, 'A'));
 
         $um = new MockUserManager($this);
-        $um->expectOnce('getUserById', array($user_id));
         $um->setReturnValue('getUserById', $user);
         $frsrf->setReturnValue('getUserManager', $um);
         
-        $this->assertTrue($frsrf->userCanRead($group_id, $package_id, $release_id, $user_id));
+        $this->assertTrue($frsrf->userCanRead($this->group_id, $this->package_id, $this->release_id, $this->user_id));
     }
 
     function testSiteAdminHasAlwaysAccessToReleases() {
-        // Values
-        $group_id   = 12;
-        $package_id = 34;
-        $release_id = 56;
-        $user_id    = 78;
-
         // Setup test
         $frsrf = new FRSReleaseFactoryTestVersion($this);
 
@@ -85,13 +72,80 @@ class FRSReleaseFactoryTest extends UnitTestCase {
         $user->setReturnValue('isSuperUser', true);
 
         $um = new MockUserManager($this);
-        $um->expectOnce('getUserById', array($user_id));
         $um->setReturnValue('getUserById', $user);
         $frsrf->setReturnValue('getUserManager', $um);
         
-        $this->assertTrue($frsrf->userCanRead($group_id, $package_id, $release_id, $user_id));
+        $this->assertTrue($frsrf->userCanRead($this->group_id, $this->package_id, $this->release_id, $this->user_id));
     }
 
+    protected function _userCanReadWhenNoPermsOnRelease($canReadPackage) {
+        // Setup test
+        $frsrf = new FRSReleaseFactoryTestVersion($this);
+
+        // User
+        $user = new MockUser($this);
+        $user->setReturnValue('getId', $this->user_id);
+        $um = new MockUserManager($this);
+        $um->setReturnValue('getUserById', $user);
+        $frsrf->setReturnValue('getUserManager', $um);
+        
+        // Perms
+        $pm = new MockPermissionsManager($this);
+        $pm->expectOnce('isPermissionExist', array($this->release_id, 'RELEASE_READ'));
+        $pm->setReturnValue('isPermissionExist', false);
+        $frsrf->setReturnValue('getPermissionsManager', $pm);
+        
+        // PackageFactory
+        $frspf = new MockFRSPackageFactory($this);
+        $frspf->expectOnce('userCanRead', array($this->group_id, $this->package_id, $this->user_id));
+        $frspf->setReturnValue('userCanRead', $canReadPackage);
+        $frsrf->setReturnValue('_getFRSPackageFactory', $frspf);
+
+        return $frsrf;
+    }
+
+    function testUserCanReadWhenNoPermsOnReleaseButCanReadPackage() {
+        $frsrf = $this->_userCanReadWhenNoPermsOnRelease(true);
+        $this->assertTrue($frsrf->userCanRead($this->group_id, $this->package_id, $this->release_id, $this->user_id));
+    }
+
+    function testUserCanReadWhenNoPermsOnReleaseButCannotReadPackage() {
+        $frsrf = $this->_userCanReadWhenNoPermsOnRelease(false);
+        $this->assertFalse($frsrf->userCanRead($this->group_id, $this->package_id, $this->release_id, $this->user_id));
+    }
+
+    protected function _userCanReadWithSpecificPerms($canReadRelease) {
+        // Setup test
+        $frsrf = new FRSReleaseFactoryTestVersion($this);
+
+        // User
+        $user = new MockUser($this);
+        $user->expectOnce('getUgroups', array($this->group_id, array()));
+        $user->setReturnValue('getUgroups', array(1,2,76));
+        $um = new MockUserManager($this);
+        $um->setReturnValue('getUserById', $user);
+        $frsrf->setReturnValue('getUserManager', $um);
+        
+        // Perms
+        $pm = new MockPermissionsManager($this);
+        $pm->expectOnce('isPermissionExist', array($this->release_id, 'RELEASE_READ'));
+        $pm->setReturnValue('isPermissionExist', true);
+        $pm->expectOnce('userHasPermission', array($this->release_id, 'RELEASE_READ', array(1,2,76)));
+        $pm->setReturnValue('userHasPermission', $canReadRelease);
+        $frsrf->setReturnValue('getPermissionsManager', $pm);
+        
+        return $frsrf;
+    }
+
+    function testUserCanReadWithSpecificPermsHasAccess() {
+        $frsrf = $this->_userCanReadWithSpecificPerms(true);
+        $this->assertTrue($frsrf->userCanRead($this->group_id, $this->package_id, $this->release_id, $this->user_id));
+    }
+
+    function testUserCanReadWithSpecificPermsHasNoAccess() {
+        $frsrf = $this->_userCanReadWithSpecificPerms(false);
+        $this->assertFalse($frsrf->userCanRead($this->group_id, $this->package_id, $this->release_id, $this->user_id));
+    }
 }
 
 ?>

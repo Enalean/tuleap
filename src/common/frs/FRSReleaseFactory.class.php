@@ -307,8 +307,8 @@ class FRSReleaseFactory {
             return true;
         } else {
             $pm = $this->getPermissionsManager();
-            if ($pm->isPermissionExist($release_id, 'RELEASE_READ')) {
-                $ok = $pm->userHasPermission($release_id, 'RELEASE_READ', $user->getUgroups($group_id, array()));
+            if ($pm->isPermissionExist($release_id, FRSRelease::PERM_READ)) {
+                $ok = $pm->userHasPermission($release_id, FRSRelease::PERM_READ, $user->getUgroups($group_id, array()));
             } else {
                 $frspf = $this->_getFRSPackageFactory();
                 $ok    = $frspf->userCanRead($group_id, $package_id, $user->getId());
