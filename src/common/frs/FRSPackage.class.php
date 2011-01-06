@@ -190,7 +190,8 @@ class FRSPackage extends Error {
      * @return boolean true if user has Read access to this package, false otherwise
 	 */ 
 	function userCanRead($user_id=0) {
-        return FRSPackageFactory::userCanRead($this->getGroupID(), $this->getPackageID(), $user_id);
+        $frspf = new FRSPackageFactory();
+        return $frspf->userCanRead($this->getGroupID(), $this->getPackageID(), $user_id);
 	}
 
 
