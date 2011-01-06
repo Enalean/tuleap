@@ -48,9 +48,8 @@ class CodendiSOAP extends SoapClient {
 		} else if (array_key_exists("HOMEPATH", $_ENV) && array_key_exists("HOMEDRIVE", $_ENV)) {		// For Windows
 			$session_dir = $_ENV["HOMEDRIVE"]."\\".$_ENV["HOMEPATH"]."\\";
 		}
-		$session_file = $session_dir.".codendirc";
-		if (file_exists($session_file)) {
-			$this->session_file = $session_file;
+		$this->session_file = $session_dir.".codendirc";
+		if (file_exists($this->session_file)) {
  			$this->readSession();
 		}
 	}
