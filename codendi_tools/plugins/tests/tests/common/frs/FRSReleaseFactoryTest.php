@@ -154,7 +154,6 @@ class FRSReleaseFactoryTest extends UnitTestCase {
     //
     // userCanUpdate
     //
-    /*
     function testFileReleaseAdminCanAlwaysUpdateReleases() {
         // Setup test
         $frsrf = new FRSReleaseFactoryTestVersion($this);
@@ -168,7 +167,7 @@ class FRSReleaseFactoryTest extends UnitTestCase {
         $um->setReturnValue('getUserById', $user);
         $frsrf->setReturnValue('getUserManager', $um);
         
-        $this->assertTrue($frsrf->userCanUpdate($this->group_id, $this->package_id, $this->release_id, $this->user_id));
+        $this->assertTrue($frsrf->userCanUpdate($this->group_id, $this->release_id, $this->user_id));
     }
 
     function testProjectAdminCanAlwaysUpdateReleases() {
@@ -183,7 +182,7 @@ class FRSReleaseFactoryTest extends UnitTestCase {
         $um->setReturnValue('getUserById', $user);
         $frsrf->setReturnValue('getUserManager', $um);
         
-        $this->assertTrue($frsrf->userCanUpdate($this->group_id, $this->package_id, $this->release_id, $this->user_id));
+        $this->assertTrue($frsrf->userCanUpdate($this->group_id, $this->release_id, $this->user_id));
     }
 
     function testSiteAdminCanAlwaysUpdateReleases() {
@@ -197,9 +196,21 @@ class FRSReleaseFactoryTest extends UnitTestCase {
         $um->setReturnValue('getUserById', $user);
         $frsrf->setReturnValue('getUserManager', $um);
         
-        $this->assertTrue($frsrf->userCanUpdate($this->group_id, $this->package_id, $this->release_id, $this->user_id));
+        $this->assertTrue($frsrf->userCanUpdate($this->group_id, $this->release_id, $this->user_id));
     }
-    */
+
+    function testMereMortalCannotUpdateReleases() {
+        // Setup test
+        $frsrf = new FRSReleaseFactoryTestVersion($this);
+
+        $user = new MockUser($this);
+
+        $um = new MockUserManager($this);
+        $um->setReturnValue('getUserById', $user);
+        $frsrf->setReturnValue('getUserManager', $um);
+        
+        $this->assertFalse($frsrf->userCanUpdate($this->group_id, $this->release_id, $this->user_id));
+    }
 
     //
     // userCanCreate

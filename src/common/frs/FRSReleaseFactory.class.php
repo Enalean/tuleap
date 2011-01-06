@@ -317,23 +317,17 @@ class FRSReleaseFactory {
         }
 	}
 
-    /** return true if user has Update permission on this release 
-     * @param int $group_id the project this release is in
-     * @param int $release_id the ID of the release to update
-     * @param int $user_id if not given or false, take the current user
-     * @return boolean true if user can update the release $release_id, false otherwise
+    /** 
+     * Return true if user has Update permission on this release 
+     *
+     * @param Integer $group_id   The project this release is in
+     * @param Integer $release_id The ID of the release to update
+     * @param Integer $user_id    If not given or false, take the current user
+     *
+     * @return Boolean true if user can update the release $release_id, false otherwise
      */ 
-	function userCanUpdate($group_id,$release_id,$user_id=false) {
-        $pm = $this->getPermissionsManager();
-        $um = $this->getUserManager();
-	    if (! $user_id) {
-            $user =& $um->getCurrentUser();
-        } else {
-            $user =& $um->getUserById($user_id);    
-        }
-        $ok = $user->isSuperUser() 
-              || $pm->userHasPermission($release_id, 'RELEASE_READ', $user->getUgroups($group_id, array()));
-        return $ok;
+	function userCanUpdate($group_id, $release_id, $user_id=false) {
+        return $this->userCanCreate($group_id, $user_id);
 	}
     
     /** 
@@ -342,20 +336,19 @@ class FRSReleaseFactory {
      * NOTE : At this time, there is no difference between creation and update, but in the future, permissions could be added
      * For the moment, only super admin, project admin (A) and file admin (R2) can create releases
      * 
-     * @param int $group_id the project ID this release is in
-     * @param int $user_id the ID of the user. If not given or false, take the current user
-     * @return boolean true if the user has permission to create releases, false otherwise
+     * @param Integer $group_id The project ID this release is in
+     * @param Integer $user_id  The ID of the user. If not given or false, take the current user
+     *
+     * @return Boolean true if the user has permission to create releases, false otherwise
      */ 
-	function userCanCreate($group_id,$user_id=false) {
-        $pm = $this->getPermissionsManager();
+	function userCanCreate($group_id, $user_id=false) {
         $um = $this->getUserManager();
 	    if (! $user_id) {
-            $user =& $um->getCurrentUser();
+            $user = $um->getCurrentUser();
         } else {
-            $user =& $um->getUserById($user_id);    
+            $user = $um->getUserById($user_id);    
         }
-        $ok = $user->isSuperUser() || $user->isMember($group_id,'R2') || $user->isMember($group_id,'A');
-        return $ok;
+        return $this->userCanAdmin($user, $group_id);
 	}
 
     /**
