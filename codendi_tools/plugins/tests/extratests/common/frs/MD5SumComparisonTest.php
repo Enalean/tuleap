@@ -61,9 +61,8 @@ class MD5SumComparisonTest extends UnitTestCase {
         $endTime = microtime(true);
         $delay = $endTime - $startTime;
         echo "Le delay to compute the md5sum is ".$delay;
-        exec('md5sum  '. $this->readPath, $output, $returnValue);
-        if ($returnValue == 0) {
-            $md5SystemCompute = substr($output[0], 0,32);
+        $md5SystemCompute = trim(`md5sum $this->readPath| awk '{ print $1 }'`);
+        if ($md5SystemCompute) {
             $this->assertIdentical($md5SystemCompute , $md5PhpCompute);
             echo "\nLe md5sum computed is ".$md5SystemCompute."\n";
         } else {
