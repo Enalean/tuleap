@@ -99,7 +99,7 @@ class FRSPackageFactoryTest extends UnitTestCase {
     // userCanRead
     //
 
-    function testFileReleaseAdminHasAlwaysAccess() {
+    function testFileAdminHasAlwaysAccess() {
         // Setup test
         $frsrf = new FRSPackageFactoryTestVersion($this);
 
@@ -200,5 +200,125 @@ class FRSPackageFactoryTest extends UnitTestCase {
         $this->assertTrue($frspf->userCanRead($this->group_id, $this->package_id, $this->user_id));
     }
     
+    //
+    // userCanUpdate
+    //
+
+    function testFileAdminCanAlwaysUpdate() {
+        // Setup test
+        $frspf = new FRSPackageFactoryTestVersion($this);
+
+        $user = new MockUser($this);
+        $user->setReturnValue('isMember', true, array($this->group_id, 'R2'));
+
+        $um = new MockUserManager($this);
+        $um->expectOnce('getUserById', array($this->user_id));
+        $um->setReturnValue('getUserById', $user);
+        $frspf->setReturnValue('getUserManager', $um);
+        
+        $this->assertTrue($frspf->userCanUpdate($this->group_id, $this->package_id, $this->user_id));
+    }
+
+    function testProjectAdminCanAlwaysUpdate() {
+        // Setup test
+        $frspf = new FRSPackageFactoryTestVersion($this);
+
+        $user = new MockUser($this);
+        $user->setReturnValue('isMember', true, array($this->group_id, 'A'));
+
+        $um = new MockUserManager($this);
+        $um->setReturnValue('getUserById', $user);
+        $frspf->setReturnValue('getUserManager', $um);
+        
+        $this->assertTrue($frspf->userCanUpdate($this->group_id, $this->package_id, $this->user_id));
+    }
+
+    function testSiteAdminCanAlwaysUpdate() {
+        // Setup test
+        $frspf = new FRSPackageFactoryTestVersion($this);
+
+        $user = new MockUser($this);
+        $user->setReturnValue('isSuperUser', true);
+
+        $um = new MockUserManager($this);
+        $um->setReturnValue('getUserById', $user);
+        $frspf->setReturnValue('getUserManager', $um);
+        
+        $this->assertTrue($frspf->userCanUpdate($this->group_id, $this->package_id, $this->user_id));
+    }
+
+    function testMereMortalCannotUpdate() {
+        // Setup test
+        $frspf = new FRSPackageFactoryTestVersion($this);
+
+        $user = new MockUser($this);
+
+        $um = new MockUserManager($this);
+        $um->setReturnValue('getUserById', $user);
+        $frspf->setReturnValue('getUserManager', $um);
+        
+        $this->assertFalse($frspf->userCanUpdate($this->group_id, $this->package_id, $this->user_id));
+    }
+
+    //
+    // userCanCreate
+    //
+
+    function testFileAdminCanAlwaysCreate() {
+        // Setup test
+        $frspf = new FRSPackageFactoryTestVersion($this);
+
+        $user = new MockUser($this);
+        $user->setReturnValue('isMember', true, array($this->group_id, 'R2'));
+
+        $um = new MockUserManager($this);
+        $um->expectOnce('getUserById', array($this->user_id));
+        $um->setReturnValue('getUserById', $user);
+        $frspf->setReturnValue('getUserManager', $um);
+        
+        $this->assertTrue($frspf->userCanCreate($this->group_id, $this->user_id));
+    }
+
+    function testProjectAdminCanAlwaysCreate() {
+        // Setup test
+        $frspf = new FRSPackageFactoryTestVersion($this);
+
+        $user = new MockUser($this);
+        $user->setReturnValue('isMember', true, array($this->group_id, 'A'));
+
+        $um = new MockUserManager($this);
+        $um->setReturnValue('getUserById', $user);
+        $frspf->setReturnValue('getUserManager', $um);
+        
+        $this->assertTrue($frspf->userCanCreate($this->group_id, $this->user_id));
+    }
+
+    function testSiteAdminCanAlwaysCreate() {
+        // Setup test
+        $frspf = new FRSPackageFactoryTestVersion($this);
+
+        $user = new MockUser($this);
+        $user->setReturnValue('isSuperUser', true);
+
+        $um = new MockUserManager($this);
+        $um->setReturnValue('getUserById', $user);
+        $frspf->setReturnValue('getUserManager', $um);
+        
+        $this->assertTrue($frspf->userCanCreate($this->group_id, $this->user_id));
+    }
+
+    function testMereMortalCannotCreate() {
+        // Setup test
+        $frspf = new FRSPackageFactoryTestVersion($this);
+
+        $user = new MockUser($this);
+
+        $um = new MockUserManager($this);
+        $um->setReturnValue('getUserById', $user);
+        $frspf->setReturnValue('getUserManager', $um);
+        
+        $this->assertFalse($frspf->userCanCreate($this->group_id, $this->user_id));
+    }
+
 }
 ?>

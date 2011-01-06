@@ -277,16 +277,7 @@ class FRSPackageFactory {
      * @return boolean true of user can update the package $package_id, false otherwise
      */ 
 	function userCanUpdate($group_id,$package_id,$user_id=false) {
-        $pm = $this->getPermissionsManager();
-        $um = $this->getUserManager();
-	    if (! $user_id) {
-            $user =& $um->getCurrentUser();
-        } else {
-            $user =& $um->getUserById($user_id);    
-        }
-        $ok = $user->isSuperUser() 
-              || $pm->userHasPermission($package_id, 'PACKAGE_READ', $user->getUgroups($group_id, array()));
-        return $ok;
+        return $this->userCanCreate($group_id, $user_id);
 	}
     
     /** 
