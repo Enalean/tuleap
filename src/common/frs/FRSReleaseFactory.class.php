@@ -324,8 +324,8 @@ class FRSReleaseFactory {
      * @return boolean true if user can update the release $release_id, false otherwise
      */ 
 	function userCanUpdate($group_id,$release_id,$user_id=false) {
-        $pm =& PermissionsManager::instance();
-        $um =& UserManager::instance();
+        $pm = $this->getPermissionsManager();
+        $um = $this->getUserManager();
 	    if (! $user_id) {
             $user =& $um->getCurrentUser();
         } else {
@@ -347,8 +347,8 @@ class FRSReleaseFactory {
      * @return boolean true if the user has permission to create releases, false otherwise
      */ 
 	function userCanCreate($group_id,$user_id=false) {
-        $pm =& PermissionsManager::instance();
-        $um =& UserManager::instance();
+        $pm = $this->getPermissionsManager();
+        $um = $this->getUserManager();
 	    if (! $user_id) {
             $user =& $um->getCurrentUser();
         } else {
