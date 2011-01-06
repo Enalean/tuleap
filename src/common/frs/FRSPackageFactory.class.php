@@ -259,7 +259,7 @@ class FRSPackageFactory {
      *
      * @return Boolean
      */
-    protected function userCanAdmin($user, $groupId) {
+    public static function userCanAdmin($user, $groupId) {
         return ($user->isSuperUser() || $user->isMember($groupId, 'R2') || $user->isMember($groupId, 'A'));
     }
 

@@ -263,24 +263,6 @@ class FRSReleaseFactory {
 			return 1;
 		}
 	}
-    
-    /**
-     * Get a Package Factory
-     *
-     * @return Object{FRSPackageFactory} a FRSPackageFactory Object.
-     */
-    function _getFRSPackageFactory() {
-        return new FRSPackageFactory();
-    }
-    
-    /**
-     * Get a File Factory
-     *
-     * @return Object{FRSFileFactory} a FRSFileFactory Object.
-     */
-    function _getFRSFileFactory() {
-        return new FRSFileFactory();
-    }
 
     /**
      * Test is user can administrate FRS service of given project
@@ -291,7 +273,7 @@ class FRSReleaseFactory {
      * @return Boolean
      */
     protected function userCanAdmin($user, $groupId) {
-        return ($user->isSuperUser() || $user->isMember($groupId, 'R2') || $user->isMember($groupId, 'A'));
+        return FRSPackageFactory::userCanAdmin($user, $groupId);
     }
 
     /**
@@ -400,6 +382,24 @@ class FRSReleaseFactory {
      */
     function getUserManager() {
         return UserManager::instance();
+    }
+
+    /**
+     * Get a Package Factory
+     *
+     * @return FRSPackageFactory
+     */
+    function _getFRSPackageFactory() {
+        return new FRSPackageFactory();
+    }
+
+    /**
+     * Get a File Factory
+     *
+     * @return FRSFileFactory
+     */
+    function _getFRSFileFactory() {
+        return new FRSFileFactory();
     }
 }
 ?>
