@@ -111,6 +111,7 @@ class SystemEvent_COMPUTE_MD5SUM extends SystemEvent {
      * 
      * @param Integer $fileId
      * @param String  $md5Computed
+     *
      * @return Boolean
      */
     public function updateDB($fileId, $md5Computed) {

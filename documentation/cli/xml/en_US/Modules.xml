@@ -1324,7 +1324,7 @@ File retrieved successfully.
                         </para>
                     </listitem>
                     <listitem>
-                        <para>--local_file(*): location (local) of the new file that will be created. Use this argument if your file is local. Your file will be uploaded on the server. Please note that for adding big files, it is better to use the uploaded way, because memory error could happen. One of the argument --local_file or --uploaded_file is required, depending the way you want to add your file.
+                        <para>--local_file(*): location (local) of the new file that will be created. Use this argument if your file is local. Your file will be uploaded on the server. One of the argument --local_file or --uploaded_file is required, depending the way you want to add your file.
                         </para>
                     </listitem>
                     <listitem>
@@ -1367,13 +1367,7 @@ File retrieved successfully.
 (for a file already uploaded in the incoming directory of your server)
                         </programlisting>
                     </example>
-                    <note>Note: The value returned (627) is the ID of the new file.</note>
-               </para>
-               <para>
-                <note>Note: If you get a memory problem with uploading large files, you can increase the memory by modifying
-                the memory_limit directive in PHP file configuration (php.ini).
-                If problems still remain, please upload your files on the server before (using scp or ftp), and then use 
-                the second method (--uploaded_file)</note>
+                    <note>Note: The value returned (420) is the ID of the new file.</note>
                </para>
             </para>
         </section>
@@ -1723,12 +1717,6 @@ File uploaded successfully
                         </programlisting>
                     </example>
                </para>
-               <para>
-                <note>Note: If you get a memory problem with uploading large files, you can increase the memory by modifying
-                the memory_limit directive in PHP file configuration (php.ini). The issue depends on many parameters and could 
-                still be there after this workaround. We are sorry about it, but it is due to some NuSoap technical limitation.
-                </note>
-               </para>
             </para>
         </section>
 
@@ -2039,7 +2027,6 @@ File uploaded successfully
                         <title>getFile command</title>
                         <programlisting format="linespecific" linenumbering="unnumbered" width="80">
 [terzino@linux codendi cli ]$ ./codendi.php docman getFile --project=myproject --id=110493 --version_number=1 --output=document_cli.doc
-Sending file (100%)
 File downloaded successfully
                         </programlisting>
                     </example>

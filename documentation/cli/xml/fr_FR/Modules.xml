@@ -1377,7 +1377,7 @@ File retrieved successfully.
                         </para>
                     </listitem>
                     <listitem>
-                        <para>--local_file(*): emplacement (local) du fichier à ajouter. Utilisez cet argument si votre fichier est local. Votre fichier sera téléchargé sur le serveur. Pour ajouter des fichiers de grosse taille, merci d'utiliser la méthode d'upload décrite ci-dessous, car des problèmes mémoires peuvent survenir. Au moins un des arguments --local_file ou --uploaded_file est obligatoire, selon la méthode utilisée pour ajouter votre fichier.
+                        <para>--local_file(*): emplacement (local) du fichier à ajouter. Utilisez cet argument si votre fichier est local. Votre fichier sera téléchargé sur le serveur. Au moins un des arguments --local_file ou --uploaded_file est obligatoire, selon la méthode utilisée pour ajouter votre fichier.
                         </para>
                     </listitem>
                     <listitem>
@@ -1420,13 +1420,7 @@ File retrieved successfully.
 (pour un fichier déjà téléchargé dans le répertoire incoming de votre serveur)
                         </programlisting>
                     </example>
-                    <note>Note: La valeur retournée (627) est l'identifiant du nouveau fichier créé.</note>
-               </para>
-               <para>
-                <note>Note: Si vous rencontrez des problèmes de mémoire en essayant de télécharger des fichiers volumineux, vous pouvez augmenter
-                la mémoire en modifiant la directive memory_limit dans le fichier de configuration de PHP (php.ini).
-                Si les problèmes persistent, il est conseillé de charger auparavant les fichiers sur le serveur (via scp ou ftp), puis d'utiliser 
-                la deuxième méthode (--uploaded_file)</note>
+                    <note>Note: La valeur retournée (420) est l'identifiant du nouveau fichier créé.</note>
                </para>
             </para>
         </section>
@@ -1772,13 +1766,6 @@ File uploaded successfully
                         </programlisting>
                     </example>
                </para>
-               <para>
-                <note>Note: Si vous rencontrez des problèmes de mémoire en essayant de télécharger des fichiers volumineux, vous pouvez augmenter
-                la mémoire en modifiant la directive memory_limit dans le fichier de configuration de PHP (php.ini).
-                Ce problème dépend de nombreux paramètres et pourrait persister, même après cette manipulation. Il s'agit d'une 
-                limitation technique de NuSoap.
-                </note>
-               </para>
             </para>
         </section>
 		<section id="DocmanFunctionCreateEmptyDocument">
@@ -2061,7 +2048,6 @@ File uploaded successfully
                         <title>getFile command</title>
                         <programlisting format="linespecific" linenumbering="unnumbered" width="80">
 [terzino@linux codendi cli ]$ ./codendi.php docman getFile --project=myproject --id=110493 --version_number=1 --output=document_cli.doc
-Sending file (100%)
 File downloaded successfully
                         </programlisting>
                     </example>
