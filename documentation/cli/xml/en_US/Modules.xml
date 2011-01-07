@@ -1193,7 +1193,7 @@ File retrieved successfully.
 +--------+
                         </programlisting>
                     </example>
-                    <note>Note: The value returned (65) is the ID of the new package.</note>
+                    <note>Note: The value returned (197) is the ID of the new package.</note>
                </para>
             </para>
         </section>
@@ -1273,7 +1273,7 @@ File retrieved successfully.
 +--------+
                         </programlisting>
                     </example>
-                    <note>Note: The value returned (84) is the ID of the new release.</note>
+                    <note>Note: The value returned (143) is the ID of the new release.</note>
                </para>
             </para>
         </section>

@@ -1246,7 +1246,7 @@ File retrieved successfully.
 +--------+
                         </programlisting>
                     </example>
-                    <note>Note: La valeur retournée (65) est l'identifiant du nouveau paquet créé.</note>
+                    <note>Note: La valeur retournée (197) est l'identifiant du nouveau paquet créé.</note>
                </para>
             </para>
         </section>
@@ -1326,7 +1326,7 @@ File retrieved successfully.
 +--------+
                         </programlisting>
                     </example>
-                    <note>Note: La valeur retournée (84) est l'identifiant de la nouvelle version créée.</note>
+                    <note>Note: La valeur retournée (143) est l'identifiant de la nouvelle version créée.</note>
                </para>
             </para>
         </section>
