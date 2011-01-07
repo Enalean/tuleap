@@ -1393,6 +1393,10 @@ File retrieved successfully.
                         </para>
                     </listitem>
                     <listitem>
+                        <para>--reference_md5: Le md5 du fichier se trouvant dans le répertoire "incoming" du serveur.
+                        </para>
+                     </listitem>
+                    <listitem>
                         <para>--project: nom UNIX du projet. Si vous ne le spécifiez pas, le projet spécifié lors de la connexion sera utilisé. Si aucun projet n'a été spécifié lors du login, une erreur sera affichée.
                         </para>
                     </listitem>
