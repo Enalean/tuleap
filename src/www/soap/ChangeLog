@@ -52,7 +52,7 @@
 	Docman
 	======
 	Methods
-    -------
+	-------
     * getDocmanFileChunk
       xsd:string getDocmanFileChunk(xsd:string sessionKey, xsd:int group_id, xsd:int item_id, xsd:int version_number, xsd:int offset, xsd:int size)
         Returns a part (chunk) of the <strong>content</strong>, encoded in base64, of the file/embedded file which id
