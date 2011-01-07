@@ -1401,6 +1401,9 @@ File retrieved successfully.
                         </para>
                     </listitem>
                 </itemizedlist>
+                <note>
+                    <para>Pour un fichier local le md5sum est automatiquement calculé par CLI dans la machine cliente, alors le paramètre reference_md5 n'est pris en considération que pour les fichiers uploadés dans "incoming" en utilisant ftp et il est absolument inutile de l'ajouter pour un fichier local.</para>
+                </note>
                 <para>
                     <example>
                         <title>commande addFile</title>

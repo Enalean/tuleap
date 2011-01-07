@@ -1348,6 +1348,9 @@ File retrieved successfully.
                         </para>
                     </listitem>
                 </itemizedlist>
+                <note>
+                    <para>For local file md5sum is automatically calculated by CLI in client side, so the parameter reference_md5 is taken into consideration only for uploded files and it is absolutely useless to add it for a local file.</para>
+                </note>
                 <para>
                     <example>
                         <title>addFile command</title>
