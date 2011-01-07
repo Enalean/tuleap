@@ -1033,41 +1033,17 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
                 }
             }
 
-            //send notification
+            // Send notification
             if ($notification) {
-                /*
-                    Send a release notification email
-                */
-                $fmmf = new FileModuleMonitorFactory();
-                $result = $fmmf->whoIsMonitoringPackageById($group_id, $release['package_id']);
-
-                if ($result && count($result) > 0) {
-                    //send the email
-                    $array_emails = array ();
-                    foreach ($result as $res) {
-                        $array_emails[] = $res['email'];
-                        $package_name = $res['name'];
-                    }
-                    $list = implode($array_emails, ', ');
-                    $pm = ProjectManager::instance();
-                    $subject = $GLOBALS['sys_name'] . ' ' . $GLOBALS['Language']->getText('file_admin_editreleases', 'file_rel_notice') . ' ' . $GLOBALS['Language']->getText('file_admin_editreleases', 'file_rel_notice_project', $pm->getProject($group_id)->getUnixName());
-                    $package_id = $release['package_id'];
-                    list ($host, $port) = explode(':', $GLOBALS['sys_default_domain']);
-                    $body = $GLOBALS['Language']->getText('file_admin_editreleases', 'download_explain_modified_package', $package_name) . " " . $GLOBALS['Language']->getText('file_admin_editreleases', 'download_explain', array (
-                    "<" . get_server_url() . "/file/showfiles.php?group_id=$group_id&release_id=$release_id> ", $GLOBALS['sys_name'])) .
-                    "\n<" . get_server_url() . "/file/filemodule_monitor.php?filemodule_id=$package_id> ";
-
-                    $mail = & new Mail();
-                    $mail->setFrom($GLOBALS['sys_noreply']);
-                    $mail->setBcc($list);
-                    $mail->setSubject($subject);
-                    $mail->setBody($body);
-                    if ($mail->send()) {
-                        $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('file_admin_editreleases', 'email_sent', count($result)));
-                    } else { //ERROR
-                        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('global', 'mail_failed', array (
+                $rel = new FRSRelease($array);
+                $count = $frsrf->emailNotification($rel);
+                if ($count === false) {
+                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('global', 'mail_failed', array (
                             $GLOBALS['sys_email_admin']
                         )));
+                } else {
+                    if ($count > 0) {
+                        $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('file_admin_editreleases', 'email_sent', $count));
                     }
                 }
             }

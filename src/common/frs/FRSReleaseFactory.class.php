@@ -358,6 +358,57 @@ class FRSReleaseFactory {
     }
 
     /**
+     * Send email notification to people monitoring the package the release belongs to
+     *
+     * @param FRSRelease $release Release in which the file is published
+     *
+     * @return Integer The number of people notified. False in case of error.
+     */
+    function emailNotification(FRSRelease $release) {
+        $fmmf   = new FileModuleMonitorFactory();
+        $result = $fmmf->whoIsMonitoringPackageById($release->getGroupID(), $release->getPackageID());
+
+        if ($result && count($result) > 0) {
+            $package = $this->_getFRSPackageFactory()->getFRSPackageFromDb($release->getPackageID());
+
+            // To
+            $array_emails = array ();
+            foreach ($result as $res) {
+                $array_emails[] = $res['email'];
+            }
+            $list = implode($array_emails, ', ');
+
+            $pm = ProjectManager::instance();
+
+            // Subject
+            $subject  = $GLOBALS['sys_name'];
+            $subject .= ' '.$GLOBALS['Language']->getText('file_admin_editreleases', 'file_rel_notice');
+            $subject .= ' '.$GLOBALS['Language']->getText('file_admin_editreleases', 'file_rel_notice_project', $pm->getProject($package->getGroupID())->getUnixName());
+
+            // Body
+            $fileUrl  = get_server_url() . "/file/showfiles.php?group_id=".$package->getGroupID()."&release_id=".$release->getReleaseID();
+            $notifUrl = get_server_url() . "/file/filemodule_monitor.php?filemodule_id=".$package->getPackageID();
+
+            $body  = $GLOBALS['Language']->getText('file_admin_editreleases', 'download_explain_modified_package', $package->getName());
+            $body .= " " .$GLOBALS['Language']->getText('file_admin_editreleases', 'download_explain', array("<".$fileUrl."> ", $GLOBALS['sys_name']));
+            $body .= "\n<".$notifUrl."> ";
+            
+            $mail = new Mail();
+            $mail->setFrom($GLOBALS['sys_noreply']);
+            $mail->setBcc($list);
+            $mail->setSubject($subject);
+            $mail->setBody($body);
+
+            if ($mail->send()) {
+                return count($result);
+            } else {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
      * Returns an instance of EventManager
      *
      * @return EventManager

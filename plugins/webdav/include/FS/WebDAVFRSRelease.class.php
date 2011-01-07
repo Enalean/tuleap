@@ -446,7 +446,9 @@ class WebDAVFRSRelease extends Sabre_DAV_Directory {
                                            'type_id'      => 100,
                                            'computed_md5' => $computedMd5,
                                            'user_id'      => $this->getUser()->getId());
-                        $frsff->create($fileArray);
+                        if ($frsff->create($fileArray)) {
+                            $utils->getReleaseFactory()->emailNotification($this->getRelease());
+                        }
                     } else {
                         throw new Sabre_DAV_Exception($GLOBALS['Language']->getText('plugin_webdav_upload', 'move_fileforge_fail'));
                     }

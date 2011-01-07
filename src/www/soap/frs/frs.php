@@ -1117,6 +1117,7 @@ function addUploadedFile($sessionKey,$group_id,$package_id,$release_id,$filename
                     if (! $file_id) {
                         return new SoapFault(invalid_file_fault,$file_fact->getErrorMessage(),'addUploadedFile');
                     } else {
+                        $release_fact->emailNotification($release);
                         return $file_id;
                     }
                 } else {
