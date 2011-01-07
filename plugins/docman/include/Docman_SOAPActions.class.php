@@ -232,7 +232,11 @@ class Docman_SOAPActions extends Docman_Actions {
             $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_item_id_missing'));
         }
     }
-    
+
+    /**
+     *  Returns a part (chunk) of the content, encoded in base64, of the file/embedded file which id
+     *  item_id of a given version version_number, if the version is not specified it will be the current one, in the project group_id.
+     */
     function getFileChunk() {
         $request = $this->_controler->request;
 
