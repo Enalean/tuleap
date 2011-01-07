@@ -10,7 +10,7 @@ require_once(CODENDI_CLI_DIR.'/lib/PHP_BigFile.class.php');
 
 class CLI_Action_Frs_AddFile extends CLI_Action {
     function CLI_Action_Frs_AddFile() {
-        $this->CLI_Action('addFile', 'Add the the file to a release.');
+        $this->CLI_Action('addUploadedFile', 'Add the the file to a release.');
         $this->addParam(array(
             'name'           => 'package_id',
             'description'    => '--package_id=<package_id>    Id of the package the returned file belong to.',
@@ -73,7 +73,6 @@ class CLI_Action_Frs_AddFile extends CLI_Action {
          return true;
      }
     function before_soapCall(&$loaded_params) {
-        $this->soapCommand = 'addUploadedFile';
         if (!$loaded_params['others']['uploaded_file'] && !$loaded_params['others']['local_file']) {
             exit_error("You must specify a file name with either the --local_file or --uploaded_file parameter, depending the way you want to add the file.");
         } else {
