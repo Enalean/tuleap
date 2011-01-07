@@ -22,6 +22,11 @@ require_once('include/DataAccessObject.class.php');
 
 class FRSLogDao extends DataAccessObject {
 
+    /**
+     * Constructor of the class
+     *
+     * @param CodendiDataAccess $da
+     */
     function __construct($da) {
         parent::__construct($da);
         $this->table_name = 'frs_log';
@@ -31,8 +36,8 @@ class FRSLogDao extends DataAccessObject {
      * Add the action to FRS log
      *
      * @param Integer $userID
+     * @param Integer $projectID
      * @param Integer $itemID
-     * @param Integer $itemTypeID
      * @param Integer $actionID
      *
      * @return Boolean

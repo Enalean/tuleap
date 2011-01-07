@@ -71,7 +71,7 @@ class SystemEvent_COMPUTE_MD5SUM extends SystemEvent {
             //Compute Md5sum for files
             $md5Computed = $this->computeFRSMd5Sum($file->getFileLocation());
             if (!$md5Computed) {
-                if (!$this->sendNotificationMail($user, $file,'md5_compute_error', array($file->getFileLocation()))) {
+                if (!$this->sendNotificationMail($user, $file, 'md5_compute_error', array($file->getFileLocation()))) {
                     $this->error('Could not send mail to inform user that computing md5sum failed');
                     return false;
                 }
@@ -100,16 +100,17 @@ class SystemEvent_COMPUTE_MD5SUM extends SystemEvent {
      * Computes the md5sum for a given file
      * 
      * @param String $filePath
+     *
+     * @return String
      */
     public function computeFRSMd5Sum($filePath) {
         return PHP_BigFile::getMd5Sum($filePath);
     }
     /**
-     * 
      * Inserts the computed md5sum for the uploaded files using ftp
      * 
      * @param Integer $fileId
-     * @param String $md5Computed
+     * @param String  $md5Computed
      * @return Boolean
      */
     public function updateDB($fileId, $md5Computed) {
@@ -130,6 +131,8 @@ class SystemEvent_COMPUTE_MD5SUM extends SystemEvent {
      * 
      * @param User    $user
      * @param FRSFile $file
+     * @param String  $bodyContent
+     * @param Array   $option
      * 
      * @return Boolean
      */

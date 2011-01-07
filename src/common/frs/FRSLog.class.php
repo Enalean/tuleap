@@ -24,13 +24,19 @@ class FRSLog {
 
     var $dao;
 
+    /**
+     * Constructor of the class.
+     * It is also used to add FRSLog events to listen in EventManager.
+     *
+     * @return FRSLog
+     */
     protected function __construct() {
         $em = EventManager::instance();
         $packageEventToListen = array('frs_create_package',
                                       'frs_update_package', 
                                       'frs_delete_package'
         );
-        foreach($packageEventToListen as $event) {
+        foreach ($packageEventToListen as $event) {
             $em->addListener($event, $this, 'addLogPackage', true, 0);
         }
 
@@ -38,7 +44,7 @@ class FRSLog {
                                       'frs_update_release', 
                                       'frs_delete_release'
         );
-        foreach($releaseEventToListen as $event) {
+        foreach ($releaseEventToListen as $event) {
             $em->addListener($event, $this, 'addLogRelease', true, 0);
         }
 
@@ -47,12 +53,18 @@ class FRSLog {
                                    'frs_delete_file', 
                                    'frs_restore_file'
         );
-        foreach($fileEventToListen as $event) {
+        foreach ($fileEventToListen as $event) {
             $em->addListener($event, $this, 'addLogFile', true, 0);
         }
     }
 
     protected static $_instance;
+
+    /**
+     * Singleton pattern
+     *
+     * @return FRSLog
+     */
     public static function instance() {
         if (!isset(self::$_instance)) {
             $c = __CLASS__;
@@ -65,7 +77,7 @@ class FRSLog {
      * Add log for events on FRSPackage
      *
      * @param String $event
-     * @param Array $params
+     * @param Array  $params
      *
      * @return void
      */
@@ -91,7 +103,7 @@ class FRSLog {
      * Add log for events on FRSRelease
      *
      * @param String $event
-     * @param Array $params
+     * @param Array  $params
      *
      * @return void
      */
@@ -117,7 +129,7 @@ class FRSLog {
      * Add log for events on FRSFile
      *
      * @param String $event
-     * @param Array $params
+     * @param Array  $params
      *
      * @return void
      */
@@ -156,6 +168,11 @@ class FRSLog {
 
     /**
      * Store the event in DB
+     *
+     * @param Integer $userID
+     * @param Integer $projectID
+     * @param Integer $itemID
+     * @param Integer $actionID
      *
      * @return void
      */
