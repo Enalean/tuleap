@@ -509,13 +509,13 @@ class ArtifactType extends Error {
 	function deleteUser($id) {
 	  global $Language;
 
-		if (!$this->userIsAdmin()) {
-			$this->setError($Language->getText('tracker_common_canned','perm_denied'));
-			return false;
-		}
 		if (!$id) {
 			$this->setError($Language->getText('tracker_common_canned','missing_param'));
 			return false;
+		}
+		if (!$this->userIsAdmin($id)) {
+			//$this->setError($Language->getText('tracker_common_canned','perm_denied'));
+			return true;
 		}
 		$sql="DELETE FROM artifact_perm
 			WHERE user_id='". db_ei($id) ."' AND group_artifact_id='". db_ei($this->getID()) ."'";
