@@ -20,6 +20,7 @@
 
 require_once('FRSFile.class.php');
 require_once('common/dao/FRSFileDao.class.php');
+require_once ('common/frs/FRSLog.class.php');
 
 /**
  * 
@@ -27,7 +28,6 @@ require_once('common/dao/FRSFileDao.class.php');
 class FRSFileFactory extends Error {
 
     function FRSFileFactory() {
-        
     }
 
     function &getFRSFileFromArray(&$array) {
@@ -159,14 +159,29 @@ class FRSFileFactory extends Error {
     
     function update($data_array) {
         $dao =& $this->_getFRSFileDao();
-        return $dao->updateFromArray($data_array);
+        if ($dao->updateFromArray($data_array)) {
+            $file = $this->getFRSFileFromDb($data_array['file_id']);
+            $this->_getEventManager()->processEvent('frs_update_file',
+                                                   array('group_id' => $file->getGroup()->getGroupId(),
+                                                         'item_id'    => $data_array['file_id']));
+            return true;
+        }
+        return false;
     }
     
     
     function create($data_array) {
         $dao =& $this->_getFRSFileDao();
-        $id = $dao->createFromArray($data_array);
-        return $id;
+        if ($id = $dao->createFromArray($data_array)) {
+            $file = $this->getFRSFileFromDb($id);
+            $um = UserManager::instance();
+            $user = $um->getCurrentUser();
+            $this->_getEventManager()->processEvent('frs_create_file',
+                                                    array('group_id' => $file->getGroup()->getGroupId(),
+                                                          'item_id'    => $id));
+            return $id;
+        }
+        return false;
     }
     
     /**
@@ -175,7 +190,7 @@ class FRSFileFactory extends Error {
      * @return true or id(auto_increment) if there is no error
      */
     function createFromIncomingFile($name=null, $release_id=null, 
-                               $type_id=null, $processor_id=null) {
+                               $type_id=null, $processor_id=null, $computedMd5, $referenceMd5) {
         
         // check if the file exists
         $uploaded_files = $this->getUploadedFileNames();
@@ -185,7 +200,10 @@ class FRSFileFactory extends Error {
         }
 
 	// Don't use filesize() : Workaround for files larger than 2 GB
- 	$filesize = file_utils_get_size($GLOBALS['ftp_incoming_dir'] . '/' . $name);
+        $filesize = file_utils_get_size($GLOBALS['ftp_incoming_dir'] . '/' . $name);
+
+        $um = UserManager::instance();
+        $user = $um->getCurrentUser();
 
         $file = new FRSFile();
         $file->setFileName($name);
@@ -194,7 +212,10 @@ class FRSFileFactory extends Error {
         $file->setTypeID($type_id);
         $file->setProcessorID($processor_id);
         $file->setStatus('A');
-        
+        $file->setComputedMd5($computedMd5);
+        $file->setReferenceMd5($referenceMd5);
+        $file->setUserID($user->getId());
+
         // retrieve the group_id
         $release_fact =& $this->_getFRSReleaseFactory();
         $release =& $release_fact->getFRSReleaseFromDb($release_id);
@@ -237,9 +258,16 @@ class FRSFileFactory extends Error {
     }
     
     function _delete($file_id){
-    	$_id = (int) $file_id;
-    	$dao =& $this->_getFRSFileDao();
-    	return $dao->delete($_id);
+        $_id = (int) $file_id;
+        $file = $this->getFRSFileFromDb($_id);
+        $dao =& $this->_getFRSFileDao();
+        if ($dao->delete($_id)) {
+            $this->_getEventManager()->processEvent('frs_delete_file',
+                                                   array('group_id' => $file->getGroup()->getGroupId(),
+                                                         'item_id'    => $_id));
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -520,6 +548,27 @@ class FRSFileFactory extends Error {
     }
 
     /**
+     * Wrapper to get a UserManager instance
+     *
+     * @return UserManager
+     */
+    function _getUserManager() {
+        $um = UserManager::instance();
+        return $um;
+    }
+
+    /**
+     * Wrapper to get an EventManager instance
+     *
+     * @return EventManager
+     */
+    function _getEventManager() {
+        $em = EventManager::instance();
+        FRSLog::instance();
+        return $em;
+    }
+
+    /**
      * restore file by moving it from staging area to its old location
      * 
      * @param FRSFile $file 
@@ -535,12 +584,18 @@ class FRSFileFactory extends Error {
             }
             if (rename($stagingPath, $file->getFileLocation())) {
                 $dao = $this->_getFRSFileDao();
-                return $dao->restoreFile($file->getFileID());
+                if ($dao->restoreFile($file->getFileID())) {
+                    $this->_getEventManager()->processEvent('frs_restore_file',
+                                                           array('group_id' => $file->getGroup()->getGroupId(),
+                                                                 'item_id'    => $file->getFileID()));
+                    return true;
+                }
+                return false;
             }
         }
         return false;
     }
-    
+
     /**
      * Restore files marked to be restored
      * 
@@ -571,6 +626,33 @@ class FRSFileFactory extends Error {
     public function markFileToBeRestored($file) {
         $dao = $this->_getFRSFileDao();
         return $dao->markFileToBeRestored($file->getFileID());
+    }
+    
+    /**
+     * Insert the computed md5sum value in case of offline checksum compute
+     * 
+     * @param Integer $fileId
+     * @param String $md5Computed
+     * 
+     * @return Boolean
+     */
+    
+    public function updateComputedMd5sum($fileId, $md5Computed) {
+        $dao = $this->_getFRSFileDao();
+        return $dao->updateComputedMd5sum($fileId, $md5Computed);
+    }
+
+    /**
+     * Compare md5sums to check if they fit
+     * Note : Empty fields make coparison pass
+     *
+     * @param String $computedMd5
+     * @param String $referenceMd5
+     *
+     * @return Boolean
+     */
+    function compareMd5Checksums($computedMd5, $referenceMd5) {
+        return($computedMd5 == '' || $referenceMd5 == '' || $computedMd5 == $referenceMd5);
     }
 }
 

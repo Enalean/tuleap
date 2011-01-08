@@ -202,6 +202,10 @@ class WebDAVUtils {
     function getIncomingFileSize($name) {
         return file_utils_get_size($GLOBALS['ftp_incoming_dir'].'/'.$name);
     }
+    
+    function getIncomingFileMd5Sum($file) {
+        return PHP_BigFile::getMd5Sum($file);
+    }
 
 }
 

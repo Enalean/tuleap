@@ -26,7 +26,9 @@ require_once('common/dao/CodendiDataAccess.class.php');
 *
 */
 class PermissionsManager {
-    
+    /**
+     * @var PermissionsDao
+     */
     var $permission_dao;
     var $_permissions;
     var $_ugroups_for_user;
@@ -146,8 +148,38 @@ class PermissionsManager {
              return $dar;
          } 
      }
-     
-     
+
+     /**
+      * Return the list of the default ugroup_ids authorized to access the given permission_type
+      * 
+      * @see permission_db_get_defaults
+      * 
+      * @param String $permissionType
+      * 
+      * @return DataAccessResult
+      */
+     public function getDefaults($permissionType, $withName = true) {
+         return $this->_permission_dao->searchDefaults($permissionType, $withName);
+     }
+
+     /**
+      * Return the list of ugroups authorized to access the given object with the given permission_type
+      *
+      * If no specific permissions set, returns the defaults.
+      *
+      * @param Integer $objectId
+      * @param String  $permissionType
+      *
+      * @return DataAccessResult
+      */
+     public function getAuthorizedUgroups($objectId, $permissionType, $withName = true) {
+         $dar = $this->_permission_dao->searchUgroupByObjectIdAndPermissionType($objectId, $permissionType, $withName);
+        if ($dar && $dar->rowCount() > 0) {
+            return $dar;
+        } else {
+            return $this->getDefaults($permissionType, $withName);
+        }
+     }
 
     /**
     * Returns true if user has full permissions in all cases

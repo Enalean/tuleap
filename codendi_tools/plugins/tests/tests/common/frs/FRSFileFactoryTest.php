@@ -4,6 +4,11 @@ require_once('common/frs/FRSFileFactory.class.php');
 require_once('common/frs/FRSReleaseFactory.class.php');
 require_once('common/backend/BackendSystem.class.php');
 
+Mock::generate('User');
+Mock::generate('UserManager');
+Mock::generate('EventManager');
+require_once('common/project/Project.class.php');
+Mock::generate('Project');
 Mock::generate('DataAccessResult');
 Mock::generate('FRSReleaseFactory');
 Mock::generate('FRSRelease');
@@ -15,7 +20,7 @@ Mock::generatePartial('FRSFileFactory', 'FRSFileFactoryTestPurgeFiles', array('_
 Mock::generatePartial('FRSFileFactory', 'FRSFileFactoryTestPurgeOneFile', array('_getFRSFileDao'));
 Mock::generatePartial('FRSFileFactory', 'FRSFileFactoryTestMoveToStaging', array('_getFRSFileDao', 'moveDeletedFileToStagingArea'));
 Mock::generatePartial('FRSFileFactory', 'FRSFileFactoryTestPurgeDeletedFiles', array('purgeFiles', 'moveDeletedFilesToStagingArea', 'cleanStaging', 'restoreDeletedFiles'));
-Mock::generatePartial('FRSFileFactory', 'FRSFileFactoryTestRestore', array('_getFRSFileDao'));
+Mock::generatePartial('FRSFileFactory', 'FRSFileFactoryTestRestore', array('_getFRSFileDao', '_getUserManager', '_getEventManager'));
 Mock::generatePartial('FRSFileFactory', 'FRSFileFactoryTestRestoreFiles', array('_getFRSFileDao', 'restoreFile'));
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
@@ -278,6 +283,8 @@ class FRSFileFactoryTest extends UnitTestCase {
         $file->setReturnValue('getFileID', 12);
         $file->setReturnValue('getFileName', 'p1_r1/toto.xls');
         $file->setReturnValue('getFileLocation', $GLOBALS['ftp_frs_dir_prefix'].'/prj/p1_r1/toto.xls');
+        $project = new MockProject($this);
+        $file->setReturnValue('getGroup', $project);
         mkdir($GLOBALS['ftp_frs_dir_prefix'].'/prj/p1_r1/', 0750, true);
         $this->assertTrue(is_dir($GLOBALS['ftp_frs_dir_prefix'].'/prj/p1_r1/'));
 
@@ -286,6 +293,14 @@ class FRSFileFactoryTest extends UnitTestCase {
         $dao->setReturnValue('restoreFile', true);
         $fileFactory->setReturnValue('_getFRSFileDao', $dao);
         $backend = new MockBackendSystem($this);
+
+        $user = new MockUser($this);
+        $um = new MockUserManager($this);
+        $um->setReturnValue('getCurrentUser', $user);
+        $fileFactory->setReturnValue('_getUserManager', $um);
+        $em = new MockEventManager($this);
+        $fileFactory->setReturnValue('_getEventManager', $em);
+
         $this->assertTrue($fileFactory->restoreFile($file, $backend));
          
         // Cleanup
@@ -337,6 +352,8 @@ class FRSFileFactoryTest extends UnitTestCase {
         $file->setReturnValue('getFileID', 12);
         $file->setReturnValue('getFileName', 'p2_r1/toto.xls');
         $file->setReturnValue('getFileLocation', $GLOBALS['ftp_frs_dir_prefix'].'/prj/p2_r1/toto.xls');
+        $project = new MockProject($this);
+        $file->setReturnValue('getGroup', $project);
         $this->assertTrue(is_dir(dirname($GLOBALS['ftp_frs_dir_prefix'].'/prj/p2_r1/')));
         $backend->setReturnValue('chgrp', true);
 
@@ -344,6 +361,13 @@ class FRSFileFactoryTest extends UnitTestCase {
         $dao->expectOnce('restoreFile');
         $dao->setReturnValue('restoreFile', true);
         $fileFactory->setReturnValue('_getFRSFileDao', $dao);
+
+        $user = new MockUser($this);
+        $um = new MockUserManager($this);
+        $um->setReturnValue('getCurrentUser', $user);
+        $fileFactory->setReturnValue('_getUserManager', $um);
+        $em = new MockEventManager($this);
+        $fileFactory->setReturnValue('_getEventManager', $em);
 
         $this->assertTrue($fileFactory->restoreFile($file, $backend));
 
@@ -367,6 +391,8 @@ class FRSFileFactoryTest extends UnitTestCase {
         $file->setReturnValue('getFileID', 12);
         $file->setReturnValue('getFileName', 'p3_r1/toto.xls');
         $file->setReturnValue('getFileLocation', $GLOBALS['ftp_frs_dir_prefix'].'/prj/p3_r1/toto.xls');
+        $project = new MockProject($this);
+        $file->setReturnValue('getGroup', $project);
         $this->assertTrue(is_dir(dirname($GLOBALS['ftp_frs_dir_prefix'].'/prj/p3_r1/')));
 
         $dao = new MockFRSFileDao($this);
@@ -375,6 +401,14 @@ class FRSFileFactoryTest extends UnitTestCase {
         $fileFactory->setReturnValue('_getFRSFileDao', $dao);
         $backend = new MockBackendSystem($this);
         $backend->setReturnValue('chgrp', true);
+
+        $user = new MockUser($this);
+        $um = new MockUserManager($this);
+        $um->setReturnValue('getCurrentUser', $user);
+        $fileFactory->setReturnValue('_getUserManager', $um);
+        $em = new MockEventManager($this);
+        $fileFactory->setReturnValue('_getEventManager', $em);
+
         $this->assertFalse($fileFactory->restoreFile($file, $backend));
 
         // Cleanup
@@ -405,6 +439,31 @@ class FRSFileFactoryTest extends UnitTestCase {
         $ff->setReturnValue('restoreFile', true);
         
         $this->assertTrue($ff->restoreDeletedFiles($backend));
+    }
+
+    function testCompareMd5ChecksumsFail() {
+        $fileFactory = new FRSFileFactory();
+        $this->assertFalse($fileFactory->compareMd5Checksums('da1e100dc9e7bebb810985e37875de36', 'da1e100dc9e7bebb810985e37875de38'));
+    }
+
+    function testCompareMd5ChecksumsSucceedeEmptyHashes() {
+        $fileFactory = new FRSFileFactory();
+        $this->assertTrue($fileFactory->compareMd5Checksums('', ''));
+    }
+
+    function testCompareMd5ChecksumsSucceedeEmptyReference() {
+        $fileFactory = new FRSFileFactory();
+        $this->assertTrue($fileFactory->compareMd5Checksums('da1e100dc9e7bebb810985e37875de36', ''));
+    }
+
+    function testCompareMd5ChecksumsSucceedeEmptyComputed() {
+        $fileFactory = new FRSFileFactory();
+        $this->assertTrue($fileFactory->compareMd5Checksums('', 'da1e100dc9e7bebb810985e37875de38'));
+    }
+
+    function testCompareMd5ChecksumsSucceededComparison() {
+        $fileFactory = new FRSFileFactory();
+        $this->assertTrue($fileFactory->compareMd5Checksums('da1e100dc9e7bebb810985e37875de38', 'da1e100dc9e7bebb810985e37875de38'));
     }
 }
 ?>

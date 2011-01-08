@@ -6,10 +6,11 @@
 */
 
 require_once(CODENDI_CLI_DIR.'/CLI_Action.class.php');
+require_once(CODENDI_CLI_DIR.'/lib/PHP_BigFile.class.php');
 
 class CLI_Action_Frs_AddFile extends CLI_Action {
     function CLI_Action_Frs_AddFile() {
-        $this->CLI_Action('addFile', 'Add the the file to a release.');
+        $this->CLI_Action('addUploadedFile', 'Add the the file to a release.');
         $this->addParam(array(
             'name'           => 'package_id',
             'description'    => '--package_id=<package_id>    Id of the package the returned file belong to.',
@@ -36,6 +37,10 @@ class CLI_Action_Frs_AddFile extends CLI_Action {
             'name'           => 'processor_id',
             'description'    => '--processor_id=<processor_id> Id of the processor of the file',
         ));
+        $this->addParam(array(
+            'name'           => 'reference_md5',
+            'description'    => '--reference_md5=<reference_md5> Md5 checksum of the file located in the incoming directory on the server.'
+             ));
     }
     function validate_package_id(&$package_id) {
         if (!$package_id) {
@@ -61,6 +66,12 @@ class CLI_Action_Frs_AddFile extends CLI_Action {
         }
         return true;
     }
+    function validate_reference_md5(&$reference_md5) {
+         if (!$reference_md5) {
+             $reference_md5 = '';
+         }
+         return true;
+     }
     function before_soapCall(&$loaded_params) {
         if (!$loaded_params['others']['uploaded_file'] && !$loaded_params['others']['local_file']) {
             exit_error("You must specify a file name with either the --local_file or --uploaded_file parameter, depending the way you want to add the file.");
@@ -72,18 +83,54 @@ class CLI_Action_Frs_AddFile extends CLI_Action {
                     exit_error("File '". $loaded_params['others']['uploaded_file'] ."' not found in incoming directory.");
                 }
                 $loaded_params['soap']['filename']  = $loaded_params['others']['uploaded_file'];
-                $this->soapCommand = 'addUploadedFile';
             } else {
-                if (!file_exists($loaded_params['others']['local_file'])) {
-                    exit_error("File '". $loaded_params['others']['local_file'] ."' doesn't exist");
-                } else if (!($fh = fopen($loaded_params['others']['local_file'], "rb"))) {
-                    exit_error("Could not open '". $loaded_params['others']['local_file'] ."' for reading");
+                $localFileLocation = $loaded_params['others']['local_file'];
+                if (!file_exists($localFileLocation)) {
+                    exit_error("File '". $localFileLocation ."' doesn't exist");
+                } else if (!is_readable($localFileLocation)) {
+                    exit_error("Could not open '". $localFileLocation ."' for reading");
                 } else {
-                    $contents = @fread($fh, filesize($loaded_params['others']['local_file']));
-                    $loaded_params['soap']['base64_contents'] = base64_encode($contents);
-                    $loaded_params['soap']['filename']  = $loaded_params['others']['local_file'];
+                    // TODO : use PHP_BigFile
+                    //$path = PHP_BigFile::stream(realpath($localFileLocation));
+                    $path = realpath($localFileLocation);
+                    $GLOBALS['LOG']->add('Calculating md5 checksum of the file ...');
+                    $loaded_params['soap']['reference_md5'] = PHP_BigFile::getMd5Sum($path);
+                    $GLOBALS['LOG']->add('Md5 checksum calculated.');
+                    $offset = 0;
+                    $chunkSize = $GLOBALS['soap']->getFileChunkSize();
+                    $startTime = microtime(true);
+                    $totalTran = 0;
+                    $i = 0;
+                    /* During this loop the file in construction in the incoming directory
+                     * may be corrupted by concurrent access, such as releasing it
+                     * or use of addFileChunk again with the same filename.
+                     * This corruption will be automatically detected at the end of upload
+                     * when comparing the md5 sums and file will not be released.
+                     */ 
+                    do {
+                        $offset = $i * $chunkSize;
+                        $contents = file_get_contents($path, false, NULL, $offset, $chunkSize);
+                        $cLength = strlen($contents);
+                        $contents = base64_encode($contents);
+                        if ($i == 0) {
+                            $firstChunk = true;
+                        } else {
+                            $firstChunk = false;
+                        }
+                        $addedSize = $GLOBALS['soap']->call("addFileChunk", array('filename' => basename($path), 'contents' => $contents, 'first_chunk' => $firstChunk));
+                        if ($addedSize == $cLength) {
+                            $totalTran += $cLength;
+                            $i++;
+                        } else {
+                            exit_error("Upload of the file failed");
+                        }
+                    } while ($cLength >= $chunkSize);
+                    $endTime = microtime(true);
+                    $transRate = $totalTran / ($endTime - $startTime);
+                    $GLOBALS['LOG']->add('Transfer rate: '.size_readable($transRate, null, 'bi', '%.2f %s/s'));
+
+                    $loaded_params['soap']['filename']  = basename($loaded_params['others']['local_file']);
                     $loaded_params['soap']['is_upload'] = true;
-                    fclose($fh);
                 }
             }
             
@@ -108,7 +155,7 @@ class CLI_Action_Frs_AddFile extends CLI_Action {
     }
     
 	function sort_parameters($p1, $p2) {
-        $order = array('group_id', 'package_id', 'release_id', 'filename', 'base64_contents', 'type_id', 'processor_id', 'is_upload');
+        $order = array('group_id', 'package_id', 'release_id', 'filename', 'type_id', 'processor_id', 'reference_md5', 'is_upload');
         $order_flip = array_flip($order);
         return $order_flip[$p1] > $order_flip[$p2];
     }

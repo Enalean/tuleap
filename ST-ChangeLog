@@ -13,6 +13,15 @@ Version 4.0.16 = Not released yet
                            * reduce space "lost" between tracker's toolbar and artifact info.
                            * rework of follow-up comments layout to improve readability.
 
+	backlog #114221: File Release System provides means to check files consistency through md5 sums.
+	  Codendi automatically computes md5 sum on files submitted in File Release System.
+	  If you submit a reference md5 sum, Codendi compares with the computed one and raise
+	  an error if it fails.
+
+	CLI update to 1.4.0, see cli/ChangeLog for details.
+	
+	SOAP API update to version 4.1, see src/www/soap/ChangeLog for details.
+
         == BugFix ==
         backlog #114221: Still have admin privileges on tracker for non members
         backlog #114020: Artifact submitted with the value "None" at the mandatory field

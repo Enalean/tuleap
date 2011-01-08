@@ -37,7 +37,7 @@
             wrap-option='wrap'
             white-space-collapse='false'
             linefeed-treatment="preserve"
-            font-size="8pt"
+            font-size="6pt"
             xsl:use-attribute-sets="monospace.verbatim.properties">
     <xsl:apply-templates/>
     </fo:block>

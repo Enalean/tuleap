@@ -54,6 +54,14 @@
              <listitem>
                 <para>tracker: Module de gestion des Trackers</para>
              </listitem>
+
+             <listitem>
+                <para>frs : Module de gestion desversions de fichiers</para>
+             </listitem>
+
+             <listitem>
+                <para>docman : Module de gestion de documents</para>
+             </listitem>
            </itemizedlist>
           </para>
          </listitem>

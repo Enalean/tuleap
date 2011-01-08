@@ -34,7 +34,7 @@ if (array_key_exists("CODENDI_WSDL", $_ENV)) {
 
 /**** END OF CONFIGURATION SECTION ****/
 
-$CLI_VERSION = "1.3.3";
+$CLI_VERSION = "1.4.0";
 
 error_reporting(E_ALL);
 
@@ -139,7 +139,7 @@ if (!$module) {
 $module->execute($params);
 
 // End script
-echo "\n";
+//echo "\n";
 exit(0);
 
 

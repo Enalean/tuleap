@@ -88,6 +88,7 @@ file_admin_editreleases	p_rel_not_yours	Le paquet ou la version n'existe pas ou 
 file_admin_editreleases	not_add_file	Le fichier n'a pas pu être ajouté
 file_admin_editreleases	filename_invalid	Nom de fichier invalide ou inexistant
 file_admin_editreleases	filename_exists	Le nom de fichier existe déjà pour ce projet
+file_admin_editreleases	md5_fail	La comparaison des MD5 checksum a echoué pour le fichier "$1", la valeur du MD5 calculée au niveau du serveur est "$2"
 file_admin_editreleases	no_files_selected	Aucun fichier sélectionné
 file_admin_editreleases	file_deleted	Fichier détruit : $1
 file_admin_editreleases	file_rel_notice	Notification d'une nouvelle version
@@ -175,6 +176,8 @@ file_admin_editreleases	create_new_release	Créer une nouvelle version
 file_admin_editreleases	create_canceled	Création de la version annulée
 file_admin_editreleases	update_canceled	Mise à jour de la version annulée
 file_admin_editreleases	upload_file_msg	(La taille maximum autorisée est de $1 Mb - <u>Veuillez compresser vos fichiers</u>)
+file_admin_editreleases	md5sum	md5 Checksum
+file_admin_editreleases	user	Utilisateur
 #
 #-----------------------------------------------
 # Script: SF/www/file/admin/index.php
@@ -294,6 +297,8 @@ file_showfiles	stat_total_size	Ko
 file_showfiles	stat_total_nb_downloads	téléchargements
 file_showfiles	hidden_package	Ce paquet est caché.
 file_showfiles	hidden_release	Cette version est cachée.
+file_showfiles	md5sum	Checksum du fichier
+file_showfiles	user	Utilisateur
 #
 #-----------------------------------------------
 # Script: SF/www/file/shownotes.php

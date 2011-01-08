@@ -23,6 +23,7 @@ require_once ('common/dao/FRSReleaseDao.class.php');
 require_once ('common/frs/FRSFileFactory.class.php');
 require_once ('common/frs/FRSPackageFactory.class.php');
 require_once('www/project/admin/ugroup_utils.php');
+require_once ('common/frs/FRSLog.class.php');
 /**
  * 
  */
@@ -34,7 +35,6 @@ class FRSReleaseFactory {
     
 
 	function FRSReleaseFactory() {
-
 	}
 
 	function  getFRSReleaseFromArray(& $array) {
@@ -192,21 +192,41 @@ class FRSReleaseFactory {
 		return $this->dao;
 	}
 
-	function update($data_array) {
-		$dao =  $this->_getFRSReleaseDao();
-		return $dao->updateFromArray($data_array);
-	}
+    function update($data_array) {
+        $dao =  $this->_getFRSReleaseDao();
+        if ($dao->updateFromArray($data_array)) {
+            $release = $this->getFRSReleaseFromDb($data_array['release_id']);
+            $this->getEventManager()->processEvent('frs_update_release',
+                                                   array('group_id' => $release->getGroupID(),
+                                                         'item_id'    => $data_array['release_id']));
+            return true;
+        }
+        return false;
+    }
 
-	function create($data_array) {
-		$dao = $this->_getFRSReleaseDao();
-		$id = $dao->createFromArray($data_array);
-		return $id;
-	}
-	
-	function _delete($release_id){
-    	$_id = (int) $release_id;
-    	$dao = $this->_getFRSReleaseDao();
-    	return $dao->delete($_id,$this->STATUS_DELETED);
+    function create($data_array) {
+        $dao = $this->_getFRSReleaseDao();
+        if ($id = $dao->createFromArray($data_array)) {
+            $release = $this->getFRSReleaseFromDb($id);
+            $this->getEventManager()->processEvent('frs_create_release',
+                                                   array('group_id' => $release->getGroupID(),
+                                                         'item_id'    => $id));
+            return $id;
+        }
+        return false;
+    }
+
+    function _delete($release_id){
+        $_id = (int) $release_id;
+        $release = $this->getFRSReleaseFromDb($_id);
+        $dao = $this->_getFRSReleaseDao();
+        if ($dao->delete($_id,$this->STATUS_DELETED)) {
+            $this->getEventManager()->processEvent('frs_delete_release',
+                                                   array('group_id' => $release->getGroupID(),
+                                                         'item_id' => $_id));
+            return true;
+        }
+        return false;
     }
 
 	/*
@@ -243,66 +263,61 @@ class FRSReleaseFactory {
 			return 1;
 		}
 	}
-    
+
     /**
-     * Get a Package Factory
+     * Test is user can administrate FRS service of given project
      *
-     * @return Object{FRSPackageFactory} a FRSPackageFactory Object.
+     * @param User    $user    User to test
+     * @param Integer $groupId Project
+     *
+     * @return Boolean
      */
-    function _getFRSPackageFactory() {
-        return new FRSPackageFactory();
+    protected function userCanAdmin($user, $groupId) {
+        return FRSPackageFactory::userCanAdmin($user, $groupId);
     }
-    
+
     /**
-     * Get a File Factory
+     * Return true if user has Read or Update permission on this release
      *
-     * @return Object{FRSFileFactory} a FRSFileFactory Object.
-     */
-    function _getFRSFileFactory() {
-        return new FRSFileFactory();
-    }
-	
-	/** return true if user has Read or Update permission on this release 
-	 * @param group_id: the package this release is in
-	 * @param release_id: the release id 
-	 * @param user_id: if not given or false take the current user
+	 * @param Integer $group_id   The project the release is in
+     * @param Integer $package_id The package this release is in
+	 * @param Integer $release_id The release id
+	 * @param Integer $user_id    If not given or false take the current user
+     *
+     * @return Boolean
      */ 
-	function userCanRead($group_id,$package_id,$release_id,$user_id=false) {
-        $pm =& PermissionsManager::instance();
-        $um =& UserManager::instance();
-	    if (! $user_id) {
-            $user =& $um->getCurrentUser();
-            $user_id = $user->getId();
+	function userCanRead($group_id, $package_id, $release_id, $user_id=false) {
+        $um = $this->getUserManager();
+	    if (!$user_id) {
+            $user = $um->getCurrentUser();
         } else {
-            $user =& $um->getUserById($user_id);    
+            $user = $um->getUserById($user_id);    
         }
-        if($pm->isPermissionExist($release_id, 'RELEASE_READ')){
-        	$ok = $user->isSuperUser() 
-              	|| $pm->userHasPermission($release_id, 'RELEASE_READ', $user->getUgroups($group_id, array()));
-		} else{
-        	$frspf =& $this->_getFRSPackageFactory();
-        	$ok = $frspf->userCanRead($group_id, $package_id, $user_id);
+        if ($this->userCanAdmin($user, $group_id)) {
+            return true;
+        } else {
+            $pm = $this->getPermissionsManager();
+            if ($pm->isPermissionExist($release_id, FRSRelease::PERM_READ)) {
+                $ok = $pm->userHasPermission($release_id, FRSRelease::PERM_READ, $user->getUgroups($group_id, array()));
+            } else {
+                $frspf = $this->_getFRSPackageFactory();
+                $ok    = $frspf->userCanRead($group_id, $package_id, $user->getId());
+            }
+            return $ok;
         }
-        return $ok;
 	}
 
-    /** return true if user has Update permission on this release 
-     * @param int $group_id the project this release is in
-     * @param int $release_id the ID of the release to update
-     * @param int $user_id if not given or false, take the current user
-     * @return boolean true if user can update the release $release_id, false otherwise
+    /** 
+     * Return true if user has Update permission on this release 
+     *
+     * @param Integer $group_id   The project this release is in
+     * @param Integer $release_id The ID of the release to update
+     * @param Integer $user_id    If not given or false, take the current user
+     *
+     * @return Boolean true if user can update the release $release_id, false otherwise
      */ 
-	function userCanUpdate($group_id,$release_id,$user_id=false) {
-        $pm =& PermissionsManager::instance();
-        $um =& UserManager::instance();
-	    if (! $user_id) {
-            $user =& $um->getCurrentUser();
-        } else {
-            $user =& $um->getUserById($user_id);    
-        }
-        $ok = $user->isSuperUser() 
-              || $pm->userHasPermission($release_id, 'RELEASE_READ', $user->getUgroups($group_id, array()));
-        return $ok;
+	function userCanUpdate($group_id, $release_id, $user_id=false) {
+        return $this->userCanCreate($group_id, $user_id);
 	}
     
     /** 
@@ -311,21 +326,131 @@ class FRSReleaseFactory {
      * NOTE : At this time, there is no difference between creation and update, but in the future, permissions could be added
      * For the moment, only super admin, project admin (A) and file admin (R2) can create releases
      * 
-     * @param int $group_id the project ID this release is in
-     * @param int $user_id the ID of the user. If not given or false, take the current user
-     * @return boolean true if the user has permission to create releases, false otherwise
+     * @param Integer $group_id The project ID this release is in
+     * @param Integer $user_id  The ID of the user. If not given or false, take the current user
+     *
+     * @return Boolean true if the user has permission to create releases, false otherwise
      */ 
-	function userCanCreate($group_id,$user_id=false) {
-        $pm =& PermissionsManager::instance();
-        $um =& UserManager::instance();
+	function userCanCreate($group_id, $user_id=false) {
+        $um = $this->getUserManager();
 	    if (! $user_id) {
-            $user =& $um->getCurrentUser();
+            $user = $um->getCurrentUser();
         } else {
-            $user =& $um->getUserById($user_id);    
+            $user = $um->getUserById($user_id);    
         }
-        $ok = $user->isSuperUser() || $user->isMember($group_id,'R2') || $user->isMember($group_id,'A');
-        return $ok;
+        return $this->userCanAdmin($user, $group_id);
 	}
 
+    /**
+     * Set default permission on given release
+     *
+     * By default, release inherits it's permissions from the parent package.
+     *
+     * @param FRSRelease $release Release on which to apply permissions
+     */
+    function setDefaultPermissions(FRSRelease $release) {
+        $pm = $this->getPermissionsManager();
+        $ugroupsId = $pm->getUgroupIdByObjectIdAndPermissionType($release->getPackageID(), FRSPackage::PERM_READ);
+        foreach ($ugroupsId as $row) {
+            $pm->addPermission(FRSRelease::PERM_READ, $release->getReleaseID(), $row['ugroup_id']);
+        }
+        permission_add_history($release->getGroupID(), FRSRelease::PERM_READ, $release->getReleaseID());
+    }
+
+    /**
+     * Send email notification to people monitoring the package the release belongs to
+     *
+     * @param FRSRelease $release Release in which the file is published
+     *
+     * @return Integer The number of people notified. False in case of error.
+     */
+    function emailNotification(FRSRelease $release) {
+        $fmmf   = new FileModuleMonitorFactory();
+        $result = $fmmf->whoIsMonitoringPackageById($release->getGroupID(), $release->getPackageID());
+
+        if ($result && count($result) > 0) {
+            $package = $this->_getFRSPackageFactory()->getFRSPackageFromDb($release->getPackageID());
+
+            // To
+            $array_emails = array ();
+            foreach ($result as $res) {
+                $array_emails[] = $res['email'];
+            }
+            $list = implode($array_emails, ', ');
+
+            $pm = ProjectManager::instance();
+
+            // Subject
+            $subject  = $GLOBALS['sys_name'];
+            $subject .= ' '.$GLOBALS['Language']->getText('file_admin_editreleases', 'file_rel_notice');
+            $subject .= ' '.$GLOBALS['Language']->getText('file_admin_editreleases', 'file_rel_notice_project', $pm->getProject($package->getGroupID())->getUnixName());
+
+            // Body
+            $fileUrl  = get_server_url() . "/file/showfiles.php?group_id=".$package->getGroupID()."&release_id=".$release->getReleaseID();
+            $notifUrl = get_server_url() . "/file/filemodule_monitor.php?filemodule_id=".$package->getPackageID();
+
+            $body  = $GLOBALS['Language']->getText('file_admin_editreleases', 'download_explain_modified_package', $package->getName());
+            $body .= " " .$GLOBALS['Language']->getText('file_admin_editreleases', 'download_explain', array("<".$fileUrl."> ", $GLOBALS['sys_name']));
+            $body .= "\n<".$notifUrl."> ";
+            
+            $mail = new Mail();
+            $mail->setFrom($GLOBALS['sys_noreply']);
+            $mail->setBcc($list);
+            $mail->setSubject($subject);
+            $mail->setBody($body);
+
+            if ($mail->send()) {
+                return count($result);
+            } else {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Returns an instance of EventManager
+     *
+     * @return EventManager
+     */
+    function getEventManager() {
+         $em = EventManager::instance();
+         FRSLog::instance();
+         return $em;
+    }
+
+    /**
+     * Return an instance of PermissionsManager
+     *
+     * @return PermissionsManager
+     */
+    function getPermissionsManager() {
+        return PermissionsManager::instance();
+    }
+
+    /**
+     * @return UserManager
+     */
+    function getUserManager() {
+        return UserManager::instance();
+    }
+
+    /**
+     * Get a Package Factory
+     *
+     * @return FRSPackageFactory
+     */
+    function _getFRSPackageFactory() {
+        return new FRSPackageFactory();
+    }
+
+    /**
+     * Get a File Factory
+     *
+     * @return FRSFileFactory
+     */
+    function _getFRSFileFactory() {
+        return new FRSFileFactory();
+    }
 }
 ?>

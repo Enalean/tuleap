@@ -78,7 +78,7 @@ function add_new_file() {
 			
 	//TR tag construction		 	
 	var row = Builder.node('tr', {id:'row_'+id});
-			
+	
 	//TD tag constuction, add the trash image this tag (used to remove the line)
 	var cell_trash = Builder.node('td');
 	var image = Builder.node('img', {src:'./../images/delete.png', onclick:'delete_file(\'row_'+id+'\','+id+')', style:'cursor:pointer'});
@@ -135,6 +135,13 @@ function add_new_file() {
 	select.options[0].selected = 'selected';
 	cell.appendChild(select);
 	row.appendChild(cell);
+	
+
+	//Add field for reference checksum
+	cell = Builder.node('td');
+	var md5sum = Builder.node('input', {'type':'text', id:'reference_md5_'+id, size: 36, name:'reference_md5'});
+	cell.appendChild(md5sum);	
+	row.appendChild(cell);
 
 	$('files_body').appendChild(row);
     current_select_number++;
@@ -156,6 +163,7 @@ function onselectchange(select, number, id, cell_trash, image) {
         Element.remove('ftp_file_'+id);
         $('processor_'+id).name='file_processor[]';
         $('type_'+id).name='file_type[]';
+        $('reference_md5_'+id).name = 'reference_md5[]';
         cell_trash.appendChild(image);
     }else if(select.options[select.selectedIndex].value != '-1'){
         var h = {};
@@ -175,6 +183,7 @@ function onselectchange(select, number, id, cell_trash, image) {
         used_ftp_files.push(select.options[select.selectedIndex].value);
         $('processor_'+id).name='ftp_file_processor[]';
         $('type_'+id).name='ftp_file_type[]';
+        $('reference_md5_'+id).name = 'ftp_reference_md5[]';
         cell_trash.appendChild(image);
         $('td_file_'+id).innerHTML += select.options[select.selectedIndex].value;
         

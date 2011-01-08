@@ -100,7 +100,7 @@ class FRSFileDao extends DataAccessObject {
     	
     	$sql = sprintf("SELECT frs_file.file_id AS file_id, frs_file.filename AS filename, frs_file.file_size AS file_size," 
 				 	. "frs_file.release_time AS release_time, frs_file.type_id AS type, frs_file.processor_id AS processor," 
-				 	. "frs_dlstats_filetotal_agg.downloads AS downloads  FROM frs_file " 
+				 	. "frs_dlstats_filetotal_agg.downloads AS downloads , frs_file.computed_md5 AS computed_md5, frs_file.user_id AS user_id FROM frs_file " 
 				 	. "LEFT JOIN frs_dlstats_filetotal_agg ON frs_dlstats_filetotal_agg.file_id=frs_file.file_id " 
 				 	. "WHERE release_id=%s".$where_status , 	
 				 	$this->da->quoteSmart($_release_id));
@@ -142,7 +142,7 @@ class FRSFileDao extends DataAccessObject {
      */
     function create($file_name=null, $release_id=null, $type_id=null,
     				$processor_id=null, $release_time=null, 
-                    $file_size=null, $post_date=null, $status ='A') {
+                    $file_size=null, $reference_md5= null, $post_date=null, $status ='A') {
 
         $arg    = array();
         $values = array();
@@ -167,6 +167,10 @@ class FRSFileDao extends DataAccessObject {
             $values[] = ($this->da->escapeInt($processor_id));
         }
 
+        if($reference_md5 !== null) {
+            $arg[] = 'reference_md5';
+            $values[] = $this->da->quoteSmart($reference_md5);
+        }
 
         $arg[] = 'release_time';
         $values[] = ($this->da->escapeInt(time()));
@@ -195,7 +199,7 @@ class FRSFileDao extends DataAccessObject {
     function createFromArray($data_array) {
         $arg    = array();
         $values = array();
-        $cols   = array('filename', 'release_id', 'type_id', 'processor_id', 'file_size', 'status');
+        $cols   = array('filename', 'release_id', 'type_id', 'processor_id', 'file_size', 'status', 'computed_md5', 'reference_md5', 'user_id');
         foreach ($data_array as $key => $value) {
             if (in_array($key, $cols)) {
                 $arg[]    = $key;
@@ -314,24 +318,38 @@ class FRSFileDao extends DataAccessObject {
         $deleted = $this->update($sql);
         return $deleted;
     }
-    
+
     /**
      * Log the file download action into the database
      * 
      * @param Object{FRSFile) $file the FRSFile Object to log the download of
-     * @param int $user_id the user that download the file (if 0, the current user will be taken)
+     * @param int $user_id the user that download the file
      * @return boolean true if there is no error, false otherwise
      */
-    function logDownload($file, $user_id = 0) {
-    	   if ($user_id == 0) {
-    	       // must take the current user
-           $user_id = user_getid();
-    	   }
-       //Insert a new entry in the file release download log table
+    function logDownload($file, $user_id) {
        $sql = "INSERT INTO filedownload_log(user_id,filerelease_id,time) "
              ."VALUES ('".$this->da->escapeInt($user_id)."','".$this->da->escapeInt($file->getFileID())."','".$this->da->escapeInt(time())."')";
-       $inserted = $this->update($sql);
-       return $inserted;	
+       return $this->update($sql);
+    }
+
+    /**
+     * Return true if a download is already logged for the user since the given time
+     *
+     * @param Integer $fileId
+     * @param Integer $userId
+     * @param Integer $time
+     *
+     * @return Boolean
+     */
+    function existsDownloadLogSince($fileId, $userId, $time) {
+        $sql = 'SELECT NULL'.
+               ' FROM filedownload_log'.
+               ' WHERE user_id = '.$this->da->escapeInt($userId).
+               ' AND filerelease_id = '.$this->da->escapeInt($fileId).
+               ' AND time >= '.$time.
+               ' LIMIT 1';
+        $dar = $this->retrieve($sql);
+        return ($dar && !$dar->isError() && $dar->rowCount() !== 0);
     }
 
     /**
@@ -388,8 +406,8 @@ class FRSFileDao extends DataAccessObject {
      */
     function setFileInDeletedList($id) {
         // Store file in deleted table
-        $sql = 'INSERT INTO frs_file_deleted(file_id, filename, release_id, type_id, processor_id, release_time, file_size, post_date, status, delete_date)'.
-               ' SELECT file_id, filename, release_id, type_id, processor_id, release_time, file_size, post_date, status, '.$this->da->escapeInt($_SERVER['REQUEST_TIME']).
+        $sql = 'INSERT INTO frs_file_deleted(file_id, filename, release_id, type_id, processor_id, release_time, file_size, post_date, status, computed_md5, reference_md5, user_id,delete_date)'.
+               ' SELECT file_id, filename, release_id, type_id, processor_id, release_time, file_size, post_date, status, computed_md5, reference_md5, user_id,'.$this->da->escapeInt($_SERVER['REQUEST_TIME']).
                ' FROM frs_file'.
                ' WHERE file_id = '.$this->da->escapeInt($id);
         $this->update($sql);
@@ -453,6 +471,21 @@ class FRSFileDao extends DataAccessObject {
                 ' WHERE f.file_id = '.$this->da->escapeInt($id).
                 ' AND f.release_id = r.release_id '.
                 ' AND r.status_id != 2 ';
+        return $this->update($sql);
+    }
+
+    /**
+     * Insert the computed md5sum value in case of offline checksum comput
+     * e
+     * @param Integer $fileId
+     * @param String $md5Computed
+     * 
+     * @return Boolean
+     */
+    function updateComputedMd5sum($fileId, $md5Computed) {
+        $sql = ' UPDATE frs_file '. 
+               ' SET computed_md5 = '.$this->da->quoteSmart($md5Computed).
+               ' WHERE file_id= '.$this->da->escapeInt($fileId);
         return $this->update($sql);
     }
 

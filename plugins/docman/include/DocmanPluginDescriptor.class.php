@@ -25,7 +25,7 @@ require_once('common/plugin/PluginDescriptor.class.php');
 class DocmanPluginDescriptor extends PluginDescriptor {
     
     function DocmanPluginDescriptor() {
-        $this->PluginDescriptor($GLOBALS['Language']->getText('plugin_docman', 'descriptor_name'), 'v2.0', $GLOBALS['Language']->getText('plugin_docman', 'descriptor_description'));
+        $this->PluginDescriptor($GLOBALS['Language']->getText('plugin_docman', 'descriptor_name'), 'v2.1', $GLOBALS['Language']->getText('plugin_docman', 'descriptor_description'));
     }
 }
 ?>

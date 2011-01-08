@@ -8,6 +8,7 @@ require_once('common/frs/FRSRelease.class.php');
 require_once('common/frs/FRSReleaseFactory.class.php');
 require_once('common/frs/FRSFile.class.php');
 require_once('common/frs/FRSFileFactory.class.php');
+require_once('common/include/lib/PHP_BigFile.class.php');
 
 // define fault code constants
 define('invalid_package_fault', '3017');
@@ -82,14 +83,17 @@ $server->wsdl->addComplexType(
     'sequence',
     '',
     array(
-        'file_id' => array('name'=>'file_id', 'type' => 'xsd:int'),
-        'release_id' => array('name'=>'release_id', 'type' => 'xsd:int'),
-        'file_name' => array('name'=>'file_name', 'type' => 'xsd:string'),
-        'file_size' => array('name'=>'file_size', 'type' => 'xsd:int'),
-        'type_id' => array('name'=>'type_id', 'type' => 'xsd:int'),
-        'processor_id' => array('name'=>'processor_id', 'type' => 'xsd:int'),
-        'release_time' => array('name'=>'release_time', 'type' => 'xsd:int'),
-        'post_date' => array('name'=>'post_date', 'type' => 'xsd:int'),
+        'file_id'       => array('name'=>'file_id',       'type' => 'xsd:int'),
+        'release_id'    => array('name'=>'release_id',    'type' => 'xsd:int'),
+        'file_name'     => array('name'=>'file_name',     'type' => 'xsd:string'),
+        'file_size'     => array('name'=>'file_size',     'type' => 'xsd:int'),
+        'type_id'       => array('name'=>'type_id',       'type' => 'xsd:int'),
+        'processor_id'  => array('name'=>'processor_id',  'type' => 'xsd:int'),
+        'release_time'  => array('name'=>'release_time',  'type' => 'xsd:int'),
+        'post_date'     => array('name'=>'post_date',     'type' => 'xsd:int'),
+        'computed_md5'  => array('name'=>'computed_md5',  'type' => 'xsd:string'),
+        'reference_md5' => array('name'=>'reference_md5', 'type' => 'xsd:string'),
+        'user_id'       => array('name'=>'user_id',       'type' => 'xsd:int'),
     )
 );
 
@@ -200,6 +204,26 @@ $server->register(
 );
 
 $server->register(
+    'getFileInfo',
+    array(
+        'sessionKey'=>'xsd:string',
+        'group_id'=>'xsd:int',
+        'package_id'=>'xsd:int',
+        'release_id'=>'xsd:int',
+        'file_id'=>'xsd:int'),
+    array('getFileInfoResponse'=>'tns:FRSFile'),
+    $uri,
+    $uri.'#getFileInfo',
+    'rpc',
+    'encoded',
+    'Returns the metadata of the file contained in 
+     the release release_id in the package package_id, in the project group_id.
+     Returns a soap fault if the group ID does not match with a valid project, or if the package ID
+     does not match with the right group ID, or if the release ID does not match with the right package ID,
+     or if the file ID does not match with the right release ID.'
+);
+
+$server->register(
     'getFile',
     array(
         'sessionKey'=>'xsd:string',
@@ -220,6 +244,29 @@ $server->register(
 );
 
 $server->register(
+    'getFileChunk',
+    array(
+        'sessionKey' => 'xsd:string',
+        'group_id'   => 'xsd:int',
+        'package_id' => 'xsd:int',
+        'release_id' => 'xsd:int',
+        'file_id'    => 'xsd:int',
+        'offset'     => 'xsd:int',
+        'size'       => 'xsd:int'),
+    array('getFileChunkResponse'=>'xsd:string'),
+    $uri,
+    $uri.'#getFileChunk',
+    'rpc',
+    'encoded',
+    'Returns a part (chunk) of the <strong>content</strong>, encoded in base64, of the file contained in 
+     the release release_id in the package package_id, in the project group_id.
+     You specify the offset where the download should start and the size to transfer.
+     Returns a soap fault if the group ID does not match with a valid project, or if the package ID
+     does not match with the right group ID, or if the release ID does not match with the right package ID,
+     or if the file ID does not match with the right release ID.'
+);
+
+$server->register(
     'addFile',
     array(
         'sessionKey'=>'xsd:string',
@@ -229,7 +276,8 @@ $server->register(
         'filename'=>'xsd:string',
         'base64_contents'=>'xsd:string',
         'type_id'=>'xsd:int',
-        'processor_id'=>'xsd:int'
+        'processor_id'=>'xsd:int',
+        'reference_md5'=>'xsd:string'
         ),
     array('addFile'=>'xsd:int'),
     $uri,
@@ -237,13 +285,33 @@ $server->register(
     'rpc',
     'encoded',
     'Add a File to the File Release Manager of the project group_id with the values given by 
-     package_id, release_id, filename, base64_contents, type_id and processor_id. 
+     package_id, release_id, filename, base64_contents, type_id, processor_id and reference_md5. 
      The content of the file must be encoded in base64.
      Returns the ID of the created file if the creation succeed.
      Returns a soap fault if the group_id is not a valid one, 
      if the package does not match with the group ID, 
      if the release does not match with the package ID,
      or if the add failed.'
+);
+
+$server->register(
+    'addFileChunk',
+    array(
+        'sessionKey'     => 'xsd:string',
+        'filename'       => 'xsd:string',
+        'contents'       => 'xsd:string',
+        'first_chunk'    => 'xsd:boolean',
+        ),
+    array('addFileChunk'=>'xsd:integer'),
+    $uri,
+    $uri.'#addFileChunk',
+    'rpc',
+    'encoded',
+    'Add a chunk to a file in the incoming directory to be released later in FRS. 
+     The content of the chunk must be encoded in base64.
+     Returns the size of the written chunk if the chunk addition succeed.
+     Returns a soap fault if the session is not valid
+     or if the addition failed.'
 );
 
 $server->register(
@@ -255,7 +323,8 @@ $server->register(
         'release_id'=>'xsd:int',
         'filename'=>'xsd:string',
         'type_id'=>'xsd:int',
-        'processor_id'=>'xsd:int'
+        'processor_id'=>'xsd:int',
+        'reference_md5'=>'xsd:string'
         ),
     array('addUploadedFile'=>'xsd:int'),
     $uri,
@@ -263,7 +332,7 @@ $server->register(
     'rpc',
     'encoded',
     'Add a File to the File Release Manager of the project group_id with the values given by 
-     package_id, release_id, filename, type_id and processor_id. 
+     package_id, release_id, filename, type_id, processor_id and reference_md5. 
      The file must already be present in the incoming directory.
      Returns the ID of the created file if the creation succeed.
      Returns a soap fault if the group_id is not a valid one, 
@@ -407,8 +476,12 @@ function addPackage($sessionKey,$group_id,$package_name,$status_id,$rank=0,$appr
             if ($pkg_fact->isPackageNameExist($package_name, $group_id)) {
                 return new SoapFault(invalid_package_fault, 'Package name already exists in this project', 'addPackage');
             } else {
-                $dao =& $pkg_fact->_getFRSPackageDao();
-                $dar = $dao->create($group->getID(), $package_name, $status_id, $rank, $approve_license);
+                $pkg_array = array('group_id'        => $group->getID(),
+                                   'name'            => $package_name,
+                                   'status_id'       => $status_id,
+                                   'rank'            => $rank,
+                                   'approve_license' => $approve_license);
+                $dar = $pkg_fact->create($pkg_array);
                 if (!$dar) {
                     return new SoapFault(invalid_package_fault, $dar->isError(), 'addPackage');
                 } else {
@@ -551,12 +624,23 @@ function addRelease($sessionKey,$group_id,$package_id,$name,$notes,$changes,$sta
             if ($release_fact->isReleaseNameExist($name, $package_id)) {
                 return new SoapFault(invalid_release_fault, 'Release name already exists in this package', 'addRelease');
             } else {
-                $dao =& $release_fact->_getFRSReleaseDao();
-                $dar = $dao->create($package_id, $name, $notes, $changes, $status_id, 1, $release_date);
+                $release_array = array ('package_id' => $package_id,
+                                        'name' => $name,
+                                        'notes' => $notes,
+                                        'changes' => $changes,
+                                        'status_id' => $status_id,
+                                        'release_date' => $release_date);
+                $dar = $release_fact->create($release_array);
                 if (!$dar) {
                     return new SoapFault(invalid_release_fault, $dar->isError(), 'addRelease');
                 } else {
                     // if there is no error, $dar contains the release_id
+                    //add the default permission inherited from package
+                    //we can modify it from web UI
+                    $release_array['release_id'] = $dar;
+                    $release = new FRSRelease($release_array);
+                    $release_fact->setDefaultPermissions($release);
+
                     return $dar;
                 }
             }
@@ -621,6 +705,64 @@ function getFiles($sessionKey,$group_id,$package_id,$release_id) {
 }
 
 /**
+ * getFileInfo - returns an FRSFile metadata corresponding to the file identified by file_id that belongs to the release release_id, in the package package_id, in project group_id,
+ *
+ * @param string $sessionKey the session hash associated with the session opened by the person who calls the service
+ * @param int $group_id the ID of the group the file belongs to
+ * @param int $package_id the ID of the package the file belongs to
+ * @param int $release_id the ID of the release the file belongs to
+ * @param int $file_id the ID of the file we want to retrieve the metadata
+ * @return array FRSFile that belongs to the project identified by $group_id, in the package $package_id, in the release $release_id, with the ID $file_id
+ *         or a soap fault if group_id does not match with a valid project or if package_id does not match with group_id, or if release_id does not match with package_id, or if file_id does not match with release_id.
+ */
+function getFileInfo($sessionKey, $group_id, $package_id, $release_id, $file_id) {
+    if (session_continue($sessionKey)) {
+
+        $pm = ProjectManager::instance();
+        $group = $pm->getProject($group_id);
+        if (!$group || !is_object($group)) {
+            return new SoapFault(get_group_fault,'Could Not Get Group','getFileInfo');
+        } elseif ($group->isError()) {
+            return new SoapFault(get_group_fault, $group->getErrorMessage(),'getFileInfo');
+        }
+        if (!checkRestrictedAccess($group)) {
+            return new SoapFault(get_group_fault, 'Restricted user: permission denied.', 'getFileInfo');
+        }
+
+        // retieve the package
+        $pkg_fact = new FRSPackageFactory();
+        $package = $pkg_fact->getFRSPackageFromDb($package_id);
+        if (!$package || $package->isDeleted() || $package->getGroupID() != $group_id) {
+            return new SoapFault(invalid_package_fault,'Invalid Package','getFileInfo');
+        }
+        // check access rights to this package
+        if (! $package->userCanRead() || ! $package->isActive()) {
+            return new SoapFault(invalid_package_fault,'Permission to this Package denied','getFileInfo');
+        }
+
+        // retrieve the release
+        $release_fact = new FRSReleaseFactory();
+        $release = $release_fact->getFRSReleaseFromDb($release_id);
+        if (!$release || $release->isDeleted() || $release->getPackageID() != $package_id) {
+            return new SoapFault(invalid_release_fault,'Invalid Release','getFileInfo');
+        }
+        // check access rights to this release
+        if (! $release->userCanRead() || ! $release->isActive()) {
+            return new SoapFault(invalid_release_fault,'Permission to this Release denied','getFileInfo');
+        }
+
+        $file_fact = new FRSFileFactory();
+        $file = $file_fact->getFRSFileFromDb($file_id);
+        if (!$file || !$file->isActive() || $file->getReleaseID() != $release_id) {
+            return new SoapFault(invalid_file_fault,'Invalid File','getFileInfo');
+        }
+        return file_to_soap($file);
+    } else {
+        return new SoapFault(invalid_session_fault,'getFileInfo','Invalid Session','');
+    }
+}
+
+/**
  * file_to_soap : return the soap FRSFile structure giving a PHP FRSFile Object.
  * @access private
  * 
@@ -636,14 +778,17 @@ function file_to_soap($file) {
     } else {
         // for the moment, no permissions on files
         $return = array(
-            'file_id' => $file->getFileID(),
-            'release_id' => $file->getReleaseID(),
-            'file_name' => $file->getFileName(),
-            'file_size' => $file->getFileSize(),
-            'type_id' => $file->getTypeID(),
-            'processor_id' => $file->getProcessorID(),
-            'release_time' => $file->getReleaseTime(),
-            'post_date' => $file->getPostDate(),
+            'file_id'       => $file->getFileID(),
+            'release_id'    => $file->getReleaseID(),
+            'file_name'     => $file->getFileName(),
+            'file_size'     => $file->getFileSize(),
+            'type_id'       => $file->getTypeID(),
+            'processor_id'  => $file->getProcessorID(),
+            'release_time'  => $file->getReleaseTime(),
+            'post_date'     => $file->getPostDate(),
+            'computed_md5'  => $file->getComputedMd5(),
+            'reference_md5' => $file->getReferenceMd5(),
+            'user_id'       => $file->getUserID(),
         );
     }
     return $return;
@@ -711,7 +856,7 @@ function getFile($sessionKey,$group_id,$package_id,$release_id,$file_id) {
         
         $file_fact = new FRSFileFactory();
         $file =& $file_fact->getFRSFileFromDb($file_id);
-        if (!$file || $file->getReleaseID() != $release_id) {
+        if (!$file || !$file->isActive() || $file->getReleaseID() != $release_id) {
             return new SoapFault(invalid_file_fault,'Invalid File','getFile');
         }
         
@@ -730,6 +875,78 @@ function getFile($sessionKey,$group_id,$package_id,$release_id,$file_id) {
 }
 
 /**
+ * getFileChunk - returns the content (encoded in base64) of FRSFiles that belongs to the release identified by file_id, part of release_id, package_id, in project group_id. 
+ *
+ * @param string $sessionKey the session hash associated with the session opened by the person who calls the service
+ * @param int $group_id the ID of the group we want to retrieve the content of file
+ * @param int $package_id the ID of the package we want to retrieve the content of file
+ * @param int $release_id the ID of the release we want to retrieve the content of file
+ * @param int $file_id the ID of the file we want to retrieve the content
+ * @return the content of the file (encoded in base64) $file_id that belongs to the project identified by $group_id, in the package $package_id, in the release $release_id 
+ *         or a soap fault if 
+ *              - group_id does not match with a valid project or 
+ *              - package_id does not match with group_id, or 
+ *              - release_id does not match with package_id, or 
+ *              - file_id does not match with release_id, or
+ *              - the file is not present on the server
+ */
+function getFileChunk($sessionKey,$group_id,$package_id,$release_id,$file_id,$offset,$size) {
+    if (session_continue($sessionKey)) {
+    
+        $pm = ProjectManager::instance();
+        $group = $pm->getProject($group_id);
+        if (!$group || !is_object($group)) {
+            return new SoapFault(get_group_fault,'Could Not Get Group','getFile');
+        } elseif ($group->isError()) {
+            return new SoapFault(get_group_fault, $group->getErrorMessage(),'getFile');
+        }
+        if (!checkRestrictedAccess($group)) {
+            return new SoapFault(get_group_fault, 'Restricted user: permission denied.', 'getFile');
+        }
+
+        // retieve the package
+        $pkg_fact = new FRSPackageFactory();
+        $package =& $pkg_fact->getFRSPackageFromDb($package_id);
+        if (!$package || $package->isDeleted() || $package->getGroupID() != $group_id) {
+            return new SoapFault(invalid_package_fault,'Invalid Package','getFile');
+        }
+        // check access rights to this package
+        if (! $package->userCanRead() || ! $package->isActive()) {
+            return new SoapFault(invalid_package_fault,'Permission to this Package denied','getFiles');
+        }
+        
+        // retrieve the release
+        $release_fact = new FRSReleaseFactory();
+        $release =& $release_fact->getFRSReleaseFromDb($release_id);
+        if (!$release || $release->isDeleted() || $release->getPackageID() != $package_id) {
+            return new SoapFault(invalid_release_fault,'Invalid Release','getFile');
+        }
+        // check access rights to this release
+        if (! $release->userCanRead() || ! $release->isActive()) {
+            return new SoapFault(invalid_release_fault,'Permission to this Release denied','getFiles');
+        }
+        
+        $file_fact = new FRSFileFactory();
+        $file =& $file_fact->getFRSFileFromDb($file_id);
+        if (!$file || !$file->isActive() || $file->getReleaseID() != $release_id) {
+            return new SoapFault(invalid_file_fault,'Invalid File','getFile');
+        }
+        
+        if (!$file->fileExists()) {
+            return new SoapFault(invalid_file_fault,'File doesn\'t exist on the server','getFile');
+        }
+        
+        // Log the download action
+        $file->logDownload();
+        
+        $contents = $file->getContent($offset,$size);
+        return base64_encode($contents);
+    } else {
+        return new SoapFault(invalid_session_fault,'getFile','Invalid Session','');
+    }
+}
+
+/**
  * addFile - add a file in the file release manager, in the release $release_id, in package $package_id of the project $group_id with given values
  *
  * @param string $sessionKey the session hash associated with the session opened by the person who calls the service
@@ -740,6 +957,7 @@ function getFile($sessionKey,$group_id,$package_id,$release_id,$file_id) {
  * @param string $base64_contents the content of the file, encoded in base64
  * @param int $type_id the ID of the type of the file
  * @param int $processor_id the ID of the processor of the file
+ * @param string reference_md5 the md5sum of the file calculated in client side
  * @return int the ID of the new created file, 
  *              or a soap fault if :
  *              - group_id does not match with a valid project, 
@@ -750,7 +968,7 @@ function getFile($sessionKey,$group_id,$package_id,$release_id,$file_id) {
  *              - the user does not have the permissions to create a file
  *              - the file creation failed.
  */
-function addFile($sessionKey,$group_id,$package_id,$release_id,$filename,$base64_contents,$type_id,$processor_id) {
+function addFile($sessionKey,$group_id,$package_id,$release_id,$filename,$base64_contents,$type_id,$processor_id,$reference_md5) {
     if (session_continue($sessionKey)) {
 
         $pm = ProjectManager::instance();
@@ -795,13 +1013,48 @@ function addFile($sessionKey,$group_id,$package_id,$release_id,$filename,$base64
             
             // call addUploadedFile function
             $uploaded_filename = basename($filename);
-            return addUploadedFile($sessionKey,$group_id,$package_id,$release_id,$uploaded_filename,$type_id,$processor_id);
+            return addUploadedFile($sessionKey,$group_id,$package_id,$release_id,$uploaded_filename,$type_id,$processor_id,$reference_md5);
             
         } else {
             return new SoapFault(invalid_file_fault, 'User is not allowed to add a file', 'addFile');
         }
     } else {
         return new SoapFault(invalid_session_fault,'Invalid Session','addFile');
+    }
+}
+
+/**
+ * addFileChunk - add a chunk of a file in the incoming directory.
+ *
+ * @param string $sessionKey the session hash associated with the session opened by the person who calls the service
+ * @param int $group_id the ID of the group we want to add the file
+ * @param string $filename the name of the file we want to add
+ * @param string $contents the content of the chunk, encoded in base64
+ * @param boolean $first_chunk indicates if the chunk to add is the first
+ * @return int size of the chunk if added, or a soap fault if:
+ *              - the sessionKey is not valid, 
+ *              - the file creation failed.
+ */
+function addFileChunk($sessionKey, $filename, $contents, $first_chunk) {
+    if (session_continue($sessionKey)) {
+        // if it's the first chunk overwrite the existing (if exists) file with the same name
+        if ($first_chunk) {
+            $mode = 'w';
+        } else {
+            $mode = 'a';
+        }
+        $fp = fopen($GLOBALS['ftp_incoming_dir'].'/'.$filename, $mode);
+        $chunk = base64_decode($contents);
+        $cLength = strlen($chunk);
+        $written = fwrite($fp, $chunk);
+        fclose($fp);
+        if ($written != $cLength) {
+            return new SoapFault(invalid_file_fault,'Sent '.$cLength.' of data but only '.$written.' saved in the server', 'addFileChunk');
+        } else {
+            return $written;
+        }
+    } else {
+        return new SoapFault(invalid_session_fault,'Invalid Session', 'addFileChunk');
     }
 }
 
@@ -815,6 +1068,7 @@ function addFile($sessionKey,$group_id,$package_id,$release_id,$filename,$base64
  * @param string $filename the name of the file we want to add (only file name, not directory)
  * @param int $type_id the ID of the type of the file
  * @param int $processor_id the ID of the processor of the file
+ * @param string reference_md5 the md5sum of the file calculated in client side
  * @return int the ID of the new created file, 
  *              or a soap fault if :
  *              - group_id does not match with a valid project, 
@@ -823,9 +1077,10 @@ function addFile($sessionKey,$group_id,$package_id,$release_id,$filename,$base64
  *              - release_id does not match with a valid release,
  *              - release_id does not belong to the project group_id,
  *              - the user does not have the permissions to create a file
+ *              - the md5 comparison failed
  *              - the file creation failed.
  */
-function addUploadedFile($sessionKey,$group_id,$package_id,$release_id,$filename,$type_id,$processor_id) {
+function addUploadedFile($sessionKey,$group_id,$package_id,$release_id,$filename,$type_id,$processor_id,$reference_md5) {
     if (session_continue($sessionKey)) {
 
         $pm = ProjectManager::instance();
@@ -856,11 +1111,17 @@ function addUploadedFile($sessionKey,$group_id,$package_id,$release_id,$filename
         $file_fact = new FRSFileFactory();
         if ($file_fact->userCanAdd($group_id)) {
             if (! $file_fact->isFileBaseNameExists($filename, $release->getReleaseID(), $group_id)) {
-                $file_id = $file_fact->createFromIncomingFile(basename($filename),$release_id,$type_id,$processor_id);
-                if (! $file_id) {
-                    return new SoapFault(invalid_file_fault,$file_fact->getErrorMessage(),'addUploadedFile');
+                $computed_md5 = PHP_BigFile::getMd5Sum($GLOBALS['ftp_incoming_dir'] . '/' . $filename);
+                if ($file_fact->compareMd5Checksums($computed_md5, $reference_md5)) {
+                    $file_id = $file_fact->createFromIncomingFile(basename($filename),$release_id,$type_id,$processor_id,$computed_md5,$reference_md5);
+                    if (! $file_id) {
+                        return new SoapFault(invalid_file_fault,$file_fact->getErrorMessage(),'addUploadedFile');
+                    } else {
+                        $release_fact->emailNotification($release);
+                        return $file_id;
+                    }
                 } else {
-                    return $file_id;
+                    return new SoapFault(invalid_file_fault, 'Md5 comparison failed for file "'.$filename.'"', 'addUploadedFile');
                 }
             } else {
                 return new SoapFault(invalid_file_fault, 'Filename "'.$filename.'" already exists', 'addUploadedFile');
@@ -982,8 +1243,11 @@ $server->addFunction(
             'getReleases',
     	    'addRelease',
     	    'getFiles',
+    	    'getFileInfo',
     	    'getFile',
+    	    'getFileChunk',
     	    'addFile',
+    	    'addFileChunk',
     	    'addUploadedFile',
     	    'getUploadedFiles',
             'deleteFile'

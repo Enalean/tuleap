@@ -376,6 +376,17 @@ function frs_display_release_form($is_update, &$release, $group_id, $title, $url
         }
         $release =& new FRSRelease($release);
     }
+    if ($is_update) {
+        $files = $release->getFiles();
+        if (count($files) > 0 ) {
+            for ($i = 0; $i < count($files); $i++) {
+                if (!$frsff->compareMd5Checksums($files[$i]->getComputedMd5(), $files[$i]->getReferenceMd5())) {
+                    $GLOBALS['Response']->addFeedback('error',$GLOBALS['Language']->getText('file_admin_editreleases',  'md5_fail', array(basename($files[$i]->getFileName()), $files[$i]->getComputedMd5())));
+                }
+            }
+        }
+    }
+
     file_utils_admin_header(array (
         'title' => $GLOBALS['Language']->getText('file_admin_editreleases',
         'release_new_file_version'
@@ -411,8 +422,12 @@ function frs_display_release_form($is_update, &$release, $group_id, $title, $url
     echo "var refresh_files_list = '". $GLOBALS['Language']->getText('file_admin_editreleases','refresh_file_list') . "';";
     echo "var release_mode = '". ($is_update ? 'edition' : 'creation' ) ."';";
     if ($is_update) {
-        $pm = & PermissionsManager::instance();
-        $ugroups_name = $pm->getUgroupNameByObjectIdAndPermissionType($release->getReleaseID(), 'RELEASE_READ');
+        $pm  = PermissionsManager::instance();
+        $dar = $pm->getAuthorizedUgroups($release->getReleaseID(), FRSRelease::PERM_READ);
+        $ugroups_name = array();
+        foreach ($dar as $row) {
+            $ugroups_name[] = util_translate_name_ugroup($row['name']);
+        }
         echo "var ugroups_name = '" . implode(", ", $ugroups_name) . "';";
         echo "var default_permissions_text = '" . $GLOBALS['Language']->getText('file_admin_editreleases', 'release_perm') . "';";
     } else {
@@ -495,6 +510,8 @@ function frs_display_release_form($is_update, &$release, $group_id, $title, $url
     $titles[] = $GLOBALS['Language']->getText('file_admin_editreleases', 'filename');
     $titles[] = $GLOBALS['Language']->getText('file_admin_editreleases', 'processor');
     $titles[] = $GLOBALS['Language']->getText('file_admin_editreleases', 'file_type');
+    $titles[] = $GLOBALS['Language']->getText('file_admin_editreleases', 'md5sum');
+    $titles[] = $GLOBALS['Language']->getText('file_admin_editreleases', 'user');
     if ($is_update) {
         $titles[] = $GLOBALS['Language']->getText('file_admin_editreleasepermissions', 'release');
         $titles[] = $GLOBALS['Language']->getText('file_admin_editreleases', 'release_date');
@@ -509,11 +526,22 @@ function frs_display_release_form($is_update, &$release, $group_id, $title, $url
             $fname = $files[$i]->getFileName();
             $list = split('/', $fname);
             $fname = $list[sizeof($list) - 1];
+            $user_id = $files[$i]->getUserID();
+            $userName =(isset($user_id)) ? UserManager::instance()->getUserById($files[$i]->getUserID())->getRealName() : "";   
             echo '<TR>';
             echo '<TD><INPUT TYPE="CHECKBOX" NAME="release_files_to_delete[]" VALUE="' . $files[$i]->getFileID() . '"</TD>';
             echo '<TD>' . $hp->purify($fname, CODENDI_PURIFIER_CONVERT_HTML) . '<INPUT TYPE="HIDDEN" NAME="release_files[]" VALUE="' . $files[$i]->getFileID() . '"></TD>';
             echo '<TD>' . frs_show_processor_popup($group_id,$name = 'release_file_processor[]', $files[$i]->getProcessorID()) . '</TD>';
             echo '<TD>' . frs_show_filetype_popup($name = 'release_file_type[]', $files[$i]->getTypeID()) . '</TD>';
+            //In case of difference between the inserted md5 and the computed one
+            //we dispaly an editable text field to let the user insert the right value
+            //to avoid the error message next time
+            $value = 'value = "'.$files[$i]->getReferenceMd5().'"';
+            if ($frsff->compareMd5Checksums($files[$i]->getComputedMd5(), $files[$i]->getReferenceMd5())) {
+                $value = 'value = "'.$files[$i]->getComputedMd5().'" readonly="true"';
+            }
+            echo '<TD><INPUT TYPE="TEXT" NAME="release_reference_md5[]" '.$value.' SIZE="36" ></TD>';
+            echo '<TD><INPUT TYPE="TEXT" NAME="user" value = "'.$userName.'" readonly="true"></TD>';
             echo '<TD>' . frs_show_release_popup2($group_id, $name = 'new_release_id[]', $files[$i]->getReleaseID()) . '</TD>';
             echo '<TD><INPUT TYPE="TEXT" NAME="release_time[]" VALUE="' . format_date('Y-m-d', $files[$i]->getReleaseTime()) . '" SIZE="10" MAXLENGTH="10"></TD></TR>';
         }
@@ -548,6 +576,9 @@ function frs_display_release_form($is_update, &$release, $group_id, $title, $url
                             </td>
                             <td>
                                 <?php print frs_show_filetype_popup($name = 'file_type'); ?>
+                            </td>
+                            <td>
+                                <input name="reference_md5" value="" size="36" type="TEXT">
                             </td>
                         </tr>
                     </tbody>
@@ -761,6 +792,12 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
     } else {
         $file_type = array();
     }
+
+    if($request->validArray(new Valid_String('reference_md5'))) {
+        $reference_md5 = $request->get('reference_md5');
+    } else {
+        $reference_md5 = array();
+    }
     
     if($request->validArray(new Valid_UInt('ftp_file_processor'))) {
         $ftp_file_processor = $request->get('ftp_file_processor');
@@ -773,7 +810,13 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
     } else {
         $ftp_file_type = array();
     }
-    
+
+    if($request->validArray(new Valid_String('ftp_reference_md5'))) {
+        $ftp_reference_md5 = $request->get('ftp_reference_md5');
+    } else {
+        $ftp_reference_md5 = array();
+    }
+
     if($request->valid(new Valid_String('release_news_subject'))) {
         $release_news_subject = $request->get('release_news_subject');
     } else {
@@ -817,7 +860,7 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
         } else {
             $release_files_to_delete = array();
         }
-        
+
         if($request->validArray(new Valid_UInt('release_files'))) { 
             $release_files = $request->get('release_files');
         } else {
@@ -835,7 +878,12 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
         } else {
             $release_file_type = array();
         }
-        
+
+        if($request->validArray(new Valid_String('release_reference_md5'))) {
+            $release_reference_md5 = $request->get('release_reference_md5');
+        } else {
+            $release_reference_md5 = array();
+        }
         if($request->validArray(new Valid_UInt('new_release_id'))) {
             $new_release_id = $request->get('new_release_id');
         } else {
@@ -846,6 +894,12 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
             $release_time = $request->get('release_time');
         } else {
             $release_time = array();
+        }
+        
+        if($request->validArray(new Valid_String('reference_md5'))) {
+            $reference_md5 = $request->get('reference_md5');
+        } else {
+            $reference_md5 = array();
         }
         
         if($request->valid(new Valid_UInt('id'))) {
@@ -979,41 +1033,17 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
                 }
             }
 
-            //send notification
+            // Send notification
             if ($notification) {
-                /*
-                    Send a release notification email
-                */
-                $fmmf = new FileModuleMonitorFactory();
-                $result = $fmmf->whoIsMonitoringPackageById($group_id, $release['package_id']);
-
-                if ($result && count($result) > 0) {
-                    //send the email
-                    $array_emails = array ();
-                    foreach ($result as $res) {
-                        $array_emails[] = $res['email'];
-                        $package_name = $res['name'];
-                    }
-                    $list = implode($array_emails, ', ');
-                    $pm = ProjectManager::instance();
-                    $subject = $GLOBALS['sys_name'] . ' ' . $GLOBALS['Language']->getText('file_admin_editreleases', 'file_rel_notice') . ' ' . $GLOBALS['Language']->getText('file_admin_editreleases', 'file_rel_notice_project', $pm->getProject($group_id)->getUnixName());
-                    $package_id = $release['package_id'];
-                    list ($host, $port) = explode(':', $GLOBALS['sys_default_domain']);
-                    $body = $GLOBALS['Language']->getText('file_admin_editreleases', 'download_explain_modified_package', $package_name) . " " . $GLOBALS['Language']->getText('file_admin_editreleases', 'download_explain', array (
-                    "<" . get_server_url() . "/file/showfiles.php?group_id=$group_id&release_id=$release_id> ", $GLOBALS['sys_name'])) .
-                    "\n<" . get_server_url() . "/file/filemodule_monitor.php?filemodule_id=$package_id> ";
-
-                    $mail = & new Mail();
-                    $mail->setFrom($GLOBALS['sys_noreply']);
-                    $mail->setBcc($list);
-                    $mail->setSubject($subject);
-                    $mail->setBody($body);
-                    if ($mail->send()) {
-                        $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('file_admin_editreleases', 'email_sent', count($result)));
-                    } else { //ERROR
-                        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('global', 'mail_failed', array (
+                $rel = new FRSRelease($array);
+                $count = $frsrf->emailNotification($rel);
+                if ($count === false) {
+                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('global', 'mail_failed', array (
                             $GLOBALS['sys_email_admin']
                         )));
+                } else {
+                    if ($count > 0) {
+                        $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('file_admin_editreleases', 'email_sent', $count));
                     }
                 }
             }
@@ -1029,16 +1059,14 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
                 foreach ($release_files_to_delete as $rel_file) {
                     $res =& $frsff->getFRSFileFromDb($rel_file);
                     $fname = $res->getFileName();
-                    $list = split('/', $fname);
-                    $fname = $list[sizeof($list) - 1];            
                     $res = $frsff->delete_file($group_id, $rel_file);
                     if ($res == 0) {
-                        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('file_admin_editreleases', 'f_not_yours', $fname));
+                        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('file_admin_editreleases', 'f_not_yours', basename($fname)));
                     } else {
-                        $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('file_admin_editreleases', 'file_deleted', $fname));
+                        $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('file_admin_editreleases', 'file_deleted', basename($fname)));
                     }
                 }
-    
+
                 //update files
                 $index = 0;
                 foreach ($release_files as $rel_file) {
@@ -1072,6 +1100,7 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
                                         'release_time' => $unix_release_time,
                                         'type_id' => $release_file_type[$index],
                                         'processor_id' => $release_file_processor[$index],
+                                        'reference_md5' => $release_reference_md5[$index],
                                         'file_id' => $rel_file
                                     );
                                     $res = $frsff->update($array);
@@ -1095,11 +1124,13 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
             $ftp_files_processor_type_list = array ();
             if (isset ($js) && $js == 'no_js') {
                 //if javascript is not allowed, there is maximum one file to upload						
+                // TODO : fix warnings due to array instead of string for "file_processor", "file_type" & "reference_md5"
                 if ($ftp_file[0] != -1) {
                     $ftp_files_processor_type_list[] = array (
                         'name' => $ftp_file[0],
                         'processor' => $file_processor,
-                        'type' => $file_type
+                        'type' => $file_type,
+                        'reference_md5' => $reference_md5
                     );
 
                 } else
@@ -1109,7 +1140,8 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
                             'name' => $_FILES['file']['name'][0],
                             'tmp_name' => $_FILES['file']['tmp_name'][0],
                             'processor' => $file_processor,
-                            'type' => $file_type
+                            'type' => $file_type,
+                            'reference_md5' => $reference_md5
                         );
                     }
             } else {
@@ -1122,7 +1154,8 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
                             'name' => $_FILES['file']['name'][$i],
                             'tmp_name' => $_FILES['file']['tmp_name'][$i],
                             'processor' => $file_processor[$i],
-                            'type' => $file_type[$i]
+                            'type' => $file_type[$i],
+                            'reference_md5' => $reference_md5[$i]
                         );
                     }
                 }
@@ -1134,7 +1167,8 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
                         $ftp_files_processor_type_list[] = array (
                             'name' => $file,
                             'processor' => $ftp_file_processor[$index],
-                            'type' => $ftp_file_type[$index]
+                            'type' => $ftp_file_type[$index],
+                            'reference_md5' => $ftp_reference_md5[$index]
                         );
                         $index++;
                     }
@@ -1197,7 +1231,13 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
                                             move the file to the project's fileserver directory
                                         */
                                         clearstatcache();
-                                        if (file_exists($GLOBALS['ftp_incoming_dir'] . '/' . $filename)) {
+                                        $path = $GLOBALS['ftp_incoming_dir'] . '/' . $filename;
+                                        if (file_exists($path)) {
+                                             $um = UserManager::instance();
+                                             $user = $um->getCurrentUser();
+                                            // calculate its md5sum
+                                            $computedMd5 = PHP_BigFile::getMd5Sum($path);
+                                            if ($frsff->compareMd5Checksums($computedMd5, $file['reference_md5'])) {
                                             //move the file to a its project page using a setuid program
                                             //test if the file aldready exists in the destination directory
                                             $group = $pm->getProject($group_id);
@@ -1207,9 +1247,14 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
                                                     //echo '<h3>' . $exec_res[0], $exec_res[1] . '</H3><P>';
                                                 
                                                     //add the file to the database
-                                                    $array = array (
-                                                        'filename' => $frsff->getUploadSubDirectory($release_id
-                                                    ) . '/' . $filename, 'release_id' => $release_id, 'file_size' => file_utils_get_size($project_files_dir . '/' . $frsff->getUploadSubDirectory($release_id) . '/' . $filename), 'processor_id' => $file['processor'] , 'type_id' => $file['type'] );
+                                                    $array = array ('filename'      => $frsff->getUploadSubDirectory($release_id) . '/' . $filename,
+                                                                    'release_id'    => $release_id,
+                                                                    'file_size'     => file_utils_get_size($project_files_dir . '/' . $frsff->getUploadSubDirectory($release_id) . '/' . $filename),
+                                                                    'processor_id'  => $file['processor'],
+                                                                    'type_id'       => $file['type'],
+                                                                    'computed_md5'  => $computedMd5,
+                                                                    'reference_md5' => $file['reference_md5'],
+                                                                    'user_id'       => $user->getId());
                                                     $res = & $frsff->create($array);
         
                                                     if (!$res) {
@@ -1218,8 +1263,11 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
                                                     } else {
                                                         $addingFiles = true;
                                                     }
-                                            } else {
+                                                } else {
                                                     $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('file_admin_editreleases', 'not_add_file') . ": " . basename($filename));
+                                                }
+                                            } else {
+                                                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('file_admin_editreleases', 'md5_fail', array (basename($filename), $computedMd5)));
                                             }
                                         } else {
                                             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('file_admin_editreleases', 'filename_invalid') . ": $filename");
@@ -1259,11 +1307,17 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
                                     //move the file to a its project page using a setuid program
                                         $exec_res = $frsff->moveFileForge($group_id, $filename, $frsff->getUploadSubDirectory($release_id));
                                         if (!$exec_res) {
+                                             $um = UserManager::instance();
+                                             $user = $um->getCurrentUser();
                                             //echo '<h3>' . $exec_res[0], $exec_res[1] . '</H3><P>';
                                             //add the file to the database
-                                            $array = array (
-                                                'filename' => $frsff->getUploadSubDirectory($release_id
-                                            ) . '/' . $filename, 'release_id' => $release_id, 'file_size' => file_utils_get_size($project_files_dir . '/' . $frsff->getUploadSubDirectory($release_id) . '/' . $filename), 'processor_id' => $file['processor'], 'type_id' => $file['type']);
+                                            $array = array ('filename'      => $frsff->getUploadSubDirectory($release_id) . '/' . $filename,
+                                                            'release_id'    => $release_id,
+                                                            'file_size'     => file_utils_get_size($project_files_dir . '/' . $frsff->getUploadSubDirectory($release_id) . '/' . $filename),
+                                                            'processor_id'  => $file['processor'],
+                                                            'type_id'       => $file['type'],
+                                                            'reference_md5' => $file['reference_md5'],
+                                                            'user_id'       => $user->getId());
                                             $res = $frsff->create($array);
         
                                             if (!$res) {
@@ -1271,6 +1325,9 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
                                                 echo db_error();
                                             } else {
                                                 $addingFiles = true;
+                                                $path = $project_files_dir . '/' . $frsff->getUploadSubDirectory($release_id) . '/' . $filename;
+                                                $em = EventManager::instance();
+                                                $em->processEvent(Event::COMPUTE_MD5SUM, array('fileId' =>$res));
                                             }
                                         } else {
                                             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('file_admin_editreleases', 'not_add_file') . ": $filename ");

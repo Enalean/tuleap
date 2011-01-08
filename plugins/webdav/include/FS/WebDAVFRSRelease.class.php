@@ -432,15 +432,23 @@ class WebDAVFRSRelease extends Sabre_DAV_Directory {
                     if ($fileSize > $this->getMaxFileSize()) {
                         throw new Sabre_DAV_Exception_RequestedRangeNotSatisfiable($GLOBALS['Language']->getText('plugin_webdav_download', 'error_file_size'));
                     }
+                    // calculate its md5sum
+                    $computedMd5 = $utils->getIncomingFileMd5Sum($GLOBALS['ftp_incoming_dir'].'/'.$name);
                     $frsff = $utils->getFileFactory();
                     // Call to fileforge to move the file from incoming to its destination directory
                     $res = $frsff->moveFileForge($this->getProject()->getGroupId(), $name, $frsff->getUploadSubDirectory($this->getReleaseId()));
 
                     if (!$res) {
-                        $fileArray = array('filename' => $utils->getFileFactory()->getUploadSubDirectory($this->getReleaseId()).'/'.$name
-                        , 'release_id' => $this->getReleaseId(), 'file_size' => $fileSize
-                        , 'processor_id' => 100, 'type_id' => 100);
-                        $frsff->create($fileArray);
+                        $fileArray = array('filename'     => $frsff->getUploadSubDirectory($this->getReleaseId()).'/'.$name,
+                                           'release_id'   => $this->getReleaseId(),
+                                           'file_size'    => $fileSize,
+                                           'processor_id' => 100,
+                                           'type_id'      => 100,
+                                           'computed_md5' => $computedMd5,
+                                           'user_id'      => $this->getUser()->getId());
+                        if ($frsff->create($fileArray)) {
+                            $utils->getReleaseFactory()->emailNotification($this->getRelease());
+                        }
                     } else {
                         throw new Sabre_DAV_Exception($GLOBALS['Language']->getText('plugin_webdav_upload', 'move_fileforge_fail'));
                     }

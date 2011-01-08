@@ -286,6 +286,8 @@ function permission_db_authorized_ugroups($permission_type, $object_id) {
 
 /**
  * Return a DB list of the default ugroup_ids authorized to access the given permission_type
+ * @deprecated
+ * @see PermissionManager::getDefaults
  */
 function permission_db_get_defaults($permission_type) {
     $sql="SELECT ugroup_id FROM permissions_values WHERE permission_type='$permission_type' AND is_default='1' ORDER BY ugroup_id";

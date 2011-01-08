@@ -564,17 +564,17 @@ class WebDAVFRSPackageTest extends UnitTestCase {
      */
     function testCreateDirectoryFailWithNameExist() {
 
-    $webDAVFRSPackage = new WebDAVFRSPackageTestVersion($this);
+        $webDAVFRSPackage = new WebDAVFRSPackageTestVersion($this);
 
-    $webDAVFRSPackage->setReturnValue('userCanWrite', true);
-    $frsrf = new MockFRSReleaseFactory();
-    $frsrf->setReturnValue('isReleaseNameExist', true);
-    $utils = new MockWebDAVUtils();
-    $utils->setReturnValue('getReleaseFactory', $frsrf);
-    $webDAVFRSPackage->setReturnValue('getUtils', $utils);
-    $this->expectException('Sabre_DAV_Exception_MethodNotAllowed');
+        $webDAVFRSPackage->setReturnValue('userCanWrite', true);
+        $frsrf = new MockFRSReleaseFactory();
+        $frsrf->setReturnValue('isReleaseNameExist', true);
+        $utils = new MockWebDAVUtils();
+        $utils->setReturnValue('getReleaseFactory', $frsrf);
+        $webDAVFRSPackage->setReturnValue('getUtils', $utils);
+        $this->expectException('Sabre_DAV_Exception_MethodNotAllowed');
 
-    $webDAVFRSPackage->createDirectory('release');
+        $webDAVFRSPackage->createDirectory('release');
 
     }
 
@@ -583,20 +583,38 @@ class WebDAVFRSPackageTest extends UnitTestCase {
      */
     function testCreateDirectorysucceed() {
 
-    $webDAVFRSPackage = new WebDAVFRSPackageTestVersion($this);
+        // Values we expect for the package to create
+        $refPackageToCreate = array('name'       => 'release',
+                                    'package_id' => 42,
+                                    'notes'      => '',
+                                    'changes'    => '',
+                                    'status_id'  => 1);
+        // Values we expect for the package once created
+        $refPackage = $refPackageToCreate;
+        $refPackage['release_id'] = 15;
 
-    $webDAVFRSPackage->setReturnValue('userCanWrite', true);
-    $frsrf = new MockFRSReleaseFactory();
-    $frsrf->setReturnValue('isReleaseNameExist', false);
-    $utils = new MockWebDAVUtils();
-    $utils->setReturnValue('getReleaseFactory', $frsrf);
-    $pm = new MockPermissionsManager();
-    $utils->setReturnValue('getPermissionsManager', $pm);
-    $webDAVFRSPackage->setReturnValue('getUtils', $utils);
-    $this->assertNoErrors();
 
-    $webDAVFRSPackage->createDirectory('release');
+        $webDAVFRSPackage = new WebDAVFRSPackageTestVersion($this);
+        $webDAVFRSPackage->setReturnValue('getPackageId', 42);
 
+        $webDAVFRSPackage->setReturnValue('userCanWrite', true);
+
+        $frsrf = new MockFRSReleaseFactory();
+        $frsrf->setReturnValue('isReleaseNameExist', false);
+        $frsrf->expectOnce('create', array($refPackageToCreate));
+        $frsrf->setReturnValue('create', 15);
+        $frsrf->expectOnce('setDefaultPermissions', array(new FRSRelease($refPackage)));
+
+        $utils = new MockWebDAVUtils();
+        $utils->setReturnValue('getReleaseFactory', $frsrf);
+
+        $pm = new MockPermissionsManager();
+        $utils->setReturnValue('getPermissionsManager', $pm);
+
+        $webDAVFRSPackage->setReturnValue('getUtils', $utils);
+        $this->assertNoErrors();
+
+        $webDAVFRSPackage->createDirectory('release');
     }
 
 }

@@ -262,9 +262,6 @@ class WebDAVFRS extends Sabre_DAV_Directory {
                 $packageData['group_id'] = $this->getGroupId();
                 $packageData['status_id'] = 1;
                 $packageId = $utils->getPackageFactory()->create($packageData);
-                if ($packageId) {
-                    $utils->getPermissionsManager()->addPermission('PACKAGE_READ', $packageId, '2');
-                }
             } else {
                 throw new Sabre_DAV_Exception_MethodNotAllowed($GLOBALS['Language']->getText('plugin_webdav_common', 'package_name_exist'));
             }

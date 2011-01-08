@@ -459,50 +459,6 @@ img {
  border:none; 
 }
 
-/* {{{ File Release System */
-.frs_filename_col {
-    width: 50%;
-}
-.frs_size_col {
-    width: 10%;
-}
-.frs_downloads_col {
-    width: 10%;
-}
-.frs_architecture_col {
-    width: 10%;
-}
-.frs_filetype_col {
-    width: 10%;
-}
-.frs_date_col {
-    width: 10%;
-}
-fieldset.package {
-    margin-bottom: 20px;
-}
-fieldset.package legend {
-    font-size: larger;
-    padding-right: 10px;
-}
-.release {
-    background-color: #D1CEC4;
-    border-spacing: 0px;
-    border-collapse: collapse;
-    margin-top: 1px;
-}
-.release_date {
-    width: 10%;
-    text-align: right;
-}
-table.release tr td img {
-    vertical-align: bottom;
-}
-.files_table {
-    margin-bottom: 20px;
-}
-/* }}} */
-
 .iframe_service {
     width:100%;
     height:650px;

@@ -308,6 +308,8 @@ while (list ($package_id, $package) = each($packages)) {
                         $title_arr[] = $Language->getText('file_showfiles', 'arch');
                         $title_arr[] = $Language->getText('file_showfiles', 'type');
                         $title_arr[] = $Language->getText('file_showfiles', 'date');
+                        $title_arr[] = $Language->getText('file_showfiles', 'md5sum');
+                        $title_arr[] = $Language->getText('file_showfiles', 'user');
                         echo html_build_list_table_top($title_arr, false, false, true, null, "files_table") . "\n";
                         
                         // colgroup is used here in order to avoid table resizing when expand or collapse files, with CSS properties.
@@ -318,6 +320,8 @@ while (list ($package_id, $package) = each($packages)) {
                         echo ' <col class="frs_architecture_col">';
                         echo ' <col class="frs_filetype_col">';
                         echo ' <col class="frs_date_col">';
+                        echo ' <col class="frs_md5sum_col">';
+                        echo ' <col class="frs_user_col">';
                         echo '</colgroup>';
         
                             // now iterate and show the files in this release....
@@ -340,10 +344,13 @@ while (list ($package_id, $package) = each($packages)) {
                             if ($file_release['file_size'] < 1024) {
                                 $size_precision = 2;
                             }
+                            $user = UserManager::instance()->getUserById($file_release['user_id']);
                             print '</B></TD>' . '<TD>' . FRSFile::convertBytesToKbytes($file_release['file_size'], $size_precision) . '</TD>' . '<TD>' . ($file_release['downloads'] ? $file_release['downloads'] : '0') . '</TD>';
                             print '<TD>' . (isset ($processor[$file_release['processor']]) ?  $hp->purify($processor[$file_release['processor']], CODENDI_PURIFIER_CONVERT_HTML) : "") . '</TD>';
-                            print '<TD>' . (isset ($file_type[$file_release['type']]) ? $file_type[$file_release['type']] : "") . '</TD>' . '<TD>' . format_date("Y-m-d", $file_release['release_time']) . '</TD>' . '</TR>' . "\n";
-                            if (!isset ($proj_stats['size']))
+                            print '<TD>' . (isset ($file_type[$file_release['type']]) ? $file_type[$file_release['type']] : "") . '</TD>' . '<TD>' . format_date("Y-m-d", $file_release['release_time']) . '</TD>'. 
+                                  '<TD>' . (isset ($file_release['computed_md5'])? $file_release['computed_md5']: ""). '</TD>' .
+                                  '<TD>' . (isset ($file_release['user_id'])? $user->getRealName(): ""). '</TD>' .'</TR>' . "\n";
+                                 if (!isset ($proj_stats['size']))
                                 $proj_stats['size'] = 0;
                             $proj_stats['size'] += $file_release['file_size'];
                             if (!isset ($proj_stats['downloads']))

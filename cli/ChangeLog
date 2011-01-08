@@ -1,3 +1,30 @@
-1.3.3
-	* Module 'tracker': Add '--format' in 'addComment' (choose text or HTML for
-	  comment format
+1.4.0 - Codendi SOAP api 4.1 (Codendi_ST 4.0.16) Not released yet
+    What Changed?
+    ============
+    * tracker addComment
+        Add the field '--format' in order to specify the comment format (text/HTML)
+
+    * frs addFile
+        Send the file split in chunks so local files having big size can be added using CLI.
+        For local file calculate md5sum of the file in client side then send it to the server so file integrity can be verified in server side.
+        For uploaded file the user can submit the md5 of the file as a parameter for the same verification.
+        Use SOAP addUploadedFile for both local and uploaded file since local file is created into incoming directory by addFile chunk.
+
+    * frs getFile
+        obtain the file split in chunks and reassamble it in client side,
+        it verify also file integrity by comparing file md5sum calculted in client side with one obtained from the server.
+
+    What's new ?
+    ============
+
+    * frs getFileInfo
+        To obtain information about a specific file.
+
+    * docman getFile
+        Downloads a file or an embedded file.
+
+    * Introduce the lib PHP_BigFile to manage files bigger than 2,147,483,647 (2^31-1) bytes
+
+    Bug fix
+    =======
+    * Manage the case session file could not be opened.

@@ -793,6 +793,9 @@ CREATE TABLE frs_file (
   file_size bigint NOT NULL default '0',
   post_date int(11) NOT NULL default '0',
   status char(1) NOT NULL default 'A',
+  computed_md5 varchar(32),
+  reference_md5 varchar(32),
+  user_id int(11),
   PRIMARY KEY  (file_id),
   KEY idx_frs_file_release_id (release_id),
   KEY idx_frs_file_type (type_id),
@@ -811,6 +814,9 @@ CREATE TABLE frs_file_deleted (
   file_size bigint NOT NULL default '0',
   post_date int(11) NOT NULL default '0',
   status char(1) NOT NULL default 'A',
+  computed_md5 varchar(32),
+  reference_md5 varchar(32),
+  user_id int(11),
   delete_date INT(11) UNSIGNED NULL,
   purge_date INT(11) UNSIGNED NULL,
   PRIMARY KEY  (file_id),
@@ -875,6 +881,20 @@ CREATE TABLE frs_release (
   KEY idx_frs_release_package (package_id)
 );
 
+#
+# Table structure for table 'frs_log'
+#
+
+CREATE TABLE frs_log (
+  log_id int(11) NOT NULL auto_increment,
+  time int(11) NOT NULL default 0,
+  user_id int(11) NOT NULL default 0,
+  group_id int(11) NOT NULL default 0,
+  item_id int(11) NOT NULL,
+  action_id int(11) NOT NULL,
+  PRIMARY KEY (log_id),
+  KEY idx_frs_log_group_item (group_id, item_id)
+);
 
 #
 # Table structure for table 'group_cvs_full_history'

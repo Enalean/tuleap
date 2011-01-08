@@ -387,9 +387,14 @@ class WebDAVFRSPackage extends Sabre_DAV_Directory {
                 $releaseData['notes'] = '';
                 $releaseData['changes'] = '';
                 $releaseData['status_id'] = 1;
-                $releaseId = $utils->getReleaseFactory()->create($releaseData);
+
+                $relFactory = $utils->getReleaseFactory();
+                $releaseId  = $relFactory->create($releaseData);
                 if ($releaseId) {
-                    $utils->getPermissionsManager()->addPermission('PACKAGE_READ', $releaseId, '2');
+                    // Set permissions
+                    $releaseData['release_id'] = $releaseId;
+                    $release = new FRSRelease($releaseData);
+                    $relFactory->setDefaultPermissions($release);
                 }
             } else {
                 throw new Sabre_DAV_Exception_MethodNotAllowed($GLOBALS['Language']->getText('plugin_webdav_common', 'release_name_exist'));

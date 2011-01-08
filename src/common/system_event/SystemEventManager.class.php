@@ -42,6 +42,7 @@ require_once('common/system_event/include/SystemEvent_SERVICE_USAGE_SWITCH.class
 require_once('common/system_event/include/SystemEvent_UGROUP_MODIFY.class.php');
 require_once('common/system_event/include/SystemEvent_EDIT_SSH_KEYS.class.php');
 require_once('common/system_event/include/SystemEvent_ROOT_DAILY.class.php');
+require_once('common/system_event/include/SystemEvent_COMPUTE_MD5SUM.class.php');
 
 // Backends
 require_once('common/backend/Backend.class.php');
@@ -66,6 +67,7 @@ class SystemEventManager {
             Event::EDIT_SSH_KEYS,
             Event::PROJECT_RENAME,
             Event::USER_RENAME,
+            Event::COMPUTE_MD5SUM,
             'approve_pending_project',
             'project_is_deleted',
             'project_admin_add_user',
@@ -244,6 +246,12 @@ class SystemEventManager {
                                '',
                                SystemEvent::PRIORITY_MEDIUM);
             break;
+               case Event::COMPUTE_MD5SUM:
+            $this->createEvent(SystemEvent::TYPE_COMPUTE_MD5SUM,
+                               $params['fileId'],
+                               SystemEvent::PRIORITY_MEDIUM);
+            break;
+  
         default:
 
             break;
@@ -355,6 +363,7 @@ class SystemEventManager {
         case SystemEvent::TYPE_PROJECT_IS_PRIVATE:
         case SystemEvent::TYPE_SERVICE_USAGE_SWITCH:
         case SystemEvent::TYPE_ROOT_DAILY:
+            case SystemEvent::TYPE_COMPUTE_MD5SUM:
             $klass = 'SystemEvent_'. $row['type'];            
             break;
         default:

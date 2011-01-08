@@ -79,3 +79,8 @@ mail_utils	mail_turned_off	This Project Has Turned Off Mailing Lists
 mail_utils	admin	Admin
 mail_utils	add_list	Add List
 mail_utils	update_list	Update List
+#------------------------------------------------
+# SystemEvent
+#
+mail_system_event	md5_compute_error	Dear Files service user,\n\n An error occurs while trying to compute md5sum in your uploaded file $1.\nPlease try to upload it again.   
+mail_system_event	md5_compare_error	Dear Files service user, \n\nThe entered reference md5sum for the file $1 differs from the computed one which equals = $2.\n Note that an error message will be shown each time you display the release content in the web interface. \nIf you consider that the upload has been well done, you can modify the value in the md5sum field by putting the right value or just letting it empty.
