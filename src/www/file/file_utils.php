@@ -988,7 +988,7 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
             } else {
                 //release added - now show the detail page for this new release
                 $release_id = $array['release_id'];
-                $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('file_admin_editreleases', 'rel_updated'));
+                $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('file_admin_editreleases', 'rel_updated', $release['name']));
             }
         } else {
             $res = $frsrf->create($array);
@@ -1100,9 +1100,11 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
                                         'release_time' => $unix_release_time,
                                         'type_id' => $release_file_type[$index],
                                         'processor_id' => $release_file_processor[$index],
-                                        'reference_md5' => $release_reference_md5[$index],
                                         'file_id' => $rel_file
                                     );
+                                    if ($release_reference_md5[$index] && $release_reference_md5[$index] != '') {
+                                        $array['reference_md5'] = $release_reference_md5[$index];
+                                    }
                                     $res = $frsff->update($array);
                                     if($res) {
                                         $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('file_admin_editreleases', 'file_updated', $fname));
@@ -1325,9 +1327,9 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
                                                 echo db_error();
                                             } else {
                                                 $addingFiles = true;
-                                                $path = $project_files_dir . '/' . $frsff->getUploadSubDirectory($release_id) . '/' . $filename;
                                                 $em = EventManager::instance();
                                                 $em->processEvent(Event::COMPUTE_MD5SUM, array('fileId' =>$res));
+                                                $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('file_admin_editreleases', 'offline_md5', $filename));
                                             }
                                         } else {
                                             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('file_admin_editreleases', 'not_add_file') . ": $filename ");

@@ -177,7 +177,7 @@ if ($request->valid($vFunc)) {
                         }
         
                         if ($package_is_updated) {
-                            $GLOBALS['Response']->addFeedback('info', $Language->getText('file_admin_editpackages','p_updated'));
+                            $GLOBALS['Response']->addFeedback('info', $Language->getText('file_admin_editpackages','p_updated', $package->getName()));
                         } else {
                             $GLOBALS['Response']->addFeedback('info', 'Package not updated');
                         }

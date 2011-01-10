@@ -60,17 +60,11 @@ class CLI_Action_Frs_GetFile extends CLI_Action {
         return true;
     }
 
-    function soapCall($soap_params, $use_extra_params = true) {
-        // Prepare SOAP parameters
-        $callParams = $soap_params;
-        unset($callParams['output']);
-        $callParams['offset']     = 0;
-        $callParams['chunk_size'] = $GLOBALS['soap']->getFileChunkSize();
-
-        // Manage screen/file output
+    // Manage screen/file output
+    function manageOutput($soap_output, &$output, &$fd) {
         $output = false;
-        if ($soap_params['output']) {
-            $output = $soap_params['output'];
+        if ($soap_output) {
+            $output = $soap_output;
         }
         if ($output !== false) {
             while (!($fd = @fopen($output, "wb"))) {
@@ -81,6 +75,14 @@ class CLI_Action_Frs_GetFile extends CLI_Action {
                 }
             }
         }
+    }
+
+    function soapCall($soap_params, $use_extra_params = true) {
+        // Prepare SOAP parameters
+        $callParams = $soap_params;
+        unset($callParams['output']);
+        $callParams['offset']     = 0;
+        $callParams['chunk_size'] = $GLOBALS['soap']->getFileChunkSize();
 
         $startTime = microtime(true);
         $totalTran = 0;
@@ -88,6 +90,9 @@ class CLI_Action_Frs_GetFile extends CLI_Action {
         do {
             $callParams['offset'] = $i * $GLOBALS['soap']->getFileChunkSize();
             $content = base64_decode($GLOBALS['soap']->call($this->soapCommand, $callParams, $use_extra_params));
+            if ($i == 0) {
+                $this->manageOutput($soap_params['output'], $output, $fd);
+            }
             $cLength = strlen($content);
             if ($output !== false) {
                 $written = fwrite($fd, $content);
@@ -116,6 +121,8 @@ class CLI_Action_Frs_GetFile extends CLI_Action {
                 $localChecksum = PHP_BigFile::getMd5Sum($output);
                 if ($localChecksum != $fileInfo->computed_md5) {
                     exit_error("File transfer faild: md5 checksum locally computed doesn't match remote one ($fileInfo->computed_md5)");
+                } else {
+                    echo "File retrieved successfully.\n";
                 }
             }
         }

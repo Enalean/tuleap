@@ -23,7 +23,7 @@ file_admin_editpackagepermissions	select_u_group	Select user groups who are gran
 #
 file_admin_editpackages	p_name_exists	This package name already exists. Please choose another name.
 file_admin_editpackages	cannot_hide	Sorry - you cannot hide a package that still contains active releases. Hide attached releases first
-file_admin_editpackages	p_updated	Updated Package
+file_admin_editpackages	p_updated	Updated Package "$1"
 file_admin_editpackages	perm_update_err	ERROR: could not update permissions
 file_admin_editpackages	perm_reset_err	Error: cannot reset permissions to default
 file_admin_editpackages	perm_reset	Permissions reset to default
@@ -82,7 +82,7 @@ file_admin_editreleases	invalid_flag_err	ERROR invalid upload flag
 file_admin_editreleases	create_p_before_rel_status	Must create a package before you create a release. You must also include a release name and status.
 file_admin_editreleases	p_not_yours	Trying to change a package that isn't yours
 file_admin_editreleases	cannot_del_rel	Sorry - you cannot delete a release that still contains files
-file_admin_editreleases	rel_updated	Updated Release
+file_admin_editreleases	rel_updated	Updated Release "$1"
 file_admin_editreleases	rel_update_failed	Updating Release Failed
 file_admin_editreleases	f_not_yours	Not Your File $1 Or File Doesn't Exist
 file_admin_editreleases	rel_not_yours	Not Your Release Or Release Doesn't Exist (for the file : $1)
@@ -90,6 +90,7 @@ file_admin_editreleases	data_not_parsed	Sorry - File Date entry could not be par
 file_admin_editreleases	data_not_parsed_file	Sorry - File $1 : Date entry could not be parsed. It must be in YYYY-MM-DD format.
 file_admin_editreleases	file_updated	File Updated : $1
 file_admin_editreleases	add_files	Adding File(s)
+file_admin_editreleases	offline_md5	The MD5 checksum of the file "$1" will be computed by a background process shortly. You will be notified by email in case of issue.
 file_admin_editreleases	illegal_file_name	Illegal Filename
 file_admin_editreleases	p_rel_not_yours	Package/Release Doesn't Exist Or Isn't Yours
 file_admin_editreleases	not_add_file	Couldn't Add Filename
@@ -184,7 +185,7 @@ file_admin_editreleases	create_canceled	Release creation canceled
 file_admin_editreleases	update_canceled	Release update canceled
 file_admin_editreleases	upload_file_msg	(The maximum upload file size is $1 Mb - <u>Please compress your files</u>)
 file_admin_editreleases	md5sum	md5 Checksum
-file_admin_editreleases	user	User
+file_admin_editreleases	user	Owner
 #
 #-----------------------------------------------
 # Script: SF/www/file/admin/index.php
@@ -304,8 +305,8 @@ file_showfiles	stat_total_size	Kb
 file_showfiles	stat_total_nb_downloads	downloads
 file_showfiles	hidden_package	This package is hidden.
 file_showfiles	hidden_release	This release is hidden.
-file_showfiles	md5sum	File checksum
-file_showfiles	user	User
+file_showfiles	md5sum	File md5sum
+file_showfiles	user	Owner
 #
 #-----------------------------------------------
 # Script: SF/www/file/shownotes.php
