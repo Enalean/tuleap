@@ -185,7 +185,7 @@ file_admin_editreleases	create_canceled	Release creation canceled
 file_admin_editreleases	update_canceled	Release update canceled
 file_admin_editreleases	upload_file_msg	(The maximum upload file size is $1 Mb - <u>Please compress your files</u>)
 file_admin_editreleases	md5sum	md5 Checksum
-file_admin_editreleases	user	User
+file_admin_editreleases	user	Owner
 #
 #-----------------------------------------------
 # Script: SF/www/file/admin/index.php
@@ -305,8 +305,8 @@ file_showfiles	stat_total_size	Kb
 file_showfiles	stat_total_nb_downloads	downloads
 file_showfiles	hidden_package	This package is hidden.
 file_showfiles	hidden_release	This release is hidden.
-file_showfiles	md5sum	File checksum
-file_showfiles	user	User
+file_showfiles	md5sum	File md5sum
+file_showfiles	user	Owner
 #
 #-----------------------------------------------
 # Script: SF/www/file/shownotes.php
