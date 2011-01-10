@@ -83,6 +83,7 @@ file_admin_editreleases	data_not_parsed	Désolé, le format de la date du fichie
 file_admin_editreleases	data_not_parsed_file	Désolé, le format de la date du fichier $1 est incorrect. Il doit suivre le format AAAA-MM-JJ.
 file_admin_editreleases	file_updated	Fichier mis à jour : $1
 file_admin_editreleases	add_files	Fichier(s) ajoutés
+file_admin_editreleases	offline_md5	Le md5 checksum du fichier "$1" va être calculé et vérifié dans un instant.
 file_admin_editreleases	illegal_file_name	Nom de fichier invalide
 file_admin_editreleases	p_rel_not_yours	Le paquet ou la version n'existe pas ou ne vous appartient pas
 file_admin_editreleases	not_add_file	Le fichier n'a pas pu être ajouté

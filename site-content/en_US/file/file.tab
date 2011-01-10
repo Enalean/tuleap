@@ -90,6 +90,7 @@ file_admin_editreleases	data_not_parsed	Sorry - File Date entry could not be par
 file_admin_editreleases	data_not_parsed_file	Sorry - File $1 : Date entry could not be parsed. It must be in YYYY-MM-DD format.
 file_admin_editreleases	file_updated	File Updated : $1
 file_admin_editreleases	add_files	Adding File(s)
+file_admin_editreleases	offline_md5	Md5 checksum of the file "$1" will be calculated and verified in a while.
 file_admin_editreleases	illegal_file_name	Illegal Filename
 file_admin_editreleases	p_rel_not_yours	Package/Release Doesn't Exist Or Isn't Yours
 file_admin_editreleases	not_add_file	Couldn't Add Filename
