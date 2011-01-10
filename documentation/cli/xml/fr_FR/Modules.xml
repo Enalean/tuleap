@@ -1462,6 +1462,7 @@ File retrieved successfully.
                         <title>commande getFile</title>
                         <programlisting format="linespecific" linenumbering="unnumbered" width="80">
 [ounis@linux codendi cli ]$ ./codendi.php frs getFile --package_id=197 --release_id=143 --file_id=419 --output=./downloaded_file
+File retrieved successfully.
                         </programlisting>
                     </example>
                </para>
@@ -2055,7 +2056,7 @@ File uploaded successfully
                         <title>getFile command</title>
                         <programlisting format="linespecific" linenumbering="unnumbered" width="80">
 [terzino@linux codendi cli ]$ ./codendi.php docman getFile --project=myproject --id=110493 --version_number=1 --output=document_cli.doc
-File downloaded successfully
+File retrieved successfully.
                         </programlisting>
                     </example>
                </para>
