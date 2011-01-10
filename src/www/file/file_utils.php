@@ -988,7 +988,7 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
             } else {
                 //release added - now show the detail page for this new release
                 $release_id = $array['release_id'];
-                $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('file_admin_editreleases', 'rel_updated'));
+                $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('file_admin_editreleases', 'rel_updated', $release['name']));
             }
         } else {
             $res = $frsrf->create($array);

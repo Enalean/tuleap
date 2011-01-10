@@ -23,7 +23,7 @@ file_admin_editpackagepermissions	select_u_group	Select user groups who are gran
 #
 file_admin_editpackages	p_name_exists	This package name already exists. Please choose another name.
 file_admin_editpackages	cannot_hide	Sorry - you cannot hide a package that still contains active releases. Hide attached releases first
-file_admin_editpackages	p_updated	Updated Package
+file_admin_editpackages	p_updated	Updated Package "$1"
 file_admin_editpackages	perm_update_err	ERROR: could not update permissions
 file_admin_editpackages	perm_reset_err	Error: cannot reset permissions to default
 file_admin_editpackages	perm_reset	Permissions reset to default
@@ -82,7 +82,7 @@ file_admin_editreleases	invalid_flag_err	ERROR invalid upload flag
 file_admin_editreleases	create_p_before_rel_status	Must create a package before you create a release. You must also include a release name and status.
 file_admin_editreleases	p_not_yours	Trying to change a package that isn't yours
 file_admin_editreleases	cannot_del_rel	Sorry - you cannot delete a release that still contains files
-file_admin_editreleases	rel_updated	Updated Release
+file_admin_editreleases	rel_updated	Updated Release "$1"
 file_admin_editreleases	rel_update_failed	Updating Release Failed
 file_admin_editreleases	f_not_yours	Not Your File $1 Or File Doesn't Exist
 file_admin_editreleases	rel_not_yours	Not Your Release Or Release Doesn't Exist (for the file : $1)
