@@ -1100,9 +1100,11 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
                                         'release_time' => $unix_release_time,
                                         'type_id' => $release_file_type[$index],
                                         'processor_id' => $release_file_processor[$index],
-                                        'reference_md5' => $release_reference_md5[$index],
                                         'file_id' => $rel_file
                                     );
+                                    if ($release_reference_md5[$index] && $release_reference_md5[$index] != '') {
+                                        $array['reference_md5'] = $release_reference_md5[$index];
+                                    }
                                     $res = $frsff->update($array);
                                     if($res) {
                                         $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('file_admin_editreleases', 'file_updated', $fname));
