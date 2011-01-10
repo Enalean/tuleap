@@ -121,6 +121,8 @@ class CLI_Action_Frs_GetFile extends CLI_Action {
                 $localChecksum = PHP_BigFile::getMd5Sum($output);
                 if ($localChecksum != $fileInfo->computed_md5) {
                     exit_error("File transfer faild: md5 checksum locally computed doesn't match remote one ($fileInfo->computed_md5)");
+                } else {
+                    echo "File retrieved successfully.\n";
                 }
             }
         }
