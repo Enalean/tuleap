@@ -464,6 +464,7 @@ class FRSFileFactoryTest extends UnitTestCase {
     function testCompareMd5ChecksumsSucceededComparison() {
         $fileFactory = new FRSFileFactory();
         $this->assertTrue($fileFactory->compareMd5Checksums('da1e100dc9e7bebb810985e37875de38', 'da1e100dc9e7bebb810985e37875de38'));
+        $this->assertTrue($fileFactory->compareMd5Checksums('da1e100dc9e7bebb810985e37875de38', 'DA1E100DC9E7BEBB810985E37875DE38'));
     }
 }
 ?>
