@@ -23,6 +23,7 @@ Version 4.0.16 = Not released yet
 	                 * SOAP API update to version 4.1, see src/www/soap/ChangeLog for details.
 
         == BugFix ==
+        backlog #119163: SQL error during codendi install
         backlog #114221: Still have admin privileges on tracker for non members
         backlog #114020: Artifact submitted with the value "None" at the mandatory field
         backlog #114005: Disable notifications when remove user from private project

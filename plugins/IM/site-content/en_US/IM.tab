@@ -1,6 +1,6 @@
 plugin_im	description	Instant Messaging Plugin. Provides instant messaging capabilities, based on a Jabber/XMPP server.
 plugin_im	name	Instant Messaging
-plugin_im	version	V1.0
+plugin_im	version	V1.1
 
 plugin_im	link_im_admin_title	Instant Messaging 
 
