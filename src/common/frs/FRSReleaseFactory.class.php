@@ -389,6 +389,14 @@ class FRSReleaseFactory {
             $notifUrl = get_server_url() . "/file/filemodule_monitor.php?filemodule_id=".$package->getPackageID();
 
             $body  = $GLOBALS['Language']->getText('file_admin_editreleases', 'download_explain_modified_package', array($project->getPublicName(), $package->getName(), $release->getName(), $fileUrl));
+
+            if ($release->getNotes() != '') {
+                $body .= $GLOBALS['Language']->getText('file_admin_editreleases', 'file_rel_notice_notes', array($release->getNotes()));
+            }
+            if ($release->getChanges() != '') {
+                $body .= $GLOBALS['Language']->getText('file_admin_editreleases', 'file_rel_notice_changes', array($release->getChanges()));
+            }
+
             $body .= $GLOBALS['Language']->getText('file_admin_editreleases', 'download_explain', array($notifUrl));
             
             $mail = new Mail();

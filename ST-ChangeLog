@@ -4,6 +4,10 @@ Version 4.0.16 = Not released yet
 	  Codendi automatically computes md5 sum on files submitted in File Release System.
 	  If you submit a reference md5 sum, Codendi compares with the computed one and raise
 	  an error if it fails.
+	  Following tickets were addressed:
+	  * feature #codex:101884: Improve the mail notification
+	  * bug #codex:116656:     It is not possible to update the Release ChangeLog when we add a file in FRS (with CLI script)
+	  * bug codexstn #13752:   Releases permissions checking don't take into account frs admin / project admin perms
 
 	CLI update to 1.4.0, see cli/ChangeLog for details.
 	
