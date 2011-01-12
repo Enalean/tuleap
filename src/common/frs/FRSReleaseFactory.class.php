@@ -378,20 +378,18 @@ class FRSReleaseFactory {
             }
             $list = implode($array_emails, ', ');
 
-            $pm = ProjectManager::instance();
+            $pm      = ProjectManager::instance();
+            $project = $pm->getProject($package->getGroupID());
 
             // Subject
-            $subject  = $GLOBALS['sys_name'];
-            $subject .= ' '.$GLOBALS['Language']->getText('file_admin_editreleases', 'file_rel_notice');
-            $subject .= ' '.$GLOBALS['Language']->getText('file_admin_editreleases', 'file_rel_notice_project', $pm->getProject($package->getGroupID())->getUnixName());
+            $subject = ' '.$GLOBALS['Language']->getText('file_admin_editreleases', 'file_rel_notice_subject', array($GLOBALS['sys_name'], $project->getPublicName(), $package->getName()));
 
             // Body
             $fileUrl  = get_server_url() . "/file/showfiles.php?group_id=".$package->getGroupID()."&release_id=".$release->getReleaseID();
             $notifUrl = get_server_url() . "/file/filemodule_monitor.php?filemodule_id=".$package->getPackageID();
 
-            $body  = $GLOBALS['Language']->getText('file_admin_editreleases', 'download_explain_modified_package', $package->getName());
-            $body .= " " .$GLOBALS['Language']->getText('file_admin_editreleases', 'download_explain', array("<".$fileUrl."> ", $GLOBALS['sys_name']));
-            $body .= "\n<".$notifUrl."> ";
+            $body  = $GLOBALS['Language']->getText('file_admin_editreleases', 'download_explain_modified_package', array($project->getPublicName(), $package->getName(), $release->getName(), $fileUrl));
+            $body .= $GLOBALS['Language']->getText('file_admin_editreleases', 'download_explain', array($notifUrl));
             
             $mail = new Mail();
             $mail->setFrom($GLOBALS['sys_noreply']);
