@@ -22,7 +22,10 @@ Version 4.0.16 = Not released yet
 	
 	                 * SOAP API update to version 4.1, see src/www/soap/ChangeLog for details.
 
+        backlog #119336: Enlarge the project name field in Widget Show project admins
+
         == BugFix ==
+        backlog #119270: Filter lost in Admin delegation widget: Show all projects
         backlog #119163: SQL error during codendi install
         backlog #114221: Still have admin privileges on tracker for non members
         backlog #114020: Artifact submitted with the value "None" at the mandatory field

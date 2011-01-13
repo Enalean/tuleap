@@ -28,7 +28,7 @@ require_once 'common/plugin/PluginDescriptor.class.php';
  */
 class AdminDelegationPluginDescriptor extends PluginDescriptor {
     public function __construct() {
-        parent::__construct($GLOBALS['Language']->getText('plugin_admindelegation', 'descriptor_name'), '2.0', $GLOBALS['Language']->getText('plugin_admindelegation', 'descriptor_description'));
+        parent::__construct($GLOBALS['Language']->getText('plugin_admindelegation', 'descriptor_name'), '2.1', $GLOBALS['Language']->getText('plugin_admindelegation', 'descriptor_description'));
     }
 }
 ?>
