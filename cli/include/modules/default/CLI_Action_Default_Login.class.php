@@ -75,7 +75,7 @@ class CLI_Action_Default_Login extends CLI_Action {
             } else {
                 $protocol = "http";
             }
-            $GLOBALS['soap']->setWSDLString($protocol."://".$loaded_params['others']['host']."/soap/codendi.wsdl.php?wsdl");
+            $GLOBALS['soap']->setWSDL($protocol."://".$loaded_params['others']['host']."/soap/codendi.wsdl.php?wsdl");
         }
     	if (isset($loaded_params['others']['proxy'])) {
     		$proxy = $loaded_params['others']['proxy'];

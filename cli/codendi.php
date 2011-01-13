@@ -23,12 +23,14 @@
  * Directory where common include files and module scripts are located (use trailing slash)
  */ 
 define("CODENDI_CLI_DIR", dirname(__FILE__)."/include/");
-
-// Will be used if no other way to set host are valid:
-// * --host on command line
-// * CODENDI_WSDL environment variable
-// * ~/.codendirc
-define("WSDL_URL", "%wsdl_domain%/soap/codendi.wsdl.php?wsdl");
+/**
+ * URL of your server's WSDL
+ */
+if (array_key_exists("CODENDI_WSDL", $_ENV)) {
+	$host = $_ENV["CODENDI_WSDL"];
+} else {
+	$host = "%wsdl_domain%/soap/codendi.wsdl.php?wsdl";
+}
 
 /**** END OF CONFIGURATION SECTION ****/
 
@@ -49,7 +51,6 @@ $function_index = 0;		// Points to the position where the information about whic
 /* Parse the parameters and options passed to the main script */
 $log_level = 0;
 $display_help = false;
-$host = '';
 
 for ($i = 1; $i <= $argc-1; $i++) {
 	// Show user the help screen
@@ -98,21 +99,13 @@ for ($i = 1; $i <= $argc-1; $i++) {
 	}
 }
 
-// If no host define on command line, try to get it from environment
-if (!$host && isset($_ENV['CODENDI_WSDL'])) {
-    $host = $_ENV['CODENDI_WSDL'];
-}
-
-$soap = new CodendiSOAP();
-if ($host) {
-    $soap->setWSDLString($host);
-}
-
+define("WSDL_URL", $host);
 $LOG = new Log();
+$soap = new CodendiSOAP();
 $modules =& new CLI_ModuleFactory(CODENDI_CLI_DIR."modules/");
 
 if ($display_help || !$function_index) {		// No function was specified. Show the help.
-	display_help($modules, $soap);
+	display_help($modules);
 	exit(0);
 }
 $LOG->setLevel($log_level);
@@ -146,6 +139,7 @@ if (!$module) {
 $module->execute($params);
 
 // End script
+//echo "\n";
 exit(0);
 
 
@@ -154,9 +148,10 @@ exit(0);
 /**
  * display_help - Show the help string
  */
-function display_help($modules, $soap) {
+function display_help(&$modules) {
 	echo <<<EOT
-Syntax: php codendi.php [options] [module name] [function] [parameters]
+Syntax:
+codendi [options] [module name] [function] [parameters]
 * Options:
     -h or --help    Display this screen
     --version       Display the software version
@@ -190,7 +185,7 @@ EOT;
         echo "\n";
     }
     echo $default_module;
-    echo "Currently using WSDL from ".$soap->getWSDLString()."\n";
+    echo "Currently using WSDL from ".WSDL_URL."\n";
 }
 /*
 Available modules:
