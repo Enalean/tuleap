@@ -3,8 +3,49 @@
 require_once('../include/simpletest/reporter.php');
 require_once('../include/simpletest/extensions/junit_xml_reporter.php');
 
+require_once 'PHP/CodeCoverage.php';
+
+class CodeCoverageInvokerDecorator extends SimpleInvokerDecorator {
+        protected $coverage;
+
+        function __construct($coverage, $invoker) {
+            SimpleInvokerDecorator::SimpleInvokerDecorator($invoker);
+            $this->coverage = $coverage;
+        }
+
+        /**
+         *    Runs test level set up. Used for changing
+         *    the mechanics of base test cases.
+         *    @param string $method    Test method to call.
+         *    @access public
+         */
+        function before($method) {
+            $this->_invoker->before($method);
+            $this->coverage->start($method);
+        }
+
+        /**
+         *    Runs test level clean up. Used for changing
+         *    the mechanics of base test cases.
+         *    @param string $method    Test method to call.
+         *    @access public
+         */
+        function after($method) {
+            $this->coverage->stop();
+            $this->_invoker->after($method);
+        }
+
+}
+
 class CodendiHtmlReporter extends HtmlReporter {
     protected $_timer;
+    protected $coverage;
+
+    function __construct($coverage) {
+        HtmlReporter::HtmlReporter();
+        $this->coverage = $coverage;
+    }
+
     function paintHeader($test_name) {
         print "<h1>$test_name</h1>\n";
         $this->_timer = microtime(true);
@@ -36,6 +77,22 @@ class CodendiHtmlReporter extends HtmlReporter {
         parent::paintFail($message);
         echo '</span></p>';
     }
+
+    /**
+     *    Can wrap the invoker in preperation for running
+     *    a test.
+     *    @param SimpleInvoker $invoker   Individual test runner.
+     *    @return SimpleInvoker           Wrapped test runner.
+     *    @access public
+     */
+    function createInvoker($invoker) {
+        return new CodeCoverageInvokerDecorator($this->coverage, $invoker);
+    }
+
+    function getCodeCoverage() {
+        return $this->coverage;
+    }
+
 }
  
 class CodendiJUnitXMLReporter extends JUnitXMLReporter {
@@ -54,6 +111,7 @@ class CodendiJUnitXMLReporter extends JUnitXMLReporter {
 
 class CodendiReporterFactory {
     public static function reporter($type = "html") {
+        $coverage = new PHP_CodeCoverage();
         switch ($type) {
             case "text":
                 return new TextReporter();
@@ -62,7 +120,7 @@ class CodendiReporterFactory {
                 return new CodendiJUnitXMLReporter();
                 break;
             default:
-                return new CodendiHtmlReporter();
+                return new CodendiHtmlReporter($coverage);
         }
     }
 }

@@ -1,6 +1,9 @@
 <?php
 
 ini_set('display_errors', 'on');
+ini_set('max_execution_time', 0);
+ini_set('memory_limit', -1);
+
 header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
 header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
 header("Cache-Control: no-store, no-cache, must-revalidate");
@@ -8,6 +11,8 @@ header("Cache-Control: post-check=0, pre-check=0", false);
 header("Pragma: no-cache");
 
 require_once('./tests_utils.php');
+
+require_once 'PHP/CodeCoverage/Report/HTML.php';
 
 function display_tests($tests, $categ, $params) {
     $prefixe  = ($params['is_cat'] && $categ !== "_tests") ? $params['prefixe'] .'['. $categ .']' : $params['prefixe'];
@@ -216,8 +221,14 @@ function display_tests_as_javascript($tests, $categ, $params) {
                                     }
                                 }
                             }
-                            $g =& get_group_tests($_REQUEST['tests_to_run']);
-                            $g->run(CodendiReporterFactory::reporter());
+
+                            $reporter = CodendiReporterFactory::reporter();
+
+                            $g = get_group_tests($_REQUEST['tests_to_run']);
+                            $g->run($reporter);
+
+                            $writer = new PHP_CodeCoverage_Report_HTML();
+                            $writer->process($reporter->getCodeCoverage(), '/usr/share/codendi/codendi_tools/plugins/tests/www/code-coverage-report');
                         }
                         ?>
                     </fieldset>
