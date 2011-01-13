@@ -3,8 +3,13 @@
 require_once('../include/simpletest/reporter.php');
 require_once('../include/simpletest/extensions/junit_xml_reporter.php');
 
-require_once 'PHP/CodeCoverage.php';
+@include_once 'PHP/CodeCoverage.php';
 
+/**
+ * Invoker decorator to target code coverage only on executed tests
+ *
+ * 
+ */
 class CodeCoverageInvokerDecorator extends SimpleInvokerDecorator {
         protected $coverage;
 
@@ -21,7 +26,7 @@ class CodeCoverageInvokerDecorator extends SimpleInvokerDecorator {
          */
         function before($method) {
             $this->_invoker->before($method);
-            $this->coverage->start($method);
+            $this->coverage->start($method.'('.$this->_invoker->getTestCase()->getLabel().')');
         }
 
         /**
@@ -86,7 +91,10 @@ class CodendiHtmlReporter extends HtmlReporter {
      *    @access public
      */
     function createInvoker($invoker) {
-        return new CodeCoverageInvokerDecorator($this->coverage, $invoker);
+        if ($this->coverage) {
+            return new CodeCoverageInvokerDecorator($this->coverage, $invoker);
+        }
+        return $invoker;
     }
 
     function getCodeCoverage() {
@@ -110,8 +118,16 @@ class CodendiJUnitXMLReporter extends JUnitXMLReporter {
 }
 
 class CodendiReporterFactory {
+
+    public static function getCodeCoverage() {
+        if (class_exists('PHP_CodeCoverage')) {
+            return new PHP_CodeCoverage();
+        }
+        return null;
+    }
+
     public static function reporter($type = "html") {
-        $coverage = new PHP_CodeCoverage();
+        $coverage = self::getCodeCoverage();
         switch ($type) {
             case "text":
                 return new TextReporter();
