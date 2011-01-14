@@ -5,6 +5,10 @@ Version 4.0.16 = Not released yet
                            of HTML markups: p, br, a, img, ul, ol, li, cite, code, blockquote, strong, em, pre, b, i
                            This modification comes with a rich text editor in the  follow-up comment text area.
                            It's possible to add comment in HTML with SOAP and Codendi_CLI too (but no update yet).
+	  Following tickets were addressed:
+	  * feature #codex:101884: Improve the mail notification
+	  * bug #codex:116656:     It is not possible to update the Release ChangeLog when we add a file in FRS (with CLI script)
+	  * bug codexstn #13752:   Releases permissions checking don't take into account frs admin / project admin perms
 
                          * Fix wrong behaviour in CSV import/export that was leading to comments duplication.
                            Known limitations: It's not possible to import follow-up comments in HTML format yet.
@@ -16,7 +20,7 @@ Version 4.0.16 = Not released yet
 	backlog #114221: File Release System provides means to check files consistency through md5 sums.
 	                 * Codendi automatically computes md5 sum on files submitted in File Release System.
 	                   If you submit a reference md5 sum, Codendi compares with the computed one and raise
-	                   an error if it fails.
+	                   an error if it fails. Enhance the notification mail received while monitoring a package. 
 
 	                 * CLI update to 1.4.0, see cli/ChangeLog for details.
 	

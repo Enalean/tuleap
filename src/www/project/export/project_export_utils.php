@@ -651,7 +651,7 @@ function prepare_access_logs_record($group_id, &$record) {
     	$record['local_time'] = strftime("%H:%M", $time);
     }
     $um = UserManager::instance();
-    $user = $um->getUserByEmail($record['email']);
+    $user = $um->getUserByUserName($record['user_name']);
     if ($user) {
         $record['user'] = $user->getRealName()."(".$user->getName().")";
     } else {

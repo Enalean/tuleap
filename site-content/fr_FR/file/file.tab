@@ -92,11 +92,12 @@ file_admin_editreleases	filename_exists	Le nom de fichier existe déjà pour ce 
 file_admin_editreleases	md5_fail	La comparaison des MD5 checksum a echoué pour le fichier "$1", la valeur du MD5 calculée au niveau du serveur est "$2"
 file_admin_editreleases	no_files_selected	Aucun fichier sélectionné
 file_admin_editreleases	file_deleted	Fichier détruit : $1
-file_admin_editreleases	file_rel_notice	Notification d'une nouvelle version
-file_admin_editreleases	file_rel_notice_project	Projet $1
+file_admin_editreleases	file_rel_notice_subject	[$1] $2 : nouvelle version du paquet $3
 file_admin_editreleases	download_explain_modified_file	Une nouvelle version de $2 (paquet $1) vient d'être publiée.
-file_admin_editreleases	download_explain_modified_package	Une nouvelle version du paquet $1 vient d'ï¿½tre publiée.
-file_admin_editreleases	download_explain	 \nVous pouvez la télécharger à : \n\n$1\n\nVous avez demandé à être notifié lors de la publication d'une nouvelle version de ce paquet. Si vous ne voulez plus recevoir ces notifications à l'avenir, connectez-vous à $2 et suivez ce lien
+file_admin_editreleases	download_explain_modified_package	Le project $1 vient de publier la version '$3' du package '$2'.\nVous pouvez la télécharger à l'addresse suivante :\n<$4>\n
+file_admin_editreleases	download_explain	 \n--\nVous avez demandé à être notifié lors de la publication d'une nouvelle version de ce paquet.\nSi vous ne voulez plus recevoir ces notifications à l'avenir, suivez ce lien :\n<$1>
+file_admin_editreleases	file_rel_notice_notes	\n\nNotes:\n$1\n
+file_admin_editreleases	file_rel_notice_changes	\n\nModifications:\n$1\n
 file_admin_editreleases	email_sent	E-mail envoyé - $1 utilisateurs suivent ce paquet
 file_admin_editreleases	rel_id_not_found	Ce numéro de version (ID) n'est pas dans la base de données
 file_admin_editreleases	release_new_file_version	Publier une nouvelle version

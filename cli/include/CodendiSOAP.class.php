@@ -94,26 +94,18 @@ class CodendiSOAP extends SoapClient {
 	function connect() {
 		global $LOG;
 		
-		if (!$this->wsdl_string) {
-			if (defined("WSDL_URL")) {
-				$this->wsdl_string = WSDL_URL;
-			} else {
-				exit_error("CodendiSOAP: URL of the WSDL is not defined. Please set your CODENDI_WSDL environment variable.");
-			}
-		}
-		
         try {
         	$log_proxy = '';
         	if ($this->proxy_host && $this->proxy_port) {
         		$log_proxy = ', using proxy '.$this->proxy_host.':'.$this->proxy_port;
         	}
-            $LOG->add("CodendiSOAP::Connecting to the server ".$this->wsdl_string.$log_proxy."...");
+            $LOG->add("CodendiSOAP::Connecting to the server ".$this->getWSDLString().$log_proxy."...");
             $options = array('trace' => true);
             if ($this->proxy_host && $this->proxy_port) {
             	$options['proxy_host'] = $this->proxy_host;
             	$options['proxy_port'] = (int)$this->proxy_port;
             }
-            parent::__construct($this->wsdl_string, $options);
+            parent::__construct($this->getWSDLString(), $options);
         } catch (SoapFault $fault) {
             exit_error($fault, $this->faultcode);
 		}
@@ -155,10 +147,20 @@ class CodendiSOAP extends SoapClient {
 		return $this->session_user_id;
 	}
     
-	function setWSDL($wsdl) {
+	function setWSDLString($wsdl) {
 		$this->wsdl_string = $wsdl;
 	}
-	
+    function getWSDLString() {
+		if (!$this->wsdl_string) {
+			if (defined("WSDL_URL")) {
+				$this->wsdl_string = WSDL_URL;
+			} else {
+				exit_error("CodendiSOAP: URL of the WSDL is not defined. Please set your CODENDI_WSDL environment variable.");
+			}
+		}
+        return $this->wsdl_string;
+    }
+
 	function setProxy($proxy) {
 		$arr_proxy = explode(":", $proxy);
 		$this->proxy_host = $arr_proxy[0];
@@ -186,7 +188,7 @@ class CodendiSOAP extends SoapClient {
 		}
 
 		$content = '';
-		$content .= "wsdl_string=\"".$this->wsdl_string."\"".PHP_EOL;
+		$content .= "wsdl_string=\"".$this->getWSDLString()."\"".PHP_EOL;
 		$content .= "session_string=\"".$this->session_string."\"".PHP_EOL;
 		$content .= "session_group_id=\"".$this->session_group_id."\"".PHP_EOL;
 		$content .= "session_user=\"".$this->session_user."\"".PHP_EOL;

@@ -23,7 +23,7 @@ class Docman_MetadataHtmlWiki extends Docman_MetadataHtml {
     
     function getField() {
         $hp =& Codendi_HTMLPurifier::instance();
-        return '<input type="text" name="item[wiki_page]" value="'. $hp->purify($this->pagename) .'" /> ';
+        return '<input type="text" class="docman_text_field" name="item[wiki_page]" value="'. $hp->purify($this->pagename) .'" /> ';
     }
 
     function &getValidator() {
@@ -47,7 +47,7 @@ class Docman_MetadataHtmlLink extends Docman_MetadataHtml {
     
     function getField() {
         $hp =& Codendi_HTMLPurifier::instance();
-        return '<input type="text" name="item[link_url]" value="'. $hp->purify($this->link_url) .'" />';
+        return '<input type="text" class="docman_text_field" name="item[link_url]" value="'. $hp->purify($this->link_url) .'" />';
     }
 
     function &getValidator() {
