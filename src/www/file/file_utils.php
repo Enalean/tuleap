@@ -1035,7 +1035,7 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
 
             // Send notification
             if ($notification) {
-                $rel = new FRSRelease($array);
+                $rel = $frsrf->getFRSReleaseFromDb($release_id);
                 $count = $frsrf->emailNotification($rel);
                 if ($count === false) {
                     $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('global', 'mail_failed', array (
