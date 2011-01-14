@@ -12,8 +12,6 @@ header("Pragma: no-cache");
 
 require_once('./tests_utils.php');
 
-@include_once 'PHP/CodeCoverage/Report/HTML.php';
-
 function display_tests($tests, $categ, $params) {
     $prefixe  = ($params['is_cat'] && $categ !== "_tests") ? $params['prefixe'] .'['. $categ .']' : $params['prefixe'];
     if ($params['is_cat']) {
@@ -57,6 +55,9 @@ function display_tests_as_javascript($tests, $categ, $params) {
         echo "'$tests':true,";
     }
 }
+
+$coverCode = isset($_REQUEST['cover_code']) ? true  : false;
+
 ?>
 <html>
     <head>
@@ -182,7 +183,7 @@ function display_tests_as_javascript($tests, $categ, $params) {
                         <fieldset>
                             <legend>Options</legend>
                             <input type="checkbox" id="show_pass" name="show_pass" value="1" <?= isset($_REQUEST['show_pass']) ? 'checked="checked"' : '' ?> /><label for="show_pass">Show pass</label>
-                            <input type="checkbox" id="cover_code" name="cover_code" value="1" <?= isset($_REQUEST['cover_code']) ? 'checked="checked"' : '' ?> /><label for="cover_code">Code coverage</label>
+                            <input type="checkbox" id="cover_code" name="cover_code" value="1" <?= $coverCode ? 'checked="checked"' : '' ?> /><label for="cover_code">Code coverage</label>
                         </fieldset>
                         <fieldset>
                             <legend>Tests</legend>
@@ -223,18 +224,14 @@ function display_tests_as_javascript($tests, $categ, $params) {
                                 }
                             }
 
-                            $reporter = CodendiReporterFactory::reporter();
+                            $reporter = CodendiReporterFactory::reporter('html', $coverCode);
 
                             $g = get_group_tests($_REQUEST['tests_to_run']);
                             $g->run($reporter);
 
-                            if (class_exists('PHP_CodeCoverage_Report_HTML')) {
-                                $writer = new PHP_CodeCoverage_Report_HTML();
-                                $writer->process($reporter->getCodeCoverage(), dirname(__FILE__).'/code-coverage-report');
+                            if ($reporter->generateCoverage(dirname(__FILE__).'/code-coverage-report')) {
                                 echo '<p><a href="code-coverage-report">Code coverage results:</a></p>';
                                 echo '<iframe src="code-coverage-report" style="width: 100%; height: 500px;" />';
-                                
-                                
                             }
                         }
                         ?>

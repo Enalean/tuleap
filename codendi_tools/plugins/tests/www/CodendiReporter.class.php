@@ -4,6 +4,8 @@ require_once('../include/simpletest/reporter.php');
 require_once('../include/simpletest/extensions/junit_xml_reporter.php');
 
 @include_once 'PHP/CodeCoverage.php';
+@include_once 'PHP/CodeCoverage/Report/HTML.php';
+@include_once 'PHP/CodeCoverage/Report/Clover.php';
 
 /**
  * Invoker decorator to target code coverage only on executed tests
@@ -14,7 +16,7 @@ class CodeCoverageInvokerDecorator extends SimpleInvokerDecorator {
         protected $coverage;
 
         function __construct($coverage, $invoker) {
-            SimpleInvokerDecorator::SimpleInvokerDecorator($invoker);
+            $this->SimpleInvokerDecorator($invoker);
             $this->coverage = $coverage;
         }
 
@@ -42,12 +44,26 @@ class CodeCoverageInvokerDecorator extends SimpleInvokerDecorator {
 
 }
 
-class CodendiHtmlReporter extends HtmlReporter {
+interface iCodeCoverageReporter {
+    /**
+     *    Can wrap the invoker in preperation for running
+     *    a test.
+     *    @param SimpleInvoker $invoker   Individual test runner.
+     *    @return SimpleInvoker           Wrapped test runner.
+     *    @access public
+     */
+    public function createInvoker($invoker);
+
+    public function generateCoverage($path);
+}
+
+
+class CodendiHtmlReporter extends HtmlReporter implements iCodeCoverageReporter {
     protected $_timer;
     protected $coverage;
 
     function __construct($coverage) {
-        HtmlReporter::HtmlReporter();
+        $this->HtmlReporter();
         $this->coverage = $coverage;
     }
 
@@ -83,13 +99,6 @@ class CodendiHtmlReporter extends HtmlReporter {
         echo '</span></p>';
     }
 
-    /**
-     *    Can wrap the invoker in preperation for running
-     *    a test.
-     *    @param SimpleInvoker $invoker   Individual test runner.
-     *    @return SimpleInvoker           Wrapped test runner.
-     *    @access public
-     */
     function createInvoker($invoker) {
         if ($this->coverage) {
             return new CodeCoverageInvokerDecorator($this->coverage, $invoker);
@@ -97,14 +106,25 @@ class CodendiHtmlReporter extends HtmlReporter {
         return $invoker;
     }
 
-    function getCodeCoverage() {
-        return $this->coverage;
+    public function generateCoverage($path) {
+        if ($this->coverage) {
+            $writer = new PHP_CodeCoverage_Report_HTML();
+            $writer->process($this->coverage, $path);
+            return true;
+        }
+        return false;
     }
 
 }
  
-class CodendiJUnitXMLReporter extends JUnitXMLReporter {
-        
+class CodendiJUnitXMLReporter extends JUnitXMLReporter implements iCodeCoverageReporter {
+    protected $coverage;
+
+    function __construct($coverage) {
+        $this->JUnitXMLReporter();
+        $this->coverage = $coverage;
+    }
+
     public function getXML() {
         return $this->doc->saveXML();
     }
@@ -114,26 +134,41 @@ class CodendiJUnitXMLReporter extends JUnitXMLReporter {
         fwrite($fh, $this->getXML());
         fclose($fh);        
     }
-        
+
+    function createInvoker($invoker) {
+        if ($this->coverage) {
+            return new CodeCoverageInvokerDecorator($this->coverage, $invoker);
+        }
+        return $invoker;
+    }
+
+    public function generateCoverage($path) {
+        if ($this->coverage) {
+            $writer = new PHP_CodeCoverage_Report_Clover();
+            $writer->process($this->coverage, $path);
+            return true;
+        }
+        return false;
+    }
 }
 
 class CodendiReporterFactory {
 
-    public static function getCodeCoverage() {
-        if (class_exists('PHP_CodeCoverage')) {
+    public static function getCodeCoverage($enableCoverage = false) {
+        if ($enableCoverage && class_exists('PHP_CodeCoverage')) {
             return new PHP_CodeCoverage();
         }
         return null;
     }
 
-    public static function reporter($type = "html") {
-        $coverage = self::getCodeCoverage();
+    public static function reporter($type = "html", $enableCoverage = false) {
+        $coverage = self::getCodeCoverage($enableCoverage);
         switch ($type) {
             case "text":
                 return new TextReporter();
                 break;
             case "junit_xml":
-                return new CodendiJUnitXMLReporter();
+                return new CodendiJUnitXMLReporter($coverage);
                 break;
             default:
                 return new CodendiHtmlReporter($coverage);
