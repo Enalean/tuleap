@@ -146,6 +146,9 @@ class CodendiJUnitXMLReporter extends JUnitXMLReporter implements iCodeCoverageR
         if ($this->coverage) {
             $writer = new PHP_CodeCoverage_Report_Clover();
             $writer->process($this->coverage, $path);
+
+            $writer = new PHP_CodeCoverage_Report_HTML();
+            $writer->process($this->coverage, dirname(__FILE__).'/code-coverage-report');
             return true;
         }
         return false;
