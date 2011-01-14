@@ -28,7 +28,7 @@ function add_test_to_group($test, $categ, $params) {
 
 $g = get_group_tests($GLOBALS['tests']);
 
-$j_reporter = CodendiReporterFactory::reporter('junit_xml', $coverCode);
+$j_reporter = CodendiReporterFactory::reporter('junit_xml', true);
 $g->run($j_reporter);
 
 $xml = $j_reporter->writeXML('codendi_unit_tests_report.xml');
