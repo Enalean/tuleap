@@ -1,4 +1,4 @@
-Version 4.0.16 = Not released yet
+Version 4.0.16 - Tuesday, 18th January 2011 
         == New Features ==
         backlog #113540: Support of <pre> in tracker follow-up comment
                          * Follow-up comments can be submitted with usage of a subset
