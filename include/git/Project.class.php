@@ -266,9 +266,9 @@ class GitPHP_Project
 			$this->owner = $exe->Execute(GIT_CONFIG, $args);
 			unset($exe);
 			
-			if (empty($this->owner)) {
+			if (empty($this->owner) && function_exists('posix_getpwuid')) {
 				$uid = fileowner($this->GetPath());
-				if ($uid > 0) {
+				if ($uid !== false) {
 					$data = posix_getpwuid($uid);
 					if (isset($data['gecos']) && !empty($data['gecos'])) {
 						$this->owner = $data['gecos'];
