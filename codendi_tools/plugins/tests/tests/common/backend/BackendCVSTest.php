@@ -432,7 +432,7 @@ class BackendCVSTest extends UnitTestCase {
         $project = new MockProject($this);
         $project->setReturnValue('getUnixName', 'TestProj',array(false));
         $pm = new MockProjectManager();
-        $pm->setReturnReference('getProject', $project, array(1));
+        $pm->setReturnValue('getProject', $project, array(1));
         $backend = new BackendCVSTestVersion($this);
         $backend->setReturnValue('getProjectManager', $pm);
         $backend->setReturnValue('getCVSWatchMode', false);
@@ -444,8 +444,28 @@ class BackendCVSTest extends UnitTestCase {
         
          // Cleanup
         /*$backend->recurseDeleteInDir($GLOBALS['cvs_prefix']."/TestProj");
+        rmdir($GLOBALS['cvs_prefix']."/TestProj");*/
+    }
+    
+    function testUpdateCVSWatchModeNotyfyExist() {
+        $project = new MockProject($this);
+        $project->setReturnValue('getUnixName', 'TestProj', array(false));
+        $pm = new MockProjectManager();
+        $pm->setReturnValue('getProject', $project, array(1));
+        $project->setReturnValue('getMembersUserNames', array());
+        $backend = new BackendCVSTestVersion($this);
+        $backend->setReturnValue('getProjectManager', $pm);
+        $backend->setReturnValue('getCVSWatchMode', false);
+
+        // Simulate notify generated using command
+        $cvsdir = $GLOBALS['cvs_prefix'].'/TestProj';
+        mkdir($cvsdir);
+        system($GLOBALS['cvs_cmd']." -d $cvsdir init");
+        $this->assertTrue($backend->updateCVSWatchMode(1));
+
+        // Cleanup
+        $backend->recurseDeleteInDir($GLOBALS['cvs_prefix']."/TestProj");
         rmdir($GLOBALS['cvs_prefix']."/TestProj");
-        rmdir($GLOBALS['cvslock_prefix']."/TestProj");*/
     }
 }
 ?>
