@@ -277,32 +277,36 @@ class BackendCVS extends Backend {
       */
     public function updateCVSWatchMode($group_id) {
         $project=$this->getProjectManager()->getProject($group_id);
-        if (!$project) return false;
+        if (!$project) {
+            $this->log("Project not found: $group_id", Backend::LOG_ERROR);
+            return false;
+        }
 
         $unix_group_name=$project->getUnixName(false); // May contain upper-case letters
         $cvs_dir=$GLOBALS['cvs_prefix']."/".$unix_group_name;
-
+        $filename = "$cvs_dir/CVSROOT/notify";
+        //If notify file does not exist, we should raise error in log
+        //and return false
+        if (!file_exists($filename)) {
+            $this->log("No such file: $filename", Backend::LOG_ERROR);
+            return false;
+        }
+        $file_array=file($filename);
 
         // Add notify command if cvs_watch_mode is on
         if ($project->getCVSWatchMode()) {
-            $filename = "$cvs_dir/CVSROOT/notify";
-            $file_array=file($filename);
             if (!in_array($this->block_marker_start,$file_array)) {
                 $this->_RcsCheckout($filename);
                 $this->addBlock($filename,'ALL mail %s -s "CVS notification"');
                 $this->_RcsCommit($filename);
 
-                // Apply cvs watch on only if cvs_watch_mode changed to on 
+                // Apply cvs watch on only if cvs_watch_mode changed to on
                 $this->CVSWatch($cvs_dir,$unix_group_name,1);
                 $this->recurseChownChgrp($cvs_dir,$this->getHTTPUser(),$unix_group_name);
                 system("chmod g+rw $cvs_dir");
             }
-        }
-      
-        // Remove notify command if cvs_watch_mode is off.
-        if (! $project->getCVSWatchMode()) {
-            $filename = "$cvs_dir/CVSROOT/notify";
-            $file_array=file($filename);
+        } else {
+            // Remove notify command if cvs_watch_mode is off.
             if (in_array($this->block_marker_start,$file_array)) {
                 // Switch to cvs watch off
                 $this->_RcsCheckout($filename);
@@ -312,7 +316,6 @@ class BackendCVS extends Backend {
                 $this->CVSWatch($cvs_dir,$unix_group_name,0);
             }
         }
-
         return true;
     }
 

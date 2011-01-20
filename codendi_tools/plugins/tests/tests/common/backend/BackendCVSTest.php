@@ -428,7 +428,7 @@ class BackendCVSTest extends UnitTestCase {
             
     }
 
-    function testUpdateCVSWatchModeNotyfyMissing() {
+    function testUpdateCVSWatchModeNotifyMissing() {
         $project = new MockProject($this);
         $project->setReturnValue('getUnixName', 'TestProj',array(false));
         $pm = new MockProjectManager();
@@ -437,17 +437,11 @@ class BackendCVSTest extends UnitTestCase {
         $backend->setReturnValue('getProjectManager', $pm);
         $backend->setReturnValue('getCVSWatchMode', false);
 
-        $this->assertEqual(false, $backend->updateCVSWatchMode(1));
-        /*$this->assertFalse($svnroots === false);
-        $this->assertPattern("/gpig2/",$svnroots,"Project name not found in SVN root");
-        $this->assertPattern("/AuthName \"Subversion Authorization \(Guinea Pig is 'back'\)\"/",$svnroots,"Group name double quotes in realm");*/
-        
-         // Cleanup
-        /*$backend->recurseDeleteInDir($GLOBALS['cvs_prefix']."/TestProj");
-        rmdir($GLOBALS['cvs_prefix']."/TestProj");*/
+        $filename = $GLOBALS['cvs_prefix']."/TestProj/CVSROOT/notify";
+        $this->assertFalse($backend->updateCVSWatchMode(1));
     }
     
-    function testUpdateCVSWatchModeNotyfyExist() {
+    function testUpdateCVSWatchModeNotifyExist() {
         $project = new MockProject($this);
         $project->setReturnValue('getUnixName', 'TestProj', array(false));
         $pm = new MockProjectManager();
