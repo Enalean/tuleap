@@ -36,11 +36,12 @@ Mock::generate('ServiceDao');
 
 
 Mock::generatePartial('BackendCVS', 'BackendCVSTestVersionInit', array('getUserManager', 
-                                                             'getProjectManager',
-                                                             'chown',
-                                                             'chgrp',
-                                                             'chmod',
-                                                             '_getServiceDao'
+                                                                       'getProjectManager',
+                                                                       'chown',
+                                                                       'chgrp',
+                                                                       'chmod',
+                                                                       '_getServiceDao',
+                                                                       'getCVSWatchMode'
                                                            ));
 
 class BackendCVSTestVersion extends BackendCVSTestVersionInit {
@@ -425,6 +426,26 @@ class BackendCVSTest extends UnitTestCase {
         $backend->expectArgumentsAt(1, 'updateCVSwriters', array(101));
        
             
+    }
+
+    function testUpdateCVSWatchModeNotyfyMissing() {
+        $project = new MockProject($this);
+        $project->setReturnValue('getUnixName', 'TestProj',array(false));
+        $pm = new MockProjectManager();
+        $pm->setReturnReference('getProject', $project, array(1));
+        $backend = new BackendCVSTestVersion($this);
+        $backend->setReturnValue('getProjectManager', $pm);
+        $backend->setReturnValue('getCVSWatchMode', false);
+
+        $this->assertEqual(false, $backend->updateCVSWatchMode(1));
+        /*$this->assertFalse($svnroots === false);
+        $this->assertPattern("/gpig2/",$svnroots,"Project name not found in SVN root");
+        $this->assertPattern("/AuthName \"Subversion Authorization \(Guinea Pig is 'back'\)\"/",$svnroots,"Group name double quotes in realm");*/
+        
+         // Cleanup
+        /*$backend->recurseDeleteInDir($GLOBALS['cvs_prefix']."/TestProj");
+        rmdir($GLOBALS['cvs_prefix']."/TestProj");
+        rmdir($GLOBALS['cvslock_prefix']."/TestProj");*/
     }
 }
 ?>
