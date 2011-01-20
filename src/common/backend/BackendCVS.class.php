@@ -472,7 +472,11 @@ class BackendCVS extends Backend {
         $files_to_check=array('CVSROOT/loginfo', 'CVSROOT/commitinfo', 'CVSROOT/config');
         $need_owner_update = false;
         foreach ($files_to_check as $file) {
-            // Get file stat 
+            if (!file_exists($cvsroot.'/'.$file)) {
+                $this->log("File not found in cvsroot: $cvsroot/$file", Backend::LOG_ERROR);
+                return false;
+            }
+            // Get file stat
             $stat = stat("$cvsroot/$file");
             if ($stat) {
                 if ( ($stat['uid'] != $this->getHTTPUserUID())
