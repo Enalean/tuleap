@@ -49,7 +49,7 @@ class BackendCVSTestVersion extends BackendCVSTestVersionInit {
  
     // log to apache error logs (does not seem to work??)
     function log($message) {
-        echo "<br>LOG: $message\n";
+        echo "<br>LOG: $message\n<br>";
     }
 }
 
@@ -438,7 +438,7 @@ class BackendCVSTest extends UnitTestCase {
         $backend->setReturnValue('getProjectManager', $pm);
         $backend->setReturnValue('getCVSWatchMode', false);
 
-        $filename = $GLOBALS['cvs_prefix']."/TestProj/CVSROOT/notify";
+        // Test must echo : LOG: No such file: <path>/plugins/tests/tests/common/backend/_fixtures/cvsroot/TestProj/CVSROOT/notify 
         $this->assertFalse($backend->updateCVSWatchMode(1));
     }
 
@@ -488,6 +488,7 @@ class BackendCVSTest extends UnitTestCase {
 
         $backend = new BackendCVSTestVersion($this);
         $backend->setReturnValue('getHTTPUserUID', $stat['uid']);
+        // Test must echo : LOG: File not found in cvsroot: <path>/plugins/tests/tests/common/backend/_fixtures/cvsroot/TestProj/CVSROOT/commitinfo 
         $this->assertFalse($backend->checkCVSMode($project));
 
         // Cleanup
@@ -520,6 +521,7 @@ class BackendCVSTest extends UnitTestCase {
         $this->assertTrue(file_exists($cvsdir.'/CVSROOT/commitinfo'));
         $this->assertTrue(file_exists($cvsdir.'/CVSROOT/config'));
 
+        // Test must echo : LOG: Restoring ownership on CVS dir: <path>/plugins/tests/tests/common/backend/_fixtures/cvsroot/TestProj 
         $this->assertTrue($backend->checkCVSMode($project));
 
         // Cleanup
