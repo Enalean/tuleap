@@ -291,7 +291,7 @@ class BackendCVS extends Backend {
     /**
      * Update CVS writers into all projects that given user belongs to
      *
-     * @param User $user
+     * @param User $user member to add as committer
      *
      * @return Boolean
      */
@@ -346,7 +346,7 @@ class BackendCVS extends Backend {
 
                 // Apply cvs watch on only if cvs_watch_mode changed to on
                 $this->CVSWatch($cvs_dir, $unix_group_name, 1);
-                $this->recurseChownChgrp($cvs_dir,$this->getHTTPUser(), $unix_group_name);
+                $this->recurseChownChgrp($cvs_dir, $this->getHTTPUser(), $unix_group_name);
                 system("chmod g+rw $cvs_dir");
             }
         } else {
@@ -369,7 +369,6 @@ class BackendCVS extends Backend {
      * @param String  $cvs_dir         CVS root directory
      * @param String  $unix_group_name name of the project
      * @param Integer $watch_mode      defines the watch mode
-     *
      *
      * @return Boolean
      */
@@ -497,7 +496,7 @@ class BackendCVS extends Backend {
         fclose($fp);
 
         // Backup existing file and install new one if they are different
-        $this->installNewFileVersion($config_file_new, $config_file,$config_file_old);
+        $this->installNewFileVersion($config_file_new, $config_file, $config_file_old);
 
         return true;
     }
