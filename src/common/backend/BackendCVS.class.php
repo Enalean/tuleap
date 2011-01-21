@@ -271,10 +271,13 @@ class BackendCVS extends Backend {
     }
 
 
-     /**
-      * Update CVS Watch Mode
-      * @return true on success
-      */
+    /**
+     * Update CVS Watch Mode
+     * 
+     * @param Integer $group_id
+     * 
+     * @return Boolean
+     */
     public function updateCVSWatchMode($group_id) {
         $project=$this->getProjectManager()->getProject($group_id);
         if (!$project) {
@@ -318,7 +321,6 @@ class BackendCVS extends Backend {
         }
         return true;
     }
-
 
    function CVSWatch($cvs_dir, $unix_group_name, $watch_mode) {
         $sandbox_dir =  $GLOBALS['tmp_dir']."/".$unix_group_name.".cvs_watch_sandbox";
@@ -472,17 +474,17 @@ class BackendCVS extends Backend {
         $files_to_check=array('CVSROOT/loginfo', 'CVSROOT/commitinfo', 'CVSROOT/config');
         $need_owner_update = false;
         foreach ($files_to_check as $file) {
-            if (!file_exists($cvsroot.'/'.$file)) {
-                $this->log("File not found in cvsroot: $cvsroot/$file", Backend::LOG_ERROR);
-                return false;
-            }
-            // Get file stat
-            $stat = stat("$cvsroot/$file");
-            if ($stat) {
-                if ( ($stat['uid'] != $this->getHTTPUserUID())
-                     || ($stat['gid'] != $project->getUnixGID()) ) {
-                    $need_owner_update = true;
+            if (file_exists($cvsroot.'/'.$file)) {
+                // Get file stat
+                $stat = stat("$cvsroot/$file");
+                if ($stat) {
+                    if ( ($stat['uid'] != $this->getHTTPUserUID())
+                    || ($stat['gid'] != $project->getUnixGID()) ) {
+                        $need_owner_update = true;
+                    }
                 }
+            } else {
+                $this->log("File not found in cvsroot: $cvsroot/$file", Backend::LOG_WARNING);
             }
         }
         if ($need_owner_update) {
