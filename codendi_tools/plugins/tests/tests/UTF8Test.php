@@ -16,6 +16,7 @@ class UTF8Test extends UnitTestCase {
             'simpletest',
             'tiny_mce',
             'phpwiki',
+            'code-coverage-report',
         );
         $cmd = 'find '.$GLOBALS['codendi_dir'].'/ -not -name "iso-8859-1_to_utf-8.sh" -not -wholename "*/'. implode('/*" -not -wholename "*/', $exclude_wholename) .'/*" -print -exec file -bi {} \; | grep -i iso-8859 -B 1';
         $handle = popen($cmd, 'r');
@@ -43,7 +44,7 @@ class UTF8Test extends UnitTestCase {
     }
     
     private function _parseHtmlFiles($file) {
-        if (is_dir($file) && !in_array(basename($file), array('.', '..', '.svn', 'phpwiki'))) {
+        if (is_dir($file) && !in_array(basename($file), array('.', '..', '.svn', 'phpwiki', 'code-coverage-report'))) {
             foreach(glob($file .'/*') as $f) {
                 $this->_parseHtmlFiles($f);
             }
