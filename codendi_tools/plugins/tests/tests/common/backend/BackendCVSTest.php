@@ -34,30 +34,17 @@ Mock::generate('Project');
 require_once('common/dao/ServiceDao.class.php');
 Mock::generate('ServiceDao');
 
-Mock::generatePartial('BackendCVS', 'BackendCVSTestVersionInit', array('getUserManager', 
+
+Mock::generatePartial('BackendCVS', 'BackendCVSTestVersion', array('getUserManager', 
                                                                        'getProjectManager',
                                                                        'chown',
                                                                        'chgrp',
                                                                        'chmod',
                                                                        '_getServiceDao',
                                                                        'getCVSWatchMode',
-                                                                       'getHTTPUserUID'
-                                                                 )
-);
-
-class BackendCVSTestVersion extends BackendCVSTestVersionInit {
-
-    var $message;
-
-    function log($message) {
-        $this->message = $message;
-    }
-
-    function getLog() {
-        return $this->message;
-    }
-
-}
+                                                                       'getHTTPUserUID',
+                                                                       'log'
+                                                           ));
 
 Mock::generatePartial('BackendCVS', 'BackendCVS4RenameCVSNT', array('useCVSNT', '_RcsCheckout', '_RcsCommit','updateCVSwriters',
 'repositoryExists', 'getProjectManager'));
@@ -76,7 +63,8 @@ class BackendCVSTest extends UnitTestCase {
         $GLOBALS['cvs_root_allow_file']       = dirname(__FILE__) . '/_fixtures/etc/cvs_root_allow';
         mkdir($GLOBALS['cvs_prefix'] . '/' . 'toto');
     }
-
+    
+    
     function tearDown() {
         //clear the cache between each tests
         Backend::clearInstances();
@@ -87,10 +75,11 @@ class BackendCVSTest extends UnitTestCase {
         unset($GLOBALS['cvs_cmd']);
         unset($GLOBALS['cvs_root_allow_file']);
     }
-
+    
     function testConstructor() {
         $backend = BackendCVS::instance();
     }
+    
 
     function testArchiveProjectCVS() {
         $project = new MockProject($this);
@@ -108,7 +97,7 @@ class BackendCVSTest extends UnitTestCase {
         // Setup test data
         mkdir($projdir);
         mkdir($projdir."/CVSROOT");
-
+        
         //$this->assertTrue(is_dir($projdir),"Project dir should be created");
 
         $this->assertEqual($backend->archiveProjectCVS(142),True);
@@ -185,14 +174,14 @@ class BackendCVSTest extends UnitTestCase {
         $this->assertTrue($backend->getCVSRootListNeedUpdate(),"Need to update the repo list");
 
         $this->assertEqual($backend->CVSRootListUpdate(),True);
-
+        
         // Now test CVSRootListUpdate
         $this->assertTrue(is_file($GLOBALS['cvs_root_allow_file']),"cvs_root_allow file should be created");
         $cvs_config_array1 = file($GLOBALS['cvs_root_allow_file']);
 
         $this->assertTrue(in_array("/cvsroot/gpig\n",$cvs_config_array1),"Project gpig should be listed in root file");
         $this->assertTrue(in_array("/cvsroot/TestProj\n",$cvs_config_array1),"Project TestProj should be listed in root file");
-
+      
         $service_dao->setReturnValue('searchActiveUnixGroupByUsedService',array(array('unix_group_name'=>'TestProj'),array('unix_group_name'=>'gpig')));
         $backend->setCVSRootListNeedUpdate();
         $this->assertTrue($backend->getCVSRootListNeedUpdate(),"Need to update the repo list");
@@ -202,6 +191,7 @@ class BackendCVSTest extends UnitTestCase {
         $cvs_config_array2 = file($GLOBALS['cvs_root_allow_file'].".new");
         $this->assertTrue(in_array("/cvsroot/gpig\n",$cvs_config_array2),"Project gpig should be listed in root.new file");
         $this->assertTrue(in_array("/cvsroot/TestProj\n",$cvs_config_array2),"Project TestProj should be listed in root.new file");
+
 
         // A project was added
         $service_dao2 = new MockServiceDao($this);
@@ -225,7 +215,7 @@ class BackendCVSTest extends UnitTestCase {
         unlink($GLOBALS['cvs_root_allow_file'].".old");
         unlink($GLOBALS['cvs_root_allow_file'].".new");
     }
-
+    
     public function testSetCVSPrivacy_private() {
         $backend = new BackendCVSTestVersion($this);
         $backend->setReturnValue('chmod', true);
@@ -236,7 +226,7 @@ class BackendCVSTest extends UnitTestCase {
         
         $this->assertTrue($backend->setCVSPrivacy($project, true));
     }
-
+    
     public function testsetCVSPrivacy_public() {
         $backend = new BackendCVSTestVersion($this);
         $backend->setReturnValue('chmod', true);
@@ -247,7 +237,7 @@ class BackendCVSTest extends UnitTestCase {
         
         $this->assertTrue($backend->setCVSPrivacy($project, false));
     }
-
+    
     public function testSetCVSPrivacy_no_repository() {
         $path_that_doesnt_exist = md5(uniqid(rand(), true));
         
@@ -317,7 +307,7 @@ class BackendCVSTest extends UnitTestCase {
 
         $backend = new BackendCVSTestVersion($this);
         $backend->setReturnValue('getProjectManager', $pm);
-
+        
         $backend->createProjectCVS(142);
         
         $this->assertEqual($backend->renameCVSRepository($project, "foobar"), true);
@@ -353,7 +343,7 @@ class BackendCVSTest extends UnitTestCase {
         $project = new MockProject($this);
         $project->setReturnValue('getUnixName', 'TestProj',array(false));
         $project->setReturnValue('getUnixName', 'testproj',array(true));
-
+        
         // Simulate loginfo generated for CVSNT
         $cvsdir = $GLOBALS['cvs_prefix'].'/foobar';
         mkdir($cvsdir);
@@ -367,63 +357,69 @@ class BackendCVSTest extends UnitTestCase {
         $backend = new BackendCVS4RenameCVSNT($this);
         $backend->setReturnValue('useCVSNT', true);
         $backend->renameLogInfoFile($project, 'foobar');
-
+        
         // Test loginfo file
         $file = file_get_contents($cvsdir."/CVSROOT/loginfo");
         $this->assertTrue(preg_match('#^DEFAULT chgrp -f -R\s*foobar '.$cvsdir.'$#m', $file), "CVS loginfo should use new project name");
         $this->assertTrue(preg_match('#^ALL '.$GLOBALS['codendi_bin_prefix'].'/log_accum -T foobar -C foobar -s %{sVv}$#m', $file), "CVS loginfo should use new project name");
         $this->assertFalse(preg_match("/TestProj/", $file), "There should no longer be any occurence of old project name in CVSROOT/loginfo");
-
+        
         $backend->recurseDeleteInDir($cvsdir);
         rmdir($cvsdir);
     }
-
+    
     public function testIsNameAvailable() {
         $cvsdir = $GLOBALS['cvs_prefix'].'/foobar';
         mkdir ($cvsdir);
-
+     
         $backend = new BackendCVSTestVersion($this);
         $this->assertEqual($backend->isNameAvailable("foobar"), false);
-
+         
         $backend->recurseDeleteInDir($cvsdir);
-
+        
         rmdir($cvsdir);
     }
-
+    
     public function testUpdateCVSWritersForGivenMember() {
+    
         $backend = new BackendCVS4RenameCVSNT($this);
 
         // The user
         $user = new MockUser($this);
         $user->setReturnValue('getId', array(142));
-
+       
         $project1 = new MockProject($this);
         $project1->setReturnValue('getId', 102);
-
+       
         $project2 = new MockProject($this);
         $project2->setReturnValue('getId', 101);
-
+       
         $projects =  array(102, 101);
         $user->setReturnValue('getProjects', $projects);
-
+         
+        
         $backend->setReturnValue('repositoryExists', true);
         $backend->setReturnValue('updateCVSwriters', true);
-
+        
         $pm = new MockProjectManager();
         $backend->setReturnValue('getProjectManager', $pm);
-
+       
         $pm->setReturnReference('getProject', $project1, array(102));
         $pm->setReturnReference('getProject', $project2, array(101));
-
+      
+        
         $this->assertEqual($backend->updateCVSWritersForGivenMember($user), true);
-
+        
+        
         $backend->expectCallCount('repositoryExists', 2);
         $backend->expectArgumentsAt(0, 'repositoryExists', array($project1));
         $backend->expectArgumentsAt(1, 'repositoryExists', array($project2));
-
+       
         $backend->expectCallCount('updateCVSwriters', 2);
         $backend->expectArgumentsAt(0, 'updateCVSwriters', array(102));
         $backend->expectArgumentsAt(1, 'updateCVSwriters', array(101));
+       
+            
     }
 
     function testUpdateCVSWatchModeNotifyMissing() {
@@ -435,8 +431,9 @@ class BackendCVSTest extends UnitTestCase {
         $backend->setReturnValue('getProjectManager', $pm);
         $backend->setReturnValue('getCVSWatchMode', false);
 
+        $backend->expectOnce('log', array('No such file: '.dirname(__FILE__).'/_fixtures/cvsroot/TestProj/CVSROOT/notify', 'error'));
+
         $this->assertFalse($backend->updateCVSWatchMode(1));
-        $this->assertPattern('/No such file:/i', $backend->getLog());
     }
 
     function testUpdateCVSWatchModeNotifyExist() {
@@ -485,8 +482,12 @@ class BackendCVSTest extends UnitTestCase {
 
         $backend = new BackendCVSTestVersion($this);
         $backend->setReturnValue('getHTTPUserUID', $stat['uid']);
+
+        $backend->expectCallCount('log', 2);
+        $backend->expectAt(0, 'log', array('File not found in cvsroot: '.$cvsdir.'/CVSROOT/commitinfo', 'warn'));
+        $backend->expectAt(1, 'log', array('File not found in cvsroot: '.$cvsdir.'/CVSROOT/config', 'warn'));
+
         $this->assertTrue($backend->checkCVSMode($project));
-        $this->assertPattern('/File not found in cvsroot/i', $backend->getLog());
 
         // Cleanup
         $backend->recurseDeleteInDir($GLOBALS['cvs_prefix']."/TestProj");
@@ -518,8 +519,9 @@ class BackendCVSTest extends UnitTestCase {
         $this->assertTrue(file_exists($cvsdir.'/CVSROOT/commitinfo'));
         $this->assertTrue(file_exists($cvsdir.'/CVSROOT/config'));
 
+        $backend->expectOnce('log', array('Restoring ownership on CVS dir: '.$cvsdir, 'info'));
+
         $this->assertTrue($backend->checkCVSMode($project));
-        $this->assertPattern('/Restoring ownership on CVS dir/i', $backend->getLog()); 
 
         // Cleanup
         $backend->recurseDeleteInDir($GLOBALS['cvs_prefix']."/TestProj");
