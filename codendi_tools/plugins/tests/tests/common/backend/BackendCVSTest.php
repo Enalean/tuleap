@@ -456,7 +456,7 @@ class BackendCVSTest extends UnitTestCase {
         $backend->recurseDeleteInDir($GLOBALS['cvs_prefix']."/TestProj");
         rmdir($GLOBALS['cvs_prefix']."/TestProj");
     }
-
+    
     function testCheckCVSModeFilesMissing() {
         $project = new MockProject($this);
         $project->setReturnValue('getUnixName', 'TestProj', array(false));
@@ -493,7 +493,7 @@ class BackendCVSTest extends UnitTestCase {
         $backend->recurseDeleteInDir($GLOBALS['cvs_prefix']."/TestProj");
         rmdir($GLOBALS['cvs_prefix']."/TestProj");
     }
-
+    
     function testCheckCVSModeNeedOwnerUpdate() {
         $project = new MockProject($this);
         $project->setReturnValue('getUnixName', 'TestProj', array(false));
@@ -526,6 +526,7 @@ class BackendCVSTest extends UnitTestCase {
         // Cleanup
         $backend->recurseDeleteInDir($GLOBALS['cvs_prefix']."/TestProj");
         rmdir($GLOBALS['cvs_prefix']."/TestProj");
+        rmdir($GLOBALS['cvslock_prefix']."/TestProj");
     }
 
 }
