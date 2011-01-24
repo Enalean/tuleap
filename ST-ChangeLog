@@ -1,3 +1,9 @@
+Version 4.0.17 - (Not released yet)
+        == New Features ==
+        backlog #119877: Add more coverage for CVS Backend
+
+
+
 Version 4.0.16 - Tuesday, 18th January 2011 
         == New Features ==
         backlog #113540: Support of <pre> in tracker follow-up comment
