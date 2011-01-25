@@ -11,8 +11,6 @@
      */
     require_once(dirname(__FILE__) . '/test_case.php');
     require_once(dirname(__FILE__) . '/dumper.php');
-    // MockFunction will work only if runkit is installed
-    //require_once(dirname(__FILE__) . '/mock_functions.php');
     /**#@-*/
 
     /**
