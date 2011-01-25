@@ -200,7 +200,7 @@
          */
         function setReturnReferenceAt($timing, $function, &$reference, $args = false) {
             $mock = & MockFunction::_instance($function);
-            $mock->setReturnReferenceAt($timing, $function, &$reference, $args);
+            $mock->setReturnReferenceAt($timing, $function, $reference, $args);
         }
         
         /**
@@ -468,14 +468,17 @@
          *    @access public
          */
         function deploy() {
-            
-            runkit_function_rename(
+            runkit_function_copy(
                 $this->_function,
                 $this->_tmp_function
                 ) or
-                    trigger_error('Error archiving real function implementation',
-                    E_USER_ERROR);
-            
+                trigger_error('Error archiving real function implementation (copy)',
+                              E_USER_ERROR);
+
+            runkit_function_remove($this->_function) 
+                or trigger_error('Error archiving real function implementation (remove)',
+                                 E_USER_ERROR);;
+
             $this->_generateMockFunction();
         }
         
@@ -485,17 +488,20 @@
          *    @access public
          */
         function restore() {
-            
             runkit_function_remove($this->_function) or
                 trigger_error('Error removing mock function',
                     E_USER_ERROR);
             
-            runkit_function_rename(
+            runkit_function_copy(
                 $this->_tmp_function,
                 $this->_function
                 ) or
                 trigger_error('Error restoring real function',
                     E_USER_ERROR);
+
+            runkit_function_remove($this->_tmp_function)or
+                trigger_error('Error removing tmp function',
+                    E_USER_ERROR);;
         }
     }
     
