@@ -24,13 +24,13 @@
  * to copy this file with other tests, then run it.
  */
 
-require_once(dirname(__FILE__) .'/../../plugins/tests/include/simpletest/mock_functions.php');
+require_once(dirname(__FILE__) .'/../include/simpletest/mock_functions.php');
 
 function foobar() {
     return 'foo';
 }
 
-class FoolTest extends UnitTestCase {
+class MockFunctionsTest extends UnitTestCase {
 
     function testFoobar() {
 
