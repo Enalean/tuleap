@@ -380,7 +380,7 @@ class LDAP {
      * @param String   $name      Name of the group to look for
      * @param Integer  $sizeLimit Limit the amount of result sent
      * 
-     * @return LDAPResultIterator
+     * @return Array of LDAPResultIterator
      */
     function searchUserAsYouType($name, $sizeLimit, $validEmail=false) {
         $lri = false;
@@ -400,10 +400,15 @@ class LDAP {
             $this->trapErrors();
             // Use SCOPE_ONELEVEL to only search in "sys_ldap_people_dn" branch 
             // of the directory to speed up the search.
-            $lri = $this->search($this->ldapParams['people_dn'], $filter, self::SCOPE_ONELEVEL, $attrs, $attrsOnly, $sizeLimit);
+            foreach (split(';', $this->ldapParams['people_dn']) as $PeopleDn) {
+                $result = $this->search($PeopleDn, $filter, self::SCOPE_ONELEVEL, $attrs, $attrsOnly, $sizeLimit);
+                if ($result) {
+                    $lri[] = $result;
+                }
+            }
         }
         if ($lri === false) {
-            return new LDAPResultIterator(array(), array());
+            return array();
         } else {
             return $lri;
         }

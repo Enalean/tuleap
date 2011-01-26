@@ -62,7 +62,12 @@ class LDAP_DirectorySynchronization {
         $ldap_query = 'st-eduid='.$row['ldap_id'];
 
         $time_start = microtime(true);
-        $lri = $this->ldap->search($this->ldap->getLDAPParam('people_dn'), $ldap_query, LDAP::SCOPE_ONELEVEL, array('cn', 'mail', 'employeetype', 'st-eduid', 'o', 'uid'));
+        foreach (split(';', $this->ldapParams['people_dn']) as $PeopleDn) {
+            // TODO : Verify that search return false if user is not found in a branch
+            if (!$lri) {
+                $lri = $this->ldap->search($PeopleDn, $ldap_query, LDAP::SCOPE_ONELEVEL, array('cn', 'mail', 'employeetype', 'st-eduid', 'o', 'uid'));
+            }
+        }
         $time_end   = microtime(true);
         $this->ldapTime += ($time_end-$time_start);
 
