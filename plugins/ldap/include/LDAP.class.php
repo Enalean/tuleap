@@ -404,7 +404,7 @@ class LDAP {
             foreach ($peopleDn as $count) {
                 $ds[] = $this->ds;
             }
-            $asr = ldap_search($ds, $peopleDn, $filter, $attrs, $attrsOnly, $sizeLimit, 0, LDAP_DEREF_NEVER);
+            $asr = ldap_list($ds, $peopleDn, $filter, $attrs, $attrsOnly, $sizeLimit, 0, LDAP_DEREF_NEVER);
             if ($asr !== false) {
                 foreach ($asr as $sr) {
                     $entries = ldap_get_entries($this->ds, $sr);
