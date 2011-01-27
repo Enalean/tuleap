@@ -64,7 +64,7 @@ class LDAP_DirectorySynchronization {
         $sync = $this->ldap->getLDAPParam('sync_attribute');
         $attributes = $sync ? explode(',', $sync): array() ;
 
-        $requiredValues = array("cn", "mail");
+        $requiredValues = array($this->ldap->getLDAPParam('cn'), $this->ldap->getLDAPParam('mail'));
         foreach ($requiredValues as $val) {
             if (!in_array($val, $attributes)) {
                 $attributes[] = $val;
