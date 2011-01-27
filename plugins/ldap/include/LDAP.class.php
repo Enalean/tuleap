@@ -380,10 +380,10 @@ class LDAP {
      * @param String   $name      Name of the group to look for
      * @param Integer  $sizeLimit Limit the amount of result sent
      * 
-     * @return Array of LDAPResultIterator
+     * @return Array of LDAPResult
      */
     function searchUserAsYouType($name, $sizeLimit, $validEmail=false) {
-        $lri = false;
+        $lri = array();
         if($name && $this->_connectAndBind()) {
             $filter = '('.$this->ldapParams['cn'].'='.$name.'*)';
             if($validEmail) {
@@ -400,18 +400,26 @@ class LDAP {
             $this->trapErrors();
             // Use SCOPE_ONELEVEL to only search in "sys_ldap_people_dn" branch 
             // of the directory to speed up the search.
-            foreach (split(';', $this->ldapParams['people_dn']) as $PeopleDn) {
-                $result = $this->search($PeopleDn, $filter, self::SCOPE_ONELEVEL, $attrs, $attrsOnly, $sizeLimit);
-                if ($result) {
-                    $lri[] = $result;
+            $peopleDn = split(';', $this->ldapParams['people_dn']);
+            foreach ($peopleDn as $count) {
+                $ds[] = $this->ds;
+            }
+            $asr = ldap_search($ds, $peopleDn, $filter, $attrs, $attrsOnly, $sizeLimit, 0, LDAP_DEREF_NEVER);
+            if ($asr !== false) {
+                foreach ($asr as $sr) {
+                    $entries = ldap_get_entries($this->ds, $sr);
+                    if ($entries !== false) {
+                        foreach ($entries as $entry) {
+                            $result = new LDAPResult($entry, $this->ldapParams);
+                            if (!$result->isEmpty()) {
+                                $lri[] = $result;
+                            }
+                        }
+                    }
                 }
             }
         }
-        if ($lri === false) {
-            return array();
-        } else {
-            return $lri;
-        }
+        return $lri;
     }
 
     /**
