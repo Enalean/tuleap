@@ -411,7 +411,7 @@ class LDAP {
                     if ($entries !== false) {
                         foreach ($entries as $entry) {
                             $result = new LDAPResult($entry, $this->ldapParams);
-                            if (!$result->isEmpty()) {
+                            if ($result->exist() && $result->valid()) {
                                 $lri[] = $result;
                             }
                         }
