@@ -70,7 +70,7 @@ class LDAP {
      * @return String
      */
     function getLDAPParam($key) {
-        return $this->ldapParams[$key];
+        return isset($this->ldapParams[$key]) ?  $this->ldapParams[$key] : null;
     }
     
     /**

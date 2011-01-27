@@ -60,7 +60,16 @@ class LDAP_DirectorySynchronization {
 
     public function ldapSync($row) {
         $ldap_query = $this->ldap->getLDAPParam('eduid').'='.$row['ldap_id'];
-        $attributes = explode(',', $this->ldap->getLDAPParam('sync_attribute'));
+
+        $sync = $this->ldap->getLDAPParam('sync_attribute');
+        $attributes = $sync ? explode(',', $sync): array() ;
+
+        $requiredValues = array("cn", "mail");
+        foreach ($requiredValues as $val) {
+            if (!in_array($val, $attributes)) {
+                $attributes[] = $val;
+            }
+        }
 
         $time_start = microtime(true);
         $lri = false;
