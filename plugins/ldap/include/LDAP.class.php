@@ -380,10 +380,9 @@ class LDAP {
      * @param String   $name      Name of the group to look for
      * @param Integer  $sizeLimit Limit the amount of result sent
      * 
-     * @return Array of LDAPResult
+     * @return LDAPResultIterator
      */
     function searchUserAsYouType($name, $sizeLimit, $validEmail=false) {
-        $lri = array();
         if($name && $this->_connectAndBind()) {
             $filter = '('.$this->ldapParams['cn'].'='.$name.'*)';
             if($validEmail) {
@@ -406,20 +405,16 @@ class LDAP {
             }
             $asr = ldap_list($ds, $peopleDn, $filter, $attrs, $attrsOnly, $sizeLimit, 0, LDAP_DEREF_NEVER);
             if ($asr !== false) {
+                $apIt  = new AppendIterator();
                 foreach ($asr as $sr) {
                     $entries = ldap_get_entries($this->ds, $sr);
                     if ($entries !== false) {
-                        foreach ($entries as $entry) {
-                            $result = new LDAPResult($entry, $this->ldapParams);
-                            if ($result->exist() && $result->valid()) {
-                                $lri[] = $result;
-                            }
-                        }
+                        $apIt->append(new LDAPResultIterator($entries, $this->ldapParams));
                     }
                 }
             }
         }
-        return $lri;
+        return $apIt;
     }
 
     /**
