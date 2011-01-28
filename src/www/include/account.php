@@ -109,6 +109,9 @@ function account_send_add_user_to_group_email($group_id,$user_id) {
     $res = db_query("SELECT email FROM user WHERE user_id=".db_ei($user_id));
     if (db_numrows($res) > 0) {
         $email_address = db_result($res,0,'email');
+        if (!$email_address) {
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('global', 'no_mail_for_account'));
+        }
         $res2 = db_query("SELECT group_name,unix_group_name FROM groups WHERE group_id=".db_ei($group_id));
         if (db_numrows($res2) > 0) {
             $group_name = db_result($res2,0,'group_name');
