@@ -75,8 +75,7 @@ class LDAP_DirectorySynchronization {
         $lri = false;
         foreach (split(';', $this->ldap->getLDAPParam('people_dn')) as $PeopleDn) {
             $lri = $this->ldap->search($PeopleDn, $ldap_query, LDAP::SCOPE_ONELEVEL, $attributes);
-            // TODO : Verify that search return false if user is not found in a branch
-            if ($lri != false) {
+            if (count($lri) == 1 && $lri != false) {
                 break;
             }
         }

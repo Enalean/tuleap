@@ -26,7 +26,7 @@ require_once 'common/language/BaseLanguage.class.php';
 require_once 'common/user/UserManager.class.php';
 
 // Needed because of bad type checking in SimpleTest
-Mock::generatePartial('LDAP', 'MockInhLDAP', array('search', 'getErrno'));
+Mock::generatePartial('LDAP', 'MockInhLDAP', array('search', 'getErrno', 'getLDAPParam'));
 Mock::generatePartial('LDAP_DirectorySynchronization', 'LDAP_DirectorySynchronizationTestVersion', array('getUserManager', 'getLdapUserManager', 'getLdapUserSync'));
 Mock::generate('LDAPResultIterator');
 Mock::generate('LDAPResult');
@@ -73,6 +73,8 @@ class LDAP_DirectorySynchronizationTest extends UnitTestCase {
         $ldap = new MockInhLDAP($this);
         $ldap->setReturnValue('getErrno', 0);
         $ldap->setReturnValue('search', false);
+        $ldap->expectCallCount('search', 3);
+        $ldap->setReturnValue('getLDAPParam', 'ou=People,dc=st,dc=com ; ou=Intranet,dc=st,dc=com ; ou=Extranet,dc=st,dc=com');
         $sync->__construct($ldap);
 
         $um = new MockUserManager($this);
@@ -99,6 +101,8 @@ class LDAP_DirectorySynchronizationTest extends UnitTestCase {
         $ldap = new MockInhLDAP($this);
         $ldap->setReturnValue('getErrno', 15);
         $ldap->setReturnReference('search', $lri);
+        $ldap->expectCallCount('search', 3);
+        $ldap->setReturnValue('getLDAPParam', 'ou=People,dc=st,dc=com ; ou=Intranet,dc=st,dc=com ; ou=Extranet,dc=st,dc=com');
         $sync->__construct($ldap);
 
         $um = new MockUserManager($this);
@@ -125,6 +129,8 @@ class LDAP_DirectorySynchronizationTest extends UnitTestCase {
         $ldap = new MockInhLDAP($this);
         $ldap->setReturnValue('getErrno', LDAP::ERR_SUCCESS);
         $ldap->setReturnReference('search', $lri);
+        $ldap->expectCallCount('search', 3);
+        $ldap->setReturnValue('getLDAPParam', 'ou=People,dc=st,dc=com ; ou=Intranet,dc=st,dc=com ; ou=Extranet,dc=st,dc=com');
         $sync->__construct($ldap);
 
         $um = new MyUmMock4Suspended($this);
@@ -157,6 +163,8 @@ class LDAP_DirectorySynchronizationTest extends UnitTestCase {
         $ldap = new MockInhLDAP($this);
         $ldap->setReturnValue('getErrno', LDAP::ERR_SUCCESS);
         $ldap->setReturnReference('search', $lri);
+        $ldap->expectCallCount('search', 1);
+        $ldap->setReturnValue('getLDAPParam', 'ou=People,dc=st,dc=com ; ou=Intranet,dc=st,dc=com ; ou=Extranet,dc=st,dc=com');
         $sync->__construct($ldap);
 
         $um = new MockUserManager($this);
@@ -194,6 +202,8 @@ class LDAP_DirectorySynchronizationTest extends UnitTestCase {
         $ldap = new MockInhLDAP($this);
         $ldap->setReturnValue('getErrno', LDAP::ERR_SUCCESS);
         $ldap->setReturnReference('search', $lri);
+        $ldap->expectCallCount('search', 1);
+        $ldap->setReturnValue('getLDAPParam', 'ou=People,dc=st,dc=com ; ou=Intranet,dc=st,dc=com ; ou=Extranet,dc=st,dc=com');
         $sync->__construct($ldap);
 
         $um = new MockUserManager($this);
@@ -231,6 +241,51 @@ class LDAP_DirectorySynchronizationTest extends UnitTestCase {
         $ldap = new MockInhLDAP($this);
         $ldap->setReturnValue('getErrno', LDAP::ERR_SUCCESS);
         $ldap->setReturnReference('search', $lri);
+        $ldap->expectCallCount('search', 1);
+        $ldap->setReturnValue('getLDAPParam', 'ou=People,dc=st,dc=com ; ou=Intranet,dc=st,dc=com ; ou=Extranet,dc=st,dc=com');
+        $sync->__construct($ldap);
+
+        $um = new MockUserManager($this);
+        $um->expectNever('updateDb');
+        $sync->setReturnValue('getUserManager', $um);
+
+        $lum = new MockLDAP_UserManager($this);
+        $lum->expectNever('updateLdapUid');
+        $sync->setReturnValue('getLdapUserManager', $lum);
+
+        $lus = new MockLDAP_UserSync($this);
+        $lus->setReturnValue('sync', false);
+        $lus->expectOnce('sync');
+        $sync->setReturnValue('getLdapUserSync', $lus);
+
+        $row = array('user_id'  => '4321',
+                     'ldap_id'  => 'ed1234',
+                     'ldap_uid' => 'mis_1234'
+                     );
+        $sync->ldapSync($row);
+    }
+
+    function testUserInSecondBranch() {
+        $sync = new LDAP_DirectorySynchronizationTestVersion($this);
+
+        $res = new MockLDAPResult($this);
+        $res->setReturnValue('getLogin', 'mis_1234');
+
+        $lri = new MockLDAPResultIterator($this);
+        $lri->setReturnValue('count', 1);
+        $lri->setReturnValueAt(0, 'valid', true);
+        $lri->setReturnValueAt(1, 'valid', false);
+        $lri->setReturnReference('current', $res);
+
+        $ldap = new MockInhLDAP($this);
+        $ldap->setReturnValue('getErrno', LDAP::ERR_SUCCESS);
+        $param1 = 'ou=People,dc=st,dc=com ';
+        $param2 = ' ou=Intranet,dc=st,dc=com ';
+        $ldap->setReturnValueAt(0, 'search', false);
+        $ldap->setReturnValueAt(1, 'search', $lri);
+        $ldap->setReturnValueAt(2, 'search', false);
+        $ldap->expectCallCount('search', 2);
+        $ldap->setReturnValue('getLDAPParam', 'ou=People,dc=st,dc=com ; ou=Intranet,dc=st,dc=com ; ou=Extranet,dc=st,dc=com');
         $sync->__construct($ldap);
 
         $um = new MockUserManager($this);
