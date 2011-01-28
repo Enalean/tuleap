@@ -100,7 +100,14 @@ function account_add_user_obj_to_group ($group_id, User $user) {
     return false;
 }
 
-// Warn user she has been added to a project
+/**
+ * Warn user she has been added to a project
+ *
+ * @param Integer $group_id id of the project
+ * @param Integer $user_id  id of the user
+ *
+ * @return Boolean true if the mail was sent false otherwise
+ */
 function account_send_add_user_to_group_email($group_id,$user_id) {
   global $Language;
     $base_url = get_server_url();
@@ -111,6 +118,7 @@ function account_send_add_user_to_group_email($group_id,$user_id) {
         $email_address = db_result($res,0,'email');
         if (!$email_address) {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('global', 'no_mail_for_account'));
+            return false;
         }
         $res2 = db_query("SELECT group_name,unix_group_name FROM groups WHERE group_id=".db_ei($group_id));
         if (db_numrows($res2) > 0) {
@@ -125,11 +133,14 @@ function account_send_add_user_to_group_email($group_id,$user_id) {
             $mail->setFrom($GLOBALS['sys_noreply']);
             $mail->setSubject($Language->getText('include_account','welcome',array($GLOBALS['sys_name'],$group_name)));
             $mail->setBody($message);
-            if (!$mail->send()) {
+            $result = $mail->send();
+            if (!$result) {
                 $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('global', 'mail_failed', array($GLOBALS['sys_email_admin'])));
             }
+            return $result;
         }
     }
+    return false;
 }
 
 /**
