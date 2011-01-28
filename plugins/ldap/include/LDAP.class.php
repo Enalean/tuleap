@@ -383,6 +383,7 @@ class LDAP {
      * @return LDAPResultIterator
      */
     function searchUserAsYouType($name, $sizeLimit, $validEmail=false) {
+        $apIt  = new AppendIterator();
         if($name && $this->_connectAndBind()) {
             $filter = '('.$this->ldapParams['cn'].'='.$name.'*)';
             if($validEmail) {
@@ -405,7 +406,6 @@ class LDAP {
             }
             $asr = ldap_list($ds, $peopleDn, $filter, $attrs, $attrsOnly, $sizeLimit, 0, LDAP_DEREF_NEVER);
             if ($asr !== false) {
-                $apIt  = new AppendIterator();
                 foreach ($asr as $sr) {
                     $entries = ldap_get_entries($this->ds, $sr);
                     if ($entries !== false) {
