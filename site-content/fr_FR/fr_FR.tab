@@ -53,7 +53,7 @@ global	System	Système
 global	Personal	Personnel
 global	default	Défaut
 global	no_mail_for_account	Ce compte n'a pas d'aresse mail.
-global	mail_failed	L'e-mail n'a pas été envoyé. Veuillez contactez <a href='mailto:$1'>$1</a>.
+global	mail_failed	L'e-mail n'a pas été envoyé. Veuillez contactez $1.
 global	open	Ouvert
 global	closed	Fermé
 global	status	Statut
