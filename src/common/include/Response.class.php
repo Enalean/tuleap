@@ -46,7 +46,7 @@ class Response {
             $this->_feedback =& new Feedback();
         }
     }
-    function addFeedback($level, $message,  $purify=CODENDI_PURIFIER_BASIC) {
+    function addFeedback($level, $message,  $purify=CODENDI_PURIFIER_CONVERT_HTML) {
         $this->_feedback->log($level, $message, $purify);
     }
     function feedbackHasWarningsOrErrors() {

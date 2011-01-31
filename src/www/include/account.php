@@ -135,7 +135,7 @@ function account_send_add_user_to_group_email($group_id,$user_id) {
             $mail->setBody($message);
             $result = $mail->send();
             if (!$result) {
-                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('global', 'mail_failed', array($GLOBALS['sys_email_admin'])));
+                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('global', 'mail_failed', array($GLOBALS['sys_email_admin'])), CODENDI_PURIFIER_LIGHT);
             }
             return $result;
         }
