@@ -304,6 +304,18 @@ class Docman_FilterFactory {
     }
 
     /**
+     * Wrapper to obtain an instance of Docman_FilterFactory
+     * Technically useless but for unit tests
+     *
+     * @param $groupId id of the project
+     *
+     * @retunr Docman_FilterFactory
+     */
+    function getFilterFactory($groupId) {
+        return new Docman_FilterFactory($groupId);
+    }
+
+    /**
      *
      */
     function cloneFilter($srcFilter, $dstReport, $metadataMapping) {
@@ -324,15 +336,20 @@ class Docman_FilterFactory {
         }
         
         if($newLabel !== null) {
-            $dstFilterFactory = new Docman_FilterFactory($dstReport->getGroupId());
+            $dstFilterFactory = $this->getFilterFactory($dstReport->getGroupId());
 
             $gsMd = $this->getGlobalSearchMetadata();
             if($newLabel == $gsMd->getLabel()) {
                 $newMd = $gsMd;
             } else {
-                $newMd = $dstMdFactory->getFromLabel($newLabel);
+                $itMd = $this->getItemTypeSearchMetadata();
+                if ($newLabel == $itMd->getLabel()) {
+                    $newMd = $itMd;
+                } else {
+                    $newMd = $dstMdFactory->getFromLabel($newLabel);
+                }
             }
-            
+
             if($newMd->isUsed()) {
                 // Create new filter
                 $dstFilter = $dstFilterFactory->createFromMetadata($newMd, $dstReport->getAdvancedSearch());
@@ -384,7 +401,7 @@ class Docman_FilterFactory {
     function getLoveClonedValue($srcFilter, $value, $metadataMapping) {
         $dstVal = null;
 
-        if($srcFilter->md->getLabel() == 'status') {
+        if($srcFilter->md->getLabel() == 'status' || $srcFilter->md->getLabel() == 'item_type') {
             $dstVal = $value;
         } 
         elseif(isset($metadataMapping['love'][$value])) {

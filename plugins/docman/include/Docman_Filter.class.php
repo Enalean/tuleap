@@ -24,9 +24,9 @@ class Docman_Filter {
     var $value;
     var $md;
 
-    function Docman_Filter($md) {  
-        $this->value     = null;
-        $this->md        = $md;
+    function Docman_Filter($md) {
+        $this->value = null;
+        $this->md = $md;
     }
   
     function setValue($v) {
@@ -306,6 +306,7 @@ class Docman_FilterList extends Docman_Filter {
         $mdFactory = new Docman_MetadataFactory($md->getGroupId());
         $mdFactory->appendMetadataValueList($md, false);
         parent::Docman_Filter($md);
+        $this->setValue(0);
     }
 
     function initFromRow($row) {
@@ -429,6 +430,7 @@ class Docman_FilterItemTypeAdvanced extends Docman_FilterListAdvanced {
 class Docman_FilterItemType extends Docman_FilterList {
     function Docman_FilterItemType($md) {
         parent::Docman_Filter($md);
+        $this->setValue(0);
     }
 }
 

@@ -364,7 +364,7 @@ plugin_docman	details_paste_inprogress_title	Paste in progress '$1' in '$2'
 plugin_docman	details_paste_inprogress_info	Paste in progress...
 plugin_docman	details_paste_inprogress_wait	\n\nPlease wait for the paste to complete. This may take a while depending on size of data to be copied <img src="$1" />
 plugin_docman	details_paste_successful	<p>Paste operation successfully completed.</p>
-plugin_docman	details_paste_complete_redirect	<p>You will be redirected to <a href="'.$1.'">'.$2.'</a> in $3 seconds</p>
+plugin_docman	details_paste_complete_redirect	<p>You will be redirected to <a href="$1"> $2 </a> in $3 seconds</p>
 plugin_docman	details_permissions	Permissions
 plugin_docman	details_permissions_ugroups	User groups
 plugin_docman	details_permissions_perms	Access Permissions

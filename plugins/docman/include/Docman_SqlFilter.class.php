@@ -74,6 +74,7 @@ extends Docman_MetadataSqlQueryChunk {
    
     var $filter;
     var $isRealMetadata;
+    var $db;
 
     function Docman_SqlFilter($filter) {
         $this->filter = $filter;

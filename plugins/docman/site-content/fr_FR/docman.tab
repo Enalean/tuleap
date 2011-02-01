@@ -364,7 +364,7 @@ plugin_docman	details_paste_inprogress_title	Coller '$1' dans '$2' en cours...
 plugin_docman	details_paste_inprogress_info	Coller en cours...
 plugin_docman	details_paste_inprogress_wait	\n\nVeuillez attendre que la copie soit terminée. L'opération peut prendre du temps en fonction de la taille des données à coller <img src="$1" />
 plugin_docman	details_paste_successful	<p>Opération "Coller" terminée avec succès.</p>
-plugin_docman	details_paste_complete_redirect	<p>Vous allez être redirigé vers <a href="'.$1.'">'.$2.'</a> dans $3 secondes</p>
+plugin_docman	details_paste_complete_redirect	<p>Vous allez être redirigé vers <a href="$1"> $2 </a> dans $3 secondes</p>
 plugin_docman	details_permissions	Permissions
 plugin_docman	details_permissions_ugroups	Groupes d'utilisateurs
 plugin_docman	details_permissions_perms	Permissions d'accès
