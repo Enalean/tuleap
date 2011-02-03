@@ -188,7 +188,9 @@ class LdapPlugin extends Plugin {
             $ldap = $this->getLdap();
             $lri  = $ldap->searchUserAsYouType($params['searchToken'], $params['limit'], $validEmail);
             foreach($lri as $lr) {
-                $params['userList'][] = $lr->getCommonName().' ('.$lr->getLogin().')';
+                if ($lr->exist() && $lr->valid()) {
+                    $params['userList'][] = $lr->getCommonName().' ('.$lr->getLogin().')';
+                }
             }
             if($ldap->getErrno() == LDAP::ERR_SIZELIMIT) {
                 $params['userList'][] = "<strong>...</strong>";

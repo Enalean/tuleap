@@ -52,7 +52,8 @@ global	Project	Projet
 global	System	Système
 global	Personal	Personnel
 global	default	Défaut
-global	mail_failed	L'e-mail n'a pas été envoyé. Veuillez contactez <a href='mailto:$1'>$1</a>.
+global	no_mail_for_account	Ce compte n'a pas d'adresse mail.
+global	mail_failed	Le mail n'a pas été envoyé. Veuillez contacter <a href='mailto:$1'>$1</a>.
 global	open	Ouvert
 global	closed	Fermé
 global	status	Statut
