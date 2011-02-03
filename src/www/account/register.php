@@ -234,8 +234,11 @@ if($page == "admin_creation") {
 	
 	}
 	print $Language->getText('account_register', 'send_email'); 
-}?>
+} else {
+    include $Language->getContent('account/user_legal');
+}
 
+?>
 </form>
 <?
 }
