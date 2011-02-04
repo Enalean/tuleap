@@ -4,7 +4,7 @@ endif
 
 BASE_DIR=$(shell cd ../..; pwd)
 
-version=$(shell LANG=C cat $(BASE_DIR)/ST-VERSION)
+version=$(shell LANG=C cat $(BASE_DIR)/VERSION)
 PLUGIN_FORUMML_VERSION=$(shell LANG=C cat $(BASE_DIR)/plugins/forumml/VERSION)
 PLUGIN_GIT_VERSION=$(shell LANG=C cat $(BASE_DIR)/plugins/git/VERSION)
 PLUGIN_SVNTODIMENSIONS_VERSION=$(shell LANG=C cat $(BASE_DIR)/plugins/svntodimensions/VERSION)

@@ -253,7 +253,7 @@ SteerForge theme for Codendi
 #
 # Install codendi application
 %{__install} -m 755 -d $RPM_BUILD_ROOT/%{APP_DIR}
-for i in codendi_tools cli plugins site-content src ST-ChangeLog ST-VERSION; do
+for i in codendi_tools cli plugins site-content src ChangeLog VERSION; do
 	%{__cp} -ar $i $RPM_BUILD_ROOT/%{APP_DIR}
 done
 # Remove old scripts: not used and add unneeded perl depedencies to the package
@@ -460,8 +460,8 @@ fi
 %{APP_DIR}/codendi_tools
 %{APP_DIR}/cli
 %{APP_DIR}/site-content
-%{APP_DIR}/ST-ChangeLog
-%{APP_DIR}/ST-VERSION
+%{APP_DIR}/ChangeLog
+%{APP_DIR}/VERSION
 # Split src for src/www/themes
 %dir %{APP_DIR}/src
 %{APP_DIR}/src/AUTHORS

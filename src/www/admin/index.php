@@ -62,7 +62,7 @@ db_query("SELECT count(*) AS count FROM user WHERE status='V' OR status='W'");
 $row = db_fetch_array();
 $validated_users = $row['count'];
 
-$version = trim(file_get_contents($GLOBALS['codendi_dir'].'/ST-VERSION'));
+$version = trim(file_get_contents($GLOBALS['codendi_dir'].'/VERSION'));
 
 ?>
  
