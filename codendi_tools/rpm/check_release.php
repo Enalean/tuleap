@@ -32,6 +32,8 @@ $rootSvnUrl  = $rootSvnInfo->entry->url;
 // Get diff since last release
 echo "Compare tag with current branch: ".$rootSvnUrl.PHP_EOL;
 $plugins = array();
+$themes  = array();
+$toCheck = array();
 $diff = simplexml_load_string(shell_exec('svn diff --xml --summarize '.$tagUrl.' '.$rootSvnUrl));
 foreach ($diff->xpath('paths/path') as $path) {
     $fullURL = (string) $path;
@@ -42,8 +44,8 @@ foreach ($diff->xpath('paths/path') as $path) {
         $toCheck['documentation/cli'] = true;
     }
     $match = array();
-    if (preg_match('%^/plugins/([^/]+)/%', $p, $match)) {
-        $toCheck['plugins/'.$match[1]] = true;
+    if (preg_match('%^(/plugins/[^/]+)/%', $p, $match)) {
+        //$toCheck['plugins/'.$match[1]] = true;
         $plugins[$match[1]] = true;
     }
     if (preg_match('%^/cli/%', $p)) {
@@ -53,9 +55,9 @@ foreach ($diff->xpath('paths/path') as $path) {
         $toCheck['src/www/soap'] = true;
     }
     $match = array();
-    if (preg_match('%^/(src/www/themes/[^/]+)/%', $p, $match)) {
+    if (preg_match('%^(/src/www/themes/[^/]+)/%', $p, $match)) {
         if ($match[1] != 'common') {
-            $toCheck[$match[1]] = true;
+            $themes[$match[1]] = true;
         }
     }
 }
@@ -67,7 +69,8 @@ foreach ($toCheck as $path => $nop) {
 
 echo "Plugins: ".PHP_EOL;
 $pluginCmp = new PluginReleaseVersionComparator($tagUrl, $rootdir, new FakePluginDescriptor($rootdir));
-foreach ($plugins as $plugin => $nop) {
+$pluginCmp->iterateOverPaths(array_keys($plugins));
+/*foreach ($plugins as $plugin => $nop) {
     $relVersionPath = '/plugins/'.$plugin.'/VERSION';
 
     // Find current version number
@@ -77,6 +80,9 @@ foreach ($plugins as $plugin => $nop) {
     if (version_compare($curVersion, $prevVersion, '<=')) {
         echo "\t".$plugin.": ".$curVersion.' (Previous release was: '.$prevVersion.')'.PHP_EOL;        
     }
-}
+    }*/
+
+
+
 
 ?>

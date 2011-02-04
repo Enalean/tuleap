@@ -9,6 +9,17 @@ class ReleaseVersionComparator {
         $this->curUri  = $curUri;
     }
 
+    public function iterateOverPaths($paths) {
+        foreach ($paths as $path) {
+            $versionPath = $path.'/VERSION';            
+            $curVersion  = $pluginCmp->getCurrentVersion($versionPath);
+            $prevVersion = $pluginCmp->getPreviousVersion($versionPath);
+            if (version_compare($curVersion, $prevVersion, '<=')) {
+                echo "\t".$path.": ".$curVersion.' (Previous release was: '.$prevVersion.')'.PHP_EOL;        
+            }
+        }
+    }
+
     public function getCurrentVersion($relPath) {
         if (is_dir($this->curUri)) {
             return $this->getVersionContent($this->curUri.$relPath);
