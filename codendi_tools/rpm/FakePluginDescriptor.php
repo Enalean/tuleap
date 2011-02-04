@@ -70,10 +70,10 @@ class FakePluginDescriptor {
         throw new Exception("No plugin found with given name: $pluginName in $this->basedir");
     }
 
-    protected function findDescriptor($pluginPath) {
+    public function findDescriptor($pluginPath) {
         $it = new DirectoryIterator($pluginPath.'/include');
         foreach ($it as $file) {
-            if (strpos($file->getFilename(), 'PluginDescriptor.class.php') !== false) {
+            if (preg_match('/PluginDescriptor\.class\.php$/', $file->getFilename())) {
                 return $file->getPathname();
             }
         }

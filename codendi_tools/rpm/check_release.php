@@ -6,7 +6,8 @@ $rootdir = realpath(dirname(__FILE__).'/../..');
 chdir($rootdir);
 
 // Get last tag
-$tags = simplexml_load_string(shell_exec('svn ls --xml ^/contrib/st/intg/Codendi-ST-4.0/tags'));
+$tagBase = '/contrib/st/intg/Codendi-ST-4.0/tags';
+$tags = simplexml_load_string(shell_exec('svn ls --xml ^'.$tagBase));
 $max  = 0;
 $maxEntry = null;
 foreach ($tags->list->entry as $entry) {
@@ -20,8 +21,8 @@ foreach ($tags->list->entry as $entry) {
 }
 
 $lastReleaseRevision = (int) $maxEntry->commit['revision'];
-echo 'Last release was: '.$maxEntry->name.' ('.$lastReleaseRevision.')'.PHP_EOL;
-
+$tagUrl  = $tagBase.'/'.((string) $maxEntry->name);
+echo 'Last release was: '.$maxEntry->name.' ('.$tagUrl.' r'.$lastReleaseRevision.')'.PHP_EOL;
 
 // Get diff since last release
 $plugins = array();
@@ -56,19 +57,53 @@ foreach ($toCheck as $path => $nop) {
     echo "\t".$path.PHP_EOL;
 }
 
+
 echo "Plugins: ".PHP_EOL;
 $fpd = new FakePluginDescriptor($rootdir);
 foreach ($plugins as $plugin => $nop) {
-    $desc = $fpd->getDescriptor($plugin);
+    $curVersion = -1;
+    $preVersion = -1;
+    $pluginRoot = '/plugins/'.$plugin;
+    $descLoaded = false;
 
-    $oldDescPath = $plugin.'PluginDescriptor.class.php.'.$lastReleaseRevision;
+    $relVersionPath = $pluginRoot.'/VERSION';
 
-    shell_exec('svn cat -r'.$lastReleaseRevision.' '.$rootdir.'/plugins/'.$plugin.'/include/LdapPluginDescriptor.class.php > '.$oldDescPath);
+    // Find current version number
+    if (file_exists($rootdir.$relVersionPath)) {
+        $curVersion = trim(file_get_contents($rootdir.$relVersionPath));
+    } else {
+        $desc       = $fpd->getDescriptor($plugin);
+        $curVersion = $desc->getVersion();
+        $descLoaded = true;
+    }
 
-    $oldDesc = $fpd->getDescriptorFromFile($plugin, $oldDescPath);
+    // First try to get the VERSION if any
+    $oldVersionPath = 'VERSION.'.$plugin.'.'.$lastReleaseRevision;
+    $output = array();
+    $retVal = false;
+    exec('svn cat -r'.$lastReleaseRevision.' ^'.$tagUrl.$relVersionPath.' 2>/dev/null > '.$oldVersionPath, $output, $retVal);
+    if ($retVal === 0) {
+        $prevVersion = trim(file_get_contents($oldVersionPath));
+    } else {
+        if (!$descLoaded) {
+            $path    = $fpd->findDescriptor($rootdir.$pluginRoot);
+            $relPath = substr($path, -(strlen($path)-strlen($rootdir)));
 
-    echo "\t".$plugin.": ".$desc->getVersion().' (Previous release was: '.$oldDesc->getVersion().')'.PHP_EOL;
-    break;
+            $oldDescPath = basename($relPath).'.'.$lastReleaseRevision;
+            shell_exec('svn cat -r'.$lastReleaseRevision.' ^'.$tagUrl.$relPath.' > '.$oldDescPath);
+        
+            // Get descriptor
+            $oldDesc     = $fpd->getDescriptorFromFile($plugin, $oldDescPath);
+            $prevVersion = $oldDesc->getVersion();
+
+            unlink($oldDescPath);
+        }
+    }
+    unlink($oldVersionPath);
+
+    if (version_compare($curVersion, $prevVersion, '<=')) {
+        echo "\t".$plugin.": ".$curVersion.' (Previous release was: '.$prevVersion.')'.PHP_EOL;        
+    }
 }
 
 ?>
