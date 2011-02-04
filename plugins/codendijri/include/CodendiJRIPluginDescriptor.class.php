@@ -23,8 +23,9 @@ require_once('common/plugin/PluginDescriptor.class.php');
 
 class CodendiJRIPluginDescriptor extends PluginDescriptor {
     
-    function CodendiJRIPluginDescriptor() {
-        $this->PluginDescriptor($GLOBALS['Language']->getText('plugin_codendijri', 'descriptor_name'), '1.0', $GLOBALS['Language']->getText('plugin_codendijri', 'descriptor_description'));
+    function __construct() {
+        parent::__construct($GLOBALS['Language']->getText('plugin_codendijri', 'descriptor_name'), false, $GLOBALS['Language']->getText('plugin_codendijri', 'descriptor_description'));
+        $this->setVersionFromFile(dirname(__FILE__).'/../VERSION');
     }
 }
 ?>

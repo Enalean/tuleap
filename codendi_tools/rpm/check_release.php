@@ -70,3 +70,5 @@ foreach ($plugins as $plugin => $nop) {
     echo "\t".$plugin.": ".$desc->getVersion().' (Previous release was: '.$oldDesc->getVersion().')'.PHP_EOL;
     break;
 }
+
+?>
