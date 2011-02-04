@@ -180,5 +180,7 @@ echo '</tr>';
 echo '</table>';
 echo '</fieldset>';
 
+include $Language->getContent('account/user_legal');
+
 $HTML->footer(array());
 ?>
