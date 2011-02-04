@@ -28,6 +28,15 @@ require_once('common/frs/FRSPackageFactory.class.php');
  *
  */
 class FRSPackage extends Error {
+    const PERM_READ      = 'PACKAGE_READ';
+
+    const STATUS_ACTIVE  = 1;
+    const STATUS_DELETED = 2;
+    const STATUS_HIDDEN  = 3;
+
+    const EVT_CREATE = 101;
+    const EVT_UPDATE = 102;
+    const EVT_DELETE = 103;
 
     /**
      * @var int $package_id the ID of this FRSPackage
@@ -181,7 +190,8 @@ class FRSPackage extends Error {
      * @return boolean true if user has Read access to this package, false otherwise
 	 */ 
 	function userCanRead($user_id=0) {
-        return FRSPackageFactory::userCanRead($this->getGroupID(), $this->getPackageID(), $user_id);
+        $frspf = new FRSPackageFactory();
+        return $frspf->userCanRead($this->getGroupID(), $this->getPackageID(), $user_id);
 	}
 
 

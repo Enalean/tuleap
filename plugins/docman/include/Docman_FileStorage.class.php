@@ -22,6 +22,7 @@
  * FileStorage is a transport object (aka container) used to share data between
  * Model/Controler and View layer of the application
  */
+require_once('common/include/lib/PHP_BigFile.class.php');
 class Docman_FileStorage {
     
     var $root;
@@ -62,11 +63,9 @@ class Docman_FileStorage {
         }
     }
     
-    function getFileMD5sum($group_id, $item_id, $version_number) {
-        $path = $this->_getPath('file', $group_id, $item_id, $version_number);
-        
+    function getFileMD5sum($path) {
         if (is_file($path)) {
-            return md5_file($path);
+            return PHP_BigFile::getMd5Sum($path);
         } else {
             return false;
         }

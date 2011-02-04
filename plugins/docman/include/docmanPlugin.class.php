@@ -23,6 +23,9 @@
  * 
  */
 require_once('common/plugin/Plugin.class.php');
+require_once('Docman_VersionFactory.class.php');
+require_once('Docman_ItemFactory.class.php');
+require_once('Docman_NotificationsManager.class.php');
 
 class DocmanPlugin extends Plugin {
 	
@@ -57,10 +60,17 @@ class DocmanPlugin extends Plugin {
         $this->_addHook('project_export',                    'project_export',                    false);
         $this->_addHook('SystemEvent_PROJECT_RENAME',        'renameProject',                     false);
         $this->_addHook('file_exists_in_data_dir',           'file_exists_in_data_dir',           false);
+        $this->_addHook('webdav_root_for_service',           'getRootItemForProject',             false);
         // Stats plugin
         $this->_addHook('plugin_statistics_disk_usage_collect_project', 'plugin_statistics_disk_usage_collect_project', false);
         $this->_addHook('plugin_statistics_disk_usage_service_label',   'plugin_statistics_disk_usage_service_label',   false);
-    }
+
+        $this->_addHook('show_pending_documents',             'show_pending_documents',             false);
+
+        $this->_addHook('backend_system_purge_files',  'purgeFiles',  false);
+        $this->_addHook('project_admin_remove_user', 'projectRemoveUser', false);
+        $this->_addHook('project_is_private', 'projectIsPrivate', false);
+	}
 
     function permission_get_name($params) {
         if (!$params['name']) {
@@ -434,6 +444,21 @@ class DocmanPlugin extends Plugin {
     }
 
     /**
+     * Hook to know if docman is activated for the given project
+     * it returns the root item of that project
+     *
+     * @param Array $params
+     */
+    function getRootItemForProject($params) {
+        if ($params['service'] == 'docman') {
+            require_once('Docman_ItemFactory.class.php');
+            $docmanItemFactory = new Docman_ItemFactory();
+            $root = $docmanItemFactory->getRoot($params['project']->getId());
+            $params['root']= $root;
+        }
+    }
+
+    /**
      * Hook to collect docman disk size usage per project
      *
      * @param array $params
@@ -453,6 +478,245 @@ class DocmanPlugin extends Plugin {
     function plugin_statistics_disk_usage_service_label($params) {
         $params['services']['plugin_docman'] = 'Docman';
     }
+    
+    
+    /**
+     * Hook to list pending documents and/or versions of documents in site admin page
+     *
+     * @param array $params
+     */
+    function show_pending_documents($params) {
+        $request = HTTPRequest::instance();
+        $limit = 25;
+
+        //return all pending versions for given group id
+        $offsetVers = $request->getValidated('offsetVers', 'uint', 0);
+        if ( !$offsetVers || $offsetVers < 0 ) {
+            $offsetVers = 0;
+        }
+        
+        $linkToLogMsg = '<p>When an element is deleted, the action appears in <a href="/project/stats/source_code_access.php/?who=allusers&span=14&view=daily&group_id='.$params['group_id'].'">the access log</a>.</p>';
+        
+        $version = new Docman_VersionFactory();
+        $res = $version->listPendingVersions($params['group_id'], $offsetVers, $limit);
+        $params['id'][] = 'version';
+        $params['nom'][] = $GLOBALS['Language']->getText('plugin_docman','deleted_version');
+        $html = '';
+        $html .= '<div class="contenu_onglet" id="contenu_onglet_version">';
+        $html .= $linkToLogMsg;
+        if (isset($res) && $res) {
+            $html .= $this->showPendingVersions($res['versions'], $params['group_id'], $res['nbVersions'], $offsetVers, $limit);
+        } else {
+            $html .= 'No restorable versions found';
+        }
+        $html .='</div>';
+        $params['html'][]= $html;
+
+        //return all pending items for given group id
+        $offsetItem = $request->getValidated('offsetItem', 'uint', 0);
+        if ( !$offsetItem || $offsetItem < 0 ) {
+            $offsetItem = 0;
+        }
+        $item = new Docman_ItemFactory($params['group_id']);
+        $res = $item->listPendingItems($params['group_id'], $offsetItem , $limit);
+        $params['id'][] = 'item';
+        $params['nom'][]= $GLOBALS['Language']->getText('plugin_docman','deleted_item');
+        $html = '';
+        $html .= '<div class="contenu_onglet" id="contenu_onglet_item">';
+        $html .= $linkToLogMsg;
+        if (isset($res) && $res) {
+            $html .= $this->showPendingItems($res['items'], $params['group_id'], $res['nbItems'], $offsetItem, $limit);
+        } else {
+            $html .= 'No restorable items found';
+        }
+        $html .='</div>';
+        $params['html'][]= $html;
+    }
+
+    function showPendingVersions($versions, $groupId, $nbVersions, $offset, $limit) {
+        $hp = Codendi_HTMLPurifier::instance();
+
+        $html ='';
+        $title =array();
+        $title[] = $GLOBALS['Language']->getText('plugin_docman','item_id');
+        $title[] = $GLOBALS['Language']->getText('plugin_docman','doc_title');
+        $title[] = $GLOBALS['Language']->getText('plugin_docman','label');
+        $title[] = $GLOBALS['Language']->getText('plugin_docman','number');
+        $title[] = $GLOBALS['Language']->getText('plugin_docman','delete_date');
+        $title[] = $GLOBALS['Language']->getText('plugin_docman','purge_date');
+        $title[] = $GLOBALS['Language']->getText('plugin_docman','restore_version');
+
+        if ($nbVersions > 0) {
+
+            $html .= '<H3>'.$GLOBALS['Language']->getText('plugin_docman', 'deleted_version').'</H3><P>';
+            $html .= html_build_list_table_top ($title);
+            $i=1;
+
+            foreach ($versions as $row) {
+                $historyUrl = $this->getPluginPath().'/index.php?group_id='.$groupId.'&id='.$row['item_id'].'&action=details&section=history';
+                $purgeDate = strtotime('+'.$GLOBALS['sys_file_deletion_delay'].' day', $row['date']);
+                $html .= '<tr class="'. html_get_alt_row_color($i++) .'">'.
+                '<td><a href="'.$historyUrl.'">'.$row['item_id'].'</a></td>'.
+                '<td>'.$hp->purify($row['title'], CODENDI_PURIFIER_BASIC, $groupId).'</td>'.
+                '<td>'.$hp->purify($row['label']).'</td>'.
+                '<td>'.$row['number'].'</td>'.
+                '<td>'.html_time_ago($row['date']).'</td>'.
+                '<td>'.format_date($GLOBALS['Language']->getText('system', 'datefmt'), $purgeDate).'</td>'.
+                '<td align="center"><a href="/plugins/docman/restore_documents.php?group_id='.$groupId.'&func=confirm_restore_version&id='.$row['id'].'&item_id='.$row['item_id'].'" ><IMG SRC="'.util_get_image_theme("trash-x.png").'" onClick="return confirm(\'Confirm restore of this version\')" BORDER=0 HEIGHT=16 WIDTH=16></a></td></tr>';
+            }
+            $html .= '</TABLE>'; 
+
+
+            $html .= '<div style="text-align:center" class="'. util_get_alt_row_color($i++) .'">';
+
+            if ($offset > 0) {
+                $html .=  '<a href="?group_id='.$groupId.'&focus=version&offsetVers='.($offset -$limit).'">[ '.$GLOBALS['Language']->getText('plugin_docman', 'previous').'  ]</a>';
+                $html .= '&nbsp;';
+            }
+            if (($offset + $limit) < $nbVersions) {
+                $html .= '&nbsp;';
+                $html .='<a href="?group_id='.$groupId.'&focus=version&offsetVers='.($offset+$limit).'">[ '.$GLOBALS['Language']->getText('plugin_docman', 'next').' ]</a>';
+            }
+            $html .='<br>'.($offset+$i-2).'/'.$nbVersions.'</br>';
+            $html .= '</div>';
+          
+        } else {
+            $html .= $GLOBALS['Response']->addFeedback('info',$GLOBALS['Language']->getText('plugin_docman', 'no_pending_versions'));
+        }
+        return $html;
+    }
+
+    function showPendingItems($res, $groupId, $nbItems, $offset, $limit) {
+        $hp = Codendi_HTMLPurifier::instance();
+        $itemFactory = new Docman_ItemFactory($groupId);
+        $uh = UserHelper::instance();
+
+        $html ='';
+        $title =array();
+        $title[] = $GLOBALS['Language']->getText('plugin_docman','item_id');
+        $title[] = $GLOBALS['Language']->getText('plugin_docman','filters_item_type');
+        $title[] = $GLOBALS['Language']->getText('plugin_docman','doc_title');
+        $title[] = $GLOBALS['Language']->getText('plugin_docman','location');
+        $title[] = $GLOBALS['Language']->getText('plugin_docman','owner');
+        $title[] = $GLOBALS['Language']->getText('plugin_docman','delete_date');
+        $title[] = $GLOBALS['Language']->getText('plugin_docman','purge_date');
+        $title[] = $GLOBALS['Language']->getText('plugin_docman','restore_item');
+
+
+        if ($nbItems > 0) {
+            $html .= '<H3>'.$GLOBALS['Language']->getText('plugin_docman', 'deleted_item').'</H3><P>';
+            $html .= html_build_list_table_top ($title);
+            $i=1;
+            foreach ($res as $row ){
+                $purgeDate = strtotime('+'.$GLOBALS['sys_file_deletion_delay'].' day', $row['date']);
+                $html .='<tr class="'. html_get_alt_row_color($i++) .'">'.
+                '<td>'.$row['id'].'</td>'.
+                '<td>'.$itemFactory->getItemTypeAsText($row['item_type']).'</td>'.
+                '<td>'. $hp->purify($row['title'], CODENDI_PURIFIER_BASIC, $groupId).'</td>'.
+                '<td>'.$hp->purify($row['location']).'</td>'.
+                '<td>'.$uh->getDisplayNameFromUserId($row['user']).'</td>'.
+                '<td>'.html_time_ago($row['date']).'</td>'.
+                '<td>'.format_date($GLOBALS['Language']->getText('system', 'datefmt'), $purgeDate).'</td>'.
+                '<td align="center"><a href="/plugins/docman/restore_documents.php?group_id='.$groupId.'&func=confirm_restore_item&id='.$row['id'].'" ><IMG SRC="'.util_get_image_theme("trash-x.png").'" onClick="return confirm(\'Confirm restore of this item\')" BORDER=0 HEIGHT=16 WIDTH=16></a></td></tr>';
+            }
+            $html .= '</TABLE>'; 
+
+            $html .= '<div style="text-align:center" class="'. util_get_alt_row_color($i++) .'">';
+
+            if ($offset > 0) {
+                $html .=  '<a href="?group_id='.$groupId.'&focus=item&offsetItem='.($offset -$limit).'">[ '.$GLOBALS['Language']->getText('plugin_docman', 'previous').'  ]</a>';
+                $html .= '&nbsp;';
+            }
+            if (($offset + $limit) < $nbItems) {
+                $html .= '&nbsp;';
+                $html .= '<a href="?group_id='.$groupId.'&focus=item&offsetItem='.($offset+$limit).'">[ '.$GLOBALS['Language']->getText('plugin_docman', 'next').' ]</a>';
+            }
+            $html .='<br>'.($offset +$i-2).'/'.$nbItems.'</br>';
+            $html .= '</div>';
+
+        } else {
+            $html .= $GLOBALS['Response']->addFeedback('info',$GLOBALS['Language']->getText('plugin_docman', 'no_pending_items'));
+        }
+        return $html;
+    }
+
+    /**
+     * Hook to purge deleted items if their agony ends today
+     *
+     * @param Array $params
+     *
+     * @return void
+     */
+    function purgeFiles(array $params) {
+        $itemFactory = new Docman_ItemFactory();
+        $itemFactory->purgeDeletedItems($params['time']);
+
+        $versionFactory = new Docman_VersionFactory();
+        $versionFactory->purgeDeletedVersions($params['time']);
+    }
+
+    /**
+     * Function called when a user is removed from a project 
+     * If a user is removed from a private project, the
+     * documents monitored by that user should be monitored no more.
+     *
+     * @param array $params
+     *
+     * @return void
+     */
+    function projectRemoveUser($params) {
+        $groupId = $params['group_id'];
+        $userId = $params['user_id'];
+
+        $pm = ProjectManager::instance();
+        $project = $pm->getProject($groupId);
+        if (!$project->isPublic()) {
+            $docmanItemFactory = new Docman_ItemFactory();
+            $root = $docmanItemFactory->getRoot($groupId);
+            if ($root) {
+                $notificationsManager = new Docman_NotificationsManager($groupId, null, null);
+                $dar = $notificationsManager->listAllMonitoredItems($groupId, $userId);
+                if($dar && !$dar->isError()) {
+                    foreach ($dar as $row) {
+                        $notificationsManager->remove($row['user_id'], $row['object_id'], $row['type']);
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Function called when a project goes from public to private so
+     * documents monitored by non member users should be monitored no more.
+     *
+     * @param array $params
+     *
+     * @return void
+     */
+    function projectIsPrivate($params) {
+        $groupId = $params['group_id'];
+        $private = $params['project_is_private'];
+
+        if ($private) {
+            $docmanItemFactory = new Docman_ItemFactory();
+            $root = $docmanItemFactory->getRoot($groupId);
+            if ($root) {
+                $notificationsManager = new Docman_NotificationsManager($groupId, null, null);
+                $dar = $notificationsManager->listAllMonitoredItems($groupId);
+                if($dar && !$dar->isError()) {
+                    $userManager = UserManager::instance();
+                    $user = null;
+                    foreach ($dar as $row) {
+                        $user = $userManager->getUserById($row['user_id']);
+                        if (!$user->isMember($groupId)) {
+                            $notificationsManager->remove($row['user_id'], $row['object_id'], $row['type']);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
 }
 
 ?>

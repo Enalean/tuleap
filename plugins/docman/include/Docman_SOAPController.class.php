@@ -91,6 +91,7 @@ class Docman_SOAPController extends Docman_Controller {
             case 'getProjectMetadata':
             case 'getTreeInfo':
             case 'getFileContents':
+            case 'getFileChunk':
                 if (!$this->userCanRead($item->getId())) {
                     $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_perms_view'));
                 } else {

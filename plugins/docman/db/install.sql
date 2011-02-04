@@ -26,6 +26,28 @@ CREATE TABLE plugin_docman_item (
   FULLTEXT fltxt (title, description)
 );
 
+DROP TABLE IF EXISTS plugin_docman_item_deleted;
+CREATE TABLE plugin_docman_item_deleted (
+  item_id INT(11) UNSIGNED NOT NULL,
+  parent_id INT(11) UNSIGNED NULL,
+  group_id INT(11) UNSIGNED NULL,
+  title TEXT NULL,
+  description TEXT NULL,
+  create_date INT(11) UNSIGNED NULL,
+  update_date INT(11) UNSIGNED NULL,
+  delete_date INT(11) UNSIGNED NULL,
+  purge_date INT(11) UNSIGNED NULL,
+  user_id INT(11) UNSIGNED NULL,
+  status TINYINT(4) DEFAULT 100 NOT NULL,
+  obsolescence_date int(11) DEFAULT 0 NOT NULL,
+  rank INT(11) DEFAULT 0 NOT NULL,
+  item_type INT(11) UNSIGNED NULL,
+  link_url TEXT NULL,
+  wiki_page TEXT NULL,
+  file_is_embedded INT(11) UNSIGNED NULL,
+  PRIMARY KEY(item_id)
+);
+
 DROP TABLE IF EXISTS plugin_docman_version;
 CREATE TABLE plugin_docman_version (
   id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -42,6 +64,25 @@ CREATE TABLE plugin_docman_version (
   PRIMARY KEY(id),
   KEY item_id (item_id),
   FULLTEXT fltxt (label, changelog, filename)
+);
+
+
+CREATE TABLE plugin_docman_version_deleted (
+  id INT(11) UNSIGNED NOT NULL,
+  item_id INT(11) UNSIGNED NULL,
+  number INT(11) UNSIGNED NULL,
+  user_id INT(11) UNSIGNED NULL,
+  label TEXT NULL,
+  changelog TEXT NULL,
+  create_date INT(11) UNSIGNED NULL,
+  delete_date INT(11) UNSIGNED NULL,
+  purge_date INT(11) UNSIGNED NULL,
+  filename TEXT NULL,
+  filesize INT(11) UNSIGNED NULL,
+  filetype TEXT NULL,
+  path TEXT NULL,
+  PRIMARY KEY(id),
+  KEY item_id (item_id)
 );
 
 DROP TABLE IF EXISTS plugin_docman_log;

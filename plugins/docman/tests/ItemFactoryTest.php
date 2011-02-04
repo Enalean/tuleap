@@ -21,11 +21,21 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+require_once('common/event/EventManager.class.php');
+Mock::generate('EventManager');
+
 require_once(dirname(__FILE__).'/../include/Docman_ItemFactory.class.php');
 
 Mock::generate('DataAccessResult');
 Mock::generate('Docman_ItemDao');
-Mock::generatePartial('Docman_ItemFactory', 'Docman_ItemFactoryTestVersion', array('_getItemDao'));
+Mock::generate('Docman_Folder');
+Mock::generate('Docman_File');
+Mock::generate('Docman_Version');
+Mock::generate('Docman_VersionFactory');
+Mock::generate('User');
+Mock::generate('UserManager');
+Mock::generatePartial('Docman_ItemFactory', 'Docman_ItemFactoryTestVersion', array('_getItemDao', 'purgeDeletedItem'));
+Mock::generatePartial('Docman_ItemFactory', 'Docman_ItemFactoryTestRestore', array('_getItemDao', '_getVersionFactory', 'getItemTypeForItem', '_getUserManager', '_getEventManager'));
 
 class Docman_ItemFactoryTest extends UnitTestCase {
 
@@ -257,5 +267,205 @@ class Docman_ItemFactoryTest extends UnitTestCase {
         $this->assertEqual($rootId, 140);
     }
 
+    function testPurgeDeletedItemsWithNoItems() {
+        $itemFactory = new Docman_ItemFactoryTestVersion($this);
+
+        $dar = new MockDataAccessResult($this);
+        $dar->setReturnValue('isError', false);
+        $dar->setReturnValue('getRow', false);
+        $dar->setReturnValue('valid', false);
+        $dar->setReturnValue('rowCount', 0);
+
+        $dao = new MockDocman_ItemDao($this);
+        $dao->expectOnce('listItemsToPurge');
+        $dao->setReturnValue('listItemsToPurge', $dar);
+        $itemFactory->setReturnValue('_getItemDao', $dao);
+
+        $itemFactory->expectNever('purgeDeletedItem');
+
+        $this->assertTrue($itemFactory->PurgeDeletedItems(1234567890));
+    }
+
+    function testPurgeDeletedItems() {
+        $itemFactory = new Docman_ItemFactoryTestVersion($this);
+
+        $dar = new MockDataAccessResult($this);
+        $dar->setReturnValue('isError', false);
+        $dar->setReturnValue('current', array('id'               => null,
+                                              'title'            => null,
+                                              'description'      => null,
+                                              'createDate'       => null,
+                                              'updateDate'       => null,
+                                              'deleteDate'       => null,
+                                              'rank'             => null,
+                                              'parentId'         => null,
+                                              'groupId'          => null,
+                                              'ownerId'          => null,
+                                              'status'           => null,
+                                              'obsolescenceDate' => null));
+        $dar->setReturnValueAt(0, 'valid', true);
+        $dar->setReturnValueAt(1, 'valid', false);
+        $dar->setReturnValue('rowCount', 1);
+
+        $dao = new MockDocman_ItemDao($this);
+        $dao->expectOnce('listItemsToPurge');
+        $dao->setReturnValue('listItemsToPurge', $dar);
+        $itemFactory->setReturnValue('_getItemDao', $dao);
+
+        $itemFactory->expectOnce('purgeDeletedItem');
+
+        $this->assertTrue($itemFactory->PurgeDeletedItems(1234567890));
+    }
+
+    function testRestoreDeletedItemNonFile() {
+        $itemFactory = new Docman_ItemFactoryTestRestore($this);
+
+        $item = new MockDocman_Folder($this);
+        $item->setReturnValue('getId', 112);
+        $item->setReturnValue('getGroupId', 114);
+
+        $dao = new MockDocman_ItemDao($this);
+        $dao->expectOnce('restore', array(112));
+        $dao->setReturnValue('restore', true);
+        $itemFactory->setReturnValue('_getItemDao', $dao);
+
+        // Event
+        $user = new MockUser($this);
+        $um   = new MockUserManager($this);
+        $um->setReturnValue('getCurrentUser', $user);
+        $itemFactory->setReturnValue('_getUserManager', $um);
+        $em = new MockEventManager($this);
+        $em->expectOnce('processEvent', array('plugin_docman_event_restore', array('group_id' => 114, 'item' => $item, 'user' => $user)));
+        $itemFactory->setReturnValue('_getEventManager', $em);
+
+        $this->assertTrue($itemFactory->restore($item));
+    }
+
+    function testRestoreDeletedItemFile() {
+        $itemFactory = new Docman_ItemFactoryTestRestore($this);
+        
+        $item = new MockDocman_File($this);
+        $item->setReturnValue('getId', 112);
+        $item->setReturnValue('getGroupId', 114);
+        $itemFactory->setReturnValue('getItemTypeForItem', PLUGIN_DOCMAN_ITEM_TYPE_FILE);
+        
+        $dao = new MockDocman_ItemDao($this);
+        $dao->expectOnce('restore', array(112));
+        $dao->setReturnValue('restore', true);
+        $itemFactory->setReturnValue('_getItemDao', $dao);
+        
+        $v1 = new MockDocman_Version($this);
+        $v2 = new MockDocman_Version($this);
+        
+        $versionFactory = new MockDocman_VersionFactory($this);
+        $versionFactory->expectOnce('listVersionsToPurgeForItem', array($item));
+        $versionFactory->setReturnValue('listVersionsToPurgeForItem', array($v1, $v2));
+        $versionFactory->expectAt(0, 'restore', array($v1));
+        $versionFactory->expectAt(1, 'restore', array($v2));
+        $versionFactory->setReturnValue('restore', true);
+        $itemFactory->setReturnValue('_getVersionFactory', $versionFactory);
+
+        // Event
+        $user = new MockUser($this);
+        $um   = new MockUserManager($this);
+        $um->setReturnValue('getCurrentUser', $user);
+        $itemFactory->setReturnValue('_getUserManager', $um);
+        $em = new MockEventManager($this);
+        $em->expectOnce('processEvent', array('plugin_docman_event_restore', array('group_id' => 114, 'item' => $item, 'user' => $user)));
+        $itemFactory->setReturnValue('_getEventManager', $em);
+
+        $this->assertTrue($itemFactory->restore($item));
+    }
+
+    function testRestoreDeletedItemFileWithoutRestorableVersions() {
+        $itemFactory = new Docman_ItemFactoryTestRestore($this);
+        
+        $item = new MockDocman_File($this);
+        $item->setReturnValue('getId', 112);
+        $item->setReturnValue('getGroupId', 114);
+        $itemFactory->setReturnValue('getItemTypeForItem', PLUGIN_DOCMAN_ITEM_TYPE_FILE);
+        
+        $dao = new MockDocman_ItemDao($this);
+        $dao->expectNever('restore');
+        $itemFactory->setReturnValue('_getItemDao', $dao);
+        
+        $versionFactory = new MockDocman_VersionFactory($this);
+        $versionFactory->expectOnce('listVersionsToPurgeForItem', array($item));
+        $versionFactory->setReturnValue('listVersionsToPurgeForItem', false);
+        $versionFactory->expectNever('restore');
+        $itemFactory->setReturnValue('_getVersionFactory', $versionFactory);
+
+        // Event
+        $itemFactory->expectNever('_getEventManager');
+
+        $this->assertFalse($itemFactory->restore($item));
+    }
+
+    function testRestoreDeletedItemFileWithSomeVersionRestoreFailure() {
+        $itemFactory = new Docman_ItemFactoryTestRestore($this);
+
+        $item = new MockDocman_File($this);
+        $item->setReturnValue('getId', 112);
+        $item->setReturnValue('getGroupId', 114);
+        $itemFactory->setReturnValue('getItemTypeForItem', PLUGIN_DOCMAN_ITEM_TYPE_FILE);
+
+        $dao = new MockDocman_ItemDao($this);
+        $dao->expectOnce('restore', array(112));
+        $dao->setReturnValue('restore', true);
+        $itemFactory->setReturnValue('_getItemDao', $dao);
+
+        $v1 = new MockDocman_Version($this);
+        $v2 = new MockDocman_Version($this);
+
+        $versionFactory = new MockDocman_VersionFactory($this);
+        $versionFactory->expectOnce('listVersionsToPurgeForItem', array($item));
+        $versionFactory->setReturnValue('listVersionsToPurgeForItem', array($v1, $v2));
+        $versionFactory->expectAt(0, 'restore', array($v1));
+        $versionFactory->setReturnValueAt(0, 'restore', true);
+        $versionFactory->expectAt(1, 'restore', array($v2));
+        $versionFactory->setReturnValueAt(1, 'restore', false);
+        $itemFactory->setReturnValue('_getVersionFactory', $versionFactory);
+
+        // Event
+        $user = new MockUser($this);
+        $um   = new MockUserManager($this);
+        $um->setReturnValue('getCurrentUser', $user);
+        $itemFactory->setReturnValue('_getUserManager', $um);
+        $em = new MockEventManager($this);
+        $em->expectOnce('processEvent', array('plugin_docman_event_restore', array('group_id' => 114, 'item' => $item, 'user' => $user)));
+        $itemFactory->setReturnValue('_getEventManager', $em);
+        
+        $this->assertTrue($itemFactory->restore($item));
+    }
+
+    function testRestoreDeletedItemFileWithAllVersionRestoreFailure() {
+        $itemFactory = new Docman_ItemFactoryTestRestore($this);
+
+        $item = new MockDocman_File($this);
+        $item->setReturnValue('getId', 112);
+        $item->setReturnValue('getGroupId', 114);
+        $itemFactory->setReturnValue('getItemTypeForItem', PLUGIN_DOCMAN_ITEM_TYPE_FILE);
+
+        $dao = new MockDocman_ItemDao($this);
+        $dao->expectNever('restore');
+        $itemFactory->setReturnValue('_getItemDao', $dao);
+
+        $v1 = new MockDocman_Version($this);
+        $v2 = new MockDocman_Version($this);
+
+        $versionFactory = new MockDocman_VersionFactory($this);
+        $versionFactory->expectOnce('listVersionsToPurgeForItem', array($item));
+        $versionFactory->setReturnValue('listVersionsToPurgeForItem', array($v1, $v2));
+        $versionFactory->expectAt(0, 'restore', array($v1));
+        $versionFactory->setReturnValueAt(0, 'restore', false);
+        $versionFactory->expectAt(1, 'restore', array($v2));
+        $versionFactory->setReturnValueAt(1, 'restore', false);
+        $itemFactory->setReturnValue('_getVersionFactory', $versionFactory);
+
+        // Event
+        $itemFactory->expectNever('_getEventManager');
+
+        $this->assertFalse($itemFactory->restore($item));
+    }
 }
 ?>

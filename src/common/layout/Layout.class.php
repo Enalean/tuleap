@@ -1243,7 +1243,7 @@ class Layout extends Response {
         $paths = array();
         $i = 1;
         foreach($backtraces as $b) {
-            self::debug_backtrace_rec($paths, array_reverse($b[0]), ('#' . $i++));
+            self::_debug_backtrace_rec($paths, array_reverse($b[0]), ('#' . $i++));
         }
         echo '<table>';
         self::_debug_display_paths($paths);

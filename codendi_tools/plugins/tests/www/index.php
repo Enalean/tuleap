@@ -1,6 +1,9 @@
 <?php
 
 ini_set('display_errors', 'on');
+ini_set('max_execution_time', 0);
+ini_set('memory_limit', -1);
+
 header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
 header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
 header("Cache-Control: no-store, no-cache, must-revalidate");
@@ -52,6 +55,9 @@ function display_tests_as_javascript($tests, $categ, $params) {
         echo "'$tests':true,";
     }
 }
+
+$coverCode = isset($_REQUEST['cover_code']) ? true  : false;
+
 ?>
 <html>
     <head>
@@ -175,6 +181,11 @@ function display_tests_as_javascript($tests, $categ, $params) {
                     <form action="" method="POST">
                         <div id="submit_panel"><input type="submit" value="Run !" /></div>
                         <fieldset>
+                            <legend>Options</legend>
+                            <input type="checkbox" id="show_pass" name="show_pass" value="1" <?= isset($_REQUEST['show_pass']) ? 'checked="checked"' : '' ?> /><label for="show_pass">Show pass</label>
+                            <input type="checkbox" id="cover_code" name="cover_code" value="1" <?= $coverCode ? 'checked="checked"' : '' ?> /><label for="cover_code">Code coverage</label>
+                        </fieldset>
+                        <fieldset>
                             <legend>Tests</legend>
                             <ul id="menu">
                             <?php foreach($GLOBALS['tests'] as $c => $t) {
@@ -191,10 +202,6 @@ function display_tests_as_javascript($tests, $categ, $params) {
                             //-->
                             </script>
                         </fieldset>
-                        <fieldset>
-                            <legend>Options</legend>
-                            <input type="checkbox" id="show_pass" name="show_pass" value="1" <?= isset($_REQUEST['show_pass']) ? 'checked="checked"' : '' ?> /><label for="show_pass">Show pass</label>
-                        </fieldset>
                     </form>
                 </td>
                 <td width="90%">
@@ -206,7 +213,7 @@ function display_tests_as_javascript($tests, $categ, $params) {
                             function add_test_to_group($test, $categ, $params) {
                                 if ($categ != '_do_all') {
                                     if (is_array($test)) {
-                                        $g =& new GroupTest($categ .' Results');
+                                        $g = new TestSuite($categ .' Results');
                                         foreach($test as $c => $t) {
                                             add_test_to_group($t, $c, array('group' => &$g, 'path' => $params['path']."/$categ/"));
                                         }
@@ -216,8 +223,16 @@ function display_tests_as_javascript($tests, $categ, $params) {
                                     }
                                 }
                             }
-                            $g =& get_group_tests($_REQUEST['tests_to_run']);
-                            $g->run(CodendiReporterFactory::reporter());
+
+                            $reporter = CodendiReporterFactory::reporter('html', $coverCode);
+
+                            $g = get_group_tests($_REQUEST['tests_to_run']);
+                            $g->run($reporter);
+
+                            if ($reporter->generateCoverage(dirname(__FILE__).'/code-coverage-report')) {
+                                echo '<p><a href="code-coverage-report">Code coverage results:</a></p>';
+                                echo '<iframe src="code-coverage-report" style="width: 100%; height: 500px;" />';
+                            }
                         }
                         ?>
                     </fieldset>

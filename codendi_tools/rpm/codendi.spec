@@ -235,7 +235,7 @@ Provides: codendi-theme-steerforge = %{version}
 %description theme-steerforge
 SteerForge theme for Codendi
 
-#
+# 
 # Package setup
 %prep
 %setup -q

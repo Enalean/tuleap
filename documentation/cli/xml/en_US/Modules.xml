@@ -49,11 +49,21 @@
                     <example>
                         <title>login command</title>
                         <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[mnazaria@linux codendi cli ]$ ./codendi.php login --username=john --password=johnpass --project=myproject
+[ounis@linux codendi cli ]$ ./codendi.php login --username=john --password=johnpass --project=myproject
++---------+----------------------------------+
+| user_id |           session_hash           |
++---------+----------------------------------+
+| 103     | de6bb9f64e0ad45a0a0209f112f774f7 |
++---------+----------------------------------+
 Logged in.
 (OR)
-[mnazaria@linux codendi cli ]$ ./codendi.php login --username=marc --project=myproject
+[ounis@linux codendi cli ]$ ./codendi.php login --username=marc --project=myproject
 Password:
++---------+----------------------------------+
+| user_id |           session_hash           |
++---------+----------------------------------+
+| 103     | de6bb9f64e0ad45a0a0209f112f774f7 |
++---------+----------------------------------+
 Logged in.
                         </programlisting>
                     </example>
@@ -70,6 +80,28 @@ Logged in.
                         <programlisting format="linespecific" linenumbering="unnumbered" width="80">
 [mnazaria@linux codendi cli ]$ ./codendi.php logout
 Session terminated.
+                        </programlisting>
+                    </example>
+               </para>
+            </para>
+        </section>
+
+        <section id="CoreFunctionMyprojects">
+            <title>myprojects</title>
+            <para>myprojects : Display the list of the projects the user is member of.
+                <para>
+                    <example>
+                        <title>myprojects command</title>
+                        <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+[ounis@linux codendi cli ]$ ./codendi.php myprojects
++----------+------------+-----------------+-------------+
+| group_id | group_name | unix_group_name | description |
++----------+------------+-----------------+-------------+
+| 104      | project 1  | project1        | project1    |
+| 105      | project 2  | project2        | project2    |
+| 106      | project 3  | project3        | project3    |
+| 107      | project 4  | project4        | project4    |
++----------+------------+-----------------+-------------+
                         </programlisting>
                     </example>
                </para>
@@ -96,33 +128,63 @@ Session terminated.
                     </listitem>
                 </itemizedlist>
                 <para>
+
+
+                </para>
+                <para>
                     <example>
                         <title>trackerlist command</title>
                         <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[mnazaria@linux codendi cli ]$ ./codendi.php tracker trackerlist --project=guineapig
-Array
-(
-    [0] => Array
-           (
-            [group_artifact_id] => 113
-            [group_id] => 5
-            [name] => Bugs
-            [description] => Bugs Tracker
-            [item_name] => bug
-            [open_count] => 3
-            [total_count] => 15
-            )
-    [1] => Array
-           (
-            [group_artifact_id] => 114
-            [group_id] => 5
-            [name] => Support Requests
-            [description] => Support Requests Tracker
-            [item_name] => SR
-            [open_count] => 40
-            [total_count] => 50
-            )
-)
+[ounis@linux codendi cli ]$ ./codendi.php tracker trackerlist --project=project1
++-------------------+----------+------------------+----------------------------------------------------...
+| group_artifact_id | group_id |       name       |                         description                ...
++-------------------+----------+------------------+----------------------------------------------------...
+| 116               | 104      | Bugs             | Bugs Tracker                                       ...
+| 119               | 104      | Salome Bug       | Salome Bug Tracker                                 ...
+| 120               | 104      | Scrum Backlog    | Scrum backlog used to store user stories and to pla...
+| 118               | 104      | Support Requests | Support Requests Tracker                           ...
+| 117               | 104      | Tasks            | Tasks Tracker                                      ...
++-------------------+----------+------------------+----------------------------------------------------...
+
+[1]:
++-----------+-------------------+---------+------------------------------------+-------+
+| report_id | group_artifact_id |  name   |            description             | scope |
++-----------+-------------------+---------+------------------------------------+-------+
+| 116       | 116               | Bugs    | Bugs Report                        | P     |
+| 100       | 116               | Default | The system default artifact report | S     |
++-----------+-------------------+---------+------------------------------------+-------+
+
+[2]:
++-----------+-------------------+-------------+------------------------------------+-------+
+| report_id | group_artifact_id |    name     |            description             | scope |
++-----------+-------------------+-------------+------------------------------------+-------+
+| 119       | 119               | Salome Bugs | Salome Bugs Report                 | P     |
+| 100       | 119               | Default     | The system default artifact report | S     |
++-----------+-------------------+-------------+------------------------------------+-------+
+
+[3]:
++-----------+-------------------+---------+------------------------------------+-------+
+| report_id | group_artifact_id |  name   |            description             | scope |
++-----------+-------------------+---------+------------------------------------+-------+
+| 120       | 120               | Scrum   | Scrum Report                       | P     |
+| 100       | 120               | Default | The system default artifact report | S     |
++-----------+-------------------+---------+------------------------------------+-------+
+
+[4]:
++-----------+-------------------+---------+------------------------------------+-------+
+| report_id | group_artifact_id |  name   |            description             | scope |
++-----------+-------------------+---------+------------------------------------+-------+
+| 118       | 118               | SR      | Support Requests Report            | P     |
+| 100       | 118               | Default | The system default artifact report | S     |
++-----------+-------------------+---------+------------------------------------+-------+
+
+[5]:
++-----------+-------------------+---------+------------------------------------+-------+
+| report_id | group_artifact_id |  name   |            description             | scope |
++-----------+-------------------+---------+------------------------------------+-------+
+| 117       | 117               | Tasks   | Tasks Report                       | P     |
+| 100       | 117               | Default | The system default artifact report | S     |
++-----------+-------------------+---------+------------------------------------+-------+
                         </programlisting>
                     </example>
                 </para>
@@ -150,20 +212,34 @@ Array
                     <example>
                         <title>trackers command</title>
                         <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[mnazaria@linux codendi cli ]$ ./codendi.php tracker trackers --project=guineapig
-Array
-(
-    [0] => Array
-           (
-            [group_artifact_id] => 113
-            [group_id] => 5
-            [name] => Bugs
-            [description] => Bugs Tracker
-            [item_name] => bug
-            [open_count] => 3
-            [total_count] => 15
-            [field_sets] => Array
-            (... list of trackers, field sets and fields ...)
+[ounis@linux codendi cli ]$ ./codendi.php tracker trackers --project=project1
++-------------------+----------+------------------+----------------------------------------------------...
+| group_artifact_id | group_id |       name       |                         description                ...
++-------------------+----------+------------------+----------------------------------------------------...
+| 116               | 104      | Bugs             | Bugs Tracker                                       ...
+| 119               | 104      | Salome Bug       | Salome Bug Tracker                                 ...
+| 120               | 104      | Scrum Backlog    | Scrum backlog used to store user stories and to pla...
+| 118               | 104      | Support Requests | Support Requests Tracker                           ...
+| 117               | 104      | Tasks            | Tasks Tracker                                      ...
++-------------------+----------+------------------+----------------------------------------------------...
+[13]:
++----------+-------------------+----------+-------+-------------+----------+--------+
+| field_id | group_artifact_id | value_id | value | description | order_id | status |
++----------+-------------------+----------+-------+-------------+----------+--------+
+| 10       | 116               | 100      | None  |             | 10       | P      |
++----------+-------------------+----------+-------+-------------+----------+--------+
+
+[14]:
++----------+-------------------+----------+-------+-------------+----------+--------+
+| field_id | group_artifact_id | value_id | value | description | order_id | status |
++----------+-------------------+----------+-------+-------------+----------+--------+
+| 7        | 116               | 103      | ounis |             | 0        |        |
+| 7        | 116               | 100      | None  |             | 10       | P      |
++----------+-------------------+----------+-------+-------------+----------+--------+
+
+[15]:
+No results
+(... list of trackers, field sets and fields ...)
                         </programlisting>
                     </example>
                 </para>
@@ -188,18 +264,20 @@ Array
                     <example>
                         <title>tracker command</title>
                         <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[mnazaria@linux codendi cli ]$ ./codendi.php tracker tracker --project=guineapig --tracker_id=159
-Array
-(
-    [group_artifact_id] => 159
-    [group_id] => 5
-    [name] => Bugs
-    [description] => Bugs Tracker
-    [item_name] => bug
-    [open_count] => 3
-    [total_count] => 15
-    [field_sets] => Array
-    (... list of field sets and fields ...)
+[ounis@linux codendi cli ]$ ./codendi.php tracker tracker --project=project1 --tracker_id=116
++-------------------+----------+------+--------------+-----------+------------+-------------+----------...
+| group_artifact_id | group_id | name | description  | item_name | open_count | total_count | total_fil...
++-------------------+----------+------+--------------+-----------+------------+-------------+----------...
+| 116               | 104      | Bugs | Bugs Tracker | bug       | -1         | 1           | 0        ...
++-------------------+----------+------+--------------+-----------+------------+-------------+----------...
+[1]:
++--------------+-------------------+-------------------------------+---------+-------------------------...
+| field_set_id | group_artifact_id |             name              |  label  |          description    ...
++--------------+-------------------+-------------------------------+---------+-------------------------...
+| 49           | 116               | fieldset_default_bugs_lbl_key | Details | fieldset_default_bugs_de...
+| 50           | 116               | fieldset_status_bugs_lbl_key  | Status  | fieldset_status_bugs_des...
++--------------+-------------------+-------------------------------+---------+-------------------------...
+(... list of field sets and fields ...)
                         </programlisting>
                     </example>
                 </para>
@@ -234,46 +312,31 @@ Array
                 <example>
                     <title>list command</title>
                     <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[mnazaria@linux codendi cli ]$ ./codendi.php tracker list --tracker_id=113 --status=0 --assigned_to=142
-Array
-(
-    [0] => Array
-            (
-                [artifact_id] => 7173
-                [group_artifact_id] => 113
-                [status_id] => 0
-                [submitted_by] => 102
-                [open_date] => 1115311786
-                [close_date ] => 1125064392
-                [summary] => New bug
-                [details] => small bug
-                [severity] => 3
-                [extra_fields] => Array
-                                    (
-                                        [0] => Array
-                                                (
-                                                    [field_id] => 128
-                                                    [field_value] => 142
-                                                )
-                                        [1] => Array
-                                                (
-                                                    [field_id] => 129
-                                                    [field_value] => 41
-                                                )
-                                        [2] => Array
-                                                (
-                                                    [field_id] => 130
-                                                    [field_value] => 42
-                                                )
-                                    )
-            )
-)
+[ounis@linux codendi cli ]$ ./codendi.php tracker list --tracker_id=116
++------------------------+-----------+
+| total_artifacts_number | artifacts |
++------------------------+-----------+
+| 1                      | [1]       |
++------------------------+-----------+
+
+[1]:
++-------------+-------------------+-----------+--------------+------------+------------+---------------...
+| artifact_id | group_artifact_id | status_id | submitted_by | open_date  | close_date | last_update_da...
++-------------+-------------------+-----------+--------------+------------+------------+---------------...
+| 2           | 116               | 3         | 103          | 1289480620 | 1291276352 | 1291276353    ...
++-------------+-------------------+-----------+--------------+------------+------------+---------------...
+
+[1]:
++----------+-------------+-------------+
+| field_id | artifact_id | field_value |
++----------+-------------+-------------+
+| 3        | 2           | 100         |
+| 4        | 2           | 100         |
+| 16       | 2           | 100         |
+| 20       | 2           | 100         |
++----------+-------------+-------------+
                     </programlisting>
                 </example>
-                <note>Note: In this example, "assigned_to" corresponds to an extra_field and 
-                      142 is the search value for this field. We find this field in the 
-                      extra fields list, with the field_id 128.
-                </note>
                 </para>
             </para>
         </section>
@@ -311,69 +374,30 @@ Array
                 <example>
                     <title>reportlist command</title>
                     <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[mnazaria@linux codendi cli ]$ ./codendi.php tracker reportlist --tracker_id=113 --status=0 --assigned_to=142 --sort="artifact_id DESC, open_date ASC"
-Array
-(
-    [total_artifacts_number] => 12
-    [artifacts] => Array ( 
-                    [0] => Array (
-                            [artifact_id] => 1304
-                            [severity] => 5
-                            [fields] => Array (
-                                        [0] => Array (
-                                                [field_name] => artifact_id
-                                                [feidl_value] => 1304
-                                               )
-                                        [1] => Array (
-                                                [field_name] => submitted_by
-                                                [field_value] => mnazaria
-                                               )
-                                        [2] => Array (
-                                                [field_name] => summary
-                                                [field_value] => New bug
-                                               )
-                                        [3] => Array (
-                                                [field_name] => field_31
-                                                [field_value] => USA, France
-                                               )
-                                        [4] => Array (
-                                                [field_name] => field_32
-                                                [field_value] => mnazaria, jsmith
-                                               )
-                                       )
-                           )
-                   )
-                   [1] => Array (
-                            [artifact_id] => 1305
-                            [severity] => 8
-                            [fields] => Array (
-                                        [0] => Array (
-                                                [field_name] => artifact_id
-                                                [feidl_value] => 1305
-                                               )
-                                        [1] => Array (
-                                                [field_name] => submitted_by
-                                                [field_value] => jsmith
-                                               )
-                                        [2] => Array (
-                                                [field_name] => summary
-                                                [field_value] => New bug 2
-                                               )
-                                        [3] => Array (
-                                                [field_name] => field_31
-                                                [field_value] => Asia
-                                               )
-                                        [4] => Array (
-                                                [field_name] => field_32
-                                                [field_value] => None
-                                               )
-                                       )
-                           )
-                   )
-                   
-                   [...]
-                   
-)
+[ounis@linux codendi cli ]$ ./codendi.php tracker reportlist --tracker_id=116
++------------------------+-----------+
+| total_artifacts_number | artifacts |
++------------------------+-----------+
+| 1                      | [1]       |
++------------------------+-----------+
+
+[1]:
++-------------+----------+--------+
+| artifact_id | severity | fields |
++-------------+----------+--------+
+| 2           | 5        | [1]    |
++-------------+----------+--------+
+
+[1]:
++--------------+---------------+
+|  field_name  |  field_value  |
++--------------+---------------+
+| artifact_id  | 2             |
+| summary      | bug           |
+| open_date    | 1289480620    |
+| assigned_to  | None          |
+| submitted_by | ounis         |
++--------------+---------------+
                     </programlisting>
                 </example>
                 </para>
@@ -396,39 +420,41 @@ Array
                 <example>
                     <title>reports command</title>
                     <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[mnazaria@linux codendi cli ]$ ./codendi.php tracker reports --tracker_id=371
-Array
-(
-    [0] => Array(
-        [report_id] => 440
-        [group_artifact_id] => 371
-        [name] => My report
-        [descrition] => This is my favorite report that displays my favorite fields
-        [scope] => P
-        [fields] => Array(
-                [0] => Array(
-                        [report_id] => 440
-                        [field_name] => artifact_id
-                        [show_on_query] => 0
-                        [show_on_result] => 1 
-                        [place_query] => 
-                        [place_result] => 55
-                        [col_width] => 100
-                    )
-                [1] => Array(
-                        [report_id] => 440
-                        [field_name] => category_id
-                        [show_on_query] => 0
-                        [show_on_result] => 1 
-                        [place_query] => 
-                        [place_result] => 80
-                        [col_width] => 10
-                    )
-                [...]
-            )
-        )
-    [...]
-)
+[ounis@linux codendi cli ]$ ./codendi.php tracker reports --tracker_id=116
++-----------+-------------------+---------+------------------------------------+-------+--------+
+| report_id | group_artifact_id |  name   |            description             | scope | fields |
++-----------+-------------------+---------+------------------------------------+-------+--------+
+| 116       | 116               | Bugs    | Bugs Report                        | P     | [1]    |
+| 100       | 116               | Default | The system default artifact report | S     | [2]    |
++-----------+-------------------+---------+------------------------------------+-------+--------+
+
+[1]:
++-----------+--------------+---------------+----------------+-------------+--------------+-----------+
+| report_id |  field_name  | show_on_query | show_on_result | place_query | place_result | col_width |
++-----------+--------------+---------------+----------------+-------------+--------------+-----------+
+| 116       | status_id    | 1             | 0              | 40          | 0            | 0         |
+| 116       | bug_group_id | 1             | 0              | 20          | 0            | 0         |
+| 116       | category_id  | 1             | 0              | 10          | 0            | 0         |
+| 116       | artifact_id  | 0             | 1              | 0           | 10           | 0         |
+| 116       | summary      | 0             | 1              | 0           | 20           | 0         |
+| 116       | open_date    | 0             | 1              | 0           | 30           | 0         |
+| 116       | assigned_to  | 1             | 1              | 30          | 40           | 0         |
+| 116       | submitted_by | 0             | 1              | 0           | 50           | 0         |
++-----------+--------------+---------------+----------------+-------------+--------------+-----------+
+
+[2]:
++-----------+--------------+---------------+----------------+-------------+--------------+-----------+
+| report_id |  field_name  | show_on_query | show_on_result | place_query | place_result | col_width |
++-----------+--------------+---------------+----------------+-------------+--------------+-----------+
+| 100       | category_id  | 1             | 0              | 10          |              |           |
+| 100       | severity     | 0             | 0              |             |              |           |
+| 100       | status_id    | 1             | 0              | 20          |              |           |
+| 100       | artifact_id  | 1             | 1              | 50          | 10           |           |
+| 100       | summary      | 0             | 1              |             | 20           |           |
+| 100       | open_date    | 1             | 1              | 40          | 30           |           |
+| 100       | assigned_to  | 1             | 1              | 30          | 40           |           |
+| 100       | submitted_by | 0             | 1              |             | 50           |           |
++-----------+--------------+---------------+----------------+-------------+--------------+-----------+
                     </programlisting>
                 </example>
                 </para>
@@ -466,21 +492,25 @@ Array
                 <example>
                     <title>add command</title>
                     <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[mnazaria@linux codendi cli ]$ ./codendi.php tracker add --tracker_id=371 --summary="Back button is not working" --details="When I read my email and I press the back button, a blank page appears" --severity=4 --assigned_to=142
-Confirm you want to add a new tracker with the following information:
-group_id: 160
-group_artifact_id: 371
+[ounis@linux codendi cli ]$ ./codendi.php tracker add --tracker_id=116 --summary="Back button is not working" --details="When I read my email and I press the back button, a blank page appears" --severity=4 --assigned_to=103
+Confirm you want to add a new artifact with the following information:
 summary: Back button is not working
 details: When I read my email and I press the back button, a blank page appears
 severity: 4
-assigned_to: 142
+group_id: 104
+group_artifact_id: 116
+assigned_to: 103
 Is this information correct? (y/n): y
-7374
++--------+
+| Result |
++--------+
+| 40     |
++--------+
                     </programlisting>
                 </example>
                 <note>Note: In this example, "assigned_to" corresponds to an extra_field and 
-                      142 is a valid value ID for this extra field.
-                      The value returned (7374) is the ID of the new artifact.
+                      103 is a valid value ID for this extra field.
+                      The value returned (40) is the ID of the new artifact.
                 </note>
                 </para>
             </para>
@@ -520,14 +550,18 @@ Is this information correct? (y/n): y
                 <example>
                     <title>update command</title>
                     <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[mnazaria@linux codendi cli ]$ ./codendi.php tracker update --tracker_id=371 --id=7374 --severity=6 --extra_field_notice_textfield="Increased priority"
-Confirm you want to update the tracker with the following information:
-group_id: 160
-group_artifact_id: 371
+[ounis@linux codendi cli ]$ ./codendi.php tracker update --tracker_id=116 --id=40 --severity=6
+Confirm you want to add a new artifact with the following information:
 severity: 6
-extra_field_notice_textfield="Increased priority"
+group_id: 104
+group_artifact_id: 116
+artifact_id: 40
 Is this information correct? (y/n): y
-7374
++--------+
+| Result |
++--------+
+| 40     |
++--------+
                     </programlisting>
                 </example>
                 </para>
@@ -553,34 +587,14 @@ Is this information correct? (y/n): y
                 <example>
                     <title>comments command</title>
                     <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[mnazaria@linux codendi cli ]$ ./codendi.php tracker comments --tracker_id=371 --id=7374
-Array
-(
-    [0] => Array
-        (
-        [artifact_id] => 7374
-        [comment] => we will keep them gray
-        [date] => 1117810766
-        [by] => 142
-        [comment_type_id] => 100
-        )
-    [1] => Array
-        (
-        [artifact_id] => 7374
-        [comment] => maybe we can add a gradient
-        [date] => 1117809234
-        [by] => 135
-        [comment_type_id] => 100
-        )
-    [2] => Array
-        (
-        [artifact_id] => 7374
-        [comment] => i think most buttons should be green
-        [date] => 1117723406
-        [by] => 1142
-        [comment_type_id] => 100
-        )
-)
+[ounis@linux codendi cli ]$ ./codendi.php tracker comments --tracker_id=116 --id=40
++-------------+--------------+------------------+------------+---------------+-------+-------------+---...
+| artifact_id | follow_up_id |     comment      |    date    | original_date |  by   | original_by | co...
++-------------+--------------+------------------+------------+---------------+-------+-------------+---...
+| 40          | 559          | Yet another one  | 1293718666 | 1293718666    | ounis | ounis       | 10...
+| 40          | 558          | Another comment  | 1293718652 | 1293718652    | ounis | ounis       | 10...
+| 40          | 556          | comment by ounis | 1293718608 | 1293718608    | ounis | ounis       | 10...
++-------------+--------------+------------------+------------+---------------+-------+-------------+---...
                     </programlisting>
                 </example>
                 </para>
@@ -605,6 +619,9 @@ Array
                         <para>--comment_type_id: Comment type to add to the comment (optional).</para>
                     </listitem>
                     <listitem>
+                        <para>--format: Format of the comment, can be 'text' or 'html' (optional).</para>
+                    </listitem>
+                    <listitem>
                         <para>--project: UNIX name of the project. If none is specified, the project specified when you logged in will be used. If none was specified at that time, an error will be displayed.</para>
                     </listitem>
                 </itemizedlist>
@@ -612,7 +629,13 @@ Array
                 <example>
                     <title>addComment command</title>
                     <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[mnazaria@linux codendi cli ]$ ./codendi.php tracker addComment --tracker_id=371 --id=7374 --message="I agree with you"
+[ounis@linux codendi cli ]$ ./codendi.php tracker addComment --tracker_id=116 --id=40 --format=html --message="I agree with you"
+
++--------+
+| Result |
++--------+
+| 1      |
++--------+
                     </programlisting>
                 </example>
                 </para>
@@ -644,7 +667,12 @@ Array
                 <example>
                     <title>updateComment command</title>
                     <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[mnazaria@linux codendi cli ]$ ./codendi.php tracker updateComment --tracker_id=371 --artifact_id=7374 --comment_id=5478 --comment="This comment will replace the former one"
+[ounis@linux codendi cli ]$ ./codendi.php tracker updateComment --tracker_id=116 --artifact_id=40 --comment_id=560  --comment="This comment will replace the former one"
++--------+
+| Result |
++--------+
+| 1      |
++--------+
                     </programlisting>
                 </example>
                 </para>
@@ -673,7 +701,12 @@ Array
                 <example>
                     <title>deleteComment command</title>
                     <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[mnazaria@linux codendi cli ]$ ./codendi.php tracker deleteComment --tracker_id=371 --artifact_id=7374 --comment_id=5478
+[ounis@linux codendi cli ]$ ./codendi.php tracker deleteComment --tracker_id=116 --artifact_id=40 --comment_id=560
++--------+
+| Result |
++--------+
+| 1      |
++--------+
                     </programlisting>
                 </example>
                 </para>
@@ -699,20 +732,14 @@ Array
                 <example>
                     <title>CCList command</title>
                     <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[mnazaria@linux codendi cli ]$ ./codendi.php tracker CCList --tracker_id=371 --id=7374
-Array
-(
-    [0] => Array
-        (
-        [artifact_cc_id] => 48
-        [email] => john.smith@xerox.com
-        [added_by] => 142
-        [added_by_name] => mnazaria
-        [comment] => For info, I added this bug, John
-        [date] => 442128821
-        )
-    [...]
-)
+[ounis@linux codendi cli ]$ ./codendi.php tracker CCList --tracker_id=116 --id=40
++----------------+-------------+----------------------+----------+---------------+---------+------------+
+| artifact_cc_id | artifact_id |        email         | added_by | added_by_name | comment |    date    |
++----------------+-------------+----------------------+----------+---------------+---------+------------+
+| 1              | 40          | nouha.terzi@st.com   | 103      | ounis         |         | 1293720479 |
+| 2              | 40          | ounis                | 103      | ounis         |         | 1293720479 |
+| 3              | 40          | salma.moakhar@st.com | 103      | ounis         |         | 1293720479 |
++----------------+-------------+----------------------+----------+---------------+---------+------------+
                     </programlisting>
                 </example>
                 </para>
@@ -744,7 +771,12 @@ Array
                 <example>
                     <title>addCC command</title>
                     <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[mnazaria@linux codendi cli ]$ ./codendi.php tracker addCC --tracker_id=371 --id=7374 --cc_list="marc.nazarian@xrce.xerox.com, mnazaria, bsmith, james.brown@server.net"
+[ounis@linux codendi cli ]$ ./codendi.php tracker addCC --tracker_id=116 --id=40 --cc_list="nouha.terzi@st.com, ounis, salma.moakhar@st.com"
++--------+
+| Result |
++--------+
+| 1      |
++--------+
                     </programlisting>
                 </example>
                 </para>
@@ -773,7 +805,12 @@ Array
                 <example>
                     <title>deleteCC command</title>
                     <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[mnazaria@linux codendi cli ]$ ./codendi.php tracker deleteCC --tracker_id=371 --id=7374 --cc_id=33
+[ounis@linux codendi cli ]$ ./codendi.php tracker deleteCC --tracker_id=116 --id=40 --cc_id=2
++--------+
+| Result |
++--------+
+| 1      |
++--------+
                     </programlisting>
                 </example>
                 </para>
@@ -799,30 +836,12 @@ Array
                 <example>
                     <title>dependencies command</title>
                     <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[mnazaria@linux codendi cli ]$ ./codendi.php tracker dependencies --tracker_id=371 -- id=4569
-Array
-(
-    [0] => Array(
-        [artifact_depend_id] => 14
-        [artifact_id] => 4569
-        [is_dependent_on_artifact_id] => 10
-        [summary] => Documentation is not up-to-date
-        [tracker_id] => 371
-        [tracker_name] => Bugs
-        [group_id] => 112
-        [group_name] => MoonProject
-    )
-    [1] => Array(
-        [artifact_depend_id] => 15
-        [artifact_id] => 4569
-        [is_dependent_on_artifact_id] => 4561
-        [summary] => Strange behaviour in the plugin option
-        [tracker_id] => 159
-        [tracker_name] => Support Requests
-        [group_id] => 115
-        [group_name] => CodeProject
-    [...]
-)
+[ounis@linux codendi cli ]$ ./codendi.php tracker dependencies --tracker_id=116 --id=40
++--------------------+-------------+-----------------------------+-------------+------------+----------...
+| artifact_depend_id | artifact_id | is_dependent_on_artifact_id |   summary   | tracker_id | tracker_n...
++--------------------+-------------+-----------------------------+-------------+------------+----------...
+| 25                 | 40          | 41                          | Another bug | 116        | Bugs     ...
++--------------------+-------------+-----------------------------+-------------+------------+----------...
                     </programlisting>
                 </example>
                 </para>
@@ -848,20 +867,13 @@ Array
                 <example>
                     <title>inverseDependencies command</title>
                     <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[mnazaria@linux codendi cli ]$ ./codendi.php tracker inverseDependencies --tracker_id=371 -- id=10
-Array
-(
-    [0] => Array(
-        [artifact_depend_id] => 14
-        [artifact_id] => 4569
-        [is_dependent_on_artifact_id] => 10
-        [summary] => Need to update the documentation
-        [tracker_id] => 371
-        [tracker_name] => Bugs
-        [group_id] => 112
-        [group_name] => MoonProject
-    )
-)
+[ounis@linux codendi cli ]$ ./codendi.php tracker inverseDependencies --tracker_id=116 --id=40
++--------------------+-------------+-----------------------------+-----------------+------------+------...
+| artifact_depend_id | artifact_id | is_dependent_on_artifact_id |     summary     | tracker_id | track...
++--------------------+-------------+-----------------------------+-----------------+------------+------...
+| 26                 | 41          | 40                          | Another bug     | 116        | Bugs ...
+| 27                 | 42          | 40                          | yet another bug | 116        | Bugs ...
++--------------------+-------------+-----------------------------+-----------------+------------+------...
                     </programlisting>
                 </example>
                 </para>
@@ -890,7 +902,12 @@ Array
                 <example>
                     <title>addDependencies command</title>
                     <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[mnazaria@linux codendi cli ]$ ./codendi.php tracker addDependencies --tracker_id=371 --id=7374 --dependencies="45,689,7865"
+[ounis@linux codendi cli ]$ ./codendi.php tracker addDependencies --tracker_id=116 --id=40 --dependencies="41"
++--------+
+| Result |
++--------+
+| 1      |
++--------+
                     </programlisting>
                 </example>
                 </para>
@@ -919,7 +936,12 @@ Array
                 <example>
                     <title>deleteDependency command</title>
                     <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[mnazaria@linux codendi cli ]$ ./codendi.php tracker deleteDependency --tracker_id=371 --id=7374 --dependency=14
+[ounis@linux codendi cli ]$ ./codendi.php deleteDependency tracker --tracker_id=116 --id=40 --dependency=41
++--------+
+| Result |
++--------+
+| 41     |
++--------+
                     </programlisting>
                 </example>
                 </para>
@@ -945,25 +967,18 @@ Array
                 <example>
                     <title>artifactHistory command</title>
                     <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[mnazaria@linux codendi cli ]$ ./codendi.php tracker artifactHistory --tracker_id=371 -- id=4569
-Array
-(
-    [0] => Array(
-        [field_name] => cc
-        [old_value] => marc.nazarian@xerox.com
-        [new_value] => marc.nazarian@xerox.com, bob.smith@xerox.com
-        [modification_by] => mnazaria
-        [date] => 1245982254
-    )
-    [0] => Array(
-        [field_name] => severity
-        [old_value] => 3
-        [new_value] => 5
-        [modification_by] => customer32
-        [date] => 12459822145
-    )
-    [...]
-)
+[ounis@linux codendi cli ]$ ./codendi.php tracker artifactHistory --tracker_id=116 --id=40
++------------+-----------------------------------------------+-----------------------------------------...
+| field_name |                   old_value                   |                   new_value             ...
++------------+-----------------------------------------------+-----------------------------------------...
+| cc         | nouha.terzi@st.com,ounis,salma.moakhar@st.com | nouha.terzi@st.com,salma.moakhar@st.com ...
+| cc         |                                               | nouha.terzi@st.com,ounis,salma.moakhar@s...
+| comment    | I agree with you                              |                                         ...
+| comment    | I agree with you                              | In fact i don't agree                   ...
+| summary    | Increased priority                            | Back button is not working              ...
+| summary    | Back button is not working                    | Increased priority                      ...
+| severity   | 4                                             | 6                                       ...
++------------+-----------------------------------------------+-----------------------------------------...
                     </programlisting>
                 </example>
                 </para>
@@ -989,32 +1004,13 @@ Array
                 <example>
                     <title>attachedFiles command</title>
                     <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[mnazaria@linux codendi cli ]$ ./codendi.php tracker attachedFiles --tracker_id=116 --artifact_id=3
-Array
-(
-    [0] => Array
-        (
-            [id] => 11
-            [artifact_id] => 3
-            [name] => screenshot.jpg
-            [description] => a screenshot of the issue
-            [filesize] => 364983
-            [filetype] => image/jpeg
-            [adddate] => 1124372802
-            [submitted_by] => 102
-        )
-    [1] => Array
-        (
-            [id] => 15
-            [artifact_id] => 3
-            [name] => my_document.pdf
-            [description] => 11
-            [filesize] => 457812
-            [filetype] => application/pdf
-            [adddate] => 1124372802
-            [submitted_by] => 104
-        )
-)
+[ounis@linux codendi cli ]$ ./codendi.php tracker attachedFiles --tracker_id=116 --artifact_id=40
++----+-------------+----------+-------------------+----------+----------+------------+------------+----...
+| id | artifact_id | filename |    description    | bin_data | filesize |  filetype  |  adddate   | sub...
++----+-------------+----------+-------------------+----------+----------+------------+------------+----...
+| 2  | 40          | file2    | file2 description |          | 14       | text/plain | 1293721808 | oun...
+| 1  | 40          | file1    | file1 description |          | 14       | text/plain | 1293721737 | oun...
++----+-------------+----------+-------------------+----------+----------+------------+------------+----...
                     </programlisting>
                 </example>
                 </para>
@@ -1046,7 +1042,7 @@ Array
                 <example>
                     <title>attachedFile command</title>
                     <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[mnazaria@linux codendi cli ]$ ./codendi.php tracker attachedFile --tracker_id=116 --artifact_id=3 --file_id=11 --output=/home/mnazaria/screenshot.jpg
+[ounis@linux codendi cli ]$ ./codendi.php tracker attachedFile --tracker_id=116 --artifact_id=40 --file_id=2 --output=./file2
 File retrieved successfully.
                     </programlisting>
                  </example>
@@ -1079,11 +1075,50 @@ File retrieved successfully.
                 <example>
                     <title>addAttachedFile command</title>
                     <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[mnazaria@linux codendi cli ]$ ./codendi.php tracker addAttachedFile --tracker_id=116 --id=3 --file=/home/mnazaria/image_patch.diff --description="This is the patch to apply"
-12
+[ounis@linux codendi cli ]$ ./codendi.php tracker addAttachedFile --tracker_id=116 --artifact_id=40 --file=file2 --description="file2 description"
++--------+
+| Result |
++--------+
+| 2      |
++--------+
                     </programlisting>
                 </example>
-                <note>Note: The value returned (12) is the ID of the new file.</note>
+                <note>Note: The value returned (2) is the ID of the deleted file.</note>
+                </para>
+            </para>
+        </section>
+
+        <section id="TrackerFunctionDeleteAttachedFile">
+            <title>deleteAttachedFile</title>
+            <para>
+                deleteAttachedFile: Delete an attached file from an artifact.
+                <itemizedlist mark="bullet">
+                    <listitem>
+                        <para>--tracker_id*: Tracker ID.</para>
+                    </listitem>
+                    <listitem>
+                        <para>--artifact_id*: Artifact ID.</para>
+                    </listitem>
+                    <listitem>
+                        <para>--file_id*: ID of the file to delete.</para>
+                    </listitem>
+                    <listitem>
+                        <para>--project: UNIX name of the project. If none is specified, the project specified when you logged in will be used. If none was specified at that time, an error will be displayed.</para>
+                    </listitem>
+                </itemizedlist>
+                <para>
+                <example>
+                    <title>deleteAttachedFile command</title>
+                    <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+[ounis@linux codendi cli ]$ ./codendi.php tracker deleteAttachedFile --tracker_id=116 --artifact_id=40 --file_id=2
++--------+
+| Result |
++--------+
+| 2      |
++--------+
+                    </programlisting>
+                </example>
+                <note>Note: The value returned (2) is the ID of the new file.</note>
                 </para>
             </para>
         </section>
@@ -1099,9 +1134,9 @@ File retrieved successfully.
     <section id="FRSFunctions">
         <title>File Release System functions</title>
         
-        <section id="FRSFunctionPackages">
-            <title>packages</title>
-            <para>packages: Display a list of available packages for a project
+        <section id="FRSFunctionGetPackages">
+            <title>getPackages</title>
+            <para>getPackages: Display a list of available packages for a project
                 <itemizedlist mark="bullet">
                     <listitem>
                         <para>--project: UNIX name of the project you want to retrieve the packages in. If none is specified, the project specified when you logged in will be used. If none was specified at that time, an error will be displayed.
@@ -1110,30 +1145,15 @@ File retrieved successfully.
                 </itemizedlist>
                 <para>
                     <example>
-                        <title>packages command</title>
+                        <title>getPackages command</title>
                         <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[mnazaria@linux codendi cli ]$ ./codendi.php frs packages --project=myproject
-Array
-(
-    [0] => Array 
-            (
-                [package_id] => 13
-                [group_id] => 121
-                [name] => &SYS_PRODUCT_NAME; installation
-                [status_id] => 1
-                [rank] => 10
-                [approve_license] => 1
-             )
-    [1] => Array 
-            (
-                [package_id] => 64
-                [group_id] => 121
-                [name] => CLI installation
-                [status_id] => 1
-                [rank] => 20
-                [approve_license] => 1
-             )
-)
+[ounis@linux codendi cli ]$ ./codendi.php frs getPackages --project=project1
++------------+----------+----------------+-----------+------+-----------------+
+| package_id | group_id |      name      | status_id | rank | approve_license |
++------------+----------+----------------+-----------+------+-----------------+
+| 198        | 104      | package2       | 1         | 1    |                 |
+| 197        | 104      | my_new_package | 1         | 2    |                 |
++------------+----------+----------------+-----------+------+-----------------+
                         </programlisting>
                     </example>
                </para>
@@ -1141,8 +1161,8 @@ Array
         </section>
 
         <section id="FRSFunctionAddPackage">
-            <title>addpackage</title>
-            <para>addpackage: Add a package to the File Release System
+            <title>addPackage</title>
+            <para>addPackage: Add a package to the File Release System
                 <itemizedlist mark="bullet">
                     <listitem>
                         <para>--name*: name of the new package that will be created.
@@ -1163,20 +1183,24 @@ Array
                 </itemizedlist>
                 <para>
                     <example>
-                        <title>addpackage command</title>
+                        <title>addPackage command</title>
                         <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[mnazaria@linux codendi cli ]$ ./codendi.php frs addpackage --project=myproject --name="my_new_package" --status_id=1
-65
+[ounis@linux codendi cli ]$ ./codendi.php frs addPackage --project=project1 --name="my_new_package" --status_id=1
++--------+
+| Result |
++--------+
+| 197    |
++--------+
                         </programlisting>
                     </example>
-                    <note>Note: The value returned (65) is the ID of the new package.</note>
+                    <note>Note: The value returned (197) is the ID of the new package.</note>
                </para>
             </para>
         </section>
         
-        <section id="FRSFunctionReleases">
-            <title>releases</title>
-            <para>releases: Display a list of available releases for a project and a given package
+        <section id="FRSFunctionGetReleases">
+            <title>getReleases</title>
+            <para>getReleases: Display a list of available releases for a project and a given package
                 <itemizedlist mark="bullet">
                     <listitem>
                         <para>--package_id*: the id of the package the releases belong to
@@ -1189,35 +1213,15 @@ Array
                 </itemizedlist>
                 <para>
                     <example>
-                        <title>releases command</title>
+                        <title>getReleases command</title>
                         <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[mnazaria@linux codendi cli ]$ ./codendi.php frs releases --package_id=6
-Array
-(
-    [0] => Array 
-            (
-                [release_id] => 73
-                [package_id] => 6
-                [name] => &SYS_PRODUCT_NAME; 2.8
-                [note] => 
-                [changes] => New incredible functions in this new versions.
-                [status_id] => 1
-                [release_date] => 1163776835
-                [released_by] => 142
-             )
-    [1] => Array 
-            (
-                [release_id] => 78
-                [package_id] => 6
-                [name] => &SYS_PRODUCT_NAME; 3.0
-                [note] => &SYS_PRODUCT_NAME; platform in version 3.0
-                [changes] => So crazy changes for this new release !
-                [status_id] => 1
-                [release_date] => 1163776125
-                [released_by] => 142
-             )
-     ...
-)
+[ounis@linux codendi cli ]$ ./codendi.php frs getReleases --package_id=197
++------------+------------+---------------+--------------------------------+---------------------------...
+| release_id | package_id |     name      |             notes              |             changes       ...
++------------+------------+---------------+--------------------------------+---------------------------...
+| 144        | 197        | first version | somes notes about this release | first release             ...
+| 143        | 197        | new version   | somes notes about this release | the changes of this new re...
++------------+------------+---------------+--------------------------------+---------------------------...
                         </programlisting>
                     </example>
                </para>
@@ -1225,8 +1229,8 @@ Array
         </section>
         
         <section id="FRSFunctionAddRelease">
-            <title>addrelease</title>
-            <para>addrelease: Add a release to the File Release System
+            <title>addRelease</title>
+            <para>addRelease: Add a release to the File Release System
                 <itemizedlist mark="bullet">
                     <listitem>
                         <para>--package_id*: id of the package this release will belong to
@@ -1259,20 +1263,24 @@ Array
                 </itemizedlist>
                 <para>
                     <example>
-                        <title>addrelease command</title>
+                        <title>addRelease command</title>
                         <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[mnazaria@linux codendi cli ]$ ./codendi.php frs addrelease --package_id=6 --name="new version" --notes="somes notes about this release" --changes="the changes of this new release" --status_id=1
-84
+[ounis@linux codendi cli ]$ ./codendi.php frs addRelease --package_id=197 --name="new version" --notes="somes notes about this release" --changes="the changes of this new release" --status_id=1
++--------+
+| Result |
++--------+
+| 143    |
++--------+
                         </programlisting>
                     </example>
-                    <note>Note: The value returned (84) is the ID of the new release.</note>
+                    <note>Note: The value returned (143) is the ID of the new release.</note>
                </para>
             </para>
         </section>
         
-        <section id="FRSFunctionFiles">
-            <title>files</title>
-            <para>files: Display a list of available files for a project, a given package and a given release
+        <section id="FRSFunctionGetFiles">
+            <title>getFiles</title>
+            <para>getFiles: Display a list of available files for a project, a given package and a given release
                 <itemizedlist mark="bullet">
                     <listitem>
                         <para>--package_id*: the id of the package the files belong to
@@ -1289,24 +1297,14 @@ Array
                 </itemizedlist>
                 <para>
                     <example>
-                        <title>files command</title>
+                        <title>getFiles command</title>
                         <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[mnazaria@linux codendi cli ]$ ./codendi.php frs files --package_id=6 --release_id=49
-Array
-(
-    [0] => Array 
-            (
-                [file_id] => 196
-                [release_id] => 49
-                [filename] => p6_r49/my_file.odg
-                [file_size] => 128
-                [type_id] => 6000
-                [processor_id] => 2000
-                [release_time] => 1163776835
-                [post_date] => 1163776835
-             )
-     ...
-)
+[ounis@linux codendi cli ]$ ./codendi.php frs getFiles --package_id=197 --release_id=143
++---------+------------+-----------------+-----------+---------+--------------+--------------+---------...
+| file_id | release_id |    file_name    | file_size | type_id | processor_id | release_time | post_dat...
++---------+------------+-----------------+-----------+---------+--------------+--------------+---------...
+| 419     | 143        | p197_r143/file1 | 14        | 9999    | 9999         | 1293787567   | 12937875...
++---------+------------+-----------------+-----------+---------+--------------+--------------+---------...
                         </programlisting>
                     </example>
                </para>
@@ -1314,8 +1312,8 @@ Array
         </section>
         
         <section id="FRSFunctionAddFile">
-            <title>addfile</title>
-            <para>addfile: Add a file to the File Release System
+            <title>addFile</title>
+            <para>addFile: Add a file to the File Release System
                 <itemizedlist mark="bullet">
                     <listitem>
                         <para>--package_id*: id of the package this file will belong to
@@ -1326,7 +1324,7 @@ Array
                         </para>
                     </listitem>
                     <listitem>
-                        <para>--local_file(*): location (local) of the new file that will be created. Use this argument if your file is local. Your file will be uploaded on the server. Please note that for adding big files, it is better to use the uploaded way, because memory error could happen. One of the argument --local_file or --uploaded_file is required, depending the way you want to add your file.
+                        <para>--local_file(*): location (local) of the new file that will be created. Use this argument if your file is local. Your file will be uploaded on the server. One of the argument --local_file or --uploaded_file is required, depending the way you want to add your file.
                         </para>
                     </listitem>
                     <listitem>
@@ -1342,39 +1340,48 @@ Array
                         </para>
                     </listitem>
                     <listitem>
+                        <para>--reference_md5: md5 of the file located in the incoming directory on the server.
+                        </para>
+                     </listitem>
+                    <listitem>
                         <para>--project: UNIX name of the project you want to add the file in. If none is specified, the project specified when you logged in will be used. If none was specified at that time, an error will be displayed.
                         </para>
                     </listitem>
                 </itemizedlist>
+                <note>
+                    <para>For local file md5sum is automatically calculated by CLI in client side, so the parameter reference_md5 is taken into consideration only for uploded files and it is absolutely useless to add it for a local file.</para>
+                </note>
                 <para>
                     <example>
-                        <title>addfile command</title>
+                        <title>addFile command</title>
                         <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[mnazaria@linux codendi cli ]$ ./codendi.php frs addfile --package_id=6 --release_id=49 --local_file=/home/mnazaria/my_file.pdf
-627
+[ounis@linux codendi cli ]$ ./codendi.php frs addFile --package_id=197 --release_id=143 --local_file=file1
++--------+
+| Result |
++--------+
+| 419    |
++--------+
 
 (for a local file or )
 
-[mnazaria@linux codendi cli ]$ ./codendi.php frs addfile --package_id=6 --release_id=49 --uploaded_file=my_file.pdf
-627
+[ounis@linux codendi cli ]$ ./codendi.php frs addFile --package_id=197 --release_id=143 --uploaded_file=file2
++--------+
+| Result |
++--------+
+| 420    |
++--------+
 
 (for a file already uploaded in the incoming directory of your server)
                         </programlisting>
                     </example>
-                    <note>Note: The value returned (627) is the ID of the new file.</note>
-               </para>
-               <para>
-                <note>Note: If you get a memory problem with uploading large files, you can increase the memory by modifying
-                the memory_limit directive in PHP file configuration (php.ini).
-                If problems still remain, please upload your files on the server before (using scp or ftp), and then use 
-                the second method (--uploaded_file)</note>
+                    <note>Note: The value returned (420) is the ID of the new file.</note>
                </para>
             </para>
         </section>
         
         <section id="FRSFunctionGetFile">
-            <title>getfile</title>
-            <para>getfile: Get the content of a file in the File Release System
+            <title>getFile</title>
+            <para>getFile: Get the content of a file in the File Release System
                 <itemizedlist mark="bullet">
                     <listitem>
                         <para>--package_id*: id of the package the file belongs to
@@ -1399,16 +1406,115 @@ Array
                 </itemizedlist>
                 <para>
                     <example>
-                        <title>getfile command</title>
+                        <title>getFile command</title>
                         <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[mnazaria@linux codendi cli ]$ ./codendi.php frs getfile --package_id=6 --release_id=49 --file_id=644 --output=/home/mnazaria/downloaded_file.pdf
+[ounis@linux codendi cli ]$ ./codendi.php frs getFile --package_id=197 --release_id=143 --file_id=419 --output=./downloaded_file
 File retrieved successfully.
                         </programlisting>
                     </example>
                </para>
             </para>
         </section>
-        
+
+        <section id="FRSFunctionGetUploadedFiles">
+            <title>getUploadedFiles</title>
+            <para>getUploadedFiles: Get the list of files uploaded using ftp into the incoming directory
+                <itemizedlist mark="bullet">
+                    <listitem>
+                        <para>--project: UNIX name of the project you want to get the file. If none is specified, the project specified when you logged in will be used. If none was specified at that time, an error will be displayed.
+                        </para>
+                    </listitem>
+                </itemizedlist>
+                <para>
+                    <example>
+                        <title>getUploadedFiles command</title>
+                        <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+[ounis@linux codendi cli ]$ ./codendi.php frs getUploadedFiles
++--------+
+| Result |
++--------+
+| file1  |
+| file2  |
++--------+
+                        </programlisting>
+                    </example>
+               </para>
+            </para>
+        </section>
+
+        <section id="FRSFunctionDeleteFile">
+            <title>deleteFile</title>
+            <para>deleteFile: Delete a file from the File Release System
+                <itemizedlist mark="bullet">
+                    <listitem>
+                        <para>--package_id*: id of the package the file belongs to
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--release_id*: id of the release the file belongs to
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--file_id*: id of the file we want to delete
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--project: UNIX name of the project you want to delete the file. If none is specified, the project specified when you logged in will be used. If none was specified at that time, an error will be displayed.
+                        </para>
+                    </listitem>
+                </itemizedlist>
+                <para>
+                    <example>
+                        <title>deleteFile command</title>
+                        <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+[ounis@linux codendi cli ]$ ./codendi.php frs deleteFile --package_id=197 --release_id=143 --file_id=420
++--------+
+| Result |
++--------+
+| 1      |
++--------+
+                        </programlisting>
+                    </example>
+               </para>
+            </para>
+        </section>
+
+        <section id="FRSFunctionGetFileInfo">
+            <title>getFileInfo</title>
+            <para>getFileInfo: Get informations about a file in the File Release System
+                <itemizedlist mark="bullet">
+                    <listitem>
+                        <para>--package_id*: id of the package the file belongs to
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--release_id*: id of the release the file belongs to
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--file_id*: id of the file we want to get the info
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--project: UNIX name of the project you want to get the file info. If none is specified, the project specified when you logged in will be used. If none was specified at that time, an error will be displayed.
+                        </para>
+                    </listitem>
+                </itemizedlist>
+                <para>
+                    <example>
+                        <title>getFileInfo command</title>
+                        <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+[ounis@linux codendi cli ]$ ./codendi.php frs getFileInfo --package_id=197 --release_id=143 --file_id=419
++---------+------------+-----------------+-----------+---------+--------------+--------------+---------...
+| file_id | release_id |    file_name    | file_size | type_id | processor_id | release_time | post_dat...
++---------+------------+-----------------+-----------+---------+--------------+--------------+---------...
+| 419     | 143        | p197_r143/file1 | 14        | 9999    | 9999         | 1293787567   | 12937875...
++---------+------------+-----------------+-----------+---------+--------------+--------------+---------...
+                        </programlisting>
+                    </example>
+               </para>
+            </para>
+        </section>
     </section>
 
     <section id="DocmanFunctions">
@@ -1433,55 +1539,56 @@ File retrieved successfully.
                     <example>
                         <title>list command</title>
                         <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[mnazaria@linux codendi cli ]$ ./codendi.php docman list --id=59 --project=myproject
-Array
-(
-    [0] => Array 
-            (
-                [item_id] => 241
-                [parent_id] => 59
-                [group_id] => 112
-                [title] => CLI User Guide
-                [description] => The PDF version of the CLI User Guide
-                [create_date] => 1170168829
-                [update_date] => 1170168829
-                [delete_date] => 
-                [user_id] => 102
-                [status] => 0
-                [obsolescence_date] => 0
-                [rank] => -2
-                [item_type] => 1
-             )
-    [1] => Array 
-            (
-                [item_id] => 296
-                [parent_id] => 59
-                [group_id] => 112
-                [title] => CLI User Guide
-                [description] => The HTML version of the CLI User Guide
-                [create_date] => 1172759281
-                [update_date] => 1172759281
-                [delete_date] => 
-                [user_id] => 102
-                [status] => 0
-                [obsolescence_date] => 0
-                [rank] => -2
-                [item_type] => 3
-             )
-    
-)
+[terzino@linux codendi cli ]$ ./codendi.php docman list --id=110418 --project=myproject
++---------+-----------+----------+--------------+-------------+-------------+-------------+---------+--...
+| item_id | parent_id | group_id |    title     | create_date | update_date | delete_date | user_id | s...
++---------+-----------+----------+--------------+-------------+-------------+-------------+---------+--...
+| 110493  | 110418    | 1        | testSoap     | 1293189073  | 1293189073  |             | 101     | 1...
+| 110491  | 110418    | 1        | CLI Document | 1293188351  | 1293188351  |             | 101     | 1...
++---------+-----------+----------+--------------+-------------+-------------+-------------+---------+--...
+                        </programlisting>
+                    </example>
+               </para>
+            </para>
+        </section>
+		
+		    <section id="DocmanFunctionGetRoot">
+            <title>getRoot</title>
+            <para>getRoot: Returns the document object id that is at the top of the docman given a group object
+                <itemizedlist mark="bullet">
+                    <listitem>
+                        <para>--project: UNIX name of the project you want to add the package in. If none is specified, the project specified when you logged in will be used. If none was specified at that time, an error will be displayed.
+                        </para>
+                    </listitem>
+                </itemizedlist>
+                <para>
+                    <example>
+                        <title>getRoot command</title>
+                        <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+[terzino@linux codendi cli ]$ ./codendi.php docman getRoot --project=myproject 
++--------+
+| Result |
++--------+
+| 2      |
++--------+
+
                         </programlisting>
                     </example>
                </para>
             </para>
         </section>
         
-        <section id="DocmanFunctionCreateDocument">
-            <title>createDocument</title>
-            <para>createDocument: Add a document to the document manager
+        <section id="DocmanFunctionCreateEmbeddedFile">
+            <title>createEmbeddedFile</title>
+            <para>createEmbeddedFile: Add a document embedded file to the document manager
                 <itemizedlist mark="bullet">
                     <listitem>
-                        <para>--parent_id*: ID of the parent the document will be created in
+                        <para>--parent_id*: ID of the parent the file will be created in
+                        </para>
+                    </listitem>
+					<listitem>
+                        <para>--project*:Name of the project the item belongs to. If you specified the name of
+                            the working project when you logged in, this parameter is not needed.
                         </para>
                     </listitem>
                     <listitem>
@@ -1493,46 +1600,351 @@ Array
                         </para>
                     </listitem>
                     <listitem>
-                        <para>--type*: nature of the document. Available types are "file", "link", "wiki", and "embedded_file"
+                        <para>--status*: Status to apply to the item. Available status are "none", "draft", "approved", and "rejected"
                         </para>
                     </listitem>
                     <listitem>
-                        <para>--content*: content of the document, according to the type of the document:
-                            <itemizedlist mark="bullet">
-                                <listitem><para>the file location for "file" type</para></listitem>
-                                <listitem><para>the url for "link" type</para></listitem>
-                                <listitem><para>the name of the Wiki Page for "wiki" type</para></listitem>
-                                <listitem><para>the raw content for "embedded_file" type.</para></listitem>
-                            </itemizedlist>
+                        <para>--content*: Content of the embedded file
                         </para>
                     </listitem>
                     <listitem>
+					    <para>--perm_read*: Groups IDs that will have the permission READ separated with comma
+						</para>
+						</listitem>
+                    <listitem>
+					    <para>--perm_write*: Groups IDs that will have the permission WRITE separated with comma
+					    </para>
+					</listitem>
+                    <listitem>
+					        <para>--perm_manage*: Groups IDs that will have the permission MANAGE separated with comma
+					        </para>
+					</listitem>
+                    <listitem>
+					    <para>--perm_none*: Groups IDs that will have no permission separated with comma(ie. those groups will not inherit the permissions of the parent folder)
+                        </para>
+                    </listitem>
+                    <listitem>
+					    <para>--properties*: File that contains the properties to apply to the item
+                        </para>
+                    </listitem>
+                    <listitem>
+					    <para>--obsolescence_date*: Date when the document will be obsolete (yy-mm-dd|yyyy-mm-dd)   
+                        </para>
+                    </listitem>
+					<listitem>
                         <para>--ordering: place where the new document will be hosted. Available values are "begin" and "end"
-                        </para>
-                    </listitem>
-                    <listitem>
-                        <para>--project: UNIX name of the project you want to add the package in. If none is specified, the project specified when you logged in will be used. If none was specified at that time, an error will be displayed.
                         </para>
                     </listitem>
                 </itemizedlist>
                 <para>
                     <example>
-                        <title>createDocument command</title>
+                        <title>createEmbeddedFile command</title>
                         <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[mnazaria@linux codendi cli ]$ ./codendi.php docman createDocument --project=myproject --parent_id=60 --title="Document added from CLI" --type=link --content="http://www.xerox.com"
-1
+[terzino@linux codendi cli ]$ ./codendi.php docman createEmbeddedFile --project=myproject --parent_id=110418 --title="EmbeddedFile sample" --content="It is just a sample to describe how  we add an embedde file to the docman manager"
++--------+
+| Result |
++--------+
+| 110499 |
++--------+
                         </programlisting>
                     </example>
                </para>
-               <para>
-                <note>Note: If you get a memory problem with uploading large files, you can increase the memory by modifying
-                the memory_limit directive in PHP file configuration (php.ini). The issue depends on many parameters and could 
-                still be there after this workaround. We are sorry about it, but it is due to some NuSoap technical limitation.
-                </note>
+             </para>
+        </section>
+		
+		<section id="DocmanFunctionCreateFile">
+            <title>createFile</title>
+            <para>createFile: Add a document file to the document manager
+                <itemizedlist mark="bullet">
+                    <listitem>
+                        <para>--parent_id*: ID of the parent the file will be created in
+                        </para>
+                    </listitem>
+					<listitem>
+                        <para>--project*:Name of the project the item belongs to. If you specified the name of
+                            the working project when you logged in, this parameter is not needed.
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--title*: Title of the new document
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--description: Description of the new document
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--status*: Status to apply to the item. Available status are "none", "draft", "approved", and "rejected"
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--content*: Content of the file "local file location"
+                        </para>
+                    </listitem>
+                    <listitem>
+					    <para>--perm_read*: Groups IDs that will have the permission READ separated with comma
+						</para>
+						</listitem>
+                    <listitem>
+					    <para>--perm_write*: Groups IDs that will have the permission WRITE separated with comma
+					    </para>
+					</listitem>
+                    <listitem>
+					        <para>--perm_manage*: Groups IDs that will have the permission MANAGE separated with comma
+					        </para>
+					</listitem>
+                    <listitem>
+					    <para>--perm_none*: Groups IDs that will have no permission separated with comma(ie. those groups will not inherit the permissions of the parent folder)
+                        </para>
+                    </listitem>
+                    <listitem>
+					    <para>--properties*: File that contains the properties to apply to the item
+                        </para>
+                    </listitem>
+                    <listitem>
+					    <para>--obsolescence_date*: Date when the document will be obsolete (yy-mm-dd|yyyy-mm-dd)   
+                        </para>
+                    </listitem>
+					<listitem>
+                        <para>--ordering: place where the new document will be hosted. Available values are "begin" and "end"
+                        </para>
+                    </listitem>
+                </itemizedlist>
+                <para>
+                    <example>
+                        <title>createFile command</title>
+                        <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+[terzino@linux codendi cli ]$ ./codendi.php docman createFile --project=myproject --parent_id=110418 --title="CLi user guide" --content="cli_user_guide.pdf"
+Sending file (100%)
+File uploaded successfully
++--------+
+| Result |
++--------+
+| 110498 |
++--------+
+                        </programlisting>
+                    </example>
                </para>
             </para>
         </section>
-        
+
+		<section id="DocmanFunctionCreateEmptyDocument">
+            <title>createEmptyDocument</title>
+            <para>createEmptyDocument: Add an empty document to the document manager
+                <itemizedlist mark="bullet">
+                    <listitem>
+                        <para>--parent_id*: ID of the parent the file will be created in
+                        </para>
+                    </listitem>
+					<listitem>
+                        <para>--project:Name of the project the item belongs to. If you specified the name of
+                            the working project when you logged in, this parameter is not needed.
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--title*: Title of the new document
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--description: Description of the new document
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--status: Status to apply to the item. Available status are "none", "draft", "approved", and "rejected"
+                        </para>
+                    </listitem>
+                    <listitem>
+					    <para>--perm_read: Groups IDs that will have the permission READ separated with comma
+						</para>
+						</listitem>
+                    <listitem>
+					    <para>--perm_write: Groups IDs that will have the permission WRITE separated with comma
+					    </para>
+					</listitem>
+                    <listitem>
+					        <para>--perm_manage: Groups IDs that will have the permission MANAGE separated with comma
+					        </para>
+					</listitem>
+                    <listitem>
+					    <para>--perm_none: Groups IDs that will have no permission separated with comma(ie. those groups will not inherit the permissions of the parent folder)
+                        </para>
+                    </listitem>
+                    <listitem>
+					    <para>--properties: File that contains the properties to apply to the item
+                        </para>
+                    </listitem>
+                    <listitem>
+					    <para>--obsolescence_date: Date when the document will be obsolete (yy-mm-dd|yyyy-mm-dd)   
+                        </para>
+                    </listitem>
+					<listitem>
+                        <para>--ordering: place where the new document will be hosted. Available values are "begin" and "end"
+                        </para>
+                    </listitem>
+                </itemizedlist>
+                <para>
+                    <example>
+                        <title>createEmptyDocument command</title>
+                        <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+[terzino@linux codendi cli ]$ ./codendi.php docman createEmptyDocument --project=myproject --parent_id=110418 --title="user guide help" 
++--------+
+| Result |
++--------+
+| 110500 |
++--------+
+                        </programlisting>
+                    </example>
+               </para>
+            </para>
+        </section>
+        		<section id="DocmanFunctionCreateLink">
+            <title>createLink</title>
+            <para>createLink: Add a document link to the document manager
+                <itemizedlist mark="bullet">
+                    <listitem>
+                        <para>--parent_id*: ID of the parent the file will be created in
+                        </para>
+                    </listitem>
+					<listitem>
+                        <para>--project*:Name of the project the item belongs to. If you specified the name of
+                            the working project when you logged in, this parameter is not needed.
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--title*: Title of the new document
+                        </para>
+                    </listitem>
+					<listitem>
+                        <para>--content*: Url of the link
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--description: Description of the new document
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--status: Status to apply to the item. Available status are "none", "draft", "approved", and "rejected"
+                        </para>
+                    </listitem>
+                    <listitem>
+					    <para>--perm_read: Groups IDs that will have the permission READ separated with comma
+						</para>
+						</listitem>
+                    <listitem>
+					    <para>--perm_write: Groups IDs that will have the permission WRITE separated with comma
+					    </para>
+					</listitem>
+                    <listitem>
+					        <para>--perm_manage: Groups IDs that will have the permission MANAGE separated with comma
+					        </para>
+					</listitem>
+                    <listitem>
+					    <para>--perm_none: Groups IDs that will have no permission separated with comma(ie. those groups will not inherit the permissions of the parent folder)
+                        </para>
+                    </listitem>
+                    <listitem>
+					    <para>--properties: File that contains the properties to apply to the item
+                        </para>
+                    </listitem>
+                    <listitem>
+					    <para>--obsolescence_date: Date when the document will be obsolete (yy-mm-dd|yyyy-mm-dd)   
+                        </para>
+                    </listitem>
+					<listitem>
+                        <para>--ordering: place where the new document will be hosted. Available values are "begin" and "end"
+                        </para>
+                    </listitem>
+                </itemizedlist>
+                <para>
+                    <example>
+                        <title>createLink command</title>
+                        <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+[terzino@linux codendi cli ]$ ./codendi.php docman createLink --project=myproject --parent_id=110418 --title="user guide link" --content="codendi.org"
++--------+
+| Result |
++--------+
+| 110501 |
++--------+
+
+                        </programlisting>
+                    </example>
+               </para>
+            </para>
+        </section>
+		<section id="DocmanFunctionCreateWikiPage">
+            <title>createWikiPage</title>
+            <para>createWikiPage: Add a wiki document to the document manager
+                <itemizedlist mark="bullet">
+                    <listitem>
+                        <para>--parent_id*: ID of the parent the file will be created in
+                        </para>
+                    </listitem>
+					<listitem>
+                        <para>--title*: Title of the new document
+                        </para>
+                    </listitem>
+					<listitem>
+                        <para>--content*: Name of the wiki page
+                        </para>
+                    </listitem>
+					<listitem>
+                        <para>--project:Name of the project the item belongs to. If you specified the name of
+                            the working project when you logged in, this parameter is not needed.
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--description: Description of the new document
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--status: Status to apply to the item. Available status are "none", "draft", "approved", and "rejected"
+                        </para>
+                    </listitem>
+                    <listitem>
+					    <para>--perm_read: Groups IDs that will have the permission READ separated with comma
+						</para>
+						</listitem>
+                    <listitem>
+					    <para>--perm_write: Groups IDs that will have the permission WRITE separated with comma
+					    </para>
+					</listitem>
+                    <listitem>
+					        <para>--perm_manage: Groups IDs that will have the permission MANAGE separated with comma
+					        </para>
+					</listitem>
+                    <listitem>
+					    <para>--perm_none: Groups IDs that will have no permission separated with comma(ie. those groups will not inherit the permissions of the parent folder)
+                        </para>
+                    </listitem>
+                    <listitem>
+					    <para>--properties: File that contains the properties to apply to the item
+                        </para>
+                    </listitem>
+                    <listitem>
+					    <para>--obsolescence_date: Date when the document will be obsolete (yy-mm-dd|yyyy-mm-dd)   
+                        </para>
+                    </listitem>
+					<listitem>
+                        <para>--ordering: place where the new document will be hosted. Available values are "begin" and "end"
+                        </para>
+                    </listitem>
+                </itemizedlist>
+                <para>
+                    <example>
+                        <title>createWikiPage command</title>
+                        <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+[terzino@linux codendi cli ]$ ./codendi.php docman createWikiPage --project=myproject --parent_id=110418 --title="user guide wiki" --content="user_guide_wiki"
++--------+
+| Result |
++--------+
+| 110502 |
++--------+
+                        </programlisting>
+                    </example>
+               </para>
+            </para>
+        </section>
+
         <section id="DocmanFunctionCreateFolder">
             <title>createFolder</title>
             <para>createFolder: Add a folder to the document manager
@@ -1557,19 +1969,79 @@ Array
                         <para>--project: UNIX name of the project you want to add the package in. If none is specified, the project specified when you logged in will be used. If none was specified at that time, an error will be displayed.
                         </para>
                     </listitem>
+					<listitem>
+                        <para>--status: Status to apply to the item. Available status are "none", "draft", "approved", and "rejected"
+                        </para>
+                    </listitem>
+                    <listitem>
+					    <para>--perm_read: Groups IDs that will have the permission READ separated with comma
+						</para>
+						</listitem>
+                    <listitem>
+					    <para>--perm_write: Groups IDs that will have the permission WRITE separated with comma
+					    </para>
+					</listitem>
+                    <listitem>
+					    <para>--perm_manage: Groups IDs that will have the permission MANAGE separated with comma
+					    </para>
+					</listitem>
+                    <listitem>
+					    <para>--perm_none: Groups IDs that will have no permission separated with comma(ie. those groups will not inherit the permissions of the parent folder)
+                        </para>
+                    </listitem>
+                    <listitem>
+					    <para>--properties: File that contains the properties to apply to the item
+                        </para>
+                    </listitem>
                 </itemizedlist>
                 <para>
                     <example>
                         <title>createFolder command</title>
                         <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[mnazaria@linux codendi cli ]$ ./codendi.php docman createFolder --project=myproject --parent_id=60 --title="Tech docs folder"
-1
+[terzino@linux codendi cli ]$ ./codendi.php docman createFolder --project=myproject --parent_id=110418 --title="Tech docs folder"
++--------+
+| Result |
++--------+
+| 110503 |
++--------+
                         </programlisting>
                     </example>
                </para>
             </para>
         </section>
-        
+            <section id="DocmanFunctionGetFile">
+            <title>getFile</title>
+            <para>getFile: Get an item (File/Embedded file)
+                <itemizedlist mark="bullet">
+                    <listitem>
+                        <para>--id*: ID of the item to download
+                        </para>
+                    </listitem>
+					<listitem>
+                        <para>--output: Name of the file to write the file to
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--version_number: The version that we want to download, if not specified the current one
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--project: UNIX name of the project you want to add the package in. If none is specified, the project specified when you logged in will be used. If none was specified at that time, an error will be displayed.
+                        </para>
+                    </listitem>
+                </itemizedlist>
+                <para>
+                    <example>
+                        <title>getFile command</title>
+                        <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+[terzino@linux codendi cli ]$ ./codendi.php docman getFile --project=myproject --id=110493 --version_number=1 --output=document_cli.doc
+File retrieved successfully.
+                        </programlisting>
+                    </example>
+               </para>
+            </para>
+        </section>
+    
         <section id="DocmanFunctionDelete">
             <title>delete</title>
             <para>delete: Delete an item
@@ -1587,8 +2059,12 @@ Array
                     <example>
                         <title>delete command</title>
                         <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[mnazaria@linux codendi cli ]$ ./codendi.php docman delete --project=myproject --id=361
-1
+[terzino@linux codendi cli ]$ ./codendi.php docman delete --project=myproject --id=110502
++--------+
+| Result |
++--------+
+| 1      |
++--------+
                         </programlisting>
                     </example>
                </para>
@@ -1612,8 +2088,13 @@ Array
                     <example>
                         <title>monitor command</title>
                         <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[mnazaria@linux codendi cli ]$ ./codendi.php docman monitor --project=myproject --id=249
-1
+[terzino@linux codendi cli ]$ ./codendi.php docman monitor --project=myproject --id=110501
++--------+
+| Result |
++--------+
+| 1      |
++--------+
+
                         </programlisting>
                     </example>
                </para>
@@ -1641,8 +2122,13 @@ Array
                     <example>
                         <title>move command</title>
                         <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[mnazaria@linux codendi cli ]$ ./codendi.php docman move --project=myproject --id=241 --parent=59
-1
+[terzino@linux codendi cli ]$ ./codendi.php docman move --project=myproject --id=110501 --parent=110503
++--------+
+| Result |
++--------+
+| 1      |
++--------+
+
                         </programlisting>
                     </example>
                </para>

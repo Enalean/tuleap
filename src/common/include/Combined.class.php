@@ -35,6 +35,8 @@ class Combined {
             '/scripts/codendi/Tooltip.js',
             '/scripts/codendi/LayoutManager.js',
             '/scripts/autocomplete.js',
+            '/scripts/codendi/RichTextEditor.js',
+            '/scripts/codendi/Tracker.js',
         );
         return $arr;
     }
@@ -99,27 +101,34 @@ class Combined {
     protected function getLatestCombinedScript() {
         $src = $this->getSourceDir('/scripts/combined/codendi-');
         $files = glob($src .'*.js');
-        rsort($files);
-        return '/scripts/combined/'. basename($files[0]);
+        if ( !empty($files) ) {
+            rsort($files);
+            return '/scripts/combined/'. basename($files[0]);
+        }
+        return '';
     }
     
     public function autoGenerate() {
         $auto_generate = true;
         $combined_script = $this->getLatestCombinedScript();
-        $date = filemtime($this->getSourceDir($combined_script));
-        if (filemtime(__FILE__) < $date) {
-            $auto_generate = false;
-            foreach($this->getCombinedScripts() as $script) {
-                $file = $this->getSourceDir($script);
-                if (filemtime($file) > $date) {
-                    $auto_generate = true;
-                    break;
+        if ( empty($combined_script) ) {
+            $this->generate();
+        } else {
+            $date = filemtime($this->getSourceDir($combined_script));
+            if (filemtime(__FILE__) < $date) {
+                $auto_generate = false;
+                foreach($this->getCombinedScripts() as $script) {
+                    $file = $this->getSourceDir($script);
+                    if (filemtime($file) > $date) {
+                        $auto_generate = true;
+                        break;
+                    }
                 }
             }
-        }
-        if ($auto_generate) {
-            unlink($this->getSourceDir($combined_script));
-            $this->generate();
+            if ($auto_generate) {
+                unlink($this->getSourceDir($combined_script));
+                $this->generate();
+            }
         }
     }
 }

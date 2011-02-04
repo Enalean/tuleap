@@ -35,21 +35,16 @@ require_once('common/dao/ServiceDao.class.php');
 Mock::generate('ServiceDao');
 
 
-Mock::generatePartial('BackendCVS', 'BackendCVSTestVersionInit', array('getUserManager', 
-                                                             'getProjectManager',
-                                                             'chown',
-                                                             'chgrp',
-                                                             'chmod',
-                                                             '_getServiceDao'
+Mock::generatePartial('BackendCVS', 'BackendCVSTestVersion', array('getUserManager', 
+                                                                       'getProjectManager',
+                                                                       'chown',
+                                                                       'chgrp',
+                                                                       'chmod',
+                                                                       '_getServiceDao',
+                                                                       'getCVSWatchMode',
+                                                                       'getHTTPUserUID',
+                                                                       'log'
                                                            ));
-
-class BackendCVSTestVersion extends BackendCVSTestVersionInit {
- 
-    // log to apache error logs (does not seem to work??)
-    function log($message) {
-        echo "<br>LOG: $message\n";
-    }
-}
 
 Mock::generatePartial('BackendCVS', 'BackendCVS4RenameCVSNT', array('useCVSNT', '_RcsCheckout', '_RcsCommit','updateCVSwriters',
 'repositoryExists', 'getProjectManager'));
@@ -426,5 +421,113 @@ class BackendCVSTest extends UnitTestCase {
        
             
     }
+
+    function testUpdateCVSWatchModeNotifyMissing() {
+        $project = new MockProject($this);
+        $project->setReturnValue('getUnixName', 'TestProj',array(false));
+        $pm = new MockProjectManager();
+        $pm->setReturnValue('getProject', $project, array(1));
+        $backend = new BackendCVSTestVersion($this);
+        $backend->setReturnValue('getProjectManager', $pm);
+        $backend->setReturnValue('getCVSWatchMode', false);
+
+        $backend->expectOnce('log', array('No such file: '.dirname(__FILE__).'/_fixtures/cvsroot/TestProj/CVSROOT/notify', 'error'));
+
+        $this->assertFalse($backend->updateCVSWatchMode(1));
+    }
+
+    function testUpdateCVSWatchModeNotifyExist() {
+        $project = new MockProject($this);
+        $project->setReturnValue('getUnixName', 'TestProj', array(false));
+        $pm = new MockProjectManager();
+        $pm->setReturnValue('getProject', $project, array(1));
+        $project->setReturnValue('getMembersUserNames', array());
+        $backend = new BackendCVSTestVersion($this);
+        $backend->setReturnValue('getProjectManager', $pm);
+        $backend->setReturnValue('getCVSWatchMode', false);
+
+        // Simulate notify generated using command
+        $cvsdir = $GLOBALS['cvs_prefix'].'/TestProj';
+        mkdir($cvsdir);
+        system($GLOBALS['cvs_cmd']." -d $cvsdir init");
+        $this->assertTrue($backend->updateCVSWatchMode(1));
+
+        // Cleanup
+        $backend->recurseDeleteInDir($GLOBALS['cvs_prefix']."/TestProj");
+        rmdir($GLOBALS['cvs_prefix']."/TestProj");
+    }
+    
+    function testCheckCVSModeFilesMissing() {
+        $project = new MockProject($this);
+        $project->setReturnValue('getUnixName', 'TestProj', array(false));
+        $project->setReturnValue('isPublic', true);
+        $project->setReturnValue('isCVSPrivate', false);
+
+        // Simulate loginfo generated for CVSNT
+        $cvsdir = $GLOBALS['cvs_prefix'].'/TestProj';
+        mkdir($cvsdir);
+        mkdir($cvsdir.'/CVSROOT');
+        $file = file_get_contents(dirname(__FILE__) . '/_fixtures/cvsroot/loginfo.cvsnt');
+        $file = str_replace('%unix_group_name%', 'TestProj', $file);
+        $file = str_replace('%cvs_dir%', $GLOBALS['cvs_prefix'].'/TestProj', $file);
+        $file = str_replace('%codendi_bin_prefix%', $GLOBALS['codendi_bin_prefix'], $file);
+        file_put_contents($cvsdir.'/CVSROOT/loginfo', $file);
+
+        $stat = stat($cvsdir.'/CVSROOT/loginfo');
+        $project->setReturnValue('getUnixGID', $stat['gid']);
+
+        $this->assertTrue(file_exists($cvsdir.'/CVSROOT/loginfo'));
+        $this->assertFalse(file_exists($cvsdir.'/CVSROOT/commitinfo'));
+        $this->assertFalse(file_exists($cvsdir.'/CVSROOT/config'));
+
+        $backend = new BackendCVSTestVersion($this);
+        $backend->setReturnValue('getHTTPUserUID', $stat['uid']);
+
+        $backend->expectCallCount('log', 2);
+        $backend->expectAt(0, 'log', array('File not found in cvsroot: '.$cvsdir.'/CVSROOT/commitinfo', 'warn'));
+        $backend->expectAt(1, 'log', array('File not found in cvsroot: '.$cvsdir.'/CVSROOT/config', 'warn'));
+
+        $this->assertTrue($backend->checkCVSMode($project));
+
+        // Cleanup
+        $backend->recurseDeleteInDir($GLOBALS['cvs_prefix']."/TestProj");
+        rmdir($GLOBALS['cvs_prefix']."/TestProj");
+    }
+    
+    function testCheckCVSModeNeedOwnerUpdate() {
+        $project = new MockProject($this);
+        $project->setReturnValue('getUnixName', 'TestProj', array(false));
+        $project->setReturnValue('isPublic', true);
+        $project->setReturnValue('isCVSPrivate', false);
+        $project->setReturnValue('getMembersUserNames',array());
+
+        $pm = new MockProjectManager();
+        $pm->setReturnReference('getProject', $project, array(1));
+
+        $backend = new BackendCVSTestVersion($this);
+        $backend->setReturnValue('getProjectManager', $pm);
+        $backend = new BackendCVSTestVersion($this);
+        $backend->setReturnReference('getProjectManager', $pm);
+        $backend->createProjectCVS(1);
+
+        $cvsdir = $GLOBALS['cvs_prefix'].'/TestProj';
+        $stat = stat($cvsdir.'/CVSROOT/loginfo');
+        $project->setReturnValue('getUnixGID', $stat['gid']+1);
+        $backend->setReturnValue('getHTTPUserUID', $stat['uid']);
+
+        $this->assertTrue(file_exists($cvsdir.'/CVSROOT/loginfo'));
+        $this->assertTrue(file_exists($cvsdir.'/CVSROOT/commitinfo'));
+        $this->assertTrue(file_exists($cvsdir.'/CVSROOT/config'));
+
+        $backend->expectOnce('log', array('Restoring ownership on CVS dir: '.$cvsdir, 'info'));
+
+        $this->assertTrue($backend->checkCVSMode($project));
+
+        // Cleanup
+        $backend->recurseDeleteInDir($GLOBALS['cvs_prefix']."/TestProj");
+        rmdir($GLOBALS['cvs_prefix']."/TestProj");
+        rmdir($GLOBALS['cvslock_prefix']."/TestProj");
+    }
+
 }
 ?>

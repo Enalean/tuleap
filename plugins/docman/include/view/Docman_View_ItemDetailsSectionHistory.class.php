@@ -49,6 +49,7 @@ class Docman_View_ItemDetailsSectionHistory extends Docman_View_ItemDetailsSecti
                     $titles[] = $GLOBALS['Language']->getText('plugin_docman','details_history_versions_label');
                     $titles[] = $GLOBALS['Language']->getText('plugin_docman','details_history_versions_changelog');
                     $titles[] = $GLOBALS['Language']->getText('plugin_docman','details_history_versions_approval');
+                    $titles[] = $GLOBALS['Language']->getText('plugin_docman','details_history_versions_delete_version');
                     $content .= html_build_list_table_top($titles, false, false, false);
                     $odd_even = array('boxitem', 'boxitemalt');
                     $i = 0;
@@ -58,10 +59,15 @@ class Docman_View_ItemDetailsSectionHistory extends Docman_View_ItemDetailsSecti
                             'id'     => $this->item->getId(),
                             'version_number' => $versions[$key]->getNumber()
                         ));
+                        $delete = Docman_View_View::buildUrl($this->url, array (
+                            'action' =>'confirmDelete',
+                            'id'     => $this->item->getId(),
+                            'version' => $versions[$key]->getNumber()
+                        ));
                         $user = $versions[$key]->getAuthorId() ? user_get_name_display_from_id($versions[$key]->getAuthorId()) : $GLOBALS['Language']->getText('plugin_docman','details_history_anonymous');
                         $content .= '<tr class="'. $odd_even[$i++ % count($odd_even)] .'">';
-                        $content .= '<td><a href="'. $download .'">'. $versions[$key]->getNumber() .'</a></td>';
-                        $content .= '<td>'. format_date($GLOBALS['Language']->getText('system', 'datefmt'), $versions[$key]->getDate()) .'</td>';
+                        $content .= '<td align="center"><a href="'. $download .'">'. $versions[$key]->getNumber() .'</a></td>';
+                        $content .= '<td>'. html_time_ago($versions[$key]->getDate()) .'</td>';
                         $content .= '<td>'. $user                                                  .'</td>';
                         $content .= '<td>'. $this->hp->purify($versions[$key]->getLabel())         .'</td>';
                         $content .= '<td>'. $this->hp->purify($versions[$key]->getChangelog(), CODENDI_PURIFIER_LIGHT) .'</td>';
@@ -74,10 +80,11 @@ class Docman_View_ItemDetailsSectionHistory extends Docman_View_ItemDetailsSecti
                                 'id' => $this->item->getId(),
                                 'version' => $versions[$key]->getNumber(),
                             ));
-                            $content .= '<td><a href="'.$appTable.'">'.$titles[] = $GLOBALS['Language']->getText('plugin_docman','details_history_versions_approval_show').'</a></td>';
+                            $content .= '<td align="center"><a href="'.$appTable.'">'.$titles[] = $GLOBALS['Language']->getText('plugin_docman','details_history_versions_approval_show').'</a></td>';
                         } else {
                             $content .= '<td></td>';
                         }
+                        $content .= '<td align="center"><a href="'.$delete.'"><img src="'.util_get_image_theme("ic/trash.png").'" height="16" width="16" border="0"></a></td>';
                         $content .= '</tr>';
                     }
                     $content .= '</table>';

@@ -80,7 +80,7 @@ class Docman_SOAPActions extends Docman_Actions {
                         $vf = $this->_getVersionFactory();
                         $versions = $vf->getAllVersionForItem($item);
                         foreach ($versions as $version) {
-                            $md5sum[$version->getNumber()] = $fs->getFileMD5sum($request->get('group_id'), $item->getId(), $version->getNumber());
+                            $md5sum[$version->getNumber()] = $fs->getFileMD5sum($version->getPath());
                         }
 
                         // Sort by version order (ascending)
@@ -90,7 +90,14 @@ class Docman_SOAPActions extends Docman_Actions {
                             $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_get_checksum'));
                         }
                     } else {
-                        $md5sum = $fs->getFileMD5sum($request->get('group_id'), $item->getId(), $item->getCurrentVersion()->getNumber());
+                        // if the version number is specified we compute the md5sum of this version else the last one
+                        if ($request->existAndNonEmpty('version')){
+                            $vf = $this->_getVersionFactory();
+                            $version = $vf->getSpecificVersion($item, $request->get('version'));
+                            $md5sum = $fs->getFileMD5sum($version->getPath());
+                        } else {
+                            $md5sum = $fs->getFileMD5sum($item->getCurrentVersion()->getPath());
+                        }
                         if (!$md5sum) {
                             $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_get_checksum'));
                         }
@@ -214,6 +221,47 @@ class Docman_SOAPActions extends Docman_Actions {
                         if (file_exists($version->getPath())) {
                             $this->_controler->_viewParams['action_result'] = base64_encode(file_get_contents($version->getPath()));
                         }
+                    }
+                } else {
+                    $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_not_a_file'));
+                }
+            } else {
+                $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_filenotfound'));
+            }
+        } else {
+            $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_item_id_missing'));
+        }
+    }
+
+    /**
+     *  Returns a part (chunk) of the content, encoded in base64, of the file/embedded file which id
+     *  item_id of a given version version_number, if the version is not specified it will be the current one, in the project group_id.
+     */
+    function getFileChunk() {
+        $request = $this->_controler->request;
+
+        if ($request->exist('item_id')) {
+            $item_id = $request->get('item_id');
+            $item_factory = $this->_getItemFactory();
+            $item = $item_factory->getItemFromDb($item_id);
+            if ($item !== null) {
+                $itemType = $item_factory->getItemTypeForItem($item);
+                if($itemType == PLUGIN_DOCMAN_ITEM_TYPE_FILE || $itemType == PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE) {
+                    if ($request->exist('version_number')) {
+                        $version_factory = $this->_getVersionFactory();
+                        $version = $version_factory->getSpecificVersion($item, $request->get('version_number'));
+                    } else {
+                        $version = $item->getCurrentVersion();
+                    }
+                    if ($version) {
+                        if (file_exists($version->getPath())) {
+                            if ($request->exist('chunk_offset') && $request->exist('chunk_size')) {
+                                $contents = file_get_contents($version->getPath(),NULL, NULL, $request->get('chunk_offset'), $request->get('chunk_size'));
+                                $this->_controler->_viewParams['action_result'] = base64_encode($contents);
+                            }
+                        }
+                    } else {
+                        $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_version_not_exist'));
                     }
                 } else {
                     $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_not_a_file'));

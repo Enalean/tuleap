@@ -36,8 +36,27 @@ plugin_webdav_common	file_denied_create	Permission denied to create file.
 plugin_webdav_common	file_denied_delete	Permission denied to delete file.
 plugin_webdav_common	file_denied_rename	Permission denied to rename file.
 plugin_webdav_common	file_denied_put	Permission denied to put into this file.
+plugin_webdav_common	service_not_available	This service is not existant/activated for this project.
+plugin_webdav_common	docman_item_not_available	This item is not available.
+plugin_webdav_common	docman_item_duplicated	This item have a duplicated name.
 plugin_webdav_common	authentication_required	Authentication required.
 plugin_webdav_common	wrong_input	Verify your input.
 plugin_webdav_common	hidden	 (hidden)
+plugin_webdav_common	files	Files
+plugin_webdav_common	link	Link
+plugin_webdav_common	empty	Empty
 plugin_webdav	descriptor_description	WebDAV server for file release and documents.
 plugin_webdav	descriptor_name	WebDAV.
+plugin_webdav_html	name	Name
+plugin_webdav_html	size	Size
+plugin_webdav_html	last_modified	Last modified
+plugin_webdav_html	delete	Delete
+plugin_webdav_html	rename	Rename
+plugin_webdav_html	move	Move
+plugin_webdav_html	directory	Directory
+plugin_webdav_html	unknown	Unknown
+plugin_webdav_html	create_package	Create a new package
+plugin_webdav_html	create_release	Create a new release
+plugin_webdav_html	upload_file	Upload a new file
+plugin_webdav_html	optional	optional
+plugin_webdav_html	file	File

@@ -433,6 +433,10 @@ a img {
   width: 40em;
 }
 
+.docman_text_field {
+  width: 50em;
+}
+
 /* Widgets Preview */
 .widget-preview-plugin_docman_mydocman-fr_FR {
     background-image:url('../images/widget-preview-my_documents_under_review-fr_FR.png');

@@ -43,6 +43,8 @@ $sys_ldap_cn    = 'cn';
 $sys_ldap_mail  = 'mail';
 
 // Specific DN to look for people
+// You may use more than one DN separated by ; if you want to use several branches.
+// Example : 'ou=People, dc=st, dc=com ; ou=Extranet, dc=st, dc=com'
 $sys_ldap_people_dn     = 'ou=People, o=XEROX, c=US';
 
 // Specific DN where the user groups are
@@ -51,6 +53,9 @@ $sys_ldap_grp_dn        = 'ou=Groups, o=XEROX, c=US';
 $sys_ldap_grp_cn        = 'cn';
 // Field that indicate the membership of a user in a group
 $sys_ldap_grp_member    = 'uniquemember';
+
+//Attributes to look for while synchronising
+$sys_ldap_sync_attribute = 'cn,mail,employeetype,st-eduid,o,uid';
 
 // Filter used to look for user. It should cover a wide selection of
 // fields because it's aim to find a user whatever it's given (email, name,

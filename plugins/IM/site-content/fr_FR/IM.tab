@@ -1,6 +1,6 @@
 plugin_im	description	Plugin de messagerie instantanée basé sur le protocole Jabber/XMPP.
 plugin_im	name	Messagerie instantanée
-plugin_im	version	V1.0
+plugin_im	version	V1.1
 
 plugin_im	service_lbl_key	Messagerie Instantanée
 plugin_im	service_desc_key	La Messagerie Instantanée vous permet de discuter entre membres de projet.

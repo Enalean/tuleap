@@ -23,7 +23,12 @@ require_once('FRSReleaseFactory.class.php');
 require_once('common/include/Codendi_HTTP_Download.php');
 
 class FRSFile extends Error {
-	
+
+    const EVT_CREATE  = 301;
+    const EVT_UPDATE  = 302;
+    const EVT_DELETE  = 303;
+    const EVT_RESTORE = 304;
+
 	/**
      * @var int $file_id the ID of this FRSFile
      */
@@ -61,6 +66,18 @@ class FRSFile extends Error {
      */
     var $status;
     /**
+     * @var string $computed_md5 hash of the file computed in server side
+     */
+    var $computed_md5;
+    /**
+     * @var string $reference_md5 hash of the file submited by user (calculated in client side)
+     */
+    var $reference_md5;
+    /**
+     * @var integer $user_id id of user that created the file
+     */
+    var $user_id;
+    /**
      * @var string $file_location the full path of this FRSFile
      */
     var $file_location;
@@ -75,6 +92,9 @@ class FRSFile extends Error {
         $this->file_size     = null;
         $this->post_date     = null;
         $this->status        = null;
+        $this->computed_md5  = null;
+        $this->reference_md5 = null;
+        $this->user_id       = null;
         $this->file_location = null;
 
         if ($data_array) {
@@ -203,9 +223,33 @@ class FRSFile extends Error {
         return ($this->status == 'D');
     }
 
+    function setComputedMd5($computedMd5) {
+        $this->computed_md5 = $computedMd5;
+    }
+
+    function getComputedMd5() {
+        return $this->computed_md5;
+    }
+
+    function setReferenceMd5($referenceMd5) {
+        $this->reference_md5 = $referenceMd5;
+    }
+
+    function getReferenceMd5() {
+        return $this->reference_md5;
+    }
+
+    function setUserID($userId) {
+        $this->user_id = $userId;
+    }
+
+    function getUserID() {
+        return $this->user_id;
+    }
+
 	function initFromArray($array) {
 		if (isset($array['file_id']))       $this->setFileID($array['file_id']);
-		if (isset($array['filename']))     $this->setFileName($array['filename']);
+		if (isset($array['filename']))      $this->setFileName($array['filename']);
 		if (isset($array['release_id']))    $this->setReleaseID($array['release_id']);
         if (isset($array['type_id']))       $this->setTypeID($array['type_id']);
         if (isset($array['processor_id']))  $this->setProcessorID($array['processor_id']);
@@ -213,12 +257,15 @@ class FRSFile extends Error {
         if (isset($array['file_size']))     $this->setFileSize($array['file_size']);
         if (isset($array['post_date']))     $this->setPostDate($array['post_date']);
         if (isset($array['status']))        $this->setStatus($array['status']);
+        if (isset($array['computed_md5']))  $this->setComputedMd5($array['computed_md5']);
+        if (isset($array['reference_md5'])) $this->setReferenceMd5($array['reference_md5']);
+        if (isset($array['user_id']))       $this->setUserID($array['user_id']);
     }
 
     function toArray() {
         $array = array();
         $array['file_id']       = $this->getFileID();
-        $array['filename']     = $this->getFileName();
+        $array['filename']      = $this->getFileName();
         $array['release_id']    = $this->getReleaseID();
         $array['type_id']       = $this->getTypeID();
         $array['processor_id']  = $this->getProcessorID();
@@ -226,7 +273,11 @@ class FRSFile extends Error {
         $array['file_location'] = $this->getFileLocation();
         $array['file_size']     = $this->getFileSize();
         $array['post_date']     = $this->getPostDate();
-        $array['status']     = $this->getStatus();
+        $array['status']        = $this->getStatus();
+        $array['computed_md5']  = $this->getComputedMd5();
+        $array['reference_md5'] = $this->getReferenceMd5();
+        $array['user_id']       = $this->getUserID();
+        
         return $array;
     }
     
@@ -273,39 +324,48 @@ class FRSFile extends Error {
         // retrieve the release the file belongs to
         $release_id = $this->getReleaseID();
         $release_fact = new FRSReleaseFactory();
-        $release =& $release_fact->getFRSReleaseFromDb($release_id);
+        $release = $release_fact->getFRSReleaseFromDb($release_id, null, null, FRSReleaseDao::INCLUDE_DELETED);
         $group_id = $release->getGroupID();
         $group = $pm->getProject($group_id);
         return $group;
     }
-    
+
     /**
      * Returns the content of the file, in a raw resource
-     * Note: won't work on large files: 2GB limit + one step read might not work.
+     *
+     * +2GB safe
+     *
      * @return mixed the content of the file
      */
-    function getContent() {
-        $file_location = $this->getFileLocation();
-        $file_size = $this->getFileSize();
-        if ($fp = fopen($file_location,"rb")) {
-            return fread($fp, $file_size);
-        } else {
-            return null;
+    function getContent($offset=0, $size=-1) {
+        if ($size == -1) {
+            $size = $this->getFileSize();
         }
+        $path = PHP_BigFile::stream(realpath($this->getFileLocation()));
+        return file_get_contents($path, false, NULL, $offset, $size);
     }
-    
+
     /**
      * Log the download of the file in the log system
+     * 
+     * Only log one download attempt per file/user/hour. Driven by SOAP:getFileChunk
+     * in order to reduce the amount of download attempt logged.
      * 
      * @param int $user_id the user that download the file (if 0, the current user will be taken)
      * @return boolean true if there is no error, false otherwise
      */
     function LogDownload($user_id = 0) {
-        $dao =& $this->_getFrsFileDao();
-        $ok = $dao->logDownload($this, $user_id);
-        return $ok;
+        if ($user_id == 0) {
+            $user_id = UserManager::instance()->getCurrentUser()->getId();
+        }
+        $time = $_SERVER['REQUEST_TIME'] - 3600;
+        $dao  = $this->_getFrsFileDao();
+        if (!$dao->existsDownloadLogSince($this->getFileID(), $user_id, $time)) {
+            return $dao->logDownload($this, $user_id);
+        }
+        return true;
     }
-    
+
     /**
      * userCanDownload : determine if the user can download the file or not
      *

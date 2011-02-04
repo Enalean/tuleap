@@ -62,6 +62,9 @@ a:hover {
     color:#ff0000; 
 }
 
+fieldset {
+    padding: 0.5em;
+}
 
 /******** priorities **********/
 .priora { background-color: #dadada; }
@@ -230,22 +233,28 @@ td.artifact_spacer { width: 5%; }
 
 /* {{{ File Release System */
 .frs_filename_col {
-    width: 50%;
+    width: 44%;
 }
 .frs_size_col {
-    width: 10%;
+    width: 8%;
 }
 .frs_downloads_col {
-    width: 10%;
+    width: 8%;
 }
 .frs_architecture_col {
-    width: 10%;
+    width: 8%;
 }
 .frs_filetype_col {
-    width: 10%;
+    width: 8%;
 }
 .frs_date_col {
-    width: 10%;
+    width: 8%;
+}
+.frs_md5sum_col {
+    width: 8%;
+}
+.frs_user_col {
+    width: 8%;
 }
 fieldset.package {
     margin-bottom: 20px;
@@ -588,18 +597,56 @@ table.release tr td img {
 }
 /* }}} */
 
+/* {{{ Artifact */
+#tracker_toolbar_generic, #tracker_toolbar_specific {
+    margin-top:    0.5em;
+    margin-bottom: 0.5em;
+    font-weight: bold;
+}
+#tracker_toolbar_generic {
+    float: left;
+}
+#tracker_toolbar_specific {
+    float: right;
+}
+#tracker_toolbar_clear {
+    clear: both;
+}
+
+#tracker_toolbar_tracker_name {
+    font-size: 1.3em;
+}
+
+.artifact fieldset {
+    margin-bottom:10px;
+}
+
+.artifact fieldset legend {
+    font-size:1.3em;
+    font-weight: bold;
+    white-space: normal;
+}
+/* }}} */
+
 /* {{{ follow-up comments */
 .followup_comment {
-    border-bottom:1px solid #ccc;
+    border-top:1px solid #ccc;
+    border-left:1px solid #ccc;
+    border-right:1px solid #ccc;
+    margin-top: 0;
+    margin-bottom: 0;
+}
+.followup_comment_header {
 }
 .followup_comment_title {
+    float:left;
 }
 .followup_comment_title_user {
     font-size:1.1em; 
     font-weight:bold; 
     color:#999;
 }
-.followup_comment_title_edited_user {    
+.followup_comment_title_edited_user {
     font-weight:bold; 
     color:#999;
 }
@@ -607,20 +654,39 @@ table.release tr td img {
     font-size:0.95em; 
     color:#666;
 }
+.followup_comment_title_toolbar {
+    text-align:right;
+}
 .followup_comment_content {
-    padding-left:40px;
-    margin-bottom:20px;
-    margin-top:10px;
+    padding: 0.5em 1em 0.5em 3em;
+    margin-bottom: 1em;
+    border-bottom: 1px solid #ccc;
+}
+
+.followup_comment_content blockquote {
+    background-color: ivory;
+    border-left: 2px solid green;
+    padding-left: 0.5em;
+    margin: 0;
+}
+
+.followup_comment_content blockquote blockquote {
+    border-left: 2px solid red;
+}
+
+.followup_comment_content blockquote blockquote blockquote {
+    border-left: 2px solid blue;
+}
+
+.followup_comment_content pre {
+    max-width: 1024px;
+    background: none repeat scroll 0 0 ivory;
+    overflow: auto;
+    border: 1px solid #D2D2D2;
+    padding: 0.5em;
+    margin: 0;
 }
 /* }}} */
-
-.artifact fieldset {
-    margin-bottom:10px;
-}
-.artifact fieldset legend {
-    font-size:1.3em;
-    font-weight: bold;
-}
 
 /* {{{ Date Picker */
 
@@ -1132,3 +1198,48 @@ ul.ServiceMenu li.current {
     background-image:url('../images/ic/lock-unlock.png');
 }
 /* }}}*/
+
+/* {{{ Rules  used for the section "Show pending documents" for site admin */
+.onglet {
+    display: inline-block;
+    margin-left: 3px;
+    margin-right: 3px;
+    padding: 3px;
+    border: 1px solid black;
+    cursor: pointer;
+}
+
+.onglet_0 {
+    background: #bbbbbb;
+    border-bottom: 1px solid black;
+}
+
+.onglet_1 {
+    background: #dddddd;
+    border-bottom: 0px solid black;
+    padding-bottom: 4px;
+}
+
+.contenu_onglet {
+    background-color: #dddddd;
+    border: 1px solid black;
+    margin-top: -1px;
+    padding: 5px;
+    display: none;
+}
+/* }}}*/
+
+/* {{{ Rich Text Editor*/
+.rte_toggle {
+    padding-left:        20px;
+    background-repeat:   no-repeat;
+    background-image:    url('../images/ic/rte.png');
+    float:               left;
+}
+.rte_format {
+    float: right;
+}
+.rte_clear {
+    clear: both;
+}
+/* }}} */

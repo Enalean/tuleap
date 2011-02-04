@@ -153,22 +153,25 @@ function getUsedFields() {
     //special cases for submitted by, submitted on and last_update_date that can be set
     //"unused" by the user but that will nevertheless be used by Codendi
     $submitted_by_field = $this->art_field_fact->getFieldFromName('submitted_by');
-    $submitted_by_label = $submitted_by_field->getLabel();
-    if (array_key_exists($submitted_by_label, $used_fields) === false)
-      $used_fields[$submitted_by_label] = $submitted_by_field;
-
+    if ($submitted_by_field) {
+        $submitted_by_label = $submitted_by_field->getLabel();
+        if (array_key_exists($submitted_by_label, $used_fields) === false)
+        $used_fields[$submitted_by_label] = $submitted_by_field;
+    }
     $open_date_field = $this->art_field_fact->getFieldFromName("open_date");
-    $open_date_label = $open_date_field->getLabel();
-    if (array_key_exists($open_date_label, $used_fields) === false)
-      $used_fields[$open_date_label] = $open_date_field; 
-  
+    if ($open_date_field) {
+        $open_date_label = $open_date_field->getLabel();
+        if (array_key_exists($open_date_label, $used_fields) === false)
+        $used_fields[$open_date_label] = $open_date_field;
+    }
     $last_update_date_field = $this->art_field_fact->getFieldFromName("last_update_date");
-    $last_update_date_label = $last_update_date_field->getLabel();
-    if (array_key_exists($last_update_date_label, $used_fields) === false)
-      $used_fields[$last_update_date_label] = $last_update_date_field;
-  
+    if ($last_update_date_field){
+        $last_update_date_label = $last_update_date_field->getLabel();
+        if (array_key_exists($last_update_date_label, $used_fields) === false)
+        $used_fields[$last_update_date_label] = $last_update_date_field;
+    }
     return $used_fields;
-  }
+}
 
 
 
@@ -633,6 +636,51 @@ function getUsedFields() {
   }
 
 
+  /**
+   * Check if the given string can be converted using htmlspecialchar
+   * 
+   * Warning: this method aims to workaround a bug on CSV follow-up comments storage.
+   * The bug is now fixed (htmlspecialchars on comments in Artifact::addFollowUpComments)
+   * but we still need if for legacy purpose.
+   * 
+   * This method address one legacy bug with CSV import. CSV import use to store
+   * in the database the follow-up comments without using 'htmlspecialchar' like
+   * it's done for comments added through th web interface.
+   * With this method, we can detect if htmlspecialchar was applied on a comment
+   * or not. So we know if we need to apply it before doing comparison.
+   * 
+   * There is a known error: if, on the web, the user entered *as text* HTML entities
+   * (for instance &lt;), then exported it in CSV and finaly imported it with
+   * CSV as well.
+   * In this case, you will have
+   * - Submitted by user (web): Test&lt;
+   * - Stored in DB: Test&amp;lt;
+   * - Exported in CSV: Test&lt;
+   * -> Comparison will fail because this method cannot detect &lt; needs to be
+   * translated to &amp;lt
+   *
+   * @param String $str String to test
+   * 
+   * @return Boolean
+   */
+  function canApplyHtmlSpecialChars($str) {
+      if (strpos($str, '"') !== false) {
+          return true;
+      }
+      if (strpos($str, '<') !== false) {
+          return true;
+      }
+      if (strpos($str, '>') !== false) {
+          return true;
+      }
+      if (strpos($str, '&') !== false) {
+          if (preg_match('/&(?!(quot;|lt;|gt;|amp;))/', $str)) {
+              return true;
+          }
+      }
+      return false;
+  }
+  
   function checkCommentExist($arr,$art_id) {
     if (!$art_id || $art_id == 0 || $art_id == '0') return false;
 
@@ -648,9 +696,9 @@ function getUsedFields() {
     }
     */
 
-    $comment = str_replace("'","\'",$arr['comment']);
-
-    $res=db_query("SELECT * FROM artifact_history WHERE artifact_id = ". db_ei($art_id) ." AND field_name = 'comment' AND new_value = '". db_es($comment) ."'");
+    $comment = htmlspecialchars($arr['comment']);
+    $sql = " SELECT * FROM artifact_history WHERE artifact_id = ". db_ei($art_id) ." AND field_name = 'comment' AND new_value = '". db_es($comment) ."'";
+    $res = db_query($sql);
 
     if ($res && db_numrows($res) > 0) {
       return true;
@@ -658,13 +706,40 @@ function getUsedFields() {
       return false;
     }
   }
-  
+
+    /**
+     * After checking if the comment exist check again to verify if
+     * the comment exist but in a format that needs
+     * to be transformed using htmlspecialchars()
+     * This case is very well explained in the comment of ArtifactImport::canApplyHtmlSpecialChars()
+     *
+     * @param $arr
+     * @param $art_id
+     *
+     * @return Boolean
+     */
+    function checkCommentExistInLegacyFormat($arr,$artifact_id) {
+        if (!$artifact_id || $artifact_id == 0 || $artifact_id == '0') return false;
+
+        $comment = htmlspecialchars($arr['comment']);
+        $sql = "SELECT new_value FROM artifact_history WHERE artifact_id = ". db_ei($artifact_id);
+        $result = db_query($sql);
+        if ($result && db_numrows($result) > 0) {
+            while ($row = db_fetch_array($result)) {
+                if ($this->canApplyHtmlSpecialChars($row['new_value']) && htmlspecialchars($row['new_value']) == $comment) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
   function getUserManager() {
       return UserManager::instance();
   }
   /** assume that the 
    * @param followup_comments (IN): comments have the form that we get when exporting follow-up comments in csv format
-   *                      (see ArtifactHtml->showFollowUpComments(ascii = true))
+   *                      (see ArtifactHtml->showFollowUpComments($output == OUTPUT_EXPORT))
    * @param parsed_comments (OUT): an array (#detail => array2), where array2 is of the form
    *                              ("date" => date, "by" => user, "type" => comment-type, "comment" => comment-string)
    * @param for_parse_report (IN): if we parse the follow-up comments to show them in the parse report then we keep the labels

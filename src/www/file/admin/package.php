@@ -104,12 +104,6 @@ if ($request->valid($vFunc)) {
                     } else {
                         //create a new package
                         $res_id = $frspf->create($package_data);
-                        //add default permission on the new package (register users)
-                        //TODO permissions @ creation
-                        if($res_id){
-                            $pm = & PermissionsManager::instance();
-                            $pm->addPermission('PACKAGE_READ', $res_id, '2');
-                        }
                         $GLOBALS['Response']->addFeedback('info', $Language->getText('file_admin_editpackages','p_added'));
                         $GLOBALS['Response']->redirect('/file/?group_id='.$group_id);
                     }
@@ -183,7 +177,7 @@ if ($request->valid($vFunc)) {
                         }
         
                         if ($package_is_updated) {
-                            $GLOBALS['Response']->addFeedback('info', $Language->getText('file_admin_editpackages','p_updated'));
+                            $GLOBALS['Response']->addFeedback('info', $Language->getText('file_admin_editpackages','p_updated', $package->getName()));
                         } else {
                             $GLOBALS['Response']->addFeedback('info', 'Package not updated');
                         }

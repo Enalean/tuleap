@@ -25,6 +25,15 @@ require_once('common/frs/FRSFileFactory.class.php');
 
 
 class FRSRelease extends Error {
+    const PERM_READ      = 'RELEASE_READ';
+
+    const STATUS_ACTIVE  = 1;
+    const STATUS_DELETED = 2;
+    const STATUS_HIDDEN  = 3;
+
+    const EVT_CREATE = 201;
+    const EVT_UPDATE = 202;
+    const EVT_DELETE = 203;
 
 	/**
      * @var int $release_id the ID of this FRSRelease
@@ -192,7 +201,7 @@ class FRSRelease extends Error {
     function getGroupID() {
         $package_id = $this->getPackageID();
         $package_fact = new FRSPackageFactory();
-        $package =& $package_fact->getFRSPackageFromDb($package_id);
+        $package =& $package_fact->getFRSPackageFromDb($package_id, null, FRSPackageDao::INCLUDE_DELETED);
         $group_id = $package->getGroupID();
         return $group_id;
     }

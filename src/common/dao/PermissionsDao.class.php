@@ -70,18 +70,53 @@ class PermissionsDao extends DataAccessObject {
 				"'".$ugroupId."'");
         return $this->retrieve($sql);
     }
-    
-    /**
-     * Searches Ugroups names and Ids from ObjectId and Permission type
-     * return DataAccessResult
-     */
-     function & searchUgroupByObjectIdAndPermissionType($objectId, $permissionType){
-         $sql = sprintf("SELECT ug.name, ug.ugroup_id FROM ugroup as ug JOIN permissions as p using(ugroup_id) WHERE p.object_id = %s AND p.permission_type = %s",
-                "'".$objectId."'", "'".$permissionType."'");
-        return $this->retrieve($sql);
-     }
-      
 
+    /**
+     * Searches Ugroups Ids (and names if required) from ObjectId and Permission type
+     *
+     * @param String  $objectId       Id of object
+     * @param String  $permissionType Permission type
+     * @param Boolean $withName       Whether to include the group name or not
+     * 
+     * @return DataAccessResult
+     */
+    function searchUgroupByObjectIdAndPermissionType($objectId, $permissionType, $withName=true){
+        $fields = '';
+        $joins  = '';
+        if ($withName) {
+            $fields = ' ug.name, ';
+            $joins  = ' JOIN ugroup AS ug USING(ugroup_id) ';
+        }
+        $sql = 'SELECT '.$fields.' p.ugroup_id'.
+               ' FROM permissions p '.$joins.
+               ' WHERE p.object_id = '.$this->da->quoteSmart($objectId).
+               ' AND p.permission_type = '.$this->da->quoteSmart($permissionType).
+               ' ORDER BY ugroup_id';
+        return $this->retrieve($sql);
+    }
+
+    /**
+     * Return the list of the default ugroup_ids authorized to access the given permission_type
+     *
+     * @param String  $permissionType Permission type
+     * @param Boolean $withName       Whether to include the group name or not
+     *
+     * @return DataAccessResult
+     */
+    public function searchDefaults($permissionType, $withName=true) {
+        $fields = '';
+        $joins  = '';
+        if ($withName) {
+            $fields = ' ug.name, ';
+            $joins  = ' JOIN ugroup AS ug USING(ugroup_id) ';
+        }
+        $sql = 'SELECT '.$fields.' pv.ugroup_id'.
+               ' FROM permissions_values pv '.$joins.
+               ' WHERE pv.permission_type='.$this->da->quoteSmart($permissionType).
+               ' AND pv.is_default=1'.
+               ' ORDER BY pv.ugroup_id';
+        return $this->retrieve($sql);
+    }
 
     /**
     * Searches Permissions by ObjectId and Ugroups

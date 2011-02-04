@@ -462,3 +462,7 @@ a img {
 .docman_form input.text_field {
   width: 40em;
 }
+
+.docman_text_field {
+  width: 50em;
+}

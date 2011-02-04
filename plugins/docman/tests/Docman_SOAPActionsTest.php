@@ -93,7 +93,7 @@ class Docman_SOAPActionsTest extends UnitTestCase {
             $file->setReturnValue('getCurrentVersion', $version);
             $this->itemFactory->setReturnValue('getItemFromDb', $file, array($itemId));
             $this->itemFactory->setReturnValue('getItemTypeForItem', PLUGIN_DOCMAN_ITEM_TYPE_FILE, array($file));
-            $this->fileStorage->setReturnValue('getFileMD5sum', $md5, array('*', $itemId, '*'));
+            $this->fileStorage->setReturnValue('getFileMD5sum', $md5);
         }
         
         $user = new MockUser();
@@ -152,8 +152,9 @@ class Docman_SOAPActionsTest extends UnitTestCase {
               'group_id'=> 2,
           );
         $request = new MockSOAPRequest($params);
-        $request->setReturnValue('exist', true);
+        $request->setReturnValue('exist', true, array('item_id'));
         $request->setReturnValue('get', $params['item_id'], array('item_id'));
+        $request->setReturnValue('exist', false, array('version'));
         
         $action->getControler()->request = $request;
             
@@ -161,6 +162,30 @@ class Docman_SOAPActionsTest extends UnitTestCase {
         $this->assertEqual($action->getControler()->_viewParams['action_result'], $this->MD5Map[$params['item_id']]);
     }
     
+    /**
+     * Nominal case: getFileMD5sum is called with a correct file ID for a given version
+     */
+    public function testGetFileMD5sumGivenVersionNominal() {
+        $action = $this->action;
+
+        $params = array(
+              'item_id' => 128000,
+              'group_id'=> 2,
+              'version' => 2,
+        );
+        $request = new MockSOAPRequest($params);
+        $request->setReturnValue('exist', true, array('item_id'));
+        $request->setReturnValue('get', $params['item_id'], array('item_id'));
+        $request->setReturnValue('exist', true, array('version'));
+        $request->setReturnValue('get', $params['version'], array('version'));
+
+        $action->getControler()->request = $request;
+
+        $action->getFileMD5sum();
+        $this->assertEqual($action->getControler()->_viewParams['action_result'], $this->MD5Map[$params['item_id']]);
+    }
+
+
     public function testGetFileMD5sumAllVersions() {
         $action = $this->action;
         
@@ -398,6 +423,28 @@ class Docman_SOAPActionsTest extends UnitTestCase {
         
         $action->getTreeInfo();
     }
+    
+        public function testGetFileChunk() {
+        $action = $this->action;
+        
+        $params = array('group_id'=> 10, 'item_id'=> 128000, 'chunk_offset' => 10, 'chunk_size' => 64, 'version_number' => 2);
+        $request = new MockSOAPRequest($params);
+        $request->setReturnValue('exist', true, array('group_id'));
+        $request->setReturnValue('exist', true, array('item_id'));
+        $request->setReturnValue('exist', true, array('version_number'));
+        $request->setReturnValue('exist', true, array('chunk_offset'));
+        $request->setReturnValue('exist', true, array('chunk_size'));
+        $request->setReturnValue('get', $params['group_id'], array('group_id'));
+        $request->setReturnValue('get', $params['item_id'], array('item_id'));
+        $request->setReturnValue('get', $params['chunk_offset'], array('chunk_offset'));
+        $request->setReturnValue('get', $params['chunk_size'], array('chunk_size'));
+        $request->setReturnValue('get', $params['version_number'], array('version_number'));
+        
+        $action->getControler()->request = $request;
+
+        $action->getFileChunk();
+    }
+    
 }
 
 ?>

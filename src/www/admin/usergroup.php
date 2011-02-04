@@ -297,43 +297,43 @@ $userInfo = $um->getUserAccessInfo($user);
 echo $Language->getText('admin_usergroup', 'last_access_date');
 ?>:
 </td><td>
-<?php echo  '<span title="'. format_date($GLOBALS['Language']->getText('system', 'datefmt'), $userInfo['last_access_date']) .'">'.  $hp->purify(util_time_ago_in_words($userInfo['last_access_date']), CODENDI_PURIFIER_CONVERT_HTML)  .'</span>';?>
+<?php echo html_time_ago($userInfo['last_access_date']); ?>
 </td></tr>
 
 <tr><td>
 <?php echo $Language->getText('admin_usergroup', 'last_pwd_update'); ?>:
 </td><td>
-<?php echo  '<span title="'. format_date($GLOBALS['Language']->getText('system', 'datefmt'), $user->getLastPwdUpdate()) .'">'.  $hp->purify(util_time_ago_in_words($user->getLastPwdUpdate()), CODENDI_PURIFIER_CONVERT_HTML)  .'</span>';?>
+<?php echo html_time_ago($user->getLastPwdUpdate());?>
 </td></tr>
 
 <tr><td>
 <?php echo $Language->getText('account_options', 'auth_attempt_last_success'); ?>
 </td><td>
-<?php echo  '<span title="'. format_date($GLOBALS['Language']->getText('system', 'datefmt'), $userInfo['last_auth_success']) .'">'.  $hp->purify(util_time_ago_in_words($userInfo['last_auth_success']), CODENDI_PURIFIER_CONVERT_HTML)  .'</span>';?>
+<?php echo html_time_ago($userInfo['last_auth_success']);?>
 </td></tr>
 
 <tr><td>
 <?php echo $Language->getText('account_options', 'auth_attempt_last_failure'); ?>
 </td><td>
-<?php echo  '<span title="'. format_date($GLOBALS['Language']->getText('system', 'datefmt'), $userInfo['last_auth_failure']) .'">'.  $hp->purify(util_time_ago_in_words($userInfo['last_auth_failure']), CODENDI_PURIFIER_CONVERT_HTML)  .'</span>';?>
+<?php echo html_time_ago($userInfo['last_auth_failure']);?>
 </td></tr>
 
 <tr><td>
 <?php echo $Language->getText('account_options', 'auth_attempt_nb_failure'); ?>
 </td><td>
-<?php echo format_date($GLOBALS['Language']->getText('system', 'datefmt'), $userInfo['nb_auth_failure']); ?>
+<?php echo html_time_ago($userInfo['nb_auth_failure']); ?>
 </td></tr>
 
 <tr><td>
 <?php echo $Language->getText('account_options', 'auth_attempt_prev_success'); ?>
 </td><td>
-<?php echo  '<span title="'. format_date($GLOBALS['Language']->getText('system', 'datefmt'), $userInfo['last_auth_success']) .'">'.  $hp->purify(util_time_ago_in_words($userInfo['last_auth_success']), CODENDI_PURIFIER_CONVERT_HTML)  .'</span>';?>
+<?php echo html_time_ago($userInfo['last_auth_success']);?>
 </td></tr>
 
 <tr><td>
 <?php echo $Language->getText('include_user_home','member_since'); ?>:
 </td><td>
-<?php echo  '<span title="'. format_date($GLOBALS['Language']->getText('system', 'datefmt'), $user->getAddDate()) .'">'.  $hp->purify(util_time_ago_in_words($user->getAddDate()), CODENDI_PURIFIER_CONVERT_HTML)  .'</span>';?>
+<?php echo html_time_ago($user->getAddDate());?>
 </td></tr>
 
 

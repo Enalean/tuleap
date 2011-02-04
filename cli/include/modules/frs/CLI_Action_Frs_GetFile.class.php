@@ -6,10 +6,13 @@
 */
 
 require_once(CODENDI_CLI_DIR.'/CLI_Action.class.php');
+require_once(CODENDI_CLI_DIR.'lib/PHP_BigFile.class.php');
 
 class CLI_Action_Frs_GetFile extends CLI_Action {
-    function CLI_Action_Frs_GetFile() {
-        $this->CLI_Action('getFile', 'Get the content of the file');
+
+    function __construct() {
+        parent::__construct('getFile', 'Get the content of the file');
+        $this->setSoapCommand('getFileChunk');
         $this->addParam(array(
             'name'           => 'package_id',
             'description'    => '--package_id=<package_id>    Id of the package the returned file belong to.',
@@ -25,7 +28,6 @@ class CLI_Action_Frs_GetFile extends CLI_Action {
         $this->addParam(array(
             'name'           => 'output',
             'description'    => '--output=<location>          (Optional) Name of the file to write the file to',
-            'soap'           => false
         ));
     }
     function validate_package_id(&$package_id) {
@@ -57,27 +59,76 @@ class CLI_Action_Frs_GetFile extends CLI_Action {
         }
         return true;
     }
-    function soapResult($params, $soap_result, $fieldnames = array(), $loaded_params = array()) {
-        $file = base64_decode($soap_result);
-    
-        if ($loaded_params['others']['output']) {
-            $output = $loaded_params['others']['output'];
-            while (!($fh = @fopen($output, "wb"))) {
+
+    // Manage screen/file output
+    function manageOutput($soap_output, &$output, &$fd) {
+        $output = false;
+        if ($soap_output) {
+            $output = $soap_output;
+        }
+        if ($output !== false) {
+            while (!($fd = @fopen($output, "wb"))) {
                 echo "Couldn't open file ".$output." for writing.\n";
                 $output = "";
                 while (!$output) {
                     $output = get_user_input("Please specify a new file name: ");
                 }
             }
-            
-            fwrite($fh, $file, strlen($file));
-            fclose($fh);
-            
-            if (!$loaded_params['others']['quiet']) echo "File retrieved successfully.\n";
-        } else {
-            if (!$loaded_params['others']['quiet']) echo $file;     // if not saving to a file, output to screen
         }
     }
+
+    function soapCall($soap_params, $use_extra_params = true) {
+        // Prepare SOAP parameters
+        $callParams = $soap_params;
+        unset($callParams['output']);
+        $callParams['offset']     = 0;
+        $callParams['chunk_size'] = $GLOBALS['soap']->getFileChunkSize();
+
+        $startTime = microtime(true);
+        $totalTran = 0;
+        $i = 0;
+        do {
+            $callParams['offset'] = $i * $GLOBALS['soap']->getFileChunkSize();
+            $content = base64_decode($GLOBALS['soap']->call($this->soapCommand, $callParams, $use_extra_params));
+            if ($i == 0) {
+                $this->manageOutput($soap_params['output'], $output, $fd);
+            }
+            $cLength = strlen($content);
+            if ($output !== false) {
+                $written = fwrite($fd, $content);
+                if ($written != $cLength) {
+                    throw new Exception('Received '.$cLength.' of data but only '.$written.' written on Disk');
+                }
+            } else {
+                echo $content;
+            }
+            $totalTran += $cLength;
+            $i++;
+        } while ($cLength >= $GLOBALS['soap']->getFileChunkSize());
+        $endTime = microtime(true);
+
+        $transRate = $totalTran / ($endTime - $startTime);
+        $GLOBALS['LOG']->add('Transfer rate: '.size_readable($transRate, null, 'bi', '%.2f %s/s'));
+
+        if ($output !== false) {
+            fclose($fd);
+            
+            unset($callParams['offset']);
+            unset($callParams['chunk_size']);
+            
+            $fileInfo = $GLOBALS['soap']->call('getFileInfo', $callParams, $use_extra_params);
+            if ($fileInfo->computed_md5) {
+                $localChecksum = PHP_BigFile::getMd5Sum($output);
+                if ($localChecksum != $fileInfo->computed_md5) {
+                    exit_error("File transfer faild: md5 checksum locally computed doesn't match remote one ($fileInfo->computed_md5)");
+                } else {
+                    echo "File retrieved successfully.\n";
+                }
+            }
+        }
+    }
+
+    function soapResult($params, $soap_result, $fieldnames = array(), $loaded_params = array()) {}
 }
 
 ?>

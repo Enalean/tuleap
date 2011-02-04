@@ -17,12 +17,32 @@
           <orgname>Xerox, Marc.Nazarian@xrce.xerox.com</orgname>
         </affiliation>
       </author>
+
+      <author>
+        <firstname>Hatem</firstname>
+
+        <surname>Ounis</surname>
+
+        <affiliation>
+          <orgname>STMicroelectronics, hatem.ounis@st.com</orgname>
+        </affiliation>
+      </author>
+	  
+	  <author>
+        <firstname>Nouha</firstname>
+
+        <surname>Terzi</surname>
+
+        <affiliation>
+          <orgname>STMicroelectronics, nouha.terzi@st.com</orgname>
+        </affiliation>
+      </author>
     </authorgroup>
 
     <copyright>
-      <year>2006</year>
+      <year>2011</year>
 
-      <holder>Xerox Corporation, &SYS_PRODUCT_NAME;.</holder>
+      <holder>STMicroelectronics, &SYS_PRODUCT_NAME;.</holder>
     </copyright>
 
     <legalnotice>
@@ -38,6 +58,8 @@
       <para>This document was formatted with the DocBook XML DTD. HTML
       version rendered with DocBook HTML native renderer. PDF version
       rendered with Apache FOP.</para>
+
+      <para>Les exemples illustrés dans ce document sont dans certains cas différents du résultat réel.</para>
     </legalnotice>
 
     <revhistory>
@@ -60,6 +82,17 @@
 
         <revremark>Ajout du module de gestion des fichiers</revremark>
       </revision>
+
+      <revision>
+        <revnumber>1.4.0</revnumber>
+
+        <date>04-Janvier-2011</date>
+
+        <authorinitials>Hatem Ounis, Nouha Terzi</authorinitials>
+
+        <revremark>Mise à jour générale</revremark>
+      </revision>
+
     </revhistory>
   </bookinfo>
 <!--

@@ -169,6 +169,7 @@ project_admin_index	not_get_atf	Could Not Get ArtifactTypeFactory
 project_admin_index	del_tracker_perm_fail	Failed to delete tracker permission ($1)
 project_admin_index	del_user_from_ug_fail	Failed to delete user from ugroups
 project_admin_index	user_removed	Removed a User
+project_admin_index	self_user_remove	You are no longer a member of
 project_admin_index	p_admin	Project Admin: $1
 project_admin_index	p_edit	Project Info: $1
 project_admin_index	short_desc	Short Description: $1
@@ -827,7 +828,20 @@ project_stats_source_code_access	logs_export	Export Matching Logs
 # Script: SF/www/project/stats/source_code_access_utils.php
 #
 project_stats_source_code_access_utils	file_download	File Download 
+project_stats_source_code_access_utils	frs_actions	FRS actions
+project_stats_source_code_access_utils	frs_elements	Packages/releases/files
 project_stats_source_code_access_utils	files	Files
+project_stats_source_code_access_utils	frs_create_package	Create package
+project_stats_source_code_access_utils	frs_update_package	Update package
+project_stats_source_code_access_utils	frs_delete_package	Delete package
+project_stats_source_code_access_utils	frs_create_release	Create release
+project_stats_source_code_access_utils	frs_update_release	Update release
+project_stats_source_code_access_utils	frs_delete_release	Delete release
+project_stats_source_code_access_utils	frs_create_file	Create file
+project_stats_source_code_access_utils	frs_update_file	Update file
+project_stats_source_code_access_utils	frs_delete_file	Delete file
+project_stats_source_code_access_utils	frs_restore	Restore file
+project_stats_source_code_access_utils	frs_unknown_action	Unknown Action
 project_stats_source_code_access_utils	access_for_past_x_days	$1 for the past $2 days	
 project_stats_source_code_access_utils	in_total	$1 in total
 project_stats_source_code_access_utils	time	Local Time

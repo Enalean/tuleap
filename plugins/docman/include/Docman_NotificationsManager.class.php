@@ -23,6 +23,7 @@ require_once('common/mail/Mail.class.php');
 require_once('Docman_ItemFactory.class.php');
 require_once('Docman_Path.class.php');
 require_once('DocmanConstants.class.php');
+require_once('Docman_NotificationsDao.class.php');
 
 class Docman_NotificationsManager extends NotificationsManager { 
 
@@ -194,5 +195,20 @@ class Docman_NotificationsManager extends NotificationsManager {
         $msg .= $this->_url .'&action=details&section=notifications&id='. $params['item']->getId();
         return $msg;
     }
+
+    /**
+     * Retrieve all monitored Items (folders & documents) of a given project
+     * and if provided by user
+     *
+     * @param $groupId
+     * @param $userId
+     *
+     * @return Boolean
+     */
+    function listAllMonitoredItems($groupId, $userId = null) {
+        $notificationsDao = new Docman_NotificationsDao(CodendiDataAccess::instance());
+        return $notificationsDao->searchDocmanMonitoredItems($groupId, $userId);
+    }
+
 }
 ?>

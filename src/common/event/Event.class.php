@@ -147,5 +147,7 @@ class Event {
      * No expected results
      */
     const USER_RENAME = 'user_rename';
+    
+    const COMPUTE_MD5SUM = 'compute_md5sum';
 }
 ?>

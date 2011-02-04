@@ -74,6 +74,7 @@ extends Docman_MetadataSqlQueryChunk {
    
     var $filter;
     var $isRealMetadata;
+    var $db;
 
     function Docman_SqlFilter($filter) {
         $this->filter = $filter;
@@ -305,7 +306,7 @@ extends Docman_SqlFilter {
             if ($searchType['like']) {
                 $stmt[] =  $this->field.' LIKE '.$searchType['pattern'];
             } else {
-                $stmt[] = 'MATCH ('.$this->field.') AGAINST ("'.$qv.'" '.Docman_SqlFilter::BOOLEAN_SEARCH_TYPE.')';
+                $stmt[] = "MATCH (".$this->field.") AGAINST ('".$qv."' ".Docman_SqlFilter::BOOLEAN_SEARCH_TYPE.")";
             }
         }
         return $stmt;
@@ -346,11 +347,11 @@ extends Docman_SqlFilterText {
                 
                 $stmt[] = '('.implode(' OR ', $matches).')';
             } else {
-                $matches[] = 'MATCH (i.title, i.description) AGAINST ("'.$qv.'" '.Docman_SqlFilter::BOOLEAN_SEARCH_TYPE.')';
-                $matches[] = 'MATCH (v.label, v.changelog, v.filename) AGAINST ("'.$qv.'" '.Docman_SqlFilter::BOOLEAN_SEARCH_TYPE.')';
+                $matches[] = "MATCH (i.title, i.description) AGAINST ('".$qv."' ".Docman_SqlFilter::BOOLEAN_SEARCH_TYPE.")";
+                $matches[] = "MATCH (v.label, v.changelog, v.filename) AGAINST ('".$qv."' ".Docman_SqlFilter::BOOLEAN_SEARCH_TYPE.")";
                 
                 foreach($this->filter->dynTextFields as $f) {
-                    $matches[] = 'MATCH (mdv_'.$f.'.valueText, mdv_'.$f.'.valueString) AGAINST ("'.$qv.'" '.Docman_SqlFilter::BOOLEAN_SEARCH_TYPE.')';
+                    $matches[] = "MATCH (mdv_".$f.".valueText, mdv_".$f.".valueString) AGAINST ('".$qv."' ".Docman_SqlFilter::BOOLEAN_SEARCH_TYPE.")";
                 }
                 
                 $stmt[] = '('.implode(' OR ', $matches).')';

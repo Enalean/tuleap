@@ -13,13 +13,14 @@ require_once('www/project/admin/project_admin_utils.php');
 require_once('common/include/TemplateSingleton.class.php');
 require_once('common/event/EventManager.class.php');
 
+
 session_require(array('group'=>'1','admin_flags'=>'A'));
 $pm = ProjectManager::instance();
 $group = $pm->getProject($group_id,false,true);
 $request = HTTPRequest::instance();
 $currentproject= new project($group_id);
 
-$em =& EventManager::instance();
+$em = EventManager::instance();
 
 $Rename=$request->get('Rename');
 if ($Rename) {
@@ -104,7 +105,8 @@ echo '<H2>'.$row_grp['group_name'].'</H2>' ;?>
 
 <p>
 <A href="/project/admin/?group_id=<?php print $group_id; ?>"><B><BIG>[<?php echo $Language->getText('admin_groupedit','proj_admin'); ?>]</BIG></B></A><BR/>
-<A href="userlist.php?group_id=<?php print $group_id; ?>"><B><BIG>[<?php echo $Language->getText('admin_groupedit','proj_member'); ?>]</BIG></B></A>
+<A href="userlist.php?group_id=<?php print $group_id; ?>"><B><BIG>[<?php echo $Language->getText('admin_groupedit','proj_member'); ?>]</BIG></B></A><BR/>
+<A href="show_pending_documents.php?group_id=<?php print $group_id; ?>"><B><BIG>[<?php echo 'show pending documents'; ?>]</BIG></B></A><BR/>
 </p>
 
 <p>
@@ -185,8 +187,6 @@ print "<h3>".$Language->getText('admin_groupedit','license_other')."</h3> $row_g
 
 $template_group = $pm->getProject($group->getTemplate());
 print "<h3>".$Language->getText('admin_groupedit','built_from_template').':</h3> <a href="/projects/'.$template_group->getUnixName().'"> <B> '.$template_group->getPublicname().' </B></A>';
-
-
 
 // Check if group_id is valid
 $vGroupId = new Valid_GroupId();

@@ -24,17 +24,18 @@ require_once('common/user/UserManager.class.php');
 require_once('common/permission/PermissionsManager.class.php');
 require_once('FRSReleaseFactory.class.php');
 require_once('www/project/admin/ugroup_utils.php');
+require_once ('common/frs/FRSLog.class.php');
+
 /**
  * 
  */
 class FRSPackageFactory {
-    
-    var $STATUS_ACTIVE = 1;
-    var $STATUS_DELETED = 2;
-    var $STATUS_HIDDEN = 3;
+    // Kept for legacy
+    var $STATUS_ACTIVE  = FRSPackage::STATUS_ACTIVE;
+    var $STATUS_DELETED = FRSPackage::STATUS_DELETED;
+    var $STATUS_HIDDEN  = FRSPackage::STATUS_HIDDEN;
 
     function FRSPackageFactory() {
-        
     }
 
     function getFRSPackageFromArray(&$array) {
@@ -43,14 +44,14 @@ class FRSPackageFactory {
         return $frs_package;
     }
 
-    function getFRSPackageFromDb($package_id = null, $group_id=null) {
+    function getFRSPackageFromDb($package_id = null, $group_id=null, $extraFlags = 0) {
         $_id = (int) $package_id;
         $dao =& $this->_getFRSPackageDao();
         if($group_id){
         	$_group_id = (int) $group_id;
-        	$dar = $dao->searchInGroupById($_id, $_group_id);
+        	$dar = $dao->searchInGroupById($_id, $_group_id, $extraFlags);
         }else{
-        	$dar = $dao->searchById($_id);
+        	$dar = $dao->searchById($_id, $extraFlags);
         }
         if($dar->isError()){
             return;
@@ -172,36 +173,47 @@ class FRSPackageFactory {
         
         return $dar->valid();
     }
-    
-    
-    var $dao;
-    function _getFRSPackageDao() {
-        if (!$this->dao) {
-            $this->dao =& new FRSPackageDao(CodendiDataAccess::instance(), $this->STATUS_DELETED);
-        }
-        return $this->dao;
-    }
-    
-    
+        
     function update($data) {
         if (is_a($data, 'FRSPackage')) {
             $data = $data->toArray();
         }
-        $dao =& $this->_getFRSPackageDao();
-        return $dao->updateFromArray($data);
+        $dao = $this->_getFRSPackageDao();
+        if ($dao->updateFromArray($data)) {
+            $this->getEventManager()->processEvent('frs_update_package',
+                                                   array('group_id' => $data['group_id'],
+                                                         'item_id'    => $data['package_id']));
+            return true;
+        }
+        return false;
     }
     
     
     function create($data_array) {
         $dao =& $this->_getFRSPackageDao();
         $id = $dao->createFromArray($data_array);
+        if ($id) {
+            $data_array['package_id'] = $id;
+            $package = new FRSPackage($data_array);   
+            $this->setDefaultPermissions($package);     
+            $this->getEventManager()->processEvent('frs_create_package',
+                                                   array('group_id' => $data_array['group_id'],
+                                                         'item_id' => $id));
+        }
         return $id;
     }
     
     function _delete($package_id){
         $_id = (int) $package_id;
-        $dao =& $this->_getFRSPackageDao();
-        return $dao->delete($_id, $this->STATUS_DELETED);
+        $package = $this->getFRSPackageFromDb($_id);
+        $dao = $this->_getFRSPackageDao();
+        if ($dao->delete($_id, $this->STATUS_DELETED)) {
+            $this->getEventManager()->processEvent('frs_delete_package',
+                                                   array('group_id' => $package->getGroupID(),
+                                                         'item_id'    => $_id));
+            return true;
+        }
+        return false;
     }
     
     /*
@@ -228,67 +240,121 @@ class FRSPackageFactory {
             return 1;
         }
     }
-    
-	/** return true if user has Read or Update permission on this package 
-	 * @param group_id: the project this package is in
-	 * @param package_id: the package id 
-	 * @param user_id: if not given or false take the current user
-	**/ 
-	function userCanRead($group_id,$package_id,$user_id=false) {
-        $pm =& PermissionsManager::instance();
-        $um =& UserManager::instance();
+
+    /**
+     * Test is user can administrate FRS service of given project
+     *
+     * @param User    $user    User to test
+     * @param Integer $groupId Project
+     *
+     * @return Boolean
+     */
+    public static function userCanAdmin($user, $groupId) {
+        return ($user->isSuperUser() || $user->isMember($groupId, 'R2') || $user->isMember($groupId, 'A'));
+    }
+
+	/**
+     * Return true if user has Read or Update permission on this package
+     *
+	 * @param Integer $group_id   The project this package is in
+	 * @param Integer $package_id The package id
+	 * @param Integer $user_id    If not given or false take the current user
+     *
+     * @return Boolean
+     */ 
+	function userCanRead($group_id, $package_id, $user_id=false) {
+        $pm = $this->getPermissionsManager();
+        $um = $this->getUserManager();
 	    if (! $user_id) {
-            $user =& $um->getCurrentUser();
+            $user = $um->getCurrentUser();
         } else {
-            $user =& $um->getUserById($user_id);    
+            $user = $um->getUserById($user_id);    
         }
-        $ok = $user->isSuperUser() || $user->isMember($group_id,'R2') || $user->isMember($group_id,'A')
-              || $pm->userHasPermission($package_id, 'PACKAGE_READ', $user->getUgroups($group_id, array()))
-              || !$pm->isPermissionExist($package_id, 'PACKAGE_READ');
+        $ok = $this->userCanAdmin($user, $group_id)
+              || $pm->userHasPermission($package_id, FRSPackage::PERM_READ, $user->getUgroups($group_id, array()))
+              || !$pm->isPermissionExist($package_id, FRSPackage::PERM_READ);
         return $ok;
 	}
 
-    /** return true if user has Update permission on this package 
-     * @param int $group_id the project this package is in
-     * @param int $package_id the ID of the package to update
-     * @param int $user_id if not given or false, take the current user
-     * @return boolean true of user can update the package $package_id, false otherwise
+    /**
+     * Return true if user has Update permission on this package
+     *
+     * @param Integer $group_id   The project this package is in
+     * @param Integer $package_id The ID of the package to update
+     * @param Integer $user_id if Not given or false, take the current user
+     *
+     * @return Boolean true of user can update the package $package_id, false otherwise
      */ 
-	function userCanUpdate($group_id,$package_id,$user_id=false) {
-        $pm =& PermissionsManager::instance();
-        $um =& UserManager::instance();
-	    if (! $user_id) {
-            $user =& $um->getCurrentUser();
-        } else {
-            $user =& $um->getUserById($user_id);    
-        }
-        $ok = $user->isSuperUser() 
-              || $pm->userHasPermission($package_id, 'PACKAGE_READ', $user->getUgroups($group_id, array()));
-        return $ok;
+	function userCanUpdate($group_id, $package_id, $user_id=false) {
+        return $this->userCanCreate($group_id, $user_id);
 	}
-    
-    /** 
+
+    /**
      * Returns true if user has permissions to Create packages
      * 
      * NOTE : At this time, there is no difference between creation and update, but in the future, permissions could be added
      * For the moment, only super admin, project admin (A) and file admin (R2) can create releases
      * 
-     * @param int $group_id the project ID this release is in
-     * @param int $user_id the ID of the user. If not given or false, take the current user
-     * @return boolean true if the user has permission to create packages, false otherwise
+     * @param Integer $group_id The project ID this release is in
+     * @param Integer $user_id  The ID of the user. If not given or false, take the current user
+     *
+     * @return Boolean true if the user has permission to create packages, false otherwise
      */ 
-    function userCanCreate($group_id,$user_id=false) {
-        $pm =& PermissionsManager::instance();
-        $um =& UserManager::instance();
+    function userCanCreate($group_id, $user_id=false) {
+        $pm = $this->getPermissionsManager();
+        $um = $this->getUserManager();
         if (! $user_id) {
-            $user =& $um->getCurrentUser();
+            $user = $um->getCurrentUser();
         } else {
-            $user =& $um->getUserById($user_id);    
+            $user = $um->getUserById($user_id);    
         }
-        $ok = $user->isSuperUser() || $user->isMember($group_id,'R2') || $user->isMember($group_id,'A');
-        return $ok;
+        return $this->userCanAdmin($user, $group_id);
     }
 
+    /**
+     * By default, a package is readable by all registered users
+     *
+     * @param FRSPackage $package Permissions will apply on this Package
+     */
+    function setDefaultPermissions(FRSPackage $package) {
+        $this->getPermissionsManager()->addPermission(FRSPackage::PERM_READ, $package->getPackageID(), $GLOBALS['UGROUP_REGISTERED']);
+        permission_add_history($package->getGroupID(), FRSPackage::PERM_READ, $package->getPackageID());
+    }
+
+    /**
+     * Returns an instance of EventManager
+     *
+     * @return EventManager
+     */
+    function getEventManager() {
+         $em = EventManager::instance();
+         FRSLog::instance();
+         return $em;
+    }
+
+    /**
+     * Return an instance of PermissionsManager
+     *
+     * @return PermissionsManager
+     */
+    function getPermissionsManager() {
+        return PermissionsManager::instance();
+    }
+
+    /**
+     * @return UserManager
+     */
+    function getUserManager() {
+        return UserManager::instance();
+    }
+
+    var $dao;
+    function _getFRSPackageDao() {
+        if (!$this->dao) {
+            $this->dao = new FRSPackageDao(CodendiDataAccess::instance(), $this->STATUS_DELETED);
+        }
+        return $this->dao;
+    }
 }
 
 ?>

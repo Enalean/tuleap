@@ -483,8 +483,8 @@ $soapFunctions[] = array('getDocmanFileContents', 'Returns the content of a file
 /**
  * Returns the MD5 checksum of the file (last version) corresponding to the provided item ID.
  */
-function getDocmanFileMD5sum($sessionKey, $group_id, $item_id) {
-    $params = array('item_id' => $item_id);
+function getDocmanFileMD5sum($sessionKey, $group_id, $item_id, $version_number) {
+    $params = array('item_id' => $item_id, 'version' => $version_number);
     return _makeDocmanRequest($sessionKey, $group_id, 'getFileMD5sum', $params);
 }
 $soapFunctions[] = array('getDocmanFileMD5sum', 'Returns the MD5 checksum of the file (last version) corresponding to the provided item ID', 'xsd:string');
@@ -669,6 +669,22 @@ function moveDocmanItem($sessionKey, $group_id, $item_id, $new_parent) {
 }
 $soapFunctions[] = array('moveDocmanItem', 'Moves an item in a new folder', 'xsd:boolean');
 
+
+
+/**
+ * Download a file given its item_id and version
+ */
+function getDocmanFileChunk($sessionKey, $group_id, $item_id, $version_number, $chunk_offset, $chunk_size) {
+        $params = array(
+        'item_id'        => $item_id,
+        'version_number' => $version_number,
+        'chunk_offset'   => $chunk_offset,
+        'chunk_size'     => $chunk_size,
+    );
+    
+    return _makeDocmanRequest($sessionKey, $group_id, 'getFileChunk', $params);
+}
+$soapFunctions[] = array('getDocmanFileChunk', 'Download an  item', 'xsd:string');
 
 /**
  * Deletes a docman item

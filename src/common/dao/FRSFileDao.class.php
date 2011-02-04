@@ -100,7 +100,7 @@ class FRSFileDao extends DataAccessObject {
     	
     	$sql = sprintf("SELECT frs_file.file_id AS file_id, frs_file.filename AS filename, frs_file.file_size AS file_size," 
 				 	. "frs_file.release_time AS release_time, frs_file.type_id AS type, frs_file.processor_id AS processor," 
-				 	. "frs_dlstats_filetotal_agg.downloads AS downloads  FROM frs_file " 
+				 	. "frs_dlstats_filetotal_agg.downloads AS downloads , frs_file.computed_md5 AS computed_md5, frs_file.user_id AS user_id FROM frs_file " 
 				 	. "LEFT JOIN frs_dlstats_filetotal_agg ON frs_dlstats_filetotal_agg.file_id=frs_file.file_id " 
 				 	. "WHERE release_id=%s".$where_status , 	
 				 	$this->da->quoteSmart($_release_id));
@@ -142,7 +142,7 @@ class FRSFileDao extends DataAccessObject {
      */
     function create($file_name=null, $release_id=null, $type_id=null,
     				$processor_id=null, $release_time=null, 
-                    $file_size=null, $post_date=null, $status ='A') {
+                    $file_size=null, $reference_md5= null, $post_date=null, $status ='A') {
 
         $arg    = array();
         $values = array();
@@ -167,6 +167,10 @@ class FRSFileDao extends DataAccessObject {
             $values[] = ($this->da->escapeInt($processor_id));
         }
 
+        if($reference_md5 !== null) {
+            $arg[] = 'reference_md5';
+            $values[] = $this->da->quoteSmart($reference_md5);
+        }
 
         $arg[] = 'release_time';
         $values[] = ($this->da->escapeInt(time()));
@@ -195,7 +199,7 @@ class FRSFileDao extends DataAccessObject {
     function createFromArray($data_array) {
         $arg    = array();
         $values = array();
-        $cols   = array('filename', 'release_id', 'type_id', 'processor_id', 'file_size', 'status');
+        $cols   = array('filename', 'release_id', 'type_id', 'processor_id', 'file_size', 'status', 'computed_md5', 'reference_md5', 'user_id');
         foreach ($data_array as $key => $value) {
             if (in_array($key, $cols)) {
                 $arg[]    = $key;
@@ -306,34 +310,185 @@ class FRSFileDao extends DataAccessObject {
      * Delete entry that match $release_id in frs_file
      *
      * @param $file_id int
+     * 
      * @return true if there is no error
      */
     function delete($file_id) {
-        $sql = sprintf("UPDATE frs_file SET status='D' WHERE file_id=%d",
-                       $file_id);
-
+        $sql = "UPDATE frs_file SET status='D' WHERE file_id=".$this->da->escapeInt($file_id);
         $deleted = $this->update($sql);
         return $deleted;
     }
-    
+
     /**
      * Log the file download action into the database
      * 
      * @param Object{FRSFile) $file the FRSFile Object to log the download of
-     * @param int $user_id the user that download the file (if 0, the current user will be taken)
+     * @param int $user_id the user that download the file
      * @return boolean true if there is no error, false otherwise
      */
-    function logDownload($file, $user_id = 0) {
-    	   if ($user_id == 0) {
-    	       // must take the current user
-           $user_id = user_getid();
-    	   }
-       //Insert a new entry in the file release download log table
+    function logDownload($file, $user_id) {
        $sql = "INSERT INTO filedownload_log(user_id,filerelease_id,time) "
              ."VALUES ('".$this->da->escapeInt($user_id)."','".$this->da->escapeInt($file->getFileID())."','".$this->da->escapeInt(time())."')";
-       $inserted = $this->update($sql);
-       return $inserted;	
+       return $this->update($sql);
     }
+
+    /**
+     * Return true if a download is already logged for the user since the given time
+     *
+     * @param Integer $fileId
+     * @param Integer $userId
+     * @param Integer $time
+     *
+     * @return Boolean
+     */
+    function existsDownloadLogSince($fileId, $userId, $time) {
+        $sql = 'SELECT NULL'.
+               ' FROM filedownload_log'.
+               ' WHERE user_id = '.$this->da->escapeInt($userId).
+               ' AND filerelease_id = '.$this->da->escapeInt($fileId).
+               ' AND time >= '.$time.
+               ' LIMIT 1';
+        $dar = $this->retrieve($sql);
+        return ($dar && !$dar->isError() && $dar->rowCount() !== 0);
+    }
+
+    /**
+     * Retrieve all the files marked as deleted but not yet present in 'deleted' table
+     * 
+     * @return DataAccessResult
+     */
+    function searchStagingCandidates() {
+        $sql = 'SELECT f.*'.
+               ' FROM frs_file f LEFT JOIN frs_file_deleted d USING(file_id)'.
+               ' WHERE f.status = "D"'.
+               ' AND d.file_id IS NULL';
+        return $this->retrieve($sql);
+    }
+
+    /**
+     * Retrieve all deleted files not purged yet after a given period of time
+     * 
+     * @param Integer $time    Timestamp of the date to start the search
+     * @param Integer $groupId
+     * @param Integer $offset
+     * @param Integer $limit
+     * 
+     * @return DataAccessResult
+     */
+    function searchFilesToPurge($time, $groupId=0, $offset=0, $limit=0) {
+        $fields = '';
+        $from   = '';
+        $where  = '';
+        if ($groupId != 0) {
+            $fields .= ', rel.name as release_name, rel.status_id as release_status, rel.release_id';
+            $fields .= ', pkg.name as package_name, pkg.status_id as package_status, pkg.package_id';
+            $from   .= ' JOIN frs_release rel USING (release_id)'.
+                       ' JOIN frs_package pkg USING (package_id)';
+            $where  .= ' AND pkg.group_id = '.$this->da->escapeInt($groupId);
+        }
+        $sql = 'SELECT file.* '.
+               $fields.
+               ' FROM frs_file_deleted file'.
+               $from.
+               ' WHERE delete_date <= '.$this->da->escapeInt($time).
+               ' AND purge_date IS NULL'.
+               $where.
+               ' ORDER BY delete_date DESC';
+        return $this->retrieve($sql);
+    }
+
+    /**
+     * Copy deleted entry in the dedicated table
+     * 
+     * @param Integer $id FileId
+     * 
+     * @return Boolean
+     */
+    function setFileInDeletedList($id) {
+        // Store file in deleted table
+        $sql = 'INSERT INTO frs_file_deleted(file_id, filename, release_id, type_id, processor_id, release_time, file_size, post_date, status, computed_md5, reference_md5, user_id,delete_date)'.
+               ' SELECT file_id, filename, release_id, type_id, processor_id, release_time, file_size, post_date, status, computed_md5, reference_md5, user_id,'.$this->da->escapeInt($_SERVER['REQUEST_TIME']).
+               ' FROM frs_file'.
+               ' WHERE file_id = '.$this->da->escapeInt($id);
+        $this->update($sql);
+    }
+
+    /**
+     * Set the date of the purge of a file
+     * 
+     * @param Integer $id   File id
+     * @param Integer $time Timestamp of the deletion
+     * 
+     * @return Boolean
+     */
+    function setPurgeDate($id, $time) {
+        $sql = 'UPDATE frs_file_deleted'.
+               ' SET purge_date = '.$this->da->escapeInt($time).
+               ' WHERE file_id = '.$this->da->escapeInt($id);
+        return $this->update($sql);
+    }
+    
+    /**
+     * Restore file by updating its status and removing it from  frs_file_deleted
+     * 
+     * @param Integer $id   File id
+     * 
+     * @return Boolean
+     */
+    function restoreFile($id) {
+        $sql = 'UPDATE frs_file SET status = "A" WHERE file_id = '.$this->da->escapeInt($id);
+        if ($this->update($sql)) {
+            $sql = 'DELETE FROM frs_file_deleted WHERE file_id = '.$this->da->escapeInt($id);
+            return $this->update($sql);
+        }
+        return false;
+    }
+    
+    /**
+     * Retrieves all the documents marked to be restored
+     * 
+     * @return DataAccessResult
+     */
+    function searchFilesToRestore() {
+        $sql = 'SELECT file.* '.
+               ' FROM frs_file_deleted file'.
+               ' WHERE delete_date IS NULL '.
+               ' AND purge_date IS NULL';
+        return $this->retrieve($sql);
+    }
+    
+    /**
+     * Mark file to be restored
+     * 
+     * @param Integer $id
+     * 
+     * @return Boolean
+     */
+    function markFileToBeRestored($id) {
+                $sql = 'UPDATE frs_file_deleted AS f,'.
+                ' frs_release AS r '.
+                ' SET f.delete_date = NULL '.
+                ' WHERE f.file_id = '.$this->da->escapeInt($id).
+                ' AND f.release_id = r.release_id '.
+                ' AND r.status_id != 2 ';
+        return $this->update($sql);
+    }
+
+    /**
+     * Insert the computed md5sum value in case of offline checksum comput
+     * e
+     * @param Integer $fileId
+     * @param String $md5Computed
+     * 
+     * @return Boolean
+     */
+    function updateComputedMd5sum($fileId, $md5Computed) {
+        $sql = ' UPDATE frs_file '. 
+               ' SET computed_md5 = '.$this->da->quoteSmart($md5Computed).
+               ' WHERE file_id= '.$this->da->escapeInt($fileId);
+        return $this->update($sql);
+    }
+
 }
 
 ?>

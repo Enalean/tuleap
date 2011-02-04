@@ -59,10 +59,26 @@ class LDAP_DirectorySynchronization {
     }
 
     public function ldapSync($row) {
-        $ldap_query = 'st-eduid='.$row['ldap_id'];
+        $ldap_query = $this->ldap->getLDAPParam('eduid').'='.$row['ldap_id'];
+
+        $sync = $this->ldap->getLDAPParam('sync_attribute');
+        $attributes = $sync ? explode(',', $sync): array() ;
+
+        $requiredValues = array($this->ldap->getLDAPParam('cn'), $this->ldap->getLDAPParam('mail'));
+        foreach ($requiredValues as $val) {
+            if (!in_array($val, $attributes)) {
+                $attributes[] = $val;
+            }
+        }
 
         $time_start = microtime(true);
-        $lri = $this->ldap->search($this->ldap->getLDAPParam('people_dn'), $ldap_query, LDAP::SCOPE_ONELEVEL, array('cn', 'mail', 'employeetype', 'st-eduid', 'o', 'uid'));
+        $lri = false;
+        foreach (split(';', $this->ldap->getLDAPParam('people_dn')) as $PeopleDn) {
+            $lri = $this->ldap->search($PeopleDn, $ldap_query, LDAP::SCOPE_ONELEVEL, $attributes);
+            if (count($lri) == 1 && $lri != false) {
+                break;
+            }
+        }
         $time_end   = microtime(true);
         $this->ldapTime += ($time_end-$time_start);
 

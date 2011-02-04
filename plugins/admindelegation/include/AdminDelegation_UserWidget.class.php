@@ -111,7 +111,7 @@ class AdminDelegation_UserWidget extends Widget {
         $html .= '<form method="post" action="?">';
         $html .= '<label>'.$GLOBALS['Language']->getText('plugin_admindelegation','widget_admins_label').'</label>';
         $html .= '<input type="hidden" name="plugin_admindelegation_func" value="show_admins" />';
-        $html .= '<input type="text" name="plugin_admindelegation_group" value="'.$groupValue.'" id="plugin_admindelegation_group" />';
+        $html .= '<input type="text" name="plugin_admindelegation_group" value="'.$groupValue.'" size ="40" id="plugin_admindelegation_group" />';
         $html .= '&nbsp;';
         $html .= '<input type="submit" value="'.$GLOBALS['Language']->getText('plugin_admindelegation', 'widget_btn_search').'"/>';
         $html .= '</form>';

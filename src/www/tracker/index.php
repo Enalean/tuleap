@@ -297,7 +297,9 @@ if ( $func == 'gotoid' ) {
                 $follow_up_comment = $request->get('follow_up_comment');
                 $comment_type_id = $request->get('comment_type_id');
                 $canned_response = $request->get('canned_response');
-				$ah->addFollowUpComment($follow_up_comment,$comment_type_id,$canned_response,$changes);
+                $vFormat = new Valid_WhiteList('comment_format', array(Artifact::FORMAT_HTML, Artifact::FORMAT_TEXT));
+                $comment_format = $request->getValidated('comment_format', $vFormat, Artifact::FORMAT_TEXT);
+				$ah->addFollowUpComment($follow_up_comment,$comment_type_id,$canned_response,$changes,$comment_format);
 
                                 // send an email to notify the user of the artifact update
                                     $agnf =& new ArtifactGlobalNotificationFactory();
@@ -726,7 +728,9 @@ if ( $func == 'gotoid' ) {
             $comment = $request->get('comment');
             $email   = $request->get('email');
             if ($comment) {
-                if (!$ah->addComment($comment,$email,$changes)) {
+                $vFormat = new Valid_WhiteList('comment_format', array(Artifact::FORMAT_HTML, Artifact::FORMAT_TEXT));
+                $comment_format = $request->getValidated('comment_format', $vFormat, Artifact::FORMAT_TEXT);
+                if (!$ah->addComment($comment,$email,$changes,$comment_format)) {
                     exit_error($Language->getText('global','error'), $Language->getText('tracker_index','not_saved_comment'));
                 }
             }
@@ -787,7 +791,21 @@ if ( $func == 'gotoid' ) {
 	    break;
 	
 	}
-        
+
+        case 'getcomment': {
+            if (!user_isloggedin()) {
+                exit_not_logged_in();
+                return;
+            }
+            $ah = new ArtifactHtml($ath, $aid);
+            if ($ah) {
+                require('./get_comment.php');
+            } else {
+                exit_error($Language->getText('global','error'),$Language->getText('tracker_index', 'not_create_art'));
+            }
+            break;
+        }
+
         case 'import' : {
 	   if ( !user_isloggedin()) {
 	     exit_not_logged_in();
@@ -846,7 +864,9 @@ if ( $func == 'gotoid' ) {
             if (user_isloggedin() && $request->exist('followup_update')) {
                 $followup_update = $request->get('followup_update');
                 $ah = new ArtifactHtml($ath,$artifact_id);
-                if ($ah->updateFollowupComment($request->get('artifact_history_id'),$followup_update,$changes)) {  
+                $vFormat = new Valid_WhiteList('comment_format', array(Artifact::FORMAT_HTML, Artifact::FORMAT_TEXT));
+                $comment_format = $request->getValidated('comment_format', $vFormat, Artifact::FORMAT_TEXT);
+                if ($ah->updateFollowupComment($request->get('artifact_history_id'),$followup_update,$changes,$comment_format)) {  
                     $GLOBALS['Response']->addFeedback('info',$GLOBALS['Language']->getText('tracker_common_artifact','followup_upd_succ'));		  
                     $agnf =& new ArtifactGlobalNotificationFactory();
                     $addresses = $agnf->getAllAddresses($ath->getID(), true);
@@ -1065,7 +1085,7 @@ if ( $func == 'gotoid' ) {
         } else {
             echo "<p>".$Language->getText('tracker_index','choose_tracker');
             if (!$pv) {
-                echo " ( <A HREF='?group_id=". (int)$group_id ."&pv=1'><img src='".util_get_image_theme("msg.png")."' border='0'>&nbsp;".$Language->getText('global','printer_version')."</A> )";
+                echo " ( <A HREF='?group_id=". (int)$group_id ."&pv=1'><img src='".util_get_image_theme("ic/printer.png")."' border='0'>&nbsp;".$Language->getText('global','printer_version')."</A> )";
             }
             echo "<p>";
 

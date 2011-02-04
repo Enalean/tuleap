@@ -16,7 +16,7 @@ file_admin_editpackagepermissions	select_u_group	Sélectionner les groupes d'uti
 #
 file_admin_editpackages	p_name_exists	Ce nom de paquet existe déjà. Veuillez choisir un autre nom.
 file_admin_editpackages	cannot_hide	Désolé, vous ne pouvez pas cacher un paquet qui contient des versions actives. Veuillez d'abord cacher ces versions.
-file_admin_editpackages	p_updated	Paquet mis à jour avec succès
+file_admin_editpackages	p_updated	Paquet "$1" mis à jour avec succès
 file_admin_editpackages	perm_update_err	Erreur&nbsp;: la mise à jour des permissions a échoué
 file_admin_editpackages	perm_reset_err	Erreur&nbsp;: la ré-initialisation des permissions a échoué
 file_admin_editpackages	perm_reset	Permissions ré-initialisées à leur valeurs par défaut
@@ -75,7 +75,7 @@ file_admin_editreleases	invalid_flag_err	ERREUR type de téléchargement invalid
 file_admin_editreleases	create_p_before_rel_status	Vous devez créer un paquet avant de créer une version. Vous devez aussi préciser son nom et son statut.
 file_admin_editreleases	p_not_yours	Vous essayez de modifier un paquet qui ne vous appartient pas
 file_admin_editreleases	cannot_del_rel	Désolé, vous ne pouvez pas détruire une version qui contient encore des fichiers
-file_admin_editreleases	rel_updated	Version mise à jour avec succès
+file_admin_editreleases	rel_updated	Version "$1" mise à jour avec succès
 file_admin_editreleases	rel_update_failed	La mise à jour de la version a échoué
 file_admin_editreleases	f_not_yours	Le fichier $1 n'existe pas ou ne vous appartient pas
 file_admin_editreleases	rel_not_yours	La version n'existe pas ou ne vous appartient pas (pour le fichier : $1)
@@ -83,18 +83,21 @@ file_admin_editreleases	data_not_parsed	Désolé, le format de la date du fichie
 file_admin_editreleases	data_not_parsed_file	Désolé, le format de la date du fichier $1 est incorrect. Il doit suivre le format AAAA-MM-JJ.
 file_admin_editreleases	file_updated	Fichier mis à jour : $1
 file_admin_editreleases	add_files	Fichier(s) ajoutés
+file_admin_editreleases	offline_md5	Le md5 checksum du fichier "$1" va être calculé dans un instant. Vous serez notifié par email en cas de problème.
 file_admin_editreleases	illegal_file_name	Nom de fichier invalide
 file_admin_editreleases	p_rel_not_yours	Le paquet ou la version n'existe pas ou ne vous appartient pas
 file_admin_editreleases	not_add_file	Le fichier n'a pas pu être ajouté
 file_admin_editreleases	filename_invalid	Nom de fichier invalide ou inexistant
 file_admin_editreleases	filename_exists	Le nom de fichier existe déjà pour ce projet
+file_admin_editreleases	md5_fail	La comparaison des MD5 checksum a echoué pour le fichier "$1", la valeur du MD5 calculée au niveau du serveur est "$2"
 file_admin_editreleases	no_files_selected	Aucun fichier sélectionné
 file_admin_editreleases	file_deleted	Fichier détruit : $1
-file_admin_editreleases	file_rel_notice	Notification d'une nouvelle version
-file_admin_editreleases	file_rel_notice_project	Projet $1
+file_admin_editreleases	file_rel_notice_subject	[$1] $2 : nouvelle version du paquet $3
 file_admin_editreleases	download_explain_modified_file	Une nouvelle version de $2 (paquet $1) vient d'être publiée.
-file_admin_editreleases	download_explain_modified_package	Une nouvelle version du paquet $1 vient d'ï¿½tre publiée.
-file_admin_editreleases	download_explain	 \nVous pouvez la télécharger à : \n\n$1\n\nVous avez demandé à être notifié lors de la publication d'une nouvelle version de ce paquet. Si vous ne voulez plus recevoir ces notifications à l'avenir, connectez-vous à $2 et suivez ce lien
+file_admin_editreleases	download_explain_modified_package	Le project $1 vient de publier la version '$3' du package '$2'.\nVous pouvez la télécharger à l'addresse suivante :\n<$4>\n
+file_admin_editreleases	download_explain	 \n--\nVous avez demandé à être notifié lors de la publication d'une nouvelle version de ce paquet.\nSi vous ne voulez plus recevoir ces notifications à l'avenir, suivez ce lien :\n<$1>
+file_admin_editreleases	file_rel_notice_notes	\n\nNotes:\n$1\n
+file_admin_editreleases	file_rel_notice_changes	\n\nModifications:\n$1\n
 file_admin_editreleases	email_sent	E-mail envoyé - $1 utilisateurs suivent ce paquet
 file_admin_editreleases	rel_id_not_found	Ce numéro de version (ID) n'est pas dans la base de données
 file_admin_editreleases	release_new_file_version	Publier une nouvelle version
@@ -175,6 +178,8 @@ file_admin_editreleases	create_new_release	Créer une nouvelle version
 file_admin_editreleases	create_canceled	Création de la version annulée
 file_admin_editreleases	update_canceled	Mise à jour de la version annulée
 file_admin_editreleases	upload_file_msg	(La taille maximum autorisée est de $1 Mb - <u>Veuillez compresser vos fichiers</u>)
+file_admin_editreleases	md5sum	md5 Checksum
+file_admin_editreleases	user	Propriétaire
 #
 #-----------------------------------------------
 # Script: SF/www/file/admin/index.php
@@ -294,6 +299,8 @@ file_showfiles	stat_total_size	Ko
 file_showfiles	stat_total_nb_downloads	téléchargements
 file_showfiles	hidden_package	Ce paquet est caché.
 file_showfiles	hidden_release	Cette version est cachée.
+file_showfiles	md5sum	Md5sum du fichier
+file_showfiles	user	Propriétaire
 #
 #-----------------------------------------------
 # Script: SF/www/file/shownotes.php

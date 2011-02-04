@@ -87,7 +87,7 @@ class BrowserPlugin extends Sabre_DAV_Browser_Plugin {
     function mkcolForm() {
         echo '<form method="post" action="">
         <input type="hidden" name="action" value="mkcol" />
-        Name: <input type="text" name="name" />
+        '.$GLOBALS["Language"]->getText("plugin_webdav_html", "name").' : <input type="text" name="name" />
         <button type="submit" style="background:white; border:0;" value="create"><img src="https://'.$GLOBALS['sys_https_host'].'/themes/Dawn/images/ic/add.png"></button>
         </form>';
     }
@@ -218,19 +218,7 @@ class BrowserPlugin extends Sabre_DAV_Browser_Plugin {
         $node = $this->server->tree->getNodeForPath($path);
         $class = get_class($node);
 
-        switch ($class) {
-            case 'WebDAVRoot':
-                $params = array ('title' => 'WebDAV');
-                break;
-            case 'WebDAVProject':
-                $params = array ('title' => 'WebDAV' ,'group' => $node->getGroupId());
-                break;
-            default:
-                $params = array ('title' => 'WebDAV' ,'group' => $node->getProject()->getGroupId());
-                break;
-        }
-
-        //site_header($params);
+        echo $GLOBALS['HTML']->pv_header(array('title'=>' WebDAV : '.$node->getName()));
 
         ob_start();
 
@@ -239,20 +227,20 @@ class BrowserPlugin extends Sabre_DAV_Browser_Plugin {
         echo '';
 
         echo "<table>
-        <tr><th>Name</th><th>Type</th>";
-        if ($class == 'WebDAVProject' && $node->userCanWrite()) {
-            echo "<th>Delete</th><th>Rename</th>";
+        <tr><th>".$GLOBALS['Language']->getText('plugin_webdav_html', 'name')."</th><th>Type</th>";
+        if ($class == 'WebDAVFRS' && $node->userCanWrite()) {
+            echo "<th>".$GLOBALS['Language']->getText('plugin_webdav_html', 'delete')."</th><th>".$GLOBALS['Language']->getText('plugin_webdav_html', 'rename')."</th>";
         }
         if ($class == 'WebDAVFRSPackage') {
-            echo "<th>Last modified</th>";
+            echo "<th>".$GLOBALS['Language']->getText('plugin_webdav_html', 'last_modified')."</th>";
             if ($node->userCanWrite()) {
-                echo "<th>Delete</th><th>Rename</th><th>Move</th>";
+                echo "<th>".$GLOBALS['Language']->getText('plugin_webdav_html', 'delete')."</th><th>".$GLOBALS['Language']->getText('plugin_webdav_html', 'rename')."</th>";/*<th>".$GLOBALS['Language']->getText('plugin_webdav_html', 'move')."</th>";*/
             }
         }
         if ($class == 'WebDAVFRSRelease') {
-            echo "<th>Size</th><th>Last modified</th>";
+            echo "<th>".$GLOBALS['Language']->getText('plugin_webdav_html', 'size')."</th><th>".$GLOBALS['Language']->getText('plugin_webdav_html', 'last_modified')."</th>";
             if ($node->userCanWrite()) {
-                echo "<th>Delete</th><th>Move</th>";
+                echo "<th>".$GLOBALS['Language']->getText('plugin_webdav_html', 'delete')."</th>";/*<th>".$GLOBALS['Language']->getText('plugin_webdav_html', 'move')."</th>";*/
             }
         }
         echo "</tr><tr><td colspan=\"6\"><hr /></td></tr>";
@@ -279,12 +267,12 @@ class BrowserPlugin extends Sabre_DAV_Browser_Plugin {
             if (isset($file[200]['{DAV:}resourcetype'])) {
                 $type = $file[200]['{DAV:}resourcetype']->getValue();
                 if ($type=='{DAV:}collection') {
-                    $type = 'Directory';
+                    $type = $GLOBALS["Language"]->getText("plugin_webdav_html", "directory");
                 } elseif ($type=='') {
                     if (isset($file[200]['{DAV:}getcontenttype'])) {
                         $type = $file[200]['{DAV:}getcontenttype'];
                     } else {
-                        $type = 'Unknown';
+                        $type = $GLOBALS["Language"]->getText("plugin_webdav_html", "unknown");
                     }
                 } elseif (is_array($type)) {
                     $type = implode(', ', $type);
@@ -298,7 +286,7 @@ class BrowserPlugin extends Sabre_DAV_Browser_Plugin {
 
             echo str_replace("%", "%25", "<tr><td><a href=\"{$fullPath}\">{$name}</a></td>");
             echo "<td>{$type}</td>";
-            if ($class == 'WebDAVProject' && $node->userCanWrite()) {
+            if ($class == 'WebDAVFRS' && $node->userCanWrite()) {
                 $this->deleteForm($file);
                 $this->renameForm($file);
             }
@@ -308,7 +296,7 @@ class BrowserPlugin extends Sabre_DAV_Browser_Plugin {
                     $this->deleteForm($file);
                     $this->renameForm($file);
                     $destinations = $this->getReleaseDestinations($file);
-                    $this->moveForm($file, $destinations);
+                    //$this->moveForm($file, $destinations);
                 }
             }
             if ($class == 'WebDAVFRSRelease') {
@@ -317,7 +305,7 @@ class BrowserPlugin extends Sabre_DAV_Browser_Plugin {
                 if ($node->userCanWrite()) {
                     $this->deleteForm($file);
                     $destinations = $this->getFileDestinations($file);
-                    $this->moveForm($file, $destinations);
+                    //$this->moveForm($file, $destinations);
                 }
             }
             echo "</tr>";
@@ -328,20 +316,20 @@ class BrowserPlugin extends Sabre_DAV_Browser_Plugin {
         <tr><td>";
 
         if ($this->enablePost) {
-            if ($class == 'WebDAVProject' && $node->userCanWrite()) {
-                echo '<h4>Create new package</h4>';
+            if ($class == 'WebDAVFRS' && $node->userCanWrite()) {
+                echo '<h4>'.$GLOBALS["Language"]->getText("plugin_webdav_html", "create_package").' :</h4>';
                 $this->mkcolForm();
             }
             if ($class == 'WebDAVFRSPackage' && $node->userCanWrite()) {
-                echo '<h4>Create new release</h4>';
+                echo '<h4>'.$GLOBALS["Language"]->getText("plugin_webdav_html", "create_release").' :</h4>';
                 $this->mkcolForm();
             }
             if ($class == 'WebDAVFRSRelease' && $node->userCanWrite()) {
-                echo '<h4>Upload file</h4>
+                echo '<h4>'.$GLOBALS["Language"]->getText("plugin_webdav_html", "upload_file").' :</h4>
                 <form method="post" action="" enctype="multipart/form-data">
                 <input type="hidden" name="action" value="put" />
-                Name (optional): <input type="text" name="name" /><br />
-                File: <input type="file" name="file" />
+                '.$GLOBALS["Language"]->getText("plugin_webdav_html", "name").' ('.$GLOBALS["Language"]->getText("plugin_webdav_html", "optional").') : <input type="text" name="name" /><br />
+                '.$GLOBALS["Language"]->getText("plugin_webdav_html", "file").' : <input type="file" name="file" />
                 <button type="submit" style="background:white; border:0;" value="upload"><img src="https://'.$GLOBALS['sys_https_host'].'/themes/Dawn/images/ic/tick.png"></button>
                 </form>';
             }
@@ -350,7 +338,7 @@ class BrowserPlugin extends Sabre_DAV_Browser_Plugin {
 
         echo"</table>";
 
-        //site_footer($params);
+        echo $GLOBALS['HTML']->pv_footer(array());
 
         return ob_get_clean();
 

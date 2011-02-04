@@ -82,12 +82,14 @@ class Codendi_HTMLPurifier {
     }
 
     /**
-     * Allow basic formatting markups.
+     * Allow basic formatting markups and enable some Autoformat attributes
+     * @see http://htmlpurifier.org/live/configdoc/plain.html#AutoFormat
      *
      */
     function getLightConfig() {
         $config = $this->getCodendiConfig();
         $config->set('HTML', 'Allowed', $this->getLightConfigMarkups());
+        $config->set('AutoFormat','Linkify', true);
         return $config;
     }
     
@@ -104,15 +106,10 @@ class Codendi_HTMLPurifier {
      * - 'cite', 'code', 'blockquote', 'strong', 'em', 'pre', 'b', 'i'
      */
     function getLightConfigMarkups() {
-        $eParagraph       = array('p', 'br');
-        $eLinks           = array('a[href|title|class]');
-        $eList            = array('ul', 'ol', 'li');
-        $eContentBasedTxt = array('cite', 'code', 'blockquote', 'strong', 'em',
-                                  'pre', 'b', 'i');
-        
-        $aa = array_merge($eParagraph, $eLinks, $eList, $eContentBasedTxt);
-        $allowed = implode(',', $aa);
-        
+        $allowed = 'p,br,'.
+                   'a[href|title|class],img[src|alt],'.
+                   'ul,ol,li,'.
+                   'cite,code,blockquote,strong,em,pre,b,i';
         return $allowed;
     }
 
@@ -147,10 +144,38 @@ class Codendi_HTMLPurifier {
     }
 
     /**
-     * Wrap call to util_make_links (for testing purpose).
+     * Transform links and emails from text to html links
+     *
+     * @param String $data
+     *
+     * @return String
      */
-    function _makeLinks($str, $groupId) {
-        return util_make_links($str, $groupId);
+    function makeLinks($data = '', $group_id = 0) {
+        if(empty($data)) { return $data; }
+
+        // www.yahoo.com => http://www.yahoo.com
+        $data = preg_replace("/([ \t\n])www\./i","\\1http://www.",$data);
+
+        // http://www.yahoo.com => <a href="...">...</a>
+
+        // Special case for urls between brackets or double quotes 
+        // e.g. <http://www.google.com> or "http://www.google.com"
+        // In some places (e.g. tracker follow-ups) the text is already encoded, so the brackets are replaced by &lt; and &gt; See SR #652.
+        $data = preg_replace("/([[:alnum:]]+):\/\/([^[:space:]<]*)([[:alnum:]#?\/&=])&quot;/i", "\\1://\\2\\3\"", $data);
+        $data = preg_replace("/([[:alnum:]]+):\/\/([^[:space:]<]*)([[:alnum:]#?\/&=])&#039;/i", "\\1://\\2\\3'", $data);
+        $data = preg_replace("/([[:alnum:]]+):\/\/([^[:space:]<]*)([[:alnum:]#?\/&=])&gt;/i", "\\1://\\2\\3>", $data);
+        // Now, replace
+        $data = preg_replace("/([[:alnum:]]+):\/\/([^[:space:]<]*)([[:alnum:]#?\/&=])/i", "<a href=\"\\1://\\2\\3\" target=\"_blank\" target=\"_new\">\\1://\\2\\3</a>", $data);
+
+	    // john.doe@yahoo.com => <a href="mailto:...">...</a>
+        $data = preg_replace("/(([a-z0-9_]|\\-|\\.)+@([^[:space:]<&>]*)([[:alnum:]-]))/i", "<a href=\"mailto:\\1\" target=\"_new\">\\1</a>", $data);
+
+        if ($group_id) {
+            $reference_manager = $this->getReferenceManager();
+            $reference_manager->insertReferences($data,$group_id);
+        }
+
+        return $data;
     }
 
     /**
@@ -193,7 +218,14 @@ class Codendi_HTMLPurifier {
             break;
 
         case CODENDI_PURIFIER_LIGHT:
-            $html = nl2br($this->_makeLinks($html, $groupId));
+            if (empty($html)) {
+                $clean = $html;
+                break;
+            }
+            if ($groupId) {
+                $referenceManager = $this->getReferenceManager();
+                $referenceManager->insertReferences($html,$groupId);
+            }
         case CODENDI_PURIFIER_STRIP_HTML:
         case CODENDI_PURIFIER_FULL:
             require_once($GLOBALS['htmlpurifier_dir'].'/HTMLPurifier.auto.php');
@@ -205,10 +237,10 @@ class Codendi_HTMLPurifier {
             break;
 
         case CODENDI_PURIFIER_BASIC:
-            $clean = nl2br($this->_makeLinks(htmlentities($html, ENT_QUOTES, 'UTF-8'), $groupId));
+            $clean = nl2br($this->makeLinks(htmlentities($html, ENT_QUOTES, 'UTF-8'), $groupId));
             break;
         case CODENDI_PURIFIER_BASIC_NOBR:
-            $clean = $this->_makeLinks(htmlentities($html, ENT_QUOTES, 'UTF-8'), $groupId);
+            $clean = $this->makeLinks(htmlentities($html, ENT_QUOTES, 'UTF-8'), $groupId);
             break;
 
         case CODENDI_PURIFIER_JS_QUOTE:
@@ -229,6 +261,15 @@ class Codendi_HTMLPurifier {
 
     function purifyMap($array, $level=0, $groupId=0) {
         return array_map(array(&$this, "purify"), $array, array($level), array($groupId));
+    }
+    
+    /**
+     * Returns an instance of ReferenceManager
+     *
+     * @return ReferenceManager
+     */
+    public function getReferenceManager() {
+        return ReferenceManager::instance();
     }
 
 }

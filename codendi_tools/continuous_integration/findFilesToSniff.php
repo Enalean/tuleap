@@ -17,6 +17,18 @@ foreach ($diff->xpath('paths/path') as $path) {
             if (strpos($p, 'plugins/webdav/include/lib') !== false) {
                 continue;
             }
+            // DB updates doesn't have to be perfects
+            if (strpos($p, 'src/db/mysql/updates') !== false) {
+                continue;
+            }
+            // We don't check CLI right now
+            if (strpos($p, 'cli') !== false) {
+                continue;
+            }
+            // Internal code samples are not perfect
+            if (strpos($p, 'codendi_tools/examples') !== false) {
+                continue;
+            }
             echo $p.PHP_EOL;
         }
     }

@@ -25,7 +25,8 @@ class CodendiSOAP extends SoapClient {
 	var $session_group_id;	// Default group
 	var $session_user;		// Logged user name
     var $session_user_id;	// Logged user ID
-	
+    protected $fileChunkSize;
+
 	/**
 	 * constructor
 	 */
@@ -38,15 +39,21 @@ class CodendiSOAP extends SoapClient {
 		$this->session_group_id = 0;		// By default don't use a group
 		$this->session_user = "";
         $this->session_user_id = 0;
+		$this->fileChunkSize = 6000000; // ~6 Mo;
 		
 		// Try to find a dir where to put the session file
+		$session_dir = 0;
 		if (array_key_exists("HOME", $_ENV)) {
 			$session_dir = $_ENV["HOME"]."/";
 		} else if (array_key_exists("HOMEPATH", $_ENV) && array_key_exists("HOMEDRIVE", $_ENV)) {		// For Windows
 			$session_dir = $_ENV["HOMEDRIVE"]."\\".$_ENV["HOMEPATH"]."\\";
+
 		}
+				
 		$this->session_file = $session_dir.".codendirc";
-		$this->readSession();
+		if (file_exists($this->session_file)) {
+ 			$this->readSession();
+		}
 	}
 	
 	/**
@@ -76,7 +83,7 @@ class CodendiSOAP extends SoapClient {
             }
 		}
 		
-		$LOG->add("CodendiSOAP::Executing command ".$command."...");
+		$LOG->add("CodendiSOAP::Executing command ".$command." ...");
         return call_user_func_array(array($this, $command),$params);
 	}
 	
@@ -87,26 +94,18 @@ class CodendiSOAP extends SoapClient {
 	function connect() {
 		global $LOG;
 		
-		if (!$this->wsdl_string) {
-			if (defined("WSDL_URL")) {
-				$this->wsdl_string = WSDL_URL;
-			} else {
-				exit_error("CodendiSOAP: URL of the WSDL is not defined. Please set your CODENDI_WSDL environment variable.");
-			}
-		}
-		
         try {
         	$log_proxy = '';
         	if ($this->proxy_host && $this->proxy_port) {
         		$log_proxy = ', using proxy '.$this->proxy_host.':'.$this->proxy_port;
         	}
-            $LOG->add("CodendiSOAP::Connecting to the server ".$this->wsdl_string.$log_proxy."...");
+            $LOG->add("CodendiSOAP::Connecting to the server ".$this->getWSDLString().$log_proxy."...");
             $options = array('trace' => true);
             if ($this->proxy_host && $this->proxy_port) {
             	$options['proxy_host'] = $this->proxy_host;
             	$options['proxy_port'] = (int)$this->proxy_port;
             }
-            parent::__construct($this->wsdl_string, $options);
+            parent::__construct($this->getWSDLString(), $options);
         } catch (SoapFault $fault) {
             exit_error($fault, $this->faultcode);
 		}
@@ -148,10 +147,20 @@ class CodendiSOAP extends SoapClient {
 		return $this->session_user_id;
 	}
     
-	function setWSDL($wsdl) {
+	function setWSDLString($wsdl) {
 		$this->wsdl_string = $wsdl;
 	}
-	
+    function getWSDLString() {
+		if (!$this->wsdl_string) {
+			if (defined("WSDL_URL")) {
+				$this->wsdl_string = WSDL_URL;
+			} else {
+				exit_error("CodendiSOAP: URL of the WSDL is not defined. Please set your CODENDI_WSDL environment variable.");
+			}
+		}
+        return $this->wsdl_string;
+    }
+
 	function setProxy($proxy) {
 		$arr_proxy = explode(":", $proxy);
 		$this->proxy_host = $arr_proxy[0];
@@ -164,24 +173,36 @@ class CodendiSOAP extends SoapClient {
 		return $this->proxy_port;
 	}
 	
+	function getFileChunkSize() {
+	    return $this->fileChunkSize;
+	}
+	function setFileChunkSize($size) {
+	    $this->fileChunkSize = $size;
+	}
+
 	function saveSession() {
-		$handler = fopen($this->session_file, "w");
-		if (!$handler) {
+		// If file doesn't exist, create first and set the right permissions
+		if (!file_exists($this->session_file)) {
+			touch($this->session_file);
+			chmod($this->session_file, 0600);
+		}
+
+		$content = '';
+		$content .= "wsdl_string=\"".$this->getWSDLString()."\"".PHP_EOL;
+		$content .= "session_string=\"".$this->session_string."\"".PHP_EOL;
+		$content .= "session_group_id=\"".$this->session_group_id."\"".PHP_EOL;
+		$content .= "session_user=\"".$this->session_user."\"".PHP_EOL;
+		$content .= "session_user_id=\"".$this->session_user_id."\"".PHP_EOL;
+		$content .= "proxy_host=\"".$this->proxy_host."\"".PHP_EOL;
+		$content .= "proxy_port=\"".$this->proxy_port."\"".PHP_EOL;
+		$content .= "file_chunk_size=\"".$this->fileChunkSize."\"".PHP_EOL;
+
+		if (!file_put_contents($this->session_file, $content)) {
 			exit_error("Could not open session file ".$this->session_file." for writing");
 		}
-		
-		fputs($handler, "wsdl_string=\"".$this->wsdl_string."\"\n");
-		fputs($handler, "session_string=\"".$this->session_string."\"\n");
-		fputs($handler, "session_group_id=\"".$this->session_group_id."\"\n");
-		fputs($handler, "session_user=\"".$this->session_user."\"\n");
-        fputs($handler, "session_user_id=\"".$this->session_user_id."\"\n");
-        fputs($handler, "proxy_host=\"".$this->proxy_host."\"\n");
-        fputs($handler, "proxy_port=\"".$this->proxy_port."\"\n");
-		fclose($handler);
-		
 		chmod($this->session_file, 0600);
 	}
-	
+
 	function readSession() {
 		// Read session info (if exists)
 		if (file_exists($this->session_file)) {
@@ -194,6 +215,9 @@ class CodendiSOAP extends SoapClient {
 				$this->wsdl_string = $session["wsdl_string"];
 				$this->proxy_host = $session["proxy_host"];
 				$this->proxy_port = $session["proxy_port"];
+				if (isset($session["file_chunk_size"])) {
+				    $this->fileChunkSize = $session["file_chunk_size"];
+				}
 			}
 		}
 	}

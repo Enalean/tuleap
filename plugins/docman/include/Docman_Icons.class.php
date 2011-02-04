@@ -126,6 +126,8 @@ class Docman_Icons {
                         case 'rtf':
                         case 'msword':
                         case 'vnd.ms-works':
+                        //word office 2007: docx
+                        case 'vnd.openxmlformats-officedocument.wordprocessingml.document':
                         case 'word':
                         case 'wordperfect5.1':
                         case 'vnd.oasis.opendocument.text':
@@ -144,6 +146,8 @@ class Docman_Icons {
                             break;
                         case 'powerpoint':
                         case 'vnd.ms-powerpoint':
+                        //powerpoint office 2007: pptx
+                        case 'vnd.openxmlformats-officedocument.presentationml.presentation':
                         case 'vnd.sun.xml.impress':
                         case 'vnd.sun.xml.impress.template':
                         case 'vnd.oasis.opendocument.presentation':
@@ -155,6 +159,8 @@ class Docman_Icons {
                             break;
                         case 'excel':
                         case 'vnd.ms-excel':
+                        //Excel office 2007: xlsx
+                        case 'vnd.openxmlformats-officedocument.spreadsheetml.sheet':
                         case 'vnd.sun.xml.calc':
                         case 'vnd.sun.xml.calc.template':
                         case 'vnd.oasis.opendocument.spreadsheet':

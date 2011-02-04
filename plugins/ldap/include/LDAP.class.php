@@ -70,7 +70,7 @@ class LDAP {
      * @return String
      */
     function getLDAPParam($key) {
-        return $this->ldapParams[$key];
+        return isset($this->ldapParams[$key]) ?  $this->ldapParams[$key] : null;
     }
     
     /**
@@ -383,7 +383,7 @@ class LDAP {
      * @return LDAPResultIterator
      */
     function searchUserAsYouType($name, $sizeLimit, $validEmail=false) {
-        $lri = false;
+        $apIt  = new AppendIterator();
         if($name && $this->_connectAndBind()) {
             $filter = '('.$this->ldapParams['cn'].'='.$name.'*)';
             if($validEmail) {
@@ -400,13 +400,21 @@ class LDAP {
             $this->trapErrors();
             // Use SCOPE_ONELEVEL to only search in "sys_ldap_people_dn" branch 
             // of the directory to speed up the search.
-            $lri = $this->search($this->ldapParams['people_dn'], $filter, self::SCOPE_ONELEVEL, $attrs, $attrsOnly, $sizeLimit);
+            $peopleDn = split(';', $this->ldapParams['people_dn']);
+            foreach ($peopleDn as $count) {
+                $ds[] = $this->ds;
+            }
+            $asr = ldap_list($ds, $peopleDn, $filter, $attrs, $attrsOnly, $sizeLimit, 0, LDAP_DEREF_NEVER);
+            if ($asr !== false) {
+                foreach ($asr as $sr) {
+                    $entries = ldap_get_entries($this->ds, $sr);
+                    if ($entries !== false) {
+                        $apIt->append(new LDAPResultIterator($entries, $this->ldapParams));
+                    }
+                }
+            }
         }
-        if ($lri === false) {
-            return new LDAPResultIterator(array(), array());
-        } else {
-            return $lri;
-        }
+        return $apIt;
     }
 
     /**

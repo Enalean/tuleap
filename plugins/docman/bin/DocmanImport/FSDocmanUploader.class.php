@@ -119,7 +119,7 @@ foreach ($rii as $r) {
                         $offset++;
                     }
                 }
-                $uploadedMd5 = $soap->getDocmanFileMD5sum($hash, $project_id, $itemId, 0);
+                $uploadedMd5 = $soap->getDocmanFileMD5sum($hash, $project_id, $itemId, 1);
                 if($uploadedMd5 !== md5_file($r->getPathname())) {
                     echo "ERROR: md5 differs".PHP_EOL;
                 } else {

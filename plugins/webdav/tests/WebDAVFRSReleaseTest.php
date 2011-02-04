@@ -20,19 +20,7 @@
 
 require_once (dirname(__FILE__).'/../../../src/common/language/BaseLanguage.class.php');
 Mock::generate('BaseLanguage');
-require_once (dirname(__FILE__).'/../include/lib/Sabre/DAV/Exception.php');
-require_once (dirname(__FILE__).'/../include/lib/Sabre/DAV/Exception/FileNotFound.php');
-require_once (dirname(__FILE__).'/../include/lib/Sabre/DAV/Exception/RequestedRangeNotSatisfiable.php');
-require_once (dirname(__FILE__).'/../include/lib/Sabre/DAV/Exception/Forbidden.php');
-require_once (dirname(__FILE__).'/../include/lib/Sabre/DAV/Exception/MethodNotAllowed.php');
-require_once (dirname(__FILE__).'/../include/lib/Sabre/DAV/Exception/BadRequest.php');
-require_once (dirname(__FILE__).'/../include/lib/Sabre/DAV/INode.php');
-require_once (dirname(__FILE__).'/../include/lib/Sabre/DAV/Node.php');
-require_once (dirname(__FILE__).'/../include/lib/Sabre/DAV/IFile.php');
-require_once (dirname(__FILE__).'/../include/lib/Sabre/DAV/File.php');
-require_once (dirname(__FILE__).'/../include/lib/Sabre/DAV/ICollection.php');
-require_once (dirname(__FILE__).'/../include/lib/Sabre/DAV/IDirectory.php');
-require_once (dirname(__FILE__).'/../include/lib/Sabre/DAV/Directory.php');
+require_once ('requirements.php');
 require_once (dirname(__FILE__).'/../../../src/common/user/User.class.php');
 Mock::generate('User');
 require_once (dirname(__FILE__).'/../../../src/common/project/Project.class.php');
@@ -58,7 +46,7 @@ require_once (dirname(__FILE__).'/../include/FS/WebDAVFRSRelease.class.php');
 Mock::generatePartial(
     'WebDAVFRSRelease',
     'WebDAVFRSReleaseTestVersion',
-array('getChild', 'getRelease', 'getReleaseId', 'getPackage', 'getProject', 'getUtils', 'getMaxFileSize', 'getFileList', 'getWebDAVFRSFile', 'userIsAdmin', 'userCanWrite', 'createFileIntoIncoming')
+array('getChild', 'getRelease', 'getReleaseId', 'getPackage', 'getProject', 'getUser', 'getUtils', 'getMaxFileSize', 'getFileList', 'getWebDAVFRSFile', 'userIsAdmin', 'userCanWrite', 'createFileIntoIncoming')
 );
 
 Mock::generatePartial(
@@ -83,12 +71,14 @@ class WebDAVFRSReleaseTest extends UnitTestCase {
     function setUp() {
 
         $GLOBALS['Language'] = new MockBaseLanguage($this);
+        $GLOBALS['ftp_incoming_dir'] = dirname(__FILE__).'/_fixtures/incoming';
 
     }
 
     function tearDown() {
 
         unset($GLOBALS['Language']);
+        unset($GLOBALS['ftp_incoming_dir']);
 
     }
 
@@ -959,6 +949,8 @@ class WebDAVFRSReleaseTest extends UnitTestCase {
         $utils->setReturnValue('getIncomingFileSize', 64);
         $project = new MockProject();
         $webDAVFRSRelease->setReturnValue('getProject', $project);
+        $user = new MockUser();
+        $webDAVFRSRelease->setReturnValue('getUser', $user);
         $webDAVFRSRelease->setReturnValue('getUtils', $utils);
         $this->assertNoErrors();
         $data = fopen(dirname(__FILE__).'/_fixtures/test.txt', 'r');

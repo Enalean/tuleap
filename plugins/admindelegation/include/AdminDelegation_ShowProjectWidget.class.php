@@ -142,7 +142,7 @@ class AdminDelegation_ShowProjectWidget extends Widget {
         
         $html .= '<label>'.$GLOBALS['Language']->getText('plugin_admindelegation', 'widget_projects_label').'</label>';
         $html .= '<input type="hidden" name="plugin_admindelegation_func" value="show_projects" />';
-        $html .= '<input type="text" name="plugin_admindelegation_pattern" value="'.$pattern.'" id="plugin_admindelegation_pattern" />';
+        $html .= '<input type="text" name="plugin_admindelegation_pattern" value="'.$pattern.'" size ="40" id="plugin_admindelegation_pattern" />';
         $html .= '<br />';
 
         $html .= '<input type="checkbox" name="criteria[]" value="group_name" id="plugin_admindelegation_group_name" '.$selectedCriteria['group_name'].' />';
@@ -187,7 +187,7 @@ class AdminDelegation_ShowProjectWidget extends Widget {
            
                 $html .= '<div style="text-align:center" class="'. util_get_alt_row_color($i++) .'">';
                 if ($offset > 0) {
-                    $html .= '<a href="?plugin_admindelegation_func=show_projects&offset='.($offset-$limit).$urlParam.'&pattern='.$pattern.'">[ '.$GLOBALS['Language']->getText('plugin_admindelegation', 'widget_projects_previous').' ]</a>';
+                    $html .= '<a href="?plugin_admindelegation_func=show_projects&offset='.($offset-$limit).$urlParam.'&plugin_admindelegation_pattern='.$pattern.'">[ '.$GLOBALS['Language']->getText('plugin_admindelegation', 'widget_projects_previous').' ]</a>';
                     $html .= '&nbsp;';
                 }
                 if (($offset + $limit) < $res['numrows']) {

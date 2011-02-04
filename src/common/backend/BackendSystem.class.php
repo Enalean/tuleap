@@ -73,10 +73,6 @@ class BackendSystem extends Backend {
         return $this->needRefreshGroupCache;
     }
 
-    public function checkSetUIDbit() {
-        system("cd ".$GLOBALS['codendi_bin_prefix']."; /bin/chmod u+s log_accum fileforge");
-    }
-
     /**
      * Create user home directory
      * Also copy files from the skel directory to the new home directory.
@@ -311,50 +307,32 @@ class BackendSystem extends Backend {
      * Remove deleted releases and released files
      */
     public function cleanupFRS() {
-        // location of the download/upload directories
-        $delete_dir = $GLOBALS['ftp_frs_dir_prefix']."/DELETED";
-
-        // list of files to be deleted
-        $deleting_files = $GLOBALS['ftp_incoming_dir'] ."/.delete_files";
-        $deleting_files_work = $GLOBALS['ftp_incoming_dir'] ."/.delete_files.work";
-
-        // move the list of files to delete to a temp work file
-        rename($deleting_files, $deleting_files_work);
-        touch($deleting_files);
-        $this->chown($deleting_files, $this->getHTTPUser());
-        
-        //move all files in the .delete_files
-        $waiting_files = file($deleting_files_work);
-        if ($waiting_files === false) {
-            $this->log("Cannot open $deleting_files_work", Backend::LOG_ERROR);
-            return false;
+        // Purge all deleted files older than 3 days old
+        if (!isset($GLOBALS['sys_file_deletion_delay'])) {
+            $delay = 3;
         } else {
-            foreach($waiting_files as $line) {
-                list($file, $project, $time) = explode('::', $line);
-                $filename = $GLOBALS['ftp_frs_dir_prefix'] ."/$project/$file";
-                if (!file_exists($filename)) {
-                    $this->log("$filename doesn't exist", Backend::LOG_WARNING);
-                } else {
-                    $subdirs = dirname($file);
-                    mkdir("$delete_dir/$project/$subdirs", 0770, true);
-                    
-                    //make sure that since the deletion of the file nobody has submitted a new file with 
-                    //the same filename
-                    if (filemtime($filename) >= $time || fileatime($filename) >= $time || filectime($filename) >= $time) {
-                        $this->log("Don't delete file $project/$file (modified since deletion)", Backend::LOG_WARNING);
-                    } else {
-                        $this->log("Deleting file $project/$file", Backend::LOG_INFO);
-                        rename($filename, "$delete_dir/$project/$file-$time");
-                    }
-                }
-            }
-            //delete all files under DELETE that are older than 7 days
-            system("find $delete_dir -type f -mtime +7 -exec rm {} \\;");
-            system("find $delete_dir -mindepth 1 -type d -empty -exec rm -R {} \\;");
+            $delay = intval($GLOBALS['sys_file_deletion_delay']);
         }
-        return true;
+        $time = $_SERVER['REQUEST_TIME'] - (3600*24*$delay);
+        
+        $frs = $this->getFRSFileFactory();
+        $status =  $frs->purgeDeletedFiles($time, $this);
+
+        // {{{ /!\ WARNING HACK /!\
+        // We keep the good old purge mecanism for at least one release to clean
+        // the previously deleted files
+        // Delete all files under DELETE that are older than 10 days
+        //$delete_dir = $GLOBALS['ftp_frs_dir_prefix']."/DELETED";
+        //system("find $delete_dir -type f -mtime +10 -exec rm {} \\;");
+        //system("find $delete_dir -mindepth 1 -type d -empty -exec rm -R {} \\;");
+        // }}} /!\ WARNING HACK /!\
+
+        $em = EventManager::instance();
+        $em->processEvent('backend_system_purge_files', array('time' => $time));
+
+        return ($status);
     }
-    
+
     /**
      * dumps SSH authorized_keys into all users homedirs
      */
@@ -547,8 +525,14 @@ class BackendSystem extends Backend {
         return rename($GLOBALS['homedir_prefix'].'/'.$user->getUserName(), $GLOBALS['homedir_prefix'].'/'.$newName);
     }
     
-    
-    
+    /**
+     * Wrapper for getFRSFileFactory
+     * 
+     * @return FRSFileFactory
+     */
+    protected function getFRSFileFactory() {
+        return new FRSFileFactory();
+    }
 
 }
 

@@ -69,7 +69,7 @@ class WebDAVUtils {
     }
 
     /**
-     * Replaces '/' and '%' by their respective ASCII code
+     * Replaces '/', '%' and '|' by their respective ASCII code
      *
      * @param String $name
      *
@@ -79,6 +79,7 @@ class WebDAVUtils {
 
         $name = str_replace('%', '%25', $name);
         $name = str_replace('/', '%2F', $name);
+        $name = str_replace('|', '&#124;', $name);
         return $name;
 
     }
@@ -95,7 +96,7 @@ class WebDAVUtils {
     }
 
     /**
-     * Replaces ASCII codes of '/' and '%' by the respective characters
+     * Replaces ASCII codes of '/', '%' and '|' by the respective characters
      *
      * @param String $name
      *
@@ -105,6 +106,7 @@ class WebDAVUtils {
 
         $name = str_replace('%2F', '/', $name);
         $name = str_replace('%25', '%', $name);
+        $name = str_replace('&#124;', '|', $name);
         return $name;
 
     }
@@ -199,6 +201,10 @@ class WebDAVUtils {
 
     function getIncomingFileSize($name) {
         return file_utils_get_size($GLOBALS['ftp_incoming_dir'].'/'.$name);
+    }
+    
+    function getIncomingFileMd5Sum($file) {
+        return PHP_BigFile::getMd5Sum($file);
     }
 
 }

@@ -10,6 +10,7 @@
 require_once('common/reference/ReferenceManager.class.php');
 require_once('common/valid/Rule.class.php');
 require_once('common/include/URL.class.php');
+require_once('common/include/Codendi_HTMLPurifier.class.php');
 
 // Part about CSV format export
 // The separator for CSV export can differ regarding the Excel version.
@@ -428,28 +429,9 @@ function util_line_wrap ($text, $wrap = 80, $break = "\n") {
 }
 
 function util_make_links ($data='',$group_id = 0) {
-    if(empty($data)) { return $data; }
-
-    // www.yahoo.com => http://www.yahoo.com
-    $data = eregi_replace("([ \t\n])www\.","\\1http://www.",$data);
-
-    // http://www.yahoo.com => <a href="...">...</a>
-
-    // Special case for urls between brackets or double quotes 
-    // e.g. <http://www.google.com> or "http://www.google.com"
-    // In some places (e.g. tracker follow-ups) the text is already encoded, so the brackets are replaced by &lt; and &gt; See SR #652.
-    $data = eregi_replace("([[:alnum:]]+)://([^[:space:]<]*)([[:alnum:]#?/&=])&quot;", "\\1://\\2\\3\"", $data);
-    $data = eregi_replace("([[:alnum:]]+)://([^[:space:]<]*)([[:alnum:]#?/&=])&gt;", "\\1://\\2\\3>", $data);
-    // Now, replace
-    $data = eregi_replace("([[:alnum:]]+)://([^[:space:]<]*)([[:alnum:]#?/&=])", "<a href=\"\\1://\\2\\3\" target=\"_blank\" target=\"_new\">\\1://\\2\\3</a>", $data);
-    
-	// john.doe@yahoo.com => <a href="mailto:...">...</a>
-    $data = eregi_replace("(([a-z0-9_]|\\-|\\.)+@([^[:space:]<&>]*)([[:alnum:]-]))", "<a href=\"mailto:\\1\" target=\"_new\">\\1</a>", $data);
-    if ($group_id) {
-      return util_make_reference_links ($data,$group_id);
-    } else {
-      return $data;
-    }
+    // creation of links has moved to Codendi_HTMLPurifier::makeLinks()
+    $hp = Codendi_HTMLPurifier::instance();
+    return $hp->makeLinks($data, $group_id);
 }
 
 function util_make_reference_links ($data,$group_id) {
@@ -1525,7 +1507,7 @@ function util_return_to($url) {
 */
 function util_time_ago_in_words($time, $include_seconds = false) {
     if ($time) {
-        return $GLOBALS['Language']->getText('include_utils', 'time_ago', util_distance_of_time_in_words($time, time(), $include_seconds));
+        return $GLOBALS['Language']->getText('include_utils', 'time_ago', util_distance_of_time_in_words($time, $_SERVER['REQUEST_TIME'], $include_seconds));
     } else {
         return '-';
     }

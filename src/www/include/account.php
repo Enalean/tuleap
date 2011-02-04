@@ -100,7 +100,14 @@ function account_add_user_obj_to_group ($group_id, User $user) {
     return false;
 }
 
-// Warn user she has been added to a project
+/**
+ * Warn user she has been added to a project
+ *
+ * @param Integer $group_id id of the project
+ * @param Integer $user_id  id of the user
+ *
+ * @return Boolean true if the mail was sent false otherwise
+ */
 function account_send_add_user_to_group_email($group_id,$user_id) {
   global $Language;
     $base_url = get_server_url();
@@ -109,6 +116,10 @@ function account_send_add_user_to_group_email($group_id,$user_id) {
     $res = db_query("SELECT email FROM user WHERE user_id=".db_ei($user_id));
     if (db_numrows($res) > 0) {
         $email_address = db_result($res,0,'email');
+        if (!$email_address) {
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('global', 'no_mail_for_account'));
+            return false;
+        }
         $res2 = db_query("SELECT group_name,unix_group_name FROM groups WHERE group_id=".db_ei($group_id));
         if (db_numrows($res2) > 0) {
             $group_name = db_result($res2,0,'group_name');
@@ -122,20 +133,24 @@ function account_send_add_user_to_group_email($group_id,$user_id) {
             $mail->setFrom($GLOBALS['sys_noreply']);
             $mail->setSubject($Language->getText('include_account','welcome',array($GLOBALS['sys_name'],$group_name)));
             $mail->setBody($message);
-            if (!$mail->send()) {
-                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('global', 'mail_failed', array($GLOBALS['sys_email_admin'])));
+            $result = $mail->send();
+            if (!$result) {
+                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('global', 'mail_failed', array($GLOBALS['sys_email_admin'])), CODENDI_PURIFIER_DISABLED);
             }
+            return $result;
         }
     }
+    return false;
 }
 
 /**
  * Remove a user from a project
  *
- * @param Integer $groupId Project id
- * @param Integer $userId  User id
+ * @param Integer $groupId      Project id
+ * @param Integer $userId       User id
+ * @param Boolean $adminAction  Default value set to true, manage the displayed message according to the person that asked for the action (admin/self remove) 
  */
-function account_remove_user_from_group($groupId, $userId) {
+function account_remove_user_from_group($groupId, $userId, $adminAction = true) {
     $pm = ProjectManager::instance();
     $res=db_query("DELETE FROM user_group WHERE group_id='$groupId' AND user_id='$userId' AND admin_flags <> 'A'");
     if (!$res || db_affected_rows($res) < 1) {
@@ -176,7 +191,11 @@ function account_remove_user_from_group($groupId, $userId) {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('project_admin_index','del_user_from_ug_fail'));
         }
         $name = user_getname($userId);
-        $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('project_admin_index','user_removed').' ('.$name.')');
+        if ($adminAction) {
+            $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('project_admin_index','user_removed').' ('.$name.')');
+        } else {
+            $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('project_admin_index','self_user_remove').' ('.$group->getPublicName().')');
+        }
         group_add_history ('removed_user',user_getname($userId)." ($userId)",$groupId);
         return true;
     }

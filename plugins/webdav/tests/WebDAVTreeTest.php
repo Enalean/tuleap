@@ -23,22 +23,13 @@ Mock::generate('BaseLanguage');
 require_once (dirname(__FILE__).'/../../../src/common/project/Project.class.php');
 Mock::generate('Project');
 require_once(dirname(__FILE__).'/../../../src/common/include/Error.class.php');
-require_once (dirname(__FILE__).'/../include/lib/Sabre/DAV/Exception.php');
-require_once (dirname(__FILE__).'/../include/lib/Sabre/DAV/Exception/MethodNotAllowed.php');
-require_once (dirname(__FILE__).'/../include/lib/Sabre/DAV/URLUtil.php');
-require_once (dirname(__FILE__).'/../include/lib/Sabre/DAV/INode.php');
-require_once (dirname(__FILE__).'/../include/lib/Sabre/DAV/Node.php');
-require_once (dirname(__FILE__).'/../include/lib/Sabre/DAV/IFile.php');
-require_once (dirname(__FILE__).'/../include/lib/Sabre/DAV/File.php');
+require_once ('requirements.php');
 require_once (dirname(__FILE__).'/../include/FS/WebDAVFRSFile.class.php');
 Mock::generate('WebDAVFRSFile');
-require_once (dirname(__FILE__).'/../include/lib/Sabre/DAV/ICollection.php');
-require_once (dirname(__FILE__).'/../include/lib/Sabre/DAV/IDirectory.php');
-require_once (dirname(__FILE__).'/../include/lib/Sabre/DAV/Directory.php');
+require_once (dirname(__FILE__).'/../include/FS/WebDAVFRSRelease.class.php');
+Mock::generate('WebDAVFRSRelease');
 require_once (dirname(__FILE__).'/../include/FS/WebDAVFRSRelease.class.php');
 require_once (dirname(__FILE__).'/../include/FS/WebDAVFRSPackage.class.php');
-require_once(dirname(__FILE__).'/../include/lib/Sabre/DAV/Tree.php');
-require_once(dirname(__FILE__).'/../include/lib/Sabre/DAV/ObjectTree.php');
 require_once(dirname(__FILE__).'/../include/WebDAVTree.class.php');
 
 /**
@@ -53,7 +44,7 @@ class TestTree extends WebDAVTree {
         return new MockWebDAVFRSFile();
     }
 }
-Mock::generatePartial('TestTree', 'TestTreeTestVersion', array('canBeMoved'));
+Mock::generatePartial('TestTree', 'TestTreeTestVersion', array('canBeMoved', 'getNodeForPath'));
 
 class TestFile extends WebDAVFRSFile {
     function __construct() {
@@ -198,8 +189,10 @@ class WebDAVTreeTest extends UnitTestCase {
     }
 
     function testMoveOnlyRename() {
+        $node = new MockWebDAVFRSRelease();
         $tree = new TestTreeTestVersion($this);
         $tree->setReturnValue('canBeMoved', true);
+        $tree->setReturnValue('getNodeForPath', $node);
         //$node = $tree->getNodeForPath('path');
 
         //$node->expectOnce('setName');
@@ -222,13 +215,15 @@ class WebDAVTreeTest extends UnitTestCase {
     }
 
     function testMoveSucceed() {
+        $node = new MockWebDAVFRSRelease();
         $tree = new TestTreeTestVersion($this);
         $tree->setReturnValue('canBeMoved', true);
+        $tree->setReturnValue('getNodeForPath', $node);
         //$node = $tree->getNodeForPath('path');
 
         //$node->expectNever('setName');
         //$node->expectOnce('move');
-        $this->assertNoErrors();
+        $this->expectException('Sabre_DAV_Exception_MethodNotAllowed');
 
         $tree->move('project1/package1/release1', 'project1/package2/release2');
     }
