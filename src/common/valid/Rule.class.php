@@ -421,13 +421,14 @@ extends Rule {
     /**
      * Test maximal length of name
      * 
-     * @param String $val Value to test
+     * @param String  $val Value to test
+     * @param Integer $max maximal length (default = 30)
      * 
      * @return Boolean
      */
-    public function greaterThanMax($val) {
-        if (strlen($val) > 30) {
-            $this->error = $GLOBALS['Language']->getText('include_account','name_too_long');
+    public function greaterThanMax($val, $max = 30) {
+        if (strlen($val) > $max) {
+            $this->error = $GLOBALS['Language']->getText('include_account','name_too_long', $max);
             return true;
         }
         return false;
@@ -647,6 +648,36 @@ extends Rule_UserName {
     protected function _getErrorNoSpaces() {
         return $GLOBALS['Language']->getText('include_account', 'project_spaces');
     }
+}
+
+/**
+ * Check if a project full name is valid
+ *
+ * This extends the user name validation
+ */
+class Rule_ProjectFullName extends Rule_UserName {
+
+    /**
+     * Check validity
+     *
+     * @param String $val
+     *
+     * @return Boolean
+     */
+    public function isValid($val) {
+        $val = trim($val);
+        return !$this->lessThanMin($val) && !$this->greaterThanMax($val, 40);
+    }
+
+    /**
+     * Error message
+     *
+     * @return String
+     */
+    public function getErrorMessage() {
+        return $this->error;
+    }
+
 }
 
 /**

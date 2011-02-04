@@ -8,7 +8,7 @@
 
 <P>Nous avons besoin de quelques informations techniques concernant votre projet. Deux noms sont associés à votre projet&nbsp;:
 
-<P>Le "nom complet" est un descriptif et ne comporte pas de restriction (sauf sur sa longueur limitée à 255 caractères) et il peut être modifié à tout moment.</P>
+<P>Le "nom complet" est un descriptif et ne comporte pas de restriction (sauf sur sa longueur limitée à un minimum de 3 caractères et un maximum de 40 caractères) et il peut être modifié à tout moment.</P>
 
 <p>Le "nom court" (aussi appelé "nom du groupe") présente certaines restrictions&nbsp;:
 
@@ -16,7 +16,6 @@
 <LI>Il ne doit correspondre à aucun nom court existant
 <LI>Sa longueur est comprise entre 3 et 30 caractères
 <LI>Il ne doit comporter que des caractères alphanumériques ou des tirets (AUCUN ESPACE ou signe de ponctuation).
-<LI>Contrairement au nom long, le nom court ne peut être modifié par la suite.
 </UL>
 
 <P>En dépit de ces restrictions, veillez à choisir un nom évocateur car il sera utilisé à plusieurs occasions telles que le pointeur vers le site Web de votre projet ou le dépôt CVS ou Subversion.

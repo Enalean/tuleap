@@ -69,6 +69,7 @@ register_index	project_registration	Project Registration
 #
 register_license	invalid_g_name	Invalid Group Name
 register_license	invalid_short_name	Invalid Short Name
+register_license	invalid_full_name	Invalid Full name
 register_license	nospace_in_short_name	There cannot be any spaces neither any _ (underscore) in the Short Name
 register_license	g_name_taken	Group Name Taken
 register_license	g_name_exist	That group name already exists.

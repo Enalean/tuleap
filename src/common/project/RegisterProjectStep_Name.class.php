@@ -39,14 +39,15 @@ class RegisterProjectStep_Name extends RegisterProjectStep {
         include($GLOBALS['Language']->getContent('project/projectname'));
     }
     function onLeave($request, &$data) {
-        $data['project']['form_full_name'] = $request->get('form_full_name');
+        $data['project']['form_full_name'] = trim($request->get('form_full_name'));
         $data['project']['form_unix_name'] = $request->get('form_unix_name');
         return $this->validate($data);
     }
     function validate($data) {
-        $is_valid = false;
+        $is_valid = true;
         if (!$data['project']['form_full_name'] || !$data['project']['form_unix_name']) {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('register_projectname', 'info_missed'));
+            $is_valid = false;
         } else {
             //check for valid group name
             $form_unix_name = $data['project']['form_unix_name'];
@@ -54,8 +55,15 @@ class RegisterProjectStep_Name extends RegisterProjectStep {
             if (!$rule->isValid($form_unix_name)) {
                 $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('register_license','invalid_short_name'));
                 $GLOBALS['Response']->addFeedback('error', $rule->getErrorMessage());
+                $is_valid = false;
             } else {
-                $is_valid = true;
+                $form_full_name = $data['project']['form_full_name'];
+                $rule = new Rule_ProjectFullName();
+                if (!$rule->isValid($form_full_name)) {
+                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('register_license','invalid_full_name'));
+                    $GLOBALS['Response']->addFeedback('error', $rule->getErrorMessage());
+                    $is_valid = false;
+                }
             }
         }
         return $is_valid;

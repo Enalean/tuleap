@@ -41,9 +41,10 @@ class RegisterProjectStep_Settings extends RegisterProjectStep {
         return $this->validate($data);
     }
     function validate($data) {
-        $is_valid = false;
+        $is_valid = true;
         if (!$data['project']['form_full_name'] || !$data['project']['form_unix_name']) {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('register_projectname', 'info_missed'));
+            $is_valid = false;
         } else {
             //check for valid group name
             $form_unix_name = $data['project']['form_unix_name'];
@@ -52,7 +53,13 @@ class RegisterProjectStep_Settings extends RegisterProjectStep {
                 $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('register_license','invalid_short_name'));
                 $GLOBALS['Response']->addFeedback('error', $rule->getErrorMessage());
             } else {
-                $is_valid = true;
+                $form_full_name = $data['project']['form_full_name'];
+                $rule = new Rule_ProjectFullName();
+                if (!$rule->isValid($form_full_name)) {
+                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('register_license','invalid_full_name'));
+                    $GLOBALS['Response']->addFeedback('error', $rule->getErrorMessage());
+                    $is_valid = false;
+                }
             }
         }
         return $is_valid;

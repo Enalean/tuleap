@@ -28,7 +28,7 @@ if (db_numrows($res_grp) < 1) {
 $row_grp = db_fetch_array($res_grp);
 
 
-$form_group_name=$request->get('form_group_name');
+$form_group_name = trim($request->get('form_group_name'));
 $form_shortdesc =$request->get('form_shortdesc');
 $Update=$request->get('Update');
 
@@ -39,8 +39,14 @@ if($Update){
 	if (!$form_group_name||!$form_shortdesc) {
 	    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('project_admin_editgroupinfo', 'info_missed'));
 		$valid_data=0;
-	}
-	    
+    } else {
+        $rule = new Rule_ProjectFullName();
+        if (!$rule->isValid($form_group_name)) {
+            $GLOBALS['Response']->addFeedback('error', $rule->getErrorMessage());
+            $valid_data=0;
+        }
+    }
+
 	$descfieldsinfos = getProjectsDescFieldsInfos();
 	for($i=0;$i<sizeof($descfieldsinfos);$i++){
 	    	$currentform=trim($request->get("form_".$descfieldsinfos[$i]["group_desc_id"]));

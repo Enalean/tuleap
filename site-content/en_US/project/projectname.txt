@@ -11,7 +11,7 @@
 There are two types of names that will be associated with this project.
 
 <P>The "Full Name" is descriptive, has no real name restrictions (except
-a 255 character limit), and
+a min of 3 characters and a max of 40 character limit), and
 can be changed.</P>
 
 <p>The project "Short Name" (also known as the "Group Name") has several restrictions. They are as follows:
@@ -20,7 +20,6 @@ can be changed.</P>
 <LI>It cannot match the Short name of any other project
 <LI>It must be between 3 and 30 characters in length
 <LI>It can only contain characters, numbers, and dashes. NO SPACE.
-<LI>As opposed to the Full Name the Short name will never change for this project
 </UL>
 
 <P>In spite of these restrictions make it easy to remember because it will be used in several very visible places like the project web site or the CVS or Subversion repository.

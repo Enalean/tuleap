@@ -51,7 +51,7 @@ class RegisterProjectStep_Confirmation extends RegisterProjectStep {
         $data['project']['form_license']       = $request->get('form_license');
         $data['project']['form_license_other'] = $request->get('form_license_other');
         
-        $data['project']['form_full_name'] = $request->get('form_full_name');
+        $data['project']['form_full_name'] = trim($request->get('form_full_name'));
         $data['project']['form_unix_name'] = $request->get('form_unix_name');
         
         return true;
