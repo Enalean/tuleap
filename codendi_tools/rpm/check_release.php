@@ -2,6 +2,11 @@
 
 require_once 'ReleaseVersionComparator.php';
 
+$verbose = false;
+if (isset($argv[1])) {
+    $verbose = true;
+}
+
 $rootdir = realpath(dirname(__FILE__).'/../..');
 chdir($rootdir);
 
@@ -25,8 +30,6 @@ foreach ($tags->list->entry as $entry) {
 $tagUrl  = $svnServer.$tagBase.'/'.((string) $maxEntry->name);
 echo 'Last release was: '.$maxEntry->name.' ('.$tagUrl.')'.PHP_EOL;
 
-$tagUrl  = $svnServer.$tagBase.'/4.0.15';
-
 // Get current branch info
 $rootSvnInfo = simplexml_load_string(shell_exec('svn info --xml '.$rootdir));
 $rootSvnUrl  = $rootSvnInfo->entry->url;
@@ -44,6 +47,9 @@ foreach ($diff->xpath('paths/path') as $path) {
     $fullURL = (string) $path;
 
     $p = substr($fullURL, -(strlen($fullURL)-strlen($tagUrl)));
+    if ($verbose) {
+        echo "\t$p".PHP_EOL;
+    }
 
     if (preg_match('%^/documentation/cli/%', $p)) {
         $cli = true;
@@ -73,7 +79,7 @@ $cmp = new ReleaseVersionComparator($tagUrl, $rootdir);
 
 /*if (isset($p)) {
     echo "Core: ".PHP_EOL;
-    $cmp->iterateOverPaths(array('/'));
+    $cmp->iterateOverPaths(array('/'), $verbose);
 }
 */
 
@@ -81,12 +87,12 @@ $cmp = new ReleaseVersionComparator($tagUrl, $rootdir);
 if (count($plugins) > 0) {
     echo "Plugins: ".PHP_EOL;
     $pluginCmp = new PluginReleaseVersionComparator($tagUrl, $rootdir, new FakePluginDescriptor($rootdir));
-    $pluginCmp->iterateOverPaths(array_keys($plugins));
+    $pluginCmp->iterateOverPaths(array_keys($plugins), $verbose);
 }
 
 if (count($themes) > 0) {
     echo "Themes: ".PHP_EOL;
-    $cmp->iterateOverPaths(array_keys($themes));
+    $cmp->iterateOverPaths(array_keys($themes), $verbose);
 }
 
 if ($soap) {

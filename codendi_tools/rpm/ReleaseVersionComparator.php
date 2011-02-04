@@ -3,7 +3,7 @@
 require_once 'FakePluginDescriptor.php';
 
 class ReleaseVersionComparator {
-    protected $tmpNames;
+    protected $tmpNames = array();
 
     public function __construct($prevUri, $curUri) {
         $this->prevUri = $prevUri;
