@@ -3,18 +3,25 @@
 require_once 'FakePluginDescriptor.php';
 
 class ReleaseVersionComparator {
+    protected $tmpNames;
 
     public function __construct($prevUri, $curUri) {
         $this->prevUri = $prevUri;
         $this->curUri  = $curUri;
     }
 
-    public function iterateOverPaths($paths) {
+    public function __destruct() {
+        foreach ($this->tmpNames as $file) {
+            @unlink($file);
+        }
+    }
+
+    public function iterateOverPaths($paths, $verbose=false) {
         foreach ($paths as $path) {
             $versionPath = $path.'/VERSION';            
-            $curVersion  = $pluginCmp->getCurrentVersion($versionPath);
-            $prevVersion = $pluginCmp->getPreviousVersion($versionPath);
-            if (version_compare($curVersion, $prevVersion, '<=')) {
+            $curVersion  = $this->getCurrentVersion($versionPath);
+            $prevVersion = $this->getPreviousVersion($versionPath);
+            if ($verbose || version_compare($curVersion, $prevVersion, '<=')) {
                 echo "\t".$path.": ".$curVersion.' (Previous release was: '.$prevVersion.')'.PHP_EOL;        
             }
         }
@@ -33,23 +40,19 @@ class ReleaseVersionComparator {
     }
 
     protected function getRemoteVersion($url) {
-        //try {
-            $filePath = $this->getRemoteFile($url);
-            $v = $this->getVersionContent($filePath);
-            unlink($filePath);
-            return $v;
-            //} catch (Excepti)
+        $filePath = $this->getRemoteFile($url);
+        return $this->getVersionContent($filePath);
     }
 
     protected function getRemoteFile($url) {
         $name   = tempnam('/tmp', 'codendi_release_');
+        $this->tmpNames[] = $name;
         $output = array();
         $retVal = false;
         exec('svn cat '.$url.' 2>/dev/null > '.$name, $output, $retVal);
         if ($retVal === 0) {
             return $name;
         }
-        unlink($name);
         throw new Exception('Impossible to get remote file: '.$url);
     }
     
@@ -78,8 +81,6 @@ class PluginReleaseVersionComparator extends ReleaseVersionComparator {
             // Get descriptor
             $oldDescPath = $this->getRemoteFile($this->prevUri.$relPath);
             $oldDesc     = $this->fpd->getDescriptorFromFile($pluginName, $oldDescPath);
-            unlink($oldDescPath);
-
             return $oldDesc->getVersion();
         }
         throw new Exception('No way to get the previous version number');

@@ -25,15 +25,20 @@ foreach ($tags->list->entry as $entry) {
 $tagUrl  = $svnServer.$tagBase.'/'.((string) $maxEntry->name);
 echo 'Last release was: '.$maxEntry->name.' ('.$tagUrl.')'.PHP_EOL;
 
+$tagUrl  = $svnServer.$tagBase.'/4.0.15';
+
 // Get current branch info
 $rootSvnInfo = simplexml_load_string(shell_exec('svn info --xml '.$rootdir));
 $rootSvnUrl  = $rootSvnInfo->entry->url;
 
 // Get diff since last release
 echo "Compare tag with current branch: ".$rootSvnUrl.PHP_EOL;
-$plugins = array();
-$themes  = array();
-$toCheck = array();
+$plugins   = array();
+$themes    = array();
+$toCheck   = array();
+$soap      = false;
+$cli       = false;
+$userGuide = false;
 $diff = simplexml_load_string(shell_exec('svn diff --xml --summarize '.$tagUrl.' '.$rootSvnUrl));
 foreach ($diff->xpath('paths/path') as $path) {
     $fullURL = (string) $path;
@@ -41,48 +46,59 @@ foreach ($diff->xpath('paths/path') as $path) {
     $p = substr($fullURL, -(strlen($fullURL)-strlen($tagUrl)));
 
     if (preg_match('%^/documentation/cli/%', $p)) {
-        $toCheck['documentation/cli'] = true;
+        $cli = true;
+    }
+    if (preg_match('%^/documentation/user_guide/%', $p)) {
+        $userGuide = true;
     }
     $match = array();
     if (preg_match('%^(/plugins/[^/]+)/%', $p, $match)) {
-        //$toCheck['plugins/'.$match[1]] = true;
         $plugins[$match[1]] = true;
     }
     if (preg_match('%^/cli/%', $p)) {
-        $toCheck['cli'] = true;
+        $cli = true;
     }
     if (preg_match('%^/src/www/soap/%', $p)) {
-        $toCheck['src/www/soap'] = true;
+        $soap = true;
     }
     $match = array();
     if (preg_match('%^(/src/www/themes/[^/]+)/%', $p, $match)) {
-        if ($match[1] != 'common') {
+        if ($match[1] != '/src/www/themes/common') {
             $themes[$match[1]] = true;
         }
     }
 }
 
-echo "Please check: ".PHP_EOL;
-foreach ($toCheck as $path => $nop) {
-    echo "\t".$path.PHP_EOL;
+$cmp = new ReleaseVersionComparator($tagUrl, $rootdir);
+
+/*if (isset($p)) {
+    echo "Core: ".PHP_EOL;
+    $cmp->iterateOverPaths(array('/'));
+}
+*/
+
+
+if (count($plugins) > 0) {
+    echo "Plugins: ".PHP_EOL;
+    $pluginCmp = new PluginReleaseVersionComparator($tagUrl, $rootdir, new FakePluginDescriptor($rootdir));
+    $pluginCmp->iterateOverPaths(array_keys($plugins));
 }
 
-echo "Plugins: ".PHP_EOL;
-$pluginCmp = new PluginReleaseVersionComparator($tagUrl, $rootdir, new FakePluginDescriptor($rootdir));
-$pluginCmp->iterateOverPaths(array_keys($plugins));
-/*foreach ($plugins as $plugin => $nop) {
-    $relVersionPath = '/plugins/'.$plugin.'/VERSION';
+if (count($themes) > 0) {
+    echo "Themes: ".PHP_EOL;
+    $cmp->iterateOverPaths(array_keys($themes));
+}
 
-    // Find current version number
-    $curVersion  = $pluginCmp->getCurrentVersion($relVersionPath);
-    $prevVersion = $pluginCmp->getPreviousVersion($relVersionPath);
+if ($soap) {
+    echo "Soap path changed, please check (not automated yet)".PHP_EOL;
+}
 
-    if (version_compare($curVersion, $prevVersion, '<=')) {
-        echo "\t".$plugin.": ".$curVersion.' (Previous release was: '.$prevVersion.')'.PHP_EOL;        
-    }
-    }*/
+if ($cli) {
+    echo "CLI sources or documentation path changed, please check (not automated yet)".PHP_EOL;
+}
 
-
-
+if ($userGuide) {
+    echo "User Guide path changed, please check (not automated yet)".PHP_EOL;
+}
 
 ?>
