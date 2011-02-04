@@ -7,6 +7,16 @@ if (isset($argv[1])) {
     $verbose = true;
 }
 
+// Gather RPMs info
+$rpms = array();
+$spec = file(dirname(__FILE__).'/codendi.spec', FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+foreach ($spec as $line) {
+    $m1 = array();
+    if (preg_match('/^%package (.*)-(.*)$/', trim($line), $m1)) {
+        $rpms[$m1[1]][] = $m1[2];
+    }
+}
+
 $rootdir = realpath(dirname(__FILE__).'/../..');
 chdir($rootdir);
 
@@ -28,6 +38,7 @@ foreach ($tags->list->entry as $entry) {
 }
 
 $tagUrl  = $svnServer.$tagBase.'/'.((string) $maxEntry->name);
+//$tagUrl  = $svnServer.$tagBase.'/4.0.15';
 echo 'Last release was: '.$maxEntry->name.' ('.$tagUrl.')'.PHP_EOL;
 
 // Get current branch info
@@ -87,12 +98,12 @@ $cmp = new ReleaseVersionComparator($tagUrl, $rootdir);
 if (count($plugins) > 0) {
     echo "Plugins: ".PHP_EOL;
     $pluginCmp = new PluginReleaseVersionComparator($tagUrl, $rootdir, new FakePluginDescriptor($rootdir));
-    $pluginCmp->iterateOverPaths(array_keys($plugins), $verbose);
+    $pluginCmp->iterateOverPaths(array_keys($plugins), $rpms['plugin'], $verbose);
 }
 
 if (count($themes) > 0) {
     echo "Themes: ".PHP_EOL;
-    $cmp->iterateOverPaths(array_keys($themes), $verbose);
+    $cmp->iterateOverPaths(array_keys($themes), $rpms['theme'], $verbose);
 }
 
 if ($soap) {

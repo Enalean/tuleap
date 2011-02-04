@@ -3,6 +3,10 @@
 require_once 'FakePluginDescriptor.php';
 
 class ReleaseVersionComparator {
+    const COLOR_RED     = "\033[31m";
+    const COLOR_GREEN   = "\033[32m";
+    const COLOR_NOCOLOR = "\033[0m";
+
     protected $tmpNames = array();
 
     public function __construct($prevUri, $curUri) {
@@ -16,14 +20,30 @@ class ReleaseVersionComparator {
         }
     }
 
-    public function iterateOverPaths($paths, $verbose=false) {
+    public function iterateOverPaths($paths, $rpms, $verbose=false) {
+        $iRpms = array_flip(array_map('strtolower', $rpms));
         foreach ($paths as $path) {
             $versionPath = $path.'/VERSION';            
             $curVersion  = $this->getCurrentVersion($versionPath);
             $prevVersion = $this->getPreviousVersion($versionPath);
-            if ($verbose || version_compare($curVersion, $prevVersion, '<=')) {
-                echo "\t".$path.": ".$curVersion.' (Previous release was: '.$prevVersion.')'.PHP_EOL;        
+            $this->displayOneLine($path, $curVersion, $prevVersion, $iRpms, $verbose);
+        }
+    }
+
+    public function displayOneLine($path, $curVersion, $prevVersion, $iRpms, $verbose) {
+        $versionOk = version_compare($curVersion, $prevVersion, '>');
+        if ($verbose || !$versionOk) {
+            $flag = '';
+            $name = basename($path);
+            if (isset($iRpms[strtolower($name)])) {
+                if ($versionOk) {
+                    $flag .= self::COLOR_GREEN;
+                } else {
+                    $flag .= self::COLOR_RED;
+                }
+                $flag .= '[RPM] ';
             }
+            echo "\t$flag".$path.": ".$curVersion.' (Previous release was: '.$prevVersion.')'.self::COLOR_NOCOLOR.PHP_EOL;        
         }
     }
 
