@@ -29,7 +29,7 @@ class WebDAVPluginDescriptor extends PluginDescriptor {
      * @return void
      */
     function __construct() {
-        parent::__construct($GLOBALS['Language']->getText('plugin_webdav', 'descriptor_name'), '1.2', $GLOBALS['Language']->getText('plugin_webdav', 'descriptor_description'));
+        parent::__construct($GLOBALS['Language']->getText('plugin_webdav', 'descriptor_name'), '1.3', $GLOBALS['Language']->getText('plugin_webdav', 'descriptor_description'));
     }
 }
 

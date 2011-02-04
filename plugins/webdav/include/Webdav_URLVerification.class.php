@@ -51,34 +51,33 @@ class Webdav_URLVerification extends URLVerification {
     /**
      * Checks if the URL is valid or not and throw an error if needed.
      *
+     * Assume it's an url to be taken into account by this class. The conditions are:
+     * - The used host is defined as webdav host
+     * - The webdav host is different of default host (defined by sys_default_domain or sys_https_host)
+     *
+     * For the second point, this is to avoid the webdav URL checker override
+     * default url checker for the web part. For instance, if sys_default_domain is example.com
+     * and webdav host is also example.com, the webdav url verification will be used to test
+     * access to example.com/tracker/... instead of default url checker.
+     *
+     * @see URLVerification#assertValidUrl($server)
+     *
      * @param Array $server
      *
      * @return void
-     *
-     * @see URLVerification#assertValidUrl($server)
      */
     public function assertValidUrl($server) {
-        if (strcmp($server['HTTP_HOST'], $this->getWebDAVHost()) == 0) {
+        if (strcmp($server['HTTP_HOST'], $this->getWebDAVHost()) == 0 
+            && strcmp($this->getWebDAVHost(), $GLOBALS['sys_default_domain']) != 0
+            && strcmp($this->getWebDAVHost(), $GLOBALS['sys_https_host']) != 0
+            ) {
             if (!$this->isUsingSSL($server) && $GLOBALS['sys_force_ssl'] == 1) {
                 $this->forbiddenError();
             }
         } else {
-            //$this->parentAssertValidURL($server);
-            parent::assertValidUrl($server);
-            
+            parent::assertValidUrl($server);            
         }
     }
-
-    /**
-     * Call to URLVerification->assertValidUrl
-     *
-     * @param Array $server
-     *
-     * @return void
-     */
-    /*function parentAssertValidURL($server) {
-        parent::assertValidUrl($server);
-    }*/
 
     /**
      * Used to return HTTP/1.1 403 Forbidden

@@ -22,7 +22,7 @@ require_once(dirname(__FILE__).'/../include/Webdav_URLVerification.class.php');
 Mock::generatePartial(
     'Webdav_URLVerification',
     'Webdav_URLVerificationTestVersion',
-    array('getWebDAVHost', /*'parentAssertValidURL', */'forbiddenError')
+    array('getWebDAVHost', 'forbiddenError', 'isException')
 );
 
 class Webdav_URLVerificationTest extends UnitTestCase {
@@ -36,7 +36,7 @@ class Webdav_URLVerificationTest extends UnitTestCase {
         $WebdavURLVerification->setReturnValue('getWebDAVHost', 'webdav.codendi.org');
 
         $WebdavURLVerification->expectNever('forbiddenError');
-        //$WebdavURLVerification->expectNever('parentAssertValidURL');
+        $WebdavURLVerification->expectNever('isException'); // no parent call
 
         $WebdavURLVerification->assertValidUrl($server);
     }
@@ -51,7 +51,7 @@ class Webdav_URLVerificationTest extends UnitTestCase {
         $WebdavURLVerification->setReturnValue('getWebDAVHost', 'webdav.codendi.org');
 
         $WebdavURLVerification->expectNever('forbiddenError');
-        //$WebdavURLVerification->expectNever('parentAssertValidURL');
+        $WebdavURLVerification->expectNever('isException'); // no parent call
 
         $WebdavURLVerification->assertValidUrl($server);
     }
@@ -65,7 +65,7 @@ class Webdav_URLVerificationTest extends UnitTestCase {
         $WebdavURLVerification->setReturnValue('getWebDAVHost', 'webdav.codendi.org');
 
         $WebdavURLVerification->expectOnce('forbiddenError');
-        //$WebdavURLVerification->expectNever('parentAssertValidURL');
+        $WebdavURLVerification->expectNever('isException'); // no parent call
 
         $WebdavURLVerification->assertValidUrl($server);
     }
@@ -80,21 +80,53 @@ class Webdav_URLVerificationTest extends UnitTestCase {
         $WebdavURLVerification->setReturnValue('getWebDAVHost', 'webdav.codendi.org');
 
         $WebdavURLVerification->expectNever('forbiddenError');
-        //$WebdavURLVerification->expectNever('parentAssertValidURL');
+        $WebdavURLVerification->expectNever('isException'); // no parent call
 
         $WebdavURLVerification->assertValidUrl($server);
     }
 
-    /*function testAssertValidUrlNotPluginHost() {
+    function testAssertValidUrlNotPluginHost() {
         $server = array('HTTP_HOST' => 'codendi.org');
 
         $WebdavURLVerification = new Webdav_URLVerificationTestVersion($this);
         $WebdavURLVerification->setReturnValue('getWebDAVHost', 'webdav.codendi.org');
 
         $WebdavURLVerification->expectNever('forbiddenError');
-        $WebdavURLVerification->expectOnce('parentAssertValidURL');
+        $WebdavURLVerification->expectOnce('isException'); // parent call
+        $WebdavURLVerification->setReturnValue('isException', true);
 
         $WebdavURLVerification->assertValidUrl($server);
-    }*/
+    }
+
+
+    function testAssertValidUrlButWebdavHostIsDefaultDomain() {
+        $server = array('HTTP_HOST' => 'a.codendi.org');
+
+        $GLOBALS['sys_default_domain'] = 'a.codendi.org';
+
+        $WebdavURLVerification = new Webdav_URLVerificationTestVersion($this);
+        $WebdavURLVerification->setReturnValue('getWebDAVHost', 'a.codendi.org');
+
+        $WebdavURLVerification->expectNever('forbiddenError');
+        $WebdavURLVerification->expectOnce('isException'); // parent call
+        $WebdavURLVerification->setReturnValue('isException', true);
+
+        $WebdavURLVerification->assertValidUrl($server);
+    }
+
+    function testAssertValidUrlButWebdavHostIsHttpsHost() {
+        $server = array('HTTP_HOST' => 'b.codendi.org');
+
+        $GLOBALS['sys_https_host'] = 'b.codendi.org';
+
+        $WebdavURLVerification = new Webdav_URLVerificationTestVersion($this);
+        $WebdavURLVerification->setReturnValue('getWebDAVHost', 'b.codendi.org');
+
+        $WebdavURLVerification->expectNever('forbiddenError');
+        $WebdavURLVerification->expectOnce('isException'); // parent call
+        $WebdavURLVerification->setReturnValue('isException', true);
+
+        $WebdavURLVerification->assertValidUrl($server);
+    }
 }
 ?>

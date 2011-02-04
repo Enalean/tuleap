@@ -46,13 +46,30 @@ class MockEM4Anonymous extends MockEventManager {
    }
 }
 
+require_once('common/language/BaseLanguage.class.php');
+Mock::generate('BaseLanguage');
+
 class URLVerificationTest extends UnitTestCase {
+
+    function setUp() {
+        $this->fixtures = dirname(__FILE__).'/_fixtures';
+        $GLOBALS['Language'] = new MockBaseLanguage($this);
+    }
+
+    function tearDown() {
+        unset($GLOBALS['Language']);
+        $GLOBALS['sys_allow_anon'] = 1;
+        $GLOBALS['sys_default_domain'] = 1;
+        $GLOBALS['sys_force_ssl'] = 1;
+        $GLOBALS['sys_https_host'] = 1;
+    }
 
     function testIsScriptAllowedForAnonymous() {
         $urlVerification = new URLVerificationTestVersion($this);
         $em = new MockEM4Anonymous($this);
         $em->setReturnValue('processEvent', array('anonymous_allowed' => false));
         $urlVerification->setReturnValue('getEventManager', $em);
+        $GLOBALS['Language']->setReturnValue('getContent', $this->fixtures.'/empty.txt');
 
         $this->assertTrue($urlVerification->isScriptAllowedForAnonymous(array('SCRIPT_NAME' => '/current_css.php')));
         $this->assertTrue($urlVerification->isScriptAllowedForAnonymous(array('SCRIPT_NAME' => '/account/login.php')));
@@ -74,6 +91,18 @@ class URLVerificationTest extends UnitTestCase {
         $em = new MockEM4Anonymous($this);
         $em->setReturnValue('processEvent', array('anonymous_allowed' => true));
         $urlVerification->setReturnValue('getEventManager', $em);
+        $GLOBALS['Language']->setReturnValue('getContent', $this->fixtures.'/empty.txt');
+
+        $this->assertTrue($urlVerification->isScriptAllowedForAnonymous(array('SCRIPT_NAME' => '/foobar')));
+    }
+
+    function testIsScriptAllowedForAnonymousFromSiteContent() {
+        $urlVerification = new URLVerificationTestVersion($this);
+        $em = new MockEM4Anonymous($this);
+        $em->setReturnValue('processEvent', array('anonymous_allowed' => false));
+        $urlVerification->setReturnValue('getEventManager', $em);
+
+        $GLOBALS['Language']->setReturnValue('getContent', $this->fixtures.'/allowed_url_anonymous.txt');
 
         $this->assertTrue($urlVerification->isScriptAllowedForAnonymous(array('SCRIPT_NAME' => '/foobar')));
     }
@@ -217,6 +246,7 @@ class URLVerificationTest extends UnitTestCase {
                         'SCRIPT_NAME' => '');
 
         $GLOBALS['sys_force_ssl']      = 0;
+        $GLOBALS['sys_allow_anon']     = 1;
         $GLOBALS['sys_default_domain'] = 'codendi.org';
         $GLOBALS['sys_https_host'] = 'secure.codendi.org';
 
@@ -320,6 +350,8 @@ class URLVerificationTest extends UnitTestCase {
         $user = new MockUser();
         $user->setReturnValue('isAnonymous', true);
 
+        $GLOBALS['Language']->setReturnValue('getContent', $this->fixtures.'/empty.txt');
+
         $urlVerification = new URLVerificationTestVersion($this);
         $em = new MockEventManager();
         $urlVerification->setReturnValue('getEventManager', $em);
@@ -341,6 +373,8 @@ class URLVerificationTest extends UnitTestCase {
         $user = new MockUser();
         $user->setReturnValue('isAnonymous', true);
 
+        $GLOBALS['Language']->setReturnValue('getContent', $this->fixtures.'/empty.txt');
+
         $urlVerification = new URLVerificationTestVersion($this);
         $em = new MockEventManager();
         $urlVerification->setReturnValue('getEventManager', $em);
@@ -361,6 +395,8 @@ class URLVerificationTest extends UnitTestCase {
 
         $user = new MockUser();
         $user->setReturnValue('isAnonymous', true);
+
+        $GLOBALS['Language']->setReturnValue('getContent', $this->fixtures.'/empty.txt');
 
         $urlVerification = new URLVerificationTestVersion($this);
         $em = new MockEventManager();

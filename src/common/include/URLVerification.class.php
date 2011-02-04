@@ -70,6 +70,7 @@ class URLVerification {
      * @return Boolean
      */
     function isScriptAllowedForAnonymous($server) {
+        // Defaults
         $allowedAnonymous['/current_css.php']            = true;
         $allowedAnonymous['/account/login.php']          = true;
         $allowedAnonymous['/account/register.php']       = true;
@@ -81,13 +82,43 @@ class URLVerification {
         $allowedAnonymous['/account/pending-resend.php'] = true;
         $allowedAnonymous['/account/verify.php']         = true;
         $allowedAnonymous['/scripts/check_pw.js.php']    = true;
+        if (isset($allowedAnonymous[$server['SCRIPT_NAME']]) && $allowedAnonymous[$server['SCRIPT_NAME']] == true) {
+            return true;
+        }
 
+        // Site admin configuration
+        if ($this->isUrlAllowedBySiteContent($server)) {
+            return true;
+        }
+
+        // Plugins
         $anonymousAllowed = false;
-        $params = array('script_name'=>$server['SCRIPT_NAME'], 'anonymous_allowed'=>&$anonymousAllowed);
-        $em = $this->getEventManager();
-        $em->processEvent('anonymous_access_to_script_allowed', $params);
+        $params = array('script_name' => $server['SCRIPT_NAME'], 'anonymous_allowed' => &$anonymousAllowed);
+        $this->getEventManager()->processEvent('anonymous_access_to_script_allowed', $params);
 
-        return ((isset($allowedAnonymous[$server['SCRIPT_NAME']]) && $allowedAnonymous[$server['SCRIPT_NAME']] == true) || $anonymousAllowed);
+        return $anonymousAllowed;
+    }
+
+    /**
+     * Allow to define whitlist URLs for anonymous by site admin in configuration
+     *
+     * @param Array $server
+     *
+     * @return Boolean
+     */
+    protected function isUrlAllowedBySiteContent($server) {
+        $enable_anonymous_url = false;
+        $allowed_scripts      = array();
+
+        include($GLOBALS['Language']->getContent('include/allowed_url_anonymously','en_US'));
+        if ($enable_anonymous_url) {
+            foreach ($allowed_scripts as $script) {
+                if (strcmp($server['SCRIPT_NAME'], $script) === 0) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     /**
@@ -213,8 +244,7 @@ class URLVerification {
      */
     public function verifyRequest($server) {
         $user = $this->getCurrentUser();
-        if (!$this->isScriptAllowedForAnonymous($server) && !$GLOBALS['sys_allow_anon'] && $user->isAnonymous()) {
-            
+        if (!$GLOBALS['sys_allow_anon'] && $user->isAnonymous() && !$this->isScriptAllowedForAnonymous($server)) {
             $returnTo = urlencode((($server['REQUEST_URI'] === "/")?"/my/":$server['REQUEST_URI']));
             $url = parse_url($server['REQUEST_URI']);
             if (isset($url['query'])) {
