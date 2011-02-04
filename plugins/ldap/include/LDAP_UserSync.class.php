@@ -61,17 +61,8 @@ class LDAP_UserSync {
      * @return array
      */
     public function getSyncAttributes($ldap) {
-            //Define the sync attributes
-            $sync = $ldap->getLDAPParam('sync_attribute');
-            $this->attributes = $sync ? explode(',', $sync): array() ;
-
-            $requiredValues = array($ldap->getLDAPParam('cn'), $ldap->getLDAPParam('mail'));
-            foreach ($requiredValues as $val) {
-                if (!in_array($val, $this->attributes)) {
-                    $this->attributes[] = $val;
-                }
-            }
-        
+        //Define the default sync attributes
+        $this->attributes = array($ldap->getLDAPParam('cn'), $ldap->getLDAPParam('mail'));
         return $this->attributes;
     }
 
