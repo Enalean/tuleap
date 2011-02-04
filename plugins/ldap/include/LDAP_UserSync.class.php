@@ -30,6 +30,7 @@ require_once 'LDAPResult.class.php';
 class LDAP_UserSync {
 
     private static $instance;
+    protected $attributes;
 
     /**
      * Constructor
@@ -52,6 +53,35 @@ class LDAP_UserSync {
             self::$instance = new $syncClass;
         }
         return self::$instance;
+    }
+
+    /**
+     * Return the sync attributes
+     * 
+     * @return array
+     */
+    public function getSyncAttributes($ldap) {
+            //Define the sync attributes
+            $sync = $ldap->getLDAPParam('sync_attribute');
+            $this->attributes = $sync ? explode(',', $sync): array() ;
+
+            $requiredValues = array($ldap->getLDAPParam('cn'), $ldap->getLDAPParam('mail'));
+            foreach ($requiredValues as $val) {
+                if (!in_array($val, $this->attributes)) {
+                    $this->attributes[] = $val;
+                }
+            }
+        
+        return $this->attributes;
+    }
+
+    /**
+     * Set the sync attributes
+     * 
+     * @return array
+     */
+    public function setSyncAttributes($values) {
+        $this->attributes = $values;
     }
 
     /**

@@ -61,15 +61,8 @@ class LDAP_DirectorySynchronization {
     public function ldapSync($row) {
         $ldap_query = $this->ldap->getLDAPParam('eduid').'='.$row['ldap_id'];
 
-        $sync = $this->ldap->getLDAPParam('sync_attribute');
-        $attributes = $sync ? explode(',', $sync): array() ;
-
-        $requiredValues = array($this->ldap->getLDAPParam('cn'), $this->ldap->getLDAPParam('mail'));
-        foreach ($requiredValues as $val) {
-            if (!in_array($val, $attributes)) {
-                $attributes[] = $val;
-            }
-        }
+        $userSync = $this->getLdapUserSync();
+        $attributes = $userSync->getSyncAttributes($this->ldap);
 
         $time_start = microtime(true);
         $lri = false;
@@ -88,7 +81,7 @@ class LDAP_DirectorySynchronization {
 
             if (count($lri) == 1) {
                 $lr       = $lri->current();
-                $modified = $this->getLdapUserSync()->sync($user, $lr);
+                $modified = $userSync->sync($user, $lr);
 
                 if ($row['ldap_uid'] != $lr->getLogin()) {
                     echo "Update LUM ".$user->getName().PHP_EOL;
