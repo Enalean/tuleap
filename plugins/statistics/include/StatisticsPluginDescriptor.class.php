@@ -26,7 +26,8 @@ require_once 'common/plugin/PluginDescriptor.class.php';
 class StatisticsPluginDescriptor extends PluginDescriptor {
     
     function __construct() {
-        parent::__construct($GLOBALS['Language']->getText('plugin_statistics', 'descriptor_name'), '0.2', $GLOBALS['Language']->getText('plugin_statistics', 'descriptor_description'));
+        parent::__construct($GLOBALS['Language']->getText('plugin_statistics', 'descriptor_name'), false, $GLOBALS['Language']->getText('plugin_statistics', 'descriptor_description'));
+        $this->setVersionFromFile(dirname(__FILE__).'/../VERSION');
     }
 }
 

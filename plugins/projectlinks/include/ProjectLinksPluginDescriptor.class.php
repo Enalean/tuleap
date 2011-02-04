@@ -26,8 +26,10 @@ require_once('common/plugin/PluginDescriptor.class.php');
 class ProjectLinksPluginDescriptor extends PluginDescriptor {
     
     function __construct() {
-        parent::__construct($GLOBALS['Language']->getText('plugin_plinks', 'descriptor_name'), 'v2.0', 
+        parent::__construct($GLOBALS['Language']->getText('plugin_plinks', 'descriptor_name'),
+                            false,
                             $GLOBALS['Language']->getText('plugin_plinks', 'descriptor_description'));
+        $this->setVersionFromFile(dirname(__FILE__).'/../VERSION');
     }
 }
 
