@@ -78,7 +78,7 @@ class LDAP_UserSync {
     /**
      * Set the sync attributes
      * 
-     * @return array
+     * @param Array $values
      */
     public function setSyncAttributes($values) {
         $this->attributes = $values;
