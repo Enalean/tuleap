@@ -26,6 +26,16 @@
 class LDAPPluginCustomUserSync extends LDAP_UserSync {
 
     /**
+     * Return the sync attributes
+     *
+     *@return Array
+     */ 
+    public function getSyncAttributes($ldap) {
+        $this->attributes = array('cn', 'mail', 'employeetype', 'st-eduid', 'o', 'uid');
+        return $this->attributes;
+    }
+    
+    /**
      * Do all the synchronization between an ldap result and a Codendi user.
      *
      * This method returns if it modified the user or not. This is usefull during
