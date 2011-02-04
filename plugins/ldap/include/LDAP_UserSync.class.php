@@ -30,6 +30,7 @@ require_once 'LDAPResult.class.php';
 class LDAP_UserSync {
 
     private static $instance;
+    protected $attributes;
 
     /**
      * Constructor
@@ -40,7 +41,7 @@ class LDAP_UserSync {
     /**
      * Instanciate the right LDAP_UserSync object
      *
-     * Site can define it's own implementation in /etc/codendi/plugins/ldap/en_US/synchronize_user.txt
+     * Site can define its own implementation in /etc/codendi/plugins/ldap/site-content/en_US/synchronize_user.txt
      *
      * @return LDAP_UserSync
      */
@@ -52,6 +53,26 @@ class LDAP_UserSync {
             self::$instance = new $syncClass;
         }
         return self::$instance;
+    }
+
+    /**
+     * Return the sync attributes
+     * 
+     * @return array
+     */
+    public function getSyncAttributes($ldap) {
+        //Define the default sync attributes
+        $this->attributes = array($ldap->getLDAPParam('cn'), $ldap->getLDAPParam('mail'));
+        return $this->attributes;
+    }
+
+    /**
+     * Set the sync attributes
+     * 
+     * @param Array $values
+     */
+    public function setSyncAttributes($values) {
+        $this->attributes = $values;
     }
 
     /**

@@ -53,10 +53,6 @@ $sys_ldap_grp_dn        = 'ou=Groups, o=XEROX, c=US';
 $sys_ldap_grp_cn        = 'cn';
 // Field that indicate the membership of a user in a group
 $sys_ldap_grp_member    = 'uniquemember';
-
-//Attributes to look for while synchronising
-$sys_ldap_sync_attribute = 'cn,mail,employeetype,st-eduid,o,uid';
-
 // Filter used to look for user. It should cover a wide selection of
 // fields because it's aim to find a user whatever it's given (email, name,
 // login, etc).
