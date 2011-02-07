@@ -868,47 +868,6 @@ class WebDAVFRSReleaseTest extends UnitTestCase {
     }
 
     /**
-     * Testing creation of file when filename is not valid
-     */
-    function testCreateFileFailWithFilenameNotValid() {
-
-        $webDAVFRSRelease = new WebDAVFRSReleaseTestVersion($this);
-
-        $webDAVFRSRelease->setReturnValue('userCanWrite', true);
-
-        $utils = new MockWebDAVUtils();
-        $utils->setReturnValue('isValidFileName', false);
-        $webDAVFRSRelease->setReturnValue('getUtils', $utils);
-
-        $this->expectException('Sabre_DAV_Exception_BadRequest');
-
-        $webDAVFRSRelease->createFile('release');
-
-    }
-
-    /**
-     * Testing creation of file when the name already exist
-     */
-    function testCreateFileFailWithNameExist() {
-
-        $webDAVFRSRelease = new WebDAVFRSReleaseTestVersion($this);
-
-        $webDAVFRSRelease->setReturnValue('userCanWrite', true);
-        $frsff = new MockFRSFileFactory();
-        $frsff->setReturnValue('isFileBaseNameExists', true);
-        $utils = new MockWebDAVUtils();
-        $utils->setReturnValue('getFileFactory', $frsff);
-        $utils->setReturnValue('isValidFileName', true);
-        $project = new MockProject();
-        $webDAVFRSRelease->setReturnValue('getProject', $project);
-        $webDAVFRSRelease->setReturnValue('getUtils', $utils);
-        $this->expectException('Sabre_DAV_Exception_MethodNotAllowed');
-
-        $webDAVFRSRelease->createFile('release');
-
-    }
-
-    /**
      * Testing creation of file when the file size is bigger than permitted
      */
     function testCreateFileFailWithFileSizeLimitExceeded() {
@@ -920,7 +879,6 @@ class WebDAVFRSReleaseTest extends UnitTestCase {
         $frsff->setReturnValue('isFileBaseNameExists', false);
         $utils = new MockWebDAVUtils();
         $utils->setReturnValue('getFileFactory', $frsff);
-        $utils->setReturnValue('isValidFileName', true);
         $utils->setReturnValue('getIncomingFileSize', 65);
         $project = new MockProject();
         $webDAVFRSRelease->setReturnValue('getProject', $project);
@@ -943,10 +901,20 @@ class WebDAVFRSReleaseTest extends UnitTestCase {
         $webDAVFRSRelease->setReturnValue('userCanWrite', true);
         $frsff = new MockFRSFileFactory();
         $frsff->setReturnValue('isFileBaseNameExists', false);
+        $frsff->setReturnValue('createFile', true);
+
+        $release = new MockFRSRelease($this);
+        $release->setReturnValue('getReleaseID', 1234);
+        $webDAVFRSRelease->setReturnValue('getRelease', $release);
+
+        $frsrf = new MockFRSReleaseFactory($this);
+        $frsrf->expectOnce('emailNotification');
+
         $utils = new MockWebDAVUtils();
         $utils->setReturnValue('getFileFactory', $frsff);
-        $utils->setReturnValue('isValidFileName', true);
         $utils->setReturnValue('getIncomingFileSize', 64);
+        $utils->setReturnValue('getReleaseFactory', $frsrf);
+
         $project = new MockProject();
         $webDAVFRSRelease->setReturnValue('getProject', $project);
         $user = new MockUser();

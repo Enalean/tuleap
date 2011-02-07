@@ -3,25 +3,30 @@
 require_once('common/frs/FRSFileFactory.class.php');
 require_once('common/frs/FRSReleaseFactory.class.php');
 require_once('common/backend/BackendSystem.class.php');
+require_once 'common/valid/Rule.class.php';
+require_once('common/language/BaseLanguage.class.php');
 
 Mock::generate('User');
 Mock::generate('UserManager');
 Mock::generate('EventManager');
 require_once('common/project/Project.class.php');
 Mock::generate('Project');
+Mock::generate('ProjectManager');
 Mock::generate('DataAccessResult');
 Mock::generate('FRSReleaseFactory');
 Mock::generate('FRSRelease');
 Mock::generate('FRSFileDao');
 Mock::generate('FRSFile');
 Mock::generate('BackendSystem');
-Mock::generatePartial('FRSFileFactory', 'FRSFileFactoryTestVersion', array('_getFRSReleaseFactory'));
+Mock::generate('BaseLanguage');
+Mock::generatePartial('FRSFileFactory', 'FRSFileFactoryTestVersion', array('_getFRSReleaseFactory', '_getProjectManager'));
 Mock::generatePartial('FRSFileFactory', 'FRSFileFactoryTestPurgeFiles', array('_getFRSFileDao', 'purgeFile'));
 Mock::generatePartial('FRSFileFactory', 'FRSFileFactoryTestPurgeOneFile', array('_getFRSFileDao'));
 Mock::generatePartial('FRSFileFactory', 'FRSFileFactoryTestMoveToStaging', array('_getFRSFileDao', 'moveDeletedFileToStagingArea'));
 Mock::generatePartial('FRSFileFactory', 'FRSFileFactoryTestPurgeDeletedFiles', array('purgeFiles', 'moveDeletedFilesToStagingArea', 'cleanStaging', 'restoreDeletedFiles'));
 Mock::generatePartial('FRSFileFactory', 'FRSFileFactoryTestRestore', array('_getFRSFileDao', '_getUserManager', '_getEventManager'));
 Mock::generatePartial('FRSFileFactory', 'FRSFileFactoryTestRestoreFiles', array('_getFRSFileDao', 'restoreFile'));
+Mock::generatePartial('FRSFileFactory', 'FRSFileFactoryTestCreateFiles', array('create', 'moveFileForge','isFileBaseNameExists','compareMd5Checksums'));
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  * 
@@ -30,38 +35,44 @@ Mock::generatePartial('FRSFileFactory', 'FRSFileFactoryTestRestoreFiles', array(
  * Tests the FRSFileFactory class
  */
 class FRSFileFactoryTest extends UnitTestCase {
-    /**
-     * Constructor of the test. Can be ommitted.
-     * Usefull to set the name of the test
-     */
-    function FRSFileFactoryTest($name = 'FRSfileFactory test') {
-        $this->UnitTestCase($name);
-    }
 
     function setUp() {
+        $GLOBALS['Language']           = new MockBaseLanguage($this);
         $GLOBALS['ftp_frs_dir_prefix'] = dirname(__FILE__).'/_fixtures';
+        $GLOBALS['ftp_incoming_dir']   = dirname(__FILE__).'/_fixtures';
+
+        
+        $conf  = '<?php'.PHP_EOL;
+        $conf .= '$ftp_frs_dir_prefix = "'.$GLOBALS['ftp_frs_dir_prefix'].'"'. PHP_EOL;
+        $conf .= '$ftp_incoming_dir = "'.$GLOBALS['ftp_incoming_dir'].'"'. PHP_EOL;
+        $conf .= '?>'.PHP_EOL;
+
+        $this->fakeconf = $GLOBALS['ftp_frs_dir_prefix'].'/local.conf';
+        file_put_contents($this->fakeconf, $conf);
+
+        $this->beforeTest['CODENDI_LOCAL_INC'] = getenv('CODENDI_LOCAL_INC');
+        putenv('CODENDI_LOCAL_INC='.$this->fakeconf);
     }
 
     function tearDown() {
+        unset($GLOBALS['Language']);
         unset($GLOBALS['ftp_frs_dir_prefix']);
+        unset($GLOBALS['ftp_incoming_dir']);
+        unlink($this->fakeconf);
+        putenv('CODENDI_LOCAL_INC='.$this->beforeTest['CODENDI_LOCAL_INC']);
     }
 
     function testgetUploadSubDirectory() {
         $package_id = rand(1, 1000);
         $release_id = rand(1, 1000);
         
-        $release =& new MockFRSRelease($this);
-        $release->setReturnValue('getPackageID', $package_id);
-        $release->setReturnValue('getReleaseID', $release_id);
+        $release = new FRSRelease();
+        $release->setPackageID($package_id);
+        $release->setReleaseID($release_id);
         
-        $release_fact =& new MockFRSReleaseFactory($this);
-        $release_fact->setReturnReference('getFRSReleaseFromDb', $release);
+        $file_fact = new FRSFileFactory();
         
-        $file_fact =& new FRSFileFactoryTestVersion();
-        $file_fact->setReturnReference('_getFRSReleaseFactory', $release_fact);
-        $file_fact->FRSFileFactory();
-        
-        $sub_dir = $file_fact->getUploadSubDirectory($release_id);
+        $sub_dir = $file_fact->getUploadSubDirectory($release);
         $this->assertEqual($sub_dir, 'p'.$package_id.'_r'.$release_id);
     }
 
@@ -122,6 +133,41 @@ class FRSFileFactoryTest extends UnitTestCase {
         unlink(dirname(__FILE__).'/_fixtures/DELETED/prj/p1_r1/foobar.xls.12');
         rmdir(dirname(__FILE__).'/_fixtures/DELETED/prj/p1_r1');
         rmdir(dirname(__FILE__).'/_fixtures/DELETED/prj');
+    }
+
+    /**
+     * If for one reason the file to delete appears to be already deleted, mark it as
+     * deleted and purged at the very same date
+     * 
+     */
+    function testMoveDeletedFileToStagingAreaButFileDoesntExist() {
+        $ff = new FRSFileFactoryTestPurgeOneFile($this);
+
+        // Create temp file in a fake release
+        mkdir(dirname(__FILE__).'/_fixtures/prj/p1_r1');
+        $filepath = dirname(__FILE__).'/_fixtures/prj/p1_r1/foobar.xls';
+        $this->assertFalse(is_file($filepath), "The file shouldn't exist, this is the base of the test!");
+        $file = new MockFRSFile($this);
+        $file->setReturnValue('getFileID', 12);
+        $file->setReturnValue('getFileLocation', $filepath);
+
+        $dao = new MockFRSFileDao($this);
+        $dao->expectOnce('setFileInDeletedList', array(12)); // Mark as deleted
+        $dao->setReturnValue('setFileInDeletedList', true);
+        $dao->expectOnce('setPurgeDate', array(12, $_SERVER['REQUEST_TIME'])); // Mark as purged
+        $dao->setReturnValue('setPurgeDate', true);
+        $ff->setReturnValue('_getFRSFileDao', $dao);
+
+        $this->assertTrue($ff->moveDeletedFileToStagingArea($file));
+
+        $this->assertFalse(is_file($GLOBALS['ftp_frs_dir_prefix'].'/DELETED/prj/p1_r1/foobar.xls.12'));
+        $this->assertFalse(is_file(dirname(__FILE__).'/_fixtures/prj/p1_r1/foobar.xls'));
+        $this->assertFalse(is_dir(dirname(__FILE__).'/_fixtures/prj/p1_r1'));
+
+        // Clean-up
+        //unlink(dirname(__FILE__).'/_fixtures/DELETED/prj/p1_r1/foobar.xls.12');
+        //rmdir(dirname(__FILE__).'/_fixtures/DELETED/prj/p1_r1');
+        //rmdir(dirname(__FILE__).'/_fixtures/DELETED/prj');
     }
 
     function testMoveDeletedFileToStagingAreaReleaseNotEmpty() {
@@ -418,7 +464,7 @@ class FRSFileFactoryTest extends UnitTestCase {
         rmdir($GLOBALS['ftp_frs_dir_prefix'].'/prj/p3_r1');
     }
     
-        function testRestoreDeletedFiles() {
+    function testRestoreDeletedFiles() {
         $refFile = new FRSFile(array('file_id' => 12));
         
         $dar = new MockDataAccessResult($this);
@@ -466,5 +512,266 @@ class FRSFileFactoryTest extends UnitTestCase {
         $this->assertTrue($fileFactory->compareMd5Checksums('da1e100dc9e7bebb810985e37875de38', 'da1e100dc9e7bebb810985e37875de38'));
         $this->assertTrue($fileFactory->compareMd5Checksums('da1e100dc9e7bebb810985e37875de38', 'DA1E100DC9E7BEBB810985E37875DE38'));
     }
+
+    function testMoveFileforgeOk() {
+        // Create target release directory
+        mkdir($GLOBALS['ftp_frs_dir_prefix'].'/prj/p123_r456');
+        touch($GLOBALS['ftp_incoming_dir'].'/toto.txt');
+
+        // Try to release a file named toto.txt in the same release
+        $p = new MockProject($this);
+        $p->expectOnce('getUnixName', array(false), 'Must have project name with capital letters if any');
+        $p->setReturnValue('getUnixName', 'prj');
+        
+        $r = new FRSRelease();
+        $r->setReleaseID(456);
+        $r->setPackageID(123);
+        $r->setProject($p);
+
+        $f = new FRSFile();
+        $f->setFileName('toto.txt');
+        $f->setRelease($r);
+
+        $ff = new FRSFileFactory();
+        $ff->setFileForge(dirname(__FILE__).'/../../../../../../src/utils/fileforge.pl');
+
+        $res = $ff->moveFileForge($f, $r);
+        $this->assertTrue($res);
+        $this->assertTrue(file_exists($GLOBALS['ftp_frs_dir_prefix'].'/prj/p123_r456/toto.txt'));
+
+        unlink($GLOBALS['ftp_frs_dir_prefix'].'/prj/p123_r456/toto.txt');
+        rmdir($GLOBALS['ftp_frs_dir_prefix'].'/prj/p123_r456');
+    }
+
+    function testMoveFileforgeFileExist() {
+        // Create toto.txt in the release directory
+        mkdir($GLOBALS['ftp_frs_dir_prefix'].'/prj/p123_r456');
+        touch($GLOBALS['ftp_frs_dir_prefix'].'/prj/p123_r456/toto.txt');
+
+        // Try to release a file named toto.txt in the same release
+        $p = new MockProject();
+        $p->expectOnce('getUnixName', array(false), 'Must have project name with capital letters if any');
+        $p->setReturnValue('getUnixName', 'prj');
+
+        $r = new FRSRelease();
+        $r->setReleaseID(456);
+        $r->setPackageID(123);
+        $r->setProject($p);
+
+        $f = new FRSFile();
+        $f->setFileName('toto.txt');
+        $f->setRelease($r);
+
+        $ff = new FRSFileFactory();
+        $this->assertFalse($ff->moveFileForge($f));
+
+        unlink($GLOBALS['ftp_frs_dir_prefix'].'/prj/p123_r456/toto.txt');
+        rmdir($GLOBALS['ftp_frs_dir_prefix'].'/prj/p123_r456');
+    }
+
+    function testMoveFileforgeFileExistWithSpaces() {
+        // Create toto.txt in the release directory
+        mkdir($GLOBALS['ftp_frs_dir_prefix'].'/prj/p123_r456');
+        touch($GLOBALS['ftp_frs_dir_prefix'].'/prj/p123_r456/toto zataz.txt');
+
+        // Try to release a file named 'toto zataz.txt' in the same release
+        $p = new MockProject();
+        $p->expectOnce('getUnixName', array(false), 'Must have project name with capital letters if any');
+        $p->setReturnValue('getUnixName', 'prj');
+        
+        $r = new FRSRelease();
+        $r->setReleaseID(456);
+        $r->setPackageID(123);
+        $r->setProject($p);
+
+        $f = new FRSFile();
+        $f->setFileName('toto zataz.txt');
+        $f->setRelease($r);
+
+        $ff = new FRSFileFactory();
+        $this->assertFalse($ff->moveFileForge($f));
+
+        unlink($GLOBALS['ftp_frs_dir_prefix'].'/prj/p123_r456/toto zataz.txt');
+        rmdir($GLOBALS['ftp_frs_dir_prefix'].'/prj/p123_r456');
+    }
+
+    function testCreateFileIllegalName(){
+        $ff = new FRSFileFactory();
+        $f = new FRSFile();
+        $f->setFileName('%toto#.txt');
+
+        try {
+            $ff->createFile($f);
+        }
+        catch (Exception $e) {
+            $this->assertIsA($e, 'FRSFileIllegalNameException');
+        }
+    }
+
+    function testCreateFileAlreadyExisting() {
+        // Create toto.txt in the release directory
+        mkdir($GLOBALS['ftp_frs_dir_prefix'].'/prj/p123_r456');
+        touch($GLOBALS['ftp_frs_dir_prefix'].'/prj/p123_r456/toto.txt');
+
+        $p = new MockProject($this);
+        $p->setReturnValue('getUnixName', 'prj');
+
+        $r = new FRSRelease();
+        $r->setReleaseID(456);
+        $r->setPackageID(123);
+        $r->setGroupID(111);
+        $r->setProject($p);
+
+        $f = new FRSFile();
+        $f->setFileName('toto.txt');
+        $f->setRelease($r);
+
+        $ff = new FRSFileFactoryTestCreateFiles();
+        $ff->setReturnValue('isFileBaseNameExists', True);
+        try {
+            $ff->createFile($f);
+        }
+        catch (Exception $e) {
+            $this->assertIsA($e, 'FRSFileExistsException');
+        }
+
+        unlink($GLOBALS['ftp_frs_dir_prefix'].'/prj/p123_r456/toto.txt');
+        rmdir($GLOBALS['ftp_frs_dir_prefix'].'/prj/p123_r456');
+    }
+
+    function testCreateFileNotYetIncoming(){
+        $p = new MockProject();
+
+        $r = new FRSRelease();
+        $r->setReleaseID(456);
+        $r->setPackageID(123);
+        $r->setProject($p);
+
+        $f = new FRSFile();
+        $f->setFileName('toto.txt');
+        $f->setRelease($r);
+        $ff = new FRSFileFactoryTestCreateFiles();
+        $this->assertFalse(is_file($GLOBALS['ftp_incoming_dir'].'/toto.txt'));
+        try {
+            $ff->createFile($f, ~FRSFileFactory::COMPUTE_MD5);
+        }
+        catch (Exception $e) {
+            $this->assertIsA($e, 'FRSFileInvalidNameException');
+        }
+    }
+
+    function testCreateFileSkipCompareMD5Checksums(){
+        $p = new MockProject($this);
+        $p->setReturnValue('getUnixName', 'prj');
+
+        $r = new FRSRelease();
+        $r->setReleaseID(456);
+        $r->setPackageID(123);
+        $r->setGroupID(111);
+        $r->setProject($p);
+
+        $f = new FRSFile();
+        $f->setFileName('toto.txt');
+        $f->setRelease($r);
+        $f->setFileLocation($GLOBALS['ftp_incoming_dir']);
+        $ff = new FRSFileFactoryTestCreateFiles();
+
+        $path = $GLOBALS['ftp_incoming_dir'].'/'.$f->getFileName();
+        touch($GLOBALS['ftp_incoming_dir'].'/toto.txt');
+        $ff->setReturnValue('moveFileForge', True);
+        $ff->setReturnValue('create', True);
+
+        $ff->expectNever('compareMd5Checksums');
+        $ff->createFile($f, ~FRSFileFactory::COMPUTE_MD5);
+
+        unlink($GLOBALS['ftp_incoming_dir'].'/toto.txt');
+    }
+
+    function testCreateFileCompareMD5Checksums(){
+        $r = new FRSRelease();
+        $r->setReleaseID(456);
+        $r->setPackageID(123);
+        $r->setGroupID(111);
+
+        $ff = new FRSFileFactoryTestCreateFiles();
+
+        $f = new FRSFile();
+        $f->setRelease($r);
+        $f->setFileName('toto.txt');
+
+        touch($GLOBALS['ftp_incoming_dir'].'/toto.txt');
+        $path = $GLOBALS['ftp_incoming_dir'].'/'.$f->getFileName();
+        $f->setReferenceMd5('d41d8cd98f00b204e9800998ecf8427e');
+
+        try {
+            $ff->createFile($f, FRSFileFactory::COMPUTE_MD5);
+        }
+        catch (Exception $e) {
+            $this->assertIsA($e, 'FRSFileMD5SumException');
+        }
+
+        $this->assertNotNull($f->getComputedMd5());
+        $this->assertTrue(FRSFileFactory::compareMd5Checksums($f->getComputedMd5(), $f->getReferenceMd5()));
+
+        unlink($GLOBALS['ftp_incoming_dir'].'/toto.txt');
+    }
+
+    function testCreateFileMoveFileForgeKo(){
+        $r = new FRSRelease();
+        $r->setReleaseID(456);
+        $r->setPackageID(123);
+        $r->setGroupID(111);
+
+        $ff = new FRSFileFactoryTestCreateFiles();
+        $f = new FRSFile();
+        $f->setRelease($r);
+
+        $ff->setReturnValue('moveFileForge', False);
+        try {
+            $ff->createFile($f, ~FRSFileFactory::COMPUTE_MD5);
+        }
+        catch (Exception $e) {
+            $this->assertIsA($e, 'FRSFileForgeException');
+        }
+    }
+
+    function testCreateFileDbEntryMovedFile(){
+        // Create toto.txt in the release directory
+        mkdir($GLOBALS['ftp_frs_dir_prefix'].'/prj/p123_r456');
+        touch($GLOBALS['ftp_frs_dir_prefix'].'/prj/p123_r456/toto.txt');
+        touch($GLOBALS['ftp_incoming_dir'].'/toto.txt');
+
+        $p = new MockProject();
+        $p->setReturnValue('getUnixName', 'prj');
+
+        $r = new FRSRelease();
+        $r->setReleaseID(456);
+        $r->setPackageID(123);
+        $r->setProject($p);
+
+        $f = new FRSFile();
+        $f->setFileName('toto.txt');
+        $f->setRelease($r);
+        $f->setFileLocation($GLOBALS['ftp_frs_dir_prefix'].'/prj/p123_r456');
+
+        $ff = new FRSFileFactoryTestCreateFiles();
+
+        $ff->setReturnValue('moveFileForge', True);
+        $ff->setReturnValue('create', False);
+
+        try {
+            $ff->createFile($f, ~FRSFileFactory::COMPUTE_MD5);
+        }
+        catch (Exception $e) {
+            $this->assertIsA($e, 'FRSFileDbException');
+        }
+
+        //Cleanup
+        unlink($GLOBALS['ftp_frs_dir_prefix'].'/prj/p123_r456/toto.txt');
+        unlink($GLOBALS['ftp_incoming_dir'].'/toto.txt');
+        rmdir($GLOBALS['ftp_frs_dir_prefix'].'/prj/p123_r456');
+    }
+
 }
+
 ?>

@@ -424,39 +424,28 @@ class WebDAVFRSRelease extends Sabre_DAV_Directory {
 
         if ($this->userCanWrite()) {
             $utils = $this->getUtils();
-            if ($utils->isValidFileName($name)) {
-                if (!$utils->getFileFactory()->isFileBaseNameExists($name, $this->getReleaseId(), $this->getProject()->getGroupId())) {
-                    $this->createFileIntoIncoming($name, $data);
 
-                    $fileSize = $utils->getIncomingFileSize($name);
-                    if ($fileSize > $this->getMaxFileSize()) {
-                        throw new Sabre_DAV_Exception_RequestedRangeNotSatisfiable($GLOBALS['Language']->getText('plugin_webdav_download', 'error_file_size'));
-                    }
-                    // calculate its md5sum
-                    $computedMd5 = $utils->getIncomingFileMd5Sum($GLOBALS['ftp_incoming_dir'].'/'.$name);
-                    $frsff = $utils->getFileFactory();
-                    // Call to fileforge to move the file from incoming to its destination directory
-                    $res = $frsff->moveFileForge($this->getProject()->getGroupId(), $name, $frsff->getUploadSubDirectory($this->getReleaseId()));
+            // Create file in the staging area
+            $this->createFileIntoIncoming($name, $data);
+            $fileSize = $utils->getIncomingFileSize($name);
+            if ($fileSize > $this->getMaxFileSize()) {
+                throw new Sabre_DAV_Exception_RequestedRangeNotSatisfiable($GLOBALS['Language']->getText('plugin_webdav_download', 'error_file_size'));
+            }
 
-                    if (!$res) {
-                        $fileArray = array('filename'     => $frsff->getUploadSubDirectory($this->getReleaseId()).'/'.$name,
-                                           'release_id'   => $this->getReleaseId(),
-                                           'file_size'    => $fileSize,
-                                           'processor_id' => 100,
-                                           'type_id'      => 100,
-                                           'computed_md5' => $computedMd5,
-                                           'user_id'      => $this->getUser()->getId());
-                        if ($frsff->create($fileArray)) {
-                            $utils->getReleaseFactory()->emailNotification($this->getRelease());
-                        }
-                    } else {
-                        throw new Sabre_DAV_Exception($GLOBALS['Language']->getText('plugin_webdav_upload', 'move_fileforge_fail'));
-                    }
-                } else {
-                    throw new Sabre_DAV_Exception_MethodNotAllowed($GLOBALS['Language']->getText('plugin_webdav_common', 'file_name_exist'));
-                }
-            } else {
-                throw new Sabre_DAV_Exception_BadRequest($GLOBALS['Language']->getText('plugin_webdav_common', 'file_name_not_valid'));
+            $release = $this->getRelease();
+
+            $newFile = new FRSFile();
+            $newFile->setRelease($release);
+            $newFile->setFileName($name);
+            $newFile->setProcessorID(100);
+            $newFile->setTypeID(100);
+            $newFile->setUserId($this->getUser()->getId());
+            try {
+                $frsff = $utils->getFileFactory();
+                $frsff->createFile($newFile);
+                $utils->getReleaseFactory()->emailNotification($release);
+            } catch (Exception $e) {
+                    throw new Sabre_DAV_Exception_BadRequest($e->getMessage());
             }
         } else {
             throw new Sabre_DAV_Exception_Forbidden($GLOBALS['Language']->getText('plugin_webdav_common', 'file_denied_create'));

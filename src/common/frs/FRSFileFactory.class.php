@@ -18,16 +18,26 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('FRSFile.class.php');
-require_once('common/dao/FRSFileDao.class.php');
-require_once ('common/frs/FRSLog.class.php');
+require_once 'FRSFile.class.php';
+require_once 'FRSLog.class.php';
+require_once 'common/dao/FRSFileDao.class.php';
+require_once 'Exceptions.class.php';
+require_once 'common/valid/Rule.class.php';
 
 /**
  * 
  */
 class FRSFileFactory extends Error {
+    const COMPUTE_MD5 = 0x0001;
+
+    protected $fileforge;
 
     function FRSFileFactory() {
+        $this->fileforge = $GLOBALS['codendi_bin_prefix'] . "/fileforge";
+    }
+
+    public function setFileForge($fileforge) {
+        $this->fileforge = $fileforge;
     }
 
     function &getFRSFileFromArray(&$array) {
@@ -143,7 +153,8 @@ class FRSFileFactory extends Error {
      * @return boolean true if a file named $file_basename already exists in the release $release_id, false otherwise
      */
     function isFileBaseNameExists($file_basename, $release_id, $group_id) {
-        $subdir = $this->getUploadSubDirectory($release_id);
+        $release = $this->_getFRSReleaseFactory()->getFRSReleaseFromDb($release_id);
+        $subdir = $this->getUploadSubDirectory($release);
         $file_name = $subdir.'/'.$file_basename;
         return $this->isFileNameExist($file_name, $group_id);
     }
@@ -183,55 +194,116 @@ class FRSFileFactory extends Error {
         }
         return false;
     }
-    
+
     /**
-     * create a new file from a file present in the incoming dir
+     * Create a new file based on given objects
      *
-     * @return true or id(auto_increment) if there is no error
+     * Given a "transient" file object, physically move the file from it's landing zone to
+     * it's release area and create the corresponding entry in the database.
+     *
+     * @param FRSFile    $file    File to create
+     *
+     * @return FRSFile
      */
-    function createFromIncomingFile($name=null, $release_id=null, 
-                               $type_id=null, $processor_id=null, $computedMd5, $referenceMd5) {
-        
-        // check if the file exists
-        $uploaded_files = $this->getUploadedFileNames();
-        if (! in_array($name, $uploaded_files)) {
-            $this->setError('File not found: '.$name);
-            return false;
+    public function createFile(FRSFile $file, $extraFlags = self::COMPUTE_MD5) {
+        $rule = new Rule_FRSFileName();
+        if(!$rule->isValid($file->getFileName())){
+            throw new FRSFileIllegalNameException($file);
+        }
+        $rel = $file->getRelease();
+
+        if ($this->isFileBaseNameExists($file->getFileName(), $rel->getReleaseID(), $rel->getGroupID())) {
+            throw new FRSFileExistsException($file);
         }
 
-	// Don't use filesize() : Workaround for files larger than 2 GB
-        $filesize = file_utils_get_size($GLOBALS['ftp_incoming_dir'] . '/' . $name);
+        clearstatcache();
+        $filePath = $GLOBALS['ftp_incoming_dir'] . '/' . $file->getFileName();
+            if (!file_exists($filePath)) {
+            throw new FRSFileInvalidNameException($file);
+        }
 
-        $um = UserManager::instance();
-        $user = $um->getCurrentUser();
+        if (0 != ($extraFlags & self::COMPUTE_MD5)){
+            $file->setComputedMd5(PHP_BigFile::getMd5Sum($filePath));
+            if(!$this->compareMd5Checksums($file->getComputedMd5(), $file->getReferenceMd5())){
+                throw new FRSFileMD5SumException($file);
+            }
+        }
 
-        $file = new FRSFile();
-        $file->setFileName($name);
-        $file->setFileSize($filesize);
-        $file->setReleaseID($release_id);
-        $file->setTypeID($type_id);
-        $file->setProcessorID($processor_id);
+        $file->setFileSize(PHP_BigFile::getSize($filePath));
         $file->setStatus('A');
-        $file->setComputedMd5($computedMd5);
-        $file->setReferenceMd5($referenceMd5);
-        $file->setUserID($user->getId());
 
-        // retrieve the group_id
-        $release_fact =& $this->_getFRSReleaseFactory();
-        $release =& $release_fact->getFRSReleaseFromDb($release_id);
-        $group_id = $release->getGroupID();
-        
-        // get the sub directory where to move the file
-        $upload_sub_dir = $this->getUploadSubDirectory($release->getReleaseID());
-        
-        $exec_return = $this->moveFileForge($group_id, $name, $upload_sub_dir);
-        // shall we test the result of fileforge ???
-        
-        // set the new name of the file: we add the sub-directory
-        $file->setFileName($upload_sub_dir.'/'.$name);
-        return $this->create($file->toArray());
+        if($this->moveFileForge($file)){
+            $fileId=$this->create($file->toArray());
+            if($fileId){
+                $file->setFileID($fileId);
+                return $file;
+            } else {
+                throw new FRSFileDbException($file);
+            }
+        } else {
+            throw new FRSFileForgeException($file);
+        }
+    }
+
+    /**
+     * Returns the names of the files present in the incoming directory
+     *
+     * @return array of string : the names of the files present in the incoming directory
+     */
+    function getUploadedFileNames() {
+        $uploaded_file_names = array();
+        //iterate and show the files in the upload directory
+
+        /// This won't work for files > 2GB
+        //$dirhandle = @ opendir($GLOBALS['ftp_incoming_dir']);
+        //while ($file = @ readdir($dirhandle)) {
+
+        // Workaround for files bigger than 2Gb:
+        $filelist = shell_exec("/usr/bin/find ".$GLOBALS['ftp_incoming_dir']." -maxdepth 1 -type f -printf \"%f\\n\"");
+        $files = explode("\n",$filelist);
+        // Remove last (empty) element
+        array_pop($files);
+        foreach ($files as $file) {
+            if (!ereg('^\.', $file[0])) {
+                $uploaded_file_names[] = $file;
+            }
+        }
+        return $uploaded_file_names;
     }
     
+    /**
+     * Force the upload directory creation, and move the file $file_name in the good directory
+     *
+     * @global $GLOBALS['codendi_bin_prefix']
+     *
+     * @param int    $group_id       the ID of the project we want to upload the file
+     * @param string $file_name      the name of the file we want to upload
+     * @param string $upload_sub_dir the name of the sub-directory the file will be moved in
+     *
+     * @return Boolean True if file is moved to it's final location (false otherwise)
+     */
+    public function moveFileForge(FRSFile $file) {
+        $release = $file->getRelease();
+        $unixName = $release->getProject()->getUnixName(false);
+        $upload_sub_dir = $this->getUploadSubDirectory($release);
+        $file_name = $file->getFileName();
+        if (!file_exists($GLOBALS['ftp_frs_dir_prefix'].'/'.$unixName . '/' . $upload_sub_dir.'/'.$file_name)) {
+            $file_name = preg_replace('` `', '\\ ', $file_name);
+            $ret_val   = null;
+            $exec_res  = null;
+            $cmd = $this->fileforge." $file_name " . $unixName . "/" . $upload_sub_dir;
+            exec($cmd, $exec_res, $ret_val);
+            // Warning. Posix common value for success is 0 (zero), but in php 0 == false.
+            // So "convert" the unix "success" value to the php one (basically 0 => true).
+            if ($ret_val == 0) {
+                $file->setFileName($upload_sub_dir.'/'.$file->getFileName());
+                return true;
+            }
+        }
+        return false;
+    }
+
+
     /**
      * Get the sub directory where to upload the files
      *
@@ -240,10 +312,7 @@ class FRSFileFactory extends Error {
      * @param int $release_id the ID of the release the file belongs to
      * @return string the sub-directory (wihtout any /) where to upload the file
      */
-    function getUploadSubDirectory($release_id) {
-        $release_fact =& $this->_getFRSReleaseFactory();
-        $release =& $release_fact->getFRSReleaseFromDb($release_id);
-        // get the sub directory where to upload the file
+    function getUploadSubDirectory(FRSRelease $release) {
         return 'p' . $release->getPackageID() . '_r' . $release->getReleaseID();
     }
     
@@ -345,6 +414,8 @@ class FRSFileFactory extends Error {
      * release
      * 
      * @param FRSFile $file
+     *
+     * @return Boolean
      */
     public function moveDeletedFileToStagingArea($file) {
         $stagingPath = $this->getStagingPath($file);
@@ -352,24 +423,41 @@ class FRSFileFactory extends Error {
         if (!is_dir($stagingDir)) {
             mkdir($stagingDir, 0750, true);
         }
-        if (rename($file->getFileLocation(), $stagingPath)) {
+        if (file_exists($file->getFileLocation())) {
+            if (rename($file->getFileLocation(), $stagingPath)) {
+                $dao = $this->_getFRSFileDao();
+                $deleted = $dao->setFileInDeletedList($file->getFileId());
+                $this->deleteEmptyReleaseDirectory($file);
+                return $deleted;
+            }
+        } else {
             $dao = $this->_getFRSFileDao();
-            $deleted = $dao->setFileInDeletedList($file->getFileId());
-            
-            // Delete release directory when the last file is removed
-            $nbFiles = 0;
-            $dir = new DirectoryIterator(dirname($file->getFileLocation()));
-            foreach ($dir as $f) {
-                if (!$f->isDot()) {
-                    $nbFiles++;
-                }
-            }
-            if ($nbFiles === 0) {
-                rmdir(dirname($file->getFileLocation()));
-            }
-            return $deleted;
+            $dao->setFileInDeletedList($file->getFileId());
+            $dao->setPurgeDate($file->getFileId(), $_SERVER['REQUEST_TIME']);
+            $this->deleteEmptyReleaseDirectory($file);
+            return true;
         }
         return false;
+    }
+
+    /**
+     * If release directory is empty, delete it
+     *
+     * @param FRSFile $file
+     *
+     * @return Boolean
+     */
+    public function deleteEmptyReleaseDirectory($file) {
+        $nbFiles = 0;
+        $dir = new DirectoryIterator(dirname($file->getFileLocation()));
+        foreach ($dir as $f) {
+            if (!$f->isDot()) {
+                $nbFiles++;
+            }
+        }
+        if ($nbFiles === 0) {
+            rmdir(dirname($file->getFileLocation()));
+        }
     }
 
     /**
@@ -497,57 +585,6 @@ class FRSFileFactory extends Error {
     }
 
     /**
-     * Returns the names of the files present in the incoming directory
-     *
-     * @return array of string : the names of the files present in the incoming directory
-     */
-    function getUploadedFileNames() {
-        $uploaded_file_names = array();
-        //iterate and show the files in the upload directory
-
-        /// This won't work for files > 2GB
-        //$dirhandle = @ opendir($GLOBALS['ftp_incoming_dir']);
-        //while ($file = @ readdir($dirhandle)) {
-
-        // Workaround for files bigger than 2Gb:
-        $filelist = shell_exec("/usr/bin/find ".$GLOBALS['ftp_incoming_dir']." -maxdepth 1 -type f -printf \"%f\\n\"");
-	$files = explode("\n",$filelist);
-        // Remove last (empty) element
-        array_pop($files);
-        foreach ($files as $file) {
-            if (!ereg('^\.', $file[0])) {
-                $uploaded_file_names[] = $file;
-            }
-        }
-        return $uploaded_file_names;
-    }
-    
-    /**
-     * Force the upload directory creation, and move the file $file_name in the good directory
-     *
-     * @global $GLOBALS['codendi_bin_prefix']
-     *
-     * @param int $group_id the ID of the project we want to upload the file
-     * @param string $file_name the name of the file we want to upload
-     * @param string $upload_sub_dir the name of the sub-directory the file will be moved in
-     * @return string the feedback returned by the fileforge command.
-     */
-    function moveFileForge($group_id, $file_name, $upload_sub_dir) {
-        $pm = ProjectManager::instance();
-        $group = $pm->getProject($group_id);
-        $group_unix_name = $group->getUnixName(false);
-        $file_name = preg_replace('` `', '\\ ', $file_name);
-        if (!file_exists($GLOBALS['ftp_frs_dir_prefix'].'/'.$group_unix_name . '/' . $upload_sub_dir.'/'.$file_name)) {
-            $ret_val  = null;
-            $exec_res = null;
-            $cmd = $GLOBALS['codendi_bin_prefix'] . "/fileforge $file_name " . $group_unix_name . "/" . $upload_sub_dir;
-            exec($cmd, $exec_res, $ret_val);
-            return $ret_val;
-        }
-        return "Error";
-    }
-
-    /**
      * Wrapper to get a UserManager instance
      *
      * @return UserManager
@@ -566,6 +603,15 @@ class FRSFileFactory extends Error {
         $em = EventManager::instance();
         FRSLog::instance();
         return $em;
+    }
+
+    /**
+     * Wrapper to get ProjectManager instance
+     *
+     * @return ProjectManager
+     */
+    function _getProjectManager() {
+        return ProjectManager::instance();
     }
 
     /**

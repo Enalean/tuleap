@@ -1110,21 +1110,22 @@ function addUploadedFile($sessionKey,$group_id,$package_id,$release_id,$filename
         
         $file_fact = new FRSFileFactory();
         if ($file_fact->userCanAdd($group_id)) {
-            if (! $file_fact->isFileBaseNameExists($filename, $release->getReleaseID(), $group_id)) {
-                $computed_md5 = PHP_BigFile::getMd5Sum($GLOBALS['ftp_incoming_dir'] . '/' . $filename);
-                if ($file_fact->compareMd5Checksums($computed_md5, $reference_md5)) {
-                    $file_id = $file_fact->createFromIncomingFile(basename($filename),$release_id,$type_id,$processor_id,$computed_md5,$reference_md5);
-                    if (! $file_id) {
-                        return new SoapFault(invalid_file_fault,$file_fact->getErrorMessage(),'addUploadedFile');
-                    } else {
-                        $release_fact->emailNotification($release);
-                        return $file_id;
-                    }
-                } else {
-                    return new SoapFault(invalid_file_fault, 'Md5 comparison failed for file "'.$filename.'"', 'addUploadedFile');
-                }
-            } else {
-                return new SoapFault(invalid_file_fault, 'Filename "'.$filename.'" already exists', 'addUploadedFile');
+            $user = UserManager::instance()->getCurrentUser();
+
+            $file = new FRSFile();
+            $file->setRelease($release);
+            $file->setFileName(basename($filename));
+            $file->setTypeID($type_id);
+            $file->setProcessorID($processor_id);
+            $file->setReferenceMd5($reference_md5);
+            $file->setUserID($user->getId());
+            try {
+                $file_fact->createFile($file);
+                $release_fact->emailNotification($release);
+                return $file->getFileID();
+            }
+            catch(Exception $e) {
+                return new SoapFault(invalid_file_fault, $e->getMessage(), 'addUploadedFile');
             }
         } else {
             return new SoapFault(invalid_file_fault, 'User is not allowed to add a file', 'addUploadedFile');

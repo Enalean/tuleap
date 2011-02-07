@@ -9,6 +9,7 @@ Version 4.0.17 - (Not released yet)
         backlog #103794: Fix issue related to "item type" filter
 	backlog #121173: URLVerification failures with anonymous URLs and webdav misconfiguration.
         backlog #121035: Project creation without full name
+        backlog #120417: FRS deletion issues
 
 
 

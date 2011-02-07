@@ -913,6 +913,10 @@ function util_user_finder($ident, $strict=true) {
 }
 
 
+/**
+ * @deprecated
+ * @see src/common/valid/Rule.class.php#Rule_FRSFileName
+ */
 function util_is_valid_filename ($file) {
     if (ereg("[]`!#\"$%^,&*();=|[{}<>?/]",$file)) {
         return false;

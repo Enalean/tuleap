@@ -94,8 +94,8 @@ file_admin_editreleases	offline_md5	The MD5 checksum of the file "$1" will be co
 file_admin_editreleases	illegal_file_name	Illegal Filename
 file_admin_editreleases	p_rel_not_yours	Package/Release Doesn't Exist Or Isn't Yours
 file_admin_editreleases	not_add_file	Couldn't Add Filename
-file_admin_editreleases	filename_invalid	Filename Invalid Or Does Not Exist
-file_admin_editreleases	filename_exists	Filename Already Exists For This Project
+file_admin_editreleases	filename_invalid	Invalid file name or file doesn't exist
+file_admin_editreleases	filename_exists	File name already exists in this release
 file_admin_editreleases	md5_fail	MD5 checksum comparison failed for file "$1", the MD5 value computed on server is "$2"
 file_admin_editreleases	no_files_selected	No Files Selected
 file_admin_editreleases	file_deleted	File Deleted : $1
@@ -187,6 +187,8 @@ file_admin_editreleases	update_canceled	Release update canceled
 file_admin_editreleases	upload_file_msg	(The maximum upload file size is $1 Mb - <u>Please compress your files</u>)
 file_admin_editreleases	md5sum	md5 Checksum
 file_admin_editreleases	user	Owner
+file_admin_editreleases	fileforge_error	An error occured while moving file to destination (was the file $1 already deleted?)
+file_admin_editreleases	db_error	An error occured while adding file into the database
 #
 #-----------------------------------------------
 # Script: SF/www/file/admin/index.php

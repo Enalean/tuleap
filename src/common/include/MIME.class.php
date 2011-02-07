@@ -185,7 +185,7 @@ class MIME {
         $data = fread($fp, $length);
         fclose($fp);
         for($i = 0; $i < $length; $i++) {
-            if($data{$i} < "\x20" && $data{$i} != "\x09" && $data{$i} != "\x0a" && $data{$i} != "\x0d") {
+            if(!isset($data{$i}) || ($data{$i} < "\x20" && $data{$i} != "\x09" && $data{$i} != "\x0a" && $data{$i} != "\x0d")) {
                 return 'application/octet-stream';
             }
         }

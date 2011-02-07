@@ -748,6 +748,9 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
         $GLOBALS['Response']->redirect('/file/showfiles.php?group_id='.$group_id);        
     }
     
+    $um   = UserManager::instance();
+    $user = $um->getCurrentUser();
+
     $vDate = new Valid_String();
     if ($vDate->validate($res['date'])) {
         $release['date'] = $res['date'];     	
@@ -1188,158 +1191,73 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
                     $addingFiles = false;
                     //iterate and add the http files to the frs_file table
                     foreach ($http_files_processor_type_list as $file) {
-
-                        //see if filename is legal before adding it
                         $filename = $file['name'];
-                        if (!util_is_valid_filename($filename)) {
-                            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('file_admin_editreleases', 'illegal_file_name') . ": $filename");
-                        } else {
-                            if (isset($file['error'])) {
-                                switch($file['error']) {
-                                    case UPLOAD_ERR_OK:
-                                        // all is OK
-                                        break;
-                                    case UPLOAD_ERR_INI_SIZE:
-                                    case UPLOAD_ERR_FORM_SIZE:
-                                        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('global', 'error_upload_size', $file['error']));
-                                        break;
-                                    case UPLOAD_ERR_PARTIAL:
-                                        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('global', 'error_upload_partial', $file['error']));
-                                        break;
-                                    case UPLOAD_ERR_NO_FILE:
-                                        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('global', 'error_upload_nofile', $file['error']));
-                                        break;
-                                    default:
-                                        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('global', 'error_upload_unknown', $file['error']));
-                                }
+                        if (isset($file['error'])) {
+                            switch($file['error']) {
+                            case UPLOAD_ERR_OK:
+                                // all is OK
+                                break;
+                            case UPLOAD_ERR_INI_SIZE:
+                            case UPLOAD_ERR_FORM_SIZE:
+                                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('global', 'error_upload_size', $file['error']));
+                                break;
+                            case UPLOAD_ERR_PARTIAL:
+                                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('global', 'error_upload_partial', $file['error']));
+                                break;
+                            case UPLOAD_ERR_NO_FILE:
+                                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('global', 'error_upload_nofile', $file['error']));
+                                break;
+                            default:
+                                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('global', 'error_upload_unknown', $file['error']));
                             }
-                            if (is_uploaded_file($file['tmp_name'])) {
-                                $uploaddir = $GLOBALS['ftp_incoming_dir'];
-                                $uploadfile = $uploaddir . "/" . basename($filename);
-                                if (!file_exists($uploaddir) || !is_writable($uploaddir) || !move_uploaded_file($file['tmp_name'], $uploadfile)) {
-                                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('file_admin_editreleases', 'not_add_file') . ": " . basename($filename));
-                                } else {
-                                    // get the package id and compute the upload directory
-                                    $pres = & $frsrf->getFRSReleaseFromDb($release_id, $group_id, $release['package_id']);
-
-                                    if (!$pres || count($pres) < 1) {
-                                        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('file_admin_editreleases', 'p_rel_not_yours'));
-                                    }
-                                    //see if they already have a file by this name
-                                    $res1 = $frsff->isFileBaseNameExists($filename, $release_id, $group_id);
-                                    if (!$res1) {
-
-                                        /*
-                                            move the file to the project's fileserver directory
-                                        */
-                                        clearstatcache();
-                                        $path = $GLOBALS['ftp_incoming_dir'] . '/' . $filename;
-                                        if (file_exists($path)) {
-                                             $um = UserManager::instance();
-                                             $user = $um->getCurrentUser();
-                                            // calculate its md5sum
-                                            $computedMd5 = PHP_BigFile::getMd5Sum($path);
-                                            if ($frsff->compareMd5Checksums($computedMd5, $file['reference_md5'])) {
-                                            //move the file to a its project page using a setuid program
-                                            //test if the file aldready exists in the destination directory
-                                            $group = $pm->getProject($group_id);
-                                            $group_unix_name = $group->getUnixName(false);
-                                            $exec_res = $frsff->moveFileForge($group_id, $filename, $frsff->getUploadSubDirectory($release_id));
-                                            if (!$exec_res) {
-                                                    //echo '<h3>' . $exec_res[0], $exec_res[1] . '</H3><P>';
-                                                
-                                                    //add the file to the database
-                                                    $array = array ('filename'      => $frsff->getUploadSubDirectory($release_id) . '/' . $filename,
-                                                                    'release_id'    => $release_id,
-                                                                    'file_size'     => file_utils_get_size($project_files_dir . '/' . $frsff->getUploadSubDirectory($release_id) . '/' . $filename),
-                                                                    'processor_id'  => $file['processor'],
-                                                                    'type_id'       => $file['type'],
-                                                                    'computed_md5'  => $computedMd5,
-                                                                    'reference_md5' => $file['reference_md5'],
-                                                                    'user_id'       => $user->getId());
-                                                    $res = & $frsff->create($array);
-        
-                                                    if (!$res) {
-                                                        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('file_admin_editreleases', 'not_add_file') . ": $filename ");
-                                                        echo db_error();
-                                                    } else {
-                                                        $addingFiles = true;
-                                                    }
-                                                } else {
-                                                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('file_admin_editreleases', 'not_add_file') . ": " . basename($filename));
-                                                }
-                                            } else {
-                                                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('file_admin_editreleases', 'md5_fail', array (basename($filename), $computedMd5)));
-                                            }
-                                        } else {
-                                            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('file_admin_editreleases', 'filename_invalid') . ": $filename");
-                                        }
-                                    } else {
-                                        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('file_admin_editreleases', 'filename_exists') . ": $filename");
-                                    }
-                                }
-                            }else{
+                        }
+                        if (is_uploaded_file($file['tmp_name'])) {
+                            $uploaddir = $GLOBALS['ftp_incoming_dir'];
+                            $uploadfile = $uploaddir . "/" . basename($filename);
+                            if (!file_exists($uploaddir) || !is_writable($uploaddir) || !move_uploaded_file($file['tmp_name'], $uploadfile)) {
                                 $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('file_admin_editreleases', 'not_add_file') . ": " . basename($filename));
+                            } else {
+                                $newFile = new FRSFile();
+                                $newFile->setRelease($res1);
+                                $newFile->setFileName($filename);
+                                $newFile->setProcessorID($file['processor']);
+                                $newFile->setTypeID($file['type']);
+                                $newFile->setReferenceMd5($file['reference_md5']);
+                                $newFile->setUserId($user->getId());
+                                try {
+                                    $frsff->createFile($newFile);
+                                    $addingFiles = true;
+                                }
+                                catch (Exception $e) {
+                                    $GLOBALS['Response']->addFeedback('error', $e->getMessage());
+                                }
                             }
+                        }else{
+                            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('file_admin_editreleases', 'not_add_file') . ": " . basename($filename));
                         }
                     }
 
                     //iterate and add the ftp files to the frs_file table
                     foreach ($ftp_files_processor_type_list as $file) {
                         $filename = $file['name'];
-                        //see if filename is legal before adding it
-                        if (!util_is_valid_filename($filename)) {
-                            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('file_admin_editreleases', 'illegal_file_name') . ": $filename");
-                        } else {
-                            // get the package id and compute the upload directory
-                            $pres = & $frsrf->getFRSReleaseFromDb($release_id, $group_id, $release['package_id']);
 
-                            if (!$pres || count($pres) < 1) {
-                                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('file_admin_editreleases', 'p_rel_not_yours'));
-                            }
-                            //see if they already have a file by this name
-                            $res1 = $frsff->isFileBaseNameExists($filename, $release_id, $group_id);
-                            if (!$res1) {
+                        $newFile = new FRSFile();
+                        $newFile->setRelease($res1);
+                        $newFile->setFileName($filename);
+                        $newFile->setProcessorID($file['processor']);
+                        $newFile->setTypeID($file['type']);
+                        $newFile->setReferenceMd5($file['reference_md5']);
+                        $newFile->setUserId($user->getId());
 
-                                /*
-                                    move the file to the project's fileserver directory
-                                */
-                                clearstatcache();
-                                if (file_exists($GLOBALS['ftp_incoming_dir'] . '/' . $filename)) {
-                                    //move the file to a its project page using a setuid program
-                                        $exec_res = $frsff->moveFileForge($group_id, $filename, $frsff->getUploadSubDirectory($release_id));
-                                        if (!$exec_res) {
-                                             $um = UserManager::instance();
-                                             $user = $um->getCurrentUser();
-                                            //echo '<h3>' . $exec_res[0], $exec_res[1] . '</H3><P>';
-                                            //add the file to the database
-                                            $array = array ('filename'      => $frsff->getUploadSubDirectory($release_id) . '/' . $filename,
-                                                            'release_id'    => $release_id,
-                                                            'file_size'     => file_utils_get_size($project_files_dir . '/' . $frsff->getUploadSubDirectory($release_id) . '/' . $filename),
-                                                            'processor_id'  => $file['processor'],
-                                                            'type_id'       => $file['type'],
-                                                            'reference_md5' => $file['reference_md5'],
-                                                            'user_id'       => $user->getId());
-                                            $res = $frsff->create($array);
-        
-                                            if (!$res) {
-                                                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('file_admin_editreleases', 'not_add_file') . ": $filename ");
-                                                echo db_error();
-                                            } else {
-                                                $addingFiles = true;
-                                                $em = EventManager::instance();
-                                                $em->processEvent(Event::COMPUTE_MD5SUM, array('fileId' =>$res));
-                                                $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('file_admin_editreleases', 'offline_md5', $filename));
-                                            }
-                                        } else {
-                                            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('file_admin_editreleases', 'not_add_file') . ": $filename ");
-                                        }   
-                                } else {
-                                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('file_admin_editreleases', 'filename_invalid') . ": $filename");
-                                }
-                            } else {
-                                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('file_admin_editreleases', 'filename_exists') . ": $filename");
-                            }
+                        try {
+                            $frsff->createFile($newFile, ~FRSFileFactory::COMPUTE_MD5);
+                            $addingFiles = true;
+                            $em = EventManager::instance();
+                            $em->processEvent(Event::COMPUTE_MD5SUM, array('fileId' => $newFile->getFileID()));
+                            $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('file_admin_editreleases', 'offline_md5', $filename));
+                        }
+                        catch (Exception $e) {
+                            $GLOBALS['Response']->addFeedback('error', $e->getMessage());
                         }
                     }
                 }

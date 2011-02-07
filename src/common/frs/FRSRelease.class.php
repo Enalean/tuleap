@@ -71,7 +71,17 @@ class FRSRelease extends Error {
      * @var int $released_by the ID of the user who creates this FRSRelease
      */
     var $released_by;
-    
+
+
+    /**
+     * @var Project $project Project the release belongs to
+     */
+    protected $project;
+    /**
+     * @var Integer $group_id Project ID the release belongs to
+     */
+    protected $group_id;
+
     function FRSRelease($data_array = null) {
         $this->release_id       = null;
         $this->package_id       = null;
@@ -160,6 +170,17 @@ class FRSRelease extends Error {
         $this->released_by = $released_by;
     }
     
+    function getProject() {
+        if (!isset($this->project)) {
+            $this->project = $this->_getProjectManager()->getProject($this->getGroupID());
+        }
+        return $this->project;
+    }
+    
+    function setProject($project) {
+        $this->project = $project;
+    }
+
     /**
      * Determines if the release is active or not
      * @return boolean true if the release is active, false otherwise
@@ -196,14 +217,25 @@ class FRSRelease extends Error {
     }
     
     /**
+     * Set group id
+     */
+    function setGroupID($group_id) {
+        $this->group_id = $group_id;
+    }
+
+    /**
      * Returns the group ID the release belongs to
      */
     function getGroupID() {
-        $package_id = $this->getPackageID();
-        $package_fact = new FRSPackageFactory();
-        $package =& $package_fact->getFRSPackageFromDb($package_id, null, FRSPackageDao::INCLUDE_DELETED);
-        $group_id = $package->getGroupID();
-        return $group_id;
+        if (!isset($this->group_id)) {
+            if (isset($this->project)) {
+                $this->group_id = $this->project->getID();
+            } else {
+                $package = $this->_getFRSPackageFactory()->getFRSPackageFromDb($this->getPackageID(), null, FRSPackageDao::INCLUDE_DELETED);
+                $this->group_id = $package->getGroupID();
+            }
+        }
+        return $this->group_id;
     }
     
 	function initFromArray($array) {
@@ -290,7 +322,24 @@ class FRSRelease extends Error {
         $tooltip .= '</table>';
         return $tooltip;
     }
-    
+
+    /**
+     * Get a Package Factory
+     *
+     * @return FRSPackageFactory
+     */
+    function _getFRSPackageFactory() {
+        return new FRSPackageFactory();
+    }
+
+    /**
+     * Get ProjectManager
+     *
+     * @return ProjectManager
+     */
+    function _getProjectManager() {
+        return ProjectManager::instance();
+    }
 }
 
 ?>

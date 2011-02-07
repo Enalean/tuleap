@@ -81,6 +81,11 @@ class FRSFile extends Error {
      * @var string $file_location the full path of this FRSFile
      */
     var $file_location;
+
+    /**
+     * @var FRSRelease $release The release the file belongs to
+     */
+    protected $release;
     
     function FRSFile($data_array = null) {
         $this->file_id       = null;
@@ -148,6 +153,10 @@ class FRSFile extends Error {
     
     function setReleaseTime($release_time) {
         $this->release_time = (int) $release_time;
+    }
+    
+    function setFileLocation($location) {
+        $this->file_location = $location;
     }
     
     /**
@@ -245,6 +254,15 @@ class FRSFile extends Error {
 
     function getUserID() {
         return $this->user_id;
+    }
+
+    function setRelease($release) {
+        $this->release    = $release;
+        $this->release_id = $release->getReleaseID();
+    }
+
+    function getRelease() {
+        return $this->release;
     }
 
 	function initFromArray($array) {

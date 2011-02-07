@@ -4,10 +4,6 @@ require_once('common/frs/FRSFile.class.php');
 
 class FRSFileTest extends UnitTestCase {
 
-    function __construct($name = 'FRSFile test') {
-        parent::__construct($name);
-    }
-
     function testGetContentWholeFile() {
         $file = new FRSFile();
         $file->file_location = dirname(__FILE__).'/_fixtures/file_sample';
