@@ -33,14 +33,14 @@ class GitBackendTest extends UnitTestCase {
         @unlink($this->fixturesPath.'/tmp/post-receive');
     }
 
-    public function testIncludePostReceiveEmail() {
+    public function testIncludePostReceive() {
         // Copy reference hook to temporay path
         $hookPath = $this->fixturesPath.'/tmp/post-receive';
         copy($this->fixturesPath.'/hooks/post-receive', $hookPath);
              
 
         $backend = new GitBackendTestVersion($this);
-        $backend->deployPostReceiveEmail($hookPath);
+        $backend->deployPostReceive($hookPath);
 
         // verify that post-receive codendi hook is added
         $expect = '. '.$GLOBALS['sys_pluginsroot'].'git/hooks/post-receive 2>/dev/null';
@@ -60,7 +60,7 @@ class GitBackendTest extends UnitTestCase {
         copy($this->fixturesPath.'/hooks/post-receive', $hookPath);
 
         $backend = new GitBackendTestVersion($this);
-        $backend->deployPostReceiveEmail($hookPath);
+        $backend->deployPostReceive($hookPath);
 
         $this->assertTrue(is_executable($hookPath));
     }
