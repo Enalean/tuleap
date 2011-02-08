@@ -164,6 +164,8 @@ class GitBackend extends Backend {
      * Deploy post-receive hook into the target file
      *
      * @param String $filePath Path to the hook file
+     *
+     * @return void
      */
     public function deployPostReceive($filePath) {
         $hook = '. '.$GLOBALS['sys_pluginsroot'].'git/hooks/post-receive 2>/dev/null';
