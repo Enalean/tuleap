@@ -251,7 +251,6 @@ class GitViews extends PluginViews {
         // form to add email addresses (mailing list)
         $this->_addMailForm();
         // form to add users (with auto completion)
-        // TODO : autocomplete
         $this->_addUserForm();
         // show the list of mails to notify
         $this->_listOfMails();
@@ -405,6 +404,8 @@ class GitViews extends PluginViews {
     </table>
 </form>
         <?php
+        $js = "new UserAutoCompleter('add_user_field', '".util_get_dir_image_theme()."', false);";
+        $GLOBALS['Response']->includeFooterJavascriptSnippet($js);
     }
 
     /**
