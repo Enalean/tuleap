@@ -1111,7 +1111,7 @@ class Layout extends Response {
         global $Language;
 
         // Codendi version number
-        $version = trim(file_get_contents($GLOBALS['codendi_dir'].'/ST-VERSION'));
+        $version = trim(file_get_contents($GLOBALS['codendi_dir'].'/VERSION'));
 
         include($Language->getContent('layout/footer'));
             

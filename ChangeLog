@@ -3,15 +3,13 @@ Version 4.0.17 - (Not released yet)
         backlog #119877: Add more coverage for CVS Backend
         backlog #119371: Codendi testing; code coverage and function mock
         backlog #119788: Support several LDAP branches
-	backlog #121192: Allow site admin to define a legal warning to users on registeration page
-
+        backlog #121192: Allow site admin to define a legal warning to users on registeration page
+	
         == Bugfix ==
         backlog #103794: Fix issue related to "item type" filter
-	backlog #121173: URLVerification failures with anonymous URLs and webdav misconfiguration.
+        backlog #121173: URLVerification failures with anonymous URLs and webdav misconfiguration.
         backlog #121035: Project creation without full name
         backlog #120417: FRS deletion issues
-
-
 
 Version 4.0.16 - Tuesday, 18th January 2011 
         == New Features ==

@@ -27,7 +27,7 @@ class DocmanPluginInfo extends PluginInfo {
     
     function DocmanPluginInfo(&$plugin) {
         $this->PluginInfo($plugin);
-        $this->setPluginDescriptor(new DocmanPluginDescriptor());
+        $this->setPluginDescriptor(new DocmanPluginDescriptor($plugin));
         $this->_conf_path = $plugin->getPluginEtcRoot() .'/docman.inc';
         $this->loadProperties();
     }

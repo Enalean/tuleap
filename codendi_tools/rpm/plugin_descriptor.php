@@ -25,22 +25,10 @@
  * This script extract the version of a package from the sources.
  */
 
-$basedir=dirname(__FILE__).'/../..';
+require_once 'FakePluginDescriptor.php';
 
-ini_set('include_path', ini_get('include_path').':'.$basedir.'/src');
-
-require('common/language/BaseLanguage.class.php');
-
-$GLOBALS['codendi_cache_dir'] = '/tmp';
-$GLOBALS['sys_incdir']        = $basedir.'/site-content';
-$GLOBALS['sys_pluginsroot']   = $basedir.'/plugins';
-
-$Language = new BaseLanguage('en_US', 'en_US');
-$Language->lang = 'en_US';
-$Language->compileLanguage('en_US');
-
-// Load plugin
-$desc = loadDesc($basedir, $argv[1]);
+$fpd  = new FakePluginDescriptor(dirname(__FILE__).'/../..');
+$desc = $fpd->getDescriptor($argv[1]);
 
 // Show version
 echo $desc->getVersion().PHP_EOL;
@@ -48,19 +36,6 @@ echo $desc->getVersion().PHP_EOL;
 // Show Desc
 if (isset($argv[2])) {
     echo $desc->getDescription().PHP_EOL;
-}
-
-function loadDesc($basedir, $pluginName) {
-    $className = $pluginName.'PluginDescriptor';
-
-    if (is_dir($basedir.'/plugins/'.$pluginName)) {
-        include $basedir.'/plugins/'.$pluginName.'/include/'.$className.'.class.php';
-    } else {
-        $lc = strtolower($pluginName);
-        include $basedir.'/plugins/'.$lc.'/include/'.$className.'.class.php';
-    }
-
-    return new $className();
 }
 
 ?>

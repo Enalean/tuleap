@@ -1,12 +1,13 @@
 <?php
 
-require_once('common/plugin/PluginDescriptor.class.php');
+require_once 'common/plugin/PluginDescriptor.class.php';
 
 
 class TemplatePluginDescriptor extends PluginDescriptor {
     
-    function TemplatePluginDescriptor() {
-        $this->PluginDescriptor($GLOBALS['Language']->getText('plugin_template', 'descriptor_name'), 'v1.0', $GLOBALS['Language']->getText('plugin_template', 'descriptor_description'));
+    function __construct() {
+        parent::__construct($GLOBALS['Language']->getText('plugin_template', 'descriptor_name'), false, $GLOBALS['Language']->getText('plugin_template', 'descriptor_description'));
+        $this->setVersionFromFile(dirname(__FILE__).'/../VERSION');
     }
 }
 ?>
