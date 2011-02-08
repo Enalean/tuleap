@@ -53,6 +53,17 @@ class GitBackendTest extends UnitTestCase {
         }
         $this->assertTrue($lineFound, "post-receive hook must contains $expect");
     }
+
+    public function testPostReceiveIsExecutable() {
+        // Copy reference hook to temporay path
+        $hookPath = $this->fixturesPath.'/tmp/post-receive';
+        copy($this->fixturesPath.'/hooks/post-receive', $hookPath);
+
+        $backend = new GitBackendTestVersion($this);
+        $backend->deployPostReceiveEmail($hookPath);
+
+        $this->assertTrue(is_executable($hookPath));
+    }
 }
 
 ?>
