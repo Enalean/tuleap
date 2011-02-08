@@ -13,4 +13,4 @@
 #
 
 
-#. /usr/share/doc/git-core/contrib/hooks/post-receive-email
+. /usr/share/codendi/plugins/git/hooks/post-receive-email
