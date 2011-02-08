@@ -160,9 +160,14 @@ class GitBackend extends Backend {
         return true;
     }
 
+    /**
+     * Deploy post-receive hook into the target file
+     *
+     * @param String $filePath Path to the hook file
+     */
     public function deployPostReceive($filePath) {
-        $hook = $GLOBALS['sys_pluginsroot'].'git/hooks/post-receive 2>/dev/null';
-        $this->addBlock($filePath, '. '.$hook);
+        $hook = '. '.$GLOBALS['sys_pluginsroot'].'git/hooks/post-receive 2>/dev/null';
+        $this->addBlock($filePath, $hook);
         $this->chmod($filePath, 0755);
     }
 
