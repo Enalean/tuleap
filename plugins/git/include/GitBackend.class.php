@@ -161,9 +161,8 @@ class GitBackend extends Backend {
     }
 
     public function deployPostReceiveEmail($filePath) {
-        $hook = $GLOBALS['sys_pluginsroot'].'git/hooks/post-receive-email';
+        $hook = $GLOBALS['sys_pluginsroot'].'git/hooks/post-receive 2>/dev/null';
         $this->addBlock($filePath, '. '.$hook);
-
     }
 
     /**

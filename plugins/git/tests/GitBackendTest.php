@@ -42,12 +42,12 @@ class GitBackendTest extends UnitTestCase {
         $backend = new GitBackendTestVersion($this);
         $backend->deployPostReceiveEmail($hookPath);
 
-        // verify that post-receive-email is added
-        $expect = '. '.$GLOBALS['sys_pluginsroot'].'git/hooks/post-receive-email';
+        // verify that post-receive codendi hook is added
+        $expect = '. '.$GLOBALS['sys_pluginsroot'].'git/hooks/post-receive 2>/dev/null';
         $lineFound = false;
         $lines = file($hookPath, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
         foreach ($lines as $line) {
-            if (strpos($expect, $line) !== false) {
+            if (strpos($line, $expect) !== false) {
                 $lineFound = true;
             }
         }
