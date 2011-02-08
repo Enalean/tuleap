@@ -167,6 +167,12 @@ class GitActions extends PluginActions {
         return true;
     }
 
+    public function repositoryNotification($projectId, $repositoryId) {
+        // TODO : check params
+        $this->addData( array('repo_id'=>$repositoryId) );
+        return true;
+    }
+
     public function confirmDeletion($projectId, $repoId) {
         $c = $this->getController();
         if ( empty($repoId) ) {

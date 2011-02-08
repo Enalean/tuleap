@@ -87,3 +87,19 @@ plugin_git	no	Non
 plugin_git	project_service_not_available	Le service n'est pas disponible pour votre projet (Contactez l'administrateur du site)
 plugin_git	reference_commit_nature_key	Commit Git
 plugin_git	reference_commit_desc_key	Commit Git
+
+plugin_git	notification	Notification
+
+plugin_git	mail_prefix_title	Mettre a jour le préfixe du mail de notification
+plugin_git	mail_prefix	Nouveau Préfixe
+plugin_git	mail_prefix_submit	Soumettre
+
+plugin_git	add_mail_title	Ajouter une adresse mail a notifier
+plugin_git	add_mail	Adresse Mail
+plugin_git	add_mail_submit	Ajouter
+
+plugin_git	add_user_title	Ajouter un utilisateur a notifier
+plugin_git	add_user	Utilisateur
+plugin_git	add_user_submit	Ajouter
+
+plugin_git	notified_mails_title	Liste des adresses mail a notifier

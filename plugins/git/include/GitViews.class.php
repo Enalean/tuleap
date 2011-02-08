@@ -148,7 +148,8 @@ class GitViews extends PluginViews {
                 echo '<div class="feedback_warning">'.$this->getText('help_init_reference_msg').'</div>';
                 $this->help('init', array('repo_name'=>$repoName));
             }
-            $this->_getBreadCrumb();            
+            $this->repoId = $repoId;
+            $this->_getBreadCrumb();
 
          echo '<h2>'.$repoName.'</h2>';
 ?>
@@ -237,6 +238,26 @@ class GitViews extends PluginViews {
     }    
 
     /**
+     * NOTIFICATION VIEW
+     */
+    public function notification() {
+        $params = $this->getData();
+        $this->repoId = $params['repo_id'];
+        $this->_getBreadCrumb();
+        // TODO : check params
+        // form to update notification mail prefix
+        // TODO : put in the field the old prefix
+        $this->_mailPrefixForm();
+        // form to add email addresses (mailing list)
+        $this->_addMailForm();
+        // form to add users (with auto completion)
+        // TODO : autocomplete
+        $this->_addUserForm();
+        // show the list of mails to notify
+        $this->_listOfMails();
+    }
+
+    /**
      * TREE VIEW
      */
     public function index() {        
@@ -319,13 +340,93 @@ class GitViews extends PluginViews {
         $this->help('create', array('display'=>'none')) ;
         $this->help('init', array('display'=>'none')) ;
     }
-   
+
+    /**
+     * CREATE NOTIFICATION FORM
+     */
+    protected function _mailPrefixForm() {
+        ?>
+<h3><?php echo $this->getText('mail_prefix_title'); ?></h3>
+<form id="mail_prefix_form" action="/plugins/git/" method="POST">
+    <input type="hidden" id="action" name="action" value="notification" />
+    <input type="hidden" id="group_id" name="group_id" value="<?php echo $this->groupId ?>" />
+    <input type="hidden" id="repo_id" name="repo_id" value="<?php echo $this->repoId ?>" />
+    <table>
+        <tr>
+            <td><label for="mail_prefix"><?php echo $this->getText('mail_prefix');
+        ?></label></td>
+            <td><input id="mail_prefix_field" name="mail_prefix_field" class="" type="text" value="" /></td>
+            <td rowspan="2"><input type="submit" id="update_prefix" name="notification" value="<?php echo $this->getText('mail_prefix_submit')?>"></td>
+        </tr>
+    </table>
+</form>
+        <?php
+    }
+
+    /**
+     * MAIL FORM
+     */
+    protected function _addMailForm() {
+        ?>
+<h3><?php echo $this->getText('add_mail_title'); ?></h3>
+<form id="add_mail_form" action="/plugins/git/" method="POST">
+    <input type="hidden" id="action" name="action" value="notification" />
+    <input type="hidden" id="group_id" name="group_id" value="<?php echo $this->groupId ?>" />
+    <input type="hidden" id="repo_id" name="repo_id" value="<?php echo $this->repoId ?>" />
+    <table>
+        <tr>
+            <td><label for="add_mail"><?php echo $this->getText('add_mail');
+        ?></label></td>
+            <td><input id="add_mail_field" name="add_mail_field" class="" type="text" value="" /></td>
+            <td rowspan="2"><input type="submit" id="add_mail_submit" name="add_mail_submit" value="<?php echo $this->getText('add_mail_submit')?>"></td>
+        </tr>
+    </table>
+</form>
+        <?php
+    }
+
+    /**
+     * USER FORM
+     */
+    protected function _addUserForm() {
+        ?>
+<h3><?php echo $this->getText('add_user_title'); ?></h3>
+<form id="add_user_form" action="/plugins/git/" method="POST">
+    <input type="hidden" id="action" name="action" value="notification" />
+    <input type="hidden" id="group_id" name="group_id" value="<?php echo $this->groupId ?>" />
+    <input type="hidden" id="repo_id" name="repo_id" value="<?php echo $this->repoId ?>" />
+    <table>
+        <tr>
+            <td><label for="add_user"><?php echo $this->getText('add_user');
+        ?></label></td>
+            <td><input id="add_user_field" name="add_user_field" class="" type="text" value="" /></td>
+            <td rowspan="2"><input type="submit" id="add_user_sumit" name="add_user_submit" value="<?php echo $this->getText('add_user_submit')?>"></td>
+        </tr>
+    </table>
+</form>
+        <?php
+    }
+
+    /**
+     * LIST OF MAILS TO NOTIFY
+     */
+    protected function _listOfMails() {
+        ?>
+<h3><?php echo $this->getText('notified_mails_title'); ?></h3>
+        <?php
+    }
+
     /**
      * @todo make a breadcrumb out of the repository hierarchie ?
      */
     protected function _getBreadCrumb() {
         echo $this->linkTo( '<b>'.$this->getText('bread_crumb_home').'</b>', '/plugins/git/?group_id='.$this->groupId, 'class=""');
         echo ' | ';
+        // TODO : more verifications
+        if ($this->repoId) {
+            echo $this->linkTo( '<b>'.$this->getText('notification').'</b>', '/plugins/git/?action=notification&group_id='.$this->groupId.'&repo_id='.$this->repoId, 'class=""');
+            echo ' | ';
+        }
         echo $this->linkTo( '<b>'.$this->getText('bread_crumb_help').'</b>', 'javascript:help_window(\'/documentation/user_guide/html/'.$this->user->getLocale().'/VersionControlWithGit.html\')');
     }
     

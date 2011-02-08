@@ -78,7 +78,7 @@ class Git extends PluginController {
         $this->permittedActions = array();
         //user access control
         if ( $this->user->isMember($this->groupId, 'A') === true ) {
-            $this->permittedActions = array('index','view', 'edit', 'clone', 'add', 'del', 'create', 'confirm_deletion', 'save');
+            $this->permittedActions = array('index','view','notification' , 'edit', 'clone', 'add', 'del', 'create', 'confirm_deletion', 'save');
         } else if ( $this->user->isMember($this->groupId) === true ) {
             $this->permittedActions = array('index','view', 'edit', 'clone');
         } else if ( !$this->user->isAnonymous() && !$this->user->isRestricted() ) {
@@ -127,7 +127,11 @@ class Git extends PluginController {
                 $this->addAction( 'getRepositoryDetails', array($this->groupId, $repoId) );                
                 $this->addView('view');
                 break;
-           
+            #notification
+            case 'notification':
+                $this->addAction( 'repositoryNotification', array($this->groupId, $repoId) );
+                $this->addView('notification');
+                break;
             #ADD REF
             case 'add':
                 $this->addAction('createReference', array($this->groupId, $repositoryName) );
