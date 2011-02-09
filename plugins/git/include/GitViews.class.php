@@ -242,12 +242,12 @@ class GitViews extends PluginViews {
      */
     public function notification() {
         $params = $this->getData();
-        $this->repoId = $params['repo_id'];
+        $repository   = $params['repository'];
+        $this->repoId = $repository->getId();
         $this->_getBreadCrumb();
-        // TODO : check params
         // form to update notification mail prefix
-        // TODO : put in the field the old prefix
-        $this->_mailPrefixForm();
+        // TODO : replace the hardcoded txt with the mail prefix of the repo
+        $this->_mailPrefixForm('Old prefix');
         // form to add email addresses (mailing list)
         $this->_addMailForm();
         // form to add users (with auto completion)
@@ -343,7 +343,7 @@ class GitViews extends PluginViews {
     /**
      * CREATE NOTIFICATION FORM
      */
-    protected function _mailPrefixForm() {
+    protected function _mailPrefixForm($mailPrefix) {
         ?>
 <h3><?php echo $this->getText('mail_prefix_title'); ?></h3>
 <form id="mail_prefix_form" action="/plugins/git/" method="POST">
@@ -352,9 +352,9 @@ class GitViews extends PluginViews {
     <input type="hidden" id="repo_id" name="repo_id" value="<?php echo $this->repoId ?>" />
     <table>
         <tr>
-            <td><label for="mail_prefix"><?php echo $this->getText('mail_prefix');
+            <td><label for="mail_prefix_label"><?php echo $this->getText('mail_prefix');
         ?></label></td>
-            <td><input id="mail_prefix_field" name="mail_prefix_field" class="" type="text" value="" /></td>
+            <td><input id="mail_prefix" name="mail_prefix" class="" type="text" value="<?php echo $mailPrefix; ?>" /></td>
             <td rowspan="2"><input type="submit" id="mail_prefix_submit" name="mail_prefix_submit" value="<?php echo $this->getText('mail_prefix_submit')?>"></td>
         </tr>
     </table>
@@ -374,9 +374,9 @@ class GitViews extends PluginViews {
     <input type="hidden" id="repo_id" name="repo_id" value="<?php echo $this->repoId ?>" />
     <table>
         <tr>
-            <td><label for="add_mail"><?php echo $this->getText('add_mail');
+            <td><label for="add_mail_label"><?php echo $this->getText('add_mail');
         ?></label></td>
-            <td><input id="add_mail_field" name="add_mail_field" class="" type="text" value="" /></td>
+            <td><input id="add_mail" name="add_mail" class="" type="text" value="" /></td>
             <td rowspan="2"><input type="submit" id="add_mail_submit" name="add_mail_submit" value="<?php echo $this->getText('add_mail_submit')?>"></td>
         </tr>
     </table>
@@ -396,9 +396,9 @@ class GitViews extends PluginViews {
     <input type="hidden" id="repo_id" name="repo_id" value="<?php echo $this->repoId ?>" />
     <table>
         <tr>
-            <td><label for="add_user"><?php echo $this->getText('add_user');
+            <td><label for="add_user_label"><?php echo $this->getText('add_user');
         ?></label></td>
-            <td><input id="add_user_field" name="add_user_field" class="" type="text" value="" /></td>
+            <td><input id="add_user" name="add_user" class="" type="text" value="" /></td>
             <td rowspan="2"><input type="submit" id="add_user_submit" name="add_user_submit" value="<?php echo $this->getText('add_user_submit')?>"></td>
         </tr>
     </table>

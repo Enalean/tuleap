@@ -57,8 +57,16 @@ class Git extends PluginController {
             $this->request->set('repo_id', $repo_id);
         }        
         $this->plugin      = $plugin;
-        $this->groupId     = (int)$this->request->get('group_id');
-        $this->action      = $this->request->get('action');
+        $valid = new Valid_GroupId('group_id');
+        $valid->required();
+        if($this->request->valid($valid)) {
+            $this->groupId = (int)$this->request->get('group_id');
+        }
+        $valid = new Valid_String('action');
+        $valid->required();
+        if($this->request->valid($valid)) {
+            $this->action = $this->request->get('action');
+        }
         $this->nonMember   = false;
 
         if (  empty($this->action) ) {
@@ -111,10 +119,17 @@ class Git extends PluginController {
     }
 
     public function request() {
-        
-        $repositoryName = $this->request->get('repo_name');
-        $description    = $this->request->get('repo_desc');
-        $repoId         = $this->request->get('repo_id');
+        $valid = new Valid_String('repo_name');
+        $valid->required();
+        if($this->request->valid($valid)) {
+            $repositoryName = $this->request->get('repo_name');
+        }
+        $valid = new Valid_UInt('repo_id');
+        $valid->required();
+        if($this->request->valid($valid)) {
+            $repoId = $this->request->get('repo_id');
+        }
+
         //public access
         if ( !empty($repoId) && $this->nonMember ) {
             $repo = new GitRepository();
@@ -154,7 +169,11 @@ class Git extends PluginController {
             #EDIT
             case 'edit':                
                 if ( $this->isAPermittedAction('clone') && $this->request->get('clone') ) {
-                    $parentId = (int)$this->request->get('parent_id');
+                    $valid = new Valid_UInt('parent_id');
+                    $valid->required();
+                    if($this->request->valid($valid)) {
+                        $parentId = (int)$this->request->get('parent_id');
+                    }
                     $this->addAction( 'cloneRepository', array($this->groupId, $repositoryName, $parentId) );
                     $this->addAction( 'getRepositoryDetails', array($this->groupId, $parentId) );
                     $this->addView('view');
@@ -165,7 +184,11 @@ class Git extends PluginController {
                 }
                 else if ( $this->isAPermittedAction('save') && $this->request->get('save') ) {                    
                     $repoDesc   = $this->request->get('repo_desc');
-                    $repoAccess = $this->request->get('repo_access');
+                    $valid = new Valid_String('repo_access');
+                    $valid->required();
+                    if($this->request->valid($valid)) {
+                        $repoAccess = $this->request->get('repo_access');
+                    }
                     $this->addAction('save', array($this->groupId, $repoId, $repoAccess, $repoDesc) );
                     $this->addView('view');
                 } else {
@@ -180,22 +203,42 @@ class Git extends PluginController {
                 break;
             #mail prefix
             case 'mail_prefix':
-                $this->addAction('notificationUpdatePrefix', array($this->groupId, $repoId));
+                $valid = new Valid_String('mail_prefix');
+                $valid->required();
+                if($this->request->valid($valid)) {
+                    $mailPrefix = $this->request->get('mail_prefix');
+                }
+                $this->addAction('notificationUpdatePrefix', array($this->groupId, $repoId, $mailPrefix));
                 $this->addView('notification');
                 break;
             #add mail
             case 'add_mail':
-                $this->addAction('notificationAddMail', array($this->groupId, $repoId));
+                $valid = new Valid_String('add_mail');
+                $valid->required();
+                if($this->request->valid($valid)) {
+                    $mail = $this->request->get('add_mail');
+                }
+                $this->addAction('notificationAddMail', array($this->groupId, $repoId, $mail));
                 $this->addView('notification');
                 break;
             #add user
             case 'add_user':
-                $this->addAction('notificationAddUser', array($this->groupId, $repoId));
+                $valid = new Valid_String('add_user');
+                $valid->required();
+                if($this->request->valid($valid)) {
+                    $user = $this->request->get('add_user');
+                }
+                $this->addAction('notificationAddUser', array($this->groupId, $repoId, $user));
                 $this->addView('notification');
                 break;
             #remove mail
             case 'remove_mail':
-                $this->addAction('notificationRemoveMail', array($this->groupId, $repoId, $this->request->get('mail_id')));
+                $valid = new Valid_UInt('mail_id');
+                $valid->required();
+                if($this->request->valid($valid)) {
+                    $mailId = $this->request->get('mail_id');
+                }
+                $this->addAction('notificationRemoveMail', array($this->groupId, $repoId, $mailId));
                 $this->addView('notification');
                 break;
             #LIST
