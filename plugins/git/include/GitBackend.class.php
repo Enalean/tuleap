@@ -40,7 +40,7 @@ class GitBackend extends Backend {
 
     protected function __construct() {
         $this->gitRootPath  = '';
-        $this->driver       = GitDriver::instance();
+        $this->driver       = new GitDriver();
         $this->packagesFile = 'etc/packages.ini';
         $this->configFile   = 'etc/config.ini';
         $this->dao          = new GitDao();

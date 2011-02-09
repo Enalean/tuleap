@@ -35,18 +35,8 @@
 
 class GitDriver implements DVCSDriver {
 
-    private static $instance;
-    
-    private function __construct() {       
+    public function __construct() {       
     }
-
-    public static function instance() {
-        if ( empty(self::$instance) ) {
-            $c = __CLASS__;
-            self::$instance = new $c;
-        }
-        return self::$instance;
-    }    
 
     /**
      * Make a clone of a source repository
@@ -127,7 +117,7 @@ class GitDriver implements DVCSDriver {
         return true;
     }    
 
-    public function activateHook($hookName, $repoPath, $uid, $gid) {
+    public function activateHook($hookName, $repoPath, $uid=false, $gid=false) {
         //owner's group is default group
         if ( empty($gid) ) {
             $gid = $uid;
