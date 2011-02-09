@@ -29,10 +29,17 @@ class GitDriverTest extends UnitTestCase {
     }
 
     public function tearDown() {
-        //@unlink($this->fixturesPath.'/tmp/post-receive');
+        @unlink($this->fixturesPath.'/tmp/hooks/blah');
     }
 
-    //public function test
+    public function testActivateHook() {
+        copy($this->fixturesPath.'/hooks/post-receive', $this->fixturesPath.'/tmp/hooks/blah');
+
+        $driver = new GitDriver();
+        $driver->activateHook('blah', $this->fixturesPath.'/tmp');
+
+        $this->assertTrue(is_executable($this->fixturesPath.'/tmp/hooks/blah'));
+    }
 }
 
 ?>

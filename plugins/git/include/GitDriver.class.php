@@ -118,26 +118,27 @@ class GitDriver implements DVCSDriver {
     }    
 
     public function activateHook($hookName, $repoPath, $uid=false, $gid=false) {
-        //owner's group is default group
-        if ( empty($gid) ) {
-            $gid = $uid;
-        }
         //newer version of git
         $hook = $repoPath.'/hooks/'.$hookName;
         if ( file_exists($hook.'.sample') ) {
             //old git versions do not need this move
             rename($hook.'.sample', $hook);
         }
+
         //older versions only requires +x for hook activation
-        $rcode  = 0;
-        $output = system('chmod +x '.$hook, $rcode);
-        if ( $rcode != 0 ) {
-            throw new GitDriverErrorException($cmd.' -> '.$output);
+        if (!chmod($hook, 0755)) {
+            throw new GitDriverErrorException('Unable to make '.$hook.' executable');
         }
-        $rcode  = 0;
-        $output = system("chown $uid:$gid $hook", $rcode);
-        if ( $rcode != 0 ) {
-            throw new GitDriverErrorException($cmd.' -> '.$output);
+
+        if ($uid !== false) {
+            if (!chown($hook, $uid)) {
+                 throw new GitDriverErrorException('Unable to change '.$hook.' owner to '.$uid);
+            }
+        }
+        if ($gid !== false) {
+            if (!chgrp($hook, $gid)) {
+                 throw new GitDriverErrorException('Unable to change '.$hook.' group to '.$gid);
+            }
         }
         return true;
     }
