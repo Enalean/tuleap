@@ -331,6 +331,7 @@ class GitActions extends PluginActions {
         } else {
             $repository = $this->getGitRepository();
             $repository->setId($repositoryId);
+            $repository->load();
             $this->addData(array('repository'=>$repository));
             return true;
         }

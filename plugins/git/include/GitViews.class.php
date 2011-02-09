@@ -192,6 +192,11 @@ class GitViews extends PluginViews {
         }        
         ?>
     <em><?php echo $this->getText('view_repo_access');?> : </em><span><input type="radio" name="repo_access" value="private" <?php echo $private?>/>Private<input type="radio" name="repo_access" value="public"  <?php echo $public?>/>Public</span></em>
+    <?php endif;
+        if ($this->getController()->isAPermittedAction('notification')) :
+        ?>
+    <br />
+    <em><?php echo $this->linkTo( '<b>'.$this->getText('notification').'</b>', '/plugins/git/?action=notification&group_id='.$this->groupId.'&repo_id='.$this->repoId, 'class=""'); ?></em>
     <?php endif; ?>
        <table style="width:100%;">
            <tr>
@@ -244,7 +249,9 @@ class GitViews extends PluginViews {
         $params = $this->getData();
         $repository   = $params['repository'];
         $this->repoId = $repository->getId();
+        $repoName     = $repository->getName();
         $this->_getBreadCrumb();
+        echo "<p><b>".$this->_getRepositoryPageUrl($this->repoId, $repoName)."</b></p>";
         // form to update notification mail prefix
         // TODO : replace the hardcoded txt with the mail prefix of the repo
         $this->_mailPrefixForm('Old prefix');
@@ -404,7 +411,7 @@ class GitViews extends PluginViews {
     </table>
 </form>
         <?php
-        $js = "new UserAutoCompleter('add_user_field', '".util_get_dir_image_theme()."', false);";
+        $js = "new UserAutoCompleter('add_user', '".util_get_dir_image_theme()."', false);";
         $GLOBALS['Response']->includeFooterJavascriptSnippet($js);
     }
 
@@ -446,11 +453,6 @@ class GitViews extends PluginViews {
     protected function _getBreadCrumb() {
         echo $this->linkTo( '<b>'.$this->getText('bread_crumb_home').'</b>', '/plugins/git/?group_id='.$this->groupId, 'class=""');
         echo ' | ';
-        // TODO : more verifications
-        if ($this->repoId) {
-            echo $this->linkTo( '<b>'.$this->getText('notification').'</b>', '/plugins/git/?action=notification&group_id='.$this->groupId.'&repo_id='.$this->repoId, 'class=""');
-            echo ' | ';
-        }
         echo $this->linkTo( '<b>'.$this->getText('bread_crumb_help').'</b>', 'javascript:help_window(\'/documentation/user_guide/html/'.$this->user->getLocale().'/VersionControlWithGit.html\')');
     }
     
