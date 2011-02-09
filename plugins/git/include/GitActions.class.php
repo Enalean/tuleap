@@ -173,6 +173,34 @@ class GitActions extends PluginActions {
         return true;
     }
 
+    public function notificationUpdatePrefix($projectId, $repositoryId) {
+        // TODO : check params
+        // TODO : perform the update
+        $this->addData( array('repo_id'=>$repositoryId) );
+        return true;
+    }
+
+    public function notificationAddMail($projectId, $repositoryId) {
+        // TODO : check params
+        // TODO : perform the addition
+        $this->addData( array('repo_id'=>$repositoryId) );
+        return true;
+    }
+
+    public function notificationAddUser($projectId, $repositoryId) {
+        // TODO : check params
+        // TODO : perform the addition
+        $this->addData( array('repo_id'=>$repositoryId) );
+        return true;
+    }
+
+    public function notificationRemoveMail($projectId, $repositoryId, $mailId) {
+        // TODO : check params
+        // TODO : perform the deletion
+        $this->addData( array('repo_id'=>$repositoryId) );
+        return true;
+    }
+
     public function confirmDeletion($projectId, $repoId) {
         $c = $this->getController();
         if ( empty($repoId) ) {

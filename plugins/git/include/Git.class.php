@@ -78,7 +78,20 @@ class Git extends PluginController {
         $this->permittedActions = array();
         //user access control
         if ( $this->user->isMember($this->groupId, 'A') === true ) {
-            $this->permittedActions = array('index','view','notification' , 'edit', 'clone', 'add', 'del', 'create', 'confirm_deletion', 'save');
+            $this->permittedActions = array('index',
+                                            'view' ,
+                                            'edit',
+                                            'clone',
+                                            'add',
+                                            'del',
+                                            'create',
+                                            'confirm_deletion',
+                                            'save',
+                                            'notification',
+                                            'mail_prefix',
+                                            'add_mail',
+                                            'add_user',
+                                            'remove_mail');
         } else if ( $this->user->isMember($this->groupId) === true ) {
             $this->permittedActions = array('index','view', 'edit', 'clone');
         } else if ( !$this->user->isAnonymous() && !$this->user->isRestricted() ) {
@@ -127,11 +140,7 @@ class Git extends PluginController {
                 $this->addAction( 'getRepositoryDetails', array($this->groupId, $repoId) );                
                 $this->addView('view');
                 break;
-            #notification
-            case 'notification':
-                $this->addAction( 'repositoryNotification', array($this->groupId, $repoId) );
-                $this->addView('notification');
-                break;
+           
             #ADD REF
             case 'add':
                 $this->addAction('createReference', array($this->groupId, $repositoryName) );
@@ -163,6 +172,31 @@ class Git extends PluginController {
                     $this->addError( $this->getText('controller_action_permission_denied') );
                     $this->redirect('/plugins/git/?group_id='.$this->groupId);
                 }
+                break;
+            #notification
+            case 'notification':
+                $this->addAction('repositoryNotification', array($this->groupId, $repoId));
+                $this->addView('notification');
+                break;
+            #mail prefix
+            case 'mail_prefix':
+                $this->addAction('notificationUpdatePrefix', array($this->groupId, $repoId));
+                $this->addView('notification');
+                break;
+            #add mail
+            case 'add_mail':
+                $this->addAction('notificationAddMail', array($this->groupId, $repoId));
+                $this->addView('notification');
+                break;
+            #add user
+            case 'add_user':
+                $this->addAction('notificationAddUser', array($this->groupId, $repoId));
+                $this->addView('notification');
+                break;
+            #remove mail
+            case 'remove_mail':
+                $this->addAction('notificationRemoveMail', array($this->groupId, $repoId, $this->request->get('mail_id')));
+                $this->addView('notification');
                 break;
             #LIST
             default:     

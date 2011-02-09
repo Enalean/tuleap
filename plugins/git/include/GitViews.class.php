@@ -347,7 +347,7 @@ class GitViews extends PluginViews {
         ?>
 <h3><?php echo $this->getText('mail_prefix_title'); ?></h3>
 <form id="mail_prefix_form" action="/plugins/git/" method="POST">
-    <input type="hidden" id="action" name="action" value="notification" />
+    <input type="hidden" id="action" name="action" value="mail_prefix" />
     <input type="hidden" id="group_id" name="group_id" value="<?php echo $this->groupId ?>" />
     <input type="hidden" id="repo_id" name="repo_id" value="<?php echo $this->repoId ?>" />
     <table>
@@ -355,7 +355,7 @@ class GitViews extends PluginViews {
             <td><label for="mail_prefix"><?php echo $this->getText('mail_prefix');
         ?></label></td>
             <td><input id="mail_prefix_field" name="mail_prefix_field" class="" type="text" value="" /></td>
-            <td rowspan="2"><input type="submit" id="update_prefix" name="notification" value="<?php echo $this->getText('mail_prefix_submit')?>"></td>
+            <td rowspan="2"><input type="submit" id="mail_prefix_submit" name="mail_prefix_submit" value="<?php echo $this->getText('mail_prefix_submit')?>"></td>
         </tr>
     </table>
 </form>
@@ -369,7 +369,7 @@ class GitViews extends PluginViews {
         ?>
 <h3><?php echo $this->getText('add_mail_title'); ?></h3>
 <form id="add_mail_form" action="/plugins/git/" method="POST">
-    <input type="hidden" id="action" name="action" value="notification" />
+    <input type="hidden" id="action" name="action" value="add_mail" />
     <input type="hidden" id="group_id" name="group_id" value="<?php echo $this->groupId ?>" />
     <input type="hidden" id="repo_id" name="repo_id" value="<?php echo $this->repoId ?>" />
     <table>
@@ -391,7 +391,7 @@ class GitViews extends PluginViews {
         ?>
 <h3><?php echo $this->getText('add_user_title'); ?></h3>
 <form id="add_user_form" action="/plugins/git/" method="POST">
-    <input type="hidden" id="action" name="action" value="notification" />
+    <input type="hidden" id="action" name="action" value="add_user" />
     <input type="hidden" id="group_id" name="group_id" value="<?php echo $this->groupId ?>" />
     <input type="hidden" id="repo_id" name="repo_id" value="<?php echo $this->repoId ?>" />
     <table>
@@ -399,7 +399,7 @@ class GitViews extends PluginViews {
             <td><label for="add_user"><?php echo $this->getText('add_user');
         ?></label></td>
             <td><input id="add_user_field" name="add_user_field" class="" type="text" value="" /></td>
-            <td rowspan="2"><input type="submit" id="add_user_sumit" name="add_user_submit" value="<?php echo $this->getText('add_user_submit')?>"></td>
+            <td rowspan="2"><input type="submit" id="add_user_submit" name="add_user_submit" value="<?php echo $this->getText('add_user_submit')?>"></td>
         </tr>
     </table>
 </form>
@@ -412,8 +412,31 @@ class GitViews extends PluginViews {
      * LIST OF MAILS TO NOTIFY
      */
     protected function _listOfMails() {
+        // hardcoded mail addresses just to test display
+        $mails = array(22  => 'john.doe@gmail.com',
+                       100 => 'jane.doe@gmail.com',
+                       248 => 'john.smith@gmail.com');
         ?>
 <h3><?php echo $this->getText('notified_mails_title'); ?></h3>
+<form id="add_user_form" action="/plugins/git/" method="POST">
+    <input type="hidden" id="action" name="action" value="remove_mail" />
+    <input type="hidden" id="group_id" name="group_id" value="<?php echo $this->groupId ?>" />
+    <input type="hidden" id="repo_id" name="repo_id" value="<?php echo $this->repoId ?>" />
+    <table>
+        <?php
+        $i = 0;
+        foreach ($mails as $mailId => $mail) {
+            echo '<tr class="'.html_get_alt_row_color(++$i).'">';
+            echo '<td>'.$mail.'</td>';
+            echo '<td>';
+            echo '<button type="submit" style="background:white; border:0;" name="mail_id" value="'.$mailId.'" ><img src="'.util_get_dir_image_theme().'/ic/cross.png"></button>';
+            echo '</a>';
+            echo '</td>';
+            echo '</tr>';
+        }
+        ?>
+    </table>
+</form>
         <?php
     }
 
