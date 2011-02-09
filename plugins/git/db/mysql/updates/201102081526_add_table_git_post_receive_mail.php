@@ -23,7 +23,6 @@ EOT;
                     ' PRIMARY KEY(id),'.
                     ' KEY `repository_id` (`repository_id`)
                     );';
-        var_dump($sql);
         $this->db->createTable('git_post_receive_mail', $sql);
     }
 
