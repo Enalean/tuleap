@@ -19,15 +19,20 @@
  */
 
 require_once (dirname(__FILE__).'/../include/GitActions.class.php');
-Mock::generatePartial('GitActions', 'GitActionsTestVersion', array('getController', 'getText', 'addData'));
+Mock::generatePartial('GitActions', 'GitActionsTestVersion', array('getController', 'getText', 'addData', 'getGitRepository'));
 require_once (dirname(__FILE__).'/../include/Git.class.php');
 Mock::generate('Git');
+require_once (dirname(__FILE__).'/../include/GitRepository.class.php');
+Mock::generate('GitRepository');
+
 class GitActionsTest extends UnitTestCase {
 
     function testRepositoryNotification() {
         $gitAction = new GitActionsTestVersion();
         $git = new MockGit($this);
         $gitAction->setReturnValue('getController', $git);
+        $gitRepository = new MockGitRepository($this);
+        $gitAction->setReturnValue('getGitRepository', $gitRepository);
         $this->assertFalse($gitAction->repositoryNotification(null, null));
         $this->assertFalse($gitAction->repositoryNotification(null, 1));
         $this->assertFalse($gitAction->repositoryNotification(1, null));

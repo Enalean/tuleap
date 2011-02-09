@@ -329,11 +329,18 @@ class GitActions extends PluginActions {
             $c->addError($this->getText('actions_params_error'));
             return false;
         } else {
-            $repository = new GitRepository();
+            $repository = $this->getGitRepository();
             $repository->setId($repositoryId);
             $this->addData(array('repository'=>$repository));
             return true;
         }
+    }
+
+    /**
+     * Wrapper used for tests to get a new GitRepository
+     */
+    function getGitRepository() {
+        return new GitRepository();
     }
 
 }
