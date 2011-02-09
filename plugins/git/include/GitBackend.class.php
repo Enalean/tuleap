@@ -73,12 +73,8 @@ class GitBackend extends Backend {
         $forkPath    = $clone->getPath();
         $forkPath    = $this->getGitRootPath().DIRECTORY_SEPARATOR.$forkPath;        
         $this->getDriver()->fork($parentPath, $forkPath);
-        $this->getDriver()->activateHook('post-update', $forkPath, 'codendiadm', $clone->getProject()->getUnixName());
-        $this->setRepositoryPermissions($clone);        
-        $id = $this->getDao()->save($clone);
-        $clone->setId($id);
-        $this->changeRepositoryAccess($clone);
-        return true;
+
+        return $this->setUpRepository($clone);
     }
 
     /**
@@ -101,12 +97,8 @@ class GitBackend extends Backend {
         mkdir($path, 0770, true);
         chdir($path);
         $this->getDriver()->init($bare=true);
-        $this->getDriver()->activateHook('post-update', $path, 'codendiadm', $repository->getProject()->getUnixName());
-        $this->setRepositoryPermissions($repository);        
-        $id = $this->getDao()->save($repository);
-        $repository->setId($id);
-        $this->changeRepositoryAccess($repository);
-        return true;
+
+        return $this->setUpRepository($repository);
     }
 
     public function delete($repository) {
@@ -169,7 +161,6 @@ class GitBackend extends Backend {
      */
     public function deployPostReceive($path) {
         $this->getDriver()->activateHook('post-receive', $path);
-
         $hook = '. '.$GLOBALS['sys_pluginsroot'].'git/hooks/post-receive 2>/dev/null';
         $this->addBlock($path.'/hooks/post-receive', $hook);
     }
@@ -177,7 +168,25 @@ class GitBackend extends Backend {
     /**
      * INTERNAL METHODS
      */
-    
+
+    /**
+     * Once the repository is created/forked, set it up with proper configuration.
+     *
+     * @param GitRepository $repository The repository
+     *
+     * @return Boolean
+     */
+    protected function setUpRepository(GitRepository $repository) {
+        $path = $this->getGitRootPath().DIRECTORY_SEPARATOR.$repository->getPath();
+        $this->getDriver()->activateHook('post-update', $path);
+        $this->deployPostReceive($path);
+        $this->setRepositoryPermissions($repository);        
+        $id = $this->getDao()->save($repository);
+        $repository->setId($id);
+        $this->changeRepositoryAccess($repository);
+        return true;
+    }
+
     protected function setRepositoryPermissions($repository) {
         $path = $this->getGitRootPath().DIRECTORY_SEPARATOR.$repository->getPath();   
         $this->recurseChownChgrp($path, 'codendiadm',$repository->getProject()->getUnixName() );
