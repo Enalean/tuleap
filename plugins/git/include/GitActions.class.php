@@ -168,83 +168,35 @@ class GitActions extends PluginActions {
     }
 
     public function repositoryNotification($projectId, $repositoryId) {
-        $c = $this->getController();
-        $projectId    = intval($projectId);
-        $repositoryId = intval($repositoryId);
-        if (empty($projectId) || empty($repositoryId)) {
-            $c->addError($this->getText('actions_params_error'));
-            return false;
-        }
-
-        $repository = new GitRepository();
-        $repository->setId($repositoryId);
-        $this->addData(array('repository'=>$repository));
-        return true;
+        return $this->_checkMandatoryParams($projectId, $repositoryId);
     }
 
     public function notificationUpdatePrefix($projectId, $repositoryId, $mailPrefix) {
-        $c = $this->getController();
-        $projectId    = intval($projectId);
-        $repositoryId = intval($repositoryId);
-        if (empty($projectId) || empty($repositoryId)) {
-            $c->addError($this->getText('actions_params_error'));
-            return false;
+        if($this->_checkMandatoryParams($projectId, $repositoryId)) {
+            // TODO : perform the update
         }
-        // TODO : perform the update
-
-        $repository = new GitRepository();
-        $repository->setId($repositoryId);
-        $this->addData(array('repository'=>$repository));
-        return true;
+        return false;
     }
 
     public function notificationAddMail($projectId, $repositoryId, $mail) {
-        $c = $this->getController();
-        $projectId    = intval($projectId);
-        $repositoryId = intval($repositoryId);
-        if (empty($projectId) || empty($repositoryId)) {
-            $c->addError($this->getText('actions_params_error'));
-            return false;
+        if($this->_checkMandatoryParams($projectId, $repositoryId)) {
+            // TODO : perform the addition
         }
-        // TODO : perform the addition
-
-        $repository = new GitRepository();
-        $repository->setId($repositoryId);
-        $this->addData(array('repository'=>$repository));
-        return true;
+        return false;
     }
 
     public function notificationAddUser($projectId, $repositoryId, $user) {
-        $c = $this->getController();
-        $projectId    = intval($projectId);
-        $repositoryId = intval($repositoryId);
-        if (empty($projectId) || empty($repositoryId)) {
-            $c->addError($this->getText('actions_params_error'));
-            return false;
+            if($this->_checkMandatoryParams($projectId, $repositoryId)) {
+            // TODO : perform the addition
         }
-        // TODO : perform the addition
-
-        $repository = new GitRepository();
-        $repository->setId($repositoryId);
-        $this->addData(array('repository'=>$repository));
-        return true;
+        return false;
     }
 
-    public function notificationRemoveMail($projectId, $repositoryId, $mailId) {
-        $c = $this->getController();
-        $projectId    = intval($projectId);
-        $repositoryId = intval($repositoryId);
-        $mailId       = intval($mailId);
-        if (empty($projectId) || empty($repositoryId) || empty($mailId)) {
-            $c->addError($this->getText('actions_params_error'));
-            return false;
+    public function notificationRemoveMail($projectId, $repositoryId, $mail) {
+            if($this->_checkMandatoryParams($projectId, $repositoryId)) {
+            // TODO : perform the delition
         }
-        // TODO : perform the deletion
-
-        $repository = new GitRepository();
-        $repository->setId($repositoryId);
-        $this->addData(array('repository'=>$repository));
-        return true;
+        return false;
     }
 
     public function confirmDeletion($projectId, $repoId) {
@@ -369,6 +321,19 @@ class GitActions extends PluginActions {
             return false;
         }
         return true;
+    }
+
+    function _checkMandatoryParams($projectId, $repositoryId) {
+        $c = $this->getController();
+        if (empty($projectId) || empty($repositoryId)) {
+            $c->addError($this->getText('actions_params_error'));
+            return false;
+        } else {
+            $repository = new GitRepository();
+            $repository->setId($repositoryId);
+            $this->addData(array('repository'=>$repository));
+            return true;
+        }
     }
 
 }
