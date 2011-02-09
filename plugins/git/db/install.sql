@@ -18,11 +18,9 @@ CREATE TABLE IF NOT EXISTS `plugin_git` (
   KEY `project_id` (`project_id`)
 );
 
-CREATE TABLE IF NOT EXISTS `git_post_receive_mail` (
-  `id` int(10) UNSIGNED NOT NULL auto_increment,
+CREATE TABLE IF NOT EXISTS `plugin_git_post_receive_mail` (
   `recipient_mail` varchar(255) NOT NULL,
   `repository_id` int(10) NOT NULL,
-  PRIMARY KEY  (`id`),
   KEY `repository_id` (`repository_id`)
 );
 
