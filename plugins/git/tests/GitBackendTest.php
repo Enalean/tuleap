@@ -32,12 +32,13 @@ class GitBackendTest extends UnitTestCase {
     }
 
     public function tearDown() {
-        @unlink($this->fixturesPath.'/tmp/post-receive');
+        @unlink($this->fixturesPath.'/tmp/hooks/post-receive');
     }
 
     public function testIncludePostReceive() {
         // Copy reference hook to temporay path
-        $hookPath = $this->fixturesPath.'/tmp/post-receive';
+        $repoPath = $this->fixturesPath.'/tmp';
+        $hookPath = $repoPath.'/hooks/post-receive';
         copy($this->fixturesPath.'/hooks/post-receive', $hookPath);
              
         $driver = new MockGitDriver($this);
@@ -45,7 +46,7 @@ class GitBackendTest extends UnitTestCase {
         $backend = new GitBackendTestVersion($this);
         $backend->setReturnValue('getDriver', $driver);
 
-        $backend->deployPostReceive($hookPath);
+        $backend->deployPostReceive($repoPath);
 
         // verify that post-receive codendi hook is added
         $expect = '. '.$GLOBALS['sys_pluginsroot'].'git/hooks/post-receive 2>/dev/null';
@@ -61,16 +62,17 @@ class GitBackendTest extends UnitTestCase {
 
     public function testPostReceiveIsExecutable() {
         // Copy reference hook to temporay path
-        $hookPath = $this->fixturesPath.'/tmp/post-receive';
+        $repoPath = $this->fixturesPath.'/tmp';
+        $hookPath = $repoPath.'/hooks/post-receive';
         copy($this->fixturesPath.'/hooks/post-receive', $hookPath);
 
         $driver = new MockGitDriver($this);
-        $driver->expectOnce('activateHook', array('post-receive', dirname($hookPath)));
+        $driver->expectOnce('activateHook', array('post-receive', $repoPath));
 
         $backend = new GitBackendTestVersion($this);
         $backend->setReturnValue('getDriver', $driver);
 
-        $backend->deployPostReceive($hookPath);
+        $backend->deployPostReceive($repoPath);
     }
 }
 
