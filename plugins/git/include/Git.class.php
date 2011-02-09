@@ -213,7 +213,7 @@ class Git extends PluginController {
                 break;
             #add mail
             case 'add_mail':
-                $valid = new Valid_String('add_mail');
+                $valid = new Valid_Email('add_mail');
                 $valid->required();
                 if($this->request->valid($valid)) {
                     $mail = $this->request->get('add_mail');
@@ -233,12 +233,12 @@ class Git extends PluginController {
                 break;
             #remove mail
             case 'remove_mail':
-                $valid = new Valid_UInt('mail_id');
+                $valid = new Valid_Email('mail');
                 $valid->required();
                 if($this->request->valid($valid)) {
-                    $mailId = $this->request->get('mail_id');
+                    $mailId = $this->request->get('mail');
                 }
-                $this->addAction('notificationRemoveMail', array($this->groupId, $repoId, $mailId));
+                $this->addAction('notificationRemoveMail', array($this->groupId, $repoId, $mail));
                 $this->addView('notification');
                 break;
             #LIST

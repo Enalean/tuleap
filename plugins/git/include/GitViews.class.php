@@ -413,9 +413,9 @@ class GitViews extends PluginViews {
      */
     protected function _listOfMails() {
         // hardcoded mail addresses just to test display
-        $mails = array(22  => 'john.doe@gmail.com',
-                       100 => 'jane.doe@gmail.com',
-                       248 => 'john.smith@gmail.com');
+        $mails = array('john.doe@gmail.com',
+                       'jane.doe@gmail.com',
+                       'john.smith@gmail.com');
         ?>
 <h3><?php echo $this->getText('notified_mails_title'); ?></h3>
 <form id="add_user_form" action="/plugins/git/" method="POST">
@@ -425,11 +425,11 @@ class GitViews extends PluginViews {
     <table>
         <?php
         $i = 0;
-        foreach ($mails as $mailId => $mail) {
+        foreach ($mails as $mail) {
             echo '<tr class="'.html_get_alt_row_color(++$i).'">';
             echo '<td>'.$mail.'</td>';
             echo '<td>';
-            echo '<button type="submit" style="background:white; border:0;" name="mail_id" value="'.$mailId.'" ><img src="'.util_get_dir_image_theme().'/ic/cross.png"></button>';
+            echo '<button type="submit" style="background:white; border:0;" name="mail" value="'.$mail.'" ><img src="'.util_get_dir_image_theme().'/ic/cross.png"></button>';
             echo '</a>';
             echo '</td>';
             echo '</tr>';
