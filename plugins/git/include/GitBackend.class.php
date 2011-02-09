@@ -168,9 +168,10 @@ class GitBackend extends Backend {
      * @return void
      */
     public function deployPostReceive($filePath) {
+        $this->getDriver()->activateHook('post-receive', dirname($filePath));
+
         $hook = '. '.$GLOBALS['sys_pluginsroot'].'git/hooks/post-receive 2>/dev/null';
         $this->addBlock($filePath, $hook);
-        $this->chmod($filePath, 0755);
     }
 
     /**

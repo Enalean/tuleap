@@ -19,8 +19,10 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-require_once(dirname(__FILE__).'/../include/GitBackend.class.php');
+require_once dirname(__FILE__).'/../include/GitBackend.class.php';
 Mock::generatePartial('GitBackend', 'GitBackendTestVersion', array('getDao', 'getDriver'));
+
+Mock::generate('GitDriver');
 
 
 class GitBackendTest extends UnitTestCase {
@@ -38,8 +40,11 @@ class GitBackendTest extends UnitTestCase {
         $hookPath = $this->fixturesPath.'/tmp/post-receive';
         copy($this->fixturesPath.'/hooks/post-receive', $hookPath);
              
+        $driver = new MockGitDriver($this);
 
         $backend = new GitBackendTestVersion($this);
+        $backend->setReturnValue('getDriver', $driver);
+
         $backend->deployPostReceive($hookPath);
 
         // verify that post-receive codendi hook is added
@@ -59,10 +64,13 @@ class GitBackendTest extends UnitTestCase {
         $hookPath = $this->fixturesPath.'/tmp/post-receive';
         copy($this->fixturesPath.'/hooks/post-receive', $hookPath);
 
-        $backend = new GitBackendTestVersion($this);
-        $backend->deployPostReceive($hookPath);
+        $driver = new MockGitDriver($this);
+        $driver->expectOnce('activateHook', array('post-receive', dirname($hookPath)));
 
-        $this->assertTrue(is_executable($hookPath));
+        $backend = new GitBackendTestVersion($this);
+        $backend->setReturnValue('getDriver', $driver);
+
+        $backend->deployPostReceive($hookPath);
     }
 }
 
