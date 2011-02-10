@@ -62,9 +62,19 @@ class Git_PostReceiveMailDao extends DataAccessObject {
         return $this->update($sql);
     }
 
-    function removeUserNotification($repositoryId) {
-        $sql = sprintf('DELETE FROM plugin_git_post_receive_mail'.
+    function updateUserNotification($recipient, $repositoryId) {
+        $sql = sprintf('UPDATE plugin_git_post_receive_mail'.
+                       ' SET recipient_mail = %s'.
                        ' WHERE repository_id = %d',
+        $this->da->quoteSmart($recipient),
+        $repositoryId);
+        return $this->update($sql);
+    }
+
+    function removeUserNotification($recipient, $repositoryId) {
+        $sql = sprintf('DELETE FROM plugin_git_post_receive_mail'.
+                       ' WHERE recipient_mail = %s AND repository_id = %d ',
+        $this->da->quoteSmart($recipient),
         $repositoryId);
         return $this->update($sql);
     }
