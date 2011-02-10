@@ -16,3 +16,15 @@ textarea.text {
     height:50px;
     width:400px;
 }
+
+td.first_col {
+    width: 10em;
+}
+
+.mail_prefix {
+    width:15em;
+}
+
+.add_mail {
+    width:15em;
+}

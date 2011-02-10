@@ -250,8 +250,9 @@ class GitViews extends PluginViews {
         $repository   = $params['repository'];
         $this->repoId = $repository->getId();
         $repoName     = $repository->getName();
+        echo "<br/>";
         $this->_getBreadCrumb();
-        echo "<p><b>".$this->_getRepositoryPageUrl($this->repoId, $repoName)."</b></p>";
+        echo "<h2><b>".$this->_getRepositoryPageUrl($this->repoId, $repoName)."</b></h2>";
         // form to update notification mail prefix
         // TODO : replace the hardcoded txt with the mail prefix of the repo
         $this->_mailPrefixForm('Old prefix');
@@ -357,9 +358,9 @@ class GitViews extends PluginViews {
     <input type="hidden" id="repo_id" name="repo_id" value="<?php echo $this->repoId ?>" />
     <table>
         <tr>
-            <td><label for="mail_prefix_label"><?php echo $this->getText('mail_prefix');
+            <td class="first_col" ><label for="mail_prefix_label"><?php echo $this->getText('mail_prefix');
         ?></label></td>
-            <td><input id="mail_prefix" name="mail_prefix" class="" type="text" value="<?php echo $mailPrefix; ?>" /></td>
+            <td><input id="mail_prefix" name="mail_prefix" class="mail_prefix" type="text" value="<?php echo $mailPrefix; ?>" /></td>
             <td rowspan="2"><input type="submit" id="mail_prefix_submit" name="mail_prefix_submit" value="<?php echo $this->getText('mail_prefix_submit')?>"></td>
         </tr>
     </table>
@@ -379,9 +380,9 @@ class GitViews extends PluginViews {
     <input type="hidden" id="repo_id" name="repo_id" value="<?php echo $this->repoId ?>" />
     <table>
         <tr>
-            <td><label for="add_mail_label"><?php echo $this->getText('add_mail');
+            <td class="first_col" ><label for="add_mail_label"><?php echo $this->getText('add_mail');
         ?></label></td>
-            <td><input id="add_mail" name="add_mail" class="" type="text" value="" /></td>
+            <td><input id="add_mail" name="add_mail" class="add_mail" type="text" value="" /></td>
             <td rowspan="2"><input type="submit" id="add_mail_submit" name="add_mail_submit" value="<?php echo $this->getText('add_mail_submit')?>"></td>
         </tr>
     </table>
