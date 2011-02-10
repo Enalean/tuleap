@@ -208,7 +208,7 @@ class Git extends PluginController {
                     $mailPrefix = $this->request->get('mail_prefix');
                 }
                 $this->addAction('notificationUpdatePrefix', array($this->groupId, $repoId, $mailPrefix));
-                $this->addView('notification');
+                $this->addView('view');
                 break;
             #add mail
             case 'add_mail':

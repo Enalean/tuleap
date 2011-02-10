@@ -173,7 +173,11 @@ class GitActions extends PluginActions {
 
     public function notificationUpdatePrefix($projectId, $repositoryId, $mailPrefix) {
         if($this->_checkMandatoryParams($projectId, $repositoryId)) {
-            // TODO : perform the update
+            $repository = new GitRepository();
+            $repository->setId($repositoryId);
+            $repository->setMailPrefix($mailPrefix);
+            $repository->changeMailPrefix();
+            return true;
         }
         return false;
     }

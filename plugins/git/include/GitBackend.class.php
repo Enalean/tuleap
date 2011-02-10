@@ -152,6 +152,12 @@ class GitBackend extends Backend {
         return true;
     }
 
+    public function changeRepositoryMailPrefix($repository) {
+        // call to $repository->getPath() may reset the mail prefix
+        $this->getDao()->save($repository);
+        return true;
+    }
+
     /**
      * Deploy post-receive hook into the target file
      *

@@ -52,6 +52,7 @@ class GitRepository implements DVCSRepository {
     private $creator;
     private $deletionDate;
     private $access;
+    private $mailPrefix;
 
     private $hooks;
     private $branches;
@@ -74,6 +75,7 @@ class GitRepository implements DVCSRepository {
         $this->deletionDate   = '';
         $this->isInitialized  = 0;
         $this->access         = 'private';
+        $this->mailPrefix     = '[SCM]';
 
         $this->hooks       = array();
         $this->branches    = array();
@@ -377,6 +379,18 @@ class GitRepository implements DVCSRepository {
             return true;
         }
         return false;
+    }
+
+    public function getMailPrefix() {
+        return $this->mailPrefix;
+    }
+
+    public function setMailPrefix($mailPrefix) {
+        $this->mailPrefix = $mailPrefix;
+    }
+
+    public function changeMailPrefix() {
+        $this->getBackend()->changeRepositoryMailPrefix($this);
     }
 
     /**

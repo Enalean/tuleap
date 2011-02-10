@@ -250,12 +250,12 @@ class GitViews extends PluginViews {
         $repository   = $params['repository'];
         $this->repoId = $repository->getId();
         $repoName     = $repository->getName();
+        $mailPrefix   = $repository->getMailPrefix();
         echo "<br/>";
         $this->_getBreadCrumb();
         echo "<h2><b>".$this->_getRepositoryPageUrl($this->repoId, $repoName)."</b></h2>";
         // form to update notification mail prefix
-        // TODO : replace the hardcoded txt with the mail prefix of the repo
-        $this->_mailPrefixForm('Old prefix');
+        $this->_mailPrefixForm($mailPrefix);
         // form to add email addresses (mailing list) or a user to notify
         $this->_addMailForm();
         // show the list of mails to notify
