@@ -255,10 +255,8 @@ class GitViews extends PluginViews {
         // form to update notification mail prefix
         // TODO : replace the hardcoded txt with the mail prefix of the repo
         $this->_mailPrefixForm('Old prefix');
-        // form to add email addresses (mailing list)
+        // form to add email addresses (mailing list) or a user to notify
         $this->_addMailForm();
-        // form to add users (with auto completion)
-        $this->_addUserForm();
         // show the list of mails to notify
         $this->_listOfMails();
     }
@@ -389,29 +387,7 @@ class GitViews extends PluginViews {
     </table>
 </form>
         <?php
-    }
-
-    /**
-     * USER FORM
-     */
-    protected function _addUserForm() {
-        ?>
-<h3><?php echo $this->getText('add_user_title'); ?></h3>
-<form id="add_user_form" action="/plugins/git/" method="POST">
-    <input type="hidden" id="action" name="action" value="add_user" />
-    <input type="hidden" id="group_id" name="group_id" value="<?php echo $this->groupId ?>" />
-    <input type="hidden" id="repo_id" name="repo_id" value="<?php echo $this->repoId ?>" />
-    <table>
-        <tr>
-            <td><label for="add_user_label"><?php echo $this->getText('add_user');
-        ?></label></td>
-            <td><input id="add_user" name="add_user" class="" type="text" value="" /></td>
-            <td rowspan="2"><input type="submit" id="add_user_submit" name="add_user_submit" value="<?php echo $this->getText('add_user_submit')?>"></td>
-        </tr>
-    </table>
-</form>
-        <?php
-        $js = "new UserAutoCompleter('add_user', '".util_get_dir_image_theme()."', false);";
+        $js = "new UserAutoCompleter('add_mail', '".util_get_dir_image_theme()."', false);";
         $GLOBALS['Response']->includeFooterJavascriptSnippet($js);
     }
 

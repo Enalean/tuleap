@@ -98,7 +98,6 @@ class Git extends PluginController {
                                             'notification',
                                             'mail_prefix',
                                             'add_mail',
-                                            'add_user',
                                             'remove_mail');
         } else if ( $this->user->isMember($this->groupId) === true ) {
             $this->permittedActions = array('index','view', 'edit', 'clone');
@@ -217,18 +216,18 @@ class Git extends PluginController {
                 $valid->required();
                 if($this->request->valid($valid)) {
                     $mail = $this->request->get('add_mail');
+                } else {
+                    $valid = new Valid_String('add_mail');
+                    $valid->required();
+                    if($this->request->valid($valid)) {
+                        $um = UserManager::instance();
+                        $user = $um->findUser($this->request->get('add_mail'));
+                        if ($user) {
+                            $mail = $user->getEmail();
+                        }
+                    }
                 }
                 $this->addAction('notificationAddMail', array($this->groupId, $repoId, $mail));
-                $this->addView('notification');
-                break;
-            #add user
-            case 'add_user':
-                $valid = new Valid_String('add_user');
-                $valid->required();
-                if($this->request->valid($valid)) {
-                    $user = $this->request->get('add_user');
-                }
-                $this->addAction('notificationAddUser', array($this->groupId, $repoId, $user));
                 $this->addView('notification');
                 break;
             #remove mail

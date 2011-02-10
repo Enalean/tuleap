@@ -185,13 +185,6 @@ class GitActions extends PluginActions {
         return false;
     }
 
-    public function notificationAddUser($projectId, $repositoryId, $user) {
-            if($this->_checkMandatoryParams($projectId, $repositoryId)) {
-            // TODO : perform the addition
-        }
-        return false;
-    }
-
     public function notificationRemoveMail($projectId, $repositoryId, $mail) {
             if($this->_checkMandatoryParams($projectId, $repositoryId)) {
             // TODO : perform the delition
