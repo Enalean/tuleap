@@ -51,6 +51,8 @@ plugin_git	dao_delete_params	Impossible de supprimer le dépôt de la base de do
 plugin_git	dao_update_error	Impossible d'enregistrer les données du dépôt
 plugin_git	dao_search_params	Dépôt introuvable, paramètres invalides
 plugin_git	dao_search_error	Dépôt introuvable
+plugin_git	dao_error_create_notification	L'adresse mail à notifier n'a pas été ajoutée
+plugin_git	dao_error_remove_notification	L'adresse mail n'a pas été supprimée
 
 plugin_git	dao_child_params	Paramètres invalides
 

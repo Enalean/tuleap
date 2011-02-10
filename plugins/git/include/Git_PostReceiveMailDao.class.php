@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+ * Copyright (c) STMicroelectronics, 2011. All Rights Reserved.
  *
  * This file is a part of Codendi.
  *
@@ -18,8 +18,8 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 require_once('common/dao/include/DataAccessObject.class.php');
+require_once('exceptions/GitDaoException.class.php');
 
 /**
  *  Data Access Object for Git_PostReceiveMail
@@ -29,21 +29,13 @@ class Git_PostReceiveMailDao extends DataAccessObject {
      * Constructs the Git_PostReceiveMailDao
      * @param $da instance of the DataAccess class
      */
-    function Docman_LogDao( & $da ) {
+    function Git_PostReceiveMailDao($da) {
         DataAccessObject::DataAccessObject($da);
     }
 
     /**
-     * Gets all tables of the db
-     * @return DataAccessResult
-     */
-    function searchAll() {
-        $sql = "SELECT * FROM plugin_git_post_receive_mail";
-        return $this->retrieve($sql);
-    }
-
-    /**
      * Searches Git_PostReceiveMailDao by repository_id
+     *
      * @return DataAccessResult
      */
     function searchByRepositoryId($repositoryid) {
@@ -52,31 +44,28 @@ class Git_PostReceiveMailDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
-    function createUserNotification($recipient, $repositorytId) {
+    function createNotification($repositoryId, $recipient) {
         $sql = sprintf('INSERT INTO plugin_git_post_receive_mail'.
                        ' (recipient_mail, repository_id)'.
                        ' VALUES'.
                        ' (%s, %d)',
         $this->da->quoteSmart($recipient),
         $repositorytId);
-        return $this->update($sql);
+        if (!$this->update($sql)) {
+            throw new GitDaoException( $GLOBALS['Language']->getText('plugin_git', 'dao_error_create_notification') );
+        }
+        return true;
     }
 
-    function updateUserNotification($recipient, $repositoryId) {
-        $sql = sprintf('UPDATE plugin_git_post_receive_mail'.
-                       ' SET recipient_mail = %s'.
-                       ' WHERE repository_id = %d',
-        $this->da->quoteSmart($recipient),
-        $repositoryId);
-        return $this->update($sql);
-    }
-
-    function removeUserNotification($recipient, $repositoryId) {
+    function removeNotification($repositoryId, $recipient) {
         $sql = sprintf('DELETE FROM plugin_git_post_receive_mail'.
                        ' WHERE recipient_mail = %s AND repository_id = %d ',
         $this->da->quoteSmart($recipient),
         $repositoryId);
-        return $this->update($sql);
+        if (!$this->update($sql)) {
+            throw new GitDaoException( $GLOBALS['Language']->getText('plugin_git', 'dao_error_remove_notification') );
+        }
+        return true;
     }
 
 }

@@ -51,6 +51,8 @@ plugin_git	dao_delete_params	Missing repository id or project id
 plugin_git	dao_update_error	Unable to update Repository data
 plugin_git	dao_search_params	Repository not found : missing repository name or project id
 plugin_git	dao_search_error	Repository not found
+plugin_git	dao_error_create_notification	Mail to notify not added
+plugin_git	dao_error_remove_notification	Mail not removed
 
 plugin_git	dao_child_params	Repository child search failed : missing repository id
 

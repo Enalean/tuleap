@@ -19,36 +19,102 @@
  */
 
 require_once('Git_PostReceiveMailDao.class.php');
+require_once('GitRepository.class.php');
 
 class Git_PostReceiveMailManager {
 
     var $dao;
+    private static $_instance;
 
     /*
      * Constructor of the class
      *
      * @return void
      */
-    function __construct() {
+    private function __construct() {
         $this->dao = $this->_getDao();
+    }
+
+    /**
+     * Git_PostReceiveMailManager is a singleton
+     * 
+     * @return Git_PostReceiveMailManager
+     */
+    public static function instance() {
+        if (!isset(self::$_instance)) {
+            $c = __CLASS__;
+            self::$_instance = new $c;
+        }
+        return self::$_instance;
     }
 
     /*
      * Add a mail address to a repository to be notified
      */
     function addMail($repositoryId, $mail) {
+        try {
+            $this->dao->removeNotification($repositoryId, $mail);
+        } catch (GitDaoException $e) {
+            $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_git','dao_error_create_notification'));
+            return false;
+        }
+        return true;
     }
 
     /*
      * Remove a notified mail address from a repository
      */
     function removeMailByRepository($repositoryId, $mail) {
+        try {
+            $this->dao->removeNotification($repositoryId, $mail);
+        } catch (GitDaoException $e) {
+            $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_git','dao_error_remove_notification'));
+            return false;
+        }
+        return true;
     }
 
     /*
      * Remove a notified mail address from all repositories of a project
      */
     function removeMailByProject($groupId, $mail) {
+        $dao = new GitDao();
+        $repositoryList = $dao->getProjectRepositoryList($groupId);
+
+        if($repositoryList && !$repositoryList->isError()) {
+
+            foreach ($repositoryList as $row){
+                try {
+                    $this->dao->removeNotification($row['repository_id'], $mail);
+                } catch (GitDaoException $e) {
+            $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_git','dao_error_remove_notification'));
+                }
+            }
+        }
+    }
+
+    /*
+     * Remove a notified mail address from all private repositories of a project
+     */
+    function removeMailByProjectPrivateRepository($groupId, $mail) {
+        $gitDao = new GitDao();
+        $repositoryList = $gitDao->getProjectRepositoryList($groupId);
+
+        if($repositoryList && !$repositoryList->isError()) {
+
+            foreach ($repositoryList as $row){
+                $repository   = new GitRepository();
+                $repository->setId( $row['repository_id'] );
+                try {
+                    $repository->load();
+                    if ($repository->isPrivate()) {
+                        $this->dao->removeNotification($row['repository_id'], $mail);
+                    }
+                } catch (GitDaoException $e) {
+                                $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_git','dao_error_remove_notification'));
+                }
+            }
+        }
     }
 
     /**
