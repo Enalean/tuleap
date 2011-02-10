@@ -24,28 +24,14 @@ require_once('GitRepository.class.php');
 class Git_PostReceiveMailManager {
 
     var $dao;
-    private static $_instance;
 
     /*
      * Constructor of the class
      *
      * @return void
      */
-    private function __construct() {
+     function __construct() {
         $this->dao = $this->_getDao();
-    }
-
-    /**
-     * Git_PostReceiveMailManager is a singleton
-     * 
-     * @return Git_PostReceiveMailManager
-     */
-    public static function instance() {
-        if (!isset(self::$_instance)) {
-            $c = __CLASS__;
-            self::$_instance = new $c;
-        }
-        return self::$_instance;
     }
 
     /*
