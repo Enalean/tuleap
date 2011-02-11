@@ -189,7 +189,14 @@ class GitDriver implements DVCSDriver {
     }
 
     public function setConfig($repoPath, $key, $value) {
-
+        $configFile = $repoPath.'/config';
+        $cmd = 'git config --file '.$configFile.' --replace-all '.escapeshellarg($key).' '.escapeshellarg($value).' 2>&1';
+        $ret = -1;
+        $out = array();
+        exec($cmd, $out, $ret);
+        if ($ret !== 0) {
+            throw new GitDriverErrorException('Unable to set config for repository '.$repoPath.':'.PHP_EOL.implode(PHP_EOL, $out));
+        }
     }
 
     //TODO check path 

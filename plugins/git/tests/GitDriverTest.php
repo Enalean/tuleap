@@ -30,6 +30,7 @@ class GitDriverTest extends UnitTestCase {
 
     public function tearDown() {
         @unlink($this->fixturesPath.'/tmp/hooks/blah');
+        @unlink($this->fixturesPath.'/tmp/config');
     }
 
     public function testActivateHook() {
@@ -40,6 +41,27 @@ class GitDriverTest extends UnitTestCase {
 
         $this->assertTrue(is_executable($this->fixturesPath.'/tmp/hooks/blah'));
     }
-}
 
+    public function testSetConfigSimple() {
+        copy($this->fixturesPath.'/config', $this->fixturesPath.'/tmp/config');
+
+        $driver = new GitDriver();
+        $driver->setConfig($this->fixturesPath.'/tmp', 'hooks.showrev', 'abcd');
+
+        $config = parse_ini_file($this->fixturesPath.'/tmp/config', true);
+        $this->assertEqual($config['hooks']['showrev'], 'abcd');
+    }
+
+    public function testSetConfigComplex() {
+        copy($this->fixturesPath.'/config', $this->fixturesPath.'/tmp/config');
+
+        $val = "t=%s; git log --name-status --pretty='format:URL:    https://codendi.org/plugins/git/index.php/1750/view/290/?p=git.git&a=commitdiff&h=%%H%%nAuthor: %%an <%%ae>%%nDate:   %%aD%%n%%n%%s%%n%%b' \$t~1..\$t";
+
+        $driver = new GitDriver();
+        $driver->setConfig($this->fixturesPath.'/tmp', 'hooks.showrev', $val);
+
+        $config = parse_ini_file($this->fixturesPath.'/tmp/config', true);
+        $this->assertEqual($config['hooks']['showrev'], 't=%s; git log --name-status --pretty=\'format:URL:    https://codendi.org/plugins/git/index.php/1750/view/290/?p=git.git&a=commitdiff&h=%%H%%nAuthor: %%an <%%ae>%%nDate:   %%aD%%n%%n%%s%%n%%b\' $t~1..$t');
+    }
+}
 ?>
