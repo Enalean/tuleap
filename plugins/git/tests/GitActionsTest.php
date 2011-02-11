@@ -33,10 +33,9 @@ class GitActionsTest extends UnitTestCase {
         $gitAction->setReturnValue('getController', $git);
         $gitRepository = new MockGitRepository($this);
         $gitAction->setReturnValue('getGitRepository', $gitRepository);
-        $this->assertFalse($gitAction->repositoryNotification(null, null));
-        $this->assertFalse($gitAction->repositoryNotification(null, 1));
-        $this->assertFalse($gitAction->repositoryNotification(1, null));
-        $this->assertTrue($gitAction->repositoryNotification(1, 1));
+        $this->assertFalse($gitAction->repositoryNotification(null));
+        $this->assertTrue($gitAction->repositoryNotification(1));
+        $git->expectOnce('addError');
     }
 
 }

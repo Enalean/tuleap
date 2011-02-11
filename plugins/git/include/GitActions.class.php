@@ -167,33 +167,54 @@ class GitActions extends PluginActions {
         return true;
     }
 
-    public function repositoryNotification($projectId, $repositoryId) {
-        return $this->_checkMandatoryParams($projectId, $repositoryId);
+    public function repositoryNotification($repositoryId) {
+        $c = $this->getController();
+        if (empty($repositoryId)) {
+            $c->addError($this->getText('actions_params_error'));
+            $this->_loadRepository($repositoryId);
+            return false;
+        }
+        $this->_loadRepository($repositoryId);
+        return true;
     }
 
-    public function notificationUpdatePrefix($projectId, $repositoryId, $mailPrefix) {
-        if($this->_checkMandatoryParams($projectId, $repositoryId)) {
-            $repository = new GitRepository();
-            $repository->setId($repositoryId);
-            $repository->setMailPrefix($mailPrefix);
-            $repository->changeMailPrefix();
-            return true;
+    public function notificationUpdatePrefix($repositoryId, $mailPrefix) {
+        $c = $this->getController();
+        if (empty($repositoryId)) {
+            $c->addError($this->getText('actions_params_error'));
+            $this->_loadRepository($repositoryId);
+            return false;
         }
-        return false;
+        $repository = $this->_loadRepository($repositoryId);
+        $repository->setMailPrefix($mailPrefix);
+        $repository->changeMailPrefix();
+        $c->addInfo($this->getText('mail_prefix_updated'));
+        $this->addData(array('repository'=>$repository));
+        return true;
     }
 
-    public function notificationAddMail($projectId, $repositoryId, $mail) {
-        if($this->_checkMandatoryParams($projectId, $repositoryId)) {
-            // TODO : perform the addition
+    public function notificationAddMail($repositoryId, $mail) {
+        $c = $this->getController();
+        $this->_loadRepository($repositoryId);
+        if (empty($repositoryId) || empty($mail)) {
+            $c->addError($this->getText('actions_params_error'));
+            return false;
         }
-        return false;
+        // TODO : perform the addition
+        $c->addInfo($this->getText('mail_added'));
+        return true;
     }
 
-    public function notificationRemoveMail($projectId, $repositoryId, $mail) {
-            if($this->_checkMandatoryParams($projectId, $repositoryId)) {
-            // TODO : perform the delition
+    public function notificationRemoveMail($repositoryId, $mail) {
+        $c = $this->getController();
+        $this->_loadRepository($repositoryId);
+        if (empty($repositoryId) || empty($mail)) {
+            $c->addError($this->getText('actions_params_error'));
+            return false;
         }
-        return false;
+        // TODO : perform the delition
+        $c->addInfo($this->getText('mail_removed'));
+        return true;
     }
 
     public function confirmDeletion($projectId, $repoId) {
@@ -320,18 +341,12 @@ class GitActions extends PluginActions {
         return true;
     }
 
-    function _checkMandatoryParams($projectId, $repositoryId) {
-        $c = $this->getController();
-        if (empty($projectId) || empty($repositoryId)) {
-            $c->addError($this->getText('actions_params_error'));
-            return false;
-        } else {
-            $repository = $this->getGitRepository();
-            $repository->setId($repositoryId);
-            $repository->load();
-            $this->addData(array('repository'=>$repository));
-            return true;
-        }
+    function _loadRepository($repositoryId) {
+        $repository = $this->getGitRepository();
+        $repository->setId($repositoryId);
+        $repository->load();
+        $this->addData(array('repository'=>$repository));
+        return $repository;
     }
 
     /**

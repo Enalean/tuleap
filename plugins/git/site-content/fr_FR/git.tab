@@ -100,4 +100,11 @@ plugin_git	add_mail_title	Ajouter une adresse mail ou un utilisateur a notifier
 plugin_git	add_mail	Adresse Mail/Utilisateur
 plugin_git	add_mail_submit	Ajouter
 
+plugin_git	no_user_mail	L'utilisateur ajouté n'a pas d'adresse mail
+plugin_git	no_user	Aucun utilisateur ne correspond a votre entrée
+
+plugin_git	mail_prefix_updated	Le préfixe du mail a été mis a jour
+plugin_git	mail_added	Adresse mail ajoutée
+plugin_git	mail_removed	Adresse mail supprimée
+
 plugin_git	notified_mails_title	Liste des adresses mail a notifier

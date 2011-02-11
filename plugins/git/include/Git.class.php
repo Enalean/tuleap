@@ -197,7 +197,7 @@ class Git extends PluginController {
                 break;
             #notification
             case 'notification':
-                $this->addAction('repositoryNotification', array($this->groupId, $repoId));
+                $this->addAction('repositoryNotification', array($repoId));
                 $this->addView('notification');
                 break;
             #mail prefix
@@ -207,8 +207,8 @@ class Git extends PluginController {
                 if($this->request->valid($valid)) {
                     $mailPrefix = $this->request->get('mail_prefix');
                 }
-                $this->addAction('notificationUpdatePrefix', array($this->groupId, $repoId, $mailPrefix));
-                $this->addView('view');
+                $this->addAction('notificationUpdatePrefix', array($repoId, $mailPrefix));
+                $this->addView('notification');
                 break;
             #add mail
             case 'add_mail':
@@ -224,10 +224,15 @@ class Git extends PluginController {
                         $user = $um->findUser($this->request->get('add_mail'));
                         if ($user) {
                             $mail = $user->getEmail();
+                            if(empty($mail)) {
+                                $this->addError($this->getText('no_user_mail'));
+                            }
+                        } else {
+                            $this->addError($this->getText('no_user'));
                         }
                     }
                 }
-                $this->addAction('notificationAddMail', array($this->groupId, $repoId, $mail));
+                $this->addAction('notificationAddMail', array($repoId, $mail));
                 $this->addView('notification');
                 break;
             #remove mail
@@ -235,9 +240,9 @@ class Git extends PluginController {
                 $valid = new Valid_Email('mail');
                 $valid->required();
                 if($this->request->valid($valid)) {
-                    $mailId = $this->request->get('mail');
+                    $mail = $this->request->get('mail');
                 }
-                $this->addAction('notificationRemoveMail', array($this->groupId, $repoId, $mail));
+                $this->addAction('notificationRemoveMail', array($repoId, $mail));
                 $this->addView('notification');
                 break;
             #LIST
