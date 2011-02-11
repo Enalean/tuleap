@@ -33,7 +33,8 @@ class GitDriverTest extends UnitTestCase {
         chdir($this->curDir);
         @unlink($this->fixturesPath.'/tmp/hooks/blah');
         @unlink($this->fixturesPath.'/tmp/config');
-        @system('/bin/rm -rf '.$this->fixturesPath.'/tmp/repo.git');
+        @exec('/bin/rm -rf '.$this->fixturesPath.'/tmp/repo.git');
+        @exec('/bin/rm -rf '.$this->fixturesPath.'/tmp/fork.git');
     }
 
     public function testInitBareRepo() {
@@ -53,6 +54,20 @@ class GitDriverTest extends UnitTestCase {
         chdir($path);
         $driver->init(false);
         $this->assertTrue(file_exists($path.'/.git/HEAD'));
+    }
+
+    public function testForkRepo() {
+        $srcPath = $this->fixturesPath.'/tmp/repo.git';
+        $dstPath = $this->fixturesPath.'/tmp/fork.git';
+
+        mkdir($srcPath, 0770, true);
+        @exec('GIT_DIR='.$srcPath.' git --bare init --shared=group');
+
+        $driver = new GitDriver();
+        $driver->fork($srcPath, $dstPath);
+        
+        $this->assertTrue(file_exists($dstPath.'/HEAD'));
+        $this->assertEqual(file_get_contents($dstPath.'/description'), 'Default description for this project'.PHP_EOL);
     }
 
     public function testActivateHook() {

@@ -45,27 +45,32 @@ class GitDriver implements DVCSDriver {
      * @return <boolean>
      */
     public function fork($source, $destination) {
-        $rcode = 0;
         if ( !file_exists($source) ) {
             throw new GitDriverSourceNotFoundException($source);
         }
+
         //WARNING : never use --shared/--reference options
-        $cmd    = 'git clone --bare --local --no-hardlinks '.$source.' '.$destination;
-        $output = system($cmd, $rcode);
-        if ( $rcode != 0 ) {
-            throw new GitDriverErrorException($cmd.'->'.$output);
-        }        
-        chdir($destination);
-        $cmd    = 'git-update-server-info';
-        $output = system($cmd, $rcode);
-        if ( $rcode != 0 ) {
-            throw new GitDriverErrorException($cmd.' -> '.$output);
-        }            
-        $cmd    = 'echo "Default description for this project" > '.$destination.'/description';
-        $output = system($cmd, $rcode);
-        if ( $rcode != 0 ) {
-            throw new GitDriverErrorException($cmd.' -> '.$output);
+        $cmd = 'git clone --bare --local --no-hardlinks '.escapeshellarg($source).' '.escapeshellarg($destination);
+        $out = array();
+        $ret = -1;
+        exec($cmd, $out, $ret);
+        if ($ret !== 0) {
+            throw new GitDriverErrorException('Git fork failed on '.$cmd.PHP_EOL.implode(PHP_EOL, $out));
         }
+
+        chdir($destination);
+        $cmd = 'git-update-server-info';
+        $out = array();
+        $ret = -1;
+        exec($cmd, $out, $ret);
+        if ($ret !== 0) {
+            throw new GitDriverErrorException('Git fork failed on '.$cmd.PHP_EOL.implode(PHP_EOL, $out));
+        }
+
+        if (!$this->setDescription(getcwd(), 'Default description for this project'.PHP_EOL)) {
+            throw new GitDriverErrorException('Git init failed on description update');
+        }
+
         $this->setPermissions($destination);
         return true;
     }
