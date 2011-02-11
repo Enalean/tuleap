@@ -50,7 +50,7 @@ class GitDriver implements DVCSDriver {
         }
 
         //WARNING : never use --shared/--reference options
-        $cmd = 'git clone --bare --local --no-hardlinks '.escapeshellarg($source).' '.escapeshellarg($destination);
+        $cmd = 'git clone --bare --local --no-hardlinks '.escapeshellarg($source).' '.escapeshellarg($destination).' 2>&1';
         $out = array();
         $ret = -1;
         exec($cmd, $out, $ret);
@@ -58,21 +58,7 @@ class GitDriver implements DVCSDriver {
             throw new GitDriverErrorException('Git fork failed on '.$cmd.PHP_EOL.implode(PHP_EOL, $out));
         }
 
-        chdir($destination);
-        $cmd = 'git-update-server-info';
-        $out = array();
-        $ret = -1;
-        exec($cmd, $out, $ret);
-        if ($ret !== 0) {
-            throw new GitDriverErrorException('Git fork failed on '.$cmd.PHP_EOL.implode(PHP_EOL, $out));
-        }
-
-        if (!$this->setDescription(getcwd(), 'Default description for this project'.PHP_EOL)) {
-            throw new GitDriverErrorException('Git init failed on description update');
-        }
-
-        $this->setPermissions($destination);
-        return true;
+        return $this->setUpFreshRepository($destination);
     }
 
     /**
@@ -92,29 +78,42 @@ class GitDriver implements DVCSDriver {
             return true;
         }
 
-        $cmd = 'git --bare init --shared=group';
+        $cmd = 'git --bare init --shared=group 2>&1';
         $out = array();
         $ret = -1;
         exec($cmd, $out, $ret);
         if ( $ret !== 0 ) {
             throw new GitDriverErrorException('Git init failed on '.$cmd.PHP_EOL.implode(PHP_EOL, $out));
         }
+
+        return $this->setUpFreshRepository(getcwd());
+    }
+
+    /**
+     * Post creation/clone repository setup
+     *
+     * @param String $path Path to the repository
+     *
+     * @return Boolean
+     */
+    protected function setUpFreshRepository($path) {
+        $cwd = getcwd();
+        chdir($path);
 
         $cmd = 'git-update-server-info';
         $out = array();
         $ret = -1;
         exec($cmd, $out, $ret);
+        chdir($cwd);
         if ( $ret !== 0 ) {
-            throw new GitDriverErrorException('Git init failed on '.$cmd.PHP_EOL.implode(PHP_EOL, $out));
+            throw new GitDriverErrorException('Git setup failed on '.$cmd.PHP_EOL.implode(PHP_EOL, $out));
         }
         
-        if (!$this->setDescription(getcwd(), 'Default description for this project'.PHP_EOL)) {
-            throw new GitDriverErrorException('Git init failed on description update');
+        if (!$this->setDescription($path, 'Default description for this project'.PHP_EOL)) {
+            throw new GitDriverErrorException('Git setup failed on description update');
         }
 
-        $this->setPermissions( getcwd() );
-
-        return true;
+        return $this->setPermissions($path);
     }
 
     public function delete($path) {
