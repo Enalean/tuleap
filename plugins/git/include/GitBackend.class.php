@@ -102,6 +102,25 @@ class GitBackend extends Backend {
         return $this->setUpRepository($repository);
     }
 
+    /**
+     * Once the repository is created/forked, set it up with proper configuration.
+     *
+     * @param GitRepository $repository The repository
+     *
+     * @return Boolean
+     */
+    public function setUpRepository($repository) {
+        $path = $this->getGitRootPath().DIRECTORY_SEPARATOR.$repository->getPath();
+        $this->getDriver()->activateHook('post-update', $path);
+        $this->deployPostReceive($path);
+        $this->setRepositoryPermissions($repository);        
+        $id = $this->getDao()->save($repository);
+        $repository->setId($id);
+        $this->setUpMailingHook($repository);
+        $this->changeRepositoryAccess($repository);
+        return true;
+    }
+
     public function delete($repository) {
         $path = $repository->getPath();
         if ( empty($path) ) {
@@ -195,24 +214,6 @@ class GitBackend extends Backend {
     /**
      * INTERNAL METHODS
      */
-
-    /**
-     * Once the repository is created/forked, set it up with proper configuration.
-     *
-     * @param GitRepository $repository The repository
-     *
-     * @return Boolean
-     */
-    protected function setUpRepository($repository) {
-        $path = $this->getGitRootPath().DIRECTORY_SEPARATOR.$repository->getPath();
-        $this->getDriver()->activateHook('post-update', $path);
-        $this->deployPostReceive($path);
-        $this->setRepositoryPermissions($repository);        
-        $id = $this->getDao()->save($repository);
-        $repository->setId($id);
-        $this->changeRepositoryAccess($repository);
-        return true;
-    }
 
     protected function setRepositoryPermissions($repository) {
         $path = $this->getGitRootPath().DIRECTORY_SEPARATOR.$repository->getPath();   

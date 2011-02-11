@@ -86,7 +86,6 @@ class GitRepository implements DVCSRepository {
         $this->parent      = null;
         $this->parentId    = 0;
         $this->loaded      = false;        
-        $this->dao         = new GitDao();
     }       
 
     /**
@@ -162,7 +161,7 @@ class GitRepository implements DVCSRepository {
     
     public function hasChild() {
         $this->load();
-        return $this->dao->hasChild($this);
+        return $this->getDao()->hasChild($this);
     }
 
     /**
@@ -462,7 +461,7 @@ class GitRepository implements DVCSRepository {
     public function renameProject(Project $project, $newName) {
         $newName = strtolower($newName);
         if ($this->getBackend()->renameProject($project, $newName)) {
-            return $this->dao->renameProject($project, $newName);
+            return $this->getDao()->renameProject($project, $newName);
         }
         return false;
     }
