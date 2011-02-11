@@ -97,10 +97,29 @@ class Git_PostReceiveMailManager {
                         $this->dao->removeNotification($row['repository_id'], $mail);
                     }
                 } catch (GitDaoException $e) {
-                                $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_git','dao_error_remove_notification'));
+                    $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_git','dao_error_remove_notification'));
                 }
             }
         }
+    }
+
+    /**
+     * Returns the list of notified mails for post commit
+     * 
+     * @param Integer $repositoryId
+     * 
+     * @return array 
+     */
+    public function getNotificationMailsByRepositoryId($repositoryId) {
+        $dar = $this->dao->searchByRepositoryId($repositoryId);
+
+        $mailList = array();
+        if ($dar && !$dar->isError() && $dar->rowCount() > 0) {
+            foreach ($dar as $row ) {
+                $mailList [] = $row['recipient_mail'];
+            }
+        }
+        return $mailList;
     }
 
     /**

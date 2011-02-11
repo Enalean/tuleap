@@ -397,12 +397,13 @@ class GitRepository implements DVCSRepository {
     public function changeMailPrefix() {
         $this->getBackend()->changeRepositoryMailPrefix($this);
     }
-    
-    public function setNotifiedMails($notifiedMails) {
-        $this->notifiedMails = $notifiedMails;
+
+    public function setNotifiedMails() {
+        $postRecMailManager = $this->getPostReceiveMailManager();
+        $this->notifiedMails = $postRecMailManager->getNotificationMailsByRepositoryId($this->getId());
     }
 
-    public function getNotifiedMails($notifiedMails) {
+    public function getNotifiedMails() {
         return $this->notifiedMails;
     }
 

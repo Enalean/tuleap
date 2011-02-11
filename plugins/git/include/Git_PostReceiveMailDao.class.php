@@ -29,18 +29,19 @@ class Git_PostReceiveMailDao extends DataAccessObject {
      * Constructs the Git_PostReceiveMailDao
      * @param $da instance of the DataAccess class
      */
-    function Git_PostReceiveMailDao($da) {
-        DataAccessObject::DataAccessObject($da);
+    public function __construct() {
+        parent::__construct( CodendiDataAccess::instance() );
     }
 
     /**
      * Searches Git_PostReceiveMailDao by repository_id
+     * @param Integer $repositoryId
      *
      * @return DataAccessResult
      */
-    function searchByRepositoryId($repositoryid) {
+    function searchByRepositoryId($repositoryId) {
         $sql = sprintf("SELECT recipient_mail FROM plugin_git_post_receive_mail WHERE repository_id = %d",
-        $this->da->quoteSmart($repositoryid));
+        $this->da->quoteSmart($repositoryId));
         return $this->retrieve($sql);
     }
 

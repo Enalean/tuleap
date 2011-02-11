@@ -382,12 +382,13 @@ class GitViews extends PluginViews {
      * LIST OF MAILS TO NOTIFY
      */
     protected function _listOfMails() {
-        // hardcoded mail addresses just to test display
-        $mails = array('john.doe@gmail.com',
-                       'jane.doe@gmail.com',
-                       'john.smith@gmail.com');
+        $r = new GitRepository();
+        $r->setId($this->repoId);
+        $r->load();
+        $mails = $r->getNotifiedMails();
         ?>
 <h3><?php echo $this->getText('notified_mails_title'); ?></h3>
+    <?php if (!empty($mails)) {?>
 <form id="add_user_form" action="/plugins/git/" method="POST">
     <input type="hidden" id="action" name="action" value="remove_mail" />
     <input type="hidden" id="group_id" name="group_id" value="<?php echo $this->groupId ?>" />
@@ -408,6 +409,11 @@ class GitViews extends PluginViews {
     </table>
 </form>
         <?php
+        } else {
+?>
+<h4><?php echo $this->getText('add_mail_existing'); ?> </h4>
+<?php
+}
     }
 
     /**

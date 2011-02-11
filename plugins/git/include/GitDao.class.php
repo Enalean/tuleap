@@ -300,6 +300,7 @@ class GitDao extends DataAccessObject {
         $repository->setDeletionDate($result[self::REPOSITORY_DELETION_DATE]);
         $repository->setAccess($result[self::REPOSITORY_ACCESS]);
         $repository->setMailPrefix($result[self::REPOSITORY_MAIL_PREFIX]);
+        $repository->setNotifiedMails();
     }
 
     public static function checkName($name) {
