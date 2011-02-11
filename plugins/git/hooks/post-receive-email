@@ -200,6 +200,11 @@ generate_email()
 		describe=$rev
 	fi
 
+	if [ "$oldrev" != "0000000000000000000000000000000000000000" -a "$newrev" != "0000000000000000000000000000000000000000" ]; then
+		authors=( `git log --pretty=format:%aN $oldrev..$newrev | awk '!x[$0]++' | tr '\n' ','| sed 's/\(.*\)./\1/'`)
+		authors="by "$authors
+	fi
+
 	generate_email_header
 
 	# Call the correct body generation function
@@ -228,7 +233,7 @@ generate_email_header()
 	# Generate header
 	cat <<-EOF
 	To: $recipients
-	Subject: ${emailprefix}$projectdesc $refname_type $short_refname ${change_type}d. $describe
+	Subject: ${emailprefix} $refname_type $short_refname ${change_type}d $authors
 	X-Git-Refname: $refname
 	X-Git-Reftype: $refname_type
 	X-Git-Oldrev: $oldrev
