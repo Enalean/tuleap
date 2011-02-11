@@ -167,14 +167,13 @@ class GitActions extends PluginActions {
         return true;
     }
 
-    public function repositoryNotification($repositoryId) {
+    public function repoManagement($repositoryId) {
         $c = $this->getController();
+        $this->_loadRepository($repositoryId);
         if (empty($repositoryId)) {
             $c->addError($this->getText('actions_params_error'));
-            $this->_loadRepository($repositoryId);
             return false;
         }
-        $this->_loadRepository($repositoryId);
         return true;
     }
 

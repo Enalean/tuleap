@@ -95,10 +95,11 @@ class Git extends PluginController {
                                             'create',
                                             'confirm_deletion',
                                             'save',
-                                            'notification',
+                                            'repo_management',
                                             'mail_prefix',
                                             'add_mail',
-                                            'remove_mail');
+                                            'remove_mail',
+                                            'fork');
         } else if ( $this->user->isMember($this->groupId) === true ) {
             $this->permittedActions = array('index','view', 'edit', 'clone');
         } else if ( !$this->user->isAnonymous() && !$this->user->isRestricted() ) {
@@ -195,10 +196,10 @@ class Git extends PluginController {
                     $this->redirect('/plugins/git/?group_id='.$this->groupId);
                 }
                 break;
-            #notification
-            case 'notification':
-                $this->addAction('repositoryNotification', array($repoId));
-                $this->addView('notification');
+            #repo_management
+            case 'repo_management':
+                $this->addAction('repoManagement', array($repoId));
+                $this->addView('repoManagement');
                 break;
             #mail prefix
             case 'mail_prefix':
@@ -208,7 +209,7 @@ class Git extends PluginController {
                     $mailPrefix = $this->request->get('mail_prefix');
                 }
                 $this->addAction('notificationUpdatePrefix', array($repoId, $mailPrefix));
-                $this->addView('notification');
+                $this->addView('repoManagement');
                 break;
             #add mail
             case 'add_mail':
@@ -233,7 +234,7 @@ class Git extends PluginController {
                     }
                 }
                 $this->addAction('notificationAddMail', array($repoId, $mail));
-                $this->addView('notification');
+                $this->addView('repoManagement');
                 break;
             #remove mail
             case 'remove_mail':
@@ -243,7 +244,12 @@ class Git extends PluginController {
                     $mail = $this->request->get('mail');
                 }
                 $this->addAction('notificationRemoveMail', array($repoId, $mail));
-                $this->addView('notification');
+                $this->addView('repoManagement');
+                break;
+            #fork
+            case 'fork':
+                $this->addAction('repoManagement', array($repoId));
+                $this->addView('fork');
                 break;
             #LIST
             default:     

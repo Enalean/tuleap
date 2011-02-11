@@ -79,6 +79,7 @@ plugin_git	view_repo_initialized	Initialisé
 plugin_git	view_repo_not_initialized	Non initialisé
 plugin_git	view_repo_clone_url	Clone url
 plugin_git	view_repo_access	Accès
+plugin_git	view_repo_access_private	Privé
 
 plugin_git	repo_not_initialized	Le dépôt n'est pas initialisé
 plugin_git	confirm_deletion_msg	Etes-vous certain(e) de vouloir supprimer ce dépôt ?
@@ -90,7 +91,7 @@ plugin_git	project_service_not_available	Le service n'est pas disponible pour vo
 plugin_git	reference_commit_nature_key	Commit Git
 plugin_git	reference_commit_desc_key	Commit Git
 
-plugin_git	notification	Notification
+plugin_git	admin_repo_management	Gestion du dépot GIT
 
 plugin_git	mail_prefix_title	Mettre a jour le préfixe du mail de notification
 plugin_git	mail_prefix	Nouveau Préfixe
