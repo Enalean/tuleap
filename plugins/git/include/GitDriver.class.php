@@ -76,32 +76,39 @@ class GitDriver implements DVCSDriver {
      * @return Boolean
      */
     public function init($bare=false) {
-        //TODO there are more things to do
-        $rcode = 0;            
-        $cmd = 'git --bare init --shared=group';
         if ( $bare === false ) {
             $cmd = 'git init';
-            $output = system($cmd, $rcode);
-            if ( $rcode != 0 ) {
-                throw new GitDriverErrorException($cmd.' -> '.$output);
+            $out = array();
+            $ret = -1;
+            exec($cmd, $out, $ret);
+            if ($ret !== 0) {
+                throw new GitDriverErrorException('Git init failed on '.$cmd.PHP_EOL.implode(PHP_EOL, $out));
             }
             return true;
         }
-        $output = system($cmd, $rcode);
-        if ( $rcode != 0 ) {
-            throw new GitDriverErrorException($cmd.' -> '.$output);
+
+        $cmd = 'git --bare init --shared=group';
+        $out = array();
+        $ret = -1;
+        exec($cmd, $out, $ret);
+        if ( $ret !== 0 ) {
+            throw new GitDriverErrorException('Git init failed on '.$cmd.PHP_EOL.implode(PHP_EOL, $out));
         }
-        $cmd    = 'git-update-server-info';
-        $output = system($cmd, $rcode);
-        if ( $rcode != 0 ) {
-            throw new GitDriverErrorException($cmd.' -> '.$output);
-        }                                   
-        $cmd    = 'echo "Default description for this project" > description';
-        $output = system($cmd, $rcode);
-        if ( $rcode != 0 ) {
-            throw new GitDriverErrorException($cmd.' -> '.$output);
+
+        $cmd = 'git-update-server-info';
+        $out = array();
+        $ret = -1;
+        exec($cmd, $out, $ret);
+        if ( $ret !== 0 ) {
+            throw new GitDriverErrorException('Git init failed on '.$cmd.PHP_EOL.implode(PHP_EOL, $out));
         }
+        
+        if (!$this->setDescription(getcwd(), 'Default description for this project'.PHP_EOL)) {
+            throw new GitDriverErrorException('Git init failed on description update');
+        }
+
         $this->setPermissions( getcwd() );
+
         return true;
     }
 
@@ -215,7 +222,6 @@ class GitDriver implements DVCSDriver {
         }
         return true;
     }
- 
 }
 
 ?>

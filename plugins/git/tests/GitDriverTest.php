@@ -25,12 +25,34 @@ require_once dirname(__FILE__).'/../include/GitDriver.class.php';
 class GitDriverTest extends UnitTestCase {
 
     public function setUp() {
+        $this->curDir = getcwd();
         $this->fixturesPath = dirname(__FILE__).'/_fixtures';
     }
 
     public function tearDown() {
+        chdir($this->curDir);
         @unlink($this->fixturesPath.'/tmp/hooks/blah');
         @unlink($this->fixturesPath.'/tmp/config');
+        @system('/bin/rm -rf '.$this->fixturesPath.'/tmp/repo.git');
+    }
+
+    public function testInitBareRepo() {
+        $path = $this->fixturesPath.'/tmp/repo.git';
+        $driver = new GitDriver();
+        mkdir($path, 0770, true);
+        chdir($path);
+        $driver->init(true);
+        $this->assertTrue(file_exists($path.'/HEAD'));
+        $this->assertEqual(file_get_contents($path.'/description'), 'Default description for this project'.PHP_EOL);
+    }
+
+    public function testInitStdRepo() {
+        $path = $this->fixturesPath.'/tmp/repo.git';
+        $driver = new GitDriver();
+        mkdir($path, 0770, true);
+        chdir($path);
+        $driver->init(false);
+        $this->assertTrue(file_exists($path.'/.git/HEAD'));
     }
 
     public function testActivateHook() {
