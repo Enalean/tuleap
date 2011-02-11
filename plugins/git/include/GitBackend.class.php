@@ -308,21 +308,20 @@ class GitBackend extends Backend {
         $rcode  = 0 ;
         $output = $this->system( $cmd, $rcode );
         if ($rcode == 0) {
-            if ($output) {
-                $notifiedList = $output.','.$mail;
-                $cmd = 'git config hooks.mailinglist '.escapeshellarg($notifiedList);
-            //it is the first mail to be added
-            } else {
-                $cmd = 'git config --add hooks.mailinglist '.escapeshellarg($mail);
-            }
-            $output = $this->system( $cmd, $rcode );
+            $notifiedList = $output.','.$mail;
+            $cmd = 'git config hooks.mailinglist '.escapeshellarg($notifiedList);
+            //If the key does not exist, the error key equals 1
+            //It is the first mail to be added
+        } else {
+            $cmd = 'git config --add hooks.mailinglist '.escapeshellarg($mail);
         }
+        $output = $this->system( $cmd, $rcode );
         if ($rcode != 0 ) {
             throw new GitBackendException($cmd.' -> '.$output);
         }
         return true;
     }
-    
+
     public function processMailToBeRemoved($output, $mail) {
         if (preg_match('#(,)'.$mail.'(,?)#', $output)) {
             return preg_replace('#(,)'.$mail.'(,?)#', '$2', $output);
