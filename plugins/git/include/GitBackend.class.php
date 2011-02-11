@@ -295,13 +295,53 @@ class GitBackend extends Backend {
         $output = $this->system( $cmd, $rcode );
         if ($rcode == 0) {
             if ($output) {
-                $notifiedList = $output.', '.$mail;
-                $cmd = $gitphp_conf['gitbin'].' config hooks.mailinglist "'.$notifiedList.'"';
+                $notifiedList = $output.','.$mail;
+                $cmd = 'git config hooks.mailinglist "'.$notifiedList.'"';
             //it is the first mail to be added
             } else {
-                $cmd = $gitphp_conf['gitbin'].' config --add hooks.mailinglist "'.$mail.'"';
+                $cmd = 'git config --add hooks.mailinglist "'.$mail.'"';
             }
             $output = $this->system( $cmd, $rcode );
+        }
+        if ($rcode != 0 ) {
+            throw new GitBackendException($cmd.' -> '.$output);
+        }
+        return true;
+    }
+    
+    public function processMailToBeRemoved($output, $mail) {
+        if (preg_match('#(,)'.$mail.'(,?)#', $output)) {
+            return preg_replace('#(,)'.$mail.'(,?)#', '$2', $output);
+        } else if (preg_match('#'.$mail.'(,?)#', $output)) {
+            return preg_replace('#'.$mail.'(,?)#', '', $output);
+        }else {
+            return false;
+        }
+    }
+
+    /**
+     * It performs the mail remove from the git config hooks section
+     *
+     * @param String $repositoryPath
+     * @param String $mail
+     *
+     * @return Boolean else Exception
+     */
+    public function notificationRemoveMail($repositoryPath, $mail) {
+        chdir($this->getGitRootPath().'/'.$repositoryPath);
+        $cmd = " git config --get hooks.mailinglist ";
+        $rcode  = 0 ;
+        $output = $this->system( $cmd, $rcode );
+        if ($rcode == 0) {
+            if ($output) {
+                $notifiedList = $this->processMailToBeRemoved($output, $mail);
+                if ($notifiedList) {
+                    $cmd = 'git config hooks.mailinglist "'.$notifiedList.'"';
+                    $output = $this->system( $cmd, $rcode );
+                } else {
+                    return true;
+                }
+            }
         }
         if ($rcode != 0 ) {
             throw new GitBackendException($cmd.' -> '.$output);

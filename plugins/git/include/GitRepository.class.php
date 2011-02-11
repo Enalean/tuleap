@@ -492,6 +492,24 @@ class GitRepository implements DVCSRepository {
         }
         return true;
     }
+
+    /**
+     * Remove the @mail from the config git section and from DB
+     * @param String $mail
+     * 
+     * @return Boolean
+     */
+    public function notificationRemoveMail($mail) {
+        if (in_array($mail, $this->getNotifiedMails())) {
+            $postRecMailManager = $this->getPostReceiveMailManager();
+            if ($postRecMailManager->removeMailByRepository($this->getId(), $mail)) {
+                $this->setNotifiedMails();
+                return $this->getBackend()->notificationRemoveMail($this->getPath(), $mail);
+            }
+            return false;
+        }
+        return true;
+    }
 }
 
 ?>

@@ -130,6 +130,18 @@ class GitBackendTest extends UnitTestCase {
 
         $backend->setUpRepository($repo);
     }
+    
+    public function testProcessMailToBeRemoved() {
+        $backend = new GitBackend4SetUp($this);
+        $output = "codendiadm@codendi.org,codendiadm@codendi.com,codendiadm@codendi.net";
+        $mails = array('codendiadm@codendi.org', 'codendiadm@codendi.com', 'codendiadm@codendi.net');
+        $this->assertEqual($backend->processMailToBeRemoved($output, $mails[0]), "codendiadm@codendi.com,codendiadm@codendi.net");
+        $this->assertEqual($backend->processMailToBeRemoved($output, $mails[1]), "codendiadm@codendi.org,codendiadm@codendi.net");
+        $this->assertEqual($backend->processMailToBeRemoved($output, $mails[2]), "codendiadm@codendi.org,codendiadm@codendi.com");
+        $output = "codendiadm@codendi.org";
+        $this->assertEqual($backend->processMailToBeRemoved($output, $mails[0]), "");
+        $this->assertEqual($backend->processMailToBeRemoved($output, $mails[1]), "");
+    }
 }
 
 ?>
