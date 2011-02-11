@@ -30,7 +30,7 @@ class Git_PostReceiveMailManager {
      *
      * @return void
      */
-     function __construct() {
+    function __construct() {
         $this->dao = $this->_getDao();
     }
 
@@ -73,30 +73,6 @@ class Git_PostReceiveMailManager {
                 try {
                     $this->dao->removeNotification($row['repository_id'], $mail);
                 } catch (GitDaoException $e) {
-            $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_git','dao_error_remove_notification'));
-                }
-            }
-        }
-    }
-
-    /*
-     * Remove a notified mail address from all private repositories of a project
-     */
-    function removeMailByProjectPrivateRepository($groupId, $mail) {
-        $gitDao = new GitDao();
-        $repositoryList = $gitDao->getProjectRepositoryList($groupId);
-
-        if($repositoryList && !$repositoryList->isError()) {
-
-            foreach ($repositoryList as $row){
-                $repository   = new GitRepository();
-                $repository->setId( $row['repository_id'] );
-                try {
-                    $repository->load();
-                    if ($repository->isPrivate()) {
-                        $this->dao->removeNotification($row['repository_id'], $mail);
-                    }
-                } catch (GitDaoException $e) {
                     $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_git','dao_error_remove_notification'));
                 }
             }
@@ -104,11 +80,43 @@ class Git_PostReceiveMailManager {
     }
 
     /**
+     * Remove a notified mail address from all private repositories of a project
+     *
+     * @param Integer $groupId
+     * @param User $user
+     *
+     * @return void
+     */
+    function removeMailByProjectPrivateRepository($groupId, $user) {
+
+        if (!$user->isMember($groupId)) {
+            $gitDao = new GitDao();
+            $repositoryList = $gitDao->getProjectRepositoryList($groupId);
+
+            if($repositoryList && !$repositoryList->isError()) {
+
+                foreach ($repositoryList as $row){
+                    $repository   = new GitRepository();
+                    $repository->setId( $row['repository_id'] );
+                    try {
+                        $repository->load();
+                        if ($repository->isPrivate()) {
+                            $this->dao->removeNotification($row['repository_id'], $user->getEmail());
+                        }
+                    } catch (GitDaoException $e) {
+                        $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_git','dao_error_remove_notification'));
+                    }
+                }
+            }
+        }
+    }
+
+    /**
      * Returns the list of notified mails for post commit
-     * 
+     *
      * @param Integer $repositoryId
-     * 
-     * @return array 
+     *
+     * @return array
      */
     public function getNotificationMailsByRepositoryId($repositoryId) {
         $dar = $this->dao->searchByRepositoryId($repositoryId);
