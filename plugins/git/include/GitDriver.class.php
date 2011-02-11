@@ -188,6 +188,10 @@ class GitDriver implements DVCSDriver {
         return file_get_contents($repoPath.'/description');
     }
 
+    public function setConfig($repoPath, $key, $value) {
+
+    }
+
     //TODO check path 
     protected function setPermissions($path) {
         $rcode  = 0;

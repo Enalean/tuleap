@@ -20,13 +20,14 @@
 require_once('common/backend/Backend.class.php');
 require_once('GitDao.class.php');
 require_once('GitDriver.class.php');
+require_once('GitRepository.class.php');
 require_once('exceptions/GitBackendException.class.php');
+
 /**
  * Description of GitBackend
  *
  * @author Guillaume Storchi
  */
-
 class GitBackend extends Backend {
     
     private $driver;    
@@ -171,6 +172,26 @@ class GitBackend extends Backend {
         $this->addBlock($path.'/hooks/post-receive', $hook);
     }
 
+    public function setUpMailingHook($repository) {
+        $path = $this->getGitRootPath().$repository->getPath();
+
+        $url = 'https://'.$GLOBALS['sys_https_host'].
+            '/plugins/git/index.php/'.$repository->getProjectId().
+            '/view/'.$repository->getId().
+            '/?p='.basename($path).'&a=commitdiff&h=%%H';
+
+        $format = 'format:URL:    '.$url.'%%nAuthor: %%an <%%ae>%%nDate:   %%aD%%n%%n%%s%%n%%b';
+
+        $showrev = "t=%s; ".
+            "git log ".
+            "--name-status ".
+            "--pretty='".$format."' ".
+            "\$t~1..\$t";
+
+        $this->getDriver()->setConfig($path, 'hooks.showrev', $showrev);
+    }
+
+
     /**
      * INTERNAL METHODS
      */
@@ -182,7 +203,7 @@ class GitBackend extends Backend {
      *
      * @return Boolean
      */
-    protected function setUpRepository(GitRepository $repository) {
+    protected function setUpRepository($repository) {
         $path = $this->getGitRootPath().DIRECTORY_SEPARATOR.$repository->getPath();
         $this->getDriver()->activateHook('post-update', $path);
         $this->deployPostReceive($path);

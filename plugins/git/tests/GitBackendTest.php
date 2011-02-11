@@ -23,15 +23,19 @@ require_once dirname(__FILE__).'/../include/GitBackend.class.php';
 Mock::generatePartial('GitBackend', 'GitBackendTestVersion', array('getDao', 'getDriver'));
 
 Mock::generate('GitDriver');
-
+Mock::generate('GitRepository');
 
 class GitBackendTest extends UnitTestCase {
 
+    protected $_globals;
+
     public function setUp() {
+        $this->_globals = $GLOBALS;
         $this->fixturesPath = dirname(__FILE__).'/_fixtures';
     }
 
     public function tearDown() {
+        $GLOBALS = $this->_globals;
         @unlink($this->fixturesPath.'/tmp/hooks/post-receive');
     }
 
@@ -73,6 +77,24 @@ class GitBackendTest extends UnitTestCase {
         $backend->setReturnValue('getDriver', $driver);
 
         $backend->deployPostReceive($repoPath);
+    }
+
+    public function testAddMailingShowRev() {        
+        $GLOBALS['sys_https_host'] = 'codendi.org';
+
+        $repo = new MockGitRepository($this);
+        $repo->setReturnValue('getPath', 'prj/repo.git');
+        $repo->setReturnValue('getProjectId', 1750);
+        $repo->setReturnValue('getId', 290);
+
+        $driver = new MockGitDriver($this);
+        $driver->expectOnce('setConfig', array('/var/lib/codendi/gitroot/prj/repo.git', 'hooks.showrev', "t=%s; git log --name-status --pretty='format:URL:    https://codendi.org/plugins/git/index.php/1750/view/290/?p=repo.git&a=commitdiff&h=%%H%%nAuthor: %%an <%%ae>%%nDate:   %%aD%%n%%n%%s%%n%%b' \$t~1..\$t"));
+
+        $backend = new GitBackendTestVersion($this);
+        $backend->setGitRootPath(GitBackend::GIT_ROOT_PATH);
+        $backend->setReturnValue('getDriver', $driver);
+
+        $backend->setUpMailingHook($repo);
     }
 }
 
