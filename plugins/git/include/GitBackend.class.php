@@ -172,10 +172,24 @@ class GitBackend extends Backend {
         return true;
     }
 
+    /**
+     * Allow the update of the mail prefix
+     *
+     * @param Git_Repository $repository
+     */
     public function changeRepositoryMailPrefix($repository) {
         // call to $repository->getPath() may reset the mail prefix
-        $this->getDao()->save($repository);
-        return true;
+        if ($this->getDao()->save($repository)) {
+            chdir($this->getGitRootPath().'/'.$repository->getPath());
+            $rcode  = 0 ;
+            $cmd = 'git config hooks.emailprefix '.escapeshellarg($repository->getMailPrefix());
+            $output = $this->system( $cmd, $rcode );
+            if ($rcode != 0 ) {
+                throw new GitBackendException($cmd.' -> '.$output);
+            }
+            return true;
+        }
+        return false;
     }
 
     /**
