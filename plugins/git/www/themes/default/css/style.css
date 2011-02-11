@@ -17,6 +17,55 @@ textarea.text {
     width:400px;
 }
 
+#plugin_git_reference {
+    margin-top:1em;
+    border: 1px solid gray;
+    padding: 0em 1em;
+}
+
+#plugin_git_reference h2 {
+    padding-bottom:0;
+    margin-bottom:0;
+}
+
+#plugin_git_reference_author {
+    margin-top:0em;
+    margin-bottom:0.5em;
+    font-size:0.9em;
+    color:gray;
+}
+
+#plugin_git_confirm_deletion {
+    float: right;
+}
+
+#plugin_git_fork_form {
+    white-space:no-wrap;
+    margin-top:0em;
+}
+
+#plugin_git_clone_url {
+    margin-bottom:0.5em;
+}
+
+#plugin_git_access {
+    margin-top:0em;
+}
+
+#plugin_git_description textarea {
+    vertical-align:top;
+}
+
+#plugin_git_description {
+    margin-bottom:0.5em;
+    margin-top:1em;
+}
+
+#plugin_git_repo_parent {
+    margin-top:0em;
+    margin-bottom:0em;
+}
+
 td.first_col {
     width: 10em;
 }

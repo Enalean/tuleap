@@ -29,7 +29,7 @@ plugin_git	admin_reference_creation_submit	Create
 
 
 plugin_git	admin_fork_creation_title	Fork creation
-plugin_git	admin_fork_creation_input_name	Name
+plugin_git	admin_fork_creation_input_name	Fork name
 plugin_git	admin_fork_creation_input_parentname	Parent
 plugin_git	admin_fork_creation_submit	Fork
 plugin_git	admin_repolist_selectbox_choose	Choose one

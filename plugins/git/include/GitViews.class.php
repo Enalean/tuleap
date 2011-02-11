@@ -111,7 +111,7 @@ class GitViews extends PluginViews {
         /**
          * REPO VIEW
          */
-        public function view() {                    
+        public function view() {
             $gitphp      = '';
             $params       = $this->getData();
             if ( empty($params['repository']) ) {
@@ -120,7 +120,7 @@ class GitViews extends PluginViews {
             }
             $repository   = $params['repository'];
             $repoId       = $repository->getId();
-            $repoName     = $repository->getName();            
+            $repoName     = $repository->getName();
             $initialized  = $repository->isInitialized();
             $creator      = $repository->getCreator();
             $parent       = $repository->getParent();
@@ -148,39 +148,39 @@ class GitViews extends PluginViews {
                 echo '<div class="feedback_warning">'.$this->getText('help_init_reference_msg').'</div>';
                 $this->help('init', array('repo_name'=>$repoName));
             }
-            $this->repoId = $repoId;
             $this->_getBreadCrumb();
-
-         echo '<h2>'.$repoName.'</h2>';
+            
+            echo '<div id="plugin_git_reference">';
+            echo '<h2>'.$repoName.'</h2>';
 ?>
 <form id="repoAction" name="repoAction" method="POST" action="/plugins/git/?group_id=<?php echo $this->groupId?>">
     <input type="hidden" id="action" name="action" value="edit" />
     <input type="hidden" id="repo_id" name="repo_id" value="<?php echo $repoId?>" />
-    <em style="vertical-align:top;"><?php echo $this->getText('view_repo_description');
-            ?> : </em><textarea class="text" id="repo_desc" name="repo_desc"><?php echo $this->HTMLPurifier->purify($description, CODENDI_PURIFIER_CONVERT_HTML, $this->groupId);
-        ?></textarea>
-    <br />
-    <em><?php echo $this->getText('view_repo_creator');
-            ?> : </em><span><?php echo $creatorName;
-        ?></span>
-    <br />
-    <em><?php echo $this->getText('view_repo_creation_date');
-            ?> : </em><span><?php echo $creationDate;
-        ?></span>
-    <br />
+<?php
+            if ( $this->getController()->isAPermittedAction('del') && !$repository->hasChild() ) {
+                echo '<div id="plugin_git_confirm_deletion"><input type="submit" name="confirm_deletion" value="'. $this->getText('admin_deletion_submit') .'" /></div>';
+            }
+            echo '<p id="plugin_git_reference_author">'. 
+                $this->getText('view_repo_creator') 
+                .' '. 
+                $creatorName
+                .' on '.
+                $creationDate
+                .'</p>';
+            ?>
     <?php
     if ( !empty($parent) ) :
     ?>
-    <em><?php echo $this->getText('view_repo_parent');
-            ?> : </em><span><?php echo $this->_getRepositoryPageUrl( $parent->getId(), $parent->getName() );?></span>
-    <br />
+    <p id="plugin_git_repo_parent"><?php echo $this->getText('view_repo_parent');
+            ?>: <span><?php echo $this->_getRepositoryPageUrl( $parent->getId(), $parent->getName() );?></span>
+    </p>
     <?php
     endif;
     ?>
-    <em><?php echo $this->getText('view_repo_clone_url');
-            ?> : </em><span>git clone <?php echo $this->_getRepositoryUrl($repoName);
-        ?></span>
-    <br />
+    <p id="plugin_git_description"><?php echo $this->getText('view_repo_description');
+            ?>: <textarea class="text" id="repo_desc" name="repo_desc"><?php echo $this->HTMLPurifier->purify($description, CODENDI_PURIFIER_CONVERT_HTML, $this->groupId);
+        ?></textarea>
+    </p>
     <?php if ( $this->getController()->isAPermittedAction('save') ) :
         $public  = '';
         $private = '';
@@ -189,58 +189,44 @@ class GitViews extends PluginViews {
             $private = $checked;
         } else if ( $access == GitRepository::PUBLIC_ACCESS ) {
             $public  = $checked;
-        }        
+        }
         ?>
-    <em><?php echo $this->getText('view_repo_access');?> : </em><span><input type="radio" name="repo_access" value="private" <?php echo $private?>/>Private<input type="radio" name="repo_access" value="public"  <?php echo $public?>/>Public</span></em>
-    <?php endif;
+        <p id="plugin_git_access"><?php echo $this->getText('view_repo_access');?>: </em><span><input type="radio" name="repo_access" value="private" <?php echo $private?>/>Private<input type="radio" name="repo_access" value="public"  <?php echo $public?>/>Public</span>
+            <input type="submit" name="save" value="<?php echo $this->getText('admin_save_submit');?>" />
+        </p>
+        <?php
+        endif;
         if ($this->getController()->isAPermittedAction('notification')) :
         ?>
-    <br />
-    <em><?php echo $this->linkTo( '<b>'.$this->getText('notification').'</b>', '/plugins/git/?action=notification&group_id='.$this->groupId.'&repo_id='.$this->repoId, 'class=""'); ?></em>
-    <?php endif; ?>
-       <table style="width:100%;">
-           <tr>
-            <td style="text-align:left;">
-
-            <?php
-            if ( $initialized && $this->getController()->isAPermittedAction('clone') ) :
-            ?>                
-                <div style="white-space:no-wrap;">                                           
-                        <input type="hidden" id="parent_id" name="parent_id" value="<?php echo $repoId?>">
-                        <label for="repo_name"><?php echo $this->getText('admin_fork_creation_input_name');
-            ?> :</label>
-                        <input type="text" id="repo_name" name="repo_name" value="" /><input type="submit" name="clone" value="<?php echo $this->getText('admin_fork_creation_submit');?>" />
-                        <a href="#" onclick="$('help_fork').toggle();"> [?]</a>
-                </div>
-
-            <?php
-            endif;
-            ?>                
-            </td><td style="text-align:right;">
-            <?php
-            if ( $this->getController()->isAPermittedAction('save') ) :
-            ?>                                
-                    <input type="submit" name="save" value="<?php echo $this->getText('admin_save_submit');?>" />
-            <?php
-            endif;
-            ?>
-            <?php
-            if ( $this->getController()->isAPermittedAction('del') && !$repository->hasChild() ) :
-            ?>                
-                    <input type="submit" name="confirm_deletion" value="<?php echo $this->getText('admin_deletion_submit');?>" />
-            <?php
-            endif;
-            ?>                                  
-            </td>
-        </tr>
-    </table>
+        <p id="plugin_git_notification"><?php echo $this->linkTo( '<b>'.$this->getText('notification').'</b>', '/plugins/git/?action=notification&group_id='.$this->groupId.'&repo_id='.$repoId, 'class=""'); ?></p>
+        <?php
+        endif;
+        ?>
+    <p id="plugin_git_clone_url"><?php echo $this->getText('view_repo_clone_url');
+            ?>: <span>git clone <?php echo $this->_getRepositoryUrl($repoName);
+        ?></span>
+    </p>
+    <?php 
+        if ( $initialized && $this->getController()->isAPermittedAction('clone') ) :
+        ?>
+            <p id="plugin_git_fork_form">
+                    <input type="hidden" id="parent_id" name="parent_id" value="<?php echo $repoId?>">
+                    <label for="repo_name"><?php echo $this->getText('admin_fork_creation_input_name');
+        ?>: </label>
+                    <input type="text" id="repo_name" name="repo_name" value="" /><input type="submit" name="clone" value="<?php echo $this->getText('admin_fork_creation_submit');?>" />
+                    <a href="#" onclick="$('help_fork').toggle();"> [?]</a>
+            </p>
+        <?php
+            $this->help('fork', array('display'=>'none'));
+        endif;
+        ?>
 </form>
         <?php
-        $this->help('fork', array('display'=>'none'));
+        echo '</div>';
         if ( $initialized ) {
             echo $gitphp;
         }
-    }    
+    }
 
     /**
      * NOTIFICATION VIEW
