@@ -111,5 +111,6 @@ plugin_git	no_user	No user corresponding to entry
 plugin_git	mail_prefix_updated	Mail prefix updated
 plugin_git	mail_added	Mail added
 plugin_git	mail_removed	Mail removed
+plugin_git	mail_existing	The notification is already enabled for this email
 
 plugin_git	notified_mails_title	List of notified mails

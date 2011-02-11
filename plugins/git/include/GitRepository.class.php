@@ -476,21 +476,28 @@ class GitRepository implements DVCSRepository {
     }
 
     /**
+     * Verify if the notfication is alreadyu enabled for the given mail
+     * 
+     * @param String $mail
+     * @return Boolean
+     */
+    public function isAlreadyNotified ($mail) {
+        return (in_array($mail, $this->getNotifiedMails())) ;
+    }
+    /**
      * Add the @mail to the config git section and to DB
+     * 
      * @param String $mail
      * 
      * @return Boolean
      */
     public function notificationAddMail($mail) {
-        if (!in_array($mail, $this->getNotifiedMails())) {
             $this->notifiedMails[] = $mail;
             $postRecMailManager = $this->getPostReceiveMailManager();
             if ($postRecMailManager->addMail($this->getId(), $mail)) {
                 return $this->getBackend()->notificationAddMail($this->getPath(), $mail);
             }
             return false;
-        }
-        return true;
     }
 
     /**

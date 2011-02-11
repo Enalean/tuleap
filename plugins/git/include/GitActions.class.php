@@ -199,6 +199,10 @@ class GitActions extends PluginActions {
             $c->addError($this->getText('actions_params_error'));
             return false;
         }
+        if ($repository->isAlreadyNotified($mail)) {
+            $c->addInfo($this->getText('mail_existing'));
+            return true;
+        }
         $repository->notificationAddMail($mail);
         $c->addInfo($this->getText('mail_added'));
         return true;
