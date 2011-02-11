@@ -290,16 +290,16 @@ class GitBackend extends Backend {
      */
     public function notificationAddMail($repositoryPath, $mail) {
         chdir($this->getGitRootPath().'/'.$repositoryPath);
-        $cmd = " git config --get hooks.mailinglist ";
+        $cmd = ' git config --get hooks.mailinglist ';
         $rcode  = 0 ;
         $output = $this->system( $cmd, $rcode );
         if ($rcode == 0) {
             if ($output) {
                 $notifiedList = $output.','.$mail;
-                $cmd = 'git config hooks.mailinglist "'.$notifiedList.'"';
+                $cmd = 'git config hooks.mailinglist '.escapeshellarg($notifiedList);
             //it is the first mail to be added
             } else {
-                $cmd = 'git config --add hooks.mailinglist "'.$mail.'"';
+                $cmd = 'git config --add hooks.mailinglist '.escapeshellarg($mail);
             }
             $output = $this->system( $cmd, $rcode );
         }
@@ -329,14 +329,14 @@ class GitBackend extends Backend {
      */
     public function notificationRemoveMail($repositoryPath, $mail) {
         chdir($this->getGitRootPath().'/'.$repositoryPath);
-        $cmd = " git config --get hooks.mailinglist ";
+        $cmd = ' git config --get hooks.mailinglist ';
         $rcode  = 0 ;
         $output = $this->system( $cmd, $rcode );
         if ($rcode == 0) {
             if ($output) {
                 $notifiedList = $this->processMailToBeRemoved($output, $mail);
                 if ($notifiedList) {
-                    $cmd = 'git config hooks.mailinglist "'.$notifiedList.'"';
+                    $cmd = 'git config hooks.mailinglist '.escapeshellarg($notifiedList);
                     $output = $this->system( $cmd, $rcode );
                 } else {
                     return true;
