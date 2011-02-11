@@ -278,6 +278,35 @@ class GitBackend extends Backend {
     public function isNameAvailable($newName) {
         return ! $this->fileExists(self::GIT_ROOT_PATH.'/'.$newName);
     }
+
+    /**
+     * It performs the mail add to the git config hooks section
+     * 
+     * @param String $repositoryPath
+     * @param String $mail
+     * 
+     * @return Boolean else Exception
+     */
+    public function notificationAddMail($repositoryPath, $mail) {
+        chdir($this->getGitRootPath().'/'.$repositoryPath);
+        $cmd = " git config --get hooks.mailinglist ";
+        $rcode  = 0 ;
+        $output = $this->system( $cmd, $rcode );
+        if ($rcode == 0) {
+            if ($output) {
+                $notifiedList = $output.', '.$mail;
+                $cmd = $gitphp_conf['gitbin'].' config hooks.mailinglist "'.$notifiedList.'"';
+            //it is the first mail to be added
+            } else {
+                $cmd = $gitphp_conf['gitbin'].' config --add hooks.mailinglist "'.$mail.'"';
+            }
+            $output = $this->system( $cmd, $rcode );
+        }
+        if ($rcode != 0 ) {
+            throw new GitBackendException($cmd.' -> '.$output);
+        }
+        return true;
+    }
 }
 
 ?>

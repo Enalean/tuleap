@@ -195,12 +195,12 @@ class GitActions extends PluginActions {
 
     public function notificationAddMail($repositoryId, $mail) {
         $c = $this->getController();
-        $this->_loadRepository($repositoryId);
+        $repository = $this->_loadRepository($repositoryId);
         if (empty($repositoryId) || empty($mail)) {
             $c->addError($this->getText('actions_params_error'));
             return false;
         }
-        // TODO : perform the addition
+        $repository->notificationAddMail($mail);
         $c->addInfo($this->getText('mail_added'));
         return true;
     }

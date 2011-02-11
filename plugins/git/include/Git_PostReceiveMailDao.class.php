@@ -50,7 +50,7 @@ class Git_PostReceiveMailDao extends DataAccessObject {
                        ' VALUES'.
                        ' (%s, %d)',
         $this->da->quoteSmart($recipient),
-        $repositorytId);
+        $repositoryId);
         if (!$this->update($sql)) {
             throw new GitDaoException( $GLOBALS['Language']->getText('plugin_git', 'dao_error_create_notification') );
         }

@@ -53,6 +53,7 @@ class GitRepository implements DVCSRepository {
     private $deletionDate;
     private $access;
     private $mailPrefix;
+    private $notifiedMails;
 
     private $hooks;
     private $branches;
@@ -76,6 +77,7 @@ class GitRepository implements DVCSRepository {
         $this->isInitialized  = 0;
         $this->access         = 'private';
         $this->mailPrefix     = '[SCM]';
+        $this->notifiedMails = array();
 
         $this->hooks       = array();
         $this->branches    = array();
@@ -145,7 +147,11 @@ class GitRepository implements DVCSRepository {
         }
         return $this->backend;
     }
-
+    
+    public function getPostReceiveMailManager() {
+        return new Git_PostReceiveMailManager();
+    }
+    
     public function setId($id) {
         $this->id = $id;
     }
@@ -392,6 +398,14 @@ class GitRepository implements DVCSRepository {
     public function changeMailPrefix() {
         $this->getBackend()->changeRepositoryMailPrefix($this);
     }
+    
+    public function setNotifiedMails($notifiedMails) {
+        $this->notifiedMails = $notifiedMails;
+    }
+
+    public function getNotifiedMails($notifiedMails) {
+        return $this->notifiedMails;
+    }
 
     /**
      * Clone a repository, it inherits access
@@ -459,6 +473,24 @@ class GitRepository implements DVCSRepository {
     public function isNameAvailable($newName) {
         $newName = strtolower($newName);
         return $this->getBackend()->isNameAvailable($newName);
+    }
+
+    /**
+     * Add the @mail to the config git section and to DB
+     * @param String $mail
+     * 
+     * @return Boolean
+     */
+    public function notificationAddMail($mail) {
+        if (!in_array($mail, $this->getNotifiedMails())) {
+            $this->notifiedMails[] = $mail;
+            $postRecMailManager = $this->getPostReceiveMailManager();
+            if ($postRecMailManager->addMail($this->getId(), $mail)) {
+                return $this->getBackend()->notificationAddMail($this->getPath(), $mail);
+            }
+            return false;
+        }
+        return true;
     }
 }
 

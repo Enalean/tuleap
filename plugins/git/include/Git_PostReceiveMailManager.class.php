@@ -19,7 +19,7 @@
  */
 
 require_once('Git_PostReceiveMailDao.class.php');
-require_once('GitRepository.class.php');
+//require_once('GitRepository.class.php');
 
 class Git_PostReceiveMailManager {
 
@@ -39,9 +39,9 @@ class Git_PostReceiveMailManager {
      */
     function addMail($repositoryId, $mail) {
         try {
-            $this->dao->removeNotification($repositoryId, $mail);
+            $this->dao->createNotification($repositoryId, $mail);
         } catch (GitDaoException $e) {
-            $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_git','dao_error_create_notification'));
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_git','dao_error_create_notification'));
             return false;
         }
         return true;
@@ -54,7 +54,7 @@ class Git_PostReceiveMailManager {
         try {
             $this->dao->removeNotification($repositoryId, $mail);
         } catch (GitDaoException $e) {
-            $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_git','dao_error_remove_notification'));
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_git','dao_error_remove_notification'));
             return false;
         }
         return true;
