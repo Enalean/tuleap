@@ -150,8 +150,18 @@ class GitViews extends PluginViews {
             }
             $this->_getBreadCrumb();
             
+            $accessType = '<span class="plugin_git_repo_privacy" title=';
+            if ( $access == GitRepository::PRIVATE_ACCESS ) {
+                $accessType .= '"'.$this->getText('view_repo_access_private').'">';
+                $accessType .= '<img src="'.util_get_image_theme('ic/lock.png').'" />';
+            } else if ( $access == GitRepository::PUBLIC_ACCESS ) {
+                $accessType .= '"'.$this->getText('view_repo_access_public').'">';
+                $accessType .= '<img src="'.util_get_image_theme('ic/lock-unlock.png').'" />';
+            }
+            $accessType .= '</span>';
+
             echo '<div id="plugin_git_reference">';
-            echo '<h2>'.$repoName.'</h2>';
+            echo '<h2>'.$accessType.$repoName.'</h2>';
 ?>
 <form id="repoAction" name="repoAction" method="POST" action="/plugins/git/?group_id=<?php echo $this->groupId?>">
     <input type="hidden" id="action" name="action" value="edit" />
@@ -176,15 +186,7 @@ class GitViews extends PluginViews {
     if (!empty($description)) {
         echo '<p id="plugin_git_description">'.$this->HTMLPurifier->purify($description, CODENDI_PURIFIER_CONVERT_HTML, $this->groupId).'</p>';
     }
-
-        if ( $access == GitRepository::PRIVATE_ACCESS ) {
-            $accessType = $this->getText('view_repo_access_private');
-        } else if ( $access == GitRepository::PUBLIC_ACCESS ) {
-            $accessType  = $this->getText('view_repo_access_public');
-        }
-        ?>
-        <p id="plugin_git_access"><?php echo $this->getText('view_repo_access').' : '.$accessType;?>
-        </p>
+    ?>
     <p id="plugin_git_clone_url"><?php echo $this->getText('view_repo_clone_url');
             ?>: <input id="plugin_git_clone_field" type="text" readonly="readonly" value="git clone <?php echo $this->_getRepositoryUrl($repoName); ?>" size="90" />
     </p>

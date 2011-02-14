@@ -17,10 +17,12 @@ textarea.text {
     width:400px;
 }
 
+.plugin_git_repo_privacy {
+    margin-right: 0.5em;
+}
+
 #plugin_git_reference {
     margin-top:1em;
-    border: 1px solid gray;
-    padding: 0em 1em;
 }
 
 #plugin_git_reference h2 {
