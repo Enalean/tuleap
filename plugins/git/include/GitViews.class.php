@@ -128,9 +128,9 @@ class GitViews extends PluginViews {
             $description  = $repository->getDescription();
             $creatorName  = '';
             if ( !empty($creator) ) {
-                $creatorName  = $creator->getName();
+                $creatorName  = UserHelper::instance()->getLinkOnUserFromUserId($creator->getId());
             }
-            $creationDate = $repository->getCreationDate();
+            $creationDate = html_time_ago(strtotime($repository->getCreationDate()));
 
             if ( $initialized ) {
                 ob_start();
@@ -161,7 +161,7 @@ class GitViews extends PluginViews {
                 $this->getText('view_repo_creator') 
                 .' '. 
                 $creatorName
-                .' on '.
+                .' '.
                 $creationDate
                 .'</p>';
             ?>
@@ -325,7 +325,7 @@ class GitViews extends PluginViews {
         $_REQUEST['git_root_path'] = GitBackend::GIT_ROOT_PATH;
         $_REQUEST['action']        = 'view';
         if ( empty($_REQUEST['noheader']) ) {
-            echo '<hr>';
+            //echo '<hr>';
             echo '<div id="gitphp">';
         }
         include( dirname(__FILE__).'/../gitphp/index.php' );
