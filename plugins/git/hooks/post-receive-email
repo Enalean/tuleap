@@ -199,10 +199,12 @@ generate_email()
 	if [ -z "$describe" ]; then
 		describe=$rev
 	fi
-
-	if [ "$oldrev" != "0000000000000000000000000000000000000000" -a "$newrev" != "0000000000000000000000000000000000000000" ]; then
-		authors=( `git log --pretty=format:%aN $oldrev..$newrev | awk '!x[$0]++' | tr '\n' ','| sed 's/\(.*\)./\1/'`)
-		authors="by "$authors
+        
+	# Author list (unique, separted by comma)
+	authors=""
+	if [ ${change_type} = "update" ]; then
+		authors=$(git log --pretty='format:%an' $oldrev..$newrev | sort -u | tr "\n" "," | sed -e 's/,$//' -e 's/,/, /g')
+		authors="by $authors"
 	fi
 
 	generate_email_header
@@ -233,15 +235,11 @@ generate_email_header()
 	# Generate header
 	cat <<-EOF
 	To: $recipients
-	Subject: ${emailprefix} $refname_type $short_refname ${change_type}d $authors
+	Subject: ${emailprefix}$refname_type $short_refname ${change_type}d $authors
 	X-Git-Refname: $refname
 	X-Git-Reftype: $refname_type
 	X-Git-Oldrev: $oldrev
 	X-Git-Newrev: $newrev
-
-	This is an automated email from the git hooks/post-receive script. It was
-	generated because a ref change was pushed to the repository containing
-	the project "$projectdesc".
 
 	The $refname_type, $short_refname has been ${change_type}d
 	EOF
@@ -252,10 +250,10 @@ generate_email_footer()
 	SPACE=" "
 	cat <<-EOF
 
-
-	hooks/post-receive
 	--${SPACE}
-	$projectdesc
+	This is an automated email from the git hooks/post-receive script. It was
+	generated because a ref change was pushed to the repository containing
+	the project "$projectdesc".
 	EOF
 }
 
@@ -425,10 +423,6 @@ generate_update_branch_email()
 
 	echo ""
 	if [ -z "$rewind_only" ]; then
-		echo "Those revisions listed above that are new to this repository have"
-		echo "not appeared on any other notification email; so we list those"
-		echo "revisions in full, below."
-
 		echo ""
 		echo $LOGBEGIN
 		show_new_revisions
