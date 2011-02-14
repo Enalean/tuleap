@@ -22,20 +22,52 @@ textarea.text {
 }
 
 #plugin_git_reference {
-    margin-top:1em;
+    margin-top: 1em;
+    width:      600px;
 }
 
 #plugin_git_reference h2 {
-    padding-bottom:0;
-    margin-bottom:0;
-    margin-top: 0.25em;
+    float:          left;
+    padding-bottom: 0;
+    padding-top:    0;
+    margin-bottom:  0;
+    margin-top:     0;
+}
+
+#plugin_git_repository_actions {
+    float:      right;
+    list-style: none;
+    align:      left;
+    margin:     0 0 0 10em;
+}
+
+#plugin_git_repository_actions li {
+    display: inline;
+}
+
+#plugin_git_repository_actions a {
+  background:          no-repeat;
+  background-position: 5px center;
+  padding-left:        24px;
+}
+
+#plugin_git_repository_actions a.repo_fork {
+    background-image: url('../images/fork.png');
+}
+
+#plugin_git_repository_actions a.repo_admin {
+    background-image: url('../images/edit.png');
 }
 
 #plugin_git_reference_author {
-    margin-top:0em;
-    margin-bottom:0.5em;
+    clear: both;
+    margin:0;
     font-size:0.9em;
     color:gray;
+}
+
+#plugin_git_description {
+    margin: 0.5em 0 0.5em 0;
 }
 
 #plugin_git_confirm_deletion {
@@ -48,26 +80,19 @@ textarea.text {
 }
 
 #plugin_git_clone_url {
-    margin-bottom:0.5em;
+    margin: 0;
 }
 
 #plugin_git_clone_field {
-    border: 1px solid rgb(196,196,196);
-    font-family: Monaco, 'Courier New', 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', monospace;
+    cursor:       text;
+    border:       1px solid rgb(196,196,196);
+    font-family:  Monaco, 'Courier New', 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', monospace;
     padding-left: 5px;
-}
-
-#plugin_git_access {
-    margin-top:0em;
+    width:        80%;
 }
 
 #plugin_git_description textarea {
     vertical-align:top;
-}
-
-#plugin_git_description {
-    margin-bottom:0.5em;
-    margin-top:1em;
 }
 
 #plugin_git_repo_parent {

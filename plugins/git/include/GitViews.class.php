@@ -150,18 +150,34 @@ class GitViews extends PluginViews {
             }
             $this->_getBreadCrumb();
             
+            // Access type
             $accessType = '<span class="plugin_git_repo_privacy" title=';
-            if ( $access == GitRepository::PRIVATE_ACCESS ) {
+            switch ($access) {
+            case GitRepository::PRIVATE_ACCESS:
                 $accessType .= '"'.$this->getText('view_repo_access_private').'">';
                 $accessType .= '<img src="'.util_get_image_theme('ic/lock.png').'" />';
-            } else if ( $access == GitRepository::PUBLIC_ACCESS ) {
+                break;
+            case GitRepository::PUBLIC_ACCESS:
                 $accessType .= '"'.$this->getText('view_repo_access_public').'">';
                 $accessType .= '<img src="'.util_get_image_theme('ic/lock-unlock.png').'" />';
+                break;
             }
             $accessType .= '</span>';
 
+            // Actions
+            $repoActions = '<ul id="plugin_git_repository_actions">';
+            if ($this->getController()->isAPermittedAction('repo_management')) {
+                $repoActions .= '<li>'.$this->linkTo($this->getText('admin_repo_management'), '/plugins/git/?action=repo_management&group_id='.$this->groupId.'&repo_id='.$repoId, 'class="repo_admin"').'</li>';
+            }
+
+            if ($initialized && $this->getController()->isAPermittedAction('clone')) {
+                $repoActions .= '<li>'.$this->linkTo($this->getText('admin_fork_creation_title'), '/plugins/git/?action=fork&group_id='.$this->groupId.'&repo_id='.$repoId, 'class="repo_fork"').'</li>';
+            }
+            $repoActions .= '</ul>';
+
             echo '<div id="plugin_git_reference">';
             echo '<h2>'.$accessType.$repoName.'</h2>';
+            echo $repoActions;
 ?>
 <form id="repoAction" name="repoAction" method="POST" action="/plugins/git/?group_id=<?php echo $this->groupId?>">
     <input type="hidden" id="action" name="action" value="edit" />
@@ -188,20 +204,8 @@ class GitViews extends PluginViews {
     }
     ?>
     <p id="plugin_git_clone_url"><?php echo $this->getText('view_repo_clone_url');
-            ?>: <input id="plugin_git_clone_field" type="text" readonly="readonly" value="git clone <?php echo $this->_getRepositoryUrl($repoName); ?>" size="90" />
+            ?>: <input id="plugin_git_clone_field" type="text" value="git clone <?php echo $this->_getRepositoryUrl($repoName); ?>" />
     </p>
-    <?php
-        if ($this->getController()->isAPermittedAction('repo_management')) :
-        ?>
-        <p id="plugin_git_notification"><?php echo $this->linkTo( '<b>'.$this->getText('admin_repo_management').'</b>', '/plugins/git/?action=repo_management&group_id='.$this->groupId.'&repo_id='.$repoId, 'class=""'); ?></p>
-        <?php
-        endif;
-        if ( $initialized && $this->getController()->isAPermittedAction('clone') ) :
-        ?>
-        <p id="plugin_git_fork_form"><?php echo $this->linkTo( '<b>'.$this->getText('admin_fork_creation_title').'</b>', '/plugins/git/?action=fork&group_id='.$this->groupId.'&repo_id='.$repoId, 'class=""'); ?></p>
-        <?php
-        endif;
-        ?>
 </form>
         <?php
         echo '</div>';
