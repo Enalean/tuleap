@@ -173,12 +173,10 @@ class GitViews extends PluginViews {
     </p>
     <?php
     endif;
-    ?>
-    <p id="plugin_git_description"><?php echo $this->getText('view_repo_description');
-            ?>: <?php echo $this->HTMLPurifier->purify($description, CODENDI_PURIFIER_CONVERT_HTML, $this->groupId);
-        ?></textarea>
-    </p>
-    <?php
+    if (!empty($description)) {
+        echo '<p id="plugin_git_description">'.$this->HTMLPurifier->purify($description, CODENDI_PURIFIER_CONVERT_HTML, $this->groupId).'</p>';
+    }
+
         if ( $access == GitRepository::PRIVATE_ACCESS ) {
             $accessType = $this->getText('view_repo_access_private');
         } else if ( $access == GitRepository::PUBLIC_ACCESS ) {
@@ -188,8 +186,7 @@ class GitViews extends PluginViews {
         <p id="plugin_git_access"><?php echo $this->getText('view_repo_access').' : '.$accessType;?>
         </p>
     <p id="plugin_git_clone_url"><?php echo $this->getText('view_repo_clone_url');
-            ?>: <span>git clone <?php echo $this->_getRepositoryUrl($repoName);
-        ?></span>
+            ?>: <input id="plugin_git_clone_field" type="text" readonly="readonly" value="git clone <?php echo $this->_getRepositoryUrl($repoName); ?>" size="90" />
     </p>
     <?php
         if ($this->getController()->isAPermittedAction('repo_management')) :

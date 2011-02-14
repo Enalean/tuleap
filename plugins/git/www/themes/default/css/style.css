@@ -26,6 +26,7 @@ textarea.text {
 #plugin_git_reference h2 {
     padding-bottom:0;
     margin-bottom:0;
+    margin-top: 0.25em;
 }
 
 #plugin_git_reference_author {
@@ -46,6 +47,12 @@ textarea.text {
 
 #plugin_git_clone_url {
     margin-bottom:0.5em;
+}
+
+#plugin_git_clone_field {
+    border: 1px solid rgb(196,196,196);
+    font-family: Monaco, 'Courier New', 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', monospace;
+    padding-left: 5px;
 }
 
 #plugin_git_access {
