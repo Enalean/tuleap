@@ -175,7 +175,7 @@ class GitBackend extends Backend {
     /**
      * Allow the update of the mail prefix
      *
-     * @param Git_Repository $repository
+     * @param GitRepository $repository
      */
     public function changeRepositoryMailPrefix($repository) {
         // call to $repository->getPath() may reset the mail prefix
@@ -213,6 +213,11 @@ class GitBackend extends Backend {
         $this->addBlock($path.'/hooks/post-receive', $hook);
     }
 
+    /**
+     * Configure mail output to link commit to gitweb 
+     *
+     * @param GitRepository $repository
+     */
     public function setUpMailingHook($repository) {
         $path = $this->getGitRootPath().$repository->getPath();
 

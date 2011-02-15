@@ -200,7 +200,11 @@ class GitDriver implements DVCSDriver {
     }
 
     /**
+     * Set one configuration key
      *
+     * @param String $repoPath Path to the repository
+     * @param String $key      Key to modify
+     * @param String $value    Value to set
      */
     public function setConfig($repoPath, $key, $value) {
         if ($value === '') {
