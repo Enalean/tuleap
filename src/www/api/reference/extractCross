@@ -43,10 +43,15 @@ $reference_manager =& ReferenceManager::instance();
 $request =& HTTPRequest::instance();
 
 
- 
-if (!$request->get('group_id'))
-    $group_id=100;
- else $group_id=$request->get('group_id');
+if ($request->existAndNonEmpty('group_id')) {
+    $group_id = $request->getValidated('group_id', 'uint', 100);
+ } else {
+    $group_name = $request->getValidated('group_name', 'string', false);
+    if ($group_name != false) {
+        $project = ProjectManager::instance()->getProjectByUnixName($group_name);
+        $group_id = $project->getID();
+    }
+}
 
 if (!$request->get('text')||!$request->get('login')||!$request->get('type')||!$request->get('rev_id')) {
     echo $GLOBALS['Language']->getText('include_exit', 'missing_param_err')."\n";
