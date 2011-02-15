@@ -192,19 +192,22 @@ class GitActions extends PluginActions {
         return true;
     }
 
-    public function notificationAddMail($repositoryId, $mail) {
+    public function notificationAddMail($repositoryId, $mails) {
         $c = $this->getController();
         $repository = $this->_loadRepository($repositoryId);
-        if (empty($repositoryId) || empty($mail)) {
+        if (empty($repositoryId) || empty($mails)) {
             $c->addError($this->getText('actions_params_error'));
             return false;
         }
-        if ($repository->isAlreadyNotified($mail)) {
-            $c->addInfo($this->getText('mail_existing'));
-            return true;
+        foreach ($mails as $mail) {
+            if ($repository->isAlreadyNotified($mail)) {
+                $c->addInfo($this->getText('mail_existing'));
+            } else {
+                if ($repository->notificationAddMail($mail)) {
+                    $c->addInfo($this->getText('mail_added'));
+                }
+            }
         }
-        $repository->notificationAddMail($mail);
-        $c->addInfo($this->getText('mail_added'));
         return true;
     }
 

@@ -420,13 +420,13 @@ class GitViews extends PluginViews {
         <tr>
             <td class="first_col" ><label for="add_mail_label"><?php echo $this->getText('add_mail');
         ?></label></td>
-            <td><input id="add_mail" name="add_mail" class="add_mail" type="text" value="" /></td>
+            <td><textarea id="add_mail" name="add_mail" class="add_mail" type="text"></textarea></td>
             <td rowspan="2"><input type="submit" id="add_mail_submit" name="add_mail_submit" value="<?php echo $this->getText('add_mail_submit')?>"></td>
         </tr>
     </table>
 </form>
         <?php
-        $js = "new UserAutoCompleter('add_mail', '".util_get_dir_image_theme()."', false);";
+        $js = "new UserAutoCompleter('add_mail', '".util_get_dir_image_theme()."', true);";
         $GLOBALS['Response']->includeFooterJavascriptSnippet($js);
     }
 

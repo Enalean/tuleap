@@ -215,19 +215,20 @@ class Git extends PluginController {
                 break;
             #add mail
             case 'add_mail':
-                $valid = new Valid_Email('add_mail');
-                $valid->required();
-                if($this->request->valid($valid)) {
-                    $mail = $this->request->get('add_mail');
-                } else {
-                    $valid = new Valid_String('add_mail');
-                    $valid->required();
-                    if($this->request->valid($valid)) {
-                        $um = UserManager::instance();
-                        $user = $um->findUser($this->request->get('add_mail'));
+                $validMails = array();
+                $mails      = array_map('trim', preg_split('/[,;]/', $this->request->get('add_mail')));
+                $rule       = new Rule_Email();
+                $um         = UserManager::instance();
+                foreach ($mails as $mail) {
+                    if ($rule->isValid($mail)) {
+                        $validMails[] = $mail;
+                    } else {
+                        $user = $um->findUser($mail);
                         if ($user) {
                             $mail = $user->getEmail();
-                            if(empty($mail)) {
+                            if ($mail) {
+                                $validMails[] = $mail;
+                            } else {
                                 $this->addError($this->getText('no_user_mail'));
                             }
                         } else {
@@ -235,7 +236,7 @@ class Git extends PluginController {
                         }
                     }
                 }
-                $this->addAction('notificationAddMail', array($repoId, $mail));
+                $this->addAction('notificationAddMail', array($repoId, $validMails));
                 $this->addView('repoManagement');
                 break;
             #remove mail
