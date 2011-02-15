@@ -100,5 +100,26 @@ class GitDriverTest extends UnitTestCase {
         $config = parse_ini_file($this->fixturesPath.'/tmp/config', true);
         $this->assertEqual($config['hooks']['showrev'], 't=%s; git log --name-status --pretty=\'format:URL:    https://codendi.org/plugins/git/index.php/1750/view/290/?p=git.git&a=commitdiff&h=%%H%%nAuthor: %%an <%%ae>%%nDate:   %%aD%%n%%n%%s%%n%%b\' $t~1..$t');
     }
+
+    public function testSetConfigWithSpace() {
+        copy($this->fixturesPath.'/config', $this->fixturesPath.'/tmp/config');
+
+        $driver = new GitDriver();
+        $driver->setConfig($this->fixturesPath.'/tmp', 'hooks.showrev', '[MyVal] ');
+
+        $config = parse_ini_file($this->fixturesPath.'/tmp/config', true);
+        $this->assertEqual($config['hooks']['showrev'], '[MyVal] ');
+    }
+
+    public function testSetEmptyConfig() {
+        copy($this->fixturesPath.'/config', $this->fixturesPath.'/tmp/config');
+
+        $driver = new GitDriver();
+        $driver->setConfig($this->fixturesPath.'/tmp', 'hooks.showrev', '');
+
+        $config = parse_ini_file($this->fixturesPath.'/tmp/config', true);
+        $this->assertEqual($config['hooks']['showrev'], '');
+    }
+
 }
 ?>

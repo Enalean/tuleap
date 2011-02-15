@@ -199,9 +199,17 @@ class GitDriver implements DVCSDriver {
         return file_get_contents($repoPath.'/description');
     }
 
+    /**
+     *
+     */
     public function setConfig($repoPath, $key, $value) {
+        if ($value === '') {
+            $value = "''";
+        } else {
+            $value = escapeshellarg($value);
+        }
         $configFile = $repoPath.'/config';
-        $cmd = 'git config --file '.$configFile.' --replace-all '.escapeshellarg($key).' '.escapeshellarg($value).' 2>&1';
+        $cmd = 'git config --file '.$configFile.' --replace-all '.escapeshellarg($key).' '.$value.' 2>&1';
         $ret = -1;
         $out = array();
         exec($cmd, $out, $ret);

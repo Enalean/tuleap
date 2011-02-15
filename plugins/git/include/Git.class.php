@@ -207,6 +207,8 @@ class Git extends PluginController {
                 $valid->required();
                 if($this->request->valid($valid)) {
                     $mailPrefix = $this->request->get('mail_prefix');
+                } else {
+                    $mailPrefix = '';
                 }
                 $this->addAction('notificationUpdatePrefix', array($repoId, $mailPrefix));
                 $this->addView('repoManagement');
