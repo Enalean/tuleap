@@ -39,16 +39,14 @@ require_once('common/reference/ReferenceManager.class.php');
 
 header('Content-type: text/plain');
 
-$reference_manager =& ReferenceManager::instance();
-$request =& HTTPRequest::instance();
-
+$request = HTTPRequest::instance();
 
 if ($request->existAndNonEmpty('group_id')) {
     $group_id = $request->getValidated('group_id', 'uint', 100);
  } else {
     $group_name = $request->getValidated('group_name', 'string', false);
     if ($group_name != false) {
-        $project = ProjectManager::instance()->getProjectByUnixName($group_name);
+        $project  = ProjectManager::instance()->getProjectByUnixName(trim($group_name));
         $group_id = $project->getID();
     }
 }
@@ -59,24 +57,17 @@ if (!$request->get('text')||!$request->get('login')||!$request->get('type')||!$r
     exit;
  }
  
-
-$user_name=trim($request->get('login'));
-if($user_name=="nobody"){
-    $user_name="None";
+$login = $request->getValidated('login', 'string', 'None');
+$user = UserManager::instance()->getUserByUserName(trim($login));
+if ($user !== null) {
+    $user_id = $user->getId();
+} else {
+    $user_id = 100;
 }
+
 $text=trim($request->get('text'));
 $source_id=trim($request->get('rev_id'));
 $source_type=trim($request->get('type'));
-
-$sql="SELECT user_id from user where user_name='".$user_name."'";
-$result = db_query($sql);
-$row = db_fetch_array($result);
-if(($result)&&!(db_numrows($result) < 1)){
-	$user_id=$row["user_id"];
-}else{
-	$user_id=100;
-}
-
 
 $reference_manager =& ReferenceManager::instance();
 $reference_manager->extractCrossRef($text,$source_id,$source_type,$group_id,$user_id);    
