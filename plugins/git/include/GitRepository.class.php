@@ -495,7 +495,7 @@ class GitRepository implements DVCSRepository {
             $this->notifiedMails[] = $mail;
             $postRecMailManager = $this->getPostReceiveMailManager();
             if ($postRecMailManager->addMail($this->getId(), $mail)) {
-                return $this->getBackend()->notificationAddMail($this->getPath(), $mail);
+                return $this->getBackend()->changeRepositoryMailingList($this);
             }
             return false;
     }
@@ -511,7 +511,7 @@ class GitRepository implements DVCSRepository {
             $postRecMailManager = $this->getPostReceiveMailManager();
             if ($postRecMailManager->removeMailByRepository($this->getId(), $mail)) {
                 $this->setNotifiedMails();
-                return $this->getBackend()->notificationRemoveMail($this->getPath(), $mail);
+                return $this->getBackend()->changeRepositoryMailingList($this);
             }
             return false;
         }

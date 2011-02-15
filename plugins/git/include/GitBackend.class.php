@@ -182,9 +182,22 @@ class GitBackend extends Backend {
         if ($this->getDao()->save($repository)) {
             $path = $this->getGitRootPath().$repository->getPath();
             $this->getDriver()->setConfig($path, 'hooks.emailprefix', $repository->getMailPrefix());
+            $this->setUpMailingHook($repository);
             return true;
         }
         return false;
+    }
+
+    /**
+     * Update list of people notified by post-receive-email hook
+     *
+     * @param GitRepository $repository
+     */
+    public function changeRepositoryMailingList($repository) {
+        $path = $this->getGitRootPath().$repository->getPath();
+        $this->getDriver()->setConfig($path, 'hooks.mailinglist', implode(',', $repository->getNotifiedMails()));
+        $this->setUpMailingHook($repository);
+        return true;
     }
 
     /**
@@ -287,74 +300,6 @@ class GitBackend extends Backend {
      */
     public function isNameAvailable($newName) {
         return ! $this->fileExists(self::GIT_ROOT_PATH.'/'.$newName);
-    }
-
-    /**
-     * It performs the mail add to the git config hooks section
-     * 
-     * @param String $repositoryPath
-     * @param String $mail
-     * 
-     * @return Boolean else Exception
-     */
-    public function notificationAddMail($repositoryPath, $mail) {
-        chdir($this->getGitRootPath().'/'.$repositoryPath);
-        $cmd = ' git config --get hooks.mailinglist ';
-        $rcode  = 0 ;
-        $output = $this->system( $cmd, $rcode );
-        if ($rcode == 0) {
-            $notifiedList = $output.','.$mail;
-            $cmd = 'git config hooks.mailinglist '.escapeshellarg($notifiedList);
-            //If the key does not exist, the error key equals 1
-            //It is the first mail to be added
-        } else {
-            $cmd = 'git config --add hooks.mailinglist '.escapeshellarg($mail);
-        }
-        $output = $this->system( $cmd, $rcode );
-        if ($rcode != 0 ) {
-            throw new GitBackendException($cmd.' -> '.$output);
-        }
-        return true;
-    }
-
-    public function processMailToBeRemoved($output, $mail) {
-        if (preg_match('#(,)'.$mail.'(,?)#', $output)) {
-            return preg_replace('#(,)'.$mail.'(,?)#', '$2', $output);
-        } else if (preg_match('#'.$mail.'(,?)#', $output)) {
-            return preg_replace('#'.$mail.'(,?)#', '', $output);
-        }else {
-            return false;
-        }
-    }
-
-    /**
-     * It performs the mail remove from the git config hooks section
-     *
-     * @param String $repositoryPath
-     * @param String $mail
-     *
-     * @return Boolean else Exception
-     */
-    public function notificationRemoveMail($repositoryPath, $mail) {
-        chdir($this->getGitRootPath().'/'.$repositoryPath);
-        $cmd = ' git config --get hooks.mailinglist ';
-        $rcode  = 0 ;
-        $output = $this->system( $cmd, $rcode );
-        if ($rcode == 0) {
-            if ($output) {
-                $notifiedList = $this->processMailToBeRemoved($output, $mail);
-                if ($notifiedList) {
-                    $cmd = 'git config hooks.mailinglist '.escapeshellarg($notifiedList);
-                    $output = $this->system( $cmd, $rcode );
-                } else {
-                    return true;
-                }
-            }
-        }
-        if ($rcode != 0 ) {
-            throw new GitBackendException($cmd.' -> '.$output);
-        }
-        return true;
     }
 }
 
