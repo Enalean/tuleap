@@ -231,9 +231,11 @@ generate_email()
 
 generate_email_header()
 {
+	sender=$(getent passwd $(whoami) | cut -d':' -f5)
 	# --- Email (all stdout will be the email)
 	# Generate header
 	cat <<-EOF
+	From: $sender
 	To: $recipients
 	Subject: ${emailprefix}$refname_type $short_refname ${change_type}d $authors
 	X-Git-Refname: $refname
