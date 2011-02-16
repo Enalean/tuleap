@@ -263,7 +263,7 @@ class GitViews extends PluginViews {
             $public  = $checked;
         }
         ?>
-        <p id="plugin_git_access"><?php echo $this->getText('view_repo_access');?>: </em><span><input type="radio" name="repo_access" value="private" <?php echo $private?>/>Private<input type="radio" name="repo_access" value="public"  <?php echo $public?>/>Public</span>
+        <p id="plugin_git_access"><?php echo $this->getText('view_repo_access');?>: <span><input type="radio" name="repo_access" value="private" <?php echo $private?>/>Private<input type="radio" name="repo_access" value="public"  <?php echo $public?>/>Public</span>
             <input type="submit" name="save" value="<?php echo $this->getText('admin_save_submit');?>" />
         </p>
         </form>
@@ -429,7 +429,7 @@ class GitViews extends PluginViews {
         <tr>
             <td class="plugin_git_first_col" ><label for="add_mail_label"><?php echo $this->getText('add_mail');?>
                 <a href="#" onclick="$('help_addMail').toggle();"> [?]</a></label></td>
-            <td><textarea id="add_mail" name="add_mail" class="plugin_git_add_mail" type="text"></textarea></td>
+            <td><textarea id="add_mail" name="add_mail" class="plugin_git_add_mail"></textarea></td>
             <td rowspan="2"><input type="submit" id="add_mail_submit" name="add_mail_submit" value="<?php echo $this->getText('add_mail_submit')?>"></td>
         </tr>
     </table>
