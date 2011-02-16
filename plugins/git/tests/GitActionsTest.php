@@ -27,7 +27,7 @@ Mock::generate('GitRepository');
 
 class GitActionsTest extends UnitTestCase {
 
-    function testRepositoryNotification() {
+    function testRepoManagement() {
         $gitAction = new GitActionsTestVersion();
         $git = new MockGit($this);
         $gitAction->setReturnValue('getController', $git);

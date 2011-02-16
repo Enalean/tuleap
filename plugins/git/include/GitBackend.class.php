@@ -178,7 +178,6 @@ class GitBackend extends Backend {
      * @param GitRepository $repository
      */
     public function changeRepositoryMailPrefix($repository) {
-        // call to $repository->getPath() may reset the mail prefix
         if ($this->getDao()->save($repository)) {
             $path = $this->getGitRootPath().$repository->getPath();
             $this->getDriver()->setConfig($path, 'hooks.emailprefix', $repository->getMailPrefix());
