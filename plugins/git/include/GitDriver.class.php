@@ -161,33 +161,6 @@ class GitDriver implements DVCSDriver {
         return false;
     }
 
-    //TODO control access types
-    public function setRepositoryAccess($repoPath, $access) {
-        
-        if ( $access == GitRepository::PUBLIC_ACCESS ) {
-            $cmd      = ' find '.$repoPath.' -type d ! -path "*hooks*" | xargs chmod o+rx ';
-        } else {
-            $cmd      = ' find '.$repoPath.' -type d ! -path "*hooks*" | xargs chmod o-rwx ';
-        }
-        $rcode    = 0;
-        $output   = system( $cmd, $rcode );
-        if ( $rcode != 0 ) {
-            throw new GitBackendException($cmd.' -> '.$output);
-        }
-        if ( $access == GitRepository::PUBLIC_ACCESS ) {
-            $cmd     = ' find '.$repoPath.' -type f ! -path "*hooks*" | xargs chmod o+r ';
-        } else {
-            $cmd     = ' find '.$repoPath.' -type f ! -path "*hooks*" | xargs chmod o-rwx ';
-        }
-        $rcode   = 0;
-        $output   = system( $cmd, $rcode );
-        if ( $rcode != 0 ) {
-            throw new GitBackendException($cmd.' -> '.$output);
-        }
-        return true;
-
-    }
-
     public function setDescription($repoPath, $description) {
         if( ! file_put_contents($repoPath.'/description', $description) ) {
             throw new GitDriverErrorException('Unable to set description');
@@ -222,19 +195,42 @@ class GitDriver implements DVCSDriver {
         }
     }
 
-    //TODO check path 
+    /**
+     * Control who can access to a repository
+     *
+     * @param String  $repoPath Path to the repository
+     * @param Integer $access   Access level
+     *
+     * @return Boolean
+     */
+    public function setRepositoryAccess($repoPath, $access) {
+        if ($access == GitRepository::PUBLIC_ACCESS) {
+            return chmod($repoPath, 042775);
+        } else {
+            return chmod($repoPath, 042770);
+        }
+    }
+
+    /**
+     * Ensure repository has the right permissions
+     *
+     * Pretty useless on repo creation (--shared option is ok for that) but
+     * Mandatory for clone as clone doesn't set the right permissions by default.
+     *
+     * @param String $path Path to the repository
+     *
+     * @return Boolean
+     */
     protected function setPermissions($path) {
         $rcode  = 0;
-        $cmd    = 'find '.$path.' -type d | xargs chmod u+rwx,g+rwxs,o-rwx '.$path;
+        $cmd    = 'find '.$path.' -type d | xargs chmod u+rwx,g+rwxs '.$path;
         $output = system($cmd, $rcode);
         if ( $rcode != 0 ) {
             throw new GitDriverErrorException($cmd.' -> '.$output);
         }
-        $rcode  = 0;
-        $cmd    = 'chmod g+w '.$path.'/HEAD';
-        $output = system($cmd, $rcode);
-        if ( $rcode != 0 ) {
-            throw new GitDriverErrorException($cmd.' -> '.$output);
+
+        if (!chmod($path.DIRECTORY_SEPARATOR.'HEAD', 0664)) {
+            throw new GitDriverErrorException('Unable to set permissions on HEAD');
         }
         return true;
     }

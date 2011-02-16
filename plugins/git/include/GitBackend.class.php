@@ -113,11 +113,11 @@ class GitBackend extends Backend {
         $path = $this->getGitRootPath().DIRECTORY_SEPARATOR.$repository->getPath();
         $this->getDriver()->activateHook('post-update', $path);
         $this->deployPostReceive($path);
-        $this->setRepositoryPermissions($repository);        
         $id = $this->getDao()->save($repository);
         $repository->setId($id);
         $this->setUpMailingHook($repository);
         $this->changeRepositoryAccess($repository);
+        $this->setRepositoryPermissions($repository);
         return true;
     }
 

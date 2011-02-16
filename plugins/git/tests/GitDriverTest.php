@@ -70,6 +70,59 @@ class GitDriverTest extends UnitTestCase {
         $this->assertEqual(file_get_contents($dstPath.'/description'), 'Default description for this project'.PHP_EOL);
     }
 
+    public function testSetRepositoryAccessPublic() {
+        $srcPath = $this->fixturesPath.'/tmp/repo.git';
+
+        mkdir($srcPath, 0770, true);
+        @exec('GIT_DIR='.$srcPath.' git --bare init --shared=group');
+
+        $driver = new GitDriver();
+        $driver->setRepositoryAccess($srcPath, GitRepository::PUBLIC_ACCESS);
+        
+        clearstatcache();
+        $stat = stat($srcPath);
+        //system('/bin/ls -ld '.$srcPath);
+        $this->assertEqual(base_convert($stat['mode'], 10, 8), 42775);
+    }
+
+    public function testSetRepositoryAccessPrivate() {
+        $srcPath = $this->fixturesPath.'/tmp/repo.git';
+
+        mkdir($srcPath, 0770, true);
+        @exec('GIT_DIR='.$srcPath.' git --bare init --shared=group');
+
+        $driver = new GitDriver();
+        $driver->setRepositoryAccess($srcPath, GitRepository::PRIVATE_ACCESS);
+        
+        clearstatcache();
+        $stat = stat($srcPath);
+        //system('/bin/ls -ld '.$srcPath);
+        $this->assertEqual(base_convert($stat['mode'], 10, 8), 42770);
+    }
+
+    public function testForkRepoUnixPermissions() {
+        $srcPath = $this->fixturesPath.'/tmp/repo.git';
+        $dstPath = $this->fixturesPath.'/tmp/fork.git';
+
+        mkdir($srcPath, 0770, true);
+        @exec('GIT_DIR='.$srcPath.' git --bare init --shared=group');
+
+        $driver = new GitDriver();
+        $driver->fork($srcPath, $dstPath);
+        
+        clearstatcache();
+        $stat = stat($dstPath.'/HEAD');
+        //system('/bin/ls -ld '.$dstPath.'/HEAD');
+        $this->assertEqual(base_convert($stat['mode'], 10, 8), 100664, '/HEAD must be writable by group');
+
+        $stat = stat($dstPath.'/refs');
+        //system('/bin/ls -ld '.$dstPath.'/refs');
+        $this->assertEqual(base_convert($stat['mode'], 10, 8), 42775, '/refs must have setgid bit');
+
+        $stat = stat($dstPath.'/refs/heads');
+        $this->assertEqual(base_convert($stat['mode'], 10, 8), 42775, '/refs/heads must have setgid bit');
+    }
+   
     public function testActivateHook() {
         copy($this->fixturesPath.'/hooks/post-receive', $this->fixturesPath.'/tmp/hooks/blah');
 
@@ -120,6 +173,5 @@ class GitDriverTest extends UnitTestCase {
         $config = parse_ini_file($this->fixturesPath.'/tmp/config', true);
         $this->assertEqual($config['hooks']['showrev'], '');
     }
-
 }
 ?>
