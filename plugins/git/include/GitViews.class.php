@@ -396,9 +396,9 @@ class GitViews extends PluginViews {
     <input type="hidden" id="repo_id" name="repo_id" value="<?php echo $this->repoId ?>" />
     <table>
         <tr>
-            <td class="first_col" ><label for="mail_prefix_label"><?php echo $this->getText('mail_prefix');
+            <td class="plugin_git_first_col" ><label for="mail_prefix_label"><?php echo $this->getText('mail_prefix');
         ?></label></td>
-            <td><input id="mail_prefix" name="mail_prefix" class="mail_prefix" type="text" value="<?php echo $mailPrefix; ?>" /></td>
+            <td><input name="mail_prefix" class="plugin_git_mail_prefix" type="text" value="<?php echo $mailPrefix; ?>" /></td>
             <td rowspan="2"><input type="submit" id="mail_prefix_submit" name="mail_prefix_submit" value="<?php echo $this->getText('mail_prefix_submit')?>"></td>
         </tr>
     </table>
@@ -412,15 +412,16 @@ class GitViews extends PluginViews {
     protected function _addMailForm() {
         ?>
 <h3><?php echo $this->getText('add_mail_title'); ?></h3>
+<p id="plugin_git_add_mail_msg"><b><u>Note:</b></u> <br><?php echo $this->getText('add_mail_msg'); ?></p>
 <form id="add_mail_form" action="/plugins/git/" method="POST">
     <input type="hidden" id="action" name="action" value="add_mail" />
     <input type="hidden" id="group_id" name="group_id" value="<?php echo $this->groupId ?>" />
     <input type="hidden" id="repo_id" name="repo_id" value="<?php echo $this->repoId ?>" />
     <table>
         <tr>
-            <td class="first_col" ><label for="add_mail_label"><?php echo $this->getText('add_mail');
+            <td class="plugin_git_first_col" ><label for="add_mail_label"><?php echo $this->getText('add_mail');
         ?></label></td>
-            <td><textarea id="add_mail" name="add_mail" class="add_mail" type="text"></textarea></td>
+            <td><textarea name="add_mail" class="plugin_git_add_mail" type="text"></textarea></td>
             <td rowspan="2"><input type="submit" id="add_mail_submit" name="add_mail_submit" value="<?php echo $this->getText('add_mail_submit')?>"></td>
         </tr>
     </table>

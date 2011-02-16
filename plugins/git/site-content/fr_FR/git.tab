@@ -98,6 +98,7 @@ plugin_git	mail_prefix	Nouveau Préfixe
 plugin_git	mail_prefix_submit	Soumettre
 
 plugin_git	add_mail_title	Ajouter une adresse mail ou un utilisateur a notifier
+plugin_git	add_mail_msg	Vous pouvez ajouter plus qu'une adresse mail/utilisateur en utilisant la virgule ou le point-virgule comme séparateur.
 plugin_git	add_mail	Adresse Mail/Utilisateur
 plugin_git	add_mail_submit	Ajouter
 plugin_git	add_mail_existing	Aucun utilisateur à notifier n'a été encore ajouté.

@@ -100,15 +100,19 @@ textarea.text {
     margin-bottom:0em;
 }
 
-td.first_col {
-    width: 10em;
+#plugin_git_add_mail_msg {
+    font-size:0.9em;
 }
 
-.mail_prefix {
+td.plugin_git_first_col {
+    width: 11em;
+}
+
+.plugin_git_mail_prefix {
     width:15em;
 }
 
-.add_mail {
+.plugin_git_add_mail {
     width:  60em;
     height: 3em;
 }
