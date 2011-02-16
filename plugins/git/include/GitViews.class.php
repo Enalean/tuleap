@@ -103,6 +103,15 @@ class GitViews extends PluginViews {
                         </div>
                         <?php
                         break;
+                    case 'addMail':
+                        ?>
+                        <div id="help_addMail" class="help" style="display:<?php echo $display?>">                            
+                        <?php
+                        echo '<ul>'.$this->getText('add_mail_msg').'</ul>';
+                        ?>
+                        </div>
+                        <?php
+                        break;
                 default:
                     break;
             }            
@@ -412,21 +421,21 @@ class GitViews extends PluginViews {
     protected function _addMailForm() {
         ?>
 <h3><?php echo $this->getText('add_mail_title'); ?></h3>
-<p id="plugin_git_add_mail_msg"><b><u>Note:</b></u> <br><?php echo $this->getText('add_mail_msg'); ?></p>
 <form id="add_mail_form" action="/plugins/git/" method="POST">
     <input type="hidden" id="action" name="action" value="add_mail" />
     <input type="hidden" id="group_id" name="group_id" value="<?php echo $this->groupId ?>" />
     <input type="hidden" id="repo_id" name="repo_id" value="<?php echo $this->repoId ?>" />
     <table>
         <tr>
-            <td class="plugin_git_first_col" ><label for="add_mail_label"><?php echo $this->getText('add_mail');
-        ?></label></td>
+            <td class="plugin_git_first_col" ><label for="add_mail_label"><?php echo $this->getText('add_mail');?>
+                <a href="#" onclick="$('help_addMail').toggle();"> [?]</a></label></td>
             <td><textarea id="add_mail" name="add_mail" class="plugin_git_add_mail" type="text"></textarea></td>
             <td rowspan="2"><input type="submit" id="add_mail_submit" name="add_mail_submit" value="<?php echo $this->getText('add_mail_submit')?>"></td>
         </tr>
     </table>
 </form>
         <?php
+        $this->help('addMail', array('display'=>'none') );
         $js = "new UserAutoCompleter('add_mail', '".util_get_dir_image_theme()."', true);";
         $GLOBALS['Response']->includeFooterJavascriptSnippet($js);
     }
