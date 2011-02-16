@@ -204,7 +204,7 @@ class GitViews extends PluginViews {
     }
     ?>
     <p id="plugin_git_clone_url"><?php echo $this->getText('view_repo_clone_url');
-            ?>: <input id="plugin_git_clone_field" type="text" value="git clone <?php echo $this->_getRepositoryUrl($repoName); ?>" />
+            ?>: <input id="plugin_git_clone_field" type="text" readonly value="git clone <?php echo $this->_getRepositoryUrl($repoName); ?>" />
     </p>
 </form>
         <?php
