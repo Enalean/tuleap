@@ -89,12 +89,12 @@ class LDAP_UserSync {
     public function sync(User $user, LDAPResult $lr) {
         $modified = false;
 
-        if ($user->getRealName() != substr($lr->getCommonName(), 0, 32)) {
+        if (($lr->getCommonName() !== null) && ($user->getRealName() != substr($lr->getCommonName(), 0, 32))) {
             $user->setRealName($lr->getCommonName());
             $modified = true;
         }
 
-        if ($user->getEmail() != $lr->getEmail()) {
+        if (($lr->getEmail() !== null) && ($user->getEmail() != $lr->getEmail())) {
             $user->setEmail($lr->getEmail());
             $modified = true;
         }
