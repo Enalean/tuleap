@@ -421,7 +421,7 @@ class GitViews extends PluginViews {
         <tr>
             <td class="plugin_git_first_col" ><label for="add_mail_label"><?php echo $this->getText('add_mail');
         ?></label></td>
-            <td><textarea name="add_mail" class="plugin_git_add_mail" type="text"></textarea></td>
+            <td><textarea id="add_mail" name="add_mail" class="plugin_git_add_mail" type="text"></textarea></td>
             <td rowspan="2"><input type="submit" id="add_mail_submit" name="add_mail_submit" value="<?php echo $this->getText('add_mail_submit')?>"></td>
         </tr>
     </table>
