@@ -16,8 +16,8 @@ EOT;
     }
 
     public function up() {
-        $sql = 'ALTER TABLE plugin_git '.
-               ' ADD `repository_events_mailing_prefix` varchar(64) binary DEFAULT [SCM]';
+        $sql = "ALTER TABLE plugin_git ".
+               " ADD `repository_events_mailing_prefix` varchar(64) binary DEFAULT '[SCM]'";
         $res = $this->db->dbh->exec($sql);
             if ($res === false) {
                 throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while adding the column repository_events_mailing_prefix to the table plugin_git');
