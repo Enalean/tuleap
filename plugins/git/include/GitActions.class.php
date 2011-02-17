@@ -42,8 +42,8 @@ class GitActions extends PluginActions {
 
     }
 
-    protected function getText($key) {
-        return $GLOBALS['Language']->getText('plugin_git', $key);
+    protected function getText($key, $params = array()) {
+        return $GLOBALS['Language']->getText('plugin_git', $key, $params);
     }
     
     public function process($action, $params) {
@@ -199,14 +199,21 @@ class GitActions extends PluginActions {
             $c->addError($this->getText('actions_params_error'));
             return false;
         }
+        $res = true;
         foreach ($mails as $mail) {
             if ($repository->isAlreadyNotified($mail)) {
-                $c->addInfo($this->getText('mail_existing'));
+                $res = false;
+                $c->addInfo($this->getText('mail_existing', array($mail)));
             } else {
-                if ($repository->notificationAddMail($mail)) {
-                    $c->addInfo($this->getText('mail_added'));
+                if (!$repository->notificationAddMail($mail)) {
+                    $res = false;
+                    $c->addError($this->getText('mail_not_added', array($mail)));
                 }
             }
+        }
+        //Display this message, just if all the entred mails have been added
+        if ($res) {
+            $c->addInfo($this->getText('mail_added'));
         }
         return true;
     }
@@ -218,8 +225,11 @@ class GitActions extends PluginActions {
             $c->addError($this->getText('actions_params_error'));
             return false;
         }
-        $repository->notificationRemoveMail($mail);
-        $c->addInfo($this->getText('mail_removed'));
+        if ($repository->notificationRemoveMail($mail)) {
+            $c->addInfo($this->getText('mail_removed', array($mail)));
+        } else {
+            $c->addError($this->getText('mail_not_removed', array($mail)));
+        }
         return true;
     }
 

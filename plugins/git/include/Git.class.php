@@ -114,8 +114,8 @@ class Git extends PluginController {
         }                
     }
 
-    protected function getText($key) {
-        return $GLOBALS['Language']->getText('plugin_git', $key);
+    protected function getText($key, $params = array()) {
+        return $GLOBALS['Language']->getText('plugin_git', $key, $params);
     }
 
     public function request() {
@@ -229,10 +229,10 @@ class Git extends PluginController {
                             if ($mail) {
                                 $validMails[] = $mail;
                             } else {
-                                $this->addError($this->getText('no_user_mail'));
+                                $this->addError($this->getText('no_user_mail', array($mail)));
                             }
                         } else {
-                            $this->addError($this->getText('no_user'));
+                            $this->addError($this->getText('no_user', array($mail)));
                         }
                     }
                 }
