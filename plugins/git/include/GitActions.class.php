@@ -258,7 +258,7 @@ class GitActions extends PluginActions {
 
     public function setPrivate($repoId) {
         $c = $this->getController();
-        if (empty($repositoryId)) {
+        if (empty($repoId)) {
             $c->addError($this->getText('actions_params_error'));
             return false;
         }
