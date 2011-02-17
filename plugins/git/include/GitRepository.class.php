@@ -517,6 +517,27 @@ class GitRepository implements DVCSRepository {
         }
         return true;
     }
+
+    /**
+     * Get the list of mails notified without being project members
+     *
+     * @return Array
+     */
+    public function getNonMemberMails() {
+        $mails = $this->getNotifiedMails();
+        $mailsToDelete = array();
+        $um = UserManager::instance();
+        foreach ($mails as $mail) {
+            try {
+                $user = $um->getUserByEmail($mail);
+                if (!$user || !$user->isMember($projectId)) {
+                    $mailsToDelete[] = $mail;
+                }
+            } catch (Exception $e) {
+            }
+        }
+        return $mailsToDelete;
+    }
 }
 
 ?>

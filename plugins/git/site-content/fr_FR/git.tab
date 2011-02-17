@@ -114,3 +114,7 @@ plugin_git	mail_not_removed	L'adresse mail $1 n'a pas pu être supprimé
 plugin_git	mail_existing	La notification est déja activée pour l'adresse mail $1
 
 plugin_git	notified_mails_title	Liste des adresses mail a notifier
+
+plugin_git	set_private_warn	Changer l'accés a ce dépôt a privé va annuler la notification pour les adresses mail qui ne correspondent a aucun utilisateur membre de ce projet.
+plugin_git	set_private_confirm	Etes-vous certain(e) de vouloir changer l'accés a ce dépôt a privé ?
+plugin_git	set_private_mails	Liste des adresses mail a ne plus notifier

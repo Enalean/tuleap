@@ -232,6 +232,47 @@ class GitActions extends PluginActions {
         return true;
     }
 
+    public function confirmPrivate($projectId, $repoId, $repoAccess, $repoDescription) {
+        $c = $this->getController();
+        if (empty($repoId) || empty($repoAccess) || empty($repoDescription)) {
+            $c->addError($this->getText('actions_params_error'));
+            return false;
+        }
+        $repository = $this->_loadRepository($repoId);
+        $repository->load();
+        $repository->setDescription($repoDescription);
+        $repository->save();
+        if (strcmp($repoAccess, 'private') == 0 && $repository->getAccess() != $repoAccess) {
+            $mailsToDelete = $repository->getNonMemberMails();
+            if (!empty($mailsToDelete)) {
+                $this->addData(array('repository'=>$repository));
+                $this->addData(array('mails' => $mailsToDelete));
+                $c->addWarn($this->getText('set_private_warn'));
+                return true;
+            }
+        }
+        $this->save($projectId, $repoId, $repoAccess, $repoDescription);
+        $c->redirect('/plugins/git/index.php/'.$projectId.'/view/'.$repoId.'/');
+        return true;
+    }
+
+    public function setPrivate($repoId) {
+        $c = $this->getController();
+        if (empty($repositoryId)) {
+            $c->addError($this->getText('actions_params_error'));
+            return false;
+        }
+        $repository = $this->_loadRepository($repoId);
+        $mailsToDelete = $repository->getNonMemberMails();
+        foreach ($mailsToDelete as $mail) {
+            $repository->notificationRemoveMail($mail);
+        }
+        $this->systemEventManager->createEvent('GIT_REPO_ACCESS',
+                                               $repoId.SystemEvent::PARAMETER_SEPARATOR.'private',
+                                               SystemEvent::PRIORITY_HIGH);
+        $c->addInfo($this->getText('actions_repo_access'));
+    }
+
     public function confirmDeletion($projectId, $repoId) {
         $c = $this->getController();
         if ( empty($repoId) ) {

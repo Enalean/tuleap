@@ -117,3 +117,7 @@ plugin_git	mail_not_removed	Could not remove mail $1
 plugin_git	mail_existing	The notification is already enabled for this email $1
 
 plugin_git	notified_mails_title	List of notified mails
+
+plugin_git	set_private_warn	Making the repository access private will remove notification for all mail addresses that doesn't correspond to a user member of this project.
+plugin_git	set_private_confirm	Do you confirm change of repository access to private ?
+plugin_git	set_private_mails	List of mails to remove from notification

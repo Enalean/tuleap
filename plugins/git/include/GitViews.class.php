@@ -249,6 +249,8 @@ class GitViews extends PluginViews {
         }
         if ( $this->getController()->isAPermittedAction('save') ) :
         ?>
+        <form id="repoAction" name="repoAction" method="POST" action="/plugins/git/?group_id=<?php echo $this->groupId?>">
+        <input type="hidden" id="repo_id" name="repo_id" value="<?php echo $repoId?>" />
         <p id="plugin_git_description"><?php echo $this->getText('view_repo_description');
             ?>: <textarea class="text" id="repo_desc" name="repo_desc"><?php echo $this->HTMLPurifier->purify($description, CODENDI_PURIFIER_CONVERT_HTML, $this->groupId);
         ?></textarea>
@@ -259,11 +261,13 @@ class GitViews extends PluginViews {
         $checked = 'checked="checked"';
         if ( $access == GitRepository::PRIVATE_ACCESS ) {
             $private = $checked;
+            ?> <input type="hidden" id="action" name="action" value="edit" /> <?php
         } else if ( $access == GitRepository::PUBLIC_ACCESS ) {
             $public  = $checked;
+            ?> <input type="hidden" id="action" name="action" value="confirm_private" /> <?php
         }
         ?>
-        <p id="plugin_git_access"><?php echo $this->getText('view_repo_access');?>: <span><input type="radio" name="repo_access" value="private" <?php echo $private?>/>Private<input type="radio" name="repo_access" value="public"  <?php echo $public?>/>Public</span>
+        <p id="plugin_git_access"><?php echo $this->getText('view_repo_access');?>: <span><input type="radio" name="repo_access" value="private" <?php echo $private?>/><?php echo $this->getText('view_repo_access_private'); ?><input type="radio" name="repo_access" value="public"  <?php echo $public?>/>Public</span>
             <input type="submit" name="save" value="<?php echo $this->getText('admin_save_submit');?>" />
         </p>
         </form>
@@ -307,6 +311,41 @@ class GitViews extends PluginViews {
         <?php
         endif;
         $this->help('fork', array('display'=>'none'));
+    }
+
+    /**
+     * CONFIRM PRIVATE
+     */
+    public function confirmPrivate() {
+        $params = $this->getData();
+        $repository   = $params['repository'];
+        $repoId       = $repository->getId();
+        $repoName     = $repository->getName();
+        $initialized  = $repository->isInitialized();
+        $mails        = $params['mails'];
+        if ( $initialized && $this->getController()->isAPermittedAction('save') ) :
+        ?>
+        <div class="confirm">
+        <h3><?php echo $this->getText('set_private_confirm'); ?></h3>
+        <form id="confirm_private" method="POST" action="/plugins/git/?group_id=<?php echo $this->groupId; ?>" >
+        <input type="hidden" id="action" name="action" value="set_private" />
+        <input type="hidden" id="repo_id" name="repo_id" value="<?php echo $repoId; ?>" />
+        <input type="submit" id="submit" name="submit" value="<?php echo $this->getText('yes') ?>"/><span><input type="button" value="<?php echo $this->getText('no')?>" onclick="window.location='/plugins/git/?action=view&group_id=<?php echo $this->groupId;?>&repo_id=<?php echo $repoId?>'"/> </span>
+        </form>
+        <h3><?php echo $this->getText('set_private_mails'); ?></h3>
+    <table>
+        <?php
+        $i = 0;
+        foreach ($mails as $mail) {
+            echo '<tr class="'.html_get_alt_row_color(++$i).'">';
+            echo '<td>'.$mail.'</td>';
+            echo '</tr>';
+        }
+        ?>
+    </table>
+    </div>
+        <?php
+        endif;
     }
 
     /**

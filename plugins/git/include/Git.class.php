@@ -99,7 +99,9 @@ class Git extends PluginController {
                                             'mail_prefix',
                                             'add_mail',
                                             'remove_mail',
-                                            'fork');
+                                            'fork',
+                                            'set_private',
+                                            'confirm_private');
         } else if ( $this->user->isMember($this->groupId) === true ) {
             $this->permittedActions = array('index','view', 'edit', 'clone');
         } else if ( !$this->user->isAnonymous() && !$this->user->isRestricted() ) {
@@ -183,7 +185,11 @@ class Git extends PluginController {
                     $this->addView('confirm_deletion', array( 0=>array('repo_id'=>$repoId) ) );
                 }
                 else if ( $this->isAPermittedAction('save') && $this->request->get('save') ) {                    
-                    $repoDesc   = $this->request->get('repo_desc');
+                    $valid = new Valid_String('repo_desc');
+                    $valid->required();
+                    if($this->request->valid($valid)) {
+                        $repoDesc = $this->request->get('repo_desc');
+                    }
                     $valid = new Valid_String('repo_access');
                     $valid->required();
                     if($this->request->valid($valid)) {
@@ -253,6 +259,32 @@ class Git extends PluginController {
             case 'fork':
                 $this->addAction('repoManagement', array($repoId));
                 $this->addView('fork');
+                break;
+            #confirm_private
+            case 'confirm_private':
+                if ( $this->isAPermittedAction('confirm_deletion') && $this->request->get('confirm_deletion') ) {
+                    $this->addAction('confirmDeletion', array($this->groupId, $repoId) );
+                    $this->addView('confirm_deletion', array( 0=>array('repo_id'=>$repoId) ) );
+                }
+                else if ( $this->isAPermittedAction('save') && $this->request->get('save') ) {
+                    $valid = new Valid_String('repo_desc');
+                    $valid->required();
+                    if($this->request->valid($valid)) {
+                        $repoDesc = $this->request->get('repo_desc');
+                    }
+                    $valid = new Valid_String('repo_access');
+                    $valid->required();
+                    if($this->request->valid($valid)) {
+                        $repoAccess = $this->request->get('repo_access');
+                    }
+                    $this->addAction('confirmPrivate', array($this->groupId, $repoId, $repoAccess, $repoDesc) );
+                    $this->addView('confirmPrivate');
+                }
+                break;
+             #SET TO PRIVATE
+            case 'set_private':
+                $this->addAction('setPrivate', array($repoId));
+                $this->addView('view');
                 break;
             #LIST
             default:     
