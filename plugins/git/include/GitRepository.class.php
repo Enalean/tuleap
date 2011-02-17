@@ -530,7 +530,7 @@ class GitRepository implements DVCSRepository {
         foreach ($mails as $mail) {
             try {
                 $user = $um->getUserByEmail($mail);
-                if (!$user || !$user->isMember($projectId)) {
+                if (!$user || !$user->isMember($this->getProjectId())) {
                     $mailsToDelete[] = $mail;
                 }
             } catch (Exception $e) {
