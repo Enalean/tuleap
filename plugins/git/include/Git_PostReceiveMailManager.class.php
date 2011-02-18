@@ -35,6 +35,11 @@ class Git_PostReceiveMailManager {
 
     /**
      * Add a mail address to a repository to be notified
+     * 
+     * @param Integer $repositoryId
+     * @param String  $mail
+     * 
+     * @return Boolean
      */
     function addMail($repositoryId, $mail) {
         try {
@@ -47,7 +52,13 @@ class Git_PostReceiveMailManager {
     }
 
     /**
-     * Remove a notified mail address from a repository
+     * Remove from a repository the specified mail address if given
+     * else remove all notified mails
+     * 
+     * @param Integer $repositoryId
+     * @param String  $mail
+     * 
+     *  @return Boolean
      */
     function removeMailByRepository($repositoryId, $mail = null) {
         try {
