@@ -24,7 +24,7 @@ class Git_PostReceiveMailManager {
 
     var $dao;
 
-    /*
+    /**
      * Constructor of the class
      *
      * @return void
@@ -33,56 +33,37 @@ class Git_PostReceiveMailManager {
         $this->dao = $this->_getDao();
     }
 
-    /*
+    /**
      * Add a mail address to a repository to be notified
      */
     function addMail($repositoryId, $mail) {
         try {
             $this->dao->createNotification($repositoryId, $mail);
         } catch (GitDaoException $e) {
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_git','dao_error_create_notification'));
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_git', 'dao_error_create_notification'));
             return false;
         }
         return true;
     }
 
-    /*
+    /**
      * Remove a notified mail address from a repository
      */
     function removeMailByRepository($repositoryId, $mail) {
         try {
             $this->dao->removeNotification($repositoryId, $mail);
         } catch (GitDaoException $e) {
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_git','dao_error_remove_notification'));
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_git', 'dao_error_remove_notification'));
             return false;
         }
         return true;
     }
 
-    /*
-     * Remove a notified mail address from all repositories of a project
-     */
-    function removeMailByProject($groupId, $mail) {
-        $dao = new GitDao();
-        $repositoryList = $dao->getProjectRepositoryList($groupId);
-
-        if($repositoryList && !$repositoryList->isError()) {
-
-            foreach ($repositoryList as $row){
-                try {
-                    $this->dao->removeNotification($row['repository_id'], $mail);
-                } catch (GitDaoException $e) {
-                    $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_git','dao_error_remove_notification'));
-                }
-            }
-        }
-    }
-
     /**
      * Remove a notified mail address from all private repositories of a project
      *
-     * @param Integer $groupId
-     * @param User $user
+     * @param Integer $groupId Porject ID to remove its repositories notification
+     * @param User    $user    User to exclude from notification
      *
      * @return void
      */
@@ -92,18 +73,18 @@ class Git_PostReceiveMailManager {
             $gitDao = $this->_getGitDao();
             $repositoryList = $gitDao->getProjectRepositoryList($groupId);
 
-            if($repositoryList && !$repositoryList->isError()) {
+            if ($repositoryList ) {
 
-                foreach ($repositoryList as $row){
+                foreach ($repositoryList as $row) {
                     $repository   = new GitRepository();
-                    $repository->setId( $row['repository_id'] );
+                    $repository->setId($row['repository_id']);
                     try {
                         $repository->load();
                         if ($repository->isPrivate()) {
                             $this->dao->removeNotification($row['repository_id'], $user->getEmail());
                         }
                     } catch (GitDaoException $e) {
-                        $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_git','dao_error_remove_notification'));
+                        $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_git', 'dao_error_remove_notification'));
                     }
                 }
             }
@@ -113,7 +94,7 @@ class Git_PostReceiveMailManager {
     /**
      * Returns the list of notified mails for post commit
      *
-     * @param Integer $repositoryId
+     * @param Integer $repositoryId Id of the repository to retrieve itsnotification mails
      *
      * @return array
      */
@@ -141,6 +122,9 @@ class Git_PostReceiveMailManager {
         return  $this->dao;
     }
 
+    /**
+     * Wrapper used for tests to get a new GitDao
+     */
     function _getGitDao() {
         return new GitDao();
     }
