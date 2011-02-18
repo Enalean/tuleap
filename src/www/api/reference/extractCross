@@ -48,6 +48,8 @@ if ($request->existAndNonEmpty('group_id')) {
     if ($group_name != false) {
         $project  = ProjectManager::instance()->getProjectByUnixName(trim($group_name));
         $group_id = $project->getID();
+    } else {
+        $group_id = 100;
     }
 }
 
