@@ -31,29 +31,64 @@ Mock::generate('GitRepository');
 Mock::generate('User');
 Mock::generate('Project');
 Mock::generate('GitDao');
+Mock::generate('GitBackend');
 
 class Git_PostReceiveMailManagerTest extends UnitTestCase {
 
-    public function testRemoveMailByProjectPrivateRepositoryUserStillMember(){
-        $prm = new PostReceiveMailManagerTestVersion();
+     public function testRemoveMailByProjectPrivateRepositoryUserStillMember(){
+     $prm = new PostReceiveMailManagerTestVersion();
 
-        $user = new MockUser($this);
-        $user->setReturnValue('isMember', True);
-        $user->setReturnValue('getEmail', "codendiadm@codendi.org");
+     $user = new MockUser($this);
+     $user->setReturnValue('isMember', True);
+     $user->setReturnValue('getEmail', "codendiadm@codendi.org");
 
-        $prj = new MockProject($this);
-        $prj->setReturnValue('getId', 1750);
+     $prj = new MockProject($this);
+     $prj->setReturnValue('getId', 1750);
 
-        $gitDao = new MockGitDao($this);
-        $prm->setReturnValue('_getGitDao',$gitDao);
+     $gitDao = new MockGitDao($this);
+     $prm->setReturnValue('_getGitDao',$gitDao);
 
-        $gitDao->expectNever('getProjectRepositoryList');
+     $gitDao->expectNever('getProjectRepositoryList');
 
-        $prm->removeMailByProjectPrivateRepository($prj->getId(), $user);
+     $prm->removeMailByProjectPrivateRepository($prj->getId(), $user);
 
-    }
+     }
 
-    public function testRemoveMailByProjectPrivateRepository(){
+     public function testRemoveMailByProjectPrivateRepository(){
+     $prm = new PostReceiveMailManagerTestVersion();
+     $dao = new MockGit_PostReceiveMailDao();
+     $prm->dao = $dao;
+
+     $user = new MockUser($this);
+     $user->setReturnValue('isMember', False);
+     $user->setReturnValue('getEmail', "codendiadm@codendi.org");
+
+     $prj = new MockProject($this);
+     $prj->setReturnValue('getId', 1750);
+
+     $repositoryList = array(
+         array('project_id' => '1750', 'repository_id' => 2515),
+         array('project_id' => '1750' , 'repository_id' => 915),
+         array('project_id' => '1750' , 'repository_id' => 1035)
+     );
+
+     $gitDao = new MockGitDao($this);
+     $prm->setReturnValue('_getGitDao',$gitDao);
+     $gitDao->setReturnValue('getProjectRepositoryList', $repositoryList);
+
+     foreach ($repositoryList as $row) {
+
+     $repo = new MockGitRepository($this);
+     $prm->setReturnValue('_getGitRepository',$repo);
+     $repo->setReturnValue('isPrivate',True);
+     }
+
+     $prm->dao->expectAt(1, 'removeNotification', array(915 , "codendiadm@codendi.org"));
+     $prm->dao->expectCallCount('removeNotification',3);
+     $prm->removeMailByProjectPrivateRepository($prj->getId(), $user);
+     }
+
+    public function testRemoveMailByProjectPrivateRepositoryErrorDaoRemoving(){
         $prm = new PostReceiveMailManagerTestVersion();
         $dao = new MockGit_PostReceiveMailDao();
         $prm->dao = $dao;
@@ -66,9 +101,7 @@ class Git_PostReceiveMailManagerTest extends UnitTestCase {
         $prj->setReturnValue('getId', 1750);
 
         $repositoryList = array(
-        array('project_id' => '1750', 'repository_id' => 2515),
-        array('project_id' => '1750' , 'repository_id' => 915),
-        array('project_id' => '1750' , 'repository_id' => 1035)
+            array('project_id' => '1750', 'repository_id' => 2515),
         );
 
         $gitDao = new MockGitDao($this);
@@ -80,10 +113,15 @@ class Git_PostReceiveMailManagerTest extends UnitTestCase {
             $repo = new MockGitRepository($this);
             $prm->setReturnValue('_getGitRepository',$repo);
             $repo->setReturnValue('isPrivate',True);
+            $repo->setReturnValue('load',True);
+
+            $backend = new MockGitBackend();
+            $repo->SetReturnValue('getBackend', $backend);
         }
 
-        $prm->dao->expectAt(1, 'removeNotification', array(915 , "codendiadm@codendi.org"));
-        $prm->dao->expectCallCount('removeNotification',3);
+        $prm->dao->setReturnValue('removeNotification', False);
+        $repo->expectNever('setNotifiedMails');
+        $backend->expectNever('changeRepositoryMailingList');
         $prm->removeMailByProjectPrivateRepository($prj->getId(), $user);
     }
 
