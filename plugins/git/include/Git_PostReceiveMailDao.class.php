@@ -25,12 +25,9 @@ require_once('exceptions/GitDaoException.class.php');
  *  Data Access Object for Git_PostReceiveMail
  */
 class Git_PostReceiveMailDao extends DataAccessObject {
-    /**
-     * Constructs the Git_PostReceiveMailDao
-     * @param $da instance of the DataAccess class
-     */
+
     public function __construct() {
-        parent::__construct( CodendiDataAccess::instance() );
+        parent::__construct(CodendiDataAccess::instance());
     }
 
     /**
@@ -45,31 +42,43 @@ class Git_PostReceiveMailDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
+    /**
+     * Create new entry for email Git repository notification
+     *
+     * @param Integer $repositoryId Id of the watched Git repository
+     * @param String  $recipient email adress to notify
+     *
+     * @return Boolean
+     */
     function createNotification($repositoryId, $recipient) {
-        $sql = sprintf('INSERT INTO plugin_git_post_receive_mail'.
-                       ' (recipient_mail, repository_id)'.
-                       ' VALUES'.
-                       ' (%s, %d)',
+        $sql = sprintf(
+            'INSERT INTO plugin_git_post_receive_mail'.
+            ' (recipient_mail, repository_id)'.
+            ' VALUES'.
+            ' (%s, %d)',
         $this->da->quoteSmart($recipient),
         $repositoryId);
-        if (!$this->update($sql)) {
-            throw new GitDaoException( $GLOBALS['Language']->getText('plugin_git', 'dao_error_create_notification') );
-        }
-        return true;
+
+        return $this->update($sql);
     }
 
+    /**
+     * Remove Git repository email notification
+     *
+     * @param Integer $repositoryId Id of the watched Git repository
+     * @param String  $recipient email adress to remove from notification
+     *
+     * @return Boolean
+     */
     function removeNotification($repositoryId, $recipient) {
         $criteria = null;
         if ($recipient !== null) {
             $criteria = ' AND recipient_mail = '.$this->da->quoteSmart($recipient);
         }
         $sql = 'DELETE FROM plugin_git_post_receive_mail '.
-               'WHERE repository_id = '.$repositoryId.$criteria;
+            'WHERE repository_id = '.$repositoryId.$criteria;
 
-        if (!$this->update($sql)) {
-            throw new GitDaoException( $GLOBALS['Language']->getText('plugin_git', 'dao_error_remove_notification') );
-        }
-        return true;
+        return $this->update($sql);
     }
 
 }
