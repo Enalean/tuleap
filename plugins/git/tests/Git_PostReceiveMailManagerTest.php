@@ -98,8 +98,8 @@ class Git_PostReceiveMailManagerTest extends UnitTestCase {
             $repo->setReturnValue('isPrivate',True);
         }
 
-        $prm->dao->expectAt(1, 'removeNotification', array(915 , "codendiadm@codendi.org"));
-        $prm->dao->expectCallCount('removeNotification',3);
+        //$prm->expectAt(1, 'removeMailByRepository', array($repo , "codendiadm@codendi.org"));
+        $prm->expectCallCount('removeMailByRepository',3);
         $prm->removeMailByProjectPrivateRepository($prj->getId(), $user);
     }
 
@@ -137,7 +137,7 @@ class Git_PostReceiveMailManagerTest extends UnitTestCase {
         $prm->dao->setReturnValue('removeNotification', False);
         $repo->expectNever('setNotifiedMails');
         $backend->expectNever('changeRepositoryMailingList');
-        $GLOBALS['Response']->expectOnce('addFeedback', array('info', $GLOBALS['Language']->getText('plugin_git','dao_error_remove_notification')));
+        $GLOBALS['Response']->expectOnce('addFeedback', array('error', $GLOBALS['Language']->getText('plugin_git','dao_error_remove_notification')));
         $prm->removeMailByProjectPrivateRepository($prj->getId(), $user);
     }
 
