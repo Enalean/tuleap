@@ -130,22 +130,27 @@ class Git extends PluginController {
         $valid->required();
         if($this->request->valid($valid)) {
             $repoId = $this->request->get('repo_id');
+        } else {
+            $repoId = 0;
         }
 
         //public access
-        if ( !empty($repoId) && $this->nonMember ) {
+        if ($repoId !== 0 && $this->nonMember ) {
             $repo = new GitRepository();
             $repo->setId($repoId);
             if ( $repo->exists() && $repo->isPublic() ) {
                 $this->addPermittedAction('view');
             }
-        }
+        } 
+
         //check permissions
         if (  !empty($this->action) && !$this->isAPermittedAction($this->action) ) {
             $this->addError( $this->getText('controller_action_permission_denied') );
             $this->redirect('/plugins/git/?group_id='.$this->groupId);
             return;
         }
+
+        $this->_informAboutPendingEvents($repoId);
 
         switch ($this->action) {
             #CREATE REF
@@ -294,7 +299,35 @@ class Git extends PluginController {
         }
     }
 
-    
+    protected function _informAboutPendingEvents($repoId) {
+        $sem = SystemEventManager::instance();
+        $dar = $sem->_getDao()->searchWithParam('head', $this->groupId, array('GIT_REPO_CREATE', 'GIT_REPO_CLONE', 'GIT_REPO_DELETE'), array(SystemEvent::STATUS_NEW, SystemEvent::STATUS_RUNNING));
+        foreach ($dar as $row) {
+            switch($row['type']) {
+            case 'GIT_REPO_CREATE':
+                $p = explode('::', $row['parameters']);
+                $GLOBALS['Response']->addFeedback('info', $this->getText('feedback_event_create', array($p[1])));
+                break;
+
+            case 'GIT_REPO_CLONE':
+                $p = explode('::', $row['parameters']);
+                $GLOBALS['Response']->addFeedback('info', $this->getText('feedback_event_fork', array($p[1])));
+                break;
+
+            case 'GIT_REPO_DELETE':
+                $GLOBALS['Response']->addFeedback('info', $this->getText('feedback_event_delete'));
+                break;
+            }
+            
+        }
+
+        if ($repoId !== 0) {
+            $dar = $sem->_getDao()->searchWithParam('head', $repoId, array('GIT_REPO_ACCESS'), array(SystemEvent::STATUS_NEW, SystemEvent::STATUS_RUNNING));
+            foreach ($dar as $row) {
+                $GLOBALS['Response']->addFeedback('info', $this->getText('feedback_event_access'));
+            }
+        }
+    }
 }
 
 ?>
