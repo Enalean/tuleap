@@ -595,24 +595,26 @@ class GitViews extends PluginViews {
             if ( $delDate != '0000-00-00 00:00:00' ) {
                 continue;
             }
-            if ($isInit == 0) {
-                echo '<li>'.$this->_getRepositoryPageUrl($repoId, $repoName). ' ('.$this->getText('view_repo_not_initialized').') </li>';
-            } else {
-                // Access type
-                $accessType = '<span class="plugin_git_repo_privacy" title=';
-                switch ($access) {
-                    case GitRepository::PRIVATE_ACCESS:
-                        $accessType .= '"'.$this->getText('view_repo_access_private').'">';
-                        $accessType .= '<img src="'.util_get_image_theme('ic/lock.png').'" />';
-                        break;
-                    case GitRepository::PUBLIC_ACCESS:
-                        $accessType .= '"'.$this->getText('view_repo_access_public').'">';
-                        $accessType .= '<img src="'.util_get_image_theme('ic/lock-unlock.png').'" />';
-                        break;
-                }
-                $accessType .= '</span>';
-                echo '<li>'.$accessType.' '.$this->_getRepositoryPageUrl($repoId, $repoName). '</li>';
+
+            // Access type
+            $accessType = '<span class="plugin_git_repo_privacy" title=';
+            switch ($access) {
+                case GitRepository::PRIVATE_ACCESS:
+                    $accessType .= '"'.$this->getText('view_repo_access_private').'">';
+                    $accessType .= '<img src="'.util_get_image_theme('ic/lock.png').'" />';
+                    break;
+                case GitRepository::PUBLIC_ACCESS:
+                    $accessType .= '"'.$this->getText('view_repo_access_public').'">';
+                    $accessType .= '<img src="'.util_get_image_theme('ic/lock-unlock.png').'" />';
+                    break;
             }
+            $accessType .= '</span>';
+            echo '<li>'.$accessType.' '.$this->_getRepositoryPageUrl($repoId, $repoName);
+            if ($isInit == 0) {
+                echo ' ('.$this->getText('view_repo_not_initialized').') ';
+            }
+            echo '</li>';
+
             if ( !empty($flatTree[$childId]) ) {
                 echo '<ul>';
                 $this->_makeRepositoryTree($flatTree, $childId, $data);
