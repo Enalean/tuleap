@@ -600,10 +600,10 @@ class GitViews extends PluginViews {
             } else {
                 switch ($access) {
                     case GitRepository::PRIVATE_ACCESS:
-                        $accessType .= '<img src="'.util_get_image_theme('ic/lock.png').'" />';
+                        $accessType = '<img src="'.util_get_image_theme('ic/lock.png').'" />';
                         break;
                     case GitRepository::PUBLIC_ACCESS:
-                        $accessType .= '<img src="'.util_get_image_theme('ic/lock-unlock.png').'" />';
+                        $accessType = '<img src="'.util_get_image_theme('ic/lock-unlock.png').'" />';
                         break;
                 }
                 echo '<li>'.$accessType.' '.$this->_getRepositoryPageUrl($repoId, $repoName). '</li>';
