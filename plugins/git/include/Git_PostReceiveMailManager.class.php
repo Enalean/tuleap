@@ -73,15 +73,17 @@ class Git_PostReceiveMailManager {
             $gitDao = $this->_getGitDao();
             $repositoryList = $gitDao->getProjectRepositoryList($groupId);
 
-            if ($repositoryList ) {
-
+            if ($repositoryList) {
                 foreach ($repositoryList as $row) {
                     $repository   = $this->_getGitRepository();
                     $repository->setId($row['repository_id']);
                     try {
                         $repository->load();
                         if ($repository->isPrivate()) {
-                            $this->dao->removeNotification($row['repository_id'], $user->getEmail());
+                            if ($this->dao->removeNotification($row['repository_id'], $user->getEmail())) {
+                                $repository->setNotifiedMails();
+                                $repository->getBackend()->changeRepositoryMailingList($repository);
+                            }
                         }
                     } catch (GitDaoException $e) {
                         $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_git', 'dao_error_remove_notification'));
