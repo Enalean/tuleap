@@ -228,10 +228,10 @@ class GitActions extends PluginActions {
 
         if ($repository->notificationRemoveMail($mail)) {
             $c->addInfo($this->getText('mail_removed', array($mail)));
-        } else {
-            $c->addError($this->getText('mail_not_removed', array($mail)));
+            return true;
         }
-        return true;
+        $c->addError($this->getText('mail_not_removed', array($mail)));
+        return false;
     }
 
     public function confirmPrivate($projectId, $repoId, $repoAccess, $repoDescription) {
@@ -241,7 +241,7 @@ class GitActions extends PluginActions {
             return false;
         }
         $repository = $this->_loadRepository($projectId, $repoId);
-        if (strcmp($repoAccess, 'private') == 0 && $repository->getAccess() != $repoAccess) {
+        if (strcmp($repoAccess, 'private') == 0 && strcmp($repository->getAccess(), $repoAccess) != 0) {
             $mailsToDelete = $repository->getNonMemberMails();
             if (!empty($mailsToDelete)) {
                 $repository->setDescription($repoDescription);
