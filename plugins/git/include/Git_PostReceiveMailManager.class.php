@@ -35,10 +35,10 @@ class Git_PostReceiveMailManager {
 
     /**
      * Add a mail address to a repository to be notified
-     * 
+     *
      * @param Integer $repositoryId
      * @param String  $mail
-     * 
+     *
      * @return Boolean
      */
     function addMail($repositoryId, $mail) {
@@ -54,10 +54,10 @@ class Git_PostReceiveMailManager {
     /**
      * Remove from a repository the specified mail address if given
      * else remove all notified mails
-     * 
+     *
      * @param Integer $repositoryId
      * @param String  $mail
-     * 
+     *
      *  @return Boolean
      */
     function removeMailByRepository($repositoryId, $mail = null) {
@@ -88,16 +88,15 @@ class Git_PostReceiveMailManager {
                 foreach ($repositoryList as $row) {
                     $repository   = $this->_getGitRepository();
                     $repository->setId($row['repository_id']);
-                    try {
-                        $repository->load();
+                    if ($repository->load()) {
                         if ($repository->isPrivate()) {
                             if ($this->dao->removeNotification($row['repository_id'], $user->getEmail())) {
                                 $repository->setNotifiedMails();
                                 $repository->getBackend()->changeRepositoryMailingList($repository);
+                            } else {
+                                $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_git', 'dao_error_remove_notification'));
                             }
                         }
-                    } catch (GitDaoException $e) {
-                        $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_git', 'dao_error_remove_notification'));
                     }
                 }
             }
