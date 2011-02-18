@@ -19,7 +19,6 @@
  */
 
 require_once('Git_PostReceiveMailDao.class.php');
-//require_once('GitRepository.class.php');
 
 class Git_PostReceiveMailManager {
 
@@ -90,7 +89,7 @@ class Git_PostReceiveMailManager {
     function removeMailByProjectPrivateRepository($groupId, $user) {
 
         if (!$user->isMember($groupId)) {
-            $gitDao = new GitDao();
+            $gitDao = $this->_getGitDao();
             $repositoryList = $gitDao->getProjectRepositoryList($groupId);
 
             if($repositoryList && !$repositoryList->isError()) {
@@ -140,6 +139,10 @@ class Git_PostReceiveMailManager {
             $this->dao = new Git_PostReceiveMailDao(CodendiDataAccess::instance());
         }
         return  $this->dao;
+    }
+
+    function _getGitDao() {
+        return new GitDao();
     }
 
 }
