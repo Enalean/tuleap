@@ -512,7 +512,7 @@ class GitRepository implements DVCSRepository {
      * 
      * @return Boolean
      */
-    public function notificationRemoveMail() {
+    public function notificationRemoveMail($mail) {
         if (in_array($mail, $this->getNotifiedMails())) {
             $postRecMailManager = $this->getPostReceiveMailManager();
             if ($postRecMailManager->removeMailByRepository($this->getId(), $mail)) {
