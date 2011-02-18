@@ -76,7 +76,7 @@ class Git_PostReceiveMailManager {
             if ($repositoryList ) {
 
                 foreach ($repositoryList as $row) {
-                    $repository   = new GitRepository();
+                    $repository   = $this->_getGitRepository();
                     $repository->setId($row['repository_id']);
                     try {
                         $repository->load();
@@ -127,6 +127,13 @@ class Git_PostReceiveMailManager {
      */
     function _getGitDao() {
         return new GitDao();
+    }
+
+    /**
+     * Wrapper used for tests to get a new GitRepository
+     */
+    function _getGitRepository() {
+        return new GitRepository();
     }
 
 }
