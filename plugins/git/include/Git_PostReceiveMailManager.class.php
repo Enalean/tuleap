@@ -49,7 +49,7 @@ class Git_PostReceiveMailManager {
     /**
      * Remove a notified mail address from a repository
      */
-    function removeMailByRepository($repositoryId, $mail) {
+    function removeMailByRepository($repositoryId, $mail = null) {
         try {
             $this->dao->removeNotification($repositoryId, $mail);
         } catch (GitDaoException $e) {

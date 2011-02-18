@@ -454,6 +454,11 @@ class GitRepository implements DVCSRepository {
         if ( empty($date) || $date == '0000-00-00 00:00:00') {
             $this->setDeletionDate( date('Y-m-d H:i:s') );
         }
+
+        //remove notification from DB
+        $postRecMailManager = $this->getPostReceiveMailManager();
+        $postRecMailManager->removeMailByRepository($this->getId());
+
         $this->getBackend()->delete($this);
     }
 
@@ -507,7 +512,7 @@ class GitRepository implements DVCSRepository {
      * 
      * @return Boolean
      */
-    public function notificationRemoveMail($mail) {
+    public function notificationRemoveMail() {
         if (in_array($mail, $this->getNotifiedMails())) {
             $postRecMailManager = $this->getPostReceiveMailManager();
             if ($postRecMailManager->removeMailByRepository($this->getId(), $mail)) {
