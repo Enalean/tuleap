@@ -204,7 +204,7 @@ class Git extends PluginController {
                 break;
             #repo_management
             case 'repo_management':
-                $this->addAction('repoManagement', array($repoId));
+                $this->addAction('repoManagement', array($this->groupId, $repoId));
                 $this->addView('repoManagement');
                 break;
             #mail prefix
@@ -216,7 +216,7 @@ class Git extends PluginController {
                 } else {
                     $mailPrefix = '';
                 }
-                $this->addAction('notificationUpdatePrefix', array($repoId, $mailPrefix));
+                $this->addAction('notificationUpdatePrefix', array($this->groupId, $repoId, $mailPrefix));
                 $this->addView('repoManagement');
                 break;
             #add mail
@@ -242,7 +242,7 @@ class Git extends PluginController {
                         }
                     }
                 }
-                $this->addAction('notificationAddMail', array($repoId, $validMails));
+                $this->addAction('notificationAddMail', array($this->groupId, $repoId, $validMails));
                 $this->addView('repoManagement');
                 break;
             #remove mail
@@ -252,12 +252,12 @@ class Git extends PluginController {
                 if($this->request->valid($valid)) {
                     $mail = $this->request->get('mail');
                 }
-                $this->addAction('notificationRemoveMail', array($repoId, $mail));
+                $this->addAction('notificationRemoveMail', array($this->groupId, $repoId, $mail));
                 $this->addView('repoManagement');
                 break;
             #fork
             case 'fork':
-                $this->addAction('repoManagement', array($repoId));
+                $this->addAction('repoManagement', array($this->groupId, $repoId));
                 $this->addView('fork');
                 break;
             #confirm_private
@@ -283,7 +283,7 @@ class Git extends PluginController {
                 break;
              #SET TO PRIVATE
             case 'set_private':
-                $this->addAction('setPrivate', array($repoId));
+                $this->addAction('setPrivate', array($this->groupId, $repoId));
                 $this->addView('view');
                 break;
             #LIST

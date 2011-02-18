@@ -167,23 +167,23 @@ class GitActions extends PluginActions {
         return true;
     }
 
-    public function repoManagement($repositoryId) {
+    public function repoManagement($projectId, $repositoryId) {
         $c = $this->getController();
         if (empty($repositoryId)) {
             $c->addError($this->getText('actions_params_error'));
             return false;
         }
-        $this->_loadRepository($repositoryId);
+        $this->_loadRepository($projectId, $repositoryId);
         return true;
     }
 
-    public function notificationUpdatePrefix($repositoryId, $mailPrefix) {
+    public function notificationUpdatePrefix($projectId, $repositoryId, $mailPrefix) {
         $c = $this->getController();
         if (empty($repositoryId)) {
             $c->addError($this->getText('actions_params_error'));
             return false;
         }
-        $repository = $this->_loadRepository($repositoryId);
+        $repository = $this->_loadRepository($projectId, $repositoryId);
         $repository->setMailPrefix($mailPrefix);
         $repository->changeMailPrefix();
         $c->addInfo($this->getText('mail_prefix_updated'));
@@ -191,9 +191,9 @@ class GitActions extends PluginActions {
         return true;
     }
 
-    public function notificationAddMail($repositoryId, $mails) {
+    public function notificationAddMail($projectId, $repositoryId, $mails) {
         $c = $this->getController();
-        $repository = $this->_loadRepository($repositoryId);
+        $repository = $this->_loadRepository($projectId, $repositoryId);
         if (empty($repositoryId) || empty($mails)) {
             $c->addError($this->getText('actions_params_error'));
             return false;
@@ -218,9 +218,9 @@ class GitActions extends PluginActions {
         return true;
     }
 
-    public function notificationRemoveMail($repositoryId, $mail) {
+    public function notificationRemoveMail($projectId, $repositoryId, $mail) {
         $c = $this->getController();
-        $repository = $this->_loadRepository($repositoryId);
+        $repository = $this->_loadRepository($projectId, $repositoryId);
         if (empty($repositoryId) || empty($mail)) {
             $c->addError($this->getText('actions_params_error'));
             return false;
@@ -240,7 +240,7 @@ class GitActions extends PluginActions {
             $c->addError($this->getText('actions_params_error'));
             return false;
         }
-        $repository = $this->_loadRepository($repoId);
+        $repository = $this->_loadRepository($projectId, $repoId);
         if (strcmp($repoAccess, 'private') == 0 && $repository->getAccess() != $repoAccess) {
             $mailsToDelete = $repository->getNonMemberMails();
             if (!empty($mailsToDelete)) {
@@ -256,13 +256,13 @@ class GitActions extends PluginActions {
         return true;
     }
 
-    public function setPrivate($repoId) {
+    public function setPrivate($projectId, $repoId) {
         $c = $this->getController();
         if (empty($repoId)) {
             $c->addError($this->getText('actions_params_error'));
             return false;
         }
-        $repository = $this->_loadRepository($repoId);
+        $repository = $this->_loadRepository($projectId, $repoId);
         $mailsToDelete = $repository->getNonMemberMails();
         foreach ($mailsToDelete as $mail) {
             $repository->notificationRemoveMail($mail);
@@ -397,11 +397,17 @@ class GitActions extends PluginActions {
         return true;
     }
 
-    function _loadRepository($repositoryId) {
+    function _loadRepository($projectId, $repositoryId) {
         $repository = $this->getGitRepository();
         $repository->setId($repositoryId);
-        $repository->load();
-        $this->addData(array('repository'=>$repository));
+        try {
+            $repository->load();
+            $this->addData(array('repository'=>$repository));
+        } catch (Exception $e) {
+            $c = $this->getController();
+            $c->addError($this->getText('actions_repo_not_found'));
+            $c->redirect('/plugins/git/?action=index&group_id='.$projectId);
+        }
         return $repository;
     }
 
