@@ -420,6 +420,7 @@ class GitRepository implements DVCSRepository {
         $clone->setCreator( $this->getCreator() );
         $clone->setAccess( $this->getAccess() );
         $clone->setIsInitialized(1);
+        $clone->setDescription('-- Default description --');
         $this->getBackend()->createFork($clone);
     }
 

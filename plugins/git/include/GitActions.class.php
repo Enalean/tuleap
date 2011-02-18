@@ -239,20 +239,18 @@ class GitActions extends PluginActions {
             return false;
         }
         $repository = $this->_loadRepository($repoId);
-        $repository->load();
-        $repository->setDescription($repoDescription);
-        $repository->save();
         if (strcmp($repoAccess, 'private') == 0 && $repository->getAccess() != $repoAccess) {
             $mailsToDelete = $repository->getNonMemberMails();
             if (!empty($mailsToDelete)) {
-                $this->addData(array('repository'=>$repository));
+                $repository->setDescription($repoDescription);
+                $repository->save();
+                $this->addData(array('repository' => $repository));
                 $this->addData(array('mails' => $mailsToDelete));
                 $c->addWarn($this->getText('set_private_warn'));
                 return true;
             }
         }
         $this->save($projectId, $repoId, $repoAccess, $repoDescription);
-        $c->redirect('/plugins/git/index.php/'.$projectId.'/view/'.$repoId.'/');
         return true;
     }
 
