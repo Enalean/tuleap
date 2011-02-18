@@ -595,7 +595,19 @@ class GitViews extends PluginViews {
             if ( $delDate != '0000-00-00 00:00:00' ) {
                 continue;
             }
-            echo '<li>'.$this->_getRepositoryPageUrl($repoId, $repoName).($isInit == 0 ? ' ('.$this->getText('view_repo_not_initialized').') ' : '').' '.$access.' </li>';
+            if ($isInit == 0) {
+                echo '<li>'.$this->_getRepositoryPageUrl($repoId, $repoName). ' ('.$this->getText('view_repo_not_initialized').') </li>';
+            } else {
+                switch ($access) {
+                    case GitRepository::PRIVATE_ACCESS:
+                        $accessType .= '<img src="'.util_get_image_theme('ic/lock.png').'" />';
+                        break;
+                    case GitRepository::PUBLIC_ACCESS:
+                        $accessType .= '<img src="'.util_get_image_theme('ic/lock-unlock.png').'" />';
+                        break;
+                }
+                echo '<li>'.$accessType.' '.$this->_getRepositoryPageUrl($repoId, $repoName). '</li>';
+            }
             if ( !empty($flatTree[$childId]) ) {
                 echo '<ul>';
                 $this->_makeRepositoryTree($flatTree, $childId, $data);
