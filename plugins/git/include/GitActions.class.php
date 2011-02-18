@@ -193,11 +193,12 @@ class GitActions extends PluginActions {
 
     public function notificationAddMail($repositoryId, $mails) {
         $c = $this->getController();
+        $repository = $this->_loadRepository($repositoryId);
         if (empty($repositoryId) || empty($mails)) {
             $c->addError($this->getText('actions_params_error'));
             return false;
         }
-        $repository = $this->_loadRepository($repositoryId);
+
         $res = true;
         foreach ($mails as $mail) {
             if ($repository->isAlreadyNotified($mail)) {
@@ -219,11 +220,12 @@ class GitActions extends PluginActions {
 
     public function notificationRemoveMail($repositoryId, $mail) {
         $c = $this->getController();
+        $repository = $this->_loadRepository($repositoryId);
         if (empty($repositoryId) || empty($mail)) {
             $c->addError($this->getText('actions_params_error'));
             return false;
         }
-        $repository = $this->_loadRepository($repositoryId);
+
         if ($repository->notificationRemoveMail($mail)) {
             $c->addInfo($this->getText('mail_removed', array($mail)));
         } else {
