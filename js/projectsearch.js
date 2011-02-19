@@ -10,13 +10,14 @@
  */
 
 var oldSearchValue = '';
+var searchTimeout = null;
 
 function runSearch() {
 	var search = $('input.projectSearchBox').val().toLowerCase();
 	oldSearchValue = search;
+	clearTimeout(searchTimeout);
+	searchTimeout = null;
 	
-	$('img.searchSpinner').show();
-
 	if (search.length == 0) {
 		$('a.clearSearch').hide();
 	} else {
@@ -145,16 +146,24 @@ function initProjectSearch() {
 	});
 
 	$('a.clearSearch').click(function() {
+		$('img.searchSpinner').show();
 		$('input.projectSearchBox').val('');
 		oldSearchValue = '';
 		runSearch();
 		return false;
 	});
 
-	$('input.projectSearchBox').keyup(function() {
-		if ($('input.projectSearchBox').val() != oldSearchValue)
-			runSearch();
-	});
+	var typeEvent = function() {
+		if ($('input.projectSearchBox').val() != oldSearchValue) {
+			$('img.searchSpinner').show();
+			if (searchTimeout != null) {
+				clearTimeout(searchTimeout);
+			}
+			setTimeout("runSearch()", 500);
+		}
+	};
+
+	$('input.projectSearchBox').keyup(typeEvent).bind('input paste', typeEvent);
 };
 
 $(document).ready(function() {
