@@ -196,15 +196,6 @@ class GitPHP_Commit extends GitPHP_GitObject
 	private $treeReferenced = false;
 
 	/**
-	 * containingTagReferenced
-	 *
-	 * Stores whether the containing tag has been referenced into a pointer
-	 *
-	 * @access private
-	 */
-	private $containingTagReferenced = false;
-
-	/**
 	 * __construct
 	 *
 	 * Instantiates object
@@ -659,9 +650,6 @@ class GitPHP_Commit extends GitPHP_GitObject
 		if (!$this->containingTagRead)
 			$this->ReadContainingTag();
 
-		if ($this->containingTagReferenced)
-			$this->DereferenceContainingTag();
-
 		return $this->containingTag;
 	}
 
@@ -978,46 +966,6 @@ class GitPHP_Commit extends GitPHP_GitObject
 	}
 
 	/**
-	 * ReferenceContainingTag
-	 *
-	 * Turns the containing tag into a reference pointer
-	 *
-	 * @access private
-	 */
-	private function ReferenceContainingTag()
-	{
-		if ($this->containingTagReferenced)
-			return;
-
-		if (!$this->containingTag)
-			return;
-
-		$this->containingTag = $this->containingTag->GetName();
-
-		$this->containingTagReferenced = true;
-	}
-
-	/**
-	 * DereferenceContainingTag
-	 *
-	 * Turns the containing tag pointer back into an object
-	 *
-	 * @access private
-	 */
-	private function DereferenceContainingTag()
-	{
-		if (!$this->containingTagReferenced)
-			return;
-
-		if (empty($this->containingTag))
-			return;
-
-		$this->containingTag = $this->GetProject()->GetTag($this->containingTag);
-		
-		$this->containingTagReferenced = false;
-	}
-
-	/**
 	 * __sleep
 	 *
 	 * Called to prepare the object for serialization
@@ -1033,10 +981,7 @@ class GitPHP_Commit extends GitPHP_GitObject
 		if (!$this->treeReferenced)
 			$this->ReferenceTree();
 
-		if (!$this->containingTagReferenced)
-			$this->ReferenceContainingTag();
-
-		$properties = array('dataRead', 'parents', 'tree', 'author', 'authorEpoch', 'authorTimezone', 'committer', 'committerEpoch', 'committerTimezone', 'title', 'comment', 'readTree', 'blobPaths', 'treePaths', 'hashPathsRead', 'containingTag', 'containingTagRead', 'parentsReferenced', 'treeReferenced', 'containingTagReferenced');
+		$properties = array('dataRead', 'parents', 'tree', 'author', 'authorEpoch', 'authorTimezone', 'committer', 'committerEpoch', 'committerTimezone', 'title', 'comment', 'readTree', 'blobPaths', 'treePaths', 'hashPathsRead', 'parentsReferenced', 'treeReferenced');
 		return array_merge($properties, parent::__sleep());
 	}
 
