@@ -18,6 +18,11 @@ require_once(GITPHP_BASEDIR . 'lib/php-gettext/gettext.php');
 define('GITPHP_LOCALE_COOKIE', 'GitPHPLocale');
 
 /**
+ * Locale cookie lifetime
+ */
+define('GITPHP_LOCALE_COOKIE_LIFETIME', 60*60*24*365);		// 1 year
+
+/**
  * Resource factory class
  *
  * @package GitPHP

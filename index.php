@@ -66,7 +66,7 @@ if ((!isset($_COOKIE[GITPHP_LOCALE_COOKIE])) || empty($_COOKIE[GITPHP_LOCALE_COO
 		$httpAcceptLang = explode(',', $_SERVER['HTTP_ACCEPT_LANGUAGE']);
 		$preferredLocale = GitPHP_Resource::FindPreferredLocale($_SERVER['HTTP_ACCEPT_LANGUAGE']);
 		if (!empty($preferredLocale)) {
-			setcookie(GITPHP_LOCALE_COOKIE, $preferredLocale);
+			setcookie(GITPHP_LOCALE_COOKIE, $preferredLocale, time()+GITPHP_LOCALE_COOKIE_LIFETIME);
 			GitPHP_Resource::Instantiate($preferredLocale);
 		}
 	}
@@ -75,7 +75,7 @@ if ((!isset($_COOKIE[GITPHP_LOCALE_COOKIE])) || empty($_COOKIE[GITPHP_LOCALE_COO
 		/*
 		 * Create a dummy cookie to prevent browser delay
 		 */
-		setcookie(GITPHP_LOCALE_COOKIE, 0);
+		setcookie(GITPHP_LOCALE_COOKIE, 0, time()+GITPHP_LOCALE_COOKIE_LIFETIME);
 	}
 
 } else if (isset($_GET['l']) && !empty($_GET['l'])) {
@@ -83,7 +83,7 @@ if ((!isset($_COOKIE[GITPHP_LOCALE_COOKIE])) || empty($_COOKIE[GITPHP_LOCALE_COO
 	/*
 	 * User picked something
 	 */
-	setcookie(GITPHP_LOCALE_COOKIE, $_GET['l']);
+	setcookie(GITPHP_LOCALE_COOKIE, $_GET['l'], time()+GITPHP_LOCALE_COOKIE_LIFETIME);
 	GitPHP_Resource::Instantiate($_GET['l']);
 
 } else if (isset($_COOKIE[GITPHP_LOCALE_COOKIE]) && !empty($_COOKIE[GITPHP_LOCALE_COOKIE])) {
