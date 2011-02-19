@@ -162,3 +162,6 @@ table.treeTable td.filesize { text-align: right; }
 table.treeTable td.expander { padding-right: 0px; }
 table.tagTable td.link {text-align: right;}
 div.projectSearch { padding:8px; border:solid #d9d8d1; border-width:0px 0px 1px; }
+div.attr_footer { text-align: center; padding: 4px 8px; color: #888888; font-style: italic; }
+div.attr_footer a { color: #888888; font-style: italic; text-decoration: none; }
+div.attr_footer a:hover { text-decoration: underline; }

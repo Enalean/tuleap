@@ -15,5 +15,8 @@
         <a href="{$SCRIPT_NAME}?a=project_index" class="rss_logo">{t}TXT{/t}</a>
       {/if}
     </div>
+    <div class="attr_footer">
+    	<a href="http://xiphux.com/programming/gitphp/" target="_blank">GitPHP by Chris Han</a>
+    </div>
   </body>
 </html>
