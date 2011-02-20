@@ -116,13 +116,22 @@ class GitPHP_Project
 	protected $readHeadRef = false;
 
 	/**
-	 * refs
+	 * tags
 	 *
-	 * Stores the refs for the project
+	 * Stores the tags for the project
 	 *
 	 * @access protected
 	 */
-	protected $refs = array();
+	protected $tags = array();
+
+	/**
+	 * heads
+	 *
+	 * Stores the heads for the project
+	 *
+	 * @access protected
+	 */
+	protected $heads = array();
 
 	/**
 	 * readRefs
@@ -691,14 +700,21 @@ class GitPHP_Project
 	 * Gets the list of refs for the project
 	 *
 	 * @access public
+	 * @param string $type type of refs to get
 	 * @return array array of refs
 	 */
-	public function GetRefs()
+	public function GetRefs($type = '')
 	{
 		if (!$this->readRefs)
 			$this->ReadRefList();
 
-		return $this->refs;
+		if ($type == 'tags') {
+			return $this->tags;
+		} else if ($type == 'heads') {
+			return $this->heads;
+		}
+
+		return array_merge($this->heads, $this->tags);
 	}
 
 	/**
@@ -729,15 +745,15 @@ class GitPHP_Project
 					if ($regs[2] == 'tags') {
 						if ((!empty($regs[4])) && ($regs[4] == '^{}')) {
 							$derefCommit = $this->GetCommit($regs[1]);
-							if ($derefCommit && isset($this->refs[$key])) {
-								$this->refs[$key]->SetCommit($derefCommit);
+							if ($derefCommit && isset($this->tags[$key])) {
+								$this->tags[$key]->SetCommit($derefCommit);
 							}
 								
-						} else if (!isset($this->refs[$key])) {
-							$this->refs[$key] = $this->LoadTag($regs[3], $regs[1]);
+						} else if (!isset($this->tags[$key])) {
+							$this->tags[$key] = $this->LoadTag($regs[3], $regs[1]);
 						}
 					} else if ($regs[2] == 'heads') {
-						$this->refs[$key] = new GitPHP_Head($this, $regs[3], $regs[1]);
+						$this->heads[$key] = new GitPHP_Head($this, $regs[3], $regs[1]);
 					}
 				} catch (Exception $e) {
 				}
@@ -776,8 +792,8 @@ class GitPHP_Project
 		$tags = array();
 
 		foreach ($lines as $ref) {
-			if (isset($this->refs[$ref])) {
-				$tags[] = $this->refs[$ref];
+			if (isset($this->tags[$ref])) {
+				$tags[] = $this->tags[$ref];
 			}
 		}
 
@@ -800,11 +816,11 @@ class GitPHP_Project
 
 		$key = 'refs/tags/' . $tag;
 
-		if (!isset($this->refs[$key])) {
-			$this->refs[$key] = $this->LoadTag($key);
+		if (!isset($this->tags[$key])) {
+			$this->tags[$key] = $this->LoadTag($tag);
 		}
 
-		return $this->refs[$key];
+		return $this->tags[$key];
 	}
 
 	/**
@@ -861,8 +877,8 @@ class GitPHP_Project
 		$heads = array();
 
 		foreach ($lines as $ref) {
-			if (isset($this->refs[$ref])) {
-				$heads[] = $this->refs[$ref];
+			if (isset($this->heads[$ref])) {
+				$heads[] = $this->heads[$ref];
 			}
 		}
 
@@ -885,11 +901,11 @@ class GitPHP_Project
 
 		$key = 'refs/heads/' . $head;
 
-		if (!isset($this->refs[$key])) {
-			$this->refs[$key] = new GitPHP_Head($this, $head);
+		if (!isset($this->heads[$key])) {
+			$this->heads[$key] = new GitPHP_Head($this, $head);
 		}
 
-		return $this->refs[$key];
+		return $this->heads[$key];
 	}
 
 	/**

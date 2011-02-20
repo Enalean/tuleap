@@ -603,13 +603,11 @@ class GitPHP_Commit extends GitPHP_GitObject
 	{
 		$heads = array();
 
-		$projectRefs = $this->GetProject()->GetRefs();
+		$projectRefs = $this->GetProject()->GetRefs('heads');
 
 		foreach ($projectRefs as $ref) {
-			if ($ref instanceof GitPHP_Head) {
-				if ($ref->GetHash() == $this->hash) {
-					$heads[] = $ref;
-				}
+			if ($ref->GetHash() == $this->hash) {
+				$heads[] = $ref;
 			}
 		}
 
@@ -628,13 +626,11 @@ class GitPHP_Commit extends GitPHP_GitObject
 	{
 		$tags = array();
 
-		$projectRefs = $this->GetProject()->GetRefs();
+		$projectRefs = $this->GetProject()->GetRefs('tags');
 
 		foreach ($projectRefs as $ref) {
-			if ($ref instanceof GitPHP_Tag) {
-				if ($ref->GetCommit()->GetHash() === $this->hash) {
-					$tags[] = $ref;
-				}
+			if ($ref->GetCommit()->GetHash() === $this->hash) {
+				$tags[] = $ref;
 			}
 		}
 
