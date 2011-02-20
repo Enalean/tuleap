@@ -116,6 +116,24 @@ class GitPHP_Project
 	protected $readHeadRef = false;
 
 	/**
+	 * refs
+	 *
+	 * Stores the refs for the project
+	 *
+	 * @access protected
+	 */
+	protected $refs = array();
+
+	/**
+	 * readRefs
+	 *
+	 * Stores whether refs have been read yet
+	 *
+	 * @access protected
+	 */
+	protected $readRefs = false;
+
+	/**
 	 * heads
 	 *
 	 * Stores the heads for the project
@@ -704,6 +722,66 @@ class GitPHP_Project
 	}
 
 	/**
+	 * GetRefs
+	 *
+	 * Gets the list of refs for the project
+	 *
+	 * @access public
+	 * @return array array of refs
+	 */
+	public function GetRefs()
+	{
+		if (!$this->readRefs)
+			$this->ReadRefList();
+
+		return $this->refs;
+	}
+
+	/**
+	 * ReadRefList
+	 *
+	 * Reads the list of refs for this project
+	 *
+	 * @access protected
+	 */
+	public function ReadRefList()
+	{
+		$this->readRefs = true;
+
+		$exe = new GitPHP_GitExe($this);
+		$args = array();
+		$args[] = '--heads';
+		$args[] = '--tags';
+		$args[] = '--dereference';
+		$ret = $exe->Execute(GIT_SHOW_REF, $args);
+		unset($exe);
+
+		$lines = explode("\n", $ret);
+
+		foreach ($lines as $line) {
+			if (preg_match('/^([0-9a-fA-F]{40}) refs\/(tags|heads)\/([^^]+)(\^{})?$/', $line, $regs)) {
+				try {
+					$key = 'refs/' . $regs[2] . '/' . $regs[3];
+					if ($regs[2] == 'tags') {
+						if ((!empty($regs[4])) && ($regs[4] == '^{}')) {
+							$derefCommit = $this->GetCommit($regs[1]);
+							if ($derefCommit && isset($this->refs[$key])) {
+								$this->refs[$key]->SetCommit($derefCommit);
+							}
+								
+						} else if (!isset($this->refs[$key])) {
+							$this->refs[$key] = $this->LoadTag($regs[3], $regs[1]);
+						}
+					} else if ($regs[2] == 'heads') {
+						$this->refs[$key] = new GitPHP_Head($this, $regs[3], $regs[1]);
+					}
+				} catch (Exception $e) {
+				}
+			}
+		}
+	}
+
+	/**
 	 * GetTags
 	 *
 	 * Gets list of tags for this project
@@ -734,7 +812,7 @@ class GitPHP_Project
 			return null;
 
 		if (!isset($this->tags[$tag])) {
-			$this->LoadTag($tag);
+			$this->tags[$tag] = $this->LoadTag($tag);
 		}
 
 		return $this->tags[$tag];
@@ -749,7 +827,7 @@ class GitPHP_Project
 	 * @param string $tag tag to find
 	 * @return mixed tag object
 	 */
-	private function LoadTag($tag)
+	private function LoadTag($tag, $hash = '')
 	{
 		if (empty($tag))
 			return;
@@ -757,9 +835,9 @@ class GitPHP_Project
 		$cacheKey = 'project|' . $this->project . '|tag|' . $tag;
 		$cached = GitPHP_Cache::GetInstance()->Get($cacheKey);
 		if ($cached) {
-			$this->tags[$tag] = $cached;
+			return $cached;
 		} else {
-			$this->tags[$tag] = new GitPHP_Tag($this, $tag);
+			return new GitPHP_Tag($this, $tag, $hash);
 		}
 	}
 
@@ -793,14 +871,7 @@ class GitPHP_Project
 						}
 							
 					} else if (!isset($this->tags[$regs[2]])) {
-							$this->LoadTag($regs[2]);
-							if (isset($this->tags[$regs[2]])) {
-								$tagHash = $this->tags[$regs[2]]->GetHash();
-								if (empty($tagHash)) {
-									// New non-cached tag object
-									$this->tags[$regs[2]]->SetHash($regs[1]);
-								}
-							}
+							$this->tags[$regs[2]] = $this->LoadTag($regs[2], $regs[1]);
 					}
 				} catch (Exception $e) {
 				}

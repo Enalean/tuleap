@@ -508,7 +508,7 @@ class GitPHP_Commit extends GitPHP_GitObject
 
 		if (!empty($this->committerEpoch))
 			return time() - $this->committerEpoch;
-		
+
 		return '';
 	}
 
@@ -603,11 +603,13 @@ class GitPHP_Commit extends GitPHP_GitObject
 	{
 		$heads = array();
 
-		$projectHeads = $this->GetProject()->GetHeads();
+		$projectRefs = $this->GetProject()->GetRefs();
 
-		foreach ($projectHeads as $head) {
-			if ($head->GetCommit()->GetHash() === $this->hash) {
-				$heads[] = $head;
+		foreach ($projectRefs as $ref) {
+			if ($ref instanceof GitPHP_Head) {
+				if ($ref->GetHash() == $this->hash) {
+					$heads[] = $ref;
+				}
 			}
 		}
 
@@ -626,11 +628,13 @@ class GitPHP_Commit extends GitPHP_GitObject
 	{
 		$tags = array();
 
-		$projectTags = $this->GetProject()->GetTags();
+		$projectRefs = $this->GetProject()->GetRefs();
 
-		foreach ($projectTags as $tag) {
-			if ($tag->GetCommit()->GetHash() === $this->hash) {
-				$tags[] = $tag;
+		foreach ($projectRefs as $ref) {
+			if ($ref instanceof GitPHP_Tag) {
+				if ($ref->GetCommit()->GetHash() === $this->hash) {
+					$tags[] = $ref;
+				}
 			}
 		}
 
@@ -759,7 +763,7 @@ class GitPHP_Commit extends GitPHP_GitObject
 
 		GitPHP_Cache::GetInstance()->Set($this->GetCacheKey(), $this);
 	}
-	
+
 	/**
 	 * SearchFilenames
 	 *
@@ -824,7 +828,7 @@ class GitPHP_Commit extends GitPHP_GitObject
 		$args[] = '-e';
 		$args[] = $pattern;
 		$args[] = $this->hash;
-		
+
 		$lines = explode("\n", $exe->Execute(GIT_GREP, $args));
 
 		$results = array();
