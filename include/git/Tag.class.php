@@ -305,7 +305,7 @@ class GitPHP_Tag extends GitPHP_Ref
 		if (!$this->object)
 			return true;
 
-		return $this->object->GetHash() === $this->hash;
+		return $this->object->GetHash() === $this->GetHash();
 	}
 
 	/**
@@ -322,12 +322,12 @@ class GitPHP_Tag extends GitPHP_Ref
 		$exe = new GitPHP_GitExe($this->GetProject());
 		$args = array();
 		$args[] = '-t';
-		$args[] = $this->hash;
+		$args[] = $this->GetHash();
 		$ret = trim($exe->Execute(GIT_CAT_FILE, $args));
 		
 		if ($ret === 'commit') {
 			/* light tag */
-			$this->object = $this->GetProject()->GetCommit($this->hash);
+			$this->object = $this->GetProject()->GetCommit($this->GetHash());
 			$this->commit = $this->object;
 			$this->type = 'commit';
 			GitPHP_Cache::GetInstance()->Set($this->GetCacheKey(), $this);

@@ -58,7 +58,7 @@ class GitPHP_Head extends GitPHP_Ref
 	public function GetCommit()
 	{
 		if (!$this->commit) {
-			$this->commit = $this->project->GetCommit($this->hash);
+			$this->commit = $this->project->GetCommit($this->GetHash());
 		}
 
 		return $this->commit;
