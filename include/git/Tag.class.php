@@ -158,14 +158,17 @@ class GitPHP_Tag extends GitPHP_Ref
 	 */
 	public function GetCommit()
 	{
-		if (!$this->dataRead)
-			$this->ReadData();
-
 		if ($this->commitReferenced)
 			$this->DereferenceCommit();
 
 		if (!$this->commit)
 			$this->ReadCommit();
+
+		if ($this->commit)
+			return $this->commit;
+
+		if (!$this->dataRead)
+			$this->ReadData();
 
 		return $this->commit;
 	}
