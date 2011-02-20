@@ -125,6 +125,7 @@ class GitPHP_Controller_Blob extends GitPHP_ControllerBase
 
 				$headers = array();
 
+				$mime = null;
 				if (GitPHP_Config::GetInstance()->GetValue('filemimetype', true))
 					$mime = $blob->FileMime();
 
@@ -177,15 +178,15 @@ class GitPHP_Controller_Blob extends GitPHP_ControllerBase
 
 		if (GitPHP_Config::GetInstance()->GetValue('filemimetype', true)) {
 			$mime = $blob->FileMime();
-			if ($mime)
+			if ($mime) {
 				$mimetype = strtok($mime, '/');
-		}
-
-		if ($mime && (strtok($mime, '/') == 'image')) {
-			$this->tpl->assign('datatag', true);
-			$this->tpl->assign('mime', $mime);
-			$this->tpl->assign('data', base64_encode($blob->GetData()));
-			return;
+				if ($mimetype == 'image') {
+					$this->tpl->assign('datatag', true);
+					$this->tpl->assign('mime', $mime);
+					$this->tpl->assign('data', base64_encode($blob->GetData()));
+					return;
+				}
+			}
 		}
 
 		$this->tpl->assign('extrascripts', array('blame'));
