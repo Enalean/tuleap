@@ -1,167 +1,154 @@
-.italic {font-style:italic;}
-.bold {font-weight:bold;}
-.underline {text-decoration:underline;}
-.empty {color: gray;}
-body {
-	font-family: sans-serif; font-size: 12px; border:solid #d9d8d1; border-width:1px;
-	margin:10px; background-color:#ffffff; color:#000000;
+/*
+ * gitphp.css
+ *
+ * GitPHP layout functional stylesheet
+ *
+ * @author Christopher Han <xiphux@gmail.com>
+ * @copyright Copyright (c) 2006-2011 Christopher Han
+ * @package GitPHP
+ */
+
+
+/*
+ * Base styles 
+ */
+.italic {
+	font-style: italic;
 }
-a { color:#0000cc; }
-a:hover, a:visited, a:active { color:#880000; }
-div.page_header { height:25px; padding:8px; font-size:18px; font-weight:bold; background-color:#d9d8d1; }
-div.page_header a:visited, a.header { color:#0000cc; }
-div.page_header a:hover { color:#880000; }
-div.page_nav { padding:8px; }
-div.page_nav a:visited { color:#0000cc; }
-div.page_path { padding:8px; border:solid #d9d8d1; border-width:0px 0px 1px}
-div.page_footer { height:17px; padding:4px 8px; background-color: #d9d8d1; }
-div.page_footer_text { float:left; color:#555555; font-style:italic; }
-div.page_body { padding:8px; }
-div.title {
-	padding:6px 8px;
-	background-color:#edece6;
+
+.bold {
+	font-weight: bold;
 }
+
+.underline {
+	text-decoration: underline;
+}
+
+.respectwhitespace {
+	white-space: pre;
+}
+
+.monospace {
+	font-family: monospace;
+}
+
+.indent {
+	margin-left: 8px;
+}
+
+
+/*
+ * Title bar
+ * (main header with commit message)
+ */
 div.title a.title {
-	display: block; font-weight:bold; text-decoration:none; color:#000000;
+	display: block; 
 }
-div.title:hover { background-color: #d9d8d1; }
-div.title_text { padding:6px 0px; border: solid #d9d8d1; border-width:0px 0px 1px; }
-div.log_body { padding:8px 8px 8px 150px; }
-span.age { position:relative; float:left; width:142px; font-style:italic; }
+
+
+/*
+ * Full log view
+ */
+div.log_body { 
+	padding: 8px 8px 8px 150px; 
+}
+span.age { 
+	position: relative; 
+	float: left;
+	width: 142px;
+}
 div.log_link {
 	margin: -5px 0px;
-	padding:0px 8px;
-	font-size:10px; font-family:sans-serif; font-style:normal;
-	position:relative; float:left; width:136px;
+	padding: 0px 8px;
+	position: relative;
+	float: left; 
+	width: 136px;
 }
-div.list_head { padding:6px 8px 4px; border:solid #d9d8d1; border-width:1px 0px 0px; font-style:italic; }
-a.list { text-decoration:none; color:#000000; }
-a.list:hover { text-decoration:underline; color:#880000; }
-a.text { text-decoration:none; color:#0000cc; }
-a.text:visited { text-decoration:none; color:#880000; }
-a.text:hover { text-decoration:underline; color:#880000; }
-table { padding:8px 4px; }
-th { padding:2px 5px; font-size:12px; text-align:left; }
-tr.light:hover { background-color:#edece6; }
-tr.dark { background-color:#f6f6f0; }
-tr.dark:hover { background-color:#edece6; }
-td { padding:2px 5px; font-size:12px; vertical-align:top; }
-td.link { padding:2px 5px; font-family:sans-serif; font-size:10px; }
-div.pre { font-family:monospace; font-size:12px; white-space:pre; }
-div.diff_info { font-family:monospace; color:#000099; background-color:#edece6; font-style:italic; }
-div.index_header { border:solid #d9d8d1; border-width:0px 0px 1px; padding:12px 8px; }
-div.search { font-size: 12px; font-weight: normal; margin:4px 8px; position: absolute; top:56px; right:12px }
-a.linenr { color:#999999; text-decoration:none }
+
+
+/*
+ * Diff display
+ */
+div.pre { 
+	white-space: pre; 
+}
+
+
+/*
+ * Search box
+ */
+div.search { 
+	margin: 4px 8px; 
+	position: absolute; 
+	top: 56px;
+	right: 12px
+}
+
+
+/*
+ * Badges
+ */
 a.rss_logo {
-	float:right; padding:3px 0px; width:35px; line-height:10px;
-	border:1px solid; border-color:#fcc7a5 #7d3302 #3e1a01 #ff954e;
-	color:#ffffff; background-color:#ff6600;
-	font-weight:bold; font-family:sans-serif; font-size:10px;
-	text-align:center; text-decoration:none;
+	float: right;
 }
-a.rss_logo:hover { background-color:#ee5500; }
-span.refs a {
-	color: #000000; text-decoration: none;
-}
-span.refs a:hover {
-	color: #880000; text-decoration: underline;
-}
-span.tag {
-	padding:0px 4px; font-size:10px; font-weight:normal;
-	background-color:#ffffaa; border:1px solid; border-color:#ffffcc #ffee00 #ffee00 #ffffcc;
-}
-span.head {
-	padding:0px 4px; font-size:10px; font-weight:normal;
-	background-color:#aaffaa; border:1px solid; border-color:#ccffcc #00cc33 #00cc33 #ccffcc;
-}
-.diffplus {
-	color: #008800;
-}
-.diffminus {
-	color: #cc0000;
-}
-.diffat {
-	color: #990099;
-}
-span.agehighlight {
-	color: #009900;
-}
+
 img.logo {
 	float: right;
-	border-width: 0px;
 }
+
+
+/*
+ * Language selector
+ */
 div.lang_select {
-	font-size: 12px;
-	font-weight: normal;
 	width: 300px;
 	float: right;
 	text-align: right;
 	padding-right: 10px;
 }
-.respectwhitespace {
+
+
+/*
+ * Blob/blame display
+ */
+table.code td.num {
 	white-space: pre;
 }
-.monospace {
-	font-family: monospace;
-}
-span.newfile {
-	color: #008000;
-}
-span.deletedfile {
-	color: #c00000;
-}
-span.changedfile {
-	color: #777777;
-}
-span.movedfile {
-	color: #777777;
-}
-span.latenight {
-	color: #cc0000;
-}
-span.searchmatch {
-	color: #e00000;
-}
-div.message {
-	padding: 12px;
-}
-div.error {
-	color: #ff0000;
-}
-.indent {
-	margin-left: 8px;
-}
-table.code td {
-	padding: 0px 0px;
-}
-table.code td.num {
-	text-align: right;
-	font-family:monospace; font-size:12px; white-space:pre;
-}
+
 table.code td.codeline {
-	padding-left: 5px;
-	font-family:monospace; font-size:12px; white-space:pre;
+	white-space: pre;
 }
+
 table.code td.author, table.code td.date {
 	white-space: nowrap;
 }
-table.code tr.light:hover { background-color:#ffffff; }
-table.code tr.dark:hover { background-color:#f6f6f0; }
 
+
+/*
+ * Blob view
+ */
 td#blameData {
 	white-space: nowrap;
-	text-align: left;
 }
-td#blameData div.light:hover { background-color:#edece6; }
-td#blameData div.dark { background-color:#f6f6f0; }
-td#blameData div.dark:hover { background-color:#edece6; }
-#blobData .de1, #blobData .de2 {font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;}
-#blobData  {font-family:monospace;}
-#blobData li, #blobData .li1 {font-weight: normal; vertical-align:top;}
-table.treeTable td.filesize { text-align: right; }
-table.treeTable td.expander { padding-right: 0px; }
-table.tagTable td.link {text-align: right;}
-div.projectSearch { padding:8px; border:solid #d9d8d1; border-width:0px 0px 1px; }
-div.attr_footer { text-align: center; padding: 4px 8px; color: #888888; font-style: italic; }
-div.attr_footer a { color: #888888; font-style: italic; text-decoration: none; }
-div.attr_footer a:hover { text-decoration: underline; }
+
+
+/*
+ * Geshi styles
+ * These are generated by Geshi, don't change them
+ */
+#blobData .de1, #blobData .de2 {
+	font: normal normal 1em/1.2em monospace;
+	margin: 0;
+	padding: 0;
+	background: none; 
+	vertical-align: top;
+}
+
+#blobData {
+	font-family: monospace;
+}
+
+#blobData li, #blobData .li1 {
+	font-weight: normal;
+	vertical-align: top;
+}

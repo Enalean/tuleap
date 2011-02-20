@@ -123,9 +123,9 @@ $gitphp_conf['self'] = 'http://localhost/gitphp/';
 
 /*
  * stylesheet
- * Path to page stylesheet
+ * Path to look and feel (skin) stylesheet
  */
-$gitphp_conf['stylesheet'] = 'gitphp.css';
+$gitphp_conf['stylesheet'] = 'gitphpskin.css';
 
 /*
  * javascript
