@@ -41,7 +41,7 @@
   
   {include file='title.tpl' target='tags'}
 
-  {include file='taglist.tpl' max=17}
+  {include file='taglist.tpl'}
    
  {/if}
 
@@ -49,7 +49,7 @@
 
   {include file='title.tpl' target='heads'}
 
-  {include file='headlist.tpl' max=17}
+  {include file='headlist.tpl'}
 
  {/if}
 
