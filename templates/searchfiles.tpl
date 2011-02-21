@@ -49,7 +49,7 @@
 	      <td>
 		  <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=blob&amp;h={$result.object->GetHash()}&amp;hb={$commit->GetHash()}&amp;f={$path}" class="list"><strong>{$path|highlight:$search}</strong></a>
 		  {foreach from=$result.lines item=line name=match key=lineno}
-		    {if $smarty.foreach.match.first}<br />{/if}<span class="respectwhitespace">{$lineno}. {$line|highlight:$search:50:true}</span><br />
+		    {if $smarty.foreach.match.first}<br />{/if}<span class="matchline">{$lineno}. {$line|highlight:$search:50:true}</span><br />
 		  {/foreach}
 	      </td>
 	      <td class="link">

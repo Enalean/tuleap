@@ -1,0 +1,490 @@
+/*
+ * gitphpskin.css
+ *
+ * GitPHP look and feel stylesheet
+ *
+ * @author Christopher Han <xiphux@gmail.com>
+ * @copyright Copyright (c) 2006-2011 Christopher Han
+ * @package GitPHP
+ */
+
+
+/*
+ * Base styles 
+ */
+body {
+	font-family: sans-serif;
+	font-size: 12px;
+	border: solid #d9d8d1;
+	border-width: 1px;
+	margin: 10px;
+	background-color: #ffffff;
+	color: #000000;
+}
+
+a { 
+	color: #0000cc; 
+}
+
+a:hover, a:visited, a:active { 
+	color: #880000; 
+}
+
+.empty {
+	/* various empty / no data messages */
+	color: gray;
+}
+
+
+/*
+ * Page header
+ * (topmost bar with project link, language bar, etc)
+ */
+div.page_header { 
+	height: 25px; 
+	padding: 8px; 
+	font-size: 18px; 
+	font-weight: bold; 
+	background-color: #d9d8d1; 
+}
+
+div.page_header a:visited, a.header { 
+	color: #0000cc; 
+}
+
+div.page_header a:hover { 
+	color: #880000; 
+}
+
+
+/*
+ * Navigation header links
+ */
+div.page_nav { 
+	padding: 8px; 
+}
+
+div.page_nav a:visited { 
+	color: #0000cc; 
+}
+
+
+/*
+ * Path header
+ * (tree/blob path navigation links)
+ */
+div.page_path { 
+	padding: 8px; 
+	border: solid #d9d8d1; 
+	border-width: 0px 0px 1px;
+}
+
+
+/*
+ * Page footer
+ * (footer bar with project description and atom/rss links)
+ */
+div.page_footer { 
+	height: 17px; 
+	padding: 4px 8px; 
+	background-color: #d9d8d1;
+}
+
+
+/*
+ * Attribution footer
+ * (bottommost footer)
+ */
+div.attr_footer { 
+	text-align: center; 
+	padding: 4px 8px; 
+	color: #888888; 
+	font-style: italic; 
+}
+
+div.attr_footer a { 
+	color: #888888; 
+	font-style: italic; 
+	text-decoration: none; 
+}
+
+div.attr_footer a:hover { 
+	text-decoration: underline; 
+}
+
+
+div.page_footer_text { 
+	float: left; 
+	color: #555555;
+	font-style: italic; 
+}
+
+
+/*
+ * Page body
+ */
+div.page_body { 
+	padding: 8px; 
+}
+
+
+/*
+ * Table displays
+ */
+table { 
+	padding: 8px 4px; 
+}
+
+th { 
+	padding: 2px 5px; 
+	font-size: 12px; 
+	text-align: left; 
+}
+
+tr.light:hover {
+	/* odd rows */
+	background-color: #edece6; 
+}
+
+tr.dark {
+	/* even rows */
+	background-color: #f6f6f0; 
+}
+
+tr.dark:hover { 
+	background-color: #edece6; 
+}
+
+td { 
+	padding: 2px 5px; 
+	font-size: 12px; 
+	vertical-align: top;
+}
+
+td.link { 
+	/* navigation links on the right side of each row */
+	padding: 2px 5px; 
+	font-family: sans-serif; 
+	font-size: 10px; 
+}
+
+
+/*
+ * Messages
+ */
+div.message {
+	/* used to display information/error message to user */
+	padding: 12px;
+}
+
+div.error {
+	/* highlights error messages */
+	color: #ff0000;
+}
+
+
+/*
+ * Badges
+ */
+a.rss_logo {
+	/* the rss/atom/opml/txt buttons */
+	padding: 3px 0px; 
+	width: 35px; 
+	line-height: 10px;
+	border: 1px solid; 
+	border-color: #fcc7a5 #7d3302 #3e1a01 #ff954e;
+	color: #ffffff; 
+	background-color: #ff6600;
+	font-weight: bold; 
+	font-family: sans-serif; 
+	font-size: 10px;
+	text-align: center; 
+	text-decoration: none;
+}
+
+a.rss_logo:hover { 
+	background-color: #ee5500; 
+}
+
+span.refs a {
+	/* for both tag and head badges */
+	color: #000000;
+	text-decoration: none;
+}
+
+span.refs a:hover {
+	color: #880000;
+	text-decoration: underline;
+}
+
+span.tag {
+	/* tag badge */
+	padding: 0px 4px; 
+	font-size: 10px; 
+	font-weight: normal;
+	background-color: #ffffaa;
+	border: 1px solid; 
+	border-color: #ffffcc #ffee00 #ffee00 #ffffcc;
+}
+
+span.head {
+	/* head badge */
+	padding: 0px 4px; 
+	font-size: 10px; 
+	font-weight: normal;
+	background-color: #aaffaa; 
+	border: 1px solid; 
+	border-color: #ccffcc #00cc33 #00cc33 #ccffcc;
+}
+
+img.logo {
+	/* the git logo */
+	border-width: 0px;
+}
+
+
+/*
+ * Title bar
+ * (main header with commit message)
+ */
+div.title {
+	padding: 6px 8px;
+	background-color: #edece6;
+}
+
+div.title a.title {
+	font-weight: bold; 
+	text-decoration: none; 
+	color: #000000;
+}
+
+div.title:hover { 
+	background-color: #d9d8d1; 
+}
+
+div.title_text { 
+	padding: 6px 0px; 
+	border: solid #d9d8d1; 
+	border-width: 0px 0px 1px; 
+}
+
+
+/*
+ * Search box
+ */
+div.search { 
+	font-size: 12px; 
+	font-weight: normal; 
+}
+
+
+/*
+ * Language selector
+ */
+div.lang_select {
+	font-size: 12px;
+	font-weight: normal;
+}
+
+
+/*
+ * Full log view
+ */
+span.age {
+	/* Age display by each log commit */
+	font-style: italic; 
+}
+
+div.log_link {
+	/* Links by each log commit */
+	font-size: 10px; 
+	font-family: sans-serif; 
+	font-style: normal;
+}
+
+
+/*
+ * Commit view
+ */
+div.list_head {
+	/* Header above commit's changed files (shows # of changed files) */
+	padding: 6px 8px 4px; 
+	border: solid #d9d8d1; 
+	border-width: 1px 0px 0px; 
+	font-style: italic; 
+}
+
+a.list {
+	/* Filename in list of changed files */
+	text-decoration: none; 
+	color: #000000; 
+}
+
+a.list:hover { 
+	text-decoration: underline; 
+	color: #880000; 
+}
+
+span.newfile {
+	color: #008000;
+}
+
+span.deletedfile {
+	color: #c00000;
+}
+
+span.changedfile {
+	color: #777777;
+}
+
+span.movedfile {
+	color: #777777;
+}
+
+span.latenight {
+	/* highlights the time if it's after hours */
+	color: #cc0000;
+}
+
+
+/*
+ * Diff display
+ */
+div.pre {
+	/* the entire diff output block */
+	font-family: monospace; 
+	font-size: 12px;
+}
+
+div.diff_info {
+	/* the from -> to file header */
+	font-family: monospace; 
+	color: #000099; 
+	background-color: #edece6; 
+	font-style: italic; 
+}
+
+.diffplus {
+	color: #008800;
+}
+
+.diffminus {
+	color: #cc0000;
+}
+
+.diffat {
+	color: #990099;
+}
+
+
+/*
+ * Blob/blame display
+ */
+a.linenr {
+	/* Line numbers (non-geshi only) */
+	color: #999999; 
+	text-decoration: none;
+}
+
+table.code td {
+	/* code table (non-geshi only) */
+	padding: 0px 0px;
+}
+
+table.code td.num {
+	text-align: right;
+	font-family: monospace; 
+	font-size: 12px; 
+}
+
+table.code td.codeline {
+	padding-left: 5px;
+	font-family: monospace; 
+	font-size: 12px; 
+}
+
+table.code tr.light:hover { 
+	background-color: #ffffff; 
+}
+
+table.code tr.dark:hover { 
+	background-color: #f6f6f0; 
+}
+
+td#blameData {
+	/* the blame info column */
+	text-align: left;
+}
+
+td#blameData div.light:hover { 
+	background-color: #edece6; 
+}
+
+td#blameData div.dark { 
+	background-color: #f6f6f0; 
+}
+
+td#blameData div.dark:hover { 
+	background-color: #edece6; 
+}
+
+
+/*
+ * Project list page
+ */
+div.index_header {
+	/* the customizable info header above the list of projects */
+	border: solid #d9d8d1; 
+	border-width: 0px 0px 1px; 
+	padding: 12px 8px; 
+}
+
+span.agehighlight {
+	/* highlights recently changed project ages */
+	color: #009900;
+}
+
+div.projectSearch {
+	/* the project search box */
+	padding: 8px; 
+	border: solid #d9d8d1; 
+	border-width: 0px 0px 1px; 
+}
+
+.projectName .indent {
+	/* indents projects underneath a category */
+	margin-left: 8px;
+}
+
+
+/*
+ * Tree view
+ */
+table.treeTable td.filesize {
+	/* the file size column */
+	text-align: right; 
+}
+
+table.treeTable td.expander { 
+	/* the javascript tree expander cell */
+	padding-right: 0px; 
+}
+
+
+/*
+ * Tag view
+ */
+table.tagTable td.link {
+	/* links at the right end of each tag */
+	text-align: right;
+}
+
+
+/*
+ * Search view
+ */
+span.searchmatch {
+	/* highlights string matches */
+	color: #e00000;
+}
+

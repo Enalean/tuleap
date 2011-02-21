@@ -244,7 +244,14 @@ abstract class GitPHP_ControllerBase
 		global $gitphp_version, $gitphp_appstring;
 
 		$this->tpl->assign('version', $gitphp_version);
-		$this->tpl->assign('stylesheet', GitPHP_Config::GetInstance()->GetValue('stylesheet', 'gitphp.css'));
+
+		$stylesheet = GitPHP_Config::GetInstance()->GetValue('stylesheet', 'gitphpskin.css');
+		if ($stylesheet == 'gitphp.css') {
+			// backwards compatibility
+			$stylesheet = 'gitphpskin.css';
+		}
+		$this->tpl->assign('stylesheet', $stylesheet);
+
 		$this->tpl->assign('javascript', GitPHP_Config::GetInstance()->GetValue('javascript', true));
 		$this->tpl->assign('pagetitle', GitPHP_Config::GetInstance()->GetValue('title', $gitphp_appstring));
 		$this->tpl->assign('homelink', GitPHP_Config::GetInstance()->GetValue('homelink', __('projects')));

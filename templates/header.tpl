@@ -16,12 +16,11 @@
       <link rel="alternate" title="{$project->GetProject()} log (Atom)" href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=atom" type="application/atom+xml" />
       <link rel="alternate" title="{$project->GetProject()} log (RSS)" href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=rss" type="application/rss+xml" />
     {/if}
+    <link rel="stylesheet" href="css/gitphp.css" type="text/css" />
     <link rel="stylesheet" href="css/{$stylesheet}" type="text/css" />
     {if $extracss}
     <style type="text/css">
-    <!--
     {$extracss}
-    -->
     </style>
     {/if}
     {if $javascript}
