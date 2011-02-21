@@ -12,28 +12,8 @@
 /*
  * Base styles 
  */
-.italic {
-	font-style: italic;
-}
-
-.bold {
-	font-weight: bold;
-}
-
-.underline {
-	text-decoration: underline;
-}
-
-.respectwhitespace {
-	white-space: pre;
-}
-
 .monospace {
 	font-family: monospace;
-}
-
-.indent {
-	margin-left: 8px;
 }
 
 
@@ -129,6 +109,14 @@ table.code td.author, table.code td.date {
  */
 td#blameData {
 	white-space: nowrap;
+}
+
+
+/*
+ * File search view
+ */
+span.matchline {
+	white-space: pre;
 }
 
 

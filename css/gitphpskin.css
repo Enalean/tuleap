@@ -451,6 +451,11 @@ div.projectSearch {
 	border-width: 0px 0px 1px; 
 }
 
+.projectName .indent {
+	/* indents projects underneath a category */
+	margin-left: 8px;
+}
+
 
 /*
  * Tree view
