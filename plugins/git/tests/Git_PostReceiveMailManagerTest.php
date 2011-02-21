@@ -19,13 +19,12 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 require_once dirname(__FILE__).'/../include/Git_PostReceiveMailManager.class.php';
-Mock::generate('Git_PostReceiveMailManager');
 Mock::generatePartial('Git_PostReceiveMailManager', 'PostReceiveMailManagerTestVersion', array('addMail', '_getDao','removeMailByRepository','_getGitDao', '_getGitRepository'));
+Mock::generatePartial('Git_PostReceiveMailManager', 'PostReceiveMailManagerTestRemoveRepository', array('addMail', '_getDao','_getGitDao', '_getGitRepository'));
 Mock::generate('Git_PostReceiveMailDao');
 
 require_once dirname(__FILE__).'/../include/GitDao.class.php';
 require_once dirname(__FILE__).'/../include/GitRepository.class.php';
-
 require_once('common/user/User.class.php');
 Mock::generate('GitRepository');
 Mock::generate('User');
@@ -70,8 +69,6 @@ class Git_PostReceiveMailManagerTest extends UnitTestCase {
 
     public function testRemoveMailByProjectPrivateRepository(){
         $prm = new PostReceiveMailManagerTestVersion();
-        $dao = new MockGit_PostReceiveMailDao();
-        $prm->dao = $dao;
 
         $user = new MockUser($this);
         $user->setReturnValue('isMember', False);
@@ -81,8 +78,6 @@ class Git_PostReceiveMailManagerTest extends UnitTestCase {
         $prj->setReturnValue('getId', 1750);
 
         $repositoryList = array(
-        array('project_id' => '1750', 'repository_id' => 2515),
-        array('project_id' => '1750' , 'repository_id' => 915),
         array('project_id' => '1750' , 'repository_id' => 1035)
         );
 
@@ -90,23 +85,17 @@ class Git_PostReceiveMailManagerTest extends UnitTestCase {
         $prm->setReturnValue('_getGitDao',$gitDao);
         $gitDao->setReturnValue('getProjectRepositoryList', $repositoryList);
 
-        foreach ($repositoryList as $row) {
+        $repo = new MockGitRepository($this);
+        $prm->setReturnValue('_getGitRepository',$repo);
+        $repo->setReturnValue('load',True);
+        $repo->setReturnValue('isPrivate',True);
 
-            $repo = new MockGitRepository($this);
-            $prm->setReturnValue('_getGitRepository',$repo);
-            $repo->setReturnValue('load',True);
-            $repo->setReturnValue('isPrivate',True);
-        }
-
-        //$prm->expectAt(1, 'removeMailByRepository', array($repo , "codendiadm@codendi.org"));
-        $prm->expectCallCount('removeMailByRepository',3);
+        $prm->expectOnce('removeMailByRepository', array($repo , "codendiadm@codendi.org"));
         $prm->removeMailByProjectPrivateRepository($prj->getId(), $user);
     }
 
     public function testRemoveMailByProjectPrivateRepositoryErrorDaoRemoving(){
         $prm = new PostReceiveMailManagerTestVersion();
-        $dao = new MockGit_PostReceiveMailDao();
-        $prm->dao = $dao;
 
         $user = new MockUser($this);
         $user->setReturnValue('isMember', False);
@@ -134,12 +123,28 @@ class Git_PostReceiveMailManagerTest extends UnitTestCase {
             $repo->SetReturnValue('getBackend', $backend);
         }
 
-        $prm->dao->setReturnValue('removeNotification', False);
-        $repo->expectNever('setNotifiedMails');
-        $backend->expectNever('changeRepositoryMailingList');
+        $prm->setReturnValue('removeMailByRepository', False);
+        $GLOBALS['Language']->setReturnValue('getText','Mail not removed');
         $GLOBALS['Response']->expectOnce('addFeedback', array('error', $GLOBALS['Language']->getText('plugin_git','dao_error_remove_notification')));
         $prm->removeMailByProjectPrivateRepository($prj->getId(), $user);
     }
 
+    public function testRemoveMailByRepository(){
+        $prm = new PostReceiveMailManagerTestRemoveRepository();
+        $dao = new MockGit_PostReceiveMailDao();
+        $prm->dao = $dao;
+
+        $repo = new MockGitRepository($this);
+
+        $backend = new MockGitBackend();
+        $repo->SetReturnValue('getBackend', $backend);
+
+        $prm->dao->setReturnValue('removeNotification', True);
+
+        $repo->expectOnce('setNotifiedMails');
+        $backend->expectOnce('changeRepositoryMailingList');
+
+        $prm->removeMailByRepository($repo, "codendiadm@codendi.org");
+    }
 }
 ?>
