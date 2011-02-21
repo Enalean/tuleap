@@ -161,14 +161,14 @@ class GitPHP_Tag extends GitPHP_Ref
 		if ($this->commitReferenced)
 			$this->DereferenceCommit();
 
-		if (!$this->commit)
-			$this->ReadCommit();
-
 		if ($this->commit)
 			return $this->commit;
 
-		if (!$this->dataRead)
+		if (!$this->dataRead) {
 			$this->ReadData();
+			if ($this->commitReferenced)
+				$this->DereferenceCommit();
+		}
 
 		return $this->commit;
 	}
@@ -419,7 +419,7 @@ class GitPHP_Tag extends GitPHP_Ref
 	 */
 	private function ReadCommit()
 	{
-		$exe = new GitPHP_GitExe($this);
+		$exe = new GitPHP_GitExe($this->GetProject());
 		$args = array();
 		$args[] = '--tags';
 		$args[] = '--dereference';
