@@ -32,7 +32,7 @@ class SystemEvent_GIT_REPO_CLONE extends SystemEvent {
     public function process() {        
 
         $parameters  = $this->getParametersAsArray();
-        print_r($parameters);
+        //print_r($parameters);
         $project     = null;
         if ( !empty($parameters[0]) ) {
             $project = $this->getProject( $parameters[0] );

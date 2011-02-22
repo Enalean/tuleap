@@ -103,6 +103,15 @@ class GitViews extends PluginViews {
                         </div>
                         <?php
                         break;
+                    case 'addMail':
+                        ?>
+                        <div id="help_addMail" class="help" style="display:<?php echo $display?>">                            
+                        <?php
+                        echo '<ul>'.$this->getText('add_mail_msg').'</ul>';
+                        ?>
+                        </div>
+                        <?php
+                        break;
                 default:
                     break;
             }            
@@ -111,7 +120,7 @@ class GitViews extends PluginViews {
         /**
          * REPO VIEW
          */
-        public function view() {                    
+        public function view() {
             $gitphp      = '';
             $params       = $this->getData();
             if ( empty($params['repository']) ) {
@@ -120,7 +129,7 @@ class GitViews extends PluginViews {
             }
             $repository   = $params['repository'];
             $repoId       = $repository->getId();
-            $repoName     = $repository->getName();            
+            $repoName     = $repository->getName();
             $initialized  = $repository->isInitialized();
             $creator      = $repository->getCreator();
             $parent       = $repository->getParent();
@@ -128,9 +137,9 @@ class GitViews extends PluginViews {
             $description  = $repository->getDescription();
             $creatorName  = '';
             if ( !empty($creator) ) {
-                $creatorName  = $creator->getName();
+                $creatorName  = UserHelper::instance()->getLinkOnUserFromUserId($creator->getId());
             }
-            $creationDate = $repository->getCreationDate();
+            $creationDate = html_time_ago(strtotime($repository->getCreationDate()));
 
             if ( $initialized ) {
                 ob_start();
@@ -148,93 +157,195 @@ class GitViews extends PluginViews {
                 echo '<div class="feedback_warning">'.$this->getText('help_init_reference_msg').'</div>';
                 $this->help('init', array('repo_name'=>$repoName));
             }
-            $this->_getBreadCrumb();            
+            $this->_getBreadCrumb();
+            
+            // Access type
+            $accessType = '<span class="plugin_git_repo_privacy" title=';
+            switch ($access) {
+            case GitRepository::PRIVATE_ACCESS:
+                $accessType .= '"'.$this->getText('view_repo_access_private').'">';
+                $accessType .= '<img src="'.util_get_image_theme('ic/lock.png').'" />';
+                break;
+            case GitRepository::PUBLIC_ACCESS:
+                $accessType .= '"'.$this->getText('view_repo_access_public').'">';
+                $accessType .= '<img src="'.util_get_image_theme('ic/lock-unlock.png').'" />';
+                break;
+            }
+            $accessType .= '</span>';
 
-         echo '<h2>'.$repoName.'</h2>';
+            // Actions
+            $repoActions = '<ul id="plugin_git_repository_actions">';
+            if ($this->getController()->isAPermittedAction('repo_management')) {
+                $repoActions .= '<li>'.$this->linkTo($this->getText('admin_repo_management'), '/plugins/git/?action=repo_management&group_id='.$this->groupId.'&repo_id='.$repoId, 'class="repo_admin"').'</li>';
+            }
+
+            if ($initialized && $this->getController()->isAPermittedAction('clone')) {
+                $repoActions .= '<li>'.$this->linkTo($this->getText('admin_fork_creation_title'), '/plugins/git/?action=fork&group_id='.$this->groupId.'&repo_id='.$repoId, 'class="repo_fork"').'</li>';
+            }
+            $repoActions .= '</ul>';
+
+            echo '<div id="plugin_git_reference">';
+            echo '<h2>'.$accessType.$repoName.'</h2>';
+            echo $repoActions;
 ?>
 <form id="repoAction" name="repoAction" method="POST" action="/plugins/git/?group_id=<?php echo $this->groupId?>">
     <input type="hidden" id="action" name="action" value="edit" />
     <input type="hidden" id="repo_id" name="repo_id" value="<?php echo $repoId?>" />
-    <em style="vertical-align:top;"><?php echo $this->getText('view_repo_description');
-            ?> : </em><textarea class="text" id="repo_desc" name="repo_desc"><?php echo $this->HTMLPurifier->purify($description, CODENDI_PURIFIER_CONVERT_HTML, $this->groupId);
-        ?></textarea>
-    <br />
-    <em><?php echo $this->getText('view_repo_creator');
-            ?> : </em><span><?php echo $creatorName;
-        ?></span>
-    <br />
-    <em><?php echo $this->getText('view_repo_creation_date');
-            ?> : </em><span><?php echo $creationDate;
-        ?></span>
-    <br />
+<?php
+            echo '<p id="plugin_git_reference_author">'. 
+                $this->getText('view_repo_creator') 
+                .' '. 
+                $creatorName
+                .' '.
+                $creationDate
+                .'</p>';
+            ?>
     <?php
     if ( !empty($parent) ) :
     ?>
-    <em><?php echo $this->getText('view_repo_parent');
-            ?> : </em><span><?php echo $this->_getRepositoryPageUrl( $parent->getId(), $parent->getName() );?></span>
-    <br />
+    <p id="plugin_git_repo_parent"><?php echo $this->getText('view_repo_parent');
+            ?>: <span><?php echo $this->_getRepositoryPageUrl( $parent->getId(), $parent->getName() );?></span>
+    </p>
     <?php
     endif;
+    if (!empty($description)) {
+        echo '<p id="plugin_git_description">'.$this->HTMLPurifier->purify($description, CODENDI_PURIFIER_CONVERT_HTML, $this->groupId).'</p>';
+    }
     ?>
-    <em><?php echo $this->getText('view_repo_clone_url');
-            ?> : </em><span>git clone <?php echo $this->_getRepositoryUrl($repoName);
-        ?></span>
-    <br />
-    <?php if ( $this->getController()->isAPermittedAction('save') ) :
+    <p id="plugin_git_clone_url"><?php echo $this->getText('view_repo_clone_url');
+            ?>: <input id="plugin_git_clone_field" type="text" value="git clone <?php echo $this->_getRepositoryUrl($repoName); ?>" />
+    </p>
+</form>
+        <?php
+        echo '</div>';
+        if ( $initialized ) {
+            echo $gitphp;
+        }
+    }
+
+    /**
+     * REPOSITORY MANAGEMENT VIEW
+     */
+    public function repoManagement() {
+        $params = $this->getData();
+        $repository   = $params['repository'];
+        $repoId       = $repository->getId();
+        $repoName     = $repository->getName();
+        $initialized  = $repository->isInitialized();
+        $access       = $repository->getAccess();
+        $description  = $repository->getDescription();
+        $this->repoId = $repository->getId();
+        $mailPrefix   = $repository->getMailPrefix();
+        echo "<br/>";
+        $this->_getBreadCrumb();
+        echo "<h2><b>".$this->_getRepositoryPageUrl($this->repoId, $repoName)."</b></h2>";
+        ?>
+        <form id="repoAction" name="repoAction" method="POST" action="/plugins/git/?group_id=<?php echo $this->groupId?>">
+        <input type="hidden" id="action" name="action" value="edit" />
+        <input type="hidden" id="repo_id" name="repo_id" value="<?php echo $repoId?>" />
+        <?php
+        if ( $this->getController()->isAPermittedAction('del') && !$repository->hasChild() ) {
+            echo '<div id="plugin_git_confirm_deletion"><input type="submit" name="confirm_deletion" value="'. $this->getText('admin_deletion_submit') .'" /></div>';
+        }
+        if ( $this->getController()->isAPermittedAction('save') ) :
+        ?>
+        <form id="repoAction" name="repoAction" method="POST" action="/plugins/git/?group_id=<?php echo $this->groupId?>">
+        <input type="hidden" id="repo_id" name="repo_id" value="<?php echo $repoId?>" />
+        <p id="plugin_git_description"><?php echo $this->getText('view_repo_description');
+            ?>: <textarea class="text" id="repo_desc" name="repo_desc"><?php echo $this->HTMLPurifier->purify($description, CODENDI_PURIFIER_CONVERT_HTML, $this->groupId);
+        ?></textarea>
+        </p>
+        <?php
         $public  = '';
         $private = '';
         $checked = 'checked="checked"';
         if ( $access == GitRepository::PRIVATE_ACCESS ) {
             $private = $checked;
+            ?> <input type="hidden" id="action" name="action" value="edit" /> <?php
         } else if ( $access == GitRepository::PUBLIC_ACCESS ) {
             $public  = $checked;
-        }        
-        ?>
-    <em><?php echo $this->getText('view_repo_access');?> : </em><span><input type="radio" name="repo_access" value="private" <?php echo $private?>/>Private<input type="radio" name="repo_access" value="public"  <?php echo $public?>/>Public</span></em>
-    <?php endif; ?>
-       <table style="width:100%;">
-           <tr>
-            <td style="text-align:left;">
-
-            <?php
-            if ( $initialized && $this->getController()->isAPermittedAction('clone') ) :
-            ?>                
-                <div style="white-space:no-wrap;">                                           
-                        <input type="hidden" id="parent_id" name="parent_id" value="<?php echo $repoId?>">
-                        <label for="repo_name"><?php echo $this->getText('admin_fork_creation_input_name');
-            ?> :</label>
-                        <input type="text" id="repo_name" name="repo_name" value="" /><input type="submit" name="clone" value="<?php echo $this->getText('admin_fork_creation_submit');?>" />
-                        <a href="#" onclick="$('help_fork').toggle();"> [?]</a>
-                </div>
-
-            <?php
-            endif;
-            ?>                
-            </td><td style="text-align:right;">
-            <?php
-            if ( $this->getController()->isAPermittedAction('save') ) :
-            ?>                                
-                    <input type="submit" name="save" value="<?php echo $this->getText('admin_save_submit');?>" />
-            <?php
-            endif;
-            ?>
-            <?php
-            if ( $this->getController()->isAPermittedAction('del') && !$repository->hasChild() ) :
-            ?>                
-                    <input type="submit" name="confirm_deletion" value="<?php echo $this->getText('admin_deletion_submit');?>" />
-            <?php
-            endif;
-            ?>                                  
-            </td>
-        </tr>
-    </table>
-</form>
-        <?php
-        $this->help('fork', array('display'=>'none'));
-        if ( $initialized ) {
-            echo $gitphp;
+            ?> <input type="hidden" id="action" name="action" value="confirm_private" /> <?php
         }
-    }    
+        ?>
+        <p id="plugin_git_access"><?php echo $this->getText('view_repo_access');?>: <span><input type="radio" name="repo_access" value="private" <?php echo $private?>/><?php echo $this->getText('view_repo_access_private'); ?><input type="radio" name="repo_access" value="public"  <?php echo $public?>/>Public</span></p>
+        <p><input type="submit" name="save" value="<?php echo $this->getText('admin_save_submit');?>" /></p>
+        </form>
+        <?php
+        endif;
+        // form to update notification mail prefix
+        $this->_mailPrefixForm($mailPrefix);
+        // form to add email addresses (mailing list) or a user to notify
+        $this->_addMailForm();
+        // show the list of mails to notify
+        $this->_listOfMails();
+    }
+
+    /**
+     * FORK VIEW
+     */
+    public function fork() {
+        $params = $this->getData();
+        $repository   = $params['repository'];
+        $repoId       = $repository->getId();
+        $repoName     = $repository->getName();
+        $initialized  = $repository->isInitialized();
+        echo "<br/>";
+        $this->_getBreadCrumb();
+        echo "<h2><b>".$this->_getRepositoryPageUrl($repoId, $repoName)."</b></h2>";
+        ?>
+        <form id="repoAction" name="repoAction" method="POST" action="/plugins/git/?group_id=<?php echo $this->groupId?>">
+        <input type="hidden" id="action" name="action" value="edit" />
+        <input type="hidden" id="repo_id" name="repo_id" value="<?php echo $repoId?>" />
+        <?php
+        if ( $initialized && $this->getController()->isAPermittedAction('clone') ) :
+        ?>
+            <p id="plugin_git_fork_form">
+                <input type="hidden" id="parent_id" name="parent_id" value="<?php echo $repoId?>">
+                <label for="repo_name"><?php echo $this->getText('admin_fork_creation_input_name');
+        ?>:     </label>
+                <input type="text" id="repo_name" name="repo_name" value="" /><input type="submit" name="clone" value="<?php echo $this->getText('admin_fork_creation_submit');?>" />
+                <a href="#" onclick="$('help_fork').toggle();"> [?]</a>
+            </p>
+        </form>
+        <?php
+        endif;
+        $this->help('fork', array('display'=>'none'));
+    }
+
+    /**
+     * CONFIRM PRIVATE
+     */
+    public function confirmPrivate() {
+        $params = $this->getData();
+        $repository   = $params['repository'];
+        $repoId       = $repository->getId();
+        $repoName     = $repository->getName();
+        $initialized  = $repository->isInitialized();
+        $mails        = $params['mails'];
+        if ( $initialized && $this->getController()->isAPermittedAction('save') ) :
+        ?>
+        <div class="confirm">
+        <h3><?php echo $this->getText('set_private_confirm'); ?></h3>
+        <form id="confirm_private" method="POST" action="/plugins/git/?group_id=<?php echo $this->groupId; ?>" >
+        <input type="hidden" id="action" name="action" value="set_private" />
+        <input type="hidden" id="repo_id" name="repo_id" value="<?php echo $repoId; ?>" />
+        <input type="submit" id="submit" name="submit" value="<?php echo $this->getText('yes') ?>"/><span><input type="button" value="<?php echo $this->getText('no')?>" onclick="window.location='/plugins/git/?action=view&group_id=<?php echo $this->groupId;?>&repo_id=<?php echo $repoId?>'"/> </span>
+        </form>
+        <h3><?php echo $this->getText('set_private_mails'); ?></h3>
+    <table>
+        <?php
+        $i = 0;
+        foreach ($mails as $mail) {
+            echo '<tr class="'.html_get_alt_row_color(++$i).'">';
+            echo '<td>'.$mail.'</td>';
+            echo '</tr>';
+        }
+        ?>
+    </table>
+    </div>
+        <?php
+        endif;
+    }
 
     /**
      * TREE VIEW
@@ -264,7 +375,7 @@ class GitViews extends PluginViews {
         $_REQUEST['git_root_path'] = GitBackend::GIT_ROOT_PATH;
         $_REQUEST['action']        = 'view';
         if ( empty($_REQUEST['noheader']) ) {
-            echo '<hr>';
+            //echo '<hr>';
             echo '<div id="gitphp">';
         }
         include( dirname(__FILE__).'/../gitphp/index.php' );
@@ -319,7 +430,97 @@ class GitViews extends PluginViews {
         $this->help('create', array('display'=>'none')) ;
         $this->help('init', array('display'=>'none')) ;
     }
-   
+
+    /**
+     * CREATE NOTIFICATION FORM
+     */
+    protected function _mailPrefixForm($mailPrefix) {
+        ?>
+<h3><?php echo $this->getText('mail_prefix_title'); ?></h3>
+<form id="mail_prefix_form" action="/plugins/git/" method="POST">
+    <input type="hidden" id="action" name="action" value="mail_prefix" />
+    <input type="hidden" id="group_id" name="group_id" value="<?php echo $this->groupId ?>" />
+    <input type="hidden" id="repo_id" name="repo_id" value="<?php echo $this->repoId ?>" />
+    <table>
+        <tr>
+            <td class="plugin_git_first_col" ><label for="mail_prefix_label"><?php echo $this->getText('mail_prefix');
+        ?></label></td>
+            <td><input name="mail_prefix" class="plugin_git_mail_prefix" type="text" value="<?php echo $mailPrefix; ?>" /></td>
+        </tr>
+        <tr>
+            <td colspan="2"><input type="submit" id="mail_prefix_submit" name="mail_prefix_submit" value="<?php echo $this->getText('mail_prefix_submit')?>"></td>
+        </tr>
+    </table>
+</form>
+        <?php
+    }
+
+    /**
+     * MAIL FORM
+     */
+    protected function _addMailForm() {
+        ?>
+<h3><?php echo $this->getText('add_mail_title'); ?></h3>
+<form id="add_mail_form" action="/plugins/git/" method="POST">
+    <input type="hidden" id="action" name="action" value="add_mail" />
+    <input type="hidden" id="group_id" name="group_id" value="<?php echo $this->groupId ?>" />
+    <input type="hidden" id="repo_id" name="repo_id" value="<?php echo $this->repoId ?>" />
+    <table>
+        <tr>
+            <td class="plugin_git_first_col" ><label for="add_mail_label"><?php echo $this->getText('add_mail');?>
+                <a href="#" onclick="$('help_addMail').toggle();"> [?]</a></label></td>
+            <td><textarea id="add_mail" name="add_mail" class="plugin_git_add_mail"></textarea></td>
+        </tr>
+        <tr>
+            <td colspan="2"><input type="submit" id="add_mail_submit" name="add_mail_submit" value="<?php echo $this->getText('add_mail_submit')?>"></td>
+        </tr>
+    </table>
+</form>
+        <?php
+        $this->help('addMail', array('display'=>'none') );
+        $js = "new UserAutoCompleter('add_mail', '".util_get_dir_image_theme()."', true);";
+        $GLOBALS['Response']->includeFooterJavascriptSnippet($js);
+    }
+
+    /**
+     * LIST OF MAILS TO NOTIFY
+     */
+    protected function _listOfMails() {
+        $r = new GitRepository();
+        $r->setId($this->repoId);
+        $r->load();
+        $mails = $r->getNotifiedMails();
+        ?>
+<h3><?php echo $this->getText('notified_mails_title'); ?></h3>
+    <?php if (!empty($mails)) {?>
+<form id="add_user_form" action="/plugins/git/" method="POST">
+    <input type="hidden" id="action" name="action" value="remove_mail" />
+    <input type="hidden" id="group_id" name="group_id" value="<?php echo $this->groupId ?>" />
+    <input type="hidden" id="repo_id" name="repo_id" value="<?php echo $this->repoId ?>" />
+    <table>
+        <?php
+        $i = 0;
+        foreach ($mails as $mail) {
+            echo '<tr class="'.html_get_alt_row_color(++$i).'">';
+            echo '<td>'.$mail.'</td>';
+            echo '<td>';
+            echo '<input type="checkbox" name="mail[]" value="'.$this->HTMLPurifier->purify($mail).'" />';
+            echo '</a>';
+            echo '</td>';
+            echo '</tr>';
+        }
+        ?>
+    </table>
+    <input type="submit" value="<?php echo $GLOBALS['Language']->getText('global', 'btn_delete') ?>" />
+</form>
+        <?php
+        } else {
+?>
+<h4><?php echo $this->getText('add_mail_existing'); ?> </h4>
+<?php
+}
+    }
+
     /**
      * @todo make a breadcrumb out of the repository hierarchie ?
      */
@@ -398,7 +599,26 @@ class GitViews extends PluginViews {
             if ( $delDate != '0000-00-00 00:00:00' ) {
                 continue;
             }
-            echo '<li>'.$this->_getRepositoryPageUrl($repoId, $repoName).($isInit == 0 ? ' ('.$this->getText('view_repo_not_initialized').') ' : '').' '.$access.' </li>';
+
+            // Access type
+            $accessType = '<span class="plugin_git_repo_privacy" title=';
+            switch ($access) {
+                case GitRepository::PRIVATE_ACCESS:
+                    $accessType .= '"'.$this->getText('view_repo_access_private').'">';
+                    $accessType .= '<img src="'.util_get_image_theme('ic/lock.png').'" />';
+                    break;
+                case GitRepository::PUBLIC_ACCESS:
+                    $accessType .= '"'.$this->getText('view_repo_access_public').'">';
+                    $accessType .= '<img src="'.util_get_image_theme('ic/lock-unlock.png').'" />';
+                    break;
+            }
+            $accessType .= '</span>';
+            echo '<li>'.$accessType.' '.$this->_getRepositoryPageUrl($repoId, $repoName);
+            if ($isInit == 0) {
+                echo ' ('.$this->getText('view_repo_not_initialized').') ';
+            }
+            echo '</li>';
+
             if ( !empty($flatTree[$childId]) ) {
                 echo '<ul>';
                 $this->_makeRepositoryTree($flatTree, $childId, $data);

@@ -57,8 +57,16 @@ class Git extends PluginController {
             $this->request->set('repo_id', $repo_id);
         }        
         $this->plugin      = $plugin;
-        $this->groupId     = (int)$this->request->get('group_id');
-        $this->action      = $this->request->get('action');
+        $valid = new Valid_GroupId('group_id');
+        $valid->required();
+        if($this->request->valid($valid)) {
+            $this->groupId = (int)$this->request->get('group_id');
+        }
+        $valid = new Valid_String('action');
+        $valid->required();
+        if($this->request->valid($valid)) {
+            $this->action = $this->request->get('action');
+        }
         $this->nonMember   = false;
 
         if (  empty($this->action) ) {
@@ -78,7 +86,22 @@ class Git extends PluginController {
         $this->permittedActions = array();
         //user access control
         if ( $this->user->isMember($this->groupId, 'A') === true ) {
-            $this->permittedActions = array('index','view', 'edit', 'clone', 'add', 'del', 'create', 'confirm_deletion', 'save');
+            $this->permittedActions = array('index',
+                                            'view' ,
+                                            'edit',
+                                            'clone',
+                                            'add',
+                                            'del',
+                                            'create',
+                                            'confirm_deletion',
+                                            'save',
+                                            'repo_management',
+                                            'mail_prefix',
+                                            'add_mail',
+                                            'remove_mail',
+                                            'fork',
+                                            'set_private',
+                                            'confirm_private');
         } else if ( $this->user->isMember($this->groupId) === true ) {
             $this->permittedActions = array('index','view', 'edit', 'clone');
         } else if ( !$this->user->isAnonymous() && !$this->user->isRestricted() ) {
@@ -93,29 +116,41 @@ class Git extends PluginController {
         }                
     }
 
-    protected function getText($key) {
-        return $GLOBALS['Language']->getText('plugin_git', $key);
+    protected function getText($key, $params = array()) {
+        return $GLOBALS['Language']->getText('plugin_git', $key, $params);
     }
 
     public function request() {
-        
-        $repositoryName = $this->request->get('repo_name');
-        $description    = $this->request->get('repo_desc');
-        $repoId         = $this->request->get('repo_id');
+        $valid = new Valid_String('repo_name');
+        $valid->required();
+        if($this->request->valid($valid)) {
+            $repositoryName = $this->request->get('repo_name');
+        }
+        $valid = new Valid_UInt('repo_id');
+        $valid->required();
+        if($this->request->valid($valid)) {
+            $repoId = $this->request->get('repo_id');
+        } else {
+            $repoId = 0;
+        }
+
         //public access
-        if ( !empty($repoId) && $this->nonMember ) {
+        if ($repoId !== 0 && $this->nonMember ) {
             $repo = new GitRepository();
             $repo->setId($repoId);
             if ( $repo->exists() && $repo->isPublic() ) {
                 $this->addPermittedAction('view');
             }
-        }
+        } 
+
         //check permissions
         if (  !empty($this->action) && !$this->isAPermittedAction($this->action) ) {
             $this->addError( $this->getText('controller_action_permission_denied') );
             $this->redirect('/plugins/git/?group_id='.$this->groupId);
             return;
         }
+
+        $this->_informAboutPendingEvents($repoId);
 
         switch ($this->action) {
             #CREATE REF
@@ -141,7 +176,11 @@ class Git extends PluginController {
             #EDIT
             case 'edit':                
                 if ( $this->isAPermittedAction('clone') && $this->request->get('clone') ) {
-                    $parentId = (int)$this->request->get('parent_id');
+                    $valid = new Valid_UInt('parent_id');
+                    $valid->required();
+                    if($this->request->valid($valid)) {
+                        $parentId = (int)$this->request->get('parent_id');
+                    }
                     $this->addAction( 'cloneRepository', array($this->groupId, $repositoryName, $parentId) );
                     $this->addAction( 'getRepositoryDetails', array($this->groupId, $parentId) );
                     $this->addView('view');
@@ -151,14 +190,112 @@ class Git extends PluginController {
                     $this->addView('confirm_deletion', array( 0=>array('repo_id'=>$repoId) ) );
                 }
                 else if ( $this->isAPermittedAction('save') && $this->request->get('save') ) {                    
-                    $repoDesc   = $this->request->get('repo_desc');
-                    $repoAccess = $this->request->get('repo_access');
+                    $valid = new Valid_String('repo_desc');
+                    $valid->required();
+                    if($this->request->valid($valid)) {
+                        $repoDesc = $this->request->get('repo_desc');
+                    }
+                    $valid = new Valid_String('repo_access');
+                    $valid->required();
+                    if($this->request->valid($valid)) {
+                        $repoAccess = $this->request->get('repo_access');
+                    }
                     $this->addAction('save', array($this->groupId, $repoId, $repoAccess, $repoDesc) );
                     $this->addView('view');
                 } else {
                     $this->addError( $this->getText('controller_action_permission_denied') );
                     $this->redirect('/plugins/git/?group_id='.$this->groupId);
                 }
+                break;
+            #repo_management
+            case 'repo_management':
+                $this->addAction('repoManagement', array($this->groupId, $repoId));
+                $this->addView('repoManagement');
+                break;
+            #mail prefix
+            case 'mail_prefix':
+                $valid = new Valid_String('mail_prefix');
+                $valid->required();
+                if($this->request->valid($valid)) {
+                    $mailPrefix = $this->request->get('mail_prefix');
+                } else {
+                    $mailPrefix = '';
+                }
+                $this->addAction('notificationUpdatePrefix', array($this->groupId, $repoId, $mailPrefix));
+                $this->addView('repoManagement');
+                break;
+            #add mail
+            case 'add_mail':
+                $validMails = array();
+                $mails      = array_map('trim', preg_split('/[,;]/', $this->request->get('add_mail')));
+                $rule       = new Rule_Email();
+                $um         = UserManager::instance();
+                foreach ($mails as $mail) {
+                    if ($rule->isValid($mail)) {
+                        $validMails[] = $mail;
+                    } else {
+                        $user = $um->findUser($mail);
+                        if ($user) {
+                            $mail = $user->getEmail();
+                            if ($mail) {
+                                $validMails[] = $mail;
+                            } else {
+                                $this->addError($this->getText('no_user_mail', array($mail)));
+                            }
+                        } else {
+                            $this->addError($this->getText('no_user', array($mail)));
+                        }
+                    }
+                }
+                $this->addAction('notificationAddMail', array($this->groupId, $repoId, $validMails));
+                $this->addView('repoManagement');
+                break;
+            #remove mail
+            case 'remove_mail':
+                $mails = array();
+                $valid = new Valid_Email('mail');
+                $valid->required();
+                if($this->request->validArray($valid)) {
+                    $mails = $this->request->get('mail');
+                }
+                if (count($mails) > 0) {
+                    $this->addAction('notificationRemoveMail', array($this->groupId, $repoId, $mails));
+                    $this->addView('repoManagement');
+                } else {
+                    $this->addAction('repoManagement', array($this->groupId, $repoId));
+                    $this->addView('repoManagement');
+                }
+                break;
+            #fork
+            case 'fork':
+                $this->addAction('repoManagement', array($this->groupId, $repoId));
+                $this->addView('fork');
+                break;
+            #confirm_private
+            case 'confirm_private':
+                if ( $this->isAPermittedAction('confirm_deletion') && $this->request->get('confirm_deletion') ) {
+                    $this->addAction('confirmDeletion', array($this->groupId, $repoId) );
+                    $this->addView('confirm_deletion', array( 0=>array('repo_id'=>$repoId) ) );
+                }
+                else if ( $this->isAPermittedAction('save') && $this->request->get('save') ) {
+                    $valid = new Valid_String('repo_desc');
+                    $valid->required();
+                    if($this->request->valid($valid)) {
+                        $repoDesc = $this->request->get('repo_desc');
+                    }
+                    $valid = new Valid_String('repo_access');
+                    $valid->required();
+                    if($this->request->valid($valid)) {
+                        $repoAccess = $this->request->get('repo_access');
+                    }
+                    $this->addAction('confirmPrivate', array($this->groupId, $repoId, $repoAccess, $repoDesc) );
+                    $this->addView('confirmPrivate');
+                }
+                break;
+             #SET TO PRIVATE
+            case 'set_private':
+                $this->addAction('setPrivate', array($this->groupId, $repoId));
+                $this->addView('view');
                 break;
             #LIST
             default:     
@@ -168,7 +305,35 @@ class Git extends PluginController {
         }
     }
 
-    
+    protected function _informAboutPendingEvents($repoId) {
+        $sem = SystemEventManager::instance();
+        $dar = $sem->_getDao()->searchWithParam('head', $this->groupId, array('GIT_REPO_CREATE', 'GIT_REPO_CLONE', 'GIT_REPO_DELETE'), array(SystemEvent::STATUS_NEW, SystemEvent::STATUS_RUNNING));
+        foreach ($dar as $row) {
+            switch($row['type']) {
+            case 'GIT_REPO_CREATE':
+                $p = explode('::', $row['parameters']);
+                $GLOBALS['Response']->addFeedback('info', $this->getText('feedback_event_create', array($p[1])));
+                break;
+
+            case 'GIT_REPO_CLONE':
+                $p = explode('::', $row['parameters']);
+                $GLOBALS['Response']->addFeedback('info', $this->getText('feedback_event_fork', array($p[1])));
+                break;
+
+            case 'GIT_REPO_DELETE':
+                $GLOBALS['Response']->addFeedback('info', $this->getText('feedback_event_delete'));
+                break;
+            }
+            
+        }
+
+        if ($repoId !== 0) {
+            $dar = $sem->_getDao()->searchWithParam('head', $repoId, array('GIT_REPO_ACCESS'), array(SystemEvent::STATUS_NEW, SystemEvent::STATUS_RUNNING));
+            foreach ($dar as $row) {
+                $GLOBALS['Response']->addFeedback('info', $this->getText('feedback_event_access'));
+            }
+        }
+    }
 }
 
 ?>

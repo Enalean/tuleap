@@ -1,27 +1,28 @@
 <?php
 
 /**
-  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
-  *
-  * This file is a part of Codendi.
-  *
-  * Codendi is free software; you can redistribute it and/or modify
-  * it under the terms of the GNU General Public License as published by
-  * the Free Software Foundation; either version 2 of the License, or
-  * (at your option) any later version.
-  *
-  * Codendi is distributed in the hope that it will be useful,
-  * but WITHOUT ANY WARRANTY; without even the implied warranty of
-  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-  * GNU General Public License for more details.
-  *
-  * You should have received a copy of the GNU General Public License
-  * along with Codendi. If not, see <http://www.gnu.org/licenses/
-  */
+ * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+ *
+ * This file is a part of Codendi.
+ *
+ * Codendi is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Codendi is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Codendi. If not, see <http://www.gnu.org/licenses/
+ */
 
 require_once('common/plugin/Plugin.class.php');
 require_once('common/system_event/SystemEvent.class.php');
 require_once('GitActions.class.php');
+require_once('Git_PostReceiveMailManager.class.php');
 
 /**
  * GitPlugin
@@ -45,6 +46,8 @@ class GitPlugin extends Plugin {
         // Stats plugin
         $this->_addHook('plugin_statistics_disk_usage_collect_project', 'plugin_statistics_disk_usage_collect_project', false);
         $this->_addHook('plugin_statistics_disk_usage_service_label',   'plugin_statistics_disk_usage_service_label',   false);
+
+        $this->_addHook('project_admin_remove_user', 'projectRemoveUserFromNotification', false);
     }
 
     public function getPluginInfo() {
@@ -68,9 +71,9 @@ class GitPlugin extends Plugin {
         }
     }
 
-    public function jsFile() {        
-        // Only show the javascript if we're actually in the Git pages.       
-        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {            
+    public function jsFile() {
+        // Only show the javascript if we're actually in the Git pages.
+        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
             echo '<script type="text/javascript" src="'.$this->getPluginPath().'/git.js"></script>';
         }
     }
@@ -108,7 +111,7 @@ class GitPlugin extends Plugin {
 
     public function getReferenceNatures($params) {
         $params['natures'] = array_merge( $params['natures'],
-                array( 'git_commit'=>array('keyword'=>'git', 'label'=> $GLOBALS['Language']->getText('plugin_git', 'reference_commit_nature_key') ) ) );
+        array( 'git_commit'=>array('keyword'=>'git', 'label'=> $GLOBALS['Language']->getText('plugin_git', 'reference_commit_nature_key') ) ) );
     }
 
     public function changeProjectRepositoriesAccess($params) {
@@ -130,7 +133,7 @@ class GitPlugin extends Plugin {
         $controler = new Git($this);
         $controler->process();
     }
-    
+
     /**
      * Hook to collect docman disk size usage per project
      *
@@ -145,12 +148,34 @@ class GitPlugin extends Plugin {
 
     /**
      * Hook to list docman in the list of serices managed by disk stats
-     * 
+     *
      * @param array $params
      */
     function plugin_statistics_disk_usage_service_label($params) {
         $params['services']['plugin_git'] = 'Git';
     }
+
+    /**
+     * Function called when a user is removed from a project
+     * If a user is removed from a project wich having a private git repository, the
+     * user should be removed from notification.
+     *
+     * @param array $params
+     *
+     * @return void
+     */
+    function projectRemoveUserFromNotification($params) {
+        $groupId = $params['group_id'];
+        $userId = $params['user_id'];
+
+        $userManager = UserManager::instance();
+        $user = $userManager->getUserById($userId);
+
+        $notificationsManager = new Git_PostReceiveMailManager();
+        $notificationsManager->removeMailByProjectPrivateRepository($groupId, $user);
+
+    }
+
 }
 
 ?>

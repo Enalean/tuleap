@@ -52,6 +52,8 @@ class GitRepository implements DVCSRepository {
     private $creator;
     private $deletionDate;
     private $access;
+    private $mailPrefix;
+    private $notifiedMails;
 
     private $hooks;
     private $branches;
@@ -74,6 +76,8 @@ class GitRepository implements DVCSRepository {
         $this->deletionDate   = '';
         $this->isInitialized  = 0;
         $this->access         = 'private';
+        $this->mailPrefix     = '[SCM]';
+        $this->notifiedMails = array();
 
         $this->hooks       = array();
         $this->branches    = array();
@@ -82,7 +86,6 @@ class GitRepository implements DVCSRepository {
         $this->parent      = null;
         $this->parentId    = 0;
         $this->loaded      = false;        
-        $this->dao         = new GitDao();
     }       
 
     /**
@@ -143,7 +146,11 @@ class GitRepository implements DVCSRepository {
         }
         return $this->backend;
     }
-
+    
+    public function getPostReceiveMailManager() {
+        return new Git_PostReceiveMailManager();
+    }
+    
     public function setId($id) {
         $this->id = $id;
     }
@@ -154,7 +161,7 @@ class GitRepository implements DVCSRepository {
     
     public function hasChild() {
         $this->load();
-        return $this->dao->hasChild($this);
+        return $this->getDao()->hasChild($this);
     }
 
     /**
@@ -379,6 +386,27 @@ class GitRepository implements DVCSRepository {
         return false;
     }
 
+    public function getMailPrefix() {
+        return $this->mailPrefix;
+    }
+
+    public function setMailPrefix($mailPrefix) {
+        $this->mailPrefix = $mailPrefix;
+    }
+
+    public function changeMailPrefix() {
+        $this->getBackend()->changeRepositoryMailPrefix($this);
+    }
+
+    public function setNotifiedMails() {
+        $postRecMailManager = $this->getPostReceiveMailManager();
+        $this->notifiedMails = $postRecMailManager->getNotificationMailsByRepositoryId($this->getId());
+    }
+
+    public function getNotifiedMails() {
+        return $this->notifiedMails;
+    }
+
     /**
      * Clone a repository, it inherits access
      * @param String forkName
@@ -392,6 +420,7 @@ class GitRepository implements DVCSRepository {
         $clone->setCreator( $this->getCreator() );
         $clone->setAccess( $this->getAccess() );
         $clone->setIsInitialized(1);
+        $clone->setDescription('-- Default description --');
         $this->getBackend()->createFork($clone);
     }
 
@@ -425,6 +454,11 @@ class GitRepository implements DVCSRepository {
         if ( empty($date) || $date == '0000-00-00 00:00:00') {
             $this->setDeletionDate( date('Y-m-d H:i:s') );
         }
+
+        //remove notification from DB
+        $postRecMailManager = $this->getPostReceiveMailManager();
+        $postRecMailManager->removeMailByRepository($this->getId());
+
         $this->getBackend()->delete($this);
     }
 
@@ -434,7 +468,7 @@ class GitRepository implements DVCSRepository {
     public function renameProject(Project $project, $newName) {
         $newName = strtolower($newName);
         if ($this->getBackend()->renameProject($project, $newName)) {
-            return $this->dao->renameProject($project, $newName);
+            return $this->getDao()->renameProject($project, $newName);
         }
         return false;
     }
@@ -445,6 +479,66 @@ class GitRepository implements DVCSRepository {
     public function isNameAvailable($newName) {
         $newName = strtolower($newName);
         return $this->getBackend()->isNameAvailable($newName);
+    }
+
+    /**
+     * Verify if the notfication is alreadyu enabled for the given mail
+     * 
+     * @param String $mail
+     * @return Boolean
+     */
+    public function isAlreadyNotified ($mail) {
+        return (in_array($mail, $this->getNotifiedMails())) ;
+    }
+    /**
+     * Add the @mail to the config git section and to DB
+     * 
+     * @param String $mail
+     * 
+     * @return Boolean
+     */
+    public function notificationAddMail($mail) {
+            $this->notifiedMails[] = $mail;
+            $postRecMailManager = $this->getPostReceiveMailManager();
+            if ($postRecMailManager->addMail($this->getId(), $mail)) {
+                return $this->getBackend()->changeRepositoryMailingList($this);
+            }
+            return false;
+    }
+
+    /**
+     * Remove the @mail from the config git section and from DB
+     * @param String $mail
+     * 
+     * @return Boolean
+     */
+    public function notificationRemoveMail($mail) {
+        if (in_array($mail, $this->getNotifiedMails())) {
+            $postRecMailManager = $this->getPostReceiveMailManager();
+            return $postRecMailManager->removeMailByRepository($this, $mail);
+        }
+        return true;
+    }
+
+    /**
+     * Get the list of mails notified without being project members
+     *
+     * @return Array
+     */
+    public function getNonMemberMails() {
+        $mails = $this->getNotifiedMails();
+        $mailsToDelete = array();
+        $um = UserManager::instance();
+        foreach ($mails as $mail) {
+            try {
+                $user = $um->getUserByEmail($mail);
+                if (!$user || !$user->isMember($this->getProjectId())) {
+                    $mailsToDelete[] = $mail;
+                }
+            } catch (Exception $e) {
+            }
+        }
+        return $mailsToDelete;
     }
 }
 

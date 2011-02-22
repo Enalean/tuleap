@@ -35,18 +35,8 @@
 
 class GitDriver implements DVCSDriver {
 
-    private static $instance;
-    
-    private function __construct() {       
+    public function __construct() {       
     }
-
-    public static function instance() {
-        if ( empty(self::$instance) ) {
-            $c = __CLASS__;
-            self::$instance = new $c;
-        }
-        return self::$instance;
-    }    
 
     /**
      * Make a clone of a source repository
@@ -55,29 +45,20 @@ class GitDriver implements DVCSDriver {
      * @return <boolean>
      */
     public function fork($source, $destination) {
-        $rcode = 0;
         if ( !file_exists($source) ) {
             throw new GitDriverSourceNotFoundException($source);
         }
+
         //WARNING : never use --shared/--reference options
-        $cmd    = 'git clone --bare --local --no-hardlinks '.$source.' '.$destination;
-        $output = system($cmd, $rcode);
-        if ( $rcode != 0 ) {
-            throw new GitDriverErrorException($cmd.'->'.$output);
-        }        
-        chdir($destination);
-        $cmd    = 'git-update-server-info';
-        $output = system($cmd, $rcode);
-        if ( $rcode != 0 ) {
-            throw new GitDriverErrorException($cmd.' -> '.$output);
-        }            
-        $cmd    = 'echo "Default description for this project" > '.$destination.'/description';
-        $output = system($cmd, $rcode);
-        if ( $rcode != 0 ) {
-            throw new GitDriverErrorException($cmd.' -> '.$output);
+        $cmd = 'git clone --bare --local --no-hardlinks '.escapeshellarg($source).' '.escapeshellarg($destination).' 2>&1';
+        $out = array();
+        $ret = -1;
+        exec($cmd, $out, $ret);
+        if ($ret !== 0) {
+            throw new GitDriverErrorException('Git fork failed on '.$cmd.PHP_EOL.implode(PHP_EOL, $out));
         }
-        $this->setPermissions($destination);
-        return true;
+
+        return $this->setUpFreshRepository($destination);
     }
 
     /**
@@ -86,33 +67,53 @@ class GitDriver implements DVCSDriver {
      * @return Boolean
      */
     public function init($bare=false) {
-        //TODO there are more things to do
-        $rcode = 0;            
-        $cmd = 'git --bare init --shared=group';
         if ( $bare === false ) {
             $cmd = 'git init';
-            $output = system($cmd, $rcode);
-            if ( $rcode != 0 ) {
-                throw new GitDriverErrorException($cmd.' -> '.$output);
+            $out = array();
+            $ret = -1;
+            exec($cmd, $out, $ret);
+            if ($ret !== 0) {
+                throw new GitDriverErrorException('Git init failed on '.$cmd.PHP_EOL.implode(PHP_EOL, $out));
             }
             return true;
         }
-        $output = system($cmd, $rcode);
-        if ( $rcode != 0 ) {
-            throw new GitDriverErrorException($cmd.' -> '.$output);
+
+        $cmd = 'git --bare init --shared=group 2>&1';
+        $out = array();
+        $ret = -1;
+        exec($cmd, $out, $ret);
+        if ( $ret !== 0 ) {
+            throw new GitDriverErrorException('Git init failed on '.$cmd.PHP_EOL.implode(PHP_EOL, $out));
         }
-        $cmd    = 'git-update-server-info';
-        $output = system($cmd, $rcode);
-        if ( $rcode != 0 ) {
-            throw new GitDriverErrorException($cmd.' -> '.$output);
-        }                                   
-        $cmd    = 'echo "Default description for this project" > description';
-        $output = system($cmd, $rcode);
-        if ( $rcode != 0 ) {
-            throw new GitDriverErrorException($cmd.' -> '.$output);
+
+        return $this->setUpFreshRepository(getcwd());
+    }
+
+    /**
+     * Post creation/clone repository setup
+     *
+     * @param String $path Path to the repository
+     *
+     * @return Boolean
+     */
+    protected function setUpFreshRepository($path) {
+        $cwd = getcwd();
+        chdir($path);
+
+        $cmd = 'git-update-server-info';
+        $out = array();
+        $ret = -1;
+        exec($cmd, $out, $ret);
+        chdir($cwd);
+        if ( $ret !== 0 ) {
+            throw new GitDriverErrorException('Git setup failed on '.$cmd.PHP_EOL.implode(PHP_EOL, $out));
         }
-        $this->setPermissions( getcwd() );
-        return true;
+        
+        if (!$this->setDescription($path, 'Default description for this project'.PHP_EOL)) {
+            throw new GitDriverErrorException('Git setup failed on description update');
+        }
+
+        return $this->setPermissions($path);
     }
 
     public function delete($path) {
@@ -127,27 +128,28 @@ class GitDriver implements DVCSDriver {
         return true;
     }    
 
-    public function activateHook($hookName, $repoPath, $uid, $gid) {
-        //owner's group is default group
-        if ( empty($gid) ) {
-            $gid = $uid;
-        }
+    public function activateHook($hookName, $repoPath, $uid=false, $gid=false) {
         //newer version of git
         $hook = $repoPath.'/hooks/'.$hookName;
         if ( file_exists($hook.'.sample') ) {
             //old git versions do not need this move
             rename($hook.'.sample', $hook);
         }
+
         //older versions only requires +x for hook activation
-        $rcode  = 0;
-        $output = system('chmod +x '.$hook, $rcode);
-        if ( $rcode != 0 ) {
-            throw new GitDriverErrorException($cmd.' -> '.$output);
+        if (!chmod($hook, 0755)) {
+            throw new GitDriverErrorException('Unable to make '.$hook.' executable');
         }
-        $rcode  = 0;
-        $output = system("chown $uid:$gid $hook", $rcode);
-        if ( $rcode != 0 ) {
-            throw new GitDriverErrorException($cmd.' -> '.$output);
+
+        if ($uid !== false) {
+            if (!chown($hook, $uid)) {
+                 throw new GitDriverErrorException('Unable to change '.$hook.' owner to '.$uid);
+            }
+        }
+        if ($gid !== false) {
+            if (!chgrp($hook, $gid)) {
+                 throw new GitDriverErrorException('Unable to change '.$hook.' group to '.$gid);
+            }
         }
         return true;
     }
@@ -157,33 +159,6 @@ class GitDriver implements DVCSDriver {
             return true;
         }
         return false;
-    }
-
-    //TODO control access types
-    public function setRepositoryAccess($repoPath, $access) {
-        
-        if ( $access == GitRepository::PUBLIC_ACCESS ) {
-            $cmd      = ' find '.$repoPath.' -type d ! -path "*hooks*" | xargs chmod o+rx ';
-        } else {
-            $cmd      = ' find '.$repoPath.' -type d ! -path "*hooks*" | xargs chmod o-rwx ';
-        }
-        $rcode    = 0;
-        $output   = system( $cmd, $rcode );
-        if ( $rcode != 0 ) {
-            throw new GitBackendException($cmd.' -> '.$output);
-        }
-        if ( $access == GitRepository::PUBLIC_ACCESS ) {
-            $cmd     = ' find '.$repoPath.' -type f ! -path "*hooks*" | xargs chmod o+r ';
-        } else {
-            $cmd     = ' find '.$repoPath.' -type f ! -path "*hooks*" | xargs chmod o-rwx ';
-        }
-        $rcode   = 0;
-        $output   = system( $cmd, $rcode );
-        if ( $rcode != 0 ) {
-            throw new GitBackendException($cmd.' -> '.$output);
-        }
-        return true;
-
     }
 
     public function setDescription($repoPath, $description) {
@@ -197,23 +172,68 @@ class GitDriver implements DVCSDriver {
         return file_get_contents($repoPath.'/description');
     }
 
-    //TODO check path 
+    /**
+     * Set one configuration key
+     *
+     * @param String $repoPath Path to the repository
+     * @param String $key      Key to modify
+     * @param String $value    Value to set
+     */
+    public function setConfig($repoPath, $key, $value) {
+        if ($value === '') {
+            $value = "''";
+        } else {
+            $value = escapeshellarg($value);
+        }
+        $configFile = $repoPath.'/config';
+        $cmd = 'git config --file '.$configFile.' --replace-all '.escapeshellarg($key).' '.$value.' 2>&1';
+        $ret = -1;
+        $out = array();
+        exec($cmd, $out, $ret);
+        if ($ret !== 0) {
+            throw new GitDriverErrorException('Unable to set config for repository '.$repoPath.':'.PHP_EOL.implode(PHP_EOL, $out));
+        }
+    }
+
+    /**
+     * Control who can access to a repository
+     *
+     * @param String  $repoPath Path to the repository
+     * @param Integer $access   Access level
+     *
+     * @return Boolean
+     */
+    public function setRepositoryAccess($repoPath, $access) {
+        if ($access == GitRepository::PUBLIC_ACCESS) {
+            return chmod($repoPath, 042775);
+        } else {
+            return chmod($repoPath, 042770);
+        }
+    }
+
+    /**
+     * Ensure repository has the right permissions
+     *
+     * Pretty useless on repo creation (--shared option is ok for that) but
+     * Mandatory for clone as clone doesn't set the right permissions by default.
+     *
+     * @param String $path Path to the repository
+     *
+     * @return Boolean
+     */
     protected function setPermissions($path) {
         $rcode  = 0;
-        $cmd    = 'find '.$path.' -type d | xargs chmod u+rwx,g+rwxs,o-rwx '.$path;
+        $cmd    = 'find '.$path.' -type d | xargs chmod u+rwx,g+rwxs '.$path;
         $output = system($cmd, $rcode);
         if ( $rcode != 0 ) {
             throw new GitDriverErrorException($cmd.' -> '.$output);
         }
-        $rcode  = 0;
-        $cmd    = 'chmod g+w '.$path.'/HEAD';
-        $output = system($cmd, $rcode);
-        if ( $rcode != 0 ) {
-            throw new GitDriverErrorException($cmd.' -> '.$output);
+
+        if (!chmod($path.DIRECTORY_SEPARATOR.'HEAD', 0664)) {
+            throw new GitDriverErrorException('Unable to set permissions on HEAD');
         }
         return true;
     }
- 
 }
 
 ?>

@@ -42,8 +42,8 @@ class GitActions extends PluginActions {
 
     }
 
-    protected function getText($key) {
-        return $GLOBALS['Language']->getText('plugin_git', $key);
+    protected function getText($key, $params = array()) {
+        return $GLOBALS['Language']->getText('plugin_git', $key, $params);
     }
     
     public function process($action, $params) {
@@ -165,6 +165,115 @@ class GitActions extends PluginActions {
         }
         $this->addData( array('repository'=>$repository) );
         return true;
+    }
+
+    public function repoManagement($projectId, $repositoryId) {
+        $c = $this->getController();
+        if (empty($repositoryId)) {
+            $c->addError($this->getText('actions_params_error'));
+            return false;
+        }
+        $this->_loadRepository($projectId, $repositoryId);
+        return true;
+    }
+
+    public function notificationUpdatePrefix($projectId, $repositoryId, $mailPrefix) {
+        $c = $this->getController();
+        if (empty($repositoryId)) {
+            $c->addError($this->getText('actions_params_error'));
+            return false;
+        }
+        $repository = $this->_loadRepository($projectId, $repositoryId);
+        $repository->setMailPrefix($mailPrefix);
+        $repository->changeMailPrefix();
+        $c->addInfo($this->getText('mail_prefix_updated'));
+        $this->addData(array('repository'=>$repository));
+        return true;
+    }
+
+    public function notificationAddMail($projectId, $repositoryId, $mails) {
+        $c = $this->getController();
+        $repository = $this->_loadRepository($projectId, $repositoryId);
+        if (empty($repositoryId) || empty($mails)) {
+            $c->addError($this->getText('actions_params_error'));
+            return false;
+        }
+
+        $res = true;
+        foreach ($mails as $mail) {
+            if ($repository->isAlreadyNotified($mail)) {
+                $res = false;
+                $c->addInfo($this->getText('mail_existing', array($mail)));
+            } else {
+                if (!$repository->notificationAddMail($mail)) {
+                    $res = false;
+                    $c->addError($this->getText('mail_not_added', array($mail)));
+                }
+            }
+        }
+        //Display this message, just if all the entred mails have been added
+        if ($res) {
+            $c->addInfo($this->getText('mail_added'));
+        }
+        return true;
+    }
+
+    public function notificationRemoveMail($projectId, $repositoryId, $mails) {
+        $c = $this->getController();
+        $repository = $this->_loadRepository($projectId, $repositoryId);
+        if (empty($repositoryId) || empty($mails)) {
+            $c->addError($this->getText('actions_params_error'));
+            return false;
+        }
+        $ret = true;
+        foreach ($mails as $mail) {
+            if ($repository->notificationRemoveMail($mail)) {
+                $c->addInfo($this->getText('mail_removed', array($mail)));
+            } else {
+                $c->addError($this->getText('mail_not_removed', array($mail)));
+                $ret = false;
+            }
+        }
+        return $ret;
+    }
+
+    public function confirmPrivate($projectId, $repoId, $repoAccess, $repoDescription) {
+        $c = $this->getController();
+        if (empty($repoId) || empty($repoAccess) || empty($repoDescription)) {
+            $c->addError($this->getText('actions_params_error'));
+            return false;
+        }
+        $repository = $this->_loadRepository($projectId, $repoId);
+        if (strcmp($repoAccess, 'private') == 0 && strcmp($repository->getAccess(), $repoAccess) != 0) {
+            $mailsToDelete = $repository->getNonMemberMails();
+            if (!empty($mailsToDelete)) {
+                $repository->setDescription($repoDescription);
+                $repository->save();
+                $this->addData(array('repository' => $repository));
+                $this->addData(array('mails' => $mailsToDelete));
+                $c->addWarn($this->getText('set_private_warn'));
+                return true;
+            }
+        }
+        $this->save($projectId, $repoId, $repoAccess, $repoDescription);
+        return true;
+    }
+
+    public function setPrivate($projectId, $repoId) {
+        $c = $this->getController();
+        if (empty($repoId)) {
+            $c->addError($this->getText('actions_params_error'));
+            return false;
+        }
+        $repository = $this->_loadRepository($projectId, $repoId);
+        $mailsToDelete = $repository->getNonMemberMails();
+        foreach ($mailsToDelete as $mail) {
+            $repository->notificationRemoveMail($mail);
+        }
+        $this->systemEventManager->createEvent('GIT_REPO_ACCESS',
+                                               $repoId.SystemEvent::PARAMETER_SEPARATOR.'private',
+                                               SystemEvent::PRIORITY_HIGH);
+        $c->addInfo($this->getText('actions_repo_access'));
     }
 
     public function confirmDeletion($projectId, $repoId) {
@@ -289,6 +398,27 @@ class GitActions extends PluginActions {
             return false;
         }
         return true;
+    }
+
+    function _loadRepository($projectId, $repositoryId) {
+        $repository = $this->getGitRepository();
+        $repository->setId($repositoryId);
+        try {
+            $repository->load();
+            $this->addData(array('repository'=>$repository));
+        } catch (Exception $e) {
+            $c = $this->getController();
+            $c->addError($this->getText('actions_repo_not_found'));
+            $c->redirect('/plugins/git/?action=index&group_id='.$projectId);
+        }
+        return $repository;
+    }
+
+    /**
+     * Wrapper used for tests to get a new GitRepository
+     */
+    function getGitRepository() {
+        return new GitRepository();
     }
 
 }

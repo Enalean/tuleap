@@ -28,8 +28,8 @@ plugin_git	admin_reference_creation_textarea_name	Description
 plugin_git	admin_reference_creation_submit	Create
 
 
-plugin_git	admin_fork_creation_title	Fork creation
-plugin_git	admin_fork_creation_input_name	Name
+plugin_git	admin_fork_creation_title	Fork
+plugin_git	admin_fork_creation_input_name	Fork name
 plugin_git	admin_fork_creation_input_parentname	Parent
 plugin_git	admin_fork_creation_submit	Fork
 plugin_git	admin_repolist_selectbox_choose	Choose one
@@ -51,6 +51,8 @@ plugin_git	dao_delete_params	Missing repository id or project id
 plugin_git	dao_update_error	Unable to update Repository data
 plugin_git	dao_search_params	Repository not found : missing repository name or project id
 plugin_git	dao_search_error	Repository not found
+plugin_git	dao_error_create_notification	Mail to notify not added
+plugin_git	dao_error_remove_notification	Mail not removed
 
 plugin_git	dao_child_params	Repository child search failed : missing repository id
 
@@ -78,6 +80,8 @@ plugin_git	view_repo_initialized	Initialized
 plugin_git	view_repo_not_initialized	Not initialized
 plugin_git	view_repo_clone_url	Clone url
 plugin_git	view_repo_access	Access
+plugin_git	view_repo_access_public	Public
+plugin_git	view_repo_access_private	Private
 
 plugin_git	repo_not_initialized	Repository is not initialized
 
@@ -89,3 +93,36 @@ plugin_git	no	No
 plugin_git	project_service_not_available	Service not available for your project (Please contact site administrator)
 plugin_git	reference_commit_desc_key	Git commit
 plugin_git	reference_commit_nature_key	Git commit
+
+plugin_git	admin_repo_management	Repository management
+
+plugin_git	mail_prefix_title	Update notification mail prefix
+plugin_git	mail_prefix	New prefix
+plugin_git	mail_prefix_submit	Update
+
+plugin_git	add_mail_title	Add a mail address or a user to notify
+plugin_git	add_mail_msg	You can add more than one mail/user using comma or semi-column as separator.
+plugin_git	add_mail	Mail address/User
+plugin_git	add_mail_submit	Add
+plugin_git	add_mail_existing	There is no users to be notified yet. 
+
+plugin_git	no_user_mail	The added user $1 have no mail address
+plugin_git	no_user	No user corresponding to entry "$1"
+
+plugin_git	mail_prefix_updated	Mail prefix updated
+plugin_git	mail_added	Mail added
+plugin_git	mail_not_added	Could not add mail $1
+plugin_git	mail_removed	Mail $1 removed
+plugin_git	mail_not_removed	Could not remove mail $1 
+plugin_git	mail_existing	The notification is already enabled for this email $1
+
+plugin_git	notified_mails_title	List of notified mails
+
+plugin_git	set_private_warn	Making the repository access private will remove notification for all mail addresses that doesn't correspond to a user member of this project.
+plugin_git	set_private_confirm	Do you confirm change of repository access to private ?
+plugin_git	set_private_mails	List of mails to remove from notification
+
+plugin_git	feedback_event_create	There is an event in queue for a repository creation ($1), it will be processed in one minute or two. Please be patient!
+plugin_git	feedback_event_fork	There is an event in queue for a repository fork ($1), it will be processed in one minute or two. Please be patient!
+plugin_git	feedback_event_delete	There is an event in queue for a repository deletion, it will be processed in one minute or two. Please be patient!
+plugin_git	feedback_event_access	There is an event in queue for a repository permissions change, it will be processed in one minute or two. Please be patient!

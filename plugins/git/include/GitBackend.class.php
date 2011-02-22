@@ -20,13 +20,14 @@
 require_once('common/backend/Backend.class.php');
 require_once('GitDao.class.php');
 require_once('GitDriver.class.php');
+require_once('GitRepository.class.php');
 require_once('exceptions/GitBackendException.class.php');
+
 /**
  * Description of GitBackend
  *
  * @author Guillaume Storchi
  */
-
 class GitBackend extends Backend {
     
     private $driver;    
@@ -40,7 +41,7 @@ class GitBackend extends Backend {
 
     protected function __construct() {
         $this->gitRootPath  = '';
-        $this->driver       = GitDriver::instance();
+        $this->driver       = new GitDriver();
         $this->packagesFile = 'etc/packages.ini';
         $this->configFile   = 'etc/config.ini';
         $this->dao          = new GitDao();
@@ -73,12 +74,8 @@ class GitBackend extends Backend {
         $forkPath    = $clone->getPath();
         $forkPath    = $this->getGitRootPath().DIRECTORY_SEPARATOR.$forkPath;        
         $this->getDriver()->fork($parentPath, $forkPath);
-        $this->getDriver()->activateHook('post-update', $forkPath, 'codendiadm', $clone->getProject()->getUnixName());
-        $this->setRepositoryPermissions($clone);        
-        $id = $this->getDao()->save($clone);
-        $clone->setId($id);
-        $this->changeRepositoryAccess($clone);
-        return true;
+
+        return $this->setUpRepository($clone);
     }
 
     /**
@@ -101,11 +98,26 @@ class GitBackend extends Backend {
         mkdir($path, 0770, true);
         chdir($path);
         $this->getDriver()->init($bare=true);
-        $this->getDriver()->activateHook('post-update', $path, 'codendiadm', $repository->getProject()->getUnixName());
-        $this->setRepositoryPermissions($repository);        
+
+        return $this->setUpRepository($repository);
+    }
+
+    /**
+     * Once the repository is created/forked, set it up with proper configuration.
+     *
+     * @param GitRepository $repository The repository
+     *
+     * @return Boolean
+     */
+    public function setUpRepository($repository) {
+        $path = $this->getGitRootPath().DIRECTORY_SEPARATOR.$repository->getPath();
+        $this->getDriver()->activateHook('post-update', $path);
+        $this->deployPostReceive($path);
         $id = $this->getDao()->save($repository);
         $repository->setId($id);
+        $this->setUpMailingHook($repository);
         $this->changeRepositoryAccess($repository);
+        $this->setRepositoryPermissions($repository);
         return true;
     }
 
@@ -161,9 +173,74 @@ class GitBackend extends Backend {
     }
 
     /**
+     * Allow the update of the mail prefix
+     *
+     * @param GitRepository $repository
+     */
+    public function changeRepositoryMailPrefix($repository) {
+        if ($this->getDao()->save($repository)) {
+            $path = $this->getGitRootPath().$repository->getPath();
+            $this->getDriver()->setConfig($path, 'hooks.emailprefix', $repository->getMailPrefix());
+            $this->setUpMailingHook($repository);
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Update list of people notified by post-receive-email hook
+     *
+     * @param GitRepository $repository
+     */
+    public function changeRepositoryMailingList($repository) {
+        $path = $this->getGitRootPath().$repository->getPath();
+        $this->getDriver()->setConfig($path, 'hooks.mailinglist', implode(',', $repository->getNotifiedMails()));
+        $this->setUpMailingHook($repository);
+        return true;
+    }
+
+    /**
+     * Deploy post-receive hook into the target file
+     *
+     * @param String $path Path to the repository root
+     *
+     * @return void
+     */
+    public function deployPostReceive($path) {
+        $this->getDriver()->activateHook('post-receive', $path);
+        $hook = '. '.$GLOBALS['sys_pluginsroot'].'git/hooks/post-receive 2>/dev/null';
+        $this->addBlock($path.'/hooks/post-receive', $hook);
+    }
+
+    /**
+     * Configure mail output to link commit to gitweb 
+     *
+     * @param GitRepository $repository
+     */
+    public function setUpMailingHook($repository) {
+        $path = $this->getGitRootPath().$repository->getPath();
+
+        $url = 'https://'.$GLOBALS['sys_https_host'].
+            '/plugins/git/index.php/'.$repository->getProjectId().
+            '/view/'.$repository->getId().
+            '/?p='.basename($path).'&a=commitdiff&h=%%H';
+
+        $format = 'format:URL:    '.$url.'%%nAuthor: %%an <%%ae>%%nDate:   %%aD%%n%%n%%s%%n%%b';
+
+        $showrev = "t=%s; ".
+            "git log ".
+            "--name-status ".
+            "--pretty='".$format."' ".
+            "\$t~1..\$t";
+
+        $this->getDriver()->setConfig($path, 'hooks.showrev', $showrev);
+    }
+
+
+    /**
      * INTERNAL METHODS
      */
-    
+
     protected function setRepositoryPermissions($repository) {
         $path = $this->getGitRootPath().DIRECTORY_SEPARATOR.$repository->getPath();   
         $this->recurseChownChgrp($path, 'codendiadm',$repository->getProject()->getUnixName() );

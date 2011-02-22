@@ -40,6 +40,7 @@ class GitDao extends DataAccessObject {
     const REPOSITORY_DELETION_DATE    = 'repository_deletion_date';
     const REPOSITORY_IS_INITIALIZED   = 'repository_is_initialized';
     const REPOSITORY_ACCESS           = 'repository_access';
+    const REPOSITORY_MAIL_PREFIX      = 'repository_events_mailing_prefix';
 
     const REPO_NAME_MAX_LENGTH = 40;
     const REPO_DESC_MAX_LENGTH = 255;
@@ -85,6 +86,7 @@ class GitDao extends DataAccessObject {
     public function save($repository) {
         $id          = (int)$repository->getId();
         $name        = $repository->getName(); 
+        $mailPrefix  = $repository->getMailPrefix();
         $parentId    = 0;
         try {
             $parent   = $repository->getParent();
@@ -108,12 +110,14 @@ class GitDao extends DataAccessObject {
         $isInitialized  = $this->da->escapeInt($isInitialized);
         $creationUserId = $this->da->escapeInt($creationUserId);
         $access         = $this->da->quoteSmart($access);
+        $mailPrefix     = $this->da->quoteSmart($mailPrefix);
         $insert         = false;
         if ( $this->exists($id) ) {            
             $query = 'UPDATE '.$this->getTable().
                      ' SET '.self::REPOSITORY_DESCRIPTION.'='.$description.','.
                             self::REPOSITORY_IS_INITIALIZED.'='.$isInitialized.','.
-                            self::REPOSITORY_ACCESS.'='.$access.' '.
+                            self::REPOSITORY_ACCESS.'='.$access.','.
+                            self::REPOSITORY_MAIL_PREFIX.'='.$mailPrefix.' '.
                      'WHERE '.self::REPOSITORY_ID.'='.$id;
         } else {
             $insert       = true;
@@ -295,6 +299,8 @@ class GitDao extends DataAccessObject {
         $repository->setIsInitialized($result[self::REPOSITORY_IS_INITIALIZED]);
         $repository->setDeletionDate($result[self::REPOSITORY_DELETION_DATE]);
         $repository->setAccess($result[self::REPOSITORY_ACCESS]);
+        $repository->setMailPrefix($result[self::REPOSITORY_MAIL_PREFIX]);
+        $repository->setNotifiedMails();
     }
 
     public static function checkName($name) {

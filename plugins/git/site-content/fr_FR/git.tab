@@ -29,7 +29,7 @@ plugin_git	admin_reference_creation_submit	Créer
 plugin_git	admin_reference_creation_textarea_name	Description
 
 plugin_git	admin_fork_creation_title	Création d'un fork
-plugin_git	admin_fork_creation_input_name	Nom
+plugin_git	admin_fork_creation_input_name	Nom du fork
 plugin_git	admin_fork_creation_input_parentname	Nom du parent
 plugin_git	admin_fork_creation_submit	Fork
 plugin_git	admin_repolist_selectbox_choose	Choisir
@@ -51,6 +51,8 @@ plugin_git	dao_delete_params	Impossible de supprimer le dépôt de la base de do
 plugin_git	dao_update_error	Impossible d'enregistrer les données du dépôt
 plugin_git	dao_search_params	Dépôt introuvable, paramètres invalides
 plugin_git	dao_search_error	Dépôt introuvable
+plugin_git	dao_error_create_notification	L'adresse mail à notifier n'a pas été ajoutée
+plugin_git	dao_error_remove_notification	L'adresse mail n'a pas été supprimée
 
 plugin_git	dao_child_params	Paramètres invalides
 
@@ -77,6 +79,7 @@ plugin_git	view_repo_initialized	Initialisé
 plugin_git	view_repo_not_initialized	Non initialisé
 plugin_git	view_repo_clone_url	Clone url
 plugin_git	view_repo_access	Accès
+plugin_git	view_repo_access_private	Privé
 
 plugin_git	repo_not_initialized	Le dépôt n'est pas initialisé
 plugin_git	confirm_deletion_msg	Etes-vous certain(e) de vouloir supprimer ce dépôt ?
@@ -87,3 +90,36 @@ plugin_git	no	Non
 plugin_git	project_service_not_available	Le service n'est pas disponible pour votre projet (Contactez l'administrateur du site)
 plugin_git	reference_commit_nature_key	Commit Git
 plugin_git	reference_commit_desc_key	Commit Git
+
+plugin_git	admin_repo_management	Gestion du dépot GIT
+
+plugin_git	mail_prefix_title	Mettre a jour le préfixe du mail de notification
+plugin_git	mail_prefix	Nouveau Préfixe
+plugin_git	mail_prefix_submit	Soumettre
+
+plugin_git	add_mail_title	Ajouter une adresse mail ou un utilisateur a notifier
+plugin_git	add_mail_msg	Vous pouvez ajouter plus qu'une adresse mail/utilisateur en utilisant la virgule ou le point-virgule comme séparateur.
+plugin_git	add_mail	Adresse Mail/Utilisateur
+plugin_git	add_mail_submit	Ajouter
+plugin_git	add_mail_existing	Aucun utilisateur à notifier n'a été encore ajouté.
+
+plugin_git	no_user_mail	L'utilisateur ajouté $1 n'a pas d'adresse mail
+plugin_git	no_user	Aucun utilisateur ne correspond à votre entrée $1
+
+plugin_git	mail_prefix_updated	Le préfixe du mail a été mis a jour
+plugin_git	mail_added	Adresse mail ajoutée
+plugin_git	mail_not_added	L'adresse mail $1 n'a pas pu être ajouté
+plugin_git	mail_removed	Adresse mail $1 supprimée
+plugin_git	mail_not_removed	L'adresse mail $1 n'a pas pu être supprimé		
+plugin_git	mail_existing	La notification est déja activée pour l'adresse mail $1
+
+plugin_git	notified_mails_title	Liste des adresses mail a notifier
+
+plugin_git	set_private_warn	Changer l'accés a ce dépôt a privé va annuler la notification pour les adresses mail qui ne correspondent a aucun utilisateur membre de ce projet.
+plugin_git	set_private_confirm	Etes-vous certain(e) de vouloir changer l'accés a ce dépôt a privé ?
+plugin_git	set_private_mails	Liste des adresses mail a ne plus notifier
+
+plugin_git	feedback_event_create	Un événement est en attente pour la création du dépôt $1. Il sera traité dans une minute ou deux. Merci de votre patience.
+plugin_git	feedback_event_fork	Un événement est en attente pour le fork ($1) d'un dépôt. Il sera traité dans une minute ou deux. Merci de votre patience.
+plugin_git	feedback_event_delete	Un événement est en attente pour la suppréssion d'un dépôt. Il sera traité dans une minute ou deux. Merci de votre patience.
+plugin_git	feedback_event_access	Un événement est en attente pour le changement de permissions d'un dépôt. Il sera traité dans une minute ou deux. Merci de votre patience.

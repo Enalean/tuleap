@@ -13,8 +13,15 @@ CREATE TABLE IF NOT EXISTS `plugin_git` (
   `repository_deletion_date` datetime NOT NULL,
   `repository_is_initialized` tinyint(4) NOT NULL default '0',
   `repository_access` varchar(255) NOT NULL default 'private',
+  `repository_events_mailing_prefix` varchar(64) DEFAULT '[SCM]',
   PRIMARY KEY  (`repository_id`),
   KEY `project_id` (`project_id`)
+);
+
+CREATE TABLE IF NOT EXISTS `plugin_git_post_receive_mail` (
+  `recipient_mail` varchar(255) NOT NULL,
+  `repository_id` int(10) NOT NULL,
+  KEY `repository_id` (`repository_id`)
 );
 
 -- Enable service for project 100
