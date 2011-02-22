@@ -215,7 +215,7 @@ class GitActionsTest extends UnitTestCase {
         $git->expectOnce('addError', array('mail_not_removed john.doe@acme.com'));
         $git->expectNever('addInfo');
 
-        $this->assertFalse($gitAction->notificationRemoveMail(1, 1, 'john.doe@acme.com'));
+        $this->assertFalse($gitAction->notificationRemoveMail(1, 1, array('john.doe@acme.com')));
     }
 
     function testNotificationRemoveMailFailMailPass() {
@@ -230,7 +230,7 @@ class GitActionsTest extends UnitTestCase {
         $git->expectNever('addError');
         $git->expectOnce('addInfo', array('mail_removed john.doe@acme.com'));
 
-        $this->assertTrue($gitAction->notificationRemoveMail(1, 1, 'john.doe@acme.com'));
+        $this->assertTrue($gitAction->notificationRemoveMail(1, 1, array('john.doe@acme.com')));
     }
 
     function testConfirmPrivateFailNoRepoId() {

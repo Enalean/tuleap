@@ -225,14 +225,16 @@ class GitActions extends PluginActions {
             $c->addError($this->getText('actions_params_error'));
             return false;
         }
+        $ret = true;
         foreach ($mails as $mail) {
             if ($repository->notificationRemoveMail($mail)) {
                 $c->addInfo($this->getText('mail_removed', array($mail)));
             } else {
-                $c->addError($this->getText('mail_not_removed', array($mail)));       
+                $c->addError($this->getText('mail_not_removed', array($mail)));
+                $ret = false;
             }
         }
-        return true;
+        return $ret;
     }
 
     public function confirmPrivate($projectId, $repoId, $repoAccess, $repoDescription) {
