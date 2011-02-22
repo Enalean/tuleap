@@ -267,9 +267,8 @@ class GitViews extends PluginViews {
             ?> <input type="hidden" id="action" name="action" value="confirm_private" /> <?php
         }
         ?>
-        <p id="plugin_git_access"><?php echo $this->getText('view_repo_access');?>: <span><input type="radio" name="repo_access" value="private" <?php echo $private?>/><?php echo $this->getText('view_repo_access_private'); ?><input type="radio" name="repo_access" value="public"  <?php echo $public?>/>Public</span>
-            <input type="submit" name="save" value="<?php echo $this->getText('admin_save_submit');?>" />
-        </p>
+        <p id="plugin_git_access"><?php echo $this->getText('view_repo_access');?>: <span><input type="radio" name="repo_access" value="private" <?php echo $private?>/><?php echo $this->getText('view_repo_access_private'); ?><input type="radio" name="repo_access" value="public"  <?php echo $public?>/>Public</span></p>
+        <p><input type="submit" name="save" value="<?php echo $this->getText('admin_save_submit');?>" /></p>
         </form>
         <?php
         endif;
@@ -447,7 +446,9 @@ class GitViews extends PluginViews {
             <td class="plugin_git_first_col" ><label for="mail_prefix_label"><?php echo $this->getText('mail_prefix');
         ?></label></td>
             <td><input name="mail_prefix" class="plugin_git_mail_prefix" type="text" value="<?php echo $mailPrefix; ?>" /></td>
-            <td rowspan="2"><input type="submit" id="mail_prefix_submit" name="mail_prefix_submit" value="<?php echo $this->getText('mail_prefix_submit')?>"></td>
+        </tr>
+        <tr>
+            <td colspan="2"><input type="submit" id="mail_prefix_submit" name="mail_prefix_submit" value="<?php echo $this->getText('mail_prefix_submit')?>"></td>
         </tr>
     </table>
 </form>
@@ -469,7 +470,9 @@ class GitViews extends PluginViews {
             <td class="plugin_git_first_col" ><label for="add_mail_label"><?php echo $this->getText('add_mail');?>
                 <a href="#" onclick="$('help_addMail').toggle();"> [?]</a></label></td>
             <td><textarea id="add_mail" name="add_mail" class="plugin_git_add_mail"></textarea></td>
-            <td rowspan="2"><input type="submit" id="add_mail_submit" name="add_mail_submit" value="<?php echo $this->getText('add_mail_submit')?>"></td>
+        </tr>
+        <tr>
+            <td colspan="2"><input type="submit" id="add_mail_submit" name="add_mail_submit" value="<?php echo $this->getText('add_mail_submit')?>"></td>
         </tr>
     </table>
 </form>
