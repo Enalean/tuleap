@@ -252,13 +252,19 @@ class Git extends PluginController {
                 break;
             #remove mail
             case 'remove_mail':
+                $mails = array();
                 $valid = new Valid_Email('mail');
                 $valid->required();
-                if($this->request->valid($valid)) {
-                    $mail = $this->request->get('mail');
+                if($this->request->validArray($valid)) {
+                    $mails = $this->request->get('mail');
                 }
-                $this->addAction('notificationRemoveMail', array($this->groupId, $repoId, $mail));
-                $this->addView('repoManagement');
+                if (count($mails) > 0) {
+                    $this->addAction('notificationRemoveMail', array($this->groupId, $repoId, $mails));
+                    $this->addView('repoManagement');
+                } else {
+                    $this->addAction('repoManagement', array($this->groupId, $repoId));
+                    $this->addView('repoManagement');
+                }
                 break;
             #fork
             case 'fork':

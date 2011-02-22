@@ -501,13 +501,14 @@ class GitViews extends PluginViews {
             echo '<tr class="'.html_get_alt_row_color(++$i).'">';
             echo '<td>'.$mail.'</td>';
             echo '<td>';
-            echo '<button type="submit" style="background:white; border:0;" name="mail" value="'.$mail.'" ><img src="'.util_get_dir_image_theme().'/ic/cross.png"></button>';
+            echo '<input type="checkbox" name="mail[]" value="'.$this->HTMLPurifier->purify($mail).'" />';
             echo '</a>';
             echo '</td>';
             echo '</tr>';
         }
         ?>
     </table>
+    <input type="submit" value="<?php echo $GLOBALS['Language']->getText('global', 'btn_delete') ?>" />
 </form>
         <?php
         } else {
