@@ -409,7 +409,12 @@ class LDAP {
                 foreach ($asr as $sr) {
                     $entries = ldap_get_entries($this->ds, $sr);
                     if ($entries !== false) {
-                        $apIt->append(new LDAPResultIterator($entries, $this->ldapParams));
+                        // AppendIterator doesn't seem to handle invalid iterator well.
+                        // So don't append invalid iterators...
+                        $it = new LDAPResultIterator($entries, $this->ldapParams);
+                        if ($it->valid()) {
+                            $apIt->append($it);
+                        }
                     }
                 }
             }
