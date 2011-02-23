@@ -29,7 +29,9 @@ class StatisticsPlugin extends Plugin {
     function __construct($id) {
         parent::__construct($id);
         $this->_addHook('site_admin_option_hook', 'site_admin_option_hook', false);
-        $this->_addHook('root_daily_start', 'root_daily_start', false);
+        $this->_addHook('root_daily_start',       'root_daily_start',       false);
+        $this->_addHook('widget_instance',        'widget_instance',        false);
+        $this->_addHook('widgets',                'widgets',                false);
     }
 
     function getPluginInfo() {
@@ -86,6 +88,35 @@ class StatisticsPlugin extends Plugin {
         $this->_archiveSessions();
         $this->_diskUsage();
     }
+
+    /**
+     * Instanciate the widget
+     *
+     * @param Array $params params of the event
+     *
+     * @return void
+     */
+    function widget_instance($params) {
+        if ($params['widget'] == 'plugin_statistics_projectstatistics') {
+            include_once 'Statistics_Widget_ProjectStatistics.class.php';
+            $params['instance'] = new Statistics_Widget_ProjectStatistics();
+        }
+    }
+
+    /**
+     * Add the widget to the list
+     *
+     * @param Array $params params of the event
+     *
+     * @return void
+     */
+    function widgets($params) {
+        include_once 'common/widget/WidgetLayoutManager.class.php';
+        if ($params['owner_type'] == WidgetLayoutManager::OWNER_TYPE_GROUP) {
+            $params['codendi_widgets'][] = 'plugin_statistics_projectstatistics';
+        }
+    }
+
 }
 
 ?>
