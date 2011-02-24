@@ -57,7 +57,7 @@ $startDate = date('Y-m-d',mktime(0,0,0,date('m')-3,date('d'),date('y')));
 $title = $GLOBALS['Language']->getText('plugin_statistics_admin_page', 'disk_usage_period', array($startDate, $endDate));
 
 $GLOBALS['HTML']->header(array('title' => $title));
-echo '<h1>'.$title.'</h1>';
+echo '<h2>'.$title.'</h2>';
 
 
 if ($project && !$project->isError()) {
@@ -65,7 +65,7 @@ if ($project && !$project->isError()) {
 } else {
     $projectName = '';
 }
-echo '<h2>'.$GLOBALS['Language']->getText('plugin_statistics_show_service', 'service_growth').' <a href="/project/admin/?group_id='.$groupId.'">'.$projectName.'</a></h2>';
+echo '<h3>'.$GLOBALS['Language']->getText('plugin_statistics_show_service', 'service_growth').' <a href="/project/admin/?group_id='.$groupId.'">'.$projectName.'</a></h3>';
 if ($groupId) {
     $duHtml->getServiceEvolutionForPeriod($startDate, $endDate, $groupId);
     echo '<p><h3>'.$GLOBALS['Language']->getText('plugin_statistics_show_service', 'service_growth_graph').'</h3>';
