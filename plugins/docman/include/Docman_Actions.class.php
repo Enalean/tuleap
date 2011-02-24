@@ -1330,7 +1330,7 @@ class Docman_Actions extends Actions {
 
                 // Name
                 if($md->canChangeName()) {
-                    $_name = $request->get('name');
+                    $_name = trim($request->get('name'));
                     $md->setName($_name);
                 }
                 
@@ -1397,7 +1397,7 @@ class Docman_Actions extends Actions {
         $request =& HTTPRequest::instance();
 
         $_gid                   = (int) $request->get('group_id');
-        $_name                  = $request->get('name');
+        $_name                  = trim($request->get('name'));
         $_description           = $request->get('descr');
         $_emptyallowed          = (int) $request->get('empty_allowed');
         $_multiplevaluesallowed = (int) $request->get('multiplevalues_allowed');

@@ -168,7 +168,7 @@ class Docman_MetadataDao extends DataAccessObject {
         $sql = sprintf('SELECT *'.
                        ' FROM plugin_docman_metadata'.
                        ' WHERE group_id = %d'.
-                       '  AND name = %s'.
+                       '  AND TRIM(name) = %s'.
                        '  AND '.$this->notDeletedStmt,
                        $groupId,
                        $this->da->quoteSmart($name));

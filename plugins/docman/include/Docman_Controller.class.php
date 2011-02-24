@@ -590,7 +590,7 @@ class Docman_Controller extends Controler {
             }
             break;
         case 'admin_md_details_update':
-            $_name = $this->request->get('name');
+            $_name = trim($this->request->get('name'));
             $_label = $this->request->get('label');
             
             $mdFactory = $this->_getMetadataFactory($this->_viewParams['group_id']);
@@ -605,7 +605,7 @@ class Docman_Controller extends Controler {
             $this->view = 'RedirectAfterCrud';
             break;
         case 'admin_create_metadata':
-            $_name = $this->request->get('name');
+            $_name = trim($this->request->get('name'));
             $valid = $this->validateNewMetadata($_name);
             
             if ($valid) {
@@ -1565,6 +1565,7 @@ class Docman_Controller extends Controler {
     * another property
     */
     private function validateNewMetadata($name) {
+        $name = trim($name);
         if ($name == '') {
             $valid = false;
             $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'admin_metadata_new_name_missing'));
@@ -1588,6 +1589,7 @@ class Docman_Controller extends Controler {
     * name is not already taken by another property
     */
     private function validateUpdateMetadata($name, $label) {
+        $name = trim($name);
         if ($name == '') {
             $valid = false;
             $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'admin_metadata_new_name_missing'));

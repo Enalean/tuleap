@@ -1,2 +1,5 @@
+Version 2.5 (Not released yet)
+        Fix bug related to the creation of metadata with empty name
+
 Version 1.2
 	Update SOAP (see 4.1 release in src/www/soap/ChangeLog)

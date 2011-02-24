@@ -11,6 +11,7 @@ Version 4.0.17 - (Not released yet)
         backlog #121173: URLVerification failures with anonymous URLs and webdav misconfiguration.
         backlog #121035: Project creation without full name
         backlog #120417: FRS deletion issues
+        backlog #122410: Adding new property at the documentation is allowed with an empty name
 
 Version 4.0.16 - Tuesday, 18th January 2011 
         == New Features ==
