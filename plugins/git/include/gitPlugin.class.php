@@ -163,7 +163,7 @@ class GitPlugin extends Plugin {
      */
     function plugin_statistics_color($params) {
         if ($params['service'] == 'plugin_git') {
-            $params['color'] = 'red';
+            $params['color'] = 'purple4';
         }
     }
 
