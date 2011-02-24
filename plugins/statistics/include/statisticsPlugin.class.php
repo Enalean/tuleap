@@ -28,6 +28,7 @@ class StatisticsPlugin extends Plugin {
 
     function __construct($id) {
         parent::__construct($id);
+        $this->_addHook('cssfile',                'cssFile',                false);
         $this->_addHook('site_admin_option_hook', 'site_admin_option_hook', false);
         $this->_addHook('root_daily_start',       'root_daily_start',       false);
         $this->_addHook('widget_instance',        'widget_instance',        false);
@@ -130,6 +131,16 @@ class StatisticsPlugin extends Plugin {
             $params['codendi_widgets'][] = 'plugin_statistics_projectstatistics';
         }
     }
+    
+    function cssFile($params) {
+        // This stops styles inadvertently clashing with the main site.
+        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0 ||
+            strpos($_SERVER['REQUEST_URI'], '/widgets/') === 0 
+        ) {
+            echo '<link rel="stylesheet" type="text/css" href="'.$this->getThemePath().'/css/style.css" />'."\n";
+        }
+    }
+    
 
 }
 

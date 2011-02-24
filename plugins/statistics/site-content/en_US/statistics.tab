@@ -20,3 +20,4 @@ plugin_statistics	widget_total_project_size	Total project size:
 plugin_statistics_admin_page	show_statistics	Show project statistics
 plugin_statistics_admin_page	disk_usage_period	Disk usage from $1 to $2
 plugin_statistics_admin_page	disk_usage_fixed_period	3
+plugin_statistics_admin_page	disk_usage_quota	The allowed size per project is 5GB.

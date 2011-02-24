@@ -59,7 +59,7 @@ $title = $GLOBALS['Language']->getText('plugin_statistics_admin_page', 'disk_usa
 $GLOBALS['HTML']->header(array('title' => $title));
 echo '<h2>'.$title.'</h2>';
 
-
+echo '<div id="help_init" class="stat_help">'.$GLOBALS['Language']->getText('plugin_statistics_admin_page', 'disk_usage_quota').'</div>';
 if ($project && !$project->isError()) {
     $projectName = $project->getPublicName().' ('.$project->getUnixName().')';
 } else {
