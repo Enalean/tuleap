@@ -264,6 +264,24 @@ class Statistics_DiskUsageHtml extends Statistics_DiskUsageOutput {
         }
     }
 
+    /**
+     *
+     * Displays the disk usage for a given project
+     * 
+     * @param Integer $groupId Id of the project we want retrieve its disk usage
+     * 
+     */
+    public function getTotalProjectSize($groupId) {
+        $duMgrDao = $this->_dum->_getDao();
+        $recentDate = $duMgrDao->searchMostRecentDate();
+        $data = $duMgrDao->returnTotalSizeProject($groupId, $recentDate);
+        $projectSize= $data->getRow();
+        echo '<label><b>';
+        echo $GLOBALS['Language']->getText('plugin_statistics', 'widget_total_project_size');
+        echo '</b></label>';
+        echo $this->sizeReadable($projectSize['size']);
+    }
+
     public function getReadable($result, $key) {
         if (isset($result['service'][$key])) {
             return '<td>'.$this->sizeReadable($result['service'][$key]).'</td>';
