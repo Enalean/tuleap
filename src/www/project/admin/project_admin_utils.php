@@ -45,7 +45,7 @@ function project_admin_header($params) {
 	<A HREF="/project/admin/history.php?group_id='.$group_id.'">'.$Language->getText('project_admin_history','proj_history').'</A> |
     <A HREF="/project/stats/source_code_access.php/?group_id='.$group_id.'">'.$Language->getText('project_admin_utils','access_logs').'</A>';
     //Call hook that can be displayed in this area
-    $em->processEvent('available_in_admin_page', array('group_id' => $group_id));
+    $em->processEvent('admin_toolbar_data', array('group_id' => $group_id));
 
 	//<A HREF="/project/admin/?group_id='.$group_id.'&func=import">Tracker Import</A>
 
