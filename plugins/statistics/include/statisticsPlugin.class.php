@@ -97,8 +97,10 @@ class StatisticsPlugin extends Plugin {
      * @return void
      */
     function admin_toolbar_data($params) {
-        //the link is just to test
-        echo '| <A HREF="'.$this->getPluginPath().'/project_stat.php?group_id='.$params['group_id'].'">'.$GLOBALS['Language']->getText('plugin_statistics_admin_page', 'show_statistics').'</A>';
+        $groupId = $params['group_id'];
+        if ($groupId) {
+            echo ' | <A HREF="'.$this->getPluginPath().'/project_stat.php?group_id='.$groupId.'">'.$GLOBALS['Language']->getText('plugin_statistics_admin_page', 'show_statistics').'</A>';
+        }
     }
 
     /**
