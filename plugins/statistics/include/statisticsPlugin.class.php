@@ -28,10 +28,11 @@ class StatisticsPlugin extends Plugin {
 
     function __construct($id) {
         parent::__construct($id);
-        $this->_addHook('site_admin_option_hook', 'site_admin_option_hook', false);
-        $this->_addHook('root_daily_start',       'root_daily_start',       false);
-        $this->_addHook('widget_instance',        'widget_instance',        false);
-        $this->_addHook('widgets',                'widgets',                false);
+        $this->_addHook('site_admin_option_hook',  'site_admin_option_hook', false);
+        $this->_addHook('root_daily_start',        'root_daily_start',       false);
+        $this->_addHook('widget_instance',         'widget_instance',        false);
+        $this->_addHook('widgets',                 'widgets',                false);
+        $this->_addHook('available_in_admin_page', 'availableInAdminPage',   false);
     }
 
     function getPluginInfo() {
@@ -87,6 +88,17 @@ class StatisticsPlugin extends Plugin {
     function root_daily_start($params) {
         $this->_archiveSessions();
         $this->_diskUsage();
+    }
+
+    /**
+     * Hook.
+     *
+     * @param $params
+     * @return void
+     */
+    function availableInAdminPage($params) {
+        //the link is just to test
+        echo '|<A HREF="'.$this->getPluginPath().'/disk_usage.php?func=show_one_project">'.$GLOBALS['Language']->getText('plugin_statistics_admin_page', 'show_statistics').'</A>';
     }
 
     /**

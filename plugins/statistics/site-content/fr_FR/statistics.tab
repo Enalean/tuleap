@@ -16,3 +16,5 @@ widget_categ_label	plugin_statistics	Statistiques du projet
 plugin_statistics	widget_title_projectstatistics	Statistiques du projet
 plugin_statistics	widget_desc_projectstatistics	Affiche les statistiques disque du projet
 plugin_statistics	widget_total_project_size	Taille totale du Projet:
+
+plugin_statistics_admin_page	show_statistics	Statistiques du projet
