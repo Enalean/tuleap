@@ -46,10 +46,6 @@ class Statistics_DiskUsageGraph extends Statistics_DiskUsageOutput {
                 return 'darkslategray';
             case Statistics_DiskUsageManager::MAILMAN:
                 return 'darkkhaki';
-            case Statistics_DiskUsageManager::PLUGIN_DOCMAN:
-                return 'darkolivegreen';
-            case Statistics_DiskUsageManager::PLUGIN_FORUMML:
-                return 'darksalmon';
             case Statistics_DiskUsageManager::PLUGIN_WEBDAV:
                 return 'gainsboro';
             case Statistics_DiskUsageManager::GRP_HOME:
@@ -65,7 +61,12 @@ class Statistics_DiskUsageGraph extends Statistics_DiskUsageOutput {
             case Statistics_DiskUsageManager::BACKUP_OLD:
                 return 'peru';
             default:
-                return false;
+                // If plugins don't want to color themselves they are white
+                $color = 'white';
+                $params = array('service' => $service, 'color' => &$color);
+                $em = EventManager::instance();
+                $em->processEvent('plugin_statistics_color', $params);
+                return $color;
         }
     }
 

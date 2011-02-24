@@ -36,10 +36,8 @@ class Statistics_DiskUsageManager {
     const GRP_HOME = 'grp_home';
     const USR_HOME = 'usr_home';
     const WIKI = 'wiki';
-    const PLUGIN_DOCMAN = 'plugin_docman';
     const PLUGIN_WEBDAV = 'plugin_webdav';
     const MAILMAN = 'mailman';
-    const PLUGIN_FORUMML = 'plugin_forumml';
     const MYSQL = 'mysql';
     const CODENDI_LOGS = 'codendi_log';
     const BACKUP = 'backup';

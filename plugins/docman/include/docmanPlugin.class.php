@@ -64,6 +64,7 @@ class DocmanPlugin extends Plugin {
         // Stats plugin
         $this->_addHook('plugin_statistics_disk_usage_collect_project', 'plugin_statistics_disk_usage_collect_project', false);
         $this->_addHook('plugin_statistics_disk_usage_service_label',   'plugin_statistics_disk_usage_service_label',   false);
+        $this->_addHook('plugin_statistics_color',                      'plugin_statistics_color',                      false);
 
         $this->_addHook('show_pending_documents',             'show_pending_documents',             false);
 
@@ -478,8 +479,18 @@ class DocmanPlugin extends Plugin {
     function plugin_statistics_disk_usage_service_label($params) {
         $params['services']['plugin_docman'] = 'Docman';
     }
-    
-    
+
+    /**
+     * Hook to choose the color of the plugin in the graph
+     * 
+     * @param array $params
+     */
+    function plugin_statistics_color($params) {
+        if ($params['service'] == 'plugin_docman') {
+            $params['color'] = 'darkolivegreen';
+        }
+    }
+
     /**
      * Hook to list pending documents and/or versions of documents in site admin page
      *

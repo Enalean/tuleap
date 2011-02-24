@@ -68,7 +68,7 @@ if (strtotime($startDate) >= strtotime($endDate)) {
 }
 
 $duMgr  = new Statistics_DiskUsageManager();
-$services = $duMgr->getProjectServices();
+$services = array_keys($duMgr->getProjectServices());
 
 //
 // Display graph
