@@ -4,6 +4,7 @@ plugin_statistics	descriptor_name	Statistiques
 
 plugin_statistics_show_service	usage_per_service	Utilisation par service
 plugin_statistics_show_service	service_growth	Croissance des services
+plugin_statistics_show_service	service_growth_graph	Graph de roissance des services
 
 plugin_statistics_show_one_project	usage_per_project	Utilisation par projet
 

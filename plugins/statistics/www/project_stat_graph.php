@@ -43,10 +43,29 @@ if (!$project->userIsAdmin($user)) {
     header('Location: '.get_server_url());
 }
 
-$currentTime = time();
-$threeMonthsAgo = $currentTime - (3 * 30 * 24 * 60 * 60);
-$startDate = date('Y-m-d', $threeMonthsAgo);
-$endDate = date('Y-m-d', $currentTime);
+$vStartDate = new Valid('start_date');
+$vStartDate->addRule(new Rule_Date());
+$vStartDate->required();
+if ($request->valid($vStartDate)) {
+    $startDate = $request->get('start_date');
+} else {
+    $startDate = '';
+}
+
+$vEndDate = new Valid('end_date');
+$vEndDate->addRule(new Rule_Date());
+$vEndDate->required();
+if ($request->valid($vStartDate)) {
+    $endDate = $request->get('end_date');
+} else {
+    $endDate = date('Y-m-d');
+}
+
+$error = false;
+if (strtotime($startDate) >= strtotime($endDate)) {
+    $feedback[] = 'You made a mistake in selecting period. Please try again!';
+    $error = true;
+}
 
 $duMgr  = new Statistics_DiskUsageManager();
 $services = $duMgr->getProjectServices();
@@ -54,7 +73,9 @@ $services = $duMgr->getProjectServices();
 //
 // Display graph
 //
-$graph = new Statistics_DiskUsageGraph($duMgr);
-$graph->displayProjectGraph($groupId, $services, 'Week', $startDate, $endDate);
+if (!$error) {
+    $graph = new Statistics_DiskUsageGraph($duMgr);
+    $graph->displayProjectGraph($groupId, $services, 'Week', $startDate, $endDate);
+}
 
 ?>

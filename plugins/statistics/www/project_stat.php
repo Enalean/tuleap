@@ -68,7 +68,8 @@ if ($project && !$project->isError()) {
 echo '<h2>'.$GLOBALS['Language']->getText('plugin_statistics_show_service', 'service_growth').' <a href="/project/admin/?group_id='.$groupId.'">'.$projectName.'</a></h2>';
 if ($groupId) {
     $duHtml->getServiceEvolutionForPeriod($startDate, $endDate, $groupId);
-    echo '<p><img src="project_stat_graph.php?group_id='.$groupId.'" title="Project disk usage graph" /></p>';
+    echo '<p><h3>'.$GLOBALS['Language']->getText('plugin_statistics_show_service', 'service_growth_graph').'</h3>';
+    echo '<img src="project_stat_graph.php?group_id='.$groupId.'&start_date='.$startDate.'&end_date='.$endDate.'" title="Project disk usage graph" /></p>';
 }
 
 $GLOBALS['HTML']->footer(array());
