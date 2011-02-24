@@ -19,6 +19,7 @@
  */
 
 require_once('common/widget/Widget.class.php');
+require_once('Statistics_DiskUsageHtml.class.php');
 
 /**
  * Statisitics_Widget_ProjectStatistics
@@ -47,8 +48,18 @@ class Statistics_Widget_ProjectStatistics extends Widget {
      * @see Widget::getContent()
      */
     public function getContent() {
-        // TODO : Put the content
-        echo 'No content yet';
+        //TODO : add cumulative graph
+        $request =& HTTPRequest::instance();
+        $group_id = $request->get('group_id');
+
+        $duMgr  = new Statistics_DiskUsageManager();
+        $duHtml = new Statistics_DiskUsageHtml($duMgr);
+
+        $duMgrDao = $duMgr->_getDao();
+        $recentDate = $duMgrDao->searchMostRecentDate();
+        $totalSize = $duMgrDao->returnTotalSizeProject($group_id,$recentDate);
+        $projectSize= $totalSize->getRow();
+        print '<label>Total Project size: </label>'.$duHtml->sizeReadable($projectSize['size']);
     }
 
     /**
