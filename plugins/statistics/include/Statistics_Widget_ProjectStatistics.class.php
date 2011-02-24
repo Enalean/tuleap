@@ -59,7 +59,10 @@ class Statistics_Widget_ProjectStatistics extends Widget {
         $recentDate = $duMgrDao->searchMostRecentDate();
         $totalSize = $duMgrDao->returnTotalSizeProject($group_id,$recentDate);
         $projectSize= $totalSize->getRow();
-        print '<label>Total Project size: </label>'.$duHtml->sizeReadable($projectSize['size']);
+        echo '<label><b>';
+        echo $GLOBALS['Language']->getText('plugin_statistics', 'widget_total_project_size');
+        echo '</b></label>';
+        echo $duHtml->sizeReadable($projectSize['size']);
     }
 
     /**

@@ -14,3 +14,4 @@ plugin_statistics_show_one_user	user_detail	User details
 widget_categ_label	plugin_statistics	Project statistics
 plugin_statistics	widget_title_projectstatistics	Project statistics
 plugin_statistics	widget_desc_projectstatistics	Show project disk statistics
+plugin_statistics	widget_total_project_size	Total project size:
