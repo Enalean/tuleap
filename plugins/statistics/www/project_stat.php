@@ -49,10 +49,10 @@ $duMgr  = new Statistics_DiskUsageManager();
 $duHtml = new Statistics_DiskUsageHtml($duMgr);
 
 
-//Growth for a perid of 3 months
-//May be turned on config param
+
 $endDate = date('Y-m-d');
-$startDate = date('Y-m-d',mktime(0,0,0,date('m')-3,date('d'),date('y')));
+$periodAgo = $GLOBALS['Language']->getText('plugin_statistics_admin_page', 'disk_usage_fixed_period');
+$startDate = date('Y-m-d',mktime(0,0,0,date('m')-$periodAgo,date('d'),date('y')));
 
 $title = $GLOBALS['Language']->getText('plugin_statistics_admin_page', 'disk_usage_period', array($startDate, $endDate));
 
