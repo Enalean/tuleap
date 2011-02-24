@@ -17,3 +17,4 @@ plugin_statistics	widget_desc_projectstatistics	Show project disk statistics
 plugin_statistics	widget_total_project_size	Total project size:
 
 plugin_statistics_admin_page	show_statistics	Show project statistics
+plugin_statistics_admin_page	disk_usage_period	Disk usage from $1 to $2

@@ -30,30 +30,36 @@ if (!$p || !$pluginManager->isPluginAvailable($p)) {
     header('Location: '.get_server_url());
 }
 
-$duMgr  = new Statistics_DiskUsageManager();
-$duHtml = new Statistics_DiskUsageHtml($duMgr);
-
-
 $vGroupId = new Valid_UInt('group_id');
 $vGroupId->required();
 if ($request->valid($vGroupId)) {
     $groupId = $request->get('group_id');
+    $project = ProjectManager::instance()->getProject($groupId);
 } else {
-    $groupId = '';
+    header('Location: '.get_server_url());
 }
+
+// Grant access only to project admins
+$user = UserManager::instance()->getCurrentUser();
+if (!$project->userIsAdmin($user)) {
+    header('Location: '.get_server_url());
+}
+
+$duMgr  = new Statistics_DiskUsageManager();
+$duHtml = new Statistics_DiskUsageHtml($duMgr);
+
 
 //Growth for a perid of 3 months
 //May be turned on config param
 $endDate = date('Y-m-d');
-$startDate = date('Y-m-d',mktime(0,0,0,date('m')-3,date('d'),date('y'))); 
+$startDate = date('Y-m-d',mktime(0,0,0,date('m')-3,date('d'),date('y')));
 
-$title = 'Disk usage from '.$startDate.' to '.$endDate;
+$title = $GLOBALS['Language']->getText('plugin_statistics_admin_page', 'disk_usage_period', array($startDate, $endDate));
 
 $GLOBALS['HTML']->header(array('title' => $title));
 echo '<h1>'.$title.'</h1>';
 
 
-$project = ProjectManager::instance()->getProject($groupId);
 if ($project && !$project->isError()) {
     $projectName = $project->getPublicName().' ('.$project->getUnixName().')';
 } else {
