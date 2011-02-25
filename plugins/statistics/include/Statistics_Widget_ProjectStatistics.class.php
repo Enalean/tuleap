@@ -56,8 +56,7 @@ class Statistics_Widget_ProjectStatistics extends Widget {
         $duMgr  = new Statistics_DiskUsageManager();
         $duHtml = new Statistics_DiskUsageHtml($duMgr);
 
-        $duHtml->getTotalProjectSize($group_id);
-
+        return $duHtml->getTotalProjectSize($group_id);
     }
 
     /**

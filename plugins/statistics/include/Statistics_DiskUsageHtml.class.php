@@ -272,14 +272,17 @@ class Statistics_DiskUsageHtml extends Statistics_DiskUsageOutput {
      * 
      */
     public function getTotalProjectSize($groupId) {
-        $duMgrDao = $this->_dum->_getDao();
-        $recentDate = $duMgrDao->searchMostRecentDate();
-        $data = $duMgrDao->returnTotalSizeProject($groupId, $recentDate);
-        $projectSize= $data->getRow();
-        echo '<label><b>';
-        echo $GLOBALS['Language']->getText('plugin_statistics', 'widget_total_project_size');
-        echo '</b></label>';
-        echo $this->sizeReadable($projectSize['size']);
+        $totalSize = $this->_dum->returnTotalProjectSize($groupId);
+
+        $html = '<LABEL><b>';
+        $html .= $GLOBALS['Language']->getText('plugin_statistics', 'widget_total_project_size');
+        $html .= '</b></LABEL>';
+        $html .= $this->sizeReadable($totalSize);
+        $html .= '<div style="text-align:center"><p>';
+        $html .= '<img src="/plugins/statistics/project_cumulativeDiskUsage_graph.php?group_id='.$groupId.'" title="Project total disk usage graph" />';
+        $html .= '</p></div>';
+
+        return $html;
     }
 
     public function getReadable($result, $key) {
