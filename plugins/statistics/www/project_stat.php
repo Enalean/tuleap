@@ -39,43 +39,38 @@ if ($request->valid($vGroupId)) {
     header('Location: '.get_server_url());
 }
 
-// Grant access only to project admins
-$user = UserManager::instance()->getCurrentUser();
-if (!$project->userIsAdmin($user)) {
-    header('Location: '.get_server_url());
-}
-
-$duMgr  = new Statistics_DiskUsageManager();
-$duHtml = new Statistics_DiskUsageHtml($duMgr);
-
-
-
-$endDate = date('Y-m-d');
-$periodAgo = $GLOBALS['Language']->getText('plugin_statistics_admin_page', 'disk_usage_fixed_period');
-$startDate = date('Y-m-d',mktime(0,0,0,date('m')-$periodAgo,date('d'),date('y')));
-
-$title = $GLOBALS['Language']->getText('plugin_statistics_admin_page', 'disk_usage_period', array($startDate, $endDate));
-
-$params['group'] = $groupId;
-$params['toptab'] = 'admin';
-$params['title'] = $GLOBALS['Language']->getText('admin_groupedit','proj_admin').': '.$project->getPublicName();
-site_project_header($params);
-
-echo '<h2>'.$title.'</h2>';
-
-echo '<div id="help_init" class="stat_help">'.$GLOBALS['Language']->getText('plugin_statistics_admin_page', 'disk_usage_quota').'</div>';
 if ($project && !$project->isError()) {
-    $projectName = $project->getPublicName().' ('.$project->getUnixName().')';
-} else {
-    $projectName = '';
-}
-echo '<h3>'.$GLOBALS['Language']->getText('plugin_statistics_show_service', 'service_growth').' <a href="/project/admin/?group_id='.$groupId.'">'.$projectName.'</a></h3>';
-if ($groupId) {
+
+    // Grant access only to project admins
+    $user = UserManager::instance()->getCurrentUser();
+    if (!$project->userIsAdmin($user)) {
+        header('Location: '.get_server_url());
+    }
+
+    $endDate = date('Y-m-d');
+    $periodAgo = $GLOBALS['Language']->getText('plugin_statistics_admin_page', 'disk_usage_fixed_period');
+    $startDate = date('Y-m-d',mktime(0,0,0,date('m')-$periodAgo,date('d'),date('y')));
+
+    $params['group'] = $groupId;
+    $params['toptab'] = 'admin';
+    $params['title'] = $GLOBALS['Language']->getText('admin_groupedit','proj_admin').': '.$project->getPublicName();
+    site_project_header($params);
+
+    $title = $GLOBALS['Language']->getText('plugin_statistics_admin_page', 'disk_usage_period', array($startDate, $endDate));
+    echo '<h2>'.$title.'</h2>';
+
+    echo '<div id="help_init" class="stat_help">'.$GLOBALS['Language']->getText('plugin_statistics_admin_page', 'disk_usage_quota').'</div>';
+    echo '<h3>'.$GLOBALS['Language']->getText('plugin_statistics_show_service', 'service_growth').'</h3>';
+
+    $duMgr  = new Statistics_DiskUsageManager();
+    $duHtml = new Statistics_DiskUsageHtml($duMgr);
     $duHtml->getServiceEvolutionForPeriod($startDate, $endDate, $groupId);
     echo '<p><h3>'.$GLOBALS['Language']->getText('plugin_statistics_show_service', 'service_growth_graph').'</h3>';
     echo '<img src="project_stat_graph.php?group_id='.$groupId.'&start_date='.$startDate.'&end_date='.$endDate.'" title="Project disk usage graph" /></p>';
-}
 
-site_project_footer($params);
+    site_project_footer($params);
+} else {
+    header('Location: '.get_server_url());
+}
 
 ?>
