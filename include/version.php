@@ -12,7 +12,7 @@
 /**
  * Defines the version
  */
-$gitphp_version = "0.2.2";
+$gitphp_version = "0.2.3";
 
 /**
  * Defines the app string (app name and version)
