@@ -56,7 +56,11 @@ $startDate = date('Y-m-d',mktime(0,0,0,date('m')-$periodAgo,date('d'),date('y'))
 
 $title = $GLOBALS['Language']->getText('plugin_statistics_admin_page', 'disk_usage_period', array($startDate, $endDate));
 
-$GLOBALS['HTML']->header(array('title' => $title));
+$params['group'] = $groupId;
+$params['toptab'] = 'admin';
+$params['title'] = $GLOBALS['Language']->getText('admin_groupedit','proj_admin').': '.$project->getPublicName();
+site_project_header($params);
+
 echo '<h2>'.$title.'</h2>';
 
 echo '<div id="help_init" class="stat_help">'.$GLOBALS['Language']->getText('plugin_statistics_admin_page', 'disk_usage_quota').'</div>';
@@ -72,6 +76,6 @@ if ($groupId) {
     echo '<img src="project_stat_graph.php?group_id='.$groupId.'&start_date='.$startDate.'&end_date='.$endDate.'" title="Project disk usage graph" /></p>';
 }
 
-$GLOBALS['HTML']->footer(array());
+site_project_footer($params);
 
 ?>
