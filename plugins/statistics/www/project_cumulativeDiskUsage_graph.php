@@ -37,10 +37,14 @@ if ($request->valid($vGroupId)) {
     header('Location: '.get_server_url());
 }
 
-$currentTime = time();
-$threeMonthsAgo = $currentTime - (3 * 30 * 24 * 60 * 60);
-$startDate = date('Y-m-d', $threeMonthsAgo);
-$endDate = date('Y-m-d', $currentTime);
+//Get dates for start and end period to watch statistics
+$info = $p->getPluginInfo();
+$statPeriod = $info->getPropertyValueForName('statistics_period');
+if (!$statPeriod) {
+    $statPeriod = 3;
+}
+$endDate = date('Y-m-d');
+$startDate = date('Y-m-d',mktime(0,0,0,date('m')-$statPeriod,date('d'),date('y')));
 
 $duMgr  = new Statistics_DiskUsageManager();
 $services = $duMgr->getProjectServices();

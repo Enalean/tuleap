@@ -50,7 +50,7 @@ if ($project && !$project->isError()) {
     $info = $p->getPluginInfo();
     $statPeriod = $info->getPropertyValueForName('statistics_period');
     if (!$statPeriod) {
-        $statPeriod = 5;
+        $statPeriod = 3;
     }
     $endDate = date('Y-m-d');
     $startDate = date('Y-m-d',mktime(0,0,0,date('m')-$statPeriod,date('d'),date('y')));
