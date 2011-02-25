@@ -26,6 +26,12 @@ require_once ('Statistics_DiskUsageGraph.class.php');
  * Statisitics_Widget_ProjectStatistics
  */
 class Statistics_Widget_ProjectStatistics extends Widget {
+
+    /**
+     * Constructor
+     *
+     * @return void
+     */
     public function __construct() {
         $this->Widget('plugin_statistics_projectstatistics');
     }
@@ -60,7 +66,9 @@ class Statistics_Widget_ProjectStatistics extends Widget {
     }
 
     /**
-     * @param $project current project
+     * Widget is used in project summary page
+     *
+     * @param &$project current project
      *
      * @return Boolean
      *

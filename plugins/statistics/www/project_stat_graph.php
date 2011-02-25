@@ -30,7 +30,7 @@ if (!$p || !$pluginManager->isPluginAvailable($p)) {
 
 $vGroupId = new Valid_GroupId();
 $vGroupId->required();
-if($request->valid($vGroupId)) {
+if ($request->valid($vGroupId)) {
     $groupId = $request->get('group_id');
     $project = ProjectManager::instance()->getProject($groupId);
 } else {

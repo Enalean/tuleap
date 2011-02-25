@@ -233,8 +233,8 @@ class Statistics_DiskUsageGraph extends Statistics_DiskUsageOutput {
      * @param Boolean $absolute Is y-axis relative to data set or absolute (starting from 0)
      */
     function displayProjectTotalSizeGraph($groupId, $groupBy, $startDate, $endDate, $absolute=true){
-        $graph = new Chart(420,340,"auto");
-        $graph->img->SetMargin(70,50,30,70);
+        $graph = new Chart(420 ,340 , "auto");
+        $graph->img->SetMargin(70, 50, 30, 70);
         $graph->SetScale("textlin");
         $graph->title->Set("Total project size growth over the time");
 
@@ -245,7 +245,7 @@ class Statistics_DiskUsageGraph extends Statistics_DiskUsageOutput {
             $graph->yaxis->scale->SetAutoMin(0);
         }
 
-        $data = $this->_dum->getWeeklyEvolutionProjectTotalSize($groupId,$groupBy, $startDate, $endDate);
+        $data = $this->_dum->getWeeklyEvolutionProjectTotalSize($groupId, $groupBy, $startDate, $endDate);
         $dates = array();
         $ydata = array();
         foreach ($data as $xdate => $values) {
@@ -255,7 +255,7 @@ class Statistics_DiskUsageGraph extends Statistics_DiskUsageOutput {
 
         $lineplot = new LinePlot($ydata);
 
-        $color ='#6BA132';
+        $color = '#6BA132';
         $lineplot->SetColor($color);
         $lineplot->SetFillColor($color.':1.5');
 

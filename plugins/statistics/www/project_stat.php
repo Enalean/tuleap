@@ -2,7 +2,6 @@
 /**
  * Copyright (c) STMicroelectronics, 2011. All Rights Reserved.
  *
- *
  * This file is a part of Codendi.
  *
  * Codendi is free software; you can redistribute it and/or modify
@@ -49,11 +48,11 @@ if ($project && !$project->isError()) {
 
     $endDate = date('Y-m-d');
     $periodAgo = $GLOBALS['Language']->getText('plugin_statistics_admin_page', 'disk_usage_fixed_period');
-    $startDate = date('Y-m-d',mktime(0,0,0,date('m')-$periodAgo,date('d'),date('y')));
+    $startDate = date('Y-m-d', mktime(0, 0, 0, date('m')-$periodAgo, date('d'), date('y')));
 
     $params['group'] = $groupId;
     $params['toptab'] = 'admin';
-    $params['title'] = $GLOBALS['Language']->getText('admin_groupedit','proj_admin').': '.$project->getPublicName();
+    $params['title'] = $GLOBALS['Language']->getText('admin_groupedit', 'proj_admin').': '.$project->getPublicName();
     site_project_header($params);
 
     $title = $GLOBALS['Language']->getText('plugin_statistics_admin_page', 'disk_usage_period', array($startDate, $endDate));
