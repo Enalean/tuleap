@@ -45,10 +45,15 @@ if ($project && !$project->isError()) {
     if (!$project->userIsAdmin($user)) {
         header('Location: '.get_server_url());
     }
-
+    
+    //Get dates for start and end period to watch statistics
+    $info = $p->getPluginInfo();
+    $statPeriod = $info->getPropertyValueForName('statistics_period');
+    if (!$statPeriod) {
+        $statPeriod = 5;
+    }
     $endDate = date('Y-m-d');
-    $periodAgo = $GLOBALS['Language']->getText('plugin_statistics_admin_page', 'disk_usage_fixed_period');
-    $startDate = date('Y-m-d', mktime(0, 0, 0, date('m')-$periodAgo, date('d'), date('y')));
+    $startDate = date('Y-m-d',mktime(0,0,0,date('m')-$statPeriod,date('d'),date('y')));
 
     $params['group'] = $groupId;
     $params['toptab'] = 'admin';
