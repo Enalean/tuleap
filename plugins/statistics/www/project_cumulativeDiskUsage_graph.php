@@ -44,7 +44,7 @@ if (!$statPeriod) {
     $statPeriod = 3;
 }
 $endDate = date('Y-m-d');
-$startDate = date('Y-m-d',mktime(0,0,0,date('m')-$statPeriod,date('d'),date('y')));
+$startDate = date('Y-m-d', mktime(0, 0, 0, date('m')-$statPeriod, date('d'), date('y')));
 
 $duMgr  = new Statistics_DiskUsageManager();
 $services = $duMgr->getProjectServices();

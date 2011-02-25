@@ -53,7 +53,7 @@ if ($project && !$project->isError()) {
         $statPeriod = 3;
     }
     $endDate = date('Y-m-d');
-    $startDate = date('Y-m-d',mktime(0,0,0,date('m')-$statPeriod,date('d'),date('y')));
+    $startDate = date('Y-m-d', mktime(0, 0, 0, date('m')-$statPeriod, date('d'), date('y')));
 
     $params['group'] = $groupId;
     $params['toptab'] = 'admin';
