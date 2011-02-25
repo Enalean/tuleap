@@ -259,7 +259,18 @@ class Statistics_DiskUsageManager {
         }
         return false;
     }
-    
+
+    public function returnTotalProjectSize($group_id){
+        $dao  = $this->_getDao();
+        $recentDate = $dao->searchMostRecentDate();
+        $dar = $dao->returnTotalSizeProject($group_id, $recentDate);
+        if ($dar && !$dar->isError()) {
+            $projectSize= $dar->getRow();
+            return $projectSize['size'];
+        }
+        return false;
+    }
+
     public function returnProjectEvolutionForPeriod($groupId, $startDate ,$endDate ){
         $dao = $this->_getDao();
         $res = array();
@@ -283,7 +294,21 @@ class Statistics_DiskUsageManager {
         }
         return false;
     }
-    
+
+    public function getWeeklyEvolutionProjectTotalSize($groupId,$groupBy, $startDate, $endDate){
+        $groupBy = strtoupper($groupBy);
+        $dao  = $this->_getDao();
+        $dar = $dao->searchSizePerProjectForPeriod($groupId, $groupBy, $startDate, $endDate);
+        if ($dar && !$dar->isError()) {
+            foreach ($dar as $row) {
+                $res[$this->getKeyFromGroupBy($row, $groupBy)] = $row['size'];
+            }
+            return $res;
+        }
+        return false;
+         
+    }
+
     public function getWeeklyEvolutionUserData($userId,$groupBy, $startDate, $endDate){
         $groupBy = strtoupper($groupBy);
         $dao  = $this->_getDao();
