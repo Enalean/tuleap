@@ -7,3 +7,8 @@
   padding-left: 40px;
   margin: 0.5em;
 }
+
+.widget-preview-plugin_statistics_projectstatistics-en_US,
+.widget-preview-plugin_statistics_projectstatistics-fr_FR {
+    background-image:url('../images/widget-preview-projectstatistics.png');
+}
