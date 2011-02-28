@@ -58,7 +58,7 @@ if ($project && !$project->isError()) {
     $params['group'] = $groupId;
     $params['toptab'] = 'admin';
     $params['title'] = $GLOBALS['Language']->getText('admin_groupedit', 'proj_admin').': '.$project->getPublicName();
-    site_project_header($params);
+    project_admin_header($params);
 
     $title = $GLOBALS['Language']->getText('plugin_statistics_admin_page', 'disk_usage_period', array($startDate, $endDate));
     echo '<h2>'.$title.'</h2>';
