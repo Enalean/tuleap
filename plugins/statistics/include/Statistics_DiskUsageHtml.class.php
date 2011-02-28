@@ -173,9 +173,10 @@ class Statistics_DiskUsageHtml extends Statistics_DiskUsageOutput {
      * @param Date $startDate
      * @param Date $endDate
      * @param Integer $groupId
+     * @param Boolean $colored
      *
      */
-    public function getServiceEvolutionForPeriod($startDate , $endDate, $groupId = NULL) {
+    public function getServiceEvolutionForPeriod($startDate , $endDate, $groupId = NULL, $colored = false) {
         $res = $this->_dum->returnServiceEvolutionForPeriod($startDate , $endDate, $groupId);
         if ($res) {
             $services = $this->_dum->getProjectServices();
@@ -195,7 +196,13 @@ class Statistics_DiskUsageHtml extends Statistics_DiskUsageOutput {
             $totalEvolution = 0;
             foreach ($res as $row){
                 echo '<tr>';
-                echo '<td>'.$services[$row['service']].'</td>';
+                echo '<td>';
+                if ($colored) {
+                    $layout = new Layout('');
+                    $color = $layout->getColorCodeFromColorName($this->_dum->getServiceColor($row['service']));
+                    echo '<span class="hatem_box" style="background-color:'.$color.'">&nbsp;&nbsp;&nbsp;&nbsp;</span>';
+                }
+                echo $services[$row['service']].'</td>';
                 $totalStartSize  +=$row['start_size'];
                 $totalEndSize    +=$row['end_size'];
                 $totalEvolution  +=$row['evolution'];

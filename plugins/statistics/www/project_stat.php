@@ -68,7 +68,7 @@ if ($project && !$project->isError()) {
 
     $duMgr  = new Statistics_DiskUsageManager();
     $duHtml = new Statistics_DiskUsageHtml($duMgr);
-    $duHtml->getServiceEvolutionForPeriod($startDate, $endDate, $groupId);
+    $duHtml->getServiceEvolutionForPeriod($startDate, $endDate, $groupId, true);
     echo '</label>';
     echo '<label class="project_stat_graph">';
     echo '<img src="project_stat_graph.php?group_id='.$groupId.'&start_date='.$startDate.'&end_date='.$endDate.'" title="Project disk usage graph" /></label>';
