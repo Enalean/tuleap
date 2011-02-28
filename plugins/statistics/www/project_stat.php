@@ -64,13 +64,15 @@ if ($project && !$project->isError()) {
     echo '<h2>'.$title.'</h2>';
 
     echo '<div id="help_init" class="stat_help">'.$GLOBALS['Language']->getText('plugin_statistics_admin_page', 'disk_usage_quota').'</div>';
-    echo '<h3>'.$GLOBALS['Language']->getText('plugin_statistics_show_service', 'service_growth').'</h3>';
+    echo '<label class="project_stat_table"><h3>'.$GLOBALS['Language']->getText('plugin_statistics_show_service', 'service_growth').'</h3>';
 
     $duMgr  = new Statistics_DiskUsageManager();
     $duHtml = new Statistics_DiskUsageHtml($duMgr);
     $duHtml->getServiceEvolutionForPeriod($startDate, $endDate, $groupId);
-    echo '<p><h3>'.$GLOBALS['Language']->getText('plugin_statistics_show_service', 'service_growth_graph').'</h3>';
-    echo '<img src="project_stat_graph.php?group_id='.$groupId.'&start_date='.$startDate.'&end_date='.$endDate.'" title="Project disk usage graph" /></p>';
+    echo '</label>';
+    echo '<label class="project_stat_graph">';
+    echo '<img src="project_stat_graph.php?group_id='.$groupId.'&start_date='.$startDate.'&end_date='.$endDate.'" title="Project disk usage graph" /></label>';
+    echo '<p>&nbsp;</p>';
 
     site_project_footer($params);
 } else {

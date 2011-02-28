@@ -12,3 +12,13 @@
 .widget-preview-plugin_statistics_projectstatistics-fr_FR {
     background-image:url('../images/widget-preview-projectstatistics.png');
 }
+
+.project_stat_table {
+    position:absolute;
+}
+
+.project_stat_graph {
+    position:relative;
+    top:4em;
+    left:35em;
+}
