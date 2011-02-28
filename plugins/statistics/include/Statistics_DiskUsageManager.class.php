@@ -63,7 +63,52 @@ class Statistics_DiskUsageManager {
         }
         return $this->_services;
     }
-    
+
+    /**
+     * Return a human readable string for service
+     *
+     * @param String $service
+     *
+     * @return String
+     */
+    public function getServiceColor($service) {
+        switch($service) {
+            case Statistics_DiskUsageManager::SVN:
+                return 'darkgreen';
+            case Statistics_DiskUsageManager::CVS:
+                return 'darkseagreen';
+            case Statistics_DiskUsageManager::FRS:
+                return 'cornflowerblue';
+            case Statistics_DiskUsageManager::FTP:
+                return 'royalblue';
+            case Statistics_DiskUsageManager::WIKI:
+                return 'darkslategray';
+            case Statistics_DiskUsageManager::MAILMAN:
+                return 'darkkhaki';
+            case Statistics_DiskUsageManager::PLUGIN_WEBDAV:
+                return 'gainsboro';
+            case Statistics_DiskUsageManager::GRP_HOME:
+                return 'lavender';
+            case Statistics_DiskUsageManager::USR_HOME:
+                return 'darkturquoise';
+            case Statistics_DiskUsageManager::MYSQL:
+                return 'sandybrown';
+            case Statistics_DiskUsageManager::CODENDI_LOGS:
+                return 'forestgreen';
+            case Statistics_DiskUsageManager::BACKUP:
+                return 'saddlebrown';
+            case Statistics_DiskUsageManager::BACKUP_OLD:
+                return 'peru';
+            default:
+                // If plugins don't want to color themselves they are white
+                $color = 'white';
+                $params = array('service' => $service, 'color' => &$color);
+                $em = EventManager::instance();
+                $em->processEvent('plugin_statistics_color', $params);
+                return $color;
+        }
+    }
+
     public function getGeneralData($date, $groupId = NULL) {
         $res = array();
         $dao  = $this->_getDao();
