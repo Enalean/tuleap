@@ -143,8 +143,8 @@ class Statistics_DiskUsageGraph extends Statistics_DiskUsageOutput {
      * @param Boolean $absolute Is y-axis relative to data set or absolute (starting from 0)
      */
     function displayProjectGraph($groupId, $services, $groupBy, $startDate, $endDate, $absolute=true, $accumulative = true){
-       $graph = new Chart(650,450,"auto");
-        $graph->img->SetMargin(70,50,20,20);
+       $graph = new Chart(750,450,"auto");
+        $graph->img->SetMargin(70,160,30,70);
         $graph->SetScale("textint");
         $graph->title->Set("Project by service growth over the time");
 
@@ -172,6 +172,7 @@ class Statistics_DiskUsageGraph extends Statistics_DiskUsageOutput {
             $lineplot->SetColor($color.':0.5');
             $lineplot->SetFillColor($color);
             $lineplot->SetLegend($servicesList[$service]);
+            $graph->legend->SetPos(0.05,0.5,'right','center');
 
             //$lineplot->value->show();
             $lineplot->value->SetFont($graph->getFont(), FS_NORMAL, 8);
@@ -190,7 +191,7 @@ class Statistics_DiskUsageGraph extends Statistics_DiskUsageOutput {
             $graph->Add($accLineplot);
         }
         $graph->xaxis->title->Set("Weeks");
-        $graph->xaxis->SetTitleMargin(15);
+        $graph->xaxis->SetTitleMargin(35);
         $graph->xaxis->SetTickLabels($dates);
         
         
