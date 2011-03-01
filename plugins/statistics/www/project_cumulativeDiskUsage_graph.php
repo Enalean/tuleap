@@ -37,21 +37,41 @@ if ($request->valid($vGroupId)) {
     header('Location: '.get_server_url());
 }
 
+$func = $request->getValidated('func', new Valid_WhiteList('usage', 'progress'), '');
+
+
+
 //Get dates for start and end period to watch statistics
-$info = $p->getPluginInfo();
-$statPeriod = $info->getPropertyValueForName('statistics_period');
+$duMgr  = new Statistics_DiskUsageManager();
+$statPeriod = $duMgr->getProperty('statistics_period');
 if (!$statPeriod) {
     $statPeriod = 3;
 }
 $endDate = date('Y-m-d');
 $startDate = date('Y-m-d', mktime(0, 0, 0, date('m')-$statPeriod, date('d'), date('y')));
 
-$duMgr  = new Statistics_DiskUsageManager();
+
 $services = $duMgr->getProjectServices();
 
 // Display graph
-
 $graph = new Statistics_DiskUsageGraph($duMgr);
-$graph->displayProjectTotalSizeGraph($groupId, 'Week', $startDate, $endDate);
 
+if ($func == 'usage') {
+    //Retreive the config param & convert it to bytes
+    $allowed = $duMgr->getProperty('allowed_quota') * (1024*1024*1024);
+    //validate size param
+    $vUsed  = new Valid_UInt('size');
+    $vUsed->required();
+    if ($request->valid($vUsed)) {
+        $used = $request->get('size');
+    }
+    //In case of over usage
+    if ($used > $allowed) {
+        $used = $allowed;
+        //May be should display warning
+    }
+    $graph->displayProjectProportionUsage($used, $allowed);
+} else {
+    $graph->displayProjectTotalSizeGraph($groupId, 'Week', $startDate, $endDate);
+}
 ?>

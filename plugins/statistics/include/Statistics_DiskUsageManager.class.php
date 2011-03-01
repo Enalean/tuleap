@@ -560,6 +560,20 @@ class Statistics_DiskUsageManager {
         }
         return $this->_dao;
     }
+ 
+    /**
+     * Retreive a param config giving its name
+     * 
+     * @param String $name
+     * 
+     * @return String
+     */
+    public function getProperty($name) {
+        $pluginManager = PluginManager::instance();
+        $p = $pluginManager->getPluginByName('statistics');
+        $info =$p->getPluginInfo();
+        return $info->getPropertyValueForName($name);
+    }
 }
 
 ?>

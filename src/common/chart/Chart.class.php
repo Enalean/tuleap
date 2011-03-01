@@ -22,6 +22,7 @@ require_once($GLOBALS['jpgraph_dir'].'/jpgraph.php');
 require_once($GLOBALS['jpgraph_dir'].'/jpgraph_gantt.php');
 require_once($GLOBALS['jpgraph_dir'].'/jpgraph_line.php');
 require_once($GLOBALS['jpgraph_dir'].'/jpgraph_bar.php');
+require_once($GLOBALS['jpgraph_dir'].'/jpgraph_pie.php');
 require_once($GLOBALS['jpgraph_dir'].'/jpgraph_date.php'); 
 
 /**
@@ -46,8 +47,8 @@ class Chart {
     * 
     * @return void
     */
-    public function __construct($aWidth = 600, $aHeight = 400, $aCachedName = "", $aTimeOut = 0, $aInline = true) {
-        $classname = $this->getGraphClass();
+    public function __construct($aWidth = 600, $aHeight = 400, $aCachedName = "", $graphType = "Graph", $aTimeOut = 0, $aInline = true) {
+        $classname = $this->getGraphClass($graphType);
         $this->jpgraph_instance = new $classname($aWidth,$aHeight,$aCachedName,$aTimeOut,$aInline);
         $this->jpgraph_instance->SetMarginColor($GLOBALS['HTML']->getChartBackgroundColor());
         $this->jpgraph_instance->SetFrame(true, $this->getMainColor(), 1);
@@ -82,8 +83,8 @@ class Chart {
      *
      * @return string
      */
-    protected function getGraphClass() {
-        return 'Graph';
+    protected function getGraphClass($graphType) {
+        return $graphType;
     }
     
     /**

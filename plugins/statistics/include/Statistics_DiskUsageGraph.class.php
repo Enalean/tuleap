@@ -244,7 +244,69 @@ class Statistics_DiskUsageGraph extends Statistics_DiskUsageOutput {
 
         $graph->Stroke();
     }
+    /**
+     *
+     * @param Integer $used
+     * @param Integer $total
+     */
+    function displayProjectProportionUsage($used, $total) {
+        $graph = new Chart(200 ,150 , "auto", "PieGraph");
 
+        $data = array($used, $total-$used);
+
+        $usage = new PiePlot($data);
+        $usage->SetSliceColors(array('red','green'));
+        $usage->SetLegends(array("Used proportion", "Allowed quota"));
+        $graph->legend->SetPos(0.01,0,'right','top');
+        $graph->add($usage);
+
+        //graph display
+        $graph->stroke();
+    }
+
+    //Not used
+    function displayProjectTotalSizeProgressBar($groupId, $groupBy, $startDate, $endDate, $absolute=true){
+        $graph = new Chart(550 ,120 , "auto", "GanttGraph");
+        //$graph->img->SetMargin(30, 50, 30, 70);
+        // Add title and subtitle
+        //$graph->title->Set("Example of captions");
+
+        // Show week scale
+        $graph->ShowHeaders(GANTT_HWEEK|GANTT_HYEAR);
+
+
+        // Use the short name of the month together with a 2 digit year
+        // on the month scale
+        //$graph->scale->month->SetStyle(MONTHSTYLE_SHORTNAMEYEAR2);
+        $graph->scale->year->SetFontColor("white");
+        $graph->scale->year->SetBackgroundColor("blue");
+
+        // 0 % vertical label margin
+        $graph->SetLabelVMarginFactor(0);
+
+        // Format the bar for the project progress
+        // ($row,$title,$startdate,$enddate)
+        $activity = new GanttBar(0,"", $startDate, $endDate,"[60%]", 10);
+
+        // Yellow diagonal line pattern on a red background
+        $activity->SetPattern(BAND_RDIAG,"yellow");
+        $activity->SetFillColor("red");
+
+        // Set absolute height
+        $activity->SetHeight(20);
+
+        // Specify progress to 60%
+        $activity->progress->Set(0.6);
+        $activity->progress->SetPattern(BAND_HVCROSS,"blue");
+
+
+        // Finally add the bar to the graph
+        $graph->Add($activity);
+
+        // display it
+        $graph->Stroke();
+
+    }
 }
 
 ?>

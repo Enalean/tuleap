@@ -281,12 +281,19 @@ class Statistics_DiskUsageHtml extends Statistics_DiskUsageOutput {
     public function getTotalProjectSize($groupId) {
         $totalSize = $this->_dum->returnTotalProjectSize($groupId);
 
-        $html = '<LABEL><b>';
-        $html .= $GLOBALS['Language']->getText('plugin_statistics', 'widget_total_project_size');
-        $html .= '</b></LABEL>';
-        $html .= $this->sizeReadable($totalSize);
+        if ($this->_dum->getProperty('allowed_quota')) {
+            $html = '<div style="text-align:center"><p>';
+            $html .= '<img src="/plugins/statistics/project_cumulativeDiskUsage_graph.php?func=usage&size='.$totalSize.'&group_id='.$groupId.'" title="Disk usage percentage" />';
+            $html .= '</p></div>';
+        } else {
+            $html = '<LABEL><b>';
+            $html .= $GLOBALS['Language']->getText('plugin_statistics', 'widget_total_project_size');
+            $html .= '</b></LABEL>';
+            $html .= $this->sizeReadable($totalSize);
+        }
+
         $html .= '<div style="text-align:center"><p>';
-        $html .= '<img src="/plugins/statistics/project_cumulativeDiskUsage_graph.php?group_id='.$groupId.'" title="Project total disk usage graph" />';
+        $html .= '<img src="/plugins/statistics/project_cumulativeDiskUsage_graph.php?func=progress&group_id='.$groupId.'" title="Project total disk usage graph" />';
         $html .= '</p></div>';
 
         return $html;
