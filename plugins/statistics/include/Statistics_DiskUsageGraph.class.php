@@ -34,7 +34,7 @@ class Statistics_DiskUsageGraph extends Statistics_DiskUsageOutput {
      * @param unknown_type $endDate
      * @param Boolean $absolute Is y-axis relative to data set or absolute (starting from 0)
      */
-    function displayServiceGraph($services, $groupBy, $startDate, $endDate, $absolute=true){
+    function displayServiceGraph($services, $groupBy, $startDate, $endDate, $absolute=true, $accumulative = true){
         $graph = new Chart(650,450,"auto");
         $graph->img->SetMargin(70,50,20,20);
         $graph->SetScale("textint");
@@ -50,7 +50,7 @@ class Statistics_DiskUsageGraph extends Statistics_DiskUsageOutput {
         $servicesList = $this->_dum->getProjectServices();
         
         $data = $this->_dum->getWeeklyEvolutionServiceData($services, $groupBy, $startDate, $endDate);
-        $i = 0;
+        $lineplots = array();
         $dates = array();
         foreach ($data as $service => $values) {
             $ydata = array();
@@ -68,10 +68,19 @@ class Statistics_DiskUsageGraph extends Statistics_DiskUsageOutput {
             //$lineplot->value->show();
             $lineplot->value->SetFont($graph->getFont(), FS_NORMAL, 8);
             $lineplot->value->setFormatCallback(array($this, 'sizeReadable'));
-            $graph->Add($lineplot);
-            $i++;
+            if ($accumulative) {
+                $lineplots[] = $lineplot;
+                // Reverse order
+                //array_unshift($lineplots, $lineplot);
+            } else {
+                $graph->Add($lineplot);
+            }
         }
 
+        if ($accumulative) {
+            $accLineplot = new AccLinePlot($lineplots);
+            $graph->Add($accLineplot);
+        }
         $graph->xaxis->title->Set("Weeks");
         $graph->xaxis->SetTitleMargin(15);
         $graph->xaxis->SetTickLabels($dates);
@@ -133,7 +142,7 @@ class Statistics_DiskUsageGraph extends Statistics_DiskUsageOutput {
      * @param Date    $endDate
      * @param Boolean $absolute Is y-axis relative to data set or absolute (starting from 0)
      */
-    function displayProjectGraph($groupId, $services, $groupBy, $startDate, $endDate, $absolute=true){
+    function displayProjectGraph($groupId, $services, $groupBy, $startDate, $endDate, $absolute=true, $accumulative = true){
        $graph = new Chart(650,450,"auto");
         $graph->img->SetMargin(70,50,20,20);
         $graph->SetScale("textint");
@@ -149,7 +158,7 @@ class Statistics_DiskUsageGraph extends Statistics_DiskUsageOutput {
         $servicesList = $this->_dum->getProjectServices();
 
         $data = $this->_dum->getWeeklyEvolutionProjectData($services, $groupId, $groupBy, $startDate, $endDate);
-        $i = 0;
+        $lineplots = array();
         $dates = array();
         foreach ($data as $service => $values) {
             $ydata = array();
@@ -167,10 +176,19 @@ class Statistics_DiskUsageGraph extends Statistics_DiskUsageOutput {
             //$lineplot->value->show();
             $lineplot->value->SetFont($graph->getFont(), FS_NORMAL, 8);
             $lineplot->value->setFormatCallback(array($this, 'sizeReadable'));
-            $graph->Add($lineplot);
-            $i++;
+            if ($accumulative) {
+                $lineplots[] = $lineplot;
+                // Reverse order
+                //array_unshift($lineplots, $lineplot);
+            } else {
+                $graph->Add($lineplot);
+            }
         }
 
+        if ($accumulative) {
+            $accLineplot = new AccLinePlot($lineplots);
+            $graph->Add($accLineplot);
+        }
         $graph->xaxis->title->Set("Weeks");
         $graph->xaxis->SetTitleMargin(15);
         $graph->xaxis->SetTickLabels($dates);
