@@ -954,16 +954,17 @@ extends WikiDB_backend
         extract($this->_expressions);
         $this->lock();
         $dbh->query("DELETE FROM $nonempty_tbl"
-                    . ( $pageid ? " WHERE id=$pageid" : ""));
+                    . ( $pageid ? " WHERE id=$pageid" : " USING $nonempty_tbl JOIN $page_tbl USING (id) WHERE $page_tbl.group_id=".GROUP_ID ));
         $dbh->query("INSERT INTO $nonempty_tbl (id)"
                     . " SELECT $recent_tbl.id"
                     . " FROM $recent_tbl, $version_tbl"
+                    . ( $pageid ? "" : " JOIN $page_tbl USING (id) ")
                     . " WHERE $recent_tbl.id=$version_tbl.id"
                     . "       AND version=latestversion"
                     // We have some specifics here (Oracle)
                     //. "  AND content<>''"
                     . "  AND content $notempty"
-                    . ( $pageid ? " AND $recent_tbl.id=$pageid" : ""));
+                    . ( $pageid ? " AND $recent_tbl.id=$pageid" : " AND $page_tbl.group_id=".GROUP_ID ));
         
         $this->unlock();
     }

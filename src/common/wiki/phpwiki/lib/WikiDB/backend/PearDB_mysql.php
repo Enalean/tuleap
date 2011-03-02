@@ -103,11 +103,16 @@ extends WikiDB_backend_PearDB
         // optimized: mysql can do this with one REPLACE INTO.
         // supported in every (?) mysql version
         // requires PRIMARY KEY (id)!
+        if ($pageid) {
+            $stmt = " WHERE id=$pageid";
+        } else {
+            $stmt = " JOIN wiki_page USING (id) WHERE group_id = ".GROUP_ID;
+        }
         $dbh->query("REPLACE INTO $recent_tbl"
                     . " (id, latestversion, latestmajor, latestminor)"
                     . " SELECT id, $maxversion, $maxmajor, $maxminor"
                     . " FROM $version_tbl"
-                    . ( $pageid ? " WHERE id=$pageid" : "")
+                    . $stmt
                     . " GROUP BY id" );
     }
 

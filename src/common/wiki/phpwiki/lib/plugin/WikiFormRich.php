@@ -166,7 +166,7 @@ extends WikiPlugin
                                  'method' => strtolower($method),
                                  'class'  => 'wikiaction',
                                  'accept-charset' => $GLOBALS['charset']),
-                           HiddenInputs(array('action' => $action)));
+                           HiddenInputs(array('action' => $action, 'group_id' => GROUP_ID)));
         $nbsp = HTML::Raw('&nbsp;');
         $already_submit = 0;
         foreach ($this->inputbox as $inputbox) {
