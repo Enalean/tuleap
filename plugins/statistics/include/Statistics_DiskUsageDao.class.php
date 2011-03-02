@@ -73,17 +73,6 @@ class Statistics_DiskUsageDao extends DataAccessObject {
         return false;
     }
 
-    public function findDatesBetween($startDate, $endDate, $dateMethod) {
-        $this->_getGroupByFromDateMethod($dateMethod, $select, $groupBy);
-        $sql = 'SELECT YEAR(date) as year'.$select.
-               ' FROM plugin_statistics_diskusage_group '.
-               ' WHERE date>"'.$startDate.' 00:00:00"'.
-               ' AND date<"'.$endDate.' 23:59:59"'.
-               ' GROUP BY year'.$groupBy.
-               ' ORDER BY date ASC';
-        return $this->retrieve($sql);
-    }
-
     public function searchAllGroups() {
         $sql = 'SELECT group_id, unix_group_name FROM groups';
         return $this->retrieve($sql);

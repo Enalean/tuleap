@@ -166,14 +166,10 @@ class Statistics_DiskUsageManager {
         }
     }
 
-    function getRangeDates($startDate, $endDate, $groupBy) {
+    function getRangeDates($dar, $groupBy) {
         $dates = array();
-        $dao  = $this->_getDao();
-        $dar = $dao->findDatesBetween($startDate, $endDate, $groupBy);
-        if ($dar && !$dar->isError()) {
-            foreach ($dar as $row) {
-                $dates[$this->getKeyFromGroupBy($row, $groupBy)] = 0;
-            }
+        foreach ($dar as $row) {
+            $dates[$this->getKeyFromGroupBy($row, $groupBy)] = 0;
         }
         return $dates;
     }
@@ -183,7 +179,7 @@ class Statistics_DiskUsageManager {
         $dao  = $this->_getDao();
         $dar = $dao->searchSizePerServiceForPeriod($services, $groupBy, $startDate, $endDate);
         if ($dar && !$dar->isError()) {
-            $dates = $this->getRangeDates($startDate, $endDate, $groupBy);
+            $dates = $this->getRangeDates($dar, $groupBy);
             foreach ($dar as $row) {
                 if (!isset($res[$row['service']])) {
                     $res[$row['service']] = $dates;
@@ -389,7 +385,7 @@ class Statistics_DiskUsageManager {
         $dao  = $this->_getDao();
         $dar = $dao->searchSizePerServiceForPeriod($services, $groupBy, $startDate, $endDate, $groupId);
         if ($dar && !$dar->isError()) {
-            $dates = $this->getRangeDates($startDate, $endDate, $groupBy);
+            $dates = $this->getRangeDates($dar, $groupBy);
             foreach ($dar as $row) {
                 if (!isset($res[$row['service']])) {
                     $res[$row['service']] = $dates;
