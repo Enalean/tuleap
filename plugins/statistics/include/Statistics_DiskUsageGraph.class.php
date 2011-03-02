@@ -197,7 +197,6 @@ class Statistics_DiskUsageGraph extends Statistics_DiskUsageOutput {
    /**
      *
      * @param Integer $groupId
-     * @param Array   $services    //not nedd to services here
      * @param String  $groupBy
      * @param Date    $startDate
      * @param Date    $endDate
@@ -240,18 +239,19 @@ class Statistics_DiskUsageGraph extends Statistics_DiskUsageOutput {
 
         $graph->Stroke();
     }
+
     /**
      *
      * @param Integer $used
      * @param Integer $total
      */
     function displayProjectProportionUsage($used, $total) {
-        $graph = new Chart(200 ,150 , "auto", "PieGraph");
+        $graph = new Chart(300 ,250 , "auto", "PieGraph");
 
         $data = array($used, $total-$used);
 
         $usage = new PiePlot($data);
-        $usage->SetSliceColors(array('red','green'));
+        $usage->SetSliceColors(array('salmon','green'));
         $usage->SetLegends(array("Used proportion", "Allowed quota"));
         $graph->legend->SetPos(0.01,0,'right','top');
         $graph->add($usage);
