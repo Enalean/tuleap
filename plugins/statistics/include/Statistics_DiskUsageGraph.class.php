@@ -80,8 +80,8 @@ class Statistics_DiskUsageGraph extends Statistics_DiskUsageOutput {
             $accLineplot = new AccLinePlot($lineplots);
             $graph->Add($accLineplot);
         }
-        $graph->xaxis->title->Set("Weeks");
-        $graph->xaxis->SetTitleMargin(15);
+        $graph->xaxis->title->Set($groupBy."s");
+        $graph->xaxis->SetTitleMargin(35);
         $graph->xaxis->SetTickLabels($dates);
         
         
@@ -123,8 +123,8 @@ class Statistics_DiskUsageGraph extends Statistics_DiskUsageOutput {
         $lineplot->value->setFormatCallback(array($this, 'sizeReadable'));
         $graph->Add($lineplot);
 
-        $graph->xaxis->title->Set("Weeks");
-        $graph->xaxis->SetTitleMargin(15);
+        $graph->xaxis->title->Set($groupBy."s");
+        $graph->xaxis->SetTitleMargin(35);
         $graph->xaxis->SetTickLabels($dates);
         
         
