@@ -190,7 +190,7 @@ class Statistics_DiskUsageGraph extends Statistics_DiskUsageOutput {
             $accLineplot = new AccLinePlot($lineplots);
             $graph->Add($accLineplot);
         }
-        $graph->xaxis->title->Set("Weeks");
+        $graph->xaxis->title->Set($groupBy."s");
         $graph->xaxis->SetTitleMargin(35);
         $graph->xaxis->SetTickLabels($dates);
         
