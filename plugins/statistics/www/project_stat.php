@@ -84,10 +84,10 @@ if ($project && !$project->isError()) {
 
     if ($period == 'year') {
         $statDuration = 12;
-        $link = '?group_id='.$groupId.'&period=months';
+        $link = '?'.$serviceParam.'&group_id='.$groupId.'&period=months';
     } else {
         $statDuration = $statPeriod;
-        $link = '?group_id='.$groupId.'&period=year';
+        $link = '?'.$serviceParam.'&group_id='.$groupId.'&period=year';
     }
 
     $endDate = date('Y-m-d');
