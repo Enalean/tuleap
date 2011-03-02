@@ -61,12 +61,16 @@ class Chart {
             'dejavu-lgc/DejaVuLGCSans-Oblique.ttf', 
             'dejavu-lgc/DejaVuLGCSans-BoldOblique.ttf'
         );
+        //Fix margin
+        $this->jpgraph_instance->img->SetMargin(70,160,30,70);
         
         $this->jpgraph_instance->legend->SetShadow(false);
         $this->jpgraph_instance->legend->SetColor($this->getMainColor());
         $this->jpgraph_instance->legend->SetFillColor($GLOBALS['HTML']->getChartBackgroundColor());
         $this->jpgraph_instance->legend->SetFont($this->getFont(), FS_NORMAL, 8);
         $this->jpgraph_instance->legend->SetVColMargin(5);
+        $this->jpgraph_instance->legend->SetPos(0.05,0.5,'right','center');
+        $this->jpgraph_instance->legend->SetLineSpacing(10); 
         
         $this->jpgraph_instance->title->SetFont($this->getFont(), FS_BOLD, 12);
         $this->jpgraph_instance->title->SetColor($this->getMainColor());
