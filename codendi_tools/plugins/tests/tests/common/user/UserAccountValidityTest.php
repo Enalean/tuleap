@@ -84,12 +84,6 @@ class UserAccountValidityTest extends UnitTestCase {
         $um->suspendInactiveAccounts($currentDate);
     }
 
-    function testSuspendInactiveAccountsDao() {
-        $dao = new UserDaoTestValidity($this);
-        $dao->expectOnce('suspendAccount', array('last_access_date != 0 AND last_access_date < 1257671329'));
-        $dao->suspendInactiveAccounts(1257671329);
-    }
-
     function testSuspendExpiredAccountsDao() {
         $da = new MockDataAccess($this);
         $da->setReturnValue('escapeInt', 1257671329, array(1257671329));
