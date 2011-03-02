@@ -111,7 +111,7 @@ class Docman_View_ItemDetailsSectionActions extends Docman_View_ItemDetailsSecti
             if ($copiedItemId !== false && $cutItemId === false) {
                 $srcItem = $itemFactory->getItemFromDb($copiedItemId);
             }
-            elseif ($copiedItemId === false && $cutItemId !== false) {
+            elseif ($copiedItemId === false && $cutItemId !== false && $item->getId() != $cutItemId) {
                 $srcItem = $itemFactory->getItemFromDb($cutItemId);
             }
             if($srcItem) {

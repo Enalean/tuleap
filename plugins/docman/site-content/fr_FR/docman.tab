@@ -429,6 +429,7 @@ plugin_docman	error_md_or_love	Il y a une erreur dans les paramètres. Retour ve
 plugin_docman	error_no_perm_install	Vous devez être un administrateur projet pour initaliser ce service.
 plugin_docman	error_paste_in_document	Vous ne pouvez pas coller un élément dans un document
 plugin_docman	error_paste_no_valid_item	Pas d'élément valide à coller. L'élément n'a pas été copié ou n'existe plus.
+plugin_docman	error_paste_same_Item	Vous ne pouvez pas coller l'élément en lui même.
 plugin_docman	error_perms_admin	Vous n'avez pas les droits suffisants pour administrer le gestionnaire de documents.
 plugin_docman	error_perms_create	Vous n'avez pas les droits suffisants pour créer un élément dans ce dossier.
 plugin_docman	error_perms_edit	Vous n'avez pas les droits suffisants pour éditer cet élément.

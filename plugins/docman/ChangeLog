@@ -1,5 +1,6 @@
-Version 2.5 (Not released yet)
-        Fix bug related to the creation of metadata with empty name
+Version 2.6 (Not released yet)
+        Fix bug: Do not allow the creation of metadata with empty name.
+        Fix bug: Paste action should not appear in popup menu for the same cut document. 
 
 Version 1.2
 	Update SOAP (see 4.1 release in src/www/soap/ChangeLog)

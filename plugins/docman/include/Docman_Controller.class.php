@@ -1649,6 +1649,10 @@ class Docman_Controller extends Controler {
                 $itemToPaste = $itemFactory->getItemFromDb($copiedItemId);
                 $mode        = 'copy'; 
             }
+            elseif ($item->getId() == $cutItemId) {
+                $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_paste_same_Item'));
+                return false;
+            }
             elseif ($copiedItemId === false && $cutItemId !== false) {
                 $itemToPaste = $itemFactory->getItemFromDb($cutItemId);
                 $mode        = 'cut';

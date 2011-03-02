@@ -716,7 +716,7 @@ class Docman_Actions extends Actions {
     /**
      * Perform paste operation after cut
      * 
-     * @param Docman_Item   $itemToPaste   Item to paste
+     * @param Docman_Item   $itemToMove    Item to move
      * @param Docman_Folder $newParentItem New parent item
      * @param User          $user          User who perform the paste
      * @param String        $ordering      Where the item should be paste within the new folder
@@ -724,7 +724,7 @@ class Docman_Actions extends Actions {
      * @return void
      */
     protected function _doCutPaste($itemToMove, $newParentItem, $user, $ordering) {
-        if ($itemToMove && $newParentItem) {
+        if ($itemToMove && $newParentItem && $newParentItem->getId() != $itemToMove->getId()) {
             $item_factory = $this->_getItemFactory();
             $old_parent   = $item_factory->getItemFromDb($itemToMove->getParentId());
             if ($item_factory->setNewParent($itemToMove->getId(), $newParentItem->getId(), $ordering)) {

@@ -14,6 +14,7 @@ Version 4.0.17 - (Not released yet)
         backlog #122410: Adding new property at the documentation is allowed with an empty name
         backlog #122406: Automatic account suspend no longer works
         backlog #122408: Wiki purge might have severe perf impact on all wiki usage
+        backlog #103783: 'Paste' action should not appear in popup menu for the same cut document.
 
 Version 4.0.16 - Tuesday, 18th January 2011 
         == New Features ==

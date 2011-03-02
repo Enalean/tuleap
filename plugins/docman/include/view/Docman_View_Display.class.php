@@ -48,7 +48,7 @@ require_once('Docman_View_Docman.class.php');
         $html .= '<table border="0" width="100%">';
         $html .= '<tr>';
         $html .= '<td align="left">';
-        $html .= '<div id="item_'. $id .'">'. $GLOBALS['Language']->getText('plugin_docman', 'breadcrumbs_location') .' ';
+        $html .= '<div id="docman_item_title_link_'. $id .'">'. $GLOBALS['Language']->getText('plugin_docman', 'breadcrumbs_location') .' ';
         $parents = array_reverse($parents);
         foreach($parents as $parent) {
             $urlParams['id'] = $parent['id'];

@@ -429,6 +429,7 @@ plugin_docman	error_md_or_love	There is an error in parameters. Back to previous
 plugin_docman	error_no_perm_install	You need to be a project administrator to initialize this service.
 plugin_docman	error_paste_in_document	You cannot paste something into a document.
 plugin_docman	error_paste_no_valid_item	No valid item to paste. Either no item was copied or item no longer exist.
+plugin_docman	error_paste_same_Item	You can not paste an item into itself.
 plugin_docman	error_perms_admin	You do not have sufficient access rights to administrate the document manager.
 plugin_docman	error_perms_create	You do not have sufficient access rights to create something in this folder.
 plugin_docman	error_perms_edit	You do not have sufficient access rights to edit this item.

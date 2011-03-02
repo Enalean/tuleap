@@ -64,8 +64,9 @@ class Docman_View_GetMenuItemsVisitor /* implements Visitor*/ {
         if($this->dPm->userCanWrite($this->user, $item->getId())) {
             $this->actions['canNewDocument'] = true;
             $this->actions['canNewFolder']   = true;
+            $pasteItemId = $this->if->getCutPreference($this->user, $item->getGroupId());
             if($this->if->getCopyPreference($this->user) !== false ||
-               $this->if->getCutPreference($this->user, $item->getGroupId()) !== false) {
+               $pasteItemId !== false && $pasteItemId != $item->getId()) {
                 $this->actions['canPaste'] = true;
             }
         }

@@ -833,9 +833,14 @@ Object.extend(com.xerox.codendi.Menu.prototype, {
                     var title = $('docman_item_title_link_'+this.item_id).firstChild.nodeValue;
                     li.innerHTML = '"'+title+'" '+this.docman.options.language.feedback_cut;
 
+                    // Hide previous feedback
+                    if($('item_copied')) {
+                        $('item_copied').remove();
+                    }
                     if($('item_cut')) {
                         $('item_cut').remove();
                     }
+
                     var ul = Builder.node('ul', {'class': 'feedback_info', 'id': 'item_cut'});
                     ul.appendChild(li);
                     var feedback = $('feedback');
@@ -848,7 +853,11 @@ Object.extend(com.xerox.codendi.Menu.prototype, {
                     // There is something to paste & user have write permission on a folder -> user can paste inside that folder.
                     $H(this.docman.actionsForItem).keys().each(function (id) {
                         if (this.docman.actionsForItem[id].canNewDocument) {
-                            this.docman.actionsForItem[id].canPaste = true;
+                            if (this.item_id == id) {
+                                this.docman.actionsForItem[id].canPaste = false;
+                            } else {
+                                this.docman.actionsForItem[id].canPaste = true;
+                            }
                         }
                     }.bind(this));
 
@@ -879,9 +888,14 @@ Object.extend(com.xerox.codendi.Menu.prototype, {
                     var title = $('docman_item_title_link_'+this.item_id).firstChild.nodeValue;
                     li.innerHTML = '"'+title+'" '+this.docman.options.language.feedback_copy;
 
+                    // Hide previous feedback
                     if($('item_copied')) {
                         $('item_copied').remove();
-                    }                    
+                    }
+                    if($('item_cut')) {
+                        $('item_cut').remove();
+                    }
+
                     var ul = Builder.node('ul', {'class': 'feedback_info', 'id': 'item_copied'});
                     ul.appendChild(li);
                     var feedback = $('feedback');
