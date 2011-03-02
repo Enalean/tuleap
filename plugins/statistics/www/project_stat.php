@@ -38,10 +38,12 @@ if ($request->valid($vGroupId)) {
     header('Location: '.get_server_url());
 }
 
-$vPeriod = new Valid_WhiteList('period', array('year'));
+$vPeriod = new Valid_WhiteList('period', array('year', 'months'));
 $vPeriod->required();
 if ($request->valid($vPeriod)) {
     $period = $request->get('period');
+} else {
+    $period = 'months';
 }
 
 if ($project && !$project->isError()) {
@@ -61,9 +63,8 @@ if ($project && !$project->isError()) {
 
     if ($period == 'year') {
         $statDuration = 12;
-        $link = '?group_id='.$groupId;
+        $link = '?group_id='.$groupId.'&period=months';
     } else {
-        $period = 'months';
         $statDuration = $statPeriod;
         $link = '?group_id='.$groupId.'&period=year';
     }
