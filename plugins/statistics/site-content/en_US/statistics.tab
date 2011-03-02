@@ -17,7 +17,9 @@ plugin_statistics	widget_desc_projectstatistics	Show project disk statistics
 plugin_statistics	widget_total_project_size	Total project size:
 
 plugin_statistics_admin_page	show_statistics	Disk usage
-plugin_statistics_admin_page	disk_usage_period	Disk usage from $1 to $2
+plugin_statistics_admin_page	disk_usage_period_months	Disk usage for the $1 last months.
+plugin_statistics_admin_page	disk_usage_period_year	Disk usage for the last year.
+plugin_statistics_admin_page	disk_usage_period	From $1 to $2.
 plugin_statistics_admin_page	disk_usage_fixed_period	3
 plugin_statistics_admin_page	disk_usage_quota	The allowed size per project is <b>$1</b>. For more information, please visit the dedicated <A HREF="https://codex.cro.st.com/wiki/?group_id=1&pagename=Codex_quota"> document </A>.
 plugin_statistics_admin_page	year	View statistics for the last $1 months

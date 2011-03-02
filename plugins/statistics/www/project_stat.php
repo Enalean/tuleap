@@ -76,8 +76,9 @@ if ($project && !$project->isError()) {
     $params['title'] = $GLOBALS['Language']->getText('admin_groupedit', 'proj_admin').': '.$project->getPublicName();
     project_admin_header($params);
 
-    $title = $GLOBALS['Language']->getText('plugin_statistics_admin_page', 'disk_usage_period', array($startDate, $endDate));
-    echo '<h2>'.$title.'</h2>';
+    $title = $GLOBALS['Language']->getText('plugin_statistics_admin_page', 'disk_usage_period_'.$period, array($statDuration));
+    //Display tooltip for start and end date.
+    echo '<span class="plugin_statistics_period" title="'.$GLOBALS['Language']->getText('plugin_statistics_admin_page','disk_usage_period', array($startDate, $endDate)).'"><h2>'.$title.'</h2></span>';
 
     $duMgr  = new Statistics_DiskUsageManager();
     if ($duMgr->getProperty('allowed_quota')) {
