@@ -78,12 +78,14 @@ if ($project && !$project->isError()) {
     $title = $GLOBALS['Language']->getText('plugin_statistics_admin_page', 'disk_usage_period', array($startDate, $endDate));
     echo '<h2>'.$title.'</h2>';
 
-    echo '<div id="help_init" class="stat_help">'.$GLOBALS['Language']->getText('plugin_statistics_admin_page', 'disk_usage_quota').'</div>';
+    $duMgr  = new Statistics_DiskUsageManager();
+    if ($duMgr->getProperty('allowed_quota')) {
+        echo '<div id="help_init" class="stat_help">'.$GLOBALS['Language']->getText('plugin_statistics_admin_page', 'disk_usage_quota', array($duMgr->getProperty('allowed_quota').'GB')).'</div>';
+    }
     echo '<a href="'.$link.'">'.$GLOBALS['Language']->getText('plugin_statistics_admin_page', $period, $statPeriod).'</a>';
     echo '<h3>'.$GLOBALS['Language']->getText('plugin_statistics_show_service', 'service_growth').'</h3>';
 
     echo '<table><tr><td valign="top">';
-    $duMgr  = new Statistics_DiskUsageManager();
     $duHtml = new Statistics_DiskUsageHtml($duMgr);
     $duHtml->getServiceEvolutionForPeriod($startDate, $endDate, $groupId, true);
     echo '</td><td valign="top"><img src="project_stat_graph.php?group_id='.$groupId.'&start_date='.$startDate.'&end_date='.$endDate.'" title="Project disk usage graph" />';
