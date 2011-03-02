@@ -46,7 +46,28 @@ if ($request->valid($vPeriod)) {
     $period = 'months';
 }
 
+    $duMgr  = new Statistics_DiskUsageManager();
+
+    // selected service
+$vServices = new Valid_WhiteList('services', array_keys($duMgr->getProjectServices()));
+$vServices->required();
+if ($request->validArray($vServices)) {
+    $selectedServices = $request->get('services');
+} else {
+            $selectedServices = array_keys($duMgr->getProjectServices());
+    }
+
 if ($project && !$project->isError()) {
+    // Prepare params
+    $serviceParam    = '';
+    $first    = true;
+    foreach ($selectedServices as $serv) {
+        if ($first != true) {
+            $serviceParam .= '&';
+        }
+        $serviceParam .= 'services[]='.$serv;
+        $first     = false;
+    }
 
     // Grant access only to project admins
     $user = UserManager::instance()->getCurrentUser();
@@ -80,17 +101,39 @@ if ($project && !$project->isError()) {
     //Display tooltip for start and end date.
     echo '<span class="plugin_statistics_period" title="'.$GLOBALS['Language']->getText('plugin_statistics_admin_page','disk_usage_period', array($startDate, $endDate)).'"><h2>'.$title.'</h2></span>';
 
-    $duMgr  = new Statistics_DiskUsageManager();
+
     if ($duMgr->getProperty('allowed_quota')) {
         echo '<div id="help_init" class="stat_help">'.$GLOBALS['Language']->getText('plugin_statistics_admin_page', 'disk_usage_quota', array($duMgr->getProperty('allowed_quota').'GB')).'</div>';
     }
     echo '<a href="'.$link.'">'.$GLOBALS['Language']->getText('plugin_statistics_admin_page', $period, $statPeriod).'</a>';
     echo '<h3>'.$GLOBALS['Language']->getText('plugin_statistics_show_service', 'service_growth').'</h3>';
 
+    echo '<form name="progress_by_service" method="get" action="?">';
+    echo '<input type="hidden" name="group_id" value="'.$groupId.'" />';
+    echo '<input type="hidden" name="period" value="'.$period.'" />';
+    echo '<table>';
+    echo '<tr>';
+    echo '<th>Services</th>';
+    echo '</tr>';
+
+    echo '<tr>';
+    $services = array();
+    foreach ($duMgr->getProjectServices() as $service => $label) {
+        $services[] = array('value' => $service, 'text' => $label);
+    }
+    echo '<td valign="top">';
+    echo html_build_multiple_select_box_from_array($services, 'services[]', $selectedServices, '6', false, '', false, '', false, '', false).' ';
+    echo '</td>';
+    echo '</tr>';
+    echo '</table>';
+
+    echo '<input type="submit" value="'.$GLOBALS['Language']->getText('global', 'btn_submit').'"/>';
+    echo '</form>';
+
     echo '<table><tr><td valign="top">';
     $duHtml = new Statistics_DiskUsageHtml($duMgr);
     $duHtml->getServiceEvolutionForPeriod($startDate, $endDate, $groupId, true);
-    echo '</td><td valign="top"><img src="project_stat_graph.php?group_id='.$groupId.'&start_date='.$startDate.'&end_date='.$endDate.'" title="Project disk usage graph" />';
+    echo '</td><td valign="top"><img src="project_stat_graph.php?'.$serviceParam.'&group_id='.$groupId.'&start_date='.$startDate.'&end_date='.$endDate.'" title="Project disk usage graph" />';
     echo '</td></tr></table>';
 
     site_project_footer($params);
