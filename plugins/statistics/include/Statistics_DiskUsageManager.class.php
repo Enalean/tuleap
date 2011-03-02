@@ -73,31 +73,31 @@ class Statistics_DiskUsageManager {
      */
     public function getServiceColor($service) {
         switch($service) {
-            case Statistics_DiskUsageManager::SVN:
+            case self::SVN:
                 return 'darkgreen';
-            case Statistics_DiskUsageManager::CVS:
+            case self::CVS:
                 return 'darkseagreen';
-            case Statistics_DiskUsageManager::FRS:
+            case self::FRS:
                 return 'cornflowerblue';
-            case Statistics_DiskUsageManager::FTP:
+            case self::FTP:
                 return 'royalblue';
-            case Statistics_DiskUsageManager::WIKI:
+            case self::WIKI:
                 return 'darkslategray';
-            case Statistics_DiskUsageManager::MAILMAN:
+            case self::MAILMAN:
                 return 'darkkhaki';
-            case Statistics_DiskUsageManager::PLUGIN_WEBDAV:
+            case self::PLUGIN_WEBDAV:
                 return 'gainsboro';
-            case Statistics_DiskUsageManager::GRP_HOME:
+            case self::GRP_HOME:
                 return 'lavender';
-            case Statistics_DiskUsageManager::USR_HOME:
+            case self::USR_HOME:
                 return 'darkturquoise';
-            case Statistics_DiskUsageManager::MYSQL:
+            case self::MYSQL:
                 return 'sandybrown';
-            case Statistics_DiskUsageManager::CODENDI_LOGS:
+            case self::CODENDI_LOGS:
                 return 'forestgreen';
-            case Statistics_DiskUsageManager::BACKUP:
+            case self::BACKUP:
                 return 'saddlebrown';
-            case Statistics_DiskUsageManager::BACKUP_OLD:
+            case self::BACKUP_OLD:
                 return 'peru';
             default:
                 // If plugins don't want to color themselves they are white
