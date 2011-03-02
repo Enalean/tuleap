@@ -55,16 +55,22 @@ if ($request->valid($vStartDate)) {
 $vEndDate = new Valid('end_date');
 $vEndDate->addRule(new Rule_Date());
 $vEndDate->required();
-if ($request->valid($vStartDate)) {
+if ($request->valid($vEndDate)) {
     $endDate = $request->get('end_date');
 } else {
     $endDate = date('Y-m-d');
 }
 
+$duration = strtotime($endDate) - strtotime($startDate);
+
 $error = false;
-if (strtotime($startDate) >= strtotime($endDate)) {
+if ($duration <= 0) {
     $feedback[] = 'You made a mistake in selecting period. Please try again!';
     $error = true;
+} elseif ($duration < 31536000) {
+    $groupBy = 'Week';
+} else {
+    $groupBy = 'Month';
 }
 
 $duMgr  = new Statistics_DiskUsageManager();
@@ -75,7 +81,7 @@ $services = array_keys($duMgr->getProjectServices());
 //
 if (!$error) {
     $graph = new Statistics_DiskUsageGraph($duMgr);
-    $graph->displayProjectGraph($groupId, $services, 'Week', $startDate, $endDate);
+    $graph->displayProjectGraph($groupId, $services, $groupBy, $startDate, $endDate);
 }
 
 ?>

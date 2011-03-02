@@ -38,6 +38,12 @@ if ($request->valid($vGroupId)) {
     header('Location: '.get_server_url());
 }
 
+$vPeriod = new Valid_WhiteList('period', array('year'));
+$vPeriod->required();
+if ($request->valid($vPeriod)) {
+    $period = $request->get('period');
+}
+
 if ($project && !$project->isError()) {
 
     // Grant access only to project admins
@@ -52,11 +58,20 @@ if ($project && !$project->isError()) {
     if (!$statPeriod) {
         $statPeriod = 3;
     }
+
+    if ($period == 'year') {
+        $statDuration = 12;
+        $link = '?group_id='.$groupId;
+    } else {
+        $period = 'months';
+        $statDuration = $statPeriod;
+        $link = '?group_id='.$groupId.'&period=year';
+    }
+
     $endDate = date('Y-m-d');
-    $startDate = date('Y-m-d', mktime(0, 0, 0, date('m')-$statPeriod, date('d'), date('y')));
+    $startDate = date('Y-m-d', mktime(0, 0, 0, date('m')-$statDuration, date('d'), date('y')));
 
     $params['group'] = $groupId;
-    $params['toptab'] = 'admin';
     $params['title'] = $GLOBALS['Language']->getText('admin_groupedit', 'proj_admin').': '.$project->getPublicName();
     project_admin_header($params);
 
@@ -64,6 +79,7 @@ if ($project && !$project->isError()) {
     echo '<h2>'.$title.'</h2>';
 
     echo '<div id="help_init" class="stat_help">'.$GLOBALS['Language']->getText('plugin_statistics_admin_page', 'disk_usage_quota').'</div>';
+    echo '<a href="'.$link.'">'.$GLOBALS['Language']->getText('plugin_statistics_admin_page', $period, $statPeriod).'</a>';
     echo '<h3>'.$GLOBALS['Language']->getText('plugin_statistics_show_service', 'service_growth').'</h3>';
 
     echo '<table><tr><td valign="top">';

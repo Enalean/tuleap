@@ -21,3 +21,5 @@ plugin_statistics_admin_page	show_statistics	Utilisation disque
 plugin_statistics_admin_page	disk_usage_period	Utilisation du disque du $1 au $2
 plugin_statistics_admin_page	disk_usage_fixed_period	3
 plugin_statistics_admin_page	disk_usage_quota	La taille allouée par projet est <b>5GB</b>. Pour plus d'information, veuillez visiter <A HREF="https://codex.cro.st.com/wiki/?group_id=1&pagename=Codex_quota"> le document </A> dédié
+plugin_statistics_admin_page	year	Voir les statistiques pour les $1 derniers mois
+plugin_statistics_admin_page	months	Voir les statistiques pour l'an dernier

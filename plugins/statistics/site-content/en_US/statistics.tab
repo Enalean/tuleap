@@ -20,3 +20,5 @@ plugin_statistics_admin_page	show_statistics	Disk usage
 plugin_statistics_admin_page	disk_usage_period	Disk usage from $1 to $2
 plugin_statistics_admin_page	disk_usage_fixed_period	3
 plugin_statistics_admin_page	disk_usage_quota	The allowed size per project is <b>5GB</b>. For more information, please visit the dedicated <A HREF="https://codex.cro.st.com/wiki/?group_id=1&pagename=Codex_quota"> document </A>.
+plugin_statistics_admin_page	year	View statistics for the last $1 months
+plugin_statistics_admin_page	months	View statistics for the last year
