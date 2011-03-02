@@ -59,12 +59,8 @@ $graph = new Statistics_DiskUsageGraph($duMgr);
 if ($func == 'usage') {
     //Retreive the config param & convert it to bytes
     $allowed = $duMgr->getProperty('allowed_quota') * (1024*1024*1024);
-    //validate size param
-    $vUsed  = new Valid_UInt('size');
-    $vUsed->required();
-    if ($request->valid($vUsed)) {
-        $used = $request->get('size');
-    }
+    $used = $request->get('size');
+
     //In case of over usage
     if ($used > $allowed) {
         $used = $allowed;
