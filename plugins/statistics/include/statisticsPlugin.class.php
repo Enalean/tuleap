@@ -101,7 +101,12 @@ class StatisticsPlugin extends Plugin {
     function admin_toolbar_data($params) {
         $groupId = $params['group_id'];
         if ($groupId) {
-            echo ' | <A HREF="'.$this->getPluginPath().'/project_stat.php?group_id='.$groupId.'">'.$GLOBALS['Language']->getText('plugin_statistics_admin_page', 'show_statistics').'</A>';
+            if (UserManager::instance()->getCurrentUser()->isSuperUser()) {
+                $link = '/disk_usage.php?func=show_one_project&group_id=';
+            } else {
+                $link = '/project_stat.php?group_id=';
+            }
+            echo ' | <A HREF="'.$this->getPluginPath().$link.$groupId.'">'.$GLOBALS['Language']->getText('plugin_statistics_admin_page', 'show_statistics').'</A>';
         }
     }
 
