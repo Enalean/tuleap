@@ -338,9 +338,9 @@ class Statistics_DiskUsageManager {
         return false;
     }
     
-    public function getTopUsers($startDate, $endDate, $order) {
+    public function getTopUsers($endDate, $order) {
         $dao = $this->_getDao();
-        return $dao->searchTopUsers($startDate, $endDate, $order);
+        return $dao->searchTopUsers($endDate, $order);
     }
     
     public function getUserDetails($userId) {

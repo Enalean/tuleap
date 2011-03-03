@@ -403,10 +403,6 @@ switch ($func) {
         echo '<form name="top_users" method="get" action="?">';
         echo '<input type="hidden" name="func" value="show_top_users" />';
 
-        echo '<label>Start: </label>';
-        list($timestamp,) = util_date_to_unixtime($startDate);
-        echo (html_field_date('start_date', $startDate, false, 10, 10, 'top_users', false)).'&nbsp;<em>'.html_time_ago($timestamp).'</em><br />';
-
         echo '<label>End: </label>';
         list($timestamp,) = util_date_to_unixtime($endDate);
         echo (html_field_date('end_date', $endDate, false, 10, 10, 'top_users', false)).'&nbsp;<em>'.html_time_ago($timestamp).'</em><br />';
@@ -414,7 +410,7 @@ switch ($func) {
         echo '<input type="submit" value="'.$GLOBALS['Language']->getText('global', 'btn_submit').'"/>';
         echo '</form>';
 
-        $duHtml->getTopUsers($startDate, $endDate, $order, $urlParam);
+        $duHtml->getTopUsers($endDate, $order, $urlParam);
         break;
 
     case 'show_one_user':

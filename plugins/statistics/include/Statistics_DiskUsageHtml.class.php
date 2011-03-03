@@ -253,12 +253,11 @@ class Statistics_DiskUsageHtml extends Statistics_DiskUsageOutput {
             echo '</table>';
         }
     }
-    
-    
-    public function getTopUsers($startDate, $endDate, $order, $url) {
-        $res = $this->_dum->getTopUsers($startDate, $endDate, $order);
+
+    public function getTopUsers($endDate, $order, $url) {
+        $res = $this->_dum->getTopUsers($endDate, $order);
         if ($res) {
-            $titles = array('Rank', 'Id', 'Name', 'Start size', 'End size', 'Evolution Size ', 'Evolution Rate (%)');
+            $titles = array('Rank', 'Id', 'Name', 'End size');
             $links  = array('', '', '', $url.'&order=start_size', $url.'&order=end_size', $url.'&order=evolution', $url.'&order=evolution_rate');
             echo html_build_list_table_top($titles, $links);
             $url = str_replace('func=show_top_users', 'func=show_one_user', $url);
@@ -268,7 +267,7 @@ class Statistics_DiskUsageHtml extends Statistics_DiskUsageOutput {
                 echo '<td>'.$i++.'</td>';
                 echo '<td><a href="'.$url.'&user_id='.$row['user_id'].'">'.$row['user_id'].'</a></td>';
                 echo '<td>'.$row['user_name'].'</td>';
-                $this->_displayEvolutionData($row);
+                echo '<td>'.$this->sizeReadable($row['end_size']).'</td>';
                 echo '</tr>';
             }
             echo '</table>';
