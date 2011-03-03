@@ -38,6 +38,12 @@ if ($request->valid($vGroupId)) {
     header('Location: '.get_server_url());
 }
 
+// Grant access only to project admins
+$user = UserManager::instance()->getCurrentUser();
+if (!$project->userIsAdmin($user)) {
+    header('Location: '.get_server_url());
+}
+
 $vPeriod = new Valid_WhiteList('period', array('year', 'months'));
 $vPeriod->required();
 if ($request->valid($vPeriod)) {
@@ -46,16 +52,16 @@ if ($request->valid($vPeriod)) {
     $period = 'months';
 }
 
-    $duMgr  = new Statistics_DiskUsageManager();
+$duMgr  = new Statistics_DiskUsageManager();
 
-    // selected service
+// selected service
 $vServices = new Valid_WhiteList('services', array_keys($duMgr->getProjectServices()));
 $vServices->required();
 if ($request->validArray($vServices)) {
     $selectedServices = $request->get('services');
 } else {
-            $selectedServices = array_keys($duMgr->getProjectServices());
-    }
+    $selectedServices = array_keys($duMgr->getProjectServices());
+}
 
 if ($project && !$project->isError()) {
     // Prepare params
@@ -69,12 +75,6 @@ if ($project && !$project->isError()) {
         $first     = false;
     }
 
-    // Grant access only to project admins
-    $user = UserManager::instance()->getCurrentUser();
-    if (!$project->userIsAdmin($user)) {
-        header('Location: '.get_server_url());
-    }
-    
     //Get dates for start and end period to watch statistics
     $info = $p->getPluginInfo();
     $statPeriod = $info->getPropertyValueForName('statistics_period');
@@ -99,7 +99,7 @@ if ($project && !$project->isError()) {
 
     $title = $GLOBALS['Language']->getText('plugin_statistics_admin_page', 'disk_usage_period_'.$period, array($statDuration));
     //Display tooltip for start and end date.
-    echo '<span class="plugin_statistics_period" title="'.$GLOBALS['Language']->getText('plugin_statistics_admin_page','disk_usage_period', array($startDate, $endDate)).'"><h2>'.$title.'</h2></span>';
+    echo '<h2><span class="plugin_statistics_period" title="'.$GLOBALS['Language']->getText('plugin_statistics_admin_page','disk_usage_period', array($startDate, $endDate)).'">'.$title.'</span></h2>';
 
 
     if ($duMgr->getProperty('allowed_quota')) {

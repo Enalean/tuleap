@@ -37,9 +37,13 @@ if ($request->valid($vGroupId)) {
     header('Location: '.get_server_url());
 }
 
+// Grant access only to project admins
+$user = UserManager::instance()->getCurrentUser();
+if (!$project->userIsAdmin($user)) {
+    header('Location: '.get_server_url());
+}
+
 $func = $request->getValidated('func', new Valid_WhiteList('usage', 'progress'), '');
-
-
 
 //Get dates for start and end period to watch statistics
 $duMgr  = new Statistics_DiskUsageManager();

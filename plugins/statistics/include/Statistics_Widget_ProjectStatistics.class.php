@@ -55,7 +55,6 @@ class Statistics_Widget_ProjectStatistics extends Widget {
      * @see Widget::getContent()
      */
     public function getContent() {
-        //TODO : add cumulative graph
         $request =& HTTPRequest::instance();
         $group_id = $request->get('group_id');
 

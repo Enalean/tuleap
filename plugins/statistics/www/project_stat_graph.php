@@ -37,6 +37,12 @@ if ($request->valid($vGroupId)) {
     header('Location: '.get_server_url());
 }
 
+// Grant access only to project admins
+$user = UserManager::instance()->getCurrentUser();
+if (!$project->userIsAdmin($user)) {
+    header('Location: '.get_server_url());
+}
+
 $duMgr  = new Statistics_DiskUsageManager();
 $vServices = new Valid_WhiteList('services', array_keys($duMgr->getProjectServices()));
 $vServices->required();
@@ -44,12 +50,6 @@ if ($request->validArray($vServices)) {
     $services = $request->get('services');
 } else {
     $services = array_keys($duMgr->getProjectServices());
-}
-
-// Grant access only to project admins
-$user = UserManager::instance()->getCurrentUser();
-if (!$project->userIsAdmin($user)) {
-    header('Location: '.get_server_url());
 }
 
 $vStartDate = new Valid('start_date');
