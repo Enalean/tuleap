@@ -267,7 +267,7 @@ class Statistics_DiskUsageManager {
                     if (isset($values[$row['service']]['start_size'])) {
                         $values[$row['service']]['evolution'] = $row['size'] - $values[$row['service']]['start_size'];
                         if ($values[$row['service']]['start_size'] != 0) {
-                            $values[$row['service']]['evolution_rate'] = ($row['size'] / $values[$row['service']]['start_size']) - 1;
+                            $values[$row['service']]['evolution_rate'] = ($row['size'] / $values[$row['service']]['start_size']);
                         } else {
                             $values[$row['service']]['evolution_rate'] = 1;
                         }
