@@ -101,13 +101,14 @@ if ($project && !$project->isError()) {
     //Display tooltip for start and end date.
     echo '<h2><span class="plugin_statistics_period" title="'.$GLOBALS['Language']->getText('plugin_statistics_admin_page','disk_usage_period', array($startDate, $endDate)).'">'.$title.'</span></h2>';
 
-
-    if ($duMgr->getProperty('allowed_quota')) {
-        echo '<div id="help_init" class="stat_help">'.$GLOBALS['Language']->getText('plugin_statistics_admin_page', 'disk_usage_quota', array($duMgr->getProperty('allowed_quota').'GB')).'</div>';
+    $allowedQuota = $duMgr->getProperty('allowed_quota');
+    if ($allowedQuota) {
+        echo '<div id="help_init" class="stat_help">'.$GLOBALS['Language']->getText('plugin_statistics_admin_page', 'disk_usage_quota', array($allowedQuota.'GB')).'</div>';
+        echo '<p><img src="/plugins/statistics/project_cumulativeDiskUsage_graph.php?func=usage&size='.$duMgr->returnTotalProjectSize($groupId).'&group_id='.$groupId.'" title="Disk usage percentage" /></p>';
     }
-    echo '<a href="'.$link.'">'.$GLOBALS['Language']->getText('plugin_statistics_admin_page', $period, $statPeriod).'</a>';
     echo '<h3>'.$GLOBALS['Language']->getText('plugin_statistics_show_service', 'service_growth').'</h3>';
 
+    echo '<p><a href="'.$link.'">'.$GLOBALS['Language']->getText('plugin_statistics_admin_page', $period, $statPeriod).'</a></p>';
     echo '<form name="progress_by_service" method="get" action="?">';
     echo '<input type="hidden" name="group_id" value="'.$groupId.'" />';
     echo '<input type="hidden" name="period" value="'.$period.'" />';
