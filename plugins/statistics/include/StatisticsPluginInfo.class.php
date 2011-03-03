@@ -30,5 +30,6 @@ class StatisticsPluginInfo extends PluginFileInfo {
         parent::__construct($plugin, 'statistics');
         $this->setPluginDescriptor(new StatisticsPluginDescriptor());
     }
+    
 }
 ?>
