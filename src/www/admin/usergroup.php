@@ -201,8 +201,10 @@ $hp = Codendi_HTMLPurifier::instance();
 </td></tr>
 
 <tr><td colspan="2">
-<a href="user_changepw.php?user_id=<?php echo $user->getId(); ?>">[<?php echo $Language->getText('admin_usergroup','change_passwd'); ?>]</a></p>
-</td></tr>
+<a href="user_changepw.php?user_id=<?php echo $user->getId(); ?>">[<?php echo $Language->getText('admin_usergroup','change_passwd'); ?>]</a>
+
+<?php $em->processEvent('usergroup_data', array('user_id' => $user->getId())); ?>
+<br/></td></tr>
 
 <tr><td>
 <?php echo $GLOBALS['Language']->getText('account_options', 'codendi_login'); ?>:

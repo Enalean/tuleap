@@ -34,7 +34,8 @@ class StatisticsPlugin extends Plugin {
         $this->_addHook('widget_instance',        'widget_instance',        false);
         $this->_addHook('widgets',                'widgets',                false);
         $this->_addHook('admin_toolbar_data',     'admin_toolbar_data',     false);
-        $this->_addHook('user_home_pi_entry',     'user_home_pi_entry',     false);
+        $this->_addHook('usergroup_data',         'usergroup_data',         false);
+        $this->_addHook('groupedit_data',         'groupedit_data',         false);
     }
 
     function getPluginInfo() {
@@ -96,17 +97,13 @@ class StatisticsPlugin extends Plugin {
      * Hook.
      *
      * @param $params
+     *
      * @return void
      */
     function admin_toolbar_data($params) {
         $groupId = $params['group_id'];
         if ($groupId) {
-            if (UserManager::instance()->getCurrentUser()->isSuperUser()) {
-                $link = '/disk_usage.php?func=show_one_project&group_id=';
-            } else {
-                $link = '/project_stat.php?group_id=';
-            }
-            echo ' | <A HREF="'.$this->getPluginPath().$link.$groupId.'">'.$GLOBALS['Language']->getText('plugin_statistics_admin_page', 'show_statistics').'</A>';
+            echo ' | <A HREF="'.$this->getPluginPath().'/project_stat.php?group_id='.$groupId.'">'.$GLOBALS['Language']->getText('plugin_statistics_admin_page', 'show_statistics').'</A>';
         }
     }
 
@@ -117,11 +114,24 @@ class StatisticsPlugin extends Plugin {
      *
      * @return void
      */
-    function user_home_pi_entry($params) {
+    function usergroup_data($params) {
         $userId = $params['user_id'];
         if ($userId && UserManager::instance()->getCurrentUser()->isSuperUser()) {
-            $params['entry_label'][$this->getId()] = $GLOBALS['Language']->getText('plugin_statistics', 'descriptor_name').':';
-            $params['entry_value'][$this->getId()] = '<A HREF="'.$this->getPluginPath().'/disk_usage.php?func=show_one_user&user_id='.$userId.'">'.$GLOBALS['Language']->getText('plugin_statistics_admin_page', 'show_statistics').'</A>';
+            echo '<tr><td colspan="2"><A HREF="'.$this->getPluginPath().'/disk_usage.php?func=show_one_user&user_id='.$userId.'">['.$GLOBALS['Language']->getText('plugin_statistics_admin_page', 'show_statistics').']</A></td></tr>';
+        }
+    }
+
+    /**
+     * Display link to project disk usage for site admin
+     *
+     * @param $params
+     *
+     * @return void
+     */
+    function groupedit_data($params) {
+        $groupId = $params['group_id'];
+        if ($groupId && UserManager::instance()->getCurrentUser()->isSuperUser()) {
+            echo '<A href="'.$this->getPluginPath().'/disk_usage.php?func=show_one_project&group_id='.$groupId.'"><B><BIG>['.$GLOBALS['Language']->getText('plugin_statistics_admin_page', 'show_statistics').']</BIG></B></A><BR/>';
         }
     }
 
