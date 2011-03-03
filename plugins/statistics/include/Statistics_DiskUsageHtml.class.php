@@ -158,7 +158,7 @@ class Statistics_DiskUsageHtml extends Statistics_DiskUsageOutput {
             echo '<tbody>';
             foreach ($res as $row) {
                 echo '<tr>';
-                echo '<td>'.$row['user_id'].'</td>';
+                echo '<td><A HREF="/admin/usergroup.php?user_id='.$row['user_id'].'">'.$row['user_id'].'</A></td>';
                 echo '<td>'.$row['user_name'].'</td>';
                 echo '<td>'.$row['service'].'</td>';
                 echo '<td>'.$this->sizeReadable($row['size']).'</td>';
