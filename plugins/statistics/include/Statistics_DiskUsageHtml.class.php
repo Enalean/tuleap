@@ -32,7 +32,7 @@ class Statistics_DiskUsageHtml extends Statistics_DiskUsageOutput {
         if ($row['evolution'] == 0) {
             echo '<td>-</td>';
         } else {
-            echo '<td>'.sprintf('%01.2f %%', (($row['evolution_rate']))*100).'</td>';
+            echo '<td>'.sprintf('%01.2f %%', (($row['evolution_rate'])-1)*100).'</td>';
         }
     }
     
