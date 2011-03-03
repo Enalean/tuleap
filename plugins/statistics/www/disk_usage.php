@@ -455,7 +455,6 @@ switch ($func) {
         if (($userId) && ($startDate) && ($endDate)) {
             echo '<h3>'.$GLOBALS['Language']->getText('plugin_statistics_show_one_user', 'user_detail').'</h3>';
             $duHtml->getUserDetails($userId);
-            $duHtml->getUserEvolutionForPeriod($userId, $startDate, $endDate);
             
             $urlParam .= 'start_date='.$startDate.'&end_date='.$endDate;
             $urlParam .= '&group_by='.$selectedGroupByDate;
@@ -463,6 +462,7 @@ switch ($func) {
             $urlParam .= '&graph_type=graph_user';
             
             echo '<p><img src="disk_usage_graph.php?'.$urlParam.'"  title="Test result" /></p>';
+            $duHtml->getUserEvolutionForPeriod($userId, $startDate, $endDate);
         }    
         break;
 

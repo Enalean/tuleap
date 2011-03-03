@@ -149,6 +149,10 @@ class Statistics_DiskUsageHtml extends Statistics_DiskUsageOutput {
             echo '<table border="1">';
             echo '<thead>';
             echo '<tr>';
+            echo "<th>User Id</th>";
+            echo "<th>User Name</th>";
+            echo "<th>Service</th>";
+            echo "<th>Size</th>";
             echo '</tr>';
             echo '</thead>';
             echo '<tbody>';
