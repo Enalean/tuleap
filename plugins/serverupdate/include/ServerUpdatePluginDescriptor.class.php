@@ -12,10 +12,10 @@ require_once('common/plugin/PluginDescriptor.class.php');
  */
 class ServerUpdatePluginDescriptor extends PluginDescriptor {
     
-    function __construct( {
+    function __construct() {
         $name        = $GLOBALS['Language']->getText('plugin_serverupdate', 'descriptor_name');
         $description = $GLOBALS['Language']->getText('plugin_serverupdate', 'descriptor_description');
-        parent::__construct(($name, false, $description);
+        parent::__construct($name, false, $description);
         $this->setVersionFromFile(dirname(__FILE__).'/../VERSION');
     }
     
