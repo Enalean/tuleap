@@ -297,7 +297,16 @@ class Statistics_DiskUsageHtml extends Statistics_DiskUsageOutput {
         }
 
         $html .= '<div style="text-align:center"><p>';
-        $html .= '<img src="/plugins/statistics/project_cumulativeDiskUsage_graph.php?func=progress&group_id='.$groupId.'" title="Project total disk usage graph" />';
+        $graph = '<img src="/plugins/statistics/project_cumulativeDiskUsage_graph.php?func=progress&group_id='.$groupId.'" title="Project total disk usage graph" />';
+        $user = UserManager::instance()->getCurrentUser();
+        $project = ProjectManager::instance()->getProject($groupId);
+        if ($project->userIsAdmin($user)) {
+            $pluginManager = PluginManager::instance();
+            $p = $pluginManager->getPluginByName('statistics');
+            $html .= '<a href="'.$p->getPluginPath().'/project_stat.php?group_id='.$groupId.'">'.$graph.'<a>';
+        } else {
+            $html .= $graph;
+        }
         $html .= '</p></div>';
 
         return $html;
