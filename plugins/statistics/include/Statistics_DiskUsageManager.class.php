@@ -36,10 +36,8 @@ class Statistics_DiskUsageManager {
     const GRP_HOME = 'grp_home';
     const USR_HOME = 'usr_home';
     const WIKI = 'wiki';
-    const PLUGIN_DOCMAN = 'plugin_docman';
     const PLUGIN_WEBDAV = 'plugin_webdav';
     const MAILMAN = 'mailman';
-    const PLUGIN_FORUMML = 'plugin_forumml';
     const MYSQL = 'mysql';
     const CODENDI_LOGS = 'codendi_log';
     const BACKUP = 'backup';
@@ -65,7 +63,52 @@ class Statistics_DiskUsageManager {
         }
         return $this->_services;
     }
-    
+
+    /**
+     * Return a human readable string for service
+     *
+     * @param String $service
+     *
+     * @return String
+     */
+    public function getServiceColor($service) {
+        switch($service) {
+            case self::SVN:
+                return 'darkgreen';
+            case self::CVS:
+                return 'darkseagreen';
+            case self::FRS:
+                return 'cornflowerblue';
+            case self::FTP:
+                return 'royalblue';
+            case self::WIKI:
+                return 'darkslategray';
+            case self::MAILMAN:
+                return 'darkkhaki';
+            case self::PLUGIN_WEBDAV:
+                return 'gainsboro';
+            case self::GRP_HOME:
+                return 'lavender';
+            case self::USR_HOME:
+                return 'darkturquoise';
+            case self::MYSQL:
+                return 'sandybrown';
+            case self::CODENDI_LOGS:
+                return 'forestgreen';
+            case self::BACKUP:
+                return 'saddlebrown';
+            case self::BACKUP_OLD:
+                return 'peru';
+            default:
+                // If plugins don't want to color themselves they are white
+                $color = 'white';
+                $params = array('service' => $service, 'color' => &$color);
+                $em = EventManager::instance();
+                $em->processEvent('plugin_statistics_color', $params);
+                return $color;
+        }
+    }
+
     public function getGeneralData($date, $groupId = NULL) {
         $res = array();
         $dao  = $this->_getDao();
@@ -122,13 +165,25 @@ class Statistics_DiskUsageManager {
                 break;
         }
     }
-    
+
+    function getRangeDates($dar, $groupBy) {
+        $dates = array();
+        foreach ($dar as $row) {
+            $dates[$this->getKeyFromGroupBy($row, $groupBy)] = 0;
+        }
+        return $dates;
+    }
+
     public function getWeeklyEvolutionServiceData($services, $groupBy, $startDate, $endDate) {
         $groupBy = strtoupper($groupBy);
         $dao  = $this->_getDao();
         $dar = $dao->searchSizePerServiceForPeriod($services, $groupBy, $startDate, $endDate);
         if ($dar && !$dar->isError()) {
+            $dates = $this->getRangeDates($dar, $groupBy);
             foreach ($dar as $row) {
+                if (!isset($res[$row['service']])) {
+                    $res[$row['service']] = $dates;
+                }
                 $res[$row['service']][$this->getKeyFromGroupBy($row, $groupBy)] = $row['size'];
             }
             return $res;
@@ -212,7 +267,7 @@ class Statistics_DiskUsageManager {
                     if (isset($values[$row['service']]['start_size'])) {
                         $values[$row['service']]['evolution'] = $row['size'] - $values[$row['service']]['start_size'];
                         if ($values[$row['service']]['start_size'] != 0) {
-                            $values[$row['service']]['evolution_rate'] = ($row['size'] / $values[$row['service']]['start_size']) - 1;
+                            $values[$row['service']]['evolution_rate'] = ($row['size'] / $values[$row['service']]['start_size'])-1;
                         } else {
                             $values[$row['service']]['evolution_rate'] = 1;
                         }
@@ -257,11 +312,35 @@ class Statistics_DiskUsageManager {
         $res = array();
         $dar = $dao->returnUserEvolutionForPeriod($userId, $startDate ,$endDate);
         if ($dar && !$dar->isError()) {
-            return $dar;
+            $res = $dar->getRow();
+            if (isset($res['start_size'])) {
+                if ($res['start_size'] != 0) {
+                    $res['evolution_rate'] = ($res['end_size'] / $res['start_size'])-1;
+                } else {
+                    $res['evolution_rate'] = 1;
+                }
+            }
+            else {
+                $res['start_size']     = 0;
+                $res['evolution']      = $res['end_size'];
+                $res['evolution_rate'] = 1;
+            }
+            return $res;
         }
         return false;
     }
-    
+
+    public function returnTotalProjectSize($group_id){
+        $dao  = $this->_getDao();
+        $recentDate = $dao->searchMostRecentDate();
+        $dar = $dao->returnTotalSizeProject($group_id, $recentDate);
+        if ($dar && !$dar->isError()) {
+            $projectSize= $dar->getRow();
+            return $projectSize['size'];
+        }
+        return false;
+    }
+
     public function returnProjectEvolutionForPeriod($groupId, $startDate ,$endDate ){
         $dao = $this->_getDao();
         $res = array();
@@ -272,9 +351,9 @@ class Statistics_DiskUsageManager {
         return false;
     }
     
-    public function getTopUsers($startDate, $endDate, $order) {
+    public function getTopUsers($endDate, $order) {
         $dao = $this->_getDao();
-        return $dao->searchTopUsers($startDate, $endDate, $order);
+        return $dao->searchTopUsers($endDate, $order);
     }
     
     public function getUserDetails($userId) {
@@ -285,7 +364,21 @@ class Statistics_DiskUsageManager {
         }
         return false;
     }
-    
+
+    public function getWeeklyEvolutionProjectTotalSize($groupId,$groupBy, $startDate, $endDate){
+        $groupBy = strtoupper($groupBy);
+        $dao  = $this->_getDao();
+        $dar = $dao->searchSizePerProjectForPeriod($groupId, $groupBy, $startDate, $endDate);
+        if ($dar && !$dar->isError()) {
+            foreach ($dar as $row) {
+                $res[$this->getKeyFromGroupBy($row, $groupBy)] = $row['size'];
+            }
+            return $res;
+        }
+        return false;
+         
+    }
+
     public function getWeeklyEvolutionUserData($userId,$groupBy, $startDate, $endDate){
         $groupBy = strtoupper($groupBy);
         $dao  = $this->_getDao();
@@ -305,7 +398,11 @@ class Statistics_DiskUsageManager {
         $dao  = $this->_getDao();
         $dar = $dao->searchSizePerServiceForPeriod($services, $groupBy, $startDate, $endDate, $groupId);
         if ($dar && !$dar->isError()) {
+            $dates = $this->getRangeDates($dar, $groupBy);
             foreach ($dar as $row) {
+                if (!isset($res[$row['service']])) {
+                    $res[$row['service']] = $dates;
+                }
                 $res[$row['service']][$this->getKeyFromGroupBy($row, $groupBy)] = $row['size'];
             }
             return $res;
@@ -471,6 +568,20 @@ class Statistics_DiskUsageManager {
             $this->_dao = new Statistics_DiskUsageDao(CodendiDataAccess::instance());
         }
         return $this->_dao;
+    }
+ 
+    /**
+     * Retreive a param config giving its name
+     * 
+     * @param String $name
+     * 
+     * @return String
+     */
+    public function getProperty($name) {
+        $pluginManager = PluginManager::instance();
+        $p = $pluginManager->getPluginByName('statistics');
+        $info =$p->getPluginInfo();
+        return $info->getPropertyValueForName($name);
     }
 }
 

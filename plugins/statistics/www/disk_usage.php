@@ -243,7 +243,7 @@ switch ($func) {
         $urlParam .= '&graph_type=graph_service';
         echo '<p><img src="disk_usage_graph.php?'.$urlParam.'"  title="Test result" /></p>';
 
-        $duHtml->getServiceEvolutionForPeriod($startDate , $endDate);
+        $duHtml->getServiceEvolutionForPeriod($startDate , $endDate, null, true);
         
         break;
 
@@ -391,7 +391,7 @@ switch ($func) {
         echo '<p><img src="disk_usage_graph.php?'.$urlParam.'"  title="Test result" /></p>';
         
         if (($groupId) && ($startDate) && ($endDate)) {
-            $duHtml->getServiceEvolutionForPeriod($startDate, $endDate, $groupId);
+            $duHtml->getServiceEvolutionForPeriod($startDate, $endDate, $groupId, true);
         }       
         break;
 
@@ -403,10 +403,6 @@ switch ($func) {
         echo '<form name="top_users" method="get" action="?">';
         echo '<input type="hidden" name="func" value="show_top_users" />';
 
-        echo '<label>Start: </label>';
-        list($timestamp,) = util_date_to_unixtime($startDate);
-        echo (html_field_date('start_date', $startDate, false, 10, 10, 'top_users', false)).'&nbsp;<em>'.html_time_ago($timestamp).'</em><br />';
-
         echo '<label>End: </label>';
         list($timestamp,) = util_date_to_unixtime($endDate);
         echo (html_field_date('end_date', $endDate, false, 10, 10, 'top_users', false)).'&nbsp;<em>'.html_time_ago($timestamp).'</em><br />';
@@ -414,7 +410,7 @@ switch ($func) {
         echo '<input type="submit" value="'.$GLOBALS['Language']->getText('global', 'btn_submit').'"/>';
         echo '</form>';
 
-        $duHtml->getTopUsers($startDate, $endDate, $order, $urlParam);
+        $duHtml->getTopUsers($endDate, $order, $urlParam);
         break;
 
     case 'show_one_user':
@@ -455,7 +451,6 @@ switch ($func) {
         if (($userId) && ($startDate) && ($endDate)) {
             echo '<h3>'.$GLOBALS['Language']->getText('plugin_statistics_show_one_user', 'user_detail').'</h3>';
             $duHtml->getUserDetails($userId);
-            $duHtml->getUserEvolutionForPeriod($userId, $startDate, $endDate);
             
             $urlParam .= 'start_date='.$startDate.'&end_date='.$endDate;
             $urlParam .= '&group_by='.$selectedGroupByDate;
@@ -463,6 +458,7 @@ switch ($func) {
             $urlParam .= '&graph_type=graph_user';
             
             echo '<p><img src="disk_usage_graph.php?'.$urlParam.'"  title="Test result" /></p>';
+            $duHtml->getUserEvolutionForPeriod($userId, $startDate, $endDate);
         }    
         break;
 

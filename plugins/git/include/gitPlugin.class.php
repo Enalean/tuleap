@@ -46,6 +46,7 @@ class GitPlugin extends Plugin {
         // Stats plugin
         $this->_addHook('plugin_statistics_disk_usage_collect_project', 'plugin_statistics_disk_usage_collect_project', false);
         $this->_addHook('plugin_statistics_disk_usage_service_label',   'plugin_statistics_disk_usage_service_label',   false);
+        $this->_addHook('plugin_statistics_color',                      'plugin_statistics_color',                      false);
 
         $this->_addHook('project_admin_remove_user', 'projectRemoveUserFromNotification', false);
     }
@@ -153,6 +154,17 @@ class GitPlugin extends Plugin {
      */
     function plugin_statistics_disk_usage_service_label($params) {
         $params['services']['plugin_git'] = 'Git';
+    }
+
+    /**
+     * Hook to choose the color of the plugin in the graph
+     * 
+     * @param array $params
+     */
+    function plugin_statistics_color($params) {
+        if ($params['service'] == 'plugin_git') {
+            $params['color'] = 'purple4';
+        }
     }
 
     /**

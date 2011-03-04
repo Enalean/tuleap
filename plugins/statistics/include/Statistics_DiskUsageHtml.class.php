@@ -22,6 +22,7 @@
  */
 
 require_once 'Statistics_DiskUsageOutput.class.php';
+require_once 'common/chart/Chart.class.php';
 
 class Statistics_DiskUsageHtml extends Statistics_DiskUsageOutput {
 
@@ -149,12 +150,16 @@ class Statistics_DiskUsageHtml extends Statistics_DiskUsageOutput {
             echo '<table border="1">';
             echo '<thead>';
             echo '<tr>';
+            echo "<th>User Id</th>";
+            echo "<th>User Name</th>";
+            echo "<th>Service</th>";
+            echo "<th>Size</th>";
             echo '</tr>';
             echo '</thead>';
             echo '<tbody>';
             foreach ($res as $row) {
                 echo '<tr>';
-                echo '<td>'.$row['user_id'].'</td>';
+                echo '<td><A HREF="/admin/usergroup.php?user_id='.$row['user_id'].'">'.$row['user_id'].'</A></td>';
                 echo '<td>'.$row['user_name'].'</td>';
                 echo '<td>'.$row['service'].'</td>';
                 echo '<td>'.$this->sizeReadable($row['size']).'</td>';
@@ -164,7 +169,21 @@ class Statistics_DiskUsageHtml extends Statistics_DiskUsageOutput {
             echo '</table>';
         }
     }
-    
+
+    /**
+     * Apply a jpgraph compliant color modifier on color and return a css rgb() rule
+     */
+    function applyColorModifier($color) {
+        $jpgraphRgb = new RGB();
+        $newColor   = $jpgraphRgb->color($color.':1.5');
+        // Unset alpha channel
+        unset($newColor[3]);
+
+        // floor value to match jpgraph behaviour
+        $col = implode(',', array_map('floor', $newColor));
+        return 'rgb('.$col.')';
+    }
+
     /**
      * 
      * Displays the table of service evolution for a given period
@@ -173,36 +192,37 @@ class Statistics_DiskUsageHtml extends Statistics_DiskUsageOutput {
      * @param Date $startDate
      * @param Date $endDate
      * @param Integer $groupId
+     * @param Boolean $colored
      *
      */
-    public function getServiceEvolutionForPeriod($startDate , $endDate, $groupId = NULL) {
+    public function getServiceEvolutionForPeriod($startDate , $endDate, $groupId = NULL, $colored = false) {
         $res = $this->_dum->returnServiceEvolutionForPeriod($startDate , $endDate, $groupId);
         if ($res) {
             $services = $this->_dum->getProjectServices();
-            echo '<table border="1">';
-            echo '<thead>';
-            echo '<tr>';
-            echo "<th>Service</th>";
-            echo "<th>Start size</th>";
-            echo "<th>End size</th>";
-            echo "<th>Size Evolution</th>";
-            echo "<th>Rate Evolution (%)</th>";
-            echo '</tr>';
-            echo '</thead>';
-            echo '<tbody>';
+
+            $titles = array('Service', 'Start size', 'End size', 'Size evolution', 'Rate evolution');
+
+            echo html_build_list_table_top($titles);
             $totalStartSize = 0;
             $totalEndSize   = 0;
             $totalEvolution = 0;
+            $i = 0;
             foreach ($res as $row){
-                echo '<tr>';
-                echo '<td>'.$services[$row['service']].'</td>';
+                echo '<tr class="'. util_get_alt_row_color($i++) .'">';
+                echo '<td>';
+                if ($colored) {
+                    $color = $GLOBALS['HTML']->getColorCodeFromColorName($this->_dum->getServiceColor($row['service']));
+                    $color = $this->applyColorModifier($color.':1.5');
+                    echo '<span class="plugin_statistics_table_legend" style="background-color:'.$color.';">&nbsp;</span>';
+                }
+                echo $services[$row['service']].'</td>';
                 $totalStartSize  +=$row['start_size'];
                 $totalEndSize    +=$row['end_size'];
                 $totalEvolution  +=$row['evolution'];
                 $this->_displayEvolutionData($row);
                 echo '</tr>';
             }
-            echo '<tr>';
+            echo '<tr class="'. util_get_alt_row_color($i++) .'">';
             echo '<th>Total size</th>';
             echo '<td>'.$this->sizeReadable($totalStartSize).'</td>';
             echo '<td>'.$this->sizeReadable($totalEndSize).'</td>';
@@ -232,22 +252,19 @@ class Statistics_DiskUsageHtml extends Statistics_DiskUsageOutput {
             echo '</tr>';
             echo '</thead>';
             echo '<tbody>';
-            foreach ($res as $row){
                 echo '<tr>';
                 echo '<td>'.$userId.'</td>';
-                $this->_displayEvolutionData($row);
+                $this->_displayEvolutionData($res);
                 echo '</tr>';
-            }
             echo '</tbody>';
             echo '</table>';
         }
     }
-    
-    
-    public function getTopUsers($startDate, $endDate, $order, $url) {
-        $res = $this->_dum->getTopUsers($startDate, $endDate, $order);
+
+    public function getTopUsers($endDate, $order, $url) {
+        $res = $this->_dum->getTopUsers($endDate, $order);
         if ($res) {
-            $titles = array('Rank', 'Id', 'Name', 'Start size', 'End size', 'Evolution Size ', 'Evolution Rate (%)');
+            $titles = array('Rank', 'Id', 'Name', 'End size');
             $links  = array('', '', '', $url.'&order=start_size', $url.'&order=end_size', $url.'&order=evolution', $url.'&order=evolution_rate');
             echo html_build_list_table_top($titles, $links);
             $url = str_replace('func=show_top_users', 'func=show_one_user', $url);
@@ -257,11 +274,46 @@ class Statistics_DiskUsageHtml extends Statistics_DiskUsageOutput {
                 echo '<td>'.$i++.'</td>';
                 echo '<td><a href="'.$url.'&user_id='.$row['user_id'].'">'.$row['user_id'].'</a></td>';
                 echo '<td>'.$row['user_name'].'</td>';
-                $this->_displayEvolutionData($row);
+                echo '<td>'.$this->sizeReadable($row['end_size']).'</td>';
                 echo '</tr>';
             }
             echo '</table>';
         }
+    }
+
+    /**
+     *
+     * Displays the disk usage for a given project
+     * 
+     * @param Integer $groupId Id of the project we want retrieve its disk usage
+     * 
+     */
+    public function getTotalProjectSize($groupId) {
+        $totalSize = $this->_dum->returnTotalProjectSize($groupId);
+
+        if ($this->_dum->getProperty('allowed_quota')) {
+            $html = '<div style="text-align:center"><p>'.$GLOBALS['Language']->getText('plugin_statistics_admin_page', 'disk_usage_proportion', array($this->sizeReadable($totalSize), $this->_dum->getProperty('allowed_quota').'GiB')).'</p></div>';
+        } else {
+            $html = '<LABEL><b>';
+            $html .= $GLOBALS['Language']->getText('plugin_statistics', 'widget_total_project_size');
+            $html .= '</b></LABEL>';
+            $html .= $this->sizeReadable($totalSize);
+        }
+
+        $html .= '<div style="text-align:center"><p>';
+        $graph = '<img src="/plugins/statistics/project_cumulativeDiskUsage_graph.php?func=progress&group_id='.$groupId.'" title="Project total disk usage graph" />';
+        $user = UserManager::instance()->getCurrentUser();
+        $project = ProjectManager::instance()->getProject($groupId);
+        if ($project->userIsAdmin($user)) {
+            $pluginManager = PluginManager::instance();
+            $p = $pluginManager->getPluginByName('statistics');
+            $html .= '<a href="'.$p->getPluginPath().'/project_stat.php?group_id='.$groupId.'">'.$graph.'<a>';
+        } else {
+            $html .= $graph;
+        }
+        $html .= '</p></div>';
+
+        return $html;
     }
 
     public function getReadable($result, $key) {

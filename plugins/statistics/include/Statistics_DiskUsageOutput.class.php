@@ -41,7 +41,7 @@ class Statistics_DiskUsageOutput {
      * @param       string  $system      'si' for SI, 'bi' for binary prefixes
      * @param       string  $retstring   return string format
      */
-    public function sizeReadable($size, $max = null, $system = 'bi', $retstring = '%d %s')
+    public function sizeReadable($size, $max = null, $system = 'bi', $retstring = 'auto')
     {
         // Pick units
         $systems['si']['prefix'] = array('B', 'K', 'MB', 'GB', 'TB', 'PB');
@@ -61,6 +61,17 @@ class Statistics_DiskUsageOutput {
         while (abs($size) >= $sys['size'] && $i < $depth) {
             $size /= $sys['size'];
             $i++;
+        }
+
+        // Adapt the decimal places to the number of digit:
+        // 1.24 / 12.3 / 123
+        if ($retstring == 'auto') {
+            $nbDigit = (int)(log(abs($size))/log(10)) + 1;
+            switch ($nbDigit) {
+            case 1:  $retstring = '%.2f %s'; break;
+            case 2:  $retstring = '%.1f %s'; break;
+            default: $retstring = '%d %s'; break;
+            }
         }
 
         return sprintf($retstring, $size, $sys['prefix'][$i]);

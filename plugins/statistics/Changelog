@@ -1,0 +1,17 @@
+Version 0.4 (Codendi_ST 4.0.17) Not released yet
+	
+	What Changed?
+	============
+        * Make this plugin available for project admins and members.
+        ** For Project member 
+           This is done with a widget.
+           - Project data size 
+           - Cumulative graph with all services (no details)
+           - Quota policy link by site configuration (site-content overload)
+
+        ** For project admin, in dedicated admin page:
+           - Last 3 months by weeks/ Last year
+           - Pie chart grapg for total project size 
+           - Quota policy link by site configuration (site-content overload)
+           - Cumulative graph with all services (with details per service)
+

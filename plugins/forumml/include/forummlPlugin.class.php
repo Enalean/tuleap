@@ -36,6 +36,7 @@ class ForumMLPlugin extends Plugin {
         // Stat plugin
         $this->_addHook('plugin_statistics_disk_usage_collect_project', 'plugin_statistics_disk_usage_collect_project', false);
         $this->_addHook('plugin_statistics_disk_usage_service_label',   'plugin_statistics_disk_usage_service_label',   false);
+        $this->_addHook('plugin_statistics_color',                      'plugin_statistics_color',                      false);
 
         // Set ForumML plugin scope to 'Projects' wide 
         $this->setScope(Plugin::SCOPE_PROJECT);
@@ -145,6 +146,18 @@ class ForumMLPlugin extends Plugin {
     function plugin_statistics_disk_usage_service_label($params) {
         $params['services']['plugin_forumml'] = 'ForumML';
     }
+
+    /**
+     * Hook to choose the color of the plugin in the graph
+     * 
+     * @param array $params
+     */
+    function plugin_statistics_color($params) {
+        if ($params['service'] == 'plugin_forumml') {
+            $params['color'] = 'darksalmon';
+        }
+    }
+
 }
 
 ?>

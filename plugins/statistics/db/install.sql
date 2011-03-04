@@ -13,7 +13,8 @@ CREATE TABLE plugin_statistics_diskusage_group (
     service VARCHAR(64) NOT NULL DEFAULT '',
     date DATETIME DEFAULT '0000-00-00 00:00:00' NOT NULL,
     size BIGINT UNSIGNED DEFAULT 0 NOT NULL,
-    INDEX idx_date (date, group_id, service(5))
+    INDEX idx_date (date, group_id, service(5)),
+    INDEX idx_group_id_date (group_id, date)
 ) TYPE = InnoDB;
 
 DROP TABLE IF EXISTS plugin_statistics_diskusage_user;

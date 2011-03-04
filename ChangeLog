@@ -5,6 +5,7 @@ Version 4.0.17 - (Not released yet)
         backlog #119788: Support several LDAP branches
         backlog #121192: Allow site admin to define a legal warning to users on registeration page
         backlog #113547: GIT hook to send a mail when pushing
+        backlog #113546: Disk statistics per project visible at project level
 	
         == Bugfix ==
         backlog #103794: Fix issue related to "item type" filter

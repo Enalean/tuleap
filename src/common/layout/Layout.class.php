@@ -136,6 +136,22 @@ class Layout extends Response {
             'mistyrose3',
             'slategray1',
             'yellow1',
+            'darkgreen',
+            'darkseagreen',
+            'cornflowerblue',
+            'royalblue',
+            'darkslategray',
+            'darkkhaki',
+            'gainsboro',
+            'lavender',
+            'darkturquoise',
+            'sandybrown',
+            'forestgreen',
+            'saddlebrown',
+            'peru',
+            'darkolivegreen',
+            'darksalmon',
+            'purple4'
         );
     }
     

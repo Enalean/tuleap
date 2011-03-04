@@ -235,18 +235,13 @@ class Statistics_DiskUsageDao extends DataAccessObject {
       
         return $this->retrieve($sql);
     }
-    
-    public function searchTopUsers($startDate, $endDate, $order, $limit=10) {
-        $sql = 'SELECT user_id, user_name, end_size, start_size, (end_size - start_size) as evolution, (end_size/start_size) as evolution_rate'.
-               ' FROM (SELECT user_id, sum(size) as start_size 
-                       FROM plugin_statistics_diskusage_user
-                       WHERE '.$this->findFirstDateGreaterThan($startDate, 'plugin_statistics_diskusage_user').' 
-                       GROUP BY user_id) as start'. 
-               ' LEFT JOIN (SELECT user_id, sum(size) as end_size 
+
+    public function searchTopUsers($endDate, $order, $limit=10) {
+        $sql = 'SELECT user_id, user_name, end_size '.
+               ' FROM ( SELECT user_id, sum(size) as end_size 
                        FROM plugin_statistics_diskusage_user 
                        WHERE '.$this->findFirstDateLowerThan($endDate, 'plugin_statistics_diskusage_user').' 
                        GROUP BY user_id) as end'.
-               ' USING (user_id)'.
                ' LEFT JOIN user USING (user_id)'.
                ' ORDER BY '.$order.' DESC'.
                ' LIMIT '.$this->da->escapeInt($limit);
