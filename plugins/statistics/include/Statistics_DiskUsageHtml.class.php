@@ -33,7 +33,7 @@ class Statistics_DiskUsageHtml extends Statistics_DiskUsageOutput {
         if ($row['evolution'] == 0) {
             echo '<td>-</td>';
         } else {
-            echo '<td>'.sprintf('%01.2f %%', (($row['evolution_rate'])-1)*100).'</td>';
+            echo '<td>'.sprintf('%01.2f %%', (($row['evolution_rate']))*100).'</td>';
         }
     }
     
@@ -252,12 +252,10 @@ class Statistics_DiskUsageHtml extends Statistics_DiskUsageOutput {
             echo '</tr>';
             echo '</thead>';
             echo '<tbody>';
-            foreach ($res as $row){
                 echo '<tr>';
                 echo '<td>'.$userId.'</td>';
-                $this->_displayEvolutionData($row);
+                $this->_displayEvolutionData($res);
                 echo '</tr>';
-            }
             echo '</tbody>';
             echo '</table>';
         }

@@ -267,7 +267,7 @@ class Statistics_DiskUsageManager {
                     if (isset($values[$row['service']]['start_size'])) {
                         $values[$row['service']]['evolution'] = $row['size'] - $values[$row['service']]['start_size'];
                         if ($values[$row['service']]['start_size'] != 0) {
-                            $values[$row['service']]['evolution_rate'] = ($row['size'] / $values[$row['service']]['start_size']);
+                            $values[$row['service']]['evolution_rate'] = ($row['size'] / $values[$row['service']]['start_size'])-1;
                         } else {
                             $values[$row['service']]['evolution_rate'] = 1;
                         }
@@ -312,7 +312,20 @@ class Statistics_DiskUsageManager {
         $res = array();
         $dar = $dao->returnUserEvolutionForPeriod($userId, $startDate ,$endDate);
         if ($dar && !$dar->isError()) {
-            return $dar;
+            $res = $dar->getRow();
+            if (isset($res['start_size'])) {
+                if ($res['start_size'] != 0) {
+                    $res['evolution_rate'] = ($res['end_size'] / $res['start_size'])-1;
+                } else {
+                    $res['evolution_rate'] = 1;
+                }
+            }
+            else {
+                $res['start_size']     = 0;
+                $res['evolution']      = $res['end_size'];
+                $res['evolution_rate'] = 1;
+            }
+            return $res;
         }
         return false;
     }
