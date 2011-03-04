@@ -199,22 +199,16 @@ class Statistics_DiskUsageHtml extends Statistics_DiskUsageOutput {
         $res = $this->_dum->returnServiceEvolutionForPeriod($startDate , $endDate, $groupId);
         if ($res) {
             $services = $this->_dum->getProjectServices();
-            echo '<table border="1">';
-            echo '<thead>';
-            echo '<tr>';
-            echo "<th>Service</th>";
-            echo "<th>Start size</th>";
-            echo "<th>End size</th>";
-            echo "<th>Size Evolution</th>";
-            echo "<th>Rate Evolution (%)</th>";
-            echo '</tr>';
-            echo '</thead>';
-            echo '<tbody>';
+
+            $titles = array('Service', 'Start size', 'End size', 'Size evolution', 'Rate evolution');
+
+            echo html_build_list_table_top($titles);
             $totalStartSize = 0;
             $totalEndSize   = 0;
             $totalEvolution = 0;
+            $i = 0;
             foreach ($res as $row){
-                echo '<tr>';
+                echo '<tr class="'. util_get_alt_row_color($i++) .'">';
                 echo '<td>';
                 if ($colored) {
                     $color = $GLOBALS['HTML']->getColorCodeFromColorName($this->_dum->getServiceColor($row['service']));
@@ -228,7 +222,7 @@ class Statistics_DiskUsageHtml extends Statistics_DiskUsageOutput {
                 $this->_displayEvolutionData($row);
                 echo '</tr>';
             }
-            echo '<tr>';
+            echo '<tr class="'. util_get_alt_row_color($i++) .'">';
             echo '<th>Total size</th>';
             echo '<td>'.$this->sizeReadable($totalStartSize).'</td>';
             echo '<td>'.$this->sizeReadable($totalEndSize).'</td>';
