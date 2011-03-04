@@ -285,10 +285,7 @@ class Statistics_DiskUsageHtml extends Statistics_DiskUsageOutput {
         $totalSize = $this->_dum->returnTotalProjectSize($groupId);
 
         if ($this->_dum->getProperty('allowed_quota')) {
-            $html = '<div style="text-align:center"><p>'.$GLOBALS['Language']->getText('plugin_statistics_admin_page', 'disk_usage_quota', array($this->_dum->getProperty('allowed_quota').'GB')).'</p></div>';
-            $html .= '<div style="text-align:center"><p>';
-            $html .= '<img src="/plugins/statistics/project_cumulativeDiskUsage_graph.php?func=usage&size='.$totalSize.'&group_id='.$groupId.'" title="Disk usage percentage" />';
-            $html .= '</p></div>';
+            $html = '<div style="text-align:center"><p>'.$GLOBALS['Language']->getText('plugin_statistics_admin_page', 'disk_usage_proportion', array($this->sizeReadable($totalSize), $this->_dum->getProperty('allowed_quota').'GiB')).'</p></div>';
         } else {
             $html = '<LABEL><b>';
             $html .= $GLOBALS['Language']->getText('plugin_statistics', 'widget_total_project_size');
