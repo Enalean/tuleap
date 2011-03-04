@@ -219,7 +219,7 @@ class Statistics_DiskUsageHtml extends Statistics_DiskUsageOutput {
                 if ($colored) {
                     $color = $GLOBALS['HTML']->getColorCodeFromColorName($this->_dum->getServiceColor($row['service']));
                     $color = $this->applyColorModifier($color.':1.5');
-                    echo '<span class="hatem_box" style="background-color:'.$color.'">&nbsp;&nbsp;&nbsp;&nbsp;</span>';
+                    echo '<span class="plugin_statistics_table_legend" style="background-color:'.$color.';">&nbsp;</span>';
                 }
                 echo $services[$row['service']].'</td>';
                 $totalStartSize  +=$row['start_size'];
