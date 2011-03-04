@@ -217,8 +217,7 @@ class Statistics_DiskUsageHtml extends Statistics_DiskUsageOutput {
                 echo '<tr>';
                 echo '<td>';
                 if ($colored) {
-                    $layout = new Layout('');
-                    $color = $layout->getColorCodeFromColorName($this->_dum->getServiceColor($row['service']));
+                    $color = $GLOBALS['HTML']->getColorCodeFromColorName($this->_dum->getServiceColor($row['service']));
                     $color = $this->applyColorModifier($color.':1.5');
                     echo '<span class="hatem_box" style="background-color:'.$color.'">&nbsp;&nbsp;&nbsp;&nbsp;</span>';
                 }
