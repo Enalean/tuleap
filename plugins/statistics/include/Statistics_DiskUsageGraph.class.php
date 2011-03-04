@@ -167,8 +167,8 @@ class Statistics_DiskUsageGraph extends Statistics_DiskUsageOutput {
             $lineplot = new LinePlot($ydata);
 
             $color = $this->_dum->getServiceColor($service);
-            $lineplot->SetColor($color.':0.5');
-            $lineplot->SetFillColor($color);
+            $lineplot->SetColor($color);
+            $lineplot->SetFillColor($color.':1.5');
             $lineplot->SetLegend($servicesList[$service]);
 
             //$lineplot->value->show();

@@ -22,6 +22,7 @@
  */
 
 require_once 'Statistics_DiskUsageOutput.class.php';
+require_once 'common/chart/Chart.class.php';
 
 class Statistics_DiskUsageHtml extends Statistics_DiskUsageOutput {
 
@@ -168,7 +169,21 @@ class Statistics_DiskUsageHtml extends Statistics_DiskUsageOutput {
             echo '</table>';
         }
     }
-    
+
+    /**
+     * Apply a jpgraph compliant color modifier on color and return a css rgb() rule
+     */
+    function applyColorModifier($color) {
+        $jpgraphRgb = new RGB();
+        $newColor   = $jpgraphRgb->color($color.':1.5');
+        // Unset alpha channel
+        unset($newColor[3]);
+
+        // floor value to match jpgraph behaviour
+        $col = implode(',', array_map('floor', $newColor));
+        return 'rgb('.$col.')';
+    }
+
     /**
      * 
      * Displays the table of service evolution for a given period
@@ -204,6 +219,7 @@ class Statistics_DiskUsageHtml extends Statistics_DiskUsageOutput {
                 if ($colored) {
                     $layout = new Layout('');
                     $color = $layout->getColorCodeFromColorName($this->_dum->getServiceColor($row['service']));
+                    $color = $this->applyColorModifier($color.':1.5');
                     echo '<span class="hatem_box" style="background-color:'.$color.'">&nbsp;&nbsp;&nbsp;&nbsp;</span>';
                 }
                 echo $services[$row['service']].'</td>';
