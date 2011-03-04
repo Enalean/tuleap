@@ -53,6 +53,7 @@ if ($request->valid($vPeriod)) {
 }
 
 $duMgr  = new Statistics_DiskUsageManager();
+$duHtml = new Statistics_DiskUsageHtml($duMgr);
 
 // selected service
 $vServices = new Valid_WhiteList('services', array_keys($duMgr->getProjectServices()));
@@ -97,11 +98,17 @@ if ($project && !$project->isError()) {
     $params['title'] = $GLOBALS['Language']->getText('admin_groupedit', 'proj_admin').': '.$project->getPublicName();
     project_admin_header($params);
 
+    echo '<h2>'.$GLOBALS['Language']->getText('plugin_statistics_admin_page', 'show_statistics').'</h2>';
+    $usedProportion = $duMgr->returnTotalProjectSize($groupId);
     $allowedQuota = $duMgr->getProperty('allowed_quota');
     if ($allowedQuota) {
-        echo '<h2>'.$GLOBALS['Language']->getText('plugin_statistics_admin_page', 'show_statistics').'</h2>';
-        echo '<div id="help_init" class="stat_help">'.$GLOBALS['Language']->getText('plugin_statistics_admin_page', 'disk_usage_quota', array($allowedQuota.'GB')).'</div>';
-        echo '<p><img src="/plugins/statistics/project_cumulativeDiskUsage_graph.php?func=usage&size='.$duMgr->returnTotalProjectSize($groupId).'&group_id='.$groupId.'" title="Disk usage percentage" /></p>';
+        echo '<div id="help_init" class="stat_help">'.$GLOBALS['Language']->getText('plugin_statistics_admin_page', 'disk_usage_proportion', array($duHtml->sizeReadable($usedProportion),$allowedQuota.'GiB')).'</div>';
+        echo '<p><img src="/plugins/statistics/project_cumulativeDiskUsage_graph.php?func=usage&size='.$usedProportion.'&group_id='.$groupId.'" title="Disk usage percentage" /></p>';
+    } else {
+        echo '<LABEL><b>';
+        echo $GLOBALS['Language']->getText('plugin_statistics', 'widget_total_project_size');
+        echo'</b></LABEL>';
+        echo $duHtml->sizeReadable($usedProportion);
     }
 
     $title = $GLOBALS['Language']->getText('plugin_statistics_admin_page', 'disk_usage_period_'.$period, array($statDuration));
@@ -131,7 +138,6 @@ if ($project && !$project->isError()) {
     echo '</form>';
 
     echo '<table><tr><td valign="top">';
-    $duHtml = new Statistics_DiskUsageHtml($duMgr);
     $duHtml->getServiceEvolutionForPeriod($startDate, $endDate, $groupId, true);
     echo '</td><td valign="top"><img src="project_stat_graph.php?'.$serviceParam.'&group_id='.$groupId.'&start_date='.$startDate.'&end_date='.$endDate.'" title="Project disk usage graph" />';
     echo '</td></tr></table>';
