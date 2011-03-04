@@ -22,6 +22,7 @@
  */
 
 require_once 'common/chart/Chart.class.php';
+require_once 'common/chart/Chart_Pie.class.php';
 require_once 'Statistics_DiskUsageOutput.class.php';
 
 class Statistics_DiskUsageGraph extends Statistics_DiskUsageOutput {
@@ -246,7 +247,7 @@ class Statistics_DiskUsageGraph extends Statistics_DiskUsageOutput {
      * @param Integer $total
      */
     function displayProjectProportionUsage($used, $total) {
-        $graph = new Chart(300 ,250 , "auto", "PieGraph");
+        $graph = new Chart_Pie(300 ,250 , "auto");
 
         $data = array($used, $total-$used);
 
