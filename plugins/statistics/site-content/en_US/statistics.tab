@@ -20,7 +20,6 @@ plugin_statistics_admin_page	show_statistics	Disk usage
 plugin_statistics_admin_page	disk_usage_period_months	Disk usage for the $1 last months
 plugin_statistics_admin_page	disk_usage_period_year	Disk usage for the last year
 plugin_statistics_admin_page	disk_usage_period	From $1 to $2.
-plugin_statistics_admin_page	disk_usage_fixed_period	3
 plugin_statistics_admin_page	disk_usage_proportion	This project uses <b>$1</b> of the <b>$2</b> allowed quota. 
 plugin_statistics_admin_page	year	View statistics for the last $1 months
 plugin_statistics_admin_page	months	View statistics for the last year
