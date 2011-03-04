@@ -55,7 +55,7 @@ class Git_PostReceiveMailManager {
      * Remove from a repository the specified mail address if given
      * else remove all notified mails
      *
-     * @param Integer $repositoryId
+     * @param GitRepository  $repository
      * @param String  $mail
      *
      *  @return Boolean

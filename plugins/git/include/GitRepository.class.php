@@ -457,7 +457,7 @@ class GitRepository implements DVCSRepository {
 
         //remove notification from DB
         $postRecMailManager = $this->getPostReceiveMailManager();
-        $postRecMailManager->removeMailByRepository($this->getId());
+        $postRecMailManager->removeMailByRepository($this);
 
         $this->getBackend()->delete($this);
     }
