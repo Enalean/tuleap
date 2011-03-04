@@ -158,28 +158,31 @@ class Statistics_DiskUsageGraph extends Statistics_DiskUsageOutput {
         $data = $this->_dum->getWeeklyEvolutionProjectData($services, $groupId, $groupBy, $startDate, $endDate);
         $lineplots = array();
         $dates = array();
-        foreach ($data as $service => $values) {
-            $ydata = array();
-            foreach ($values as $date => $size) {
-                $dates[] = $date;
-                $ydata[] = $size;
-            }
-            $lineplot = new LinePlot($ydata);
+        foreach ($servicesList as $service => $serviceName) {
+            if (array_key_exists($service, $data)) {
+                $values = $data[$service];
+                $ydata = array();
+                foreach ($values as $date => $size) {
+                    $dates[] = $date;
+                    $ydata[] = $size;
+                }
+                $lineplot = new LinePlot($ydata);
 
-            $color = $this->_dum->getServiceColor($service);
-            $lineplot->SetColor($color);
-            $lineplot->SetFillColor($color.':1.5');
-            $lineplot->SetLegend($servicesList[$service]);
+                $color = $this->_dum->getServiceColor($service);
+                $lineplot->SetColor($color);
+                $lineplot->SetFillColor($color.':1.5');
+                $lineplot->SetLegend($serviceName);
 
-            //$lineplot->value->show();
-            $lineplot->value->SetFont($graph->getFont(), FS_NORMAL, 8);
-            $lineplot->value->setFormatCallback(array($this, 'sizeReadable'));
-            if ($accumulative) {
-                $lineplots[] = $lineplot;
-                // Reverse order
-                //array_unshift($lineplots, $lineplot);
-            } else {
-                $graph->Add($lineplot);
+                //$lineplot->value->show();
+                $lineplot->value->SetFont($graph->getFont(), FS_NORMAL, 8);
+                $lineplot->value->setFormatCallback(array($this, 'sizeReadable'));
+                if ($accumulative) {
+                    $lineplots[] = $lineplot;
+                    // Reverse order
+                    //array_unshift($lineplots, $lineplot);
+                } else {
+                    $graph->Add($lineplot);
+                }
             }
         }
 
