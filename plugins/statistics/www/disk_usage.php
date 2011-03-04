@@ -243,7 +243,7 @@ switch ($func) {
         $urlParam .= '&graph_type=graph_service';
         echo '<p><img src="disk_usage_graph.php?'.$urlParam.'"  title="Test result" /></p>';
 
-        $duHtml->getServiceEvolutionForPeriod($startDate , $endDate);
+        $duHtml->getServiceEvolutionForPeriod($startDate , $endDate, null, true);
         
         break;
 
@@ -391,7 +391,7 @@ switch ($func) {
         echo '<p><img src="disk_usage_graph.php?'.$urlParam.'"  title="Test result" /></p>';
         
         if (($groupId) && ($startDate) && ($endDate)) {
-            $duHtml->getServiceEvolutionForPeriod($startDate, $endDate, $groupId);
+            $duHtml->getServiceEvolutionForPeriod($startDate, $endDate, $groupId, true);
         }       
         break;
 

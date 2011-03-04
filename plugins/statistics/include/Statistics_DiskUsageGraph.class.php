@@ -69,9 +69,9 @@ class Statistics_DiskUsageGraph extends Statistics_DiskUsageOutput {
             $lineplot->value->SetFont($graph->getFont(), FS_NORMAL, 8);
             $lineplot->value->setFormatCallback(array($this, 'sizeReadable'));
             if ($accumulative) {
-                $lineplots[] = $lineplot;
+                //$lineplots[] = $lineplot;
                 // Reverse order
-                //array_unshift($lineplots, $lineplot);
+                array_unshift($lineplots, $lineplot);
             } else {
                 $graph->Add($lineplot);
             }
@@ -81,6 +81,7 @@ class Statistics_DiskUsageGraph extends Statistics_DiskUsageOutput {
             $accLineplot = new AccLinePlot($lineplots);
             $graph->Add($accLineplot);
         }
+        $graph->legend->SetReverse();
         $graph->xaxis->title->Set($groupBy."s");
         $graph->xaxis->SetTitleMargin(35);
         $graph->xaxis->SetTickLabels($dates);
