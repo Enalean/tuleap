@@ -67,8 +67,10 @@ codendi.tracker.RuleNode = Class.create({
         
         //Register event on the field
         var f = codendi.tracker.fields.get(this.field);
-        this.onchangeEvent = f.onchange.bind(f);
-        f.element().observe('change', this.onchangeEvent);
+        if (f.element().nodeName != 'SPAN') {
+            this.onchangeEvent = f.onchange.bind(f);
+            f.element().observe('change', this.onchangeEvent);
+        }
     },
     addRule: function(source_value, target_field, target_value) {
         if (!this.targets[target_field]) {
@@ -84,7 +86,19 @@ codendi.tracker.RuleNode = Class.create({
     },
     process: function() {
         //retrieve selected source values
-        var selected_sources = codendi.tracker.fields.get(this.field).element().getValue();
+        var el = codendi.tracker.fields.get(this.field).element();
+        if (el.nodeName == 'SPAN') {
+            //in case of MB, the returned value is a list a value ids (i.e: v_id1,v_id2,...)
+            var e = el.innerHTML;
+            var c = ",";
+            if (e.indexOf(c) != -1) {
+                var selected_sources = e.split(',');
+            } else {
+                var selected_sources = el.innerHTML;
+            }
+        } else {
+            var selected_sources = el.getValue();
+        }
         if (!Object.isArray(selected_sources)) {
             selected_sources = [selected_sources];
         }

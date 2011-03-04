@@ -74,10 +74,10 @@ class ArtifactFieldHtml extends ArtifactField {
      *  @param box_name: the selectbox name
      *  @param group_artifact_id: the artifact type id
      *  @param checked,show_none,text_none,show_any,text_any,show_value: values used by html_build_select_box function
-     *
+     *  @param display: define whether the MB will be displayed or not: In case of RO, it will not be displayed
 	 *	@return	string
 	 */
-	function multipleFieldBox($box_name='',$group_artifact_id,$checked=false,$show_none=false,$text_none=0,$show_any=false, $text_any=0,$show_unchanged=false,$text_unchanged=0,$show_value=false) {
+	function multipleFieldBox($box_name='',$group_artifact_id,$checked=false,$show_none=false,$text_none=0,$show_any=false, $text_any=0,$show_unchanged=false,$text_unchanged=0,$show_value=false, $display=true) {
 	  global $Language;
       $hp = Codendi_HTMLPurifier::instance();
 	  if (!$text_none) $text_none=$Language->getText('global','none');
@@ -107,7 +107,10 @@ class ArtifactFieldHtml extends ArtifactField {
             if ($box_name == '') {
                 $box_name = $this->field_name.'[]';
             }
-            $output  = html_build_multiple_select_box($result,$box_name,$checked,($this->getDisplaySize()!=""?$this->getDisplaySize():"6"),$show_none,$text_none, $show_any,$text_any,$show_unchanged,$text_unchanged,$show_value);
+            $output = '';
+            if ($display) {
+                $output  .= html_build_multiple_select_box($result,$box_name,$checked,($this->getDisplaySize()!=""?$this->getDisplaySize():"6"),$show_none,$text_none, $show_any,$text_any,$show_unchanged,$text_unchanged,$show_value);
+            }
             $output .= '<script type="text/javascript">';
             $output .= "\ncodendi.tracker.fields.add('".(int)$this->getID()."', '".$hp->purify($this->getName(), CODENDI_PURIFIER_JS_QUOTE)."', '".$hp->purify(SimpleSanitizer::unsanitize($this->getLabel()), CODENDI_PURIFIER_JS_QUOTE)."')";
             $output .= $this->_getValuesAsJavascript($array_values,$checked);
@@ -163,10 +166,11 @@ class ArtifactFieldHtml extends ArtifactField {
      *  @param box_name: the selectbox name
      *  @param group_artifact_id: the artifact type id
      *  @param checked,show_none,text_none,show_any,text_any: values used by html_build_select_box function
-     *
+     *  @param display: to manage the display of the selectBox: In case of RO it is not dispalyed
+     *  
 	 *	@return	string
 	 */
-	function fieldBox($box_name='',$group_artifact_id,$checked=false,$show_none=false,$text_none=0,$show_any=false,$text_any=0,$show_unchanged=false,$text_unchanged=0) {
+	function fieldBox($box_name='',$group_artifact_id,$checked=false,$show_none=false,$text_none=0,$show_any=false,$text_any=0,$show_unchanged=false,$text_unchanged=0, $display = true) {
 	  global $Language;
       $hp = Codendi_HTMLPurifier::instance();
 	  if (!$text_none) $text_none=$Language->getText('global','none');
@@ -199,7 +203,10 @@ class ArtifactFieldHtml extends ArtifactField {
             if ($box_name == '') {
                 $box_name = $this->field_name;
             }
-            $output  = html_build_select_box ($result,$box_name,$checked,$show_none,$text_none,$show_any, $text_any,$show_unchanged,$text_unchanged);
+            $output = '';
+            if ($display) {
+                $output  .= html_build_select_box ($result,$box_name,$checked,$show_none,$text_none,$show_any, $text_any,$show_unchanged,$text_unchanged);
+            }
             $output .= '<script type="text/javascript">';
             $output .= "\ncodendi.tracker.fields.add('".(int)$this->getID()."', '".$hp->purify($this->getName(), CODENDI_PURIFIER_JS_QUOTE)."', '".$hp->purify(SimpleSanitizer::unsanitize($this->getLabel()), CODENDI_PURIFIER_JS_QUOTE)."')";
              $output .= $this->_getValuesAsJavascript($array_values,$checked, $text_unchanged);
@@ -208,7 +215,7 @@ class ArtifactFieldHtml extends ArtifactField {
            return $output;
 	    }
 	}
-	
+
 	/**
      * 
 	 *  Returns a multi date field
@@ -424,6 +431,11 @@ class ArtifactFieldHtml extends ArtifactField {
                 $output .= join(', ', $arr);
             } else {
                 $output .= join('<br>', $arr);
+                //The span is used to pass values that would be processed in JS as dependency sources' values  
+                $output .= '<span id="'.$this->field_name.'" style="display: none;">'.$value.'</span>';
+                $output .= $this->fieldBox('',$group_artifact_id, $value,
+						       $show_none,$text_none,$show_any,
+						       $text_any,$show_unchanged,$text_unchanged, false);	
             }
 	
 		} else {
@@ -449,6 +461,7 @@ class ArtifactFieldHtml extends ArtifactField {
 	
 	    case 'MB':
                 $arr = ( is_array($value) ? $value : array($value));
+                $valueArray = $arr;
 		if ($ro) {
 		    // if multiple selected values return a list of , separated values
 		    for ($i=0;$i < count($arr); $i++) {
@@ -463,11 +476,14 @@ class ArtifactFieldHtml extends ArtifactField {
                     }
                 }
 		    }
-	
-		    $output .= join(', ', $arr);
-	
+		    $output .= join(",", $arr);
+		    //The span is used to pass values id that would be processed in JS as dependency sources' values  
+		    $output .= '<span id="'.$this->field_name.'" style="display: none;">'.implode(',', $valueArray).'</span>';
+		    $output .= $this->multipleFieldBox('',$group_artifact_id, $value,
+		    $show_none,$text_none,$show_any,
+		    $text_any,$show_unchanged,$text_unchanged, false, false);
 		} else {
-		    
+
 		    // Only show the 'None" label if empty value is allowed or
 		    // if value is already none (it can happen if the field was not used in
 		    // the artifact submission form)
