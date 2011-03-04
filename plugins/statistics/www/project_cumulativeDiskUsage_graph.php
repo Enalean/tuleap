@@ -37,9 +37,8 @@ if ($request->valid($vGroupId)) {
     header('Location: '.get_server_url());
 }
 
-// Grant access only to project admins
 $user = UserManager::instance()->getCurrentUser();
-if (!$project->userIsAdmin($user)) {
+if ((!$project->isPublic() || $user->isRestricted()) && !$project->userIsMember($user)) {
     header('Location: '.get_server_url());
 }
 
