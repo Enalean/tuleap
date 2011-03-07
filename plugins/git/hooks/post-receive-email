@@ -707,10 +707,17 @@ codendi_extract_references()
     repo_location=$(cd $GIT_DIR; pwd)
     codendi_repo_name=$(basename $repo_location | sed -e 's/\.git$//')
     codendi_group_name=$(basename $(dirname $repo_location))
+    encoded_text="$(perl -MURI::Escape -e 'print uri_escape($ARGV[0]);' "$mail_body")"
+
+    # Skip one line to make it more readable
     echo ""
     curl --silent \
         --user-agent "Codendi Perl Agent" \
-        --data "group_name=$codendi_group_name&login=$codendi_login&type=git_commit&rev_id=$codendi_repo_name/$newrev&text=$mail_body" \
+        --data "group_name=$codendi_group_name" \
+        --data "login=$codendi_login" \
+        --data "type=git_commit" \
+        --data "rev_id=$codendi_repo_name/$newrev" \
+        --data "text=$encoded_text" \
         http://localhost/api/reference/extractCross
 }
 
