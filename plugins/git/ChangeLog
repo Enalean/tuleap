@@ -1,4 +1,4 @@
-Version 1.5 (Codendi_ST 4.0.17) Not released yet
+Version 1.6 (Codendi_ST 4.0.17) Not released yet
 	
 	What Changed?
 	============
@@ -11,4 +11,5 @@ Version 1.5 (Codendi_ST 4.0.17) Not released yet
             * Add gitweb diff links
 
         ** Extract references from commit messages like subversion
-        ** Direct link to gitweb interface based on sha1 (i.e: git #repository_name/commit_sha1)
+        ** Direct link to gitweb interface based on sha1 (i.e: git #repository_name/commit_sha1)i
+        ** Add hook for color used in plugin statistics.
