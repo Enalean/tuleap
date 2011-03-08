@@ -786,6 +786,7 @@ CREATE TABLE frs_dlstats_grouptotal_agg (
 CREATE TABLE frs_file (
   file_id int(11) NOT NULL auto_increment,
   filename text,
+  filepath varchar(255) default NULL,
   release_id int(11) NOT NULL default '0',
   type_id int(11) NOT NULL default '0',
   processor_id int(11) NOT NULL default '0',
@@ -807,6 +808,7 @@ CREATE TABLE frs_file (
 CREATE TABLE frs_file_deleted (
   file_id int(11) NOT NULL,
   filename text,
+  filepath varchar(255) default NULL,
   release_id int(11) NOT NULL default '0',
   type_id int(11) NOT NULL default '0',
   processor_id int(11) NOT NULL default '0',
