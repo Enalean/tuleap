@@ -608,10 +608,10 @@ class FRSFileFactoryTest extends UnitTestCase {
         }
     }
 
-    function testCreateFileAlreadyExisting() {
+    function testCreateFileAlreadyExistingAndActive() {
         // Create toto.txt in the release directory
         mkdir($GLOBALS['ftp_frs_dir_prefix'].'/prj/p123_r456');
-        touch($GLOBALS['ftp_frs_dir_prefix'].'/prj/p123_r456/toto.txt');
+        touch($GLOBALS['ftp_frs_dir_prefix'].'/prj/p123_r456/toto.txt_1299584197');
 
         $p = new MockProject($this);
         $p->setReturnValue('getUnixName', 'prj');
@@ -622,20 +622,59 @@ class FRSFileFactoryTest extends UnitTestCase {
         $r->setGroupID(111);
         $r->setProject($p);
 
-        $f = new FRSFile();
-        $f->setFileName('toto.txt');
-        $f->setRelease($r);
+        $f1 = new FRSFile();
+        $f1->setFileName('toto.txt_1299584197');
+        $f1->setStatus("A");
+
+
+        $f2 = new FRSFile();
+        $f2->setFileName('toto.txt_1299584219');
+        $f2->setRelease($r);
 
         $ff = new FRSFileFactoryTestCreateFiles();
         $ff->setReturnValue('isFileBaseNameExists', True);
         try {
-            $ff->createFile($f);
+            $ff->createFile($f2);
         }
         catch (Exception $e) {
             $this->assertIsA($e, 'FRSFileExistsException');
         }
 
-        unlink($GLOBALS['ftp_frs_dir_prefix'].'/prj/p123_r456/toto.txt');
+        unlink($GLOBALS['ftp_frs_dir_prefix'].'/prj/p123_r456/toto.txt_1299584197');
+        rmdir($GLOBALS['ftp_frs_dir_prefix'].'/prj/p123_r456');
+    }
+
+    function testCreateFileAlreadyExistingAndMarkedToBeDeletedNotYetMoved() {
+        // Create toto.txt in the release directory
+        mkdir($GLOBALS['ftp_frs_dir_prefix'].'/prj/p123_r456');
+        touch($GLOBALS['ftp_frs_dir_prefix'].'/prj/p123_r456/toto.txt_1299584197');
+
+        $p = new MockProject($this);
+        $p->setReturnValue('getUnixName', 'prj');
+
+        $r = new FRSRelease();
+        $r->setReleaseID(456);
+        $r->setPackageID(123);
+        $r->setGroupID(111);
+        $r->setProject($p);
+
+        $f1 = new FRSFile();
+        $f1->setFileName('toto.txt_1299584197');
+        $f1->setStatus("D");
+
+
+        $f2 = new FRSFile();
+        $f2->setFileName('toto.txt_1299584219');
+        $f2->setRelease($r);
+
+
+        $ff = new FRSFileFactoryTestCreateFiles();
+        $ff->setReturnValue('isFileBaseNameExists', True);
+
+        $this->assertTrue($ff->createFile($f2));
+
+        unlink($GLOBALS['ftp_frs_dir_prefix'].'/prj/p123_r456/toto.txt_1299584219');
+        unlink($GLOBALS['ftp_frs_dir_prefix'].'/prj/p123_r456/toto.txt_1299584197');
         rmdir($GLOBALS['ftp_frs_dir_prefix'].'/prj/p123_r456');
     }
 
