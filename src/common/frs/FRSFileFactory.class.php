@@ -275,13 +275,12 @@ class FRSFileFactory extends Error {
      * Returns the filename created by appending a timestamp to the names of the file present in
      * the incoming directory
      *
-     * @param FRSFile $file the file we want to resolve its name
+     * @param string $file_name the file name we want to resolve it
      *
-     * @return String : the created filename
+     * @return string : the created filename
      */
-    function getResolvedFileName($file) {
-        $file_name = basename($file->getFileName());
-        $resolvedName = $file_name."_".$file->getPostDate();
+    function getResolvedFileName($file_name) {
+        $resolvedName = $file_name."_".$_SERVER['REQUEST_TIME'];
         return $resolvedName;
     }
 
