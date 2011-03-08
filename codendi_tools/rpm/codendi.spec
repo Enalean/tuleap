@@ -46,6 +46,25 @@ Requires: forgeupgrade >= 1.2
 %description
 Codendi is a web based application that address all the aspects of product development.
 
+#
+## Core component definitions
+#
+
+%package core-mailman
+Summary: Mailman component for codendi
+Group: Development/Tools
+Version: @@CORE_MAILMAN_VERSION@@
+Release: 1%{?dist}
+Requires: %{name} >= %{version}
+Requires: mailman = 3:2.1.9-6.codendi
+Provides: codendi-core-mailman = %{version}
+%description core-mailman
+Manage dependencies for Codendi mailman integration
+
+#
+## Plugins
+#
+
 %package plugin-forumml
 Summary: ForumML plugin for Codendi
 Group: Development/Tools
@@ -553,6 +572,14 @@ fi
 %attr(00755,root,root) /etc/rc.d/init.d/%{APP_NAME}
 %attr(00644,root,root) /etc/cron.d/%{APP_NAME}
 %dir %{APP_CACHE_DIR}
+
+
+#
+# Core
+#
+%files core-mailman
+%defattr(-,%{APP_USER},%{APP_USER},-)
+%{APP_DIR}/src/CORE_MAILMAN_VERSION
 
 #
 # Plugins

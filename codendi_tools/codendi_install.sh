@@ -187,10 +187,6 @@ fi
 # The right solution would be to add codendi as a dependency of those packages
 #
 
-# -> mailman
-# add exclude mailman in base yum
-missing_rpms="$missing_rpms mailman-2.1.9-5.codendi"
-
 # -> ViewVC
 # Need codendiadm user & group
 missing_rpms="$missing_rpms viewvc-1.0.7-1.codendi"
