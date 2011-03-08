@@ -25,7 +25,7 @@ require_once 'Exceptions.class.php';
 require_once 'common/valid/Rule.class.php';
 
 /**
- * 
+ *
  */
 class FRSFileFactory extends Error {
     const COMPUTE_MD5 = 0x0001;
@@ -50,10 +50,10 @@ class FRSFileFactory extends Error {
         $_id = (int) $file_id;
         $dao =& $this->_getFRSFileDao();
         if($group_id){
-        	$_group_id = (int) $group_id;
-        	$dar = $dao->searchInReleaseById($_id, $group_id);
+            $_group_id = (int) $group_id;
+            $dar = $dao->searchInReleaseById($_id, $group_id);
         }else{
-        	$dar = $dao->searchById($_id);
+            $dar = $dao->searchById($_id);
         }
 
         $file = null;
@@ -63,10 +63,10 @@ class FRSFileFactory extends Error {
         }
         return $file;
     }
-    
+
     /**
      * get the files of the release.
-     * 
+     *
      * @param int $relase_id the ID of the release the files belong to
      */
     function &getFRSFilesFromDb($release_id) {
@@ -84,66 +84,66 @@ class FRSFileFactory extends Error {
         }
         return $files;
     }
-    
+
     function getFRSFileInfoListFromDb($group_id, $file_id) {
-		$_group_id = (int) $group_id;
-		$_file_id = (int) $file_id;
-		$dao = & $this->_getFRSFileDao();
-		
-		$dar = $dao->searchInfoByGroupFileID($_group_id, $_file_id);
+        $_group_id = (int) $group_id;
+        $_file_id = (int) $file_id;
+        $dao = & $this->_getFRSFileDao();
 
-		if ($dar->isError()) {
-			return;
-		}
+        $dar = $dao->searchInfoByGroupFileID($_group_id, $_file_id);
 
-		if (!$dar->valid()) {
-			return;
-		}	
-		
-		$file_info = array ();
-		while ($dar->valid()) {
-			$file_info[] = $dar->current();
-			$dar->next();
-		}
-		return $file_info;
+        if ($dar->isError()) {
+            return;
+        }
 
-	}
-	
-	function getFRSFileInfoListByReleaseFromDb($release_id) {
-		$_release_id = (int) $release_id;
-		$dao = & $this->_getFRSFileDao();
-		
-		$dar = $dao->searchInfoFileByReleaseID($_release_id);
+        if (!$dar->valid()) {
+            return;
+        }
 
-		if ($dar->isError()) {
-			return;
-		}
+        $file_info = array ();
+        while ($dar->valid()) {
+            $file_info[] = $dar->current();
+            $dar->next();
+        }
+        return $file_info;
 
-		if (!$dar->valid()) {
-			return;
-		}	
-		
-		$file_info = array ();
-		while ($dar->valid()) {
-			$file_info[] = $dar->current();
-			$dar->next();
-		}
-		return $file_info;
+    }
 
-	}
-    
+    function getFRSFileInfoListByReleaseFromDb($release_id) {
+        $_release_id = (int) $release_id;
+        $dao = & $this->_getFRSFileDao();
+
+        $dar = $dao->searchInfoFileByReleaseID($_release_id);
+
+        if ($dar->isError()) {
+            return;
+        }
+
+        if (!$dar->valid()) {
+            return;
+        }
+
+        $file_info = array ();
+        while ($dar->valid()) {
+            $file_info[] = $dar->current();
+            $dar->next();
+        }
+        return $file_info;
+
+    }
+
     function isFileNameExist($file_name, $group_id){
-    	$_id = (int) $group_id;
+        $_id = (int) $group_id;
         $dao =& $this->_getFRSFileDao();
         $dar = $dao->searchFileByName($file_name, $_id);
 
         if($dar->isError()){
             return;
         }
-        
+
         return $dar->valid();
     }
-    
+
     /**
      * Determine if there is already a file named $file_basename in the release $release_id for the project $group_id
      *
@@ -158,29 +158,29 @@ class FRSFileFactory extends Error {
         $file_name = $subdir.'/'.$file_basename;
         return $this->isFileNameExist($file_name, $group_id);
     }
-    
+
     var $dao;
-    
+
     function &_getFRSFileDao() {
         if (!$this->dao) {
             $this->dao =& new FRSFileDao(CodendiDataAccess::instance());
         }
         return $this->dao;
     }
-    
+
     function update($data_array) {
         $dao =& $this->_getFRSFileDao();
         if ($dao->updateFromArray($data_array)) {
             $file = $this->getFRSFileFromDb($data_array['file_id']);
             $this->_getEventManager()->processEvent('frs_update_file',
-                                                   array('group_id' => $file->getGroup()->getGroupId(),
+            array('group_id' => $file->getGroup()->getGroupId(),
                                                          'item_id'    => $data_array['file_id']));
             return true;
         }
         return false;
     }
-    
-    
+
+
     function create($data_array) {
         $dao =& $this->_getFRSFileDao();
         if ($id = $dao->createFromArray($data_array)) {
@@ -188,7 +188,7 @@ class FRSFileFactory extends Error {
             $um = UserManager::instance();
             $user = $um->getCurrentUser();
             $this->_getEventManager()->processEvent('frs_create_file',
-                                                    array('group_id' => $file->getGroup()->getGroupId(),
+            array('group_id' => $file->getGroup()->getGroupId(),
                                                           'item_id'    => $id));
             return $id;
         }
@@ -218,7 +218,7 @@ class FRSFileFactory extends Error {
 
         clearstatcache();
         $filePath = $GLOBALS['ftp_incoming_dir'] . '/' . $file->getFileName();
-            if (!file_exists($filePath)) {
+        if (!file_exists($filePath)) {
             throw new FRSFileInvalidNameException($file);
         }
 
@@ -272,7 +272,7 @@ class FRSFileFactory extends Error {
     }
 
     /**
-     * Returns the filename created by appending a timestamp to the names of the file present in 
+     * Returns the filename created by appending a timestamp to the names of the file present in
      * the incoming directory
      *
      * @param FRSFile $file the file we want to resolve its name
@@ -280,9 +280,11 @@ class FRSFileFactory extends Error {
      * @return String : the created filename
      */
     function getResolvedFileName($file) {
-        
+        $file_name = basename($file->getFileName());
+        $resolvedName = $file_name."_".$file->getPostDate();
+        return $resolvedName;
     }
-    
+
     /**
      * Force the upload directory creation, and move the file $file_name in the good directory
      *
@@ -327,7 +329,7 @@ class FRSFileFactory extends Error {
     function getUploadSubDirectory(FRSRelease $release) {
         return 'p' . $release->getPackageID() . '_r' . $release->getReleaseID();
     }
-    
+
     /**
      * Get a Release Factory
      *
@@ -337,14 +339,14 @@ class FRSFileFactory extends Error {
         $f = new FRSReleaseFactory();
         return $f;
     }
-    
+
     function _delete($file_id){
         $_id = (int) $file_id;
         $file = $this->getFRSFileFromDb($_id);
         $dao =& $this->_getFRSFileDao();
         if ($dao->delete($_id)) {
             $this->_getEventManager()->processEvent('frs_delete_file',
-                                                   array('group_id' => $file->getGroup()->getGroupId(),
+            array('group_id' => $file->getGroup()->getGroupId(),
                                                          'item_id'    => $_id));
             return true;
         }
@@ -388,9 +390,9 @@ class FRSFileFactory extends Error {
 
     /**
      * Centralize treatement of files physical deletion in FRS
-     * 
+     *
      * @param Integer $time Date from when the files must be erased
-     * 
+     *
      * @return Boolean
      */
     public function purgeDeletedFiles($time, $backend) {
@@ -403,7 +405,7 @@ class FRSFileFactory extends Error {
 
     /**
      * Move to staging all files marked as deleted but still in the release area
-     * 
+     *
      * @return Boolean
      */
     public function moveDeletedFilesToStagingArea() {
@@ -420,11 +422,11 @@ class FRSFileFactory extends Error {
 
     /**
      * Physically move one file from release area to staging
-     * 
+     *
      * The file is renamed during the move with its file id to avoid override
      * if someone upload and delete 2 times (or more) the same file in the same
      * release
-     * 
+     *
      * @param FRSFile $file
      *
      * @return Boolean
@@ -474,9 +476,9 @@ class FRSFileFactory extends Error {
 
     /**
      * Get the path in staging area of a file
-     * 
+     *
      * @param FRSFile $file
-     * 
+     *
      * @return String
      */
     public function getStagingPath($file) {
@@ -525,7 +527,7 @@ class FRSFileFactory extends Error {
 
     /**
      * Remove empty releases and project directories in staging area
-     * 
+     *
      * @return Boolean
      */
     public function cleanStaging() {
@@ -563,11 +565,11 @@ class FRSFileFactory extends Error {
 
     /**
      * List all files deleted but not already purged
-     * 
+     *
      * @param Integer $groupId
      * @param Integer $offset
      * @param Integer $limit
-     * 
+     *
      * @return Boolean
      */
     public function listPendingFiles($groupId, $offset, $limit) {
@@ -575,22 +577,22 @@ class FRSFileFactory extends Error {
         return $dao->searchFilesToPurge($_SERVER['REQUEST_TIME'], $groupId, $offset, $limit);
     }
 
-    /** 
+    /**
      * Returns true if user has permissions to add files
-     * 
+     *
      * NOTE : For the moment, only super admin, project admin (A) and file admin (R2) can add files
-     * 
+     *
      * @param int $group_id the project ID this file is in
      * @param int $user_id the ID of the user. If not given or false, take the current user
      * @return boolean true if the user has permission to add files, false otherwise
-     */ 
+     */
     function userCanAdd($group_id,$user_id=false) {
         $pm =& PermissionsManager::instance();
         $um =& UserManager::instance();
         if (! $user_id) {
             $user =& $um->getCurrentUser();
         } else {
-            $user =& $um->getUserById($user_id);    
+            $user =& $um->getUserById($user_id);
         }
         $ok = $user->isSuperUser() || user_ismember($group_id,'R2') || user_ismember($group_id,'A');
         return $ok;
@@ -628,9 +630,9 @@ class FRSFileFactory extends Error {
 
     /**
      * restore file by moving it from staging area to its old location
-     * 
-     * @param FRSFile $file 
-     * 
+     *
+     * @param FRSFile $file
+     *
      * @return Boolean
      */
     function restoreFile($file, $backend) {
@@ -644,7 +646,7 @@ class FRSFileFactory extends Error {
                 $dao = $this->_getFRSFileDao();
                 if ($dao->restoreFile($file->getFileID())) {
                     $this->_getEventManager()->processEvent('frs_restore_file',
-                                                           array('group_id' => $file->getGroup()->getGroupId(),
+                    array('group_id' => $file->getGroup()->getGroupId(),
                                                                  'item_id'    => $file->getFileID()));
                     return true;
                 }
@@ -656,7 +658,7 @@ class FRSFileFactory extends Error {
 
     /**
      * Restore files marked to be restored
-     * 
+     *
      * @return Boolean
      */
     public function restoreDeletedFiles($backend) {
@@ -673,28 +675,28 @@ class FRSFileFactory extends Error {
         }
         return false;
     }
-    
+
     /**
      * Mark the files that site admin wants to restore
-     * 
+     *
      * @param FRSFile $file
-     * 
+     *
      * @return Boolean
      */
     public function markFileToBeRestored($file) {
         $dao = $this->_getFRSFileDao();
         return $dao->markFileToBeRestored($file->getFileID());
     }
-    
+
     /**
      * Insert the computed md5sum value in case of offline checksum compute
-     * 
+     *
      * @param Integer $fileId
      * @param String $md5Computed
-     * 
+     *
      * @return Boolean
      */
-    
+
     public function updateComputedMd5sum($fileId, $md5Computed) {
         $dao = $this->_getFRSFileDao();
         return $dao->updateComputedMd5sum($fileId, $md5Computed);
