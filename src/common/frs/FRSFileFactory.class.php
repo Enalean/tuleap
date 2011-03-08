@@ -270,6 +270,18 @@ class FRSFileFactory extends Error {
         }
         return $uploaded_file_names;
     }
+
+    /**
+     * Returns the filename created by appending a timestamp to the names of the file present in 
+     * the incoming directory
+     *
+     * @param FRSFile $file the file we want to resolve its name
+     *
+     * @return String : the created filename
+     */
+    function getResolvedFileName($file) {
+        
+    }
     
     /**
      * Force the upload directory creation, and move the file $file_name in the good directory
