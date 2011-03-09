@@ -140,7 +140,7 @@ class FRSFileDao extends DataAccessObject {
      *
      * @return true or id(auto_increment) if there is no error
      */
-    function create($file_name=null, $release_id=null, $type_id=null,
+    function create($file_name=null, $filepath=null, $release_id=null, $type_id=null,
     				$processor_id=null, $release_time=null, 
                     $file_size=null, $reference_md5= null, $post_date=null, $status ='A') {
 
@@ -150,6 +150,11 @@ class FRSFileDao extends DataAccessObject {
         if($file_name !== null) {
             $arg[] = 'filename';
             $values[] = $this->da->quoteSmart($file_name);
+        }
+
+        if($filepath !== null) {
+            $arg[] = '$filepath';
+            $values[] = $this->da->quoteSmart($filepath);
         }
 
         if($release_id !== null) {
@@ -199,7 +204,7 @@ class FRSFileDao extends DataAccessObject {
     function createFromArray($data_array) {
         $arg    = array();
         $values = array();
-        $cols   = array('filename', 'release_id', 'type_id', 'processor_id', 'file_size', 'status', 'computed_md5', 'reference_md5', 'user_id');
+        $cols   = array('filename', 'filepath', 'release_id', 'type_id', 'processor_id', 'file_size', 'status', 'computed_md5', 'reference_md5', 'user_id');
         foreach ($data_array as $key => $value) {
             if (in_array($key, $cols)) {
                 $arg[]    = $key;
@@ -406,8 +411,8 @@ class FRSFileDao extends DataAccessObject {
      */
     function setFileInDeletedList($id) {
         // Store file in deleted table
-        $sql = 'INSERT INTO frs_file_deleted(file_id, filename, release_id, type_id, processor_id, release_time, file_size, post_date, status, computed_md5, reference_md5, user_id,delete_date)'.
-               ' SELECT file_id, filename, release_id, type_id, processor_id, release_time, file_size, post_date, status, computed_md5, reference_md5, user_id,'.$this->da->escapeInt($_SERVER['REQUEST_TIME']).
+        $sql = 'INSERT INTO frs_file_deleted(file_id, filename, filepath, release_id, type_id, processor_id, release_time, file_size, post_date, status, computed_md5, reference_md5, user_id,delete_date)'.
+               ' SELECT file_id, filename, filepath, release_id, type_id, processor_id, release_time, file_size, post_date, status, computed_md5, reference_md5, user_id,'.$this->da->escapeInt($_SERVER['REQUEST_TIME']).
                ' FROM frs_file'.
                ' WHERE file_id = '.$this->da->escapeInt($id);
         $this->update($sql);
