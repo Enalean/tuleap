@@ -12,6 +12,7 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <errno.h>
+#include <string.h>
 
 int legal_string (char* test_string) {
 // We have commented thios function because 
@@ -43,6 +44,20 @@ int legal_string (char* test_string) {
   return 1;
 } /* legal_string */
 
+int get_dirname(char *ch)
+{
+    char* s;
+    s=ch+strlen(ch)-1;
+    while (s && *s == '/') {
+        *s = '\0';
+        s=ch+strlen(ch)-1;
+    }
+    s = strrchr(ch, '/');
+    if (s && *s)
+        *s = '\0';
+    return(0);
+}
+
 int main (int argc, char** argv) {
 
   /* edit me */
@@ -53,6 +68,7 @@ int main (int argc, char** argv) {
   char* move_path = "/bin/mv";
   char* move_file = "mv";
   char* dest_file;
+  char* dirname;
   char* src_file;
 
   struct stat buf;
@@ -71,6 +87,9 @@ int main (int argc, char** argv) {
     dest_file = (char *) malloc(strlen(dest_dir) + strlen(argv[2]) + 1);
     strcpy(dest_file, dest_dir);
     strcat(dest_file, argv[2]);
+    dirname = (char *) malloc(strlen(dest_file) + 1);
+    strcpy(dirname, dest_file);
+    get_dirname(dirname);
 
     /* test for legal characters: [a-zA-Z0-9_-.]  */
     /* test for illegal combinations of legal characters: ".." */
@@ -84,7 +103,7 @@ int main (int argc, char** argv) {
       exit(1);
     } /* if */
 
-    if ((mkdir(dest_file, 0775) != 0) && errno != EEXIST) {
+    if ((mkdir(dirname, 0775) != 0) && errno != EEXIST) {
       fprintf(stderr, "FAILURE: destination directory could not be created\n");
       exit(1);
     } /* if */
@@ -103,6 +122,7 @@ int main (int argc, char** argv) {
 
   printf("OK\n");
   free(dest_file);
+  free(dirname);
   free(src_file);
   exit(0);
 } /* main */
