@@ -344,6 +344,7 @@ class FRSFileFactory extends Error {
         $fileName = $file->getFileName();
         $filePath = $file->getFilePath();
         if (!file_exists($GLOBALS['ftp_frs_dir_prefix'].'/'.$unixName . '/' . $upload_sub_dir.'/'.$filePath)) {
+            $fileName= preg_replace('` `', '\\ ', $fileName);
             $filePath = preg_replace('` `', '\\ ', $filePath);
             $ret_val   = null;
             $exec_res  = null;
