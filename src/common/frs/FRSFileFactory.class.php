@@ -145,26 +145,6 @@ class FRSFileFactory extends Error {
     }
 
     /**
-     * Determine if there is already a file named $file_name (with Active status)in the same package_release for the project $group_id
-     *
-     * @param string $file_name the file name (with dirname) we want to check
-     * @param int $group_id the ID of the project the file belongs to
-     *
-     * @return boolean true if a file named $file_basename already exists in the release $release_id, false otherwise
-     */
-    function isActiveFileNameExist($file_name, $group_id){
-        $_id = (int) $group_id;
-        $dao =& $this->_getFRSFileDao();
-        $dar = $dao->searchFileByName($file_name, $_id);
-        if ($dar && !$dar->isError()) {
-            if(0 != $dar->rowCount()){
-                return True;
-            }
-        }
-        return false;
-    }
-
-    /**
      * Determine if there is already a file named $file_basename in the release $release_id for the project $group_id
      *
      * @param string $file_basename the file name (base, without directory) we want to check

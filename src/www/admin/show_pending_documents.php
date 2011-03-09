@@ -179,7 +179,7 @@ function frs_file_restore_process($request, $group_id) {
         $fileFactory = new FRSFileFactory();
         $file        = $fileFactory->getFRSFileFromDb($fileId);
         $file_name   = $file->getFileName();
-        if(!$fileFactory->isActiveFileNameExist($file_name, $group_id)){
+        if(!$fileFactory->isFileNameExist($file_name, $group_id)){
             if ($fileFactory->markFileToBeRestored($file)) {
                 $GLOBALS['Response']->addFeedback('info', 'File marked to be restored');
             } else {
