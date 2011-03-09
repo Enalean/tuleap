@@ -18,6 +18,7 @@ my $src_dir = $conf{'ftp_incoming_dir'}   || '/var/lib/codendi/ftp/incoming/';
 my $dst_dir = $conf{'ftp_frs_dir_prefix'} || '/var/lib/codendi/ftp/codendi/';
 my $file    = '';
 my $group   = '';
+my $dst_file = '';
 
 # Ensure there is a trailing slash
 if ($src_dir !~ '/\/$/') {
@@ -37,15 +38,16 @@ if ($ARGV[0] =~ /^(.*)$/) {
 } else {
     die("First argument invalid\n");
 }
-if ($ARGV[1] =~ /^(.*)$/) {
+if ($ARGV[1] =~ /^(.*)\/(.*)$/) {
     $group = $1;
+    $dst_file = $2;
 } else {
     die("Second argument invalid\n");
 }
 
 my $src_file = $src_dir.$file;
 
-
+$dst_dir = $dst_dir.$group;
 if (! -d $dst_dir) {
     if (!mkdir($dst_dir, 0775)) {
         die("FAILURE: destination directory could not be created ($!)\n");
@@ -56,7 +58,7 @@ if (! -d $dst_dir) {
 chmod(0640, $src_file);
 
 
-my $dst_file  = $dst_dir.$group;
+$dst_file  = $dst_dir.$dst_file;
 # print "Rename $src_file $dst_file\n";
 
 if (!rename($src_file, $dst_file)) {
