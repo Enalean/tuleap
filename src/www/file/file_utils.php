@@ -1214,12 +1214,14 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
                         if (is_uploaded_file($file['tmp_name'])) {
                             $uploaddir = $GLOBALS['ftp_incoming_dir'];
                             $uploadfile = $uploaddir . "/" . basename($filename);
+                            $filepath = $frsff->getResolvedFileName($filename);
                             if (!file_exists($uploaddir) || !is_writable($uploaddir) || !move_uploaded_file($file['tmp_name'], $uploadfile)) {
                                 $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('file_admin_editreleases', 'not_add_file') . ": " . basename($filename));
                             } else {
                                 $newFile = new FRSFile();
                                 $newFile->setRelease($res1);
                                 $newFile->setFileName($filename);
+                                $newFile->setFilePath($filepath);
                                 $newFile->setProcessorID($file['processor']);
                                 $newFile->setTypeID($file['type']);
                                 $newFile->setReferenceMd5($file['reference_md5']);
@@ -1244,6 +1246,7 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
                         $newFile = new FRSFile();
                         $newFile->setRelease($res1);
                         $newFile->setFileName($filename);
+                        $newFile->setFilePath($frsff->getResolvedFileName($filename));
                         $newFile->setProcessorID($file['processor']);
                         $newFile->setTypeID($file['type']);
                         $newFile->setReferenceMd5($file['reference_md5']);

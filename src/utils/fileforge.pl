@@ -40,13 +40,11 @@ if ($ARGV[0] =~ /^(.*)$/) {
 if ($ARGV[1] =~ /^(.*)$/) {
     $group = $1;
 } else {
-    die("First argument invalid\n");
+    die("Second argument invalid\n");
 }
 
 my $src_file = $src_dir.$file;
-$dst_dir  = $dst_dir.$group;
 
-#print "Move $src_file $dst_dir\n";
 
 if (! -d $dst_dir) {
     if (!mkdir($dst_dir, 0775)) {
@@ -57,7 +55,11 @@ if (! -d $dst_dir) {
 # add 'group' read and remove 'other' perms
 chmod(0640, $src_file);
 
-if (!move($src_file, $dst_dir)) {
+
+my $dst_file  = $dst_dir.$group;
+# print "Rename $src_file $dst_file\n";
+
+if (!rename($src_file, $dst_file)) {
     die("FAILURE: cannot move file ($!)\n");
 }
 
