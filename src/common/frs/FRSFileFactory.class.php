@@ -179,6 +179,24 @@ class FRSFileFactory extends Error {
         return $this->isFileNameExist($file_name, $group_id);
     }
 
+    /**
+     * Determine if there is already a file named $basename in the release and marked to be restored
+     * but not yet moved to its original path
+     * 
+     * @param String $basename
+     * @param Integer $release_id
+     * @param Integer $group_id
+     * 
+     * @return Boolean
+     */
+    function isSameFileMarkedToBeRestored($basename, $release_id, $group_id) {
+        $dao = $this->_getFRSFileDao();
+        $release = $this->_getFRSReleaseFactory()->getFRSReleaseFromDb($release_id);
+        $subdir = $this->getUploadSubDirectory($release);
+        $filename = $subdir.'/'.$basename;
+        return $dao->isMarkedToBeRestored($filename);
+    }
+
     var $dao;
 
     function &_getFRSFileDao() {
@@ -234,6 +252,10 @@ class FRSFileFactory extends Error {
 
         if ($this->isFileBaseNameExists($file->getFileName(), $rel->getReleaseID(), $rel->getGroupID())) {
             throw new FRSFileExistsException($file);
+        }
+        
+        if ($this->isSameFileMarkedToBeRestored($file->getFileName(), $rel->getReleaseID(), $rel->getGroupID())) {
+            throw new FRSFileToBeRestoredException($file);
         }
 
         clearstatcache();

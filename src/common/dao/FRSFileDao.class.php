@@ -461,7 +461,24 @@ class FRSFileDao extends DataAccessObject {
                ' AND purge_date IS NULL';
         return $this->retrieve($sql);
     }
-    
+
+    /**
+     * Returns if the file is already marked to be restored or not
+     * 
+     * @param String $filename
+     * 
+     * @return boolean
+     */
+    function isMarkedToBeRestored($filename) {
+        $sql = 'SELECT NULL'.
+               ' FROM frs_file_deleted file'.
+               ' WHERE delete_date IS NULL '.
+               ' AND purge_date IS NULL '.
+               ' AND filename ='.$this->da->quoteSmart($filename);
+        $res = $this->retrieve($sql);
+        return ($res && !$res->isError() && $res->rowCount() > 0);
+    }
+
     /**
      * Mark file to be restored
      * 

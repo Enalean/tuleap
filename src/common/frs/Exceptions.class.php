@@ -61,6 +61,18 @@ class FRSFileExistsException extends FRSFileException {
     }
 }
 
+class FRSFileToBeRestoredException extends FRSFileException {
+    /**
+     * Constructor
+     *
+     * @param FRSFile $file The file that triggered the exception
+     * @param Integer $code Numeric code
+     */
+    public function __construct($file, $code = 0) {
+        parent::__construct($GLOBALS['Language']->getText('file_admin_editreleases', 'filename_to_be_restored').': '.$file->getFileName(), $code);
+    }
+}
+
 class FRSFileForgeException extends FRSFileException {
     /**
      * Constructor
