@@ -38,7 +38,7 @@ if ($ARGV[0] =~ /^(.*)$/) {
 } else {
     die("First argument invalid\n");
 }
-if ($ARGV[1] =~ /^(.*)\/(.*)$/) {
+if ($ARGV[1] =~ /^(.*)(\/(.*))$/) {
     $group = $1;
     $dst_file = $2;
 } else {
