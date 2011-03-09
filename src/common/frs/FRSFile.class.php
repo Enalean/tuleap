@@ -129,7 +129,11 @@ class FRSFile extends Error {
     }
 
     function getFilePath() {
-        return $this->filepath;
+        if ($this->filepath == null) {
+            return $this->filename;
+        } else {
+            return $this->filepath;
+        }
     }
 
     function setFilePath($filepath) {
