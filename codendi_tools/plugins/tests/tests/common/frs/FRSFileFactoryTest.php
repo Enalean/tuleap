@@ -26,7 +26,7 @@ Mock::generatePartial('FRSFileFactory', 'FRSFileFactoryTestMoveToStaging', array
 Mock::generatePartial('FRSFileFactory', 'FRSFileFactoryTestPurgeDeletedFiles', array('purgeFiles', 'moveDeletedFilesToStagingArea', 'cleanStaging', 'restoreDeletedFiles'));
 Mock::generatePartial('FRSFileFactory', 'FRSFileFactoryTestRestore', array('_getFRSFileDao', '_getUserManager', '_getEventManager'));
 Mock::generatePartial('FRSFileFactory', 'FRSFileFactoryTestRestoreFiles', array('_getFRSFileDao', 'restoreFile'));
-Mock::generatePartial('FRSFileFactory', 'FRSFileFactoryTestCreateFiles', array('create', 'moveFileForge','isFileBaseNameExists','compareMd5Checksums'));
+Mock::generatePartial('FRSFileFactory', 'FRSFileFactoryTestCreateFiles', array('create', 'moveFileForge','isFileBaseNameExists', 'isSameFileMarkedToBeRestored', 'compareMd5Checksums'));
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  * 
@@ -667,6 +667,7 @@ class FRSFileFactoryTest extends UnitTestCase {
 
         $ff = new FRSFileFactoryTestCreateFiles();
         $ff->setReturnValue('isFileBaseNameExists', False);
+        $ff->setReturnValue('isSameFileMarkedToBeRestored', False);
         $ff->setReturnValue('moveFileForge', True);
         $ff->setReturnValue('create', False);
 
