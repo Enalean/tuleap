@@ -178,10 +178,15 @@ function frs_file_restore_process($request, $group_id) {
     if ($fileId > 0) {
         $fileFactory = new FRSFileFactory();
         $file        = $fileFactory->getFRSFileFromDb($fileId);
-        if ($fileFactory->markFileToBeRestored($file)) {
-            $GLOBALS['Response']->addFeedback('info', 'File marked to be restored');
-        } else {
-            $GLOBALS['Response']->addFeedback('error', 'File not restored');
+        $file_name   = $file->getFileName();
+        if(!$fileFactory->isActiveFileNameExist($file_name, $group_id)){
+            if ($fileFactory->markFileToBeRestored($file)) {
+                $GLOBALS['Response']->addFeedback('info', 'File marked to be restored');
+            } else {
+                $GLOBALS['Response']->addFeedback('error', 'File not restored');
+            }
+        }else {
+            $GLOBALS['Response']->addFeedback('error', 'There is already a file with this filename having an active status');
         }
     } else {
         $GLOBALS['Response']->addFeedback('error', 'Bad file id');
