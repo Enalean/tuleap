@@ -684,6 +684,44 @@ class FRSFileFactoryTest extends UnitTestCase {
         rmdir($GLOBALS['ftp_frs_dir_prefix'].'/prj/p123_r456');
     }
 
+    function testCreateFileAlreadyMarkedToBeRestoredNotYetMoved() {
+        // Create toto.txt in the release directory
+        touch($GLOBALS['ftp_incoming_dir'].'/toto.txt');
+        mkdir($GLOBALS['ftp_frs_dir_prefix'].'/prj/p123_r456');
+
+        $p = new MockProject($this);
+        $p->setReturnValue('getUnixName', 'prj');
+
+        $r = new FRSRelease();
+        $r->setReleaseID(456);
+        $r->setPackageID(123);
+        $r->setGroupID(111);
+        $r->setProject($p);
+
+
+        $f = new FRSFile();
+        $f->setFileName('toto.txt');
+        $f->setFilePath('toto.txt_1299584210');
+        $f->setRelease($r);
+        $f->setFileLocation($GLOBALS['ftp_frs_dir_prefix'].'/prj/p123_r456');
+
+
+        $ff = new FRSFileFactoryTestCreateFiles();
+        $ff->setReturnValue('isFileBaseNameExists', False);
+        $ff->setReturnValue('isSameFileMarkedToBeRestored', True);
+
+        try {
+            $ff->createFile($f, ~FRSFileFactory::COMPUTE_MD5);
+        }
+        catch (Exception $e) {
+            $this->assertIsA($e, 'FRSFileToBeRestoredException');
+        }
+
+        unlink($GLOBALS['ftp_incoming_dir'].'/toto.txt');
+        rmdir($GLOBALS['ftp_frs_dir_prefix'].'/prj/p123_r456');
+    }
+
+
     function testCreateFileNotYetIncoming(){
         $p = new MockProject();
 
