@@ -128,6 +128,13 @@ class FRSFile extends Error {
         $this->filename = $filename;
     }
 
+    /**
+     * Obtain the name of the file as stored in filesystem
+     * Old files are stored in the filesystem as uploaded by the user
+     * In that case filepath == NULL then the returned vaue is filename
+     *
+     * @return String
+     */
     function getFilePath() {
         if ($this->filepath == null) {
             return $this->filename;
