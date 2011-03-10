@@ -1,7 +1,7 @@
 #!/usr/bin/perl -UT
 
 #
-# fileforge filename-1.0.gz unix_group_name/p1245_r765
+# fileforge filename-1.0.gz unix_group_name/p1245_r765/filename-1.0.gz_1299584197
 #
 
 # Set default path (required by taint mode)

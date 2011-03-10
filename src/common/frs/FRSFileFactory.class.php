@@ -253,7 +253,6 @@ class FRSFileFactory extends Error {
 
         $file->setFileSize(PHP_BigFile::getSize($filePath));
         $file->setStatus('A');
-        $file->setFilePath($this->getResolvedFileName($file->getFileName()));
 
         if($this->moveFileForge($file)){
             $fileId=$this->create($file->toArray());
@@ -323,7 +322,7 @@ class FRSFileFactory extends Error {
         $unixName = $release->getProject()->getUnixName(false);
         $upload_sub_dir = $this->getUploadSubDirectory($release);
         $fileName = $file->getFileName();
-        $filePath = $file->getFilePath();
+        $filePath = $this->getResolvedFileName($file->getFileName());
         if (!file_exists($GLOBALS['ftp_frs_dir_prefix'].'/'.$unixName . '/' . $upload_sub_dir.'/'.$filePath)) {
             $fileName= preg_replace('` `', '\\ ', $fileName);
             $filePath = preg_replace('` `', '\\ ', $filePath);
@@ -335,7 +334,7 @@ class FRSFileFactory extends Error {
             // So "convert" the unix "success" value to the php one (basically 0 => true).
             if ($ret_val == 0) {
                 $file->setFileName($upload_sub_dir.'/'.$file->getFileName());
-                $file->setFilePath($upload_sub_dir.'/'.$file->getFilePath());
+                $file->setFilePath($upload_sub_dir.'/'.$filePath);
                 return true;
             }
         }
