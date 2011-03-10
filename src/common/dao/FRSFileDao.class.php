@@ -454,11 +454,24 @@ class FRSFileDao extends DataAccessObject {
      * 
      * @return DataAccessResult
      */
-    function searchFilesToRestore() {
+    function searchFilesToRestore($groupId=null) {
+        $fields = '';
+        $from   = '';
+        $where  = '';
+        if($groupId !== null) {
+            $fields .= ', rel.name as release_name, rel.status_id as release_status, rel.release_id';
+            $fields .= ', pkg.name as package_name, pkg.status_id as package_status, pkg.package_id';
+            $from   .= ' JOIN frs_release rel USING (release_id)'.
+                       ' JOIN frs_package pkg USING (package_id)';
+            $where  .= ' AND pkg.group_id = '.$this->da->escapeInt($groupId);
+        }
         $sql = 'SELECT file.* '.
+               $fields.
                ' FROM frs_file_deleted file'.
+               $from.
                ' WHERE delete_date IS NULL '.
-               ' AND purge_date IS NULL';
+               ' AND purge_date IS NULL'.
+               $where;
         return $this->retrieve($sql);
     }
 
