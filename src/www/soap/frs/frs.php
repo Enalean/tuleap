@@ -1115,7 +1115,6 @@ function addUploadedFile($sessionKey,$group_id,$package_id,$release_id,$filename
             $file = new FRSFile();
             $file->setRelease($release);
             $file->setFileName(basename($filename));
-            $file->setFilePath($file_fact->getResolvedFileName($filename));
             $file->setTypeID($type_id);
             $file->setProcessorID($processor_id);
             $file->setReferenceMd5($reference_md5);

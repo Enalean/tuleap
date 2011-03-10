@@ -253,6 +253,7 @@ class FRSFileFactory extends Error {
 
         $file->setFileSize(PHP_BigFile::getSize($filePath));
         $file->setStatus('A');
+        $file->setFilePath($this->getResolvedFileName($file->getFileName()));
 
         if($this->moveFileForge($file)){
             $fileId=$this->create($file->toArray());
