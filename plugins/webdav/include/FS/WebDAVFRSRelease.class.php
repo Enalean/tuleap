@@ -437,11 +437,11 @@ class WebDAVFRSRelease extends Sabre_DAV_Directory {
             $newFile = new FRSFile();
             $newFile->setRelease($release);
             $newFile->setFileName($name);
-            $frsff = $utils->getFileFactory();
             $newFile->setProcessorID(100);
             $newFile->setTypeID(100);
             $newFile->setUserId($this->getUser()->getId());
             try {
+                $frsff = $utils->getFileFactory();
                 $frsff->createFile($newFile);
                 $utils->getReleaseFactory()->emailNotification($release);
             } catch (Exception $e) {
