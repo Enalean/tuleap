@@ -610,6 +610,10 @@ class FRSFileFactoryTest extends UnitTestCase {
         }
     }
 
+    /**
+     * We should not be able to create a file with the same name, 
+     * if an acive one exists.
+     */
     function testCreateFileAlreadyExistingAndActive() {
         // Create toto.txt in the release directory
         mkdir($GLOBALS['ftp_frs_dir_prefix'].'/prj/p123_r456');
@@ -641,12 +645,16 @@ class FRSFileFactoryTest extends UnitTestCase {
         rmdir($GLOBALS['ftp_frs_dir_prefix'].'/prj/p123_r456');
     }
 
+    /**
+     * We should be able to create a file with the same name, 
+     * even if the active one has been deleted but not yet moved to staging area.
+     */
     function testCreateFileAlreadyExistingAndMarkedToBeDeletedNotYetMoved() {
         // Create toto.txt in the release directory
         touch($GLOBALS['ftp_incoming_dir'].'/toto.txt');
         mkdir($GLOBALS['ftp_frs_dir_prefix'].'/prj/p123_r456');
+        // toto.txt_1299584187 is the file having been deleted but not yet moved
         touch($GLOBALS['ftp_frs_dir_prefix'].'/prj/p123_r456/toto.txt_1299584187');
-        touch($GLOBALS['ftp_frs_dir_prefix'].'/prj/p123_r456/toto.txt_1299584210');
 
         $p = new MockProject($this);
         $p->setReturnValue('getUnixName', 'prj');
@@ -662,28 +670,32 @@ class FRSFileFactoryTest extends UnitTestCase {
         $f->setFileName('toto.txt');
         $f->setFilePath('toto.txt_1299584210');
         $f->setRelease($r);
+        $f->setFileID(15225);
         $f->setFileLocation($GLOBALS['ftp_frs_dir_prefix'].'/prj/p123_r456');
 
 
         $ff = new FRSFileFactoryTestCreateFiles();
         $ff->setReturnValue('isFileBaseNameExists', False);
         $ff->setReturnValue('isSameFileMarkedToBeRestored', False);
-        $ff->setReturnValue('moveFileForge', True);
-        $ff->setReturnValue('create', False);
 
-        try {
-            $ff->createFile($f, ~FRSFileFactory::COMPUTE_MD5);
-        }
-        catch (Exception $e) {
-            $this->assertIsA($e, 'FRSFileDbException');
-        }
-        
+        //moveFielForge will copy the new file to its destination
+        $ff->setReturnValue('moveFileForge', True);
+        touch($GLOBALS['ftp_frs_dir_prefix'].'/prj/p123_r456/toto.txt_1299584210');
+
+        $ff->setReturnValue('create', 15225);
+        $this->assertEqual($ff->createFile($f, ~FRSFileFactory::COMPUTE_MD5), $f);
+
         unlink($GLOBALS['ftp_incoming_dir'].'/toto.txt');
         unlink($GLOBALS['ftp_frs_dir_prefix'].'/prj/p123_r456/toto.txt_1299584210');
         unlink($GLOBALS['ftp_frs_dir_prefix'].'/prj/p123_r456/toto.txt_1299584187');
         rmdir($GLOBALS['ftp_frs_dir_prefix'].'/prj/p123_r456');
     }
 
+    /**
+     * We should not be able to create a file with the same name, 
+     * even if the restored one has not yet been moved to the corresponding  pi_rj.
+     */
+    
     function testCreateFileAlreadyMarkedToBeRestoredNotYetMoved() {
         // Create toto.txt in the release directory
         touch($GLOBALS['ftp_incoming_dir'].'/toto.txt');
