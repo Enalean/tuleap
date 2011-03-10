@@ -36,7 +36,6 @@ CP='/bin/cp'
 LN='/bin/ln'
 LS='/bin/ls'
 RM='/bin/rm'
-TAR='/bin/tar'
 MKDIR='/bin/mkdir'
 RPM='/bin/rpm'
 CHOWN='/bin/chown'
@@ -46,7 +45,6 @@ FIND='/usr/bin/find'
 MYSQL='/usr/bin/mysql'
 TOUCH='/bin/touch'
 CAT='/bin/cat'
-MAKE='/usr/bin/make'
 TAIL='/usr/bin/tail'
 GREP='/bin/grep'
 CHKCONFIG='/sbin/chkconfig'
@@ -117,9 +115,23 @@ substitute() {
   $PERL -pi -e "s/$2/$replacement/g" $1
 }
 
+generate_passwd() {
+    $CAT /dev/urandom | tr -dc "a-zA-Z0-9" | fold -w 9 | head -1
+}
+
 ##############################################
 # Codendi installation
 ##############################################
+
+auto_passwd=""
+configure_bind=""
+for arg in $@; do
+    case "$arg" in
+        --auto-passwd) auto_passwd="true";;
+        --skip-bind-config) configure_bind="false";;
+    esac
+done
+
 
 ##############################################
 # Check that all command line tools we need are available
@@ -177,26 +189,6 @@ if [ -d "$INSTALL_DIR/plugins/IM" ]; then
     enable_plugin_im="true"
 fi
 
-
-#####
-# Codendi RPMS
-#
-# Those rpms requires codendiadm user so cannot be installed before codendi
-# package as dependencies
-#
-# The right solution would be to add codendi as a dependency of those packages
-#
-
-# -> ViewVC
-# Need codendiadm user & group
-missing_rpms="$missing_rpms viewvc-1.0.7-1.codendi"
-
-if [ ! -z "$missing_rpms" ]; then
-    $YUM install $missing_rpms
-fi
-echo "All requested RedHat RPMS installed... good!"
-
-
 echo
 echo "Configuration questions"
 echo
@@ -207,11 +199,36 @@ read -p "Your Company short name: " sys_org_name
 read -p "Your Company long name: " sys_long_org_name
 read -p "Codendi Server fully qualified machine name: " sys_fullname
 read -p "Codendi Server IP address: " sys_ip_address
-read -p "LDAP server name: " sys_ldap_server
-read -p "Activate user shell accounts? [y|n]:" active_shell
-read -p "Generate a self-signed SSL certificate to enable HTTPS support? [y|n]:" create_ssl_certificate
 read -p "Disable sub-domain management (no DNS delegation)? [y|n]:" disable_subdomains
 
+if [ "$disable_subdomains" != "y" ]; then
+    if [ "$configure_bind" != "false" ]; then
+        configure_bind="true"
+    fi
+elif
+    configure_bind="false"
+fi
+
+
+
+if [ "$auto_passwd" = "true" ]; then
+    # Mysql Root password (what if remote DB ?)
+    rt_passwd=$(generate_passwd)
+
+    # For both DB and system
+    codendiadm_passwd=$(generate_passwd)
+
+    # Mailman (only if installed)
+    mm_passwd=$(generate_passwd)
+
+    # Openfire (only if installed)
+    openfire_passwd=$(generate_passwd)
+
+    # Only for ftp/ssh/cvs
+    dbauth_passwd=$(generate_passwd)
+
+    # Ask for site admin ?
+else
 # Ask for user passwords
 rt_passwd="a"; rt_passwd2="b";
 while [ "$rt_passwd" != "$rt_passwd2" ]; do
@@ -258,13 +275,18 @@ while [ "$dbauth_passwd" != "$dbauth_passwd2" ]; do
     echo
 done
 
-py_cmd="import crypt; print crypt.crypt(\"$codendiadm_passwd\",\"\$1\$h67e4niB\$\")"
-codendi_encpasswd=`python -c "$py_cmd"`
-py_cmd="import crypt; print crypt.crypt(\"$mm_passwd\",\"\$1\$eniB4h67\$\")"
-mm_encpasswd=`python -c "$py_cmd"`
+fi
+
+# Save in /root/.codendi_passwd
+#echo $rt_passwd
+#echo $codendiadm_passwd
+#echo $mm_passwd
+#echo $openfire_passwd
+#echo $dbauth_passwd
+
 
 # Update codendi user password
-$USERMOD -p "$codendi_encpasswd" codendiadm
+echo "$codendiadm_passwd" | passwd --stdin codendiadm
 
 # Build file structure
 
@@ -419,7 +441,7 @@ echo "***************************************"
 echo "Installing configuration files..."
 #echo " You should overwrite existing files"
 make_backup /etc/httpd/conf/httpd.conf
-for f in /etc/httpd/conf/httpd.conf /var/named/chroot/var/named/codendi.zone \
+for f in /etc/httpd/conf/httpd.conf \
 /etc/httpd/conf/ssl.conf \
 /etc/httpd/conf.d/php.conf /etc/httpd/conf.d/subversion.conf /etc/httpd/conf.d/auth_mysql.conf \
 /etc/libnss-mysql.cfg  /etc/libnss-mysql-root.cfg \
@@ -442,21 +464,51 @@ for f in /etc/httpd/conf/httpd.conf /var/named/chroot/var/named/codendi.zone \
     $CHMOD 640 $f
 done
 
-$CHOWN root:named /var/named/chroot/var/named/codendi.zone
-#$LN -s /var/named/chroot/etc/named.conf /etc
-if [ -f "/var/named/chroot/etc/named.conf" ]; then
-   $CHGRP named /var/named/chroot/etc/named.conf
-fi
+###
+#
+# Bind configuration
 
-if [ $SELINUX_ENABLED ]; then
-    $CHCON -h system_u:object_r:named_zone_t /var/named/chroot/var/named/codendi.zone
-    if [ -f "/var/named/chroot/etc/named.conf" ]; then
-        $CHCON -h system_u:object_r:named_conf_t /var/named/chroot/etc/named.conf
+if [ "$disable_subdomains" != "y" ]; then
+    if [ -f /var/named/chroot/var/named/codendi.zone ]; then
+        $CP -af /var/named/chroot/var/named/codendi.zone /var/named/chroot/var/named/codendi.zone.orig
     fi
+    $CP -f $INSTALL_DIR/src/etc/codendi.zone /var/named/chroot/var/named/codendi.zone
+
+    $CHOWN root:named /var/named/chroot/var/named/codendi.zone
+    if [ -f "/var/named/chroot/etc/named.conf" ]; then
+        $CHGRP named /var/named/chroot/etc/named.conf
+    fi
+
+    if [ $SELINUX_ENABLED ]; then
+        $CHCON -h system_u:object_r:named_zone_t /var/named/chroot/var/named/codendi.zone
+        if [ -f "/var/named/chroot/etc/named.conf" ]; then
+            $CHCON -h system_u:object_r:named_conf_t /var/named/chroot/etc/named.conf
+        fi
+    fi
+
+  # replace string patterns in codendi.zone
+  sys_shortname=`echo $sys_fullname | $PERL -pe 's/\.(.*)//'`
+  dns_serial=`date +%Y%m%d`01
+  substitute '/var/named/chroot/var/named/codendi.zone' '%sys_default_domain%' "$sys_default_domain" 
+  substitute '/var/named/chroot/var/named/codendi.zone' '%sys_fullname%' "$sys_fullname"
+  substitute '/var/named/chroot/var/named/codendi.zone' '%sys_ip_address%' "$sys_ip_address"
+  substitute '/var/named/chroot/var/named/codendi.zone' '%sys_shortname%' "$sys_shortname"
+  substitute '/var/named/chroot/var/named/codendi.zone' '%dns_serial%' "$dns_serial"
+
+  todo "Create the DNS configuration files as explained in the Codendi Installation Guide:"
+  todo "    update /var/named/chroot/var/named/codendi.zone - replace all words starting with %%."
+  todo "    make sure the file is readable by 'other':"
+  todo "      > chmod o+r /var/named/chroot/var/named/codendi.zone"
+  todo "    edit /etc/named.conf to create the new zone."
+
+
+  $CHKCONFIG named on
 fi
 
-
+###
+#
 # Update nsswitch.conf to use libnss-mysql
+
 if [ -f "/etc/nsswitch.conf" ]; then
     # passwd
     $GREP ^passwd  /etc/nsswitch.conf | $GREP -q mysql
@@ -482,7 +534,6 @@ fi
 
 # replace string patterns in local.inc
 substitute '/etc/codendi/conf/local.inc' '%sys_default_domain%' "$sys_default_domain" 
-substitute '/etc/codendi/conf/local.inc' '%sys_ldap_server%' "$sys_ldap_server" 
 substitute '/etc/codendi/conf/local.inc' '%sys_org_name%' "$sys_org_name" 
 substitute '/etc/codendi/conf/local.inc' '%sys_long_org_name%' "$sys_long_org_name" 
 substitute '/etc/codendi/conf/local.inc' '%sys_fullname%' "$sys_fullname" 
@@ -510,17 +561,6 @@ $CHMOD 600 /etc/libnss-mysql-root.cfg
 
 # replace string patterns in munin.conf (for MySQL authentication)
 substitute '/etc/httpd/conf.d/munin.conf' '%sys_dbauth_passwd%' "$dbauth_passwd" 
-
-if [ "$disable_subdomains" != "y" ]; then
-  # replace string patterns in codendi.zone
-  sys_shortname=`echo $sys_fullname | $PERL -pe 's/\.(.*)//'`
-  dns_serial=`date +%Y%m%d`01
-  substitute '/var/named/chroot/var/named/codendi.zone' '%sys_default_domain%' "$sys_default_domain" 
-  substitute '/var/named/chroot/var/named/codendi.zone' '%sys_fullname%' "$sys_fullname"
-  substitute '/var/named/chroot/var/named/codendi.zone' '%sys_ip_address%' "$sys_ip_address"
-  substitute '/var/named/chroot/var/named/codendi.zone' '%sys_shortname%' "$sys_shortname"
-  substitute '/var/named/chroot/var/named/codendi.zone' '%dns_serial%' "$dns_serial"
-fi
 
 # Make sure SELinux contexts are valid
 if [ $SELINUX_ENABLED ]; then
@@ -787,25 +827,6 @@ todo "Customize /etc/codendi/site-content/en_US/others/default_page.php (project
 todo "Customize site-content information for your site."
 todo "  For instance: contact/contact.txt cvs/intro.txt"
 todo "  svn/intro.txt include/new_project_email.txt, etc."
-##############################################
-# Shell Access configuration
-#
-
-if [ "$active_shell" = "n" ]; then
-    echo "Shell access configuration defaulted to 'No shell account'..."
-    $MYSQL -u codendiadm codendi --password=$codendiadm_passwd -e "ALTER TABLE user ALTER COLUMN shell SET DEFAULT '/sbin/nologin'"
-fi
-
-##############################################
-# DNS Configuration
-#
-if [ "$disable_subdomains" != "y" ]; then
-  todo "Create the DNS configuration files as explained in the Codendi Installation Guide:"
-  todo "    update /var/named/chroot/var/named/codendi.zone - replace all words starting with %%."
-  todo "    make sure the file is readable by 'other':"
-  todo "      > chmod o+r /var/named/chroot/var/named/codendi.zone"
-  todo "    edit /etc/named.conf to create the new zone."
-fi
 
 ##############################################
 # Crontab configuration
@@ -818,10 +839,10 @@ if [ $? -ne 0 ]; then
     $CAT <<'EOF' >>/tmp/cronfile
 #
 # Codendi: daily incremental backup of subversion repositories
-45 23 * * 1-6 /usr/lib/codendi/bin/backup_subversion.sh -i
+#45 23 * * 1-6 /usr/lib/codendi/bin/backup_subversion.sh -i
 #
 # Codendi: weekly full backup of subversion repositories (0:15 on Sunday)
-15 0 * * Sun /usr/lib/codendi/bin/backup_subversion.sh -noarchives
+#15 0 * * Sun /usr/lib/codendi/bin/backup_subversion.sh -noarchives
 #
 # Codendi: weekly backup preparation (mysql shutdown, file dump and restart)
 45 0 * * Sun /usr/lib/codendi/bin/backup_job
@@ -984,9 +1005,6 @@ EOF
 ##############################################
 # Make sure all major services are on
 #
-if [ "$disable_subdomains" != "y" ]; then
-  $CHKCONFIG named on
-fi
 $CHKCONFIG sshd on
 $CHKCONFIG httpd on
 $CHKCONFIG mysqld on
