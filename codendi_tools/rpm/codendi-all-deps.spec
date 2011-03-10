@@ -41,8 +41,8 @@ Requires: zip, unzip
 # CVS
 Requires: xinetd, rcs, cvs = 1.11.22-5.codendi
 # SVN
-Conflicts: cadaver
-Requires: subversion, subversion-tools, mod_dav_svn, subversion-perl, subversion-python
+#Conflicts: cadaver
+#Requires: subversion, subversion-tools, mod_dav_svn, subversion-perl, subversion-python
 # libnss-mysql (system authentication based on MySQL)
 Requires: libnss-mysql, mod_auth_mysql, nss, nscd
 # cvsgraph

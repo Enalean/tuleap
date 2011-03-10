@@ -61,6 +61,19 @@ Provides: codendi-core-mailman = %{version}
 %description core-mailman
 Manage dependencies for Codendi mailman integration
 
+%package core-subversion
+Summary: Subversion component for codendi
+Group: Development/Tools
+Version: @@CORE_SUBVERSION_VERSION@@
+Release: 1%{?dist}
+Requires: %{name} >= %{version}
+Conflicts: cadaver
+Requires: viewvc = 1.0.7-2.codendi
+Requires: subversion, subversion-tools, mod_dav_svn, subversion-perl, subversion-python
+Provides: codendi-core-subversion = %{version}
+%description core-subversion
+Manage dependencies for Codendi Subversion integration
+
 #
 ## Plugins
 #
@@ -71,7 +84,7 @@ Group: Development/Tools
 Version: @@PLUGIN_FORUMML_VERSION@@
 Release: 1%{?dist}
 Requires: %{name} >= %{version}, php, php-pear-Mail-mimeDecode php-pear-Mail-Mime php-pear-Mail-Mbox php-pear-Mail
-#Requires: mailman-2.1.9-5.codendi
+Requires: codendi-core-mailman
 Provides: codendi-plugin-forumml = %{version}
 %description plugin-forumml
 ForumML brings to Codendi a very nice mail archive viewer and the possibility
@@ -580,6 +593,10 @@ fi
 %files core-mailman
 %defattr(-,%{APP_USER},%{APP_USER},-)
 %{APP_DIR}/src/CORE_MAILMAN_VERSION
+
+%files core-subversion
+%defattr(-,%{APP_USER},%{APP_USER},-)
+%{APP_DIR}/src/CORE_SUBVERSION_VERSION
 
 #
 # Plugins
