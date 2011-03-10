@@ -602,6 +602,18 @@ class FRSFileFactory extends Error {
     }
 
     /**
+     * List all deleted files marked to be restored
+     *
+     * @param Integer $groupId
+     *
+     * @return Boolean
+     */
+    public function listToBeRestoredFiles($groupId) {
+        $dao = $this->_getFRSFileDao();
+        return $dao->searchFilesToRestore($groupId);
+    }
+
+    /**
      * Returns true if user has permissions to add files
      *
      * NOTE : For the moment, only super admin, project admin (A) and file admin (R2) can add files

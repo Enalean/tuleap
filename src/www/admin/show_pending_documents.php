@@ -161,6 +161,20 @@ function frs_file_restore_view($group_id, $idArray, $nomArray, $htmlArray) {
                 $html .= '</tr>';
             }
         }
+
+        $ToBeRestored_files       = $fileFactory->listToBeRestoredFiles($group_id);
+                foreach ($ToBeRestored_files as $file) {
+                        $html .= '<tr class="boxitemgrey">';
+                $html .= '<td>'.$file['filename'].'</td>';
+                $url   = '/file/showfiles.php?group_id='.$group_id.'#p_'.$file['package_id'].'r_'.$file['release_id'];
+                $html .= '<td><a href="'.$url.'">'.$file['release_name'].'</a></td>';
+                $url   = '/file/showfiles.php?group_id='.$group_id.'#p_'.$file['package_id'];
+                $html .= '<td><a href="'.$url.'">'.$file['package_name'].'</a></td>';
+                $html .= '<td>File to be restored next SYSTEM_CHECK event</td>';
+                $html .= '<td>File to be restored next SYSTEM_CHECK event</td>';
+                $html .= '<td align="center"><img src="'.util_get_image_theme("trash-grey.png").'" border="0" height="16" width="16"></td></tr>';
+                $html .= '</tr>';
+                }
         $html .= '</table>';
     }
     if ($i == 1) {
