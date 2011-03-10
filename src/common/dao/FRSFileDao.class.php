@@ -153,7 +153,7 @@ class FRSFileDao extends DataAccessObject {
         }
 
         if($filepath !== null) {
-            $arg[] = '$filepath';
+            $arg[] = 'filepath';
             $values[] = $this->da->quoteSmart($filepath);
         }
 
