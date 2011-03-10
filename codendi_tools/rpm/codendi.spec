@@ -56,7 +56,7 @@ Group: Development/Tools
 Version: @@CORE_MAILMAN_VERSION@@
 Release: 1%{?dist}
 Requires: %{name} >= %{version}
-Requires: mailman-codendi
+Requires: mailman = 3:2.1.9-6.codendi
 Provides: codendi-core-mailman = %{version}
 %description core-mailman
 Manage dependencies for Codendi mailman integration
