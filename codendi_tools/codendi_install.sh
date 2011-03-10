@@ -189,6 +189,12 @@ if [ -d "$INSTALL_DIR/plugins/IM" ]; then
     enable_plugin_im="true"
 fi
 
+# Check if mailman is installed
+enable_core_mailman="false"
+if $RPM -q mailman | $GREP codendi 2>&1 >/dev/null; then
+    enable_core_mailman="true"
+fi
+
 echo
 echo "Configuration questions"
 echo
@@ -210,7 +216,6 @@ elif
 fi
 
 
-
 if [ "$auto_passwd" = "true" ]; then
     # Mysql Root password (what if remote DB ?)
     rt_passwd=$(generate_passwd)
@@ -219,10 +224,14 @@ if [ "$auto_passwd" = "true" ]; then
     codendiadm_passwd=$(generate_passwd)
 
     # Mailman (only if installed)
-    mm_passwd=$(generate_passwd)
+    if [ "$enable_core_mailman" = "true" ]; then
+        mm_passwd=$(generate_passwd)
+    fi
 
     # Openfire (only if installed)
-    openfire_passwd=$(generate_passwd)
+    if [ "$enable_plugin_im" = "true" ]; then
+        openfire_passwd=$(generate_passwd)
+    fi
 
     # Only for ftp/ssh/cvs
     dbauth_passwd=$(generate_passwd)
@@ -246,13 +255,15 @@ while [ "$codendiadm_passwd" != "$codendiadm_passwd2" ]; do
     echo
 done
 
-mm_passwd="a"; mm_passwd2="b";
-while [ "$mm_passwd" != "$mm_passwd2" ]; do
-    read -s -p "Password for user mailman: " mm_passwd
-    echo
-    read -s -p "Retype mailman password: " mm_passwd2
-    echo
-done
+if [ "$enable_core_mailman" = "true" ]; then
+    mm_passwd="a"; mm_passwd2="b";
+    while [ "$mm_passwd" != "$mm_passwd2" ]; do
+        read -s -p "Password for user mailman: " mm_passwd
+        echo
+        read -s -p "Retype mailman password: " mm_passwd2
+        echo
+    done
+fi
 
 if [ "$enable_plugin_im" = "true" ]; then
     openfire_passwd="a"; openfire_passwd2="b";
@@ -649,21 +660,20 @@ fi
 # Mailman configuration
 # RPM was intalled previously
 #
-echo "Configuring Mailman..."
+if [ "$enable_core_mailman" = "true" ]; then
+    echo "Configuring Mailman..."
 
-# Setup admin password
-/usr/lib/mailman/bin/mmsitepass $mm_passwd
+    # Setup admin password
+    /usr/lib/mailman/bin/mmsitepass $mm_passwd
 
-#$LN -sf $MAILMAN_DIR /usr/local/mailman ???
+    # Update Mailman config
+    if [ "$disable_subdomains" != "y" ]; then
+        LIST_DOMAIN=lists.$sys_default_domain
+    else
+        LIST_DOMAIN=$sys_default_domain
+    fi
 
-# Update Mailman config
-if [ "$disable_subdomains" != "y" ]; then
-  LIST_DOMAIN=lists.$sys_default_domain
-else
-  LIST_DOMAIN=$sys_default_domain
-fi
-
-$CAT <<EOF >> /usr/lib/mailman/Mailman/mm_cfg.py
+    $CAT <<EOF >> /usr/lib/mailman/Mailman/mm_cfg.py
 DEFAULT_EMAIL_HOST = '$LIST_DOMAIN'
 DEFAULT_URL_HOST = '$LIST_DOMAIN'
 add_virtualhost(DEFAULT_URL_HOST, DEFAULT_EMAIL_HOST)
@@ -678,23 +688,22 @@ IMAGE_LOGOS = 0
 EOF
 
 
-# Compile file
-`python -O /usr/lib/mailman/Mailman/mm_cfg.py`
+    # Compile file
+    `python -O /usr/lib/mailman/Mailman/mm_cfg.py`
 
-# Create site wide ML
-# Note that if sys_default_domain is not a domain, the script will complain
-LIST_OWNER=codendi-admin@$sys_default_domain
-if [ "$disable_subdomains" = "y" ]; then
-    LIST_OWNER=codendi-admin@$sys_fullname
-fi
-/usr/lib/mailman/bin/newlist -q mailman $LIST_OWNER $mm_passwd > /dev/null
+    # Create site wide ML
+    # Note that if sys_default_domain is not a domain, the script will complain
+    LIST_OWNER=codendi-admin@$sys_default_domain
+    if [ "$disable_subdomains" = "y" ]; then
+        LIST_OWNER=codendi-admin@$sys_fullname
+    fi
+    /usr/lib/mailman/bin/newlist -q mailman $LIST_OWNER $mm_passwd > /dev/null
 
-# Comment existing mailman aliases in /etc/aliases
-$PERL -i'.orig' -p -e "s/^mailman(.*)/#mailman\1/g" /etc/aliases
+    # Comment existing mailman aliases in /etc/aliases
+    $PERL -i'.orig' -p -e "s/^mailman(.*)/#mailman\1/g" /etc/aliases
 
-
-# Add new aliases
-cat << EOF >> /etc/aliases
+    # Add new aliases
+    cat << EOF >> /etc/aliases
 
 ## mailman mailing list
 mailman:              "|/usr/lib/mailman/mail/mailman post mailman"
@@ -710,10 +719,12 @@ mailman-unsubscribe:  "|/usr/lib/mailman/mail/mailman unsubscribe mailman"
 
 EOF
 
-# Subscribe codendi-admin to this ML
-echo $LIST_OWNER | /usr/lib/mailman/bin/add_members -r - mailman
+    # Subscribe codendi-admin to this ML
+    echo $LIST_OWNER | /usr/lib/mailman/bin/add_members -r - mailman
 
-$SERVICE mailman start
+    $CHKCONFIG mailman on
+    $SERVICE mailman start
+fi
 
 ##############################################
 # Installing and configuring Sendmail
@@ -1009,7 +1020,6 @@ $CHKCONFIG sshd on
 $CHKCONFIG httpd on
 $CHKCONFIG mysqld on
 $CHKCONFIG cvs on
-$CHKCONFIG mailman on
 $CHKCONFIG munin-node on
 $CHKCONFIG vsftpd on
 $CHKCONFIG crond on
