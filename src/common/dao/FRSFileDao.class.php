@@ -359,14 +359,29 @@ class FRSFileDao extends DataAccessObject {
 
     /**
      * Retrieve all the files marked as deleted but not yet present in 'deleted' table
-     * 
+     *
+     * @param $groupId
+     *
      * @return DataAccessResult
      */
-    function searchStagingCandidates() {
-        $sql = 'SELECT f.*'.
+    function searchStagingCandidates($groupId = 0) {
+        $fields = '';
+        $from   = '';
+        $where  = '';
+        if ($groupId != 0) {
+            $fields .= ', rel.name as release_name, rel.status_id as release_status, rel.release_id';
+            $fields .= ', pkg.name as package_name, pkg.status_id as package_status, pkg.package_id';
+            $from   .= ' JOIN frs_release rel ON (f.release_id = rel.release_id)'.
+                       ' JOIN frs_package pkg ON (rel.package_id = pkg.package_id)';
+            $where  .= ' AND pkg.group_id = '.$this->da->escapeInt($groupId);
+        }
+        $sql = 'SELECT f.* '.
+               $fields.
                ' FROM frs_file f LEFT JOIN frs_file_deleted d USING(file_id)'.
+               $from.
                ' WHERE f.status = "D"'.
-               ' AND d.file_id IS NULL';
+               ' AND d.file_id IS NULL'.
+               $where;
         return $this->retrieve($sql);
     }
 

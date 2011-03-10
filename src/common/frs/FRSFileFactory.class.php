@@ -614,6 +614,18 @@ class FRSFileFactory extends Error {
     }
 
     /**
+     * List all files deleted but not yet moved to staging area
+     *
+     * @param Integer $groupId
+     *
+     * @return DataAccessObject
+     */
+    public function listStagingCandidates($groupId) {
+        $dao = $this->_getFRSFileDao();
+        return $dao->searchStagingCandidates($groupId);
+    }
+
+    /**
      * Returns true if user has permissions to add files
      *
      * NOTE : For the moment, only super admin, project admin (A) and file admin (R2) can add files
