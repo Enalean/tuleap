@@ -191,7 +191,7 @@ function frs_file_restore_process($request, $group_id) {
             }else {
                 $GLOBALS['Response']->addFeedback('error', 'There is already a file with this filename having an active status');
             }
-        } else {$GLOBALS['Response']->addFeedback('info', 'A file with a same name is marked to be restored');}
+        } else {$GLOBALS['Response']->addFeedback('error', 'A file with a same name is marked to be restored');}
     } else {
         $GLOBALS['Response']->addFeedback('error', 'Bad file id');
     }
