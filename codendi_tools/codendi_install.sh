@@ -201,10 +201,10 @@ echo
 
 # Ask for domain name and other installation parameters
 read -p "Codendi Domain name: " sys_default_domain
-read -p "Your Company short name: " sys_org_name
-read -p "Your Company long name: " sys_long_org_name
 read -p "Codendi Server fully qualified machine name: " sys_fullname
 read -p "Codendi Server IP address: " sys_ip_address
+read -p "Your Company short name: " sys_org_name
+read -p "Your Company long name: " sys_long_org_name
 read -p "Disable sub-domain management (no DNS delegation)? [y|n]:" disable_subdomains
 
 if [ "$disable_subdomains" != "y" ]; then
@@ -217,26 +217,38 @@ fi
 
 
 if [ "$auto_passwd" = "true" ]; then
+    # Save in /root/.codendi_passwd
+    passwd_file=/root/.codendi_passwd
+    touch $passwd_file
+    $CHMOD 0600 $passwd_file
+
     # Mysql Root password (what if remote DB ?)
     rt_passwd=$(generate_passwd)
+    echo $rt_passwd >> $passwd_file
 
     # For both DB and system
     codendiadm_passwd=$(generate_passwd)
+    echo $codendiadm_passwd >> $passwd_file
 
     # Mailman (only if installed)
     if [ "$enable_core_mailman" = "true" ]; then
         mm_passwd=$(generate_passwd)
+        echo $mm_passwd >> $passwd_file
     fi
 
     # Openfire (only if installed)
     if [ "$enable_plugin_im" = "true" ]; then
         openfire_passwd=$(generate_passwd)
+        echo $openfire_passwd >> $passwd_file
     fi
 
     # Only for ftp/ssh/cvs
     dbauth_passwd=$(generate_passwd)
+    echo $dbauth_passwd >> $passwd_file
 
     # Ask for site admin ?
+
+    todo "Automatically generated passwords are stored in $passwd_file"
 else
 # Ask for user passwords
 rt_passwd="a"; rt_passwd2="b";
@@ -287,14 +299,6 @@ while [ "$dbauth_passwd" != "$dbauth_passwd2" ]; do
 done
 
 fi
-
-# Save in /root/.codendi_passwd
-#echo $rt_passwd
-#echo $codendiadm_passwd
-#echo $mm_passwd
-#echo $openfire_passwd
-#echo $dbauth_passwd
-
 
 # Update codendi user password
 echo "$codendiadm_passwd" | passwd --stdin codendiadm
