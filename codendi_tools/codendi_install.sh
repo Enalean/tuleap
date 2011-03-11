@@ -179,7 +179,46 @@ EOF
     $SERVICE vsftpd start
 }
 
+##############################################
+# Bind DNS server configuration
+#
+setup_bind() {
+    if [ -f /var/named/chroot/var/named/codendi.zone ]; then
+        $CP -af /var/named/chroot/var/named/codendi.zone /var/named/chroot/var/named/codendi.zone.orig
+    fi
+    $CP -f $INSTALL_DIR/src/etc/codendi.zone /var/named/chroot/var/named/codendi.zone
 
+    $CHOWN root:named /var/named/chroot/var/named/codendi.zone
+    if [ -f "/var/named/chroot/etc/named.conf" ]; then
+        $CHGRP named /var/named/chroot/etc/named.conf
+    fi
+
+    if [ $SELINUX_ENABLED ]; then
+        $CHCON -h system_u:object_r:named_zone_t /var/named/chroot/var/named/codendi.zone
+        if [ -f "/var/named/chroot/etc/named.conf" ]; then
+            $CHCON -h system_u:object_r:named_conf_t /var/named/chroot/etc/named.conf
+        fi
+    fi
+
+  # replace string patterns in codendi.zone
+  sys_shortname=`echo $sys_fullname | $PERL -pe 's/\.(.*)//'`
+  dns_serial=`date +%Y%m%d`01
+  substitute '/var/named/chroot/var/named/codendi.zone' '%sys_default_domain%' "$sys_default_domain" 
+  substitute '/var/named/chroot/var/named/codendi.zone' '%sys_fullname%' "$sys_fullname"
+  substitute '/var/named/chroot/var/named/codendi.zone' '%sys_ip_address%' "$sys_ip_address"
+  substitute '/var/named/chroot/var/named/codendi.zone' '%sys_shortname%' "$sys_shortname"
+  substitute '/var/named/chroot/var/named/codendi.zone' '%dns_serial%' "$dns_serial"
+
+  todo "Create the DNS configuration files as explained in the Codendi Installation Guide:"
+  todo "    update /var/named/chroot/var/named/codendi.zone - replace all words starting with %%."
+  todo "    make sure the file is readable by 'other':"
+  todo "      > chmod o+r /var/named/chroot/var/named/codendi.zone"
+  todo "    edit /etc/named.conf to create the new zone."
+
+
+  $CHKCONFIG named on
+  $SERVICE named start
+}
 
 ##############################################
 # Codendi installation
@@ -537,45 +576,9 @@ for f in /etc/httpd/conf/httpd.conf \
     $CHMOD 640 $f
 done
 
-###
-#
-# Bind configuration
-
-if [ "$disable_subdomains" != "y" ]; then
-    if [ -f /var/named/chroot/var/named/codendi.zone ]; then
-        $CP -af /var/named/chroot/var/named/codendi.zone /var/named/chroot/var/named/codendi.zone.orig
-    fi
-    $CP -f $INSTALL_DIR/src/etc/codendi.zone /var/named/chroot/var/named/codendi.zone
-
-    $CHOWN root:named /var/named/chroot/var/named/codendi.zone
-    if [ -f "/var/named/chroot/etc/named.conf" ]; then
-        $CHGRP named /var/named/chroot/etc/named.conf
-    fi
-
-    if [ $SELINUX_ENABLED ]; then
-        $CHCON -h system_u:object_r:named_zone_t /var/named/chroot/var/named/codendi.zone
-        if [ -f "/var/named/chroot/etc/named.conf" ]; then
-            $CHCON -h system_u:object_r:named_conf_t /var/named/chroot/etc/named.conf
-        fi
-    fi
-
-  # replace string patterns in codendi.zone
-  sys_shortname=`echo $sys_fullname | $PERL -pe 's/\.(.*)//'`
-  dns_serial=`date +%Y%m%d`01
-  substitute '/var/named/chroot/var/named/codendi.zone' '%sys_default_domain%' "$sys_default_domain" 
-  substitute '/var/named/chroot/var/named/codendi.zone' '%sys_fullname%' "$sys_fullname"
-  substitute '/var/named/chroot/var/named/codendi.zone' '%sys_ip_address%' "$sys_ip_address"
-  substitute '/var/named/chroot/var/named/codendi.zone' '%sys_shortname%' "$sys_shortname"
-  substitute '/var/named/chroot/var/named/codendi.zone' '%dns_serial%' "$dns_serial"
-
-  todo "Create the DNS configuration files as explained in the Codendi Installation Guide:"
-  todo "    update /var/named/chroot/var/named/codendi.zone - replace all words starting with %%."
-  todo "    make sure the file is readable by 'other':"
-  todo "      > chmod o+r /var/named/chroot/var/named/codendi.zone"
-  todo "    edit /etc/named.conf to create the new zone."
-
-
-  $CHKCONFIG named on
+# Bind config
+if [ "$configure_bind" != "y" ]; then
+    setup_bind
 fi
 
 ###
