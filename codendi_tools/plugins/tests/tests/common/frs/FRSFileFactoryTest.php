@@ -537,6 +537,72 @@ class FRSFileFactoryTest extends UnitTestCase {
         $this->assertTrue($ff->restoreDeletedFiles($backend));
     }
 
+    function testRestoreDeletedFilesReturnFalse() {
+        $refFile1 = new FRSFile(array('file_id' => 12));
+        $refFile2 = new FRSFile(array('file_id' => 13));
+
+        $dar = new MockDataAccessResult($this);
+        $dar->setReturnValue('isError', false);
+        $dar->setReturnValueAt(0, 'current', array('file_id' => 12));
+        $dar->setReturnValueAt(1, 'current', array('file_id' => 13));
+        $dar->setReturnValueAt(0, 'valid', true);
+        $dar->setReturnValueAt(1, 'valid', true);
+        $dar->setReturnValueAt(2, 'valid', false);
+        $dar->setReturnValue('rowCount', 1);
+
+        $dao = new MockFRSFileDao($this);
+        $dao->expectOnce('searchFilesToRestore');
+        $dao->setReturnValue('searchFilesToRestore', $dar);
+
+        $ff = new FRSFileFactoryTestRestoreFiles($this);
+        $ff->setReturnValue('_getFRSFileDao', $dao);
+        $backend  = new MockBackendSystem($this);
+        $ff->expectCallCount('restoreFile', 2);
+        $ff->setReturnValueAt(0, 'restoreFile', false);
+        $ff->setReturnValueAt(1, 'restoreFile', true);
+
+        $this->assertFalse($ff->restoreDeletedFiles($backend));
+    }
+
+    function testRestoreDeletedFilesDBError() {
+        $refFile = new FRSFile(array('file_id' => 12));
+
+        $dar = new MockDataAccessResult($this);
+        $dar->setReturnValue('isError', true);
+
+        $dao = new MockFRSFileDao($this);
+        $dao->expectOnce('searchFilesToRestore');
+        $dao->setReturnValue('searchFilesToRestore', $dar);
+
+        $ff = new FRSFileFactoryTestRestoreFiles($this);
+        $ff->setReturnValue('_getFRSFileDao', $dao);
+        $backend  = new MockBackendSystem($this);
+        $ff->expectNever('restoreFile', array($refFile, $backend));
+        $ff->setReturnValue('restoreFile', false);
+
+        $this->assertFalse($ff->restoreDeletedFiles($backend));
+    }
+
+    function testRestoreDeletedFilesNoFiles() {
+        $refFile = new FRSFile(array('file_id' => 12));
+
+        $dar = new MockDataAccessResult($this);
+        $dar->setReturnValue('isError', false);
+        $dar->setReturnValue('rowCount', 0);
+
+        $dao = new MockFRSFileDao($this);
+        $dao->expectOnce('searchFilesToRestore');
+        $dao->setReturnValue('searchFilesToRestore', $dar);
+
+        $ff = new FRSFileFactoryTestRestoreFiles($this);
+        $ff->setReturnValue('_getFRSFileDao', $dao);
+        $backend  = new MockBackendSystem($this);
+        $ff->expectNever('restoreFile', array($refFile, $backend));
+        $ff->setReturnValue('restoreFile', false);
+
+        $this->assertFalse($ff->restoreDeletedFiles($backend));
+    }
+
     function testCompareMd5ChecksumsFail() {
         $fileFactory = new FRSFileFactory();
         $this->assertFalse($fileFactory->compareMd5Checksums('da1e100dc9e7bebb810985e37875de36', 'da1e100dc9e7bebb810985e37875de38'));
