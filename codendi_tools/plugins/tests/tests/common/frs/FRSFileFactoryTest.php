@@ -24,7 +24,7 @@ Mock::generatePartial('FRSFileFactory', 'FRSFileFactoryTestPurgeFiles', array('_
 Mock::generatePartial('FRSFileFactory', 'FRSFileFactoryTestPurgeOneFile', array('_getFRSFileDao'));
 Mock::generatePartial('FRSFileFactory', 'FRSFileFactoryTestMoveToStaging', array('_getFRSFileDao', 'moveDeletedFileToStagingArea'));
 Mock::generatePartial('FRSFileFactory', 'FRSFileFactoryTestPurgeDeletedFiles', array('purgeFiles', 'moveDeletedFilesToStagingArea', 'cleanStaging', 'restoreDeletedFiles'));
-Mock::generatePartial('FRSFileFactory', 'FRSFileFactoryTestRestore', array('_getFRSFileDao', '_getUserManager', '_getEventManager'));
+Mock::generatePartial('FRSFileFactory', 'FRSFileFactoryTestRestore', array('_getFRSReleaseFactory', '_getFRSFileDao', '_getUserManager', '_getEventManager'));
 Mock::generatePartial('FRSFileFactory', 'FRSFileFactoryTestRestoreFiles', array('_getFRSFileDao', 'restoreFile'));
 Mock::generatePartial('FRSFileFactory', 'FRSFileFactoryTestCreateFiles', array('create', 'moveFileForge','isFileBaseNameExists', 'isSameFileMarkedToBeRestored', 'compareMd5Checksums'));
 /**
@@ -346,6 +346,11 @@ class FRSFileFactoryTest extends UnitTestCase {
         $fileFactory->setReturnValue('_getUserManager', $um);
         $em = new MockEventManager($this);
         $fileFactory->setReturnValue('_getEventManager', $em);
+        $release = new MockFRSRelease($this);
+        $release->setReturnValue('isActive', true);
+        $releaseFactory = new MockFRSReleaseFactory($this);
+        $releaseFactory->setReturnValue('getFRSReleaseFromDb', $release);
+        $fileFactory->setReturnValue('_getFRSReleaseFactory', $releaseFactory);
 
         $this->assertTrue($fileFactory->restoreFile($file, $backend));
          
@@ -377,6 +382,13 @@ class FRSFileFactoryTest extends UnitTestCase {
         $fileFactory->setReturnValue('_getFRSFileDao', $dao);
         $backend = new MockBackendSystem($this);
         $backend->setReturnValue('chgrp', true);
+
+        $release = new MockFRSRelease($this);
+        $release->setReturnValue('isActive', true);
+        $releaseFactory = new MockFRSReleaseFactory($this);
+        $releaseFactory->setReturnValue('getFRSReleaseFromDb', $release);
+        $fileFactory->setReturnValue('_getFRSReleaseFactory', $releaseFactory);
+
         $this->assertFalse($fileFactory->restoreFile($file, $backend));
          
         // Cleanup
@@ -414,6 +426,11 @@ class FRSFileFactoryTest extends UnitTestCase {
         $fileFactory->setReturnValue('_getUserManager', $um);
         $em = new MockEventManager($this);
         $fileFactory->setReturnValue('_getEventManager', $em);
+        $release = new MockFRSRelease($this);
+        $release->setReturnValue('isActive', true);
+        $releaseFactory = new MockFRSReleaseFactory($this);
+        $releaseFactory->setReturnValue('getFRSReleaseFromDb', $release);
+        $fileFactory->setReturnValue('_getFRSReleaseFactory', $releaseFactory);
 
         $this->assertTrue($fileFactory->restoreFile($file, $backend));
 
@@ -454,6 +471,11 @@ class FRSFileFactoryTest extends UnitTestCase {
         $fileFactory->setReturnValue('_getUserManager', $um);
         $em = new MockEventManager($this);
         $fileFactory->setReturnValue('_getEventManager', $em);
+        $release = new MockFRSRelease($this);
+        $release->setReturnValue('isActive', true);
+        $releaseFactory = new MockFRSReleaseFactory($this);
+        $releaseFactory->setReturnValue('getFRSReleaseFromDb', $release);
+        $fileFactory->setReturnValue('_getFRSReleaseFactory', $releaseFactory);
 
         $this->assertFalse($fileFactory->restoreFile($file, $backend));
 
