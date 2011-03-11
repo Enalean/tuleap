@@ -38,17 +38,8 @@ Requires: jpgraph = 2.3.4-0.codendi
 Requires: policycoreutils, coreutils, selinux-policy, selinux-policy-targeted, libselinux
 # CLI (build only?)
 Requires: zip, unzip
-# CVS
-Requires: xinetd, rcs, cvs = 1.11.22-5.codendi
-# SVN
-#Conflicts: cadaver
-#Requires: subversion, subversion-tools, mod_dav_svn, subversion-perl, subversion-python
 # libnss-mysql (system authentication based on MySQL)
 Requires: libnss-mysql, mod_auth_mysql, nss, nscd
-# cvsgraph
-Requires: cvsgraph
-# highlight
-Requires: highlight
 # APC
 Requires: php-pecl-apc
 # Munin

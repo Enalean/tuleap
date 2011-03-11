@@ -69,10 +69,22 @@ Release: 1%{?dist}
 Requires: %{name} >= %{version}
 Conflicts: cadaver
 Requires: viewvc = 1.0.7-2.codendi
-Requires: subversion, subversion-tools, mod_dav_svn, subversion-perl, subversion-python
+Requires: subversion, subversion-tools, mod_dav_svn, subversion-perl, subversion-python, highlight
 Provides: codendi-core-subversion = %{version}
 %description core-subversion
 Manage dependencies for Codendi Subversion integration
+
+%package core-cvs
+Summary: CVS component for codendi
+Group: Development/Tools
+Version: @@CORE_CVS_VERSION@@
+Release: 1%{?dist}
+Requires: %{name} >= %{version}
+Requires: viewvc = 1.0.7-2.codendi
+Requires: xinetd, rcs, cvs = 1.11.22-5.codendi, cvsgraph, highlight
+Provides: codendi-core-cvs = %{version}
+%description core-cvs
+Manage dependencies for Codendi CVS integration
 
 #
 ## Plugins
@@ -597,6 +609,10 @@ fi
 %files core-subversion
 %defattr(-,%{APP_USER},%{APP_USER},-)
 %{APP_DIR}/src/CORE_SUBVERSION_VERSION
+
+%files core-cvs
+%defattr(-,%{APP_USER},%{APP_USER},-)
+%{APP_DIR}/src/CORE_CVS_VERSION
 
 #
 # Plugins
