@@ -611,7 +611,7 @@ class FRSFileFactoryTest extends UnitTestCase {
 
     /**
      * We should not be able to create a file with the same name, 
-     * if an acive one exists.
+     * if an active one exists.
      */
     function testCreateFileAlreadyExistingAndActive() {
         // Create toto.txt in the release directory

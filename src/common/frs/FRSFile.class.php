@@ -131,7 +131,7 @@ class FRSFile extends Error {
     /**
      * Obtain the name of the file as stored in filesystem
      * Old files are stored in the filesystem as uploaded by the user
-     * In that case filepath == NULL then the returned vaue is filename
+     * In that case filepath == NULL then the returned value is filename
      *
      * @return String
      */
