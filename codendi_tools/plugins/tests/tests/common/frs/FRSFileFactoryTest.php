@@ -24,9 +24,9 @@ Mock::generatePartial('FRSFileFactory', 'FRSFileFactoryTestPurgeFiles', array('_
 Mock::generatePartial('FRSFileFactory', 'FRSFileFactoryTestPurgeOneFile', array('_getFRSFileDao'));
 Mock::generatePartial('FRSFileFactory', 'FRSFileFactoryTestMoveToStaging', array('_getFRSFileDao', 'moveDeletedFileToStagingArea'));
 Mock::generatePartial('FRSFileFactory', 'FRSFileFactoryTestPurgeDeletedFiles', array('purgeFiles', 'moveDeletedFilesToStagingArea', 'cleanStaging', 'restoreDeletedFiles'));
-Mock::generatePartial('FRSFileFactory', 'FRSFileFactoryTestRestore', array('_getFRSFileDao', '_getUserManager', '_getEventManager'));
+Mock::generatePartial('FRSFileFactory', 'FRSFileFactoryTestRestore', array('_getFRSReleaseFactory', '_getFRSFileDao', '_getUserManager', '_getEventManager'));
 Mock::generatePartial('FRSFileFactory', 'FRSFileFactoryTestRestoreFiles', array('_getFRSFileDao', 'restoreFile'));
-Mock::generatePartial('FRSFileFactory', 'FRSFileFactoryTestCreateFiles', array('create', 'moveFileForge','isFileBaseNameExists','compareMd5Checksums'));
+Mock::generatePartial('FRSFileFactory', 'FRSFileFactoryTestCreateFiles', array('create', 'moveFileForge','isFileBaseNameExists', 'isSameFileMarkedToBeRestored', 'compareMd5Checksums'));
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  * 
@@ -346,6 +346,11 @@ class FRSFileFactoryTest extends UnitTestCase {
         $fileFactory->setReturnValue('_getUserManager', $um);
         $em = new MockEventManager($this);
         $fileFactory->setReturnValue('_getEventManager', $em);
+        $release = new MockFRSRelease($this);
+        $release->setReturnValue('isActive', true);
+        $releaseFactory = new MockFRSReleaseFactory($this);
+        $releaseFactory->setReturnValue('getFRSReleaseFromDb', $release);
+        $fileFactory->setReturnValue('_getFRSReleaseFactory', $releaseFactory);
 
         $this->assertTrue($fileFactory->restoreFile($file, $backend));
          
@@ -377,6 +382,13 @@ class FRSFileFactoryTest extends UnitTestCase {
         $fileFactory->setReturnValue('_getFRSFileDao', $dao);
         $backend = new MockBackendSystem($this);
         $backend->setReturnValue('chgrp', true);
+
+        $release = new MockFRSRelease($this);
+        $release->setReturnValue('isActive', true);
+        $releaseFactory = new MockFRSReleaseFactory($this);
+        $releaseFactory->setReturnValue('getFRSReleaseFromDb', $release);
+        $fileFactory->setReturnValue('_getFRSReleaseFactory', $releaseFactory);
+
         $this->assertFalse($fileFactory->restoreFile($file, $backend));
          
         // Cleanup
@@ -414,6 +426,11 @@ class FRSFileFactoryTest extends UnitTestCase {
         $fileFactory->setReturnValue('_getUserManager', $um);
         $em = new MockEventManager($this);
         $fileFactory->setReturnValue('_getEventManager', $em);
+        $release = new MockFRSRelease($this);
+        $release->setReturnValue('isActive', true);
+        $releaseFactory = new MockFRSReleaseFactory($this);
+        $releaseFactory->setReturnValue('getFRSReleaseFromDb', $release);
+        $fileFactory->setReturnValue('_getFRSReleaseFactory', $releaseFactory);
 
         $this->assertTrue($fileFactory->restoreFile($file, $backend));
 
@@ -454,6 +471,11 @@ class FRSFileFactoryTest extends UnitTestCase {
         $fileFactory->setReturnValue('_getUserManager', $um);
         $em = new MockEventManager($this);
         $fileFactory->setReturnValue('_getEventManager', $em);
+        $release = new MockFRSRelease($this);
+        $release->setReturnValue('isActive', true);
+        $releaseFactory = new MockFRSReleaseFactory($this);
+        $releaseFactory->setReturnValue('getFRSReleaseFromDb', $release);
+        $fileFactory->setReturnValue('_getFRSReleaseFactory', $releaseFactory);
 
         $this->assertFalse($fileFactory->restoreFile($file, $backend));
 
@@ -463,7 +485,35 @@ class FRSFileFactoryTest extends UnitTestCase {
         unlink($GLOBALS['ftp_frs_dir_prefix'].'/prj/p3_r1/toto.xls');
         rmdir($GLOBALS['ftp_frs_dir_prefix'].'/prj/p3_r1');
     }
-    
+
+    function testRestoreFileInDeletedRelease(){
+        $fileFactory = new FRSFileFactoryTestRestore();
+
+        // Create temp file
+        $filepath = dirname(__FILE__).'/_fixtures/DELETED/prj/p3_r1/toto.xls.12';
+        mkdir(dirname($filepath), 0750, true);
+        touch($filepath);
+        $this->assertTrue(is_dir(dirname($filepath)));
+
+        $release = new MockFRSRelease($this);
+        $release->setReturnValue('isActive', false);
+        $releaseFactory = new MockFRSReleaseFactory($this);
+        $releaseFactory->setReturnValue('getFRSReleaseFromDb', $release);
+        $fileFactory->setReturnValue('_getFRSReleaseFactory', $releaseFactory);
+        $file = new MockFRSFile($this);
+        $backend = new MockBackendSystem($this);
+
+        $this->assertFalse($fileFactory->restoreFile($file, $backend));
+        $this->assertTrue(is_dir(dirname($filepath)));
+        $this->assertFalse(file_exists($GLOBALS['ftp_frs_dir_prefix'].'/prj/p3_r1/toto.xls'));
+        $this->assertFalse(is_dir($GLOBALS['ftp_frs_dir_prefix'].'/prj/p3_r1'));
+
+        // Cleanup
+        unlink($GLOBALS['ftp_frs_dir_prefix'].'/DELETED/prj/p3_r1/toto.xls.12');
+        rmdir($GLOBALS['ftp_frs_dir_prefix'].'/DELETED/prj/p3_r1');
+        rmdir($GLOBALS['ftp_frs_dir_prefix'].'/DELETED/prj');
+    }
+
     function testRestoreDeletedFiles() {
         $refFile = new FRSFile(array('file_id' => 12));
         
@@ -485,6 +535,69 @@ class FRSFileFactoryTest extends UnitTestCase {
         $ff->setReturnValue('restoreFile', true);
         
         $this->assertTrue($ff->restoreDeletedFiles($backend));
+    }
+
+    function testRestoreDeletedFilesReturnFalse() {
+        $dar = new MockDataAccessResult($this);
+        $dar->setReturnValue('isError', false);
+        $dar->setReturnValueAt(0, 'current', array('file_id' => 12));
+        $dar->setReturnValueAt(1, 'current', array('file_id' => 13));
+        $dar->setReturnValueAt(0, 'valid', true);
+        $dar->setReturnValueAt(1, 'valid', true);
+        $dar->setReturnValueAt(2, 'valid', false);
+        $dar->setReturnValue('rowCount', 1);
+
+        $dao = new MockFRSFileDao($this);
+        $dao->expectOnce('searchFilesToRestore');
+        $dao->setReturnValue('searchFilesToRestore', $dar);
+
+        $ff = new FRSFileFactoryTestRestoreFiles($this);
+        $ff->setReturnValue('_getFRSFileDao', $dao);
+        $backend  = new MockBackendSystem($this);
+        $ff->expectCallCount('restoreFile', 2);
+        $ff->setReturnValueAt(0, 'restoreFile', false);
+        $ff->setReturnValueAt(1, 'restoreFile', true);
+
+        $this->assertFalse($ff->restoreDeletedFiles($backend));
+    }
+
+    function testRestoreDeletedFilesDBError() {
+        $refFile = new FRSFile(array('file_id' => 12));
+
+        $dar = new MockDataAccessResult($this);
+        $dar->setReturnValue('isError', true);
+
+        $dao = new MockFRSFileDao($this);
+        $dao->expectOnce('searchFilesToRestore');
+        $dao->setReturnValue('searchFilesToRestore', $dar);
+
+        $ff = new FRSFileFactoryTestRestoreFiles($this);
+        $ff->setReturnValue('_getFRSFileDao', $dao);
+        $backend  = new MockBackendSystem($this);
+        $ff->expectNever('restoreFile', array($refFile, $backend));
+        $ff->setReturnValue('restoreFile', false);
+
+        $this->assertFalse($ff->restoreDeletedFiles($backend));
+    }
+
+    function testRestoreDeletedFilesNoFiles() {
+        $refFile = new FRSFile(array('file_id' => 12));
+
+        $dar = new MockDataAccessResult($this);
+        $dar->setReturnValue('isError', false);
+        $dar->setReturnValue('rowCount', 0);
+
+        $dao = new MockFRSFileDao($this);
+        $dao->expectOnce('searchFilesToRestore');
+        $dao->setReturnValue('searchFilesToRestore', $dar);
+
+        $ff = new FRSFileFactoryTestRestoreFiles($this);
+        $ff->setReturnValue('_getFRSFileDao', $dao);
+        $backend  = new MockBackendSystem($this);
+        $ff->expectNever('restoreFile', array($refFile, $backend));
+        $ff->setReturnValue('restoreFile', false);
+
+        $this->assertFalse($ff->restoreDeletedFiles($backend));
     }
 
     function testCompareMd5ChecksumsFail() {
@@ -537,16 +650,16 @@ class FRSFileFactoryTest extends UnitTestCase {
 
         $res = $ff->moveFileForge($f, $r);
         $this->assertTrue($res);
-        $this->assertTrue(file_exists($GLOBALS['ftp_frs_dir_prefix'].'/prj/p123_r456/toto.txt'));
+        $this->assertTrue(file_exists($GLOBALS['ftp_frs_dir_prefix'].'/prj/'.$f->getFilePath()));
 
-        unlink($GLOBALS['ftp_frs_dir_prefix'].'/prj/p123_r456/toto.txt');
+        unlink($GLOBALS['ftp_frs_dir_prefix'].'/prj/'.$f->getFilePath());
         rmdir($GLOBALS['ftp_frs_dir_prefix'].'/prj/p123_r456');
     }
 
     function testMoveFileforgeFileExist() {
         // Create toto.txt in the release directory
         mkdir($GLOBALS['ftp_frs_dir_prefix'].'/prj/p123_r456');
-        touch($GLOBALS['ftp_frs_dir_prefix'].'/prj/p123_r456/toto.txt');
+        touch($GLOBALS['ftp_frs_dir_prefix'].'/prj/p123_r456/toto.txt_1299584211');
 
         // Try to release a file named toto.txt in the same release
         $p = new MockProject();
@@ -560,12 +673,13 @@ class FRSFileFactoryTest extends UnitTestCase {
 
         $f = new FRSFile();
         $f->setFileName('toto.txt');
+        $f->setFilePath('toto.txt_1299584211');
         $f->setRelease($r);
 
         $ff = new FRSFileFactory();
         $this->assertFalse($ff->moveFileForge($f));
 
-        unlink($GLOBALS['ftp_frs_dir_prefix'].'/prj/p123_r456/toto.txt');
+        unlink($GLOBALS['ftp_frs_dir_prefix'].'/prj/p123_r456/toto.txt_1299584211');
         rmdir($GLOBALS['ftp_frs_dir_prefix'].'/prj/p123_r456');
     }
 
@@ -608,10 +722,14 @@ class FRSFileFactoryTest extends UnitTestCase {
         }
     }
 
-    function testCreateFileAlreadyExisting() {
+    /**
+     * We should not be able to create a file with the same name, 
+     * if an active one exists.
+     */
+    function testCreateFileAlreadyExistingAndActive() {
         // Create toto.txt in the release directory
         mkdir($GLOBALS['ftp_frs_dir_prefix'].'/prj/p123_r456');
-        touch($GLOBALS['ftp_frs_dir_prefix'].'/prj/p123_r456/toto.txt');
+        touch($GLOBALS['ftp_frs_dir_prefix'].'/prj/p123_r456/toto.txt_1299584197');
 
         $p = new MockProject($this);
         $p->setReturnValue('getUnixName', 'prj');
@@ -623,7 +741,7 @@ class FRSFileFactoryTest extends UnitTestCase {
         $r->setProject($p);
 
         $f = new FRSFile();
-        $f->setFileName('toto.txt');
+        $f->setFileName('toto.txt_1299584219');
         $f->setRelease($r);
 
         $ff = new FRSFileFactoryTestCreateFiles();
@@ -635,9 +753,98 @@ class FRSFileFactoryTest extends UnitTestCase {
             $this->assertIsA($e, 'FRSFileExistsException');
         }
 
-        unlink($GLOBALS['ftp_frs_dir_prefix'].'/prj/p123_r456/toto.txt');
+        unlink($GLOBALS['ftp_frs_dir_prefix'].'/prj/p123_r456/toto.txt_1299584197');
         rmdir($GLOBALS['ftp_frs_dir_prefix'].'/prj/p123_r456');
     }
+
+    /**
+     * We should be able to create a file with the same name, 
+     * even if the active one has been deleted but not yet moved to staging area.
+     */
+    function testCreateFileAlreadyExistingAndMarkedToBeDeletedNotYetMoved() {
+        // Create toto.txt in the release directory
+        touch($GLOBALS['ftp_incoming_dir'].'/toto.txt');
+        mkdir($GLOBALS['ftp_frs_dir_prefix'].'/prj/p123_r456');
+        // toto.txt_1299584187 is the file having been deleted but not yet moved
+        touch($GLOBALS['ftp_frs_dir_prefix'].'/prj/p123_r456/toto.txt_1299584187');
+
+        $p = new MockProject($this);
+        $p->setReturnValue('getUnixName', 'prj');
+
+        $r = new FRSRelease();
+        $r->setReleaseID(456);
+        $r->setPackageID(123);
+        $r->setGroupID(111);
+        $r->setProject($p);
+
+
+        $f = new FRSFile();
+        $f->setFileName('toto.txt');
+        $f->setFilePath('toto.txt_1299584210');
+        $f->setRelease($r);
+        $f->setFileID(15225);
+        $f->setFileLocation($GLOBALS['ftp_frs_dir_prefix'].'/prj/p123_r456');
+
+
+        $ff = new FRSFileFactoryTestCreateFiles();
+        $ff->setReturnValue('isFileBaseNameExists', False);
+        $ff->setReturnValue('isSameFileMarkedToBeRestored', False);
+
+        //moveFielForge will copy the new file to its destination
+        $ff->setReturnValue('moveFileForge', True);
+        touch($GLOBALS['ftp_frs_dir_prefix'].'/prj/p123_r456/toto.txt_1299584210');
+
+        $ff->setReturnValue('create', 15225);
+        $this->assertEqual($ff->createFile($f, ~FRSFileFactory::COMPUTE_MD5), $f);
+
+        unlink($GLOBALS['ftp_incoming_dir'].'/toto.txt');
+        unlink($GLOBALS['ftp_frs_dir_prefix'].'/prj/p123_r456/toto.txt_1299584210');
+        unlink($GLOBALS['ftp_frs_dir_prefix'].'/prj/p123_r456/toto.txt_1299584187');
+        rmdir($GLOBALS['ftp_frs_dir_prefix'].'/prj/p123_r456');
+    }
+
+    /**
+     * We should not be able to create a file with the same name, 
+     * even if the restored one has not yet been moved to the corresponding  pi_rj.
+     */
+    
+    function testCreateFileAlreadyMarkedToBeRestoredNotYetMoved() {
+        // Create toto.txt in the release directory
+        touch($GLOBALS['ftp_incoming_dir'].'/toto.txt');
+        mkdir($GLOBALS['ftp_frs_dir_prefix'].'/prj/p123_r456');
+
+        $p = new MockProject($this);
+        $p->setReturnValue('getUnixName', 'prj');
+
+        $r = new FRSRelease();
+        $r->setReleaseID(456);
+        $r->setPackageID(123);
+        $r->setGroupID(111);
+        $r->setProject($p);
+
+
+        $f = new FRSFile();
+        $f->setFileName('toto.txt');
+        $f->setFilePath('toto.txt_1299584210');
+        $f->setRelease($r);
+        $f->setFileLocation($GLOBALS['ftp_frs_dir_prefix'].'/prj/p123_r456');
+
+
+        $ff = new FRSFileFactoryTestCreateFiles();
+        $ff->setReturnValue('isFileBaseNameExists', False);
+        $ff->setReturnValue('isSameFileMarkedToBeRestored', True);
+
+        try {
+            $ff->createFile($f, ~FRSFileFactory::COMPUTE_MD5);
+        }
+        catch (Exception $e) {
+            $this->assertIsA($e, 'FRSFileToBeRestoredException');
+        }
+
+        unlink($GLOBALS['ftp_incoming_dir'].'/toto.txt');
+        rmdir($GLOBALS['ftp_frs_dir_prefix'].'/prj/p123_r456');
+    }
+
 
     function testCreateFileNotYetIncoming(){
         $p = new MockProject();

@@ -134,8 +134,10 @@ site_admin_footer(array());
  */
 
 function frs_file_restore_view($group_id, $idArray, $nomArray, $htmlArray) {
-    $fileFactory = new FRSFileFactory();
-    $files       = $fileFactory->listPendingFiles($group_id, 0, 0);
+    $fileFactory        = new FRSFileFactory();
+    $files              = $fileFactory->listPendingFiles($group_id, 0, 0);
+    $toBeRestoredFiles = $fileFactory->listToBeRestoredFiles($group_id);
+    $deletedFiles       = $fileFactory->listStagingCandidates($group_id);
 
     $html  = '';
     $html .= '<div class="contenu_onglet" id="contenu_onglet_frs_file">';
@@ -157,19 +159,67 @@ function frs_file_restore_view($group_id, $idArray, $nomArray, $htmlArray) {
                 $html .= '<td><a href="'.$url.'">'.$file['package_name'].'</a></td>';
                 $html .= '<td>'.html_time_ago($file['delete_date']).'</td>';
                 $html .= '<td>'.format_date($GLOBALS['Language']->getText('system', 'datefmt'), $purgeDate).'</td>';
-                $html .= '<td align="center"><a href="?group_id='.$group_id.'&func=confirm_restore_frs_file&id='.$file['file_id'].'"><img src="'.util_get_image_theme("trash-x.png").'" onClick="return confirm(\'Confirm restore of this file\')" border="0" height="16" width="16"></a></td></tr>';
+                $html .= '<td align="center"><a href="?group_id='.$group_id.'&func=confirm_restore_frs_file&id='.$file['file_id'].'"><img src="'.util_get_image_theme("trash-x.png").'" onClick="return confirm(\'Confirm restore of this file\')" border="0" height="16" width="16"></a></td>';
                 $html .= '</tr>';
             }
         }
-        $html .= '</table>';
     }
     if ($i == 1) {
         $html .= '<center>No restorable files found</center>';
     }
+
+    if ($toBeRestoredFiles->rowCount() > 0) {
+        if ($i == 1) {
+            $i++;
+            $titles = array ('Filename', 'Release name', 'Package name', '', '', '');
+            $html  .= html_build_list_table_top ($titles);
+        }
+        foreach ($toBeRestoredFiles as $file) {
+            $html .= '<tr class="boxitemgrey">';
+            $html .= '<td>'.$file['filename'].'</td>';
+            $url   = '/file/showfiles.php?group_id='.$group_id.'#p_'.$file['package_id'].'r_'.$file['release_id'];
+            $html .= '<td><a href="'.$url.'">'.$file['release_name'].'</a></td>';
+            $url   = '/file/showfiles.php?group_id='.$group_id.'#p_'.$file['package_id'];
+            $html .= '<td><a href="'.$url.'">'.$file['package_name'].'</a></td>';
+            if ($file['release_status'] != FRSRelease::STATUS_DELETED
+                && $file['package_status'] != FRSPackage::STATUS_DELETED) {
+                $html .= '<td align="center" colspan="2">File to be restored next SYSTEM_CHECK event</td>';
+            } else {
+                $html .= '<td align="center" colspan="2">File marked to be restored in a deleted release</td>';
+            }
+            $html .= '<td align="center"><img src="'.util_get_image_theme("trash-grey.png").'" border="0" height="16" width="16"></td>';
+            $html .= '</tr>';
+        }
+    }
+
+    if ($deletedFiles->rowCount() > 0) {
+        if ($i == 1) {
+            $i++;
+            $titles = array ('Filename', 'Release name', 'Package name', '', '', '');
+            $html  .= html_build_list_table_top ($titles);
+        }
+        foreach ($deletedFiles as $file) {
+            if ($file['release_status'] != FRSRelease::STATUS_DELETED
+                && $file['package_status'] != FRSPackage::STATUS_DELETED) {
+                $html .= '<tr class="boxitemgrey"">';
+                $html .= '<td>'.$file['filename'].'</td>';
+                $url   = '/file/showfiles.php?group_id='.$group_id.'#p_'.$file['package_id'].'r_'.$file['release_id'];
+                $html .= '<td><a href="'.$url.'">'.$file['release_name'].'</a></td>';
+                $url   = '/file/showfiles.php?group_id='.$group_id.'#p_'.$file['package_id'];
+                $html .= '<td><a href="'.$url.'">'.$file['package_name'].'</a></td>';
+                $html .= '<td align="center" colspan="2">Not yet restorable</td>';
+                $html .= '<td align="center"><img src="'.util_get_image_theme("trash-grey.png").'" border="0" height="16" width="16"></td>';
+                $html .= '</tr>';
+            }
+        }
+    }
+    if ($i > 1) {
+        $html .= '</table>';
+    }
     $html .= '</div>';
 
     $idArray[]   = 'frs_file';
-    $nomArray[]  = 'File files';
+    $nomArray[]  = 'Deleted files';
     $htmlArray[] = $html;
 }
 
@@ -178,11 +228,20 @@ function frs_file_restore_process($request, $group_id) {
     if ($fileId > 0) {
         $fileFactory = new FRSFileFactory();
         $file        = $fileFactory->getFRSFileFromDb($fileId);
-        if ($fileFactory->markFileToBeRestored($file)) {
-            $GLOBALS['Response']->addFeedback('info', 'File marked to be restored');
-        } else {
-            $GLOBALS['Response']->addFeedback('error', 'File not restored');
-        }
+        $file_name   = $file->getFileName();
+        $basename = basename($file_name);
+        $release_id = $file->getReleaseID();
+        if (!$fileFactory->isSameFileMarkedToBeRestored($basename, $release_id, $group_id)){
+            if(!$fileFactory->isFileNameExist($file_name, $group_id)){
+                if ($fileFactory->markFileToBeRestored($file)) {
+                    $GLOBALS['Response']->addFeedback('info', 'File marked to be restored');
+                } else {
+                    $GLOBALS['Response']->addFeedback('error', 'File not restored');
+                }
+            }else {
+                $GLOBALS['Response']->addFeedback('error', 'There is already a file with this filename having an active status');
+            }
+        } else {$GLOBALS['Response']->addFeedback('error', 'A file with a same name is marked to be restored');}
     } else {
         $GLOBALS['Response']->addFeedback('error', 'Bad file id');
     }

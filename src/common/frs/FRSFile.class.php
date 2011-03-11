@@ -34,9 +34,13 @@ class FRSFile extends Error {
      */
     var $file_id;	
     /**
-     * @var int $filename the name of this FRSFile
+     * @var String $filename the name of this FRSFile
      */
     var $filename;
+    /**
+     * @var String $filepath the full path where the file is created  
+     */
+    var $filepath;
     /**
      * @var int $release_id the ID of the release this FRSFile belong to
      */
@@ -90,6 +94,7 @@ class FRSFile extends Error {
     function FRSFile($data_array = null) {
         $this->file_id       = null;
         $this->filename     = null;
+        $this->filepath     = null;
         $this->release_id    = null;
         $this->type_id       = null;
         $this->processor_id  = null;
@@ -118,11 +123,30 @@ class FRSFile extends Error {
     function getFileName() {
         return $this->filename;
     }
-    
+
     function setFileName($filename) {
         $this->filename = $filename;
     }
-    
+
+    /**
+     * Obtain the name of the file as stored in filesystem
+     * Old files are stored in the filesystem as uploaded by the user
+     * In that case filepath == NULL then the returned value is filename
+     *
+     * @return String
+     */
+    function getFilePath() {
+        if ($this->filepath == null) {
+            return $this->filename;
+        } else {
+            return $this->filepath;
+        }
+    }
+
+    function setFilePath($filepath) {
+        $this->filepath = $filepath;
+    }
+
     function getReleaseID() {
         return $this->release_id;
     }
@@ -169,7 +193,7 @@ class FRSFile extends Error {
         if ($this->file_location == null) {
             $group = $this->getGroup();
             $group_unix_name = $group->getUnixName(false);
-            $basename = $this->getFileName();
+            $basename = $this->getFilePath();
             $this->file_location = $GLOBALS['ftp_frs_dir_prefix'].'/'.$group_unix_name.'/'.$basename;
         }
         return $this->file_location;
@@ -268,6 +292,7 @@ class FRSFile extends Error {
 	function initFromArray($array) {
 		if (isset($array['file_id']))       $this->setFileID($array['file_id']);
 		if (isset($array['filename']))      $this->setFileName($array['filename']);
+        if (isset($array['filepath']))      $this->setFilePath($array['filepath']);
 		if (isset($array['release_id']))    $this->setReleaseID($array['release_id']);
         if (isset($array['type_id']))       $this->setTypeID($array['type_id']);
         if (isset($array['processor_id']))  $this->setProcessorID($array['processor_id']);
@@ -284,6 +309,7 @@ class FRSFile extends Error {
         $array = array();
         $array['file_id']       = $this->getFileID();
         $array['filename']      = $this->getFileName();
+        $array['filepath']      = $this->getFilePath();
         $array['release_id']    = $this->getReleaseID();
         $array['type_id']       = $this->getTypeID();
         $array['processor_id']  = $this->getProcessorID();

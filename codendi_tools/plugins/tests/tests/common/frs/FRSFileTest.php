@@ -43,6 +43,18 @@ class FRSFileTest extends UnitTestCase {
         $content .= $file->getContent(300, 100);
         $this->assertIdentical(file_get_contents(dirname(__FILE__).'/_fixtures/file_sample'), $content);
     }
+
+    function testGetfilePath() {
+        $file = new FRSFile();
+        $filepath = 'path';
+        $file->setFilePath($filepath);
+        $filename = 'name';
+        $file->setFileName($filename);
+        $this->assertequal($filepath, $file->getFilePath());
+
+        $file->setFilePath(null);
+        $this->assertequal($filename, $file->getFilePath());
+    }
 }
 
 

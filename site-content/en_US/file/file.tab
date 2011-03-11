@@ -96,6 +96,7 @@ file_admin_editreleases	p_rel_not_yours	Package/Release Doesn't Exist Or Isn't Y
 file_admin_editreleases	not_add_file	Couldn't Add Filename
 file_admin_editreleases	filename_invalid	Invalid file name or file doesn't exist
 file_admin_editreleases	filename_exists	File name already exists in this release
+file_admin_editreleases	filename_to_be_restored	A file with similar name is marked to be restored in few minutes 
 file_admin_editreleases	md5_fail	MD5 checksum comparison failed for file "$1", the MD5 value computed on server is "$2"
 file_admin_editreleases	no_files_selected	No Files Selected
 file_admin_editreleases	file_deleted	File Deleted : $1

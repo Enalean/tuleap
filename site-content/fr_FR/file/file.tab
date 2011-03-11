@@ -89,6 +89,7 @@ file_admin_editreleases	p_rel_not_yours	Le paquet ou la version n'existe pas ou 
 file_admin_editreleases	not_add_file	Le fichier n'a pas pu être ajouté
 file_admin_editreleases	filename_invalid	Nom de fichier invalide ou inexistant
 file_admin_editreleases	filename_exists	Le nom de fichier existe déjà pour ce projet
+file_admin_editreleases	filename_to_be_restored	Un fichier avec ce même nom va être restauré dans quelques minutes
 file_admin_editreleases	md5_fail	La comparaison des MD5 checksum a echoué pour le fichier "$1", la valeur du MD5 calculée au niveau du serveur est "$2"
 file_admin_editreleases	no_files_selected	Aucun fichier sélectionné
 file_admin_editreleases	file_deleted	Fichier détruit : $1
