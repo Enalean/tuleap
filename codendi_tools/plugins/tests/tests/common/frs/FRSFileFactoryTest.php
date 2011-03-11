@@ -530,7 +530,6 @@ class FRSFileFactoryTest extends UnitTestCase {
 
         $f = new FRSFile();
         $f->setFileName('toto.txt');
-        $f->setFilePath('toto.txt_1299584219');
         $f->setRelease($r);
 
         $ff = new FRSFileFactory();
@@ -538,9 +537,9 @@ class FRSFileFactoryTest extends UnitTestCase {
 
         $res = $ff->moveFileForge($f, $r);
         $this->assertTrue($res);
-        $this->assertTrue(file_exists($GLOBALS['ftp_frs_dir_prefix'].'/prj/p123_r456/toto.txt_1299584219'));
+        $this->assertTrue(file_exists($GLOBALS['ftp_frs_dir_prefix'].'/prj/'.$f->getFilePath()));
 
-        unlink($GLOBALS['ftp_frs_dir_prefix'].'/prj/p123_r456/toto.txt_1299584219');
+        unlink($GLOBALS['ftp_frs_dir_prefix'].'/prj/'.$f->getFilePath());
         rmdir($GLOBALS['ftp_frs_dir_prefix'].'/prj/p123_r456');
     }
 
