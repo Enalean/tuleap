@@ -136,7 +136,7 @@ site_admin_footer(array());
 function frs_file_restore_view($group_id, $idArray, $nomArray, $htmlArray) {
     $fileFactory        = new FRSFileFactory();
     $files              = $fileFactory->listPendingFiles($group_id, 0, 0);
-    $ToBeRestored_files = $fileFactory->listToBeRestoredFiles($group_id);
+    $toBeRestoredFiles = $fileFactory->listToBeRestoredFiles($group_id);
     $deletedFiles       = $fileFactory->listStagingCandidates($group_id);
 
     $html  = '';
@@ -168,21 +168,20 @@ function frs_file_restore_view($group_id, $idArray, $nomArray, $htmlArray) {
         $html .= '<center>No restorable files found</center>';
     }
 
-    if ($ToBeRestored_files->rowCount() > 0) {
+    if ($toBeRestoredFiles->rowCount() > 0) {
         if ($i == 1) {
             $i++;
             $titles = array ('Filename', 'Release name', 'Package name', '', '', '');
             $html  .= html_build_list_table_top ($titles);
         }
-        foreach ($ToBeRestored_files as $file) {
+        foreach ($toBeRestoredFiles as $file) {
             $html .= '<tr class="boxitemgrey">';
             $html .= '<td>'.$file['filename'].'</td>';
             $url   = '/file/showfiles.php?group_id='.$group_id.'#p_'.$file['package_id'].'r_'.$file['release_id'];
             $html .= '<td><a href="'.$url.'">'.$file['release_name'].'</a></td>';
             $url   = '/file/showfiles.php?group_id='.$group_id.'#p_'.$file['package_id'];
             $html .= '<td><a href="'.$url.'">'.$file['package_name'].'</a></td>';
-            $html .= '<td>File to be restored next SYSTEM_CHECK event</td>';
-            $html .= '<td>File to be restored next SYSTEM_CHECK event</td>';
+            $html .= '<td align="center" colspan="2">File to be restored next SYSTEM_CHECK event</td>';
             $html .= '<td align="center"><img src="'.util_get_image_theme("trash-grey.png").'" border="0" height="16" width="16"></td>';
             $html .= '</tr>';
         }
@@ -203,8 +202,7 @@ function frs_file_restore_view($group_id, $idArray, $nomArray, $htmlArray) {
                 $html .= '<td><a href="'.$url.'">'.$file['release_name'].'</a></td>';
                 $url   = '/file/showfiles.php?group_id='.$group_id.'#p_'.$file['package_id'];
                 $html .= '<td><a href="'.$url.'">'.$file['package_name'].'</a></td>';
-                $html .= '<td>Not yet restorable</td>';
-                $html .= '<td>Not yet restorable</td>';
+                $html .= '<td align="center" colspan="2">Not yet restorable</td>';
                 $html .= '<td align="center"><img src="'.util_get_image_theme("trash-grey.png").'" border="0" height="16" width="16"></td>';
                 $html .= '</tr>';
             }
