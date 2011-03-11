@@ -523,7 +523,6 @@ else
     configure_bind="false"
 fi
 
-
 if [ "$auto_passwd" = "true" ]; then
     # Save in /root/.codendi_passwd
     passwd_file=/root/.codendi_passwd
@@ -791,7 +790,7 @@ for f in /etc/httpd/conf/httpd.conf \
 done
 
 # Bind config
-if [ "$configure_bind" = "y" ]; then
+if [ "$configure_bind" = "true" ]; then
     setup_bind
 fi
 
