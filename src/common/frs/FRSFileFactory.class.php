@@ -720,14 +720,14 @@ class FRSFileFactory extends Error {
         $dao = $this->_getFRSFileDao();
         $dar = $dao->searchFilesToRestore();
         if ($dar && !$dar->isError() && $dar->rowCount() >0) {
-            $isError = false;
+            $restoreState = true;
             foreach ($dar as $row) {
                 $file = new FRSFile($row);
                 if (!$this->restoreFile($file, $backend)) {
-                    $isError = true;
+                    $restoreState = false;
                 }
             }
-            return !$isError;
+            return $restoreState;
         }
         return false;
     }
