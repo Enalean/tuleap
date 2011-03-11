@@ -700,10 +700,14 @@ class FRSFileFactory extends Error {
                               'item_id'  => $file->getFileID()));
                         return true;
                     }
+                    echo "File ".$file->getFileName()."(".$file->getFileID().") not restored, database error.\n";
                     return false;
                 }
             }
+            echo "File ".$file->getFileName()."(".$file->getFileID().") could not be restored, not found in staging path ".$stagingPath.".\n";
+            return false;
         }
+        echo "File ".$file->getFileName()."(".$file->getFileID().") could not be restored in deleted release ".$release->getName()."(".$release->getReleaseID().").\n";
         return false;
     }
 
@@ -716,13 +720,14 @@ class FRSFileFactory extends Error {
         $dao = $this->_getFRSFileDao();
         $dar = $dao->searchFilesToRestore();
         if ($dar && !$dar->isError() && $dar->rowCount() >0) {
+            $isError = false;
             foreach ($dar as $row) {
                 $file = new FRSFile($row);
                 if (!$this->restoreFile($file, $backend)) {
-                    return false;
+                    $isError = true;
                 }
             }
-            return true;
+            return !$isError;
         }
         return false;
     }
