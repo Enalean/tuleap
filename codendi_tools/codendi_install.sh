@@ -791,7 +791,7 @@ for f in /etc/httpd/conf/httpd.conf \
 done
 
 # Bind config
-if [ "$configure_bind" != "y" ]; then
+if [ "$configure_bind" = "y" ]; then
     setup_bind
 fi
 
