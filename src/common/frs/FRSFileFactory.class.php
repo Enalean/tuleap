@@ -684,21 +684,24 @@ class FRSFileFactory extends Error {
      * @return Boolean
      */
     function restoreFile($file, $backend) {
-        $stagingPath = $this->getStagingPath($file);
-        if (file_exists($stagingPath)) {
-            if (!is_dir(dirname($file->getFileLocation()))) {
-                mkdir(dirname($file->getFileLocation()), 0755, true);
-                $backend->chgrp(dirname($file->getFileLocation()), $GLOBALS['sys_http_user']);
-            }
-            if (rename($stagingPath, $file->getFileLocation())) {
-                $dao = $this->_getFRSFileDao();
-                if ($dao->restoreFile($file->getFileID())) {
-                    $this->_getEventManager()->processEvent('frs_restore_file',
-                    array('group_id' => $file->getGroup()->getGroupId(),
-                                                                 'item_id'    => $file->getFileID()));
-                    return true;
+        $release = $this->_getFRSReleaseFactory()->getFRSReleaseFromDb($file->getReleaseId(), null, null, true);
+        if ($release->isActive()) {
+            $stagingPath = $this->getStagingPath($file);
+            if (file_exists($stagingPath)) {
+                if (!is_dir(dirname($file->getFileLocation()))) {
+                    mkdir(dirname($file->getFileLocation()), 0755, true);
+                    $backend->chgrp(dirname($file->getFileLocation()), $GLOBALS['sys_http_user']);
                 }
-                return false;
+                if (rename($stagingPath, $file->getFileLocation())) {
+                    $dao = $this->_getFRSFileDao();
+                    if ($dao->restoreFile($file->getFileID())) {
+                        $this->_getEventManager()->processEvent('frs_restore_file',
+                        array('group_id' => $file->getGroup()->getGroupId(),
+                              'item_id'  => $file->getFileID()));
+                        return true;
+                    }
+                    return false;
+                }
             }
         }
         return false;

@@ -181,7 +181,12 @@ function frs_file_restore_view($group_id, $idArray, $nomArray, $htmlArray) {
             $html .= '<td><a href="'.$url.'">'.$file['release_name'].'</a></td>';
             $url   = '/file/showfiles.php?group_id='.$group_id.'#p_'.$file['package_id'];
             $html .= '<td><a href="'.$url.'">'.$file['package_name'].'</a></td>';
-            $html .= '<td align="center" colspan="2">File to be restored next SYSTEM_CHECK event</td>';
+            if ($file['release_status'] != FRSRelease::STATUS_DELETED
+                && $file['package_status'] != FRSPackage::STATUS_DELETED) {
+                $html .= '<td align="center" colspan="2">File to be restored next SYSTEM_CHECK event</td>';
+            } else {
+                $html .= '<td align="center" colspan="2">File marked to be restored in a deleted release</td>';
+            }
             $html .= '<td align="center"><img src="'.util_get_image_theme("trash-grey.png").'" border="0" height="16" width="16"></td>';
             $html .= '</tr>';
         }
