@@ -538,9 +538,6 @@ class FRSFileFactoryTest extends UnitTestCase {
     }
 
     function testRestoreDeletedFilesReturnFalse() {
-        $refFile1 = new FRSFile(array('file_id' => 12));
-        $refFile2 = new FRSFile(array('file_id' => 13));
-
         $dar = new MockDataAccessResult($this);
         $dar->setReturnValue('isError', false);
         $dar->setReturnValueAt(0, 'current', array('file_id' => 12));
