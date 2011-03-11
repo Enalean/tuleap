@@ -40,8 +40,24 @@ Packager: Manuel VACELET <manuel.vacelet@st.com>
 # Package cutting is still a bit a mess so do not force dependency on custmization package yet
 #Requires: %{PKG_NAME}-customization
 Requires: vixie-cron >= 4.1-9
-
+# Php and web related stuff
+Requires: php, php-mysql, php-xml, php-mbstring, php-gd, php-soap, php-pear, gd
+Requires: dejavu-lgc-fonts
+Requires: jpgraph = 2.3.4-0.codendi
+Requires: php-pecl-apc
+Requires: htmlpurifier
+Requires: curl
+# Perl
+Requires: perl, perl-DBI, perl-DBD-MySQL, perl-suidperl, perl-URI, perl-HTML-Tagset, perl-HTML-Parser, perl-libwww-perl, perl-DateManip
+# Apache
+Requires: httpd, mod_ssl, openssl
+# Mysql Client
+Requires: mysql
+# libnss-mysql (system authentication based on MySQL)
+Requires: libnss-mysql, mod_auth_mysql, nss, nscd
+# Forgeupgrade
 Requires: forgeupgrade >= 1.2
+
 
 %description
 Codendi is a web based application that address all the aspects of product development.
