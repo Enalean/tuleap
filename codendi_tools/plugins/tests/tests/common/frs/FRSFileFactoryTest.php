@@ -485,7 +485,35 @@ class FRSFileFactoryTest extends UnitTestCase {
         unlink($GLOBALS['ftp_frs_dir_prefix'].'/prj/p3_r1/toto.xls');
         rmdir($GLOBALS['ftp_frs_dir_prefix'].'/prj/p3_r1');
     }
-    
+
+    function testRestoreFileInDeletedRelease(){
+        $fileFactory = new FRSFileFactoryTestRestore();
+
+        // Create temp file
+        $filepath = dirname(__FILE__).'/_fixtures/DELETED/prj/p3_r1/toto.xls.12';
+        mkdir(dirname($filepath), 0750, true);
+        touch($filepath);
+        $this->assertTrue(is_dir(dirname($filepath)));
+
+        $release = new MockFRSRelease($this);
+        $release->setReturnValue('isActive', false);
+        $releaseFactory = new MockFRSReleaseFactory($this);
+        $releaseFactory->setReturnValue('getFRSReleaseFromDb', $release);
+        $fileFactory->setReturnValue('_getFRSReleaseFactory', $releaseFactory);
+        $file = new MockFRSFile($this);
+        $backend = new MockBackendSystem($this);
+
+        $this->assertFalse($fileFactory->restoreFile($file, $backend));
+        $this->assertTrue(is_dir(dirname($filepath)));
+        $this->assertFalse(file_exists($GLOBALS['ftp_frs_dir_prefix'].'/prj/p3_r1/toto.xls'));
+        $this->assertFalse(is_dir($GLOBALS['ftp_frs_dir_prefix'].'/prj/p3_r1'));
+
+        // Cleanup
+        unlink($GLOBALS['ftp_frs_dir_prefix'].'/DELETED/prj/p3_r1/toto.xls.12');
+        rmdir($GLOBALS['ftp_frs_dir_prefix'].'/DELETED/prj/p3_r1');
+        rmdir($GLOBALS['ftp_frs_dir_prefix'].'/DELETED/prj');
+    }
+
     function testRestoreDeletedFiles() {
         $refFile = new FRSFile(array('file_id' => 12));
         
