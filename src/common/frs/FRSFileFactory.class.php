@@ -325,10 +325,10 @@ class FRSFileFactory extends Error {
         $filePath = $this->getResolvedFileName($file->getFileName());
         if (!file_exists($GLOBALS['ftp_frs_dir_prefix'].'/'.$unixName . '/' . $upload_sub_dir.'/'.$filePath)) {
             $fileName= preg_replace('` `', '\\ ', $fileName);
-            $filePath = preg_replace('` `', '\\ ', $filePath);
+            $cmdFilePath = preg_replace('` `', '\\ ', $filePath);
             $ret_val   = null;
             $exec_res  = null;
-            $cmd = $this->fileforge." $fileName " . $unixName . "/" . $upload_sub_dir.'/'.$filePath;
+            $cmd = $this->fileforge." $fileName " . $unixName . "/" . $upload_sub_dir.'/'.$cmdFilePath;
             exec($cmd, $exec_res, $ret_val);
             // Warning. Posix common value for success is 0 (zero), but in php 0 == false.
             // So "convert" the unix "success" value to the php one (basically 0 => true).
