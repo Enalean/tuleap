@@ -43,6 +43,7 @@ CHGRP='/bin/chgrp'
 CHMOD='/bin/chmod'
 FIND='/usr/bin/find'
 MYSQL='/usr/bin/mysql'
+MYSQLSHOW='/usr/bin/mysqlshow'
 TOUCH='/bin/touch'
 CAT='/bin/cat'
 TAIL='/usr/bin/tail'
@@ -123,7 +124,9 @@ generate_passwd() {
 # Setup chunks
 ##############################################
 
-##############################################
+
+###############################################################################
+#
 # FTP server configuration
 #
 setup_vsftpd() {
@@ -179,7 +182,9 @@ EOF
     $SERVICE vsftpd start
 }
 
-##############################################
+
+###############################################################################
+#
 # Bind DNS server configuration
 #
 setup_bind() {
@@ -220,18 +225,198 @@ setup_bind() {
   $SERVICE named start
 }
 
+###############################################################################
+#
+# Mailman configuration
+#
+setup_mailman() {
+    echo "Configuring Mailman..."
+
+    # Setup admin password
+    /usr/lib/mailman/bin/mmsitepass $mm_passwd
+
+    # Update Mailman config
+    if [ "$disable_subdomains" != "y" ]; then
+        LIST_DOMAIN=lists.$sys_default_domain
+    else
+        LIST_DOMAIN=$sys_default_domain
+    fi
+
+    $CAT <<EOF >> /usr/lib/mailman/Mailman/mm_cfg.py
+DEFAULT_EMAIL_HOST = '$LIST_DOMAIN'
+DEFAULT_URL_HOST = '$LIST_DOMAIN'
+add_virtualhost(DEFAULT_URL_HOST, DEFAULT_EMAIL_HOST)
+
+# Remove images from Mailman pages (GNU, Python and Mailman logos)
+IMAGE_LOGOS = 0
+
+# Uncomment to run Mailman on secure server only
+#DEFAULT_URL_PATTERN = 'https://%s/mailman/'
+#PUBLIC_ARCHIVE_URL = 'https://%(hostname)s/pipermail/%(listname)s'
+
+EOF
+
+
+    # Compile file
+    `python -O /usr/lib/mailman/Mailman/mm_cfg.py`
+
+    # Create site wide ML
+    # Note that if sys_default_domain is not a domain, the script will complain
+    LIST_OWNER=codendi-admin@$sys_default_domain
+    if [ "$disable_subdomains" = "y" ]; then
+        LIST_OWNER=codendi-admin@$sys_fullname
+    fi
+    /usr/lib/mailman/bin/newlist -q mailman $LIST_OWNER $mm_passwd > /dev/null
+
+    # Comment existing mailman aliases in /etc/aliases
+    $PERL -i'.orig' -p -e "s/^mailman(.*)/#mailman\1/g" /etc/aliases
+
+    # Add new aliases
+    cat << EOF >> /etc/aliases
+
+## mailman mailing list
+mailman:              "|/usr/lib/mailman/mail/mailman post mailman"
+mailman-admin:        "|/usr/lib/mailman/mail/mailman admin mailman"
+mailman-bounces:      "|/usr/lib/mailman/mail/mailman bounces mailman"
+mailman-confirm:      "|/usr/lib/mailman/mail/mailman confirm mailman"
+mailman-join:         "|/usr/lib/mailman/mail/mailman join mailman"
+mailman-leave:        "|/usr/lib/mailman/mail/mailman leave mailman"
+mailman-owner:        "|/usr/lib/mailman/mail/mailman owner mailman"
+mailman-request:      "|/usr/lib/mailman/mail/mailman request mailman"
+mailman-subscribe:    "|/usr/lib/mailman/mail/mailman subscribe mailman"
+mailman-unsubscribe:  "|/usr/lib/mailman/mail/mailman unsubscribe mailman"
+
+EOF
+
+    # Subscribe codendi-admin to this ML
+    echo $LIST_OWNER | /usr/lib/mailman/bin/add_members -r - mailman
+
+    $CHKCONFIG mailman on
+    $SERVICE mailman start
+}
+
+###############################################################################
+#
+# Mailman configuration
+#
+setup_mysql() {
+    echo "Creating the Codendi database..."
+
+    # If DB is local, mysql password where not already tested
+    pass_opt=""
+    if [ -z "$mysql_host" ]; then
+        # See if MySQL root account is password protected
+        $MYSQLSHOW -uroot 2>&1 | grep password
+        while [ $? -eq 0 ]; do
+            read -s -p "Existing DB is password protected. What is the Mysql root password?: " old_passwd
+            echo
+            $MYSQLSHOW -uroot --password=$old_passwd 2>&1 | grep password
+        done
+        if [ "X$old_passwd" != "X" ]; then
+            pass_opt="-uroot --password=$old_passwd"
+        else
+            pass_opt="-uroot"
+        fi
+    else
+        pass_opt="-uroot --password=$rt_passwd"
+    fi
+
+    # Test if codendi DB already exists
+    yn="-"
+    freshdb=0
+    if $MYSQLSHOW $pass_opt | $GREP codendi 2>&1 >/dev/null; then
+        read -p "Codendi Database already exists. Overwrite? [y|n]:" yn
+    fi
+
+    # Delete the Codendi DB if asked for
+    if [ "$yn" = "y" ]; then
+        $MYSQL $pass_opt -e "DROP DATABASE codendi"
+    fi
+
+    # If no codendi, create it!
+    if ! $MYSQLSHOW $pass_opt | $GREP codendi 2>&1 >/dev/null; then
+        freshdb=1
+        $MYSQL $pass_opt -e "CREATE DATABASE codendi DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci"
+        $CAT <<EOF | $MYSQL $pass_opt mysql
+GRANT ALL PRIVILEGES on *.* to codendiadm@$mysql_httpd_host identified by '$codendiadm_passwd' WITH GRANT OPTION;
+REVOKE SUPER ON *.* FROM codendiadm@$mysql_httpd_host;
+GRANT ALL PRIVILEGES on *.* to root@$mysql_httpd_host identified by '$rt_passwd';
+FLUSH PRIVILEGES;
+EOF
+    fi
+    # Password has changed
+    pass_opt="-uroot --password=$rt_passwd"
+
+    if [ $freshdb -eq 1 ]; then
+        echo "Populating the Codendi database..."
+        cd $INSTALL_DIR/src/db/mysql/
+        $MYSQL -u codendiadm codendi --password=$codendiadm_passwd < database_structure.sql   # create the DB
+        cp database_initvalues.sql /tmp/database_initvalues.sql
+        substitute '/tmp/database_initvalues.sql' '_DOMAIN_NAME_' "$sys_default_domain"
+        $MYSQL -u codendiadm codendi --password=$codendiadm_passwd < /tmp/database_initvalues.sql  # populate with init values.
+        rm -f /tmp/database_initvalues.sql
+
+        # Create dbauthuser
+        $CAT <<EOF | $MYSQL $pass_opt mysql
+GRANT SELECT ON codendi.user to dbauthuser@$mysql_httpd_host identified by '$dbauth_passwd';
+GRANT SELECT ON codendi.groups to dbauthuser@$mysql_httpd_host;
+GRANT SELECT ON codendi.user_group to dbauthuser@$mysql_httpd_host;
+FLUSH PRIVILEGES;
+EOF
+    fi
+}
+
+
+test_mysql_host() {
+    echo -n "Testing Mysql connexion means... "
+    # Root access: w/o password
+    if [ -z "$rt_passwd" ]; then
+        if ! $MYSQLSHOW -uroot >/dev/null 2>&1; then
+            die "You didn't provide any root password for $mysql_host but one seems required"
+        fi
+    fi
+    if ! $MYSQLSHOW -uroot -p$rt_passwd >/dev/null 2>&1; then
+        die "The Mysql root password you provided for $mysql_host doesn't work"
+    fi
+    echo "[OK]"
+}
+
 ##############################################
 # Codendi installation
 ##############################################
 
 auto_passwd=""
 configure_bind=""
+mysql_host=""
+mysql_port=""
+mysql_httpd_host="localhost"
+rt_passwd=""
 for arg in $@; do
     case "$arg" in
-        --auto-passwd) auto_passwd="true";;
+        --auto-passwd)         auto_passwd="true";;
         --without-bind-config) configure_bind="false";;
+        --mysql-host=*)
+            mysql_host=$(echo "$arg" | sed -e 's/--mysql-host=//')
+            MYSQL="$MYSQL -h$mysql_host"
+            MYSQLSHOW="$MYSQLSHOW -h$mysql_host"
+            ;;
+        --mysql-port=*)
+            mysql_port=$(echo "$arg" | sed -e 's/--mysql-port=//')
+            MYSQL="$MYSQL -P$mysql_port"
+            MYSQLSHOW="$MYSQLSHOW -P$mysql_port"
+            ;;
+        --mysql-root-password=*)
+            rt_passwd=$(echo "$arg" | sed -e 's/--mysql-root-password=//')
+            ;;
+        --mysql-httpd-host=*)
+            mysql_httpd_host=$(echo "$arg" | sed -e 's/--mysql-httpd-host=//')
+            ;;
     esac
 done
+
+if [ ! -z "$mysql_host" ]; then
+    test_mysql_host
+fi
 
 
 ##############################################
@@ -312,7 +497,7 @@ if [ "$disable_subdomains" != "y" ]; then
     if [ "$configure_bind" != "false" ]; then
         configure_bind="true"
     fi
-elif
+else
     configure_bind="false"
 fi
 
@@ -320,45 +505,51 @@ fi
 if [ "$auto_passwd" = "true" ]; then
     # Save in /root/.codendi_passwd
     passwd_file=/root/.codendi_passwd
+    $RM -f $passwd_file
     touch $passwd_file
     $CHMOD 0600 $passwd_file
 
     # Mysql Root password (what if remote DB ?)
-    rt_passwd=$(generate_passwd)
-    echo $rt_passwd >> $passwd_file
+    if [ -z "rt_passwd" ]; then
+        rt_passwd=$(generate_passwd)
+        echo "Mysql root (root): $rt_passwd" >> $passwd_file
+    fi
 
     # For both DB and system
     codendiadm_passwd=$(generate_passwd)
-    echo $codendiadm_passwd >> $passwd_file
+    echo "Codendiadm unix & DB (codendiadm): $codendiadm_passwd" >> $passwd_file
 
     # Mailman (only if installed)
     if [ "$enable_core_mailman" = "true" ]; then
         mm_passwd=$(generate_passwd)
-        echo $mm_passwd >> $passwd_file
+        echo "Mailman siteadmin: $mm_passwd" >> $passwd_file
     fi
 
     # Openfire (only if installed)
     if [ "$enable_plugin_im" = "true" ]; then
         openfire_passwd=$(generate_passwd)
-        echo $openfire_passwd >> $passwd_file
+        echo "Openfire DB user (openfireadm): $openfire_passwd" >> $passwd_file
     fi
 
     # Only for ftp/ssh/cvs
     dbauth_passwd=$(generate_passwd)
-    echo $dbauth_passwd >> $passwd_file
+    echo "Libnss-mysql DB user (dbauthuser): $dbauth_passwd" >> $passwd_file
 
     # Ask for site admin ?
 
     todo "Automatically generated passwords are stored in $passwd_file"
 else
-# Ask for user passwords
-rt_passwd="a"; rt_passwd2="b";
-while [ "$rt_passwd" != "$rt_passwd2" ]; do
-    read -s -p "Password for MySQL root: " rt_passwd
-    echo
-    read -s -p "Retype MySQL root password: " rt_passwd2
-    echo
-done
+    # Ask for user passwords
+
+    if [ -z "rt_passwd" ]; then
+        rt_passwd="a"; rt_passwd2="b";
+        while [ "$rt_passwd" != "$rt_passwd2" ]; do
+            read -s -p "Password for MySQL root: " rt_passwd
+            echo
+            read -s -p "Retype MySQL root password: " rt_passwd2
+            echo
+        done
+    fi
 
 codendiadm_passwd="a"; codendiadm_passwd2="b";
 while [ "$codendiadm_passwd" != "$codendiadm_passwd2" ]; do
@@ -539,11 +730,12 @@ pid-file=/var/run/mysqld/mysqld.pid
 
 EOF
 
-echo "Initializing MySQL: You can ignore additionnal messages on MySQL below this line:"
-echo "***************************************"
-# Start database
-$SERVICE mysqld start
-echo "***************************************"
+if [ -z "$mysql_host" ]; then
+    echo "Initializing MySQL: You can ignore additionnal messages on MySQL below this line:"
+    echo "***************************************"
+    $SERVICE mysqld start
+    echo "***************************************"
+fi
 
 
 ##############################################
@@ -659,59 +851,7 @@ $CHMOD 770 /var/lib/dav/
 ##############################################
 # Installing the Codendi database
 #
-echo "Creating the Codendi database..."
-
-yn="-"
-freshdb=0
-pass_opt=""
-if [ -d "/var/lib/mysql/codendi" ]; then
-    read -p "Codendi Database already exists. Overwrite? [y|n]:" yn
-fi
-
-# See if MySQL root account is password protected
-mysqlshow 2>&1 | grep password
-while [ $? -eq 0 ]; do
-    read -s -p "Existing Codendi DB is password protected. What is the Mysql root password?: " old_passwd
-    echo
-    mysqlshow --password=$old_passwd 2>&1 | grep password
-done
-[ "X$old_passwd" != "X" ] && pass_opt="--password=$old_passwd"
-
-# Delete the Codendi DB if asked for
-if [ "$yn" = "y" ]; then
-    $MYSQL -u root $pass_opt -e "drop database codendi"
-fi
-
-if [ ! -d "/var/lib/mysql/codendi" ]; then
-    freshdb=1
-    $MYSQL -u root $pass_opt -e "create database codendi DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci"
-    $CAT <<EOF | $MYSQL -u root mysql $pass_opt
-GRANT ALL PRIVILEGES on *.* to codendiadm@localhost identified by '$codendiadm_passwd' WITH GRANT OPTION;
-REVOKE SUPER ON *.* FROM codendiadm@localhost;
-GRANT ALL PRIVILEGES on *.* to root@localhost identified by '$rt_passwd';
-FLUSH PRIVILEGES;
-EOF
-fi
-# Password has changed
-pass_opt="--password=$rt_passwd"
-
-if [ $freshdb -eq 1 ]; then
-echo "Populating the Codendi database..."
-cd $INSTALL_DIR/src/db/mysql/
-$MYSQL -u codendiadm codendi --password=$codendiadm_passwd < database_structure.sql   # create the DB
-cp database_initvalues.sql /tmp/database_initvalues.sql
-substitute '/tmp/database_initvalues.sql' '_DOMAIN_NAME_' "$sys_default_domain"
-$MYSQL -u codendiadm codendi --password=$codendiadm_passwd < /tmp/database_initvalues.sql  # populate with init values.
-rm -f /tmp/database_initvalues.sql
-
-# Create dbauthuser
-$CAT <<EOF | $MYSQL -u root mysql $pass_opt
-GRANT SELECT ON codendi.user to dbauthuser@localhost identified by '$dbauth_passwd';
-GRANT SELECT ON codendi.groups to dbauthuser@localhost;
-GRANT SELECT ON codendi.user_group to dbauthuser@localhost;
-FLUSH PRIVILEGES;
-EOF
-fi
+setup_mysql
 
 ##############################################
 # SSL Certificate creation
@@ -726,69 +866,7 @@ fi
 # RPM was intalled previously
 #
 if [ "$enable_core_mailman" = "true" ]; then
-    echo "Configuring Mailman..."
-
-    # Setup admin password
-    /usr/lib/mailman/bin/mmsitepass $mm_passwd
-
-    # Update Mailman config
-    if [ "$disable_subdomains" != "y" ]; then
-        LIST_DOMAIN=lists.$sys_default_domain
-    else
-        LIST_DOMAIN=$sys_default_domain
-    fi
-
-    $CAT <<EOF >> /usr/lib/mailman/Mailman/mm_cfg.py
-DEFAULT_EMAIL_HOST = '$LIST_DOMAIN'
-DEFAULT_URL_HOST = '$LIST_DOMAIN'
-add_virtualhost(DEFAULT_URL_HOST, DEFAULT_EMAIL_HOST)
-
-# Remove images from Mailman pages (GNU, Python and Mailman logos)
-IMAGE_LOGOS = 0
-
-# Uncomment to run Mailman on secure server only
-#DEFAULT_URL_PATTERN = 'https://%s/mailman/'
-#PUBLIC_ARCHIVE_URL = 'https://%(hostname)s/pipermail/%(listname)s'
-
-EOF
-
-
-    # Compile file
-    `python -O /usr/lib/mailman/Mailman/mm_cfg.py`
-
-    # Create site wide ML
-    # Note that if sys_default_domain is not a domain, the script will complain
-    LIST_OWNER=codendi-admin@$sys_default_domain
-    if [ "$disable_subdomains" = "y" ]; then
-        LIST_OWNER=codendi-admin@$sys_fullname
-    fi
-    /usr/lib/mailman/bin/newlist -q mailman $LIST_OWNER $mm_passwd > /dev/null
-
-    # Comment existing mailman aliases in /etc/aliases
-    $PERL -i'.orig' -p -e "s/^mailman(.*)/#mailman\1/g" /etc/aliases
-
-    # Add new aliases
-    cat << EOF >> /etc/aliases
-
-## mailman mailing list
-mailman:              "|/usr/lib/mailman/mail/mailman post mailman"
-mailman-admin:        "|/usr/lib/mailman/mail/mailman admin mailman"
-mailman-bounces:      "|/usr/lib/mailman/mail/mailman bounces mailman"
-mailman-confirm:      "|/usr/lib/mailman/mail/mailman confirm mailman"
-mailman-join:         "|/usr/lib/mailman/mail/mailman join mailman"
-mailman-leave:        "|/usr/lib/mailman/mail/mailman leave mailman"
-mailman-owner:        "|/usr/lib/mailman/mail/mailman owner mailman"
-mailman-request:      "|/usr/lib/mailman/mail/mailman request mailman"
-mailman-subscribe:    "|/usr/lib/mailman/mail/mailman subscribe mailman"
-mailman-unsubscribe:  "|/usr/lib/mailman/mail/mailman unsubscribe mailman"
-
-EOF
-
-    # Subscribe codendi-admin to this ML
-    echo $LIST_OWNER | /usr/lib/mailman/bin/add_members -r - mailman
-
-    $CHKCONFIG mailman on
-    $SERVICE mailman start
+    setup_mailman
 fi
 
 ##############################################
@@ -1082,7 +1160,7 @@ $CAT $INSTALL_DIR/plugins/graphontrackers/db/initvalues.sql | $MYSQL -u codendia
 # IM plugin
 if [ "$enable_plugin_im" = "true" ]; then
     # Create openfireadm MySQL user
-    $CAT <<EOF | $MYSQL -u root mysql $pass_opt
+    $CAT <<EOF | $MYSQL $pass_opt mysql
 GRANT ALL PRIVILEGES on openfire.* to openfireadm@localhost identified by '$openfire_passwd';
 GRANT SELECT ON codendi.user to openfireadm@localhost;
 GRANT SELECT ON codendi.groups to openfireadm@localhost;
