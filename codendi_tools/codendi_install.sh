@@ -297,7 +297,7 @@ EOF
 
 ###############################################################################
 #
-# Mailman configuration
+# Mysql configuration
 #
 setup_mysql() {
     echo "Creating the Codendi database..."
@@ -366,7 +366,10 @@ EOF
     fi
 }
 
-
+###############################################################################
+#
+# Mysql sanity check
+#
 test_mysql_host() {
     echo -n "Testing Mysql connexion means... "
     # Root access: w/o password
@@ -379,6 +382,23 @@ test_mysql_host() {
         die "The Mysql root password you provided for $mysql_host doesn't work"
     fi
     echo "[OK]"
+}
+
+usage() {
+    cat <<EOF
+Usage: $1 [options]
+Options:
+  --auto-passwd                  Automaticaly generate random passwords
+  --without-bind-config          Do not setup local DNS server
+
+  Mysql configuration (if database on remote server):
+  --mysql-host=host              Hostname (or IP) of mysql server
+  --mysql-port=port              Port if not default (3306)
+  --mysql-root-password=password Mysql root user password on remote host
+  --mysql-httpd-host=host        Name or IP of the current server as seen by
+                                 remote host
+EOF
+    exit 1
 }
 
 ##############################################
@@ -411,13 +431,15 @@ for arg in $@; do
         --mysql-httpd-host=*)
             mysql_httpd_host=$(echo "$arg" | sed -e 's/--mysql-httpd-host=//')
             ;;
+        -*)
+            usage $0
+            ;;
     esac
 done
 
 if [ ! -z "$mysql_host" ]; then
     test_mysql_host
 fi
-
 
 ##############################################
 # Check that all command line tools we need are available
