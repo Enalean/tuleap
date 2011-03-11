@@ -120,6 +120,68 @@ generate_passwd() {
 }
 
 ##############################################
+# Setup chunks
+##############################################
+
+##############################################
+# FTP server configuration
+#
+setup_vsftpd() {
+    # Configure vsftpd
+    $PERL -i'.orig' -p -e "s/^#anon_upload_enable=YES/anon_upload_enable=YES/g" /etc/vsftpd/vsftpd.conf 
+    $PERL -pi -e "s/^#ftpd_banner=.*/ftpd_banner=Welcome to Codendi FTP service./g" /etc/vsftpd/vsftpd.conf 
+    $PERL -pi -e "s/^local_umask=.*/local_umask=002/g" /etc/vsftpd/vsftpd.conf 
+
+    # Add welcome messages
+    $CAT <<'EOF' > /var/lib/codendi/ftp/.message
+********************************************************************
+Welcome to Codendi FTP server
+
+On This Site:
+/incoming          Place where to upload your new file release
+/pub               Projects Anonymous FTP space
+*********************************************************************
+
+EOF
+    $CHOWN ftpadmin.ftpadmin /var/lib/codendi/ftp/.message
+
+    # Add welcome messages
+    $CAT <<'EOF' >/var/lib/codendi/ftp/incoming/.message
+
+Upload new file releases here
+
+EOF
+    $CHOWN ftpadmin.ftpadmin /var/lib/codendi/ftp/incoming/.message
+
+    # Log Rotate
+    $CAT <<'EOF' >/etc/logrotate.d/vsftpd.log
+/var/log/xferlog {
+    # ftpd doesn't handle SIGHUP properly
+    nocompress
+    missingok
+    daily
+    postrotate
+     year=`date +%Y`
+     month=`date +%m`
+     day=`date +%d`
+     destdir="/var/log/codendi/$year/$month"
+     destfile="ftp_xferlog_$year$month$day.log"
+     mkdir -p $destdir
+     cp /var/log/xferlog.1 $destdir/$destfile
+    endscript
+}
+EOF
+    $CHOWN root:root /etc/logrotate.d/vsftpd.log
+    $CHMOD 644 /etc/logrotate.d/vsftpd.log
+
+    # Start service
+    $CHKCONFIG vsftpd on
+    $SERVICE vsftpd start
+}
+
+
+
+##############################################
 # Codendi installation
 ##############################################
 
@@ -128,7 +190,7 @@ configure_bind=""
 for arg in $@; do
     case "$arg" in
         --auto-passwd) auto_passwd="true";;
-        --skip-bind-config) configure_bind="false";;
+        --without-bind-config) configure_bind="false";;
     esac
 done
 
@@ -406,10 +468,6 @@ do
     $TOUCH $current_name
 done
 cd - > /dev/null
-
-
-$PERL -pi -e "s/^#ftpd_banner=.*/ftpd_banner=Welcome to Codendi FTP service./g" /etc/vsftpd/vsftpd.conf 
-
 
 echo "Creating MySQL conf file..."
 $CAT <<'EOF' >/etc/my.cnf
@@ -788,37 +846,8 @@ EOF
 echo "Updating daily cron job in system crontab..."
 $PERL -i'.orig' -p -e's/\d+ \d+ (.*daily)/58 23 \1/g' /etc/crontab
 
-##############################################
-# FTP server configuration
-#
-
-# Configure vsftpd
-$PERL -i'.orig' -p -e "s/^#anon_upload_enable=YES/anon_upload_enable=YES/g" /etc/vsftpd/vsftpd.conf 
-$PERL -pi -e "s/^#ftpd_banner=.*/ftpd_banner=Welcome to Codendi FTP service./g" /etc/vsftpd/vsftpd.conf 
-$PERL -pi -e "s/^local_umask=.*/local_umask=002/g" /etc/vsftpd/vsftpd.conf 
-
-# Add welcome messages
-$CAT <<'EOF' > /var/lib/codendi/ftp/.message
-********************************************************************
-Welcome to Codendi FTP server
-
-On This Site:
-/incoming          Place where to upload your new file release
-/pub               Projects Anonymous FTP space
-*********************************************************************
-
-EOF
-$CHOWN ftpadmin.ftpadmin /var/lib/codendi/ftp/.message
-
-# Add welcome messages
-$CAT <<'EOF' >/var/lib/codendi/ftp/incoming/.message
-
-Upload new file releases here
-
-EOF
-$CHOWN ftpadmin.ftpadmin /var/lib/codendi/ftp/incoming/.message
-
-$SERVICE vsftpd start
+# FTP
+setup_vsftpd
 
 ##############################################
 # Create the custom default page for the project Web sites
@@ -934,27 +963,6 @@ EOF
 $CHOWN root:root /etc/logrotate.d/httpd
 $CHMOD 644 /etc/logrotate.d/httpd
 
-
-$CAT <<'EOF' >/etc/logrotate.d/vsftpd.log
-/var/log/xferlog {
-    # ftpd doesn't handle SIGHUP properly
-    nocompress
-    missingok
-    daily
-    postrotate
-     year=`date +%Y`
-     month=`date +%m`
-     day=`date +%d`
-     destdir="/var/log/codendi/$year/$month"
-     destfile="ftp_xferlog_$year$month$day.log"
-     mkdir -p $destdir
-     cp /var/log/xferlog.1 $destdir/$destfile
-    endscript
-}
-EOF
-$CHOWN root:root /etc/logrotate.d/vsftpd.log
-$CHMOD 644 /etc/logrotate.d/vsftpd.log
-
 ##############################################
 # Create Codendi profile script
 #
@@ -1025,7 +1033,6 @@ $CHKCONFIG httpd on
 $CHKCONFIG mysqld on
 $CHKCONFIG cvs on
 $CHKCONFIG munin-node on
-$CHKCONFIG vsftpd on
 $CHKCONFIG crond on
 
 if [ "$enable_plugin_im" = "true" ]; then
