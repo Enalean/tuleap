@@ -500,6 +500,9 @@ class FRSFileFactoryTest extends UnitTestCase {
         $releaseFactory = new MockFRSReleaseFactory($this);
         $releaseFactory->setReturnValue('getFRSReleaseFromDb', $release);
         $fileFactory->setReturnValue('_getFRSReleaseFactory', $releaseFactory);
+        $dao = new MockFRSFileDao($this);
+        $dao->expectOnce('cancelRrestore');
+        $fileFactory->setReturnValue('_getFRSFileDao', $dao);
         $file = new MockFRSFile($this);
         $backend = new MockBackendSystem($this);
 

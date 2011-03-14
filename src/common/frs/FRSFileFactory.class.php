@@ -685,6 +685,7 @@ class FRSFileFactory extends Error {
      */
     function restoreFile($file, $backend) {
         $release = $this->_getFRSReleaseFactory()->getFRSReleaseFromDb($file->getReleaseId(), null, null, true);
+        $dao = $this->_getFRSFileDao();
         if ($release->isActive()) {
             $stagingPath = $this->getStagingPath($file);
             if (file_exists($stagingPath)) {
@@ -693,7 +694,6 @@ class FRSFileFactory extends Error {
                     $backend->chgrp(dirname($file->getFileLocation()), $GLOBALS['sys_http_user']);
                 }
                 if (rename($stagingPath, $file->getFileLocation())) {
-                    $dao = $this->_getFRSFileDao();
                     if ($dao->restoreFile($file->getFileID())) {
                         $this->_getEventManager()->processEvent('frs_restore_file',
                         array('group_id' => $file->getGroup()->getGroupId(),
@@ -707,6 +707,7 @@ class FRSFileFactory extends Error {
             echo "File ".$file->getFileName()."(".$file->getFileID().") could not be restored, not found in staging path ".$stagingPath.".\n";
             return false;
         }
+        $dao->cancelRrestore($file->getFileID());
         echo "File ".$file->getFileName()."(".$file->getFileID().") could not be restored in deleted release ".$release->getName()."(".$release->getReleaseID().").\n";
         return false;
     }
