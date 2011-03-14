@@ -57,8 +57,11 @@ class SystemEvent_SYSTEM_CHECK extends SystemEvent {
         // TODO: check that there is no pending event??? What about lower priority events??
         
         // remove deleted releases and released files
-        $backendSystem->cleanupFRS();
-        
+        if (!$backendSystem->cleanupFRS()) {
+            $this->error("An error occured while moving FRS files");
+            return false;
+        }
+
         // dump SSH authorized_keys into all users homedirs
         $backendSystem->dumpSSHKeys();
         

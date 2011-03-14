@@ -420,11 +420,13 @@ class FRSFileFactory extends Error {
      * @return Boolean
      */
     public function purgeDeletedFiles($time, $backend) {
-        $this->moveDeletedFilesToStagingArea();
-        $this->purgeFiles($time);
-        $this->cleanStaging();
-        $this->restoreDeletedFiles($backend);
-        return true;
+        if ($this->moveDeletedFilesToStagingArea()
+            && $this->purgeFiles($time)
+            && $this->cleanStaging()
+            && $this->restoreDeletedFiles($backend)) {
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -700,15 +702,15 @@ class FRSFileFactory extends Error {
                               'item_id'  => $file->getFileID()));
                         return true;
                     }
-                    echo "File ".$file->getFileName()."(".$file->getFileID().") not restored, database error.\n";
+                    $backend->log("File ".$file->getFileName()."(".$file->getFileID().") not restored, database error", "error");
                     return false;
                 }
             }
-            echo "File ".$file->getFileName()."(".$file->getFileID().") could not be restored, not found in staging path ".$stagingPath.".\n";
+            $backend->log("File ".$file->getFileName()."(".$file->getFileID().") could not be restored, not found in staging path ".$stagingPath, "error");
             return false;
         }
         $dao->cancelRrestore($file->getFileID());
-        echo "File ".$file->getFileName()."(".$file->getFileID().") could not be restored in deleted release ".$release->getName()."(".$release->getReleaseID().").\n";
+        $backend->log("File ".$file->getFileName()."(".$file->getFileID().") could not be restored in deleted release ".$release->getName()."(".$release->getReleaseID().")", "error");
         return false;
     }
 
@@ -720,15 +722,18 @@ class FRSFileFactory extends Error {
     public function restoreDeletedFiles($backend) {
         $dao = $this->_getFRSFileDao();
         $dar = $dao->searchFilesToRestore();
-        if ($dar && !$dar->isError() && $dar->rowCount() >0) {
-            $restoreState = true;
-            foreach ($dar as $row) {
-                $file = new FRSFile($row);
-                if (!$this->restoreFile($file, $backend)) {
-                    $restoreState = false;
+        if ($dar && !$dar->isError()) {
+            if ($dar->rowCount() >0) {
+                $restoreState = true;
+                foreach ($dar as $row) {
+                    $file = new FRSFile($row);
+                    if (!$this->restoreFile($file, $backend)) {
+                        $restoreState = false;
+                    }
                 }
+                return $restoreState;
             }
-            return $restoreState;
+            return true;
         }
         return false;
     }
