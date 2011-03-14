@@ -709,7 +709,7 @@ class FRSFileFactory extends Error {
             $backend->log("File ".$file->getFileName()."(".$file->getFileID().") could not be restored, not found in staging path ".$stagingPath, "error");
             return false;
         }
-        $dao->cancelRrestore($file->getFileID());
+        $dao->cancelRestore($file->getFileID());
         $backend->log("File ".$file->getFileName()."(".$file->getFileID().") could not be restored in deleted release ".$release->getName()."(".$release->getReleaseID().")", "error");
         return false;
     }

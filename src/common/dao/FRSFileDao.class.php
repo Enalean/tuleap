@@ -531,7 +531,7 @@ class FRSFileDao extends DataAccessObject {
      * 
      * @return Boolean
      */
-    function cancelRrestore($fileId) {
+    function cancelRestore($fileId) {
         $sql = 'UPDATE frs_file_deleted SET delete_date = '.$this->da->escapeInt($_SERVER['REQUEST_TIME']).' WHERE file_id = '.$this->da->escapeInt($fileId);
         return $this->update($sql);
     }
