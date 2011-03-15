@@ -88,7 +88,7 @@ class FRSFileFactoryTest extends UnitTestCase {
         $backend = new MockBackendSystem($this);
         $ff->expectOnce('restoreDeletedFiles', array($backend));
         
-        $this->assertTrue($ff->purgeDeletedFiles(1287504083, $backend));
+        $this->assertTrue($ff->moveFiles(1287504083, $backend));
     }
 
    function testPurgeDeletedFilesMoveStagingError() {
@@ -103,7 +103,7 @@ class FRSFileFactoryTest extends UnitTestCase {
         $backend = new MockBackendSystem($this);
         $ff->expectNever('restoreDeletedFiles', array($backend));
 
-        $ff->purgeDeletedFiles(1287504083, $backend);
+        $this->assertFalse($ff->moveFiles(1287504083, $backend));
     }
 
    function testPurgeDeletedFilesPurgeError() {
@@ -118,7 +118,7 @@ class FRSFileFactoryTest extends UnitTestCase {
         $backend = new MockBackendSystem($this);
         $ff->expectNever('restoreDeletedFiles', array($backend));
 
-        $this->assertFalse($ff->purgeDeletedFiles(1287504083, $backend));
+        $this->assertFalse($ff->moveFiles(1287504083, $backend));
     }
 
    function testPurgeDeletedFilesCleanStagingError() {
@@ -133,7 +133,7 @@ class FRSFileFactoryTest extends UnitTestCase {
         $backend = new MockBackendSystem($this);
         $ff->expectNever('restoreDeletedFiles', array($backend));
 
-        $this->assertFalse($ff->purgeDeletedFiles(1287504083, $backend));
+        $this->assertFalse($ff->moveFiles(1287504083, $backend));
     }
 
    function testPurgeDeletedFilesRestoreDeletedError() {
@@ -148,7 +148,7 @@ class FRSFileFactoryTest extends UnitTestCase {
         $backend = new MockBackendSystem($this);
         $ff->expectOnce('restoreDeletedFiles', array($backend));
 
-        $this->assertFalse($ff->purgeDeletedFiles(1287504083, $backend));
+        $this->assertFalse($ff->moveFiles(1287504083, $backend));
     }
 
     function testMoveDeletedFilesToStagingAreaWithNoFiles() {
