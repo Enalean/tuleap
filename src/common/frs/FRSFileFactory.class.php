@@ -171,7 +171,7 @@ class FRSFileFactory extends Error {
      */
     function isSameFileMarkedToBeRestored($basename, $release_id, $group_id) {
         $dao = $this->_getFRSFileDao();
-        $release = $this->_getFRSReleaseFactory()->getFRSReleaseFromDb($release_id);
+        $release = $this->_getFRSReleaseFactory()->getFRSReleaseFromDb($release_id, null, null, true);
         $subdir = $this->getUploadSubDirectory($release);
         $filename = $subdir.'/'.$basename;
         return $dao->isMarkedToBeRestored($filename);
@@ -746,8 +746,12 @@ class FRSFileFactory extends Error {
      * @return Boolean
      */
     public function markFileToBeRestored($file) {
-        $dao = $this->_getFRSFileDao();
-        return $dao->markFileToBeRestored($file->getFileID());
+        $release = $this->_getFRSReleaseFactory()->getFRSReleaseFromDb($file->getReleaseID(), null, null, true);
+        if ($release->isActive()) {
+            $dao = $this->_getFRSFileDao();
+            return $dao->markFileToBeRestored($file->getFileID());
+        }
+        return false;
     }
 
     /**
