@@ -316,7 +316,7 @@ class BackendSystem extends Backend {
         $time = $_SERVER['REQUEST_TIME'] - (3600*24*$delay);
         
         $frs = $this->getFRSFileFactory();
-        $status =  $frs->purgeDeletedFiles($time, $this);
+        $status =  $frs->moveFiles($time, $this);
 
         // {{{ /!\ WARNING HACK /!\
         // We keep the good old purge mecanism for at least one release to clean

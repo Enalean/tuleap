@@ -171,7 +171,7 @@ class FRSFileFactory extends Error {
      */
     function isSameFileMarkedToBeRestored($basename, $release_id, $group_id) {
         $dao = $this->_getFRSFileDao();
-        $release = $this->_getFRSReleaseFactory()->getFRSReleaseFromDb($release_id);
+        $release = $this->_getFRSReleaseFactory()->getFRSReleaseFromDb($release_id, null, null, true);
         $subdir = $this->getUploadSubDirectory($release);
         $filename = $subdir.'/'.$basename;
         return $dao->isMarkedToBeRestored($filename);
@@ -419,12 +419,14 @@ class FRSFileFactory extends Error {
      *
      * @return Boolean
      */
-    public function purgeDeletedFiles($time, $backend) {
-        $this->moveDeletedFilesToStagingArea();
-        $this->purgeFiles($time);
-        $this->cleanStaging();
-        $this->restoreDeletedFiles($backend);
-        return true;
+    public function moveFiles($time, $backend) {
+        if ($this->moveDeletedFilesToStagingArea()
+            && $this->purgeFiles($time)
+            && $this->cleanStaging()
+            && $this->restoreDeletedFiles($backend)) {
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -685,6 +687,7 @@ class FRSFileFactory extends Error {
      */
     function restoreFile($file, $backend) {
         $release = $this->_getFRSReleaseFactory()->getFRSReleaseFromDb($file->getReleaseId(), null, null, true);
+        $dao = $this->_getFRSFileDao();
         if ($release->isActive()) {
             $stagingPath = $this->getStagingPath($file);
             if (file_exists($stagingPath)) {
@@ -693,21 +696,21 @@ class FRSFileFactory extends Error {
                     $backend->chgrp(dirname($file->getFileLocation()), $GLOBALS['sys_http_user']);
                 }
                 if (rename($stagingPath, $file->getFileLocation())) {
-                    $dao = $this->_getFRSFileDao();
                     if ($dao->restoreFile($file->getFileID())) {
                         $this->_getEventManager()->processEvent('frs_restore_file',
                         array('group_id' => $file->getGroup()->getGroupId(),
                               'item_id'  => $file->getFileID()));
                         return true;
                     }
-                    echo "File ".$file->getFileName()."(".$file->getFileID().") not restored, database error.\n";
+                    $backend->log("File ".$file->getFileName()."(".$file->getFileID().") not restored, database error", "error");
                     return false;
                 }
             }
-            echo "File ".$file->getFileName()."(".$file->getFileID().") could not be restored, not found in staging path ".$stagingPath.".\n";
+            $backend->log("File ".$file->getFileName()."(".$file->getFileID().") could not be restored, not found in staging path ".$stagingPath, "error");
             return false;
         }
-        echo "File ".$file->getFileName()."(".$file->getFileID().") could not be restored in deleted release ".$release->getName()."(".$release->getReleaseID().").\n";
+        $dao->cancelRestore($file->getFileID());
+        $backend->log("File ".$file->getFileName()."(".$file->getFileID().") could not be restored in deleted release ".$release->getName()."(".$release->getReleaseID().")", "error");
         return false;
     }
 
@@ -719,15 +722,18 @@ class FRSFileFactory extends Error {
     public function restoreDeletedFiles($backend) {
         $dao = $this->_getFRSFileDao();
         $dar = $dao->searchFilesToRestore();
-        if ($dar && !$dar->isError() && $dar->rowCount() >0) {
-            $restoreState = true;
-            foreach ($dar as $row) {
-                $file = new FRSFile($row);
-                if (!$this->restoreFile($file, $backend)) {
-                    $restoreState = false;
+        if ($dar && !$dar->isError()) {
+            if ($dar->rowCount() >0) {
+                $restoreState = true;
+                foreach ($dar as $row) {
+                    $file = new FRSFile($row);
+                    if (!$this->restoreFile($file, $backend)) {
+                        $restoreState = false;
+                    }
                 }
+                return $restoreState;
             }
-            return $restoreState;
+            return true;
         }
         return false;
     }
@@ -740,8 +746,12 @@ class FRSFileFactory extends Error {
      * @return Boolean
      */
     public function markFileToBeRestored($file) {
-        $dao = $this->_getFRSFileDao();
-        return $dao->markFileToBeRestored($file->getFileID());
+        $release = $this->_getFRSReleaseFactory()->getFRSReleaseFromDb($file->getReleaseID(), null, null, true);
+        if ($release->isActive()) {
+            $dao = $this->_getFRSFileDao();
+            return $dao->markFileToBeRestored($file->getFileID());
+        }
+        return false;
     }
 
     /**

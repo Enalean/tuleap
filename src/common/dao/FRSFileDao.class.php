@@ -525,6 +525,18 @@ class FRSFileDao extends DataAccessObject {
     }
 
     /**
+     * Cancel restoration of a file
+     * 
+     * @param Integer $fileId File id
+     * 
+     * @return Boolean
+     */
+    function cancelRestore($fileId) {
+        $sql = 'UPDATE frs_file_deleted SET delete_date = '.$this->da->escapeInt($_SERVER['REQUEST_TIME']).' WHERE file_id = '.$this->da->escapeInt($fileId);
+        return $this->update($sql);
+    }
+
+    /**
      * Insert the computed md5sum value in case of offline checksum comput
      * e
      * @param Integer $fileId
