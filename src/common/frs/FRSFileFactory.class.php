@@ -433,6 +433,8 @@ class FRSFileFactory extends Error {
     /**
      * Move to staging all files marked as deleted but still in the release area
      *
+     * @param BackendSystem $backend
+     *
      * @return Boolean
      */
     public function moveDeletedFilesToStagingArea($backend) {
@@ -459,7 +461,8 @@ class FRSFileFactory extends Error {
      * if someone upload and delete 2 times (or more) the same file in the same
      * release
      *
-     * @param FRSFile $file
+     * @param FRSFile       $file
+     * @param BackendSystem $backend
      *
      * @return Boolean
      */
