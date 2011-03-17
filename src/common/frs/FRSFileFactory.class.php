@@ -421,7 +421,7 @@ class FRSFileFactory extends Error {
      * @return Boolean
      */
     public function moveFiles($time, $backend) {
-        if ($this->moveDeletedFilesToStagingArea()
+        if ($this->moveDeletedFilesToStagingArea($backend)
             && $this->purgeFiles($time, $backend)
             && $this->cleanStaging()
             && $this->restoreDeletedFiles($backend)) {
@@ -435,15 +435,20 @@ class FRSFileFactory extends Error {
      *
      * @return Boolean
      */
-    public function moveDeletedFilesToStagingArea() {
+    public function moveDeletedFilesToStagingArea($backend) {
         $dao = $this->_getFRSFileDao();
         $dar = $dao->searchStagingCandidates();
         if ($dar && !$dar->isError()) {
+            $moveStatus = true;
             foreach ($dar as $row) {
-                $this->moveDeletedFileToStagingArea(new FRSFile($row));
+                $file = new FRSFile($row);
+                if (!$this->moveDeletedFileToStagingArea($file, $backend)) {
+                    $moveStatus = false;
+                }
             }
-            return true;
+            return $moveStatus;
         }
+        $backend->log("Error while searching staging candidates", "error");
         return false;
     }
 
@@ -458,27 +463,28 @@ class FRSFileFactory extends Error {
      *
      * @return Boolean
      */
-    public function moveDeletedFileToStagingArea($file) {
+    public function moveDeletedFileToStagingArea($file, $backend) {
         $stagingPath = $this->getStagingPath($file);
         $stagingDir  = dirname($stagingPath);
+        $moveStatus = true;
+        $dao = $this->_getFRSFileDao();
         if (!is_dir($stagingDir)) {
-            mkdir($stagingDir, 0750, true);
+            $moveStatus = mkdir($stagingDir, 0750, true);
         }
         if (file_exists($file->getFileLocation())) {
-            if (rename($file->getFileLocation(), $stagingPath)) {
-                $dao = $this->_getFRSFileDao();
-                $deleted = $dao->setFileInDeletedList($file->getFileId());
-                $this->deleteEmptyReleaseDirectory($file);
-                return $deleted;
-            }
+            $moveStatus = rename($file->getFileLocation(), $stagingPath);
         } else {
-            $dao = $this->_getFRSFileDao();
-            $dao->setFileInDeletedList($file->getFileId());
-            $dao->setPurgeDate($file->getFileId(), $_SERVER['REQUEST_TIME']);
-            $this->deleteEmptyReleaseDirectory($file);
-            return true;
+            $moveStatus = $dao->setPurgeDate($file->getFileId(), $_SERVER['REQUEST_TIME']);
         }
-        return false;
+        $moveStatus = $dao->setFileInDeletedList($file->getFileId());
+        if (!$moveStatus) {
+            $backend->log("Error while moving file ".$file->getFileName()."(".$file->getFileID().") to staging area", "error");
+        }
+        if (!$this->deleteEmptyReleaseDirectory($file)) {
+            $backend->log("Error while deleting empty release directory ".dirname($file->getFileLocation()), "error");
+            $moveStatus = false;
+        }
+        return $moveStatus;
     }
 
     /**
@@ -490,14 +496,19 @@ class FRSFileFactory extends Error {
      */
     public function deleteEmptyReleaseDirectory($file) {
         $nbFiles = 0;
-        $dir = new DirectoryIterator(dirname($file->getFileLocation()));
-        foreach ($dir as $f) {
-            if (!$f->isDot()) {
-                $nbFiles++;
+        try {
+            $dir = new DirectoryIterator(dirname($file->getFileLocation()));
+            foreach ($dir as $f) {
+                if (!$f->isDot()) {
+                    $nbFiles++;
+                }
             }
-        }
-        if ($nbFiles === 0) {
-            rmdir(dirname($file->getFileLocation()));
+            if ($nbFiles === 0) {
+                rmdir(dirname($file->getFileLocation()));
+            }
+            return true;
+        } catch (Exception $e) {
+            return false;
         }
     }
 

@@ -164,10 +164,11 @@ class FRSFileFactoryTest extends UnitTestCase {
         $dao->expectOnce('searchStagingCandidates');
         $dao->setReturnValue('searchStagingCandidates', $dar);
         $ff->setReturnValue('_getFRSFileDao', $dao);
+        $backend = new MockBackendSystem($this);
 
         $ff->expectNever('moveDeletedFileToStagingArea');
 
-        $this->assertTrue($ff->moveDeletedFilesToStagingArea());
+        $this->assertTrue($ff->moveDeletedFilesToStagingArea($backend));
     }
 
     function testMoveDeletedFileToStagingArea() {
@@ -186,8 +187,9 @@ class FRSFileFactoryTest extends UnitTestCase {
         $dao->expectOnce('setFileInDeletedList', array(12));
         $dao->setReturnValue('setFileInDeletedList', true);
         $ff->setReturnValue('_getFRSFileDao', $dao);
+        $backend = new MockBackendSystem($this);
 
-        $this->assertTrue($ff->moveDeletedFileToStagingArea($file));
+        $this->assertTrue($ff->moveDeletedFileToStagingArea($file, $backend));
 
         $this->assertTrue(is_file($GLOBALS['ftp_frs_dir_prefix'].'/DELETED/prj/p1_r1/foobar.xls.12'));
         $this->assertFalse(is_file(dirname(__FILE__).'/_fixtures/prj/p1_r1/foobar.xls'));
@@ -221,8 +223,9 @@ class FRSFileFactoryTest extends UnitTestCase {
         $dao->expectOnce('setPurgeDate', array(12, $_SERVER['REQUEST_TIME'])); // Mark as purged
         $dao->setReturnValue('setPurgeDate', true);
         $ff->setReturnValue('_getFRSFileDao', $dao);
+        $backend = new MockBackendSystem($this);
 
-        $this->assertTrue($ff->moveDeletedFileToStagingArea($file));
+        $this->assertTrue($ff->moveDeletedFileToStagingArea($file, $backend));
 
         $this->assertFalse(is_file($GLOBALS['ftp_frs_dir_prefix'].'/DELETED/prj/p1_r1/foobar.xls.12'));
         $this->assertFalse(is_file(dirname(__FILE__).'/_fixtures/prj/p1_r1/foobar.xls'));
@@ -252,8 +255,9 @@ class FRSFileFactoryTest extends UnitTestCase {
         $dao->expectOnce('setFileInDeletedList', array(12));
         $dao->setReturnValue('setFileInDeletedList', true);
         $ff->setReturnValue('_getFRSFileDao', $dao);
+        $backend = new MockBackendSystem($this);
 
-        $this->assertTrue($ff->moveDeletedFileToStagingArea($file));
+        $this->assertTrue($ff->moveDeletedFileToStagingArea($file, $backend));
 
         $this->assertTrue(is_file($GLOBALS['ftp_frs_dir_prefix'].'/DELETED/prj/p1_r1/foobar.xls.12'));
         $this->assertFalse(is_file(dirname(__FILE__).'/_fixtures/prj/p1_r1/foobar.xls'));
@@ -283,9 +287,11 @@ class FRSFileFactoryTest extends UnitTestCase {
         $ff->setReturnValue('_getFRSFileDao', $dao);
 
         $refFile = new FRSFile(array('file_id' => 12));
-        $ff->expectOnce('moveDeletedFileToStagingArea', array($refFile));
+        $backend = new MockBackendSystem($this);
+        $ff->setReturnValue('moveDeletedFileToStagingArea', true);
+        $ff->expectOnce('moveDeletedFileToStagingArea', array($refFile, $backend));
 
-        $this->assertTrue($ff->moveDeletedFilesToStagingArea());
+        $this->assertTrue($ff->moveDeletedFilesToStagingArea($backend));
     }
 
     function testPurgeFilesWithNoFiles() {
