@@ -423,7 +423,7 @@ class FRSFileFactory extends Error {
     public function moveFiles($time, $backend) {
         if ($this->moveDeletedFilesToStagingArea($backend)
             && $this->purgeFiles($time, $backend)
-            && $this->cleanStaging()
+            && $this->cleanStaging($backend)
             && $this->restoreDeletedFiles($backend)) {
             return true;
         }
@@ -579,9 +579,11 @@ class FRSFileFactory extends Error {
     /**
      * Remove empty releases and project directories in staging area
      *
+     * @param Backend $backend
+     * 
      * @return Boolean
      */
-    public function cleanStaging() {
+    public function cleanStaging($backend) {
         // All projects
         $prjIter = new DirectoryIterator($GLOBALS['ftp_frs_dir_prefix'].'/DELETED');
         foreach ($prjIter as $prj) {
@@ -600,19 +602,26 @@ class FRSFileFactory extends Error {
                             }
                         }
                         if ($nbFiles === 0) {
-                            rmdir($rel->getPathname());
+                            if(!rmdir($rel->getPathname())) {
+                            $backend->log("Error while removing ".$rel->getFilename()."release folder", "error");
+                            return false;
+                            }
                         } else {
                             $nbRel++;
                         }
                     }
                 }
                 if ($nbRel === 0) {
-                    rmdir($prj->getPathname());
+                    if(!rmdir($prj->getPathname())) {
+                        $backend->log("Error while removing ".$prj->getFilename()." project folder", "error");
+                        return false;
+                    }
                 }
             }
         }
         return true;
     }
+    
 
     /**
      * List all files deleted but not already purged

@@ -420,6 +420,7 @@ class FRSFileFactoryTest extends UnitTestCase {
 
     function testRemoveStagingEmptyDirectories() {
         $ff = new FRSFileFactory();
+        $backend = new MockBackendSystem($this);
 
         mkdir($GLOBALS['ftp_frs_dir_prefix'].'/DELETED/prj/p1_r1', 0750, true);
         mkdir($GLOBALS['ftp_frs_dir_prefix'].'/DELETED/prj2/p2_r5', 0750, true);
@@ -428,7 +429,7 @@ class FRSFileFactoryTest extends UnitTestCase {
         mkdir($GLOBALS['ftp_frs_dir_prefix'].'/DELETED/prj3/p9_r10', 0750, true);
         touch($GLOBALS['ftp_frs_dir_prefix'].'/DELETED/prj3/p9_r10/foo.txt.12');
 
-        $this->assertTrue($ff->cleanStaging());
+        $this->assertTrue($ff->cleanStaging($backend));
         $this->assertFalse(is_dir($GLOBALS['ftp_frs_dir_prefix'].'/DELETED/prj'));
         $this->assertTrue(is_file($GLOBALS['ftp_frs_dir_prefix'].'/DELETED/prj2/p2_r5/file.txt.7'));
         $this->assertFalse(is_dir($GLOBALS['ftp_frs_dir_prefix'].'/DELETED/prj3/p7_r8'));
