@@ -271,6 +271,29 @@ class FRSFileFactoryTest extends UnitTestCase {
         rmdir(dirname(__FILE__).'/_fixtures/DELETED/prj');
     }
 
+    function testMoveDeletedFilesToStagingAreaFail() {
+        $ff = new FRSFileFactoryTestMoveToStaging($this);
+
+        $dar = new MockDataAccessResult($this);
+        $dar->setReturnValue('isError', false);
+        $dar->setReturnValue('current', array('file_id' => 12));
+        $dar->setReturnValueAt(0, 'valid', true);
+        $dar->setReturnValueAt(1, 'valid', false);
+        $dar->setReturnValue('rowCount', 1);
+
+        $dao = new MockFRSFileDao($this);
+        $dao->expectOnce('searchStagingCandidates');
+        $dao->setReturnValue('searchStagingCandidates', $dar);
+        $ff->setReturnValue('_getFRSFileDao', $dao);
+
+        $refFile = new FRSFile(array('file_id' => 12));
+        $backend = new MockBackendSystem($this);
+        $ff->setReturnValue('moveDeletedFileToStagingArea', false);
+        $ff->expectOnce('moveDeletedFileToStagingArea', array($refFile, $backend));
+
+        $this->assertFalse($ff->moveDeletedFilesToStagingArea($backend));
+    }
+
     function testMoveDeletedFilesToStagingAreaWithOneFile() {
         $ff = new FRSFileFactoryTestMoveToStaging($this);
 
