@@ -29,8 +29,8 @@ Mock::generatePartial('FRSFileFactory', 'FRSFileFactoryTestRestoreFiles', array(
 Mock::generatePartial('FRSFileFactory', 'FRSFileFactoryTestCreateFiles', array('create', 'moveFileForge','isFileBaseNameExists', 'isSameFileMarkedToBeRestored', 'compareMd5Checksums'));
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * 
- * 
+ *
+ *
  *
  * Tests the FRSFileFactory class
  */
@@ -41,7 +41,7 @@ class FRSFileFactoryTest extends UnitTestCase {
         $GLOBALS['ftp_frs_dir_prefix'] = dirname(__FILE__).'/_fixtures';
         $GLOBALS['ftp_incoming_dir']   = dirname(__FILE__).'/_fixtures';
 
-        
+
         $conf  = '<?php'.PHP_EOL;
         $conf .= '$ftp_frs_dir_prefix = "'.$GLOBALS['ftp_frs_dir_prefix'].'"'. PHP_EOL;
         $conf .= '$ftp_incoming_dir = "'.$GLOBALS['ftp_incoming_dir'].'"'. PHP_EOL;
@@ -65,33 +65,33 @@ class FRSFileFactoryTest extends UnitTestCase {
     function testgetUploadSubDirectory() {
         $package_id = rand(1, 1000);
         $release_id = rand(1, 1000);
-        
+
         $release = new FRSRelease();
         $release->setPackageID($package_id);
         $release->setReleaseID($release_id);
-        
+
         $file_fact = new FRSFileFactory();
-        
+
         $sub_dir = $file_fact->getUploadSubDirectory($release);
         $this->assertEqual($sub_dir, 'p'.$package_id.'_r'.$release_id);
     }
 
-   function testPurgeDeletedFiles() {
+    function testPurgeDeletedFiles() {
         $ff = new FRSFileFactoryTestPurgeDeletedFiles($this);
         $ff->setReturnValue('moveDeletedFilesToStagingArea', true);
         $ff->setReturnValue('purgeFiles', true);
         $ff->setReturnValue('cleanStaging', true);
         $ff->setReturnValue('restoreDeletedFiles', true);
-        $ff->expectOnce('moveDeletedFilesToStagingArea');
-        $ff->expectOnce('purgeFiles', array(1287504083));
-        $ff->expectOnce('cleanStaging');
         $backend = new MockBackendSystem($this);
+        $ff->expectOnce('moveDeletedFilesToStagingArea');
+        $ff->expectOnce('purgeFiles', array(1287504083, $backend));
+        $ff->expectOnce('cleanStaging');
         $ff->expectOnce('restoreDeletedFiles', array($backend));
-        
+
         $this->assertTrue($ff->moveFiles(1287504083, $backend));
     }
 
-   function testPurgeDeletedFilesMoveStagingError() {
+    function testPurgeDeletedFilesMoveStagingError() {
         $ff = new FRSFileFactoryTestPurgeDeletedFiles($this);
         $ff->setReturnValue('moveDeletedFilesToStagingArea', false);
         $ff->setReturnValue('purgeFiles', true);
@@ -106,46 +106,46 @@ class FRSFileFactoryTest extends UnitTestCase {
         $this->assertFalse($ff->moveFiles(1287504083, $backend));
     }
 
-   function testPurgeDeletedFilesPurgeError() {
+    function testPurgeDeletedFilesPurgeError() {
         $ff = new FRSFileFactoryTestPurgeDeletedFiles($this);
         $ff->setReturnValue('moveDeletedFilesToStagingArea', true);
         $ff->setReturnValue('purgeFiles', false);
         $ff->setReturnValue('cleanStaging', true);
         $ff->setReturnValue('restoreDeletedFiles', true);
-        $ff->expectOnce('moveDeletedFilesToStagingArea');
-        $ff->expectOnce('purgeFiles', array(1287504083));
-        $ff->expectNever('cleanStaging');
         $backend = new MockBackendSystem($this);
+        $ff->expectOnce('moveDeletedFilesToStagingArea');
+        $ff->expectOnce('purgeFiles', array(1287504083, $backend));
+        $ff->expectNever('cleanStaging');
         $ff->expectNever('restoreDeletedFiles', array($backend));
 
         $this->assertFalse($ff->moveFiles(1287504083, $backend));
     }
 
-   function testPurgeDeletedFilesCleanStagingError() {
+    function testPurgeDeletedFilesCleanStagingError() {
         $ff = new FRSFileFactoryTestPurgeDeletedFiles($this);
         $ff->setReturnValue('moveDeletedFilesToStagingArea', true);
         $ff->setReturnValue('purgeFiles', true);
         $ff->setReturnValue('cleanStaging', false);
         $ff->setReturnValue('restoreDeletedFiles', true);
-        $ff->expectOnce('moveDeletedFilesToStagingArea');
-        $ff->expectOnce('purgeFiles', array(1287504083));
-        $ff->expectOnce('cleanStaging');
         $backend = new MockBackendSystem($this);
+        $ff->expectOnce('moveDeletedFilesToStagingArea');
+        $ff->expectOnce('purgeFiles', array(1287504083, $backend));
+        $ff->expectOnce('cleanStaging');
         $ff->expectNever('restoreDeletedFiles', array($backend));
 
         $this->assertFalse($ff->moveFiles(1287504083, $backend));
     }
 
-   function testPurgeDeletedFilesRestoreDeletedError() {
+    function testPurgeDeletedFilesRestoreDeletedError() {
         $ff = new FRSFileFactoryTestPurgeDeletedFiles($this);
         $ff->setReturnValue('moveDeletedFilesToStagingArea', true);
         $ff->setReturnValue('purgeFiles', true);
         $ff->setReturnValue('cleanStaging', true);
         $ff->setReturnValue('restoreDeletedFiles', false);
-        $ff->expectOnce('moveDeletedFilesToStagingArea');
-        $ff->expectOnce('purgeFiles', array(1287504083));
-        $ff->expectOnce('cleanStaging');
         $backend = new MockBackendSystem($this);
+        $ff->expectOnce('moveDeletedFilesToStagingArea');
+        $ff->expectOnce('purgeFiles', array(1287504083, $backend));
+        $ff->expectOnce('cleanStaging');
         $ff->expectOnce('restoreDeletedFiles', array($backend));
 
         $this->assertFalse($ff->moveFiles(1287504083, $backend));
@@ -153,20 +153,20 @@ class FRSFileFactoryTest extends UnitTestCase {
 
     function testMoveDeletedFilesToStagingAreaWithNoFiles() {
         $ff = new FRSFileFactoryTestMoveToStaging($this);
-        
+
         $dar = new MockDataAccessResult($this);
         $dar->setReturnValue('isError', false);
         $dar->setReturnValue('getRow', false);
         $dar->setReturnValue('valid', false);
         $dar->setReturnValue('rowCount', 0);
-        
+
         $dao = new MockFRSFileDao($this);
         $dao->expectOnce('searchStagingCandidates');
-        $dao->setReturnValue('searchStagingCandidates', $dar); 
+        $dao->setReturnValue('searchStagingCandidates', $dar);
         $ff->setReturnValue('_getFRSFileDao', $dao);
 
         $ff->expectNever('moveDeletedFileToStagingArea');
-        
+
         $this->assertTrue($ff->moveDeletedFilesToStagingArea());
     }
 
@@ -202,7 +202,7 @@ class FRSFileFactoryTest extends UnitTestCase {
     /**
      * If for one reason the file to delete appears to be already deleted, mark it as
      * deleted and purged at the very same date
-     * 
+     *
      */
     function testMoveDeletedFileToStagingAreaButFileDoesntExist() {
         $ff = new FRSFileFactoryTestPurgeOneFile($this);
@@ -247,7 +247,7 @@ class FRSFileFactoryTest extends UnitTestCase {
         $file->setReturnValue('getFileLocation', $filepath);
         // Second file, not deleted
         touch(dirname(__FILE__).'/_fixtures/prj/p1_r1/barfoo.doc');
-    
+
         $dao = new MockFRSFileDao($this);
         $dao->expectOnce('setFileInDeletedList', array(12));
         $dao->setReturnValue('setFileInDeletedList', true);
@@ -269,22 +269,22 @@ class FRSFileFactoryTest extends UnitTestCase {
 
     function testMoveDeletedFilesToStagingAreaWithOneFile() {
         $ff = new FRSFileFactoryTestMoveToStaging($this);
-        
+
         $dar = new MockDataAccessResult($this);
         $dar->setReturnValue('isError', false);
         $dar->setReturnValue('current', array('file_id' => 12));
         $dar->setReturnValueAt(0, 'valid', true);
         $dar->setReturnValueAt(1, 'valid', false);
         $dar->setReturnValue('rowCount', 1);
-        
+
         $dao = new MockFRSFileDao($this);
         $dao->expectOnce('searchStagingCandidates');
-        $dao->setReturnValue('searchStagingCandidates', $dar); 
+        $dao->setReturnValue('searchStagingCandidates', $dar);
         $ff->setReturnValue('_getFRSFileDao', $dao);
-        
+
         $refFile = new FRSFile(array('file_id' => 12));
         $ff->expectOnce('moveDeletedFileToStagingArea', array($refFile));
-        
+
         $this->assertTrue($ff->moveDeletedFilesToStagingArea());
     }
 
@@ -294,42 +294,73 @@ class FRSFileFactoryTest extends UnitTestCase {
         $dar->setReturnValue('getRow', false);
         $dar->setReturnValue('valid', false);
         $dar->setReturnValue('rowCount', 0);
-        
+
         $dao = new MockFRSFileDao($this);
         $dao->expectOnce('searchFilesToPurge', array(1287504083));
         $dao->setReturnValue('searchFilesToPurge', $dar);
-        
+
         $ff = new FRSFileFactoryTestPurgeFiles($this);
         $ff->setReturnValue('_getFRSFileDao', $dao);
-        
+
         $ff->expectNever('purgeFile');
-        
-        $this->assertTrue($ff->purgeFiles(1287504083));
+        $backend = new MockBackendSystem($this);
+        $this->assertTrue($ff->purgeFiles(1287504083, $backend));
     }
 
     function testPurgeFilesWithOneFile() {
         $refFile = new FRSFile(array('file_id' => 12));
-        
+
         $dar = new MockDataAccessResult($this);
         $dar->setReturnValue('isError', false);
         $dar->setReturnValue('current', array('file_id' => 12));
         $dar->setReturnValueAt(0, 'valid', true);
         $dar->setReturnValueAt(1, 'valid', false);
         $dar->setReturnValue('rowCount', 1);
-        
+
         $dao = new MockFRSFileDao($this);
         $dao->expectOnce('searchFilesToPurge', array(1287504083));
         $dao->setReturnValue('searchFilesToPurge', $dar);
-        
+
         $ff = new FRSFileFactoryTestPurgeFiles($this);
         $ff->setReturnValue('_getFRSFileDao', $dao);
-        
-        $ff->expectOnce('purgeFile', array($refFile));
-        
-        $this->assertTrue($ff->purgeFiles(1287504083));
+
+        $backend = new MockBackendSystem($this);
+        $ff->expectOnce('purgeFile', array($refFile, $backend));
+        $ff->setReturnValue('purgeFile', true);
+        $this->assertTrue($ff->purgeFiles(1287504083, $backend));
     }
 
-    function testPurgeFile() {
+    function testPurgeFileSucceed() {
+        $ff = new FRSFileFactoryTestPurgeOneFile($this);
+
+        // Create temp file
+        $filepath = dirname(__FILE__).'/_fixtures/DELETED/prj/p1_r1/foobar.xls.12';
+        mkdir(dirname($filepath), 0750, true);
+        touch($filepath);
+
+        $this->assertTrue(is_file($filepath));
+        $file = new MockFRSFile($this);
+        $file->setReturnValue('getFileID', 12);
+        $file->setReturnValue('getFileName', 'p1_r1/foobar.xls');
+        $file->setReturnValue('getFileLocation', $GLOBALS['ftp_frs_dir_prefix'].'/prj/p1_r1/foobar.xls');
+
+        $dao = new MockFRSFileDao($this);
+        $dao->expectOnce('setPurgeDate', array(12, '*'));
+        $dao->setReturnValue('setPurgeDate', true);
+        $ff->setReturnValue('_getFRSFileDao', $dao);
+
+        $backend = new MockBackendSystem();
+        $backend->expectNever('log', array('File p1_r1/foobar.xls(12) not purged, Set purge date in DB fail', 'error'));
+        $this->assertTrue($ff->purgeFile($file, $backend));
+
+        $this->assertFalse(is_file($filepath), "File should be deleted");
+
+        // Cleanup
+        rmdir($GLOBALS['ftp_frs_dir_prefix'].'/DELETED/prj/p1_r1');
+        rmdir($GLOBALS['ftp_frs_dir_prefix'].'/DELETED/prj');
+    }
+
+    function testPurgeFileDBUpdateFails() {
         $ff = new FRSFileFactoryTestPurgeOneFile($this);
 
         // Create temp file
@@ -341,15 +372,18 @@ class FRSFileFactoryTest extends UnitTestCase {
         $file->setReturnValue('getFileID', 12);
         $file->setReturnValue('getFileName', 'p1_r1/foobar.xls');
         $file->setReturnValue('getFileLocation', $GLOBALS['ftp_frs_dir_prefix'].'/prj/p1_r1/foobar.xls');
-        
+
         $dao = new MockFRSFileDao($this);
         $dao->expectOnce('setPurgeDate', array(12, '*'));
-        $dao->setReturnValue('setPurgeDate', true);
+        $dao->setReturnValue('setPurgeDate', false);
         $ff->setReturnValue('_getFRSFileDao', $dao);
-        
-        $this->assertTrue($ff->purgeFile($file));
+
+        $backend = new MockBackendSystem();
+        $backend->expectOnce('log', array('File p1_r1/foobar.xls(12) not purged, Set purge date in DB fail', 'error'));
+        $this->assertFalse($ff->purgeFile($file, $backend));
+
         $this->assertFalse(is_file($filepath), "File should be deleted");
-        
+
         // Cleanup
         rmdir($GLOBALS['ftp_frs_dir_prefix'].'/DELETED/prj/p1_r1');
         rmdir($GLOBALS['ftp_frs_dir_prefix'].'/DELETED/prj');
@@ -364,7 +398,7 @@ class FRSFileFactoryTest extends UnitTestCase {
         mkdir($GLOBALS['ftp_frs_dir_prefix'].'/DELETED/prj3/p7_r8', 0750, true);
         mkdir($GLOBALS['ftp_frs_dir_prefix'].'/DELETED/prj3/p9_r10', 0750, true);
         touch($GLOBALS['ftp_frs_dir_prefix'].'/DELETED/prj3/p9_r10/foo.txt.12');
-        
+
         $this->assertTrue($ff->cleanStaging());
         $this->assertFalse(is_dir($GLOBALS['ftp_frs_dir_prefix'].'/DELETED/prj'));
         $this->assertTrue(is_file($GLOBALS['ftp_frs_dir_prefix'].'/DELETED/prj2/p2_r5/file.txt.7'));
@@ -379,7 +413,7 @@ class FRSFileFactoryTest extends UnitTestCase {
         rmdir($GLOBALS['ftp_frs_dir_prefix'].'/DELETED/prj3/p9_r10');
         rmdir($GLOBALS['ftp_frs_dir_prefix'].'/DELETED/prj3');
     }
-    
+
     function testRestoreFileSucceed() {
         $fileFactory = new FRSFileFactoryTestRestore();
 
@@ -504,7 +538,7 @@ class FRSFileFactoryTest extends UnitTestCase {
         unlink($GLOBALS['ftp_frs_dir_prefix'].'/prj/p2_r1/toto.xls');
         rmdir($GLOBALS['ftp_frs_dir_prefix'].'/prj/p2_r1');
     }
-    
+
     function testRestoreFileDBUpdateFails(){
         $fileFactory = new FRSFileFactoryTestRestore();
 
@@ -583,24 +617,24 @@ class FRSFileFactoryTest extends UnitTestCase {
 
     function testRestoreDeletedFiles() {
         $refFile = new FRSFile(array('file_id' => 12));
-        
+
         $dar = new MockDataAccessResult($this);
         $dar->setReturnValue('isError', false);
         $dar->setReturnValue('current', array('file_id' => 12));
         $dar->setReturnValueAt(0, 'valid', true);
         $dar->setReturnValueAt(1, 'valid', false);
         $dar->setReturnValue('rowCount', 1);
-        
+
         $dao = new MockFRSFileDao($this);
         $dao->expectOnce('searchFilesToRestore');
         $dao->setReturnValue('searchFilesToRestore', $dar);
-        
+
         $ff = new FRSFileFactoryTestRestoreFiles($this);
         $ff->setReturnValue('_getFRSFileDao', $dao);
         $backend  = new MockBackendSystem($this);
         $ff->expectOnce('restoreFile', array($refFile, $backend));
         $ff->setReturnValue('restoreFile', true);
-        
+
         $this->assertTrue($ff->restoreDeletedFiles($backend));
     }
 
@@ -702,7 +736,7 @@ class FRSFileFactoryTest extends UnitTestCase {
         $p = new MockProject($this);
         $p->expectOnce('getUnixName', array(false), 'Must have project name with capital letters if any');
         $p->setReturnValue('getUnixName', 'prj');
-        
+
         $r = new FRSRelease();
         $r->setReleaseID(456);
         $r->setPackageID(123);
@@ -759,7 +793,7 @@ class FRSFileFactoryTest extends UnitTestCase {
         $p = new MockProject();
         $p->expectOnce('getUnixName', array(false), 'Must have project name with capital letters if any');
         $p->setReturnValue('getUnixName', 'prj');
-        
+
         $r = new FRSRelease();
         $r->setReleaseID(456);
         $r->setPackageID(123);
@@ -790,7 +824,7 @@ class FRSFileFactoryTest extends UnitTestCase {
     }
 
     /**
-     * We should not be able to create a file with the same name, 
+     * We should not be able to create a file with the same name,
      * if an active one exists.
      */
     function testCreateFileAlreadyExistingAndActive() {
@@ -825,7 +859,7 @@ class FRSFileFactoryTest extends UnitTestCase {
     }
 
     /**
-     * We should be able to create a file with the same name, 
+     * We should be able to create a file with the same name,
      * even if the active one has been deleted but not yet moved to staging area.
      */
     function testCreateFileAlreadyExistingAndMarkedToBeDeletedNotYetMoved() {
@@ -871,10 +905,10 @@ class FRSFileFactoryTest extends UnitTestCase {
     }
 
     /**
-     * We should not be able to create a file with the same name, 
+     * We should not be able to create a file with the same name,
      * even if the restored one has not yet been moved to the corresponding  pi_rj.
      */
-    
+
     function testCreateFileAlreadyMarkedToBeRestoredNotYetMoved() {
         // Create toto.txt in the release directory
         touch($GLOBALS['ftp_incoming_dir'].'/toto.txt');

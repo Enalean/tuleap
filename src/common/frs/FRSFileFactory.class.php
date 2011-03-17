@@ -416,12 +416,13 @@ class FRSFileFactory extends Error {
      * Centralize treatement of files physical deletion in FRS
      *
      * @param Integer $time Date from when the files must be erased
+     * @param Backend $backend
      *
      * @return Boolean
      */
     public function moveFiles($time, $backend) {
         if ($this->moveDeletedFilesToStagingArea()
-            && $this->purgeFiles($time)
+            && $this->purgeFiles($time, $backend)
             && $this->cleanStaging()
             && $this->restoreDeletedFiles($backend)) {
             return true;
@@ -520,18 +521,22 @@ class FRSFileFactory extends Error {
      * Permanently erase from the file system all deleted files older than given date
      *
      * @param Integer $time Timestamp
+     * @param Backend $backend
      *
      * @return Boolean
      */
-    public function purgeFiles($time) {
+    public function purgeFiles($time, $backend) {
         $dao = $this->_getFRSFileDao();
         $dar = $dao->searchFilesToPurge($time);
         if ($dar && !$dar->isError()) {
-            foreach ($dar as $row) {
-                $file = new FRSFile($row);
-                $this->purgeFile($file);
+            $purgeState = true;
+            if ($dar->rowCount() > 0) {
+                foreach ($dar as $row) {
+                    $file = new FRSFile($row);
+                    $purgeState = $purgeState & $this->purgeFile($file, $backend);
+                }
             }
-            return true;
+            return $purgeState;
         }
         return false;
     }
@@ -540,14 +545,20 @@ class FRSFileFactory extends Error {
      * Erase from the file system one file
      *
      * @param FRSFile $file File to delete
+     * @param Backend $backend
      *
      * @return Boolean
      */
-    public function purgeFile($file) {
+    public function purgeFile($file, $backend) {
         if (unlink($this->getStagingPath($file))) {
             $dao = $this->_getFRSFileDao();
-            return $dao->setPurgeDate($file->getFileID(), time());
+            if (!$dao->setPurgeDate($file->getFileID(), time())) {
+                $backend->log("File ".$file->getFileName()."(".$file->getFileID().") not purged, Set purge date in DB fail", "error");
+                return false;
+            }
+            return true;
         }
+        $backend->log("File ".$file->getFileName()."(".$file->getFileID().") not purged, unlink failed", "error");
         return false;
     }
 
