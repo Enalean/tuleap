@@ -475,11 +475,11 @@ class FRSFileFactory extends Error {
             $moveStatus = mkdir($stagingDir, 0750, true);
         }
         if (file_exists($file->getFileLocation())) {
-            $moveStatus = rename($file->getFileLocation(), $stagingPath);
+            $moveStatus = $moveStatus && rename($file->getFileLocation(), $stagingPath);
         } else {
-            $moveStatus = $dao->setPurgeDate($file->getFileId(), $_SERVER['REQUEST_TIME']);
+            $moveStatus = $moveStatus && $dao->setPurgeDate($file->getFileId(), $_SERVER['REQUEST_TIME']);
         }
-        $moveStatus = $dao->setFileInDeletedList($file->getFileId());
+        $moveStatus = $moveStatus && $dao->setFileInDeletedList($file->getFileId());
         if (!$moveStatus) {
             $backend->log("Error while moving file ".$file->getFileName()."(".$file->getFileID().") to staging area", "error");
         }
