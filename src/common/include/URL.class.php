@@ -79,7 +79,7 @@ class URL {
             }
             //Project short name validation
             $rule = $this->getProjectNameRule();
-            if (!$rule->isValid($this_proj_name)) {
+            if ($rule->containsIllegalChars($this_proj_name)) {
                 return false;
             }
             $dao = $this->getProjectDao();
