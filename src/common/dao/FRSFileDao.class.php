@@ -430,7 +430,7 @@ class FRSFileDao extends DataAccessObject {
                ' SELECT file_id, filename, filepath, release_id, type_id, processor_id, release_time, file_size, post_date, status, computed_md5, reference_md5, user_id,'.$this->da->escapeInt($_SERVER['REQUEST_TIME']).
                ' FROM frs_file'.
                ' WHERE file_id = '.$this->da->escapeInt($id);
-        $this->update($sql);
+        return $this->update($sql);
     }
 
     /**

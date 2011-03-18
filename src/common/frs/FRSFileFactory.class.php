@@ -416,13 +416,14 @@ class FRSFileFactory extends Error {
      * Centralize treatement of files physical deletion in FRS
      *
      * @param Integer $time Date from when the files must be erased
+     * @param Backend $backend
      *
      * @return Boolean
      */
     public function moveFiles($time, $backend) {
-        if ($this->moveDeletedFilesToStagingArea()
-            && $this->purgeFiles($time)
-            && $this->cleanStaging()
+        if ($this->moveDeletedFilesToStagingArea($backend)
+            && $this->purgeFiles($time, $backend)
+            && $this->cleanStaging($backend)
             && $this->restoreDeletedFiles($backend)) {
             return true;
         }
@@ -432,17 +433,24 @@ class FRSFileFactory extends Error {
     /**
      * Move to staging all files marked as deleted but still in the release area
      *
+     * @param BackendSystem $backend
+     *
      * @return Boolean
      */
-    public function moveDeletedFilesToStagingArea() {
+    public function moveDeletedFilesToStagingArea($backend) {
         $dao = $this->_getFRSFileDao();
         $dar = $dao->searchStagingCandidates();
         if ($dar && !$dar->isError()) {
+            $moveStatus = true;
             foreach ($dar as $row) {
-                $this->moveDeletedFileToStagingArea(new FRSFile($row));
+                $file = new FRSFile($row);
+                if (!$this->moveDeletedFileToStagingArea($file, $backend)) {
+                    $moveStatus = false;
+                }
             }
-            return true;
+            return $moveStatus;
         }
+        $backend->log("Error while searching staging candidates", "error");
         return false;
     }
 
@@ -453,31 +461,32 @@ class FRSFileFactory extends Error {
      * if someone upload and delete 2 times (or more) the same file in the same
      * release
      *
-     * @param FRSFile $file
+     * @param FRSFile       $file
+     * @param BackendSystem $backend
      *
      * @return Boolean
      */
-    public function moveDeletedFileToStagingArea($file) {
+    public function moveDeletedFileToStagingArea($file, $backend) {
         $stagingPath = $this->getStagingPath($file);
         $stagingDir  = dirname($stagingPath);
+        $moveStatus = true;
+        $dao = $this->_getFRSFileDao();
         if (!is_dir($stagingDir)) {
-            mkdir($stagingDir, 0750, true);
+            $moveStatus = mkdir($stagingDir, 0750, true);
         }
         if (file_exists($file->getFileLocation())) {
-            if (rename($file->getFileLocation(), $stagingPath)) {
-                $dao = $this->_getFRSFileDao();
-                $deleted = $dao->setFileInDeletedList($file->getFileId());
-                $this->deleteEmptyReleaseDirectory($file);
-                return $deleted;
-            }
+            $moveStatus = $moveStatus && rename($file->getFileLocation(), $stagingPath);
         } else {
-            $dao = $this->_getFRSFileDao();
-            $dao->setFileInDeletedList($file->getFileId());
-            $dao->setPurgeDate($file->getFileId(), $_SERVER['REQUEST_TIME']);
-            $this->deleteEmptyReleaseDirectory($file);
-            return true;
+            $moveStatus = $moveStatus && $dao->setPurgeDate($file->getFileId(), $_SERVER['REQUEST_TIME']);
         }
-        return false;
+        $moveStatus = $moveStatus && $dao->setFileInDeletedList($file->getFileId());
+        if (!$moveStatus) {
+            $backend->log("Error while moving file ".$file->getFileName()."(".$file->getFileID().") to staging area", "error");
+        }
+        if (!$this->deleteEmptyReleaseDirectory($file, $backend)) {
+            $moveStatus = false;
+        }
+        return $moveStatus;
     }
 
     /**
@@ -487,16 +496,26 @@ class FRSFileFactory extends Error {
      *
      * @return Boolean
      */
-    public function deleteEmptyReleaseDirectory($file) {
+    public function deleteEmptyReleaseDirectory($file, $backend) {
         $nbFiles = 0;
-        $dir = new DirectoryIterator(dirname($file->getFileLocation()));
-        foreach ($dir as $f) {
-            if (!$f->isDot()) {
-                $nbFiles++;
+        $directory = dirname($file->getFileLocation());
+        try {
+            $dir = new DirectoryIterator($directory);
+            foreach ($dir as $f) {
+                if (!$f->isDot()) {
+                    $nbFiles++;
+                }
             }
-        }
-        if ($nbFiles === 0) {
-            rmdir(dirname($file->getFileLocation()));
+            if ($nbFiles === 0) {
+                rmdir(dirname($file->getFileLocation()));
+            }
+            return true;
+        } catch (RuntimeException $e) {
+            $backend->log("Directory ".$directory." already deleted", "warn");
+            return true;
+        } catch (Exception $e) {
+            $backend->log("Error while deleting empty release directory ".$directory, "error");
+            return false;
         }
     }
 
@@ -520,18 +539,22 @@ class FRSFileFactory extends Error {
      * Permanently erase from the file system all deleted files older than given date
      *
      * @param Integer $time Timestamp
+     * @param Backend $backend
      *
      * @return Boolean
      */
-    public function purgeFiles($time) {
+    public function purgeFiles($time, $backend) {
         $dao = $this->_getFRSFileDao();
         $dar = $dao->searchFilesToPurge($time);
         if ($dar && !$dar->isError()) {
-            foreach ($dar as $row) {
-                $file = new FRSFile($row);
-                $this->purgeFile($file);
+            $purgeState = true;
+            if ($dar->rowCount() > 0) {
+                foreach ($dar as $row) {
+                    $file = new FRSFile($row);
+                    $purgeState = $purgeState & $this->purgeFile($file, $backend);
+                }
             }
-            return true;
+            return $purgeState;
         }
         return false;
     }
@@ -540,23 +563,31 @@ class FRSFileFactory extends Error {
      * Erase from the file system one file
      *
      * @param FRSFile $file File to delete
+     * @param Backend $backend
      *
      * @return Boolean
      */
-    public function purgeFile($file) {
+    public function purgeFile($file, $backend) {
         if (unlink($this->getStagingPath($file))) {
             $dao = $this->_getFRSFileDao();
-            return $dao->setPurgeDate($file->getFileID(), time());
+            if (!$dao->setPurgeDate($file->getFileID(), time())) {
+                $backend->log("File ".$file->getFileName()."(".$file->getFileID().") not purged, Set purge date in DB fail", "error");
+                return false;
+            }
+            return true;
         }
+        $backend->log("File ".$file->getFileName()."(".$file->getFileID().") not purged, unlink failed", "error");
         return false;
     }
 
     /**
      * Remove empty releases and project directories in staging area
      *
+     * @param Backend $backend
+     * 
      * @return Boolean
      */
-    public function cleanStaging() {
+    public function cleanStaging($backend) {
         // All projects
         $prjIter = new DirectoryIterator($GLOBALS['ftp_frs_dir_prefix'].'/DELETED');
         foreach ($prjIter as $prj) {
@@ -575,19 +606,26 @@ class FRSFileFactory extends Error {
                             }
                         }
                         if ($nbFiles === 0) {
-                            rmdir($rel->getPathname());
+                            if(!rmdir($rel->getPathname())) {
+                            $backend->log("Error while removing ".$rel->getFilename()."release folder", "error");
+                            return false;
+                            }
                         } else {
                             $nbRel++;
                         }
                     }
                 }
                 if ($nbRel === 0) {
-                    rmdir($prj->getPathname());
+                    if(!rmdir($prj->getPathname())) {
+                        $backend->log("Error while removing ".$prj->getFilename()." project folder", "error");
+                        return false;
+                    }
                 }
             }
         }
         return true;
     }
+    
 
     /**
      * List all files deleted but not already purged
