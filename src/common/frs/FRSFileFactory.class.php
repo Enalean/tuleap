@@ -483,8 +483,7 @@ class FRSFileFactory extends Error {
         if (!$moveStatus) {
             $backend->log("Error while moving file ".$file->getFileName()."(".$file->getFileID().") to staging area", "error");
         }
-        if (!$this->deleteEmptyReleaseDirectory($file)) {
-            $backend->log("Error while deleting empty release directory ".dirname($file->getFileLocation()), "error");
+        if (!$this->deleteEmptyReleaseDirectory($file, $backend)) {
             $moveStatus = false;
         }
         return $moveStatus;
@@ -497,25 +496,27 @@ class FRSFileFactory extends Error {
      *
      * @return Boolean
      */
-    public function deleteEmptyReleaseDirectory($file) {
+    public function deleteEmptyReleaseDirectory($file, $backend) {
         $nbFiles = 0;
         $directory = dirname($file->getFileLocation());
-        if (file_exists($directory)) {
-            try {
-                $dir = new DirectoryIterator($directory);
-                foreach ($dir as $f) {
-                    if (!$f->isDot()) {
-                        $nbFiles++;
-                    }
+        try {
+            $dir = new DirectoryIterator($directory);
+            foreach ($dir as $f) {
+                if (!$f->isDot()) {
+                    $nbFiles++;
                 }
-                if ($nbFiles === 0) {
-                    rmdir(dirname($file->getFileLocation()));
-                }
-            } catch (Exception $e) {
-                return false;
             }
+            if ($nbFiles === 0) {
+                rmdir(dirname($file->getFileLocation()));
+            }
+            return true;
+        } catch (RuntimeException $e) {
+            $backend->log("Directory ".$directory." already deleted", "warn");
+            return true;
+        } catch (Exception $e) {
+            $backend->log("Error while deleting empty release directory ".$directory, "error");
+            return false;
         }
-        return true;
     }
 
     /**
