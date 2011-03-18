@@ -24,7 +24,7 @@
 require_once('common/include/URL.class.php');
 require_once('common/dao/include/DataAccessResult.class.php');
 Mock::generate('DataAccessResult');
-Mock::generatePartial('URL', 'URLTestVersion', array('getProjectDao','getForumDao','getNewsBytesDao','getArtifactDao'));
+Mock::generatePartial('URL', 'URLTestVersion', array('getProjectDao','getForumDao','getNewsBytesDao','getArtifactDao', 'getProjectNameRule'));
 
 require_once('common/dao/ProjectDao.class.php');
 Mock::generate('ProjectDao');
@@ -34,19 +34,30 @@ require_once('common/dao/NewsBytesDao.class.php');
 Mock::generate('NewsBytesDao');
 require_once('common/dao/ArtifactDao.class.php');
 Mock::generate('ArtifactDao');
+require_once('common/valid/Rule.class.php');
+Mock::generate('Rule_ProjectName');
 
 class URLTest extends UnitTestCase {
     function setUp() {
         $GLOBALS['sys_news_group'] = 46;
     }
-    
+
     function tearDown() {
         unset($GLOBALS['group_id']);
         unset($GLOBALS['sys_news_group']);
         unset($_REQUEST['forum_id']);
         unset($GLOBALS['PATH_INFO']);
     }
-    
+
+    function testProjectsSvnExist() {
+        $url = new URL();
+        $this->assertEqual($url->getGroupNameFromSVNUrl('/viewvc.php/?roottype=svn&root=group_name'), 'group_name');
+        $this->assertEqual($url->getGroupNameFromSVNUrl('/viewvc.php/?roottype=svn&root=group.name'), 'group.name');
+        $this->assertEqual($url->getGroupNameFromSVNUrl('/viewvc.php/?root=group_name&roottype=svn'), 'group_name');
+        $this->assertEqual($url->getGroupNamefromSVNUrl('/viewvc.php/?root=group_name&action=co&roottype=svn'), 'group_name');
+        $this->assertEqual($url->getGroupNameFromSVNUrl('/viewvc.php/?roo=group_name&roottype=svn'), false);
+    }
+
     function testProjectsDontExist() {
         $url = new URLTestVersion($this);
         $dao = new MockProjectDao($this);
@@ -54,11 +65,13 @@ class URLTest extends UnitTestCase {
         $exists->setReturnValue('rowCount', 0);
         $exists->setReturnValue('getRow', false);
         $dao->setReturnReference('searchByUnixGroupName', $exists);
-        
+
+        $rule = new MockRule_ProjectName();
+        $url->setReturnValue('getProjectNameRule', $rule);
         $url->setReturnReference('getProjectDao', $dao);
         $this->assertFalse($url->getGroupIdFromURL('/projects/dontexist/'));
     }
-    
+
     function testProjectsExist() {
         $url = new URLTestVersion($this);
         $dao = new MockProjectDao($this);
@@ -71,27 +84,34 @@ class URLTest extends UnitTestCase {
         $exists1->setReturnValue('rowCount', 1);
         $exists1->setReturnValue('getRow', false);
         $exists1->setReturnValueAt(0, 'getRow', array('group_id' => '1'));
+        $rule = new MockRule_ProjectName();
+        $url->setReturnValue('getProjectNameRule', $rule);
+        $rule->setReturnValue('isValid', true);
 
         $dao->setReturnReferenceAt(0, 'searchByUnixGroupName', $exists);
         $dao->setReturnReferenceAt(1, 'searchByUnixGroupName', $exists1);
-        
+
         $url->setReturnReference('getProjectDao', $dao);
         $this->assertEqual($url->getGroupIdFromURL('/projects/exist/'), 1);
         $this->assertNotEqual($url->getGroupIdFromURL('/toto/projects/exist/'), 1);
     }
-    
+
     function testViewVcDontExist() {
         $url = new URLTestVersion($this);
         $dao = new MockProjectDao($this);
         $exists = new MockDataAccessResult($this);
         $exists->setReturnValue('rowCount', 0);
         $exists->setReturnValue('getRow', false);
+        $rule = new MockRule_ProjectName();
+        $url->setReturnValue('getProjectNameRule', $rule);
+        $rule->setReturnValue('isValid', true);
+
         $dao->setReturnReference('searchByUnixGroupName', $exists);
-        
+
         $url->setReturnReference('getProjectDao', $dao);
         $this->assertFalse($url->getGroupIdFromURL('/viewvc.php/?roottype=svn&root=dontexist'));
     }
-    
+
     function testViewVcExist() {
         $url = new URLTestVersion($this);
         $dao = new MockProjectDao($this);
@@ -100,11 +120,41 @@ class URLTest extends UnitTestCase {
         $exists->setReturnValue('getRow', false);
         $exists->setReturnValueAt(0, 'getRow', array('group_id' => '1'));
         $dao->setReturnReference('searchByUnixGroupName', $exists);
-        
+        $rule = new MockRule_ProjectName();
+        $url->setReturnValue('getProjectNameRule', $rule);
+        $rule->setReturnValue('isValid', true);
+
         $url->setReturnReference('getProjectDao', $dao);
         $this->assertEqual($url->getGroupIdFromURL('/viewvc.php/?roottype=svn&root=exist'), 1);
     }
-    
+
+    function testViewVcNotValidProjectName() {
+        $url = new URLTestVersion($this);
+        $rule = new MockRule_ProjectName();
+        $url->setReturnValue('getProjectNameRule', $rule);
+        $rule->setReturnValue('isValid', false);
+
+        $this->assertEqual($url->getGroupIdFromURL('/viewvc.php/?roottype=svn&root=ex(ist'), false);
+    }
+
+    function testViewVcExistForProjectWithPoint() {
+        $url = new URLTestVersion($this);
+        $dao = new MockProjectDao($this);
+        $exists = new MockDataAccessResult($this);
+        $exists->setReturnValue('rowCount', 1);
+        $exists->setReturnValue('getRow', false);
+        $exists->setReturnValueAt(0, 'getRow', array('group_id' => '1'));
+        $rule = new MockRule_ProjectName();
+        $url->setReturnValue('getProjectNameRule', $rule);
+        $rule->setReturnValue('isValid', true);
+
+        $dao->expectOnce('searchByUnixGroupName',array('test.svn'));
+        $dao->setReturnReference('searchByUnixGroupName', $exists);
+
+        $url->setReturnReference('getProjectDao', $dao);
+        $this->assertEqual($url->getGroupIdFromURL('/viewvc.php/?roottype=svn&root=test.svn'), 1);
+    }
+
     function testForumDontExist() {
         $url = new URLTestVersion($this);
         $dao = new MockForumDao($this);
@@ -115,7 +165,7 @@ class URLTest extends UnitTestCase {
         $url->setReturnReference('getForumDao', $dao);
         $this->assertFalse($url->getGroupIdFromURL('/forum/forum.php?forum_id=dontexist'));
     }
-    
+
     function testForumExist() {
         $url = new URLTestVersion($this);
         $dao = new MockForumDao($this);
