@@ -499,20 +499,23 @@ class FRSFileFactory extends Error {
      */
     public function deleteEmptyReleaseDirectory($file) {
         $nbFiles = 0;
-        try {
-            $dir = new DirectoryIterator(dirname($file->getFileLocation()));
-            foreach ($dir as $f) {
-                if (!$f->isDot()) {
-                    $nbFiles++;
+        $directory = dirname($file->getFileLocation());
+        if (file_exists($directory)) {
+            try {
+                $dir = new DirectoryIterator($directory);
+                foreach ($dir as $f) {
+                    if (!$f->isDot()) {
+                        $nbFiles++;
+                    }
                 }
+                if ($nbFiles === 0) {
+                    rmdir(dirname($file->getFileLocation()));
+                }
+            } catch (Exception $e) {
+                return false;
             }
-            if ($nbFiles === 0) {
-                rmdir(dirname($file->getFileLocation()));
-            }
-            return true;
-        } catch (Exception $e) {
-            return false;
         }
+        return true;
     }
 
     /**
