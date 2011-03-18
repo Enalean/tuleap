@@ -86,7 +86,7 @@ class URLTest extends UnitTestCase {
         $exists1->setReturnValueAt(0, 'getRow', array('group_id' => '1'));
         $rule = new MockRule_ProjectName();
         $url->setReturnValue('getProjectNameRule', $rule);
-        $rule->setReturnValue('isValid', true);
+        $rule->setReturnValue('containsIllegalChars', false);
 
         $dao->setReturnReferenceAt(0, 'searchByUnixGroupName', $exists);
         $dao->setReturnReferenceAt(1, 'searchByUnixGroupName', $exists1);
@@ -104,7 +104,7 @@ class URLTest extends UnitTestCase {
         $exists->setReturnValue('getRow', false);
         $rule = new MockRule_ProjectName();
         $url->setReturnValue('getProjectNameRule', $rule);
-        $rule->setReturnValue('isValid', true);
+        $rule->setReturnValue('containsIllegalChars', false);
 
         $dao->setReturnReference('searchByUnixGroupName', $exists);
 
@@ -122,7 +122,7 @@ class URLTest extends UnitTestCase {
         $dao->setReturnReference('searchByUnixGroupName', $exists);
         $rule = new MockRule_ProjectName();
         $url->setReturnValue('getProjectNameRule', $rule);
-        $rule->setReturnValue('isValid', true);
+        $rule->setReturnValue('containsIllegalChars', false);
 
         $url->setReturnReference('getProjectDao', $dao);
         $this->assertEqual($url->getGroupIdFromURL('/viewvc.php/?roottype=svn&root=exist'), 1);
@@ -132,7 +132,7 @@ class URLTest extends UnitTestCase {
         $url = new URLTestVersion($this);
         $rule = new MockRule_ProjectName();
         $url->setReturnValue('getProjectNameRule', $rule);
-        $rule->setReturnValue('isValid', false);
+        $rule->setReturnValue('containsIllegalChars', true);
 
         $this->assertEqual($url->getGroupIdFromURL('/viewvc.php/?roottype=svn&root=ex(ist'), false);
     }
@@ -146,7 +146,7 @@ class URLTest extends UnitTestCase {
         $exists->setReturnValueAt(0, 'getRow', array('group_id' => '1'));
         $rule = new MockRule_ProjectName();
         $url->setReturnValue('getProjectNameRule', $rule);
-        $rule->setReturnValue('isValid', true);
+        $rule->setReturnValue('containsIllegalChars', false);
 
         $dao->expectOnce('searchByUnixGroupName',array('test.svn'));
         $dao->setReturnReference('searchByUnixGroupName', $exists);
