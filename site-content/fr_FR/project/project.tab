@@ -397,6 +397,7 @@ project_admin_utils	import	Importation de données
 project_admin_utils	rename_request	Demande de renommage du projet
 project_admin_utils	rename_done	Renommage du projet effectué
 project_admin_utils	rename_with_error	Renommage du projet effectué avec des erreurs
+project_admin_utils	membership_request_updated	Délégation des demandes d'accès modifiée
 # There must be one message here for each return value of
 # the permission_get_object_type function in www/project/admin/permissions.php
 project_admin_utils	perm_reset_for_field	Réinitialisation des permissions pour le champ $1

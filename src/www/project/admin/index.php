@@ -85,7 +85,21 @@ if ($request->isPost() && $request->valid($vFunc)) {
         $vUGroups->required();
         if ($request->validArray($vUGroups)) {
             $ugroups = $request->get('ugroups');
+            //to retreive the old marked ugroups 
+            $darUgroups = $pm->getMembershipRequestNotificationUGroup($group_id);
             if ($pm->setMembershipRequestNotificationUGroup($group_id, $ugroups)) {
+                if ($darUgroups && !$darUgroups->isError() && $darUgroups->rowCount() > 0) {
+                    foreach ($darUgroups as $row) {
+                        $oldUgroups[] = ugroup_get_name_from_id($row['ugroup_id']);
+                    }
+                } else {
+                    $oldUgroups = array(ugroup_get_name_from_id($GLOBALS['UGROUP_PROJECT_ADMIN']));
+                }
+                foreach ($ugroups as $ugroupId) {
+                    $newUgroups[] = ugroup_get_name_from_id($ugroupId);
+                }
+                //update group history
+                group_add_history('membership_request_updated', implode(',', $oldUgroups).' :: '.implode(',', $newUgroups), $group_id);
                 $GLOBALS['Response']->addFeedback('info', $Language->getText('project_admin_index', 'member_request_delegation_ugroups_msg'));
             }
         } else {
