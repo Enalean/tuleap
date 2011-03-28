@@ -128,7 +128,7 @@ class WikiAttachmentDao extends DataAccessObject {
      */
     function &getIdFromFilename($gid, $filename) {
         $qry = sprintf('SELECT id FROM wiki_attachment'
-                       .' WHERE name=%s'
+                       .' WHERE name COLLATE utf8_bin =%s'
                        .' AND group_id=%d',
                        $this->da->quoteSmart($filename),
                        $gid);

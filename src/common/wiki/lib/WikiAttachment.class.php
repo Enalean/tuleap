@@ -223,7 +223,7 @@ class WikiAttachment /* implements UGroupPermission */ {
             trigger_error($GLOBALS['Language']->getText('wiki_lib_attachment', 'err_alpha', array($name)), E_USER_ERROR);
         }
 
-        $this->filename = $name;
+        $this->filename = strtolower($name);
 
         return true;
     }
