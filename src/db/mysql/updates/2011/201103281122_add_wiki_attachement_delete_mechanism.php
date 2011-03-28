@@ -43,7 +43,7 @@ EOT;
         }
 
         if (!$this->db->tableNameExists('wiki_attachment_deleted')) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotCompleteException('wiki_attachment_deleted table is missing');
+            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('wiki_attachment_deleted table is missing');
         }
 
     }
