@@ -530,6 +530,18 @@ class WikiAttachment /* implements UGroupPermission */ {
                                     $this->id);
     }
 
+    /**
+     * Delete the entry fictitiously, no remove from the FS until the purge
+     *
+     * @param Integer $attachmentId
+     *
+     * @return Boolean
+     */
+    function deleteAttachment($attachmentId) {
+        $dao = $this->getDao();
+        return $dao->delete($attachmentId);
+    }
+
 }
 
 ?>

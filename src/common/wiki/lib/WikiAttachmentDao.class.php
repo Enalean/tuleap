@@ -64,18 +64,23 @@ class WikiAttachmentDao extends DataAccessObject {
     }
 
     /**
-     * Delete the entry corresponding to the given id.
+     * Set the status of the attachment to deleted and add the entry to the wiki_attchment_deleted table.
      *
      * @param integer $id Attachement id
+     * 
      * @return boolean
      */
     function delete($id) {
-        $qry = sprintf('DELETE FROM wiki_attachment'
-                       .' WHERE id=%d',                       
-                       $id);
-         
-        $res = $this->update($qry);
-        return $res;
+        $sql = 'UPDATE wiki_attachment SET delete_date='.$this->da->escapeInt($_SERVER['REQUEST_TIME']);
+        if ($this->update($sql)) {
+            $sql = 'INSERT INTO wiki_attachment_deleted(id, group_id, name, delete_date)'.
+               ' SELECT id, group_id, name, delete_date'.
+               ' FROM wiki_attachment'.
+               ' WHERE id = '.$this->da->escapeInt($id);
+            $res = $this->update($sql);
+            return $res;
+        }
+        return false;
     }
 
     /**
