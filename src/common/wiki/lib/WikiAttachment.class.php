@@ -330,6 +330,13 @@ class WikiAttachment /* implements UGroupPermission */ {
         return is_dir($this->basedir.'/'.$this->filename);
     }
 
+    function isActive() {
+        $dao = WikiAttachment::getDao();
+        $dar = $dao->read($this->id);
+        $row = $dar->getRow();
+        return ($row['delete_date'] == null);
+    }
+
     function dbadd() {
         $dao =& WikiAttachment::getDao();
         $created = $dao->create($this->gid, $this->filename);
