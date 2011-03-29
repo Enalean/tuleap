@@ -191,13 +191,18 @@ ws[cfh]");
                 foreach($args as $id) {
                     $wa = new WikiAttachment();
                     $wa->initWithId($id);
-                    // TODO : Check validity & permissions
-                    if(!$wa->deleteAttachment()) {
+                    if ($wa->validate() && $wa->gid == GROUP_ID && $wa->isAutorized($user->getId())) {
+                        if(!$wa->deleteAttachment()) {
+                            $deleteStatus = false;
+                        }
+                    } else {
                         $deleteStatus = false;
                     }
                 }
                 if ($deleteStatus) {
                     $message->pushContent(HTML::h2(_("File(s) successfully deleted.")));
+                } else {
+                    $message->pushContent(HTML::h2(_("An error occured while deleting attachement(s).")));
                 }
             } else {
                 $message->pushContent(HTML::br(),HTML::br());
