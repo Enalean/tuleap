@@ -415,29 +415,31 @@ class WikiServiceAdminViews extends WikiViews {
         while($wai->valid()) {
             $wa =& $wai->current();
 
-            print '<tr>';
+            if ($wa->isActive()) {
+                print '<tr>';
 
-            $filename = basename($wa->getFilename());
-            $id = $wa->getId();
+                $filename = basename($wa->getFilename());
+                $id = $wa->getId();
 
-            print '<td><a href="'.$this->wikiAdminLink.'&view=browseAttachment&id='.$id.'">'.$filename.'</a></td>';
-            print '<td align="center">'.$wa->count().'</td>';
+                print '<td><a href="'.$this->wikiAdminLink.'&view=browseAttachment&id='.$id.'">'.$filename.'</a></td>';
+                print '<td align="center">'.$wa->count().'</td>';
 
-            $status=$GLOBALS['Language']->getText('wiki_views_wkserviews', 'define_perms');
-            if($wa->permissionExist()) {
-                $status=$GLOBALS['Language']->getText('wiki_views_wkserviews', 'edit_perms');
+                $status=$GLOBALS['Language']->getText('wiki_views_wkserviews', 'define_perms');
+                if($wa->permissionExist()) {
+                    $status=$GLOBALS['Language']->getText('wiki_views_wkserviews', 'edit_perms');
+                }
+                print '<td align="center">';
+                print '<a href="'.$this->wikiAdminLink.'&view=attachmentPerms&id='.$id.'">['.$status.']</a>';
+                print '</td>';
+
+
+                //print '<td align="center">';
+                //      print $this->getTrashLink($this->wikiAdminLink.'&view=wikiAttachments&action=delAttach&id='
+                //			, 'delete "'.$filename.'" attachment');
+                // print 'n/a';
+                //print '</td>';
+                print '</tr>';
             }
-            print '<td align="center">';
-            print '<a href="'.$this->wikiAdminLink.'&view=attachmentPerms&id='.$id.'">['.$status.']</a>';
-            print '</td>';
-
-
-            //print '<td align="center">';
-            //      print $this->getTrashLink($this->wikiAdminLink.'&view=wikiAttachments&action=delAttach&id='
-            //			, 'delete "'.$filename.'" attachment');
-            // print 'n/a';
-            //print '</td>';
-            print '</tr>';
 
             $wai->next();
         }
