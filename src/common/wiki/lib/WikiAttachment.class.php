@@ -537,9 +537,9 @@ class WikiAttachment /* implements UGroupPermission */ {
      *
      * @return Boolean
      */
-    function deleteAttachment($attachmentId) {
+    function deleteAttachment() {
         $dao = $this->getDao();
-        return $dao->delete($attachmentId);
+        return $dao->delete($this->id);
     }
 
 }

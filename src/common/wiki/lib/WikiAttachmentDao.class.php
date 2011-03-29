@@ -113,6 +113,7 @@ class WikiAttachmentDao extends DataAccessObject {
                        .' FROM wiki_attachment_revision AS war, wiki_attachment AS wa'
                        .' WHERE wa.group_id=%d'
                        .' AND war.attachment_id=wa.id'
+                       .' AND wa.delete_date IS NULL'
                        .' GROUP BY attachment_id'
                        .' ORDER BY max_date DESC',
                        $gid);

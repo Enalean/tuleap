@@ -185,7 +185,23 @@ ws[cfh]");
             }
         }
         else {
-            $message->pushContent(HTML::br(),HTML::br());
+            $args = $request->getArg('attachments_to_delete');
+            if (is_array($args)) {
+                $deleteStatus = true;
+                foreach($args as $id) {
+                    $wa = new WikiAttachment();
+                    $wa->initWithId($id);
+                    // TODO : Check validity & permissions
+                    if(!$wa->deleteAttachment()) {
+                        $deleteStatus = false;
+                    }
+                }
+                if ($deleteStatus) {
+                    $message->pushContent(HTML::h2(_("File(s) successfully deleted.")));
+                }
+            } else {
+                $message->pushContent(HTML::br(),HTML::br());
+            }
         }
 
         /// {{{ Codendi Specific        
@@ -222,7 +238,7 @@ ws[cfh]");
                                                 "Attach:".$filename)));
             $line->pushContent(HTML::td($wa->count()));
             $line->pushContent(HTML::td(HTML::input(array('type'    => 'checkbox',
-                                                          'name'    => 'delete_attachement_'.$wa->getId(),
+                                                          'name'    => 'attachments_to_delete[]'.$wa->getId(),
                                                           'value'   => $wa->getId()))));
             $attchTab->pushContent($line);                
             
