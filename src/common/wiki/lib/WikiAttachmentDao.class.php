@@ -71,7 +71,8 @@ class WikiAttachmentDao extends DataAccessObject {
      * @return boolean
      */
     function delete($id) {
-        $sql = 'UPDATE wiki_attachment SET delete_date='.$this->da->escapeInt($_SERVER['REQUEST_TIME']);
+        $sql = 'UPDATE wiki_attachment SET delete_date='.$this->da->escapeInt($_SERVER['REQUEST_TIME']).
+               ' WHERE id = '.$this->da->escapeInt($id);
         if ($this->update($sql)) {
             $sql = 'INSERT INTO wiki_attachment_deleted(id, group_id, name, delete_date)'.
                ' SELECT id, group_id, name, delete_date'.
