@@ -137,5 +137,29 @@ class WikiAttachmentDao extends DataAccessObject {
 
         return $this->retrieve($qry);
     }
+
+    /**
+     * Retrieve all deleted Attachment not purged yet after a given period of time
+     * 
+     * @param Integer $time    Timestamp of the date to start the search
+     * @param Integer $groupId
+     * @param Integer $offset
+     * @param Integer $limit
+     * 
+     * @return DataAccessResult
+     */
+    function searchAttachmentToPurge($time, $groupId=0, $offset=0, $limit=0) {
+        $where  = '';
+        if ($groupId != 0) {
+            $where  .= ' AND attachment.group_id = '.$this->da->escapeInt($groupId);
+        }
+        $sql = 'SELECT attachment.* '.
+               ' FROM wiki_attachment_deleted attachment'.
+               ' WHERE attachment.delete_date <= '.$this->da->escapeInt($time).
+               ' AND attachment.purge_date IS NULL'.
+               $where.
+               ' ORDER BY attachment.delete_date DESC';
+        return $this->retrieve($sql);
+    }
 }
 ?>
