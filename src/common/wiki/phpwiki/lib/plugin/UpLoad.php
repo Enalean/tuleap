@@ -204,7 +204,8 @@ ws[cfh]");
         $attchTab = HTML::table(array('border' => '1',
                                       'width'  => '100%'));
         $attchTab->pushContent(HTML::tr(HTML::th(_("Attachment")),
-                                        HTML::th(_("Number of revision"))));
+                                        HTML::th(_("Number of revision")),
+                                        HTML::th(_("Delete"))));
         $wai =& WikiAttachment::getListWithCounter(GROUP_ID,
                                                    user_getid(),
                                                    array('offset' => $offset,
@@ -220,6 +221,9 @@ ws[cfh]");
             $line->pushContent(HTML::td(HTML::a(array('href' => $url),
                                                 "Attach:".$filename)));
             $line->pushContent(HTML::td($wa->count()));
+            $line->pushContent(HTML::td(HTML::input(array('type'    => 'checkbox',
+                                                          'name'    => 'delete_attachement_'.$wa->getId(),
+                                                          'value'   => $wa->getId()))));
             $attchTab->pushContent($line);                
             
             $wai->next();
@@ -227,7 +231,17 @@ ws[cfh]");
         $attchList = HTML();
         $attchList->pushContent(HTML::hr(),
                                 HTML::h2(_("Attached files")));
-        $attchList->pushContent($attchTab);
+        $deleteForm = HTML::form(array('action'   => $request->getPostURL(),
+                                       'method'   => 'post'));
+        $deleteButton = HTML::input(array('value' => _("Delete"),
+                                          'type'  => 'submit'));
+        $line = HTML::tr();
+        $line->pushContent(HTML::td());
+        $line->pushContent(HTML::td());
+        $line->pushContent(HTML::td($deleteButton));
+        $attchTab->pushContent($line);
+        $deleteForm->pushContent($attchTab);
+        $attchList->pushContent($deleteForm);
         
         $url = WikiURL("UpLoad");
         if(!empty($_REQUEST['pv'])) {
