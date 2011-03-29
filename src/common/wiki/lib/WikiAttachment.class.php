@@ -533,8 +533,6 @@ class WikiAttachment /* implements UGroupPermission */ {
     /**
      * Delete the entry fictitiously, no remove from the FS until the purge
      *
-     * @param Integer $attachmentId
-     *
      * @return Boolean
      */
     function deleteAttachment() {

@@ -238,7 +238,7 @@ ws[cfh]");
                                                 "Attach:".$filename)));
             $line->pushContent(HTML::td($wa->count()));
             $line->pushContent(HTML::td(HTML::input(array('type'    => 'checkbox',
-                                                          'name'    => 'attachments_to_delete[]'.$wa->getId(),
+                                                          'name'    => 'attachments_to_delete[]',
                                                           'value'   => $wa->getId()))));
             $attchTab->pushContent($line);                
             
