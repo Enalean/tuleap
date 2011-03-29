@@ -540,6 +540,19 @@ class WikiAttachment /* implements UGroupPermission */ {
         return $dao->delete($this->id);
     }
 
+    /**
+     * List all attachments deleted but not already purged
+     *
+     * @param Integer $groupId
+     * @param Integer $offset
+     * @param Integer $limit
+     *
+     * @return Boolean
+     */
+    public function listPendingAttachments($groupId, $offset, $limit) {
+        $dao = $this->getDao();
+        return $dao->searchAttachmentToPurge($_SERVER['REQUEST_TIME'], $groupId, $offset, $limit);
+    }
 }
 
 ?>
