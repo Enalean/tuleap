@@ -163,5 +163,22 @@ class WikiAttachmentDao extends DataAccessObject {
                ' ORDER BY attachment.delete_date DESC';
         return $this->retrieve($sql);
     }
+
+    /**
+     * Restore deleted wiki attachments
+     * 
+     * @param Integer $id
+     * 
+     * @return Boolean
+     */
+    function restoreAttachment($id) {
+                $sql = 'UPDATE wiki_attachment SET delete_date = NULL '.
+                       'WHERE id = '.$this->da->escapeInt($id);
+            if ($this->update($sql)) {
+            $sql = 'DELETE FROM wiki_attachment_deleted WHERE id = '.$this->da->escapeInt($id);
+            return $this->update($sql);
+        }
+        return false;
+    }
 }
 ?>

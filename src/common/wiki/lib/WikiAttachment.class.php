@@ -586,6 +586,18 @@ class WikiAttachment /* implements UGroupPermission */ {
         $dao = $this->getDao();
         return $dao->searchAttachmentToPurge($_SERVER['REQUEST_TIME'], $groupId, $offset, $limit);
     }
+
+    /**
+     * Restore wiki attachment
+     *
+     * @param Integer $id
+     *
+     * @return Boolean
+     */
+    public function restoreDeletedAttachment($id) {
+        $dao = $this->getDao();
+        return $dao->restoreAttachment($id);
+    }
 }
 
 ?>
