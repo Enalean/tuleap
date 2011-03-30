@@ -30,32 +30,48 @@ class WikiAttachmentTest extends UnitTestCase {
         $wa->setFilesystemName();
         $this->assertNotEqual('toto.txt', $wa->getFilesystemName());
         $this->assertPattern('/toto.txt_[0..9]*/', $wa->getFilesystemName());
-        $wa->filesytemName = 'titi.txt';
+        $wa->filesystemName = 'titi.txt';
         $this->assertNotEqual('toto.txt', $wa->getFilesystemName());
         $this->assertNoPattern('/toto.txt_[0..9]*/', $wa->getFilesystemName());
         $this->assertEqual('titi.txt', $wa->getFilesystemName());
     }
 
-    function testCreate() {
+    function testCreateNoFilesystemName() {
+        $wa = new WikiAttachmentTestVersion();
+        $wa->setFilename('testing.txt');
+        $wa->basedir = dirname(__FILE__).'/_fixtures/';
+        $wa->setReturnValue('dbadd', true);
+
+        $this->assertNoErrors();
+        $this->assertFalse(is_dir($wa->basedir.'/testing.txt'));
+        $this->assertTrue($wa->create());
+        $this->assertTrue(is_dir($wa->basedir.'/testing.txt'));
+        rmdir($wa->basedir.'/testing.txt');
+    }
+
+    function testCreateFolderAlreadyExist() {
+        $wa = new WikiAttachmentTestVersion();
+        $wa->setFilename('toto.txt');
+        $wa->basedir = dirname(__FILE__).'/_fixtures/';
+        $wa->setReturnValue('dbadd', true);
+
+        $this->assertNoErrors();
+        $this->assertTrue(is_dir($wa->basedir.'/toto.txt'));
+        $this->assertTrue($wa->create());
+        $this->assertTrue(is_dir($wa->basedir.'/toto.txt'));
+    }
+
+    function testCreateWithFilesystemName() {
         $wa = new WikiAttachmentTestVersion();
         $wa->setFilename('titi.txt');
         $wa->basedir = dirname(__FILE__).'/_fixtures/';
         $wa->setReturnValue('dbadd', true);
 
         $this->assertNoErrors();
-        $this->assertFalse(is_dir($wa->basedir.'/titi.txt'));
-        $this->assertTrue($wa->create());
-        $this->assertTrue(is_dir($wa->basedir.'/titi.txt'));
-        rmdir($wa->basedir.'/titi.txt');
-
-        $wa->setFilename('toto.txt');
-        $this->assertTrue(is_dir($wa->basedir.'/toto.txt'));
-        $this->assertTrue($wa->create());
-        $this->assertTrue(is_dir($wa->basedir.'/toto.txt'));
-
-        $wa->filesytemName = 'testing.txt';
+        $wa->filesystemName = 'testing.txt';
         $this->assertFalse(is_dir($wa->basedir.'/testing.txt'));
         $this->assertTrue($wa->create());
+        $this->assertFalse(is_dir($wa->basedir.'/titi.txt'));
         $this->assertTrue(is_dir($wa->basedir.'/testing.txt'));
         rmdir($wa->basedir.'/testing.txt');
     }

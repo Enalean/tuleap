@@ -63,7 +63,7 @@ class WikiAttachment /* implements UGroupPermission */ {
      * @access private
      * @var    string
      */
-    var $filesytemName;
+    var $filesystemName;
 
     /**
      * Attachment location (directory)
@@ -236,7 +236,7 @@ class WikiAttachment /* implements UGroupPermission */ {
     }
 
     function setFilesystemName() {
-        $this->filesytemName = $this->filename.'_'.time();
+        $this->filesystemName = $this->filename.'_'.time();
         return true;
     }
   
@@ -245,12 +245,12 @@ class WikiAttachment /* implements UGroupPermission */ {
     }
 
     function getFilesystemName() {
-        if ($this->filesytemName) {
-            return $this->filesytemName;
+        if ($this->filesystemName) {
+            return $this->filesystemName;
         } else {
             $this->initWithId($this->id);
-            if ($this->filesytemName) {
-                return $this->filesytemName;
+            if ($this->filesystemName) {
+                return $this->filesystemName;
             } else {
             return $this->getFilename();
             }
@@ -471,7 +471,7 @@ class WikiAttachment /* implements UGroupPermission */ {
         $this->setGid($row['group_id']);
         $this->filename = $row['name'];
         if (isset($row['filesystem_name'])) {
-            $this->filesytemName = $row['filesystem_name'];
+            $this->filesystemName = $row['filesystem_name'];
         }
     }
 
