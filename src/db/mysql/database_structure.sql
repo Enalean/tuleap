@@ -2998,6 +2998,7 @@ CREATE TABLE wiki_attachment (
   id INT( 11 ) NOT NULL AUTO_INCREMENT ,
   group_id INT( 11 ) NOT NULL ,
   name VARCHAR( 255 ) NOT NULL ,
+  filesystem_name VARCHAR( 255 ) DEFAULT NULL,
   delete_date INT(11) UNSIGNED NULL,
   PRIMARY KEY (id)
 );
@@ -3006,6 +3007,7 @@ CREATE TABLE wiki_attachment_deleted (
   id INT( 11 ) NOT NULL AUTO_INCREMENT ,
   group_id INT( 11 ) NOT NULL ,
   name VARCHAR( 255 ) NOT NULL ,
+  filesystem_name VARCHAR( 255 ) DEFAULT NULL,
   delete_date INT(11) UNSIGNED NULL,
   purge_date INT(11) UNSIGNED NULL,
   PRIMARY KEY (id),

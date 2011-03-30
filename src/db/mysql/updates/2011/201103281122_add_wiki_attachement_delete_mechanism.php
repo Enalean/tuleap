@@ -16,6 +16,14 @@ EOT;
     }
 
     public function up() {
+        $sql = 'ALTER TABLE wiki_attachment ADD filesystem_name VARCHAR( 255 ) DEFAULT NULL';
+        if ($this->db->tableNameExists('wiki_attachment')) {
+            $res = $this->db->dbh->exec($sql);
+            if ($res === false) {
+                throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while adding column filesystem_name to table wiki_attachement');
+            }
+        }
+
         $sql = 'ALTER TABLE wiki_attachment ADD delete_date INT(11) UNSIGNED NULL';
         if ($this->db->tableNameExists('wiki_attachment')) {
             $res = $this->db->dbh->exec($sql);
@@ -28,6 +36,7 @@ EOT;
                 id INT( 11 ) NOT NULL AUTO_INCREMENT ,
                 group_id INT( 11 ) NOT NULL ,
                 name VARCHAR( 255 ) NOT NULL ,
+                filesystem_name VARCHAR( 255 ) DEFAULT NULL,
                 delete_date INT(11) UNSIGNED NULL,
                 purge_date INT(11) UNSIGNED NULL,
                 PRIMARY KEY (id),
