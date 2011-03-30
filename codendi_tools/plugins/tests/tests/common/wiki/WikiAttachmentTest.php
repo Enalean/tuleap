@@ -1,0 +1,64 @@
+<?php
+/**
+ * Copyright (c) STMicroelectronics, 2011. All Rights Reserved.
+ *
+ * This file is a part of Codendi.
+ *
+ * Codendi is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Codendi is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+require_once('common/wiki/lib/WikiAttachment.class.php');
+Mock::generatePartial('WikiAttachment', 'WikiAttachmentTestVersion', array('initWithId', 'dbadd'));
+
+class WikiAttachmentTest extends UnitTestCase {
+
+    function testGetFilesystemName() {
+        $wa = new WikiAttachmentTestVersion();
+        $wa->setFilename('toto.txt');
+        $this->assertEqual('toto.txt', $wa->getFilesystemName());
+        $wa->setFilesystemName();
+        $this->assertNotEqual('toto.txt', $wa->getFilesystemName());
+        $this->assertPattern('/toto.txt_[0..9]*/', $wa->getFilesystemName());
+        $wa->filesytemName = 'titi.txt';
+        $this->assertNotEqual('toto.txt', $wa->getFilesystemName());
+        $this->assertNoPattern('/toto.txt_[0..9]*/', $wa->getFilesystemName());
+        $this->assertEqual('titi.txt', $wa->getFilesystemName());
+    }
+
+    function testCreate() {
+        $wa = new WikiAttachmentTestVersion();
+        $wa->setFilename('titi.txt');
+        $wa->basedir = dirname(__FILE__).'/_fixtures/';
+        $wa->setReturnValue('dbadd', true);
+
+        $this->assertNoErrors();
+        $this->assertFalse(is_dir($wa->basedir.'/titi.txt'));
+        $this->assertTrue($wa->create());
+        $this->assertTrue(is_dir($wa->basedir.'/titi.txt'));
+        rmdir($wa->basedir.'/titi.txt');
+
+        $wa->setFilename('toto.txt');
+        $this->assertTrue(is_dir($wa->basedir.'/toto.txt'));
+        $this->assertTrue($wa->create());
+        $this->assertTrue(is_dir($wa->basedir.'/toto.txt'));
+
+        $wa->filesytemName = 'testing.txt';
+        $this->assertFalse(is_dir($wa->basedir.'/testing.txt'));
+        $this->assertTrue($wa->create());
+        $this->assertTrue(is_dir($wa->basedir.'/testing.txt'));
+        rmdir($wa->basedir.'/testing.txt');
+    }
+
+}
+?>

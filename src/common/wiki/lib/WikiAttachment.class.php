@@ -59,6 +59,13 @@ class WikiAttachment /* implements UGroupPermission */ {
     var $filename;
 
     /**
+     * Attachment name in the filesystem
+     * @access private
+     * @var    string
+     */
+    var $filesytemName;
+
+    /**
      * Attachment location (directory)
      * @access private
      * @var    string
@@ -227,11 +234,28 @@ class WikiAttachment /* implements UGroupPermission */ {
 
         return true;
     }
+
+    function setFilesystemName() {
+        $this->filesytemName = $this->filename.'_'.time();
+        return true;
+    }
   
     function getFilename() {
         return $this->filename;
     }
 
+    function getFilesystemName() {
+        if ($this->filesytemName) {
+            return $this->filesytemName;
+        } else {
+            $this->initWithId($this->id);
+            if ($this->filesytemName) {
+                return $this->filesytemName;
+            } else {
+            return $this->getFilename();
+            }
+        }
+    }
 
     function setFile($basedir="") {
     
@@ -327,7 +351,7 @@ class WikiAttachment /* implements UGroupPermission */ {
 	}
 
     function exist() {
-        return is_dir($this->basedir.'/'.$this->filename);
+        return is_dir($this->basedir.'/'.$this->getFilesystemName());
     }
 
     function isActive() {
@@ -339,7 +363,7 @@ class WikiAttachment /* implements UGroupPermission */ {
 
     function dbadd() {
         $dao =& WikiAttachment::getDao();
-        $created = $dao->create($this->gid, $this->filename);
+        $created = $dao->create($this->gid, $this->getFilename(), $this->getFilesystemName());
 
         if(!$created) {            
             trigger_error($GLOBALS['Language']->getText('wiki_lib_attachment', 
@@ -363,8 +387,8 @@ class WikiAttachment /* implements UGroupPermission */ {
         }
     
         // Create directory where file revison will be stored
-        if(!is_dir($this->basedir.'/'.$this->filename)){
-            $res = mkdir($this->basedir.'/'.$this->filename, 0700);
+        if(!is_dir($this->basedir.'/'.$this->getFilesystemName())){
+            $res = mkdir($this->basedir.'/'.$this->getFilesystemName(), 0700);
             if(!$res) {
                 trigger_error($GLOBALS['Language']->getText('wiki_lib_attachment', 'err_create_file_dir'), E_USER_ERROR);
                 return false;
@@ -406,6 +430,12 @@ class WikiAttachment /* implements UGroupPermission */ {
             return -1;
         }
 
+        if ($this->getId()) {
+            $this->initWithId($this->getId());
+        } elseif(!$this->setFilesystemName()) {
+            return -1;
+        }
+
         if(!$this->exist()) {
             if(!$this->create()) {	
                 return -1;
@@ -414,7 +444,7 @@ class WikiAttachment /* implements UGroupPermission */ {
 
         $att_rev = new WikiAttachmentRevision($this->gid);
     
-        $att_rev->setFilename($this->getFilename());
+        $att_rev->setFilename($this->getFilesystemName());
         $att_rev->setOwnerId(user_getid());
         $att_rev->setAttachmentId($this->getId());
         $att_rev->setMimeType($userfile_type);
@@ -440,6 +470,9 @@ class WikiAttachment /* implements UGroupPermission */ {
         $this->id       = $row['id'];
         $this->setGid($row['group_id']);
         $this->filename = $row['name'];
+        if (isset($row['filesystem_name'])) {
+            $this->filesytemName = $row['filesystem_name'];
+        }
     }
 
     function setRevisionCounter($nb) {
@@ -459,7 +492,7 @@ class WikiAttachment /* implements UGroupPermission */ {
             exit_no_group();
    
         // Validate filename   
-        if(!is_dir($this->basedir.'/'.$this->filename)){
+        if(!is_dir($this->basedir.'/'.$this->getFilesystemName())){
             return false;
             //      print "error ".$this->basedir.'/'.$this->filename;
         }

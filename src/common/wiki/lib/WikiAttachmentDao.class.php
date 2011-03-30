@@ -39,11 +39,12 @@ class WikiAttachmentDao extends DataAccessObject {
      * @param string $filename Attachement name
      * @return boolean
      */
-    function create($gid, $filename) {
-        $qry = sprintf(' INSERT INTO wiki_attachment (group_id, name)'
-                       .' VALUES (%d, %s)',
+    function create($gid, $filename, $filesystemName) {
+        $qry = sprintf(' INSERT INTO wiki_attachment (group_id, name, filesystem_name)'
+                       .' VALUES (%d, %s, %s)',
                        $gid,
-                       $this->da->quoteSmart($filename));
+                       $this->da->quoteSmart($filename),
+                       $this->da->quoteSmart($filesystemName));
 
         $res = $this->update($qry);
         return $res;
@@ -131,7 +132,8 @@ class WikiAttachmentDao extends DataAccessObject {
     function &getIdFromFilename($gid, $filename) {
         $qry = sprintf('SELECT id FROM wiki_attachment'
                        .' WHERE name COLLATE utf8_bin =%s'
-                       .' AND group_id=%d',
+                       .' AND group_id=%d'
+                       .' AND delete_date IS NULL',
                        $this->da->quoteSmart($filename),
                        $gid);
 
