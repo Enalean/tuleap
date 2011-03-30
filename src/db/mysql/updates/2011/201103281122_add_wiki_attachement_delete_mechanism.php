@@ -47,6 +47,10 @@ EOT;
     }
 
     public function postUp() {
+        if (!$this->db->columnNameExists('wiki_attachment', 'filesystem_name')) {
+            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('Column filesystem_name not created in wiki_attachment');
+        }
+
         if (!$this->db->columnNameExists('wiki_attachment', 'delete_date')) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('delete_date not created in wiki_attachment');
         }
