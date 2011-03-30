@@ -228,10 +228,10 @@ class GitBackend extends Backend {
         $format = 'format:URL:    '.$url.'%%nAuthor: %%an <%%ae>%%nDate:   %%aD%%n%%n%%s%%n%%b';
 
         $showrev = "t=%s; ".
-            "git log ".
+            "git show ".
             "--name-status ".
             "--pretty='".$format."' ".
-            "\$t~1..\$t";
+            "\$t";
 
         $this->getDriver()->setConfig($path, 'hooks.showrev', $showrev);
     }

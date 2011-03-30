@@ -652,7 +652,8 @@ show_new_revisions()
 		revspec=$oldrev..$newrev
 	fi
 
-	other_branches=$(git for-each-ref --format='%(refname)' refs/heads/ |
+	# Removed final slash of refs/heads for git 1.5
+	other_branches=$(git for-each-ref --format='%(refname)' refs/heads |
 	    grep -F -v $refname)
 	git rev-parse --not $other_branches |
 	if [ -z "$custom_showrev" ]
