@@ -29,7 +29,7 @@ $request = HTTPRequest::instance();
 $em      = EventManager::instance();
 $pm      = ProjectManager::instance();
 
-$vFunc = new Valid_WhiteList('func', array('confirm_restore_frs_file'));
+$vFunc = new Valid_WhiteList('func', array('confirm_restore_frs_file', 'confirm_restore_wiki_attachment'));
 $vFunc->required();
 if ($request->valid($vFunc)) {
     $func = $request->get('func');
@@ -257,13 +257,8 @@ function wiki_attachment_restore_view($group_id, $idArray, $nomArray, $htmlArray
     $wikiAttachment = new WikiAttachment($group_id);
     $attachments = $wikiAttachment->listPendingAttachments($group_id, 0, 0);
 
-
-    
     $tabbed_content  = '';
     $tabbed_content .= '<div class="contenu_onglet" id="contenu_onglet_wiki_attachment">';
-    $tabbed_content .= '<p>Note: there might be some delay (max 30 minutes) between the time the attachment is deleted and time it appears here.<br />When a file is deleted by the user, it appears in this list after SYSTEM_CHECK <a href="/admin/system_events/">system event</a> is processed</p>'.
-             '<p>Please note that <strong>actual attachment restoration</strong> will be done by the <strong>next SYSTEM_CHECK</strong> event. This interface only schedule the restoration.</p>';
-
 
         $i     = 1;
     if ($attachments->rowCount() > 0) {
@@ -293,7 +288,18 @@ function wiki_attachment_restore_view($group_id, $idArray, $nomArray, $htmlArray
 }
 
 function wiki_attachment_restore_process($request, $group_id) {
-    
+    $attachmentId = $request->getValidated('id', 'uint', 0); // ????
+    if ($attachmentId > 0) {
+        $wikiAttachment = new WikiAttachment($group_id);
+        if($wikiAttachment->restoreDeletedAttachment($attachmentId)) {
+            $GLOBALS['Response']->addFeedback('info', 'Wiki attachment restored');
+        } else {
+            $GLOBALS['Response']->addFeedback('error', 'Wiki attachment not restored');
+        }
+    } else {
+        $GLOBALS['Response']->addFeedback('error', 'Bad attachment id');
+    }
+    $GLOBALS['Response']->redirect('?group_id='.$group_id.'&focus=wiki_attachment');
 }
 
 ?>
