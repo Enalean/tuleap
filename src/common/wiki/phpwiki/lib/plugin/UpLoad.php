@@ -189,11 +189,11 @@ ws[cfh]");
             if (is_array($args)) {
                 $deleteStatus = true;
                 $um = UserManager::instance();
-                $user = $um->getCurrentUser();
+                $codendiUser = $um->getCurrentUser();
                 foreach($args as $id) {
                     $wa = new WikiAttachment();
                     $wa->initWithId($id);
-                    if ($wa->validate() && $wa->gid == GROUP_ID && $wa->isAutorized($user->getId())) {
+                    if ($wa->validate() && $wa->gid == GROUP_ID && $wa->isAutorized($codendiUser->getId())) {
                         if(!$wa->deleteAttachment()) {
                             $deleteStatus = false;
                         }
