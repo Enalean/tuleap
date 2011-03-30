@@ -96,8 +96,8 @@ class WikiAttachment /* implements UGroupPermission */ {
         /*
          * Check user
          */
-        if (!user_isloggedin())
-            exit_not_logged_in();
+        //if (!user_isloggedin())
+            //exit_not_logged_in();
     }
 
     function &getDao() {
@@ -585,6 +585,59 @@ class WikiAttachment /* implements UGroupPermission */ {
     public function listPendingAttachments($groupId, $offset, $limit) {
         $dao = $this->getDao();
         return $dao->searchAttachmentToPurge($_SERVER['REQUEST_TIME'], $groupId, $offset, $limit);
+    }
+
+    /**
+     * Purge the attachments from FS and DB
+     *
+     * @param Integer $time
+     *
+     * @return Boolean
+     */
+    public function purgeAttachments($time) {
+        $dao = $this->getDao();
+        $dar = $dao->searchAttachmentToPurge($time);
+        if ($dar && !$dar->isError()) {
+            $purgeState = true;
+            if ($dar->rowCount() > 0) {
+                foreach ($dar as $row) {
+                    $attachment = new WikiAttachment($this->gid);
+                    $attachment->setFromRow($row);
+                    $purgeState = $purgeState & $attachment->purgeAttachment();
+                }
+            }
+            return $purgeState;
+        }
+        return false;
+    }
+
+
+    /**
+     * Erase from the file system one attachment with its all version
+     *
+     * @return Boolean
+     */
+    public function purgeAttachment() {
+        if($this->exist()){
+            $attachmentPath = $this->basedir.'/'.$this->getFilesystemName();
+            $dirAttachment = new DirectoryIterator($attachmentPath);
+            foreach ($dirAttachment as $version) {
+                if (!$version->isDot()) {
+                    if (!unlink($version->getPathname())) {
+                        return false;
+                    }
+                }
+            }
+            if (rmdir($attachmentPath)) {
+                $dao = $this->getDao();
+                if (!$dao->setPurgeDate($this->id, time())) {
+                    return false;
+                }
+                return true;
+            }
+            return false;
+        }
+        return true;
     }
 
     /**

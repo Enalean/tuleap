@@ -22,6 +22,7 @@
 
 require_once('common/backend/Backend.class.php');
 require_once('common/dao/UserDao.class.php');
+require_once('common/wiki/lib/WikiAttachment.class.php');
 
 
 class BackendSystem extends Backend {
@@ -327,6 +328,10 @@ class BackendSystem extends Backend {
         //system("find $delete_dir -mindepth 1 -type d -empty -exec rm -R {} \\;");
         // }}} /!\ WARNING HACK /!\
 
+        //Manage the purge of wiki attachments
+        $wiki = $this->getWikiFactory();
+        $status = $status & $wiki->purgeAttachments($time);
+
         $em = EventManager::instance();
         $em->processEvent('backend_system_purge_files', array('time' => $time));
 
@@ -533,6 +538,16 @@ class BackendSystem extends Backend {
     protected function getFRSFileFactory() {
         return new FRSFileFactory();
     }
+
+    /**
+     * Wrapper for getWikiFactory
+     * 
+     * @return WikiAttachment
+     */
+    protected function getWikiFactory() {
+        return new WikiAttachment();
+    }
+    
 
 }
 

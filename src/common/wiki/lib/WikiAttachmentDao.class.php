@@ -180,5 +180,19 @@ class WikiAttachmentDao extends DataAccessObject {
         }
         return false;
     }
+
+    /**
+     * Save the purge date of a deleted attachment
+     *
+     * @param Integer $attachmentId
+     * @param Integer $time
+     *
+     * @return Boolean
+     */
+    function setPurgeDate($id, $time) {
+        $sql = 'UPDATE wiki_attachment_deleted SET purge_date ='.$this->da->escapeInt($time).
+                       ' WHERE id = '.$this->da->escapeInt($id);
+        return $this->update($sql);
+    }
 }
 ?>
