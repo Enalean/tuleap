@@ -19,7 +19,8 @@
  */
 
 require_once('common/wiki/lib/WikiAttachment.class.php');
-Mock::generatePartial('WikiAttachment', 'WikiAttachmentTestVersion', array('initWithId', 'dbadd'));
+Mock::generate('WikiAttachmentDao');
+Mock::generatePartial('WikiAttachment', 'WikiAttachmentTestVersion', array('initWithId', 'dbadd', 'getDao'));
 
 class WikiAttachmentTest extends UnitTestCase {
 
@@ -74,6 +75,33 @@ class WikiAttachmentTest extends UnitTestCase {
         $this->assertFalse(is_dir($wa->basedir.'/titi.txt'));
         $this->assertTrue(is_dir($wa->basedir.'/testing.txt'));
         rmdir($wa->basedir.'/testing.txt');
+    }
+
+    function testPurgeAttachmentsSucceeded() {
+        $wa = new WikiAttachmentTestVersion();
+        $wa->filesystemName = 'testing.txt_12300058';
+        $wa->basedir = dirname(__FILE__).'/_fixtures/';
+        mkdir($wa->basedir.'/testing.txt_12300058');
+        touch($wa->basedir.'/testing.txt_12300058/0');
+
+        $dao = new MockWikiAttachmentDao($this);
+        $wa->setReturnValue('getDao', $dao);
+        $dao->setReturnValue('setPurgeDate', true);
+        $this->assertTrue($wa->purgeAttachment());
+    }
+
+    function testPurgeAttachmentsDBFailure() {
+        $wa = new WikiAttachmentTestVersion();
+        $wa->filesystemName = 'testing.txt_12300060';
+        $wa->basedir = dirname(__FILE__).'/_fixtures/';
+        mkdir($wa->basedir.'/testing.txt_12300060');
+        touch($wa->basedir.'/testing.txt_12300060/0');
+        touch($wa->basedir.'/testing.txt_12300060/1');
+
+        $dao = new MockWikiAttachmentDao($this);
+        $wa->setReturnValue('getDao', $dao);
+        $dao->setReturnValue('setPurgeDate', false);
+        $this->assertFalse($wa->purgeAttachment());
     }
 
 }
