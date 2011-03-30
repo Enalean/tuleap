@@ -235,7 +235,7 @@ class WikiAttachment /* implements UGroupPermission */ {
         return true;
     }
 
-    function setFilesystemName() {
+    function initFilesystemName() {
         $this->filesystemName = $this->filename.'_'.time();
         return true;
     }
@@ -432,7 +432,7 @@ class WikiAttachment /* implements UGroupPermission */ {
 
         if ($this->getId()) {
             $this->initWithId($this->getId());
-        } elseif(!$this->setFilesystemName()) {
+        } elseif(!$this->initFilesystemName()) {
             return -1;
         }
 

@@ -27,7 +27,7 @@ class WikiAttachmentTest extends UnitTestCase {
         $wa = new WikiAttachmentTestVersion();
         $wa->setFilename('toto.txt');
         $this->assertEqual('toto.txt', $wa->getFilesystemName());
-        $wa->setFilesystemName();
+        $wa->initFilesystemName();
         $this->assertNotEqual('toto.txt', $wa->getFilesystemName());
         $this->assertPattern('/toto.txt_[0..9]*/', $wa->getFilesystemName());
         $wa->filesystemName = 'titi.txt';
