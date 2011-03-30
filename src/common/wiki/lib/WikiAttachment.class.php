@@ -438,7 +438,7 @@ class WikiAttachment /* implements UGroupPermission */ {
 
     function setFromRow($row) {
         $this->id       = $row['id'];
-        $this->gid      = $row['group_id'];
+        $this->setGid($row['group_id']);
         $this->filename = $row['name'];
     }
 
@@ -459,7 +459,7 @@ class WikiAttachment /* implements UGroupPermission */ {
             exit_no_group();
    
         // Validate filename   
-        if(!is_file($this->basedir.'/'.$this->filename)){
+        if(!is_dir($this->basedir.'/'.$this->filename)){
             return false;
             //      print "error ".$this->basedir.'/'.$this->filename;
         }

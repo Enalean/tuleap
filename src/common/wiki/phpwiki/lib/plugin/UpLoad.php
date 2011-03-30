@@ -128,9 +128,12 @@ ws[cfh]");
         $form->pushContent($contents);
 
         $message = HTML();
+
+        $um = UserManager::instance();
+        $user = $um->getCurrentUser();
+
         if ($request->isPost() and $this->only_authenticated) {
             // Make sure that the user is logged in.
-            $user = $request->getUser();
             if (!$user->isAuthenticated()) {
                 $message->pushContent(HTML::h2(_("ACCESS DENIED: You must log in to upload files.")),
                                           HTML::br(),HTML::br());
