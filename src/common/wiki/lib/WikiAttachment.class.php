@@ -673,6 +673,23 @@ class WikiAttachment /* implements UGroupPermission */ {
         $dao = $this->getDao();
         return $dao->restoreAttachment($id);
     }
+
+    /**
+     * Restore wiki attachment
+     *
+     * @param Integer $id
+     *
+     * @return Boolean
+     */
+    public function restoreDeletedAttachment($id) {
+        $dao = $this->getDao();
+        $this->initWithId($id);
+        if($this->exist()&& !$this->isActive()) {
+        return $dao->restoreAttachment($id);
+        } else {
+            return false;
+        }
+    }
 }
 
 ?>
