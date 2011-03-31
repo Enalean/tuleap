@@ -95,6 +95,14 @@ class Plugin {
         trigger_error("Plugin->_getPluginPath() is deprecated. Please use Plugin->getPluginPath() instead in ". $trace[0]['file'] ." at line ". $trace[0]['line'], E_USER_WARNING);
         return $this->getPluginPath();
     }
+
+    /**
+     * Return plugin's URL path from the server root
+     *
+     * Example: /plugins/docman
+     *
+     * @return String
+     */
     public function getPluginPath() {
         $pm = $this->_getPluginManager();
         if (isset($GLOBALS['sys_pluginspath']))
@@ -105,7 +113,7 @@ class Plugin {
         }
         return $path.'/'.$pm->getNameForPlugin($this);
     }
-    
+
     public function _getThemePath() {
         $trace = debug_backtrace();
         trigger_error("Plugin->_getThemePath() is deprecated. Please use Plugin->getThemePath() instead in ". $trace[0]['file'] ." at line ". $trace[0]['line'], E_USER_WARNING);
@@ -130,7 +138,29 @@ class Plugin {
         }
         return $found;
     }
-    
+
+    /**
+     * Returns plugin's path on the server file system
+     *
+     * Example: /usr/share/codendi/plugins/docman
+     *
+     * @return String
+     */
+    public function getFilesystemPath() {
+        $pm = $this->_getPluginManager();
+        if ($pm->pluginIsCustom($this)) {
+            $path = $GLOBALS['sys_custompluginsroot'];
+        } else {
+            $path = $GLOBALS['sys_pluginsroot'];
+        }
+        return $path.'/'.$pm->getNameForPlugin($this);
+    }
+
+    /**
+     * Wrapper for PluginManager
+     *
+     * @return PluginManager
+     */
     protected function _getPluginManager() {
         $pm = PluginManager::instance();
         return $pm;

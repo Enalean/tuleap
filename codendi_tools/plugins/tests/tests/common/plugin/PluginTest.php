@@ -19,12 +19,13 @@ Mock::generate('PluginManager');
  * Tests the class Plugin
  */
 class PluginTest extends UnitTestCase {
-    /**
-     * Constructor of the test. Can be ommitted.
-     * Usefull to set the name of the test
-     */
-    function PluginTest($name = 'Plugin test') {
-        $this->UnitTestCase($name);
+
+    function setUp() {
+        $this->globals = $GLOBALS;
+    }
+
+    function tearDown() {
+        $GLOBALS = $this->globals;
     }
 
     function testId() {
@@ -234,5 +235,38 @@ class PluginTest extends UnitTestCase {
         
         rmdir(dirname($GLOBALS['sys_custompluginsroot']));
     }
+
+
+    function testGetFilesystemPath() {
+        $GLOBALS['sys_pluginsroot']       = '/my/application';
+
+        $pm = new MockPluginManager($this);
+        $pm->setReturnValue('getNameForPlugin', 'zataz');
+        $pm->setReturnValue('pluginIsCustom', false);
+
+        $p = new PluginTestVersion($this);
+        $p->setReturnValue('_getPluginManager', $pm);
+
+        $this->assertEqual($p->getFilesystemPath(), '/my/application/zataz');
+    }
+
+    function testGetFilesystemPathCustom() {
+        $GLOBALS['sys_custompluginsroot']       = '/my/custom/application';
+
+        $pm = new MockPluginManager($this);
+        $pm->setReturnValue('getNameForPlugin', 'zataz');
+        $pm->setReturnValue('pluginIsCustom', true);
+
+        $p = new PluginTestVersion($this);
+        $p->setReturnValue('_getPluginManager', $pm);
+
+        $this->assertEqual($p->getFilesystemPath(), '/my/custom/application/zataz');
+    }
+
+    /*function testForgeUpgradeConfigDoesntExist() {
+        $p = new Plugin();
+
+        $p->is
+        }*/
 }
 ?>
