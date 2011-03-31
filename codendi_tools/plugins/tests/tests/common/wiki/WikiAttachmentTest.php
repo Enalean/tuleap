@@ -40,68 +40,98 @@ class WikiAttachmentTest extends UnitTestCase {
     function testCreateNoFilesystemName() {
         $wa = new WikiAttachmentTestVersion();
         $wa->setFilename('testing.txt');
-        $wa->basedir = dirname(__FILE__).'/_fixtures/';
+        $wa->basedir = dirname(__FILE__).'/_fixtures';
         $wa->setReturnValue('dbadd', true);
 
         $this->assertNoErrors();
         $this->assertFalse(is_dir($wa->basedir.'/testing.txt'));
+        $this->assertFalse($wa->exist());
         $this->assertTrue($wa->create());
         $this->assertTrue(is_dir($wa->basedir.'/testing.txt'));
+        $this->assertTrue($wa->exist());
         rmdir($wa->basedir.'/testing.txt');
     }
 
-    function testCreateFolderAlreadyExist() {
+    function testCreateFolderAlreadyExistNoFilesystemName() {
         $wa = new WikiAttachmentTestVersion();
         $wa->setFilename('toto.txt');
-        $wa->basedir = dirname(__FILE__).'/_fixtures/';
+        $wa->basedir = dirname(__FILE__).'/_fixtures';
         $wa->setReturnValue('dbadd', true);
 
         $this->assertNoErrors();
         $this->assertTrue(is_dir($wa->basedir.'/toto.txt'));
+        $this->assertTrue($wa->exist());
         $this->assertTrue($wa->create());
         $this->assertTrue(is_dir($wa->basedir.'/toto.txt'));
+        $this->assertTrue($wa->exist());
+    }
+
+    function testCreateFolderAlreadyExistWithFilesystemName() {
+        $wa = new WikiAttachmentTestVersion();
+        $wa->setFilename('testing.txt');
+        $wa->initFilesystemName();
+        $wa->basedir = dirname(__FILE__).'/_fixtures';
+        $wa->setReturnValue('dbadd', true);
+        mkdir($wa->basedir.'/'.$wa->getFilesystemName());
+
+        $this->assertNoErrors();
+        $this->assertTrue(is_dir($wa->basedir.'/'.$wa->getFilesystemName()));
+        $this->assertTrue($wa->exist());
+        $this->assertTrue($wa->create());
+        $this->assertFalse(is_dir($wa->basedir.'/testing.txt'));
+        $this->assertTrue(is_dir($wa->basedir.'/'.$wa->getFilesystemName()));
+        $this->assertTrue($wa->exist());
+        rmdir($wa->basedir.'/'.$wa->getFilesystemName());
+        
     }
 
     function testCreateWithFilesystemName() {
         $wa = new WikiAttachmentTestVersion();
         $wa->setFilename('titi.txt');
-        $wa->basedir = dirname(__FILE__).'/_fixtures/';
+        $wa->initFilesystemName();
+        $wa->basedir = dirname(__FILE__).'/_fixtures';
         $wa->setReturnValue('dbadd', true);
-
         $this->assertNoErrors();
-        $wa->filesystemName = 'testing.txt';
-        $this->assertFalse(is_dir($wa->basedir.'/testing.txt'));
+        $this->assertFalse(is_dir($wa->basedir.'/'.$wa->getFilesystemName()));
+        $this->assertFalse($wa->exist());
         $this->assertTrue($wa->create());
         $this->assertFalse(is_dir($wa->basedir.'/titi.txt'));
-        $this->assertTrue(is_dir($wa->basedir.'/testing.txt'));
-        rmdir($wa->basedir.'/testing.txt');
+        $this->assertTrue(is_dir($wa->basedir.'/'.$wa->getFilesystemName()));
+        $this->assertTrue($wa->exist());
+        rmdir($wa->basedir.'/'.$wa->getFilesystemName());
     }
 
-    function testPurgeAttachmentsSucceeded() {
+    function testPurgeAttachmentSucceeded() {
         $wa = new WikiAttachmentTestVersion();
-        $wa->filesystemName = 'testing.txt_12300058';
-        $wa->basedir = dirname(__FILE__).'/_fixtures/';
-        mkdir($wa->basedir.'/testing.txt_12300058');
-        touch($wa->basedir.'/testing.txt_12300058/0');
+        $wa->setFilename('testing.txt');
+        $wa->initFilesystemName();
+        $wa->basedir = dirname(__FILE__).'/_fixtures';
+        mkdir($wa->basedir.'/'.$wa->getFilesystemName());
+        touch($wa->basedir.'/'.$wa->getFilesystemName().'/0');
 
         $dao = new MockWikiAttachmentDao($this);
         $wa->setReturnValue('getDao', $dao);
         $dao->setReturnValue('setPurgeDate', true);
+        $this->assertNoErrors();
         $this->assertTrue($wa->purgeAttachment());
+        $this->assertFalse($wa->exist());
     }
 
-    function testPurgeAttachmentsDBFailure() {
+    function testPurgeAttachmentDBFailure() {
         $wa = new WikiAttachmentTestVersion();
-        $wa->filesystemName = 'testing.txt_12300060';
-        $wa->basedir = dirname(__FILE__).'/_fixtures/';
-        mkdir($wa->basedir.'/testing.txt_12300060');
-        touch($wa->basedir.'/testing.txt_12300060/0');
-        touch($wa->basedir.'/testing.txt_12300060/1');
+        $wa->setFilename('testing.txt');
+        $wa->initFilesystemName();
+        $wa->basedir = dirname(__FILE__).'/_fixtures';
+        mkdir($wa->basedir.'/'.$wa->getFilesystemName());
+        touch($wa->basedir.'/'.$wa->getFilesystemName().'/0');
+        touch($wa->basedir.'/'.$wa->getFilesystemName().'/1');
 
         $dao = new MockWikiAttachmentDao($this);
         $wa->setReturnValue('getDao', $dao);
         $dao->setReturnValue('setPurgeDate', false);
+        $this->assertNoErrors();
         $this->assertFalse($wa->purgeAttachment());
+        $this->assertFalse($wa->exist());
     }
 
 }
