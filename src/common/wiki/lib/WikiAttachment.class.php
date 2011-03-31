@@ -235,6 +235,11 @@ class WikiAttachment /* implements UGroupPermission */ {
         return true;
     }
 
+    /**
+     * Set the name of the attachment that will be used in the filesystem
+     *
+     * @return Boolean
+     */
     function initFilesystemName() {
         $this->filesystemName = $this->filename.'_'.time();
         return true;
@@ -244,6 +249,13 @@ class WikiAttachment /* implements UGroupPermission */ {
         return $this->filename;
     }
 
+    /**
+     * Obtain the name of the attachment as stored in the filesystem
+     * Old attachments are stored in the filesystem as uploaded by the user
+     * In that case filesystemName == NULL then the returned value is filename
+     *
+     * @return String
+     */
     function getFilesystemName() {
         if ($this->filesystemName) {
             return $this->filesystemName;
@@ -354,6 +366,11 @@ class WikiAttachment /* implements UGroupPermission */ {
         return is_dir($this->basedir.'/'.$this->getFilesystemName());
     }
 
+    /**
+     * Check if the status of the attachment is active
+     *
+     * @return Boolean
+     */
     function isActive() {
         $dao = WikiAttachment::getDao();
         $dar = $dao->read($this->id);
