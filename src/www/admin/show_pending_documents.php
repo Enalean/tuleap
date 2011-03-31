@@ -299,10 +299,15 @@ function wiki_attachment_restore_process($request, $group_id) {
     $attachmentId = $request->getValidated('id', 'uint', 0);
     if ($attachmentId > 0) {
         $wikiAttachment = new WikiAttachment($group_id);
-          if($wikiAttachment->restoreDeletedAttachment($attachmentId)) {
-            $GLOBALS['Response']->addFeedback('info', 'Wiki attachment restored');
+        $wikiAttachment->initWithId($attachmentId);
+        if($wikiAttachment->exist()&& !$wikiAttachment->isActive()) {
+            if($wikiAttachment->restoreDeletedAttachment($attachmentId)) {
+                $GLOBALS['Response']->addFeedback('info', 'Wiki attachment restored');
+            } else {
+                $GLOBALS['Response']->addFeedback('error', 'Wiki attachment not restored');
+            }
         } else {
-            $GLOBALS['Response']->addFeedback('error', 'Wiki attachment not restored');
+            $GLOBALS['Response']->addFeedback('error', 'Can\'t restore active attachment');
         }
     } else {
         $GLOBALS['Response']->addFeedback('error', 'Bad attachment id');
