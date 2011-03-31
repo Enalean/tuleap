@@ -262,5 +262,18 @@ class PluginTest extends UnitTestCase {
 
         $this->assertEqual($p->getFilesystemPath(), '/my/custom/application/zataz');
     }
+
+    function testGetFilesystemPathWithSlashAtTheEnd() {
+        $GLOBALS['sys_pluginsroot']       = '/my/application/';
+
+        $pm = new MockPluginManager($this);
+        $pm->setReturnValue('getNameForPlugin', 'zataz');
+        $pm->setReturnValue('pluginIsCustom', false);
+
+        $p = new PluginTestVersion($this);
+        $p->setReturnValue('_getPluginManager', $pm);
+
+        $this->assertEqual($p->getFilesystemPath(), '/my/application/zataz');
+    }
 }
 ?>

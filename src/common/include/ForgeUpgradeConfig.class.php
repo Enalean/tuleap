@@ -47,6 +47,18 @@ class ForgeUpgradeConfig {
     }
 
     /**
+     * Load default codendi config as defined in configuration
+     */
+    public function loadDefaults() {
+        if (isset($GLOBALS['forgeupgrade_file']) && is_file($GLOBALS['forgeupgrade_file'])) {
+            $this->setFilePath($GLOBALS['forgeupgrade_file']);
+        } else {
+            $localInc = getenv('CODENDI_LOCAL_INC')?getenv('CODENDI_LOCAL_INC'):'/etc/codendi/conf/local.inc';
+            throw new Exception('$forgeupgrade_file variable not defined in '.$localInc);
+        }
+    }
+
+    /**
      * Test is given path exists in core.path section of configuration
      *
      * @param String $path A path to test

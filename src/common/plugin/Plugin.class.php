@@ -153,7 +153,10 @@ class Plugin {
         } else {
             $path = $GLOBALS['sys_pluginsroot'];
         }
-        return $path.'/'.$pm->getNameForPlugin($this);
+        if ($path[strlen($path) -1 ] != '/') {
+            $path .= '/';
+        }
+        return $path.$pm->getNameForPlugin($this);
     }
 
     /**
