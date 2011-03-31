@@ -25,6 +25,10 @@ Mock::generatePartial('WikiAttachment', 'WikiAttachmentTestVersionRestoreDeleted
 
 class WikiAttachmentTest extends UnitTestCase {
 
+    function tearDown() {
+        clearstatcache();
+    }
+
     function testGetFilesystemName() {
         $wa = new WikiAttachmentTestVersion();
         $wa->setFilename('toto.txt');
@@ -83,12 +87,11 @@ class WikiAttachmentTest extends UnitTestCase {
         $this->assertTrue(is_dir($wa->basedir.'/'.$wa->getFilesystemName()));
         $this->assertTrue($wa->exist());
         rmdir($wa->basedir.'/'.$wa->getFilesystemName());
-        
     }
 
     function testCreateWithFilesystemName() {
         $wa = new WikiAttachmentTestVersion();
-        $wa->setFilename('titi.txt');
+        $wa->setFilename('testing.txt');
         $wa->initFilesystemName();
         $wa->basedir = dirname(__FILE__).'/_fixtures';
         $wa->setReturnValue('dbadd', true);
@@ -96,7 +99,7 @@ class WikiAttachmentTest extends UnitTestCase {
         $this->assertFalse(is_dir($wa->basedir.'/'.$wa->getFilesystemName()));
         $this->assertFalse($wa->exist());
         $this->assertTrue($wa->create());
-        $this->assertFalse(is_dir($wa->basedir.'/titi.txt'));
+        $this->assertFalse(is_dir($wa->basedir.'/testing.txt'));
         $this->assertTrue(is_dir($wa->basedir.'/'.$wa->getFilesystemName()));
         $this->assertTrue($wa->exist());
         rmdir($wa->basedir.'/'.$wa->getFilesystemName());
