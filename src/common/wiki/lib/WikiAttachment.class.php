@@ -368,6 +368,7 @@ class WikiAttachment /* implements UGroupPermission */ {
 
     /**
      * Check if the status of the attachment is active
+     * Active means that the delete_date is null
      *
      * @return Boolean
      */
