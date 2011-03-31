@@ -262,11 +262,5 @@ class PluginTest extends UnitTestCase {
 
         $this->assertEqual($p->getFilesystemPath(), '/my/custom/application/zataz');
     }
-
-    /*function testForgeUpgradeConfigDoesntExist() {
-        $p = new Plugin();
-
-        $p->is
-        }*/
 }
 ?>
