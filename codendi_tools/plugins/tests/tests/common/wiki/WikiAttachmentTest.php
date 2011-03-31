@@ -112,6 +112,7 @@ class WikiAttachmentTest extends UnitTestCase {
         $dao = new MockWikiAttachmentDao($this);
         $wa->setReturnValue('getDao', $dao);
         $dao->setReturnValue('setPurgeDate', true);
+        $dao->expectOnce('setPurgeDate');
         $this->assertNoErrors();
         $this->assertTrue($wa->purgeAttachment());
         $this->assertFalse($wa->exist());
@@ -129,6 +130,7 @@ class WikiAttachmentTest extends UnitTestCase {
         $dao = new MockWikiAttachmentDao($this);
         $wa->setReturnValue('getDao', $dao);
         $dao->setReturnValue('setPurgeDate', false);
+        $dao->expectOnce('setPurgeDate');
         $this->assertNoErrors();
         $this->assertFalse($wa->purgeAttachment());
         $this->assertFalse($wa->exist());

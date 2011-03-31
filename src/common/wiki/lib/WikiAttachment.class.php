@@ -628,13 +628,12 @@ class WikiAttachment /* implements UGroupPermission */ {
                     }
                 }
             }
-            if (rmdir($attachmentPath)) {
-                $dao = $this->getDao();
-                if (!$dao->setPurgeDate($this->id, time())) {
-                    return false;
-                }
-                return true;
+            if (!rmdir($attachmentPath)) {
+                return false;
             }
+        }
+        $dao = $this->getDao();
+        if (!$dao->setPurgeDate($this->id, time())) {
             return false;
         }
         return true;
