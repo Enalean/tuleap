@@ -374,8 +374,11 @@ class WikiAttachment /* implements UGroupPermission */ {
     function isActive() {
         $dao = WikiAttachment::getDao();
         $dar = $dao->read($this->id);
-        $row = $dar->getRow();
-        return ($row['delete_date'] == null);
+        if ($dar && !$dar->isError()) {
+            $row = $dar->getRow();
+            return ($row['delete_date'] == null);
+        }
+        return false;
     }
 
     function dbadd() {
