@@ -3,11 +3,11 @@
 /**
  *
  */
-class b201103281122_add_wiki_attachement_delete_mechanism extends ForgeUpgrade_Bucket {
+class b201103281122_add_wiki_attachment_delete_mechanism extends ForgeUpgrade_Bucket {
 
     public function description() {
         return <<<EOT
-Add the table wiki_attachment_deleted to manage deleted wiki attachement in order to facilitate their restore later
+Add the table wiki_attachment_deleted to manage deleted wiki attachment in order to facilitate their restore later
 EOT;
     }
 
@@ -20,7 +20,7 @@ EOT;
         if ($this->db->tableNameExists('wiki_attachment')) {
             $res = $this->db->dbh->exec($sql);
             if ($res === false) {
-                throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while adding column filesystem_name to table wiki_attachement');
+                throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while adding column filesystem_name to table wiki_attachment');
             }
         }
 
@@ -28,7 +28,7 @@ EOT;
         if ($this->db->tableNameExists('wiki_attachment')) {
             $res = $this->db->dbh->exec($sql);
             if ($res === false) {
-                throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while adding column delete_date to table wiki_attachement');
+                throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while adding column delete_date to table wiki_attachment');
             }
         }
 
