@@ -39,7 +39,7 @@ Packager: Manuel VACELET <manuel.vacelet@st.com>
 
 # Package cutting is still a bit a mess so do not force dependency on custmization package yet
 #Requires: %{PKG_NAME}-customization
-Requires: vixie-cron >= 4.1-9
+Requires: vixie-cron >= 4.1-9, tmpwatch
 # Php and web related stuff
 Requires: php, php-mysql, php-xml, php-mbstring, php-gd, php-soap, php-pear, gd
 Requires: dejavu-lgc-fonts
@@ -57,7 +57,6 @@ Requires: mysql
 Requires: libnss-mysql, mod_auth_mysql, nss, nscd
 # Forgeupgrade
 Requires: forgeupgrade >= 1.2
-
 
 %description
 Codendi is a web based application that address all the aspects of product development.
