@@ -20,7 +20,7 @@
 
 require_once('common/wiki/lib/WikiAttachment.class.php');
 Mock::generate('WikiAttachmentDao');
-Mock::generatePartial('WikiAttachment', 'WikiAttachmentTestVersion', array('initWithId', 'dbadd', 'getDao', 'isActive'));
+Mock::generatePartial('WikiAttachment', 'WikiAttachmentTestVersion', array('initWithId', 'dbadd', 'getDao', 'isActive', 'exist'));
 
 class WikiAttachmentTest extends UnitTestCase {
 
@@ -168,5 +168,16 @@ class WikiAttachmentTest extends UnitTestCase {
         $this->assertFalse($wa->deleteAttachment());
     }
 
+    function testRestoreDeletedAttachmentFailure() {
+        $wa = new WikiAttachmentTestVersion();
+        $wa->setReturnValue('isActive', true);
+        $wa->setReturnValue('initWithId', '666');
+
+        $dao = new MockWikiAttachmentDao($this);
+        $wa->setReturnValue('getDao', $dao);
+        $dao->expectNever('restoreAttachment');
+        $wa->expectOnce('exist');
+        $this->assertFalse($wa->restoreDeletedAttachment('666'));
+    }
 }
 ?>
