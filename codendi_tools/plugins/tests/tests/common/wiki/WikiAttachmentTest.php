@@ -21,7 +21,7 @@
 require_once('common/wiki/lib/WikiAttachment.class.php');
 Mock::generate('WikiAttachmentDao');
 Mock::generatePartial('WikiAttachment', 'WikiAttachmentTestVersion', array('initWithId', 'dbadd', 'getDao', 'isActive'));
-Mock::generatePartial('WikiAttachment', 'WikiAttachmentTestVersionRestoreDeleted', array('initWithId', 'dbadd', 'getDao', 'isActive', 'exist'));
+Mock::generatePartial('WikiAttachment', 'WikiAttachmentTestVersionRestoreDeleted', array('initWithId', 'getDao', 'isActive', 'exist'));
 
 class WikiAttachmentTest extends UnitTestCase {
 
@@ -172,16 +172,48 @@ class WikiAttachmentTest extends UnitTestCase {
         $this->assertFalse($wa->deleteAttachment());
     }
 
-    function testRestoreDeletedAttachmentFailure() {
+    function testRestoreDeletedAttachmentActiveFileFailure() {
         $wa = new WikiAttachmentTestVersionRestoreDeleted();
         $wa->setReturnValue('isActive', true);
-        $wa->setReturnValue('initWithId', '666');
+        $wa->setReturnValue('exist', true);
 
         $dao = new MockWikiAttachmentDao($this);
         $wa->setReturnValue('getDao', $dao);
         $dao->expectNever('restoreAttachment');
-        $wa->expectOnce('exist');
-        $this->assertFalse($wa->restoreDeletedAttachment('666'));
+        $this->assertFalse($wa->restoreDeletedAttachment(1));
+    }
+
+    function testRestoreDeletedAttachmentFileSystemFailure() {
+        $wa = new WikiAttachmentTestVersionRestoreDeleted();
+        $wa->setReturnValue('isActive', False);
+        $wa->setReturnValue('exist', False);
+
+        $dao = new MockWikiAttachmentDao($this);
+        $wa->setReturnValue('getDao', $dao);
+        $dao->expectNever('restoreAttachment');
+        $this->assertFalse($wa->restoreDeletedAttachment(1));
+    }
+
+    function testRestoreDeletedAttachmentDaoFailure() {
+        $wa = new WikiAttachmentTestVersionRestoreDeleted();
+        $wa->setReturnValue('isActive', False);
+        $wa->setReturnValue('exist', true);
+
+        $dao = new MockWikiAttachmentDao($this);
+        $wa->setReturnValue('getDao', $dao);
+        $dao->setReturnValue('restoreAttachment', False);
+        $this->assertFalse($wa->restoreDeletedAttachment(1));
+    }
+
+    function testRestoreDeletedAttachmentSuccess() {
+        $wa = new WikiAttachmentTestVersionRestoreDeleted();
+        $wa->setReturnValue('isActive', False);
+        $wa->setReturnValue('exist', true);
+
+        $dao = new MockWikiAttachmentDao($this);
+        $wa->setReturnValue('getDao', $dao);
+        $dao->setReturnValue('restoreAttachment', true);
+        $this->assertTrue($wa->restoreDeletedAttachment(1));
     }
 }
 ?>
