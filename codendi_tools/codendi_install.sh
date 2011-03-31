@@ -858,7 +858,7 @@ if [ $SELINUX_ENABLED ]; then
 fi
 
 todo "Customize /etc/codendi/conf/local.inc and /etc/codendi/conf/database.inc"
-todo "You may also want to customize /etc/httpd/conf/httpd.conf /usr/lib/codendi/bin/backup_job and /usr/lib/codendi/bin/backup_subversion.sh"
+todo "You may also want to customize /etc/httpd/conf/httpd.conf"
 
 ##############################################
 # Installing phpMyAdmin
@@ -984,13 +984,6 @@ crontab -u root -l > /tmp/cronfile
 $GREP -q "Codendi" /tmp/cronfile
 if [ $? -ne 0 ]; then
     $CAT <<'EOF' >>/tmp/cronfile
-#
-# Codendi: daily incremental backup of subversion repositories
-#45 23 * * 1-6 /usr/lib/codendi/bin/backup_subversion.sh -i
-#
-# Codendi: weekly full backup of subversion repositories (0:15 on Sunday)
-#15 0 * * Sun /usr/lib/codendi/bin/backup_subversion.sh -noarchives
-#
 # Codendi: weekly backup preparation (mysql shutdown, file dump and restart)
 45 0 * * Sun /usr/lib/codendi/bin/backup_job
 EOF
