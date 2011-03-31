@@ -260,17 +260,25 @@ function wiki_attachment_restore_view($group_id, $idArray, $nomArray, $htmlArray
     $tabbed_content  = '';
     $tabbed_content .= '<div class="contenu_onglet" id="contenu_onglet_wiki_attachment">';
 
-        $i     = 1;
+    $i     = 1;
     if ($attachments->rowCount() > 0) {
         $titles = array ('Attachment name', 'Delete date', 'Forcast purge date', 'Restore');
         $tabbed_content  .= html_build_list_table_top ($titles);
         foreach ($attachments as $wiki_attachment) {
-                $purgeDate = strtotime('+'.$GLOBALS['sys_file_deletion_delay'].' day', $wiki_attachment['delete_date']);
+            $nonRestorableAttachments = $wikiAttachment->getDao()->getIdFromFilename($group_id, $wiki_attachment['name']);
+            if($nonRestorableAttachments->rowCount()) {
+                $tabbed_content .= '<tr class="boxitemgrey">';
+                $tabbed_content .= '<td>'.$wiki_attachment['name'].'</td>';
+                $tabbed_content .= '<td align="center" colspan="2">Non-restorable attachment</td>';
+                $tabbed_content .= '<td align="center"><img src="'.util_get_image_theme("trash-grey.png").'" border="0" height="16" width="16"></td>';
+            } else {
+            $purgeDate = strtotime('+'.$GLOBALS['sys_file_deletion_delay'].' day', $wiki_attachment['delete_date']);
                 $tabbed_content .= '<tr class="'. html_get_alt_row_color($i++) .'">';
                 $tabbed_content .= '<td>'.$wiki_attachment['name'].'</td>';
                 $tabbed_content .= '<td>'.html_time_ago($wiki_attachment['delete_date']).'</td>';
                 $tabbed_content .= '<td>'.format_date($GLOBALS['Language']->getText('system', 'datefmt'), $purgeDate).'</td>';
                 $tabbed_content .= '<td align="center"><a href="?group_id='.$group_id.'&func=confirm_restore_wiki_attachment&id='.$wiki_attachment['id'].'"><img src="'.util_get_image_theme("trash-x.png").'" onClick="return confirm(\'Confirm restore of this attachment\')" border="0" height="16" width="16"></a></td>';
+            }
                 $tabbed_content .= '</tr>';
         }
     }
@@ -281,17 +289,17 @@ function wiki_attachment_restore_view($group_id, $idArray, $nomArray, $htmlArray
     if ($i > 1) {
         $tabbed_content .= '</table>';
     }
-        $tabbed_content .= '</div>';
-        $idArray[]   = 'wiki_attachment';
+    $tabbed_content .= '</div>';
+    $idArray[]   = 'wiki_attachment';
     $nomArray[]  = 'Deleted wiki attachments';
     $htmlArray[] = $tabbed_content;
 }
 
 function wiki_attachment_restore_process($request, $group_id) {
-    $attachmentId = $request->getValidated('id', 'uint', 0); // ????
+    $attachmentId = $request->getValidated('id', 'uint', 0);
     if ($attachmentId > 0) {
         $wikiAttachment = new WikiAttachment($group_id);
-        if($wikiAttachment->restoreDeletedAttachment($attachmentId)) {
+          if($wikiAttachment->restoreDeletedAttachment($attachmentId)) {
             $GLOBALS['Response']->addFeedback('info', 'Wiki attachment restored');
         } else {
             $GLOBALS['Response']->addFeedback('error', 'Wiki attachment not restored');
