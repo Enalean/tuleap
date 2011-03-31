@@ -20,7 +20,7 @@
 
 require_once('common/wiki/lib/WikiAttachment.class.php');
 Mock::generate('WikiAttachmentDao');
-Mock::generatePartial('WikiAttachment', 'WikiAttachmentTestVersion', array('initWithId', 'dbadd', 'getDao'));
+Mock::generatePartial('WikiAttachment', 'WikiAttachmentTestVersion', array('initWithId', 'dbadd', 'getDao', 'isActive'));
 
 class WikiAttachmentTest extends UnitTestCase {
 
@@ -134,6 +134,38 @@ class WikiAttachmentTest extends UnitTestCase {
         $this->assertNoErrors();
         $this->assertFalse($wa->purgeAttachment());
         $this->assertFalse($wa->exist());
+    }
+
+    function testDeleteAttachmntSuccess() {
+        $wa = new WikiAttachmentTestVersion();
+        $wa->setReturnValue('isActive', true);
+
+        $dao = new MockWikiAttachmentDao($this);
+        $wa->setReturnValue('getDao', $dao);
+        $dao->setReturnValue('delete', true);
+        $dao->expectOnce('delete');
+        $this->assertTrue($wa->deleteAttachment());
+    }
+
+    function testDeleteAttachmentNotActive() {
+        $wa = new WikiAttachmentTestVersion();
+        $wa->setReturnValue('isActive', false);
+
+        $dao = new MockWikiAttachmentDao($this);
+        $wa->setReturnValue('getDao', $dao);
+        $dao->expectNever('delete');
+        $this->assertFalse($wa->deleteAttachment());
+    }
+
+    function testDeleteAttachmentDBFailure() {
+        $wa = new WikiAttachmentTestVersion();
+        $wa->setReturnValue('isActive', true);
+
+        $dao = new MockWikiAttachmentDao($this);
+        $wa->setReturnValue('getDao', $dao);
+        $dao->setReturnValue('delete', false);
+        $dao->expectOnce('delete');
+        $this->assertFalse($wa->deleteAttachment());
     }
 
 }
