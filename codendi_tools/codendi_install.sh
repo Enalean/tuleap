@@ -55,6 +55,7 @@ DIFF='/usr/bin/diff'
 PHP='/usr/bin/php'
 UNAME='/bin/uname'
 YUM='/usr/bin/yum -qy'
+INSTALL='/usr/bin/install'
 
 CHCON='/usr/bin/chcon'
 SELINUX_CONTEXT="root:object_r:httpd_sys_content_t";
@@ -1162,6 +1163,16 @@ if [ $SELINUX_ENABLED ]; then
 fi
 
 ##############################################
+# Install & configure forgeupgrade for Codendi
+#
+
+# Cannot be done yet (to old branch)
+$MYSQL -ucodendiadm -p$codendiadm_passwd codendi < /usr/share/forgeupgrade/db/install-mysql.sql
+$INSTALL --group=codendiadm --owner=codendiadm --mode=0755 --directory /etc/codendi/forgeupgrade
+$INSTALL --group=codendiadm --owner=codendiadm --mode=0644 $INSTALL_DIR/src/etc/forgeupgrade-config.ini.dist /etc/codendi/forgeupgrade/config.ini
+
+
+##############################################
 # *Last* step: install plugins
 #
 
@@ -1172,11 +1183,12 @@ build_dir /etc/codendi/plugins/docman/etc codendiadm codendiadm 755
 $CP $INSTALL_DIR/plugins/docman/etc/docman.inc.dist /etc/codendi/plugins/docman/etc/docman.inc
 $CHOWN codendiadm.codendiadm /etc/codendi/plugins/docman/etc/docman.inc
 $CHMOD 644 /etc/codendi/plugins/docman/etc/docman.inc
-
+echo "path[]=\"$INSTALL_DIR/plugins/docman\"" >> /etc/codendi/forgeupgrade/config.ini
 
 #GraphOnTrackers plugin
 $CAT $INSTALL_DIR/plugins/graphontrackers/db/install.sql | $MYSQL -u codendiadm codendi --password=$codendiadm_passwd
 $CAT $INSTALL_DIR/plugins/graphontrackers/db/initvalues.sql | $MYSQL -u codendiadm codendi --password=$codendiadm_passwd
+echo "path[]=\"$INSTALL_DIR/plugins/graphontrackers\"" >> /etc/codendi/forgeupgrade/config.ini
 
 # IM plugin
 if [ "$enable_plugin_im" = "true" ]; then
@@ -1201,13 +1213,14 @@ EOF
     IM_ADMIN_USER_PW='1M@dm1n'
     IM_MUC_PW='Mu6.4dm1n' # Doesn't need to change
     $PHP $INSTALL_DIR/plugins/IM/include/jabbex_api/installation/install.php -a -orp $rt_passwd -uod openfireadm -pod $openfire_passwd -ucd openfireadm -pcd $openfire_passwd -odb jdbc:mysql://localhost:3306/openfire -cdb jdbc:mysql://localhost:3306/codendi -ouri $sys_default_domain -gjx $IM_ADMIN_GROUP -ujx $IM_ADMIN_USER -pjx $IM_ADMIN_USER_PW -pmuc $IM_MUC_PW
+    echo "path[]=\"$INSTALL_DIR/plugins/IM\"" >> /etc/codendi/forgeupgrade/config.ini
 fi
 
-##############################################
-# Install & configure forgeupgrade for Codendi
-#
 
-# Cannot be done yet (to old branch)
+##############################################
+# Register buckets in forgeupgrade
+#
+/usr/lib/forgeupgrade/bin/forgeupgrade --config=/etc/codendi/forgeupgrade/config.ini record-only
 
 
 ##############################################
