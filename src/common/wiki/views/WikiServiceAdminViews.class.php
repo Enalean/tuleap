@@ -434,7 +434,7 @@ class WikiServiceAdminViews extends WikiViews {
 
 
                 print '<td align="center">';
-                print '<input type="checkbox" value="'.$wa->getId().'" name="attachments_to_delete[]'.$wa->getId().'">';
+                print '<input type="checkbox" value="'.$wa->getId().'" name="attachments_to_delete[]">';
                 print '</td>';
                 print '</tr>';
             }
