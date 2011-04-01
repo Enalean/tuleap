@@ -56,12 +56,12 @@ $duMgr  = new Statistics_DiskUsageManager();
 $duHtml = new Statistics_DiskUsageHtml($duMgr);
 
 // selected service
-$vServices = new Valid_WhiteList('services', array_keys($duMgr->getProjectServices()));
+$vServices = new Valid_WhiteList('services', array_keys($duMgr->getProjectServices(false)));
 $vServices->required();
 if ($request->validArray($vServices)) {
     $selectedServices = $request->get('services');
 } else {
-    $selectedServices = array_keys($duMgr->getProjectServices());
+    $selectedServices = array_keys($duMgr->getProjectServices(false));
 }
 
 if ($project && !$project->isError()) {
@@ -125,7 +125,7 @@ if ($project && !$project->isError()) {
 
     echo '<tr>';
     $services = array();
-    foreach ($duMgr->getProjectServices() as $service => $label) {
+    foreach ($duMgr->getProjectServices(false) as $service => $label) {
         $services[] = array('value' => $service, 'text' => $label);
     }
     echo '<td valign="top">';

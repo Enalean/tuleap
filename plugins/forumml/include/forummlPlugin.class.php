@@ -154,7 +154,7 @@ class ForumMLPlugin extends Plugin {
      */
     function plugin_statistics_color($params) {
         if ($params['service'] == 'plugin_forumml') {
-            $params['color'] = 'darksalmon';
+            $params['color'] = 'lemonchiffon3';
         }
     }
 

@@ -142,7 +142,7 @@ class Statistics_DiskUsageGraph extends Statistics_DiskUsageOutput {
      * @param Date    $endDate
      * @param Boolean $absolute Is y-axis relative to data set or absolute (starting from 0)
      */
-    function displayProjectGraph($groupId, $services, $groupBy, $startDate, $endDate, $absolute=true, $accumulative = true){
+    function displayProjectGraph($groupId, $services, $groupBy, $startDate, $endDate, $absolute=true, $accumulative = true, $siteAdminView = true){
        $graph = new Chart(750,450,"auto");
         $graph->SetScale("textint");
         $graph->title->Set("Project by service growth over the time");
@@ -154,7 +154,7 @@ class Statistics_DiskUsageGraph extends Statistics_DiskUsageOutput {
             $graph->yaxis->scale->SetAutoMin(0);
         }
 
-        $servicesList = $this->_dum->getProjectServices();
+        $servicesList = $this->_dum->getProjectServices($siteAdminView);
 
         $data = $this->_dum->getWeeklyEvolutionProjectData($services, $groupId, $groupBy, $startDate, $endDate);
         $lineplots = array();
