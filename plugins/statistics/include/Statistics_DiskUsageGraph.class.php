@@ -252,7 +252,7 @@ class Statistics_DiskUsageGraph extends Statistics_DiskUsageOutput {
      * @param Integer $total
      */
     function displayProjectProportionUsage($used, $total) {
-        $graph = new Chart_Pie(300 ,250 , "auto");
+        $graph = new Chart_Pie(350 ,250 , "auto");
 
         $data = array($used, $total-$used);
 
