@@ -184,32 +184,6 @@ ws[cfh]");
                 $message->pushContent(HTML::br(),_("Uploading failed."),HTML::br());
             }
         }
-        else {
-            $args = $request->getArg('attachments_to_delete');
-            if (is_array($args)) {
-                $deleteStatus = true;
-                $um = UserManager::instance();
-                $codendiUser = $um->getCurrentUser();
-                foreach($args as $id) {
-                    $wa = new WikiAttachment();
-                    $wa->initWithId($id);
-                    if ($wa->validate() && $wa->gid == GROUP_ID && $wa->isAutorized($codendiUser->getId())) {
-                        if(!$wa->deleteAttachment()) {
-                            $deleteStatus = false;
-                        }
-                    } else {
-                        $deleteStatus = false;
-                    }
-                }
-                if ($deleteStatus) {
-                    $message->pushContent(HTML::h2(_("File(s) successfully deleted.")));
-                } else {
-                    $message->pushContent(HTML::h2(_("An error occured while deleting attachement(s).")));
-                }
-            } else {
-                $message->pushContent(HTML::br(),HTML::br());
-            }
-        }
 
         /// {{{ Codendi Specific        
 
@@ -227,8 +201,7 @@ ws[cfh]");
         $attchTab = HTML::table(array('border' => '1',
                                       'width'  => '100%'));
         $attchTab->pushContent(HTML::tr(HTML::th(_("Attachment")),
-                                        HTML::th(_("Number of revision")),
-                                        HTML::th(_("Delete"))));
+                                        HTML::th(_("Number of revision"))));
         $wai =& WikiAttachment::getListWithCounter(GROUP_ID,
                                                    user_getid(),
                                                    array('offset' => $offset,
@@ -244,9 +217,6 @@ ws[cfh]");
             $line->pushContent(HTML::td(HTML::a(array('href' => $url),
                                                 "Attach:".$filename)));
             $line->pushContent(HTML::td($wa->count()));
-            $line->pushContent(HTML::td(HTML::input(array('type'    => 'checkbox',
-                                                          'name'    => 'attachments_to_delete[]',
-                                                          'value'   => $wa->getId()))));
             $attchTab->pushContent($line);                
             
             $wai->next();
@@ -256,12 +226,8 @@ ws[cfh]");
                                 HTML::h2(_("Attached files")));
         $deleteForm = HTML::form(array('action'   => $request->getPostURL(),
                                        'method'   => 'post'));
-        $deleteButton = HTML::input(array('value' => _("Delete"),
-                                          'type'  => 'submit'));
+
         $line = HTML::tr();
-        $line->pushContent(HTML::td());
-        $line->pushContent(HTML::td());
-        $line->pushContent(HTML::td($deleteButton));
         $attchTab->pushContent($line);
         $deleteForm->pushContent($attchTab);
         $attchList->pushContent($deleteForm);
