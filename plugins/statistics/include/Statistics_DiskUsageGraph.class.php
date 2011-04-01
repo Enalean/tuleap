@@ -257,7 +257,7 @@ class Statistics_DiskUsageGraph extends Statistics_DiskUsageOutput {
         $data = array($used, $total-$used);
 
         $usage = new PiePlot($data);
-        $usage->SetSliceColors(array('salmon','darkolivegreen2'));
+        $usage->SetSliceColors(array('#44697D','#ACBBA4'));
         $usage->SetLegends(array("Used proportion", "Allowed quota"));
         $graph->legend->SetPos(0.01,0,'right','top');
         $graph->add($usage);
