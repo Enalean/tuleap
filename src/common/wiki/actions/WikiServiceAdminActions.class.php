@@ -105,6 +105,34 @@ class WikiServiceAdminActions extends WikiActions {
   }
 
   /**
+   * Perform wiki attachment removal.
+   */
+  function deleteAttachments() {
+      $args =$_REQUEST['attachments_to_delete'];
+      if (is_array($args)) {
+          $deleteStatus = true;
+          $um = UserManager::instance();
+          $user = $um->getCurrentUser();
+          foreach($args as $id) {
+              $wa = new WikiAttachment();
+              $wa->initWithId($id);
+              if ($wa->validate() && $wa->gid == $_REQUEST['group_id'] && $wa->isAutorized($user->getId())) {
+                  if(!$wa->deleteAttachment()) {
+                      $deleteStatus = false;
+                  }
+              } else {
+                  $deleteStatus = false;
+              }
+          }
+          if ($deleteStatus) {
+              $GLOBALS['Response']->addFeedback('info', 'Wiki attachment(s) Deleted');
+          } else {
+              $GLOBALS['Response']->addFeedback('error', 'An error occured while deleting attachement(s).');
+          }
+      }
+  }
+
+  /**
    *
    */
   function update() {
