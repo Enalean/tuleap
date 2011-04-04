@@ -124,6 +124,7 @@ class WikiAttachmentDao extends DataAccessObject {
     
     /**
      * Return attachment id for a file in a project.
+     * The utf8_bin collation enforce case sensitivity within where clause
      *
      * @param integer $gid group id
      * @param string  $filename attachement name
@@ -172,9 +173,9 @@ class WikiAttachmentDao extends DataAccessObject {
      * @return Boolean
      */
     function restoreAttachment($id) {
-                $sql = 'UPDATE wiki_attachment SET delete_date = NULL '.
+        $sql = 'UPDATE wiki_attachment SET delete_date = NULL '.
                        'WHERE id = '.$this->da->escapeInt($id);
-            if ($this->update($sql)) {
+        if ($this->update($sql)) {
             $sql = 'DELETE FROM wiki_attachment_deleted WHERE id = '.$this->da->escapeInt($id);
             return $this->update($sql);
         }
