@@ -1,5 +1,8 @@
 Version 4.0.18 - (Not released yet)
 
+        == New Features ==
+        backlog #124820: Add history for membership delegation
+
         == Bugfix ==
         backlog #124819: Strip HTML in tracker notification
 
