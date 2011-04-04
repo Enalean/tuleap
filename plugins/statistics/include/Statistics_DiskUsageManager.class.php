@@ -46,8 +46,16 @@ class Statistics_DiskUsageManager {
 
     public function __construct() {
     }
-    
-    public function getProjectServices() {
+
+    /**
+     * The SVN/Webdav statistics is dedicated just to the site admin
+     * We do not display it in case of project admin
+     * 
+     * @param Boolean $siteAdminView
+     * 
+     * @return Array
+     */
+    public function getProjectServices($siteAdminView = true) {
         if (count($this->_services) == 0) {
             $this->_services = array(self::SVN           => 'Subversion',
                                      self::CVS           => 'CVS',
@@ -55,8 +63,10 @@ class Statistics_DiskUsageManager {
                                      self::FTP           => 'Public FTP',
                                      self::GRP_HOME      => 'Home page',
                                      self::WIKI          => 'Wiki',
-                                     self::MAILMAN       => 'Mailman',
-                                     self::PLUGIN_WEBDAV => 'SVN/Webdav');
+                                     self::MAILMAN       => 'Mailman');
+            if ($siteAdminView) {
+                $this->_services[self::PLUGIN_WEBDAV] = 'SVN/Webdav';
+            }
             $em     = EventManager::instance();
             $params = array('services' => &$this->_services);
             $em->processEvent('plugin_statistics_disk_usage_service_label', $params);
@@ -74,21 +84,21 @@ class Statistics_DiskUsageManager {
     public function getServiceColor($service) {
         switch($service) {
             case self::SVN:
-                return 'darkgreen';
+                return 'darkolivegreen';
             case self::CVS:
-                return 'darkseagreen';
+                return 'darkgreen';
             case self::FRS:
-                return 'cornflowerblue';
+                return 'pink1';
             case self::FTP:
-                return 'royalblue';
+                return 'purple4';
+            case self::GRP_HOME:
+                return 'mistyrose';
             case self::WIKI:
-                return 'darkslategray';
+                return 'darkturquoise';
             case self::MAILMAN:
                 return 'darkkhaki';
             case self::PLUGIN_WEBDAV:
-                return 'gainsboro';
-            case self::GRP_HOME:
-                return 'lavender';
+                return 'aquamarine';
             case self::USR_HOME:
                 return 'darkturquoise';
             case self::MYSQL:
@@ -98,7 +108,7 @@ class Statistics_DiskUsageManager {
             case self::BACKUP:
                 return 'saddlebrown';
             case self::BACKUP_OLD:
-                return 'peru';
+                return 'cornflowerblue';
             default:
                 // If plugins don't want to color themselves they are white
                 $color = 'white';

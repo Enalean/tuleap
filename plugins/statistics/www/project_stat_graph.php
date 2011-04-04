@@ -44,12 +44,12 @@ if (!$project->userIsAdmin($user)) {
 }
 
 $duMgr  = new Statistics_DiskUsageManager();
-$vServices = new Valid_WhiteList('services', array_keys($duMgr->getProjectServices()));
+$vServices = new Valid_WhiteList('services', array_keys($duMgr->getProjectServices(false)));
 $vServices->required();
 if ($request->validArray($vServices)) {
     $services = $request->get('services');
 } else {
-    $services = array_keys($duMgr->getProjectServices());
+    $services = array_keys($duMgr->getProjectServices(false));
 }
 
 $vStartDate = new Valid('start_date');
@@ -87,7 +87,7 @@ if ($duration <= 0) {
 //
 if (!$error) {
     $graph = new Statistics_DiskUsageGraph($duMgr);
-    $graph->displayProjectGraph($groupId, $services, $groupBy, $startDate, $endDate);
+    $graph->displayProjectGraph($groupId, $services, $groupBy, $startDate, $endDate, true, true, false);
 }
 
 ?>

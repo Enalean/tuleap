@@ -487,7 +487,7 @@ class DocmanPlugin extends Plugin {
      */
     function plugin_statistics_color($params) {
         if ($params['service'] == 'plugin_docman') {
-            $params['color'] = 'darkolivegreen';
+            $params['color'] = 'royalblue';
         }
     }
 
