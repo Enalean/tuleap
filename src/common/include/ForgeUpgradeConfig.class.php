@@ -121,8 +121,8 @@ class ForgeUpgradeConfig {
             $content .= '['.$key.']'.PHP_EOL;
             foreach ($elem as $key2=>$elem2) {
                 if(is_array($elem2)) {
-                    for($i=0;$i<count($elem2);$i++) {
-                        $content .= $key2.'[] = "'.$elem2[$i].'"'.PHP_EOL;
+                    foreach($elem2 as $value) {
+                        $content .= $key2.'[] = "'.$value.'"'.PHP_EOL;
                     }
                 }
                 else if($elem2=="") $content .= $key2.' = '.PHP_EOL;

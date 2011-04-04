@@ -51,7 +51,7 @@ class ForgeUpgradeConfigTest extends UnitTestCase {
         unlink($this->fixtures.'/forgeupgrade-addpath.ini');
     }
 
-    public function testRemovePathInFile() {
+    public function testRemovePathAtTheEndOfFile() {
         copy($this->fixtures.'/forgeupgrade-config-docman.ini', $this->fixtures.'/forgeupgrade-addpath.ini');
 
         $fuc = new ForgeUpgradeConfig($this->fixtures.'/forgeupgrade-addpath.ini');
@@ -65,6 +65,23 @@ class ForgeUpgradeConfigTest extends UnitTestCase {
         $this->assertFalse($fuc2->existsInPath('/usr/share/codendi/plugins/docman'));
 
         unlink($this->fixtures.'/forgeupgrade-addpath.ini');
+    }
+
+    public function testRemovePathInTheMiddleOfFile() {
+        $configFile = $this->fixtures.'/forgeupgrade-addpath.ini';
+        copy($this->fixtures.'/forgeupgrade-config-docman.ini', $configFile);
+
+        $fuc = new ForgeUpgradeConfig($configFile);
+        $this->assertTrue($fuc->existsInPath('/usr/share/codendi/plugins/webdav'));
+
+        $fuc->removePath('/usr/share/codendi/plugins/webdav');
+        $this->assertFalse($fuc->existsInPath('/usr/share/codendi/plugins/webdav'));
+
+        // Verify by loading it again
+        $fuc2 = new ForgeUpgradeConfig($configFile);
+        $this->assertFalse($fuc2->existsInPath('/usr/share/codendi/plugins/webdav'));
+
+        unlink($configFile);
     }
 
     public function testForgeUpgradeExecution() {
