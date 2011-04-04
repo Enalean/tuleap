@@ -264,7 +264,6 @@ class WikiAttachment /* implements UGroupPermission */ {
     }
 
     function setFile($basedir="") {
-    
     }
 
 
@@ -579,7 +578,7 @@ class WikiAttachment /* implements UGroupPermission */ {
     }
 
     /**
-     * Delete the entry fictitiously, no remove from the FS until the purge
+     * Mark the attachment as deleted, no physical remove from the FS until the purge
      *
      * @return Boolean
      */
@@ -651,7 +650,7 @@ class WikiAttachment /* implements UGroupPermission */ {
             }
         }
         $dao = $this->getDao();
-        if (!$dao->setPurgeDate($this->id, time())) {
+        if (!$dao->setPurgeDate($this->id, $_SERVER['REQUEST_TIME'])) {
             return false;
         }
         return true;
