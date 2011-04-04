@@ -73,7 +73,11 @@ class PluginManager {
         }
         return $this->pluginHookPriorityManager;
     }
-    
+
+    function _getForgeUpgradeConfig() {
+        return new ForgeUpgradeConfig();
+    }
+
     function isPluginsLoaded() {
         return $this->plugins_loaded;
     }
@@ -165,11 +169,11 @@ class PluginManager {
      * @param String $name Plugin's name
      */
     protected function configureForgeUpgrade($name) {
-        $fuc = new ForgeUpgradeConfig();
+        $fuc = $this->_getForgeUpgradeConfig();
         try {
             $fuc->loadDefaults();
             $fuc->addPath($GLOBALS['sys_pluginsroot'].$name);
-            // Run forgeupgrade record only
+            $fuc->execute('record-only');
         } catch (Exception $e) {
             $GLOBALS['Response']->addFeedback('warning', "ForgeUpgrade configuration update failed: ".$e->getMessage());
         }

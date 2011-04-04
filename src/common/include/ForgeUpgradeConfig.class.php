@@ -135,6 +135,35 @@ class ForgeUpgradeConfig {
         }
     }
 
+    /**
+     * Execute a ForgeUpgrade command
+     *
+     * @param String $cmd The command to execute
+     */
+    public function execute($cmd) {
+        $this->run('/usr/lib/forgeupgrade/bin/forgeupgrade --config='.escapeshellarg($this->filePath).' '.escapeshellarg($cmd));
+    }
+
+    /**
+     * Perform forgeupgrade command
+     *
+     * @param String $cmd The command
+     *
+     * @return Boolean
+     */
+    protected function run($cmd) {
+        $out = array();
+        $ret = 0;
+        exec($cmd, $out, $ret);
+        // Warning. Posix common value for success is 0 (zero), but in php 0 == false.
+        // So "convert" the unix "success" value to the php one (basically 0 => true).
+        if ($ret == 0) {
+            return true;
+        } else {
+            throw new Exception('ForgeUpgrade didn\'t success to execute '.$cmd);
+        }
+    }
+
 }
 
 ?>

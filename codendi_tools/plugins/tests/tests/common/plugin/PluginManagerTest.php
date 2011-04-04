@@ -1,6 +1,6 @@
 <?php
 require_once('common/plugin/PluginManager.class.php');
-Mock::generatePartial('PluginManager', 'PluginManagerTestVersion', array('_getPluginFactory', '_getEventManager', '_getPluginHookPriorityManager'));
+Mock::generatePartial('PluginManager', 'PluginManagerTestVersion', array('_getPluginFactory', '_getEventManager', '_getPluginHookPriorityManager', '_getForgeUpgradeConfig'));
 require_once('common/plugin/PluginHookPriorityManager.class.php');
 Mock::generate('PluginHookPriorityManager');
 require_once('common/plugin/PluginFactory.class.php');
@@ -16,6 +16,8 @@ require_once('common/dao/include/DataAccessResult.class.php');
 Mock::generate('DataAccessResult');
 require(getenv('CODENDI_LOCAL_INC')?getenv('CODENDI_LOCAL_INC'):'/etc/codendi/conf/local.inc');
 require($GLOBALS['db_config_file']);
+
+Mock::generatePartial('ForgeUpgradeConfig', 'ForgeUpgradeConfigTestPluginManager', array('run'));
 
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
@@ -244,6 +246,11 @@ class PluginManagerTest extends UnitTestCase {
         //The plugins manager
         $pm = new PluginManagerTestVersion($this);
         $pm->setReturnReference('_getPluginFactory', $plugin_factory);
+
+        $fuc = new ForgeUpgradeConfigTestPluginManager($this);
+        $fuc->expectOnce('run');
+        $fuc->setReturnValue('run', true);
+        $pm->setReturnValue('_getForgeUpgradeConfig', $fuc);
 
         $this->assertReference($pm->installPlugin('New_Plugin'), $plugin);
         

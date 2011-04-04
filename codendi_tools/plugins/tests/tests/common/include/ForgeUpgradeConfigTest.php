@@ -20,7 +20,7 @@
 
 require_once 'common/include/ForgeUpgradeConfig.class.php';
 
-Mock::generate('Plugin');
+Mock::generatePartial('ForgeUpgradeConfig', 'ForgeUpgradeConfigTestVersion', array('run'));
 
 class ForgeUpgradeConfigTest extends UnitTestCase {
     protected $fixtures;
@@ -65,6 +65,17 @@ class ForgeUpgradeConfigTest extends UnitTestCase {
         $this->assertFalse($fuc2->existsInPath('/usr/share/codendi/plugins/docman'));
 
         unlink($this->fixtures.'/forgeupgrade-addpath.ini');
+    }
+
+    public function testForgeUpgradeExecution() {
+        $configFile = $this->fixtures.'/forgeupgrade-config-docman.ini';
+
+        $fuc = new ForgeUpgradeConfigTestVersion($this);
+        $fuc->setFilePath($configFile);
+        $fuc->expectOnce('run', array('/usr/lib/forgeupgrade/bin/forgeupgrade --config=\''.$configFile.'\' \'record-only\''));
+        $fuc->setReturnValue('run', true);
+
+        $fuc->execute('record-only');
     }
 }
 
