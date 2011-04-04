@@ -51,6 +51,21 @@ class ForgeUpgradeConfigTest extends UnitTestCase {
         unlink($this->fixtures.'/forgeupgrade-addpath.ini');
     }
 
+    public function testRemovePathInFile() {
+        copy($this->fixtures.'/forgeupgrade-config-docman.ini', $this->fixtures.'/forgeupgrade-addpath.ini');
+
+        $fuc = new ForgeUpgradeConfig($this->fixtures.'/forgeupgrade-addpath.ini');
+        $this->assertTrue($fuc->existsInPath('/usr/share/codendi/plugins/docman'));
+
+        $fuc->removePath('/usr/share/codendi/plugins/docman');
+        $this->assertFalse($fuc->existsInPath('/usr/share/codendi/plugins/docman'));
+
+        // Verify by loading it again
+        $fuc2 = new ForgeUpgradeConfig($this->fixtures.'/forgeupgrade-addpath.ini');
+        $this->assertFalse($fuc2->existsInPath('/usr/share/codendi/plugins/docman'));
+
+        unlink($this->fixtures.'/forgeupgrade-addpath.ini');
+    }
 }
 
 

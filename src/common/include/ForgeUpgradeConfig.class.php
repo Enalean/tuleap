@@ -89,6 +89,27 @@ class ForgeUpgradeConfig {
     }
 
     /**
+     * Remove given path from core.path section
+     *
+     * @param String $path the path to remove
+     */
+    public function removePath($path) {
+        if (isset($this->config['core']['path'])) {
+            $confChanged = false;
+            foreach ($this->config['core']['path'] as $k => $v) {
+                if ($v === $path) {
+                    unset($this->config['core']['path'][$k]);
+                    $confChanged = true;
+                    break;
+                }
+            }
+            if ($confChanged) {
+                $this->write();
+            }
+        }
+    }
+
+    /**
      * Write (override) forgeupgrade config file based on in memory status
      *
      * @see http://stackoverflow.com/questions/1268378/create-ini-file-write-values-in-php

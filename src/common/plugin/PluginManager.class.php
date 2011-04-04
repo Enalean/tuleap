@@ -136,6 +136,7 @@ class PluginManager {
         if (!$this->_executeSqlStatements('uninstall', $name)) {
             $phpm = $this->_getPluginHookPriorityManager();
             $phpm->removePlugin($plugin);
+            $this->uninstallForgeUpgrade($name);
             $plugin_factory = $this->_getPluginFactory();
             return $plugin_factory->removePlugin($plugin);
         } else {
@@ -170,7 +171,24 @@ class PluginManager {
             $fuc->addPath($GLOBALS['sys_pluginsroot'].$name);
             // Run forgeupgrade record only
         } catch (Exception $e) {
-            $GLOBALS['Response']->addFeedback('warning', "ForgeUpgrade configuration updated failed: ".$e->getMessage());
+            $GLOBALS['Response']->addFeedback('warning', "ForgeUpgrade configuration update failed: ".$e->getMessage());
+        }
+    }
+
+    /**
+     * Remove plugin from ForgeUpgrade configuration
+     *
+     * Keep migration scripts in DB, it doesn't matter.
+     *
+     * @param String $name Plugin's name
+     */
+    protected function uninstallForgeUpgrade($name) {
+        $fuc = new ForgeUpgradeConfig();
+        try {
+            $fuc->loadDefaults();
+            $fuc->removePath($GLOBALS['sys_pluginsroot'].$name);
+        } catch (Exception $e) {
+            $GLOBALS['Response']->addFeedback('warning', "ForgeUpgrade configuration update failed: ".$e->getMessage());
         }
     }
 
