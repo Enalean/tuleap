@@ -5,7 +5,16 @@ Mock::generate('BaseLanguage');
 require_once('common/include/Error.class.php');
 require_once('common/tracker/Artifact.class.php');
 
-Mock::generatePartial('Artifact', 'ArtifactTestVersion', array('insertDependency', 'validArtifact', 'existDependency'));
+Mock::generatePartial('Artifact', 'ArtifactTestVersion', array('insertDependency', 'validArtifact', 'existDependency', 'addHistory', 'getReferenceManager', 'userCanEditFollowupComment'));
+
+require_once('common/tracker/ArtifactFieldFactory.class.php');
+Mock::generate('ArtifactFieldFactory');
+
+require_once('common/reference/ReferenceManager.class.php');
+Mock::generate('ReferenceManager');
+
+require_once('common/tracker/ArtifactType.class.php');
+Mock::generate('ArtifactType');
 
 require_once('common/include/Response.class.php');
 Mock::generate('Response');
@@ -14,6 +23,8 @@ require_once('common/include/Codendi_HTMLPurifier.class.php');
 Mock::generate('Codendi_HTMLPurifier');
 
 require_once('www/include/utils.php');
+
+require_once(dirname(__FILE__) .'/../../../include/simpletest/mock_functions.php');
 
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
@@ -37,6 +48,7 @@ class ArtifactTest extends UnitTestCase {
 
     function tearDown() {
         unset($GLOBALS['Language']);
+        unset($art_field_fact);
     }
 
     function testAddDependenciesSimple() {
@@ -89,5 +101,71 @@ class ArtifactTest extends UnitTestCase {
         $this->assertEqual('<pre>   function processEvent($event, $params) {<br />       foreach(parent::processEvent($event, $params) as $key =&gt; $value) {<br />           $params[$key] = $value;<br />       }<br />   }<br /></pre> ', $art->formatFollowUp(102, 1,$htmlContent, 0));
         $this->assertEqual($txtContent, $art->formatFollowUp(102, 0,$txtContent, 0));
     }
+
+    function testAddFollowupComment() {
+        MockFunction::generate('db_query');
+        MockFunction::setReturnValue('db_query', null);
+        global $art_field_fact;
+        $art_field_fact = new MockArtifactFieldFactory($this);
+
+        $art = new ArtifactTestVersion($this);
+        $art->ArtifactType = new MockArtifactType();
+        $referenceManager = new MockReferenceManager($this);
+        $art->setReturnValue('getReferenceManager', $referenceManager);
+
+        $art->addFollowUpComment('<pre>text</pre>', null, null, &$changes, Artifact::FORMAT_TEXT);
+        $this->assertEqual($changes['comment']['add'], '<pre>text</pre>');
+        $this->assertEqual($changes['comment']['format'], Artifact::FORMAT_TEXT);
+        $art->addFollowUpComment('<pre>text</pre>', null, null, &$changes, Artifact::FORMAT_HTML);
+        $this->assertEqual($changes['comment']['add'], '<pre>text</pre>');
+        $this->assertEqual($changes['comment']['format'], Artifact::FORMAT_HTML);
+
+        MockFunction::restore('db_query');
+    }
+
+    function testUpdateFollowupComment() {
+        MockFunction::generate('db_query');
+        MockFunction::generate('db_ei');
+        MockFunction::generate('db_result');
+        MockFunction::setReturnValue('db_query', true);
+        global $art_field_fact;
+        $art_field_fact = new MockArtifactFieldFactory($this);
+
+        $art = new ArtifactTestVersion($this);
+        $art->ArtifactType = new MockArtifactType();
+        $referenceManager = new MockReferenceManager($this);
+        $art->setReturnValue('getReferenceManager', $referenceManager);
+        $art->setReturnValue('userCanEditFollowupComment', true);
+
+        $art->updateFollowUpComment(1, '<pre>text</pre>', &$changes, Artifact::FORMAT_TEXT);
+        $this->assertEqual($changes['comment']['add'], '<pre>text</pre>');
+        $this->assertEqual($changes['comment']['format'], Artifact::FORMAT_TEXT);
+        $art->updateFollowUpComment(1, '<pre>text</pre>', &$changes, Artifact::FORMAT_HTML);
+        $this->assertEqual($changes['comment']['add'], '<pre>text</pre>');
+        $this->assertEqual($changes['comment']['format'], Artifact::FORMAT_HTML);
+
+        MockFunction::restore('db_query');
+        MockFunction::restore('db_ei');
+        MockFunction::restore('db_result');
+    }
+
+    function testFormatChangesForFollowupComments() {
+        MockFunction::generate('user_isloggedin');
+        MockFunction::setReturnValue('user_isloggedin', false);
+
+        $nullVar = null;
+        $art = new Artifact($nullVar);
+        $changes['comment']['add'] = '<pre>text</pre>';
+        $changes['comment']['format'] = Artifact::FORMAT_TEXT;
+        $this->assertPattern('/\<pre\>text\<\/pre\>/', $art->formatChanges($changes, null, $nullVar));
+
+        $changes['comment']['add'] = '<pre>text</pre>';
+        $changes['comment']['format'] = Artifact::FORMAT_HTML;
+        $this->assertPattern('/text/', $art->formatChanges($changes, null, $nullVar));
+        $this->assertNoPattern('/\<pre\>text\<\/pre\>/', $art->formatChanges($changes, null, $nullVar));
+
+        MockFunction::restore('user_isloggedin');
+    }
+
 }
 ?>

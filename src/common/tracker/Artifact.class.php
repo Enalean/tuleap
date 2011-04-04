@@ -675,14 +675,15 @@ class Artifact extends Error {
       
       	if ($comment != '') {
         	$this->addHistory('comment', '', htmlspecialchars($comment), $comment_type_id, false, false, $comment_format);
-          	$changes['comment']['add'] = $comment;
+            $changes['comment']['add'] = $comment;
+            $changes['comment']['format'] = $comment_format;
 
 			$field = $art_field_fact->getFieldFromName("comment_type_id");
 			if ( $field && isset($comment_type_id) && $comment_type_id) {
 			  $changes['comment']['type'] =
 			    $field->getValue($this->ArtifactType->getID(), $comment_type_id);
 			} 
-			$reference_manager =& ReferenceManager::instance();
+			$reference_manager = $this->getReferenceManager();
         	$reference_manager->extractCrossRef($comment,$this->getID(), ReferenceManager::REFERENCE_NATURE_ARTIFACT, $this->ArtifactType->getGroupID());    
 			
     		return true;
@@ -690,7 +691,16 @@ class Artifact extends Error {
         	return false;
       	}
     }
-        
+
+    /**
+     * Wrapper for tests
+     *
+     * @return ReferenceManager
+     */
+    function getReferenceManager() {
+        return ReferenceManager::instance();
+    }
+
     /**
      *  Add a list of follow-up comments coming from the import facility
      *
@@ -768,7 +778,8 @@ class Artifact extends Error {
                 $this->addHistory($comment_lbl,$new_value,htmlspecialchars($comment_txt), $comment_type_id,false,$comment_id,$comment_format);
                 $changes['comment']['del'] = $new_value;
                 $changes['comment']['add'] = $comment_txt;
-                $reference_manager =& ReferenceManager::instance();
+                $changes['comment']['format'] = $comment_format;
+                $reference_manager = $this->getReferenceManager();
         		$reference_manager->extractCrossRef($comment_txt,$this->getID(),ReferenceManager::REFERENCE_NATURE_ARTIFACT,$this->ArtifactType->getGroupID());    
                 
                 return true;
@@ -2700,7 +2711,7 @@ class Artifact extends Error {
           if (isset($changes['comment']['type']) && $changes['comment']['type'] != $Language->getText('global','none') && $changes['comment']['type'] != '') {
                  $out_com .= "[".$changes['comment']['type']."]".$GLOBALS['sys_lf'];
           }
-          $out_com .= util_unconvert_htmlspecialchars($changes['comment']['add']);
+          $out_com .= $this->formatFollowUp(null, $changes['comment']['format'], $changes['comment']['add'], self::OUTPUT_MAIL_TEXT);
           unset($changes['comment']);
         }
         

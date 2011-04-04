@@ -1,3 +1,8 @@
+Version 4.0.18 - (Not released yet)
+
+        == Bugfix ==
+        backlog #124819: Strip HTML in tracker notification
+
 Version 4.0.17 - Monday, 4th April 2011  
         == New Features ==
         backlog #119877: Add more coverage for CVS Backend
