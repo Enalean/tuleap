@@ -184,6 +184,9 @@ ws[cfh]");
                 $message->pushContent(HTML::br(),_("Uploading failed."),HTML::br());
             }
         }
+        else {
+            $message->pushContent(HTML::br(),HTML::br());
+        }
 
         /// {{{ Codendi Specific        
 
@@ -224,13 +227,7 @@ ws[cfh]");
         $attchList = HTML();
         $attchList->pushContent(HTML::hr(),
                                 HTML::h2(_("Attached files")));
-        $deleteForm = HTML::form(array('action'   => $request->getPostURL(),
-                                       'method'   => 'post'));
-
-        $line = HTML::tr();
-        $attchTab->pushContent($line);
-        $deleteForm->pushContent($attchTab);
-        $attchList->pushContent($deleteForm);
+        $attchList->pushContent($attchTab);
         
         $url = WikiURL("UpLoad");
         if(!empty($_REQUEST['pv'])) {
