@@ -35,6 +35,22 @@ class ForgeUpgradeConfigTest extends UnitTestCase {
         $this->assertFalse($fuc->existsInPath('/usr/share/codendi/plugins/git'));
     }
 
+    public function testAddPathInFile() {
+        copy($this->fixtures.'/forgeupgrade-config-docman.ini', $this->fixtures.'/forgeupgrade-addpath.ini');
+
+        $fuc = new ForgeUpgradeConfig($this->fixtures.'/forgeupgrade-addpath.ini');
+        $this->assertFalse($fuc->existsInPath('/usr/share/codendi/plugins/git'));
+
+        $fuc->addPath('/usr/share/codendi/plugins/git');
+        $this->assertTrue($fuc->existsInPath('/usr/share/codendi/plugins/git'));
+
+        // Verify by loading it again
+        $fuc2 = new ForgeUpgradeConfig($this->fixtures.'/forgeupgrade-addpath.ini');
+        $this->assertTrue($fuc2->existsInPath('/usr/share/codendi/plugins/git'));
+
+        unlink($this->fixtures.'/forgeupgrade-addpath.ini');
+    }
+
 }
 
 

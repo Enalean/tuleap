@@ -25,12 +25,13 @@ require($GLOBALS['db_config_file']);
  * Tests the class PluginManager
  */
 class PluginManagerTest extends UnitTestCase {
-    /**
-     * Constructor of the test. Can be ommitted.
-     * Usefull to set the name of the test
-     */
-    function PluginManagerTest($name = 'PluginManager test') {
-        $this->UnitTestCase($name);
+
+    function setUp() {
+        $this->globals = $GLOBALS;
+    }
+
+    function tearDown() {
+        $GLOBALS = $this->globals;
     }
 
     function testLoadPlugins() {
@@ -224,9 +225,13 @@ class PluginManagerTest extends UnitTestCase {
     function testInstallPlugin() {
         $GLOBALS['sys_pluginsroot'] = dirname(__FILE__).'/test/custom/';
         $GLOBALS['sys_custompluginsroot'] = dirname(__FILE__).'/test/custom/';
+        $GLOBALS['sys_pluginsroot'] = dirname(__FILE__).'/test/custom/';
+        $GLOBALS['forgeupgrade_file'] = dirname(__FILE__).'/test/forgeupgrade.ini';
+
         mkdir(dirname(__FILE__).'/test');
         mkdir(dirname(__FILE__).'/test/custom');
-        
+        touch($GLOBALS['forgeupgrade_file']);
+
         //The plugins
         $plugin = new MockPlugin($this);
         
@@ -244,9 +249,26 @@ class PluginManagerTest extends UnitTestCase {
         
         // plugin manager must call postInstall 1 time on plugin after its creation
         $plugin->expectCallCount('postInstall', 1);
-        
+
+        // Plugin dir was created in "/etc"
+        $this->assertTrue(is_dir(dirname(__FILE__).'/test/custom/New_Plugin'));
+
+        // Forgeupgrade config updated
+        // do not use parse_ini_file to be independent of implementation
+        $wantedLine = dirname(__FILE__).'/test/custom/New_Plugin';
+        $lineFound  = false;
+        $conf       = file($GLOBALS['forgeupgrade_file'], FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+        foreach ($conf as $line) {
+            if (preg_match('%path\[\]\s*=\s*"'.$wantedLine.'"%', $line)) {
+                $lineFound = true;
+            }
+        }
+        $this->assertTrue($lineFound, "Forgeupgrade configuration file must contains $wantedLine");
+
+
         $this->_remove_directory(dirname(__FILE__).'/test');
     }
+
     function testIsNameValide() {
         $pm = new PluginManager();
         $this->assertTrue($pm->isNameValid('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_'));

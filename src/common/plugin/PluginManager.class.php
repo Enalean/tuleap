@@ -26,7 +26,7 @@ require_once('common/plugin/PluginHookPriorityManager.class.php');
 require_once('common/dao/DBTablesDao.class.php');
 require_once('common/dao/CodendiDataAccess.class.php');
 
-
+require_once('common/include/ForgeUpgradeConfig.class.php');
 
 /**
  * PluginManager
@@ -120,6 +120,7 @@ class PluginManager {
                     $plugin_factory = $this->_getPluginFactory();
                     $plugin = $plugin_factory->createPlugin($name);
                     $this->_createEtc($name);
+                    $this->configureForgeUpgrade($name);
                     $plugin->postInstall();
                 } else {
                     $GLOBALS['Response']->addFeedback('error', 'DB may be corrupted');
@@ -128,7 +129,7 @@ class PluginManager {
         }
         return $plugin;
     }
-    
+
     function uninstallPlugin($plugin) {
         $plugin_factory = $this->_getPluginFactory();
         $name = $plugin_factory->getNameForPlugin($plugin);
@@ -153,6 +154,26 @@ class PluginManager {
             file_get_contents($GLOBALS['sys_pluginsroot'].$path_to_file) : 
             false;
     }
+
+    /**
+     * Initialize ForgeUpgrade configuration for given plugin
+     *
+     * Add in configuration and record existing migration scripts as 'skipped'
+     * because the 'install.sql' script is up-to-date with latest DB modif.
+     *
+     * @param String $name Plugin's name
+     */
+    protected function configureForgeUpgrade($name) {
+        $fuc = new ForgeUpgradeConfig();
+        try {
+            $fuc->loadDefaults();
+            $fuc->addPath($GLOBALS['sys_pluginsroot'].$name);
+            // Run forgeupgrade record only
+        } catch (Exception $e) {
+            $GLOBALS['Response']->addFeedback('warning', "ForgeUpgrade configuration updated failed: ".$e->getMessage());
+        }
+    }
+
     function _createEtc($name) {
         if (!is_dir($GLOBALS['sys_custompluginsroot'] .'/'. $name)) {
             mkdir($GLOBALS['sys_custompluginsroot'] .'/'. $name, 0700);
@@ -171,7 +192,7 @@ class PluginManager {
             }
         }
     }
-        
+
     function _executeSqlStatements($file, $name) {
         $db_corrupted = false;
         $path_found   = false;
