@@ -258,12 +258,13 @@ class WikiAttachment /* implements UGroupPermission */ {
             if ($this->filesystemName) {
                 return $this->filesystemName;
             } else {
-            return $this->getFilename();
+                return $this->getFilename();
             }
         }
     }
 
     function setFile($basedir="") {
+    
     }
 
 

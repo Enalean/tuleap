@@ -85,6 +85,8 @@ wiki_actions_wikiserviceadmin	page_name_empty_err	Vous essayez de créer un Docu
 wiki_actions_wikiserviceadmin	update_perm_err	Impossible de mettre à jour les permissions&nbsp;: <p>$1</p>
 wiki_actions_wikiserviceadmin	update_page_perm_err	Impossible de mettre à jour les permissions de cette page Wiki&nbsp;: <p>$1</p>
 wiki_actions_wikiserviceadmin	update_attachment_perm_err	Impossible de mettre à jour les permissions de ce fichier joint Wiki&nbsp;: <p>$1</p>
+wiki_actions_wikiserviceadmin	delete_attachment_success	Fichier(s) joint(s) supprimé(s)
+wiki_actions_wikiserviceadmin	delete_attachment_failure	Une erreur est survenue lors de la suppression du/des fichier(s) joint(s)
 
 #-----------------------------------------------
 # Script: SF/common/wiki/WikiService.class.php
@@ -138,6 +140,7 @@ wiki_views_wkserviews	attachment_revision	Révision
 wiki_views_wkserviews	attachment_date	Date
 wiki_views_wkserviews	attachment_author	Auteur
 wiki_views_wkserviews	attachment_size	Taille
+wiki_views_wkserviews	attachment_delete	Supprimer
 wiki_views_wkserviews	doc_name	Nom
 wiki_views_wkserviews	doc_page	Page
 wiki_views_wkserviews	doc_rank	Rang à l'écran

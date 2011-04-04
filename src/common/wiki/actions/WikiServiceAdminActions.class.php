@@ -108,16 +108,23 @@ class WikiServiceAdminActions extends WikiActions {
    * Perform wiki attachment removal.
    */
   function deleteAttachments() {
-      $args =$_REQUEST['attachments_to_delete'];
-      if (is_array($args)) {
+      $request = HTTPRequest::instance();
+      if ($request->isPost() && $request->exist('attachments_to_delete')) {
+          $args = $request->get('attachments_to_delete');
           $deleteStatus = true;
           $um = UserManager::instance();
           $user = $um->getCurrentUser();
           foreach($args as $id) {
-              $wa = new WikiAttachment();
-              $wa->initWithId($id);
-              if ($wa->validate() && $wa->gid == $_REQUEST['group_id'] && $wa->isAutorized($user->getId())) {
-                  if(!$wa->deleteAttachment()) {
+              $valid = new Valid_UInt('repo_id');
+              $valid->required();
+              if($valid->validate($id)) {
+                  $wa = new WikiAttachment();
+                  $wa->initWithId($id);
+                  if ($wa->validate() && $wa->gid == $_REQUEST['group_id'] && $wa->isAutorized($user->getId())) {
+                      if(!$wa->deleteAttachment()) {
+                          $deleteStatus = false;
+                      }
+                  } else {
                       $deleteStatus = false;
                   }
               } else {
@@ -125,9 +132,9 @@ class WikiServiceAdminActions extends WikiActions {
               }
           }
           if ($deleteStatus) {
-              $GLOBALS['Response']->addFeedback('info', 'Wiki attachment(s) Deleted');
+              $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('wiki_actions_wikiserviceadmin','delete_attachment_success'));
           } else {
-              $GLOBALS['Response']->addFeedback('error', 'An error occured while deleting attachement(s).');
+              $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('wiki_actions_wikiserviceadmin','delete_attachment_failure'));
           }
       }
   }

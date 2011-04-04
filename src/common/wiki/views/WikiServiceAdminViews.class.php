@@ -407,8 +407,8 @@ class WikiServiceAdminViews extends WikiViews {
         print '<form method="post" action="'.$this->wikiAdminLink.'&view=wikiAttachments&action=deleteAttachments">';
         print html_build_list_table_top(array($GLOBALS['Language']->getText('wiki_views_wkserviews', 'attachment_name'),
                                               $GLOBALS['Language']->getText('wiki_views_wkserviews', 'attachment_revisions'), 
-                                              $GLOBALS['Language']->getText('wiki_views_wkserviews', 'attachment_permissions')
-                                              , 'Delete ?'));
+                                              $GLOBALS['Language']->getText('wiki_views_wkserviews', 'attachment_permissions'),
+                                              $GLOBALS['Language']->getText('wiki_views_wkserviews', 'attachment_delete')." ?"));
 
         $wai =& WikiAttachment::getAttachmentIterator($this->gid);
         $wai->rewind();
@@ -441,7 +441,7 @@ class WikiServiceAdminViews extends WikiViews {
 
             $wai->next();
         }
-        print'<td align="right" colspan="4" style="padding-right:50px; "><input type="submit" value="Delete"></td></tr>';
+        print'<td align="right" colspan="4" style="padding-right:50px; "><input type="submit" value="'.$GLOBALS['Language']->getText('wiki_views_wkserviews', 'attachment_delete').'"></td></tr>';
         print '</table>';
         print '<hr/><p><a href="'.$this->wikiAdminLink.'">'.$GLOBALS['Language']->getText('wiki_views_wkserviews', 'back_admin').'</a></p>'."\n";
     print '</form>';
