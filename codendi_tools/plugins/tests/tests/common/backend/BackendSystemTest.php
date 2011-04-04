@@ -39,7 +39,7 @@ Mock::generatePartial('BackendSystem', 'BackendTestVersion', array('getUserManag
                                                              'chgrp',
                                                              'chmod',
                                                              'getFRSFileFactory',
-                                                             'getWikiFactory'
+                                                             'getwikiAttachment'
                                                              ));
 
 
@@ -397,7 +397,7 @@ class BackendSystemTest extends UnitTestCase {
         $wiki->setReturnValue('purgeAttachments', true);
         
         $backend->setReturnValue('getFRSFileFactory', $ff);
-        $backend->setReturnValue('getWikiFactory', $wiki);
+        $backend->setReturnValue('getwikiAttachment', $wiki);
         
         $this->assertTrue($backend->cleanupFRS());
     }

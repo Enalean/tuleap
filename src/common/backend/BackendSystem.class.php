@@ -329,7 +329,7 @@ class BackendSystem extends Backend {
         // }}} /!\ WARNING HACK /!\
 
         //Manage the purge of wiki attachments
-        $wiki = $this->getWikiFactory();
+        $wiki = $this->getWikiAttachment();
         $status = $status & $wiki->purgeAttachments($time);
 
         $em = EventManager::instance();
@@ -540,11 +540,11 @@ class BackendSystem extends Backend {
     }
 
     /**
-     * Wrapper for getWikiFactory
+     * Wrapper for getWikiAttachment
      * 
      * @return WikiAttachment
      */
-    protected function getWikiFactory() {
+    protected function getWikiAttachment() {
         return new WikiAttachment();
     }
     

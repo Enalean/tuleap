@@ -92,12 +92,6 @@ class WikiAttachment /* implements UGroupPermission */ {
         $this->filetype = null;
         $this->filesize = null;
         $this->revisionCounter = null;
-
-        /*
-         * Check user
-         */
-        //if (!user_isloggedin())
-            //exit_not_logged_in();
     }
 
     function &getDao() {
