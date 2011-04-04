@@ -111,7 +111,7 @@ class WikiServiceAdminActions extends WikiActions {
       $request = HTTPRequest::instance();
       if ($request->isPost() && $request->exist('attachments_to_delete')) {
           $args = $request->get('attachments_to_delete');
-          $deleteStatus = false;
+          $deleteStatus = true;
           $um = UserManager::instance();
           $user = $um->getCurrentUser();
           foreach($args as $id) {
@@ -121,10 +121,14 @@ class WikiServiceAdminActions extends WikiActions {
                   $wa = new WikiAttachment();
                   $wa->initWithId($id);
                   if ($wa->validate() && $wa->gid == $_REQUEST['group_id'] && $wa->isAutorized($user->getId())) {
-                      if($wa->deleteAttachment()) {
-                          $deleteStatus = true;
+                      if(!$wa->deleteAttachment()) {
+                          $deleteStatus = false;
                       }
+                  } else {
+                      $deleteStatus = false;
                   }
+              } else {
+                  $deleteStatus = false;
               }
           }
           if ($deleteStatus) {
