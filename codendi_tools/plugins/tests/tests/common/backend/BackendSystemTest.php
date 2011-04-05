@@ -32,12 +32,14 @@ Mock::generate('ProjectManager');
 require_once('common/project/Project.class.php');
 Mock::generate('Project');
 Mock::generate('FRSFileFactory');
+Mock::generate('WikiAttachment');
 Mock::generatePartial('BackendSystem', 'BackendTestVersion', array('getUserManager', 
                                                              'getProjectManager',
                                                              'chown',
                                                              'chgrp',
                                                              'chmod',
                                                              'getFRSFileFactory',
+                                                             'getWikiAttachment'
                                                              ));
 
 
@@ -390,8 +392,12 @@ class BackendSystemTest extends UnitTestCase {
         $ff = new MockFRSFileFactory($this);
         $ff->setReturnValue('moveFiles', true);
         //$ff->expectOnce('moveFiles', array($daysBefore, $backend));
+
+        $wiki = new MockWikiAttachment($this);
+        $wiki->setReturnValue('purgeAttachments', true);
         
         $backend->setReturnValue('getFRSFileFactory', $ff);
+        $backend->setReturnValue('getWikiAttachment', $wiki);
         
         $this->assertTrue($backend->cleanupFRS());
     }

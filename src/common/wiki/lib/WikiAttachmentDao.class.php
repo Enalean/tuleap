@@ -39,11 +39,12 @@ class WikiAttachmentDao extends DataAccessObject {
      * @param string $filename Attachement name
      * @return boolean
      */
-    function create($gid, $filename) {
-        $qry = sprintf(' INSERT INTO wiki_attachment (group_id, name)'
-                       .' VALUES (%d, %s)',
+    function create($gid, $filename, $filesystemName) {
+        $qry = sprintf(' INSERT INTO wiki_attachment (group_id, name, filesystem_name)'
+                       .' VALUES (%d, %s, %s)',
                        $gid,
-                       $this->da->quoteSmart($filename));
+                       $this->da->quoteSmart($filename),
+                       $this->da->quoteSmart($filesystemName));
 
         $res = $this->update($qry);
         return $res;
@@ -64,18 +65,24 @@ class WikiAttachmentDao extends DataAccessObject {
     }
 
     /**
-     * Delete the entry corresponding to the given id.
+     * Set the status of the attachment to deleted and add the entry to the wiki_attchment_deleted table.
      *
      * @param integer $id Attachement id
+     * 
      * @return boolean
      */
     function delete($id) {
-        $qry = sprintf('DELETE FROM wiki_attachment'
-                       .' WHERE id=%d',                       
-                       $id);
-         
-        $res = $this->update($qry);
-        return $res;
+        $sql = 'UPDATE wiki_attachment SET delete_date='.$this->da->escapeInt($_SERVER['REQUEST_TIME']).
+               ' WHERE id = '.$this->da->escapeInt($id);
+        if ($this->update($sql)) {
+            $sql = 'INSERT INTO wiki_attachment_deleted(id, group_id, name, delete_date)'.
+               ' SELECT id, group_id, name, delete_date'.
+               ' FROM wiki_attachment'.
+               ' WHERE id = '.$this->da->escapeInt($id);
+            $res = $this->update($sql);
+            return $res;
+        }
+        return false;
     }
 
     /**
@@ -107,6 +114,7 @@ class WikiAttachmentDao extends DataAccessObject {
                        .' FROM wiki_attachment_revision AS war, wiki_attachment AS wa'
                        .' WHERE wa.group_id=%d'
                        .' AND war.attachment_id=wa.id'
+                       .' AND wa.delete_date IS NULL'
                        .' GROUP BY attachment_id'
                        .' ORDER BY max_date DESC',
                        $gid);
@@ -116,6 +124,7 @@ class WikiAttachmentDao extends DataAccessObject {
     
     /**
      * Return attachment id for a file in a project.
+     * The utf8_bin collation enforce case sensitivity within where clause
      *
      * @param integer $gid group id
      * @param string  $filename attachement name
@@ -123,12 +132,68 @@ class WikiAttachmentDao extends DataAccessObject {
      */
     function &getIdFromFilename($gid, $filename) {
         $qry = sprintf('SELECT id FROM wiki_attachment'
-                       .' WHERE name=%s'
-                       .' AND group_id=%d',
+                       .' WHERE name COLLATE utf8_bin =%s'
+                       .' AND group_id=%d'
+                       .' AND delete_date IS NULL',
                        $this->da->quoteSmart($filename),
                        $gid);
 
         return $this->retrieve($qry);
+    }
+
+    /**
+     * Retrieve all deleted Attachment not purged yet after a given period of time
+     * 
+     * @param Integer $time    Timestamp of the date to start the search
+     * @param Integer $groupId
+     * @param Integer $offset
+     * @param Integer $limit
+     * 
+     * @return DataAccessResult
+     */
+    function searchAttachmentToPurge($time, $groupId=0, $offset=0, $limit=0) {
+        $where  = '';
+        if ($groupId != 0) {
+            $where  .= ' AND attachment.group_id = '.$this->da->escapeInt($groupId);
+        }
+        $sql = 'SELECT attachment.* '.
+               ' FROM wiki_attachment_deleted attachment'.
+               ' WHERE attachment.delete_date <= '.$this->da->escapeInt($time).
+               ' AND attachment.purge_date IS NULL'.
+               $where.
+               ' ORDER BY attachment.delete_date DESC';
+        return $this->retrieve($sql);
+    }
+
+    /**
+     * Restore deleted wiki attachments
+     * 
+     * @param Integer $id
+     * 
+     * @return Boolean
+     */
+    function restoreAttachment($id) {
+        $sql = 'UPDATE wiki_attachment SET delete_date = NULL '.
+                       'WHERE id = '.$this->da->escapeInt($id);
+        if ($this->update($sql)) {
+            $sql = 'DELETE FROM wiki_attachment_deleted WHERE id = '.$this->da->escapeInt($id);
+            return $this->update($sql);
+        }
+        return false;
+    }
+
+    /**
+     * Save the purge date of a deleted attachment
+     *
+     * @param Integer $attachmentId
+     * @param Integer $time
+     *
+     * @return Boolean
+     */
+    function setPurgeDate($id, $time) {
+        $sql = 'UPDATE wiki_attachment_deleted SET purge_date ='.$this->da->escapeInt($time).
+                       ' WHERE id = '.$this->da->escapeInt($id);
+        return $this->update($sql);
     }
 }
 ?>

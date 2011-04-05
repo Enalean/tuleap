@@ -404,46 +404,47 @@ class WikiServiceAdminViews extends WikiViews {
      */
     function wikiAttachments() {
         echo $GLOBALS['Language']->getText('wiki_views_wkserviews', 'attachment_title', array($this->wikiname));
-   
+        print '<form method="post" action="'.$this->wikiAdminLink.'&view=wikiAttachments&action=deleteAttachments">';
         print html_build_list_table_top(array($GLOBALS['Language']->getText('wiki_views_wkserviews', 'attachment_name'),
                                               $GLOBALS['Language']->getText('wiki_views_wkserviews', 'attachment_revisions'), 
-                                              $GLOBALS['Language']->getText('wiki_views_wkserviews', 'attachment_permissions')
-                                              /*, 'Delete ?'*/));
+                                              $GLOBALS['Language']->getText('wiki_views_wkserviews', 'attachment_permissions'),
+                                              $GLOBALS['Language']->getText('wiki_views_wkserviews', 'attachment_delete')." ?"));
 
         $wai =& WikiAttachment::getAttachmentIterator($this->gid);
         $wai->rewind();
         while($wai->valid()) {
             $wa =& $wai->current();
 
-            print '<tr>';
+            if ($wa->isActive()) {
+                print '<tr>';
 
-            $filename = basename($wa->getFilename());
-            $id = $wa->getId();
+                $filename = basename($wa->getFilename());
+                $id = $wa->getId();
 
-            print '<td><a href="'.$this->wikiAdminLink.'&view=browseAttachment&id='.$id.'">'.$filename.'</a></td>';
-            print '<td align="center">'.$wa->count().'</td>';
+                print '<td><a href="'.$this->wikiAdminLink.'&view=browseAttachment&id='.$id.'">'.$filename.'</a></td>';
+                print '<td align="center">'.$wa->count().'</td>';
 
-            $status=$GLOBALS['Language']->getText('wiki_views_wkserviews', 'define_perms');
-            if($wa->permissionExist()) {
-                $status=$GLOBALS['Language']->getText('wiki_views_wkserviews', 'edit_perms');
+                $status=$GLOBALS['Language']->getText('wiki_views_wkserviews', 'define_perms');
+                if($wa->permissionExist()) {
+                    $status=$GLOBALS['Language']->getText('wiki_views_wkserviews', 'edit_perms');
+                }
+                print '<td align="center">';
+                print '<a href="'.$this->wikiAdminLink.'&view=attachmentPerms&id='.$id.'">['.$status.']</a>';
+                print '</td>';
+
+
+                print '<td align="center">';
+                print '<input type="checkbox" value="'.$wa->getId().'" name="attachments_to_delete[]">';
+                print '</td>';
+                print '</tr>';
             }
-            print '<td align="center">';
-            print '<a href="'.$this->wikiAdminLink.'&view=attachmentPerms&id='.$id.'">['.$status.']</a>';
-            print '</td>';
-
-
-            //print '<td align="center">';
-            //      print $this->getTrashLink($this->wikiAdminLink.'&view=wikiAttachments&action=delAttach&id='
-            //			, 'delete "'.$filename.'" attachment');
-            // print 'n/a';
-            //print '</td>';
-            print '</tr>';
 
             $wai->next();
         }
-    
+        print'<td align="right" colspan="4" style="padding-right:50px; "><input type="submit" value="'.$GLOBALS['Language']->getText('wiki_views_wkserviews', 'attachment_delete').'"></td></tr>';
         print '</table>';
         print '<hr/><p><a href="'.$this->wikiAdminLink.'">'.$GLOBALS['Language']->getText('wiki_views_wkserviews', 'back_admin').'</a></p>'."\n";
+    print '</form>';
     }
   
 

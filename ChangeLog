@@ -2,9 +2,11 @@ Version 4.0.18 - (Not released yet)
 
         == New Features ==
         backlog #124820: Add history for membership delegation
+        backlog #99968 : Add a "delete feature" for wiki attached file
 
         == Bugfix ==
         backlog #124819: Strip HTML in tracker notification
+        backlog #124833: Upload an attached file in wiki with a difference in the filename case
 
 Version 4.0.17 - Monday, 4th April 2011  
         == New Features ==

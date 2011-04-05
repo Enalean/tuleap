@@ -153,7 +153,7 @@ class WikiAttachmentRevision {
         if($this->exist()){
             header('Content-type: '.$this->getMimeType());
             header('Content-Length: '.$this->getSize());
-            header('Content-Disposition: filename="'.$this->getFilename().'"');
+            header('Content-Disposition: filename="'.$this->displayFilename.'"');
       
             $this->getContent();
         }
@@ -273,7 +273,8 @@ class WikiAttachmentRevision {
             // @todo: catch error when wiki no attachementId is set.
             $wa->initWithId($this->attachmentId);
             // @todo: catch error when given attchId do not exist
-            $this->filename = $wa->getFilename();            
+            $this->displayFilename = $wa->getFilename();
+            $this->filename       = $wa->getFilesystemName();
         }
         return $this->filename;
     }

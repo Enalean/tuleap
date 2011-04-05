@@ -59,6 +59,13 @@ class WikiAttachment /* implements UGroupPermission */ {
     var $filename;
 
     /**
+     * Attachment name in the filesystem
+     * @access private
+     * @var    string
+     */
+    var $filesystemName;
+
+    /**
      * Attachment location (directory)
      * @access private
      * @var    string
@@ -85,12 +92,6 @@ class WikiAttachment /* implements UGroupPermission */ {
         $this->filetype = null;
         $this->filesize = null;
         $this->revisionCounter = null;
-
-        /*
-         * Check user
-         */
-        if (!user_isloggedin())
-            exit_not_logged_in();
     }
 
     function &getDao() {
@@ -227,11 +228,40 @@ class WikiAttachment /* implements UGroupPermission */ {
 
         return true;
     }
+
+    /**
+     * Set the name of the attachment that will be used in the filesystem
+     *
+     * @return Boolean
+     */
+    function initFilesystemName() {
+        $this->filesystemName = $this->filename.'_'.time();
+        return true;
+    }
   
     function getFilename() {
         return $this->filename;
     }
 
+    /**
+     * Obtain the name of the attachment as stored in the filesystem
+     * Old attachments are stored in the filesystem as uploaded by the user
+     * In that case filesystemName == NULL then the returned value is filename
+     *
+     * @return String
+     */
+    function getFilesystemName() {
+        if ($this->filesystemName) {
+            return $this->filesystemName;
+        } else {
+            $this->initWithId($this->id);
+            if ($this->filesystemName) {
+                return $this->filesystemName;
+            } else {
+                return $this->getFilename();
+            }
+        }
+    }
 
     function setFile($basedir="") {
     
@@ -327,12 +357,28 @@ class WikiAttachment /* implements UGroupPermission */ {
 	}
 
     function exist() {
-        return is_dir($this->basedir.'/'.$this->filename);
+        return is_dir($this->basedir.'/'.$this->getFilesystemName());
+    }
+
+    /**
+     * Check if the status of the attachment is active
+     * Active means that the delete_date is null
+     *
+     * @return Boolean
+     */
+    function isActive() {
+        $dao = WikiAttachment::getDao();
+        $dar = $dao->read($this->id);
+        if ($dar && !$dar->isError()) {
+            $row = $dar->getRow();
+            return ($row['delete_date'] == null);
+        }
+        return false;
     }
 
     function dbadd() {
         $dao =& WikiAttachment::getDao();
-        $created = $dao->create($this->gid, $this->filename);
+        $created = $dao->create($this->gid, $this->getFilename(), $this->getFilesystemName());
 
         if(!$created) {            
             trigger_error($GLOBALS['Language']->getText('wiki_lib_attachment', 
@@ -356,8 +402,8 @@ class WikiAttachment /* implements UGroupPermission */ {
         }
     
         // Create directory where file revison will be stored
-        if(!is_dir($this->basedir.'/'.$this->filename)){
-            $res = mkdir($this->basedir.'/'.$this->filename, 0700);
+        if(!is_dir($this->basedir.'/'.$this->getFilesystemName())){
+            $res = mkdir($this->basedir.'/'.$this->getFilesystemName(), 0700);
             if(!$res) {
                 trigger_error($GLOBALS['Language']->getText('wiki_lib_attachment', 'err_create_file_dir'), E_USER_ERROR);
                 return false;
@@ -399,6 +445,12 @@ class WikiAttachment /* implements UGroupPermission */ {
             return -1;
         }
 
+        if ($this->getId()) {
+            $this->initWithId($this->getId());
+        } elseif(!$this->initFilesystemName()) {
+            return -1;
+        }
+
         if(!$this->exist()) {
             if(!$this->create()) {	
                 return -1;
@@ -407,7 +459,7 @@ class WikiAttachment /* implements UGroupPermission */ {
 
         $att_rev = new WikiAttachmentRevision($this->gid);
     
-        $att_rev->setFilename($this->getFilename());
+        $att_rev->setFilename($this->getFilesystemName());
         $att_rev->setOwnerId(user_getid());
         $att_rev->setAttachmentId($this->getId());
         $att_rev->setMimeType($userfile_type);
@@ -431,8 +483,11 @@ class WikiAttachment /* implements UGroupPermission */ {
 
     function setFromRow($row) {
         $this->id       = $row['id'];
-        $this->gid      = $row['group_id'];
+        $this->setGid($row['group_id']);
         $this->filename = $row['name'];
+        if (isset($row['filesystem_name'])) {
+            $this->filesystemName = $row['filesystem_name'];
+        }
     }
 
     function setRevisionCounter($nb) {
@@ -452,7 +507,7 @@ class WikiAttachment /* implements UGroupPermission */ {
             exit_no_group();
    
         // Validate filename   
-        if(!is_file($this->basedir.'/'.$this->filename)){
+        if(!is_dir($this->basedir.'/'.$this->getFilesystemName())){
             return false;
             //      print "error ".$this->basedir.'/'.$this->filename;
         }
@@ -523,6 +578,101 @@ class WikiAttachment /* implements UGroupPermission */ {
                                     $this->id);
     }
 
+    /**
+     * Mark the attachment as deleted, no physical remove from the FS until the purge
+     *
+     * @return Boolean
+     */
+    function deleteAttachment() {
+        if ($this->isActive()) {
+            $dao = $this->getDao();
+            return $dao->delete($this->id);
+        }
+        return false;
+    }
+
+    /**
+     * List all attachments deleted but not already purged
+     *
+     * @param Integer $groupId
+     * @param Integer $offset
+     * @param Integer $limit
+     *
+     * @return Boolean
+     */
+    public function listPendingAttachments($groupId, $offset, $limit) {
+        $dao = $this->getDao();
+        return $dao->searchAttachmentToPurge($_SERVER['REQUEST_TIME'], $groupId, $offset, $limit);
+    }
+
+    /**
+     * Purge the attachments from FS and DB
+     *
+     * @param Integer $time
+     *
+     * @return Boolean
+     */
+    public function purgeAttachments($time) {
+        $dao = $this->getDao();
+        $dar = $dao->searchAttachmentToPurge($time);
+        if ($dar && !$dar->isError()) {
+            $purgeState = true;
+            if ($dar->rowCount() > 0) {
+                foreach ($dar as $row) {
+                    $attachment = new WikiAttachment($this->gid);
+                    $attachment->setFromRow($row);
+                    $purgeState = $purgeState & $attachment->purgeAttachment();
+                }
+            }
+            return $purgeState;
+        }
+        return false;
+    }
+
+
+    /**
+     * Erase from the file system one attachment with its all version
+     *
+     * @return Boolean
+     */
+    public function purgeAttachment() {
+        if($this->exist()){
+            $attachmentPath = $this->basedir.'/'.$this->getFilesystemName();
+            $dirAttachment = new DirectoryIterator($attachmentPath);
+            foreach ($dirAttachment as $version) {
+                if (!$version->isDot()) {
+                    if (!unlink($version->getPathname())) {
+                        return false;
+                    }
+                }
+            }
+            if (!rmdir($attachmentPath)) {
+                return false;
+            }
+        }
+        $dao = $this->getDao();
+        if (!$dao->setPurgeDate($this->id, $_SERVER['REQUEST_TIME'])) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * Restore wiki attachment
+     *
+     * @param Integer $id
+     *
+     * @return Boolean
+     */
+    public function restoreDeletedAttachment($id) {
+        $dao = $this->getDao();
+        $this->initWithId($id);
+        if($this->exist()&& !$this->isActive()) {
+        return $dao->restoreAttachment($id);
+        } else {
+            return false;
+        }
+    }
 }
 
 ?>

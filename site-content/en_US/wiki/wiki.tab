@@ -90,6 +90,8 @@ wiki_actions_wikiserviceadmin	page_name_empty_err	You try to create a Wiki Docum
 wiki_actions_wikiserviceadmin	update_perm_err	Could not update permissions: <p>$1</p>
 wiki_actions_wikiserviceadmin	update_page_perm_err	Could not update permissions on this Wiki Page: <p>$1</p>
 wiki_actions_wikiserviceadmin	update_attachment_perm_err	Could not update permissions on this Wiki Attachment: <p>$1</p>
+wiki_actions_wikiserviceadmin	delete_attachment_success	Wiki attachment(s) Deleted
+wiki_actions_wikiserviceadmin	delete_attachment_failure	An error occured while deleting attachement(s)
 #
 #-----------------------------------------------
 # Script: SF/common/wiki/WikiService.class.php
@@ -143,6 +145,7 @@ wiki_views_wkserviews	attachment_revision	Revision
 wiki_views_wkserviews	attachment_date	Date
 wiki_views_wkserviews	attachment_author	Author
 wiki_views_wkserviews	attachment_size	Size
+wiki_views_wkserviews	attachment_delete	Delete
 wiki_views_wkserviews	doc_name	Name
 wiki_views_wkserviews	doc_page	Page
 wiki_views_wkserviews	doc_rank	Rank On Screen

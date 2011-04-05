@@ -21,6 +21,7 @@
 require_once('pre.php');
 require_once('www/admin/admin_utils.php');
 require_once('common/event/EventManager.class.php');
+require_once('common/wiki/lib/WikiAttachment.class.php');
 
 session_require(array('group'=>'1','admin_flags'=>'A'));
 
@@ -28,7 +29,7 @@ $request = HTTPRequest::instance();
 $em      = EventManager::instance();
 $pm      = ProjectManager::instance();
 
-$vFunc = new Valid_WhiteList('func', array('confirm_restore_frs_file'));
+$vFunc = new Valid_WhiteList('func', array('confirm_restore_frs_file', 'confirm_restore_wiki_attachment'));
 $vFunc->required();
 if ($request->valid($vFunc)) {
     $func = $request->get('func');
@@ -50,6 +51,9 @@ switch ($func) {
     case 'confirm_restore_frs_file':
         frs_file_restore_process($request, $group_id);
         break;
+    case 'confirm_restore_wiki_attachment':
+        wiki_attachment_restore_process($request, $group_id);
+        break;
 }
 //}
 
@@ -63,6 +67,7 @@ $nomArray  = array();
 $htmlArray = array();
 
 frs_file_restore_view($group_id, &$idArray, &$nomArray, &$htmlArray);
+wiki_attachment_restore_view($group_id, &$idArray, &$nomArray, &$htmlArray);
 
 $params = array('group_id' => $group_id,
                 'id'       => &$idArray,
@@ -246,6 +251,64 @@ function frs_file_restore_process($request, $group_id) {
         $GLOBALS['Response']->addFeedback('error', 'Bad file id');
     }
     $GLOBALS['Response']->redirect('?group_id='.$group_id);
+}
+
+function wiki_attachment_restore_view($group_id, $idArray, $nomArray, $htmlArray) {
+    $wikiAttachment = new WikiAttachment($group_id);
+    $attachments = $wikiAttachment->listPendingAttachments($group_id, 0, 0);
+
+    $tabbed_content  = '';
+    $tabbed_content .= '<div class="contenu_onglet" id="contenu_onglet_wiki_attachment">';
+
+    $i     = 1;
+    if ($attachments->rowCount() > 0) {
+        $titles = array ('Attachment name', 'Delete date', 'Forcast purge date', 'Restore');
+        $tabbed_content  .= html_build_list_table_top ($titles);
+        foreach ($attachments as $wiki_attachment) {
+            $nonRestorableAttachments = $wikiAttachment->getDao()->getIdFromFilename($group_id, $wiki_attachment['name']);
+            if($nonRestorableAttachments->rowCount()) {
+                $tabbed_content .= '<tr class="boxitemgrey">';
+                $tabbed_content .= '<td>'.$wiki_attachment['name'].'</td>';
+                $tabbed_content .= '<td align="center" colspan="2">Non-restorable attachment</td>';
+                $tabbed_content .= '<td align="center"><img src="'.util_get_image_theme("trash-grey.png").'" border="0" height="16" width="16"></td>';
+            } else {
+            $purgeDate = strtotime('+'.$GLOBALS['sys_file_deletion_delay'].' day', $wiki_attachment['delete_date']);
+                $tabbed_content .= '<tr class="'. html_get_alt_row_color($i++) .'">';
+                $tabbed_content .= '<td>'.$wiki_attachment['name'].'</td>';
+                $tabbed_content .= '<td>'.html_time_ago($wiki_attachment['delete_date']).'</td>';
+                $tabbed_content .= '<td>'.format_date($GLOBALS['Language']->getText('system', 'datefmt'), $purgeDate).'</td>';
+                $tabbed_content .= '<td align="center"><a href="?group_id='.$group_id.'&func=confirm_restore_wiki_attachment&id='.$wiki_attachment['id'].'"><img src="'.util_get_image_theme("trash-x.png").'" onClick="return confirm(\'Confirm restore of this attachment\')" border="0" height="16" width="16"></a></td>';
+            }
+                $tabbed_content .= '</tr>';
+        }
+    }
+    if ($i == 1) {
+        $tabbed_content .= '<center>No restorable Attachments found</center>';
+    }
+
+    if ($i > 1) {
+        $tabbed_content .= '</table>';
+    }
+    $tabbed_content .= '</div>';
+    $idArray[]   = 'wiki_attachment';
+    $nomArray[]  = 'Deleted wiki attachments';
+    $htmlArray[] = $tabbed_content;
+}
+
+function wiki_attachment_restore_process($request, $group_id) {
+    $attachmentId = $request->getValidated('id', 'uint', 0);
+    if ($attachmentId > 0) {
+        $wikiAttachment = new WikiAttachment($group_id);
+        $wikiAttachment->initWithId($attachmentId);
+            if($wikiAttachment->restoreDeletedAttachment($attachmentId)) {
+                $GLOBALS['Response']->addFeedback('info', 'Wiki attachment restored');
+            } else {
+                $GLOBALS['Response']->addFeedback('error', 'Wiki attachment not restored');
+            }
+    } else {
+        $GLOBALS['Response']->addFeedback('error', 'Bad attachment id');
+    }
+    $GLOBALS['Response']->redirect('?group_id='.$group_id.'&focus=wiki_attachment');
 }
 
 ?>
