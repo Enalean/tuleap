@@ -7,6 +7,7 @@ Version 4.0.17 - Monday, 4th April 2011
         backlog #113547: GIT hook to send a mail when pushing
         backlog #113546: Disk statistics per project visible at project level
         backlog #123246: Allow upload of the same deleted file
+        backlog #131538: Remove the switch to html in followup while double clicking
 	
         == Bugfix ==
         backlog #103794: Fix issue related to "item type" filter
