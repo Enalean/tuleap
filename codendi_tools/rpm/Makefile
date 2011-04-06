@@ -42,7 +42,7 @@ rpmprep:
 	#echo '%dist -zata' >> ~/.rpmmacros
 
 tarball:
-	cd $(BASE_DIR) && find . -type f -or -type l | grep -v '/.svn/' | cpio -pdumB --quiet $(RPM_TMP)/SOURCES/$(PKG_NAME)-$(version)
+	cd $(BASE_DIR) && find . -type f -or -type l  | grep -v '/.svn/' | egrep -v '^\./plugins/tests' | egrep -v '^\./plugins/maillog' | cpio -pdumB --quiet $(RPM_TMP)/SOURCES/$(PKG_NAME)-$(version)
 	cd $(RPM_TMP)/SOURCES && tar czf $(PKG_NAME)-$(version).tar.gz $(PKG_NAME)-$(version)
 
 codendi: rpmprep tarball

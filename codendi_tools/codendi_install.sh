@@ -125,6 +125,41 @@ generate_passwd() {
 # Setup chunks
 ##############################################
 
+###############################################################################
+#
+# CVS configuration
+#
+setup_cvs() {
+    echo "Configuring the CVS server and CVS tracking tools..."
+    $TOUCH /etc/cvs_root_allow
+    $CHOWN codendiadm.codendiadm /etc/cvs_root_allow
+    $CHMOD 644 /etc/cvs_root_allow
+
+    $CP /etc/xinetd.d/cvs /root/cvs.xinetd.ori
+
+    $CAT <<'EOF' >/etc/xinetd.d/cvs
+service cvspserver
+{
+        disable             = no
+        socket_type         = stream
+        protocol            = tcp
+        wait                = no
+        user                = root
+        server              = /usr/bin/cvs
+        server_args         = -f -z3 -T/var/tmp --allow-root-file=/etc/cvs_root_allow pserver
+}
+EOF
+
+    $CAT <<'EOF' >> /etc/shells
+/usr/lib/codendi/bin/cvssh
+/usr/lib/codendi/bin/cvssh-restricted
+EOF
+
+    $CHKCONFIG cvs on
+    $CHKCONFIG xinetd on
+
+    $SERVICE xinetd start
+}
 
 ###############################################################################
 #
@@ -385,6 +420,10 @@ test_mysql_host() {
     echo "[OK]"
 }
 
+###############################################################################
+#
+# Usage
+#
 usage() {
     cat <<EOF
 Usage: $1 [options]
@@ -916,39 +955,15 @@ echo "codendi-admin:          root" >> /etc/aliases
 todo "Finish sendmail settings (see installation Guide). By default, emails sent to codendi-admin are redirected to root (see /etc/aliases)"
 
 ##############################################
-# CVS configuration
-#
-echo "Configuring the CVS server and CVS tracking tools..."
-$TOUCH /etc/cvs_root_allow
-$CHOWN codendiadm.codendiadm /etc/cvs_root_allow
-$CHMOD 644 /etc/cvs_root_allow
-
-$CP /etc/xinetd.d/cvs /root/cvs.xinetd.ori
-
-$CAT <<'EOF' >/etc/xinetd.d/cvs
-service cvspserver
-{
-        disable             = no
-        socket_type         = stream
-        protocol            = tcp
-        wait                = no
-        user                = root
-        server              = /usr/bin/cvs
-        server_args         = -f -z3 -T/var/tmp --allow-root-file=/etc/cvs_root_allow pserver
-}
-EOF
-
-$CAT <<'EOF' >> /etc/shells
-/usr/lib/codendi/bin/cvssh
-/usr/lib/codendi/bin/cvssh-restricted
-EOF
-
+# CVS
+setup_cvs
 
 ##############################################
 # Make the system daily cronjob run at 23:58pm
 echo "Updating daily cron job in system crontab..."
 $PERL -i'.orig' -p -e's/\d+ \d+ (.*daily)/58 23 \1/g' /etc/crontab
 
+##############################################
 # FTP
 setup_vsftpd
 
@@ -1127,13 +1142,8 @@ EOF
 $CHKCONFIG sshd on
 $CHKCONFIG httpd on
 $CHKCONFIG mysqld on
-$CHKCONFIG cvs on
 $CHKCONFIG munin-node on
 $CHKCONFIG crond on
-
-if [ "$enable_plugin_im" = "true" ]; then
-    $CHKCONFIG openfire on
-fi
 
 /etc/init.d/codendi start
 
@@ -1159,7 +1169,6 @@ fi
 # Install & configure forgeupgrade for Codendi
 #
 
-# Cannot be done yet (to old branch)
 $MYSQL -ucodendiadm -p$codendiadm_passwd codendi < /usr/share/forgeupgrade/db/install-mysql.sql
 $INSTALL --group=codendiadm --owner=codendiadm --mode=0755 --directory /etc/codendi/forgeupgrade
 $INSTALL --group=codendiadm --owner=codendiadm --mode=0644 $INSTALL_DIR/src/etc/forgeupgrade-config.ini.dist /etc/codendi/forgeupgrade/config.ini
@@ -1207,6 +1216,10 @@ EOF
     IM_MUC_PW='Mu6.4dm1n' # Doesn't need to change
     $PHP $INSTALL_DIR/plugins/IM/include/jabbex_api/installation/install.php -a -orp $rt_passwd -uod openfireadm -pod $openfire_passwd -ucd openfireadm -pcd $openfire_passwd -odb jdbc:mysql://localhost:3306/openfire -cdb jdbc:mysql://localhost:3306/codendi -ouri $sys_default_domain -gjx $IM_ADMIN_GROUP -ujx $IM_ADMIN_USER -pjx $IM_ADMIN_USER_PW -pmuc $IM_MUC_PW
     echo "path[]=\"$INSTALL_DIR/plugins/IM\"" >> /etc/codendi/forgeupgrade/config.ini
+
+    # Enable service
+    $CHKCONFIG openfire on
+    $SERVICE openfire start
 fi
 
 
