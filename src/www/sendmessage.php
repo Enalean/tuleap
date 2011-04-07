@@ -62,7 +62,6 @@ if (!$user->isLoggedIn()) {
 }
 
 $email = $user->getEmail();
-$name = $user->getRealName();
 
 if (!isset($toaddress) && !isset($touser)) {
 	exit_error($Language->getText('include_exit', 'error'),$Language->getText('sendmessage','err_noparam'));
@@ -89,7 +88,7 @@ if (isset($toaddress) && !eregi($host,$toaddress)) {
 
 
 if (isset($send_mail)) {
-	if (!$subject || !$body || !$name || !$email) {
+	if (!$subject || !$body || !$email) {
 		/*
 			force them to enter all vars
 		*/
@@ -125,7 +124,7 @@ if (isset($send_mail)) {
     }
     $mail->setSubject(stripslashes($subject));
     $mail->setBody(stripslashes($body));
-    $mail->setFrom($name." <".$email.">");
+    $mail->setFrom($email);
     $mail_is_send = $mail->send();
 
     if (!$mail_is_send) {
@@ -158,8 +157,6 @@ $HTML->header(array('title'=>$Language->getText('sendmessage', 'title',array($to
 <INPUT TYPE="HIDDEN" NAME="touser" VALUE="<?php echo $touser; ?>">
 
 <B><?php echo $Language->getText('sendmessage', 'email'); ?>:</B> <?php echo $email; ?>
-<P>
-<B><?php echo $Language->getText('sendmessage', 'name'); ?>:</B> <?php echo $name; ?>
 <P>
 <B><?php echo $Language->getText('sendmessage', 'subject'); ?>:</B><BR>
 <INPUT TYPE="TEXT" NAME="subject" SIZE="30" MAXLENGTH="40" VALUE="<?php echo $subject; ?>">
