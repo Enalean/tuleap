@@ -55,6 +55,14 @@ if ($request->isPost() && $request->exist('Submit') &&  $request->existAndNonEmp
     exit;
 }
 
+$um = UserManager::instance();
+$user = $um->getCurrentUser();
+if (!$user->isLoggedIn()) {
+    exit_error($Language->getText('include_exit', 'error'),$Language->getText('include_exit', 'not_logged_in'));
+}
+
+$email = $user->getEmail();
+$name = $user->getRealName();
 
 if (!isset($toaddress) && !isset($touser)) {
 	exit_error($Language->getText('include_exit', 'error'),$Language->getText('sendmessage','err_noparam'));
@@ -117,7 +125,7 @@ if (isset($send_mail)) {
     }
     $mail->setSubject(stripslashes($subject));
     $mail->setBody(stripslashes($body));
-    $mail->setFrom($email);
+    $mail->setFrom($name." <".$email.">");
     $mail_is_send = $mail->send();
 
     if (!$mail_is_send) {
