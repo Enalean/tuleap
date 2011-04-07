@@ -216,7 +216,7 @@ if (user_isloggedin()) {
         <div id="cc_link"  style="display:'.($cc !== ""?'none':'block').';"><a href="" onclick="addCCField(); return false;" title="'.$Language->getText('include_user_home','add_cc').'">'.$Language->getText('include_user_home','add_cc').'</a></div>
         <div id="cc_field" style="display:'.($cc === ""?'none':'block').';">
             <table cellspacing="0" cellpadding="0"><tr><td><B>'.$Language->getText('include_user_home','cc').':</B><BR/>
-            <INPUT TYPE="TEXT" NAME="cc" SIZE="30" VALUE="'.$cc.'"></td><td style="padding-left:10px;">
+            <INPUT TYPE="TEXT" id="cc" NAME="cc" SIZE="80" VALUE="'.$cc.'"></td><td style="padding-left:10px;">
             '.$Language->getText('include_user_home','fill_cc_list_msg').'</td></tr></table>
         </div>
     </div>
@@ -246,6 +246,9 @@ if (user_isloggedin()) {
 </TABLE>
 
 <?php
+$js = "new UserAutoCompleter('cc','".util_get_dir_image_theme()."', true);";
+$GLOBALS['Response']->includeFooterJavascriptSnippet($js);
+
 $HTML->footer(array());
 
 ?>
