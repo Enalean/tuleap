@@ -1,4 +1,8 @@
-Version 4.0.17.1 - Thursday, 7th April 2011  
+Version 4.0.17.1 - Thursday, 7th April 2011
+        == New Features ==
+        backlog #131538: Remove the switch to html in followup while double clicking 
+
+Version 4.0.17 - Monday, 4th April 2011 (Canceled) 
         == New Features ==
         backlog #119877: Add more coverage for CVS Backend
         backlog #119371: Codendi testing; code coverage and function mock
@@ -7,7 +11,6 @@ Version 4.0.17.1 - Thursday, 7th April 2011
         backlog #113547: GIT hook to send a mail when pushing
         backlog #113546: Disk statistics per project visible at project level
         backlog #123246: Allow upload of the same deleted file
-        backlog #131538: Remove the switch to html in followup while double clicking
 	
         == Bugfix ==
         backlog #103794: Fix issue related to "item type" filter
