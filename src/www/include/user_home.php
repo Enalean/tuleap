@@ -198,14 +198,13 @@ if (user_isloggedin()) {
         </B>
 	
 
-        <INPUT TYPE="HIDDEN" NAME="email" VALUE="'.$my_email.'">	<P>
+        <P>
 	<B>'.$Language->getText('include_user_home','your_name').':</B><!-- <BR> -->
 	<B>';
 
 	$my_name=user_getrealname(user_getid());
     $cc = (isset($_REQUEST['cc'])?htmlspecialchars(trim($_REQUEST['cc'])):"");
 	echo  $hp->purify($my_name, CODENDI_PURIFIER_CONVERT_HTML) .'</B>
-	<INPUT TYPE="HIDDEN" NAME="name" VALUE="'.$my_name.'">
     <div>
         <script type="text/javascript" src="/scripts/blocks.js"></script>
         <script type="text/javascript">

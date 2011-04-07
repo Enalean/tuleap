@@ -157,11 +157,9 @@ $HTML->header(array('title'=>$Language->getText('sendmessage', 'title',array($to
 <INPUT TYPE="HIDDEN" NAME="toaddress" VALUE="<?php echo $toaddress; ?>">
 <INPUT TYPE="HIDDEN" NAME="touser" VALUE="<?php echo $touser; ?>">
 
-<B><?php echo $Language->getText('sendmessage', 'email'); ?>:</B><BR>
-<INPUT TYPE="TEXT" NAME="email" SIZE="30" MAXLENGTH="40" VALUE="">
+<B><?php echo $Language->getText('sendmessage', 'email'); ?>:</B> <?php echo $email; ?>
 <P>
-<B><?php echo $Language->getText('sendmessage', 'name'); ?>:</B><BR>
-<INPUT TYPE="TEXT" NAME="name" SIZE="30" MAXLENGTH="40" VALUE="">
+<B><?php echo $Language->getText('sendmessage', 'name'); ?>:</B> <?php echo $name; ?>
 <P>
 <B><?php echo $Language->getText('sendmessage', 'subject'); ?>:</B><BR>
 <INPUT TYPE="TEXT" NAME="subject" SIZE="30" MAXLENGTH="40" VALUE="<?php echo $subject; ?>">
