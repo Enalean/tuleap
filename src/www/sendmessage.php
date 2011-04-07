@@ -63,6 +63,18 @@ if (!$user->isLoggedIn()) {
 
 $email = $user->getEmail();
 
+$valid = new Valid_Email('toaddress');
+$valid->required();
+if ($request->valid($valid)) {
+    $toaddress = $request->get('toaddress');
+}
+
+$valid = new Valid_Email('touser');
+$valid->required();
+if ($request->valid($valid)) {
+    $touser = $request->get('touser');
+}
+
 if (!isset($toaddress) && !isset($touser)) {
 	exit_error($Language->getText('include_exit', 'error'),$Language->getText('sendmessage','err_noparam'));
 }
@@ -86,6 +98,17 @@ if (isset($toaddress) && !eregi($host,$toaddress)) {
 		   $Language->getText('sendmessage','err_host',array($host)));
 }
 
+$valid = new Valid_Text('subject');
+$valid->required();
+if ($request->valid($valid)) {
+    $subject = $request->get('subject');
+}
+
+$valid = new Valid_Text('body');
+$valid->required();
+if ($request->valid($valid)) {
+    $body = $request->get('body');
+}
 
 if (isset($send_mail)) {
 	if (!$subject || !$body || !$email) {
@@ -106,12 +129,18 @@ if (isset($send_mail)) {
 		*/
 		$to=db_result($result,0,'email');
 	}
-    
+
+$valid = new Valid_Text('cc');
+$valid->required();
+if ($request->valid($valid)) {
+    $requestCc = $request->get('cc');
+}
+
 	$mail =& new Mail();
     $mail->setTo($to);
     $dest = $to;
-    if (isset($_REQUEST['cc']) && strlen($_REQUEST['cc']) > 0) {
-        $cc_array =& split('[,;]', $_REQUEST['cc']);
+    if (isset($requestCc) && strlen($requestCc) > 0) {
+        $cc_array =& split('[,;]', $requestCc);
         if(!util_validateCCList($cc_array, $feedback, false)) {
             exit_error($Language->getText('include_exit', 'error'),
                        $feedback);
