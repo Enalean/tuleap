@@ -55,6 +55,8 @@ Requires: php-pecl-apc
 Requires: munin = 1.2.5-1.codendi, munin-node = 1.2.5-1.codendi
 # HTML Purifier
 Requires: htmlpurifier
+# Mail
+Requires: php-pear-Mail, php-pear-Mail-Mime
 
 
 %description
