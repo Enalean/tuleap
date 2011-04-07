@@ -8,7 +8,11 @@ Version 4.0.18 - (Not released yet)
         backlog #124819: Strip HTML in tracker notification
         backlog #124833: Upload an attached file in wiki with a difference in the filename case
 
-Version 4.0.17 - Monday, 4th April 2011  
+Version 4.0.17.1 - Thursday, 7th April 2011
+        == New Features ==
+        backlog #131538: Remove the switch to html in followup while double clicking
+
+Version 4.0.17 - Monday, 4th April 2011 (Canceled)
         == New Features ==
         backlog #119877: Add more coverage for CVS Backend
         backlog #119371: Codendi testing; code coverage and function mock

@@ -36,8 +36,6 @@ var Codendi_RTE_Light = Class.create({
             $(element+'_label').appendChild(toggle);
         }
 
-        // Can also double click on text area to activate HTML edition
-        this.element.observe('dblclick', this.toggle.bindAsEventListener(this));
     },
     init_rte: function() {
         tinyMCE.init({
