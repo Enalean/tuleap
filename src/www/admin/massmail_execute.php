@@ -64,24 +64,19 @@ flush();
 $rows=db_numrows($res_mail);
 
 list($host,$port) = explode(':',$GLOBALS['sys_default_domain']);
-$codendiMail = new Codendi_Mail();
-$mail = $codendiMail->getMailHtml();
-$mail->addTo($GLOBALS['sys_noreply']);
+$mail = new Codendi_Mail();
+$mail->setTo($GLOBALS['sys_noreply']);
 $mail->setFrom($GLOBALS['sys_noreply']);
 $mail->setSubject(stripslashes($mail_subject));
 //just to test
 $format = Codendi_Mail::FORMAT_HTML;
-if ($format == Codendi_Mail::FORMAT_HTML) {
-    $mail->setBodyHtml(stripslashes($mail_message));
-} else {
-    $mail->setBodyText(stripslashes($mail_message));
-}
+$mail->setBody($mail_message, $format);
 $tolist = '';
 for ($i=1; $i<=$rows; $i++) {
 	$tolist .= db_result($res_mail,$i-1,'email').', ';
     if ($i % 25 == 0) {
 		//spawn sendmail for 25 addresses at a time
-        $mail->addBcc($tolist);
+        $mail->setBcc($tolist);
         if ($mail->send()) {
             print "\n".$Language->getText('admin_massmail_execute','sending').": ".$tolist;
         } else {
@@ -95,7 +90,7 @@ for ($i=1; $i<=$rows; $i++) {
 
 //send the last of the messages.
 if (strlen($tolist) > 0) {
-    $mail->addBcc($tolist);
+    $mail->setBcc($tolist);
     if ($mail->send()) {
         print "\n".$Language->getText('admin_massmail_execute','sending').": ".$tolist;
     } else {

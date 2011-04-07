@@ -35,11 +35,39 @@ class Codendi_Mail {
 
     /**
      * Return Zend_Mail object
-     * 
+     *
      * @return Zend_Mail object
      */
     function getMailHtml() {
         return $this->mailHtml;
+    }
+
+    function setTo($email) {
+        $this->mailHtml->addTo($email);
+    }
+
+    function setFrom($email) {
+        $this->mailHtml->setFrom($email);
+    }
+
+    function setSubject($subject) {
+        $this->mailHtml->setSubject($subject);
+    }
+
+    function setBcc($email) {
+        $this->mailHtml->addBcc($email);
+    }
+
+    function setBody($message, $format = FORMAT_TEXT) {
+        if ($format == Codendi_Mail::FORMAT_HTML) {
+            $this->mailHtml->setBodyHtml(stripslashes($message));
+        } else {
+            $this->mailHtml->setBodyText(stripslashes($message));
+        }
+    }
+
+    function send() {
+        $this->mailHtml->send();
     }
 }
 
