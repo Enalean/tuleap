@@ -7,7 +7,7 @@
 // 
 
 require_once('pre.php');    
-require_once('common/mail/Mail.class.php');
+require_once('common/mail/Codendi_Mail.class.php');
 require_once('common/include/HTTPRequest.class.php');
 
 
@@ -80,12 +80,9 @@ if (!isset($toaddress) && !isset($touser)) {
 }
 
 if (isset($touser)) {
-	/*
-		check to see if that user even exists
-		Get their name and email if it does
-	*/
-	$result=db_query("SELECT email,user_name FROM user WHERE user_id='$touser'");
-	if (!$result || db_numrows($result) < 1) {
+    //Return the user given its user_id 
+	$to = $um->getUserById($touser);
+	if (!$to) {
 	    exit_error($Language->getText('include_exit', 'error'),
 		       $Language->getText('sendmessage','err_nouser'));
 	}
@@ -117,42 +114,31 @@ if (isset($send_mail)) {
 		*/
 		exit_missing_param();
 	}
-
-	if (isset($toaddress)) {
-		/*
-			send it to the toaddress
-		*/
-		$to=eregi_replace('_maillink_','@',$toaddress);
-	} else if (isset($touser)) {
-		/*
-			figure out the user's email and send it there
-		*/
-		$to=db_result($result,0,'email');
-	}
-
 $valid = new Valid_Text('cc');
 $valid->required();
 if ($request->valid($valid)) {
     $requestCc = $request->get('cc');
 }
 
-	$mail =& new Mail();
-    $mail->setTo($to);
+	$mail = new Codendi_Mail();
+    $mail->setTo(array($to));
     $dest = $to;
     if (isset($requestCc) && strlen($requestCc) > 0) {
-        $cc_array =& split('[,;]', $requestCc);
-        if(!util_validateCCList($cc_array, $feedback, false)) {
-            exit_error($Language->getText('include_exit', 'error'),
-                       $feedback);
-        }
-        $cc_list  =& implode(', ', $cc_array);
-        $cc = util_normalize_emails($cc_list);
-        $mail->setCc($cc);
-        $dest .= ','.$cc;
-
+        $mailArray = split('[,;]', $requestCc);
+        $ccArray = $mail->validateMailList($mailArray);
+        $mail->setCc($ccArray);
+        $dest .= ','.$requestCc;
     }
+    
     $mail->setSubject(stripslashes($subject));
-    $mail->setBody(stripslashes($body));
+    //Just to test
+    $comment_format = Codendi_Mail::FORMAT_HTML;
+    if ($comment_format == Codendi_Mail::FORMAT_HTML) {
+            $mail->setBodyHtml(stripslashes($body));
+    } else {
+            $mail->setBodyText(stripslashes($body));
+    }
+    $mail->setBodyText(stripslashes($body));
     $mail->setFrom($email);
     $mail_is_send = $mail->send();
 

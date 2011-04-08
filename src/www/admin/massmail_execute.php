@@ -8,7 +8,7 @@
 
 require_once('pre.php');
 
-require_once('common/mail/Codendi_Mail.class.php');
+require_once('common/mail/Mail.class.php');
 
 
 session_require(array('group'=>1,'admin_flags'=>'A'));
@@ -64,13 +64,11 @@ flush();
 $rows=db_numrows($res_mail);
 
 list($host,$port) = explode(':',$GLOBALS['sys_default_domain']);
-$mail = new Codendi_Mail();
+$mail = new Mail();
 $mail->setTo($GLOBALS['sys_noreply']);
 $mail->setFrom($GLOBALS['sys_noreply']);
 $mail->setSubject(stripslashes($mail_subject));
-//just to test
-$format = Codendi_Mail::FORMAT_HTML;
-$mail->setBody($mail_message, $format);
+$mail->setBody($mail_message);
 $tolist = '';
 for ($i=1; $i<=$rows; $i++) {
 	$tolist .= db_result($res_mail,$i-1,'email').', ';
