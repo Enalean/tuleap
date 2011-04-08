@@ -79,14 +79,6 @@ if (!isset($toaddress) && !isset($touser)) {
 	exit_error($Language->getText('include_exit', 'error'),$Language->getText('sendmessage','err_noparam'));
 }
 
-if (isset($touser)) {
-    //Return the user given its user_id 
-	$to = $um->getUserById($touser);
-	if (!$to) {
-	    exit_error($Language->getText('include_exit', 'error'),
-		       $Language->getText('sendmessage','err_nouser'));
-	}
-}
 
 list($host,$port) = explode(':',$GLOBALS['sys_default_domain']);		
 
@@ -108,55 +100,69 @@ if ($request->valid($valid)) {
 }
 
 if (isset($send_mail)) {
-	if (!$subject || !$body || !$email) {
-		/*
-			force them to enter all vars
-		*/
-		exit_missing_param();
-	}
+    if (!$subject || !$body || !$email) {
+        /*
+         force them to enter all vars
+         */
+        exit_missing_param();
+    }
+
+
 $valid = new Valid_Text('cc');
 $valid->required();
 if ($request->valid($valid)) {
     $requestCc = $request->get('cc');
 }
 
-	$mail = new Codendi_Mail();
-    $mail->setTo(array($to));
+$mail = new Codendi_Mail();
+if (isset($touser)) {
+    //Return the user given its user_id
+    $to = $um->getUserById($touser);
+    if (!$to) {
+        exit_error($Language->getText('include_exit', 'error'),
+        $Language->getText('sendmessage','err_nouser'));
+    }
+    $mail->setToUser(array($to));
+    $dest = $to->getRealName();
+} else if (isset($toaddress)) {
+    $to=eregi_replace('_maillink_','@',$toaddress);
+    $mail->setTo($to);
     $dest = $to;
-    if (isset($requestCc) && strlen($requestCc) > 0) {
-        $mailArray = split('[,;]', $requestCc);
-        $ccArray = $mail->validateMailList($mailArray);
-        $mail->setCc($ccArray);
-        $dest .= ','.$requestCc;
-    }
-    
-    $mail->setSubject(stripslashes($subject));
-    //Just to test
-    $comment_format = Codendi_Mail::FORMAT_HTML;
-    if ($comment_format == Codendi_Mail::FORMAT_HTML) {
-            $mail->setBodyHtml(stripslashes($body));
-    } else {
-            $mail->setBodyText(stripslashes($body));
-    }
-    $mail->setBodyText(stripslashes($body));
-    $mail->setFrom($email);
-    $mail_is_send = $mail->send();
+}
 
-    if (!$mail_is_send) {
-        exit_error($GLOBALS['Language']->getText('global', 'error'), 
-                    $GLOBALS['Language']->getText('global', 'mail_failed', array($GLOBALS['sys_email_admin'])));
-    }
-	site_header(array('title'=>$Language->getText('sendmessage', 'title_sent',array($to))));
-    echo '<H2>'.$Language->getText('sendmessage', 'title_sent',str_replace(',', ', ',$dest)).'</H2>';
-	$HTML->footer(array());
-	exit;
+if (isset($requestCc) && strlen($requestCc) > 0) {
+    $mailArray = split('[,;]', $requestCc);
+    $ccArray = $mail->validateMailList($mailArray);
+    $mail->setCcUser($ccArray);
+    $dest .= ','.$requestCc;
+}
+
+$mail->setSubject(stripslashes($subject));
+//Just to test
+$comment_format = Codendi_Mail::FORMAT_HTML;
+if ($comment_format == Codendi_Mail::FORMAT_HTML) {
+    $mail->setBodyHtml(stripslashes($body));
+} else {
+    $mail->setBodyText(stripslashes($body));
+}
+$mail->setFrom($email);
+$mail_is_send = $mail->send();
+
+if (!$mail_is_send) {
+    exit_error($GLOBALS['Language']->getText('global', 'error'),
+    $GLOBALS['Language']->getText('global', 'mail_failed', array($GLOBALS['sys_email_admin'])));
+}
+site_header(array('title'=>$Language->getText('sendmessage', 'title_sent',array($to))));
+echo '<H2>'.$Language->getText('sendmessage', 'title_sent',str_replace(',', ', ',$dest)).'</H2>';
+$HTML->footer(array());
+exit;
 
 }
 
 if ($toaddress) {
 	$to_msg = $toaddress;
 } else {
-	$to_msg = db_result($result,0,'user_name');
+	$to_msg = $to->getUserName();
 }
 
 $HTML->header(array('title'=>$Language->getText('sendmessage', 'title',array($to_msg))));

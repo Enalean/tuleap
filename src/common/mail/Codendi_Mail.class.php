@@ -76,7 +76,7 @@ class Codendi_Mail {
      *
      * @param Array of User $to
      */
-    function setTo($to) {
+    function setToUser($to) {
         $arrayTo = $this->_validateRecipient($to);
         foreach ($arrayTo as $to) {
             $this->mailHtml->addTo($to['email'], $to['user_name']);
@@ -101,9 +101,9 @@ class Codendi_Mail {
     function validateMailList($mailArray) {
         $userManager = UserManager::instance();
         $userArray  = array();
-        foreach($mailArray as $key => $cc) {
-            $cc = trim($cc);
-            $user = $userManager->findUser($cc);
+        foreach($mailArray as $key => $mail) {
+            $mail = trim($mail);
+            $user = $userManager->getUserByEmail($mail);
             if ($user) {
                 $userArray[] = $user;
             }
@@ -115,7 +115,7 @@ class Codendi_Mail {
      *
      * @param array of User $bcc
      */
-    function setBcc($bcc) {
+    function setBccUser($bcc) {
         $arrayBcc = $this->_validateRecipient($cc);
         foreach ($arrayBcc as $user) {
             $this->mailHtml->addBcc($user['email'], $user['user_name']);
@@ -126,12 +126,79 @@ class Codendi_Mail {
      *
      * @param Array $cc
      */
-    function setCc($cc) {
-        //if (is_a($to, 'User')) {
+    function setCcUser($cc) {
         $arrayCc = $this->_validateRecipient($cc);
-        //}
         foreach ($arrayCc as $user) {
             $this->mailHtml->addCc($user['email'], $user['user_name']);
+        }
+    }
+
+    /**
+     * Check if given mail is valid (Ie. Active or Restricted) user.
+     *
+     * @param list of emails $mailList
+     *
+     * @return Array of user_name and mail
+     */
+    function _validateRecipientMail($mailList) {
+        $mailArray = split('[;,]', $mailList);
+        $retArray = array();
+        $allowedStatus = array('A', 'R', 'P', 'V', 'W');
+        $userManager = UserManager::instance();
+        foreach($mailArray as $mail) {
+            $mail = trim($mail);
+            if(!empty($mail) && validate_email($mail)) {
+                $user = $userManager->getUserByEmail($mail);
+                if ($user) {
+                    if (in_array($user->getStatus(), $allowedStatus)) {
+                        $retArray[] = array('email' => $mail, 'user_name' => $user->getRealName());
+                    }
+                } else {
+                    $retArray[] = array('email' =>$mail, 'user_name' =>'');
+                }
+            }
+        }
+        return $retArray;
+    }
+
+    /**
+     *
+     * @param String  $to
+     * @param Boolean $raw
+     */
+    function setTo($to, $raw=false) {
+        if(!$raw) {
+            $to = $this->_validateRecipientMail($to);
+            $this->mailHtml->addTo($to['email'], $to['user_name']);
+        } else {
+            $this->mailHtml->addTo($to , '');
+        }
+    }
+
+    /**
+     *
+     * @param String  $bcc
+     * @param Boolean $raw
+     */
+    function setBcc($bcc, $raw=false) {
+        if(!$raw) {
+            $bcc = $this->_validateRecipientMail($bcc);
+            $this->mailHtml->addBcc($bcc['email'], $bcc['user_name']);
+        } else {
+            $this->mailHtml->addBcc($bcc , '');
+        }
+    }
+    /**
+     *
+     * @param String  $cc
+     * @param Boolean $raw
+     */
+    function setCc($cc, $raw=false) {
+        if(!$raw) {
+            $cc = $this->_validateRecipientMail($cc);
+            $this->mailHtml->addCc($cc['email'], $cc['user_name']);
+        } else {
+            $this->mailHtml->addCc($cc , '');
         }
     }
 
