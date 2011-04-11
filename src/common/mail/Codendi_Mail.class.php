@@ -83,12 +83,20 @@ class Codendi_Mail {
         }
     }
 
+    function getTo() {
+        return $this->_getRecipientsFromHeader('To');
+    }
+
     function setFrom($email) {
         $this->mailHtml->setFrom($email);
     }
 
     function setSubject($subject) {
         $this->mailHtml->setSubject($subject);
+    }
+
+    function getSubject() {
+        return $this->mailHtml->getSubject();
     }
 
     /**
@@ -125,6 +133,10 @@ class Codendi_Mail {
         }
     }
 
+    function getBcc() {
+        return $this->_getRecipientsFromHeader('Bcc');
+    }
+
     /**
      *
      * @param Array $cc
@@ -133,6 +145,21 @@ class Codendi_Mail {
         $arrayCc = $this->_validateRecipient($cc);
         foreach ($arrayCc as $user) {
             $this->mailHtml->addCc($user['email'], $user['real_name']);
+        }
+    }
+
+    function getCc() {
+        return $this->_getRecipientsFromHeader('Cc');
+    }
+
+    function _getRecipientsFromHeader($recipientType) {
+        $allowed = array('To', 'Cc', 'Bcc');
+        if (in_array($recipientType, $allowed)) {
+            $headers = $this->mailHtml->getHeaders();
+            if (isset($headers[$recipientType])) {
+                unset ($headers[$recipientType]['append']);
+                return implode(', ', $headers[$recipientType]);
+            }
         }
     }
 
@@ -210,14 +237,25 @@ class Codendi_Mail {
     }
 
     function setBodyHtml($message) {
+        $this->_body = $message;
         $this->mailHtml->setBodyHtml($message);
     }
 
+    function getBody() {
+        return $this->_body;
+    }
+
     function setBodyText($message) {
+        $this->_body = $message;
         $this->mailHtml->setBodyText($message);
     }
 
     function send() {
+        $params = array('mail'   => $this,
+                        'header' => $this->mailHtml->getHeaders());
+        $em = EventManager::instance();
+        $em->processEvent('mail_sendmail', $params);
+
         return $this->mailHtml->send();
     }
 }
