@@ -64,11 +64,12 @@ flush();
 $rows=db_numrows($res_mail);
 
 list($host,$port) = explode(':',$GLOBALS['sys_default_domain']);
-$mail = new Mail();
+$mail =& new Mail();
 $mail->setTo($GLOBALS['sys_noreply']);
 $mail->setFrom($GLOBALS['sys_noreply']);
 $mail->setSubject(stripslashes($mail_subject));
-$mail->setBody($mail_message);
+$mail->setBody(stripslashes($mail_message));
+
 $tolist = '';
 for ($i=1; $i<=$rows; $i++) {
 	$tolist .= db_result($res_mail,$i-1,'email').', ';
