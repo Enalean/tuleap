@@ -94,16 +94,19 @@ class Codendi_Mail {
     /**
      * Return Array of uses given their emails
      *
-     * @param Array of mails $mailArray
+     * @param Array of usernames and mails $mailArray
      * 
      * @return Array of User
      */
     function validateMailList($mailArray) {
         $userManager = UserManager::instance();
         $userArray  = array();
-        foreach($mailArray as $key => $mail) {
-            $mail = trim($mail);
-            $user = $userManager->getUserByEmail($mail);
+        foreach($mailArray as $key => $ident) {
+            $ident = trim($ident);
+            $user = $userManager->getUserByEmail($ident);
+            if (!$user) {
+                $user = $userManager->findUser($ident);
+            }
             if ($user) {
                 $userArray[] = $user;
             }
