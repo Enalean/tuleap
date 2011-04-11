@@ -139,8 +139,8 @@ if (isset($requestCc) && strlen($requestCc) > 0) {
 
 $mail->setSubject(stripslashes($subject));
 
-$vFormat = new Valid_WhiteList('comment_format', array(Codendi_Mail::FORMAT_HTML, Codendi_Mail::FORMAT_TEXT));
-$comment_format = $request->getValidated('comment_format', $vFormat, Codendi_Mail::FORMAT_HTML);
+$vFormat = new Valid_WhiteList('body_format', array(Codendi_Mail::FORMAT_HTML, Codendi_Mail::FORMAT_TEXT));
+$comment_format = $request->getValidated('body_format', $vFormat, Codendi_Mail::FORMAT_HTML);
 if ($comment_format == Codendi_Mail::FORMAT_HTML) {
     $mail->setBodyHtml(stripslashes($body));
 } else {
