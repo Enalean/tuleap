@@ -83,10 +83,6 @@ class Codendi_Mail {
         }
     }
 
-    function getTo() {
-        return $this->_getRecipientsFromHeader('To');
-    }
-
     function setFrom($email) {
         $this->mailHtml->setFrom($email);
     }
@@ -133,10 +129,6 @@ class Codendi_Mail {
         }
     }
 
-    function getBcc() {
-        return $this->_getRecipientsFromHeader('Bcc');
-    }
-
     /**
      *
      * @param Array $cc
@@ -145,21 +137,6 @@ class Codendi_Mail {
         $arrayCc = $this->_validateRecipient($cc);
         foreach ($arrayCc as $user) {
             $this->mailHtml->addCc($user['email'], $user['real_name']);
-        }
-    }
-
-    function getCc() {
-        return $this->_getRecipientsFromHeader('Cc');
-    }
-
-    function _getRecipientsFromHeader($recipientType) {
-        $allowed = array('To', 'Cc', 'Bcc');
-        if (in_array($recipientType, $allowed)) {
-            $headers = $this->mailHtml->getHeaders();
-            if (isset($headers[$recipientType])) {
-                unset ($headers[$recipientType]['append']);
-                return implode(', ', $headers[$recipientType]);
-            }
         }
     }
 
@@ -209,6 +186,10 @@ class Codendi_Mail {
         }
     }
 
+    function getTo() {
+        return $this->_getRecipientsFromHeader('To');
+    }
+
     /**
      *
      * @param String  $bcc
@@ -222,6 +203,11 @@ class Codendi_Mail {
             $this->mailHtml->addBcc($bcc , '');
         }
     }
+
+    function getBcc() {
+        return $this->_getRecipientsFromHeader('Bcc');
+    }
+
     /**
      *
      * @param String  $cc
@@ -233,6 +219,21 @@ class Codendi_Mail {
             $this->mailHtml->addCc($cc['email'], $cc['real_name']);
         } else {
             $this->mailHtml->addCc($cc , '');
+        }
+    }
+
+    function getCc() {
+        return $this->_getRecipientsFromHeader('Cc');
+    }
+
+    function _getRecipientsFromHeader($recipientType) {
+        $allowed = array('To', 'Cc', 'Bcc');
+        if (in_array($recipientType, $allowed)) {
+            $headers = $this->mailHtml->getHeaders();
+            if (isset($headers[$recipientType])) {
+                unset ($headers[$recipientType]['append']);
+                return implode(', ', $headers[$recipientType]);
+            }
         }
     }
 
