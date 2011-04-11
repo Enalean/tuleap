@@ -254,7 +254,7 @@ $GLOBALS['Response']->includeFooterJavascriptSnippet($js);
 $rte = "
 var useLanguage = '". substr(UserManager::instance()->getCurrentUser()->getLocale(), 0, 2) ."';
 document.observe('dom:loaded', function() {
-            new Codendi_RTE_Light_Tracker_FollowUp('body');
+            new Codendi_RTE_Send_HTML_MAIL('body');
             
         });";
 
