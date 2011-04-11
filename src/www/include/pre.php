@@ -31,9 +31,9 @@ require_once('common/include/URL.class.php');
  * @return void
  */
 function __autoload($className) {
-    if (isset($GLOBALS['zend_path'])) {
-        ini_set('include_path', $GLOBALS['zend_path'].':'.ini_get('include_path'));
-        if (strpos($className, 'Zend') === 0) {
+    if (strpos($className, 'Zend') === 0 && !class_exists($className)) {
+        if (isset($GLOBALS['zend_path'])) {
+            ini_set('include_path', $GLOBALS['zend_path'].':'.ini_get('include_path'));
             $path = str_replace('_', '/', $className);
             require_once $path.'.php';
         }
