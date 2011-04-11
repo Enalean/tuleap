@@ -12,6 +12,7 @@ require_once('pre.php');
 session_require(array('group'=>'1','admin_flags'=>'A'));
 
 $HTML->header(array('title'=>$Language->getText('admin_massmail','title')));
+$GLOBALS['HTML']->includeFooterJavascriptFile('/scripts/tiny_mce/tiny_mce.js');
 
 // get numbers of users for each mailing
 $res_count = db_query("SELECT * FROM user WHERE ( status='A' or status='R' ) AND mail_va=1 GROUP BY email");
@@ -60,7 +61,9 @@ print '<h2>'.$Language->getText('admin_massmail','header',array($GLOBALS['sys_na
 
 <P>'.$Language->getText('admin_massmail','text').'
 <PRE>
-<BR><TEXTAREA name="mail_message" cols="70" rows="40" wrap="physical">
+<BR>
+<div id="mail_message_label" ></div>
+<TEXTAREA id="mail_message" name="mail_message" cols="70" rows="40" wrap="physical">
 '.stripcslashes($Language->getText('admin_massmail','footer',array($GLOBALS['sys_default_domain'],$GLOBALS['sys_email_admin']))).'
 </TEXTAREA>
 </PRE>
@@ -69,6 +72,12 @@ print '<h2>'.$Language->getText('admin_massmail','header',array($GLOBALS['sys_na
 </FORM>
 ';
 
+$js = "     document.observe('dom:loaded', function() {
+            new Codendi_RTE_Light_Tracker_FollowUp('mail_message');
+            
+        });";
+
+$GLOBALS['HTML']->includeFooterJavascriptSnippet($js);
 $HTML->footer(array());
 
 ?>
