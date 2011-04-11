@@ -152,7 +152,7 @@ if (!$mail_is_send) {
     exit_error($GLOBALS['Language']->getText('global', 'error'),
     $GLOBALS['Language']->getText('global', 'mail_failed', array($GLOBALS['sys_email_admin'])));
 }
-site_header(array('title'=>$Language->getText('sendmessage', 'title_sent',array($to))));
+site_header(array('title'=>$Language->getText('sendmessage', 'title_sent',array($dest))));
 echo '<H2>'.$Language->getText('sendmessage', 'title_sent',str_replace(',', ', ',$dest)).'</H2>';
 $HTML->footer(array());
 exit;
