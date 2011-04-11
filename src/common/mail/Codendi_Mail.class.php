@@ -79,7 +79,7 @@ class Codendi_Mail {
     function setToUser($to) {
         $arrayTo = $this->_validateRecipient($to);
         foreach ($arrayTo as $to) {
-            $this->mailHtml->addTo($to['email'], $to['user_name']);
+            $this->mailHtml->addTo($to['email'], $to['real_name']);
         }
     }
 
@@ -121,7 +121,7 @@ class Codendi_Mail {
     function setBccUser($bcc) {
         $arrayBcc = $this->_validateRecipient($cc);
         foreach ($arrayBcc as $user) {
-            $this->mailHtml->addBcc($user['email'], $user['user_name']);
+            $this->mailHtml->addBcc($user['email'], $user['real_name']);
         }
     }
 
@@ -132,7 +132,7 @@ class Codendi_Mail {
     function setCcUser($cc) {
         $arrayCc = $this->_validateRecipient($cc);
         foreach ($arrayCc as $user) {
-            $this->mailHtml->addCc($user['email'], $user['user_name']);
+            $this->mailHtml->addCc($user['email'], $user['real_name']);
         }
     }
 
@@ -154,10 +154,10 @@ class Codendi_Mail {
                 $user = $userManager->getUserByEmail($mail);
                 if ($user) {
                     if (in_array($user->getStatus(), $allowedStatus)) {
-                        $retArray[] = array('email' => $mail, 'user_name' => $user->getRealName());
+                        $retArray[] = array('email' => $mail, 'real_name' => $user->getRealName());
                     }
                 } else {
-                    $retArray[] = array('email' =>$mail, 'user_name' =>'');
+                    $retArray[] = array('email' =>$mail, 'real_name' =>'');
                 }
             }
         }
@@ -172,7 +172,7 @@ class Codendi_Mail {
     function setTo($to, $raw=false) {
         if(!$raw) {
             $to = $this->_validateRecipientMail($to);
-            $this->mailHtml->addTo($to['email'], $to['user_name']);
+            $this->mailHtml->addTo($to['email'], $to['real_name']);
         } else {
             $this->mailHtml->addTo($to , '');
         }
@@ -186,7 +186,7 @@ class Codendi_Mail {
     function setBcc($bcc, $raw=false) {
         if(!$raw) {
             $bcc = $this->_validateRecipientMail($bcc);
-            $this->mailHtml->addBcc($bcc['email'], $bcc['user_name']);
+            $this->mailHtml->addBcc($bcc['email'], $bcc['real_name']);
         } else {
             $this->mailHtml->addBcc($bcc , '');
         }
@@ -199,7 +199,7 @@ class Codendi_Mail {
     function setCc($cc, $raw=false) {
         if(!$raw) {
             $cc = $this->_validateRecipientMail($cc);
-            $this->mailHtml->addCc($cc['email'], $cc['user_name']);
+            $this->mailHtml->addCc($cc['email'], $cc['real_name']);
         } else {
             $this->mailHtml->addCc($cc , '');
         }
