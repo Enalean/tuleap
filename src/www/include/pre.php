@@ -21,6 +21,25 @@ require_once('common/include/HTTPRequest.class.php');
 require_once('common/include/SimpleSanitizer.class.php');
 require_once('common/include/URL.class.php');
 
+/**
+ * Method called when a class is not defined.
+ *
+ * Used to load Zend classes on the fly
+ *
+ * @param String $className
+ *
+ * @return void
+ */
+function __autoload($className) {
+    if (isset($GLOBALS['zend_path'])) {
+        ini_set('include_path', $GLOBALS['zend_path'].':'.ini_get('include_path'));
+        if (strpos($className, 'Zend') === 0) {
+            $path = str_replace('_', '/', $className);
+            require_once $path.'.php';
+        }
+    }
+}
+
 // Detect whether this file is called by a script running in cli mode, or in normal web mode
 if (array_key_exists('HTTP_HOST', $_SERVER) == true) {
     define('IS_SCRIPT', false); ;
