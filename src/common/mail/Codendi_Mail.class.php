@@ -218,7 +218,7 @@ class Codendi_Mail {
     }
 
     function send() {
-        $this->mailHtml->send();
+        return $this->mailHtml->send();
     }
 }
 
