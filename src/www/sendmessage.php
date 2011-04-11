@@ -140,8 +140,8 @@ if (isset($requestCc) && strlen($requestCc) > 0) {
 $mail->setSubject(stripslashes($subject));
 
 $vFormat = new Valid_WhiteList('body_format', array(Codendi_Mail::FORMAT_HTML, Codendi_Mail::FORMAT_TEXT));
-$body_format = $request->getValidated('body_format', $vFormat, Codendi_Mail::FORMAT_HTML);
-if ($body_format == Codendi_Mail::FORMAT_HTML) {
+$bodyFormat = $request->getValidated('body_format', $vFormat, Codendi_Mail::FORMAT_HTML);
+if ($bodyFormat == Codendi_Mail::FORMAT_HTML) {
     $mail->setBodyHtml(stripslashes($body));
 } else {
     $mail->setBodyText(stripslashes($body));
