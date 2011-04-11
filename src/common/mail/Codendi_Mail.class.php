@@ -137,28 +137,32 @@ class Codendi_Mail {
     }
 
     /**
-     * Check if given mail is valid (Ie. Active or Restricted) user.
+     * Check if given mail/user_name is valid (Ie. Active or Restricted) user.
      *
-     * @param list of emails $mailList
+     * @param list of emails/user_name $mailList
      *
-     * @return Array of user_name and mail
+     * @return Array of real_name and mail
      */
     function _validateRecipientMail($mailList) {
         $mailArray = split('[;,]', $mailList);
         $retArray = array();
         $allowedStatus = array('A', 'R', 'P', 'V', 'W');
         $userManager = UserManager::instance();
-        foreach($mailArray as $mail) {
-            $mail = trim($mail);
-            if(!empty($mail) && validate_email($mail)) {
-                $user = $userManager->getUserByEmail($mail);
-                if ($user) {
-                    if (in_array($user->getStatus(), $allowedStatus)) {
-                        $retArray[] = array('email' => $mail, 'real_name' => $user->getRealName());
-                    }
+        foreach($mailArray as $ident) {
+            $ident = trim($ident);
+            if(!empty($ident)) {
+                if (validate_email($ident)) {
+                    $user = $userManager->getUserByEmail($ident);
                 } else {
-                    $retArray[] = array('email' =>$mail, 'real_name' =>'');
+                    $user = $userManager->findUser($ident);
                 }
+            }
+            if ($user) {
+                if (in_array($user->getStatus(), $allowedStatus)) {
+                    $retArray[] = array('email' => $user->getEmail(), 'real_name' => $user->getRealName());
+                }
+            } else {
+                $retArray[] = array('email' =>$ident, 'real_name' =>'');
             }
         }
         return $retArray;
