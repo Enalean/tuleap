@@ -251,7 +251,9 @@ if (user_isloggedin()) {
 $js = "new UserAutoCompleter('cc','".util_get_dir_image_theme()."', true);";
 $GLOBALS['Response']->includeFooterJavascriptSnippet($js);
 
-$rte = "     document.observe('dom:loaded', function() {
+$rte = "
+var useLanguage = '". substr(UserManager::instance()->getCurrentUser()->getLocale(), 0, 2) ."';
+document.observe('dom:loaded', function() {
             new Codendi_RTE_Light_Tracker_FollowUp('body');
             
         });";
