@@ -74,12 +74,17 @@ class Codendi_Mail {
     /**
      *
      * @param Array of User $to
+     * 
+     * @return Array
      */
     function setToUser($to) {
         $arrayTo = $this->_validateRecipient($to);
+        $arrayToRealName = array();
         foreach ($arrayTo as $to) {
             $this->mailHtml->addTo($to['email'], $to['real_name']);
+            $arrayToRealName[] = $to['real_name'];
         }
+        return $arrayToRealName;
     }
 
     function setFrom($email) {
@@ -120,23 +125,33 @@ class Codendi_Mail {
     /**
      *
      * @param array of User $bcc
+     * 
+     * @return Array;
      */
     function setBccUser($bcc) {
         $arrayBcc = $this->_validateRecipient($cc);
+        $arrayBccRealName = array();
         foreach ($arrayBcc as $user) {
             $this->mailHtml->addBcc($user['email'], $user['real_name']);
+            $arrayBccRealName[] = $user['real_name'];
         }
+        return $arrayBccRealName;
     }
 
     /**
      *
      * @param Array $cc
+     * 
+     * @return Array
      */
     function setCcUser($cc) {
         $arrayCc = $this->_validateRecipient($cc);
+        $arrayCcRealName = array();
         foreach ($arrayCc as $user) {
             $this->mailHtml->addCc($user['email'], $user['real_name']);
+            $arrayCcRealName[] = $user['real_name'];
         }
+        return $arrayCcRealName;
     }
 
     /**

@@ -133,8 +133,10 @@ if (isset($touser)) {
 if (isset($requestCc) && strlen($requestCc) > 0) {
     $mailArray = split('[,;]', $requestCc);
     $ccArray = $mail->validateMailList($mailArray);
-    $mail->setCcUser($ccArray);
-    $dest .= ','.$requestCc;
+    if (!empty($ccArray)) {
+        $cc = $mail->setCcUser($ccArray);
+        $dest .= ','.implode(',', $cc);
+    }
 }
 
 $mail->setSubject(stripslashes($subject));
