@@ -22,6 +22,7 @@
 
 
 $HTML->header(array('title'=>$Language->getText('include_user_home','devel_profile')));
+$GLOBALS['HTML']->includeFooterJavascriptFile('/scripts/tiny_mce/tiny_mce.js');
 
 if (!$res_user || db_numrows($res_user) < 1) {
 	exit_error($Language->getText('include_user_home','no_such_user'),$Language->getText('include_user_home','no_such_user'));
@@ -226,7 +227,8 @@ if (user_isloggedin()) {
 	<INPUT TYPE="TEXT" NAME="subject" SIZE="30" MAXLENGTH="40" VALUE="">
 	<P>
 	<B>'.$Language->getText('include_user_home','message').':</B><BR>
-	<TEXTAREA NAME="body" ROWS="15" COLS="60" WRAP="HARD"></TEXTAREA>
+	<div id="body_label" ></div>
+	<TEXTAREA ID="body" NAME="body" ROWS="15" COLS="60" WRAP="HARD"></TEXTAREA>
 	<P>
 	<CENTER>
 	<INPUT TYPE="SUBMIT" NAME="send_mail" VALUE="'.$Language->getText('include_user_home','send_message').'">
@@ -249,6 +251,12 @@ if (user_isloggedin()) {
 $js = "new UserAutoCompleter('cc','".util_get_dir_image_theme()."', true);";
 $GLOBALS['Response']->includeFooterJavascriptSnippet($js);
 
+$rte = "     document.observe('dom:loaded', function() {
+            new Codendi_RTE_Light_Tracker_FollowUp('body');
+            
+        });";
+
+$GLOBALS['HTML']->includeFooterJavascriptSnippet($rte);
 $HTML->footer(array());
 
 ?>
