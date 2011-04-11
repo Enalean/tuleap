@@ -186,6 +186,11 @@ class Codendi_Mail {
         }
     }
 
+    /**
+     * Return list of destination mail addresses separated by comma
+     *
+     * @return String
+     */
     function getTo() {
         return $this->_getRecipientsFromHeader('To');
     }
@@ -204,6 +209,11 @@ class Codendi_Mail {
         }
     }
 
+    /**
+     * Return list of mail addresses in BCC separated by comma
+     *
+     * @return String
+     */
     function getBcc() {
         return $this->_getRecipientsFromHeader('Bcc');
     }
@@ -222,10 +232,22 @@ class Codendi_Mail {
         }
     }
 
+    /**
+     * Return list of mail addresses in CC separated by comma
+     *
+     * @return String
+     */
     function getCc() {
         return $this->_getRecipientsFromHeader('Cc');
     }
 
+    /**
+     * Return list of mail addresses separated by comma, from the headers, depending on the type
+     *
+     * @param String $recipientType Allowed values are "To", "Cc" and "Bcc"
+     *
+     * @return String
+     */
     function _getRecipientsFromHeader($recipientType) {
         $allowed = array('To', 'Cc', 'Bcc');
         if (in_array($recipientType, $allowed)) {
@@ -242,6 +264,11 @@ class Codendi_Mail {
         $this->mailHtml->setBodyHtml($message);
     }
 
+    /**
+     * Return the mails body
+     *
+     * @return String
+     */
     function getBody() {
         return $this->_body;
     }
