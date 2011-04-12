@@ -26,13 +26,6 @@ Mock::generatePartial('Codendi_Mail', 'Codendi_MailTestVersion', array());
 
 
 class Codendi_MailTest extends UnitTestCase {
-    /**
-     * Constructor of the test. Can be ommitted.
-     * Usefull to set the name of the test
-     */
-    function Codendi_MailTest() {
-        $this->UnitTestCase('Codendi_Mail test');
-    }
 
     function testValidateRecipient() {
         $mail = new Codendi_MailTestVersion($this);
