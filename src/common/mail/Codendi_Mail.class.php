@@ -20,9 +20,6 @@
 
 class Codendi_Mail {
 
-    const FORMAT_TEXT  = 0;
-    const FORMAT_HTML  = 1;
-
     var $mailHtml;
     var $userDao;
 

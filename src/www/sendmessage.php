@@ -10,6 +10,8 @@ require_once('pre.php');
 require_once('common/mail/Codendi_Mail.class.php');
 require_once('common/include/HTTPRequest.class.php');
 
+define('FORMAT_TEXT', 0);
+define('FORMAT_HTML', 1);
 
 $request = HTTPRequest::instance();
 $func = $request->getValidated('func', new Valid_WhiteList('restricted_user_request', 'private_project_request'), '');
@@ -141,9 +143,9 @@ if (isset($requestCc) && strlen($requestCc) > 0) {
 
 $mail->setSubject(stripslashes($subject));
 
-$vFormat = new Valid_WhiteList('body_format', array(Codendi_Mail::FORMAT_HTML, Codendi_Mail::FORMAT_TEXT));
-$bodyFormat = $request->getValidated('body_format', $vFormat, Codendi_Mail::FORMAT_HTML);
-if ($bodyFormat == Codendi_Mail::FORMAT_HTML) {
+$vFormat = new Valid_WhiteList('body_format', array(FORMAT_HTML, FORMAT_TEXT));
+$bodyFormat = $request->getValidated('body_format', $vFormat, FORMAT_HTML);
+if ($bodyFormat == FORMAT_HTML) {
     $mail->setBodyHtml(stripslashes($body));
 } else {
     $mail->setBodyText(stripslashes($body));

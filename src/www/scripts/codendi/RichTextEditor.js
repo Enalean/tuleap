@@ -164,7 +164,7 @@ var Codendi_RTE_Send_HTML_MAIL = Class.create({
         div.appendChild(bold);
 
         // Add a radio button that tells that the content format is text
-        // The value is defined in Codendi_Mail class (Codendi_Mail::FORMAT_TEXT).
+        // The value is defined in sendmessage.php (FORMAT_TEXT).
         var text_button = Builder.node('input', {'name'     : 'body_format',
                                                  'type'     : 'radio',
                                                  'value'    : '0',
@@ -174,7 +174,7 @@ var Codendi_RTE_Send_HTML_MAIL = Class.create({
         div.appendChild(document.createTextNode('Text'));
 
         // Add a radio button that tells that the content format is HTML
-        // The value is defined in Codendi_Mail class (Codendi_Mail::FORMAT_HTML).
+        // The value is defined in sensmessage.php (FORMAT_HTML).
         var html_button = Builder.node('input', {'name' : 'body_format',
                                                  'type' : 'radio',
                                                  'value': '1',
