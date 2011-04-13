@@ -38,8 +38,9 @@ function __autoload($className) {
             $path = str_replace('_', '/', $className);
             require_once $path.'.php';
         } else if (is_dir('/usr/share/zend')) {
-            ini_set('include_path', '/usr/share/zend/library/:'.ini_get('include_path'));
-            require_once 'Zend/Mail.php';
+            ini_set('include_path', '/usr/share/zend/:'.ini_get('include_path'));
+            $path = str_replace('_', '/', $className);
+            require_once $path.'.php';
         } else {
             exit_error($Language->getText('global','error'),$Language->getText('include_pre','zend_path_not_set',$GLOBALS['sys_email_admin']));
         }
