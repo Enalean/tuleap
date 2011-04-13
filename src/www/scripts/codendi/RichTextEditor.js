@@ -137,23 +137,10 @@ var Codendi_RTE_Light_Tracker_FollowUp = Class.create(Codendi_RTE_Light, {
     }
 });
 
-var Codendi_RTE_Send_HTML_MAIL = Class.create({
-    initialize: function (element, format) {
-    this.element = $(element);
-    this.rte     = false;
 
-    // If there is an element named after the editor's id + label add
-    // a toggler on it
-    if ($(element+'_label')) {
-        var toggle = Builder.node('a', {'class': 'rte_toggle', href: '#'});
-        toggle.appendChild(document.createTextNode(' Rich text editor '));
-        // Must use Event.observe(toggle... instead of toggle.observe(...
-        // Otherwise IE cannot manage it. Oo
-        Event.observe(toggle, 'click', this.toggle.bindAsEventListener(this));
-        $(element+'_label').appendChild(toggle);
-    }
-    // Can also double click on text area to activate HTML edition
-   // this.element.observe('dblclick', this.toggle.bindAsEventListener(this));
+var Codendi_RTE_Send_HTML_MAIL = Class.create(Codendi_RTE_Light, {
+    initialize: function ($super,element, format) {
+    $super(element);
 
         var label = $(element+'_label');
 
@@ -219,18 +206,9 @@ init_rte: function() {
     });
     this.rte = true;
 },
-toggle: function(event) {
+toggle: function ($super, event) {
     this.switchButtonToHtml();
-    if (!this.rte) {
-        this.init_rte();
-    } else {
-        if (!tinyMCE.get(this.element.id)) {
-            tinyMCE.execCommand("mceAddControl", false, this.element.id);
-        } else {
-            tinyMCE.execCommand("mceRemoveControl", false, this.element.id);
-        }
-    }
-    event.stop();
+    $super(event);
 },
     /**
      * Disable the radio button that tells that the content is text
@@ -240,4 +218,4 @@ toggle: function(event) {
         $('body_format_text').disabled = true;
         $('body_format_html').checked  = true;
     }
-});
+}); 
