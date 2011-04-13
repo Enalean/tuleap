@@ -272,10 +272,35 @@ class Codendi_Mail implements Codendi_Mail_Interface {
         }
     }
 
-    function setBody($message) {
-        $this->setBodyText($message);
+    /**
+     * Returns the text part of the body mail
+     * 
+     * @return String
+     */
+    function getBodyText($textOnly = true) {
+        return $this->mail->getBodyText($textOnly);
     }
 
+    /**
+     * @param String $message
+     */
+    function setBodyText($message) {
+        $this->mail->setBodyText($message);
+    }
+
+    /**
+     * Returns the Html part of the body mail
+     * 
+     * @return String
+     */
+    function getBodyHtml($htmlOnly = true) {
+        return $this->mail->getBodyHtml($htmlOnly);
+    }
+
+    /**
+     * 
+     * @param String $message
+     */
     function setBodyHtml($message) {
         $this->mail->setBodyHtml($message);
     }
@@ -289,8 +314,11 @@ class Codendi_Mail implements Codendi_Mail_Interface {
         return $this->body;
     }
 
-    function setBodyText($message) {
-        $this->mail->setBodyText($message);
+    /**
+     * @param String $message
+     */
+    function setBody($message) {
+        $this->body = $message;
     }
 
     function send() {
