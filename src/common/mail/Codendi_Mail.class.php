@@ -105,7 +105,7 @@ class Codendi_Mail implements Codendi_Mail_Interface {
      * 
      * @return Array of User
      */
-    function validateMailList($mailArray) {
+    function retreiveUsersFromMails($mailArray) {
         $userManager = UserManager::instance();
         $userArray  = array();
         foreach($mailArray as $key => $ident) {
