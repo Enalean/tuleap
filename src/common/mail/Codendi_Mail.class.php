@@ -21,14 +21,15 @@ require_once('Codendi_Mail_Interface.class.php');
 
 class Codendi_Mail implements Codendi_Mail_Interface {
 
-    var $mailHtml;
+    var $mail;
     var $userDao;
+    var $body;
 
     /**
      * Constructor
      */
     function __construct() {
-        $this->mailHtml = new Zend_Mail('UTF-8');
+        $this->mail = new Zend_Mail('UTF-8');
         $this->userDao = $this->getUserDao();
     }
 
@@ -37,8 +38,8 @@ class Codendi_Mail implements Codendi_Mail_Interface {
      *
      * @return Zend_Mail object
      */
-    function getMailHtml() {
-        return $this->mailHtml;
+    function getMail() {
+        return $this->mail;
     }
 
     /**
@@ -79,22 +80,22 @@ class Codendi_Mail implements Codendi_Mail_Interface {
         $arrayTo = $this->_validateRecipient($to);
         $arrayToRealName = array();
         foreach ($arrayTo as $to) {
-            $this->mailHtml->addTo($to['email'], $to['real_name']);
+            $this->mail->addTo($to['email'], $to['real_name']);
             $arrayToRealName[] = $to['real_name'];
         }
         return $arrayToRealName;
     }
 
     function setFrom($email) {
-        $this->mailHtml->setFrom($email);
+        $this->mail->setFrom($email);
     }
 
     function setSubject($subject) {
-        $this->mailHtml->setSubject($subject);
+        $this->mail->setSubject($subject);
     }
 
     function getSubject() {
-        return $this->mailHtml->getSubject();
+        return $this->mail->getSubject();
     }
 
     /**
@@ -130,7 +131,7 @@ class Codendi_Mail implements Codendi_Mail_Interface {
         $arrayBcc = $this->_validateRecipient($cc);
         $arrayBccRealName = array();
         foreach ($arrayBcc as $user) {
-            $this->mailHtml->addBcc($user['email'], $user['real_name']);
+            $this->mail->addBcc($user['email'], $user['real_name']);
             $arrayBccRealName[] = $user['real_name'];
         }
         return $arrayBccRealName;
@@ -146,7 +147,7 @@ class Codendi_Mail implements Codendi_Mail_Interface {
         $arrayCc = $this->_validateRecipient($cc);
         $arrayCcRealName = array();
         foreach ($arrayCc as $user) {
-            $this->mailHtml->addCc($user['email'], $user['real_name']);
+            $this->mail->addCc($user['email'], $user['real_name']);
             $arrayCcRealName[] = $user['real_name'];
         }
         return $arrayCcRealName;
@@ -192,9 +193,9 @@ class Codendi_Mail implements Codendi_Mail_Interface {
     function setTo($to, $raw=false) {
         if(!$raw) {
             $to = $this->_validateRecipientMail($to);
-            $this->mailHtml->addTo($to['email'], $to['real_name']);
+            $this->mail->addTo($to['email'], $to['real_name']);
         } else {
-            $this->mailHtml->addTo($to , '');
+            $this->mail->addTo($to , '');
         }
     }
 
@@ -215,9 +216,9 @@ class Codendi_Mail implements Codendi_Mail_Interface {
     function setBcc($bcc, $raw=false) {
         if(!$raw) {
             $bcc = $this->_validateRecipientMail($bcc);
-            $this->mailHtml->addBcc($bcc['email'], $bcc['real_name']);
+            $this->mail->addBcc($bcc['email'], $bcc['real_name']);
         } else {
-            $this->mailHtml->addBcc($bcc , '');
+            $this->mail->addBcc($bcc , '');
         }
     }
 
@@ -238,9 +239,9 @@ class Codendi_Mail implements Codendi_Mail_Interface {
     function setCc($cc, $raw=false) {
         if(!$raw) {
             $cc = $this->_validateRecipientMail($cc);
-            $this->mailHtml->addCc($cc['email'], $cc['real_name']);
+            $this->mail->addCc($cc['email'], $cc['real_name']);
         } else {
-            $this->mailHtml->addCc($cc , '');
+            $this->mail->addCc($cc , '');
         }
     }
 
@@ -263,7 +264,7 @@ class Codendi_Mail implements Codendi_Mail_Interface {
     function _getRecipientsFromHeader($recipientType) {
         $allowed = array('To', 'Cc', 'Bcc');
         if (in_array($recipientType, $allowed)) {
-            $headers = $this->mailHtml->getHeaders();
+            $headers = $this->mail->getHeaders();
             if (isset($headers[$recipientType])) {
                 unset ($headers[$recipientType]['append']);
                 return implode(', ', $headers[$recipientType]);
@@ -272,8 +273,8 @@ class Codendi_Mail implements Codendi_Mail_Interface {
     }
 
     function setBodyHtml($message) {
-        $this->_body = $message;
-        $this->mailHtml->setBodyHtml($message);
+        $this->body = $message;
+        $this->mail->setBodyHtml($message);
     }
 
     /**
@@ -282,21 +283,21 @@ class Codendi_Mail implements Codendi_Mail_Interface {
      * @return String
      */
     function getBody() {
-        return $this->_body;
+        return $this->body;
     }
 
     function setBodyText($message) {
-        $this->_body = $message;
-        $this->mailHtml->setBodyText($message);
+        $this->body = $message;
+        $this->mail->setBodyText($message);
     }
 
     function send() {
         $params = array('mail'   => $this,
-                        'header' => $this->mailHtml->getHeaders());
+                        'header' => $this->mail->getHeaders());
         $em = EventManager::instance();
         $em->processEvent('mail_sendmail', $params);
 
-        return $this->mailHtml->send();
+        return $this->mail->send();
     }
 }
 
