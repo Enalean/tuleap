@@ -272,8 +272,12 @@ class Codendi_Mail implements Codendi_Mail_Interface {
         }
     }
 
-    function setBodyHtml($message) {
+    function setBody($message) {
         $this->body = $message;
+    }
+
+    function setBodyHtml($message) {
+        $this->setBody($message);
         $this->mail->setBodyHtml($message);
     }
 
@@ -287,7 +291,7 @@ class Codendi_Mail implements Codendi_Mail_Interface {
     }
 
     function setBodyText($message) {
-        $this->body = $message;
+        $this->setBody($message);
         $this->mail->setBodyText($message);
     }
 

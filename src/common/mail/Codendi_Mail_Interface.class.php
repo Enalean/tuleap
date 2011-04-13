@@ -27,6 +27,7 @@ interface Codendi_Mail_Interface {
     public function setFrom($email);
     public function setSubject($subject);
     public function setTo($to);
+    public function setBody($body);
 
     public function getBcc();
     public function getCc();
