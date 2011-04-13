@@ -31,11 +31,14 @@ require_once('common/include/URL.class.php');
  * @return void
  */
 function __autoload($className) {
+    global $Language;
     if (strpos($className, 'Zend') === 0 && !class_exists($className)) {
         if (isset($GLOBALS['zend_path'])) {
             ini_set('include_path', $GLOBALS['zend_path'].':'.ini_get('include_path'));
             $path = str_replace('_', '/', $className);
             require_once $path.'.php';
+        } else {
+            exit_error($Language->getText('global','error'),$Language->getText('include_pre','zend_path_not_set',$GLOBALS['sys_email_admin']));
         }
     }
 }
