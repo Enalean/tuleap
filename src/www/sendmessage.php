@@ -146,9 +146,9 @@ $mail->setSubject(stripslashes($subject));
 $vFormat = new Valid_WhiteList('body_format', array(FORMAT_HTML, FORMAT_TEXT));
 $bodyFormat = $request->getValidated('body_format', $vFormat, FORMAT_HTML);
 if ($bodyFormat == FORMAT_HTML) {
-    $mail->setBodyHtml(stripslashes($body));
+    $mail->setBodyHtml($body);
 } else {
-    $mail->setBodyText(stripslashes($body));
+    $mail->setBodyText($body);
 }
 $mail->setFrom($email);
 $mail_is_send = $mail->send();
