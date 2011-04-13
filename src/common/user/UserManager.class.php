@@ -695,7 +695,28 @@ class UserManager {
         }
         return false;
     }
-    
+
+    /**
+     * Return Array of uses given their emails
+     *
+     * @param Array of usernames and mails $mailArray
+     * 
+     * @return Array of User
+     */
+    function retreiveUsersFromMails($mailArray) {
+        $userArray  = array();
+        foreach($mailArray as $key => $ident) {
+            $ident = trim($ident);
+            $user = $this->getUserByEmail($ident);
+            if (!$user) {
+                $user = $this->findUser($ident);
+            }
+            if ($user) {
+                $userArray[] = $user;
+            }
+        }
+        return $userArray;
+    }
 }
 
 ?>

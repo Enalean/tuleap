@@ -99,29 +99,6 @@ class Codendi_Mail implements Codendi_Mail_Interface {
     }
 
     /**
-     * Return Array of uses given their emails
-     *
-     * @param Array of usernames and mails $mailArray
-     * 
-     * @return Array of User
-     */
-    function retreiveUsersFromMails($mailArray) {
-        $userManager = UserManager::instance();
-        $userArray  = array();
-        foreach($mailArray as $key => $ident) {
-            $ident = trim($ident);
-            $user = $userManager->getUserByEmail($ident);
-            if (!$user) {
-                $user = $userManager->findUser($ident);
-            }
-            if ($user) {
-                $userArray[] = $user;
-            }
-        }
-        return $userArray;
-    }
-
-    /**
      *
      * @param array of User $bcc
      * 
