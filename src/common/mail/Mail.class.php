@@ -5,8 +5,9 @@
 
 require_once('common/dao/UserDao.class.php');
 require_once('common/dao/CodendiDataAccess.class.php');
+require_once('Codendi_Mail_Interface.class.php');
 
-class Mail {
+class Mail  implements Codendi_Mail_Interface {
     
     function Mail() {
         $this->setHeaderCharset('UTF-8');

@@ -17,8 +17,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
+require_once('Codendi_Mail_Interface.class.php');
 
-class Codendi_Mail {
+class Codendi_Mail implements Codendi_Mail_Interface {
 
     var $mailHtml;
     var $userDao;
