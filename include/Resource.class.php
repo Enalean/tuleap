@@ -127,6 +127,8 @@ class GitPHP_Resource
 				return 'Deutsch';
 			case 'ru_RU':
 				return 'Русский';
+			case 'zh_CN':
+				return '中文简体';
 			case 'zz_Debug':
 				return 'Gibberish';
 		}

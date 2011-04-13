@@ -1,0 +1,702 @@
+# Chinese translations for PACKAGE package
+# PACKAGE 软件包的简体中文翻译.
+# Copyright (C) 2011 Christopher Han
+# This file is distributed under the same license as the PACKAGE package.
+# seefan <seefan@jianel.net>, 2011.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: GitPHP 0.2.1\n"
+"Report-Msgid-Bugs-To: xiphux@gmail.com\n"
+"POT-Creation-Date: 2010-12-02 22:09-0600\n"
+"PO-Revision-Date: 2011-04-12 17:28+0800\n"
+"Last-Translator: seefan <seefan@jianel.net>\n"
+"Language-Team: Chinese (家内网) <service@jianel.net>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Poedit-Language: 中文简体\n"
+"X-Poedit-Country: CHINA\n"
+"X-Poedit-SourceCharset: utf-8\n"
+
+# Used as link to and title for page displaying a blob, which is what git calls a single file
+#: templates/blobdiff.tpl templates/commit.tpl templates/treelist.tpl
+#: templates/searchfiles.tpl templates/history.tpl
+#: include/controller/Controller_Blob.class.php:78
+msgid "blob"
+msgstr "二进制"
+
+# Used as link to and title for the file history, which displays all commits that have modified a certain file
+#: templates/commit.tpl templates/treelist.tpl templates/searchfiles.tpl
+#: templates/blob.tpl include/controller/Controller_History.class.php:76
+msgid "history"
+msgstr "历史"
+
+# Used as title for and link to a list of files in a directory, which git calls a 'tree'
+#: templates/search.tpl templates/commit.tpl templates/headlist.tpl
+#: templates/nav.tpl templates/treelist.tpl templates/searchfiles.tpl
+#: templates/log.tpl templates/projectlist.tpl templates/shortloglist.tpl
+#: include/controller/Controller_Tree.class.php:79
+msgid "tree"
+msgstr "树形"
+
+# Used as link to download a copy of the files in a given commit
+#: templates/search.tpl templates/commit.tpl templates/taglist.tpl
+#: templates/header.tpl templates/treelist.tpl templates/projectlist.tpl
+#: templates/shortloglist.tpl
+#: include/controller/Controller_Snapshot.class.php:85
+msgid "snapshot"
+msgstr "快照"
+
+# Used to label something stored in a git repository where the type of item - tag, blob, etc - isn't known
+#: templates/tag.tpl
+msgid "object"
+msgstr "对象"
+
+# Used as link to and title for page displaying info about a single commit in the project
+#: templates/tag.tpl templates/search.tpl templates/commit.tpl
+#: templates/nav.tpl templates/taglist.tpl templates/header.tpl
+#: templates/log.tpl templates/history.tpl templates/shortloglist.tpl
+#: include/controller/Controller_Commit.class.php:79
+msgid "commit"
+msgstr "提交"
+
+# Used as link to and title for page displaying detailed info about a tag
+#: templates/tag.tpl templates/tagtip.tpl templates/taglist.tpl
+#: include/controller/Controller_Tag.class.php:79
+msgid "tag"
+msgstr "标签"
+
+# Used to label the author of the commit, and as a field to search
+# The author is the person who wrote the changes in the commit
+#: templates/tag.tpl templates/commit.tpl templates/committip.tpl
+#: templates/header.tpl
+msgid "author"
+msgstr "作者"
+
+# Used as a link to a plaintext version of a page
+#: templates/blobdiff.tpl templates/commit.tpl templates/blame.tpl
+#: templates/treelist.tpl templates/commitdiff.tpl templates/blob.tpl
+msgid "plain"
+msgstr "文本"
+
+# Used as a link to the first page in a list of results
+#: templates/search.tpl templates/searchfiles.tpl
+msgid "first"
+msgstr "首页"
+
+# Used as a link to the previous page in a list of results
+#: templates/search.tpl templates/searchfiles.tpl templates/log.tpl
+#: templates/shortlog.tpl
+msgid "prev"
+msgstr "向前"
+
+# Used as a link to the next page in a list of results
+#: templates/search.tpl templates/searchfiles.tpl templates/log.tpl
+#: templates/shortlog.tpl templates/shortloglist.tpl
+msgid "next"
+msgstr "向后"
+
+# Used as link to and title for the full diff of all the changes in a commit
+#: templates/search.tpl templates/commit.tpl templates/nav.tpl
+#: templates/log.tpl templates/history.tpl templates/shortloglist.tpl
+#: include/controller/Controller_Commitdiff.class.php:79
+msgid "commitdiff"
+msgstr "比较提交"
+
+# Used to label the committer of the commit, and as a field to search
+# The committer is the person who put the commit into this project
+#: templates/commit.tpl templates/committip.tpl templates/header.tpl
+msgid "committer"
+msgstr "提交者"
+
+# Used to label the parent of this commit
+# The parent is the commit preceding this one in the project history
+#: templates/commit.tpl
+msgid "parent"
+msgstr "父级"
+
+# Used to indicate the number of files changed in a commit
+# Comes before a list of files
+# %1: the number of files
+#: templates/commit.tpl
+msgid "%1 file changed:"
+msgid_plural "%1 files changed:"
+msgstr[0] "%1 个文件改变:"
+msgstr[1] "%1 个文件改变:"
+
+# Used to indicate a new object was added with an access mode
+# %1: the type of object
+# %2: the mode
+#: templates/commit.tpl
+msgid "new %1 with mode %2"
+msgstr "新的 %1 模式 %2"
+
+# Used to indicate a new object was added
+# %1: the type of object
+#: templates/commit.tpl
+msgid "new %1"
+msgstr "新的 %1"
+
+# Used to indicate an object was deleted
+# %1: the type of object
+#: templates/commit.tpl
+msgid "deleted %1"
+msgstr "删除的 %1"
+
+# Used to indicate a file type changed, including original and new file modes
+# (when both original and new files are regular files)
+# %1: the original file type
+# %2: the new file type
+# %3: the original file mode
+# %4: the new file mode
+#: templates/commit.tpl
+msgid "changed from %1 to %2 mode: %3 -> %4"
+msgstr "改变从 %1 到 %2 模式：%3 -> %4"
+
+# Used to indicate a file type changed, with only new file mode
+# (when old file type wasn't a normal file)
+# %1: the original file type
+# %2: the new file type
+# %3: the original file mode
+# %4: the new file mode
+#: templates/commit.tpl
+msgid "changed from %1 to %2 mode: %3"
+msgstr "改变从 %1 到 %2 模式：%3"
+
+# Used to indicate a file type changed
+# %1: the original file type
+# %2: the new file type
+#: templates/commit.tpl
+msgid "changed from %1 to %2"
+msgstr "改变从 %1 到 %2"
+
+# Used to indicate a file mode changed
+# %1: the original file mode
+# %2: the new file mode
+#: templates/commit.tpl
+msgid "changed mode: %1 -> %2"
+msgstr "改变模式：%1 -> %2"
+
+# Used to indicate a file mode changed
+# %1: the new file mode
+#: templates/commit.tpl
+msgid "changed mode: %1"
+msgstr "改变模式：%1"
+
+# Used to indicate a file mode changed
+#: templates/commit.tpl
+msgid "changed"
+msgstr "改变"
+
+# Used as link to diff this file version with the previous version
+#: templates/commit.tpl
+msgid "diff"
+msgstr "对比"
+
+# Used to indicate a file was moved and the file mode changed
+# This string should be HTML safe
+# %1: the old file
+# %2: the similarity as a percent number
+# %3: the new file mode
+#: templates/commit.tpl
+msgid "moved from %1 with %2%% similarity, mode: %3"
+msgstr "与%2%%类似，从 %1 移动，模式：%3"
+
+# Used to indicate a file was moved
+# This string should be HTML safe
+# %1: the old file
+# %2: the similarity as a percent number
+#: templates/commit.tpl
+msgid "moved from %1 with %2%% similarity"
+msgstr "与%2%%类似，从 %1 移动"
+
+# Used as title for and link to the compact log view with one line abbreviated commits
+#: templates/headlist.tpl templates/nav.tpl templates/taglist.tpl
+#: templates/title.tpl templates/projectlist.tpl
+#: include/controller/Controller_Log.class.php:80
+msgid "shortlog"
+msgstr "短日志"
+
+# Used as title for and link to log view with full commit messages
+#: templates/headlist.tpl templates/nav.tpl templates/taglist.tpl
+#: templates/projectlist.tpl include/controller/Controller_Log.class.php:85
+msgid "log"
+msgstr "日志"
+
+# Used as title for and link to project summary page
+#: templates/nav.tpl templates/projectlist.tpl
+#: include/controller/Controller_Project.class.php:75
+msgid "summary"
+msgstr "概要"
+
+# Link back to the list of projects
+#: templates/header.tpl include/controller/ControllerBase.class.php:250
+#: include/controller/Controller_ProjectList.class.php:94
+msgid "projects"
+msgstr "项目"
+
+# Used as a search type, to search the contents of files in the project
+#: templates/header.tpl include/git/Blob.class.php:174
+msgid "file"
+msgstr "文件"
+
+# Used as title for search page, and also is the label for the search box
+#: templates/header.tpl include/controller/Controller_Search.class.php:93
+msgid "search"
+msgstr "搜索"
+
+# Used as a link to the HEAD of a project for a log or file
+# (note: HEAD is standard git terminology)
+#: templates/blame.tpl templates/log.tpl templates/shortlog.tpl
+#: templates/blob.tpl
+msgid "HEAD"
+msgstr "HEAD"
+
+# Used to indicate the last change in a project
+# %1: the timestamp of the latest change
+#: templates/log.tpl
+msgid "Last change %1"
+msgstr "最新改变 %1"
+
+# Message displayed when there are no commits in the project to display
+#: templates/log.tpl templates/projectlist.tpl templates/shortloglist.tpl
+msgid "No commits"
+msgstr "没有提交"
+
+# Used as link to diff this file version with the current file
+#: templates/history.tpl
+msgid "diff to current"
+msgstr "与当前对比"
+
+# Used as link to and title for page showing all tags in a project
+#: templates/title.tpl include/controller/Controller_Tags.class.php:76
+msgid "tags"
+msgstr "标签"
+
+# Used as link to and title for page showing all heads in a project
+#: templates/title.tpl include/controller/Controller_Heads.class.php:76
+msgid "heads"
+msgstr "分支"
+
+# Used when diffing a file, to indicate that it's been deleted
+#: templates/commitdiff.tpl
+msgid "(deleted)"
+msgstr "（删除）"
+
+# Used when diffing a file, to indicate that it's a new file
+#: templates/commitdiff.tpl
+msgid "(new)"
+msgstr "（新）"
+
+# Used to label the project description
+#: templates/project.tpl
+msgid "description"
+msgstr "说明"
+
+# Used to label the project owner
+#: templates/project.tpl
+msgid "owner"
+msgstr "所有者"
+
+# Used to label the time the project was last changed
+# (the time of the most recent commit)
+#: templates/project.tpl
+msgid "last change"
+msgstr "最新改变"
+
+# Used to label the url that users can use to clone the project
+#: templates/project.tpl
+msgid "clone url"
+msgstr "clone 地址"
+
+# Used to label the url that users can use to push commits to the project
+#: templates/project.tpl
+msgid "push url"
+msgstr "push 地址"
+
+# Used as the header for the project name column
+#: templates/projectlist.tpl
+msgid "Project"
+msgstr "项目"
+
+# Used as the header for the project description column
+#: templates/projectlist.tpl
+msgid "Description"
+msgstr "说明"
+
+# Used as the header for the column showing the person that owns the project
+#: templates/projectlist.tpl
+msgid "Owner"
+msgstr "所有者"
+
+# Used as the header for the last change column
+# (how long ago was the last commit)
+#: templates/projectlist.tpl
+msgid "Last Change"
+msgstr "最新改变"
+
+# Used as the header for the actions column, which is a list of links users can use to jump to various parts of this project
+#: templates/projectlist.tpl
+msgid "Actions"
+msgstr "动作"
+
+# Message shown when there were no projects found to display
+#: templates/projectlist.tpl
+msgid "No projects found"
+msgstr "没有找到项目"
+
+# Used as link to and title for page displaying blame info (who last touched what line) in a file
+#: templates/blob.tpl include/controller/Controller_Blame.class.php:79
+msgid "blame"
+msgstr "blame"
+
+# Error message when user tries to do an action that requires a project but a project isn't specified
+#: include/controller/Controller_Feed.class.php:45
+#: include/controller/Controller_Tree.class.php:34
+#: include/controller/Controller_Commit.class.php:34
+#: include/controller/Controller_Log.class.php:34
+#: include/controller/Controller_Blame.class.php:34
+#: include/controller/Controller_Snapshot.class.php:43
+#: include/controller/Controller_Blob.class.php:34
+#: include/controller/Controller_Tag.class.php:34
+#: include/controller/Controller_Tags.class.php:34
+#: include/controller/Controller_Project.class.php:33
+#: include/controller/Controller_Commitdiff.class.php:34
+#: include/controller/Controller_Blobdiff.class.php:34
+#: include/controller/Controller_History.class.php:34
+#: include/controller/Controller_Heads.class.php:34
+#: include/controller/Controller_Search.class.php:47
+msgid "Project is required"
+msgstr "项目是必须的"
+
+# Used as the title of the rss controller
+# rss is a standard web feed format
+#: include/controller/Controller_Feed.class.php:91
+msgid "rss"
+msgstr "rss"
+
+# Used as link to and title for a diff of a single file
+#: include/controller/Controller_Blobdiff.class.php:79
+msgid "blobdiff"
+msgstr "二进制对比"
+
+# Error message when user tries to access a project that doesn't exist
+# %1$s: the project the user tried to access
+#: include/controller/ControllerBase.class.php:93
+#, php-format
+msgid "Invalid project %1$s"
+msgstr "错误的项目 %1$s"
+
+# Used as the title for the opml controller
+# OPML is a standard XML outline format
+#: include/controller/Controller_ProjectList.class.php:84
+msgid "opml"
+msgstr "opml"
+
+# Used as the title of the project index controller
+#: include/controller/Controller_ProjectList.class.php:89
+msgid "project index"
+msgstr "项目索引"
+
+# Error message when a user tries to search but searching has been disabled in the config
+#: include/controller/Controller_Search.class.php:41
+msgid "Search has been disabled"
+msgstr "搜索已被禁止"
+
+# Error message when a user tries to do a file search but searching files has been disabled in the config
+#: include/controller/Controller_Search.class.php:112
+msgid "File search has been disabled"
+msgstr "文件搜索已被禁止"
+
+# Error message when a user's search query is too short
+# %1$d: the minimum number of characters
+#: include/controller/Controller_Search.class.php:118
+#, php-format
+msgid "You must enter search text of at least %1$d character"
+msgid_plural "You must enter search text of at least %1$d characters"
+msgstr[0] "你至少要输入 %1$d 个用于搜索的字符"
+msgstr[1] "你至少要输入 %1$d 个用于搜索的字符"
+
+# Error message when the user enters an unsupported search type
+#: include/controller/Controller_Search.class.php:162
+msgid "Invalid search type"
+msgstr "错误的搜索类型"
+
+# Error message when a user's search didn't produce any results
+# %1$s: the user's search string
+#: include/controller/Controller_Search.class.php:168
+#, php-format
+msgid "No matches for \"%1$s\""
+msgstr "与找到与 \"%1$s\" 匹配的项目"
+
+# A type of filesystem object stored in a project
+#: include/git/Blob.class.php:162
+msgid "directory"
+msgstr "目录"
+
+# A type of filesystem object stored in a project
+#: include/git/Blob.class.php:168
+msgid "symlink"
+msgstr "符号链接"
+
+# Used when an object is stored in a project but git doesn't know what type it is
+#: include/git/Blob.class.php:181
+msgid "unknown"
+msgstr "未知的"
+
+# Error message when user specifies a path for a project root or project, but the path given isn't a directory
+# %1$s: the path the user specified
+#: include/git/ProjectListDirectory.class.php:47
+#: include/git/Project.class.php:230
+#, php-format
+msgid "%1$s is not a directory"
+msgstr "%1$s 不是一个目录"
+
+# Error message when a path specified in the config is not a git repository
+# %1$s: the specified path
+#: include/git/Project.class.php:234
+#, php-format
+msgid "%1$s is not a git repository"
+msgstr "%1$s 不是一个git仓库"
+
+# Error message when a path specified is using '..' to break out of the project root (a hack attempt)
+# %1$s: The specified path
+#: include/git/Project.class.php:238
+#, php-format
+msgid "%1$s is attempting directory traversal"
+msgstr "%1$s 是一个跨目录动作"
+
+# Error message when a path specified is outside of the project root
+# %1$s: The specified path
+#: include/git/Project.class.php:244
+#, php-format
+msgid "%1$s is outside of the projectroot"
+msgstr "%1$s 不在设置的主目录内"
+
+# Error message when a temporary directory isn't specified in the config
+#: include/git/TmpDir.class.php:136
+msgid "No tmpdir defined"
+msgstr "未定义临时目录"
+
+# Error message when the system can't write to the temporary directory
+# %1$s: the temp dir specified
+#: include/git/TmpDir.class.php:142
+#, php-format
+msgid "Specified tmpdir %1$s is not writable"
+msgstr "指定的临时目录 %1$s 不可写"
+
+# Error message when the temporary directory specified isn't a directory
+# %1$s: the temp dir specified
+#: include/git/TmpDir.class.php:145
+#, php-format
+msgid "Specified tmpdir %1$s is not a directory"
+msgstr "指定的临时目录 %1$s 不是一个目录"
+
+# Error message when the system attempts to create the temporary directory but can't
+# %1$s: the temp dir it's trying to create
+#: include/git/TmpDir.class.php:148
+#, php-format
+msgid "Could not create tmpdir %1$s"
+msgstr "不能创建临时目录 %1$s"
+
+# Error message when user tries to specify a file with a list of the projects, but it isn't a file
+# %1$s: the path the user specified
+#: include/git/ProjectListFile.class.php:38
+#, php-format
+msgid "%1$s is not a file"
+msgstr "%1$s 不是一个文件"
+
+# Error message when user tries to specify a file with a list of the projects, but the system can't read the file
+# %1$s: the file the user specified
+#: include/git/ProjectListFile.class.php:57
+#, php-format
+msgid "Failed to open project list file %1$s"
+msgstr "打开项目列表文件  %1$s 失败"
+
+# Error message when a hash specified in a URL isn't a valid git hash
+# %1$s: the hash entered
+#: include/git/GitObject.class.php:107
+#, php-format
+msgid "Invalid hash %1$s"
+msgstr "错误的哈希值 %1$s"
+
+# Used to represent an age in years
+# %1$d: the number of years
+#: include/smartyplugins/modifier.agestring.php:25
+#, php-format
+msgid "%1$d year ago"
+msgid_plural "%1$d years ago"
+msgstr[0] "%1$d 年前"
+msgstr[1] "%1$d 年前"
+
+# Used to represent an age in months
+# %1$d: the number of months
+#: include/smartyplugins/modifier.agestring.php:30
+#, php-format
+msgid "%1$d month ago"
+msgid_plural "%1$d months ago"
+msgstr[0] "%1$d 个月前"
+msgstr[1] "%1$d 个月前"
+
+# Used to represent an age in weeks
+# %1$d: the number of weeks
+#: include/smartyplugins/modifier.agestring.php:35
+#, php-format
+msgid "%1$d week ago"
+msgid_plural "%1$d weeks ago"
+msgstr[0] "%1$d 周前"
+msgstr[1] "%1$d 周前"
+
+# Used to represent an age in days
+# %1$d: the number of days
+#: include/smartyplugins/modifier.agestring.php:40
+#, php-format
+msgid "%1$d day ago"
+msgid_plural "%1$d days ago"
+msgstr[0] "%1$d 天前"
+msgstr[1] "%1$d 天前"
+
+# Used to represent an age in hours
+# %1$d: the number of hours
+#: include/smartyplugins/modifier.agestring.php:45
+#, php-format
+msgid "%1$d hour ago"
+msgid_plural "%1$d hours ago"
+msgstr[0] "%1$d 小时前"
+msgstr[1] "%1$d 小时前"
+
+# Used to represent an age in minutes
+# %1$d: the number of minutes
+#: include/smartyplugins/modifier.agestring.php:50
+#, php-format
+msgid "%1$d min ago"
+msgid_plural "%1$d min ago"
+msgstr[0] "%1$d 分钟前"
+msgstr[1] "%1$d 分钟前"
+
+# Used to represent an age in seconds
+# %1$d: the number of seconds
+#: include/smartyplugins/modifier.agestring.php:55
+#, php-format
+msgid "%1$d sec ago"
+msgid_plural "%1$d sec ago"
+msgstr[0] "%1$d 秒前"
+msgstr[1] "%1$d 秒前"
+
+# Used to represent a modification time of right now
+#: include/smartyplugins/modifier.agestring.php:59
+msgid "right now"
+msgstr "现在"
+
+# Error message when user hasn't defined a project root in the config
+# "projectroot" refers to a root directory where the user's git projects are stored
+#: index.php:123
+msgid "A projectroot must be set in the config"
+msgstr "必须在配置文件中设置项目主目录"
+
+# Caption for the rss button for a project
+# rss is a standard web feed format
+#: templates/footer.tpl
+msgid "RSS"
+msgstr "RSS"
+
+# Caption for the OPML button on the project list
+# OPML is a standard XML outline format
+#: templates/footer.tpl
+msgid "OPML"
+msgstr "OPML"
+
+# Caption for the button to get a plaintext list of projects
+#: templates/footer.tpl
+msgid "TXT"
+msgstr "TXT"
+
+# Label for the selected commit, when selecting commits to diff
+#: templates/log.tpl templates/shortlog.tpl
+msgid "selected"
+msgstr "选择"
+
+# Link to deselect the currently selected diff
+#: templates/log.tpl templates/shortlog.tpl templates/shortloglist.tpl
+msgid "deselect"
+msgstr "反选"
+
+# Link beside commits - diffs this commit against the currently selected commit
+#: templates/log.tpl templates/shortloglist.tpl
+msgid "diff with selected"
+msgstr "与选择项对比"
+
+# Link beside commits - selects this commit to be used in a diff
+#: templates/log.tpl templates/shortloglist.tpl
+msgid "select for diff"
+msgstr "选择准备对比"
+
+# Used as an alternate text on javascript "loading" images
+#: templates/header.tpl
+msgid "Loading…"
+msgstr "正在加载..."
+
+# Used as a loading message while blame data is being pulled from the server
+#: templates/header.tpl
+msgid "Loading blame data…"
+msgstr "正在加载 blame 数据..."
+
+# Used as a label by the language selector drop-down box
+#: templates/header.tpl
+msgid "language:"
+msgstr "语言"
+
+# Used as a button by the language selector drop-down box to set the
+# language to the user's choice
+#: templates/header.tpl
+msgid "set"
+msgstr "设置"
+
+# Caption for the Atom button for a project
+# Atom is a standard web feed format
+#: templates/footer.tpl
+msgid "Atom"
+msgstr "Atom"
+
+# Used as the title of the Atom controller
+# Atom is a standard web feed format
+#: include/controller/Controller_Feed.class.php:96
+msgid "atom"
+msgstr "atom"
+
+# Used as an error message when memcache is turned
+# on without the appropriate PHP extension installed
+#: include/cache/Memcache.class.php:103
+msgid "The Memcached or Memcache PHP extension is required for Memcache support"
+msgstr "Memcache 支持需要Memcached 或者 Memcache PHP extension"
+
+# Message when searching the project list, and nothing is found
+# %1: the search string entered
+#: templates/header.tpl templates/projectlist.tpl
+msgid "No matches found for \"%1\""
+msgstr "没有找到与 \"%1\" 匹配的项目"
+
+# Label for the field to search the project list
+#: templates/projectlist.tpl
+msgid "Search projects"
+msgstr "搜索项目"
+
+# Error message displayed when the git executable isn't found or doesn't work
+# %1$s: the git executable the system is trying to run
+# %2$s: the config value the user needs to set to specify the correct path
+#: index.php:131
+#, php-format
+msgid "Could not run the git executable \"%1$s\".  You may need to set the \"%2$s\" config value."
+msgstr "不能运行 git 程序 \"%1$s\". 你需要在配置文件中配置 \"%2$s\"项."
+
+# Error message displayed when the diff executable isn't found or doesn't work
+# %1$s: the diff executable the system is trying to run
+# %2$s: the config value the user needs to set to specify the correct path
+#: index.php:135
+#, php-format
+msgid "Could not run the diff executable \"%1$s\".  You may need to set the \"%2$s\" config value."
+msgstr "不能运行比较程序 \"%1$s\". 你需要在配置文件中配置 \"%2$s\"项."
+
