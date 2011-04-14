@@ -35,3 +35,4 @@ interface Codendi_Mail_Interface {
     public function getTo();
     public function getSubject();
 }
+?>
