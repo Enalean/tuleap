@@ -250,7 +250,7 @@ class Codendi_Mail implements Codendi_Mail_Interface {
      * @param String $message
      */
     function setBody($message) {
-        $this->body = $message;
+        $this->setBodyText($message);
     }
 
     /**
@@ -259,7 +259,7 @@ class Codendi_Mail implements Codendi_Mail_Interface {
      * @return String
      */
     function getBody() {
-        return $this->body;
+        return $this->getBodyText($textOnly = true);
     }
 
     /**
