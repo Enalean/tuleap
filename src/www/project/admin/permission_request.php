@@ -155,5 +155,8 @@ echo '<form method="post" action="permission_request.php">
 
 echo '</td></tr>';
 
+$em = EventManager::instance();
+$em->processEvent('permission_request_information', array());
+
 project_admin_footer(array());
 ?>
