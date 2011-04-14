@@ -135,8 +135,8 @@ if (isset($touser)) {
 if (isset($requestCc) && strlen($requestCc) > 0) {
     $mailArray = split('[,;]', $requestCc);
     $ccArray = $um->retreiveUsersFromMails($mailArray);
-    if (!empty($ccArray)) {
-        $cc = $mail->setCcUser($ccArray);
+    if (!empty($ccArray['users'])) {
+        $cc = $mail->setCcUser($ccArray['users']);
         $dest .= ','.implode(',', $cc);
     }
 }

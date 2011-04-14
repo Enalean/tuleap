@@ -21,9 +21,9 @@ require_once('Codendi_Mail_Interface.class.php');
 
 class Codendi_Mail implements Codendi_Mail_Interface {
 
-    var $mail;
-    var $userDao;
-    var $body;
+    protected $mail;
+    protected $userDao;
+    protected $body;
 
     /**
      * Constructor
@@ -140,22 +140,13 @@ class Codendi_Mail implements Codendi_Mail_Interface {
     function _validateRecipientMail($mailList) {
         $mailArray = split('[;,]', $mailList);
         $retArray = array();
-        $allowedStatus = array('A', 'R', 'P', 'V', 'W');
         $userManager = UserManager::instance();
-        foreach($mailArray as $ident) {
-            $ident = trim($ident);
-            if(!empty($ident)) {
-                if (validate_email($ident)) {
-                    $user = $userManager->getUserByEmail($ident);
-                } else {
-                    $user = $userManager->findUser($ident);
-                }
-            }
-            if ($user) {
-                if (in_array($user->getStatus(), $allowedStatus)) {
-                    $retArray[] = array('email' => $user->getEmail(), 'real_name' => $user->getRealName());
-                }
-            } else {
+        $usersArray = $userManager->retreiveUsersFromMails($mailArray);
+        if (!empty($usersArray))  {
+            //Recuperate an array of valid Users passed on the users array
+            $retArray = $this->_validateRecipient($usersArray['users']);
+            //Recuperate an array of mails passed on the emails array
+            foreach ($usersArray['emails'] as $ident) {
                 $retArray[] = array('email' =>$ident, 'real_name' =>'');
             }
         }
@@ -170,7 +161,11 @@ class Codendi_Mail implements Codendi_Mail_Interface {
     function setTo($to, $raw=false) {
         if(!$raw) {
             $to = $this->_validateRecipientMail($to);
-            $this->mail->addTo($to['email'], $to['real_name']);
+            if (!empty($to)) {
+                foreach ($to as $row) {
+                    $this->mail->addTo($row['email'], $row['real_name']);
+                }
+            }
         } else {
             $this->mail->addTo($to , '');
         }
@@ -193,7 +188,11 @@ class Codendi_Mail implements Codendi_Mail_Interface {
     function setBcc($bcc, $raw=false) {
         if(!$raw) {
             $bcc = $this->_validateRecipientMail($bcc);
-            $this->mail->addBcc($bcc['email'], $bcc['real_name']);
+            if (!empty($bcc)) {
+                foreach ($bcc as $row) {
+                    $this->mail->addBcc($row['email'], $row['real_name']);
+                }
+            }
         } else {
             $this->mail->addBcc($bcc , '');
         }
@@ -216,7 +215,11 @@ class Codendi_Mail implements Codendi_Mail_Interface {
     function setCc($cc, $raw=false) {
         if(!$raw) {
             $cc = $this->_validateRecipientMail($cc);
-            $this->mail->addCc($cc['email'], $cc['real_name']);
+            if (!empty($cc)) {
+                foreach ($cc as $row) {
+                    $this->mail->addCc($row['email'], $row['real_name']);
+                }
+            }
         } else {
             $this->mail->addCc($cc , '');
         }

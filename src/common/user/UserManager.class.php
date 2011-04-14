@@ -705,17 +705,23 @@ class UserManager {
      */
     function retreiveUsersFromMails($mailArray) {
         $userArray  = array();
+        $nonUserArray = array();
         foreach($mailArray as $key => $ident) {
             $ident = trim($ident);
-            $user = $this->getUserByEmail($ident);
-            if (!$user) {
-                $user = $this->findUser($ident);
+            if(!empty($ident)) {
+                if (validate_email($ident)) {
+                    $user = $this->getUserByEmail($ident);
+                } else {
+                    $user = $this->findUser($ident);
+                }
             }
             if ($user) {
                 $userArray[] = $user;
+            } else {
+                $nonUserArray[] = $ident;
             }
         }
-        return $userArray;
+        return array('users' => $userArray, 'emails' => $nonUserArray);
     }
 }
 
