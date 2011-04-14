@@ -363,6 +363,7 @@ project_admin_utils	event	Event
 project_admin_utils	val	Value
 project_admin_utils	date	Date
 project_admin_utils	no_g_change	No Changes Have Been Made to This Group
+project_admin_utils	permission_request	Permission Request
 
 project_admin_utils	previous	Previous
 project_admin_utils	next	Next
@@ -483,6 +484,7 @@ project_admin_ugroup	ug_name	User Group Name
 project_admin_ugroup	members	Members
 project_admin_ugroup	del_ug	Delete this user group ?
 project_admin_ugroup	predef_g	(*) denotes predefined groups
+project_admin_ugroup	permission_request	Permission Request
 #
 #-----------------------------------------------
 # Script: SF/www/project/admin/ugroup_utils.php
