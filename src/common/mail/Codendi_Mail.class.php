@@ -29,7 +29,6 @@ class Codendi_Mail implements Codendi_Mail_Interface {
 
     protected $mail;
     protected $userDao;
-    protected $body;
 
     /**
      * Constructor
