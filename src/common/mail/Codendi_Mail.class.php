@@ -19,6 +19,12 @@
  */
 require_once('Codendi_Mail_Interface.class.php');
 
+/**
+ * Class for sending an email using the zend lib.
+ * 
+ * It allows to send mails in html format
+ * 
+ */
 class Codendi_Mail implements Codendi_Mail_Interface {
 
     protected $mail;
@@ -43,9 +49,12 @@ class Codendi_Mail implements Codendi_Mail_Interface {
     }
 
     /**
+     * 
+     * Returns an instance of UserDao
+     * 
      * @return UserDao
      */
-    protected function getUserDao() {
+    function getUserDao() {
         if (!$this->userDao) {
           $this->userDao = new UserDao(CodendiDataAccess::instance());
         }
@@ -71,66 +80,6 @@ class Codendi_Mail implements Codendi_Mail_Interface {
     }
 
     /**
-     *
-     * @param Array of User $to
-     * 
-     * @return Array
-     */
-    function setToUser($to) {
-        $arrayTo = $this->_validateRecipient($to);
-        $arrayToRealName = array();
-        foreach ($arrayTo as $to) {
-            $this->mail->addTo($to['email'], $to['real_name']);
-            $arrayToRealName[] = $to['real_name'];
-        }
-        return $arrayToRealName;
-    }
-
-    function setFrom($email) {
-        $this->mail->setFrom($email);
-    }
-
-    function setSubject($subject) {
-        $this->mail->setSubject($subject);
-    }
-
-    function getSubject() {
-        return $this->mail->getSubject();
-    }
-
-    /**
-     *
-     * @param array of User $bcc
-     * 
-     * @return Array;
-     */
-    function setBccUser($bcc) {
-        $arrayBcc = $this->_validateRecipient($cc);
-        $arrayBccRealName = array();
-        foreach ($arrayBcc as $user) {
-            $this->mail->addBcc($user['email'], $user['real_name']);
-            $arrayBccRealName[] = $user['real_name'];
-        }
-        return $arrayBccRealName;
-    }
-
-    /**
-     *
-     * @param Array $cc
-     * 
-     * @return Array
-     */
-    function setCcUser($cc) {
-        $arrayCc = $this->_validateRecipient($cc);
-        $arrayCcRealName = array();
-        foreach ($arrayCc as $user) {
-            $this->mail->addCc($user['email'], $user['real_name']);
-            $arrayCcRealName[] = $user['real_name'];
-        }
-        return $arrayCcRealName;
-    }
-
-    /**
      * Check if given mail/user_name is valid (Ie. Active or Restricted) user.
      *
      * @param list of emails/user_name $mailList
@@ -151,6 +100,36 @@ class Codendi_Mail implements Codendi_Mail_Interface {
             }
         }
         return $retArray;
+    }
+
+    /**
+     * Return list of mail addresses separated by comma, from the headers, depending on the type
+     *
+     * @param String $recipientType Allowed values are "To", "Cc" and "Bcc"
+     *
+     * @return String
+     */
+    function _getRecipientsFromHeader($recipientType) {
+        $allowed = array('To', 'Cc', 'Bcc');
+        if (in_array($recipientType, $allowed)) {
+            $headers = $this->mail->getHeaders();
+            if (isset($headers[$recipientType])) {
+                unset ($headers[$recipientType]['append']);
+                return implode(', ', $headers[$recipientType]);
+            }
+        }
+    }
+
+    function setFrom($email) {
+        $this->mail->setFrom($email);
+    }
+
+    function setSubject($subject) {
+        $this->mail->setSubject($subject);
+    }
+
+    function getSubject() {
+        return $this->mail->getSubject();
     }
 
     /**
@@ -235,21 +214,10 @@ class Codendi_Mail implements Codendi_Mail_Interface {
     }
 
     /**
-     * Return list of mail addresses separated by comma, from the headers, depending on the type
-     *
-     * @param String $recipientType Allowed values are "To", "Cc" and "Bcc"
-     *
-     * @return String
+     * @param String $message
      */
-    function _getRecipientsFromHeader($recipientType) {
-        $allowed = array('To', 'Cc', 'Bcc');
-        if (in_array($recipientType, $allowed)) {
-            $headers = $this->mail->getHeaders();
-            if (isset($headers[$recipientType])) {
-                unset ($headers[$recipientType]['append']);
-                return implode(', ', $headers[$recipientType]);
-            }
-        }
+    function setBodyText($message) {
+        $this->mail->setBodyText($message);
     }
 
     /**
@@ -262,10 +230,11 @@ class Codendi_Mail implements Codendi_Mail_Interface {
     }
 
     /**
+     * 
      * @param String $message
      */
-    function setBodyText($message) {
-        $this->mail->setBodyText($message);
+    function setBodyHtml($message) {
+        $this->mail->setBodyHtml($message);
     }
 
     /**
@@ -278,11 +247,10 @@ class Codendi_Mail implements Codendi_Mail_Interface {
     }
 
     /**
-     * 
      * @param String $message
      */
-    function setBodyHtml($message) {
-        $this->mail->setBodyHtml($message);
+    function setBody($message) {
+        $this->body = $message;
     }
 
     /**
@@ -295,12 +263,58 @@ class Codendi_Mail implements Codendi_Mail_Interface {
     }
 
     /**
-     * @param String $message
+     *
+     * @param Array of User $to
+     * 
+     * @return Array
      */
-    function setBody($message) {
-        $this->body = $message;
+    function setToUser($to) {
+        $arrayTo = $this->_validateRecipient($to);
+        $arrayToRealName = array();
+        foreach ($arrayTo as $to) {
+            $this->mail->addTo($to['email'], $to['real_name']);
+            $arrayToRealName[] = $to['real_name'];
+        }
+        return $arrayToRealName;
     }
 
+    /**
+     *
+     * @param array of User $bcc
+     * 
+     * @return Array;
+     */
+    function setBccUser($bcc) {
+        $arrayBcc = $this->_validateRecipient($cc);
+        $arrayBccRealName = array();
+        foreach ($arrayBcc as $user) {
+            $this->mail->addBcc($user['email'], $user['real_name']);
+            $arrayBccRealName[] = $user['real_name'];
+        }
+        return $arrayBccRealName;
+    }
+
+    /**
+     *
+     * @param Array $cc
+     * 
+     * @return Array
+     */
+    function setCcUser($cc) {
+        $arrayCc = $this->_validateRecipient($cc);
+        $arrayCcRealName = array();
+        foreach ($arrayCc as $user) {
+            $this->mail->addCc($user['email'], $user['real_name']);
+            $arrayCcRealName[] = $user['real_name'];
+        }
+        return $arrayCcRealName;
+    }
+
+    /**
+     * Send the mail
+     * 
+     * @return Boolean
+     */
     function send() {
         $params = array('mail'   => $this,
                         'header' => $this->mail->getHeaders());
