@@ -429,60 +429,9 @@ echo '</TD>
 	Delegate notifications
 */
 $HTML->box1_top($Language->getText('project_admin_index','member_request_delegation_title'));
-
 echo '<tr><td colspan="2">';
-echo $Language->getText('project_admin_index','member_request_delegation_desc');
+echo '<A HREF="/project/admin/permission_request.php?group_id='.$group_id.'">'.$Language->getText('project_admin_utils','permission_request').'</A>';
 echo '</td></tr>';
-
-//Retrieve the saved ugroups for notification from DB
-$dar = $pm->getMembershipRequestNotificationUGroup($group_id);
-if ($dar && !$dar->isError() && $dar->rowCount() > 0) {
-    foreach ($dar as $row) {
-        $selectedUgroup[] = $row['ugroup_id'];
-    }
-} else {
-        $selectedUgroup = array($GLOBALS['UGROUP_PROJECT_ADMIN']);
-}
-
- 
-$ugroupList = array(array('value' => $GLOBALS['UGROUP_PROJECT_ADMIN'], 'text' => util_translate_name_ugroup('project_admin')));
-$res = ugroup_db_get_existing_ugroups($group_id);
-while ($row = db_fetch_array($res)) {
-    $ugroupList[] = array('value' => $row['ugroup_id'], 'text' => $row['name']);
-}
-echo '<tr><td colspan="2" style="text-align: center;">';
-echo '<form method="post" action="?">';
-echo '<input type="hidden" name="func" value="member_req_notif_group" />';
-echo '<input type="hidden" name="group_id" value="'. $group_id .'">';
-echo html_build_multiple_select_box_from_array($ugroupList, "ugroups[]", $selectedUgroup, 8, false, '', false, '', false, '', false);
-echo '<br />';
-echo '<input type="submit" name="submit" value="'.$Language->getText('global', 'btn_update').'" />';
-echo '</form>';
-echo '</td></tr>';
-
-echo '<tr><td colspan="2">';
-echo $Language->getText('project_admin_index','member_request_delegation_msg_desc');
-echo '</td></tr>';
-
-$message = $GLOBALS['Language']->getText('project_admin_index', 'member_request_delegation_msg_to_requester');
-$pm = ProjectManager::instance();
-$dar = $pm->getMessageToRequesterForAccessProject($group_id);
-if ($dar && !$dar->isError() && $dar->rowCount() == 1) {
-    $row = $dar->current();
-    if ($row['msg_to_requester'] != "member_request_delegation_msg_to_requester" ) {
-        $message = $row['msg_to_requester'];
-    }
-}
-echo '<tr><td colspan="2" style="text-align: center;">';
-echo '<form method="post" action="?">
-          <textarea wrap="virtual" rows="5" cols="70" name="text">'.$message.'</textarea></p>
-          <input type="hidden" name="func" value="member_req_notif_message">
-          <input type="hidden" name="group_id" value="' .$group_id. '">
-          <br><input name="submit" type="submit" value="'.$GLOBALS['Language']->getText('global', 'btn_update').'"/></br>
-     </form>';
-
-echo '</td></tr>';
-
 echo $HTML->box1_bottom();
 ?>
 </TD>
