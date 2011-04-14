@@ -137,10 +137,9 @@ var Codendi_RTE_Light_Tracker_FollowUp = Class.create(Codendi_RTE_Light, {
     }
 });
 
-
 var Codendi_RTE_Send_HTML_MAIL = Class.create(Codendi_RTE_Light, {
     initialize: function ($super,element, format) {
-    $super(element);
+        $super(element);
 
         var label = $(element+'_label');
 
@@ -182,34 +181,34 @@ var Codendi_RTE_Send_HTML_MAIL = Class.create(Codendi_RTE_Light, {
         }
         
     },
-init_rte: function() {
-    tinyMCE.init({
-            // General options
-            mode : "exact",
-            elements : this.element.id,
-            theme : "advanced",
+    init_rte: function() {
+        tinyMCE.init({
+                // General options
+                mode : "exact",
+                elements : this.element.id,
+                theme : "advanced",
 
-            // Inherit language from Codendi default (see Layout class)
-            language : useLanguage,
+                // Inherit language from Codendi default (see Layout class)
+                language : useLanguage,
 
-            // Theme options
-            theme_advanced_toolbar_location : "top",
-            theme_advanced_toolbar_align : "left",
-            theme_advanced_statusbar_location : "bottom",
-            theme_advanced_buttons1 : "bold,italic,underline,strikethrough,blockquote,formatselect,|,bullist,numlist,|,link,unlink,|,forecolor,backcolor,code",
-            theme_advanced_buttons2 : "formatselect,fontselect,fontsizeselect,|,justifyleft,justifycenter,justifyright,justifyfull,|,cut,copy,paste,pastetext,outdent,indent",
-            theme_advanced_buttons3 : "",
-            theme_advanced_resizing : true,
-            theme_advanced_blockformats : "p,pre",
+                // Theme options
+                theme_advanced_toolbar_location : "top",
+                theme_advanced_toolbar_align : "left",
+                theme_advanced_statusbar_location : "bottom",
+                theme_advanced_buttons1 : "bold,italic,underline,strikethrough,blockquote,formatselect,|,bullist,numlist,|,link,unlink,|,forecolor,backcolor,code",
+                theme_advanced_buttons2 : "formatselect,fontselect,fontsizeselect,|,justifyleft,justifycenter,justifyright,justifyfull,|,cut,copy,paste,pastetext,outdent,indent",
+                theme_advanced_buttons3 : "",
+                theme_advanced_resizing : true,
+                theme_advanced_blockformats : "p,pre",
             
-            codendi:null //cheat to not have to remove the last comma in elements above. #*%@ IE !
-    });
-    this.rte = true;
-},
-toggle: function ($super, event) {
+                codendi:null //cheat to not have to remove the last comma in elements above. #*%@ IE !
+        });
+        this.rte = true;
+    },
+    toggle: function ($super, event) {
     this.switchButtonToHtml();
     $super(event);
-},
+    },
     /**
      * Disable the radio button that tells that the content is text
      * Check the radio button that tells that the content is HTML
@@ -218,4 +217,4 @@ toggle: function ($super, event) {
         $('body_format_text').disabled = true;
         $('body_format_html').checked  = true;
     }
-}); 
+});
