@@ -141,7 +141,7 @@ if (isset($requestCc) && strlen($requestCc) > 0) {
     }
 }
 
-$mail->setSubject(stripslashes($subject));
+$mail->setSubject($subject);
 
 $vFormat = new Valid_WhiteList('body_format', array(FORMAT_HTML, FORMAT_TEXT));
 $bodyFormat = $request->getValidated('body_format', $vFormat, FORMAT_HTML);
@@ -178,7 +178,7 @@ $HTML->header(array('title'=>$Language->getText('sendmessage', 'title',array($to
 <P>
 <?php echo $Language->getText('sendmessage', 'message'); ?>
 <P>
-<FORM ACTION="<?php echo $PHP_SELF; ?>" METHOD="POST">
+<FORM ACTION="?" METHOD="POST">
 <INPUT TYPE="HIDDEN" NAME="toaddress" VALUE="<?php echo $toaddress; ?>">
 <INPUT TYPE="HIDDEN" NAME="touser" VALUE="<?php echo $touser; ?>">
 
