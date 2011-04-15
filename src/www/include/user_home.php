@@ -174,38 +174,23 @@ if (db_numrows($res_cat) < 1) {
 $HTML->box1_bottom(); ?>
 </TD></TR>
 
-<TR><TD COLSPAN="3">
+<TR>
+
+<TD>
 
 <?php 
 
 if (user_isloggedin()) {
 
-	echo '
-	&nbsp;
-	<P>
-	<H3>'.$Language->getText('include_user_home','send_message_to').' '. $hp->purify(db_result($res_user,0,'realname'), CODENDI_PURIFIER_CONVERT_HTML) .'</H3>
-	<P>
+    $HTML->box1_top($Language->getText('include_user_home','send_message_to').' '. $hp->purify(db_result($res_user,0,'realname'), CODENDI_PURIFIER_CONVERT_HTML));
+
+    echo '
 	<FORM ACTION="/sendmessage.php" METHOD="POST">
-	<INPUT TYPE="HIDDEN" NAME="touser" VALUE="'.$user_id.'">
-
-
-
-	<B>'.$Language->getText('include_user_home','your_address').':</B><!-- LJ<BR> -->
-	<B>';
-	$my_email=user_getemail(user_getid());
-
-	echo $my_email.'</B>
-
-        </B>
-	
-
-        <P>
-	<B>'.$Language->getText('include_user_home','your_name').':</B><!-- <BR> -->
-	<B>';
+	<INPUT TYPE="HIDDEN" NAME="touser" VALUE="'.$user_id.'">';
 
 	$my_name=user_getrealname(user_getid());
     $cc = (isset($_REQUEST['cc'])?htmlspecialchars(trim($_REQUEST['cc'])):"");
-	echo  $hp->purify($my_name, CODENDI_PURIFIER_CONVERT_HTML) .'</B>
+	echo  '
     <div>
         <script type="text/javascript" src="/scripts/blocks.js"></script>
         <script type="text/javascript">
@@ -216,25 +201,29 @@ if (user_isloggedin()) {
         </script>
         <div id="cc_link"  style="display:'.($cc !== ""?'none':'block').';"><a href="" onclick="addCCField(); return false;" title="'.$Language->getText('include_user_home','add_cc').'">'.$Language->getText('include_user_home','add_cc').'</a></div>
         <div id="cc_field" style="display:'.($cc === ""?'none':'block').';">
-            <table cellspacing="0" cellpadding="0"><tr><td><B>'.$Language->getText('include_user_home','cc').':</B><BR/>
-            <INPUT TYPE="TEXT" id="cc" NAME="cc" SIZE="80" VALUE="'.$cc.'"></td><td style="padding-left:10px;">
-            '.$Language->getText('include_user_home','fill_cc_list_msg').'</td></tr></table>
+            <P><B>'.$Language->getText('include_user_home','cc').':</B><BR/>
+            <INPUT TYPE="TEXT" id="cc" NAME="cc" VALUE="'.$cc.'"STYLE="width: 99%;"><BR/>
+            '.$Language->getText('include_user_home','fill_cc_list_msg').'</P>
         </div>
     </div>
-    
+
 	<P>
 	<B>'.$Language->getText('include_user_home','subject').':</B><BR>
-	<INPUT TYPE="TEXT" NAME="subject" SIZE="30" MAXLENGTH="40" VALUE="">
-	<P>
+	<INPUT TYPE="TEXT" NAME="subject" VALUE="" STYLE="width: 99%;">
+    </P>
+
+    <P>
 	<B>'.$Language->getText('include_user_home','message').':</B><BR>
-	<div id="body_label" ></div>
-	<TEXTAREA ID="body" NAME="body" ROWS="15" COLS="60" WRAP="HARD"></TEXTAREA>
-	<P>
+	<div id="body_label"></div>
+	<TEXTAREA ID="body" NAME="body" ROWS="15" WRAP="HARD" STYLE="width: 99%;"></TEXTAREA>
+	</P>
+
 	<CENTER>
 	<INPUT TYPE="SUBMIT" NAME="send_mail" VALUE="'.$Language->getText('include_user_home','send_message').'">
 	</CENTER>
 	</FORM>';
-	
+
+    $HTML->box1_bottom();
 
 } else {
 
@@ -255,7 +244,6 @@ $rte = "
 var useLanguage = '". substr(UserManager::instance()->getCurrentUser()->getLocale(), 0, 2) ."';
 document.observe('dom:loaded', function() {
             new Codendi_RTE_Send_HTML_MAIL('body');
-            
         });";
 
 $GLOBALS['HTML']->includeFooterJavascriptSnippet($rte);
