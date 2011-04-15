@@ -79,46 +79,6 @@ if ($request->isPost() && $request->valid($vFunc)) {
             $GLOBALS['Response']->addFeedback('info', $Language->getText('project_admin_index','changed_group_type'));
       }
       break;
-
-    case 'member_req_notif_group':
-        $vUGroups = new Valid_UInt('ugroups');
-        $vUGroups->required();
-        if ($request->validArray($vUGroups)) {
-            $ugroups = $request->get('ugroups');
-            //to retreive the old marked ugroups 
-            $darUgroups = $pm->getMembershipRequestNotificationUGroup($group_id);
-            if ($pm->setMembershipRequestNotificationUGroup($group_id, $ugroups)) {
-                if ($darUgroups && !$darUgroups->isError() && $darUgroups->rowCount() > 0) {
-                    foreach ($darUgroups as $row) {
-                        $oldUgroups[] = ugroup_get_name_from_id($row['ugroup_id']);
-                    }
-                } else {
-                    $oldUgroups = array(ugroup_get_name_from_id($GLOBALS['UGROUP_PROJECT_ADMIN']));
-                }
-                foreach ($ugroups as $ugroupId) {
-                    $newUgroups[] = ugroup_get_name_from_id($ugroupId);
-                }
-                //update group history
-                group_add_history('membership_request_updated', implode(',', $oldUgroups).' :: '.implode(',', $newUgroups), $group_id);
-                $GLOBALS['Response']->addFeedback('info', $Language->getText('project_admin_index', 'member_request_delegation_ugroups_msg'));
-            }
-        } else {
-            $GLOBALS['Response']->addFeedback('error', $Language->getText('project_admin_index', 'member_request_delegation_ugroups_error'));
-        }
-        break;
-
-    case 'member_req_notif_message':
-        $vMessage = new Valid_Text('text');
-        $vMessage->required();
-        if ($request->valid($vMessage)) {
-            $message = trim($request->get('text'));
-            if ($pm->setMessageToRequesterForAccessProject($group_id, $message)) {
-                $GLOBALS['Response']->addFeedback('info', $Language->getText('project_admin_index', 'member_request_delegation_msg_info'));
-            }
-        } else {
-            $GLOBALS['Response']->addFeedback('error', $Language->getText('project_admin_index', 'member_request_delegation_msg_error'));
-        }
-        break;
     }
 }
 
