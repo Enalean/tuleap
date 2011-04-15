@@ -7,9 +7,11 @@
 // 
 
 require_once('pre.php');    
-require_once('common/mail/Mail.class.php');
+require_once('common/mail/Codendi_Mail.class.php');
 require_once('common/include/HTTPRequest.class.php');
 
+define('FORMAT_TEXT', 0);
+define('FORMAT_HTML', 1);
 
 $request = HTTPRequest::instance();
 $func = $request->getValidated('func', new Valid_WhiteList('restricted_user_request', 'private_project_request'), '');
@@ -55,22 +57,30 @@ if ($request->isPost() && $request->exist('Submit') &&  $request->existAndNonEmp
     exit;
 }
 
+$um = UserManager::instance();
+$user = $um->getCurrentUser();
+if (!$user->isLoggedIn()) {
+    exit_error($Language->getText('include_exit', 'error'),$Language->getText('include_exit', 'not_logged_in'));
+}
+
+$email = $user->getEmail();
+
+$valid = new Valid_Email('toaddress');
+$valid->required();
+if ($request->valid($valid)) {
+    $toaddress = $request->get('toaddress');
+}
+
+$valid = new Valid_Email('touser');
+$valid->required();
+if ($request->valid($valid)) {
+    $touser = $request->get('touser');
+}
 
 if (!isset($toaddress) && !isset($touser)) {
 	exit_error($Language->getText('include_exit', 'error'),$Language->getText('sendmessage','err_noparam'));
 }
 
-if (isset($touser)) {
-	/*
-		check to see if that user even exists
-		Get their name and email if it does
-	*/
-	$result=db_query("SELECT email,user_name FROM user WHERE user_id='$touser'");
-	if (!$result || db_numrows($result) < 1) {
-	    exit_error($Language->getText('include_exit', 'error'),
-		       $Language->getText('sendmessage','err_nouser'));
-	}
-}
 
 list($host,$port) = explode(':',$GLOBALS['sys_default_domain']);		
 
@@ -79,62 +89,85 @@ if (isset($toaddress) && !eregi($host,$toaddress)) {
 		   $Language->getText('sendmessage','err_host',array($host)));
 }
 
+$valid = new Valid_Text('subject');
+$valid->required();
+if ($request->valid($valid)) {
+    $subject = $request->get('subject');
+}
+
+$valid = new Valid_Text('body');
+$valid->required();
+if ($request->valid($valid)) {
+    $body = $request->get('body');
+}
 
 if (isset($send_mail)) {
-	if (!$subject || !$body || !$name || !$email) {
-		/*
-			force them to enter all vars
-		*/
-		exit_missing_param();
-	}
+    if (!$subject || !$body || !$email) {
+        /*
+         force them to enter all vars
+         */
+        exit_missing_param();
+    }
 
-	if (isset($toaddress)) {
-		/*
-			send it to the toaddress
-		*/
-		$to=eregi_replace('_maillink_','@',$toaddress);
-	} else if (isset($touser)) {
-		/*
-			figure out the user's email and send it there
-		*/
-		$to=db_result($result,0,'email');
-	}
-    
-	$mail =& new Mail();
+
+$valid = new Valid_Text('cc');
+$valid->required();
+if ($request->valid($valid)) {
+    $requestCc = $request->get('cc');
+}
+
+$mail = new Codendi_Mail();
+if (isset($touser)) {
+    //Return the user given its user_id
+    $to = $um->getUserById($touser);
+    if (!$to) {
+        exit_error($Language->getText('include_exit', 'error'),
+        $Language->getText('sendmessage','err_nouser'));
+    }
+    $mail->setToUser(array($to));
+    $dest = $to->getRealName();
+} else if (isset($toaddress)) {
+    $to=eregi_replace('_maillink_','@',$toaddress);
     $mail->setTo($to);
     $dest = $to;
-    if (isset($_REQUEST['cc']) && strlen($_REQUEST['cc']) > 0) {
-        $cc_array =& split('[,;]', $_REQUEST['cc']);
-        if(!util_validateCCList($cc_array, $feedback, false)) {
-            exit_error($Language->getText('include_exit', 'error'),
-                       $feedback);
-        }
-        $cc_list  =& implode(', ', $cc_array);
-        $cc = util_normalize_emails($cc_list);
-        $mail->setCc($cc);
-        $dest .= ','.$cc;
+}
 
+if (isset($requestCc) && strlen($requestCc) > 0) {
+    $mailArray = split('[,;]', $requestCc);
+    $ccArray = $um->retreiveUsersFromMails($mailArray);
+    if (!empty($ccArray['users'])) {
+        $cc = $mail->setCcUser($ccArray['users']);
+        $dest .= ','.implode(',', $cc);
     }
-    $mail->setSubject(stripslashes($subject));
-    $mail->setBody(stripslashes($body));
-    $mail->setFrom($email);
-    $mail_is_send = $mail->send();
+}
 
-    if (!$mail_is_send) {
-        exit_error($GLOBALS['Language']->getText('global', 'error'), 
-                    $GLOBALS['Language']->getText('global', 'mail_failed', array($GLOBALS['sys_email_admin'])));
-    }
-	site_header(array('title'=>$Language->getText('sendmessage', 'title_sent',array($to))));
-    echo '<H2>'.$Language->getText('sendmessage', 'title_sent',str_replace(',', ', ',$dest)).'</H2>';
-	$HTML->footer(array());
-	exit;
+$mail->setSubject($subject);
+
+$vFormat = new Valid_WhiteList('body_format', array(FORMAT_HTML, FORMAT_TEXT));
+$bodyFormat = $request->getValidated('body_format', $vFormat, FORMAT_HTML);
+if ($bodyFormat == FORMAT_HTML) {
+    $mail->setBodyHtml($body);
+} else {
+    $mail->setBodyText($body);
+}
+$mail->setFrom($email);
+$mail_is_send = $mail->send();
+
+if (!$mail_is_send) {
+    exit_error($GLOBALS['Language']->getText('global', 'error'),
+    $GLOBALS['Language']->getText('global', 'mail_failed', array($GLOBALS['sys_email_admin'])));
+}
+site_header(array('title'=>$Language->getText('sendmessage', 'title_sent',array($dest))));
+echo '<H2>'.$Language->getText('sendmessage', 'title_sent',str_replace(',', ', ',$dest)).'</H2>';
+$HTML->footer(array());
+exit;
 
 }
 
 if ($toaddress) {
 	$to_msg = $toaddress;
 } else {
-	$to_msg = db_result($result,0,'user_name');
+	$to_msg = $to->getUserName();
 }
 
 $HTML->header(array('title'=>$Language->getText('sendmessage', 'title',array($to_msg))));
@@ -145,15 +178,11 @@ $HTML->header(array('title'=>$Language->getText('sendmessage', 'title',array($to
 <P>
 <?php echo $Language->getText('sendmessage', 'message'); ?>
 <P>
-<FORM ACTION="<?php echo $PHP_SELF; ?>" METHOD="POST">
+<FORM ACTION="?" METHOD="POST">
 <INPUT TYPE="HIDDEN" NAME="toaddress" VALUE="<?php echo $toaddress; ?>">
 <INPUT TYPE="HIDDEN" NAME="touser" VALUE="<?php echo $touser; ?>">
 
-<B><?php echo $Language->getText('sendmessage', 'email'); ?>:</B><BR>
-<INPUT TYPE="TEXT" NAME="email" SIZE="30" MAXLENGTH="40" VALUE="">
-<P>
-<B><?php echo $Language->getText('sendmessage', 'name'); ?>:</B><BR>
-<INPUT TYPE="TEXT" NAME="name" SIZE="30" MAXLENGTH="40" VALUE="">
+<B><?php echo $Language->getText('sendmessage', 'email'); ?>:</B> <?php echo $email; ?>
 <P>
 <B><?php echo $Language->getText('sendmessage', 'subject'); ?>:</B><BR>
 <INPUT TYPE="TEXT" NAME="subject" SIZE="30" MAXLENGTH="40" VALUE="<?php echo $subject; ?>">

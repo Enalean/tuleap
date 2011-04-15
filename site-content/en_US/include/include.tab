@@ -195,6 +195,7 @@ include_menu	auth_nb_failure	Number of bad attempts:
 # Script: SF/www/include/pre.php
 #
 include_pre	site_admin_declines_license	Your site administrator declined the Codendi License. \nThe Codendi site has been shut down. For more information contact your  \n<a href="mailto:$1">Site Administrator</a>.
+include_pre	zend_path_not_set	The path to the zend library is not defined.For more information contact your  \n<a href="mailto:$1">Site Administrator</a>.
 #
 #-----------------------------------------------
 # Script: SF/www/include/project.php

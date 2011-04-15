@@ -70,10 +70,16 @@ class MaillogDao extends DataAccessObject {
     }
 
     function insertBody($mail) {
+        if (is_a($mail, 'Codendi_Mail')) {
+            $body = $mail->getBodyText()."\n".$mail->getBodyHTML();
+        } else {
+            $body = $mail->getBody();
+        }
+
         $qry = sprintf('INSERT INTO plugin_maillog_message'.
                        ' (body)'.
                        ' VALUES ("%s")',
-                       db_escape_string($mail->getBody()));
+                       db_escape_string($body));
         $this->update($qry);
         if(!$this->da->isError()) {
             $dar = $this->retrieve('SELECT LAST_INSERT_ID() AS id');
