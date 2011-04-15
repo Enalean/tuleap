@@ -254,7 +254,8 @@ abstract class Error_PermissionDenied {
         $body = $GLOBALS['Language']->getText($this->getTextBase(), 'mail_content_'.$this->getType(), array($user->getRealName(), $user->getName(), $link, $project->getPublicName(), $hrefApproval, $messageToAdmin, $user->getEmail()));
         if ($adminList['status']== false) {
             //The mail body will be changed
-        }  
+            $body .= "\n\n". $GLOBALS['Language']->getText($this->getTextBase(), 'mail_content_unvalid_ugroup', array($project->getPublicName()));
+        }
         $mail->setBody($body);
 
         if (!$mail->send()) {
