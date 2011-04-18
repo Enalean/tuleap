@@ -608,4 +608,50 @@ function ugroup_copy_ugroup($ugroup_id,$to_group,&$ugid) {
 
 }
 
+/**
+ * Validate the ugroup list containing group admins
+ *
+ * @param Integer $groupId
+ * @param Array   $ugroups
+ *
+ * @return Array
+ */
+function ugroup_validate_admin_ugroups($groupId, $ugroups) {
+    $um = UserManager::instance();
+    $validUGroups = null;
+    $res = ugroup_db_get_existing_ugroups($groupId);
+    while ($row = db_fetch_array($res)) {
+        $ugroupId = $row['ugroup_id'];
+        if (in_array($ugroupId, $ugroups)) {
+            $containAdmin = false;
+            $sql = ugroup_db_get_members($ugroupId);
+            $res2 = db_query($sql);
+            while ($row2 = db_fetch_array($res2)) {
+                $user = $um->getUserById($row2['user_id']);
+                if ($user->isMember($groupId, 'A')) {
+                    $containAdmin = true;
+                }
+            }
+            if ($containAdmin) {
+                $validUGroups[] = $ugroupId;
+            }
+        }
+    }
+    foreach ($ugroups as $ugroupId) {
+        $sql = ugroup_db_get_dynamic_members($ugroupId, null, $groupId);
+        $res = db_query($sql);
+        $containAdmin = false;
+        while ($row = db_fetch_array($res)) {
+            $user = $um->getUserById($row['user_id']);
+            if ($user->isMember($groupId, 'A')) {
+                $containAdmin = true;
+            }
+        }
+        if ($containAdmin) {
+            $validUGroups[] = $ugroupId;
+        }
+    }
+    return $validUGroups;
+}
+
 ?>
