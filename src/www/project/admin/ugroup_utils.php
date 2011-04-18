@@ -614,11 +614,12 @@ function ugroup_copy_ugroup($ugroup_id,$to_group,&$ugid) {
  * @param Integer $groupId
  * @param Array   $ugroups
  *
- * @return Array
+ * @return Boolean
  */
-function ugroup_validate_admin_ugroups($groupId, $ugroups) {
+function ugroup_validate_admin_ugroups($groupId, &$ugroups) {
     $um = UserManager::instance();
-    $validUGroups = null;
+    $validUGroups = array();
+    // Check static ugroups
     $res = ugroup_db_get_existing_ugroups($groupId);
     while ($row = db_fetch_array($res)) {
         $ugroupId = $row['ugroup_id'];
@@ -637,6 +638,7 @@ function ugroup_validate_admin_ugroups($groupId, $ugroups) {
             }
         }
     }
+    // Check dynamic ugroups
     foreach ($ugroups as $ugroupId) {
         $sql = ugroup_db_get_dynamic_members($ugroupId, null, $groupId);
         $res = db_query($sql);
@@ -651,7 +653,15 @@ function ugroup_validate_admin_ugroups($groupId, $ugroups) {
             $validUGroups[] = $ugroupId;
         }
     }
-    return $validUGroups;
+    // Verify if all ugroups are valid
+    $diff = array_diff($ugroups, $validUGroups);
+    if (empty($diff)) {
+        $allSelected = true;
+    } else {
+        $allSelected = false;
+    }
+    $ugroups = $validUGroups;
+    return $allSelected;
 }
 
 ?>
