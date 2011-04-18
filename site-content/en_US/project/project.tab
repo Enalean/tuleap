@@ -196,7 +196,7 @@ project_admin_index	file_admin	File Manager Admin
 project_admin_index	tracker_admin	Tracker Admin
 project_admin_index	no_tracker_found	No Accessible Trackers Found
 project_admin_index	admin	Admin
-project_admin_index	member_request_delegation_title	Membership requests delegation
+project_admin_index	member_request_delegation_title	Project membership requests delegation
 project_admin_index	member_request_delegation_desc	When people don't have access to your project, either because your project is private or because the user is restricted and only have access to projects he is member of, they can request to be added as members.<br />The following group will receive the email requests:
 project_admin_index	member_request_delegation_ugroups_error	Invalid user groups
 project_admin_index	member_request_delegation_ugroups_msg	The user group to be notified for admin delegation is added.

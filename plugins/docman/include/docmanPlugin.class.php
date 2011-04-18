@@ -735,8 +735,8 @@ class DocmanPlugin extends Plugin {
      *
      * @return void
      */
-    function permissionRequestInformation() {
-        echo "<p><h3>".$GLOBALS['Language']->getText('plugin_docman', 'permission_requests')."</h3>".$GLOBALS['Language']->getText('plugin_docman', 'permission_requests_information')."</p>";
+    function permissionRequestInformation($params) {
+        echo "<p><h2>".$GLOBALS['Language']->getText('plugin_docman', 'permission_requests')."</h2>".$GLOBALS['Language']->getText('plugin_docman', 'permission_requests_information', array('/plugins/docman/?group_id='.$params['group_id'].'&action=admin_permissions'))."</p>";
     }
 
 }
