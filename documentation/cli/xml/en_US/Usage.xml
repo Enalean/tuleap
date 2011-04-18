@@ -28,6 +28,12 @@
             <listitem>
                 <para>-h: Help. Display help on how to use the program.</para>
             </listitem>
+            <listitem>
+                <para>--retry N: Retry operation N times (Default: 0).
+                      If API call fails due to a network issue, re-issue call until it succeeds or at max N times.
+                      This option is safe with Read actions (get) but use it carefully with write (add/update/delete) ones.
+                </para>
+            </listitem>
            </itemizedlist>
           </para>
          </listitem>

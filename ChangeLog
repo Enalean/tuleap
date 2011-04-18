@@ -1,9 +1,9 @@
 Version 4.0.18 - (Not released yet)
-
         == New Features ==
         backlog #124820: Add history for membership delegation
         backlog #99968 : Add a "delete feature" for wiki attached file
         backlog #124821: Study/Deploy the possibility to send HTML notification
+	New version of CLI: 1.4.1, See separted ChangeLog
 
         == Bugfix ==
         backlog #124819: Strip HTML in tracker notification

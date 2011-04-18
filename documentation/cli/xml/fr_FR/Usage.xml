@@ -29,6 +29,15 @@
             <listitem>
                 <para>-h: Help. Affiche l'aide à propos de l'utilisation du programme.</para>
             </listitem>
+            <listitem>
+                <para>--retry N: Retente l'opération N fois (Defaut: 0).
+                      Si un appel à une méthode de l'API SOAP échoue à cause d'un problème réseau,
+                      l'appel en question est ré-exécuté jusqu'a ce qu'il réussisse ou que le nombre
+                      maximum de tentatives (N) est atteint.
+                      Cette option ne présente pas de risque avec les opérations en lecture (Get*) mais
+                      il est conseillé d'être prudent avec les opérations en écriture (Add*/Update*/Delete*).
+                </para>
+            </listitem>
            </itemizedlist>
           </para>
          </listitem>

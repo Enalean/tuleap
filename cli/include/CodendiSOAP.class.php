@@ -26,11 +26,12 @@ class CodendiSOAP extends SoapClient {
 	var $session_user;		// Logged user name
     var $session_user_id;	// Logged user ID
     protected $fileChunkSize;
-
+    protected $maxRetry;  // Max number of soap call retry in case of failure
+    protected $callDelay; // Time "spacer" between 2 failing soap calls
 	/**
 	 * constructor
 	 */
-	function CodendiSOAP() {
+	function __construct() {
 		$this->wsdl_string = "";
 		$this->proxy_host = "";
 		$this->proxy_port = 0;
@@ -40,7 +41,9 @@ class CodendiSOAP extends SoapClient {
 		$this->session_user = "";
         $this->session_user_id = 0;
 		$this->fileChunkSize = 6000000; // ~6 Mo;
-		
+		$this->maxRetry      = 0;
+		$this->callDelay     = 5;
+
 		// Try to find a dir where to put the session file
 		$session_dir = 0;
 		if (array_key_exists("HOME", $_ENV)) {
@@ -82,11 +85,28 @@ class CodendiSOAP extends SoapClient {
                 $params = array('sessionKey' => $this->session_string) + $params;   // params need to be in the right order (sessionKey first)
             }
 		}
-		
-		$LOG->add("CodendiSOAP::Executing command ".$command." ...");
-        return call_user_func_array(array($this, $command),$params);
+
+		$nbAttempt       = 0;
+		$soapCallSuccess = false;
+		do {
+			$nbAttempt++;
+			try {
+				$LOG->add("CodendiSOAP::Executing command ".$command." ...");
+				return call_user_func_array(array($this, $command), $params);
+			}
+			catch (SoapFault $e) {
+				if (strtolower($e->faultcode) == 'http' &&
+					strtolower($e->faultstring) == 'error fetching http headers' &&
+					$nbAttempt < $this->getMaxRetry()) {
+					$GLOBALS['LOG']->add('CodendiSOAP::An error occured while executing '.$command.', try again [Nb attempt: '.$nbAttempt.'/'.$GLOBALS['soap']->getMaxRetry().']. Wait for '.($nbAttempt * $this->getCallDelay()).' seconds (mitigate network congestion) ...');
+					sleep($nbAttempt * $this->getCallDelay());
+				} else {
+					throw $e;
+				}
+			}
+		} while ($nbAttempt < $this->getMaxRetry());
 	}
-	
+
 	/**
 	 * connect - Establish the connection to the server. This is done in the constructor
 	 * of the soap_client class
@@ -174,10 +194,24 @@ class CodendiSOAP extends SoapClient {
 	}
 	
 	function getFileChunkSize() {
-	    return $this->fileChunkSize;
+		return $this->fileChunkSize;
 	}
 	function setFileChunkSize($size) {
-	    $this->fileChunkSize = $size;
+		$this->fileChunkSize = $size;
+	}
+
+	function getMaxRetry() {
+		return $this->maxRetry;
+	}
+	function setMaxRetry($maxRetry) {
+		$this->maxRetry = $maxRetry;
+	}
+
+	function getCallDelay() {
+		return $this->callDelay;
+	}
+	function setCallDelay($callDelay) {
+		$this->callDelay = $callDelay;
 	}
 
 	function saveSession() {

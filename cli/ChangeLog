@@ -1,4 +1,14 @@
-1.4.0 - Codendi SOAP api 4.1 (Codendi_ST 4.0.16) 
+1.4.1 - Codendi SOAP api 4.1 (Codendi_ST 4.0.18)
+    Bug fix
+    =======
+    bug #codex:133168: CLI 1.4.0: Improve robustness against slow/bad/... networks
+    * Add "--retry N" option to be more resistent to network errors.
+      If a SOAP call fail due to a network error, CLI automatically tries to
+      re-issue the command N time (with N * 5 seconds of delay to mitigate
+      network congestions).
+    * Modify PHP options to make CLI more patient with slow API call responses.
+
+1.4.0 - Codendi SOAP api 4.1 (Codendi_ST 4.0.16)
     What Changed?
     ============
     * tracker addComment

@@ -37,6 +37,16 @@
           <orgname>STMicroelectronics, nouha.terzi@st.com</orgname>
         </affiliation>
       </author>
+
+      <author>
+        <firstname>Manuel</firstname>
+
+        <surname>Vacelet</surname>
+
+        <affiliation>
+          <orgname>Enalean, manuel.vacelet@enalean.com</orgname>
+        </affiliation>
+      </author>
     </authorgroup>
 
     <copyright>
@@ -91,6 +101,16 @@
         <authorinitials>Hatem Ounis, Nouha Terzi</authorinitials>
 
         <revremark>General update</revremark>
+      </revision>
+
+      <revision>
+        <revnumber>1.4.1</revnumber>
+
+        <date>18-Apr-2011</date>
+
+        <authorinitials>Manuel Vacelet</authorinitials>
+
+        <revremark>Describe new command line option</revremark>
       </revision>
 
     </revhistory>

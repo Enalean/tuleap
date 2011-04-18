@@ -32,9 +32,12 @@ define("WSDL_URL", "%wsdl_domain%/soap/codendi.wsdl.php?wsdl");
 
 /**** END OF CONFIGURATION SECTION ****/
 
-$CLI_VERSION = "1.4.0";
+$CLI_VERSION = "1.4.1";
 
 error_reporting(E_ALL);
+ini_set('default_socket_timeout', 3600);
+ini_set('max_execution_time', 0);
+ini_set('memory_limit', -1);
 
 /* Include common files */
 require_once(CODENDI_CLI_DIR."common.php");	// Common functions, variables and defines
@@ -50,6 +53,7 @@ $function_index = 0;		// Points to the position where the information about whic
 $log_level = 0;
 $display_help = false;
 $host = '';
+$soap = new CodendiSOAP();
 
 for ($i = 1; $i <= $argc-1; $i++) {
 	// Show user the help screen
@@ -91,7 +95,16 @@ for ($i = 1; $i <= $argc-1; $i++) {
             $display_help = true;
         }
     }
-    
+    else if ($argv[$i] == "--retry") {
+        $i++;
+        if (isset($argv[$i]) && !preg_match("/^-/", $argv[$i])) {
+            $soap->setMaxRetry(intval($argv[$i]));
+        } else {
+            echo "You should give a valid value for '--retry' parameter.\n";
+            $display_help = true;
+        }
+    }
+
 	// Unknown parameter
 	else {
 		exit_error('Unknown parameter: "'.$argv[$i].'"');
@@ -103,7 +116,6 @@ if (!$host && isset($_ENV['CODENDI_WSDL'])) {
     $host = $_ENV['CODENDI_WSDL'];
 }
 
-$soap = new CodendiSOAP();
 if ($host) {
     $soap->setWSDLString($host);
 }
@@ -162,7 +174,9 @@ Syntax: php codendi.php [options] [module name] [function] [parameters]
     --version       Display the software version
     -v              Verbose
     --host          URL of your server's WSDL
-
+    --retry N       If API call fails due to a network issue, re-issue call
+                    N times (Default: 0). Safe with Read actions (gets) use
+                    it carefully with write (add/update/delete) ones.
 
 EOT;
     $all_modules = $modules->getAllModules();

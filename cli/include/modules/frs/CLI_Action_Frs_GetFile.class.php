@@ -106,24 +106,28 @@ class CLI_Action_Frs_GetFile extends CLI_Action {
             $i++;
         } while ($cLength >= $GLOBALS['soap']->getFileChunkSize());
         $endTime = microtime(true);
+        $GLOBALS['LOG']->add('File download completed');
 
         $transRate = $totalTran / ($endTime - $startTime);
         $GLOBALS['LOG']->add('Transfer rate: '.size_readable($transRate, null, 'bi', '%.2f %s/s'));
 
         if ($output !== false) {
             fclose($fd);
-            
+
             unset($callParams['offset']);
             unset($callParams['chunk_size']);
-            
+
             $fileInfo = $GLOBALS['soap']->call('getFileInfo', $callParams, $use_extra_params);
             if ($fileInfo->computed_md5) {
+                $GLOBALS['LOG']->add('Compute downloaded file\'s md5 sum');
                 $localChecksum = PHP_BigFile::getMd5Sum($output);
                 if ($localChecksum != $fileInfo->computed_md5) {
                     exit_error("File transfer faild: md5 checksum locally computed doesn't match remote one ($fileInfo->computed_md5)");
                 } else {
-                    echo "File retrieved successfully.\n";
+                    echo "File retrieved successfully (md5 checksum verified).\n";
                 }
+            } else {
+                echo "File retrieved successfully.\n";
             }
         }
     }
