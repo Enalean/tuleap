@@ -59,6 +59,7 @@ if ($request->isPost() && $request->valid($vFunc)) {
             $ugroups = $request->get('ugroups');
             $allSelected = ugroup_validate_admin_ugroups($group_id, $ugroups, $containNonAdmin);
             if (empty($ugroups)) {
+                $ugroups = array($GLOBALS['UGROUP_PROJECT_ADMIN']);
                 $GLOBALS['Response']->addFeedback('error', $Language->getText('project_admin_index', 'member_request_delegation_ugroups_all_invalid'));
             } else {
                 if (!$allSelected) {
@@ -67,23 +68,23 @@ if ($request->isPost() && $request->valid($vFunc)) {
                 if ($containNonAdmin) {
                     $GLOBALS['Response']->addFeedback('warning', $Language->getText('project_admin_index', 'member_request_delegation_ugroups_non_admins'));
                 }
-                //to retreive the old marked ugroups
-                $darUgroups = $pm->getMembershipRequestNotificationUGroup($group_id);
-                if ($pm->setMembershipRequestNotificationUGroup($group_id, $ugroups)) {
-                    if ($darUgroups && !$darUgroups->isError() && $darUgroups->rowCount() > 0) {
-                        foreach ($darUgroups as $row) {
-                            $oldUgroups[] = ugroup_get_name_from_id($row['ugroup_id']);
-                        }
-                    } else {
-                        $oldUgroups = array(ugroup_get_name_from_id($GLOBALS['UGROUP_PROJECT_ADMIN']));
+            }
+            //to retreive the old marked ugroups
+            $darUgroups = $pm->getMembershipRequestNotificationUGroup($group_id);
+            if ($pm->setMembershipRequestNotificationUGroup($group_id, $ugroups)) {
+                if ($darUgroups && !$darUgroups->isError() && $darUgroups->rowCount() > 0) {
+                    foreach ($darUgroups as $row) {
+                        $oldUgroups[] = ugroup_get_name_from_id($row['ugroup_id']);
                     }
-                    foreach ($ugroups as $ugroupId) {
-                        $newUgroups[] = ugroup_get_name_from_id($ugroupId);
-                    }
-                    //update group history
-                    group_add_history('membership_request_updated', implode(',', $oldUgroups).' :: '.implode(',', $newUgroups), $group_id);
-                    $GLOBALS['Response']->addFeedback('info', $Language->getText('project_admin_index', 'member_request_delegation_ugroups_msg'));
+                } else {
+                    $oldUgroups = array(ugroup_get_name_from_id($GLOBALS['UGROUP_PROJECT_ADMIN']));
                 }
+                foreach ($ugroups as $ugroupId) {
+                    $newUgroups[] = ugroup_get_name_from_id($ugroupId);
+                }
+                //update group history
+                group_add_history('membership_request_updated', implode(',', $oldUgroups).' :: '.implode(',', $newUgroups), $group_id);
+                $GLOBALS['Response']->addFeedback('info', $Language->getText('project_admin_index', 'member_request_delegation_ugroups_msg'));
             }
         } else {
             $GLOBALS['Response']->addFeedback('error', $Language->getText('project_admin_index', 'member_request_delegation_ugroups_error'));
