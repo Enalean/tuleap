@@ -609,50 +609,102 @@ function ugroup_copy_ugroup($ugroup_id,$to_group,&$ugid) {
 }
 
 /**
- * Validate the ugroup list containing group admins
+ * Detect if the ugroup contain project admins, project admins only or
+ * no project admins.
  *
  * @param Integer $groupId
- * @param Array   $ugroups
+ * @param String  $usersSql
+ * @param Boolean $containNonAdmin
  *
  * @return Boolean
  */
-function ugroup_validate_admin_ugroups($groupId, &$ugroups) {
+function ugroup_contain_project_admins($groupId, $usersSql, &$containNonAdmin) {
     $um = UserManager::instance();
-    $validUGroups = array();
-    // Check static ugroups
+    $containAdmin    = false;
+    $containNonAdmin = false;
+    $res = db_query($usersSql);
+    while ($row = db_fetch_array($res)) {
+        $user = $um->getUserById($row['user_id']);
+        if ($user->isMember($groupId, 'A')) {
+            $containAdmin = true;
+        } else {
+            $containNonAdmin = true;
+        }
+    }
+    return $containAdmin;
+}
+
+/**
+ * Filter static ugroups that contain project admins.
+ * Retun value indicates if there is non project admins
+ * in the filtered ugroups.
+ *
+ * @param Integer $groupId
+ * @param Array   $ugroups
+ * @param Array   $validUgroups
+ *
+ * @return Boolean
+ */
+function ugroup_validate_static_admin_ugroups($groupId, $ugroups, &$validUGroups) {
+    $containNonAdmin = false;
     $res = ugroup_db_get_existing_ugroups($groupId);
     while ($row = db_fetch_array($res)) {
         $ugroupId = $row['ugroup_id'];
         if (in_array($ugroupId, $ugroups)) {
-            $containAdmin = false;
             $sql = ugroup_db_get_members($ugroupId);
-            $res2 = db_query($sql);
-            while ($row2 = db_fetch_array($res2)) {
-                $user = $um->getUserById($row2['user_id']);
-                if ($user->isMember($groupId, 'A')) {
-                    $containAdmin = true;
-                }
-            }
+            $containAdmin = ugroup_contain_project_admins($groupId, $sql, $nonAdmin);
             if ($containAdmin) {
                 $validUGroups[] = $ugroupId;
+                $containNonAdmin = $containNonAdmin | $nonAdmin;
             }
         }
     }
-    // Check dynamic ugroups
+    return $containNonAdmin;
+}
+
+/**
+ * Filter dynamic ugroups that contain project admins.
+ * Retun value indicates if there is non project admins
+ * in the filtered ugroups.
+ *
+ * @param Integer $groupId
+ * @param Array   $ugroups
+ * @param Array   $validUgroups
+ *
+ * @return Boolean
+ */
+function ugroup_validate_dynamic_admin_ugroups($groupId, $ugroups, &$validUGroups) {
+    $containNonAdmin = false;
     foreach ($ugroups as $ugroupId) {
         $sql = ugroup_db_get_dynamic_members($ugroupId, null, $groupId);
-        $res = db_query($sql);
-        $containAdmin = false;
-        while ($row = db_fetch_array($res)) {
-            $user = $um->getUserById($row['user_id']);
-            if ($user->isMember($groupId, 'A')) {
-                $containAdmin = true;
-            }
-        }
+        $containAdmin = ugroup_contain_project_admins($groupId, $sql, $nonAdmin);
         if ($containAdmin) {
             $validUGroups[] = $ugroupId;
+            $containNonAdmin = $containNonAdmin | $nonAdmin;
         }
     }
+    return $containNonAdmin;
+}
+
+/**
+ * Validate the ugroup list containing group admins.
+ * Remove ugroups that are empty or contain no project admins and
+ * indicate if no ugroup removed in the return value
+ * Don't remove ugroups containing both project admins and non project admins admins
+ * just indicate $containNonAdmin.
+ *
+ * @param Integer $groupId
+ * @param Array   $ugroups
+ * @param Boolean $containNonAdmin
+ *
+ * @return Boolean
+ */
+function ugroup_validate_admin_ugroups($groupId, &$ugroups, &$containNonAdmin) {
+    $validUGroups = array();
+    // Check static ugroups
+    $containNonAdmin = ugroup_validate_static_admin_ugroups($groupId, $ugroups, $validUGroups);
+    // Check dynamic ugroups
+    $containNonAdmin = $containNonAdmin | ugroup_validate_dynamic_admin_ugroups($groupId, $ugroups, $validUGroups);
     // Verify if all ugroups are valid
     $diff = array_diff($ugroups, $validUGroups);
     if (empty($diff)) {

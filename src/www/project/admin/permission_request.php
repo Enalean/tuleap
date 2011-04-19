@@ -57,10 +57,16 @@ if ($request->isPost() && $request->valid($vFunc)) {
         $vUGroups->required();
         if ($request->validArray($vUGroups)) {
             $ugroups = $request->get('ugroups');
-            if (!ugroup_validate_admin_ugroups($group_id, $ugroups)) {
-                $GLOBALS['Response']->addFeedback('warning', $Language->getText('project_admin_index', 'member_request_delegation_ugroups_invalid'));
-            }
-            if (!empty($ugroups)) {
+            $allSelected = ugroup_validate_admin_ugroups($group_id, $ugroups, $containNonAdmin);
+            if (empty($ugroups)) {
+                $GLOBALS['Response']->addFeedback('error', $Language->getText('project_admin_index', 'member_request_delegation_ugroups_all_invalid'));
+            } else {
+                if (!$allSelected) {
+                    $GLOBALS['Response']->addFeedback('warning', $Language->getText('project_admin_index', 'member_request_delegation_ugroups_some_invalid'));
+                }
+                if ($containNonAdmin) {
+                    $GLOBALS['Response']->addFeedback('warning', $Language->getText('project_admin_index', 'member_request_delegation_ugroups_non_admins'));
+                }
                 //to retreive the old marked ugroups
                 $darUgroups = $pm->getMembershipRequestNotificationUGroup($group_id);
                 if ($pm->setMembershipRequestNotificationUGroup($group_id, $ugroups)) {
