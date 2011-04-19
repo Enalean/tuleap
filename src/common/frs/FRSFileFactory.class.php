@@ -421,13 +421,11 @@ class FRSFileFactory extends Error {
      * @return Boolean
      */
     public function moveFiles($time, $backend) {
-        if ($this->moveDeletedFilesToStagingArea($backend)
-            && $this->purgeFiles($time, $backend)
-            && $this->cleanStaging($backend)
-            && $this->restoreDeletedFiles($backend)) {
-            return true;
-        }
-        return false;
+        $moveToStaging  = $this->moveDeletedFilesToStagingArea($backend);
+        $purgeFiles     = $this->purgeFiles($time, $backend);
+        $cleanStaging   = $this->cleanStaging($backend);
+        $restoreDeleted = $this->restoreDeletedFiles($backend);
+        return $moveToStaging && $purgeFiles && $cleanStaging && $restoreDeleted;
     }
 
     /**
