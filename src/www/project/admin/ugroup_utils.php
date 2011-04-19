@@ -609,6 +609,15 @@ function ugroup_copy_ugroup($ugroup_id,$to_group,&$ugid) {
 }
 
 /**
+ * Wrapper for tests
+ *
+ * @return UserManager
+ */
+function ugroup_get_user_manager() {
+    return UserManager::instance();
+}
+
+/**
  * Detect if the ugroup contain project admins, project admins only or
  * no project admins.
  *
@@ -619,7 +628,7 @@ function ugroup_copy_ugroup($ugroup_id,$to_group,&$ugid) {
  * @return Boolean
  */
 function ugroup_contain_project_admins($groupId, $usersSql, &$containNonAdmin) {
-    $um = UserManager::instance();
+    $um = ugroup_get_user_manager();
     $containAdmin    = false;
     $containNonAdmin = false;
     $res = db_query($usersSql);
