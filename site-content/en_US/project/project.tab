@@ -202,7 +202,7 @@ project_admin_index	member_request_delegation_ugroups_error	Invalid user groups
 project_admin_index	member_request_delegation_ugroups_all_invalid	All selected user groups could not be added, they contain no project admins or they are empty
 project_admin_index	member_request_delegation_ugroups_some_invalid	Some selected user groups could not be added, they contain no project admins or they are empty
 project_admin_index	member_request_delegation_ugroups_non_admins	Some selected user groups contain non project admins.
-project_admin_index	member_request_delegation_ugroups_msg	The user group to be notified for admin delegation is added.
+project_admin_index	member_request_delegation_ugroups_msg	The user group(s) to be notified for admin delegation have been updated.
 project_admin_index	member_request_delegation_msg_to_requester	Please write something meaningful for the admin.
 project_admin_index	member_request_delegation_msg_desc	This is the default message which will be displayed to requester. You can personnalize it.
 project_admin_index	member_request_delegation_msg_info	The default message for requester has been updated successfully.
