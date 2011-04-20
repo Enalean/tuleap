@@ -45,14 +45,14 @@ if ($project->getStatus() != 'A') {
     session_require(array('group'=>1));
 }
 
-$vFunc = new Valid_WhiteList('func', array('member_req_notif_group', 'member_req_notif_message'));
+$vFunc = new Valid_WhiteList('func', array('member_req_notif_group'));
+$vFuncNotifMessage = new Valid_WhiteList('func_notif', array('member_req_notif_message'));
 $vFunc->required();
 if ($request->isPost() && $request->valid($vFunc)) {
     /*
       updating the database
     */
-    switch ($request->get('func')) {
-    case 'member_req_notif_group':
+    if ($request->get('func') == 'member_req_notif_group') {
         $vUGroups = new Valid_UInt('ugroups');
         $vUGroups->required();
         if ($request->validArray($vUGroups)) {
@@ -92,9 +92,9 @@ if ($request->isPost() && $request->valid($vFunc)) {
         } else {
             $GLOBALS['Response']->addFeedback('error', $Language->getText('project_admin_index', 'member_request_delegation_ugroups_error'));
         }
-        break;
+    }
 
-    case 'member_req_notif_message':
+    if ($request->get('func_notif') == 'member_req_notif_message') {
         $vMessage = new Valid_Text('text');
         $vMessage->required();
         if ($request->valid($vMessage)) {
@@ -105,7 +105,6 @@ if ($request->isPost() && $request->valid($vFunc)) {
         } else {
             $GLOBALS['Response']->addFeedback('error', $Language->getText('project_admin_index', 'member_request_delegation_msg_error'));
         }
-        break;
     }
 }
 
@@ -118,9 +117,9 @@ project_admin_header(array('title'=>$Language->getText('project_admin_ugroup', '
 echo '
 <h2>'.$Language->getText('project_admin_index', 'member_request_delegation_title').'</h2>';
 
-echo '<tr><td colspan="2">';
+echo '<tr><td colspan="2"><p>';
 echo $Language->getText('project_admin_index', 'member_request_delegation_desc');
-echo '</td></tr>';
+echo '</p></td></tr>';
 
 //Retrieve the saved ugroups for notification from DB
 $dar = $pm->getMembershipRequestNotificationUGroup($group_id);
@@ -141,16 +140,12 @@ while ($row = db_fetch_array($res)) {
 echo '<tr><td colspan="2" style="text-align: center;">';
 echo '<form method="post" action="permission_request.php">';
 echo '<input type="hidden" name="func" value="member_req_notif_group" />';
-echo '<input type="hidden" name="group_id" value="'. $group_id .'">';
 echo html_build_multiple_select_box_from_array($ugroupList, "ugroups[]", $selectedUgroup, 8, false, '', false, '', false, '', false);
 echo '<br />';
-echo '<input type="submit" name="submit" value="'.$Language->getText('global', 'btn_update').'" />';
-echo '</form>';
 echo '</td></tr>';
-
-echo '<tr><td colspan="2">';
+echo '<tr><td colspan="2"><p>';
 echo $Language->getText('project_admin_index', 'member_request_delegation_msg_desc');
-echo '</td></tr>';
+echo '</p></td></tr>';
 
 $message = $GLOBALS['Language']->getText('project_admin_index', 'member_request_delegation_msg_to_requester');
 $dar = $pm->getMessageToRequesterForAccessProject($group_id);
@@ -160,10 +155,9 @@ if ($dar && !$dar->isError() && $dar->rowCount() == 1) {
         $message = $row['msg_to_requester'];
     }
 }
-echo '<tr><td colspan="2" style="text-align: center;">';
-echo '<form method="post" action="permission_request.php">
-          <textarea wrap="virtual" rows="5" cols="70" name="text">'.$message.'</textarea></p>
-          <input type="hidden" name="func" value="member_req_notif_message">
+          echo '<tr><td style="text-align: center;">
+          <p><textarea wrap="virtual" rows="5" cols="70" name="text">'.$message.'</textarea></p>
+          <input type="hidden" name="func_notif" value="member_req_notif_message">
           <input type="hidden" name="group_id" value="' .$group_id. '">
           <br><input name="submit" type="submit" value="'.$GLOBALS['Language']->getText('global', 'btn_update').'"/></br>
      </form>';
