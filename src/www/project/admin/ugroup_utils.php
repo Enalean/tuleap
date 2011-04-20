@@ -10,6 +10,7 @@
 //
 
 require_once('common/user/UserHelper.class.php');
+require_once('common/project/UGroup.class.php');
 
 //
 // Define various functions for user group management
@@ -618,29 +619,37 @@ function ugroup_get_user_manager() {
 }
 
 /**
+ * Wrapper for tests
+ *
+ * @return UGroup
+ */
+function ugroup_get_ugroup() {
+    return new UGroup();
+}
+
+/**
  * Detect if the ugroup contain project admins, project admins only or
  * no project admins.
  *
  * @param Integer $groupId
  * @param String  $usersSql
- * @param Boolean $containNonAdmin
  *
- * @return Boolean
+ * @return Array
  */
-function ugroup_contain_project_admins($groupId, $usersSql, &$containNonAdmin) {
+function ugroup_contain_project_admins($groupId, $usersSql) {
     $um = ugroup_get_user_manager();
-    $containAdmin    = false;
-    $containNonAdmin = false;
+    $admins    = 0;
+    $nonAdmins = 0;
     $res = db_query($usersSql);
     while ($row = db_fetch_array($res)) {
         $user = $um->getUserById($row['user_id']);
         if ($user->isMember($groupId, 'A')) {
-            $containAdmin = true;
+            $admins ++;
         } else {
-            $containNonAdmin = true;
+            $nonAdmins ++;
         }
     }
-    return $containAdmin;
+    return array('admins' => $admins, 'non_admins' => $nonAdmins);
 }
 
 /**
@@ -652,19 +661,20 @@ function ugroup_contain_project_admins($groupId, $usersSql, &$containNonAdmin) {
  * @param Array   $ugroups
  * @param Array   $validUgroups
  *
- * @return Boolean
+ * @return Integer
  */
 function ugroup_validate_static_admin_ugroups($groupId, $ugroups, &$validUGroups) {
-    $containNonAdmin = false;
-    $res = ugroup_db_get_existing_ugroups($groupId);
-    while ($row = db_fetch_array($res)) {
-        $ugroupId = $row['ugroup_id'];
-        if (in_array($ugroupId, $ugroups)) {
+    $containNonAdmin = 0;
+    $uGroup = ugroup_get_ugroup();
+    foreach ($ugroups as $ugroupId) {
+        if ($uGroup->CheckUGroupValidityByGroupId($groupId, $ugroupId)) {
             $sql = ugroup_db_get_members($ugroupId);
-            $containAdmin = ugroup_contain_project_admins($groupId, $sql, $nonAdmin);
-            if ($containAdmin) {
+            $arrayUsers = ugroup_contain_project_admins($groupId, $sql);
+            $nonAdmin = $arrayUsers['non_admins'];
+            $containAdmin = $arrayUsers['admins'];
+            if ($containAdmin > 0) {
                 $validUGroups[] = $ugroupId;
-                $containNonAdmin = $containNonAdmin | $nonAdmin;
+                $containNonAdmin += $nonAdmin;
             }
         }
     }
@@ -680,16 +690,16 @@ function ugroup_validate_static_admin_ugroups($groupId, $ugroups, &$validUGroups
  * @param Array   $ugroups
  * @param Array   $validUgroups
  *
- * @return Boolean
+ * @return Integer
  */
 function ugroup_validate_dynamic_admin_ugroups($groupId, $ugroups, &$validUGroups) {
-    $containNonAdmin = false;
+    $containNonAdmin = 0;
     foreach ($ugroups as $ugroupId) {
         $sql = ugroup_db_get_dynamic_members($ugroupId, null, $groupId);
-        $containAdmin = ugroup_contain_project_admins($groupId, $sql, $nonAdmin);
-        if ($containAdmin) {
+        $arrayUsers = ugroup_contain_project_admins($groupId, $sql);
+        if ($arrayUsers['admins'] > 0) {
             $validUGroups[] = $ugroupId;
-            $containNonAdmin = $containNonAdmin | $nonAdmin;
+            $containNonAdmin += $arrayUsers['non_admins'];
         }
     }
     return $containNonAdmin;
@@ -704,25 +714,22 @@ function ugroup_validate_dynamic_admin_ugroups($groupId, $ugroups, &$validUGroup
  *
  * @param Integer $groupId
  * @param Array   $ugroups
- * @param Boolean $containNonAdmin
  *
- * @return Boolean
+ * @return Array
  */
-function ugroup_validate_admin_ugroups($groupId, &$ugroups, &$containNonAdmin) {
+function ugroup_validate_admin_ugroups($groupId, $ugroups) {
     $validUGroups = array();
+    $allSelected = false;
     // Check static ugroups
-    $containNonAdmin = ugroup_validate_static_admin_ugroups($groupId, $ugroups, $validUGroups);
+    $nonAdmins = ugroup_validate_static_admin_ugroups($groupId, $ugroups, $validUGroups);
     // Check dynamic ugroups
-    $containNonAdmin = $containNonAdmin | ugroup_validate_dynamic_admin_ugroups($groupId, $ugroups, $validUGroups);
+    $nonAdmins += ugroup_validate_dynamic_admin_ugroups($groupId, $ugroups, $validUGroups);
     // Verify if all ugroups are valid
     $diff = array_diff($ugroups, $validUGroups);
     if (empty($diff)) {
         $allSelected = true;
-    } else {
-        $allSelected = false;
     }
-    $ugroups = $validUGroups;
-    return $allSelected;
+    return array('all_selected' => $allSelected, 'non_admins' => $nonAdmins, 'ugroups' => $validUGroups);
 }
 
 ?>

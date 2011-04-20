@@ -57,21 +57,24 @@ if ($request->isPost() && $request->valid($vFunc)) {
         $vUGroups->required();
         if ($request->validArray($vUGroups)) {
             $ugroups = $request->get('ugroups');
-            $allSelected = ugroup_validate_admin_ugroups($group_id, $ugroups, $containNonAdmin);
-            if (empty($ugroups)) {
-                $ugroups = array($GLOBALS['UGROUP_PROJECT_ADMIN']);
+            $result = ugroup_validate_admin_ugroups($group_id, $ugroups);
+            $allSelected  = $result['all_selected'];
+            $nonAdmins    = $result['non_admins'];
+            $validUgroups = $result['ugroups'];
+            if (empty($validUgroups)) {
+                $validUgroups = array($GLOBALS['UGROUP_PROJECT_ADMIN']);
                 $GLOBALS['Response']->addFeedback('error', $Language->getText('project_admin_index', 'member_request_delegation_ugroups_all_invalid'));
             } else {
                 if (!$allSelected) {
                     $GLOBALS['Response']->addFeedback('warning', $Language->getText('project_admin_index', 'member_request_delegation_ugroups_some_invalid'));
                 }
-                if ($containNonAdmin) {
-                    $GLOBALS['Response']->addFeedback('warning', $Language->getText('project_admin_index', 'member_request_delegation_ugroups_non_admins'));
+                if ($nonAdmins > 0) {
+                    $GLOBALS['Response']->addFeedback('warning', $Language->getText('project_admin_index', 'member_request_delegation_ugroups_non_admins', $nonAdmins));
                 }
             }
             //to retreive the old marked ugroups
             $darUgroups = $pm->getMembershipRequestNotificationUGroup($group_id);
-            if ($pm->setMembershipRequestNotificationUGroup($group_id, $ugroups)) {
+            if ($pm->setMembershipRequestNotificationUGroup($group_id, $validUgroups)) {
                 if ($darUgroups && !$darUgroups->isError() && $darUgroups->rowCount() > 0) {
                     foreach ($darUgroups as $row) {
                         $oldUgroups[] = ugroup_get_name_from_id($row['ugroup_id']);
@@ -79,7 +82,7 @@ if ($request->isPost() && $request->valid($vFunc)) {
                 } else {
                     $oldUgroups = array(ugroup_get_name_from_id($GLOBALS['UGROUP_PROJECT_ADMIN']));
                 }
-                foreach ($ugroups as $ugroupId) {
+                foreach ($validUgroups as $ugroupId) {
                     $newUgroups[] = ugroup_get_name_from_id($ugroupId);
                 }
                 //update group history
