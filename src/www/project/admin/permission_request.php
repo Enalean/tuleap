@@ -23,13 +23,13 @@ require_once('pre.php');
 // Valid group id
 $vGroupId = new Valid_GroupId();
 $vGroupId->required();
-if(!$request->valid($vGroupId)) {
-    exit_error($Language->getText('project_admin_index','invalid_p'), $Language->getText('project_admin_index','p_not_found'));
+if (!$request->valid($vGroupId)) {
+    exit_error($Language->getText('project_admin_index', 'invalid_p'), $Language->getText('project_admin_index', 'p_not_found'));
 }
 $group_id = $request->get('group_id');
 
 
-session_require(array('group'=>$group_id,'admin_flags'=>'A'));
+session_require(array('group'=>$group_id, 'admin_flags'=>'A'));
 
 //
 //  get the Project
@@ -37,7 +37,7 @@ session_require(array('group'=>$group_id,'admin_flags'=>'A'));
 $pm    = ProjectManager::instance();
 $project = $pm->getProject($group_id);
 if (!$project || !is_object($project) || $project->isError()) {
-  exit_no_group();
+    exit_no_group();
 }
 
 //if the project isn't active, require you to be a member of the super-admin group
@@ -110,13 +110,13 @@ if ($request->isPost() && $request->valid($vFunc)) {
     Delegate notifications
 */
 
-project_admin_header(array('title'=>$Language->getText('project_admin_ugroup','permission_request'),'group'=>$group_id));
+project_admin_header(array('title'=>$Language->getText('project_admin_ugroup', 'permission_request'), 'group'=>$group_id));
 
 echo '
-<h2>'.$Language->getText('project_admin_index','member_request_delegation_title').'</h2>';
+<h2>'.$Language->getText('project_admin_index', 'member_request_delegation_title').'</h2>';
 
 echo '<tr><td colspan="2">';
-echo $Language->getText('project_admin_index','member_request_delegation_desc');
+echo $Language->getText('project_admin_index', 'member_request_delegation_desc');
 echo '</td></tr>';
 
 //Retrieve the saved ugroups for notification from DB
@@ -146,7 +146,7 @@ echo '</form>';
 echo '</td></tr>';
 
 echo '<tr><td colspan="2">';
-echo $Language->getText('project_admin_index','member_request_delegation_msg_desc');
+echo $Language->getText('project_admin_index', 'member_request_delegation_msg_desc');
 echo '</td></tr>';
 
 $message = $GLOBALS['Language']->getText('project_admin_index', 'member_request_delegation_msg_to_requester');
