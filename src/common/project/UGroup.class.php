@@ -106,5 +106,18 @@ class UGroup {
         return $username_array;
     }
 
+    /**
+    * Wrapper for the UGroupDao method that checks UGroup validity by GroupId 
+    *
+    * @param Integer $groupId the group id
+    * @param Integer $ugroupId the ugroup id
+    *
+    * @return boolean
+    */
+    function CheckUGroupValidityByGroupId($groupId, $ugroupId) {
+        $ugroup_dao =& $this->_getUGroupDao();
+        return $ugroup_dao->CheckUGroupValidityByGroupId($groupId, $ugroupId);
+    }
+
 }
 ?>

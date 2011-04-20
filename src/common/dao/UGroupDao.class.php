@@ -50,5 +50,28 @@ class UGroupDao extends DataAccessObject {
                 WHERE user_id = '.$this->da->escapeInt($userId);
         return $this->retrieve($sql);
     }
+    
+    /**
+    * Checks UGroup  validity by GroupId 
+    *
+    * @param Integer $groupId the group id
+    * @param Integer $ugroupId the ugroup id
+    *
+    * @return boolean
+    */
+    function CheckUGroupValidityByGroupId($groupId, $ugroupId) {
+        $groupId = $this->da->escapeInt($groupId);
+        $ugroupId = $this->da->escapeInt($ugroupId);
+
+        $sql = 'SELECT NULL
+                FROM ugroup 
+                WHERE group_id = '. $groupId .' AND ugroup_id = '. $ugroupId;
+        $res = $this->retrieve($sql);
+        if($res && !$res->isError() && $res->rowCount() == 1) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }
 ?>
