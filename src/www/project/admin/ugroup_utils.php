@@ -628,8 +628,7 @@ function ugroup_get_ugroup() {
 }
 
 /**
- * Detect if the ugroup contain project admins, project admins only or
- * no project admins.
+ * Calculate the number of project admins and non project admins of the ugroup
  *
  * @param Integer $groupId
  * @param String  $usersSql
@@ -654,7 +653,7 @@ function ugroup_contain_project_admins($groupId, $usersSql) {
 
 /**
  * Filter static ugroups that contain project admins.
- * Retun value indicates if there is non project admins
+ * Retun value is the number of non project admins
  * in the filtered ugroups.
  *
  * @param Integer $groupId
@@ -683,7 +682,7 @@ function ugroup_validate_static_admin_ugroups($groupId, $ugroups, &$validUGroups
 
 /**
  * Filter dynamic ugroups that contain project admins.
- * Retun value indicates if there is non project admins
+ * Retun is the number of non project admins
  * in the filtered ugroups.
  *
  * @param Integer $groupId
@@ -709,8 +708,8 @@ function ugroup_validate_dynamic_admin_ugroups($groupId, $ugroups, &$validUGroup
  * Validate the ugroup list containing group admins.
  * Remove ugroups that are empty or contain no project admins and
  * indicate if no ugroup removed in the return value
- * Don't remove ugroups containing both project admins and non project admins admins
- * just indicate $containNonAdmin.
+ * Don't remove ugroups containing both project admins and non project admins
+ * just indicate the total number of non project admins.
  *
  * @param Integer $groupId
  * @param Array   $ugroups
