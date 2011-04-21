@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Copyright (c) STMicroelectronics, 2011. All Rights Reserved.
  *
@@ -20,25 +19,28 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-require_once('common/mvc/Actions.class.php');
+require_once('common/mvc/Views.class.php');
 require_once('common/include/HTTPRequest.class.php');
 
 /**
- * CodexToRemedyActions
+ * CodexToRemedyViews
  */
+class CodexToRemedyViews extends Views {
 
-class CodexToRemedyActions extends Actions {
-    
-    function CodexToRemedyActions(&$controler, $view=null) {
-        $this->Actions($controler);
+    function header() {
+        $title = $GLOBALS['Language']->getText('plugin_codextoremedy','title');
+        $GLOBALS['HTML']->header(array('title'=>$title));
+        echo '<h2>'.$title.'</h2>';
     }
-
-    // {{{ Actions
+    function footer() {
+        $GLOBALS['HTML']->footer(array());
+    }
     
+    // {{{ Views
+    function remedy_form() {
+        echo 'Feed Rif table here !';
+    }
     // }}}
-    
-    
 }
-
 
 ?>

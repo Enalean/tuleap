@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Copyright (c) STMicroelectronics, 2011. All Rights Reserved.
  *
@@ -29,14 +28,13 @@ require_once('CodexToRemedyActions.class.php');
  * CodexToRemedy */
 
 class CodexToRemedy extends Controler {
-    
+
     function CodexToRemedy() {
         session_require(array('group'=>'1','admin_flags'=>'A'));
     }
-    
+
     function request() {
-        $request =& HTTPRequest::instance();
-        
+        $request = HTTPRequest::instance();
         $this->view = 'remedy_form';
     }
 }
