@@ -101,7 +101,7 @@ if ($request->isPost() && $request->valid($vFunc)) {
         $updatedMessage = true;
         $vMessage = new Valid_Text('text');
         $vMessage->required();
-        $message = trim(preg_replace('/\s\s+/', ' ', $request->get('text')));
+        $message = trim($request->get('text'));
         $dar = $pm->getMessageToRequesterForAccessProject($group_id);
         if ($dar && !$dar->isError() && $dar->rowCount() == 1) {
             $row = $dar->current();
