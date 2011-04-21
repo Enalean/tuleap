@@ -31,9 +31,9 @@ class CodexToRemedyActions extends Actions {
     
     function CodexToRemedyActions(&$controler, $view=null) {
         $this->Actions($controler);
-	}
-	
-	// {{{ Actions
+    }
+
+    // {{{ Actions
     
     // }}}
     
