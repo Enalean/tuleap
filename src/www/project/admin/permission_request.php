@@ -90,7 +90,7 @@ if ($request->isPost() && $request->valid($vFunc)) {
                 }
                 //update group history
                 group_add_history('membership_request_updated', implode(',', $oldUgroups).' :: '.implode(',', $newUgroups), $group_id);
-                $GLOBALS['Response']->addFeedback('info', $Language->getText('project_admin_index', 'member_request_delegation_ugroups_msg'));
+                $GLOBALS['Response']->addFeedback('info', $Language->getText('project_admin_index', 'member_request_delegation_ugroups_msg', implode(', ', $newUgroups)));
             }
         } else {
             $GLOBALS['Response']->addFeedback('error', $Language->getText('project_admin_index', 'member_request_delegation_ugroups_error'));
@@ -98,15 +98,15 @@ if ($request->isPost() && $request->valid($vFunc)) {
         break;
 
     case 'member_req_notif_message':
-        $updatedMessage = True;
+        $updatedMessage = true;
         $vMessage = new Valid_Text('text');
         $vMessage->required();
         $message = trim(preg_replace('/\s\s+/', ' ', $request->get('text')));
         $dar = $pm->getMessageToRequesterForAccessProject($group_id);
         if ($dar && !$dar->isError() && $dar->rowCount() == 1) {
             $row = $dar->current();
-            if (!strcmp ( $row['msg_to_requester'] , $message )) {
-               $updatedMessage = False;
+            if (!strcmp($row['msg_to_requester'], $message)) {
+                $updatedMessage = false;
             }
         }
         if ($request->valid($vMessage) & !empty($message) & $updatedMessage) {
@@ -131,9 +131,9 @@ echo '
 
 echo '<tr><td colspan="2"><p>';
 if (!$project->isPublic()) {
-echo $Language->getText('project_admin_index', 'member_request_delegation_desc_private_group');
+    echo $Language->getText('project_admin_index', 'member_request_delegation_desc_private_group');
 } else {
-echo $Language->getText('project_admin_index', 'member_request_delegation_desc_restricted_user');
+    echo $Language->getText('project_admin_index', 'member_request_delegation_desc_restricted_user');
 }
 echo '</p></td></tr>';
 
