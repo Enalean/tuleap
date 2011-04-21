@@ -31,7 +31,7 @@ class CodexToRemedyActions extends Actions {
     /**
      * Constructor
      *
-     * @param $controler
+     * @param CodexToRemedy $controler the controller
      *
      * @return void
      */

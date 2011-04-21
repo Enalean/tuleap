@@ -27,6 +27,8 @@ class CodexToRemedyPluginInfo extends PluginInfo {
     /**
      * Constructor
      *
+     * @param codextoremedyPlugin $plugin the plugin
+     *
      * @return void
      */
     function CodexToRemedyPluginInfo($plugin) {

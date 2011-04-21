@@ -27,11 +27,12 @@ class codextoremedyPlugin extends Plugin {
     /**
      * Constructor
      *
+     * @param Integer $id id of the plugin
+     *
      * @return void
      */
     function codextoremedyPlugin($id) {
         $this->Plugin($id);
-        $this->_addHook('cssfile', 'cssFile', false);
         $this->_addHook('site_help', 'displayForm', false);
     }
 
@@ -49,17 +50,6 @@ class codextoremedyPlugin extends Plugin {
     }
 
     /**
-     * Add link to CSS file
-     *
-     * @return void
-     */
-    function cssFile($params) {
-        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
-            echo '<link rel="stylesheet" type="text/css" href="'.$this->getThemePath().'/css/style.css" />';
-        }
-    }
-
-    /**
      * Launch the controller
      *
      * @return void
@@ -73,32 +63,32 @@ class codextoremedyPlugin extends Plugin {
     /**
      * Display form to fill a request
      *
-     * @param Array $params
+     * @param Array $params params of the hook
      *
      * @return Void
      */
     function displayForm($params) {
-?>
-<form  name="request" action="index.php" method="post" enctype="multipart/form-data">
-     <fieldset style="width:20%"><legend>Submit Help Request:</legend>
-         <table>
-             <tr><td><b>Type:</b></td>
-             <td><select name="type">
-                 <option value"support">Support request</option>
-                 <option value"enhancement">Enhancement request</option>
-             </select></td></tr>
-             <tr><td><b>Severity:</b></td><td><select name="severity">
-                 <option value"minor">Minor</option>
-                 <option value"serious">Serious</option>
-                 <option value"critical">Critical</option>
-             </select></td></tr>
-             <tr><td><b>Summary:</b></td><td><input type="text" name="request_summary" /></td></tr>
-             <tr><td><b>Description:</b></td><td><textarea name="request_description" cols="60" rows="7"></textarea></td></tr>
-            <tr><td></td><td><input name="submit" type="submit" value="Submit" /></td></tr>
-        </table>
-    </fieldset>
-</form>
-<?php
+        ?>
+        <form  name="request" action="index.php" method="post" enctype="multipart/form-data">
+             <fieldset style="width:20%"><legend>Submit Help Request:</legend>
+                 <table>
+                     <tr><td><b>Type:</b></td>
+                     <td><select name="type">
+                         <option value"support">Support request</option>
+                         <option value"enhancement">Enhancement request</option>
+                     </select></td></tr>
+                     <tr><td><b>Severity:</b></td><td><select name="severity">
+                         <option value"minor">Minor</option>
+                         <option value"serious">Serious</option>
+                         <option value"critical">Critical</option>
+                     </select></td></tr>
+                     <tr><td><b>Summary:</b></td><td><input type="text" name="request_summary" /></td></tr>
+                     <tr><td><b>Description:</b></td><td><textarea name="request_description" cols="60" rows="7"></textarea></td></tr>
+                    <tr><td></td><td><input name="submit" type="submit" value="Submit" /></td></tr>
+                </table>
+            </fieldset>
+        </form>
+        <?php
     }
 }
 ?>
