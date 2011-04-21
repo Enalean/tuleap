@@ -118,9 +118,13 @@ project_admin_header(array('title'=>$Language->getText('project_admin_ugroup', '
 echo '
 <h2>'.$Language->getText('project_admin_index', 'member_request_delegation_title').'</h2>';
 
-echo '<tr><td colspan="2">';
-echo $Language->getText('project_admin_index', 'member_request_delegation_desc');
-echo '</td></tr>';
+echo '<tr><td colspan="2"><p>';
+if (!$project->isPublic()) {
+echo $Language->getText('project_admin_index', 'member_request_delegation_desc_private_group');
+} else {
+echo $Language->getText('project_admin_index', 'member_request_delegation_desc_restricted_user');
+}
+echo '</p></td></tr>';
 
 //Retrieve the saved ugroups for notification from DB
 $dar = $pm->getMembershipRequestNotificationUGroup($group_id);
@@ -148,9 +152,9 @@ echo '<input type="submit" name="submit" value="'.$Language->getText('global', '
 echo '</form>';
 echo '</td></tr>';
 
-echo '<tr><td colspan="2">';
+echo '<tr><td colspan="2"><p>';
 echo $Language->getText('project_admin_index', 'member_request_delegation_msg_desc');
-echo '</td></tr>';
+echo '</p></td></tr>';
 
 $message = $GLOBALS['Language']->getText('project_admin_index', 'member_request_delegation_msg_to_requester');
 $dar = $pm->getMessageToRequesterForAccessProject($group_id);
