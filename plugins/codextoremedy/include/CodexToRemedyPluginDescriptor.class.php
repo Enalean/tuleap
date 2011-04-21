@@ -22,7 +22,12 @@
 require_once 'common/plugin/PluginDescriptor.class.php';
 
 class CodexToRemedyPluginDescriptor extends PluginDescriptor {
-    
+
+    /**
+     * Constructor
+     *
+     * @return void
+     */
     function __construct() {
         parent::__construct($GLOBALS['Language']->getText('plugin_codextoremedy', 'descriptor_name'), false, $GLOBALS['Language']->getText('plugin_codextoremedy', 'descriptor_description'));
     }

@@ -28,7 +28,14 @@ require_once('common/include/HTTPRequest.class.php');
 
 class CodexToRemedyActions extends Actions {
 
-    function CodexToRemedyActions(&$controler, $view=null) {
+    /**
+     * Constructor
+     *
+     * @param $controler
+     *
+     * @return void
+     */
+    function CodexToRemedyActions($controler) {
         $this->Actions($controler);
     }
 

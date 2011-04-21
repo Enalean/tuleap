@@ -24,14 +24,23 @@ require_once('common/system_event/SystemEvent.class.php');
 
 class codextoremedyPlugin extends Plugin {
 
+    /**
+     * Constructor
+     *
+     * @return void
+     */
     function codextoremedyPlugin($id) {
         $this->Plugin($id);
-        $this->_addHook('site_admin_option_hook', 'siteAdminHooks', false);
         $this->_addHook('cssfile', 'cssFile', false);
         $this->_addHook('site_help', 'displayForm', false);
     }
 
-    function &getPluginInfo() {
+    /**
+     * Retrieve plugin info
+     *
+     * @return CodexToRemedyPluginInfo
+     */
+    function getPluginInfo() {
         if (!$this->pluginInfo instanceof CodexToRemedyPluginInfo) {
             include_once('CodexToRemedyPluginInfo.class.php');
             $this->pluginInfo = new CodexToRemedyPluginInfo($this);
@@ -39,19 +48,25 @@ class codextoremedyPlugin extends Plugin {
         return $this->pluginInfo;
     }
 
-    function siteAdminHooks($params) {
-        echo '<li><a href="'.$this->getPluginPath().'/">Codex To Remedy</a></li>';
-    }
-
+    /**
+     * Add link to CSS file
+     *
+     * @return void
+     */
     function cssFile($params) {
         if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
             echo '<link rel="stylesheet" type="text/css" href="'.$this->getThemePath().'/css/style.css" />';
         }
     }
-    
+
+    /**
+     * Launch the controller
+     *
+     * @return void
+     */
     function process() {
         require_once('CodexToRemedy.class.php');
-        $controler =& new CodexToRemedy();
+        $controler = new CodexToRemedy();
         $controler->process();
     }
 

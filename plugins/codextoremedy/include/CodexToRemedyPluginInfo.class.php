@@ -23,10 +23,16 @@ require_once 'common/plugin/PluginInfo.class.php';
 require_once 'CodexToRemedyPluginDescriptor.class.php';
 
 class CodexToRemedyPluginInfo extends PluginInfo {
-    function CodexToRemedyPluginInfo(&$plugin) {
+
+    /**
+     * Constructor
+     *
+     * @return void
+     */
+    function CodexToRemedyPluginInfo($plugin) {
         $this->PluginInfo($plugin);
         $this->setPluginDescriptor(new CodexToRemedyPluginDescriptor());
     }
-    
+
 }
 ?>

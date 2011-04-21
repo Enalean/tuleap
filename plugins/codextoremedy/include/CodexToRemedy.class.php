@@ -29,13 +29,14 @@ require_once('CodexToRemedyActions.class.php');
 
 class CodexToRemedy extends Controler {
 
-    function CodexToRemedy() {
-        session_require(array('group'=>'1','admin_flags'=>'A'));
-    }
-
+    /**
+     * Compute the request
+     *
+     * @return void
+     */
     function request() {
         $request = HTTPRequest::instance();
-        $this->view = 'remedy_form';
+        $this->view = 'remedyForm';
     }
 }
 

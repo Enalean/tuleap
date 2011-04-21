@@ -27,17 +27,33 @@ require_once('common/include/HTTPRequest.class.php');
  */
 class CodexToRemedyViews extends Views {
 
+    /**
+     * Display header
+     *
+     * @return void
+     */
     function header() {
-        $title = $GLOBALS['Language']->getText('plugin_codextoremedy','title');
+        $title = $GLOBALS['Language']->getText('plugin_codextoremedy', 'title');
         $GLOBALS['HTML']->header(array('title'=>$title));
         echo '<h2>'.$title.'</h2>';
     }
+
+    /**
+     * Display footer
+     *
+     * @return void
+     */
     function footer() {
         $GLOBALS['HTML']->footer(array());
     }
-    
+
     // {{{ Views
-    function remedy_form() {
+    /**
+     * Redirect to form
+     *
+     * @return void
+     */
+    function remedyForm() {
         $GLOBALS['Response']->redirect('/site');
     }
     // }}}
