@@ -98,14 +98,15 @@ if ($request->isPost() && $request->valid($vFunc)) {
         break;
 
     case 'member_req_notif_message':
+        $updatedMessage = True;
         $vMessage = new Valid_Text('text');
         $vMessage->required();
         $message = trim(preg_replace('/\s\s+/', ' ', $request->get('text')));
         $dar = $pm->getMessageToRequesterForAccessProject($group_id);
         if ($dar && !$dar->isError() && $dar->rowCount() == 1) {
             $row = $dar->current();
-            if ($row['msg_to_requester'] != $message ) {
-                $updatedMessage = True;
+            if (!strcmp ( $row['msg_to_requester'] , $message )) {
+               $updatedMessage = False;
             }
         }
         if ($request->valid($vMessage) & !empty($message) & $updatedMessage) {
