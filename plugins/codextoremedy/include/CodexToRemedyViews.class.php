@@ -38,7 +38,7 @@ class CodexToRemedyViews extends Views {
     
     // {{{ Views
     function remedy_form() {
-        echo 'Feed Rif table here !';
+        $GLOBALS['Response']->redirect('/site');
     }
     // }}}
 }
