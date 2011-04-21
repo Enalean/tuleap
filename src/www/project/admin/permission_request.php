@@ -58,15 +58,18 @@ if ($request->isPost() && $request->valid($vFunc)) {
         if ($request->validArray($vUGroups)) {
             $ugroups = $request->get('ugroups');
             $result = ugroup_validate_admin_ugroups($group_id, $ugroups);
-            $allSelected  = $result['all_selected'];
             $nonAdmins    = $result['non_admins'];
             $validUgroups = $result['ugroups'];
             if (empty($validUgroups)) {
                 $validUgroups = array($GLOBALS['UGROUP_PROJECT_ADMIN']);
                 $GLOBALS['Response']->addFeedback('error', $Language->getText('project_admin_index', 'member_request_delegation_ugroups_all_invalid'));
             } else {
-                if (!$allSelected) {
-                    $GLOBALS['Response']->addFeedback('warning', $Language->getText('project_admin_index', 'member_request_delegation_ugroups_some_invalid'));
+                $diff = array_diff($ugroups, $validUgroups);
+                if (!empty($diff)) {
+                    foreach ($diff as $ugroupId) {
+                        $deletedUgroups[] = ugroup_get_name_from_id($ugroupId);
+                    }
+                    $GLOBALS['Response']->addFeedback('warning', $Language->getText('project_admin_index', 'member_request_delegation_ugroups_some_invalid', implode(', ', $deletedUgroups)));
                 }
                 if ($nonAdmins > 0) {
                     $GLOBALS['Response']->addFeedback('warning', $Language->getText('project_admin_index', 'member_request_delegation_ugroups_non_admins', $nonAdmins));

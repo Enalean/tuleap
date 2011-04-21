@@ -201,7 +201,7 @@ project_admin_index	member_request_delegation_desc_private_group	Lorsqu'un utili
 project_admin_index	member_request_delegation_desc_restricted_user	Lorsqu'un utilisateur n'a pas accès à votre projet, du fait qu'il soit soit restreint aux projects dont il est membre, il peut vous envoyer une demande afin d'être ajouté aux membres de projet.<br />La demande est envoyée au group d'utilisateurs suivant :
 project_admin_index	member_request_delegation_ugroups_error	Groupe d'utilisateur invalid
 project_admin_index	member_request_delegation_ugroups_all_invalid	Les groupes d'utilisateurs ne peuvent pas etre ajoutés, ils ne contiennent aucun admin du projet ou sont vides
-project_admin_index	member_request_delegation_ugroups_some_invalid	Certains groupes d'utilisateurs ne peuvent pas etre ajoutés, ils ne contiennent aucun admin du projet ou sont vides
+project_admin_index	member_request_delegation_ugroups_some_invalid	Ces groupes d'utilisateurs ($1) ne peuvent pas etre ajoutés, ils ne contiennent aucun admin du projet ou sont vides
 project_admin_index	member_request_delegation_ugroups_non_admins	Certains groupes d'utilisateurs contiennent des utilisateurs non admins du projet ($1 non admin du projet en total, ils ne vont pas reçevoir les demandes de permission).
 project_admin_index	member_request_delegation_ugroups_msg	Le(s) groupe(s) d'utilisateur à  notifier pour la délégation d'opération d'admin ont été modifiés.
 project_admin_index	member_request_delegation_msg_to_requester	Veuillez soumettre un message significatif à fin d'aider l'administateur. 

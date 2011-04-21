@@ -706,8 +706,7 @@ function ugroup_validate_dynamic_admin_ugroups($groupId, $ugroups, &$validUGroup
 
 /**
  * Validate the ugroup list containing group admins.
- * Remove ugroups that are empty or contain no project admins and
- * indicate if no ugroup removed in the return value
+ * Remove ugroups that are empty or contain no project admins.
  * Don't remove ugroups containing both project admins and non project admins
  * just indicate the total number of non project admins.
  *
@@ -718,17 +717,11 @@ function ugroup_validate_dynamic_admin_ugroups($groupId, $ugroups, &$validUGroup
  */
 function ugroup_validate_admin_ugroups($groupId, $ugroups) {
     $validUGroups = array();
-    $allSelected = false;
     // Check static ugroups
     $nonAdmins = ugroup_validate_static_admin_ugroups($groupId, $ugroups, $validUGroups);
     // Check dynamic ugroups
     $nonAdmins += ugroup_validate_dynamic_admin_ugroups($groupId, $ugroups, $validUGroups);
-    // Verify if all ugroups are valid
-    $diff = array_diff($ugroups, $validUGroups);
-    if (empty($diff)) {
-        $allSelected = true;
-    }
-    return array('all_selected' => $allSelected, 'non_admins' => $nonAdmins, 'ugroups' => $validUGroups);
+    return array('non_admins' => $nonAdmins, 'ugroups' => $validUGroups);
 }
 
 ?>
