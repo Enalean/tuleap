@@ -100,8 +100,15 @@ if ($request->isPost() && $request->valid($vFunc)) {
     case 'member_req_notif_message':
         $vMessage = new Valid_Text('text');
         $vMessage->required();
-        if ($request->valid($vMessage)) {
-            $message = trim($request->get('text'));
+        $message = trim(preg_replace('/\s\s+/', ' ', $request->get('text')));
+        $dar = $pm->getMessageToRequesterForAccessProject($group_id);
+        if ($dar && !$dar->isError() && $dar->rowCount() == 1) {
+            $row = $dar->current();
+            if ($row['msg_to_requester'] != $message ) {
+                $updatedMessage = True;
+            }
+        }
+        if ($request->valid($vMessage) & !empty($message) & $updatedMessage) {
             if ($pm->setMessageToRequesterForAccessProject($group_id, $message)) {
                 $GLOBALS['Response']->addFeedback('info', $Language->getText('project_admin_index', 'member_request_delegation_msg_info'));
             }
