@@ -114,9 +114,9 @@ class UGroup {
     *
     * @return boolean
     */
-    function CheckUGroupValidityByGroupId($groupId, $ugroupId) {
-        $ugroup_dao =& $this->_getUGroupDao();
-        return $ugroup_dao->CheckUGroupValidityByGroupId($groupId, $ugroupId);
+    function checkUGroupValidityByGroupId($groupId, $ugroupId) {
+        $dao =& $this->_getUGroupDao();
+        return $dao->checkUGroupValidityByGroupId($groupId, $ugroupId);
     }
 
 }

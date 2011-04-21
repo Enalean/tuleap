@@ -59,7 +59,7 @@ class UGroupDao extends DataAccessObject {
     *
     * @return boolean
     */
-    function CheckUGroupValidityByGroupId($groupId, $ugroupId) {
+    function checkUGroupValidityByGroupId($groupId, $ugroupId) {
         $groupId = $this->da->escapeInt($groupId);
         $ugroupId = $this->da->escapeInt($ugroupId);
 
