@@ -414,5 +414,8 @@ $sys_use_snippet = 1;
 // (1 to enable, 0 to disable)
 $sys_use_project_registration = 1;
 
+//Zend Framework path
+$zend_path = "/usr/share/zend";
+
 // End of customizations -- place nothing after the closing PHP tag!
 ?>
