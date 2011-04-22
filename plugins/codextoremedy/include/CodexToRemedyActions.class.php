@@ -50,6 +50,35 @@ class CodexToRemedyActions extends Actions {
         $dao = new CodexToRemedyDao();
         return $dao->insertInCodexDB($params['id'], $params['user_id'], $params['summary'], $params['create_date'], $params['description'], $params['type'], $params['severity']);
     }
+
+    /**
+     * Send mail to SD after ticket submission
+     *
+     * @param User    $user        The requester
+     * @param String  $requestType The type of the request
+     * @param String  $severity    The severity
+     * @param String  $summary     The request summary
+     * @param String  $messageToSd The request description
+     */
+    function sendMailToSd($user,$requestType,$severity,$summary,$messageToSd) {
+        $c = $this->getController();
+
+        $to = 'codex-team-bounces@lists.codex.cro.st.com';
+        $from = $user->getEmail();
+        // Send a notification message to the SD and CodexCC
+        $mail = new Codendi_Mail();
+        $mail->setTo($to);
+        $mail->setFrom($from);
+
+        $mail->setSubject($GLOBALS['Language']->getText('plugin_codextoremedy', 'codextoremedy_mail_subject', array($requesType, $user->getRealName())));
+
+        $body = $GLOBALS['Language']->getText('plugin_codextoremedy', 'codextoremedy_mail_content', array($user->getRealName(), $user->getName(), $project->getPublicName(), $requestType, $severity, $summary, $messageToSd, $user->getEmail()));
+
+        $mail->setBodyHtml($body);
+        if (!$mail->send()) {
+            $c->addError($GLOBALS['Language']->getText('plugin_codextoremedy', 'codextoremedy_mail_failed'));
+        }
+    }
     // }}}
 }
 
