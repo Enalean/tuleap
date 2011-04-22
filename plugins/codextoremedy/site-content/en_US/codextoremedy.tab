@@ -8,3 +8,6 @@ plugin_codextoremedy	Enhancement_request	Enhancement request
 plugin_codextoremedy	Minor	Minor
 plugin_codextoremedy	Serious	Serious
 plugin_codextoremedy	Critical	Critical
+plugin_codextoremedy	codextoremedy_mail_subject	$2 has submitted a new $1 ticket
+plugin_codextoremedy	codextoremedy_mail_content	Dear SD peoples,\n\n$1 (login: $2) insert a new Remedy ticket.
+plugin_codextoremedy	codextoremedy_mail_failed	Send notification mail has failed
