@@ -403,7 +403,7 @@ if ($dar && !$dar->isError() && $dar->rowCount() > 0) {
 } else {
     $selectedUgroup = array(util_translate_name_ugroup('project_admin'));
 }
-echo '<b>User group(s) to be notified for admin delegation:</b>';
+echo '<b>'.$Language->getText('project_admin_utils','selected_ugroups_title').'</b>';
 echo '<ul>';
 foreach ($selectedUgroup as $ugroup) {
     echo '<li>'.$ugroup.'</li>';
@@ -418,7 +418,7 @@ if ($dar && !$dar->isError() && $dar->rowCount() == 1) {
         $message = $row['msg_to_requester'];
     }
 }
-echo '<b>Notification message:</b><br/>';
+echo '<b>'.$Language->getText('project_admin_utils','notif_message_title').'</b><br/>';
 echo '<textarea wrap="virtual" rows="5" cols="70" name="text" readonly>'.$message.'</textarea>';
 echo '<tr><td colspan="2">';
 echo '<p align="center">';
