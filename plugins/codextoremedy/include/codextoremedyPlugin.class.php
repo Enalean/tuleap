@@ -69,21 +69,49 @@ class codextoremedyPlugin extends Plugin {
      */
     function displayForm($params) {
         ?>
-        <form  name="request" action="index.php" method="post" enctype="multipart/form-data">
-             <fieldset style="width:20%"><legend>Submit Help Request:</legend>
+<link rel="stylesheet" type="text/css" href="style.css">
+<style type="text/css">
+.cssform label{
+font-weight: bold;
+float: left;
+}
+
+.cssform input[type="text"]{ /*width of text boxes. IE6 does not understand this attribute*/
+width: 180px;
+}
+
+.cssform textarea{
+width: 250px;
+height: 150px;
+}
+.cssform fieldset{
+background: rgb(222,222,222);
+}
+.cssform legend
+{
+    position:absolute;
+    top:-8px;
+}
+</style>
+        <form  name="request" style="width: 250px;" class="cssform" action="index.php" method="post" enctype="multipart/form-data">
+             <fieldset >
                  <table>
-                     <tr><td><b>Type:</b></td>
-                     <td><select name="type">
-                         <option value"support">Support request</option>
-                         <option value"enhancement">Enhancement request</option>
-                     </select></td></tr>
-                     <tr><td><b>Severity:</b></td><td><select name="severity">
-                         <option value"minor">Minor</option>
-                         <option value"serious">Serious</option>
-                         <option value"critical">Critical</option>
-                     </select></td></tr>
-                     <tr><td><b>Summary:</b></td><td><input type="text" name="request_summary" /></td></tr>
-                     <tr><td><b>Description:</b></td><td><textarea name="request_description" cols="60" rows="7"></textarea></td></tr>
+                     <tr>
+                     	<td><b>Type:</b></td>
+                     	<td><select name="type">
+                         <option value"support"><?php echo $GLOBALS['Language']->getText('plugin_codextoremedy', 'Support_request');?></option>
+                         <option value"enhancement"><?php echo $GLOBALS['Language']->getText('plugin_codextoremedy', 'Enhancement_request');?></option>
+                     		</select>
+                     	<b><?php echo $GLOBALS['Language']->getText('plugin_codextoremedy', 'severity');?></b></td>
+                         <td><select name="severity">
+                             <option value"minor">Minor</option>
+                             <option value"serious">Serious</option>
+                             <option value"critical">Critical</option>
+                             </select>
+                         </td>
+                     </tr>
+                     <tr><td><b><?php echo $GLOBALS['Language']->getText('plugin_codextoremedy', 'summary');?></b></td><td><input type="text" name="request_summary" /></td></tr>
+                     <tr><td><b>Description:</b></td><td><textarea style="background: b" name="request_description"></textarea></td></tr>
                     <tr><td></td><td><input name="submit" type="submit" value="Submit" /></td></tr>
                 </table>
             </fieldset>
