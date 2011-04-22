@@ -19,10 +19,10 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-require_once 'common/plugin/PluginInfo.class.php';
+require_once 'common/plugin/PluginFileInfo.class.php';
 require_once 'CodexToRemedyPluginDescriptor.class.php';
 
-class CodexToRemedyPluginInfo extends PluginInfo {
+class CodexToRemedyPluginInfo extends PluginFileInfo {
 
     /**
      * Constructor
@@ -31,8 +31,8 @@ class CodexToRemedyPluginInfo extends PluginInfo {
      *
      * @return void
      */
-    function CodexToRemedyPluginInfo($plugin) {
-        $this->PluginInfo($plugin);
+    function __construct($plugin) {
+        parent::__construct($plugin, 'codextoremedy');
         $this->setPluginDescriptor(new CodexToRemedyPluginDescriptor());
     }
 
