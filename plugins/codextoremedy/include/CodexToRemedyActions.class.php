@@ -21,6 +21,7 @@
 
 require_once('common/mvc/Actions.class.php');
 require_once('common/include/HTTPRequest.class.php');
+require_once('CodexToRemedyDao.class.php');
 
 /**
  * CodexToRemedyActions
@@ -40,7 +41,15 @@ class CodexToRemedyActions extends Actions {
     }
 
     // {{{ Actions
-
+    /**
+     * Insert informations about the ticket in Codex database
+     *
+     * @return Boolean
+     */
+    function insertInPluginDB($params) {
+        $dao = new CodexToRemedyDao();
+        return $dao->insertInCodexDB($params['id'], $params['user_id'], $params['summary'], $params['create_date'], $params['description'], $params['type'], $params['severity']);
+    }
     // }}}
 }
 
