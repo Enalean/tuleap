@@ -403,6 +403,7 @@ if ($dar && !$dar->isError() && $dar->rowCount() > 0) {
 } else {
     $selectedUgroup = array(util_translate_name_ugroup('project_admin'));
 }
+echo '<b>User group(s) to be notified for admin delegation:</b>';
 echo '<ul>';
 foreach ($selectedUgroup as $ugroup) {
     echo '<li>'.$ugroup.'</li>';
@@ -417,10 +418,12 @@ if ($dar && !$dar->isError() && $dar->rowCount() == 1) {
         $message = $row['msg_to_requester'];
     }
 }
+echo '<b>Notification message:</b>';
 echo '<textarea wrap="virtual" rows="5" cols="70" name="text" readonly>'.$message.'</textarea>';
 echo '<tr><td colspan="2">';
-echo '<A HREF="/project/admin/permission_request.php?group_id='.$group_id.'">'.$Language->getText('project_admin_utils','permission_request').'</A>';
-echo '</td></tr>';
+echo '<p align="center">';
+echo '<A HREF="/project/admin/permission_request.php?group_id='.$group_id.'"><b>['.$Language->getText('project_admin_utils','permission_request').']</b></A>';
+echo '</p></td></tr>';
 echo $HTML->box1_bottom();
 ?>
 </TD>
