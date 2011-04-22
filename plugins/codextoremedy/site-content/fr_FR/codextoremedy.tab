@@ -2,9 +2,9 @@ plugin_codextoremedy	descriptor_description	Plugin permettant l'intégration de 
 plugin_codextoremedy	descriptor_name	Plugin Codex To Remedy
 plugin_codextoremedy	title	Codex To Remedy
 plugin_codextoremedy	severity	Severité
-plugin_codextoremedy	summary		Titre
-plugin_codextoremedy	Support_request		Demande de support 
-plugin_codextoremedy	Enhancement_request		Demande d'amélioration 
+plugin_codextoremedy	summary	Titre
+plugin_codextoremedy	Support_request	Demande de support 
+plugin_codextoremedy	Enhancement_request	Demande d'amélioration 
 plugin_codextoremedy	Minor	Mineure
-plugin_codextoremedy	Serious		Graves
+plugin_codextoremedy	Serious	Graves
 plugin_codextoremedy	Critical	Critique

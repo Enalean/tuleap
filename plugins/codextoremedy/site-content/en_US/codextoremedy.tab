@@ -2,9 +2,9 @@ plugin_codextoremedy	descriptor_description	Plugin which integrates Remedy to Co
 plugin_codextoremedy	descriptor_name	Codex To Remedy Plugin
 plugin_codextoremedy	title	Codex To Remedy
 plugin_codextoremedy	severity	Severity
-plugin_codextoremedy	summary		Summary
-plugin_codextoremedy	Support_request		Support request
-plugin_codextoremedy	Enhancement_request		Enhancement request
+plugin_codextoremedy	summary	Summary
+plugin_codextoremedy	Support_request	Support request
+plugin_codextoremedy	Enhancement_request	Enhancement request
 plugin_codextoremedy	Minor	Minor
-plugin_codextoremedy	Serious		Serious
+plugin_codextoremedy	Serious	Serious
 plugin_codextoremedy	Critical	Critical
