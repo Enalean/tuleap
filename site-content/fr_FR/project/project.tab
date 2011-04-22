@@ -368,7 +368,7 @@ project_admin_utils	date	Date
 project_admin_utils	no_g_change	Aucun changement effectué sur ce projet
 project_admin_utils	previous	Précédent
 project_admin_utils	next	Suivant
-project_admin_utils	permission_request	Demande de permission
+project_admin_utils	permission_request	Mettre a jour les groupes et le message
 # ... message for the group_history field_name
 # they do not appear in the code !!!!
 project_admin_utils	approved	Approuvé

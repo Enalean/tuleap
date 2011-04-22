@@ -367,7 +367,7 @@ project_admin_utils	event	Event
 project_admin_utils	val	Value
 project_admin_utils	date	Date
 project_admin_utils	no_g_change	No Changes Have Been Made to This Group
-project_admin_utils	permission_request	Permission Request
+project_admin_utils	permission_request	Update Selected groups and message
 
 project_admin_utils	previous	Previous
 project_admin_utils	next	Next

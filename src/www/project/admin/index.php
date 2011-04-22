@@ -389,6 +389,35 @@ echo '</TD>
 	Delegate notifications
 */
 $HTML->box1_top($Language->getText('project_admin_index','member_request_delegation_title'));
+
+//Retrieve the saved ugroups for notification from DB
+$dar = $pm->getMembershipRequestNotificationUGroup($group_id);
+if ($dar && !$dar->isError() && $dar->rowCount() > 0) {
+    foreach ($dar as $row) {
+        if ($row['ugroup_id'] == $GLOBALS['UGROUP_PROJECT_ADMIN']) {
+            $selectedUgroup[] = util_translate_name_ugroup('project_admin');
+        } else {
+            $selectedUgroup[] = ugroup_get_name_from_id($row['ugroup_id']);
+        }
+    }
+} else {
+    $selectedUgroup = array(util_translate_name_ugroup('project_admin'));
+}
+echo '<ul>';
+foreach ($selectedUgroup as $ugroup) {
+    echo '<li>'.$ugroup.'</li>';
+}
+echo '</ul>';
+$message = $GLOBALS['Language']->getText('project_admin_index', 'member_request_delegation_msg_to_requester');
+$pm = ProjectManager::instance();
+$dar = $pm->getMessageToRequesterForAccessProject($group_id);
+if ($dar && !$dar->isError() && $dar->rowCount() == 1) {
+    $row = $dar->current();
+    if ($row['msg_to_requester'] != "member_request_delegation_msg_to_requester" ) {
+        $message = $row['msg_to_requester'];
+    }
+}
+echo '<textarea wrap="virtual" rows="5" cols="70" name="text" readonly>'.$message.'</textarea>';
 echo '<tr><td colspan="2">';
 echo '<A HREF="/project/admin/permission_request.php?group_id='.$group_id.'">'.$Language->getText('project_admin_utils','permission_request').'</A>';
 echo '</td></tr>';
