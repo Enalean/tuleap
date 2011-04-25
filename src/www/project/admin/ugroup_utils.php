@@ -635,7 +635,7 @@ function ugroup_get_ugroup() {
  *
  * @return Array
  */
-function ugroup_contain_project_admins($groupId, $usersSql) {
+function ugroup_count_project_admins($groupId, $usersSql) {
     $um = ugroup_get_user_manager();
     $admins    = 0;
     $nonAdmins = 0;
@@ -668,7 +668,7 @@ function ugroup_validate_static_admin_ugroups($groupId, $ugroups, &$validUGroups
     foreach ($ugroups as $ugroupId) {
         if ($uGroup->exists($groupId, $ugroupId)) {
             $sql = ugroup_db_get_members($ugroupId);
-            $arrayUsers = ugroup_contain_project_admins($groupId, $sql);
+            $arrayUsers = ugroup_count_project_admins($groupId, $sql);
             $nonAdmin = $arrayUsers['non_admins'];
             $containAdmin = $arrayUsers['admins'];
             if ($containAdmin > 0) {
@@ -695,7 +695,7 @@ function ugroup_validate_dynamic_admin_ugroups($groupId, $ugroups, &$validUGroup
     $containNonAdmin = 0;
     foreach ($ugroups as $ugroupId) {
         $sql = ugroup_db_get_dynamic_members($ugroupId, null, $groupId);
-        $arrayUsers = ugroup_contain_project_admins($groupId, $sql);
+        $arrayUsers = ugroup_count_project_admins($groupId, $sql);
         if ($arrayUsers['admins'] > 0) {
             $validUGroups[] = $ugroupId;
             $containNonAdmin += $arrayUsers['non_admins'];

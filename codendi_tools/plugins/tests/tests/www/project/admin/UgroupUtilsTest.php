@@ -39,15 +39,15 @@ class UgroupUtilsTest extends UnitTestCase {
         MockFunction::restore('ugroup_get_user_manager');
     }
 
-    function testUgroupContainProjectAdminsNoUsers() {
+    function testUgroupCountProjectAdminsNoUsers() {
         MockFunction::setReturnValue('db_fetch_array', null);
         MockFunction::expectOnce('db_fetch_array');
-        $result = ugroup_contain_project_admins(1, '');
+        $result = ugroup_count_project_admins(1, '');
         $this->assertEqual(0, $result['admins']);
         $this->assertEqual(0, $result['non_admins']);
     }
 
-    function testUgroupContainProjectAdminsOnlyAdmins() {
+    function testUgroupCountProjectAdminsOnlyAdmins() {
         MockFunction::setReturnValueAt(0 ,'db_fetch_array', array('user_id' => 1));
         MockFunction::setReturnValueAt(1 ,'db_fetch_array', array('user_id' => 2));
         MockFunction::setReturnValueAt(2 ,'db_fetch_array', null);
@@ -58,12 +58,12 @@ class UgroupUtilsTest extends UnitTestCase {
         $um = new MockUserManager();
         $um->setReturnValue('getUserById', $user);
         MockFunction::setReturnValue('ugroup_get_user_manager', $um);
-        $result = ugroup_contain_project_admins(1, '');
+        $result = ugroup_count_project_admins(1, '');
         $this->assertEqual(2, $result['admins']);
         $this->assertEqual(0, $result['non_admins']);
     }
 
-    function testUgroupContainProjectAdminsOnlyNonAdmins() {
+    function testUgroupCountProjectAdminsOnlyNonAdmins() {
         MockFunction::setReturnValueAt(0 ,'db_fetch_array', array('user_id' => 1));
         MockFunction::setReturnValueAt(1 ,'db_fetch_array', array('user_id' => 2));
         MockFunction::setReturnValueAt(2 ,'db_fetch_array', null);
@@ -74,12 +74,12 @@ class UgroupUtilsTest extends UnitTestCase {
         $um = new MockUserManager();
         $um->setReturnValue('getUserById', $user);
         MockFunction::setReturnValue('ugroup_get_user_manager', $um);
-        $result = ugroup_contain_project_admins(1, '');
+        $result = ugroup_count_project_admins(1, '');
         $this->assertEqual(0, $result['admins']);
         $this->assertEqual(2, $result['non_admins']);
     }
 
-    function testUgroupContainProjectAdminsMixed() {
+    function testUgroupCountProjectAdminsMixed() {
         MockFunction::setReturnValueAt(0 ,'db_fetch_array', array('user_id' => 1));
         MockFunction::setReturnValueAt(1 ,'db_fetch_array', array('user_id' => 2));
         MockFunction::setReturnValueAt(2 ,'db_fetch_array', null);
@@ -91,7 +91,7 @@ class UgroupUtilsTest extends UnitTestCase {
         $um = new MockUserManager();
         $um->setReturnValue('getUserById', $user);
         MockFunction::setReturnValue('ugroup_get_user_manager', $um);
-        $result = ugroup_contain_project_admins(1, '');
+        $result = ugroup_count_project_admins(1, '');
         $this->assertEqual(1, $result['admins']);
         $this->assertEqual(1, $result['non_admins']);
     }
@@ -104,13 +104,13 @@ class UgroupUtilsTest extends UnitTestCase {
         $uGroup->setReturnValue('exists', false, array(1, 4));
         MockFunction::generate('ugroup_get_ugroup');
         MockFunction::setReturnValue('ugroup_get_ugroup', $uGroup);
-        MockFunction::generate('ugroup_contain_project_admins');
-        MockFunction::setReturnValue('ugroup_contain_project_admins', array('admins' => 1, 'non_admins' => 1));
-        MockFunction::expectNever('ugroup_contain_project_admins');
+        MockFunction::generate('ugroup_count_project_admins');
+        MockFunction::setReturnValue('ugroup_count_project_admins', array('admins' => 1, 'non_admins' => 1));
+        MockFunction::expectNever('ugroup_count_project_admins');
         $validUGroups = array(1, 2);
         $this->assertFalse(ugroup_validate_static_admin_ugroups(1, array(3, 4), $validUGroups));
         $this->assertEqual(array(1, 2), $validUGroups);
-        MockFunction::restore('ugroup_contain_project_admins');
+        MockFunction::restore('ugroup_count_project_admins');
     }
 
     function testUgroupValidateStaticAdminUgroupsContainAdmins() {
@@ -121,13 +121,13 @@ class UgroupUtilsTest extends UnitTestCase {
         $uGroup->setReturnValue('exists', true, array(1, 4));
         MockFunction::generate('ugroup_get_ugroup');
         MockFunction::setReturnValue('ugroup_get_ugroup', $uGroup);
-        MockFunction::generate('ugroup_contain_project_admins');
-        MockFunction::setReturnValue('ugroup_contain_project_admins', array('admins' => 2, 'non_admins' => 3));
-        MockFunction::expectCallCount('ugroup_contain_project_admins', 2);
+        MockFunction::generate('ugroup_count_project_admins');
+        MockFunction::setReturnValue('ugroup_count_project_admins', array('admins' => 2, 'non_admins' => 3));
+        MockFunction::expectCallCount('ugroup_count_project_admins', 2);
         $validUGroups = array(1, 2);
         $this->assertEqual(6, ugroup_validate_static_admin_ugroups(1, array(3, 4), $validUGroups));
         $this->assertEqual(array(1, 2, 3, 4), $validUGroups);
-        MockFunction::restore('ugroup_contain_project_admins');
+        MockFunction::restore('ugroup_count_project_admins');
     }
 
     function testUgroupValidateStaticAdminUgroupsContainNoAdmins() {
@@ -138,13 +138,13 @@ class UgroupUtilsTest extends UnitTestCase {
         $uGroup->setReturnValue('exists', true, array(1, 4));
         MockFunction::generate('ugroup_get_ugroup');
         MockFunction::setReturnValue('ugroup_get_ugroup', $uGroup);
-        MockFunction::generate('ugroup_contain_project_admins');
-        MockFunction::setReturnValue('ugroup_contain_project_admins', array('admins' => 0, 'non_admins' => 3));
-        MockFunction::expectCallCount('ugroup_contain_project_admins', 2);
+        MockFunction::generate('ugroup_count_project_admins');
+        MockFunction::setReturnValue('ugroup_count_project_admins', array('admins' => 0, 'non_admins' => 3));
+        MockFunction::expectCallCount('ugroup_count_project_admins', 2);
         $validUGroups = array(1, 2);
         $this->assertEqual(0, ugroup_validate_static_admin_ugroups(1, array(3, 4), $validUGroups));
         $this->assertEqual(array(1, 2), $validUGroups);
-        MockFunction::restore('ugroup_contain_project_admins');
+        MockFunction::restore('ugroup_count_project_admins');
     }
 
     function testUgroupValidateStaticAdminUgroupsMixed() {
@@ -155,114 +155,114 @@ class UgroupUtilsTest extends UnitTestCase {
         $uGroup->setReturnValue('exists', true, array(1, 4));
         MockFunction::generate('ugroup_get_ugroup');
         MockFunction::setReturnValue('ugroup_get_ugroup', $uGroup);
-        MockFunction::generate('ugroup_contain_project_admins');
-        MockFunction::setReturnValueAt(0, 'ugroup_contain_project_admins', array('admins' => 0, 'non_admins' => 2));
-        MockFunction::setReturnValueAt(1, 'ugroup_contain_project_admins', array('admins' => 1, 'non_admins' => 3));
-        MockFunction::expectCallCount('ugroup_contain_project_admins', 2);
+        MockFunction::generate('ugroup_count_project_admins');
+        MockFunction::setReturnValueAt(0, 'ugroup_count_project_admins', array('admins' => 0, 'non_admins' => 2));
+        MockFunction::setReturnValueAt(1, 'ugroup_count_project_admins', array('admins' => 1, 'non_admins' => 3));
+        MockFunction::expectCallCount('ugroup_count_project_admins', 2);
         $validUGroups = array(1, 2);
         $this->assertEqual(3, ugroup_validate_static_admin_ugroups(1, array(3, 4), $validUGroups));
         $this->assertEqual(array(1, 2, 4), $validUGroups);
-        MockFunction::restore('ugroup_contain_project_admins');
+        MockFunction::restore('ugroup_count_project_admins');
     }
 
     function testUgroupValidateDynamicAdminUgroupsContainAdmins() {
-        MockFunction::generate('ugroup_contain_project_admins');
-        MockFunction::setReturnValue('ugroup_contain_project_admins', array('admins' => 1, 'non_admins' => 2));
-        MockFunction::expectCallCount('ugroup_contain_project_admins', 2);
+        MockFunction::generate('ugroup_count_project_admins');
+        MockFunction::setReturnValue('ugroup_count_project_admins', array('admins' => 1, 'non_admins' => 2));
+        MockFunction::expectCallCount('ugroup_count_project_admins', 2);
         $validUGroups = array(1, 2);
         $this->assertEqual(4 ,ugroup_validate_dynamic_admin_ugroups(1, array(3, 4), $validUGroups));
         $this->assertEqual(array(1, 2, 3, 4), $validUGroups);
-        MockFunction::restore('ugroup_contain_project_admins');
+        MockFunction::restore('ugroup_count_project_admins');
     }
 
     function testUgroupValidateDynamicAdminUgroupsContainNoAdmins() {
-        MockFunction::generate('ugroup_contain_project_admins');
-        MockFunction::setReturnValue('ugroup_contain_project_admins', array('admins' => 0, 'non_admins' => 2));
-        MockFunction::expectCallCount('ugroup_contain_project_admins', 2);
+        MockFunction::generate('ugroup_count_project_admins');
+        MockFunction::setReturnValue('ugroup_count_project_admins', array('admins' => 0, 'non_admins' => 2));
+        MockFunction::expectCallCount('ugroup_count_project_admins', 2);
         $validUGroups = array(1, 2);
         $this->assertEqual(0, ugroup_validate_dynamic_admin_ugroups(1, array(3, 4), $validUGroups));
         $this->assertEqual(array(1, 2), $validUGroups);
-        MockFunction::restore('ugroup_contain_project_admins');
+        MockFunction::restore('ugroup_count_project_admins');
     }
 
     function testUgroupValidateDynamicAdminUgroupsMixed() {
-        MockFunction::generate('ugroup_contain_project_admins');
-        MockFunction::setReturnValueAt(0, 'ugroup_contain_project_admins', array('admins' => 0, 'non_admins' => 2));
-        MockFunction::setReturnValueAt(1, 'ugroup_contain_project_admins', array('admins' => 1, 'non_admins' => 3));
-        MockFunction::expectCallCount('ugroup_contain_project_admins', 2);
+        MockFunction::generate('ugroup_count_project_admins');
+        MockFunction::setReturnValueAt(0, 'ugroup_count_project_admins', array('admins' => 0, 'non_admins' => 2));
+        MockFunction::setReturnValueAt(1, 'ugroup_count_project_admins', array('admins' => 1, 'non_admins' => 3));
+        MockFunction::expectCallCount('ugroup_count_project_admins', 2);
         $validUGroups = array(1, 2);
         $this->assertEqual(3, ugroup_validate_dynamic_admin_ugroups(1, array(3, 4), $validUGroups));
         $this->assertEqual(array(1, 2, 4), $validUGroups);
-        MockFunction::restore('ugroup_contain_project_admins');
+        MockFunction::restore('ugroup_count_project_admins');
     }
 
     function testUgroupValidateAdminUgroupsNoUgroups() {
-        MockFunction::generate('ugroup_contain_project_admins');
-        MockFunction::setReturnValue('ugroup_contain_project_admins', array('admins' => 0, 'non_admins' => 2));
-        MockFunction::expectCallCount('ugroup_contain_project_admins', 4);
+        MockFunction::generate('ugroup_count_project_admins');
+        MockFunction::setReturnValue('ugroup_count_project_admins', array('admins' => 0, 'non_admins' => 2));
+        MockFunction::expectCallCount('ugroup_count_project_admins', 4);
         $ugroups = array(1, 2);
         $this->assertEqual(array('non_admins' => 0, 'ugroups' => array()), ugroup_validate_admin_ugroups(1, $ugroups));
-        MockFunction::restore('ugroup_contain_project_admins');
+        MockFunction::restore('ugroup_count_project_admins');
     }
 
     function testUgroupValidateAdminUgroupsStaticAllAdmins() {
-        MockFunction::generate('ugroup_contain_project_admins');
-        MockFunction::setReturnValueAt(0, 'ugroup_contain_project_admins', array('admins' => 1, 'non_admins' => 1));
-        MockFunction::setReturnValueAt(1, 'ugroup_contain_project_admins', array('admins' => 1, 'non_admins' => 2));
-        MockFunction::setReturnValueAt(2, 'ugroup_contain_project_admins', array('admins' => 0, 'non_admins' => 4));
-        MockFunction::setReturnValueAt(3, 'ugroup_contain_project_admins', array('admins' => 0, 'non_admins' => 8));
-        MockFunction::expectCallCount('ugroup_contain_project_admins', 4);
+        MockFunction::generate('ugroup_count_project_admins');
+        MockFunction::setReturnValueAt(0, 'ugroup_count_project_admins', array('admins' => 1, 'non_admins' => 1));
+        MockFunction::setReturnValueAt(1, 'ugroup_count_project_admins', array('admins' => 1, 'non_admins' => 2));
+        MockFunction::setReturnValueAt(2, 'ugroup_count_project_admins', array('admins' => 0, 'non_admins' => 4));
+        MockFunction::setReturnValueAt(3, 'ugroup_count_project_admins', array('admins' => 0, 'non_admins' => 8));
+        MockFunction::expectCallCount('ugroup_count_project_admins', 4);
         $ugroups = array(1, 2);
         $this->assertEqual(array('non_admins' => 3, 'ugroups' => array(1, 2)), ugroup_validate_admin_ugroups(1, $ugroups));
-        MockFunction::restore('ugroup_contain_project_admins');
+        MockFunction::restore('ugroup_count_project_admins');
     }
 
     function testUgroupValidateAdminUgroupsStaticMixed() {
-        MockFunction::generate('ugroup_contain_project_admins');
-        MockFunction::setReturnValueAt(0, 'ugroup_contain_project_admins', array('admins' => 0, 'non_admins' => 1));
-        MockFunction::setReturnValueAt(1, 'ugroup_contain_project_admins', array('admins' => 1, 'non_admins' => 2));
-        MockFunction::setReturnValueAt(2, 'ugroup_contain_project_admins', array('admins' => 0, 'non_admins' => 4));
-        MockFunction::setReturnValueAt(3, 'ugroup_contain_project_admins', array('admins' => 0, 'non_admins' => 8));
-        MockFunction::expectCallCount('ugroup_contain_project_admins', 4);
+        MockFunction::generate('ugroup_count_project_admins');
+        MockFunction::setReturnValueAt(0, 'ugroup_count_project_admins', array('admins' => 0, 'non_admins' => 1));
+        MockFunction::setReturnValueAt(1, 'ugroup_count_project_admins', array('admins' => 1, 'non_admins' => 2));
+        MockFunction::setReturnValueAt(2, 'ugroup_count_project_admins', array('admins' => 0, 'non_admins' => 4));
+        MockFunction::setReturnValueAt(3, 'ugroup_count_project_admins', array('admins' => 0, 'non_admins' => 8));
+        MockFunction::expectCallCount('ugroup_count_project_admins', 4);
         $ugroups = array(1, 2);
         $this->assertEqual(array('non_admins' => 2, 'ugroups' => array(2)), ugroup_validate_admin_ugroups(1, $ugroups));
-        MockFunction::restore('ugroup_contain_project_admins');
+        MockFunction::restore('ugroup_count_project_admins');
     }
 
     function testUgroupValidateAdminUgroupsDynamicMixed() {
-        MockFunction::generate('ugroup_contain_project_admins');
-        MockFunction::setReturnValueAt(0, 'ugroup_contain_project_admins', array('admins' => 0, 'non_admins' => 1));
-        MockFunction::setReturnValueAt(1, 'ugroup_contain_project_admins', array('admins' => 0, 'non_admins' => 2));
-        MockFunction::setReturnValueAt(2, 'ugroup_contain_project_admins', array('admins' => 1, 'non_admins' => 4));
-        MockFunction::setReturnValueAt(3, 'ugroup_contain_project_admins', array('admins' => 0, 'non_admins' => 8));
-        MockFunction::expectCallCount('ugroup_contain_project_admins', 4);
+        MockFunction::generate('ugroup_count_project_admins');
+        MockFunction::setReturnValueAt(0, 'ugroup_count_project_admins', array('admins' => 0, 'non_admins' => 1));
+        MockFunction::setReturnValueAt(1, 'ugroup_count_project_admins', array('admins' => 0, 'non_admins' => 2));
+        MockFunction::setReturnValueAt(2, 'ugroup_count_project_admins', array('admins' => 1, 'non_admins' => 4));
+        MockFunction::setReturnValueAt(3, 'ugroup_count_project_admins', array('admins' => 0, 'non_admins' => 8));
+        MockFunction::expectCallCount('ugroup_count_project_admins', 4);
         $ugroups = array(1, 2);
         $this->assertEqual(array('non_admins' => 4, 'ugroups' => array(1)), ugroup_validate_admin_ugroups(1, $ugroups));
-        MockFunction::restore('ugroup_contain_project_admins');
+        MockFunction::restore('ugroup_count_project_admins');
     }
 
     function testUgroupValidateAdminUgroupsDynamicAllAdmins() {
-        MockFunction::generate('ugroup_contain_project_admins');
-        MockFunction::setReturnValueAt(0, 'ugroup_contain_project_admins', array('admins' => 0, 'non_admins' => 1));
-        MockFunction::setReturnValueAt(1, 'ugroup_contain_project_admins', array('admins' => 0, 'non_admins' => 2));
-        MockFunction::setReturnValueAt(2, 'ugroup_contain_project_admins', array('admins' => 1, 'non_admins' => 4));
-        MockFunction::setReturnValueAt(3, 'ugroup_contain_project_admins', array('admins' => 1, 'non_admins' => 8));
-        MockFunction::expectCallCount('ugroup_contain_project_admins', 4);
+        MockFunction::generate('ugroup_count_project_admins');
+        MockFunction::setReturnValueAt(0, 'ugroup_count_project_admins', array('admins' => 0, 'non_admins' => 1));
+        MockFunction::setReturnValueAt(1, 'ugroup_count_project_admins', array('admins' => 0, 'non_admins' => 2));
+        MockFunction::setReturnValueAt(2, 'ugroup_count_project_admins', array('admins' => 1, 'non_admins' => 4));
+        MockFunction::setReturnValueAt(3, 'ugroup_count_project_admins', array('admins' => 1, 'non_admins' => 8));
+        MockFunction::expectCallCount('ugroup_count_project_admins', 4);
         $ugroups = array(1, 2);
         $this->assertEqual(array('non_admins' => 12, 'ugroups' => array(1, 2)), ugroup_validate_admin_ugroups(1, $ugroups));
-        MockFunction::restore('ugroup_contain_project_admins');
+        MockFunction::restore('ugroup_count_project_admins');
     }
 
     function testUgroupValidateAdminUgroupsBothAllAdmins() {
-        MockFunction::generate('ugroup_contain_project_admins');
-        MockFunction::setReturnValueAt(0, 'ugroup_contain_project_admins', array('admins' => 1, 'non_admins' => 1));
-        MockFunction::setReturnValueAt(1, 'ugroup_contain_project_admins', array('admins' => 1, 'non_admins' => 2));
-        MockFunction::setReturnValueAt(2, 'ugroup_contain_project_admins', array('admins' => 1, 'non_admins' => 4));
-        MockFunction::setReturnValueAt(3, 'ugroup_contain_project_admins', array('admins' => 1, 'non_admins' => 8));
-        MockFunction::expectCallCount('ugroup_contain_project_admins', 4);
+        MockFunction::generate('ugroup_count_project_admins');
+        MockFunction::setReturnValueAt(0, 'ugroup_count_project_admins', array('admins' => 1, 'non_admins' => 1));
+        MockFunction::setReturnValueAt(1, 'ugroup_count_project_admins', array('admins' => 1, 'non_admins' => 2));
+        MockFunction::setReturnValueAt(2, 'ugroup_count_project_admins', array('admins' => 1, 'non_admins' => 4));
+        MockFunction::setReturnValueAt(3, 'ugroup_count_project_admins', array('admins' => 1, 'non_admins' => 8));
+        MockFunction::expectCallCount('ugroup_count_project_admins', 4);
         $ugroups = array(1, 2);
         $this->assertEqual(array('non_admins' => 15, 'ugroups' => array(1, 2, 1, 2)), ugroup_validate_admin_ugroups(1, $ugroups));
-        MockFunction::restore('ugroup_contain_project_admins');
+        MockFunction::restore('ugroup_count_project_admins');
     }
 }
 ?>
