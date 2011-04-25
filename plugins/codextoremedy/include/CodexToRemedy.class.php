@@ -36,7 +36,20 @@ class CodexToRemedy extends Controler {
      */
     function request() {
         $request = HTTPRequest::instance();
+
+        if ($request->exist('action')) {
+            switch ($request->get('action')) {
+                case 'submit_ticket':
+                    $this->action = 'sendMailToSd';
+                    
+                    //$this->view = 'remedyForm';
+                    break;
+                default:
+                    break;
+            }
+        } else {
         $this->view = 'remedyForm';
+    }
     }
 }
 
