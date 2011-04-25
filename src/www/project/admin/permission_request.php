@@ -91,11 +91,17 @@ if ($request->isPost() && $request->valid($vFunc)) {
                     $oldUgroups = array(ugroup_get_name_from_id($GLOBALS['UGROUP_PROJECT_ADMIN']));
                 }
                 foreach ($validUgroups as $ugroupId) {
-                    $newUgroups[] = ugroup_get_name_from_id($ugroupId);
+                    $ugroupName = ugroup_get_name_from_id($ugroupId);
+                    $newUgroups[] = $ugroupName;
+                    if ($ugroupId == $GLOBALS['UGROUP_PROJECT_ADMIN']) {
+                        $addedUgroups[] = util_translate_name_ugroup('project_admin');
+                    } else {
+                        $addedUgroups[] = $ugroupName;
+                    }
                 }
                 //update group history
                 group_add_history('membership_request_updated', implode(',', $oldUgroups).' :: '.implode(',', $newUgroups), $group_id);
-                $GLOBALS['Response']->addFeedback('info', $Language->getText('project_admin_index', 'member_request_delegation_ugroups_msg', implode(', ', $newUgroups)));
+                $GLOBALS['Response']->addFeedback('info', $Language->getText('project_admin_index', 'member_request_delegation_ugroups_msg', implode(', ', $addedUgroups)));
             }
         } else {
             $GLOBALS['Response']->addFeedback('error', $Language->getText('project_admin_index', 'member_request_delegation_ugroups_error'));
