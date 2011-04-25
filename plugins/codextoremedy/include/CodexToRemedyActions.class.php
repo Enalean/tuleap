@@ -21,6 +21,7 @@
 
 require_once('common/mvc/Actions.class.php');
 require_once('common/include/HTTPRequest.class.php');
+require_once('common/mail/Codendi_Mail.class.php');
 require_once('CodexToRemedyDao.class.php');
 
 /**
@@ -60,8 +61,17 @@ class CodexToRemedyActions extends Actions {
      * @param String  $summary     The request summary
      * @param String  $messageToSd The request description
      */
-    function sendMailToSd($user,$requestType,$severity,$summary,$messageToSd) {
-        $c = $this->getController();
+    function sendMailToSd() {
+        $request = HTTPRequest::instance();
+
+        $user_id = $request->get('user');
+        $um = UserManager::instance();
+        $user = $um->getUserById($user_id);
+
+        $requestType = $request->get('type');
+        $severity = $request->get('severity');
+        $summary = $request->get('request_summary');
+        $messageToSd = $request->get('request_description');
 
         $to = 'codex-team-bounces@lists.codex.cro.st.com';
         $from = $user->getEmail();
@@ -70,14 +80,18 @@ class CodexToRemedyActions extends Actions {
         $mail->setTo($to);
         $mail->setFrom($from);
 
-        $mail->setSubject($GLOBALS['Language']->getText('plugin_codextoremedy', 'codextoremedy_mail_subject', array($requesType, $user->getRealName())));
+        $mail->setSubject($GLOBALS['Language']->getText('plugin_codextoremedy', 'codextoremedy_mail_subject', array($requestType, $user->getRealName())));
 
-        $body = $GLOBALS['Language']->getText('plugin_codextoremedy', 'codextoremedy_mail_content', array($user->getRealName(), $user->getName(), $project->getPublicName(), $requestType, $severity, $summary, $messageToSd, $user->getEmail()));
+        $body = $GLOBALS['Language']->getText('plugin_codextoremedy', 'codextoremedy_mail_content', array($user->getRealName(), $user->getName(), $requestType, $severity, $summary, $messageToSd, $user->getEmail()));
 
         $mail->setBodyHtml($body);
-        if (!$mail->send()) {
-            $c->addError($GLOBALS['Language']->getText('plugin_codextoremedy', 'codextoremedy_mail_failed'));
+        try {
+            if(!$mail->send())
+            { $GLOBALS['feedback'] .= '<div>'.$GLOBALS['Language']->getText('plugin_codextoremedy', 'codextoremedy_mail_failed').'</div>'; }
+        } catch (Zend_Mail_Transport_Exception $e) {
+            $GLOBALS['feedback'] .= '<div>'.$GLOBALS['Language']->getText('plugin_codextoremedy', 'codextoremedy_mail_failed').'</div>';
         }
+
     }
     // }}}
 }
