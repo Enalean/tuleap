@@ -73,32 +73,53 @@ class codextoremedyPlugin extends Plugin {
      * @return Void
      */
     function displayForm($params) {
-	
-	?>   
-        <form  name="request" style="width: 250px;" class="cssform" action="index.php" method="post" enctype="multipart/form-data">
-             <fieldset >
-                 <table>
-                     <tr>
-                     	<td><b>Type:</b></td>
-                     	<td><select name="type">
-                         <option value"support"><?php echo $GLOBALS['Language']->getText('plugin_codextoremedy', 'Support_request');?></option>
-                         <option value"enhancement"><?php echo $GLOBALS['Language']->getText('plugin_codextoremedy', 'Enhancement_request');?></option>
-                     		</select>
-                     	<b><?php echo $GLOBALS['Language']->getText('plugin_codextoremedy', 'severity');?></b></td>
-                         <td><select name="severity">
-                             <option value"minor"><?php echo $GLOBALS['Language']->getText('plugin_codextoremedy', 'Minor');?></option>
-                             <option value"serious"><?php echo $GLOBALS['Language']->getText('plugin_codextoremedy', 'Serious');?></option>
-                             <option value"critical"><?php echo $GLOBALS['Language']->getText('plugin_codextoremedy', 'Critical');?></option>
-                             </select>
-                         </td>
-                     </tr>
-                     <tr><td><b><?php echo $GLOBALS['Language']->getText('plugin_codextoremedy', 'summary');?></b></td><td><input type="text" name="request_summary" /></td></tr>
-                     <tr><td><b>Description:</b></td><td><textarea style="background: b" name="request_description"></textarea></td></tr>
-                    <tr><td></td><td><input name="submit" type="submit" value="Submit" /></td></tr>
-                </table>
-            </fieldset>
-        </form>
-        <?php
+        $um = UserManager::instance();
+        $user = $um->getCurrentUser();
+        if ($user->isLoggedIn()) {
+            ?>
+<form name="request" style="width: 250px;" class="cssform"
+	action="index.php" method="post" enctype="multipart/form-data">
+<fieldset>
+<table>
+	<tr>
+		<td><b>Type:</b></td>
+		<td><select name="type">
+			<optionvalue"support">
+			<?php echo $GLOBALS['Language']->getText('plugin_codextoremedy', 'Support_request');?>
+			</option>
+			<optionvalue"enhancement">
+			<?php echo $GLOBALS['Language']->getText('plugin_codextoremedy', 'Enhancement_request');?>
+			</option>
+		</select> <b><?php echo $GLOBALS['Language']->getText('plugin_codextoremedy', 'severity');?></b></td>
+		<td><select name="severity">
+			<optionvalue"minor">
+			<?php echo $GLOBALS['Language']->getText('plugin_codextoremedy', 'Minor');?>
+			</option>
+			<optionvalue"serious">
+			<?php echo $GLOBALS['Language']->getText('plugin_codextoremedy', 'Serious');?>
+			</option>
+			<optionvalue"critical">
+			<?php echo $GLOBALS['Language']->getText('plugin_codextoremedy', 'Critical');?>
+			</option>
+		</select></td>
+	</tr>
+	<tr>
+		<td><b><?php echo $GLOBALS['Language']->getText('plugin_codextoremedy', 'summary');?></b></td>
+		<td><input type="text" name="request_summary" /></td>
+	</tr>
+	<tr>
+		<td><b>Description:</b></td>
+		<td><textarea style="background: b" name="request_description"></textarea></td>
+	</tr>
+	<tr>
+		<td></td>
+		<td><input name="submit" type="submit" value="Submit" /></td>
+	</tr>
+</table>
+</fieldset>
+</form>
+<?php
+        }
     }
 }
 ?>
