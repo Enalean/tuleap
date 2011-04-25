@@ -128,8 +128,10 @@ abstract class Error_PermissionDenied {
         if ($res && !$res->isError()) {
             if ($res->rowCount() == 0) {
                 $dar = $pm->returnProjectAdminsByGroupId($project->getId());
-                foreach ($dar as $row) {
-                    $admins[] = $row['email'];
+                if ($dar && !$dar->isError() && $dar->rowCount() > 0) {
+                    foreach ($dar as $row) {
+                        $admins[] = $row['email'];
+                    }
                 }
             } else {
                 /* We can face one of these composition for ugroups array:
@@ -141,13 +143,19 @@ abstract class Error_PermissionDenied {
                 $dars = array();
                 foreach ($res as $row) {
                     if ($row['ugroup_id'] == $GLOBALS['UGROUP_PROJECT_ADMIN']) {
-                        $dars []= $pm->returnProjectAdminsByGroupId($project->getId());
+                        $dar = $pm->returnProjectAdminsByGroupId($project->getId());
+                        if ($dar && !$dar->isError() && $dar->rowCount() > 0) {
+                            $dars[] = $dar;
+                        }
                     } else {
                         $ugroups[] = $row['ugroup_id'];
                     }
                 }
                 if (count($ugroups) > 0) {
-                    $dars[] = $this->getUGroup()->returnProjectAdminsByStaticUGroupId($project->getId(), $ugroups);
+                    $dar = $this->getUGroup()->returnProjectAdminsByStaticUGroupId($project->getId(), $ugroups);
+                    if ($dar && !$dar->isError() && $dar->rowCount() > 0) {
+                        $dars[] = $dar;
+                    }
                 }
                 foreach ($dars as $dar) {
                     foreach ($dar as $row) {
@@ -156,11 +164,14 @@ abstract class Error_PermissionDenied {
                 }
             }
 
+            //If all selected ugroups are not valid, send mail to the project admins
             if (count($admins) == 0) {
                 $status = false;
                 $dar = $pm->returnProjectAdminsByGroupId($project->getId());
-                foreach ($dar as $row) {
-                    $admins[] = $row['email'];
+                if ($dar && !$dar->isError() && $dar->rowCount() > 0) {
+                    foreach ($dar as $row) {
+                        $admins[] = $row['email'];
+                    }
                 }
             }
         }
@@ -204,7 +215,8 @@ abstract class Error_PermissionDenied {
 
         //to
         $adminList = $this->extractReceiver($project, $urlData);
-        $to = implode(',', $adminList['admins']);
+        $admins = array_unique($adminList['admins']);
+        $to = implode(',', $admins);
         $mail->setTo($to);
 
         //from
