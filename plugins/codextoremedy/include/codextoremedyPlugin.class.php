@@ -76,7 +76,7 @@ class codextoremedyPlugin extends Plugin {
         $um = UserManager::instance();
         $user = $um->getCurrentUser();
         if ($user->isLoggedIn()) {
-            echo '<form name="request" style="width: 250px;" class="cssform" action="index.php" method="post" enctype="multipart/form-data">
+            echo '<form name="request" style="width: 250px;" class="cssform" action="'.$this->getPluginPath().'/" method="post" enctype="multipart/form-data">
              <fieldset >
                  <table>
                      <tr>';
@@ -96,7 +96,9 @@ class codextoremedyPlugin extends Plugin {
             echo '<tr><td><b>'.$GLOBALS['Language']->getText('plugin_codextoremedy', 'summary').'</b></td>
                      <td><input type="text" name="request_summary" /></td></tr>';
             echo '<tr><td><b>Description:</b></td><td><textarea style="background: b" name="request_description"></textarea></td></tr>
-                    <tr><td></td><td><input name="submit" type="submit" value="Submit" /></td></tr>
+            <tr><td></td><td><input name="user" type="hidden" value="'.$user->getId().'" /></td></tr>
+            <tr><td></td><td><input name="action" type="hidden" value="submit_ticket" /></td></tr>
+            <tr><td></td><td><input name="submit" type="submit" value="Submit" /></td></tr>
                 </table>
             </fieldset>
         </form>';
