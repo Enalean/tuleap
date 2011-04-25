@@ -1,0 +1,24 @@
+.cssform label{
+	font-weight: bold;
+	text-align:center;
+
+}
+
+.cssform input[type="text"]{ /*width of text boxes. IE6 does not understand this attribute*/
+	width: 180px;
+	position: relative; 
+	
+}
+
+.cssform textarea{
+	width: 600px;
+	height: 120px;
+}
+.cssform fieldset{
+	background: rgb(222,222,222);
+}
+.cssform legend
+{
+    position:absolute;
+    top:-8px;
+}

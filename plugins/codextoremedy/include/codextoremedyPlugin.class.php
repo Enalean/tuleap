@@ -33,6 +33,7 @@ class codextoremedyPlugin extends Plugin {
      */
     function codextoremedyPlugin($id) {
         $this->Plugin($id);
+        $this->_addHook('cssfile', 'cssFile', false);
         $this->_addHook('site_help', 'displayForm', false);
     }
 
@@ -59,6 +60,10 @@ class codextoremedyPlugin extends Plugin {
         $controler = new CodexToRemedy();
         $controler->process();
     }
+	function cssFile($params) {
+            echo '<link rel="stylesheet" type="text/css" href="'.$this->getThemePath().'/css/style.css" />'."\n";
+        
+    }
 
     /**
      * Display form to fill a request
@@ -68,31 +73,8 @@ class codextoremedyPlugin extends Plugin {
      * @return Void
      */
     function displayForm($params) {
-        ?>
-<link rel="stylesheet" type="text/css" href="style.css">
-<style type="text/css">
-.cssform label{
-font-weight: bold;
-float: left;
-}
-
-.cssform input[type="text"]{ /*width of text boxes. IE6 does not understand this attribute*/
-width: 180px;
-}
-
-.cssform textarea{
-width: 250px;
-height: 150px;
-}
-.cssform fieldset{
-background: rgb(222,222,222);
-}
-.cssform legend
-{
-    position:absolute;
-    top:-8px;
-}
-</style>
+	
+	?>   
         <form  name="request" style="width: 250px;" class="cssform" action="index.php" method="post" enctype="multipart/form-data">
              <fieldset >
                  <table>
@@ -104,9 +86,9 @@ background: rgb(222,222,222);
                      		</select>
                      	<b><?php echo $GLOBALS['Language']->getText('plugin_codextoremedy', 'severity');?></b></td>
                          <td><select name="severity">
-                             <option value"minor">Minor</option>
-                             <option value"serious">Serious</option>
-                             <option value"critical">Critical</option>
+                             <option value"minor"><?php echo $GLOBALS['Language']->getText('plugin_codextoremedy', 'Minor');?></option>
+                             <option value"serious"><?php echo $GLOBALS['Language']->getText('plugin_codextoremedy', 'Serious');?></option>
+                             <option value"critical"><?php echo $GLOBALS['Language']->getText('plugin_codextoremedy', 'Critical');?></option>
                              </select>
                          </td>
                      </tr>

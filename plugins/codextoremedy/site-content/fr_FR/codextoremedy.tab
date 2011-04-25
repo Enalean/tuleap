@@ -1,13 +1,13 @@
 plugin_codextoremedy	descriptor_description	Plugin permettant l'intégration de Remedy dans codex
 plugin_codextoremedy	descriptor_name	Plugin Codex To Remedy
 plugin_codextoremedy	title	Codex To Remedy
-plugin_codextoremedy	severity	Severité
+plugin_codextoremedy	severity	S&eacute;v&eacute;rit&eacute;
 plugin_codextoremedy	summary	Titre
 plugin_codextoremedy	Support_request	Demande de support 
-plugin_codextoremedy	Enhancement_request	Demande d'amélioration 
+plugin_codextoremedy	Enhancement_request	Demande d'am&eacute;lioration 
 plugin_codextoremedy	Minor	Mineure
-plugin_codextoremedy	Serious	Graves
+plugin_codextoremedy	Serious	Grave
 plugin_codextoremedy	Critical	Critique
 plugin_codextoremedy	codextoremedy_mail_subject	$2 a soumis $1 ticket
-plugin_codextoremedy	codextoremedy_mail_content	Cher agent SD,\n\n$1 (login: $2) a insérer un nouveau ticket remedy.
-plugin_codextoremedy	codextoremedy_mail_failed	Echec d'envoie du mail de notification 
+plugin_codextoremedy	codextoremedy_mail_content	Cher agent SD,\n\n$1 (login: $2) a ins&eacute;rer un nouveau ticket remedy.
+plugin_codextoremedy	codextoremedy_mail_failed	&Eacute;chec d'envoie du mail de notification 
