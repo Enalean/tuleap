@@ -9,5 +9,5 @@ plugin_codextoremedy	Minor	Mineure
 plugin_codextoremedy	Serious	Graves
 plugin_codextoremedy	Critical	Critique
 plugin_codextoremedy	codextoremedy_mail_subject	$2 a soumis $1 ticket
-plugin_codextoremedy	codextoremedy_mail_content	Cher agent SD,\n\n$1 (login: $2) a insérer un nouveau ticket remedy.
+plugin_codextoremedy	codextoremedy_mail_content	Cher agent SD,\n\n$1 (login: $2) a insÃ©rer un nouveau ticket remedy.
 plugin_codextoremedy	codextoremedy_mail_failed	Echec d'envoie du mail de notification 
