@@ -113,45 +113,6 @@ abstract class Error_PermissionDenied {
     }
 
     /**
-     * Return the sql request retreiving project admins of given project
-     * 
-     * @param Integer $groupId
-     * 
-     * @return String
-     */
-    function returnProjectAdminsByGroupId($groupId) {
-        $sql = 'SELECT u.email as email  FROM user u
-                    JOIN user_group ug 
-                    USING(user_id) 
-                    WHERE ug.admin_flags="A" 
-                    AND u.status IN ("A", "R") 
-                    AND ug.group_id ='.db_ei($groupId);
-        return $sql;
-    }
-
-    /**
-     * Return the sql request retreiving project admins of given static group
-     * 
-     * @param Integer $groupId
-     * @param Array $ugroups
-     * 
-     * @return String
-     */
-    function retrieveAdminProjectByStaticUGroupId($groupId, $ugroups) {
-        $sql = 'SELECT u.email as email FROM user u
-                    JOIN ugroup_user uu 
-                    USING(user_id)
-                    JOIN user_group ug 
-                    USING(user_id) 
-                    WHERE ug.admin_flags="A" 
-                    AND u.status IN ("A", "R") 
-                    AND ug.group_id ='.db_ei($groupId).' 
-                    AND u.status IN ("A", "R") 
-                    AND uu.ugroup_id IN ('.implode(",",$ugroups).')';
-        return $sql;
-    }
-
-    /**
      *
      * Returns the administrators' list of a given project
      *
@@ -166,7 +127,10 @@ abstract class Error_PermissionDenied {
         $res = $pm->getMembershipRequestNotificationUGroup($project->getId());
         if ($res && !$res->isError()) {
             if ($res->rowCount() == 0) {
-                $sql = $this->returnProjectAdminsByGroupId($project->getId());
+                $dar = $pm->returnProjectAdminsByGroupId($project->getId());
+                foreach ($dar as $row) {
+                    $admins[] = $row['email'];
+                }
             } else {
                 /* We can face one of these composition for ugroups array:
                  * 1 - UGROUP_PROJECT_ADMIN
@@ -174,28 +138,28 @@ abstract class Error_PermissionDenied {
                  * 3 - UGROUP_1, UGROUP_2,.., UGROUP_n
                  */
                 $ugroups = array();
+                $dars = array();
                 foreach ($res as $row) {
                     if ($row['ugroup_id'] == $GLOBALS['UGROUP_PROJECT_ADMIN']) {
-                        $stm [] = $this->returnProjectAdminsByGroupId($project->getId());
+                        $dars []= $pm->returnProjectAdminsByGroupId($project->getId());
                     } else {
                         $ugroups[] = $row['ugroup_id'];
                     }
                 }
                 if (count($ugroups) > 0) {
-                    $stm[] = $this->retrieveAdminProjectByStaticUGroupId($project->getId(), $ugroups);
+                    $dars[] = $this->getUGroup()->returnProjectAdminsByStaticUGroupId($project->getId(), $ugroups);
                 }
-                $sql =  implode(" UNION ",$stm);
+                foreach ($dars as $dar) {
+                    foreach ($dar as $row) {
+                        $admins[] = $row['email'];
+                    }
+                }
             }
 
-            $res = db_query($sql);
-            if (db_numrows($res) > 0) {
-                while ($row = db_fetch_array($res)) {
-                    $admins[] = $row['email'];
-                }
-            } else {
+            if (count($admins) == 0) {
                 $status = false;
-                $res = db_query($this->returnProjectAdminsByGroupId($project->getId()));
-                while ($row = db_fetch_array($res)) {
+                $dar = $pm->returnProjectAdminsByGroupId($project->getId());
+                foreach ($dar as $row) {
                     $admins[] = $row['email'];
                 }
             }
@@ -253,7 +217,6 @@ abstract class Error_PermissionDenied {
         $link = $this->getRedirectLink($urlData, $GLOBALS['Language']);
         $body = $GLOBALS['Language']->getText($this->getTextBase(), 'mail_content_'.$this->getType(), array($user->getRealName(), $user->getName(), $link, $project->getPublicName(), $hrefApproval, $messageToAdmin, $user->getEmail()));
         if ($adminList['status']== false) {
-            //The mail body will be changed
             $body .= "\n\n". $GLOBALS['Language']->getText($this->getTextBase(), 'mail_content_unvalid_ugroup', array($project->getPublicName()));
         }
         $mail->setBody($body);
@@ -284,6 +247,14 @@ abstract class Error_PermissionDenied {
     protected function getProjectManager() {
         return ProjectManager::instance();
     }
-    
+
+    /**
+     * Get an instance of UGroup. 
+     * 
+     * @return UGroup
+     */
+    protected function getUGroup() {
+        return new UGroup();
+    }
 }
 ?>

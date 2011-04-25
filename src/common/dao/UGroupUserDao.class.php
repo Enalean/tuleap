@@ -43,5 +43,26 @@ class UGroupUserDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
+    /**
+     * Return project admins of given static group
+     * 
+     * @param Integer $groupId
+     * @param Array $ugroups
+     * 
+     * @return String
+     */
+    function returnProjectAdminsByStaticUGroupId($groupId, $ugroups) {
+        $sql = 'SELECT u.email as email FROM user u
+                    JOIN ugroup_user uu 
+                    USING(user_id)
+                    JOIN user_group ug 
+                    USING(user_id) 
+                    WHERE ug.admin_flags="A" 
+                    AND u.status IN ("A", "R") 
+                    AND ug.group_id ='.$this->da->escapeInt($groupId).' 
+                    AND u.status IN ("A", "R") 
+                    AND uu.ugroup_id IN ('.implode(",",$ugroups).')';
+        return $this->retrieve($sql);
+    }
 }
 ?>

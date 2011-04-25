@@ -119,5 +119,17 @@ class UGroup {
         return $dao->checkUGroupValidityByGroupId($groupId, $ugroupId);
     }
 
+    /**
+     * Return project admins of given static group
+     *
+     * @param Integer $groupId
+     * @param Array $ugroups
+     *
+     * @return Data Access Result
+     */
+    public function returnProjectAdminsByStaticUGroupId($groupId, $ugroups) {
+        $dao = $this->_getUGroupUserDao();
+        return $dao->returnProjectAdminsByStaticUGroupId($groupId, $ugroups);
+    }
 }
 ?>

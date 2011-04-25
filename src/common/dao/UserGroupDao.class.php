@@ -63,7 +63,23 @@ class UserGroupDao extends DataAccessObject {
         $row = $this->retrieve($sql)->getRow();
         return $row['numrows'];
     }
- 
+
+    /**
+     * Return the sql request retreiving project admins of given project
+     *
+     * @param Integer $groupId
+     *
+     * @return String
+     */
+    function returnProjectAdminsByGroupId($groupId) {
+        $sql = 'SELECT u.email as email  FROM user u
+                    JOIN user_group ug 
+                    USING(user_id) 
+                    WHERE ug.admin_flags="A" 
+                    AND u.status IN ("A", "R") 
+                    AND ug.group_id ='.$this->da->escapeInt($groupId);
+        return $this->retrieve($sql);
+    }
 }
 
 
