@@ -420,7 +420,7 @@ if ($dar && !$dar->isError() && $dar->rowCount() == 1) {
 }
 echo '<hr size="1" noshade="">';
 echo '<b>'.$Language->getText('project_admin_utils','notif_message_title').'</b><br/>';
-echo '<p><pre class="release">'.$message.'</pre></p>';
+echo '<p><div class="admin_delegation"><pre>'.$message.'</pre></div></p>';
 echo '<hr size="1" noshade="">';
 echo '<tr><td colspan="2">';
 echo '<p align="center">';

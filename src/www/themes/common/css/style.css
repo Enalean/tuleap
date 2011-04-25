@@ -1244,3 +1244,15 @@ ul.ServiceMenu li.current {
     clear: both;
 }
 /* }}} */
+
+/* {{{ Admin delegation */
+.admin_delegation pre {
+    max-height:100px;
+    max-width: 500px;
+    background: none repeat scroll 0 0 ivory;
+    overflow: auto;
+    border: 1px solid #D2D2D2;
+    padding: 0.5em;
+    margin: 0;
+}
+/* }}} */
