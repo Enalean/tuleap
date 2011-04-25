@@ -418,8 +418,10 @@ if ($dar && !$dar->isError() && $dar->rowCount() == 1) {
         $message = $row['msg_to_requester'];
     }
 }
+echo '<hr size="1" noshade="">';
 echo '<b>'.$Language->getText('project_admin_utils','notif_message_title').'</b><br/>';
-echo '<textarea wrap="virtual" rows="5" cols="70" name="text" readonly>'.$message.'</textarea>';
+echo '<p><pre class="release">'.$message.'</pre></p>';
+echo '<hr size="1" noshade="">';
 echo '<tr><td colspan="2">';
 echo '<p align="center">';
 echo '<A HREF="/project/admin/permission_request.php?group_id='.$group_id.'"><b>['.$Language->getText('project_admin_utils','permission_request').']</b></A>';
