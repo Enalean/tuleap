@@ -98,10 +98,10 @@ class UgroupUtilsTest extends UnitTestCase {
 
     function testUgroupValidateStaticAdminUgroupsNotProjectGroups() {
         $uGroup = new MockUGroup();
-        $uGroup->setReturnValue('checkUGroupValidityByGroupId', true, array(1, 1));
-        $uGroup->setReturnValue('checkUGroupValidityByGroupId', true, array(1, 2));
-        $uGroup->setReturnValue('checkUGroupValidityByGroupId', false, array(1, 3));
-        $uGroup->setReturnValue('checkUGroupValidityByGroupId', false, array(1, 4));
+        $uGroup->setReturnValue('exists', true, array(1, 1));
+        $uGroup->setReturnValue('exists', true, array(1, 2));
+        $uGroup->setReturnValue('exists', false, array(1, 3));
+        $uGroup->setReturnValue('exists', false, array(1, 4));
         MockFunction::generate('ugroup_get_ugroup');
         MockFunction::setReturnValue('ugroup_get_ugroup', $uGroup);
         MockFunction::generate('ugroup_contain_project_admins');
@@ -115,10 +115,10 @@ class UgroupUtilsTest extends UnitTestCase {
 
     function testUgroupValidateStaticAdminUgroupsContainAdmins() {
         $uGroup = new MockUGroup();
-        $uGroup->setReturnValue('checkUGroupValidityByGroupId', true, array(1, 1));
-        $uGroup->setReturnValue('checkUGroupValidityByGroupId', true, array(1, 2));
-        $uGroup->setReturnValue('checkUGroupValidityByGroupId', true, array(1, 3));
-        $uGroup->setReturnValue('checkUGroupValidityByGroupId', true, array(1, 4));
+        $uGroup->setReturnValue('exists', true, array(1, 1));
+        $uGroup->setReturnValue('exists', true, array(1, 2));
+        $uGroup->setReturnValue('exists', true, array(1, 3));
+        $uGroup->setReturnValue('exists', true, array(1, 4));
         MockFunction::generate('ugroup_get_ugroup');
         MockFunction::setReturnValue('ugroup_get_ugroup', $uGroup);
         MockFunction::generate('ugroup_contain_project_admins');
@@ -132,10 +132,10 @@ class UgroupUtilsTest extends UnitTestCase {
 
     function testUgroupValidateStaticAdminUgroupsContainNoAdmins() {
         $uGroup = new MockUGroup();
-        $uGroup->setReturnValue('checkUGroupValidityByGroupId', true, array(1, 1));
-        $uGroup->setReturnValue('checkUGroupValidityByGroupId', true, array(1, 2));
-        $uGroup->setReturnValue('checkUGroupValidityByGroupId', true, array(1, 3));
-        $uGroup->setReturnValue('checkUGroupValidityByGroupId', true, array(1, 4));
+        $uGroup->setReturnValue('exists', true, array(1, 1));
+        $uGroup->setReturnValue('exists', true, array(1, 2));
+        $uGroup->setReturnValue('exists', true, array(1, 3));
+        $uGroup->setReturnValue('exists', true, array(1, 4));
         MockFunction::generate('ugroup_get_ugroup');
         MockFunction::setReturnValue('ugroup_get_ugroup', $uGroup);
         MockFunction::generate('ugroup_contain_project_admins');
@@ -149,10 +149,10 @@ class UgroupUtilsTest extends UnitTestCase {
 
     function testUgroupValidateStaticAdminUgroupsMixed() {
         $uGroup = new MockUGroup();
-        $uGroup->setReturnValue('checkUGroupValidityByGroupId', true, array(1, 1));
-        $uGroup->setReturnValue('checkUGroupValidityByGroupId', true, array(1, 2));
-        $uGroup->setReturnValue('checkUGroupValidityByGroupId', true, array(1, 3));
-        $uGroup->setReturnValue('checkUGroupValidityByGroupId', true, array(1, 4));
+        $uGroup->setReturnValue('exists', true, array(1, 1));
+        $uGroup->setReturnValue('exists', true, array(1, 2));
+        $uGroup->setReturnValue('exists', true, array(1, 3));
+        $uGroup->setReturnValue('exists', true, array(1, 4));
         MockFunction::generate('ugroup_get_ugroup');
         MockFunction::setReturnValue('ugroup_get_ugroup', $uGroup);
         MockFunction::generate('ugroup_contain_project_admins');

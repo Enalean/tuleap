@@ -57,13 +57,16 @@ if ($request->isPost() && $request->valid($vFunc)) {
         $vUGroups->required();
         if ($request->validArray($vUGroups)) {
             $ugroups = $request->get('ugroups');
+            // Remove ugroups that are empty or contain no project admins
             $result = ugroup_validate_admin_ugroups($group_id, $ugroups);
             $nonAdmins    = $result['non_admins'];
             $validUgroups = $result['ugroups'];
             if (empty($validUgroups)) {
+                // If no valid ugroups the default one is project admins ugroup
                 $validUgroups = array($GLOBALS['UGROUP_PROJECT_ADMIN']);
                 $GLOBALS['Response']->addFeedback('error', $Language->getText('project_admin_index', 'member_request_delegation_ugroups_all_invalid'));
             } else {
+                // If some selected ugroups are not valid display them to the user.
                 $diff = array_diff($ugroups, $validUgroups);
                 if (!empty($diff)) {
                     foreach ($diff as $ugroupId) {
@@ -71,6 +74,8 @@ if ($request->isPost() && $request->valid($vFunc)) {
                     }
                     $GLOBALS['Response']->addFeedback('warning', $Language->getText('project_admin_index', 'member_request_delegation_ugroups_some_invalid', implode(', ', $deletedUgroups)));
                 }
+                // Inform about the number of non admins in the selected ugroups
+                // and indicate that they will not recieve any permission request mail.
                 if ($nonAdmins > 0) {
                     $GLOBALS['Response']->addFeedback('warning', $Language->getText('project_admin_index', 'member_request_delegation_ugroups_non_admins', $nonAdmins));
                 }
@@ -99,6 +104,7 @@ if ($request->isPost() && $request->valid($vFunc)) {
 
     case 'member_req_notif_message':
         $updatedMessage = true;
+        // Validate the text
         $vMessage = new Valid_Text('text');
         $vMessage->required();
         $message = trim($request->get('text'));

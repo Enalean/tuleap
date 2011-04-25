@@ -666,7 +666,7 @@ function ugroup_validate_static_admin_ugroups($groupId, $ugroups, &$validUGroups
     $containNonAdmin = 0;
     $uGroup = ugroup_get_ugroup();
     foreach ($ugroups as $ugroupId) {
-        if ($uGroup->checkUGroupValidityByGroupId($groupId, $ugroupId)) {
+        if ($uGroup->exists($groupId, $ugroupId)) {
             $sql = ugroup_db_get_members($ugroupId);
             $arrayUsers = ugroup_contain_project_admins($groupId, $sql);
             $nonAdmin = $arrayUsers['non_admins'];

@@ -107,15 +107,15 @@ class UGroup {
     }
 
     /**
-    * Wrapper for the UGroupDao method that checks UGroup validity by GroupId 
+    * Check if the ugroup exist for the given project
     *
     * @param Integer $groupId the group id
     * @param Integer $ugroupId the ugroup id
     *
     * @return boolean
     */
-    function checkUGroupValidityByGroupId($groupId, $ugroupId) {
-        $dao =& $this->_getUGroupDao();
+    function exists($groupId, $ugroupId) {
+        $dao = $this->_getUGroupDao();
         return $dao->checkUGroupValidityByGroupId($groupId, $ugroupId);
     }
 
