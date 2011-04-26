@@ -189,7 +189,7 @@ include_menu	auth_nb_failure	Nombre de tentatives:
 # Script: SF/www/include/pre.php
 #
 include_pre	site_admin_declines_license	Votre administrateur site a décliné la licence logicielle Codendi. \nLe site Codendi a été arrêté. Pour plus d'information contactez votre \n<a href="mailto:$1">administrateur site</a>.
-include_pre	zend_path_not_set	Le chemin de la librairie zend n'est pas d�fini.Pour plus d'information contactez votre \n<a href="mailto:$1">administrateur site</a>.
+include_pre	zend_path_not_set	Le chemin de la librairie zend n'est pas défini.Pour plus d'information contactez votre \n<a href="mailto:$1">administrateur site</a>.
 #
 #-----------------------------------------------
 # Script: SF/www/include/project.php
