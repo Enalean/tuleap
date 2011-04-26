@@ -58,7 +58,7 @@ if ($request->isPost() && $request->valid($vFunc)) {
         if ($request->validArray($vUGroups)) {
             $ugroups = $request->get('ugroups');
             // Remove ugroups that are empty or contain no project admins
-            $result = ugroup_validate_admin_ugroups($group_id, $ugroups);
+            $result = ugroup_filter_ugroups_by_project_admin($group_id, $ugroups);
             $nonAdmins    = $result['non_admins'];
             $validUgroups = $result['ugroups'];
             if (empty($validUgroups)) {

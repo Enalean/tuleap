@@ -715,7 +715,7 @@ function ugroup_count_non_admin_for_dynamic_ugroups($groupId, $ugroups, &$validU
  *
  * @return Array
  */
-function ugroup_validate_admin_ugroups($groupId, $ugroups) {
+function ugroup_filter_ugroups_by_project_admin($groupId, $ugroups) {
     $validUGroups = array();
     // Check static ugroups
     $nonAdmins = ugroup_count_non_admin_for_static_ugroups($groupId, $ugroups, $validUGroups);
