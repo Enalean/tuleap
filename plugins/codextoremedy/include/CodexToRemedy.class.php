@@ -29,6 +29,13 @@ require_once('CodexToRemedyActions.class.php');
 
 class CodexToRemedy extends Controler {
 
+    const SEVERITY_MINOR    = 1;
+    const SEVERITY_SERIOUS  = 2;
+    const SEVERITY_CRITICAL = 3;
+
+    const TYPE_SUPPORT      = 1;
+    const TYPE_ENHANCEMENT  = 2;
+
     /**
      * Compute the request
      *
@@ -41,15 +48,26 @@ class CodexToRemedy extends Controler {
             switch ($request->get('action')) {
                 case 'submit_ticket':
                     $this->action = 'sendMailToSd';
-                    
+
+                    // {{{ Example to test insertion in Codex DB
+                    $params['id']          = rand(1, 100);
+                    $params['user_id']     = UserManager::instance()->getCurrentUser()->getId();
+                    $params['summary']     = $request->get('request_summary');
+                    $params['create_date'] = time();
+                    $params['description'] = $request->get('request_description');
+                    $params['type']        = $request->get('type');
+                    $params['severity']    = $request->get('severity');
+                    CodexToRemedyActions::insertInPluginDB($params);
+                    // }}}
+
                     //$this->view = 'remedyForm';
                     break;
                 default:
                     break;
             }
         } else {
-        $this->view = 'remedyForm';
-    }
+            $this->view = 'remedyForm';
+        }
     }
 }
 

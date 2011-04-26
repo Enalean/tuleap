@@ -21,6 +21,7 @@
 
 require_once('common/plugin/Plugin.class.php');
 require_once('common/system_event/SystemEvent.class.php');
+require_once('CodexToRemedy.class.php');
 
 class codextoremedyPlugin extends Plugin {
 
@@ -56,7 +57,6 @@ class codextoremedyPlugin extends Plugin {
      * @return void
      */
     function process() {
-        require_once('CodexToRemedy.class.php');
         $controler = new CodexToRemedy();
         $controler->process();
     }
@@ -89,14 +89,14 @@ class codextoremedyPlugin extends Plugin {
                      <tr>';
             echo '<td><b>Type:</b></td>
                      <td><select name="type">
-                      <option value="support">'.$GLOBALS['Language']->getText('plugin_codextoremedy', 'Support_request').'</option>
-                         <option value="enhancement">'.$GLOBALS['Language']->getText('plugin_codextoremedy', 'Enhancement_request').'</option>
+                      <option value="'.CodexToRemedy::TYPE_SUPPORT.'">'.$GLOBALS['Language']->getText('plugin_codextoremedy', 'Support_request').'</option>
+                         <option value="'.CodexToRemedy::TYPE_ENHANCEMENT.'">'.$GLOBALS['Language']->getText('plugin_codextoremedy', 'Enhancement_request').'</option>
                      </select>';
             echo '</td><td><b>'.$GLOBALS['Language']->getText('plugin_codextoremedy', 'severity').'</b></td>
                              <td><select name="severity">
-                             <option value="minor">'.$GLOBALS['Language']->getText('plugin_codextoremedy', 'Minor').'</option>
-                             <option value="serious">'.$GLOBALS['Language']->getText('plugin_codextoremedy', 'Serious').'</option>
-                             <option value="critical">'.$GLOBALS['Language']->getText('plugin_codextoremedy', 'Critical').'</option>
+                             <option value="'.CodexToRemedy::SEVERITY_MINOR.'">'.$GLOBALS['Language']->getText('plugin_codextoremedy', 'Minor').'</option>
+                             <option value="'.CodexToRemedy::SEVERITY_SERIOUS.'">'.$GLOBALS['Language']->getText('plugin_codextoremedy', 'Serious').'</option>
+                             <option value="'.CodexToRemedy::SEVERITY_CRITICAL.'">'.$GLOBALS['Language']->getText('plugin_codextoremedy', 'Critical').'</option>
                              </select>
                          </td>
                      </tr>';

@@ -47,7 +47,7 @@ class CodexToRemedyDao extends DataAccessObject {
      * @return Boolean
      */
     function insertInCodexDB($id, $userId, $summary, $createDate, $description, $type, $severity) {
-        $select = 'SELECT NULL FROM plugin_codex_to_remedy values WHERE id = '.$this->da->escapeInt($id);
+        $select = 'SELECT NULL FROM plugin_codex_to_remedy WHERE id = '.$this->da->escapeInt($id);
         $res = $this->retrieve($select);
         if($res && !$res->isError() && $res->rowCount() == 0) {
             $insert = 'INSERT INTO plugin_codex_to_remedy'.
