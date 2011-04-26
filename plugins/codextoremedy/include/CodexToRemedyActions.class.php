@@ -45,6 +45,8 @@ class CodexToRemedyActions extends Actions {
     /**
      * Insert informations about the ticket in Codex database
      *
+     * @param Array $params collection of data that will be inserted
+     *
      * @return Boolean
      */
     function insertInPluginDB($params) {
@@ -55,18 +57,13 @@ class CodexToRemedyActions extends Actions {
     /**
      * Send mail to SD after ticket submission
      *
-     * @param User    $user        The requester
-     * @param String  $requestType The type of the request
-     * @param String  $severity    The severity
-     * @param String  $summary     The request summary
-     * @param String  $messageToSd The request description
+     * @return void
      */
     function sendMailToSd() {
         $request = HTTPRequest::instance();
 
-        $user_id = $request->get('user');
         $um = UserManager::instance();
-        $user = $um->getUserById($user_id);
+        $user = $um->getCurrentUser();
 
         $requestType = $request->get('type');
         $severity = $request->get('severity');
@@ -86,12 +83,12 @@ class CodexToRemedyActions extends Actions {
 
         $mail->setBodyHtml($body);
         try {
-            if(!$mail->send())
-            { $GLOBALS['feedback'] .= '<div>'.$GLOBALS['Language']->getText('plugin_codextoremedy', 'codextoremedy_mail_failed').'</div>'; }
+            if(!$mail->send()) {
+                $GLOBALS['feedback'] .= '<div>'.$GLOBALS['Language']->getText('plugin_codextoremedy', 'codextoremedy_mail_failed').'</div>';
+            }
         } catch (Zend_Mail_Transport_Exception $e) {
             $GLOBALS['feedback'] .= '<div>'.$GLOBALS['Language']->getText('plugin_codextoremedy', 'codextoremedy_mail_failed').'</div>';
         }
-
     }
     // }}}
 }
