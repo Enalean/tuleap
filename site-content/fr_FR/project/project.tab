@@ -196,10 +196,14 @@ project_admin_index	file_admin	Administration du système de publication de fich
 project_admin_index	tracker_admin	Administrations des outils de suivi
 project_admin_index	no_tracker_found	Aucun outil de suivi n'est accessible
 project_admin_index	admin	Administration
-project_admin_index	member_request_delegation_title	Délégation des demandes d'accès
-project_admin_index	member_request_delegation_desc	Lorsqu'un utilisateur n'a pas accès à votre projet, que le projet soit privé ou que l'utilisateur soit restreint aux projects dont il est membre, il peut vous envoyer une demande afin d'être ajouté aux membres de projet.<br />La demande est envoyée au group d'utilisateurs suivant :
+project_admin_index	member_request_delegation_title	Délégation des demandes d'accès au projet
+project_admin_index	member_request_delegation_desc_private_group	Lorsqu'un utilisateur n'a pas accès à votre projet privé, il peut vous envoyer une demande afin d'être ajouté aux membres de projet.<br />La demande est envoyée au group d'utilisateurs suivant :
+project_admin_index	member_request_delegation_desc_restricted_user	Lorsqu'un utilisateur n'a pas accès à votre projet, du fait qu'il soit soit restreint aux projects dont il est membre, il peut vous envoyer une demande afin d'être ajouté aux membres de projet.<br />La demande est envoyée au group d'utilisateurs suivant :
 project_admin_index	member_request_delegation_ugroups_error	Groupe d'utilisateur invalid
-project_admin_index	member_request_delegation_ugroups_msg	Le groupe d'utilisateur à  notifier pour la délégation d'opération d'admin a été ajouté.
+project_admin_index	member_request_delegation_ugroups_all_invalid	Les groupes d'utilisateurs ne peuvent pas etre ajoutés, ils ne contiennent aucun admin du projet ou sont vides
+project_admin_index	member_request_delegation_ugroups_some_invalid	Ces groupes d'utilisateurs ($1) ne peuvent pas etre ajoutés, ils ne contiennent aucun admin du projet ou sont vides
+project_admin_index	member_request_delegation_ugroups_non_admins	Certains groupes d'utilisateurs contiennent des utilisateurs non admins du projet ($1 non admin du projet en total, ils ne vont pas reçevoir les demandes de permission).
+project_admin_index	member_request_delegation_ugroups_msg	Le(s) groupe(s) d'utilisateur à  notifier pour la délégation d'opération d'admin ($1) ont été modifiés.
 project_admin_index	member_request_delegation_msg_to_requester	Veuillez soumettre un message significatif à fin d'aider l'administateur. 
 project_admin_index	member_request_delegation_msg_desc	Ci-dessous le message par défaut qui va être affiché aux utilisateurs qui requièrent l'accès à votre projet. Vous pouvez le personnaliser.
 project_admin_index	member_request_delegation_msg_info	Le message destiné aux utilisateurs a été modifié .
@@ -364,6 +368,9 @@ project_admin_utils	date	Date
 project_admin_utils	no_g_change	Aucun changement effectué sur ce projet
 project_admin_utils	previous	Précédent
 project_admin_utils	next	Suivant
+project_admin_utils	permission_request	Mettre a jour les groupes et le message
+project_admin_utils	selected_ugroups_title	Le(s) groupe(s) d'utilisateurs notifié(s) lors de la délégation des demandes d'accès:
+project_admin_utils	notif_message_title	Message de notification par défaut:
 # ... message for the group_history field_name
 # they do not appear in the code !!!!
 project_admin_utils	approved	Approuvé
@@ -481,6 +488,7 @@ project_admin_ugroup	ug_name	Nom du groupe d'utilisateurs
 project_admin_ugroup	members	Membres
 project_admin_ugroup	del_ug	Détruire de groupe d'utilisateurs ?
 project_admin_ugroup	predef_g	(*) indique un groupe prédéfini
+project_admin_ugroup	permission_request	Demande de permission
 #
 #-----------------------------------------------
 # Script: SF/www/project/admin/ugroup_utils.php

@@ -71,6 +71,8 @@ class DocmanPlugin extends Plugin {
         $this->_addHook('backend_system_purge_files',  'purgeFiles',  false);
         $this->_addHook('project_admin_remove_user', 'projectRemoveUser', false);
         $this->_addHook('project_is_private', 'projectIsPrivate', false);
+
+        $this->_addHook('permission_request_information', 'permissionRequestInformation', false);
 	}
 
     function permission_get_name($params) {
@@ -726,6 +728,15 @@ class DocmanPlugin extends Plugin {
                 }
             }
         }
+    }
+
+    /**
+     * Display information about admin delegation
+     *
+     * @return void
+     */
+    function permissionRequestInformation($params) {
+        echo "<p><h2>".$GLOBALS['Language']->getText('plugin_docman', 'permission_requests')."</h2>".$GLOBALS['Language']->getText('plugin_docman', 'permission_requests_information')."</p>";
     }
 
 }

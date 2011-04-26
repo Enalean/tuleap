@@ -106,5 +106,30 @@ class UGroup {
         return $username_array;
     }
 
+    /**
+    * Check if the ugroup exist for the given project
+    *
+    * @param Integer $groupId the group id
+    * @param Integer $ugroupId the ugroup id
+    *
+    * @return boolean
+    */
+    function exists($groupId, $ugroupId) {
+        $dao = $this->_getUGroupDao();
+        return $dao->checkUGroupValidityByGroupId($groupId, $ugroupId);
+    }
+
+    /**
+     * Return project admins of given static group
+     *
+     * @param Integer $groupId
+     * @param Array $ugroups
+     *
+     * @return Data Access Result
+     */
+    public function returnProjectAdminsByStaticUGroupId($groupId, $ugroups) {
+        $dao = $this->_getUGroupUserDao();
+        return $dao->returnProjectAdminsByStaticUGroupId($groupId, $ugroups);
+    }
 }
 ?>

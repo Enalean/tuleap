@@ -79,46 +79,6 @@ if ($request->isPost() && $request->valid($vFunc)) {
             $GLOBALS['Response']->addFeedback('info', $Language->getText('project_admin_index','changed_group_type'));
       }
       break;
-
-    case 'member_req_notif_group':
-        $vUGroups = new Valid_UInt('ugroups');
-        $vUGroups->required();
-        if ($request->validArray($vUGroups)) {
-            $ugroups = $request->get('ugroups');
-            //to retreive the old marked ugroups 
-            $darUgroups = $pm->getMembershipRequestNotificationUGroup($group_id);
-            if ($pm->setMembershipRequestNotificationUGroup($group_id, $ugroups)) {
-                if ($darUgroups && !$darUgroups->isError() && $darUgroups->rowCount() > 0) {
-                    foreach ($darUgroups as $row) {
-                        $oldUgroups[] = ugroup_get_name_from_id($row['ugroup_id']);
-                    }
-                } else {
-                    $oldUgroups = array(ugroup_get_name_from_id($GLOBALS['UGROUP_PROJECT_ADMIN']));
-                }
-                foreach ($ugroups as $ugroupId) {
-                    $newUgroups[] = ugroup_get_name_from_id($ugroupId);
-                }
-                //update group history
-                group_add_history('membership_request_updated', implode(',', $oldUgroups).' :: '.implode(',', $newUgroups), $group_id);
-                $GLOBALS['Response']->addFeedback('info', $Language->getText('project_admin_index', 'member_request_delegation_ugroups_msg'));
-            }
-        } else {
-            $GLOBALS['Response']->addFeedback('error', $Language->getText('project_admin_index', 'member_request_delegation_ugroups_error'));
-        }
-        break;
-
-    case 'member_req_notif_message':
-        $vMessage = new Valid_Text('text');
-        $vMessage->required();
-        if ($request->valid($vMessage)) {
-            $message = trim($request->get('text'));
-            if ($pm->setMessageToRequesterForAccessProject($group_id, $message)) {
-                $GLOBALS['Response']->addFeedback('info', $Language->getText('project_admin_index', 'member_request_delegation_msg_info'));
-            }
-        } else {
-            $GLOBALS['Response']->addFeedback('error', $Language->getText('project_admin_index', 'member_request_delegation_msg_error'));
-        }
-        break;
     }
 }
 
@@ -430,40 +390,25 @@ echo '</TD>
 */
 $HTML->box1_top($Language->getText('project_admin_index','member_request_delegation_title'));
 
-echo '<tr><td colspan="2">';
-echo $Language->getText('project_admin_index','member_request_delegation_desc');
-echo '</td></tr>';
-
 //Retrieve the saved ugroups for notification from DB
 $dar = $pm->getMembershipRequestNotificationUGroup($group_id);
 if ($dar && !$dar->isError() && $dar->rowCount() > 0) {
     foreach ($dar as $row) {
-        $selectedUgroup[] = $row['ugroup_id'];
+        if ($row['ugroup_id'] == $GLOBALS['UGROUP_PROJECT_ADMIN']) {
+            $selectedUgroup[] = util_translate_name_ugroup('project_admin');
+        } else {
+            $selectedUgroup[] = ugroup_get_name_from_id($row['ugroup_id']);
+        }
     }
 } else {
-        $selectedUgroup = array($GLOBALS['UGROUP_PROJECT_ADMIN']);
+    $selectedUgroup = array(util_translate_name_ugroup('project_admin'));
 }
-
- 
-$ugroupList = array(array('value' => $GLOBALS['UGROUP_PROJECT_ADMIN'], 'text' => util_translate_name_ugroup('project_admin')));
-$res = ugroup_db_get_existing_ugroups($group_id);
-while ($row = db_fetch_array($res)) {
-    $ugroupList[] = array('value' => $row['ugroup_id'], 'text' => $row['name']);
+echo '<b>'.$Language->getText('project_admin_utils','selected_ugroups_title').'</b>';
+echo '<ul>';
+foreach ($selectedUgroup as $ugroup) {
+    echo '<li>'.$ugroup.'</li>';
 }
-echo '<tr><td colspan="2" style="text-align: center;">';
-echo '<form method="post" action="?">';
-echo '<input type="hidden" name="func" value="member_req_notif_group" />';
-echo '<input type="hidden" name="group_id" value="'. $group_id .'">';
-echo html_build_multiple_select_box_from_array($ugroupList, "ugroups[]", $selectedUgroup, 8, false, '', false, '', false, '', false);
-echo '<br />';
-echo '<input type="submit" name="submit" value="'.$Language->getText('global', 'btn_update').'" />';
-echo '</form>';
-echo '</td></tr>';
-
-echo '<tr><td colspan="2">';
-echo $Language->getText('project_admin_index','member_request_delegation_msg_desc');
-echo '</td></tr>';
-
+echo '</ul>';
 $message = $GLOBALS['Language']->getText('project_admin_index', 'member_request_delegation_msg_to_requester');
 $pm = ProjectManager::instance();
 $dar = $pm->getMessageToRequesterForAccessProject($group_id);
@@ -473,16 +418,14 @@ if ($dar && !$dar->isError() && $dar->rowCount() == 1) {
         $message = $row['msg_to_requester'];
     }
 }
-echo '<tr><td colspan="2" style="text-align: center;">';
-echo '<form method="post" action="?">
-          <textarea wrap="virtual" rows="5" cols="70" name="text">'.$message.'</textarea></p>
-          <input type="hidden" name="func" value="member_req_notif_message">
-          <input type="hidden" name="group_id" value="' .$group_id. '">
-          <br><input name="submit" type="submit" value="'.$GLOBALS['Language']->getText('global', 'btn_update').'"/></br>
-     </form>';
-
-echo '</td></tr>';
-
+echo '<hr size="1" noshade="">';
+echo '<b>'.$Language->getText('project_admin_utils','notif_message_title').'</b><br/>';
+echo '<p><div class="admin_delegation"><pre>'.$message.'</pre></div></p>';
+echo '<hr size="1" noshade="">';
+echo '<tr><td colspan="2">';
+echo '<p align="center">';
+echo '<A HREF="/project/admin/permission_request.php?group_id='.$group_id.'"><b>['.$Language->getText('project_admin_utils','permission_request').']</b></A>';
+echo '</p></td></tr>';
 echo $HTML->box1_bottom();
 ?>
 </TD>

@@ -267,5 +267,17 @@ class ProjectManager {
         $dao = $this->_getDao();
         return $dao->setMessageToRequesterForAccessProject($groupId, $message);
     }
+
+    /**
+     * Return the sql request retreiving project admins of given project
+     *
+     * @param Integer $groupId
+     *
+     * @return Data Access Result
+     */
+    function returnProjectAdminsByGroupId($groupId) {
+        $dao = new UserGroupDao(CodendiDataAccess::instance());
+        return $dao->returnProjectAdminsByGroupId($groupId);
+    }
 }
 ?>

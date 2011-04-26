@@ -196,10 +196,14 @@ project_admin_index	file_admin	File Manager Admin
 project_admin_index	tracker_admin	Tracker Admin
 project_admin_index	no_tracker_found	No Accessible Trackers Found
 project_admin_index	admin	Admin
-project_admin_index	member_request_delegation_title	Membership requests delegation
-project_admin_index	member_request_delegation_desc	When people don't have access to your project, either because your project is private or because the user is restricted and only have access to projects he is member of, they can request to be added as members.<br />The following group will receive the email requests:
+project_admin_index	member_request_delegation_title	Project membership requests delegation
+project_admin_index	member_request_delegation_desc_private_group	When people don't have access to your project, because your project is private, they can request to be added as members.<br />The following group will receive the email requests:
+project_admin_index	member_request_delegation_desc_restricted_user	When people don't have access to your project, because he is restricted and only have access to projects he is member of, they can request to be added as members.<br />The following group will receive the email requests:
 project_admin_index	member_request_delegation_ugroups_error	Invalid user groups
-project_admin_index	member_request_delegation_ugroups_msg	The user group to be notified for admin delegation is added.
+project_admin_index	member_request_delegation_ugroups_all_invalid	All selected user groups could not be added, they contain no project admins or they are empty
+project_admin_index	member_request_delegation_ugroups_some_invalid	Those selected user groups ($1) could not be added, they contain no project admins or they are empty
+project_admin_index	member_request_delegation_ugroups_non_admins	Some selected user groups contain non project admins ($1 non project admins in total, they will not receive premission requests).
+project_admin_index	member_request_delegation_ugroups_msg	The user group(s) to be notified for admin delegation ($1) have been updated.
 project_admin_index	member_request_delegation_msg_to_requester	Please write something meaningful for the admin.
 project_admin_index	member_request_delegation_msg_desc	This is the default message which will be displayed to requester. You can personnalize it.
 project_admin_index	member_request_delegation_msg_info	The default message for requester has been updated successfully.
@@ -363,6 +367,9 @@ project_admin_utils	event	Event
 project_admin_utils	val	Value
 project_admin_utils	date	Date
 project_admin_utils	no_g_change	No Changes Have Been Made to This Group
+project_admin_utils	permission_request	Update Selected groups and message
+project_admin_utils	selected_ugroups_title	User group(s) to be notified for admin delegation:
+project_admin_utils	notif_message_title	Default notification message:
 
 project_admin_utils	previous	Previous
 project_admin_utils	next	Next
@@ -483,6 +490,7 @@ project_admin_ugroup	ug_name	User Group Name
 project_admin_ugroup	members	Members
 project_admin_ugroup	del_ug	Delete this user group ?
 project_admin_ugroup	predef_g	(*) denotes predefined groups
+project_admin_ugroup	permission_request	Permission Request
 #
 #-----------------------------------------------
 # Script: SF/www/project/admin/ugroup_utils.php

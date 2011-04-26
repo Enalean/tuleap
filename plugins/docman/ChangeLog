@@ -1,3 +1,6 @@
+Version 2.9
+        Add hook to display info message in permission request dedicated screen.
+
 Version 2.8 
         Fix bug: Do not allow the creation of metadata with empty name.
         Fix bug: Paste action should not appear in popup menu for the same cut document. 

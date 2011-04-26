@@ -111,7 +111,7 @@ abstract class Error_PermissionDenied {
               </form>';
         }
     }
-    
+
     /**
      *
      * Returns the administrators' list of a given project
@@ -122,13 +122,17 @@ abstract class Error_PermissionDenied {
      */
     function extractReceiver($project, $urlData) {
         $admins = array();
-
+        $status  = true;
         $pm = ProjectManager::instance();
         $res = $pm->getMembershipRequestNotificationUGroup($project->getId());
         if ($res && !$res->isError()) {
-            $request = 'SELECT email, language_id FROM user u JOIN user_group ug USING(user_id) WHERE ug.admin_flags="A" AND u.status IN ("A", "R") AND ug.group_id = '.db_ei($project->getId());
             if ($res->rowCount() == 0) {
-                $sql = $request;
+                $dar = $pm->returnProjectAdminsByGroupId($project->getId());
+                if ($dar && !$dar->isError() && $dar->rowCount() > 0) {
+                    foreach ($dar as $row) {
+                        $admins[] = $row['email'];
+                    }
+                }
             } else {
                 /* We can face one of these composition for ugroups array:
                  * 1 - UGROUP_PROJECT_ADMIN
@@ -136,25 +140,42 @@ abstract class Error_PermissionDenied {
                  * 3 - UGROUP_1, UGROUP_2,.., UGROUP_n
                  */
                 $ugroups = array();
+                $dars = array();
                 foreach ($res as $row) {
                     if ($row['ugroup_id'] == $GLOBALS['UGROUP_PROJECT_ADMIN']) {
-                        $stm [] = $request;
+                        $dar = $pm->returnProjectAdminsByGroupId($project->getId());
+                        if ($dar && !$dar->isError() && $dar->rowCount() > 0) {
+                            $dars[] = $dar;
+                        }
                     } else {
                         $ugroups[] = $row['ugroup_id'];
                     }
                 }
                 if (count($ugroups) > 0) {
-                    $stm[] = ' SELECT email, language_id FROM user u JOIN ugroup_user ug USING(user_id) WHERE u.status IN ("A", "R") AND ug.ugroup_id IN ('.implode(",",$ugroups).')';
+                    $dar = $this->getUGroup()->returnProjectAdminsByStaticUGroupId($project->getId(), $ugroups);
+                    if ($dar && !$dar->isError() && $dar->rowCount() > 0) {
+                        $dars[] = $dar;
+                    }
                 }
-                $sql =  implode(" UNION ",$stm);
+                foreach ($dars as $dar) {
+                    foreach ($dar as $row) {
+                        $admins[] = $row['email'];
+                    }
+                }
             }
 
-            $res = db_query($sql);
-            while ($row = db_fetch_array($res)) {
-                $admins[$row['email']] = $row['language_id'];
+            //If all selected ugroups are not valid, send mail to the project admins
+            if (count($admins) == 0) {
+                $status = false;
+                $dar = $pm->returnProjectAdminsByGroupId($project->getId());
+                if ($dar && !$dar->isError() && $dar->rowCount() > 0) {
+                    foreach ($dar as $row) {
+                        $admins[] = $row['email'];
+                    }
+                }
             }
         }
-        return $admins;
+        return array('admins' => $admins, 'status' => $status);
     }
 
     /**
@@ -178,7 +199,6 @@ abstract class Error_PermissionDenied {
         $urlData = get_server_url().$request->get('url_data');
         return $this->sendMail($project, $user, $urlData, $hrefApproval, $messageToAdmin);
     }
-    
 
 
     /**
@@ -191,37 +211,35 @@ abstract class Error_PermissionDenied {
      * @param String  $messageToAdmin
      */
     function sendMail($project, $user, $urlData, $hrefApproval,$messageToAdmin) {
+        $mail = new Mail();
+
+        //to
         $adminList = $this->extractReceiver($project, $urlData);
-        if (count($adminList) > 0) {
-            $from = $user->getEmail();
-            $hdrs = 'From: '.$from."\n";
+        $admins = array_unique($adminList['admins']);
+        $to = implode(',', $admins);
+        $mail->setTo($to);
 
-            foreach ($adminList as $to => $lang) {
-                // Send a notification message to the project administrator
-                //according to his prefered language
-                $mail = new Mail();
-                $mail->setTo($to);
-                $mail->setFrom($from);
+        //from
+        $from = $user->getEmail();
+        $hdrs = 'From: '.$from."\n";
+        $mail->setFrom($from);
 
-                $language = new BaseLanguage($GLOBALS['sys_supported_languages'], $GLOBALS['sys_lang']);
-                $language->loadLanguage($lang);
+        $mail->setSubject($GLOBALS['Language']->getText($this->getTextBase(), 'mail_subject_'.$this->getType(), array($project->getPublicName(), $user->getRealName())));
 
-                $mail->setSubject($language->getText($this->getTextBase(), 'mail_subject_'.$this->getType(), array($project->getPublicName(), $user->getRealName())));
-
-                $link = $this->getRedirectLink($urlData, $language);
-                $body = $language->getText($this->getTextBase(), 'mail_content_'.$this->getType(), array($user->getRealName(), $user->getName(), $link, $project->getPublicName(), $hrefApproval, $messageToAdmin, $user->getEmail()));
-                $mail->setBody($body);
-
-                if (!$mail->send()) {
-                    exit_error($GLOBALS['Language']->getText('global', 'error'), $GLOBALS['Language']->getText('global', 'mail_failed', array($GLOBALS['sys_email_admin'])));
-                }
-            }
-
-            $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('include_exit', 'request_sent'), CODENDI_PURIFIER_DISABLED);
-            $GLOBALS['Response']->redirect('/my');
-            exit;
+        $link = $this->getRedirectLink($urlData, $GLOBALS['Language']);
+        $body = $GLOBALS['Language']->getText($this->getTextBase(), 'mail_content_'.$this->getType(), array($user->getRealName(), $user->getName(), $link, $project->getPublicName(), $hrefApproval, $messageToAdmin, $user->getEmail()));
+        if ($adminList['status']== false) {
+            $body .= "\n\n". $GLOBALS['Language']->getText($this->getTextBase(), 'mail_content_unvalid_ugroup', array($project->getPublicName()));
         }
-        exit_error($GLOBALS['Language']->getText('global', 'error'), $GLOBALS['Language']->getText('global', 'mail_failed', array($GLOBALS['sys_email_admin'])));
+        $mail->setBody($body);
+
+        if (!$mail->send()) {
+            exit_error($GLOBALS['Language']->getText('global', 'error'), $GLOBALS['Language']->getText('global', 'mail_failed', array($GLOBALS['sys_email_admin'])));
+        }
+
+        $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('include_exit', 'request_sent'), CODENDI_PURIFIER_DISABLED);
+        $GLOBALS['Response']->redirect('/my');
+        exit;
     }
 
     /**
@@ -241,6 +259,14 @@ abstract class Error_PermissionDenied {
     protected function getProjectManager() {
         return ProjectManager::instance();
     }
-    
+
+    /**
+     * Get an instance of UGroup. 
+     * 
+     * @return UGroup
+     */
+    protected function getUGroup() {
+        return new UGroup();
+    }
 }
 ?>

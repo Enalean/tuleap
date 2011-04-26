@@ -3,6 +3,7 @@ Version 4.0.18 - (Not released yet)
         backlog #124820: Add history for membership delegation
         backlog #99968 : Add a "delete feature" for wiki attached file
         backlog #124821: Study/Deploy the possibility to send HTML notification
+        backlog #130629: Add tests on the validity of the group delegated membership
 	New version of CLI: 1.4.1, See separted ChangeLog
 
         == Bugfix ==

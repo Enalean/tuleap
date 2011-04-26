@@ -10,6 +10,7 @@
 //
 
 require_once('common/user/UserHelper.class.php');
+require_once('common/project/UGroup.class.php');
 
 //
 // Define various functions for user group management
@@ -606,6 +607,121 @@ function ugroup_copy_ugroup($ugroup_id,$to_group,&$ugid) {
 
   return $err;
 
+}
+
+/**
+ * Wrapper for tests
+ *
+ * @return UserManager
+ */
+function ugroup_get_user_manager() {
+    return UserManager::instance();
+}
+
+/**
+ * Wrapper for tests
+ *
+ * @return UGroup
+ */
+function ugroup_get_ugroup() {
+    return new UGroup();
+}
+
+/**
+ * Calculate the number of project admins and non project admins of the ugroup
+ *
+ * @param Integer $groupId
+ * @param String  $usersSql
+ *
+ * @return Array
+ */
+function ugroup_count_project_admins($groupId, $usersSql) {
+    $um = ugroup_get_user_manager();
+    $admins    = 0;
+    $nonAdmins = 0;
+    $res = db_query($usersSql);
+    while ($row = db_fetch_array($res)) {
+        $user = $um->getUserById($row['user_id']);
+        if ($user->isMember($groupId, 'A')) {
+            $admins ++;
+        } else {
+            $nonAdmins ++;
+        }
+    }
+    return array('admins' => $admins, 'non_admins' => $nonAdmins);
+}
+
+/**
+ * Filter static ugroups that contain project admins.
+ * Retun value is the number of non project admins
+ * in the filtered ugroups.
+ *
+ * @param Integer $groupId
+ * @param Array   $ugroups
+ * @param Array   $validUgroups
+ *
+ * @return Integer
+ */
+function ugroup_count_non_admin_for_static_ugroups($groupId, $ugroups, &$validUGroups) {
+    $containNonAdmin = 0;
+    $uGroup = ugroup_get_ugroup();
+    foreach ($ugroups as $ugroupId) {
+        if ($uGroup->exists($groupId, $ugroupId)) {
+            $sql = ugroup_db_get_members($ugroupId);
+            $arrayUsers = ugroup_count_project_admins($groupId, $sql);
+            $nonAdmin = $arrayUsers['non_admins'];
+            $containAdmin = $arrayUsers['admins'];
+            if ($containAdmin > 0) {
+                $validUGroups[] = $ugroupId;
+                $containNonAdmin += $nonAdmin;
+            }
+        }
+    }
+    return $containNonAdmin;
+}
+
+/**
+ * Filter dynamic ugroups that contain project admins.
+ * Retun is the number of non project admins
+ * in the filtered ugroups.
+ *
+ * @param Integer $groupId
+ * @param Array   $ugroups
+ * @param Array   $validUgroups
+ *
+ * @return Integer
+ */
+function ugroup_count_non_admin_for_dynamic_ugroups($groupId, $ugroups, &$validUGroups) {
+    $containNonAdmin = 0;
+    foreach ($ugroups as $ugroupId) {
+        $sql = ugroup_db_get_dynamic_members($ugroupId, null, $groupId);
+        $arrayUsers = ugroup_count_project_admins($groupId, $sql);
+        if ($arrayUsers['admins'] > 0) {
+            $validUGroups[] = $ugroupId;
+            $containNonAdmin += $arrayUsers['non_admins'];
+        }
+    }
+    return $containNonAdmin;
+}
+
+/**
+ * Validate the ugroup list containing group admins.
+ * Remove ugroups that are empty or contain no project admins.
+ * Don't remove ugroups containing both project admins and non project admins
+ * just indicate the total number of non project admins.
+ *
+ * @param Integer $groupId
+ * @param Array   $ugroups
+ *
+ * @return Array
+ */
+function ugroup_filter_ugroups_by_project_admin($groupId, $ugroups) {
+    $validUGroups = array();
+    // Check static ugroups
+    $nonAdmins = ugroup_count_non_admin_for_static_ugroups($groupId, $ugroups, $validUGroups);
+    // Check dynamic ugroups
+    $nonAdmins += ugroup_count_non_admin_for_dynamic_ugroups($groupId, $ugroups, $validUGroups);
+    return array('non_admins' => $nonAdmins, 'ugroups' => $validUGroups);
 }
 
 ?>
