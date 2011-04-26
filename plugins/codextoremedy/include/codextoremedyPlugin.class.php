@@ -92,8 +92,8 @@ class codextoremedyPlugin extends Plugin {
                       <option value="support">'.$GLOBALS['Language']->getText('plugin_codextoremedy', 'Support_request').'</option>
                          <option value="enhancement">'.$GLOBALS['Language']->getText('plugin_codextoremedy', 'Enhancement_request').'</option>
                      </select>';
-            echo '<b>'.$GLOBALS['Language']->getText('plugin_codextoremedy', 'severity').'</b></td>
-                         <td><select name="severity">
+            echo '</td><td><b>'.$GLOBALS['Language']->getText('plugin_codextoremedy', 'severity').'</b></td>
+                             <td><select name="severity">
                              <option value="minor">'.$GLOBALS['Language']->getText('plugin_codextoremedy', 'Minor').'</option>
                              <option value="serious">'.$GLOBALS['Language']->getText('plugin_codextoremedy', 'Serious').'</option>
                              <option value="critical">'.$GLOBALS['Language']->getText('plugin_codextoremedy', 'Critical').'</option>
@@ -103,7 +103,6 @@ class codextoremedyPlugin extends Plugin {
             echo '<tr><td><b>'.$GLOBALS['Language']->getText('plugin_codextoremedy', 'summary').'</b></td>
                      <td><input type="text" name="request_summary" /></td></tr>';
             echo '<tr><td><b>Description:</b></td><td><textarea style="background: b" name="request_description"></textarea></td></tr>
-            <tr><td></td><td><input name="user" type="hidden" value="'.$user->getId().'" /></td></tr>
             <tr><td></td><td><input name="action" type="hidden" value="submit_ticket" /></td></tr>
             <tr><td></td><td><input name="submit" type="submit" value="Submit" /></td></tr>
                 </table>
