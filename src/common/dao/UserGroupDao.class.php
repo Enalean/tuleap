@@ -65,11 +65,11 @@ class UserGroupDao extends DataAccessObject {
     }
 
     /**
-     * Return the sql request retreiving project admins of given project
+     * Return project admins of given project
      *
      * @param Integer $groupId
      *
-     * @return String
+     * @return Data Access Result
      */
     function returnProjectAdminsByGroupId($groupId) {
         $sql = 'SELECT u.email as email  FROM user u

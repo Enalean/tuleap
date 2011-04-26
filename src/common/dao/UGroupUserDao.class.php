@@ -49,7 +49,7 @@ class UGroupUserDao extends DataAccessObject {
      * @param Integer $groupId
      * @param Array $ugroups
      * 
-     * @return String
+     * @return Data Access Result
      */
     function returnProjectAdminsByStaticUGroupId($groupId, $ugroups) {
         $sql = 'SELECT u.email as email FROM user u
