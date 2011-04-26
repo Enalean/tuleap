@@ -91,22 +91,22 @@ class FRSFileFactoryTest extends UnitTestCase {
         $this->assertTrue($ff->moveFiles(1287504083, $backend));
     }
 
-    function testPurgeDeletedFilesMoveStagingError() {
+    function testMoveFilesMoveStagingError() {
         $ff = new FRSFileFactoryTestPurgeDeletedFiles($this);
         $ff->setReturnValue('moveDeletedFilesToStagingArea', false);
         $ff->setReturnValue('purgeFiles', true);
         $ff->setReturnValue('cleanStaging', true);
         $ff->setReturnValue('restoreDeletedFiles', true);
         $ff->expectOnce('moveDeletedFilesToStagingArea');
-        $ff->expectNever('purgeFiles', array(1287504083));
-        $ff->expectNever('cleanStaging');
         $backend = new MockBackendSystem($this);
-        $ff->expectNever('restoreDeletedFiles', array($backend));
+        $ff->expectOnce('purgeFiles', array(1287504083, $backend));
+        $ff->expectOnce('cleanStaging');
+        $ff->expectOnce('restoreDeletedFiles', array($backend));
 
         $this->assertFalse($ff->moveFiles(1287504083, $backend));
     }
 
-    function testPurgeDeletedFilesPurgeError() {
+    function testMoveFilesPurgeError() {
         $ff = new FRSFileFactoryTestPurgeDeletedFiles($this);
         $ff->setReturnValue('moveDeletedFilesToStagingArea', true);
         $ff->setReturnValue('purgeFiles', false);
@@ -115,13 +115,13 @@ class FRSFileFactoryTest extends UnitTestCase {
         $backend = new MockBackendSystem($this);
         $ff->expectOnce('moveDeletedFilesToStagingArea');
         $ff->expectOnce('purgeFiles', array(1287504083, $backend));
-        $ff->expectNever('cleanStaging');
-        $ff->expectNever('restoreDeletedFiles', array($backend));
+        $ff->expectOnce('cleanStaging');
+        $ff->expectOnce('restoreDeletedFiles', array($backend));
 
         $this->assertFalse($ff->moveFiles(1287504083, $backend));
     }
 
-    function testPurgeDeletedFilesCleanStagingError() {
+    function testMoveFilesCleanStagingError() {
         $ff = new FRSFileFactoryTestPurgeDeletedFiles($this);
         $ff->setReturnValue('moveDeletedFilesToStagingArea', true);
         $ff->setReturnValue('purgeFiles', true);
@@ -131,12 +131,12 @@ class FRSFileFactoryTest extends UnitTestCase {
         $ff->expectOnce('moveDeletedFilesToStagingArea');
         $ff->expectOnce('purgeFiles', array(1287504083, $backend));
         $ff->expectOnce('cleanStaging');
-        $ff->expectNever('restoreDeletedFiles', array($backend));
+        $ff->expectOnce('restoreDeletedFiles', array($backend));
 
         $this->assertFalse($ff->moveFiles(1287504083, $backend));
     }
 
-    function testPurgeDeletedFilesRestoreDeletedError() {
+    function testMoveFilesRestoreDeletedError() {
         $ff = new FRSFileFactoryTestPurgeDeletedFiles($this);
         $ff->setReturnValue('moveDeletedFilesToStagingArea', true);
         $ff->setReturnValue('purgeFiles', true);
