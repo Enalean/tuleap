@@ -57,7 +57,8 @@ class CodexToRemedy extends Controler {
                     $params['description'] = $request->get('request_description');
                     $params['type']        = $request->get('type');
                     $params['severity']    = $request->get('severity');
-                    CodexToRemedyActions::insertInPluginDB($params);
+                    CodexToRemedyActions::insertTicketInCodexDB($params);
+                    CodexToRemedyActions::insertTicketInRIFDB($params);
                     // }}}
 
                     //$this->view = 'remedyForm';

@@ -48,6 +48,32 @@ class CodexToRemedyDBDriver {
     }
 
     /**
+     * Insert the ticket in RIF DB
+     * 
+     * @param String $summary
+     * @param String $description
+     * @param String $type 
+     * @param String $severity
+     * @param Date   $createDate
+     * 
+     * @return Boolean
+     */
+    public function createTicket($summary, $description, $type, $severity, $createDate) {
+        $sth = $this->pdo->prepare("INSERT INTO RIF_REQUEST (CATEGORY , TYPE , ITEM , REQUESTER_NAME , SUMMARY, DESCRIPTION, SEVERITY ,".
+                                    "CC_MAIL_IDS , INSERTION_DATE, REQUEST_STATUS , REQUESTER_LOGIN, RIF_ID) VALUES ('MANUFACTURING WIP',".    
+                                    "'AMHS (LOT TRANSPORTATIONPRI', 'OTHERS','STMR ADMINISTRATOR',?, ?,". 
+                                    "?, 'alberto.aprato@st.com',sysdate,'NEW', 'STMR ADMIN', RIF_REQUEST_SEQ.NEXTVAL)");
+        $sth->bindParam(1, $summary, PDO::PARAM_STR, 256);
+        $sth->bindParam(2, $description, PDO::PARAM_STR, 64);
+        $sth->bindParam(3, $severity, PDO::PARAM_STR, 12);
+        if ($sth) {
+            return $sth->execute();
+        }
+        return false;
+    }
+
+
+    /**
      * Retreive a param config giving its name
      *
      * @param String $name

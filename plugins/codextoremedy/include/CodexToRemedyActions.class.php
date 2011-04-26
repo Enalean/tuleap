@@ -23,6 +23,7 @@ require_once('common/mvc/Actions.class.php');
 require_once('common/include/HTTPRequest.class.php');
 require_once('common/mail/Codendi_Mail.class.php');
 require_once('CodexToRemedyDao.class.php');
+require_once('CodexToRemedyDBDriver.class.php');
 
 /**
  * CodexToRemedyActions
@@ -49,9 +50,23 @@ class CodexToRemedyActions extends Actions {
      *
      * @return Boolean
      */
-    function insertInPluginDB($params) {
+    function insertTicketInCodexDB($params) {
         $dao = new CodexToRemedyDao();
         return $dao->insertInCodexDB($params['id'], $params['user_id'], $params['summary'], $params['create_date'], $params['description'], $params['type'], $params['severity']);
+    }
+
+    /**
+     * Insert ticket in RIF DB
+     * 
+     * @param Array $params collection of data that will be inserted
+     * 
+     * @return Boolean
+     */
+    function insertTicketInRIFDB($params) {
+        $pdo = new CodexToRemedyDBDriver();
+        $pdo->getPdo();
+        //need more parameters from form: people_cc
+        return $pdo->createTicket($params['summary'], $params['description'], $params['type'], $params['severity'], $params['create_date']);
     }
 
     /**
@@ -70,7 +85,7 @@ class CodexToRemedyActions extends Actions {
         $summary = $request->get('request_summary');
         $messageToSd = $request->get('request_description');
 
-        $to = 'codex-team-bounces@lists.codex.cro.st.com';
+        $to = 'codex-team@lists.codex.cro.st.com';
         $from = $user->getEmail();
         // Send a notification message to the SD and CodexCC
         $mail = new Codendi_Mail();
