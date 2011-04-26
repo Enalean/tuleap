@@ -96,7 +96,7 @@ class UgroupUtilsTest extends UnitTestCase {
         $this->assertEqual(1, $result['non_admins']);
     }
 
-    function testUgroupValidateStaticAdminUgroupsNotProjectGroups() {
+    function testUgroupCountNonAdminForStaticUgroupsNotProjectGroups() {
         $uGroup = new MockUGroup();
         $uGroup->setReturnValue('exists', true, array(1, 1));
         $uGroup->setReturnValue('exists', true, array(1, 2));
@@ -108,12 +108,12 @@ class UgroupUtilsTest extends UnitTestCase {
         MockFunction::setReturnValue('ugroup_count_project_admins', array('admins' => 1, 'non_admins' => 1));
         MockFunction::expectNever('ugroup_count_project_admins');
         $validUGroups = array(1, 2);
-        $this->assertFalse(ugroup_validate_static_admin_ugroups(1, array(3, 4), $validUGroups));
+        $this->assertFalse(ugroup_count_non_admin_for_static_ugroups(1, array(3, 4), $validUGroups));
         $this->assertEqual(array(1, 2), $validUGroups);
         MockFunction::restore('ugroup_count_project_admins');
     }
 
-    function testUgroupValidateStaticAdminUgroupsContainAdmins() {
+    function testUgroupCountNonAdminForStaticUgroupsContainAdmins() {
         $uGroup = new MockUGroup();
         $uGroup->setReturnValue('exists', true, array(1, 1));
         $uGroup->setReturnValue('exists', true, array(1, 2));
@@ -125,12 +125,12 @@ class UgroupUtilsTest extends UnitTestCase {
         MockFunction::setReturnValue('ugroup_count_project_admins', array('admins' => 2, 'non_admins' => 3));
         MockFunction::expectCallCount('ugroup_count_project_admins', 2);
         $validUGroups = array(1, 2);
-        $this->assertEqual(6, ugroup_validate_static_admin_ugroups(1, array(3, 4), $validUGroups));
+        $this->assertEqual(6, ugroup_count_non_admin_for_static_ugroups(1, array(3, 4), $validUGroups));
         $this->assertEqual(array(1, 2, 3, 4), $validUGroups);
         MockFunction::restore('ugroup_count_project_admins');
     }
 
-    function testUgroupValidateStaticAdminUgroupsContainNoAdmins() {
+    function testUgroupCountNonAdminForStaticUgroupsContainNoAdmins() {
         $uGroup = new MockUGroup();
         $uGroup->setReturnValue('exists', true, array(1, 1));
         $uGroup->setReturnValue('exists', true, array(1, 2));
@@ -142,12 +142,12 @@ class UgroupUtilsTest extends UnitTestCase {
         MockFunction::setReturnValue('ugroup_count_project_admins', array('admins' => 0, 'non_admins' => 3));
         MockFunction::expectCallCount('ugroup_count_project_admins', 2);
         $validUGroups = array(1, 2);
-        $this->assertEqual(0, ugroup_validate_static_admin_ugroups(1, array(3, 4), $validUGroups));
+        $this->assertEqual(0, ugroup_count_non_admin_for_static_ugroups(1, array(3, 4), $validUGroups));
         $this->assertEqual(array(1, 2), $validUGroups);
         MockFunction::restore('ugroup_count_project_admins');
     }
 
-    function testUgroupValidateStaticAdminUgroupsMixed() {
+    function testUgroupCountNonAdminForStaticUgroupsMixed() {
         $uGroup = new MockUGroup();
         $uGroup->setReturnValue('exists', true, array(1, 1));
         $uGroup->setReturnValue('exists', true, array(1, 2));
@@ -160,38 +160,38 @@ class UgroupUtilsTest extends UnitTestCase {
         MockFunction::setReturnValueAt(1, 'ugroup_count_project_admins', array('admins' => 1, 'non_admins' => 3));
         MockFunction::expectCallCount('ugroup_count_project_admins', 2);
         $validUGroups = array(1, 2);
-        $this->assertEqual(3, ugroup_validate_static_admin_ugroups(1, array(3, 4), $validUGroups));
+        $this->assertEqual(3, ugroup_count_non_admin_for_static_ugroups(1, array(3, 4), $validUGroups));
         $this->assertEqual(array(1, 2, 4), $validUGroups);
         MockFunction::restore('ugroup_count_project_admins');
     }
 
-    function testUgroupValidateDynamicAdminUgroupsContainAdmins() {
+    function testUgroupCountNonAdminForDynamicUgroupsContainAdmins() {
         MockFunction::generate('ugroup_count_project_admins');
         MockFunction::setReturnValue('ugroup_count_project_admins', array('admins' => 1, 'non_admins' => 2));
         MockFunction::expectCallCount('ugroup_count_project_admins', 2);
         $validUGroups = array(1, 2);
-        $this->assertEqual(4 ,ugroup_validate_dynamic_admin_ugroups(1, array(3, 4), $validUGroups));
+        $this->assertEqual(4 ,ugroup_count_non_admin_for_dynamic_ugroups(1, array(3, 4), $validUGroups));
         $this->assertEqual(array(1, 2, 3, 4), $validUGroups);
         MockFunction::restore('ugroup_count_project_admins');
     }
 
-    function testUgroupValidateDynamicAdminUgroupsContainNoAdmins() {
+    function testUgroupCountNonAdminForDynamicUgroupsContainNoAdmins() {
         MockFunction::generate('ugroup_count_project_admins');
         MockFunction::setReturnValue('ugroup_count_project_admins', array('admins' => 0, 'non_admins' => 2));
         MockFunction::expectCallCount('ugroup_count_project_admins', 2);
         $validUGroups = array(1, 2);
-        $this->assertEqual(0, ugroup_validate_dynamic_admin_ugroups(1, array(3, 4), $validUGroups));
+        $this->assertEqual(0, ugroup_count_non_admin_for_dynamic_ugroups(1, array(3, 4), $validUGroups));
         $this->assertEqual(array(1, 2), $validUGroups);
         MockFunction::restore('ugroup_count_project_admins');
     }
 
-    function testUgroupValidateDynamicAdminUgroupsMixed() {
+    function testUgroupCountNonAdminForDynamicUgroupsMixed() {
         MockFunction::generate('ugroup_count_project_admins');
         MockFunction::setReturnValueAt(0, 'ugroup_count_project_admins', array('admins' => 0, 'non_admins' => 2));
         MockFunction::setReturnValueAt(1, 'ugroup_count_project_admins', array('admins' => 1, 'non_admins' => 3));
         MockFunction::expectCallCount('ugroup_count_project_admins', 2);
         $validUGroups = array(1, 2);
-        $this->assertEqual(3, ugroup_validate_dynamic_admin_ugroups(1, array(3, 4), $validUGroups));
+        $this->assertEqual(3, ugroup_count_non_admin_for_dynamic_ugroups(1, array(3, 4), $validUGroups));
         $this->assertEqual(array(1, 2, 4), $validUGroups);
         MockFunction::restore('ugroup_count_project_admins');
     }

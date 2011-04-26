@@ -662,7 +662,7 @@ function ugroup_count_project_admins($groupId, $usersSql) {
  *
  * @return Integer
  */
-function ugroup_validate_static_admin_ugroups($groupId, $ugroups, &$validUGroups) {
+function ugroup_count_non_admin_for_static_ugroups($groupId, $ugroups, &$validUGroups) {
     $containNonAdmin = 0;
     $uGroup = ugroup_get_ugroup();
     foreach ($ugroups as $ugroupId) {
@@ -691,7 +691,7 @@ function ugroup_validate_static_admin_ugroups($groupId, $ugroups, &$validUGroups
  *
  * @return Integer
  */
-function ugroup_validate_dynamic_admin_ugroups($groupId, $ugroups, &$validUGroups) {
+function ugroup_count_non_admin_for_dynamic_ugroups($groupId, $ugroups, &$validUGroups) {
     $containNonAdmin = 0;
     foreach ($ugroups as $ugroupId) {
         $sql = ugroup_db_get_dynamic_members($ugroupId, null, $groupId);
@@ -718,9 +718,9 @@ function ugroup_validate_dynamic_admin_ugroups($groupId, $ugroups, &$validUGroup
 function ugroup_validate_admin_ugroups($groupId, $ugroups) {
     $validUGroups = array();
     // Check static ugroups
-    $nonAdmins = ugroup_validate_static_admin_ugroups($groupId, $ugroups, $validUGroups);
+    $nonAdmins = ugroup_count_non_admin_for_static_ugroups($groupId, $ugroups, $validUGroups);
     // Check dynamic ugroups
-    $nonAdmins += ugroup_validate_dynamic_admin_ugroups($groupId, $ugroups, $validUGroups);
+    $nonAdmins += ugroup_count_non_admin_for_dynamic_ugroups($groupId, $ugroups, $validUGroups);
     return array('non_admins' => $nonAdmins, 'ugroups' => $validUGroups);
 }
 
