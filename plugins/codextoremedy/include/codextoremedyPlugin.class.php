@@ -60,9 +60,16 @@ class codextoremedyPlugin extends Plugin {
         $controler = new CodexToRemedy();
         $controler->process();
     }
-	function cssFile($params) {
-            echo '<link rel="stylesheet" type="text/css" href="'.$this->getThemePath().'/css/style.css" />'."\n";
-        
+
+     /**
+     * Set the right style sheet for CodexToRemedy form
+     *
+     * @param Array $params params of the hook
+     *
+     * @return void
+     */
+    function cssFile($params) {
+        echo '<link rel="stylesheet" type="text/css" href="'.$this->getThemePath().'/css/style.css" />'."\n";
     }
 
     /**
@@ -82,14 +89,14 @@ class codextoremedyPlugin extends Plugin {
                      <tr>';
             echo '<td><b>Type:</b></td>
                      <td><select name="type">
-                      <option value"support">'.$GLOBALS['Language']->getText('plugin_codextoremedy', 'Support_request').'</option>
-                         <option value"enhancement">'.$GLOBALS['Language']->getText('plugin_codextoremedy', 'Enhancement_request').'</option>
+                      <option value="support">'.$GLOBALS['Language']->getText('plugin_codextoremedy', 'Support_request').'</option>
+                         <option value="enhancement">'.$GLOBALS['Language']->getText('plugin_codextoremedy', 'Enhancement_request').'</option>
                      </select>';
             echo '<b>'.$GLOBALS['Language']->getText('plugin_codextoremedy', 'severity').'</b></td>
                          <td><select name="severity">
-                             <option value"minor">'.$GLOBALS['Language']->getText('plugin_codextoremedy', 'Minor').'</option>
-                             <option value"serious">'.$GLOBALS['Language']->getText('plugin_codextoremedy', 'Serious').'</option>
-                             <option value"critical">'.$GLOBALS['Language']->getText('plugin_codextoremedy', 'Critical').'</option>
+                             <option value="minor">'.$GLOBALS['Language']->getText('plugin_codextoremedy', 'Minor').'</option>
+                             <option value="serious">'.$GLOBALS['Language']->getText('plugin_codextoremedy', 'Serious').'</option>
+                             <option value="critical">'.$GLOBALS['Language']->getText('plugin_codextoremedy', 'Critical').'</option>
                              </select>
                          </td>
                      </tr>';
