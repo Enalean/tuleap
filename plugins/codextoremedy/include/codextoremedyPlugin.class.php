@@ -110,5 +110,17 @@ class codextoremedyPlugin extends Plugin {
         </form>';
         }
     }
+
+    /**
+     * Retreive a param config giving its name
+     *
+     * @param String $name
+     *
+     * @return String
+     */
+    public function getProperty($name) { 
+        $info =$this->getPluginInfo();
+        return $info->getPropertyValueForName($name);
+    }
 }
 ?>

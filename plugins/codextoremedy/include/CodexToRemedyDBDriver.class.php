@@ -24,8 +24,10 @@ class CodexToRemedyDBDriver {
     protected $password;
 
     public function __construct() {
-        if ($this->getProperty('db_host') && $this->getProperty('db_name')&& $this->getProperty('db_port')) {
-            $this->dsn      = 'oci:dbname='.$this->getProperty('db_host').':'.$this->getProperty('db_port').'/'.$this->getProperty('db_name');
+        $pluginManager = PluginManager::instance();
+        $p = $pluginManager->getPluginByName('codextoremedy');
+        if ($p->getProperty('db_host') && $p->getProperty('db_name')&& $p->getProperty('db_port')) {
+            $this->dsn      = 'oci:dbname='.$p->getProperty('db_host').':'.$p->getProperty('db_port').'/'.$p->getProperty('db_name');
             $this->user     = $this->getProperty('db_user');
             $this->password = $this->getProperty('db_passwd');
         } else {
@@ -70,21 +72,6 @@ class CodexToRemedyDBDriver {
             return $sth->execute();
         }
         return false;
-    }
-
-
-    /**
-     * Retreive a param config giving its name
-     *
-     * @param String $name
-     *
-     * @return String
-     */
-    public function getProperty($name) {
-        $pluginManager = PluginManager::instance();
-        $p = $pluginManager->getPluginByName('codextoremedy');
-        $info =$p->getPluginInfo();
-        return $info->getPropertyValueForName($name);
     }
 
 }
