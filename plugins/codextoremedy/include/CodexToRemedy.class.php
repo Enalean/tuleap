@@ -19,7 +19,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-require_once('common/plugin/mvc/PluginControler.class.php');
+require_once('mvc/PluginControler.class.php');
 require_once('common/include/HTTPRequest.class.php');
 require_once('CodexToRemedyViews.class.php');
 require_once('CodexToRemedyActions.class.php');
