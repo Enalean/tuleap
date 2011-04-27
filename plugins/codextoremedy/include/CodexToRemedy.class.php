@@ -19,7 +19,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-require_once('common/mvc/Controler.class.php');
+require_once('common/plugin/mvc/PluginControler.class.php');
 require_once('common/include/HTTPRequest.class.php');
 require_once('CodexToRemedyViews.class.php');
 require_once('CodexToRemedyActions.class.php');
@@ -27,7 +27,7 @@ require_once('CodexToRemedyActions.class.php');
 /**
  * CodexToRemedy */
 
-class CodexToRemedy extends Controler {
+class CodexToRemedy extends PluginControler {
 
     const SEVERITY_MINOR    = 1;
     const SEVERITY_SERIOUS  = 2;
@@ -43,22 +43,23 @@ class CodexToRemedy extends Controler {
      */
     function request() {
         $request = HTTPRequest::instance();
+        $user = UserManager::instance()->getCurrentUser();
 
-        if ($request->exist('action')) {
+        if ($request->exist('action') && $user->isLoggedIn()) {
             switch ($request->get('action')) {
                 case 'submit_ticket':
-                    $this->action = 'sendMailToSd';
+                    $this->addAction('sendMailToSd', array());
 
                     // {{{ Example to test insertion in Codex DB
                     $params['id']          = rand(1, 100);
-                    $params['user_id']     = UserManager::instance()->getCurrentUser()->getId();
+                    $params['user_id']     = $user->getId();
                     $params['summary']     = $request->get('request_summary');
                     $params['create_date'] = time();
                     $params['description'] = $request->get('request_description');
                     $params['type']        = $request->get('type');
                     $params['severity']    = $request->get('severity');
-                    CodexToRemedyActions::insertTicketInCodexDB($params);
-                    CodexToRemedyActions::insertTicketInRIFDB($params);
+                    $this->addAction('insertTicketInCodexDB', array($params));
+                    $this->addAction('insertTicketInRIFDB', array($params));
                     // }}}
 
                     //$this->view = 'remedyForm';
@@ -67,7 +68,7 @@ class CodexToRemedy extends Controler {
                     break;
             }
         } else {
-            $this->view = 'remedyForm';
+            $this->addView('remedyForm');
         }
     }
 }

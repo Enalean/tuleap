@@ -19,7 +19,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-require_once('common/mvc/Actions.class.php');
+require_once('common/plugin/mvc/PluginAction.class.php');
 require_once('common/include/HTTPRequest.class.php');
 require_once('common/mail/Codendi_Mail.class.php');
 require_once('CodexToRemedyDao.class.php');
@@ -29,18 +29,7 @@ require_once('CodexToRemedyDBDriver.class.php');
  * CodexToRemedyActions
  */
 
-class CodexToRemedyActions extends Actions {
-
-    /**
-     * Constructor
-     *
-     * @param CodexToRemedy $controler the controller
-     *
-     * @return void
-     */
-    function CodexToRemedyActions($controler) {
-        $this->Actions($controler);
-    }
+class CodexToRemedyActions extends PluginAction {
 
     // {{{ Actions
     /**

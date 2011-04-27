@@ -19,13 +19,13 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-require_once('common/mvc/Views.class.php');
+require_once('common/plugin/mvc/PluginView.class.php');
 require_once('common/include/HTTPRequest.class.php');
 
 /**
  * CodexToRemedyViews
  */
-class CodexToRemedyViews extends Views {
+class CodexToRemedyViews extends PluginView {
 
     /**
      * Display header
