@@ -5,5 +5,6 @@ $db_port = '1541';
 $db_name = 's2qa';
 $db_user = 'dlh_rif';
 $db_passwd = 'useme123';
+$send_notif_mail_sd ='codex-team@lists.codex.cro.st.com';
 
 ?>
