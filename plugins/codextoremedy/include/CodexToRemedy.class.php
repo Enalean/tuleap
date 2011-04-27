@@ -48,7 +48,6 @@ class CodexToRemedy extends PluginControler {
         if ($request->exist('action') && $user->isLoggedIn()) {
             switch ($request->get('action')) {
                 case 'submit_ticket':
-                    $this->addAction('sendMailToSd', array());
 
                     // {{{ Example to test insertion in Codex DB
                     $params['id']          = rand(1, 100);
@@ -58,6 +57,7 @@ class CodexToRemedy extends PluginControler {
                     $params['description'] = $request->get('request_description');
                     $params['type']        = $request->get('type');
                     $params['severity']    = $request->get('severity');
+                    $this->addAction('sendMailToSd', array($params));
                     $this->addAction('insertTicketInCodexDB', array($params));
                     $this->addAction('insertTicketInRIFDB', array($params));
                     // }}}

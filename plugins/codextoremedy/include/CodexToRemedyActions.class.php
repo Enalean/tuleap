@@ -63,16 +63,39 @@ class CodexToRemedyActions extends PluginAction {
      *
      * @return void
      */
-    function sendMailToSd() {
+    function sendMailToSd($params) {
         $request = HTTPRequest::instance();
 
         $um = UserManager::instance();
         $user = $um->getCurrentUser();
 
-        $requestType = $request->get('type');
-        $severity = $request->get('severity');
-        $summary = $request->get('request_summary');
-        $messageToSd = $request->get('request_description');
+        switch ($requestType = $params['type']) {
+            case CodexToRemedy::TYPE_SUPPORT :
+                $requestType = 'SUPPORT REQUEST';
+                break;
+            case CodexToRemedy::TYPE_ENHANCEMENT :
+                $requestType = 'ENHANCEMENT REQUEST';
+                break;
+            default:
+                $requestType = '';
+                break;
+        }
+        switch ($severity = $params['severity']) {
+            case CodexToRemedy::SEVERITY_MINOR :
+                $severity = 'MINOR';
+                break;
+            case CodexToRemedy::SEVERITY_SERIOUS :
+                $severity = 'SERIOUS';
+                break;
+            case CodexToRemedy::SEVERITY_CRITICAL :
+                $severity = 'CRITICAL';
+                break;
+            default:
+                $severity = '';
+                break;
+        }
+        $summary = $params['summary'];
+        $messageToSd = $params['description'];
 
         $to = 'codex-team@lists.codex.cro.st.com';
         $from = $user->getEmail();
@@ -88,10 +111,10 @@ class CodexToRemedyActions extends PluginAction {
         $mail->setBodyHtml($body);
         try {
             if(!$mail->send()) {
-                $GLOBALS['feedback'] .= '<div>'.$GLOBALS['Language']->getText('plugin_codextoremedy', 'codextoremedy_mail_failed').'</div>';
+                $GLOBALS['Response']->addFeedBack('error',$GLOBALS['Language']->getText('plugin_codextoremedy', 'codextoremedy_mail_failed'));
             }
         } catch (Zend_Mail_Transport_Exception $e) {
-            $GLOBALS['feedback'] .= '<div>'.$GLOBALS['Language']->getText('plugin_codextoremedy', 'codextoremedy_mail_failed').'</div>';
+                $GLOBALS['Response']->addFeedBack('error',$GLOBALS['Language']->getText('plugin_codextoremedy', 'codextoremedy_mail_failed'));
         }
     }
     // }}}
