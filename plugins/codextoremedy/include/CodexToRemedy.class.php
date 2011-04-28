@@ -46,7 +46,8 @@ class CodexToRemedy extends PluginControler {
      */
     function request() {
         $request = HTTPRequest::instance();
-        $user = UserManager::instance()->getCurrentUser();
+        $um      = UserManager::instance();
+        $user    = $um->getCurrentUser();
 
         if ($request->exist('action') && $user->isLoggedIn()) {
             switch ($request->get('action')) {
@@ -60,6 +61,31 @@ class CodexToRemedy extends PluginControler {
                     $params['description'] = $request->get('request_description');
                     $params['type']        = $request->get('type');
                     $params['severity']    = $request->get('severity');
+                    $cc = '';
+                    $mails      = array_map('trim', preg_split('/[,;]/', $this->request->get('cc')));
+                    $rule       = new Rule_Email();
+                    foreach ($mails as $mail) {
+                        if ($rule->isValid($mail)) {
+                            if ($cc == '') {
+                                $cc = $mail;
+                            } else {
+                                $cc .= ';'.$mail;
+                            }
+                        } else {
+                            $user = $um->findUser($mail);
+                            if ($user) {
+                                $mail = $user->getEmail();
+                                if ($mail) {
+                                    if ($cc == '') {
+                                        $cc = $mail;
+                                    } else {
+                                        $cc .= ';'.$mail;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    $params['cc'] = $cc;
                     $this->addAction('sendMail', array($params, self::RECEPIENT_SD,&$requestStatus));
                     $this->addAction('insertTicketInCodexDB', array($params));
                     $this->addAction('insertTicketInRIFDB', array($params));

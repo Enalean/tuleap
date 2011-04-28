@@ -103,11 +103,14 @@ class codextoremedyPlugin extends Plugin {
             echo '<tr><td><label>'.$GLOBALS['Language']->getText('plugin_codextoremedy', 'summary').':</label></td>
                      <td><input type="text" name="request_summary" /></td></tr>';
             echo '<tr><td><label style="top:-45px;">Description:</label></td><td><textarea name="request_description"></textarea></td></tr>
+            <tr><td><label>CC :</label><td><input id="codextoremedy_cc" type="text" name="cc" /></td></tr>
             <tr><td></td><td><input name="action" type="hidden" value="submit_ticket" /></td></tr>
             <tr><td></td><td><input name="submit" type="submit" value="Submit" /></td></tr>
                 </table>
             </fieldset>
         </form>';
+            $js = "new UserAutoCompleter('codextoremedy_cc', '".util_get_dir_image_theme()."', true);";
+            $GLOBALS['Response']->includeFooterJavascriptSnippet($js);
         }
     }
 

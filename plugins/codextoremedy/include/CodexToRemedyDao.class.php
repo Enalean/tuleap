@@ -46,7 +46,7 @@ class CodexToRemedyDao extends DataAccessObject {
      *
      * @return Boolean
      */
-    function insertInCodexDB($id, $userId, $summary, $createDate, $description, $type, $severity) {
+    function insertInCodexDB($id, $userId, $summary, $createDate, $description, $type, $severity, $cc) {
         $select = 'SELECT NULL FROM plugin_codex_to_remedy WHERE id = '.$this->da->escapeInt($id);
         $res = $this->retrieve($select);
         if($res && !$res->isError() && $res->rowCount() == 0) {
@@ -57,7 +57,8 @@ class CodexToRemedyDao extends DataAccessObject {
                       'create_date, '.
                       'description, '.
                       'type, '.
-                      'severity '.
+                      'severity, '.
+                      'cc '.
                       ')values ('.
                       $this->da->escapeInt($id).', '.
                       $this->da->escapeInt($userId).', '.
@@ -65,7 +66,8 @@ class CodexToRemedyDao extends DataAccessObject {
                       $this->da->escapeInt($createDate).', '.
                       $this->da->quoteSmart($description).', '.
                       $this->da->escapeInt($type).', '.
-                      $this->da->escapeInt($severity).')';
+                      $this->da->escapeInt($severity).', '.
+                      $this->da->quoteSmart($cc).')';
             return $this->update($insert);
         } else {
             return false;
