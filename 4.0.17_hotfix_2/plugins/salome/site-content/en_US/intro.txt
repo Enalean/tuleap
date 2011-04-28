@@ -1,5 +1,0 @@
-Salomé-TMF is an independent Test Management Framework 
-(please visit <a href="https://wiki.objectweb.org/salome-tmf/" target="_blank">the web site</a> to know more about Salomé-TMF).<br>
-
-To launch Salomé, click the 'Launch Salomé' link, and select Open with... <strong>javaws</strong>, which is the java web start application to run Salomé.
-

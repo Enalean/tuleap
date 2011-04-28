@@ -1,4 +1,0 @@
-This directory contains the non DB upgrades (when you need to modifiy the
-filesystem for instance).
-
-For DB related upgrades, please have a look to db/ subdirectory.

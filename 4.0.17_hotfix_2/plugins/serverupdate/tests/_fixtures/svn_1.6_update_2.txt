@@ -1,6 +1,0 @@
-A  newdir/README
-D  newdir/toggle.c
-D  newdir/disclose.c
-D  newdir/launch.c
-U  foo.c
-Updated to revision 30.

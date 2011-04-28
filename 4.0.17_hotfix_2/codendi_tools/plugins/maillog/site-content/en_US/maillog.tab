@@ -1,2 +1,0 @@
-plugin_maillog	descriptor_description	A plugin to catch mail send by codendi for development environment not 'Email Powered'\nDO NOT INSTALL THIS PLUGIN ON A PRODUCTION ENVIRONMENT!
-plugin_maillog	descriptor_name	MailLog

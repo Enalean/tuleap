@@ -1,5 +1,0 @@
-A  newdir/toggle.c
-A  newdir/disclose.c
-A  newdir/launch.c
-D  newdir/README
-Updated to revision 32.

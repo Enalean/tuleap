@@ -1,7 +1,0 @@
-Version 3.4 (Codendi_ST 4.0.17) 
-	
-	What Changed?
-	============
-        ** Make Codendi look for people in several LDAP branches, according to the config
-		** Add the autocompletion for external users
-		

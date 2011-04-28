@@ -1,6 +1,0 @@
-httpd_enable_cgi=1
-httpd_enable_homedirs=1
-httpd_ssi_exec=1
-named_write_master_zones=0
-httpd_unified=1
-httpd_tty_comm=0

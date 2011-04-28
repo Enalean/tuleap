@@ -1,8 +1,0 @@
-==== Current limitations ====
-- For HTML emails send in Text+HTML (aka multipart/alternative) we can display
-  the HTML version only because it's the first attachment we treat.
-
-==== For a future release ====
-- Refactor DB:
--- Mime messages tables (esp. multipart/alternative)
--- Store often used headers as table columns (date, ctype, subject, message_id)

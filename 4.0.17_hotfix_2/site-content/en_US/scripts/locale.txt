@@ -1,7 +1,0 @@
-codendi.locales['cross_ref_fact_include'] = {
-    legend: 'List of items referenced by or referencing this item.',
-    legend_referenced_by: 'List of items referencing this item.',
-    show_references_to:	'Show items referenced by this item',
-    hide_references_to:	'Hide items referenced by this item'
-};
-
