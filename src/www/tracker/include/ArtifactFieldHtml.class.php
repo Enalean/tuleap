@@ -477,11 +477,13 @@ class ArtifactFieldHtml extends ArtifactField {
                 }
 		    }
 		    $output .= join(",", $arr);
-		    //The span is used to pass values id that would be processed in JS as dependency sources' values  
-		    $output .= '<span id="'.$this->field_name.'" style="display: none;">'.implode(',', $valueArray).'</span>';
-		    $output .= $this->multipleFieldBox('',$group_artifact_id, $value,
-		    $show_none,$text_none,$show_any,
-		    $text_any,$show_unchanged,$text_unchanged, false, false);
+            if (!$ascii) {
+                //The span is used to pass values id that would be processed in JS as dependency sources' values  
+                $output .= '<span id="'.$this->field_name.'" style="display: none;">'.implode(',', $valueArray).'</span>';
+                $output .= $this->multipleFieldBox('',$group_artifact_id, $value,
+                $show_none,$text_none,$show_any,
+                $text_any,$show_unchanged,$text_unchanged, false, false);
+            }
 		} else {
 
 		    // Only show the 'None" label if empty value is allowed or
