@@ -59,11 +59,14 @@ class CodexToRemedyActions extends PluginAction {
     }
 
     /**
-     * Send mail to SD after ticket submission
+     * Send mail to recipient after ticket submission
+     *
+     * @param Array $params collection of data used to build the mail
+     * @param Int $recepient flag used to make out the recepient
      *
      * @return void
      */
-    function sendMailToSd($params) {
+    function sendMail($params, $recepient) {
         $request = HTTPRequest::instance();
 
         $um = UserManager::instance();
@@ -97,9 +100,11 @@ class CodexToRemedyActions extends PluginAction {
         $summary = $params['summary'];
         $messageToSd = $params['description'];
 
+        if($recepient = '1') {
         $pluginManager = PluginManager::instance();
         $p = $pluginManager->getPluginByName('codextoremedy');
         $to = $p->getProperty('send_notif_mail_sd');
+        }
 
         $from = $user->getEmail();
         // Send a notification message to the SD and CodexCC

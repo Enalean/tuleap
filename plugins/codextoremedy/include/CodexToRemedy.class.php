@@ -36,6 +36,9 @@ class CodexToRemedy extends PluginControler {
     const TYPE_SUPPORT      = 1;
     const TYPE_ENHANCEMENT  = 2;
 
+    const RECEPIENT_SD  = 1;
+    const RECEPIENT_USER  = 2;
+
     /**
      * Compute the request
      *
@@ -57,7 +60,7 @@ class CodexToRemedy extends PluginControler {
                     $params['description'] = $request->get('request_description');
                     $params['type']        = $request->get('type');
                     $params['severity']    = $request->get('severity');
-                    $this->addAction('sendMailToSd', array($params));
+                    $this->addAction('sendMail', array($params, self::RECEPIENT_SD));
                     $this->addAction('insertTicketInCodexDB', array($params));
                     $this->addAction('insertTicketInRIFDB', array($params));
                     // }}}
