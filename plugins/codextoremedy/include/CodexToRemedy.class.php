@@ -61,8 +61,8 @@ class CodexToRemedy extends PluginControler {
                     $params['type']        = $request->get('type');
                     $params['severity']    = $request->get('severity');
                     $this->addAction('sendMail', array($params, self::RECEPIENT_SD));
-                    //$this->addAction('insertTicketInCodexDB', array($params));
-                    //$this->addAction('insertTicketInRIFDB', array($params));
+                    $this->addAction('insertTicketInCodexDB', array($params));
+                    $this->addAction('insertTicketInRIFDB', array($params));
                     // }}}
 
                     $this->addview('remedyPostSubmission', array());
