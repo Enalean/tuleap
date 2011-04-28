@@ -11,3 +11,4 @@ plugin_codextoremedy	Critical	Critique
 plugin_codextoremedy	codextoremedy_mail_subject	$2 a soumis $1 un ticket Remedy
 plugin_codextoremedy	codextoremedy_mail_content	Cher agent SD,<br /><br /> <b>$1</b> (login: <em>$2</em>) a inséré un nouveau ticket Remedy $3.<br />$3 - $4 <br /><p>$6<p>
 plugin_codextoremedy	codextoremedy_mail_failed	Echec d'envoie du mail de notification
+plugin_codextoremedy	codextoremedy_ticket_submission_success	Ticket soumis avec succés

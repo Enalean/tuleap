@@ -49,12 +49,13 @@ class CodexToRemedyViews extends PluginView {
 
     // {{{ Views
     /**
-     * Redirect to form
+     * Redirect after ticket submission
      *
      * @return void
      */
-    function remedyForm() {
-        $GLOBALS['Response']->redirect('/site');
+    function remedyPostSubmission() {
+        $GLOBALS['Response']->addFeedBack('info',$GLOBALS['Language']->getText('plugin_codextoremedy', 'codextoremedy_ticket_submission_success'));
+        $GLOBALS['Response']->redirect('/my/');
     }
     // }}}
 }
