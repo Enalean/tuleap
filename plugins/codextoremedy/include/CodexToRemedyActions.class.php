@@ -55,7 +55,7 @@ class CodexToRemedyActions extends PluginAction {
         $oci = new CodexToRemedyDBDriver();
         $oci->getdbh();
         //need more parameters from form: people_cc
-        return $pdo->createTicket($params['summary'], $params['description'], $params['type'], $params['severity'], $params['create_date']);
+        return $oci->createTicket($params['summary'], $params['description'], $params['type'], $params['severity'], $params['create_date']);
     }
 
     /**
@@ -120,9 +120,13 @@ class CodexToRemedyActions extends PluginAction {
         try {
             if(!$mail->send()) {
                 $GLOBALS['Response']->addFeedBack('error',$GLOBALS['Language']->getText('plugin_codextoremedy', 'codextoremedy_mail_failed'));
+                $status = False;
+            } else {
+                $status = True;
             }
         } catch (Zend_Mail_Transport_Exception $e) {
                 $GLOBALS['Response']->addFeedBack('error',$GLOBALS['Language']->getText('plugin_codextoremedy', 'codextoremedy_mail_failed'));
+                $status = False;
         }
     }
     // }}}
