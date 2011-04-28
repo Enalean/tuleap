@@ -66,7 +66,7 @@ class CodexToRemedyActions extends PluginAction {
      *
      * @return void
      */
-    function sendMail($params, $recepient) {
+    function sendMail($params, $recepient,&$requestStatus) {
         $request = HTTPRequest::instance();
 
         $um = UserManager::instance();
@@ -119,14 +119,13 @@ class CodexToRemedyActions extends PluginAction {
         $mail->setBodyHtml($body);
         try {
             if(!$mail->send()) {
-                $GLOBALS['Response']->addFeedBack('error',$GLOBALS['Language']->getText('plugin_codextoremedy', 'codextoremedy_mail_failed'));
-                $status = False;
+                $requestStatus = False;
             } else {
-                $status = True;
+                $requestStatus = True;
             }
         } catch (Zend_Mail_Transport_Exception $e) {
                 $GLOBALS['Response']->addFeedBack('error',$GLOBALS['Language']->getText('plugin_codextoremedy', 'codextoremedy_mail_failed'));
-                $status = False;
+                $requestStatus = False;
         }
     }
     // }}}

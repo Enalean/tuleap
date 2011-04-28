@@ -53,9 +53,15 @@ class CodexToRemedyViews extends PluginView {
      *
      * @return void
      */
-    function remedyPostSubmission() {
+    function remedyPostSubmission($requestStatus) {
+        if(!$requestStatus) {
+        $GLOBALS['Response']->addFeedBack('error',$GLOBALS['Language']->getText('plugin_codextoremedy', 'codextoremedy_mail_failed'));
+        $GLOBALS['Response']->redirect('/site/');
+        }
+        else {
         $GLOBALS['Response']->addFeedBack('info',$GLOBALS['Language']->getText('plugin_codextoremedy', 'codextoremedy_ticket_submission_success'));
         $GLOBALS['Response']->redirect('/my/');
+        }
     }
     // }}}
 }
