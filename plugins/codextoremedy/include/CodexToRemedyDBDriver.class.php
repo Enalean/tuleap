@@ -18,7 +18,7 @@
  */
 
 class CodexToRemedyDBDriver {
-    protected $pdo;
+    protected $dbh;
     protected $dsn;
     protected $user;
     protected $password;
@@ -27,53 +27,46 @@ class CodexToRemedyDBDriver {
         $pluginManager = PluginManager::instance();
         $p = $pluginManager->getPluginByName('codextoremedy');
         if ($p->getProperty('db_host') && $p->getProperty('db_name')&& $p->getProperty('db_port')) {
-            $this->dsn      = 'oci:dbname='.$p->getProperty('db_host').':'.$p->getProperty('db_port').'/'.$p->getProperty('db_name');
-            $this->user     = $this->getProperty('db_user');
-            $this->password = $this->getProperty('db_passwd');
+            $this->dsn      = '//'.$p->getProperty('db_host').':'.$p->getProperty('db_port').'/'.$p->getProperty('db_name');
+            $this->user     = $p->getProperty('db_user');
+            $this->password = $p->getProperty('db_passwd');
         } else {
             throw new Exception('Unable to find valid parameters connexion, please check codextoremedy conf file');
         }
     }
 
     /**
-     * Setup the PDO object to be used for DB connexion
+     * Setup the oci object to be used for DB connexion
      *
      * The DB connexion will be used to insert tickets in RIF remedy DB.
      *
-     * @return PDO
+     * @return dbh
      */
-    public function getPdo() {
-        if (!$this->pdo) {
-            $this->pdo = new PDO($this->dsn, $this->user, $this->password);
+    public function getdbh() {
+        if (!$this->dbh) {
+            $this->dbh = oci_connect($this->user,$this->password,$this->dsn);
         }
-        return $this->pdo;
+        return $this->dbh;
     }
 
     /**
      * Insert the ticket in RIF DB
-     * 
+     *
      * @param String $summary
      * @param String $description
-     * @param String $type 
+     * @param String $type
      * @param String $severity
      * @param Date   $createDate
-     * 
+     *
      * @return Boolean
      */
     public function createTicket($summary, $description, $type, $severity, $createDate) {
-        $sth = $this->pdo->prepare("INSERT INTO RIF_REQUEST (CATEGORY , TYPE , ITEM , REQUESTER_NAME , SUMMARY, DESCRIPTION, SEVERITY ,".
-                                    "CC_MAIL_IDS , INSERTION_DATE, REQUEST_STATUS , REQUESTER_LOGIN, RIF_ID) VALUES ('MANUFACTURING WIP',".    
-                                    "'AMHS (LOT TRANSPORTATIONPRI', 'OTHERS','STMR ADMINISTRATOR',?, ?,". 
-                                    "?, 'alberto.aprato@st.com',sysdate,'NEW', 'STMR ADMIN', RIF_REQUEST_SEQ.NEXTVAL)");
-        $sth->bindParam(1, $summary, PDO::PARAM_STR, 256);
-        $sth->bindParam(2, $description, PDO::PARAM_STR, 64);
-        $sth->bindParam(3, $severity, PDO::PARAM_STR, 12);
-        if ($sth) {
-            return $sth->execute();
-        }
-        return false;
+        $sql = "INSERT INTO RIF_REQUEST (CATEGORY , TYPE , ITEM , REQUESTER_NAME , SUMMARY, DESCRIPTION, SEVERITY ,".
+                                    "CC_MAIL_IDS , INSERTION_DATE, REQUEST_STATUS , REQUESTER_LOGIN, RIF_ID) VALUES ('COLLABORATION PLATFORM','CODEXSTN',".    
+                                    "'ASSISTANCE REQUEST','HOSNIAH', '".$summary."' , '".$description."' ,'".$severity. 
+                                    "', 'hosni.ahmed@st.com',sysdate,'NEW', 'HOSNIAH', RIF_REQUEST_SEQ.NEXTVAL)";
+        $stid = oci_parse($this->dbh , $sql);
+        return oci_execute($stid);
     }
-
 }
-
 ?>

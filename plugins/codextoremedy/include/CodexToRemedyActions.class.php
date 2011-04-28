@@ -52,8 +52,8 @@ class CodexToRemedyActions extends PluginAction {
      * @return Boolean
      */
     function insertTicketInRIFDB($params) {
-        $pdo = new CodexToRemedyDBDriver();
-        $pdo->getPdo();
+        $oci = new CodexToRemedyDBDriver();
+        $oci->getdbh();
         //need more parameters from form: people_cc
         return $pdo->createTicket($params['summary'], $params['description'], $params['type'], $params['severity'], $params['create_date']);
     }
