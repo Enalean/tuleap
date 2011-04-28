@@ -1,0 +1,71 @@
+Date: Wed, 2 Feb 2005 20:32:44 +0100
+Mime-Version: 1.0 (Produced by PhpWiki 1.3.11)
+X-Rcs-Id: $Id: UnfoldSubpagesPlugin,v 1.5 2005/02/02 19:48:30 rurban Exp $
+Content-Type: application/x-phpwiki;
+  pagename=UnfoldSubpagesPlugin;
+  pgsrc_version="2 $Revision: 1.5 $";
+  flags="";
+  markup=2;
+  charset=iso-8859-1
+Content-Transfer-Encoding: binary
+
+The ~UnfoldSubpages WikiPlugin is used to display all or some subpages
+of the current or a given page.  This gives a overview for a
+WikiBlogPlugin, CalendarPlugin or similar subpages.
+
+Warning: Don't use it with subpages with non-existant sections! 
+The section extractor is currently quite unstable.
+
+! Usage:
+<verbatim>
+     <?plugin UnfoldSubpages ?>
+  or <?plugin UnfoldSubpages sortby=-mtime words=50 maxpages=5 ?>
+  or <?plugin UnfoldSubpages quiet=1 smalltitle=1 ?>
+  or <?plugin UnfoldSubpages sections=2 words=100 ?>
+  or <?plugin UnfoldSubpages lines=3 ?>
+  or <?plugin UnfoldSubpages pagename="PhpWikiAdministration" 
+              section="Plugin Arguments" sectionhead=1 ?>
+</verbatim>
+
+!! Plugin Arguments:
+<strong>pagename</strong>:
+  Any pagename or if empty the current page. Default: ""
+<strong>quiet</strong>:
+  Print no header.  Default: false
+<strong>sortby</strong>:
+  Sort by + (ASC) or - (DESC) and one column. 
+  Multiple columns like sortby="-hits,-mtime" not yet supported.
+  Supported columns: ~[+|-]pagename, ~[+|-]mtime, ~[+|-]hits. 
+  Default: "pagename"
+<strong>maxpages</strong>:
+  Maximum number of pages to include or all if not defined. 
+  Default: false
+<strong>sections</strong>:
+  Maximum number of sections per page to include or all if not defined. 
+  Default: false
+<strong>section</strong>:
+  Include this named section per page only if defined. Default: ""
+<strong>sectionhead</strong>:
+  When including a named section show the heading. Default: false
+<strong>smalltitle</strong>:
+  If set, hide transclusion-title, just have a small link at the start of 
+  the page. Default: false
+<strong>words</strong>:
+  Maximum number of words per page to include. Default: false
+<strong>lines</strong>:
+  Maximum number of lines per page to include. Default: false
+<strong>bytes</strong>:
+  Maximum number of bytes per page to include. Default: false
+
+! Deprecated Arguments:
+<strong>pages</strong>:
+  deprecated. renamed to maxpages.
+<strong>sort</strong>:
+  'asc' or 'desc'. deprecated: use "+" or "-" before the column name with sortby.
+
+! Example:
+<?plugin UnfoldSubpages pagename=PgsrcTranslation limit=20 ?>
+
+-------------
+
+PhpWikiDocumentation WikiPlugin

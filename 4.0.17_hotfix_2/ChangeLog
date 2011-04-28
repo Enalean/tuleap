@@ -1,0 +1,165 @@
+Version 4.0.17.2 - Thursday, 28th April 2011
+        == Bugfix ==
+        backlog #134453: Tracker notification mail contain unwanted text
+
+Version 4.0.17.1 - Thursday, 7th April 2011
+        == New Features ==
+        backlog #131538: Remove the switch to html in followup while double clicking 
+
+Version 4.0.17 - Monday, 4th April 2011 (Canceled) 
+        == New Features ==
+        backlog #119877: Add more coverage for CVS Backend
+        backlog #119371: Codendi testing; code coverage and function mock
+        backlog #119788: Support several LDAP branches
+        backlog #121192: Allow site admin to define a legal warning to users on registeration page
+        backlog #113547: GIT hook to send a mail when pushing
+        backlog #113546: Disk statistics per project visible at project level
+        backlog #123246: Allow upload of the same deleted file
+	
+        == Bugfix ==
+        backlog #103794: Fix issue related to "item type" filter
+        backlog #121173: URLVerification failures with anonymous URLs and webdav misconfiguration.
+        backlog #121035: Project creation without full name
+        backlog #120417: FRS deletion issues
+        backlog #122410: Adding new property at the documentation is allowed with an empty name
+        backlog #122406: Automatic account suspend no longer works
+        backlog #122408: Wiki purge might have severe perf impact on all wiki usage
+        backlog #103783: 'Paste' action should not appear in popup menu for the same cut document.
+        backlog #121636: Issue in fields dependencies
+        backlog #123243: Browse svn for project with "." in short name
+
+Version 4.0.16 - Tuesday, 18th January 2011 
+        == New Features ==
+        backlog #113540: Support of <pre> in tracker follow-up comment
+                         * Follow-up comments can be submitted with usage of a subset
+                           of HTML markups: p, br, a, img, ul, ol, li, cite, code, blockquote, strong, em, pre, b, i
+                           This modification comes with a rich text editor in the  follow-up comment text area.
+                           It's possible to add comment in HTML with SOAP and Codendi_CLI too (but no update yet).
+	  Following tickets were addressed:
+	  * feature #codex:101884: Improve the mail notification
+	  * bug #codex:116656:     It is not possible to update the Release ChangeLog when we add a file in FRS (with CLI script)
+	  * bug codexstn #13752:   Releases permissions checking don't take into account frs admin / project admin perms
+
+                         * Fix wrong behaviour in CSV import/export that was leading to comments duplication.
+                           Known limitations: It's not possible to import follow-up comments in HTML format yet.
+
+                         * Improvement of Artifact edition UI: 
+                           * reduce space "lost" between tracker's toolbar and artifact info.
+                           * rework of follow-up comments layout to improve readability.
+
+	backlog #114221: File Release System provides means to check files consistency through md5 sums.
+	                 * Codendi automatically computes md5 sum on files submitted in File Release System.
+	                   If you submit a reference md5 sum, Codendi compares with the computed one and raise
+	                   an error if it fails. Enhance the notification mail received while monitoring a package. 
+
+	                 * CLI update to 1.4.0, see cli/ChangeLog for details.
+	
+	                 * SOAP API update to version 4.1, see src/www/soap/ChangeLog for details.
+
+        backlog #119336: Enlarge the project name field in Widget Show project admins
+
+        == BugFix ==
+        backlog #119270: Filter lost in Admin delegation widget: Show all projects
+        backlog #119163: SQL error during codendi install
+        backlog #114221: Still have admin privileges on tracker for non members
+        backlog #114020: Artifact submitted with the value "None" at the mandatory field
+        backlog #114005: Disable notifications when remove user from private project
+        backlog #116806: Lost comment type when editing a follow up
+        backlog #118054: The delete icon is not displayed with IE
+
+Version 4.0.15 - Friday, 19th november 2010
+        == Bugfix ==
+        backlog #114802: Bad display of some codex pages 
+
+Version 4.0.14 - Monday, 8th November 2010
+        == New features ==
+        backlog #107554: Enhance the interface to request access from project admins
+        backlog #110702: Improve PhpWiki look (font rendering, table of contents, colors, separators, etc)
+        backlog #111780: RPM: dependency management for plugins & themes
+        backlog #109427: Integration of docman in WebDAV iteration 1
+        backlog #110673: Request to delete specific document's version(s)
+        backlog #110676: Delayed document deletion
+
+        == Bugfix ==
+        backlog #112816: Blank page when trying to import a tracker created from "Scrum" template
+        backlog #110672: Request to set the correct icon for office 2007 documents
+        backlog #113539: Unable to search for exact pattern under 2 quotes
+
+Version 4.0.13 - Wednesday, 29th September 2010
+        == New features ==
+        backlog #101486: Webdav integration for service FRS: Iteration 3 (Write access)
+        backlog #108632: Integrate Git in disk usage stats & upstream diff reduction
+
+        == Bugfix ==
+        backlog #106503: Tracker import and export issue
+        backlog #106404: Wrong link for summary page due to rename project operation
+        backlog #106752: Fix bugs in RPM installation (munin, mailman, openfire)
+        backlog #105989: Site admin cannot remove user's LDAP id
+        backlog #97573 : After a document is moved, Codex shows a blank page
+        backlog #107125: Error stack trace may disclose credentials 
+        backlog #99967 : Issue in tracker creation when shortname contains '_'
+        backlog #106110: Reduce load on user table
+        backlog #108287: LDAP synchro must take LDAP server down into account
+        backlog #108176: Account are disabled after 3 month for people that only use SVN client
+        backlog #109631: Tracker queries may overload the server
+
+Version 4.0.12 - Tuesday, 14th September(Just to fix a bug regression)
+        == Bugfix==
+        backlog #108647: Assigned to shows None and unkown value 
+
+Version 4.0.11 - Monday, 9th August 2010 
+        == Bugfix==
+        backlog #106228: Bad dispaly of privacy icon except with 'Dawn' theme
+ 
+Version 4.0.10 - Thursday, 5th August 2010 (Canceled) 
+        == New features ==
+        backlog #103963: Permission denied improvement: docman items
+	backlog #104505: Installation based RPM
+	backlog #104711: Highlight project privacy
+
+	== Bugfix ==
+	backlog #104684: Integrate LDAP daily sync in system event
+	backlog #104715: Remove toggler.js reference in project links
+
+Version 4.0.9 - Friday, 2nd July 2010
+	== Upgrade/install procedure ==
+	Switch to RPM distribution:
+	1. Stop application
+	[root@server]# service httpd stop
+	[root@server]# service crond stop
+
+	2. Remove codendi specific cron jobs, except backups (as root):
+	[root@server]# crontab -e
+	[root@server]# crontab -u codendiadm -e
+
+	3. Add new yum repository
+	[root@server]# vi /etc/yum.repos.d/codendi.repo
+	[codendi]
+	name=Codendi
+	baseurl=ftp://codex.cro.st.com/pub/codex-cc/yum/codendi/4.0/i386
+	enabled=1
+	gpgcheck=0
+
+	4. Install packages (replace XYZ by the name of the platform:
+	stcodex, codexstn or steerforge)
+	[root@server]# yum install forgeupgrade codendi_st codendi_st-customization-XYZ
+
+	5. Restart applications
+	[root@server]# service httpd start
+	[root@server]# service crond start
+	[root@server]# /etc/init.d/codendi start
+
+	== New features ==
+	This release introduce 2 main components:
+	* ForgeUpgrade
+	* Install of Codendi via RPMS.
+
+	Other new features:
+        * branch #102157: Improve permission denied error for private project and restricted user.
+
+	== Bug fix ==
+	* backlog #101260: Impossible to add user without username
+	* backlog #97577:  Cannot remove project admin right
+	* backlog #101500: Artifact permissions section disabled when using IE
+	* backlog #101176: MS office 2007 documents are not supported with IE
+        * backlog #103085: Impossible to set user to restricted 

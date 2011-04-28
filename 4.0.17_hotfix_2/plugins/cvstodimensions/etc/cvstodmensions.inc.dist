@@ -1,0 +1,24 @@
+<?php
+
+//command to launch dmcli
+$dmcli = 'LD_LIBRARY_PATH=/exec/products/dimensions/v9/serena/changeman/dimensions/9.1/lib /exec/products/dimensions/v9/serena/changeman/dimensions/9.1/prog/dmcli';
+
+// Role required to transfer a tag to dimensions
+$role = 'GESTION_CONFIGURATION';
+
+//dsn (dmcli connection parameter)
+$dsn = 'P26C';
+
+//host (dmcli connection parameter)
+$host = '10.170.65.216';
+
+// Where the directory used to export cvs data is located
+$temp_dir = '/var/tmp';
+
+//command to execute upload.sh
+$upload_path = '. /exec/products/dimensions/v9/clients/profile_client; /exec/products/dimensions/v9/clients/exec/upload.sh';
+
+// Oracle database (used in the dimensions database connection)
+$dimensions_db = '//gc26c.snpi.francetelecom.fr/P26C';
+
+?>

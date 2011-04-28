@@ -1,0 +1,7 @@
+Changes since v0.1:
+
+	* autoscroll only if scrollbar at bottom
+	* support for private messages
+	* nick highlighting
+	* configurable backend (http polling and/or binding)
+	* a lot of fixes and enhancements

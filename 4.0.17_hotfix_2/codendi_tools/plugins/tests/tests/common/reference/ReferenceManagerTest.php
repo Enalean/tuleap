@@ -1,0 +1,139 @@
+<?php
+require_once('common/language/BaseLanguage.class.php');
+Mock::generate('BaseLanguage');
+
+require_once('common/reference/ReferenceManager.class.php');
+Mock::generatePartial('ReferenceManager', 'ReferenceManagerTestVersion', array('_getReferenceDao'));
+require_once('common/dao/ReferenceDao.class.php');
+Mock::generate('ReferenceDao');
+require_once('common/dao/include/DataAccessResult.class.php');
+Mock::generate('DataAccessResult');
+
+/**
+ * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+ *
+ *
+ *
+ * Tests the class ReferenceManager
+ */
+class ReferenceManagerTest extends UnitTestCase {
+	/**
+	 * Constructor of the test. Can be ommitted.
+	 * Usefull to set the name of the test
+	 */
+	function ReferenceManagerTest($name = 'ReferenceManager test') {
+		$this->UnitTestCase($name);
+	}
+
+    function setUp() {
+        $GLOBALS['Language'] = new MockBaseLanguage($this);
+    }
+    function tearDown() {
+        unset($GLOBALS['Language']);
+    }
+
+	function testSingleton() {
+		$this->assertReference(
+		ReferenceManager::instance(),
+		ReferenceManager::instance());
+		$this->assertIsA(ReferenceManager::instance(), 'ReferenceManager');
+	}
+
+
+	function testKeyword() {
+        $dao = new MockReferenceDao($this);
+        //The Reference manager
+        $rm = new ReferenceManagerTestVersion($this);
+        $rm->setReturnReference('_getReferenceDao', $dao);
+		$this->assertFalse($rm->_isValidKeyword("UPPER"));
+		$this->assertFalse($rm->_isValidKeyword("with space"));
+		$this->assertFalse($rm->_isValidKeyword('with$pecialchar'));
+		$this->assertFalse($rm->_isValidKeyword("with/special/char"));
+		$this->assertFalse($rm->_isValidKeyword("with-special"));
+		$this->assertFalse($rm->_isValidKeyword("-begin"));
+		$this->assertFalse($rm->_isValidKeyword("end-"));
+		$this->assertFalse($rm->_isValidKeyword("end "));
+
+		$this->assertTrue($rm->_isValidKeyword("valid"));
+		$this->assertTrue($rm->_isValidKeyword("valid123"));
+		$this->assertTrue($rm->_isValidKeyword("123")); // should it be?
+		$this->assertTrue($rm->_isValidKeyword("with_underscore"));
+
+		$this->assertTrue($rm->_isReservedKeyword("art"));
+		$this->assertTrue($rm->_isReservedKeyword("cvs"));
+		$this->assertFalse($rm->_isReservedKeyword("artifacts"));
+		$this->assertFalse($rm->_isReservedKeyword("john2"));
+	}
+
+	function testExtractReference() {
+        $dao = new MockReferenceDao($this);
+        $dar = new MockDataAccessResult($this);
+        $dao->setReturnReference('searchActiveByGroupID', $dar, array(100));
+        $dar->setReturnValueAt(0, 'getRow', array(
+            'id'                 => 1,
+            'keyword'            => 'art',
+            'description'        => 'reference_art_desc_key',
+            'link'               => '/tracker/?func=detail&aid=$1&group_id=$group_id',
+            'scope'              => 'S',
+            'service_short_name' => 'tracker',
+            'nature'             => 'artifact',
+            'id'                 => 1,
+            'reference_id'       => 1,
+            'group_id'           => 100,
+            'is_active'          => 1,
+        ));
+        $dar->setReturnValueAt(1, 'getRow', false);
+        
+        $dar2 = new MockDataAccessResult($this);
+        $dao->setReturnReference('searchActiveByGroupID', $dar2, array('1'));
+        $dar2->setReturnValueAt(0, 'getRow', array(
+            'id'                 => 1,
+            'keyword'            => 'art',
+            'description'        => 'reference_art_desc_key',
+            'link'               => '/tracker/?func=detail&aid=$1&group_id=$group_id',
+            'scope'              => 'S',
+            'service_short_name' => 'tracker',
+            'nature'             => 'artifact',
+            'id'                 => 1,
+            'reference_id'       => 1,
+            'group_id'           => 1,
+            'is_active'          => 1,
+        ));
+        $dar2->setReturnValueAt(1, 'getRow', false);
+        
+        //The Reference manager
+        $rm = new ReferenceManagerTestVersion($this);
+        $rm->setReturnReference('_getReferenceDao', $dao);
+		$this->assertTrue(count($rm->extractReferences("art #123",0))==1,"Art is a shared keyword for all projects");
+		$this->assertTrue(count($rm->extractReferences("arto #123",0))==0,"Should not extract a reference on unknown keyword");
+		$this->assertTrue(count($rm->extractReferences("art #1:123",0))==1,"Art is a reference for project num 1");
+		$this->assertTrue(count($rm->extractReferences("art #100:123",0))==1,"Art is a reference for project named codendi");
+	}
+
+	function testExtractRegexp() {
+        $dao = new MockReferenceDao($this);
+        //The Reference manager
+        $rm = new ReferenceManagerTestVersion($this);
+        $rm->setReturnReference('_getReferenceDao', $dao);
+		$this->assertFalse(count($rm->_extractAllMatches("art 123"))==1,"No sharp sign");
+		$this->assertFalse(count($rm->_extractAllMatches("art#123"))==1,"No space");
+		$this->assertFalse(count($rm->_extractAllMatches("art #"))==1,"No reference");
+
+		$this->assertTrue(count($rm->_extractAllMatches("art #123"))==1,"simple reference");
+		$this->assertTrue(count($rm->_extractAllMatches("art #abc"))==1,"No number");
+		$this->assertTrue(count($rm->_extractAllMatches("art #abc:123"))==1,"groupName:ObjID");
+		$this->assertTrue(count($rm->_extractAllMatches("art #123:123"))==1,"groupID:ObjID");
+		$this->assertTrue(count($rm->_extractAllMatches("art #abc:abc"))==1,"groupName:ObjName");
+		$this->assertTrue(count($rm->_extractAllMatches("art #123:abc"))==1,"groupID:ObjName");
+		$this->assertTrue(count($rm->_extractAllMatches("art #123:abc is a reference to art #123 and rev #codendi:123 as well as file #123:release1",0))==4,"Multiple extracts");
+		$this->assertTrue(count($rm->_extractAllMatches("art #123-rev #123",0))==2,"Multiple extracts with '-'");
+		$this->assertTrue(count($rm->_extractAllMatches("art #123:wikipage/2",0))==1,"Wikipage revision number");
+
+		# Projectname with - and _ See SR #1178
+		$refarray =array(0=>"art #abc-def:ghi", 1=>"art", 2=>"abc-def:", 3=>"ghi");
+		$this->assertTrue(in_array($refarray,$rm->_extractAllMatches("art #abc-def:ghi")),"group-Name:ObjName");
+		$refarray =array(0=>"art #abc-de_f:ghi", 1=>"art", 2=>"abc-de_f:", 3=>"ghi");
+		$this->assertTrue(in_array($refarray,$rm->_extractAllMatches("art #abc-de_f:ghi")),"group-Na_me:ObjName");
+	}
+}
+?>

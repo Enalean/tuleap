@@ -1,0 +1,474 @@
+This file contains instructions for how to complete the installation
+of mailman after you have installed the Red Hat mailman RPM. There are
+certain items you will need to manually configure as the RPM is not
+capable of doing every installation and confirguration task.
+
+First, you should note that the RPM has installed mailman in the
+following directory:
+@prefix@
+You may want to examine this directory to find additional mailman
+documentation, or other mailman files.
+
+IMPORTANT NOTE FOR USERS UPGRADING FROM A PREVIOUS RED HAT MAILMAN
+INSTALLATION OR THOSE FAMILAR WITH "STANDARD MAILMAN INSTALLATIONS"
+
+    Earlier Red Hat mailman rpms installed all of the mailman files under
+    /var/mailman. This did not conform to the Filesystem Hierarchy
+    Standard (FHS) and created security violations when SELinux is
+    enabled. As of mailman-2.1.5-21 the following directory and file
+    changes occurred:
+
+    variable data (e.g. lists) is in @VAR_PREFIX@, library code,
+    executables, and scripts are located in @prefix@, lock files are in
+    @LOCK_DIR@, the pid file is in @PID_DIR@, qfiles are in @QUEUE_DIR@,
+    and configuration files have been moved to the new @CONFIG_DIR@.
+
+    If you previously had mailman installed and have edited files in
+    /var/mailman (e.g. configuration) you will need to move those changes
+    to their new locations.
+
+    A script has been provided to aid in the task of migrating your
+    mailman datafiles, it is contrib/migrate-fhs, run with -h for help
+    information.
+
+    The mapping of old locations to new locations is as follows:
+
+    Directory Mapping:
+    /var/mailman				--> /var/lib/mailman
+    /var/mailman/Mailman			--> /usr/lib/mailman/Mailman
+    /var/mailman/archives			--> /var/lib/mailman/archives
+    /var/mailman/bin				--> /usr/lib/mailman/bin
+    /var/mailman/cgi-bin			--> /usr/lib/mailman/cgi-bin
+    /var/mailman/cron				--> /usr/lib/mailman/cron
+    /var/mailman/data				--> /var/lib/mailman/data
+    /var/mailman/lists				--> /var/lib/mailman/lists
+    /var/mailman/locks				--> /var/lock/mailman
+    /var/mailman/logs				--> /var/log/mailman
+    /var/mailman/mail				--> /usr/lib/mailman/mail
+    /var/mailman/messages			--> /usr/lib/mailman/messages
+    /var/mailman/pythonlib			--> /usr/lib/mailman/pythonlib
+    /var/mailman/qfiles				--> /var/spool/mailman
+    /var/spool/mailman/qfiles			--> /var/spool/mailman
+    /var/mailman/scripts			--> /usr/lib/mailman/scripts
+    /var/mailman/spam				--> /var/lib/mailman/spam
+    /var/mailman/templates			--> /usr/lib/mailman/templates
+    /var/mailman/tests				--> /usr/lib/mailman/tests
+
+    File Mapping:
+    /var/mailman/data/adm.pw			--> /etc/mailman/adm.pw
+    /var/mailman/data/creator.pw		--> /etc/mailman/creator.pw
+    /var/mailman/data/aliases			--> /etc/mailman/aliases
+    /var/mailman/data/virtual-mailman		--> /etc/mailman/virtual-mailman
+    /var/mailman/data/sitelist.cfg		--> /etc/mailman/sitelist.cfg
+    /var/mailman/data/master-qrunner.pid	--> /var/run/mailman/master-qrunner.pid
+
+    Discussion of directory and file relocation:
+
+    Two new directories were created and three existing directories which
+    were hardcoded are now configurable.
+
+    PID_DIR is used to hold the process id and is new because FHS wants
+    pid files to be located in /var/run. The FHS says when there is only a
+    single pid file it should be located in /var/run/<name>.pid, and when
+    there are multiple pid's files they should be located together in a
+    subdirectory, /var/run/<name>/. Currently mailman only has a single
+    pid file, but it does have multiple processes (qrunners). Also SELinux
+    security policy is easier to write if processes are segregated into
+    individual subdirectories. Therefore we elected to place the mailman
+    pid file in its own subdirectory, there is some debate if this is 100%
+    FHS compliant because there is only currently a single pid file, but
+    this gives us greater future flexibility and is in the spirit of FHS.
+
+    CONFIG_DIR is used to hold the site configuration files. FHS wants
+    configuration files stored in /etc/mailman. Previously configuration
+    files were mixed in with data files in DATA_DIR and with the run-time
+    code (e.g. Mailman/mm_cfg.py). CONFIG_DIR continues to exist but is
+    now restricted to data files (e.g. python pickle files). The password
+    files, alias files, and .cfg (e.g. sitelist.cfg) files have been moved
+    to CONFIG_DIR. mm_cfg.py which is the primary mailman configuration
+    file was presented a bit of a dilemma. In theory it should be located
+    in /etc/mailman, however it is executable code which argues it should
+    be located with the other executable files, it has traditionally lived
+    in $PREFIX/Mailman and experienced mailman admins will expect to find
+    it there. Modifying all the mm_cfg import statements and paths.py was
+    believed to be too invasive a change, and technically its part of the
+    "Mailman" package and moving it would take it out of the package
+    (although currently I don't think that presents any known
+    issues). Instead a compromise approach was adopted, mm_cfg.py is
+    symbolically linked into the /etc/mailman directory pointing to
+    $PREFIX/Mailman/mm_cfg.py. Thus mm_cfg.py "appears" in the
+    configuration directory but retains its traditional location, this was
+    deemed a reasonable compromise for the mailman 2.1.x timeframe.
+
+    sitelist.cfg has a symbolic link in its old location in the DATA_DIR
+    pointing to its new location in the CONFIG_DIR.
+
+    New Directories (can be specified as parameter to configure):
+
+    CONFIG_DIR:	default=$VAR_PREFIX/data		FHS=/etc/mailman
+    PID_DIR		default=$VAR_PREFIX/data	FHS=/var/run/mailman
+
+    Existing directories that can now be specified as parameter to configure:
+
+    LOCK_DIR:	default=$VAR_PREFIX/locks	FHS=/var/lock/mailman
+    LOG_DIR:	default=$VAR_PREFIX/logs	FHS=/var/log/mailman
+    QUEUE_DIR	default=$VAR_PREFIX/qfiles	FHS=/var/spool/mailman
+
+You can find addition documentation in the
+@DOC_DIR@/README.* files and/or
+@prefix@/README.* files.
+
+Mailman is an open source project and full documentation, current
+sources, patches, etc. can be found at the following official mailman
+web sites:
+
+http://www.gnu.org/software/mailman/mailman.html
+http://www.list.org
+
+1. Final installation instructions:
+
+    Congratulations!  You've installed the Mailman software.  To get
+    everything running you need to hook Mailman up to both your web
+    server and your mail system.
+
+    - If you plan on running your MTA and web server on different
+      machines, sharing Mailman installations via NFS, be sure that
+      the clocks on those two machines are synchronized closely.  You
+      might take a look at the file Mailman/LockFile.py; the constant
+      CLOCK_SLOP helps the locking mechanism compensate for clock skew
+      in this type of environment.
+
+    - Configure your web server. The RPM has made the assumption you
+      are running the apache web server (httpd). The RPM has installed
+      a mailman config file (@HTTPD_CONF_FILE@) in @HTTPD_CONF_DIR@.
+      You should edit the file to set your domain, see the
+      instructions in the config file.
+
+      Now restart your web server so the new settings take effect:
+
+      % /sbin/service httpd restart
+
+    - Create the site password using:
+
+      % @prefix@/bin/mmsitepass <your-site-password>
+
+      This password can be used anywhere that individual user or
+      mailing list administrator passwords are required, giving the
+      mailman site administrator the ability to adjust these things
+      when necessary.
+
+      You may also want to create a password for the site-wide "list
+      creator" role (someone other than the site administrator who as
+      privileges to create and remove lists through the web).  Use the
+      -c option to mmsitepass to set this.
+
+    - Set the values for DEFAULT_EMAIL_HOST and DEFAULT_URL_HOST in
+      @prefix@/Mailman/mm_cfg.py file if the fqdn of the host you are
+      running mailman on is not the email and url host you need to use.
+
+    - Update Mailman list files to new verson by running:
+      @prefix@/bin/update
+
+      Users upgrading from previous releases of this package may need
+      to move their data or adjust the configuration files to point to
+      the locations where their data is.
+
+    - Create a "site-wide" mailing list (Note: this must be done
+      before starting the mailman daemon). This is the one that
+      password reminders will appear to come from.  Usually this
+      should be the "mailman" mailing list, but if you need to change
+      this, be sure to change the MAILMAN_SITE_LIST variable in
+      mm_cfg.py (see below).
+
+      % @prefix@/bin/newlist mailman
+
+      Follow the prompts, and see the README file for more
+      information.
+
+    - Start the Mailman qrunner daemon
+
+      As of mailman version 2.1 mailman requires a service (daemon) to be
+      run for mailman to operate. RedHat does not ship RPM's that enable
+      services as part of package installation. You will need to enable
+      the mailman service if you want mailman to run.
+
+      To enable the mailman service after package installation you may run
+      the "serviceconf" GUI tool, or you may do the following on the
+      command line as root.
+
+      /sbin/service mailman start
+
+      To have the mailman service automatically start at certain run
+      levels (replace the runlevel below with your desired run levels, for
+      example to start mailman at run levels 3 and 5 runlevel would be 35:
+
+      /sbin/chkconfig --level runlevel mailman on
+
+    - You should then subscribe yourself to the mailman list.
+
+
+2. Customize Mailman
+
+    You should do these steps using the account you installed Mailman
+    under in section 2 above.
+
+    - The file @prefix@/Mailman/Defaults.py contains a number of
+      defaults for your installation.  If any of these are incorrect,
+      override them in @prefix@/Mailman/mm_cfg.py.
+
+      DO NOT EDIT Defaults.py!
+
+      Note: If you have upgraded your mailman installation RPM will
+      save a copy of your previous version of mm_cfg.py in
+      mm_cfg.py.rpmsave.
+
+      See the comments in Defaults.py for details.  Once a list is
+      created, editing many of these variables will have no effect.
+      At that point, you'll need to configure your lists through the
+      web admin interface or through the command line script
+      @prefix@/bin/withlist or @prefix@/bin/config_list.
+
+      Note: Do *not* change HOME_DIR or MAILMAN_DIR.  These are set
+      automatically by the configure script when the RPM was created.
+
+    - Create the site password using:
+
+      % @prefix@/bin/mmsitepass <your-site-password>
+
+      This password can be used anywhere that individual user or
+      mailing list administrator passwords are required, giving the
+      mailman site administrator the ability to adjust these things
+      when necessary.
+
+      You may also want to create a password for the site-wide "list
+      creator" role (someone other than the site administrator who as
+      privileges to create and remove lists through the web).  Use the
+      -c option to mmsitepass to set this.
+
+
+3. Troubleshooting
+
+    If you encounter problems with running Mailman, first check the
+    "Common Problems" section, below.  If your problem is not covered
+    there, check both the FAQ file and the online FAQ Wizard.
+    Check for errors in the mailman log files which can be found in
+
+    @LOG_DIR@
+
+    Mailman logs errors to this file:
+
+    @LOG_DIR@/error
+
+    If you encounter an error, send an error report to
+    mailman-users@python.org.  Include a description of what you're
+    doing to cause the problem, and the relevant lines from your
+    syslog.  Also include information on your operating system, which
+    version of Python you're using, and which version of Mailman
+    you're installing.
+
+
+4. Common Problems
+
+    Problem:  All Mailman web pages give a 404 File not found error.
+
+    Solution: Your web server has not been set up properly for handling
+              Mailman's cgi commands.  Make sure you've:
+
+              1) Configured the web server to give permissions to
+                 @prefix@/cgi-bin
+              2) Restarted the web server properly.
+
+              Consult your web server's documentation for instructions
+              on how to do these things.
+
+
+    Problem:  All Mailman web pages give an "Internal Server Error".
+
+    Solution: The likely problem is that you are using the wrong GID or
+              UID for CGI scripts.  Check your syslog.  If you see, for
+              example, a line like:
+
+                  Attempt to exec script with invalid gid 51, expected 99
+
+              You need to reinstall Mailman, and specify $CGI_GID to be 51,
+              as described in the installation instructions.
+
+
+    Problem:  I send mail to the list, and get back mail saying the
+              list is not found!
+
+    Solution: You probably didn't add the necessary aliases to the system
+              alias database, given to you when you ran the newlist
+              command.  If you did add them, you likely did not update
+              the alias database, or your system requires you to run
+              newaliases explicitly.  Refer to section 5 above for
+              more information.
+
+
+    Problem:  I send mail to the list, and get back mail saying,
+              "unknown mailer error".
+
+    Solution: The likely problem is that you are using the wrong GID or
+              UID for mail.  Check your syslog.  If you see, for
+              example, a line like:
+
+                  Attempt to exec script with invalid gid 51, expected 99
+
+              You need to reinstall Mailman, and specify $MAIL_GID to
+              be 51, as described in the installation
+              instructions. see notes on Postfix below, as by default
+              it will create these problems on installation.
+
+
+    Problem:  I use Postfix for my MTA and the mail wrapper programs
+              are logging complaints about the wrong GID.
+
+    Solution: Create a separate aliases file for Postfix in its
+              main.cf config file under the variable "alias_maps". Put
+              the file somewhere in Mailman's home directory, or
+              somewhere else where the user mailman has write access
+              to it; *as user mailman* call Postfix's "postalias" on the
+              alias file.
+
+              % postalias <the alias file>
+
+              Also as user mailman, run
+
+              % python -c'import os; print os.getgid()'
+
+              This should print out the group id that Mailman should
+              be configured to expect when the mail wrapper programs
+              are run.  Call it "thegid".  Rebuild Mailman with
+
+              % ./configure --with-mail-gid=thegid
+
+              See also the README.POSTFIX file for more information on
+              connecting Postfix and Mailman.
+
+
+    Problem:  I send mail to the list, and get back mail saying,
+              "sh: mailman not available for sendmail programs"
+
+    Solution: Your system uses sendmail restricted shell (smrsh).  You
+              need to configure smrsh by creating a symbolic link from
+              the mail wrapper (@prefix@/mail/mailman) to the directory
+              identifying executables allowed to run under smrsh.
+
+              Some common names for this directory are
+              /var/admin/sm.bin, /usr/admin/sm.bin or /etc/smrsh.
+
+              Note that on Debian Linux, the system makes
+              /usr/lib/sm.bin, which is wrong, you will need to create
+              the directory /usr/admin/sm.bin and add the link there.
+              Note further any aliases newaliases spits out will need
+              to be adjusted to point to the secure link to the
+              wrapper.
+
+
+    Problem:  I messed up when I called configure.  How do I clean
+              things up and re-install?
+
+    Solution: % make clean
+              % ./configure --with-the-right-options
+              % make install
+
+
+-------------------- Other Useful Information -----------------
+
+RPM Preserves User Modified Files
+---------------------------------
+
+The rpm during installation will preserve changes you have made to
+configuration files and templates from a previous installation. This
+is almost always what is desired. However you may want to check for
+the existence of files with either the .rpmsave or the .rpmnew
+extension and verify if any of these backup files created during the
+RPM install exist and if you are indeed using the version of the file
+you desire.
+
+Note: The installation directory for non-data files changed from
+@VAR_PREFIX@ to @prefix@ in mailman-2.1.5-20. Configuration files and
+templates that were user modified in a previous installation will need
+to manually move those changes from the earlier @VAR_PREFIX@ to the
+new @prefix@ installation directory.
+
+Here are a few commands that will aid you in this process:
+
+List any rpm backup files in the mailman installation directory:
+
+% find @prefix@ @VAR_PREFIX@ -name '*.rpm*'
+
+List any configuration files NOT in the mailman installation directory
+you might miss with the above command which also have the potental for
+backup copies. Given this short list you'll have to look for a
+matching backup file.
+
+% rpm -qc mailman | egrep -v '@prefix@|@VAR_PREFIX@'
+
+When rpm preserves a user modified file it installs the newest version
+of the file by appending the .rpmnew extension to the file name thus
+preserving the file but making the latest version avialable. If rpm
+replaces a user modified file the file being replaced is renamed to
+have the .rpmsave extension. RPM only performs these backup operations
+if the file is marked as being a configuration file in the rpm spec
+file, it is not performed in general on all files in the package.
+
+
+Mailman Cron Jobs:
+------------------
+
+Mailman relies on the cron daemon to schedule periodic actions. These
+are contained in a crontab file. Previous versions of the mailman RPM
+from Red Hat created the cron jobs by running the crontab(1) command
+during the RPM installation phase. The cron jobs are now handled
+slightly differently. Rather than invoking crontab which loaded the
+cron jobs into a private cron file a mailman crontab file is installed
+into /etc/cron.d. The crontab file and the commands it runs were
+modified from the upstream distribution so these commands would run
+under the correct SELinux security profile.
+
+Previously the cron jobs were installed when the RPM was
+installed. This was less than optimal because the act of having the
+mailman RPM installed on a system should not cause the cron jobs to
+run. A better solution is to only run the mailman cron jobs if the
+mailman service is enabled. This is accomplished by installing the
+mailman crontab file in /etc/cron.d when the mailman service is
+started by mailman init.d script (e.g. either at boot time or via
+/sbin/service). When the mailman service is stopped the crontab file
+is removed from /etc/cron.d. The crontab file is copied from
+@prefix@/cron/crontab.in to /etc/cron.d/mailman. Thus if you edit the
+cron jobs you will need to edit the master copy in @prefix@/cron
+otherwise your edits will be lost the next time the mailman service is
+started or restarted. To pick up any changes made to the crontab file
+edit the master copy in @prefix@/cron and then use /sbin/service to
+restart mailman (e.g. /sbin/service mailman restart). Some may wonder
+why the crontab file in /etc/cron.d is not symbolically linked to the
+master copy when the service starts and unlinked when it stops. The
+reason is because newer versions of cron will refuse for security
+reasons to run any crontabs which are links to other files or
+writeable by anybody else except root.
+
+Choosing your MTA (sendmail or postfix) on Red Hat Systems:
+-----------------------------------------------------------
+
+Red Hat ships two different MTA's, sendmail and postfix. Because the
+sendmail and postfix rpms's share file names when installed the
+conflict is accomodated by utilizing the "alternatives" mechanism
+which manages a set of links. When one of the MTA's is selected via
+/usr/sbin/alternatives links are established which point to the
+correct files for that MTA. There are two ways to select your MTA:
+The system-switch-mail package contains a GUI front end to the
+alternatives mechanism and /usr/bin/system-switch-mail is an easy way
+to select your MTA, or you can invoke alternatives directly like this:
+
+% /usr/sbin/alternatives --config mta
+
+Note: Selecting your preferred MTA is distinct from configuring the
+MTA, you will need to consult the documentation for the MTA you
+selected for information on how to configure it.
+
+
+Local Variables:
+mode: indented-text
+indent-tabs-mode: nil
+End:

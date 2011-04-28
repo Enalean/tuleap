@@ -1,0 +1,133 @@
+Date: Mon, 17 Jan 2005 08:44:07 +0100
+Mime-Version: 1.0 (Produced by PhpWiki 1.3.11)
+X-Rcs-Id: $Id: PhpWikiAdministration,v 1.39 2005/01/25 06:58:23 rurban Exp $
+Content-Type: application/x-phpwiki;
+  pagename=PhpWikiAdministration;
+  pgsrc_version="2 $Revision: 1.39 $";
+  flags=PAGE_LOCKED;
+  markup=2;
+  charset=iso-8859-1
+Content-Transfer-Encoding: binary
+
+_*Note:*_  _Most of the actions on this page require administrative
+privileges. They will not work unless you have set an admin username and
+password in the PhpWiki config file._
+
+<?plugin CreateToc jshide||=1 with_toclink||=1 ?>
+
+----
+!!! Page Explorer
+
+First select pages and then define the action:
+
+<?plugin-form WikiAdminSelect s="*" ?>
+
+or call the available ~WikiAdmin actions directly:
+
+[Remove | PhpWikiAdministration/Remove] |
+  [Rename | PhpWikiAdministration/Rename] |
+    [Replace | PhpWikiAdministration/Replace]
+      
+
+----
+!!! Cleanup
+
+A Wiki SandBox is very easy to clean. Here you can restore it to
+pristine condition by loading the default from pgsrc.
+
+  [Rake the SandBox|phpwiki:?action=loadfile&source=pgsrc/SandBox].
+
+----------
+
+!!! Making Snapshots or Backups
+
+!! ZIP files of database
+
+These links lead to zip files, generated on the fly, which contain all
+the pages in your Wiki. The zip file will be downloaded to your local
+computer.
+
+  This *[ZIP Snapshot | phpwiki:?action=zip]* contains only the
+  latest versions of each page, while this *[ZIP Dump |
+  phpwiki:?action=zip&include=all]* contains all archived versions.
+
+  (If the PhpWiki is configured to allow it, anyone can download a zip
+  file.)
+
+If your php has _zlib_ support, the files in the archive will be
+compressed, otherwise they will just be stored.
+
+!! Dump to directory
+
+Here you can dump pages of your Wiki into a directory of your choice.
+
+  <?plugin WikiForm action=dumpserial?>
+
+The most recent version of each page will written out to the
+directory, one page per file. Your server must have write permissions
+to the directory!
+
+----
+
+!!! Dump pages as XHTML
+
+  <?plugin WikiForm action=dumphtml?>
+
+This will generate a directory of static pages suitable for
+distribution on disk where no web server is available. The various
+links for page editing functions and navigation are removed from the
+pages.
+
+  The XHTML file collection can also be downloaded as an
+  *[XHTML ZIP Snapshot | phpwiki:?action=ziphtml]*.
+
+----
+
+!!! Phpwiki Internals
+
+These are here mostly for debugging purposes (at least, that is the
+hope.)
+
+In normal use, you should not need to use these, though, then again,
+they should not really do any harm.
+
+!! Purge Markup Cache
+
+(If your wiki is so configured,) the transformed (almost-HTML) content
+of the most recent version of each page is cached. This speeds up page
+rendering since parsing of the wiki-text takes a fair amount of juice.
+
+  Hitting this button will delete all cached transformed
+  content. (Each pages content will be transformed and re-cached next
+  time someone views it.)
+
+  <?plugin WikiAdminUtils
+           action=purge-cache
+           label="Purge Cache"
+   ?>
+
+!! Clean WikiDB of Illegal Filenames
+
+Page names beginning with the subpage-separator, usually a slash
+(=/=), are not allowed. Sometimes though an errant plugin or something
+might create one....
+
+  This button will delete any pages with illegal page names, without possibility to restore.
+
+  <?plugin WikiAdminUtils
+           action=purge-bad-pagenames
+           label="Purge bad pagenames"
+   ?>
+
+!! Clean WikiDB of empty and unreferenced pages
+
+  *Warning!* This button will delete every empty and unreferenced page, without any possibility to restore them again.
+  This will disable the possibility to revert or get back any deleted page.
+
+  <?plugin WikiAdminUtils
+           action=purge-empty-pages
+           label="Purge all empty unreferenced pages"
+   ?>
+
+----
+PhpWikiDocumentation

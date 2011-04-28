@@ -1,0 +1,173 @@
+<!--
+//
+// Copyright (c) Xerox Corporation, Codendi 2007-2008.
+// This file is licensed under the GNU General Public License version 2. See the file COPYING. 
+//
+// Originally written by Nicolas Guerin 2004, Codendi Team, Xerox
+//
+-->
+
+  <chapter id="CodendiArchitecture">
+    <title>&SYS_PRODUCT_NAME; Architecture</title>
+    <para></para>
+    
+    <section id="Implementation">
+      <title>&SYS_PRODUCT_NAME; Implementation</title>
+      <para></para>
+      <section id="sourceforgedotnet">
+        <title>SourceForge.net Software</title>
+        <para>
+            &SYS_PRODUCT_NAME; is based on the open source platform SourceForge.net 2.0.
+            For this reason, a large amount of the &SYS_PRODUCT_NAME; code is based 
+            on SourceForge source code. However, recent versions of SourceForge 
+            are no longer open source, so there is no new code coming from that project.
+        </para>
+      </section>
+      
+      <section>
+        <title>Based on Open Source software</title>
+        <itemizedlist mark="bullet" spacing="compact">
+          <listitem>
+            <para>
+                <emphasis role="bold">Linux Distribution</emphasis> &SYS_PRODUCT_NAME; 
+                is supported on a very specific platform. For instance, 
+                &SYS_PRODUCT_NAME; 4.0 is supported on RedHat Enterprise Server 5 
+                (and maybe others).
+            </para>
+          </listitem>
+          
+          <listitem>
+            <para>
+                <emphasis role="bold">Apache</emphasis> web server with additionnal 
+                modules: mod_php, mod_dav, and others.
+            </para>
+          </listitem>
+          
+          <listitem>
+            <para>
+                <emphasis role="bold">MySQL</emphasis> Database Manager
+            </para>
+          </listitem>
+          
+          <listitem>
+            <para>
+                <emphasis role="bold">CVS and FTP servers</emphasis>
+            </para>
+          </listitem>
+    
+          <listitem>
+            <para>
+                <emphasis role="bold">Mailman</emphasis> mailing list manager
+            </para>
+          </listitem>
+          
+          <listitem>
+            <para>
+                <emphasis role="bold">PHP, Python and Perl programming languages.</emphasis>
+            </para>
+          </listitem>
+    
+        </itemizedlist>
+
+        <para>
+            Note that &SYS_PRODUCT_NAME; 4.0 is built on top of Apache 2.2.3 and PHP 5.
+        </para>
+      </section>
+      
+
+    </section>
+    
+    <section id="Architecture">
+      <title>Architecture</title>
+      <para>
+        This figure gives an overview of the &SYS_PRODUCT_NAME; software architecture:
+      </para>
+      <figure id="FigureArchitecture">
+        <title>&SYS_PRODUCT_NAME; Architecture</title>
+        
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="../../slides/en_US/Codendi_Architecture.png" format="PNG"/>
+          </imageobject>
+        </mediaobject>
+      </figure>
+
+    </section>
+    <section id="FactsAndFigures">
+      <title>&SYS_PRODUCT_NAME; Facts and Figures</title>
+      <para>As of June 2004, &SYS_PRODUCT_NAME; code is made of:</para>
+      <itemizedlist spacing="compact" mark="bullet">
+        <listitem>
+          <para>
+            65,000 lines of PHP code (including a lot of HTML)
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            7,000 lines of Perl
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            7,000 lines of SQL
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            2,000 lines of Shell scripts
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            1,300 lines of C code (mostly unused!)
+          </para>
+        </listitem>
+      </itemizedlist>
+    </section>
+
+
+    <section id="DatabaseStructure">
+      <title>Database Structure</title>
+      <para>
+        &SYS_PRODUCT_NAME; database contains over 180 tables. All project data 
+        (except file releases, mailing lists, documents of document manager, and 
+        project web site) is stored in the database. This includes documentation, 
+        artifact attachments, patches and code snippets.
+      </para>
+      <para>
+        Most tables correspond to a specific service. E.g. all tables with names 
+        starting with 'artifact_' are used by the tracker service. Note that 
+        'bug_', 'support_' and most 'project_' tables deal with the three legacy 
+        trackers (bugs, support request and task manager).
+      </para>
+      <para>
+        Then, some tables are at site level: 'snippet_', 'stats_', 'trove_', etc.
+      </para>
+      <para>
+        And last, there are also a few important tables that are referenced in 
+        many others, e.g.:
+      </para>
+      <itemizedlist spacing="compact" mark="bullet">
+        <listitem>
+          <para>
+            <emphasis role="bold"><literal>groups</literal></emphasis> contains 
+            project data (e.g. defined at creation time), and most notably defines 
+            the <literal>group_id</literal>, used almost everywhere!
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            <emphasis role="bold"><literal>user</literal></emphasis> contains 
+            &SYS_PRODUCT_NAME; registered users data: user ID, name, login and 
+            encrypted password, status, etc.
+          </para>
+        </listitem>
+      </itemizedlist>
+    </section>
+  </chapter>
+
+  <!--
+  Local Variables:
+  sgml-parent-document: ("Codendi_Programmer_Guide.xml" "book" "chapter")
+  End:
+  -->

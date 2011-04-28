@@ -1,0 +1,79 @@
+--- cvs-1.11.22/src/logmsg.c.cvspass	2006-05-16 02:16:31.000000000 +0200
++++ cvs-1.11.22/src/logmsg.c	2006-06-12 09:46:15.000000000 +0200
+@@ -267,7 +267,7 @@
+     }
+ 
+     (void) fprintf (fp,
+-  "%s----------------------------------------------------------------------\n",
++  "\n%s----------------------------------------------------------------------\n",
+ 		    CVSEDITPREFIX);
+     (void) fprintf (fp,
+   "%sEnter Log.  Lines beginning with `%.*s' are removed automatically\n%s\n",
+--- cvs-1.11.22/src/login.c.cvspass	2006-05-04 17:13:41.000000000 +0200
++++ cvs-1.11.22/src/login.c	2006-06-12 09:46:15.000000000 +0200
+@@ -313,6 +313,15 @@
+     fp = CVS_FOPEN (passfile, "r");
+     if (fp == NULL)
+     {
++       fp = CVS_FOPEN (passfile, "w");
++       if (fp != NULL)
++       {
++           fclose (fp);
++           fp = CVS_FOPEN (passfile, "r");
++       }
++    }
++    if (fp == NULL)
++    {
+ 	error (0, errno, "warning: failed to open %s for reading", passfile);
+ 	goto process;
+     }
+--- cvs-1.11.22/src/sanity.sh.cvspass	2006-06-09 04:09:41.000000000 +0200
++++ cvs-1.11.22/src/sanity.sh	2006-06-12 09:54:44.000000000 +0200
+@@ -15183,6 +15183,7 @@
+ revision 1\.1
+ date: [0-9/]* [0-9:]*;  author: ${username};  state: Exp;
+ branches:  1\.1\.2;
++x
+ xCVS: ----------------------------------------------------------------------
+ xCVS: Enter Log.  Lines beginning with .CVS:. are removed automatically
+ xCVS:
+@@ -15194,6 +15195,7 @@
+ ----------------------------
+ revision 1\.1\.2\.1
+ date: [0-9/]* [0-9:]*;  author: ${username};  state: Exp;  lines: ${PLUS}1 -0
++x
+ xCVS: ----------------------------------------------------------------------
+ xCVS: Enter Log.  Lines beginning with .CVS:. are removed automatically
+ xCVS:
+@@ -15221,6 +15223,7 @@
+ revision 1\.1
+ date: [0-9/]* [0-9:]*;  author: ${username};  state: Exp;
+ branches:  1\.1\.2;
++x
+ xCVS: ----------------------------------------------------------------------
+ xCVS: Enter Log.  Lines beginning with .CVS:. are removed automatically
+ xCVS:
+@@ -15232,6 +15235,7 @@
+ ----------------------------
+ revision 1\.1\.2\.1
+ date: [0-9/]* [0-9:]*;  author: ${username};  state: Exp;  lines: ${PLUS}1 -0
++x
+ xCVS: ----------------------------------------------------------------------
+ xCVS: Enter Log.  Lines beginning with .CVS:. are removed automatically
+ xCVS:
+@@ -15253,6 +15257,7 @@
+ revision 1\.1
+ date: [0-9/]* [0-9:]*;  author: ${username};  state: Exp;
+ branches:  1\.1\.2;
++x
+ xCVS: ----------------------------------------------------------------------
+ xCVS: Enter Log.  Lines beginning with .CVS:. are removed automatically
+ xCVS:
+@@ -15264,6 +15269,7 @@
+ ----------------------------
+ revision 1\.1\.2\.1
+ date: [0-9/]* [0-9:]*;  author: ${username};  state: Exp;  lines: ${PLUS}1 -0
++x
+ xCVS: ----------------------------------------------------------------------
+ xCVS: Enter Log.  Lines beginning with .CVS:. are removed automatically
+ xCVS:

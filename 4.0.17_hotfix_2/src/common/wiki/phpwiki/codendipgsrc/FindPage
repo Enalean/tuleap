@@ -1,0 +1,57 @@
+Date: Thu, 21 Apr 2005 18:56:40 +0100
+Mime-Version: 1.0 (Produced by PhpWiki 1.3.11)
+X-Rcs-Id: $Id: FindPage,v 1.18 2005/05/06 17:33:55 rurban Exp $
+Content-Type: application/x-phpwiki;
+  pagename=FindPage;
+  pgsrc_version="2 $Revision: 1.18 $";
+  flags=PAGE_LOCKED;
+  markup=2;
+  charset=iso-8859-1
+Content-Transfer-Encoding: binary
+
+Here are some good starting points for browsing.
+
+* HowToUseWiki gives you the quick lowdown on Wiki markup.
+* RecentChanges recorded automatically.
+* MoreAboutMechanics of browsing and editing on this server.
+
+Here's a title search. Try something like <tt>wiki or sandwich</tt>.
+
+<?plugin WikiFormRich action=TitleSearch method=GET nobr=1 class=wikiaction
+  editbox[] name=s text=""
+  submit[]
+  checkbox[] name=case_exact
+  pulldown[] name=regex value="auto,none,glob,posix,pcre,sql" ?>
+
+Use the following for a full text search. This takes a few seconds.
+The results will show all lines on a given page which contain a
+match.
+
+<?plugin WikiFormRich action=FullTextSearch method=GET nobr=1 class=wikiaction
+  editbox[] name=s text=""
+  submit[]
+  checkbox[] name=case_exact
+  pulldown[] name=regex value="auto,none,glob,posix,pcre,sql" ?>
+
+In a fuzzy pages search the titles of all pages are examined to find
+those which are similarly spelled or similar sounding (english).
+
+<?plugin-form FuzzyPages ?>
+
+------
+
+! Tips
+Separate words with a space. All words have to match as substrings. %%%
+'OR', grouping with parenthesis, string-quoting and some glob-style wildcard 
+characters are also supported. %%%
+To exclude words from a title search or full text search, prepend a '-'. %%%
+Use '^xx' or 'xx*' to match words starting with 'xx'. %%%
+Use '~*xx' or 'xx$' to match words ending with 'xx'. %%%
+Use '^word$' to match exact words. %%%
+Use regex=auto and 're:' like 're:word.*xx' or regex=posix to use posix regular expressions. (not yet) %%%
+Use regex=auto and '//' like '/^word$/' or regex=pcre to match using perl-style regular expressions. %%%
+Use regex=sql to match using SQL-style wildcards '%' and '_'. %%%
+Use regex=none to match any wildcards verbatim. %%%
+
+Example: 'wiki text -php' looks for all pages containing the words 'wiki' and 'text',  %%%
+         but not containing the word 'php'.

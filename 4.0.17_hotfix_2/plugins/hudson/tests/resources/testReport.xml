@@ -1,0 +1,61 @@
+<?xml version='1.0' standalone='yes'?>
+<testResult>
+ <child>
+  <child>
+   <child>
+    <age>0</age>
+    <className>Account test</className>
+    <duration>0.010210037</duration>
+    <name>testEquals</name>
+    <statu>PASSED</statu>
+   </child>
+   <failCount>0</failCount>
+   <name>Account test</name>
+   <passCount>1</passCount>
+   <skipCount>0</skipCount>
+  </child>
+  <child>
+   <child>
+    <age>0</age>
+    <className>Artifact test</className>
+    <duration>0.0016520023</duration>
+    <name>testAddDependenciesDouble</name>
+    <statu>PASSED</statu>
+   </child>
+   <child>
+    <age>0</age>
+    <className>Artifact test</className>
+    <duration>0.0014100075</duration>
+    <name>testAddDependenciesSimple</name>
+    <statu>PASSED</statu>
+   </child>
+   <child>
+    <age>0</age>
+    <className>Artifact test</className>
+    <duration>0.0024449825</duration>
+    <name>testAddWrongDependency</name>
+    <statu>PASSED</statu>
+   </child>
+   <failCount>0</failCount>
+   <name>Artifact test</name>
+   <passCount>3</passCount>
+   <skipCount>0</skipCount>
+  </child>
+  <child>
+   <child>
+    <age>0</age>
+    <className>ArtifactImport test</className>
+    <duration>0.17610717</duration>
+    <name>testALL</name>
+    <statu>PASSED</statu>
+   </child>
+   <failCount>0</failCount>
+   <name>ArtifactImport test</name>
+   <passCount>1</passCount>
+   <skipCount>0</skipCount>
+  </child>
+ </child>
+ <failCount>5</failCount>
+ <passCount>416</passCount>
+ <skipCount>3</skipCount>
+</testResult>

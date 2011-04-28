@@ -1,0 +1,15 @@
+Version 1.9 (Codendi_ST 4.0.17) 
+
+	What Changed?
+	============
+        ** Activate post-receive hook repo/repo with configuration (destination email, prefix, etc)
+        ** Improve post-receive email readability
+            * Add list of authors
+            * Move texts
+            * Remove useless texts
+            * Change email subject
+            * Add gitweb diff links
+
+        ** Extract references from commit messages like subversion
+        ** Direct link to gitweb interface based on sha1 (i.e: git #repository_name/commit_sha1)i
+        ** Add hook for color used in plugin statistics.

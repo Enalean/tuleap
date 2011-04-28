@@ -1,0 +1,217 @@
+diff -c -r viewvc-1.0.5/lib/viewvc.py viewvc-1.0.5.codendi/lib/viewvc.py
+*** viewvc-1.0.5/lib/viewvc.py	2008-02-28 16:22:14.000000000 +0100
+--- viewvc-1.0.5.codendi/lib/viewvc.py	2008-05-16 13:33:53.000000000 +0200
+***************
+*** 50,55 ****
+--- 50,82 ----
+  except (SyntaxError, ImportError):
+    idiff = None
+  
++ # ============== Codendi specific ============== 
++ # Determine Codendi path and make sure it comes first
++ # to avoid Codendi modules being hidden by python modules
++ # with the same name
++  
++ import posix
++ sys.path.insert(0,os.getenv('DOCUMENT_ROOT','')+'/../utils/svn')
++ sys.path.insert(0,os.getenv('DOCUMENT_ROOT','')+'/../utils/cvs1')
++ sys.path.insert(0,os.getenv('DOCUMENT_ROOT','')+'/../utils')
++ import include
++ import exit
++ import user
++ import session
++ import group
++ import svnaccess
++ import cvsaccess
++ 
++ include.db_connect()
++ session.session_set()
++ 
++ if not user.user_isloggedin():
++   exit.exit_not_logged_in()
++   sys.exit(0)
++ 
++ group_name = ""
++ # =========================================== 
++ 
+  debug.t_end('imports')
+  
+  #########################################################################
+***************
+*** 215,223 ****
+      self.where = _path_join(path_parts)
+      self.path_parts = path_parts
+  
+      if self.rootname:
+        # Create the repository object
+!       if cfg.general.cvs_roots.has_key(self.rootname):
+          self.rootpath = os.path.normpath(cfg.general.cvs_roots[self.rootname])
+          try:
+            if cfg.general.use_rcsparse:
+--- 242,257 ----
+      self.where = _path_join(path_parts)
+      self.path_parts = path_parts
+  
++     # Codendi specific - Special handling for roottype parameter
++     roottype_param = self.query_dict.get('roottype', None)
++     if roottype_param:
++       self.roottype = roottype_param
++     else:
++       self.roottype = 'cvs'
++ 
+      if self.rootname:
+        # Create the repository object
+!       if cfg.general.cvs_roots.has_key(self.rootname) and self.roottype == 'cvs':
+          self.rootpath = os.path.normpath(cfg.general.cvs_roots[self.rootname])
+          try:
+            if cfg.general.use_rcsparse:
+***************
+*** 238,244 ****
+              % self.rootname)
+          # required so that spawned rcs programs correctly expand $CVSHeader$
+          os.environ['CVSROOT'] = self.rootpath
+!       elif cfg.general.svn_roots.has_key(self.rootname):
+          self.rootpath = cfg.general.svn_roots[self.rootname]
+          try:
+            if re.match(_re_rewrite_url, self.rootpath):
+--- 272,278 ----
+              % self.rootname)
+          # required so that spawned rcs programs correctly expand $CVSHeader$
+          os.environ['CVSROOT'] = self.rootpath
+!       elif cfg.general.svn_roots.has_key(self.rootname) and self.roottype == 'svn':
+          self.rootpath = cfg.general.svn_roots[self.rootname]
+          try:
+            if re.match(_re_rewrite_url, self.rootpath):
+***************
+*** 268,273 ****
+--- 302,319 ----
+            'The root "%s" is unknown. If you believe the value is '
+            'correct, then please double-check your configuration.'
+            % self.rootname, "404 Repository not found")
++     # ============== Codendi specific ==============
++     # Make sure the user has access to that path in the repo
++     #
++     if self.roottype == 'svn':
++       if not svnaccess.check_read_access(user.user_getname(), self.rootpath, self.where):
++         self.view_func = view_noaccess
++     elif self.roottype == 'cvs':
++       if not cvsaccess.check_read_access(user.user_getname(), self.rootpath, self.where):
++         self.view_func = view_noaccess
++     global group_name
++     group_name = self.rootname
++     # ============================================
+  
+      # If this is using an old-style 'rev' parameter, redirect to new hotness.
+      # Subversion URLs will now use 'pathrev'; CVS ones use 'revision'.
+***************
+*** 422,428 ****
+      hidden_values = prepare_hidden_values(params)
+      return action, hidden_values
+  
+!   def get_link(self, view_func=None, where=None, pathtype=None, params=None):
+      """Constructs a link pointing to another ViewVC page. All arguments
+      correspond to members of the Request object. If they are set to 
+      None they take values from the current page. Return value is a base
+--- 468,474 ----
+      hidden_values = prepare_hidden_values(params)
+      return action, hidden_values
+  
+!   def get_link(self, view_func=None, roottype = None, where=None, pathtype=None, params=None):
+      """Constructs a link pointing to another ViewVC page. All arguments
+      correspond to members of the Request object. If they are set to 
+      None they take values from the current page. Return value is a base
+***************
+*** 433,438 ****
+--- 479,487 ----
+      if view_func is None:
+        view_func = self.view_func
+  
++     if roottype is None:
++       roottype = self.roottype
++ 
+      if params is None:
+        params = self.query_dict.copy()
+      else:
+***************
+*** 497,502 ****
+--- 546,554 ----
+          and rootname == self.rootname):
+        params['pathrev'] = self.pathrev
+  
++     # add rootype
++     params['roottype'] = roottype
++ 
+      # add path
+      if where:
+        url = url + '/' + where
+***************
+*** 642,647 ****
+--- 694,700 ----
+  # the legal query parameters and their validation functions
+  _legal_params = {
+    'root'          : None,
++   'roottype'      : _re_validate_alpha,
+    'view'          : None,
+    'search'        : _validate_regex,
+    'p1'            : None,
+***************
+*** 1060,1065 ****
+--- 1113,1119 ----
+  def common_template_data(request):
+    cfg = request.cfg
+    data = {
++     'current_root' : request.rootname,
+      'cfg' : cfg,
+      'vsn' : __version__,
+      'kv'  : request.kv,
+***************
+*** 1344,1351 ****
+  
+  markup_streamers = {
+  # '.py' : markup_stream_python,
+!   '.php' : markup_stream_php,
+!   '.inc' : markup_stream_php,
+    }
+  
+  def make_time_string(date, cfg):
+--- 1398,1405 ----
+  
+  markup_streamers = {
+  # '.py' : markup_stream_python,
+! #  '.php' : markup_stream_php,
+! #  '.inc' : markup_stream_php,
+    }
+  
+  def make_time_string(date, cfg):
+***************
+*** 3441,3446 ****
+--- 3495,3513 ----
+                % (fileinfo.rev, prev_rev(fileinfo.rev),
+                   fileinfo.dir, fileinfo.file)
+  
++ # ============== Codendi specific ==============
++ # Display the 'Access Denied' template
++ #
++ def view_noaccess(request):
++ 
++  # prepare the data that will be passed to the template
++  data = common_template_data(request)
++ #  })
++ 
++  request.server.header()
++  generate_page(request, "noaccess", data)
++ # ===========================================
++ 
+  def view_query(request):
+    if not is_query_supported(request):
+      raise debug.ViewVCException('Can not query project root "%s" at "%s".'
+***************
+*** 3655,3660 ****
+--- 3722,3728 ----
+    'queryform': view_queryform,
+    'rev':       view_revision,
+    'roots':     view_roots,
++   'noaccess':  view_noaccess,
+    'tar':       download_tarball,
+    'redirect_pathrev': redirect_pathrev,
+  }

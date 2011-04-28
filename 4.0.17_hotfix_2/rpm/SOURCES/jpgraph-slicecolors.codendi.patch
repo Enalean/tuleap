@@ -1,0 +1,19 @@
+*** src/jpgraph_pie.php	2008-06-27 18:16:29.000000000 +0200
+--- src/jpgraph_pie.codendi.php	2008-06-27 18:16:34.000000000 +0200
+***************
+*** 567,573 ****
+  		$img->SetColor($this->color);
+  	    else
+  		$img->SetColor($slicecolor);	    
+! 	    $arccolor = $this->pie_border && $aaoption===0 ? $this->color : "";
+  
+  	    // Calculate the x,y coordinates for the base of this slice taking
+  	    // the exploded distance into account. Here we use the mid angle as the
+--- 567,573 ----
+  		$img->SetColor($this->color);
+  	    else
+  		$img->SetColor($slicecolor);	    
+! 	    $arccolor = $this->pie_border && $aaoption===0 ? $slicecolor.':0.7' : "";
+  
+  	    // Calculate the x,y coordinates for the base of this slice taking
+  	    // the exploded distance into account. Here we use the mid angle as the

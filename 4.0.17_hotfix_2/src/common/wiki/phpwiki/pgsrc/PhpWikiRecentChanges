@@ -1,0 +1,16 @@
+Date: Fri, 9 Apr 2004 19:41:39 +0100
+Mime-Version: 1.0 (Produced by PhpWiki 1.3.10pre)
+X-Rcs-Id: $Id: PhpWikiRecentChanges,v 1.2 2004/11/03 16:46:16 rurban Exp $
+Content-Type: application/x-phpwiki;
+  pagename=PhpWikiRecentChanges;
+  pgsrc_version="2 $Revision: 1.2 $";
+  flags="";
+  markup=2;
+  charset=iso-8859-1
+Content-Transfer-Encoding: binary
+
+<?plugin RssFeed feed=PhpWikiRecentChanges description="PhpWiki:RecentChanges"
+	         url=http://phpwiki.sourceforge.net/phpwiki/RecentChanges?format=rss ?>
+
+----
+PhpWikiDocumentation

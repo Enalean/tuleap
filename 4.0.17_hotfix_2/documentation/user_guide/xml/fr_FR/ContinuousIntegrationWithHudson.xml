@@ -1,0 +1,873 @@
+<!--
+// Copyright (c) Xerox Corporation, Codendi 2007-2008.
+// This file is licensed under the GNU General Public License version 2. See the file COPYING. 
+-->
+<chapter id="ContinuousIntegrationWithHudson">
+  <title>Intégration Continue avec Hudson</title>
+  
+  <section id="ContinuousIntegrationIntroduction">
+    <title>Introduction à l'intégration continue</title>
+    
+    <para>
+        L'intégration continue est un ensemble de bonnes pratiques utilisées 
+        en génie logiciel. Ces bonnes pratiques visent à vérifier qu'une 
+        modification de code source n'entraîne pas de régression de l'application 
+        en cours de développement. Cette vérification est en générale effectuée
+        sur une autre machine que votre machine de développement (serveur 
+        d'intégration); et cette vérification est effectuée assez fréquement
+        <footnote>
+         <para>
+            Plusieurs stratégies sont possibles : après chaque commit, à intervalle
+            régulier (toutes les heures, toutes les nuits). Tout dépend de la taille
+            du projet, du nombre de développeurs, de la fréquence des modifications.
+         </para>
+        </footnote>,
+        d'où le nom d'Intégration Continue.
+    </para>
+    <para>
+        L'outil qui va se charger d'effectuer cette vérification est un outil 
+        d'intégration continue tel que CruiseControl ou Hudson.
+        Cette étape de vérification est appelée <emphasis role="bold">Build</emphasis>.
+        Un build pourra correspondre, selon votre projet, en une succession d'étapes, 
+        comme par exemple :
+        <itemizedlist mark="bullet">
+         <listitem><para>La compilation,</para></listitem>
+         <listitem><para>La génération de la documentation (javadoc par exemple),</para></listitem>
+         <listitem><para>L'exécution des tests unitaires,</para></listitem>
+         <listitem><para>Une analyse de qualimétrie sur le code source (respect des conventions de codage, pourcentage de commentaires, métriques sur le code, ...),</para></listitem>
+         <listitem><para>La génération d'un exécutable.</para></listitem>
+        </itemizedlist>
+        L'outil d'intégration continue n'effectue pas lui-même le build, mais le
+        lance à intervalle régulier, affiche le résultat du build, et est en 
+        général capable de notifier les membres du projet si une modification a
+        engendré une quelconque régression.
+    </para>
+    <para>
+        Cette technique de développement, initiée au départ par la communauté de 
+        l'Extreme Programming et adoptée par les méthodes Agiles apporte un certain
+        nombre d'avantages. Parmis ceux-ci, nous pouvons citer :
+        <itemizedlist mark="bullet">
+         <listitem><para>Les tests sont immédiatement exécutés après chaque modification (étape souvent négligée par les développeurs),</para></listitem>
+         <listitem><para>Les problèmes d'intégration sont détectés en continue, permettant de les réparer au plus vite,</para></listitem>
+         <listitem><para>Il existe toujours une version des livrables opérationnelle et disponible pour test, démonstration ou distribution.</para></listitem>
+        </itemizedlist>
+    </para>
+    
+    <para>
+        Nous avons choisi d'intégrer à &SYS_PRODUCT_NAME; l'outil d'intégration
+        continue <emphasis role="bold">Hudson</emphasis>, qui est l'un des outils 
+        les plus en vogue actuellement. Le paramétrage d'Hudson se réalise de 
+        manière assez simple dans une interface web et bénéficie d'une aide 
+        contextuelle en ligne très appréciable.
+    </para>
+    
+    <para>
+      L'intégration continue, ainsi que l'outil Hudson, possède un certains 
+      nombre de termes spécifiques. En voici la définition :
+      <table frame="all">
+       <title>Glossaire des termes spécifiques à l'I.C. et à Hudson</title>
+       <tgroup cols="2">
+       <colspec colname="c1" colwidth="100pt" />
+       <colspec colname="c2" colwidth="350pt"  />
+       <thead>
+        <row>
+         <entry>Terme</entry>
+         <entry>Définition</entry>
+        </row>
+       </thead>
+       <tbody>
+        <row>
+         <entry><emphasis role="bold">Job</emphasis></entry>
+         <entry>La notion de Job Hudson peut être mise en correspondance avec la 
+         notion de projet. C'est le Job qui va exécuter le build. Mais il ne fait 
+         pas que cela. En effet, le Job va mettre en place l'environnement 
+         nécessaire à l'exécution du Build (mise à jour du code source), éxécuter
+         le build, puis effectuer un certain nombre d'opération après celui-ci 
+         (comme publier la documentation générée, publier le résultats des tests,
+         notifier du résultats du build, ...)</entry>
+        </row>
+        <row>
+         <entry><emphasis role="bold">Build</emphasis></entry>
+         <entry>Littéralement "contruction" de votre projet logiciel. Processus 
+         constitué de plusieurs étapes exécutées périodiquement sur un serveur
+         d'intégration continue.</entry>
+        </row>
+        <row>
+         <entry><emphasis role="bold">Artéfact</emphasis></entry>
+         <entry>Item généré lors du build, et mis à disposition par l'outil 
+         d'intégration continue. Attention à ne pas confondre un artefact d'un 
+         build et un artefact &SYS_PRODUCT_NAME; (qui est un item suivi dans l'outil de suivi).</entry>
+        </row>
+        <row>
+         <entry><emphasis role="bold">Espace de travail (workspace)</emphasis></entry>
+         <entry>Répertoire dans lequel le projet va être dépoyé pour
+         pouvoir y effectuer le build, et éventuellement y construire les artéfacts.</entry>
+        </row>
+        <row>
+         <entry><emphasis role="bold">Statut (du build)</emphasis></entry>
+         <entry>Etat du build. Peut prendre diverses valeurs selon l'outil.
+         Hudson propose 4 états :
+          <itemizedlist mark="bullet">
+           <listitem><para>Succès : tout s'est bien passé, aucun test n'est en échec,</para></listitem>
+           <listitem><para>Instable : le build s'est achevé, mais il est instable (des tests sont en échecs par exemple),</para></listitem>
+           <listitem><para>Echec : le build est en échec</para></listitem>
+           <listitem><para>Inactif : aucun build n'a encore été lancé ou le build est désactivé.</para></listitem>
+          </itemizedlist>
+         </entry>
+        </row>
+        <row>
+         <entry><emphasis role="bold">Tendance (des builds)</emphasis></entry>
+         <entry>Tendance du résultat des builds basé sur les 5 derniers builds.
+         Cette tendance est représentée par une image empruntée à la météo 
+         (soleil, orage, etc) pour signifier que la tendance est au beau fixe ou pas.</entry>
+        </row>
+       </tbody>
+      </tgroup>
+     </table>
+    </para>
+    
+  </section>
+  
+  <section id="HudsonInstallation">
+    <title>Installation de Hudson</title>
+    <para>
+        Pour installer Hudson, vous devez disposer d'une JVM sur le serveur 
+        d'intégration continue (version 1.5 ou supérieure nécessaire).
+        Nous privilégierons l'installation d'Hudson dans un serveur d'application
+        comme Tomcat.
+        <procedure>
+         <title>Voici donc les étapes à suivre pour l'installer :</title>
+          <step><para>Installez Tomcat</para></step>
+          <step><para>Télécharger le fichier war Hudson (hudson.war) à l'adresse <ulink url="https://hudson.dev.java.net/">https://hudson.dev.java.net/</ulink></para></step>
+          <step><para>Définir la variable d'environnement HOME_HUDSON si vous souhaitez spécifier le répertoire d'installation d'Hudson</para></step>
+          <step><para>Déployer la war Hudson dans le manager de Tomcat.</para></step>
+        </procedure>
+        Ca y est ! Hudson est installé. Par défaut, vous pouvez y accèder à l'adresse : <ulink url="http://localhost:8080/hudson">http://localhost:8080/hudson</ulink>
+      </para>
+    
+  </section>
+  
+  <section id="HudsonConfiguration">
+    <title>Configuration de Hudson</title>
+    <para>
+        Avant de créer vos propres Jobs (voir <xref linkend="JobCreationAndConfiguration" />),
+        il faut configurer Hudson. Toutes les étapes sont facultatives.
+        Ne configurez que ce dont vous avez besoin.
+    </para>
+    
+    <section id="HudsonSystemConfiguration">
+      <title>Configuration système</title>
+      <para>
+        Pour configurer Hudson, cliquez sur le lien "Administrer Hudson" dans le menu
+        en haut à gauche de l'interface principale d'Hudson, puis sur le lien
+        "Configurer le système".
+      </para>
+      <para>
+        Toutes les étapes de configuration disposent d'une aide contextuelle.
+        Pour avoir des détails concernant une option, cliquez sur le point 
+        d'interrogation correspondant.
+      </para>
+        
+      <section id="HudsonSystemConfigurationToolpath">
+        <title>Outils externes</title>
+        <para>
+            Pour pouvoir exécuter les builds de vos projets, Hudson doit
+            connaître les chemins des outils nécessaires à l'exécution des builds.
+        </para>
+        <para>
+            Vous pouvez spécifier ici les chemins vers les outils externes dont
+            vous pouvez avoir besoin. Par défaut, les outils proposés sont JDK, 
+            Shell, Ant, Maven et CVS. Si vous installez des plugins 
+            (voir <xref linkend="HudsonPluginsConfiguration" />) qui font appel 
+            à des outils externes, vous aurez la possiblité de les configurer 
+            dans cette section.
+            <figure id="HudsonExternalToolsConfiguration">
+              <title>Configuration des outils</title>
+              <mediaobject>
+                <imageobject>
+                  <imagedata format="PNG"
+                    fileref="../../screenshots/fr_FR/sc_hudsonexternaltoolsconfiguration.png" width="14.5cm" />
+                </imageobject>
+              </mediaobject>
+            </figure>
+            Notons que vous pouvez définir plusieurs instances du même outil (plusieurs
+            version de JDK par exemple).
+        </para>
+      </section>
+      
+      <section id="HudsonSystemConfigurationAuthentication">
+        <title>Authentification</title>
+        <para>
+            Par défaut, Hudson est accessible par tout le monde. Tout le monde
+            peut voir les jobs, parcourir le résultats des builds, et lancer
+            de nouveaux builds via l'interface web.
+        </para>
+        <para>
+            Vous pouvez néanmoins restreindre ces droits. Pour cela, il faut 
+            cocher la case "activer la sécurité" (toujours dans le menu
+            "Administrer Hudson" -> "Configurer le système").
+            Vous avez alors plusieurs options :
+            <itemizedlist mark="bullet">
+             <listitem>
+              <para>
+                <emphasis role="bold">Déléguer au conteneur de servlets :</emphasis>
+                dans notre cas, il s'agit de Tomcat. Le fichier de définition des 
+                droits utilisateurs est le fichier 
+                <emphasis>&lt;tomcat&gt;/conf/tomcat-users.xml</emphasis>. 
+                Reportez-vous à la documentation de votre conteneur pour plus 
+                de précisions.
+              </para>
+             </listitem>
+             <listitem>
+              <para>
+                <emphasis role="bold">LDAP :</emphasis> si vous disposez d'un 
+                annuaire LDAP, il vous suffit de spécifier l'adresse du serveur, 
+                et les utilisateurs seront automatiquement reconnus.
+              </para>
+             </listitem>
+             <listitem>
+              <para>
+                <emphasis role="bold">Base de données des utilisateurs de Hudson :</emphasis>
+                Hudson peut gérer lui-même la base de données des utilisateurs. 
+                Dans ce cas, vous devrez soit les créer vous-même, soit autoriser 
+                les utilisateurs à s'enregistrer.
+              </para>
+             </listitem>
+            </itemizedlist>
+            Le choix d'activer ou non la sécurité dépendra de la politique interne
+            de votre entreprise, de la spécificité de vos projets, et de la taille
+            de vos équipes.
+        </para>
+      </section>
+      
+      <section id="HudsonSystemConfigurationEmailNotification">
+        <title>Notification par Email</title>
+        <para>
+            Hudson peut envoyer des notifications pour vous avertir du résultat
+            du build. Ceci est bien entendu paramétrable pour chaque job.
+            Pour permettre la notification, vous devez indiquer un serveur de
+            messagerie (serveur SMTP). Laissez le champ vide si vous souhaitez 
+            utiliser le serveur de messagerie par défault (localhost).
+        </para>
+        <para>
+            Vous pouvez également spécifier le suffixe par défaut des emails des 
+            utilisateurs. Par défaut, tous les utilisateurs &SYS_PRODUCT_NAME; 
+            ont une adresse email du type 
+            <emphasis role="bold">login@&SYS_DEFAULT_DOMAIN;</emphasis> qui sera
+            redirigée vers l'adresse réelle de l'utilisateur. Vous pouvez donc 
+            renseigner dans ce champ la valeur 
+            <emphasis role="bold">@&SYS_DEFAULT_DOMAIN;</emphasis> et les emails 
+            seront alors automatiquement envoyées aux bons utilisateurs.
+        </para>
+        <para>
+            Vous pouvez spécifier l'adresse email de l'administrateur système.
+            Il s'agit de l'utilisateur qui va envoyer les emails aux responsables
+            du projet et/ou aux personnes qui ont cassé un build.
+        </para>
+        <para>
+            Vous devrez finalement préciser l'URL de votre serveur Hudson, afin
+            que les URL dans les mails envoyés par Hudsons soient corrects.
+        </para>
+      </section>
+      
+      <section id="HudsonSystemConfigurationJabberNotification">
+        <title>Notification Jabber</title>
+        <para>
+            Si vous avez installé le plugin Jabber pour hudson 
+            (voir <xref linkend="HudsonPluginsConfiguration" />), vous trouverez 
+            également dans la section "Administrer Hudson" -> "Configurer le système"
+            une partie dédiée aux notifications Jabber. Si le plugin Jabber pour
+            &SYS_PRODUCT_NAME; est installé et activé, chaque utilisateur 
+            dispose d'un compte Jabber (Voir <xref linkend="IMPlugin" />) et 
+            chaque projet dispose d'un salon de discussion. Le plugin Jabber pour 
+            Hudson vous permet alors de notifier les utilisateurs (ou les salons) des
+            résultats des builds. Il est également possible de lancer certaines 
+            action par message Jabber.
+        </para>
+        <para>
+            Pour utiliser la notification Jabber, veuillez renseigner le champ
+            serveur (par défaut &SYS_DEFAULT_DOMAIN;) ainsi que le JabberID de 
+            l'auteur des notifications.
+        </para>
+      </section>
+    
+    </section>
+    
+    
+    <section id="HudsonPluginsConfiguration">
+      <title>Plugins Hudson</title>
+      <para>
+        Il existe de nombreux plugins pour étendre Hudson. Parmis ceux-ci, nous 
+        pouvons citer : checkstyle, CI game, Crap4J, LDAP Email, MSBuild, NAnt,
+        NUnit, Selenium, etc. Vous trouverez une liste détaillée des plugins à 
+        l'adresse <ulink url="http://hudson.gotdns.com/wiki/display/HUDSON/Plugins">http://hudson.gotdns.com/wiki/display/HUDSON/Plugins</ulink>
+      </para>
+      <para>
+        La liste des plugins disponibles se trouve dans le menu "Administrer Hudson" -> 
+        "Gestion des plugins". La liste des plugins est mise à jour dynamiquement.
+        Si votre serveur d'intégration continue est situé derrière un proxy, il vous
+        faudra alors spécifier l'adresse de celui-ci dans l'onglet "Avancé".
+      </para>
+      <para>
+        Pour installer un plugin, cochez la case en face du plugin souhaité dans 
+        la liste des plugins disponibles, puis cliquez sur Installer, et suivez 
+        les instructions.
+      </para>
+    </section>
+    
+  </section>
+  
+  <section id="JobCreationAndConfiguration">
+    <title>Création et configuration de Jobs Hudson</title>
+    <para>
+        Une fois le système configuré, vous pouvez définir vos Jobs.
+        Pour ceci, cliquez sur le lien "Nouveau job" dans le menu en
+        haut à gauche. Il vous suffit ensuite d'entrer le nom du job
+        (le nom de votre projet logiciel par exemple), et de choisir 
+        son type.
+        Différents types de job sont proposés. Le type le plus courant est
+        le projet "free-style", que nous allons prendre comme exemple.
+        Il existe aussi un type de projet Maven2, si vous utilisez déjà cet
+        outil de build.
+    </para>
+    <para>
+        Cliquez sur le bouton Ok pour valider la création de votre job.
+        Vous verez alors apparaître un autre écran de définition du job.
+        Vous pouvez par exemple rajouter une description. Vous pourrez ensuite
+        définir le dépôt de code source, et la manière dont Hudson va gérer les
+        mises à jour de code source, définir les différentes étapes du build,
+        et finalement préciser à Hudson ce que vous souhaitez faire après le build.
+    </para>
+    
+    <section id="JobConfigurationSVNCVS">
+      <title>CVS et Subversion</title>
+      <para>
+        Par défaut, Hudson propose les deux même gestionnaire de code source 
+        que &SYS_PRODUCT_NAME; : CVS et Subversion. Sélectionnez le gestionnaire que
+        vous utilisez pour votre projet, puis entrez les informations concernant
+        les chemins vers le dépôt de votre projet.
+      </para>
+      <section id="JobConfigurationCVS">
+       <title>CVS</title>
+          <para>
+            Pour CVS, vous devez renseigner le CVSROOT de votre projet. Le format 
+            attendu est <emphasis role="bold">:protocol:user@host:path</emphasis>
+          </para>
+          <para>
+            Vous pouvez trouver le détail de cette chaîne en cliquant sur l'onglet 
+            CVS de votre projet. Typiquement, il s'agit de 
+            <emphasis role="bold">:pserver:[username]@[projectname].&SYS_DEFAULT_DOMAIN;:/cvsroot/[projectname]</emphasis>
+          </para>
+          <para>
+            Vous pouvez également préciser un ou plusieurs modules, une branche.
+          </para>
+      </section>
+      <section id="JobConfigurationSVN">
+       <title>Subversion</title>
+          <para>
+            Pour Subversion, vous devez aussi renseigner l'URL du dépôt SVN.
+            Cette information est disponible sur l'interface web de &SYS_PRODUCT_NAME;
+            en cliquant sur l'onglet SVN de votre projet. Il s'agit d'une chaîne de type 
+            <emphasis role="bold">http://&SYS_DEFAULT_DOMAIN;/svnroot/[projectname]</emphasis>
+          </para>
+          <para>
+            Hudson vous demandera d'entrer une authentification Subversion afin de 
+            pouvoir accéder au dépôt de code. Vous avez plusieurs options pour gérer
+            cette authentification (entrer directement vos login/mot de passe, utiliser
+            l'authentification par clé publique SSH ou utiliser un certificat HTTPS
+            client). Nous vous laissons le soin de choisir celle qui vous correspond
+            le mieux.
+          </para>
+          <para>
+            Vous pouvez ajouter plusieurs dépôts subversion en
+            cliquant sur le bouton "Ajoutez d'autres emplacements".
+          </para>
+          <para>
+            Enfin, si vous souhaitez permettre à vos utilisateurs de naviguer 
+            dans la base de code source via l'interface d'Hudson, vous devez 
+            sélectionner "ViewSVN" dans le champ Navigateur de la base de code,
+            puis entrer la chaîne suivante :
+            <emphasis role="bold">http://&SYS_DEFAULT_DOMAIN;/svn/viewvc.php?roottype=svn&amp;root=[le_nom_court_de_votre_projet]</emphasis>
+          </para>
+      </section>
+    </section>
+    
+    <section id="JobConfigurationBuildTrigger">
+      <title>Déclenchement des builds</title>
+      <para>
+        Comme nous l'expliquions en introduction, l'intérêt de l'intégration
+        continue réside dans le fait que, une fois paramétré correctement,
+        le build est réalisé en continu, sans plus vous en soucier. Il reste
+        cependant à définir la manière dont les builds vont être lancés. Deux
+        options principales s'offrent à vous :
+        <itemizedlist mark="bullet">
+         <listitem>
+          <para><emphasis role="bold">Scruter l'outil de gestion de version</emphasis> :
+          demande à Hudson de scruter les changements dans l'outil de gestion de version.
+          Vous pouvez définir la fréquence suivant la syntaxe cron (voir aide Hudson en ligne).
+          Notez toutefois que cette opération est consommatrice de ressources pour
+          le serveur &SYS_PRODUCT_NAME;. Envisagez d'utiliser la méthode de type 
+          'push' pour éviter cette surcharge (voir ci-dessous).
+          </para>
+         </listitem>
+         <listitem>
+          <para><emphasis role="bold">Déclencher les builds à distance</emphasis> :
+          cette méthode de type 'push' évite la surcharge du serveur. Le build est
+          déclenché par une URL. Pour éviter que n'importe qui déclenche le build,
+          vous pouvez spécifier un jeton (token) qui servira de protection. Pour que
+          le build soit effectivement déclenché après chaque modification de code
+          source, il faudra le paramétrer dans &SYS_PRODUCT_NAME; dans l'onglet 
+          'Build' de votre projet (Voir <xref linkend="HudsonServiceAddJob" />). 
+          Vous pourrez également spécifier le jeton si vous en avez défini un.
+          </para>
+         </listitem>
+        </itemizedlist>
+      </para>
+    </section>
+    
+    <section id="JobConfigurationBuildSteps">
+      <title>Définition du build (Etapes)</title>
+      <para>
+        Il vous faut maintenant définir ce que va réellement faire le build 
+        (compiler votre projet, générer la documentation, exécuter les tests
+        unitaires, etc.). Pour cela, vous pouvez ajouter autant d'étapes que 
+        nécessaire. Par défaut (sans autre plugin), Hudson propose 4 types 
+        d'étapes possibles :
+        <itemizedlist mark="bullet">
+         <listitem>
+          <para><emphasis role="bold">Exécuter un script shell</emphasis> : 
+          vous permet d'entrer directement un script shell dans le champ texte.
+          Vous avez à disposition un certain nombre de variable d'environnement
+          (voir l'aide en ligne).
+          </para>
+         </listitem>
+         <listitem>
+          <para><emphasis role="bold">Exécuter une ligne de commande batch Windows</emphasis> :
+          vous permet d'entrer directement un script batch Windows dans le champ texte.
+          Vous avez à disposition un certain nombre de variable d'environnement
+          (voir l'aide en ligne).
+          </para>
+         </listitem>
+         <listitem>
+          <para><emphasis role="bold">Appeler Ant</emphasis> :
+          vous permet d'appeler un script Ant. Vous pouvez choisir la version de 
+          Ant à utiliser si vous en avez défini plusieurs (voir <xref linkend="HudsonSystemConfigurationToolpath" />),
+          et éventuellement définir une cible précise. En cliquant sur le bouton
+          "Avancé", vous pouvez également spécifier des propriétes et des options Java.
+          </para>
+         </listitem>
+         <listitem>
+          <para><emphasis role="bold">Invoquer les cibles Maven de haut niveau</emphasis> :
+          vous permet d'appeler les cibles Maven. Précisez les cibles en question.
+          Le bouton "Avancé" vous permet de définir le fichier POM, des propriétés 
+          et des options Java.
+          </para>
+         </listitem>
+        </itemizedlist>
+      </para>
+      Cette partie de définition des étapes du build étant propre à chaque projet,
+      nous vous laisserons le soin de la remplir selon vos besoins.
+    </section>
+    
+    <section id="JobConfigurationAfterBuild">
+      <title>Actions à la suite du build</title>
+      <para>
+        Après le build, Hudson vous propose un certain nombre d'actions. On peut 
+        citer parmis elle :
+        <itemizedlist mark="bullet">
+         <listitem>
+          <para><emphasis role="bold">Archiver des artefacts</emphasis> : 
+          si votre build produit un exécutable (ou un zip, un tar), ou génère 
+          de la documentation utilisateur par exemple, vous pouvez publier ces 
+          artefacts sur la page du build Hudson. Vous devez donc spécifier le 
+          chemin vers ses artefacts à publier (le répertoire de référence est 
+          l'espace de travail - workspace - de votre projet). Vous pouvez utiliser 
+          les wildcard (*) pour définir les artefacts à publier. Vous pouvez 
+          choisir de conserver ou non l'ensemble des artefatcs, ou seulement les 
+          derniers générés avec succès pour gagner de la place.
+          </para>
+         </listitem>
+         <listitem>
+          <para><emphasis role="bold">Publier les javadocs</emphasis> :
+          si votre build produit de la javadoc, vous pouvez la publier sur la 
+          page du build. Pour ce faire, entrez le chemin vers le répertoire 
+          racine de la javadoc. Vous pouvez là aussi utiliser le wildcard et 
+          choisir ou non d'archiver les anciennes versions.
+          </para>
+         </listitem>
+         <listitem>
+          <para><emphasis role="bold">Publier le rapport de résultat des tests JUnit</emphasis> :
+          si votre build exécute des tests unitaires JUnit, vous pouvez publier 
+          un rapport de résultat des tests sur la page du build. Pour cela, 
+          spécifiez le chemin des fichiers XML de rapport des tests générés par JUnit.
+          Si vous utilisez un autre plugin de tests, vous trouverez certainement 
+          l'équivalent.
+          </para>
+         </listitem>
+         <listitem>
+          <para><emphasis role="bold">Construire d'autres projets</emphasis> :
+          Votre Job peut être dépendant d'un autre Job. Dans ce cas, vous pouvez
+          souhaitez construire un autre projet (job) après ce build. Le cas 
+          échéant, indiquez le nom du job à construire après ce build. Vous avez
+          la possibilité aussi définir si le job doit être construit même si 
+          le build courant est en échec.
+          </para>
+         </listitem>
+         <listitem>
+          <para><emphasis role="bold">Notifier par email</emphasis> :
+          Hudson a la capacité d'envoyer des emails aux destinaires spécifiés 
+          lorsque certains évènements importants ont eu lieu.
+          Vous pouvez entrez une liste d'adresses email destinataires de ces 
+          notifications. Une bonne pratique peut être de mettre dans ce champ 
+          une liste de distribution (spéciale pour Hudson ou non) qui avertira
+          l'ensemble de l'équipe (voir <xref linkend="MailingListsCreation" />
+          pour créer des listes de distribution). Les évènements déclenchant
+          des notifications sont gérés de la façon suivante :
+              <itemizedlist mark="bullet">
+               <listitem>
+                <para>Chaque build en échec provoque l'envoi d'un mail.</para>
+               </listitem>
+               <listitem>
+                <para>Un build qui passe avec succès après un build en échec 
+                provoque l'envoi d'un mail, ce qui permet de savoir qu'une 
+                situation de crise est résolue.</para>
+               </listitem>
+               <listitem>
+                <para>Un build instable après un build avec succès provoque l'envoi 
+                d'un mail, indiquant ainsi qu'il y a eu une régression.</para>
+               </listitem>
+               <listitem>
+                <para>Sauf configuration contraire, chaque build instable provoque 
+                l'envoi d'un mail, indiquant ainsi qu'une régression est toujours 
+                d'actualité.</para>
+               </listitem>
+              </itemizedlist>
+          Pour les projets qui ne suivent pas les bonnes pratiques et où les 
+          builds instables sont la norme, décochez la case "Envoyer un email 
+          à chaque build instable".
+          </para>
+          <para>
+          Vous pouvez également envoyer un email aux personnes qui ont cassé
+          le build. Pour que cela fonctionne correctement et que les utilisateurs
+          soient automatiquement reconnus par Hudson, il faut vérifier que le 
+          serveur soit correctement configuré 
+          (voir <xref linkend="HudsonSystemConfigurationEmailNotification" />).
+          </para>
+         </listitem>
+        </itemizedlist>
+      </para>
+    </section>
+    
+  </section>
+  
+  
+  <section id="HudsonInCodendi">
+    <title>Intégration dans &SYS_PRODUCT_NAME;</title>
+    <para>
+        Parce que l'intégration continue fait partie des bonnes pratiques de
+        développement logiciel, et pas seulement dans des projets mettant en
+        oeuvre les méthodologies Agiles, &SYS_PRODUCT_NAME; intègre l'outil
+        Hudson. Nous avons vu plus haut comment installer 
+        (voir <xref linkend="HudsonInstallation" />) et configurer 
+        (voir <xref linkend="HudsonConfiguration" />) Hudson. Nous avons également
+        vu comment créer et configurer ses jobs Hudson 
+        (voir <xref linkend="JobCreationAndConfiguration" />).
+        Voyons maintenant comment Hudson est intégré à &SYS_PRODUCT_NAME;.
+    </para>
+    
+    <section id="HudsonService">
+      <title>Service Hudson</title>
+      <para>
+        Si le plugin Hudson est installé et activé sur votre serveur &SYS_PRODUCT_NAME;,
+        chaque projet peut activer le service Hudson (voir <xref linkend="ServiceConfiguration" /> 
+        pour activer des services dans votre projet).
+      </para>
+      <para>
+        Une fois le service activé, vous verrez apparaître un nouvel onglet "Build"
+        dans la barre des services. Il s'agit de l'onglet correspondant à l'intégration 
+        continue avec Hudson.
+      </para>
+      
+      <section id="HudsonServiceAddJob">
+        <title>Lier un job Hudson à votre projet &SYS_PRODUCT_NAME;</title>
+        <para>
+            Pour lier un job Hudson à votre projet, sélectionnez l'onglet Build
+            de votre projet, puis cliquez sur le lien 'Ajouter un job'.
+            Vous devez alors entrer l'URL du job Hudson que vous souhaitez associer
+            à votre projet (par exemple : http://[mon_serveur_ic]:8080/hudson/job/[mon_job]).
+            <figure id="HudsonAddJobInCodendi">
+              <title>Lier un job Hudson à votre projet</title>
+              <mediaobject>
+                <imageobject>
+                  <imagedata format="PNG"
+                    fileref="../../screenshots/fr_FR/sc_hudsonaddjobincodendi.png" width="14.5cm" />
+                </imageobject>
+              </mediaobject>
+            </figure>
+        </para>
+        <para>
+            Vous pouvez ensuite décider d'activer le déclenchement automatique 
+            du build pour ce job après chaque commit effectué sur le dépôt de 
+            code source de votre projet (CVS ou Subversion). Si vous avez protégé
+            votre build avec un jeton (token), vous pouvez également le spécifier
+            (voir <xref linkend="JobConfigurationBuildTrigger" /> pour plus 
+            d'explication). En cochant cette option, chaque commit déclenchera un
+            build du job lié, via un hook de pré-commit (vous n'avez rien d'autre
+            à faire).
+        </para>
+        <para>
+            Il est possible de lier plusieurs Jobs Hudson à un même projet 
+            &SYS_PRODUCT_NAME;.
+        </para>
+        
+      </section>
+      
+      <section id="HudsonServiceBrowseJob">
+        <title>Parcourir les jobs et les builds Hudson</title>
+        <para>
+            Lorsque vous cliquez sur l'onglet Build de votre projet, vous voyez
+            un tableau qui vous présente l'ensemble des jobs associés à votre
+            projet.
+            <figure id="HudsonBrowseJobsInCodendi">
+              <title>Visualiser les jobs Hudson associés à votre projet</title>
+              <mediaobject>
+                <imageobject>
+                  <imagedata format="PNG"
+                    fileref="../../screenshots/fr_FR/sc_hudsonbrowsejobs.png" width="14.5cm" />
+                </imageobject>
+              </mediaobject>
+            </figure>
+            Pour chaque job, vous voyez son état actuel (icône de couleur à gauche du
+            nom du job), son nom, le dernier build en succès, le dernier build en échec,
+            si vous avez activé ou non le déclenchement automatique du build 
+            (voir <xref linkend="HudsonServiceAddJob" />). Si vous êtes administrateur
+            du projet, vous verrez également apparaître pour chaque job des icones
+            vous permettant de modifier le job ou de le supprimer.
+        </para>
+        <para>
+            Le nom du job est automatiquement détecté lors de la création, mais 
+            vous pouvez le changer en éditant le job. Ceci est assez pratique
+            si vous souhaitez référencer des objets Hudson (voir 
+            <xref linkend="HudsonJobReferences" />). Les espaces pour les noms de 
+            jobs seront automatiquement remplacés par des tirets bas (_), afin
+            de permettre les références.
+        </para>
+        <para>
+            Le nom du job et les derniers builds sont des liens hypertextes qui 
+            ouvriront la section Hudson correspondante dans une fenêtre juste en 
+            dessous. Ceci est très pratique pour naviguer dans l'interface de
+            Hudson tout en restant dans l'interface de &SYS_PRODUCT_NAME;.
+            Si vous souhaitez visualiser la page Hudson en grand,
+            vous pouvez cliquer sur le lien 'voir seulement cette fenêtre' en
+            haut à droite.
+        </para>
+        <para>
+            Le tableau vous propose également un lien vers le flux RSS de chaque
+            job.
+        </para>
+      </section>
+      
+    </section>
+    
+    <section id="HudsonWidgets">
+      <title>Widgets Hudson</title>
+      <para>
+        Le service Hudson vous permet d'agrémenter votre tableau de bord projet
+        ou personnel de nombreux widgets.
+        Pour savoir comment ajouter des widgets à votre tableau de bord personnel 
+        (votre page personnel), voir <xref linkend="LoginAndPersonalPage" />.
+        La procédure est similaire pour ajouter des widgets au tableau de
+        bord projet (page sommaire du projet, voir <xref linkend="ProjectSummaryPageContent" />).
+      </para>
+      <itemizedlist mark="bullet">
+        <listitem>
+         <para>
+          <emphasis role="bold">Mes jobs Hudson</emphasis> :
+          ce widget est utilisable sur la page personnelle seulement.
+          Il représente par défaut un aperçu de l'ensemble des jobs des projets
+          dont vous êtes membre. Vous pouvez bien entendu choisir les jobs que 
+          vous souhaitez voir affichés en cliquant sur le lien "préférences" du
+          widget.
+           <figure id="HudsonWidgetMyJobs">
+            <title>Widget "Mes jobs Hudson"</title>
+            <mediaobject>
+             <imageobject>
+               <imagedata format="PNG"
+                 fileref="../../screenshots/fr_FR/sc_hudson_widget_my_jobs.png" width="14.5cm" />
+             </imageobject>
+            </mediaobject>
+           </figure>
+         </para>
+        </listitem>
+        <listitem>
+         <para>
+          <emphasis role="bold">Aperçu des jobs</emphasis> :
+          ce widget est utilisable sur la page projet uniquement.
+          Il permet d'afficher un aperçu des jobs de votre projet.
+          Si vous avez plusieurs jobs associés à votre projet, vous pouvez
+          choisir ceux que vous souhaitez voir dans le widget (lien préférences).
+           <figure id="HudsonWidgetJobsOverview">
+            <title>Widget "Aperçu des jobs"</title>
+            <mediaobject>
+             <imageobject>
+               <imagedata format="PNG"
+                 fileref="../../screenshots/fr_FR/sc_hudson_widget_jobs_overview.png" width="14.5cm" />
+             </imageobject>
+            </mediaobject>
+           </figure>
+         </para>
+        </listitem>
+        <listitem>
+         <para>
+          <emphasis role="bold">Derniers builds</emphasis> :
+          ce widget est utilisable sur le tableau projet et personnel.
+          Il est lié à un seul job, et vous présente les derniers builds du job
+          (dernier en date, dernier succès, dernier échec). Il affiche également 
+          la tendance du projet (icône météo, voir <xref linkend="ContinuousIntegrationIntroduction" />).
+           <figure id="HudsonWidgetLastBuilds">
+            <title>Widget "Derniers builds"</title>
+            <mediaobject>
+             <imageobject>
+               <imagedata format="PNG"
+                 fileref="../../screenshots/fr_FR/sc_hudson_widget_last_builds.png" width="14.5cm" />
+             </imageobject>
+            </mediaobject>
+           </figure>
+         </para>
+        </listitem>
+        <listitem>
+         <para>
+          <emphasis role="bold">Résultat des tests</emphasis> :
+          ce widget est utilisable sur le tableau projet et personnel.
+          Il est lié à un seul job, et vous présente les résultats des tests du 
+          dernier build du job concerné. Il faut que votre job dispose de tests
+          et qu'il les publie pour que ce widget affiche quelque chose. Les résultats
+          sont présentés sous forme de camembert.
+           <figure id="HudsonWidgetTestResults">
+            <title>Widget "Résultat des tests"</title>
+            <mediaobject>
+             <imageobject>
+               <imagedata format="PNG"
+                 fileref="../../screenshots/fr_FR/sc_hudson_widget_test_results.png" width="14.5cm" />
+             </imageobject>
+            </mediaobject>
+           </figure>
+         </para>
+        </listitem>
+        <listitem>
+         <para>
+          <emphasis role="bold">Tendance des tests</emphasis> :
+          ce widget est utilisable sur le tableau projet et personnel.
+          Il est lié à un seul job, et vous présente la tendance des résultats 
+          des tests du job concerné. Il faut que votre job dispose de tests pour 
+          que ce widget affiche quelque chose. Ce graphique représente le nombre
+          de tests (en échec et en succès) dans le temps. Cela permet par exemple
+          au chef de projet de vérifier que le nombre de tests est en constante 
+          augmentation avec le nombre de builds/commits.
+           <figure id="HudsonWidgetTestTrend">
+            <title>Widget "Tendance des tests"</title>
+            <mediaobject>
+             <imageobject>
+               <imagedata format="PNG"
+                 fileref="../../screenshots/fr_FR/sc_hudson_widget_test_trend.png" width="14.5cm" />
+             </imageobject>
+            </mediaobject>
+           </figure>
+         </para>
+        </listitem>
+        <listitem>
+         <para>
+          <emphasis role="bold">Historique des builds</emphasis> :
+          ce widget est utilisable sur le tableau projet et personnel.
+          Il est lié à un seul job, et vous présente l'historique des builds
+          sous forme de flux RSS. Pour chaque build de la liste, vous avez son
+          numéro, son état et sa date.
+           <figure id="HudsonWidgetBuildHistory">
+            <title>Widget "Historique des builds"</title>
+            <mediaobject>
+             <imageobject>
+               <imagedata format="PNG"
+                 fileref="../../screenshots/fr_FR/sc_hudson_widget_builds_history.png" width="14.5cm" />
+             </imageobject>
+            </mediaobject>
+           </figure>
+         </para>
+        </listitem>
+        <listitem>
+         <para>
+          <emphasis role="bold">Derniers artéfacts du build</emphasis> :
+          ce widget est utilisable sur le tableau projet et personnel.
+          Il est lié à un seul job, et vous présente les derniers artéfacts publiés.
+          Il faut que votre job dispose d'artéfacts et qu'il les publie pour que 
+          ce widget affiche quelque chose.
+           <figure id="HudsonWidgetLastArtifacts">
+            <title>Widget "Derniers artéfacts du build"</title>
+            <mediaobject>
+             <imageobject>
+               <imagedata format="PNG"
+                 fileref="../../screenshots/fr_FR/sc_hudson_widget_last_artifacts.png" width="14.5cm" />
+             </imageobject>
+            </mediaobject>
+           </figure>
+         </para>
+        </listitem>
+       </itemizedlist>
+    
+    </section>
+    
+    
+    <section id="HudsonReferences">
+      <title>Références Hudson</title>
+      <para>
+        Il est possible de créer des références vers certains objets Hudson 
+        dans &SYS_PRODUCT_NAME;. Certaines références sont prédéfinies (job, build),
+        mais vous pouvez tout à fait définir vos propres références si besoin
+        (voir <xref linkend="ReferenceOverview" /> pour plus de détails sur les références)
+      </para>
+      
+      <section id="HudsonJobReferences">
+        <title>Référencer un Job Hudson</title>
+        <para>
+            Le mot clé pour référencer un job est : <emphasis role="bold">job</emphasis>.
+            Pour référencer un job, vous pouvez utiliser les syntaxes suivantes :
+            <itemizedlist mark="bullet">
+             <listitem>
+              <para>job #LeNomDuJobAReferencer (le job en question doit se trouver alors dans le projet courant)</para>
+             </listitem>
+             <listitem>
+              <para>job #projet:LeNomDuJobAReferencer (le job en question doit se trouver alors dans le projet de nom 'projet')</para>
+             </listitem>
+             <listitem>
+              <para>job #num_projet:LeNomDuJobAReferencer (le job en question doit se trouver alors dans le projet numéro 'num_projet')</para>
+             </listitem>
+            </itemizedlist>
+         </para>
+      </section>
+      <section id="HudsonBuildReferences">
+        <title>Référencer un Build Hudson</title>
+        <para>
+            Le mot clé pour référencer un build est : <emphasis role="bold">build</emphasis>.
+            Pour référencer un build, vous pouvez utiliser les syntaxes suivantes :
+            <itemizedlist mark="bullet">
+             <listitem>
+              <para>build #XXX (il ne doit y avoir alors qu'un seul job associé au projet courant, et le build référencé est alors le build numéro 'XXX' de ce job)</para>
+             </listitem>
+             <listitem>
+              <para>build #UnJob/XXX (référence le build numéro 'XXX' du job 'UnJob' du projet courant)</para>
+             </listitem>
+             <listitem>
+              <para>build #projet:UnJob/XXX (référence le build numéro 'XXX' du job 'UnJob' du projet 'projet')</para>
+             </listitem>
+             <listitem>
+              <para>build #num_projet:UnJob/XXX (référence le build numéro 'XXX' du job 'UnJob' du projet numéro 'num_projet')</para>
+             </listitem>
+            </itemizedlist>
+        </para>
+      </section>
+      
+    </section>
+    
+  </section>
+  
+  
+</chapter>

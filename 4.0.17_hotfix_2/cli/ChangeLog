@@ -1,0 +1,35 @@
+1.4.0 - Codendi SOAP api 4.1 (Codendi_ST 4.0.16) 
+    What Changed?
+    ============
+    * tracker addComment
+        Add the field '--format' in order to specify the comment format (text/HTML)
+
+    * frs addFile
+        Send the file split in chunks so local files having big size can be added using CLI.
+        For local file calculate md5sum of the file in client side then send it to the server so file integrity can be verified in server side.
+        For uploaded file the user can submit the md5 of the file as a parameter for the same verification.
+        Use SOAP addUploadedFile for both local and uploaded file since local file is created into incoming directory by addFile chunk.
+
+    * frs getFile
+        obtain the file split in chunks and reassamble it in client side,
+        it verify also file integrity by comparing file md5sum calculted in client side with one obtained from the server.
+
+    What's new ?
+    ============
+
+    * frs getFileInfo
+        To obtain information about a specific file.
+
+    * docman getFile
+        Downloads a file or an embedded file.
+
+    * Introduce the lib PHP_BigFile to manage files bigger than 2,147,483,647 (2^31-1) bytes
+
+    Bug fix
+    =======
+    bug #codex:81684  CLI should tell users when it's not able to write the session file
+    bug #codex:113853 Codendi FRS Command AddRelease create a Release without Permissions
+    bug #codex:114502 Adding a new file via CLI/Soap doesn't notify people who monitor
+    bug #codex:115494 CLI getFile failed with big files
+    bug #codex:116492 FRS download of large files is not secure
+    bug #codex:116653 condendi 1.3.2 and Documentation V0.2(17-Jan-2007) are not consistent

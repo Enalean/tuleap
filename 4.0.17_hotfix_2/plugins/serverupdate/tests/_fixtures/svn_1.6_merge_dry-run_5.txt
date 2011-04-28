@@ -1,0 +1,4 @@
+--- Merging differences between repository URLs into '.':
+D   integer.c
+A   whole.c
+U   .

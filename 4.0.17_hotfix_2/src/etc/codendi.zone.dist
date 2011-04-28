@@ -1,0 +1,36 @@
+; Codendi DNS zone definition
+$TTL 3600
+@		IN	SOA	%sys_fullname%. dnssupport.%sys_fullname%. (
+				        %dns_serial%	; Serial
+					3600	; Refresh 1 hour
+					900	; Retry 15 minutes
+					604800	; Expire in 7 days
+					3600 )	; Minimum TTL 1 hours
+		IN	NS	%sys_fullname%.
+;		IN	NS	%%forwarder. ; you may list several forwarders (one per line)
+localhost       IN      A       127.0.0.1
+
+%sys_default_domain%.    	IN      A       %sys_ip_address%
+%sys_shortname%                	IN	A	%sys_ip_address%
+
+%sys_default_domain%.		IN	MX	0	%sys_fullname%.
+;%sys_default_domain%.		IN	MX	10	%%referral. ; uncomment if needed.
+;
+www                             IN      CNAME   %sys_shortname%
+cvs                             IN      CNAME   %sys_shortname%
+cvs1                            IN      CNAME   %sys_shortname%
+svn                             IN      CNAME   %sys_shortname%
+svn1                            IN      CNAME   %sys_shortname%
+download                        IN      CNAME   %sys_shortname%
+shell                           IN      CNAME   %sys_shortname%
+shell1                          IN      CNAME   %sys_shortname%
+users                           IN      CNAME   %sys_shortname%
+lists                           IN      A   %sys_ip_address%
+				IN	MX	0	lists.%sys_default_domain%.
+;				IN	MX	10	%%referral. ; uncomment if needed
+
+;
+; Wildcard DNS entry, to match all possible hosts: projnamme.*, cvs.projname.*, svn.projname.*, etc.
+;
+*                               IN      CNAME   %sys_shortname%
+

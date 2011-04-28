@@ -1,0 +1,123 @@
+.help {
+  width: auto;
+  background:url(../images/help.png) no-repeat;
+  background-position: 5px center;
+  border: 1px solid #DDDDDD;
+  padding: 0.5em;
+  padding-left: 40px;
+  margin: 0.5em;
+}
+
+.repository {
+    width:auto;
+}
+
+textarea.text {
+    height:50px;
+    width:400px;
+}
+
+.plugin_git_repo_privacy {
+    margin-right: 0.5em;
+}
+
+#plugin_git_reference {
+    margin-top: 1em;
+    width:      600px;
+}
+
+#plugin_git_reference h2 {
+    float:          left;
+    padding-bottom: 0;
+    padding-top:    0;
+    margin-bottom:  0;
+    margin-top:     0;
+}
+
+#plugin_git_repository_actions {
+    float:      right;
+    list-style: none;
+    align:      left;
+    margin:     0 0 0 10em;
+}
+
+#plugin_git_repository_actions li {
+    display: inline;
+}
+
+#plugin_git_repository_actions a {
+  background:          no-repeat;
+  background-position: 5px center;
+  padding-left:        24px;
+}
+
+#plugin_git_repository_actions a.repo_fork {
+    background-image: url('../images/fork.png');
+}
+
+#plugin_git_repository_actions a.repo_admin {
+    background-image: url('../images/edit.png');
+}
+
+#plugin_git_reference_author {
+    clear: both;
+    margin:0;
+    font-size:0.9em;
+    color:gray;
+}
+
+#plugin_git_description {
+    margin: 0.5em 0 0.5em 0;
+}
+
+#plugin_git_confirm_deletion {
+    float: right;
+}
+
+#plugin_git_fork_form {
+    white-space:no-wrap;
+    margin-top:0em;
+}
+
+#plugin_git_clone_url {
+    margin: 0;
+}
+
+#plugin_git_clone_field {
+    cursor:       text;
+    border:       1px solid rgb(196,196,196);
+    font-family:  Monaco, 'Courier New', 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', monospace;
+    padding-left: 5px;
+    width:        80%;
+}
+
+#plugin_git_description textarea {
+    vertical-align:top;
+}
+
+#plugin_git_repo_parent {
+    margin-top:0em;
+    margin-bottom:0em;
+}
+
+#plugin_git_add_mail_msg {
+    font-size:0.9em;
+}
+
+td.plugin_git_first_col {
+    width: 11em;
+}
+
+.plugin_git_mail_prefix {
+    width:15em;
+}
+
+.plugin_git_add_mail {
+    width:  60em;
+    height: 3em;
+}
+
+#gitphp {
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+}

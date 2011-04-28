@@ -1,0 +1,69 @@
+<?php // -*-php-*-
+rcs_id('$Id: signin.tmpl,v 1.34 2005/02/02 19:01:04 rurban Exp $');
+
+if (empty($FORMNAME))
+    $FORMNAME = 'signin';
+else
+    $NOFORM = true;
+?>
+<?php if (empty($NOFORM)) { ?>
+  <form method="post" action="<?= $request->getPostURL() ?>" accept-charset="<?=$charset?>" name="<?=$FORMNAME?>">
+  <?= HiddenInputs($request->getArgs(), false, array('auth')) ?>
+<?php } ?>
+<?php 
+if ($user->isAuthenticated()) {
+    $Sep = $WikiTheme->getButtonSeparator();
+    $SignOutB = $WikiTheme->makeButton(_("Sign Out"), "javascript:SignOut();", 'wikiaction');
+    $SignOutJS = JavaScript('    document.write(\'<input type="hidden" name="auth[logout]" value="0" />\');
+    function SignOut() { 
+      var form = document.forms["'.$FORMNAME.'"];
+      form.elements["auth[logout]"].value = 1;
+      form.submit();
+    }
+    document.write(\''.AsXML($SignOutB).'\');');
+?>
+  <?= fmt("Authenticated as %s", WikiLink($user->getAuthenticatedId(), 'auto')) ?>
+  <?=$Sep?><?=$SignOutJS?>
+  <noscript><?= Button("submit:auth[logout]", _("Sign Out"), 'wikiaction') ?></noscript>
+<?php } else {
+    $SignInInput = HTML::input(array('type' => 'text',
+				     'name' => "auth[userid]",
+				     'size' => 12,
+				     'maxlength' => 256,
+				     'onchange' => "SignIn(this.form,false);"));
+    $SignInInput->addTooltip(_("Enter your UserId to sign in"));
+    $userid = $user->getId();
+    if ($user->isSignedIn()) {
+        echo sprintf(_("You are signed but not authenticated as %s. "), 
+		   asXml(HTML::a(array(
+				       'href'=>'#',
+				       'title' => sprintf(_("Click to authenticate as %s"),$userid),
+				       'onclick'=>'SignIn(document.forms["'.$FORMNAME.'"],"'.$userid.'");'),
+				 $userid)));
+    }
+    $editing_policy = (defined('EDITING_POLICY') and $request->_dbi->isWikiPage(EDITING_POLICY));
+    $SignInJS = JavaScript('
+     function SignIn(form,userid) {'.($editing_policy ? '
+      if (window.focus) {
+        window.open("' . WikiUrl(EDITING_POLICY) . '",<!-- url -->
+                    "PleaseReadThisFirst",<!-- window name -->
+                    "width=600,height=430,scrollbars=yes,resizable=yes,toolbar=yes");
+      }':'').'
+      if (userid) {
+        form.elements["auth[userid]"].value = userid;
+      }
+      form.submit();
+    }');
+?>
+  <?= $SignInJS ?>
+  <?= Button("submit:auth[login]", _("Sign in as:"), 'wikiaction')?>
+  <?= $SignInInput ?>
+<?php /* // sf.net bug #950841 "Sign In:" button appears twice
+  <noscript>
+    <?= Button("submit:auth[login]", _("Sign in as:"), 'wikiaction')?>
+  </noscript>
+*/ ?>
+<?php } ?>
+<?php if (empty($NOFORM)) { ?>
+  </form>
+<?php } ?>

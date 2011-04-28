@@ -1,0 +1,7 @@
+@LOG_DIR@/bounce @LOG_DIR@/digest @LOG_DIR@/error @LOG_DIR@/post @LOG_DIR@/smtp @LOG_DIR@/smtp-failure @LOG_DIR@/qrunner @LOG_DIR@/locks @LOG_DIR@/fromusenet @LOG_DIR@/subscribe @LOG_DIR@/vette {
+    missingok
+    sharedscripts
+    postrotate
+        @MMDIR@/bin/mailmanctl reopen >/dev/null 2>&1 || true
+    endscript
+}

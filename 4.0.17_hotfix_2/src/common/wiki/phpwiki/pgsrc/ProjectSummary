@@ -1,0 +1,12 @@
+Date: Mon, 12 Apr 2004 17:28:55 -0500
+Mime-Version: 1.0 (Produced by PhpWiki 1.3.10pre)
+X-Rcs-Id: $Id: ProjectSummary,v 1.1 2004/04/12 18:11:31 rurban Exp $
+Content-Type: application/x-phpwiki;
+  pagename=ProjectSummary;
+  pgsrc_version="2 $Revision: 1.1 $";
+  flags=PAGE_LOCKED;
+  markup=2;
+  charset=iso-8859-1
+Content-Transfer-Encoding: binary
+
+<?plugin RssFeed url=http://sourceforge.net/export/rss2_projsummary.php?group_id=6121 ?>

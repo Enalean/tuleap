@@ -1,0 +1,360 @@
+
+Using PhpWiki 1.3 with Mac OS X / Darwin
+
+PhpWiki works quite well and retains almost complete functionality
+when used with a default installation of Mac OS X 10.1 (or greater),
+with only a few minor exceptions as noted below. Setting up a database
+for the Wiki backend is probably the most difficult part of the
+PhpWiki installation as it will require use of the Terminal utility;
+therefore it is recommended that you at least have some familiarity
+with the unix command prompt. However, the setup is straightforward
+and you should be able to complete the install by following the
+instructions in the INSTALL document included with the PhpWiki
+download.
+
+If you intend to compile the required database software or PHP module
+yourself you should download and install the Developer tools from
+Apple, which includes the necessary cc compiler, and at least
+temporarily activate the superuser (root) account. The steps necessary
+to do this are relatively more complicated and are beyond the scope of
+this document.
+
+In any case you may find Project Builder to be an attractive
+alternative to TextEdit, especially if you are intent on heavily
+customizing PhpWiki, working with PHP or doing any other code
+development. Among other niceties it provides multiple undos (even
+beyond the last file save), line numbering and syntax coloring;
+however it doesn't always properly handle coloring for strangely
+nested \"escaped quotes\" which are frequently called for in PHP when
+generating HTML code.  \\" <--(kludge for broken syntax coloring)
+
+Instructions for using Project Builder with PhpWiki can be found at
+the bottom of this document.
+
+
+Database
+--------
+
+A suitable database for PhpWiki is not included with Mac OS X 10.1. If
+you decide to use one of the more popular (and free) database packages
+such as mySQL or PostgreSQL with PhpWiki, fortunately there are
+precompiled versions of the software available. Some distributions
+even come with Mac OS X installers which will significantly reduce the
+amount of work you will have to do in the unix environment.
+
+The MySQL 3.23.46 binary installation works well with Mac OS X 10.1
+and PhpWiki. After you install and test mySQL follow the instructions
+given in INSTALL.mysql to prepare a new database for use with PhpWiki.
+
+
+Apache PHP Module
+-----------------
+
+The default PHP module for Apache as supplied by Apple does work with
+PhpWiki but is missing support for the zlib and GD libraries. Wiki
+will still produce a valid ZIP file when an administrator saves a ZIP
+dump of the database but it will not use any compression.
+
+If you want compressed ZIP dumps you will have to install a version of
+PHP which does support the zlib library, or compile PHP yourself and
+replace the default /usr/libexec/httpd/libphp4.so (part of the
+Apple-supplied Apache installation).
+
+PHP with GD library support is required to use "text2png", an
+experimental plugin for Wiki 1.3.
+
+PhpWiki 1.3 already knows where to find the required PEAR.php on Mac
+OS X systems. However if you need to use PEAR with other PHP
+applications, edit or create the file /usr/local/lib/php.ini then add
+the following line:
+
+include_path = ".:/System/Library/PHP";
+
+If you compiled a version of PHP yourself (perhaps newer than the
+4.0.6 version included by Apple) the path will already be included in
+the php.ini file. In that case you shouldn't have to change the path,
+unless you installed PHP into a location other than the default
+/usr/local/ prefix.
+
+
+Obtaining and Installing mySQL and libphp4.so
+---------------------------------------------
+
+Mark Liyanage has graciously provided precompiled Mac OS X versions of
+mySQL, an updated PHP module for Apache and some installation
+instructions on his web site. He has also written some tips if you
+want to compile these programs for yourself.
+
+    <http://www.entropy.ch/software/macosx/>
+
+Note that whether you use the built-in PHP module or another PHP
+module, it must be activated in Apache's httpd.conf before you can use
+PHP. Take a look at Mark's PHP installation instructions or read the
+Apache documentation for more information.
+
+A good place to find other distributions of mySQL or PostgreSQL which
+can be used with Mac OS X are listed at:
+
+    <http://versiontracker.com/macosx/>
+    <http://fink.sourceforge.net/>
+
+PHP 4.1 and Mac OS X
+--------------------
+
+The version of PHP 4.1 from Mark Liyanage's web site requires an
+updated PEAR library. PhpWiki seems to work anyway but it will produce
+warnings about a depreciated user function with each page load.
+
+1.  Move the current contents of '/System/Library/PHP' into a backup
+    folder, such as '/System/Library/PHP/PEAR-4.0.6'.
+
+2.  Take the contents of the 'pear' folder from the official PHP 4.1
+    tarball (php-4.1.0.tar.gz) and move it into '/System/Library/PHP'.
+
+
+PhpWiki Configuration Notes
+---------------------------
+
+Move the phpwiki folder into the directory used by the web server. In
+Mac OS X 10.1 this folder will be "/Library/WebServer/Documents"
+(unless you previously changed it to somewhere else in the config file
+"/private/etc/httpd/httpd.conf").
+
+Follow the generalized installation instructions described in INSTALL
+but with the changes to sections 1 and 2 listed below.
+
+Section 1
+
+The Mac OS X Apache web server runs as user "www" and this works fine
+with PhpWiki so long as "Everyone" has at least read-only access in
+the phpwiki folder's Get Info.
+
+If you want to perform serial dumps instead of ZIP dumps you need to
+set at least one directory to be accessible read-write by the http
+server. The easiest solution is probably to create a new folder called
+"dumps" inside the phpwiki folder, then give the user "www" read-write
+access to it in the terminal:
+
+sudo chown www:www /System/Library/phpwiki/dumps
+sudo chmod u+wrx /System/Library/phpwiki/dumps
+
+Section 2
+
+A few lines need to be inserted into Apache's configuration in order
+to use "nice" URLs with PhpWiki such as:
+
+    "http://somehost/wiki/GoodStyle"
+
+Open the terminal and type in the following to edit the web server
+configuration file (enter your administration password when prompted):
+
+sudo pico /etc/httpd/httpd.conf
+
+Scroll down to the <IfModule mod-alias.c> section. Copy the comment
+line "#PhpWiki 1.3 aliases" and the four lines below it, then paste it
+into the mod_alias section as shown below.
+
+<IfModule mod_alias.c>
+
+    #
+    # Note that if you include a trailing / on fakename then the server will
+    # require it to be present in the URL.  So "/icons" isn't aliased in this
+    # example, only "/icons/".  If the fakename is slash-terminated, then the 
+    # realname must also be slash terminated, and if the fakename omits the 
+    # trailing slash, the realname must also omit it.
+    #
+    Alias /icons/ "/usr/share/httpd/icons/"
+
+#PhpWiki 1.3 aliases
+    Alias /wiki/themes/ "/Library/WebServer/Documents/phpwiki/themes/"
+    Alias /wiki/themes  "/Library/WebServer/Documents/phpwiki/themes"
+    Alias /wiki/favicon.ico "/Library/WebServer/Documents/phpwiki/favicon.ico"
+    Alias /wiki/ "/Library/WebServer/Documents/phpwiki/index.php/"
+    Alias /wiki  "/Library/WebServer/Documents/phpwiki/index.php"
+
+
+To save your changes and exit, press 'control-x', then 'y' followed by
+the 'return' key.
+
+Restart the Web Sharing server from the System Preferences "Sharing"
+control panel or from the terminal:
+
+sudo apachectl graceful
+
+Next, edit the following lines in part five of index.php to match the
+following:
+
+define('DATA_PATH', '/wiki');
+define('USE_PATH_INFO', true);
+define('VIRTUAL_PATH', '/wiki');
+
+Section 3
+
+To retain your PhpWiki logs between system restarts you should specify
+a non-temporary directory. I recommend you use the same folder where
+the web-server stores it's logs. Change the following (line 73) in
+index.php from:
+
+define('ACCESS_LOG', '/tmp/wiki_access_log');
+
+to something like:
+
+define('ACCESS_LOG', '/private/var/log/httpd/wiki_access.log');
+
+Note that the automatic /etc/daily and weekly cron cleanup routines
+will not touch the Wiki log file--even if it is in the same directory
+as the httpd logs--it will be up to you to Trash it once in a while or
+write your own /etc/daily.local file to include it as part of a server
+log rotation.
+
+The web server must have write access to the log file:
+
+    sudo chown www /private/var/log/httpd/wiki_access.log
+
+
+Using Apple's Project Builder with PhpWiki
+------------------------------------------
+
+A PB project file is available on the SourceForge CVS server to allow
+you to easily edit PhpWiki's source code using Apple's Project
+Builder. PB 2.1 (Dec 2002 DevTools) is recommended. If you have not
+yet updated to at least PB 1.1.1 (Dec 2001 DevTools) it is highly
+recommended you do so because the PhpWiki source are written in
+ISO-8859-1, and some of the bug fixes are pertinent to file encoding.
+
+The older PB 1.1 has some bugs which makes it impossible to select the
+correct character encoding in the GUI for any pre-existing source code
+files. By using this project file you will find the PhpWiki source
+files are already preset to use the correct ISO-8859-1 (Western
+Latin-1) encoding.
+
+Also by using the project file, if you are updating or adding a
+tranlastion to the './phpwiki/locale/po/' files, you do not have to
+run 'make' from the terminal window. The Build Target settings have
+been preconfigured to automatically build the project with a "legacy
+Makefile", by invoking '/usr/bin/gnumake' in the folder
+'./phpwiki/locale'. Just click the build button in the toolbar.
+
+To download the phpwiki.pbxproj bundle, use CVS to checkout the module
+named "phpwiki.pbxproj" then place it into the same folder which
+contains your "phpwiki" folder.
+
+
+How to use SSH with Project Builder
+-----------------------------------
+
+To use the CVS functions in PB, the phpwiki folder itself must have
+been checked out with CVS (i.e. the 'CVS' folders within each
+subdirectory of the phpwiki source are required by PB).
+
+Project Builder 1.1.1 (December 2001 Dev Tools) can be used with
+SourceForge's CVS but a little work is needed to get it set up the
+first time. The following instructions were based on a tip from
+macosxhints.com.
+
+Preparation
+
+Make sure that your ssh keys have been uploaded to your account at
+SourceForge and that you can sucessfully ssh into your account. Next,
+ensure that you can check out your project from SourceForge using the
+unix command-line based CVS tools provided by Mac OS X.
+
+Instructions
+
+1.  Download and install "keychain" from:
+
+    <http://www.gentoo.org/projects/keychain.html>
+
+Keychain is also available via the Fink package manager.
+
+The Keychain script acts as a front-end to ssh-agent, allowing you to
+easily have one long-running ssh-agent process per system, rather than
+per login session. This dramatically reduces the number of times you
+need to enter your passphrase, from once per new terminal window
+session to once every time your local machine is rebooted. It also
+allows you to use Project Builder with SSH instead of RSH. SSH is
+required if you want to commit files to a CVS repository at
+SourceForge.
+
+2.  If you use the default tcsh shell or csh, add the following to your
+    .cshrc file:
+
+setenv CVS_RSH 'ssh'
+alias pb 'open -a /Developer/Applications/Project\ Builder.app '
+# Alias to servers via SSH
+alias sshsf 'ssh mysfuserid@phpwiki.sourceforge.net'
+
+    Also add the following to your ~/.login file:
+
+# Keychain is an OpenSSH key manager
+# This will add my SSH1 and SSH2 key
+# Use '/sw/bin/keychain' for a fink-installed keychain
+/usr/bin/keychain ~/.ssh/id_rsa ~/.ssh/id_dsa
+source ~/.keychain/${HOST}-csh
+
+
+    If you use bash instead, add following lines to the ~/.bashrc file:
+
+CVS_RSH=ssh; EXPORT CVS_RSH
+alias pb='open -a /Developer/Applications/Project\ Builder.app '
+# Alias to servers via SSH
+alias sshsf='ssh mysfuserid@phpwiki.sourceforge.net'
+
+    Bash users also add the following to your ~/.login file:
+
+# Keychain is an OpenSSH key manager
+# This will add my SSH1 and SSH2 key
+/usr/bin/keychain ~/.ssh/id_rsa ~/.ssh/id_dsa
+source ~/.keychain/${HOSTNAME}-sh
+
+
+3.  Close the terminal window then open a new one. Keychain will
+    activate ssh-agent which will ask for your ssh key password. It
+    keeps running in the background and won't ask for your password
+    again until you log out or restart.
+
+4.  From now on, YOU MUST open Project Builder from the Terminal shell
+    for it's CVS to work with SSH. This is why we created a command
+    alias in .cshrc to launch Project Builder. If it is already
+    running because you double-clicked the PB icon, quit it, then
+    launch it from the terminal by typing pb. <em>Once PB is running
+    you can safely double-click a project file to open it</em>.
+
+Using the above method, ProjectBuilder will successfully connect to
+the Sourceforge CVS with SSH. Any other server which requires cvs
+connections to be made cia ssh instead of rsh should now work too.
+
+Note: Renaming /usr/bin/rsh to something else and replacing it with
+      ssh doesn't seem to work; Project Builder simply MUST be
+      launched from the command line for it to work at all with ssh.
+
+Hopefully Project Builder's integrated CVS will be improved in the
+future to directly support SSH. To let Apple know that full support
+for SSH in Project Builder is important, send an email to:
+
+      <macosx-tools-feedback@group.apple.com>
+
+
+Project Builder: Miscellaneous 
+------------------------------
+
+ProjectBuilder 1.1.1 has a new auto-indent feature but it does not yet
+recognise php files. You can create a temporary file with the filename
+suffix ".c" and drag it into the project. Paste your code into that temp
+file to use auto-indent, then copy your changes back to the original file
+when you're done.
+
+
+Emacs Users: You can add custom Alt-key bindings to Project Builder
+for some common Emacs stuff: *Note the wrapped url!
+
+<http://developer.apple.com/techpubs/macosx/Cocoa/TasksAndConcepts/
+ProgrammingTopics/TextDisplay/Tasks/TextDefaultsAndBindings.html>
+
+
+If you have problems after all of this, try contacting the
+phpwiki-talk list at phpwiki-talk@lists.sourceforge.net.
+
+Carsten Klapp <carstenklapp@users.sourceforge.net>
+
+$Id: INSTALL.MacOSX,v 1.17 2004/05/09 00:57:31 rurban Exp $

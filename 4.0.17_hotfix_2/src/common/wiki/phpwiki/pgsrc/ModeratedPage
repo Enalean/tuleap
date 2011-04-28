@@ -1,0 +1,77 @@
+Date: Fri, 19 Nov 2004 20:26:00 +0100
+Mime-Version: 1.0 (Produced by PhpWiki 1.3.11pre)
+X-Rcs-Id: $Id: ModeratedPage,v 1.3 2004/11/24 10:00:59 rurban Exp $
+Content-Type: application/x-phpwiki;
+  pagename=ModeratedPage;
+  pgsrc_version="2 $Revision: 1.3 $";
+  flags="LOCKED";
+  markup=2;
+  charset=iso-8859-1
+Content-Transfer-Encoding: binary
+
+<?plugin ModeratedPage ?>
+
+----
+
+!!! What is a ModeratedPage?
+
+A ModeratedPage is a page-internal setting, which restricts certain actions on certain pages. 
+The requested action and page is stored internally and an email is sent to the moderators
+described in the linked and locked ModeratedPage action page. 
+Any moderator may approve or reject the action by simply clicking an url. 
+When approving the action, the requested action (edit, rename, ...) is performed. 
+
+In both cases the author is notified, so it's recommended for the
+moderator to click on either the approve or reject links in the moderation email. 
+In case of multiple moderators: first comes, first serves.
+
+!!! How to enable ModeratedPage on a single page?
+
+* Check the status of this action page, esp. the moderators in the
+  plugin line, if they had their emails stored in their
+  UserPreferences, and if the action page is locked.
+* Add a link to this action page in the page(s) in question.
+* Save the page.
+* Lock the page to actually change the moderation status. You may want to unlock it then.
+
+!!! How to disable ModeratedPage on a single page?
+
+* Remove the link to this action page in the page(s) in question.
+* Save the page.
+* Lock the page to actually change the moderation status. You may want to unlock it then.
+
+!!! Plugin Arguments
+
+* moderators: comma seperated list of registered usernames or groups.
+  Each user should have his email defined in his prefs. Default: "Administrators" or 
+  <?plugin SystemInfo ADMIN_USER ?>
+* requirelevel: one of 0, 1, 2 or 10 on which moderation is used. Default: false (use requireaccess instead)
+* requireaccess: comma separated list of access perms, on which the moderation is used
+  "view,edit,create,list,remove,change"
+  Default: edit,remove,change
+
+!!! How does it work internally?
+
+You need to lock the page additionally, so that the link parser performs 
+some magic whether the ModeratedPage link is present or not, for efficiency 
+reasons. It can be unlocked again, and even the ModeratedPage link may be removed. 
+The status will only be changed on the *lock* action, whether the ModeratedPage 
+link is present or not.
+
+The moderation status is stored in each page in question. 
+Each moderated action is stored in the page also, together with a randomly
+created permission key to allow Grant by a simple external unauthorized request. 
+There's no timeout on moderated actions, so the actions may stack up. 
+The delayed actions may be performed in any order, there's no strict ordering to 
+follow for the moderator.
+
+!!! How to enable ModeratedPage on multiple/all pages?
+
+If you enable the config option ENABLE_MODERATEDPAGE_ALL, the page moderation status on 
+every page is automatically set to check this action page ModeratedPage.
+
+There may come another administrative plugin to change the moderation 
+status on selected pages.
+
+-----
+PhpWikiDocumentation WikiPlugin

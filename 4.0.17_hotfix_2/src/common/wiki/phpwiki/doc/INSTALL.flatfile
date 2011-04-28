@@ -1,0 +1,139 @@
+If you cannot run PhpWiki on top of a relational database like
+MySQL or Postgresql, and your system does not support DBA files
+or (worse) has a broken implementation like NDBM on Solaris or 
+GDBM on Linux, then a flat file Wiki should work for you. 
+
+Installation is similar to using a DBA file for storing the pages.
+You should read the main INSTALL file before this one (it's not long
+and complicated so go ahead and we'll wait for you right here).
+
+INSTALLATION NOTES for 1.3
+
+Set DATABASE_TYPE = file in config/config.ini,
+check DATABASE_DIRECTORY not to start with /tmp,
+and fire up the wiki url in your browser.
+The webserver will then start to create this directory with 
+the correct permissions and populate the database.
+
+INSTALLATION NOTES for 1.2
+
+First, edit lib/config.php and set the database to "file":
+
+   $WhichDatabase = 'file'; // use one of "dbm", "mysql", "pgsql", "msql",
+			    // or "file"
+
+
+Now, the key thing is you need a directory that the web server can 
+read and write to. This is where it will store current and archived
+pages.
+
+If you have root access the next section applies to you. If you don't
+have root access, skip down to the section "I DON'T HAVE ROOT ACCESS"
+to see what options you have.
+
+Choose where you want to have the pages stored; on my system I put
+them in a directory under the PhpWiki root directory. That is, I
+installed my PhpWiki in /home/swain/public_html/flatfiletest/phpwiki.
+I created a directory called "pages" like this:
+
+[root@localhost phpwiki]# mkdir pages
+
+This creates a new directory:
+
+[swain@localhost phpwiki]$ ls -l
+total 65
+-rw-r--r--    1 swain    swain        1776 Dec 22 16:10 CREDITS
+-rw-r--r--    1 swain    swain        6323 Dec 12 16:53 DBLIB.txt
+-rw-r--r--    1 swain    swain       10373 Nov  5 22:19 HISTORY
+-rw-r--r--    1 swain    swain        3241 Oct  8 15:08 INSTALL
+-rw-r--r--    1 swain    swain        1241 Oct  8 14:12 INSTALL.mSQL
+-rw-r--r--    1 swain    swain        1584 Oct  8 14:12 INSTALL.mysql
+-rw-r--r--    1 swain    swain        2001 Oct  8 15:19 INSTALL.pgsql
+-rw-r--r--    1 swain    swain       18106 Jun  2  2000 LICENSE
+-rw-r--r--    1 swain    swain        2873 Dec 12 16:24 README
+drwxrwxr-x    2 swain    swain        1024 Jan  1 18:46 admin
+-rw-r--r--    1 swain    swain        2366 Nov 13 05:59 admin.php
+drwxrwxr-x    2 swain    swain        1024 Jan  1 18:46 images
+-rw-r--r--    1 swain    swain        1305 Nov  8 10:34 index.php
+drwxrwxr-x    2 swain    swain        1024 Jan  3 22:44 lib
+drwxrwxr-x    6 swain    swain        1024 Jan  1 18:46 locale
+drwxrwxr-x    4 swain    swain        1024 Jan  1 18:50 pages
+drwxrwxr-x    2 swain    swain        1024 Jan  1 18:46 pgsrc
+drwxrwxr-x    2 swain    swain        1024 Jan  1 18:46 schemas
+drwxrwxr-x    2 swain    swain        1024 Jan  1 18:46 templates
+
+Next, I'm going to change the owner of the directory. Your web server
+probably runs as user "nobody," so I log in as root and run the chown
+command:
+
+[swain@localhost phpwiki]$ su
+Password: 
+[root@localhost phpwiki]# chown nobody:nobody pages
+
+Now the directory is read/writable by "nobody" and should work
+fine. If your web server runs as a different user substitute the
+appropriate name.
+
+
+I DON'T HAVE ROOT ACCESS...
+
+If you do not have root access to your machine you are in a tougher
+situation. What you can do is give the directory read/write permission
+to anybody, but for security reasons this is a bad idea.
+
+The second thing you can do is have your systems administrator install
+PhpWiki for you, or at least follow the steps above to create a
+directory owned by the web server.
+
+Another solution is to let the web server create the directory for
+you. The drawback to this approach is that you won't be able to edit
+the files or copy them from the command line, but most people can live
+with this limitation. (This is how you would do it on SourceForge, by
+the way; they have a cron job that sweeps the filesystem every few
+hours looking for things that are set world writable and change the
+permission.) This will require you to TEMPORARILY make the phpwiki/
+directory world writable:
+
+cd ..
+chmod o+wr phpwiki
+cd phpwiki/
+
+and create a PHP file like this:
+
+
+<html>
+<head>
+<title>Make a directory</title>
+</head>
+
+<?
+
+   /* 
+      I created this to set up server-writable files
+      for the Wiki. You shouldn't have world writable files.
+   */
+
+   $int = mkdir("pages", 0775);
+   if ($int) { echo "mkdir returned $int (success)\n"; }
+
+?>
+</html>
+
+Put the file in the phpwiki/ directory and call it through a web
+browser. This should create a directory owned by the web server in the
+phpwiki/ directory. 
+
+IMPORTANT
+Now you need to restore the permissions of the phpwiki directory
+itself:
+
+cd ..
+chmod 755 phpwiki
+
+If you have problems after all of this, try contacting the
+phpwiki-talk list at phpwiki-talk@lists.sourceforge.net.
+
+Steve Wainstead
+swain@panix.com
+
+$Id: INSTALL.flatfile,v 1.2 2005/10/13 06:55:21 rurban Exp $

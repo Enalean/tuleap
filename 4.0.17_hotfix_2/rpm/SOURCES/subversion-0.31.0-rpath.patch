@@ -1,0 +1,28 @@
+
+Only pass -rpath $(libdir) on the link line when linking libraries,
+not programs.
+
+--- subversion-0.31.0/build/generator/gen_base.py.rpath
++++ subversion-0.31.0/build/generator/gen_base.py
+@@ -421,6 +421,9 @@
+     tfile = '%s-%s%s' % (name, cfg.version, extmap['lib', 'target'])
+     self.filename = os.path.join(self.path, tfile)
+ 
++    ### hmm. this is Makefile-specific
++    self.link_cmd = '$(LINK_LIB)'
++
+ class TargetApacheMod(TargetLib):
+ 
+   def __init__(self, name, options, cfg, extmap):
+--- subversion-0.31.0/Makefile.in.rpath
++++ subversion-0.31.0/Makefile.in
+@@ -183,7 +183,8 @@
+ COMPILE_JAVAHL_JAVAC = $(JAVAC) $(JAVAC_FLAGS)
+ COMPILE_JAVAHL_JAVAH = $(JAVAH)
+ 
+-LINK = $(LIBTOOL) $(LTFLAGS) --mode=link $(CC) $(LT_LDFLAGS) $(CFLAGS) $(LDFLAGS) -rpath $(libdir)
++LINK = $(LIBTOOL) $(LTFLAGS) --mode=link $(CC) $(LT_LDFLAGS) $(CFLAGS) $(LDFLAGS)
++LINK_LIB = $(LINK) -rpath $(libdir)
+ LINK_CXX = $(LIBTOOL) $(LTCXXFLAGS) --mode=link $(CXX) $(LT_LDFLAGS) $(CXXFLAGS) $(LDFLAGS) -rpath $(libdir)
+ 
+ # special link rule for mod_dav_svn

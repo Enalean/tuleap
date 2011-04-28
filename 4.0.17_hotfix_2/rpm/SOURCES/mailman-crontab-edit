@@ -1,0 +1,47 @@
+#!/usr/bin/python
+
+# This script inserts the mailman user name into the crontab entries after
+# the 5 time/date fields so that it can be installed under /etc/cron.d
+#
+# usage: mailman-crontab-edit [-s src_file] [-u mailman_user] [-d dst_file]
+# src_file defaults to stdin
+# mailman_user defaults to mailman
+# dst_file defaults to stdout
+
+import sys, re, getopt
+
+srcFile = None
+dstFile = None
+mmUser = None
+
+opts, args = getopt.getopt(sys.argv[1:], "s:d:u:")
+for o, a in opts:
+    if o == "-s":
+        srcFile = a
+    if o == "-d":
+        dstFile = a
+    if o == "-u":
+        mmUser = a
+
+if srcFile:
+    inFD = open(srcFile)
+else:
+    inFD = sys.stdin
+
+if dstFile:
+    outFD = open(dstFile, mode='w')
+else:
+    outFD = sys.stdout
+
+if not mmUser:
+    mmUser = "mailman"
+
+comment_re = re.compile(r'^\s*#')
+time_date_re = re.compile(r'(^\s*(\S+\s+){5,5})')
+
+for line in inFD:
+    if not comment_re.search(line):
+        match = time_date_re.search(line)
+        if match:
+            line = time_date_re.sub(r'\1 %s ' % mmUser, line)
+    print >>outFD, line,

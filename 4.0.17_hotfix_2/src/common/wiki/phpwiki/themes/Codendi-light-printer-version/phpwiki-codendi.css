@@ -1,0 +1,35 @@
+table.ServiceMenu {
+  width: 100%;
+
+  margin-top: 0px;
+  margin-bottom: 0px;
+  padding-top: 0px;
+  padding-bottom: 0px;
+}
+
+ul.ServiceMenu    {
+  margin-top: 0px;
+  list-style-type: none; 
+  padding: 0px;
+}
+
+ul.ServiceMenu li {
+  display: inline;
+  font-weight: bold;
+}
+
+ul.ServiceMenu li.current {
+  font-weight: bold;
+}
+
+ul.WikiEntries li {
+  padding-bottom: 0px;
+  margin-bottom: 0px;
+}
+
+ul.WikiEntries li p {
+  margin-top: 0px;
+  margin-bottom: 0px;
+  padding-bottom: 0px;
+  margin-bottom: 0px;
+}

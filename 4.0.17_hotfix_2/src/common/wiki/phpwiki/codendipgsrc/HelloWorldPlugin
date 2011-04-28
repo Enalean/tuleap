@@ -1,0 +1,85 @@
+Date: Sun, 4 Jul 2004 01:31:02 -0700
+Mime-Version: 1.0 (Produced by PhpWiki 1.3.5pre)
+X-Rcs-Id: $Id: HelloWorldPlugin,v 1.5 2004/07/04 08:44:08 rurban Exp $
+Content-Type: application/x-phpwiki;
+  pagename=HelloWorldPlugin;
+  pgsrc_version="2 $Revision: 1.5 $";
+  flags="";
+  markup=2;
+  charset=iso-8859-1
+Content-Transfer-Encoding: binary
+
+A simple example plugin.
+
+<?plugin HelloWorld salutation="Hello," name="WikiUser" ?>
+
+From the source of this page:
+
+<verbatim>
+<?plugin HelloWorld salutation="Hello," name="WikiUser" ?>
+</verbatim>
+
+-----
+PhpWiki's plugin architecture allows you to add custom page elements to your wiki. All you have to do is extend (subclass) the ~WikiPlugin class and create your output via the run() method, dependend on the Wiki- or Request arguments, 
+
+* either with the predefined HTML classes to create valid XHTML,
+* or by using templates, which are easier customizable, but generally more a mess to use and easier to create invalid XHTML.
+
+<?plugin PhpHighlight
+
+/**
+ * A simple demonstration WikiPlugin.
+ *
+ * Usage:
+ * <?plugin HelloWorld?&gt;
+ * <?plugin HelloWorld
+ *          salutation="Greetings, "
+ *          name=Wikimeister
+ * ? >
+ * <?plugin HelloWorld salutation=Hi ? >
+ * <?plugin HelloWorld name=WabiSabi ? >
+ */
+
+// Constants are defined before the class.
+if (!defined('THE_END'))
+    define('THE_END', "!");
+
+class WikiPlugin_HelloWorld
+extends WikiPlugin
+{
+    // Five required functions in a WikiPlugin.
+
+    function getName () {
+        return _("HelloWorld");
+    }
+
+    function getDescription () {
+        return _("Simple Sample Plugin");
+
+    }
+
+    function getVersion() {
+        return preg_replace("/[Revision: $]/", '',
+                            "\$Revision: 1.5 $");
+    }
+
+    // Establish default values for each of this plugin's arguments.
+    function getDefaultArguments() {
+        return array('salutation' => "Hello,",
+                     'name'       => "World");
+    }
+
+    function run($dbi, $argstr, $request) {
+        extract($this->getArgs($argstr, $request));
+
+        // Any text that is returned will not be further transformed,
+        // so use html where necessary.
+        $html = HTML::tt(fmt('%s: %s', $salutation, WikiLink($name, 'auto')),
+                         THE_END);
+        return $html;
+    }
+};
+?>
+-------------
+
+PhpWikiDocumentation WikiPlugin

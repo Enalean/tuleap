@@ -1,0 +1,87 @@
+<?php // -*-php-*- ?>
+<!-- $Id: online.tmpl,v 1.7 2005/04/02 15:13:45 rurban Exp $ -->
+<?php
+// Formatting and idea borrowed from postnuke.
+
+// We have two modes: 1. a simple "summary" block, and
+// 2. "detail" with a table of online users, date and current actions
+$header = _("Who Is Online");
+if ($MAX_ONLINE_TIME and $MAX_ONLINE_NUM)
+  $MAX_ONLINE_TIME = $WikiTheme->formatDateTime($MAX_ONLINE_TIME);
+?>
+
+<?php if ($mode == 'summary') {
+    if ($allow_detail) {
+      $url = WikiUrl($pagename,array("mode"=>"detail"));
+      $header = HTML::a(array('href'=>$url,'title'=>_("Switch to detailed list")),_("Who Is Online"));
+    }
+?>
+<table width="100%" cellpadding="2" cellspacing="1" border="0" class="forumline">
+  <tr><td class="cat" colspan="2"><?= $header ?></td></tr>
+  <tr><td class="row1" rowspan="3"><?= $ONLINE_ICON ?></td>
+      <td class="row1" class="gensmall"><?= fmt("Our users created a total of %d pages.",$NUM_PAGES) ?><br />
+	  <?= fmt("We have a total of %d registered users.",$NUM_USERS) ?><br />
+          <?= $NEWEST_USER ? fmt("The newest registered user is %s.",$NEWEST_USER) : ''?>
+          </td></tr>
+  <?php if ($SESSDATA_BOOL) { ?>
+  <tr><td class="row1" class="gensmall">
+          <?= fmt("In total there are %d user sessions online. :: Unique %d Registered and %d Guests",
+	          $NUM_ONLINE,$NUM_REGISTERED,$NUM_GUESTS) ?><br />
+          <?= $MAX_ONLINE_NUM ? fmt("Most users ever online was %d at %s.",$MAX_ONLINE_NUM,$MAX_ONLINE_TIME) : '' ?><br />
+          <?= fmt("Registered Users Online: ") ?>
+<?php 
+    $s='';
+    foreach ($REGISTERED as $user) {
+      $link = WikiLink($user['name']);
+      $s .= $link->asXML() . ", ";
+    }
+    if (!count($REGISTERED)) echo(htmlentities(_("<none>")));
+    else echo(substr($s,0,-2));
+?>
+<?php if (!empty($ADMINS) and $dispose_admin) { ?> 
+    <br />
+    <?= fmt("Admin is also online.") ?>
+<?php } ?>
+  </td></tr>
+  <tr><td class="row1" class="gensmall">
+    <?= fmt("This data is based on users active over the past %s.",$SESSION_TIME) ?><br />
+    </td></tr>
+  <?php } else { ?>
+  <tr><td class="row1" class="gensmall"><br />
+   <?= fmt("Sorry, no dynamic DB Session support.") ?><br />
+    </td></tr>
+  <?php } ?>
+</table>
+<?php } ?>
+
+<?php if ($mode == 'detail') {
+    $url = WikiUrl($pagename,array("mode"=>"summary"));
+    $header = HTML::a(array('href'=>$url,'title'=>_("Switch to summary")),_("Who Is Online"));
+?>
+<table width="100%" cellpadding="2" cellspacing="1" border="0" class="forumline">
+  <tr><td class="cat" colspan="3"><?= $header ?></td></tr>
+   <tr><td class="cat" colspan="3"><?= _("Registered Users") ?></td></tr>
+  <?php if (!empty($ADMINS) and $dispose_admin) { ?> 
+  <?php   foreach ($ADMINS as $user) { ?>
+  <tr><td class="row1" class="gensmall"><?= $user['name'] ?></td>
+      <td class="row1" class="gensmall"><?= $WikiTheme->formatDateTime($user['date']) ?></td>
+      <td class="row1" class="gensmall"><?= $user['action'].' '.$user['page'] ?></td>
+      </tr>
+  <?php   } ?>
+  <?php } ?>
+  <?php foreach ($REGISTERED as $user) { ?>
+  <tr><td class="row1" class="gensmall"><?= $user['name'] ?></td>
+      <td class="row1" class="gensmall"><?= $WikiTheme->formatDateTime($user['date']) ?></td>
+      <td class="row1" class="gensmall"><?= $user['action'].' '.$user['page'] ?></td>
+      </tr>
+  <?php } ?>
+   <tr><td class="cat" colspan="3"><?= _("Guests") ?></td></tr>
+  <?php foreach ($GUESTS as $user) { ?>
+  <tr><td class="row1" class="gensmall"><?= $user['name'] ?></td>
+      <td class="row1" class="gensmall"><?= $WikiTheme->formatDateTime($user['date']) ?></td>
+      <td class="row1" class="gensmall"><?= $user['action'].' '.$user['page'] ?></td>
+      </tr>
+  <?php } ?>
+</table>
+<?php } ?>
+<hr class="no-css" />

@@ -1,0 +1,17 @@
+Date: Fri, 19 Nov 2004 14:27:36 +0100
+Mime-Version: 1.0 (Produced by PhpWiki 1.3.11pre)
+X-Rcs-Id: $Id: AllUsers,v 1.5 2004/11/19 13:34:50 rurban Exp $
+Content-Type: application/x-phpwiki;
+  pagename=AllUsers;
+  pgsrc_version="2 $Revision: 1.5 $";
+  flags=PAGE_LOCKED;
+  markup=2;
+  charset=iso-8859-1
+Content-Transfer-Encoding: binary
+
+Here is a list of all users who have once successfully logged in, 
+created their own home page or have saved UserPreferences at least once.
+----
+<?plugin AllUsers?>
+----
+WikiPlugin PluginManager

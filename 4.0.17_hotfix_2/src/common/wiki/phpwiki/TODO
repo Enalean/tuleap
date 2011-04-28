@@ -1,0 +1,163 @@
+2006-03-07 19:54:31 rurban
+TODO for 1.3.13:
+architecture:
+* finish moacdropdown integration (xmlrpc)
+* the new Mailer class
+* maybe evaluate other Template solutions (Smarty or regex replacements)
+* add xml syntax for plugins: 
+  <IncludePagesPlugin pages=<!plugin-list BackLinks !> />
+  <BackLinkPlugin include_self=false />
+* SQL-Schema: add relation to link table, add relation to getPageLinks() extractor
+
+new:
+* finish ModeratedPages
+* WYSIWYG (htmlarea3 + tinymce) integration into EditToolbar
+* HtmlParser and importer plugins (word, excel, html, interwiki)
+* SemanticWeb link parser+db update, plugins: SemanticRelations, SemanticSearch
+* TrackBack, PingBack services
+* Blog theme
+* FileInfoPlugin
+* lang: mapping
+* add Help: and Relation: interwiki map entries (via upgrade also)
+
+fixes:
+* pcre textsearch with multiple words: order-independency
+* SQL textsearch with multiple words: AND 
+  (the two new failing unit tests)
+* fix textsearch optimize with "word -word -word"
+* add Help/ prefix to all documention pages, via upgrade also.
+
+and the rest of the sf.net buglist
+
+-----------------------
+2006-??
+
+FixMe:
+* check why template expansion is so slow (xml parsing and printing, ob + exec)
+*   upgrade => %BODY% in MonoBook
+* more httpauth tests: enforced, server-side ok
+* test reported personalpage auth problems
+* fix random PearDB mysql connection loss (fixed?)
+* fix SystemInfoPlugin dump failure
+* fix jscalendar in sidebar and blog (fixed?)
+* ModeratedPage 3/3 (GET=>POST, Preview?)
+* fix configurator.php (fixed?)
+* pagedata_cache on PageGroupTest/subpage (fixed?)
+  wrong PhpWikiAdmin/Chown owner display
+* re-enable pagedata_cache->next iterator (?, mem test)
+
+Improvements:
+* collapse page change notification on LoadAny (80%, missing: )
+* restrict certain action to groups: RawHtml (could be a define)
+* db.timeout: force mysql.connect_timeout = 60
+
+Maybe (probably defer):
+* CalendarList/UnfoldSubpages/Blog changes should update links to the basepage.
+* Warn other editors
+* http://www.movabletype.org/docs/mttrackback.html, http://umsu.de/beta-blogger/
+* http://www.hixie.ch/specs/pingback/pingback, http://umsu.de/beta-blogger/
+* Other languages: check page for [de:pagename] pseudo-interwiki links?
+* pagerank algo: HITS http://www2002.org/CDROM/refereed/643/node1.html
+  FractalNavigation (pagetrail analysis)
+* fix more wikilens libs and plugins, layout improvements (header, sidebar include)
+* format=rdf and a new owl PageType (similar to InterWikiMap)
+  to statically define predicates used by PhpWiki:SemanticWeb
+  (semantically enriched links, like interwiki links).
+* SqlResult paging (finished?)
+* plugin\WikiAdminSetAclSimple, Chmod
+* plugin\NewUserWelcomePage.php (some better template solution)
+* plugin\SearchHighlight
+* logfile stuff:
+*   plugin\RecentReferrers
+*   WikiAccessRestrictions
+* SpamAssassinIntegration
+
+already done lately:
+* PgsrcTranslation slowness (update_locale?)
+* overlarge session data
+* handle empty DEFAULT_LANGUAGE: proper client detection
+* fix glob errors
+* display login page on "$action is disallowed on this wiki for user ..."
+* remove "Invalid username" warning on "sign in as" button click
+* themes/blog, BlogArchivesPlugin
+* test WikiPluginCached support for image maps and svg, swf, eps, ...
+  defer header logic
+* don't print php notices and warnings as red errors.
+  just green or grey
+* rewrite OldTextFormattingRules, AnciennesR%E8glesDeFormatage
+  for proper importing
+* PageChangeNotification other actions also (rename, remove).
+  better subject on create.
+* do all unit tests:
+  all langs, all db backends, all pages import and export
+* javascript search&replace
+* pdf button when an external html2pdf app is defined
+  (enabled at PhpWikiDemo)
+* enhanced WikiPluginCached (static, ondemand)
+* added LdapSearchPlugin 
+* more PageList options
+
+2004-11-10 20:25:13 rurban
+* optimize increaseHitCount, esp. for mysql.
+* prepend dirs to the include_path (phpwiki_dir for faster searches)
+* Pear_DB version logic (awful but needed)
+* fix broken ADODB quote
+* _extract_page_data simplification
+
+2004-11-10 16:24:58 rurban
+* requires newer Pear_DB (as the internal one): quote() uses now escapeSimple for strings
+* ACCESS_LOG_SQL: fix cause request not yet initialized
+* WikiDB: moved SQL specific methods upwards
+* new Pear_DB quoting: same as ADODB and as newer Pear_DB.
+  fixes all around: WikiGroup, WikiUserNew SQL methods, SQL logging
+
+2004-11-09 18:10:22 rurban
+* revert to the wikidb ref passing. there's no memory abuse there.
+* use new wikidb->_cache->_id_cache[] instead of wikidb->_iwpcache, to effectively
+  store page ids with getPageLinks (GleanDescription) of all existing pages, which 
+  are also needed at the rendering for linkExistingWikiWord().
+  pass options to pageiterator.
+  use this cache also for _get_pageid()
+  This saves about 8 SELECT count per page (num all pagelinks).
+* fix passing of all page fields to the pageiterator.
+* fix overlarge session data which got broken with the latest ACCESS_LOG_SQL changes
+
+1.3.11 Goals:
+
+    * fix more sf.net bugs and patches (90%)
+    * fix LDAP with USER_AUTH_POLICY=old (100%)
+    * ADODB lock and transaction fixes (50%)
+    * some more theme beautification, new crao and nuke theme, 
+      cut or split long sidebar links somehow (100%)
+    * add some basic Recommender engine to enable rating recommendations, 
+      fix metadata getAvg and test it. (100%)
+    * fix metadata RateIt methods and RateIt usergroups, (100%)
+    * rewrite WikiGroup to be current_user independent to be able 
+      to ask for group membership of any user. (100%)
+    * more action=upgrade (diffs, multi-page interface) (60%)
+    * finish PdfOutput plugin and button (80%)
+    * add editpage javascript toolbar (100%)
+    * try the php-internal soap extension, test SOAP, fix GooglePlugin+AmazonPlugin (0%)
+    * iniconfig helpers (Joby?) (0%)
+    * improve more plugins caching (90%)
+
+    * change remove_page in WikiDb API, so that RecentChanges displays it.
+      (just purge all revisions?)
+    * rename global $Theme to $WikiTheme (gforge nameclash) (100%)
+
+1.4.0 Goals:
+
+    * fix WikiAdminSetAcl (least common ACL denominator) (100%)
+    * enable ACL's in the mime dumps (100%)
+    * force strict PagePermissions on all plugins, which require now 
+      admin and some more administrative actions (90%)
+    * complete full paging support (limit=, prev/next buttons in PageList) (95%)
+      fix paging in MostPopular
+    * fix possibly remaining WikiGroup problems (100%)
+    * fix possibly remaining RateIt problems (50%)
+    * finalize PdfOutput (0%)
+      external works fine
+    * finalize editpage javascript toolbar (80%)
+      fix search/replace bug (100%)
+    * finalize SOAP support (0%)
+    * better utf-8 support (50%)

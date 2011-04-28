@@ -1,0 +1,8 @@
+<?php
+
+$salome_dbhost = "localhost";
+$salome_dbuser = "salomeadm";
+$salome_dbpasswd = "%sys_salomedbpasswd%";
+$salome_dbname =  "salome";
+
+?>

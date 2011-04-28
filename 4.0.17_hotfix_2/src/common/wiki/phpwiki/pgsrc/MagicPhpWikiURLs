@@ -1,0 +1,134 @@
+Date: Wed, 27 Feb 2002 19:54:00 -0500
+Mime-Version: 1.0 (Produced by PhpWiki 1.3.3-jeffs-hacks)
+X-Rcs-Id: $Id: MagicPhpWikiURLs,v 1.13 2002/11/25 19:44:01 dairiki Exp $
+Content-Type: application/x-phpwiki;
+  pagename=MagicPhpWikiURLs;
+  flags=PAGE_LOCKED;
+  pgsrc_version="2 $Revision: 1.13 $";
+  markup=2;
+  charset=iso-8859-1
+Content-Transfer-Encoding: binary
+
+!!! About phpwiki: URLs
+
+A special type of URL is available for making links to perform
+administrative and other special functions in PhpWiki.  Here is a
+brief description of how they work.
+
+The basic syntax of a phpwiki: URL is
+
+<pre>
+__phpwiki:__''pagename''__?__''query-args''
+</pre>
+
+If _pagename_ is omitted it defaults to the current page.
+
+_Query-args_ should be a set of parameters in standard HTTP GET
+format.
+
+The "action=''x''" parameter should almost always be given.  It can be one of
+__browse__, __diff__, __edit__, __viewsource__,
+__zip__, __dumpserial__, __loadserial__,
+__remove__, __lock__, __unlock__,
+__login__, __logout__, __setprefs__ or __save__.
+The default action is __browse__.
+
+Some of the actions accept other parameters.
+
+__FullTextSearch__, __TitleSearch__:
+
+  Accepts __s__=search term, and __size__=input size.
+
+__edit__:
+
+  Accepts __version__.
+
+__remove__:
+
+  Accepts __verify__.
+
+__save__:
+
+  Accepts __editversion__, __minor_edit__, and  __content__.
+
+__setprefs__:
+
+  Accepts __edit_area_width__, __edit_area_height__.
+
+!! Writing Magic Links in Wiki Pages
+
+A magic link looks like:
+
+<pre>
+__~[__ ''text'' __|__ ''phpwiki-url'' __]__
+</pre>
+
+The "''text'' *|*" is optional but usually recommended.  If given it
+will provide the label for the link.
+
+The _phpwiki-url_ is a *phpwiki:* URL as described above.
+
+!Some examples
+
+<verbatim>
+[ Edit the SandBox | phpwiki:SandBox?action=edit ]
+</verbatim>
+will generate a link which will take you directly to editing the
+SandBox, like so: [Edit the SandBox | phpwiki:SandBox?action=edit].
+
+Other possibilites:
+* [ Diff the SandBox | phpwiki:SandBox?action=diff ],
+* [ Lock the HomePage | phpwiki:HomePage?action=lock ],
+* [ Get a Full Zip Dump | phpwiki:?action=zip&include=all ],
+* Search for [ Page titles containing 'wiki' | phpwiki:?action=TitleSearch&s=wiki ]
+
+!! Writing Magic Forms in Wiki Pages
+
+''__Note__: The old syntax for Magic forms is no longer supported.
+They are superseded by =<?plugin-form>=.''
+
+If the plugin is called using *<?plugin-form* instead of *<?plugin*
+and the plugin supports searching, then it will be rendered as a form.
+
+''size'':
+
+  If given, specifies the size of the input area.
+
+''s'':
+
+  Specifies the default value for the input.
+
+!Examples:
+
+A search plugin invoked with *<?plugin* instead of *<?plugin-form*
+simply inserts the search results of the plugin:
+
+<verbatim>
+<?plugin TitleSearch s=wiki noheader=true ?>
+</verbatim>
+
+Search results for Page titles containing 'wiki':
+
+<?plugin TitleSearch s=wiki noheader=true ?>
+
+<verbatim>
+<?plugin-form FullTextSearch ?>
+</verbatim>
+
+gives
+
+<?plugin-form FullTextSearch ?>
+
+While
+
+<verbatim>
+<?plugin-form TitleSearch formsize=12 ?>
+</verbatim>
+
+yields
+
+<?plugin-form TitleSearch formsize=12 ?>
+
+----
+
+PhpWikiDocumentation

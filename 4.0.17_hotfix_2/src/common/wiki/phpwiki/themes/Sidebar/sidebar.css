@@ -1,0 +1,199 @@
+/**
+ * $Id: sidebar.css,v 1.29 2005/02/04 13:25:07 rurban Exp $
+ *
+ * This incarnation of this stylesheet is a complete rewrite from the
+ * ground up.
+ * 
+ * It renders excellent with Mozilla and very good with IE5.1Mac.
+ * 
+ * No floats are used, for older versions of ie (which apparently hang).
+ *
+ * OmniWeb is totally useless with this stylesheet.
+ * This also has not yet been tested against NS4.
+ * 
+ */
+@import url("../default/phpwiki.css");
+
+/**
+ * General settings
+ */
+body {
+  background: #fffff0;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 85%; /* The default is too large. But enlarge monospace below */
+  margin: 0 0 0 0;
+}
+
+div.wikitext {
+  margin-left: 0.5em;
+  /* "paper" borders */
+  border-top:    1px solid #e8e6df;
+  border-left:   1px solid #e8e6df;
+  border-bottom: 1px solid #b2b2b2;
+  border-right:  1px solid #b2b2b2;
+}
+
+/** some border colors
+ ** to play with
+  #d3d2c8;
+  #e8e6df;
+  #6d6a5c;
+  #b3ae97;
+ **/
+div#logo img {
+  /*  position: fixed; */
+  left: 1ex;
+  top:  1ex;
+}
+/*
+div#clock {
+  position: fixed;
+  left: 0.7ex;
+  top:  31ex;
+}
+div#calendar {
+  position: fixed;
+  left:  0.7ex;
+  top:  31ex;
+}
+*/
+h1 {
+  /*  position: fixed; */
+  top: 0;
+  background: ivory;
+  padding-top:    0.5ex;
+  padding-bottom: 0.5ex;
+  padding-left:   0.25em;
+  width: 100%;
+  border-bottom: 2px solid black;
+}
+
+h1 a.backlinks { text-decoration: none; }
+
+/**
+ * Common toolbar settings
+ * Note that div.toolbar is used for other toolbars besides
+ * #navbar and #actionbar, such as in editpage and removepage
+ */
+#navbar hr, #actionbar hr { display: none; }
+#actionbuttons, #signin { line-height: 2.4ex; }
+#navbuttons input { margin-bottom: 0.5ex; }
+.sidebar { line-height: 1em; }
+/*#navbuttons { top: 5.5ex; }*/
+
+/* backlinks button */
+.sidebar a.wikiadmin, .sidebar a.wikiaction { 
+  border: 0;
+  margin: 0;
+  padding: 0;
+  -moz-appearance: none;
+  -moz-box-sizing: auto;
+  -moz-border-radius: 0;
+  background-color: #fff;
+}
+
+/**
+ * Action links
+ * bonus for css2 browsers
+ * localise with dynamic css?
+ */
+/*
+div#actionbuttons:before {
+  display: block;
+  content: "Actions";
+}
+*/
+/* div#actionbuttons { bottom: 10ex; } */
+
+/**
+ * Sign In
+ */
+/* div#signin { position: fixed; bottom: 0; } */
+div#signin { margin-bottom: 1ex; }
+
+/**
+ * Last edited
+ *
+ * Really the only thing left in in #actionbar
+   at this point is the date, everything else
+   has been plucked out. */
+p.editdate {
+  background: white;
+  padding: 0.25ex 0.5em;
+  border-top:  1px solid #e8e6df;
+  border-left: 1px solid #e8e6df;
+  border-bottom: 1px solid #d3d2c8;
+  border-right:  1px solid #e8e6df;
+
+  margin-left:  0.5em;
+  margin-right: 1em;
+  margin-top:   0.5ex;
+  margin-bottom: 0.5ex;
+}
+
+/*
+div#actionbar {
+  color: black;
+  background: ivory;
+  border-top: 1px solid #b2b2b2;
+  width: auto;
+  position: fixed;
+  left:  13em;
+  bottom: 0;
+  margin: 0;
+}
+*/
+
+/**
+ * Other
+ */
+.debug {
+  margin-left:  0.5em;
+  left: 0.5em;
+  /*position: fixed;
+  top: 42ex;
+  width: 13em; */
+  max-width: 13em; /* ie ignores this */
+}
+
+/*
+div#xhtml-validator { display: none; }
+ */
+
+div#xhtml-validator {
+  /*  position: fixed; */
+  right: 0.75em;
+  /*  top: 1ex; */
+}
+
+.clear-floats {
+  clear: both;
+}
+
+/* Black Links */
+div.box-title a, div.box-title a:visited, div.box-title a:link {
+  font-weight: normal;
+  text-decoration: none;
+  color: black;
+}
+div.box-title a:hover {
+  background-color: #def;
+}
+
+/* smaller sidebar links */
+div.box-data a, div.box-data a:visited, div.box-data a:link {
+  text-decoration: none;
+  color: black;
+  font-size: smaller;
+}
+
+div.box-data a:hover {
+  background-color: #def;
+}
+/* For emacs users
+ *
+ * Local Variables:
+ * mode: c
+ * c-file-style: cc-mode
+ * End:
+ */

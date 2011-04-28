@@ -1,0 +1,20 @@
+Date: Sun, 27 Jan 2002 17:28:55 -0500
+Mime-Version: 1.0 (Produced by PhpWiki 1.3.2-jeffs-hacks)
+X-Rcs-Id: $Id: HomePage,v 1.11 2004/04/12 17:42:02 rurban Exp $
+Content-Type: application/x-phpwiki;
+  pagename=HomePage;
+  pgsrc_version="2 $Revision: 1.11 $";
+  flags="";
+  markup=2;
+  charset=iso-8859-1
+Content-Transfer-Encoding: binary
+
+* What is a WikiWikiWeb? A description of this application.
+* Learn HowToUseWiki and learn about AddingPages.
+* Use the SandBox page to experiment with Wiki pages.
+* Please sign your name in RecentVisitors.
+* See RecentChanges for the latest page additions and changes.
+* Find out which pages are MostPopular.
+* Read the ReleaseNotes and RecentReleases.
+* Administer this wiki via PhpWikiAdministration.
+* See more PhpWikiDocumentation.

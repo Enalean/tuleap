@@ -1,0 +1,22 @@
+<!--
+//
+// Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+// This file is licensed under the GNU General Public License version 2. See the file COPYING.
+//
+-->
+<p>Nous souhaitons en savoir un peu plus sur votre projet. Toutes les
+informations saisies sur cette page seront visibles pour les
+utilisateurs de <?php print $GLOBALS['sys_name']; ?> une fois votre
+projet enregistré. Veuillez donc fournir des informations aussi
+précises que possible.
+
+<P>Si l'équipe <?php print $GLOBALS['sys_name']; ?> approuve votre
+projet, votre environnement de projet devra être uniquement utilisé à
+des fins correspondant à la description ci-dessous. Si les objectifs
+du projet devaient changer par la suite, il vous faudra procéder à la
+mise à jour de ces informations.
+
+<P><em>Remarque</em>&nbsp;: Le formattage de votre texte (saut de lignes)
+est préservé. Les URLs seront automatiquement transformés en liens
+hypertextes dans le texte final. <p><font color="red">*</font>&nbsp;: Saisie
+obligatoire</p> 

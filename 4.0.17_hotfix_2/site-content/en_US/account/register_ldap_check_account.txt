@@ -1,0 +1,13 @@
+<?php
+//
+// Codendi
+// Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+// http://www.codendi.com
+//
+// 
+//
+
+// The following script is used to make additional checks in the LDAP directory before creating a Codendi account.
+// It may be used to check that the account is not suspended, 
+
+?>

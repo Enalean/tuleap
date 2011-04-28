@@ -1,0 +1,47 @@
+Date: Sun, 4 Jul 2004 01:31:02 -0700
+Mime-Version: 1.0 (Produced by PhpWiki 1.3.8)
+X-Rcs-Id: $Id: CreateTocPlugin,v 1.4 2004/07/04 08:44:08 rurban Exp $
+Content-Type: application/x-phpwiki;
+  pagename=CreateTocPlugin;
+  pgsrc_version="2 $Revision: 1.4 $";
+  flags="";
+  markup=2;
+  charset=iso-8859-1
+Content-Transfer-Encoding: binary
+
+<?plugin CreateToc jshide||=1 ?>
+
+WikiPlugin to create a dynamical *Table Of Contents* of all headers. Since v1.3.8
+
+!! Usage
+<verbatim>
+     <?plugin CreateToc ?>
+     <?plugin CreateToc jshide||=1 with_toclink||=1 ?>
+</verbatim>
+
+!! Plugin Arguments
+__jshide__: |
+  Boolean if the TOC should be initially hidden and on click expanded. Default: 0
+__with_toclink__:  |
+  Boolean if headers should link back to the TOC. Default: 0
+__headers__:  |
+  Which headers to include.  Default: !!!,!!,!    1,2,3 also allowed
+__noheader__:  |
+  Boolean if the "Table of Contents" h2 header should be omitted. Default: 0
+__liststyle__:  |
+  dl or ol or ul. Default: dl
+__indentstr__:  |
+  Default: &nbsp;&nbsp;
+__pagename__:  |
+  TOC of which page? Default: current pagename
+
+!! Known Problems
+
+If any header contains a link or a ~WikiWord or non-word characters, ~CreateToc will print a warning and refuse to link this header.
+
+!! Examples
+
+See for example PhpWikiDemo:en/TextFormattingRules
+-------------
+
+PhpWikiDocumentation WikiPlugin

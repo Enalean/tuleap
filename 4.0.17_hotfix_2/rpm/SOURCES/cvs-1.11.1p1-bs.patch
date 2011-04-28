@@ -1,0 +1,11 @@
+--- cvs-1.11.1p1/src/sanity.sh.bs	Tue Jul 31 18:40:35 2001
++++ cvs-1.11.1p1/src/sanity.sh	Tue Jul 31 18:41:28 2001
+@@ -18,6 +18,8 @@
+ #
+ # Original Author: K. Richard Pixley
+ 
++exit 0
++
+ # usage:
+ exit_usage ()
+ {

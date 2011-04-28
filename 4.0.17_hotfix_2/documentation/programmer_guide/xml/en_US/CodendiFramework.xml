@@ -1,0 +1,565 @@
+<!--
+//
+// Copyright (c) Xerox Corporation, Codendi 2007-2008.
+// This file is licensed under the GNU General Public License version 2. See the file COPYING. 
+//
+// Originally written by Nicolas Terray 2005, Codendi Team, Xerox
+//
+-->
+<chapter id="CodendiFramework">
+	<title>&SYS_PRODUCT_NAME; Framework</title>
+	<section id="CodendiFramework_Introduction">
+		<title>Introduction</title>
+		<para>
+            In this chapter we will discuss about the CodendiFramework. 
+            It consists of small frameworks or packages. The dependencies between 
+            those packages are shown in the following picture:
+        </para>
+		<figure id="CodendiPackagesDependencies">
+			<title>Packages dependencies</title>
+			<mediaobject>
+				<imageobject>
+					<imagedata fileref="../../slides/en_US/CodendiPackagesDependencies.png" format="PNG"/>
+				</imageobject>
+			</mediaobject>
+		</figure>
+		<para>
+			Please remember to follow those principles, among others:
+			<itemizedlist>
+				<listitem>
+					<simpara><emphasis role="bold">ADP:</emphasis> Acyclic Dependencies Principle</simpara>
+					<simpara>The dependency structure between packages must not contain cyclic dependencies.</simpara>
+					<simpara><ulink url="http://c2.com/cgi/wiki?AcyclicDependenciesPrinciple">http://c2.com/cgi/wiki?AcyclicDependenciesPrinciple</ulink></simpara>
+				</listitem>
+				<listitem>
+					<simpara><emphasis role="bold">SDP:</emphasis> Stable Dependencies Principle</simpara>
+					<simpara>The dependencies between packages should be in the direction of the stability of the packages. A package should only depend upon packages that are more stable than it is.</simpara>
+					<simpara><ulink url="http://c2.com/cgi/wiki?StableDependenciesPrinciple">http://c2.com/cgi/wiki?StableDependenciesPrinciple</ulink></simpara>
+				</listitem>
+				<listitem>
+					<simpara><emphasis role="bold">SAP:</emphasis> Stable Abstractions Principle</simpara>
+					<simpara>Packages that are maximally stable should be maximally abstract. Unstable packages should be concrete. The abstractness of a package should be in proportion to its stability.</simpara>
+					<simpara><ulink url="http://c2.com/cgi/wiki?StableAbstractionsPrinciple">http://c2.com/cgi/wiki?StableAbstractionsPrinciple</ulink></simpara>
+				</listitem>
+			</itemizedlist>
+		</para>
+	</section>
+	<section id="Collections">
+		<title>Collections</title>
+		<figure id="CodendiCollectionFramework">
+			<title>Collection Framework</title>
+			<mediaobject>
+				<imageobject>
+					<imagedata fileref="../../slides/en_US/CodendiCollectionFramework.png" format="PNG"/>
+				</imageobject>
+				
+			</mediaobject>
+		</figure>
+		<para>Please consult the corresponding unit tests to have example of use.</para>
+	</section>
+	<section id="DataAccessLayer">
+		<title>Data Access Layer</title>
+		<figure id="CodendiDAOFramework">
+			<title>Data Access Layer Framework</title>
+			<mediaobject>
+				<imageobject>
+					<imagedata fileref="../../slides/en_US/CodendiDAOFramework.png" format="PNG"/>
+				</imageobject>
+			</mediaobject>
+		</figure>
+		<para>The Data Access Object pattern is a strategy for constructing a single API which encapsulates all data fetching operations (such as SQL queries), allowing our application logic to be a client to that API without needing to be concerned with SQL syntax.</para>
+		<para>The Data Access Object pattern provides a useful way to abstract data fetching operations. Here, the implementation is simple, however it is sufficient to add a layer of abstraction to seperate our application logic from the underlying database.</para>
+		<itemizedlist>
+			<listitem><simpara>The class DataAccess deals with connecting to MySQL and performing functions like <programlisting>mysql_query()</programlisting>.</simpara></listitem>
+			<listitem><simpara>DataAccess returns an instance of the DataAccessResult class, which we can use to fetch rows from the query.</simpara></listitem>
+			<listitem><simpara>DataAcessObject class provides only two methods, the first for retrieving data (SELECT statement) which will return the instance for DataAccessResult from the DataAccess class. The second method is used for anything that changes the database, i.e. INSERT, UPDATE and DELETE.</simpara></listitem>
+			<listitem><simpara>To access a table, you have to provide a specific Data Access Object which extends the Dao class, and add methods to retrieve or update your data. For exemple:<programlisting><![CDATA[
+function & searchByID ($id) {
+	$sql = sprintf('SELECT * FROM log WHERE id = ', 
+		$this->da->quoteSmart($id));
+	return $this->retrieve($sql);
+}
+]]></programlisting>
+			</simpara></listitem>
+                        <listitem><simpara>DataAccess provide a method <programlisting>quoteSmart</programlisting> which escape malicious characters (from sql engine point of view) from a string and add quotes around if needed (numerics do not need quotes). Please note that the string should not have been already escaped. This method is mandatory when inserting data from request, and should be used in association with the HTTPRequest wrapper.</simpara></listitem>
+		</itemizedlist>
+	</section>
+	<section id="Events">
+		<title>Events</title>
+		<figure id="CodendiEventFramework">
+			<title>Event Framework</title>
+			<mediaobject>
+				<imageobject>
+					<imagedata fileref="../../slides/en_US/CodendiEventFramework.png" format="PNG"/>
+				</imageobject>
+			</mediaobject>
+		</figure>
+		<section>
+			<title>How to get an instance of EventManager ?</title>
+			<para>EventManager follows Singleton Pattern. Therefore you <emphasis role="bold">have to</emphasis> do:</para>
+			<programlisting><![CDATA[$em =& EventManager::instance();]]></programlisting>
+		</section>
+		<section>
+			<title>How to fire an event ?</title>
+			<programlisting><![CDATA[$em->processEvent('the_event', $params);]]></programlisting>
+		</section>
+		<section>
+			<title>How to listen to an event ?</title>
+			<programlisting><![CDATA[$em->addListener('the_event', $event_listener, 'callback', $recallEvent = true, $priority);]]></programlisting>
+			<para>When event 'the_event' will be processed, EventManager will wake up the listener by doing:</para>
+			<programlisting><![CDATA[$event_listener->callback('the_event', $params);]]></programlisting>
+		</section>
+		<section>
+			<title>What is <literal>priority</literal> ?</title>
+			<para>EventManager fire events to listeners. The order depends on listener's priority.</para>
+			<para>Between two listeners A and B, if priorities are equal, there is no specific order. Maybe FIFO, however it depends on implementation.</para>
+			<para>If priority of A is bigger than priority of B (<literal>A.priority > B.priority</literal>) then A is waked up before B.</para>
+		</section>
+	</section>
+	<section id="Plugins">
+		<title>Plugins</title>
+		<para>In this chapter, we will refer to the plugin named <emphasis>template</emphasis>, which is part of &SYS_PRODUCT_NAME; and which you can fund in the <literal>plugins</literal> directory.</para>
+		<section id="PluginLifeCycle">
+			<title>Plugin Life Cycle</title>
+			<itemizedlist>
+				<listitem><simpara>Develop</simpara></listitem>
+				<listitem><simpara>Install</simpara></listitem>
+				<listitem><simpara>Execute</simpara></listitem>
+				<listitem><simpara>Uninstall</simpara></listitem>
+			</itemizedlist>
+		</section>
+		<section id="Develop">
+			<title>Develop</title>
+			<section>
+				<title>Naming Convention</title>
+				<para>The short-name of a plugin must be unique and composed of lowercase letters and digits only, because it is going to be used in table names and we don't want namespace conflicts.</para>
+				<para>The main class of the plugin must be composed of the short-name followed by "Plugin.class.php" e.g: "templatePlugin.class.php".</para>
+				<para>SQL tables of the plugin must follow this pattern <literal><![CDATA[plugin_<plugin-shortname>_<table-name>]]></literal> to avoid conflicts.</para>
+			</section>
+			<section>
+				<title>Plugin Directory Structure</title>
+				<para>In <literal>plugins/template/</literal>:
+					<itemizedlist>
+						<listitem><simpara><emphasis role="bold">cgi-bin</emphasis>: cgi scripts. Contains cgi used by the plugin. It will be accessible by the following URI: http://example.com/plugins/template/cgi-bin/,</simpara></listitem>
+						<listitem><simpara><emphasis role="bold">db</emphasis>: database scripts. Contains among others install.sql and uninstall.sql (not mandatory),</simpara></listitem>
+						<listitem><simpara><emphasis role="bold">etc</emphasis>: scripts to configure/customize the plugin. The directory will be copied in <literal>/etc/codendi/plugins/template/etc</literal>,</simpara></listitem>
+						<listitem><simpara><emphasis role="bold">include</emphasis>: contains PHP classes, including the main class of the plugin</simpara>,</listitem>
+						<listitem><simpara><emphasis role="bold">site-content</emphasis>: the repository for plugin specific text and messages. This can be customized with <literal>/etc/codendi/plugins/template/site-content/</literal>,</simpara></listitem>
+						<listitem><simpara><emphasis role="bold">www</emphasis>: web space of the plugin. It will be accessible by the following URI: http://example.com/plugins/template/. It is useful for images, html or php pages, etc. specific to the plugin.</simpara></listitem>
+					</itemizedlist>
+				</para>
+			</section>
+			<section>
+				<title>Plugin Framework</title>
+				<figure id="CodendiPluginFramework">
+					<title>Plugin Framework</title>
+					<mediaobject>
+						<imageobject>
+							<imagedata fileref="../../slides/en_US/CodendiPluginFramework.png" format="PNG"/>
+						</imageobject>
+					</mediaobject>
+				</figure>
+				<para>Some important points:</para>
+				<itemizedlist>
+					<listitem><simpara>Plugin virtually(due to PHP4) inherit from the interface EventListener,</simpara></listitem>
+					<listitem><simpara>The main class of a plugin must inherit from Plugin,</simpara></listitem>
+					<listitem><simpara>Language object is not already instanciated when plugin manager loads the plugins.</simpara></listitem>
+				</itemizedlist>
+			</section>
+			<section>
+				<title>Hooks</title>
+				<section>
+					<title>What is a hook ?</title>
+					<para>A hook is an event. The aim of a hook is to allow plugins to do a specific action when a part of the &SYS_PRODUCT_NAME; core is reached.</para>
+				</section>
+				<section>
+					<title>How to listen/subscribe to a hook ?</title>
+					<para>In your plugin constructor just add <literal>$this->addHook('name_of_hook');</literal> foreach hooks you want to listen to.</para>
+				</section>
+				<section>
+					<title>How to respond to a hook ?</title>
+					<para>Plugins responds to hooks with callbacks. A callback is a method of the class of your plugin. The default callback is <literal>CallHook</literal> wich takes two parameters : the name of the hook fired and the parameters in an array.</para>
+					<para>If you want your plugin to respond to a hook with another callback (to prevent many ifs or switches in one callback), you have to say it during subscription: <literal>$this->_addHook('name_of_hook', 'specific_callback', $recall_hook = false/true);</literal>. The two additionnal parameters are  : the name of the callback, and a boolean which indicates if you want to know which hook is fired (to treat different hooks in the same callback). The default values for those parameters are <literal>CallHook, true</literal>.</para>
+					<para>For a real example, see the plugin PluginsAdministration.</para>
+				</section>
+				<section>
+					<title>How to fire a hook ?</title>
+					<para>In the core of &SYS_PRODUCT_NAME;, since hooks are events, you fire them via the EventManager: <literal>$em->processEvent('the_hook', $params_of_hook);</literal>.</para>
+					<para><emphasis role="bold">Important:</emphasis> the parameters is given to ALL plugins which listen to the hook.</para>
+				</section>
+				<section>
+					<title>How can I make a plugin respond to a hook before another plugin ?</title>
+					<para>Plugins are independant. Plugins developpers should not make predictions about the order of listeners of a hook.</para>
+					<para>However, administrators can ajust the priority between plugins for a hook. It is done in the PluginsAdministration page: for each hooks are listed the plugins and their priority. Ajust priority at the level you want. Priority is realized by an integer: plugins are waked up from higher to lower. Default priority is zero.</para>
+				</section>
+				<section>
+					<title>What are current hooks provided by &SYS_PRODUCT_NAME;?</title>
+					<section>
+						<title>cssfile</title>
+						<itemizedlist>
+							<listitem><simpara><emphasis role="bold">Description:</emphasis> Used to include a CSS link element to include in the page layout. The hook should echo directly complete &lt;link&gt; element(s). Plugin specific rules should begin with &lt;plugin_name&gt; in stylesheets.</simpara>
+							</listitem>
+						</itemizedlist>
+					</section>
+					<section>
+						<title>cssstyle</title>
+						<itemizedlist>
+							<listitem><simpara><emphasis role="bold">Description:</emphasis> Used to include inline CSS into the page layout. The hook should echo directly pure CSS, without surrounding &lt;style&gt; elements. Plugin specific rules should begin with &lt;plugin_name&gt; in stylesheets.</simpara>
+							</listitem>
+						</itemizedlist>
+					</section>
+					<section>
+						<title>javascript</title>
+						<itemizedlist>
+							<listitem><simpara><emphasis role="bold">Description:</emphasis> Provides a place to add inline javascript into the page. The output of the hook should be pure Javascript, as it will be placed within an existing &lt;script&gt; block.</simpara>
+							</listitem>
+						</itemizedlist>
+					</section>
+					<section>
+						<title>javascript_file</title>
+						<itemizedlist>
+							<listitem><simpara><emphasis role="bold">Description:</emphasis> Used to include a full javascript element. The hook should echo directly complete script element(s). e.g: <programlisting><![CDATA[<script type="text/javascript" src="my_script.js"></script>]]></programlisting></simpara>
+							</listitem>
+						</itemizedlist>
+					</section>
+					<section>
+						<title>site_admin_menu_hook</title>
+						<itemizedlist>
+							<listitem><simpara><emphasis role="bold">Description:</emphasis> Use this to provide a link to the site wide administrative menu for your plugin. The hook should call HTML::menu_entry.</simpara>
+							</listitem>
+						</itemizedlist>
+					</section>
+					<section>
+						<title>site_admin_option_hook</title>
+						<itemizedlist>
+							<listitem><simpara><emphasis role="bold">Description:</emphasis> Use this to provide a link to the site wide administrative pages for your plugin. The hook should echo directly a <![CDATA[<li>]]> block and will appear on the Site Admin page in the Plugins list.</simpara>
+							</listitem>
+						</itemizedlist>
+					</section>
+					<section>
+						<title>usermenu</title>
+						<itemizedlist>
+							<listitem><simpara><emphasis role="bold">Description:</emphasis> Use this to provide a link to the user menu for your plugin (do not work for tabbed layouts). The hook should call HTML::menu_entry.</simpara>
+							</listitem>
+						</itemizedlist>
+					</section>
+                    <section>
+						<title>register_project_creation</title>
+						<itemizedlist>
+							<listitem><simpara><emphasis role="bold">Description:</emphasis> Use this to perform special action when a project is created</simpara>
+							</listitem>
+						</itemizedlist>
+					</section>
+                    <section>
+						<title>project_admin_edition</title>
+						<itemizedlist>
+							<listitem><simpara><emphasis role="bold">Description:</emphasis> Use this to perform special action when public info of a project are updated (name, description, etc.)</simpara>
+							</listitem>
+						</itemizedlist>
+					</section>
+                    <section>
+						<title>project_admin_add_user</title>
+						<itemizedlist>
+							<listitem><simpara><emphasis role="bold">Description:</emphasis> Use this to perform special action when a user is added as member of a project</simpara>
+							</listitem>
+						</itemizedlist>
+					</section>
+
+				</section>
+			</section>
+			<section>
+				<title>GForge Plugins</title>
+				<para>Since &SYS_PRODUCT_NAME; wants to make plugins as much closed as possible to GForge plugins, it is, in theory and relatively, possible to migrate a plugin from GForge to &SYS_PRODUCT_NAME;. You have to follow the following points:</para>
+				<itemizedlist>
+					<listitem>
+						<simpara>In plugin constructor, add $id. Replace:<programlisting><![CDATA[
+class <plugin_name>Plugin extends Plugin {
+        function <plugin_name>Plugin() {
+                $this->Plugin();
+                ...
+]]></programlisting> by <programlisting><![CDATA[
+class <plugin_name>Plugin extends Plugin {
+        function <plugin_name>Plugin($id) {
+                $this->Plugin($id);
+                ...]]></programlisting>
+						</simpara>
+					</listitem>
+					<listitem>
+						<simpara>In plugin constructor, replace each occurence of<programlisting><![CDATA[
+$this->hooks[] = "<name_of_hook>";
+]]></programlisting> by <programlisting><![CDATA[
+$this->_addHook("<name_of_hook>");]]></programlisting>
+						</simpara>
+					</listitem>
+					<listitem><simpara>Foreach hook, modify how plugin interacts with (parameters will be different in most cases)</simpara></listitem>
+					<listitem><simpara>Modify hard links</simpara></listitem>
+					<listitem><simpara>Make PostGres scripts "MySql compatible"</simpara></listitem>
+					<listitem><simpara>Move installation sql script in db/install.sql</simpara></listitem>
+					<listitem><simpara>Move uninstallation sql script in db/uninstall.sql</simpara></listitem>
+				</itemizedlist>
+			</section>
+		</section>
+		<section id="Install">
+			<title>Install</title>
+			<para>First, you have to copy the plugin files in the plugins directory. Untar ou unzip the archive, cvs or svn checkout.</para>
+			<para>Second, you have to copy directories (etc, site-content) of the plugin in etc directory : </para>
+			<programlisting><![CDATA[
+mkdir /etc/codendi/plugins/template
+cp -r /home/httpd/plugins/template/etc /etc/codendi/plugins/template/.
+cp -r /home/httpd/plugins/template/site-content /etc/codendi/plugins/template/.]]></programlisting>
+			<para>Finally, once these two steps are done, you have two way to finish the installation : manually or automatically.</para>
+			<section>
+				<title>Manually</title>
+				<para>You have to tell &SYS_PRODUCT_NAME; that you want to use this plugin. You do that by inserting a new row in the plugin table :
+				<literal>INSERT INTO plugin (name, enabled) VALUES ('template', 0);</literal>. <literal>name</literal> is the short-name of the plugin. You have to set <literal>enabled</literal> to <literal>1</literal> if you want to enable the plugin.</para>
+				<para>If the plugins use the database, use the <emphasis>db/install.sql</emphasis> script to create/populate tables.</para>
+			</section>
+			<section>
+				<title>Automatically</title>
+				<para>With the plugin PluginsAdministration, you can manage your plugins through a web-based interface.</para>
+				<para>Locate your plugin in the 'not yet installed' plugins list and select it to install it. PluginsAdministration will update the database for you and will run <emphasis>db/install.sql</emphasis> during installation.</para>
+				<para>Note that the plugin will be disabled by default. You will have to enabled it (again with PluginsAdministration) after installation.</para>
+				<para>The plugin PluginsAdministration is part of &SYS_PRODUCT_NAME;.</para>
+			</section>
+		</section>
+		<section id="Execute">
+			<title>Execute</title>
+			<itemizedlist>
+				<listitem><simpara>First, all plugins which are enabled are loaded by the PluginManager. <emphasis>This is done before all things (session/themes/...) and therefore BaseLanguage is not yet loaded: you can't load directly message files in your plugin.</emphasis></simpara></listitem>
+				<listitem><simpara>Then, when a point in the core of &SYS_PRODUCT_NAME; is reached, the EventManager fires an event to all listeners. A plugin may respond to this event (hook) as he wants (please remember that it is not alone !).</simpara></listitem>
+			</itemizedlist>
+		</section>
+		<section id="Uninstall">
+			<title>Uninstall</title>
+			<para>With the PluginsAdministration, you can simply uninstall a plugin: it will run <literal>db/uninstall.sql</literal>, delete priorities and remove the plugin from the plugin table.</para>
+			<para>If you don't use PluginsAdministration, you have to do those steps by hands.</para>
+			<para><emphasis role="bold">Important:</emphasis> in both cases (manually, automatically) you may have to remove the directory of the plugin because its web space (<literal>/plugins/template/www/</literal>) will always remain accessible, even if the plugin is disabled or uninstalled.</para>
+		</section>
+	</section>
+    
+    <section id="Widgets">
+        <title>Widgets</title>
+        <para>
+            &SYS_PRODUCT_NAME; provides widgets on personal and project dashboards.
+            These widgets can be moved on the page, easily added and removed.
+            This lets the user (for personal dashboard) and project admin (for
+            project dashboard) design his own dashboard as he wants.
+        </para>
+        <section id="HowToMakeAWidget">
+            <title>How to make a widget</title>
+            <para>
+                All widgets related to the core of &SYS_PRODUCT_NAME; are located 
+                in <emphasis role="bold">src/common/widget/</emphasis> directory.
+                Plugin's widget will be located in 
+                <emphasis role="bold">/plugins/[plugin_dir]/include/</emphasis>.
+                Widget files must follow the syntax Widget_My[WidgetName] or
+                Widget_Project[WidgetName] and extends Widget class.
+            </para>
+            <para>
+                Then, you must implement your widget:
+<programlisting format="linespecific" linenumbering="unnumbered" width="80">
+<![CDATA[
+<?php
+
+require_once('Widget.class.php');
+
+class Widget_MyPersonalWidget extends Widget {
+    /**
+     * Constructor of the widget
+     * If anything special here, just call the parent 
+     * passing the name of the widget
+     */
+    public function __construct() {
+        // this name must be unique
+        $this->Widget('mypersonalwidget');
+    }
+    /**
+     * getTitle returns the title of the widget
+     * don't forget to internationalize it!
+     * @return string the title of the widget
+     */
+    function getTitle() {
+        // TODO
+    }
+    /**
+     * getContent returns the content of the widget, in other words the 
+     * HTML to display
+     * This is the core of the widget.
+     * @return string HTML to display, body of the widget
+     */
+    function getContent() {
+        // TODO
+    }
+    /**
+     * getCategory returns the category of the widget
+     * In the user interface, widgets are grouped by category. 
+     * The default category (used if getCategory is not defined) 
+     * is 'general'.
+     * Available categories are: 
+     * general, scm, trackers, frs, forums, im, hudson
+     */
+    function getCategory() {
+        // optional (to be overwritten if different from 'general')
+    }
+    /**
+     * getDescription returns the description of the widget
+     * will be displayed in the User Interface when choosing widgets.
+     * A good description helps the user to know what the widget really do.
+     * don't forget to internationalize it!
+     * @return string the description of the widget
+     */
+    function getDescription() {
+        // TODO
+    }
+    /**
+     * isAjax returns weither the widget is ajax or not
+     * Dashboard can be a bit long to display, regarding the widgets the user
+     * as set. isAjax = true can speed up pages.
+     * @returns boolean if widget is ajax or not
+     */
+    function isAjax() {
+        // optional (to be overwritten or not, default value is false)
+    }
+}
+
+?>
+]]>
+</programlisting>
+            </para>
+            <para>
+                Once your widget is implemented, you have to declare it to the system.
+                This can be done in the class <emphasis role="bold">Widget</emphasis> 
+                (<emphasis role="bold">src/common/Widget.class.php</emphasis>).
+                You need to add your widget in the function getInstance():
+<programlisting format="linespecific" linenumbering="unnumbered" width="80">
+<![CDATA[
+case 'mypersonalwidget':
+    $o =& new Widget_MyPersonalWidget();
+    break;
+]]>
+</programlisting>
+                Add the require_once('common/widget/Widget_MyPersonalWidget.class.php'); 
+                on top of the file, and then add your widget in the function
+                getCodendiWidgets, regarding it is a personal widget (displayed in 
+                personal dashboard) or a project widget (displayed in project dashboard).
+                Just add the name of your widget (e.g. 'mypersonalwidget') in the
+                array of available widgets.
+            </para>
+            <para>
+                Each widget should provide a preview image. This is really convenient
+                for end user to help him knowing what the widget will look like.
+                If no preview is provided, the default one will be used, but
+                it is better to provide a preview.
+                This preview image must be 128 x 128 pixels. We recommand using
+                the same preview style as the existing widgets, which means a 
+                circle preview rounded by a circle border (available at
+                <emphasis role="bold">src/www/themes/common/images/widget-preview-border.png</emphasis>).
+                This border has a transparency of 50%, and the outside of the circle is also
+                transparent. For instance:
+                <figure id="HudsonWidgetBuildHistory">
+                <title>Example of widget preview</title>
+                <mediaobject>
+                 <imageobject>
+                   <imagedata format="PNG"
+                     fileref="../../screenshots/widget-preview-my_artifacts.png" width="5cm" />
+                 </imageobject>
+                </mediaobject>
+               </figure>
+            </para>
+            <para>
+                To display widget preview, we use CSS images.
+                The CSS property of the widget preview is based on the widget's
+                name. It is <emphasis role="bold">widget-preview-[name_of_widget]-[locale]</emphasis>
+                where [name_of_widget] is the name of your widget (e.g. 'mypersonalwidget')
+                and [locale] is the locale language (fr_FR or en_US for instance).
+                Widget preview are also internationalized! If there is text in 
+                your preview, don't forget to internationalize it!.
+                Then, you must add the property in the CSS file 
+                (<emphasis role="bold">src/www/themes/common/css/style.css</emphasis>)
+                if your widget is a core widget, or 
+                <emphasis role="bold">plugins/[plugin_name]/www/themes/default/css/style.css</emphasis>
+                if your widget is a plugin's widget.
+                The code to add in the CSS file is the following:
+<programlisting format="linespecific" linenumbering="unnumbered" width="80">
+<![CDATA[
+.widget-preview-mypersonalwidget-fr_FR {
+    background-image:url("../images/widget_preview/fr_FR_my_personal_widget.png");
+}
+.widget-preview-mypersonalwidget-en_US {
+    background-image:url("../images/widget_preview/en_US_my_personal_widget.png");
+}
+]]>
+</programlisting>
+                where you just have to define where your image is located.
+            </para>
+            <para>
+                If your widget is a plugin's widget, you should implement the two
+                hooks <emphasis role="bold">widget_instance</emphasis> and 
+                <emphasis role="bold">widgets</emphasis>.
+            </para>
+        </section>
+    </section>
+    
+    
+	<section id="Themes">
+		<title>Themes</title>
+		<figure id="ThemesFramework">
+			<title>Themes Architecture</title>
+			<mediaobject>
+				<imageobject>
+					<imagedata fileref="../../slides/en_US/CodendiThemesArchitecture.png" format="PNG"/>
+				</imageobject>
+			</mediaobject>
+		</figure>
+		<para>Traditional themes like &SYS_PRODUCT_NAME; or Savannah inherit from Layout. Tabbed themes, like CodendiTab, inherit from TabbedLayout. And as GForge themes are tabbed, they inherit from GForgeLayout which inherit from TabbedLayout.</para>
+		<section id="GForgeThemes">
+			<title>Cookbook to install a GForge Theme (gforge_theme) into &SYS_PRODUCT_NAME;</title>
+			<para>In order to make a GForge Theme '&SYS_PRODUCT_NAME; compatible', you have to follow those steps :</para>
+			<orderedlist>
+				<listitem><simpara>Copy the theme in themes directory:<programlisting><![CDATA[
+cp -r /path/to/your/gforge_theme /etc/codendi/themes/.]]></programlisting></simpara></listitem>
+				<listitem><simpara>Rename your Theme.class.php file :<programlisting><![CDATA[
+mv /etc/codendi/themes/gforge_theme/Theme.class.php 
+   /etc/codendi/themes/gforge_theme/gforge_theme_Theme.class.php ]]></programlisting></simpara>
+   					<simpara>(Rename also your Theme class)</simpara>
+					<simpara>This is to prevent from name clash with other Theme class, like with PhpWiki.</simpara>
+				</listitem>
+				<listitem><simpara>Make Theme class inherit from GForgeLayout, don't forget to include it.</simpara></listitem>
+				<listitem><simpara>Change html_image calls: put width and height in the array parameter</simpara></listitem>
+				<listitem><simpara>Change plugin_hook calls to event calls:<programlisting><![CDATA[
+plugin_hook('the_corresponding_hook', $the_parameters);
+
+becomes
+
+$em =& EventManager::instance();
+$em->processEvent('the_corresponding_hook', $the_parameters);]]></programlisting></simpara></listitem>
+				<listitem><simpara>Replace <programlisting>session_loggedin</programlisting> by <programlisting>user_isloggedin</programlisting></simpara></listitem>
+				<listitem><simpara>Check if footer calls generic_footer (This will replace GForge copyright by &SYS_PRODUCT_NAME; copyright)</simpara></listitem>
+				<listitem><simpara>Replace the GForge logo by a &SYS_PRODUCT_NAME; logo</simpara></listitem>
+				<listitem><simpara>Copy &SYS_PRODUCT_NAME; images<programlisting><![CDATA[
+cp -ir /home/httpd/SF/www/themes/Codendi/images/* 
+   /etc/codendi/themes/gforge_theme/images/.]]></programlisting> (Say no for each prompt)</simpara></listitem>
+				<listitem><simpara>Remove trailing spaces in the Theme class file (To prevent sending characters before headers)</simpara></listitem>
+				<listitem><simpara>Update css with missing rules (most of them are in GForgeLayout::header)</simpara></listitem>
+				<listitem><simpara>Put missing languages strings in themes/gforge-compat.tab</simpara></listitem>
+				<listitem><simpara>Be careful with images and css paths: themes in <programlisting>/etc</programlisting> are accessible via <programlisting>/custom/gforge_theme/</programlisting> (Fix $imgroot for exemple)</simpara></listitem>
+			</orderedlist>
+		</section>
+	</section>
+        <section id="FieldsDependencies">
+                <title>Fields Dependencies</title>
+		<figure>
+			<title>Field Dependencies Architecture</title>
+			<mediaobject>
+				<imageobject>
+					<imagedata fileref="../../slides/en_US/CodendiFieldsDependencies.png" format="PNG"/>
+				</imageobject>
+			</mediaobject>
+		</figure>
+        </section>
+</chapter>
+<!--
+Local Variables:
+sgml-parent-document: ("Codendi_Programmer_Guide.xml" "book" "chapter")
+End:
+-->

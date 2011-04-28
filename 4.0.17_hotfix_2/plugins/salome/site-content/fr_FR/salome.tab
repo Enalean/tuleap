@@ -1,0 +1,97 @@
+plugin_salome	descriptor_description	Intègre Salome TMF
+plugin_salome	descriptor_name	Salomé
+
+plugin_salome	title	Salomé
+
+plugin_salome	service_lbl_key	Gestion des tests
+plugin_salome	service_desc_key	Outil de gestion des tests
+
+plugin_salome	toolbar_admin	Administration
+plugin_salome	toolbar_proxy	Proxy
+
+plugin_salome	net_soap_and_proxy	Mode SOAP, proxy
+plugin_salome	net_soap_no_proxy	Mode SOAP, sans proxy
+plugin_salome	net_jdbc	Mode JDBC
+plugin_salome	net_change	Changer la configuration réseau
+
+plugin_salome	service_not_used	Le service Salomé n'est pas actif
+plugin_salome	group_id_missing	Paramétre group_id manquant.
+plugin_salome	err_plugins_dir	Erreur lors de la lecture du répertoire : $1
+plugin_salome	salome_plugin_postinstall	Pour compléter l'installation du plugin Salomé, vous devez configurer la connexion à la base de données Salomé dans le fichier : $1
+plugin_salome	salome_plugin_cannotbemadeavailable	Impossible de rendre le plugin Salomé disponible. Vous devez d'abord configurer la connexion à la base de données Salomé dans le fichier : $1
+
+plugin_salome	launch_salome	Lancer Salomé TMF ...
+
+plugin_salome	tracker_not_configured	L'outil de suivi Salomé n'est pas correctement configuré pour utiliser Salomé.
+plugin_salome	salome_project_notfound	Project Salome non trouvé.
+plugin_salome	salome_tracker_notfound	L'outil de suivi Salomé n'a pas été sélectionné.
+plugin_salome	salome_report_notfound	Le rapport Salomé n'a pas été sélectionné.
+plugin_salome	salome_fields_notfound	L'un des champs spéciaux Salomé n'a pas été sélectionné.
+plugin_salome	salome_same_fields	Deux champs Salomé sont liés au même champ : $1
+plugin_salome	salome_user_notfound	Utilisateur Salome non trouvé : $1.
+plugin_salome	salome_group_notfound	Groupe Salome non trouvé : $1.
+
+plugin_salome	admin_options_title	Gérer les options de configuration de Salomé
+plugin_salome	admin_options_desc	Définir les options de configuration propres à Salomé.
+plugin_salome	admin_tracker_title	Gérer l'outil de suivi pour Salomé
+plugin_salome	admin_tracker_desc	Définir l'outil de suivi et la correspondance entre les champs utilisés par Salomé
+plugin_salome	admin_permissions_title	Gérer les permissions
+plugin_salome	admin_permissions_desc	Définir les permissions Salomé
+plugin_salome	admin_plugins_title	Gérer les plugins Salomé
+plugin_salome	admin_plugins_desc	Définir les plugins utilisés par l'instance de Salomé pour ce projet
+
+plugin_salome	admin_tracker_mapping	Association de l'outil de suivi Salomé
+plugin_salome	admin_report_mapping	Association du rapport Salomé
+plugin_salome	admin_field_mapping	Association des champs spéciaux Salomé
+
+plugin_salome	admin_tracker_choose_tracker	Sélectionnez le tracker utilisé par Salomé :
+plugin_salome	admin_tracker_choose_report	Sélectionnez le rapport utilisé par Salomé :
+plugin_salome	admin_tracker_choose_environment_field	Sélectionnez le champ 'Environnement' utilisé par Salomé :
+plugin_salome	admin_tracker_choose_campaign_field	Sélectionnez le champ 'Campagne' utilisé par Salomé :
+plugin_salome	admin_tracker_choose_family_field	Sélectionnez le champ 'Famille' utilisé par Salomé :
+plugin_salome	admin_tracker_choose_suite_field	Sélectionnez le champ 'Suite' utilisé par Salomé :
+plugin_salome	admin_tracker_choose_test_field	Sélectionnez le champ 'Test' utilisé par Salomé :
+plugin_salome	admin_tracker_choose_action_field	Sélectionnez le champ 'Action' utilisé par Salomé :
+plugin_salome	admin_tracker_choose_execution_field	Sélectionnez le champ 'Execution' utilisé par Salomé :
+plugin_salome	admin_tracker_choose_dataset_field	Sélectionnez le champ 'Jeu de données' utilisé par Salomé :
+plugin_salome	admin_tracker_updated	Mise à jour du tracker Salomé.
+
+plugin_salome	admin_options_updated	Mise à jour des options effectuée.
+
+plugin_salome	admin_plugins_updated	Mise à jour des plugins Salomé. Les plugins activés sont : <strong>$1.</strong>
+
+plugin_salome	enable_proxy	Activer un proxy pour Salomé
+plugin_salome	proxy	Proxy :
+plugin_salome	proxy_user	Nom d'utilisateur :
+plugin_salome	proxy_password	Mot de passe :
+plugin_salome	admin_proxy_updated	Mise à jour du proxy pour Salomé.
+
+plugin_salome	admin_permissions_all	Toutes les permissions
+plugin_salome	admin_permissions_add	Ajouter
+plugin_salome	admin_permissions_modify	Modifier
+plugin_salome	admin_permissions_delete	Supprimer
+plugin_salome	admin_permissions_execute	Exécuter
+plugin_salome	admin_permissions_updated	Mise à jour des permissions Salomé.
+plugin_salome	admin_permissions_ugroups	Cliquez sur le nom du groupe pour en définir les permissions Salomé :
+plugin_salome	admin_permissions_ugroup	Sélectionnez les permissions Salomé pour le groupe <strong>$1</strong> :
+plugin_salome	admin_permissions_notallowed	Echec de la mise à jour : valeurs de permissions non valides.
+
+plugin_salome	admin_options_include_ical	Inclure l'indicateur ICAL
+plugin_salome	admin_options_lock_plan	Verrouiller le plan de test si une campagne a été exécutée
+plugin_salome	admin_options_lock_test	Verrouiller la modification du test si le test a été exécuté
+
+plugin_salome	admin_unable_update	Mise à jour impossible.
+
+plugin_salome	admin_used_plugins	Sélectionnez les plugins utilisés par Salomé :
+
+plugin_salome	project_creation_user_not_created	Utilisateur non créé dans la base de données Salome
+plugin_salome	project_creation_admgroup_not_created	Groupe Administrateur du projet non créé dans la base de données Salome
+plugin_salome	project_creation_group_not_created	Groupe non créé dans la base de données Salome
+plugin_salome	project_creation_usergroup_not_created	Association Utilisateur - Groupe non créé dans la base de données Salome
+plugin_salome	project_creation_tracker_not_created	Outil de suivi 'Salome' non créé : $1
+plugin_salome	project_creation_template_not_found	Template d'outil de suivi 'Salome' non trouvé.
+plugin_salome	project_creation_project_not_created	Projet non créé dans la base de données Salome
+plugin_salome	project_edition_project_not_updated	Project non mis à jour dans la base de données Salome
+plugin_salome	project_admin_ugroup_not_created	Groupe non mis à jour dans la base de données Salome
+plugin_salome	project_admin_ugroup_not_deleted	Groupe non supprimé dans la base de données Salome
+plugin_salome	project_admin_usergroup_not_removed	Association Utilisateur-Groupe n'a pas pu étre supprimée dans la base de données Salome

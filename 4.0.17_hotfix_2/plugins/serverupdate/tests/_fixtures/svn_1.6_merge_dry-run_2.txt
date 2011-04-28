@@ -1,0 +1,8 @@
+--- Merging r3 through r7 into '.':   
+   C alpha
+ C   beta
+C    gamma
+Summary of conflicts:
+  Text conflicts: 1
+  Property conflicts: 1
+  Tree conflicts: 1

@@ -1,0 +1,31 @@
+<!--
+//
+// Codendi
+// Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+// http://www.codendi.com
+//
+// 
+//
+-->
+
+<fieldset><legend style="font-size:1.2em;">Choose the project type</legend>
+<p>Please note that the project type cannot be changed after creation</p>
+<B>Project type <?php echo help_button('ProjectAdministration.html#ProjectType'); ?> : </B>
+<select name="is_test"><option value="0" selected="selected">Project</option>
+<option value="1">Test project</option>
+</select>
+</fieldset>
+
+<fieldset><legend style="font-size:1.2em;">Choose the project privacy</legend>
+<B>Project privacy: </B>
+<?php
+
+if ($GLOBALS['sys_is_project_public']==1){
+    echo '<select name="is_public"><option value="1" selected="selected">Public</option><option value="0">Private</option></select>';
+}else{
+    echo '<select name="is_public"><option value="0" selected="selected">Private</option><option value="1">Public</option></select>';
+}
+?>
+</fieldset>
+
+

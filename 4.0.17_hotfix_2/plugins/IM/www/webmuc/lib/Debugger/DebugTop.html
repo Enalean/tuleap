@@ -1,0 +1,52 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+  <head>
+		<script>
+			function toggleLog(el) {
+			if (parent.oDbg.debug) {
+			parent.oDbg.stop();
+			el.innerHTML = 'Start';
+			} else {
+			parent.oDbg.start();
+			el.innerHTML = 'Stop';
+			}
+			el.blur();
+			}
+			function levelChanged(el) {
+			if (el.selectedIndex == 0)
+			return;
+			parent.oDbg.setLevel(el.options[el.selectedIndex].value);
+			}
+			
+		</script>
+		<style type="text/css">
+			body {
+			font-size: 0.8em;
+			font-family: sans-serif;
+			text-align: right;
+			margin: 2;
+			background-color: #cfd498;
+			}
+			select {
+			font-size: 0.8em;
+			font-family: sans-serif;
+			}
+			button {
+			font-size: 0.8em;
+			font-family: sans-serif;
+			border: 1px solid black;
+			}
+		</style>
+  </head>
+
+  <body>
+		Set Level: <select onchange="levelChanged(this);" id="lvlSelector">
+			<script>
+				for (var i=0; i <= parent.opener.DEBUGGER_MAX_LEVEL; i++)
+					document.write("<option value='"+i+"'>"+i+"</option>");
+			</script>
+		</select>&nbsp;
+		<button onclick="toggleLog(this);" id="toggleLogButton">Stop</button>&nbsp;
+		<button onclick="top.DebugBottom.document.body.innerHTML='';">Clear</button>
+  </body>
+</html>

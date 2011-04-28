@@ -1,0 +1,32 @@
+Date: Sun, 4 Jul 2004 01:31:02 -0700
+Mime-Version: 1.0 (Produced by PhpWiki 1.3.7)
+X-Rcs-Id: $Id: FoafViewerPlugin,v 1.3 2004/07/04 08:44:08 rurban Exp $
+Content-Type: application/x-phpwiki;
+  pagename=FoafViewerPlugin;
+  pgsrc_version="1 $Revision: 1.3 $";
+  flags="";
+  markup=2;
+  charset=iso-8859-1
+Content-Transfer-Encoding: binary
+
+!About
+FoafViewerPlugin is written to facilitate the viewing of FOAF / RDF files in human readable form. Please note, it provides only basic features at this time.
+
+!Version
+0.0.1
+
+!Usage
+<verbatim>
+<?plugin FoafViewer foaf=http://www.myfoaf.com/foaf.rdf ?>
+/FoafViewerPlugin?foaf=http://www.myfoaf.com/foaf.rdf
+</verbatim>
+
+!Download from....
+http://www.ahsonline.com.au/dod/FoafViewerPlugin.zip
+
+!Example
+<?plugin FoafViewer foaf=http://www.ahsonline.com.au/dod/FOAF.rdf ?>
+
+-----
+
+PhpWikiDocumentation WikiPlugin

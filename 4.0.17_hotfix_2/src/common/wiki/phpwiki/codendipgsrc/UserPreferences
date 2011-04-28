@@ -1,0 +1,12 @@
+Date: Fri, 5 Nov 2004 23:26:05 +0100
+Mime-Version: 1.0 (Produced by PhpWiki 1.3.11pre)
+X-Rcs-Id: $Id: UserPreferences,v 1.9 2004/11/05 22:33:17 rurban Exp $
+Content-Type: application/x-phpwiki;
+  pagename=UserPreferences;
+  pgsrc_version="2 $Revision: 1.9 $";
+  flags=PAGE_LOCKED;
+  markup=2;
+  charset=iso-8859-1
+Content-Transfer-Encoding: binary
+
+<?plugin UserPreferences?>

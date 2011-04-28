@@ -1,0 +1,11 @@
+--- cvs-1.11.22/src/login.c.old	2006-06-28 13:41:14.000000000 +0200
++++ cvs-1.11.22/src/login.c	2006-06-28 13:35:40.000000000 +0200
+@@ -600,7 +600,7 @@
+        context, then assume they have supplied the correct, scrambled
+        password. */
+     if (cvs_password)
+-	return cvs_password;
++	return xstrdup(cvs_password);
+ 
+     if (getenv ("CVS_PASSWORD") != NULL)
+     {

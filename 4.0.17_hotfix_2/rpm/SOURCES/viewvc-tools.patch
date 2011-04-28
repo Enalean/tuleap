@@ -1,0 +1,49 @@
+--- viewvc/bin/make-database.orig	2006-01-21 18:18:09.000000000 -0500
++++ viewvc/bin/make-database	2006-01-23 00:45:27.000000000 -0500
+@@ -48,15 +48,15 @@
+ CREATE TABLE checkins (
+   type enum('Change','Add','Remove'),
+   ci_when datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
+-  whoid mediumint(9) DEFAULT '0' NOT NULL,
+-  repositoryid mediumint(9) DEFAULT '0' NOT NULL,
+-  dirid mediumint(9) DEFAULT '0' NOT NULL,
+-  fileid mediumint(9) DEFAULT '0' NOT NULL,
++  whoid mediumint(9)  NOT NULL,
++  repositoryid mediumint(9)  NOT NULL,
++  dirid mediumint(9)  NOT NULL,
++  fileid mediumint(9)  NOT NULL,
+   revision varchar(32) binary DEFAULT '' NOT NULL,
+   stickytag varchar(255) binary DEFAULT '' NOT NULL,
+-  branchid mediumint(9) DEFAULT '0' NOT NULL,
+-  addedlines int(11) DEFAULT '0' NOT NULL,
+-  removedlines int(11) DEFAULT '0' NOT NULL,
++  branchid mediumint(9)  NOT NULL,
++  addedlines int(11)  NOT NULL,
++  removedlines int(11)  NOT NULL,
+   descid mediumint(9),
+   UNIQUE repositoryid (repositoryid,dirid,fileid,revision),
+   KEY ci_when (ci_when),
+@@ -71,7 +71,7 @@
+ CREATE TABLE descs (
+   id mediumint(9) NOT NULL auto_increment,
+   description text,
+-  hash bigint(20) DEFAULT '0' NOT NULL,
++  hash bigint(20)  NOT NULL,
+   PRIMARY KEY (id),
+   KEY hash (hash)
+ );
+@@ -110,10 +110,10 @@
+ 
+ DROP TABLE IF EXISTS tags;
+ CREATE TABLE tags (
+-  repositoryid mediumint(9) DEFAULT '0' NOT NULL,
+-  branchid mediumint(9) DEFAULT '0' NOT NULL,
+-  dirid mediumint(9) DEFAULT '0' NOT NULL,
+-  fileid mediumint(9) DEFAULT '0' NOT NULL,
++  repositoryid mediumint(9)  NOT NULL,
++  branchid mediumint(9)  NOT NULL,
++  dirid mediumint(9)  NOT NULL,
++  fileid mediumint(9)  NOT NULL,
+   revision varchar(32) binary DEFAULT '' NOT NULL,
+   UNIQUE repositoryid (repositoryid,dirid,fileid,branchid,revision),
+   KEY repositoryid_2 (repositoryid),

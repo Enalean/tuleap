@@ -1,0 +1,61 @@
+Date: Sun, 4 Jul 2004 01:31:02 -0700
+Mime-Version: 1.0 (Produced by PhpWiki 1.3.11pre)
+X-Rcs-Id: $Id: SyntaxHighlighterPlugin,v 1.3 2004/07/04 08:44:08 rurban Exp $
+Content-Type: application/x-phpwiki;
+  pagename=SyntaxHighlighterPlugin;
+  pgsrc_version="2 $Revision: 1.3 $";
+  flags="";
+  markup=2;
+  charset=iso-8859-1
+Content-Transfer-Encoding: binary
+
+The ~SyntaxHighlighter plugin passes all its arguments through a C++
+highlighter called "highlight" (available at http://www.andre-simon.de/).
+
+Author: alecthomas
+
+! Arguments
+syntax |
+  (required), See http://www.andre-simon.de/doku/highlight/highlight.html 
+style |
+  ~[ "ansi", "gnu", "kr", "java", "linux" ~] (required)
+color |
+  null (optional), see =highlight/themes=
+number |
+  0  (optional)
+wrap |
+  0  (optional)
+
+
+! Example
+
+<verbatim>
+<?plugin SyntaxHighlighter syntax=c style=kr color=emacs
+ #include <stdio.h>
+
+ int main() {
+ printf("Lalala\n");
+ }
+?>
+</verbatim>
+
+=>
+
+<?plugin SyntaxHighlighter syntax=c style=kr color=emacs
+ #include <stdio.h>
+
+ int main() {
+ printf("Lalala\n");
+ }
+?>
+
+I did not use beautifier, because it used up more than 8M of memory on
+my system and PHP killed it. I'm not sure whether this is a problem
+with my integration, or with beautifier itself.
+
+Fixes by Reini Urban:
+* support options: syntax, style, color.
+* php version switch
+* HIGHLIGHT_DATA_DIR, HIGHLIGHT_EXE constants
+----
+PhpWikiDocumentation WikiPlugin 

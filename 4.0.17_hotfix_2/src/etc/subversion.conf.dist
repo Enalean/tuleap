@@ -1,0 +1,9 @@
+<IfModule !mod_dav.c>
+  LoadModule dav_module         modules/mod_dav.so
+</IfModule>
+<IfModule !mod_dav_svn.c>
+  LoadModule dav_svn_module     modules/mod_dav_svn.so
+</IfModule>
+<IfModule !mod_authz_svn.c>
+  LoadModule authz_svn_module   modules/mod_authz_svn.so
+</IfModule>

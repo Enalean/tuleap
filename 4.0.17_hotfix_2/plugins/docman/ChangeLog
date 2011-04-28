@@ -1,0 +1,7 @@
+Version 2.8 
+        Fix bug: Do not allow the creation of metadata with empty name.
+        Fix bug: Paste action should not appear in popup menu for the same cut document. 
+        Enhancement: Add hook for color used in plugin statistics.
+
+Version 1.2
+	Update SOAP (see 4.1 release in src/www/soap/ChangeLog)

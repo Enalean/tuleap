@@ -1,0 +1,3 @@
+<?php
+$git_backup_dir = '/tmp/';
+?>

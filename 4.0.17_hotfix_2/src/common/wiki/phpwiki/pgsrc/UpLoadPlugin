@@ -1,0 +1,52 @@
+Date: Sun, 4 Jul 2004 01:31:02 -0700
+Mime-Version: 1.0 (Produced by PhpWiki 1.3.10)
+X-Rcs-Id: $Id: UpLoadPlugin,v 1.4 2004/07/04 08:44:08 rurban Exp $
+Content-Type: application/x-phpwiki;
+  pagename=UpLoadPlugin;
+  pgsrc_version="2 $Revision: 1.4 $";
+  flags="";
+  markup=2;
+  charset=iso-8859-1
+Content-Transfer-Encoding: binary
+
+The UpLoad WikiPlugin displays an editbox and two buttons. 
+The first button let's you choose the file to be uploaded at your local filesystem. 
+The textvalue of this button is localised from your browser. 
+The second "Upload" button actually uploads the given filename to the upload directory.
+This directory is not browsable, any file there may be accessed by using the "Upload~:" 
+InterWikiMap prefix to the given filename. This way you can easily inline uploaded images.
+See PhpWiki:InlineUploadedImages
+
+! Usage:
+<verbatim>
+     <?plugin UpLoad ?>
+</verbatim>
+
+!! Plugin Arguments:
+__logfile__:
+  local path. Default: "phpwiki-upload.log"
+  The format is currently HTML - a new <tr> row per entry - and not log file syntax.
+__autolink__:
+  Add the uploaded filename to the list of uploaded files at the page.
+  Default: true
+__page__:
+  The page where the uploaded files are publicly listed, if autolink is true. 
+  Default: current page.
+
+! Conflicts:
+
+# The user must be authenticated to be able to upload.
+# The filename may not end with certain disallowed extensions, to prevent from abuse.
+# MAX_FILE_SITE is configured by the config.ini option MAX_UPLOAD_SIZE, which defaults to 16MB.
+  Your webserver and php may add another limit.
+# Already existing uploaded files are NOT overwritten.
+# Certain internal php problems for Windows and MacOSX have been fixed with 1.3.9.
+
+----
+
+! Example:
+<?plugin UpLoad ?>
+
+-----
+
+PhpWikiDocumentation WikiPlugin

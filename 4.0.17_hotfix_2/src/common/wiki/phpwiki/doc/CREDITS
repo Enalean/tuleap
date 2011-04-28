@@ -1,0 +1,219 @@
+!! The PhpWiki Development Team
+
+Please report bugs to mailto:phpwiki-talk@lists.sourceforge.net
+
+! Core team
+
+;[ Steve Wainstead | mailto:swain@panix.com ] :
+;: Original author
+;: Chief in charge
+
+;[ Jeff Dairiki | mailto:dairiki@dairiki.org ] :
+;: Did a complete rewrite of PhpWiki using PHP classes.
+
+;[ Reini Urban | mailto:rurban@x-ray.at ] :
+;: Maintainance for the 1.2.x series since 1.2.4 and 1.3.x since 1.3.8
+;: External auth, ACL, DbSession, ...
+
+;[ CarstenKlapp | PhpWiki:CarstenKlapp ] :
+;: Maintainance for 1.3.4 - 1.3.7 and the MacOSX theme.
+
+! Developers
+
+;[ Arno Hollosi | mailto:ahollosi@mail.com ] :
+;: Wrote the MySQL library, the templates, and the database schema
+;: plus many other things too numerous to mention, up to 1.2.x
+
+;[Joel Uckelman | mailto:uckelman@nomic.net ] :
+;: Ported the dbmlib.php to the new dba_* interface, which is the default 
+;: in PHP 4.0.4 and later.
+
+;[ Dan Frankowski | http://wikilens.org ] :
+;: Initiated and maintains the wikilens lib and project ("rating system"), 
+;: several plugins.
+
+; Joe Edelman :
+;: IncludePagePlugin
+
+; Lawrence Akka :
+;: Added ADODB support, OrphanedPages, XmlRpc Interface, RSS, ...
+
+; Pierrick Meignen
+;: French localization, several patches, TeX2png plugin
+
+; Jeb Bateman
+
+; Gerrit Riessen :
+;: cvs and file WikiDB backends
+
+; Jochen Kalmbach :
+;: flatfile backend, several patches (prefs, UserManagement)
+
+; Joseph (Joby) Walker  :
+;: configuration libs and tools, WikiGroup architecture
+
+; Johannes Große :
+;: WikiPluginCached plugins and architecture
+
+! Localization
+
+;[ Jan Nieuwenhuizen | mailto:janneke@gnu.org ] :
+;: built architecture to support internationalization
+;: contributed Dutch translation
+
+;[ Sandino Araico Sánchez | mailto:sandino@sandino.net ] :
+;: contributed Spanish translation
+;: Updates by Pablo Roca (proca@clavo.net), J.Ramón Palacios
+
+;[ Jon Åslund | mailto:d98-jas@nada.kth.se ] :
+;: contributed Swedish translation
+
+; [ Arno Hollosi <ahollosi@mail.com> ] :
+;: contributed German translation, 
+;: updates by Helmer Pardun <pardunpress@t-online.de>, 
+;: Carsten Klapp, Reini Urban
+
+;[ Marco Milanesi | mailto:kpanic@ada2.unipv.it ] :
+;: contributed the Italian translation
+
+;[ Pierrick Meignen <meignen.pierrick@wanadoo.fr> ] :
+;: contributed and maintains the French translation
+;: Updates by Trique <roland.trique@free.fr>, Stéphane Gourichon 
+;: <stephane.gourichon@lip6.fr>, Pascal <pascal@phpfrance.com>, 
+;: Benoit Masson, Jean-Philippe Georget <jpgeorget@ouvaton.org> 
+
+;[ Tadashi Jokagi <webmaster@elf.no-ip.org> ] :
+;: contributed and maintains the Japanese translation
+
+;[ DruryL <druryl@user.sourceforge.net> ] :
+;: contributed the Chinese translation, updates by ShiningRay <ShiningRay@users.sf.net>
+
+; Jon Åslund
+;: contributed the Swedish translation
+
+! Patches (mainly for 1.2.x)
+
+;[ Aredridel Niothke | mailto:aredridel@nbtsc.org ] :
+;: has started a flat file database for Phpwiki 1.2.x
+
+;[ Pablo Roca Rozas | mailto:proca@clavo.net ] :
+;: contributed a new logo image file and updated the Spanish translation
+
+;[Scott R. Anderson | mailto:sra@diem.net ] :
+;: contributed a patch to allow authorized users' names to appear in RecentChanges.
+
+;[Neil Brown | mailto:neilb@cse.unsw.edu.au ] :
+;: has contributed numerous useful patches e.g. nested definition lists
+
+;[Jan Hidders | mailto:hidders@win.tue.nl ] :
+;: has contributed a patch for dbmlib.php for the wikilinks stuff and page removal.
+
+;[Antti Kaihola | mailto:akaihola@siba.fi ] :
+;: patch for named internal links
+
+;[Jeremie Kass | mailto:jeremie@umich.edu ] :
+;: contributed a patch so the logo is decided in the templates instead of being hardcoded.
+
+; Jeremy Avnet
+
+; Manuel Samper <manuel@samper.dyndns.org>
+;: improved the WikiLink regexp splitter
+
+! Contributors since 1.3.x:
+
+; Philippe Vanhaesendonck (oracle backend, several patches)
+; Matt Palmer (debian package maintainer, sqlite, IniConfig)
+; Renat Lumpau (gentoo package maintainer)
+; Jeroen Coumans (several patches)
+; Jim Cheetham  (several patches)
+; John Kershaw (several patches)
+; John Cole (several patches, esp. groups and LDAP)
+; Michael Van Dam (several patches, EditMetaDataPlugin, GoToPlugin, WikiBlogPlugin)
+; Charles Corrigan (several patches and AccessLogSql)
+; Arnaud Fontaine + L. Lunati : 
+;: http://wiki.crao.net/ crao theme, RssParser, JabberPresencePlugin, ...
+; Kai Krakow (several patches)
+; Ernie Oporto (LDAP, WikiGroup)
+; Nicolas Noble (several patches, PopUpPlugin)
+; Rasmus Watjen (PopAuth implementation)
+; Konstantin Zadorozhny 
+; Pablo Martinez  (several patches)
+; Jason Buberel (HttpAuth patch)
+; Mikhail Vladimirov (auth patches)
+; Hendrik Scheider (some patches)
+; Jérôme WAGNER (copypage idea)
+; John Lines (LdapSearch plugin)
+; Mike Pickering (Wordpress theme)
+; Walter Rafelsberger (Shamino_com theme, FraktalNavigation)
+; Lea 'LadyBug' Viljanen (CreateBibPlugin)
+; Bill Morrow (apache2 support)
+; Olivier Korn
+; Cuthbert Cat (several patches, SiteMapPlugin, IncludeSiteMapPlugin)
+; Roy Sutton
+; Søren Jacobi
+; Paul Pearson (PageTrailPlugin)
+; Ken MacCuish (PageTrail Duplicates Patch (1.3.4))
+; Jim Hurne
+; Norberto Meijome (LDAP Auth against W2K Active Directory)
+; Ted Vinke (PhotoAlbumPlugin)
+; Pascal Giard (AppendTextPlugin)
+; Daniel O'Connor (FoafViewPlugin)
+; Martin Geisler (PhpHighlightPlugin, PhpWeatherPlugin, configurator framework)
+; Sameer D. Sahasrabuddhe (RichTablePlugin)
+; NathanGass <gass@iogram.ch>, qubit <rtryon@dartmouth.edu> (UpLoadPlugin)
+; electrawn (several patches, WikiSettingsPlugin)
+; Martin Norbäck (CalendarListPlugin)
+; Alister Bulman (Calendar patch)
+; Sebastien Delahaye (locale)
+; Manuel Vacelet 
+; Matti Airas (several patches)
+; Micki Kaufman (IncludeSiteMap, ...)
+; Oliver Betz (several patches)
+; Paul Henry (several patches)
+; Philip J. Hollenback
+; Sascha Carlin (several patches)
+; Scott Yilek (wikilens integration)
+; Steven D. Brewer (UnfoldSubpages patch)
+; Steve Christey, MITRE (LDAP injection issue)
+; Thomas Moschny (auth patch)
+; Todd Mokros (several patches, TemplateFormPlugin - not used, but thanks for the idea)
+; Ricardo Gladwell (CollatePages, TextBox plugins)
+; Rob Fulwell (FileBlog plugin)
+; Robert Orenstein (Email Notification - not used)
+; Roy "Kylratix" Laurie (several patches)
+; Rui Carmo (blog theme and libs)
+; Tony Laszlo (utf-8 fix)
+; z2d2z@earthlink.net (several patches)
+; Zot O'Connor (several patches and plugins)
+
+and many more (will be updated later)
+
+! External credits:
+<pre>
+Olivier PLATHEY for fpdf, Don Sebà for fpdf
+Mircho Mirev for acdropdown (livesearch)
+Peter Jipsen, Kee-Lin Steven Chan for AsciiMath
+Simon Willison for HttpClient (RssFeed)
+Chris Petersen (Google API)
+Bob Apthorpe for babycart (Blog::SpamAssassin)
+Yamasoft for gif.php
+Stanislav Shramko for the original DBSession
+Dan Libby for the xmlrpc library and tests
+Dietrich Ayala (NuSphere Corporation) for nusoap
+Michael Heilemann (Kubrick css)
+Gabriel Wicke (MonoBook layout, CSS and js)
+Chris Snyder (RawHtml safe mode)
+Martin Langhoff <martin@catalyst.net.nz> (gforge integration)
+Ry4an Brase (IRC gateway)
+Sara von Mosch (Word to wiki converter)
+</pre>
+------------
+
+!! In the 1.0 series:
+
+* John Jorgensen http://c2.com/cgi-bin/wiki?AnotherPhpWiki,
+* Tim Voght http://c2.com/cgi-bin/wiki?TimVoght,
+* Grant Morgan http://c2.com/cgi-bin/wiki?GrantMorgan,
+* and especially Clifford A. Adams: http://c2.com/cgi-bin/wiki?CliffordAdams
+
+ $Id: CREDITS,v 1.6 2005/08/27 10:01:26 rurban Exp $

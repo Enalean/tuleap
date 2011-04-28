@@ -1,0 +1,242 @@
+!FoaF
+!Technology
+* RAP - RDF API for PHP
+* XML_FOAF, Pear
+
+!Why not bare bones RAP?
+RAP is too hard to work with, it provides all of the needed power and functionality, but this means that it tends to get a bit complex to deal with.
+
+!What does XML_FOAF do?
+Its a parser and creator of FOAF files. It was written by [David Shafik|http://beta.plink.org/profile/26b2e3834d83a5ca3fc81e5a942862f7a2bcb653] (Plink), and is currently not ''stable''.
+
+Its really easy to use:
+<verbatim>
+<?php
+require_once 'XML/FOAF.php';
+// Main FOAF
+$foaf = new XML_FOAF();
+
+$foaf->newAgent('person');
+$foaf->setName('Davey Shafik');
+$foaf->setTitle('Mr');
+$foaf->setFirstName('Davey');
+$foaf->setSurname('Shafik');
+$foaf->addMbox('mailto:davey@php.net',TRUE); // see also: XML_FOAF::setMboxSha1Sum();
+$foaf->addHomepage('http://pixelated-dreams.com/~davey/');
+$foaf->addWeblog('http://pixelated-dreams.com/blog');
+$foaf->addImg('http://pixelated-dreams.com/~davey/me.jpg');
+$foaf->addPage('http://pixelated-dreams.com/~davey/CV','Curriculum Vitae','Davey Shafiks Curriculum Vitae');
+$foaf->addPage('http://www.php-mag.net/itr/online_artikel/psecom,id,484,nodeid,114.html','Sticking The Fork In','Creating Daemons in PHP');
+$foaf->addPage('http://pawscon.com/', 'PHP and Web Standards Conference UK 2004', 'A Conference dedicated to PHP, Web Standards and the Semantic Web');
+$foaf->addPhone('07776293539');
+$foaf->addJabberID('fractured_realities@jabber.org');
+$foaf->addTheme('http://php.net');
+$foaf->addOnlineAccount('Davey','http://freenode.info','http://xmlns.com/foaf/0.1/OnlineChatAccount');
+$foaf->addOnlineGamingAccount('Davey_S','http://www.there.com');
+$foaf->addWorkplaceHomepage('http://www.pawscon.com');
+$foaf->addSchoolHomepage('http://www.nobel.herts.sch.uk/');
+$foaf->addInterest('http://xmlns.com/foaf/0.1/');
+$foaf->addFundedBy('http://synapticmedia.net');
+$foaf->addLogo('http://paws.davey.is-a-geek.com/images/paws.jpg');
+$foaf->setBasedNear(52.565475,-1.162895);
+$foaf->addDepiction('http://example.org/depiction/');
+$foaf->addDepiction('http://example.org/depiction/2');
+
+// Content of a <foaf:knows><foaf:Person /></foaf:knows>
+$matt = new XML_FOAF();
+$matt->newAgent('person');
+$matt->setName('Matt McClanahan');
+$matt->addNick('mattmcc');
+$matt->addMboxSha1Sum('0cd5f54daf6aa59d1071ea6bf2973e0171ece606',TRUE);
+$matt->addSeeAlso('http://mmcc.cx/foaf.rdf');
+$matt->addJabberID('mattmcc@jabber.com');
+$matt->addOnlineChatAccount('mattmcc','http://freenode.info','http://xmlns.com/foaf/0.1/OnlineChatAccount');
+// Add to Main FOAF
+$foaf->addKnows($matt);
+
+// Another <foaf:knows><foaf:Person /></foaf:knows>
+/*
+Although we use another instance of XML_FOAF, we could re-use
+the one from above ($matt)
+*/
+$libby = new XML_FOAF();
+$libby->newAgent('person');
+$libby->setName('Libby Miller');
+$libby->addMbox('mailto:libby.miller@bristol.ac.uk');
+$libby->addSeeAlso('http://swordfish.rdfweb.org/people/libby/rdfweb/webwho.xrdf');
+
+// Add to Main FOAF
+$foaf->addKnows($libby);
+
+$mcd = new XML_FOAF();
+$mcd->newAgent('Organization');
+$mcd->setName('McDonalds');
+$mcd->addHomepage('http://www.mcdonalds.com/');
+
+$foaf->addKnows($mcd);
+
+if (!isset($_GET['xml'])) {
+echo "<pre>" .htmlentities($foaf->get()). "</pre>";
+echo "<hr />";
+show_source(__FILE__);
+} else {
+header('Content-Type: text/xml');
+$foaf->dump();
+}
+
+/* Output
+<rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:foaf="http://xmlns.com/foaf/0.1/"
+xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#"
+xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
+<foaf:Person>
+   <foaf:name>Davey Shafik</foaf:name>
+   <foaf:title>Mr</foaf:title>
+   <foaf:firstName>Davey</foaf:firstName>
+   <foaf:surname>Shafik</foaf:surname>
+   <foaf:mbox_sha1sum>26b2e3834d83a5ca3fc81e5a942862f7a2bcb653</foaf:mbox_sha1sum>
+   <foaf:homepage rdf:resource="http://pixelated-dreams.com/~davey/" />
+   <foaf:img rdf:resource="http://pixelated-dreams.com/~davey/me.jpg" />
+   <foaf:page>
+	   <foaf:Document rdf:about="http://pixelated-dreams.com/~davey/CV/">
+		   <dc:title>Curriculum Vitae</dc:title>
+	   </foaf:Document>
+   </foaf:page>
+   <foaf:phone rdf:resource="tel:07776293539" />
+   <foaf:workplaceHomepage rdf:resource="http://www.pawscon.com" />
+   <foaf:schoolHomepage rdf:resource="http://www.nobel.herts.sch.uk/" />
+   <foaf:interest rdf:resource="http://xmlns.com/foaf/0.1/" />
+   <foaf:based_near>
+	   <geo:Point geo:lat="52.565475" geo:long="-1.162895" />
+   </foaf:based_near>
+   <foaf:knows>
+	   <foaf:Person>
+		   <foaf:name>Matt McClanahan</foaf:name>
+		   <foaf:nick>mattmcc</foaf:nick>
+		   <foaf:mbox_sha1sum>0cd5f54daf6aa59d1071ea6bf2973e0171ece606</foaf:mbox_sha1sum>
+		   <rdfs:seeAlso rdf:resource="http://mmcc.cx/foaf.rdf" />
+	   </foaf:Person>
+   </foaf:knows>
+   <foaf:knows>
+	   <foaf:Person>
+		   <foaf:name>Libby Miller</foaf:name>
+		   <foaf:mbox rdf:resource="mailto:libby.miller@bristol.ac.uk" />
+		   <rdfs:seeAlso rdf:resource="http://swordfish.rdfweb.org/people/libby/rdfweb/webwho.xrdf" />
+	   </foaf:Person>
+   </foaf:knows>
+</foaf:Person>
+</rdf:RDF>
+*/
+?>
+</verbatim>
+
+!Parsing
+Parsing isn't so hard either:
+<verbatim>
+ <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+ <html xmlns="http://www.w3.org/1999/xhtml">
+ 	<head>
+ 		<title>XML_FOAF_Parser Example</title>
+ 		<meta name="Author" content="" />
+ 		<meta name="Keywords" content="" />
+ 		<meta name="Description" content="" />
+ 		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+ 		<style type="text/css">
+			table,th,td { border: 1px solid black; }
+		</style>
+	</head>
+	<body>
+		<?php
+// Get our FOAF File from $_GET['foaf']
+if (!isset($_REQUEST['foaf'])) {
+echo "<strong>Please enter a FOAF file below";
+} else {
+$foaf = file_get_contents($_REQUEST['foaf']);
+
+// Require the XML_FOAF_Parser class
+require_once 'XML/FOAF/Parser.php';
+
+// Create new Parser object
+$parser = new XML_FOAF_Parser;
+
+// Start of output
+echo '<h1>XML_FOAF_Parser Example</h1>';
+if (isset($_REQUEST['xml'])) {
+echo '<pre>' .htmlentities($foaf). '</pre>';
+}
+
+// Parser our FOAF in $foaf
+$parser->parseFromMem($foaf);
+
+if (isset($_REQUEST['table'])) {
+// Show our FOAF as an HTML table
+echo "<h2>FOAF as HTML Table</h2>";
+echo $parser->toHTML($parser->toArray());
+}
+
+if (isset($_REQUEST['array'])) {
+// Show the contents of the FOAF Data array
+echo "<h2>FOAF as Array</h2>";
+echo "<pre>";
+var_dump($parser->toArray());
+echo "</pre>";
+}
+}
+?>
+		<form method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
+			<p>
+				<label>FOAF File URI: <input type="text" name="foaf" value="<?php echo(@$_REQUEST['foaf']) ?>" /></label>
+				<br />
+				Show XML: <input type="checkbox" name="xml" value="true" />
+				<br />
+				Show as HTML Table: <input type="checkbox" name="table" value="true" checked="checked" />
+				<br />
+				Show as Array: <input type="checkbox" name="array" value="true" />
+				<br />
+				<input type="submit" value="Parse FOAF!" />
+			</p>
+		</form>
+	</body>
+</html>
+</verbatim>
+
+!How will the plugin(s) work?
+# FoafViewerPlugin is embedded in a normal phpwiki page, with default arguments coming from $_GET varibles.
+# FoafMakePlugin will get some kind of user id from the database, and retrieve any stored information about the user - outputting as FOAF.
+
+!Installing PEAR / XML_FOAF
+The XML_FOAF pear library will not be included with phpwiki, so you have to install the pear 
+library by your own and be sure that the pear path is in the include_path.
+
+Reason: XML_FOAF is based on XML_Parser and XML_Tree, but phpwiki uses its own XML parser and XML 
+tree representation, so it would be unneccesary and incompatible duplication of the same thing.
+
+See: http://pear.php.net/package/XML_FOAF
+PHP Version: PHP 4.3.0 or newer
+PEAR Package: XML_Tree 1.1 or newer
+PEAR Package: XML_Beautifier 0.2.2 or newer
+
+Pear is dead simple to install.
+!! Win32
+<verbatim>
+Start > Run > Command.com
+cd\
+cd c:\php
+go-pear
+</verbatim>
+Follow your nose for a bit. I'm sure you can blunder through it. Next, install the needed modules.
+<verbatim>
+pear download XML_FOAF
+pear download XML_Tree
+pear download XML_Beautifier
+pear upgrade-all
+pear install XML_Tree
+pear install XML_Beautifier
+pear install XML_FOAF
+</verbatim>
+Now, chances are, you won't get away with it all this easy, but if you can't get pear to install XML_FOAF (no ''stable'' package available), then follow these steps next
+# Download [XML_FOAF 0.2|http://pear.php.net/get/XML_FOAF-0.2.tgz]
+# Extract XML_FOAF-0.2.tgz/XML_FOAF-0.2/FOAF/ to C:\php\pear\XML\FOAF
+# Extract documentation to c:\php\pear\docs\
+
+One other thing: make sure your php.ini points to the right location in the ''include_path'' directive!

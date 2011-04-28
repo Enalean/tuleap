@@ -1,0 +1,5 @@
+U    foo.c
+U    bar.c
+Skipped missing target: 'baz.c'
+U    glub.c
+U    sputter.h

@@ -1,0 +1,25 @@
+Date: Sun, 4 Jul 2004 01:31:02 -0700
+Mime-Version: 1.0 (Produced by PhpWiki 1.3.8)
+Content-Type: application/x-phpwiki;
+  pagename=PhpWikiPoll;
+  pgsrc_version="2 $Revision: 1.5 $";
+  flags=PAGE_LOCKED;
+  markup=2;
+  charset=iso-8859-1
+Content-Transfer-Encoding: binary
+
+<?plugin WikiPoll require_all=0 require_least=2
+           question[1]="Do you like PhpWiki?"
+             answer[1][1]="Yes" answer[1][2]="Do not know" answer[1][3]="No"
+           question[2]="Do you have PhpWiki installed by your own?"
+             answer[2][1]="Yes" answer[2][2]="No"
+           question[3]="Did you install any other wiki engine?"
+             answer[3][1]="Yes" answer[3][2]="No"
+           question[4]="What wiki engine do you like most?"
+             answer[4][1]="c2Wiki" answer[4][2]="MoinMoin" answer[4][3]="PhpWiki"
+             answer[4][4]="usemod" answer[4][5]="Twiki" answer[4][5]="guiki"
+             answer[4][6]="Other"
+           question[5]="Which PhpWiki version do you use?"
+             answer[5][1]="1.2.x" answer[5][2]="1.3. 1-2" answer[5][3]="1.3. 3-4"
+             answer[5][4]="1.3. 5-8"
+?>

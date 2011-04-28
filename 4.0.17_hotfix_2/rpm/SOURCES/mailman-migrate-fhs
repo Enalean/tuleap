@@ -1,0 +1,293 @@
+#!/usr/bin/env python
+
+import sys
+import os
+import re
+import shutil
+import getopt
+from stat import *
+
+#------------------------------------------------------------------------------
+
+# Command Line Args
+doit = True
+verbose = False
+quiet = False
+warn = False
+force = False
+print_mapping = False
+remove_files = False
+remove_installation = False
+
+# Scan Results
+existing_files = {}
+non_existing_files = {}
+
+# Directory and File mappings
+
+# This is the complete directory map, it includes both data files
+# and run-time files
+dir_map = {
+    '/var/mailman'				: '/var/lib/mailman',
+    '/var/mailman/Mailman'			: '/usr/lib/mailman/Mailman',
+    '/var/mailman/archives'			: '/var/lib/mailman/archives',
+    '/var/mailman/bin'				: '/usr/lib/mailman/bin',
+    '/var/mailman/cgi-bin'			: '/usr/lib/mailman/cgi-bin',
+    '/var/mailman/cron'				: '/usr/lib/mailman/cron',
+    '/var/mailman/data'				: '/var/lib/mailman/data',
+    '/var/mailman/lists'			: '/var/lib/mailman/lists',
+    '/var/mailman/locks'			: '/var/lock/mailman',
+    '/var/mailman/logs'				: '/var/log/mailman',
+    '/var/mailman/mail'				: '/usr/lib/mailman/mail',
+    '/var/mailman/messages'			: '/usr/lib/mailman/messages',
+    '/var/mailman/pythonlib'			: '/usr/lib/mailman/pythonlib',
+    '/var/mailman/qfiles'			: '/var/spool/mailman',
+    '/var/spool/mailman/qfiles'			: '/var/spool/mailman',
+    '/var/mailman/scripts'			: '/usr/lib/mailman/scripts',
+    '/var/mailman/spam'				: '/var/lib/mailman/spam',
+    '/var/mailman/templates'			: '/usr/lib/mailman/templates',
+    '/var/mailman/tests'			: '/usr/lib/mailman/tests'
+}
+
+# These are directories that contain data files the user may
+# want to preserve from an old installation and should be copied
+# into the new directory location.
+data_dir_map = {
+    '/var/mailman/archives'			: '/var/lib/mailman/archives',
+    '/var/mailman/data'				: '/var/lib/mailman/data',
+    '/var/mailman/lists'			: '/var/lib/mailman/lists',
+    '/var/mailman/logs'				: '/var/log/mailman',
+    '/var/mailman/qfiles'			: '/var/spool/mailman',
+    '/var/spool/mailman/qfiles'			: '/var/spool/mailman',
+    '/var/mailman/spam'				: '/var/lib/mailman/spam',
+}
+
+# These are mappings for individual files. They represent files that
+# cannot be mapped via their parent dirctories, they must be treated
+# individually.
+file_map = {
+    '/var/mailman/data/adm.pw'			: '/etc/mailman/adm.pw',
+    '/var/mailman/data/creator.pw'		: '/etc/mailman/creator.pw',
+    '/var/mailman/data/aliases'			: '/etc/mailman/aliases',
+    '/var/mailman/data/virtual-mailman'		: '/etc/mailman/virtual-mailman',
+    '/var/mailman/data/sitelist.cfg'		: '/etc/mailman/sitelist.cfg',
+    '/var/mailman/data/master-qrunner.pid'	: '/var/run/mailman/master-qrunner.pid'
+}
+
+#------------------------------------------------------------------------------
+
+def DumpMapping():
+    '''Print out the directory and file mappings'''
+    print "Directory Mapping:"
+    for key in dir_map.keys():
+        print "%s --> %s" %(key, dir_map[key])
+
+    print "\nFile Mapping:"
+    for key in file_map.keys():
+        print "%s --> %s" %(key, file_map[key])
+
+def RecordFile(src, dst):
+    '''If the src files (old) exists record this as a potential
+    file operation. File operations are grouped into two sets,
+    those where the dst (new) files exists and those where it does not
+    exist. This is done to prevent overwriting files'''
+    
+    global existing_files, non_existing_files
+
+    if not os.path.exists(src):
+        return
+
+    if existing_files.has_key(src):
+        if warn:
+            print "WARNING: src file already seen (%s) and has dst match: (%s)" % (src, dst)
+        return
+
+    if non_existing_files.has_key(src):
+        if warn:
+            print "WARNING: src file already seen (%s) does not have dst match" % (src)
+        return
+
+    if os.path.exists(dst):
+        existing_files[src] = dst
+    else:
+        non_existing_files[src] = dst
+
+def GetCopyFiles(old_root, new_root):
+    '''Recursively generate a list of src files (old) in the old_root
+    and pair each of them with their new dst path name'''
+    
+    prefix_re = re.compile("^(%s)/*(.*)" % re.escape(old_root))
+    dst_files_existing = []
+    dst_files_non_existing = []
+    for root, dirs, files in os.walk(old_root):
+        match = prefix_re.match(root)
+        subdir = match.group(2)
+        for name in files:
+            oldpath = os.path.join(root, name)
+            newpath = os.path.join(new_root, subdir, name)
+            RecordFile(oldpath, newpath)
+
+def CopyFile(src_path, dst_path):
+    '''Copy file, preserve its mode and ownership. If the dst directory
+    does not exist, create it preserving the mode and ownership of the
+    src direcotry'''
+    
+    if not doit:
+        print "cp %s %s" % (src_path, dst_path)
+        return
+    
+    src_dir = os.path.dirname(src_path)
+    dst_dir = os.path.dirname(dst_path)
+
+    if not os.path.isdir(dst_dir):
+        if os.path.exists(dst_dir):
+            print "ERROR: dst dir exists, but is not directory (%s)" % dst_dir
+            return
+        st = os.stat(src_dir)
+        os.makedirs(dst_dir, st[ST_MODE])
+        os.chown(dst_dir, st[ST_UID], st[ST_GID])
+    
+    shutil.copy2(src_path, dst_path)
+    st = os.stat(src_path)
+    os.chown(dst_path, st[ST_UID], st[ST_GID])
+
+def RemoveFile(path):
+    '''Remove the file'''
+    
+    if not os.path.exists(path):
+        if warn:
+            print "WARNING: attempt to remove non-existent file (%s)" % path
+        return
+
+    if not os.path.isfile(path):
+        if warn:
+            print "WARNING: attempt to remove non-plain file (%s)" % path
+        return
+
+    if not doit:
+        print "rm %s" % (path)
+        return
+
+    os.unlink(path)
+    
+def RemoveDirs(top):
+    '''Delete everything reachable from the directory named in 'top',
+    assuming there are no symbolic links.
+    CAUTION:  This is dangerous!  For example, if top == '/', it
+    could delete all your disk files.'''
+    for root, dirs, files in os.walk(top, topdown=False):
+        for name in files:
+            path = os.path.join(root, name)
+            if not doit:
+                print "rm %s" % (path)
+            else:
+                os.remove(path)
+        for name in dirs:
+            path = os.path.join(root, name)
+            if not doit:
+                print "rmdir %s" % (path)
+            else:
+                os.rmdir(path)
+
+def Usage():
+    print """
+This script will help you copy mailman data files from the old
+directory structure to the new FHS directory structure.
+
+Mailman should not be running when you perform this!
+/sbin/service mailman stop
+
+This script is conservative, by default it will not overwrite
+any file in the new directory on the assumption it is most recent
+and most correct. If you want to force overwrites use -f.
+
+Files are copied to the new directories, if you want to remove the
+old data files use -r. Hint: copy first and test, once everything is
+working remove the old files with -r. If you want to remove the entire
+old installation use -R
+
+migrate [-f] [-n] [-q] [-v] [-w] [-m] [-r] [-R]
+-n don't execute, but show what would be done
+-f force destination overwrites
+-m print mapping
+-r remove old data files
+-R remove entire old installation
+-q be quiet
+-v be verbose
+-w print warnings
+-h help
+"""
+
+#------------------------------------------------------------------------------
+
+try:
+    opts, args = getopt.getopt(sys.argv[1:], "nfvmqwhrR")
+    for o, a in opts:
+        if o == "-n":
+            doit = False
+        elif o == "-f":
+            force = True
+        elif o == "-v":
+            verbose = True
+        elif o == "-m":
+            print_mapping = True
+        elif o == "-q":
+            quiet = True
+        elif o == "-w":
+            warn = True
+        elif o == "-r":
+            remove_files = True
+        elif o == "-R":
+            remove_installation = True
+        elif o == "-h":
+            Usage()
+            sys.exit(1)
+except getopt.GetoptError, err:
+    print err
+    Usage()
+    sys.exit(1)
+
+
+if print_mapping:
+    DumpMapping()
+    sys.exit(0)
+
+# Generate file list
+for src_dir in data_dir_map.keys():
+    GetCopyFiles(src_dir, dir_map[src_dir])
+
+for src_file in file_map.keys():
+    RecordFile(src_file, file_map[src_file])
+
+
+# Copy files
+for src in non_existing_files:
+    dst = non_existing_files[src]
+    CopyFile(src, dst)
+
+if force:
+    for src in existing_files:
+        dst = existing_files[src]
+        CopyFile(src, dst)
+else:
+    if len(existing_files) > 0 and not quiet:
+        print "\nThe following files already exist in the destination, they will NOT be copied"
+        print "To force overwriting invoke with -f\n"
+        for src in existing_files:
+            dst = existing_files[src]
+            print "# cp %s %s" %(src, dst)
+
+# Remove old files
+if remove_files:
+    for src in existing_files:
+        RemoveFile(src)
+    for src in non_existing_files:
+        RemoveFile(src)
+
+if remove_installation:
+    for old_dir in dir_map.keys():
+        RemoveDirs(old_dir)
+
+
+sys.exit(0)    
+

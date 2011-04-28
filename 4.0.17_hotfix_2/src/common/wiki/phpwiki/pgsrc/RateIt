@@ -1,0 +1,16 @@
+Date: Mon, 12 Apr 2004 11:26:41 +0100
+Mime-Version: 1.0 (Produced by PhpWiki 1.3.9)
+X-Rcs-Id: $Id: RateIt,v 1.3 2004/05/15 19:51:47 rurban Exp $
+Content-Type: application/x-phpwiki;
+  pagename=RateIt;
+  pgsrc_version="2 $Revision: 1.3 $";
+  flags="";
+  markup=2;
+  charset=iso-8859-1
+Content-Transfer-Encoding: binary
+
+<?plugin RateIt show=ratings ?>
+
+%%%
+<?plugin AllPages info=rating limit||=25 ?>
+

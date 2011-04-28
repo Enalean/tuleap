@@ -1,0 +1,15 @@
+/* CSS-based Image Maps
+   Author: Frank Manno
+   Version: Nov. 25, 2004
+----------------------------------------------- */
+.screenshot .legend {
+	font-weight:bold;
+	font-size:0.80em;
+	color:#333;
+	padding-left:20px;
+}
+.screenshot .legend:before {
+	content:'Image : ';
+}
+
+

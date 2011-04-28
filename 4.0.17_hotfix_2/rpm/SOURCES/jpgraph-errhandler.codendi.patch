@@ -1,0 +1,21 @@
+*** src/jpgraph_errhandler.inc.php	2007-12-07 22:59:52.000000000 +0100
+--- src/jpgraph_errhandler.inc.codendi.php	2008-06-16 10:20:29.000000000 +0200
+***************
+*** 188,194 ****
+  	    // Special case for headers already sent or that the installation doesn't support
+  	    // the PNG format (which the error icon is encoded in). 
+  	    // Dont return an image since it can't be displayed
+! 	    die($this->iTitle.' '.$aMsg);		
+  	}
+  
+  	$aMsg = wordwrap($aMsg,55);
+--- 188,196 ----
+  	    // Special case for headers already sent or that the installation doesn't support
+  	    // the PNG format (which the error icon is encoded in). 
+  	    // Dont return an image since it can't be displayed
+! 	    //die($this->iTitle.' '.$aMsg);		
+! 	    throw new Exception ($aMsg);
+! 	    die();
+  	}
+  
+  	$aMsg = wordwrap($aMsg,55);

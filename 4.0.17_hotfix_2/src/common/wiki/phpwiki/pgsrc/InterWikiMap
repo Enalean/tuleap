@@ -1,0 +1,15 @@
+Date: Fri, 15 Oct 2004 19:08:04 -0700
+Mime-Version: 1.0 (Produced by PhpWiki 1.3.2-jeffs-hacks)
+X-Rcs-Id: $Id: InterWikiMap,v 1.11 2004/11/03 16:46:16 rurban Exp $
+Content-Type: application/x-phpwiki;
+  pagename=InterWikiMap;
+  pagetype=interwikimap;
+  pgsrc_version="3 $Revision: 1.11 $";
+  flags=PAGE_LOCKED;
+  markup=2;
+  charset=iso-8859-1
+Content-Transfer-Encoding: binary
+
+The InterWiki map used on this wiki is listed below.  The map is taken
+from the text in the verbatim block below.  (But this only works if
+this page is locked.)

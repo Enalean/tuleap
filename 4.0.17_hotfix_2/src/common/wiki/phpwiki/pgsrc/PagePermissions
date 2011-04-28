@@ -1,0 +1,166 @@
+Date: Fri, 15 Oct 2004 19:08:04 -0700
+Mime-Version: 1.0 (Produced by PhpWiki 1.3.10)
+X-Rcs-Id: $Id: PagePermissions,v 1.1 2004/11/03 16:43:56 rurban Exp $
+Content-Type: application/x-phpwiki;
+  pagename=PagePermissions;
+  pgsrc_version="2 $Revision: 1.1 $";
+  flags="";
+  markup=2;
+  charset=iso-8859-1
+Content-Transfer-Encoding: binary
+
+!!! Full recursive ACL page permissions supported (Solaris / Windows style)
+
+Boolean permissions per page and action (*granted* or *denied*) based on the current users
+group membership is implemented with ACL's (Access Control Lists).
+Opposed to the simplier unix like ugo:rwx system. <br>
+The previous system was only based on action and current user, independent of pages.
+
+A individual page permission may be inherited from its parent pages, and
+from an optional master page ("." or _dotpage'). <br>
+Use predefined default permissions, if a "." page does not exist. <br>
+Pagenames starting with "." have tighter default permissions. (edit, change, list disallowed)
+
+! Order of Evaluation (denial overrides granted, or vice versa?)
+
+The array of permissions is evaluated from top to bottom. <br>
+Access is granted if the next matching *group membership* returns true, denied if false. <br>
+If the group membership is false, the next group is tried. <br>
+If no group membership matches the upper permissions are tried recursively: <br>
+  current page => basepage => "." page => default perms. <br>
+If no group-perm pair grants access, access is denied.
+
+Consider the following perm:
+<verbatim>
+     'change' => array(ACL_ADMIN => false,
+                       ACL_OWNER => true));
+</verbatim>
+  => "Members of ADMIN may not change, the owner may change."
+
+-----
+
+For Authentication see ~WikiUserNew.php, ~WikiGroup.php and main.php
+Page Permissions are in PhpWiki since v1.3.9. 
+I suspect ACL page permissions to degrade performance by 10%
+
+Enable/Disable it in config/config.ini:
+
+  ENABLE_PAGEPERM = true
+
+The defined (and extendable) main.php actions map to simplier access types:
+<verbatim>
+       browse => view
+       edit   => edit
+       create => edit or create
+       remove => remove
+       rename => change
+       store prefs => change
+       list in PageList => list
+</verbatim>
+
+For simplicity we also map the ACL to the posix-style _owner_, _group_ and _world_ groups
+and _read_, _write_, _execute_ perms, in cygwin fashion.
+
+!!! Groups - definition of group membership
+
+See WikiGroup how to enable and where to store user-specific group membership.
+Group methods: database, file, ldap, wikipage, none
+
+ToDo: _explain better._
+
+The following special groups are always predefined, even if no other group methods are provided:
+
+* _EVERY
+* _ANONYMOUS
+* _BOGOUSER
+* _HASHOMEPAGE
+* _SIGNED
+* _AUTHENTICATED
+* _ADMIN
+* _OWNER
+* _CREATOR
+
+Those special groups are stored in a page acl as locale-independent string.
+  *Todo*: See the available translations for these special groups.
+Other group names are safed as defined by the group methods. (e.g. "Other Users")
+
+!!! Perms - mapping of actions to permissions
+
+PhpWiki supports individual actions, the default is browse. To simplify ACL's these
+actions are mapped to some special permissions (vulgo _'perms'_).
+
+We currently support the following permissions which can be stored in every page, for every group.
+
+* 'list'     List this page and all subpages (for PageList)
+* 'view'     View this page and all subpages
+* 'edit'     Edit this page and all subpages
+* 'create'   Create a new (sub)page
+* 'dump'     Download the page contents
+* 'change'   Change page attributes
+* 'remove'   Remove this page
+
+There are no plans to support additional custom perms. The API can handle that, but there's no UI,
+and it would be only specific for certain plugins, which check permissions by their own.
+
+! Action <=> Perm mapping
+
+Those perms are mapped to those actions. ActionPages (plugins) check their access restrictions by themselves.
+
+list:
+  _none, 'list' is checked for every pagename listed in PageList, to prevent from being listed in AllPages._
+
+view:
+  browse, viewsource, diff, select, xmlrpc, search, pdf
+
+dump:
+  zip, ziphtml, dumpserial, dumphtml
+
+edit:
+  revert, edit
+
+create:
+  _edit or create, if the page doesn't exist yet_
+
+change:
+  upload, loadfile, remove, lock, unlock, upgrade, chown, setacl, rename. %%%
+  all other actionpages which are not wikiwords.
+
+!! Default Permissions
+
+<verbatim>
+        $perm = array('view'   => array(ACL_EVERY => true),
+                      'edit'   => array(ACL_EVERY => true),
+                      'create' => array(ACL_EVERY => true),
+                      'list'   => array(ACL_EVERY => true),
+                      'remove' => array(ACL_ADMIN => true,
+                                        ACL_OWNER => true),
+                      'change' => array(ACL_ADMIN => true,
+                                        ACL_OWNER => true));
+        if (ZIPDUMP_AUTH)
+            $perm['dump'] = array(ACL_ADMIN => true,
+                                  ACL_OWNER => true);
+        else
+            $perm['dump'] = array(ACL_EVERY => true);
+        // view:
+        if (!ALLOW_ANON_USER) {
+            if (!ALLOW_USER_PASSWORDS)
+            	$perm['view'] = array(ACL_SIGNED => true);
+            else
+            	$perm['view'] = array(ACL_AUTHENTICATED => true);
+            $perm['view'][ACL_BOGOUSER] = ALLOW_BOGO_LOGIN ? true : false;
+        }
+        // edit:
+        if (!ALLOW_ANON_EDIT) {
+            if (!ALLOW_USER_PASSWORDS)
+            	$perm['edit'] = array(ACL_SIGNED => true);
+            else
+            	$perm['edit'] = array(ACL_AUTHENTICATED => true);
+            $perm['edit'][ACL_BOGOUSER] = ALLOW_BOGO_LOGIN ? true : false;
+            $perm['create'] = $perm['edit'];
+        }
+        return $perm;
+</verbatim>
+
+Source: [PhpWikiCvs:lib/PagePerm.php]
+-----
+PhpWikiDocumentation

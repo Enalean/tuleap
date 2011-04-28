@@ -1,0 +1,5 @@
+<?php
+
+$salome_db_config_file = 'database_salome.inc';
+
+?>

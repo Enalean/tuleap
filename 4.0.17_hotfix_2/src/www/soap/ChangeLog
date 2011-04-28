@@ -1,0 +1,68 @@
+4.1 - (Codendi_ST 4.0.16) 
+	What Changed?
+	============
+	Types
+	-----
+	* FRSFile Type as 3 new fields:
+	  computed_md5 	MD5 checksum computed on server side by Codendi
+	  reference_md5 MD5 checksum submitted by user when releasing the file (if any)
+	  user_id 	Id of user who made the delivery
+
+	Methods
+	-------
+	* addFile has a new parameter (last position):
+	  reference_md5 MD5 of the file you submit. If not blank, it will be compared to the value computed on the server and if values differ, an error will be raised.
+
+	* addUploadedFile has a new parameter (last position):
+	  reference_md5 MD5 of the file you submit. If not blank, it will be compared to the value computed on the server and if values differ, an error will be raised.
+
+	* getFile no longer returns deleted files.
+	
+	What's new ?
+	============
+	FRS
+	===
+	Methods
+	-------
+	* getFileInfo
+	  tns:FRSFile getFileInfo(xsd:string sessionKey, xsd:int group_id, xsd:int package_id, xsd:int release_id, xsd:int file_id)
+	    Returns the metadata of the file contained in
+	    The release release_id in the package package_id, in the project group_id.
+	    Returns a soap fault if the group ID does not match with a valid project, or if the package ID
+	    does not match with the right group ID, or if the release ID does not match with the right package ID,
+	    or if the file ID does not match with the right release ID.
+	
+	* getFileChunk
+	  xsd:string getFileChunk(xsd:string sessionKey, xsd:int group_id, xsd:int package_id, xsd:int release_id, xsd:int file_id, xsd:int offset, xsd:int size)
+	    Returns a part (chunk) of the <strong>content</strong>, encoded in base64, of the file contained in
+	    the release release_id in the package package_id, in the project group_id.
+	    You specify the offset where the download should start and the size to transfer.
+	    Returns a soap fault if the group ID does not match with a valid project, or if the package ID
+	    does not match with the right group ID, or if the release ID does not match with the right package ID,
+	    or if the file ID does not match with the right release ID.'
+
+	* addFileChunk
+	  xsd:integer addFileChunk(xsd:string sessionKey, xsd:string filename, xsd:string contents, xsd:boolean first_chunk)
+	    Add a chunk to a file in the incoming directory to be released later in FRS.
+	    The content of the chunk must be encoded in base64.
+	    Returns the size of the written chunk if the chunk addition succeed.
+	    Returns a soap fault if the session is not valid
+	    or if the addition failed.'
+	
+	Docman
+	======
+	Methods
+	-------
+	* getDocmanFileChunk
+	  xsd:string getDocmanFileChunk(xsd:string sessionKey, xsd:int group_id, xsd:int item_id, xsd:int version_number, xsd:int offset, xsd:int size)
+	    Returns a part (chunk) of the <strong>content</strong>, encoded in base64, of the file/embedded file which id
+	    item_id of a given version version_number, if the version is not specified it will be the current one, in the project group_id.
+	    Returns an error if the group ID does not match with a valid project, or if the item ID
+	    does not match with the right group ID, or if the version number does not match with the item ID.
+	
+	
+
+	Bug fix
+	=======
+	* addFilePackage set the default permissions properly (ie. package readable by registered_user)
+	* addFileRelease now inherits package's permissions (bug #codex:113853)

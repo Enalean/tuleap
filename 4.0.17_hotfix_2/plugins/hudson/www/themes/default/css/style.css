@@ -1,0 +1,81 @@
+.legend {
+    font-style: italic;
+    font-size: smaller;
+    color: #666;
+    background: transparent;
+    margin: 0 0 0 50px;
+    padding: 0;
+}
+
+table#jobs_table {
+    margin-bottom: 20px;
+}
+
+span.job_action {
+	margin-left: 2px;
+	margin-right: 2px;
+}
+
+td.widget_lastbuilds_weather {
+	align: right; 
+	text-align: right;
+}
+img.widget_lastbuilds_weather_img {
+    vertical-align: middle;
+}
+
+
+
+/* Widgets preview */
+.widget-preview-plugin_hudson_project_jobbuildhistory-fr_FR,
+.widget-preview-plugin_hudson_my_jobbuildhistory-fr_FR {
+    background-image:url("../images/widget_preview/fr_FR_hudson_widget_builds_history.png");
+}
+.widget-preview-plugin_hudson_project_jobbuildhistory-en_US,
+.widget-preview-plugin_hudson_my_jobbuildhistory-en_US {
+    background-image:url("../images/widget_preview/en_US_hudson_widget_builds_history.png");
+}
+.widget-preview-plugin_hudson_project_joblastartifacts-fr_FR,
+.widget-preview-plugin_hudson_my_joblastartifacts-fr_FR {
+    background-image:url("../images/widget_preview/fr_FR_hudson_widget_last_artifacts.png");
+}
+.widget-preview-plugin_hudson_project_joblastartifacts-en_US,
+.widget-preview-plugin_hudson_my_joblastartifacts-en_US {
+    background-image:url("../images/widget_preview/en_US_hudson_widget_last_artifacts.png");
+}
+.widget-preview-plugin_hudson_project_joblastbuilds-fr_FR,
+.widget-preview-plugin_hudson_my_joblastbuilds-fr_FR {
+    background-image:url("../images/widget_preview/fr_FR_hudson_widget_last_builds.png");
+}
+.widget-preview-plugin_hudson_project_joblastbuilds-en_US,
+.widget-preview-plugin_hudson_my_joblastbuilds-en_US {
+    background-image:url("../images/widget_preview/en_US_hudson_widget_last_builds.png");
+}
+.widget-preview-plugin_hudson_project_jobtestresults-fr_FR,
+.widget-preview-plugin_hudson_my_jobtestresults-fr_FR {
+    background-image:url("../images/widget_preview/fr_FR_hudson_widget_test_results.png");
+}
+.widget-preview-plugin_hudson_project_jobtestresults-en_US,
+.widget-preview-plugin_hudson_my_jobtestresults-en_US {
+    background-image:url("../images/widget_preview/en_US_hudson_widget_test_results.png");
+}
+.widget-preview-plugin_hudson_project_jobtesttrend-fr_FR,
+.widget-preview-plugin_hudson_my_jobtesttrend-fr_FR {
+    background-image:url("../images/widget_preview/fr_FR_hudson_widget_test_trend.png");
+}
+.widget-preview-plugin_hudson_project_jobtesttrend-en_US,
+.widget-preview-plugin_hudson_my_jobtesttrend-en_US {
+    background-image:url("../images/widget_preview/en_US_hudson_widget_test_trend.png");
+}
+.widget-preview-plugin_hudson_my_jobs-fr_FR {
+    background-image:url("../images/widget_preview/fr_FR_hudson_widget_my_jobs.png");
+}
+.widget-preview-plugin_hudson_my_jobs-en_US {
+    background-image:url("../images/widget_preview/en_US_hudson_widget_my_jobs.png");
+}
+.widget-preview-plugin_hudson_project_jobsoverview-fr_FR {
+    background-image:url("../images/widget_preview/fr_FR_hudson_widget_jobs_overview.png");
+}
+.widget-preview-plugin_hudson_project_jobsoverview-en_US {
+    background-image:url("../images/widget_preview/en_US_hudson_widget_jobs_overview.png");
+}

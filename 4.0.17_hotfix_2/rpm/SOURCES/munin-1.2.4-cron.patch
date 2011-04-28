@@ -1,0 +1,8 @@
+diff -Nur munin-1.2.4.orig/dists/redhat/munin.cron.d munin-1.2.4/dists/redhat/munin.cron.d
+--- munin-1.2.4.orig/dists/redhat/munin.cron.d	2005-10-08 04:11:01.000000000 -0600
++++ munin-1.2.4/dists/redhat/munin.cron.d	2006-04-22 14:10:48.000000000 -0600
+@@ -5,4 +5,3 @@
+ MAILTO=root
+ 
+ */5 * * * *     munin test -x /usr/bin/munin-cron && /usr/bin/munin-cron
+-10 10 * * *     munin test -x /usr/share/munin/munin-nagios && /usr/share/munin/munin-nagios --removeok

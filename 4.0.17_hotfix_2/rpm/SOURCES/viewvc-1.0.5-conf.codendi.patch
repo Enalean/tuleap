@@ -1,0 +1,168 @@
+diff -c -r viewvc-1.0.5/viewvc.conf.dist viewvc-1.0.5.codendi/viewvc.conf.dist
+*** viewvc-1.0.5/viewvc.conf.dist	2008-02-25 21:47:24.000000000 +0100
+--- viewvc-1.0.5.codendi/viewvc.conf.dist	2008-05-16 13:30:00.000000000 +0200
+***************
+*** 69,75 ****
+  # names to them. Each root should be given by a "name: path" value. Multiple
+  # roots should be separated by commas and can be placed on separate lines.
+  #
+! cvs_roots = cvs: /home/cvsroot
+  
+  #
+  # This setting specifies each of the Subversion roots (repositories)
+--- 69,75 ----
+  # names to them. Each root should be given by a "name: path" value. Multiple
+  # roots should be separated by commas and can be placed on separate lines.
+  #
+! #cvs_roots = cvs: /home/cvsroot
+  
+  #
+  # This setting specifies each of the Subversion roots (repositories)
+***************
+*** 97,108 ****
+  # Each parent path is processed sequentially, so repositories under
+  # later parent paths may override earlier ones.
+  #
+! #root_parents = /home/svn-repositories : svn,
+! #               /home/cvs-repositories : cvs
+  
+  # this is the name of the default root
+  # (ignored when root_as_url_component is turned on)
+! default_root = cvs
+  
+  # uncomment if the RCS binaries are not on the standard path
+  #rcs_path = /usr/bin/
+--- 97,108 ----
+  # Each parent path is processed sequentially, so repositories under
+  # later parent paths may override earlier ones.
+  #
+! root_parents = /svnroot : svn,
+!                /cvsroot : cvs
+  
+  # this is the name of the default root
+  # (ignored when root_as_url_component is turned on)
+! #default_root = cvs
+  
+  # uncomment if the RCS binaries are not on the standard path
+  #rcs_path = /usr/bin/
+***************
+*** 139,145 ****
+  
+  # This address is shown in the footer of the generated pages. 
+  # It must be replaced with the address of the local repository maintainer.
+! address = <a href="mailto:cvs-admin@insert.your.domain.here">No admin address has been configured</a>
+  
+  #
+  # This should contain a list of modules (that is, top-level directories within 
+--- 139,145 ----
+  
+  # This address is shown in the footer of the generated pages. 
+  # It must be replaced with the address of the local repository maintainer.
+! address =
+  
+  #
+  # This should contain a list of modules (that is, top-level directories within 
+***************
+*** 186,192 ****
+  # Allow "xml", forbid other modules starting with "x", and allow the rest:
+  #   forbidden = !xml, x*, !*
+  #
+! forbidden =
+  
+  #
+  # This is similar to 'forbidden', but differs in some key ways:
+--- 186,192 ----
+  # Allow "xml", forbid other modules starting with "x", and allow the rest:
+  #   forbidden = !xml, x*, !*
+  #
+! forbidden = .lockdir
+  
+  #
+  # This is similar to 'forbidden', but differs in some key ways:
+***************
+*** 281,287 ****
+  # user's requested languages are available. If there are ties on the
+  # selection of a language, then the first to appear in the list is chosen.
+  #
+! languages = en-us
+  
+  # other examples:
+  #
+--- 281,287 ----
+  # user's requested languages are available. If there are ties on the
+  # selection of a language, then the first to appear in the list is chosen.
+  #
+! languages = en-us, fr
+  
+  # other examples:
+  #
+***************
+*** 330,336 ****
+  # in browser caching.
+  #   1      Generate Etags
+  #   0      Don't generate Etags
+! generate_etags = 1
+  
+  # sort_by: File sort order
+  #   file   Sort by filename
+--- 330,336 ----
+  # in browser caching.
+  #   1      Generate Etags
+  #   0      Don't generate Etags
+! generate_etags = 0
+  
+  # sort_by: File sort order
+  #   file   Sort by filename
+***************
+*** 471,477 ****
+  short_log_len = 80
+  
+  # should we use 'enscript' for syntax coloring?
+! use_enscript = 0
+  
+  #
+  # if the enscript program is not on the path, set this value
+--- 471,477 ----
+  short_log_len = 80
+  
+  # should we use 'enscript' for syntax coloring?
+! use_enscript = 1
+  
+  #
+  # if the enscript program is not on the path, set this value
+***************
+*** 510,517 ****
+  # Use CvsGraph. See http://www.akhphd.au.dk/~bertho/cvsgraph/ for
+  # documentation and download. 
+  #
+! use_cvsgraph = 0
+! # use_cvsgraph = 1
+  
+  #
+  # if the cvsgraph program is not on the path, set this value
+--- 510,517 ----
+  # Use CvsGraph. See http://www.akhphd.au.dk/~bertho/cvsgraph/ for
+  # documentation and download. 
+  #
+! # use_cvsgraph = 0
+! use_cvsgraph = 1
+  
+  #
+  # if the cvsgraph program is not on the path, set this value
+***************
+*** 523,529 ****
+  # Location of the customized cvsgraph configuration file.  
+  # You will need an absolute pathname here:
+  #
+! cvsgraph_conf = cvsgraph.conf
+  
+  #
+  # Set to enable regular expression search of all files in a directory
+--- 523,529 ----
+  # Location of the customized cvsgraph configuration file.  
+  # You will need an absolute pathname here:
+  #
+! cvsgraph_conf = /etc/codendi/conf/cvsgraph.conf
+  
+  #
+  # Set to enable regular expression search of all files in a directory

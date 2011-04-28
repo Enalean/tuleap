@@ -1,0 +1,25 @@
+legend {
+    font-weight: bold;
+}
+
+label {
+	width: 30%;
+	text-align: right;
+	margin: 0;
+	padding: 0 .5em 0 0;
+}
+
+label#proxy_label{
+	width: 100px;
+}
+label#proxy_user_label{
+	width: 100px;
+}
+label#proxy_password_label{
+	width: 100px;
+}
+
+label#field_environment_label, #field_campaign_label, #field_family_label, #field_suite_label, #field_test_label, #field_action_label, #field_execution_label, #field_dataset_label{
+    	float: left;
+}
+

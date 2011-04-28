@@ -1,0 +1,128 @@
+plugin_git	descriptor_description	Plugin which provides Git support for Codendi
+plugin_git	descriptor_name	Git Plugin
+
+plugin_git	title	Git Plugin
+plugin_git	service_lbl_key	Git
+plugin_git	service_desc_key	Git
+plugin_git	help_reference_title	Initialize a reference repository
+plugin_git	help_init_reference	<li>cd mysources</li><li>git init</li><li>git add .</li><li>git commit -m 'initial commit'</li><li>git push $1 master</li>
+plugin_git	help_init_reference_msg	The current repository has not been initialized yet, this is required to allow users to clone it
+plugin_git	help_create_reference_title	Create a reference
+plugin_git	help_create_reference	<li>A reference is main repository which intends to be forked onto the codendi server (e.g. shared project feature) as well as cloned by users for local developments</li>
+plugin_git	help_link	Help
+plugin_git	help_tree	<li>The tree of repositories shows the repository hierarchie. References are roots as clones (forks) are displayed below their parent</li><li>Each repository is a link to a detail and administration page</li>
+plugin_git	help_fork	<li>A fork is a reference clone or a fork clone</li><li>It is accessible by all project members with read and write permissions.</li><li>It may be used as a repository for any feature developpement.</li>
+
+plugin_git	info_access_title	Git access
+plugin_git	info_access_content	Repositories are accessible through the following url, where REPO_NAME must be replaced with the actual repository name.<br /> For any access permission issue please contact your site admin.
+
+plugin_git	bread_crumb_home	Repository list
+plugin_git	bread_crumb_help	Help
+
+plugin_git	tree_title_available_repo	Repository list
+plugin_git	tree_msg_no_available_repo	No repository found
+
+plugin_git	admin_reference_creation_title	Reference creation
+plugin_git	admin_reference_creation_input_name	Name
+plugin_git	admin_reference_creation_textarea_name	Description
+plugin_git	admin_reference_creation_submit	Create
+
+
+plugin_git	admin_fork_creation_title	Fork
+plugin_git	admin_fork_creation_input_name	Fork name
+plugin_git	admin_fork_creation_input_parentname	Parent
+plugin_git	admin_fork_creation_submit	Fork
+plugin_git	admin_repolist_selectbox_choose	Choose one
+plugin_git	admin_repolist_selectbox_references	References
+plugin_git	admin_repolist_selectbox_forks	Forks
+
+plugin_git	admin_deletion_title	Repository deletion
+plugin_git	admin_deletion_submit	Delete this repository
+plugin_git	admin_deletion_input_name	Delete
+plugin_git	admin_save_submit	Save
+
+
+plugin_git	controller_access_denied	You are not allowed to access this page. You must be a project member
+plugin_git	controller_action_permission_denied	You do not have sufficient permissions to perform this action
+
+plugin_git	dao_delete_error	Unable to delete repository from database
+plugin_git	dao_delete_params	Missing repository id or project id
+
+plugin_git	dao_update_error	Unable to update Repository data
+plugin_git	dao_search_params	Repository not found : missing repository name or project id
+plugin_git	dao_search_error	Repository not found
+plugin_git	dao_error_create_notification	Mail to notify not added
+plugin_git	dao_error_remove_notification	Mail not removed
+
+plugin_git	dao_child_params	Repository child search failed : missing repository id
+
+plugin_git	backend_delete_haschild_error	Unable to delete repository : it has child(ren)
+plugin_git	backend_gitroot_mkdir_error	Error while creating root for Git repositories (Contact the site admin)
+plugin_git	backend_projectroot_mkdir_error	Error while creating project root for Git repository (Contact the site admin)
+plugin_git	backend_projectroot_chgrp_error	Error while setting project root permissions (Contact the site admin)
+
+plugin_git	actions_params_error	Empty required parameter(s)
+plugin_git	actions_delete_process	Repository will be removed in a few seconds
+plugin_git	actions_input_format_error	Repository name is not well formatted only alphanumeric and - _ characters are allowed, max lenght is
+plugin_git	actions_create_repo_process	Repository will be created in a few seconds
+
+plugin_git	actions_repo_not_found	The repository does not exist
+plugin_git	actions_repo_access	Repository access permissions are going to be modified in a few seconds
+plugin_git	actions_save_repo_process	Repository informations have been saved
+plugin_git	actions_delete_backup	A repository backup will be available in the backup directory
+plugin_git	actions_name_not_available	     A file already exists with this name under gitroot
+
+plugin_git	view_repo_description	Description
+plugin_git	view_repo_creator	Created by
+plugin_git	view_repo_creation_date	Date
+plugin_git	view_repo_parent	Parent
+plugin_git	view_repo_initialized	Initialized
+plugin_git	view_repo_not_initialized	Not initialized
+plugin_git	view_repo_clone_url	Clone url
+plugin_git	view_repo_access	Access
+plugin_git	view_repo_access_public	Public
+plugin_git	view_repo_access_private	Private
+
+plugin_git	repo_not_initialized	Repository is not initialized
+
+plugin_git	confirm_deletion_msg	Do you really want to delete this repository ?
+
+plugin_git	yes	Yes
+plugin_git	no	No
+
+plugin_git	project_service_not_available	Service not available for your project (Please contact site administrator)
+plugin_git	reference_commit_desc_key	Git commit
+plugin_git	reference_commit_nature_key	Git commit
+
+plugin_git	admin_repo_management	Repository management
+
+plugin_git	mail_prefix_title	Update notification mail prefix
+plugin_git	mail_prefix	New prefix
+plugin_git	mail_prefix_submit	Update
+
+plugin_git	add_mail_title	Add a mail address or a user to notify
+plugin_git	add_mail_msg	You can add more than one mail/user using comma or semi-column as separator.
+plugin_git	add_mail	Mail address/User
+plugin_git	add_mail_submit	Add
+plugin_git	add_mail_existing	There is no users to be notified yet. 
+
+plugin_git	no_user_mail	The added user $1 have no mail address
+plugin_git	no_user	No user corresponding to entry "$1"
+
+plugin_git	mail_prefix_updated	Mail prefix updated
+plugin_git	mail_added	Mail added
+plugin_git	mail_not_added	Could not add mail $1
+plugin_git	mail_removed	Mail $1 removed
+plugin_git	mail_not_removed	Could not remove mail $1 
+plugin_git	mail_existing	The notification is already enabled for this email $1
+
+plugin_git	notified_mails_title	List of notified mails
+
+plugin_git	set_private_warn	Making the repository access private will remove notification for all mail addresses that doesn't correspond to a user member of this project.
+plugin_git	set_private_confirm	Do you confirm change of repository access to private ?
+plugin_git	set_private_mails	List of mails to remove from notification
+
+plugin_git	feedback_event_create	There is an event in queue for a repository creation ($1), it will be processed in one minute or two. Please be patient!
+plugin_git	feedback_event_fork	There is an event in queue for a repository fork ($1), it will be processed in one minute or two. Please be patient!
+plugin_git	feedback_event_delete	There is an event in queue for a repository deletion, it will be processed in one minute or two. Please be patient!
+plugin_git	feedback_event_access	There is an event in queue for a repository permissions change, it will be processed in one minute or two. Please be patient!

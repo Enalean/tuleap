@@ -1,0 +1,54 @@
+This patch is to fix bug #137863
+
+https://bugzilla.redhat.com/bugzilla/show_bug.cgi?id=137863
+
+The problem arose when the SELinux security policy detected mailman
+attempting to open files under /usr/src/build (i.e. the buildroot
+where the RPM is created). It was a bit of a mystery what in mailmain
+was causing access to a hardcoded absolute path that only exists on
+the machine mailman was built on and doesn't exist on the machine it
+was installed on. It was finally determined the path had been embedded
+in the .pyc files when they were compiled during the build
+process. These path names are used as debug output when exceptions
+occur in the .pyc file (e.g. file, line number in stack traces). The
+SELinux security violations occurred only after a python exception
+occurred in mailman. The solution to supply the "ddir" parameter
+(debug directory) in the compile_dir function call. Given that mailman
+expects to build on the machine and in its install directory it was
+never necessary to suppy a "ddir" parameter in addition to "dir"
+because they were the same. But when building for an alternate
+installation it is necessary to supply both parameters because they
+are different. Note in the default case of building on the target both
+$(DESTDIR)$(prefix)" and "$(prefix)" will evaluate to the same value
+and the original behavior will be retained.
+
+The compile_dir command used to recurse from the $(prefix)/Mailman
+root to find .py files, but this missed .py files also located here:
+
+$(prefix)/bin
+$(prefix)/cron
+$(prefix)/pythonlib
+$(prefix)/scripts
+$(prefix)/tests
+
+In particular it missed $(prefix)/pythonlib. When $(prefix)/pythonlib
+was added a new problem was observed, that path contained pre-compiled
+.pyc files that are unpacked from a codecs tar file and since the .pyc
+files already existed in the tar file the compile_dir command skipped
+compiling them. This resulting in leaving the wrong debug path in the
+.pyc file (the ddir arg to compile_dir). Therefore we added "force" to
+the compile_dir command and started the directory recursion one level
+higher.
+
+diff -u -r mailman-2.1.5.orig/Makefile.in mailman-2.1.5.pyc/Makefile.in
+--- mailman-2.1.5.orig/Makefile.in	2003-03-31 14:26:57.000000000 -0500
++++ mailman-2.1.5.pyc/Makefile.in	2004-11-09 12:49:42.000000000 -0500
+@@ -124,7 +124,7 @@
+ 	do \
+ 	    (cd $$d; $(MAKE) DESTDIR=$(DESTDIR) install); \
+ 	done
+-	$(PYTHON) -c 'from compileall import *; compile_dir("$(DESTDIR)$(prefix)/Mailman")'
++	$(PYTHON) -c 'from compileall import *; compile_dir("$(DESTDIR)$(prefix)", 20, "$(prefix)", 1)'
+ 
+ # Only run bin/update if we aren't installing in DESTDIR, as this
+ # means there are probably no lists to deal with, and it wouldn't

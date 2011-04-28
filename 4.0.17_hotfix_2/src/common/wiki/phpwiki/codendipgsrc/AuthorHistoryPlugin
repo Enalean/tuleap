@@ -1,0 +1,28 @@
+Date: Sun, 4 Jul 2004 01:31:02 -0700
+Mime-Version: 1.0 (Produced by PhpWiki 1.3.7)
+X-Rcs-Id: $Id: AuthorHistoryPlugin,v 1.5 2004/07/04 08:44:08 rurban Exp $
+Content-Type: application/x-phpwiki;
+  pagename=AuthorHistoryPlugin;
+  pgsrc_version="2 $Revision: 1.5 $";
+  flags="";
+  markup=2;
+  charset=iso-8859-1
+Content-Transfer-Encoding: binary
+
+This plugin allows you to list the history of edits by a particular
+author; you can specify the page name as well (default is the current
+page).
+
+<verbatim>
+<?plugin AuthorHistory user="test" ?>
+
+<?plugin AuthorHistory page=HomePage ?>
+</verbatim>
+
+The second example will default to the current page. We can't provide
+examples for you since we don't know any potential usernames for your
+wiki.
+
+-------------
+
+PhpWikiDocumentation WikiPlugin

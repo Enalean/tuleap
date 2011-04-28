@@ -1,0 +1,62 @@
+FIXME: The flatfile backend has not yet been ported to the new database
+scheme.  For now, it is broken.
+
+Note: mSQL will not be supported in the 1.3 development branch, unless
+someone wants to assume responsibility for it. When the new version of
+mSQL is released we might reconsider it, but there has been no demand
+for a mSQL based Wiki so far. --Steve Wainstead, swain@panix.com
+
+
+mSQL support is fairly stable. However, due to the limitations of
+mSQL's SQL syntax, certain features found in the MySQL and Postgresql
+versions are not available. This is not to say they can't be done, but
+it will require a lot more code in msql.php to compensate for the lack
+of advanced SQL syntax. Simplicity is one of mSQL's virtues however.
+
+Setting up mSQL is beyond the scope of this document. See
+http://www.hughes.com.au/ for information on downloading and
+instructions.
+
+Create the database. You might need system privledges to do this:
+
+[root@localhost phpwiki]# msqladmin create wiki
+Database "wiki" created.
+[root@localhost phpwiki]# 
+
+Load the database schema (here I'm in the phpwiki/ directory created
+after untarring the application):
+
+[swain@localhost phpwiki]$ msql wiki < schemas/minisql-initialize.sql
+
+You will see a few error messages like this: 
+
+mSQL >     -> 
+
+ERROR : Unknown table "wiki"
+
+This is normal because the schema file drops the table and then
+creates it... dropping a nonexistent table is a nonfatal error and you
+don't have to worry about it. You should see a lot of these:
+
+mSQL >     ->     -> 
+Query OK.  1 row(s) modified or retrieved.
+
+
+
+
+mSQL >     -> 
+Bye!
+
+
+
+Now the database is created; edit lib/config.php and comment out the
+DBM file settings. Uncomment the mSQL settings, making sure the values
+are correct.
+
+That should be all! Try accessing your Wiki now. Read INSTALL and
+README for more information, plus the comments in lib/config.php.
+
+--Steve Wainstead
+swain@panix.com
+
+$Id: INSTALL.mSQL,v 1.3 2004/07/25 17:46:44 dfrankow Exp $

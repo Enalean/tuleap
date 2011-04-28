@@ -1,0 +1,418 @@
+<?php
+// Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+//
+// This file is a part of Codendi.
+//
+// Codendi is free software; you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation; either version 2 of the License, or
+// (at your option) any later version.
+//
+// Codendi is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+//
+ 
+//
+// Codendi Global Configuration File
+//
+
+// Important note on file format
+// -----------------------------
+// This script is read/parsed in PHP, Python, Perl, and parts in Bash
+// For this reason it is important to follow the following syntax rules:
+// - variables start with a '$'
+// - lines end with ";"
+// - use at least one blank char before and after every equal sign (e.g. "$a = 1;" is valid, "$a=1;" is not)
+// - you can reuse one variable (not more) in a definition. 
+// - You can concatenate two strings (not more) with a " . ".
+// - some definitions may not contain variables (whenever precised)
+// Examples:
+// $a = 1;           -> valid
+// $a = $b . "/tmp"; -> valid
+// $a = $b."/tmp";   -> invalid (missing blanks around the dot)
+// $a =$b . "/tmp";  -> invalid (missing a blank after equal sign)
+// $a = $b . $c;     -> invalid (only one variable accepted)
+// $a = "/home" . $b . "/tmp"; -> invalid (only one concatenation per line)
+
+
+//
+//
+// PART I - Codendi hostnames
+//
+
+// Hostnames should be fully qualified domain names (FQDNs); using short names
+// would be prettier but would stop you from distributing your Codendi
+// implementation across multiple domains.
+//
+// Of course, if you have a lot of machines serving a particular purpose
+// such as FTP or for shell accounts, the "hostname" here might be in
+// reality an addr_list of machines that is serviced by a round-robin
+// mechanism or something fancy like a local-director.
+//
+// =============================================================
+// The default Codendi domain
+//
+// this is used where ever the "naked" form of the Codendi domain
+// might be used.
+// This is also used as the default name for the Web server using
+// the standard http protocol (for https see below). You can also 
+// define a specific port number (useful for test servers - default 80)
+//
+$sys_default_domain = "%sys_default_domain%";
+
+// If your Apache server have SSL configured give here the name
+// of the secure server. In most cases it will likely be the same
+// as $sys_default_domain. However you can also use this variable
+// to indicate a specific port for the https traffic (default 443)
+$sys_https_host = "%sys_default_domain%";
+
+//This is used for cookie authentication. If you have distributed servers, 
+//please use a generic domain to allow single sign on.
+//Examples:
+//- you have 1 server (s1.codendi.com) 
+//   => cookie domain is "s1.codendi.com"
+//- you have 2 servers (s1.codendi.com & s2.codendi.com) 
+//   => cookie domain should be "codendi.com" for SSO
+$sys_cookie_domain = "%sys_default_domain%";
+ 
+// Machine that hosts the mailing lists (This could also be
+// the mail host if you have enough horsepower & bandwidth)
+$sys_lists_host = "lists.%sys_default_domain%";
+
+// Fully qualified name
+$sys_fullname = "%sys_fullname%";
+
+//This is used for cookie authentication. If you have distributed servers, 
+//please use same cookie prefix for a "cluster"
+$sys_cookie_prefix = "CODENDI";
+
+
+//
+//
+// PART II - Paths and system settings
+//
+//
+
+// The id of the server.
+// If the server belong to a distributed architecture, make sure that all servers have a different server_id.
+// Otherwise, use '0'.
+$sys_server_id = 0;
+
+// In order to run a test server (without backend cron jobs, CVS, SVN, mailman, vhosts, FRS, etc.)
+// Please update the following variables:
+// $codendi_dir = "mydir/codendi"
+// $sys_custom_dir = "mydir/etc/codendi"
+// $sys_data_dir = "mydir/data"
+
+
+// Codendi directory (PHP pages, site-content, etc)
+$codendi_dir = "/usr/share/codendi";
+
+// Site specific settings are stored there:
+$sys_custom_dir = "/etc/codendi";
+
+// Codendi binary prefix - do *not* use variables in this definition (compile_fileforge.sh)
+$codendi_bin_prefix = "/usr/lib/codendi/bin";
+
+// Codendi database configuration file
+$db_config_file = $sys_custom_dir . "/conf/database.inc";
+
+// Data Directory
+$sys_data_dir = "/var/lib/codendi";
+
+// Place to put temporary data: deleted user's accounts, etc
+$tmp_dir = "/var/tmp";		 
+
+// Codendi utils and documentation directories
+// WARNING: DO NOT USE VARIABLES in the three parameter definitions below.
+// For instance, do *not* use someting like
+//    *wrong* $codendi_utils_prefix = $codendi_dir . "codendi/utils" *wrong*
+// this is because those variables will be read by shell scripts.
+$codendi_utils_prefix         = "/usr/share/codendi/src/utils";
+$codendi_documentation_prefix = "/usr/share/codendi/documentation";
+$codendi_downloads_dir        = "/usr/share/codendi/downloads";// Codendi extra files download directory (eg: CLI archive)
+
+// Where wiki attachments are stored
+$sys_wiki_attachment_data_dir = $sys_data_dir . "/wiki";
+
+// Where the Codendi files are placed
+$sys_urlroot = $codendi_dir . "/src/www/"; 
+
+// Site-content paths
+$sys_incdir = $codendi_dir . '/site-content';// Directory which hosts the site content
+$sys_custom_incdir = $sys_custom_dir . '/site-content';// Directory which hosts the customized site content
+
+// Cache location
+// This directory must be world reachable, but writable only by the web-server
+$codendi_cache_dir = $tmp_dir . "/codendi_cache";
+
+$homedir_prefix = "/home/users"; // prefix to add to the user's homedir
+$grpdir_prefix  = "/home/groups";// prefix to add to the project's homedir
+
+// CVS paths
+$cvs_prefix          = "/var/lib/codendi/cvsroot";  // cvs root
+$cvslock_prefix      = "/var/lock/cvs";           // prefix to add to the cvs lock directory
+$cvs_root_allow_file = "/etc/cvs_root_allow";// File containing allowed cvs roots (regular CVS *and* CVSnt)
+$cvsnt_config_file   = "/etc/cvsnt/PServer"; // File containing CVSnt configuration
+$cvs_cmd             = "/usr/bin/cvs";       // CVS binary
+$cvs_hook_tmp_dir    = "/var/run/log_accum"; // temporary directory used by CVS commit hooks. Must be similar in commit_prep
+
+// Subversion paths
+$svn_prefix    = "/var/lib/codendi/svnroot";// prefix to add to the subversion root directory
+$svnadmin_cmd  = "/usr/bin/svnadmin";     // SVN Admin binary
+$svn_root_file = "/etc/httpd/conf.d/codendi_svnroot.conf"; // File containing SVN repository definitions for Apache
+
+// FRS paths - do *not* use variables in the following parameters
+// If you change those paths, please run utils/compile_fileforge.sh
+$ftp_frs_dir_prefix  = "/var/lib/codendi/ftp/codendi";   // Where the released files are located
+$ftp_incoming_dir    = "/var/lib/codendi/ftp/incoming";// Where files are placed when uploaded
+$ftp_anon_dir_prefix = "/var/lib/codendi/ftp/pub";     // prefix to add to the anon ftp project homedir
+
+// Path for DB dumps. Do *not* use variables in this parameter
+$dump_dir         = "/var/lib/codendi/dumps";// Where should we stick files we're working with
+
+// Paths for backend scripts
+$codendi_log        = "/var/log/codendi";   // Codendi log dir (cvslogs,)
+$codendi_shell_skel = "/etc/skel_codendi";  // Codendi Shell skeleton files directory
+$dns_master_file  = "/var/named/codendi.zone";// DNS master file
+
+// Mailman paths
+$mailman_bin_dir = "/usr/lib/mailman/bin";
+$mailman_list_dir= "/var/lib/mailman/lists";
+$mailman_wrapper = "/usr/lib/mailman/mail/mailman";
+
+// Sendmail alias
+$alias_file      = "/etc/aliases.codendi";
+
+// Plugins related paths
+$sys_pluginsroot       = $codendi_dir . "/plugins/";
+$sys_custompluginsroot = $sys_custom_dir . "/plugins/";
+$sys_pluginspath       = "/plugins";
+$sys_custompluginspath = "/customplugins";
+
+// Themeing related paths
+$sys_themeroot = $codendi_dir . "/src/www/themes/";
+$sys_custom_themeroot = $sys_custom_dir . "/themes";
+
+// 3rd Party libraries
+$htmlpurifier_dir = "/usr/share/htmlpurifier";
+$jpgraph_dir      = "/usr/share/jpgraph";
+
+// TrueType font dir (be careful, the leading / is mandatory).
+$ttf_font_dir     = "/usr/share/fonts/";
+
+// How much to add to the database unix_uid to get the actual unix uid
+// NOTE: if you change the default value, you need to update /etc/libnss-mysql.cfg
+$unix_uid_add	= "20000";
+// How much to add to the database group_id to get the unix gid
+// NOTE: if you change the default value, you need to update /etc/libnss-mysql.cfg
+$unix_gid_add	= "1000";
+
+// Users
+$sys_http_user  = "codendiadm"; // Unix user running the HTTP server
+
+// DB user for http authentication (must have access to user/group/user_group tables)
+$sys_dbauth_user   = "dbauthuser";
+$sys_dbauth_passwd = '%sys_dbauth_passwd%';
+
+//
+//
+// Part III - GUI modifications (menu colors, etc.) and other parameters
+//
+// 
+
+
+// Group id corresponding to Codendi News group
+// (was group 714 in SourceForge - sfnews)
+$sys_news_group = 46;
+
+// Default trove category in software map welcome page.
+// Default is 18 ('topic')
+$sys_default_trove_cat = 18;
+
+// Make project categorisation mandatory. If a project has not categorized itself,
+// it will result in a warning in project summary page.
+$sys_trove_cat_mandatory = 1;
+
+// ID of the survey to be referenced in users personal pages ('my page')
+$sys_my_page_survey = 1;
+
+// Linefeed characters: \r\n for Windows, \n for Linux/Unix
+$sys_lf = "\n";
+
+// Disable sub-domains (like cvs.proj.codendi.xerox.com)
+// Should be disabled if no DNS delegation
+$sys_disable_subdomains = 0;
+
+//Display boxes in Codendi Home Page
+$sys_display_homepage_boxes = 1;
+
+
+//
+// Authentication scheme
+//
+// Should be either 'ldap' or 'codendi'
+$sys_auth_type = 'codendi';
+
+// LDAP server(s) to query for more information on Codendi users and 
+// for authentication.
+// You may use a comma-separated list if there are several servers available
+// (leave blank to disable LDAP lookup). 
+// To specify secure LDAP servers, use 'ldaps://servername' 
+$sys_ldap_server = '%sys_ldap_server%';
+
+// To enable LDAP information on Codendi users, also define the DN 
+// (distinguised name) to use in LDAP queries.
+// The ldap filter is the filter to use to query the LDAP directory
+// (%name% are substituted with the value from the user table)
+$sys_ldap_dn     = 'o=XEROX, c=US';
+$sys_ldap_filter = 'mail=%email%';
+
+// For LDAP systems that do not accept anonymous binding, define here
+// a valid DN and password:
+//$sys_ldap_bind_dn = "ldapsearch";
+//$sys_ldap_bind_passwd = "xxxxxxxxx";
+
+// LDAP authentication:
+// sys_ldap_auth_dn is used for binding to the LDAP server with the
+// ldap name and password.
+// sys_ldap_auth_filter is needed to retrieve user information when
+// creating the account, and during two-step authentication
+//
+// You should use '%ldap_name%' wherever the ldap login would appear.
+//
+// NOTE: if you need a two-step authentication (search, then bind),
+// don't specify any '%ldap_name%' in $sys_ldap_auth_dn
+// (in this case, you should probably have:
+//  $sys_ldap_auth_dn == $sys_ldap_dn )
+//
+// 1- Direct authentication:
+//$sys_ldap_auth_dn = 'dc=xerox, dc=com, cn=%ldap_name%';
+// 2- Two-step authentication (search, then bind):
+$sys_ldap_auth_dn     = 'o=XEROX, c=US';
+$sys_ldap_auth_filter = 'uid=%ldap_name%';
+
+
+
+// System name to be used in Web pages, documentation,etc.
+$sys_name = 'Codendi';
+
+// Company/Organization running the system (short and long)
+$sys_org_name      = '%sys_org_name%';
+$sys_long_org_name = '%sys_long_org_name%';
+
+// Email address pointing to the Codendi site administrators
+// for use Web pages, documentation,etc.
+$sys_email_admin = 'codendi-admin@%sys_default_domain%';
+
+// Email address pointing to the Codendi contacts.
+// for use Web pages, documentation,etc.
+$sys_email_contact = 'codendi-contact@%sys_default_domain%';
+
+// Address from which emails are sent
+$sys_noreply = '"Codendi" <noreply@%sys_default_domain%>';
+
+// Supported languages (separated comma)
+// Only en_US and fr_FR are available for now
+// Exemple: 'en_US,fr_FR'
+$sys_supported_languages = 'en_US,fr_FR';
+
+// Default language for the system
+$sys_lang = 'en_US';
+
+// Default theme
+$sys_themedefault = 'Dawn';
+
+// Default theme for old browsers (currently netscape 4)
+$sys_themedefault_old = 'savannah';
+
+// If set to 1 (one) it forces the server to operate
+// HTTPS (SSL connection). HTTP request are redirected
+// to HTTPS requests.
+$sys_force_ssl = 0;
+
+// If set to 1 (one) the user registration must be approved by site 
+// admin. If 0 user can register by themselves
+$sys_user_approval = 0;
+
+// If set to 1 (one) anonymous users can browse the
+// public part of the site without logging in. If 0
+// user must first login before going further.
+$sys_allow_anon = 1;
+
+// Project default privacy status (1 is public, 0 is private) 
+$sys_is_project_public = 1;
+
+// Enable restricted users on this server
+// (restricted users only have access to the projects they belong to)
+// (0 no restricted users, 1 restricted users allowed)
+// if set to 1, $sys_user_approval should also be set to 1, 
+//          and $sys_is_project_public to 1
+//          and $sys_allow_anon to 0 (or it is useless!)
+$sys_allow_restricted_users = 0;
+
+// Is license approval mandatory when downloading a file from the FRS?
+// (1 is mandatory, 0 is optional)
+$sys_frs_license_mandatory = 1;
+
+// Default session duration when user select "Remember Me" option in user 
+// account maintainance (in seconds)
+// Default value is about 6 months: 3600*24*183=15811200
+$sys_session_lifetime = 15811200;
+
+// Duration before deleting pending accounts which have not been activated
+// (in days)
+// Default value is 60 days
+$sys_pending_account_lifetime = 60;
+
+// Default password duration. User will be asked to change its password 
+// after 'sys_password_lifetime' days.
+// 0 = no duration
+$sys_password_lifetime = 0;
+
+// Suspend user account after a given period of inactivity (in days)
+// 0 = no inactivity checking
+$sys_suspend_inactive_accounts_delay = 0;
+
+// Suspend user account if he has been no  more member of any project (in days)
+// 0 = never desactivate "not project members" account
+$sys_suspend_non_project_member_delay = 0;
+
+// Delay between the date when a doc is deleted by a user and the date the
+// corresponding file is erased on the filesystem.
+// Useful for backup and to restore files that where deleted by mistake
+// Default value is 3 days
+$sys_file_deletion_delay = 3;
+
+// Max upload size for quick release, documentation, patch and code snippet.
+// in bytes. E.g. 67108864 for 64 MB
+// Make sure that php.ini and mysql configuration file (/etc/my.cnf)
+// are also configured to allow this size.
+$sys_max_size_upload = 67108864;
+
+// Max upload size for attachments (bugs, SR, artifacts, etc.)
+// in bytes. E.g. 16777216 for 16 MB
+$sys_max_size_attachment = 16777216;
+
+//Proxy used to access to Internet. "host:port"
+$sys_proxy = "";
+
+// Enable trove categorization (project tree/software map)
+// (1 to enable, 0 to disable)
+$sys_use_trove = 1;
+
+// Enable code snippet library
+// (1 to enable, 0 to disable)
+$sys_use_snippet = 1;
+
+//Enable new project registration
+// (1 to enable, 0 to disable)
+$sys_use_project_registration = 1;
+
+// End of customizations -- place nothing after the closing PHP tag!
+?>

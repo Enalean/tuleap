@@ -1,0 +1,20 @@
+Date: Sun, 27 Jan 2002 17:28:55 -0500
+Mime-Version: 1.0 (Produced by PhpWiki 1.3.2-jeffs-hacks)
+X-Rcs-Id: $Id: PhpWiki,v 1.6 2002/12/29 00:32:34 carstenklapp Exp $
+Content-Type: application/x-phpwiki;
+  pagename=PhpWiki;
+  pgsrc_version="2 $Revision: 1.6 $";
+  flags="";
+  markup=2;
+  charset=iso-8859-1
+Content-Transfer-Encoding: binary
+
+You are using PhpWiki at this very moment. Incredible, ain't it?
+
+Visit our home page at http://phpwiki.sourceforge.net/ and see PhpWiki
+in action at http://phpwiki.sourceforge.net/phpwiki/ (and of course
+here too :-)).
+
+----
+
+PhpWikiDocumentation

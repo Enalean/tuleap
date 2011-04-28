@@ -1,0 +1,41 @@
+<?php // -*-php-*-
+    rcs_id('$Id: navbar.tmpl,v 1.10 2005/04/06 06:41:05 rurban Exp $');
+    $split = $WikiTheme->_autosplitWikiWords;
+    $WikiTheme->setAutosplitWikiWords(true);
+?>
+<!-- The top navigation/search bar -->
+<form action="<?= WikiURL(_("TitleSearch"))?>" target="_top"
+      method="get" accept-charset="<?=$charset?>" style="display:inline">
+<div id="navbuttons">
+<!-- &middot; ?= WikiLink(_("RecentChanges"), "button") ? -->
+<input type="hidden" name="auto_redirect" value="1" />
+<?php if (! USE_PATH_INFO) { ?>
+<input type="hidden" name="pagename" value="<?=_("TitleSearch")?>" />
+<?php } ?>
+<input type="text"  name="s" size="12" maxlength="256"
+             title='<?=_("Quick Search")?>'
+             onmouseover="window.status='<?=_("Quick Search")?>'; return true;"
+             onmouseout="window.status=''; return true;" /><? 
+// remove the class from the href AND img for the annoying box
+$button = Button(_("TitleSearch"));
+$button->setAttr('class', false);
+if (isset($button->_content[0])) $button->_content[0]->setAttr('class', false);
+echo $button->asXml();
+?><?=$SEP?><?= WikiLink(_("FindPage"), "button",_("Full Search")) ?>
+<?php 
+if (ENABLE_DISCUSSION_LINK) { // This requires Talk: map to end in "/Discussion"
+  if (!string_ends_with($page->getName(), _("Discussion"))) { ?>
+    <?=$SEP?><?= WikiLink(new WikiPagename('Talk:'.$page->getName(), $page->getName()), 
+               'button', _("Discussion")) ?>
+  <?php } else { ?>
+    <?=$SEP?><?= Button(array(),_("Article"),$page->getName()) ?>
+  <?php } ?>
+<?php } ?>
+<?php if (!empty($revision)) { ?>
+<?=$SEP?><?=Button(_("BackLinks")) ?>
+<?php } ?>
+<?php if (!empty($user) && $user->isAdmin()) { ?>
+<?=$SEP?><?= WikiLink(_("PhpWikiAdministration"), "button", _("Admin")) ?>
+<?php }
+$WikiTheme->setAutosplitWikiWords($split); ?></div>
+</form>

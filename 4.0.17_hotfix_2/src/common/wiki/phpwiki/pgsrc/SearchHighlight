@@ -1,0 +1,10 @@
+Date: Fri, 24 Sep 2004 21:30:51 +0200
+Mime-Version: 1.0 (Produced by PhpWiki 1.3.11pre)
+X-Rcs-Id: $Id: SearchHighlight,v 1.1 2004/09/27 09:24:56 rurban Exp $
+Content-Type: application/x-phpwiki;
+  pagename=SearchHighlight;
+  pgsrc_version="2 $Revision: 1.1 $";
+  flags="";
+  markup=2;
+  charset=iso-8859-1
+Content-Transfer-Encoding: binary

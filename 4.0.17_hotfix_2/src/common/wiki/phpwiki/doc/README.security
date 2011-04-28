@@ -1,0 +1,231 @@
+_I hate [WikiSpam|http://en.wikipedia.org/wiki/Wikispam]!_
+
+Being technically minded and based in the Asia time zone while my
+co-authors are mainly in Europe and some in the US, it became my
+unofficial role to clean up the WikiSpam each day in a 1.2 based PhpWiki.
+The WikiSpam that I see is mostly created during the evening in the US
+time zone - which is the morning for me.
+
+I started working on PhpWiki 1.3/1.4 with a view to upgrade our wiki,
+implementing security to:
+* let anyone view our work,
+* let anyone register themselves as users,
+* but require new users to be authorised before editing or creating pages.
+
+While testing and fixing bugs, I discovered some interesting and useful
+things about security in PhpWiki. I hope my knowledge will help others.
+This is the recipe that I used. There are many variations that will work
+just as well or even better for you. Note that for most of the actions,
+you need to be logged into the wiki as an administrator.
+
+!!!1 - Generic security setup.
+For the configuration that I describe above, the following parameters
+should be set in config/config.ini (and are further documented there).
+This requires that you have read and write access to the filestore on the
+webserver.
+----
+<pre>
+; require the new login code - the default
+;ENABLE_USER_NEW = true
+
+; allow ACL based permissions on pages - the default
+;ENABLE_PAGEPERM = true
+
+; allow unknown/anonymous users to by default read the content
+ALLOW_ANON_USER = true
+
+; prevent unknown/anonymous users from editing/creating pages
+ALLOW_ANON_EDIT = false
+
+; prevent users just creating a temporary user
+; (I am skating over the complexities of this setting)
+ALLOW_BOGO_LOGIN = false
+
+; to require users to have passwords
+; (this is not independent of the other settings above)
+ALLOW_USER_PASSWORDS = true
+
+; require passwords to have a minimum length
+; I am not trying to protect national security,
+; just encourage the vandals to go elsewhere
+PASSWORD_LENGTH_MINIMUM = 6
+
+; use a database to check user-ids and passwords.
+; Note that there many other settings database settings that
+; need careful attention but that is out of scope for this HOW-TO
+USER_AUTH_ORDER = "Db"
+USER_AUTH_POLICY = first-only
+
+; Store group information in wiki pages
+; there’s no need to develop a complex front end for a database.
+; Note that in performance terms this is the most expensive option.
+GROUP_METHOD = WIKIPAGE
+
+; the master page listing the groups - I just used the default
+; CATEGORY_GROUP_PAGE = ~CategoryGroup
+
+; The following SQL queries/statements are stored in
+; config/config.ini so that they can easily be changed
+; if there an existing user database. Several of these have
+; alternatives documented in config/config.ini
+DBAUTH_AUTH_USER_EXISTS = "SELECT userid FROM user WHERE userid="$userid""
+DBAUTH_AUTH_CHECK = "SELECT IF(passwd=PASSWORD("$password"),1,0) AS ok
+FROM user WHERE userid="$userid""
+DBAUTH_AUTH_CRYPT_METHOD = plain
+DBAUTH_AUTH_UPDATE = "UPDATE user SET passwd=PASSWORD("$password") WHERE
+userid="$userid""
+DBAUTH_AUTH_CREATE = "INSERT INTO user SET
+passwd=PASSWORD("$password"),userid="$userid""
+DBAUTH_PREF_SELECT = "SELECT prefs FROM pref WHERE userid="$userid""
+DBAUTH_PREF_UPDATE = "REPLACE INTO pref SET
+prefs="$pref_blob",userid="$userid""
+
+; I am paranoid about undiscovered cross-site scripting
+; vulnerabilities so I prevent users injecting HTML directly into
+; pages. It may be safe to allow the latter 2 options
+ENABLE_RAW_HTML = false
+ENABLE_RAW_HTML_LOCKEDONLY = false
+ENABLE_RAW_HTML_SAFE = false
+</pre>
+----
+
+!!!2 - User Group management
+Create group pages in the wiki.
+*First, in page CategoryGroup, add the name of the group in the bulleted
+list.  This may either be a WikiWord or enclosed in "~[" and "~]" and
+there must be nothing else on the line. For example, while editing
+CategoryGroup, add
+<pre>* ~[Writers]
+* ~UserManagement
+</pre>
+  and save. I will use these two groups as examples.
+
+* Create the two group pages by clicking on the links in the CategoryGroup
+page and add the list of users as a bulleted list (as above).
+  - In the Writers group, list the users that are allowed to edit and
+create pages.
+  - In the UserManagement group, list the users that may authorise new
+users (or remove existing users).
+  - A user may be a member of both groups and new users may be added at
+any time.
+* Lock all three pages CategoryGroup, Writers and UserManagement.
+* Unlock all three pages. _I am not certain that these last two steps are
+necessary but various comments around the documentation indicate that it
+is and, anyway, it did no harm._
+
+!!!3 - change the default page permissions.
+
+Create a page named . to hold these default permissions. _Yes, named "."._
+
+The recommended way to do this is to
+* go your HomePage
+* remove "HomePage" from the url and replace with the parameters
+  "?pagename=.&action=create"
+* enter some text like "This page holds the default ACLs for all pages"
+  and save
+* go your HomePage
+* remove "HomePage" from the url and replace with the parameters
+  "?pagename=.&action=setacl"
+* change the ACLs for EDIT and for CREATE to
+  - +Administrators
+  - +Owner
+  - +Writers
+  - -Authenticated Users
+  - -Signed Users
+  - -Bogo Users
+* _Where + means the ACL allows that kind of access and – means the ACL
+  does not allow that kind of access._
+* change the ACLs for CHANGE and REMOVE to
+  - +Administrators
+  - +Owner
+  - -Authenticated Users
+  - -Signed Users
+  - -Bogo Users
+
+!3a Alternative method to create page "." and set the ACLs correctly.
+I found some problems in the SetACL user interface (that I have not yet looked
+into / fixed), so I used an alternative mechanism to set the ACLs.
+* export a Zip Dump (via the PhpWikiAdministration page)
+* extract one of the files from this zip - initially, it might look like
+----
+<pre>Subject: ~AppendText
+From: foo@bar (~PhpWiki)
+To: foo@bar (~PhpWiki)
+Date: Wed, 5 Jan 2005 17:09:46 +0800
+Mime-Version: 1.0 (Produced by ~PhpWiki 1.3.11pre-20050108)
+Content-Type: application/x-phpwiki;
+  pagename=~AppendText;
+  flags="";
+  author=The%20PhpWiki%20programming%20team;
+  version=1;
+  lastmodified=1104916186;
+  created=1104916186;
+  author_id=The%20PhpWiki%20programming%20team;
+  markup=2;
+  charset=iso-8859-1
+Content-Transfer-Encoding: quoted-printable
+
+~<?plugin ~AppendText ?>
+</pre>
+----
+* rename and edit this file (I called it "dot" but this does not matter).
+The contents should look something like
+----
+<pre>Subject: .
+From: foo@bar (~PhpWiki)
+To: foo@bar (~PhpWiki)
+Date: Mon, 17 Jan 2005 15:54:59 +0800
+Mime-Version: 1.0 (Produced by ~PhpWiki 1.3.11pre-20050108)
+Content-Type: application/x-phpwiki;
+  pagename=.;
+  flags="";
+  author=Admin;
+  version=1;
+  lastmodified=1105949000;
+  created=1105949000;
+  author_id=Admin;
+  markup=2;
+  acl="view:_EVERY;
+edit:_ADMIN,_OWNER,Writers,-_SIGNED-_BOGOUSER,-_AUTHENTICATED;
+create:_ADMIN,_OWNER,Writers,-_SIGNED,-_BOGOUSER,-_AUTHENTICATED;
+list:_EVERY; remove:_ADMIN,_OWNER,-_SIGNED,-_BOGOUSER,-_AUTHENTICATED;
+change:_ADMIN,_OWNER,-_SIGNED,-_BOGOUSER,-_AUTHENTICATED; dump:_EVERY";
+  charset=iso-8859-1
+Content-Transfer-Encoding: quoted-printable
+
+This page holds the default permissions for all pages
+</pre>
+----
+* The author and author_id should be the name of the administrator account.
+* The important line is the one starting "  acl=". This lists the
+groups/login types allowed to perform various actions on a page.
+  - Names starting with an _ and all in capitals ("_ADMIN","_OWNER" etc.)
+are built-in PhpWiki groups.
+  - A - in front of the name means that that group is not allowed perform
+an action, so "edit:-_AUTHENTICATED" means that a user that has logged
+in is not allowed edit a page (unless they are also a member of another
+group that is allowed).
+* The example acl= line above implements the policy that I described near
+the start of this page.
+* Load the file back into the database through the PhpWikiAdministration
+page.
+* Check the permissions are what you need in PhpWikiAdministration/SetAcl
+- this can be done on any page, not just on the "." page. _Use the setacl
+button to see the permissions on a page._
+
+* If you have to alter the ACL, I suggest that you bump the values for
+version, lastmodified and created before reloading (I found problems
+removing groups in the UI, so use the dump page, manual edit and reload
+page mechanism documented above).
+
+* Set any additional/specific restrictions on an individual page by page
+basis.
+* In particular, to have a limited list of users that can manage adding
+and removing users from the Writers group, you should
+  - on pages Writers, UserManagement, CategoryGroup and CategoryCategory
+  - add UserManagement to edit and create permissions
+  - remove Writers from edit and create permissions
+
+* Test the permissions work as expected.
+
+--PhpWiki:CharlesCorrigan

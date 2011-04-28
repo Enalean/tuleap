@@ -1,0 +1,128 @@
+diff -c -r viewvc-1.0.5/templates/include/footer.ezt viewvc-1.0.5.codendi/templates/include/footer.ezt
+*** viewvc-1.0.5/templates/include/footer.ezt	2007-04-06 18:53:06.000000000 +0200
+--- viewvc-1.0.5.codendi/templates/include/footer.ezt	2008-05-16 13:54:23.000000000 +0200
+***************
+*** 2,16 ****
+  
+  <hr />
+  
+! <table>
+  <tr>
+!   <td><address>[cfg.general.address]</address></td>
+!   <td style="text-align: right;"><strong><a href="[help_href]">ViewVC Help</a></strong></td>
+! </tr>
+! <tr>
+!   <td>Powered by <a href="http://viewvc.tigris.org/">ViewVC [vsn]</a></td>
+!   <td style="text-align: right;">[if-any rss_href]<a href="[rss_href]" title="RSS 2.0 feed"><img src="[docroot]/images/feed-icon-16x16.jpg" alt="RSS 2.0 feed"/></a>[else]&nbsp;[end]</td>
+! </tr>
+  </table>
+  
+  </body>
+--- 2,10 ----
+  
+  <hr />
+  
+! <table width="100%">
+  <tr>
+!    <td align="right">Powered by <a href="http://viewvc.tigris.org/">ViewVC [vsn]</a></td>
+  </table>
+  
+  </body>
+diff -c -r viewvc-1.0.5/templates/include/header.ezt viewvc-1.0.5.codendi/templates/include/header.ezt
+*** viewvc-1.0.5/templates/include/header.ezt	2007-04-06 18:53:06.000000000 +0200
+--- viewvc-1.0.5.codendi/templates/include/header.ezt	2008-05-16 13:36:12.000000000 +0200
+***************
+*** 9,21 ****
+    [if-any rss_href]<link rel="alternate" type="application/rss+xml" title="RSS [[][rootname]][where]" href="[rss_href]" />[end]
+  </head>
+  <body>
+- <div class="vc_navheader">
+- [if-any roots]
+-   <form method="get" action="[change_root_action]">
+- [end]
+- <table style="padding:0.1em;">
+- <tr>
+-   <td>
+    [if-any nav_path]<strong>
+      [for nav_path]
+        [if-any nav_path.href]<a href="[nav_path.href]">[end]
+--- 9,14 ----
+***************
+*** 26,75 ****
+      [end]
+      </strong>
+    [end]
+-   </td>
+-   <td style="text-align:right;">
+-   [if-any roots]
+-     [change_root_hidden_values]
+-       <strong>Repository:</strong>
+-       <select name="root" onchange="submit()">
+-         [define cvs_root_options][end]
+-         [define svn_root_options][end]
+-         <option value="*viewroots*"[is view "roots"] selected="selected"[else][end]>Repository Listing</option>
+-         [for roots]
+-           [define root_option][end]
+-           [is roots.name rootname]
+-             [define root_option]<option selected="selected">[roots.name]</option>[end]
+-           [else]
+-             [define root_option]<option>[roots.name]</option>[end]
+-           [end]
+-           [is roots.type "cvs"]
+-             [define cvs_root_options][cvs_root_options][root_option][end]
+-           [else]
+-             [is roots.type "svn"]
+-               [define svn_root_options][svn_root_options][root_option][end]
+-             [end]
+-           [end]
+-         [end]
+-         [is cvs_root_options ""][else]
+-           <optgroup label="CVS Repositories">[cvs_root_options]</optgroup>
+-         [end]
+-         [is svn_root_options ""][else]
+-           <optgroup label="Subversion Repositories">[svn_root_options]</optgroup>
+-         [end]
+-       </select>
+-       <input type="submit" value="Go" />
+-   [else]
+-     &nbsp;
+-   [end]
+-   </td>
+- </tr>
+- </table>
+- [if-any roots]
+- </form>
+- [end]
+- </div>
+  
+! <div style="float: right; padding: 5px;"><a href="http://www.viewvc.org/"><img src="[docroot]/images/logo.png" alt="ViewVC logotype" width="128" height="48" /></a></div>
+! <h1>[page_title]</h1>
+  
+  
+--- 19,25 ----
+      [end]
+      </strong>
+    [end]
+  
+! <h3>[page_title]</h3>
+  
+  
+diff -rc viewvc-1.0.1/templates/noaccess.ezt viewvc.codendi/templates/noaccess.ezt
+*** viewvc-1.0.1/templates/noaccess.ezt   2006-03-06 21:01:11.000000000 +0100
+--- viewvc.codendi/templates/noaccess.ezt   2006-09-26 18:11:06.000000000 +0200
+***************
+*** 0 ****
+--- 1,13 ----
++ <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
++     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
++ <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
++ <!-- ViewVC :: http://www.viewvc.org/ -->
++ <head>
++ <title>ViewVC - Permission Denied</title>
++ </head>
++ <body>
++ <h3>Access Denied</h3>
++ You are not authorized to access this directory.
++ <br>Please contact a project administrator.
++ </body>
++ </html>

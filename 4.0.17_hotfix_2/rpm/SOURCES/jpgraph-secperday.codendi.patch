@@ -1,0 +1,21 @@
+*** src/jpgraph_date.php	2008-05-30 11:20:15.000000000 +0200
+--- src/jpgraph_date.codendi.php	2008-05-30 11:21:42.000000000 +0200
+***************
+*** 41,47 ****
+  define('DAYADJ_7',1);
+  
+  define('SECPERYEAR',31536000);
+! define('SECPERDAY',86400);
+  define('SECPERHOUR',3600);
+  define('SECPERMIN',60);
+  
+--- 41,49 ----
+  define('DAYADJ_7',1);
+  
+  define('SECPERYEAR',31536000);
+! if(!defined('SECPERDAY')){
+! 	define('SECPERDAY',86400);
+! }
+  define('SECPERHOUR',3600);
+  define('SECPERMIN',60);
+  
