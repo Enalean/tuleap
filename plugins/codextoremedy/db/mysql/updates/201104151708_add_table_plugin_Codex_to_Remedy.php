@@ -55,6 +55,7 @@ EOT;
                     ' description TEXT NULL,'.
                     ' type INT,'.
                     ' severity INT,'.
+                    ' cc TEXT,'.
                     ' PRIMARY KEY(id))';
         $this->db->createTable('plugin_codex_to_remedy', $sql);
     }
