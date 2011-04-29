@@ -12,3 +12,4 @@ plugin_codextoremedy	codextoremedy_mail_subject	$2 has submitted a new $1 Remedy
 plugin_codextoremedy	codextoremedy_mail_content	Dear SD peoples,<br /><br /> <b>$1</b>(login: <em>$2</em>) insert a new $3 Remedy ticket.<br />$3 - $4 <br />$5<br /><p>$6<p>
 plugin_codextoremedy	codextoremedy_mail_failed	Send notification mail has failed
 plugin_codextoremedy	codextoremedy_ticket_submission_success	Ticket was successfully submitted
+plugin_codextoremedy	codextoremedy_ticket_submission_fail	Ticket submission failed
