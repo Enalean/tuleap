@@ -96,13 +96,13 @@ class CodexToRemedyActions extends PluginAction {
         $mail->setBodyHtml($body);
         try {
             if(!$mail->send()) {
-                $requestStatus = False;
+                $requestStatus = false;
             } else {
-                $requestStatus = True;
+                $requestStatus = true;
             }
         } catch (Zend_Mail_Transport_Exception $e) {
                 $GLOBALS['Response']->addFeedBack('error',$GLOBALS['Language']->getText('plugin_codextoremedy', 'codextoremedy_mail_failed'));
-                $requestStatus = False;
+                $requestStatus = false;
         }
     }
     // }}}
