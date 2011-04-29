@@ -60,11 +60,15 @@ class CodexToRemedyDBDriver {
      *
      * @return Boolean
      */
-    public function createTicket($summary, $description, $type, $severity, $createDate) {
-        $sql = "INSERT INTO RIF_REQUEST (CATEGORY , TYPE , ITEM , REQUESTER_NAME , SUMMARY, DESCRIPTION, SEVERITY ,".
-                                    "INSERTION_DATE, REQUEST_STATUS , REQUESTER_LOGIN, RIF_ID) VALUES ('COLLABORATION PLATFORM','CODEXSTN',".
-                                    "'".$type."','OUNISH', '".$summary."' , '".$description."' ,'".$severity."'".
-                                    ",sysdate,'NEW', 'OUNISH', RIF_REQUEST_SEQ.NEXTVAL)";
+    public function createTicket($summary, $description, $type, $severity, $createDate, $cc) {
+        $pluginManager = PluginManager::instance();
+        $p = $pluginManager->getPluginByName('codextoremedy');
+        $submitter = $p->getProperty('codextoremedy_submitter');
+
+        $sql = "INSERT INTO RIF_REQUEST (CATEGORY , TYPE , ITEM , REQUESTER_NAME , SUMMARY, DESCRIPTION, SEVERITY , ".
+                                    "CC_MAIL_IDS, INSERTION_DATE, REQUEST_STATUS , REQUESTER_LOGIN, RIF_ID) VALUES ('COLLABORATION PLATFORM','CODEXSTN',".
+                                    "'".$type."','".$submitter."', '".$summary."' , '".$description."' ,'".$severity."' ,'".
+                                    $cc."',sysdate,'NEW', '".$submitter."', RIF_REQUEST_SEQ.NEXTVAL)";
         $stid = oci_parse($this->dbh , $sql);
         return oci_execute($stid);
     }

@@ -41,7 +41,7 @@ class CodexToRemedyActions extends PluginAction {
      */
     function insertTicketInCodexDB($params) {
         $dao = new CodexToRemedyDao();
-        return $dao->insertInCodexDB($params['id'], $params['user_id'], $params['summary'], $params['create_date'], $params['description'], $params['type'], $params['severity'], $params['cc']);
+        return $dao->insertInCodexDB($params['id'], $params['user_id'], $params['summary'], $params['create_date'], $params['description'], $params['text_type'], $params['text_severity'], $params['cc']);
     }
 
     /**
@@ -55,7 +55,7 @@ class CodexToRemedyActions extends PluginAction {
         $oci = new CodexToRemedyDBDriver();
         $oci->getdbh();
         //need more parameters from form: people_cc
-        return $oci->createTicket($params['summary'], $params['description'], $params['text_type'], $params['text_severity'], $params['create_date']);
+        return $oci->createTicket($params['summary'], $params['description'], $params['text_type'], $params['text_severity'], $params['create_date'], $params['cc']);
     }
 
     /**
