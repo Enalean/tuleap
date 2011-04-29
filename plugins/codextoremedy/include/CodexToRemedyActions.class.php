@@ -55,7 +55,7 @@ class CodexToRemedyActions extends PluginAction {
         $oci = new CodexToRemedyDBDriver();
         $oci->getdbh();
         //need more parameters from form: people_cc
-        return $oci->createTicket($params['summary'], $params['description'], $params['text_type'], $params['text_severity'], $params['create_date'], $params['cc']);
+        return $oci->createTicket($params['summary'], $params['description'], $params['text_type'], $params['text_severity'], $params['create_date']);
     }
 
     /**
