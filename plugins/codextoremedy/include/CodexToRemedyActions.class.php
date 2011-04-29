@@ -55,7 +55,7 @@ class CodexToRemedyActions extends PluginAction {
         $oci = new CodexToRemedyDBDriver();
         $oci->getdbh();
         //need more parameters from form: people_cc
-        return $oci->createTicket($params['summary'], $params['description'], $params['type'], $params['severity'], $params['create_date']);
+        return $oci->createTicket($params['summary'], $params['description'], $params['text_type'], $params['text_severity'], $params['create_date']);
     }
 
     /**
@@ -72,31 +72,8 @@ class CodexToRemedyActions extends PluginAction {
         $um = UserManager::instance();
         $user = $um->getCurrentUser();
 
-        switch ($requestType = $params['type']) {
-            case CodexToRemedy::TYPE_SUPPORT :
-                $requestType = 'SUPPORT REQUEST';
-                break;
-            case CodexToRemedy::TYPE_ENHANCEMENT :
-                $requestType = 'ENHANCEMENT REQUEST';
-                break;
-            default:
-                $requestType = '';
-                break;
-        }
-        switch ($severity = $params['severity']) {
-            case CodexToRemedy::SEVERITY_MINOR :
-                $severity = 'MINOR';
-                break;
-            case CodexToRemedy::SEVERITY_SERIOUS :
-                $severity = 'SERIOUS';
-                break;
-            case CodexToRemedy::SEVERITY_CRITICAL :
-                $severity = 'CRITICAL';
-                break;
-            default:
-                $severity = '';
-                break;
-        }
+        $requestType = $params['text_type'];
+        $severity = $params['text_severity'];
         $summary = $params['summary'];
         $messageToSd = $params['description'];
 

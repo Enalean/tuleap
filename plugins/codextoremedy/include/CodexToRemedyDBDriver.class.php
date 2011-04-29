@@ -62,9 +62,9 @@ class CodexToRemedyDBDriver {
      */
     public function createTicket($summary, $description, $type, $severity, $createDate) {
         $sql = "INSERT INTO RIF_REQUEST (CATEGORY , TYPE , ITEM , REQUESTER_NAME , SUMMARY, DESCRIPTION, SEVERITY ,".
-                                    "CC_MAIL_IDS , INSERTION_DATE, REQUEST_STATUS , REQUESTER_LOGIN, RIF_ID) VALUES ('COLLABORATION PLATFORM','CODEXSTN',".    
-                                    "'ASSISTANCE REQUEST','HOSNIAH', '".$summary."' , '".$description."' ,'".$severity. 
-                                    "', 'hosni.ahmed@st.com',sysdate,'NEW', 'HOSNIAH', RIF_REQUEST_SEQ.NEXTVAL)";
+                                    "INSERTION_DATE, REQUEST_STATUS , REQUESTER_LOGIN, RIF_ID) VALUES ('COLLABORATION PLATFORM','CODEXSTN',".
+                                    "'".$type."','OUNISH', '".$summary."' , '".$description."' ,'".$severity."'".
+                                    ",sysdate,'NEW', 'OUNISH', RIF_REQUEST_SEQ.NEXTVAL)";
         $stid = oci_parse($this->dbh , $sql);
         return oci_execute($stid);
     }
