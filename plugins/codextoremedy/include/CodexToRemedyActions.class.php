@@ -41,7 +41,7 @@ class CodexToRemedyActions extends PluginAction {
      */
     function insertTicketInCodexDB($params) {
         $dao = new CodexToRemedyDao();
-        return $dao->insertInCodexDB($params['id'], $params['user_id'], $params['summary'], $params['create_date'], $params['description'], $params['text_type'], $params['text_severity'], $params['cc']);
+        return $dao->insertInCodexDB($params['id'], $params['user_id'], $params['summary'], $params['create_date'], $params['description'], $params['type'], $params['severity'], $params['cc']);
     }
 
     /**
