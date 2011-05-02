@@ -26,12 +26,12 @@ class CodexToRemedyDBDriver {
     public function __construct() {
         $pluginManager = PluginManager::instance();
         $p = $pluginManager->getPluginByName('codextoremedy');
-        if ($p->getProperty('db_host') && $p->getProperty('db_name')&& $p->getProperty('db_port')) {
+        if ($p->getProperty('db_host') && $p->getProperty('db_name')&& $p->getProperty('db_port') && $p->getProperty('db_user') && $p->getProperty('db_passwd')) {
             $this->dsn      = '//'.$p->getProperty('db_host').':'.$p->getProperty('db_port').'/'.$p->getProperty('db_name');
             $this->user     = $p->getProperty('db_user');
             $this->password = $p->getProperty('db_passwd');
         } else {
-            throw new Exception('Unable to find valid parameters connexion, please check codextoremedy conf file');
+            throw new Exception('Unable to find valid connexion parameters, please check codextoremedy conf file');
         }
     }
 
@@ -60,17 +60,45 @@ class CodexToRemedyDBDriver {
      *
      * @return Boolean
      */
-    public function createTicket($summary, $description, $type, $severity, $createDate) {
+    public function createTicket($summary, $description, $item, $severity, $createDate) {
         $pluginManager = PluginManager::instance();
         $p = $pluginManager->getPluginByName('codextoremedy');
         $submitter = $p->getProperty('codextoremedy_submitter');
+        $category  = $p->getProperty('remedy_category');
+        $type     = $p->getProperty('remedy_type');
 
-        $sql = "INSERT INTO RIF_REQUEST (CATEGORY , TYPE , ITEM , REQUESTER_NAME , SUMMARY, DESCRIPTION, SEVERITY , ".
-                                    " INSERTION_DATE, REQUEST_STATUS , REQUESTER_LOGIN, RIF_ID) VALUES ('COLLABORATION PLATFORM','CODEXSTN',".
-                                    "'".$type."','".$submitter."', '".$summary."' , '".$description."' ,'".$severity."' , ".
-                                    " sysdate,'NEW', '".$submitter."', RIF_REQUEST_SEQ.NEXTVAL)";
-        $stid = oci_parse($this->dbh , $sql);
-        return oci_execute($stid);
+        if ($submitter && $category && $type) {
+            $sql = "INSERT INTO RIF_REQUEST
+                   (
+                   CATEGORY,
+                   TYPE,
+                   ITEM,
+                   REQUESTER_NAME,
+                   SUMMARY,
+                   DESCRIPTION,
+                   SEVERITY,
+                   INSERTION_DATE,
+                   REQUEST_STATUS,
+                   REQUESTER_LOGIN,
+                   RIF_ID
+                   ) VALUES (
+                   '".$category."',
+                   '".$type."',
+                   '".$item."',
+                   '".$submitter."',
+                   '".$summary."',
+                   '".$description."',
+                   '".$severity."',
+                   sysdate,
+                   'NEW',
+                   '".$submitter."',
+                   RIF_REQUEST_SEQ.NEXTVAL
+                   )";
+            $stid = oci_parse($this->dbh , $sql);
+            return oci_execute($stid);
+        } else {
+            throw new Exception('Unable to find RIF settings, please check codextoremedy conf file');
+        }
     }
 }
 ?>

@@ -1,10 +1,23 @@
 <?php
 
 $db_host = 'eux410.sgp.st.com';
+
 $db_port = '1541';
+
 $db_name = 's2qa';
+
 $db_user = 'dlh_rif';
+
 $db_passwd = 'useme123';
-$send_notif_mail_sd ='codex-team@lists.codex.cro.st.com';
-$codextoremedy_submitter='ABDELMA';
+
+// People to be notified 
+$send_notif_mail_sd = 'codex-team@lists.codex.cro.st.com';
+
+// Remedy submitter
+$codextoremedy_submitter = 'ABDELMA';
+
+$remedy_category = 'COLLABORATION PLATFORM';
+
+$remedy_type = 'CODEXSTN';
+
 ?>
