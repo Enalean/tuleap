@@ -48,7 +48,7 @@ EOT;
      */
     public function up() {
         $sql = 'CREATE TABLE plugin_codex_to_remedy ('.
-                    ' id INT(11) UNSIGNED NOT NULL, '.
+                    ' id INT(11) UNSIGNED NOT NULL auto_increment, '.
                     ' user_id INT(11) UNSIGNED NULL,'.
                     ' summary TEXT NOT NULL,'.
                     ' create_date INT(11) UNSIGNED NULL,'.
