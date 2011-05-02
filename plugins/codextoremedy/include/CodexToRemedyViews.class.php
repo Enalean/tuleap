@@ -58,12 +58,12 @@ class CodexToRemedyViews extends PluginView {
         $data = $c->getData();
         $requestStatus = $data['status'];
         if(!$requestStatus) {
-            $GLOBALS['Response']->addFeedBack('error',$GLOBALS['Language']->getText('plugin_codextoremedy', 'codextoremedy_ticket_submission_fail'));
-            $GLOBALS['Response']->redirect('/site/');
+            $c->addError($GLOBALS['Language']->getText('plugin_codextoremedy', 'codextoremedy_ticket_submission_fail'));
+            $c->redirect('/site/');
         }
         else {
-            $GLOBALS['Response']->addFeedBack('info',$GLOBALS['Language']->getText('plugin_codextoremedy', 'codextoremedy_ticket_submission_success'));
-            $GLOBALS['Response']->redirect('/my/');
+            $c->addInfo($GLOBALS['Language']->getText('plugin_codextoremedy', 'codextoremedy_ticket_submission_success'));
+            $c->redirect('/my/');
         }
     }
 
@@ -73,7 +73,7 @@ class CodexToRemedyViews extends PluginView {
      * @return void
      */
     function form() {
-        $GLOBALS['Response']->redirect('/site/');
+        $c->redirect('/site/');
     }
     // }}}
 }
