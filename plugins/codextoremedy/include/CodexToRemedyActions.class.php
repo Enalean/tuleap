@@ -33,6 +33,7 @@ class CodexToRemedyActions extends PluginAction {
 
     const RECEPIENT_SD   = 1;
     const RECEPIENT_USER = 2;
+    const RECEPIENT_FAILURE_SD = 3;
 
     // {{{ Actions
     /**
@@ -165,24 +166,40 @@ class CodexToRemedyActions extends PluginAction {
         $summary = $params['summary'];
         $messageToSd = $params['description'];
 
-        if($recepient == self::RECEPIENT_SD) {
-            $pluginManager = PluginManager::instance();
-            $p = $pluginManager->getPluginByName('codextoremedy');
-            if (!$to = $p->getProperty('send_notif_mail_sd')) {
-                $to = 'codex-team@lists.codex.cro.st.com';
-            }
-        }
-
         $from = $user->getEmail();
         // Send a notification message to the SD and CodexCC
         $mail = new Codendi_Mail();
-        $mail->setTo($to);
         $mail->setFrom($from);
 
-        $mail->setSubject($GLOBALS['Language']->getText('plugin_codextoremedy', 'codextoremedy_mail_subject', array($requestType, $user->getRealName())));
+        switch ($recepient) {
+            case self::RECEPIENT_SD:
+                $pluginManager = PluginManager::instance();
+                $p = $pluginManager->getPluginByName('codextoremedy');
+                if (!$to = $p->getProperty('send_notif_mail_sd')) {
+                    $to = 'codex-team@lists.codex.cro.st.com';
+                }
+                $mail->setSubject($GLOBALS['Language']->getText('plugin_codextoremedy', 'codextoremedy_mail_subject', array($requestType, $user->getRealName())));
+                $body = $GLOBALS['Language']->getText('plugin_codextoremedy', 'codextoremedy_mail_content', array($user->getRealName(), $user->getName(), $requestType, $severity, $summary, $messageToSd, $user->getEmail()));
+                break;
+            case self::RECEPIENT_FAILURE_SD:
+                $pluginManager = PluginManager::instance();
+                $p = $pluginManager->getPluginByName('codextoremedy');
+                if(!$to = $p->getProperty('send_notif_mail_sd')) {
+                $to = 'codex-team@lists.codex.cro.st.com';
+                }
+                $mail->setSubject($GLOBALS['Language']->getText('plugin_codextoremedy', 'codextoremedy_Failure_mail_subject', array($requestType, $user->getRealName())));
+                $body = $GLOBALS['Language']->getText('plugin_codextoremedy', 'codextoremedy_Failure_mail_content', array($user->getRealName(), $user->getName(), $requestType, $severity, $summary, $messageToSd, $user->getEmail()));
+                break;
+            case self::RECEPIENT_USER:
+                $to = $user->getEmail();
+                $mail->setSubject($GLOBALS['Language']->getText('plugin_codextoremedy', 'codextoremedy_mail_subject', array($requestType, $user->getRealName())));
+                $body = $GLOBALS['Language']->getText('plugin_codextoremedy', 'codextoremedy_user_mail_content', array($user->getRealName(), $user->getName(), $requestType, $severity, $summary, $messageToSd, $user->getEmail()));
+                break;
+            default:
+                break;
+        }
 
-        $body = $GLOBALS['Language']->getText('plugin_codextoremedy', 'codextoremedy_mail_content', array($user->getRealName(), $user->getName(), $requestType, $severity, $summary, $messageToSd, $user->getEmail()));
-
+        $mail->setTo($to);
         $mail->setBodyHtml($body);
         try {
             if(!$mail->send()) {
@@ -212,9 +229,9 @@ class CodexToRemedyActions extends PluginAction {
         $params['create_date'] = time();
         if($this->insertTicketInCodexDB($params)) {
             $this->sendMail($params, self::RECEPIENT_SD);
-            // TODO : notify user
+            $this->sendMail($params, self::RECEPIENT_USER);
             if(!$this->insertTicketInRIFDB($params)) {
-                // TODO : notify SD by the failure
+            $this->sendMail($params, self::RECEPIENT_FAILURE_SD);
             }
             $c->addData(array('status' => true));
         } else {
