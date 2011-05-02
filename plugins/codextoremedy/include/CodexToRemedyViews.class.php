@@ -73,6 +73,7 @@ class CodexToRemedyViews extends PluginView {
      * @return void
      */
     function form() {
+        $c = $this->getController();
         $c->redirect('/site/');
     }
     // }}}
