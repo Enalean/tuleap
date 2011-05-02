@@ -53,15 +53,27 @@ class CodexToRemedyViews extends PluginView {
      *
      * @return void
      */
-    function remedyPostSubmission($requestStatus) {
+    function remedyPostSubmission() {
+        $c = $this->getController();
+        $data = $c->getData();
+        $requestStatus = $data['status'];
         if(!$requestStatus) {
-        $GLOBALS['Response']->addFeedBack('error',$GLOBALS['Language']->getText('plugin_codextoremedy', 'codextoremedy_ticket_submission_fail'));
-        $GLOBALS['Response']->redirect('/site/');
+            $GLOBALS['Response']->addFeedBack('error',$GLOBALS['Language']->getText('plugin_codextoremedy', 'codextoremedy_ticket_submission_fail'));
+            $GLOBALS['Response']->redirect('/site/');
         }
         else {
-        $GLOBALS['Response']->addFeedBack('info',$GLOBALS['Language']->getText('plugin_codextoremedy', 'codextoremedy_ticket_submission_success'));
-        $GLOBALS['Response']->redirect('/my/');
+            $GLOBALS['Response']->addFeedBack('info',$GLOBALS['Language']->getText('plugin_codextoremedy', 'codextoremedy_ticket_submission_success'));
+            $GLOBALS['Response']->redirect('/my/');
         }
+    }
+
+    /**
+     * Default view
+     *
+     * @return void
+     */
+    function form() {
+        $GLOBALS['Response']->redirect('/site/');
     }
     // }}}
 }

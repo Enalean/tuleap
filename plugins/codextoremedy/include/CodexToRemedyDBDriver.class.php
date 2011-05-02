@@ -97,7 +97,7 @@ class CodexToRemedyDBDriver {
             $stid = oci_parse($this->dbh , $sql);
             return oci_execute($stid);
         } else {
-            throw new Exception('Unable to find RIF settings, please check codextoremedy conf file');
+            return false;
         }
     }
 }
