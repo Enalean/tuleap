@@ -174,15 +174,15 @@ class CodexToRemedyActions extends PluginAction {
         $summary = $params['summary'];
         $messageToSd = $params['description'];
 
-        $from = $user->getEmail();
+        $pluginManager = PluginManager::instance();
+        $p = $pluginManager->getPluginByName('codextoremedy');
+        $from = $p->getProperty('send_notif_mail_from');
         // Send a notification message to the SD and CodexCC
         $mail = $this->_getCodendiMail();
         $mail->setFrom($from);
 
         switch ($recepient) {
             case self::RECEPIENT_SD:
-                $pluginManager = PluginManager::instance();
-                $p = $pluginManager->getPluginByName('codextoremedy');
                 if (!$to = $p->getProperty('send_notif_mail_sd')) {
                     $to = 'codex-team@lists.codex.cro.st.com';
                 }
@@ -190,8 +190,6 @@ class CodexToRemedyActions extends PluginAction {
                 $body = $GLOBALS['Language']->getText('plugin_codextoremedy', 'codextoremedy_mail_content', array($user->getRealName(), $user->getName(), $requestType, $severity, $summary, $messageToSd, $user->getEmail()));
                 break;
             case self::RECEPIENT_FAILURE_SD:
-                $pluginManager = PluginManager::instance();
-                $p = $pluginManager->getPluginByName('codextoremedy');
                 if (!$to = $p->getProperty('send_notif_mail_sd')) {
                     $to = 'codex-team@lists.codex.cro.st.com';
                 }
@@ -267,7 +265,7 @@ class CodexToRemedyActions extends PluginAction {
      * @return Codendi_Mail
      */
     function _getCodendiMail() {
-        return $mail = new Codendi_Mail();
+        return new Codendi_Mail();
     }
 
 }

@@ -27,6 +27,7 @@ require_once('common/mail/Codendi_Mail.class.php');
 Mock::generate('Codendi_Mail');
 require_once('common/language/BaseLanguage.class.php');
 Mock::generate('BaseLanguage');
+require_once('common/plugin/PluginManager.class.php');
 
 require_once(dirname(__FILE__).'/../include/CodexToRemedy.class.php');
 Mock::generate('CodexToRemedy');

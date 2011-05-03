@@ -16,6 +16,9 @@ $send_notif_mail_sd = 'codex-team@lists.codex.cro.st.com';
 // Remedy submitter
 $codextoremedy_submitter = 'ABDELMA';
 
+// From adress
+$send_notif_mail_from = 'noreply@codex.cro.st.com';
+
 $remedy_category = 'COLLABORATION PLATFORM';
 
 $remedy_type = 'CODEXSTN';
