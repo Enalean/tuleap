@@ -94,7 +94,7 @@ class CodexToRemedyActions extends PluginAction {
         $cc = '';
         $mails      = array_map('trim', preg_split('/[,;]/', $request->get('cc')));
         $rule       = new Rule_Email();
-        $um         = UserManager::instance();
+        $um         = $this->_getUserManager();
         foreach ($mails as $mail) {
             if ($rule->isValid($mail)) {
                 if ($cc == '') {
@@ -143,7 +143,7 @@ class CodexToRemedyActions extends PluginAction {
         try {
             $oci = new CodexToRemedyDBDriver();
             $oci->getdbh();
-            return $oci->createTicket($params['summary'], $params['description'], $params['text_type'], $params['text_severity'], $params['create_date']);
+            return $oci->createTicket($params['summary'], $params['description'], $params['text_type'], $params['text_severity']);
         } catch(Exception $e) {
             return false;
         }
@@ -158,7 +158,7 @@ class CodexToRemedyActions extends PluginAction {
      * @return void
      */
     function sendMail($params, $recepient) {
-        $um = UserManager::instance();
+        $um = $this->_getUserManager();
         $user = $um->getCurrentUser();
 
         $requestType = $params['text_type'];
@@ -220,13 +220,14 @@ class CodexToRemedyActions extends PluginAction {
      * @return void
      */
     function AddTicket() {
-        $c = $this->getController();
-        $um = UserManager::instance();
-        $user = $um->getCurrentUser();
-        $request               = $this->getController()->getRequest();
+        $c                     = $this->getController();
+        $um                    = $this->_getUserManager();
+        $user                  = $um->getCurrentUser();
+        $request               = $c->getRequest();
         $params                = $this->validateRequest($request);
         $params['user_id']     = $user->getId();
         $params['create_date'] = time();
+        var_dump($params);
         if($this->insertTicketInCodexDB($params)) {
             $this->sendMail($params, self::RECEPIENT_SD);
             $this->sendMail($params, self::RECEPIENT_USER);
@@ -239,6 +240,15 @@ class CodexToRemedyActions extends PluginAction {
         }
     }
     // }}}
+
+    /**
+     * Wrapper for tests
+     *
+     * @return UserManager
+     */
+    function _getUserManager() {
+        return UserManager::instance();
+    }
 }
 
 ?>

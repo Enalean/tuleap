@@ -56,11 +56,10 @@ class CodexToRemedyDBDriver {
      * @param String $description
      * @param String $type
      * @param String $severity
-     * @param Date   $createDate
      *
      * @return Boolean
      */
-    public function createTicket($summary, $description, $item, $severity, $createDate) {
+    public function createTicket($summary, $description, $item, $severity) {
         $pluginManager = PluginManager::instance();
         $p = $pluginManager->getPluginByName('codextoremedy');
         $submitter = $p->getProperty('codextoremedy_submitter');

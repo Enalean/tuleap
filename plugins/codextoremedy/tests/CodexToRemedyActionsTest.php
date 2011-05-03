@@ -21,9 +21,14 @@
 require_once('common/include/HTTPRequest.class.php');
 Mock::generate('HTTPRequest');
 require_once('common/valid/ValidFactory.class.php');
+Mock::generate('User');
+Mock::generate('UserManager');
 
 require_once(dirname(__FILE__).'/../include/CodexToRemedy.class.php');
+Mock::generate('CodexToRemedy');
 require_once(dirname(__FILE__).'/../include/CodexToRemedyActions.class.php');
+Mock::generatePartial('CodexToRemedyActions', 'CodexToRemedyActionsTestVersion', array('_getUserManager'));
+Mock::generatePartial('CodexToRemedyActions', 'CodexToRemedyActionsTestVersion2', array('_getUserManager', 'insertTicketInCodexDB', 'sendMail', 'insertTicketInRIFDB', 'getController', 'validateRequest'));
 
 class CodexToRemedyActionsTest extends UnitTestCase {
 
@@ -35,7 +40,8 @@ class CodexToRemedyActionsTest extends UnitTestCase {
         $request->setReturnValue('get', 1, array('severity'));
         $request->setReturnValue('get', 'john.doe@example.com', array('cc'));
         $request->setReturnValue('valid', true);
-        $params = CodexToRemedyActions::validateRequest($request);
+        $actions = new CodexToRemedyActionsTestVersion();
+        $params = $actions->validateRequest($request);
         $validParams = array('summary' => 'valid summary',
                              'description' => 'valid description',
                              'type' => 1,
@@ -54,9 +60,63 @@ class CodexToRemedyActionsTest extends UnitTestCase {
         $request->setReturnValue('get', 1, array('severity'));
         $request->setReturnValue('get', 'john.doe@example.com', array('cc'));
         $request->setReturnValue('valid', false);
-        $params = CodexToRemedyActions::validateRequest($request);
+        $actions = new CodexToRemedyActionsTestVersion();
+        $params = $actions->validateRequest($request);
         $validParams = array('cc' => 'john.doe@example.com');
         $this->assertEqual($params, $validParams);
+    }
+
+    function testAddTicketCodexDBFail() {
+        $um = new MockUserManager();
+        $user = new MockUser();
+        $um->setReturnValue('getCurrentUser', $user);
+        $actions = new CodexToRemedyActionsTestVersion2();
+        $c = new MockCodexToRemedy();
+        $actions->setReturnValue('getController', $c);
+        $actions->setReturnValue('_getUserManager', $um);
+        $actions->setReturnValue('insertTicketInCodexDB', false);
+        $actions->expectOnce('insertTicketInCodexDB');
+        $actions->expectNever('sendMail');
+        $actions->expectNever('insertTicketInRIFDB');
+        $c->expectOnce('addData');
+        $c->expect('addData', array(array('status' => false)));
+        $actions->AddTicket();
+    }
+
+    function testAddTicketRIFDBFail() {
+        $um = new MockUserManager();
+        $user = new MockUser();
+        $um->setReturnValue('getCurrentUser', $user);
+        $actions = new CodexToRemedyActionsTestVersion2();
+        $c = new MockCodexToRemedy();
+        $actions->setReturnValue('getController', $c);
+        $actions->setReturnValue('_getUserManager', $um);
+        $actions->setReturnValue('insertTicketInCodexDB', true);
+        $actions->setReturnValue('insertTicketInRIFDB', false);
+        $actions->expectOnce('insertTicketInCodexDB');
+        $actions->expectCallCount('sendMail', 3);
+        $actions->expectOnce('insertTicketInRIFDB');
+        $c->expectOnce('addData');
+        $c->expect('addData', array(array('status' => true)));
+        $actions->AddTicket();
+    }
+
+    function testAddTicketSuccess() {
+        $um = new MockUserManager();
+        $user = new MockUser();
+        $um->setReturnValue('getCurrentUser', $user);
+        $actions = new CodexToRemedyActionsTestVersion2();
+        $c = new MockCodexToRemedy();
+        $actions->setReturnValue('getController', $c);
+        $actions->setReturnValue('_getUserManager', $um);
+        $actions->setReturnValue('insertTicketInCodexDB', true);
+        $actions->setReturnValue('insertTicketInRIFDB', true);
+        $actions->expectOnce('insertTicketInCodexDB');
+        $actions->expectCallCount('sendMail', 2);
+        $actions->expectOnce('insertTicketInRIFDB');
+        $c->expectOnce('addData');
+        $c->expect('addData', array(array('status' => true)));
+        $actions->AddTicket();
     }
 
 }
