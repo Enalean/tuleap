@@ -114,6 +114,20 @@ class CodexToRemedyActionsTest extends UnitTestCase {
         $this->assertFalse($params);
     }
 
+    function testValidateRequestBadTypeValue() {
+        $request = new MockHTTPRequest();
+        $request->setReturnValue('get', 'valid summary', array('request_summary'));
+        $request->setReturnValue('get', 'valid description', array('request_description'));
+        $request->setReturnValue('get', 3, array('type'));
+        $request->setReturnValue('get', 1, array('severity'));
+        $request->setReturnValue('get', 'john.doe@example.com', array('cc'));
+        $request->setReturnValue('valid', true);
+        $request->expectCallCount('valid', 3);
+        $actions = new CodexToRemedyActionsTestVersion();
+        $params = $actions->validateRequest($request);
+        $this->assertFalse($params);
+    }
+
     function testValidateRequestNonValidSeverity() {
         $request = new MockHTTPRequest();
         $request->setReturnValue('get', 'valid summary', array('request_summary'));
@@ -125,6 +139,20 @@ class CodexToRemedyActionsTest extends UnitTestCase {
         $request->setReturnValueAt(1, 'valid', true);
         $request->setReturnValueAt(2, 'valid', true);
         $request->setReturnValueAt(3, 'valid', false);
+        $request->expectCallCount('valid', 4);
+        $actions = new CodexToRemedyActionsTestVersion();
+        $params = $actions->validateRequest($request);
+        $this->assertFalse($params);
+    }
+
+    function testValidateRequestBadSeverityValue() {
+        $request = new MockHTTPRequest();
+        $request->setReturnValue('get', 'valid summary', array('request_summary'));
+        $request->setReturnValue('get', 'valid description', array('request_description'));
+        $request->setReturnValue('get', 1, array('type'));
+        $request->setReturnValue('get', 4, array('severity'));
+        $request->setReturnValue('get', 'john.doe@example.com', array('cc'));
+        $request->setReturnValue('valid', true);
         $request->expectCallCount('valid', 4);
         $actions = new CodexToRemedyActionsTestVersion();
         $params = $actions->validateRequest($request);
