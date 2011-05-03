@@ -174,7 +174,7 @@ class CodexToRemedyActions extends PluginAction {
         $summary = $params['summary'];
         $messageToSd = $params['description'];
 
-        $pluginManager = PluginManager::instance();
+        $pluginManager = $this->_getPluginManager();
         $p = $pluginManager->getPluginByName('codextoremedy');
         if (!$from = $p->getProperty('send_notif_mail_from')) {
             $from = 'noreply@codex.cro.st.com';
@@ -270,6 +270,15 @@ class CodexToRemedyActions extends PluginAction {
         return new Codendi_Mail();
     }
 
+    /**
+     * Wrapper for tests
+     *
+     * @return PluginManager
+     */
+    function _getPluginManager() {
+        return PluginManager::instance();
+
+    }
 }
 
 ?>

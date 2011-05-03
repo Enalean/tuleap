@@ -28,6 +28,9 @@ Mock::generate('Codendi_Mail');
 require_once('common/language/BaseLanguage.class.php');
 Mock::generate('BaseLanguage');
 require_once('common/plugin/PluginManager.class.php');
+Mock::generate('PluginManager');
+require_once('common/include/Properties.class.php');
+Mock::generate('Properties');
 
 require_once(dirname(__FILE__).'/../include/CodexToRemedy.class.php');
 Mock::generate('CodexToRemedy');
@@ -251,8 +254,17 @@ class CodexToRemedyActionsTest extends UnitTestCase {
                              'text_severity' => 'Minor',
                              'cc' => 'john.doe@example.com');
 
+        $pm = new MockPluginManager();
+        $p = new MockProperties();
+        $pm->setReturnValue('getPluginByName', $p);
+        $p->setReturnValue('getProperty', 'jenny.doe@example.com');
+
+
+        $p->setReturnValue('getProperty', 'jenny.doe@example.com');
+
         $actions = new CodexToRemedyActionsTestVersion3();
         $actions->setReturnValue('_getUserManager', $um);
+        $actions->setReturnValue('_getPlugin',$p);
         $mail = new MockCodendi_Mail();
         $mail->expect('setTo', array('requester@example.com'));
         $mail->setReturnValue('send', true);
