@@ -168,7 +168,7 @@ class CodexToRemedyActions extends PluginAction {
 
         $from = $user->getEmail();
         // Send a notification message to the SD and CodexCC
-        $mail = new Codendi_Mail();
+        $mail = $this->_getCodendiMail();
         $mail->setFrom($from);
 
         switch ($recepient) {
@@ -248,6 +248,16 @@ class CodexToRemedyActions extends PluginAction {
     function _getUserManager() {
         return UserManager::instance();
     }
+
+    /**
+     * Wrapper for tests
+     *
+     * @return Codendi_Mail
+     */
+    function _getCodendiMail() {
+        return $mail = new Codendi_Mail();
+    }
+
 }
 
 ?>

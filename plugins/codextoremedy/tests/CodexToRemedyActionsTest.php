@@ -23,14 +23,27 @@ Mock::generate('HTTPRequest');
 require_once('common/valid/ValidFactory.class.php');
 Mock::generate('User');
 Mock::generate('UserManager');
+require_once('common/mail/Codendi_Mail.class.php');
+Mock::generatePartial('Codendi_Mail', 'Codendi_MailTestVersion', array('setFrom','setTo','setSubject','setBodyHtml','send'));
+require_once('common/language/BaseLanguage.class.php');
+Mock::generate('BaseLanguage');
 
 require_once(dirname(__FILE__).'/../include/CodexToRemedy.class.php');
 Mock::generate('CodexToRemedy');
 require_once(dirname(__FILE__).'/../include/CodexToRemedyActions.class.php');
 Mock::generatePartial('CodexToRemedyActions', 'CodexToRemedyActionsTestVersion', array('_getUserManager'));
 Mock::generatePartial('CodexToRemedyActions', 'CodexToRemedyActionsTestVersion2', array('_getUserManager', 'insertTicketInCodexDB', 'sendMail', 'insertTicketInRIFDB', 'getController', 'validateRequest'));
+Mock::generatePartial('CodexToRemedyActions', 'CodexToRemedyActionsTestVersion3', array('_getUserManager', '_getCodendiMail', '_getPlugin', 'validateRequest'));
 
 class CodexToRemedyActionsTest extends UnitTestCase {
+
+    function setUp() {
+        $GLOBALS['Language']           = new MockBaseLanguage($this);
+    }
+
+    function tearDown() {
+        unset($GLOBALS['Language']);
+    }
 
     function testValidateRequestValid() {
         $request = new MockHTTPRequest();
@@ -117,6 +130,28 @@ class CodexToRemedyActionsTest extends UnitTestCase {
         $c->expectOnce('addData');
         $c->expect('addData', array(array('status' => true)));
         $actions->addTicket();
+    }
+
+    function testSendMailToUSER() {
+        $um = new MockUserManager();
+        $user = new MockUser();
+        $um->setReturnValue('getCurrentUser', $user);
+
+        $validParams = array('summary' => 'valid summary',
+                             'description' => 'valid description',
+                             'type' => 1,
+                             'text_type' => 'SUPPORT REQUEST',
+                             'severity' => 1,
+                             'text_severity' => 'Minor',
+                             'cc' => 'john.doe@example.com');
+
+        $actions = new CodexToRemedyActionsTestVersion3();
+        $actions->setReturnValue('_getUserManager', $um);
+        $mail = new Codendi_MailTestVersion();
+        $mail->setReturnValue('send',True);
+
+        $actions->setReturnValue('_getCodendiMail', $mail);
+        $this->assertTrue($actions->sendMail($validParams, CodexToRemedyActions::RECEPIENT_USER));
     }
 
 }
