@@ -297,6 +297,36 @@ class CodexToRemedyActionsTest extends UnitTestCase {
         $this->assertFalse($actions->sendMail($validParams, CodexToRemedyActions::RECEPIENT_SD));
     }
 
+    function testSendMailToSDInsertRifDBFail() {
+        $um   = new MockUserManager();
+        $user = new MockUser();
+        $um->setReturnValue('getCurrentUser', $user);
+
+        $validParams = array('summary'       => 'valid summary',
+                             'description'   => 'valid description',
+                             'type'          => 1,
+                             'text_type'     => 'SUPPORT REQUEST',
+                             'severity'      => 1,
+                             'text_severity' => 'Minor',
+                             'cc'            => 'john.doe@example.com');
+
+        $GLOBALS['Language']->setReturnValue('getText','Failure');
+        $pm = new MockPluginManager();
+        $p = new MockProperties();
+        $pm->setReturnValue('getPluginByName', $p);
+        $p->setReturnValue('getProperty', 'jenny.doe@example.com');
+        $actions = new CodexToRemedyActionsTestVersion3();
+        $actions->setReturnValue('_getUserManager', $um);
+        $actions->setReturnValue('_getPluginManager',$pm);
+        $mail = new MockCodendi_Mail();
+        $mail->expect('setTo', array('jenny.doe@example.com'));
+        $mail->expect('setSubject', array('Failure'));
+        $mail->setReturnValue('send', true);
+
+        $actions->setReturnValue('_getCodendiMail', $mail);
+        $this->assertTrue($actions->sendMail($validParams, CodexToRemedyActions::RECEPIENT_FAILURE_SD));
+    }
+
 }
 
 ?>
