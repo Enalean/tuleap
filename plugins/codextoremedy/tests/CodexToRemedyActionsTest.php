@@ -24,7 +24,7 @@ require_once('common/valid/ValidFactory.class.php');
 Mock::generate('User');
 Mock::generate('UserManager');
 require_once('common/mail/Codendi_Mail.class.php');
-Mock::generatePartial('Codendi_Mail', 'Codendi_MailTestVersion', array('setFrom','setTo','setSubject','setBodyHtml','send'));
+Mock::generate('Codendi_Mail');
 require_once('common/language/BaseLanguage.class.php');
 Mock::generate('BaseLanguage');
 
@@ -53,6 +53,7 @@ class CodexToRemedyActionsTest extends UnitTestCase {
         $request->setReturnValue('get', 1, array('severity'));
         $request->setReturnValue('get', 'john.doe@example.com', array('cc'));
         $request->setReturnValue('valid', true);
+        $request->expectCallCount('valid', 4);
         $actions = new CodexToRemedyActionsTestVersion();
         $params = $actions->validateRequest($request);
         $validParams = array('summary' => 'valid summary',
@@ -65,18 +66,69 @@ class CodexToRemedyActionsTest extends UnitTestCase {
         $this->assertEqual($params, $validParams);
     }
 
-    function testValidateRequestNonValid() {
+    function testValidateRequestNonValidSummary() {
         $request = new MockHTTPRequest();
         $request->setReturnValue('get', 'valid summary', array('request_summary'));
         $request->setReturnValue('get', 'valid description', array('request_description'));
         $request->setReturnValue('get', 1, array('type'));
         $request->setReturnValue('get', 1, array('severity'));
         $request->setReturnValue('get', 'john.doe@example.com', array('cc'));
-        $request->setReturnValue('valid', false);
+        $request->setReturnValueAt(0, 'valid', false);
+        $request->setReturnValueAt(1, 'valid', true);
+        $request->expectCallCount('valid', 1);
         $actions = new CodexToRemedyActionsTestVersion();
         $params = $actions->validateRequest($request);
-        $validParams = array('cc' => 'john.doe@example.com');
-        $this->assertEqual($params, $validParams);
+        $this->assertFalse($params);
+    }
+
+    function testValidateRequestNonValidDescription() {
+        $request = new MockHTTPRequest();
+        $request->setReturnValue('get', 'valid summary', array('request_summary'));
+        $request->setReturnValue('get', 'valid description', array('request_description'));
+        $request->setReturnValue('get', 1, array('type'));
+        $request->setReturnValue('get', 1, array('severity'));
+        $request->setReturnValue('get', 'john.doe@example.com', array('cc'));
+        $request->setReturnValueAt(0, 'valid', true);
+        $request->setReturnValueAt(1, 'valid', false);
+        $request->setReturnValueAt(2, 'valid', true);
+        $request->expectCallCount('valid', 2);
+        $actions = new CodexToRemedyActionsTestVersion();
+        $params = $actions->validateRequest($request);
+        $this->assertFalse($params);
+    }
+
+    function testValidateRequestNonValidType() {
+        $request = new MockHTTPRequest();
+        $request->setReturnValue('get', 'valid summary', array('request_summary'));
+        $request->setReturnValue('get', 'valid description', array('request_description'));
+        $request->setReturnValue('get', 1, array('type'));
+        $request->setReturnValue('get', 1, array('severity'));
+        $request->setReturnValue('get', 'john.doe@example.com', array('cc'));
+        $request->setReturnValueAt(0, 'valid', true);
+        $request->setReturnValueAt(1, 'valid', true);
+        $request->setReturnValueAt(2, 'valid', false);
+        $request->setReturnValueAt(3, 'valid', true);
+        $request->expectCallCount('valid', 3);
+        $actions = new CodexToRemedyActionsTestVersion();
+        $params = $actions->validateRequest($request);
+        $this->assertFalse($params);
+    }
+
+    function testValidateRequestNonValidSeverity() {
+        $request = new MockHTTPRequest();
+        $request->setReturnValue('get', 'valid summary', array('request_summary'));
+        $request->setReturnValue('get', 'valid description', array('request_description'));
+        $request->setReturnValue('get', 1, array('type'));
+        $request->setReturnValue('get', 1, array('severity'));
+        $request->setReturnValue('get', 'john.doe@example.com', array('cc'));
+        $request->setReturnValueAt(0, 'valid', true);
+        $request->setReturnValueAt(1, 'valid', true);
+        $request->setReturnValueAt(2, 'valid', true);
+        $request->setReturnValueAt(3, 'valid', false);
+        $request->expectCallCount('valid', 4);
+        $actions = new CodexToRemedyActionsTestVersion();
+        $params = $actions->validateRequest($request);
+        $this->assertFalse($params);
     }
 
     function testAddTicketCodexDBFail() {
@@ -87,6 +139,14 @@ class CodexToRemedyActionsTest extends UnitTestCase {
         $c = new MockCodexToRemedy();
         $actions->setReturnValue('getController', $c);
         $actions->setReturnValue('_getUserManager', $um);
+        $params = array('summary' => 'valid summary',
+                             'description' => 'valid description',
+                             'type' => 1,
+                             'text_type' => 'SUPPORT REQUEST',
+                             'severity' => 1,
+                             'text_severity' => 'Minor',
+                             'cc' => 'john.doe@example.com');
+        $actions->setReturnValue('validateRequest', $params);
         $actions->setReturnValue('insertTicketInCodexDB', false);
         $actions->expectOnce('insertTicketInCodexDB');
         $actions->expectNever('sendMail');
@@ -104,6 +164,14 @@ class CodexToRemedyActionsTest extends UnitTestCase {
         $c = new MockCodexToRemedy();
         $actions->setReturnValue('getController', $c);
         $actions->setReturnValue('_getUserManager', $um);
+        $params = array('summary' => 'valid summary',
+                             'description' => 'valid description',
+                             'type' => 1,
+                             'text_type' => 'SUPPORT REQUEST',
+                             'severity' => 1,
+                             'text_severity' => 'Minor',
+                             'cc' => 'john.doe@example.com');
+        $actions->setReturnValue('validateRequest', $params);
         $actions->setReturnValue('insertTicketInCodexDB', true);
         $actions->setReturnValue('insertTicketInRIFDB', false);
         $actions->expectOnce('insertTicketInCodexDB');
@@ -122,6 +190,14 @@ class CodexToRemedyActionsTest extends UnitTestCase {
         $c = new MockCodexToRemedy();
         $actions->setReturnValue('getController', $c);
         $actions->setReturnValue('_getUserManager', $um);
+        $params = array('summary' => 'valid summary',
+                             'description' => 'valid description',
+                             'type' => 1,
+                             'text_type' => 'SUPPORT REQUEST',
+                             'severity' => 1,
+                             'text_severity' => 'Minor',
+                             'cc' => 'john.doe@example.com');
+        $actions->setReturnValue('validateRequest', $params);
         $actions->setReturnValue('insertTicketInCodexDB', true);
         $actions->setReturnValue('insertTicketInRIFDB', true);
         $actions->expectOnce('insertTicketInCodexDB');
@@ -133,8 +209,9 @@ class CodexToRemedyActionsTest extends UnitTestCase {
     }
 
     function testSendMailToUSER() {
-        $um = new MockUserManager();
+        $um   = new MockUserManager();
         $user = new MockUser();
+        $user->setReturnValue('getEmail', 'requester@example.com');
         $um->setReturnValue('getCurrentUser', $user);
 
         $validParams = array('summary' => 'valid summary',
@@ -147,8 +224,9 @@ class CodexToRemedyActionsTest extends UnitTestCase {
 
         $actions = new CodexToRemedyActionsTestVersion3();
         $actions->setReturnValue('_getUserManager', $um);
-        $mail = new Codendi_MailTestVersion();
-        $mail->setReturnValue('send',True);
+        $mail = new MockCodendi_Mail();
+        $mail->expect('setTo', array('requester@example.com'));
+        $mail->setReturnValue('send', true);
 
         $actions->setReturnValue('_getCodendiMail', $mail);
         $this->assertTrue($actions->sendMail($validParams, CodexToRemedyActions::RECEPIENT_USER));

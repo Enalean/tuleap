@@ -48,11 +48,15 @@ class CodexToRemedyActions extends PluginAction {
         $valid->required();
         if ($request->valid($valid)) {
             $params['summary'] = $request->get('request_summary');
+        } else {
+            return false;
         }
         $valid = new Valid_Text('request_description');
         $valid->required();
         if ($request->valid($valid)) {
             $params['description'] = $request->get('request_description');
+        } else {
+            return false;
         }
         $valid = new Valid_UInt('type');
         $valid->required();
@@ -67,9 +71,11 @@ class CodexToRemedyActions extends PluginAction {
                     $params['text_type'] = 'ENHANCEMENT REQUEST';
                     break;
                 default:
-                    $params['text_type'] = '';
+                    return false;
                     break;
             }
+        } else {
+            return false;
         }
         $valid = new Valid_UInt('severity');
         $valid->required();
@@ -87,9 +93,11 @@ class CodexToRemedyActions extends PluginAction {
                     $params['text_severity'] = 'Critical';
                     break;
                 default:
-                    $params['text_severity'] = '';
+                    return false;
                     break;
             }
+        } else {
+            return false;
         }
         $cc = '';
         $mails      = array_map('trim', preg_split('/[,;]/', $request->get('cc')));
@@ -225,15 +233,19 @@ class CodexToRemedyActions extends PluginAction {
         $user                  = $um->getCurrentUser();
         $request               = $c->getRequest();
         $params                = $this->validateRequest($request);
-        $params['user_id']     = $user->getId();
-        $params['create_date'] = time();
-        if ($this->insertTicketInCodexDB($params)) {
-            $this->sendMail($params, self::RECEPIENT_SD);
-            $this->sendMail($params, self::RECEPIENT_USER);
-            if (!$this->insertTicketInRIFDB($params)) {
-                $this->sendMail($params, self::RECEPIENT_FAILURE_SD);
+        if ($params) {
+            $params['user_id']     = $user->getId();
+            $params['create_date'] = time();
+            if ($this->insertTicketInCodexDB($params)) {
+                $this->sendMail($params, self::RECEPIENT_SD);
+                $this->sendMail($params, self::RECEPIENT_USER);
+                if (!$this->insertTicketInRIFDB($params)) {
+                    $this->sendMail($params, self::RECEPIENT_FAILURE_SD);
+                }
+                $c->addData(array('status' => true));
+            } else {
+                $c->addData(array('status' => false));
             }
-            $c->addData(array('status' => true));
         } else {
             $c->addData(array('status' => false));
         }
