@@ -103,7 +103,7 @@ class CodexToRemedyDBDriver {
                    )";
             $stid = oci_parse($this->dbh, $sql);
             @oci_execute($stid);
-            return defined($stid);
+            return $stid;
         } else {
             return false;
         }
