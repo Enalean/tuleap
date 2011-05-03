@@ -176,7 +176,9 @@ class CodexToRemedyActions extends PluginAction {
 
         $pluginManager = PluginManager::instance();
         $p = $pluginManager->getPluginByName('codextoremedy');
-        $from = $p->getProperty('send_notif_mail_from');
+        if (!$from = $p->getProperty('send_notif_mail_from')) {
+            $from = 'noreply@codex.cro.st.com';
+        }
         // Send a notification message to the SD and CodexCC
         $mail = $this->_getCodendiMail();
         $mail->setFrom($from);
