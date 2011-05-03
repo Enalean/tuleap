@@ -87,12 +87,12 @@ class codextoremedyPlugin extends Plugin {
              <fieldset >
                  <table>
                      <tr>';
-            echo '<td><label>Type:</label></td>
+            echo '<td><label>Type:</label>&nbsp;<span class="highlight"><big>*</big></b></span></td>
                      <td><select name="type">
                       <option value="'.CodexToRemedy::TYPE_SUPPORT.'">'.$GLOBALS['Language']->getText('plugin_codextoremedy', 'Support_request').'</option>
                          <option value="'.CodexToRemedy::TYPE_ENHANCEMENT.'">'.$GLOBALS['Language']->getText('plugin_codextoremedy', 'Enhancement_request').'</option>
                      </select>';
-            echo '</td><td><label>'.$GLOBALS['Language']->getText('plugin_codextoremedy', 'severity').':</label></td>
+            echo '</td><td><label>'.$GLOBALS['Language']->getText('plugin_codextoremedy', 'severity').':</label>&nbsp;<span class="highlight"><big>*</big></b></span></td>
                              <td><select name="severity">
                              <option value="'.CodexToRemedy::SEVERITY_MINOR.'">'.$GLOBALS['Language']->getText('plugin_codextoremedy', 'Minor').'</option>
                              <option value="'.CodexToRemedy::SEVERITY_SERIOUS.'">'.$GLOBALS['Language']->getText('plugin_codextoremedy', 'Serious').'</option>
@@ -100,9 +100,9 @@ class codextoremedyPlugin extends Plugin {
                              </select>
                          </td>
                      </tr>';
-            echo '<tr><td><label>'.$GLOBALS['Language']->getText('plugin_codextoremedy', 'summary').':</label></td>
+            echo '<tr><td><label>'.$GLOBALS['Language']->getText('plugin_codextoremedy', 'summary').':</label>&nbsp;<span class="highlight"><big>*</big></b></span></td>
                      <td><input type="text" name="request_summary" /></td></tr>';
-            echo '<tr><td><label style="top:-45px;">Description:</label></td><td><textarea name="request_description"></textarea></td></tr>
+            echo '<tr><td><label><span class="totop">Description:</span></label>&nbsp;<span class="highlight"><span class="totop"><big>*</big></b></span></span></td><td><textarea name="request_description"></textarea></td></tr>
             <tr><td><label>CC :</label><td><input id="codextoremedy_cc" type="text" name="cc" /></td></tr>
             <tr><td></td><td><input name="action" type="hidden" value="submit_ticket" /></td></tr>
             <tr><td></td><td><input name="submit" type="submit" value="Submit" /></td></tr>
