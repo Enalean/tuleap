@@ -258,10 +258,6 @@ class CodexToRemedyActionsTest extends UnitTestCase {
         $p = new MockProperties();
         $pm->setReturnValue('getPluginByName', $p);
         $p->setReturnValue('getProperty', 'jenny.doe@example.com');
-
-
-        $p->setReturnValue('getProperty', 'jenny.doe@example.com');
-
         $actions = new CodexToRemedyActionsTestVersion3();
         $actions->setReturnValue('_getUserManager', $um);
         $actions->setReturnValue('_getPlugin',$p);
@@ -272,6 +268,7 @@ class CodexToRemedyActionsTest extends UnitTestCase {
         $actions->setReturnValue('_getCodendiMail', $mail);
         $this->assertTrue($actions->sendMail($validParams, CodexToRemedyActions::RECEPIENT_USER));
     }
+
 
 }
 
