@@ -37,7 +37,7 @@ Mock::generate('CodexToRemedy');
 require_once(dirname(__FILE__).'/../include/CodexToRemedyActions.class.php');
 Mock::generatePartial('CodexToRemedyActions', 'CodexToRemedyActionsTestVersion', array('_getUserManager'));
 Mock::generatePartial('CodexToRemedyActions', 'CodexToRemedyActionsTestVersion2', array('_getUserManager', 'insertTicketInCodexDB', 'sendMail', 'insertTicketInRIFDB', 'getController', 'validateRequest'));
-Mock::generatePartial('CodexToRemedyActions', 'CodexToRemedyActionsTestVersion3', array('_getUserManager', '_getCodendiMail', '_getPlugin', 'validateRequest'));
+Mock::generatePartial('CodexToRemedyActions', 'CodexToRemedyActionsTestVersion3', array('_getUserManager', '_getCodendiMail', '_getPluginManager', 'validateRequest'));
 
 class CodexToRemedyActionsTest extends UnitTestCase {
 
@@ -60,13 +60,13 @@ class CodexToRemedyActionsTest extends UnitTestCase {
         $request->expectCallCount('valid', 4);
         $actions = new CodexToRemedyActionsTestVersion();
         $params = $actions->validateRequest($request);
-        $validParams = array('summary' => 'valid summary',
-                             'description' => 'valid description',
-                             'type' => 1,
-                             'text_type' => 'SUPPORT REQUEST',
-                             'severity' => 1,
+        $validParams = array('summary'       => 'valid summary',
+                             'description'   => 'valid description',
+                             'type'          => 1,
+                             'text_type'     => 'SUPPORT REQUEST',
+                             'severity'      => 1,
                              'text_severity' => 'Minor',
-                             'cc' => 'john.doe@example.com');
+                             'cc'            => 'john.doe@example.com');
         $this->assertEqual($params, $validParams);
     }
 
@@ -171,13 +171,13 @@ class CodexToRemedyActionsTest extends UnitTestCase {
         $c = new MockCodexToRemedy();
         $actions->setReturnValue('getController', $c);
         $actions->setReturnValue('_getUserManager', $um);
-        $params = array('summary' => 'valid summary',
-                             'description' => 'valid description',
-                             'type' => 1,
-                             'text_type' => 'SUPPORT REQUEST',
-                             'severity' => 1,
-                             'text_severity' => 'Minor',
-                             'cc' => 'john.doe@example.com');
+        $params = array('summary'       => 'valid summary',
+                        'description'   => 'valid description',
+                        'type'          => 1,
+                        'text_type'     => 'SUPPORT REQUEST',
+                        'severity'      => 1,
+                        'text_severity' => 'Minor',
+                        'cc'            => 'john.doe@example.com');
         $actions->setReturnValue('validateRequest', $params);
         $actions->setReturnValue('insertTicketInCodexDB', false);
         $actions->expectOnce('insertTicketInCodexDB');
@@ -196,13 +196,13 @@ class CodexToRemedyActionsTest extends UnitTestCase {
         $c = new MockCodexToRemedy();
         $actions->setReturnValue('getController', $c);
         $actions->setReturnValue('_getUserManager', $um);
-        $params = array('summary' => 'valid summary',
-                             'description' => 'valid description',
-                             'type' => 1,
-                             'text_type' => 'SUPPORT REQUEST',
-                             'severity' => 1,
-                             'text_severity' => 'Minor',
-                             'cc' => 'john.doe@example.com');
+        $params = array('summary'       => 'valid summary',
+                        'description'   => 'valid description',
+                        'type'          => 1,
+                        'text_type'     => 'SUPPORT REQUEST',
+                        'severity'      => 1,
+                        'text_severity' => 'Minor',
+                        'cc'            => 'john.doe@example.com');
         $actions->setReturnValue('validateRequest', $params);
         $actions->setReturnValue('insertTicketInCodexDB', true);
         $actions->setReturnValue('insertTicketInRIFDB', false);
@@ -222,13 +222,13 @@ class CodexToRemedyActionsTest extends UnitTestCase {
         $c = new MockCodexToRemedy();
         $actions->setReturnValue('getController', $c);
         $actions->setReturnValue('_getUserManager', $um);
-        $params = array('summary' => 'valid summary',
-                             'description' => 'valid description',
-                             'type' => 1,
-                             'text_type' => 'SUPPORT REQUEST',
-                             'severity' => 1,
-                             'text_severity' => 'Minor',
-                             'cc' => 'john.doe@example.com');
+        $params = array('summary'       => 'valid summary',
+                        'description'   => 'valid description',
+                        'type'          => 1,
+                        'text_type'     => 'SUPPORT REQUEST',
+                        'severity'      => 1,
+                        'text_severity' => 'Minor',
+                        'cc'            => 'john.doe@example.com');
         $actions->setReturnValue('validateRequest', $params);
         $actions->setReturnValue('insertTicketInCodexDB', true);
         $actions->setReturnValue('insertTicketInRIFDB', true);
@@ -246,13 +246,13 @@ class CodexToRemedyActionsTest extends UnitTestCase {
         $user->setReturnValue('getEmail', 'requester@example.com');
         $um->setReturnValue('getCurrentUser', $user);
 
-        $validParams = array('summary' => 'valid summary',
-                             'description' => 'valid description',
-                             'type' => 1,
-                             'text_type' => 'SUPPORT REQUEST',
-                             'severity' => 1,
+        $validParams = array('summary'       => 'valid summary',
+                             'description'   => 'valid description',
+                             'type'          => 1,
+                             'text_type'     => 'SUPPORT REQUEST',
+                             'severity'      => 1,
                              'text_severity' => 'Minor',
-                             'cc' => 'john.doe@example.com');
+                             'cc'            => 'john.doe@example.com');
 
         $pm = new MockPluginManager();
         $p = new MockProperties();
@@ -260,7 +260,7 @@ class CodexToRemedyActionsTest extends UnitTestCase {
         $p->setReturnValue('getProperty', 'jenny.doe@example.com');
         $actions = new CodexToRemedyActionsTestVersion3();
         $actions->setReturnValue('_getUserManager', $um);
-        $actions->setReturnValue('_getPlugin',$p);
+        $actions->setReturnValue('_getPluginManager',$pm);
         $mail = new MockCodendi_Mail();
         $mail->expect('setTo', array('requester@example.com'));
         $mail->setReturnValue('send', true);
@@ -268,7 +268,6 @@ class CodexToRemedyActionsTest extends UnitTestCase {
         $actions->setReturnValue('_getCodendiMail', $mail);
         $this->assertTrue($actions->sendMail($validParams, CodexToRemedyActions::RECEPIENT_USER));
     }
-
 
 }
 
