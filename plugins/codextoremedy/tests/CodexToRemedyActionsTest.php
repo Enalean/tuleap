@@ -52,9 +52,10 @@ class CodexToRemedyActionsTest extends UnitTestCase {
         $request->setReturnValue('get', 'valid description', array('request_description'));
         $request->setReturnValue('get', 1, array('type'));
         $request->setReturnValue('get', 1, array('severity'));
+        $request->setReturnValue('get', 'john.doe@example.com', array('cc'));
         $request->setReturnValue('valid', false);
         $params = CodexToRemedyActions::validateRequest($request);
-        $validParams = array('cc' => '');
+        $validParams = array('cc' => 'john.doe@example.com');
         $this->assertEqual($params, $validParams);
     }
 
