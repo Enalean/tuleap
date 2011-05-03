@@ -80,7 +80,7 @@ class CodexToRemedyActionsTest extends UnitTestCase {
         $actions->expectNever('insertTicketInRIFDB');
         $c->expectOnce('addData');
         $c->expect('addData', array(array('status' => false)));
-        $actions->AddTicket();
+        $actions->addTicket();
     }
 
     function testAddTicketRIFDBFail() {
@@ -98,7 +98,7 @@ class CodexToRemedyActionsTest extends UnitTestCase {
         $actions->expectOnce('insertTicketInRIFDB');
         $c->expectOnce('addData');
         $c->expect('addData', array(array('status' => true)));
-        $actions->AddTicket();
+        $actions->addTicket();
     }
 
     function testAddTicketSuccess() {
@@ -116,7 +116,7 @@ class CodexToRemedyActionsTest extends UnitTestCase {
         $actions->expectOnce('insertTicketInRIFDB');
         $c->expectOnce('addData');
         $c->expect('addData', array(array('status' => true)));
-        $actions->AddTicket();
+        $actions->addTicket();
     }
 
 }

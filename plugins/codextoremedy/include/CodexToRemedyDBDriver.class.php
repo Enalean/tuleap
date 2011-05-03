@@ -2,19 +2,20 @@
 /**
  * Copyright (c) STMicroelectronics, 2011. All Rights Reserved.
  *
+ * This file is a part of Codendi.
  *
- * ForgeUpgrade is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as published by
+ * Codendi is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * ForgeUpgrade is distributed in the hope that it will be useful,
+ * Codendi is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public License
- * along with ForgeUpgrade. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
 class CodexToRemedyDBDriver {
@@ -23,6 +24,13 @@ class CodexToRemedyDBDriver {
     protected $user;
     protected $password;
 
+    /**
+     * Constructor
+     *
+     * @throws Exception
+     *
+     * @return void
+     */
     public function __construct() {
         $pluginManager = PluginManager::instance();
         $p = $pluginManager->getPluginByName('codextoremedy');
@@ -44,7 +52,7 @@ class CodexToRemedyDBDriver {
      */
     public function getdbh() {
         if (!$this->dbh) {
-            $this->dbh = oci_connect($this->user,$this->password,$this->dsn);
+            $this->dbh = oci_connect($this->user, $this->password, $this->dsn);
         }
         return $this->dbh;
     }
@@ -52,10 +60,10 @@ class CodexToRemedyDBDriver {
     /**
      * Insert the ticket in RIF DB
      *
-     * @param String $summary
-     * @param String $description
-     * @param String $type
-     * @param String $severity
+     * @param String $summary     Ticket summary
+     * @param String $description Ticket description
+     * @param String $item        Type of the request
+     * @param String $severity    Ticket severity
      *
      * @return Boolean
      */
@@ -64,7 +72,7 @@ class CodexToRemedyDBDriver {
         $p = $pluginManager->getPluginByName('codextoremedy');
         $submitter = $p->getProperty('codextoremedy_submitter');
         $category  = $p->getProperty('remedy_category');
-        $type     = $p->getProperty('remedy_type');
+        $type      = $p->getProperty('remedy_type');
 
         if ($submitter && $category && $type) {
             $sql = "INSERT INTO RIF_REQUEST
@@ -93,7 +101,7 @@ class CodexToRemedyDBDriver {
                    '".$submitter."',
                    RIF_REQUEST_SEQ.NEXTVAL
                    )";
-            $stid = oci_parse($this->dbh , $sql);
+            $stid = oci_parse($this->dbh, $sql);
             @oci_execute($stid);
             return defined($stid);
         } else {

@@ -117,7 +117,7 @@ class codextoremedyPlugin extends Plugin {
     /**
      * Retreive a param config giving its name
      *
-     * @param String $name
+     * @param String $name Property name
      *
      * @return String
      */

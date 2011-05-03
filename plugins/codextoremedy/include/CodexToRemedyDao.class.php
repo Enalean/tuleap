@@ -30,19 +30,19 @@ class CodexToRemedyDao extends DataAccessObject {
      * @return void
      */
     function __construct() {
-        parent::__construct( CodendiDataAccess::instance() );
+        parent::__construct(CodendiDataAccess::instance());
     }
 
     /**
      * Insert the ticket informations in Codex database
      *
-     * @param Integer $id
-     * @param Integer $userId
-     * @param String  $summary
-     * @param date    $createDate
-     * @param String  $description
-     * @param Integer $type
-     * @param Integer $severity
+     * @param Integer $userId      Id of the submitter
+     * @param String  $summary     Ticket summary
+     * @param date    $createDate  Creation date
+     * @param String  $description Ticket description
+     * @param Integer $type        Ticket type
+     * @param Integer $severity    Ticket severity
+     * @param String  $cc          CC mail addresses
      *
      * @return Boolean
      */

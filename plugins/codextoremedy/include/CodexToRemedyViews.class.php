@@ -57,11 +57,10 @@ class CodexToRemedyViews extends PluginView {
         $c = $this->getController();
         $data = $c->getData();
         $requestStatus = $data['status'];
-        if(!$requestStatus) {
+        if (!$requestStatus) {
             $c->addError($GLOBALS['Language']->getText('plugin_codextoremedy', 'codextoremedy_ticket_submission_fail'));
             $c->redirect('/site/');
-        }
-        else {
+        } else {
             $c->addInfo($GLOBALS['Language']->getText('plugin_codextoremedy', 'codextoremedy_ticket_submission_success'));
             $c->redirect('/my/');
         }

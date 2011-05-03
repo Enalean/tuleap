@@ -39,24 +39,24 @@ class CodexToRemedyActions extends PluginAction {
     /**
      * Validate request values
      *
-     * @param HTTPRequest $request
+     * @param HTTPRequest $request request containing form values
      *
      * @return Array
      */
     function validateRequest($request) {
         $valid = new Valid_String('request_summary');
         $valid->required();
-        if($request->valid($valid)) {
+        if ($request->valid($valid)) {
             $params['summary'] = $request->get('request_summary');
         }
         $valid = new Valid_Text('request_description');
         $valid->required();
-        if($request->valid($valid)) {
+        if ($request->valid($valid)) {
             $params['description'] = $request->get('request_description');
         }
         $valid = new Valid_UInt('type');
         $valid->required();
-        if($request->valid($valid)) {
+        if ($request->valid($valid)) {
             $requestType = $request->get('type');
             $params['type'] = $requestType;
             switch ($requestType) {
@@ -73,7 +73,7 @@ class CodexToRemedyActions extends PluginAction {
         }
         $valid = new Valid_UInt('severity');
         $valid->required();
-        if($request->valid($valid)) {
+        if ($request->valid($valid)) {
             $severity = $request->get('severity');
             $params['severity'] = $severity;
             switch ($severity) {
@@ -152,8 +152,8 @@ class CodexToRemedyActions extends PluginAction {
     /**
      * Send mail to recipient after ticket submission
      *
-     * @param Array $params collection of data used to build the mail
-     * @param Int $recepient flag used to make out the recepient
+     * @param Array $params    collection of data used to build the mail
+     * @param Int   $recepient flag used to make out the recepient
      *
      * @return void
      */
@@ -184,8 +184,8 @@ class CodexToRemedyActions extends PluginAction {
             case self::RECEPIENT_FAILURE_SD:
                 $pluginManager = PluginManager::instance();
                 $p = $pluginManager->getPluginByName('codextoremedy');
-                if(!$to = $p->getProperty('send_notif_mail_sd')) {
-                $to = 'codex-team@lists.codex.cro.st.com';
+                if (!$to = $p->getProperty('send_notif_mail_sd')) {
+                    $to = 'codex-team@lists.codex.cro.st.com';
                 }
                 $mail->setSubject($GLOBALS['Language']->getText('plugin_codextoremedy', 'codextoremedy_Failure_mail_subject', array($requestType, $user->getRealName())));
                 $body = $GLOBALS['Language']->getText('plugin_codextoremedy', 'codextoremedy_Failure_mail_content', array($user->getRealName(), $user->getName(), $requestType, $severity, $summary, $messageToSd, $user->getEmail()));
@@ -202,13 +202,13 @@ class CodexToRemedyActions extends PluginAction {
         $mail->setTo($to);
         $mail->setBodyHtml($body);
         try {
-            if(!$mail->send()) {
+            if (!$mail->send()) {
                 $requestStatus = false;
             } else {
                 $requestStatus = true;
             }
         } catch (Zend_Mail_Transport_Exception $e) {
-                $GLOBALS['Response']->addFeedBack('error',$GLOBALS['Language']->getText('plugin_codextoremedy', 'codextoremedy_mail_failed'));
+                $GLOBALS['Response']->addFeedBack('error', $GLOBALS['Language']->getText('plugin_codextoremedy', 'codextoremedy_mail_failed'));
                 $requestStatus = false;
         }
         return $requestStatus;
@@ -219,7 +219,7 @@ class CodexToRemedyActions extends PluginAction {
      *
      * @return void
      */
-    function AddTicket() {
+    function addTicket() {
         $c                     = $this->getController();
         $um                    = $this->_getUserManager();
         $user                  = $um->getCurrentUser();
@@ -227,11 +227,11 @@ class CodexToRemedyActions extends PluginAction {
         $params                = $this->validateRequest($request);
         $params['user_id']     = $user->getId();
         $params['create_date'] = time();
-        if($this->insertTicketInCodexDB($params)) {
+        if ($this->insertTicketInCodexDB($params)) {
             $this->sendMail($params, self::RECEPIENT_SD);
             $this->sendMail($params, self::RECEPIENT_USER);
-            if(!$this->insertTicketInRIFDB($params)) {
-            $this->sendMail($params, self::RECEPIENT_FAILURE_SD);
+            if (!$this->insertTicketInRIFDB($params)) {
+                $this->sendMail($params, self::RECEPIENT_FAILURE_SD);
             }
             $c->addData(array('status' => true));
         } else {

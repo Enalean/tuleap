@@ -50,7 +50,7 @@ class CodexToRemedy extends PluginControler {
             $action = $request->getValidated('action', $vAction, false);
             switch ($action) {
                 case 'submit_ticket':
-                    $this->addAction('AddTicket');
+                    $this->addAction('addTicket');
                     $this->addview('remedyPostSubmission');
                     break;
                 default:
