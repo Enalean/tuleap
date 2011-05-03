@@ -102,8 +102,11 @@ class CodexToRemedyDBDriver {
                    RIF_REQUEST_SEQ.NEXTVAL
                    )";
             $stid = oci_parse($this->dbh, $sql);
-            @oci_execute($stid);
-            return $stid;
+            if ($stid) {
+                return @oci_execute($stid);
+            } else {
+                return false;
+            }
         } else {
             return false;
         }
