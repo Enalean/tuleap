@@ -10,9 +10,9 @@ plugin_codextoremedy	Serious	Serious
 plugin_codextoremedy	Critical	Critical
 plugin_codextoremedy	codextoremedy_mail_subject	$2 has submitted a new $1 Remedy ticket
 plugin_codextoremedy	codextoremedy_Failure_mail_subject	$2 has encountred a problem while submitting a new $1 Remedy ticket
-plugin_codextoremedy	codextoremedy_Failure_mail_content	$2 has submitted a new $1 Remedy ticket
-plugin_codextoremedy	codextoremedy_mail_content	Dear SD peoples,<br /><br /> <b>$1</b>(login: <em>$2</em>) insert a new $3 Remedy ticket.<br />$3 - $4 <br />$5<br /><p>$6<p>
-plugin_codextoremedy	codextoremedy_user_mail_content	Dear user (login: <em>$2</em>),<br /><br /> You have inserted a new $3 Remedy ticket.<br />$3 - $4 <br />$5<br /><p>$6<p>
+plugin_codextoremedy	codextoremedy_Failure_mail_content	Dear SD peoples,<br /><br /> <b>$1</b>(login: <em>$2</em>) tried to insert a new Remedy ticket with the following data:<br /><br /><HR align="center" width="50%" color="midnightblue" size="3"><b>Request Type:</b>$3 - <b>Severity:</b> $4 <br /><HR align="center" width="70%" color="midnightblue" size="3"><p><b>Summary:</b> $5</p><HR align="center" width="70%" color="midnightblue" size="3"><p><b>Description:</b> $6<p>
+plugin_codextoremedy	codextoremedy_mail_content	Dear SD peoples,<br /><br /> <b>$1</b>(login: <em>$2</em>) insert a new Remedy ticket with the following data:<br /><br /><HR align="center" width="50%" color="midnightblue" size="3"><b>Request Type:</b>$3 - <b>Severity:</b> $4 <br /><HR align="center" width="70%" color="midnightblue" size="3"><p><b>Summary:</b> $5</p><HR align="center" width="70%" color="midnightblue" size="3"><p><b>Description:</b> $6<p>
+plugin_codextoremedy	codextoremedy_user_mail_content	Dear user (login: <em>$2</em>),<br /><br /> You have inserted a new Remedy ticket with the following data:<br /><br /><HR align="center" width="50%" color="midnightblue" size="3"><b>Request Type:</b>$3 - <b>Severity:</b> $4 <br /><HR align="center" width="70%" color="midnightblue" size="3"><p><b>Summary:</b> $5</p><HR align="center" width="70%" color="midnightblue" size="3"><p><b>Description:</b> $6<p>
 plugin_codextoremedy	codextoremedy_mail_failed	Send notification mail has failed
 plugin_codextoremedy	codextoremedy_ticket_submission_success	Ticket was successfully submitted
 plugin_codextoremedy	codextoremedy_ticket_submission_fail	Ticket submission failed
