@@ -227,7 +227,6 @@ class CodexToRemedyActions extends PluginAction {
         $params                = $this->validateRequest($request);
         $params['user_id']     = $user->getId();
         $params['create_date'] = time();
-        var_dump($params);
         if($this->insertTicketInCodexDB($params)) {
             $this->sendMail($params, self::RECEPIENT_SD);
             $this->sendMail($params, self::RECEPIENT_USER);
