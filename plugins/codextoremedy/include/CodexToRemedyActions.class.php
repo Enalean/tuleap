@@ -166,13 +166,14 @@ class CodexToRemedyActions extends PluginAction {
      * @return void
      */
     function sendMail($params, $recepient) {
-        $um = $this->_getUserManager();
+        $um   = $this->_getUserManager();
         $user = $um->getCurrentUser();
 
         $requestType = $params['text_type'];
-        $severity = $params['text_severity'];
-        $summary = $params['summary'];
+        $severity    = $params['text_severity'];
+        $summary     = $params['summary'];
         $messageToSd = $params['description'];
+        $cc          = $params['cc'];
 
         $pluginManager = $this->_getPluginManager();
         $p = $pluginManager->getPluginByName('codextoremedy');
@@ -189,19 +190,23 @@ class CodexToRemedyActions extends PluginAction {
                     $to = 'codex-team@lists.codex.cro.st.com';
                 }
                 $mail->setSubject($GLOBALS['Language']->getText('plugin_codextoremedy', 'codextoremedy_mail_subject', $summary));
-                $body = $GLOBALS['Language']->getText('plugin_codextoremedy', 'codextoremedy_mail_content', array($user->getRealName(), $user->getName(), $requestType, $severity, $summary, $messageToSd, $user->getEmail()));
+                $body = $GLOBALS['Language']->getText('plugin_codextoremedy', 'codextoremedy_mail_content', array($user->getRealName(), $user->getName(), $requestType, $severity, $summary, $messageToSd, $cc));
                 break;
             case self::RECEPIENT_FAILURE_SD:
                 if (!$to = $p->getProperty('send_notif_mail_sd')) {
                     $to = 'codex-team@lists.codex.cro.st.com';
                 }
                 $mail->setSubject($GLOBALS['Language']->getText('plugin_codextoremedy', 'codextoremedy_Failure_mail_subject'));
-                $body = $GLOBALS['Language']->getText('plugin_codextoremedy', 'codextoremedy_Failure_mail_content', array($user->getRealName(), $user->getName(), $requestType, $severity, $summary, $messageToSd, $user->getEmail()));
+                $body = $GLOBALS['Language']->getText('plugin_codextoremedy', 'codextoremedy_Failure_mail_content', array($user->getRealName(), $user->getName(), $requestType, $severity, $summary, $messageToSd, $cc));
                 break;
             case self::RECEPIENT_USER:
                 $to = $user->getEmail();
+                $ccMails = array_map('trim', preg_split('/[;]/', $cc));
+                foreach ($ccMails as $ccMail) {
+                    $mail->setCc($ccMail);
+                }
                 $mail->setSubject($GLOBALS['Language']->getText('plugin_codextoremedy', 'codextoremedy_mail_subject', $summary));
-                $body = $GLOBALS['Language']->getText('plugin_codextoremedy', 'codextoremedy_user_mail_content', array($user->getRealName(), $user->getName(), $requestType, $severity, $summary, $messageToSd, $user->getEmail()));
+                $body = $GLOBALS['Language']->getText('plugin_codextoremedy', 'codextoremedy_user_mail_content', array($user->getRealName(), $user->getName(), $requestType, $severity, $summary, $messageToSd, $cc));
                 break;
             default:
                 break;
