@@ -34,8 +34,10 @@ class codextoremedyPlugin extends Plugin {
      */
     function codextoremedyPlugin($id) {
         $this->Plugin($id);
-        $this->_addHook('cssfile', 'cssFile', false);
-        $this->_addHook('site_help', 'displayForm', false);
+        if (extension_loaded('oci8')) {
+            $this->_addHook('cssfile', 'cssFile', false);
+            $this->_addHook('site_help', 'displayForm', false);
+        }
     }
 
     /**

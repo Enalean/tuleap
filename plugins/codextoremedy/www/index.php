@@ -25,7 +25,7 @@ require_once('common/plugin/PluginManager.class.php');
 $plugin_manager = PluginManager::instance();
 $p = $plugin_manager->getPluginByName('codextoremedy');
 
-if ($p && $plugin_manager->isPluginAvailable($p)) {
+if ($p && $plugin_manager->isPluginAvailable($p) && extension_loaded('oci8')) {
     $p->process();
 } else {
     header('Location: '.get_server_url());
