@@ -93,7 +93,7 @@ class CodexToRemedyDBDriver {
                    '".$type."',
                    '".$item."',
                    '".$submitter."',
-                   '".$this->escapeString($summary)."'',
+                   '".$this->escapeString($summary)."',
                    '".$this->escapeString($description)."',
                    '".$severity."',
                    sysdate,
