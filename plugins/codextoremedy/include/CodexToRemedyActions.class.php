@@ -175,8 +175,6 @@ class CodexToRemedyActions extends PluginAction {
         $messageToSd = $params['description'];
         $cc          = $params['cc'];
 
-        include($GLOBALS['Language']->getContent('mail_content', null, 'codextoremedy'));
-
         $pluginManager = $this->_getPluginManager();
         $p = $pluginManager->getPluginByName('codextoremedy');
         if (!$from = $p->getProperty('send_notif_mail_from')) {
@@ -188,6 +186,7 @@ class CodexToRemedyActions extends PluginAction {
 
         switch ($recepient) {
             case self::RECEPIENT_SD:
+                include($GLOBALS['Language']->getContent('mail_content', null, 'codextoremedy'));
                 if (!$to = $p->getProperty('send_notif_mail_sd')) {
                     $to = 'codex-team@lists.codex.cro.st.com';
                 }
@@ -195,6 +194,7 @@ class CodexToRemedyActions extends PluginAction {
                 $body = $codextoremedy_mail_content;
                 break;
             case self::RECEPIENT_FAILURE_SD:
+                include($GLOBALS['Language']->getContent('mail_content', null, 'codextoremedy'));
                 if (!$to = $p->getProperty('send_notif_mail_sd')) {
                     $to = 'codex-team@lists.codex.cro.st.com';
                 }
@@ -202,6 +202,7 @@ class CodexToRemedyActions extends PluginAction {
                 $body = $codextoremedy_Failure_mail_content;
                 break;
             case self::RECEPIENT_USER:
+                include($GLOBALS['Language']->getContent('mail_content', null, 'codextoremedy'));
                 $to = $user->getEmail();
                 if ($cc != '') {
                     $ccMails = array_map('trim', preg_split('/[;]/', $cc));
@@ -213,6 +214,7 @@ class CodexToRemedyActions extends PluginAction {
                 $body = $codextoremedy_user_mail_content;
                 break;
             default:
+                return false;
                 break;
         }
 
