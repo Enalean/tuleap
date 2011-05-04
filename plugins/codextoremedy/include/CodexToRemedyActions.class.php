@@ -203,9 +203,11 @@ class CodexToRemedyActions extends PluginAction {
                 break;
             case self::RECEPIENT_USER:
                 $to = $user->getEmail();
-                $ccMails = array_map('trim', preg_split('/[;]/', $cc));
-                foreach ($ccMails as $ccMail) {
-                    $mail->setCc($ccMail);
+                if ($cc != '') {
+                    $ccMails = array_map('trim', preg_split('/[;]/', $cc));
+                    foreach ($ccMails as $ccMail) {
+                        $mail->setCc($ccMail);
+                    }
                 }
                 $mail->setSubject($GLOBALS['Language']->getText('plugin_codextoremedy', 'codextoremedy_mail_subject', $summary));
                 $body = $codextoremedy_user_mail_content;
