@@ -1,0 +1,106 @@
+<?php
+/**
+ * Copyright (c) STMicroelectronics, 2011. All Rights Reserved.
+ *
+ * This file is a part of Codendi.
+ *
+ * Codendi is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Codendi is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ */
+$codextoremedy_Failure_mail_content = '<table border=0 cellspacing=0 cellpadding=0 width=910 style="width:682.5pt;border-collapse:collapse">'.
+	'<tr style="height:6.75pt"><td width=205 valign=top style="width:153.75pt;padding:.75pt .75pt .75pt .75pt;height:6.75pt">'.
+	'<p><span style=\'font-size:10.0pt;font-family:"Verdana","sans-serif"\'>'.
+	'Dear support team,<br /><br />A new ticket was added but its insertion in Remedy failed.'
+	'<br /></span></p><p><span style=\'font-size:10.0pt;font-family:"Verdana","sans-serif";color:red\'>'.
+	'Please DO NOT reply on this email account.</span></p></td></tr>'.
+	'<tr style="height:6.75pt"><td width=205 valign=top style="width:153.75pt;padding:.75pt .75pt .75pt .75pt; height:6.75pt">'.
+	'<p><b><span style=\'font-size:10.0pt;font-family:"Verdana","sans-serif";color:navy\'>Request Type:</span></b></p>'.  
+	'<p><span style=\'font-size:10.0pt;font-family:"Arial","sans-serif"\'>'.$requestType.'</span></p>'.
+	'<p><b><span style=\'font-size:10.0pt;font-family:"Verdana","sans-serif";color:navy\'>Severity:</span></b></p> '. 
+	'<p><span style=\'font-size:10.0pt;font-family:"Arial","sans-serif"\'>'.$severity.'</span></p>'.
+	'</td></tr></table><table border=0 cellspacing=0 cellpadding=0 width=678 style=\'width:508.5pt;border-collapse:collapse\'>'.
+	'<tr><td valign=bottom style="padding:.75pt .75pt .75pt .75pt">'.
+	'<HR align="center" width="100%" color="midnightblue" size="3">'.
+	'</td></tr><tr><td valign=top style="padding:.75pt .75pt .75pt .75pt">'.
+	'<p><b><span style=\'font-size:10.0pt;font-family:"Verdana","sans-serif";color:navy\'>Summary:</span></b></p>'.
+	'<p style="margin:0in;margin-bottom:.0001pt"><span style=\'font-size:10.0pt;font-family:"Verdana","sans-serif"\'>'.$summary.'</span></p></td></tr>'.
+	'<tr><td valign=top style="padding:.75pt .75pt .75pt .75pt">'.
+	'<p><b><span style=\'font-size:10.0pt;font-family:"Verdana","sans-serif";color:navy\'>Description:</span></b></p>'.
+	'<p style="margin:0in;margin-bottom:.0001pt"><span style=\'font-size:10.0pt;font-family:"Verdana","sans-serif"\'>'.
+	$messageToSd .'</span></p></td></tr></table> <table border=0 cellspacing=0 cellpadding=0 width=678 style=\'width:508.5pt;border-collapse:collapse\'>'.
+	'<tr><td valign=bottom style=\'padding:.75pt .75pt .75pt .75pt\'>'.	
+	'<HR align="center" width="100%" color="midnightblue" size="3"></td></tr><tr><td valign=top style="padding:.75pt .75pt .75pt .75pt">'.
+	'<p ><b><span style=\'font-size:10.0pt;font-family:"Verdana","sans-serif";color:navy\'>Submitter:</span></b></p>'.
+	'<p ><span style=\'font-size:10.0pt;font-family:"Verdana","sans-serif"\'>'.$user->getRealName().'(<em>'.$user->getName().'</em>) </span><span style=\'font-size:10.0pt;font-family:"Arial","sans-serif"\'><a href="mailto:'.$user->getEmail().'">'.$user->getEmail().'</a></span></p>'.
+	'</td></tr><tr><td valign=top style=\'padding:.75pt .75pt .75pt .75pt\'>'.
+	'<p><b><span style=\'font-size:10.0pt;font-family:"Verdana","sans-serif";color:navy\'>People in CC:</span></b></p>'.
+	'<p><span style=\'font-size:10.0pt;font-family:"Arial","sans-serif"\'><a href="mailto:'.$cc.'">'.$cc.'</a></span></p></td></tr></table>';
+
+$codextoremedy_mail_content = '<table border=0 cellspacing=0 cellpadding=0 width=910 style="width:682.5pt;border-collapse:collapse">'.
+	'<tr style="height:6.75pt"><td width=205 valign=top style="width:153.75pt;padding:.75pt .75pt .75pt .75pt;height:6.75pt">'.
+	'<p><span style=\'font-size:10.0pt;font-family:"Verdana","sans-serif"\'>'.
+	'Dear support team,<br /><br />'.$user->getRealName().'inserted a new Remedy ticket.'
+	'<br /></span></p><p><span style=\'font-size:10.0pt;font-family:"Verdana","sans-serif";color:red\'>'.
+	'Please DO NOT reply on this email account.</span></p></td></tr>'.
+	'<tr style="height:6.75pt"><td width=205 valign=top style="width:153.75pt;padding:.75pt .75pt .75pt .75pt; height:6.75pt">'.
+	'<p><b><span style=\'font-size:10.0pt;font-family:"Verdana","sans-serif";color:navy\'>Request Type:</span></b></p>'.  
+	'<p><span style=\'font-size:10.0pt;font-family:"Arial","sans-serif"\'>'.$requestType.'</span></p>'.
+	'<p><b><span style=\'font-size:10.0pt;font-family:"Verdana","sans-serif";color:navy\'>Severity:</span></b></p> '. 
+	'<p><span style=\'font-size:10.0pt;font-family:"Arial","sans-serif"\'>'.$severity.'</span></p>'.
+	'</td></tr></table><table border=0 cellspacing=0 cellpadding=0 width=678 style=\'width:508.5pt;border-collapse:collapse\'>'.
+	'<tr><td valign=bottom style="padding:.75pt .75pt .75pt .75pt">'.
+	'<HR align="center" width="100%" color="midnightblue" size="3">'.
+	'</td></tr><tr><td valign=top style="padding:.75pt .75pt .75pt .75pt">'.
+	'<p><b><span style=\'font-size:10.0pt;font-family:"Verdana","sans-serif";color:navy\'>Summary:</span></b></p>'.
+	'<p style="margin:0in;margin-bottom:.0001pt"><span style=\'font-size:10.0pt;font-family:"Verdana","sans-serif"\'>'.$summary.'</span></p></td></tr>'.
+	'<tr><td valign=top style="padding:.75pt .75pt .75pt .75pt">'.
+	'<p><b><span style=\'font-size:10.0pt;font-family:"Verdana","sans-serif";color:navy\'>Description:</span></b></p>'.
+	'<p style="margin:0in;margin-bottom:.0001pt"><span style=\'font-size:10.0pt;font-family:"Verdana","sans-serif"\'>'.
+	$messageToSd .'</span></p></td></tr></table> <table border=0 cellspacing=0 cellpadding=0 width=678 style=\'width:508.5pt;border-collapse:collapse\'>'.
+	'<tr><td valign=bottom style=\'padding:.75pt .75pt .75pt .75pt\'>'.	
+	'<HR align="center" width="100%" color="midnightblue" size="3"></td></tr><tr><td valign=top style="padding:.75pt .75pt .75pt .75pt">'.
+	'<p ><b><span style=\'font-size:10.0pt;font-family:"Verdana","sans-serif";color:navy\'>Submitter:</span></b></p>'.
+	'<p ><span style=\'font-size:10.0pt;font-family:"Verdana","sans-serif"\'>'.$user->getRealName().'(<em>'.$user->getName().'</em>) </span><span style=\'font-size:10.0pt;font-family:"Arial","sans-serif"\'><a href="mailto:'.$user->getEmail().'">'.$user->getEmail().'</a></span></p>'.
+	'</td></tr><tr><td valign=top style=\'padding:.75pt .75pt .75pt .75pt\'>'.
+	'<p><b><span style=\'font-size:10.0pt;font-family:"Verdana","sans-serif";color:navy\'>People in CC:</span></b></p>'.
+	'<p><span style=\'font-size:10.0pt;font-family:"Arial","sans-serif"\'><a href="mailto:'.$cc.'">'.$cc.'</a></span></p></td></tr></table>';
+
+$codextoremedy_user_mail_content = '<table border=0 cellspacing=0 cellpadding=0 width=910 style="width:682.5pt;border-collapse:collapse">'.
+	'<tr style="height:6.75pt"><td width=205 valign=top style="width:153.75pt;padding:.75pt .75pt .75pt .75pt;height:6.75pt">'.
+	'<p><span style=\'font-size:10.0pt;font-family:"Verdana","sans-serif"\'>'.
+	'Dear '.$user->getRealName().'(<em>'.$user->getName().'</em>),<br /><br />You have inserted a new ticket.'
+	'<br /></span></p><p><span style=\'font-size:10.0pt;font-family:"Verdana","sans-serif";color:red\'>'.
+	'Please DO NOT reply on this email account.</span></p></td></tr>'.
+	'<tr style="height:6.75pt"><td width=205 valign=top style="width:153.75pt;padding:.75pt .75pt .75pt .75pt; height:6.75pt">'.
+	'<p><b><span style=\'font-size:10.0pt;font-family:"Verdana","sans-serif";color:navy\'>Request Type:</span></b></p>'.  
+	'<p><span style=\'font-size:10.0pt;font-family:"Arial","sans-serif"\'>'.$requestType.'</span></p>'.
+	'<p><b><span style=\'font-size:10.0pt;font-family:"Verdana","sans-serif";color:navy\'>Severity:</span></b></p> '. 
+	'<p><span style=\'font-size:10.0pt;font-family:"Arial","sans-serif"\'>'.$severity.'</span></p>'.
+	'</td></tr></table><table border=0 cellspacing=0 cellpadding=0 width=678 style=\'width:508.5pt;border-collapse:collapse\'>'.
+	'<tr><td valign=bottom style="padding:.75pt .75pt .75pt .75pt">'.
+	'<HR align="center" width="100%" color="midnightblue" size="3">'.
+	'</td></tr><tr><td valign=top style="padding:.75pt .75pt .75pt .75pt">'.
+	'<p><b><span style=\'font-size:10.0pt;font-family:"Verdana","sans-serif";color:navy\'>Summary:</span></b></p>'.
+	'<p style="margin:0in;margin-bottom:.0001pt"><span style=\'font-size:10.0pt;font-family:"Verdana","sans-serif"\'>'.$summary.'</span></p></td></tr>'.
+	'<tr><td valign=top style="padding:.75pt .75pt .75pt .75pt">'.
+	'<p><b><span style=\'font-size:10.0pt;font-family:"Verdana","sans-serif";color:navy\'>Description:</span></b></p>'.
+	'<p style="margin:0in;margin-bottom:.0001pt"><span style=\'font-size:10.0pt;font-family:"Verdana","sans-serif"\'>'.
+	$messageToSd .'</span></p></td></tr></table> <table border=0 cellspacing=0 cellpadding=0 width=678 style=\'width:508.5pt;border-collapse:collapse\'>'.
+	'<tr><td valign=bottom style=\'padding:.75pt .75pt .75pt .75pt\'>'.	
+	'<HR align="center" width="100%" color="midnightblue" size="3"></td></tr><tr><td valign=top style="padding:.75pt .75pt .75pt .75pt">'.
+	'<p ><b><span style=\'font-size:10.0pt;font-family:"Verdana","sans-serif";color:navy\'>Submitter:</span></b></p>'.
+	'<p ><span style=\'font-size:10.0pt;font-family:"Verdana","sans-serif"\'>'.$user->getRealName().'(<em>'.$user->getName().'</em>) </span><span style=\'font-size:10.0pt;font-family:"Arial","sans-serif"\'><a href="mailto:'.$user->getEmail().'">'.$user->getEmail().'</a></span></p>'.
+	'</td></tr><tr><td valign=top style=\'padding:.75pt .75pt .75pt .75pt\'>'.
+	'<p><b><span style=\'font-size:10.0pt;font-family:"Verdana","sans-serif";color:navy\'>People in CC:</span></b></p>'.
+	'<p><span style=\'font-size:10.0pt;font-family:"Arial","sans-serif"\'><a href="mailto:'.$cc.'">'.$cc.'</a></span></p></td></tr></table>';
+ ?>

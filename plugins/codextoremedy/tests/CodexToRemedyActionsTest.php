@@ -254,6 +254,20 @@ class CodexToRemedyActionsTest extends UnitTestCase {
                              'text_severity' => 'Minor',
                              'cc'            => 'john.doe@example.com');
 
+        // Create content file
+        $content_mail = '<?php '. PHP_EOL;
+        $content_mail .= '$codextoremedy_user_mail_content = "this is fake body";'. PHP_EOL;
+        $content_mail .= '$codextoremedy_mail_content = "this is fake body";'. PHP_EOL;
+        $content_mail .= '$codextoremedy_Failure_mail_content = "this is fake body";'. PHP_EOL;
+        $content_mail .='?>'.PHP_EOL;
+
+        $filepath = dirname(__FILE__).'/_fixtures/mail_content.txt';
+        mkdir(dirname($filepath), 0750, true);
+        touch($filepath);
+        file_put_contents($filepath, $content_mail);
+        $GLOBALS['Language']->setReturnValue('getContent',$filepath);
+
+
         $pm = new MockPluginManager();
         $p = new MockProperties();
         $pm->setReturnValue('getPluginByName', $p);
@@ -263,10 +277,14 @@ class CodexToRemedyActionsTest extends UnitTestCase {
         $actions->setReturnValue('_getPluginManager',$pm);
         $mail = new MockCodendi_Mail();
         $mail->expect('setTo', array('requester@example.com'));
+        $mail->expect('setBodyHtml', array('this is fake body'));
         $mail->setReturnValue('send', true);
 
         $actions->setReturnValue('_getCodendiMail', $mail);
         $this->assertTrue($actions->sendMail($validParams, CodexToRemedyActions::RECEPIENT_USER));
+
+        unlink(dirname(__FILE__).'/_fixtures/mail_content.txt');
+        rmdir(dirname(__FILE__).'/_fixtures');
     }
 
     function testSendMailToSDFailure() {
@@ -282,6 +300,22 @@ class CodexToRemedyActionsTest extends UnitTestCase {
                              'text_severity' => 'Minor',
                              'cc'            => 'john.doe@example.com');
 
+        // Create content file
+        $content_mail = '<?php '. PHP_EOL;
+        $content_mail .= '$codextoremedy_user_mail_content = "this is fake body";'. PHP_EOL;
+        $content_mail .= '$codextoremedy_mail_content = "this is fake body";'. PHP_EOL;
+        $content_mail .= '$codextoremedy_Failure_mail_content = "this is fake body";'. PHP_EOL;
+         $content_mail .='?>'.PHP_EOL;
+
+        $filepath = dirname(__FILE__).'/_fixtures/mail_content.txt';
+        mkdir(dirname($filepath), 0750, true);
+        touch($filepath);
+        file_put_contents($filepath, $content_mail);
+        $GLOBALS['Language']->setReturnValue('getContent',$filepath);
+                $codextoremedy_user_mail_content = 'this is fake body';
+        $codextoremedy_mail_content = 'this is fake body';
+        $codextoremedy_Failure_mail_content = 'this is fake body';
+
         $pm = new MockPluginManager();
         $p = new MockProperties();
         $pm->setReturnValue('getPluginByName', $p);
@@ -291,10 +325,14 @@ class CodexToRemedyActionsTest extends UnitTestCase {
         $actions->setReturnValue('_getPluginManager',$pm);
         $mail = new MockCodendi_Mail();
         $mail->expect('setTo', array('jenny.doe@example.com'));
+        $mail->expect('setBodyHtml', array('this is fake body'));
         $mail->setReturnValue('send', false);
 
         $actions->setReturnValue('_getCodendiMail', $mail);
         $this->assertFalse($actions->sendMail($validParams, CodexToRemedyActions::RECEPIENT_SD));
+
+        unlink(dirname(__FILE__).'/_fixtures/mail_content.txt');
+        rmdir(dirname(__FILE__).'/_fixtures');
     }
 
     function testSendMailToSDInsertRifDBFail() {
@@ -310,6 +348,20 @@ class CodexToRemedyActionsTest extends UnitTestCase {
                              'text_severity' => 'Minor',
                              'cc'            => 'john.doe@example.com');
 
+        // Create content file
+        $content_mail = '<?php '. PHP_EOL;
+        $content_mail .= '$codextoremedy_user_mail_content = "this is fake body";'. PHP_EOL;
+        $content_mail .= '$codextoremedy_mail_content = "this is fake body";'. PHP_EOL;
+        $content_mail .= '$codextoremedy_Failure_mail_content = "this is fake body";'. PHP_EOL;
+         $content_mail .='?>'.PHP_EOL;
+
+        $filepath = dirname(__FILE__).'/_fixtures/mail_content.txt';
+        mkdir(dirname($filepath), 0750, true);
+        touch($filepath);
+        file_put_contents($filepath, $content_mail);
+        $GLOBALS['Language']->setReturnValue('getContent',$filepath);
+
+
         $GLOBALS['Language']->setReturnValue('getText','Failure');
         $pm = new MockPluginManager();
         $p = new MockProperties();
@@ -321,10 +373,14 @@ class CodexToRemedyActionsTest extends UnitTestCase {
         $mail = new MockCodendi_Mail();
         $mail->expect('setTo', array('jenny.doe@example.com'));
         $mail->expect('setSubject', array('Failure'));
+        $mail->expect('setBodyHtml', array('this is fake body'));
         $mail->setReturnValue('send', true);
 
         $actions->setReturnValue('_getCodendiMail', $mail);
         $this->assertTrue($actions->sendMail($validParams, CodexToRemedyActions::RECEPIENT_FAILURE_SD));
+
+        unlink(dirname(__FILE__).'/_fixtures/mail_content.txt');
+        rmdir(dirname(__FILE__).'/_fixtures');
     }
 
 }

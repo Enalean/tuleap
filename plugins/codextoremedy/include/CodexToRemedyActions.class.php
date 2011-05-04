@@ -175,6 +175,8 @@ class CodexToRemedyActions extends PluginAction {
         $messageToSd = $params['description'];
         $cc          = $params['cc'];
 
+        include($GLOBALS['Language']->getContent('mail_content', null, 'codextoremedy'));
+
         $pluginManager = $this->_getPluginManager();
         $p = $pluginManager->getPluginByName('codextoremedy');
         if (!$from = $p->getProperty('send_notif_mail_from')) {
@@ -190,14 +192,14 @@ class CodexToRemedyActions extends PluginAction {
                     $to = 'codex-team@lists.codex.cro.st.com';
                 }
                 $mail->setSubject($GLOBALS['Language']->getText('plugin_codextoremedy', 'codextoremedy_mail_subject', $summary));
-                $body = $GLOBALS['Language']->getText('plugin_codextoremedy', 'codextoremedy_mail_content', array($user->getRealName(), $user->getName(), $requestType, $severity, $summary, $messageToSd, $cc));
+                $body = $codextoremedy_mail_content;
                 break;
             case self::RECEPIENT_FAILURE_SD:
                 if (!$to = $p->getProperty('send_notif_mail_sd')) {
                     $to = 'codex-team@lists.codex.cro.st.com';
                 }
                 $mail->setSubject($GLOBALS['Language']->getText('plugin_codextoremedy', 'codextoremedy_Failure_mail_subject'));
-                $body = $GLOBALS['Language']->getText('plugin_codextoremedy', 'codextoremedy_Failure_mail_content', array($user->getRealName(), $user->getName(), $requestType, $severity, $summary, $messageToSd, $cc));
+                $body = $codextoremedy_Failure_mail_content;
                 break;
             case self::RECEPIENT_USER:
                 $to = $user->getEmail();
@@ -206,7 +208,7 @@ class CodexToRemedyActions extends PluginAction {
                     $mail->setCc($ccMail);
                 }
                 $mail->setSubject($GLOBALS['Language']->getText('plugin_codextoremedy', 'codextoremedy_mail_subject', $summary));
-                $body = $GLOBALS['Language']->getText('plugin_codextoremedy', 'codextoremedy_user_mail_content', array($user->getRealName(), $user->getName(), $requestType, $severity, $summary, $messageToSd, $cc));
+                $body = $codextoremedy_user_mail_content;
                 break;
             default:
                 break;
