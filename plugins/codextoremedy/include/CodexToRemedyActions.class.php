@@ -188,7 +188,7 @@ class CodexToRemedyActions extends PluginAction {
                 if (!$to = $p->getProperty('send_notif_mail_sd')) {
                     $to = 'codex-team@lists.codex.cro.st.com';
                 }
-                $mail->setSubject($GLOBALS['Language']->getText('plugin_codextoremedy', 'codextoremedy_mail_subject'));
+                $mail->setSubject($GLOBALS['Language']->getText('plugin_codextoremedy', 'codextoremedy_mail_subject', $summary));
                 $body = $GLOBALS['Language']->getText('plugin_codextoremedy', 'codextoremedy_mail_content', array($user->getRealName(), $user->getName(), $requestType, $severity, $summary, $messageToSd, $user->getEmail()));
                 break;
             case self::RECEPIENT_FAILURE_SD:
@@ -200,7 +200,7 @@ class CodexToRemedyActions extends PluginAction {
                 break;
             case self::RECEPIENT_USER:
                 $to = $user->getEmail();
-                $mail->setSubject($GLOBALS['Language']->getText('plugin_codextoremedy', 'codextoremedy_mail_subject'));
+                $mail->setSubject($GLOBALS['Language']->getText('plugin_codextoremedy', 'codextoremedy_mail_subject', $summary));
                 $body = $GLOBALS['Language']->getText('plugin_codextoremedy', 'codextoremedy_user_mail_content', array($user->getRealName(), $user->getName(), $requestType, $severity, $summary, $messageToSd, $user->getEmail()));
                 break;
             default:

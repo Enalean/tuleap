@@ -8,7 +8,7 @@ plugin_codextoremedy	Enhancement_request	Demande d'amélioration
 plugin_codextoremedy	Minor	Mineure
 plugin_codextoremedy	Serious	Grave
 plugin_codextoremedy	Critical	Critique
-plugin_codextoremedy	codextoremedy_mail_subject	Nouveau ticket soumis
+plugin_codextoremedy	codextoremedy_mail_subject	[Nouveau ticket] $1
 plugin_codextoremedy	codextoremedy_Failure_mail_subject	Problème de ticket Remedy
 plugin_codextoremedy	codextoremedy_Failure_mail_content	Chere équipe de support,<br /><br /> Un nouveau ticket a été ajouté mais son insertion dans Remedy a échoué.<br /><br /><b>Utilisateur : </b>$1 (<em>$2</em>)<br /><br /><HR align="center" width="50%" color="midnightblue" size="3"><b>Type de requête : </b>$3 - <b>Severité : </b> $4<br /><HR align="center" width="50%" color="midnightblue" size="3"><p>Sommaire : $5</p><br /><HR align="center" width="50%" color="midnightblue" size="3"><p>Description : $6<p>
 plugin_codextoremedy	codextoremedy_mail_content	Chere équipe de support,<br /><br /> <b>$1</b> (<em>$2</em>) a inséré un nouveau ticket Remedy avec le contenu suivant :<br /><br /><HR align="center" width="50%" color="midnightblue" size="3"><b>Type de requête : </b>$3 - <b>Severité : </b> $4<br /><HR align="center" width="50%" color="midnightblue" size="3"><p>Sommaire : $5</p><br /><HR align="center" width="50%" color="midnightblue" size="3"><p>Description : $6<p>
