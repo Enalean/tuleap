@@ -24,7 +24,7 @@ $table_footer =  '</span></p></td></tr></table>';
 $separator =     '<HR align="center" width="100%" color="midnightblue" size="3">';
 $title_span =    '<span style=\'font-size:10.0pt;font-family:"Verdana","sans-serif";color:navy\'>';
 $content_span =  '<span style=\'font-size:10.0pt;font-family:"Verdana","sans-serif"\'>';
-$noreply_alert = '<p><span style=\'font-size:10.0pt;font-family:"Verdana","sans-serif";color:red\'>Ne répondez pas s\'il vous pla�t sur cette adresse mail.</span></p><br/>';
+$noreply_alert = '<p><span style=\'font-size:10.0pt;font-family:"Verdana","sans-serif";color:red\'>Ne répondez pas s\'il vous plaît sur cette adresse mail.</span></p><br/>';
 $add_cell =      '</td></tr><tr><td valign=top style="padding:.75pt .75pt .75pt .75pt">';
 
 $core_mail = '<tr style="height:6.75pt">'.
