@@ -93,7 +93,7 @@ class CodexToRemedyDBDriver {
                    '".$type."',
                    '".$item."',
                    '".$submitter."',
-                   '".$this->escapeString($summary)."',
+                   '".$this->escapeString($summary)."'',
                    '".$this->escapeString($description)."',
                    '".$severity."',
                    sysdate,
@@ -101,7 +101,7 @@ class CodexToRemedyDBDriver {
                    '".$submitter."',
                    RIF_REQUEST_SEQ.NEXTVAL
                    )";
-            $stid = oci_parse($this->dbh, $sql);
+            $stid = @oci_parse($this->dbh, $sql);
             if ($stid) {
                 return @oci_execute($stid);
             } else {
