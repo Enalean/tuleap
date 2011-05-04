@@ -20,7 +20,7 @@
 $codextoremedy_Failure_mail_content = '<table border=0 cellspacing=0 cellpadding=0 width=910 style="width:682.5pt;border-collapse:collapse">'.
 	'<tr style="height:6.75pt"><td width=205 valign=top style="width:153.75pt;padding:.75pt .75pt .75pt .75pt;height:6.75pt">'.
 	'<p><span style=\'font-size:10.0pt;font-family:"Verdana","sans-serif"\'>'.
-	'Dear support team,<br /><br />A new ticket was added but its insertion in Remedy failed.'
+	'Dear support team,<br /><br />A new ticket was added but its insertion in Remedy failed.'.
 	'<br /></span></p><p><span style=\'font-size:10.0pt;font-family:"Verdana","sans-serif";color:red\'>'.
 	'Please DO NOT reply on this email account.</span></p></td></tr>'.
 	'<tr style="height:6.75pt"><td width=205 valign=top style="width:153.75pt;padding:.75pt .75pt .75pt .75pt; height:6.75pt">'.
@@ -49,7 +49,7 @@ $codextoremedy_Failure_mail_content = '<table border=0 cellspacing=0 cellpadding
 $codextoremedy_mail_content = '<table border=0 cellspacing=0 cellpadding=0 width=910 style="width:682.5pt;border-collapse:collapse">'.
 	'<tr style="height:6.75pt"><td width=205 valign=top style="width:153.75pt;padding:.75pt .75pt .75pt .75pt;height:6.75pt">'.
 	'<p><span style=\'font-size:10.0pt;font-family:"Verdana","sans-serif"\'>'.
-	'Dear support team,<br /><br />'.$user->getRealName().'inserted a new Remedy ticket.'
+	'Dear support team,<br /><br />'.$user->getRealName().'inserted a new Remedy ticket.'.
 	'<br /></span></p><p><span style=\'font-size:10.0pt;font-family:"Verdana","sans-serif";color:red\'>'.
 	'Please DO NOT reply on this email account.</span></p></td></tr>'.
 	'<tr style="height:6.75pt"><td width=205 valign=top style="width:153.75pt;padding:.75pt .75pt .75pt .75pt; height:6.75pt">'.
@@ -78,7 +78,7 @@ $codextoremedy_mail_content = '<table border=0 cellspacing=0 cellpadding=0 width
 $codextoremedy_user_mail_content = '<table border=0 cellspacing=0 cellpadding=0 width=910 style="width:682.5pt;border-collapse:collapse">'.
 	'<tr style="height:6.75pt"><td width=205 valign=top style="width:153.75pt;padding:.75pt .75pt .75pt .75pt;height:6.75pt">'.
 	'<p><span style=\'font-size:10.0pt;font-family:"Verdana","sans-serif"\'>'.
-	'Dear '.$user->getRealName().'(<em>'.$user->getName().'</em>),<br /><br />You have inserted a new ticket.'
+	'Dear '.$user->getRealName().'(<em>'.$user->getName().'</em>),<br /><br />You have inserted a new ticket.'.
 	'<br /></span></p><p><span style=\'font-size:10.0pt;font-family:"Verdana","sans-serif";color:red\'>'.
 	'Please DO NOT reply on this email account.</span></p></td></tr>'.
 	'<tr style="height:6.75pt"><td width=205 valign=top style="width:153.75pt;padding:.75pt .75pt .75pt .75pt; height:6.75pt">'.
