@@ -18,14 +18,14 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
  $table_header = '<table border=0 cellspacing=0 cellpadding=0 width=910 style="width:682.5pt;border-collapse:collapse">'.
-                '<tr style="height:6.75pt"><td width=205 valign=top style="width:153.75pt;padding:.75pt .75pt .75pt .75pt;height:6.75pt">';
-$table_footer = '</span></p></td></tr></table>';
-$separator = '<HR align="center" width="100%" color="midnightblue" size="3">';
-$title_span = '<span style=\'font-size:10.0pt;font-family:"Verdana","sans-serif";color:navy\'>';
-$content_span ='<span style=\'font-size:10.0pt;font-family:"Verdana","sans-serif"\'>';
+                 '<tr style="height:6.75pt"><td width=205 valign=top style="width:153.75pt;padding:.75pt .75pt .75pt .75pt;height:6.75pt">';
+$table_footer =  '</span></p></td></tr></table>';
+$separator =     '<HR align="center" width="100%" color="midnightblue" size="3">';
+$title_span =    '<span style=\'font-size:10.0pt;font-family:"Verdana","sans-serif";color:navy\'>';
+$content_span =  '<span style=\'font-size:10.0pt;font-family:"Verdana","sans-serif"\'>';
 $noreply_alert = '<p><span style=\'font-size:10.0pt;font-family:"Verdana","sans-serif";color:red\'>'.
-    'Please DO NOT reply on this email.</span></p>';
-$add_cell ='</td></tr><tr><td valign=top style="padding:.75pt .75pt .75pt .75pt">';
+                 'Please DO NOT reply on this email.</span></p>';
+$add_cell =      '</td></tr><tr><td valign=top style="padding:.75pt .75pt .75pt .75pt">';
 
 $core_mail = '<tr style="height:6.75pt">'.
                '<td width=205 valign=top style="width:153.75pt;padding:.75pt .75pt .75pt .75pt; height:6.75pt"><p><b>'.
@@ -49,7 +49,7 @@ $core_mail = '<tr style="height:6.75pt">'.
                $separator.
                  $add_cell.
                  '<p ><b>'.$title_span.'Submitter:</span></b></p>'.
-                   '<p >'.$content_span.$user.' (<em>'.$user->getName().'</em>) </span><span style=\'font-size:10.0pt;font-family:"Arial","sans-serif"\'><a href="mailto:'.$user->getEmail().'">'.$user->getEmail().'</a></span></p><br/>'.
+                   '<p >'.$content_span.$user->getRealName().' (<em>'.$user->getName().'</em>) </span><span style=\'font-size:10.0pt;font-family:"Arial","sans-serif"\'><a href="mailto:'.$user->getEmail().'">'.$user->getEmail().'</a></span></p><br/>'.
                    $add_cell.
                    '<p><b>'.$title_span.'People in CC:</span></b></p>'.
                    '<p>'.$content_span.'<a href="mailto:'.$cc.'">'.$cc.'</a>'.
