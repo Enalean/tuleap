@@ -93,8 +93,8 @@ class CodexToRemedyDBDriver {
                    '".$type."',
                    '".$item."',
                    '".$submitter."',
-                   '".$summary."',
-                   '".$description."',
+                   '".$this->escapeString($summary)."',
+                   '".$this->escapeString($description)."',
                    '".$severity."',
                    sysdate,
                    'NEW',
@@ -110,6 +110,18 @@ class CodexToRemedyDBDriver {
         } else {
             return false;
         }
+    }
+
+    /**
+     * Escape string for Oracle
+     * /!\ replacing ' by '' may not be sufficient to escape strings for Oracle /!\
+     *
+     * @param String $str String to escape
+     *
+     * @return String
+     */
+    function escapeString($str) {
+        return str_replace("'", "''", $str);
     }
 }
 ?>
