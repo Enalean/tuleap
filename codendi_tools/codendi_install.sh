@@ -490,46 +490,26 @@ do
 done
 
 
-
 ##############################################
-# Detect architecture
-$UNAME -m | $GREP -q x86_64
-if [ $? -ne 0 ]; then
-  ARCH=i386
-else
-  ARCH=x86_64
-fi
-
-##############################################
-# Check we are running on RHEL 5.3 
-# 5.3 is needed for openjdk. This will need to be updated when 5.4 is available!
+# Check release
 #
 RH_RELEASE="5"
-yn="y"
-$RPM -q redhat-release-${RH_RELEASE}* | grep 5-3 2>/dev/null 1>&2
-if [ $? -eq 1 ]; then
-  $RPM -q centos-release-${RH_RELEASE}* | grep 5-3 2>/dev/null 1>&2
-  if [ $? -eq 1 ]; then
-    cat <<EOF
-This machine is not running RedHat Enterprise Linux ${RH_RELEASE} or CentOS  ${RH_RELEASE}. Executing this install
-script may cause data loss or corruption.
-EOF
-read -p "Continue? [y|n]: " yn
-  else
-    echo "Running on CentOS ${RH_RELEASE}... good!"
-  fi
+RH_UPDATE="6"
+
+minor_version=`$RPM -qa | grep -P "^(centos|redhat)-release-${RH_RELEASE}" | sed -rn 's/(centos|redhat)-release-5-(.).*/\2/p'`
+if [ "x$minor_version" != x ] && [ "$minor_version" -ge "$RH_UPDATE" ]; then
+    echo "Running on RHEL or CentOS ${RH_RELEASE}... good!"
 else
-    echo "Running on RedHat Enterprise Linux ${RH_RELEASE}... good!"
+  cat << EOF
+This machine is not running RedHat Enterprise Linux or CentOS ${RH_RELEASE}.${RH_UPDATE}
+You should consider to upgrade your system before going any further (yum upgrade).
+EOF
+  read -p "Continue? [y|n]: " yn
+  if [ "$yn" = "n" ]; then
+      echo "Bye now!"
+      exit 1
+  fi
 fi
-
-if [ "$yn" = "n" ]; then
-    echo "Bye now!"
-    exit 1
-fi
-
-rm -f $TODO_FILE
-todo "WHAT TO DO TO FINISH THE CODENDI INSTALLATION (see $TODO_FILE)"
-
 
 # Check if IM plugin is installed
 enable_plugin_im="false"
@@ -542,6 +522,11 @@ enable_core_mailman="false"
 if $RPM -q mailman | $GREP codendi 2>&1 >/dev/null; then
     enable_core_mailman="true"
 fi
+
+
+
+rm -f $TODO_FILE
+todo "WHAT TO DO TO FINISH THE CODENDI INSTALLATION (see $TODO_FILE)"
 
 echo
 echo "Configuration questions"
