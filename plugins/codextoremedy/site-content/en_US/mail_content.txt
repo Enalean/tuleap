@@ -21,13 +21,13 @@
                  '<tr style="height:6.75pt"><td width=205 valign=top style="width:153.75pt;padding:.75pt .75pt .75pt .75pt;height:6.75pt">';
 $table_footer =  '</span></p></td></tr></table>';
 $separator =     '<HR align="center" width="100%" color="midnightblue" size="3">';
-$title_span =    '<span style=\'font-size:10.0pt;font-family:"Verdana","sans-serif";color:navy\'>';
+$title_span =    '<span style=\'font-size:10.0pt;font-family:"Verdana","sans-serif";color:#221871 \'>';
 $content_span =  '<span style=\'font-size:10.0pt;font-family:"Verdana","sans-serif"\'>';
-$noreply_alert = '<p><span style=\'font-size:10.0pt;font-family:"Verdana","sans-serif";color:red\'>'.
-                 'Please DO NOT reply on this email.</span></p>';
+$noreply_alert = '<p><span style=\'font-size:10.0pt;font-family:"Verdana","sans-serif";color:#F90403 \'>'.
+                 'Please DO NOT reply to this email.</span></p>';
 $add_cell =      '</td></tr><tr><td valign=top style="padding:.75pt .75pt .75pt .75pt">';
 
-$core_mail = '<tr style="height:6.75pt">'.
+$core_mail = separator.'<tr style="height:6.75pt">'.
                '<td width=205 valign=top style="width:153.75pt;padding:.75pt .75pt .75pt .75pt; height:6.75pt"><p><b>'.
                  $title_span.'Request Type:</span></b></p>'.  
                    '<p>'.$content_span.$requestType.
@@ -39,11 +39,11 @@ $core_mail = '<tr style="height:6.75pt">'.
               $separator.
                 $add_cell.
                 '<p><b>'.$title_span.'Summary:</span></b></p>'.
-                  '<p style="margin:0in;margin-bottom:.0001pt">'.$content_span.$summary.'</span></p><br/>'.
+                  '<p style="margin:0in;margin-bottom:.0001pt">'.$content_span.'<pre>'.$summary.'</pre></span></p><br/>'.
                 $add_cell.
                   '<p><b>'.$title_span.'Description:</span></b></p>'.
                     '<p style="margin:0in;margin-bottom:.0001pt">'.$content_span.
-                      $messageToSd .
+                      '<pre>'.$messageToSd .'</pre>'.
              $table_footer.
              $table_header.
                $separator.
@@ -63,7 +63,7 @@ $codextoremedy_Failure_mail_content = $table_header.
 
 $codextoremedy_mail_content = $table_header.
                                 '<p>'.$content_span.
-                                  'Dear support team,<br /><br />'.$user->getRealName().'inserted a new Remedy ticket.<br /></span></p>'.
+                                  'Dear support team,<br /><br />'.$user->getRealName().' inserted a new Remedy ticket.<br /></span></p>'.
                                   $noreply_alert.'</td></tr>'.
                                   $core_mail;
 
