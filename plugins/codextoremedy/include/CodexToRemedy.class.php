@@ -54,11 +54,11 @@ class CodexToRemedy extends PluginControler {
                     $this->addview('remedyPostSubmission');
                     break;
                 default:
-                    $this->addview('form');
+                    $this->addview('displayForm');
                     break;
             }
         } else {
-            $this->addview('form');
+            $this->addview('displayForm');
         }
     }
 

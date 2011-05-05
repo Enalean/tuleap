@@ -35,7 +35,7 @@ class CodexToRemedyViews extends PluginView {
     function header() {
         $title = $GLOBALS['Language']->getText('plugin_codextoremedy', 'title');
         $GLOBALS['HTML']->header(array('title'=>$title));
-        echo '<h2>'.$title.'</h2>';
+        include($GLOBALS['Language']->getContent('help/site'));
     }
 
     /**
@@ -58,8 +58,8 @@ class CodexToRemedyViews extends PluginView {
         $data = $c->getData();
         $requestStatus = $data['status'];
         if (!$requestStatus) {
-            $c->addError($GLOBALS['Language']->getText('plugin_codextoremedy', 'codextoremedy_ticket_submission_fail'));
-            $c->redirect('/site/');
+            $params        = $data['params'];
+            $this->displayForm($params);
         } else {
             $c->addInfo($GLOBALS['Language']->getText('plugin_codextoremedy', 'codextoremedy_ticket_submission_success'));
             $c->redirect('/my/');
@@ -67,13 +67,74 @@ class CodexToRemedyViews extends PluginView {
     }
 
     /**
-     * Default view
+     * Display form to fill a request
      *
-     * @return void
+     * @param Array $params params of the hook
+     *
+     * @return Void
      */
-    function form() {
-        $c = $this->getController();
-        $c->redirect('/site/');
+    function displayForm($params = null) {
+        $um = UserManager::instance();
+        $user = $um->getCurrentUser();
+        if ($user->isLoggedIn()) {
+            $type        = CodexToRemedy::TYPE_SUPPORT;
+            $severity    = CodexToRemedy::SEVERITY_MINOR;
+            $summary     = '';
+            $description =  '';
+            if (is_array($params)) {
+                if (isset($params['type'])) {
+                    $type = $params['type'];
+                }
+                if (isset($params['severity'])) {
+                    $severity = $params['severity'];
+                }
+                if (isset($params['summary'])) {
+                    $summary = $params['summary'];
+                }
+                if (isset($params['description'])) {
+                    $description = $params['description'];
+                }
+            }
+            $p = PluginManager::instance()->getPluginByName('codextoremedy');
+            echo '<form name="request" class="cssform" action="'.$p->getPluginPath().'/" method="post" enctype="multipart/form-data">
+             <fieldset >
+                 <table>
+                     <tr>';
+            echo '<td><label>Type:</label>&nbsp;<span class="highlight"><big>*</big></b></span></td>
+                     <td><select name="type">
+                      <option value="'.CodexToRemedy::TYPE_SUPPORT.'" ';
+            if ($type == CodexToRemedy::TYPE_SUPPORT)  echo 'selected';
+            echo '>'.$GLOBALS['Language']->getText('plugin_codextoremedy', 'Support_request').'</option>
+                         <option value="'.CodexToRemedy::TYPE_ENHANCEMENT.'" ';
+            if ($type == CodexToRemedy::TYPE_ENHANCEMENT) echo 'selected';
+            echo '>'.$GLOBALS['Language']->getText('plugin_codextoremedy', 'Enhancement_request').'</option>
+                     </select>';
+            echo '</td><td><label>'.$GLOBALS['Language']->getText('plugin_codextoremedy', 'severity').':</label>&nbsp;<span class="highlight"><big>*</big></b></span></td>
+                             <td><select name="severity">
+                             <option value="'.CodexToRemedy::SEVERITY_MINOR.'" ';
+            if ($severity == CodexToRemedy::SEVERITY_MINOR) echo 'selected';
+            echo '>'.$GLOBALS['Language']->getText('plugin_codextoremedy', 'Minor').'</option>
+                             <option value="'.CodexToRemedy::SEVERITY_SERIOUS.'" ';
+            if ($severity == CodexToRemedy::SEVERITY_SERIOUS) echo 'selected';
+            echo '>'.$GLOBALS['Language']->getText('plugin_codextoremedy', 'Serious').'</option>
+                             <option value="'.CodexToRemedy::SEVERITY_CRITICAL.'" ';
+            if ($severity == CodexToRemedy::SEVERITY_CRITICAL) echo 'selected';
+            echo '>'.$GLOBALS['Language']->getText('plugin_codextoremedy', 'Critical').'</option>
+                             </select>
+                         </td>
+                     </tr>';
+            echo '<tr><td><label>'.$GLOBALS['Language']->getText('plugin_codextoremedy', 'summary').':</label>&nbsp;<span class="highlight"><big>*</big></b></span></td>
+                     <td><input type="text" name="request_summary" value="'.$summary.'" /></td></tr>';
+            echo '<tr><td><label><span class="totop">Description:</span></label>&nbsp;<span class="highlight"><span class="totop"><big>*</big></b></span></span></td><td><textarea name="request_description">'.$description.'</textarea></td></tr>
+            <tr><td><label>CC :</label><td><input id="codextoremedy_cc" type="text" name="cc" /></td></tr>
+            <tr><td></td><td><input name="action" type="hidden" value="submit_ticket" /></td></tr>
+            <tr><td></td><td><input name="submit" type="submit" value="Submit" /></td></tr>
+                </table>
+            </fieldset>
+        </form>';
+            $js = "new UserAutoCompleter('codextoremedy_cc', '".util_get_dir_image_theme()."', true);";
+            $GLOBALS['Response']->includeFooterJavascriptSnippet($js);
+        }
     }
     // }}}
 }

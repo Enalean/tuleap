@@ -13,3 +13,4 @@ plugin_codextoremedy	codextoremedy_Failure_mail_subject	Remedy ticket Problem
 plugin_codextoremedy	codextoremedy_mail_failed	Send notification mail has failed
 plugin_codextoremedy	codextoremedy_ticket_submission_success	Ticket was successfully submitted
 plugin_codextoremedy	codextoremedy_ticket_submission_fail	Ticket submission failed
+plugin_codextoremedy	codextoremedy_invalid_params	Please fill mandatory fields

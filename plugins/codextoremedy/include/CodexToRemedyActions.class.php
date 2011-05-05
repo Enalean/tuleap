@@ -44,19 +44,20 @@ class CodexToRemedyActions extends PluginAction {
      * @return Array
      */
     function validateRequest($request) {
+        $status = true;
         $valid = new Valid_String('request_summary');
         $valid->required();
         if ($request->valid($valid)) {
             $params['summary'] = $request->get('request_summary');
         } else {
-            return false;
+            $status = false;
         }
         $valid = new Valid_Text('request_description');
         $valid->required();
         if ($request->valid($valid)) {
             $params['description'] = $request->get('request_description');
         } else {
-            return false;
+            $status = false;
         }
         $valid = new Valid_UInt('type');
         $valid->required();
@@ -71,11 +72,11 @@ class CodexToRemedyActions extends PluginAction {
                     $params['text_type'] = 'ENHANCEMENT REQUEST';
                     break;
                 default:
-                    return false;
+                    $status = false;
                     break;
             }
         } else {
-            return false;
+            $status = false;
         }
         $valid = new Valid_UInt('severity');
         $valid->required();
@@ -93,11 +94,11 @@ class CodexToRemedyActions extends PluginAction {
                     $params['text_severity'] = 'Critical';
                     break;
                 default:
-                    return false;
+                    $status = false;
                     break;
             }
         } else {
-            return false;
+            $status = false;
         }
         $cc = '';
         $mails      = array_map('trim', preg_split('/[,;]/', $request->get('cc')));
@@ -125,7 +126,7 @@ class CodexToRemedyActions extends PluginAction {
             }
         }
         $params['cc'] = $cc;
-        return $params;
+        return array('status' => $status, 'params' => $params);
     }
 
     /**
@@ -243,8 +244,10 @@ class CodexToRemedyActions extends PluginAction {
         $um                    = $this->_getUserManager();
         $user                  = $um->getCurrentUser();
         $request               = $c->getRequest();
-        $params                = $this->validateRequest($request);
-        if ($params) {
+        $validation            = $this->validateRequest($request);
+        $status                = $validation['status'];
+        $params                = $validation['params'];
+        if ($status) {
             $params['user_id']     = $user->getId();
             $params['create_date'] = time();
             if ($this->insertTicketInCodexDB($params)) {
@@ -255,10 +258,12 @@ class CodexToRemedyActions extends PluginAction {
                 }
                 $c->addData(array('status' => true));
             } else {
-                $c->addData(array('status' => false));
+                $c->addData(array('status' => false, 'params' => $params));
+                $c->addError($GLOBALS['Language']->getText('plugin_codextoremedy', 'codextoremedy_ticket_submission_fail'));
             }
         } else {
-            $c->addData(array('status' => false));
+            $c->addData(array('status' => false, 'params' => $params));
+            $c->addError($GLOBALS['Language']->getText('plugin_codextoremedy', 'codextoremedy_invalid_params'));
         }
     }
     // }}}
