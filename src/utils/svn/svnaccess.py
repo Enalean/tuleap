@@ -26,7 +26,8 @@ import sys
 import string
 import user
 import group
-import codendildap
+import MySQLdb
+import include
 
 global SVNACCESS, SVNGROUPS
 SVNACCESS = None
@@ -98,14 +99,27 @@ def fetch_access_file(svnrepo):
         #print SVNGROUPS
         #print SVNACCESS
 
+# Check if ldap plugin is installed and available
+def ldap_plugin_is_enabled():
+    cursor = include.dbh.cursor(cursorclass=MySQLdb.cursors.DictCursor)
+    res    = cursor.execute('SELECT NULL'+ 
+                            ' FROM plugin'+
+                            ' WHERE name="ldap"'+
+                            ' AND available=1')
+    return (cursor.rowcount == 1)
+
 # Specific to LDAP plugin: if the current repository is handled by LDAP
 # authentication we must check user access with it's ldap name instead of codex
 # name because they can be different (ldap login: 'john doe' => 'john_doe')
 def get_name_for_svn_access(svnrepo, username):
-    if codendildap.project_has_ldap_auth(svnrepo):
-        return codendildap.get_login_from_username(username)
+    if ldap_plugin_is_enabled():
+        import codendildap
+        if codendildap.project_has_ldap_auth(svnrepo):
+            return codendildap.get_login_from_username(username)
+        else:
+            return username.lower()
     else:
-        return username.lower()
+       return username.lower() 
 
 def check_read_access(username, svnrepo, svnpath):
     
