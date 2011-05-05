@@ -23,7 +23,7 @@ Requires: bind, bind-chroot, caching-nameserver
 # SELinux
 Requires: policycoreutils, coreutils, selinux-policy, selinux-policy-targeted, libselinux
 # Munin
-Requires: munin = 1.2.5-1.codendi, munin-node = 1.2.5-1.codendi
+#Requires: munin = 1.2.5-1.codendi, munin-node = 1.2.5-1.codendi
 
 ##
 ## Inherited from old install script, possibly useless of just dependencies...
@@ -31,7 +31,7 @@ Requires: munin = 1.2.5-1.codendi, munin-node = 1.2.5-1.codendi
 #Requires: enscript
 Requires: openssh-server, openssh, openssh-clients
 Requires: ntp
-Requires: sysstat, aspell
+Requires: sysstat
 # CLI (build only?)
 Requires: zip, unzip
 # Java (for documentation building ?)
