@@ -46,7 +46,7 @@ $codextoremedy_mail_content         = '<table><tr><td>Chere équipe de support,<
                                       $noreply_alert.
                                       $core_mail;
 
-$codextoremedy_user_mail_content    = '<table><tr><td>Dear '.$user->getRealName().' (<em>'.$user->getName().'</em>),<br /><br />Vous avez inséré un nouveau ticket Remedy.</td></tr>'.
+$codextoremedy_user_mail_content    = '<table><tr><td>Cher '.$user->getRealName().' (<em>'.$user->getName().'</em>),<br /><br />Vous avez inséré un nouveau ticket Remedy.</td></tr>'.
                                       $noreply_alert.
                                       $core_mail;
  ?>
