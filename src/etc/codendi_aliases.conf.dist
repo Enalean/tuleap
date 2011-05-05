@@ -57,7 +57,7 @@ Alias /downloads/ "/usr/share/codendi/downloads/"
 #
 Alias /custom/ "/etc/codendi/themes/"
 <Directory "/etc/codendi/themes/">
-    Options None
+    Options FollowSymLinks
     AllowOverride None
     Order allow,deny
     Allow from all
