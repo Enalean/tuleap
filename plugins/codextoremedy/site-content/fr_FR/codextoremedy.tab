@@ -1,6 +1,7 @@
 plugin_codextoremedy	descriptor_description	Plugin permettant l'intégration de Remedy dans codex
 plugin_codextoremedy	descriptor_name	Plugin Codex To Remedy
 plugin_codextoremedy	title	Codex To Remedy
+plugin_codextoremedy	type	Type de requête
 plugin_codextoremedy	severity	Sévérité
 plugin_codextoremedy	summary	Titre
 plugin_codextoremedy	Support_request	Demande de support 
@@ -14,3 +15,11 @@ plugin_codextoremedy	codextoremedy_mail_failed	Echec d'envoi du mail de notifica
 plugin_codextoremedy	codextoremedy_ticket_submission_success	Ticket soumis avec succés
 plugin_codextoremedy	codextoremedy_ticket_submission_fail	Erreur de soumission du ticket
 plugin_codextoremedy	codextoremedy_invalid_params	Veuillez remplir les champs obligatoires
+plugin_codextoremedy	codextoremedy_mail_noreply	Veuillez ne pas répondre à cet email
+plugin_codextoremedy	codextoremedy_mail_submitter	Utilisateur
+plugin_codextoremedy	codextoremedy_mail_cc	Personnes en CC
+plugin_codextoremedy	codextoremedy_mail_ticket_details	Détails du ticket
+plugin_codextoremedy	codextoremedy_mail_notif_details	Détails de l'utilisateur et de la notification
+plugin_codextoremedy	codextoremedy_mail_support	Chere équipe de support,<br /><br />$1 a inséré un nouveau ticket Remedy
+plugin_codextoremedy	codextoremedy_mail_user	Cher $1 (<em>$2</em>),<br /><br />Vous avez inséré un nouveau ticket Remedy
+plugin_codextoremedy	codextoremedy_mail_error	Chere équipe de support,<br /><br />Un nouveau ticket a été ajouté mais son insertion dans Remedy a échoué

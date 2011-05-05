@@ -185,6 +185,31 @@ class CodexToRemedyActions extends PluginAction {
         $mail = $this->_getCodendiMail();
         $mail->setFrom($from);
 
+        $separator     = '<tr><td><HR color="midnightblue" size="3"></td></tr>';
+        $noreply_alert = '<tr><td><span style="font-size:10.0pt;font-family:Verdana,font:sans-serif;color:red">'.$GLOBALS['Language']->getText('plugin_codextoremedy', 'codextoremedy_mail_noreply').'.</span></td><tr></table>';
+        $section_span  = '<span style="font-size:10.0pt;font-family:Verdana,font:sans-serif;color:#009900">';
+        $title_span    = '<span style="font-size:10.0pt;font-family:Verdana;font:sans-serif;color:navy" >';
+        $content_span  = '<span style="font-size:10.0pt;font-family:Verdana,font:sans-serif" >';
+        $core_mail     = $separator.$section_span.'<b>Ticket Details</b></span>'.
+                      '<table>'.
+                      '<tr><td>'.$title_span.'<b>'.$GLOBALS['Language']->getText('plugin_codextoremedy', 'type').' : </b></span></td><td>'.$content_span.$requestType.'</span></td></tr>'.
+                      '<tr><td>'.$title_span.'<b>'.$GLOBALS['Language']->getText('plugin_codextoremedy', 'severity').' : </b></span></td><td>'.$content_span.$severity.'</span></td></tr>'.
+                      '<tr><td>'.$title_span.'<b>'.$GLOBALS['Language']->getText('plugin_codextoremedy', 'summary').' : </b></span></td><td>'.$content_span.'<pre>'.$summary.'</pre></span></td></tr>'.
+                      '<tr><td>'.$title_span.'<b>Description : </b></span></td></tr><tr></table><p>'.$content_span.'<pre>'.$messageToSd .'</pre></span></p>'.
+        $separator.
+        $section_span.'<b>Requester and notification details</b></span>'.
+                      '<table>'.
+                      '<tr><p><td>'.$title_span.'<b>'.$GLOBALS['Language']->getText('plugin_codextoremedy', 'codextoremedy_mail_submitter').' : </b></span></td><td>'.$content_span.$user->getRealName().' (<em>'.$user->getName().'</em>) <a href="mailto:'.$user->getEmail().'">'.$user->getEmail().'</a></td></span></tr>';
+        if ($cc != '') {
+            $core_mail .= '<tr><td>'.$title_span.'<b>'.$GLOBALS['Language']->getText('plugin_codextoremedy', 'codextoremedy_mail_cc').' : </b></span></td><td>'.$content_span;
+            $ccMails = array_map('trim', preg_split('/[;]/', $cc));
+            foreach ($ccMails as $ccMail) {
+                $core_mail .= ' <a href="mailto:'.$ccMail.'">'.$ccMail.'</a>';
+            }
+            $core_mail .= '</td></span></p></tr>';
+        }
+        $core_mail .= '</table>';
+
         switch ($recepient) {
             case self::RECEPIENT_SD:
                 include($GLOBALS['Language']->getContent('mail_content', null, 'codextoremedy'));
@@ -192,27 +217,23 @@ class CodexToRemedyActions extends PluginAction {
                     $to = 'codex-team@lists.codex.cro.st.com';
                 }
                 $mail->setSubject($GLOBALS['Language']->getText('plugin_codextoremedy', 'codextoremedy_mail_subject', array($severity, $summary)));
-                $body = $codextoremedy_mail_content;
+                $body = '<table><tr><td>'.$GLOBALS['Language']->getText('plugin_codextoremedy', 'codextoremedy_mail_support', $user->getRealName()).'.</td></tr>'.$noreply_alert.$core_mail;
                 break;
             case self::RECEPIENT_FAILURE_SD:
-                include($GLOBALS['Language']->getContent('mail_content', null, 'codextoremedy'));
                 if (!$to = $p->getProperty('send_notif_mail_sd')) {
                     $to = 'codex-team@lists.codex.cro.st.com';
                 }
                 $mail->setSubject($GLOBALS['Language']->getText('plugin_codextoremedy', 'codextoremedy_Failure_mail_subject'));
-                $body = $codextoremedy_Failure_mail_content;
+                $body = '<table><tr><td>'.$GLOBALS['Language']->getText('plugin_codextoremedy', 'codextoremedy_mail_error').'.</td></tr>'.$noreply_alert.$core_mail;
                 break;
             case self::RECEPIENT_USER:
-                include($GLOBALS['Language']->getContent('mail_content', null, 'codextoremedy'));
                 $to = $user->getEmail();
                 if ($cc != '') {
-                    $ccMails = array_map('trim', preg_split('/[;]/', $cc));
                     foreach ($ccMails as $ccMail) {
                         $mail->setCc($ccMail);
                     }
                 }
-                $mail->setSubject($GLOBALS['Language']->getText('plugin_codextoremedy', 'codextoremedy_mail_subject', array($severity, $summary)));
-                $body = $codextoremedy_user_mail_content;
+                $body = '<table><tr><td>'.$GLOBALS['Language']->getText('plugin_codextoremedy', 'codextoremedy_mail_user', array($user->getRealName(), $user->getName())).'</td></tr>'.$noreply_alert.$core_mail;
                 break;
             default:
                 return false;
