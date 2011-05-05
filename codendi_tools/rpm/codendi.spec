@@ -39,12 +39,71 @@ Packager: Manuel VACELET <manuel.vacelet@st.com>
 
 # Package cutting is still a bit a mess so do not force dependency on custmization package yet
 #Requires: %{PKG_NAME}-customization
-Requires: vixie-cron >= 4.1-9
-
+Requires: vixie-cron >= 4.1-9, tmpwatch
+# Php and web related stuff
+Requires: php, php-mysql, php-xml, php-mbstring, php-gd, php-soap, php-pear, gd
+Requires: dejavu-lgc-fonts
+Requires: jpgraph = 2.3.4-0.codendi
+Requires: php-pecl-apc
+Requires: htmlpurifier
+Requires: curl
+# Perl
+Requires: perl, perl-DBI, perl-DBD-MySQL, perl-suidperl, perl-URI, perl-HTML-Tagset, perl-HTML-Parser, perl-libwww-perl, perl-DateManip
+# Apache
+Requires: httpd, mod_ssl, openssl
+# Mysql Client
+Requires: mysql
+# libnss-mysql (system authentication based on MySQL)
+Requires: libnss-mysql, mod_auth_mysql, nss, nscd
+# Forgeupgrade
 Requires: forgeupgrade >= 1.2
 
 %description
 Codendi is a web based application that address all the aspects of product development.
+
+#
+## Core component definitions
+#
+
+%package core-mailman
+Summary: Mailman component for codendi
+Group: Development/Tools
+Version: @@CORE_MAILMAN_VERSION@@
+Release: 1%{?dist}
+Requires: %{name} >= %{version}
+Requires: mailman = 3:2.1.9-6.codendi
+Provides: codendi-core-mailman = %{version}
+%description core-mailman
+Manage dependencies for Codendi mailman integration
+
+%package core-subversion
+Summary: Subversion component for codendi
+Group: Development/Tools
+Version: @@CORE_SUBVERSION_VERSION@@
+Release: 1%{?dist}
+Requires: %{name} >= %{version}
+Conflicts: cadaver
+Requires: viewvc = 1.0.7-2.codendi
+Requires: subversion, mod_dav_svn, subversion-perl, highlight
+Provides: codendi-core-subversion = %{version}
+%description core-subversion
+Manage dependencies for Codendi Subversion integration
+
+%package core-cvs
+Summary: CVS component for codendi
+Group: Development/Tools
+Version: @@CORE_CVS_VERSION@@
+Release: 1%{?dist}
+Requires: %{name} >= %{version}
+Requires: viewvc = 1.0.7-2.codendi
+Requires: xinetd, rcs, cvs = 1.11.22-5.codendi, cvsgraph, highlight
+Provides: codendi-core-cvs = %{version}
+%description core-cvs
+Manage dependencies for Codendi CVS integration
+
+#
+## Plugins
+#
 
 %package plugin-forumml
 Summary: ForumML plugin for Codendi
@@ -52,7 +111,7 @@ Group: Development/Tools
 Version: @@PLUGIN_FORUMML_VERSION@@
 Release: 1%{?dist}
 Requires: %{name} >= %{version}, php, php-pear-Mail-mimeDecode php-pear-Mail-Mime php-pear-Mail-Mbox php-pear-Mail
-#Requires: mailman-2.1.9-5.codendi
+Requires: codendi-core-mailman
 Provides: codendi-plugin-forumml = %{version}
 %description plugin-forumml
 ForumML brings to Codendi a very nice mail archive viewer and the possibility
@@ -553,6 +612,22 @@ fi
 %attr(00755,root,root) /etc/rc.d/init.d/%{APP_NAME}
 %attr(00644,root,root) /etc/cron.d/%{APP_NAME}
 %dir %{APP_CACHE_DIR}
+
+
+#
+# Core
+#
+%files core-mailman
+%defattr(-,%{APP_USER},%{APP_USER},-)
+%{APP_DIR}/src/CORE_MAILMAN_VERSION
+
+%files core-subversion
+%defattr(-,%{APP_USER},%{APP_USER},-)
+%{APP_DIR}/src/CORE_SUBVERSION_VERSION
+
+%files core-cvs
+%defattr(-,%{APP_USER},%{APP_USER},-)
+%{APP_DIR}/src/CORE_CVS_VERSION
 
 #
 # Plugins

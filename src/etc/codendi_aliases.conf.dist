@@ -12,21 +12,21 @@
 # NOTE: This can be disabled when delegation is available
 # If the web site uses absolute or semi-relative URLS (starting with '/'), only one 
 # access mode will work (vhost or /www/projname)
-AliasMatch ^/www/([^/]*)/(.*) /home/groups/$1/htdocs/$2
-<Directory /home/groups>
-        DirectoryIndex index.html index.php
-
-        # PHP variables
-        php_admin_value open_basedir "/home/groups/"
-        php_admin_value include_path "."
-        php_admin_flag safe_mode on
-        php_admin_flag safe_mode_gid on
-
-        Options Indexes FollowSymlinks
-        AllowOverride All
-        order allow,deny
-        allow from all
-</Directory>
+#AliasMatch ^/www/([^/]*)/(.*) /home/groups/$1/htdocs/$2
+#<Directory /home/groups>
+#        DirectoryIndex index.html index.php
+#
+#        # PHP variables
+#        php_admin_value open_basedir "/home/groups/"
+#        php_admin_value include_path "."
+#        php_admin_flag safe_mode on
+#        php_admin_flag safe_mode_gid on
+#
+#        Options Indexes FollowSymlinks
+#        AllowOverride All
+#        order allow,deny
+#        allow from all
+#</Directory>
 
 #
 # Codendi documentation
@@ -57,7 +57,7 @@ Alias /downloads/ "/usr/share/codendi/downloads/"
 #
 Alias /custom/ "/etc/codendi/themes/"
 <Directory "/etc/codendi/themes/">
-    Options None
+    Options FollowSymLinks
     AllowOverride None
     Order allow,deny
     Allow from all

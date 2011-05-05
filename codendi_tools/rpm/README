@@ -39,3 +39,10 @@ It will generate 2 pacakges:
 If you only care about the sources, 'make codendi' will only generate the
 source package (much more quick).
 
+Note for later
+==============
+
+How to replace a package: Move from 'mailman' to 'mailman-codendi':
+1. Download mailman-codendi.rpm
+2. Run rpm -ivh --replacepkgs --replacefiles mailman-codendi.rpm
+3. Run yum remove mailman

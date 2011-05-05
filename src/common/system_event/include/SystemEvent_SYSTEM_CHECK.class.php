@@ -66,10 +66,6 @@ class SystemEvent_SYSTEM_CHECK extends SystemEvent {
         $backendSystem->dumpSSHKeys();
         
         // Force global updates: aliases, CVS roots, SVN roots
-        $backendCVS->setCVSRootListNeedUpdate();
-        // Do not force SVN as it flushes the caches (APC, ldap)
-        // reload only when needed.
-        //$backendSVN->setSVNApacheConfNeedUpdate();
         $backendAliases->setNeedUpdateMailAliases();
         $backendSystem->setNeedRefreshUserCache();
         $backendSystem->setNeedRefreshGroupCache();
@@ -110,6 +106,8 @@ class SystemEvent_SYSTEM_CHECK extends SystemEvent {
             }
             
             if ($project->usesCVS()) {
+                $backendCVS->setCVSRootListNeedUpdate();
+
                 if (!$backendCVS->repositoryExists($project)) {
                     if (!$backendCVS->createProjectCVS($project->getId())) {
                         $this->error("Could not create/initialize project CVS repository");

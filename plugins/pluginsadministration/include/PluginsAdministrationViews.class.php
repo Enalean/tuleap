@@ -8,6 +8,7 @@
  */
 require_once('common/mvc/Views.class.php');
 require_once('common/include/HTTPRequest.class.php');
+require_once('common/include/ForgeUpgradeConfig.class.php');
 require_once('common/plugin/PluginManager.class.php');
 require_once('common/plugin/PluginHookPriorityManager.class.php');
 
@@ -19,7 +20,7 @@ class PluginsAdministrationViews extends Views {
     
     function header() {
         $title = $GLOBALS['Language']->getText('plugin_pluginsadministration','title');
-        $GLOBALS['HTML']->includeJavascriptFile('/scripts/scriptaculous/scriptaculous.js');
+        //$GLOBALS['HTML']->includeJavascriptFile('/scripts/scriptaculous/scriptaculous.js');
         $GLOBALS['HTML']->header(array('title'=>$title, 'selected_top_tab' => 'admin'));
         echo '<h2>'.$title.'&nbsp;'.$this->_getHelp().'</h2>';
     }
@@ -28,9 +29,14 @@ class PluginsAdministrationViews extends Views {
     }
     
     function display($view='') {
-        if ($view == 'ajax_projects') {
+        switch ($view) {
+        case 'ajax_projects':
             $this->$view();
-        } else {
+            break;
+
+        case 'browse':
+            $this->_searchPlugins();
+        default:
             parent::display($view);
         }
     }
@@ -58,7 +64,7 @@ class PluginsAdministrationViews extends Views {
                     echo '<p>Please read the following:</p>';
                     echo '<pre style="border:1px solid black;">'. $pi .'</pre>';
                 }
-                echo '<a href="?"><< Go back to Plugins Administration</a>';
+                echo '<a href="?">&lt;&lt; Go back to Plugins Administration</a>';
             }
         }
     }
@@ -323,7 +329,14 @@ EOS;
             
             $plugin_hook_priority_manager =& new PluginHookPriorityManager();
             $plugin_manager               =& PluginManager::instance();
-            
+            try {
+                $forgeUpgradeConfig = new ForgeUpgradeConfig();
+                $forgeUpgradeConfig->loadDefaults();
+                $noFUConfig = array();
+            } catch (Exception $e) {
+                $GLOBALS['Response']->addFeedback('warning', $e->getMessage());
+            }
+
             $plugins = $plugin_manager->getAllPlugins();
             foreach($plugins as $plugin) {
                 $plug_info  =& $plugin->getPluginInfo();
@@ -342,6 +355,11 @@ EOS;
                     'available'   => $available,
                     'scope'       => $plugin->getScope(),
                     'dont_touch'  => $dont_touch);
+
+                if (isset($noFUConfig) && !$forgeUpgradeConfig->existsInPath($plugin->getFilesystemPath())) {
+                    $noFUConfig[] = array('name' => $name, 'plugin' => $plugin);
+                }
+
                 $col_hooks =& $plugin->getHooks();
                 $hooks =& $col_hooks->iterator();
                 while($hooks->valid()) {
@@ -357,12 +375,20 @@ EOS;
                     $hooks->next();
                 }
             }
+
+            // ForgeUpgrade configuration warning
+            if (isset($noFUConfig) && count($noFUConfig) && isset($GLOBALS['forgeupgrade_file'])) {
+                $txt = 'Some plugins are not referenced in ForgeUpgrade configuration, please add the following in <code>'.$GLOBALS['forgeupgrade_file'].'.</code><br/>';
+                foreach ($noFUConfig as $plugInfo) {
+                    $txt .= '<code>path[]="'.$plugInfo['plugin']->getFilesystemPath().'"</code><br/>';
+                }
+                $GLOBALS['Response']->addFeedback('warning', $txt, CODENDI_PURIFIER_DISABLED);
+            }
         }
     }
     
     function _installedPlugins() {
         $Language =& $GLOBALS['Language'];
-        $this->_searchPlugins();
         $output = '';
         $output .= '<fieldset class="pluginsadministration"><legend>'.$Language->getText('plugin_pluginsadministration','plugins').'&nbsp;'.$this->_getHelp('manage').'</legend><form>';
         $titles = array();
