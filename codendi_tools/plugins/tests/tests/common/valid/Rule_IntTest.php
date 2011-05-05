@@ -117,11 +117,18 @@ class Rule_IntTest extends UnitTestCase {
 
         // 2^31-1
         $this->assertTrue($r->isValid('2147483647'));
-        $this->assertFalse($r->isValid('2147483648'));
-
         // -2^31
         $this->assertTrue($r->isValid('-2147483648'));
-        $this->assertFalse($r->isValid('-2147483649'));
+
+        if (PHP_INT_SIZE == 4) {
+            // 32 bits version
+            $this->assertFalse($r->isValid('2147483648'));
+            $this->assertFalse($r->isValid('-2147483649'));
+        } else {
+            // 64 bits version
+            $this->assertTrue($r->isValid('2147483648'));
+            $this->assertTrue($r->isValid('-2147483649'));
+        }
     }
 
 }

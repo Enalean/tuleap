@@ -54,11 +54,16 @@ class Codendi_FileTest extends UnitTestCase {
         $this->assertTrue(is_file($this->small_file));
         $this->assertEqual(filesize($this->small_file), 14);
         if ($this->test_big_files) {
-            $this->assertFalse(is_file($this->big_file)); // PHP behavior is wrong with files > 4Gb. 
-                                                          // Hope that it will be fixed one day
-                                                          // PHP6?
-            $this->assertFalse(filesize($this->big_file));
-            $this->assertError();
+            if (PHP_INT_SIZE == 4) {
+                $this->assertFalse(is_file($this->big_file)); // PHP 32 bits behavior is wrong with files > 4Gb. 
+                                                              // Hope that it will be fixed one day
+                                                              // PHP6?
+                $this->assertFalse(filesize($this->big_file));
+                $this->assertError();
+            } else {
+                $this->assertTrue(is_file($this->big_file));
+                $this->assertTrue(filesize($this->big_file));
+            }
         }
     }
     

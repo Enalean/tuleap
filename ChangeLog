@@ -10,7 +10,8 @@ Version 4.0.18 - (Not released yet)
         backlog #124819: Strip HTML in tracker notification
         backlog #124833: Upload an attached file in wiki with a difference in the filename case
         backlog #133850: FRS backend job abort if one of tasks fails
-	Fix bugs in subversion/viewvc when ldap is not installed on platform
+	* Fix bugs in subversion/viewvc when ldap is not installed on platform
+	* Fix unit tests on x86-64 platforms + skip tests that depends of runkit when not available
 
 Version 4.0.17.2 - Thursday, 28th April 2011
         == Bugfix ==

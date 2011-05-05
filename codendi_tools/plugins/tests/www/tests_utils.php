@@ -10,6 +10,20 @@ require_once('../include/simpletest/expectation.php');
 
 require_once('CodendiReporter.class.php');
 
+// It seems that runkit doesn't work properly on x86_64, at least with
+// PHP 5.1.6
+if (PHP_INT_SIZE == 4) {
+    if (extension_loaded('runkit')) {
+        require_once(dirname(__FILE__) .'/../include/simpletest/mock_functions.php');
+        define('MOCKFUNCTION_AVAILABLE', true);
+    } else {
+        define('MOCKFUNCTION_AVAILABLE', false);
+    }
+} else {
+    define('MOCKFUNCTION_AVAILABLE', false);
+}
+
+
 $GLOBALS['config']['plugins_root'] = $GLOBALS['sys_pluginsroot'];
 $GLOBALS['config']['tests_root']   = '/tests/';
 $GLOBALS['config']['excludes']     = array('.', '..', '.svn');

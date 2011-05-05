@@ -24,8 +24,6 @@
  * to copy this file with other tests, then run it.
  */
 
-require_once(dirname(__FILE__) .'/../include/simpletest/mock_functions.php');
-
 function foobar() {
     return 'foo';
 }
@@ -33,16 +31,18 @@ function foobar() {
 class MockFunctionsTest extends UnitTestCase {
 
     function testFoobar() {
+        $this->skipUnless(MOCKFUNCTION_AVAILABLE, "Function mocking not available");
+        if (MOCKFUNCTION_AVAILABLE) {
+            MockFunction::generate('foobar');
 
-        MockFunction::generate('foobar');
+            MockFunction::setReturnValue('foobar','bar');
+            MockFunction::expectCallCount('foobar',2);
 
-        MockFunction::setReturnValue('foobar','bar');
-        MockFunction::expectCallCount('foobar',2);
+            $this->assertEqual(foobar(), 'bar');
+            $this->assertEqual(foobar(), 'bar');
 
-        $this->assertEqual(foobar(), 'bar');
-        $this->assertEqual(foobar(), 'bar');
-
-        MockFunction::restore('foobar');
+            MockFunction::restore('foobar');
+        }
     }
 }
 
