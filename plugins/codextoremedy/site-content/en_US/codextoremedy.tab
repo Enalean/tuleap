@@ -8,7 +8,7 @@ plugin_codextoremedy	Enhancement_request	Enhancement request
 plugin_codextoremedy	Minor	Minor
 plugin_codextoremedy	Serious	Serious
 plugin_codextoremedy	Critical	Critical
-plugin_codextoremedy	codextoremedy_mail_subject	[New ticket] $1
+plugin_codextoremedy	codextoremedy_mail_subject	[New request][$1] $2
 plugin_codextoremedy	codextoremedy_Failure_mail_subject	Remedy ticket Problem
 plugin_codextoremedy	codextoremedy_mail_failed	Send notification mail has failed
 plugin_codextoremedy	codextoremedy_ticket_submission_success	Ticket was successfully submitted
