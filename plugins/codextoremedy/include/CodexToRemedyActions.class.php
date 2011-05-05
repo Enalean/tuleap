@@ -65,13 +65,13 @@ class CodexToRemedyActions extends PluginAction {
             $requestType = $request->get('type');
             $params['type'] = $requestType;
             switch ($requestType) {
-                case CodexToRemedy::TYPE_SUPPORT :
+            case CodexToRemedy::TYPE_SUPPORT :
                     $params['text_type'] = 'SUPPORT REQUEST';
                     break;
-                case CodexToRemedy::TYPE_ENHANCEMENT :
+            case CodexToRemedy::TYPE_ENHANCEMENT :
                     $params['text_type'] = 'ENHANCEMENT REQUEST';
                     break;
-                default:
+            default:
                     $status = false;
                     break;
             }
@@ -84,16 +84,16 @@ class CodexToRemedyActions extends PluginAction {
             $severity = $request->get('severity');
             $params['severity'] = $severity;
             switch ($severity) {
-                case CodexToRemedy::SEVERITY_MINOR :
+            case CodexToRemedy::SEVERITY_MINOR :
                     $params['text_severity'] = 'Minor';
                     break;
-                case CodexToRemedy::SEVERITY_SERIOUS :
+            case CodexToRemedy::SEVERITY_SERIOUS :
                     $params['text_severity'] = 'Serious';
                     break;
-                case CodexToRemedy::SEVERITY_CRITICAL :
+            case CodexToRemedy::SEVERITY_CRITICAL :
                     $params['text_severity'] = 'Critical';
                     break;
-                default:
+            default:
                     $status = false;
                     break;
             }
@@ -211,31 +211,31 @@ class CodexToRemedyActions extends PluginAction {
         $core_mail .= '</table>';
 
         switch ($recepient) {
-            case self::RECEPIENT_SD:
-                if (!$to = $p->getProperty('send_notif_mail_sd')) {
+        case self::RECEPIENT_SD:
+            if (!$to = $p->getProperty('send_notif_mail_sd')) {
                     $to = 'codex-team@lists.codex.cro.st.com';
                 }
                 $mail->setSubject($GLOBALS['Language']->getText('plugin_codextoremedy', 'codextoremedy_mail_subject', array($severity, $summary)));
                 $body = '<table><tr><td>'.$GLOBALS['Language']->getText('plugin_codextoremedy', 'codextoremedy_mail_support', $user->getRealName()).'.</td></tr>'.$noreply_alert.$core_mail;
                 break;
-            case self::RECEPIENT_FAILURE_SD:
-                if (!$to = $p->getProperty('send_notif_mail_sd')) {
+        case self::RECEPIENT_FAILURE_SD:
+            if (!$to = $p->getProperty('send_notif_mail_sd')) {
                     $to = 'codex-team@lists.codex.cro.st.com';
                 }
                 $mail->setSubject($GLOBALS['Language']->getText('plugin_codextoremedy', 'codextoremedy_Failure_mail_subject'));
                 $body = '<table><tr><td>'.$GLOBALS['Language']->getText('plugin_codextoremedy', 'codextoremedy_mail_error').'.</td></tr>'.$noreply_alert.$core_mail;
                 break;
-            case self::RECEPIENT_USER:
+        case self::RECEPIENT_USER:
                 $to = $user->getEmail();
-                if ($cc != '') {
-                    foreach ($ccMails as $ccMail) {
+            if ($cc != '') {
+                foreach ($ccMails as $ccMail) {
                         $mail->setCc($ccMail);
                     }
                 }
                 $mail->setSubject($GLOBALS['Language']->getText('plugin_codextoremedy', 'codextoremedy_mail_subject', array($severity, $summary)));
                 $body = '<table><tr><td>'.$GLOBALS['Language']->getText('plugin_codextoremedy', 'codextoremedy_mail_user', array($user->getRealName(), $user->getName())).'</td></tr>'.$noreply_alert.$core_mail;
                 break;
-            default:
+        default:
                 return false;
                 break;
         }
