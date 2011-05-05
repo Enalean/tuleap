@@ -20,10 +20,10 @@
  $table_header = '<table border=0 cellspacing=0 cellpadding=0 width=910 style="width:682.5pt;border-collapse:collapse">'.
                  '<tr style="height:6.75pt"><td width=205 valign=top style="width:153.75pt;padding:.75pt .75pt .75pt .75pt;height:6.75pt">';
 $table_footer =  '</span></p></td></tr></table>';
-$separator =     '<HR align="center" width="100%" color="midnightblue" size="3">';
-$title_span =    '<span style=\'font-size:10.0pt;font-family:"Verdana","sans-serif";color:#221871 \'>';
+$separator =     '<tr><td valign=top style="padding:.75pt .75pt .75pt .75pt"><HR align="center" width="100%" color="midnightblue" size="3"></td></tr>';
+$title_span =    '<span color="#221871" style=\'font-size:10.0pt;font-family:"Verdana","sans-serif";\'>';
 $content_span =  '<span style=\'font-size:10.0pt;font-family:"Verdana","sans-serif"\'>';
-$noreply_alert = '<p><span style=\'font-size:10.0pt;font-family:"Verdana","sans-serif";color:#F90403 \'>'.
+$noreply_alert = '<p><span color="#F90403" style=\'font-size:10.0pt;font-family:"Verdana","sans-serif"; \'>'.
                  'Please DO NOT reply to this email.</span></p>';
 $add_cell =      '</td></tr><tr><td valign=top style="padding:.75pt .75pt .75pt .75pt">';
 
