@@ -60,13 +60,30 @@ class CodexToRemedyActionsTest extends UnitTestCase {
         $request->expectCallCount('valid', 4);
         $actions = new CodexToRemedyActionsTestVersion();
         $params = $actions->validateRequest($request);
-        $validParams = array('summary'       => 'valid summary',
-                             'description'   => 'valid description',
-                             'type'          => 1,
-                             'text_type'     => 'SUPPORT REQUEST',
-                             'severity'      => 1,
-                             'text_severity' => 'Minor',
-                             'cc'            => 'john.doe@example.com');
+        $validParams = array('status' => true,
+                             'params' => array('summary'       => 'valid summary',
+                                               'description'   => 'valid description',
+                                               'type'          => 1,
+                                               'text_type'     => 'SUPPORT REQUEST',
+                                               'severity'      => 1,
+                                               'text_severity' => 'Minor',
+                                               'cc'            => 'john.doe@example.com'));
+        $this->assertEqual($params, $validParams);
+    }
+
+    function testValidateRequestNonValid() {
+        $request = new MockHTTPRequest();
+        $request->setReturnValue('get', 'valid summary', array('request_summary'));
+        $request->setReturnValue('get', 'valid description', array('request_description'));
+        $request->setReturnValue('get', 1, array('type'));
+        $request->setReturnValue('get', 1, array('severity'));
+        $request->setReturnValue('get', 'john.doe@example.com', array('cc'));
+        $request->setReturnValue('valid', false);
+        $request->expectCallCount('valid', 4);
+        $actions = new CodexToRemedyActionsTestVersion();
+        $params = $actions->validateRequest($request);
+        $validParams = array('status' => false,
+                             'params' => array('cc' => 'john.doe@example.com'));
         $this->assertEqual($params, $validParams);
     }
 
@@ -79,10 +96,19 @@ class CodexToRemedyActionsTest extends UnitTestCase {
         $request->setReturnValue('get', 'john.doe@example.com', array('cc'));
         $request->setReturnValueAt(0, 'valid', false);
         $request->setReturnValueAt(1, 'valid', true);
-        $request->expectCallCount('valid', 1);
+        $request->setReturnValueAt(2, 'valid', true);
+        $request->setReturnValueAt(3, 'valid', true);
+        $request->expectCallCount('valid', 4);
         $actions = new CodexToRemedyActionsTestVersion();
         $params = $actions->validateRequest($request);
-        $this->assertFalse($params);
+        $validParams = array('status' => false,
+                             'params' => array('description'   => 'valid description',
+                                               'type'          => 1,
+                                               'text_type'     => 'SUPPORT REQUEST',
+                                               'severity'      => 1,
+                                               'text_severity' => 'Minor',
+                                               'cc'            => 'john.doe@example.com'));
+        $this->assertEqual($params, $validParams);
     }
 
     function testValidateRequestNonValidDescription() {
@@ -95,10 +121,18 @@ class CodexToRemedyActionsTest extends UnitTestCase {
         $request->setReturnValueAt(0, 'valid', true);
         $request->setReturnValueAt(1, 'valid', false);
         $request->setReturnValueAt(2, 'valid', true);
-        $request->expectCallCount('valid', 2);
+        $request->setReturnValueAt(3, 'valid', true);
+        $request->expectCallCount('valid', 4);
         $actions = new CodexToRemedyActionsTestVersion();
         $params = $actions->validateRequest($request);
-        $this->assertFalse($params);
+        $validParams = array('status' => false,
+                             'params' => array('summary'       => 'valid summary',
+                                               'type'          => 1,
+                                               'text_type'     => 'SUPPORT REQUEST',
+                                               'severity'      => 1,
+                                               'text_severity' => 'Minor',
+                                               'cc'            => 'john.doe@example.com'));
+        $this->assertEqual($params, $validParams);
     }
 
     function testValidateRequestNonValidType() {
@@ -112,10 +146,16 @@ class CodexToRemedyActionsTest extends UnitTestCase {
         $request->setReturnValueAt(1, 'valid', true);
         $request->setReturnValueAt(2, 'valid', false);
         $request->setReturnValueAt(3, 'valid', true);
-        $request->expectCallCount('valid', 3);
+        $request->expectCallCount('valid', 4);
         $actions = new CodexToRemedyActionsTestVersion();
         $params = $actions->validateRequest($request);
-        $this->assertFalse($params);
+        $validParams = array('status' => false,
+                             'params' => array('summary'       => 'valid summary',
+                                               'description'   => 'valid description',
+                                               'severity'      => 1,
+                                               'text_severity' => 'Minor',
+                                               'cc'            => 'john.doe@example.com'));
+        $this->assertEqual($params, $validParams);
     }
 
     function testValidateRequestBadTypeValue() {
@@ -126,10 +166,17 @@ class CodexToRemedyActionsTest extends UnitTestCase {
         $request->setReturnValue('get', 1, array('severity'));
         $request->setReturnValue('get', 'john.doe@example.com', array('cc'));
         $request->setReturnValue('valid', true);
-        $request->expectCallCount('valid', 3);
+        $request->expectCallCount('valid', 4);
         $actions = new CodexToRemedyActionsTestVersion();
         $params = $actions->validateRequest($request);
-        $this->assertFalse($params);
+        $validParams = array('status' => false,
+                             'params' => array('summary'       => 'valid summary',
+                                               'description'   => 'valid description',
+                                               'type'          => '3',
+                                               'severity'      => 1,
+                                               'text_severity' => 'Minor',
+                                               'cc'            => 'john.doe@example.com'));
+        $this->assertEqual($params, $validParams);
     }
 
     function testValidateRequestNonValidSeverity() {
@@ -146,7 +193,13 @@ class CodexToRemedyActionsTest extends UnitTestCase {
         $request->expectCallCount('valid', 4);
         $actions = new CodexToRemedyActionsTestVersion();
         $params = $actions->validateRequest($request);
-        $this->assertFalse($params);
+        $validParams = array('status' => false,
+                             'params' => array('summary'     => 'valid summary',
+                                               'description' => 'valid description',
+                                               'type'        => 1,
+                                               'text_type'   => 'SUPPORT REQUEST',
+                                               'cc'          => 'john.doe@example.com'));
+        $this->assertEqual($params, $validParams);
     }
 
     function testValidateRequestBadSeverityValue() {
@@ -160,7 +213,14 @@ class CodexToRemedyActionsTest extends UnitTestCase {
         $request->expectCallCount('valid', 4);
         $actions = new CodexToRemedyActionsTestVersion();
         $params = $actions->validateRequest($request);
-        $this->assertFalse($params);
+        $validParams = array('status' => false,
+                             'params' => array('summary'     => 'valid summary',
+                                               'description' => 'valid description',
+                                               'type'        => 1,
+                                               'text_type'   => 'SUPPORT REQUEST',
+                                               'severity'    => 4,
+                                               'cc'          => 'john.doe@example.com'));
+        $this->assertEqual($params, $validParams);
     }
 
     function testAddTicketCodexDBFail() {
@@ -171,20 +231,20 @@ class CodexToRemedyActionsTest extends UnitTestCase {
         $c = new MockCodexToRemedy();
         $actions->setReturnValue('getController', $c);
         $actions->setReturnValue('_getUserManager', $um);
-        $params = array('summary'       => 'valid summary',
-                        'description'   => 'valid description',
-                        'type'          => 1,
-                        'text_type'     => 'SUPPORT REQUEST',
-                        'severity'      => 1,
-                        'text_severity' => 'Minor',
-                        'cc'            => 'john.doe@example.com');
+        $params = array('status' => true,
+                        'params' => array('summary'       => 'valid summary',
+                                          'description'   => 'valid description',
+                                          'type'          => 1,
+                                          'text_type'     => 'SUPPORT REQUEST',
+                                          'severity'      => 1,
+                                          'text_severity' => 'Minor',
+                                          'cc'            => 'john.doe@example.com'));
         $actions->setReturnValue('validateRequest', $params);
         $actions->setReturnValue('insertTicketInCodexDB', false);
         $actions->expectOnce('insertTicketInCodexDB');
         $actions->expectNever('sendMail');
         $actions->expectNever('insertTicketInRIFDB');
         $c->expectOnce('addData');
-        $c->expect('addData', array(array('status' => false)));
         $actions->addTicket();
     }
 
@@ -196,13 +256,14 @@ class CodexToRemedyActionsTest extends UnitTestCase {
         $c = new MockCodexToRemedy();
         $actions->setReturnValue('getController', $c);
         $actions->setReturnValue('_getUserManager', $um);
-        $params = array('summary'       => 'valid summary',
-                        'description'   => 'valid description',
-                        'type'          => 1,
-                        'text_type'     => 'SUPPORT REQUEST',
-                        'severity'      => 1,
-                        'text_severity' => 'Minor',
-                        'cc'            => 'john.doe@example.com');
+        $params = array('status' => true,
+                        'params' => array('summary'       => 'valid summary',
+                                          'description'   => 'valid description',
+                                          'type'          => 1,
+                                          'text_type'     => 'SUPPORT REQUEST',
+                                          'severity'      => 1,
+                                          'text_severity' => 'Minor',
+                                          'cc'            => 'john.doe@example.com'));
         $actions->setReturnValue('validateRequest', $params);
         $actions->setReturnValue('insertTicketInCodexDB', true);
         $actions->setReturnValue('insertTicketInRIFDB', false);
@@ -222,13 +283,14 @@ class CodexToRemedyActionsTest extends UnitTestCase {
         $c = new MockCodexToRemedy();
         $actions->setReturnValue('getController', $c);
         $actions->setReturnValue('_getUserManager', $um);
-        $params = array('summary'       => 'valid summary',
-                        'description'   => 'valid description',
-                        'type'          => 1,
-                        'text_type'     => 'SUPPORT REQUEST',
-                        'severity'      => 1,
-                        'text_severity' => 'Minor',
-                        'cc'            => 'john.doe@example.com');
+        $params = array('status' => true,
+                        'params' => array('summary'       => 'valid summary',
+                                          'description'   => 'valid description',
+                                          'type'          => 1,
+                                          'text_type'     => 'SUPPORT REQUEST',
+                                          'severity'      => 1,
+                                          'text_severity' => 'Minor',
+                                          'cc'            => 'john.doe@example.com'));
         $actions->setReturnValue('validateRequest', $params);
         $actions->setReturnValue('insertTicketInCodexDB', true);
         $actions->setReturnValue('insertTicketInRIFDB', true);
