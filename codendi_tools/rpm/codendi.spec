@@ -84,7 +84,7 @@ Release: 1%{?dist}
 Requires: %{name} >= %{version}
 Conflicts: cadaver
 Requires: viewvc = 1.0.7-2.codendi
-Requires: subversion, subversion-tools, mod_dav_svn, subversion-perl, subversion-python, highlight
+Requires: subversion, mod_dav_svn, subversion-perl, highlight
 Provides: codendi-core-subversion = %{version}
 %description core-subversion
 Manage dependencies for Codendi Subversion integration
