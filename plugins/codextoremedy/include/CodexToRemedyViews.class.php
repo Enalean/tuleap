@@ -103,22 +103,32 @@ class CodexToRemedyViews extends PluginView {
             echo '<td><label>Type:</label>&nbsp;<span class="highlight"><big>*</big></b></span></td>
                      <td><select name="type">
                       <option value="'.CodexToRemedy::TYPE_SUPPORT.'" ';
-            if ($type == CodexToRemedy::TYPE_SUPPORT)  echo 'selected';
+            if ($type == CodexToRemedy::TYPE_SUPPORT) {
+                echo 'selected';
+            }
             echo '>'.$GLOBALS['Language']->getText('plugin_codextoremedy', 'Support_request').'</option>
                          <option value="'.CodexToRemedy::TYPE_ENHANCEMENT.'" ';
-            if ($type == CodexToRemedy::TYPE_ENHANCEMENT) echo 'selected';
+            if ($type == CodexToRemedy::TYPE_ENHANCEMENT) {
+                echo 'selected';
+            }
             echo '>'.$GLOBALS['Language']->getText('plugin_codextoremedy', 'Enhancement_request').'</option>
                      </select>';
             echo '</td><td><label>'.$GLOBALS['Language']->getText('plugin_codextoremedy', 'severity').':</label>&nbsp;<span class="highlight"><big>*</big></b></span></td>
                              <td><select name="severity">
                              <option value="'.CodexToRemedy::SEVERITY_MINOR.'" ';
-            if ($severity == CodexToRemedy::SEVERITY_MINOR) echo 'selected';
+            if ($severity == CodexToRemedy::SEVERITY_MINOR) {
+                echo 'selected';
+            }
             echo '>'.$GLOBALS['Language']->getText('plugin_codextoremedy', 'Minor').'</option>
                              <option value="'.CodexToRemedy::SEVERITY_SERIOUS.'" ';
-            if ($severity == CodexToRemedy::SEVERITY_SERIOUS) echo 'selected';
+            if ($severity == CodexToRemedy::SEVERITY_SERIOUS) {
+                echo 'selected';
+            }
             echo '>'.$GLOBALS['Language']->getText('plugin_codextoremedy', 'Serious').'</option>
                              <option value="'.CodexToRemedy::SEVERITY_CRITICAL.'" ';
-            if ($severity == CodexToRemedy::SEVERITY_CRITICAL) echo 'selected';
+            if ($severity == CodexToRemedy::SEVERITY_CRITICAL) {
+                echo 'selected';
+            }
             echo '>'.$GLOBALS['Language']->getText('plugin_codextoremedy', 'Critical').'</option>
                              </select>
                          </td>

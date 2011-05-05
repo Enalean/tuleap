@@ -74,6 +74,11 @@ class codextoremedyPlugin extends Plugin {
         echo '<link rel="stylesheet" type="text/css" href="'.$this->getThemePath().'/css/style.css" />'."\n";
     }
 
+    /**
+     * Redirects the hook call to plugin path
+     *
+     * @return void
+     */
     function redirectToPlugin() {
         $c = new CodexToRemedy();
         $c->redirect($this->getPluginPath().'/');
