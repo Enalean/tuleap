@@ -8,7 +8,7 @@ plugin_codextoremedy	Enhancement_request	Demande d'amélioration
 plugin_codextoremedy	Minor	Mineure
 plugin_codextoremedy	Serious	Grave
 plugin_codextoremedy	Critical	Critique
-plugin_codextoremedy	codextoremedy_mail_subject	[Nouvelle requette][$1] $2
+plugin_codextoremedy	codextoremedy_mail_subject	[Nouvelle requête][$1] $2
 plugin_codextoremedy	codextoremedy_Failure_mail_subject	Problème de ticket Remedy
 plugin_codextoremedy	codextoremedy_mail_failed	Echec d'envoi du mail de notification
 plugin_codextoremedy	codextoremedy_ticket_submission_success	Ticket soumis avec succés
