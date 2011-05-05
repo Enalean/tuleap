@@ -781,6 +781,13 @@ old_passwords=1
 # Comment this line if you prefer to be safer.
 set-variable  = binlog-ignore-db=openfire
 
+# Reduce default inactive timeout (prevent DB overload in case of nscd
+# crash)
+set-variable=wait_timeout=180
+
+# Innodb settings
+innodb_file_per_table
+
 [mysql.server]
 user=mysql
 basedir=/var/lib
