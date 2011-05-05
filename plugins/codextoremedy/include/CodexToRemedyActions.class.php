@@ -191,11 +191,11 @@ class CodexToRemedyActions extends PluginAction {
         $title_span    = '<span style="font-size:10.0pt;font-family:Verdana;font:sans-serif;color:navy" >';
         $content_span  = '<span style="font-size:10.0pt;font-family:Verdana,font:sans-serif" >';
         $core_mail     = $separator.$section_span.'<b>Ticket Details</b></span>'.
-                      '<table>'.
-                      '<tr><td>'.$title_span.'<b>'.$GLOBALS['Language']->getText('plugin_codextoremedy', 'type').' : </b></span></td><td>'.$content_span.$requestType.'</span></td></tr>'.
-                      '<tr><td>'.$title_span.'<b>'.$GLOBALS['Language']->getText('plugin_codextoremedy', 'severity').' : </b></span></td><td>'.$content_span.$severity.'</span></td></tr>'.
-                      '<tr><td>'.$title_span.'<b>'.$GLOBALS['Language']->getText('plugin_codextoremedy', 'summary').' : </b></span></td><td>'.$content_span.'<pre>'.$summary.'</pre></span></td></tr>'.
-                      '<tr><td>'.$title_span.'<b>Description : </b></span></td></tr><tr></table><p>'.$content_span.'<pre>'.$messageToSd .'</pre></span></p>'.
+                         '<table>'.
+                         '<tr><td>'.$title_span.'<b>'.$GLOBALS['Language']->getText('plugin_codextoremedy', 'type').' : </b></span></td><td>'.$content_span.$requestType.'</span></td></tr>'.
+                         '<tr><td>'.$title_span.'<b>'.$GLOBALS['Language']->getText('plugin_codextoremedy', 'severity').' : </b></span></td><td>'.$content_span.$severity.'</span></td></tr>'.
+                         '<tr><td>'.$title_span.'<b>'.$GLOBALS['Language']->getText('plugin_codextoremedy', 'summary').' : </b></span></td><td>'.$content_span.'<pre>'.$summary.'</pre></span></td></tr>'.
+                         '<tr><td>'.$title_span.'<b>Description : </b></span></td></tr><tr></table><p>'.$content_span.'<pre>'.$messageToSd .'</pre></span></p>'.
         $separator.
         $section_span.'<b>Requester and notification details</b></span>'.
                       '<table>'.
@@ -212,7 +212,6 @@ class CodexToRemedyActions extends PluginAction {
 
         switch ($recepient) {
             case self::RECEPIENT_SD:
-                include($GLOBALS['Language']->getContent('mail_content', null, 'codextoremedy'));
                 if (!$to = $p->getProperty('send_notif_mail_sd')) {
                     $to = 'codex-team@lists.codex.cro.st.com';
                 }
