@@ -27,7 +27,7 @@ $noreply_alert = '<p><span style=\'font-size:10.0pt;font-family:"Verdana","sans-
                  'Please DO NOT reply to this email.</span></p>';
 $add_cell =      '</td></tr><tr><td valign=top style="padding:.75pt .75pt .75pt .75pt">';
 
-$core_mail = separator.'<tr style="height:6.75pt">'.
+$core_mail = $separator.'<tr style="height:6.75pt">'.
                '<td width=205 valign=top style="width:153.75pt;padding:.75pt .75pt .75pt .75pt; height:6.75pt"><p><b>'.
                  $title_span.'Request Type:</span></b></p>'.  
                    '<p>'.$content_span.$requestType.
