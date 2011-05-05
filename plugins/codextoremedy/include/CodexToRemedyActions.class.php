@@ -233,6 +233,7 @@ class CodexToRemedyActions extends PluginAction {
                         $mail->setCc($ccMail);
                     }
                 }
+                $mail->setSubject($GLOBALS['Language']->getText('plugin_codextoremedy', 'codextoremedy_mail_subject', array($severity, $summary)));
                 $body = '<table><tr><td>'.$GLOBALS['Language']->getText('plugin_codextoremedy', 'codextoremedy_mail_user', array($user->getRealName(), $user->getName())).'</td></tr>'.$noreply_alert.$core_mail;
                 break;
             default:
