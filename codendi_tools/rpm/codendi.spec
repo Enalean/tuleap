@@ -43,7 +43,11 @@ Requires: vixie-cron >= 4.1-9, tmpwatch
 # Php and web related stuff
 Requires: php, php-mysql, php-xml, php-mbstring, php-gd, php-soap, php-pear, gd
 Requires: dejavu-lgc-fonts
+%if %{PKG_NAME} == codendi_st
 Requires: jpgraph = 2.3.4-0.codendi
+%else
+Requires: jpgraph-%{PKG_NAME}
+%endif
 Requires: php-pecl-apc
 Requires: htmlpurifier
 Requires: curl
@@ -70,8 +74,12 @@ Summary: Mailman component for codendi
 Group: Development/Tools
 Version: @@CORE_MAILMAN_VERSION@@
 Release: 1%{?dist}
-Requires: %{name} >= %{version}
+Requires: %{name} >= @@VERSION@@
+%if %{PKG_NAME} == codendi_st
 Requires: mailman = 3:2.1.9-6.codendi
+%else
+Requires: mailman-%{PKG_NAME}
+%endif
 Provides: codendi-core-mailman = %{version}
 %description core-mailman
 Manage dependencies for Codendi mailman integration
@@ -81,9 +89,13 @@ Summary: Subversion component for codendi
 Group: Development/Tools
 Version: @@CORE_SUBVERSION_VERSION@@
 Release: 1%{?dist}
-Requires: %{name} >= %{version}
+Requires: %{name} >= @@VERSION@@
 Conflicts: cadaver
+%if %{PKG_NAME} == codendi_st
 Requires: viewvc = 1.0.7-2.codendi
+%else
+Requires: viewvc-%{PKG_NAME}
+%endif
 Requires: subversion, mod_dav_svn, subversion-perl, highlight
 Provides: codendi-core-subversion = %{version}
 %description core-subversion
@@ -94,9 +106,15 @@ Summary: CVS component for codendi
 Group: Development/Tools
 Version: @@CORE_CVS_VERSION@@
 Release: 1%{?dist}
-Requires: %{name} >= %{version}
+Requires: %{name} >= @@VERSION@@
+%if %{PKG_NAME} == codendi_st
 Requires: viewvc = 1.0.7-2.codendi
-Requires: xinetd, rcs, cvs = 1.11.22-5.codendi, cvsgraph, highlight
+Requires: cvs = 1.11.22-5.codendi
+%else
+Requires: viewvc-%{PKG_NAME}
+Requires: cvs-%{PKG_NAME}
+%endif
+Requires: xinetd, rcs, cvsgraph, highlight
 Provides: codendi-core-cvs = %{version}
 %description core-cvs
 Manage dependencies for Codendi CVS integration
@@ -110,7 +128,7 @@ Summary: ForumML plugin for Codendi
 Group: Development/Tools
 Version: @@PLUGIN_FORUMML_VERSION@@
 Release: 1%{?dist}
-Requires: %{name} >= %{version}, php, php-pear-Mail-mimeDecode php-pear-Mail-Mime php-pear-Mail-Mbox php-pear-Mail
+Requires: %{name} >= @@VERSION@@, php, php-pear-Mail-mimeDecode php-pear-Mail-Mime php-pear-Mail-Mbox php-pear-Mail
 Requires: codendi-core-mailman
 Provides: codendi-plugin-forumml = %{version}
 %description plugin-forumml
@@ -122,7 +140,7 @@ Summary: Git plugin for Codendi
 Group: Development/Tools
 Version: @@PLUGIN_GIT_VERSION@@
 Release: 1%{?dist}
-Requires: %{name} >= %{version}, git, geshi, php-Smarty
+Requires: %{name} >= @@VERSION@@, git, geshi, php-Smarty
 Provides: codendi-plugin-git = %{version}
 %description plugin-git
 Integration of git distributed software configuration management tool together
@@ -133,7 +151,7 @@ Summary: Codendi plugin for svntodimensions
 Group: Development/Tools
 Version: @@PLUGIN_SVNTODIMENSIONS_VERSION@@
 Release: 1%{?dist}
-Requires: %{name} >= %{version}
+Requires: %{name} >= @@VERSION@@
 Provides: codendi-plugin-svntodimensions = %{version}
 %description plugin-svntodimensions
 Codendi plugin for svntodimensions
@@ -143,7 +161,7 @@ Summary: Codendi plugin for cvstodimensions
 Group: Development/Tools
 Version: @@PLUGIN_CVSTODIMENSIONS_VERSION@@
 Release: 1%{?dist}
-Requires: %{name} >= %{version}
+Requires: %{name} >= @@VERSION@@
 Provides: codendi-plugin-cvstodimensions = %{version}
 %description plugin-cvstodimensions
 Codendi plugin for cvstodimensions
@@ -153,7 +171,7 @@ Summary: Codendi plugin for PDF watermarking
 Group: Development/Tools
 Version: @@PLUGIN_DOCMANWATERMARK_VERSION@@
 Release: 1%{?dist}
-Requires: %{name} >= %{version}, php-zendframework = 1.8.1
+Requires: %{name} >= @@VERSION@@, php-zendframework = 1.8.1
 # Requires: codendi-plugin-docman
 Provides: codendi-plugin-docmanwatermark = %{version}
 %description plugin-docmanwatermark
@@ -165,7 +183,7 @@ Summary: Codendi plugin to manage LDAP integration
 Group: Development/Tools
 Version: @@PLUGIN_LDAP_VERSION@@
 Release: 1%{?dist}
-Requires: %{name} >= %{version}, php-ldap, perl-LDAP, python-ldap
+Requires: %{name} >= @@VERSION@@, php-ldap, perl-LDAP, python-ldap
 Provides: codendi-plugin-ldap = %{version}
 %description plugin-ldap
 LDAP Plugin for Codendi. Provides LDAP information, LDAP
@@ -176,7 +194,7 @@ Summary: Instant Messaging Plugin for Codendi
 Group: Development/Tools
 Version: @@PLUGIN_IM_VERSION@@
 Release: 1%{?dist}
-Requires: %{name} >= %{version}, openfire, openfire-codendi-plugins
+Requires: %{name} >= @@VERSION@@, openfire, openfire-codendi-plugins
 Provides: codendi-plugin-im = %{version}
 %description plugin-im
 Provides instant messaging capabilities, based on a Jabber/XMPP server.
@@ -186,7 +204,7 @@ Summary: Codendi Java Remote Interface plugin
 Group: Development/Tools
 Version: @@PLUGIN_JRI_VERSION@@
 Release: 1%{?dist}
-Requires: %{name} >= %{version}, codendi-jri
+Requires: %{name} >= @@VERSION@@, codendi-jri
 Provides: codendi-plugin-jri = %{version}
 %description plugin-jri
 Codendi Java Remote Interface: the java API for Codendi
@@ -196,7 +214,7 @@ Summary: Eclipse plugin for Codendi
 Group: Development/Tools
 Version: @@PLUGIN_ECLIPSE_VERSION@@
 Release: 1%{?dist}
-Requires: %{name} >= %{version}, codendi-eclipse
+Requires: %{name} >= @@VERSION@@, codendi-eclipse
 Provides: codendi-plugin-eclipse = %{version}
 %description plugin-eclipse
 Plugin to install the Codendi Eclipse plugin and access the documentation
@@ -206,7 +224,7 @@ Summary: Hudson plugin for Codendi
 Group: Development/Tools/Building
 Version: @@PLUGIN_HUDSON_VERSION@@
 Release: 1%{?dist}
-Requires: %{name} >= %{version}
+Requires: %{name} >= @@VERSION@@
 Provides: codendi-plugin-hudson = %{version}
 %description plugin-hudson
 Plugin to install the Codendi Hudson plugin for continuous integration
@@ -216,7 +234,7 @@ Summary: WebDAV plugin for Codendi
 Group: Development/Tools
 Version: @@PLUGIN_WEBDAV_VERSION@@
 Release: 1%{?dist}
-Requires: %{name} >= %{version}, Sabre_DAV = 1.0.14
+Requires: %{name} >= @@VERSION@@, Sabre_DAV = 1.0.14
 Provides: codendi-plugin-webdav = %{version}
 %description plugin-webdav
 Plugin to access to file releases & docman though WebDAV
@@ -229,7 +247,7 @@ Summary: Codex theme for Codendi
 Group: Development/Tools
 Version: @@THEME_CODEX_VERSION@@
 Release: 1%{?dist}
-Requires: %{name} >= %{version}
+Requires: %{name} >= @@VERSION@@
 Provides: codendi-theme-codex = %{version}
 %description theme-codex
 Original theme for Codendi
@@ -239,7 +257,7 @@ Summary: CodexTab theme for Codendi
 Group: Development/Tools
 Version: @@THEME_CODEXTAB_VERSION@@
 Release: 1%{?dist}
-Requires: %{name} >= %{version}
+Requires: %{name} >= @@VERSION@@
 Provides: codendi-theme-codextab = %{version}
 %description theme-codextab
 CodexTab theme for Codendi
@@ -249,7 +267,7 @@ Summary: Dawn theme for Codendi
 Group: Development/Tools
 Version: @@THEME_DAWN_VERSION@@
 Release: 1%{?dist}
-Requires: %{name} >= %{version}
+Requires: %{name} >= @@VERSION@@
 Provides: codendi-theme-dawn = %{version}
 %description theme-dawn
 Dawn theme for Codendi
@@ -259,7 +277,7 @@ Summary: Savannah theme for Codendi
 Group: Development/Tools
 Version: @@THEME_SAVANNAH_VERSION@@
 Release: 1%{?dist}
-Requires: %{name} >= %{version}
+Requires: %{name} >= @@VERSION@@
 Provides: codendi-theme-savannah = %{version}
 %description theme-savannah
 Savannah theme for Codendi
@@ -269,7 +287,7 @@ Summary: STTab theme for Codendi
 Group: Development/Tools
 Version: @@THEME_STTAB_VERSION@@
 Release: 1%{?dist}
-Requires: %{name} >= %{version}
+Requires: %{name} >= @@VERSION@@
 Provides: codendi-theme-sttab = %{version}
 %description theme-sttab
 STMicroelectronics theme for Codendi
@@ -279,7 +297,7 @@ Summary: CodexSTN theme for Codendi
 Group: Development/Tools
 Version: @@THEME_CODEXSTN_VERSION@@
 Release: 1%{?dist}
-Requires: %{name} >= %{version}
+Requires: %{name} >= @@VERSION@@
 Provides: codendi-theme-codexstn = %{version}
 %description theme-codexstn
 ST-Ericsson theme for Codendi
@@ -289,7 +307,7 @@ Summary: SteerForge theme for Codendi
 Group: Development/Tools
 Version: @@THEME_STEERFORGE_VERSION@@
 Release: 1%{?dist}
-Requires: %{name} >= %{version}
+Requires: %{name} >= @@VERSION@@
 Provides: codendi-theme-steerforge = %{version}
 %description theme-steerforge
 SteerForge theme for Codendi
