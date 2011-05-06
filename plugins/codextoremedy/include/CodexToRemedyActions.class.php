@@ -45,7 +45,7 @@ class CodexToRemedyActions extends PluginAction {
      */
     function validateRequest($request) {
         $status  = true;
-        $invalid = '';
+        $invalid = array();
         $valid = new Valid_String('request_summary');
         $valid->required();
         $summary = trim($request->get('request_summary'));
@@ -53,7 +53,7 @@ class CodexToRemedyActions extends PluginAction {
             $params['summary'] = $summary;
         } else {
             $status = false;
-            $invalid = $GLOBALS['Language']->getText('plugin_codextoremedy', 'summary');
+            $invalid[] = $GLOBALS['Language']->getText('plugin_codextoremedy', 'summary');
         }
         $valid = new Valid_Text('request_description');
         $valid->required();
@@ -62,11 +62,7 @@ class CodexToRemedyActions extends PluginAction {
             $params['description'] = $description;
         } else {
             $status = false;
-            if ($invalid == '') {
-                $invalid = 'Description';
-            } else {
-                $invalid .= ', Description';
-            }
+            $invalid[] = 'Description';
         }
         $valid = new Valid_UInt('type');
         $valid->required();
@@ -82,20 +78,12 @@ class CodexToRemedyActions extends PluginAction {
                     break;
                 default:
                     $status = false;
-                    if ($invalid == '') {
-                        $invalid = 'Type';
-                    } else {
-                        $invalid .= ', Type';
-                    }
+                    $invalid[] = 'Type';
                     break;
             }
         } else {
             $status = false;
-            if ($invalid == '') {
-                $invalid = 'Type';
-            } else {
-                $invalid .= ', Type';
-            }
+            $invalid[] = 'Type';
         }
         $valid = new Valid_UInt('severity');
         $valid->required();
@@ -114,47 +102,40 @@ class CodexToRemedyActions extends PluginAction {
                     break;
                 default:
                     $status = false;
-                    if ($invalid == '') {
-                        $invalid = $GLOBALS['Language']->getText('plugin_codextoremedy', 'severity');
-                    } else {
-                        $invalid .= ', '.$GLOBALS['Language']->getText('plugin_codextoremedy', 'severity');
-                    }
+                    $invalid[] = $GLOBALS['Language']->getText('plugin_codextoremedy', 'severity');
                     break;
             }
         } else {
             $status = false;
-            if ($invalid == '') {
-                $invalid = $GLOBALS['Language']->getText('plugin_codextoremedy', 'severity');
-            } else {
-                $invalid .= ', '.$GLOBALS['Language']->getText('plugin_codextoremedy', 'severity');
-            }
+            $invalid[] = $GLOBALS['Language']->getText('plugin_codextoremedy', 'severity');
         }
-        $cc = '';
+        $cc         = array();
         $mails      = array_map('trim', preg_split('/[,;]/', $request->get('cc')));
         $rule       = new Rule_Email();
         $um         = $this->_getUserManager();
+        $invalidCc  = array();
         foreach ($mails as $mail) {
             if ($rule->isValid($mail)) {
-                if ($cc == '') {
-                    $cc = $mail;
-                } else {
-                    $cc .= ';'.$mail;
-                }
+                $cc = $mail;
             } else {
                 $user = $um->findUser($mail);
                 if ($user) {
                     $mail = $user->getEmail();
                     if ($mail) {
-                        if ($cc == '') {
-                            $cc = $mail;
-                        } else {
-                            $cc .= ';'.$mail;
-                        }
+                        $cc = $mail;
+                    } else {
+                        $invalidCc[] = $mail;
                     }
+                } else {
+                    $invalidCc[] = $mail;
                 }
             }
         }
-        $params['cc'] = $cc;
+        if (!empty($invalidCc)) {
+            $c = $this->getController();
+            $c->addWarn($GLOBALS['Language']->getText('plugin_codextoremedy', 'codextoremedy_invalid_cc', implode(", ",$invalidCc)));
+        }
+        $params['cc'] = implode(";", $cc);
         return array('status' => $status, 'params' => $params, 'invalid' => $invalid);
     }
 
@@ -313,7 +294,7 @@ class CodexToRemedyActions extends PluginAction {
             }
         } else {
             $c->addData(array('status' => false, 'params' => $params));
-            $c->addError($GLOBALS['Language']->getText('plugin_codextoremedy', 'codextoremedy_invalid_params', $validation['invalid']));
+            $c->addError($GLOBALS['Language']->getText('plugin_codextoremedy', 'codextoremedy_invalid_params', implode(", ",$validation['invalid'])));
         }
     }
     // }}}
