@@ -136,7 +136,7 @@ class CodexToRemedyViews extends PluginView {
             echo '<tr><td><label>'.$GLOBALS['Language']->getText('plugin_codextoremedy', 'summary').':</label>&nbsp;<span class="highlight"><big>*</big></b></span></td>
                      <td><input type="text" name="request_summary" value="'.$summary.'" /></td></tr>';
             echo '<tr><td><label><span class="totop">Description:</span></label>&nbsp;<span class="highlight"><span class="totop"><big>*</big></b></span></span></td><td><textarea name="request_description">'.$description.'</textarea></td></tr>
-            <tr><td></td><td><label><b><u>Note</u>: </b>'.$GLOBALS['Language']->getText('plugin_codextoremedy', 'codextoremedy_cc_note').'</label><br /></td></tr>
+            <tr><td></td><td><i><b><u>Note</u>: </b>'.$GLOBALS['Language']->getText('plugin_codextoremedy', 'codextoremedy_cc_note').'</i></td></tr>
             <tr><td><label>CC :</label></td><td><input id="codextoremedy_cc" type="text" name="cc" /></td></tr>
             <tr><td></td><td><input name="action" type="hidden" value="submit_ticket" /></td></tr>
             <tr><td></td><td><input name="submit" type="submit" value="Submit" /></td></tr>
