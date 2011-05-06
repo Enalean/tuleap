@@ -12,9 +12,9 @@ plugin_codextoremedy	Critical	Critique
 plugin_codextoremedy	codextoremedy_mail_subject	[Nouvelle requête][$1] $2
 plugin_codextoremedy	codextoremedy_Failure_mail_subject	Problème de ticket Remedy
 plugin_codextoremedy	codextoremedy_mail_failed	Echec d'envoi du mail de notification
-plugin_codextoremedy	codextoremedy_ticket_submission_success	Ticket soumis avec succés
+plugin_codextoremedy	codextoremedy_ticket_submission_success	Ticket soumis avec succès
 plugin_codextoremedy	codextoremedy_ticket_submission_fail	Erreur de soumission du ticket
-plugin_codextoremedy	codextoremedy_invalid_params	Veuillez remplir les champs obligatoires
+plugin_codextoremedy	codextoremedy_invalid_params	Champs invalides : $1. Veuillez vérifies les valeures de ce(s) champ(s).
 plugin_codextoremedy	codextoremedy_mail_noreply	Veuillez ne pas répondre à cet email
 plugin_codextoremedy	codextoremedy_mail_submitter	Utilisateur
 plugin_codextoremedy	codextoremedy_mail_cc	Personnes en CC

@@ -44,13 +44,15 @@ class CodexToRemedyActions extends PluginAction {
      * @return Array
      */
     function validateRequest($request) {
-        $status = true;
+        $status  = true;
+        $invalid = '';
         $valid = new Valid_String('request_summary');
         $valid->required();
         if ($request->valid($valid)) {
             $params['summary'] = $request->get('request_summary');
         } else {
             $status = false;
+            $invalid = $GLOBALS['Language']->getText('plugin_codextoremedy', 'summary');
         }
         $valid = new Valid_Text('request_description');
         $valid->required();
@@ -58,6 +60,11 @@ class CodexToRemedyActions extends PluginAction {
             $params['description'] = $request->get('request_description');
         } else {
             $status = false;
+            if ($invalid == '') {
+                $invalid = 'Description';
+            } else {
+                $invalid .= ', Description';
+            }
         }
         $valid = new Valid_UInt('type');
         $valid->required();
@@ -65,18 +72,28 @@ class CodexToRemedyActions extends PluginAction {
             $requestType = $request->get('type');
             $params['type'] = $requestType;
             switch ($requestType) {
-            case CodexToRemedy::TYPE_SUPPORT :
+                case CodexToRemedy::TYPE_SUPPORT :
                     $params['text_type'] = 'SUPPORT REQUEST';
                     break;
-            case CodexToRemedy::TYPE_ENHANCEMENT :
+                case CodexToRemedy::TYPE_ENHANCEMENT :
                     $params['text_type'] = 'ENHANCEMENT REQUEST';
                     break;
-            default:
+                default:
                     $status = false;
+                    if ($invalid == '') {
+                        $invalid = 'Type';
+                    } else {
+                        $invalid .= ', Type';
+                    }
                     break;
             }
         } else {
             $status = false;
+            if ($invalid == '') {
+                $invalid = 'Type';
+            } else {
+                $invalid .= ', Type';
+            }
         }
         $valid = new Valid_UInt('severity');
         $valid->required();
@@ -84,21 +101,31 @@ class CodexToRemedyActions extends PluginAction {
             $severity = $request->get('severity');
             $params['severity'] = $severity;
             switch ($severity) {
-            case CodexToRemedy::SEVERITY_MINOR :
+                case CodexToRemedy::SEVERITY_MINOR :
                     $params['text_severity'] = 'Minor';
                     break;
-            case CodexToRemedy::SEVERITY_SERIOUS :
+                case CodexToRemedy::SEVERITY_SERIOUS :
                     $params['text_severity'] = 'Serious';
                     break;
-            case CodexToRemedy::SEVERITY_CRITICAL :
+                case CodexToRemedy::SEVERITY_CRITICAL :
                     $params['text_severity'] = 'Critical';
                     break;
-            default:
+                default:
                     $status = false;
+                    if ($invalid == '') {
+                        $invalid = $GLOBALS['Language']->getText('plugin_codextoremedy', 'severity');
+                    } else {
+                        $invalid .= ', '.$GLOBALS['Language']->getText('plugin_codextoremedy', 'severity');
+                    }
                     break;
             }
         } else {
             $status = false;
+            if ($invalid == '') {
+                $invalid = $GLOBALS['Language']->getText('plugin_codextoremedy', 'severity');
+            } else {
+                $invalid .= ', '.$GLOBALS['Language']->getText('plugin_codextoremedy', 'severity');
+            }
         }
         $cc = '';
         $mails      = array_map('trim', preg_split('/[,;]/', $request->get('cc')));
@@ -126,7 +153,7 @@ class CodexToRemedyActions extends PluginAction {
             }
         }
         $params['cc'] = $cc;
-        return array('status' => $status, 'params' => $params);
+        return array('status' => $status, 'params' => $params, 'invalid' => $invalid);
     }
 
     /**
@@ -211,31 +238,31 @@ class CodexToRemedyActions extends PluginAction {
         $core_mail .= '</table>';
 
         switch ($recepient) {
-        case self::RECEPIENT_SD:
-            if (!$to = $p->getProperty('send_notif_mail_sd')) {
+            case self::RECEPIENT_SD:
+                if (!$to = $p->getProperty('send_notif_mail_sd')) {
                     $to = 'codex-team@lists.codex.cro.st.com';
                 }
                 $mail->setSubject($GLOBALS['Language']->getText('plugin_codextoremedy', 'codextoremedy_mail_subject', array($severity, $summary)));
                 $body = '<table><tr><td>'.$GLOBALS['Language']->getText('plugin_codextoremedy', 'codextoremedy_mail_support', $user->getRealName()).'.</td></tr>'.$noreply_alert.$core_mail;
                 break;
-        case self::RECEPIENT_FAILURE_SD:
-            if (!$to = $p->getProperty('send_notif_mail_sd')) {
+            case self::RECEPIENT_FAILURE_SD:
+                if (!$to = $p->getProperty('send_notif_mail_sd')) {
                     $to = 'codex-team@lists.codex.cro.st.com';
                 }
                 $mail->setSubject($GLOBALS['Language']->getText('plugin_codextoremedy', 'codextoremedy_Failure_mail_subject'));
                 $body = '<table><tr><td>'.$GLOBALS['Language']->getText('plugin_codextoremedy', 'codextoremedy_mail_error').'.</td></tr>'.$noreply_alert.$core_mail;
                 break;
-        case self::RECEPIENT_USER:
+            case self::RECEPIENT_USER:
                 $to = $user->getEmail();
-            if ($cc != '') {
-                foreach ($ccMails as $ccMail) {
+                if ($cc != '') {
+                    foreach ($ccMails as $ccMail) {
                         $mail->setCc($ccMail);
                     }
                 }
                 $mail->setSubject($GLOBALS['Language']->getText('plugin_codextoremedy', 'codextoremedy_mail_subject', array($severity, $summary)));
                 $body = '<table><tr><td>'.$GLOBALS['Language']->getText('plugin_codextoremedy', 'codextoremedy_mail_user', array($user->getRealName(), $user->getName())).'</td></tr>'.$noreply_alert.$core_mail;
                 break;
-        default:
+            default:
                 return false;
                 break;
         }
@@ -284,7 +311,7 @@ class CodexToRemedyActions extends PluginAction {
             }
         } else {
             $c->addData(array('status' => false, 'params' => $params));
-            $c->addError($GLOBALS['Language']->getText('plugin_codextoremedy', 'codextoremedy_invalid_params'));
+            $c->addError($GLOBALS['Language']->getText('plugin_codextoremedy', 'codextoremedy_invalid_params', $validation['invalid']));
         }
     }
     // }}}
