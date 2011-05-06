@@ -23,3 +23,4 @@ plugin_codextoremedy	codextoremedy_mail_notif_details	Détails de l'utilisateur 
 plugin_codextoremedy	codextoremedy_mail_support	Chere équipe de support,<br /><br />$1 a inséré un nouveau ticket Remedy
 plugin_codextoremedy	codextoremedy_mail_user	Cher $1 (<em>$2</em>),<br /><br />Vous avez inséré un nouveau ticket Remedy
 plugin_codextoremedy	codextoremedy_mail_error	Chere équipe de support,<br /><br />Un nouveau ticket a été ajouté mais son insertion dans Remedy a échoué
+plugin_codextoremedy	codextoremedy_cc_note		Pour ajouter des utilisateurs, insérez leurs logins au lieu de leurs adresses e-mail.<br />Veuillez remplir la liste en utilisant comme séparateurs les virgules ou les point-virgules.
