@@ -48,16 +48,18 @@ class CodexToRemedyActions extends PluginAction {
         $invalid = '';
         $valid = new Valid_String('request_summary');
         $valid->required();
-        if ($request->valid($valid)) {
-            $params['summary'] = $request->get('request_summary');
+        $summary = trim($request->get('request_summary'));
+        if ($request->valid($valid) && strlen($summary) < 128 && $summary != '') {
+            $params['summary'] = $summary;
         } else {
             $status = false;
             $invalid = $GLOBALS['Language']->getText('plugin_codextoremedy', 'summary');
         }
         $valid = new Valid_Text('request_description');
         $valid->required();
-        if ($request->valid($valid)) {
-            $params['description'] = $request->get('request_description');
+        $description = trim($request->get('request_description'));
+        if ($request->valid($valid) && strlen($description) < 4000 && $description != '') {
+            $params['description'] = $description;
         } else {
             $status = false;
             if ($invalid == '') {
