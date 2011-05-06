@@ -68,7 +68,7 @@ class CodexToRemedyActionsTest extends UnitTestCase {
                                                'severity'      => 1,
                                                'text_severity' => 'Minor',
                                                'cc'            => 'john.doe@example.com'),
-                             'invalid' => '');
+                             'invalid' => array());
         $this->assertEqual($params, $validParams);
     }
 
@@ -85,7 +85,7 @@ class CodexToRemedyActionsTest extends UnitTestCase {
         $params = $actions->validateRequest($request);
         $validParams = array('status' => false,
                              'params' => array('cc' => 'john.doe@example.com'),
-                             'invalid' => 'Description, Type, ');
+                             'invalid' => array('', 'Description', 'Type', ''));
         $this->assertEqual($params, $validParams);
     }
 
@@ -110,7 +110,7 @@ class CodexToRemedyActionsTest extends UnitTestCase {
                                                'severity'      => 1,
                                                'text_severity' => 'Minor',
                                                'cc'            => 'john.doe@example.com'),
-                             'invalid' => '');
+                             'invalid' => array(''));
         $this->assertEqual($params, $validParams);
     }
 
@@ -135,7 +135,7 @@ class CodexToRemedyActionsTest extends UnitTestCase {
                                                'severity'      => 1,
                                                'text_severity' => 'Minor',
                                                'cc'            => 'john.doe@example.com'),
-                             'invalid' => 'Description');
+                             'invalid' => array('Description'));
         $this->assertEqual($params, $validParams);
     }
 
@@ -159,7 +159,7 @@ class CodexToRemedyActionsTest extends UnitTestCase {
                                                'severity'      => 1,
                                                'text_severity' => 'Minor',
                                                'cc'            => 'john.doe@example.com'),
-                             'invalid' => 'Type');
+                             'invalid' => array('Type'));
         $this->assertEqual($params, $validParams);
     }
 
@@ -181,7 +181,7 @@ class CodexToRemedyActionsTest extends UnitTestCase {
                                                'severity'      => 1,
                                                'text_severity' => 'Minor',
                                                'cc'            => 'john.doe@example.com'),
-                             'invalid' => 'Type');
+                             'invalid' => array('Type'));
         $this->assertEqual($params, $validParams);
     }
 
@@ -205,7 +205,7 @@ class CodexToRemedyActionsTest extends UnitTestCase {
                                                'type'        => 1,
                                                'text_type'   => 'SUPPORT REQUEST',
                                                'cc'          => 'john.doe@example.com'),
-                             'invalid' => '');
+                             'invalid' => array(''));
         $this->assertEqual($params, $validParams);
     }
 
@@ -227,7 +227,7 @@ class CodexToRemedyActionsTest extends UnitTestCase {
                                                'text_type'   => 'SUPPORT REQUEST',
                                                'severity'    => 4,
                                                'cc'          => 'john.doe@example.com'),
-                             'invalid' => '');
+                             'invalid' => array(''));
         $this->assertEqual($params, $validParams);
     }
 

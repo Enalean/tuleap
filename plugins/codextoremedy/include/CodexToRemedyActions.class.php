@@ -116,18 +116,20 @@ class CodexToRemedyActions extends PluginAction {
         $invalidCc  = array();
         foreach ($mails as $mail) {
             if ($rule->isValid($mail)) {
-                $cc = $mail;
+                $cc[] = $mail;
             } else {
-                $user = $um->findUser($mail);
-                if ($user) {
-                    $mail = $user->getEmail();
-                    if ($mail) {
-                        $cc = $mail;
+                if (trim($mail) != '') {
+                    $user = $um->findUser($mail);
+                    if ($user) {
+                        $mail = $user->getEmail();
+                        if ($mail) {
+                            $cc[] = $mail;
+                        } else {
+                            $invalidCc[] = $mail;
+                        }
                     } else {
                         $invalidCc[] = $mail;
                     }
-                } else {
-                    $invalidCc[] = $mail;
                 }
             }
         }
