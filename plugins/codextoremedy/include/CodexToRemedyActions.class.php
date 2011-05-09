@@ -135,7 +135,7 @@ class CodexToRemedyActions extends PluginAction {
         }
         if (!empty($invalidCc)) {
             $c = $this->getController();
-            $c->addWarn($GLOBALS['Language']->getText('plugin_codextoremedy', 'codextoremedy_invalid_cc', implode(", ",$invalidCc)));
+            $c->addWarn($GLOBALS['Language']->getText('plugin_codextoremedy', 'codextoremedy_invalid_cc', implode(", ", $invalidCc)));
         }
         $params['cc'] = implode(";", $cc);
         return array('status' => $status, 'params' => $params, 'invalid' => $invalid);
@@ -296,7 +296,7 @@ class CodexToRemedyActions extends PluginAction {
             }
         } else {
             $c->addData(array('status' => false, 'params' => $params));
-            $c->addError($GLOBALS['Language']->getText('plugin_codextoremedy', 'codextoremedy_invalid_params', implode(", ",$validation['invalid'])));
+            $c->addError($GLOBALS['Language']->getText('plugin_codextoremedy', 'codextoremedy_invalid_params', implode(", ", $validation['invalid'])));
         }
     }
     // }}}
