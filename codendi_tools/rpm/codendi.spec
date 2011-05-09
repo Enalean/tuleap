@@ -162,7 +162,7 @@ Provides: codendi-plugin-webdav = %{version}
 %description plugin-webdav
 Plugin to access to file releases & docman though WebDAV
 
-%package plugin-codextoremdy
+%package plugin-codextoremedy
 Summary: Insert Remedy tickets using Codex
 Group: Development/Tools
 Version: @@PLUGIN_CODEXTOREMEDY_VERSION@@
