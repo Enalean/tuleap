@@ -57,9 +57,9 @@ class CodexToRemedyDao extends DataAccessObject {
                   'cc '.
                   ')values ('.
                   $this->da->escapeInt($userId).', '.
-                  $this->da->quoteSmart($summary).', '.
+                  $this->da->quoteSmart(utf8_encode($summary)).', '.
                   $this->da->escapeInt($createDate).', '.
-                  $this->da->quoteSmart($description).', '.
+                  $this->da->quoteSmart(utf8_encode($description)).', '.
                   $this->da->escapeInt($type).', '.
                   $this->da->escapeInt($severity).', '.
                   $this->da->quoteSmart($cc).')';
