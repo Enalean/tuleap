@@ -4,6 +4,7 @@ Version 4.0.18 - (Not released yet)
         backlog #99968 : Add a "delete feature" for wiki attached file
         backlog #124821: Study/Deploy the possibility to send HTML notification
         backlog #130629: Add tests on the validity of the group delegated membership
+        backlog #133453: Remedy integration
 	* Major improvements in installation process:
 	  * Modularity (mere mortal can decide not to install CVS)
 	  * Introduce dependencies on core in viewvc & mailman package so we can completely rely on dependency mechanism for install
