@@ -121,7 +121,7 @@ class CodexToRemedyActions extends PluginAction {
                 if (trim($mail) != '') {
                     $user = $um->findUser($mail);
                     if ($user) {
-                        $mail = $user->getEmail();
+                        $mail = $user->getUserName();
                         if ($mail) {
                             $cc[] = $mail;
                         } else {
