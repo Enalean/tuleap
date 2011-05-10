@@ -121,7 +121,7 @@ class CodexToRemedyActions extends PluginAction {
                 if (trim($mail) != '') {
                     $user = $um->findUser($mail);
                     if ($user) {
-                        $mail = $user->getEmail();
+                        $mail = $user->getUserName();
                         if ($mail) {
                             $cc[] = $mail;
                         } else {
@@ -238,7 +238,7 @@ class CodexToRemedyActions extends PluginAction {
                 $body = '<table><tr><td>'.$GLOBALS['Language']->getText('plugin_codextoremedy', 'codextoremedy_mail_error').'.</td></tr>'.$noreply_alert.$core_mail;
                 break;
             case self::RECEPIENT_USER:
-                $to = $user->getEmail();
+                $to = $user->getUserName();
                 if ($cc != '') {
                     foreach ($ccMails as $ccMail) {
                         $mail->setCc($ccMail);

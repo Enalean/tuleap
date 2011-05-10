@@ -333,7 +333,7 @@ class CodexToRemedyActionsTest extends UnitTestCase {
         $actions->setReturnValue('_getUserManager', $um);
         $actions->setReturnValue('_getPluginManager',$pm);
         $mail = new MockCodendi_Mail();
-        $mail->expect('setTo', array('requester@example.com'));
+        $mail->expect('setTo', array(null));
         $mail->expect('setSubject', array('Generic subject to user'));
         $mail->expectOnce('setBodyHtml');
         $mail->setReturnValue('send', true);

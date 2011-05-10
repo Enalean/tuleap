@@ -82,6 +82,7 @@ class codextoremedyPlugin extends Plugin {
     function redirectToPlugin() {
         $c = new CodexToRemedy();
         $c->redirect($this->getPluginPath().'/');
+        exit();
     }
 
     /**
