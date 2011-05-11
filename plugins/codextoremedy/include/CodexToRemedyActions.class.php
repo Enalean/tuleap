@@ -215,8 +215,14 @@ class CodexToRemedyActions extends PluginAction {
         if ($cc != '') {
             $core_mail .= '<tr><td>'.$title_span.'<b>'.$GLOBALS['Language']->getText('plugin_codextoremedy', 'codextoremedy_mail_cc').' : </b></span></td><td>'.$content_span;
             $ccMails = array_map('trim', preg_split('/[;]/', $cc));
+            $rule = new Rule_Email();
             foreach ($ccMails as $ccMail) {
-                $core_mail .= ' <a href="mailto:'.$ccMail.'">'.$ccMail.'</a>';
+                if ($rule->isValid($ccMail)) {
+                    $core_mail .= ' <a href="mailto:'.$ccMail.'">'.$ccMail.'</a>';
+                } else {
+                    $email = $um->getUserByUserName($ccMail)->getEmail();
+                    $core_mail .= ' <a href="mailto:'.$ccMail.'">'.$email.'</a>';
+                }
             }
             $core_mail .= '</td></span></p></tr>';
         }
