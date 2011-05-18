@@ -167,6 +167,12 @@ class UserManager {
      * Returns the user that have the given email address.
      * Returns null if no account is found.
      * Throws an exception if several accounts share the same email address.
+     *
+     * @param String $email mail address of the user to retrieve
+     *
+     * @throws Exception
+     *
+     * @return User or null if no user found
      */
     public function getUserByEmail($email) {
         $user_result = $this->getDao()->searchByEmail($email);
@@ -221,7 +227,10 @@ class UserManager {
                         $user = $this->getUserById($identifierValue);
                         break;
                     case 'email': // Use with caution, a same email can be shared between several accounts
-                        $user = $this->getUserByEmail($identifierValue);
+                                        try {
+                            $user = $this->getUserByEmail($identifierValue);
+                        } catch (Exception $e) {
+                        }
                         break;
                 }
             }
@@ -710,7 +719,11 @@ class UserManager {
             $ident = trim($ident);
             if(!empty($ident)) {
                 if (validate_email($ident)) {
-                    $user = $this->getUserByEmail($ident);
+                    try {
+                        $user = $this->getUserByEmail($ident);
+                    } catch (Exception $e) {
+                        continue;
+                    }
                 } else {
                     $user = $this->findUser($ident);
                 }
