@@ -473,13 +473,15 @@ class FRSFileFactory extends Error {
             $moveStatus = mkdir($stagingDir, 0750, true);
         }
         if (file_exists($file->getFileLocation())) {
-            $moveStatus = $moveStatus && rename($file->getFileLocation(), $stagingPath);
+            $moveStatus = rename($file->getFileLocation(), $stagingPath) && $moveStatus;
         } else {
-            $moveStatus = $moveStatus && $dao->setPurgeDate($file->getFileId(), $_SERVER['REQUEST_TIME']);
+            $dao->setPurgeDate($file->getFileId(), $_SERVER['REQUEST_TIME']);
+            $backend->log("File ".$file->getFileLocation()."(".$file->getFileID().") doesn't exist, it could not be moved to staging area", "error");
+            $moveStatus = false;
         }
-        $moveStatus = $moveStatus && $dao->setFileInDeletedList($file->getFileId());
+        $moveStatus = $dao->setFileInDeletedList($file->getFileId()) && $moveStatus;
         if (!$moveStatus) {
-            $backend->log("Error while moving file ".$file->getFileName()."(".$file->getFileID().") to staging area", "error");
+            $backend->log("Error while moving file ".$file->getFileLocation()."(".$file->getFileID().") to staging area", "error");
         }
         if (!$this->deleteEmptyReleaseDirectory($file, $backend)) {
             $moveStatus = false;
@@ -566,15 +568,19 @@ class FRSFileFactory extends Error {
      * @return Boolean
      */
     public function purgeFile($file, $backend) {
-        if (unlink($this->getStagingPath($file))) {
-            $dao = $this->_getFRSFileDao();
-            if (!$dao->setPurgeDate($file->getFileID(), time())) {
-                $backend->log("File ".$file->getFileName()."(".$file->getFileID().") not purged, Set purge date in DB fail", "error");
-                return false;
+        if (file_exists($this->getStagingPath($file))) {
+            if (unlink($this->getStagingPath($file))) {
+                $dao = $this->_getFRSFileDao();
+                if (!$dao->setPurgeDate($file->getFileID(), time())) {
+                    $backend->log("File ".$this->getStagingPath($file)." not purged, Set purge date in DB fail", "error");
+                    return false;
+                }
+                return true;
             }
-            return true;
+            $backend->log("File ".$this->getStagingPath($file)." not purged, unlink failed", "error");
+            return false;
         }
-        $backend->log("File ".$file->getFileName()."(".$file->getFileID().") not purged, unlink failed", "error");
+        $backend->log("File ".$this->getStagingPath($file)." not purged, file not found", "error");
         return false;
     }
 
@@ -605,7 +611,7 @@ class FRSFileFactory extends Error {
                         }
                         if ($nbFiles === 0) {
                             if(!rmdir($rel->getPathname())) {
-                            $backend->log("Error while removing ".$rel->getFilename()."release folder", "error");
+                            $backend->log("Error while removing ".$rel->getPathname()."release folder", "error");
                             return false;
                             }
                         } else {
@@ -615,7 +621,7 @@ class FRSFileFactory extends Error {
                 }
                 if ($nbRel === 0) {
                     if(!rmdir($prj->getPathname())) {
-                        $backend->log("Error while removing ".$prj->getFilename()." project folder", "error");
+                        $backend->log("Error while removing ".$prj->getPathname()." project folder", "error");
                         return false;
                     }
                 }
@@ -738,15 +744,15 @@ class FRSFileFactory extends Error {
                               'item_id'  => $file->getFileID()));
                         return true;
                     }
-                    $backend->log("File ".$file->getFileName()."(".$file->getFileID().") not restored, database error", "error");
+                    $backend->log("File ".$file->getFileLocation()."(".$file->getFileID().") not restored, database error", "error");
                     return false;
                 }
             }
-            $backend->log("File ".$file->getFileName()."(".$file->getFileID().") could not be restored, not found in staging path ".$stagingPath, "error");
+            $backend->log("File ".$file->getFileLocation()."(".$file->getFileID().") could not be restored, not found in staging path ".$stagingPath, "error");
             return false;
         }
         $dao->cancelRestore($file->getFileID());
-        $backend->log("File ".$file->getFileName()."(".$file->getFileID().") could not be restored in deleted release ".$release->getName()."(".$release->getReleaseID().")", "error");
+        $backend->log("File ".$file->getFileLocation()."(".$file->getFileID().") could not be restored in deleted release ".$release->getName()."(".$release->getReleaseID().")", "error");
         return false;
     }
 
