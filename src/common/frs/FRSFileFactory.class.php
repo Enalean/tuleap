@@ -476,7 +476,7 @@ class FRSFileFactory extends Error {
             $moveStatus = rename($file->getFileLocation(), $stagingPath) && $moveStatus;
         } else {
             $dao->setPurgeDate($file->getFileId(), $_SERVER['REQUEST_TIME']);
-            $backend->log("File ".$file->getFileLocation()."(".$file->getFileID().") doesn't exist, it could not be moved to staging area", "error");
+            $backend->log("File ".$file->getFileLocation()."(".$file->getFileID().") doesn't exist, it could not be moved to staging area", "warning");
             $moveStatus = false;
         }
         $moveStatus = $dao->setFileInDeletedList($file->getFileId()) && $moveStatus;
@@ -568,9 +568,9 @@ class FRSFileFactory extends Error {
      * @return Boolean
      */
     public function purgeFile($file, $backend) {
+        $dao = $this->_getFRSFileDao();
         if (file_exists($this->getStagingPath($file))) {
             if (unlink($this->getStagingPath($file))) {
-                $dao = $this->_getFRSFileDao();
                 if (!$dao->setPurgeDate($file->getFileID(), time())) {
                     $backend->log("File ".$this->getStagingPath($file)." not purged, Set purge date in DB fail", "error");
                     return false;
@@ -580,7 +580,10 @@ class FRSFileFactory extends Error {
             $backend->log("File ".$this->getStagingPath($file)." not purged, unlink failed", "error");
             return false;
         }
-        $backend->log("File ".$this->getStagingPath($file)." not purged, file not found", "error");
+        if (!$dao->setPurgeDate($file->getFileID(), time())) {
+            $backend->log("File ".$this->getStagingPath($file)." not purged, Set purge date in DB fail", "error");
+        }
+        $backend->log("File ".$this->getStagingPath($file)." not purged, file not found", "warning");
         return false;
     }
 
