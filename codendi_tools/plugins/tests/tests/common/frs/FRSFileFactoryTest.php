@@ -224,8 +224,8 @@ class FRSFileFactoryTest extends UnitTestCase {
         $dao->setReturnValue('setPurgeDate', true);
         $ff->setReturnValue('_getFRSFileDao', $dao);
         $backend = new MockBackendSystem($this);
-        $backend->expectAt('0','log', array('File '.$filepath.'('.$file->getFileID().') doesn\'t exist, it could not be moved to staging area', 'warning'));
-        $backend->expectAt('1','log', array('Error while moving file '.$filepath.'('.$file->getFileID().') to staging area', 'error'));
+        $backend->expectAt('0','log', array('*', 'warn'));
+        $backend->expectAt('1','log', array('*', 'error'));
 
         $this->assertFalse($ff->moveDeletedFileToStagingArea($file, $backend));
 
@@ -437,7 +437,7 @@ class FRSFileFactoryTest extends UnitTestCase {
         $ff->setReturnValue('_getFRSFileDao', $dao);
 
         $backend = new MockBackendSystem();
-        $backend->expectOnce('log', array('File '.$filepath.' not found on file system, automatically marked as purged', 'warning'));
+        $backend->expectOnce('log', array('File '.$filepath.' not found on file system, automatically marked as purged', 'warn'));
         $this->assertFalse($ff->purgeFile($file, $backend));
     }
 
