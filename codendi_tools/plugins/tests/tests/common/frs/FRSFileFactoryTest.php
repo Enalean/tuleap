@@ -224,8 +224,10 @@ class FRSFileFactoryTest extends UnitTestCase {
         $dao->setReturnValue('setPurgeDate', true);
         $ff->setReturnValue('_getFRSFileDao', $dao);
         $backend = new MockBackendSystem($this);
+        $backend->expectAt('0','log', array('*', 'warn'));
+        $backend->expectAt('1','log', array('*', 'error'));
 
-        $this->assertTrue($ff->moveDeletedFileToStagingArea($file, $backend));
+        $this->assertFalse($ff->moveDeletedFileToStagingArea($file, $backend));
 
         $this->assertFalse(is_file($GLOBALS['ftp_frs_dir_prefix'].'/DELETED/prj/p1_r1/foobar.xls.12'));
         $this->assertFalse(is_file(dirname(__FILE__).'/_fixtures/prj/p1_r1/foobar.xls'));
@@ -408,7 +410,7 @@ class FRSFileFactoryTest extends UnitTestCase {
         $ff->setReturnValue('_getFRSFileDao', $dao);
 
         $backend = new MockBackendSystem();
-        $backend->expectOnce('log', array('File p1_r1/foobar.xls(12) not purged, Set purge date in DB fail', 'error'));
+        $backend->expectOnce('log', array('File '.$filepath.' not purged, Set purge date in DB fail', 'error'));
         $this->assertFalse($ff->purgeFile($file, $backend));
 
         $this->assertFalse(is_file($filepath), "File should be deleted");
@@ -416,6 +418,27 @@ class FRSFileFactoryTest extends UnitTestCase {
         // Cleanup
         rmdir($GLOBALS['ftp_frs_dir_prefix'].'/DELETED/prj/p1_r1');
         rmdir($GLOBALS['ftp_frs_dir_prefix'].'/DELETED/prj');
+    }
+
+    function testPurgeFileWithFileNotFoundInFS() {
+        $ff = new FRSFileFactoryTestPurgeOneFile($this);
+
+        $filepath = dirname(__FILE__).'/_fixtures/DELETED/prj/p1_r1/foobar.xls.12';
+
+        $this->assertFalse(is_file($filepath));
+        $file = new MockFRSFile($this);
+        $file->setReturnValue('getFileID', 12);
+        $file->setReturnValue('getFileName', 'p1_r1/foobar.xls');
+        $file->setReturnValue('getFileLocation', $GLOBALS['ftp_frs_dir_prefix'].'/prj/p1_r1/foobar.xls');
+
+        $dao = new MockFRSFileDao($this);
+        $dao->expectOnce('setPurgeDate', array(12, '*'));
+        $dao->setReturnValue('setPurgeDate', true);
+        $ff->setReturnValue('_getFRSFileDao', $dao);
+
+        $backend = new MockBackendSystem();
+        $backend->expectOnce('log', array('File '.$filepath.' not found on file system, automatically marked as purged', 'warn'));
+        $this->assertTrue($ff->purgeFile($file, $backend));
     }
 
     function testRemoveStagingEmptyDirectories() {

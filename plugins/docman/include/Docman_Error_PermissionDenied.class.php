@@ -142,13 +142,18 @@ class Docman_Error_PermissionDenied extends Error_PermissionDenied {
                     $query['id'] = $row['item_id'];
 
                 } else {
-                    return array();
+                    array('admins' => array(), 'status' => false);
                 }
             }
         }
 
         $pm = $this->_getPermissionManagerInstance($project->getId());
-        return  $pm->returnDocmanManagerUsers($query['id'], 'PLUGIN_DOCMAN_MANAGE',$project);
+        $adminList = $pm->returnDocmanManagerUsers($query['id'], 'PLUGIN_DOCMAN_MANAGE',$project);
+        $receivers = array();
+        foreach ($adminList as $mail => $language) {
+            $receivers[] = $mail;
+        }
+        return array('admins' => $receivers, 'status' => true);
     }
 
     /**
