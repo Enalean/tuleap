@@ -374,6 +374,7 @@ class FRSFileDao extends DataAccessObject {
             $from   .= ' JOIN frs_release rel ON (f.release_id = rel.release_id)'.
                        ' JOIN frs_package pkg ON (rel.package_id = pkg.package_id)';
             $where  .= ' AND pkg.group_id = '.$this->da->escapeInt($groupId);
+            $where  .= ' AND rel.status_id != '.FRSRelease::STATUS_DELETED;
         }
         $sql = 'SELECT f.* '.
                $fields.
@@ -405,6 +406,7 @@ class FRSFileDao extends DataAccessObject {
             $from   .= ' JOIN frs_release rel USING (release_id)'.
                        ' JOIN frs_package pkg USING (package_id)';
             $where  .= ' AND pkg.group_id = '.$this->da->escapeInt($groupId);
+            $where  .= ' AND rel.status_id != '.FRSRelease::STATUS_DELETED;
         }
         $sql = 'SELECT file.* '.
                $fields.
