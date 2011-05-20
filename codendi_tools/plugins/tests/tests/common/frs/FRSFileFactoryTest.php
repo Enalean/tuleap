@@ -437,7 +437,7 @@ class FRSFileFactoryTest extends UnitTestCase {
         $ff->setReturnValue('_getFRSFileDao', $dao);
 
         $backend = new MockBackendSystem();
-        $backend->expectOnce('log', array('File '.$filepath.' not purged, file not found', 'warning'));
+        $backend->expectOnce('log', array('File '.$filepath.' not found on file system, automatically marked as purged', 'warning'));
         $this->assertFalse($ff->purgeFile($file, $backend));
     }
 
