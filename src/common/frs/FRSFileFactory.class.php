@@ -581,7 +581,8 @@ class FRSFileFactory extends Error {
             return false;
         }
         if (!$dao->setPurgeDate($file->getFileID(), time())) {
-            $backend->log("File ".$this->getStagingPath($file)." not purged, Set purge date in DB fail", "error");
+            $backend->log("File ".$this->getStagingPath($file)." not found on file system and not purged, Set purge date in DB fail", "error");
+            return false;
         }
         $backend->log("File ".$this->getStagingPath($file)." not found on file system, automatically marked as purged", "warning");
         return false;
