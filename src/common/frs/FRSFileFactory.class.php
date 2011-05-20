@@ -476,7 +476,7 @@ class FRSFileFactory extends Error {
             $moveStatus = rename($file->getFileLocation(), $stagingPath) && $moveStatus;
         } else {
             $dao->setPurgeDate($file->getFileId(), $_SERVER['REQUEST_TIME']);
-            $backend->log("File ".$file->getFileLocation()."(".$file->getFileID().") doesn't exist, it could not be moved to staging area", "warning");
+            $backend->log("File ".$file->getFileLocation()."(".$file->getFileID().") doesn't exist. It cannot be moved to staging area. Marked as purged", "warning");
             $moveStatus = false;
         }
         $moveStatus = $dao->setFileInDeletedList($file->getFileId()) && $moveStatus;
