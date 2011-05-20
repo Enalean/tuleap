@@ -227,7 +227,7 @@ class UserManager {
                         $user = $this->getUserById($identifierValue);
                         break;
                     case 'email': // Use with caution, a same email can be shared between several accounts
-                                        try {
+                        try {
                             $user = $this->getUserByEmail($identifierValue);
                         } catch (Exception $e) {
                         }
