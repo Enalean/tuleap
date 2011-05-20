@@ -438,7 +438,7 @@ class FRSFileFactoryTest extends UnitTestCase {
 
         $backend = new MockBackendSystem();
         $backend->expectOnce('log', array('File '.$filepath.' not found on file system, automatically marked as purged', 'warn'));
-        $this->assertFalse($ff->purgeFile($file, $backend));
+        $this->assertTrue($ff->purgeFile($file, $backend));
     }
 
     function testRemoveStagingEmptyDirectories() {

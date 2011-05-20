@@ -585,7 +585,7 @@ class FRSFileFactory extends Error {
             return false;
         }
         $backend->log("File ".$this->getStagingPath($file)." not found on file system, automatically marked as purged", Backend::LOG_WARNING);
-        return false;
+        return true;
     }
 
     /**
