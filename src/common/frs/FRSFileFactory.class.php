@@ -472,6 +472,7 @@ class FRSFileFactory extends Error {
         if (!is_dir($stagingDir)) {
             $moveStatus = mkdir($stagingDir, 0750, true);
         }
+        $moveStatus = $dao->setFileInDeletedList($file->getFileId()) && $moveStatus;
         if (file_exists($file->getFileLocation())) {
             $moveStatus = rename($file->getFileLocation(), $stagingPath) && $moveStatus;
         } else {
@@ -479,7 +480,6 @@ class FRSFileFactory extends Error {
             $backend->log("File ".$file->getFileLocation()."(".$file->getFileID().") doesn't exist. It cannot be moved to staging area. Marked as purged", Backend::LOG_WARNING);
             $moveStatus = false;
         }
-        $moveStatus = $dao->setFileInDeletedList($file->getFileId()) && $moveStatus;
         if (!$moveStatus) {
             $backend->log("Error while moving file ".$file->getFileLocation()."(".$file->getFileID().") to staging area", Backend::LOG_ERROR);
         }
