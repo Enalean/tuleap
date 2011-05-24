@@ -45,7 +45,7 @@ $text = file_get_contents('php://stdin');
 
 $ch = curl_init();
 
-curl_setopt($ch, CURLOPT_URL, 'http://localhost:2080/api/reference/extractCross');
+curl_setopt($ch, CURLOPT_URL, 'http://localhost/api/reference/extractCross');
 curl_setopt($ch, CURLOPT_USERAGENT, 'Codendi Perl Agent');
 curl_setopt($ch, CURLOPT_POSTFIELDS, 'group_name='.$params['group_name'].'&login='.$params['login'].'&type='.$params['type'].'&rev_id='.$params['rev_id'].'&text='.urlencode($text));
 
