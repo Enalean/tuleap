@@ -17,7 +17,7 @@
  *
  *
  * Wrap API access to cross reference extraction. The text to check
- * is expected on stding
+ * is expected on stdin.
  *
  * Usage: php extractCrossRef.php --group_name="gpig" --login="disciplus_simplex" --type="git_commit" --rev_id="gpig/64bf3ca"
  */

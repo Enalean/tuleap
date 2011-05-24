@@ -220,13 +220,14 @@ generate_email()
 		;;
 	esac
 
-	codendi_login=$(whoami)
+	# Tuleap specific
+	tuleap_login=$(whoami)
 	repo_location=$(cd $GIT_DIR; pwd)
-	codendi_repo_name=$(basename $repo_location | sed -e 's/\.git$//')
-	codendi_group_name=$(basename $(dirname $repo_location))
+	tuleap_repo_name=$(basename $repo_location | sed -e 's/\.git$//')
+	tuleap_group_name=$(basename $(dirname $repo_location))
 
 	if [ -z "$maxlines" ]; then
-		generate_${change_type}_${fn_name}_email | php /usr/share/codendi/plugins/git/hooks/extractCrossRef.php --group_name="$codendi_group_name" --login="$codendi_login" --type="git_commit" --rev_id="$codendi_repo_name/$newrev"
+		generate_${change_type}_${fn_name}_email | php /usr/share/codendi/plugins/git/hooks/extractCrossRef.php --group_name="$tuleap_group_name" --login="$tuleap_login" --type="git_commit" --rev_id="$tuleap_repo_name/$newrev"
 	else
 		generate_${change_type}_${fn_name}_email | limit_lines $maxlines
 	fi
