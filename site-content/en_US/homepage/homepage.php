@@ -38,3 +38,7 @@ It only takes a couple of minutes to get a fully working environment to share yo
 You can download the <a href="/downloads/Codendi_CLI.zip">Codendi CLI client</a> and its <a href="documentation/cli/pdf/en_US/Codendi_CLI.pdf">documentation</a>.
 
 <p>Thanks... and enjoy the site.</p>
+
+<?php
+// Because of to aggressive continuous integration check on closing tags...
+?>

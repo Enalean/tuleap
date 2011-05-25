@@ -16,7 +16,7 @@ echo '<div id="homepage">';
 
 echo '<div id="homepage_speech">';
 $speechFile = $Language->getContent('homepage/homepage', null, null, '.php');
-if ($speechFile != '') {
+if (strpos($speechFile, 'homepage') !== false) {
     include ($speechFile);
 } else {
     echo stripcslashes($Language->getText('homepage', 'introduction',array($GLOBALS['sys_org_name'],$GLOBALS['sys_name'])));
@@ -25,14 +25,17 @@ echo '</div>';
 
 if (isset($GLOBALS['sys_display_homepage_boxes']) && $GLOBALS['sys_display_homepage_boxes'] == 1) {
     echo '<div id="homepage_boxes">';
-    echo show_features_boxes();
+    show_features_boxes();
     echo '</div>';
 }
 
 echo '<div id="homepage_news">';
-$HTML->box1_top($Language->getText('homepage', 'news_title')."<a href=\"/export/rss_sfnews.php\" title=\"".$Language->getText('homepage', 'news_title2').'"><img src="'.util_get_dir_image_theme().'/ic/feed.png"></a>');
-echo news_show_latest($GLOBALS['sys_news_group'],5,true,false,false,5);
-$HTML->box1_bottom();
+
+$w = new StaticWidget($Language->getText('homepage', 'news_title'));
+$w->setContent(news_show_latest($GLOBALS['sys_news_group'],5,true,false,false,5));
+$w->setRss('/export/rss_sfnews.php');
+$w->display();
+
 echo '</div>';
 
 echo '</div>';

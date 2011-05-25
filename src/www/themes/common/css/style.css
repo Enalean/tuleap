@@ -333,6 +333,7 @@ table.release tr td img {
 }
 .widget_content {
     clear:both;
+    padding: 0.5em;
 }
 .widget_preferences {
     background: #E0DDD2;
@@ -344,7 +345,7 @@ table.release tr td img {
 .widget_titlebar {
     background: #E0DDD2 url(../images/widget-header.png) left top repeat-x; 
     font-weight: bold; 
-    text-align: center; 
+    text-align: left; 
      
     color: #555;
     height:1.2em;

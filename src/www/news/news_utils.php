@@ -193,7 +193,7 @@ function news_show_latest($group_id='',$limit=10,$show_summaries=true,$allow_sub
     }
     
     if ($tail_headlines) {
-	$return .= '</ul><HR width="100%" size="1" noshade>'."\n";
+	$return .= '</ul>'."\n";
     }
     
     $return .= '<div align="center">'

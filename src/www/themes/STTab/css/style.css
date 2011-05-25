@@ -485,11 +485,10 @@ img {
 .widget_titlebar {
     background: #E0DDD2 url(../images/widget-header.png) left top repeat-x; 
     font-weight: bold; 
-    text-align: center; 
-    text-transform: capitalize; 
+    text-align: left;  
     color: #555;
     height:1.2em;
-    padding-left:40px;
+    padding-left:1em;
     padding-right:4px;
 }
 .widget_titlebar_handle {
