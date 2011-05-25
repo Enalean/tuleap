@@ -1,3 +1,6 @@
+Version 4.0.19 - Not released yet
+	* Git plugin v1.10 see separated ChangeLog.
+
 Version 4.0.18.2 - Monday, 23rd May 2011
 	== Bug fix ==
 	* Fix bug when moving FRS file into staging area with already deleted

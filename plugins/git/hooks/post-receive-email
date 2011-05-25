@@ -220,8 +220,14 @@ generate_email()
 		;;
 	esac
 
+	# Tuleap specific
+	tuleap_login=$(whoami)
+	repo_location=$(cd $GIT_DIR; pwd)
+	tuleap_repo_name=$(basename $repo_location | sed -e 's/\.git$//')
+	tuleap_group_name=$(basename $(dirname $repo_location))
+
 	if [ -z "$maxlines" ]; then
-		generate_${change_type}_${fn_name}_email | codendi_include_references
+		generate_${change_type}_${fn_name}_email | php /usr/share/codendi/plugins/git/hooks/extractCrossRef.php --group_name="$tuleap_group_name" --login="$tuleap_login" --type="git_commit" --rev_id="$tuleap_repo_name/$newrev"
 	else
 		generate_${change_type}_${fn_name}_email | limit_lines $maxlines
 	fi
@@ -652,7 +658,7 @@ show_new_revisions()
 		revspec=$oldrev..$newrev
 	fi
 
-	# Removed final slash of refs/heads for git 1.5
+	# Removed final slash of refs/heads for git 1.5 compat (works with 1.7 too)
 	other_branches=$(git for-each-ref --format='%(refname)' refs/heads |
 	    grep -F -v $refname)
 	git rev-parse --not $other_branches |
@@ -694,45 +700,6 @@ send_mail()
 	else
 		/usr/sbin/sendmail -t
 	fi
-}
-
-#
-# Codendi specific: Query web API to extract cross-references embedded
-# in the mail body
-# 
-# param: String  $mail_body         Content of the mail
-#
-codendi_extract_references()
-{
-    codendi_login=$(whoami)
-    repo_location=$(cd $GIT_DIR; pwd)
-    codendi_repo_name=$(basename $repo_location | sed -e 's/\.git$//')
-    codendi_group_name=$(basename $(dirname $repo_location))
-    encoded_text="$(perl -MURI::Escape -e 'print uri_escape($ARGV[0]);' "$mail_body")"
-
-    # Skip one line to make it more readable
-    echo ""
-    curl --silent \
-        --user-agent "Codendi Perl Agent" \
-        --data "group_name=$codendi_group_name" \
-        --data "login=$codendi_login" \
-        --data "type=git_commit" \
-        --data "rev_id=$codendi_repo_name/$newrev" \
-        --data "text=$encoded_text" \
-        http://localhost/api/reference/extractCross
-}
-
-#
-# Codendi specific: Get mail body as a string and extract references
-#
-codendi_include_references()
-{
-    mail_body=""
-    while IFS="" read -r line; do
-        mail_body="$mail_body $line"
-        printf "%s\n" "$line"
-    done
-    codendi_extract_references
 }
 
 # ---------------------------- main()
