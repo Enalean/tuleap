@@ -109,6 +109,14 @@ msgstr ""
 msgid "plain"
 msgstr ""
 
+# Used as a link to a side-by-side version of a diff
+msgid "side by side"
+msgstr ""
+
+# Used as a link to a unified version of a diff
+msgid "unified"
+msgstr ""
+
 # Used as a link to the first page in a list of results
 #: templates/search.tpl
 #: templates/searchfiles.tpl

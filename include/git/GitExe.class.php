@@ -107,7 +107,8 @@ class GitPHP_GitExe
 
 		$ret = shell_exec($fullCommand);
 
-		GitPHP_Log::GetInstance()->Log('Finish executing "' . $fullCommand . '"');
+		GitPHP_Log::GetInstance()->Log('Finish executing "' . $fullCommand . '"' .
+			"\nwith result: " . $ret);
 
 		return $ret;
 	}
