@@ -232,6 +232,31 @@ td.artifact_spacer { width: 5%; }
 }
 /* }}} */
 
+/* {{{ Home Page */
+#homepage {
+    width: 960px;
+    margin: auto;
+    margin-top: 1em;
+}
+
+#homepage_speech {
+    float: left;
+    width: 715px;
+    margin-right: 5px;
+}
+
+#homepage_boxes {
+    float: right;
+    width: 235px;
+    margin-left: 5px;
+}
+
+#homepage_news {
+    clear: both;
+}
+
+/* }}} */
+
 /* {{{ File Release System */
 .frs_filename_col {
     width: 44%;

@@ -10,45 +10,32 @@ require_once('pre.php');
 require_once('www/forum/forum_utils.php');
 require_once('features_boxes.php');
 
-
 $HTML->header(array('title'=>$Language->getText('homepage', 'title')));
 
-?>
-<!-- whole page table -->
-<TABLE width=100% cellpadding=5 cellspacing=0 border=0>
-<?php
+echo '<div id="homepage">';
 
-$display_boxes = !isset($GLOBALS['sys_display_homepage_boxes']) || $GLOBALS['sys_display_homepage_boxes'] != 0;
-
-if ($display_boxes) {
-    $width='65';
+echo '<div id="homepage_speech">';
+$speechFile = $Language->getContent('homepage/homepage', null, null, '.php');
+if ($speechFile != '') {
+    include ($speechFile);
 } else {
-    $width='100';
+    echo stripcslashes($Language->getText('homepage', 'introduction',array($GLOBALS['sys_org_name'],$GLOBALS['sys_name'])));
 }
-echo ' <TR><TD width="'.$width.'%" VALIGN="TOP">';
+echo '</div>';
 
-echo stripcslashes($Language->getText('homepage', 'introduction',array($GLOBALS['sys_org_name'],$GLOBALS['sys_name'])));
-$HTML->box1_top($Language->getText('homepage', 'news_title')."<A href=\"/export/rss_sfnews.php\" title=\"".$Language->getText('homepage', 'news_title2').'">&nbsp;[XML]</A>');
+if (isset($GLOBALS['sys_display_homepage_boxes']) && $GLOBALS['sys_display_homepage_boxes'] == 1) {
+    echo '<div id="homepage_boxes">';
+    echo show_features_boxes();
+    echo '</div>';
+}
+
+echo '<div id="homepage_news">';
+$HTML->box1_top($Language->getText('homepage', 'news_title')."<a href=\"/export/rss_sfnews.php\" title=\"".$Language->getText('homepage', 'news_title2').'"><img src="'.util_get_dir_image_theme().'/ic/feed.png"></a>');
 echo news_show_latest($GLOBALS['sys_news_group'],5,true,false,false,5);
 $HTML->box1_bottom();
-?>
+echo '</div>';
 
-</TD>
-
-<?php
-if ($display_boxes) {
-    echo '<TD width="35%" VALIGN="TOP">';
-    // Allow front page to restricted users but not the boxes that may disclose informations
-    echo show_features_boxes();
-    echo '</TD></TR>';
-}
-?>
-<!-- LJ end of the main page body -->
-</TABLE>
-<!-- LJ Added a missing end center -->
-</CENTER>
-
-<?php
+echo '</div>';
 
 $HTML->footer(array());
 
