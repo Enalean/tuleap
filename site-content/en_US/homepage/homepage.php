@@ -34,8 +34,8 @@ Also make sure you read the <b><A href="/plugins/docman/?group_id=1"><?= $GLOBAL
 <P><u><B>Set Up Your Own Project</B></u><BR>After you <A href="/account/register.php">register as a site user</A>, you can <A HREF="/account/login.php">login</A> and <A HREF="/project/register.php">register your project</A>.
 It only takes a couple of minutes to get a fully working environment to share your code.
 
-<P><B><U>Codendi CLI</U></B><BR />This site provides a Command Line Interface based on the <a href="/soap/index.php">Codendi SOAP API</a> to access it through a command line client.
-You can download the <a href="/downloads/Codendi_CLI.zip">Codendi CLI client</a> and its <a href="documentation/cli/pdf/en_US/Codendi_CLI.pdf">documentation</a>.
+<P><B><U>CLI</U></B><BR />This site provides a Command Line Interface based on the <a href="/soap/index.php">SOAP API</a> to access it through a command line client.
+You can download the <a href="/downloads/Codendi_CLI.zip">CLI client</a> and its <a href="documentation/cli/pdf/en_US/Codendi_CLI.pdf">documentation</a>.
 
 <p>Thanks... and enjoy the site.</p>
 

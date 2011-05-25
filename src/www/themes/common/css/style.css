@@ -83,6 +83,10 @@ fieldset {
 .threadmsg { background-color: #E3E3E3; }
 
 /* .footer { color: #333333; } */
+#footer {
+    width: 100%;
+    text-align: center;
+} 
 .standardtable { width: 99%; border-spacing: 0; border: 0; color: #333333; }
 
 /* content frame specific */
