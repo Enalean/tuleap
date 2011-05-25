@@ -834,7 +834,7 @@ class Layout extends Response {
             }
         }
         if ($widget->hasRss()) {
-            echo '<div class="widget_titlebar_rss"><a href="'.$widget->getRssUrl($owner_id, $owner_type).'">rss</a></div>';
+            echo '<div class="widget_titlebar_rss"><a href="'.$widget->getRssUrl($owner_id, $owner_type).'">'.$this->getImage('ic/feed.png').'</a></div>';
         }
         echo '</div>';
         $style = '';
