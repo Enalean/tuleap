@@ -1,4 +1,7 @@
-Version 1.9 (Codendi_ST 4.0.17) 
+Version 1.10 (Not released yet)
+	* Rewrite management of cross references extraction to improve performances
+
+Version 1.9 (Codendi_ST 4.0.17)
 
 	What Changed?
 	============
