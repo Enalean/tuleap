@@ -17,6 +17,8 @@ site_admin_header(array('title'=>$Language->getText('admin_main', 'title')));
 
 $abc_array = array('A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z','0','1','2','3','4','5','6','7','8','9');
 
+$em = EventManager::instance();
+
 // Get various number of users and projects from status
 $res = db_query("SELECT count(*) AS count FROM groups");
 $row = db_fetch_array($res);
@@ -104,6 +106,7 @@ $wStats->setContent('
             <li>'.$Language->getText('admin_main','last3months_users').': <strong>'.number_format(stats_getactiveusers(8031600)).'</strong></li>
         </ul>
       </li>
+      <li><a href="lastlogins.php">'.$Language->getText('admin_main', 'stat_login').'</a></li>
     </ul>
   </li>
   <li>'.$Language->getText('admin_main', 'stat_projects').'
@@ -113,6 +116,7 @@ $wStats->setContent('
       <li>'.$Language->getText('admin_main', 'sstat_pend_g').': <strong>'.$pending_projects.'</strong></li>
     </ul>
   </li>
+  <li><a href="/stats/">'.$Language->getText('admin_main', 'stat_spu').'</a>
 </ul>');
 
 // User administration
@@ -187,87 +191,73 @@ $wProject->setContent('
   <li>'.$Language->getText('admin_main', 'deleted_group',array("grouplist.php?status=D")).'</li>
 </ul>');
 
+// Configuration
+
+if ($GLOBALS['sys_use_trove'] != 0) {
+    $trov_conf = '<li>'.$Language->getText('admin_main', 'trove_cat').': 
+                    <ul>
+                      <li><a href="/admin/trove/trove_cat_list.php">'.$Language->getText('admin_main', 'trove_cat_list').'</a></li>
+                      <li><a href="/admin/trove/trove_cat_add.php">'.$Language->getText('admin_main', 'trove_cat_add').'</a></li>
+                    </ul>
+                  </li>';
+} else {
+    $trove_conf = '';
+}
+
+$wConf = new Widget_Static("Configuration");
+$wConf->setContent('
+<ul>
+  <li>'.$Language->getText('admin_main', 'conf_project').': 
+    <ul>
+      <li><a href="/admin/descfields/desc_fields_edit.php">'.$Language->getText('admin_main', 'desc_fields_edit').'</a></li>
+      <li><a href="/project/admin/servicebar.php?group_id=100">'.$Language->getText('admin_main', 'configure_svc').'</a></li>
+      <li><a href="/project/admin/reference.php?group_id=100">'.$Language->getText('admin_main', 'configure_ref').'</a></li>
+    </ul>
+  </li>
+  <li>'.$Language->getText('admin_main', 'header_tracker').':
+    <ul>
+      <li><a href="/tracker/admin/restore.php">'.$Language->getText('admin_main', 'tracker_remove').'</a></li>
+      <li><a href="/tracker/admin/?group_id=100">'.$Language->getText('admin_main', 'tracker_template').'</a></li>
+    </ul>
+  </li>
+  '.$trov_conf.'
+</ul>');
+
+// Site utils
+ob_start();
+$em->processEvent('site_admin_external_tool_hook', null);
+$pluginsContent = ob_get_contents();
+ob_end_clean();
+
+$wUtils = new Widget_Static($Language->getText('admin_main', 'header_utils'));
+$wUtils->setContent('
+<ul>
+  <li><a href="/admin/system_events/">'.$Language->getText('admin_main', 'sysevent_monitor').'</a></li>
+  <li><a href="/news/admin">'.$Language->getText('admin_main', 'site_news_approval').'</a></li>
+  <li><a href="massmail.php">'.$Language->getText('admin_main', 'mail_engine').'</a></li>
+  <li><a href="externaltools.php?tool=phpMyAdmin">phpMyAdmin</a></li>
+  <li><a href="externaltools.php?tool=munin">munin</a></li>
+  <li><a href="externaltools.php?tool=info">PHP info</a></li>
+  <li><a href="externaltools.php?tool=APC">APC - PHP Cache</a></li>
+  '.$pluginsContent.'
+</ul>');
+
+// Plugins
+ob_start();
+$em->processEvent('site_admin_option_hook', null);
+$pluginsContent = ob_get_contents();
+ob_end_clean();
+
+$wPlugins = new Widget_Static($Language->getText('admin_main', 'header_plugins'));
+$wPlugins->setContent('<ul>'.$pluginsContent.'</ul>');
+
 $wDoc->display();
 $wStats->display();
 $wUser->display();
 $wProject->display();
-?>
+$wConf->display();
+$wUtils->display();
+$wPlugins->display();
 
-<h3><?php echo $Language->getText('admin_main', 'site_news'); ?></h3>
-<ul>
-<li><a href="/news/admin"><?php echo $Language->getText('admin_main', 'site_news_approval'); ?></A>
-</ul>
-
-<h3><?php echo $Language->getText('admin_main', 'system_event'); ?></h3>
-<ul>
-<li><a href="/admin/system_events/"><?php echo $Language->getText('admin_main', 'sysevent_monitor'); ?></A>
-</ul>
-
-<h3><?php echo $Language->getText('admin_main', 'desc_fields'); ?></h3>
-<ul>
-<li><a href="/admin/descfields/desc_fields_edit.php"><?php echo $Language->getText('admin_main', 'desc_fields_edit'); ?></A>
-</ul>
-
-
-<h3><?php         
-if ($GLOBALS['sys_use_trove'] != 0) {
-    echo $Language->getText('admin_main', 'trove_cat'); ?></h3>
-<ul>
-<li><a href="/admin/trove/trove_cat_list.php"><?php echo $Language->getText('admin_main', 'trove_cat_list'); ?></A>
-<li><a href="/admin/trove/trove_cat_add.php"><?php echo $Language->getText('admin_main', 'trove_cat_add'); ?></A>
-</ul>
-
-<h3><?php
-} // if trove
- echo $Language->getText('admin_main', 'header_svc'); ?></h3>
-<ul>
-<li><a href="/project/admin/servicebar.php?group_id=100"><?php echo $Language->getText('admin_main', 'configure_svc'); ?></A>
-</ul>
-
-<h3><?php echo $Language->getText('admin_main', 'servers'); ?></h3>
-<ul>
-<li><a href="/admin/servers/"><?php echo $Language->getText('admin_main', 'servers_admin'); ?></A>
-</ul>
-
-<h3><?php echo $Language->getText('admin_main', 'header_ref'); ?></h3>
-<ul>
-<li><a href="/project/admin/reference.php?group_id=100"><?php echo $Language->getText('admin_main', 'configure_ref'); ?></A>
-</ul>
-
-<h3><?php echo $Language->getText('admin_main', 'header_tracker'); ?></h3>
-<ul>
-<li><a href="/tracker/admin/restore.php"><?php echo $Language->getText('admin_main', 'tracker_remove'); ?></A>
-<li><a href="/tracker/admin/?group_id=100"><?php echo $Language->getText('admin_main', 'tracker_template'); ?></A>
-</ul>
-
-<h3><?php echo $Language->getText('admin_main', 'header_stat'); ?></h3>
-<ul>
-<li><a href="lastlogins.php"><?php echo $Language->getText('admin_main', 'stat_login'); ?></A>
-<li><a href="/stats/"><?php echo $Language->getText('admin_main', 'stat_spu'); ?></A>
-</ul>
-
-<h3><?php echo $Language->getText('admin_main', 'header_utils'); ?></h3>
-<UL>
-<LI><A href="massmail.php"><?php echo $Language->getText('admin_main', 'mail_engine'); ?></A>
-<LI><A href="externaltools.php?tool=phpMyAdmin">phpMyAdmin</A>
-<LI><A href="externaltools.php?tool=munin">munin</A>
-<LI><A href="externaltools.php?tool=info">PHP info</A>
-<LI><A href="externaltools.php?tool=APC">APC - PHP Cache</A>
-<?php
-    $em =& EventManager::instance();
-    $em->processEvent('site_admin_external_tool_hook', null);
-?>
-</ul>
-
-<h3><?php echo $Language->getText('admin_main', 'header_plugins'); ?></h3>
-<ul>
-<?php
-    $em =& EventManager::instance();
-    $em->processEvent('site_admin_option_hook', null);
-?>
-</ul>
-
-
-<?php
 site_admin_footer(array());
 ?>

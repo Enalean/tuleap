@@ -72,8 +72,9 @@ admin_main	desc_fields_edit	Modification des champs de description des projets
 admin_main	system_event	Evénements système
 admin_main	sysevent_monitor	Affichage des événements système
 admin_main	documentation	Documentation
-admin_main	install_guide	Guide d'installation Codendi
-admin_main	admin_guide	Guide d'administration Codendi
+admin_main	install_guide	Guide d'installation
+admin_main	admin_guide	Guide d'administration
+admin_main	conf_project	Configuration projet
 #
 #-----------------------------------------------
 # Script: SF/www/admin/admin_utils.php

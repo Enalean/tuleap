@@ -80,8 +80,9 @@ admin_main	desc_fields_edit	Project Description Fields Edition
 admin_main	system_event	System Events
 admin_main	sysevent_monitor	System Events Monitor
 admin_main	documentation	Documentation
-admin_main	install_guide	Codendi Installation Guide
-admin_main	admin_guide	Codendi Administration Guide
+admin_main	install_guide	Installation Guide
+admin_main	admin_guide	Administration Guide
+admin_main	conf_project	Project configuration
 #
 #-----------------------------------------------
 # Script: SF/www/admin/admin_utils.php
