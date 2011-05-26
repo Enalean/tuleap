@@ -31,9 +31,9 @@ if (isset($GLOBALS['sys_display_homepage_boxes']) && $GLOBALS['sys_display_homep
 
 echo '<div id="homepage_news">';
 
-$w = new StaticWidget($Language->getText('homepage', 'news_title'));
+$w = new Widget_Static($Language->getText('homepage', 'news_title'));
 $w->setContent(news_show_latest($GLOBALS['sys_news_group'],5,true,false,true,5));
-$w->setRss('/export/rss_sfnews.php');
+$w->setRssUrl('/export/rss_sfnews.php');
 $w->display();
 
 echo '</div>';
