@@ -9,19 +9,26 @@
 require_once('pre.php');
 require_once('www/admin/admin_utils.php');
 require_once('www/stats/site_stats_utils.php');
+require_once('common/widget/Widget_Static.class.php');
 
 session_require(array('group'=>'1','admin_flags'=>'A'));
-
 
 site_admin_header(array('title'=>$Language->getText('admin_main', 'title')));
 
 $abc_array = array('A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z','0','1','2','3','4','5','6','7','8','9');
 
 // Get various number of users and projects from status
+$res = db_query("SELECT count(*) AS count FROM groups");
+$row = db_fetch_array($res);
+$total_groups = $row['count'];
+
 db_query("SELECT count(*) AS count FROM groups WHERE status='P'");
 $row = db_fetch_array();
 $pending_projects = $row['count'];
 
+$res = db_query("SELECT count(*) AS count FROM groups WHERE status='A'");
+$row = db_fetch_array($res);
+$active_groups = $row['count'];
 
 db_query("SELECT count(*) AS count FROM user WHERE status='P'");
 $row = db_fetch_array();
@@ -62,132 +69,129 @@ db_query("SELECT count(*) AS count FROM user WHERE status='V' OR status='W'");
 $row = db_fetch_array();
 $validated_users = $row['count'];
 
-$version = trim(file_get_contents($GLOBALS['codendi_dir'].'/VERSION'));
+// Start output
 
-?>
- 
-<h2><?php echo $Language->getText('admin_main', 'header').' ('.$version.')'; ?></h2>
-<p><i><?php echo $Language->getText('admin_main', 'message'); ?></i>
+echo "<p><i>".$Language->getText('admin_main', 'message')."</i></p>";
 
-
-<h3><?php // Documentation
-echo $Language->getText('admin_main', 'documentation'); ?></h3>
+// Documentation
+$wDoc = new Widget_Static($Language->getText('admin_main', 'documentation'));
+$wDoc->setContent('
 <ul>
-<li><a href="/documentation/installation_guide/html/Codendi_Installation_Guide.html">
-    <?php echo $Language->getText('admin_main', 'install_guide'); ?></a></li>
-<li><a href="/documentation/administration_guide/html/Codendi_Administration_Guide.html">
-    <?php echo $Language->getText('admin_main', 'admin_guide'); ?></a></li>
-</ul>
+  <li><a href="/documentation/installation_guide/html/Codendi_Installation_Guide.html">'.$Language->getText('admin_main', 'install_guide').'</a></li>
+  <li><a href="/documentation/administration_guide/html/Codendi_Administration_Guide.html">'.$Language->getText('admin_main', 'admin_guide').'</a></li>
+</ul>');
 
-<h3><?php 
-
-//Display of Site Statistics
-echo $Language->getText('admin_main', 'header_sstat'); ?></h3>
+// Site Statistics
+$wStats = new Widget_Static($Language->getText('admin_main', 'header_sstat'));
+$wStats->setContent('
 <ul>
-<?php
-		print "<li>".$Language->getText('admin_main', 'stat_users')." :" ;
-        db_query("SELECT count(*) AS count FROM user WHERE status='A' or status='R'");
-        $row = db_fetch_array();
-        print "<ul><li>".$Language->getText('admin_main', 'sstat_reg_u')." : <B>$row[count]</B></li>";
-		print "<li>".$Language->getText('admin_main', 'status_user')." : " ;
-		print "<B>$actif_users</B> ".$Language->getText('admin_main', 'statusactif_user');
-		print ", <B>".$restricted_users."</B> ".$Language->getText('admin_main', 'statusrestricted_user');
-		print ", <B>".$hold_users."</B> ".$Language->getText('admin_main', 'statushold_user');
-		print ", <B>".$deleted_users."</B> ".$Language->getText('admin_main', 'statusdeleted_user');
-		print ", <B>".$validated_users."</B> ".$Language->getText('admin_main', 'statusvalidated_user');
-		print ", <B>".$realpending_users."</B> ".$Language->getText('admin_main', 'statuspending_user');
-		print ", ".$Language->getText('admin_main', 'statustotal_user')." : <B>".($realpending_users + $validated_users + $deleted_users + $hold_users + $restricted_users + $actif_users)."</B></li>";
-		
-			
-		print "<li>".$Language->getText('admin_main','active_users').' :';
-		print "<ul><li>".$Language->getText('admin_main','lastday_users').' : <B>'.number_format(stats_getactiveusers(84600)).'</B></li>';
-		print "<li>".$Language->getText('admin_main','lastweek_users').' : <B>'.number_format(stats_getactiveusers(592200)).'</B></li>';
-		print "<li>".$Language->getText('admin_main','lastmonth_users').' : <B>'.number_format(stats_getactiveusers(2678400)).'</B></li>';
-		print "<li>".$Language->getText('admin_main','last3months_users').' : <B>'.number_format(stats_getactiveusers(8031600)).'</B></li></ul></li>';
-  
-		print "</ul></li><li>".$Language->getText('admin_main', 'stat_projects')." :" ;
-        db_query("SELECT count(*) AS count FROM groups");
-        $row = db_fetch_array();
-        print "<ul><li>".$Language->getText('admin_main', 'sstat_reg_g')." : <B>$row[count]</B></li>";
+  <li>'.$Language->getText('admin_main', 'stat_users').':
+    <ul>
+      <li>'.$Language->getText('admin_main', 'sstat_reg_u').': <strong>'.($actif_users+$restricted_users).'</strong></li>
+      <li>'.$Language->getText('admin_main', 'status_user').': 
+        <strong>'.$actif_users.'</strong> '.$Language->getText('admin_main', 'statusactif_user').',
+        <strong>'.$restricted_users.'</strong> '.$Language->getText('admin_main', 'statusrestricted_user').',
+        <strong>'.$hold_users.'</strong> '.$Language->getText('admin_main', 'statushold_user').',
+        <strong>'.$deleted_users.'</strong> '.$Language->getText('admin_main', 'statusdeleted_user').',
+        <strong>'.$validated_users.'</strong> '.$Language->getText('admin_main', 'statusvalidated_user').',
+        <strong>'.$realpending_users.'</strong> '.$Language->getText('admin_main', 'statuspending_user').', '.
+        $Language->getText('admin_main', 'statustotal_user').' : <strong>'.($realpending_users + $validated_users + $deleted_users + $hold_users + $restricted_users + $actif_users).'</strong>
+      </li>
+      <li>'.$Language->getText('admin_main','active_users').':
+        <ul><li>'.$Language->getText('admin_main','lastday_users').': <strong>'.number_format(stats_getactiveusers(84600)).'</strong></li>
+            <li>'.$Language->getText('admin_main','lastweek_users').': <strong>'.number_format(stats_getactiveusers(592200)).'</strong></li>
+            <li>'.$Language->getText('admin_main','lastmonth_users').': <strong>'.number_format(stats_getactiveusers(2678400)).'</strong></li>
+            <li>'.$Language->getText('admin_main','last3months_users').': <strong>'.number_format(stats_getactiveusers(8031600)).'</strong></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li>'.$Language->getText('admin_main', 'stat_projects').'
+    <ul>
+      <li>'.$Language->getText('admin_main', 'sstat_reg_g').': <strong>'.$total_groups.'</strong></li>
+      <li>'.$Language->getText('admin_main', 'sstat_reg_act_g').': <strong>'.$active_groups.'</strong></li>
+      <li>'.$Language->getText('admin_main', 'sstat_pend_g').': <strong>'.$pending_projects.'</strong></li>
+    </ul>
+  </li>
+</ul>');
 
-        db_query("SELECT count(*) AS count FROM groups WHERE status='A'");
-        $row = db_fetch_array();
-        print "<li>".$Language->getText('admin_main', 'sstat_reg_act_g')." : <B>$row[count]</B></li>";
+// User administration
 
-		print "<li>".$Language->getText('admin_main', 'sstat_pend_g')." : <B>$pending_projects</B></li></ul>";
+// Letter Links
+$letter_links = '';
+foreach ($abc_array as $l) {
+    $letter_links .= '<a href="userlist.php?user_name_search='.$l.'">&nbsp;'.$l.'&nbsp;</a>';
+}
 
-        
-		print "</li>";
-?>
-</ul>
-
-<h3><?php echo $Language->getText('admin_main', 'header_user'); ?></h3>
-<ul>
-<li><?php echo $Language->getText('admin_main', 'display_user');
-
-	for ($i=0; $i < count($abc_array); $i++) {
-        echo '<a href="userlist.php?user_name_search='. $abc_array[$i] .'">&nbsp;'. $abc_array[$i] .'&nbsp;</a>';
-	}
-?>
-<br>
-<?php echo $Language->getText('admin_main', 'search_user'); ?>
-<br>
-<form name="usersrch" action="search.php" method="POST">
-  <input type="text" name="search">
-  <input type="hidden" name="usersearch" value="1">
-  <input type="submit" value="<?php echo $Language->getText('admin_main', 'search'); ?>">
-</form>
-<ul>
-<li><?php echo $Language->getText('admin_main', 'all_users',array("userlist.php")); ?></a></li>
-<LI><?php echo $Language->getText('admin_main', 'pending_user',array("approve_pending_users.php?page=pending")); ?>
-<?php echo " <b>($pending_users";
+// Pending users
 if ($GLOBALS['sys_user_approval'] == 1 && $pending_users != 0) {
-    print "&nbsp;-&nbsp; <a href=\"approve_pending_users.php?page=pending\">".$Language->getText('admin_main', 'need_validation')."</a>";
+    $user_approval =  '<strong>('.$pending_users.' - <a href="approve_pending_users.php?page=pending">'.$Language->getText('admin_main', 'need_validation').'</a>)</strong>';
+} else {
+    $user_approval = '(0)';
 }
-echo ")</b>";
-?></li>
-<?php if ($GLOBALS['sys_user_approval'] == 1) { ?>
-<LI><?php echo $Language->getText('admin_main', 'validated_user',array("approve_pending_users.php?page=validated")); ?>
-<?php echo " <b>($validated_users)</b>";
+
+// Validated
+if ($GLOBALS['sys_user_approval'] == 1) {
+    $user_validated = '<li>'.$Language->getText('admin_main', 'validated_user',array("approve_pending_users.php?page=validated")).'<strong>('.$validated_users.')</strong></li>';
+} else {
+    $user_validated = '';
 }
-?>
-</li>
-</ul>
-<li><a href="/people/admin"><?php echo $Language->getText('admin_main', 'skills'); ?></a></li>
-<li><a href="register_admin.php?page=admin_creation"><?php echo $Language->getText('admin_main', 'new_user'); ?></a></li>
-</ul>
 
-<h3><?php echo $Language->getText('admin_main', 'header_group'); ?></h3>
+$wUser = new Widget_Static($Language->getText('admin_main', 'header_user'));
+$wUser->setContent('
 <ul>
+  <li>'.$Language->getText('admin_main', 'all_users',array("userlist.php")).'</li>
+  <li>'.$Language->getText('admin_main', 'display_user').$letter_links.'</li>
+  <li>'.$Language->getText('admin_main', 'search_user').'
+    <form name="usersrch" action="search.php" method="post" style="display: inline;">
+      <input type="text" name="search">
+      <input type="hidden" name="usersearch" value="1">
+      <input type="submit" value="'.$Language->getText('admin_main', 'search').'">
+    </form>
+  </li>
+  <li>'.$Language->getText('admin_main', 'pending_user',array("approve_pending_users.php?page=pending")).' '.$user_approval.'</li>
+  '.$user_validated.'
+  <li><a href="/people/admin">'.$Language->getText('admin_main', 'skills').'</a></li>
+  <li><a href="register_admin.php?page=admin_creation">'.$Language->getText('admin_main', 'new_user').'</a></li>
+</ul>');
 
-<li><?php echo $Language->getText('admin_main', 'display_group');
-	for ($i=0; $i < count($abc_array); $i++) {
-		echo '<a href="grouplist.php?group_name_search='. $abc_array[$i] .'">&nbsp;'. $abc_array[$i] .'&nbsp;</a>';
-	}
-?>
-<br>
-<?php echo $Language->getText('admin_main', 'search_group'); ?>
-<br>
-<form name="gpsrch" action="search.php" method="POST">
-  <input type="text" name="search">
-  <input type="hidden" name="groupsearch" value="1">
-  <input type="submit" value="<?php echo $Language->getText('admin_main', 'search'); ?>">
-</form>
 
-<p>
+// Project administration
+// Letter Links
+$letter_links = '';
+foreach ($abc_array as $l) {
+    $letter_links .= '<a href="grouplist.php?group_name_search='. $l .'">&nbsp;'. $l .'&nbsp;</a>';
+}
 
-<ul>
-<li><?php echo $Language->getText('admin_main', 'all_groups',array("grouplist.php")); ?></a></li>
-<LI><?php echo $Language->getText('admin_main', 'incomplete_group',array("grouplist.php?status=I")); ?>
-<LI><?php echo $Language->getText('admin_main', 'pending_group',array("approve-pending.php")); ?>
-<?php echo " <b>($pending_projects";
+// Pending
 if ($pending_projects != 0) {
-    print "&nbsp;-&nbsp; <a href=\"approve-pending.php\">".$Language->getText('admin_main', 'need_approval')."</a>";
+    $groups_pending = '<strong>('.$pending_projects.' - <a href="approve-pending.php">'.$Language->getText('admin_main', 'need_approval').'</a>)</strong>';
+} else {
+    $groups_pending = '(0)';
 }
-echo ")</b>";?>
-<LI><?php echo $Language->getText('admin_main', 'deleted_group',array("grouplist.php?status=D")); ?>
-</ul>
-</ul>
+
+$wProject = new Widget_Static($Language->getText('admin_main', 'header_group'));
+$wProject->setContent('
+<ul>
+  <li>'.$Language->getText('admin_main', 'all_groups', array("grouplist.php")).'</li>
+  <li>'.$Language->getText('admin_main', 'display_group').$letter_links.'</li>
+  <li>'.$Language->getText('admin_main', 'search_group').'
+    <form name="gpsrch" action="search.php" method="post" style="display: inline;">
+      <input type="text" name="search">
+      <input type="hidden" name="groupsearch" value="1">
+      <input type="submit" value="'.$Language->getText('admin_main', 'search').'">
+    </form>
+  </li>
+  <li>'.$Language->getText('admin_main', 'incomplete_group', array("grouplist.php?status=I")).'</li>
+  <li>'.$Language->getText('admin_main', 'pending_group', array("approve-pending.php")).' '.$groups_pending.'</li>
+  <li>'.$Language->getText('admin_main', 'deleted_group',array("grouplist.php?status=D")).'</li>
+</ul>');
+
+$wDoc->display();
+$wStats->display();
+$wUser->display();
+$wProject->display();
+?>
 
 <h3><?php echo $Language->getText('admin_main', 'site_news'); ?></h3>
 <ul>
