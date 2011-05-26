@@ -29,10 +29,11 @@
 
 /********  general   **********/
 body {
+    font-family: "Lucida Grande", sans-serif;
+    font-size: 13px;
 	margin: 0;
 	background: white;
 	color: black;
-	font-family: "Lucida Grande", verdana, tahoma, helvetica, arial, sans-serif;
 	padding: 3px 10px 0 10px;
 }
 
@@ -151,7 +152,6 @@ fieldset {
 .boxtitle {
     	background: gray url(../images/headergrad.png) left top repeat-x;
     	color: white;
-    	font-family: verdana, tahoma, helvetica, arial, sans-serif;
     	font-weight: normal; 
     	text-align: left; 
     	padding: 0 1px 0 2px;
@@ -180,7 +180,7 @@ fieldset {
 .boxspace { font-size: 2pt; }
 .maintitlebar { color: white;}
 .slogan { font-weight: bold;}
-.osdn { font-family: verdana, tahoma, helvetica, arial, sans-serif; font-weight: bold; color: #ffffff; }
+.osdn { font-weight: bold; color: #ffffff; }
 .osdntext, .osdntext:link { font-weight: bold; text-decoration: none; color: #ffffff; }
 .osdntext:visited { font-weight: bold; text-decoration: none; color: #ffffff; }
 .osdntext:hover { font-weight: bold; text-decoration: none; color: #ffffff; }
@@ -321,7 +321,6 @@ td.artifact_spacer { width: 5%; }
 
 /* {{{ feedback */
 .feedback_error, .feedback_warning, .feedback_info, .feedback_debug {
-        font-family: verdana, tahoma, helvetica, arial, sans-serif;
         background-color: #f7f7f7;
         background-position: 20px 50%;
         background-repeat:no-repeat;
@@ -404,7 +403,6 @@ td.artifact_spacer { width: 5%; }
 
 #navigation {
 	width: 100%;
-	font-family: verdana, tahoma, helvetica, arial, sans-serif;
 	font-size: 100%;
 	margin-top: -21px;
 }
@@ -570,7 +568,6 @@ img {
 	border: 1px solid white;
     -moz-border-radius: 3px 3px 0px 0px;
     background: #aaaaaa url(../images/navigation_grad.png) left top repeat-x; 
-    font-family: verdana, tahoma, helvetica, arial, sans-serif;
     font-size: 100%;
     font-weight: normal; 
     text-align: center; 
@@ -971,11 +968,12 @@ div.datePicker table td
 
 
 /* Addition from space */
+/*
 * {
     font-family: "Lucida Grande", sans-serif;
     font-size: 13px;
 }
-
+*/
 td.header_logo a { 
 padding-left: 1em; 
 font-size: 2em; 
