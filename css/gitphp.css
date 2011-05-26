@@ -122,7 +122,6 @@ span.matchline {
  * side-by-side-diff diff
  */
 table.diffTable {
-	font-family: monospace;
 	border-spacing:0px;
 	width: 100%;
 }
@@ -131,21 +130,6 @@ table.diffTable td {
 	width: 50%;
 }
 
-table.diffTable td.diff-added {
-	background-color: #C1FFC1;
-}
-
-table.diffTable td.diff-modified {
-	background-color: #DDEEFF;
-}
-
-table.diffTable td.diff-deleted {
-	background-color: #FFDDDD;
-}
-
-table.diffTable td.diff-left {
-	border-right: 1px solid #d9d8d1;
-}
 
 /*
  * Geshi styles

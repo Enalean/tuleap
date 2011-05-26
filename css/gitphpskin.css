@@ -378,6 +378,30 @@ div.diff_info {
 
 
 /*
+ * side-by-side-diff diff
+ */
+table.diffTable {
+	font-family: monospace;
+}
+
+table.diffTable td.diff-added {
+	background-color: #C1FFC1;
+}
+
+table.diffTable td.diff-modified {
+	background-color: #DDEEFF;
+}
+
+table.diffTable td.diff-deleted {
+	background-color: #FFDDDD;
+}
+
+table.diffTable td.diff-left {
+	border-right: 1px solid #d9d8d1;
+}
+
+
+/*
  * Blob/blame display
  */
 a.linenr {
