@@ -48,6 +48,9 @@ class GitPHP_Controller_Blobdiff extends GitPHP_ControllerBase
 		if (isset($this->params['plain']) && ($this->params['plain'] === true)) {
 			return 'blobdiffplain.tpl';
 		}
+		if (isset($this->params['sidebyside']) && ($this->params['sidebyside'] === true)) {
+			return 'sidebyside.tpl';
+		}
 		return 'blobdiff.tpl';
 	}
 
@@ -98,6 +101,13 @@ class GitPHP_Controller_Blobdiff extends GitPHP_ControllerBase
 			$this->params['hashbase'] = $_GET['hb'];
 		if (isset($_GET['hp']))
 			$this->params['hashparent'] = $_GET['hp'];
+		if (isset($_GET['o'])) {
+			if (!isset($this->params['plain']) || $this->params['plain'] != true) {
+				if ($_GET['o'] == 'sidebyside') {
+					$this->params['sidebyside'] = true;
+				}
+			}
+		}
 	}
 
 	/**

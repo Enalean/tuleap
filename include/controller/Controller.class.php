@@ -54,10 +54,6 @@ class GitPHP_Controller
 				if ($action === 'blobdiff_plain')
 					$controller->SetParam('plain', true);
 				break;
-			case 'blobdiff_sidebyside':
-				require_once(GITPHP_CONTROLLERDIR . 'Controller_Sidediff.class.php');
-				$controller = new GitPHP_Controller_Sidediff();
-				break;
 			case 'history':
 				require_once(GITPHP_CONTROLLERDIR . 'Controller_History.class.php');
 				$controller = new GitPHP_Controller_History();
