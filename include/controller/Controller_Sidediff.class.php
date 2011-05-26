@@ -145,7 +145,7 @@ class GitPHP_Controller_Sidediff extends GitPHP_ControllerBase
 			array("blob", $this->params['hashparent']));
 		$blob  = explode("\n", $rawBlob);
 
-		$diffLines = explode("\n", $this->gitexe->Execute("diff",
+		$diffLines = explode("\n", $this->gitexe->Execute(GIT_DIFF,
 			array("-U0", $this->params['hashparent'],
 				$this->params['hash'])));
 

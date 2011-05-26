@@ -25,6 +25,7 @@ define('GIT_BLAME','blame');
 define('GIT_NAME_REV','name-rev');
 define('GIT_FOR_EACH_REF','for-each-ref');
 define('GIT_CONFIG','config');
+define('GIT_DIFF','diff');
 
 /**
  * Git Executable class
