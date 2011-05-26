@@ -124,6 +124,7 @@ span.matchline {
 table.diffTable {
 	border-spacing:0px;
 	width: 100%;
+	white-space: pre-wrap;
 }
 
 table.diffTable td {
