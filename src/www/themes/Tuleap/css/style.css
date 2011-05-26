@@ -283,22 +283,16 @@ a.tabsellink:hover {
 }
 .header_actions ul li {
 	display:inline;
+	padding: 0 1em 0 1em;
 }
 .header_actions ul li a {
 	border: 0px solid gray;
-	margin: 0em 0em 0em 0em;
-	padding: 0em;
 	text-decoration:none;
 }
 .header_actions ul li a:hover {
 	background: white;
 }
 
-.header_actions ul li a,
-.header_actions ul li.header_actions_nolink {
-	padding: 0 0.2em 0 0;
-	margin: 0 0.2em 0 1em;
-}
 .header_actions ul li.header_actions_nolink {
 	font-weight:bold;
 }
