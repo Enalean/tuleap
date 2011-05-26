@@ -13,8 +13,6 @@ require_once('common/widget/Widget_Static.class.php');
 
 session_require(array('group'=>'1','admin_flags'=>'A'));
 
-site_admin_header(array('title'=>$Language->getText('admin_main', 'title')));
-
 $abc_array = array('A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z','0','1','2','3','4','5','6','7','8','9');
 
 $em = EventManager::instance();
@@ -71,10 +69,6 @@ db_query("SELECT count(*) AS count FROM user WHERE status='V' OR status='W'");
 $row = db_fetch_array();
 $validated_users = $row['count'];
 
-// Start output
-
-echo "<p><i>".$Language->getText('admin_main', 'message')."</i></p>";
-
 // Documentation
 $wDoc = new Widget_Static($Language->getText('admin_main', 'documentation'));
 $wDoc->setContent('
@@ -124,7 +118,7 @@ $wStats->setContent('
 // Letter Links
 $letter_links = '';
 foreach ($abc_array as $l) {
-    $letter_links .= '<a href="userlist.php?user_name_search='.$l.'">&nbsp;'.$l.'&nbsp;</a>';
+    $letter_links .= '<a href="userlist.php?user_name_search='.$l.'"> '.$l.' </a>';
 }
 
 // Pending users
@@ -164,7 +158,7 @@ $wUser->setContent('
 // Letter Links
 $letter_links = '';
 foreach ($abc_array as $l) {
-    $letter_links .= '<a href="grouplist.php?group_name_search='. $l .'">&nbsp;'. $l .'&nbsp;</a>';
+    $letter_links .= '<a href="grouplist.php?group_name_search='. $l .'"> '. $l .' </a>';
 }
 
 // Pending
@@ -251,13 +245,31 @@ ob_end_clean();
 $wPlugins = new Widget_Static($Language->getText('admin_main', 'header_plugins'));
 $wPlugins->setContent('<ul>'.$pluginsContent.'</ul>');
 
-$wDoc->display();
-$wStats->display();
+
+// Start output
+site_admin_header(array('title'=>$Language->getText('admin_main', 'title')));
+
+echo "<p><i>".$Language->getText('admin_main', 'message')."</i></p>";
+
+echo '<table id="site_admin_main_table"><tr>';
+
+echo '<td>';
 $wUser->display();
 $wProject->display();
-$wConf->display();
+echo "</td>";
+
+echo '<td>';
 $wUtils->display();
+$wConf->display();
+echo "</td>";
+
+echo '<td>';
+$wDoc->display();
+$wStats->display();
 $wPlugins->display();
+echo "</td>";
+
+echo "</tr></table>";
 
 site_admin_footer(array());
 ?>
