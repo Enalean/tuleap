@@ -16,6 +16,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+// For backward compatibility: if the introduction speech was 
+// customized in etc/site-content homepage.tab, we display him
+// instead of following text.
 if ($Language->hasText('homepage', 'introduction')) {
     echo stripcslashes($Language->getText('homepage', 'introduction',array($GLOBALS['sys_org_name'],$GLOBALS['sys_name'])));
     return;

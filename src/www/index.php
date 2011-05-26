@@ -18,19 +18,21 @@ echo '<div id="homepage_speech">';
 include ($Language->getContent('homepage/homepage', null, null, '.php'));
 echo '</div>';
 
-if (isset($GLOBALS['sys_display_homepage_boxes']) && $GLOBALS['sys_display_homepage_boxes'] == 1) {
+if (!isset($GLOBALS['sys_display_homepage_boxes']) || (isset($GLOBALS['sys_display_homepage_boxes']) && $GLOBALS['sys_display_homepage_boxes'] == 1)) {
     echo '<div id="homepage_boxes">';
     show_features_boxes();
     echo '</div>';
 }
 
+// HTML is sad, we need to keep this div to clear the "float:right/left" that might exists before
+// Yet another dead kitten somewhere :'(
 echo '<div id="homepage_news">';
-
-$w = new Widget_Static($Language->getText('homepage', 'news_title'));
-$w->setContent(news_show_latest($GLOBALS['sys_news_group'],5,true,false,true,5));
-$w->setRssUrl('/export/rss_sfnews.php');
-$w->display();
-
+if (!isset($GLOBALS['sys_display_homepage_news']) || (isset($GLOBALS['sys_display_homepage_news']) && $GLOBALS['sys_display_homepage_news'] == 1)) {
+    $w = new Widget_Static($Language->getText('homepage', 'news_title'));
+    $w->setContent(news_show_latest($GLOBALS['sys_news_group'],5,true,false,true,5));
+    $w->setRssUrl('/export/rss_sfnews.php');
+    $w->display();
+}
 echo '</div>';
 
 echo '</div>';

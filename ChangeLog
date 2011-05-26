@@ -3,6 +3,8 @@ Version 4.0.19 - Not released yet
 	* Improve themability of HomePage
 		* New css selectors for each homepage elements and for news
 		* "boxes" (Site stats, most active projects, etc) now looks like widgets
+		* Site admin can hide news from front page (new config item in local.inc: 'sys_display_homepage_news' (backward compatible)
+		* Site admin has more (and easier) control on the "welcome speech". It's no longer a string but a dedicted page (backward compatible)
 		* New theme: Tuleap
 
 Version 4.0.18.2 - Monday, 23rd May 2011
