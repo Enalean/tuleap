@@ -15,6 +15,11 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
+if ($Language->hasText('homepage', 'introduction')) {
+    echo stripcslashes($Language->getText('homepage', 'introduction',array($GLOBALS['sys_org_name'],$GLOBALS['sys_name'])));
+    return;
+}
 ?>
 
 <div class="slogan">Collaborative Software Development at <?= $GLOBALS['sys_org_name']?></div>

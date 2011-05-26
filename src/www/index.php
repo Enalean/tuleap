@@ -15,12 +15,7 @@ $HTML->header(array('title'=>$Language->getText('homepage', 'title')));
 echo '<div id="homepage">';
 
 echo '<div id="homepage_speech">';
-$speechFile = $Language->getContent('homepage/homepage', null, null, '.php');
-if (strpos($speechFile, 'homepage') !== false) {
-    include ($speechFile);
-} else {
-    echo stripcslashes($Language->getText('homepage', 'introduction',array($GLOBALS['sys_org_name'],$GLOBALS['sys_name'])));
-}
+include ($Language->getContent('homepage/homepage', null, null, '.php'));
 echo '</div>';
 
 if (isset($GLOBALS['sys_display_homepage_boxes']) && $GLOBALS['sys_display_homepage_boxes'] == 1) {
