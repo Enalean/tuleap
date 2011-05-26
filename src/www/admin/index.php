@@ -226,14 +226,22 @@ ob_end_clean();
 $wUtils = new Widget_Static($Language->getText('admin_main', 'header_utils'));
 $wUtils->setContent('
 <ul>
-  <li><a href="/admin/system_events/">'.$Language->getText('admin_main', 'sysevent_monitor').'</a></li>
-  <li><a href="/news/admin">'.$Language->getText('admin_main', 'site_news_approval').'</a></li>
-  <li><a href="massmail.php">'.$Language->getText('admin_main', 'mail_engine').'</a></li>
-  <li><a href="externaltools.php?tool=phpMyAdmin">phpMyAdmin</a></li>
-  <li><a href="externaltools.php?tool=munin">munin</a></li>
-  <li><a href="externaltools.php?tool=info">PHP info</a></li>
-  <li><a href="externaltools.php?tool=APC">APC - PHP Cache</a></li>
-  '.$pluginsContent.'
+  <li>'.$Language->getText('admin_main', 'tool_internal').':
+    <ul>
+      <li><a href="/admin/system_events/">'.$Language->getText('admin_main', 'sysevent_monitor').'</a></li>
+      <li><a href="/news/admin">'.$Language->getText('admin_main', 'site_news_approval').'</a></li>
+      <li><a href="massmail.php">'.$Language->getText('admin_main', 'mail_engine').'</a></li>
+    </ul>
+  </li>
+  <li>'.$Language->getText('admin_main', 'tool_external').':
+    <ul>
+      <li><a href="externaltools.php?tool=phpMyAdmin">phpMyAdmin</a></li>
+      <li><a href="externaltools.php?tool=munin">munin</a></li>
+      <li><a href="externaltools.php?tool=info">PHP info</a></li>
+      <li><a href="externaltools.php?tool=APC">APC - PHP Cache</a></li>
+      '.$pluginsContent.'
+    </ul>
+  </li>
 </ul>');
 
 // Plugins

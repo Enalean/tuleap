@@ -571,7 +571,7 @@ img {
     font-size: 100%;
     font-weight: normal; 
     text-align: center; 
-    text-transform: capitalize; 
+    text-transform: none; 
     height: 18px;
     padding-left:10px;
     padding-right:4px;

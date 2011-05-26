@@ -9,24 +9,24 @@ admin_main	title		Administration du site
 admin_main	header		Fonctions d'administration
 admin_main	message		<b>Attention !</b> L'utilisation du bouton <b>Retour</b> de votre navigateur est fortement déconseillée dans les fonctions d'administration.
 admin_main	header_user	Administration des utilisateurs
-admin_main	display_user	Afficher les utilisateurs commençant par&nbsp;:
-admin_main	search_user	ou chercher (e-mail, nom d'utilisateur, nom complet, Id utilisateur)&nbsp;:
+admin_main	display_user	Afficher les utilisateurs commençant par :
+admin_main	search_user	Chercher (e-mail, nom d'utilisateur, nom complet, Id utilisateur) :
 admin_main	search	Chercher
 admin_main	pending_user	Utilisateurs en statut <a href="$1"><B>P</B> (en attente)</a>
 admin_main	validated_user	Utilisateurs validés en <a href="$1"> attente d'activation par e-mail</a>
 admin_main	need_approval	approbation requise
 admin_main	need_validation	validation requise
-admin_main	header_group	Administration de groupes
-admin_main	display_group	Afficher les groupes commençant par&nbsp;:
-admin_main	search_group	ou chercher (Id groupe, nom unix, nom complet)&nbsp;:
+admin_main	header_group	Administration des projets
+admin_main	display_group	Afficher les projets commençant par :
+admin_main	search_group	Chercher (Id projet, nom unix, nom complet) :
 admin_main	all_users	Tous les <a href="$1">utilisateurs</a>
 admin_main	all_groups	Tous les <a href="$1">groupes</a>
 admin_main	incomplete_group	Groupes en statut <a href="$1"><B>I</B> (incomplet)</A>
 admin_main	pending_group	Groupes en statut <a href="$1"><B>P</B> (en attente)</A>
 admin_main	deleted_group	Groupes en statut <a href="$1"><B>D</B> (détruit)</A>
-admin_main	header_svc	Administration des Services
+admin_main	header_svc	Administration des services
 admin_main	configure_svc	Configuration des services prédéfinis
-admin_main	header_ref	Administration des Références
+admin_main	header_ref	Administration des références
 admin_main	configure_ref	Configuration des références systèmes
 admin_main	header_tracker	Administration des outils de suivi
 admin_main	tracker_remove	Nettoyage des outils de suivi en attente
@@ -51,7 +51,7 @@ admin_main	trove_cat	Catégories
 admin_main	trove_cat_list	Liste des catégories
 admin_main	trove_cat_add	Ajout des catégories
 admin_main	skills	Compétences utilisateurs
-admin_main	new_user	Nouvel Utilisateur
+admin_main	new_user	Nouvel utilisateur
 admin_main	active_users	Utilisateurs actifs
 admin_main	lastday_users	Les dernières 24 heures
 admin_main	lastweek_users	La semaine dernière
@@ -67,7 +67,7 @@ admin_main	statusdeleted_user	détruit(s)
 admin_main	statusvalidated_user	validé(s)
 admin_main	statuspending_user	en attente
 admin_main	statustotal_user	total
-admin_main	desc_fields	Description des Projets
+admin_main	desc_fields	Description des projets
 admin_main	desc_fields_edit	Modification des champs de description des projets
 admin_main	system_event	Evénements système
 admin_main	sysevent_monitor	Affichage des événements système
@@ -75,6 +75,8 @@ admin_main	documentation	Documentation
 admin_main	install_guide	Guide d'installation
 admin_main	admin_guide	Guide d'administration
 admin_main	conf_project	Configuration projet
+admin_main	tool_internal	Interne
+admin_main	tool_external	Outil tierces
 #
 #-----------------------------------------------
 # Script: SF/www/admin/admin_utils.php
