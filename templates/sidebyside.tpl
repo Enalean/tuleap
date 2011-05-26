@@ -26,9 +26,17 @@
    {* Display the sidebysidediff *}
    <table class="diffTable pre">
    {foreach from=$filediff->GetDiffSplit() item=lineinfo}
+     {if $lineinfo[0]=='added'}
+     <tr class="diff-added">
+     {elseif $lineinfo[0]=='deleted'}
+     <tr class="diff-deleted">
+     {elseif $lineinfo[0]=='modified'}
+     <tr class="diff-modified">
+     {else}
      <tr>
-       <td class="diff{$lineinfo[0]} diff-left">{$lineinfo[1]|escape}</td>
-       <td class="diff{$lineinfo[0]}">{$lineinfo[2]|escape}</td>
+     {/if}
+       <td class="diff-left">{$lineinfo[1]|escape}</td>
+       <td>{$lineinfo[2]|escape}</td>
      </tr>
    {/foreach}
    </table>

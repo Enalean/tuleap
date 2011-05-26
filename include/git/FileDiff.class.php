@@ -677,16 +677,16 @@ class GitPHP_FileDiff
 		foreach($diffs as $d) {
 			while($idx+1 < $d['line']) {
 				$h = $blob[$idx];
-				$output[] = array(' ', $h, $h);
+				$output[] = array('', $h, $h);
 				$idx ++;
 			}
 
 			if(count($d['left']) == 0) {
-				$mode = '-added';
+				$mode = 'added';
 			} elseif(count($d['right']) == 0) {
-				$mode = '-deleted';
+				$mode = 'deleted';
 			} else {
-				$mode = '-modified';
+				$mode = 'modified';
 			}
 
 			for($i = 0; $i < count($d['left']) || $i < count($d['right']); $i++) {
@@ -700,7 +700,7 @@ class GitPHP_FileDiff
 
 		while($idx < count($blob)) {
 			$h = $blob[$idx];
-			$output[] = array(' ', $h, $h);
+			$output[] = array('', $h, $h);
 			$idx ++;
 		}
 

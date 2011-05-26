@@ -384,15 +384,15 @@ table.diffTable {
 	font-family: monospace;
 }
 
-table.diffTable td.diff-added {
+table.diffTable tr.diff-added {
 	background-color: #C1FFC1;
 }
 
-table.diffTable td.diff-modified {
+table.diffTable tr.diff-modified {
 	background-color: #DDEEFF;
 }
 
-table.diffTable td.diff-deleted {
+table.diffTable tr.diff-deleted {
 	background-color: #FFDDDD;
 }
 
