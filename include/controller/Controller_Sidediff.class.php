@@ -112,8 +112,8 @@ class GitPHP_Controller_Sidediff extends GitPHP_ControllerBase
 		if (isset($this->params['file']))
 			$this->tpl->assign('file', $this->params['file']);
 
-		$diffData = $this->makeDiffData();
-		$this->tpl->assign('diffdata', $diffData);
+		$filediff = new GitPHP_FileDiff($this->project, $this->params['hashparent'], $this->params['hash']);
+		$this->tpl->assign('filediff', $filediff);
 
 		$commit = $this->project->GetCommit($this->params['hashbase']);
 		$this->tpl->assign('commit', $commit);
@@ -129,98 +129,6 @@ class GitPHP_Controller_Sidediff extends GitPHP_ControllerBase
 
 		$tree = $commit->GetTree();
 		$this->tpl->assign('tree', $tree);
-	}
-
-	/**
-	 * construct the side by side diff data from the git data
-	 * The result is an array of ternary arrays with 3 elements each:
-	 * First the mode ("" or "-added" or "-deleted" or "-modified"),
-	 * then the first column, then the second.
-	 *
-	 * @return an array of line elements (see above)
-	 */
-	private function makeDiffData()
-	{
-		$rawBlob = $this->gitexe->Execute(GIT_CAT_FILE,
-			array("blob", $this->params['hashparent']));
-		$blob  = explode("\n", $rawBlob);
-
-		$diffLines = explode("\n", $this->gitexe->Execute(GIT_DIFF,
-			array("-U0", $this->params['hashparent'],
-				$this->params['hash'])));
-
-		//
-		// parse diffs
-		$diffs = array();
-		$currentDiff = FALSE;
-		foreach($diffLines as $d) {
-			if(strlen($d) == 0)
-				continue;
-			switch($d[0]) {
-				case '@':
-					if($currentDiff)
-						$diffs[] = $currentDiff;
-					$comma = strpos($d, ",");
-					$line = -intval(substr($d, 2, $comma-2));
-					$currentDiff = array("line" => $line,
-						"left" => array(), "right" => array());
-					break;
-				case '+':
-					if($currentDiff)
-						$currentDiff["right"][] = substr($d, 1);
-					break;
-				case '-':
-					if($currentDiff)
-						$currentDiff["left"][] = substr($d, 1);
-					break;
-				case ' ':
-					echo "should not happen!";
-					if($currentDiff) {
-						$currentDiff["left"][] = substr($d, 1);
-						$currentDiff["right"][] = substr($d, 1);
-					}
-					break;
-			}
-		}
-		if($currentDiff)
-			$diffs[] = $currentDiff;
-		// echo "<pre>"; print_r($diffs);
-
-		//
-		// iterate over diffs
-		$output = array();
-		$idx = 0;
-		foreach($diffs as $d) {
-			while($idx+1 < $d['line']) {
-				$h = $blob[$idx];
-				$output[] = array(' ', $h, $h);
-				$idx ++;
-			}
-
-			if(count($d['left']) == 0) {
-				$mode = '-added';
-			} elseif(count($d['right']) == 0) {
-				$mode = '-deleted';
-			} else {
-				$mode = '-modified';
-			}
-
-			for($i = 0; $i < count($d['left']) || $i < count($d['right']); $i++) {
-				$left = $i < count($d['left']) ? $d['left'][$i] : FALSE;
-				$right = $i < count($d['right']) ? $d['right'][$i] : FALSE;
-				$output[] = array($mode, $left, $right);
-			}
-
-			$idx += count($d['left']);
-		}
-
-		while($idx < count($blob)) {
-			$h = $blob[$idx];
-			$output[] = array(' ', $h, $h);
-			$idx ++;
-		}
-
-		return $output;
 	}
 
 }

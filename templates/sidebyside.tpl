@@ -25,7 +25,7 @@
    </div>
    {* Display the sidebysidediff *}
    <table class="diffTable pre">
-   {foreach from=$diffdata item=lineinfo}
+   {foreach from=$filediff->GetDiffSplit() item=lineinfo}
      <tr>
        <td class="diff{$lineinfo[0]} diff-left">{$lineinfo[1]|escape}</td>
        <td class="diff{$lineinfo[0]}">{$lineinfo[2]|escape}</td>

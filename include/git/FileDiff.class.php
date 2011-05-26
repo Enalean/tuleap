@@ -50,6 +50,24 @@ class GitPHP_FileDiff
 	protected $diffData;
 
 	/**
+	 * diffDataSplitRead
+	 *
+	 * Stores whether split diff data has been read
+	 *
+	 * @access protected
+	 */
+	protected $diffDataSplitRead = false;
+
+	/**
+	 * diffDataSplit
+	 *
+	 * Stores the diff data split up by left/right changes
+	 *
+	 * @access protected
+	 */
+	protected $diffDataSplit;
+
+	/**
 	 * diffDataName
 	 *
 	 * Filename used on last data diff
@@ -581,6 +599,113 @@ class GitPHP_FileDiff
 			return explode("\n", $this->diffData);
 		else
 			return $this->diffData;
+	}
+
+	/**
+	 * GetDiffSplit
+	 *
+	 * construct the side by side diff data from the git data
+	 * The result is an array of ternary arrays with 3 elements each:
+	 * First the mode ("" or "-added" or "-deleted" or "-modified"),
+	 * then the first column, then the second.
+	 *
+	 * @author Mattias Ulbrich
+	 *
+	 * @access public
+	 * @return an array of line elements (see above)
+	 */
+	public function GetDiffSplit()
+	{
+		if ($this->diffDataSplitRead) {
+			return $this->diffDataSplit;
+		}
+
+		$this->diffDataSplitRead = true;
+
+		$exe = new GitPHP_GitExe($this->project);
+
+		$rawBlob = $exe->Execute(GIT_CAT_FILE,
+			array("blob", $this->fromHash));
+		$blob  = explode("\n", $rawBlob);
+
+		$diffLines = explode("\n", $exe->Execute(GIT_DIFF,
+			array("-U0", $this->fromHash,
+				$this->toHash)));
+
+		unset($exe);
+
+		//
+		// parse diffs
+		$diffs = array();
+		$currentDiff = FALSE;
+		foreach($diffLines as $d) {
+			if(strlen($d) == 0)
+				continue;
+			switch($d[0]) {
+				case '@':
+					if($currentDiff)
+						$diffs[] = $currentDiff;
+					$comma = strpos($d, ",");
+					$line = -intval(substr($d, 2, $comma-2));
+					$currentDiff = array("line" => $line,
+						"left" => array(), "right" => array());
+					break;
+				case '+':
+					if($currentDiff)
+						$currentDiff["right"][] = substr($d, 1);
+					break;
+				case '-':
+					if($currentDiff)
+						$currentDiff["left"][] = substr($d, 1);
+					break;
+				case ' ':
+					echo "should not happen!";
+					if($currentDiff) {
+						$currentDiff["left"][] = substr($d, 1);
+						$currentDiff["right"][] = substr($d, 1);
+					}
+					break;
+			}
+		}
+		if($currentDiff)
+			$diffs[] = $currentDiff;
+
+		//
+		// iterate over diffs
+		$output = array();
+		$idx = 0;
+		foreach($diffs as $d) {
+			while($idx+1 < $d['line']) {
+				$h = $blob[$idx];
+				$output[] = array(' ', $h, $h);
+				$idx ++;
+			}
+
+			if(count($d['left']) == 0) {
+				$mode = '-added';
+			} elseif(count($d['right']) == 0) {
+				$mode = '-deleted';
+			} else {
+				$mode = '-modified';
+			}
+
+			for($i = 0; $i < count($d['left']) || $i < count($d['right']); $i++) {
+				$left = $i < count($d['left']) ? $d['left'][$i] : FALSE;
+				$right = $i < count($d['right']) ? $d['right'][$i] : FALSE;
+				$output[] = array($mode, $left, $right);
+			}
+
+			$idx += count($d['left']);
+		}
+
+		while($idx < count($blob)) {
+			$h = $blob[$idx];
+			$output[] = array(' ', $h, $h);
+			$idx ++;
+		}
+
+		$this->diffDataSplit = $output;
+		return $output;
 	}
 
 	/**
