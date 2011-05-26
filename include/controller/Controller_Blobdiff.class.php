@@ -48,9 +48,6 @@ class GitPHP_Controller_Blobdiff extends GitPHP_ControllerBase
 		if (isset($this->params['plain']) && ($this->params['plain'] === true)) {
 			return 'blobdiffplain.tpl';
 		}
-		if (isset($this->params['sidebyside']) && ($this->params['sidebyside'] === true)) {
-			return 'sidebyside.tpl';
-		}
 		return 'blobdiff.tpl';
 	}
 
@@ -64,7 +61,7 @@ class GitPHP_Controller_Blobdiff extends GitPHP_ControllerBase
 	 */
 	protected function GetCacheKey()
 	{
-		return (isset($this->params['hashbase']) ? $this->params['hashbase'] : '') . '|' . (isset($this->params['hash']) ? $this->params['hash'] : '') . '|' . (isset($this->params['hashparent']) ? $this->params['hashparent'] : '') . '|' . (isset($this->params['file']) ? sha1($this->params['file']) : '');
+		return (isset($this->params['hashbase']) ? $this->params['hashbase'] : '') . '|' . (isset($this->params['hash']) ? $this->params['hash'] : '') . '|' . (isset($this->params['hashparent']) ? $this->params['hashparent'] : '') . '|' . (isset($this->params['file']) ? sha1($this->params['file']) : '') . '|' . (isset($this->params['sidebyside']) && ($this->params['sidebyside'] === true) ? '1' : '');
 	}
 
 	/**
@@ -141,6 +138,10 @@ class GitPHP_Controller_Blobdiff extends GitPHP_ControllerBase
 
 		if (isset($this->params['plain']) && ($this->params['plain'] === true)) {
 			return;
+		}
+
+		if (isset($this->params['sidebyside']) && ($this->params['sidebyside'] === true)) {
+			$this->tpl->assign('sidebyside', true);
 		}
 
 		$commit = $this->project->GetCommit($this->params['hashbase']);
