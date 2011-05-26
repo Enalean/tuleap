@@ -24,22 +24,7 @@
      {t}blob{/t}:<a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=blob&amp;h={$blobparent->GetHash()}&amp;hb={$commit->GetHash()}&amp;f={$file}">{if $file}a/{$file}{else}{$blobparent->GetHash()}{/if}</a> -&gt; {t}blob{/t}:<a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=blob&amp;h={$blob->GetHash()}&amp;hb={$commit->GetHash()}&amp;f={$file}">{if $file}b/{$file}{else}{$blob->GetHash()}{/if}</a>
    </div>
    {* Display the sidebysidediff *}
-   <table class="diffTable">
-   {foreach from=$filediff->GetDiffSplit() item=lineinfo}
-     {if $lineinfo[0]=='added'}
-     <tr class="diff-added">
-     {elseif $lineinfo[0]=='deleted'}
-     <tr class="diff-deleted">
-     {elseif $lineinfo[0]=='modified'}
-     <tr class="diff-modified">
-     {else}
-     <tr>
-     {/if}
-       <td class="diff-left">{if $lineinfo[1]}{$lineinfo[1]|escape}{else}&nbsp;{/if}</td>
-       <td>{if $lineinfo[2]}{$lineinfo[2]|escape}{else}&nbsp;{/if}</td>
-     </tr>
-   {/foreach}
-   </table>
+   {include file='filediffsidebyside.tpl' diffsplit=$filediff->GetDiffSplit()}
  </div>
 
  {include file='footer.tpl'}
