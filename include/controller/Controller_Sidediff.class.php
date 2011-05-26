@@ -9,18 +9,6 @@
  * @subpackage Controller
  */
 
-/**
- * private little helper
- */
-function toH($in) {
-	if(!$in || strlen($in) == 0) {
-		return "&nbsp";
-	} else {
-		$in = htmlentities($in);
-		$in = str_replace(" ", "&nbsp;", $in);
-		return $in;
-	}
-}
 
 /**
  * Blobdiff controller class
@@ -204,7 +192,7 @@ class GitPHP_Controller_Sidediff extends GitPHP_ControllerBase
 		$idx = 0;
 		foreach($diffs as $d) {
 			while($idx+1 < $d['line']) {
-				$h = toH($blob[$idx]);
+				$h = $blob[$idx];
 				$output[] = array(' ', $h, $h);
 				$idx ++;
 			}
@@ -220,14 +208,14 @@ class GitPHP_Controller_Sidediff extends GitPHP_ControllerBase
 			for($i = 0; $i < count($d['left']) || $i < count($d['right']); $i++) {
 				$left = $i < count($d['left']) ? $d['left'][$i] : FALSE;
 				$right = $i < count($d['right']) ? $d['right'][$i] : FALSE;
-				$output[] = array($mode, toH($left), toH($right));
+				$output[] = array($mode, $left, $right);
 			}
 
 			$idx += count($d['left']);
 		}
 
 		while($idx < count($blob)) {
-			$h = toH($blob[$idx]);
+			$h = $blob[$idx];
 			$output[] = array(' ', $h, $h);
 			$idx ++;
 		}

@@ -49,7 +49,7 @@ div.log_link {
 /*
  * Diff display
  */
-div.pre { 
+.pre { 
 	white-space: pre; 
 }
 

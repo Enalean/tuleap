@@ -24,11 +24,11 @@
      {t}blob{/t}:<a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=blob&amp;h={$blobparent->GetHash()}&amp;hb={$commit->GetHash()}&amp;f={$file}">{if $file}a/{$file}{else}{$blobparent->GetHash()}{/if}</a> -&gt; {t}blob{/t}:<a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=blob&amp;h={$blob->GetHash()}&amp;hb={$commit->GetHash()}&amp;f={$file}">{if $file}b/{$file}{else}{$blob->GetHash()}{/if}</a>
    </div>
    {* Display the sidebysidediff *}
-   <table class="diffTable">
+   <table class="diffTable pre">
    {foreach from=$diffdata item=lineinfo}
      <tr>
-       <td class="diff{$lineinfo[0]} diff-left">{$lineinfo[1]}</td>
-       <td class="diff{$lineinfo[0]}">{$lineinfo[2]}</td>
+       <td class="diff{$lineinfo[0]} diff-left">{$lineinfo[1]|escape}</td>
+       <td class="diff{$lineinfo[0]}">{$lineinfo[2]|escape}</td>
      </tr>
    {/foreach}
    </table>
