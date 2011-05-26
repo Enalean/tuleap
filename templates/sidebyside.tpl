@@ -35,8 +35,8 @@
      {else}
      <tr>
      {/if}
-       <td class="diff-left">{$lineinfo[1]|escape}</td>
-       <td>{$lineinfo[2]|escape}</td>
+       <td class="diff-left">{if $lineinfo[1]}{$lineinfo[1]|escape}{else}&nbsp;{/if}</td>
+       <td>{if $lineinfo[2]}{$lineinfo[2]|escape}{else}&nbsp;{/if}</td>
      </tr>
    {/foreach}
    </table>
