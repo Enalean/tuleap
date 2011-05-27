@@ -83,6 +83,10 @@ fieldset {
 .threadmsg { background-color: #E3E3E3; }
 
 /* .footer { color: #333333; } */
+#footer {
+    width: 100%;
+    text-align: center;
+} 
 .standardtable { width: 99%; border-spacing: 0; border: 0; color: #333333; }
 
 /* content frame specific */
@@ -232,6 +236,39 @@ td.artifact_spacer { width: 5%; }
 }
 /* }}} */
 
+/* {{{ Home Page */
+#homepage {
+}
+
+#homepage_speech {
+    float: left;
+    width: 70%;
+}
+
+#homepage_boxes {
+    float: right;
+    width: 250px;
+}
+
+#homepage_news {
+    clear: both;
+}
+/* }}} */
+
+/* {{{ News */
+.news_summary {
+    font-weight: bold;
+}
+
+.news_date {
+    font-style: italic;
+}
+
+.news_author {
+    font-style: italic;
+}
+/* }}} */
+
 /* {{{ File Release System */
 .frs_filename_col {
     width: 44%;
@@ -308,6 +345,7 @@ table.release tr td img {
 }
 .widget_content {
     clear:both;
+    padding: 0.5em;
 }
 .widget_preferences {
     background: #E0DDD2;
@@ -319,10 +357,10 @@ table.release tr td img {
 .widget_titlebar {
     background: #E0DDD2 url(../images/widget-header.png) left top repeat-x; 
     font-weight: bold; 
-    text-align: center; 
+    text-align: left; 
      
     color: #555;
-    height:1.2em;
+    height:18px;
     padding-left:40px;
     padding-right:4px;
 }
@@ -341,7 +379,7 @@ table.release tr td img {
 }
 .widget_titlebar_rss,
 .widget_titlebar_prefs {
-    padding:2px 4px;
+    padding:1px;
 }
 .widget_titlebar_rss a, .widget_titlebar_rss a:link, .widget_titlebar_rss a:visited, .widget_titlebar_rss a:hover,
 .widget_titlebar_prefs a, .widget_titlebar_prefs a:link, .widget_titlebar_prefs a:visited, .widget_titlebar_prefs a:hover {
@@ -1184,6 +1222,26 @@ ul.ServiceMenu li.current {
 .site_admin_user_status_S {
     background-color: blue;
 }
+
+
+#site_admin_main_table {
+    width: 100%;
+}
+
+#site_admin_main_table td {
+    width: 30%;
+    vertical-align: top;
+}
+
+#site_admin_main_table ul {
+    padding: 0;
+    margin: 0;
+}
+
+#site_admin_main_table li {
+    margin-left: 1em;
+}
+
 /* }}}*/
 
 /* {{{ Projects privacy highlighting */

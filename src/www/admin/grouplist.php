@@ -12,10 +12,6 @@ require_once('www/admin/admin_utils.php');
 
 session_require(array('group'=>'1','admin_flags'=>'A'));
 
-site_admin_header(array('title'=>$Language->getText('admin_grouplist','title')));
-
-
-print "<p>".$Language->getText('admin_grouplist','for_categ').": ";
 $dao = new ProjectDao(CodendiDataAccess::instance());
 $offset = $request->getValidated('offset', 'uint', 0);
 if ( !$offset || $offset < 0 ) {
@@ -39,17 +35,26 @@ if($request->valid($vStatus)) {
     }
 }
 
+//return projects matching given parameters
+$res = $dao->returnAllProjects($offset, $limit, $status, $group_name_search);
+if ($res['numrows'] == 1) {
+    $row = $res['projects']->getRow();
+    $GLOBALS['Response']->redirect('/admin/groupedit.php?group_id='.$row['group_id']);
+}
+
+site_admin_header(array('title'=>$Language->getText('admin_grouplist','title')));
+
+print "<p>".$Language->getText('admin_grouplist','for_categ').": ";
 if ($group_name_search !="0") {
     print "<b>".$Language->getText('admin_grouplist','begins_with',array($group_name_search))."</b>\n";
 } else {
     print "<b>".$Language->getText('admin_grouplist','all_categ')."</b>\n";
 }
-//return projects matching given parameters
-$res = $dao->returnAllProjects($offset, $limit, $status, $group_name_search);
+
 
 ?>
 
-<TABLE width=100% border=1>
+<TABLE width="100%" border="1">
 <TR>
 <TD><b><?php echo $Language->getText('admin_groupedit','grp_name')." ".$Language->getText('admin_grouplist','click');?></b></TD>
 <TD><b><?php echo $Language->getText('admin_groupedit','unix_grp'); ?></b></TD>
@@ -64,7 +69,7 @@ $res = $dao->returnAllProjects($offset, $limit, $status, $group_name_search);
 $odd_even = array('boxitem', 'boxitemalt');
 $i = 0;
 // Get project type label
-$template =& TemplateSingleton::instance();
+$template = TemplateSingleton::instance();
 
 if ($group_name_search != "0") {
     $group_name_param="&group_name_search=$group_name_search";
@@ -80,7 +85,7 @@ if ($status !="") {
 
 if ($res['numrows'] > 0) {
     $daoUsers = new UserGroupDao(CodendiDataAccess::instance());
-    while ($grp = db_fetch_array($res['projects'])) {
+    foreach ($res['projects'] as $grp) {
         print "<tr class=\"". $odd_even[$i++ % count($odd_even)] ."\">";
         print '<td><a href="groupedit.php?group_id='.$grp['group_id'].'">'.$grp['group_name'].'</a></td>';
         print '<td>'.$grp['unix_group_name'].'</td>';

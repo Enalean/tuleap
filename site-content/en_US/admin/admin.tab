@@ -13,38 +13,38 @@
 #-----------------------------------------------
 # Script: SF/www/admin/index.php
 #
-admin_main	title		Site Administration
-admin_main	header		Administrative Functions
+admin_main	title		Site administration
+admin_main	header		Administrative functions
 admin_main	message		<b>Warning!</b> Navigating the admin functions with the <b>back</b> button is highly unadvised.
-admin_main	header_user	User Administration
-admin_main	display_user	Display Users Beginning with :
-admin_main	search_user	or Search (email,user name,real name,userid)&nbsp;:
+admin_main	header_user	User administration
+admin_main	display_user	Display users beginning with :
+admin_main	search_user	Search (email, user name, real name, user id) :
 admin_main	search	Search
-admin_main	pending_user	Users in <a href="$1"><B>P</B> (pending) Status</a>
+admin_main	pending_user	Users in <a href="$1"><B>P</B> (pending) status</a>
 admin_main	validated_user	Validated users <a href="$1"><B>pending email activation</B></a>
 admin_main	need_approval	approval needed
 admin_main	need_validation	validation needed
-admin_main	header_group	Group Administration
-admin_main	display_group	Display Groups Beginning with :
-admin_main	search_group	or Search (groupid,groupunixname,groupname)&nbsp;:
+admin_main	header_group	Project administration
+admin_main	display_group	Display projects neginning with :
+admin_main	search_group	Search (group id, unix name, real name) :
 admin_main	all_users	All <a href="$1">users</a>
 admin_main	all_groups	All <a href="$1">groups</a>
-admin_main	incomplete_group	Groups in <a href="$1"><B>I</B> (incomplete) Status</A>
-admin_main	pending_group	Groups in <a href="$1"><B>P</B> (pending) Status</A>
-admin_main	deleted_group	Groups in <a href="$1"><B>D</B> (deleted) Status</A>
-admin_main	header_svc	Service Administration
+admin_main	incomplete_group	Groups in <a href="$1"><B>I</B> (incomplete) status</A>
+admin_main	pending_group	Groups in <a href="$1"><B>P</B> (pending) status</A>
+admin_main	deleted_group	Groups in <a href="$1"><B>D</B> (deleted) status</A>
+admin_main	header_svc	Service administration
 admin_main	configure_svc	Configuration of predefined services
-admin_main	header_ref	Reference Administration
+admin_main	header_ref	Reference administration
 admin_main	configure_ref	Configuration of predefined references
-admin_main	header_tracker	Trackers Administration
-admin_main	tracker_remove	Pending Trackers Removal
+admin_main	header_tracker	Trackers administration
+admin_main	tracker_remove	Pending trackers removal
 admin_main	tracker_template	Configuration of predefined tracker templates
 admin_main	header_stat	Statistics
-admin_main	stat_login	View Most Recent Logins
-admin_main	stat_spu	Generate Site/Projects/Users Statistics
-admin_main	header_utils	Site Utilities
-admin_main	mail_engine	Mass Mail Engine
-admin_main	header_sstat	Site Statistics
+admin_main	stat_login	View most recent logins
+admin_main	stat_spu	Generate Site/Projects/Users statistics
+admin_main	header_utils	Site utilities
+admin_main	mail_engine	Mass mail engine
+admin_main	header_sstat	Site statistics
 admin_main	header_plugins	Plugins
 admin_main	servers	Servers
 admin_main	servers_admin	Servers administration
@@ -53,20 +53,20 @@ admin_main	sstat_reg_g	Registered projects
 admin_main	sstat_reg_act_g	Registered active projects
 admin_main	sstat_pend_g	Pending projects
 admin_main	sstat_pend_u	Pending users
-admin_main	site_news	Site News
-admin_main	site_news_approval	Site News Approval
-admin_main	trove_cat	Trove Categories
-admin_main	trove_cat_list	Trove Categories List
-admin_main	trove_cat_add	Trove Categories Add
-admin_main	skills	People Skills
-admin_main	new_user	New User
+admin_main	site_news	Site news
+admin_main	site_news_approval	Site news approval
+admin_main	trove_cat	Trove categories
+admin_main	trove_cat_list	List all
+admin_main	trove_cat_add	Add one
+admin_main	skills	People skills
+admin_main	new_user	New user
 admin_main	active_users	Per activities
 admin_main	lastday_users	Last 24 hours
 admin_main	lastweek_users	Last week
 admin_main	lastmonth_users	Last month
 admin_main	last3months_users	Last 3 months
-admin_main	stat_projects	Projects Statistics
-admin_main	stat_users	Users Statistics
+admin_main	stat_projects	Projects statistics
+admin_main	stat_users	Users statistics
 admin_main	status_user	Per status 
 admin_main	statusactif_user	active
 admin_main	statusrestricted_user	restricted
@@ -75,13 +75,16 @@ admin_main	statusdeleted_user	deleted
 admin_main	statusvalidated_user	validated
 admin_main	statuspending_user	pending
 admin_main	statustotal_user	total
-admin_main	desc_fields	Project Description Fields
-admin_main	desc_fields_edit	Project Description Fields Edition
-admin_main	system_event	System Events
-admin_main	sysevent_monitor	System Events Monitor
+admin_main	desc_fields	Project Description fields
+admin_main	desc_fields_edit	Project description fields edition
+admin_main	system_event	System events
+admin_main	sysevent_monitor	System events monitor
 admin_main	documentation	Documentation
-admin_main	install_guide	Codendi Installation Guide
-admin_main	admin_guide	Codendi Administration Guide
+admin_main	install_guide	Installation guide
+admin_main	admin_guide	Administration guide
+admin_main	conf_project	Project configuration
+admin_main	tool_internal	Internal
+admin_main	tool_external	3rd party
 #
 #-----------------------------------------------
 # Script: SF/www/admin/admin_utils.php

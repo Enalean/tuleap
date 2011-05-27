@@ -11,31 +11,33 @@ require_once('www/new/new_utils.php');
 require_once('www/stats/site_stats_utils.php');
 require_once('common/frs/FRSPackageFactory.class.php');
 require_once('common/frs/FRSReleaseFactory.class.php');
+require_once('common/widget/Widget_Static.class.php');
 
 function show_features_boxes() {
     GLOBAL $HTML,$Language;
     $return  = "";
+    
+    $w = new Widget_Static($GLOBALS['sys_name'].' '.$Language->getText('include_features_boxes','stats'));
+    $w->setContent(show_sitestats());
+    $w->display();
 
-    $return .= $HTML->box1_top($GLOBALS['sys_name'].' '.$Language->getText('include_features_boxes','stats'),0);
-    $return .= show_sitestats();
-    $return .= $HTML->box1_bottom(0);
+    $w = new Widget_Static($Language->getText('include_features_boxes','top_download_yesterday'));
+    $w->setContent(show_top_downloads());
+    $w->display();
 
-    $return .= $HTML->box1_top($Language->getText('include_features_boxes','top_download_yesterday'), 0);
-    $return .= show_top_downloads();
-    $return .= $HTML->box1_bottom(0);
+    $w = new Widget_Static($Language->getText('include_features_boxes','newest_releases'));
+    $w->setContent(show_top_downloads());
+    $w->setRssUrl('/export/rss_sfnewreleases.php');
+    $w->display();
 
-    $return .= $HTML->box1_top($Language->getText('include_features_boxes','newest_releases').' <A href="/export/rss_sfnewreleases.php" title="'.$Language->getText('include_features_boxes','newest_releases').' '.$Language->getText('include_features_boxes','rss_format').'">['.$Language->getText('include_features_boxes','xml').']</A>', 0);
-    $return .= show_newest_releases();
-    $return .= $HTML->box1_bottom(0);
+    $w = new Widget_Static($Language->getText('include_features_boxes','newest_projects'));
+    $w->setContent(show_newest_projects());
+    $w->setRssUrl('/export/rss_sfprojects.php?type=rss&option=newest');
+    $w->display();
 
-    $return .= $HTML->box1_top($Language->getText('include_features_boxes','newest_projects').' <A href="/export/rss_sfprojects.php?type=rss&option=newest" title="'.$Language->getText('include_features_boxes','newest_projects').' '.$Language->getText('include_features_boxes','rss_format').'">['.$Language->getText('include_features_boxes','xml').']</A>', 0);
-    $return .= show_newest_projects();
-    $return .= $HTML->box1_bottom(0);
-
-    $return .= $HTML->box1_top($Language->getText('include_features_boxes','most_active_week'), 0);
-    $return .= show_highest_ranked_projects();
-    $return .= $HTML->box1_bottom(0);
-    return $return;
+    $w = new Widget_Static($Language->getText('include_features_boxes','most_active_week'));
+    $w->setContent(show_top_downloads());
+    $w->display();
 }
 
 function show_top_downloads() {

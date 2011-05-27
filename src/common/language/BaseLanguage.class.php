@@ -353,7 +353,7 @@ class BaseLanguage {
     // and is used either to include long piece of text that are inconvenient
     // to format on one line as the .tab file does or because there is some
     // PHP code that can be cutomized
-    function getContent($file, $lang_code = null, $plugin_name = null){
+    function getContent($file, $lang_code = null, $plugin_name = null, $ext = '.txt'){
 
         // Language for current user unless it is specified in the param list
         if (!isset($lang_code)) { 
@@ -362,9 +362,9 @@ class BaseLanguage {
 
         if (is_null($plugin_name)) {
             // Test first the custom directory
-            $custom_fn = $GLOBALS['sys_custom_incdir']."/".$lang_code."/".$file.".txt";
+            $custom_fn = $GLOBALS['sys_custom_incdir']."/".$lang_code."/".$file.$ext;
         } else {
-            $custom_fn = $GLOBALS['sys_custompluginsroot'].'/'.$plugin_name.'/site-content/'.$lang_code.'/'.$file.'.txt' ;
+            $custom_fn = $GLOBALS['sys_custompluginsroot'].'/'.$plugin_name.'/site-content/'.$lang_code.'/'.$file.$ext ;
         }
         if ( file_exists($custom_fn) ) {
             // The custom file exists. 
@@ -373,9 +373,9 @@ class BaseLanguage {
             // Use the default file
             // Check first if exist
             if (is_null($plugin_name)) {
-                $fn = $GLOBALS['sys_incdir']."/".$lang_code."/".$file.".txt";
+                $fn = $GLOBALS['sys_incdir']."/".$lang_code."/".$file.$ext;
             } else {
-                $fn = $GLOBALS['sys_pluginsroot'].'/'.$plugin_name.'/site-content/'.$lang_code.'/'.$file.".txt";
+                $fn = $GLOBALS['sys_pluginsroot'].'/'.$plugin_name.'/site-content/'.$lang_code.'/'.$file.$ext;
             }
             if ( file_exists($fn) ) {
                 // The custom file exists. 

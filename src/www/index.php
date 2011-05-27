@@ -10,45 +10,32 @@ require_once('pre.php');
 require_once('www/forum/forum_utils.php');
 require_once('features_boxes.php');
 
-
 $HTML->header(array('title'=>$Language->getText('homepage', 'title')));
 
-?>
-<!-- whole page table -->
-<TABLE width=100% cellpadding=5 cellspacing=0 border=0>
-<?php
+echo '<div id="homepage">';
 
-$display_boxes = !isset($GLOBALS['sys_display_homepage_boxes']) || $GLOBALS['sys_display_homepage_boxes'] != 0;
+echo '<div id="homepage_speech">';
+include ($Language->getContent('homepage/homepage', null, null, '.php'));
+echo '</div>';
 
-if ($display_boxes) {
-    $width='65';
-} else {
-    $width='100';
+if (!isset($GLOBALS['sys_display_homepage_boxes']) || (isset($GLOBALS['sys_display_homepage_boxes']) && $GLOBALS['sys_display_homepage_boxes'] == 1)) {
+    echo '<div id="homepage_boxes">';
+    show_features_boxes();
+    echo '</div>';
 }
-echo ' <TR><TD width="'.$width.'%" VALIGN="TOP">';
 
-echo stripcslashes($Language->getText('homepage', 'introduction',array($GLOBALS['sys_org_name'],$GLOBALS['sys_name'])));
-$HTML->box1_top($Language->getText('homepage', 'news_title')."<A href=\"/export/rss_sfnews.php\" title=\"".$Language->getText('homepage', 'news_title2').'">&nbsp;[XML]</A>');
-echo news_show_latest($GLOBALS['sys_news_group'],5,true,false,false,5);
-$HTML->box1_bottom();
-?>
-
-</TD>
-
-<?php
-if ($display_boxes) {
-    echo '<TD width="35%" VALIGN="TOP">';
-    // Allow front page to restricted users but not the boxes that may disclose informations
-    echo show_features_boxes();
-    echo '</TD></TR>';
+// HTML is sad, we need to keep this div to clear the "float:right/left" that might exists before
+// Yet another dead kitten somewhere :'(
+echo '<div id="homepage_news">';
+if (!isset($GLOBALS['sys_display_homepage_news']) || (isset($GLOBALS['sys_display_homepage_news']) && $GLOBALS['sys_display_homepage_news'] == 1)) {
+    $w = new Widget_Static($Language->getText('homepage', 'news_title'));
+    $w->setContent(news_show_latest($GLOBALS['sys_news_group'],5,true,false,true,5));
+    $w->setRssUrl('/export/rss_sfnews.php');
+    $w->display();
 }
-?>
-<!-- LJ end of the main page body -->
-</TABLE>
-<!-- LJ Added a missing end center -->
-</CENTER>
+echo '</div>';
 
-<?php
+echo '</div>';
 
 $HTML->footer(array());
 

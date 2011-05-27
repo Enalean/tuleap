@@ -94,10 +94,9 @@ function news_show_latest($group_id='',$limit=10,$show_summaries=true,$allow_sub
 	$wclause='news_bytes.is_approved=1';
     }
 
-    $sql="SELECT groups.group_name,groups.unix_group_name,user.user_name,news_bytes.forum_id,news_bytes.summary,news_bytes.date,news_bytes.details ".
-	"FROM user,news_bytes,groups ".
+    $sql="SELECT groups.group_name,groups.unix_group_name,news_bytes.submitted_by,news_bytes.forum_id,news_bytes.summary,news_bytes.date,news_bytes.details ".
+	"FROM news_bytes,groups ".
 	"WHERE $wclause ".
-	"AND user.user_id=news_bytes.submitted_by ".
 	"AND news_bytes.group_id=groups.group_id ".
 	'ORDER BY date DESC LIMIT '.db_ei($limit+$tail_headlines);
 
@@ -139,21 +138,19 @@ function news_show_latest($group_id='',$limit=10,$show_summaries=true,$allow_sub
                 
                 if (!$limit) {
         
-                $return .= '<li><A HREF="/forum/forum.php?forum_id='. db_result($result,$i,'forum_id') .'"><B>'. db_result($result,$i,'summary') . '</B></A>';
-                $return .= ' &nbsp; <I>'. format_date($GLOBALS['Language']->getText('system', 'datefmt'),db_result($result,$i,'date')).'</I><br>';
+                $return .= '<li><span class="news_summary"><a href="/forum/forum.php?forum_id='. db_result($result,$i,'forum_id') .'">'. db_result($result,$i,'summary') . '</a></span>';
+                $return .= ' <span class="news_date">'. html_time_ago(db_result($result,$i,'date')).'</span><br>';
                 } else {
                 $return .= '
-                        <A HREF="/forum/forum.php?forum_id='. db_result($result,$i,'forum_id') .'"><B>'. db_result($result,$i,'summary') . '</B></A>';
+                        <span class="news_summary"><a href="/forum/forum.php?forum_id='. db_result($result,$i,'forum_id') .'">'. db_result($result,$i,'summary') . '</a></span>';
         
                 if (!$flat) {
                     $return .= '
                                                    <BR>&nbsp;';
                 }
-                $return .= '&nbsp;&nbsp;&nbsp;<I>'.
-                    $hp->purify($uh->getDisplayNameFromUserName(db_result($result,$i,'user_name')), CODENDI_PURIFIER_CONVERT_HTML) .
-                    ' - '.
-                    format_date($GLOBALS['Language']->getText('system', 'datefmt'),db_result($result,$i,'date')) .' </I>'.
-                    $proj_name . $summ_txt;
+                $return .= ' <span class="news_author">'.$uh->getLinkOnUserFromUserId(db_result($result,$i,'submitted_by')).'</span>'.
+                           ' <span class="news_date">'.html_time_ago(db_result($result,$i,'date')).'</span>'.
+                           $proj_name . $summ_txt;
         
                 $sql='SELECT count(*) FROM forum WHERE group_forum_id='.db_result($result,$i,'forum_id');
                 $res2 = db_query($sql);
@@ -193,7 +190,7 @@ function news_show_latest($group_id='',$limit=10,$show_summaries=true,$allow_sub
     }
     
     if ($tail_headlines) {
-	$return .= '</ul><HR width="100%" size="1" noshade>'."\n";
+	$return .= '</ul>'."\n";
     }
     
     $return .= '<div align="center">'

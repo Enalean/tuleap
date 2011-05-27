@@ -834,7 +834,7 @@ class Layout extends Response {
             }
         }
         if ($widget->hasRss()) {
-            echo '<div class="widget_titlebar_rss"><a href="'.$widget->getRssUrl($owner_id, $owner_type).'">rss</a></div>';
+            echo '<div class="widget_titlebar_rss"><a href="'.$widget->getRssUrl($owner_id, $owner_type).'">'.$this->getImage('ic/feed.png').'</a></div>';
         }
         echo '</div>';
         $style = '';
@@ -872,7 +872,12 @@ class Layout extends Response {
         return 'ic/toggle_minus.png';
     }
 
-    // Box Top, equivalent to html_box1_top()
+    /**
+     * Box Top, equivalent to html_box1_top()
+     * 
+     * @see Widget_Static
+     * @deprecated You should consider using Widget_Static instead
+     */
     function box1_top($title,$echoout=1,$bgcolor='',$cols=2){
             $return = '<TABLE class="boxtable" cellspacing="1" cellpadding="5" width="100%" border="0">
                         <TR class="boxtitle" align="center">
@@ -887,7 +892,12 @@ class Layout extends Response {
             }
     }
 
-    // Box Middle, equivalent to html_box1_middle()
+    /**
+     * Box Middle, equivalent to html_box1_middle()
+     * 
+     * @see Widget_Static
+     * @deprecated You should consider using Widget_Static instead
+     */
     function box1_middle($title,$bgcolor='',$cols=2) {
             return '
                                 </TD>
@@ -900,7 +910,12 @@ class Layout extends Response {
                                 <TD colspan="'.$cols.'">';
     }
 
-    // Box Bottom, equivalent to html_box1_bottom()
+    /**
+     * Box Bottom, equivalent to html_box1_bottom()
+     * 
+     * @see Widget_Static
+     * @deprecated You should consider using Widget_Static instead
+     */
     function box1_bottom($echoout=1) {
             $return = '
                 </TD>

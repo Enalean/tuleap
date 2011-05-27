@@ -334,6 +334,28 @@ td.artifact_spacer { width: 5%; }
 }
 /* }}} */
 
+/* {{{ Home Page */
+#homepage {
+    margin-top: 1em;
+}
+
+#homepage_speech {
+    float: left;
+    width: 70%;
+}
+
+#homepage_boxes {
+    float: right;
+    width: 250px;
+}
+
+#homepage_news {
+    clear: both;
+    width: 75%;
+    margin: auto;
+}
+/* }}} */
+
 /*
  * Tabs
  *
@@ -503,8 +525,6 @@ img {
     background: white url(../images/headergrad_orange.png) left top repeat-x; 
     font-weight: normal; 
     text-align: center; 
-    text-transform: capitalize; 
-    height:1.2em;
     padding-left:10px;
     padding-right:4px;
 }
@@ -516,17 +536,7 @@ img {
     color: white;
     float:left;
 }
-.widget_titlebar_close,
-.widget_titlebar_rss,
-.widget_titlebar_prefs,
-.widget_titlebar_minimize,
-.widget_titlebar_maximize {
-    float:right;
-}
-.widget_titlebar_rss,
-.widget_titlebar_prefs {
-    padding:2px 4px;
-}
+
 .widget_titlebar_rss a, .widget_titlebar_rss a:link, .widget_titlebar_rss a:visited, .widget_titlebar_rss a:hover,
 .widget_titlebar_prefs a, .widget_titlebar_prefs a:link, .widget_titlebar_prefs a:visited, .widget_titlebar_prefs a:hover {
     color:#555;

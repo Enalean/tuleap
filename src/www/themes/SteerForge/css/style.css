@@ -380,6 +380,27 @@ td.artifact_spacer { width: 5%; }
 }
 /* }}} */
 
+/* {{{ Home Page */
+#homepage {
+    margin: auto;
+    margin-top: 1em;
+    width: 960px;
+}
+
+#homepage_speech {
+    float: none;
+}
+
+#homepage_boxes {
+    float: none;
+    display: none;
+}
+
+#homepage_news {
+    clear: both;
+}
+/* }}} */
+
 /*
  * Tabs
  *
@@ -553,8 +574,6 @@ img {
     font-size: 90%;
     font-weight: normal; 
     text-align: center; 
-    text-transform: capitalize; 
-    height:1.2em;
     padding-left:10px;
     padding-right:4px;
 }
@@ -566,17 +585,7 @@ img {
     color: white;
     float:left;
 }
-.widget_titlebar_close,
-.widget_titlebar_rss,
-.widget_titlebar_prefs,
-.widget_titlebar_minimize,
-.widget_titlebar_maximize {
-    float:right;
-}
-.widget_titlebar_rss,
-.widget_titlebar_prefs {
-    padding:2px 4px;
-}
+
 .widget_titlebar_rss a, .widget_titlebar_rss a:link, .widget_titlebar_rss a:visited, .widget_titlebar_rss a:hover,
 .widget_titlebar_prefs a, .widget_titlebar_prefs a:link, .widget_titlebar_prefs a:visited, .widget_titlebar_prefs a:hover {
     color: lightgray;

@@ -309,6 +309,28 @@ td.artifact_spacer { width: 5%; }
 }
 /* }}} */
 
+/* {{{ Home Page */
+#homepage {
+    margin-top: 1em;
+}
+
+#homepage_speech {
+    float: left;
+    width: 70%;
+}
+
+#homepage_boxes {
+    float: right;
+    width: 250px;
+}
+
+#homepage_news {
+    clear: both;
+    width: 75%;
+    margin: auto;
+}
+/* }}} */
+
 /*
  * Tabs
  *
@@ -484,12 +506,11 @@ img {
 }
 .widget_titlebar {
     background: #E0DDD2 url(../images/widget-header.png) left top repeat-x; 
-    font-weight: bold; 
-    text-align: center; 
-    text-transform: capitalize; 
+    font-weight: normal; 
+    text-align: left;  
     color: #555;
-    height:1.2em;
-    padding-left:40px;
+    height:18px;
+    padding-left:1em;
     padding-right:4px;
 }
 .widget_titlebar_handle {
@@ -507,7 +528,7 @@ img {
 }
 .widget_titlebar_rss,
 .widget_titlebar_prefs {
-    padding:2px 4px;
+    padding:1px;
 }
 .widget_titlebar_rss a, .widget_titlebar_rss a:link, .widget_titlebar_rss a:visited, .widget_titlebar_rss a:hover,
 .widget_titlebar_prefs a, .widget_titlebar_prefs a:link, .widget_titlebar_prefs a:visited, .widget_titlebar_prefs a:hover {

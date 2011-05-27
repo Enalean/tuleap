@@ -4,14 +4,5 @@
 // This file is licensed under the GNU General Public License version 2. See the file COPYING.
 //
 -->
-<center>
-<span class="footer">
-
-<!-- This Copyright statement below MUST NOT be MODIFIED and MUST ALWAYS
-APPEAR IN THE FOOTER -->
-Logiciel Codendi&trade;. Version <?php echo $version; ?>. Copyright 1999-2000 &copy; The SourceForge Crew. Copyright &copy; 2001-<?php echo date('Y',time()); ?> Xerox Corporation.
-
-Le logiciel Codendi&trade; est couvert par la licence <a href="http://www.fsf.org/licenses/gpl.html">GNU General Public License</a> version 2.
-</span>
-</center>
-<BR>&nbsp;
+<!-- This Copyright statement below MUST NOT be MODIFIED and MUST ALWAYS APPEAR IN THE FOOTER -->
+<div id="footer">Tuleap&trade; version <?php echo $version; ?>. Copyright 1999-2000 &copy; The SourceForge Crew. Copyright &copy; 2001-2010 Xerox Corporation. Copyright &copy; 2004-2011 STMicroelectronics. Copyright &copy; 2011 Enalean.</div>

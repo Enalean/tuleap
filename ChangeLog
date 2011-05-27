@@ -3,6 +3,15 @@ Version 4.0.19 - Not released yet
 	* backlog #124814: Notification issue when documents are removed
 
 	* Git plugin v1.10 see separated ChangeLog.
+	* Improve themability of HomePage
+		* New css selectors for each homepage elements and for news
+		* "boxes" (Site stats, most active projects, etc) now looks like widgets
+		* Site admin can hide news from front page (new config item in local.inc: 'sys_display_homepage_news' (backward compatible)
+		* Site admin has more (and easier) control on the "welcome speech". It's no longer a string but a dedicted page (backward compatible)
+		* New theme: Tuleap
+	* Improve Site Admin experience
+		* Rewrite front page with widget to have a better organization
+		* Improve search of user and groups (more direct results and better output)
 
 Version 4.0.18.2 - Monday, 23rd May 2011
 	== Bug fix ==
