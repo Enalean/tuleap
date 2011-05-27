@@ -26,7 +26,7 @@ if ($request->existAndNonEmpty('groupsearch')) {
 
 $HTML->header(array('title'=>$Language->getText('admin_search','title')));
 
-echo "<p>Legacy page, please search in group or user directly</p>"
+echo "<p>Legacy page, please search in group or user directly</p>";
 $GLOBALS['Response']->redirect('/admin');
 
 $HTML->footer(array());
