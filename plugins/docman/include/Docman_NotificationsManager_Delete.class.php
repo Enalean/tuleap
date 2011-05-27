@@ -135,7 +135,7 @@ class Docman_NotificationsManager_Delete extends Docman_NotificationsManager {
                 $user = $um->getUserById($row['user_id']);
                 if ($user && $dpm->userCanRead($user, $params['item']->getId()) && $dpm->userCanAccess($user, $params['item']->getParentId()) && $dpm->userCanAccess($user, $row['object_id'])) {
                     $this->_listeners[$user->getId()] = array(
-                        'user'   => &$user,
+                        'user'  => $user,
                         'items' => array()
                     );
                 }
