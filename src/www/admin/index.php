@@ -141,9 +141,8 @@ $wUser->setContent('
   <li>'.$Language->getText('admin_main', 'all_users',array("userlist.php")).'</li>
   <li>'.$Language->getText('admin_main', 'display_user').$letter_links.'</li>
   <li>'.$Language->getText('admin_main', 'search_user').'
-    <form name="usersrch" action="search.php" method="post" style="display: inline;">
-      <input type="text" name="search">
-      <input type="hidden" name="usersearch" value="1">
+    <form name="usersrch" action="userlist.php" method="get" style="display: inline;">
+      <input type="text" name="user_name_search">
       <input type="submit" value="'.$Language->getText('admin_main', 'search').'">
     </form>
   </li>

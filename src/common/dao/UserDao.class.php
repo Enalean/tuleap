@@ -668,8 +668,11 @@ class UserDao extends DataAccessObject {
      */
     function listAllUsers ($pattern = "", $offset, $limit) {
         $stm = "";
-        if ($pattern!="") {
-            $stm = ' WHERE user_name LIKE '.$this->da->quoteSmart($pattern.'%');
+        if ($pattern != "") {
+            $pattern = $this->da->quoteSmart('%'.$pattern.'%');
+            $stm = ' WHERE (user_name LIKE '.$pattern;
+            $stm .= '  OR user_id LIKE '.$pattern;
+            $stm .= '  OR realname LIKE '.$pattern.')';
         }
     
         $sql='SELECT SQL_CALC_FOUND_ROWS * FROM user ' 

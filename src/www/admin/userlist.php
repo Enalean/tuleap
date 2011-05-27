@@ -26,7 +26,9 @@ function show_users_list ($res, $offset, $limit, $user_name_search="") {
     $odd_even = array('boxitem', 'boxitemalt');
     if ($user_name_search != "") {
         $user_name_param="&user_name_search=$user_name_search";
-    } else  $user_name_param="";
+    } else {
+        $user_name_param="";
+    }
 
     $i = 0;
     echo "<tr><th>".$Language->getText('include_user_home','login_name')."</th>";
@@ -73,24 +75,22 @@ function show_users_list ($res, $offset, $limit, $user_name_search="") {
             echo "\n<TD><span class=\"site_admin_user_status_".$usr['status']."\">&nbsp;</span>".$status."</TD>";
             echo "\n</TR>";
         }
-    
-        echo "</TABLE>";
-        echo '<div style="text-align:center" class="'. util_get_alt_row_color($i++) .'">';
- 
-        if ($offset > 0) {
-            echo  '<a href="?offset='.($offset-$limit).$user_name_param.'">[ '.$Language->getText('project_admin_utils', 'previous').'  ]</a>';
-            echo '&nbsp;';
-        }
-        if (($offset + $limit) < $res['numrows']) {
-            echo '&nbsp;';
-            echo '<a href="?offset='.($offset+$limit).$user_name_param.'">[ '.$Language->getText('project_admin_utils', 'next').' ]</a>';
-        }
-        echo '</div>';
-        echo '<div style="text-align:center" class="'. util_get_alt_row_color($i++) .'">';
-        echo ($offset+$i-2).'/'.$res['numrows'];
-        echo '</div>';
-    
     }
+    echo "</TABLE>";
+    echo '<div style="text-align:center" class="'. util_get_alt_row_color($i++) .'">';
+
+    if ($offset > 0) {
+        echo  '<a href="?offset='.($offset-$limit).$user_name_param.'">[ '.$Language->getText('project_admin_utils', 'previous').'  ]</a>';
+        echo '&nbsp;';
+    }
+    if (($offset + $limit) < $res['numrows']) {
+        echo '&nbsp;';
+        echo '<a href="?offset='.($offset+$limit).$user_name_param.'">[ '.$Language->getText('project_admin_utils', 'next').' ]</a>';
+    }
+    echo '</div>';
+    echo '<div style="text-align:center" class="'. util_get_alt_row_color($i++) .'">';
+    echo ($offset+$i-2).'/'.$res['numrows'];
+    echo '</div>';
 }
 // Administrative functions
 if (!isset($action)) {

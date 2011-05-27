@@ -10,8 +10,14 @@ require_once('pre.php');
 $hp = Codendi_HTMLPurifier::instance();
 session_require(array('group'=>'1','admin_flags'=>'A'));
 
-if ($search == "") {
-  exit_error("ERROR",$Language->getText('admin_search','error_nowholedb'));
+$search = $request->getValidated('search', 'string', '');
+if ($search == '') {
+    $GLOBALS['Response']->addFeedback('error', $Language->getText('admin_search','error_nowholedb'));
+    $GLOBALS['Response']->redirect('/admin');
+}
+
+if ($request->existAndNonEmpty('usersearch')) {
+    $GLOBALS['Response']->redirect('/admin/userlist.php?user_name_search='.urlencode($search));
 }
 
 $HTML->header(array('title'=>$Language->getText('admin_search','title')));
@@ -20,32 +26,9 @@ $HTML->header(array('title'=>$Language->getText('admin_search','title')));
 
 <h2><?php echo $Language->getText('admin_search','header'); ?></h2>
 
-<p><h3><?php echo $Language->getText('admin_search','maintenance'); ?></h3>
-<br>
-<b> <?php echo $Language->getText('admin_search','criteria'); ?>: </b> <?php print ' "%'. $search .'%" <p>'; 
+<h3><?php echo $Language->getText('admin_search','maintenance'); ?></h3>
 
-
-if ($usersearch) {
-
-	$sql = "select distinctrow * from user where user_id like '%$search%' or user_name like '%$search%' or email like '%$search%' or realname like '%$search%'";
-	$result = db_query($sql) or exit_error("ERROR",db_error());
-	if (db_numrows($result) < 1) {
-	    print $Language->getText('admin_search','nomatch').'.<p><a href="/admin/">'.$Language->getText('global','back')."</a>";
-
-	}
-	else {
-
-		print '<table border="1">';
-		print "<tr><th>".$Language->getText('admin_search','login')."</th><th>".$Language->getText('admin_search','user_name')."</th></tr>\n\n";
-
-		while ($row = db_fetch_array($result)) {
-			print '<tr><td><a href="usergroup.php?user_id='. $row['user_id'] .'">'. $row['user_name'] .'</a></td><td>'.  $hp->purify($row['realname'], CODENDI_PURIFIER_CONVERT_HTML) ."</td></tr>\n"; 
-		}
-		print "</table>";
-
-	} 
-} // end if ($usersearch)
-
+<p><b> <?php echo $Language->getText('admin_search','criteria'); ?>: </b> <?php echo ' "%'. $hp->purify($search) .'%" </p>'; 
 
 if ($groupsearch) {
 
