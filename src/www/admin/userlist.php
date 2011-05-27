@@ -15,8 +15,6 @@ require_once('common/dao/UserDao.class.php');
 
 session_require(array('group'=>'1','admin_flags'=>'A'));
 
-$HTML->header(array('title'=>$Language->getText('admin_userlist','title')));
-
 function show_users_list ($res, $offset, $limit, $user_name_search="") {
     $result = $res['users'];
     $hp = Codendi_HTMLPurifier::instance();
@@ -37,7 +35,7 @@ function show_users_list ($res, $offset, $limit, $user_name_search="") {
     echo "<th>".$Language->getText('admin_userlist','status')."</th>";
     
     if ($res['numrows'] > 0) {
-        while ($usr = db_fetch_array($result)) {
+        foreach ($result as $usr) {
             switch ($usr['status']) {
                 case User::STATUS_ACTIVE:
                     $status = $Language->getText('admin_userlist','active');
@@ -92,32 +90,6 @@ function show_users_list ($res, $offset, $limit, $user_name_search="") {
     echo ($offset+$i-2).'/'.$res['numrows'];
     echo '</div>';
 }
-// Administrative functions
-if (!isset($action)) {
-    $action = '';
- }
-
-/*
-	Add a user to this group
-*/
-if ($action=='add_to_group') {
-    // Get user unix name
-    $um = UserManager::instance();
-    $res_newuser  = $um->getUserById($user_id);
-    if ($res_newuser->getID() != 0) {
-        $user_name = $res_newuser->getUserName();
-        if (!account_add_user_to_group($group_id,$user_name)) {
-            $feedback .= ' '.$Language->getText('admin_userlist','error_noadd');
-        }
-    } else {
-	$feedback .= ' '.$Language->getText('admin_userlist','error_uid',array($user_id));
-    }
-}
-
-/*
-	Show list of users
-*/
-print "<p>".$Language->getText('admin_userlist','user_list').":  ";
 
 $dao = new UserDao(CodendiDataAccess::instance());
 $offset = $request->getValidated('offset', 'uint', 0);
@@ -126,14 +98,17 @@ if ( !$offset || $offset < 0 ) {
 }
 $limit  = 100;
 
-$vUserNameSearch = new Valid_String('user_name_search');
+$vUserNameSearch  = new Valid_String('user_name_search');
+$user_name_search = '';
 if($request->valid($vUserNameSearch)) {
-    if ($request->exist('user_name_search'))
+    if ($request->exist('user_name_search')) {
         $user_name_search = $request->get('user_name_search');
+    }
 }
 
 // Check if group_id is valid
 $vGroupId = new Valid_GroupId();
+$group_id = false;
 if($request->valid($vGroupId)) {
     if ($request->exist('group_id')) {
         $group_id = $request->get('group_id');
@@ -141,49 +116,35 @@ if($request->valid($vGroupId)) {
 }
 
 if (!$group_id) {
-	print "<b>".$Language->getText('admin_userlist','all_groups')."</b>";
-	print "\n<p>";
-    
-
- 
     if (isset($user_name_search) && $user_name_search) {
-    $result = $dao->listAllUsers($user_name_search, $offset, $limit);
-    
+        $result = $dao->listAllUsers($user_name_search, $offset, $limit);
+        if ($result['numrows'] == 1) {
+            $row = $result['users']->getRow();
+            $GLOBALS['Response']->redirect('/admin/usergroup.php?user_id='.$row['user_id']);
+        }
     } else {
         $user_name_search="";
         $result = $dao->listAllUsers(0, $offset, $limit);
     }
-    show_users_list ($result, $offset, $limit, $user_name_search);
 } else {
-	/*
-		Show list for one group
-	*/
-    $pm = ProjectManager::instance();
-    print "<b>Group ".$Language->getText('admin_userlist','group',array($pm->getProject($group_id)->getPublicName()))."</b>";
-	
-	print "\n<p>";
     $result = $dao->listAllUsersForGroup($group_id, $offset, $limit);
-    show_users_list ($result, $offset, $limit);
-
-	/*
-        	Show a form so a user can be added to this group
-	*/
-	?>
-	<hr>
-	<P>
-	<form action="?" method="post">
-	<input type="HIDDEN" name="action" VALUE="add_to_group">
-	<p><?php echo $Language->getText('admin_userlist','uid_toadd'); ?>:&nbsp;
-	<input name="user_id" type="TEXT" value="">
-	<br>
-	<input type="HIDDEN" name="group_id" VALUE="<?php print $group_id; ?>">
-	<p>
-	<input type="submit" name="Submit" value="<?php echo $Language->getText('global','btn_submit'); ?>">
-	</form>
-
-	<?php	
 }
 
+/*
+ * Show list of users
+ */
+$HTML->header(array('title'=>$Language->getText('admin_userlist','title')));
+echo "<p>";
+echo $Language->getText('admin_userlist','user_list').":  ";
+if (!$group_id) {
+    echo "<strong>".$Language->getText('admin_userlist','all_groups')."</strong>";
+} else {
+    $pm = ProjectManager::instance();
+    echo "<strong>".$Language->getText('admin_userlist', 'group', array($pm->getProject($group_id)->getPublicName()))."</strong>";
+}
+echo "</p>";
+
+show_users_list ($result, $offset, $limit, $user_name_search);
 $HTML->footer(array());
 
 ?>

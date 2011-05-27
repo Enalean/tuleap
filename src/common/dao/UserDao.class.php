@@ -679,7 +679,7 @@ class UserDao extends DataAccessObject {
              .$stm.' ORDER BY user_name 
                ASC LIMIT '.$this->da->escapeInt($offset).', '.$this->da->escapeInt($limit);
         
-        $res = db_query($sql);
+        $res = $this->retrieve($sql);
         
         return array('users' => $res, 'numrows' => $this->foundRows());
     }
