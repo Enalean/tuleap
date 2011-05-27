@@ -1,4 +1,7 @@
 Version 4.0.19 - Not released yet
+	== Bug fix ==
+	* backlog #124814: Notification issue when documents are removed
+
 	* Git plugin v1.10 see separated ChangeLog.
 
 Version 4.0.18.2 - Monday, 23rd May 2011
