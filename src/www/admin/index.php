@@ -116,10 +116,6 @@ $wStats->setContent('
 // User administration
 
 // Letter Links
-$letter_links = '';
-foreach ($abc_array as $l) {
-    $letter_links .= '<a href="userlist.php?user_name_search='.$l.'"> '.$l.' </a>';
-}
 
 // Pending users
 if ($GLOBALS['sys_user_approval'] == 1 && $pending_users != 0) {
@@ -139,7 +135,6 @@ $wUser = new Widget_Static($Language->getText('admin_main', 'header_user'));
 $wUser->setContent('
 <ul>
   <li>'.$Language->getText('admin_main', 'all_users',array("userlist.php")).'</li>
-  <li>'.$Language->getText('admin_main', 'display_user').$letter_links.'</li>
   <li>'.$Language->getText('admin_main', 'search_user').'
     <form name="usersrch" action="userlist.php" method="get" style="display: inline;">
       <input type="text" name="user_name_search">
@@ -154,11 +149,6 @@ $wUser->setContent('
 
 
 // Project administration
-// Letter Links
-$letter_links = '';
-foreach ($abc_array as $l) {
-    $letter_links .= '<a href="grouplist.php?group_name_search='. $l .'"> '. $l .' </a>';
-}
 
 // Pending
 if ($pending_projects != 0) {
@@ -171,11 +161,9 @@ $wProject = new Widget_Static($Language->getText('admin_main', 'header_group'));
 $wProject->setContent('
 <ul>
   <li>'.$Language->getText('admin_main', 'all_groups', array("grouplist.php")).'</li>
-  <li>'.$Language->getText('admin_main', 'display_group').$letter_links.'</li>
   <li>'.$Language->getText('admin_main', 'search_group').'
-    <form name="gpsrch" action="search.php" method="post" style="display: inline;">
-      <input type="text" name="search">
-      <input type="hidden" name="groupsearch" value="1">
+    <form name="gpsrch" action="grouplist.php" method="post" style="display: inline;">
+      <input type="text" name="group_name_search">
       <input type="submit" value="'.$Language->getText('admin_main', 'search').'">
     </form>
   </li>

@@ -157,7 +157,8 @@ class ProjectDao extends DataAccessObject {
         }
         
         if ($groupName != false) {
-            $cond[] = 'group_name LIKE '.$this->da->quoteSmart($groupName.'%');
+            $pattern = $this->da->quoteSmart('%'.$groupName.'%');
+            $cond[] = '(group_name LIKE '.$pattern.' OR group_id LIKE '.$pattern.' OR unix_group_name LIKE '.$pattern.')';
         }
         
         if (count($cond) > 0) {
