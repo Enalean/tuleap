@@ -643,8 +643,11 @@ class GitPHP_FileDiff
 				continue;
 			switch($d[0]) {
 				case '@':
-					if($currentDiff)
+					if($currentDiff) {
+						if (count($currentDiff['left']) == 0 && count($currentDiff['right']) > 0)
+							$currentDiff['line']++; 	// HACK to make added blocks align correctly
 						$diffs[] = $currentDiff;
+					}
 					$comma = strpos($d, ",");
 					$line = -intval(substr($d, 2, $comma-2));
 					$currentDiff = array("line" => $line,
@@ -667,8 +670,11 @@ class GitPHP_FileDiff
 					break;
 			}
 		}
-		if($currentDiff)
+		if($currentDiff) {
+			if (count($currentDiff['left']) == 0 && count($currentDiff['right']) > 0)
+				$currentDiff['line']++;		// HACK to make added blocks align correctly
 			$diffs[] = $currentDiff;
+		}
 
 		//
 		// iterate over diffs
