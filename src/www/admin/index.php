@@ -162,7 +162,7 @@ $wProject->setContent('
 <ul>
   <li>'.$Language->getText('admin_main', 'all_groups', array("grouplist.php")).'</li>
   <li>'.$Language->getText('admin_main', 'search_group').'
-    <form name="gpsrch" action="grouplist.php" method="post" style="display: inline;">
+    <form name="gpsrch" action="grouplist.php" method="get" style="display: inline;">
       <input type="text" name="group_name_search">
       <input type="submit" value="'.$Language->getText('admin_main', 'search').'">
     </form>

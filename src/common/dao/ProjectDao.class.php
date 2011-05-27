@@ -172,11 +172,7 @@ class ProjectDao extends DataAccessObject {
                 ORDER BY group_name 
                 ASC LIMIT '.$this->da->escapeInt($offset).', '.$this->da->escapeInt($limit);
 
-        $res = db_query($sql);
-        $sql = 'SELECT FOUND_ROWS() as nb';
-        $res_numrows = db_query($sql);
-        $row = db_fetch_array($res_numrows);
-        return array('projects' => $res, 'numrows' => $row['nb']);
+        return array('projects' => $this->retrieve($sql), 'numrows' => $this->foundRows());
     }
 
 
