@@ -294,6 +294,15 @@ Provides: codendi-theme-steerforge = %{version}
 %description theme-steerforge
 SteerForge theme for Codendi
 
+%package theme-tuleap
+Summary: Tuleap theme
+Group: Development/Tools
+Version: @@THEME_TULEAP_VERSION@@
+Release: 1%{?dist}
+Requires: %{name} >= %{version}
+%description theme-tuleap
+Tuleap theme
+
 # 
 # Package setup
 %prep
@@ -712,6 +721,10 @@ fi
 %files theme-steerforge
 %defattr(-,%{APP_USER},%{APP_USER},-)
 %{APP_DIR}/src/www/themes/SteerForge
+
+%files theme-tuleap
+%defattr(-,%{APP_USER},%{APP_USER},-)
+%{APP_DIR}/src/www/themes/Tuleap
 
 #%doc
 #%config
