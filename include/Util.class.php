@@ -35,7 +35,7 @@ class GitPHP_Util
 
 		$end = substr($path, -1);
 
-		if (!(($end == '/') || ($backslash && (strtoupper(substr(PHP_OS, 0, 3))) && ($end == '\\'))))
+		if (!(( ($end == '/') || ($end == ':')) || ($backslash && (strtoupper(substr(PHP_OS, 0, 3))) && ($end == '\\'))))
 			$path .= '/';
 
 		return $path;
