@@ -96,7 +96,13 @@ $data['project']['services'][$arr['service_id']]['server_id'];
         /*foreach($data['project']['trove'] as $root => $values);
          */
 
-        return create_project($data, true);
+        $id = create_project($data, true);
+        if ($id) {
+            $project = $pm->getProject($id);
+            return $pm->activate($project);
+            //return $id;
+        }
+        throw new SoapFault('Project creation failure');
     }
 
 }
@@ -106,3 +112,5 @@ $server = new SoapServer(null, array('uri' => "http://localhost:3080/soap2/", 'c
 $server->setClass('SoapProjectManager');
 
 $server->handle();
+
+?>
