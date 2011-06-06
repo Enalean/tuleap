@@ -2,6 +2,9 @@ Version 4.0.19 - Not released yet
 	== Bug fix ==
 	* backlog #124814: Notification issue when documents are removed
 
+	== SOAP ==
+	* checkUsersExistence used by Restricted Users no longer returns info about users not members of a shared project.
+
 	* Git plugin v1.10 see separated ChangeLog.
 	* Improve themability of HomePage
 		* New css selectors for each homepage elements and for news

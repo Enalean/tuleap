@@ -438,7 +438,34 @@ class User {
         }
         return $this->_dynamics_ugroups[$hash];
     }
-    
+
+    /**
+     * Check if user can see the existance of given user.
+     *
+     * A user can see another one if
+     * - the "querying" user is Active
+     * - the "querying" user is Restricted AND the user to see is
+     *   member of a project the restricted user is member too.
+     *
+     * @param User $user A user to test
+     *
+     * @return Boolean
+     */
+    public function canSee($user) {
+        if ($this->isRestricted()) {
+            $myGroupData   = $this->getUserGroupData();
+            $userGroupData = $user->getUserGroupData();
+            foreach ($myGroupData as $group => $perms) {
+                if (isset($userGroupData[$group])) {
+                    return true;
+                }
+            }
+            return false;
+        } else {
+            return true;
+        }
+    }
+
     //
     // Getter
     //

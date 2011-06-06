@@ -230,6 +230,45 @@ class UserTest extends UnitTestCase {
         $this->assertFalse($projectmember->isMember(1));
         $this->assertFalse($projectmember->isMember(1, 'A'));
     }
-    
+
+
+    function testActiveUserCanSeePeopleNotInHisProjects() {
+        $activeUser = new UserTestVersion2($this);
+        $activeUser->setId(123);
+        $activeUser->setReturnValue('getUserGroupData', array(101 => array(),
+                                                              102 => array()));
+        $activeUser->setStatus(User::STATUS_ACTIVE);
+
+        $notProjectMember = new UserTestVersion2($this);
+        $notProjectMember->setReturnValue('getUserGroupData', array(103 => array()));
+
+        $this->assertTrue($activeUser->canSee($notProjectMember));
+    }
+
+    function testRestrictedUserCanSeePeopleInHisProjects() {
+        $restrictedUser = new UserTestVersion2($this);
+        $restrictedUser->setId(123);
+        $restrictedUser->setReturnValue('getUserGroupData', array(101 => array(),
+                                                                  102 => array()));
+        $restrictedUser->setStatus(User::STATUS_RESTRICTED);
+
+        $otherProjectMember = new UserTestVersion2($this);
+        $otherProjectMember->setReturnValue('getUserGroupData', array(102 => array()));
+
+        $this->assertTrue($restrictedUser->canSee($otherProjectMember));
+    }
+
+    function testRestrictedUserCannotSeePeopleNotInHisProjects() {
+        $restrictedUser = new UserTestVersion2($this);
+        $restrictedUser->setId(123);
+        $restrictedUser->setReturnValue('getUserGroupData', array(101 => array(),
+                                                                  102 => array()));
+        $restrictedUser->setStatus(User::STATUS_RESTRICTED);
+
+        $notProjectMember = new UserTestVersion2($this);
+        $notProjectMember->setReturnValue('getUserGroupData', array(103 => array()));
+
+        $this->assertFalse($restrictedUser->canSee($notProjectMember));
+    }
 }
 ?>
