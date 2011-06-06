@@ -107,6 +107,11 @@ $data['project']['services'][$arr['service_id']]['server_id'];
     }
 
     /**
+     * Add given user as member of the project
+     *
+     * TODO: check who is allowed to do that (site admin and/or project admin)
+     *
+     *
      */
     function addProjectMember($groupId, $userLogin) {
         $user = UserManager::instance()->getUserByUserName($userLogin);
