@@ -116,22 +116,36 @@ $data['project']['services'][$arr['service_id']]['server_id'];
     function addProjectMember($groupId, $userLogin) {
         $user = UserManager::instance()->getUserByUserName($userLogin);
         if (!$user->isMember($groupId)) {
-            $res = account_add_user_to_group($groupId, $userLogin);
-            if (!$res) {
-                if ($GLOBALS['Response']->feedbackHasErrors()) {
-                    foreach($GLOBALS['Response']->_feedback->logs as $log) {
-                        if ($log['level'] == 'error') {
-                            throw new SoapFault('3100', $log['msg']);
-                        }
-                    }
-                }
-            }
-            return $res;
+            return $this->feedbackToSoapFault(account_add_user_to_group($groupId, $userLogin));
         } else {
             return true;
         }
     }
 
+    function removeProjectMember($groupId, $userLogin) {
+        $user = UserManager::instance()->getUserByUserName($userLogin);
+        if (!$user) {
+            throw new SoapFault('3100', "Invalid user name");
+        }
+        if ($user->isMember($groupId)) {
+            return $this->feedbackToSoapFault(account_remove_user_from_group($groupId, $user->getId()));
+        } else {
+            return true;
+        }
+    }
+
+    function feedbackToSoapFault($res) {
+        if (!$res) {
+            if ($GLOBALS['Response']->feedbackHasErrors()) {
+                foreach($GLOBALS['Response']->_feedback->logs as $log) {
+                    if ($log['level'] == 'error') {
+                        throw new SoapFault('3100', $log['msg']);
+                    }
+                }
+            }
+        }
+        return $res;
+    }
 }
 
 $server = new SoapServer(null, array('uri' => "http://localhost:3080/soap2/", 'cache_wsdl' => WSDL_CACHE_NONE));

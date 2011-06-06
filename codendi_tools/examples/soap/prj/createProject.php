@@ -19,4 +19,12 @@ for($i = 4; $i < $argc; $i++) {
     var_dump($client->addProjectMember($prjId, $argv[$i]));
 }
 
+for($i = 4; $i < $argc; $i++) {
+    var_dump($client->removeProjectMember($prjId, $argv[$i]));
+}
+
+for($i = 4; $i < $argc; $i++) {
+    var_dump($client->addProjectMember($prjId, $argv[$i]));
+}
+
 ?>
