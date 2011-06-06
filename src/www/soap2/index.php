@@ -3,6 +3,7 @@
 require_once 'pre.php';
 require_once 'common/project/ProjectManager.class.php';
 require_once 'www/project/create_project.php';
+require_once 'www/include/account.php';
 
 class SoapProjectManager {
 
@@ -103,6 +104,27 @@ $data['project']['services'][$arr['service_id']]['server_id'];
             //return $id;
         }
         throw new SoapFault('Project creation failure');
+    }
+
+    /**
+     */
+    function addProjectMember($groupId, $userLogin) {
+        $user = UserManager::instance()->getUserByUserName($userLogin);
+        if (!$user->isMember($groupId)) {
+            $res = account_add_user_to_group($groupId, $userLogin);
+            if (!$res) {
+                if ($GLOBALS['Response']->feedbackHasErrors()) {
+                    foreach($GLOBALS['Response']->_feedback->logs as $log) {
+                        if ($log['level'] == 'error') {
+                            throw new SoapFault('3100', $log['msg']);
+                        }
+                    }
+                }
+            }
+            return $res;
+        } else {
+            return true;
+        }
     }
 
 }
