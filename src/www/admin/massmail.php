@@ -12,6 +12,7 @@ require_once('pre.php');
 session_require(array('group'=>'1','admin_flags'=>'A'));
 
 $HTML->header(array('title'=>$Language->getText('admin_massmail','title')));
+$GLOBALS['HTML']->includeFooterJavascriptFile('/scripts/tiny_mce/tiny_mce.js');
 
 // get numbers of users for each mailing
 $res_count = db_query("SELECT * FROM user WHERE ( status='A' or status='R' ) AND mail_va=1 GROUP BY email");
@@ -32,6 +33,8 @@ $count_sfadmin = db_numrows($res_count);
 
 print '<h2>'.$Language->getText('admin_massmail','header',array($GLOBALS['sys_name'])).'</h2>
 
+<TABLE width=50% cellpadding=0 cellspacing=0 border=0>
+<TR><TD>
 <P>'.$Language->getText('admin_massmail','warning').'
 
 <FORM ACTION="massmail_execute.php" METHOD="POST">
@@ -54,21 +57,31 @@ print '<h2>'.$Language->getText('admin_massmail','header',array($GLOBALS['sys_na
 '.$Language->getText('admin_massmail','to_all').' ('
 .$count_all
 .' users)
-
+</TD></TR>
+<TR><TD>
 <P>'.$Language->getText('admin_massmail','subject').'
 <BR><INPUT type="text" name="mail_subject" value="'.$GLOBALS['sys_name'].': "size="40">
 
 <P>'.$Language->getText('admin_massmail','text').'
 <PRE>
-<BR><TEXTAREA name="mail_message" cols="70" rows="40" wrap="physical">
+<BR>
+<div id="mail_message_label"></div>
+<TEXTAREA id="mail_message" name="mail_message" cols="75" rows="40" wrap="physical">
 '.stripcslashes($Language->getText('admin_massmail','footer',array($GLOBALS['sys_default_domain'],$GLOBALS['sys_email_admin']))).'
 </TEXTAREA>
 </PRE>
 <P><INPUT type="submit" name="Submit" value="'.$Language->getText('global','btn_submit').'">
-
+</TD></TR></TABLE>
 </FORM>
 ';
 
+$rte = "
+var useLanguage = '". substr(UserManager::instance()->getCurrentUser()->getLocale(), 0, 2) ."';
+document.observe('dom:loaded', function() {
+            new Codendi_RTE_Send_HTML_MAIL('mail_message');
+        });";
+
+$GLOBALS['HTML']->includeFooterJavascriptSnippet($rte);
 $HTML->footer(array());
 
 ?>
