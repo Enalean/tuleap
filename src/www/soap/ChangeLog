@@ -1,4 +1,18 @@
-4.1 - (Codendi_ST 4.0.16) 
+4.2 - Not released yet
+        What Changed?
+	============
+	Types
+	-----
+	* UserInfo as 3 new fields
+	** xsd:string real_name
+	** xsd:string email
+	** xsd:string ldap_id
+
+	Methods
+	-------
+	* checkUsersExistence: When used by a Restricted User, no longer returns info about users not members of a shared project.
+
+4.1 - (Core 4.0.16)
 	What Changed?
 	============
 	Types

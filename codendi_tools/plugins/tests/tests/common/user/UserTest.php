@@ -25,13 +25,6 @@ Mock::generate('DataAccessResult');
  * Tests the class User
  */
 class UserTest extends UnitTestCase {
-    /**
-     * Constructor of the test. Can be ommitted.
-     * Usefull to set the name of the test
-     */
-    function UserTest($name = 'User test') {
-        $this->UnitTestCase($name);
-    }
 
     function testStatus() {
         $u1 =& new UserTestVersion($this);
