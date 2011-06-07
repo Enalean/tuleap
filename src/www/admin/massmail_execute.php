@@ -73,7 +73,6 @@ if ($request->isPost() && $request->exist('Submit') &&  $request->existAndNonEmp
     } else {
         $mail = new Mail();
     }
-    $mail->setTo($GLOBALS['sys_noreply']);
     $mail->setFrom($GLOBALS['sys_noreply']);
 
     $validSubject = new Valid_String('mail_subject');
