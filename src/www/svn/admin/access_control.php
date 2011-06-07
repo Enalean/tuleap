@@ -20,8 +20,8 @@ if ($request->isPost() && $request->existAndNonEmpty('post_changes')) {
     $vAccessFile = new Valid_Text('form_accessfile');
     $vAccessFile->setErrorMessage($Language->getText('svn_admin_access_control','upd_fail'));
     if($request->valid($vAccessFile)) {
-        $form_accessfile = $request->get('form_accessfile');
-        
+        $saf = new SVNAccessFile();
+        $form_accessfile = $saf->validateUGroupLines($project, $request->get('form_accessfile'), true);
         //store the custom access file in db
         $sql = "UPDATE groups
                 SET svn_accessfile = '". db_es($form_accessfile) ."'

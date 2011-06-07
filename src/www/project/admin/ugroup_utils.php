@@ -423,6 +423,13 @@ function ugroup_update($group_id, $ugroup_id, $ugroup_name, $ugroup_description)
     if (!$ugroup_id) {
         exit_error($Language->getText('global','error'),$Language->getText('project_admin_editugroup','ug_id_missed'));
     }
+    // Retrieve ugroup old name before updating
+    $sql = "SELECT name FROM ugroup WHERE group_id='$group_id' AND ugroup_id ='$ugroup_id'";
+    $result=db_query($sql);
+    if($result && !db_error($result)) {
+        $row = db_fetch_array($result);
+        $ugroup_old_name = $row['name'];
+    }
 
     // Check that there is no ugroup with the same name and a different id in this project
     $sql = "SELECT * FROM ugroup WHERE name='$ugroup_name' AND group_id='$group_id' AND ugroup_id!='$ugroup_id'";
@@ -454,6 +461,7 @@ function ugroup_update($group_id, $ugroup_id, $ugroup_name, $ugroup_description)
         'group_id'  => $group_id,
         'ugroup_id' => $ugroup_id,
         'ugroup_name' => $ugroup_name,
+        'ugroup_old_name' => $ugroup_old_name,
         'ugroup_desc' => $ugroup_description,
         'pick_list' => $pickList
     ));
@@ -476,7 +484,18 @@ function ugroup_remove_user_from_ugroup($group_id, $ugroup_id, $user_id) {
         // Now log in project history
         $res = ugroup_db_get_ugroup($ugroup_id);
         group_add_history('upd_ug','',$group_id,array(db_result($res,0,'name')));
-        $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('project_admin_ugroup_utils','ug_upd_success',array(db_result($res,0,'name'), 1)));
+        // Search for all members of this ugroup
+        $sql="SELECT count(user.user_id)".
+             "FROM ugroup_user, user ".
+             "WHERE user.user_id = ugroup_user.user_id ".
+             "AND user.status IN ('A', 'R') ".
+             "AND ugroup_user.ugroup_id=".db_ei($ugroup_id);
+        $result = db_query($sql);
+        $usersCount = db_result($result, 0,0);
+        $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('project_admin_ugroup_utils','ug_upd_success',array(db_result($res,0,'name'), $usersCount)));
+        if ($usersCount == 0) {
+            $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('project_admin_ugroup_utils','ug_upd_empty'));
+        }
         // Raise event for ugroup modification
         EventManager::instance()->processEvent('project_admin_ugroup_remove_user', array(
                 'group_id' => $group_id,

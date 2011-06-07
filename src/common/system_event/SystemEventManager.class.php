@@ -205,8 +205,12 @@ class SystemEventManager {
                                $this->concatParameters($params, array('group_id', 'project_is_private')), 
                                SystemEvent::PRIORITY_MEDIUM);
             break;
-        case 'project_admin_ugroup_creation':
         case 'project_admin_ugroup_edition':
+            $this->createEvent(SystemEvent::TYPE_UGROUP_MODIFY,
+                              $this->concatParameters($params, array('group_id', 'ugroup_id', 'ugroup_name', 'ugroup_old_name')),
+                              SystemEvent::PRIORITY_MEDIUM);
+                        break;
+        case 'project_admin_ugroup_creation':
         case 'project_admin_ugroup_remove_user':
         case 'project_admin_ugroup_add_user':
         case 'project_admin_ugroup_deletion':
