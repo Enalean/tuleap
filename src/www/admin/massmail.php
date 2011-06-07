@@ -33,11 +33,11 @@ $count_sfadmin = db_numrows($res_count);
 
 print '<h2>'.$Language->getText('admin_massmail','header',array($GLOBALS['sys_name'])).'</h2>
 
-<TABLE width=50% cellpadding=0 cellspacing=0 border=0>
-<TR><TD>
 <P>'.$Language->getText('admin_massmail','warning').'
 
 <FORM ACTION="massmail_execute.php" METHOD="POST">
+<TABLE width=50% cellpadding=0 cellspacing=0 border=0>
+<TR><TD>
 <INPUT type="radio" name="destination" value="comm">
 '.$Language->getText('admin_massmail','to_additional').' ('
 .$count_comm
