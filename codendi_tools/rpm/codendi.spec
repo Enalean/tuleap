@@ -3,7 +3,8 @@
 %define APP_NAME codendi
 %define APP_USER codendiadm
 %define APP_DIR %{_datadir}/%{APP_NAME}
-%define APP_LIB_DIR %{_libdir}/%{APP_NAME}
+# Do not use %{_libdir} because it's /usr/lib64 on x86_64 boxes
+%define APP_LIB_DIR /usr/lib/%{APP_NAME}
 %define APP_LIBBIN_DIR %{APP_LIB_DIR}/bin
 %define APP_DATA_DIR %{_localstatedir}/lib/%{APP_NAME}
 %define APP_CACHE_DIR %{_localstatedir}/tmp/%{APP_NAME}_cache
