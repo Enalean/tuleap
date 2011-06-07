@@ -45,7 +45,8 @@ Requires: vixie-cron >= 4.1-9, tmpwatch
 Requires: php, php-mysql, php-xml, php-mbstring, php-gd, php-soap, php-pear, gd
 Requires: dejavu-lgc-fonts
 %if %{PKG_NAME} == codendi_st
-Requires: jpgraph = 2.3.4-0.codendi
+Requires: jpgraph
+# = 2.3.4-0.codendi
 %else
 Requires: jpgraph-%{PKG_NAME}
 %endif
@@ -77,7 +78,8 @@ Version: @@CORE_MAILMAN_VERSION@@
 Release: 1%{?dist}
 Requires: %{name} >= @@VERSION@@
 %if %{PKG_NAME} == codendi_st
-Requires: mailman = 3:2.1.9-6.codendi
+Requires: mailman
+# = 3:2.1.9-6.codendi
 %else
 Requires: mailman-%{PKG_NAME}
 %endif
@@ -92,7 +94,8 @@ Release: 1%{?dist}
 Requires: %{name} >= @@VERSION@@
 Conflicts: cadaver
 %if %{PKG_NAME} == codendi_st
-Requires: viewvc = 1.0.7-2.codendi
+Requires: viewvc
+# = 1.0.7-2.codendi
 %else
 Requires: viewvc-%{PKG_NAME}
 %endif
@@ -107,8 +110,10 @@ Version: @@CORE_CVS_VERSION@@
 Release: 1%{?dist}
 Requires: %{name} >= @@VERSION@@
 %if %{PKG_NAME} == codendi_st
-Requires: viewvc = 1.0.7-2.codendi
-Requires: cvs = 1.11.22-5.codendi
+Requires: viewvc
+# = 1.0.7-2.codendi
+Requires: cvs
+# = 1.11.22-5.codendi
 %else
 Requires: viewvc-%{PKG_NAME}
 Requires: cvs-%{PKG_NAME}
