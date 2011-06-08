@@ -38,7 +38,7 @@ print '<h2>'.$Language->getText('admin_massmail','header',array($GLOBALS['sys_na
 <FORM ACTION="massmail_execute.php" METHOD="POST">
 <TABLE width=50% cellpadding=0 cellspacing=0 border=0>
 <TR><TD>
-<INPUT type="radio" name="destination" value="preview" CHECKED> Send preview to <INPUT type="text" name="preview_destination" size="50"><BR>
+<INPUT type="radio" name="destination" value="preview" CHECKED> '.$Language->getText('admin_massmail','to_preview').' <INPUT type="text" name="preview_destination" size="50"><BR>
 <INPUT type="radio" name="destination" value="comm">
 '.$Language->getText('admin_massmail','to_additional').' ('
 .$count_comm

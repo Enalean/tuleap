@@ -214,6 +214,7 @@ admin_massmail_execute	done	Terminé !
 admin_massmail	title	Envoi de courrier électronique en masse
 admin_massmail	header	Envoi de courrier électronique en masse aux utilisateurs de $1
 admin_massmail	warning	Soyez <span class="highlight"><B>TRÈS</B></span> vigilant avec ce formulaire car son utilisation déclenche l'envoie de e-mails à de très nombreux utilisateurs.
+admin_massmail	to_preview	Envoyer un aperçu à
 admin_massmail	to_additional	Envoyer uniquement aux abonnés de l'option "Courrier électronique supplémentaire au sujet de la communauté"
 admin_massmail	to_update	Envoyer uniquement aux abonnés de l'option "Courrier électronique à propos des mises à jour du site"
 admin_massmail	to_devel	Envoyer uniquement aux développeurs des projets 
