@@ -79,7 +79,6 @@ print '<h2>'.$Language->getText('admin_massmail','header',array($GLOBALS['sys_na
 </div>
 <div id="myDivLink"></div>
 <br><P>'.$Language->getText('admin_massmail','to_preview').'
-<INPUT type="hidden" name="destination" value="preview">
 <INPUT type="text" id="preview_destination" name="preview_destination" size="50">
 <INPUT type="button" name="Submit" onClick="sendPreview()" value="'.$Language->getText('global','btn_submit').'">
 <DIV id="preview_result"></DIV>
