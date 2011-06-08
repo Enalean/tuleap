@@ -3401,6 +3401,16 @@ CREATE TABLE groups_notif_delegation_message (
   msg_to_requester text NOT NULL default "",
   PRIMARY KEY (group_id)
 );
+
+CREATE TABLE mass_mail (
+  mail_id int(11) NOT NULL auto_increment,
+  filename VARCHAR(255) NOT NULL,
+  status char(1) NOT NULL default 'N',
+  creation_date INT(11) UNSIGNED NULL,
+  use_date INT(11) UNSIGNED NULL,
+  PRIMARY KEY (mail_id)
+);
+
 #
 # EOF
 #
