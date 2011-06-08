@@ -19,12 +19,12 @@ require_once('pre.php');
 
 $attachmentArea = $GLOBALS['sys_data_dir'].'/massmail/';
 
-if(!is_dir($attachmentArea)) {
-    mkdir($attachmentArea,0777);
+if (!is_dir($attachmentArea)) {
+    mkdir($attachmentArea, 0777);
 }
 
 sleep(2);
-if(!empty($_FILES['image'])){
+if (!empty($_FILES['image'])) {
     $ftmp = $_FILES['image']['tmp_name'];
     $oname = $_FILES['image']['name'];
     $osize = $_FILES['image']['size'];
@@ -32,32 +32,31 @@ if(!empty($_FILES['image'])){
     $extenssion = strstr($oname, ".");
     $fname = $attachmentArea.$_FILES['image']['name'];
 
-    if(move_uploaded_file($ftmp, $fname)){
-        ?>
-<html>
-<head>
-<script>
+    if (move_uploaded_file($ftmp, $fname)) {
+
+print " <html>
+        <head>
+        <script>
             var par = window.parent.document;
             var images = par.getElementById('images1');
-            var imgdiv = images.getElementsByTagName('div')[<?php echo (int) $_POST['imgnum'] ?>];
+            var imgdiv = images.getElementsByTagName('div')[". (int) $_POST['imgnum'] ."];
             var image = imgdiv.getElementsByTagName('img')[0];
             imgdiv.removeChild(image);
             var bre = par.createElement('br');
             imgdiv.appendChild(bre);
-            var attachment=par.createElement('span');
-            attachment.innerHTML='<?php echo $oname ?> <img src="../themes/common/images/ic/cross.png" onclick="delete_image(\'id\');" > &nbsp; Size : <?php echo $osize ?> bytes &nbsp;  Disposition inline ? <input type=checkbox name="attachmentDisposition" onclick="setAttachmentDisposition()" checked="checked" id="disposition" />';
+            var attachment=par.createElement('span');";
+print "  attachment.innerHTML='". $oname ."<img src=\"../themes/common/images/ic/cross.png\" onclick=\"delete_image(\'id\');\" > &nbsp; Size : ".  $osize ." bytes &nbsp;  Disposition inline ? <input type=checkbox name=\"attachmentDisposition\" onclick=\"setAttachmentDisposition()\" checked=\"checked\" id=\"disposition\" />';
             imgdiv.appendChild(attachment);
             // TODO : implement delete_image 
-</script>
-</head>
-</html>
-<?php
+        </script>
+        </head>
+        </html>";
         exit();
+    }
 }
-}
-?>
-<html><head>
-<script language="javascript">
+
+print "<html><head>
+<script language=\"javascript\">
 function upload(){
     // hide old iframe
     var par = window.parent.document;
@@ -82,62 +81,20 @@ function upload(){
     var imgnum = images.getElementsByTagName('div').length - 1;
     document.iform.imgnum.value = imgnum;
     setTimeout(document.iform.submit(),5000);
-}
+}";
 
-function ajaxRequest(){
- var activexmodes=['Msxml2.XMLHTTP', 'Microsoft.XMLHTTP']; //activeX versions to check for in IE
- if (window.ActiveXObject){ //Test for support for ActiveXObject in IE first (as XMLHttpRequest in IE7 is broken)
-  for (var i=0; i<activexmodes.length; i++){
-   try{
-    return new ActiveXObject(activexmodes[i]);
-   }
-   catch(e){
-    //suppress error
-   }
-  }
- }
- else if (window.XMLHttpRequest) // if Mozilla, Safari etc
-  return new XMLHttpRequest();
- else
-  return false;
-}
-
-function sendPreview() {
-    var mypostrequest=new ajaxRequest();
-    mypostrequest.onreadystatechange=function() {
-        if (mypostrequest.readyState==4){
-            document.getElementById('preview_result').innerHTML = '<img src=\"/themes/common/images/ic/spinner.gif\" border=\"0\" />';
-            if (mypostrequest.status==200 || window.location.href.indexOf('http')==-1) {
-                document.getElementById('preview_result').innerHTML='<span style=\"color:red\"><small><b>'+mypostrequest.responseText+'</b></small></span>';
-            } else {
-                alert('An error has occured making the request');
-            }
-        }
-    }
-    var mailSubject=encodeURIComponent(document.getElementById('mail_subject').value);
-    var mailMessage=encodeURIComponent(document.getElementById('mail_message').value);
-    var previewDestination=encodeURIComponent(document.getElementById('preview_destination').value);
-    for (var i=0; i < document.massmail_form.body_format.length; i++) {
-        if (document.massmail_form.body_format[i].checked) {
-            var bodyFormat = document.massmail_form.body_format[i].value;
-        }
-    }
-    var parameters='destination=preview&mail_subject='+mailSubject+'&body_format='+bodyFormat+'&mail_message='+mailMessage+'&preview_destination='+previewDestination+'&Submit=Submit';
-    mypostrequest.open('POST', '/admin/massmail_execute.php', true);
-    mypostrequest.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-    mypostrequest.send(parameters);
-}
-
-</script>
+print "</script>
 <style>
 #file {
 width: 350px;
 }
-</style>
-</head><body><center>
+</style>";
+
+print '</head><body><center>
 <form name="iform" action="" method="post" enctype="multipart/form-data">
 <span> Attach a file :</span>
 <input id="file" type="file" name="image" onChange="upload()" />
 <input type="hidden" name="imgnum" />
 </form>
-</center></html>
+</center></html>';
+?>

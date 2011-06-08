@@ -92,7 +92,51 @@ $rte = "
 var useLanguage = '". substr(UserManager::instance()->getCurrentUser()->getLocale(), 0, 2) ."';
 document.observe('dom:loaded', function() {
             new Codendi_RTE_Send_HTML_MAIL('mail_message');
-        });";
+        });
+
+function ajaxRequest(){
+ var activexmodes=['Msxml2.XMLHTTP', 'Microsoft.XMLHTTP']; //activeX versions to check for in IE
+ if (window.ActiveXObject){ //Test for support for ActiveXObject in IE first (as XMLHttpRequest in IE7 is broken)
+  for (var i=0; i<activexmodes.length; i++){
+   try{
+    return new ActiveXObject(activexmodes[i]);
+   }
+   catch(e){
+    //suppress error
+   }
+  }
+ }
+ else if (window.XMLHttpRequest) // if Mozilla, Safari etc
+  return new XMLHttpRequest();
+ else
+  return false;
+}
+
+function sendPreview() {
+    var mypostrequest=new ajaxRequest();
+    mypostrequest.onreadystatechange=function() {
+        if (mypostrequest.readyState==4){
+            document.getElementById('preview_result').innerHTML = '<img src=\"/themes/common/images/ic/spinner.gif\" border=\"0\" />';
+            if (mypostrequest.status==200 || window.location.href.indexOf('http')==-1) {
+                document.getElementById('preview_result').innerHTML='<span style=\"color:red\"><small><b>'+mypostrequest.responseText+'</b></small></span>';
+            } else {
+                alert('An error has occured making the request');
+            }
+        }
+    }
+    var mailSubject=encodeURIComponent(document.getElementById('mail_subject').value);
+    var mailMessage=encodeURIComponent(document.getElementById('mail_message').value);
+    var previewDestination=encodeURIComponent(document.getElementById('preview_destination').value);
+    for (var i=0; i < document.massmail_form.body_format.length; i++) {
+        if (document.massmail_form.body_format[i].checked) {
+            var bodyFormat = document.massmail_form.body_format[i].value;
+        }
+    }
+    var parameters='destination=preview&mail_subject='+mailSubject+'&body_format='+bodyFormat+'&mail_message='+mailMessage+'&preview_destination='+previewDestination+'&Submit=Submit';
+    mypostrequest.open('POST', '/admin/massmail_execute.php', true);
+    mypostrequest.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+    mypostrequest.send(parameters);
+}";
 
 $GLOBALS['HTML']->includeFooterJavascriptSnippet($rte);
 $HTML->footer(array());
