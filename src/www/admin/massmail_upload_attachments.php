@@ -108,7 +108,7 @@ function sendPreview() {
         if (mypostrequest.readyState==4){
             document.getElementById('preview_result').innerHTML = '<img src=\"/themes/common/images/ic/spinner.gif\" border=\"0\" />';
             if (mypostrequest.status==200 || window.location.href.indexOf('http')==-1) {
-                document.getElementById('preview_result').innerHTML=mypostrequest.responseText;
+                document.getElementById('preview_result').innerHTML='<span style=\"color:red\"><small><b>'+mypostrequest.responseText+'</b></small></span>';
             } else {
                 alert('An error has occured making the request');
             }

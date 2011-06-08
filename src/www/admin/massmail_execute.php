@@ -60,10 +60,6 @@ if ($request->isPost() && $request->exist('Submit') &&  $request->existAndNonEmp
         default:
             exit_error('Unrecognized Post','cannot execute');
     }
-    header ('Content-Type: text/plain');
-
-    print $Language->getText('admin_massmail_execute','post_recvd')."\n";
-    flush();
 
     list($host,$port) = explode(':',$GLOBALS['sys_default_domain']);
     $validFormat = new Valid_WhiteList('body_format' ,array(0, 1));
@@ -88,6 +84,11 @@ if ($request->isPost() && $request->exist('Submit') &&  $request->existAndNonEmp
     $mail->setBody(stripslashes($mailMessage));
 
     if (isset($res_mail)) {
+        header ('Content-Type: text/plain');
+
+        print $Language->getText('admin_massmail_execute','post_recvd')."\n";
+        flush();
+
         print $Language->getText('admin_massmail_execute','mailing',array(db_numrows($res_mail)))." ($to_name)\n\n";
         flush();
 
