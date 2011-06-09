@@ -20,7 +20,15 @@ var MassMail = Class.create({
             // Must use Event.observe(toggle... instead of toggle.observe(...
             // Otherwise IE cannot manage it. Oo
             Event.observe($('preview_submit'), 'click', this.sendPreview.bindAsEventListener(this));
+            Event.observe($('preview_destination'), 'keypress', this.disableEnterKey.bindAsEventListener(this));
     },
+    disableEnterKey: function(event) {
+        if (Event.KEY_RETURN == event.keyCode) {
+            this.sendPreview(event);
+            event.stop();
+            return false;
+        }
+   },
     sendPreview: function(event) {
         var mailSubject = encodeURIComponent($('mail_subject').value);
         var mailMessage = encodeURIComponent($('mail_message').value);
@@ -45,19 +53,3 @@ var MassMail = Class.create({
         return false;
     }
 });
-
-function disableEnterKey(e) {
-     var key;
-     if(window.event) {
-         key = window.event.keyCode;     //IE
-     }
-     else {
-         key = e.which;     //firefox
-     }
-     if(key == 13) {
-         return false;
-     }
-     else {
-         return true;
-     }
-}
