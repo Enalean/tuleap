@@ -147,7 +147,7 @@ if ($request->isPost() && $request->exist('Submit') &&  $request->existAndNonEmp
             }
         }
         $previewDestination = implode(', ', $validMails);
-        $mail->setBcc($previewDestination, true);
+        $mail->setTo($previewDestination, true);
         if ($mail->send()) {
             print "\n".$Language->getText('admin_massmail_execute','sending').": ".$previewDestination;
         } else {
