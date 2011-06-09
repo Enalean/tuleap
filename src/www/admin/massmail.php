@@ -13,6 +13,7 @@ session_require(array('group'=>'1','admin_flags'=>'A'));
 
 $HTML->header(array('title'=>$Language->getText('admin_massmail','title')));
 $GLOBALS['HTML']->includeFooterJavascriptFile('/scripts/tiny_mce/tiny_mce.js');
+$GLOBALS['HTML']->includeFooterJavascriptFile('/scripts/codendi/MassMail.js');
 
 // get numbers of users for each mailing
 $res_count = db_query("SELECT * FROM user WHERE ( status='A' or status='R' ) AND mail_va=1 GROUP BY email");
@@ -86,39 +87,15 @@ $rte = "
 var useLanguage = '". substr(UserManager::instance()->getCurrentUser()->getLocale(), 0, 2) ."';
 document.observe('dom:loaded', function() {
             new Codendi_RTE_Send_HTML_MAIL('mail_message');
-            $('preview_button').innerHTML = '<INPUT type=\'button\' name=\'Submit\' value=\'Preview\' onClick=\'sendPreview()\'>';
-        });
 
-function sendPreview() {
-    var mailSubject = encodeURIComponent($('mail_subject').value);
-    var mailMessage = encodeURIComponent($('mail_message').value);
-    var previewDestination = encodeURIComponent($('preview_destination').value);
-    $('body_format_text', 'body_format_html').each(function(node){if (node.checked) {bodyFormat = encodeURIComponent(node.getValue());}});
-    var formParameters = 'destination=preview&mail_subject='+mailSubject+'&body_format='+bodyFormat+'&mail_message='+mailMessage+'&preview_destination='+previewDestination+'&Submit=Submit&pv=2';
-    $('massmail_form').request({
-        method: 'post',
-        parameters: formParameters,
-        onCreate: function() { $('preview_result').innerHTML = '<img src=\"/themes/common/images/ic/spinner.gif\" border=\"0\" />'; },
-        onSuccess: function(response){ $('preview_result').innerHTML = '<span style=\"color:red\"><small><b>'+response.responseText+'</b></small></span>'; }});
-    return false;
-}
+            var button = Builder.node('input', {'id'      : 'preview_submit',
+                                                'name'    : 'Submit',
+                                                'type'    : 'button',
+                                                'value'   : 'Preview'});
+            $('preview_button').appendChild(button);
 
-function disableEnterKey(e) {
-     var key;
-     if(window.event) {
-         key = window.event.keyCode;     //IE
-     }
-     else {
-         key = e.which;     //firefox
-     }
-     if(key == 13) {
-         sendPreview();
-         return false;
-     }
-     else {
-         return true;
-     }
-}";
+            new MassMail();
+        });";
 
 $GLOBALS['HTML']->includeFooterJavascriptSnippet($rte);
 $HTML->footer(array());

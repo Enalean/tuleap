@@ -14,15 +14,6 @@ require_once('common/mail/Codendi_Mail.class.php');
 
 session_require(array('group'=>1,'admin_flags'=>'A'));
 
-$vPv = new Valid_Pv();
-if ($request->valid($vPv) && $request->get('pv') == 2) {
-    $pv = 2;
-    $HTML->pv_header(array('title'=>$Language->getText('admin_massmail','title')));
-} else {
-    $pv = 0;
-    site_header(array('title'=>$Language->getText('admin_massmail','title')));
-}
-
 $request = HTTPRequest::instance();
 if ($request->isPost() && $request->exist('Submit') &&  $request->existAndNonEmpty('destination')) {
 
@@ -93,6 +84,14 @@ if ($request->isPost() && $request->exist('Submit') &&  $request->existAndNonEmp
     $mail->setBody(stripslashes($mailMessage));
 
     if (isset($res_mail)) {
+    $vPv = new Valid_Pv();
+    if ($request->valid($vPv) && $request->get('pv') == 2) {
+    $pv = 2;
+    $HTML->pv_header(array('title'=>$Language->getText('admin_massmail','title')));
+    } else {
+    $pv = 0;
+    site_header(array('title'=>$Language->getText('admin_massmail','title')));
+    }
 
         print $Language->getText('admin_massmail_execute','post_recvd')."<br>";
         flush();
@@ -135,6 +134,9 @@ if ($request->isPost() && $request->exist('Submit') &&  $request->existAndNonEmp
                 print "<br><br>".$GLOBALS['Language']->getText('global', 'mail_failed', array($GLOBALS['sys_email_admin'])).": ".$tolist."<br><br>";
             }
         }
+        print "<br>".$Language->getText('admin_massmail_execute','done')."<br>";
+        flush();
+        ($pv == 2) ? $HTML->pv_footer(array()) : $HTML->footer(array());;
     } else {
         $validMails = array();
         $addresses  = array_map('trim', preg_split('/[,;]/', $request->get('preview_destination')));
@@ -151,10 +153,9 @@ if ($request->isPost() && $request->exist('Submit') &&  $request->existAndNonEmp
         } else {
             print "\n".$GLOBALS['Language']->getText('global', 'mail_failed', array($GLOBALS['sys_email_admin'])).": ".$previewDestination;
         }
+        print "\n".$Language->getText('admin_massmail_execute','done')."\n";
+        flush();
     }
-    print "\n".$Language->getText('admin_massmail_execute','done')."\n";
-    flush();
 }
-($pv == 2) ? $HTML->pv_footer(array()) : $HTML->footer(array());;
 
 ?>
