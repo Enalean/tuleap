@@ -35,7 +35,7 @@ print '<h2>'.$Language->getText('admin_massmail','header',array($GLOBALS['sys_na
 
 <P>'.$Language->getText('admin_massmail','warning').'
 
-<FORM NAME="massmail_form" ACTION="massmail_execute.php" METHOD="POST">
+<FORM ID="massmail_form" NAME="massmail_form" ACTION="massmail_execute.php" METHOD="POST">
 <TABLE width=50% cellpadding=0 cellspacing=0 border=0>
 <TR><TD>
 <INPUT type="radio" name="destination" value="comm">
@@ -79,7 +79,7 @@ print '<h2>'.$Language->getText('admin_massmail','header',array($GLOBALS['sys_na
 </div>
 <div id="myDivLink"></div>
 <br><P>'.$Language->getText('admin_massmail','to_preview').'
-<INPUT type="text" id="preview_destination" name="preview_destination" size="50">
+<INPUT type="text" id="preview_destination" name="preview_destination" size="50" onKeyPress="return disableEnterKey(event)">
 <INPUT type="button" name="Submit" onClick="sendPreview()" value="'.$Language->getText('global','btn_submit').'">
 <DIV id="preview_result"></DIV>
 </P>
@@ -94,48 +94,34 @@ document.observe('dom:loaded', function() {
             new Codendi_RTE_Send_HTML_MAIL('mail_message');
         });
 
-function ajaxRequest(){
- var activexmodes=['Msxml2.XMLHTTP', 'Microsoft.XMLHTTP']; //activeX versions to check for in IE
- if (window.ActiveXObject){ //Test for support for ActiveXObject in IE first (as XMLHttpRequest in IE7 is broken)
-  for (var i=0; i<activexmodes.length; i++){
-   try{
-    return new ActiveXObject(activexmodes[i]);
-   }
-   catch(e){
-    //suppress error
-   }
-  }
- }
- else if (window.XMLHttpRequest) // if Mozilla, Safari etc
-  return new XMLHttpRequest();
- else
-  return false;
+function sendPreview() {
+    var mailSubject = encodeURIComponent($('mail_subject').value);
+    var mailMessage = encodeURIComponent($('mail_message').value);
+    var previewDestination = encodeURIComponent($('preview_destination').value);
+    $('body_format_text', 'body_format_html').each(function(node){if (node.checked) {bodyFormat = encodeURIComponent(node.getValue());}});
+    var formParameters = 'destination=preview&mail_subject='+mailSubject+'&body_format='+bodyFormat+'&mail_message='+mailMessage+'&preview_destination='+previewDestination+'&Submit=Submit';
+    $('massmail_form').request({
+        method: 'post',
+        parameters: formParameters,
+        onCreate: function() { $('preview_result').innerHTML = '<img src=\"/themes/common/images/ic/spinner.gif\" border=\"0\" />'; },
+        onSuccess: function(response){ $('preview_result').innerHTML = '<span style=\"color:red\"><small><b>'+response.responseText+'</b></small></span>'; }});
 }
 
-function sendPreview() {
-    var mypostrequest=new ajaxRequest();
-    mypostrequest.onreadystatechange=function() {
-        if (mypostrequest.readyState==4){
-            document.getElementById('preview_result').innerHTML = '<img src=\"/themes/common/images/ic/spinner.gif\" border=\"0\" />';
-            if (mypostrequest.status==200 || window.location.href.indexOf('http')==-1) {
-                document.getElementById('preview_result').innerHTML='<span style=\"color:red\"><small><b>'+mypostrequest.responseText+'</b></small></span>';
-            } else {
-                alert('An error has occured making the request');
-            }
-        }
-    }
-    var mailSubject=encodeURIComponent(document.getElementById('mail_subject').value);
-    var mailMessage=encodeURIComponent(document.getElementById('mail_message').value);
-    var previewDestination=encodeURIComponent(document.getElementById('preview_destination').value);
-    for (var i=0; i < document.massmail_form.body_format.length; i++) {
-        if (document.massmail_form.body_format[i].checked) {
-            var bodyFormat = document.massmail_form.body_format[i].value;
-        }
-    }
-    var parameters='destination=preview&mail_subject='+mailSubject+'&body_format='+bodyFormat+'&mail_message='+mailMessage+'&preview_destination='+previewDestination+'&Submit=Submit';
-    mypostrequest.open('POST', '/admin/massmail_execute.php', true);
-    mypostrequest.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-    mypostrequest.send(parameters);
+function disableEnterKey(e) {
+     var key;
+     if(window.event) {
+         key = window.event.keyCode;     //IE
+     }
+     else {
+         key = e.which;     //firefox
+     }
+     if(key == 13) {
+         sendPreview();
+         return false;
+     }
+     else {
+         return true;
+     }
 }";
 
 $GLOBALS['HTML']->includeFooterJavascriptSnippet($rte);
