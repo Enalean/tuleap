@@ -71,16 +71,10 @@ print '<h2>'.$Language->getText('admin_massmail','header',array($GLOBALS['sys_na
 </TEXTAREA>
 </PRE>
 </TD></TR><TR><TD>
-<div id="main1">
-<div id="iframe">
-<iframe src="massmail_upload_attachments.php" frameborder="0"></iframe>
-</div>
-<div id="images1"></div>
-</div>
-<div id="myDivLink"></div>
-<br><P>'.$Language->getText('admin_massmail','to_preview').'
+<P><NOSCRIPT><INPUT type="radio" name="destination" value="preview" CHECKED></NOSCRIPT>
+'.$Language->getText('admin_massmail','to_preview').'
 <INPUT type="text" id="preview_destination" name="preview_destination" size="50" onKeyPress="return disableEnterKey(event)">
-<INPUT type="button" name="Submit" onClick="sendPreview()" value="'.$Language->getText('global','btn_submit').'">
+<SPAN ID="preview_button"></SPAN>
 <DIV id="preview_result"></DIV>
 </P>
 <P><INPUT type="submit" name="Submit" value="'.$Language->getText('global','btn_submit').'">
@@ -92,6 +86,7 @@ $rte = "
 var useLanguage = '". substr(UserManager::instance()->getCurrentUser()->getLocale(), 0, 2) ."';
 document.observe('dom:loaded', function() {
             new Codendi_RTE_Send_HTML_MAIL('mail_message');
+            $('preview_button').innerHTML = '<INPUT type=\'button\' name=\'Submit\' value=\'Preview\' onClick=\'sendPreview()\'>';
         });
 
 function sendPreview() {
@@ -99,12 +94,13 @@ function sendPreview() {
     var mailMessage = encodeURIComponent($('mail_message').value);
     var previewDestination = encodeURIComponent($('preview_destination').value);
     $('body_format_text', 'body_format_html').each(function(node){if (node.checked) {bodyFormat = encodeURIComponent(node.getValue());}});
-    var formParameters = 'destination=preview&mail_subject='+mailSubject+'&body_format='+bodyFormat+'&mail_message='+mailMessage+'&preview_destination='+previewDestination+'&Submit=Submit';
+    var formParameters = 'destination=preview&mail_subject='+mailSubject+'&body_format='+bodyFormat+'&mail_message='+mailMessage+'&preview_destination='+previewDestination+'&Submit=Submit&pv=2';
     $('massmail_form').request({
         method: 'post',
         parameters: formParameters,
         onCreate: function() { $('preview_result').innerHTML = '<img src=\"/themes/common/images/ic/spinner.gif\" border=\"0\" />'; },
         onSuccess: function(response){ $('preview_result').innerHTML = '<span style=\"color:red\"><small><b>'+response.responseText+'</b></small></span>'; }});
+    return false;
 }
 
 function disableEnterKey(e) {

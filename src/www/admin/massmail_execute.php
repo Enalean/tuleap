@@ -14,6 +14,15 @@ require_once('common/mail/Codendi_Mail.class.php');
 
 session_require(array('group'=>1,'admin_flags'=>'A'));
 
+$vPv = new Valid_Pv();
+if ($request->valid($vPv) && $request->get('pv') == 2) {
+    $pv = 2;
+    $HTML->pv_header(array('title'=>$Language->getText('admin_massmail','title')));
+} else {
+    $pv = 0;
+    site_header(array('title'=>$Language->getText('admin_massmail','title')));
+}
+
 $request = HTTPRequest::instance();
 if ($request->isPost() && $request->exist('Submit') &&  $request->existAndNonEmpty('destination')) {
 
@@ -84,12 +93,11 @@ if ($request->isPost() && $request->exist('Submit') &&  $request->existAndNonEmp
     $mail->setBody(stripslashes($mailMessage));
 
     if (isset($res_mail)) {
-        header ('Content-Type: text/plain');
 
-        print $Language->getText('admin_massmail_execute','post_recvd')."\n";
+        print $Language->getText('admin_massmail_execute','post_recvd')."<br>";
         flush();
 
-        print $Language->getText('admin_massmail_execute','mailing',array(db_numrows($res_mail)))." ($to_name)\n\n";
+        print $Language->getText('admin_massmail_execute','mailing',array(db_numrows($res_mail)))." ($to_name)<br><br>";
         flush();
 
         $rows=db_numrows($res_mail);
@@ -103,9 +111,9 @@ if ($request->isPost() && $request->exist('Submit') &&  $request->existAndNonEmp
                 $mail->setBcc($tolist);
                 $mail->setTo($GLOBALS['sys_noreply']);
                 if ($mail->send()) {
-                    print "\n".$Language->getText('admin_massmail_execute','sending').": ".$tolist;
+                    print "<br>".$Language->getText('admin_massmail_execute','sending').": ".$tolist;
                 } else {
-                    print "\n".$GLOBALS['Language']->getText('global', 'mail_failed', array($GLOBALS['sys_email_admin'])).": ".$tolist;
+                    print "<br>".$GLOBALS['Language']->getText('global', 'mail_failed', array($GLOBALS['sys_email_admin'])).": ".$tolist;
                 }
                 flush();
                 usleep(2000000);
@@ -122,9 +130,9 @@ if ($request->isPost() && $request->exist('Submit') &&  $request->existAndNonEmp
             $mail->setBcc($tolist);
             $mail->setTo($GLOBALS['sys_noreply']);
             if ($mail->send()) {
-                print "\n".$Language->getText('admin_massmail_execute','sending').": ".$tolist;
+                print "<br><br>".$Language->getText('admin_massmail_execute','sending').": ".$tolist."<br><br>";
             } else {
-                print "\n".$GLOBALS['Language']->getText('global', 'mail_failed', array($GLOBALS['sys_email_admin'])).": ".$tolist;
+                print "<br><br>".$GLOBALS['Language']->getText('global', 'mail_failed', array($GLOBALS['sys_email_admin'])).": ".$tolist."<br><br>";
             }
         }
     } else {
@@ -147,4 +155,6 @@ if ($request->isPost() && $request->exist('Submit') &&  $request->existAndNonEmp
     print "\n".$Language->getText('admin_massmail_execute','done')."\n";
     flush();
 }
+($pv == 2) ? $HTML->pv_footer(array()) : $HTML->footer(array());;
+
 ?>
