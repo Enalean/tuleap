@@ -74,7 +74,7 @@ print '<h2>'.$Language->getText('admin_massmail','header',array($GLOBALS['sys_na
 </TD></TR><TR><TD>
 <P><NOSCRIPT><INPUT type="radio" name="destination" value="preview" CHECKED></NOSCRIPT>
 '.$Language->getText('admin_massmail','to_preview').'
-<INPUT type="text" id="preview_destination" name="preview_destination" size="50" onKeyPress="return disableEnterKey(event)">
+<INPUT type="text" id="preview_destination" name="preview_destination" size="50" >
 <SPAN ID="preview_button"></SPAN>
 <DIV id="preview_result"></DIV>
 </P>
