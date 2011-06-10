@@ -33,8 +33,9 @@ var MassMail = Class.create({
         var mailSubject = encodeURIComponent($('mail_subject').value);
         var previewDestination = encodeURIComponent($('preview_destination').value);
         $('body_format_text', 'body_format_html').each(function(node){if (node.checked) {bodyFormat = encodeURIComponent(node.getValue());}});
-        if (tinyMCE.getInstanceById('mail_message')) {
-        $('mail_message').innerHTML = tinyMCE.getInstanceById('mail_message').getBody().innerHTML;
+        var inst = tinyMCE.getInstanceById('mail_message');
+        if (inst) {
+        $('mail_message').value = tinyMCE.getInstanceById('mail_message').getBody().innerHTML;
         }
         var mailMessage = encodeURIComponent($('mail_message').value);
         var formParameters = 'destination=preview&mail_subject='+mailSubject+'&body_format='+bodyFormat+'&mail_message='+mailMessage+'&preview_destination='+previewDestination+'&Submit=Submit&pv=2';
