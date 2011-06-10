@@ -22,6 +22,7 @@ var MassMail = Class.create({
             Event.observe($('preview_submit'), 'click', this.sendPreview.bindAsEventListener(this));
             Event.observe($('preview_destination'), 'keypress', this.disableEnterKey.bindAsEventListener(this));
     },
+    //Disable massmail_form submission when enter key is pressed, the preview is sent instead .
     disableEnterKey: function(event) {
         if (Event.KEY_RETURN == event.keyCode) {
             this.sendPreview(event);
@@ -33,6 +34,7 @@ var MassMail = Class.create({
         var mailSubject = encodeURIComponent($('mail_subject').value);
         var previewDestination = encodeURIComponent($('preview_destination').value);
         $('body_format_text', 'body_format_html').each(function(node){if (node.checked) {bodyFormat = encodeURIComponent(node.getValue());}});
+        //Once toggled, TinyMCE will inlay an amount of html so the content of the mass_mail textarea must be updated.
         var inst = tinyMCE.getInstanceById('mail_message');
         if (inst) {
         $('mail_message').value = tinyMCE.getInstanceById('mail_message').getBody().innerHTML;
@@ -41,6 +43,7 @@ var MassMail = Class.create({
         var formParameters = 'destination=preview&mail_subject='+mailSubject+'&body_format='+bodyFormat+'&mail_message='+mailMessage+'&preview_destination='+previewDestination+'&Submit=Submit&pv=2';
         var spinner = Builder.node('img', {'src'    : '/themes/common/images/ic/spinner.gif',
                                            'border' : '0'});
+        //we request the preview here, massmail_execute will process the whole stuff
         $('massmail_form').request({
             method: 'post',
             parameters: formParameters,

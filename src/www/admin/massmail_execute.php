@@ -138,6 +138,7 @@ if ($request->isPost() && $request->exist('Submit') &&  $request->existAndNonEmp
         flush();
         ($pv == 2) ? $HTML->pv_footer(array()) : $HTML->footer(array());;
     } else {
+        // This part would send a preview email, parameters are retrieved within the function sendPreview() in MassMail.js
         $validMails = array();
         $addresses  = array_map('trim', preg_split('/[,;]/', $request->get('preview_destination')));
         $rule       = new Rule_Email();

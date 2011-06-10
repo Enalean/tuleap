@@ -88,12 +88,14 @@ var useLanguage = '". substr(UserManager::instance()->getCurrentUser()->getLocal
 document.observe('dom:loaded', function() {
             new Codendi_RTE_Send_HTML_MAIL('mail_message');
 
+            // Building input for the submission of preview adresses 
             var button = Builder.node('input', {'id'      : 'preview_submit',
                                                 'name'    : 'Submit',
                                                 'type'    : 'button',
                                                 'value'   : 'Preview'});
             $('preview_button').appendChild(button);
 
+            //launching initialize function on MassMail instance will observe Events on the  input built above
             new MassMail();
         });";
 
