@@ -3,6 +3,7 @@ Version 4.0.19 - Not released yet
 	* backlog #124814: Notification issue when documents are removed
 	* Rename a UserGroup in project admin interface doesn't rename the corresponding group in SvnAccessFile
 	* Empty UserGroup lead to error in viewvc
+	* .xlsm not recognized by viewvc
 
 	== New features ==
 	* Improve themability of HomePage

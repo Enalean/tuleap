@@ -105,8 +105,27 @@ function viewvc_utils_passcommand() {
 	if (preg_match('/^Content-Type:(.*)$/',$line,$matches)) {
 	    //Until Apache will support the office 2007 mime types by default
         //We should keep test on extension for IE to set the right Mime Type.
-	    if (array_key_exists('extension', $pathInfo) && in_array($pathInfo['extension'], array('docx', 'xslx', 'pptx', 'dotx'))) {
-            $viewvc_content_type = 'application/vnd.openxmlformats';
+        $officeEtensions = array('docm' => 'application/vnd.ms-word.document.macroEnabled.12',
+                                 'docx' => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                                 'dotm' => 'application/vnd.ms-word.template.macroEnabled.12',
+                                 'dotx' => 'application/vnd.openxmlformats-officedocument.wordprocessingml.template',
+                                 'potm' => 'application/vnd.ms-powerpoint.template.macroEnabled.12',
+                                 'potx' => 'application/vnd.openxmlformats-officedocument.presentationml.template',
+                                 'ppam' => 'application/vnd.ms-powerpoint.addin.macroEnabled.12',
+                                 'ppsm' => 'application/vnd.ms-powerpoint.slideshow.macroEnabled.12',
+                                 'ppsx' => 'application/vnd.openxmlformats-officedocument.presentationml.slideshow',
+                                 'pptm' => 'application/vnd.ms-powerpoint.presentation.macroEnabled.12',
+                                 'pptx' => 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+                                 'sldm' => 'application/vnd.ms-powerpoint.slide.macroEnabled.12',
+                                 'sldx' => 'application/vnd.openxmlformats-officedocument.presentationml.slide',
+                                 'xlam' => 'application/vnd.ms-excel.addin.macroEnabled.12',
+                                 'xlsb' => 'application/vnd.ms-excel.sheet.binary.macroEnabled.12',
+                                 'xlsm' => 'application/vnd.ms-excel.sheet.macroEnabled.12',
+                                 'xlsx' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                                 'xltm' => 'application/vnd.ms-excel.template.macroEnabled.12',
+                                 'xltx' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.template');
+	    if (array_key_exists('extension', $pathInfo) && array_key_exists($pathInfo['extension'], $officeEtensions)) {
+            $viewvc_content_type = $officeEtensions[$pathInfo['extension']];
         } else {
             $viewvc_content_type=$matches[1];
         }
