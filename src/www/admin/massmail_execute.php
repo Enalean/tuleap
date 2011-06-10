@@ -84,14 +84,14 @@ if ($request->isPost() && $request->exist('Submit') &&  $request->existAndNonEmp
     $mail->setBody(stripslashes($mailMessage));
 
     if (isset($res_mail)) {
-    $vPv = new Valid_Pv();
-    if ($request->valid($vPv) && $request->get('pv') == 2) {
-    $pv = 2;
-    $HTML->pv_header(array('title'=>$Language->getText('admin_massmail','title')));
-    } else {
-    $pv = 0;
-    site_header(array('title'=>$Language->getText('admin_massmail','title')));
-    }
+        $vPv = new Valid_Pv();
+        if ($request->valid($vPv) && $request->get('pv') == 2) {
+            $pv = 2;
+            $HTML->pv_header(array('title'=>$Language->getText('admin_massmail','title')));
+        } else {
+            $pv = 0;
+            site_header(array('title'=>$Language->getText('admin_massmail','title')));
+        }
 
         print $Language->getText('admin_massmail_execute','post_recvd')."<br>";
         flush();
