@@ -590,26 +590,43 @@ class GitPHP_Project
 			$head = $this->GetHead(substr($hash, 11));
 			if ($head != null)
 				return $head->GetCommit();
+			return null;
 		} else if (substr_compare($hash, 'refs/tags/', 0, 10) === 0) {
 			$tag = $this->GetTag(substr($hash, 10));
 			if ($tag != null) {
-				$obj = $tag->GetObject();
+				$obj = $tag->GetCommit();
 				if ($obj != null) {
 					return $obj;
 				}
 			}
+			return null;
 		}
 
-		if (!isset($this->commitCache[$hash])) {
-			$cacheKey = 'project|' . $this->project . '|commit|' . $hash;
-			$cached = GitPHP_Cache::GetInstance()->Get($cacheKey);
-			if ($cached)
-				$this->commitCache[$hash] = $cached;
-			else
-				$this->commitCache[$hash] = new GitPHP_Commit($this, $hash);
+		if (preg_match('/[0-9a-f]{40}/i', $hash)) {
+
+			if (!isset($this->commitCache[$hash])) {
+				$cacheKey = 'project|' . $this->project . '|commit|' . $hash;
+				$cached = GitPHP_Cache::GetInstance()->Get($cacheKey);
+				if ($cached)
+					$this->commitCache[$hash] = $cached;
+				else
+					$this->commitCache[$hash] = new GitPHP_Commit($this, $hash);
+			}
+
+			return $this->commitCache[$hash];
+
 		}
 
-		return $this->commitCache[$hash];
+		if (!$this->readRefs)
+			$this->ReadRefList();
+
+		if (isset($this->heads['refs/heads/' . $hash]))
+			return $this->heads['refs/heads/' . $hash]->GetCommit();
+
+		if (isset($this->tags['refs/tags/' . $hash]))
+			return $this->tags['refs/tags/' . $hash]->GetCommit();
+
+		return null;
 	}
 
 	/**
