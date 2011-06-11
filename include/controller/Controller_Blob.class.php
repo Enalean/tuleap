@@ -120,14 +120,20 @@ class GitPHP_Controller_Blob extends GitPHP_ControllerBase
 				else
 					$saveas = $this->params['hash'] . ".txt";
 
-				$blob = $this->project->GetBlob($this->params['hash']);
-				$blob->SetPath($this->params['file']);
-
 				$headers = array();
 
 				$mime = null;
-				if (GitPHP_Config::GetInstance()->GetValue('filemimetype', true))
+				if (GitPHP_Config::GetInstance()->GetValue('filemimetype', true)) {
+					if ((!isset($this->params['hash'])) && (isset($this->params['file']))) {
+						$commit = $this->project->GetCommit($this->params['hashbase']);
+						$this->params['hash'] = $commit->PathToHash($this->params['file']);
+					}
+
+					$blob = $this->project->GetBlob($this->params['hash']);
+					$blob->SetPath($this->params['file']);
+
 					$mime = $blob->FileMime();
+				}
 
 				if ($mime)
 					$headers[] = "Content-type: " . $mime;
