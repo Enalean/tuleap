@@ -24,30 +24,30 @@ require_once('common/dao/include/DataAccessObject.class.php');
  */
 class RequestHelpDao extends DataAccessObject {
 
-    /**
-     * Constructor
-     *
-     * @return void
-     */
-    function __construct() {
-        parent::__construct(CodendiDataAccess::instance());
-    }
+	/**
+	 * Constructor
+	 *
+	 * @return void
+	 */
+	function __construct() {
+		parent::__construct(CodendiDataAccess::instance());
+	}
 
-    /**
-     * Insert the ticket informations in Codex database
-     *
-     * @param Integer $userId      Id of the submitter
-     * @param String  $summary     Ticket summary
-     * @param date    $createDate  Creation date
-     * @param String  $description Ticket description
-     * @param Integer $type        Ticket type
-     * @param Integer $severity    Ticket severity
-     * @param String  $cc          CC mail addresses
-     *
-     * @return Boolean
-     */
-    function insertInCodexDB($userId, $summary, $createDate, $description, $type, $severity, $cc) {
-        $insert = 'INSERT INTO plugin_request_help'.
+	/**
+	 * Insert the ticket informations in Codex database
+	 *
+	 * @param Integer $userId      Id of the submitter
+	 * @param String  $summary     Ticket summary
+	 * @param date    $createDate  Creation date
+	 * @param String  $description Ticket description
+	 * @param Integer $type        Ticket type
+	 * @param Integer $severity    Ticket severity
+	 * @param String  $cc          CC mail addresses
+	 *
+	 * @return Boolean
+	 */
+	function insertInCodexDB($userId, $summary, $createDate, $description, $type, $severity, $cc) {
+		$insert = 'INSERT INTO plugin_request_help'.
                   '(user_id, '.
                   'summary, '.
                   'create_date, '.
@@ -56,15 +56,15 @@ class RequestHelpDao extends DataAccessObject {
                   'severity, '.
                   'cc '.
                   ')values ('.
-                  $this->da->escapeInt($userId).', '.
-                  $this->da->quoteSmart(utf8_encode($summary)).', '.
-                  $this->da->escapeInt($createDate).', '.
-                  $this->da->quoteSmart(utf8_encode($description)).', '.
-                  $this->da->escapeInt($type).', '.
-                  $this->da->escapeInt($severity).', '.
-                  $this->da->quoteSmart($cc).')';
-        return $this->update($insert);
-    }
+		$this->da->escapeInt($userId).', '.
+		$this->da->quoteSmart(utf8_encode($summary)).', '.
+		$this->da->escapeInt($createDate).', '.
+		$this->da->quoteSmart(utf8_encode($description)).', '.
+		$this->da->escapeInt($type).', '.
+		$this->da->escapeInt($severity).', '.
+		$this->da->quoteSmart($cc).')';
+		return $this->update($insert);
+	}
 
 }
 

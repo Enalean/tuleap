@@ -25,76 +25,76 @@ require_once('RequestHelp.class.php');
 
 class requesthelpPlugin extends Plugin {
 
-    /**
-     * Constructor
-     *
-     * @param Integer $id id of the plugin
-     *
-     * @return void
-     */
-    function requesthelpPlugin($id) {
-        $this->Plugin($id);
-        if (extension_loaded('oci8')) {
-            $this->_addHook('cssfile', 'cssFile', false);
-            $this->_addHook('site_help', 'redirectToPlugin', false);
-        }
-    }
+	/**
+	 * Constructor
+	 *
+	 * @param Integer $id id of the plugin
+	 *
+	 * @return void
+	 */
+	function requesthelpPlugin($id) {
+		$this->Plugin($id);
+		if (extension_loaded('oci8')) {
+			$this->_addHook('cssfile', 'cssFile', false);
+			$this->_addHook('site_help', 'redirectToPlugin', false);
+		}
+	}
 
-    /**
-     * Retrieve plugin info
-     *
-     * @return RequestHelpPluginInfo
-     */
-    function getPluginInfo() {
-        if (!$this->pluginInfo instanceof RequestHelpPluginInfo) {
-            include_once('RequestHelpPluginInfo.class.php');
-            $this->pluginInfo = new RequestHelpPluginInfo($this);
-        }
-        return $this->pluginInfo;
-    }
+	/**
+	 * Retrieve plugin info
+	 *
+	 * @return RequestHelpPluginInfo
+	 */
+	function getPluginInfo() {
+		if (!$this->pluginInfo instanceof RequestHelpPluginInfo) {
+			include_once('RequestHelpPluginInfo.class.php');
+			$this->pluginInfo = new RequestHelpPluginInfo($this);
+		}
+		return $this->pluginInfo;
+	}
 
-    /**
-     * Launch the controller
-     *
-     * @return void
-     */
-    function process() {
-        $controler = new RequestHelp();
-        $controler->process();
-    }
+	/**
+	 * Launch the controller
+	 *
+	 * @return void
+	 */
+	function process() {
+		$controler = new RequestHelp();
+		$controler->process();
+	}
 
-     /**
-     * Set the right style sheet for RequestHelp form
-     *
-     * @param Array $params params of the hook
-     *
-     * @return void
-     */
-    function cssFile($params) {
-        echo '<link rel="stylesheet" type="text/css" href="'.$this->getThemePath().'/css/style.css" />'."\n";
-    }
+	/**
+	 * Set the right style sheet for RequestHelp form
+	 *
+	 * @param Array $params params of the hook
+	 *
+	 * @return void
+	 */
+	function cssFile($params) {
+		echo '<link rel="stylesheet" type="text/css" href="'.$this->getThemePath().'/css/style.css" />'."\n";
+	}
 
-    /**
-     * Redirects the hook call to plugin path
-     *
-     * @return void
-     */
-    function redirectToPlugin() {
-        $c = new RequestHelp();
-        $c->redirect($this->getPluginPath().'/');
-        exit();
-    }
+	/**
+	 * Redirects the hook call to plugin path
+	 *
+	 * @return void
+	 */
+	function redirectToPlugin() {
+		$c = new RequestHelp();
+		$c->redirect($this->getPluginPath().'/');
+		exit();
+	}
 
-    /**
-     * Retreive a param config giving its name
-     *
-     * @param String $name Property name
-     *
-     * @return String
-     */
-    public function getProperty($name) {
-        $info =$this->getPluginInfo();
-        return $info->getPropertyValueForName($name);
-    }
+	/**
+	 * Retreive a param config giving its name
+	 *
+	 * @param String $name Property name
+	 *
+	 * @return String
+	 */
+	public function getProperty($name) {
+		$info =$this->getPluginInfo();
+		return $info->getPropertyValueForName($name);
+	}
 }
 ?>

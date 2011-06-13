@@ -1,37 +1,39 @@
 .cssform {
-    width: 900px;
+	width: 900px;
 }
 
 .cssform label {
-    font-weight: bold;
-    text-align:left;
-    position:relative;
+	font-weight: bold;
+	text-align: left;
+	position: relative;
 }
 
 .cssform input [type="select"] {
-    text-align:left;
-    position: relative;
+	text-align: left;
+	position: relative;
 }
 
-.cssform input[type="text"] { /*width of text boxes. IE6 does not understand this attribute*/
-    width: 600px;
-    position: relative;
+.cssform input[type="text"] {
+	/*width of text boxes. IE6 does not understand this attribute*/
+	width: 600px;
+	position: relative;
 }
 
 .cssform textarea {
-    width: 600px;
-    height: 100px;
+	width: 600px;
+	height: 100px;
 }
 
 .totop {
-    position:relative;
-    top: -45px;
+	position: relative;
+	top: -45px;
 }
 
 .cssform fieldset {
-    background: rgb(222,222,222);
+	background: rgb(222, 222, 222);
 }
+
 .cssform legend {
-    position:absolute;
-    top:-8px;
+	position: absolute;
+	top: -8px;
 }
