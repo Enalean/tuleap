@@ -21,9 +21,9 @@
 
 require_once('common/plugin/Plugin.class.php');
 require_once('common/system_event/SystemEvent.class.php');
-require_once('CodexToRemedy.class.php');
+require_once('RequestHelp.class.php');
 
-class codextoremedyPlugin extends Plugin {
+class requesthelpPlugin extends Plugin {
 
     /**
      * Constructor
@@ -32,7 +32,7 @@ class codextoremedyPlugin extends Plugin {
      *
      * @return void
      */
-    function codextoremedyPlugin($id) {
+    function requesthelpPlugin($id) {
         $this->Plugin($id);
         if (extension_loaded('oci8')) {
             $this->_addHook('cssfile', 'cssFile', false);
@@ -43,12 +43,12 @@ class codextoremedyPlugin extends Plugin {
     /**
      * Retrieve plugin info
      *
-     * @return CodexToRemedyPluginInfo
+     * @return RequestHelpPluginInfo
      */
     function getPluginInfo() {
-        if (!$this->pluginInfo instanceof CodexToRemedyPluginInfo) {
-            include_once('CodexToRemedyPluginInfo.class.php');
-            $this->pluginInfo = new CodexToRemedyPluginInfo($this);
+        if (!$this->pluginInfo instanceof RequestHelpPluginInfo) {
+            include_once('RequestHelpPluginInfo.class.php');
+            $this->pluginInfo = new RequestHelpPluginInfo($this);
         }
         return $this->pluginInfo;
     }
@@ -59,12 +59,12 @@ class codextoremedyPlugin extends Plugin {
      * @return void
      */
     function process() {
-        $controler = new CodexToRemedy();
+        $controler = new RequestHelp();
         $controler->process();
     }
 
      /**
-     * Set the right style sheet for CodexToRemedy form
+     * Set the right style sheet for RequestHelp form
      *
      * @param Array $params params of the hook
      *
@@ -80,7 +80,7 @@ class codextoremedyPlugin extends Plugin {
      * @return void
      */
     function redirectToPlugin() {
-        $c = new CodexToRemedy();
+        $c = new RequestHelp();
         $c->redirect($this->getPluginPath().'/');
         exit();
     }

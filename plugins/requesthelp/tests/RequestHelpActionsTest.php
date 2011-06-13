@@ -32,14 +32,14 @@ Mock::generate('PluginManager');
 require_once('common/include/Properties.class.php');
 Mock::generate('Properties');
 
-require_once(dirname(__FILE__).'/../include/CodexToRemedy.class.php');
-Mock::generate('CodexToRemedy');
-require_once(dirname(__FILE__).'/../include/CodexToRemedyActions.class.php');
-Mock::generatePartial('CodexToRemedyActions', 'CodexToRemedyActionsTestVersion', array('_getUserManager'));
-Mock::generatePartial('CodexToRemedyActions', 'CodexToRemedyActionsTestVersion2', array('_getUserManager', 'insertTicketInCodexDB', 'sendMail', 'insertTicketInRIFDB', 'getController', 'validateRequest'));
-Mock::generatePartial('CodexToRemedyActions', 'CodexToRemedyActionsTestVersion3', array('_getUserManager', '_getCodendiMail', '_getPluginManager', 'validateRequest'));
+require_once(dirname(__FILE__).'/../include/RequestHelp.class.php');
+Mock::generate('RequestHelp');
+require_once(dirname(__FILE__).'/../include/RequestHelpActions.class.php');
+Mock::generatePartial('RequestHelpActions', 'RequestHelpActionsTestVersion', array('_getUserManager'));
+Mock::generatePartial('RequestHelpActions', 'RequestHelpActionsTestVersion2', array('_getUserManager', 'insertTicketInCodexDB', 'sendMail', 'insertTicketInRIFDB', 'getController', 'validateRequest'));
+Mock::generatePartial('RequestHelpActions', 'RequestHelpActionsTestVersion3', array('_getUserManager', '_getCodendiMail', '_getPluginManager', 'validateRequest'));
 
-class CodexToRemedyActionsTest extends UnitTestCase {
+class RequestHelpActionsTest extends UnitTestCase {
 
     function setUp() {
         $GLOBALS['Language']           = new MockBaseLanguage($this);
@@ -58,7 +58,7 @@ class CodexToRemedyActionsTest extends UnitTestCase {
         $request->setReturnValue('get', 'john.doe@example.com', array('cc'));
         $request->setReturnValue('valid', true);
         $request->expectCallCount('valid', 4);
-        $actions = new CodexToRemedyActionsTestVersion();
+        $actions = new RequestHelpActionsTestVersion();
         $params = $actions->validateRequest($request);
         $validParams = array('status' => true,
                              'params' => array('summary'       => 'valid summary',
@@ -81,7 +81,7 @@ class CodexToRemedyActionsTest extends UnitTestCase {
         $request->setReturnValue('get', 'john.doe@example.com', array('cc'));
         $request->setReturnValue('valid', false);
         $request->expectCallCount('valid', 4);
-        $actions = new CodexToRemedyActionsTestVersion();
+        $actions = new RequestHelpActionsTestVersion();
         $params = $actions->validateRequest($request);
         $validParams = array('status' => false,
                              'params' => array('cc' => 'john.doe@example.com'),
@@ -101,7 +101,7 @@ class CodexToRemedyActionsTest extends UnitTestCase {
         $request->setReturnValueAt(2, 'valid', true);
         $request->setReturnValueAt(3, 'valid', true);
         $request->expectCallCount('valid', 4);
-        $actions = new CodexToRemedyActionsTestVersion();
+        $actions = new RequestHelpActionsTestVersion();
         $params = $actions->validateRequest($request);
         $validParams = array('status' => false,
                              'params' => array('description'   => 'valid description',
@@ -126,7 +126,7 @@ class CodexToRemedyActionsTest extends UnitTestCase {
         $request->setReturnValueAt(2, 'valid', true);
         $request->setReturnValueAt(3, 'valid', true);
         $request->expectCallCount('valid', 4);
-        $actions = new CodexToRemedyActionsTestVersion();
+        $actions = new RequestHelpActionsTestVersion();
         $params = $actions->validateRequest($request);
         $validParams = array('status' => false,
                              'params' => array('summary'       => 'valid summary',
@@ -151,7 +151,7 @@ class CodexToRemedyActionsTest extends UnitTestCase {
         $request->setReturnValueAt(2, 'valid', false);
         $request->setReturnValueAt(3, 'valid', true);
         $request->expectCallCount('valid', 4);
-        $actions = new CodexToRemedyActionsTestVersion();
+        $actions = new RequestHelpActionsTestVersion();
         $params = $actions->validateRequest($request);
         $validParams = array('status' => false,
                              'params' => array('summary'       => 'valid summary',
@@ -172,7 +172,7 @@ class CodexToRemedyActionsTest extends UnitTestCase {
         $request->setReturnValue('get', 'john.doe@example.com', array('cc'));
         $request->setReturnValue('valid', true);
         $request->expectCallCount('valid', 4);
-        $actions = new CodexToRemedyActionsTestVersion();
+        $actions = new RequestHelpActionsTestVersion();
         $params = $actions->validateRequest($request);
         $validParams = array('status' => false,
                              'params' => array('summary'       => 'valid summary',
@@ -197,7 +197,7 @@ class CodexToRemedyActionsTest extends UnitTestCase {
         $request->setReturnValueAt(2, 'valid', true);
         $request->setReturnValueAt(3, 'valid', false);
         $request->expectCallCount('valid', 4);
-        $actions = new CodexToRemedyActionsTestVersion();
+        $actions = new RequestHelpActionsTestVersion();
         $params = $actions->validateRequest($request);
         $validParams = array('status' => false,
                              'params' => array('summary'     => 'valid summary',
@@ -218,7 +218,7 @@ class CodexToRemedyActionsTest extends UnitTestCase {
         $request->setReturnValue('get', 'john.doe@example.com', array('cc'));
         $request->setReturnValue('valid', true);
         $request->expectCallCount('valid', 4);
-        $actions = new CodexToRemedyActionsTestVersion();
+        $actions = new RequestHelpActionsTestVersion();
         $params = $actions->validateRequest($request);
         $validParams = array('status' => false,
                              'params' => array('summary'     => 'valid summary',
@@ -235,8 +235,8 @@ class CodexToRemedyActionsTest extends UnitTestCase {
         $um = new MockUserManager();
         $user = new MockUser();
         $um->setReturnValue('getCurrentUser', $user);
-        $actions = new CodexToRemedyActionsTestVersion2();
-        $c = new MockCodexToRemedy();
+        $actions = new RequestHelpActionsTestVersion2();
+        $c = new MockRequestHelp();
         $actions->setReturnValue('getController', $c);
         $actions->setReturnValue('_getUserManager', $um);
         $params = array('status' => true,
@@ -260,8 +260,8 @@ class CodexToRemedyActionsTest extends UnitTestCase {
         $um = new MockUserManager();
         $user = new MockUser();
         $um->setReturnValue('getCurrentUser', $user);
-        $actions = new CodexToRemedyActionsTestVersion2();
-        $c = new MockCodexToRemedy();
+        $actions = new RequestHelpActionsTestVersion2();
+        $c = new MockRequestHelp();
         $actions->setReturnValue('getController', $c);
         $actions->setReturnValue('_getUserManager', $um);
         $params = array('status' => true,
@@ -287,8 +287,8 @@ class CodexToRemedyActionsTest extends UnitTestCase {
         $um = new MockUserManager();
         $user = new MockUser();
         $um->setReturnValue('getCurrentUser', $user);
-        $actions = new CodexToRemedyActionsTestVersion2();
-        $c = new MockCodexToRemedy();
+        $actions = new RequestHelpActionsTestVersion2();
+        $c = new MockRequestHelp();
         $actions->setReturnValue('getController', $c);
         $actions->setReturnValue('_getUserManager', $um);
         $params = array('status' => true,
@@ -324,12 +324,12 @@ class CodexToRemedyActionsTest extends UnitTestCase {
                              'text_severity' => 'Minor',
                              'cc'            => 'john.doe@example.com');
 
-                $GLOBALS['Language']->setReturnValue('getText','Generic subject to user', array('plugin_codextoremedy', 'codextoremedy_mail_subject', array('Minor', 'valid summary')));
+                $GLOBALS['Language']->setReturnValue('getText','Generic subject to user', array('plugin_requesthelp', 'requesthelp_mail_subject', array('Minor', 'valid summary')));
         $pm = new MockPluginManager();
         $p = new MockProperties();
         $pm->setReturnValue('getPluginByName', $p);
         $p->setReturnValue('getProperty', 'jenny.doe@example.com');
-        $actions = new CodexToRemedyActionsTestVersion3();
+        $actions = new RequestHelpActionsTestVersion3();
         $actions->setReturnValue('_getUserManager', $um);
         $actions->setReturnValue('_getPluginManager',$pm);
         $mail = new MockCodendi_Mail();
@@ -339,7 +339,7 @@ class CodexToRemedyActionsTest extends UnitTestCase {
         $mail->setReturnValue('send', true);
 
         $actions->setReturnValue('_getCodendiMail', $mail);
-        $this->assertTrue($actions->sendMail($validParams, CodexToRemedyActions::RECEPIENT_USER));
+        $this->assertTrue($actions->sendMail($validParams, RequestHelpActions::RECEPIENT_USER));
     }
 
     function testSendMailToSDFailure() {
@@ -355,16 +355,16 @@ class CodexToRemedyActionsTest extends UnitTestCase {
                              'text_severity' => 'Minor',
                              'cc'            => 'john.doe@example.com');
 
-        $GLOBALS['Language']->setReturnValue('getText','Generic subject to SD', array('plugin_codextoremedy', 'codextoremedy_mail_subject', array('Minor', 'valid summary')));
-                $codextoremedy_user_mail_content = 'this is fake body';
-        $codextoremedy_mail_content = 'this is fake body';
-        $codextoremedy_Failure_mail_content = 'this is fake body';
+        $GLOBALS['Language']->setReturnValue('getText','Generic subject to SD', array('plugin_requesthelp', 'requesthelp_mail_subject', array('Minor', 'valid summary')));
+                $requesthelp_user_mail_content = 'this is fake body';
+        $requesthelp_mail_content = 'this is fake body';
+        $requesthelp_Failure_mail_content = 'this is fake body';
 
         $pm = new MockPluginManager();
         $p = new MockProperties();
         $pm->setReturnValue('getPluginByName', $p);
         $p->setReturnValue('getProperty', 'jenny.doe@example.com');
-        $actions = new CodexToRemedyActionsTestVersion3();
+        $actions = new RequestHelpActionsTestVersion3();
         $actions->setReturnValue('_getUserManager', $um);
         $actions->setReturnValue('_getPluginManager',$pm);
         $mail = new MockCodendi_Mail();
@@ -374,7 +374,7 @@ class CodexToRemedyActionsTest extends UnitTestCase {
         $mail->setReturnValue('send', false);
 
         $actions->setReturnValue('_getCodendiMail', $mail);
-        $this->assertFalse($actions->sendMail($validParams, CodexToRemedyActions::RECEPIENT_SD));
+        $this->assertFalse($actions->sendMail($validParams, RequestHelpActions::RECEPIENT_SD));
     }
 
     function testSendMailToSDInsertRifDBFail() {
@@ -390,12 +390,12 @@ class CodexToRemedyActionsTest extends UnitTestCase {
                              'text_severity' => 'Minor',
                              'cc'            => 'john.doe@example.com');
 
-        $GLOBALS['Language']->setReturnValue('getText','Failure', array('plugin_codextoremedy', 'codextoremedy_Failure_mail_subject'));
+        $GLOBALS['Language']->setReturnValue('getText','Failure', array('plugin_requesthelp', 'requesthelp_Failure_mail_subject'));
         $pm = new MockPluginManager();
         $p = new MockProperties();
         $pm->setReturnValue('getPluginByName', $p);
         $p->setReturnValue('getProperty', 'jenny.doe@example.com');
-        $actions = new CodexToRemedyActionsTestVersion3();
+        $actions = new RequestHelpActionsTestVersion3();
         $actions->setReturnValue('_getUserManager', $um);
         $actions->setReturnValue('_getPluginManager',$pm);
         $mail = new MockCodendi_Mail();
@@ -405,7 +405,7 @@ class CodexToRemedyActionsTest extends UnitTestCase {
         $mail->setReturnValue('send', true);
 
         $actions->setReturnValue('_getCodendiMail', $mail);
-        $this->assertTrue($actions->sendMail($validParams, CodexToRemedyActions::RECEPIENT_FAILURE_SD));
+        $this->assertTrue($actions->sendMail($validParams, RequestHelpActions::RECEPIENT_FAILURE_SD));
     }
 
 }

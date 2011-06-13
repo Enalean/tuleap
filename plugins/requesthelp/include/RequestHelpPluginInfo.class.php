@@ -19,16 +19,22 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-require_once('pre.php');
-require_once('common/plugin/PluginManager.class.php');
+require_once 'common/plugin/PluginFileInfo.class.php';
+require_once 'RequestHelpPluginDescriptor.class.php';
 
-$plugin_manager = PluginManager::instance();
-$p = $plugin_manager->getPluginByName('codextoremedy');
+class RequestHelpPluginInfo extends PluginFileInfo {
 
-if ($p && $plugin_manager->isPluginAvailable($p) && extension_loaded('oci8')) {
-    $p->process();
-} else {
-    header('Location: '.get_server_url());
+    /**
+     * Constructor
+     *
+     * @param requesthelpPlugin $plugin the plugin
+     *
+     * @return void
+     */
+    function __construct($plugin) {
+        parent::__construct($plugin, 'requesthelp');
+        $this->setPluginDescriptor(new RequestHelpPluginDescriptor());
+    }
+
 }
-
 ?>

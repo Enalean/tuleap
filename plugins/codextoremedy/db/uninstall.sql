@@ -1,1 +1,0 @@
-DROP TABLE IF EXISTS plugin_codex_to_remedy;

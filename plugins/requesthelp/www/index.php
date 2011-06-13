@@ -19,18 +19,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-require_once 'common/plugin/PluginDescriptor.class.php';
+require_once('pre.php');
+require_once('common/plugin/PluginManager.class.php');
 
-class CodexToRemedyPluginDescriptor extends PluginDescriptor {
+$plugin_manager = PluginManager::instance();
+$p = $plugin_manager->getPluginByName('requesthelp');
 
-    /**
-     * Constructor
-     *
-     * @return void
-     */
-    function __construct() {
-        parent::__construct($GLOBALS['Language']->getText('plugin_codextoremedy', 'descriptor_name'), false, $GLOBALS['Language']->getText('plugin_codextoremedy', 'descriptor_description'));
-    }
+if ($p && $plugin_manager->isPluginAvailable($p) && extension_loaded('oci8')) {
+    $p->process();
+} else {
+    header('Location: '.get_server_url());
 }
 
 ?>

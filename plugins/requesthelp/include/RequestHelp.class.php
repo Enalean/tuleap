@@ -21,13 +21,13 @@
 
 require_once('mvc/PluginControler.class.php');
 require_once('common/include/HTTPRequest.class.php');
-require_once('CodexToRemedyViews.class.php');
-require_once('CodexToRemedyActions.class.php');
+require_once('RequestHelpViews.class.php');
+require_once('RequestHelpActions.class.php');
 
 /**
- * CodexToRemedy */
+ * RequestHelp */
 
-class CodexToRemedy extends PluginControler {
+class RequestHelp extends PluginControler {
 
     const SEVERITY_MINOR    = 1;
     const SEVERITY_SERIOUS  = 2;

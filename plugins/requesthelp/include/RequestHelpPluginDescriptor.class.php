@@ -19,22 +19,18 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-require_once 'common/plugin/PluginFileInfo.class.php';
-require_once 'CodexToRemedyPluginDescriptor.class.php';
+require_once 'common/plugin/PluginDescriptor.class.php';
 
-class CodexToRemedyPluginInfo extends PluginFileInfo {
+class RequestHelpPluginDescriptor extends PluginDescriptor {
 
     /**
      * Constructor
      *
-     * @param codextoremedyPlugin $plugin the plugin
-     *
      * @return void
      */
-    function __construct($plugin) {
-        parent::__construct($plugin, 'codextoremedy');
-        $this->setPluginDescriptor(new CodexToRemedyPluginDescriptor());
+    function __construct() {
+        parent::__construct($GLOBALS['Language']->getText('plugin_requesthelp', 'descriptor_name'), false, $GLOBALS['Language']->getText('plugin_requesthelp', 'descriptor_description'));
     }
-
 }
+
 ?>

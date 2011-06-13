@@ -22,7 +22,7 @@ require_once('common/dao/include/DataAccessObject.class.php');
 /**
  * Dao of the plugin
  */
-class CodexToRemedyDao extends DataAccessObject {
+class RequestHelpDao extends DataAccessObject {
 
     /**
      * Constructor
@@ -47,7 +47,7 @@ class CodexToRemedyDao extends DataAccessObject {
      * @return Boolean
      */
     function insertInCodexDB($userId, $summary, $createDate, $description, $type, $severity, $cc) {
-        $insert = 'INSERT INTO plugin_codex_to_remedy'.
+        $insert = 'INSERT INTO plugin_request_help'.
                   '(user_id, '.
                   'summary, '.
                   'create_date, '.

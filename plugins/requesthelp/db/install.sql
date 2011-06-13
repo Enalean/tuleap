@@ -1,5 +1,5 @@
-DROP TABLE IF EXISTS plugin_codex_to_remedy;
-CREATE TABLE plugin_codex_to_remedy (
+DROP TABLE IF EXISTS plugin_request_help;
+CREATE TABLE plugin_request_help (
     id INT(11) UNSIGNED NOT NULL auto_increment,
     user_id INT(11) UNSIGNED NULL,
     summary TEXT NOT NULL,

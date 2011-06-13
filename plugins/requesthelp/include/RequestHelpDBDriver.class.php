@@ -18,7 +18,7 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class CodexToRemedyDBDriver {
+class RequestHelpDBDriver {
     protected $dbh;
     protected $dsn;
     protected $user;
@@ -33,13 +33,13 @@ class CodexToRemedyDBDriver {
      */
     public function __construct() {
         $pluginManager = PluginManager::instance();
-        $p = $pluginManager->getPluginByName('codextoremedy');
+        $p = $pluginManager->getPluginByName('requesthelp');
         if ($p->getProperty('db_host') && $p->getProperty('db_name')&& $p->getProperty('db_port') && $p->getProperty('db_user') && $p->getProperty('db_passwd')) {
             $this->dsn      = '//'.$p->getProperty('db_host').':'.$p->getProperty('db_port').'/'.$p->getProperty('db_name');
             $this->user     = $p->getProperty('db_user');
             $this->password = $p->getProperty('db_passwd');
         } else {
-            throw new Exception('Unable to find valid connexion parameters, please check codextoremedy conf file');
+            throw new Exception('Unable to find valid connexion parameters, please check requesthelp conf file');
         }
     }
 
@@ -69,8 +69,8 @@ class CodexToRemedyDBDriver {
      */
     public function createTicket($summary, $description, $item, $severity) {
         $pluginManager = PluginManager::instance();
-        $p = $pluginManager->getPluginByName('codextoremedy');
-        $submitter = $p->getProperty('codextoremedy_submitter');
+        $p = $pluginManager->getPluginByName('requesthelp');
+        $submitter = $p->getProperty('requesthelp_submitter');
         $category  = $p->getProperty('remedy_category');
         $type      = $p->getProperty('remedy_type');
 

@@ -19,7 +19,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class b201104151708_add_table_plugin_Codex_to_Remedy extends ForgeUpgrade_Bucket {
+class b201104151708_add_table_plugin_Request_Help extends ForgeUpgrade_Bucket {
 
     /**
      * Description of the bucket
@@ -28,7 +28,7 @@ class b201104151708_add_table_plugin_Codex_to_Remedy extends ForgeUpgrade_Bucket
      */
     public function description() {
         return <<<EOT
-Add the table plugin_codex_to_remedy to manage the automatic ticket insertion in RIF table
+Add the table plugin_request_help to manage the automatic ticket insertion in RIF table
 EOT;
     }
 
@@ -47,7 +47,7 @@ EOT;
      * @return void
      */
     public function up() {
-        $sql = 'CREATE TABLE plugin_codex_to_remedy ('.
+        $sql = 'CREATE TABLE plugin_request_help ('.
                     ' id INT(11) UNSIGNED NOT NULL auto_increment, '.
                     ' user_id INT(11) UNSIGNED NULL,'.
                     ' summary TEXT NOT NULL,'.
@@ -57,7 +57,7 @@ EOT;
                     ' severity INT,'.
                     ' cc TEXT,'.
                     ' PRIMARY KEY(id))';
-        $this->db->createTable('plugin_codex_to_remedy', $sql);
+        $this->db->createTable('plugin_request_help', $sql);
     }
 
     /**
@@ -66,8 +66,8 @@ EOT;
      * @return void
      */
     public function postUp() {
-        if (!$this->db->tableNameExists('plugin_codex_to_remedy')) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotCompleteException('plugin_codex_to_remedy table is missing');
+        if (!$this->db->tableNameExists('plugin_request_help')) {
+            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotCompleteException('plugin_request_help table is missing');
         }
     }
 

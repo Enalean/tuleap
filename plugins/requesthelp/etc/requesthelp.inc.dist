@@ -14,7 +14,7 @@ $db_passwd = 'useme123';
 $send_notif_mail_sd = 'codex-team@lists.codex.cro.st.com';
 
 // Remedy submitter
-$codextoremedy_submitter = 'ABDELMA';
+$requesthelp_submitter = 'ABDELMA';
 
 // From adress
 $send_notif_mail_from = 'noreply@codex.cro.st.com';

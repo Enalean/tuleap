@@ -1,4 +1,4 @@
-Codex_To_Remedy Plugin
+Request_Help Plugin
 ======================
 
 This is the Remedy integration plugin for Codendi. It provides:
