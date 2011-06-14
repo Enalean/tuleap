@@ -54,7 +54,7 @@ print '<h2>'.$Language->getText('admin_massmail','header',array($GLOBALS['sys_na
 .' users)<BR><INPUT type="radio" id="'.$count_sfadmin.'" name="destination" value="sfadmin">
 '.$Language->getText('admin_massmail','to_site_admin').' ('
 .$count_sfadmin
-.' users)<BR><INPUT type="radio" name="destination" value="all">
+.' users)<BR><INPUT type="radio" id="'.$count_all.'" name="destination" value="all">
 '.$Language->getText('admin_massmail','to_all').' ('
 .$count_all
 .' users)

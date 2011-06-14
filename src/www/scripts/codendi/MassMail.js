@@ -19,14 +19,13 @@
  * add a js confirmation popup on "send" mass mail with a tailored message
  */
 function confirmSubmitMassMail() {
-	var radioButtons = document.getElementsByName("destination");
-	for ( var x = 0; x < radioButtons.length; x++) {
-		if (radioButtons[x].checked) {
-			users = radioButtons[x].id;
-		}
-	}
-	return confirm("You are about to send to " + users
-			+ " people, do you confirm ?")
+    var radioButtons = document.getElementsByName("destination");
+    for ( var x = 0; x < radioButtons.length; x++) {
+        if (radioButtons[x].checked) {
+            users = radioButtons[x].id;
+        }
+    }
+    return confirm("You are about to send to " + users + " people, do you confirm ?")
 }
  
 /**
