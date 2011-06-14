@@ -83,8 +83,8 @@ print '<h2>'.$Language->getText('admin_massmail','header',array($GLOBALS['sys_na
 ';
 
 $js = "new UserAutoCompleter('preview_destination',
-                          '".util_get_dir_image_theme()."',
-                          true);";
+                             '".util_get_dir_image_theme()."',
+                             true);";
 $GLOBALS['HTML']->includeFooterJavascriptSnippet($js);
 
 $rte = "

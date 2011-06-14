@@ -61,7 +61,6 @@ if ($request->isPost() && $request->exist('Submit') &&  $request->existAndNonEmp
             exit_error('Unrecognized Post','cannot execute');
     }
 
-    list($host,$port) = explode(':',$GLOBALS['sys_default_domain']);
     $validFormat = new Valid_WhiteList('body_format' ,array(0, 1));
     $bodyFormat = $request->getValidated('body_format', $validFormat, 0);
     if ($bodyFormat) {
@@ -75,13 +74,13 @@ if ($request->isPost() && $request->exist('Submit') &&  $request->existAndNonEmp
     if($request->valid($validSubject)) {
         $mailSubject = $request->get('mail_subject');
     }
-    $mail->setSubject(stripslashes($mailSubject));
+    $mail->setSubject($mailSubject);
 
     $validMessage = new Valid_Text('mail_message');
     if($request->valid($validMessage)) {
         $mailMessage = $request->get('mail_message');
     }
-    $mail->setBody(stripslashes($mailMessage));
+    $mail->setBody($mailMessage);
 
     if (isset($res_mail)) {
         $vPv = new Valid_Pv();
@@ -91,10 +90,8 @@ if ($request->isPost() && $request->exist('Submit') &&  $request->existAndNonEmp
         } else {
             $pv = 0;
             site_header(array('title'=>$Language->getText('admin_massmail','title')));
+            print '<h2>'.$Language->getText('admin_massmail','header',array($GLOBALS['sys_name'])).'</h2>';
         }
-
-        print $Language->getText('admin_massmail_execute','post_recvd')."<br>";
-        flush();
 
         print $Language->getText('admin_massmail_execute','mailing',array(db_numrows($res_mail)))." ($to_name)<br><br>";
         flush();
@@ -118,8 +115,7 @@ if ($request->isPost() && $request->exist('Submit') &&  $request->existAndNonEmp
                 usleep(2000000);
                 $tolist='';
                 if ($bodyFormat) {
-                    $m = $mail->getMail();
-                    $m->clearRecipients();
+                    $mail->clearRecipients();
                 }
             }
         }
@@ -139,27 +135,27 @@ if ($request->isPost() && $request->exist('Submit') &&  $request->existAndNonEmp
         ($pv == 2) ? $HTML->pv_footer(array()) : $HTML->footer(array());;
     } else {
         // This part would send a preview email, parameters are retrieved within the function sendPreview() in MassMail.js
-    	$validMails = array();
-    	$addresses  = array_map('trim', preg_split('/[,;]/', $request->get('preview_destination')));
-    	$rule       = new Rule_Email();
-    	foreach ($addresses as $address) {
-    		if ($rule->isValid($address)) {
-    			$validMails[] = $address;
-    		} else {
-    			$um         = UserManager::instance();
-    			$user = $um->findUser($address);
-    			if ($user) {
-    				$address = $user->getEmail();
-    				if ($address) {
-    					$validMails[] = $address;
-    				} else {
-    					print "\n".$Language->getText('admin_massmail_execute','no_user_mail', array($user->getUserName()))."\n";
-    				}
-    			} else {
-    				print "\n".$Language->getText('admin_massmail_execute','no_user', array($address))."\n";
-    			}
-    		}
-    	}
+        $validMails = array();
+        $addresses  = array_map('trim', preg_split('/[,;]/', $request->get('preview_destination')));
+        $rule       = new Rule_Email();
+        foreach ($addresses as $address) {
+            if ($rule->isValid($address)) {
+                $validMails[] = $address;
+            } else {
+                $um   = UserManager::instance();
+                $user = $um->findUser($address);
+                if ($user) {
+                    $address = $user->getEmail();
+                    if ($address) {
+                        $validMails[] = $address;
+                    } else {
+                        print "\n".$Language->getText('admin_massmail_execute','no_user_mail', array($user->getUserName()))."\n";
+                    }
+                } else {
+                    print "\n".$Language->getText('admin_massmail_execute','no_user', array($address))."\n";
+                }
+            }
+        }
         $previewDestination = implode(', ', $validMails);
         $mail->setTo($previewDestination, true);
         if ($mail->send()) {

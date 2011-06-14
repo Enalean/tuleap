@@ -204,7 +204,7 @@ admin_lastlogins	recent	Connections les plus récentes
 # Script: SF/www/admin/massmail_execute.php
 #
 admin_massmail_execute	post_recvd	Requête Post reçue. Interrogation en cours	
-admin_massmail_execute	mailing	Interrogation terminée. Démarrage du mailing ver $1 adresses e-mail distinctes
+admin_massmail_execute	mailing	Démarrage du mailing ver $1 adresses e-mail distinctes
 admin_massmail_execute	sending	envoi à
 admin_massmail_execute	done	Terminé !
 admin_massmail_execute	no_user_mail	L'utilisateur ajouté $1 n'a pas d'adresse mail.
