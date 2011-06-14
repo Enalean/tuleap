@@ -153,7 +153,7 @@ if ($request->isPost() && $request->exist('Submit') &&  $request->existAndNonEmp
     				if ($address) {
     					$validMails[] = $address;
     				} else {
-    					print "\n".$Language->getText('admin_massmail_execute','no_user_mail', array($address))."\n";
+    					print "\n".$Language->getText('admin_massmail_execute','no_user_mail', array($user->getUserName()))."\n";
     				}
     			} else {
     				print "\n".$Language->getText('admin_massmail_execute','no_user', array($address))."\n";
