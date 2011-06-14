@@ -14,7 +14,12 @@
    {/if}
    {include file='nav.tpl' current='commitdiff' logcommit=$commit treecommit=$commit}
    <br />
-   <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=commitdiff_plain&amp;h={$commit->GetHash()}{if $hashparent}&amp;hp={$hashparent}{/if}">{t}plain{/t}</a>
+   {if $sidebyside}
+   | <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=commitdiff&amp;h={$commit->GetHash()}&amp;{if $hashparent}&amp;hp={$hashparent}{/if};o=unified">{t}unified{/t}</a>
+   {else}
+   | <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=commitdiff&amp;h={$commit->GetHash()}&amp;{if $hashparent}&amp;hp={$hashparent}{/if};o=sidebyside">{t}side by side{/t}</a>
+   {/if}
+   | <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=commitdiff_plain&amp;h={$commit->GetHash()}{if $hashparent}&amp;hp={$hashparent}{/if}">{t}plain{/t}</a>
  </div>
 
  {include file='title.tpl' titlecommit=$commit}
@@ -50,7 +55,11 @@
        {/if}
      {/if}
      </div>
-     {include file='filediff.tpl' diff=$filediff->GetDiff('', true, true)}
+     {if $sidebyside}
+        {include file='filediffsidebyside.tpl' diffsplit=$filediff->GetDiffSplit()}
+     {else}
+        {include file='filediff.tpl' diff=$filediff->GetDiff('', true, true)}
+     {/if}
    {/foreach}
  </div>
 
