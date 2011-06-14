@@ -15,12 +15,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+/**
+ * Scripts of the mass mail engine
+ * Manages sending a preview
+ */
 var MassMail = Class.create({
     initialize: function () {
-            // Must use Event.observe(toggle... instead of toggle.observe(...
-            // Otherwise IE cannot manage it. Oo
-            Event.observe($('preview_submit'), 'click', this.sendPreview.bindAsEventListener(this));
-            Event.observe($('preview_destination'), 'keypress', this.disableEnterKey.bindAsEventListener(this));
+        // Must use Event.observe(toggle... instead of toggle.observe(...
+        // Otherwise IE cannot manage it. Oo
+        Event.observe($('preview_submit'), 'click', this.sendPreview.bindAsEventListener(this));
+        Event.observe($('preview_destination'), 'keypress', this.disableEnterKey.bindAsEventListener(this));
     },
     //Disable massmail_form submission when enter key is pressed, the preview is sent instead .
     disableEnterKey: function(event) {
@@ -29,7 +33,7 @@ var MassMail = Class.create({
             event.stop();
             return false;
         }
-   },
+    },
     sendPreview: function(event) {
         var mailSubject = encodeURIComponent($('mail_subject').value);
         var previewDestination = encodeURIComponent($('preview_destination').value);
