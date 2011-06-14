@@ -1,0 +1,7 @@
+plugin_timeline	descriptor_description	Highlight the most recent stuff made
+plugin_timeline	descriptor_name	Timeline
+
+plugin_timeline	title	Timeline
+
+plugin_timeline	widget_user_title	My timeline
+plugin_timeline	widget_user_description	List latest things I made on the site
