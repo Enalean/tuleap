@@ -16,21 +16,21 @@ $GLOBALS['HTML']->includeFooterJavascriptFile('/scripts/tiny_mce/tiny_mce.js');
 $GLOBALS['HTML']->includeFooterJavascriptFile('/scripts/codendi/MassMail.js');
 
 // get numbers of users for each mailing
-$res_count = db_query("SELECT * FROM user WHERE ( status='A' or status='R' ) AND mail_va=1 GROUP BY email");
-$count_comm = db_numrows($res_count);
-$res_count = db_query("SELECT * FROM user WHERE ( status='A' or status='R' ) AND mail_siteupdates=1 GROUP BY email");
-$count_sf = db_numrows($res_count);
-$res_count = db_query("SELECT * FROM user WHERE ( status='A' or status='R' ) GROUP BY email");
-$count_all = db_numrows($res_count);
-$res_count = db_query("SELECT * FROM user,user_group WHERE "
-	."user.user_id=user_group.user_id AND ( user.status='A' OR user.status='R' ) AND user_group.admin_flags='A' GROUP BY email");
-$count_admin = db_numrows($res_count);
-$res_count = db_query("SELECT * FROM user,user_group WHERE "
-	."user.user_id=user_group.user_id AND ( user.status='A' OR user.status='R' ) GROUP BY email");
-$count_devel = db_numrows($res_count);
-$res_count = db_query("SELECT * FROM user,user_group WHERE "
-	."user.user_id=user_group.user_id AND( user.status='A' OR user.status='R' ) AND user_group.group_id=1 GROUP BY email");
-$count_sfadmin = db_numrows($res_count);
+$res_count = db_query("SELECT COUNT(DISTINCT user.email) FROM user WHERE ( status='A' or status='R' ) AND mail_va=1");
+$count_comm = db_result($res_count, 0, null);
+$res_count = db_query("SELECT COUNT(DISTINCT user.email) FROM user WHERE ( status='A' or status='R' ) AND mail_siteupdates=1");
+$count_sf = db_result($res_count, 0, null);
+$res_count = db_query("SELECT COUNT(DISTINCT user.email) FROM user WHERE ( status='A' or status='R' )");
+$count_all = db_result($res_count, 0, null);
+$res_count = db_query("SELECT COUNT(DISTINCT user.email) FROM user,user_group WHERE "
+	."user.user_id=user_group.user_id AND ( user.status='A' OR user.status='R' ) AND user_group.admin_flags='A'");
+$count_admin = db_result($res_count, 0, null);
+$res_count = db_query("SELECT COUNT(DISTINCT user.email) FROM user,user_group WHERE "
+	."user.user_id=user_group.user_id AND ( user.status='A' OR user.status='R' )");
+$count_devel = db_result($res_count, 0, null);
+$res_count = db_query("SELECT COUNT(DISTINCT user.email) FROM user,user_group WHERE "
+	."user.user_id=user_group.user_id AND( user.status='A' OR user.status='R' ) AND user_group.group_id=1");
+$count_sfadmin = db_result($res_count, 0, null);
 
 print '<h2>'.$Language->getText('admin_massmail','header',array($GLOBALS['sys_name'])).'</h2>
 
