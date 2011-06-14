@@ -139,14 +139,27 @@ if ($request->isPost() && $request->exist('Submit') &&  $request->existAndNonEmp
         ($pv == 2) ? $HTML->pv_footer(array()) : $HTML->footer(array());;
     } else {
         // This part would send a preview email, parameters are retrieved within the function sendPreview() in MassMail.js
-        $validMails = array();
-        $addresses  = array_map('trim', preg_split('/[,;]/', $request->get('preview_destination')));
-        $rule       = new Rule_Email();
-        foreach ($addresses as $address) {
-            if ($rule->isValid($address)) {
-                $validMails[] = $address;
-            }
-        }
+    	$validMails = array();
+    	$addresses  = array_map('trim', preg_split('/[,;]/', $request->get('preview_destination')));
+    	$rule       = new Rule_Email();
+    	foreach ($addresses as $address) {
+    		if ($rule->isValid($address)) {
+    			$validMails[] = $address;
+    		} else {
+    			$um         = UserManager::instance();
+    			$user = $um->findUser($address);
+    			if ($user) {
+    				$address = $user->getEmail();
+    				if ($address) {
+    					$validMails[] = $address;
+    				} else {
+    					print "\n".$Language->getText('admin_massmail_execute','no_user_mail', array($address))."\n";
+    				}
+    			} else {
+    				print "\n".$Language->getText('admin_massmail_execute','no_user', array($address))."\n";
+    			}
+    		}
+    	}
         $previewDestination = implode(', ', $validMails);
         $mail->setTo($previewDestination, true);
         if ($mail->send()) {

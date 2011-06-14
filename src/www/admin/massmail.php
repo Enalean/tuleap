@@ -65,7 +65,6 @@ print '<h2>'.$Language->getText('admin_massmail','header',array($GLOBALS['sys_na
 
 <P>'.$Language->getText('admin_massmail','text').'
 <PRE>
-<BR>
 <div id="mail_message_label"></div>
 <TEXTAREA id="mail_message" name="mail_message" cols="75" rows="40" wrap="physical">
 '.stripcslashes($Language->getText('admin_massmail','footer',array($GLOBALS['sys_default_domain'],$GLOBALS['sys_email_admin']))).'
@@ -82,6 +81,11 @@ print '<h2>'.$Language->getText('admin_massmail','header',array($GLOBALS['sys_na
 </TD></TR></TABLE>
 </FORM>
 ';
+
+$js = "new UserAutoCompleter('preview_destination',
+                          '".util_get_dir_image_theme()."',
+                          true);";
+$GLOBALS['HTML']->includeFooterJavascriptSnippet($js);
 
 $rte = "
 var useLanguage = '". substr(UserManager::instance()->getCurrentUser()->getLocale(), 0, 2) ."';

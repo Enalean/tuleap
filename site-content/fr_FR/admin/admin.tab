@@ -207,6 +207,8 @@ admin_massmail_execute	post_recvd	Requête Post reçue. Interrogation en cours
 admin_massmail_execute	mailing	Interrogation terminée. Démarrage du mailing ver $1 adresses e-mail distinctes
 admin_massmail_execute	sending	envoi à
 admin_massmail_execute	done	Terminé !
+admin_massmail_execute	no_user_mail	L'utilisateur ajouté $1 n'a pas d'adresse mail.
+admin_massmail_execute	no_user	Aucun utilisateur ne correspond à votre entrée $1.
 #
 #-----------------------------------------------
 # Script: SF/www/admin/massmail.php

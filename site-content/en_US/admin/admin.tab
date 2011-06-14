@@ -216,6 +216,8 @@ admin_massmail_execute	post_recvd	Received Post. Making Query
 admin_massmail_execute	mailing	Query Complete. Beginning mailings to $1 distinct email addresses
 admin_massmail_execute	sending	sending to
 admin_massmail_execute	done	Done!
+admin_massmail_execute	no_user_mail	The added user $1 have no mail address.
+admin_massmail_execute	no_user	No user corresponding to entry $1.
 #
 #-----------------------------------------------
 # Script: SF/www/admin/massmail.php
