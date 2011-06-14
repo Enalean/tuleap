@@ -310,6 +310,15 @@ class Codendi_Mail implements Codendi_Mail_Interface {
     }
 
     /**
+     * Reset the recipients of the mail
+     *
+     * @return void
+     */
+    function clearRecipients() {
+        $this->mail->clearRecipients();
+    }
+
+    /**
      * Send the mail
      * 
      * @return Boolean
