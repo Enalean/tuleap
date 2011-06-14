@@ -36,22 +36,22 @@ print '<h2>'.$Language->getText('admin_massmail','header',array($GLOBALS['sys_na
 
 <P>'.$Language->getText('admin_massmail','warning').'
 
-<FORM ID="massmail_form" NAME="massmail_form" ACTION="massmail_execute.php" METHOD="POST">
+ <FORM ID="massmail_form" NAME="massmail_form" onSubmit="return confirmSubmitMassMail()" ACTION="massmail_execute.php" METHOD="POST">
 <TABLE width=50% cellpadding=0 cellspacing=0 border=0>
 <TR><TD>
-<INPUT type="radio" name="destination" value="comm">
+<INPUT type="radio" id="'.$count_comm.'" name="destination" value="comm">
 '.$Language->getText('admin_massmail','to_additional').' ('
 .$count_comm
-.' users)<BR><INPUT type="radio" name="destination" value="sf">
+.' users)<BR><INPUT type="radio" id="'.$count_sf.'" name="destination" value="sf">
 '.$Language->getText('admin_massmail','to_update').' ('
 .$count_sf
-.' users)<BR><INPUT type="radio" name="destination" value="devel">
+.' users)<BR><INPUT type="radio" id="'.$count_devel.'" name="destination" value="devel">
 '.$Language->getText('admin_massmail','to_devel').' ('
 .$count_devel
-.' users)<BR><INPUT type="radio" name="destination" value="admin">
+.' users)<BR><INPUT type="radio" id="'.$count_admin.'" name="destination" value="admin">
 '.$Language->getText('admin_massmail','to_proj_admin').' ('
 .$count_admin
-.' users)<BR><INPUT type="radio" name="destination" value="sfadmin">
+.' users)<BR><INPUT type="radio" id="'.$count_sfadmin.'" name="destination" value="sfadmin">
 '.$Language->getText('admin_massmail','to_site_admin').' ('
 .$count_sfadmin
 .' users)<BR><INPUT type="radio" name="destination" value="all">
