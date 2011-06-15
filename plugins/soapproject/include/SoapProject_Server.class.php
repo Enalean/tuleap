@@ -1,11 +1,29 @@
 <?php
-
-require_once 'pre.php';
+/**
+ * Copyright (c) Enalean, 2011. All Rights Reserved.
+ *
+ * This file is a part of Codendi.
+ *
+ * Codendi is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Codendi is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Codendi; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
+ 
 require_once 'common/project/ProjectManager.class.php';
 require_once 'www/project/create_project.php';
 require_once 'www/include/account.php';
 
-class SoapProjectManager {
+class SoapProject_Server {
 
     /**
      * Create a new project
@@ -30,21 +48,21 @@ class SoapProjectManager {
      *
      * @return Integer The ID of newly created project
      */
-    function addProject($requesterLogin, $shortName, $realName, $privacy="public") {
+    public function addProject($requesterLogin, $shortName, $realName, $privacy="public") {
         /*
-        $data['project']['form_unix_name']
-$data['project']['form_full_name']
-$data['project']['form_license']
-$data['project']['form_license_other']
-$data['project']['form_short_description']
-$data['project']['built_from_template']
-$data['project']['is_test']
-$data['project']['is_public']
-$data['project']["form_".$descfieldsinfos[$i]["group_desc_id"]]
-foreach($data['project']['trove'] as $root => $values);
-$data['project']['services'][$arr['service_id']]['is_used'];
-$data['project']['services'][$arr['service_id']]['server_id'];
-        */
+         $data['project']['form_unix_name']
+         $data['project']['form_full_name']
+         $data['project']['form_license']
+         $data['project']['form_license_other']
+         $data['project']['form_short_description']
+         $data['project']['built_from_template']
+         $data['project']['is_test']
+         $data['project']['is_public']
+         $data['project']["form_".$descfieldsinfos[$i]["group_desc_id"]]
+         foreach($data['project']['trove'] as $root => $values);
+         $data['project']['services'][$arr['service_id']]['is_used'];
+         $data['project']['services'][$arr['service_id']]['server_id'];
+         */
 
         $data = array();
 
@@ -113,7 +131,7 @@ $data['project']['services'][$arr['service_id']]['server_id'];
      *
      *
      */
-    function addProjectMember($groupId, $userLogin) {
+    public function addProjectMember($groupId, $userLogin) {
         $user = UserManager::instance()->getUserByUserName($userLogin);
         if (!$user->isMember($groupId)) {
             return $this->feedbackToSoapFault(account_add_user_to_group($groupId, $userLogin));
@@ -122,7 +140,7 @@ $data['project']['services'][$arr['service_id']]['server_id'];
         }
     }
 
-    function removeProjectMember($groupId, $userLogin) {
+    public function removeProjectMember($groupId, $userLogin) {
         $user = UserManager::instance()->getUserByUserName($userLogin);
         if (!$user) {
             throw new SoapFault('3100', "Invalid user name");
@@ -134,7 +152,7 @@ $data['project']['services'][$arr['service_id']]['server_id'];
         }
     }
 
-    function feedbackToSoapFault($res) {
+    protected function feedbackToSoapFault($res) {
         if (!$res) {
             if ($GLOBALS['Response']->feedbackHasErrors()) {
                 foreach($GLOBALS['Response']->_feedback->logs as $log) {
@@ -147,11 +165,4 @@ $data['project']['services'][$arr['service_id']]['server_id'];
         return $res;
     }
 }
-
-$server = new SoapServer(null, array('uri' => "http://localhost:3080/soap2/", 'cache_wsdl' => WSDL_CACHE_NONE));
-
-$server->setClass('SoapProjectManager');
-
-$server->handle();
-
 ?>
