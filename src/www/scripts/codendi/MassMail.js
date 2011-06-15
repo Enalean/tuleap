@@ -37,7 +37,8 @@ var MassMail = Class.create({
     //Disable massmail_form submission when enter key is pressed, the preview is sent instead .
     disableEnterKey: function(event) {
         if (Event.KEY_RETURN == event.keyCode) {
-            this.sendPreview(event);
+            // Sending the preview using enter key causes bad surprises when combined with autocomplete
+            //this.sendPreview(event);
             event.stop();
             return false;
         }
