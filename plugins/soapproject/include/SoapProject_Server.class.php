@@ -127,12 +127,18 @@ class SoapProject_Server {
     /**
      * Add given user as member of the project
      *
-     * TODO: check who is allowed to do that (site admin and/or project admin)
+     * @todo check who is allowed to do that (site admin and/or project admin)
      *
+     * @param Integer $groupId Project ID
+     * @param String  $userLogin User login name
      *
+     * @return Boolean
      */
     public function addProjectMember($groupId, $userLogin) {
         $user = UserManager::instance()->getUserByUserName($userLogin);
+        if (!$user) {
+            throw new SoapFault('3100', "Invalid user name");
+        }
         if (!$user->isMember($groupId)) {
             return $this->feedbackToSoapFault(account_add_user_to_group($groupId, $userLogin));
         } else {
@@ -140,6 +146,16 @@ class SoapProject_Server {
         }
     }
 
+    /**
+     * Remove given user from project members
+     *
+     * @todo check who is allowed to do that (site admin and/or project admin)
+     *
+     * @param Integer $groupId Project ID
+     * @param String  $userLogin User login name
+     *
+     * @return Boolean
+     */
     public function removeProjectMember($groupId, $userLogin) {
         $user = UserManager::instance()->getUserByUserName($userLogin);
         if (!$user) {
@@ -152,8 +168,16 @@ class SoapProject_Server {
         }
     }
 
-    protected function feedbackToSoapFault($res) {
-        if (!$res) {
+    /**
+     * Transform errors from feedback errors into SoapFault
+     *
+     * @throws SoapFault
+     * @param Boolean $result Result of initial command
+     *
+     * @return Boolean
+     */
+    protected function feedbackToSoapFault($result) {
+        if (!$result) {
             if ($GLOBALS['Response']->feedbackHasErrors()) {
                 foreach($GLOBALS['Response']->_feedback->logs as $log) {
                     if ($log['level'] == 'error') {
@@ -162,7 +186,7 @@ class SoapProject_Server {
                 }
             }
         }
-        return $res;
+        return $result;
     }
 }
 ?>
