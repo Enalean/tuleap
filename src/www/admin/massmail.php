@@ -36,7 +36,7 @@ print '<h2>'.$Language->getText('admin_massmail','header',array($GLOBALS['sys_na
 
 <P>'.$Language->getText('admin_massmail','warning').'
 
- <FORM ID="massmail_form" NAME="massmail_form" onSubmit="return confirmSubmitMassMail()" ACTION="massmail_execute.php" METHOD="POST">
+ <FORM ID="massmail_form" NAME="massmail_form" ACTION="massmail_execute.php" METHOD="POST">
 <TABLE width=50% cellpadding=0 cellspacing=0 border=0>
 <TR><TD>
 <SPAN name="'.$count_comm.'"><INPUT type="radio" name="destination" value="comm"></SPAN>

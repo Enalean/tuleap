@@ -310,15 +310,6 @@ class Codendi_Mail implements Codendi_Mail_Interface {
     }
 
     /**
-     * Reset the recipients of the mail
-     *
-     * @return void
-     */
-    function clearRecipients() {
-        $this->mail->clearRecipients();
-    }
-
-    /**
      * Send the mail
      * 
      * @return Boolean
@@ -329,7 +320,9 @@ class Codendi_Mail implements Codendi_Mail_Interface {
         $em = EventManager::instance();
         $em->processEvent('mail_sendmail', $params);
 
-        return $this->mail->send();
+        $status = $this->mail->send();
+        $this->mail->clearRecipients();
+        return $status;
     }
 }
 

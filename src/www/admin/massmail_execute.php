@@ -82,16 +82,9 @@ if ($request->isPost() && $request->exist('Submit') &&  $request->existAndNonEmp
     }
     $mail->setBody($mailMessage);
 
-    if (isset($res_mail)) {
-        $vPv = new Valid_Pv();
-        if ($request->valid($vPv) && $request->get('pv') == 2) {
-            $pv = 2;
-            $HTML->pv_header(array('title'=>$Language->getText('admin_massmail','title')));
-        } else {
-            $pv = 0;
-            site_header(array('title'=>$Language->getText('admin_massmail','title')));
-            print '<h2>'.$Language->getText('admin_massmail','header',array($GLOBALS['sys_name'])).'</h2>';
-        }
+    if ($destination != 'preview') {
+        site_header(array('title'=>$Language->getText('admin_massmail','title')));
+        print '<h2>'.$Language->getText('admin_massmail','header',array($GLOBALS['sys_name'])).'</h2>';
 
         print $Language->getText('admin_massmail_execute','mailing',array(db_numrows($res_mail)))." ($to_name)<br><br>";
         flush();
@@ -114,9 +107,6 @@ if ($request->isPost() && $request->exist('Submit') &&  $request->existAndNonEmp
                 flush();
                 usleep(2000000);
                 $tolist='';
-                if ($bodyFormat) {
-                    $mail->clearRecipients();
-                }
             }
         }
 
@@ -132,7 +122,7 @@ if ($request->isPost() && $request->exist('Submit') &&  $request->existAndNonEmp
         }
         print "<br>".$Language->getText('admin_massmail_execute','done')."<br>";
         flush();
-        ($pv == 2) ? $HTML->pv_footer(array()) : $HTML->footer(array());;
+        $HTML->footer(array());
     } else {
         // This part would send a preview email, parameters are retrieved within the function sendPreview() in MassMail.js
         $validMails = array();
