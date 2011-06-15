@@ -39,7 +39,7 @@ if ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') || $GLOBALS['sys_fo
 }
 $uri = $protocol.'://'.$GLOBALS['sys_default_domain'].$p->getPluginPath();
 
-$server = new SoapServer(null, array('uri' => "http://localhost:3080/soap2/", 'cache_wsdl' => WSDL_CACHE_NONE));
+$server = new SoapServer(null, array('uri' => $uri, 'cache_wsdl' => WSDL_CACHE_NONE));
 
 $server->setClass('SoapProject_Server');
 
