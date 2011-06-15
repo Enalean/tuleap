@@ -144,7 +144,10 @@ class PluginCreationWizardActions extends Actions {
             fwrite($f, $tpl->fetch('tpl/Descriptor.tpl'));
             fwrite($f, '?'.">");
             fclose($f);
-            
+
+            // Create version
+            file_put_contents($GLOBALS['sys_pluginsroot'].'/'.$params['short_name'].'/VERSION', $params['version']);
+
             //{{{ Create MVC
             if ($params['use_web_space'] && $params['use_mvc']) {
                 //Create Controler class
