@@ -19,15 +19,10 @@
  * add a js confirmation popup on "send" mass mail with a tailored message
  */
 function confirmSubmitMassMail() {
-    var radioButtons = document.getElementsByName("destination");
-    for ( var x = 0; x < radioButtons.length; x++) {
-        if (radioButtons[x].checked) {
-            users = radioButtons[x].id;
-        }
-    }
+    $$('*[id^="destination_"]').each(function(node){if (node.checked) {users = node.readAttribute('id').substring(12);}});
     return confirm("You are about to send to " + users + " people, do you confirm ?")
 }
- 
+
 /**
  * Scripts of the mass mail engine
  * Manages sending a preview
