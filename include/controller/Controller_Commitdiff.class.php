@@ -10,21 +10,7 @@
  * @subpackage Controller
  */
 
-/**
- * Constants for blobdiff modes
- */
-define('GITPHP_BLOBDIFF_UNIFIED', 1);
-define('GITPHP_BLOBDIFF_SIDEBYSIDE', 2);
-
-/**
- * Constant of the blobdiff mode cookie in the user's browser
- */
-define('GITPHP_BLOBDIFF_MODE_COOKIE', 'GitPHPBlobdiffMode');
-
-/**
- * Blobdiff mode cookie lifetime
- */
-define('GITPHP_BLOBDIFF_MODE_COOKIE_LIFETIME', 60*60*24*365);           // 1 year
+require_once(GITPHP_CONTROLLERDIR . 'Controller_DiffBase.class.php');
 
 /**
  * Commitdiff controller class
@@ -32,7 +18,7 @@ define('GITPHP_BLOBDIFF_MODE_COOKIE_LIFETIME', 60*60*24*365);           // 1 yea
  * @package GitPHP
  * @subpackage Controller
  */
-class GitPHP_Controller_Commitdiff extends GitPHP_ControllerBase
+class GitPHP_Controller_Commitdiff extends GitPHP_Controller_DiffBase
 {
 
 	/**
@@ -110,45 +96,12 @@ class GitPHP_Controller_Commitdiff extends GitPHP_ControllerBase
 	 */
 	protected function ReadQuery()
 	{
+		parent::ReadQuery();
+
 		if (isset($_GET['h']))
 			$this->params['hash'] = $_GET['h'];
 		if (isset($_GET['hp']))
 			$this->params['hashparent'] = $_GET['hp'];
-
-		if (!isset($this->params['plain']) || $this->params['plain'] != true) {
-
-			$mode = GITPHP_BLOBDIFF_UNIFIED;        // default
-
-
-			/*
-			 * Check cookie
-			 */
-			if (!empty($_COOKIE[GITPHP_BLOBDIFF_MODE_COOKIE])) {
-				$mode = $_COOKIE[GITPHP_BLOBDIFF_MODE_COOKIE];
-			} else {
-				/*
-				 * Create cookie to prevent browser delay
-				 */
-				setcookie(GITPHP_BLOBDIFF_MODE_COOKIE, $mode, time()+GITPHP_BLOBDIFF_MODE_COOKIE_LIFETIME);
-			}
-
-			if (isset($_GET['o'])) {
-				/*
-				 * User is choosing a new mode
-				 */
-				if ($_GET['o'] == 'sidebyside') {
-					$mode = GITPHP_BLOBDIFF_SIDEBYSIDE;
-					setcookie(GITPHP_BLOBDIFF_MODE_COOKIE, GITPHP_BLOBDIFF_SIDEBYSIDE, time()+GITPHP_BLOBDIFF_MODE_COOKIE_LIFETIME);
-				} else if ($_GET['o'] == 'unified') {
-					$mode = GITPHP_BLOBDIFF_UNIFIED;
-					setcookie(GITPHP_BLOBDIFF_MODE_COOKIE, GITPHP_BLOBDIFF_UNIFIED, time()+GITPHP_BLOBDIFF_MODE_COOKIE_LIFETIME);
-				}
-			}
-
-			if ($mode == GITPHP_BLOBDIFF_SIDEBYSIDE) {
-				$this->params['sidebyside'] = true;
-			}
-		}
 	}
 
 	/**
@@ -160,10 +113,9 @@ class GitPHP_Controller_Commitdiff extends GitPHP_ControllerBase
 	 */
 	protected function LoadHeaders()
 	{
-		if (isset($this->params['plain']) && ($this->params['plain'] === true)) {
-			GitPHP_Log::GetInstance()->SetEnabled(false);
+		parent::LoadHeaders();
 
-			$this->headers[] = 'Content-type: text/plain; charset=UTF-8';
+		if (isset($this->params['plain']) && ($this->params['plain'] === true)) {
 			$this->headers[] = 'Content-disposition: inline; filename="git-' . $this->params['hash'] . '.patch"';
 		}
 	}
