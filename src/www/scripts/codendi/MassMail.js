@@ -51,7 +51,7 @@ var MassMail = Class.create({
                 $('mail_message').value = tinyMCE.getInstanceById('mail_message').getBody().innerHTML;
             }
             var mailMessage = encodeURIComponent($('mail_message').value);
-            var formParameters = 'destination=preview&mail_subject='+mailSubject+'&body_format='+bodyFormat+'&mail_message='+mailMessage+'&preview_destination='+previewDestination+'&Submit=Submit&pv=2';
+            var formParameters = 'destination=preview&mail_subject='+mailSubject+'&body_format='+bodyFormat+'&mail_message='+mailMessage+'&preview_destination='+previewDestination+'&Submit=Submit';
             var spinner = Builder.node('img', {'src'    : '/themes/common/images/ic/spinner.gif',
                                                'border' : '0'});
             //we request the preview here, massmail_execute will process the whole stuff
