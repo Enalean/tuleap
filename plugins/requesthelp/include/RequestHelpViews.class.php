@@ -96,14 +96,11 @@ class RequestHelpViews extends PluginView {
                 }
             }
             $p = PluginManager::instance()->getPluginByName('requesthelp');
-            echo '<form name="request" class="cssform" action="'.$p->getPluginPath().'/" method="post" enctype="multipart/form-data">
-             <fieldset >
+             echo '<fieldset>
+             <legend><b>'.$GLOBALS['Language']->getText('plugin_requesthelp', 'requesthelp_explain_label').'</b></legend>
+             <form name="request" class="cssform" action="'.$p->getPluginPath().'/" method="post" enctype="multipart/form-data">
                  <table>
-                 	<tr>
-                 		<label><i>'.$GLOBALS['Language']->getText('plugin_requesthelp', 'requesthelp_explain_label').'</i></label>
-                 	    <br><br><br>
-                 	</tr>
-                 	<tr>';
+                     <tr>';
             echo '<td><label>Type:</label>&nbsp;<span class="highlight"><big>*</big></b></span></td>
                      <td><select name="type">
                       <option value="'.RequestHelp::TYPE_SUPPORT.'" ';
@@ -145,8 +142,8 @@ class RequestHelpViews extends PluginView {
             <tr><td></td><td><input name="action" type="hidden" value="submit_ticket" /></td></tr>
             <tr><td></td><td><input name="submit" type="submit" value="Submit" /></td></tr>
                 </table>
-            </fieldset>
-        </form>';
+            </form>
+        </fieldset>';
             $js = "new UserAutoCompleter('requesthelp_cc', '".util_get_dir_image_theme()."', true);";
             $GLOBALS['Response']->includeFooterJavascriptSnippet($js);
         }

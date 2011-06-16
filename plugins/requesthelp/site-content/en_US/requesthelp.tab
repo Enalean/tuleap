@@ -25,4 +25,4 @@ plugin_requesthelp	requesthelp_mail_support	Dear support team,<br /><br />$1 has
 plugin_requesthelp	requesthelp_mail_user	Dear $1 (<em>$2</em>),<br /><br />You have inserted a new ticket
 plugin_requesthelp	requesthelp_mail_error	Dear support team,<br /><br />A new ticket was added but its insertion in Remedy failed
 plugin_requesthelp	requesthelp_cc_note	For users use their login name rather than their email addresses.<br />Fill your list using comma or semicolon as separator.
-plugin_requesthelp	requesthelp_explain_label	For any Codex help, please use this form below:
+plugin_requesthelp	requesthelp_explain_label	For any Codex help, please use this form below
