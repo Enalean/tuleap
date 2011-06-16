@@ -158,6 +158,9 @@ class RequestHelpActions extends PluginAction {
      */
     function insertTicketInRIFDB($params) {
         try {
+            $um   = $this->_getUserManager();
+            $user = $um->getCurrentUser();
+            $requester = strtoupper($user->getName());
             $oci = new RequestHelpDBDriver();
             $oci->getdbh();
             $ccMails = array_map('trim', preg_split('/[;]/', $params['cc']));
@@ -174,7 +177,7 @@ class RequestHelpActions extends PluginAction {
                     }
                 }
             }
-            return $oci->createTicket($params['summary'], $params['description'], $params['text_type'], $params['text_severity'], $cc);
+            return $oci->createTicket($params['summary'], $params['description'], $params['text_type'], $params['text_severity'], $cc, $requester);
         } catch(Exception $e) {
             return false;
         }

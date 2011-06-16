@@ -68,10 +68,9 @@ class RequestHelpDBDriver {
      *
      * @return String Remedy ticket id
      */
-    public function createTicket($summary, $description, $item, $severity, $cc) {
+    public function createTicket($summary, $description, $item, $severity, $cc, $submitter) {
         $pluginManager = PluginManager::instance();
         $p = $pluginManager->getPluginByName('requesthelp');
-        $submitter = $p->getProperty('requesthelp_submitter');
         $category  = $p->getProperty('remedy_category');
         $type      = $p->getProperty('remedy_type');
 
