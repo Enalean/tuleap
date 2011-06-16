@@ -30,35 +30,35 @@ require_once('common/include/Codendi_HTMLPurifier.class.php');
 
 class PluginView {
 
-	protected $request;
-	protected $controller;
+    protected $request;
+    protected $controller;
 
-	public function __construct($controller) {
-		$this->controller   = $controller;
-		$this->request      = $controller->getRequest();
-		$this->HTMLPurifier = Codendi_HTMLPurifier::instance();
-		$this->user         = $controller->getUser();
-	}
+    public function __construct($controller) {
+        $this->controller   = $controller;
+        $this->request      = $controller->getRequest();
+        $this->HTMLPurifier = Codendi_HTMLPurifier::instance();
+        $this->user         = $controller->getUser();
+    }
 
-	public function getController() {
-		return $this->controller;
-	}
+    public function getController() {
+        return $this->controller;
+    }
 
-	public function getData() {
-		return $this->controller->getData();
-	}
+    public function getData() {
+        return $this->controller->getData();
+    }
 
-	public function display($name, $params=array()) {
-		if ( empty($name) ) {
-			return false;
-		}
-		call_user_func_array(array($this,$name), $params);
-	}
+    public function display($name, $params=array()) {
+        if ( empty($name) ) {
+            return false;
+        }
+        call_user_func_array(array($this,$name), $params);
+    }
 
-	public static function linkTo($link, $href, $options='' ) {
-		$linkTo = '<a href="'.$href.'" '.$options.' >'.$link.'</a>';
-		return $linkTo;
-	}
-	 
+    public static function linkTo($link, $href, $options='' ) {
+        $linkTo = '<a href="'.$href.'" '.$options.' >'.$link.'</a>';
+        return $linkTo;
+    }
+
 }
 ?>

@@ -26,9 +26,9 @@ $plugin_manager = PluginManager::instance();
 $p = $plugin_manager->getPluginByName('requesthelp');
 
 if ($p && $plugin_manager->isPluginAvailable($p) && extension_loaded('oci8')) {
-	$p->process();
+    $p->process();
 } else {
-	header('Location: '.get_server_url());
+    header('Location: '.get_server_url());
 }
 
 ?>

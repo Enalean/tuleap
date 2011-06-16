@@ -23,14 +23,14 @@ require_once 'common/plugin/PluginDescriptor.class.php';
 
 class RequestHelpPluginDescriptor extends PluginDescriptor {
 
-	/**
-	 * Constructor
-	 *
-	 * @return void
-	 */
-	function __construct() {
-		parent::__construct($GLOBALS['Language']->getText('plugin_requesthelp', 'descriptor_name'), false, $GLOBALS['Language']->getText('plugin_requesthelp', 'descriptor_description'));
-	}
+    /**
+     * Constructor
+     *
+     * @return void
+     */
+    function __construct() {
+        parent::__construct($GLOBALS['Language']->getText('plugin_requesthelp', 'descriptor_name'), false, $GLOBALS['Language']->getText('plugin_requesthelp', 'descriptor_description'));
+    }
 }
 
 ?>

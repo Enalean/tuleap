@@ -24,17 +24,17 @@ require_once 'RequestHelpPluginDescriptor.class.php';
 
 class RequestHelpPluginInfo extends PluginFileInfo {
 
-	/**
-	 * Constructor
-	 *
-	 * @param requesthelpPlugin $plugin the plugin
-	 *
-	 * @return void
-	 */
-	function __construct($plugin) {
-		parent::__construct($plugin, 'requesthelp');
-		$this->setPluginDescriptor(new RequestHelpPluginDescriptor());
-	}
+    /**
+     * Constructor
+     *
+     * @param requesthelpPlugin $plugin the plugin
+     *
+     * @return void
+     */
+    function __construct($plugin) {
+        parent::__construct($plugin, 'requesthelp');
+        $this->setPluginDescriptor(new RequestHelpPluginDescriptor());
+    }
 
 }
 ?>

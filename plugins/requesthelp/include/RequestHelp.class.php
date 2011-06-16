@@ -29,38 +29,38 @@ require_once('RequestHelpActions.class.php');
 
 class RequestHelp extends PluginControler {
 
-	const SEVERITY_MINOR    = 1;
-	const SEVERITY_SERIOUS  = 2;
-	const SEVERITY_CRITICAL = 3;
+    const SEVERITY_MINOR    = 1;
+    const SEVERITY_SERIOUS  = 2;
+    const SEVERITY_CRITICAL = 3;
 
-	const TYPE_SUPPORT      = 1;
-	const TYPE_ENHANCEMENT  = 2;
+    const TYPE_SUPPORT      = 1;
+    const TYPE_ENHANCEMENT  = 2;
 
-	/**
-	 * Compute the request
-	 *
-	 * @return void
-	 */
-	function request() {
-		$request = $this->getRequest();
+    /**
+     * Compute the request
+     *
+     * @return void
+     */
+    function request() {
+        $request = $this->getRequest();
 
-		if ($request->exist('action') && $this->getUser()->isLoggedIn()) {
-			$vAction = new Valid_WhiteList('action', array('submit_ticket'));
-			$vAction->required();
-			$action = $request->getValidated('action', $vAction, false);
-			switch ($action) {
-				case 'submit_ticket':
-					$this->addAction('addTicket');
-					$this->addview('remedyPostSubmission');
-					break;
-				default:
-					$this->addview('displayForm');
-					break;
-			}
-		} else {
-			$this->addview('displayForm');
-		}
-	}
+        if ($request->exist('action') && $this->getUser()->isLoggedIn()) {
+            $vAction = new Valid_WhiteList('action', array('submit_ticket'));
+            $vAction->required();
+            $action = $request->getValidated('action', $vAction, false);
+            switch ($action) {
+                case 'submit_ticket':
+                    $this->addAction('addTicket');
+                    $this->addview('remedyPostSubmission');
+                    break;
+                default:
+                    $this->addview('displayForm');
+                    break;
+            }
+        } else {
+            $this->addview('displayForm');
+        }
+    }
 
 }
 

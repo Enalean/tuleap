@@ -21,33 +21,33 @@
 
 class b201104151708_add_table_plugin_Request_Help extends ForgeUpgrade_Bucket {
 
-	/**
-	 * Description of the bucket
-	 *
-	 * @return String
-	 */
-	public function description() {
-		return <<<EOT
+    /**
+     * Description of the bucket
+     *
+     * @return String
+     */
+    public function description() {
+        return <<<EOT
 Add the table plugin_request_help to manage the automatic ticket insertion in RIF table
 EOT;
-	}
+    }
 
-	/**
-	 * Get the API
-	 *
-	 * @return void
-	 */
-	public function preUp() {
-		$this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
-	}
+    /**
+     * Get the API
+     *
+     * @return void
+     */
+    public function preUp() {
+        $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
+    }
 
-	/**
-	 * Creation of the table
-	 *
-	 * @return void
-	 */
-	public function up() {
-		$sql = 'CREATE TABLE plugin_request_help ('.
+    /**
+     * Creation of the table
+     *
+     * @return void
+     */
+    public function up() {
+        $sql = 'CREATE TABLE plugin_request_help ('.
                     ' id INT(11) UNSIGNED NOT NULL auto_increment, '.
                     ' user_id INT(11) UNSIGNED NULL,'.
                     ' summary TEXT NOT NULL,'.
@@ -57,19 +57,19 @@ EOT;
                     ' severity INT,'.
                     ' cc TEXT,'.
                     ' PRIMARY KEY(id))';
-		$this->db->createTable('plugin_request_help', $sql);
-	}
+        $this->db->createTable('plugin_request_help', $sql);
+    }
 
-	/**
-	 * Verify the table creation
-	 *
-	 * @return void
-	 */
-	public function postUp() {
-		if (!$this->db->tableNameExists('plugin_request_help')) {
-			throw new ForgeUpgrade_Bucket_Exception_UpgradeNotCompleteException('plugin_request_help table is missing');
-		}
-	}
+    /**
+     * Verify the table creation
+     *
+     * @return void
+     */
+    public function postUp() {
+        if (!$this->db->tableNameExists('plugin_request_help')) {
+            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotCompleteException('plugin_request_help table is missing');
+        }
+    }
 
 }
 

@@ -24,34 +24,34 @@
  */
 class PluginAction {
 
-	protected $controller;
+    protected $controller;
 
-	public function __construct( $controller ) {
-		$this->controller = $controller;
-		$this->user       = $controller->getUser();
-		$this->request    = $controller->getRequest();
-	}
+    public function __construct( $controller ) {
+        $this->controller = $controller;
+        $this->user       = $controller->getUser();
+        $this->request    = $controller->getRequest();
+    }
 
-	public function getController() {
-		return $this->controller;
-	}
+    public function getController() {
+        return $this->controller;
+    }
 
-	public function getData() {
-		return $this->controller->getData();
-	}
+    public function getData() {
+        return $this->controller->getData();
+    }
 
-	public function addData($data) {
-		$this->controller->addData($data);
-	}
+    public function addData($data) {
+        $this->controller->addData($data);
+    }
 
-	public function check() {
-		return true;
-	}
+    public function check() {
+        return true;
+    }
 
-	public function process($actionName, $actionParams) {
-		if( $this->check() ) {
-			return call_user_func_array(array($this,$actionName), $actionParams);
-		}
-	}
+    public function process($actionName, $actionParams) {
+        if( $this->check() ) {
+            return call_user_func_array(array($this,$actionName), $actionParams);
+        }
+    }
 }
 ?>
