@@ -119,11 +119,11 @@ class RequestHelpDBDriver {
                             :OUT
                         );
                     END;";
-            $stid = oci_parse($this->dbh, $sql);
+            $stid = @oci_parse($this->dbh, $sql);
             if ($stid) {
                 $ticketId = 0;
-                oci_bind_by_name($stid, ":OUT", &$ticketId, 30);
-                if (oci_execute($stid)) {
+                @oci_bind_by_name($stid, ":OUT", &$ticketId, 30);
+                if (@oci_execute($stid)) {
                     return $ticketId;
                 } else {
                     return false;
