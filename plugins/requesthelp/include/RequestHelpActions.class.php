@@ -31,9 +31,6 @@ require_once('RequestHelpDBDriver.class.php');
 
 class RequestHelpActions extends PluginAction {
 
-    const RECEPIENT_SD   = 1;
-    const RECEPIENT_FAILURE_SD = 2;
-
     // {{{ Actions
     /**
     * Validate request values
@@ -149,7 +146,7 @@ class RequestHelpActions extends PluginAction {
      */
     function insertTicketInCodexDB($params) {
         $dao = new RequestHelpDao();
-        return $dao->insertInCodexDB($params['user_id'], $params['summary'], $params['create_date'], $params['description'], $params['type'], $params['severity'], $params['cc']);
+        return $dao->insertInCodexDB($params['user_id'], $params['summary'], $params['create_date'], $params['description'], $params['type'], $params['severity'], $params['cc'], $params['ticket_id']);
     }
 
     /**
@@ -191,10 +188,11 @@ class RequestHelpActions extends PluginAction {
      *
      * @return void
      */
-    function sendMail($params, $recepient) {
+    function sendMail($params) {
         $um   = $this->_getUserManager();
         $user = $um->getCurrentUser();
 
+        $ticketId    = $params['ticket_id'];
         $requestType = $params['text_type'];
         $severity    = $params['text_severity'];
         $summary     = $params['summary'];
@@ -217,6 +215,7 @@ class RequestHelpActions extends PluginAction {
         $content_span  = '<span style="font-size:10.0pt;font-family:Verdana,font:sans-serif" >';
         $core_mail     = $separator.$section_span.'<b>Ticket Details</b></span>'.
                          '<table>'.
+                         '<tr><td>'.$title_span.'<b>Ticket : </b></span></td><td>'.$content_span.$ticketId.'</span></td></tr>'.
                          '<tr><td>'.$title_span.'<b>'.$GLOBALS['Language']->getText('plugin_requesthelp', 'type').' : </b></span></td><td>'.$content_span.$requestType.'</span></td></tr>'.
                          '<tr><td>'.$title_span.'<b>'.$GLOBALS['Language']->getText('plugin_requesthelp', 'severity').' : </b></span></td><td>'.$content_span.$severity.'</span></td></tr>'.
                          '<tr><td>'.$title_span.'<b>'.$GLOBALS['Language']->getText('plugin_requesthelp', 'summary').' : </b></span></td><td>'.$content_span.'<pre>'.$summary.'</pre></span></td></tr>'.
@@ -241,25 +240,11 @@ class RequestHelpActions extends PluginAction {
         }
         $core_mail .= '</table>';
 
-        switch ($recepient) {
-            case self::RECEPIENT_SD:
-                if (!$to = $p->getProperty('send_notif_mail_sd')) {
-                    $to = 'codex-team@lists.codex.cro.st.com';
-                }
-                $mail->setSubject($GLOBALS['Language']->getText('plugin_requesthelp', 'requesthelp_mail_subject', array($severity, $summary)));
-                $body = '<table><tr><td>'.$GLOBALS['Language']->getText('plugin_requesthelp', 'requesthelp_mail_support', $user->getRealName()).'.</td></tr>'.$noreply_alert.$core_mail;
-                break;
-            case self::RECEPIENT_FAILURE_SD:
-                if (!$to = $p->getProperty('send_notif_mail_sd')) {
-                    $to = 'codex-team@lists.codex.cro.st.com';
-                }
-                $mail->setSubject($GLOBALS['Language']->getText('plugin_requesthelp', 'requesthelp_Failure_mail_subject'));
-                $body = '<table><tr><td>'.$GLOBALS['Language']->getText('plugin_requesthelp', 'requesthelp_mail_error').'.</td></tr>'.$noreply_alert.$core_mail;
-                break;
-            default:
-                return false;
-                break;
+        if (!$to = $p->getProperty('send_notif_mail_sd')) {
+            $to = 'codex-team@lists.codex.cro.st.com';
         }
+        $mail->setSubject($GLOBALS['Language']->getText('plugin_requesthelp', 'requesthelp_mail_subject', array($severity, $summary)));
+        $body = '<table><tr><td>'.$GLOBALS['Language']->getText('plugin_requesthelp', 'requesthelp_mail_support', $user->getRealName()).'.</td></tr>'.$noreply_alert.$core_mail;
 
         $mail->setTo($to);
         $mail->setBodyHtml($body);
@@ -292,11 +277,10 @@ class RequestHelpActions extends PluginAction {
         if ($status) {
             $params['user_id']     = $user->getId();
             $params['create_date'] = time();
-            if ($this->insertTicketInCodexDB($params)) {
-                $this->sendMail($params, self::RECEPIENT_SD);
-                if (!$this->insertTicketInRIFDB($params)) {
-                    $this->sendMail($params, self::RECEPIENT_FAILURE_SD);
-                }
+            $ticketId = $this->insertTicketInRIFDB($params);
+            $params['ticket_id'] = $ticketId;
+            if ($ticketId && $this->insertTicketInCodexDB($params, $ticketId)) {
+                $this->sendMail($params);
                 $c->addData(array('status' => true));
             } else {
                 $c->addData(array('status' => false, 'params' => $params));

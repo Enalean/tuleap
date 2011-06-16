@@ -43,12 +43,14 @@ class RequestHelpDao extends DataAccessObject {
      * @param Integer $type        Ticket type
      * @param Integer $severity    Ticket severity
      * @param String  $cc          CC mail addresses
+     * @param String  $ticketId    Id of the Remedy ticket
      *
      * @return Boolean
      */
-    function insertInCodexDB($userId, $summary, $createDate, $description, $type, $severity, $cc) {
+    function insertInCodexDB($userId, $summary, $createDate, $description, $type, $severity, $cc, $ticketId) {
         $insert = 'INSERT INTO plugin_request_help'.
                   '(user_id, '.
+                  'ticket_id, '.
                   'summary, '.
                   'create_date, '.
                   'description, '.
@@ -57,6 +59,7 @@ class RequestHelpDao extends DataAccessObject {
                   'cc '.
                   ')values ('.
         $this->da->escapeInt($userId).', '.
+        $this->da->quoteSmart($ticketId).', '.
         $this->da->quoteSmart(utf8_encode($summary)).', '.
         $this->da->escapeInt($createDate).', '.
         $this->da->quoteSmart(utf8_encode($description)).', '.

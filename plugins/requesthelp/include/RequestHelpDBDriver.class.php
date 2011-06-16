@@ -66,7 +66,7 @@ class RequestHelpDBDriver {
      * @param String $severity    Ticket severity
      * @param String $cc          People in CC
      *
-     * @return Boolean
+     * @return String Remedy ticket id
      */
     public function createTicket($summary, $description, $item, $severity, $cc) {
         $pluginManager = PluginManager::instance();
@@ -121,19 +121,29 @@ class RequestHelpDBDriver {
                     END;";
             $stid = @oci_parse($this->dbh, $sql);
             if ($stid) {
-                $ticketId = 0;
-                @oci_bind_by_name($stid, ":OUT", &$ticketId, 30);
+                $rifId = 0;
+                @oci_bind_by_name($stid, ":OUT", &$rifId, 30);
                 if (@oci_execute($stid)) {
-                    return $ticketId;
-                } else {
-                    return false;
+                    $sql= 'SELECT TICKET_ID, REQUEST_STATUS FROM RIF_REQUEST WHERE RIF_ID = '.$rifId;
+                    $stid = @oci_parse($this->dbh, $sql);
+                    if ($stid) {
+                        $inserted = false;
+                        while(!$inserted) {
+                            if (@oci_execute($stid)) {
+                                $row = @oci_fetch_array($stid, OCI_ASSOC);
+                                if ($row && $row['REQUEST_STATUS'] != 'NEW') {
+                                    $inserted = true;
+                                    if ($row['REQUEST_STATUS'] == 'CLOSE') {
+                                        return $row['TICKET_ID'];
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
-            } else {
-                return false;
             }
-        } else {
-            return false;
         }
+        return false;
     }
 
     /**
