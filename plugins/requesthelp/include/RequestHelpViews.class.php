@@ -114,8 +114,8 @@ class RequestHelpViews extends PluginView {
             }
             echo '>'.$GLOBALS['Language']->getText('plugin_requesthelp', 'Enhancement_request').'</option>
                      </select>';
-            echo '</td><td><label>'.$GLOBALS['Language']->getText('plugin_requesthelp', 'severity').':</label>&nbsp;<span class="highlight"><big>*</big></b></span></td>
-                             <td><select name="severity">
+            echo '</td><td align="right"><label>'.$GLOBALS['Language']->getText('plugin_requesthelp', 'severity').':</label>&nbsp;<span class="highlight"><big>*</big></b></span>
+                             <select name="severity">
                              <option value="'.RequestHelp::SEVERITY_MINOR.'" ';
             if ($severity == RequestHelp::SEVERITY_MINOR) {
                 echo 'selected';
@@ -135,12 +135,11 @@ class RequestHelpViews extends PluginView {
                          </td>
                      </tr>';
             echo '<tr><td><label>'.$GLOBALS['Language']->getText('plugin_requesthelp', 'summary').':</label>&nbsp;<span class="highlight"><big>*</big></b></span></td>
-                     <td><input type="text" name="request_summary" value="'.$summary.'" /></td></tr>';
-            echo '<tr><td><label><span class="totop">Description:</span></label>&nbsp;<span class="highlight"><span class="totop"><big>*</big></b></span></span></td><td><textarea name="request_description">'.$description.'</textarea></td></tr>
-            <tr><td></td><td><i><b><u>Note</u>: </b>'.$GLOBALS['Language']->getText('plugin_requesthelp', 'requesthelp_cc_note').'</i></td></tr>
-            <tr><td><label>CC :</label></td><td><input id="requesthelp_cc" type="text" name="cc" /></td></tr>
-            <tr><td></td><td><input name="action" type="hidden" value="submit_ticket" /></td></tr>
-            <tr><td></td><td><input name="submit" type="submit" value="Submit" /></td></tr>
+                     <td colspan="3"><input type="text" name="request_summary" value="'.$summary.'" /></td></tr>';
+            echo '<tr><td><label><span class="totop">Description:</span></label>&nbsp;<span class="highlight"><span class="totop"><big>*</big></b></span></span></td><td  colspan="3"><textarea name="request_description">'.$description.'</textarea></td></tr>
+            <tr><td></td><td colspan="3"><i><b><u>Note</u>: </b>'.$GLOBALS['Language']->getText('plugin_requesthelp', 'requesthelp_cc_note').'</i></td></tr>
+            <tr><td><label>CC :</label></td><td  colspan="3"><input id="requesthelp_cc" type="text" name="cc" /></td></tr>
+            <tr><td><input name="action" type="hidden" value="submit_ticket" /></td><td><input name="submit" type="submit" value="Submit" /></td></tr>
                 </table>
             </form>
         </fieldset>';
