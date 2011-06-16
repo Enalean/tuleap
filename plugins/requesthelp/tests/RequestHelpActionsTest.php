@@ -249,9 +249,9 @@ class RequestHelpActionsTest extends UnitTestCase {
                                           'cc'            => 'john.doe@example.com'));
         $actions->setReturnValue('validateRequest', $params);
         $actions->setReturnValue('insertTicketInCodexDB', false);
-        $actions->expectOnce('insertTicketInCodexDB');
+        $actions->expectNever('insertTicketInCodexDB');
         $actions->expectNever('sendMail');
-        $actions->expectNever('insertTicketInRIFDB');
+        $actions->expectOnce('insertTicketInRIFDB');
         $c->expectOnce('addData');
         $actions->addTicket();
     }
@@ -275,11 +275,10 @@ class RequestHelpActionsTest extends UnitTestCase {
         $actions->setReturnValue('validateRequest', $params);
         $actions->setReturnValue('insertTicketInCodexDB', true);
         $actions->setReturnValue('insertTicketInRIFDB', false);
-        $actions->expectOnce('insertTicketInCodexDB');
-        $actions->expectCallCount('sendMail', 2);
+        $actions->expectNever('insertTicketInCodexDB');
+        $actions->expectNever('sendMail');
         $actions->expectOnce('insertTicketInRIFDB');
         $c->expectOnce('addData');
-        $c->expect('addData', array(array('status' => true)));
         $actions->addTicket();
     }
 
@@ -315,7 +314,8 @@ class RequestHelpActionsTest extends UnitTestCase {
         $user = new MockUser();
         $um->setReturnValue('getCurrentUser', $user);
 
-        $validParams = array('summary'       => 'valid summary',
+        $validParams = array('ticket_id'     => 'QA0000000000001',
+                             'summary'       => 'valid summary',
                              'description'   => 'valid description',
                              'type'          => 1,
                              'text_type'     => 'SUPPORT REQUEST',
@@ -342,38 +342,7 @@ class RequestHelpActionsTest extends UnitTestCase {
         $mail->setReturnValue('send', false);
 
         $actions->setReturnValue('_getCodendiMail', $mail);
-        $this->assertFalse($actions->sendMail($validParams, RequestHelpActions::RECEPIENT_SD));
-    }
-
-    function testSendMailToSDInsertRifDBFail() {
-        $um   = new MockUserManager();
-        $user = new MockUser();
-        $um->setReturnValue('getCurrentUser', $user);
-
-        $validParams = array('summary'       => 'valid summary',
-                             'description'   => 'valid description',
-                             'type'          => 1,
-                             'text_type'     => 'SUPPORT REQUEST',
-                             'severity'      => 1,
-                             'text_severity' => 'Minor',
-                             'cc'            => 'john.doe@example.com');
-
-        $GLOBALS['Language']->setReturnValue('getText','Failure', array('plugin_requesthelp', 'requesthelp_Failure_mail_subject'));
-        $pm = new MockPluginManager();
-        $p = new MockProperties();
-        $pm->setReturnValue('getPluginByName', $p);
-        $p->setReturnValue('getProperty', 'jenny.doe@example.com');
-        $actions = new RequestHelpActionsTestVersion3();
-        $actions->setReturnValue('_getUserManager', $um);
-        $actions->setReturnValue('_getPluginManager',$pm);
-        $mail = new MockCodendi_Mail();
-        $mail->expect('setTo', array('jenny.doe@example.com'));
-        $mail->expect('setSubject', array('Failure'));
-        $mail->expectOnce('setBodyHtml');
-        $mail->setReturnValue('send', true);
-
-        $actions->setReturnValue('_getCodendiMail', $mail);
-        $this->assertTrue($actions->sendMail($validParams, RequestHelpActions::RECEPIENT_FAILURE_SD));
+        $this->assertFalse($actions->sendMail($validParams));
     }
 
 }
