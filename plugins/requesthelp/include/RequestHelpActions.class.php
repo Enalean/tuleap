@@ -32,8 +32,7 @@ require_once('RequestHelpDBDriver.class.php');
 class RequestHelpActions extends PluginAction {
 
     const RECEPIENT_SD   = 1;
-    const RECEPIENT_USER = 2;
-    const RECEPIENT_FAILURE_SD = 3;
+    const RECEPIENT_FAILURE_SD = 2;
 
     // {{{ Actions
     /**
@@ -257,16 +256,6 @@ class RequestHelpActions extends PluginAction {
                 $mail->setSubject($GLOBALS['Language']->getText('plugin_requesthelp', 'requesthelp_Failure_mail_subject'));
                 $body = '<table><tr><td>'.$GLOBALS['Language']->getText('plugin_requesthelp', 'requesthelp_mail_error').'.</td></tr>'.$noreply_alert.$core_mail;
                 break;
-            case self::RECEPIENT_USER:
-                $to = $user->getUserName();
-                if ($cc != '') {
-                    foreach ($ccMails as $ccMail) {
-                        $mail->setCc($ccMail);
-                    }
-                }
-                $mail->setSubject($GLOBALS['Language']->getText('plugin_requesthelp', 'requesthelp_mail_subject', array($severity, $summary)));
-                $body = '<table><tr><td>'.$GLOBALS['Language']->getText('plugin_requesthelp', 'requesthelp_mail_user', array($user->getRealName(), $user->getName())).'</td></tr>'.$noreply_alert.$core_mail;
-                break;
             default:
                 return false;
                 break;
@@ -305,7 +294,6 @@ class RequestHelpActions extends PluginAction {
             $params['create_date'] = time();
             if ($this->insertTicketInCodexDB($params)) {
                 $this->sendMail($params, self::RECEPIENT_SD);
-                $this->sendMail($params, self::RECEPIENT_USER);
                 if (!$this->insertTicketInRIFDB($params)) {
                     $this->sendMail($params, self::RECEPIENT_FAILURE_SD);
                 }
