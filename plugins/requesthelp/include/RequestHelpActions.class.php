@@ -158,9 +158,7 @@ class RequestHelpActions extends PluginAction {
      */
     function insertTicketInRIFDB($params) {
         try {
-            $um   = $this->_getUserManager();
-            $user = $um->getCurrentUser();
-            $requester = strtoupper($user->getName());
+            $requester = strtoupper($this->_getRequesterLdapLogin());
             $oci = new RequestHelpDBDriver();
             $oci->getdbh();
             $ccMails = array_map('trim', preg_split('/[;]/', $params['cc']));
@@ -303,6 +301,30 @@ class RequestHelpActions extends PluginAction {
      */
     function _getUserManager() {
         return UserManager::instance();
+    }
+
+    /**
+     * Return LDAP login stored in DB corresponding to given userId.
+     * Retrieve the default Requester Login from conf if the Ldap plugin is not available.
+     *
+     * @return String requester login
+     */
+    function _getRequesterLdapLogin() {
+        $um   = $this->_getUserManager();
+        $user = $um->getCurrentUser();
+        $pluginManager = $this->_getPluginManager();
+        $ldapPlugin    = $pluginManager->getPluginByName('ldap');
+        if ($ldapPlugin && $pluginManager->isPluginAvailable($ldapPlugin)) {
+            $ldapUm = new LDAP_UserManager($ldapPlugin->getLdap());
+            $userId[] = $user->getId();
+            $ldapLogin = $ldapUm->getLdapLoginFromUserIds($userId);
+            $ldapLoginArray = $ldapLogin->getRow();
+            $requester = $ldapLoginArray['ldap_uid'];
+        } else {
+            $requestHelpPlugin = $pluginManager->getPluginByName('requesthelp');
+            $requester = $requestHelpPlugin->getProperty('requesthelp_submitter');
+        }
+        return $requester;
     }
 
     /**
