@@ -322,10 +322,10 @@ class RequestHelpActions extends PluginAction {
                 $ldapLoginArray = $ldapLogin->getRow();
                 $requester = $ldapLoginArray['ldap_uid'];
             } else {
-                $this->_getDefaultRequesterLogin();
+                $requester = $this->_getDefaultRequesterLogin();
             }
         } else {
-            $this->_getDefaultRequesterLogin();
+            $requester = $this->_getDefaultRequesterLogin();
         }
         return $requester;
     }
@@ -335,7 +335,8 @@ class RequestHelpActions extends PluginAction {
      *
      * @return Codendi_Mail
      */
-    function _getDefaultRequesterLogin()() {
+    function _getDefaultRequesterLogin() {
+        $pluginManager = $this->_getPluginManager();
         $requestHelpPlugin = $pluginManager->getPluginByName('requesthelp');
         $requester = $requestHelpPlugin->getProperty('requesthelp_submitter');
         return $requester;
