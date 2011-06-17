@@ -24,8 +24,8 @@ if ($argc < 4) {
 }
 
 // Establish connexion to the server
-$client = new SoapClient(null, array('location'   => "http://localhost:2080/plugins/soapproject/",
-                                     'uri'        => 'http://localhost:2080/plugins/soapproject/',
+$client = new SoapClient(null, array('location'   => "http://localhost/plugins/soapproject/",
+                                     'uri'        => 'http://localhost/plugins/soapproject/',
                                      'cache_wsdl' => WSDL_CACHE_NONE));
 
 //$client->addProject(requester, shortname, longname);
