@@ -63,10 +63,18 @@ if ($request->isPost() && $request->exist('Submit') &&  $request->existAndNonEmp
 
     $validFormat = new Valid_WhiteList('body_format' ,array(0, 1));
     $bodyFormat = $request->getValidated('body_format', $validFormat, 0);
+
+    $validMessage = new Valid_Text('mail_message');
+    if($request->valid($validMessage)) {
+        $mailMessage = $request->get('mail_message');
+    }
+
     if ($bodyFormat) {
         $mail = new Codendi_Mail();
+        $mail->setBodyHtml($mailMessage);
     } else {
         $mail = new Mail();
+        $mail->setBody($mailMessage);
     }
     $mail->setFrom($GLOBALS['sys_noreply']);
 
@@ -75,12 +83,6 @@ if ($request->isPost() && $request->exist('Submit') &&  $request->existAndNonEmp
         $mailSubject = $request->get('mail_subject');
     }
     $mail->setSubject($mailSubject);
-
-    $validMessage = new Valid_Text('mail_message');
-    if($request->valid($validMessage)) {
-        $mailMessage = $request->get('mail_message');
-    }
-    $mail->setBody($mailMessage);
 
     if ($destination != 'preview') {
         site_header(array('title'=>$Language->getText('admin_massmail','title')));
@@ -128,11 +130,11 @@ if ($request->isPost() && $request->exist('Submit') &&  $request->existAndNonEmp
         $validMails = array();
         $addresses  = array_map('trim', preg_split('/[,;]/', $request->get('preview_destination')));
         $rule       = new Rule_Email();
+        $um         = UserManager::instance();
         foreach ($addresses as $address) {
             if ($rule->isValid($address)) {
                 $validMails[] = $address;
             } else {
-                $um   = UserManager::instance();
                 $user = $um->findUser($address);
                 if ($user) {
                     $address = $user->getEmail();
