@@ -31,8 +31,44 @@
      {$line|htmlspecialchars|buglink:$bugpattern:$bugurl}<br />
    {/foreach}
    <br />
+
+   {if $sidebyside && ($treediff->Count() > 1)}
+    <div class="commitDiffSBS">
+
+     <div class="SBSTOC">
+       <ul>
+       {foreach from=$treediff item=filediff}
+       <li>
+       <a href="#{$filediff->GetFromHash()}_{$filediff->GetToHash()}">
+       {if $filediff->GetStatus() == 'A'}
+         {if $filediff->GetToFile()}{$filediff->GetToFile()}{else}{$filediff->GetToHash()}{/if} {t}(new){/t}
+       {elseif $filediff->GetStatus() == 'D'}
+         {if $filediff->GetFromFile()}{$filediff->GetFromFile()}{else}{$filediff->GetToFile()}{/if} {t}(deleted){/t}
+       {elseif $filediff->GetStatus() == 'M'}
+         {if $filediff->GetFromFile()}
+	   {assign var=fromfilename value=$filediff->GetFromFile()}
+	 {else}
+	   {assign var=fromfilename value=$filediff->GetFromHash()}
+	 {/if}
+	 {if $filediff->GetToFile()}
+	   {assign var=tofilename value=$filediff->GetToFile()}
+	 {else}
+	   {assign var=tofilename value=$filediff->GetToHash()}
+	 {/if}
+	 {$fromfilename}{if $fromfilename != $tofilename} -&gt; {$tofilename}{/if}
+       {/if}
+       </a>
+       </li>
+       {/foreach}
+       </ul>
+     </div>
+
+     <div class="SBSContent">
+   {/if}
+
    {* Diff each file changed *}
    {foreach from=$treediff item=filediff}
+     <div class="diffBlob" id="{$filediff->GetFromHash()}_{$filediff->GetToHash()}">
      <div class="diff_info">
      {if ($filediff->GetStatus() == 'D') || ($filediff->GetStatus() == 'M')}
        {assign var=localfromtype value=$filediff->GetFromFileType(1)}
@@ -60,7 +96,17 @@
      {else}
         {include file='filediff.tpl' diff=$filediff->GetDiff('', true, true)}
      {/if}
+     </div>
    {/foreach}
+
+   {if $sidebyside && ($treediff->Count() > 1)}
+     </div>
+     <div class="SBSFooter"></div>
+
+    </div>
+   {/if}
+
+
  </div>
 
  {include file='footer.tpl'}
