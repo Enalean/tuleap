@@ -479,6 +479,10 @@ done
 
 if [ ! -z "$mysql_host" ]; then
     test_mysql_host
+else
+    if $RPM -q mysql-server 2>&1 >/dev/null; then
+	die "No --mysql-host nor local mysql server installed, exit. Please install 'mysql-server' package"
+    fi
 fi
 
 ##############################################
@@ -948,7 +952,9 @@ todo "Finish sendmail settings (see installation Guide). By default, emails sent
 
 ##############################################
 # CVS
-setup_cvs
+if $RPM -q cvs 2>&1 >/dev/null; then
+    setup_cvs
+fi
 
 ##############################################
 # Make the system daily cronjob run at 23:58pm
@@ -957,7 +963,9 @@ $PERL -i'.orig' -p -e's/\d+ \d+ (.*daily)/58 23 \1/g' /etc/crontab
 
 ##############################################
 # FTP
-setup_vsftpd
+if $RPM -q vsftpd 2>&1 >/dev/null; then
+    setup_vsftpd
+fi
 
 ##############################################
 # Create the custom default page for the project Web sites
