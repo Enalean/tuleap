@@ -305,7 +305,6 @@ class RequestHelpActions extends PluginAction {
 
     /**
      * Return LDAP login stored in DB corresponding to given userId.
-     * Retrieve the default Requester Login from conf if the Ldap plugin is not available.
      *
      * @return String requester login
      */
@@ -318,12 +317,27 @@ class RequestHelpActions extends PluginAction {
             $ldapUm = new LDAP_UserManager($ldapPlugin->getLdap());
             $userId[] = $user->getId();
             $ldapLogin = $ldapUm->getLdapLoginFromUserIds($userId);
-            $ldapLoginArray = $ldapLogin->getRow();
-            $requester = $ldapLoginArray['ldap_uid'];
+            if($ldapLogin->rowCount())
+            {
+                $ldapLoginArray = $ldapLogin->getRow();
+                $requester = $ldapLoginArray['ldap_uid'];
+            } else {
+                $this->_getDefaultRequesterLogin();
+            }
         } else {
-            $requestHelpPlugin = $pluginManager->getPluginByName('requesthelp');
-            $requester = $requestHelpPlugin->getProperty('requesthelp_submitter');
+            $this->_getDefaultRequesterLogin();
         }
+        return $requester;
+    }
+
+    /**
+     * Retrieve the default Requester Login from plugin conf
+     *
+     * @return Codendi_Mail
+     */
+    function _getDefaultRequesterLogin()() {
+        $requestHelpPlugin = $pluginManager->getPluginByName('requesthelp');
+        $requester = $requestHelpPlugin->getProperty('requesthelp_submitter');
         return $requester;
     }
 
