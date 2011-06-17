@@ -82,7 +82,7 @@ Group: Development/Tools
 Version: @@CORE_SUBVERSION_VERSION@@
 Release: 1%{?dist}
 Requires: %{name} >= %{version}
-Conflicts: cadaver
+#Conflicts: cadaver
 Requires: viewvc = 1.0.7-2.codendi
 Requires: subversion, mod_dav_svn, subversion-perl, highlight
 Provides: codendi-core-subversion = %{version}
