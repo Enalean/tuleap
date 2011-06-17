@@ -3,7 +3,7 @@
 %define APP_NAME codendi
 %define APP_USER codendiadm
 %define APP_DIR %{_datadir}/%{APP_NAME}
-%define APP_LIB_DIR %{_libdir}/%{APP_NAME}
+%define APP_LIB_DIR /usr/lib/%{APP_NAME}
 %define APP_LIBBIN_DIR %{APP_LIB_DIR}/bin
 %define APP_DATA_DIR %{_localstatedir}/lib/%{APP_NAME}
 %define APP_CACHE_DIR %{_localstatedir}/tmp/%{APP_NAME}_cache
@@ -220,6 +220,15 @@ Requires: %{name} >= %{version}, Sabre_DAV = 1.0.14
 Provides: codendi-plugin-webdav = %{version}
 %description plugin-webdav
 Plugin to access to file releases & docman though WebDAV
+
+%package plugin-soapproject
+Summary: Project creation automation through SOAP
+Group: Development/Tools
+Version: @@PLUGIN_SOAPPROJECT_VERSION@@
+Release: 1%{?dist}
+Requires: @@PKG_NAME@@ >= @@VERSION@@
+%description plugin-soapproject
+Project creation automation through SOAP
 
 #
 ## Themes
@@ -690,6 +699,10 @@ fi
 %defattr(-,%{APP_USER},%{APP_USER},-)
 %{APP_DIR}/plugins/webdav
 %attr(00755,%{APP_USER},%{APP_USER}) %{APP_CACHE_DIR}/plugins/webdav
+
+%files plugin-soapproject
+%defattr(-,%{APP_USER},%{APP_USER},-)
+%{APP_DIR}/plugins/soapproject
 
 #
 # Themes
